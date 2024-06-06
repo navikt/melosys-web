@@ -4,6 +4,10 @@ import * as DucksTestUtils from "../test-utils";
 import { LandkoderFraSakstypeSelector } from "./selectors";
 import { STATUS } from "../../services";
 
+vi.mock("../../featuretoggle", () => ({
+  erFeatureToggleEnabled: () => true,
+}));
+
 describe("LandkoderFraSakstypeSelector", () => {
   const landkoderFraFellesKodeverk = [
     { kode: "kode 1", term: "term 1" },
