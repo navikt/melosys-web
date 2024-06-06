@@ -25,7 +25,7 @@ export const VurderingAarsavregning = () => {
   }, [selectedYear]);
 
   return (
-    <VStack align="start" gap="5">
+    <VStack align="start" gap="3">
       <h1>Årsavregning</h1>
       <AarVelger onYearChange={handleYearChange} />
       <VStack className="tabeller" gap="6" align="start">

@@ -2,6 +2,8 @@ import { Table } from "@navikt/ds-react";
 import { Medlemskapsperiode } from "../../../../services/modules/aarsavregning/aarsavregning";
 import * as Utils from "../../../../utils";
 import "./aarsavregning.css";
+import * as KV from "../../../../kodeverk";
+import MKV from "../../../../melosyskodeverk";
 
 const MedlemskapsPerioderTabell = ({ perioder }: { perioder?: Medlemskapsperiode[] }) => {
   if (!perioder) return null;
@@ -22,7 +24,9 @@ const MedlemskapsPerioderTabell = ({ perioder }: { perioder?: Medlemskapsperiode
                 medlemskapsPeriode.tom
               )}`}
             </Table.DataCell>
-            <Table.DataCell key={Utils._uuid()}>{medlemskapsPeriode.trygdedekning}</Table.DataCell>
+            <Table.DataCell key={Utils._uuid()}>
+              {KV.kodeTilTerm(medlemskapsPeriode.trygdedekning, MKV.KTObjects.trygdedekninger)}
+            </Table.DataCell>
           </Table.Row>
         ))}
       </Table.Body>
