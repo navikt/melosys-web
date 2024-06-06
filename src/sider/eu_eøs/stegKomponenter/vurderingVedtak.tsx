@@ -31,6 +31,8 @@ import { RootState } from "AppTypes";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { kontrollOperations } from "../../../ducks/kontroll";
 import { lovvalgsperioderSelectors } from "../../../ducks/lovvalgsperioder";
+import { useFeatureToggle } from "../../../featuretoggle";
+import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../featuretoggle/toggleNavn";
 
 const { FO_883_2004_ART11_3A } = MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004;
 const { FO_883_2004_ART11_4_1 } = MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004;
@@ -140,6 +142,7 @@ const VurderingVedtak = ({
   const dispatch = useDispatch();
   const [vedtakPending, setVedtakPending] = useState(false);
   const [erBucAapen, setErBucAapen] = useState(true);
+  const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
   let oppdaterFørKontroll = true;
 
   const lovvalgsperioder = useSelector(lovvalgsperioderSelectors.LovvalgsperioderSelector);
@@ -238,7 +241,9 @@ const VurderingVedtak = ({
   return (
     <div className="vedtak">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">
-        Omfattet av norsk trygdelovgivning etter {finnLovvalgSomTerm(lovvalgsbestemmelse, tilleggBestemmelse)}
+        {konvensjonStorbritanniaToggleEnabled
+          ? "Omfattet av norsk trygdelovgivning"
+          : `Omfattet av norsk trygdelovgivning etter ${finnLovvalgSomTerm(lovvalgsbestemmelse, tilleggBestemmelse)}`}
       </Nav.Typo.Innholdstittel>
       <div>
         <Nav.Row className="lovvalgsperiode">
