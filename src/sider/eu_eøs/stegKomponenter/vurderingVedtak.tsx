@@ -20,7 +20,6 @@ import Dokumentliste, {
   BrevDokumentMetadataType,
   SedDokumentMetadataType,
 } from "../../../felleskomponenter/dokumentliste";
-import DatoOmrade from "../../../felleskomponenter/datoOmrade";
 import Mottakerinstitusjonvelger from "../../../felleskomponenter/mottakerinstitusjonvelger";
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import VurderingArtikkel12VedtakSchema from "./vurderingArtikkel12VedtakSchema";
@@ -33,6 +32,7 @@ import { kontrollOperations } from "../../../ducks/kontroll";
 import { lovvalgsperioderSelectors } from "../../../ducks/lovvalgsperioder";
 import { useFeatureToggle } from "../../../featuretoggle";
 import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../featuretoggle/toggleNavn";
+import EnkeltDato from "../../../felleskomponenter/enkeltDato";
 
 const { FO_883_2004_ART11_3A } = MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004;
 const { FO_883_2004_ART11_4_1 } = MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004;
@@ -48,11 +48,8 @@ const {
 } = MKV.Koder.behandlinger.behandlingstema;
 const { LA_BUC_04, LA_BUC_05 } = EKV.Koder.buctyper.legislation;
 
-const finnLovvalgSomTerm = (lovvalgsbestemmelse?: string, tilleggBestemmelse?: string) => {
-  const lovvalgsbestemmelseKT = KV.finnEnkeltKodeFraListe(lovvalgsbestemmelse, MKV.Kodekombinasjoner.alleLovvalg);
-
-  if (lovvalgsbestemmelse === FO_883_2004_ART11_3A && tilleggBestemmelse === FO_883_2004_ART11_4_1) {
-    const tilleggBestemmelseKT = KV.finnEnkeltKodeFraListe(tilleggBestemmelse, MKV.Kodekombinasjoner.alleLovvalg);
+const finnLovvalgSomTerm = (lovvalgsbestemmelseKT?: KTObject, tilleggBestemmelseKT?: KTObject) => {
+  if (lovvalgsbestemmelseKT?.kode === FO_883_2004_ART11_3A && tilleggBestemmelseKT?.kode === FO_883_2004_ART11_4_1) {
     return `${KV.objektTilTerm(tilleggBestemmelseKT)} og ${KV.objektTilTerm(lovvalgsbestemmelseKT)}`;
   }
 
@@ -236,17 +233,41 @@ const VurderingVedtak = ({
   const bucType = erArtikkel11_4 ? LA_BUC_05 : LA_BUC_04;
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
 
+  const lovvalgsbestemmelseKT = MKVUtils.lovvalgsbestemmelseTilObjekt(lovvalgsbestemmelse);
+  const tilleggBestemmelseKT = MKVUtils.lovvalgsbestemmelseTilObjekt(tilleggBestemmelse);
+
   return (
     <div className="vedtak">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">
         {konvensjonStorbritanniaToggleEnabled
           ? "Omfattet av norsk trygdelovgivning"
-          : `Omfattet av norsk trygdelovgivning etter ${finnLovvalgSomTerm(lovvalgsbestemmelse, tilleggBestemmelse)}`}
+          : `Omfattet av norsk trygdelovgivning etter ${finnLovvalgSomTerm(
+              lovvalgsbestemmelseKT,
+              tilleggBestemmelseKT
+            )}`}
       </Nav.Typo.Innholdstittel>
       <div>
         <Nav.Row className="lovvalgsperiode">
-          <Nav.Column xs="6">
-            <DatoOmrade periode={{ fom: fomDato, tom: tomDato }} label="Lovvalgsperiode" />
+          <Nav.Column xs="12">
+            <Nav.Typo.Element>Lovvalgsperiode</Nav.Typo.Element>
+          </Nav.Column>
+        </Nav.Row>
+        <Nav.Row>
+          <Nav.Column xs="2">
+            <Nav.Typo.Element>Fra</Nav.Typo.Element>
+            <EnkeltDato dato={fomDato} />
+          </Nav.Column>
+          <Nav.Column xs="2">
+            <Nav.Typo.Element>Til</Nav.Typo.Element>
+            <EnkeltDato dato={tomDato} />
+          </Nav.Column>
+          <Nav.Column xs="4">
+            <Nav.Typo.Element>Lovvalgsbestemmelse</Nav.Typo.Element>
+            {lovvalgsbestemmelseKT?.term}
+          </Nav.Column>
+          <Nav.Column xs="4">
+            <Nav.Typo.Element>Tilleggsbestemmelse</Nav.Typo.Element>
+            {tilleggBestemmelseKT?.term}
           </Nav.Column>
         </Nav.Row>
         {erNyVurdering && <Skjema.Vedtakstype redigerbart={redigerbart} />}
