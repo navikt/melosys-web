@@ -9,48 +9,90 @@ exports[`VurderingAarsavregning > renders correctly 1`] = `
     <h1>
       Årsavregning
     </h1>
-    <div>
+    <div
+      class="navds-stack navds-hstack"
+      style="--__ac-stack-wrap: wrap; --__ac-stack-gap-xs: var(--a-spacing-4); --__ac-stack-direction-xs: row; --__ac-stack-align-xs: center;"
+    >
       År:
-      <select
-        data-testid="aarVelger"
-        style="margin-left: 1rem; padding: 0.5rem 3rem 0.5rem 0.5rem; border-radius: 0.25rem; border: 1px solid #ccc; background: rgb(255, 255, 255);"
+      <div
+        class="navds-form-field navds-form-field--medium"
       >
-        <option
-          value="2023"
+        <label
+          class="navds-form-field__label navds-sr-only navds-label"
+          for="select-aksel-id-1"
         >
-          2023
-        </option>
-        <option
-          value="2022"
+          År:
+        </label>
+        <div
+          class="navds-select__container"
         >
-          2022
-        </option>
-        <option
-          value="2021"
-        >
-          2021
-        </option>
-        <option
-          value="2020"
-        >
-          2020
-        </option>
-        <option
-          value="2019"
-        >
-          2019
-        </option>
-        <option
-          value="2018"
-        >
-          2018
-        </option>
-        <option
-          value="2017"
-        >
-          2017
-        </option>
-      </select>
+          <select
+            class="navds-select__input navds-body-short navds-body-short--medium"
+            data-testid="aarVelger"
+            id="select-aksel-id-1"
+          >
+            <option
+              value="2023"
+            >
+              2023
+            </option>
+            <option
+              value="2022"
+            >
+              2022
+            </option>
+            <option
+              value="2021"
+            >
+              2021
+            </option>
+            <option
+              value="2020"
+            >
+              2020
+            </option>
+            <option
+              value="2019"
+            >
+              2019
+            </option>
+            <option
+              value="2018"
+            >
+              2018
+            </option>
+            <option
+              value="2017"
+            >
+              2017
+            </option>
+          </select>
+          <svg
+            aria-hidden="true"
+            class="navds-select__chevron"
+            fill="none"
+            focusable="false"
+            height="1em"
+            role="img"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              clip-rule="evenodd"
+              d="M5.97 9.47a.75.75 0 0 1 1.06 0L12 14.44l4.97-4.97a.75.75 0 1 1 1.06 1.06l-5.5 5.5a.75.75 0 0 1-1.06 0l-5.5-5.5a.75.75 0 0 1 0-1.06Z"
+              fill="currentColor"
+              fill-rule="evenodd"
+            />
+          </svg>
+        </div>
+        <div
+          aria-live="polite"
+          aria-relevant="additions removals"
+          class="navds-form-field__error"
+          id="select-error-aksel-id-1"
+        />
+      </div>
     </div>
     <div
       class="navds-stack tabeller navds-vstack"
@@ -66,15 +108,15 @@ exports[`VurderingAarsavregning > renders correctly 1`] = `
         class="navds-radio navds-radio--medium"
       >
         <input
-          aria-labelledby="aksel-id-2"
+          aria-labelledby="aksel-id-3"
           class="navds-radio__input"
-          id="radio-aksel-id-1"
+          id="radio-aksel-id-2"
           type="radio"
           value="10"
         />
         <label
           class="navds-radio__label"
-          for="radio-aksel-id-1"
+          for="radio-aksel-id-2"
         >
           <span
             class="navds-radio__content"
@@ -82,7 +124,7 @@ exports[`VurderingAarsavregning > renders correctly 1`] = `
             <span
               aria-hidden="true"
               class="navds-body-short navds-body-short--medium"
-              id="aksel-id-2"
+              id="aksel-id-3"
             >
               Ja
             </span>
@@ -93,15 +135,15 @@ exports[`VurderingAarsavregning > renders correctly 1`] = `
         class="navds-radio navds-radio--medium"
       >
         <input
-          aria-labelledby="aksel-id-5"
+          aria-labelledby="aksel-id-6"
           class="navds-radio__input"
-          id="radio-aksel-id-4"
+          id="radio-aksel-id-5"
           type="radio"
           value="20"
         />
         <label
           class="navds-radio__label"
-          for="radio-aksel-id-4"
+          for="radio-aksel-id-5"
         >
           <span
             class="navds-radio__content"
@@ -109,7 +151,7 @@ exports[`VurderingAarsavregning > renders correctly 1`] = `
             <span
               aria-hidden="true"
               class="navds-body-short navds-body-short--medium"
-              id="aksel-id-5"
+              id="aksel-id-6"
             >
               Nei
             </span>
