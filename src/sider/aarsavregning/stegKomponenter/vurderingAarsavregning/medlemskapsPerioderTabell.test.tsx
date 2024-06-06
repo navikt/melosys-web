@@ -32,8 +32,14 @@ describe("MedlemskapsPerioderTabell", () => {
   });
 
   it("viser riktig trygdedekning verdi", () => {
-    const perioder = [{ fom: "2022-01-01", tom: "2022-12-31", trygdedekning: "Full" }];
+    const perioder = [
+      {
+        fom: "2022-01-01",
+        tom: "2022-12-31",
+        trygdedekning: "FTRL_2_9_FØRSTE_LEDD_C_ANDRE_LEDD_HELSE_PENSJON_SYKE_FORELDREPENGER",
+      },
+    ];
     render(<MedlemskapsPerioderTabell perioder={perioder} />);
-    expect(screen.getByText("Full")).toBeInTheDocument();
+    expect(screen.getByText("Helse- og pensjonsdel med syke- og foreldrepenger (§ 2-9)")).toBeInTheDocument();
   });
 });

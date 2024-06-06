@@ -34,6 +34,6 @@ describe("SkatteforholdsPerioderTabell", () => {
   it("viser riktig skatteplikttype verdi", () => {
     const perioder = [{ fom: "2022-01-01", tom: "2022-12-31", skatteplikttype: "true" }];
     render(<SkatteforholdsPerioderTabell perioder={perioder} />);
-    expect(screen.getByText("true")).toBeInTheDocument();
+    expect(screen.getByText("Ja")).toBeInTheDocument();
   });
 });
