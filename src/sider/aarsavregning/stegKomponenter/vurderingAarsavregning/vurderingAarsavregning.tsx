@@ -3,7 +3,7 @@ import { useAsyncCallbackState } from "../../../../hooks";
 import * as Api from "../../../../services/api";
 import SkatteforholdsPerioderTabell from "./skatteforholdsPerioderTabell";
 import MedlemskapsPerioderTabell from "./medlemskapsPerioderTabell";
-import { Button, Radio, VStack } from "@navikt/ds-react";
+import { Button, Radio, RadioGroup, VStack } from "@navikt/ds-react";
 import "./aarsavregning.css";
 import { useEffect, useState } from "react";
 import AarVelger from "../../../../felleskomponenter/AarVelger/AarVelger";
@@ -40,11 +40,10 @@ export const VurderingAarsavregning = () => {
           avgift={lagretTrygdeavgift?.tidligereOpplysninger?.avgift}
         />
       </VStack>
-      <div className="avvik">
-        <b>Er det avvik i opplysningene fra skatt eller bruker?</b>
+      <RadioGroup legend="Er det avvik i opplysningene fra skatt eller bruker?">
         <Radio value="10">Ja</Radio>
         <Radio value="20">Nei</Radio>
-      </div>
+      </RadioGroup>
       <Button variant="primary">Bekreft og fortsett</Button>
     </VStack>
   );
