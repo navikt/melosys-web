@@ -2,7 +2,7 @@ import { render, fireEvent } from "@testing-library/react";
 import AarVelger from "./aarVelger";
 
 describe("AarVelger", () => {
-  it("displays the correct years", () => {
+  it("vi kan velge år innenfor tidsrommet vi har definert", () => {
     const { getByTestId } = render(<AarVelger onForandringAvAar={() => {}} />);
     const select = getByTestId("aarVelger") as HTMLSelectElement;
     const options = Array.from(select.options);
