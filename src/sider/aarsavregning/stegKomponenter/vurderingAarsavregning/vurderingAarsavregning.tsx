@@ -27,7 +27,7 @@ export const VurderingAarsavregning = () => {
   return (
     <VStack align="start" gap="3">
       <Heading size="large">Årsavregning</Heading>
-      <AarVelger onYearChange={handleYearChange} />
+      <AarVelger onForandringAvAar={handleYearChange} />
       <VStack className="tabeller" gap="6" align="start">
         <MedlemskapsPerioderTabell
           perioder={lagretTrygdeavgift?.tidligereOpplysninger?.trygdeavgiftsgrunnlag.medlemskapsperioder}

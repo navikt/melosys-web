@@ -3,7 +3,7 @@ import AarVelger from "./AarVelger";
 
 describe("AarVelger", () => {
   it("displays the correct years", () => {
-    const { getByTestId } = render(<AarVelger onYearChange={() => {}} />);
+    const { getByTestId } = render(<AarVelger onForandringAvAar={() => {}} />);
     const select = getByTestId("aarVelger") as HTMLSelectElement;
     const options = Array.from(select.options);
     const optionValues = options.map((option) => option.value);
@@ -12,9 +12,9 @@ describe("AarVelger", () => {
     expect(optionValues).toEqual(expectedYears);
   });
 
-  it("calls onYearChange when the selected year changes", () => {
+  it("kaller onYearChange når vi forandrer år", () => {
     const onYearChange = vi.fn();
-    const { getByTestId } = render(<AarVelger onYearChange={onYearChange} />);
+    const { getByTestId } = render(<AarVelger onForandringAvAar={onYearChange} />);
     const select = getByTestId("aarVelger");
     fireEvent.change(select, { target: { value: "2020" } });
     expect(onYearChange).toHaveBeenCalledWith(2020);

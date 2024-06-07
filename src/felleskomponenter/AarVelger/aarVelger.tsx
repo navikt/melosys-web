@@ -2,11 +2,11 @@ import { useState } from "react";
 import { HStack, Select } from "@navikt/ds-react";
 
 interface YearSelectorProps {
-  onYearChange: (year: number) => void;
+  onForandringAvAar: (year: number) => void;
 }
 
 function AarVelger(props: YearSelectorProps) {
-  const { onYearChange } = props;
+  const { onForandringAvAar } = props;
   const maksAar = new Date().getFullYear() - 1;
   const minimumAar = maksAar - 6;
   const [selectedYear, setSelectedYear] = useState<number>(maksAar);
@@ -14,7 +14,7 @@ function AarVelger(props: YearSelectorProps) {
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const year = parseInt(event.target.value, 10);
     setSelectedYear(year);
-    onYearChange(year);
+    onForandringAvAar(year);
   };
 
   const muligeAar: number[] = Array.from({ length: maksAar - minimumAar + 1 }, (_, index) => maksAar - index);
