@@ -33,7 +33,7 @@ const Familiemedlemmer = () => {
 
   return (
     <div className={familiemedlemmerClassName.block}>
-      <div style={{ paddingBottom: "2em" }}>
+      <div className={familiemedlemmerClassName.element("padding-bottom")}>
         <Tag size="small" variant="info" className={familiemedlemmerClassName.element("fra-register-etikett")}>
           Fra register
         </Tag>
