@@ -1,7 +1,6 @@
 import MKV from "../../../../../melosyskodeverk";
 import { Fragment, ReactElement } from "react";
 import * as Nav from "../../../../../navFrontend";
-import DatoOmrade from "../../../../../felleskomponenter/datoOmrade";
 import * as Skjema from "../../../../../felleskomponenter/skjema";
 import * as Utils from "../../../../../utils";
 import { Periode } from "../../../../../services/api";
@@ -10,6 +9,9 @@ import Dokumentliste, {
   SedDokumentMetadataType,
 } from "../../../../../felleskomponenter/dokumentliste";
 import { FormValuesProps } from "../vurderingArtikkel16Vedtak";
+import { useFeatureToggle } from "../../../../../featuretoggle";
+import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../../../featuretoggle/toggleNavn";
+import DatoOgBestemmelse from "./datoOgBestemmelse";
 
 interface InnvilgelseProps {
   redigerbart: boolean;
@@ -36,6 +38,8 @@ const Innvilgelse = ({
   vedKlikkForhandsvis,
   stegErGyldig,
 }: InnvilgelseProps) => {
+  const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
+
   const pdfDokumenter: (BrevDokumentMetadataType | SedDokumentMetadataType)[] = [
     {
       dokumentData: {
@@ -58,7 +62,9 @@ const Innvilgelse = ({
   return (
     <Fragment>
       <Nav.Typo.Innholdstittel className="stegvelgertittel">
-        Omfattet av norsk trygdelovgivning etter Fo 883/2004 Artikkel 16 nr. 1.
+        {konvensjonStorbritanniaToggleEnabled
+          ? "Omfattet av norsk trygdelovgivning"
+          : "Omfattet av norsk trygdelovgivning etter Fo 883/2004 Artikkel 16 nr. 1."}
       </Nav.Typo.Innholdstittel>
       <Nav.Row>
         <Nav.Column xs="7">

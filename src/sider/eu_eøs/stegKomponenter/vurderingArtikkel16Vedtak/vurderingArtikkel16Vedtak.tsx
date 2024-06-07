@@ -195,15 +195,18 @@ export const VurderingArtikkel16Vedtak = ({
       .catch(() => setVedtakPending(false));
   };
 
+  const { anmodningsperiodeSvarType } = anmodningsperiodesvar;
+
   const renderBegrunnelser = useCallback(
     () => (
       <VedtakBegrunnelser
         art12_1_begrunnelser={art_12_1_begrunnelser}
         art12_2_begrunnelser={art_12_2_begrunnelser}
         vilkarBegrunnelser={vilkarBegrunnelser}
+        anmodningsperiodeSvarType={anmodningsperiodeSvarType}
       />
     ),
-    [art_12_1_begrunnelser, art_12_2_begrunnelser, vilkarBegrunnelser]
+    [art_12_1_begrunnelser, art_12_2_begrunnelser, vilkarBegrunnelser, anmodningsperiodeSvarType]
   );
 
   const renderFritekstFelt = useCallback(
@@ -274,7 +277,6 @@ export const VurderingArtikkel16Vedtak = ({
     }
   };
 
-  const { anmodningsperiodeSvarType } = anmodningsperiodesvar;
   const stegErGyldig = redigerbart && formIsValid && (!harFeilmeldinger || anmodningsperiodeSvarType === AVSLAG);
   const vedtakInnhold = finnVedtakInnhold(anmodningsperiodeSvarType, stegErGyldig);
 

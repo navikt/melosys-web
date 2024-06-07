@@ -7,7 +7,9 @@ class Artikkel16Vedtak extends Steg {
     super(propsLight, stegPosisjon);
     this.kriterier = [];
     this.id = STEG.ARTIKKEL_16_VEDTAK;
-    this.tittel = "Artikkel 16.1 Vedtak";
+    this.tittel = propsLight.konvensjonStorbritanniaToggleEnabled
+      ? "Vedtak unntaks\u00ADbestemmelse"
+      : "Artikkel 16.1 Vedtak";
     this.komponent = VurderingArtikkel16Vedtak;
     this.samleRelevanteData = (_propsLight) => ({
       redigerbart: _propsLight.redigerbart,

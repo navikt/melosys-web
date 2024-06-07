@@ -1,7 +1,6 @@
 import MKV from "../../../../../melosyskodeverk";
 import { Fragment, ReactElement } from "react";
 import * as Nav from "../../../../../navFrontend";
-import DatoOmrade from "../../../../../felleskomponenter/datoOmrade";
 import * as Skjema from "../../../../../felleskomponenter/skjema";
 import * as Utils from "../../../../../utils";
 import Dokumentliste, {
@@ -10,6 +9,9 @@ import Dokumentliste, {
 } from "../../../../../felleskomponenter/dokumentliste";
 import { Periode } from "../../../../../services/api";
 import { FormValuesProps } from "../vurderingArtikkel16Vedtak";
+import { useFeatureToggle } from "../../../../../featuretoggle";
+import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../../../featuretoggle/toggleNavn";
+import DatoOgBestemmelse from "./datoOgBestemmelse";
 
 interface DelvisInnvilgelseProps {
   redigerbart: boolean;
@@ -38,6 +40,8 @@ const DelvisInnvilgelse = ({
   vedKlikkForhandsvis,
   stegErGyldig,
 }: DelvisInnvilgelseProps) => {
+  const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
+
   const pdfDokumenter: (BrevDokumentMetadataType | SedDokumentMetadataType)[] = [
     {
       dokumentData: {
@@ -60,8 +64,9 @@ const DelvisInnvilgelse = ({
   return (
     <Fragment>
       <Nav.Typo.Innholdstittel className="stegvelgertittel">
-        Delvis innvilgelse - omfattet av norsk trygdelovgivning etter Fo 883/2004 Artikkel 16 nr. 1. i deler av
-        søknadsperioden
+        {konvensjonStorbritanniaToggleEnabled
+          ? "Delvis innvilgelse"
+          : "Delvis innvilgelse - omfattet av norsk trygdelovgivning etter Fo 883/2004 Artikkel 16 nr. 1. i deler av søknadsperioden"}
       </Nav.Typo.Innholdstittel>
       <Nav.Row>
         <Nav.Column xs="7">
