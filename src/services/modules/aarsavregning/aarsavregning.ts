@@ -1,4 +1,4 @@
-import { postAsJson } from "../../utils";
+import { getAsJson, postAsJson } from "../../utils";
 import { API_BASE_URL, AARSAVREGNING } from "../../api-constants";
 
 export type AarsavregningResponse = {
@@ -70,5 +70,13 @@ export type Avregning = {
   tilFaktureringBeloep: number;
 };
 
-export const hentAvregningsData = (avregningID: number, aar: number): Promise<AarsavregningResponse> =>
-  postAsJson(`${API_BASE_URL}/${AARSAVREGNING}/${avregningID}/aar/${aar}`);
+export const hentAvregningsData = (behandlingsId: number): Promise<AarsavregningResponse> =>
+  getAsJson(`${API_BASE_URL}${AARSAVREGNING}/${behandlingsId}`);
+
+export type LagAarsavregningRequest = {
+  aar: number;
+  behandlingsId: number;
+};
+
+export const lagAvregningsData = (request: LagAarsavregningRequest): Promise<Number> =>
+  postAsJson(`${API_BASE_URL}${AARSAVREGNING}/opprettAarsavregning`, request);

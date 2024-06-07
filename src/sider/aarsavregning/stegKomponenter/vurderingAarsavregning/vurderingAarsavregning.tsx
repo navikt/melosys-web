@@ -5,23 +5,36 @@ import SkatteforholdsPerioderTabell from "./skatteforholdsPerioderTabell";
 import MedlemskapsPerioderTabell from "./medlemskapsPerioderTabell";
 import { Button, Heading, Radio, RadioGroup, VStack } from "@navikt/ds-react";
 import "./aarsavregning.css";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import AarVelger from "../../../../felleskomponenter/AarVelger/aarVelger";
+import { LagAarsavregningRequest } from "../../../../services/modules/aarsavregning/aarsavregning";
 
 export const VurderingAarsavregning = () => {
   const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
-  const [lagretTrygdeavgift, setLagretTrygdeavgift] = useAsyncCallbackState(
-    () => Api.Aarsavregning.hentAvregningsData(1, selectedYear), // TODO bruk behandlingsID når det er klart
-    undefined,
-    []
-  );
+  const initialRender = useRef(true);
+  const fetchAvregningsData = () => Api.Aarsavregning.hentAvregningsData(1); // TODO bruk behandlingsID når det er klart
+
+  const [lagretTrygdeavgift, setLagretTrygdeavgift] = useAsyncCallbackState(fetchAvregningsData, undefined, []);
 
   const handleYearChange = (year: number) => {
     setSelectedYear(year);
   };
 
   useEffect(() => {
-    Api.Aarsavregning.hentAvregningsData(1, selectedYear).then((response) => setLagretTrygdeavgift(response));
+    if (initialRender.current) {
+      // TODO finnes det en bedre måte å håndtere dette på?
+      initialRender.current = false;
+      return;
+    }
+
+    const lagNyAvregning: LagAarsavregningRequest = {
+      aar: selectedYear,
+      behandlingsId: 1, // TODO erstatt med faktisk behandlingsId når det er klart
+    };
+
+    Api.Aarsavregning.lagAvregningsData(lagNyAvregning)
+      .then(() => fetchAvregningsData())
+      .then((response) => setLagretTrygdeavgift(response));
   }, [selectedYear]);
 
   return (
