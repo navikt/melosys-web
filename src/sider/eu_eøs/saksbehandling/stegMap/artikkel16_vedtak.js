@@ -11,14 +11,12 @@ class Artikkel16Vedtak extends Steg {
     this.komponent = VurderingArtikkel16Vedtak;
     this.samleRelevanteData = (_propsLight) => ({
       redigerbart: _propsLight.redigerbart,
-      harValgtNorskArbeidsgiver: _propsLight.harValgtNorskArbeidsgiver,
       harFeilmeldinger: _propsLight.harFeilmeldinger,
     });
     this.beregnRelevantUI = (_propsLight) => ({});
     this.handlers = {
       tilbake: propsLight.tilgjengeligeHandlers.tilbake,
-      kontrollerFerdigbehandling: this._propsLight.tilgjengeligeHandlers.kontrollerFerdigbehandling,
-      validerMottatteOpplysninger: this._propsLight.tilgjengeligeHandlers.validerMottatteOpplysninger,
+      validerMottatteOpplysninger: propsLight.tilgjengeligeHandlers.validerMottatteOpplysninger,
     };
     this._status = FANE_STATUS.OK;
   }

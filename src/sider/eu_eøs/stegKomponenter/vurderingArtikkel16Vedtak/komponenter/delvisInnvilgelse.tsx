@@ -1,0 +1,111 @@
+import MKV from "../../../../../melosyskodeverk";
+import { Fragment, ReactElement } from "react";
+import * as Nav from "../../../../../navFrontend";
+import DatoOmrade from "../../../../../felleskomponenter/datoOmrade";
+import * as Skjema from "../../../../../felleskomponenter/skjema";
+import * as Utils from "../../../../../utils";
+import Dokumentliste, {
+  BrevDokumentMetadataType,
+  SedDokumentMetadataType,
+} from "../../../../../felleskomponenter/dokumentliste";
+import { Periode } from "../../../../../services/api";
+import { FormValuesProps } from "../vurderingArtikkel16Vedtak";
+
+interface DelvisInnvilgelseProps {
+  redigerbart: boolean;
+  behandlingID: number;
+  gjeldendePeriode: Partial<Periode>;
+  vedtaksbrevFritekst?: string;
+  renderFritekstFelt: () => ReactElement;
+  renderBegrunnelser: () => ReactElement;
+  visOrienteringsbrevArbeidsgiver: boolean;
+  onPeriodeForkorterUncheck: () => void;
+  formValues: FormValuesProps;
+  vedKlikkForhandsvis: () => Promise<boolean>;
+  stegErGyldig: boolean;
+}
+
+const DelvisInnvilgelse = ({
+  redigerbart,
+  behandlingID,
+  gjeldendePeriode,
+  vedtaksbrevFritekst,
+  renderFritekstFelt,
+  renderBegrunnelser,
+  visOrienteringsbrevArbeidsgiver,
+  onPeriodeForkorterUncheck,
+  formValues,
+  vedKlikkForhandsvis,
+  stegErGyldig,
+}: DelvisInnvilgelseProps) => {
+  const pdfDokumenter: (BrevDokumentMetadataType | SedDokumentMetadataType)[] = [
+    {
+      dokumentData: {
+        produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
+        mottaker: MKV.Koder.mottakerroller.BRUKER,
+        fritekst: vedtaksbrevFritekst,
+      },
+    },
+  ];
+
+  if (visOrienteringsbrevArbeidsgiver) {
+    pdfDokumenter.push({
+      dokumentData: {
+        produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
+        mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
+      },
+    });
+  }
+
+  return (
+    <Fragment>
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">
+        Delvis innvilgelse - omfattet av norsk trygdelovgivning etter Fo 883/2004 Artikkel 16 nr. 1. i deler av
+        søknadsperioden
+      </Nav.Typo.Innholdstittel>
+      <Nav.Row>
+        <Nav.Column xs="7">
+          <DatoOmrade periode={gjeldendePeriode} label="Lovvalgsperiode" />
+        </Nav.Column>
+      </Nav.Row>
+      <Nav.Row>
+        <Nav.Column xs="7">
+          <Skjema.PeriodeForkorter
+            redigerbart={redigerbart}
+            fomRedigerbar
+            checkboxClassName="forkortLovvalgsperiode"
+            checkboxLabel="Lovvalget innvilges for en kortere periode"
+            checkboxFeltnavn="forkortLovvalgsperiode"
+            onUncheck={onPeriodeForkorterUncheck}
+            forkortPeriode={formValues.forkortLovvalgsperiode}
+            fomLabel="Startdato"
+            fomFeltNavn="fomDato"
+            minDate={Utils.dato.norskStringTilDate(formValues.fomDato)!!}
+            maxDate={Utils.dato.norskStringTilDate(formValues.tomDato)}
+            tomLabel="Sluttdato"
+            tomFeltNavn="tomDato"
+          />
+        </Nav.Column>
+      </Nav.Row>
+      <Nav.Row>
+        <Nav.Column xs="7">{renderBegrunnelser()}</Nav.Column>
+      </Nav.Row>
+      <Nav.Row>
+        <Nav.Column xs="7">{renderFritekstFelt()}</Nav.Column>
+      </Nav.Row>
+      <Nav.Row>
+        <Nav.Column xs="7">
+          {stegErGyldig && (
+            <Dokumentliste
+              behandlingID={behandlingID}
+              dokumenter={pdfDokumenter}
+              validateOnClick={vedKlikkForhandsvis}
+            />
+          )}
+        </Nav.Column>
+      </Nav.Row>
+    </Fragment>
+  );
+};
+
+export default DelvisInnvilgelse;

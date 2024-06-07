@@ -6,7 +6,7 @@ export const AnmodningsperioderSelector = createSelector(
 );
 
 export const AnmodningsperiodeSelector = createSelector(
-  AnmodningsperioderSelector,
+  (state) => AnmodningsperioderSelector(state),
   (anmodningsperioder) => anmodningsperioder[0] || {}
 );
 
@@ -31,12 +31,12 @@ export const UnntakFraBestemmelseSelector = createSelector(
 );
 
 export const TomDatoSelector = createSelector(
-  AnmodningsperiodeSelector,
+  (state) => AnmodningsperiodeSelector(state),
   (anmodningsperiode) => anmodningsperiode.tomDato
 );
 
 export const FomDatoSelector = createSelector(
-  AnmodningsperiodeSelector,
+  (state) => AnmodningsperiodeSelector(state),
   (anmodningsperiode) => anmodningsperiode.fomDato
 );
 
