@@ -25,7 +25,6 @@ interface DelvisInnvilgelseProps {
   formValues: FormValuesProps;
   vedKlikkForhandsvis: () => Promise<boolean>;
   stegErGyldig: boolean;
-  lovvalgsbestemmelse: string;
 }
 
 const DelvisInnvilgelse = ({
@@ -40,7 +39,6 @@ const DelvisInnvilgelse = ({
   formValues,
   vedKlikkForhandsvis,
   stegErGyldig,
-  lovvalgsbestemmelse,
 }: DelvisInnvilgelseProps) => {
   const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
 
@@ -70,11 +68,7 @@ const DelvisInnvilgelse = ({
           ? "Delvis innvilgelse"
           : "Delvis innvilgelse - omfattet av norsk trygdelovgivning etter Fo 883/2004 Artikkel 16 nr. 1. i deler av søknadsperioden"}
       </Nav.Typo.Innholdstittel>
-      <DatoOgBestemmelse
-        fomDato={gjeldendePeriode.fom}
-        tomDato={gjeldendePeriode.tom}
-        lovvalgsbestemmelse={lovvalgsbestemmelse}
-      />
+      <DatoOgBestemmelse fomDato={gjeldendePeriode.fom} tomDato={gjeldendePeriode.tom} />
       <Nav.Row>
         <Nav.Column xs="7">
           <Skjema.PeriodeForkorter

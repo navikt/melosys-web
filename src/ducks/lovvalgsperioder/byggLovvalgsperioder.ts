@@ -185,13 +185,14 @@ const byggLovvalgsperiodeArtikkel11_4_2 = (stegState: PerioderStegState, reduxSt
 const byggLovvalgsperiodeArtikkelUnntak = (reduxState: RootState): Lovvalgsperiode[] => {
   const erAnmodningsperiodeSendtUtland =
     anmodningsperioderSelectors.AnmodningsperioderErSendtUtlandetSelector(reduxState);
-  const erBehandlingsstatusUnderBehandlingEllerAvsluttet = [
+  const erBehandlingsstatusUnderBehandlingAvsluttetEllerMottattSvarPåAnmodning = [
     MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
+    MKV.Koder.behandlinger.behandlingsstatus.SVAR_ANMODNING_MOTTATT,
     MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET,
   ].includes(behandlingerSelectors.BehandlingsstatusKodeSelector(reduxState));
 
   // Anmodning om unntak har ikke lovvalgsperiode før avsluttet behandling. Før det har de bare anmodningsperiode.
-  if (erAnmodningsperiodeSendtUtland && erBehandlingsstatusUnderBehandlingEllerAvsluttet) {
+  if (erAnmodningsperiodeSendtUtland && erBehandlingsstatusUnderBehandlingAvsluttetEllerMottattSvarPåAnmodning) {
     return Selectors.LovvalgsperioderSelector(reduxState);
   }
   return [];
