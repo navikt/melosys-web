@@ -1,5 +1,5 @@
 import { render, fireEvent } from "@testing-library/react";
-import AarVelger from "./AarVelger";
+import AarVelger from "./aarVelger";
 
 describe("AarVelger", () => {
   it("displays the correct years", () => {

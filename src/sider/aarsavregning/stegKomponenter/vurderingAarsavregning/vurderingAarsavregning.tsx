@@ -6,7 +6,7 @@ import MedlemskapsPerioderTabell from "./medlemskapsPerioderTabell";
 import { Button, Heading, Radio, RadioGroup, VStack } from "@navikt/ds-react";
 import "./aarsavregning.css";
 import { useEffect, useState } from "react";
-import AarVelger from "../../../../felleskomponenter/AarVelger/AarVelger";
+import AarVelger from "../../../../felleskomponenter/AarVelger/aarVelger";
 
 export const VurderingAarsavregning = () => {
   const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
