@@ -43,6 +43,7 @@ describe("VurderingArtikkel16Vedtak", () => {
       fattVedtak: vi.fn(),
       harFeilmeldinger: false,
       mottatteOpplysningerStatus: "OK",
+      anmodningsperiode: {},
     };
   });
 
