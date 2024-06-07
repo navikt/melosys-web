@@ -243,6 +243,7 @@ export const VurderingArtikkel16Vedtak = ({
             formValues={formValues}
             vedKlikkForhandsvis={vedKlikkForhandsvis}
             stegErGyldig={stegErGyldig}
+            lovvalgsbestemmelse={anmodningsperiode.lovvalgBestemmelse}
           />
         );
       case DELVIS_INNVILGELSE:
@@ -259,6 +260,7 @@ export const VurderingArtikkel16Vedtak = ({
             formValues={formValues}
             vedKlikkForhandsvis={vedKlikkForhandsvis}
             stegErGyldig={stegErGyldig}
+            lovvalgsbestemmelse={anmodningsperiode.lovvalgBestemmelse}
           />
         );
       case AVSLAG:
