@@ -14,16 +14,9 @@ interface VarslerProps {
   inngangsvilkaar: Api.Vilkar.Vilkaar | undefined;
   landkoder: Array<string>;
   behandlingstema: string;
-  behandlingHarPeriodeOgLand: boolean;
 }
 
-const Varsler = ({
-  oppfyllerInngangsvilkar,
-  inngangsvilkaar,
-  landkoder,
-  behandlingstema,
-  behandlingHarPeriodeOgLand,
-}: VarslerProps) => {
+const Varsler = ({ oppfyllerInngangsvilkar, inngangsvilkaar, landkoder, behandlingstema }: VarslerProps) => {
   const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
   const inngangsvilkaarBegrunnelseKoder = inngangsvilkaar?.begrunnelseKoder || [];
 
@@ -42,15 +35,6 @@ const Varsler = ({
   });
 
   if (Utils._isEmpty(inngangsvilkaar)) {
-    if (!behandlingHarPeriodeOgLand) {
-      return (
-        <ul className="betingelser__liste">
-          <li className={oppfyllerInngangsvilkarCl}>
-            Det mangler periode og/eller land. Fyll disse inn i sidemenyen nedenfor og oppdater registeropplysninger.
-          </li>
-        </ul>
-      );
-    }
     return (
       <ul className="betingelser__liste">
         <li className={oppfyllerInngangsvilkarCl}>Teknisk feil, finner ingen inngangsvilkår.</li>
