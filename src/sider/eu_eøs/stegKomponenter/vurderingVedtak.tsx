@@ -36,6 +36,9 @@ import EnkeltDato from "../../../felleskomponenter/enkeltDato";
 
 const { FO_883_2004_ART11_3A } = MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004;
 const { FO_883_2004_ART11_4_1 } = MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004;
+const { KONV_EFTA_STORBRITANNIA_ART13_3A } = MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia;
+const { KONV_EFTA_STORBRITANNIA_ART13_4_1 } =
+  MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_konv_efta_storbritannia;
 const { EU_EOS } = MKV.Koder.sakstyper;
 const { FØRSTEGANGSVEDTAK } = MKV.Koder.vedtakstyper;
 const { FASTSATT_LOVVALGSLAND } = MKV.Koder.behandlinger.behandlingsresultattyper;
@@ -63,6 +66,12 @@ const finnSedMottakerLand = (
   tilleggBestemmelse: string
 ) => {
   if (lovvalgsbestemmelse === FO_883_2004_ART11_3A && tilleggBestemmelse === FO_883_2004_ART11_4_1) {
+    return bostedsland.kode;
+  }
+  if (
+    lovvalgsbestemmelse === KONV_EFTA_STORBRITANNIA_ART13_3A &&
+    tilleggBestemmelse === KONV_EFTA_STORBRITANNIA_ART13_4_1
+  ) {
     return bostedsland.kode;
   }
   return arbeidsland[0]?.kode;
