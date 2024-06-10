@@ -24,17 +24,17 @@ export const VilkarSelector = createSelector(
 
 export const vesentligVirksomhetSelector = createSelector(
   (state) => VilkarSelector(state),
-  (alleVilkar) => finnVilkår(alleVilkar, MKV.Koder.vilkaar.ART12_1_VESENTLIG_VIRKSOMHET)
+  (alleVilkar) => finnVilkår(alleVilkar, MKV.Koder.vilkaar.VESENTLIG_VIRKSOMHET)
 );
 
 export const normaltDriverVirksomhetSelector = createSelector(
   (state) => VilkarSelector(state),
-  (alleVilkar) => finnVilkår(alleVilkar, MKV.Koder.vilkaar.ART12_2_NORMALT_DRIVER_VIRKSOMHET)
+  (alleVilkar) => finnVilkår(alleVilkar, MKV.Koder.vilkaar.NORMALT_DRIVER_VIRKSOMHET)
 );
 
 export const forutgaendeMedlemskap = createSelector(
   (state) => VilkarSelector(state),
-  (alleVilkar) => finnVilkår(alleVilkar, MKV.Koder.vilkaar.ART12_1_FORUTGAAENDE_MEDLEMSKAP)
+  (alleVilkar) => finnVilkår(alleVilkar, MKV.Koder.vilkaar.FORUTGAAENDE_MEDLEMSKAP)
 );
 
 export const art11_3A = createSelector(

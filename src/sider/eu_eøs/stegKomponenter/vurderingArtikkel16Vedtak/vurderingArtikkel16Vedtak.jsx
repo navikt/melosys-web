@@ -30,31 +30,37 @@ import VurderingArtikkel16VedtakSchema from "./vurderingArtikkel16VedtakSchema";
 import "./vurderingArtikkel16Vedtak.css";
 
 export const VurderingArtikkel16VedtakBegrunnelser = ({
-  art12_1_begrunnelser,
-  art12_2_begrunnelser,
+  valgte_utsendt_arbeidstaker_begrunnelser,
+  valgte_utsendt_naeringsdrivende_begrunnelser,
   vilkarBegrunnelser,
 }) => {
   const muligeVirksomhetBegrunnelser = [
-    ...MKV.KTObjects.begrunnelser.art12_2_normalt_virksomhet,
-    ...MKV.KTObjects.begrunnelser.art12_1_vesentlig_virksomhet,
-    ...MKV.KTObjects.begrunnelser.art12_1_forutgaaende_medl,
+    ...MKV.KTObjects.begrunnelser.normalt_virksomhet_begrunnelser,
+    ...MKV.KTObjects.begrunnelser.vesentlig_virksomhet_begrunnelser,
+    ...MKV.KTObjects.begrunnelser.forutgaaende_medl_begrunnelser,
     ...MKV.KTObjects.begrunnelser.bosted,
   ];
 
   return (
     <Fragment>
-      {art12_1_begrunnelser.length > 0 && (
+      {valgte_utsendt_arbeidstaker_begrunnelser.length > 0 && (
         <Begrunnelser
           label="Søkeren fyller ikke kriteriene for artikkel 12 nr. 1."
-          valgteBegrunnelser={[...art12_1_begrunnelser, ...vilkarBegrunnelser]}
-          muligeBegrunnelser={[...MKV.KTObjects.begrunnelser.art12_1_begrunnelser, ...muligeVirksomhetBegrunnelser]}
+          valgteBegrunnelser={[...valgte_utsendt_arbeidstaker_begrunnelser, ...vilkarBegrunnelser]}
+          muligeBegrunnelser={[
+            ...MKV.KTObjects.begrunnelser.utsendt_arbeidstaker_begrunnelser,
+            ...muligeVirksomhetBegrunnelser,
+          ]}
         />
       )}
-      {art12_2_begrunnelser.length > 0 && (
+      {valgte_utsendt_naeringsdrivende_begrunnelser.length > 0 && (
         <Begrunnelser
           label="Søkeren fyller ikke kriteriene for artikkel 12 nr. 2."
-          valgteBegrunnelser={[...art12_2_begrunnelser, ...vilkarBegrunnelser]}
-          muligeBegrunnelser={[...MKV.KTObjects.begrunnelser.art12_2_begrunnelser, ...muligeVirksomhetBegrunnelser]}
+          valgteBegrunnelser={[...valgte_utsendt_naeringsdrivende_begrunnelser, ...vilkarBegrunnelser]}
+          muligeBegrunnelser={[
+            ...MKV.KTObjects.begrunnelser.utsendt_naeringsdrivende_begrunnelser,
+            ...muligeVirksomhetBegrunnelser,
+          ]}
         />
       )}
       <Begrunnelser
@@ -66,8 +72,8 @@ export const VurderingArtikkel16VedtakBegrunnelser = ({
 };
 
 VurderingArtikkel16VedtakBegrunnelser.propTypes = {
-  art12_1_begrunnelser: PT.arrayOf(PT.string).isRequired,
-  art12_2_begrunnelser: PT.arrayOf(PT.string).isRequired,
+  valgte_utsendt_arbeidstaker_begrunnelser: PT.arrayOf(PT.string).isRequired,
+  valgte_utsendt_naeringsdrivende_begrunnelser: PT.arrayOf(PT.string).isRequired,
   vilkarBegrunnelser: PT.arrayOf(PT.string).isRequired,
 };
 
@@ -352,8 +358,8 @@ export const VurderingArtikkel16Vedtak = ({
   behandlingID,
   anmodningsperiode,
   anmodningsperiodesvar,
-  art_12_1_begrunnelser,
-  art_12_2_begrunnelser,
+  valgte_utsendt_arbeidstaker_begrunnelser,
+  valgte_utsendt_naeringsdrivende_begrunnelser,
   formIsValid,
   formValues,
   vilkarBegrunnelser,
@@ -434,6 +440,7 @@ export const VurderingArtikkel16Vedtak = ({
       setVedtakPending(false);
     }
   }
+
   const debouncedKontrollerBehandling = useCallback(Utils._debounce(kontroller, 500), [kontrollerFerdigbehandling]);
 
   useEffect(() => {
@@ -463,12 +470,12 @@ export const VurderingArtikkel16Vedtak = ({
   const renderBegrunnelser = useCallback(
     () => (
       <VurderingArtikkel16VedtakBegrunnelser
-        art12_1_begrunnelser={art_12_1_begrunnelser}
-        art12_2_begrunnelser={art_12_2_begrunnelser}
+        valgte_utsendt_arbeidstaker_begrunnelser={valgte_utsendt_arbeidstaker_begrunnelser}
+        valgte_utsendt_naeringsdrivende_begrunnelser={valgte_utsendt_naeringsdrivende_begrunnelser}
         vilkarBegrunnelser={vilkarBegrunnelser}
       />
     ),
-    [art_12_1_begrunnelser, art_12_2_begrunnelser, vilkarBegrunnelser]
+    [valgte_utsendt_arbeidstaker_begrunnelser, valgte_utsendt_naeringsdrivende_begrunnelser, vilkarBegrunnelser]
   );
 
   const renderFritekstFelt = useCallback(
@@ -584,8 +591,8 @@ VurderingArtikkel16Vedtak.propTypes = {
   tilbake: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
   vilkarBegrunnelser: PT.arrayOf(PT.string).isRequired,
-  art_12_1_begrunnelser: PT.arrayOf(PT.string).isRequired,
-  art_12_2_begrunnelser: PT.arrayOf(PT.string).isRequired,
+  valgte_utsendt_arbeidstaker_begrunnelser: PT.arrayOf(PT.string).isRequired,
+  valgte_utsendt_naeringsdrivende_begrunnelser: PT.arrayOf(PT.string).isRequired,
   touch: PT.func.isRequired,
   formValues: PT.object,
   harValgtNorskArbeidsgiver: PT.bool.isRequired,
@@ -658,8 +665,8 @@ const mapStateToProps = (state) => {
     anmodningsperiode: anmodningsperioderSelectors.AnmodningsperiodeSelector(state),
     anmodningsperiodesvar: anmodningsperiodesvarSelectors.AnmodningsperiodesvarSelector(state),
     vilkarBegrunnelser: vilkarSelectors.vilkarBegrunnelserSelector(state),
-    art_12_1_begrunnelser: vilkarSelectors.art12_1_begrunnelserSelector(state),
-    art_12_2_begrunnelser: vilkarSelectors.art12_2_begrunnelserSelector(state),
+    valgte_utsendt_arbeidstaker_begrunnelser: vilkarSelectors.art12_1_begrunnelserSelector(state),
+    valgte_utsendt_naeringsdrivende_begrunnelser: vilkarSelectors.art12_2_begrunnelserSelector(state),
     mottatteOpplysningerStatus: mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector(state),
     formIsValid: isValid(KV.Form.ARTIKKEL_16_1_VEDTAK)(state),
     formValues: getFormValues(KV.Form.ARTIKKEL_16_1_VEDTAK)(state),

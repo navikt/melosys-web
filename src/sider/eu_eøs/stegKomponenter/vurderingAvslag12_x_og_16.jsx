@@ -32,8 +32,8 @@ const skalViseSendOrienteringsbrev = (sakstype, behandlingstema) =>
   ].includes(behandlingstema);
 
 const VurderingAvslag12_x_og_16 = ({
-  valgte_art_12_1_begrunnelser,
-  valgte_art_12_2_begrunnelser,
+  valgte_utsendt_arbeidstaker_begrunnelser,
+  valgte_utsendt_naeringsdrivende_begrunnelser,
   valgte_art_16_1_begrunnelser,
   art16_1_fritekst,
   vilkarBegrunnelser,
@@ -79,9 +79,9 @@ const VurderingAvslag12_x_og_16 = ({
   }
 
   const muligeVirksomhetBegrunnelser = [
-    ...MKV.KTObjects.begrunnelser.art12_2_normalt_virksomhet,
-    ...MKV.KTObjects.begrunnelser.art12_1_vesentlig_virksomhet,
-    ...MKV.KTObjects.begrunnelser.art12_1_forutgaaende_medl,
+    ...MKV.KTObjects.begrunnelser.normalt_virksomhet_begrunnelser,
+    ...MKV.KTObjects.begrunnelser.vesentlig_virksomhet_begrunnelser,
+    ...MKV.KTObjects.begrunnelser.forutgaaende_medl_begrunnelser,
     ...MKV.KTObjects.begrunnelser.bosted,
   ];
 
@@ -145,25 +145,31 @@ const VurderingAvslag12_x_og_16 = ({
   return (
     <div>
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Avslag</Nav.Typo.Innholdstittel>
-      {valgte_art_12_1_begrunnelser.length > 0 && (
+      {valgte_utsendt_arbeidstaker_begrunnelser.length > 0 && (
         <Begrunnelser
           label="Søkeren fyller ikke kriteriene for artikkel 12. nr. 1:"
-          valgteBegrunnelser={[...valgte_art_12_1_begrunnelser, ...vilkarBegrunnelser]}
-          muligeBegrunnelser={[...MKV.KTObjects.begrunnelser.art12_1_begrunnelser, ...muligeVirksomhetBegrunnelser]}
+          valgteBegrunnelser={[...valgte_utsendt_arbeidstaker_begrunnelser, ...vilkarBegrunnelser]}
+          muligeBegrunnelser={[
+            ...MKV.KTObjects.begrunnelser.utsendt_arbeidstaker_begrunnelser,
+            ...muligeVirksomhetBegrunnelser,
+          ]}
         />
       )}
-      {valgte_art_12_2_begrunnelser.length > 0 && (
+      {valgte_utsendt_naeringsdrivende_begrunnelser.length > 0 && (
         <Begrunnelser
           label="Søkeren fyller ikke kriteriene for artikkel 12, nr. 2:"
-          valgteBegrunnelser={[...valgte_art_12_2_begrunnelser, ...vilkarBegrunnelser]}
-          muligeBegrunnelser={[...MKV.KTObjects.begrunnelser.art12_2_begrunnelser, ...muligeVirksomhetBegrunnelser]}
+          valgteBegrunnelser={[...valgte_utsendt_naeringsdrivende_begrunnelser, ...vilkarBegrunnelser]}
+          muligeBegrunnelser={[
+            ...MKV.KTObjects.begrunnelser.utsendt_naeringsdrivende_begrunnelser,
+            ...muligeVirksomhetBegrunnelser,
+          ]}
         />
       )}
       {(valgte_art_16_1_begrunnelser.length > 0 || art16_1_fritekst) && (
         <Begrunnelser
           label="Søkeren fyller ikke kriteriene for artikkel 16, nr. 1:"
           valgteBegrunnelser={valgte_art_16_1_begrunnelser}
-          muligeBegrunnelser={MKV.KTObjects.begrunnelser.art16_1_avslag}
+          muligeBegrunnelser={MKV.KTObjects.begrunnelser.avslag_anmodning_begrunnelser}
           fritekst={art16_1_fritekst}
         />
       )}
@@ -202,8 +208,8 @@ const VurderingAvslag12_x_og_16 = ({
 };
 
 VurderingAvslag12_x_og_16.propTypes = {
-  valgte_art_12_1_begrunnelser: PT.array.isRequired,
-  valgte_art_12_2_begrunnelser: PT.array.isRequired,
+  valgte_utsendt_arbeidstaker_begrunnelser: PT.array.isRequired,
+  valgte_utsendt_naeringsdrivende_begrunnelser: PT.array.isRequired,
   valgte_art_16_1_begrunnelser: PT.array.isRequired,
   art16_1_fritekst: PT.string,
   vilkarBegrunnelser: PT.array.isRequired,
@@ -244,8 +250,8 @@ const VurderingAvslagArtikkel12Og16Form = reduxForm({
 })(VurderingAvslag12_x_og_16);
 
 const mapStateToProps = (state) => ({
-  valgte_art_12_1_begrunnelser: VilkarSelectors.art12_1_begrunnelserSelector(state),
-  valgte_art_12_2_begrunnelser: VilkarSelectors.art12_2_begrunnelserSelector(state),
+  valgte_utsendt_arbeidstaker_begrunnelser: VilkarSelectors.art12_1_begrunnelserSelector(state),
+  valgte_utsendt_naeringsdrivende_begrunnelser: VilkarSelectors.art12_2_begrunnelserSelector(state),
   valgte_art_16_1_begrunnelser: VilkarSelectors.art16_1_begrunnelserSelector(state),
   art16_1_fritekst: VilkarSelectors.art16_1_fritekstSelector(state),
   vilkarBegrunnelser: VilkarSelectors.vilkarBegrunnelserSelector(state),

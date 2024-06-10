@@ -10,7 +10,7 @@ class NormaltDriverVirksomhet extends Steg {
     this.kriterier = [
       {
         exec: (avklartefakta, alleVilkar) =>
-          erVilkarOppfylt(MKV.Koder.vilkaar.ART12_2_NORMALT_DRIVER_VIRKSOMHET, alleVilkar) !== undefined,
+          erVilkarOppfylt(MKV.Koder.vilkaar.NORMALT_DRIVER_VIRKSOMHET, alleVilkar) !== undefined,
         nesteSteg: STEG.ARTIKKEL_12_2,
       },
     ];
@@ -20,14 +20,11 @@ class NormaltDriverVirksomhet extends Steg {
     this.komponent = VurderingNormaltDriverVirksomhet;
     this.samleRelevanteData = (_propsLight) => ({
       valgteVirksomheter: _propsLight.valgteVirksomheter,
-      begrunnelser: _propsLight.begrunnelser.art12_2_normalt_virksomhet,
+      begrunnelser: _propsLight.begrunnelser.normalt_virksomhet_begrunnelser,
       redigerbart: _propsLight.generiskStegRedigerbart,
     });
     this.beregnRelevantUI = (_propsLight) => {
-      const normaltDriverVirksomhet = hentVilkar(
-        MKV.Koder.vilkaar.ART12_2_NORMALT_DRIVER_VIRKSOMHET,
-        _propsLight.vilkar
-      );
+      const normaltDriverVirksomhet = hentVilkar(MKV.Koder.vilkaar.NORMALT_DRIVER_VIRKSOMHET, _propsLight.vilkar);
       const harAvklaring =
         normaltDriverVirksomhet.oppfylt === true ||
         (normaltDriverVirksomhet.oppfylt === false && normaltDriverVirksomhet.begrunnelseKoder.length > 0);

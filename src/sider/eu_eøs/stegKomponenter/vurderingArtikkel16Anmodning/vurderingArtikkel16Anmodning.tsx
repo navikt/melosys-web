@@ -43,8 +43,8 @@ import { useFeatureToggle } from "../../../../featuretoggle";
 import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../../featuretoggle/toggleNavn";
 
 const { KONV_EFTA_STORBRITANNIA_ART18_1 } = MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia;
+const { SAERLIG_GRUNN } = MKV.Koder.begrunnelser.anmodning_begrunnelser;
 const { FO_883_2004_ART16_1 } = MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004;
-const { SAERLIG_GRUNN } = MKV.Koder.begrunnelser.art16_1_anmodning;
 const { BRUKER, UTENLANDSK_TRYGDEMYNDIGHET } = MKV.Koder.mottakerroller;
 const { ORIENTERING_ANMODNING_UNNTAK, ANMODNING_UNNTAK } = MKV.Koder.brev.produserbaredokumenter;
 
