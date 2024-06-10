@@ -1,4 +1,5 @@
 @import (reference) "~nav-frontend-core/less/_variabler";
+@import "../../../../../constants.less";
 
 .familiemedlemmer {
   &__fra-register-etikett {
@@ -6,7 +7,11 @@
   }
 
   .menypanel__table-wrapper {
-    margin-bottom: 1rem;
+    margin-bottom: 2.5rem;
+  }
+
+  &__understrek {
+    border-bottom: 1px solid @gray-dark;
   }
 
   &__undertittel {
@@ -29,4 +34,11 @@
   &__vis-familieforhold-knapp {
     margin: 1rem 0;
   }
+  &__padding-bottom {
+    padding-bottom: 2rem;
+  }
+}
+
+.mellomrom-ikon-tekst {
+  margin-right: 0.2rem;
 }

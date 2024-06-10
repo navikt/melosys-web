@@ -1,9 +1,8 @@
 import { ElementType, MouseEvent } from "react";
 import { FieldArrayFieldsProps } from "redux-form";
 import classNames from "classnames";
-
-import * as Mui from "../../../ui";
-import * as Ikoner from "../../../../resources/images";
+import { Button } from "@navikt/ds-react";
+import { PlusCircleIcon } from "@navikt/aksel-icons";
 
 import EditerbartElement, { SymbolsynlighetConfig } from "../editerbartElement";
 
@@ -93,15 +92,17 @@ function EnRedigeringsKnappListe<T>({
             <IngenDataKomponent />
           </div>
           {redigerbart && (
-            <Mui.Lenkeknapp
+            <Button
+              size="small"
+              variant="tertiary"
               onClick={() => {
                 apneRedigering();
                 leggTil();
               }}
-              ikon={Ikoner.Add}
+              icon={<PlusCircleIcon />}
             >
               {leggTilTekst}
-            </Mui.Lenkeknapp>
+            </Button>
           )}
         </>
       )
@@ -152,9 +153,9 @@ function EnRedigeringsKnappListe<T>({
           })}
           {redigerbart && kanLeggeTilFlereElementer && (
             <div>
-              <Mui.Lenkeknapp onClick={leggTil} ikon={Ikoner.Add}>
+              <Button size="small" variant="tertiary" onClick={leggTil} icon={<PlusCircleIcon />}>
                 {leggTilTekst}
-              </Mui.Lenkeknapp>
+              </Button>
             </div>
           )}
         </div>
