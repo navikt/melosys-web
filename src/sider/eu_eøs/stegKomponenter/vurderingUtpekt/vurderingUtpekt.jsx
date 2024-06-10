@@ -34,7 +34,7 @@ import vurderingUtpektSchema from "./vurderingUtpektSchema";
 
 import "./vurderingUtpekt.css";
 
-const lovvalgsbestemmelserStottetAvBrevVedNorgeUtpekt = MKV.Kodekombinasjoner.alleLovvalg.filter(
+const lovvalgsbestemmelserStottetAvBrevVedNorgeUtpekt = MKV.Kodekombinasjoner.alleEØSLovvalg.filter(
   ({ kode }) =>
     kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1A ||
     kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B1 ||
@@ -110,7 +110,7 @@ export const VurderingUtpekt = ({
   const lovvalgsbestemmelser =
     behandlingstema === MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE
       ? lovvalgsbestemmelserStottetAvBrevVedNorgeUtpekt
-      : MKV.Kodekombinasjoner.alleLovvalg;
+      : MKV.Kodekombinasjoner.alleEØSLovvalg;
 
   return (
     <form className="vurderingutpekt" onSubmit={handleSubmit}>

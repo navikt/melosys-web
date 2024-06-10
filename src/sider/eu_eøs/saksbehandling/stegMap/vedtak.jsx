@@ -37,6 +37,8 @@ class Vedtak extends Steg {
 
       const visSedLenkeForLovvalgsbestemmelser = [
         MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_1,
+        MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia.KONV_EFTA_STORBRITANNIA_ART14_1,
+        MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia.KONV_EFTA_STORBRITANNIA_ART16_1,
       ];
 
       if (
@@ -52,17 +54,21 @@ class Vedtak extends Steg {
         });
       }
 
-      const erArtikkel12Lovvalgsbestemmelse = (lovvalgKTObject) => {
+      const erArtikkelForUtsending = (lovvalgKTObject) => {
         if (!lovvalgKTObject) return false;
 
-        return (
-          lovvalgKTObject.kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_2 ||
-          lovvalgKTObject.kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_1
-        );
+        return [
+          MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_1,
+          MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_2,
+          MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia.KONV_EFTA_STORBRITANNIA_ART14_1,
+          MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia.KONV_EFTA_STORBRITANNIA_ART14_2,
+          MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia.KONV_EFTA_STORBRITANNIA_ART16_1,
+          MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia.KONV_EFTA_STORBRITANNIA_ART16_3,
+        ].includes(lovvalgKTObject.kode);
       };
 
       if (formValues.kreverMottakerinstitusjon) {
-        if (erArtikkel12Lovvalgsbestemmelse(lovvalgSomKodeTerm)) {
+        if (erArtikkelForUtsending(lovvalgSomKodeTerm)) {
           pdfDokumenter.push({
             sedType: EKV.Koder.sedtyper.A009,
             sedData: {
