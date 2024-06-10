@@ -1,4 +1,4 @@
-import MKV from "../melosyskodeverk";
+import MKV from "./index";
 import * as KV from "../kodeverk";
 
 export const erBehandlingAvSed = (sakstype, behandlingstema) => {
