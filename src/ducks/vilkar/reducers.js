@@ -80,7 +80,7 @@ export default function reducer(state = initialState, action = {}) {
           action.data.vilkar.vesentligVirksomhet_begrunnelser
         ),
         vilkarTilObjekt(
-          MKV.Koder.vilkaar.FORUTGAAENDE_MEDLEMSKAP,
+          MKV.Koder.vilkaar.NORMALT_DRIVER_VIRKSOMHET,
           action.data.vilkar.normaltDriverVirksomhet,
           action.data.vilkar.normaltDriverVirksomhet_begrunnelser
         ),
@@ -88,7 +88,7 @@ export default function reducer(state = initialState, action = {}) {
         vilkarTilObjekt(
           MKV.Koder.vilkaar.FO_883_2004_ART12_1,
           action.data.vilkar.art12_1,
-          action.data.vilkar.valgte_utsendt_arbeidstaker_begrunnelser
+          action.data.vilkar.art12_1_begrunnelser
         ),
         vilkarTilObjekt(
           MKV.Koder.vilkaar.FO_883_2004_ART12_2,
