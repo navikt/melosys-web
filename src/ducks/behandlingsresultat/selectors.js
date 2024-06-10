@@ -35,7 +35,7 @@ export const VedtakstypeSelector = createSelector(
 );
 
 export const BegrunnelseKoderSelector = createSelector(
-  BehandlingsresultatSelector,
+  (state) => BehandlingsresultatSelector(state),
   (behandlingsresultat) => behandlingsresultat.begrunnelseKoder
 );
 

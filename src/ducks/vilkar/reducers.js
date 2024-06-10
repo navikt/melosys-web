@@ -70,17 +70,17 @@ export default function reducer(state = initialState, action = {}) {
       /* eslint-disable max-len */
       const vilkarArray = [
         vilkarTilObjekt(
-          MKV.Koder.vilkaar.ART12_1_FORUTGAAENDE_MEDLEMSKAP,
+          MKV.Koder.vilkaar.FORUTGAAENDE_MEDLEMSKAP,
           action.data.vilkar.forutgaendeMedlemskap,
           action.data.vilkar.forutgaendeMedlemskap_begrunnelser
         ),
         vilkarTilObjekt(
-          MKV.Koder.vilkaar.ART12_1_VESENTLIG_VIRKSOMHET,
+          MKV.Koder.vilkaar.VESENTLIG_VIRKSOMHET,
           action.data.vilkar.vesentligVirksomhet,
           action.data.vilkar.vesentligVirksomhet_begrunnelser
         ),
         vilkarTilObjekt(
-          MKV.Koder.vilkaar.ART12_2_NORMALT_DRIVER_VIRKSOMHET,
+          MKV.Koder.vilkaar.NORMALT_DRIVER_VIRKSOMHET,
           action.data.vilkar.normaltDriverVirksomhet,
           action.data.vilkar.normaltDriverVirksomhet_begrunnelser
         ),

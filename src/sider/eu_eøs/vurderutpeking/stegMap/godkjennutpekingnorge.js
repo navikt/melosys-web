@@ -34,7 +34,6 @@ class GodkjennUtpekingNorge extends Steg {
 
       return {
         redigerbart: _propsLight.generiskStegRedigerbart,
-        visAntallManederUtland: false,
         pdfDokumenter,
         harFeilmeldinger: _propsLight.harFeilmeldinger,
       };
@@ -48,8 +47,7 @@ class GodkjennUtpekingNorge extends Steg {
     };
     this.handlers = {
       tilbake: propsLight.tilgjengeligeHandlers.tilbake,
-      kontrollerFerdigbehandling: propsLight.tilgjengeligeHandlers.kontrollerFerdigbehandling,
-      validerMottatteOpplysninger: this._propsLight.tilgjengeligeHandlers.validerMottatteOpplysninger,
+      validerMottatteOpplysninger: propsLight.tilgjengeligeHandlers.validerMottatteOpplysninger,
     };
     this._status = FANE_STATUS.OK;
   }

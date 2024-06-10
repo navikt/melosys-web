@@ -33,13 +33,10 @@ const EnkeltVilkaar = (props) => {
             onChange={radioEndringHandler}
             defaultValue={vilkaar.oppfylt}
             disabled={!redigerbart}
+            name={vilkaarKode}
           >
-            <Nav.Radio name={vilkaarKode} value>
-              {labelOppfylt}
-            </Nav.Radio>
-            <Nav.Radio name={vilkaarKode} value={false}>
-              {labelIkkeOppfylt}
-            </Nav.Radio>
+            <Nav.Radio value>{labelOppfylt}</Nav.Radio>
+            <Nav.Radio value={false}>{labelIkkeOppfylt}</Nav.Radio>
           </Nav.RadioGroup>
         </Nav.Column>
       </Nav.Row>

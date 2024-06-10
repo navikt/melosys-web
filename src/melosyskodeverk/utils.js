@@ -1,4 +1,5 @@
-import MKV from "./filtrertmelosyskodeverk";
+import MKV from "./index";
+import * as KV from "../kodeverk";
 
 export const erBehandlingAvSed = (sakstype, behandlingstema) => {
   switch (behandlingstema) {
@@ -13,6 +14,9 @@ export const erBehandlingAvSed = (sakstype, behandlingstema) => {
   }
 };
 
+export const lovvalgsbestemmelseTilObjekt = (bestemmelseKode) => {
+  return KV.kodeTilObjekt(bestemmelseKode, MKV.Kodekombinasjoner.alleLovvalg);
+};
 export const enesteLandErStorbritannia = (landkoder) =>
   landkoder?.length === 1 && landkoder[0] === MKV.Koder.landkoder.GB;
 

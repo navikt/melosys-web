@@ -7,12 +7,22 @@ export const alleLovvalg: KTObject[] = [
   ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004,
   ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_987_2009,
   ...MKV.KTObjects.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004,
+  ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia,
+  ...MKV.KTObjects.lovvalgsbestemmelser.tilleggsbestemmelser_konv_efta_storbritannia,
+];
+
+export const alleEØSLovvalg: KTObject[] = [
+  ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004,
+  ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_987_2009,
+  ...MKV.KTObjects.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004,
 ];
 
 const bestemmelserIkkeRelevanteForUnntak: string[] = [
   MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_1,
   MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3B,
   MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3C,
+  MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART11_4_1,
+  MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_4_2,
   MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_1,
   MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_2,
   MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART15,
@@ -27,7 +37,7 @@ const bestemmelserIkkeRelevanteForUnntak: string[] = [
 const kodeverkComparator = ({ kode: k1 }: KTObject, { kode: k2 }: KTObject) => k1.localeCompare(k2);
 
 export const unntaksbestemmelser: KTObject[] = Utils._uniqBy(
-  [...alleLovvalg].filter(({ kode }) => !bestemmelserIkkeRelevanteForUnntak.includes(kode)),
+  [...alleEØSLovvalg].filter(({ kode }) => !bestemmelserIkkeRelevanteForUnntak.includes(kode)),
   ({ kode }) => kode
 ).sort(kodeverkComparator);
 
