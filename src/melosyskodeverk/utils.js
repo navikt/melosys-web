@@ -1,4 +1,5 @@
 import MKV from "./filtrertmelosyskodeverk";
+import * as KV from "../kodeverk";
 
 export const erBehandlingAvSed = (sakstype, behandlingstema) => {
   switch (behandlingstema) {
@@ -13,6 +14,12 @@ export const erBehandlingAvSed = (sakstype, behandlingstema) => {
   }
 };
 
+export const lovvalgsbestemmelseTilObjekt = (bestemmelseKode) => {
+  return (
+    KV.kodeTilObjekt(bestemmelseKode, MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004) ??
+    KV.kodeTilObjekt(bestemmelseKode, MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia)
+  );
+};
 export const enesteLandErStorbritannia = (landkoder) =>
   landkoder?.length === 1 && landkoder[0] === MKV.Koder.landkoder.GB;
 

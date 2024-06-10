@@ -1,4 +1,4 @@
-import MKV from "../../../../melosyskodeverk";
+import MKV, { MKVUtils } from "../../../../melosyskodeverk";
 import * as Nav from "../../../../navFrontend";
 import {
   konverterLovvalgsbestemmelseTilStegData,
@@ -32,8 +32,6 @@ import {
   hentRelevantUtsendelseArtikkel14,
   hentRelevantUtsendelseArtikkel16,
   initializeVedtakValg,
-  kodeTilObjektEØS,
-  kodeTilObjektKonvGB,
   VedtakValg,
 } from "./bestemmelserUtils";
 import { anmodningsperioderSelectors } from "../../../../ducks/anmodningsperioder";
@@ -184,15 +182,20 @@ export const Bestemmelser = ({
     if (innvilgelse) {
       return visStorbritanniaKonvensjon
         ? [
-            kodeTilObjektKonvGB(erSokkel ? KONV_EFTA_STORBRITANNIA_ART16 : KONV_EFTA_STORBRITANNIA_ART14),
-            kodeTilObjektEØS(FO_883_2004_ART12),
+            MKVUtils.lovvalgsbestemmelseTilObjekt(
+              erSokkel ? KONV_EFTA_STORBRITANNIA_ART16 : KONV_EFTA_STORBRITANNIA_ART14
+            ),
+            MKVUtils.lovvalgsbestemmelseTilObjekt(FO_883_2004_ART12),
           ]
-        : [kodeTilObjektEØS(FO_883_2004_ART12)];
+        : [MKVUtils.lovvalgsbestemmelseTilObjekt(FO_883_2004_ART12)];
     }
     if (anmodningOmUnntak) {
       return visStorbritanniaKonvensjon
-        ? [kodeTilObjektKonvGB(KONV_EFTA_STORBRITANNIA_ART18_1), kodeTilObjektEØS(FO_883_2004_ART16_1)]
-        : [kodeTilObjektEØS(FO_883_2004_ART16_1)];
+        ? [
+            MKVUtils.lovvalgsbestemmelseTilObjekt(KONV_EFTA_STORBRITANNIA_ART18_1),
+            MKVUtils.lovvalgsbestemmelseTilObjekt(FO_883_2004_ART16_1),
+          ]
+        : [MKVUtils.lovvalgsbestemmelseTilObjekt(FO_883_2004_ART16_1)];
     }
     return [];
   };

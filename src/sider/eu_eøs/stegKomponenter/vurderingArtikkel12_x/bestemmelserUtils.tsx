@@ -1,6 +1,5 @@
 import * as KV from "../../../../kodeverk";
 import MKV from "../../../../melosyskodeverk";
-import { KTObject } from "@navikt/melosys-kodeverk";
 import { Vilkaar } from "../../../../services/modules/vilkar";
 
 const {
@@ -50,11 +49,6 @@ export const initializeVedtakValg = (
   }
   return undefined;
 };
-
-export const kodeTilObjektKonvGB = (bestemmelseKode: string): KTObject =>
-  KV.kodeTilObjekt(bestemmelseKode, MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia);
-export const kodeTilObjektEØS = (bestemmelseKode: string): KTObject =>
-  KV.kodeTilObjekt(bestemmelseKode, MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004);
 
 export const begrunnelseKoderForSokkelStorbritannia: string[] = [
   // artikler for arbeidsgiver:
