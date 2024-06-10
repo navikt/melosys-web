@@ -7,7 +7,7 @@ import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysn
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { vilkarOperations } from "../../../../ducks/vilkar";
 import "./vurderingInngang.css";
-import { useEffect, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import Varsler from "./varsler";
 
 type VurderingInngangProps = {
@@ -24,7 +24,7 @@ export const VurderingInngang = ({
   inngangsvilkaar,
 }: VurderingInngangProps) => {
   const dispatch = useDispatch();
-  const [feil, setFeil] = useState<string | undefined>(undefined);
+  const [feil, setFeil] = useState<ReactElement | undefined>(undefined);
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const behandlingHarPeriodeOgLand = useSelector(mottatteOpplysningerSelectors.HarPeriodeOgLandSelector);
@@ -34,15 +34,32 @@ export const VurderingInngang = ({
   useEffect(() => {
     const flereEnnEttLand = landkoder.length > 1 || flereLandUkjentHvilke;
 
-    if (flereEnnEttLand && !MKVUtils.kanHaFlereSoknadsland(behandlingstema)) {
+    if (!behandlingHarPeriodeOgLand) {
       setFeil(
-        "Du har valgt et behandlingstema som kun tillater ett arbeidsland. " +
-          "Du må fjerne land under “Periode og land” i sidemenyen eller endre behandlingstema."
+        <>
+          <Nav.Typo.Element>Det mangler periode og/eller land</Nav.Typo.Element>
+          <ul>
+            <li>Du må fylle disse inn under “Periode og land” i sidemenyen og oppdatere registeropplysninger.</li>
+          </ul>
+        </>
+      );
+    } else if (flereEnnEttLand && !MKVUtils.kanHaFlereSoknadsland(behandlingstema)) {
+      setFeil(
+        <>
+          <Nav.Typo.Element>Du har valgt et behandlingstema som kun tillater ett arbeidsland</Nav.Typo.Element>
+          <ul>
+            <li>Du må fjerne land under “Periode og land” i sidemenyen eller endre behandlingstema.</li>
+          </ul>
+        </>
       );
     } else if (!flereEnnEttLand && behandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND) {
       setFeil(
-        "Det er påkrevd med to eller flere land for valgt behandlingstema. " +
-          "Du må legge til land under “Periode og land” i sidemenyen eller endre behandlingstema."
+        <>
+          <Nav.Typo.Element>Det er påkrevd med to eller flere land for valgt behandlingstema</Nav.Typo.Element>
+          <ul>
+            <li>Du må legge til land under “Periode og land” i sidemenyen eller endre behandlingstema.</li>
+          </ul>
+        </>
       );
     } else {
       setFeil(undefined);
@@ -66,9 +83,12 @@ export const VurderingInngang = ({
         inngangsvilkaar={inngangsvilkaar}
         landkoder={landkoder}
         behandlingstema={behandlingstema}
-        behandlingHarPeriodeOgLand={behandlingHarPeriodeOgLand}
       />
-      {feil && <Nav.Alert variant="error">{feil}</Nav.Alert>}
+      {feil && (
+        <Nav.Alert variant="error" className="periode_land_feil">
+          {feil}
+        </Nav.Alert>
+      )}
       <Mui.StegKnapper
         bekreftKnappProps={{
           disabled: !redigerbart || Boolean(feil),

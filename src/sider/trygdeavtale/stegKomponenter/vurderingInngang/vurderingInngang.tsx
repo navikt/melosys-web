@@ -30,6 +30,8 @@ import { DialogboksOppfriskSak } from "../../../../felleskomponenter/dialogboks"
 import { FellesHandlersContext } from "../../../../contexts";
 import { navigeringOperations } from "../../../../ducks/navigering";
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
+import { useFeatureToggle } from "../../../../featuretoggle";
+import { MELOSYS_TRYGDEAVTALE_KOREA } from "../../../../featuretoggle/toggleNavn";
 
 interface Periode {
   fom?: string | null;
@@ -114,6 +116,7 @@ const VurderingInngang = ({
   const [initialFomTomLand, setInitialFomTomLand] = useState<{ fom?: string; tom?: string; arbeidsland?: string }>({});
   const [landUtenStøtteValgt, setLandUtenStøtteValgt] = useState(false);
   const [visOppfrisk, setVisOppfrisk] = useState(false);
+  const koreaToggleEnabled = useFeatureToggle(MELOSYS_TRYGDEAVTALE_KOREA);
 
   const skalHenteRegisteropplysninger =
     !registeropplysningerHentet ||
@@ -212,7 +215,11 @@ const VurderingInngang = ({
           >
             <LandValgSomOptions landValg={landValg} />
             {landValg && landValgUtenStøtte && <option disabled>{"\u2500"}</option>}
-            <LandValgSomOptions landValg={landValgUtenStøtte} />
+            <LandValgSomOptions
+              landValg={
+                koreaToggleEnabled ? landValgUtenStøtte : landValgUtenStøtte.filter((land) => land.kode !== "KR")
+              }
+            />
           </Skjema.Select>
         </Nav.Column>
       </Nav.Row>
