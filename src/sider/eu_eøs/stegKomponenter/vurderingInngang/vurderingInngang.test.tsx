@@ -28,6 +28,10 @@ describe("VurderingInngang", () => {
             landkoder,
             flereLandUkjentHvilke,
           },
+          periode: {
+            fom: "2020-01-01",
+            tom: "2020-12-31",
+          },
         },
       },
     },
@@ -53,7 +57,9 @@ describe("VurderingInngang", () => {
 
   describe("knapp for å gå videre i stegvelger", () => {
     it("er ikke disabled dersom redigerbart er true", () => {
-      renderWithProviders(<VurderingInngang {...props} />);
+      renderWithProviders(<VurderingInngang {...props} />, {
+        preloadedState: initialStore("", ["DK"], false),
+      });
 
       expect(screen.getByRole("button", { name: "Bekreft og fortsett" })).not.toBeDisabled();
     });
@@ -61,7 +67,9 @@ describe("VurderingInngang", () => {
     it("er disabled dersom redigerbart er false", () => {
       props.redigerbart = false;
 
-      renderWithProviders(<VurderingInngang {...props} />);
+      renderWithProviders(<VurderingInngang {...props} />, {
+        preloadedState: initialStore("", ["DK"], false),
+      });
 
       expect(screen.getByRole("button", { name: "Bekreft og fortsett" })).toBeDisabled();
     });
@@ -73,9 +81,7 @@ describe("VurderingInngang", () => {
     });
 
     expect(
-      await screen.findByText(
-        "Du har valgt et behandlingstema som kun tillater ett arbeidsland. Du må fjerne land under “Periode og land” i sidemenyen eller endre behandlingstema."
-      )
+      await screen.findByText("Du har valgt et behandlingstema som kun tillater ett arbeidsland")
     ).toBeInTheDocument();
   });
 
@@ -85,9 +91,7 @@ describe("VurderingInngang", () => {
     });
 
     expect(
-      await screen.findByText(
-        "Du har valgt et behandlingstema som kun tillater ett arbeidsland. Du må fjerne land under “Periode og land” i sidemenyen eller endre behandlingstema."
-      )
+      await screen.findByText("Du har valgt et behandlingstema som kun tillater ett arbeidsland")
     ).toBeInTheDocument();
   });
 
@@ -97,9 +101,15 @@ describe("VurderingInngang", () => {
     });
 
     expect(
-      await screen.findByText(
-        "Det er påkrevd med to eller flere land for valgt behandlingstema. Du må legge til land under “Periode og land” i sidemenyen eller endre behandlingstema."
-      )
+      await screen.findByText("Det er påkrevd med to eller flere land for valgt behandlingstema")
     ).toBeInTheDocument();
+  });
+
+  it("Viser feilmelding ved ingen valgt land", async () => {
+    renderWithProviders(<VurderingInngang {...props} />, {
+      preloadedState: initialStore("", [], false),
+    });
+
+    expect(await screen.findByText("Det mangler periode og/eller land")).toBeInTheDocument();
   });
 });

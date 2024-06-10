@@ -1,10 +1,9 @@
-import { ChangeEvent, Fragment, useEffect, useState } from "react";
+import { ChangeEvent, Fragment, useCallback, useEffect, useState } from "react";
 import { connect, ConnectedProps, useDispatch, useSelector } from "react-redux";
 import { getFormValues, InjectedFormProps, isValid, reduxForm } from "redux-form";
 // @ts-ignore
 import * as EKV from "eessi-kodeverk";
 import { v4 as uuid } from "uuid";
-import * as Api from "../../../../services/api";
 import * as Utils from "../../../../utils";
 import MKV from "../../../../melosyskodeverk";
 import * as Nav from "../../../../navFrontend";
@@ -32,7 +31,7 @@ import {
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import VurderingArtikkel16AnmodningSchema from "./vurderingArtikkel16AnmodningSchema";
 import "./vurderingArtikkel16Anmodning.css";
-import { kontrollOperations } from "../../../../ducks/kontroll";
+import { kontrollOperations, kontrollSelectors } from "../../../../ducks/kontroll";
 import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
 import TidligereMedlemskap from "./tidligereMedlemskap";
 import { Vilkaar } from "../../../../services/modules/vilkar";
@@ -45,6 +44,7 @@ import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../../featu
 
 const { KONV_EFTA_STORBRITANNIA_ART18_1 } = MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia;
 const { SAERLIG_GRUNN } = MKV.Koder.begrunnelser.anmodning_begrunnelser;
+const { FO_883_2004_ART16_1 } = MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004;
 const { BRUKER, UTENLANDSK_TRYGDEMYNDIGHET } = MKV.Koder.mottakerroller;
 const { ORIENTERING_ANMODNING_UNNTAK, ANMODNING_UNNTAK } = MKV.Koder.brev.produserbaredokumenter;
 
@@ -81,6 +81,7 @@ interface Props {
   oppdaterData: (objekt: any) => void;
   slettData: (objekt?: any) => void;
   redigerbart: boolean;
+  aktivtSteg: boolean;
   lagreVilkarHandler: () => void;
   lagreAnmodningsperioderHandler: () => Promise<void>;
   byggAnmodningsperioderHandler: () => Promise<void>;
@@ -101,6 +102,7 @@ const VurderingArtikkel16Anmodning = ({
   redigerbart,
   form,
   tilbake,
+  aktivtSteg,
 }: Props & PropsFromRedux & InjectedFormProps<FormValuesProps, Props & PropsFromRedux>) => {
   const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
   const dispatch = useDispatch();
@@ -109,18 +111,15 @@ const VurderingArtikkel16Anmodning = ({
   const [begrunnelseFeilmelding, setBegrunnelseFeilmelding] = useState<string | undefined>(undefined);
   const [fritekstFeilmelding, setFritekstFeilmelding] = useState<string | undefined>(undefined);
   const [fritekstSEDFeilmelding, setFritekstSEDFeilmelding] = useState<string | undefined>(undefined);
-  const [sendBrevFeilmelding, setSendBrevFeilmelding] = useState<string | undefined>(undefined);
   const [valgteVedlegg, setValgteVedlegg] = useState<FysiskDokument[]>([]);
-  const [harFeil, setHarFeil] = useState(false);
-  const [anmodningPending, setAnmodningPending] = useState(false);
-  const [sjekkerAdresse, setSjekkerAdresse] = useState(false);
+  const [pending, setPending] = useState(false);
 
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const anmodningsperiode = useSelector(anmodningsperioderSelectors.AnmodningsperiodeSelector);
+  const kontrollFeil = useSelector(kontrollSelectors.KontrollFeilSelector);
   const arbeidsland = useSelector(avklartefaktaSelectors.ArbeidslandKTSelector);
   const medlemskap = useSelector(behandlingerSelectors.MedlemskapSelector);
   const unntakFraBestemmelse = useSelector(anmodningsperioderSelectors.UnntakFraBestemmelseSelector);
-  const valgteVirksomheter = useSelector(avklartefaktaSelectors.AvklarteVirksomheterSelector);
   const fysiskeDokumenter = useSelector(dokumenterSelectors.AlleFysiskeDokumentSelector);
   const mottatteOpplysningerStatus = useSelector(mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector);
   const lovvalgsbestemmelse = useSelector(anmodningsperioderSelectors.LovvalgsbestemmelseSelector);
@@ -133,11 +132,7 @@ const VurderingArtikkel16Anmodning = ({
       oppdaterData(konverterLovvalgsbestemmelseTilStegData(lovvalgsbestemmelse));
     } else {
       oppdaterData(konverterVilkarTilStegData("art16_1_anmodning", unntaksvilkår));
-      oppdaterData(
-        konverterLovvalgsbestemmelseTilStegData(
-          MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1
-        )
-      );
+      oppdaterData(konverterLovvalgsbestemmelseTilStegData(FO_883_2004_ART16_1));
     }
 
     if (unntakFraBestemmelse) {
@@ -146,37 +141,22 @@ const VurderingArtikkel16Anmodning = ({
 
     return () => {
       slettData();
+      dispatch(kontrollOperations.resetKontrollFeil());
     };
   }, []);
 
-  const kontroller = () => {
-    setSjekkerAdresse(true);
-    Api.Kontroll.kontrollerAdresse({ behandlingID })
-      .then((res) => {
-        if (!Utils._isEmpty(res.kontrollfeilList)) {
-          setHarFeil(true);
-          dispatch(kontrollOperations.oppdaterKontrollFeil({ kontrollfeilList: res.kontrollfeilList }));
-        } else {
-          setHarFeil(false);
-          dispatch(kontrollOperations.resetKontrollFeil());
-        }
-        setSendBrevFeilmelding(undefined);
-        setSjekkerAdresse(false);
-      })
-      .catch(() => {
-        setHarFeil(true);
-        setSendBrevFeilmelding(
-          "En teknisk feil skjedde da adresser skulle sjekkes. Prøv igjen eller kontakt brukerstøtte hvis problemet vedvarer."
-        );
-        setSjekkerAdresse(false);
-      });
+  const kontrollerBehandling = async (data: { aktivtSteg: boolean; mottatteOpplysningerStatus: string }) => {
+    if (redigerbart && data.mottatteOpplysningerStatus === "OK" && data.aktivtSteg) {
+      setPending(true);
+      await dispatch(kontrollOperations.kontrollerAnmodningOmUnntak({ behandlingID }));
+      setPending(false);
+    }
   };
+  const debouncedKontrollerBehandling = useCallback(Utils._debounce(kontrollerBehandling, 500), []);
 
   useEffect(() => {
-    if (mottatteOpplysningerStatus === "OK" && !sjekkerAdresse) {
-      kontroller();
-    }
-  }, [mottatteOpplysningerStatus]);
+    debouncedKontrollerBehandling({ aktivtSteg, mottatteOpplysningerStatus });
+  }, [aktivtSteg, mottatteOpplysningerStatus]);
 
   const handleEndretUnntakFraBestemmelse = async (event: ChangeEvent<HTMLSelectElement>) => {
     oppdaterData(lagUnntakFraBestemmelse(event.target.value));
@@ -204,50 +184,33 @@ const VurderingArtikkel16Anmodning = ({
     lagreVilkarHandler();
   };
 
-  const validerArbeidsgivere = () => {
-    if (valgteVirksomheter.length === 1) {
-      setSendBrevFeilmelding(undefined);
-      return true;
-    }
-    setSendBrevFeilmelding(MKV.Terms.begrunnelser.kontroll_begrunnelser.IKKE_KUN_EN_VIRKSOMHET);
-    return false;
-  };
+  const erFriteksterGyldig = () => {
+    if (!unntaksvilkår.begrunnelseKoder.includes(SAERLIG_GRUNN)) return true;
 
-  const validerUnntakFraBestemmelse = () => {
-    const valid = unntakFraBestemmelse;
-    if (!valid) setLovvalgFeilmelding("Velg lovvalg");
-    return valid;
-  };
-
-  const validerBegrunnelser = () => {
-    const valid = unntaksvilkår.begrunnelseKoder.length !== 0;
-    if (!valid) setBegrunnelseFeilmelding("Velg begrunnelser");
-    return valid;
-  };
-
-  const validerFritekst = () => {
-    const begrunnelseFritekstBrevValid = unntaksvilkår.begrunnelseFritekst;
+    const begrunnelseFritekstBrevValid = Boolean(unntaksvilkår.begrunnelseFritekst);
     if (!begrunnelseFritekstBrevValid) setFritekstFeilmelding("Fyll inn fritekst");
 
-    const begrunnelseFritekstEngelskValid = unntaksvilkår.begrunnelseFritekstEngelsk;
+    const begrunnelseFritekstEngelskValid = Boolean(unntaksvilkår.begrunnelseFritekstEngelsk);
     if (!begrunnelseFritekstEngelskValid) setFritekstSEDFeilmelding("Fyll inn fritekst");
 
     return begrunnelseFritekstBrevValid && begrunnelseFritekstEngelskValid;
   };
 
-  const validerSteg = () => {
-    const arbeidsgivereValid = validerArbeidsgivere();
-    const lovvalgValid = validerUnntakFraBestemmelse();
-    const begrunnelserValid = validerBegrunnelser();
-    const fritekstValid = unntaksvilkår.begrunnelseKoder.includes(SAERLIG_GRUNN) ? validerFritekst() : true;
+  const erStegGyldig = () => {
+    const unntakFraBestemmelseErGyldig = Boolean(unntakFraBestemmelse);
+    if (!unntakFraBestemmelseErGyldig) setLovvalgFeilmelding("Velg lovvalg");
+
+    const begrunnelserErGyldig = unntaksvilkår.begrunnelseKoder.length !== 0;
+    if (!begrunnelserErGyldig) setBegrunnelseFeilmelding("Velg begrunnelser");
+
     touch("mottakerinstitusjon");
 
-    return arbeidsgivereValid && lovvalgValid && begrunnelserValid && fritekstValid && formIsValid;
+    return unntakFraBestemmelseErGyldig && begrunnelserErGyldig && erFriteksterGyldig() && formIsValid;
   };
 
   const validerStegOgLagreBehandling = async () => {
-    if (validerSteg()) {
-      setAnmodningPending(true);
+    if (erStegGyldig()) {
+      setPending(true);
       await byggAnmodningsperioderHandler();
       setLovvalgFeilmelding(undefined);
 
@@ -261,7 +224,7 @@ const VurderingArtikkel16Anmodning = ({
 
       // Anmodning-operation navigerer til forside, og komponenten kan derfor være unmountet.
       if (isMounted) {
-        setAnmodningPending(false);
+        setPending(false);
       }
     }
   };
@@ -443,7 +406,7 @@ const VurderingArtikkel16Anmodning = ({
           <>
             <Nav.Row>
               <Nav.Column xs="10">
-                <Dokumentliste behandlingID={behandlingID} dokumenter={pdfDokumenter} validateOnClick={validerSteg} />
+                <Dokumentliste behandlingID={behandlingID} dokumenter={pdfDokumenter} validateOnClick={erStegGyldig} />
               </Nav.Column>
             </Nav.Row>
 
@@ -466,18 +429,12 @@ const VurderingArtikkel16Anmodning = ({
           </>
         )}
 
-        {sendBrevFeilmelding && (
-          <Nav.Alert variant={harFeil ? "error" : "warning"} className="varsel">
-            {sendBrevFeilmelding}
-          </Nav.Alert>
-        )}
-
         <Nav.Row className="artikkel16__ekstratopp">
           <Mui.StegKnapper
             bekreftTekst="Send brevene"
             bekreftKnappProps={{
-              loading: anmodningPending,
-              disabled: !redigerbart || harFeil,
+              loading: pending,
+              disabled: !redigerbart || !Utils._isEmpty(kontrollFeil),
               onClick: validerStegOgLagreBehandling,
             }}
             tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}

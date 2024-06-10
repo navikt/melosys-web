@@ -22,7 +22,7 @@ class Artikkel16MottaSvar extends Steg {
       },
     ];
     this.id = STEG.ARTIKKEL_16_MOTTA_SVAR;
-    this.tittel = "Artikkel 16.1 Svar";
+    this.tittel = propsLight.konvensjonStorbritanniaToggleEnabled ? "Svar på anmodning" : "Artikkel 16.1 Svar";
     this.komponent = VurderingArtikkel16MottaSvar;
     this.samleRelevanteData = (_propsLight) => ({
       redigerbart: _propsLight.redigerbart,
@@ -31,10 +31,10 @@ class Artikkel16MottaSvar extends Steg {
       harAvklaring,
     });
     this.handlers = {
-      bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
+      bekreftOgFortsett: propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
       tilbake: propsLight.tilgjengeligeHandlers.tilbake,
-      oppdaterData: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, verdi),
-      slettData: (data) => this._propsLight.tilgjengeligeHandlers.slettStegData(this.id, data),
+      oppdaterData: (felt, verdi) => propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, verdi),
+      slettData: (data) => propsLight.tilgjengeligeHandlers.slettStegData(this.id, data),
     };
     this._status = FANE_STATUS.OK;
   }

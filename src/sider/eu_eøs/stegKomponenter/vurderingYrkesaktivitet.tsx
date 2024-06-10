@@ -37,10 +37,8 @@ const VurderingYrkesaktivitet = (props: VurderingYrkesaktivitetProps) => {
   } = props;
   const { skjulArbeidstakerFrilanserOgSelvstendigNaeringsdrivende, harAvklaring, yrkesaktivitet } = tilstand;
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
+  const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
 
-  const konvensjonEftaLandOgStorbritanniaToggleEnabled = useFeatureToggle(
-    MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA
-  );
   useEffect(() => {
     oppdaterData(konverterAvklartfaktaTilStegData(KV.Koder.YRKESAKTIVITET, yrkesaktivitet));
     return () => {
@@ -86,7 +84,7 @@ const VurderingYrkesaktivitet = (props: VurderingYrkesaktivitetProps) => {
         {!skjulArbeidstakerFrilanserOgSelvstendigNaeringsdrivende && (
           <Nav.Radio value={KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_OG_SELVSTENDIG}>{labels[2]}</Nav.Radio>
         )}
-        {!(konvensjonEftaLandOgStorbritanniaToggleEnabled && MKVUtils.erUtsendt(behandlingstema)) && (
+        {!(konvensjonStorbritanniaToggleEnabled && MKVUtils.erUtsendt(behandlingstema)) && (
           <Nav.Radio
             disabled={!erSoknadArbeidFlereLand}
             value={KV.Koder.VurderingYrkesaktivitetTyper.TJENESTEPERSON_NORSK_STATSFORVANTLING}
