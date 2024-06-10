@@ -1,32 +1,32 @@
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { KTObject } from "@navikt/melosys-kodeverk";
-import MKV, { MKVUtils } from "../../../melosyskodeverk";
-import * as Nav from "../../../navFrontend";
-import * as KV from "../../../kodeverk";
-import * as Utils from "../../../utils";
-import * as Mui from "../../../felleskomponenter/ui";
-import SokkelSkipListe from "../../../felleskomponenter/sokkelskipliste";
+import MKV, { MKVUtils } from "../../../../melosyskodeverk";
+import * as Nav from "../../../../navFrontend";
+import * as KV from "../../../../kodeverk";
+import * as Utils from "../../../../utils";
+import * as Mui from "../../../../felleskomponenter/ui";
+import SokkelSkipListe from "../../../../felleskomponenter/sokkelskipliste";
 import {
   konverterAvklartfaktaTilStegData,
   lagAvklartefaktaBegrunnelse,
   lagAvklartfakta,
   lagVilkaar,
   slettVilkar,
-} from "../../../felleskomponenter/stegvelger";
-import { hentFaktaVerdi } from "../../../domeneUtils";
+} from "../../../../felleskomponenter/stegvelger";
+import { hentFaktaVerdi } from "../../../../domeneUtils";
 
-import { formSelectors } from "../../../ducks/form";
+import { formSelectors } from "../../../../ducks/form";
 import "./vurderingSokkelSkip.css";
-import { Avklartfakta } from "../../../services/modules/avklartefakta";
-import { behandlingerSelectors } from "../../../ducks/behandlinger";
-import { useFeatureToggle } from "../../../featuretoggle";
-import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../featuretoggle/toggleNavn";
+import { Avklartfakta } from "../../../../services/modules/avklartefakta";
+import { behandlingerSelectors } from "../../../../ducks/behandlinger";
+import { useFeatureToggle } from "../../../../featuretoggle";
+import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../../featuretoggle/toggleNavn";
+import { Feilmelding, feilMeldingBlokkerer, finnAktivFeilmelding } from "./feilmeldinger";
 
 interface Props {
   begrunnelser: KTObject[];
   bekreftOgFortsett: () => void;
-  maritimtArbeid: string[];
   tilstand: {
     harAvklaring: boolean;
     sokkelSkipKonklusjon: Avklartfakta;
@@ -95,6 +95,14 @@ const VurderingSokkelSkip = ({
     (enkeltMaritimtArbeid) => enkeltMaritimtArbeid.enhetNavn
   );
 
+  const aktivFeilmelding = finnAktivFeilmelding(
+    sokkelSkipKonklusjon,
+    sokkelEllerSkipListe,
+    arbeidslandListe,
+    maritimtArbeid
+  );
+  const visFeilmeldinger = feilMeldingBlokkerer(aktivFeilmelding) && redigerbart;
+
   return (
     <div className="vurderingSokkelSkip">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Vurdering av sokkel eller skip</Nav.Typo.Innholdstittel>
@@ -150,9 +158,10 @@ const VurderingSokkelSkip = ({
           </Nav.Radio>
         )}
       </Nav.RadioGroup>
+      {visFeilmeldinger && <Feilmelding type={aktivFeilmelding} />}
       <Mui.StegKnapper
         bekreftKnappProps={{
-          disabled: !(redigerbart && harAvklaring),
+          disabled: !(redigerbart && harAvklaring && aktivFeilmelding === undefined),
           onClick: bekreftOgFortsett,
         }}
         tilbakeKnappProps={{
