@@ -80,7 +80,7 @@ export default function reducer(state = initialState, action = {}) {
           action.data.vilkar.vesentligVirksomhet_begrunnelser
         ),
         vilkarTilObjekt(
-          MKV.Koder.vilkaar.FORUTGAAENDE_MEDLEMSKAP,
+          MKV.Koder.vilkaar.NORMALT_DRIVER_VIRKSOMHET,
           action.data.vilkar.normaltDriverVirksomhet,
           action.data.vilkar.normaltDriverVirksomhet_begrunnelser
         ),
