@@ -1,46 +1,58 @@
 import MKV from "../../../../../melosyskodeverk";
 import { Fragment } from "react";
 import Begrunnelser from "../../../../../felleskomponenter/begrunnelser";
-import { KTObject } from "@navikt/melosys-kodeverk";
 import { useFeatureToggle } from "../../../../../featuretoggle";
 import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../../../featuretoggle/toggleNavn";
+import { useSelector } from "react-redux";
+import { vilkarSelectors } from "../../../../../ducks/vilkar";
 
 interface VedtakBegrunnelserProps {
-  art12_1_begrunnelser: KTObject[];
-  art12_2_begrunnelser: KTObject[];
-  vilkarBegrunnelser: KTObject[];
   anmodningsperiodeSvarType: string;
 }
 
-export const VedtakBegrunnelser = ({
-  art12_1_begrunnelser,
-  art12_2_begrunnelser,
-  vilkarBegrunnelser,
-  anmodningsperiodeSvarType,
-}: VedtakBegrunnelserProps) => {
+export const VedtakBegrunnelser = ({ anmodningsperiodeSvarType }: VedtakBegrunnelserProps) => {
   const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
+  const vilkarBegrunnelser = useSelector(vilkarSelectors.vilkarBegrunnelserSelector);
+  const utsendtArbeidstakerBegrunnelser = useSelector(vilkarSelectors.UtsendingsvilkårArbeidstakerBegrunnelserSelector);
+  const utsendtNaeringsdrivendeBegrunnelser = useSelector(
+    vilkarSelectors.UtsendingsvilkårNæringsdrivendeBegrunnelserSelector
+  );
 
   const muligeVirksomhetBegrunnelser = [
-    ...MKV.KTObjects.begrunnelser.art12_2_normalt_virksomhet,
-    ...MKV.KTObjects.begrunnelser.art12_1_vesentlig_virksomhet,
-    ...MKV.KTObjects.begrunnelser.art12_1_forutgaaende_medl,
+    ...MKV.KTObjects.begrunnelser.normalt_virksomhet_begrunnelser,
+    ...MKV.KTObjects.begrunnelser.vesentlig_virksomhet_begrunnelser,
+    ...MKV.KTObjects.begrunnelser.forutgaaende_medl_begrunnelser,
     ...MKV.KTObjects.begrunnelser.bosted,
   ];
 
   return (
     <Fragment>
-      {art12_1_begrunnelser.length > 0 && (
+      {utsendtArbeidstakerBegrunnelser.length > 0 && (
         <Begrunnelser
-          label="Søkeren fyller ikke kriteriene for artikkel 12 nr. 1."
-          valgteBegrunnelser={[...art12_1_begrunnelser, ...vilkarBegrunnelser]}
-          muligeBegrunnelser={[...MKV.KTObjects.begrunnelser.art12_1_begrunnelser, ...muligeVirksomhetBegrunnelser]}
+          label={
+            konvensjonStorbritanniaToggleEnabled
+              ? "Søkeren fyller ikke kriteriene for utsending av arbeidstaker"
+              : "Søkeren fyller ikke kriteriene for artikkel 12 nr. 1."
+          }
+          valgteBegrunnelser={[...utsendtArbeidstakerBegrunnelser, ...vilkarBegrunnelser]}
+          muligeBegrunnelser={[
+            ...MKV.KTObjects.begrunnelser.utsendt_arbeidstaker_begrunnelser,
+            ...muligeVirksomhetBegrunnelser,
+          ]}
         />
       )}
-      {art12_2_begrunnelser.length > 0 && (
+      {utsendtNaeringsdrivendeBegrunnelser.length > 0 && (
         <Begrunnelser
-          label="Søkeren fyller ikke kriteriene for artikkel 12 nr. 2."
-          valgteBegrunnelser={[...art12_2_begrunnelser, ...vilkarBegrunnelser]}
-          muligeBegrunnelser={[...MKV.KTObjects.begrunnelser.art12_2_begrunnelser, ...muligeVirksomhetBegrunnelser]}
+          label={
+            konvensjonStorbritanniaToggleEnabled
+              ? "Søkeren fyller ikke kriteriene for utsending av næringsdrivende"
+              : "Søkeren fyller ikke kriteriene for artikkel 12 nr. 2."
+          }
+          valgteBegrunnelser={[...utsendtNaeringsdrivendeBegrunnelser, ...vilkarBegrunnelser]}
+          muligeBegrunnelser={[
+            ...MKV.KTObjects.begrunnelser.utsendt_naeringsdrivende_begrunnelser,
+            ...muligeVirksomhetBegrunnelser,
+          ]}
         />
       )}
       {!konvensjonStorbritanniaToggleEnabled ||

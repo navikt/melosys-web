@@ -12,6 +12,7 @@ import { FormValuesProps } from "../vurderingArtikkel16Vedtak";
 import { useFeatureToggle } from "../../../../../featuretoggle";
 import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../../../featuretoggle/toggleNavn";
 import DatoOgBestemmelse from "./datoOgBestemmelse";
+import VedtakBegrunnelser from "./vedtakBegrunnelser";
 
 interface DelvisInnvilgelseProps {
   redigerbart: boolean;
@@ -19,7 +20,6 @@ interface DelvisInnvilgelseProps {
   gjeldendePeriode: Partial<Periode>;
   vedtaksbrevFritekst?: string;
   renderFritekstFelt: () => ReactElement;
-  renderBegrunnelser: () => ReactElement;
   visOrienteringsbrevArbeidsgiver: boolean;
   onPeriodeForkorterUncheck: () => void;
   formValues: FormValuesProps;
@@ -33,7 +33,6 @@ const DelvisInnvilgelse = ({
   gjeldendePeriode,
   vedtaksbrevFritekst,
   renderFritekstFelt,
-  renderBegrunnelser,
   visOrienteringsbrevArbeidsgiver,
   onPeriodeForkorterUncheck,
   formValues,
@@ -89,7 +88,9 @@ const DelvisInnvilgelse = ({
         </Nav.Column>
       </Nav.Row>
       <Nav.Row>
-        <Nav.Column xs="7">{renderBegrunnelser()}</Nav.Column>
+        <Nav.Column xs="7">
+          <VedtakBegrunnelser anmodningsperiodeSvarType={MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE} />
+        </Nav.Column>
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="7">{renderFritekstFelt()}</Nav.Column>

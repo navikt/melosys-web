@@ -5,13 +5,13 @@ import Dokumentliste, {
   BrevDokumentMetadataType,
   SedDokumentMetadataType,
 } from "../../../../../felleskomponenter/dokumentliste";
+import VedtakBegrunnelser from "./vedtakBegrunnelser";
 
 interface AvslagProps {
   redigerbart: boolean;
   behandlingID: number;
   vedtaksbrevFritekst?: string;
   renderFritekstFelt: () => ReactElement;
-  renderBegrunnelser: () => ReactElement;
   visOrienteringsbrevArbeidsgiver: boolean;
 }
 
@@ -20,7 +20,6 @@ export const Avslag = ({
   behandlingID,
   vedtaksbrevFritekst,
   renderFritekstFelt,
-  renderBegrunnelser,
   visOrienteringsbrevArbeidsgiver,
 }: AvslagProps) => {
   const pdfDokumenter: (BrevDokumentMetadataType | SedDokumentMetadataType)[] = [
@@ -46,7 +45,9 @@ export const Avslag = ({
     <Fragment>
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Avslag</Nav.Typo.Innholdstittel>
       <Nav.Row>
-        <Nav.Column xs="7">{renderBegrunnelser()}</Nav.Column>
+        <Nav.Column xs="7">
+          <VedtakBegrunnelser anmodningsperiodeSvarType={MKV.Koder.anmodningsperiodesvartyper.AVSLAG} />
+        </Nav.Column>
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="7">{renderFritekstFelt()}</Nav.Column>

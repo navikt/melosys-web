@@ -11,7 +11,6 @@ import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
 import { anmodningsperiodesvarSelectors } from "../../../../ducks/anmodningsperiodesvar";
 import { anmodningsperioderSelectors } from "../../../../ducks/anmodningsperioder";
-import { vilkarSelectors } from "../../../../ducks/vilkar";
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
 import { vedtakOperations } from "../../../../ducks/vedtak";
 import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
@@ -21,7 +20,6 @@ import "./vurderingArtikkel16Vedtak.css";
 import Innvilgelse from "./komponenter/innvilgelse";
 import DelvisInnvilgelse from "./komponenter/delvisInnvilgelse";
 import { Avslag } from "./komponenter/avslag";
-import VedtakBegrunnelser from "./komponenter/vedtakBegrunnelser";
 import { AnmodningsperiodesvarResDto } from "../../../../services/modules/anmodningsperioder/svar/svar";
 import { Anmodningsperiode } from "../../../../services/modules/anmodningsperioder";
 import { RootState } from "AppTypes";
@@ -98,12 +96,10 @@ export const VurderingArtikkel16Vedtak = ({
   let oppdaterFørKontroll = true;
 
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
-  const vilkarBegrunnelser = useSelector(vilkarSelectors.vilkarBegrunnelserSelector);
-  const art_12_1_begrunnelser = useSelector(vilkarSelectors.art12_1_begrunnelserSelector);
-  const art_12_2_begrunnelser = useSelector(vilkarSelectors.art12_2_begrunnelserSelector);
   const mottatteOpplysningerStatus = useSelector(mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector);
   const harValgtNorskArbeidsgiver = useSelector(flytSelectors.HarValgtNorskArbeidsgiverSelector);
   const formIsValid = useSelector(isValid(KV.Form.ARTIKKEL_16_1_VEDTAK));
+
   const endreLovvalgsperiode = (fomdato?: string | null, tomdato?: string | null) =>
     dispatch(lovvalgsperioderOperations.endreLovvalgsPeriode(fomdato ?? "", tomdato ?? undefined));
 
@@ -197,18 +193,6 @@ export const VurderingArtikkel16Vedtak = ({
 
   const { anmodningsperiodeSvarType } = anmodningsperiodesvar;
 
-  const renderBegrunnelser = useCallback(
-    () => (
-      <VedtakBegrunnelser
-        art12_1_begrunnelser={art_12_1_begrunnelser}
-        art12_2_begrunnelser={art_12_2_begrunnelser}
-        vilkarBegrunnelser={vilkarBegrunnelser}
-        anmodningsperiodeSvarType={anmodningsperiodeSvarType}
-      />
-    ),
-    [art_12_1_begrunnelser, art_12_2_begrunnelser, vilkarBegrunnelser, anmodningsperiodeSvarType]
-  );
-
   const renderFritekstFelt = useCallback(
     () => (
       <Skjema.Textarea
@@ -253,7 +237,6 @@ export const VurderingArtikkel16Vedtak = ({
             renderFritekstFelt={renderFritekstFelt}
             vedtaksbrevFritekst={formValues.vedtaksbrevFritekst}
             gjeldendePeriode={gjeldendePeriode}
-            renderBegrunnelser={renderBegrunnelser}
             visOrienteringsbrevArbeidsgiver={visOrienteringsbrevArbeidsgiver}
             onPeriodeForkorterUncheck={gjenopprettUforkortetPeriode}
             formValues={formValues}
@@ -268,7 +251,6 @@ export const VurderingArtikkel16Vedtak = ({
             behandlingID={behandlingID}
             renderFritekstFelt={renderFritekstFelt}
             vedtaksbrevFritekst={formValues.vedtaksbrevFritekst}
-            renderBegrunnelser={renderBegrunnelser}
             visOrienteringsbrevArbeidsgiver={visOrienteringsbrevArbeidsgiver}
           />
         );
