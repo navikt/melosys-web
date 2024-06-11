@@ -67,6 +67,7 @@ export const Bestemmelser = ({
   const anmodningsperiodeBestemmelse = useSelector(anmodningsperioderSelectors.LovvalgsbestemmelseSelector);
   const anmodningsperiodeTilleggsbestemmelse = useSelector(anmodningsperioderSelectors.TilleggsbestemmelseSelector);
   const lovvalgsbestemmelse = lovvalgsperiodeBestemmelse ?? anmodningsperiodeBestemmelse;
+  const tilleggsbestemmelse = lovvalgsperiodeTilleggsbestemmelse ?? anmodningsperiodeTilleggsbestemmelse;
   const yrkesgruppeFakta = useSelector(avklartefaktaSelectors.YrkesgruppeSelector);
   const arbeidPåSkipFakta = useSelector(avklartefaktaSelectors.ArbeidSokkelSkipSelector);
   const utsendingsvilkår: Partial<Vilkaar> = useSelector(vilkarSelectors.UtsendingsvilkårSelector);
@@ -91,11 +92,23 @@ export const Bestemmelser = ({
     if (konvensjonStorbritanniaToggleEnabled && lovvalgsbestemmelse) {
       oppdaterData(konverterLovvalgsbestemmelseTilStegData(lovvalgsbestemmelse));
     }
-    const tilleggsbestemmelse = lovvalgsperiodeTilleggsbestemmelse ?? anmodningsperiodeTilleggsbestemmelse;
     if (konvensjonStorbritanniaToggleEnabled && tilleggsbestemmelse) {
       oppdaterData(konverterTilleggBestemmelseTilStegData(tilleggsbestemmelse));
     }
   }, []);
+
+  useEffect(() => {
+    const nyTilleggsbestemmelse = finnTilleggsbestemmelse(lovvalgsbestemmelse, yrkesgruppeFakta, arbeidPåSkipFakta);
+    if (
+      konvensjonStorbritanniaToggleEnabled &&
+      lovvalgsbestemmelse &&
+      vedtakValg &&
+      nyTilleggsbestemmelse !== tilleggsbestemmelse
+    ) {
+      slettData(slettTilleggBestemmelse());
+      if (nyTilleggsbestemmelse) oppdaterData(lagTilleggBestemmelse(nyTilleggsbestemmelse));
+    }
+  }, [yrkesgruppeFakta, arbeidPåSkipFakta]);
 
   const slettAlleVilkår = () => alleRelevanteFeltNavn.forEach((feltNavn) => slettData(slettVilkar(feltNavn)));
 
