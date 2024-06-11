@@ -23,9 +23,6 @@ describe("VurderingArtikkel16Vedtak", () => {
       behandlingID: 1,
       tilbake: vi.fn(),
       redigerbart: true,
-      vilkarBegrunnelser: [],
-      valgte_utsendt_arbeidstaker_begrunnelser: [],
-      valgte_utsendt_naeringsdrivende_begrunnelser: [],
       formIsValid: true,
       behandlingstype: MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
       touch: vi.fn(),
@@ -34,15 +31,11 @@ describe("VurderingArtikkel16Vedtak", () => {
         vedtakstype: MKV.Koder.vedtakstyper.KORRIGERINGSVEDTAK,
         vedtaksbrevFritekst: "Test",
       },
-      harValgtNorskArbeidsgiver: true,
-      hentLovvalgsperioder: vi.fn(),
-      lagreLovvalgsperioder: vi.fn(),
-      endreLovvalgsperiode: vi.fn(),
-      kontrollerFerdigbehandling: vi.fn(),
       validerMottatteOpplysninger: vi.fn().mockImplementation(() => Promise.resolve()),
       fattVedtak: vi.fn(),
       harFeilmeldinger: false,
       mottatteOpplysningerStatus: "OK",
+      anmodningsperiode: {},
     };
   });
 

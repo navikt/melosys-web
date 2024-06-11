@@ -71,6 +71,11 @@ export const UtsendingsvilkårArbeidstakerSelector = createSelector(
   }
 );
 
+export const UtsendingsvilkårArbeidstakerBegrunnelserSelector = createSelector(
+  (state) => UtsendingsvilkårArbeidstakerSelector(state),
+  (vilkar) => vilkar.begrunnelseKoder || []
+);
+
 export const UtsendingsvilkårNæringsdrivendeSelector = createSelector(
   (state) => VilkarSelector(state),
   (alleVilkar) => {
@@ -80,6 +85,11 @@ export const UtsendingsvilkårNæringsdrivendeSelector = createSelector(
 
     return art12_2 ?? art14_2 ?? art16_3 ?? {};
   }
+);
+
+export const UtsendingsvilkårNæringsdrivendeBegrunnelserSelector = createSelector(
+  (state) => UtsendingsvilkårNæringsdrivendeSelector(state),
+  (vilkar) => vilkar.begrunnelseKoder || []
 );
 
 export const UtsendingsvilkårSelector = createSelector(
