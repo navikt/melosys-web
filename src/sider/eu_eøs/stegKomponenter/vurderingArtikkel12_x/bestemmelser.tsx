@@ -167,8 +167,8 @@ export const Bestemmelser = ({
     if (valgtVedtak === VedtakValg.JA_INNVILGE) {
       const utsendelsevilkårFeltNavn = finnFeltNavn(nyBestemmelse);
       oppdaterData(lagVilkaar(utsendelsevilkårFeltNavn, true));
-      const tilleggsbestemmelse = finnTilleggsbestemmelse(nyBestemmelse, yrkesgruppeFakta, arbeidPåSkipFakta);
-      if (tilleggsbestemmelse) oppdaterData(lagTilleggBestemmelse(tilleggsbestemmelse));
+      const nyTilleggsbestemmelse = finnTilleggsbestemmelse(nyBestemmelse, yrkesgruppeFakta, arbeidPåSkipFakta);
+      if (nyTilleggsbestemmelse) oppdaterData(lagTilleggBestemmelse(nyTilleggsbestemmelse));
     }
     if (valgtVedtak === VedtakValg.NEI_ANMODNING_UNNTAK) {
       const utsendelsevilkår = finnUtsendelsevilkår(nyBestemmelse);
