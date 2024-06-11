@@ -15,6 +15,10 @@ export const VELG_MINST_TO_LAND = { melding: "Velg minst to land" };
 export const VELG_LAND = { melding: "Velg et land" };
 export const SKRIV_INN_KUN_NUMMER = { melding: "Skriv inn kun nummer" };
 
+// Ordinær maksgrense for SED sin ytterligereInformasjon
 export const DU_KAN_IKKE_SKRIVE_MER_ENN_500_TEGN = "Du kan ikke skrive mer enn 500 tegn";
+
+// Maksgrense for SED sin ytterligereInformasjon for behandlinger med GB-bestemmelser da de har default-tekst på 38 tegn.
 export const DU_KAN_IKKE_SKRIVE_MER_ENN_462_TEGN = "Du kan ikke skrive mer enn 462 tegn";
+
 export const DU_KAN_IKKE_SKRIVE_MER_ENN_4000_TEGN = "Du kan ikke skrive mer enn 4000 tegn";
