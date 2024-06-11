@@ -16,7 +16,7 @@ export const AnmodningsperiodeIDSelector = createSelector(
 );
 
 export const LovvalgsbestemmelseSelector = createSelector(
-  AnmodningsperiodeSelector,
+  (state) => AnmodningsperiodeSelector(state),
   (anmodningsperiode) => anmodningsperiode.lovvalgBestemmelse
 );
 
