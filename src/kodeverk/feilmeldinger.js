@@ -16,4 +16,5 @@ export const VELG_LAND = { melding: "Velg et land" };
 export const SKRIV_INN_KUN_NUMMER = { melding: "Skriv inn kun nummer" };
 
 export const DU_KAN_IKKE_SKRIVE_MER_ENN_500_TEGN = "Du kan ikke skrive mer enn 500 tegn";
+export const DU_KAN_IKKE_SKRIVE_MER_ENN_462_TEGN = "Du kan ikke skrive mer enn 462 tegn";
 export const DU_KAN_IKKE_SKRIVE_MER_ENN_4000_TEGN = "Du kan ikke skrive mer enn 4000 tegn";

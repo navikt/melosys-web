@@ -49,6 +49,7 @@ const { BRUKER, UTENLANDSK_TRYGDEMYNDIGHET } = MKV.Koder.mottakerroller;
 const { ORIENTERING_ANMODNING_UNNTAK, ANMODNING_UNNTAK } = MKV.Koder.brev.produserbaredokumenter;
 
 const mapStateToProps = (state: RootState) => ({
+  lovvalgsbestemmelse: anmodningsperioderSelectors.LovvalgsbestemmelseSelector(state),
   formIsValid: isValid(KV.Form.ARTIKKEL_16_ANMODNING)(state),
   formValues: getFormValues(KV.Form.ARTIKKEL_16_ANMODNING)(state) as FormValuesProps,
   initialValues: {
@@ -103,6 +104,7 @@ const VurderingArtikkel16Anmodning = ({
   form,
   tilbake,
   aktivtSteg,
+  lovvalgsbestemmelse,
 }: Props & PropsFromRedux & InjectedFormProps<FormValuesProps, Props & PropsFromRedux>) => {
   const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
   const dispatch = useDispatch();
@@ -122,7 +124,6 @@ const VurderingArtikkel16Anmodning = ({
   const unntakFraBestemmelse = useSelector(anmodningsperioderSelectors.UnntakFraBestemmelseSelector);
   const fysiskeDokumenter = useSelector(dokumenterSelectors.AlleFysiskeDokumentSelector);
   const mottatteOpplysningerStatus = useSelector(mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector);
-  const lovvalgsbestemmelse = useSelector(anmodningsperioderSelectors.LovvalgsbestemmelseSelector);
   const feltNavnFraBestemmelse =
     lovvalgsbestemmelse === KONV_EFTA_STORBRITANNIA_ART18_1 ? "art18_1_anmodning" : "art16_1_anmodning";
 
@@ -264,8 +265,7 @@ const VurderingArtikkel16Anmodning = ({
     </Fragment>
   );
 
-  const maksAntallTegn =
-    konvensjonStorbritanniaToggleEnabled && lovvalgsbestemmelse === KONV_EFTA_STORBRITANNIA_ART18_1 ? 500 - 38 : 500;
+  const maksAntallTegn = lovvalgsbestemmelse === KONV_EFTA_STORBRITANNIA_ART18_1 ? 500 - 38 : 500;
 
   return (
     <div>
@@ -454,7 +454,10 @@ const VurderingArtikkel16AnmodningForm = reduxForm<FormValuesProps, PropsFromRed
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
-  validate: (values) => lagYupToReduxformErrorMapper(VurderingArtikkel16AnmodningSchema)(values),
+  validate: (values, props) =>
+    lagYupToReduxformErrorMapper(VurderingArtikkel16AnmodningSchema, {
+      context: { bestemmelse: props.lovvalgsbestemmelse },
+    })(values),
 })(VurderingArtikkel16Anmodning);
 
 export default connector(VurderingArtikkel16AnmodningForm);
