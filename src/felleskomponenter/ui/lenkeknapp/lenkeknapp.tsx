@@ -1,3 +1,7 @@
+/**
+ * @deprecated Erstattes med Aksel Button (variant tertiary + icon prop)
+ */
+
 import { ElementType, MouseEventHandler, ReactNode } from "react";
 import classNames from "classnames";
 

@@ -1,7 +1,7 @@
 import { FunctionComponent } from "react";
 
-import * as Nav from "../../../../../navFrontend";
+import { BodyShort } from "@navikt/ds-react";
 
-const IngenData: FunctionComponent = () => <Nav.Typo.Normaltekst>Ingen barn oppgitt i søknaden.</Nav.Typo.Normaltekst>;
+const IngenData: FunctionComponent = () => <BodyShort size="small"> Ingen barn oppgitt i søknaden.</BodyShort>;
 
 export default IngenData;

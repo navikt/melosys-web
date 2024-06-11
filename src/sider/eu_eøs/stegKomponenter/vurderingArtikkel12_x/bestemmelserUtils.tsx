@@ -1,6 +1,5 @@
 import * as KV from "../../../../kodeverk";
 import MKV from "../../../../melosyskodeverk";
-import { KTObject } from "@navikt/melosys-kodeverk";
 import { Vilkaar } from "../../../../services/modules/vilkar";
 
 const {
@@ -8,8 +7,9 @@ const {
   IKKE_NORSK_AG_REGNING,
   IKKE_OMFATTET_LENGE_NOK_I_NORGE_FOER,
   IKKE_VESENTLIG_VIRKSOMHET,
-} = MKV.Koder.begrunnelser.art12_1_begrunnelser;
-const { IKKE_LIGNENDE_VIRKSOMHET, NORMALT_IKKE_DRIFT_NORGE } = MKV.Koder.begrunnelser.art12_2_begrunnelser;
+} = MKV.Koder.begrunnelser.utsendt_arbeidstaker_begrunnelser;
+const { IKKE_LIGNENDE_VIRKSOMHET, NORMALT_IKKE_DRIFT_NORGE } =
+  MKV.Koder.begrunnelser.utsendt_naeringsdrivende_begrunnelser;
 const {
   FO_883_2004_ART12_1,
   FO_883_2004_ART12_2,
@@ -49,11 +49,6 @@ export const initializeVedtakValg = (
   }
   return undefined;
 };
-
-export const kodeTilObjektKonvGB = (bestemmelseKode: string): KTObject =>
-  KV.kodeTilObjekt(bestemmelseKode, MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia);
-export const kodeTilObjektEØS = (bestemmelseKode: string): KTObject =>
-  KV.kodeTilObjekt(bestemmelseKode, MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004);
 
 export const begrunnelseKoderForSokkelStorbritannia: string[] = [
   // artikler for arbeidsgiver:

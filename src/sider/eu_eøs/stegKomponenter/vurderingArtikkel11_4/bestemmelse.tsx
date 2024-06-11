@@ -1,8 +1,7 @@
 import { KTObject } from "@navikt/melosys-kodeverk";
 import * as Nav from "../../../../navFrontend";
-import MKV from "../../../../melosyskodeverk";
+import MKV, { MKVUtils } from "../../../../melosyskodeverk";
 import { ArtikkelValg } from "./vurderingArtikkel11_4";
-import * as KV from "../../../../kodeverk";
 
 const { KONV_EFTA_STORBRITANNIA_ART13_3A, KONV_EFTA_STORBRITANNIA_ART13_4_2 } =
   MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia;
@@ -22,11 +21,6 @@ export const tilleggsbestemmelseFraLovvalgsbestemmelse = (lovvalgsbestemmelse: s
   }
 };
 
-export const kodeTilObjektKonvGB = (bestemmelseKode: string): KTObject =>
-  KV.kodeTilObjekt(bestemmelseKode, MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia);
-export const kodeTilObjektEØS = (bestemmelseKode: string): KTObject =>
-  KV.kodeTilObjekt(bestemmelseKode, MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004);
-
 interface BestemmelseProps {
   bestemmelse?: string;
   handleEndreBestemmelse: (nyBestemmelse: string) => void;
@@ -34,6 +28,7 @@ interface BestemmelseProps {
   redigerbart: boolean;
   visStorbritanniaKonvensjon: boolean;
 }
+
 const Bestemmelse = ({
   bestemmelse,
   handleEndreBestemmelse,
@@ -44,13 +39,19 @@ const Bestemmelse = ({
   const hentBestemmelser = (): KTObject[] => {
     if (artikkelValg === ArtikkelValg.ART11_4_1) {
       return visStorbritanniaKonvensjon
-        ? [kodeTilObjektKonvGB(KONV_EFTA_STORBRITANNIA_ART13_3A), kodeTilObjektEØS(FO_883_2004_ART11_3A)]
-        : [kodeTilObjektEØS(FO_883_2004_ART11_3A)];
+        ? [
+            MKVUtils.lovvalgsbestemmelseTilObjekt(KONV_EFTA_STORBRITANNIA_ART13_3A),
+            MKVUtils.lovvalgsbestemmelseTilObjekt(FO_883_2004_ART11_3A),
+          ]
+        : [MKVUtils.lovvalgsbestemmelseTilObjekt(FO_883_2004_ART11_3A)];
     }
     if (artikkelValg === ArtikkelValg.ART11_4_2) {
       return visStorbritanniaKonvensjon
-        ? [kodeTilObjektKonvGB(KONV_EFTA_STORBRITANNIA_ART13_4_2), kodeTilObjektEØS(FO_883_2004_ART11_4_2)]
-        : [kodeTilObjektEØS(FO_883_2004_ART11_4_2)];
+        ? [
+            MKVUtils.lovvalgsbestemmelseTilObjekt(KONV_EFTA_STORBRITANNIA_ART13_4_2),
+            MKVUtils.lovvalgsbestemmelseTilObjekt(FO_883_2004_ART11_4_2),
+          ]
+        : [MKVUtils.lovvalgsbestemmelseTilObjekt(FO_883_2004_ART11_4_2)];
     }
     return [];
   };

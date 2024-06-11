@@ -13,7 +13,7 @@ interface BarnTableProps {
 function BarnTable({ barnListe }: BarnTableProps) {
   return (
     <div className="menypanel__table-wrapper">
-      <Table>
+      <Table size="small">
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell>Navn</Table.HeaderCell>
