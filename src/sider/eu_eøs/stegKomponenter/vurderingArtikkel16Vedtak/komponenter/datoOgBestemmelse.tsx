@@ -1,17 +1,8 @@
 import EnkeltDato from "../../../../../felleskomponenter/enkeltDato";
 import * as Nav from "../../../../../navFrontend";
-import MKV from "../../../../../melosyskodeverk";
-import * as KV from "../../../../../kodeverk";
+import { MKVUtils } from "../../../../../melosyskodeverk";
 import { useSelector } from "react-redux";
 import { lovvalgsperioderSelectors } from "../../../../../ducks/lovvalgsperioder";
-
-// TODO: Dra inn fra MKVUtils når vedtak-pr er merget.
-const lovvalgsbestemmelseTilObjekt = (bestemmelseKode: string) => {
-  return (
-    KV.kodeTilObjekt(bestemmelseKode, MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004) ??
-    KV.kodeTilObjekt(bestemmelseKode, MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia)
-  );
-};
 
 interface DatoOgBestemmelseProps {
   fomDato: string | undefined | null;
@@ -20,7 +11,7 @@ interface DatoOgBestemmelseProps {
 
 const DatoOgBestemmelse = ({ fomDato, tomDato }: DatoOgBestemmelseProps) => {
   const bestemmelse = useSelector(lovvalgsperioderSelectors.LovvalgBestemmelseSelector);
-  const lovvalgsbestemmelseKT = lovvalgsbestemmelseTilObjekt(bestemmelse);
+  const lovvalgsbestemmelseKT = MKVUtils.lovvalgsbestemmelseTilObjekt(bestemmelse);
 
   return (
     <>
