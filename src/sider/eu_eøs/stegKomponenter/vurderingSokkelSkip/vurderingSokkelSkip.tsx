@@ -22,7 +22,7 @@ import { Avklartfakta } from "../../../../services/modules/avklartefakta";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { useFeatureToggle } from "../../../../featuretoggle";
 import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../../featuretoggle/toggleNavn";
-import { Feilmelding, feilMeldingBlokkerer, finnAktivFeilmelding } from "./feilmeldinger";
+import { Feilmelding, finnAktivFeilmelding } from "./feilmeldinger";
 
 interface Props {
   begrunnelser: KTObject[];
@@ -101,7 +101,7 @@ const VurderingSokkelSkip = ({
     arbeidslandListe,
     maritimtArbeid
   );
-  const visFeilmeldinger = feilMeldingBlokkerer(aktivFeilmelding) && redigerbart;
+  const visFeilmeldinger = redigerbart && aktivFeilmelding;
 
   return (
     <div className="vurderingSokkelSkip">

@@ -98,16 +98,6 @@ export const finnAktivFeilmelding = (
   return undefined;
 };
 
-export const feilMeldingBlokkerer = (type?: string): boolean => {
-  switch (type) {
-    case TypeFeilmelding.ULOGISK_KOMBINASJON_ERROR:
-    case TypeFeilmelding.FLERE_ARBEIDSLAND_ERROR:
-      return true;
-    default:
-      return false;
-  }
-};
-
 export const Feilmelding = ({ type }: { type?: string }) => {
   switch (type) {
     case TypeFeilmelding.ULOGISK_KOMBINASJON_ERROR:
