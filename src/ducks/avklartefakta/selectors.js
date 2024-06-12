@@ -471,7 +471,7 @@ export const AlleRelevanteLandSelector = createSelector(
       ...valgteVirksomheter.map((virksomhet) =>
         KV.termTilKode(Utils.streng.storeForbokstaverForLand(virksomhet.adresse.land), MKV.KTObjects.landkoder)
       ),
-      ...(bostedsland.kode ? [bostedsland.kode] : []),
+      ...(bostedsland?.kode ? [bostedsland.kode] : []),
     ];
   }
 );

@@ -17,6 +17,10 @@ export const erBehandlingAvSed = (sakstype, behandlingstema) => {
 export const lovvalgsbestemmelseTilObjekt = (bestemmelseKode) => {
   return KV.kodeTilObjekt(bestemmelseKode, MKV.Kodekombinasjoner.alleLovvalg);
 };
+
+export const erStorbritanniaKonvBestemmelse = (bestemmelseKode) =>
+  Boolean(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia[bestemmelseKode]);
+
 export const enesteLandErStorbritannia = (landkoder) =>
   landkoder?.length === 1 && landkoder[0] === MKV.Koder.landkoder.GB;
 
