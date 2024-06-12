@@ -5,7 +5,7 @@ import { getFormValues, InjectedFormProps, isValid, reduxForm } from "redux-form
 import * as EKV from "eessi-kodeverk";
 import { v4 as uuid } from "uuid";
 import * as Utils from "../../../../utils";
-import MKV from "../../../../melosyskodeverk";
+import MKV, { MKVUtils } from "../../../../melosyskodeverk";
 import * as Nav from "../../../../navFrontend";
 import * as KV from "../../../../kodeverk";
 import * as Mui from "../../../../felleskomponenter/ui";
@@ -265,7 +265,7 @@ const VurderingArtikkel16Anmodning = ({
     </Fragment>
   );
 
-  const maksAntallTegn = lovvalgsbestemmelse === KONV_EFTA_STORBRITANNIA_ART18_1 ? 500 - 38 : 500;
+  const maksAntallTegn = MKVUtils.erStorbritanniaKonvBestemmelse(lovvalgsbestemmelse) ? 500 - 38 : 500;
 
   return (
     <div>
