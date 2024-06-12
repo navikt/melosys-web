@@ -115,26 +115,28 @@ const erEtterFomTest = {
     ) >= 0,
 };
 
+const lagMeldingForMedfolgendeFamilie = (options, melding) =>
+  lagMelding(
+    KV.Menypunkter.Familieforhold.tittel,
+    erTrygdeavtaleEllerFtrl(options.context.sakstype)
+      ? KV.Menypunkter.Familieforhold.undertitler.familieMedPaReisen
+      : KV.Menypunkter.Familieforhold.undertitler.barnMedPaReisen,
+    melding
+  );
 const medfolgendeFamilie = object().shape({
   fnr: lazy((value, options) =>
     string()
-      .erFnrEllerDnrEllerFødselsdato(
-        lagMelding(
-          KV.Menypunkter.Familieforhold.tittel,
-          erTrygdeavtaleEllerFtrl(options.context.sakstype)
-            ? KV.Menypunkter.Familieforhold.undertitler.familieMedPaReisen
-            : KV.Menypunkter.Familieforhold.undertitler.barnMedPaReisen,
-          "F.nr./d-nr./dato er ugyldig"
-        )
-      )
-      .required(MAA_FYLLES_UT)
+      .erFnrEllerDnrEllerFødselsdato(lagMeldingForMedfolgendeFamilie(options, "F.nr./d-nr./dato er ugyldig"))
+      .required(lagMeldingForMedfolgendeFamilie(options, "F.nr./d-nr./dato kreves"))
   ),
-  navn: string()
-    .when("fnr", {
-      is: (fnr) => Boolean(Utils.dato.vaskInputDato(fnr)),
-      then: string().required(MAA_FYLLES_UT),
-    })
-    .nullable(),
+  navn: lazy((value, options) =>
+    string()
+      .when("fnr", {
+        is: (fnr) => Boolean(Utils.dato.vaskInputDato(fnr)),
+        then: string().required(lagMeldingForMedfolgendeFamilie(options, "Navn kreves")),
+      })
+      .nullable()
+  ),
 });
 
 const foedestedOgLandSchema = object()
