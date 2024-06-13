@@ -87,7 +87,7 @@ function MultiSelect<T extends OptionBase>(props: MultiSelectProps<T>) {
         value={options.filter((option) => values?.indexOf(option.value) >= 0)}
       />
       <div role="alert" aria-live="assertive">
-        {feil && <div className="skjemaelement__feilmelding skjemaelement__feilmelding--additional">{feil}</div>}
+        {feil && <div className="skjemaelement__feilmelding skjemaelement__feilmelding--multiSelect">{feil}</div>}
       </div>
     </div>
   );
