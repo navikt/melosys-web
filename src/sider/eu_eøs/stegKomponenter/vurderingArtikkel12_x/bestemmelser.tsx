@@ -100,6 +100,7 @@ export const Bestemmelser = ({
   useEffect(() => {
     const nyTilleggsbestemmelse = finnTilleggsbestemmelse(lovvalgsbestemmelse, yrkesgruppeFakta, arbeidPåSkipFakta);
     if (
+      redigerbart &&
       konvensjonStorbritanniaToggleEnabled &&
       lovvalgsbestemmelse &&
       vedtakValg &&

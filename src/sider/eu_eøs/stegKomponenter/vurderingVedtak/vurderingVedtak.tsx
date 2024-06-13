@@ -3,36 +3,36 @@ import { connect, ConnectedProps, useDispatch, useSelector } from "react-redux";
 import { getFormValues, InjectedFormProps, isValid, reduxForm } from "redux-form";
 // @ts-ignore
 import * as EKV from "eessi-kodeverk";
-import MKV, { MKVUtils } from "../../../melosyskodeverk";
-import * as KV from "../../../kodeverk";
-import * as Nav from "../../../navFrontend";
-import * as Skjema from "../../../felleskomponenter/skjema";
-import * as Mui from "../../../felleskomponenter/ui";
-import * as Utils from "../../../utils";
-import { avklartefaktaSelectors } from "../../../ducks/avklartefakta";
-import { behandlingerSelectors } from "../../../ducks/behandlinger";
-import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
-import { vedtakOperations } from "../../../ducks/vedtak";
-import { fagsakSelectors } from "../../../ducks/fagsaker";
-import { flytSelectors } from "../../../ducks/flyt";
-import { skalViseIngenFlyt } from "../../../url";
+import MKV, { MKVUtils } from "../../../../melosyskodeverk";
+import * as KV from "../../../../kodeverk";
+import * as Nav from "../../../../navFrontend";
+import * as Skjema from "../../../../felleskomponenter/skjema";
+import * as Mui from "../../../../felleskomponenter/ui";
+import * as Utils from "../../../../utils";
+import { avklartefaktaSelectors } from "../../../../ducks/avklartefakta";
+import { behandlingerSelectors } from "../../../../ducks/behandlinger";
+import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
+import { vedtakOperations } from "../../../../ducks/vedtak";
+import { fagsakSelectors } from "../../../../ducks/fagsaker";
+import { flytSelectors } from "../../../../ducks/flyt";
+import { skalViseIngenFlyt } from "../../../../url";
 import Dokumentliste, {
   BrevDokumentMetadataType,
   SedDokumentMetadataType,
-} from "../../../felleskomponenter/dokumentliste";
-import Mottakerinstitusjonvelger from "../../../felleskomponenter/mottakerinstitusjonvelger";
-import { lagYupToReduxformErrorMapper } from "../../../yup";
-import VurderingArtikkel12VedtakSchema from "./vurderingArtikkel12VedtakSchema";
+} from "../../../../felleskomponenter/dokumentliste";
+import Mottakerinstitusjonvelger from "../../../../felleskomponenter/mottakerinstitusjonvelger";
+import { lagYupToReduxformErrorMapper } from "../../../../yup";
+import VurderingVedtakSchema from "./vurderingVedtakSchema";
 import "./vurderingVedtak.css";
-import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
-import * as Api from "../../../services/api";
+import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
+import * as Api from "../../../../services/api";
 import { RootState } from "AppTypes";
 import { KTObject } from "@navikt/melosys-kodeverk";
-import { kontrollOperations } from "../../../ducks/kontroll";
-import { lovvalgsperioderSelectors } from "../../../ducks/lovvalgsperioder";
-import { useFeatureToggle } from "../../../featuretoggle";
-import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../featuretoggle/toggleNavn";
-import EnkeltDato from "../../../felleskomponenter/enkeltDato";
+import { kontrollOperations } from "../../../../ducks/kontroll";
+import { lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
+import { useFeatureToggle } from "../../../../featuretoggle";
+import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../../featuretoggle/toggleNavn";
+import EnkeltDato from "../../../../felleskomponenter/enkeltDato";
 
 const { FO_883_2004_ART11_3A } = MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004;
 const { FO_883_2004_ART11_4_1 } = MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004;
@@ -106,6 +106,7 @@ interface FormValuesProps {
 }
 
 const mapStateToProps = (state: RootState) => ({
+  lovvalgsperiode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
   formValues: getFormValues(KV.Form.ARTIKKEL_12_VEDTAK)(state) as FormValuesProps,
   initialValues: {
@@ -142,6 +143,7 @@ const VurderingVedtak = ({
   harFeilmeldinger,
   aktivtSteg = false,
   validerMottatteOpplysninger,
+  lovvalgsperiode,
 }: VurderingVedtakProps & InjectedFormProps<FormValuesProps, VurderingVedtakProps>) => {
   const dispatch = useDispatch();
   const [vedtakPending, setVedtakPending] = useState(false);
@@ -149,7 +151,6 @@ const VurderingVedtak = ({
   const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
   let oppdaterFørKontroll = true;
 
-  const lovvalgsperioder = useSelector(lovvalgsperioderSelectors.LovvalgsperioderSelector);
   const arbeidsland = useSelector(avklartefaktaSelectors.ArbeidslandKTSelector);
   const bostedsland = useSelector(avklartefaktaSelectors.BostedslandSelector);
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
@@ -157,7 +158,7 @@ const VurderingVedtak = ({
   const sakstema = useSelector(fagsakSelectors.SakstemaKodeSelector);
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const formIsValid = useSelector(isValid(KV.Form.ARTIKKEL_12_VEDTAK));
-  const erArtikkel11_4 = useSelector(flytSelectors.ErIArtikkel11_4Selector);
+  const erArtikkel11_4Eller13_4 = useSelector(flytSelectors.ErIArtikkel11_4Eller13_4FlytSelector);
   const mottatteOpplysningerStatus = useSelector(mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector);
 
   const visMottakerinstitusjoner = skalViseMottakerinstitusjoner(sakstype, sakstema, behandlingstema, behandlingstype);
@@ -233,17 +234,17 @@ const VurderingVedtak = ({
       .catch(() => setVedtakPending(false));
   };
 
-  const { fomDato, tomDato, lovvalgsbestemmelse, tilleggBestemmelse } = lovvalgsperioder[0] || {};
+  const { fomDato, tomDato, lovvalgsbestemmelse, tilleggBestemmelse } = lovvalgsperiode;
 
   const sedMottakerLand = finnSedMottakerLand(arbeidsland, bostedsland || {}, lovvalgsbestemmelse, tilleggBestemmelse);
   const flereSoknadslandEnnTillatt = arbeidsland.length > 1 && !MKVUtils.kanHaFlereSoknadsland(behandlingstema);
   const stegErGyldig = redigerbart && formIsValid && !harFeilmeldinger && !flereSoknadslandEnnTillatt;
   const bucLukketOgLovvalgNorge = !erBucAapen && behandlingstema === BESLUTNING_LOVVALG_NORGE;
-  const bucType = erArtikkel11_4 ? LA_BUC_05 : LA_BUC_04;
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
 
   const lovvalgsbestemmelseKT = MKVUtils.lovvalgsbestemmelseTilObjekt(lovvalgsbestemmelse);
   const tilleggBestemmelseKT = MKVUtils.lovvalgsbestemmelseTilObjekt(tilleggBestemmelse);
+  const maksAntallTegn = MKVUtils.erStorbritanniaKonvBestemmelse(lovvalgsbestemmelse) ? 500 - 38 : 500;
 
   return (
     <div className="vedtak">
@@ -297,8 +298,8 @@ const VurderingVedtak = ({
                 label="Ytterligere informasjon til SED (valgfri)"
                 feltNavn="fritekstSed"
                 disabled={!redigerbart}
-                visTellerFra={500}
-                maxLength={500}
+                visTellerFra={maksAntallTegn}
+                maxLength={maksAntallTegn}
               />
             </Nav.Column>
           </Nav.Row>
@@ -310,7 +311,7 @@ const VurderingVedtak = ({
                 form={form}
                 redigerbart={redigerbart}
                 landkode={sedMottakerLand}
-                bucType={bucType}
+                bucType={erArtikkel11_4Eller13_4 ? LA_BUC_05 : LA_BUC_04}
               />
             </Nav.Column>
           </Nav.Row>
@@ -366,9 +367,10 @@ const VurderingVedtakForm = reduxForm<FormValuesProps, VurderingVedtakProps>({
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
   validate: (values, props) =>
-    lagYupToReduxformErrorMapper(VurderingArtikkel12VedtakSchema, {
+    lagYupToReduxformErrorMapper(VurderingVedtakSchema, {
       context: {
         behandlingstype: props.behandlingstype,
+        bestemmelse: props.lovvalgsperiode?.lovvalgsbestemmelse,
       },
     })(values),
 })(VurderingVedtak);
