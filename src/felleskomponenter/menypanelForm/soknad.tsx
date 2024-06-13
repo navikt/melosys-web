@@ -17,7 +17,6 @@ import { behandlingsperioderSelectors } from "../../ducks/behandlingsperioder";
 import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../ducks/mottatteOpplysninger";
 import { behandlingerSelectors } from "../../ducks/behandlinger";
 import { avklartefaktaSelectors } from "../../ducks/avklartefakta";
-import { vilkarSelectors } from "../../ducks/vilkar";
 import { formSelectors } from "../../ducks/form";
 import { redigerbartSelectors } from "../../ducks/redigerbart";
 import { fagsakSelectors } from "../../ducks/fagsaker";
@@ -172,25 +171,6 @@ const mapStateToProps = (state: RootState) => ({
       yrkesgruppe: avklartefaktaSelectors.YrkesgruppeSelector(state),
       yrkesaktivitet: avklartefaktaSelectors.YrkesaktivitetSelector(state),
       sokkelSkipKonklusjon: avklartefaktaSelectors.ArbeidSokkelSkipSelector(state),
-    },
-    vilkar: {
-      // Klarer ikke å se hvor disse kan bli brukt... Slette?
-      vesentligVirksomhet: vilkarSelectors.vesentligVirksomhetSelector(state).oppfylt,
-      vesentligVirksomhetBegrunnelser: vilkarSelectors.vesentligVirksomhetSelector(state).begrunnelseKoder,
-      normaltDriverVirksomhet: vilkarSelectors.normaltDriverVirksomhetSelector(state).oppfylt,
-      normaltDriverVirksomhetBegrunnelser: vilkarSelectors.normaltDriverVirksomhetSelector(state).begrunnelseKoder,
-      forutgaendeMedlemskap: vilkarSelectors.forutgaendeMedlemskap(state).oppfylt,
-      forutgaendeMedlemskapBegrunnelser: vilkarSelectors.forutgaendeMedlemskap(state).begrunnelseKoder,
-      art11_3A: vilkarSelectors.art11_3A(state).oppfylt,
-      art11_4_1: vilkarSelectors.art11_4_1(state).oppfylt,
-      art11_4_2: vilkarSelectors.art11_4_2(state).oppfylt,
-      nis: vilkarSelectors.nis(state).oppfylt,
-      art12_1: vilkarSelectors.art12_1(state).oppfylt,
-      art12_1_begrunnelser: vilkarSelectors.art12_1(state).begrunnelseKoder,
-      art12_2: vilkarSelectors.art12_2(state).oppfylt,
-      art12_2_begrunnelser: vilkarSelectors.art12_2(state).begrunnelseKoder,
-      art16_1: vilkarSelectors.art16_1(state).oppfylt,
-      art16_1_begrunnelser: vilkarSelectors.art16_1(state).begrunnelseKoder,
     },
   },
 });

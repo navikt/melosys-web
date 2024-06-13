@@ -10,8 +10,8 @@ import * as KV from "../../../kodeverk";
 import * as Nav from "../../../navFrontend";
 import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Mui from "../../../felleskomponenter/ui";
-import * as VilkarSelectors from "../../../ducks/vilkar/selectors";
 
+import { vilkarSelectors } from "../../../ducks/vilkar";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
 import { kontrollerFerdigbehandling } from "../../../ducks/kontroll/operations";
@@ -250,11 +250,11 @@ const VurderingAvslagArtikkel12Og16Form = reduxForm({
 })(VurderingAvslag12_x_og_16);
 
 const mapStateToProps = (state) => ({
-  valgte_utsendt_arbeidstaker_begrunnelser: VilkarSelectors.art12_1_begrunnelserSelector(state),
-  valgte_utsendt_naeringsdrivende_begrunnelser: VilkarSelectors.art12_2_begrunnelserSelector(state),
-  valgte_art_16_1_begrunnelser: VilkarSelectors.art16_1_begrunnelserSelector(state),
-  art16_1_fritekst: VilkarSelectors.art16_1_fritekstSelector(state),
-  vilkarBegrunnelser: VilkarSelectors.vilkarBegrunnelserSelector(state),
+  valgte_utsendt_arbeidstaker_begrunnelser: vilkarSelectors.Artikkel12_1BegrunnelserSelector(state),
+  valgte_utsendt_naeringsdrivende_begrunnelser: vilkarSelectors.Artikkel12_2BegrunnelserSelector(state),
+  valgte_art_16_1_begrunnelser: vilkarSelectors.Artikkel16_1BegrunnelserSelector(state),
+  art16_1_fritekst: vilkarSelectors.Artikkel16_1FritekstSelector(state),
+  vilkarBegrunnelser: vilkarSelectors.VilkarBegrunnelserSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   sakstype: fagsakSelectors.SakstypeKodeSelector(state),
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
