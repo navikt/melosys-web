@@ -158,7 +158,7 @@ const VurderingVedtak = ({
   const sakstema = useSelector(fagsakSelectors.SakstemaKodeSelector);
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const formIsValid = useSelector(isValid(KV.Form.ARTIKKEL_12_VEDTAK));
-  const erArtikkel11_4 = useSelector(flytSelectors.ErIArtikkel11_4Selector);
+  const erArtikkel11_4Eller13_4 = useSelector(flytSelectors.ErIArtikkel11_4Eller13_4FlytSelector);
   const mottatteOpplysningerStatus = useSelector(mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector);
 
   const visMottakerinstitusjoner = skalViseMottakerinstitusjoner(sakstype, sakstema, behandlingstema, behandlingstype);
@@ -240,7 +240,6 @@ const VurderingVedtak = ({
   const flereSoknadslandEnnTillatt = arbeidsland.length > 1 && !MKVUtils.kanHaFlereSoknadsland(behandlingstema);
   const stegErGyldig = redigerbart && formIsValid && !harFeilmeldinger && !flereSoknadslandEnnTillatt;
   const bucLukketOgLovvalgNorge = !erBucAapen && behandlingstema === BESLUTNING_LOVVALG_NORGE;
-  const bucType = erArtikkel11_4 ? LA_BUC_05 : LA_BUC_04;
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
 
   const lovvalgsbestemmelseKT = MKVUtils.lovvalgsbestemmelseTilObjekt(lovvalgsbestemmelse);
@@ -312,7 +311,7 @@ const VurderingVedtak = ({
                 form={form}
                 redigerbart={redigerbart}
                 landkode={sedMottakerLand}
-                bucType={bucType}
+                bucType={erArtikkel11_4Eller13_4 ? LA_BUC_05 : LA_BUC_04}
               />
             </Nav.Column>
           </Nav.Row>
