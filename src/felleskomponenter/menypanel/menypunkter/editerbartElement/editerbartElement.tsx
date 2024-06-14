@@ -133,12 +133,14 @@ const EditerbartElement = ({
       <Heading level="2" size="small" spacing>
         <div className="heading-margin">{legend}</div>
       </Heading>
-      {hentAktivtInnhold()}
-      {skalRendreLagreKnapp && (
-        <Button onClick={lagreClickHandler} disabled={!redigerbart} variant="primary" size="small">
-          Lagre
-        </Button>
-      )}
+      <div className="padding-left">
+        {hentAktivtInnhold()}
+        {skalRendreLagreKnapp && (
+          <Button onClick={lagreClickHandler} disabled={!redigerbart} variant="primary" size="small">
+            Lagre
+          </Button>
+        )}
+      </div>
     </div>
   );
 };
