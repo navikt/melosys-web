@@ -12,7 +12,7 @@ interface VedtakBegrunnelserProps {
 
 export const VedtakBegrunnelser = ({ anmodningsperiodeSvarType }: VedtakBegrunnelserProps) => {
   const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
-  const vilkarBegrunnelser = useSelector(vilkarSelectors.vilkarBegrunnelserSelector);
+  const vilkarBegrunnelser = useSelector(vilkarSelectors.VilkarBegrunnelserSelector);
   const utsendtArbeidstakerBegrunnelser = useSelector(vilkarSelectors.UtsendingsvilkårArbeidstakerBegrunnelserSelector);
   const utsendtNaeringsdrivendeBegrunnelser = useSelector(
     vilkarSelectors.UtsendingsvilkårNæringsdrivendeBegrunnelserSelector
