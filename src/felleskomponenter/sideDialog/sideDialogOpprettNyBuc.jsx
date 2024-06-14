@@ -275,6 +275,11 @@ const SideDialogOpprettNyBuc = ({ behandlingID, behandlingstema, sakstype, dokum
           dokumenter={dokumenter}
           redigerbart={redigerbart}
         />
+        {alertmelding && (
+          <Nav.Alert variant="error" className="feilmelding">
+            {alertmelding}
+          </Nav.Alert>
+        )}
         <Knapperad
           bekreft={sendSed}
           avbryt={resetKomponent}
@@ -289,11 +294,6 @@ const SideDialogOpprettNyBuc = ({ behandlingID, behandlingstema, sakstype, dokum
             <Nav.Link href={opprettetBucUrl} target="_blank">
               {opprettetBucUrl}
             </Nav.Link>
-          </Nav.Alert>
-        )}
-        {alertmelding && (
-          <Nav.Alert variant="warning" className="varsel">
-            {alertmelding}
           </Nav.Alert>
         )}
       </form>
