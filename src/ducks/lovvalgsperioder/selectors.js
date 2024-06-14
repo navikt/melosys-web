@@ -6,7 +6,7 @@
  */
 
 import { createSelector } from "reselect";
-import { valgteLovvalgsVilkar } from "../vilkar/selectors";
+import { ValgteLovvalgsVilkar } from "../vilkar/selectors";
 
 // import * as Koder from '../../kodeverk';
 
@@ -22,7 +22,7 @@ export const LovvalgsperiodeSelector = createSelector(
 );
 
 export const ValgteLovvalgsVilkarBestemmelseSelector = createSelector(
-  (state) => valgteLovvalgsVilkar(state),
+  (state) => ValgteLovvalgsVilkar(state),
   (lovvalgsvilkar) => (lovvalgsvilkar.length > 0 ? lovvalgsvilkar[0].vilkaar : undefined)
 );
 

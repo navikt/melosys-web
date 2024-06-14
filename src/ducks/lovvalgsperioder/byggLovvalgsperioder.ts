@@ -98,7 +98,7 @@ const byggLovvalgsperiodeArtikkel11_3Aeller13_3A = (
   oppfyltLovvalg: string
 ): Lovvalgsperiode[] => {
   const søknadsperiode = mottatteOpplysningerSelectors.PeriodeSelector(reduxState);
-  const tilleggsbestemmelseFraVilkar = finnOppfyltVilkar(vilkarSelectors.valgteTilleggsVilkar(reduxState));
+  const tilleggsbestemmelseFraVilkar = finnOppfyltVilkar(vilkarSelectors.ValgteTilleggsVilkar(reduxState));
   const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
   return [
     {
@@ -117,7 +117,7 @@ const byggLovvalgsperiodeArtikkel11_3Aeller13_3A = (
 
 const byggLovvalgsperiodeArtikkel11_3A = (stegState: PerioderStegState, reduxState: RootState) => {
   const periode = mottatteOpplysningerSelectors.PeriodeSelector(reduxState);
-  const tilleggsbestemmelseFraVilkar = finnOppfyltVilkar(vilkarSelectors.valgteTilleggsVilkar(reduxState));
+  const tilleggsbestemmelseFraVilkar = finnOppfyltVilkar(vilkarSelectors.ValgteTilleggsVilkar(reduxState));
   const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
   const unntakFraBestemmelse = stegState.unntakfrabestemmelse;
 
@@ -347,7 +347,7 @@ const byggLovvalgsperioder = (stegState: PerioderStegState, reduxState: RootStat
 export function oppdaterLovvalgsperioderState(stegState: PerioderStegState) {
   return (dispatch: ThunkDispatch<RootState, unknown, Types.Action>, getState: () => RootState) => {
     const reduxState = getState();
-    const alleLovvalgsvilkar = vilkarSelectors.valgteLovvalgsVilkar(reduxState);
+    const alleLovvalgsvilkar = vilkarSelectors.ValgteLovvalgsVilkar(reduxState);
 
     if (alleLovvalgsvilkar.length > 0) {
       const oppfyltLovvalg = finnOppfyltVilkar(alleLovvalgsvilkar);
