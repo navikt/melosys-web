@@ -1,5 +1,4 @@
 import TrygdeavgiftsperioderTabell from "./trygdeavgiftsperioderTabell";
-import { useAsyncCallbackState } from "../../../../hooks";
 import * as Api from "../../../../services/api";
 import SkatteforholdsPerioderTabell from "./skatteforholdsPerioderTabell";
 import MedlemskapsPerioderTabell from "./medlemskapsPerioderTabell";
@@ -7,26 +6,30 @@ import { Alert, Button, Heading, Radio, RadioGroup, VStack } from "@navikt/ds-re
 import "./aarsavregning.css";
 import { useEffect, useRef, useState } from "react";
 import AarVelger from "../../../../felleskomponenter/AarVelger/aarVelger";
-import { LagAarsavregningRequest } from "../../../../services/modules/aarsavregning/aarsavregning";
+import {
+  AarsavregningResponse,
+  LagAarsavregningRequest,
+} from "../../../../services/modules/aarsavregning/aarsavregning";
 
 export const VurderingAarsavregning = () => {
   const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
   const initialRender = useRef(true);
 
   const [feil, setFeil] = useState<undefined | string>(undefined);
+  const [lagretTrygdeavgift, setLagretTrygdeavgift] = useState<AarsavregningResponse | undefined>(undefined);
 
-  const fetchAvregningsData = async () => {
-    try {
-      // TODO: use behandlingsID when it's ready
-      return await Api.Aarsavregning.hentAvregningsData(1);
-    } catch (error) {
-      // @ts-ignore
-      setFeil(error.message);
-      return undefined;
-    }
+  useEffect(() => {
+    fetchAvregningsData();
+  }, []);
+
+  const fetchAvregningsData = () => {
+    return Api.Aarsavregning.hentAvregningsData(1) // TODO: use behandlingsID when it's ready
+      .then((response: AarsavregningResponse) => {
+        setLagretTrygdeavgift(response);
+        return response;
+      })
+      .catch((error: any) => setFeil(error.body?.message || error));
   };
-
-  const [lagretTrygdeavgift, setLagretTrygdeavgift] = useAsyncCallbackState(fetchAvregningsData, undefined, []);
 
   const handleYearChange = (year: number) => {
     setSelectedYear(year);
@@ -44,16 +47,14 @@ export const VurderingAarsavregning = () => {
       behandlingsId: 1, // TODO erstatt med faktisk behandlingsId når det er klart
     };
 
-    Api.Aarsavregning.lagAvregningsData(lagNyAvregning)
-      .then(() => fetchAvregningsData())
-      .then((response) => setLagretTrygdeavgift(response));
+    Api.Aarsavregning.lagAvregningsData(lagNyAvregning).then(() => fetchAvregningsData());
   }, [selectedYear]);
 
   return (
     <VStack align="start" gap="3">
       <Heading size="large">Årsavregning</Heading>
-      {feil && <Alert variant="error">{feil}</Alert>}
       <AarVelger onForandringAvAar={handleYearChange} />
+      {feil && <Alert variant="error">{feil}</Alert>}
       <VStack className="tabeller" gap="6" align="start">
         <MedlemskapsPerioderTabell
           perioder={lagretTrygdeavgift?.tidligereOpplysninger?.trygdeavgiftsgrunnlag.medlemskapsperioder}
