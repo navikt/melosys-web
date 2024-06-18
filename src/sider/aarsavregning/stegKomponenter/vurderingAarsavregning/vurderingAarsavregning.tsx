@@ -3,7 +3,7 @@ import { useAsyncCallbackState } from "../../../../hooks";
 import * as Api from "../../../../services/api";
 import SkatteforholdsPerioderTabell from "./skatteforholdsPerioderTabell";
 import MedlemskapsPerioderTabell from "./medlemskapsPerioderTabell";
-import { Button, Heading, Radio, RadioGroup, VStack } from "@navikt/ds-react";
+import { Alert, Button, Heading, Radio, RadioGroup, VStack } from "@navikt/ds-react";
 import "./aarsavregning.css";
 import { useEffect, useRef, useState } from "react";
 import AarVelger from "../../../../felleskomponenter/AarVelger/aarVelger";
@@ -12,7 +12,19 @@ import { LagAarsavregningRequest } from "../../../../services/modules/aarsavregn
 export const VurderingAarsavregning = () => {
   const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
   const initialRender = useRef(true);
-  const fetchAvregningsData = () => Api.Aarsavregning.hentAvregningsData(1); // TODO bruk behandlingsID når det er klart
+
+  const [feil, setFeil] = useState<undefined | string>(undefined);
+
+  const fetchAvregningsData = async () => {
+    try {
+      // TODO: use behandlingsID when it's ready
+      return await Api.Aarsavregning.hentAvregningsData(1);
+    } catch (error) {
+      // @ts-ignore
+      setFeil(error.message);
+      return undefined;
+    }
+  };
 
   const [lagretTrygdeavgift, setLagretTrygdeavgift] = useAsyncCallbackState(fetchAvregningsData, undefined, []);
 
@@ -40,6 +52,7 @@ export const VurderingAarsavregning = () => {
   return (
     <VStack align="start" gap="3">
       <Heading size="large">Årsavregning</Heading>
+      {feil && <Alert variant="error">{feil}</Alert>}
       <AarVelger onForandringAvAar={handleYearChange} />
       <VStack className="tabeller" gap="6" align="start">
         <MedlemskapsPerioderTabell
