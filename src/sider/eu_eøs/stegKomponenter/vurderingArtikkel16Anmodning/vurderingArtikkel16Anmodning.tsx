@@ -241,11 +241,23 @@ const VurderingArtikkel16Anmodning = ({
 
   const pdfDokumenter = formValues?.kreverMottakerinstitusjon
     ? [
-        { dokumentData: { produserbardokument: ORIENTERING_ANMODNING_UNNTAK, mottaker: BRUKER } },
+        {
+          dokumentData: {
+            produserbardokument: ORIENTERING_ANMODNING_UNNTAK,
+            mottaker: BRUKER,
+            fritekst: unntaksvilkår.begrunnelseFritekst,
+          },
+        },
         { sedType: EKV.Koder.sedtyper.A001, sedData: { fritekst: formValues?.fritekstSed } },
       ]
     : [
-        { dokumentData: { produserbardokument: ORIENTERING_ANMODNING_UNNTAK, mottaker: BRUKER } },
+        {
+          dokumentData: {
+            produserbardokument: ORIENTERING_ANMODNING_UNNTAK,
+            mottaker: BRUKER,
+            fritekst: unntaksvilkår.begrunnelseFritekst,
+          },
+        },
         {
           dokumentData: {
             produserbardokument: ANMODNING_UNNTAK,
