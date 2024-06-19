@@ -23,7 +23,7 @@ export const VurderingAarsavregning = () => {
   }, []);
 
   const fetchAvregningsData = () => {
-    return Api.Aarsavregning.hentAvregningsData(1) // TODO: use behandlingsID when it's ready
+    return Api.Aarsavregning.hentAvregningsData(1) // TODO: use behandlingsID når det er klart
       .then((response: AarsavregningResponse) => {
         setLagretTrygdeavgift(response);
         return response;
