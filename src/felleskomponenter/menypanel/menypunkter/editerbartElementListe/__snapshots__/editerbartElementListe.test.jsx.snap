@@ -96,8 +96,12 @@ exports[`EditerbartElementListe > snapshot test 1`] = `
               </div>
             </div>
           </h2>
-          <div>
-            Element
+          <div
+            class="padding-left"
+          >
+            <div>
+              Element
+            </div>
           </div>
         </div>
       </div>
@@ -189,8 +193,12 @@ exports[`EditerbartElementListe > snapshot test 1`] = `
               </div>
             </div>
           </h2>
-          <div>
-            Element
+          <div
+            class="padding-left"
+          >
+            <div>
+              Element
+            </div>
           </div>
         </div>
       </div>

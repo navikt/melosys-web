@@ -5,9 +5,10 @@ import { useHentFamiliemedlemmerQuery } from "./hentFamiliemedlemmer.generated";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import { Familierelasjonsrolle } from "../../../../../graphql";
 import bem from "../../../../../bemUtils";
+import { BarnTable } from "./tables/barnTable";
+import { EktefelleTable } from "./tables/ektefelleTable";
+
 import "./familiemedlemmer.css";
-import BarnTable from "./tables/barnTable";
-import EktefelleTable from "./tables/ektefelleTable";
 
 const Familiemedlemmer = () => {
   const behandlingID: number = useSelector(behandlingerSelectors.BehandlingIDSelector) as number;
@@ -41,24 +42,28 @@ const Familiemedlemmer = () => {
       <Heading size="xsmall" level="2" spacing className={familiemedlemmerClassName.element("understrek")}>
         <ChildEyesIcon aria-hidden="true" fontSize="1.5rem" className="mellomrom-ikon-tekst" /> Barn
       </Heading>
-      {barn.length > 0 ? (
-        <BarnTable barnListe={barn} />
-      ) : (
-        <BodyShort size="small" spacing>
-          Ingen barn registrert.
-        </BodyShort>
-      )}
+      <div className="menypanel__table-wrapper--padding-left">
+        {barn.length > 0 ? (
+          <BarnTable barnListe={barn} />
+        ) : (
+          <BodyShort size="small" spacing>
+            Ingen barn registrert.
+          </BodyShort>
+        )}
+      </div>
       <Heading size="xsmall" level="2" spacing className={familiemedlemmerClassName.element("understrek")}>
         <PersonGroupIcon aria-hidden="true" fontSize="1.5rem" className="mellomrom-ikon-tekst" /> Ektefelle/partner
       </Heading>
-      <BodyShort size="small" textColor="subtle" spacing>
-        Samboer registreres ikke som relasjon i PDL
-      </BodyShort>
-      {ektefellePartner.length > 0 ? (
-        <EktefelleTable ektefelleListe={ektefellePartner} />
-      ) : (
-        <BodyShort size="small">Ingen ektefelle/partner registrert.</BodyShort>
-      )}
+      <div className="menypanel__table-wrapper--padding-left">
+        <BodyShort size="small" textColor="subtle" spacing>
+          Samboer registreres ikke som relasjon i PDL
+        </BodyShort>
+        {ektefellePartner.length > 0 ? (
+          <EktefelleTable ektefelleListe={ektefellePartner} />
+        ) : (
+          <BodyShort size="small">Ingen ektefelle/partner registrert.</BodyShort>
+        )}
+      </div>
     </div>
   );
 };
