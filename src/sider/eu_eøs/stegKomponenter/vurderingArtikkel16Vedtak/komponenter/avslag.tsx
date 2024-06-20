@@ -6,6 +6,8 @@ import Dokumentliste, {
   SedDokumentMetadataType,
 } from "../../../../../felleskomponenter/dokumentliste";
 import VedtakBegrunnelser from "./vedtakBegrunnelser";
+import { Periode } from "../../../../../services/modules/types";
+import DatoOgBestemmelse from "./datoOgBestemmelse";
 
 interface AvslagProps {
   redigerbart: boolean;
@@ -13,6 +15,7 @@ interface AvslagProps {
   vedtaksbrevFritekst?: string;
   renderFritekstFelt: () => ReactElement;
   visOrienteringsbrevArbeidsgiver: boolean;
+  gjeldendePeriode: Partial<Periode>;
 }
 
 export const Avslag = ({
@@ -21,6 +24,7 @@ export const Avslag = ({
   vedtaksbrevFritekst,
   renderFritekstFelt,
   visOrienteringsbrevArbeidsgiver,
+  gjeldendePeriode,
 }: AvslagProps) => {
   const pdfDokumenter: (BrevDokumentMetadataType | SedDokumentMetadataType)[] = [
     {
@@ -44,6 +48,7 @@ export const Avslag = ({
   return (
     <Fragment>
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Avslag</Nav.Typo.Innholdstittel>
+      <DatoOgBestemmelse fomDato={gjeldendePeriode.fom} tomDato={gjeldendePeriode.tom} />
       <Nav.Row>
         <Nav.Column xs="7">
           <VedtakBegrunnelser anmodningsperiodeSvarType={MKV.Koder.anmodningsperiodesvartyper.AVSLAG} />
