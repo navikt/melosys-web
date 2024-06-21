@@ -252,6 +252,7 @@ export const VurderingArtikkel16Vedtak = ({
             renderFritekstFelt={renderFritekstFelt}
             vedtaksbrevFritekst={formValues.vedtaksbrevFritekst}
             visOrienteringsbrevArbeidsgiver={visOrienteringsbrevArbeidsgiver}
+            gjeldendePeriode={gjeldendePeriode}
           />
         );
       default:

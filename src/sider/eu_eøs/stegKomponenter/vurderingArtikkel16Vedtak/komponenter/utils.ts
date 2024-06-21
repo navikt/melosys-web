@@ -14,12 +14,6 @@ export const hentLovvalgsperiode = (
 ): Partial<Periode> => {
   const { anmodningsperiodeSvarType, endretPeriode } = anmodningsperiodesvar;
 
-  if (anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE) {
-    return {
-      fom: anmodningsperiode.fomDato,
-      tom: anmodningsperiode.tomDato,
-    };
-  }
   if (anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE) {
     return {
       fom: endretPeriode.fom!!,
@@ -28,8 +22,8 @@ export const hentLovvalgsperiode = (
   }
 
   return {
-    fom: undefined,
-    tom: undefined,
+    fom: anmodningsperiode.fomDato,
+    tom: anmodningsperiode.tomDato,
   };
 };
 
