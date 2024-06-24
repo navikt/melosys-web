@@ -145,10 +145,10 @@ const OpprettNySak = ({
   const hentOppgaver = async (value: string) => {
     if (Utils.person.erGyldigFnrEllerDnr(value) || Utils.organisasjon.erOrgnrGyldig(value)) {
       try {
-        const oppgaverResponse = await Api.Oppgaver.sok(
-          Utils.person.erGyldigFnrEllerDnr(value) ? value : null,
-          Utils.organisasjon.erOrgnrGyldig(value) ? value : null
-        );
+        const oppgaverResponse = await Api.Oppgaver.sok({
+          personIdent: Utils.person.erGyldigFnrEllerDnr(value) ? value : null,
+          orgnr: Utils.organisasjon.erOrgnrGyldig(value) ? value : null,
+        });
         setOppgaver(oppgaverResponse);
         setOppgaverForsoktHentet(true);
       } catch (e) {
