@@ -1,4 +1,4 @@
-import { getAsJson, cachedGetAsJson, postAsJson } from "../utils";
+import { getAsJson, postAsJson } from "../utils";
 import { API_BASE_URL, OPPGAVER } from "../api-constants";
 import * as KV from "../../kodeverk";
 
@@ -11,6 +11,11 @@ export interface PlukkOppgaveReqDto {
 export interface TilbakeleggOppgaveReqDto {
   behandlingID: number;
   venterPaaDokumentasjon: boolean;
+}
+
+export interface SokOppgaveReqDto {
+  personIdent: string | null;
+  orgnr: string | null;
 }
 
 export interface SokOppgaveResDto {
@@ -30,12 +35,5 @@ export const sendPlukk = (data: PlukkOppgaveReqDto) => postAsJson(`${API_BASE_UR
 export const tilbakelegg = (data: TilbakeleggOppgaveReqDto) =>
   postAsJson(`${API_BASE_URL}${OPPGAVER}/tilbakelegg`, data);
 
-export const sok = (
-  personIdent: string | null,
-  orgnr: string | null,
-  cacheDuration = 30
-): Promise<Array<SokOppgaveResDto>> =>
-  cachedGetAsJson(
-    `${API_BASE_URL}${OPPGAVER}/sok?personIdent=${personIdent || ""}&orgnr=${orgnr || ""}`,
-    cacheDuration
-  );
+export const sok = (data: SokOppgaveReqDto): Promise<Array<SokOppgaveResDto>> =>
+  postAsJson(`${API_BASE_URL}${OPPGAVER}/sok`, data);
