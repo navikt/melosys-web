@@ -211,6 +211,7 @@ export const KnyttTilSak = (props) => {
     </div>
   );
 };
+
 KnyttTilSak.propTypes = {
   sak: MPT.Fagsak.isRequired,
   erJournalføring: PT.bool.isRequired,
