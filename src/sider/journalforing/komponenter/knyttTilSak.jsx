@@ -96,13 +96,10 @@ export const KnyttTilSak = (props) => {
 
   useEffect(() => {
     if (sakstype.kode && sakstema.kode && behandlingstema) {
-      Api.LovligeKombinasjoner.hentBehandlingstyper(
+      Api.LovligeKombinasjoner.hentBehandlingstyperForKnyttTilSak(
         journalforingGjelder,
-        sakstype.kode,
-        sakstema.kode,
-        behandlingstema,
-        null,
-        sisteBehandling.behandlingID
+        sak.saksnummer,
+        behandlingstema
       ).then((alleMuligeBehandlingstyper) => {
         setMuligeBehandlingstyper(alleMuligeBehandlingstyper);
       });
@@ -214,6 +211,7 @@ export const KnyttTilSak = (props) => {
     </div>
   );
 };
+
 KnyttTilSak.propTypes = {
   sak: MPT.Fagsak.isRequired,
   erJournalføring: PT.bool.isRequired,

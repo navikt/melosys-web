@@ -95,6 +95,13 @@ vi.mock("../../../../services/modules/lovligekombinasjoner", async () => {
         { kode: "HENVENDELSE", term: HENVENDELSE },
         { kode: "KLAGE", term: KLAGE },
       ]),
+    hentBehandlingstyperForKnyttTilSak: () =>
+      Promise.resolve([
+        { kode: "FØRSTEGANG", term: FØRSTEGANG },
+        { kode: "NY_VURDERING", term: NY_VURDERING },
+        { kode: "HENVENDELSE", term: HENVENDELSE },
+        { kode: "KLAGE", term: KLAGE },
+      ]),
   };
 });
 
