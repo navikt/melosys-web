@@ -28,12 +28,14 @@ export const Avslag = ({
   visOrienteringsbrevArbeidsgiver,
   gjeldendePeriode,
 }: AvslagProps) => {
-  const bestemmelse = useSelector(lovvalgsperioderSelectors.LovvalgBestemmelseSelector);
+  /* const bestemmelse = useSelector(lovvalgsperioderSelectors.LovvalgBestemmelseSelector);
   const lovvalgsbestemmelseKT = MKVUtils.lovvalgsbestemmelseTilObjekt(bestemmelse);
 
   const erStorbrittania =
     lovvalgsbestemmelseKT ===
-    MKV.Koder.Lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia.KONV_EFTA_STORBRITANNIA_ART18_1;
+    MKV.Koder.Lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia.KONV_EFTA_STORBRITANNIA_ART18_1;*/
+
+  const erStorbrittania = true;
 
   const pdfDokumenter: (BrevDokumentMetadataType | SedDokumentMetadataType)[] = [
     {
