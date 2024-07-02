@@ -48,9 +48,8 @@ export const KnyttTilSak = (props) => {
 
   const sisteBehandlingErPågåendeArtikkel16Sak =
     sisteBehandlingHarSendtAnmodningUnntakTilUtland && !sisteBehandlingErInaktiv;
-
   const sisteBehandlingKanOpprettesAndregangsbehandlingPå =
-    sisteBehandlingErInaktiv || sisteBehandlingErPågåendeArtikkel16Sak;
+    sisteBehandlingErInaktiv || sisteBehandlingErPågåendeArtikkel16Sak || muligeBehandlingstyper?.length > 0;
 
   useEffect(() => {
     if (sisteBehandlingErPågåendeArtikkel16Sak && erJournalføring) {
