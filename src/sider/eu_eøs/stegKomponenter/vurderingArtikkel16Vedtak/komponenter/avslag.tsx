@@ -8,8 +8,6 @@ import Dokumentliste, {
 import VedtakBegrunnelser from "./vedtakBegrunnelser";
 import { Periode } from "../../../../../services/modules/types";
 import DatoOgBestemmelse from "./datoOgBestemmelse";
-import { useSelector } from "react-redux";
-import { lovvalgsperioderSelectors } from "../../../../../ducks/lovvalgsperioder";
 
 interface AvslagProps {
   redigerbart: boolean;
@@ -18,6 +16,7 @@ interface AvslagProps {
   renderFritekstFelt: () => ReactElement;
   visOrienteringsbrevArbeidsgiver: boolean;
   gjeldendePeriode: Partial<Periode>;
+  erStorbrittaniaArt18_1Bestemmelse: boolean;
 }
 
 export const Avslag = ({
@@ -27,20 +26,12 @@ export const Avslag = ({
   renderFritekstFelt,
   visOrienteringsbrevArbeidsgiver,
   gjeldendePeriode,
+  erStorbrittaniaArt18_1Bestemmelse,
 }: AvslagProps) => {
-  /* const bestemmelse = useSelector(lovvalgsperioderSelectors.LovvalgBestemmelseSelector);
-  const lovvalgsbestemmelseKT = MKVUtils.lovvalgsbestemmelseTilObjekt(bestemmelse);
-
-  const erStorbrittania =
-    lovvalgsbestemmelseKT ===
-    MKV.Koder.Lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia.KONV_EFTA_STORBRITANNIA_ART18_1;*/
-
-  const erStorbrittania = true;
-
   const pdfDokumenter: (BrevDokumentMetadataType | SedDokumentMetadataType)[] = [
     {
       dokumentData: {
-        produserbardokument: erStorbrittania
+        produserbardokument: erStorbrittaniaArt18_1Bestemmelse
           ? MKV.Koder.brev.produserbaredokumenter.AVSLAG_EFTA_STORBRITANNIA
           : MKV.Koder.brev.produserbaredokumenter.AVSLAG_YRKESAKTIV,
         mottaker: MKV.Koder.mottakerroller.BRUKER,
