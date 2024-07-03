@@ -1,5 +1,6 @@
 import * as Api from "../../../../services/api";
 import { useFeatureToggle } from "../../../../featuretoggle";
+import { useHentStatsborgerskapQuery } from "../../../../felleskomponenter/menypanel/menypunkter/person/statsborgerskapTable/hentStatsborgerskap.generated";
 import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../../featuretoggle/toggleNavn";
 import classNames from "classnames";
 import * as Utils from "../../../../utils";
@@ -14,11 +15,27 @@ interface VarslerProps {
   inngangsvilkaar: Api.Vilkar.Vilkaar | undefined;
   landkoder: Array<string>;
   behandlingstema: string;
+  behandlingID: number;
 }
 
-const Varsler = ({ oppfyllerInngangsvilkar, inngangsvilkaar, landkoder, behandlingstema }: VarslerProps) => {
+const Varsler = ({
+  oppfyllerInngangsvilkar,
+  inngangsvilkaar,
+  landkoder,
+  behandlingstema,
+  behandlingID,
+}: VarslerProps) => {
   const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
   const inngangsvilkaarBegrunnelseKoder = inngangsvilkaar?.begrunnelseKoder || [];
+
+  const { data: statsborgerskapData } = useHentStatsborgerskapQuery({
+    variables: { behandlingID },
+  });
+
+  const statsborgerskapLand =
+    statsborgerskapData?.hentSaksopplysninger?.persondata?.statsborgerskap?.map(
+      (statsborgerskap) => statsborgerskap.land
+    ) ?? [];
 
   const inngangsvilkaarErOverstyrtAvSaksbehandler =
     inngangsvilkaarBegrunnelseKoder.includes(OVERSTYRT_AV_SAKSBEHANDLER);
@@ -50,10 +67,11 @@ const Varsler = ({ oppfyllerInngangsvilkar, inngangsvilkaar, landkoder, behandli
     (kode) => kode !== OVERSTYRT_AV_SAKSBEHANDLER
   );
 
+  const erFraEllerSkalTilStorbritannia =
+    statsborgerskapLand.includes("STORBRITANNIA") || MKVUtils.enesteLandErStorbritannia(landkoder);
+
   const visStorbritanniaKonvensjonTekst =
-    konvensjonStorbritanniaToggleEnabled &&
-    MKVUtils.erUtsendt(behandlingstema) &&
-    MKVUtils.enesteLandErStorbritannia(landkoder);
+    konvensjonStorbritanniaToggleEnabled && MKVUtils.erUtsendt(behandlingstema) && erFraEllerSkalTilStorbritannia;
 
   return (
     <div className="vurderinginngang_eu_eos">
