@@ -99,6 +99,7 @@ export const VurderingArtikkel16Vedtak = ({
   const mottatteOpplysningerStatus = useSelector(mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector);
   const harValgtNorskArbeidsgiver = useSelector(flytSelectors.HarValgtNorskArbeidsgiverSelector);
   const formIsValid = useSelector(isValid(KV.Form.ARTIKKEL_16_1_VEDTAK));
+  const lovvalgsbestemmelse = useSelector(lovvalgsperioderSelectors.LovvalgBestemmelseSelector);
 
   const endreLovvalgsperiode = (fomdato?: string | null, tomdato?: string | null) =>
     dispatch(lovvalgsperioderOperations.endreLovvalgsPeriode(fomdato ?? "", tomdato ?? undefined));
@@ -207,6 +208,9 @@ export const VurderingArtikkel16Vedtak = ({
 
   if (!formValues) return null;
 
+  const erStorbrittaniaArt18_1Bestemmelse =
+    lovvalgsbestemmelse ===
+    MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia.KONV_EFTA_STORBRITANNIA_ART18_1;
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
   const visOrienteringsbrevArbeidsgiver = harValgtNorskArbeidsgiver && !erNyVurdering;
   const gjeldendePeriode = hentLovvalgsperiode(anmodningsperiodesvar, anmodningsperiode);
@@ -253,6 +257,7 @@ export const VurderingArtikkel16Vedtak = ({
             vedtaksbrevFritekst={formValues.vedtaksbrevFritekst}
             visOrienteringsbrevArbeidsgiver={visOrienteringsbrevArbeidsgiver}
             gjeldendePeriode={gjeldendePeriode}
+            erStorbrittaniaArt18_1Bestemmelse={erStorbrittaniaArt18_1Bestemmelse}
           />
         );
       default:
