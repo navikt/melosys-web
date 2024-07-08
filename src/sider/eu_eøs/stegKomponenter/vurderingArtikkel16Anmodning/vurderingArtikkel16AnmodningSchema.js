@@ -1,5 +1,9 @@
 import { object, string, bool } from "yup";
-import { DU_KAN_IKKE_SKRIVE_MER_ENN_500_TEGN } from "../../../../kodeverk/feilmeldinger";
+import {
+  DU_KAN_IKKE_SKRIVE_MER_ENN_462_TEGN,
+  DU_KAN_IKKE_SKRIVE_MER_ENN_500_TEGN,
+} from "../../../../kodeverk/feilmeldinger";
+import { MKVUtils } from "../../../../melosyskodeverk";
 
 const VELG_MOTTAKERINSTITUSJON = { melding: "Velg mottakerinstitusjon" };
 
@@ -9,7 +13,11 @@ const artikkel16_anmodning = object().shape({
     is: true,
     then: string().required(VELG_MOTTAKERINSTITUSJON),
   }),
-  fritekstSed: string().nullable().max(500, DU_KAN_IKKE_SKRIVE_MER_ENN_500_TEGN),
+  fritekstSed: string().when("$bestemmelse", {
+    is: MKVUtils.erStorbritanniaKonvBestemmelse,
+    then: string().nullable().max(462, DU_KAN_IKKE_SKRIVE_MER_ENN_462_TEGN),
+    otherwise: string().nullable().max(500, DU_KAN_IKKE_SKRIVE_MER_ENN_500_TEGN),
+  }),
 });
 
 export default artikkel16_anmodning;

@@ -1,25 +1,20 @@
 import { useSelector } from "react-redux";
-import classnames from "classnames";
-
-import * as Nav from "../../../../../navFrontend";
-import * as Ikoner from "../../../../../resources/images";
-import * as Mui from "../../../../ui";
-import * as Tags from "../../../tags";
-
+import { Alert, BodyShort, Heading, Tag } from "@navikt/ds-react";
+import { PersonGroupIcon, ChildEyesIcon } from "@navikt/aksel-icons";
 import { useHentFamiliemedlemmerQuery } from "./hentFamiliemedlemmer.generated";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import { Familierelasjonsrolle } from "../../../../../graphql";
 import bem from "../../../../../bemUtils";
+import { BarnTable } from "./tables/barnTable";
+import { EktefelleTable } from "./tables/ektefelleTable";
 
 import "./familiemedlemmer.css";
-import BarnTable from "./tables/barnTable";
-import EktefelleTable from "./tables/ektefelleTable";
 
 const Familiemedlemmer = () => {
-  const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
+  const behandlingID: number = useSelector(behandlingerSelectors.BehandlingIDSelector) as number;
   const { loading, error, data } = useHentFamiliemedlemmerQuery({ variables: { behandlingID } });
 
-  if (error) return <Nav.Alert variant="error">Kunne ikke hente familiemedlemmer!</Nav.Alert>;
+  if (error) return <Alert variant="error">Kunne ikke hente familiemedlemmer!</Alert>;
   if (loading) return <div>Henter familiemedlemmer...</div>;
 
   const barn =
@@ -39,39 +34,36 @@ const Familiemedlemmer = () => {
 
   return (
     <div className={familiemedlemmerClassName.block}>
-      <Nav.Row>
-        <Tags.FraRegister className={familiemedlemmerClassName.element("fra-register-etikett")} />
-      </Nav.Row>
-      <Mui.Undertittel className={familiemedlemmerClassName.element("undertittel")} ikon={Ikoner.Child} tekst="Barn" />
-      {barn.length > 0 ? (
-        <BarnTable barnListe={barn} />
-      ) : (
-        <Nav.Typo.Normaltekst
-          className={familiemedlemmerClassName.element("ingen-familiemedlemmer-registrert-etikett")}
-        >
-          Ingen barn registrert.
-        </Nav.Typo.Normaltekst>
-      )}
-      <Mui.Undertittel
-        className={classnames(
-          familiemedlemmerClassName.element("undertittel"),
-          familiemedlemmerClassName.element("ektefelle-partner-undertittel")
+      <div className={familiemedlemmerClassName.element("padding-bottom")}>
+        <Tag size="small" variant="info" className={familiemedlemmerClassName.element("fra-register-etikett")}>
+          Fra register
+        </Tag>
+      </div>
+      <Heading size="xsmall" level="2" spacing className={familiemedlemmerClassName.element("understrek")}>
+        <ChildEyesIcon aria-hidden="true" fontSize="1.5rem" className="mellomrom-ikon-tekst" /> Barn
+      </Heading>
+      <div className="menypanel__table-wrapper--padding-left">
+        {barn.length > 0 ? (
+          <BarnTable barnListe={barn} />
+        ) : (
+          <BodyShort size="small" spacing>
+            Ingen barn registrert.
+          </BodyShort>
         )}
-        ikon={Ikoner.CoApplicant}
-        tekst="Ektefelle/partner"
-      />
-      <Nav.Typo.EtikettLiten className={familiemedlemmerClassName.element("samboer-etikett")}>
-        Samboer registreres ikke som relasjon i PDL
-      </Nav.Typo.EtikettLiten>
-      {ektefellePartner.length > 0 ? (
-        <EktefelleTable ektefelleListe={ektefellePartner} />
-      ) : (
-        <Nav.Typo.Normaltekst
-          className={familiemedlemmerClassName.element("ingen-familiemedlemmer-registrert-etikett")}
-        >
-          Ingen ektefelle/partner registrert.
-        </Nav.Typo.Normaltekst>
-      )}
+      </div>
+      <Heading size="xsmall" level="2" spacing className={familiemedlemmerClassName.element("understrek")}>
+        <PersonGroupIcon aria-hidden="true" fontSize="1.5rem" className="mellomrom-ikon-tekst" /> Ektefelle/partner
+      </Heading>
+      <div className="menypanel__table-wrapper--padding-left">
+        <BodyShort size="small" textColor="subtle" spacing>
+          Samboer registreres ikke som relasjon i PDL
+        </BodyShort>
+        {ektefellePartner.length > 0 ? (
+          <EktefelleTable ektefelleListe={ektefellePartner} />
+        ) : (
+          <BodyShort size="small">Ingen ektefelle/partner registrert.</BodyShort>
+        )}
+      </div>
     </div>
   );
 };

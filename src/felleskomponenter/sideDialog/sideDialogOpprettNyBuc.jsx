@@ -47,6 +47,7 @@ const SideDialogOpprettNyBuc = ({ behandlingID, behandlingstema, sakstype, dokum
   });
   const [oppdaterteFelt, setOppdaterteFelt] = useState({ buc: false, land: false, mottakerinstitusjoner: false });
   const [alertmelding, setAlertmelding] = useState("");
+  const [visSuccessAlert, setVisSuccessAlert] = useState(false);
 
   const hentMottakerinstitusjoner = async (buc, landkode) => {
     if (buc && landkode) {
@@ -112,6 +113,7 @@ const SideDialogOpprettNyBuc = ({ behandlingID, behandlingstema, sakstype, dokum
         if (sedResponse) {
           setOpprettetBucUrl(sedResponse.rinaUrl);
           setAlertmelding("");
+          setVisSuccessAlert(true);
           resetForm();
         }
       } catch (e) {
@@ -206,6 +208,10 @@ const SideDialogOpprettNyBuc = ({ behandlingID, behandlingstema, sakstype, dokum
 
   const feil = (felt) => (oppdaterteFelt[felt] ? feilmeldinger[felt] : undefined);
 
+  const lukkSuksessMelding = () => {
+    setVisSuccessAlert(false);
+  };
+
   return (
     <div className="sedbestilling">
       <form onSubmit={overstyrSubmit}>
@@ -275,6 +281,19 @@ const SideDialogOpprettNyBuc = ({ behandlingID, behandlingstema, sakstype, dokum
           dokumenter={dokumenter}
           redigerbart={redigerbart}
         />
+        {alertmelding && (
+          <Nav.Alert variant="error" className="feilmelding">
+            {alertmelding}
+          </Nav.Alert>
+        )}
+        {opprettetBucUrl && bucOpprettet && visSuccessAlert && (
+          <Nav.Alert variant="success" className="feilmelding" closeButton onClose={lukkSuksessMelding}>
+            Saken er nå opprettet i RINA
+            <Nav.Link href={opprettetBucUrl} target="_blank">
+              {opprettetBucUrl}
+            </Nav.Link>
+          </Nav.Alert>
+        )}
         <Knapperad
           bekreft={sendSed}
           avbryt={resetKomponent}
@@ -283,19 +302,6 @@ const SideDialogOpprettNyBuc = ({ behandlingID, behandlingstema, sakstype, dokum
           redigerbart={redigerbart}
           spinner={oppretterBuc}
         />
-        {opprettetBucUrl && bucOpprettet && (
-          <Nav.Alert variant="success" className="varsel">
-            Saken er nå opprettet i RINA
-            <Nav.Link href={opprettetBucUrl} target="_blank">
-              {opprettetBucUrl}
-            </Nav.Link>
-          </Nav.Alert>
-        )}
-        {alertmelding && (
-          <Nav.Alert variant="warning" className="varsel">
-            {alertmelding}
-          </Nav.Alert>
-        )}
       </form>
     </div>
   );

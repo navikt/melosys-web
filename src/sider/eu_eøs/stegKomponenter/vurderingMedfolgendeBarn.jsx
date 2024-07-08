@@ -60,14 +60,14 @@ const MedfolgendeBarn = ({
           hideLegend
           disabled={!redigerbart}
           onChange={onCheck}
-          defaultValue={Utils.streng.uppercaseStrengTilBool(omfattet)}
+          defaultValue={omfattet}
           name={radioName}
           size="small"
         >
           <Nav.Radio value={BOOLSK_STRING.SANN}>Ja</Nav.Radio>
           <Nav.Radio value={BOOLSK_STRING.USANN}>Nei</Nav.Radio>
         </Nav.RadioGroup>
-        {omfattet === false && (
+        {omfattet === BOOLSK_STRING.USANN && (
           <Nav.Row>
             <Nav.Column xs="8">
               <Nav.Select
@@ -96,7 +96,7 @@ const MedfolgendeBarn = ({
 MedfolgendeBarn.propTypes = {
   navn: PT.string,
   idNummer: PT.string,
-  omfattet: PT.oneOf([true, false, null]),
+  omfattet: PT.oneOf([BOOLSK_STRING.SANN, BOOLSK_STRING.USANN, null]),
   redigerbart: PT.bool.isRequired,
   onCheck: PT.func.isRequired,
   onUnmount: PT.func.isRequired,
@@ -168,16 +168,6 @@ const VurderingMedfolgendeBarn = ({
       </Nav.Typo.Undertittel>
       {medfolgendeBarn.map((barn) => {
         const medfolgendeBarnEnkeltfakta = vurderingLovvalgBarnFakta.find((af) => af.subjektID === barn.uuid);
-        const omfattet = () => {
-          const faktaVerdi = hentFaktaVerdi(medfolgendeBarnEnkeltfakta);
-          if (faktaVerdi === BOOLSK_STRING.SANN) {
-            return true;
-          }
-          if (faktaVerdi === BOOLSK_STRING.USANN) {
-            return false;
-          }
-          return null;
-        };
         const begrunnelse =
           medfolgendeBarnEnkeltfakta && medfolgendeBarnEnkeltfakta.begrunnelseKoder.length > 0
             ? medfolgendeBarnEnkeltfakta.begrunnelseKoder[0]
@@ -213,7 +203,7 @@ const VurderingMedfolgendeBarn = ({
             navn={barn.navn}
             idNummer={barn.fnr}
             redigerbart={redigerbart}
-            omfattet={omfattet()}
+            omfattet={hentFaktaVerdi(medfolgendeBarnEnkeltfakta)}
             onCheck={onCheck}
             onUnmount={onUnmount}
             onMount={onMount}

@@ -1,6 +1,7 @@
 import { CSSProperties, ReactNode } from "react";
 import Select, { Styles } from "react-select";
 
+import "./multiSelect.less";
 import * as Utils from "../../utils";
 
 export interface OptionBase {
@@ -29,14 +30,19 @@ function MultiSelect<T extends OptionBase>(props: MultiSelectProps<T>) {
 
   const getBackgroundColor = () => {
     if (!redigerbart) return "#E9E7E7";
-    if (feil) return "#F3E3E3";
     return "#FFFFFF";
+  };
+
+  const getBoxShadow = () => {
+    if (feil) return "0 0 0 1px #ba3a26";
+    return "none";
   };
 
   const styles: Styles<T, true> = {
     control: (provided: CSSProperties) => ({
       ...provided,
       borderColor: getBorderColor(),
+      boxShadow: getBoxShadow(),
       "&:hover": {
         borderColor: getBorderColor(true),
       },
@@ -81,7 +87,7 @@ function MultiSelect<T extends OptionBase>(props: MultiSelectProps<T>) {
         value={options.filter((option) => values?.indexOf(option.value) >= 0)}
       />
       <div role="alert" aria-live="assertive">
-        {feil && <div className="skjemaelement__feilmelding">{feil}</div>}
+        {feil && <div className="skjemaelement__feilmelding skjemaelement__feilmelding--multiSelect">{feil}</div>}
       </div>
     </div>
   );

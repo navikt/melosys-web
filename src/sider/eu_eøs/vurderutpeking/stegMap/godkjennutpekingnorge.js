@@ -3,7 +3,7 @@ import * as EKV from "eessi-kodeverk";
 import MKV from "../../../../melosyskodeverk";
 import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
 import { STEG, FANE_STATUS } from "../../../../felleskomponenter/stegvelger";
-import VurderingVedtak from "../../stegKomponenter/vurderingVedtak";
+import VurderingVedtak from "../../stegKomponenter/vurderingVedtak/vurderingVedtak";
 
 class GodkjennUtpekingNorge extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -34,7 +34,6 @@ class GodkjennUtpekingNorge extends Steg {
 
       return {
         redigerbart: _propsLight.generiskStegRedigerbart,
-        visAntallManederUtland: false,
         pdfDokumenter,
         harFeilmeldinger: _propsLight.harFeilmeldinger,
       };
@@ -48,8 +47,7 @@ class GodkjennUtpekingNorge extends Steg {
     };
     this.handlers = {
       tilbake: propsLight.tilgjengeligeHandlers.tilbake,
-      kontrollerFerdigbehandling: propsLight.tilgjengeligeHandlers.kontrollerFerdigbehandling,
-      validerMottatteOpplysninger: this._propsLight.tilgjengeligeHandlers.validerMottatteOpplysninger,
+      validerMottatteOpplysninger: propsLight.tilgjengeligeHandlers.validerMottatteOpplysninger,
     };
     this._status = FANE_STATUS.OK;
   }

@@ -8,11 +8,11 @@ exports[`ArbeidsforholdNorgeListe > snapshot test 1`] = `
     <div
       class="redigerbartElement editerbart__element"
     >
-      <fieldset
-        class="fieldset"
+      <h2
+        class="navds-heading navds-heading--small navds-typo--spacing"
       >
-        <legend
-          class="fieldset__legend"
+        <div
+          class="heading-margin"
         >
           <div
             class="editerbart-element__legend editerbart-element__legend--understrek"
@@ -62,7 +62,11 @@ exports[`ArbeidsforholdNorgeListe > snapshot test 1`] = `
               </button>
             </span>
           </div>
-        </legend>
+        </div>
+      </h2>
+      <div
+        class="padding-left"
+      >
         <div
           class="row enkeltArbeidsforholdNorgeRedigerer"
         >
@@ -103,7 +107,7 @@ exports[`ArbeidsforholdNorgeListe > snapshot test 1`] = `
             class="col col-xs-7"
           />
         </div>
-      </fieldset>
+      </div>
     </div>
     <div
       class="leggTilKnapp"

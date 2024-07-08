@@ -1,20 +1,16 @@
 import { useContext, useEffect, useState } from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-
-import { KTObject } from "@navikt/melosys-kodeverk";
-import MKV from "../../melosyskodeverk";
 import * as Nav from "../../navFrontend";
 
 import * as Utils from "../../utils";
 import Informasjonlinje from "../../felleskomponenter/informasjonlinje";
 import { SoknadMenypanelForm } from "../../felleskomponenter/menypanelForm";
-import Oppsummering from "../../felleskomponenter/oppsummering";
 import SideDialog, { defaultTabs } from "../../felleskomponenter/sideDialog";
 import SaksoversiktLenke from "../../felleskomponenter/saksoversiktLenke";
 
 import { EnkelStegvelger } from "../../felleskomponenter/enkelStegvelger";
-import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../ducks/mottatteOpplysninger";
+// import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../ducks/mottatteOpplysninger";
 import { behandlingsresultatOperations } from "../../ducks/behandlingsresultat";
 import { behandlingerOperations, behandlingerSelectors } from "../../ducks/behandlinger";
 import { fagsakOperations } from "../../ducks/fagsaker";
@@ -38,13 +34,13 @@ const Saksbehandling = ({ match, location }: Props) => {
 
   const dispatch = useDispatch();
 
-  const land = useSelector(mottatteOpplysningerSelectors.SoknadslandkoderSelector);
+  /* const land = useSelector(mottatteOpplysningerSelectors.SoknadslandkoderSelector); TODO kommentert ut for å brute force oss inn i flyten før opprettelse av behandling er på plass
   const mottatteOpplysningerPeriodeFom = useSelector((state) =>
     Utils.dato.formatterDatoTilNorsk(mottatteOpplysningerSelectors.PeriodeSelector(state).fom)
   );
   const mottatteOpplysningerPeriodeTom = useSelector((state) =>
     Utils.dato.formatterDatoTilNorsk(mottatteOpplysningerSelectors.PeriodeSelector(state).tom)
-  );
+  );*/
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const registeropplysningerHentet = useSelector(behandlingerSelectors.RegisteropplysningerHentetSelector);
 
@@ -78,7 +74,7 @@ const Saksbehandling = ({ match, location }: Props) => {
         return false;
       }
 
-      await dispatch(mottatteOpplysningerOperations.hent(behandlingId));
+      // await dispatch(mottatteOpplysningerOperations.hent(behandlingId));
       await dispatch(dokumenterOperations.hentDokumentOversikt(saksnr));
       setSaksopplysningerLastet(true);
       return true;
@@ -94,7 +90,7 @@ const Saksbehandling = ({ match, location }: Props) => {
       dispatch(fagsakOperations.resetFagsakState());
       dispatch(behandlingerOperations.resetBehandlingerState());
       dispatch(behandlingsresultatOperations.resetBehandlingsresultatState());
-      dispatch(mottatteOpplysningerOperations.resetState());
+      // dispatch(mottatteOpplysningerOperations.resetState());
       dispatch(dokumenterOperations.resetDokument());
     };
   }, []);
@@ -124,13 +120,6 @@ const Saksbehandling = ({ match, location }: Props) => {
               <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
             </Nav.Column>
             <Nav.Column xs="5">
-              <Oppsummering
-                arbeidsland={MKV.KTObjects.land_iso2.filter((landkodeObjekt: KTObject) =>
-                  land.includes(landkodeObjekt.kode)
-                )}
-                mottatteOpplysningerPeriodeFom={mottatteOpplysningerPeriodeFom}
-                mottatteOpplysningerPeriodeTom={mottatteOpplysningerPeriodeTom}
-              />
               <SaksoversiktLenke />
               <SideDialog tabs={defaultTabs} />
             </Nav.Column>

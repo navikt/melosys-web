@@ -117,12 +117,12 @@ function EndreBehandlingModal({
 
   useEffect(() => {
     if (sakstype && sakstema && behandlingstema) {
-      Api.LovligeKombinasjoner.hentBehandlingstyper(
+      Api.LovligeKombinasjoner.hentBehandlingstyperForEndring(
         fagsak.hovedpartRolle,
         sakstype,
         sakstema,
         behandlingstema,
-        behandlingID
+        fagsak.saksnummer
       ).then((alleMuligeBehandlingstyper) => {
         setMuligeBehandlingstyper(alleMuligeBehandlingstyper);
       });

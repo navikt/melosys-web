@@ -110,21 +110,9 @@ describe("Varsler", () => {
 
   it("Viser feilmelding ved manglende inngangsvilkår", () => {
     props.inngangsvilkaar = undefined;
-    props.behandlingHarPeriodeOgLand = true;
 
     render(<Varsler {...props} />);
 
     expect(screen.getByRole("listitem")).toHaveTextContent("Teknisk feil, finner ingen inngangsvilkår.");
-  });
-
-  it("Viser feilmelding ved manglende periode og land når det mangler", () => {
-    props.inngangsvilkaar = undefined;
-    props.behandlingHarPeriodeOgLand = false;
-
-    render(<Varsler {...props} />);
-
-    expect(screen.getByRole("listitem")).toHaveTextContent(
-      "Det mangler periode og/eller land. Fyll disse inn i sidemenyen nedenfor og oppdater registeropplysninger."
-    );
   });
 });

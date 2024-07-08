@@ -1,12 +1,11 @@
 import { ElementType, MouseEvent, MouseEventHandler, ReactNode, useState } from "react";
 import classnames from "classnames";
 
-import * as Nav from "../../../../navFrontend";
-
 import Legend from "./legend";
 import { Status, SymbolsynlighetConfig } from "./types";
 
 import "./editerbartElement.css";
+import { Heading, Button } from "@navikt/ds-react";
 
 interface EditerbartElementProps {
   redigererRender: (lukkRedigering: () => void) => ReactNode;
@@ -131,12 +130,17 @@ const EditerbartElement = ({
 
   return (
     <div className={cls}>
-      <Nav.Fieldset legend={legend}>{hentAktivtInnhold()}</Nav.Fieldset>
-      {skalRendreLagreKnapp && (
-        <Nav.Button onClick={lagreClickHandler} disabled={!redigerbart} variant="primary" size="small">
-          Lagre
-        </Nav.Button>
-      )}
+      <Heading level="2" size="small" spacing>
+        <div className="heading-margin">{legend}</div>
+      </Heading>
+      <div className="padding-left">
+        {hentAktivtInnhold()}
+        {skalRendreLagreKnapp && (
+          <Button onClick={lagreClickHandler} disabled={!redigerbart} variant="primary" size="small">
+            Lagre
+          </Button>
+        )}
+      </div>
     </div>
   );
 };

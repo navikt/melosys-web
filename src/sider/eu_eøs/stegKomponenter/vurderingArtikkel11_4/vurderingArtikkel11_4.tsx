@@ -24,6 +24,7 @@ import LandInformasjon from "./landInformasjon";
 import Bestemmelse, { tilleggsbestemmelseFraLovvalgsbestemmelse } from "./bestemmelse";
 import { vilkarSelectors } from "../../../../ducks/vilkar";
 import { avklartefaktaSelectors } from "../../../../ducks/avklartefakta";
+import * as Utils from "../../../../utils";
 
 const {
   FO_883_2004_ART11_3A,
@@ -236,7 +237,7 @@ const VurderingArtikkel11_4 = ({
               onChange={handleEndretNISSvar}
               name="nis"
               disabled={!redigerbart}
-              defaultValue={nis.oppfylt}
+              defaultValue={Utils.streng.boolTilUppercaseStreng(nis.oppfylt)}
               size="small"
             >
               <Nav.Radio value={BOOLSK_STRING.USANN}>Nei</Nav.Radio>

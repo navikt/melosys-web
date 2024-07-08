@@ -5,7 +5,7 @@ import { getFormValues, InjectedFormProps, isValid, reduxForm } from "redux-form
 import * as EKV from "eessi-kodeverk";
 import { v4 as uuid } from "uuid";
 import * as Utils from "../../../../utils";
-import MKV from "../../../../melosyskodeverk";
+import MKV, { MKVUtils } from "../../../../melosyskodeverk";
 import * as Nav from "../../../../navFrontend";
 import * as KV from "../../../../kodeverk";
 import * as Mui from "../../../../felleskomponenter/ui";
@@ -43,12 +43,13 @@ import { useFeatureToggle } from "../../../../featuretoggle";
 import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../../featuretoggle/toggleNavn";
 
 const { KONV_EFTA_STORBRITANNIA_ART18_1 } = MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia;
+const { SAERLIG_GRUNN } = MKV.Koder.begrunnelser.anmodning_begrunnelser;
 const { FO_883_2004_ART16_1 } = MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004;
-const { SAERLIG_GRUNN } = MKV.Koder.begrunnelser.art16_1_anmodning;
 const { BRUKER, UTENLANDSK_TRYGDEMYNDIGHET } = MKV.Koder.mottakerroller;
 const { ORIENTERING_ANMODNING_UNNTAK, ANMODNING_UNNTAK } = MKV.Koder.brev.produserbaredokumenter;
 
 const mapStateToProps = (state: RootState) => ({
+  lovvalgsbestemmelse: anmodningsperioderSelectors.LovvalgsbestemmelseSelector(state),
   formIsValid: isValid(KV.Form.ARTIKKEL_16_ANMODNING)(state),
   formValues: getFormValues(KV.Form.ARTIKKEL_16_ANMODNING)(state) as FormValuesProps,
   initialValues: {
@@ -103,6 +104,7 @@ const VurderingArtikkel16Anmodning = ({
   form,
   tilbake,
   aktivtSteg,
+  lovvalgsbestemmelse,
 }: Props & PropsFromRedux & InjectedFormProps<FormValuesProps, Props & PropsFromRedux>) => {
   const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
   const dispatch = useDispatch();
@@ -122,7 +124,6 @@ const VurderingArtikkel16Anmodning = ({
   const unntakFraBestemmelse = useSelector(anmodningsperioderSelectors.UnntakFraBestemmelseSelector);
   const fysiskeDokumenter = useSelector(dokumenterSelectors.AlleFysiskeDokumentSelector);
   const mottatteOpplysningerStatus = useSelector(mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector);
-  const lovvalgsbestemmelse = useSelector(anmodningsperioderSelectors.LovvalgsbestemmelseSelector);
   const feltNavnFraBestemmelse =
     lovvalgsbestemmelse === KONV_EFTA_STORBRITANNIA_ART18_1 ? "art18_1_anmodning" : "art16_1_anmodning";
 
@@ -240,11 +241,23 @@ const VurderingArtikkel16Anmodning = ({
 
   const pdfDokumenter = formValues?.kreverMottakerinstitusjon
     ? [
-        { dokumentData: { produserbardokument: ORIENTERING_ANMODNING_UNNTAK, mottaker: BRUKER } },
+        {
+          dokumentData: {
+            produserbardokument: ORIENTERING_ANMODNING_UNNTAK,
+            mottaker: BRUKER,
+            fritekst: unntaksvilkår.begrunnelseFritekst,
+          },
+        },
         { sedType: EKV.Koder.sedtyper.A001, sedData: { fritekst: formValues?.fritekstSed } },
       ]
     : [
-        { dokumentData: { produserbardokument: ORIENTERING_ANMODNING_UNNTAK, mottaker: BRUKER } },
+        {
+          dokumentData: {
+            produserbardokument: ORIENTERING_ANMODNING_UNNTAK,
+            mottaker: BRUKER,
+            fritekst: unntaksvilkår.begrunnelseFritekst,
+          },
+        },
         {
           dokumentData: {
             produserbardokument: ANMODNING_UNNTAK,
@@ -263,6 +276,8 @@ const VurderingArtikkel16Anmodning = ({
       </Nav.Typo.Normaltekst>
     </Fragment>
   );
+
+  const maksAntallTegn = MKVUtils.erStorbritanniaKonvBestemmelse(lovvalgsbestemmelse) ? 500 - 38 : 500;
 
   return (
     <div>
@@ -384,8 +399,8 @@ const VurderingArtikkel16Anmodning = ({
                 label={<Nav.Typo.Element>Ytterligere informasjon til SED (valgfri)</Nav.Typo.Element>}
                 feltNavn="fritekstSed"
                 disabled={!redigerbart}
-                visTellerFra={500}
-                maxLength={500}
+                visTellerFra={maksAntallTegn}
+                maxLength={maksAntallTegn}
               />
             </Nav.Column>
           </Nav.Row>
@@ -451,7 +466,10 @@ const VurderingArtikkel16AnmodningForm = reduxForm<FormValuesProps, PropsFromRed
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
-  validate: (values) => lagYupToReduxformErrorMapper(VurderingArtikkel16AnmodningSchema)(values),
+  validate: (values, props) =>
+    lagYupToReduxformErrorMapper(VurderingArtikkel16AnmodningSchema, {
+      context: { bestemmelse: props.lovvalgsbestemmelse },
+    })(values),
 })(VurderingArtikkel16Anmodning);
 
 export default connector(VurderingArtikkel16AnmodningForm);

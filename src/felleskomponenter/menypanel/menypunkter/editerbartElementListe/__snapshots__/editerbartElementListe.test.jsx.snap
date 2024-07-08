@@ -14,11 +14,11 @@ exports[`EditerbartElementListe > snapshot test 1`] = `
         <div
           class="editerbart__element"
         >
-          <fieldset
-            class="fieldset"
+          <h2
+            class="navds-heading navds-heading--small navds-typo--spacing"
           >
-            <legend
-              class="fieldset__legend"
+            <div
+              class="heading-margin"
             >
               <div
                 class="editerbart-element__legend editerbart-element__legend--understrek"
@@ -94,11 +94,15 @@ exports[`EditerbartElementListe > snapshot test 1`] = `
                   </button>
                 </span>
               </div>
-            </legend>
+            </div>
+          </h2>
+          <div
+            class="padding-left"
+          >
             <div>
               Element
             </div>
-          </fieldset>
+          </div>
         </div>
       </div>
       <div
@@ -107,11 +111,11 @@ exports[`EditerbartElementListe > snapshot test 1`] = `
         <div
           class="editerbart__element"
         >
-          <fieldset
-            class="fieldset"
+          <h2
+            class="navds-heading navds-heading--small navds-typo--spacing"
           >
-            <legend
-              class="fieldset__legend"
+            <div
+              class="heading-margin"
             >
               <div
                 class="editerbart-element__legend editerbart-element__legend--understrek"
@@ -187,11 +191,15 @@ exports[`EditerbartElementListe > snapshot test 1`] = `
                   </button>
                 </span>
               </div>
-            </legend>
+            </div>
+          </h2>
+          <div
+            class="padding-left"
+          >
             <div>
               Element
             </div>
-          </fieldset>
+          </div>
         </div>
       </div>
       <div

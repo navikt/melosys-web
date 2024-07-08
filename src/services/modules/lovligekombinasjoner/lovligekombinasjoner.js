@@ -18,23 +18,33 @@ export const hentBehandlingstemaer = (hovedpart, sakstype, sakstema, aktivBehand
   const params = QS.stringify({ hovedpart, sakstype, sakstema, aktivBehandlingID, sistBehandlingstema });
   return getAsJson(`${URI_PATH}/behandlingstemaer/hent-lovlige-kombinasjoner/?${params}`);
 };
-export const hentBehandlingstyper = (
-  hovedpart,
-  sakstype,
-  sakstema,
-  behandlingstema,
-  aktivBehandlingID,
-  sisteBehandlingsID
-) => {
+
+export const hentBehandlingstyper = (hovedpart, sakstype, sakstema, behandlingstema) => {
   const params = QS.stringify({
     hovedpart,
     sakstype,
     sakstema,
     behandlingstema,
-    aktivBehandlingID,
-    sisteBehandlingsID,
   });
-  return getAsJson(`${URI_PATH}/behandlingstyper/hent-lovlige-kombinasjoner/?${params}`);
+  return getAsJson(`${URI_PATH}/behandlingstyper/kombinasjoner/?${params}`);
+};
+
+export const hentBehandlingstyperForEndring = (hovedpart, sakstype, sakstema, behandlingstema, saksnummer) => {
+  const params = QS.stringify({
+    hovedpart,
+    sakstype,
+    sakstema,
+    behandlingstema,
+  });
+  return getAsJson(`${URI_PATH}/${saksnummer}/behandlingstyper/kombinasjoner-for-endring/?${params}`);
+};
+
+export const hentBehandlingstyperForKnyttTilSak = (hovedpart, saksnummer, behandlingstema) => {
+  const params = QS.stringify({
+    hovedpart,
+    behandlingstema,
+  });
+  return getAsJson(`${URI_PATH}/${saksnummer}/behandlingstyper/kombinasjoner-for-knytt-sak/?${params}`);
 };
 
 export const hentBehandlingsårsaktyper = (behandlingstype) => {

@@ -22,42 +22,19 @@ export const VilkarSelector = createSelector(
   (vurdering) => vurdering
 );
 
-export const vesentligVirksomhetSelector = createSelector(
+export const VesentligVirksomhetSelector = createSelector(
   (state) => VilkarSelector(state),
-  (alleVilkar) => finnVilkår(alleVilkar, MKV.Koder.vilkaar.ART12_1_VESENTLIG_VIRKSOMHET)
+  (alleVilkar) => finnVilkår(alleVilkar, MKV.Koder.vilkaar.VESENTLIG_VIRKSOMHET)
 );
 
-export const normaltDriverVirksomhetSelector = createSelector(
+export const NormaltDriverVirksomhetSelector = createSelector(
   (state) => VilkarSelector(state),
-  (alleVilkar) => finnVilkår(alleVilkar, MKV.Koder.vilkaar.ART12_2_NORMALT_DRIVER_VIRKSOMHET)
+  (alleVilkar) => finnVilkår(alleVilkar, MKV.Koder.vilkaar.NORMALT_DRIVER_VIRKSOMHET)
 );
 
-export const forutgaendeMedlemskap = createSelector(
+export const ForutgaendeMedlemskapSelector = createSelector(
   (state) => VilkarSelector(state),
-  (alleVilkar) => finnVilkår(alleVilkar, MKV.Koder.vilkaar.ART12_1_FORUTGAAENDE_MEDLEMSKAP)
-);
-
-export const art11_3A = createSelector(
-  (state) => VilkarSelector(state),
-  (alleVilkar) =>
-    finnVilkår(alleVilkar, MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3A)
-);
-
-export const art11_4_1 = createSelector(
-  (state) => VilkarSelector(state),
-  (alleVilkar) =>
-    finnVilkår(alleVilkar, MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART11_4_1)
-);
-
-export const art11_4_2 = createSelector(
-  (state) => VilkarSelector(state),
-  (alleVilkar) =>
-    finnVilkår(alleVilkar, MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_4_2)
-);
-
-export const nis = createSelector(
-  (state) => VilkarSelector(state),
-  (alleVilkar) => finnVilkår(alleVilkar, MKV.Koder.vilkaar.FTRL_2_12_UNNTAK_TURISTSKIP)
+  (alleVilkar) => finnVilkår(alleVilkar, MKV.Koder.vilkaar.FORUTGAAENDE_MEDLEMSKAP)
 );
 
 export const UtsendingsvilkårArbeidstakerSelector = createSelector(
@@ -71,6 +48,11 @@ export const UtsendingsvilkårArbeidstakerSelector = createSelector(
   }
 );
 
+export const UtsendingsvilkårArbeidstakerBegrunnelserSelector = createSelector(
+  (state) => UtsendingsvilkårArbeidstakerSelector(state),
+  (vilkar) => vilkar.begrunnelseKoder || []
+);
+
 export const UtsendingsvilkårNæringsdrivendeSelector = createSelector(
   (state) => VilkarSelector(state),
   (alleVilkar) => {
@@ -80,6 +62,11 @@ export const UtsendingsvilkårNæringsdrivendeSelector = createSelector(
 
     return art12_2 ?? art14_2 ?? art16_3 ?? {};
   }
+);
+
+export const UtsendingsvilkårNæringsdrivendeBegrunnelserSelector = createSelector(
+  (state) => UtsendingsvilkårNæringsdrivendeSelector(state),
+  (vilkar) => vilkar.begrunnelseKoder || []
 );
 
 export const UtsendingsvilkårSelector = createSelector(
@@ -134,24 +121,14 @@ export const Artikkel11_4_2Eller13_4_2Selector = createSelector(
   }
 );
 
-export const art12_1 = createSelector(
+export const Artikkel12_1BegrunnelserSelector = createSelector(
   (state) => VilkarSelector(state),
-  (alleVilkar) => finnVilkår(alleVilkar, MKV.Koder.vilkaar.FO_883_2004_ART12_1)
+  (alleVilkar) => finnVilkår(alleVilkar, MKV.Koder.vilkaar.FO_883_2004_ART12_1).begrunnelseKoder || []
 );
 
-export const art12_1_begrunnelserSelector = createSelector(
-  (state) => art12_1(state),
-  (art12_1_vilkar) => art12_1_vilkar.begrunnelseKoder || []
-);
-
-export const art12_2 = createSelector(
+export const Artikkel12_2BegrunnelserSelector = createSelector(
   (state) => VilkarSelector(state),
-  (alleVilkar) => finnVilkår(alleVilkar, MKV.Koder.vilkaar.FO_883_2004_ART12_2)
-);
-
-export const art12_2_begrunnelserSelector = createSelector(
-  (state) => art12_2(state),
-  (art12_2_vilkar) => art12_2_vilkar.begrunnelseKoder || []
+  (alleVilkar) => finnVilkår(alleVilkar, MKV.Koder.vilkaar.FO_883_2004_ART12_2).begrunnelseKoder || []
 );
 
 export const art16_1 = createSelector(
@@ -159,17 +136,17 @@ export const art16_1 = createSelector(
   (alleVilkar) => finnVilkår(alleVilkar, MKV.Koder.vilkaar.FO_883_2004_ART16_1)
 );
 
-export const art16_1_begrunnelserSelector = createSelector(
+export const Artikkel16_1BegrunnelserSelector = createSelector(
   (state) => art16_1(state),
   (art16_1_vilkar) => art16_1_vilkar.begrunnelseKoder || []
 );
 
-export const art16_1_fritekstSelector = createSelector(
+export const Artikkel16_1FritekstSelector = createSelector(
   (state) => art16_1(state),
   (art16_1_vilkar) => art16_1_vilkar.begrunnelseFritekst
 );
 
-export const valgteLovvalgsVilkar = createSelector(
+export const ValgteLovvalgsVilkar = createSelector(
   (state) => VilkarSelector(state),
   (alleVilkar) => {
     const alleLovvalg = [
@@ -183,7 +160,7 @@ export const valgteLovvalgsVilkar = createSelector(
   }
 );
 
-export const valgteTilleggsVilkar = createSelector(
+export const ValgteTilleggsVilkar = createSelector(
   (state) => VilkarSelector(state),
   (alleVilkar) => {
     const alleTilleggsbestemmelser = [
@@ -196,10 +173,10 @@ export const valgteTilleggsVilkar = createSelector(
   }
 );
 
-export const vilkarBegrunnelserSelector = createSelector(
-  (state) => vesentligVirksomhetSelector(state),
-  (state) => normaltDriverVirksomhetSelector(state),
-  (state) => forutgaendeMedlemskap(state),
+export const VilkarBegrunnelserSelector = createSelector(
+  (state) => VesentligVirksomhetSelector(state),
+  (state) => NormaltDriverVirksomhetSelector(state),
+  (state) => ForutgaendeMedlemskapSelector(state),
   (vesentligvirksomhet, normaltDrivervirksomhet, forutgaendemedlemskap) =>
     [
       ...(vesentligvirksomhet.begrunnelseKoder || []),

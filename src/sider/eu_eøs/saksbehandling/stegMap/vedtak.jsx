@@ -4,7 +4,7 @@ import * as KV from "../../../../kodeverk";
 import MKV from "../../../../melosyskodeverk";
 import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
 import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
-import VurderingVedtak from "../../stegKomponenter/vurderingVedtak";
+import VurderingVedtak from "../../stegKomponenter/vurderingVedtak/vurderingVedtak";
 
 class Vedtak extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -37,6 +37,8 @@ class Vedtak extends Steg {
 
       const visSedLenkeForLovvalgsbestemmelser = [
         MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_1,
+        MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia.KONV_EFTA_STORBRITANNIA_ART14_1,
+        MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia.KONV_EFTA_STORBRITANNIA_ART16_1,
       ];
 
       if (
@@ -52,17 +54,21 @@ class Vedtak extends Steg {
         });
       }
 
-      const erArtikkel12Lovvalgsbestemmelse = (lovvalgKTObject) => {
+      const erArtikkelForUtsending = (lovvalgKTObject) => {
         if (!lovvalgKTObject) return false;
 
-        return (
-          lovvalgKTObject.kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_2 ||
-          lovvalgKTObject.kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_1
-        );
+        return [
+          MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_1,
+          MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_2,
+          MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia.KONV_EFTA_STORBRITANNIA_ART14_1,
+          MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia.KONV_EFTA_STORBRITANNIA_ART14_2,
+          MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia.KONV_EFTA_STORBRITANNIA_ART16_1,
+          MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia.KONV_EFTA_STORBRITANNIA_ART16_3,
+        ].includes(lovvalgKTObject.kode);
       };
 
       if (formValues.kreverMottakerinstitusjon) {
-        if (erArtikkel12Lovvalgsbestemmelse(lovvalgSomKodeTerm)) {
+        if (erArtikkelForUtsending(lovvalgSomKodeTerm)) {
           pdfDokumenter.push({
             sedType: EKV.Koder.sedtyper.A009,
             sedData: {
@@ -81,7 +87,6 @@ class Vedtak extends Steg {
 
       return {
         redigerbart: _propsLight.generiskStegRedigerbart,
-        visAntallManederUtland: false,
         pdfDokumenter,
         harFeilmeldinger: _propsLight.harFeilmeldinger,
       };
@@ -89,8 +94,7 @@ class Vedtak extends Steg {
     this.beregnRelevantUI = () => ({});
     this.handlers = {
       tilbake: propsLight.tilgjengeligeHandlers.tilbake,
-      kontrollerFerdigbehandling: this._propsLight.tilgjengeligeHandlers.kontrollerFerdigbehandling,
-      validerMottatteOpplysninger: this._propsLight.tilgjengeligeHandlers.validerMottatteOpplysninger,
+      validerMottatteOpplysninger: propsLight.tilgjengeligeHandlers.validerMottatteOpplysninger,
     };
     this.status = FANE_STATUS.OK;
   }

@@ -1,4 +1,4 @@
-import MKV from "../../../../melosyskodeverk";
+import MKV, { MKVUtils } from "../../../../melosyskodeverk";
 import * as Nav from "../../../../navFrontend";
 import {
   konverterLovvalgsbestemmelseTilStegData,
@@ -32,14 +32,12 @@ import {
   hentRelevantUtsendelseArtikkel14,
   hentRelevantUtsendelseArtikkel16,
   initializeVedtakValg,
-  kodeTilObjektEØS,
-  kodeTilObjektKonvGB,
   VedtakValg,
 } from "./bestemmelserUtils";
 import { anmodningsperioderSelectors } from "../../../../ducks/anmodningsperioder";
 
 const { FO_883_2004_ART16_1, KONV_EFTA_STORBRITANNIA_ART18_1 } = MKV.Koder.vilkaar;
-const { SAERLIG_AVSLAGSGRUNN } = MKV.Koder.begrunnelser.art16_1_avslag;
+const { SAERLIG_AVSLAGSGRUNN } = MKV.Koder.begrunnelser.avslag_anmodning_begrunnelser;
 
 interface ListevelgerFlervalgEvent {
   value: string[];
@@ -69,6 +67,7 @@ export const Bestemmelser = ({
   const anmodningsperiodeBestemmelse = useSelector(anmodningsperioderSelectors.LovvalgsbestemmelseSelector);
   const anmodningsperiodeTilleggsbestemmelse = useSelector(anmodningsperioderSelectors.TilleggsbestemmelseSelector);
   const lovvalgsbestemmelse = lovvalgsperiodeBestemmelse ?? anmodningsperiodeBestemmelse;
+  const tilleggsbestemmelse = lovvalgsperiodeTilleggsbestemmelse ?? anmodningsperiodeTilleggsbestemmelse;
   const yrkesgruppeFakta = useSelector(avklartefaktaSelectors.YrkesgruppeSelector);
   const arbeidPåSkipFakta = useSelector(avklartefaktaSelectors.ArbeidSokkelSkipSelector);
   const utsendingsvilkår: Partial<Vilkaar> = useSelector(vilkarSelectors.UtsendingsvilkårSelector);
@@ -93,11 +92,24 @@ export const Bestemmelser = ({
     if (konvensjonStorbritanniaToggleEnabled && lovvalgsbestemmelse) {
       oppdaterData(konverterLovvalgsbestemmelseTilStegData(lovvalgsbestemmelse));
     }
-    const tilleggsbestemmelse = lovvalgsperiodeTilleggsbestemmelse ?? anmodningsperiodeTilleggsbestemmelse;
     if (konvensjonStorbritanniaToggleEnabled && tilleggsbestemmelse) {
       oppdaterData(konverterTilleggBestemmelseTilStegData(tilleggsbestemmelse));
     }
   }, []);
+
+  useEffect(() => {
+    const nyTilleggsbestemmelse = finnTilleggsbestemmelse(lovvalgsbestemmelse, yrkesgruppeFakta, arbeidPåSkipFakta);
+    if (
+      redigerbart &&
+      konvensjonStorbritanniaToggleEnabled &&
+      lovvalgsbestemmelse &&
+      vedtakValg &&
+      nyTilleggsbestemmelse !== tilleggsbestemmelse
+    ) {
+      slettData(slettTilleggBestemmelse());
+      if (nyTilleggsbestemmelse) oppdaterData(lagTilleggBestemmelse(nyTilleggsbestemmelse));
+    }
+  }, [yrkesgruppeFakta, arbeidPåSkipFakta]);
 
   const slettAlleVilkår = () => alleRelevanteFeltNavn.forEach((feltNavn) => slettData(slettVilkar(feltNavn)));
 
@@ -156,8 +168,8 @@ export const Bestemmelser = ({
     if (valgtVedtak === VedtakValg.JA_INNVILGE) {
       const utsendelsevilkårFeltNavn = finnFeltNavn(nyBestemmelse);
       oppdaterData(lagVilkaar(utsendelsevilkårFeltNavn, true));
-      const tilleggsbestemmelse = finnTilleggsbestemmelse(nyBestemmelse, yrkesgruppeFakta, arbeidPåSkipFakta);
-      if (tilleggsbestemmelse) oppdaterData(lagTilleggBestemmelse(tilleggsbestemmelse));
+      const nyTilleggsbestemmelse = finnTilleggsbestemmelse(nyBestemmelse, yrkesgruppeFakta, arbeidPåSkipFakta);
+      if (nyTilleggsbestemmelse) oppdaterData(lagTilleggBestemmelse(nyTilleggsbestemmelse));
     }
     if (valgtVedtak === VedtakValg.NEI_ANMODNING_UNNTAK) {
       const utsendelsevilkår = finnUtsendelsevilkår(nyBestemmelse);
@@ -184,15 +196,20 @@ export const Bestemmelser = ({
     if (innvilgelse) {
       return visStorbritanniaKonvensjon
         ? [
-            kodeTilObjektKonvGB(erSokkel ? KONV_EFTA_STORBRITANNIA_ART16 : KONV_EFTA_STORBRITANNIA_ART14),
-            kodeTilObjektEØS(FO_883_2004_ART12),
+            MKVUtils.lovvalgsbestemmelseTilObjekt(
+              erSokkel ? KONV_EFTA_STORBRITANNIA_ART16 : KONV_EFTA_STORBRITANNIA_ART14
+            ),
+            MKVUtils.lovvalgsbestemmelseTilObjekt(FO_883_2004_ART12),
           ]
-        : [kodeTilObjektEØS(FO_883_2004_ART12)];
+        : [MKVUtils.lovvalgsbestemmelseTilObjekt(FO_883_2004_ART12)];
     }
     if (anmodningOmUnntak) {
       return visStorbritanniaKonvensjon
-        ? [kodeTilObjektKonvGB(KONV_EFTA_STORBRITANNIA_ART18_1), kodeTilObjektEØS(FO_883_2004_ART16_1)]
-        : [kodeTilObjektEØS(FO_883_2004_ART16_1)];
+        ? [
+            MKVUtils.lovvalgsbestemmelseTilObjekt(KONV_EFTA_STORBRITANNIA_ART18_1),
+            MKVUtils.lovvalgsbestemmelseTilObjekt(FO_883_2004_ART16_1),
+          ]
+        : [MKVUtils.lovvalgsbestemmelseTilObjekt(FO_883_2004_ART16_1)];
     }
     return [];
   };
@@ -283,7 +300,7 @@ export const Bestemmelser = ({
               {konvensjonStorbritanniaToggleEnabled ? (
                 <>
                   <Mui.ListevelgerFlervalg
-                    muligeValg={MKV.KTObjects.begrunnelser.art16_1_avslag}
+                    muligeValg={MKV.KTObjects.begrunnelser.avslag_anmodning_begrunnelser}
                     label="Legg til begrunnelse for at unntaksbestemmelse ikke er oppfylt"
                     tillatFritekst={false}
                     onChange={(event: ListevelgerFlervalgEvent) =>
@@ -307,7 +324,7 @@ export const Bestemmelser = ({
               ) : (
                 <Nav.Fieldset legend="Begrunnelse artikkel 16.1:">
                   <Mui.ListevelgerFlervalg
-                    muligeValg={MKV.KTObjects.begrunnelser.art16_1_avslag}
+                    muligeValg={MKV.KTObjects.begrunnelser.avslag_anmodning_begrunnelser}
                     label="Legg til begrunnelse for avslag:"
                     tillatFritekst={false}
                     onChange={(event: ListevelgerFlervalgEvent) => handleEndreBegrunnelse(event, "art16_1_avslag")}
