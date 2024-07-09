@@ -14,6 +14,7 @@ export type BrevAdresse = {
 };
 
 export enum ValgType {
+  CHECKBOX = "CHECKBOX",
   RADIO = "RADIO",
   SELECT = "SELECT",
 }
