@@ -18,13 +18,7 @@ const ValgAlternativer = ({ valg, feltKode, redigerbart, changeField }: ValgAlte
             value={alternativ.kode}
             id={`${feltKode}.${alternativ.kode}`}
             key={`${feltKode}.${alternativ.kode}`}
-            onClick={
-              () =>
-                changeField(
-                  `felt.${feltKode}.valg`,
-                  alternativ.kode
-                ) /* TODO: Denne trigger vis/ikkeVis, men ikke riktig */
-            }
+            onClick={() => changeField(`felt.${feltKode}.valg`, alternativ.kode)}
           >
             {alternativ.beskrivelse}
           </Nav.Checkbox>
