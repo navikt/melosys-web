@@ -68,6 +68,7 @@ interface FormValuesProps {
   mottakerinstitusjon: string;
   kreverMottakerinstitusjon: boolean;
   fritekstSed: string | null;
+  begrunnelseFritekst: string | null;
 }
 
 interface Props {
@@ -218,6 +219,7 @@ const VurderingArtikkel16Anmodning = ({
       const body = {
         mottakerinstitusjon: formValues.mottakerinstitusjon || null,
         fritekstSed: formValues.fritekstSed,
+        begrunnelseFritekst: unntaksvilkår.begrunnelseFritekst,
         vedlegg: valgteVedlegg.map(({ journalpostID, dokumentID }) => ({ journalpostID, dokumentID })),
       };
 
