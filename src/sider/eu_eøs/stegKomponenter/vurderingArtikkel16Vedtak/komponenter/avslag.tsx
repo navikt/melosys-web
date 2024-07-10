@@ -16,6 +16,7 @@ interface AvslagProps {
   renderFritekstFelt: () => ReactElement;
   visOrienteringsbrevArbeidsgiver: boolean;
   gjeldendePeriode: Partial<Periode>;
+  erStorbrittaniaArt18_1Bestemmelse: boolean;
 }
 
 export const Avslag = ({
@@ -25,11 +26,14 @@ export const Avslag = ({
   renderFritekstFelt,
   visOrienteringsbrevArbeidsgiver,
   gjeldendePeriode,
+  erStorbrittaniaArt18_1Bestemmelse,
 }: AvslagProps) => {
   const pdfDokumenter: (BrevDokumentMetadataType | SedDokumentMetadataType)[] = [
     {
       dokumentData: {
-        produserbardokument: MKV.Koder.brev.produserbaredokumenter.AVSLAG_YRKESAKTIV,
+        produserbardokument: erStorbrittaniaArt18_1Bestemmelse
+          ? MKV.Koder.brev.produserbaredokumenter.AVSLAG_EFTA_STORBRITANNIA
+          : MKV.Koder.brev.produserbaredokumenter.AVSLAG_YRKESAKTIV,
         mottaker: MKV.Koder.mottakerroller.BRUKER,
         fritekst: vedtaksbrevFritekst,
       },

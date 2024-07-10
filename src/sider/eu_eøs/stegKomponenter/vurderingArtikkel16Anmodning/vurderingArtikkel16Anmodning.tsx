@@ -68,6 +68,7 @@ interface FormValuesProps {
   mottakerinstitusjon: string;
   kreverMottakerinstitusjon: boolean;
   fritekstSed: string | null;
+  begrunnelseFritekst: string | null;
 }
 
 interface Props {
@@ -218,6 +219,7 @@ const VurderingArtikkel16Anmodning = ({
       const body = {
         mottakerinstitusjon: formValues.mottakerinstitusjon || null,
         fritekstSed: formValues.fritekstSed,
+        begrunnelseFritekst: unntaksvilkår.begrunnelseFritekst,
         vedlegg: valgteVedlegg.map(({ journalpostID, dokumentID }) => ({ journalpostID, dokumentID })),
       };
 
@@ -241,11 +243,23 @@ const VurderingArtikkel16Anmodning = ({
 
   const pdfDokumenter = formValues?.kreverMottakerinstitusjon
     ? [
-        { dokumentData: { produserbardokument: ORIENTERING_ANMODNING_UNNTAK, mottaker: BRUKER } },
+        {
+          dokumentData: {
+            produserbardokument: ORIENTERING_ANMODNING_UNNTAK,
+            mottaker: BRUKER,
+            fritekst: unntaksvilkår.begrunnelseFritekst,
+          },
+        },
         { sedType: EKV.Koder.sedtyper.A001, sedData: { fritekst: formValues?.fritekstSed } },
       ]
     : [
-        { dokumentData: { produserbardokument: ORIENTERING_ANMODNING_UNNTAK, mottaker: BRUKER } },
+        {
+          dokumentData: {
+            produserbardokument: ORIENTERING_ANMODNING_UNNTAK,
+            mottaker: BRUKER,
+            fritekst: unntaksvilkår.begrunnelseFritekst,
+          },
+        },
         {
           dokumentData: {
             produserbardokument: ANMODNING_UNNTAK,
