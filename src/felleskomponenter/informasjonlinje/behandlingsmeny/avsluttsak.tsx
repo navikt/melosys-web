@@ -103,7 +103,7 @@ const AvsluttSak = () => {
     return false;
   };
 
-  const skalViseBehandlingenErBortfalt = () => redigerbart;
+  const skalViseBehandlingenErBortfalt = () => redigerbart && behandlingstype !== HENVENDELSE;
 
   const skalViseFerdigbehandlet = () => {
     switch (behandlingstema) {
