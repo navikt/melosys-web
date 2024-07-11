@@ -68,7 +68,7 @@ const Varsler = ({
   );
 
   const erFraEllerSkalTilStorbritannia =
-    statsborgerskapLand.includes("STORBRITANNIA") || MKVUtils.enesteLandErStorbritannia(landkoder);
+    statsborgerskapLand.includes(MKV.Terms.landkoder.GB.toUpperCase()) || MKVUtils.enesteLandErStorbritannia(landkoder);
 
   const visStorbritanniaKonvensjonTekst =
     konvensjonStorbritanniaToggleEnabled && MKVUtils.erUtsendt(behandlingstema) && erFraEllerSkalTilStorbritannia;
