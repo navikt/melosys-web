@@ -269,13 +269,16 @@ const VurderingArtikkel16Anmodning = ({
         },
       ];
 
+  // TODO: Erstattes med en enkel labeltekst når storbritannia toggle fjernes
   const begrunnelseFritekstBrevLabel = (
     <Fragment>
       <Nav.Typo.Element>Begrunnelse til orienteringsbrev til bruker</Nav.Typo.Element>
-      <Nav.Typo.Normaltekst>
-        Begrunnelsen kommer ut i vedtaksbrevet som en setning som starter med «Vi har bedt trygdemyndighetene i [land]
-        om en avtale for deg, fordi», og slutter med teksten du har tilføyd.
-      </Nav.Typo.Normaltekst>
+      {!konvensjonStorbritanniaToggleEnabled && (
+        <Nav.Typo.Normaltekst>
+          Begrunnelsen kommer ut i vedtaksbrevet som en setning som starter med «Vi har bedt trygdemyndighetene i [land]
+          om en avtale for deg, fordi», og slutter med teksten du har tilføyd.
+        </Nav.Typo.Normaltekst>
+      )}
     </Fragment>
   );
 
