@@ -79,4 +79,4 @@ export type LagAarsavregningRequest = {
 };
 
 export const lagAvregningsData = (request: LagAarsavregningRequest): Promise<Number> =>
-  postAsJson(`${API_BASE_URL}${AARSAVREGNING}/opprettAarsavregning`, request);
+  postAsJson(`${API_BASE_URL}${AARSAVREGNING}/`, request);
