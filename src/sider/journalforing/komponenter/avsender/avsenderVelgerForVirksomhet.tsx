@@ -9,11 +9,13 @@ import * as KV from "../../../../kodeverk";
 type AvsenderVelgerForVirksomhetProps = {
   tomAvsender: () => void;
   kopierVirksomhetTilAvsender: () => void;
+  mottaksKanalErElektroniskSoeknad: boolean;
 };
 
 export const AvsenderVelgerForVirksomhet = ({
   tomAvsender,
   kopierVirksomhetTilAvsender,
+  mottaksKanalErElektroniskSoeknad,
 }: AvsenderVelgerForVirksomhetProps) => {
   const formValues = useSelector((state) => getFormValues(KV.Form.JOURNALFORING)(state)) as any;
 
@@ -26,7 +28,12 @@ export const AvsenderVelgerForVirksomhet = ({
   }, [formValues.avsenderType]);
 
   return (
-    <Skjema.RadioGroup legend="Hvem er avsender?" name="avsenderType" size="medium">
+    <Skjema.RadioGroup
+      legend="Hvem er avsender?"
+      name="avsenderType"
+      size="medium"
+      readOnly={mottaksKanalErElektroniskSoeknad}
+    >
       <Nav.Radio value={MKV.Koder.avsendertyper.ORGANISASJON}>Virksomhet</Nav.Radio>
       <Nav.Radio value={KV.AvsenderTyper.FRITEKST}>Fritekst</Nav.Radio>
       {formValues.avsenderType === KV.AvsenderTyper.FRITEKST && <Skjema.Input label="" feltNavn="avsenderNavn" />}

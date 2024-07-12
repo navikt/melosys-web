@@ -70,6 +70,7 @@ const JournalforingForm = ({
   avsenderIDFraJournalpost,
   avsenderNavnFraJournalpost,
   mottaksKanalErEessi,
+  mottaksKanalErElektroniskSoeknad,
 }) => {
   const visForvaltningsmelding = skalViseForvaltningsmelding(formValues, fagsakListe);
   const visFagsakVelger = formValues?.brukerNavn || formValues?.virksomhetNavn;
@@ -144,6 +145,7 @@ const JournalforingForm = ({
         avsenderIDFraJournalpost={avsenderIDFraJournalpost}
         avsenderNavnFraJournalpost={avsenderNavnFraJournalpost}
         mottaksKanalErEessi={mottaksKanalErEessi}
+        mottaksKanalErElektroniskSoeknad={mottaksKanalErElektroniskSoeknad}
       />
 
       {visFagsakVelger && (
@@ -211,6 +213,7 @@ JournalforingForm.propTypes = {
   avsenderIDFraJournalpost: PT.string,
   avsenderNavnFraJournalpost: PT.string,
   mottaksKanalErEessi: PT.bool.isRequired,
+  mottaksKanalErElektroniskSoeknad: PT.bool.isRequired,
 };
 
 JournalforingForm.defaultProps = {

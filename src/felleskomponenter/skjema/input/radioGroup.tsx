@@ -36,6 +36,7 @@ const InnerRadioGroup = ({
   size,
   disabled,
   children,
+  readOnly,
 }: InnerRadioGroupProps) => {
   const innerChange = (value: any) => {
     if (onChange) onChange(value);
@@ -55,12 +56,14 @@ const InnerRadioGroup = ({
       size={size ?? "small"}
       disabled={disabled}
       id={id}
+      readOnly={readOnly}
     >
       {children}
     </Nav.RadioGroup>
   );
 };
 
+// TODO: Erstatt bruk av disabled med readOnly. Kommer egen jira på dette
 interface RadioGroupProps {
   onChange?: (value: any) => void;
   id?: string;
@@ -71,6 +74,7 @@ interface RadioGroupProps {
   size?: "small" | "medium" | undefined;
   children: ReactNode;
   hideLegend?: boolean;
+  readOnly?: boolean;
 }
 
 const RadioGroup = ({ ...props }: RadioGroupProps) => {
