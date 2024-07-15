@@ -215,7 +215,7 @@ const SideDialogOpprettNyBuc = ({ behandlingID, behandlingstema, sakstype, dokum
   return (
     <div className="sedbestilling">
       <form onSubmit={overstyrSubmit}>
-        <Nav.Select bredde="fullbredde" label="Fagområde" onChange={fagomradeEndret} value={valgtFagomrade}>
+        <Nav.Select label="Fagområde" onChange={fagomradeEndret} value={valgtFagomrade}>
           <TomtFelt />
           {tilgjengeligeFagomrader.map((fagomrade) => (
             <option key={fagomrade.kode} value={fagomrade.kode}>
@@ -224,10 +224,9 @@ const SideDialogOpprettNyBuc = ({ behandlingID, behandlingstema, sakstype, dokum
           ))}
         </Nav.Select>
         <Nav.Select
-          bredde="fullbredde"
           onChange={bucEndret}
           value={valgtBuc}
-          feil={feil("buc")}
+          error={feil("buc")}
           label={
             <LabelMedHjelpetekst
               label="BUC"
@@ -242,7 +241,7 @@ const SideDialogOpprettNyBuc = ({ behandlingID, behandlingstema, sakstype, dokum
             </option>
           ))}
         </Nav.Select>
-        <Nav.Select bredde="fullbredde" label="SED" value={valgtSed} disabled>
+        <Nav.Select label="SED" value={valgtSed} readOnly>
           <TomtFelt tekst="" />
           {tilgjengeligeSeder(valgtBuc).map((forsteSed) => (
             <option key={forsteSed.kode} value={forsteSed.kode}>

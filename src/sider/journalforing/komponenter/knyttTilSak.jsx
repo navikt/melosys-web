@@ -165,7 +165,6 @@ export const KnyttTilSak = (props) => {
             <Nav.Typo.Undertittel className="overskrift">Velg tema og type for ny behandling</Nav.Typo.Undertittel>
             <Skjema.Select
               feltNavn={feltNavn.behandlingstema}
-              bredde="fullbredde"
               label="Behandlingstema"
               emptyFieldDisabled={behandlingstema?.kode}
               disabled={harBehandlingMedTrygdeavgift}

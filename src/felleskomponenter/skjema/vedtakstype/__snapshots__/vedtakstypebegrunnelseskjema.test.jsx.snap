@@ -3,20 +3,19 @@
 exports[`VedtakstypebegrunnelseSkjema > snapshot test 1`] = `
 <div>
   <div
-    class="skjemaelement artikkel"
+    class="artikkel navds-form-field navds-form-field--medium"
   >
     <label
-      class="skjemaelement__label"
+      class="navds-form-field__label navds-label"
       for="123"
     >
       label
     </label>
     <div
-      class="selectContainer input--fullbredde"
+      class="navds-select__container"
     >
       <select
-        aria-invalid="false"
-        class="skjemaelement__input"
+        class="navds-select__input navds-body-short navds-body-short--medium"
         id="123"
         name="feltNavn"
       >
@@ -37,7 +36,31 @@ exports[`VedtakstypebegrunnelseSkjema > snapshot test 1`] = `
           Det er mottatt nye opplysninger i saken
         </option>
       </select>
+      <svg
+        aria-hidden="true"
+        class="navds-select__chevron"
+        fill="none"
+        focusable="false"
+        height="1em"
+        role="img"
+        viewBox="0 0 24 24"
+        width="1em"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          clip-rule="evenodd"
+          d="M5.97 9.47a.75.75 0 0 1 1.06 0L12 14.44l4.97-4.97a.75.75 0 1 1 1.06 1.06l-5.5 5.5a.75.75 0 0 1-1.06 0l-5.5-5.5a.75.75 0 0 1 0-1.06Z"
+          fill="currentColor"
+          fill-rule="evenodd"
+        />
+      </svg>
     </div>
+    <div
+      aria-live="polite"
+      aria-relevant="additions removals"
+      class="navds-form-field__error"
+      id="select-error-aksel-id-1"
+    />
   </div>
 </div>
 `;

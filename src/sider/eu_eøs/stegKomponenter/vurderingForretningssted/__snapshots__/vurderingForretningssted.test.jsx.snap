@@ -209,20 +209,19 @@ exports[`VurderingForretningssted > snapshot test 1`] = `
       </div>
     </fieldset>
     <div
-      class="skjemaelement"
+      class="navds-form-field navds-form-field--medium"
     >
       <label
-        class="skjemaelement__label"
+        class="navds-form-field__label navds-label"
         for="vurdering13_1"
       >
         Velg...
       </label>
       <div
-        class="selectContainer input--fullbredde"
+        class="navds-select__container"
       >
         <select
-          aria-invalid="false"
-          class="skjemaelement__input"
+          class="navds-select__input navds-body-short navds-body-short--medium"
           id="vurdering13_1"
           name="artikkel3_1_vurdering"
         >
@@ -257,7 +256,31 @@ exports[`VurderingForretningssted > snapshot test 1`] = `
             14.11: Forordning 987, artikkel 14: arbeidsgiver utenfor EU/EØS-område
           </option>
         </select>
+        <svg
+          aria-hidden="true"
+          class="navds-select__chevron"
+          fill="none"
+          focusable="false"
+          height="1em"
+          role="img"
+          viewBox="0 0 24 24"
+          width="1em"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            clip-rule="evenodd"
+            d="M5.97 9.47a.75.75 0 0 1 1.06 0L12 14.44l4.97-4.97a.75.75 0 1 1 1.06 1.06l-5.5 5.5a.75.75 0 0 1-1.06 0l-5.5-5.5a.75.75 0 0 1 0-1.06Z"
+            fill="currentColor"
+            fill-rule="evenodd"
+          />
+        </svg>
       </div>
+      <div
+        aria-live="polite"
+        aria-relevant="additions removals"
+        class="navds-form-field__error"
+        id="select-error-aksel-id-2"
+      />
     </div>
     <div
       class="enkeltAvklartfakta__skjemafelt"
@@ -283,7 +306,7 @@ exports[`VurderingForretningssted > snapshot test 1`] = `
                 class="navds-radio navds-radio--small"
               >
                 <input
-                  aria-labelledby="aksel-id-3"
+                  aria-labelledby="aksel-id-4"
                   class="navds-radio__input"
                   id="123"
                   name="OMFATTES_I_NORGE"
@@ -300,7 +323,7 @@ exports[`VurderingForretningssted > snapshot test 1`] = `
                     <span
                       aria-hidden="true"
                       class="navds-body-short navds-body-short--small"
-                      id="aksel-id-3"
+                      id="aksel-id-4"
                     >
                       Norge
                     </span>
@@ -311,7 +334,7 @@ exports[`VurderingForretningssted > snapshot test 1`] = `
                 class="navds-radio navds-radio--small"
               >
                 <input
-                  aria-labelledby="aksel-id-6"
+                  aria-labelledby="aksel-id-7"
                   class="navds-radio__input"
                   id="123"
                   name="OMFATTES_I_NORGE"
@@ -328,7 +351,7 @@ exports[`VurderingForretningssted > snapshot test 1`] = `
                     <span
                       aria-hidden="true"
                       class="navds-body-short navds-body-short--small"
-                      id="aksel-id-6"
+                      id="aksel-id-7"
                     >
                       Annet
                     </span>
@@ -340,7 +363,7 @@ exports[`VurderingForretningssted > snapshot test 1`] = `
               aria-live="polite"
               aria-relevant="additions removals"
               class="navds-fieldset__error"
-              id="fieldset-error-aksel-id-8"
+              id="fieldset-error-aksel-id-9"
             />
           </fieldset>
         </div>
