@@ -405,7 +405,7 @@ class Journalforing extends Component {
         avsenderID,
         avsenderNavn,
         mottaksKanalErEessi,
-        mottaksKanalErElektroniskSoeknad,
+        mottaksKanalErElektronisk,
       },
       settFeltInnhold,
     } = this.props;
@@ -451,7 +451,7 @@ class Journalforing extends Component {
                           submitJournalforing={this.submitJournalforingNormal}
                           avbrytJournalforing={this.avbrytJournalforing}
                           settFeltInnhold={settFeltInnhold}
-                          mottaksKanalErElektroniskSoeknad={mottaksKanalErElektroniskSoeknad}
+                          mottaksKanalErElektronisk={mottaksKanalErElektronisk}
                         />
                       )}
                     </div>

@@ -230,7 +230,7 @@ class Informasjon extends Component {
       avsenderIDFraJournalpost,
       avsenderNavnFraJournalpost,
       mottaksKanalErEessi,
-      mottaksKanalErElektroniskSoeknad,
+      mottaksKanalErElektronisk,
     } = this.props;
     const {
       hoveddokument: { tittel: hoveddokumentTittel, logiskeVedlegg = [] },
@@ -302,7 +302,7 @@ class Informasjon extends Component {
                 <AvsenderVelgerForVirksomhet
                   tomAvsender={this.tomAvsender}
                   kopierVirksomhetTilAvsender={this.kopierVirksomhetTilAvsender}
-                  mottaksKanalErElektroniskSoeknad={mottaksKanalErElektroniskSoeknad}
+                  mottaksKanalErElektronisk={mottaksKanalErElektronisk}
                 />
               ) : (
                 <AvsenderVelgerForBruker
@@ -310,7 +310,7 @@ class Informasjon extends Component {
                   tomAvsender={this.tomAvsender}
                   settFeltInnhold={settFeltInnhold}
                   hentOgVisAvsender={this.hentOgVisAvsender}
-                  mottaksKanalErElektroniskSoeknad={mottaksKanalErElektroniskSoeknad}
+                  mottaksKanalErElektronisk={mottaksKanalErElektronisk}
                 />
               )
             }
@@ -402,7 +402,7 @@ Informasjon.propTypes = {
   avsenderIDFraJournalpost: PT.string,
   avsenderNavnFraJournalpost: PT.string,
   mottaksKanalErEessi: PT.bool.isRequired,
-  mottaksKanalErElektroniskSoeknad: PT.bool.isRequired,
+  mottaksKanalErElektronisk: PT.bool.isRequired,
 };
 
 Informasjon.defaultProps = {

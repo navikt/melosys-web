@@ -31,7 +31,7 @@ type AvsenderVelgerForBrukerProps = PropsFromRedux & {
   formValues: FormValuesProps;
   settFeltInnhold: (felt: string, innhold: any) => void;
   hentOgVisAvsender: (ident: string) => void;
-  mottaksKanalErElektroniskSoeknad: boolean;
+  mottaksKanalErElektronisk: boolean;
 };
 
 const AvsenderVelgerForBruker = ({
@@ -40,7 +40,7 @@ const AvsenderVelgerForBruker = ({
   formValues,
   settFeltInnhold,
   hentOgVisAvsender,
-  mottaksKanalErElektroniskSoeknad,
+  mottaksKanalErElektronisk,
 }: AvsenderVelgerForBrukerProps) => {
   const avsenderTypeEndret = (avsenderType: string) => {
     if (avsenderType !== MKV.Koder.avsendertyper.UTENLANDSK_TRYGDEMYNDIGHET) {
@@ -95,7 +95,7 @@ const AvsenderVelgerForBruker = ({
         legend="Hvem er avsender?"
         name="avsenderType"
         size="medium"
-        readOnly={mottaksKanalErElektroniskSoeknad}
+        readOnly={mottaksKanalErElektronisk}
       >
         <Nav.Radio value={MKV.Koder.avsendertyper.PERSON}>Bruker</Nav.Radio>
         <Nav.Radio value={KV.AvsenderTyper.ANNEN_PERSON_ELLER_VIRKSOMHET}>Annen person eller virksomhet</Nav.Radio>

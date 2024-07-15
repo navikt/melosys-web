@@ -9,13 +9,13 @@ import * as KV from "../../../../kodeverk";
 type AvsenderVelgerForVirksomhetProps = {
   tomAvsender: () => void;
   kopierVirksomhetTilAvsender: () => void;
-  mottaksKanalErElektroniskSoeknad: boolean;
+  mottaksKanalErElektronisk: boolean;
 };
 
 export const AvsenderVelgerForVirksomhet = ({
   tomAvsender,
   kopierVirksomhetTilAvsender,
-  mottaksKanalErElektroniskSoeknad,
+  mottaksKanalErElektronisk,
 }: AvsenderVelgerForVirksomhetProps) => {
   const formValues = useSelector((state) => getFormValues(KV.Form.JOURNALFORING)(state)) as any;
 
@@ -32,7 +32,7 @@ export const AvsenderVelgerForVirksomhet = ({
       legend="Hvem er avsender?"
       name="avsenderType"
       size="medium"
-      readOnly={mottaksKanalErElektroniskSoeknad}
+      readOnly={mottaksKanalErElektronisk}
     >
       <Nav.Radio value={MKV.Koder.avsendertyper.ORGANISASJON}>Virksomhet</Nav.Radio>
       <Nav.Radio value={KV.AvsenderTyper.FRITEKST}>Fritekst</Nav.Radio>
