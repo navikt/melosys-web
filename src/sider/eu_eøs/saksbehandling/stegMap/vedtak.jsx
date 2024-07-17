@@ -5,6 +5,7 @@ import MKV from "../../../../melosyskodeverk";
 import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
 import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
 import VurderingVedtak from "../../stegKomponenter/vurderingVedtak/vurderingVedtak";
+import { erStorbritanniaKonvBestemmelse } from "../../../../melosyskodeverk/utils";
 
 class Vedtak extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -25,15 +26,11 @@ class Vedtak extends Steg {
         MKV.Kodekombinasjoner.alleLovvalg
       );
 
-      const pdfDokumenter = [
-        {
-          dokumentData: {
-            produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
-            mottaker: MKV.Koder.mottakerroller.BRUKER,
-            fritekst: formValues.vedtaksbrevFritekst,
-          },
-        },
-      ];
+      const erUtsendt =
+        MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER === _propsLight.behandlingstema.kode ||
+        MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG === _propsLight.behandlingstema.kode;
+
+      const erStorbritanniaBestemmelse = erStorbritanniaKonvBestemmelse(_propsLight.lovvalgsbestemmelse);
 
       const visSedLenkeForLovvalgsbestemmelser = [
         MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_1,
@@ -41,17 +38,41 @@ class Vedtak extends Steg {
         MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia.KONV_EFTA_STORBRITANNIA_ART16_1,
       ];
 
-      if (
-        lovvalgSomKodeTerm &&
-        visSedLenkeForLovvalgsbestemmelser.includes(lovvalgSomKodeTerm.kode) &&
-        formValues?.kopiTilArbeidsgiver
-      ) {
+      const pdfDokumenter = [];
+      if (erUtsendt && erStorbritanniaBestemmelse && _propsLight.konvensjonStorbritanniaToggleEnabled) {
         pdfDokumenter.push({
           dokumentData: {
-            produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
-            mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
+            produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_EFTA_STORBRITANNIA,
+            mottaker: MKV.Koder.mottakerroller.BRUKER,
+            fritekst: formValues.vedtaksbrevFritekst,
           },
         });
+        pdfDokumenter.push({
+          dokumentData: {
+            produserbardokument: MKV.Koder.brev.produserbaredokumenter.ATTEST_A1,
+            mottaker: MKV.Koder.mottakerroller.BRUKER,
+          },
+        });
+      } else {
+        pdfDokumenter.push({
+          dokumentData: {
+            produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
+            mottaker: MKV.Koder.mottakerroller.BRUKER,
+            fritekst: formValues.vedtaksbrevFritekst,
+          },
+        });
+        if (
+          lovvalgSomKodeTerm &&
+          visSedLenkeForLovvalgsbestemmelser.includes(lovvalgSomKodeTerm.kode) &&
+          formValues?.kopiTilArbeidsgiver
+        ) {
+          pdfDokumenter.push({
+            dokumentData: {
+              produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
+              mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
+            },
+          });
+        }
       }
 
       const erArtikkelForUtsending = (lovvalgKTObject) => {
