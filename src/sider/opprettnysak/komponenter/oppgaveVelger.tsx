@@ -8,6 +8,8 @@ import { OpprettNySakFormData } from "../opprettnysak";
 import { OpprettNyOppgave } from "./opprettNyOppgave";
 
 import "./oppgaveVelger.css";
+import { HStack } from "@navikt/ds-react";
+import { EnkelNavBox } from "../../../felleskomponenter/enkelNavBox";
 
 interface OppgaveVelgerProps {
   oppgaverForsoktHentet: boolean;
@@ -72,8 +74,14 @@ export const OppgaveVelger = ({
   return (
     <div className="oppgaveVelger">
       <Skjema.RadioGroup legend="" hideLegend name="oppretterOppgave" size="medium">
-        <Nav.Radio value>Opprett ny oppgave</Nav.Radio>
-        <Nav.Radio value={false}>Eksisterende oppgave</Nav.Radio>
+        <HStack gap="3" justify="space-between">
+          <EnkelNavBox focused={oppretterOppgave}>
+            <Nav.Radio value>Opprett ny oppgave</Nav.Radio>
+          </EnkelNavBox>
+          <EnkelNavBox focused={!oppretterOppgave}>
+            <Nav.Radio value={false}>Eksisterende oppgave</Nav.Radio>
+          </EnkelNavBox>
+        </HStack>
       </Skjema.RadioGroup>
       {oppretterOppgave ? (
         <OpprettNyOppgave />
