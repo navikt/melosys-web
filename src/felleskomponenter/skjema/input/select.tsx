@@ -61,8 +61,8 @@ function SelectWrappedComponent({
       label={label}
       error={feil}
       id={inputProps.id ?? Utils._uuid()}
-      size={size}
-      className={className}
+      size={size || "small"}
+      className={`melosys-select ${className ?? ""}`}
       readOnly={readOnly}
       errorId={errorId}
       htmlSize={htmlSize}
