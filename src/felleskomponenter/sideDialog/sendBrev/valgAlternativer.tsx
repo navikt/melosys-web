@@ -1,7 +1,7 @@
 import { DokumenterV2 } from "../../../services/api";
 import * as Skjema from "../../skjema";
 import * as Nav from "../../../navFrontend";
-import { CheckboxGroup } from "@navikt/ds-react";
+import { Checkbox, CheckboxGroup } from "@navikt/ds-react";
 
 interface ValgAlternativProps {
   valg: DokumenterV2.Valg;
@@ -15,14 +15,20 @@ const ValgAlternativer = ({ valg, feltKode, redigerbart, changeField }: ValgAlte
     return (
       <CheckboxGroup legend="" hideLegend name={`felt.${feltKode}.valg`} disabled={!redigerbart}>
         {valg.valgAlternativer.map((alternativ) => (
-          <Nav.Checkbox
+          <Checkbox
             value={alternativ.kode}
             id={`${feltKode}.${alternativ.kode}`}
             key={`${feltKode}.${alternativ.kode}`}
-            onChange={() => changeField(`felt.${feltKode}.valg`, alternativ.kode)}
+            onChange={(e) => {
+              if (e.target.checked) {
+                changeField(`felt.${feltKode}.valg`, alternativ.kode);
+              } else {
+                changeField(`felt.${feltKode}.valg`, "");
+              }
+            }}
           >
             {alternativ.beskrivelse}
-          </Nav.Checkbox>
+          </Checkbox>
         ))}
       </CheckboxGroup>
     );
