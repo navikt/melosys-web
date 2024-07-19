@@ -3,10 +3,10 @@
 exports[`Select > SelectWrappedComponent > viser en Nav Select 1`] = `
 <div>
   <div
-    class="navds-form-field navds-form-field--medium"
+    class="melosys-select  navds-form-field navds-form-field--small"
   >
     <label
-      class="navds-form-field__label navds-label"
+      class="navds-form-field__label navds-label navds-label--small"
       for="321"
     >
       Label
@@ -15,7 +15,7 @@ exports[`Select > SelectWrappedComponent > viser en Nav Select 1`] = `
       class="navds-select__container"
     >
       <select
-        class="navds-select__input navds-body-short navds-body-short--medium"
+        class="navds-select__input navds-body-short navds-body-short--small"
         id="321"
         name="feltName"
       >
@@ -63,10 +63,10 @@ exports[`Select > SelectWrappedComponent > viser en Nav Select 1`] = `
 exports[`Select > snapshot test 1`] = `
 <div>
   <div
-    class="className navds-form-field navds-form-field--medium"
+    class="melosys-select className navds-form-field navds-form-field--small"
   >
     <label
-      class="navds-form-field__label navds-label"
+      class="navds-form-field__label navds-label navds-label--small"
       for="1234"
     />
     <div
@@ -74,7 +74,7 @@ exports[`Select > snapshot test 1`] = `
     >
       <select
         array="[object Object]"
-        class="navds-select__input navds-body-short navds-body-short--medium"
+        class="navds-select__input navds-body-short navds-body-short--small"
         form="test"
         id="1234"
         name="feltnavn"

@@ -86,10 +86,10 @@ exports[`Vedtakstype > snapshot test 1`] = `
         />
       </fieldset>
       <div
-        class="navds-form-field navds-form-field--medium"
+        class="melosys-select  navds-form-field navds-form-field--small"
       >
         <label
-          class="navds-form-field__label navds-label"
+          class="navds-form-field__label navds-label navds-label--small"
           for="123"
         >
           vedtakstypebegrunnelseLabel
@@ -98,7 +98,7 @@ exports[`Vedtakstype > snapshot test 1`] = `
           class="navds-select__container"
         >
           <select
-            class="navds-select__input navds-body-short navds-body-short--medium"
+            class="navds-select__input navds-body-short navds-body-short--small"
             id="123"
             name="vedtakstypebegrunnelseFeltNavn"
           >
