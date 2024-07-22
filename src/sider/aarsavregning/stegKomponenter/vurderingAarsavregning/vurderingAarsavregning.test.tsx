@@ -1,6 +1,5 @@
 import { VurderingAarsavregning } from "./vurderingAarsavregning";
 import { renderWithProviders } from "../../../../ducks/test-utils/renderWithProviders";
-import * as uuid from "uuid";
 
 vi.mock("uuid");
 
