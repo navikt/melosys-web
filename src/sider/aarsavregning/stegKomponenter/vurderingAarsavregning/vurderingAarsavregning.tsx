@@ -1,77 +1,113 @@
 import TrygdeavgiftsperioderTabell from "./trygdeavgiftsperioderTabell";
 import * as Api from "../../../../services/api";
-import SkatteforholdsPerioderTabell from "./skatteforholdsPerioderTabell";
 import MedlemskapsPerioderTabell from "./medlemskapsPerioderTabell";
-import { Alert, Button, Heading, Radio, RadioGroup, VStack } from "@navikt/ds-react";
-import "./aarsavregning.css";
-import { useEffect, useRef, useState } from "react";
-import AarVelger from "../../../../felleskomponenter/AarVelger/aarVelger";
-import {
-  AarsavregningResponse,
-  LagAarsavregningRequest,
-} from "../../../../services/modules/aarsavregning/aarsavregning";
+import "./vurderingAarsavregning.css";
+import { useEffect, useState } from "react";
+import { AarsavregningResponse } from "../../../../services/modules/aarsavregning/aarsavregning";
+import { useSelector } from "react-redux";
+import { behandlingerSelectors } from "../../../../ducks/behandlinger";
+import * as Nav from "../../../../navFrontend";
+import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
+import { redigerbartSelectors } from "../../../../ducks/redigerbart";
+import SkatteforholdsPerioderTabell from "./skatteforholdsPerioderTabell";
+import { TidligereGrunnlagsopplysningerFinnesIkke } from "./tidligereGrunnlagsopplysningerFinnesIkke";
 
 export const VurderingAarsavregning = () => {
-  const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
-  const initialRender = useRef(true);
+  const [valgtÅr, setValgtÅr] = useState<number | undefined>(undefined);
 
   const [feil, setFeil] = useState<undefined | string>(undefined);
   const [lagretTrygdeavgift, setLagretTrygdeavgift] = useState<AarsavregningResponse | undefined>(undefined);
+  const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
+  const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
+  const sisteMuligeÅr = new Date().getFullYear() - 1;
+  const antallÅrTilbakeITid = 6;
+  const muligeAar = Array.from({ length: antallÅrTilbakeITid }, (_, i) => sisteMuligeÅr - i);
 
   useEffect(() => {
     fetchAvregningsData();
   }, []);
 
   const fetchAvregningsData = () => {
-    return Api.Aarsavregning.hentAvregningsData(1) // TODO: use behandlingsID når det er klart
+    return Api.Aarsavregning.hentAvregningsData(behandlingID)
       .then((response: AarsavregningResponse) => {
         setLagretTrygdeavgift(response);
+        setValgtÅr(response.aar);
         return response;
       })
-      .catch((error: any) => setFeil(error.body?.message || error));
+      .catch((error: any) => {
+        if (error.response?.status === 404) {
+          setLagretTrygdeavgift(undefined);
+          setValgtÅr(undefined);
+        }
+      });
   };
 
-  const handleYearChange = (year: number) => {
-    setSelectedYear(year);
+  const håndterEndringAvÅr = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const år = parseInt(event.target.value);
+    setFeil(undefined);
+    setValgtÅr(år);
   };
 
   useEffect(() => {
-    if (initialRender.current) {
-      // TODO finnes det en bedre måte å håndtere dette på?
-      initialRender.current = false;
+    if (!valgtÅr || lagretTrygdeavgift?.aar === valgtÅr) {
       return;
     }
 
-    const lagNyAvregning: LagAarsavregningRequest = {
-      aar: selectedYear,
-      behandlingsId: 1, // TODO erstatt med faktisk behandlingsId når det er klart
-    };
-
-    Api.Aarsavregning.lagAvregningsData(lagNyAvregning).then(() => fetchAvregningsData());
-  }, [selectedYear]);
+    Api.Aarsavregning.lagAvregningsData(behandlingID, { aar: valgtÅr })
+      .then((lagretTrygdeavgift) => setLagretTrygdeavgift(lagretTrygdeavgift))
+      .catch((error: any) => {
+        setFeil(error.body?.message || error);
+      });
+  }, [valgtÅr]);
 
   return (
-    <VStack align="start" gap="3">
-      <Heading size="large">Årsavregning</Heading>
-      <AarVelger onForandringAvAar={handleYearChange} />
-      {feil && <Alert variant="error">{feil}</Alert>}
-      <VStack className="tabeller" gap="6" align="start">
-        <MedlemskapsPerioderTabell
-          perioder={lagretTrygdeavgift?.tidligereOpplysninger?.trygdeavgiftsgrunnlag.medlemskapsperioder}
-        />
-        <SkatteforholdsPerioderTabell
-          perioder={lagretTrygdeavgift?.tidligereOpplysninger?.trygdeavgiftsgrunnlag.skatteforholdsperioder}
-        />
-        <TrygdeavgiftsperioderTabell
-          perioder={lagretTrygdeavgift?.tidligereOpplysninger?.avgift.trygdeavgiftsperioder}
-          avgift={lagretTrygdeavgift?.tidligereOpplysninger?.avgift}
-        />
-      </VStack>
-      <RadioGroup legend="Er det avvik i opplysningene fra skatt eller bruker?">
-        <Radio value="10">Ja</Radio>
-        <Radio value="20">Nei</Radio>
-      </RadioGroup>
-      <Button variant="primary">Bekreft og fortsett</Button>
-    </VStack>
+    <div className="vurderingAarsavregning">
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">Årsavregning</Nav.Typo.Innholdstittel>
+      <Nav.Fieldset className="select" legend={<LabelMedHjelpetekst bold label={"År"} placement="left-start" />}>
+        <Nav.Row>
+          <Nav.Column xs="4">
+            <Nav.Select label="" data-testid="aarVelger" value={valgtÅr ?? ""} onChange={håndterEndringAvÅr}>
+              <option key="" value="" disabled>
+                Velg...
+              </option>
+              {muligeAar.map((aar) => (
+                <option key={aar} value={aar}>
+                  {aar}
+                </option>
+              ))}
+            </Nav.Select>
+          </Nav.Column>
+        </Nav.Row>
+      </Nav.Fieldset>
+      {feil && <Nav.Alert variant="error">{feil}</Nav.Alert>}
+      {lagretTrygdeavgift?.tidligereGrunnlagsopplysninger === null && lagretTrygdeavgift.aar == valgtÅr && (
+        <TidligereGrunnlagsopplysningerFinnesIkke />
+      )}
+      {lagretTrygdeavgift?.tidligereGrunnlagsopplysninger && (
+        <>
+          <MedlemskapsPerioderTabell
+            perioder={lagretTrygdeavgift.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag.medlemskapsperioder}
+          />
+          <SkatteforholdsPerioderTabell
+            perioder={lagretTrygdeavgift.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag.skatteforholdsperioder}
+          />
+          <TrygdeavgiftsperioderTabell
+            perioder={lagretTrygdeavgift.tidligereGrunnlagsopplysninger.avgift.trygdeavgiftsperioder}
+            avgift={lagretTrygdeavgift.tidligereGrunnlagsopplysninger.avgift}
+          />
+          ;
+        </>
+      )}
+      {lagretTrygdeavgift && (
+        <Nav.RadioGroup legend="Er det avvik i opplysningene fra skatt eller bruker?">
+          <Nav.Radio value="10">Ja</Nav.Radio>
+          <Nav.Radio value="20">Nei</Nav.Radio>
+        </Nav.RadioGroup>
+      )}
+      <Nav.Button variant="primary" disabled={!redigerbart}>
+        Bekreft og fortsett
+      </Nav.Button>
+      ;
+    </div>
   );
 };
