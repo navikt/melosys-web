@@ -6,7 +6,6 @@ import * as Utils from "../../../utils";
 
 function InnerCheckboxComponent({ input, meta, label, submitOnChange, onClick, disabled, className }) {
   const feil = meta.error && meta.touched && !meta.active ? meta.error : undefined;
-  console.log(input);
 
   const onChange = (...args) => {
     if (submitOnChange) {

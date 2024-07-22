@@ -13,7 +13,7 @@ interface ValgAlternativProps {
 const ValgAlternativer = ({ valg, feltKode, redigerbart, changeField }: ValgAlternativProps) => {
   if (valg.valgType === DokumenterV2.ValgType.CHECKBOX) {
     return (
-      <CheckboxGroup legend="" hideLegend name={`felt.${feltKode}.valg`} disabled={!redigerbart}>
+      <Nav.CheckboxGroup legend="" hideLegend name={`felt.${feltKode}.valg`} disabled={!redigerbart}>
         {valg.valgAlternativer.map((alternativ) => (
           <Nav.Checkbox
             value={alternativ.kode}
@@ -21,7 +21,7 @@ const ValgAlternativer = ({ valg, feltKode, redigerbart, changeField }: ValgAlte
             key={`${feltKode}.${alternativ.kode}`}
             onChange={(a) => {
               changeField(`felt.${feltKode}.valg`, alternativ.kode);
-              if (alternativ.kode === "FRITEKST" && !a.target.checked) {
+              if (!a.target.checked) {
                 changeField(`felt.${feltKode}.valg`, "");
               }
             }}
@@ -29,7 +29,7 @@ const ValgAlternativer = ({ valg, feltKode, redigerbart, changeField }: ValgAlte
             {alternativ.beskrivelse}
           </Nav.Checkbox>
         ))}
-      </CheckboxGroup>
+      </Nav.CheckboxGroup>
     );
   }
   if (valg.valgType === DokumenterV2.ValgType.RADIO) {
