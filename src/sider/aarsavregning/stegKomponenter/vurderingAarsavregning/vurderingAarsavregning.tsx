@@ -43,7 +43,7 @@ export const VurderingAarsavregning = () => {
   };
 
   const håndterEndringAvÅr = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const år = parseInt(event.target.value);
+    const år = parseInt(event.target.value, 10);
     setFeil(undefined);
     setValgtÅr(år);
   };
@@ -54,7 +54,7 @@ export const VurderingAarsavregning = () => {
     }
 
     Api.Aarsavregning.lagAvregningsData(behandlingID, { aar: valgtÅr })
-      .then((lagretTrygdeavgift) => setLagretTrygdeavgift(lagretTrygdeavgift))
+      .then((nyAvregningsData) => setLagretTrygdeavgift(nyAvregningsData))
       .catch((error: any) => {
         setFeil(error.body?.message || error);
       });
@@ -63,7 +63,7 @@ export const VurderingAarsavregning = () => {
   return (
     <div className="vurderingAarsavregning">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Årsavregning</Nav.Typo.Innholdstittel>
-      <Nav.Fieldset className="select" legend={<LabelMedHjelpetekst bold label={"År"} placement="left-start" />}>
+      <Nav.Fieldset className="select" legend={<LabelMedHjelpetekst bold label="År" placement="left-start" />}>
         <Nav.Row>
           <Nav.Column xs="4">
             <Nav.Select label="" data-testid="aarVelger" value={valgtÅr ?? ""} onChange={håndterEndringAvÅr}>
@@ -80,7 +80,7 @@ export const VurderingAarsavregning = () => {
         </Nav.Row>
       </Nav.Fieldset>
       {feil && <Nav.Alert variant="error">{feil}</Nav.Alert>}
-      {lagretTrygdeavgift?.tidligereGrunnlagsopplysninger === null && lagretTrygdeavgift.aar == valgtÅr && (
+      {lagretTrygdeavgift?.tidligereGrunnlagsopplysninger === null && lagretTrygdeavgift.aar === valgtÅr && (
         <TidligereGrunnlagsopplysningerFinnesIkke />
       )}
       {lagretTrygdeavgift?.tidligereGrunnlagsopplysninger && (

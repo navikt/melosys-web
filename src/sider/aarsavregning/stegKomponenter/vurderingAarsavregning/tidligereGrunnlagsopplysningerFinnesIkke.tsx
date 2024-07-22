@@ -16,14 +16,14 @@ const informasjonsmeldingIngenInformasjonOmPerioder = (
 );
 
 export const TidligereGrunnlagsopplysningerFinnesIkke = () => (
-  <div className={"skjema__panel"}>
+  <div className="skjema__panel">
     <Nav.Typo.Undertittel className="ingenInformasjonOmPerioderTittel">
       Grunnlagsopplysninger for trygdeavgift
     </Nav.Typo.Undertittel>
 
     {informasjonsmeldingIngenInformasjonOmPerioder}
 
-    <Nav.Fieldset legend="" className={"skjema__fieldset"}>
+    <Nav.Fieldset legend="" className="skjema__fieldset">
       <Nav.Row>
         <Nav.Column xs="4">
           <Nav.TextField label="Totalt tidligere fakturert trygdeavgift:" type="number" />
