@@ -1,81 +1,48 @@
 import { ReactElement, forwardRef, ReactNode } from "react";
 import { Controller, UseControllerProps } from "react-hook-form";
 import * as Nav from "../../navFrontend";
-
-import { RegisterHookFormProps } from "./misc/reacthookProps";
 import { getErrorMessage } from "./misc/mapFeilmelding";
+import "./select.less";
 
-interface SelectComponentProps extends Nav.SelectProps {
+interface SelectComponentProps extends Omit<React.SelectHTMLAttributes<HTMLSelectElement>, "size" | "multiple"> {
   label?: string | ReactElement;
   emptyFieldDisabled?: boolean;
-  disabled?: boolean;
   children: ReactNode | ReactNode[];
   onChange?: (value: any) => void;
+  size?: "small" | "medium";
+  className?: string;
+  hideLabel?: boolean;
+  error?: ReactNode;
+  readOnly?: boolean;
+  errorId?: string;
+  htmlSize?: number;
+  id?: string;
 }
 
-type SelectInnerComponentProps = SelectComponentProps & RegisterHookFormProps;
-
-const SelectInnerComponent = forwardRef<HTMLSelectElement, SelectInnerComponentProps>(
-  (
-    {
-      label,
-      emptyFieldDisabled,
-      disabled,
-      children,
-      onChange,
-      onBlur,
-      name,
-      value,
-      itemRef,
-      feil,
-      ...rest
-    }: SelectProps,
-    _ref: any
-  ) => {
-    return (
-      <Nav.Select
-        label={label}
-        disabled={disabled}
-        onChange={onChange}
-        onBlur={onBlur}
-        name={name}
-        value={value}
-        ref={itemRef}
-        feil={feil}
-        {...rest}
-      >
-        <option disabled={emptyFieldDisabled} value="">
-          Velg...
-        </option>
-        {children}
-      </Nav.Select>
-    );
-  }
-);
-
-type SelectProps = SelectComponentProps & UseControllerProps;
-
-const Select = forwardRef<HTMLSelectElement, SelectProps>(
-  ({ name, control, label, emptyFieldDisabled, disabled, onChange, children, ...rest }: SelectProps, _ref: any) => {
+const Select = forwardRef<HTMLSelectElement, SelectComponentProps & UseControllerProps>(
+  ({ name, control, label, emptyFieldDisabled, onChange, children, className, size, ...rest }) => {
     return (
       <Controller
         name={name}
         control={control}
         render={({ field, formState }) => (
-          <SelectInnerComponent
+          <Nav.Select
             {...field}
             label={label}
-            emptyFieldDisabled={emptyFieldDisabled}
-            disabled={disabled}
-            onChange={(event: any) => {
+            onChange={(event) => {
               field.onChange(event);
               if (onChange) onChange(event?.target?.value);
             }}
-            feil={getErrorMessage(field, formState)}
+            error={getErrorMessage(field, formState)}
+            size={size || "small"}
+            className={`melosys-select ${className ?? ""}`}
             {...rest}
           >
+            <option disabled={emptyFieldDisabled} value="">
+              Velg...
+            </option>
             {children}
-          </SelectInnerComponent>
+          </Nav.Select>
         )}
       />
     );

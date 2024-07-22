@@ -85,7 +85,6 @@ export const VilkaarOgBegrunnelser = ({
             <Nav.Column xs="7">
               <Nav.Select
                 label=""
-                bredde="fullbredde"
                 onChange={handleEndreBegrunnelseKode}
                 name={`${vilkår}`}
                 value={valgtBegrunnelseForVilkår?.begrunnelseKode}

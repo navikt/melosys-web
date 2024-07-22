@@ -29,7 +29,6 @@ export const ListeVelger = ({
         <Nav.Column xs="7">
           <Nav.Select
             label=""
-            bredde="fullbredde"
             onChange={(event) => endretAlternativ(event.target.value)}
             name={name}
             value={valgtAlternativ}

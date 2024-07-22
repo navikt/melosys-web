@@ -6,9 +6,20 @@ import * as Utils from "../../../utils";
 
 import "../skjema.css";
 
-interface SelectWrappedComponentBaseProps extends Nav.SelectProps {
+interface SelectWrappedComponentBaseProps
+  extends Omit<React.SelectHTMLAttributes<HTMLSelectElement>, "size" | "multiple"> {
   emptyFieldDisabled?: boolean;
+  label?: string | React.ReactElement;
+  children?: React.ReactNode;
   onChange?: ChangeEventHandler<HTMLSelectElement>;
+  size?: "small" | "medium";
+  className?: string;
+  hideLabel?: boolean;
+  error?: React.ReactNode;
+  readOnly?: boolean;
+  errorId?: string;
+  htmlSize?: number;
+  id?: string;
 }
 
 type SelectWrappedComponentProps = SelectWrappedComponentBaseProps & WrappedFieldProps;
@@ -17,13 +28,18 @@ function SelectWrappedComponent({
   input,
   label,
   children = (
-    <option disabled value="0">
+    <option disabled value="">
       ingen valg tilgjengelig
     </option>
   ),
   meta,
   emptyFieldDisabled = true,
   onChange,
+  size,
+  className,
+  readOnly,
+  errorId,
+  htmlSize,
   ...rest
 }: SelectWrappedComponentProps) {
   const { touched, active } = meta;
@@ -39,8 +55,19 @@ function SelectWrappedComponent({
     ...rest,
     onChange: innerChange,
   };
+
   return (
-    <Nav.Select label={label} feil={feil} id={inputProps.id ?? Utils._uuid()} {...inputProps}>
+    <Nav.Select
+      label={label}
+      error={feil}
+      id={inputProps.id ?? Utils._uuid()}
+      size={size || "small"}
+      className={`melosys-select ${className ?? ""}`}
+      readOnly={readOnly}
+      errorId={errorId}
+      htmlSize={htmlSize}
+      {...inputProps}
+    >
       <option disabled={emptyFieldDisabled} value="">
         Velg...
       </option>
