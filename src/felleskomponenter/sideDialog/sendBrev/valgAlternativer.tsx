@@ -1,7 +1,6 @@
 import { DokumenterV2 } from "../../../services/api";
 import * as Skjema from "../../skjema";
 import * as Nav from "../../../navFrontend";
-import { Checkbox, CheckboxGroup } from "@navikt/ds-react";
 
 interface ValgAlternativProps {
   valg: DokumenterV2.Valg;
@@ -12,10 +11,8 @@ interface ValgAlternativProps {
 
 const ValgAlternativer = ({ valg, feltKode, redigerbart, changeField }: ValgAlternativProps) => {
   if (valg.valgType === DokumenterV2.ValgType.CHECKBOX) {
-    return (
-      <CheckboxGroup legend="" hideLegend name={`felt.${feltKode}.valg`} disabled={!redigerbart}>
-        {valg.valgAlternativer.map((alternativ) => (
-          <Checkbox
+    return valg.valgAlternativer.map((alternativ) => (
+      /* <Checkbox
             value={alternativ.kode}
             id={`${feltKode}.${alternativ.kode}`}
             key={`${feltKode}.${alternativ.kode}`}
@@ -28,10 +25,9 @@ const ValgAlternativer = ({ valg, feltKode, redigerbart, changeField }: ValgAlte
             }}
           >
             {alternativ.beskrivelse}
-          </Checkbox>
-        ))}
-      </CheckboxGroup>
-    );
+          </Checkbox>*/
+      <Skjema.Checkbox feltNavn={`felt.${alternativ.kode}`} label={alternativ.beskrivelse} disabled={!redigerbart} />
+    ));
   }
   if (valg.valgType === DokumenterV2.ValgType.RADIO) {
     return (

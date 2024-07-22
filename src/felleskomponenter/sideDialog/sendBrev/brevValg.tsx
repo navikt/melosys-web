@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment, useEffect } from "react";
 import { ColumnWidth } from "nav-frontend-grid";
 
 import * as Api from "../../../services/api";
@@ -19,6 +19,10 @@ interface BrevValgProps {
 const BrevValg = ({ formValues, width, redigerbart, changeField, finnValgAlternativ }: BrevValgProps) => {
   const skalViseBrevFelt = (felt: Api.DokumenterV2.Felt) => felt.valg === null || finnValgAlternativ(felt)?.visFelt;
 
+  useEffect(() => {
+    console.log(formValues.felt.FRITEKST);
+    changeField(`felt.FRITEKST.valg`, formValues.felt?.FRITEKST?.feltVerdi);
+  }, [formValues.felt]);
   return (
     <>
       {formValues.valgtBrev?.felter?.map((felt) => (
