@@ -82,7 +82,12 @@ class Stegvelger extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { aktivtStegNummer } = this.state;
+    const { aktivtStegNummer, aktuelleSteg } = this.state;
+    const svarAnmodningSteg = aktuelleSteg.find((steg) => steg.id === STEG.ARTIKKEL_16_MOTTA_SVAR);
+
+    if (svarAnmodningSteg && aktivtStegNummer !== svarAnmodningSteg.stegPosisjon) {
+      this.setState({ aktivtStegNummer: svarAnmodningSteg.stegPosisjon });
+    }
 
     if (!Utils._isEqual(prevProps, this.props)) {
       this.debouncedOppdaterAktuelleSteg(aktivtStegNummer);
@@ -536,7 +541,6 @@ class Stegvelger extends Component {
       this.erVedtakSteg(aktivtStegNummer) || aktuelleSteg[aktivtStegNummer]?.id === STEG.ARTIKKEL_16_ANMODNING;
     const inngangStegErAktivt = this.erInngangsteg(aktivtStegNummer);
     const erNyVurdering = oppsummering.behandlingstype?.kode === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
-
     return (
       <div className="stegvelger panelSeksjon">
         <StegLinje steg={aktuelleSteg} stegKlikk={this.validerSoknadOgGaTilSteg} />
