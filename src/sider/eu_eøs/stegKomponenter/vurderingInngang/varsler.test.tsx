@@ -8,6 +8,21 @@ vi.mock("../../../../featuretoggle", () => ({
   useFeatureToggle: () => true,
 }));
 
+vi.mock(
+  "../../../../felleskomponenter/menypanel/menypunkter/person/statsborgerskapTable/hentStatsborgerskap.generated",
+  () => ({
+    useHentStatsborgerskapQuery: () => ({
+      data: {
+        hentSaksopplysninger: {
+          persondata: {
+            statsborgerskap: [{ land: "NO" }],
+          },
+        },
+      },
+    }),
+  })
+);
+
 describe("Varsler", () => {
   const mockedProps = mock<ComponentProps<typeof Varsler>>();
   let props = instance(mockedProps);
@@ -17,6 +32,7 @@ describe("Varsler", () => {
   beforeEach(() => {
     props = instance(mockedProps);
     props.landkoder = ["DK"];
+    props.behandlingID = 4;
   });
 
   it("Viser melding om oppfyllte inngangsvilkår", () => {

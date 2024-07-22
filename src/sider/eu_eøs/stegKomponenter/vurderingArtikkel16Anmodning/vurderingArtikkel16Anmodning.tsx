@@ -68,6 +68,7 @@ interface FormValuesProps {
   mottakerinstitusjon: string;
   kreverMottakerinstitusjon: boolean;
   fritekstSed: string | null;
+  begrunnelseFritekst: string | null;
 }
 
 interface Props {
@@ -218,6 +219,7 @@ const VurderingArtikkel16Anmodning = ({
       const body = {
         mottakerinstitusjon: formValues.mottakerinstitusjon || null,
         fritekstSed: formValues.fritekstSed,
+        begrunnelseFritekst: unntaksvilkår.begrunnelseFritekst,
         vedlegg: valgteVedlegg.map(({ journalpostID, dokumentID }) => ({ journalpostID, dokumentID })),
       };
 
@@ -267,13 +269,16 @@ const VurderingArtikkel16Anmodning = ({
         },
       ];
 
+  // TODO: Erstattes med en enkel labeltekst når storbritannia toggle fjernes
   const begrunnelseFritekstBrevLabel = (
     <Fragment>
       <Nav.Typo.Element>Begrunnelse til orienteringsbrev til bruker</Nav.Typo.Element>
-      <Nav.Typo.Normaltekst>
-        Begrunnelsen kommer ut i vedtaksbrevet som en setning som starter med «Vi har bedt trygdemyndighetene i [land]
-        om en avtale for deg, fordi», og slutter med teksten du har tilføyd.
-      </Nav.Typo.Normaltekst>
+      {!konvensjonStorbritanniaToggleEnabled && (
+        <Nav.Typo.Normaltekst>
+          Begrunnelsen kommer ut i vedtaksbrevet som en setning som starter med «Vi har bedt trygdemyndighetene i [land]
+          om en avtale for deg, fordi», og slutter med teksten du har tilføyd.
+        </Nav.Typo.Normaltekst>
+      )}
     </Fragment>
   );
 
@@ -317,7 +322,7 @@ const VurderingArtikkel16Anmodning = ({
         <Nav.Row>
           <Nav.Column xs="7">
             <Nav.Select
-              feil={lovvalgFeilmelding}
+              error={lovvalgFeilmelding}
               onChange={handleEndretUnntakFraBestemmelse}
               value={unntakFraBestemmelse || ""}
               disabled={!redigerbart}
@@ -334,7 +339,7 @@ const VurderingArtikkel16Anmodning = ({
         <Nav.Row>
           <Nav.Column xs="7">
             <Nav.Select
-              feil={begrunnelseFeilmelding}
+              error={begrunnelseFeilmelding}
               onChange={handleEndretBegrunnelse}
               value={unntaksvilkår.begrunnelseKoder ? unntaksvilkår.begrunnelseKoder[0] : ""}
               disabled={!redigerbart}

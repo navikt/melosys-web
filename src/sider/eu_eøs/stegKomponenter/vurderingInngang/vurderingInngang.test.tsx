@@ -8,6 +8,21 @@ import MKV from "../../../../melosyskodeverk";
 import { VurderingInngang } from "./vurderingInngang";
 import { renderWithProviders } from "../../../../ducks/test-utils/renderWithProviders";
 
+vi.mock(
+  "../../../../felleskomponenter/menypanel/menypunkter/person/statsborgerskapTable/hentStatsborgerskap.generated",
+  () => ({
+    useHentStatsborgerskapQuery: () => ({
+      data: {
+        hentSaksopplysninger: {
+          persondata: {
+            statsborgerskap: [{ land: "NO" }],
+          },
+        },
+      },
+    }),
+  })
+);
+
 describe("VurderingInngang", () => {
   const initialStore = (behandlingstema: string, landkoder: string[], flereLandUkjentHvilke: boolean) => ({
     behandlinger: {
@@ -19,6 +34,7 @@ describe("VurderingInngang", () => {
           },
         },
       },
+      behandlingID: 4,
     },
     mottatteOpplysninger: {
       status: "",

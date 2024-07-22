@@ -48,6 +48,7 @@ export const KnyttTilSak = (props) => {
 
   const sisteBehandlingErPågåendeArtikkel16Sak =
     sisteBehandlingHarSendtAnmodningUnntakTilUtland && !sisteBehandlingErInaktiv;
+
   const sisteBehandlingKanOpprettesAndregangsbehandlingPå =
     sisteBehandlingErInaktiv || sisteBehandlingErPågåendeArtikkel16Sak || muligeBehandlingstyper?.length > 0;
 
@@ -142,15 +143,17 @@ export const KnyttTilSak = (props) => {
   if (sisteBehandlingKanOpprettesAndregangsbehandlingPå) {
     return (
       <div className="knyttTilSak__panelramme">
-        {sisteBehandlingErPågåendeArtikkel16Sak ? (
+        {sisteBehandlingErPågåendeArtikkel16Sak && (
           <Nav.Alert variant="warning" className="anmodningSvarSendt">
             Hvis du har mottatt svar på anmodning om unntak skal du <b>ikke</b> opprette en ny behandling.
           </Nav.Alert>
-        ) : (
+        )}
+        {sisteBehandlingErInaktiv && (
           <Nav.Alert variant="info" className="tidligereBehandlingAvsluttet">
             Tidligere behandling er avsluttet.
           </Nav.Alert>
         )}
+
         {erJournalføring && (
           <div className="panelElement">
             <Nav.Typo.Undertittel className="overskrift">Velg hva du vil gjøre med dokumentet</Nav.Typo.Undertittel>
@@ -165,7 +168,6 @@ export const KnyttTilSak = (props) => {
             <Nav.Typo.Undertittel className="overskrift">Velg tema og type for ny behandling</Nav.Typo.Undertittel>
             <Skjema.Select
               feltNavn={feltNavn.behandlingstema}
-              bredde="fullbredde"
               label="Behandlingstema"
               emptyFieldDisabled={behandlingstema?.kode}
               disabled={harBehandlingMedTrygdeavgift}

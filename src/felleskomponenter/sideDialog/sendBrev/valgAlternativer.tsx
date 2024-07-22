@@ -1,7 +1,6 @@
 import { DokumenterV2 } from "../../../services/api";
 import * as Skjema from "../../skjema";
 import * as Nav from "../../../navFrontend";
-import { CheckboxGroup } from "@navikt/ds-react";
 
 interface ValgAlternativProps {
   valg: DokumenterV2.Valg;

@@ -15,6 +15,8 @@ import EnkeltSak from "./enkeltSak";
 import KnyttTilSak from "./knyttTilSak";
 
 import "./fagsakVelger.css";
+import { HStack } from "@navikt/ds-react";
+import { EnkelNavBox } from "../../../felleskomponenter/enkelNavBox";
 
 const EKSISTERENDE = "Eksisterende sak";
 const OPPRETT = "Opprett ny sak";
@@ -76,8 +78,15 @@ const FagsakVelger = (props) => {
           legend=""
           hideLegend
         >
-          <Nav.Radio value={EKSISTERENDE}>{EKSISTERENDE}</Nav.Radio>
-          <Nav.Radio value={OPPRETT}>{OPPRETT}</Nav.Radio>
+          <HStack gap="3" justify="space-between">
+            <EnkelNavBox focused={valgtVisning === EKSISTERENDE}>
+              <Nav.Radio value={EKSISTERENDE}>{EKSISTERENDE}</Nav.Radio>
+            </EnkelNavBox>
+
+            <EnkelNavBox focused={valgtVisning === OPPRETT}>
+              <Nav.Radio value={OPPRETT}>{OPPRETT}</Nav.Radio>
+            </EnkelNavBox>
+          </HStack>
         </Nav.RadioGroup>
       )}
 

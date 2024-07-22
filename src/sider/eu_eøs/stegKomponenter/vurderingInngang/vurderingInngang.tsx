@@ -25,7 +25,7 @@ export const VurderingInngang = ({
 }: VurderingInngangProps) => {
   const dispatch = useDispatch();
   const [feil, setFeil] = useState<ReactElement | undefined>(undefined);
-  const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
+  const behandlingID: number = useSelector(behandlingerSelectors.BehandlingIDSelector) as number;
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const behandlingHarPeriodeOgLand = useSelector(mottatteOpplysningerSelectors.HarPeriodeOgLandSelector);
   const landkoder = useSelector(mottatteOpplysningerSelectors.SoknadslandkoderSelector);
@@ -83,6 +83,7 @@ export const VurderingInngang = ({
         inngangsvilkaar={inngangsvilkaar}
         landkoder={landkoder}
         behandlingstema={behandlingstema}
+        behandlingID={behandlingID}
       />
       {feil && (
         <Nav.Alert variant="error" className="periode_land_feil">
