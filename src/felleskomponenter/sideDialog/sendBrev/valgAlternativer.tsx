@@ -19,7 +19,12 @@ const ValgAlternativer = ({ valg, feltKode, redigerbart, changeField }: ValgAlte
             value={alternativ.kode}
             id={`${feltKode}.${alternativ.kode}`}
             key={`${feltKode}.${alternativ.kode}`}
-            onChange={() => changeField(`felt.${feltKode}.valg`, alternativ.kode)}
+            onChange={(a) => {
+              changeField(`felt.${feltKode}.valg`, alternativ.kode);
+              if (alternativ.kode === "FRITEKST" && !a.target.checked) {
+                changeField(`felt.${feltKode}.valg`, "");
+              }
+            }}
           >
             {alternativ.beskrivelse}
           </Nav.Checkbox>
