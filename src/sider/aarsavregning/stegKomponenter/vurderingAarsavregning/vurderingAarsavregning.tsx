@@ -66,7 +66,7 @@ export const VurderingAarsavregning = () => {
       <Nav.Fieldset className="select" legend={<LabelMedHjelpetekst bold label="År" placement="left-start" />}>
         <Nav.Row>
           <Nav.Column xs="4">
-            <Nav.Select label="" data-testid="aarVelger" value={valgtÅr ?? ""} onChange={håndterEndringAvÅr}>
+            <Nav.Select label="" id="aarVelger" value={valgtÅr ?? ""} onChange={håndterEndringAvÅr}>
               <option key="" value="" disabled>
                 Velg...
               </option>
