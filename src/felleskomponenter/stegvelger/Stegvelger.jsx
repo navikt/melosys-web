@@ -81,9 +81,10 @@ class Stegvelger extends Component {
     this.oppdaterAktuelleSteg(aktivtStegNummer);
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     const { aktivtStegNummer, aktuelleSteg } = this.state;
     const svarAnmodningSteg = aktuelleSteg.find((steg) => steg.id === STEG.ARTIKKEL_16_MOTTA_SVAR);
+    const prevSvarAnmodningSteg = prevState.aktuelleSteg.find((steg) => steg.id === STEG.ARTIKKEL_16_MOTTA_SVAR);
 
     const behandlingsstatusErMottattSvarAnmodning =
       prevProps.oppsummering.behandlingsstatus.kode === MKV.Koder.behandlinger.behandlingsstatus.SVAR_ANMODNING_MOTTATT;
@@ -91,8 +92,8 @@ class Stegvelger extends Component {
     if (
       behandlingsstatusErMottattSvarAnmodning &&
       svarAnmodningSteg &&
-      aktivtStegNummer !== svarAnmodningSteg.stegPosisjon &&
-      !Utils._isEqual(prevProps, this.props)
+      !prevSvarAnmodningSteg &&
+      aktivtStegNummer !== svarAnmodningSteg.stegPosisjon
     ) {
       this.setState({ aktivtStegNummer: svarAnmodningSteg.stegPosisjon });
     }
