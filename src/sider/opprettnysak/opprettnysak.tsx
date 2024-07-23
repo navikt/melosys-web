@@ -33,6 +33,8 @@ import opprettNySakSchema from "./opprettnysakSchema";
 import "./opprettnysak.css";
 import { Spinner } from "../../felleskomponenter/spinner";
 import { oppgaverOperations } from "../../ducks/oppgaver";
+import { HStack } from "@navikt/ds-react";
+import { EnkelNavBox } from "../../felleskomponenter/enkelNavBox";
 
 const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
 
@@ -306,8 +308,14 @@ const OpprettNySak = ({
                   legend=""
                   hideLegend
                 >
-                  <Nav.Radio value={BRUKER}>Bruker</Nav.Radio>
-                  <Nav.Radio value={VIRKSOMHET}>Virksomhet</Nav.Radio>
+                  <HStack gap="3" justify="space-between">
+                    <EnkelNavBox focused={hovedpartErBruker}>
+                      <Nav.Radio value={BRUKER}>Bruker</Nav.Radio>
+                    </EnkelNavBox>
+                    <EnkelNavBox focused={!hovedpartErBruker}>
+                      <Nav.Radio value={VIRKSOMHET}>Virksomhet</Nav.Radio>
+                    </EnkelNavBox>
+                  </HStack>
                 </Nav.RadioGroup>
               </div>
             </div>

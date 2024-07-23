@@ -135,7 +135,7 @@ export const Saksplukker = ({
       <form className="saksplukker__skjema" onSubmit={submitOgVideresend}>
         <Nav.Row>
           <Nav.Column md="12" lg="4">
-            <Skjema.Select feltNavn="sakstype" bredde="fullbredde" label="Sakstype">
+            <Skjema.Select feltNavn="sakstype" label="Sakstype">
               {muligeSakstyper.map(({ kode, term }: KTObject) => (
                 <option key={kode} value={kode}>
                   {term}
@@ -144,7 +144,7 @@ export const Saksplukker = ({
             </Skjema.Select>
           </Nav.Column>
           <Nav.Column md="12" lg="4">
-            <Skjema.Select feltNavn="sakstema" bredde="fullbredde" label="Sakstema">
+            <Skjema.Select feltNavn="sakstema" label="Sakstema">
               {muligeSakstemaer.map(({ kode, term }: KTObject) => (
                 <option key={kode} value={kode}>
                   {term}
@@ -153,7 +153,7 @@ export const Saksplukker = ({
             </Skjema.Select>
           </Nav.Column>
           <Nav.Column md="12" lg="4">
-            <Skjema.Select feltNavn="behandlingstema" bredde="fullbredde" label="Behandlingstema">
+            <Skjema.Select feltNavn="behandlingstema" label="Behandlingstema">
               {muligeBehandlingstemaer.sort(compareTerm).map(({ kode, term }: KTObject) => (
                 <option key={kode} value={kode}>
                   {term}

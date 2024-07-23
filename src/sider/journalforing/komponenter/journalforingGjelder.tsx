@@ -14,6 +14,8 @@ import { formSelectors } from "../../../ducks/form";
 import { journalforingSelectors } from "../../../ducks/journalforing";
 
 import "./journalforingGjelder.css";
+import { EnkelNavBox } from "../../../felleskomponenter/enkelNavBox";
+import { HStack } from "@navikt/ds-react";
 
 const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
 const { JOURNALFORING_VALUES: FormValues } = KV.Form;
@@ -67,12 +69,18 @@ const JournalforingGjelder = ({
       tittel="Hvem skal dokumentet journalføres på?"
       innhold={
         <Nav.RadioGroup onChange={handleClick} defaultValue={journalforingGjelder} legend="" hideLegend>
-          <Nav.Radio value={BRUKER} id={BRUKER}>
-            {KV.kodeTilTerm(BRUKER, MKV.KTObjects.aktoersroller)}
-          </Nav.Radio>
-          <Nav.Radio value={VIRKSOMHET} id={VIRKSOMHET}>
-            {KV.kodeTilTerm(VIRKSOMHET, MKV.KTObjects.aktoersroller)}
-          </Nav.Radio>
+          <HStack gap="3" justify="space-between">
+            <EnkelNavBox focused={journalforingGjelder === BRUKER}>
+              <Nav.Radio value={BRUKER} id={BRUKER}>
+                {KV.kodeTilTerm(BRUKER, MKV.KTObjects.aktoersroller)}
+              </Nav.Radio>
+            </EnkelNavBox>
+            <EnkelNavBox focused={journalforingGjelder === VIRKSOMHET}>
+              <Nav.Radio value={VIRKSOMHET} id={VIRKSOMHET}>
+                {KV.kodeTilTerm(VIRKSOMHET, MKV.KTObjects.aktoersroller)}
+              </Nav.Radio>
+            </EnkelNavBox>
+          </HStack>
         </Nav.RadioGroup>
       }
     />

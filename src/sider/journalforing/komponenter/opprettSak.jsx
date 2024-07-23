@@ -129,7 +129,6 @@ export const OpprettSak = (props) => {
     <div className="opprettSak">
       <Skjema.Select
         feltNavn={feltNavn.sakstype}
-        bredde="fullbredde"
         label="Sakstype"
         onChange={() => nullstillVerdier(feltNavn.sakstype, settFeltInnhold, feltNavn)}
         disabled={disableSakstype}
@@ -142,7 +141,6 @@ export const OpprettSak = (props) => {
       </Skjema.Select>
       <Skjema.Select
         feltNavn={feltNavn.sakstema}
-        bredde="fullbredde"
         label="Sakstema"
         onChange={() => nullstillVerdier(feltNavn.sakstema, settFeltInnhold, feltNavn)}
       >
@@ -154,7 +152,6 @@ export const OpprettSak = (props) => {
       </Skjema.Select>
       <Skjema.Select
         feltNavn={feltNavn.opprettnysak_behandlingstema}
-        bredde="fullbredde"
         label="Behandlingstema"
         onChange={() => {
           nullstillVerdier(feltNavn.opprettnysak_behandlingstema, settFeltInnhold, feltNavn);
@@ -169,7 +166,6 @@ export const OpprettSak = (props) => {
       </Skjema.Select>
       <Skjema.Select
         feltNavn={feltNavn.opprettnysak_behandlingstype}
-        bredde="fullbredde"
         label="Behandlingstype"
         onChange={() => nullstillVerdier(feltNavn.opprettnysak_behandlingstype, settFeltInnhold, feltNavn)}
       >
