@@ -12,18 +12,24 @@ interface ValgAlternativProps {
 const ValgAlternativer = ({ valg, feltKode, redigerbart, changeField }: ValgAlternativProps) => {
   if (valg.valgType === DokumenterV2.ValgType.CHECKBOX) {
     return (
-      <Skjema.RadioGroup legend="" hideLegend name={`felt.${feltKode}.valg`} disabled={!redigerbart}>
+      <Nav.CheckboxGroup legend="" hideLegend name={`felt.${feltKode}.valg`} disabled={!redigerbart}>
         {valg.valgAlternativer.map((alternativ) => (
           <Nav.Checkbox
+            size="small"
             value={alternativ.kode}
             id={`${feltKode}.${alternativ.kode}`}
             key={`${feltKode}.${alternativ.kode}`}
-            onClick={() => changeField(`felt.${feltKode}.valg`, alternativ.kode)}
+            onChange={(a) => {
+              changeField(`felt.${feltKode}.valg`, alternativ.kode);
+              if (!a.target.checked) {
+                changeField(`felt.${feltKode}.valg`, "");
+              }
+            }}
           >
             {alternativ.beskrivelse}
           </Nav.Checkbox>
         ))}
-      </Skjema.RadioGroup>
+      </Nav.CheckboxGroup>
     );
   }
   if (valg.valgType === DokumenterV2.ValgType.RADIO) {

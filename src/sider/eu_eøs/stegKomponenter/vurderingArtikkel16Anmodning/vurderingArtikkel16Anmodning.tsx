@@ -322,7 +322,7 @@ const VurderingArtikkel16Anmodning = ({
         <Nav.Row>
           <Nav.Column xs="7">
             <Nav.Select
-              feil={lovvalgFeilmelding}
+              error={lovvalgFeilmelding}
               onChange={handleEndretUnntakFraBestemmelse}
               value={unntakFraBestemmelse || ""}
               disabled={!redigerbart}
@@ -339,7 +339,7 @@ const VurderingArtikkel16Anmodning = ({
         <Nav.Row>
           <Nav.Column xs="7">
             <Nav.Select
-              feil={begrunnelseFeilmelding}
+              error={begrunnelseFeilmelding}
               onChange={handleEndretBegrunnelse}
               value={unntaksvilkår.begrunnelseKoder ? unntaksvilkår.begrunnelseKoder[0] : ""}
               disabled={!redigerbart}

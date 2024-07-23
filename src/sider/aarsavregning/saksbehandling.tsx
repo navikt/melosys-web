@@ -21,6 +21,9 @@ import { menypanelOperations } from "../../ducks/menypanel";
 import { MatchParams } from "../../@types";
 import { alleSteg } from "./initialStegArray";
 import { FellesHandlersContext } from "../../contexts";
+import { mottatteOpplysningerSelectors } from "../../ducks/mottatteOpplysninger";
+import Oppsummering from "../../felleskomponenter/oppsummering";
+import { lovvalgsperioderSelectors } from "../../ducks/lovvalgsperioder";
 
 interface Props extends RouteComponentProps<MatchParams> {
   behandlingOppfriskes: boolean;
@@ -34,13 +37,12 @@ const Saksbehandling = ({ match, location }: Props) => {
 
   const dispatch = useDispatch();
 
-  /* const land = useSelector(mottatteOpplysningerSelectors.SoknadslandkoderSelector); TODO kommentert ut for å brute force oss inn i flyten før opprettelse av behandling er på plass
-  const mottatteOpplysningerPeriodeFom = useSelector((state) =>
-    Utils.dato.formatterDatoTilNorsk(mottatteOpplysningerSelectors.PeriodeSelector(state).fom)
-  );
-  const mottatteOpplysningerPeriodeTom = useSelector((state) =>
-    Utils.dato.formatterDatoTilNorsk(mottatteOpplysningerSelectors.PeriodeSelector(state).tom)
-  );*/
+  const formatterDato = (dato: string | null) => Utils.dato.formatterDatoTilNorsk(dato, false, undefined);
+  const mottatteOpplysningerFom = formatterDato(useSelector(mottatteOpplysningerSelectors.PeriodeFomSelector));
+  const mottatteOpplysningerTom = formatterDato(useSelector(mottatteOpplysningerSelectors.PeriodeTomSelector));
+  const lovvalgsperiodeFom = formatterDato(useSelector(lovvalgsperioderSelectors.FomDatoSelector));
+  const lovvalgsperiodeTom = formatterDato(useSelector(lovvalgsperioderSelectors.TomDatoSelector));
+
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const registeropplysningerHentet = useSelector(behandlingerSelectors.RegisteropplysningerHentetSelector);
 
@@ -120,6 +122,12 @@ const Saksbehandling = ({ match, location }: Props) => {
               <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
             </Nav.Column>
             <Nav.Column xs="5">
+              <Oppsummering
+                lovvalgsperiodeFom={lovvalgsperiodeFom || mottatteOpplysningerFom}
+                lovvalgsperiodeTom={lovvalgsperiodeTom || mottatteOpplysningerTom}
+                mottatteOpplysningerPeriodeFom={mottatteOpplysningerFom}
+                mottatteOpplysningerPeriodeTom={mottatteOpplysningerTom}
+              />
               <SaksoversiktLenke />
               <SideDialog tabs={defaultTabs} />
             </Nav.Column>
