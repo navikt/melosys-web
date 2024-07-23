@@ -51,8 +51,8 @@ describe("VurderingAarsavreging", () => {
 
   describe("VurderingAarsavregning", () => {
     it("snapshot test", () => {
-      // @ts-ignore
       const { container } = renderWithProviders(<WrappedVurderingAarsavregning />, {
+        // @ts-ignore
         preloadedState: initialReduxState,
       });
       expect(container).toMatchSnapshot();
