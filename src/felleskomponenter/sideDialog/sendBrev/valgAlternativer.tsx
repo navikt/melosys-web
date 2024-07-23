@@ -15,6 +15,7 @@ const ValgAlternativer = ({ valg, feltKode, redigerbart, changeField }: ValgAlte
       <Nav.CheckboxGroup legend="" hideLegend name={`felt.${feltKode}.valg`} disabled={!redigerbart}>
         {valg.valgAlternativer.map((alternativ) => (
           <Nav.Checkbox
+            size="small"
             value={alternativ.kode}
             id={`${feltKode}.${alternativ.kode}`}
             key={`${feltKode}.${alternativ.kode}`}
