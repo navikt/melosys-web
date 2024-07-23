@@ -100,6 +100,134 @@ exports[`SideDialog > snapshot test 1`] = `
 </div>
 `;
 
+exports[`VurderingAarsavreging > VurderingAarsavregning > snapshot test 1`] = `
+<div>
+  <div
+    class="vurderingAarsavregning"
+  >
+    <h1
+      class="typo-innholdstittel stegvelgertittel"
+    >
+      Årsavregning
+    </h1>
+    <fieldset
+      class="fieldset select"
+    >
+      <legend
+        class="fieldset__legend"
+      >
+        <div
+          class="labelMedHjelpetekst__wrapper"
+        >
+          <span>
+            <b>
+              År
+            </b>
+          </span>
+        </div>
+      </legend>
+      <div
+        class="row"
+      >
+        <div
+          class="col col-xs-4"
+        >
+          <div
+            class="navds-form-field navds-form-field--medium"
+          >
+            <label
+              class="navds-form-field__label navds-label"
+              for="aarVelger"
+            >
+              
+            </label>
+            <div
+              class="navds-select__container"
+            >
+              <select
+                class="navds-select__input navds-body-short navds-body-short--medium"
+                id="aarVelger"
+              >
+                <option
+                  disabled=""
+                  value=""
+                >
+                  Velg...
+                </option>
+                <option
+                  value="2023"
+                >
+                  2023
+                </option>
+                <option
+                  value="2022"
+                >
+                  2022
+                </option>
+                <option
+                  value="2021"
+                >
+                  2021
+                </option>
+                <option
+                  value="2020"
+                >
+                  2020
+                </option>
+                <option
+                  value="2019"
+                >
+                  2019
+                </option>
+                <option
+                  value="2018"
+                >
+                  2018
+                </option>
+              </select>
+              <svg
+                aria-hidden="true"
+                class="navds-select__chevron"
+                fill="none"
+                focusable="false"
+                height="1em"
+                role="img"
+                viewBox="0 0 24 24"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  clip-rule="evenodd"
+                  d="M5.97 9.47a.75.75 0 0 1 1.06 0L12 14.44l4.97-4.97a.75.75 0 1 1 1.06 1.06l-5.5 5.5a.75.75 0 0 1-1.06 0l-5.5-5.5a.75.75 0 0 1 0-1.06Z"
+                  fill="currentColor"
+                  fill-rule="evenodd"
+                />
+              </svg>
+            </div>
+            <div
+              aria-live="polite"
+              aria-relevant="additions removals"
+              class="navds-form-field__error"
+              id="select-error-aksel-id-1"
+            />
+          </div>
+        </div>
+      </div>
+    </fieldset>
+    <button
+      class="navds-button navds-button--primary navds-button--medium"
+    >
+      <span
+        class="navds-label"
+      >
+        Bekreft og fortsett
+      </span>
+    </button>
+    ;
+  </div>
+</div>
+`;
+
 exports[`VurderingAarsavreging > snapshot test 1`] = `
 <div>
   <div
@@ -286,4 +414,131 @@ exports[`VurderingAarsavreging > snapshot test 1`] = `
     </button>
   </div>
 </div>
+`;
+
+exports[`VurderingAarsavregning > snapshot test 1`] = `
+<DocumentFragment>
+  <div
+    class="vurderingAarsavregning"
+  >
+    <h1
+      class="typo-innholdstittel stegvelgertittel"
+    >
+      Årsavregning
+    </h1>
+    <fieldset
+      class="fieldset select"
+    >
+      <legend
+        class="fieldset__legend"
+      >
+        <div
+          class="labelMedHjelpetekst__wrapper"
+        >
+          <span>
+            <b>
+              År
+            </b>
+          </span>
+        </div>
+      </legend>
+      <div
+        class="row"
+      >
+        <div
+          class="col col-xs-4"
+        >
+          <div
+            class="navds-form-field navds-form-field--medium"
+          >
+            <label
+              class="navds-form-field__label navds-label"
+              for="aarVelger"
+            />
+            <div
+              class="navds-select__container"
+            >
+              <select
+                class="navds-select__input navds-body-short navds-body-short--medium"
+                id="aarVelger"
+              >
+                <option
+                  disabled=""
+                  value=""
+                >
+                  Velg...
+                </option>
+                <option
+                  value="2023"
+                >
+                  2023
+                </option>
+                <option
+                  value="2022"
+                >
+                  2022
+                </option>
+                <option
+                  value="2021"
+                >
+                  2021
+                </option>
+                <option
+                  value="2020"
+                >
+                  2020
+                </option>
+                <option
+                  value="2019"
+                >
+                  2019
+                </option>
+                <option
+                  value="2018"
+                >
+                  2018
+                </option>
+              </select>
+              <svg
+                aria-hidden="true"
+                class="navds-select__chevron"
+                fill="none"
+                focusable="false"
+                height="1em"
+                role="img"
+                viewBox="0 0 24 24"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  clip-rule="evenodd"
+                  d="M5.97 9.47a.75.75 0 0 1 1.06 0L12 14.44l4.97-4.97a.75.75 0 1 1 1.06 1.06l-5.5 5.5a.75.75 0 0 1-1.06 0l-5.5-5.5a.75.75 0 0 1 0-1.06Z"
+                  fill="currentColor"
+                  fill-rule="evenodd"
+                />
+              </svg>
+            </div>
+            <div
+              aria-live="polite"
+              aria-relevant="additions removals"
+              class="navds-form-field__error"
+              id="select-error-aksel-id-1"
+            />
+          </div>
+        </div>
+      </div>
+    </fieldset>
+    <button
+      class="navds-button navds-button--primary navds-button--medium navds-button--disabled"
+      disabled=""
+    >
+      <span
+        class="navds-label"
+      >
+        Bekreft og fortsett
+      </span>
+    </button>
+    ;
+  </div>
+</DocumentFragment>
 `;
