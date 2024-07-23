@@ -93,8 +93,7 @@ class Stegvelger extends Component {
       behandlingsstatusErMottattSvarAnmodning &&
       svarAnmodningSteg &&
       !prevSvarAnmodningSteg &&
-      aktivtStegNummer !== svarAnmodningSteg.stegPosisjon &&
-      prevState.aktuelleSteg !== this.state.aktuelleSteg
+      aktivtStegNummer !== svarAnmodningSteg.stegPosisjon
     ) {
       this.setState({ aktivtStegNummer: svarAnmodningSteg.stegPosisjon });
     }
