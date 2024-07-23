@@ -3,7 +3,7 @@ import { VurderingAarsavregning } from "./vurderingAarsavregning";
 import { STATUS } from "../../../../services";
 import { renderWithProviders } from "../../../../ducks/test-utils/renderWithProviders";
 
-describe("SideDialog", () => {
+describe("VurderingAarsavreging", () => {
   const initialReduxState = {
     behandlinger: {
       data: {
