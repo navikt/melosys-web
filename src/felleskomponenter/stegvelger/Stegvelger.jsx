@@ -85,7 +85,15 @@ class Stegvelger extends Component {
     const { aktivtStegNummer, aktuelleSteg } = this.state;
     const svarAnmodningSteg = aktuelleSteg.find((steg) => steg.id === STEG.ARTIKKEL_16_MOTTA_SVAR);
 
-    if (svarAnmodningSteg && aktivtStegNummer !== svarAnmodningSteg.stegPosisjon) {
+    const behandlingsstatusErMottattSvarAnmodning =
+      prevProps.oppsummering.behandlingsstatus.kode === MKV.Koder.behandlinger.behandlingsstatus.SVAR_ANMODNING_MOTTATT;
+
+    if (
+      behandlingsstatusErMottattSvarAnmodning &&
+      svarAnmodningSteg &&
+      aktivtStegNummer !== svarAnmodningSteg.stegPosisjon &&
+      !Utils._isEqual(prevProps, this.props)
+    ) {
       this.setState({ aktivtStegNummer: svarAnmodningSteg.stegPosisjon });
     }
 
