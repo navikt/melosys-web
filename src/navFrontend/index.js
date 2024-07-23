@@ -1,7 +1,19 @@
 import { Column, Container, Row } from "./grid";
 import NavFrontendSpinner from "nav-frontend-spinner";
 import Tekstomrade from "nav-frontend-tekstomrade";
-import { Box, Button, HelpText, Link, Tag, Modal, Checkbox, Radio, RadioGroup, Select } from "@navikt/ds-react";
+import {
+  Box,
+  Button,
+  HelpText,
+  Link,
+  Tag,
+  Modal,
+  Checkbox,
+  Radio,
+  RadioGroup,
+  Select,
+  CheckboxGroup,
+} from "@navikt/ds-react";
 import Alert from "./alert";
 import TextField from "./skjema/textfield";
 
@@ -31,4 +43,5 @@ export {
   TextField,
   Radio,
   RadioGroup,
+  CheckboxGroup,
 };

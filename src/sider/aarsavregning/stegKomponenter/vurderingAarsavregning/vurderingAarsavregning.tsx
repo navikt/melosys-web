@@ -10,10 +10,13 @@ import {
   AarsavregningResponse,
   LagAarsavregningRequest,
 } from "../../../../services/modules/aarsavregning/aarsavregning";
+import { useSelector } from "react-redux";
+import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 
 export const VurderingAarsavregning = () => {
   const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
   const initialRender = useRef(true);
+  const behandlingsId = useSelector((state) => behandlingerSelectors.BehandlingIDSelector(state));
 
   const [feil, setFeil] = useState<undefined | string>(undefined);
   const [lagretTrygdeavgift, setLagretTrygdeavgift] = useState<AarsavregningResponse | undefined>(undefined);
@@ -23,7 +26,7 @@ export const VurderingAarsavregning = () => {
   }, []);
 
   const fetchAvregningsData = () => {
-    return Api.Aarsavregning.hentAvregningsData(1) // TODO: use behandlingsID når det er klart
+    return Api.Aarsavregning.hentAvregningsData(behandlingsId)
       .then((response: AarsavregningResponse) => {
         setLagretTrygdeavgift(response);
         return response;
@@ -44,7 +47,7 @@ export const VurderingAarsavregning = () => {
 
     const lagNyAvregning: LagAarsavregningRequest = {
       aar: selectedYear,
-      behandlingsId: 1, // TODO erstatt med faktisk behandlingsId når det er klart
+      behandlingsId, // TODO erstatt med faktisk behandlingsId når det er klart
     };
 
     Api.Aarsavregning.lagAvregningsData(lagNyAvregning).then(() => fetchAvregningsData());
