@@ -234,6 +234,12 @@ const VurderingVedtak = ({
       .catch(() => setVedtakPending(false));
   };
 
+  useEffect(() => {
+    if (formValues?.vedtakstypebegrunnelse) {
+      Api.Behandlinger.resultat.oppdaterNyVurderingBakgrunn(behandlingID as string, formValues.vedtakstypebegrunnelse);
+    }
+  }, [formValues?.vedtakstypebegrunnelse, behandlingID]);
+
   const { fomDato, tomDato, lovvalgsbestemmelse, tilleggBestemmelse } = lovvalgsperiode;
 
   const sedMottakerLand = finnSedMottakerLand(arbeidsland, bostedsland || {}, lovvalgsbestemmelse, tilleggBestemmelse);
