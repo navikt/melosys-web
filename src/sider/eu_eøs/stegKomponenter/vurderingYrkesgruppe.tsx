@@ -136,14 +136,13 @@ const VurderingYrkesgruppe = ({
 
   return (
     <div className="vurderingYrkesgruppe">
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">Hva er søkerens yrkessituasjon?</Nav.Typo.Innholdstittel>
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">Yrkessituasjon</Nav.Typo.Innholdstittel>
       <Nav.RadioGroup
-        legend=""
-        hideLegend
+        legend="Hva er brukers yrkessituasjon?"
         onChange={handleEndreYrkesgruppe}
         name="yrkesgruppe"
         defaultValue={fakta}
-        disabled={!redigerbart}
+        readOnly={!redigerbart}
       >
         <Nav.Radio value={ORDINAER}>Yrkesaktiv</Nav.Radio>
         <Nav.Radio value={SOKKEL_ELLER_SKIP}>Yrkesaktiv på sokkel eller skip</Nav.Radio>

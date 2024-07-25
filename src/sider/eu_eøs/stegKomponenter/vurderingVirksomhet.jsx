@@ -17,6 +17,17 @@ import { BOOLSK_STRING } from "../../../constants";
 import "./vurderingArbeidsgiver.css";
 import { feiletResponsOperations } from "../../../ducks/feiletRespons";
 import { kontrollOperations } from "../../../ducks/kontroll";
+import LabelMedHjelpetekst from "../../../felleskomponenter/labelMedHjelpetekst";
+
+const VIRKSOMHET_HELPTEXT = (
+  <>
+    Velg virksomhet søker er ansatt av og arbeider for i søknadsperioden.
+    <br />
+    Det er mulig å velge flere virksomheter om søker har mer enn ett arbeidsforhold.
+    <br /> Hvis søker arbeider for en virksomhet som ikke er synlig her, må du legge den til i sidemenyen under
+    «Arbeidsgiver/virksomhet»
+  </>
+);
 
 /**
  * Enkeltsjekkboks for ett arbeidsgiver.
@@ -24,7 +35,7 @@ import { kontrollOperations } from "../../../ducks/kontroll";
  * @param props Objekt Diverse props (se propTypes)
  */
 const VirksomheterLinje = (props) => {
-  const { virksomheten, avklartVirksomhet, redigerbart, oppdaterData, slettData } = props;
+  const { virksomheten, avklartVirksomhet, oppdaterData, slettData } = props;
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -46,21 +57,13 @@ const VirksomheterLinje = (props) => {
   };
 
   return (
-    <div className="arbeidsgiver__enkeltlinje">
-      <Mui.Checkbox
-        disabled={!redigerbart}
-        checked={virksomhetErValgt === true}
-        onCheck={virksomhetKlikkHandler}
-        label={`${virksomheten.navn}`}
-      />
-    </div>
+    <Mui.Checkbox onCheck={virksomhetKlikkHandler} value={virksomheten.virksomhetId} label={`${virksomheten.navn}`} />
   );
 };
 
 VirksomheterLinje.propTypes = {
   virksomheten: MPT.Virksomhet.isRequired,
   avklartVirksomhet: MPT.Avklartefakta,
-  redigerbart: PT.bool.isRequired,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
 };
@@ -85,8 +88,16 @@ const VirksomheterListe = (props) => {
     </Nav.Alert>
   );
 
+  const valgteVirksomheter = avklarteVirksomheter
+    .filter((enkeltAvklaring) => enkeltAvklaring.fakta.includes(BOOLSK_STRING.SANN))
+    .map((enkeltAvklaring) => enkeltAvklaring.subjektID);
+
   return (
-    <div>
+    <Nav.CheckboxGroup
+      legend={<LabelMedHjelpetekst label="Velg virksomhet(er)" hjelpetekst={VIRKSOMHET_HELPTEXT} />}
+      readOnly={!redigerbart}
+      defaultValue={valgteVirksomheter}
+    >
       {virksomheterIPerioden.map((virksomheten) => {
         const avklartfaktaForVirksomhet = avklarteVirksomheter.find(
           (enkeltAvklaring) => enkeltAvklaring.subjektID === virksomheten.virksomhetId
@@ -98,14 +109,13 @@ const VirksomheterListe = (props) => {
             virksomheten={virksomheten}
             avklartVirksomhet={avklartfaktaForVirksomhet}
             key={key}
-            redigerbart={redigerbart}
             oppdaterData={oppdaterData}
             slettData={slettData}
           />
         );
       })}
       {ingenVirksomheterVarsel}
-    </div>
+    </Nav.CheckboxGroup>
   );
 };
 
@@ -142,7 +152,7 @@ const VurderingVirksomhet = (props) => {
 
   return (
     <div className="vurderingArbeidsgiver">
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">Velg relevante virksomheter</Nav.Typo.Innholdstittel>
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">Virksomhet</Nav.Typo.Innholdstittel>
       <div className="arbeidsgiver">
         <VirksomheterListe
           avklarteVirksomheter={virksomheter}

@@ -1,9 +1,8 @@
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as Mui from "../../../../felleskomponenter/ui";
 import * as Nav from "../../../../navFrontend";
 import * as Services from "../../../../services";
-import { DatoOmradeMedVarighet } from "../../../../felleskomponenter/datoOmrade";
 import { avklartefaktaSelectors } from "../../../../ducks/avklartefakta";
 import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
 import { anmodningsperioderSelectors } from "../../../../ducks/anmodningsperioder";
@@ -13,12 +12,15 @@ import {
   anmodningsperiodesvarSelectors,
 } from "../../../../ducks/anmodningsperiodesvar";
 import { lagAnmodningsperiodesvar } from "../../../../felleskomponenter/stegvelger";
-import "./vurderingArtikkel16MottaSvar.css";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import FormKomponent from "./formKomponent";
 import { AnmodningsperiodesvarResDto } from "../../../../services/modules/anmodningsperioder/svar/svar";
 import { useFeatureToggle } from "../../../../featuretoggle";
 import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../../featuretoggle/toggleNavn";
+import EnkeltDato from "../../../../felleskomponenter/enkeltDato";
+import { datoDiffMenneskelig } from "../../../../utils/dato";
+
+import "./vurderingArtikkel16MottaSvar.css";
 
 interface VurderingArtikkel16MottaSvarProps {
   bekreftOgFortsett: () => void;
@@ -66,7 +68,7 @@ const VurderingArtikkel16MottaSvar = ({
   }, [anmodningsperioderSvarStatus]);
 
   return (
-    <Fragment>
+    <div className="vurderingArtikkel16MottaSvar">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">
         {konvensjonStorbritanniaToggleEnabled
           ? "Svar på anmodning om unntak"
@@ -74,15 +76,21 @@ const VurderingArtikkel16MottaSvar = ({
       </Nav.Typo.Innholdstittel>
       <Nav.Row>
         <Nav.Column xs="4">
-          <Nav.Typo.Element>Land:</Nav.Typo.Element>
+          <Nav.Typo.Element>Land</Nav.Typo.Element>
           <Nav.Typo.Normaltekst>
             {gyldigeSoknadsland.map((enkeltLandObjekt: KTObject) => enkeltLandObjekt.term).join(", ")}
           </Nav.Typo.Normaltekst>
         </Nav.Column>
       </Nav.Row>
-      <Nav.Row className="soknadsperiodeRow">
-        <Nav.Column xs="6">
-          <DatoOmradeMedVarighet periode={soknadsperiode} label="Søknadsperiode" />
+      <Nav.Row>
+        <Nav.Column xs="12">
+          <Nav.Typo.Element>Søknadsperiode</Nav.Typo.Element>
+        </Nav.Column>
+        <Nav.Column xs="12" className="soknadsperiode__innhold">
+          <EnkeltDato dato={soknadsperiode.fom} />
+          &nbsp;-&nbsp;
+          <EnkeltDato dato={soknadsperiode.tom} />
+          <Nav.Typo.Normaltekst>{datoDiffMenneskelig(soknadsperiode.fom, soknadsperiode.tom)}</Nav.Typo.Normaltekst>
         </Nav.Column>
       </Nav.Row>
       {anmodningsperioderSvarHentet && (
@@ -103,7 +111,7 @@ const VurderingArtikkel16MottaSvar = ({
           onClick: tilbake,
         }}
       />
-    </Fragment>
+    </div>
   );
 };
 

@@ -69,7 +69,7 @@ const DelvisInnvilgelse = ({
       </Nav.Typo.Innholdstittel>
       <DatoOgBestemmelse fomDato={gjeldendePeriode.fom} tomDato={gjeldendePeriode.tom} />
       <Nav.Row>
-        <Nav.Column xs="7">
+        <Nav.Column xs="12">
           <Skjema.PeriodeForkorter
             redigerbart={redigerbart}
             fomRedigerbar
@@ -95,17 +95,17 @@ const DelvisInnvilgelse = ({
       <Nav.Row>
         <Nav.Column xs="7">{renderFritekstFelt()}</Nav.Column>
       </Nav.Row>
-      <Nav.Row>
-        <Nav.Column xs="7">
-          {stegErGyldig && (
+      {stegErGyldig && (
+        <Nav.Row>
+          <Nav.Column xs="10">
             <Dokumentliste
               behandlingID={behandlingID}
               dokumenter={pdfDokumenter}
               validateOnClick={vedKlikkForhandsvis}
             />
-          )}
-        </Nav.Column>
-      </Nav.Row>
+          </Nav.Column>
+        </Nav.Row>
+      )}
     </Fragment>
   );
 };

@@ -1,7 +1,7 @@
 import MKV from "../../../../melosyskodeverk";
 import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
 import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
-import VurderingForutgaendeMedlemskap from "../../stegKomponenter/vurderingForutgaendeMedlemskap";
+import VurderingForutgaendeMedlemskap from "../../stegKomponenter/vurderingForutgaendeMedlemskap/vurderingForutgaendeMedlemskap";
 import { hentVilkar } from "../../../../domeneUtils";
 
 class ForutgaendeMedlemskap extends Steg {

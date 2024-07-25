@@ -9,8 +9,17 @@ import "./enkeltVilkaar.css";
 import { konverterVilkarTilStegData, lagVilkarbegrunnelse, lagVilkaar } from "../../../../felleskomponenter/stegvelger";
 
 const EnkeltVilkaar = (props) => {
-  const { redigerbart, begrunnelser, tittel, labelOppfylt, labelIkkeOppfylt, vilkaar, vilkaarKode, oppdaterData } =
-    props;
+  const {
+    redigerbart,
+    begrunnelser,
+    tittel,
+    labelOppfylt,
+    labelIkkeOppfylt,
+    vilkaar,
+    vilkaarKode,
+    oppdaterData,
+    size,
+  } = props;
 
   useEffect(() => {
     oppdaterData(konverterVilkarTilStegData(vilkaarKode, vilkaar));
@@ -32,21 +41,22 @@ const EnkeltVilkaar = (props) => {
             legend={tittel}
             onChange={radioEndringHandler}
             defaultValue={vilkaar.oppfylt}
-            disabled={!redigerbart}
+            readOnly={!redigerbart}
             name={vilkaarKode}
+            size={size}
           >
             <Nav.Radio value>{labelOppfylt}</Nav.Radio>
             <Nav.Radio value={false}>{labelIkkeOppfylt}</Nav.Radio>
           </Nav.RadioGroup>
         </Nav.Column>
       </Nav.Row>
-      {!vilkaar.oppfylt && (
+      {vilkaar.oppfylt !== undefined && !vilkaar.oppfylt && (
         <Nav.Row>
           <Nav.Column xs="12" md="10" lg="8">
-            <Nav.Fieldset legend="Begrunnelse:">
+            <Nav.Fieldset legend="">
               <Mui.ListevelgerFlervalg
                 muligeValg={begrunnelser}
-                label="Legg til begrunnelse:"
+                label="Legg til begrunnelse"
                 tillatFritekst={false}
                 onChange={listevalgEndringHandler}
                 defaultElementer={vilkaar.begrunnelseKoder}
@@ -69,11 +79,13 @@ EnkeltVilkaar.propTypes = {
   labelIkkeOppfylt: PT.string.isRequired,
   begrunnelser: PT.arrayOf(MPT.Kodeverk),
   oppdaterData: PT.func.isRequired,
+  size: PT.string,
 };
 
 EnkeltVilkaar.defaultProps = {
   begrunnelser: [],
   tittel: "",
+  size: "medium",
 };
 
 export default EnkeltVilkaar;

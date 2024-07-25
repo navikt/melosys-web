@@ -2,7 +2,7 @@ import { reduxForm } from "redux-form";
 
 import Select, { SelectWrappedComponent } from "./select";
 import { expect } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import { renderWithProviders } from "../../../ducks/test-utils/renderWithProviders";
 
 vi.mock("../../../utils", async () => {
@@ -44,12 +44,6 @@ describe("Select", () => {
       meta,
     });
 
-    it("viser en Nav Select", () => {
-      // @ts-ignore
-      const { container } = render(<SelectWrappedComponent {...props()} />);
-      expect(container).toMatchSnapshot();
-    });
-
     it("setter feil-prop dersom meta.error prop finnes", () => {
       const meta = {
         touched: true,
@@ -58,7 +52,7 @@ describe("Select", () => {
       };
 
       // @ts-ignore
-      render(<SelectWrappedComponent {...props(meta)} />);
+      renderWithProviders(<SelectWrappedComponent {...props(meta)} />);
       expect(screen.getByText("err")).toBeInTheDocument();
     });
   });

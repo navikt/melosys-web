@@ -1,13 +1,15 @@
 import { useEffect } from "react";
 import PT from "prop-types";
 
-import * as Nav from "../../../navFrontend";
-import * as MPT from "../../../proptypes";
-import * as Mui from "../../../felleskomponenter/ui";
+import * as Nav from "../../../../navFrontend";
+import * as MPT from "../../../../proptypes";
+import * as Mui from "../../../../felleskomponenter/ui";
 
-import { arrayTilKonjunksjon } from "../../../utils/streng";
+import { arrayTilKonjunksjon } from "../../../../utils/streng";
 
-import EnkeltVilkaar from "./felles/enkeltVilkaar";
+import EnkeltVilkaar from "../felles/enkeltVilkaar";
+
+import "./vurderingVesentligVirksomhet.css";
 
 const VurderingVesentligVirksomhet = (props) => {
   const {
@@ -36,10 +38,8 @@ const VurderingVesentligVirksomhet = (props) => {
       : "";
 
   return (
-    <div>
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">
-        Har {arbeidsgivereTekst} vesentlig virksomhet i Norge?
-      </Nav.Typo.Innholdstittel>
+    <div className="vurderingVesentligVirksomhet">
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">Vesentlig virksomhet</Nav.Typo.Innholdstittel>
       <EnkeltVilkaar
         redigerbart={redigerbart}
         begrunnelser={begrunnelser}
@@ -48,6 +48,8 @@ const VurderingVesentligVirksomhet = (props) => {
         labelOppfylt="Ja"
         labelIkkeOppfylt="Nei"
         oppdaterData={oppdaterData}
+        tittel={`Har ${arbeidsgivereTekst} vesentlig virksomhet i Norge?`}
+        size="small"
       />
       <Mui.StegKnapper
         bekreftKnappProps={{

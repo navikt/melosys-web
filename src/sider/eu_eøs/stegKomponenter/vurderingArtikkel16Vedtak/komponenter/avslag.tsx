@@ -61,11 +61,13 @@ export const Avslag = ({
       <Nav.Row>
         <Nav.Column xs="7">{renderFritekstFelt()}</Nav.Column>
       </Nav.Row>
-      <Nav.Row>
-        <Nav.Column xs="7">
-          {redigerbart && <Dokumentliste behandlingID={behandlingID} dokumenter={pdfDokumenter} />}
-        </Nav.Column>
-      </Nav.Row>
+      {redigerbart && (
+        <Nav.Row>
+          <Nav.Column xs="10">
+            <Dokumentliste behandlingID={behandlingID} dokumenter={pdfDokumenter} />
+          </Nav.Column>
+        </Nav.Row>
+      )}
     </Fragment>
   );
 };

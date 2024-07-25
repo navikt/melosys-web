@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { connect, ConnectedProps, useDispatch, useSelector } from "react-redux";
 import { getFormValues, InjectedFormProps, isValid, reduxForm } from "redux-form";
 import MKV from "../../../../melosyskodeverk";
@@ -195,14 +195,7 @@ export const VurderingArtikkel16Vedtak = ({
   const { anmodningsperiodeSvarType } = anmodningsperiodesvar;
 
   const renderFritekstFelt = useCallback(
-    () => (
-      <Skjema.Textarea
-        feltNavn="vedtaksbrevFritekst"
-        label="Fritekst til vedtaksbrev"
-        placeholder="Skriv inn tekst til vedtaksbrevet..."
-        disabled={!redigerbart}
-      />
-    ),
+    () => <Skjema.Textarea feltNavn="vedtaksbrevFritekst" label="Fritekst til innledning" disabled={!redigerbart} />,
     [formValues?.vedtaksbrevFritekst, redigerbart]
   );
 
@@ -269,10 +262,10 @@ export const VurderingArtikkel16Vedtak = ({
   const vedtakInnhold = finnVedtakInnhold(anmodningsperiodeSvarType, stegErGyldig);
 
   return (
-    <Fragment>
+    <div className="vurderingArtikkel16Vedtak">
       {vedtakInnhold}
       <Nav.Row>
-        <Nav.Column xs="7" className="fane__fot">
+        <Nav.Column xs="7">
           {erNyVurdering && <Skjema.Vedtakstype redigerbart={redigerbart} className="vedtakstype" />}
           {erNyVurdering && redigerbart && (
             <Nav.Alert variant="info">{KV.Koder.AlertstripeTekst.NY_VURDERING_MEDL_TEKST}</Nav.Alert>
@@ -291,7 +284,7 @@ export const VurderingArtikkel16Vedtak = ({
           />
         </Nav.Column>
       </Nav.Row>
-    </Fragment>
+    </div>
   );
 };
 

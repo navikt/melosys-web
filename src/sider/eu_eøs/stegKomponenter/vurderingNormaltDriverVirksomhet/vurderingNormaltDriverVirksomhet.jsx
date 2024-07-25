@@ -1,11 +1,13 @@
 import { useEffect } from "react";
 import PT from "prop-types";
-import * as Nav from "../../../navFrontend";
-import * as MPT from "../../../proptypes";
-import * as Mui from "../../../felleskomponenter/ui";
-import EnkeltVilkaar from "./felles/enkeltVilkaar";
+import * as Nav from "../../../../navFrontend";
+import * as MPT from "../../../../proptypes";
+import * as Mui from "../../../../felleskomponenter/ui";
+import EnkeltVilkaar from "../felles/enkeltVilkaar";
 
-import { arrayTilKonjunksjon } from "../../../utils/streng";
+import { arrayTilKonjunksjon } from "../../../../utils/streng";
+
+import "./vurderingNormaltDriverVirksomhet.css";
 
 const NormaltDriverVirksomhet = (props) => {
   const {
@@ -35,10 +37,8 @@ const NormaltDriverVirksomhet = (props) => {
       : "";
 
   return (
-    <div>
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">
-        Driver {arbeidsgivereTekst} vanligvis virksomhet i Norge?
-      </Nav.Typo.Innholdstittel>
+    <div className="vurderingNormaltDriverVirksomhet">
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">Drift i Norge</Nav.Typo.Innholdstittel>
       <EnkeltVilkaar
         oppdaterData={oppdaterData}
         labelOppfylt="Ja"
@@ -47,6 +47,8 @@ const NormaltDriverVirksomhet = (props) => {
         redigerbart={redigerbart}
         vilkaar={normaltDriverVirksomhet}
         vilkaarKode="normaltDriverVirksomhet"
+        tittel={`Driver ${arbeidsgivereTekst} vanligvis virksomhet i Norge?`}
+        size="small"
       />
       <Mui.StegKnapper
         bekreftKnappProps={{
