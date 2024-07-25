@@ -234,12 +234,6 @@ const VurderingVedtak = ({
       .catch(() => setVedtakPending(false));
   };
 
-  useEffect(() => {
-    if (formValues?.vedtakstypebegrunnelse) {
-      Api.Behandlinger.resultat.oppdaterNyVurderingBakgrunn(behandlingID as string, formValues.vedtakstypebegrunnelse);
-    }
-  }, [formValues?.vedtakstypebegrunnelse, behandlingID]);
-
   const { fomDato, tomDato, lovvalgsbestemmelse, tilleggBestemmelse } = lovvalgsperiode;
 
   const sedMottakerLand = finnSedMottakerLand(arbeidsland, bostedsland || {}, lovvalgsbestemmelse, tilleggBestemmelse);
@@ -251,6 +245,13 @@ const VurderingVedtak = ({
   const lovvalgsbestemmelseKT = MKVUtils.lovvalgsbestemmelseTilObjekt(lovvalgsbestemmelse);
   const tilleggBestemmelseKT = MKVUtils.lovvalgsbestemmelseTilObjekt(tilleggBestemmelse);
   const maksAntallTegn = MKVUtils.erStorbritanniaKonvBestemmelse(lovvalgsbestemmelse) ? 500 - 38 : 500;
+
+  const mapDokumenter = (dokumenter: BrevDokumentMetadataType[]) => {
+    return dokumenter.map((dokument: BrevDokumentMetadataType) => {
+      dokument.dokumentData.nyVurderingBakgrunn = formValues?.vedtakstypebegrunnelse;
+      return dokument;
+    });
+  };
 
   return (
     <div className="vedtak">
@@ -333,7 +334,7 @@ const VurderingVedtak = ({
                 dokumenter={
                   bucLukketOgLovvalgNorge
                     ? pdfDokumenter.filter((dok) => "sedType" in dok && dok.sedType !== EKV.Koder.sedtyper.A012)
-                    : pdfDokumenter
+                    : mapDokumenter(pdfDokumenter as BrevDokumentMetadataType[])
                 }
               />
             )}
