@@ -246,6 +246,13 @@ const VurderingVedtak = ({
   const tilleggBestemmelseKT = MKVUtils.lovvalgsbestemmelseTilObjekt(tilleggBestemmelse);
   const maksAntallTegn = MKVUtils.erStorbritanniaKonvBestemmelse(lovvalgsbestemmelse) ? 500 - 38 : 500;
 
+  const mapDokumenter = (dokumenter: BrevDokumentMetadataType[]) => {
+    return dokumenter.map((dokument: BrevDokumentMetadataType) => {
+      dokument.dokumentData.nyVurderingBakgrunn = formValues?.vedtakstypebegrunnelse;
+      return dokument;
+    });
+  };
+
   return (
     <div className="vedtak">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">
@@ -327,7 +334,7 @@ const VurderingVedtak = ({
                 dokumenter={
                   bucLukketOgLovvalgNorge
                     ? pdfDokumenter.filter((dok) => "sedType" in dok && dok.sedType !== EKV.Koder.sedtyper.A012)
-                    : pdfDokumenter
+                    : mapDokumenter(pdfDokumenter as BrevDokumentMetadataType[])
                 }
               />
             )}

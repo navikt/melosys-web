@@ -115,6 +115,7 @@ export type OpprettBrevReqDto = {
     tittel: string;
     fritekst: string;
   }[];
+  nyVurderingBakgrunn?: string | null;
   distribusjonstype?: string | null;
   dokumentTittel?: string | null;
   saksbehandlerNrToIdent?: string | null;
