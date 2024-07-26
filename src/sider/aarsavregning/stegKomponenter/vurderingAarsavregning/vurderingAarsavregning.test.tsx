@@ -49,9 +49,13 @@ describe("VurderingAarsavreging", () => {
     fetch.mockResponse(JSON.stringify({}));
   });
 
-  it("snapshot test", () => {
-    // @ts-ignore
-    const { container } = renderWithProviders(<WrappedVurderingAarsavregning />, { preloadedState: initialReduxState });
-    expect(container).toMatchSnapshot();
+  describe("VurderingAarsavregning", () => {
+    it("snapshot test", () => {
+      const { container } = renderWithProviders(<WrappedVurderingAarsavregning />, {
+        // @ts-ignore
+        preloadedState: initialReduxState,
+      });
+      expect(container).toMatchSnapshot();
+    });
   });
 });
