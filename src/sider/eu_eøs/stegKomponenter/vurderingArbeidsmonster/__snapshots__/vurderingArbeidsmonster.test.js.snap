@@ -8,7 +8,7 @@ exports[`VurderingArbeidsmonster snapshot test 1`] = `
     <h1
       class="typo-innholdstittel stegvelgertittel"
     >
-      Vurder aktiviteten i de ulike landene
+      Arbeidsmønster
     </h1>
     <div
       class="arbeidsmonster"
@@ -38,7 +38,7 @@ exports[`VurderingArbeidsmonster snapshot test 1`] = `
               <p
                 class="typo-undertekst-bold marginaltArbeidCheckbox"
               >
-                Marginalt arbeid? 
+                Marginalt arbeid?
                 (&lt;5%)
               </p>
             </div>
