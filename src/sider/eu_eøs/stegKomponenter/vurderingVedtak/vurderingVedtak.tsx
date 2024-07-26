@@ -248,7 +248,9 @@ const VurderingVedtak = ({
 
   const mapDokumenter = (dokumenter: BrevDokumentMetadataType[]) => {
     return dokumenter.map((dokument: BrevDokumentMetadataType) => {
-      dokument.dokumentData.nyVurderingBakgrunn = formValues?.vedtakstypebegrunnelse;
+      if (dokument.dokumentData !== undefined) {
+        dokument.dokumentData.nyVurderingBakgrunn = formValues?.vedtakstypebegrunnelse;
+      }
       return dokument;
     });
   };
