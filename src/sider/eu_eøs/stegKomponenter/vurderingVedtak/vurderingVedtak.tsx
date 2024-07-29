@@ -266,18 +266,11 @@ const VurderingVedtak = ({
             )}`}
       </Nav.Typo.Innholdstittel>
       <div>
-        <Nav.Row className="lovvalgsperiode">
-          <Nav.Column xs="12">
-            <Nav.Typo.Element>Lovvalgsperiode</Nav.Typo.Element>
-          </Nav.Column>
-        </Nav.Row>
         <Nav.Row>
-          <Nav.Column xs="2">
-            <Nav.Typo.Element>Fra</Nav.Typo.Element>
+          <Nav.Column xs="4">
+            <Nav.Typo.Element>Lovvalgsperiode</Nav.Typo.Element>
             <EnkeltDato dato={fomDato} />
-          </Nav.Column>
-          <Nav.Column xs="2">
-            <Nav.Typo.Element>Til</Nav.Typo.Element>
+            &nbsp;-&nbsp;
             <EnkeltDato dato={tomDato} />
           </Nav.Column>
           <Nav.Column xs="4">
@@ -292,12 +285,7 @@ const VurderingVedtak = ({
         {erNyVurdering && <Skjema.Vedtakstype redigerbart={redigerbart} />}
         <Nav.Row className="fritekst">
           <Nav.Column xs="7">
-            <Skjema.Textarea
-              feltNavn="vedtaksbrevFritekst"
-              label="Fritekst til vedtaksbrev"
-              placeholder="Skriv inn tekst til vedtaksbrevet..."
-              disabled={!redigerbart}
-            />
+            <Skjema.Textarea feltNavn="vedtaksbrevFritekst" label="Fritekst til innledning" disabled={!redigerbart} />
           </Nav.Column>
         </Nav.Row>
         {redigerbart && !bucLukketOgLovvalgNorge && (

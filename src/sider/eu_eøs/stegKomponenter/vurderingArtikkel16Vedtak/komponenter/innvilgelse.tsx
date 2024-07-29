@@ -89,17 +89,17 @@ const Innvilgelse = ({
       <Nav.Row>
         <Nav.Column xs="7">{renderFritekstFelt()}</Nav.Column>
       </Nav.Row>
-      <Nav.Row>
-        <Nav.Column xs="7">
-          {stegErGyldig && (
+      {stegErGyldig && (
+        <Nav.Row>
+          <Nav.Column xs="10">
             <Dokumentliste
               behandlingID={behandlingID}
               dokumenter={pdfDokumenter}
               validateOnClick={vedKlikkForhandsvis}
             />
-          )}
-        </Nav.Column>
-      </Nav.Row>
+          </Nav.Column>
+        </Nav.Row>
+      )}
     </Fragment>
   );
 };

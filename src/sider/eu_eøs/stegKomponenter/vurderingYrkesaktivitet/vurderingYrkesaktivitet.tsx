@@ -1,15 +1,17 @@
 import { useEffect } from "react";
 
-import * as Nav from "../../../navFrontend";
-import * as KV from "../../../kodeverk";
-import * as Mui from "../../../felleskomponenter/ui";
-import { konverterAvklartfaktaTilStegData, lagAvklartfakta } from "../../../felleskomponenter/stegvelger";
-import { hentFaktaVerdi } from "../../../domeneUtils";
-import { useFeatureToggle } from "../../../featuretoggle";
-import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../featuretoggle/toggleNavn";
-import { MKVUtils } from "../../../melosyskodeverk";
+import * as Nav from "../../../../navFrontend";
+import * as KV from "../../../../kodeverk";
+import * as Mui from "../../../../felleskomponenter/ui";
+import { konverterAvklartfaktaTilStegData, lagAvklartfakta } from "../../../../felleskomponenter/stegvelger";
+import { hentFaktaVerdi } from "../../../../domeneUtils";
+import { useFeatureToggle } from "../../../../featuretoggle";
+import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../../featuretoggle/toggleNavn";
+import { MKVUtils } from "../../../../melosyskodeverk";
 import { useSelector } from "react-redux";
-import { behandlingerSelectors } from "../../../ducks/behandlinger";
+import { behandlingerSelectors } from "../../../../ducks/behandlinger";
+
+import "./vurderingYrkesaktivitet.css";
 
 interface VurderingYrkesaktivitetProps {
   bekreftOgFortsett: () => void;
@@ -67,17 +69,15 @@ const VurderingYrkesaktivitet = (props: VurderingYrkesaktivitetProps) => {
   const fakta = hentFaktaVerdi(yrkesaktivitet);
   // @ts-ignore
   return (
-    <div>
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">
-        Hva slags type yrkesaktivitet skal søkeren utøve?
-      </Nav.Typo.Innholdstittel>
+    <div className="vurderingYrkesaktivitet">
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">Yrkesaktivitet</Nav.Typo.Innholdstittel>
       <Nav.RadioGroup
-        legend=""
-        hideLegend
+        legend="Hva slags type yrkesaktivitet skal bruker utøve?"
         onChange={radioEndret}
         defaultValue={fakta}
         name="yrkesaktivitet"
-        disabled={!redigerbart}
+        readOnly={!redigerbart}
+        size="small"
       >
         <Nav.Radio value={KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_ARBEIDSTAKER}>{labels[0]}</Nav.Radio>
         <Nav.Radio value={KV.Koder.VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE}>{labels[1]}</Nav.Radio>

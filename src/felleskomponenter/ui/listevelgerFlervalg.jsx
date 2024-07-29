@@ -207,7 +207,7 @@ class ListevelgerFlervalg extends Component {
             value={this.state.inputVerdi}
             list={datalistID}
             className="listevelgerFlervalg__linje__input"
-            disabled={disabled}
+            readOnly={disabled}
             size="small"
           />
           <Nav.Button

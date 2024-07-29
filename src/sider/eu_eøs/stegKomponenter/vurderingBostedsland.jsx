@@ -101,11 +101,12 @@ const VurderingBostedsland = (props) => {
         <Nav.Row>
           <Nav.Column xs="12">
             <Nav.RadioGroup
-              legend="Bostedsland er:"
+              legend="Velg bostedsland/sentrum for livsinteresser"
               onChange={radioEndringHandler}
               name="bostedsland"
-              disabled={!redigerbart}
+              readOnly={!redigerbart}
               defaultValue={erNorgeValgt}
+              size="small"
             >
               <Nav.Radio value>Norge</Nav.Radio>
               <Nav.Radio value={false}>Annet</Nav.Radio>
@@ -113,7 +114,7 @@ const VurderingBostedsland = (props) => {
                 <Nav.Row>
                   <Nav.Column xs="8" md="6" lg="4">
                     <EnkeltLandPure
-                      label="Velg land:"
+                      label=""
                       value={eksisterendeLand}
                       onChange={landEndretHandler}
                       changeOnEmptyValue
@@ -128,16 +129,15 @@ const VurderingBostedsland = (props) => {
         </Nav.Row>
         {erBegrunnelserPaakrevd && erNorgeValgt === false && (
           <Nav.Row>
-            <Nav.Column xs="6">
-              <Nav.Fieldset legend="">
-                <Mui.Checkboxgruppe
-                  muligeValg={begrunnelser}
-                  legend="Legg til begrunnelse:"
-                  onChange={begrunnelseEndret}
-                  defaultValg={bostedslandFakta.begrunnelseKoder}
-                  disabled={!redigerbart}
-                />
-              </Nav.Fieldset>
+            <Nav.Column xs="12">
+              <Mui.Checkboxgruppe
+                muligeValg={begrunnelser}
+                legend="Legg til begrunnelse"
+                onChange={begrunnelseEndret}
+                defaultValg={bostedslandFakta.begrunnelseKoder}
+                disabled={!redigerbart}
+                size="small"
+              />
             </Nav.Column>
           </Nav.Row>
         )}

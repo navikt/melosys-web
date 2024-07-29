@@ -6,7 +6,7 @@ import * as MPT from "../../proptypes";
 import * as Utils from "../../utils";
 import Checkbox from "./checkbox";
 
-const Checkboxgruppe = ({ legend, muligeValg, defaultValg, onChange, disabled }) => {
+const Checkboxgruppe = ({ legend, muligeValg, defaultValg, onChange, disabled, size }) => {
   const [valgteCheckboxer, setValgteCheckboxer] = useState(
     muligeValg.map((valg) => valg.kode).filter((kode) => defaultValg.includes(kode))
   );
@@ -27,20 +27,19 @@ const Checkboxgruppe = ({ legend, muligeValg, defaultValg, onChange, disabled })
   };
 
   return (
-    <Nav.Fieldset legend={legend}>
+    <Nav.CheckboxGroup legend={legend} defaultValue={valgteCheckboxer} size={size}>
       {muligeValg.map((valg) => (
         <Checkbox
           key={valg.kode}
           name="annetBostedsland"
           label={valg.term}
           value={valg.kode}
-          checked={valgteCheckboxer.includes(valg.kode)}
           disabled={disabled}
           onCheck={onChangeHandler}
           id={Utils._uuid()}
         />
       ))}
-    </Nav.Fieldset>
+    </Nav.CheckboxGroup>
   );
 };
 
@@ -50,12 +49,14 @@ Checkboxgruppe.propTypes = {
   disabled: PT.bool,
   onChange: PT.func.isRequired,
   defaultValg: PT.arrayOf(PT.string),
+  size: PT.string,
 };
 
 Checkboxgruppe.defaultProps = {
   legend: "",
   disabled: false,
   defaultValg: [],
+  size: "medium",
 };
 
 export default Checkboxgruppe;

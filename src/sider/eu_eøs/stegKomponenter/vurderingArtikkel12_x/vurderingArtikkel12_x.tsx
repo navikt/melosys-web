@@ -2,11 +2,11 @@ import { useEffect } from "react";
 import * as Mui from "../../../../felleskomponenter/ui";
 import Bestemmelser from "./bestemmelser";
 import * as Nav from "../../../../navFrontend";
-import { useFeatureToggle } from "../../../../featuretoggle";
-import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../../featuretoggle/toggleNavn";
 import MKV, { MKVUtils } from "../../../../melosyskodeverk";
 import { useSelector } from "react-redux";
 import { avklartefaktaSelectors } from "../../../../ducks/avklartefakta";
+
+import "./vurderingArtikkel12_x.css";
 
 interface VurderingArtikkel12_xProps {
   bekreftOgFortsett: () => void;
@@ -28,7 +28,6 @@ const VurderingArtikkel12_x = ({
   slettData,
   tilbake,
 }: VurderingArtikkel12_xProps) => {
-  const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
   const erVurderingArbeidstaker = artikkelNavn === "12.1";
   const arbeidsland = useSelector(avklartefaktaSelectors.ArbeidslandSelector);
   const visStorbritanniaKonvensjon = MKVUtils.enesteLandErStorbritannia(arbeidsland);
@@ -42,11 +41,9 @@ const VurderingArtikkel12_x = ({
   );
 
   return (
-    <div>
+    <div className="vurderingArtikkel12_x">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">
-        {konvensjonStorbritanniaToggleEnabled
-          ? "Fyller søker kriteriene for for utsendingsbestemmelsen?"
-          : `Fyller søker kriteriene for artikkel ${artikkelNavn}?`}
+        Vurdering {erVurderingArbeidstaker ? "arbeidstaker" : "næringsdrivende"}
       </Nav.Typo.Innholdstittel>
       <Bestemmelser
         oppdaterData={oppdaterData}

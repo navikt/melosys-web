@@ -16,7 +16,6 @@ import { anmodningsperioderSelectors } from "../../../../ducks/anmodningsperiode
 import { behandlingsperioderSelectors } from "../../../../ducks/behandlingsperioder";
 import { dokumenterSelectors } from "../../../../ducks/dokumenter";
 import { datoDiffMenneskelig } from "../../../../utils/dato";
-import DatoOmrade from "../../../../felleskomponenter/datoOmrade";
 import Dokumentliste from "../../../../felleskomponenter/dokumentliste";
 import Mottakerinstitusjonvelger from "../../../../felleskomponenter/mottakerinstitusjonvelger";
 import VedleggVelger from "../../../../felleskomponenter/vedleggvelger";
@@ -41,6 +40,7 @@ import { useIsMounted } from "../../../../hooks";
 import { FysiskDokument } from "Domene";
 import { useFeatureToggle } from "../../../../featuretoggle";
 import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../../featuretoggle/toggleNavn";
+import EnkeltDato from "../../../../felleskomponenter/enkeltDato";
 
 const { KONV_EFTA_STORBRITANNIA_ART18_1 } = MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia;
 const { SAERLIG_GRUNN } = MKV.Koder.begrunnelser.anmodning_begrunnelser;
@@ -285,15 +285,13 @@ const VurderingArtikkel16Anmodning = ({
   const maksAntallTegn = MKVUtils.erStorbritanniaKonvBestemmelse(lovvalgsbestemmelse) ? 500 - 38 : 500;
 
   return (
-    <div>
+    <div className="vurderingArtikkel16Anmodning">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">
-        {konvensjonStorbritanniaToggleEnabled
-          ? "Vurder anmodning om unntak"
-          : "Anmodning om unntak etter artikkel 16.1"}
+        {konvensjonStorbritanniaToggleEnabled ? "Anmodning om unntak" : "Anmodning om unntak etter artikkel 16.1"}
       </Nav.Typo.Innholdstittel>
-      <div className="artikkel16">
+      <div className="artikkel16__innhold">
         {erIDirekteTilArtikkel16Flyt && !konvensjonStorbritanniaToggleEnabled && (
-          <Nav.Row className="vilAnmode">
+          <Nav.Row>
             <Nav.Column xs="6">
               <Nav.RadioGroup legend="" hideLegend defaultValue name="vilAnmode" disabled={!redigerbart}>
                 <Nav.Radio value>Ja, jeg vil anmode om unntak</Nav.Radio>
@@ -305,17 +303,24 @@ const VurderingArtikkel16Anmodning = ({
           </Nav.Row>
         )}
 
-        <Nav.Row className="artikkel16__ekstratopp">
-          <Nav.Column xs="6">
+        <Nav.Row>
+          <Nav.Column xs="12">
             <Nav.Typo.Element>Det lands lovgivning det søkes unntak fra</Nav.Typo.Element>
             <Nav.Typo.Normaltekst>{landSomTekstListe}</Nav.Typo.Normaltekst>
           </Nav.Column>
-          <Nav.Column xs="6">
-            <Nav.Typo.Element>Antall måneder</Nav.Typo.Element>
+        </Nav.Row>
+
+        <Nav.Row>
+          <Nav.Column xs="12">
+            <Nav.Typo.Element>Søknadsperiode</Nav.Typo.Element>
+          </Nav.Column>
+          <Nav.Column xs="12" className="soknadsperiode__inhold">
+            <EnkeltDato dato={anmodningsperiode.fomDato} />
+            &nbsp;-&nbsp;
+            <EnkeltDato dato={anmodningsperiode.tomDato} />
             <Nav.Typo.Normaltekst>
               {datoDiffMenneskelig(anmodningsperiode.fomDato, anmodningsperiode.tomDato)}
             </Nav.Typo.Normaltekst>
-            <DatoOmrade periode={{ fom: anmodningsperiode.fomDato, tom: anmodningsperiode.tomDato }} />
           </Nav.Column>
         </Nav.Row>
 
@@ -325,8 +330,9 @@ const VurderingArtikkel16Anmodning = ({
               error={lovvalgFeilmelding}
               onChange={handleEndretUnntakFraBestemmelse}
               value={unntakFraBestemmelse || ""}
-              disabled={!redigerbart}
+              readOnly={!redigerbart}
               label={<Nav.Typo.Element>Artikkelen det søkes unntak fra</Nav.Typo.Element>}
+              size="small"
             >
               <option key={uuid()} value="" label="Velg..." disabled={!!unntakFraBestemmelse} />
               {hentUnntaksbestemmelser().map((kodeObjekt) => (
@@ -342,8 +348,9 @@ const VurderingArtikkel16Anmodning = ({
               error={begrunnelseFeilmelding}
               onChange={handleEndretBegrunnelse}
               value={unntaksvilkår.begrunnelseKoder ? unntaksvilkår.begrunnelseKoder[0] : ""}
-              disabled={!redigerbart}
+              readOnly={!redigerbart}
               label={<Nav.Typo.Element>Legg til begrunnelse</Nav.Typo.Element>}
+              size="small"
             >
               <option
                 key={uuid()}
@@ -431,7 +438,7 @@ const VurderingArtikkel16Anmodning = ({
             </Nav.Row>
 
             <Nav.Row>
-              <Nav.Column xs="6">
+              <Nav.Column xs="10">
                 <VedleggTable
                   valgteVedlegg={valgteVedlegg}
                   label="Vedlegg til SED"
@@ -449,7 +456,7 @@ const VurderingArtikkel16Anmodning = ({
           </>
         )}
 
-        <Nav.Row className="artikkel16__ekstratopp">
+        <Nav.Row>
           <Mui.StegKnapper
             bekreftTekst="Send brevene"
             bekreftKnappProps={{

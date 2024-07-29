@@ -1,29 +1,22 @@
 @import "../../../../constants";
 
-.artikkel16 {
-  .vilAnmode {
-    margin-top: 1.5em;
+.vurderingArtikkel16Anmodning {
+  .stegvelgertittel {
+    margin-bottom: 1.5rem;
   }
 
-  .artikkel16__ekstratopp {
-    margin-top: 1em;
+  .row:not(:last-child) {
+    margin-bottom: 1.5rem;
   }
 
-  #art16_1_anmodning::placeholder {
-    font-style: italic;
-  }
+  .soknadsperiode__inhold {
+    display: flex;
 
-  .mottakerinstitusjoner {
-    .skjemaelement__label {
-      font-weight: bold;
+    time {
+      font-size: 1rem;
     }
-  }
-
-  .tidligereMedlemskap_label {
-    margin: 0.5rem auto;
-  }
-
-  .varsel {
-    margin-top: 1em;
+    time:last-of-type {
+      margin-right: 2rem;
+    }
   }
 }

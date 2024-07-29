@@ -1,7 +1,7 @@
 import MKV from "../../../../melosyskodeverk";
 import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
 import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
-import VurderingNormaltDriverVirksomhet from "../../stegKomponenter/vurderingNormaltDriverVirksomhet";
+import VurderingNormaltDriverVirksomhet from "../../stegKomponenter/vurderingNormaltDriverVirksomhet/vurderingNormaltDriverVirksomhet";
 import { erVilkarOppfylt, hentVilkar } from "../../../../domeneUtils";
 
 class NormaltDriverVirksomhet extends Steg {
@@ -16,7 +16,7 @@ class NormaltDriverVirksomhet extends Steg {
     ];
 
     this.id = STEG.NORMALT_DRIVER_VIRKSOMHET;
-    this.tittel = "Vanligvis drift i Norge?";
+    this.tittel = "Drift i Norge";
     this.komponent = VurderingNormaltDriverVirksomhet;
     this.samleRelevanteData = (_propsLight) => ({
       valgteVirksomheter: _propsLight.valgteVirksomheter,
