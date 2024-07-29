@@ -44,6 +44,7 @@ const mapStateToProps = (state: RootState) => {
   const forkortLovvalgsperiode = erLovvalgsperiodeForkortet(state);
   return {
     behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
+    behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
     lovvalgsperioder: lovvalgsperioderSelectors.LovvalgsperioderSelector(state),
     anmodningsperiode: anmodningsperioderSelectors.AnmodningsperiodeSelector(state),
     anmodningsperiodesvar: anmodningsperiodesvarSelectors.AnmodningsperiodesvarSelector(state),
@@ -71,6 +72,7 @@ type VurderingArtikkel16VedtakProps = PropsFromRedux & {
   anmodningsperiodesvar: AnmodningsperiodesvarResDto;
   anmodningsperiode: Anmodningsperiode;
   behandlingstype: string;
+  behandlingstema: string;
   formValues: FormValuesProps;
   tilbake: () => void;
   redigerbart: boolean;
@@ -85,6 +87,7 @@ export const VurderingArtikkel16Vedtak = ({
   anmodningsperiodesvar,
   formValues,
   behandlingstype,
+  behandlingstema,
   touch,
   tilbake,
   harFeilmeldinger,
@@ -208,6 +211,9 @@ export const VurderingArtikkel16Vedtak = ({
   const visOrienteringsbrevArbeidsgiver = harValgtNorskArbeidsgiver && !erNyVurdering;
   const gjeldendePeriode = hentLovvalgsperiode(anmodningsperiodesvar, anmodningsperiode);
   const gjenopprettUforkortetPeriode = () => endreLovvalgsperiode(gjeldendePeriode.fom, gjeldendePeriode.tom);
+  const erUtsendt =
+    MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER === behandlingstema ||
+    MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG === behandlingstema;
 
   const finnVedtakInnhold = (svarType: string | null, stegErGyldig: boolean) => {
     switch (svarType) {
@@ -224,6 +230,8 @@ export const VurderingArtikkel16Vedtak = ({
             formValues={formValues}
             vedKlikkForhandsvis={vedKlikkForhandsvis}
             stegErGyldig={stegErGyldig}
+            erStorbrittaniaArt18_1Bestemmelse={erStorbrittaniaArt18_1Bestemmelse}
+            erUtsendt={erUtsendt}
           />
         );
       case DELVIS_INNVILGELSE:
@@ -239,6 +247,8 @@ export const VurderingArtikkel16Vedtak = ({
             formValues={formValues}
             vedKlikkForhandsvis={vedKlikkForhandsvis}
             stegErGyldig={stegErGyldig}
+            erStorbrittaniaArt18_1Bestemmelse={erStorbrittaniaArt18_1Bestemmelse}
+            erUtsendt={erUtsendt}
           />
         );
       case AVSLAG:
