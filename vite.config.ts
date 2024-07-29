@@ -4,7 +4,6 @@ import viteTsconfigPaths from "vite-tsconfig-paths";
 import svgrPlugin from "vite-plugin-svgr";
 import { fileURLToPath, URL } from "node:url";
 import * as path from "path";
-import reactRefresh from "@vitejs/plugin-react-refresh";
 
 const LOCAL_API_PORT = 8080;
 const LOCAL_TRYGDEAVTALE_FLYT_PORT = 8088;
@@ -45,7 +44,6 @@ export default defineConfig({
       jsxImportSource: "react",
       jsxRuntime: "classic",
     }),
-    reactRefresh(),
     viteTsconfigPaths(),
     svgrPlugin(),
   ],
