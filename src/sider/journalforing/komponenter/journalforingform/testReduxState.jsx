@@ -2,9 +2,7 @@ export const testReduxState = {
   form: {
     soknad: {
       values: {
-        soknadsland: {
-          landkoder: ["NOR", "SVE"],
-        },
+        soknadsland: {},
       },
     },
     journalforing: {

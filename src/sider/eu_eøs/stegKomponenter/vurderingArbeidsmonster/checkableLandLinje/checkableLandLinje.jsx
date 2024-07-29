@@ -24,7 +24,7 @@ const CheckableLandLinje = (props) => {
   const erMarginaltArbeidIArbeidsland =
     avklartMarginaltArbeidILand && avklartMarginaltArbeidILand.fakta.includes("TRUE");
 
-  const oppdaterDataOnCheck = (changeEvent) => {
+  const oppdaterDataOnCheck = () => {
     const verdi = erMarginaltArbeidIArbeidsland ? BOOLSK_STRING.USANN : BOOLSK_STRING.SANN;
     oppdaterData(lagAvklartfakta(MKV.Koder.avklartefaktatyper.MARGINALT_ARBEID, arbeidsland.kode, verdi));
 
