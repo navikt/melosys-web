@@ -32,12 +32,16 @@ describe("MarginaltArbeid", () => {
   });
 
   it("viser ikkeredigerbar landliste", async () => {
-    const { getByText } = renderWithProviders(<MarginaltArbeid {...props} />, {
+    const { getByText, getAllByRole } = renderWithProviders(<MarginaltArbeid {...props} redigerbart={false} />, {
       preloadedState: testReduxState,
     });
 
     expect(getByText("SVERIGE")).toBeInTheDocument();
     expect(getByText("NORGE")).toBeInTheDocument();
+
+    const checkboxes = getAllByRole("checkbox");
+    expect(checkboxes[0]).toBeDisabled();
+    expect(checkboxes[0]).toBeDisabled();
   });
 
   it("oppdaterData mottar checkboxvalg", async () => {
