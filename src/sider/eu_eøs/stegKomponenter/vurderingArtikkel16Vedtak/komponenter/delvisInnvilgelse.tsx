@@ -25,6 +25,8 @@ interface DelvisInnvilgelseProps {
   formValues: FormValuesProps;
   vedKlikkForhandsvis: () => Promise<boolean>;
   stegErGyldig: boolean;
+  erStorbrittaniaArt18_1Bestemmelse: boolean;
+  erUtsendt: boolean;
 }
 
 const DelvisInnvilgelse = ({
@@ -38,26 +40,43 @@ const DelvisInnvilgelse = ({
   formValues,
   vedKlikkForhandsvis,
   stegErGyldig,
+  erStorbrittaniaArt18_1Bestemmelse,
+  erUtsendt,
 }: DelvisInnvilgelseProps) => {
   const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
+  const pdfDokumenter: (BrevDokumentMetadataType | SedDokumentMetadataType)[] = [];
 
-  const pdfDokumenter: (BrevDokumentMetadataType | SedDokumentMetadataType)[] = [
-    {
+  if (erUtsendt && erStorbrittaniaArt18_1Bestemmelse && konvensjonStorbritanniaToggleEnabled) {
+    pdfDokumenter.push({
+      dokumentData: {
+        produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_EFTA_STORBRITANNIA,
+        mottaker: MKV.Koder.mottakerroller.BRUKER,
+        fritekst: formValues.vedtaksbrevFritekst,
+      },
+    });
+    pdfDokumenter.push({
+      dokumentData: {
+        produserbardokument: MKV.Koder.brev.produserbaredokumenter.ATTEST_A1,
+        mottaker: MKV.Koder.mottakerroller.BRUKER,
+      },
+    });
+  } else {
+    pdfDokumenter.push({
       dokumentData: {
         produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
         mottaker: MKV.Koder.mottakerroller.BRUKER,
         fritekst: vedtaksbrevFritekst,
       },
-    },
-  ];
-
-  if (visOrienteringsbrevArbeidsgiver) {
-    pdfDokumenter.push({
-      dokumentData: {
-        produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
-        mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
-      },
     });
+
+    if (visOrienteringsbrevArbeidsgiver) {
+      pdfDokumenter.push({
+        dokumentData: {
+          produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
+          mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
+        },
+      });
+    }
   }
 
   return (
