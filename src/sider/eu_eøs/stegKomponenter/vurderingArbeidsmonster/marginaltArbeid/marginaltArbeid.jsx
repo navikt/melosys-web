@@ -25,7 +25,7 @@ const MarginaltArbeid = ({ arbeidsland, redigerbart, marginaltArbeid, oppdaterDa
           return (
             <CheckableLandLinje
               key={key}
-              land={land}
+              arbeidsland={land}
               avklartMarginaltArbeidILand={avklartMarginaltArbeidILand}
               oppdaterData={oppdaterData}
             />

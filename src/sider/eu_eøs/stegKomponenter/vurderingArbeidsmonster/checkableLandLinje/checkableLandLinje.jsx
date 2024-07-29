@@ -10,7 +10,7 @@ import * as MPT from "../../../../../proptypes";
 import * as Nav from "../../../../../navFrontend";
 
 const CheckableLandLinje = (props) => {
-  const { land, avklartMarginaltArbeidILand, oppdaterData } = props;
+  const { arbeidsland, avklartMarginaltArbeidILand, oppdaterData } = props;
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -26,7 +26,7 @@ const CheckableLandLinje = (props) => {
 
   const oppdaterDataOnCheck = (changeEvent) => {
     const verdi = erMarginaltArbeidIArbeidsland ? BOOLSK_STRING.USANN : BOOLSK_STRING.SANN;
-    oppdaterData(lagAvklartfakta(MKV.Koder.avklartefaktatyper.MARGINALT_ARBEID, land.kode, verdi));
+    oppdaterData(lagAvklartfakta(MKV.Koder.avklartefaktatyper.MARGINALT_ARBEID, arbeidsland.kode, verdi));
 
     /* Ved valg av marginale land(skal ikke ha SED), reinitialize former med mottakerinstitusjoner,
     slik at mottakerinstitusjoner i vedtakssteget/utpekingssteg oppdateres.
@@ -38,19 +38,19 @@ const CheckableLandLinje = (props) => {
   return (
     <Nav.Checkbox
       size="small"
-      value={land.kode}
-      id={`marginaltArbeidslandListe.${land.kode}`}
-      key={`marginaltArbeidslandListe.${land.kode}`}
+      value={arbeidsland.kode}
+      id={`marginaltArbeidslandListe.${arbeidsland.kode}`}
+      key={`marginaltArbeidslandListe.${arbeidsland.kode}`}
       onChange={(changeEvent) => oppdaterDataOnCheck(changeEvent)}
     >
-      {land.term}
+      {arbeidsland.term}
     </Nav.Checkbox>
   );
 };
 
 CheckableLandLinje.propTypes = {
   oppdaterData: PT.func.isRequired,
-  land: MPT.Kodeverk.isRequired,
+  arbeidsland: MPT.Kodeverk.isRequired,
   avklartMarginaltArbeidILand: PT.object,
 };
 
