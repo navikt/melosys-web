@@ -168,12 +168,10 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
             <Forms.RadioGroup
               legend={
                 behandlingstema === YRKESAKTIV ? (
-                  <Nav.Typo.Element className="land">
-                    <LabelMedHjelpetekst
-                      label="Arbeidsland"
-                      hjelpetekst="Oppgi landet der arbeidet utføres. Hvis søker arbeider på skip, skal du oppgi flagglandet"
-                    />
-                  </Nav.Typo.Element>
+                  <LabelMedHjelpetekst
+                    label="Arbeidsland"
+                    hjelpetekst="Oppgi landet der arbeidet utføres. Hvis søker arbeider på skip, skal du oppgi flagglandet"
+                  />
                 ) : (
                   <Nav.Typo.Element className="land">Land</Nav.Typo.Element>
                 )
