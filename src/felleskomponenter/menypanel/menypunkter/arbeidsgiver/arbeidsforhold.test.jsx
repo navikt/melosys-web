@@ -1,14 +1,5 @@
-import renderer from "react-test-renderer";
-
 import Arbeidsforhold from "./arbeidsforhold";
-
-vi.mock("../../../../utils", async () => {
-  const actual = await vi.importActual("../../../../utils");
-  return {
-    ...actual,
-    _uuid: () => "123",
-  };
-});
+import { render } from "@testing-library/react";
 
 describe("arbeidsforhold", () => {
   const props = {
@@ -28,7 +19,8 @@ describe("arbeidsforhold", () => {
   };
 
   it("snapshot test", () => {
-    const tree = renderer.create(<Arbeidsforhold {...props} />).toJSON();
-    expect(tree).toMatchSnapshot();
+    const { container } = render(<Arbeidsforhold {...props} />);
+
+    expect(container).toMatchSnapshot();
   });
 });

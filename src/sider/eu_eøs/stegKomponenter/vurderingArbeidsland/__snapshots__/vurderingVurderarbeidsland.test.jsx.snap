@@ -1,0 +1,214 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`VurderingVurderarbeidsland > snapshot test 1`] = `
+
+<div>
+  <div class="vurderingVurderArbeidsland">
+    <h1 class="typo-innholdstittel stegvelgertittel overskrift">
+      Vurder arbeidsland
+    </h1>
+    <p class="typo-element undertittel">
+      Vurdering sokkel/skip
+    </p>
+    <div class="borderBottom">
+      <div class="row sokkelSkip__liste__rad">
+        <div class="col col-xs-3">
+          Dunfjæder
+        </div>
+        <div class="col col-xs-2">
+          <fieldset class="navds-radio-group navds-radio-group--small navds-fieldset navds-fieldset--small">
+            <legend class="navds-fieldset__legend navds-sr-only navds-label navds-label--small">
+            </legend>
+            <div class="navds-radio-buttons">
+              <div class="navds-radio navds-radio--small">
+                <input
+                  id="333"
+                  name="333"
+                  type="radio"
+                  aria-labelledby="333"
+                  class="navds-radio__input"
+                  value="SOKKEL"
+                >
+                <label
+                  for="333"
+                  class="navds-radio__label"
+                >
+                  <span class="navds-radio__content">
+                    <span
+                      id="333"
+                      aria-hidden="true"
+                      class="navds-body-short navds-body-short--small"
+                    >
+                      Sokkel
+                    </span>
+                  </span>
+                </label>
+              </div>
+              <div class="navds-radio navds-radio--small">
+                <input
+                  id="333"
+                  name="333"
+                  type="radio"
+                  aria-labelledby="333"
+                  class="navds-radio__input"
+                  value="SKIP"
+                >
+                <label
+                  for="333"
+                  class="navds-radio__label"
+                >
+                  <span class="navds-radio__content">
+                    <span
+                      id="333"
+                      aria-hidden="true"
+                      class="navds-body-short navds-body-short--small"
+                    >
+                      Skip
+                    </span>
+                  </span>
+                </label>
+              </div>
+            </div>
+            <div
+              id="333"
+              aria-relevant="additions removals"
+              aria-live="polite"
+              class="navds-fieldset__error"
+            >
+            </div>
+          </fieldset>
+        </div>
+        <div class="col col-xs-4">
+          <p class="typo-element arbeidsland_label">
+            Velg arbeidsland
+          </p>
+          <fieldset class="navds-radio-group navds-radio-group--small navds-fieldset navds-fieldset--small">
+            <legend class="navds-fieldset__legend navds-sr-only navds-label navds-label--small">
+            </legend>
+            <div class="navds-radio-buttons">
+              <div class="navds-radio navds-radio--small">
+                <input
+                  id="333"
+                  name="333"
+                  type="radio"
+                  aria-labelledby="333"
+                  class="navds-radio__input"
+                  value="Flaggland"
+                >
+                <label
+                  for="333"
+                  class="navds-radio__label"
+                >
+                  <span class="navds-radio__content">
+                    <span
+                      id="333"
+                      aria-hidden="true"
+                      class="navds-body-short navds-body-short--small"
+                    >
+                      Storbritannia - Flaggland
+                    </span>
+                  </span>
+                </label>
+              </div>
+              <div class="navds-radio navds-radio--small">
+                <input
+                  id="333"
+                  name="333"
+                  type="radio"
+                  aria-labelledby="333"
+                  class="navds-radio__input"
+                  value="Sokkelland"
+                >
+                <label
+                  for="333"
+                  class="navds-radio__label"
+                >
+                  <span class="navds-radio__content">
+                    <span
+                      id="333"
+                      aria-hidden="true"
+                      class="navds-body-short navds-body-short--small"
+                    >
+                      Storbritannia - Sokkelland
+                    </span>
+                  </span>
+                </label>
+              </div>
+              <div class="navds-radio navds-radio--small">
+                <input
+                  id="333"
+                  name="333"
+                  type="radio"
+                  aria-labelledby="333"
+                  class="navds-radio__input"
+                  value="Territorialfarvannsland"
+                >
+                <label
+                  for="333"
+                  class="navds-radio__label"
+                >
+                  <span class="navds-radio__content">
+                    <span
+                      id="333"
+                      aria-hidden="true"
+                      class="navds-body-short navds-body-short--small"
+                    >
+                      Storbritannia - Territorialfarvannsland
+                    </span>
+                  </span>
+                </label>
+              </div>
+            </div>
+            <div
+              id="333"
+              aria-relevant="additions removals"
+              aria-live="polite"
+              class="navds-fieldset__error"
+            >
+            </div>
+          </fieldset>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col col-xs-6">
+        <p class="typo-element undertittel">
+          Land fra inngangsvilkår
+        </p>
+        <div>
+        </div>
+      </div>
+    </div>
+    <div class="stegKnapper">
+      <button class="stegKnapper__bekreft navds-button navds-button--primary navds-button--small">
+        <span class="navds-label navds-label--small">
+          Bekreft og fortsett
+        </span>
+      </button>
+      <button class="stegKnapper__tilbake navds-button navds-button--tertiary navds-button--small">
+        <span class="navds-button__icon">
+          <svg
+            width="16"
+            height="14"
+            viewbox="0 0 16 14"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M16 7.66732L2.47 7.66732L7.33333 12.6976L6.41697 13.6673L0 7.00065L6.41697 0.333984L7.33333 1.30368L2.47 6.33398L16 6.33398V7.66732Z"
+              fill="#0067C5"
+            >
+            </path>
+          </svg>
+        </span>
+        <span class="navds-label navds-label--small">
+          Tilbake
+        </span>
+      </button>
+    </div>
+  </div>
+</div>
+
+`;

@@ -1,14 +1,6 @@
 import Orgnrinput from "./orgnrinput";
 import { render } from "@testing-library/react";
 
-vi.mock("../../../../../utils", async () => {
-  const actual = await vi.importActual("../../../../../utils");
-  return {
-    ...actual,
-    _uuid: () => "123",
-  };
-});
-
 describe("Orgnrinput", () => {
   let props = null;
 
@@ -17,7 +9,7 @@ describe("Orgnrinput", () => {
       redigerbart: true,
       hentOrganisasjon: vi.fn(),
       onOrgnrFunnet: vi.fn(),
-      defaultOrgnr: null,
+      defaultOrgnr: "123",
       valideringer: [],
     };
   });

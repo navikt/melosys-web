@@ -1,170 +1,80 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`VurderingArtikkel13_1_UtpekLand > snapshot test 1`] = `
+exports[`VurderingArbeidTjenestepersonEllerFlyVedtak > snapshot test 1`] = `
 
 <div>
-  <div class="vurderingArtikkel13UtpekLand">
+  <form class="vurderingArbeidTjenestepersonEllerFlyVedtak">
     <h1 class="typo-innholdstittel stegvelgertittel">
-      Omfattet av norsk lovgivning, etter artikkel 13, nr 1, b
+      Omfattet av norsk lovgivning etter ...
     </h1>
-    <h2 class="typo-undertittel">
-      <p class="typo-element undertittel">
-        Velg lovvalgsland
-      </p>
-    </h2>
-    <div class="row">
-      <div class="col col-xs-6">
-        <div class>
-          <div>
-            <div class="melosys-textfield landliste__linje__input navds-form-field navds-form-field--small">
-              <label
-                for="333"
-                class="navds-form-field__label navds-label navds-label--small"
-              >
-              </label>
-              <input
-                list="333"
-                id="333"
-                type="text"
-                class="navds-text-field__input navds-body-short navds-body-short--small"
+    <div class="row velgLovvalgsbestemmelse">
+      <div class="col col-xs-7">
+        <div class="melosys-select  navds-form-field navds-form-field--small">
+          <label
+            for="333"
+            class="navds-form-field__label navds-label navds-label--small"
+          >
+            Velg en lovvalgsbestemmelse
+          </label>
+          <div class="navds-select__container">
+            <select
+              id="333"
+              name="333"
+              class="navds-select__input navds-body-short navds-body-short--small"
+            >
+              <option
+                disabled
                 value
               >
-              <div
-                class="navds-form-field__error"
-                id="333"
-                aria-relevant="additions removals"
-                aria-live="polite"
+                Velg...
+              </option>
+              <option value="FO_883_2004_ART11_3B">
+                Rfo. 883/2004 art.11(3)(b)
+              </option>
+              <option value="FO_883_2004_ART11_5">
+                Rfo. 883/2004 art.11(5)
+              </option>
+            </select>
+            <svg
+              width="1em"
+              height="1em"
+              viewbox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              focusable="false"
+              role="img"
+              class="navds-select__chevron"
+              aria-hidden="true"
+            >
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M5.97 9.47a.75.75 0 0 1 1.06 0L12 14.44l4.97-4.97a.75.75 0 1 1 1.06 1.06l-5.5 5.5a.75.75 0 0 1-1.06 0l-5.5-5.5a.75.75 0 0 1 0-1.06Z"
+                fill="currentColor"
               >
-              </div>
-            </div>
+              </path>
+            </svg>
           </div>
-          <div class="landliste__dataliste">
-            <datalist id="333">
-              <option value="Belgia (BE)">
-                Belgia (BE)
-              </option>
-              <option value="Bulgaria (BG)">
-                Bulgaria (BG)
-              </option>
-              <option value="Danmark (DK)">
-                Danmark (DK)
-              </option>
-              <option value="Estland (EE)">
-                Estland (EE)
-              </option>
-              <option value="Finland (FI)">
-                Finland (FI)
-              </option>
-              <option value="Frankrike (FR)">
-                Frankrike (FR)
-              </option>
-              <option value="Færøyene (FO)">
-                Færøyene (FO)
-              </option>
-              <option value="Grønland (GL)">
-                Grønland (GL)
-              </option>
-              <option value="Hellas (GR)">
-                Hellas (GR)
-              </option>
-              <option value="Irland (IE)">
-                Irland (IE)
-              </option>
-              <option value="Island (IS)">
-                Island (IS)
-              </option>
-              <option value="Italia (IT)">
-                Italia (IT)
-              </option>
-              <option value="Kroatia (HR)">
-                Kroatia (HR)
-              </option>
-              <option value="Kypros (CY)">
-                Kypros (CY)
-              </option>
-              <option value="Latvia (LV)">
-                Latvia (LV)
-              </option>
-              <option value="Liechtenstein (LI)">
-                Liechtenstein (LI)
-              </option>
-              <option value="Litauen (LT)">
-                Litauen (LT)
-              </option>
-              <option value="Luxembourg (LU)">
-                Luxembourg (LU)
-              </option>
-              <option value="Malta (MT)">
-                Malta (MT)
-              </option>
-              <option value="Nederland (NL)">
-                Nederland (NL)
-              </option>
-              <option value="Norge (NO)">
-                Norge (NO)
-              </option>
-              <option value="Polen (PL)">
-                Polen (PL)
-              </option>
-              <option value="Portugal (PT)">
-                Portugal (PT)
-              </option>
-              <option value="Romania (RO)">
-                Romania (RO)
-              </option>
-              <option value="Slovakia (SK)">
-                Slovakia (SK)
-              </option>
-              <option value="Slovenia (SI)">
-                Slovenia (SI)
-              </option>
-              <option value="Spania (ES)">
-                Spania (ES)
-              </option>
-              <option value="Storbritannia (GB)">
-                Storbritannia (GB)
-              </option>
-              <option value="Svalbard og Jan Mayen (SJ)">
-                Svalbard og Jan Mayen (SJ)
-              </option>
-              <option value="Sveits (CH)">
-                Sveits (CH)
-              </option>
-              <option value="Sverige (SE)">
-                Sverige (SE)
-              </option>
-              <option value="Tsjekkia (CZ)">
-                Tsjekkia (CZ)
-              </option>
-              <option value="Tyskland (DE)">
-                Tyskland (DE)
-              </option>
-              <option value="Ungarn (HU)">
-                Ungarn (HU)
-              </option>
-              <option value="Østerrike (AT)">
-                Østerrike (AT)
-              </option>
-              <option value="Åland (AX)">
-                Åland (AX)
-              </option>
-            </datalist>
+          <div
+            class="navds-form-field__error"
+            id="333"
+            aria-relevant="additions removals"
+            aria-live="polite"
+          >
           </div>
         </div>
       </div>
     </div>
-    <h2 class="typo-undertittel">
-      <p class="typo-element undertittel">
-        Lovvalgsperiode
-      </p>
-    </h2>
-    <div class="row">
+    <p class="typo-element undertittel">
+      Søknadsperiode
+    </p>
+    <div class="row lovvalgsperiode">
       <div class="col col-xs-6">
-        -
+        12.03.2024 - 31.03.2024
       </div>
     </div>
-    <div>
-      <div class="row forkortUtpekingsperiode">
+    <div class="periodeForkorter">
+      <div class="row forkortLovvalgsperiode">
         <div class="col col-xs-8">
           <div class="navds-checkbox navds-checkbox--small">
             <input
@@ -172,9 +82,9 @@ exports[`VurderingArtikkel13_1_UtpekLand > snapshot test 1`] = `
               class="navds-checkbox__input"
               id="333"
               type="checkbox"
-              aria-checked
+              aria-checked="true"
               aria-labelledby="333"
-              value
+              value="true"
             >
             <label
               for="333"
@@ -204,7 +114,7 @@ exports[`VurderingArtikkel13_1_UtpekLand > snapshot test 1`] = `
                   aria-hidden="true"
                   class="navds-checkbox__label-text navds-body-short navds-body-short--small"
                 >
-                  Utpekingen gjelder for en kortere periode
+                  Lovvalget innvilges for en kortere periode
                 </span>
               </span>
             </label>
@@ -277,7 +187,7 @@ exports[`VurderingArtikkel13_1_UtpekLand > snapshot test 1`] = `
                   class="navds-popover navds-date__popover navds-popover--hidden"
                   data-placement="bottom-start"
                   aria-hidden="true"
-                  style="position: fixed; top: 0px; left: 0px;"
+                  style="position: fixed; top: 4px; left: 12px;"
                   role="dialog"
                   id="333"
                 >
@@ -1431,7 +1341,7 @@ exports[`VurderingArtikkel13_1_UtpekLand > snapshot test 1`] = `
                   class="navds-popover navds-date__popover navds-popover--hidden"
                   data-placement="bottom-start"
                   aria-hidden="true"
-                  style="position: fixed; top: 0px; left: 0px;"
+                  style="position: fixed; top: 4px; left: 12px;"
                   role="dialog"
                   id="333"
                 >
@@ -1445,11 +1355,12 @@ exports[`VurderingArtikkel13_1_UtpekLand > snapshot test 1`] = `
                             class="navds-sr-only"
                             id="333"
                           >
-                            juli 2024
+                            mars 2024
                           </span>
                           <button
                             type="button"
-                            class="navds-date__caption-button navds-button navds-button--tertiary navds-button--medium navds-button--icon-only"
+                            class="navds-date__caption-button navds-button navds-button--tertiary navds-button--medium navds-button--icon-only navds-button--disabled"
+                            disabled
                           >
                             <span class="navds-button__icon">
                               <svg
@@ -1486,41 +1397,8 @@ exports[`VurderingArtikkel13_1_UtpekLand > snapshot test 1`] = `
                                   id="333"
                                   class="navds-select__input navds-body-short navds-body-short--medium"
                                 >
-                                  <option value="0">
-                                    januar
-                                  </option>
-                                  <option value="1">
-                                    februar
-                                  </option>
                                   <option value="2">
                                     mars
-                                  </option>
-                                  <option value="3">
-                                    april
-                                  </option>
-                                  <option value="4">
-                                    mai
-                                  </option>
-                                  <option value="5">
-                                    juni
-                                  </option>
-                                  <option value="6">
-                                    juli
-                                  </option>
-                                  <option value="7">
-                                    august
-                                  </option>
-                                  <option value="8">
-                                    september
-                                  </option>
-                                  <option value="9">
-                                    oktober
-                                  </option>
-                                  <option value="10">
-                                    november
-                                  </option>
-                                  <option value="11">
-                                    desember
                                   </option>
                                 </select>
                                 <svg
@@ -1563,308 +1441,8 @@ exports[`VurderingArtikkel13_1_UtpekLand > snapshot test 1`] = `
                                   id="333"
                                   class="navds-select__input navds-body-short navds-body-short--medium"
                                 >
-                                  <option value="1974">
-                                    1974
-                                  </option>
-                                  <option value="1975">
-                                    1975
-                                  </option>
-                                  <option value="1976">
-                                    1976
-                                  </option>
-                                  <option value="1977">
-                                    1977
-                                  </option>
-                                  <option value="1978">
-                                    1978
-                                  </option>
-                                  <option value="1979">
-                                    1979
-                                  </option>
-                                  <option value="1980">
-                                    1980
-                                  </option>
-                                  <option value="1981">
-                                    1981
-                                  </option>
-                                  <option value="1982">
-                                    1982
-                                  </option>
-                                  <option value="1983">
-                                    1983
-                                  </option>
-                                  <option value="1984">
-                                    1984
-                                  </option>
-                                  <option value="1985">
-                                    1985
-                                  </option>
-                                  <option value="1986">
-                                    1986
-                                  </option>
-                                  <option value="1987">
-                                    1987
-                                  </option>
-                                  <option value="1988">
-                                    1988
-                                  </option>
-                                  <option value="1989">
-                                    1989
-                                  </option>
-                                  <option value="1990">
-                                    1990
-                                  </option>
-                                  <option value="1991">
-                                    1991
-                                  </option>
-                                  <option value="1992">
-                                    1992
-                                  </option>
-                                  <option value="1993">
-                                    1993
-                                  </option>
-                                  <option value="1994">
-                                    1994
-                                  </option>
-                                  <option value="1995">
-                                    1995
-                                  </option>
-                                  <option value="1996">
-                                    1996
-                                  </option>
-                                  <option value="1997">
-                                    1997
-                                  </option>
-                                  <option value="1998">
-                                    1998
-                                  </option>
-                                  <option value="1999">
-                                    1999
-                                  </option>
-                                  <option value="2000">
-                                    2000
-                                  </option>
-                                  <option value="2001">
-                                    2001
-                                  </option>
-                                  <option value="2002">
-                                    2002
-                                  </option>
-                                  <option value="2003">
-                                    2003
-                                  </option>
-                                  <option value="2004">
-                                    2004
-                                  </option>
-                                  <option value="2005">
-                                    2005
-                                  </option>
-                                  <option value="2006">
-                                    2006
-                                  </option>
-                                  <option value="2007">
-                                    2007
-                                  </option>
-                                  <option value="2008">
-                                    2008
-                                  </option>
-                                  <option value="2009">
-                                    2009
-                                  </option>
-                                  <option value="2010">
-                                    2010
-                                  </option>
-                                  <option value="2011">
-                                    2011
-                                  </option>
-                                  <option value="2012">
-                                    2012
-                                  </option>
-                                  <option value="2013">
-                                    2013
-                                  </option>
-                                  <option value="2014">
-                                    2014
-                                  </option>
-                                  <option value="2015">
-                                    2015
-                                  </option>
-                                  <option value="2016">
-                                    2016
-                                  </option>
-                                  <option value="2017">
-                                    2017
-                                  </option>
-                                  <option value="2018">
-                                    2018
-                                  </option>
-                                  <option value="2019">
-                                    2019
-                                  </option>
-                                  <option value="2020">
-                                    2020
-                                  </option>
-                                  <option value="2021">
-                                    2021
-                                  </option>
-                                  <option value="2022">
-                                    2022
-                                  </option>
-                                  <option value="2023">
-                                    2023
-                                  </option>
                                   <option value="2024">
                                     2024
-                                  </option>
-                                  <option value="2025">
-                                    2025
-                                  </option>
-                                  <option value="2026">
-                                    2026
-                                  </option>
-                                  <option value="2027">
-                                    2027
-                                  </option>
-                                  <option value="2028">
-                                    2028
-                                  </option>
-                                  <option value="2029">
-                                    2029
-                                  </option>
-                                  <option value="2030">
-                                    2030
-                                  </option>
-                                  <option value="2031">
-                                    2031
-                                  </option>
-                                  <option value="2032">
-                                    2032
-                                  </option>
-                                  <option value="2033">
-                                    2033
-                                  </option>
-                                  <option value="2034">
-                                    2034
-                                  </option>
-                                  <option value="2035">
-                                    2035
-                                  </option>
-                                  <option value="2036">
-                                    2036
-                                  </option>
-                                  <option value="2037">
-                                    2037
-                                  </option>
-                                  <option value="2038">
-                                    2038
-                                  </option>
-                                  <option value="2039">
-                                    2039
-                                  </option>
-                                  <option value="2040">
-                                    2040
-                                  </option>
-                                  <option value="2041">
-                                    2041
-                                  </option>
-                                  <option value="2042">
-                                    2042
-                                  </option>
-                                  <option value="2043">
-                                    2043
-                                  </option>
-                                  <option value="2044">
-                                    2044
-                                  </option>
-                                  <option value="2045">
-                                    2045
-                                  </option>
-                                  <option value="2046">
-                                    2046
-                                  </option>
-                                  <option value="2047">
-                                    2047
-                                  </option>
-                                  <option value="2048">
-                                    2048
-                                  </option>
-                                  <option value="2049">
-                                    2049
-                                  </option>
-                                  <option value="2050">
-                                    2050
-                                  </option>
-                                  <option value="2051">
-                                    2051
-                                  </option>
-                                  <option value="2052">
-                                    2052
-                                  </option>
-                                  <option value="2053">
-                                    2053
-                                  </option>
-                                  <option value="2054">
-                                    2054
-                                  </option>
-                                  <option value="2055">
-                                    2055
-                                  </option>
-                                  <option value="2056">
-                                    2056
-                                  </option>
-                                  <option value="2057">
-                                    2057
-                                  </option>
-                                  <option value="2058">
-                                    2058
-                                  </option>
-                                  <option value="2059">
-                                    2059
-                                  </option>
-                                  <option value="2060">
-                                    2060
-                                  </option>
-                                  <option value="2061">
-                                    2061
-                                  </option>
-                                  <option value="2062">
-                                    2062
-                                  </option>
-                                  <option value="2063">
-                                    2063
-                                  </option>
-                                  <option value="2064">
-                                    2064
-                                  </option>
-                                  <option value="2065">
-                                    2065
-                                  </option>
-                                  <option value="2066">
-                                    2066
-                                  </option>
-                                  <option value="2067">
-                                    2067
-                                  </option>
-                                  <option value="2068">
-                                    2068
-                                  </option>
-                                  <option value="2069">
-                                    2069
-                                  </option>
-                                  <option value="2070">
-                                    2070
-                                  </option>
-                                  <option value="2071">
-                                    2071
-                                  </option>
-                                  <option value="2072">
-                                    2072
-                                  </option>
-                                  <option value="2073">
-                                    2073
-                                  </option>
-                                  <option value="2074">
-                                    2074
                                   </option>
                                 </select>
                                 <svg
@@ -1898,7 +1476,8 @@ exports[`VurderingArtikkel13_1_UtpekLand > snapshot test 1`] = `
                           </div>
                           <button
                             type="button"
-                            class="navds-date__caption-button navds-button navds-button--tertiary navds-button--medium navds-button--icon-only"
+                            class="navds-date__caption-button navds-button navds-button--tertiary navds-button--medium navds-button--icon-only navds-button--disabled"
+                            disabled
                           >
                             <span class="navds-button__icon">
                               <svg
@@ -1989,9 +1568,66 @@ exports[`VurderingArtikkel13_1_UtpekLand > snapshot test 1`] = `
                               <td class="rdp-cell">
                                 <button
                                   name="333"
-                                  class="rdp-button_reset rdp-button rdp-day"
+                                  class="rdp-button_reset rdp-button rdp-day rdp-day_disabled rdp-day_outside"
+                                  disabled
                                   tabindex="-1"
-                                  aria-label="mandag 1"
+                                  aria-label="mandag 26"
+                                  aria-hidden="true"
+                                  aria-pressed="false"
+                                  type="button"
+                                >
+                                  26
+                                </button>
+                              </td>
+                              <td class="rdp-cell">
+                                <button
+                                  name="333"
+                                  class="rdp-button_reset rdp-button rdp-day rdp-day_disabled rdp-day_outside"
+                                  disabled
+                                  tabindex="-1"
+                                  aria-label="tirsdag 27"
+                                  aria-hidden="true"
+                                  aria-pressed="false"
+                                  type="button"
+                                >
+                                  27
+                                </button>
+                              </td>
+                              <td class="rdp-cell">
+                                <button
+                                  name="333"
+                                  class="rdp-button_reset rdp-button rdp-day rdp-day_disabled rdp-day_outside"
+                                  disabled
+                                  tabindex="-1"
+                                  aria-label="onsdag 28"
+                                  aria-hidden="true"
+                                  aria-pressed="false"
+                                  type="button"
+                                >
+                                  28
+                                </button>
+                              </td>
+                              <td class="rdp-cell">
+                                <button
+                                  name="333"
+                                  class="rdp-button_reset rdp-button rdp-day rdp-day_disabled rdp-day_outside"
+                                  disabled
+                                  tabindex="-1"
+                                  aria-label="torsdag 29"
+                                  aria-hidden="true"
+                                  aria-pressed="false"
+                                  type="button"
+                                >
+                                  29
+                                </button>
+                              </td>
+                              <td class="rdp-cell">
+                                <button
+                                  name="333"
+                                  class="rdp-button_reset rdp-button rdp-day rdp-day_disabled"
+                                  disabled
+                                  tabindex="-1"
+                                  aria-label="fredag 1"
                                   aria-pressed="false"
                                   type="button"
                                 >
@@ -2001,9 +1637,10 @@ exports[`VurderingArtikkel13_1_UtpekLand > snapshot test 1`] = `
                               <td class="rdp-cell">
                                 <button
                                   name="333"
-                                  class="rdp-button_reset rdp-button rdp-day"
+                                  class="rdp-button_reset rdp-button rdp-day rdp-day_disabled"
+                                  disabled
                                   tabindex="-1"
-                                  aria-label="tirsdag 2"
+                                  aria-label="lørdag 2"
                                   aria-pressed="false"
                                   type="button"
                                 >
@@ -2013,21 +1650,25 @@ exports[`VurderingArtikkel13_1_UtpekLand > snapshot test 1`] = `
                               <td class="rdp-cell">
                                 <button
                                   name="333"
-                                  class="rdp-button_reset rdp-button rdp-day"
+                                  class="rdp-button_reset rdp-button rdp-day rdp-day_disabled"
+                                  disabled
                                   tabindex="-1"
-                                  aria-label="onsdag 3"
+                                  aria-label="søndag 3"
                                   aria-pressed="false"
                                   type="button"
                                 >
                                   3
                                 </button>
                               </td>
+                            </tr>
+                            <tr class="rdp-row">
                               <td class="rdp-cell">
                                 <button
                                   name="333"
-                                  class="rdp-button_reset rdp-button rdp-day"
+                                  class="rdp-button_reset rdp-button rdp-day rdp-day_disabled"
+                                  disabled
                                   tabindex="-1"
-                                  aria-label="torsdag 4"
+                                  aria-label="mandag 4"
                                   aria-pressed="false"
                                   type="button"
                                 >
@@ -2037,9 +1678,10 @@ exports[`VurderingArtikkel13_1_UtpekLand > snapshot test 1`] = `
                               <td class="rdp-cell">
                                 <button
                                   name="333"
-                                  class="rdp-button_reset rdp-button rdp-day"
+                                  class="rdp-button_reset rdp-button rdp-day rdp-day_disabled"
+                                  disabled
                                   tabindex="-1"
-                                  aria-label="fredag 5"
+                                  aria-label="tirsdag 5"
                                   aria-pressed="false"
                                   type="button"
                                 >
@@ -2049,9 +1691,10 @@ exports[`VurderingArtikkel13_1_UtpekLand > snapshot test 1`] = `
                               <td class="rdp-cell">
                                 <button
                                   name="333"
-                                  class="rdp-button_reset rdp-button rdp-day"
+                                  class="rdp-button_reset rdp-button rdp-day rdp-day_disabled"
+                                  disabled
                                   tabindex="-1"
-                                  aria-label="lørdag 6"
+                                  aria-label="onsdag 6"
                                   aria-pressed="false"
                                   type="button"
                                 >
@@ -2061,23 +1704,23 @@ exports[`VurderingArtikkel13_1_UtpekLand > snapshot test 1`] = `
                               <td class="rdp-cell">
                                 <button
                                   name="333"
-                                  class="rdp-button_reset rdp-button rdp-day"
+                                  class="rdp-button_reset rdp-button rdp-day rdp-day_disabled"
+                                  disabled
                                   tabindex="-1"
-                                  aria-label="søndag 7"
+                                  aria-label="torsdag 7"
                                   aria-pressed="false"
                                   type="button"
                                 >
                                   7
                                 </button>
                               </td>
-                            </tr>
-                            <tr class="rdp-row">
                               <td class="rdp-cell">
                                 <button
                                   name="333"
-                                  class="rdp-button_reset rdp-button rdp-day"
+                                  class="rdp-button_reset rdp-button rdp-day rdp-day_disabled"
+                                  disabled
                                   tabindex="-1"
-                                  aria-label="mandag 8"
+                                  aria-label="fredag 8"
                                   aria-pressed="false"
                                   type="button"
                                 >
@@ -2087,9 +1730,10 @@ exports[`VurderingArtikkel13_1_UtpekLand > snapshot test 1`] = `
                               <td class="rdp-cell">
                                 <button
                                   name="333"
-                                  class="rdp-button_reset rdp-button rdp-day"
+                                  class="rdp-button_reset rdp-button rdp-day rdp-day_disabled"
+                                  disabled
                                   tabindex="-1"
-                                  aria-label="tirsdag 9"
+                                  aria-label="lørdag 9"
                                   aria-pressed="false"
                                   type="button"
                                 >
@@ -2099,21 +1743,25 @@ exports[`VurderingArtikkel13_1_UtpekLand > snapshot test 1`] = `
                               <td class="rdp-cell">
                                 <button
                                   name="333"
-                                  class="rdp-button_reset rdp-button rdp-day"
+                                  class="rdp-button_reset rdp-button rdp-day rdp-day_disabled"
+                                  disabled
                                   tabindex="-1"
-                                  aria-label="onsdag 10"
+                                  aria-label="søndag 10"
                                   aria-pressed="false"
                                   type="button"
                                 >
                                   10
                                 </button>
                               </td>
+                            </tr>
+                            <tr class="rdp-row">
                               <td class="rdp-cell">
                                 <button
                                   name="333"
-                                  class="rdp-button_reset rdp-button rdp-day"
+                                  class="rdp-button_reset rdp-button rdp-day rdp-day_disabled"
+                                  disabled
                                   tabindex="-1"
-                                  aria-label="torsdag 11"
+                                  aria-label="mandag 11"
                                   aria-pressed="false"
                                   type="button"
                                 >
@@ -2124,8 +1772,8 @@ exports[`VurderingArtikkel13_1_UtpekLand > snapshot test 1`] = `
                                 <button
                                   name="333"
                                   class="rdp-button_reset rdp-button rdp-day"
-                                  tabindex="-1"
-                                  aria-label="fredag 12"
+                                  tabindex="0"
+                                  aria-label="tirsdag 12"
                                   aria-pressed="false"
                                   type="button"
                                 >
@@ -2137,7 +1785,7 @@ exports[`VurderingArtikkel13_1_UtpekLand > snapshot test 1`] = `
                                   name="333"
                                   class="rdp-button_reset rdp-button rdp-day"
                                   tabindex="-1"
-                                  aria-label="lørdag 13"
+                                  aria-label="onsdag 13"
                                   aria-pressed="false"
                                   type="button"
                                 >
@@ -2149,21 +1797,19 @@ exports[`VurderingArtikkel13_1_UtpekLand > snapshot test 1`] = `
                                   name="333"
                                   class="rdp-button_reset rdp-button rdp-day"
                                   tabindex="-1"
-                                  aria-label="søndag 14"
+                                  aria-label="torsdag 14"
                                   aria-pressed="false"
                                   type="button"
                                 >
                                   14
                                 </button>
                               </td>
-                            </tr>
-                            <tr class="rdp-row">
                               <td class="rdp-cell">
                                 <button
                                   name="333"
                                   class="rdp-button_reset rdp-button rdp-day"
                                   tabindex="-1"
-                                  aria-label="mandag 15"
+                                  aria-label="fredag 15"
                                   aria-pressed="false"
                                   type="button"
                                 >
@@ -2175,7 +1821,7 @@ exports[`VurderingArtikkel13_1_UtpekLand > snapshot test 1`] = `
                                   name="333"
                                   class="rdp-button_reset rdp-button rdp-day"
                                   tabindex="-1"
-                                  aria-label="tirsdag 16"
+                                  aria-label="lørdag 16"
                                   aria-pressed="false"
                                   type="button"
                                 >
@@ -2187,19 +1833,21 @@ exports[`VurderingArtikkel13_1_UtpekLand > snapshot test 1`] = `
                                   name="333"
                                   class="rdp-button_reset rdp-button rdp-day"
                                   tabindex="-1"
-                                  aria-label="onsdag 17"
+                                  aria-label="søndag 17"
                                   aria-pressed="false"
                                   type="button"
                                 >
                                   17
                                 </button>
                               </td>
+                            </tr>
+                            <tr class="rdp-row">
                               <td class="rdp-cell">
                                 <button
                                   name="333"
                                   class="rdp-button_reset rdp-button rdp-day"
                                   tabindex="-1"
-                                  aria-label="torsdag 18"
+                                  aria-label="mandag 18"
                                   aria-pressed="false"
                                   type="button"
                                 >
@@ -2211,7 +1859,7 @@ exports[`VurderingArtikkel13_1_UtpekLand > snapshot test 1`] = `
                                   name="333"
                                   class="rdp-button_reset rdp-button rdp-day"
                                   tabindex="-1"
-                                  aria-label="fredag 19"
+                                  aria-label="tirsdag 19"
                                   aria-pressed="false"
                                   type="button"
                                 >
@@ -2223,7 +1871,7 @@ exports[`VurderingArtikkel13_1_UtpekLand > snapshot test 1`] = `
                                   name="333"
                                   class="rdp-button_reset rdp-button rdp-day"
                                   tabindex="-1"
-                                  aria-label="lørdag 20"
+                                  aria-label="onsdag 20"
                                   aria-pressed="false"
                                   type="button"
                                 >
@@ -2235,21 +1883,19 @@ exports[`VurderingArtikkel13_1_UtpekLand > snapshot test 1`] = `
                                   name="333"
                                   class="rdp-button_reset rdp-button rdp-day"
                                   tabindex="-1"
-                                  aria-label="søndag 21"
+                                  aria-label="torsdag 21"
                                   aria-pressed="false"
                                   type="button"
                                 >
                                   21
                                 </button>
                               </td>
-                            </tr>
-                            <tr class="rdp-row">
                               <td class="rdp-cell">
                                 <button
                                   name="333"
                                   class="rdp-button_reset rdp-button rdp-day"
                                   tabindex="-1"
-                                  aria-label="mandag 22"
+                                  aria-label="fredag 22"
                                   aria-pressed="false"
                                   type="button"
                                 >
@@ -2261,7 +1907,7 @@ exports[`VurderingArtikkel13_1_UtpekLand > snapshot test 1`] = `
                                   name="333"
                                   class="rdp-button_reset rdp-button rdp-day"
                                   tabindex="-1"
-                                  aria-label="tirsdag 23"
+                                  aria-label="lørdag 23"
                                   aria-pressed="false"
                                   type="button"
                                 >
@@ -2273,19 +1919,21 @@ exports[`VurderingArtikkel13_1_UtpekLand > snapshot test 1`] = `
                                   name="333"
                                   class="rdp-button_reset rdp-button rdp-day"
                                   tabindex="-1"
-                                  aria-label="onsdag 24"
+                                  aria-label="søndag 24"
                                   aria-pressed="false"
                                   type="button"
                                 >
                                   24
                                 </button>
                               </td>
+                            </tr>
+                            <tr class="rdp-row">
                               <td class="rdp-cell">
                                 <button
                                   name="333"
                                   class="rdp-button_reset rdp-button rdp-day"
                                   tabindex="-1"
-                                  aria-label="torsdag 25"
+                                  aria-label="mandag 25"
                                   aria-pressed="false"
                                   type="button"
                                 >
@@ -2297,7 +1945,7 @@ exports[`VurderingArtikkel13_1_UtpekLand > snapshot test 1`] = `
                                   name="333"
                                   class="rdp-button_reset rdp-button rdp-day"
                                   tabindex="-1"
-                                  aria-label="fredag 26"
+                                  aria-label="tirsdag 26"
                                   aria-pressed="false"
                                   type="button"
                                 >
@@ -2309,7 +1957,7 @@ exports[`VurderingArtikkel13_1_UtpekLand > snapshot test 1`] = `
                                   name="333"
                                   class="rdp-button_reset rdp-button rdp-day"
                                   tabindex="-1"
-                                  aria-label="lørdag 27"
+                                  aria-label="onsdag 27"
                                   aria-pressed="false"
                                   type="button"
                                 >
@@ -2321,21 +1969,19 @@ exports[`VurderingArtikkel13_1_UtpekLand > snapshot test 1`] = `
                                   name="333"
                                   class="rdp-button_reset rdp-button rdp-day"
                                   tabindex="-1"
-                                  aria-label="søndag 28"
+                                  aria-label="torsdag 28"
                                   aria-pressed="false"
                                   type="button"
                                 >
                                   28
                                 </button>
                               </td>
-                            </tr>
-                            <tr class="rdp-row">
                               <td class="rdp-cell">
                                 <button
                                   name="333"
                                   class="rdp-button_reset rdp-button rdp-day"
                                   tabindex="-1"
-                                  aria-label="mandag 29"
+                                  aria-label="fredag 29"
                                   aria-pressed="false"
                                   type="button"
                                 >
@@ -2345,9 +1991,9 @@ exports[`VurderingArtikkel13_1_UtpekLand > snapshot test 1`] = `
                               <td class="rdp-cell">
                                 <button
                                   name="333"
-                                  class="rdp-button_reset rdp-button rdp-day rdp-day_today"
-                                  tabindex="0"
-                                  aria-label="tirsdag 30"
+                                  class="rdp-button_reset rdp-button rdp-day"
+                                  tabindex="-1"
+                                  aria-label="lørdag 30"
                                   aria-pressed="false"
                                   type="button"
                                 >
@@ -2359,19 +2005,22 @@ exports[`VurderingArtikkel13_1_UtpekLand > snapshot test 1`] = `
                                   name="333"
                                   class="rdp-button_reset rdp-button rdp-day"
                                   tabindex="-1"
-                                  aria-label="onsdag 31"
+                                  aria-label="søndag 31"
                                   aria-pressed="false"
                                   type="button"
                                 >
                                   31
                                 </button>
                               </td>
+                            </tr>
+                            <tr class="rdp-row">
                               <td class="rdp-cell">
                                 <button
                                   name="333"
-                                  class="rdp-button_reset rdp-button rdp-day rdp-day_outside"
+                                  class="rdp-button_reset rdp-button rdp-day rdp-day_disabled rdp-day_outside"
+                                  disabled
                                   tabindex="-1"
-                                  aria-label="torsdag 1"
+                                  aria-label="mandag 1"
                                   aria-hidden="true"
                                   aria-pressed="false"
                                   type="button"
@@ -2382,9 +2031,10 @@ exports[`VurderingArtikkel13_1_UtpekLand > snapshot test 1`] = `
                               <td class="rdp-cell">
                                 <button
                                   name="333"
-                                  class="rdp-button_reset rdp-button rdp-day rdp-day_outside"
+                                  class="rdp-button_reset rdp-button rdp-day rdp-day_disabled rdp-day_outside"
+                                  disabled
                                   tabindex="-1"
-                                  aria-label="fredag 2"
+                                  aria-label="tirsdag 2"
                                   aria-hidden="true"
                                   aria-pressed="false"
                                   type="button"
@@ -2395,9 +2045,10 @@ exports[`VurderingArtikkel13_1_UtpekLand > snapshot test 1`] = `
                               <td class="rdp-cell">
                                 <button
                                   name="333"
-                                  class="rdp-button_reset rdp-button rdp-day rdp-day_outside"
+                                  class="rdp-button_reset rdp-button rdp-day rdp-day_disabled rdp-day_outside"
+                                  disabled
                                   tabindex="-1"
-                                  aria-label="lørdag 3"
+                                  aria-label="onsdag 3"
                                   aria-hidden="true"
                                   aria-pressed="false"
                                   type="button"
@@ -2408,9 +2059,10 @@ exports[`VurderingArtikkel13_1_UtpekLand > snapshot test 1`] = `
                               <td class="rdp-cell">
                                 <button
                                   name="333"
-                                  class="rdp-button_reset rdp-button rdp-day rdp-day_outside"
+                                  class="rdp-button_reset rdp-button rdp-day rdp-day_disabled rdp-day_outside"
+                                  disabled
                                   tabindex="-1"
-                                  aria-label="søndag 4"
+                                  aria-label="torsdag 4"
                                   aria-hidden="true"
                                   aria-pressed="false"
                                   type="button"
@@ -2418,14 +2070,13 @@ exports[`VurderingArtikkel13_1_UtpekLand > snapshot test 1`] = `
                                   4
                                 </button>
                               </td>
-                            </tr>
-                            <tr class="rdp-row">
                               <td class="rdp-cell">
                                 <button
                                   name="333"
-                                  class="rdp-button_reset rdp-button rdp-day rdp-day_outside"
+                                  class="rdp-button_reset rdp-button rdp-day rdp-day_disabled rdp-day_outside"
+                                  disabled
                                   tabindex="-1"
-                                  aria-label="mandag 5"
+                                  aria-label="fredag 5"
                                   aria-hidden="true"
                                   aria-pressed="false"
                                   type="button"
@@ -2436,9 +2087,10 @@ exports[`VurderingArtikkel13_1_UtpekLand > snapshot test 1`] = `
                               <td class="rdp-cell">
                                 <button
                                   name="333"
-                                  class="rdp-button_reset rdp-button rdp-day rdp-day_outside"
+                                  class="rdp-button_reset rdp-button rdp-day rdp-day_disabled rdp-day_outside"
+                                  disabled
                                   tabindex="-1"
-                                  aria-label="tirsdag 6"
+                                  aria-label="lørdag 6"
                                   aria-hidden="true"
                                   aria-pressed="false"
                                   type="button"
@@ -2449,66 +2101,15 @@ exports[`VurderingArtikkel13_1_UtpekLand > snapshot test 1`] = `
                               <td class="rdp-cell">
                                 <button
                                   name="333"
-                                  class="rdp-button_reset rdp-button rdp-day rdp-day_outside"
+                                  class="rdp-button_reset rdp-button rdp-day rdp-day_disabled rdp-day_outside"
+                                  disabled
                                   tabindex="-1"
-                                  aria-label="onsdag 7"
+                                  aria-label="søndag 7"
                                   aria-hidden="true"
                                   aria-pressed="false"
                                   type="button"
                                 >
                                   7
-                                </button>
-                              </td>
-                              <td class="rdp-cell">
-                                <button
-                                  name="333"
-                                  class="rdp-button_reset rdp-button rdp-day rdp-day_outside"
-                                  tabindex="-1"
-                                  aria-label="torsdag 8"
-                                  aria-hidden="true"
-                                  aria-pressed="false"
-                                  type="button"
-                                >
-                                  8
-                                </button>
-                              </td>
-                              <td class="rdp-cell">
-                                <button
-                                  name="333"
-                                  class="rdp-button_reset rdp-button rdp-day rdp-day_outside"
-                                  tabindex="-1"
-                                  aria-label="fredag 9"
-                                  aria-hidden="true"
-                                  aria-pressed="false"
-                                  type="button"
-                                >
-                                  9
-                                </button>
-                              </td>
-                              <td class="rdp-cell">
-                                <button
-                                  name="333"
-                                  class="rdp-button_reset rdp-button rdp-day rdp-day_outside"
-                                  tabindex="-1"
-                                  aria-label="lørdag 10"
-                                  aria-hidden="true"
-                                  aria-pressed="false"
-                                  type="button"
-                                >
-                                  10
-                                </button>
-                              </td>
-                              <td class="rdp-cell">
-                                <button
-                                  name="333"
-                                  class="rdp-button_reset rdp-button rdp-day rdp-day_outside"
-                                  tabindex="-1"
-                                  aria-label="søndag 11"
-                                  aria-hidden="true"
-                                  aria-pressed="false"
-                                  type="button"
-                                >
-                                  11
                                 </button>
                               </td>
                             </tr>
@@ -2525,13 +2126,13 @@ exports[`VurderingArtikkel13_1_UtpekLand > snapshot test 1`] = `
       </div>
     </div>
     <div class="row fritekst">
-      <div class="col col-xs-7">
+      <div class="col col-xs-8">
         <div class="skjemaelement textarea__container">
           <label
             class="skjemaelement__label"
             for="333"
           >
-            Fritekst til orienteringsbrev
+            Fritekst til vedtaksbrev
           </label>
           <div class="textarea--medMeta__wrapper">
             <span
@@ -2544,12 +2145,13 @@ exports[`VurderingArtikkel13_1_UtpekLand > snapshot test 1`] = `
               class="skjemaelement__input input--fullbredde skjemaelement__input textarea--medMeta"
               id="333"
               name="333"
-              style="height: 30px;"
+              style="height: 25px;"
               aria-inval
               aria-describedby="333"
-              placeholder="Skriv inn tekst til orienteringsbrevet..."
+              placeholder="Skriv inn tekst til vedtaksbrevet..."
               spellcheck="true"
             >
+              vedtaksbrevfritekst
             </textarea>
             <p class="textarea--medMeta__teller">
             </p>
@@ -2558,101 +2160,20 @@ exports[`VurderingArtikkel13_1_UtpekLand > snapshot test 1`] = `
             class="textareamirror"
             aria-hidden="true"
           >
+            vedtaksbrevfritekst
           </div>
         </div>
-      </div>
-    </div>
-    <div class="row fritekst">
-      <div class="col col-xs-7">
-        <div class="skjemaelement textarea__container">
-          <label
-            class="skjemaelement__label"
-            for="333"
-          >
-            Ytterligere informasjon til SED (valgfri)
-          </label>
-          <div class="textarea--medMeta__wrapper">
-            <span
-              id="333"
-              class="sr-only"
-            >
-              Tekstområde med plass til 20 tegn.
-            </span>
-            <textarea
-              class="skjemaelement__input input--fullbredde skjemaelement__input textarea--medMeta"
-              id="333"
-              name="333"
-              style="height: 30px;"
-              aria-inval
-              aria-describedby="333"
-              spellcheck="true"
-            >
-            </textarea>
-            <p class="textarea--medMeta__teller">
-              <span>
-                Du har 500 tegn igjen.
-              </span>
-            </p>
-          </div>
-          <div
-            class="textareamirror"
-            aria-hidden="true"
-          >
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row mottakerinstitusjoner">
-      <div class="col col-xs-7">
       </div>
     </div>
     <div class="row">
-      <div class="col col-xs-7">
-        <div class="dokumentliste">
-          <table class="navds-table navds-table--small">
-            <thead class="navds-table__header">
-              <tr class="navds-table__row navds-table__row--shade-on-hover">
-                <th class="navds-table__header-cell navds-label">
-                  Forhåndsvisning av brev
-                </th>
-                <th class="navds-table__header-cell navds-label">
-                  Mottaker
-                </th>
-              </tr>
-            </thead>
-            <tbody class="navds-table__body">
-              <tr class="navds-table__row navds-table__row--shade-on-hover">
-                <td class="navds-table__data-cell navds-body-short navds-body-short--medium">
-                  <a
-                    href="#"
-                    class="navds-link navds-link--action"
-                  >
-                    Orienteringsbrev om utpeking til et annet land (åpnes i ny fane)
-                  </a>
-                </td>
-                <td class="navds-table__data-cell navds-body-short navds-body-short--medium">
-                  BRUKER
-                </td>
-              </tr>
-              <tr class="navds-table__row navds-table__row--shade-on-hover">
-                <td class="navds-table__data-cell navds-body-short navds-body-short--medium">
-                  <a
-                    href="#"
-                    class="navds-link navds-link--action"
-                  >
-                    SED A003 (åpnes i ny fane)
-                  </a>
-                </td>
-                <td class="navds-table__data-cell navds-body-short navds-body-short--medium">
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+      <div class="col col-xs-8">
       </div>
     </div>
     <div class="stegKnapper">
-      <button class="stegKnapper__bekreft navds-button navds-button--primary navds-button--small">
+      <button
+        class="stegKnapper__bekreft navds-button navds-button--primary navds-button--small navds-button--disabled"
+        disabled
+      >
         <span class="navds-label navds-label--small">
           Fatt vedtak
         </span>
@@ -2680,7 +2201,7 @@ exports[`VurderingArtikkel13_1_UtpekLand > snapshot test 1`] = `
         </span>
       </button>
     </div>
-  </div>
+  </form>
 </div>
 
 `;

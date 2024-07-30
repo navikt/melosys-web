@@ -6,24 +6,7 @@ vi.mock("../../../../services/modules/kontroll", () => ({
   erBucAapen: () => Promise.resolve(true),
 }));
 
-vi.mock("../../../../utils", async () => {
-  const actual = await vi.importActual("../../../../utils");
-  return {
-    ...actual,
-    _uuid: () => "321",
-  };
-});
-
-vi.mock("nav-frontend-js-utils", async () => {
-  const actual = await vi.importActual("nav-frontend-js-utils");
-  return {
-    ...actual,
-    guid: () => "123",
-  };
-});
-
-// TODO: Skriv om når aksel tas inn i prosjektet. MELOSYS-6021
-describe.skip("VurderingUtpekt", () => {
+describe("VurderingUtpekt", () => {
   let props = null;
 
   const initialState = () => {

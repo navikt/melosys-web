@@ -3,53 +3,99 @@
 exports[`Redigerbarliste > snapshot test 1`] = `
 <div>
   <div
-    className="row redigerbarliste__element"
+    className=
+row redigerbarliste__element
+
   >
     <div
-      className="col col-xs-6"
+      className=
+col col-xs-6
+
     >
       term
     </div>
     <div
-      className="col col-xs-6"
+      className=
+col col-xs-6
+
     >
       <button
-        className="navds-button navds-button--secondary navds-button--small"
+        className=
+navds-button navds-button--secondary navds-button--small
+
         onClick={[Function]}
         onKeyUp={[Function]}
         style={
           {
-            "width": undefined,
+            
+width
+: undefined,
           }
         }
       >
         <span
-          className="navds-button__icon"
+          className=
+navds-button__icon
+
         >
           <svg
-            contentScriptType="text/ecmascript"
-            contentStyleType="text/css"
-            enableBackground="new 0 0 24 24"
-            height="24px"
-            id="Filled_Version"
-            preserveAspectRatio="xMidYMid meet"
-            viewBox="0 0 24 24"
-            width="24px"
-            x="0px"
-            xmlSpace="preserve"
-            xmlns="http://www.w3.org/2000/svg"
-            xmlnsXlink="http://www.w3.org/1999/xlink"
-            y="0px"
-            zoomAndPan="magnify"
+            contentScriptType=
+text/ecmascript
+
+            contentStyleType=
+text/css
+
+            enableBackground=
+new 0 0 24 24
+
+            height=
+24px
+
+            id=
+Filled_Version
+
+            preserveAspectRatio=
+xMidYMid meet
+
+            viewBox=
+0 0 24 24
+
+            width=
+24px
+
+            x=
+0px
+
+            xmlSpace=
+preserve
+
+            xmlns=
+http://www.w3.org/2000/svg
+
+            xmlnsXlink=
+http://www.w3.org/1999/xlink
+
+            y=
+0px
+
+            zoomAndPan=
+magnify
+
           >
             <path
-              d="M13.414,12L23.707,1.707c0.391-0.391,0.391-1.023,0-1.414c-0.391-0.391-1.023-0.391-1.414,0L12,10.586L1.707,0.293  c-0.391-0.391-1.023-0.391-1.414,0c-0.391,0.391-0.391,1.023,0,1.414L10.586,12L0.293,22.293c-0.391,0.391-0.391,1.023,0,1.414  C0.488,23.902,0.744,24,1,24s0.512-0.098,0.707-0.293L12,13.414l10.293,10.293C22.488,23.902,22.744,24,23,24  c0.256,0,0.512-0.098,0.707-0.293c0.391-0.391,0.391-1.023,0-1.414L13.414,12z"
-              fill="#0067c5"
+              d=
+M13.414,12L23.707,1.707c0.391-0.391,0.391-1.023,0-1.414c-0.391-0.391-1.023-0.391-1.414,0L12,10.586L1.707,0.293  c-0.391-0.391-1.023-0.391-1.414,0c-0.391,0.391-0.391,1.023,0,1.414L10.586,12L0.293,22.293c-0.391,0.391-0.391,1.023,0,1.414  C0.488,23.902,0.744,24,1,24s0.512-0.098,0.707-0.293L12,13.414l10.293,10.293C22.488,23.902,22.744,24,23,24  c0.256,0,0.512-0.098,0.707-0.293c0.391-0.391,0.391-1.023,0-1.414L13.414,12z
+
+              fill=
+#0067c5
+
             />
           </svg>
         </span>
         <span
-          className="navds-label navds-label--small"
+          className=
+navds-label navds-label--small
+
         >
           Fjern
         </span>
@@ -57,10 +103,14 @@ exports[`Redigerbarliste > snapshot test 1`] = `
     </div>
   </div>
   <div
-    className="row redigerbarliste__element"
+    className=
+row redigerbarliste__element
+
   >
     <div
-      className="col col-xs-6"
+      className=
+col col-xs-6
+
     >
       term
     </div>

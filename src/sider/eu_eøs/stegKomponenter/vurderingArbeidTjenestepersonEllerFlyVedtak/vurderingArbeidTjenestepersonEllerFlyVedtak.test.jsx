@@ -15,14 +15,6 @@ vi.mock("../../../featuretoggle", () => ({
   useFeatureToggle: vi.fn(),
 }));
 
-vi.mock("../../../utils", async () => {
-  const actual = await vi.importActual("../../../utils");
-  return {
-    ...actual,
-    _uuid: () => "123",
-  };
-});
-
 // TODO: Snapshot test.
 //  For en full rewrite inkl. testene som ble slettet i denne committen anbefaler jeg å kopiere redux state fra lokalt
 //  oppsett slik det er gjort i journalforingform.test.jsx
@@ -138,7 +130,7 @@ describe("VurderingArbeidTjenestepersonEllerFlyVedtak", () => {
     };
   });
 
-  it.skip("snapshot test", async () => {
+  it("snapshot test", async () => {
     const { container, getByRole, getByLabelText } = renderWithProviders(
       <WrappedVurderingArbeidTjenestepersonEllerFlyVedtak {...props} />,
       { preloadedState: initialReduxState }

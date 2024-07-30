@@ -6,17 +6,8 @@ import * as KV from "../../../../kodeverk";
 vi.mock("../../../featuretoggle", () => ({
   useFeatureToggle: vi.fn(),
 }));
-vi.mock("../../../../utils", async () => {
-  const actual = await vi.importActual("../../../../utils");
-  return {
-    ...actual,
-    _uuid: () => "123",
-  };
-});
 
-// TODO: Skriv om når aksel tas inn i prosjektet. MELOSYS-6021
-/* eslint-disable react/jsx-pascal-case */
-describe.skip("VurderingArtikkel13_1_UtpekLand", () => {
+describe("VurderingArtikkel13_1_UtpekLand", () => {
   const props = {
     tilstand: {
       overskrift: "Omfattet av norsk lovgivning, etter artikkel 13, nr 1, b",

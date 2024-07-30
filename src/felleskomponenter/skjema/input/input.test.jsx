@@ -2,14 +2,6 @@ import Input from "./input";
 import { reduxForm } from "redux-form";
 import { renderWithProviders } from "../../../ducks/test-utils/renderWithProviders";
 
-vi.mock("../../../utils", async () => {
-  const actual = await vi.importActual("../../../utils");
-  return {
-    ...actual,
-    _uuid: () => "123",
-  };
-});
-
 const WrappedInput = reduxForm({ form: "test" })(Input);
 
 describe("Input", () => {

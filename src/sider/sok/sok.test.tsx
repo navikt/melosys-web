@@ -5,10 +5,8 @@ import { renderWithProviders } from "../../ducks/test-utils/renderWithProviders"
 
 import { Sok } from "./sok";
 
-// TODO: Skriv om når aksel tas inn i prosjektet. MELOSYS-6021
-describe.skip("Sok", () => {
-  const getItemPrototype = Storage.prototype.getItem;
-
+const generator = new Utils.testhelpers.Generator();
+describe("Sok", () => {
   const initialStore = (sokResultat: object[] = []) => ({
     sok: {
       status: "",
@@ -22,13 +20,23 @@ describe.skip("Sok", () => {
     },
   });
 
+  beforeAll(() => {
+    // @ts-ignore
+    fetch.resetMocks();
+    // @ts-ignore
+    fetch.mockResponse(JSON.stringify({}));
+    const fnr = generator.generateBirthNumber();
+    console.log(fnr);
+    window.sessionStorage.setItem("sokefrase", JSON.stringify(fnr));
+  });
+
   afterAll(() => {
-    Storage.prototype.getItem = getItemPrototype;
+    window.sessionStorage.clear();
+    // @ts-ignore
+    fetch.resetMocks();
   });
 
   it("viser en sorterbarliste ved søk på fnr med flere resultat", () => {
-    const generator = new Utils.testhelpers.Generator();
-    Storage.prototype.getItem = vi.fn(() => generator.generateBirthNumber());
     const sokResultat = [
       {
         sakstype: { term: "A1" },
@@ -52,9 +60,6 @@ describe.skip("Sok", () => {
   });
 
   it("viser ikke sorterbarliste ved søk på fnr uten resultat", () => {
-    const generator = new Utils.testhelpers.Generator();
-    Storage.prototype.getItem = vi.fn(() => generator.generateBirthNumber());
-
     renderWithProviders(<Sok />, { preloadedState: initialStore() });
 
     const overskrifter = screen.getAllByRole("heading");

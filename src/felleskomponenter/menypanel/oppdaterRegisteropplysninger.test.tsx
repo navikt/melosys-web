@@ -10,11 +10,6 @@ const mocks = vi.hoisted(() => {
   };
 });
 
-vi.mock("../../utils", () => ({
-  _uuid: () => "123",
-  _memoize: mocks._memoize,
-}));
-
 describe("oppdaterRegisteropplysninger", () => {
   it("Skal vise alternativ for å se registeropplysninger 5 ekstra år tilbake i tid", () => {
     const { container } = renderWithProviders(

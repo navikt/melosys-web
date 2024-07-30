@@ -9,15 +9,7 @@ import * as KV from "../../../../kodeverk";
 vi.mock("../../../featuretoggle", () => ({
   useFeatureToggle: vi.fn(),
 }));
-vi.mock("../../../../utils", async () => {
-  const actual = await vi.importActual("../../../../utils");
-  return {
-    ...actual,
-    _uuid: () => "123",
-  };
-});
 
-/* eslint-disable react/jsx-pascal-case */
 describe("VurderingArtikkel13_x_Vedtak", () => {
   const props = {
     tilstand: {
@@ -55,8 +47,7 @@ describe("VurderingArtikkel13_x_Vedtak", () => {
     expect(props.handleSubmit).toHaveBeenCalledTimes(1);
   });
 
-  // TODO: Skriv om når aksel tas inn i prosjektet. MELOSYS-6021
-  it.skip("snapshot test", () => {
+  it("snapshot test", () => {
     const { container } = renderWithProviders(<WrappedVurderingArtikkel13_x_vedtak {...props} />);
     expect(container).toMatchSnapshot();
   });

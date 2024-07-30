@@ -2,47 +2,69 @@
 
 exports[`AdresseTable  > aktiv AdresseTable renders correctly 1`] = `
 <div
-  className="adresseTable menypanel__table-wrapper"
+  className=
+adresseTable menypanel__table-wrapper
+
 >
   <table
-    className="navds-table navds-table--medium menypanel__table"
+    className=
+navds-table navds-table--medium menypanel__table
+
   >
     <thead
-      className="navds-table__header"
+      className=
+navds-table__header
+
     >
       <tr
-        className="navds-table__row navds-table__row--shade-on-hover"
+        className=
+navds-table__row navds-table__row--shade-on-hover
+
       >
         <th
-          className="navds-table__header-cell navds-label fixed-width "
+          className=
+navds-table__header-cell navds-label fixed-width
+
         >
           Bostedsadresse
         </th>
         <th
-          className="navds-table__header-cell navds-label"
+          className=
+navds-table__header-cell navds-label
+
         >
           Register
         </th>
         <th
-          className="navds-table__header-cell navds-label"
+          className=
+navds-table__header-cell navds-label
+
         >
           Kilde
         </th>
         <th
-          className="navds-table__header-cell navds-label fixed-width"
+          className=
+navds-table__header-cell navds-label fixed-width
+
         >
           Gyldig f.o.m.
         </th>
       </tr>
     </thead>
     <tbody
-      className="navds-table__body"
+      className=
+navds-table__body
+
     >
       <tr
-        className="navds-table__row navds-table__row--shade-on-hover"
+        className=
+navds-table__row navds-table__row--shade-on-hover
+
       >
         <td
-          className="navds-table__data-cell navds-body-short navds-body-short--medium"
+          className=
+navds-table__data-cell navds-body-short navds-body-short--medium
+
         >
           <address>
             <div>
@@ -66,17 +88,23 @@ exports[`AdresseTable  > aktiv AdresseTable renders correctly 1`] = `
           </address>
         </td>
         <td
-          className="navds-table__data-cell navds-body-short navds-body-short--medium"
+          className=
+navds-table__data-cell navds-body-short navds-body-short--medium
+
         >
           Freg
         </td>
         <td
-          className="navds-table__data-cell navds-body-short navds-body-short--medium"
+          className=
+navds-table__data-cell navds-body-short navds-body-short--medium
+
         >
           Folkeregisteret
         </td>
         <td
-          className="navds-table__data-cell gyldig-label navds-body-short navds-body-short--medium"
+          className=
+navds-table__data-cell gyldig-label navds-body-short navds-body-short--medium
+
         >
           03.11.2012
         </td>
@@ -88,30 +116,54 @@ exports[`AdresseTable  > aktiv AdresseTable renders correctly 1`] = `
 
 exports[`AdresseTable  > historisk AdresseTable renders correctly 1`] = `
 <div
-  className="adresseTable menypanel__table-wrapper"
+  className=
+adresseTable menypanel__table-wrapper
+
 >
   <div
-    className="chevronKnapp"
+    className=
+chevronKnapp
+
   >
     <button
       onClick={[Function]}
-      type="button"
+      type=
+button
+
     >
       Åpne historikk
       <svg
-        fill="none"
-        focusable="false"
+        fill=
+none
+
+        focusable=
+false
+
         height={24}
-        role="img"
-        viewBox="0 0 24 24"
+        role=
+img
+
+        viewBox=
+0 0 24 24
+
         width={24}
-        xmlns="http://www.w3.org/2000/svg"
+        xmlns=
+http://www.w3.org/2000/svg
+
       >
         <path
-          clipRule="evenodd"
-          d="M5.97 9.47a.75.75 0 0 1 1.06 0L12 14.44l4.97-4.97a.75.75 0 1 1 1.06 1.06l-5.5 5.5a.75.75 0 0 1-1.06 0l-5.5-5.5a.75.75 0 0 1 0-1.06Z"
-          fill="currentColor"
-          fillRule="evenodd"
+          clipRule=
+evenodd
+
+          d=
+M5.97 9.47a.75.75 0 0 1 1.06 0L12 14.44l4.97-4.97a.75.75 0 1 1 1.06 1.06l-5.5 5.5a.75.75 0 0 1-1.06 0l-5.5-5.5a.75.75 0 0 1 0-1.06Z
+
+          fill=
+currentColor
+
+          fillRule=
+evenodd
+
         />
       </svg>
     </button>

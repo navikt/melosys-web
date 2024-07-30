@@ -5,15 +5,6 @@ import { expect } from "vitest";
 import { screen } from "@testing-library/react";
 import { renderWithProviders } from "../../../ducks/test-utils/renderWithProviders";
 
-vi.mock("../../../utils", async () => {
-  const actual = await vi.importActual("../../../utils");
-  return {
-    // @ts-ignore
-    ...actual,
-    _uuid: () => "321",
-  };
-});
-
 describe("Select", () => {
   it("snapshot test", () => {
     // @ts-ignore

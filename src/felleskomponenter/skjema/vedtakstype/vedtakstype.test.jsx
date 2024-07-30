@@ -2,14 +2,6 @@ import Vedtakstype from "./index";
 import { reduxForm } from "redux-form";
 import { renderWithProviders } from "../../../ducks/test-utils/renderWithProviders";
 
-vi.mock("../../../utils", async () => {
-  const actual = await vi.importActual("../../../utils");
-  return {
-    ...actual,
-    _uuid: () => "123",
-  };
-});
-
 describe("Vedtakstype", () => {
   let props = null;
   const WrappedVedtakstype = reduxForm({ form: "test" })(Vedtakstype);

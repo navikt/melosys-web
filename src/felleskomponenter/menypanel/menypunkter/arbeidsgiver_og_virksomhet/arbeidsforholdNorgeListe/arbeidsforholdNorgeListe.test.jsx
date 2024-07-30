@@ -4,14 +4,6 @@ import ArbeidsforholdNorgeListe from "./arbeidsforholdNorgeListe";
 import { renderWithProviders } from "../../../../../ducks/test-utils/renderWithProviders";
 import userEvent from "@testing-library/user-event";
 
-vi.mock("../../../../../utils", async () => {
-  const actual = await vi.importActual("../../../../../utils");
-  return {
-    ...actual,
-    _uuid: () => "123",
-  };
-});
-
 describe("ArbeidsforholdNorgeListe", () => {
   let props = null;
   const WrappedArbeidsforholdNorgeListe = reduxForm({ form: "test" })(ArbeidsforholdNorgeListe);

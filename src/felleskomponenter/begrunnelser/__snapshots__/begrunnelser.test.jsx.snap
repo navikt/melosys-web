@@ -2,23 +2,33 @@
 
 exports[`Begrunnelser > snapshot test 1`] = `
 <div
-  className="begrunnelser"
+  className=
+begrunnelser
+
 >
   <p
-    className="typo-element begrunnelseTittel"
+    className=
+typo-element begrunnelseTittel
+
   >
     Begrunnelser
   </p>
   <p
-    className="typo-normal begrunnelse"
+    className=
+typo-normal begrunnelse
+
   >
     Term1
   </p>
   <p
-    className="typo-normal begrunnelse"
+    className=
+typo-normal begrunnelse
+
   />
   <p
-    className="typo-normal begrunnelse"
+    className=
+typo-normal begrunnelse
+
   >
     Term3
   </p>
