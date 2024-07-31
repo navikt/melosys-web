@@ -21,12 +21,15 @@ const BrevValg = ({ formValues, width, redigerbart, changeField, finnValgAlterna
 
   return (
     <>
+      <LabelMedHjelpetekst label="Hva skal mottakeren sende inn?" bold small />
       {formValues.valgtBrev?.felter?.map((felt) => (
         <Fragment key={felt.kode}>
           {felt.valg && (
             <Nav.Row>
               <Nav.Column xs={width}>
-                <LabelMedHjelpetekst label={felt.beskrivelse} hjelpetekst={felt.hjelpetekst} bold small />
+                {felt.visBeskrivelse && (
+                  <LabelMedHjelpetekst label={felt.beskrivelse} hjelpetekst={felt.hjelpetekst} bold small />
+                )}
                 <ValgAlternativer
                   valg={felt.valg}
                   feltKode={felt.kode}

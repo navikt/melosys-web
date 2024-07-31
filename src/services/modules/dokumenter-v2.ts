@@ -41,6 +41,7 @@ export enum FeltType {
 export interface Felt {
   kode: string;
   beskrivelse: string;
+  visBeskrivelse: boolean | true;
   feltType: FeltType;
   hjelpetekst: string | null;
   paakrevd: boolean;
@@ -119,6 +120,7 @@ export type OpprettBrevReqDto = {
   distribusjonstype?: string | null;
   dokumentTittel?: string | null;
   saksbehandlerNrToIdent?: string | null;
+  skalViseStandardTekstOmOpplysninger?: boolean | false;
   begrunnelseKode?: string | null;
   ytterligereInformasjon?: string | null;
   opphoerDato?: string | null;
