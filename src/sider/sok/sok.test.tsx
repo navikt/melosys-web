@@ -7,6 +7,7 @@ import { Sok } from "./sok";
 
 const generator = new Utils.testhelpers.Generator();
 describe("Sok", () => {
+  let fnr;
   const initialStore = (sokResultat: object[] = []) => ({
     sok: {
       status: "",
@@ -25,18 +26,17 @@ describe("Sok", () => {
     fetch.resetMocks();
     // @ts-ignore
     fetch.mockResponse(JSON.stringify({}));
-    const fnr = generator.generateBirthNumber();
-    console.log(fnr);
-    window.sessionStorage.setItem("sokefrase", JSON.stringify(fnr));
+    fnr = generator.generateBirthNumber();
+    vi.spyOn(window.sessionStorage, "getItem").mockReturnValue(fnr);
   });
 
   afterAll(() => {
-    window.sessionStorage.clear();
     // @ts-ignore
     fetch.resetMocks();
+    vi.clearAllMocks();
   });
 
-  it("viser en sorterbarliste ved søk på fnr med flere resultat", () => {
+  it("viser en sorterbarliste ved søk på fnr med flere resultat", async () => {
     const sokResultat = [
       {
         sakstype: { term: "A1" },
@@ -49,9 +49,10 @@ describe("Sok", () => {
         behandlingOversikter: [],
       },
     ];
-    renderWithProviders(<Sok />, { preloadedState: initialStore(sokResultat) });
 
-    const overskrifter = screen.getAllByRole("heading");
+    const { findAllByRole } = renderWithProviders(<Sok />, { preloadedState: initialStore(sokResultat) });
+
+    const overskrifter = await findAllByRole("heading");
     expect(overskrifter).toHaveLength(4);
     expect(overskrifter.at(0)?.textContent).toContain("Saksoversikt");
     expect(overskrifter.at(1)?.textContent).toContain("Resultater for f.nr./d-nr.");
