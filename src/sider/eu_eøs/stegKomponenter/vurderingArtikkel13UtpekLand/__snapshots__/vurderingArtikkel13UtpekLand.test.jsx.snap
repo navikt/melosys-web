@@ -1191,8 +1191,8 @@ exports[`VurderingArtikkel13_1_UtpekLand > snapshot test 1`] = `
                               <td class="rdp-cell">
                                 <button
                                   name="333"
-                                  class="rdp-button_reset rdp-button rdp-day rdp-day_today"
-                                  tabindex="0"
+                                  class="rdp-button_reset rdp-button rdp-day"
+                                  tabindex="-1"
                                   aria-label="tirsdag 30"
                                   aria-pressed="false"
                                   type="button"
@@ -1203,8 +1203,8 @@ exports[`VurderingArtikkel13_1_UtpekLand > snapshot test 1`] = `
                               <td class="rdp-cell">
                                 <button
                                   name="333"
-                                  class="rdp-button_reset rdp-button rdp-day"
-                                  tabindex="-1"
+                                  class="rdp-button_reset rdp-button rdp-day rdp-day_today"
+                                  tabindex="0"
                                   aria-label="onsdag 31"
                                   aria-pressed="false"
                                   type="button"
@@ -2345,8 +2345,8 @@ exports[`VurderingArtikkel13_1_UtpekLand > snapshot test 1`] = `
                               <td class="rdp-cell">
                                 <button
                                   name="333"
-                                  class="rdp-button_reset rdp-button rdp-day rdp-day_today"
-                                  tabindex="0"
+                                  class="rdp-button_reset rdp-button rdp-day"
+                                  tabindex="-1"
                                   aria-label="tirsdag 30"
                                   aria-pressed="false"
                                   type="button"
@@ -2357,8 +2357,8 @@ exports[`VurderingArtikkel13_1_UtpekLand > snapshot test 1`] = `
                               <td class="rdp-cell">
                                 <button
                                   name="333"
-                                  class="rdp-button_reset rdp-button rdp-day"
-                                  tabindex="-1"
+                                  class="rdp-button_reset rdp-button rdp-day rdp-day_today"
+                                  tabindex="0"
                                   aria-label="onsdag 31"
                                   aria-pressed="false"
                                   type="button"

@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`VurderingArtikkel13_2b > snapshot test dersom Norge er valgt 1`] = `
+exports[`vurderingArtikkel13_2b > snapshot test dersom Norge er valgt 1`] = `
 
 <div>
   <div class="vurderingArtikkel13_2b">
@@ -103,7 +103,7 @@ exports[`VurderingArtikkel13_2b > snapshot test dersom Norge er valgt 1`] = `
 
 `;
 
-exports[`VurderingArtikkel13_2b > snapshot test dersom Norge ikke er valgt 1`] = `
+exports[`vurderingArtikkel13_2b > snapshot test dersom Norge ikke er valgt 1`] = `
 
 <div>
   <div class="vurderingArtikkel13_2b">
