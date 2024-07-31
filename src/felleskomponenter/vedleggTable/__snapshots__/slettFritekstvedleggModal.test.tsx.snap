@@ -1,109 +1,55 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`slettFritekstvedleggModal > snapshot test 1`] = `
-<dialog
-  aria-labelledby=
-aksel-id-1
 
-  className=
-navds-modal navds-modal--polyfilled navds-modal--autowidth
-
-  onCancel={[Function]}
-  onClose={[MockFunction spy]}
-  style={
-    {
-      
-width
-: undefined,
-    }
-  }
->
-  <div
-    className=
-navds-modal__header
-
+<div>
+  <dialog
+    class="navds-modal navds-modal--polyfilled navds-modal--autowidth"
+    aria-labelledby="333"
+    role="dialog"
+    style="z-index: 100149; top: 384px;"
+    open
   >
-    <h1
-      className=
-navds-heading navds-heading--medium
-
-      id=
-aksel-id-1
-
-    >
-      Slett fritekstvedlegg?
-    </h1>
-  </div>
-  <div
-    className=
-navds-modal__body
-
-  >
-    <p
-      className=
-typo-normal
-
-    >
-      Er du sikker på at du vil slette fritekstvedlegget?
-      <br />
-       Dokumentet vil bli permanent slettet fra Melosys
-    </p>
-  </div>
-  <div
-    className=
-navds-modal__footer
-
-  >
-    <div
-      className=
-container__knapperad
-
-    >
-      <button
-        className=
-navds-button navds-button--primary navds-button--medium
-
-        onClick={[Function]}
-        onKeyUp={[Function]}
-        style={
-          {
-            
-width
-: undefined,
-          }
-        }
+    <div class="navds-modal__header">
+      <h1
+        id="333"
+        class="navds-heading navds-heading--medium"
       >
-        <span
-          className=
-navds-label
-
-        >
-          Ja, slett
-        </span>
-      </button>
-      <button
-        className=
-navds-button navds-button--tertiary navds-button--medium
-
-        onClick={[MockFunction spy]}
-        onKeyUp={[Function]}
-        style={
-          {
-            
-width
-: undefined,
-          }
-        }
-      >
-        <span
-          className=
-navds-label
-
-        >
-          Avbryt
-        </span>
-      </button>
+        Slett fritekstvedlegg?
+      </h1>
     </div>
+    <div class="navds-modal__body">
+      <p class="typo-normal">
+        Er du sikker på at du vil slette fritekstvedlegget?
+        <br>
+        Dokumentet vil bli permanent slettet fra Melosys
+      </p>
+    </div>
+    <div class="navds-modal__footer">
+      <div class="container__knapperad">
+        <button class="navds-button navds-button--primary navds-button--medium">
+          <span class="navds-label">
+            Ja, slett
+          </span>
+        </button>
+        <button class="navds-button navds-button--tertiary navds-button--medium">
+          <span class="navds-label">
+            Avbryt
+          </span>
+        </button>
+      </div>
+    </div>
+  </dialog>
+  <div
+    class="backdrop"
+    style="z-index: 100148;"
+  >
   </div>
-</dialog>
+  <div
+    class="_dialog_overlay"
+    style="z-index: 100147;"
+  >
+  </div>
+</div>
+
 `;

@@ -1,36 +1,21 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`Begrunnelser > snapshot test 1`] = `
-<div
-  className=
-begrunnelser
 
->
-  <p
-    className=
-typo-element begrunnelseTittel
-
-  >
-    Begrunnelser
-  </p>
-  <p
-    className=
-typo-normal begrunnelse
-
-  >
-    Term1
-  </p>
-  <p
-    className=
-typo-normal begrunnelse
-
-  />
-  <p
-    className=
-typo-normal begrunnelse
-
-  >
-    Term3
-  </p>
+<div>
+  <div class="begrunnelser">
+    <p class="typo-element begrunnelseTittel">
+      Begrunnelser
+    </p>
+    <p class="typo-normal begrunnelse">
+      Term1
+    </p>
+    <p class="typo-normal begrunnelse">
+    </p>
+    <p class="typo-normal begrunnelse">
+      Term3
+    </p>
+  </div>
 </div>
+
 `;

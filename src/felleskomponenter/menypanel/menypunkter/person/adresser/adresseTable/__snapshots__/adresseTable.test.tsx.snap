@@ -1,172 +1,90 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`AdresseTable  > aktiv AdresseTable renders correctly 1`] = `
-<div
-  className=
-adresseTable menypanel__table-wrapper
 
->
-  <table
-    className=
-navds-table navds-table--medium menypanel__table
-
-  >
-    <thead
-      className=
-navds-table__header
-
-    >
-      <tr
-        className=
-navds-table__row navds-table__row--shade-on-hover
-
-      >
-        <th
-          className=
-navds-table__header-cell navds-label fixed-width
-
-        >
-          Bostedsadresse
-        </th>
-        <th
-          className=
-navds-table__header-cell navds-label
-
-        >
-          Register
-        </th>
-        <th
-          className=
-navds-table__header-cell navds-label
-
-        >
-          Kilde
-        </th>
-        <th
-          className=
-navds-table__header-cell navds-label fixed-width
-
-        >
-          Gyldig f.o.m.
-        </th>
-      </tr>
-    </thead>
-    <tbody
-      className=
-navds-table__body
-
-    >
-      <tr
-        className=
-navds-table__row navds-table__row--shade-on-hover
-
-      >
-        <td
-          className=
-navds-table__data-cell navds-body-short navds-body-short--medium
-
-        >
-          <address>
-            <div>
-              Co Yo 1
-            </div>
-            <div />
-            <div>
-              bosted gata 3
-               
-              42
-            </div>
-            <div>
-               
-              0001
-               
-            </div>
-            <div>
-               
-              STORBRITANNIA
-            </div>
-          </address>
-        </td>
-        <td
-          className=
-navds-table__data-cell navds-body-short navds-body-short--medium
-
-        >
-          Freg
-        </td>
-        <td
-          className=
-navds-table__data-cell navds-body-short navds-body-short--medium
-
-        >
-          Folkeregisteret
-        </td>
-        <td
-          className=
-navds-table__data-cell gyldig-label navds-body-short navds-body-short--medium
-
-        >
-          03.11.2012
-        </td>
-      </tr>
-    </tbody>
-  </table>
+<div>
+  <div class="adresseTable menypanel__table-wrapper">
+    <table class="navds-table navds-table--medium menypanel__table">
+      <thead class="navds-table__header">
+        <tr class="navds-table__row navds-table__row--shade-on-hover">
+          <th class="navds-table__header-cell navds-label fixed-width ">
+            Bostedsadresse
+          </th>
+          <th class="navds-table__header-cell navds-label">
+            Register
+          </th>
+          <th class="navds-table__header-cell navds-label">
+            Kilde
+          </th>
+          <th class="navds-table__header-cell navds-label fixed-width">
+            Gyldig f.o.m.
+          </th>
+        </tr>
+      </thead>
+      <tbody class="navds-table__body">
+        <tr class="navds-table__row navds-table__row--shade-on-hover">
+          <td class="navds-table__data-cell navds-body-short navds-body-short--medium">
+            <address>
+              <div>
+                Co Yo 1
+              </div>
+              <div>
+              </div>
+              <div>
+                bosted gata 3 42
+              </div>
+              <div>
+                0001
+              </div>
+              <div>
+                STORBRITANNIA
+              </div>
+            </address>
+          </td>
+          <td class="navds-table__data-cell navds-body-short navds-body-short--medium">
+            Freg
+          </td>
+          <td class="navds-table__data-cell navds-body-short navds-body-short--medium">
+            Folkeregisteret
+          </td>
+          <td class="navds-table__data-cell gyldig-label navds-body-short navds-body-short--medium">
+            03.11.2012
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
+
 `;
 
 exports[`AdresseTable  > historisk AdresseTable renders correctly 1`] = `
-<div
-  className=
-adresseTable menypanel__table-wrapper
 
->
-  <div
-    className=
-chevronKnapp
-
-  >
-    <button
-      onClick={[Function]}
-      type=
-button
-
-    >
-      Åpne historikk
-      <svg
-        fill=
-none
-
-        focusable=
-false
-
-        height={24}
-        role=
-img
-
-        viewBox=
-0 0 24 24
-
-        width={24}
-        xmlns=
-http://www.w3.org/2000/svg
-
-      >
-        <path
-          clipRule=
-evenodd
-
-          d=
-M5.97 9.47a.75.75 0 0 1 1.06 0L12 14.44l4.97-4.97a.75.75 0 1 1 1.06 1.06l-5.5 5.5a.75.75 0 0 1-1.06 0l-5.5-5.5a.75.75 0 0 1 0-1.06Z
-
-          fill=
-currentColor
-
-          fillRule=
-evenodd
-
-        />
-      </svg>
-    </button>
+<div>
+  <div class="adresseTable menypanel__table-wrapper">
+    <div class="chevronKnapp">
+      <button type="button">
+        Åpne historikk
+        <svg
+          width="24"
+          height="24"
+          viewbox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          focusable="false"
+          role="img"
+        >
+          <path
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+            d="M5.97 9.47a.75.75 0 0 1 1.06 0L12 14.44l4.97-4.97a.75.75 0 1 1 1.06 1.06l-5.5 5.5a.75.75 0 0 1-1.06 0l-5.5-5.5a.75.75 0 0 1 0-1.06Z"
+            fill="currentColor"
+          >
+          </path>
+        </svg>
+      </button>
+    </div>
   </div>
 </div>
+
 `;
