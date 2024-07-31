@@ -1,4 +1,4 @@
-import toDiffableHtml from "diffable-html";
+const toDiffableHtml = require("diffable-html");
 
 const removeDynamicallyGeneratedFields = (html) => {
   return html.replace(/\s*(id|for|aria-labelledby|list|name|aria-describedby)="[^"]*"/g, ' $1="333"');

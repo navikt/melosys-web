@@ -2,7 +2,8 @@ import { render, screen } from "@testing-library/react";
 import MKV from "../../../../melosyskodeverk";
 import VurderingArtikkel13_2b from "./vurderingArtikkel13_2b";
 
-describe("VurderingArtikkel13_2b", () => {
+/* eslint-disable react/jsx-pascal-case */
+describe("vurderingArtikkel13_2b", () => {
   const props = (omfattesILandFaktaKode = MKV.Koder.landkoder.CY) => ({
     tilstand: {
       omfattesILandFakta: {

@@ -4,12 +4,6 @@ import MKV from "../../melosyskodeverk";
 
 const { FTRL, EU_EOS } = MKV.Koder.sakstyper;
 
-const mocks = vi.hoisted(() => {
-  return {
-    _memoize: vi.fn(),
-  };
-});
-
 describe("oppdaterRegisteropplysninger", () => {
   it("Skal vise alternativ for å se registeropplysninger 5 ekstra år tilbake i tid", () => {
     const { container } = renderWithProviders(
