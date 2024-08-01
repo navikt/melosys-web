@@ -177,7 +177,6 @@ const BrevVedlegg = ({
           />
         ) : (
           <Mui.Lenkeknapp
-            className="fritekstvedlegg__knapp"
             disabled={!redigerbart}
             onClick={() => setVisFritekstvedleggSkjema(true)}
             ikon={Ikoner.Add}
