@@ -27,7 +27,7 @@ const BrevValg = ({ formValues, width, redigerbart, changeField, finnValgAlterna
           {felt.valg && (
             <Nav.Row>
               <Nav.Column xs={width}>
-                {felt.visBeskrivelse && (
+                {felt.beskrivelse && (
                   <LabelMedHjelpetekst label={felt.beskrivelse} hjelpetekst={felt.hjelpetekst} bold small />
                 )}
                 <ValgAlternativer

@@ -41,7 +41,6 @@ export enum FeltType {
 export interface Felt {
   kode: string;
   beskrivelse: string;
-  visBeskrivelse: boolean | true;
   feltType: FeltType;
   hjelpetekst: string | null;
   paakrevd: boolean;
