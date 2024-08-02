@@ -79,7 +79,6 @@ export type TilgjengeligNorskMyndighet = {
 
 export type TilgjengeligBrev = {
   type: KTObject;
-  tittel: string | null;
   felter: Felt[] | null;
 };
 export type TilgjengeligeMalerResDto = TilgjengeligMal[];
