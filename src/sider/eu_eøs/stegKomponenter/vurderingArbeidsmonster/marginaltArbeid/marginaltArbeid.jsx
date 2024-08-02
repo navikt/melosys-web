@@ -22,7 +22,7 @@ const MarginaltArbeid = ({ arbeidsland, redigerbart, marginaltArbeid, oppdaterDa
             <div>
               <Nav.CheckboxGroup
                 legend="Kryss av for land hvor det utføres marginalt arbeid (> 5%)"
-                readOnly={redigerbart}
+                readOnly={!redigerbart}
               >
                 {arbeidsland.map(({ land }) => {
                   const avklartMarginaltArbeidILand = marginaltArbeid.find(
