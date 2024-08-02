@@ -3,7 +3,7 @@ import { Avgift, Trygdeavgiftsperiode } from "../../../../services/modules/aarsa
 import MKV from "../../../../melosyskodeverk";
 import * as KV from "../../../../kodeverk";
 import * as Utils from "../../../../utils";
-import "./aarsavregning.css";
+import "./vurderingAarsavregning.css";
 
 const TrygdeavgiftsperioderTabell = ({ perioder, avgift }: { perioder?: Trygdeavgiftsperiode[]; avgift?: Avgift }) => {
   if (!perioder) return null;

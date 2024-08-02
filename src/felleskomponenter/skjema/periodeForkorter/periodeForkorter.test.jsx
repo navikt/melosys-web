@@ -29,9 +29,9 @@ describe("PeriodeForkorter", () => {
     const fomInput = getByLabelText(props.fomLabel);
     const tomInput = getByLabelText(props.tomLabel);
     expect(fomInput).toBeInTheDocument();
-    expect(fomInput).toBeEnabled();
+    expect(fomInput).not.toHaveAttribute("readonly");
     expect(tomInput).toBeInTheDocument();
-    expect(tomInput).toBeEnabled();
+    expect(tomInput).not.toHaveAttribute("readonly");
   });
 
   it("viser ikke felter for å forkorte periode dersom forkortPeriode prop er false", () => {
@@ -51,8 +51,8 @@ describe("PeriodeForkorter", () => {
     const fomInput = getByLabelText(props.fomLabel);
     const tomInput = getByLabelText(props.tomLabel);
     expect(fomInput).toBeInTheDocument();
-    expect(fomInput).toBeDisabled();
+    expect(fomInput).toHaveAttribute("readonly");
     expect(tomInput).toBeInTheDocument();
-    expect(tomInput).toBeEnabled();
+    expect(tomInput).not.toHaveAttribute("readonly");
   });
 });

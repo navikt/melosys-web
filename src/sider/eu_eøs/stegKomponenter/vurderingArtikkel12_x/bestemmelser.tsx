@@ -229,11 +229,16 @@ export const Bestemmelser = ({
       <Nav.Row>
         <Nav.Column xs="12">
           <Nav.RadioGroup
-            legend=""
+            legend={
+              konvensjonStorbritanniaToggleEnabled
+                ? "Fyller bruker kriteriene for for utsendingsbestemmelsen?"
+                : `Fyller bruker kriteriene for artikkel ${vilkaarNavn12}?`
+            }
             onChange={handleEndreVedtakValg}
             defaultValue={vedtakValg}
-            disabled={!redigerbart}
+            readOnly={!redigerbart}
             name="vedtakvalg"
+            size="small"
           >
             <Nav.Radio value={VedtakValg.JA_INNVILGE}>
               {konvensjonStorbritanniaToggleEnabled ? "Ja, jeg vil innvilge søknaden" : "Ja"}
@@ -258,7 +263,8 @@ export const Bestemmelser = ({
               label="Velg bestemmelse"
               value={bestemmelse}
               onChange={(event) => handleEndreBestemmelse(event.target.value)}
-              disabled={!redigerbart || !visStorbritanniaKonvensjon}
+              readOnly={!redigerbart || !visStorbritanniaKonvensjon}
+              size="small"
             >
               <option disabled={!!bestemmelse} key="" value="" label="Velg..." />
               {hentBestemmelser().map((ktobject) => (

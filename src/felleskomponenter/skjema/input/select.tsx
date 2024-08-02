@@ -16,7 +16,7 @@ interface SelectWrappedComponentBaseProps
   className?: string;
   hideLabel?: boolean;
   error?: React.ReactNode;
-  readOnly?: boolean;
+  redigerbart?: boolean;
   errorId?: string;
   htmlSize?: number;
   id?: string;
@@ -37,7 +37,7 @@ function SelectWrappedComponent({
   onChange,
   size,
   className,
-  readOnly,
+  redigerbart,
   errorId,
   htmlSize,
   ...rest
@@ -63,7 +63,7 @@ function SelectWrappedComponent({
       id={inputProps.id ?? Utils._uuid()}
       size={size || "small"}
       className={`melosys-select ${className ?? ""}`}
-      readOnly={readOnly}
+      readOnly={redigerbart !== undefined && !redigerbart}
       errorId={errorId}
       htmlSize={htmlSize}
       {...inputProps}

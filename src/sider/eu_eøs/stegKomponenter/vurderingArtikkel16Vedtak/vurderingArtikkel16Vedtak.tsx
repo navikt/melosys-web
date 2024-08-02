@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { connect, ConnectedProps, useDispatch, useSelector } from "react-redux";
 import { getFormValues, InjectedFormProps, isValid, reduxForm } from "redux-form";
 import MKV from "../../../../melosyskodeverk";
@@ -44,6 +44,7 @@ const mapStateToProps = (state: RootState) => {
   const forkortLovvalgsperiode = erLovvalgsperiodeForkortet(state);
   return {
     behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
+    behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
     lovvalgsperioder: lovvalgsperioderSelectors.LovvalgsperioderSelector(state),
     anmodningsperiode: anmodningsperioderSelectors.AnmodningsperiodeSelector(state),
     anmodningsperiodesvar: anmodningsperiodesvarSelectors.AnmodningsperiodesvarSelector(state),
@@ -71,6 +72,7 @@ type VurderingArtikkel16VedtakProps = PropsFromRedux & {
   anmodningsperiodesvar: AnmodningsperiodesvarResDto;
   anmodningsperiode: Anmodningsperiode;
   behandlingstype: string;
+  behandlingstema: string;
   formValues: FormValuesProps;
   tilbake: () => void;
   redigerbart: boolean;
@@ -85,6 +87,7 @@ export const VurderingArtikkel16Vedtak = ({
   anmodningsperiodesvar,
   formValues,
   behandlingstype,
+  behandlingstema,
   touch,
   tilbake,
   harFeilmeldinger,
@@ -195,14 +198,7 @@ export const VurderingArtikkel16Vedtak = ({
   const { anmodningsperiodeSvarType } = anmodningsperiodesvar;
 
   const renderFritekstFelt = useCallback(
-    () => (
-      <Skjema.Textarea
-        feltNavn="vedtaksbrevFritekst"
-        label="Fritekst til vedtaksbrev"
-        placeholder="Skriv inn tekst til vedtaksbrevet..."
-        disabled={!redigerbart}
-      />
-    ),
+    () => <Skjema.Textarea feltNavn="vedtaksbrevFritekst" label="Fritekst til innledning" disabled={!redigerbart} />,
     [formValues?.vedtaksbrevFritekst, redigerbart]
   );
 
@@ -215,6 +211,9 @@ export const VurderingArtikkel16Vedtak = ({
   const visOrienteringsbrevArbeidsgiver = harValgtNorskArbeidsgiver && !erNyVurdering;
   const gjeldendePeriode = hentLovvalgsperiode(anmodningsperiodesvar, anmodningsperiode);
   const gjenopprettUforkortetPeriode = () => endreLovvalgsperiode(gjeldendePeriode.fom, gjeldendePeriode.tom);
+  const erUtsendt =
+    MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER === behandlingstema ||
+    MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG === behandlingstema;
 
   const finnVedtakInnhold = (svarType: string | null, stegErGyldig: boolean) => {
     switch (svarType) {
@@ -231,6 +230,8 @@ export const VurderingArtikkel16Vedtak = ({
             formValues={formValues}
             vedKlikkForhandsvis={vedKlikkForhandsvis}
             stegErGyldig={stegErGyldig}
+            erStorbrittaniaArt18_1Bestemmelse={erStorbrittaniaArt18_1Bestemmelse}
+            erUtsendt={erUtsendt}
           />
         );
       case DELVIS_INNVILGELSE:
@@ -246,6 +247,8 @@ export const VurderingArtikkel16Vedtak = ({
             formValues={formValues}
             vedKlikkForhandsvis={vedKlikkForhandsvis}
             stegErGyldig={stegErGyldig}
+            erStorbrittaniaArt18_1Bestemmelse={erStorbrittaniaArt18_1Bestemmelse}
+            erUtsendt={erUtsendt}
           />
         );
       case AVSLAG:
@@ -269,10 +272,10 @@ export const VurderingArtikkel16Vedtak = ({
   const vedtakInnhold = finnVedtakInnhold(anmodningsperiodeSvarType, stegErGyldig);
 
   return (
-    <Fragment>
+    <div className="vurderingArtikkel16Vedtak">
       {vedtakInnhold}
       <Nav.Row>
-        <Nav.Column xs="7" className="fane__fot">
+        <Nav.Column xs="7">
           {erNyVurdering && <Skjema.Vedtakstype redigerbart={redigerbart} className="vedtakstype" />}
           {erNyVurdering && redigerbart && (
             <Nav.Alert variant="info">{KV.Koder.AlertstripeTekst.NY_VURDERING_MEDL_TEKST}</Nav.Alert>
@@ -291,7 +294,7 @@ export const VurderingArtikkel16Vedtak = ({
           />
         </Nav.Column>
       </Nav.Row>
-    </Fragment>
+    </div>
   );
 };
 

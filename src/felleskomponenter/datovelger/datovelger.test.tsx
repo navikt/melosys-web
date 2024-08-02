@@ -22,7 +22,7 @@ describe("Datovelger", () => {
 
     const datePicker = screen.getByText("Dato").parentElement;
     expect(datePicker).toHaveClass("datovelger__input input--fullbredde");
-    expect(datePicker).not.toBeDisabled();
+    expect(datePicker).not.toHaveAttribute("readonly");
     expect(screen.queryByRole("alert")).not.toBeInTheDocument();
   });
 
@@ -39,8 +39,7 @@ describe("Datovelger", () => {
     render(<Datovelger {...{ ...props, disabled: true }} />);
 
     const datePicker = screen.getByLabelText("Dato");
-    expect(datePicker).toHaveAttribute("disabled");
-    expect(datePicker).toBeDisabled();
+    expect(datePicker).toHaveAttribute("readonly");
   });
 
   it("viser riktige verdier dersom feilmelding vises", () => {

@@ -1,11 +1,13 @@
 import { useEffect } from "react";
 import PT from "prop-types";
 
-import * as Nav from "../../../navFrontend";
-import * as MPT from "../../../proptypes";
-import * as Mui from "../../../felleskomponenter/ui";
+import * as Nav from "../../../../navFrontend";
+import * as MPT from "../../../../proptypes";
+import * as Mui from "../../../../felleskomponenter/ui";
 
-import EnkeltVilkaar from "./felles/enkeltVilkaar";
+import EnkeltVilkaar from "../felles/enkeltVilkaar";
+
+import "./vurderingForutgaendeMedlemskap.css";
 
 const VurderingForutgaendeMedlemskap = (props) => {
   const { bekreftOgFortsett, begrunnelser, tilstand, redigerbart, oppdaterData, slettData, tilbake } = props;
@@ -20,11 +22,10 @@ const VurderingForutgaendeMedlemskap = (props) => {
   );
 
   return (
-    <div>
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">
-        Har søkeren tilstrekkelig forutgående medlemskap i folketrygden?
-      </Nav.Typo.Innholdstittel>
+    <div className="vurderingForutgaendeMedlemskap">
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">Forutgående medlemskap</Nav.Typo.Innholdstittel>
       <EnkeltVilkaar
+        tittel="Har bruker tilstrekkelig forutgående medlemskap i folketrygden?"
         redigerbart={redigerbart}
         vilkaar={forutgaendeMedlemskap}
         vilkaarKode="forutgaendeMedlemskap"
@@ -32,6 +33,7 @@ const VurderingForutgaendeMedlemskap = (props) => {
         labelIkkeOppfylt="Nei"
         begrunnelser={begrunnelser}
         oppdaterData={oppdaterData}
+        size="small"
       />
       <Mui.StegKnapper
         bekreftKnappProps={{

@@ -9,18 +9,18 @@ exports[`Begrunnelser > snapshot test 1`] = `
   >
     Begrunnelser
   </p>
-  <div
-    className="begrunnelse"
+  <p
+    className="typo-normal begrunnelse"
   >
     Term1
-  </div>
-  <div
-    className="begrunnelse"
+  </p>
+  <p
+    className="typo-normal begrunnelse"
   />
-  <div
-    className="begrunnelse"
+  <p
+    className="typo-normal begrunnelse"
   >
     Term3
-  </div>
+  </p>
 </div>
 `;

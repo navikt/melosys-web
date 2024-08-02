@@ -24,6 +24,8 @@ interface InnvilgelseProps {
   formValues: FormValuesProps;
   vedKlikkForhandsvis: () => Promise<boolean>;
   stegErGyldig: boolean;
+  erStorbrittaniaArt18_1Bestemmelse: boolean;
+  erUtsendt: boolean;
 }
 
 const Innvilgelse = ({
@@ -37,26 +39,43 @@ const Innvilgelse = ({
   formValues,
   vedKlikkForhandsvis,
   stegErGyldig,
+  erStorbrittaniaArt18_1Bestemmelse,
+  erUtsendt,
 }: InnvilgelseProps) => {
   const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
+  const pdfDokumenter: (BrevDokumentMetadataType | SedDokumentMetadataType)[] = [];
 
-  const pdfDokumenter: (BrevDokumentMetadataType | SedDokumentMetadataType)[] = [
-    {
+  if (erUtsendt && erStorbrittaniaArt18_1Bestemmelse && konvensjonStorbritanniaToggleEnabled) {
+    pdfDokumenter.push({
+      dokumentData: {
+        produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_EFTA_STORBRITANNIA,
+        mottaker: MKV.Koder.mottakerroller.BRUKER,
+        fritekst: vedtaksbrevFritekst,
+      },
+    });
+    pdfDokumenter.push({
+      dokumentData: {
+        produserbardokument: MKV.Koder.brev.produserbaredokumenter.ATTEST_A1,
+        mottaker: MKV.Koder.mottakerroller.BRUKER,
+      },
+    });
+  } else {
+    pdfDokumenter.push({
       dokumentData: {
         produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
         mottaker: MKV.Koder.mottakerroller.BRUKER,
         fritekst: vedtaksbrevFritekst,
       },
-    },
-  ];
-
-  if (visOrienteringsbrevArbeidsgiver) {
-    pdfDokumenter.push({
-      dokumentData: {
-        produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
-        mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
-      },
     });
+
+    if (visOrienteringsbrevArbeidsgiver) {
+      pdfDokumenter.push({
+        dokumentData: {
+          produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
+          mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
+        },
+      });
+    }
   }
 
   return (
@@ -89,17 +108,17 @@ const Innvilgelse = ({
       <Nav.Row>
         <Nav.Column xs="7">{renderFritekstFelt()}</Nav.Column>
       </Nav.Row>
-      <Nav.Row>
-        <Nav.Column xs="7">
-          {stegErGyldig && (
+      {stegErGyldig && (
+        <Nav.Row>
+          <Nav.Column xs="10">
             <Dokumentliste
               behandlingID={behandlingID}
               dokumenter={pdfDokumenter}
               validateOnClick={vedKlikkForhandsvis}
             />
-          )}
-        </Nav.Column>
-      </Nav.Row>
+          </Nav.Column>
+        </Nav.Row>
+      )}
     </Fragment>
   );
 };

@@ -1,6 +1,6 @@
 import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
 import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
-import VurderingYrkesaktivitet from "../../stegKomponenter/vurderingYrkesaktivitet";
+import VurderingYrkesaktivitet from "../../stegKomponenter/vurderingYrkesaktivitet/vurderingYrkesaktivitet";
 import Yrkesgruppe from "./yrkesgruppe";
 
 import * as KV from "../../../../kodeverk";

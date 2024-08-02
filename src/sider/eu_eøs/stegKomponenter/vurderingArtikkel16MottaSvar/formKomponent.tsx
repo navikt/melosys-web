@@ -100,9 +100,9 @@ const FormKomponent = ({ redigerbart, formValues, oppdaterData, formIsValid }: F
           </Skjema.RadioGroup>
         </Nav.Column>
       </Nav.Row>
-      <Nav.Row>
-        <Nav.Column xs="6">
-          {visLovvalgsperiode && (
+      {visLovvalgsperiode && (
+        <Nav.Row>
+          <Nav.Column xs="6">
             <Nav.Row>
               <Nav.Column xs="6">
                 <Skjema.Datovelger label="Startdato" feltNavn="endretPeriode.fom" disabled={!redigerbart} />
@@ -111,21 +111,21 @@ const FormKomponent = ({ redigerbart, formValues, oppdaterData, formIsValid }: F
                 <Skjema.Datovelger label="Sluttdato" feltNavn="endretPeriode.tom" disabled={!redigerbart} />
               </Nav.Column>
             </Nav.Row>
-          )}
-        </Nav.Column>
-      </Nav.Row>
-      <Nav.Row>
-        <Nav.Column xs="12">
-          {visFritekstFelt && (
+          </Nav.Column>
+        </Nav.Row>
+      )}
+      {visFritekstFelt && (
+        <Nav.Row>
+          <Nav.Column xs="12">
             <Skjema.Textarea
               feltNavn="begrunnelseFritekst"
               disabled={!redigerbart}
               label="Begrunnelse"
               tellerTekst={() => {}}
             />
-          )}
-        </Nav.Column>
-      </Nav.Row>
+          </Nav.Column>
+        </Nav.Row>
+      )}
     </form>
   );
 };
@@ -136,6 +136,7 @@ const Artikkel16MottaSvarForm = reduxForm<FormValuesProps, FormKomponentProps>({
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
+  touchOnChange: true,
   validate: (values, props) =>
     lagYupToReduxformErrorMapper(vurderingArtikkel16MottaSvarSchema, {
       context: {
