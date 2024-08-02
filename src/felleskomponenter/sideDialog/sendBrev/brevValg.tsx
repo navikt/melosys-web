@@ -6,7 +6,6 @@ import * as Nav from "../../../navFrontend";
 import ValgAlternativer from "./valgAlternativer";
 import BrevFelt from "./brevFelt";
 import { SendBrevFormValues } from "./types";
-import LabelMedHjelpetekst from "../../labelMedHjelpetekst";
 
 interface BrevValgProps {
   formValues: SendBrevFormValues;
@@ -21,20 +20,18 @@ const BrevValg = ({ formValues, width, redigerbart, changeField, finnValgAlterna
 
   return (
     <>
-      {formValues.valgtBrev?.tittel && <LabelMedHjelpetekst label={formValues.valgtBrev?.tittel} bold small />}
       {formValues.valgtBrev?.felter?.map((felt) => (
         <Fragment key={felt.kode}>
           {felt.valg && (
             <Nav.Row>
               <Nav.Column xs={width}>
-                {felt.beskrivelse && (
-                  <LabelMedHjelpetekst label={felt.beskrivelse} hjelpetekst={felt.hjelpetekst} bold small />
-                )}
                 <ValgAlternativer
                   valg={felt.valg}
                   feltKode={felt.kode}
                   redigerbart={redigerbart}
                   changeField={changeField}
+                  beskrivelse={felt.beskrivelse}
+                  hjelpetekst={felt.hjelpetekst}
                 />
               </Nav.Column>
             </Nav.Row>

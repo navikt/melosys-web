@@ -77,7 +77,7 @@ const Datovelger = ({
           })}
           size="small"
           onBlur={onBlur}
-          disabled={disabled}
+          readOnly={disabled}
           onChange={handleOnChange}
         />
       </DatePicker>
