@@ -10,35 +10,38 @@ import CheckableLandLinje from "../checkableLandLinje/checkableLandLinje";
 const MarginaltArbeid = ({ arbeidsland, redigerbart, marginaltArbeid, oppdaterData }) => {
   const { flereLandUkjentHvilke } = useSelector((state) => formValueSelector(KV.Form.SOKNAD)(state, "soknadsland"));
 
-  const landliste = flereLandUkjentHvilke ? (
-    <div>
-      <b>Flere land. Ikke kjent hvilke</b>
-    </div>
-  ) : (
-    <div>
-      <Nav.CheckboxGroup legend="Kryss av for land hvor det utføres marginalt arbeid (> 5%)" disabled={!redigerbart}>
-        {arbeidsland.map(({ land }) => {
-          const avklartMarginaltArbeidILand = marginaltArbeid.find(
-            (enkeltAvklaring) => enkeltAvklaring.subjektID === land.kode
-          );
-          const key = `marginaltArbeidslandListe${land.kode}`;
-          return (
-            <CheckableLandLinje
-              key={key}
-              arbeidsland={land}
-              avklartMarginaltArbeidILand={avklartMarginaltArbeidILand}
-              oppdaterData={oppdaterData}
-            />
-          );
-        })}
-      </Nav.CheckboxGroup>
-    </div>
-  );
-
   return (
     <Nav.Fieldset legend="Er det marginalt arbeid i noen av landene?">
       <div className="marginaltArbeid">
-        <div className="landliste_innhold">{landliste}</div>
+        <div className="landliste_innhold">
+          {flereLandUkjentHvilke ? (
+            <div>
+              <b>Flere land. Ikke kjent hvilke</b>
+            </div>
+          ) : (
+            <div>
+              <Nav.CheckboxGroup
+                legend="Kryss av for land hvor det utføres marginalt arbeid (> 5%)"
+                readOnly={redigerbart}
+              >
+                {arbeidsland.map(({ land }) => {
+                  const avklartMarginaltArbeidILand = marginaltArbeid.find(
+                    (enkeltAvklaring) => enkeltAvklaring.subjektID === land.kode
+                  );
+                  const key = `marginaltArbeidslandListe${land.kode}`;
+                  return (
+                    <CheckableLandLinje
+                      key={key}
+                      arbeidsland={land}
+                      avklartMarginaltArbeidILand={avklartMarginaltArbeidILand}
+                      oppdaterData={oppdaterData}
+                    />
+                  );
+                })}
+              </Nav.CheckboxGroup>
+            </div>
+          )}
+        </div>
       </div>
     </Nav.Fieldset>
   );

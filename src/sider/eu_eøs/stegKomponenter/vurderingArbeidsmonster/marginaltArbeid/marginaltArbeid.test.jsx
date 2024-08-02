@@ -41,7 +41,6 @@ describe("MarginaltArbeid", () => {
 
     const checkboxes = getAllByRole("checkbox");
     expect(checkboxes[0]).toBeDisabled();
-    expect(checkboxes[0]).toBeDisabled();
   });
 
   it("oppdaterData mottar checkboxvalg", async () => {
