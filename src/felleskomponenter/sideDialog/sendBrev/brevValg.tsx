@@ -21,7 +21,7 @@ const BrevValg = ({ formValues, width, redigerbart, changeField, finnValgAlterna
 
   return (
     <>
-      <LabelMedHjelpetekst label="Hva skal mottakeren sende inn?" bold small />
+      {formValues.valgtBrev?.tittel && <LabelMedHjelpetekst label={formValues.valgtBrev?.tittel} bold small />}
       {formValues.valgtBrev?.felter?.map((felt) => (
         <Fragment key={felt.kode}>
           {felt.valg && (
