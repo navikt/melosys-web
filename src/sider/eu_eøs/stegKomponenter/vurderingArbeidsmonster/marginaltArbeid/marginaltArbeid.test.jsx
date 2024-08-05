@@ -32,12 +32,9 @@ describe("MarginaltArbeid", () => {
   });
 
   it("viser ikkeredigerbar landliste", async () => {
-    const { getByLabelText, getByText, getAllByRole } = renderWithProviders(
-      <MarginaltArbeid {...props} redigerbart={false} />,
-      {
-        preloadedState: testReduxState,
-      }
-    );
+    const { getByText, getAllByRole } = renderWithProviders(<MarginaltArbeid {...props} redigerbart={false} />, {
+      preloadedState: testReduxState,
+    });
 
     expect(getByText("SVERIGE")).toBeInTheDocument();
     expect(getByText("NORGE")).toBeInTheDocument();
