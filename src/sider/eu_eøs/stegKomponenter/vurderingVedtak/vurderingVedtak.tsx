@@ -219,6 +219,7 @@ const VurderingVedtak = ({
           behandlingsresultatTypeKode: FASTSATT_LOVVALGSLAND,
           vedtakstype: formValues.vedtakstype || FØRSTEGANGSVEDTAK,
           fritekst: formValues.vedtaksbrevFritekst,
+          begrunnelseFritekst: formValues.vedtaksbrevFritekst,
           fritekstSed: formValues.fritekstSed,
           kopiTilArbeidsgiver: formValues.kopiTilArbeidsgiver,
           mottakerinstitusjoner: visMottakerinstitusjoner ? [formValues.mottakerinstitusjon] : [],
@@ -250,6 +251,7 @@ const VurderingVedtak = ({
     return dokumenter.map((dokument: BrevDokumentMetadataType) => {
       if (dokument.dokumentData !== undefined) {
         dokument.dokumentData.nyVurderingBakgrunn = formValues?.vedtakstypebegrunnelse;
+        dokument.dokumentData.begrunnelseFritekst = formValues?.vedtaksbrevFritekst;
       }
       return dokument;
     });
@@ -285,7 +287,7 @@ const VurderingVedtak = ({
         {erNyVurdering && <Skjema.Vedtakstype redigerbart={redigerbart} />}
         <Nav.Row className="fritekst">
           <Nav.Column xs="7">
-            <Skjema.Textarea feltNavn="vedtaksbrevFritekst" label="Fritekst til innledning" disabled={!redigerbart} />
+            <Skjema.Textarea feltNavn="vedtaksbrevFritekst" label="Fritekst til begrunnelse" disabled={!redigerbart} />
           </Nav.Column>
         </Nav.Row>
         {redigerbart && !bucLukketOgLovvalgNorge && (
