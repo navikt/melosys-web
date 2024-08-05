@@ -4,5 +4,5 @@ export const erUtsendelseForOppdragIUtlandet =
 export const erDrattPaaEgetInitiativ = "Reiser arbeidstakeren til utlandet på eget initiativ?";
 export const erFortsattAnsattEtterOppdraget =
   "Er det forventet at arbeidstakeren vil arbeide for virksomheten i Norge etter utenlandsoppdraget?";
-export const erAnsattForOppdragIUtlandet = "Er arbeidstakeren ansatt med tanke på dette utelandsoppdraget?";
+export const erAnsattForOppdragIUtlandet = "Er arbeidstakeren ansatt med tanke på dette utenlandsoppdraget?";
 export const samletUtsendingsperiode = "Utsendingsperioden til tidligere utsendt arbeidstaker";

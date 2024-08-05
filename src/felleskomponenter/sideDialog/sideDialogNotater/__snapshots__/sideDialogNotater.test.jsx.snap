@@ -1,21 +1,17 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`SideDialogNotater > snapshot test 1`] = `
+
 <div>
-  <div
-    class="panel"
-  >
+  <div class="panel">
     <div>
-      <button
-        class="navds-button navds-button--primary navds-button--medium"
-      >
-        <span
-          class="navds-label"
-        >
+      <button class="navds-button navds-button--primary navds-button--medium">
+        <span class="navds-label">
           Legg til nytt notat
         </span>
       </button>
     </div>
   </div>
 </div>
+
 `;

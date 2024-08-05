@@ -2,14 +2,6 @@ import EnkeltLandPure from "./enkeltLandPure";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
-vi.mock("../../../utils", async () => {
-  const actual = await vi.importActual("../../../utils");
-  return {
-    ...actual,
-    _uuid: () => "123",
-  };
-});
-
 describe("EnkeltLandPure", () => {
   let props = null;
 

@@ -1,6 +1,5 @@
-import renderer from "react-test-renderer";
-
 import VedleggTable from "./vedleggTable";
+import { render } from "@testing-library/react";
 
 const dokument = {
   dokumentID: "1",
@@ -18,19 +17,17 @@ const fritekstvedlegg = {
 
 describe("vedleggTable", () => {
   it("snapshot test", () => {
-    const tree = renderer
-      .create(
-        <VedleggTable
-          valgteVedlegg={[dokument]}
-          fritekstvedlegg={[fritekstvedlegg]}
-          setValgteVedlegg={vi.fn()}
-          redigerFritekstvedlegg={vi.fn()}
-          slettFritekstvedlegg={vi.fn()}
-          label="a"
-          redigerbart
-        />
-      )
-      .toJSON();
-    expect(tree).toMatchSnapshot();
+    const { container } = render(
+      <VedleggTable
+        valgteVedlegg={[dokument]}
+        fritekstvedlegg={[fritekstvedlegg]}
+        setValgteVedlegg={vi.fn()}
+        redigerFritekstvedlegg={vi.fn()}
+        slettFritekstvedlegg={vi.fn()}
+        label="a"
+        redigerbart
+      />
+    );
+    expect(container).toMatchSnapshot();
   });
 });

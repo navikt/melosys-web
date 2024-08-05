@@ -1,14 +1,6 @@
 import SokkelSkipEnkelt from "./sokkelSkipEnkelt";
 import { render } from "@testing-library/react";
 
-vi.mock("../../utils", async () => {
-  const actual = await vi.importActual("../../utils");
-  return {
-    ...actual,
-    _uuid: () => "123",
-  };
-});
-
 describe("SokkelSkipEnkelt", () => {
   let props = null;
 

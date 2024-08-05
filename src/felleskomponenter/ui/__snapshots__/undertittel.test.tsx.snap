@@ -1,47 +1,47 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`undertittel > snapshot test 1`] = `
-<div
-  className="undertittel"
->
-  <h3
-    className="typo-undertittel undertittel__navUndertittel"
-    id="123"
-  >
-    <svg
-      aria-labelledby="123"
-      className="undertittel__ikon"
-      contentScriptType="text/ecmascript"
-      contentStyleType="text/css"
-      focusable="false"
-      height={24}
-      preserveAspectRatio="xMidYMid meet"
-      role="img"
-      title="Tekst - undefined"
-      viewBox="0 0 24 24"
-      width={24}
-      xmlns="http://www.w3.org/2000/svg"
-      xmlnsXlink="http://www.w3.org/1999/xlink"
-      zoomAndPan="magnify"
+
+<div>
+  <div class="undertittel">
+    <h3
+      class="typo-undertittel undertittel__navUndertittel"
+      id="333"
     >
-      <g
-        fill="none"
-        stroke="#3e3832"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeMiterlimit={10}
+      <svg
+        contentscripttype="text/ecmascript"
+        width="24"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        zoomandpan="magnify"
+        contentstyletype="text/css"
+        viewbox="0 0 24 24"
+        height="24"
+        preserveaspectratio="xMidYMid meet"
+        xmlns="http://www.w3.org/2000/svg"
+        class="undertittel__ikon"
+        role="img"
+        focusable="false"
+        aria-labelledby="333"
+        title="Tekst - undefined"
       >
-        <path
-          d="M.513.5h23v23h-23zM6.513 5.5h4M3.513 8.5h7M3.513 11.5h7M3.513 14.5h7M3.513 17.5h7M13.513 5.5h7M13.513 8.5h7M13.513 11.5h7M13.513 14.5h7M13.513 17.5h5"
-        />
-      </g>
-    </svg>
-    <span
-      className="undertittel__tekst"
-    >
-      Tekst
-    </span>
-    <span />
-  </h3>
+        <g
+          fill="none"
+          stroke-miterlimit="10"
+          stroke="#3e3832"
+          stroke-linejoin="round"
+          stroke-linecap="round"
+        >
+          <path d="M.513.5h23v23h-23zM6.513 5.5h4M3.513 8.5h7M3.513 11.5h7M3.513 14.5h7M3.513 17.5h7M13.513 5.5h7M13.513 8.5h7M13.513 11.5h7M13.513 14.5h7M13.513 17.5h5">
+          </path>
+        </g>
+      </svg>
+      <span class="undertittel__tekst">
+        Tekst
+      </span>
+      <span>
+      </span>
+    </h3>
+  </div>
 </div>
+
 `;

@@ -1,16 +1,7 @@
 import { VurderingArbeidsmonster } from "./vurderingArbeidsmonster";
 import { renderWithProviders } from "../../../../ducks/test-utils/renderWithProviders";
 
-vi.mock("nav-frontend-js-utils", async () => {
-  const actual = await vi.importActual("nav-frontend-js-utils");
-  return {
-    ...actual,
-    guid: () => "123",
-  };
-});
-
-// TODO: Skriv om når aksel tas inn i prosjektet. MELOSYS-6021
-describe.skip("VurderingArbeidsmonster", () => {
+describe("VurderingArbeidsmonster", () => {
   let props = null;
 
   const initialReduxState = {
