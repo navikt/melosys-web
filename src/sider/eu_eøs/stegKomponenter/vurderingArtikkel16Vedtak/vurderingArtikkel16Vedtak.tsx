@@ -198,7 +198,7 @@ export const VurderingArtikkel16Vedtak = ({
   const { anmodningsperiodeSvarType } = anmodningsperiodesvar;
 
   const renderFritekstFelt = useCallback(
-    () => <Skjema.Textarea feltNavn="vedtaksbrevFritekst" label="Fritekst til innledning" disabled={!redigerbart} />,
+    () => <Skjema.Textarea feltNavn="vedtaksbrevFritekst" label="Fritekstfelt til begrunnelse" disabled={!redigerbart} />,
     [formValues?.vedtaksbrevFritekst, redigerbart]
   );
 

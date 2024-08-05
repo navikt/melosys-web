@@ -17,7 +17,7 @@ const RedigererPreElementer = ({ className, redigerbart }: EnRedigeringsknappLis
         <Skjema.RadioGroup
           legend="Vil arbeidstakeren ha et fast arbeidssted i utlandet?"
           name="arbeidPaaLand.erFastArbeidssted"
-          disabled={!redigerbart}
+          readOnly={!redigerbart}
         >
           <Nav.Radio value>Ja</Nav.Radio>
           <Nav.Radio value={false}>Nei</Nav.Radio>
@@ -27,7 +27,7 @@ const RedigererPreElementer = ({ className, redigerbart }: EnRedigeringsknappLis
         <Skjema.RadioGroup
           legend="Vil arbeidstakeren kun eller hovedsaklig arbeide på hjemmekontor?"
           name="arbeidPaaLand.erHjemmekontor"
-          disabled={!redigerbart}
+          readOnly={!redigerbart}
         >
           <Nav.Radio value>Ja</Nav.Radio>
           <Nav.Radio value={false}>Nei</Nav.Radio>

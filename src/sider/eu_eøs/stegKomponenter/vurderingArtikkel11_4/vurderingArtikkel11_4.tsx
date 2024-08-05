@@ -201,7 +201,7 @@ const VurderingArtikkel11_4 = ({
           <Nav.RadioGroup
             legend={konvensjonStorbritanniaToggleEnabled ? "Oppgi brukers situasjon" : "Velg riktig artikkel"}
             onChange={handleEndretArtikkelValg}
-            disabled={!redigerbart}
+            readOnly={!redigerbart}
             name="artikkel11"
             defaultValue={artikkelValg}
             size="small"
@@ -236,7 +236,7 @@ const VurderingArtikkel11_4 = ({
               legend="Jobber søker i hotell- eller restaurantnæring på NIS-registrert skip?"
               onChange={handleEndretNISSvar}
               name="nis"
-              disabled={!redigerbart}
+              readOnly={!redigerbart}
               defaultValue={Utils.streng.boolTilUppercaseStreng(nis.oppfylt)}
               size="small"
             >

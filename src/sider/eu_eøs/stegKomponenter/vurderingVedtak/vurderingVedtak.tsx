@@ -285,7 +285,7 @@ const VurderingVedtak = ({
         {erNyVurdering && <Skjema.Vedtakstype redigerbart={redigerbart} />}
         <Nav.Row className="fritekst">
           <Nav.Column xs="7">
-            <Skjema.Textarea feltNavn="vedtaksbrevFritekst" label="Fritekst til innledning" disabled={!redigerbart} />
+            <Skjema.Textarea feltNavn="vedtaksbrevFritekst" label="Fritekstfelt til begrunnelse" disabled={!redigerbart} />
           </Nav.Column>
         </Nav.Row>
         {redigerbart && !bucLukketOgLovvalgNorge && (

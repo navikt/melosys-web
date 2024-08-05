@@ -86,11 +86,7 @@ const skalSendeSed = (formValues) => {
   if (art11_5_ErValgt(formValues)) {
     return kreverMottakerinstitusjon;
   }
-  if (art11_3B_ErValgt(formValues)) {
-    return true;
-  }
-
-  return false;
+  return art11_3B_ErValgt(formValues);
 };
 
 const skalSendeOrienteringsbrev = (selvstendigArbeid) => selvstendigArbeid?.erSelvstendig !== true;
@@ -363,7 +359,7 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
             <Skjema.RadioGroup
               legend="Skal utenlandsk trygdemyndighet informeres?"
               name="informerUtenlandskTrygdemyndighet"
-              disabled={!redigerbart}
+              readOnly={!redigerbart}
             >
               <Nav.Radio value>Ja</Nav.Radio>
               <Nav.Radio value={false}>Nei</Nav.Radio>

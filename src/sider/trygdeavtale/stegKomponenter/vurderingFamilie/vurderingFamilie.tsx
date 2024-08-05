@@ -171,7 +171,7 @@ const VurderingFamilie = ({
                       <Nav.Column xs="8">
                         <Skjema.RadioGroup
                           legend={`${Utils.streng.storeForbokstaver(barn.navn)} (F.nr: ${barn.fnr})`}
-                          disabled={!redigerbart}
+                          readOnly={!redigerbart}
                           id={Utils._uuid()}
                           name={`barn.${barn.uuid}.innvilget`}
                         >
@@ -220,7 +220,7 @@ const VurderingFamilie = ({
                     legend={`${Utils.streng.storeForbokstaver(tilknyttetEktefelle.navn)} (F.nr: ${
                       tilknyttetEktefelle.fnr
                     })`}
-                    disabled={!redigerbart}
+                    readOnly={!redigerbart}
                     id={Utils._uuid()}
                     name="ektefelle.innvilget"
                   >

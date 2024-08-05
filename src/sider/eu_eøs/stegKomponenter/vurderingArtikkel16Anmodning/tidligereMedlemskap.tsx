@@ -1,5 +1,6 @@
 import { formatterDatoTilNorsk } from "../../../../utils/dato";
 import * as Mui from "../../../../felleskomponenter/ui";
+import * as Nav from "../../../../navFrontend";
 import { v4 as uuid } from "uuid";
 import { FieldArray, WrappedFieldArrayProps } from "redux-form";
 import { Medlemsperiode } from "../../../../services/modules/behandlinger/behandling";
@@ -8,7 +9,7 @@ import { useDispatch } from "react-redux";
 import { behandlingsperioderOperations } from "../../../../ducks/behandlingsperioder";
 
 type TidligereMedlemskapsperioderProps = TidligereMedlemskapProps & WrappedFieldArrayProps<number>;
-const TidligereMedlemskapsperioder = ({ medlemskap, redigerbart, fields }: TidligereMedlemskapsperioderProps) => {
+const TidligereMedlemskapsperioder = ({ medlemskap, redigerbart, fields, land }: TidligereMedlemskapsperioderProps) => {
   const dispatch = useDispatch();
   const alleValgtePeriodeID = fields.getAll() ?? [];
 
@@ -32,21 +33,20 @@ const TidligereMedlemskapsperioder = ({ medlemskap, redigerbart, fields }: Tidli
     if (redigerbart) oppdaterOgLagreTidligerePerioder();
   }, [alleValgtePeriodeID]);
 
+  if(!medlemskap?.perioderMed) return null;
   return (
-    <>
+    <Nav.CheckboxGroup legend={`Velg direkte forutgående perioder i ${land}`} readOnly={!redigerbart} defaultValue={alleValgtePeriodeID}>
       {medlemskap?.perioderMed?.map((periodeMed) => {
         const { periodeID, periode } = periodeMed;
         return (
           <Mui.Checkbox
             key={uuid()}
-            disabled={!redigerbart}
             onCheck={() => onChange(periodeID)}
             label={`Periode: ${formatterDatoTilNorsk(periode.fom)} - ${formatterDatoTilNorsk(periode.tom)}`}
-            checked={alleValgtePeriodeID.includes(periodeID)}
           />
         );
       })}
-    </>
+    </Nav.CheckboxGroup>
   );
 };
 
@@ -57,6 +57,7 @@ interface TidligereMedlemskapProps {
     perioderUten?: Medlemsperiode[];
     perioderUavklart?: Medlemsperiode[];
   };
+  land: string;
 }
 
 const TidligereMedlemskap = (props: TidligereMedlemskapProps) => (
