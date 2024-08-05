@@ -9,7 +9,6 @@ import { arrayTilKonjunksjon } from "../../../../utils/streng";
 
 import EnkeltVilkaar from "../felles/enkeltVilkaar";
 
-
 const VurderingVesentligVirksomhet = (props) => {
   const {
     bekreftOgFortsett,

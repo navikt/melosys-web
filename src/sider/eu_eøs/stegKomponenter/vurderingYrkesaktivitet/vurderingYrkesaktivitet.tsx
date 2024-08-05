@@ -11,7 +11,6 @@ import { MKVUtils } from "../../../../melosyskodeverk";
 import { useSelector } from "react-redux";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 
-
 interface VurderingYrkesaktivitetProps {
   bekreftOgFortsett: () => void;
   tilbake: () => void;

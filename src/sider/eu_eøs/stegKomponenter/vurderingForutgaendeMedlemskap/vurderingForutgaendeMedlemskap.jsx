@@ -7,7 +7,6 @@ import * as Mui from "../../../../felleskomponenter/ui";
 
 import EnkeltVilkaar from "../felles/enkeltVilkaar";
 
-
 const VurderingForutgaendeMedlemskap = (props) => {
   const { bekreftOgFortsett, begrunnelser, tilstand, redigerbart, oppdaterData, slettData, tilbake } = props;
   const { harAvklaring, forutgaendeMedlemskap } = tilstand;

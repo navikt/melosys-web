@@ -33,9 +33,13 @@ const TidligereMedlemskapsperioder = ({ medlemskap, redigerbart, fields, land }:
     if (redigerbart) oppdaterOgLagreTidligerePerioder();
   }, [alleValgtePeriodeID]);
 
-  if(!medlemskap?.perioderMed) return null;
+  if (!medlemskap?.perioderMed) return null;
   return (
-    <Nav.CheckboxGroup legend={`Velg direkte forutgående perioder i ${land}`} readOnly={!redigerbart} defaultValue={alleValgtePeriodeID}>
+    <Nav.CheckboxGroup
+      legend={`Velg direkte forutgående perioder i ${land}`}
+      readOnly={!redigerbart}
+      defaultValue={alleValgtePeriodeID}
+    >
       {medlemskap?.perioderMed?.map((periodeMed) => {
         const { periodeID, periode } = periodeMed;
         return (

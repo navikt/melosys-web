@@ -7,7 +7,6 @@ import EnkeltVilkaar from "../felles/enkeltVilkaar";
 
 import { arrayTilKonjunksjon } from "../../../../utils/streng";
 
-
 const NormaltDriverVirksomhet = (props) => {
   const {
     bekreftOgFortsett,

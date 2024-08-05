@@ -398,7 +398,7 @@ const VurderingArtikkel16Anmodning = ({
         )}
 
         {(!konvensjonStorbritanniaToggleEnabled || !Utils._isEmpty(medlemskap?.perioderMed)) && (
-            <TidligereMedlemskap redigerbart={redigerbart} medlemskap={medlemskap} land={landSomTekstListe} />
+          <TidligereMedlemskap redigerbart={redigerbart} medlemskap={medlemskap} land={landSomTekstListe} />
         )}
 
         {redigerbart && (
