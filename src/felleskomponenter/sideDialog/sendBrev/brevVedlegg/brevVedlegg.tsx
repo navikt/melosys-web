@@ -176,11 +176,7 @@ const BrevVedlegg = ({
             width={felterWidth}
           />
         ) : (
-          <Mui.Lenkeknapp
-            disabled={!redigerbart}
-            onClick={() => setVisFritekstvedleggSkjema(true)}
-            ikon={Ikoner.Add}
-          >
+          <Mui.Lenkeknapp disabled={!redigerbart} onClick={() => setVisFritekstvedleggSkjema(true)} ikon={Ikoner.Add}>
             {fritekstvedleggFelt.beskrivelse}
           </Mui.Lenkeknapp>
         ))}
