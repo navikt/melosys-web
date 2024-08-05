@@ -19,7 +19,6 @@ import { mottatteOpplysningerOperations } from "../../../../../ducks/mottatteOpp
 import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 
 import vurderingVirksomhetSchema from "./vurderingVirksomhetSchema";
-import "./vurderingVirksomhet.css";
 
 const komponentState = (state: RootState) => {
   const lagredeValgtevirksomheter = oppsummertfaktaSelectors.VirksomhetIDerSelector(state);
@@ -96,7 +95,7 @@ export const VurderingVirksomhet = ({ bekreft, tilbake, aktivtSteg, oppdaterStat
     return null;
   }
   return (
-    <div className="vurderingVirksomhet">
+    <>
       <Nav.Typo.Innholdstittel className="stegvelgertittel">
         <LabelMedHjelpetekst label="Velg virksomhet" hjelpetekst={hjelpetekst} />
       </Nav.Typo.Innholdstittel>
@@ -119,6 +118,6 @@ export const VurderingVirksomhet = ({ bekreft, tilbake, aktivtSteg, oppdaterStat
         bekreftKnappProps={{ onClick: handleFortsett, disabled: !formIsValid || !redigerbart }}
         tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
       />
-    </div>
+    </>
   );
 };

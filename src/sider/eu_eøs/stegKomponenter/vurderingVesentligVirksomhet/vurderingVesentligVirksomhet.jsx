@@ -9,7 +9,6 @@ import { arrayTilKonjunksjon } from "../../../../utils/streng";
 
 import EnkeltVilkaar from "../felles/enkeltVilkaar";
 
-import "./vurderingVesentligVirksomhet.css";
 
 const VurderingVesentligVirksomhet = (props) => {
   const {
@@ -38,7 +37,7 @@ const VurderingVesentligVirksomhet = (props) => {
       : "";
 
   return (
-    <div className="vurderingVesentligVirksomhet">
+    <>
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Vesentlig virksomhet</Nav.Typo.Innholdstittel>
       <EnkeltVilkaar
         redigerbart={redigerbart}
@@ -62,7 +61,7 @@ const VurderingVesentligVirksomhet = (props) => {
           disabled: !redigerbart,
         }}
       />
-    </div>
+    </>
   );
 };
 
