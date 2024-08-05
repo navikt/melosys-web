@@ -3,9 +3,7 @@
  */
 
 import { ElementType, MouseEventHandler, ReactNode } from "react";
-import classNames from "classnames";
-
-import "./lenkeknapp.css";
+import * as Nav from "../../../navFrontend";
 
 interface LenkeknappProps {
   onClick: MouseEventHandler<HTMLButtonElement>;
@@ -16,14 +14,19 @@ interface LenkeknappProps {
   disabled?: boolean;
 }
 
-const Lenkeknapp = ({ onClick, children, className, ikon: Ikon, ...rest }: LenkeknappProps) => {
-  const cls = classNames(Ikon ? "lenkeknapp__ikon" : "lenkeknapp", className);
-
+const Lenkeknapp = ({ onClick, children, className, ikon: Ikon, value, disabled }: LenkeknappProps) => {
   return (
-    <button {...rest} onClick={onClick} className={cls} type="button">
-      {Ikon && <Ikon className="ikon" />}
+    <Nav.Button
+      icon={Ikon && <Ikon className="ikon" />}
+      onClick={onClick}
+      className={className}
+      value={value}
+      disabled={disabled}
+      variant="tertiary"
+      size="small"
+    >
       {children}
-    </button>
+    </Nav.Button>
   );
 };
 
