@@ -1,18 +1,33 @@
 import { DokumenterV2 } from "../../../services/api";
 import * as Skjema from "../../skjema";
 import * as Nav from "../../../navFrontend";
+import LabelMedHjelpetekst from "../../labelMedHjelpetekst";
 
 interface ValgAlternativProps {
   valg: DokumenterV2.Valg;
   feltKode: string;
   redigerbart: boolean;
   changeField: (felt: string, data: any) => void;
+  beskrivelse: string;
+  hjelpetekst: string | null;
 }
 
-const ValgAlternativer = ({ valg, feltKode, redigerbart, changeField }: ValgAlternativProps) => {
+const renderLabel = (beskrivelse: string, hjelpetekst: string | null) => {
+  return <LabelMedHjelpetekst label={beskrivelse} hjelpetekst={hjelpetekst} bold small />;
+};
+
+const ValgAlternativer = ({
+  valg,
+  feltKode,
+  redigerbart,
+  changeField,
+  beskrivelse,
+  hjelpetekst,
+}: ValgAlternativProps) => {
+  const label = renderLabel(beskrivelse, hjelpetekst);
   if (valg.valgType === DokumenterV2.ValgType.CHECKBOX) {
     return (
-      <Nav.CheckboxGroup legend="" hideLegend name={`felt.${feltKode}.valg`} disabled={!redigerbart}>
+      <Nav.CheckboxGroup legend={label} name={`felt.${feltKode}.valg`} disabled={!redigerbart}>
         {valg.valgAlternativer.map((alternativ) => (
           <Nav.Checkbox
             size="small"
@@ -34,7 +49,7 @@ const ValgAlternativer = ({ valg, feltKode, redigerbart, changeField }: ValgAlte
   }
   if (valg.valgType === DokumenterV2.ValgType.RADIO) {
     return (
-      <Skjema.RadioGroup legend="" hideLegend name={`felt.${feltKode}.valg`} disabled={!redigerbart}>
+      <Skjema.RadioGroup legend={label} name={`felt.${feltKode}.valg`} disabled={!redigerbart}>
         {valg.valgAlternativer.map((alternativ) => (
           <Nav.Radio
             value={alternativ.kode}
@@ -53,7 +68,7 @@ const ValgAlternativer = ({ valg, feltKode, redigerbart, changeField }: ValgAlte
       return null;
     }
     return (
-      <Skjema.Select feltNavn={`felt.${feltKode}.valg`} label="" disabled={!redigerbart}>
+      <Skjema.Select feltNavn={`felt.${feltKode}.valg`} label={label} disabled={!redigerbart}>
         {valg.valgAlternativer.map((alternativ) => (
           <option key={alternativ.kode} value={alternativ.kode}>
             {alternativ.beskrivelse}

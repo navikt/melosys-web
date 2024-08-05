@@ -1,4 +1,3 @@
-import { MouseEventHandler } from "react";
 import * as Api from "../../../../services/api";
 import * as Ikoner from "../../../../resources/images";
 import * as Mui from "../../../ui";
@@ -13,9 +12,8 @@ interface LagredeUtkastProps {
 }
 
 const LagredeUtkast = ({ alleUtkast, settAktivtUtkast }: LagredeUtkastProps) => {
-  const velgUtkast: MouseEventHandler<HTMLButtonElement> = (event) => {
-    const tittel = (event.target as HTMLButtonElement).value;
-    const valgtUtkast = alleUtkast.find((utkast) => utkast.tittel === tittel);
+  const velgUtkast = (value: string) => {
+    const valgtUtkast = alleUtkast.find((utkast) => utkast.tittel === value);
     settAktivtUtkast(valgtUtkast || null);
   };
 
@@ -37,7 +35,7 @@ const LagredeUtkast = ({ alleUtkast, settAktivtUtkast }: LagredeUtkastProps) => 
               <Nav.Column xs="9">
                 <Mui.Lenkeknapp
                   value={utkast.tittel}
-                  onClick={velgUtkast}
+                  onClick={() => velgUtkast(utkast.tittel)}
                   ikon={Ikoner.Draft}
                   className="lagredeUtkast__utkast"
                 >
