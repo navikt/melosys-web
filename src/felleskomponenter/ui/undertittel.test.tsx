@@ -1,13 +1,10 @@
 import { ComponentProps } from "react";
-import renderer from "react-test-renderer";
 import { instance, mock } from "ts-mockito";
 import * as Ikoner from "../../resources/images";
 
 import Undertittel from "./undertittel";
-
-vi.mock("../../utils", () => ({
-  _uuid: () => "123",
-}));
+import { render } from "@testing-library/react";
+import { expect } from "vitest";
 
 describe("undertittel", () => {
   const mockedProps = mock<ComponentProps<typeof Undertittel>>();
@@ -21,7 +18,7 @@ describe("undertittel", () => {
     props.ikon = Ikoner.ParagraphTwoColumns;
     props.tekst = "Tekst";
 
-    const tree = renderer.create(<Undertittel {...props} />).toJSON();
-    expect(tree).toMatchSnapshot();
+    const { container } = render(<Undertittel {...props} />);
+    expect(container).toMatchSnapshot();
   });
 });

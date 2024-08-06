@@ -1,6 +1,5 @@
-import renderer from "react-test-renderer";
-
 import AdresseTable from "./adresseTable";
+import { render } from "@testing-library/react";
 
 const aktivBostedsadresse = {
   coAdressenavn: "Co Yo 1",
@@ -42,16 +41,14 @@ const historiskBostedsadresse = {
 
 describe("AdresseTable ", () => {
   it("aktiv AdresseTable renders correctly", () => {
-    const tree = renderer
-      .create(<AdresseTable adressetype="Bostedsadresse" adresser={[aktivBostedsadresse]} />)
-      .toJSON();
-    expect(tree).toMatchSnapshot();
+    const { container } = render(<AdresseTable adressetype="Bostedsadresse" adresser={[aktivBostedsadresse]} />);
+    expect(container).toMatchSnapshot();
   });
 
   it("historisk AdresseTable renders correctly", () => {
-    const tree = renderer
-      .create(<AdresseTable adressetype="Bostedsadresse" adresser={[historiskBostedsadresse]} historisk />)
-      .toJSON();
-    expect(tree).toMatchSnapshot();
+    const { container } = render(
+      <AdresseTable adressetype="Bostedsadresse" adresser={[historiskBostedsadresse]} historisk />
+    );
+    expect(container).toMatchSnapshot();
   });
 });

@@ -1,14 +1,6 @@
 import { Faktura } from "./faktura";
 import { renderWithProviders } from "../../../../ducks/test-utils/renderWithProviders";
 
-vi.mock("../../../../utils", async () => {
-  const actual = await vi.importActual("../../../../utils");
-  return {
-    ...actual,
-    _uuid: () => "123",
-  };
-});
-
 describe("Faktura", () => {
   let props = null;
 

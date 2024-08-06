@@ -2,14 +2,6 @@ import Checkbox from "./index";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { expect } from "vitest";
 
-vi.mock("../../../utils", async () => {
-  const actual = (await vi.importActual("../../../utils")) as object;
-  return {
-    ...actual,
-    _uuid: () => "321",
-  };
-});
-
 describe("Checkbox", () => {
   const props = {
     label: "Heihei",

@@ -1,22 +1,12 @@
-import renderer from "react-test-renderer";
-import * as uuid from "uuid";
-
 import MKV from "../../../../melosyskodeverk";
 import { VurderingVurderarbeidsland } from "./vurderingVurderarbeidsland";
+import { renderWithProviders } from "../../../../ducks/test-utils/renderWithProviders";
+import * as KV from "../../../../kodeverk/index";
+import { STATUS } from "../../../../services/index";
 
-vi.mock("uuid");
-
-vi.mock("nav-frontend-js-utils", async () => {
-  const actual = await vi.importActual("nav-frontend-js-utils");
-  return {
-    ...actual,
-    guid: () => "123",
-  };
-});
-
-// TODO: Skriv om når aksel tas inn i prosjektet. MELOSYS-6021
-describe.skip("VurderingVurderarbeidsland", () => {
+describe("VurderingVurderarbeidsland", () => {
   let props = null;
+  let initialReduxState = null;
 
   beforeEach(() => {
     props = {
@@ -32,32 +22,53 @@ describe.skip("VurderingVurderarbeidsland", () => {
         arbeidUtforesIOppgittLandFakta: undefined,
         fjernetArbeidslandFakta: [],
         harIngenMaritimeArbeidEllerHjemmebaser: false,
+        soknadslandFaktaListe: [],
+        arbeidslandFaktaListe: [],
       },
       redigerbart: true,
       oppdaterData: vi.fn(),
       slettData: vi.fn(),
-      maritimtArbeid: [
-        {
-          enhetNavn: "Dunfjæder",
-          fartsomradeKode: "INNENRIKS",
-          flaggLandkode: "GB",
-          innretningLandkode: "GB",
-          territorialfarvann: "GB",
-          foretakNavn: "SWECO NORGE AS",
-          foretakOrgnr: "967032271",
+    };
+
+    initialReduxState = {
+      form: {
+        [KV.Form.SOKNAD]: {
+          values: {
+            arbeidsstedOffshore: [],
+            arbeidsstedSkip: [
+              {
+                enhetNavn: "Dunfjæder",
+                fartsomradeKode: "INNENRIKS",
+                flaggLandkode: "GB",
+                innretningLandkode: "GB",
+                territorialfarvann: "GB",
+                foretakNavn: "SWECO NORGE AS",
+                foretakOrgnr: "967032271",
+              },
+            ],
+          },
         },
-      ],
-      hjemmebaser: [MKV.Koder.landkoder.DE],
-      soknadsland: [],
-      arbeidsland: [],
-      fjernedeArbeidsland: [],
-      fjernedeSoknadsland: [],
+      },
+      mottatteOpplysninger: {
+        data: {
+          luftfartBaser: [
+            {
+              hjemmebaseLand: MKV.Koder.landkoder.DE,
+            },
+          ],
+          soeknadsland: {
+            landkoder: MKV.Koder.landkoder.DE,
+          },
+        },
+        status: STATUS.OK,
+      },
     };
   });
 
   it("snapshot test", () => {
-    vi.spyOn(uuid, "v4").mockReturnValue("321");
-    const tree = renderer.create(<VurderingVurderarbeidsland {...props} />).toJSON();
-    expect(tree).toMatchSnapshot();
+    const { container } = renderWithProviders(<VurderingVurderarbeidsland {...props} />, {
+      preloadedState: initialReduxState,
+    });
+    expect(container).toMatchSnapshot();
   });
 });

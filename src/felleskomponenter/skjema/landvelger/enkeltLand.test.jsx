@@ -5,14 +5,6 @@ import userEvent from "@testing-library/user-event";
 
 const WrappedEnkeltLand = reduxForm({ form: "test" })(EnkeltLand);
 
-vi.mock("../../../utils", async () => {
-  const actual = await vi.importActual("../../../utils");
-  return {
-    ...actual,
-    _uuid: () => "123",
-  };
-});
-
 describe("EnkeltLand", () => {
   let props = null;
 

@@ -3,14 +3,6 @@ import { renderWithProviders } from "../../../ducks/test-utils/renderWithProvide
 import { reduxForm } from "redux-form";
 import userEvent from "@testing-library/user-event";
 
-vi.mock("../../../utils", async () => {
-  const actual = await vi.importActual("../../../utils");
-  return {
-    ...actual,
-    _uuid: () => "123",
-  };
-});
-
 describe("Checkbox", () => {
   let props = null;
   const WrappedCheckbox = reduxForm({ form: "test" })(Checkbox);

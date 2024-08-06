@@ -22,8 +22,7 @@ describe("Behandlingsmeny", () => {
     expect(await findByText("Avslutt sak")).toBeInTheDocument();
   });
 
-  // TODO: aria-labelledby generert for ikonet i accordion. Enable i MELOSYS-6534
-  it.skip("snapshot test", async () => {
+  it("snapshot test", async () => {
     const { container, getByRole } = renderWithProviders(<Behandlingsmeny />, { preloadedState: state });
 
     const user = userEvent.setup();

@@ -5,10 +5,9 @@ import { renderWithProviders } from "../../ducks/test-utils/renderWithProviders"
 
 import { Sok } from "./sok";
 
-// TODO: Skriv om når aksel tas inn i prosjektet. MELOSYS-6021
-describe.skip("Sok", () => {
-  const getItemPrototype = Storage.prototype.getItem;
-
+const generator = new Utils.testhelpers.Generator();
+describe("Sok", () => {
+  let fnr;
   const initialStore = (sokResultat: object[] = []) => ({
     sok: {
       status: "",
@@ -22,13 +21,22 @@ describe.skip("Sok", () => {
     },
   });
 
-  afterAll(() => {
-    Storage.prototype.getItem = getItemPrototype;
+  beforeAll(() => {
+    // @ts-ignore
+    fetch.resetMocks();
+    // @ts-ignore
+    fetch.mockResponse(JSON.stringify({}));
+    fnr = generator.generateBirthNumber();
+    vi.spyOn(window.sessionStorage, "getItem").mockReturnValue(fnr);
   });
 
-  it("viser en sorterbarliste ved søk på fnr med flere resultat", () => {
-    const generator = new Utils.testhelpers.Generator();
-    Storage.prototype.getItem = vi.fn(() => generator.generateBirthNumber());
+  afterAll(() => {
+    // @ts-ignore
+    fetch.resetMocks();
+    vi.clearAllMocks();
+  });
+
+  it("viser en sorterbarliste ved søk på fnr med flere resultat", async () => {
     const sokResultat = [
       {
         sakstype: { term: "A1" },
@@ -41,9 +49,10 @@ describe.skip("Sok", () => {
         behandlingOversikter: [],
       },
     ];
-    renderWithProviders(<Sok />, { preloadedState: initialStore(sokResultat) });
 
-    const overskrifter = screen.getAllByRole("heading");
+    const { findAllByRole } = renderWithProviders(<Sok />, { preloadedState: initialStore(sokResultat) });
+
+    const overskrifter = await findAllByRole("heading");
     expect(overskrifter).toHaveLength(4);
     expect(overskrifter.at(0)?.textContent).toContain("Saksoversikt");
     expect(overskrifter.at(1)?.textContent).toContain("Resultater for f.nr./d-nr.");
@@ -52,9 +61,6 @@ describe.skip("Sok", () => {
   });
 
   it("viser ikke sorterbarliste ved søk på fnr uten resultat", () => {
-    const generator = new Utils.testhelpers.Generator();
-    Storage.prototype.getItem = vi.fn(() => generator.generateBirthNumber());
-
     renderWithProviders(<Sok />, { preloadedState: initialStore() });
 
     const overskrifter = screen.getAllByRole("heading");

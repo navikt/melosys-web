@@ -1,76 +1,61 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`Vedtakstype > snapshot test 1`] = `
+
 <div>
-  <div
-    class="row artikkel"
-  >
-    <div
-      class="col col-xs-6"
-    >
+  <div class="row artikkel">
+    <div class="col col-xs-6">
       <fieldset
+        id="333"
         class="skjema-radiogroup  navds-radio-group navds-radio-group--small navds-fieldset navds-fieldset--small"
-        id="123"
       >
-        <legend
-          class="navds-fieldset__legend navds-label navds-label--small"
-        >
+        <legend class="navds-fieldset__legend navds-label navds-label--small">
           vedtakstypeLabel
         </legend>
-        <div
-          class="navds-radio-buttons"
-        >
-          <div
-            class="navds-radio navds-radio--small"
-          >
+        <div class="navds-radio-buttons">
+          <div class="navds-radio navds-radio--small">
             <input
-              aria-labelledby="aksel-id-2"
-              class="navds-radio__input"
-              id="radio-aksel-id-1"
-              name="vedtakstypeFeltNavn-radiogroup"
+              id="333"
+              name="333"
               type="radio"
+              aria-labelledby="333"
+              class="navds-radio__input"
               value="KORRIGERT_VEDTAK"
-            />
-            <label
-              class="navds-radio__label"
-              for="radio-aksel-id-1"
             >
-              <span
-                class="navds-radio__content"
-              >
+            <label
+              for="333"
+              class="navds-radio__label"
+            >
+              <span class="navds-radio__content">
                 <span
+                  id="333"
                   aria-hidden="true"
                   class="navds-body-short navds-body-short--small"
-                  id="aksel-id-2"
                 >
                   Korrigert vedtak
                 </span>
               </span>
             </label>
           </div>
-          <div
-            class="navds-radio navds-radio--small navds-radio--disabled"
-          >
+          <div class="navds-radio navds-radio--small navds-radio--disabled">
             <input
-              aria-labelledby="aksel-id-5"
-              class="navds-radio__input"
-              disabled=""
-              id="radio-aksel-id-4"
-              name="vedtakstypeFeltNavn-radiogroup"
+              disabled
+              id="333"
+              name="333"
               type="radio"
+              aria-labelledby="333"
+              class="navds-radio__input"
               value="OMGJØRINGSVEDTAK"
-            />
-            <label
-              class="navds-radio__label"
-              for="radio-aksel-id-4"
             >
-              <span
-                class="navds-radio__content"
-              >
+            <label
+              for="333"
+              class="navds-radio__label"
+            >
+              <span class="navds-radio__content">
                 <span
+                  id="333"
                   aria-hidden="true"
                   class="navds-body-short navds-body-short--small"
-                  id="aksel-id-5"
                 >
                   Omgjøringsvedtak
                 </span>
@@ -79,73 +64,69 @@ exports[`Vedtakstype > snapshot test 1`] = `
           </div>
         </div>
         <div
-          aria-live="polite"
+          id="333"
           aria-relevant="additions removals"
+          aria-live="polite"
           class="navds-fieldset__error"
-          id="fieldset-error-aksel-id-7"
-        />
+        >
+        </div>
       </fieldset>
-      <div
-        class="melosys-select  navds-form-field navds-form-field--small"
-      >
+      <div class="melosys-select  navds-form-field navds-form-field--small">
         <label
+          for="333"
           class="navds-form-field__label navds-label navds-label--small"
-          for="123"
         >
           vedtakstypebegrunnelseLabel
         </label>
-        <div
-          class="navds-select__container"
-        >
+        <div class="navds-select__container">
           <select
+            id="333"
+            name="333"
             class="navds-select__input navds-body-short navds-body-short--small"
-            id="123"
-            name="vedtakstypebegrunnelseFeltNavn"
           >
             <option
-              disabled=""
-              value=""
+              disabled
+              value
             >
               Velg...
             </option>
-            <option
-              value="FEIL_I_BEHANDLING"
-            >
+            <option value="FEIL_I_BEHANDLING">
               Det ble gjort feil i tidligere behandling
             </option>
-            <option
-              value="NYE_OPPLYSNINGER"
-            >
+            <option value="NYE_OPPLYSNINGER">
               Det er mottatt nye opplysninger i saken
             </option>
           </select>
           <svg
-            aria-hidden="true"
-            class="navds-select__chevron"
-            fill="none"
-            focusable="false"
-            height="1em"
-            role="img"
-            viewBox="0 0 24 24"
             width="1em"
+            height="1em"
+            viewbox="0 0 24 24"
+            fill="none"
             xmlns="http://www.w3.org/2000/svg"
+            focusable="false"
+            role="img"
+            class="navds-select__chevron"
+            aria-hidden="true"
           >
             <path
+              fill-rule="evenodd"
               clip-rule="evenodd"
               d="M5.97 9.47a.75.75 0 0 1 1.06 0L12 14.44l4.97-4.97a.75.75 0 1 1 1.06 1.06l-5.5 5.5a.75.75 0 0 1-1.06 0l-5.5-5.5a.75.75 0 0 1 0-1.06Z"
               fill="currentColor"
-              fill-rule="evenodd"
-            />
+            >
+            </path>
           </svg>
         </div>
         <div
-          aria-live="polite"
-          aria-relevant="additions removals"
           class="navds-form-field__error"
-          id="select-error-aksel-id-9"
-        />
+          id="333"
+          aria-relevant="additions removals"
+          aria-live="polite"
+        >
+        </div>
       </div>
     </div>
   </div>
 </div>
+
 `;

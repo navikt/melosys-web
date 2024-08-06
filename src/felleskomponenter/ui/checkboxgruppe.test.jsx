@@ -3,14 +3,6 @@ import MKV from "../../melosyskodeverk";
 import Checkboxgruppe from "./checkboxgruppe";
 import { render, screen } from "@testing-library/react";
 
-vi.mock("../../utils", async () => {
-  const actual = await vi.importActual("../../utils");
-  return {
-    ...actual,
-    _uuid: () => "123",
-  };
-});
-
 describe("Checkboxgruppe", () => {
   let props = null;
 

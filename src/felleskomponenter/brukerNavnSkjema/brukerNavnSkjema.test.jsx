@@ -2,14 +2,6 @@ import { BrukerNavnSkjema } from "./brukerNavnSkjema";
 import { reduxForm } from "redux-form";
 import { renderWithProviders } from "../../ducks/test-utils/renderWithProviders";
 
-vi.mock("../../utils", async () => {
-  const actual = await vi.importActual("../../utils");
-  return {
-    ...actual,
-    _uuid: () => "123",
-  };
-});
-
 describe("brukernavnskjema", () => {
   let props = null;
 
