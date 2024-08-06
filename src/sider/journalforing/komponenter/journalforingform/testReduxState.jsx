@@ -1,5 +1,10 @@
 export const testReduxState = {
   form: {
+    soknad: {
+      values: {
+        soknadsland: {},
+      },
+    },
     journalforing: {
       values: {
         avsenderType: "PERSON",

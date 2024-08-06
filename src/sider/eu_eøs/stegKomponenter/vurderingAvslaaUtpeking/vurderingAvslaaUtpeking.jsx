@@ -89,7 +89,7 @@ const VurderingAvslaaUtpeking = ({
           <Skjema.RadioGroup
             legend="Anmodning om mer informasjon vil bli sendt"
             name="vilSendeAnmodningOmMerInformasjon"
-            disabled={!redigerbart}
+            readOnly={!redigerbart}
           >
             <Nav.Radio value>Ja</Nav.Radio>
             <Nav.Radio value={false}>Nei</Nav.Radio>

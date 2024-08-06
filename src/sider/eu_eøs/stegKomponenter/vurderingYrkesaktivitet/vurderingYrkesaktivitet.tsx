@@ -11,8 +11,6 @@ import { MKVUtils } from "../../../../melosyskodeverk";
 import { useSelector } from "react-redux";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 
-import "./vurderingYrkesaktivitet.css";
-
 interface VurderingYrkesaktivitetProps {
   bekreftOgFortsett: () => void;
   tilbake: () => void;
@@ -69,7 +67,7 @@ const VurderingYrkesaktivitet = (props: VurderingYrkesaktivitetProps) => {
   const fakta = hentFaktaVerdi(yrkesaktivitet);
   // @ts-ignore
   return (
-    <div className="vurderingYrkesaktivitet">
+    <>
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Yrkesaktivitet</Nav.Typo.Innholdstittel>
       <Nav.RadioGroup
         legend="Hva slags type yrkesaktivitet skal bruker utøve?"
@@ -106,7 +104,7 @@ const VurderingYrkesaktivitet = (props: VurderingYrkesaktivitetProps) => {
           disabled: !redigerbart,
         }}
       />
-    </div>
+    </>
   );
 };
 

@@ -398,10 +398,7 @@ const VurderingArtikkel16Anmodning = ({
         )}
 
         {(!konvensjonStorbritanniaToggleEnabled || !Utils._isEmpty(medlemskap?.perioderMed)) && (
-          <>
-            <Nav.Typo.Element className="tidligereMedlemskap_label">{`Velg direkte forutgående perioder i ${landSomTekstListe}`}</Nav.Typo.Element>
-            <TidligereMedlemskap redigerbart={redigerbart} medlemskap={medlemskap} />
-          </>
+          <TidligereMedlemskap redigerbart={redigerbart} medlemskap={medlemskap} land={landSomTekstListe} />
         )}
 
         {redigerbart && (

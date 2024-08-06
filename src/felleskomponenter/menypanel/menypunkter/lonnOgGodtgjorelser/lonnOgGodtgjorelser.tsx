@@ -26,7 +26,7 @@ const BooleanFeltRedigerer = ({ tekst, feltNavn, redigerbart }: BooleanFeltRedig
   return (
     <Nav.Row>
       <Nav.Column xs="12">
-        <Skjema.RadioGroup legend={tekst} name={`loennOgGodtgjoerelse.${feltNavn}`} disabled={!redigerbart}>
+        <Skjema.RadioGroup legend={tekst} name={`loennOgGodtgjoerelse.${feltNavn}`} readOnly={!redigerbart}>
           <Nav.Radio value id={`${navn}.${BOOLSK_STRING.SANN}`}>
             Ja
           </Nav.Radio>

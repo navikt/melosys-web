@@ -1,78 +1,64 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`Faktura > snapshot test 1`] = `
+
 <div>
-  <tr
-    class="navds-table__row navds-table__expandable-row navds-table__row--shade-on-hover"
-  >
-    <td
-      class="navds-table__data-cell navds-table__toggle-expand-cell navds-body-short navds-body-short--medium"
-    >
+  <tr class="navds-table__row navds-table__expandable-row navds-table__row--shade-on-hover">
+    <td class="navds-table__data-cell navds-table__toggle-expand-cell navds-body-short navds-body-short--medium">
       <button
-        aria-controls="aksel-id-1"
-        aria-expanded="false"
         class="navds-table__toggle-expand-button"
         type="button"
+        aria-controls="aksel-id-1"
+        aria-expanded="false"
       >
         <svg
-          aria-labelledby="title-aksel-icon-1"
-          class="navds-table__expandable-icon"
-          fill="none"
-          focusable="false"
-          height="1em"
-          role="img"
-          viewBox="0 0 24 24"
           width="1em"
+          height="1em"
+          viewbox="0 0 24 24"
+          fill="none"
           xmlns="http://www.w3.org/2000/svg"
+          focusable="false"
+          role="img"
+          aria-labelledby="333"
+          class="navds-table__expandable-icon"
         >
-          <title
-            id="title-aksel-icon-1"
-          >
+          <title id="333">
             Vis mer
           </title>
           <path
+            fill-rule="evenodd"
             clip-rule="evenodd"
             d="M5.97 9.47a.75.75 0 0 1 1.06 0L12 14.44l4.97-4.97a.75.75 0 1 1 1.06 1.06l-5.5 5.5a.75.75 0 0 1-1.06 0l-5.5-5.5a.75.75 0 0 1 0-1.06Z"
             fill="currentColor"
-            fill-rule="evenodd"
-          />
+          >
+          </path>
         </svg>
       </button>
     </td>
-    <td
-      class="navds-table__data-cell navds-body-short navds-body-short--medium"
-    />
-    <td
-      class="navds-table__data-cell navds-body-short navds-body-short--medium"
-    >
+    <td class="navds-table__data-cell navds-body-short navds-body-short--medium">
+    </td>
+    <td class="navds-table__data-cell navds-body-short navds-body-short--medium">
       Q2 - Q3 2023
     </td>
-    <td
-      class="navds-table__data-cell navds-body-short navds-body-short--medium"
-    >
-      <div
-        class="faktura_status_wrapper"
-      >
-        <div
-          class="dott green"
-        />
+    <td class="navds-table__data-cell navds-body-short navds-body-short--medium">
+      <div class="faktura_status_wrapper">
+        <div class="dott green">
+        </div>
         Bestilt
       </div>
     </td>
-    <td
-      class="navds-table__data-cell navds-body-short navds-body-short--medium"
-    >
+    <td class="navds-table__data-cell navds-body-short navds-body-short--medium">
       -
     </td>
   </tr>
   <tr
-    aria-hidden="true"
     class="navds-table__expanded-row"
-    id="aksel-id-1"
+    aria-hidden="true"
+    id="333"
   >
     <td
-      class="navds-table__expanded-row-cell"
       colspan="999"
+      class="navds-table__expanded-row-cell"
     >
       <div
         class="navds-table__expanded-row-collapse"
@@ -83,102 +69,81 @@ exports[`Faktura > snapshot test 1`] = `
           class="navds-table__expanded-row-content"
           style="display: none;"
         >
-          <div
-            class="fakturalinje"
-          >
-            <div
-              class="fakturanr_wrapper"
-            >
-              Fakturanr: 
-              <span
-                class="kopierbar-tekst"
-              >
-                
-                <span
-                  class="kopierbar-tekst__container"
-                >
-                  <button
-                    type="button"
-                  >
-                     - 
+          <div class="fakturalinje">
+            <div class="fakturanr_wrapper">
+              Fakturanr:&nbsp;
+              <span class="kopierbar-tekst">
+                <span class="kopierbar-tekst__container">
+                  <button type="button">
+                    -
                     <svg
-                      class="kopierbar-tekst__kopier-ikon"
-                      fill="none"
-                      height="21"
-                      viewBox="0 0 18 21"
                       width="18"
+                      height="21"
+                      viewbox="0 0 18 21"
+                      fill="none"
                       xmlns="http://www.w3.org/2000/svg"
+                      class="kopierbar-tekst__kopier-ikon"
                     >
                       <path
+                        fill-rule="evenodd"
                         clip-rule="evenodd"
                         d="M1 20.1729V5.51123H11.1504V20.1729H1Z"
-                        fill-rule="evenodd"
                         stroke="#3E3832"
+                        stroke-width="1.5"
                         stroke-linecap="round"
                         stroke-linejoin="round"
-                        stroke-width="1.5"
-                      />
+                      >
+                      </path>
                       <path
                         d="M6.63904 3.19925V1H16.7894V15.6617H14.2518"
                         stroke="#3E3832"
+                        stroke-width="1.5"
                         stroke-linecap="round"
                         stroke-linejoin="round"
-                        stroke-width="1.5"
-                      />
+                      >
+                      </path>
                     </svg>
                   </button>
                 </span>
               </span>
             </div>
-            <div
-              class="fakturalinje"
-            >
-              <div
-                class="navds-alert navds-alert--info navds-alert--small"
-              >
+            <div class="fakturalinje">
+              <div class="navds-alert navds-alert--info navds-alert--small">
                 <svg
-                  aria-labelledby="title-aksel-icon-2"
-                  class="navds-alert__icon"
-                  fill="none"
-                  focusable="false"
-                  height="1em"
-                  role="img"
-                  viewBox="0 0 24 24"
                   width="1em"
+                  height="1em"
+                  viewbox="0 0 24 24"
+                  fill="none"
                   xmlns="http://www.w3.org/2000/svg"
+                  focusable="false"
+                  role="img"
+                  aria-labelledby="333"
+                  class="navds-alert__icon"
                 >
-                  <title
-                    id="title-aksel-icon-2"
-                  >
+                  <title id="333">
                     Informasjon
                   </title>
                   <path
+                    fill-rule="evenodd"
                     clip-rule="evenodd"
                     d="M3.25 4A.75.75 0 0 1 4 3.25h16a.75.75 0 0 1 .75.75v16a.75.75 0 0 1-.75.75H4a.75.75 0 0 1-.75-.75V4ZM11 7.75a1 1 0 1 1 2 0 1 1 0 0 1-2 0Zm-1.25 3a.75.75 0 0 1 .75-.75H12a.75.75 0 0 1 .75.75v4.75h.75a.75.75 0 0 1 0 1.5h-3a.75.75 0 0 1 0-1.5h.75v-4h-.75a.75.75 0 0 1-.75-.75Z"
                     fill="currentColor"
-                    fill-rule="evenodd"
-                  />
+                  >
+                  </path>
                 </svg>
-                <div
-                  class="navds-alert__wrapper navds-body-long navds-body-long--small"
-                >
+                <div class="navds-alert__wrapper navds-body-long navds-body-long--small">
                   Fakturanummer er bare kjent i Melosys når det gjelder en manglende innbetaling, du kan likevel finne faktura i OeBS ved å søke på bruker
                 </div>
               </div>
             </div>
-            <table
-              class="navds-table navds-table--medium"
-            >
-              <thead
-                class="navds-table__header"
-              >
-                <tr
-                  class="navds-table__row"
-                >
+            <table class="navds-table navds-table--medium">
+              <thead class="navds-table__header">
+                <tr class="navds-table__row">
                   <th
                     class="navds-table__header-cell navds-label"
                     scope="col"
-                  />
+                  >
+                  </th>
                   <th
                     class="navds-table__header-cell navds-label"
                     scope="col"
@@ -199,9 +164,8 @@ exports[`Faktura > snapshot test 1`] = `
                   </th>
                 </tr>
               </thead>
-              <tbody
-                class="navds-table__body"
-              />
+              <tbody class="navds-table__body">
+              </tbody>
             </table>
           </div>
         </div>
@@ -209,4 +173,5 @@ exports[`Faktura > snapshot test 1`] = `
     </td>
   </tr>
 </div>
+
 `;

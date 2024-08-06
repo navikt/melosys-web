@@ -1,500 +1,379 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`EnkeltArbeidsforholdUtland > snapshot test 1`] = `
+
 <div>
-  <div
-    class="cssklasse"
-  >
-    <div
-      class="row"
-    >
-      <div
-        class="col col-xs-6"
-      >
-        <div
-          class="melosys-textfield  navds-form-field navds-form-field--small"
-        >
+  <div class="cssklasse">
+    <div class="row">
+      <div class="col col-xs-6">
+        <div class="melosys-textfield  navds-form-field navds-form-field--small">
           <label
+            for="333"
             class="navds-form-field__label navds-label navds-label--small"
-            for="123"
           >
             Navn på virksomheten
           </label>
           <input
-            class="navds-text-field__input navds-body-short navds-body-short--small"
-            id="123"
+            name="333"
             meta="[object Object]"
-            name="feltnavn.navn"
+            id="333"
             type="text"
-            value=""
-          />
+            class="navds-text-field__input navds-body-short navds-body-short--small"
+            value
+          >
           <div
-            aria-live="polite"
-            aria-relevant="additions removals"
             class="navds-form-field__error"
-            id="textField-error-aksel-id-1"
-          />
+            id="333"
+            aria-relevant="additions removals"
+            aria-live="polite"
+          >
+          </div>
         </div>
       </div>
-      <div
-        class="col col-xs-6"
-      >
-        <div
-          class="melosys-textfield  navds-form-field navds-form-field--small"
-        >
+      <div class="col col-xs-6">
+        <div class="melosys-textfield  navds-form-field navds-form-field--small">
           <label
+            for="333"
             class="navds-form-field__label navds-label navds-label--small"
-            for="123"
           >
             Registreringsnummer
           </label>
           <input
-            class="navds-text-field__input navds-body-short navds-body-short--small"
-            id="123"
+            name="333"
             meta="[object Object]"
-            name="feltnavn.orgnr"
+            id="333"
             type="text"
-            value=""
-          />
+            class="navds-text-field__input navds-body-short navds-body-short--small"
+            value
+          >
           <div
-            aria-live="polite"
-            aria-relevant="additions removals"
             class="navds-form-field__error"
-            id="textField-error-aksel-id-2"
-          />
+            id="333"
+            aria-relevant="additions removals"
+            aria-live="polite"
+          >
+          </div>
         </div>
       </div>
     </div>
-    <div
-      class="row"
-    >
-      <div
-        class="col col-xs-12"
-      >
-        <div
-          class="melosys-textfield  navds-form-field navds-form-field--small"
-        >
+    <div class="row">
+      <div class="col col-xs-12">
+        <div class="melosys-textfield  navds-form-field navds-form-field--small">
           <label
+            for="333"
             class="navds-form-field__label navds-label navds-label--small"
-            for="123"
           >
             Adressetilleggsnavn
           </label>
           <input
-            class="navds-text-field__input navds-body-short navds-body-short--small"
-            id="123"
+            name="333"
             meta="[object Object]"
-            name="feltnavn.adresse.tilleggsnavn"
+            id="333"
             type="text"
-            value=""
-          />
+            class="navds-text-field__input navds-body-short navds-body-short--small"
+            value
+          >
           <div
-            aria-live="polite"
-            aria-relevant="additions removals"
             class="navds-form-field__error"
-            id="textField-error-aksel-id-3"
-          />
+            id="333"
+            aria-relevant="additions removals"
+            aria-live="polite"
+          >
+          </div>
         </div>
       </div>
     </div>
-    <div
-      class="row"
-    >
-      <div
-        class="col col-xs-6"
-      >
-        <div
-          class="melosys-textfield  navds-form-field navds-form-field--small"
-        >
+    <div class="row">
+      <div class="col col-xs-6">
+        <div class="melosys-textfield  navds-form-field navds-form-field--small">
           <label
+            for="333"
             class="navds-form-field__label navds-label navds-label--small"
-            for="123"
           >
             Adresse til arbeidsgiver
           </label>
           <input
-            class="navds-text-field__input navds-body-short navds-body-short--small"
-            id="123"
+            name="333"
             meta="[object Object]"
-            name="feltnavn.adresse.gatenavn"
+            id="333"
             type="text"
-            value=""
-          />
+            class="navds-text-field__input navds-body-short navds-body-short--small"
+            value
+          >
           <div
-            aria-live="polite"
-            aria-relevant="additions removals"
             class="navds-form-field__error"
-            id="textField-error-aksel-id-4"
-          />
+            id="333"
+            aria-relevant="additions removals"
+            aria-live="polite"
+          >
+          </div>
         </div>
       </div>
-      <div
-        class="col col-xs-6"
-      >
-        <div
-          class="melosys-textfield  navds-form-field navds-form-field--small"
-        >
+      <div class="col col-xs-6">
+        <div class="melosys-textfield  navds-form-field navds-form-field--small">
           <label
+            for="333"
             class="navds-form-field__label navds-label navds-label--small"
-            for="123"
           >
             Husnummer
           </label>
           <input
-            class="navds-text-field__input navds-body-short navds-body-short--small"
-            id="123"
+            name="333"
             meta="[object Object]"
-            name="feltnavn.adresse.husnummerEtasjeLeilighet"
+            id="333"
             type="text"
-            value=""
-          />
+            class="navds-text-field__input navds-body-short navds-body-short--small"
+            value
+          >
           <div
-            aria-live="polite"
-            aria-relevant="additions removals"
             class="navds-form-field__error"
-            id="textField-error-aksel-id-5"
-          />
+            id="333"
+            aria-relevant="additions removals"
+            aria-live="polite"
+          >
+          </div>
         </div>
       </div>
     </div>
-    <div
-      class="row"
-    >
-      <div
-        class="col col-xs-6"
-      >
-        <div
-          class="melosys-textfield  navds-form-field navds-form-field--small"
-        >
+    <div class="row">
+      <div class="col col-xs-6">
+        <div class="melosys-textfield  navds-form-field navds-form-field--small">
           <label
+            for="333"
             class="navds-form-field__label navds-label navds-label--small"
-            for="123"
           >
             Poststed
           </label>
           <input
-            class="navds-text-field__input navds-body-short navds-body-short--small"
-            id="123"
+            name="333"
             meta="[object Object]"
-            name="feltnavn.adresse.poststed"
+            id="333"
             type="text"
-            value=""
-          />
+            class="navds-text-field__input navds-body-short navds-body-short--small"
+            value
+          >
           <div
-            aria-live="polite"
-            aria-relevant="additions removals"
             class="navds-form-field__error"
-            id="textField-error-aksel-id-6"
-          />
+            id="333"
+            aria-relevant="additions removals"
+            aria-live="polite"
+          >
+          </div>
         </div>
       </div>
-      <div
-        class="col col-xs-6"
-      >
-        <div
-          class="melosys-textfield  navds-form-field navds-form-field--small"
-        >
+      <div class="col col-xs-6">
+        <div class="melosys-textfield  navds-form-field navds-form-field--small">
           <label
+            for="333"
             class="navds-form-field__label navds-label navds-label--small"
-            for="123"
           >
             Postnummer
           </label>
           <input
-            class="navds-text-field__input navds-body-short navds-body-short--small"
-            id="123"
+            name="333"
             meta="[object Object]"
-            name="feltnavn.adresse.postnummer"
+            id="333"
             type="text"
-            value=""
-          />
+            class="navds-text-field__input navds-body-short navds-body-short--small"
+            value
+          >
           <div
-            aria-live="polite"
-            aria-relevant="additions removals"
             class="navds-form-field__error"
-            id="textField-error-aksel-id-7"
-          />
+            id="333"
+            aria-relevant="additions removals"
+            aria-live="polite"
+          >
+          </div>
         </div>
       </div>
     </div>
-    <div
-      class="row"
-    >
-      <div
-        class="col col-xs-12"
-      >
-        <div
-          class="melosys-textfield  navds-form-field navds-form-field--small"
-        >
+    <div class="row">
+      <div class="col col-xs-12">
+        <div class="melosys-textfield  navds-form-field navds-form-field--small">
           <label
+            for="333"
             class="navds-form-field__label navds-label navds-label--small"
-            for="123"
           >
             Postboks
           </label>
           <input
-            class="navds-text-field__input navds-body-short navds-body-short--small"
-            id="123"
+            name="333"
             meta="[object Object]"
-            name="feltnavn.adresse.postboks"
+            id="333"
             type="text"
-            value=""
-          />
+            class="navds-text-field__input navds-body-short navds-body-short--small"
+            value
+          >
           <div
-            aria-live="polite"
-            aria-relevant="additions removals"
             class="navds-form-field__error"
-            id="textField-error-aksel-id-8"
-          />
+            id="333"
+            aria-relevant="additions removals"
+            aria-live="polite"
+          >
+          </div>
         </div>
       </div>
     </div>
-    <div
-      class="row"
-    >
-      <div
-        class="col col-xs-6"
-      >
-        <div
-          class="melosys-textfield  navds-form-field navds-form-field--small"
-        >
+    <div class="row">
+      <div class="col col-xs-6">
+        <div class="melosys-textfield  navds-form-field navds-form-field--small">
           <label
+            for="333"
             class="navds-form-field__label navds-label navds-label--small"
-            for="123"
           >
             Region
           </label>
           <input
-            class="navds-text-field__input navds-body-short navds-body-short--small"
-            id="123"
+            name="333"
             meta="[object Object]"
-            name="feltnavn.adresse.region"
+            id="333"
             type="text"
-            value=""
-          />
+            class="navds-text-field__input navds-body-short navds-body-short--small"
+            value
+          >
           <div
-            aria-live="polite"
-            aria-relevant="additions removals"
             class="navds-form-field__error"
-            id="textField-error-aksel-id-9"
-          />
+            id="333"
+            aria-relevant="additions removals"
+            aria-live="polite"
+          >
+          </div>
         </div>
       </div>
-      <div
-        class="col col-xs-6"
-      >
-        <div
-          class=""
-        >
+      <div class="col col-xs-6">
+        <div class>
           <div>
-            <div
-              class="melosys-textfield landliste__linje__input navds-form-field navds-form-field--small"
-            >
+            <div class="melosys-textfield landliste__linje__input navds-form-field navds-form-field--small">
               <label
+                for="333"
                 class="navds-form-field__label navds-label navds-label--small"
-                for="123"
               >
                 Land
               </label>
               <input
-                class="navds-text-field__input navds-body-short navds-body-short--small"
-                id="123"
-                list="datalist-123"
+                list="333"
+                id="333"
                 type="text"
-                value=""
-              />
+                class="navds-text-field__input navds-body-short navds-body-short--small"
+                value
+              >
               <div
-                aria-live="polite"
-                aria-relevant="additions removals"
                 class="navds-form-field__error"
-                id="textField-error-aksel-id-10"
-              />
+                id="333"
+                aria-relevant="additions removals"
+                aria-live="polite"
+              >
+              </div>
             </div>
           </div>
-          <div
-            class="landliste__dataliste"
-          >
-            <datalist
-              id="datalist-123"
-            >
-              <option
-                value="Belgia (BE)"
-              >
+          <div class="landliste__dataliste">
+            <datalist id="333">
+              <option value="Belgia (BE)">
                 Belgia (BE)
               </option>
-              <option
-                value="Bulgaria (BG)"
-              >
+              <option value="Bulgaria (BG)">
                 Bulgaria (BG)
               </option>
-              <option
-                value="Danmark (DK)"
-              >
+              <option value="Danmark (DK)">
                 Danmark (DK)
               </option>
-              <option
-                value="Estland (EE)"
-              >
+              <option value="Estland (EE)">
                 Estland (EE)
               </option>
-              <option
-                value="Finland (FI)"
-              >
+              <option value="Finland (FI)">
                 Finland (FI)
               </option>
-              <option
-                value="Frankrike (FR)"
-              >
+              <option value="Frankrike (FR)">
                 Frankrike (FR)
               </option>
-              <option
-                value="Færøyene (FO)"
-              >
+              <option value="Færøyene (FO)">
                 Færøyene (FO)
               </option>
-              <option
-                value="Grønland (GL)"
-              >
+              <option value="Grønland (GL)">
                 Grønland (GL)
               </option>
-              <option
-                value="Hellas (GR)"
-              >
+              <option value="Hellas (GR)">
                 Hellas (GR)
               </option>
-              <option
-                value="Irland (IE)"
-              >
+              <option value="Irland (IE)">
                 Irland (IE)
               </option>
-              <option
-                value="Island (IS)"
-              >
+              <option value="Island (IS)">
                 Island (IS)
               </option>
-              <option
-                value="Italia (IT)"
-              >
+              <option value="Italia (IT)">
                 Italia (IT)
               </option>
-              <option
-                value="Kroatia (HR)"
-              >
+              <option value="Kroatia (HR)">
                 Kroatia (HR)
               </option>
-              <option
-                value="Kypros (CY)"
-              >
+              <option value="Kypros (CY)">
                 Kypros (CY)
               </option>
-              <option
-                value="Latvia (LV)"
-              >
+              <option value="Latvia (LV)">
                 Latvia (LV)
               </option>
-              <option
-                value="Liechtenstein (LI)"
-              >
+              <option value="Liechtenstein (LI)">
                 Liechtenstein (LI)
               </option>
-              <option
-                value="Litauen (LT)"
-              >
+              <option value="Litauen (LT)">
                 Litauen (LT)
               </option>
-              <option
-                value="Luxembourg (LU)"
-              >
+              <option value="Luxembourg (LU)">
                 Luxembourg (LU)
               </option>
-              <option
-                value="Malta (MT)"
-              >
+              <option value="Malta (MT)">
                 Malta (MT)
               </option>
-              <option
-                value="Nederland (NL)"
-              >
+              <option value="Nederland (NL)">
                 Nederland (NL)
               </option>
-              <option
-                value="Norge (NO)"
-              >
+              <option value="Norge (NO)">
                 Norge (NO)
               </option>
-              <option
-                value="Polen (PL)"
-              >
+              <option value="Polen (PL)">
                 Polen (PL)
               </option>
-              <option
-                value="Portugal (PT)"
-              >
+              <option value="Portugal (PT)">
                 Portugal (PT)
               </option>
-              <option
-                value="Romania (RO)"
-              >
+              <option value="Romania (RO)">
                 Romania (RO)
               </option>
-              <option
-                value="Slovakia (SK)"
-              >
+              <option value="Slovakia (SK)">
                 Slovakia (SK)
               </option>
-              <option
-                value="Slovenia (SI)"
-              >
+              <option value="Slovenia (SI)">
                 Slovenia (SI)
               </option>
-              <option
-                value="Spania (ES)"
-              >
+              <option value="Spania (ES)">
                 Spania (ES)
               </option>
-              <option
-                value="Storbritannia (GB)"
-              >
+              <option value="Storbritannia (GB)">
                 Storbritannia (GB)
               </option>
-              <option
-                value="Svalbard og Jan Mayen (SJ)"
-              >
+              <option value="Svalbard og Jan Mayen (SJ)">
                 Svalbard og Jan Mayen (SJ)
               </option>
-              <option
-                value="Sveits (CH)"
-              >
+              <option value="Sveits (CH)">
                 Sveits (CH)
               </option>
-              <option
-                value="Sverige (SE)"
-              >
+              <option value="Sverige (SE)">
                 Sverige (SE)
               </option>
-              <option
-                value="Tsjekkia (CZ)"
-              >
+              <option value="Tsjekkia (CZ)">
                 Tsjekkia (CZ)
               </option>
-              <option
-                value="Tyskland (DE)"
-              >
+              <option value="Tyskland (DE)">
                 Tyskland (DE)
               </option>
-              <option
-                value="Ungarn (HU)"
-              >
+              <option value="Ungarn (HU)">
                 Ungarn (HU)
               </option>
-              <option
-                value="Østerrike (AT)"
-              >
+              <option value="Østerrike (AT)">
                 Østerrike (AT)
               </option>
-              <option
-                value="Åland (AX)"
-              >
+              <option value="Åland (AX)">
                 Åland (AX)
               </option>
             </datalist>
@@ -504,4 +383,5 @@ exports[`EnkeltArbeidsforholdUtland > snapshot test 1`] = `
     </div>
   </div>
 </div>
+
 `;

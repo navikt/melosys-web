@@ -3,14 +3,6 @@ import { reduxForm } from "redux-form";
 import * as KV from "../../../../kodeverk";
 import { renderWithProviders } from "../../../../ducks/test-utils/renderWithProviders";
 
-vi.mock("../../../utils", async () => {
-  const actual = await vi.importActual("../../../utils");
-  return {
-    ...actual,
-    _uuid: () => "123",
-  };
-});
-
 describe("VurderingAvslaaUtpeking", () => {
   let props = null;
   const WrappedVurderingAvslaaUtpeking = reduxForm({ form: KV.Form.AVSLAA_UTPEKING })(VurderingAvslaaUtpeking);

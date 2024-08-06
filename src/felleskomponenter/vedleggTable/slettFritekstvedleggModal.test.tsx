@@ -1,8 +1,8 @@
-import renderer from "react-test-renderer";
 import ReactDOM from "react-dom";
 import { ReactNode, ReactPortal } from "react";
 
 import SlettFritekstvedleggModal from "./slettFritekstvedleggModal";
+import { render } from "@testing-library/react";
 
 describe("slettFritekstvedleggModal", () => {
   beforeAll(() => {
@@ -10,9 +10,7 @@ describe("slettFritekstvedleggModal", () => {
   });
 
   it("snapshot test", () => {
-    const tree = renderer
-      .create(<SlettFritekstvedleggModal open lukkModal={vi.fn()} slettVedlegg={vi.fn()} />)
-      .toJSON();
-    expect(tree).toMatchSnapshot();
+    const { container } = render(<SlettFritekstvedleggModal open lukkModal={vi.fn()} slettVedlegg={vi.fn()} />);
+    expect(container).toMatchSnapshot();
   });
 });

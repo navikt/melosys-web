@@ -7,8 +7,6 @@ import * as Mui from "../../../../felleskomponenter/ui";
 
 import EnkeltVilkaar from "../felles/enkeltVilkaar";
 
-import "./vurderingForutgaendeMedlemskap.css";
-
 const VurderingForutgaendeMedlemskap = (props) => {
   const { bekreftOgFortsett, begrunnelser, tilstand, redigerbart, oppdaterData, slettData, tilbake } = props;
   const { harAvklaring, forutgaendeMedlemskap } = tilstand;
@@ -22,7 +20,7 @@ const VurderingForutgaendeMedlemskap = (props) => {
   );
 
   return (
-    <div className="vurderingForutgaendeMedlemskap">
+    <>
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Forutgående medlemskap</Nav.Typo.Innholdstittel>
       <EnkeltVilkaar
         tittel="Har bruker tilstrekkelig forutgående medlemskap i folketrygden?"
@@ -46,7 +44,7 @@ const VurderingForutgaendeMedlemskap = (props) => {
           disabled: !redigerbart,
         }}
       />
-    </div>
+    </>
   );
 };
 

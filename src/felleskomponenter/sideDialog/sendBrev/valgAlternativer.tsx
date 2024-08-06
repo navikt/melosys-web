@@ -49,7 +49,7 @@ const ValgAlternativer = ({
   }
   if (valg.valgType === DokumenterV2.ValgType.RADIO) {
     return (
-      <Skjema.RadioGroup legend={label} name={`felt.${feltKode}.valg`} disabled={!redigerbart}>
+      <Skjema.RadioGroup legend={label} name={`felt.${feltKode}.valg`} readOnly={!redigerbart}>
         {valg.valgAlternativer.map((alternativ) => (
           <Nav.Radio
             value={alternativ.kode}

@@ -1,269 +1,226 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`VurderingArtikkel13_x_Vedtak > snapshot test 1`] = `
+
 <div>
-  <form
-    class="vurderingArtikkel13_x_vedtak"
-  >
-    <h1
-      class="typo-innholdstittel stegvelgertittel"
-    >
+  <form class="vurderingArtikkel13_x_vedtak">
+    <h1 class="typo-innholdstittel stegvelgertittel">
       Omfattet av norsk lovgivning, etter artikkel 13, nr 1, a
     </h1>
-    <p
-      class="typo-element undertittel"
-    >
+    <p class="typo-element undertittel">
       Søknadsperiode
     </p>
-    <div
-      class="row lovvalgsperiode"
-    >
-      <div
-        class="col col-xs-6"
-      >
-        
-         - 
-        
+    <div class="row lovvalgsperiode">
+      <div class="col col-xs-6">
+        -
       </div>
     </div>
     <div>
-      <div
-        class="row forkortLovvalgsperiode"
-      >
-        <div
-          class="col col-xs-8"
-        >
-          <div
-            class="skjemaelement"
-          >
+      <div class="row forkortLovvalgsperiode">
+        <div class="col col-xs-8">
+          <div class="navds-checkbox navds-checkbox--small">
             <input
-              aria-invalid="false"
-              class="skjemaelement__input checkboks"
-              id="123"
-              name="forkortLovvalgsperiode"
+              name="333"
+              class="navds-checkbox__input"
+              id="333"
               type="checkbox"
-              value=""
-            />
-            <label
-              class="skjemaelement__label"
-              for="123"
+              aria-checked
+              aria-labelledby="333"
+              value
             >
-              Lovvalget innvilges for en kortere periode
+            <label
+              for="333"
+              class="navds-checkbox__label"
+            >
+              <span class="navds-checkbox__icon">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="0.8125rem"
+                  height="0.625rem"
+                  viewbox="0 0 13 10"
+                  fill="none"
+                  focusable="false"
+                  role="img"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M4.03524 6.41478L10.4752 0.404669C11.0792 -0.160351 12.029 -0.130672 12.5955 0.47478C13.162 1.08027 13.1296 2.03007 12.5245 2.59621L5.02111 9.59934C4.74099 9.85904 4.37559 10 4.00025 10C3.60651 10 3.22717 9.84621 2.93914 9.56111L0.439143 7.06111C-0.146381 6.47558 -0.146381 5.52542 0.439143 4.93989C1.02467 4.35437 1.97483 4.35437 2.56036 4.93989L4.03524 6.41478Z"
+                    fill="currentColor"
+                  >
+                  </path>
+                </svg>
+              </span>
+              <span class="navds-checkbox__content">
+                <span
+                  id="333"
+                  aria-hidden="true"
+                  class="navds-checkbox__label-text navds-body-short navds-body-short--small"
+                >
+                  Lovvalget innvilges for en kortere periode
+                </span>
+              </span>
             </label>
           </div>
         </div>
       </div>
     </div>
-    <div
-      class="row fritekst"
-    >
-      <div
-        class="col col-xs-8"
-      >
-        <div
-          class="skjemaelement textarea__container"
-        >
+    <div class="row fritekst">
+      <div class="col col-xs-8">
+        <div class="skjemaelement textarea__container">
           <label
             class="skjemaelement__label"
-            for="123"
+            for="333"
           >
             Fritekst til vedtaksbrev
           </label>
-          
-          <div
-            class="textarea--medMeta__wrapper"
-          >
+          <div class="textarea--medMeta__wrapper">
             <span
+              id="333"
               class="sr-only"
-              id="126157710-6898-5322-18822-3427265696568"
             >
-              Tekstområde med plass til 
-              20
-               tegn.
+              Tekstområde med plass til 20 tegn.
             </span>
             <textarea
-              aria-describedby="126157710-6898-5322-18822-3427265696568"
-              aria-invalid="false"
               class="skjemaelement__input input--fullbredde skjemaelement__input textarea--medMeta"
-              id="123"
-              name="vedtaksbrevFritekst"
+              id="333"
+              name="333"
+              style="height: 30px;"
+              aria-inval
+              aria-describedby="333"
               placeholder="Skriv inn tekst til vedtaksbrevet..."
               spellcheck="true"
-              style="height: 30px;"
-            />
-            <p
-              class="textarea--medMeta__teller"
-            />
+            >
+            </textarea>
+            <p class="textarea--medMeta__teller">
+            </p>
           </div>
           <div
-            aria-hidden="true"
             class="textareamirror"
-          />
+            aria-hidden="true"
+          >
+          </div>
         </div>
       </div>
     </div>
-    <div
-      class="row fritekstSed"
-    >
-      <div
-        class="col col-xs-8"
-      >
-        <div
-          class="skjemaelement textarea__container"
-        >
+    <div class="row fritekstSed">
+      <div class="col col-xs-8">
+        <div class="skjemaelement textarea__container">
           <label
             class="skjemaelement__label"
-            for="123"
+            for="333"
           >
             Ytterligere informasjon til SED (valgfri)
           </label>
-          
-          <div
-            class="textarea--medMeta__wrapper"
-          >
+          <div class="textarea--medMeta__wrapper">
             <span
+              id="333"
               class="sr-only"
-              id="174309089-10334-10499-22062-14534186297338"
             >
-              Tekstområde med plass til 
-              20
-               tegn.
+              Tekstområde med plass til 20 tegn.
             </span>
             <textarea
-              aria-describedby="174309089-10334-10499-22062-14534186297338"
-              aria-invalid="false"
               class="skjemaelement__input input--fullbredde skjemaelement__input textarea--medMeta"
-              id="123"
-              name="fritekstSed"
-              spellcheck="true"
+              id="333"
+              name="333"
               style="height: 30px;"
-            />
-            <p
-              class="textarea--medMeta__teller"
+              aria-inval
+              aria-describedby="333"
+              spellcheck="true"
             >
+            </textarea>
+            <p class="textarea--medMeta__teller">
               <span>
                 Du har 500 tegn igjen.
               </span>
             </p>
           </div>
           <div
-            aria-hidden="true"
             class="textareamirror"
-          />
+            aria-hidden="true"
+          >
+          </div>
         </div>
       </div>
     </div>
-    <div
-      class="row"
-    >
-      <div
-        class="col col-xs-8"
-      />
+    <div class="row">
+      <div class="col col-xs-8">
+      </div>
     </div>
-    <div
-      class="row"
-    >
-      <div
-        class="col col-xs-8"
-      >
-        <div>
-          <table
-            class="navds-table navds-table--small"
-          >
-            <thead
-              class="navds-table__header"
-            >
-              <tr
-                class="navds-table__row navds-table__row--shade-on-hover"
-              >
-                <th
-                  class="navds-table__header-cell navds-label navds-label--small"
-                >
+    <div class="row">
+      <div class="col col-xs-8">
+        <div class="dokumentliste">
+          <table class="navds-table navds-table--small">
+            <thead class="navds-table__header">
+              <tr class="navds-table__row navds-table__row--shade-on-hover">
+                <th class="navds-table__header-cell navds-label">
                   Forhåndsvisning av brev
                 </th>
-                <th
-                  class="navds-table__header-cell navds-label navds-label--small"
-                >
+                <th class="navds-table__header-cell navds-label">
                   Mottaker
                 </th>
               </tr>
             </thead>
-            <tbody
-              class="navds-table__body"
-            >
-              <tr
-                class="navds-table__row navds-table__row--shade-on-hover"
-              >
-                <td
-                  class="navds-table__data-cell navds-body-short navds-body-short--small"
-                >
+            <tbody class="navds-table__body">
+              <tr class="navds-table__row navds-table__row--shade-on-hover">
+                <td class="navds-table__data-cell navds-body-short navds-body-short--medium">
                   <a
-                    class="lenke"
                     href="#"
+                    class="navds-link navds-link--action"
                   >
                     Innvilgelse yrkesaktiv i flere land (åpnes i ny fane)
                   </a>
                 </td>
-                <td
-                  class="navds-table__data-cell navds-body-short navds-body-short--small"
-                >
+                <td class="navds-table__data-cell navds-body-short navds-body-short--medium">
                   BRUKER
                 </td>
               </tr>
-              <tr
-                class="navds-table__row navds-table__row--shade-on-hover"
-              >
-                <td
-                  class="navds-table__data-cell navds-body-short navds-body-short--small"
-                >
+              <tr class="navds-table__row navds-table__row--shade-on-hover">
+                <td class="navds-table__data-cell navds-body-short navds-body-short--medium">
                   <a
-                    class="lenke"
                     href="#"
+                    class="navds-link navds-link--action"
                   >
                     SED A003 (åpnes i ny fane)
                   </a>
                 </td>
-                <td
-                  class="navds-table__data-cell navds-body-short navds-body-short--small"
-                />
+                <td class="navds-table__data-cell navds-body-short navds-body-short--medium">
+                </td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
     </div>
-    <div
-      class="stegKnapper"
-    >
-      <button
-        class="knapp stegKnapper__bekreft knapp--hoved knapp--mini"
-        type="submit"
-      >
-        Fatt vedtak
+    <div class="stegKnapper">
+      <button class="stegKnapper__bekreft navds-button navds-button--primary navds-button--small">
+        <span class="navds-label navds-label--small">
+          Fatt vedtak
+        </span>
       </button>
-      <button
-        class="knapp stegKnapper__tilbake knapp--flat knapp--mini"
-        type="button"
-      >
-        <svg
-          fill="none"
-          height="14"
-          viewBox="0 0 16 14"
-          width="16"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            clip-rule="evenodd"
-            d="M16 7.66732L2.47 7.66732L7.33333 12.6976L6.41697 13.6673L0 7.00065L6.41697 0.333984L7.33333 1.30368L2.47 6.33398L16 6.33398V7.66732Z"
-            fill="#0067C5"
-            fill-rule="evenodd"
-          />
-        </svg>
-        <span>
+      <button class="stegKnapper__tilbake navds-button navds-button--tertiary navds-button--small">
+        <span class="navds-button__icon">
+          <svg
+            width="16"
+            height="14"
+            viewbox="0 0 16 14"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M16 7.66732L2.47 7.66732L7.33333 12.6976L6.41697 13.6673L0 7.00065L6.41697 0.333984L7.33333 1.30368L2.47 6.33398L16 6.33398V7.66732Z"
+              fill="#0067C5"
+            >
+            </path>
+          </svg>
+        </span>
+        <span class="navds-label navds-label--small">
           Tilbake
         </span>
       </button>
     </div>
   </form>
 </div>
+
 `;

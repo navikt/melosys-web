@@ -1,94 +1,72 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`EditerbartElementListe > snapshot test 1`] = `
+
 <div>
-  <div
-    class="className"
-  >
-    <div
-      class="flere__redigeringsknapper__liste"
-    >
-      <div
-        class="elementer__container"
-      >
-        <div
-          class="editerbart__element"
-        >
-          <h2
-            class="navds-heading navds-heading--small navds-typo--spacing"
-          >
-            <div
-              class="heading-margin"
-            >
-              <div
-                class="editerbart-element__legend editerbart-element__legend--understrek"
-              >
-                <span
-                  class="editerbart-element__legend__tittel-container"
-                >
-                  <span
-                    class="editerbart-element__legend__tittel-container__tittelikon"
-                  >
-                    <div />
+  <div class="className">
+    <div class="flere__redigeringsknapper__liste">
+      <div class="elementer__container">
+        <div class="editerbart__element">
+          <h2 class="navds-heading navds-heading--small navds-typo--spacing">
+            <div class="heading-margin">
+              <div class="editerbart-element__legend editerbart-element__legend--understrek">
+                <span class="editerbart-element__legend__tittel-container">
+                  <span class="editerbart-element__legend__tittel-container__tittelikon">
+                    <div>
+                    </div>
                   </span>
-                  <h3
-                    class="typo-undertittel editerbart-element__legend__tittel-container__tittel"
-                  >
+                  <h3 class="typo-undertittel editerbart-element__legend__tittel-container__tittel">
                     tittel: Navn
                   </h3>
                 </span>
-                <span
-                  class="editerbart-element__legend__symboler"
-                >
+                <span class="editerbart-element__legend__symboler">
                   <button
-                    aria-label="Rediger"
-                    class="ikon-knapp navds-button navds-button--tertiary navds-button--medium navds-button--icon-only"
-                    title="Rediger"
                     type="button"
+                    aria-label="Rediger"
+                    title="Rediger"
+                    class="ikon-knapp navds-button navds-button--tertiary navds-button--medium navds-button--icon-only"
                   >
-                    <span
-                      class="navds-button__icon"
-                    >
+                    <span class="navds-button__icon">
                       <svg
-                        class="ikon"
-                        fill="none"
-                        height="24"
-                        viewBox="0 0 24 24"
                         width="24"
+                        height="24"
+                        viewbox="0 0 24 24"
+                        fill="none"
                         xmlns="http://www.w3.org/2000/svg"
+                        class="ikon"
                       >
                         <path
+                          fill-rule="evenodd"
                           clip-rule="evenodd"
                           d="M22.8353 1.16464C24.3882 2.7175 24.3882 5.23518 22.8353 6.78804L8.07288 21.5494L0.682007 24L0 23.318L2.44911 15.926L17.2115 1.16464C18.7645 -0.388214 21.2823 -0.388214 22.8353 1.16464ZM18.6175 8.19388L15.8056 5.38219L4.18826 16.9987L2.79497 21.2036L7.00155 19.809L18.6175 8.19388ZM21.4293 2.57049C20.6882 1.82935 19.5074 1.79567 18.7262 2.46943L18.6175 2.57049L17.2115 3.97634L20.0234 6.78804L21.4293 5.38219C22.1705 4.64105 22.2042 3.46036 21.5304 2.67927L21.4293 2.57049Z"
                           fill="#0067C5"
-                          fill-rule="evenodd"
-                        />
+                        >
+                        </path>
                       </svg>
                     </span>
                   </button>
                   <button
-                    aria-label="Slett"
-                    class="ikon-knapp navds-button navds-button--tertiary navds-button--medium navds-button--icon-only"
-                    title="Slett"
                     type="button"
+                    aria-label="Slett"
+                    title="Slett"
+                    class="ikon-knapp navds-button navds-button--tertiary navds-button--medium navds-button--icon-only"
                   >
-                    <span
-                      class="navds-button__icon"
-                    >
+                    <span class="navds-button__icon">
                       <svg
-                        class="ikon"
-                        fill="none"
-                        height="24"
-                        viewBox="0 0 22 24"
                         width="22"
+                        height="24"
+                        viewbox="0 0 22 24"
+                        fill="none"
                         xmlns="http://www.w3.org/2000/svg"
+                        class="ikon"
                       >
                         <path
+                          fill-rule="evenodd"
                           clip-rule="evenodd"
                           d="M11 0C13.4189 0 15.4366 1.71767 15.8999 3.99981L22 4V6H20V20C20 22.2091 18.2091 24 16 24H6C3.79086 24 2 22.2091 2 20V6H0V4L6.10006 3.99981C6.5634 1.71767 8.58111 0 11 0ZM8.17004 4H8.66856H8.70601H9.26735H12.7327H13.2598H13.3079H13.829L13.7533 3.80669C13.6245 3.50979 13.449 3.23782 13.2362 3C12.7661 2.47481 12.1137 2.11621 11.3786 2.02365L11.1763 2.00509L11 2C10.1115 2 9.31326 2.38625 8.76394 3C8.54865 3.24054 8.3716 3.51603 8.24235 3.8169L8.17004 4ZM4 6H18V20L17.9945 20.1493C17.9182 21.1841 17.0544 22 16 22H6L5.85074 21.9945C4.81588 21.9182 4 21.0544 4 20V6ZM9 9V19H7V9H9ZM15 9V19H13V9H15Z"
                           fill="#0067C5"
-                          fill-rule="evenodd"
-                        />
+                        >
+                        </path>
                       </svg>
                     </span>
                   </button>
@@ -96,96 +74,75 @@ exports[`EditerbartElementListe > snapshot test 1`] = `
               </div>
             </div>
           </h2>
-          <div
-            class="padding-left"
-          >
+          <div class="padding-left">
             <div>
               Element
             </div>
           </div>
         </div>
       </div>
-      <div
-        class="elementer__container"
-      >
-        <div
-          class="editerbart__element"
-        >
-          <h2
-            class="navds-heading navds-heading--small navds-typo--spacing"
-          >
-            <div
-              class="heading-margin"
-            >
-              <div
-                class="editerbart-element__legend editerbart-element__legend--understrek"
-              >
-                <span
-                  class="editerbart-element__legend__tittel-container"
-                >
-                  <span
-                    class="editerbart-element__legend__tittel-container__tittelikon"
-                  >
-                    <div />
+      <div class="elementer__container">
+        <div class="editerbart__element">
+          <h2 class="navds-heading navds-heading--small navds-typo--spacing">
+            <div class="heading-margin">
+              <div class="editerbart-element__legend editerbart-element__legend--understrek">
+                <span class="editerbart-element__legend__tittel-container">
+                  <span class="editerbart-element__legend__tittel-container__tittelikon">
+                    <div>
+                    </div>
                   </span>
-                  <h3
-                    class="typo-undertittel editerbart-element__legend__tittel-container__tittel"
-                  >
+                  <h3 class="typo-undertittel editerbart-element__legend__tittel-container__tittel">
                     tittel: Navn
                   </h3>
                 </span>
-                <span
-                  class="editerbart-element__legend__symboler"
-                >
+                <span class="editerbart-element__legend__symboler">
                   <button
-                    aria-label="Rediger"
-                    class="ikon-knapp navds-button navds-button--tertiary navds-button--medium navds-button--icon-only"
-                    title="Rediger"
                     type="button"
+                    aria-label="Rediger"
+                    title="Rediger"
+                    class="ikon-knapp navds-button navds-button--tertiary navds-button--medium navds-button--icon-only"
                   >
-                    <span
-                      class="navds-button__icon"
-                    >
+                    <span class="navds-button__icon">
                       <svg
-                        class="ikon"
-                        fill="none"
-                        height="24"
-                        viewBox="0 0 24 24"
                         width="24"
+                        height="24"
+                        viewbox="0 0 24 24"
+                        fill="none"
                         xmlns="http://www.w3.org/2000/svg"
+                        class="ikon"
                       >
                         <path
+                          fill-rule="evenodd"
                           clip-rule="evenodd"
                           d="M22.8353 1.16464C24.3882 2.7175 24.3882 5.23518 22.8353 6.78804L8.07288 21.5494L0.682007 24L0 23.318L2.44911 15.926L17.2115 1.16464C18.7645 -0.388214 21.2823 -0.388214 22.8353 1.16464ZM18.6175 8.19388L15.8056 5.38219L4.18826 16.9987L2.79497 21.2036L7.00155 19.809L18.6175 8.19388ZM21.4293 2.57049C20.6882 1.82935 19.5074 1.79567 18.7262 2.46943L18.6175 2.57049L17.2115 3.97634L20.0234 6.78804L21.4293 5.38219C22.1705 4.64105 22.2042 3.46036 21.5304 2.67927L21.4293 2.57049Z"
                           fill="#0067C5"
-                          fill-rule="evenodd"
-                        />
+                        >
+                        </path>
                       </svg>
                     </span>
                   </button>
                   <button
-                    aria-label="Slett"
-                    class="ikon-knapp navds-button navds-button--tertiary navds-button--medium navds-button--icon-only"
-                    title="Slett"
                     type="button"
+                    aria-label="Slett"
+                    title="Slett"
+                    class="ikon-knapp navds-button navds-button--tertiary navds-button--medium navds-button--icon-only"
                   >
-                    <span
-                      class="navds-button__icon"
-                    >
+                    <span class="navds-button__icon">
                       <svg
-                        class="ikon"
-                        fill="none"
-                        height="24"
-                        viewBox="0 0 22 24"
                         width="22"
+                        height="24"
+                        viewbox="0 0 22 24"
+                        fill="none"
                         xmlns="http://www.w3.org/2000/svg"
+                        class="ikon"
                       >
                         <path
+                          fill-rule="evenodd"
                           clip-rule="evenodd"
                           d="M11 0C13.4189 0 15.4366 1.71767 15.8999 3.99981L22 4V6H20V20C20 22.2091 18.2091 24 16 24H6C3.79086 24 2 22.2091 2 20V6H0V4L6.10006 3.99981C6.5634 1.71767 8.58111 0 11 0ZM8.17004 4H8.66856H8.70601H9.26735H12.7327H13.2598H13.3079H13.829L13.7533 3.80669C13.6245 3.50979 13.449 3.23782 13.2362 3C12.7661 2.47481 12.1137 2.11621 11.3786 2.02365L11.1763 2.00509L11 2C10.1115 2 9.31326 2.38625 8.76394 3C8.54865 3.24054 8.3716 3.51603 8.24235 3.8169L8.17004 4ZM4 6H18V20L17.9945 20.1493C17.9182 21.1841 17.0544 22 16 22H6L5.85074 21.9945C4.81588 21.9182 4 21.0544 4 20V6ZM9 9V19H7V9H9ZM15 9V19H13V9H15Z"
                           fill="#0067C5"
-                          fill-rule="evenodd"
-                        />
+                        >
+                        </path>
                       </svg>
                     </span>
                   </button>
@@ -193,43 +150,34 @@ exports[`EditerbartElementListe > snapshot test 1`] = `
               </div>
             </div>
           </h2>
-          <div
-            class="padding-left"
-          >
+          <div class="padding-left">
             <div>
               Element
             </div>
           </div>
         </div>
       </div>
-      <div
-        class="legg__til__knapp"
-      >
-        <button
-          class="navds-button navds-button--tertiary navds-button--small"
-        >
-          <span
-            class="navds-button__icon"
-          >
+      <div class="legg__til__knapp">
+        <button class="navds-button navds-button--tertiary navds-button--small">
+          <span class="navds-button__icon">
             <svg
-              class="ikon"
-              fill="none"
-              height="20"
-              viewBox="-1 0 22 23"
               width="20"
+              height="20"
+              viewbox="-1 0 22 23"
+              fill="none"
               xmlns="http://www.w3.org/2000/svg"
+              class="ikon"
             >
               <path
+                fill-rule="evenodd"
                 clip-rule="evenodd"
                 d="M10 0C15.5228 0 20 4.47715 20 10C20 15.5228 15.5228 20 10 20C4.47715 20 0 15.5228 0 10C0 4.47715 4.47715 0 10 0ZM10 1.66667C5.39763 1.66667 1.66667 5.39763 1.66667 10C1.66667 14.6024 5.39763 18.3333 10 18.3333C14.6024 18.3333 18.3333 14.6024 18.3333 10C18.3333 5.39763 14.6024 1.66667 10 1.66667ZM10.8333 5V9.16667H15V10.8333H10.8333V15H9.16667V10.8333H5V9.16667H9.16667V5H10.8333Z"
                 fill="#0067C5"
-                fill-rule="evenodd"
-              />
+              >
+              </path>
             </svg>
           </span>
-          <span
-            class="navds-label navds-label--small"
-          >
+          <span class="navds-label navds-label--small">
             Legg til
           </span>
         </button>
@@ -237,4 +185,5 @@ exports[`EditerbartElementListe > snapshot test 1`] = `
     </div>
   </div>
 </div>
+
 `;

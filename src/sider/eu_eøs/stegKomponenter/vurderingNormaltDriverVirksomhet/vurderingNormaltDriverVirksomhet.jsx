@@ -7,8 +7,6 @@ import EnkeltVilkaar from "../felles/enkeltVilkaar";
 
 import { arrayTilKonjunksjon } from "../../../../utils/streng";
 
-import "./vurderingNormaltDriverVirksomhet.css";
-
 const NormaltDriverVirksomhet = (props) => {
   const {
     bekreftOgFortsett,
@@ -37,7 +35,7 @@ const NormaltDriverVirksomhet = (props) => {
       : "";
 
   return (
-    <div className="vurderingNormaltDriverVirksomhet">
+    <>
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Drift i Norge</Nav.Typo.Innholdstittel>
       <EnkeltVilkaar
         oppdaterData={oppdaterData}
@@ -61,7 +59,7 @@ const NormaltDriverVirksomhet = (props) => {
           disabled: !redigerbart,
         }}
       />
-    </div>
+    </>
   );
 };
 

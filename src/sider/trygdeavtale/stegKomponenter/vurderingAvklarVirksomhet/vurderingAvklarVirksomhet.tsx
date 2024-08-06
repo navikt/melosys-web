@@ -78,7 +78,7 @@ const VurderingAvklarVirksomhet = ({
       </Nav.Typo.Innholdstittel>
 
       {virksomheterListe?.length !== 0 ? (
-        <Skjema.RadioGroup legend="" hideLegend name="virksomhet" disabled={!redigerbart}>
+        <Skjema.RadioGroup legend="" hideLegend name="virksomhet" readOnly={!redigerbart}>
           {virksomheterListe?.map((virksomhet) => (
             <Nav.Radio key={virksomhet.kode} value={virksomhet.kode}>
               {virksomhet.term}

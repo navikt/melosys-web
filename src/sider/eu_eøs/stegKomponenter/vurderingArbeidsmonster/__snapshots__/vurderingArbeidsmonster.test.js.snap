@@ -38,7 +38,7 @@ exports[`VurderingArbeidsmonster snapshot test 1`] = `
               <p
                 class="typo-undertekst-bold marginaltArbeidCheckbox"
               >
-                Marginalt arbeid? 
+                Marginalt arbeid?
                 (&lt;5%)
               </p>
             </div>

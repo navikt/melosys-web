@@ -119,7 +119,7 @@ const VurderingBestemmelse = ({
       <Skjema.RadioGroup
         legend="Hva er din vurdering av søknaden?"
         name="vedtak"
-        disabled={!redigerbart || updatePending}
+        readOnly={!redigerbart || updatePending}
         onChange={() => {
           resetField("tilleggsbestemmelse");
           resetField("bestemmelse");

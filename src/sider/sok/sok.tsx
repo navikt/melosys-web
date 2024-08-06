@@ -28,7 +28,7 @@ export const Sok = ({ children }: SokProps) => {
     dispatch(landkoderOperations.hentLandkoder());
     if (sokefrase) {
       setSokPending(true);
-      await dispatch(sokOperations.sok(sokefrase));
+      dispatch(sokOperations.sok(sokefrase));
       setSokPending(false);
     }
   };

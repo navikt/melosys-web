@@ -66,7 +66,7 @@ const VirksomhetenINorge = ({
           <Nav.Row className="sporsmal-og-svar">
             <Skjema.RadioGroup
               legend="Er arbeidsgiver en offentlig virksomhet?"
-              disabled={!redigerbart}
+              readOnly={!redigerbart}
               name="juridiskArbeidsgiverNorge.erOffentligVirksomhet"
             >
               <Nav.Radio value>Ja</Nav.Radio>

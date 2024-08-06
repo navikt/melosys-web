@@ -2,24 +2,8 @@ import { render, screen } from "@testing-library/react";
 import MKV from "../../../../melosyskodeverk";
 import VurderingArtikkel13_2b from "./vurderingArtikkel13_2b";
 
-vi.mock("../../../../utils", async () => {
-  const actual = await vi.importActual("../../../../utils");
-  return {
-    ...actual,
-    _uuid: () => "123",
-  };
-});
-vi.mock("nav-frontend-js-utils", async () => {
-  const actual = await vi.importActual("nav-frontend-js-utils");
-  return {
-    ...actual,
-    guid: () => "123",
-  };
-});
-
-// TODO: Skriv om når aksel tas inn i prosjektet. MELOSYS-6021
 /* eslint-disable react/jsx-pascal-case */
-describe.skip("VurderingArtikkel13_2b", () => {
+describe("vurderingArtikkel13_2b", () => {
   const props = (omfattesILandFaktaKode = MKV.Koder.landkoder.CY) => ({
     tilstand: {
       omfattesILandFakta: {

@@ -1,6 +1,5 @@
-import renderer from "react-test-renderer";
-
 import VedleggRow from "./vedleggRow";
+import { render } from "@testing-library/react";
 
 const dokument = {
   dokumentID: "1",
@@ -14,7 +13,7 @@ const dokument = {
 
 describe("vedleggRow", () => {
   it("snapshot test", () => {
-    const tree = renderer.create(<VedleggRow slettVedlegg={vi.fn()} vedlegg={dokument} redigerbart />).toJSON();
-    expect(tree).toMatchSnapshot();
+    const { container } = render(<VedleggRow slettVedlegg={vi.fn()} vedlegg={dokument} redigerbart />);
+    expect(container).toMatchSnapshot();
   });
 });

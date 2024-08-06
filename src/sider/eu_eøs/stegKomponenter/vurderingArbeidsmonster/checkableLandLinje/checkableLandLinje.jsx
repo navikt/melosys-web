@@ -1,22 +1,16 @@
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
-import PT from "prop-types";
-import { reset } from "redux-form";
-
 import { konverterAvklartfaktaTilStegData, lagAvklartfakta } from "../../../../../felleskomponenter/stegvelger";
 import MKV from "../../../../../melosyskodeverk";
 import { BOOLSK_STRING } from "../../../../../constants";
+import { reset } from "redux-form";
 import * as KV from "../../../../../kodeverk";
-import LandLinje from "../landlinje/landlinje";
+import PT from "prop-types";
 import * as MPT from "../../../../../proptypes";
+import * as Nav from "../../../../../navFrontend";
 
-/**
- * Enkeltsjekkboks for marginalt arbeid i et land.
- *
- * @param props Objekt Diverse props (se propTypes)
- */
 const CheckableLandLinje = (props) => {
-  const { landKode, avklartMarginaltArbeidILand, oppdaterData, redigerbart } = props;
+  const { arbeidsland, avklartMarginaltArbeidILand, oppdaterData } = props;
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -30,9 +24,9 @@ const CheckableLandLinje = (props) => {
   const erMarginaltArbeidIArbeidsland =
     avklartMarginaltArbeidILand && avklartMarginaltArbeidILand.fakta.includes("TRUE");
 
-  const klikkHandler = () => {
+  const oppdaterDataOnCheck = () => {
     const verdi = erMarginaltArbeidIArbeidsland ? BOOLSK_STRING.USANN : BOOLSK_STRING.SANN;
-    oppdaterData(lagAvklartfakta(MKV.Koder.avklartefaktatyper.MARGINALT_ARBEID, landKode.kode, verdi));
+    oppdaterData(lagAvklartfakta(MKV.Koder.avklartefaktatyper.MARGINALT_ARBEID, arbeidsland.kode, verdi));
 
     /* Ved valg av marginale land(skal ikke ha SED), reinitialize former med mottakerinstitusjoner,
     slik at mottakerinstitusjoner i vedtakssteget/utpekingssteg oppdateres.
@@ -42,23 +36,22 @@ const CheckableLandLinje = (props) => {
   };
 
   return (
-    <LandLinje
-      land={`${landKode.term} (${landKode.kode})`}
-      checkbox={{
-        redigerbart,
-        checked: erMarginaltArbeidIArbeidsland === true,
-        value: BOOLSK_STRING.SANN,
-        onCheck: klikkHandler,
-      }}
-    />
+    <Nav.Checkbox
+      size="small"
+      value={arbeidsland.kode}
+      id={`marginaltArbeidslandListe.${arbeidsland.kode}`}
+      key={`marginaltArbeidslandListe.${arbeidsland.kode}`}
+      onChange={(changeEvent) => oppdaterDataOnCheck(changeEvent)}
+    >
+      {arbeidsland.term}
+    </Nav.Checkbox>
   );
 };
 
 CheckableLandLinje.propTypes = {
   oppdaterData: PT.func.isRequired,
-  landKode: MPT.Kodeverk.isRequired,
+  arbeidsland: MPT.Kodeverk.isRequired,
   avklartMarginaltArbeidILand: PT.object,
-  redigerbart: PT.bool.isRequired,
 };
 
 CheckableLandLinje.defaultProps = {

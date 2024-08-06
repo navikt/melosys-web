@@ -1,6 +1,5 @@
-import renderer from "react-test-renderer";
-
 import Begrunnelser from "./begrunnelser";
+import { render } from "@testing-library/react";
 
 describe("Begrunnelser", () => {
   let props = null;
@@ -18,7 +17,7 @@ describe("Begrunnelser", () => {
   });
 
   it("snapshot test", () => {
-    const tree = renderer.create(<Begrunnelser {...props} />).toJSON();
-    expect(tree).toMatchSnapshot();
+    const { container } = render(<Begrunnelser {...props} />);
+    expect(container).toMatchSnapshot();
   });
 });

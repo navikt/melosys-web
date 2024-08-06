@@ -63,8 +63,7 @@ describe("VurderingArtikkel16Vedtak", () => {
     expect(screen.getByText(avslagTekst)).toBeInTheDocument();
   });
 
-  // TODO: Skriv om når aksel tas inn i prosjektet. MELOSYS-6021
-  it.skip("snapshot test", () => {
+  it("snapshot test", () => {
     const { container } = renderWithProviders(<WrappedArtikkel16Vedtak {...props} />);
     expect(container).toMatchSnapshot();
   });
