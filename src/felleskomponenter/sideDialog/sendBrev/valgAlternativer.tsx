@@ -13,7 +13,11 @@ interface ValgAlternativProps {
 }
 
 const renderLabel = (beskrivelse: string, hjelpetekst: string | null) => {
-  return <LabelMedHjelpetekst label={beskrivelse} hjelpetekst={hjelpetekst} bold small />;
+  return beskrivelse != null ? (
+    <LabelMedHjelpetekst label={beskrivelse} hjelpetekst={hjelpetekst} bold small />
+  ) : (
+    <span />
+  );
 };
 
 const ValgAlternativer = ({

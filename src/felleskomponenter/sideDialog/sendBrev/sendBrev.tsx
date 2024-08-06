@@ -323,6 +323,7 @@ const SendBrev = ({
     manglerFritekst: hentFormVerdi("MANGLER_FRITEKST"),
     fritekstTittel: hentFormVerdi("BREV_TITTEL", true),
     fritekst: hentFormVerdi("FRITEKST"),
+    skalViseStandardTekstOmOpplysninger: hentFormVerdi("STANDARDTEKST_OPPLYSNINGER"),
     kopiMottakere: hentKopiMottakere() || [],
     kontaktopplysninger: hentFormVerdi("STANDARDTEKST_KONTAKTINFORMASJON"),
     saksvedlegg: valgteVedlegg.map((vedlegg) => ({

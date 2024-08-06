@@ -63,6 +63,12 @@ const BrevFelt = ({ felt, visFeltBeskrivelse, width, redigerbart }: BrevFeltProp
           </Nav.Column>
         </Nav.Row>
       );
+    case DokumenterV2.FeltType.FORMTITTEL:
+      return (
+        <Nav.Row>
+          <LabelMedHjelpetekst label={felt.beskrivelse} hjelpetekst={felt.hjelpetekst} bold small />
+        </Nav.Row>
+      );
     default:
       return null;
   }

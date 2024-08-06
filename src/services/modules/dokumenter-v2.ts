@@ -36,6 +36,7 @@ export enum FeltType {
   SJEKKBOKS = "SJEKKBOKS",
   VEDLEGG = "VEDLEGG",
   FRITEKSTVEDLEGG = "FRITEKSTVEDLEGG",
+  FORMTITTEL = "FORMTITTEL",
 }
 
 export interface Felt {
@@ -107,6 +108,7 @@ export type OpprettBrevReqDto = {
   manglerFritekst?: string | null;
   fritekstTittel?: string | null;
   fritekst?: string | null;
+  skalViseStandardTekstOmOpplysninger: boolean | false;
   kontaktpersonNavn?: string | null;
   kopiMottakere?: KopiMottaker[];
   kontaktopplysninger?: boolean | null;
