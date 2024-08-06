@@ -5,7 +5,7 @@ exports[`VurderingArbeidsmonster > snapshot test 1`] = `
 <div>
   <div class="vurderingArbeidsmonster">
     <h1 class="typo-innholdstittel stegvelgertittel">
-      Vurder aktiviteten i de ulike landene
+      Arbeidsmønster
     </h1>
     <div class="arbeidsmonster">
       <fieldset class="fieldset">
@@ -14,62 +14,10 @@ exports[`VurderingArbeidsmonster > snapshot test 1`] = `
         </legend>
         <div class="marginaltArbeid">
           <div class="landliste_innhold">
-            <div class="land__enkeltlinje">
-              <p class="typo-undertekst-bold">
-                Land
-              </p>
-              <p class="typo-undertekst-bold marginaltArbeidCheckbox">
-                Marginalt arbeid? (&lt;5%)
-              </p>
-            </div>
-            <div class="vurderingArbeidsmonster__landlinje">
-              <span>
+            <div>
+              <b>
                 Flere land. Ikke kjent hvilke
-              </span>
-              <div class="vurderingArbeidsmonster__landlinje__marginaltArbeidCheckbox navds-checkbox navds-checkbox--medium navds-checkbox--disabled">
-                <input
-                  disabled
-                  class="navds-checkbox__input"
-                  id="333"
-                  type="checkbox"
-                  aria-checked="true"
-                  aria-labelledby="333"
-                  value
-                  checked
-                >
-                <label
-                  for="333"
-                  class="navds-checkbox__label"
-                >
-                  <span class="navds-checkbox__icon">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="0.8125rem"
-                      height="0.625rem"
-                      viewbox="0 0 13 10"
-                      fill="none"
-                      focusable="false"
-                      role="img"
-                      aria-hidden="true"
-                    >
-                      <path
-                        d="M4.03524 6.41478L10.4752 0.404669C11.0792 -0.160351 12.029 -0.130672 12.5955 0.47478C13.162 1.08027 13.1296 2.03007 12.5245 2.59621L5.02111 9.59934C4.74099 9.85904 4.37559 10 4.00025 10C3.60651 10 3.22717 9.84621 2.93914 9.56111L0.439143 7.06111C-0.146381 6.47558 -0.146381 5.52542 0.439143 4.93989C1.02467 4.35437 1.97483 4.35437 2.56036 4.93989L4.03524 6.41478Z"
-                        fill="currentColor"
-                      >
-                      </path>
-                    </svg>
-                  </span>
-                  <span class="navds-checkbox__content">
-                    <span
-                      id="333"
-                      aria-hidden="true"
-                      class="navds-checkbox__label-text navds-body-short navds-body-short--medium"
-                    >
-                      ja
-                    </span>
-                  </span>
-                </label>
-              </div>
+              </b>
             </div>
           </div>
         </div>
