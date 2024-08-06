@@ -108,7 +108,7 @@ export type OpprettBrevReqDto = {
   manglerFritekst?: string | null;
   fritekstTittel?: string | null;
   fritekst?: string | null;
-  skalViseStandardTekstOmOpplysninger: boolean | false;
+  skalViseStandardTekstOmOpplysninger?: boolean | null;
   kontaktpersonNavn?: string | null;
   kopiMottakere?: KopiMottaker[];
   kontaktopplysninger?: boolean | null;
