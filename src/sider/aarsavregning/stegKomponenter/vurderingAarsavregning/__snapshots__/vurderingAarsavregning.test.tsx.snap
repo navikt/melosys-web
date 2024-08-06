@@ -19,16 +19,16 @@ exports[`VurderingAarsavreging > VurderingAarsavregning > snapshot test 1`] = `
       </legend>
       <div class="row">
         <div class="col col-xs-4">
-          <div class="navds-form-field navds-form-field--medium">
+          <div class="navds-form-field navds-form-field--small">
             <label
               for="333"
-              class="navds-form-field__label navds-label"
+              class="navds-form-field__label navds-label navds-label--small"
             >
             </label>
             <div class="navds-select__container">
               <select
                 id="333"
-                class="navds-select__input navds-body-short navds-body-short--medium"
+                class="navds-select__input navds-body-short navds-body-short--small"
               >
                 <option
                   value

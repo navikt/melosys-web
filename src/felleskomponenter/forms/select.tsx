@@ -34,7 +34,7 @@ const Select = forwardRef<HTMLSelectElement, SelectComponentProps & UseControlle
               if (onChange) onChange(event?.target?.value);
             }}
             error={getErrorMessage(field, formState)}
-            size={size || "small"}
+            size={size}
             className={`melosys-select ${className ?? ""}`}
             {...rest}
           >

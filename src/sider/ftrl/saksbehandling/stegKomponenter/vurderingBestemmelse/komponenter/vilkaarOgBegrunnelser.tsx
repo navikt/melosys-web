@@ -49,7 +49,7 @@ export const VilkaarOgBegrunnelser = ({
   const harValgtFTRL_ARBEIDSTAKER = vilkår === MKV.Koder.vilkaar.FTRL_ARBEIDSTAKER && vilkårErValgt;
 
   return (
-    <Fragment>
+    <>
       <Nav.RadioGroup
         legend={
           <LabelMedHjelpetekst
@@ -72,23 +72,20 @@ export const VilkaarOgBegrunnelser = ({
       )}
       {vilkårErValgt === false && <IngenFlytMelding />}
       {vilkårErValgt && !Utils._isEmpty(muligeBegrunnelser) && (
-        <Nav.Fieldset
-          className="select"
-          legend={
-            <LabelMedHjelpetekst
-              label="Særlig grunn"
-              hjelpetekst="Grunnen du velger utløser en standardtekst i vedtaksbrevet."
-            />
-          }
-        >
+        <>
           <Nav.Row>
             <Nav.Column xs="7">
               <Nav.Select
-                label=""
+                label={
+                  <LabelMedHjelpetekst
+                    label="Særlig grunn"
+                    hjelpetekst="Grunnen du velger utløser en standardtekst i vedtaksbrevet."
+                  />
+                }
                 onChange={handleEndreBegrunnelseKode}
                 name={`${vilkår}`}
                 value={valgtBegrunnelseForVilkår?.begrunnelseKode}
-                disabled={!redigerbart}
+                readOnly={!redigerbart}
               >
                 <option key="" value="" disabled={!!alleValgteBegrunnelser.get(`${vilkår}`)}>
                   Velg...
@@ -115,8 +112,8 @@ export const VilkaarOgBegrunnelser = ({
               </Nav.Column>
             </Nav.Row>
           )}
-        </Nav.Fieldset>
+        </>
       )}
-    </Fragment>
+    </>
   );
 };

@@ -61,7 +61,7 @@ const Bestemmelse = ({
       label="Velg bestemmelse"
       value={bestemmelse}
       onChange={(event) => handleEndreBestemmelse(event.target.value)}
-      disabled={!redigerbart || !visStorbritanniaKonvensjon}
+      readOnly={!redigerbart || !visStorbritanniaKonvensjon}
     >
       <option disabled={!!bestemmelse} key="" value="" label="Velg..." />
       {hentBestemmelser().map((ktobject) => (

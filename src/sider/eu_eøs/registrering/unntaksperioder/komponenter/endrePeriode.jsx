@@ -67,11 +67,10 @@ const EndrePeriode = ({
       </Nav.Column>
       <Nav.Column xs="12">
         <Nav.Select
-          bredde="xl"
           label="Begrunnelse for endret periode"
           onChange={(e) => oppdaterFelt(e, oppdaterBegrunnelse)}
-          disabled={!redigerbart}
-          feil={feilmeldinger.begrunnelse}
+          readOnly={!redigerbart}
+          error={feilmeldinger.begrunnelse}
           value={begrunnelse || "0"}
         >
           <option key={uuid()} value="0" disabled>

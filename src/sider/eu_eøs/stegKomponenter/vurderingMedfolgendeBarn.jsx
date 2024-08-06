@@ -72,7 +72,7 @@ const MedfolgendeBarn = ({
               <Nav.Select
                 onChange={(e) => onBegrunnelseChange(e.target.value)}
                 value={begrunnelse}
-                disabled={!redigerbart}
+                readOnly={!redigerbart}
                 label="Begrunnelse for avslag:"
               >
                 <option key={Utils._uuid()} value="" disabled>

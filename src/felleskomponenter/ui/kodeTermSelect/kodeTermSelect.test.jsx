@@ -37,17 +37,18 @@ describe("KodeTermSelect", () => {
     expect(screen.getByRole("option", { name: "valg 1" })).toBeInTheDocument();
   });
 
+  // readonly settes ikke på selecten, men ligger som tittel i legend under svg
   describe("redigerbart prop", () => {
     it("true enabler select", () => {
       props.redigerbart = true;
       render(<KodeTermSelect {...props} />);
-      expect(screen.getByRole("combobox")).toBeEnabled();
+      expect(screen.queryByTitle("readonly")).not.toBeInTheDocument();
     });
 
     it("false disabler select", () => {
       props.redigerbart = false;
       render(<KodeTermSelect {...props} />);
-      expect(screen.getByRole("combobox")).toBeDisabled();
+      expect(screen.getByTitle("readonly")).toBeInTheDocument();
     });
   });
 });

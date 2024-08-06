@@ -102,7 +102,7 @@ const SokkelSkipEnkelt = ({
         <Nav.Column xs="3">
           <Nav.Select
             name={`${key}_begrunnelser`}
-            disabled={sokkelSkipDisabled}
+            readOnly={sokkelSkipDisabled}
             id="installasjonsTypeBegrunnelser"
             label="Begrunnelse hvis sokkel"
             onChange={begrunnelserEndret}

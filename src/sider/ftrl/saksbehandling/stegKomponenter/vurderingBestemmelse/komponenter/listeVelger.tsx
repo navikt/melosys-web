@@ -1,5 +1,4 @@
 import * as Nav from "../../../../../../navFrontend";
-import LabelMedHjelpetekst from "../../../../../../felleskomponenter/labelMedHjelpetekst";
 import * as KV from "../../../../../../kodeverk";
 
 type ListeVelgerProps = {
@@ -24,27 +23,25 @@ export const ListeVelger = ({
   if (muligeAlternativer?.length === 0) return null;
 
   return (
-    <Nav.Fieldset className="select" legend={<LabelMedHjelpetekst label={tittel} />}>
-      <Nav.Row>
-        <Nav.Column xs="7">
-          <Nav.Select
-            label=""
-            onChange={(event) => endretAlternativ(event.target.value)}
-            name={name}
-            value={valgtAlternativ}
-            disabled={!redigerbart}
-          >
-            <option key="" value="" disabled>
-              Velg...
+    <Nav.Row>
+      <Nav.Column xs="7">
+        <Nav.Select
+          label={tittel}
+          onChange={(event) => endretAlternativ(event.target.value)}
+          name={name}
+          value={valgtAlternativ}
+          readOnly={!redigerbart}
+        >
+          <option key="" value="" disabled>
+            Velg...
+          </option>
+          {muligeAlternativer?.map((alternativ) => (
+            <option key={alternativ} value={alternativ}>
+              {KV.kodeTilTerm(alternativ, kodeverkKoder)}
             </option>
-            {muligeAlternativer?.map((alternativ) => (
-              <option key={alternativ} value={alternativ}>
-                {KV.kodeTilTerm(alternativ, kodeverkKoder)}
-              </option>
-            ))}
-          </Nav.Select>
-        </Nav.Column>
-      </Nav.Row>
-    </Nav.Fieldset>
+          ))}
+        </Nav.Select>
+      </Nav.Column>
+    </Nav.Row>
   );
 };

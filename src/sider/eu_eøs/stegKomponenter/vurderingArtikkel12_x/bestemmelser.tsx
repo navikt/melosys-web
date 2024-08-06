@@ -263,7 +263,6 @@ export const Bestemmelser = ({
               value={bestemmelse}
               onChange={(event) => handleEndreBestemmelse(event.target.value)}
               readOnly={!redigerbart || !visStorbritanniaKonvensjon}
-              size="small"
             >
               <option disabled={!!bestemmelse} key="" value="" label="Velg..." />
               {hentBestemmelser().map((ktobject) => (
