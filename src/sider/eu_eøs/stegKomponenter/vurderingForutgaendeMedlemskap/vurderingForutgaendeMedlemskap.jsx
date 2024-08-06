@@ -31,7 +31,6 @@ const VurderingForutgaendeMedlemskap = (props) => {
         labelIkkeOppfylt="Nei"
         begrunnelser={begrunnelser}
         oppdaterData={oppdaterData}
-        size="small"
       />
       <Mui.StegKnapper
         bekreftKnappProps={{

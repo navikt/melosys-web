@@ -77,6 +77,7 @@ const FagsakVelger = (props) => {
           onChange={setValgtVisning}
           legend=""
           hideLegend
+          size="medium"
         >
           <HStack gap="3" justify="space-between">
             <EnkelNavBox focused={valgtVisning === EKSISTERENDE}>

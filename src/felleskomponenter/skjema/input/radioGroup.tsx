@@ -52,7 +52,7 @@ const InnerRadioGroup = ({
       className={`skjema-radiogroup ${className ?? ""}`}
       error={error}
       onChange={innerChange}
-      size={size ?? "small"}
+      size={size}
       id={id}
       readOnly={readOnly}
     >

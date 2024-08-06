@@ -1,6 +1,17 @@
 {
   "parser": "@typescript-eslint/parser",
   "rules": {
+    "no-restricted-imports": [
+      "error",
+      {
+        "paths": [
+          {
+            "name": "@navikt/ds-react",
+            "message": "Direct import from @navikt/ds-react is not allowed. Use \"src/navFrontend\" instead."
+          }
+        ]
+      }
+    ],
     "space-before-function-paren": "off",
     "import/named": "off",
     "import/order": "off",
@@ -38,9 +49,17 @@
         "functions": "never"
       }
     ],
-    "no-return-assign": ["error", "except-parens"],
+    "no-return-assign": [
+      "error",
+      "except-parens"
+    ],
     "wrap-iife": "off",
-    "no-param-reassign": ["error", { "props": false }],
+    "no-param-reassign": [
+      "error",
+      {
+        "props": false
+      }
+    ],
     "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": [
       2,
@@ -50,7 +69,9 @@
         "ignoreRestSiblings": true
       }
     ],
-    "react/jsx-filename-extension": [0],
+    "react/jsx-filename-extension": [
+      0
+    ],
     // Tillat import av ts-filer uten å spesifisere extension(.ts, .tsx)
     "import/extensions": [
       "error",
@@ -63,24 +84,43 @@
         "tsx": "never"
       }
     ],
-    "import/no-extraneous-dependencies": [0],
+    "import/no-extraneous-dependencies": [
+      0
+    ],
     "import/prefer-default-export": 0,
     "import/no-named-as-default": 0,
-    "import/no-unresolved": [2, { "ignore": ["AppTypes", "Domene", "melosys-api", "nav-frontend-grid"] }],
+    "import/no-unresolved": [
+      2,
+      {
+        "ignore": [
+          "AppTypes",
+          "Domene",
+          "melosys-api",
+          "nav-frontend-grid"
+        ]
+      }
+    ],
     "import/no-cycle": 0,
     "jsx-a11y/aria-props": 2,
     "jsx-a11y/aria-proptypes": 2,
     "jsx-a11y/aria-role": 2,
     "jsx-a11y/aria-unsupported-elements": 2,
-    "jsx-a11y/href-no-hash": [0],
+    "jsx-a11y/href-no-hash": [
+      0
+    ],
     "jsx-a11y/alt-text": 2,
     "jsx-a11y/img-redundant-alt": 2,
     "jsx-a11y/label-has-for": [
       2,
       {
-        "components": ["Label"],
+        "components": [
+          "Label"
+        ],
         "required": {
-          "every": ["nesting", "id"]
+          "every": [
+            "nesting",
+            "id"
+          ]
         },
         "allowChildren": true
       }
@@ -97,20 +137,45 @@
     "jsx-a11y/anchor-is-valid": [
       "error",
       {
-        "components": ["Link"],
-        "specialLink": ["to"]
+        "components": [
+          "Link"
+        ],
+        "specialLink": [
+          "to"
+        ]
       }
     ],
     "linebreak-style": "off",
-    "no-bitwise": ["error", { "allow": ["^"] }],
+    "no-bitwise": [
+      "error",
+      {
+        "allow": [
+          "^"
+        ]
+      }
+    ],
     "no-extra-semi": "off",
-    "@typescript-eslint/no-extra-semi": ["error"],
+    "@typescript-eslint/no-extra-semi": [
+      "error"
+    ],
     // Støtt typescript reference, hvor det trengs tre slash(///)
-    "spaced-comment": ["error", "always", { "markers": ["/"] }],
+    "spaced-comment": [
+      "error",
+      "always",
+      {
+        "markers": [
+          "/"
+        ]
+      }
+    ],
     "no-shadow": "off",
-    "@typescript-eslint/no-shadow": ["error"],
+    "@typescript-eslint/no-shadow": [
+      "error"
+    ],
     "no-use-before-define": "off",
-    "@typescript-eslint/no-use-before-define": ["error"],
+    "@typescript-eslint/no-use-before-define": [
+      "error"
+    ],
     "prefer-regex-literals": "off",
     "lines-between-class-members": "off",
     "react/sort-comp": "off",
@@ -119,17 +184,28 @@
   },
   "overrides": [
     {
-      "files": ["**/*.ts", "**/*.tsx"],
+      "files": [
+        "**/*.ts",
+        "**/*.tsx"
+      ],
       "rules": {
         "react/require-default-props": "off",
         "react/prop-types": "off"
       }
     },
     {
-      "files": ["**/reducers.ts"],
+      "files": [
+        "**/reducers.ts"
+      ],
       "rules": {
         "default-param-last": "off"
       }
+    },
+    {
+      "files": [
+        "src/navFrontend/**"
+      ],
+      "rules": {"no-restricted-imports": "off"}
     }
   ],
   "extends": [
@@ -141,7 +217,10 @@
     "prettier/react",
     "plugin:vitest-globals/recommended"
   ],
-  "plugins": ["jsx-a11y", "@typescript-eslint"],
+  "plugins": [
+    "jsx-a11y",
+    "@typescript-eslint"
+  ],
   "env": {
     "browser": true,
     "vitest-globals/env": true
@@ -152,11 +231,16 @@
   },
   "settings": {
     "import/parsers": {
-      "@typescript-eslint/parser": [".ts", ".tsx"]
+      "@typescript-eslint/parser": [
+        ".ts",
+        ".tsx"
+      ]
     },
     "import/resolver": {
       "typescript": {}
     }
   },
-  "ignorePatterns": ["**/*generated.tsx"]
+  "ignorePatterns": [
+    "**/*generated.tsx"
+  ]
 }

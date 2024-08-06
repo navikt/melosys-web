@@ -238,7 +238,6 @@ export const Bestemmelser = ({
             defaultValue={vedtakValg}
             readOnly={!redigerbart}
             name="vedtakvalg"
-            size="small"
           >
             <Nav.Radio value={VedtakValg.JA_INNVILGE}>
               {konvensjonStorbritanniaToggleEnabled ? "Ja, jeg vil innvilge søknaden" : "Ja"}

@@ -106,7 +106,6 @@ const VurderingBostedsland = (props) => {
               name="bostedsland"
               readOnly={!redigerbart}
               defaultValue={erNorgeValgt}
-              size="small"
             >
               <Nav.Radio value>Norge</Nav.Radio>
               <Nav.Radio value={false}>Annet</Nav.Radio>

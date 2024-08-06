@@ -307,6 +307,7 @@ const OpprettNySak = ({
                   onChange={(value) => change("hovedpart", value)}
                   legend=""
                   hideLegend
+                  size="medium"
                 >
                   <HStack gap="3" justify="space-between">
                     <EnkelNavBox focused={hovedpartErBruker}>

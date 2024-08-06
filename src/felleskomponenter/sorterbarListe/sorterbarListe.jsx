@@ -32,7 +32,6 @@ const SorterbarListe = ({
           onChange={setSortOrder}
           legend={sortingLegend}
           defaultValue={defaultChecked}
-          size="small"
           name={uniqueName}
           className="sorteringRadiogruppe"
         >

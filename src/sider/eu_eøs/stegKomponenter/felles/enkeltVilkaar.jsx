@@ -18,7 +18,6 @@ const EnkeltVilkaar = (props) => {
     vilkaar,
     vilkaarKode,
     oppdaterData,
-    size,
   } = props;
 
   useEffect(() => {
@@ -43,7 +42,6 @@ const EnkeltVilkaar = (props) => {
             defaultValue={vilkaar.oppfylt}
             readOnly={!redigerbart}
             name={vilkaarKode}
-            size={size}
           >
             <Nav.Radio value>{labelOppfylt}</Nav.Radio>
             <Nav.Radio value={false}>{labelIkkeOppfylt}</Nav.Radio>
@@ -79,13 +77,11 @@ EnkeltVilkaar.propTypes = {
   labelIkkeOppfylt: PT.string.isRequired,
   begrunnelser: PT.arrayOf(MPT.Kodeverk),
   oppdaterData: PT.func.isRequired,
-  size: PT.string,
 };
 
 EnkeltVilkaar.defaultProps = {
   begrunnelser: [],
   tittel: "",
-  size: "medium",
 };
 
 export default EnkeltVilkaar;

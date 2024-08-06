@@ -89,7 +89,6 @@ const SokkelSkipEnkelt = ({
           disabled={sokkelSkipDisabled}
           defaultValue={installasjonsType}
           name={key}
-          size="small"
         >
           <Nav.Radio value={SOKKEL} id={Utils._uuid()}>
             Sokkel

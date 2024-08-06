@@ -62,7 +62,6 @@ const MedfolgendeBarn = ({
           onChange={onCheck}
           defaultValue={omfattet}
           name={radioName}
-          size="small"
         >
           <Nav.Radio value={BOOLSK_STRING.SANN}>Ja</Nav.Radio>
           <Nav.Radio value={BOOLSK_STRING.USANN}>Nei</Nav.Radio>

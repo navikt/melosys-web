@@ -10,12 +10,12 @@ import {
   Modal,
   Checkbox,
   Radio,
-  RadioGroup,
   Select,
   CheckboxGroup,
 } from "@navikt/ds-react";
 import Alert from "./alert";
 import TextField from "./skjema/textfield";
+import RadioGroup from "./skjema/radiogroup";
 
 // Egne implementasjoner av pakker fra nav-frontend. Noen av disse har blitt fjernet fra nav-frontend, men vi implementerer de selv fordi vi fortsatt har bruk for de.
 import { Fieldset, SkjemaGruppe, Textarea } from "./skjema";

@@ -32,7 +32,7 @@ const RadioGroup = forwardRef<HTMLSelectElement, RadioProps>(
             {...rest}
             legend={legend}
             defaultValue={field.value ?? defaultValue}
-            size={size ?? "small"}
+            size={size}
             onChange={(value: any) => {
               field.onChange(value);
               if (rest.onChange) rest.onChange(value);

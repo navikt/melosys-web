@@ -75,7 +75,6 @@ const VurderingYrkesaktivitet = (props: VurderingYrkesaktivitetProps) => {
         defaultValue={fakta}
         name="yrkesaktivitet"
         readOnly={!redigerbart}
-        size="small"
       >
         <Nav.Radio value={KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_ARBEIDSTAKER}>{labels[0]}</Nav.Radio>
         <Nav.Radio value={KV.Koder.VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE}>{labels[1]}</Nav.Radio>
