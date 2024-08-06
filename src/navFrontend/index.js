@@ -1,11 +1,12 @@
 import { Column, Container, Row } from "./grid";
 import NavFrontendSpinner from "nav-frontend-spinner";
 import Tekstomrade from "nav-frontend-tekstomrade";
-import { Box, Button, HelpText, Link, Tag, Modal, Checkbox, Radio, CheckboxGroup } from "@navikt/ds-react";
+import { Box, Button, HelpText, Link, Tag, Modal, Checkbox, Radio } from "@navikt/ds-react";
 import Alert from "./alert";
 import TextField from "./skjema/textfield";
 import RadioGroup from "./skjema/radiogroup";
 import Select from "./skjema/select";
+import CheckboxGroup from "./skjema/checkboxGroup";
 
 // Egne implementasjoner av pakker fra nav-frontend. Noen av disse har blitt fjernet fra nav-frontend, men vi implementerer de selv fordi vi fortsatt har bruk for de.
 import { Fieldset, SkjemaGruppe, Textarea } from "./skjema";

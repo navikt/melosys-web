@@ -129,13 +129,12 @@ const VurderingBostedsland = (props) => {
         {erBegrunnelserPaakrevd && erNorgeValgt === false && (
           <Nav.Row>
             <Nav.Column xs="12">
-              <Mui.Checkboxgruppe
+              <Mui.KodeTermCheckboxGroup
                 muligeValg={begrunnelser}
                 legend="Legg til begrunnelse"
                 onChange={begrunnelseEndret}
                 defaultValg={bostedslandFakta.begrunnelseKoder}
                 disabled={!redigerbart}
-                size="small"
               />
             </Nav.Column>
           </Nav.Row>
