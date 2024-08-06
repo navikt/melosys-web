@@ -154,10 +154,10 @@ const VurderingYrkesgruppe = ({
         </Nav.Radio>
         {!(konvensjonStorbritanniaToggleEnabled && MKVUtils.erUtsendt(behandlingstema)) && (
           <>
-            <Nav.Radio disabled value={IKKE_YRKESAKTIV}>
+            <Nav.Radio readOnly value={IKKE_YRKESAKTIV}>
               Ikke yrkesaktiv
             </Nav.Radio>
-            <Nav.Radio disabled value={KONTANTYTELSESMOTTAKER}>
+            <Nav.Radio readOnly value={KONTANTYTELSESMOTTAKER}>
               Kontantytelsesmottaker
             </Nav.Radio>
           </>
@@ -168,7 +168,7 @@ const VurderingYrkesgruppe = ({
             label="Velg bestemmelse"
             value={bestemmelse}
             onChange={(event) => handleEndreBestemmelse(event.target.value)}
-            disabled={!redigerbart || !visStorbritanniaKonvensjon}
+            readOnly={!redigerbart || !visStorbritanniaKonvensjon}
           >
             <option disabled={!!bestemmelse} key="" value="" label="Velg..." />
             {hentBestemmelser().map((ktobject) => (

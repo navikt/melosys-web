@@ -208,7 +208,7 @@ export const VurderingUtpekt = ({
           <Skjema.RadioGroup
             legend="Skal lovvalget godkjennes?"
             name="utpekingVurdering"
-            disabled={!redigerbart || !erBucAapen}
+            readOnly={!redigerbart || !erBucAapen}
           >
             <Nav.Radio value={MKV.Koder.utfallregistreringunntak.GODKJENT}>Godkjenn</Nav.Radio>
             <Nav.Radio value={MKV.Koder.utfallregistreringunntak.IKKE_GODKJENT}>Ikke godkjenn</Nav.Radio>

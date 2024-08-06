@@ -96,7 +96,7 @@ exports[`VurderingArtikkel16Vedtak > snapshot test 1`] = `
             class="skjemaelement__label"
             for="333"
           >
-            Fritekst til innledning
+            Fritekstfelt til begrunnelse
           </label>
           <div class="textarea--medMeta__wrapper">
             <span

@@ -4,7 +4,7 @@ import * as Nav from "../../../navFrontend";
 import { RadioGroup } from "../index";
 
 const VedtakstypeSkjema = ({ className, redigerbart, feltNavn, label }) => (
-  <RadioGroup className={className} name={feltNavn} legend={label} disabled={!redigerbart}>
+  <RadioGroup className={className} name={feltNavn} legend={label} readOnly={!redigerbart}>
     <Nav.Radio value={MKV.Koder.vedtakstyper.KORRIGERT_VEDTAK}>Korrigert vedtak</Nav.Radio>
     <Nav.Radio value={MKV.Koder.vedtakstyper.OMGJØRINGSVEDTAK} disabled>
       Omgjøringsvedtak

@@ -4,7 +4,7 @@ import Select from "../input/select";
 import * as Utils from "../../../utils";
 
 const VedtakstypebegrunnelseSkjema = ({ className, redigerbart, feltNavn, label }) => (
-  <Select feltNavn={feltNavn} label={label} className={className} disabled={!redigerbart} id={Utils._uuid()}>
+  <Select feltNavn={feltNavn} label={label} className={className} redigerbart={redigerbart} id={Utils._uuid()}>
     {MKV.KTObjects.begrunnelser.nyvurderingbakgrunner.map(({ kode, term }) => (
       <option key={kode} value={kode}>
         {term}

@@ -93,7 +93,7 @@ const FormKomponent = ({ redigerbart, formValues, oppdaterData, formIsValid }: F
     <form name="anmodningSvar" id="anmodningSvar" onSubmit={(e) => e.preventDefault()}>
       <Nav.Row className="svarFraMyndighetRow">
         <Nav.Column xs="6">
-          <Skjema.RadioGroup legend="Svar fra myndighetene" name="anmodningsperiodeSvarType" disabled={!redigerbart}>
+          <Skjema.RadioGroup legend="Svar fra myndighetene" name="anmodningsperiodeSvarType" readOnly={!redigerbart}>
             <Nav.Radio value={INNVILGELSE}>Innvilgelse</Nav.Radio>
             <Nav.Radio value={DELVIS_INNVILGELSE}>Delvis innvilgelse</Nav.Radio>
             <Nav.Radio value={AVSLAG}>Avslag</Nav.Radio>
