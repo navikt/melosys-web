@@ -38,6 +38,7 @@ const TidligereMedlemskapsperioder = ({ medlemskap, redigerbart, fields, land }:
       legend={`Velg direkte forutgående perioder i ${land}`}
       readOnly={!redigerbart}
       defaultValue={alleValgtePeriodeID}
+      size="small"
     >
       {medlemskap?.perioderMed?.map((periodeMed) => {
         const { periodeID, periode } = periodeMed;
