@@ -5,7 +5,8 @@ import Legend from "./legend";
 import { Status, SymbolsynlighetConfig } from "./types";
 
 import "./editerbartElement.css";
-import { Heading, Button } from "@navikt/ds-react";
+import { Heading } from "@navikt/ds-react";
+import * as Nav from "../../../../navFrontend";
 
 interface EditerbartElementProps {
   redigererRender: (lukkRedigering: () => void) => ReactNode;
@@ -136,9 +137,9 @@ const EditerbartElement = ({
       <div className="padding-left">
         {hentAktivtInnhold()}
         {skalRendreLagreKnapp && (
-          <Button onClick={lagreClickHandler} disabled={!redigerbart} variant="primary" size="small">
+          <Nav.Button onClick={lagreClickHandler} disabled={!redigerbart} variant="primary">
             Lagre
-          </Button>
+          </Nav.Button>
         )}
       </div>
     </div>

@@ -1,17 +1,6 @@
 {
   "parser": "@typescript-eslint/parser",
   "rules": {
-    "no-restricted-imports": [
-      "error",
-      {
-        "paths": [
-          {
-            "name": "@navikt/ds-react",
-            "message": "Direct import from @navikt/ds-react is not allowed. Use \"src/navFrontend\" instead."
-          }
-        ]
-      }
-    ],
     "space-before-function-paren": "off",
     "import/named": "off",
     "import/order": "off",
@@ -162,10 +151,6 @@
       "rules": {
         "default-param-last": "off"
       }
-    },
-    {
-      "files": ["src/navFrontend/**"],
-      "rules": { "no-restricted-imports": "off" }
     }
   ],
   "extends": [

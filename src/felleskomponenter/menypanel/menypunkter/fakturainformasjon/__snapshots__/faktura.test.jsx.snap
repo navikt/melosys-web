@@ -35,19 +35,19 @@ exports[`Faktura > snapshot test 1`] = `
         </svg>
       </button>
     </td>
-    <td class="navds-table__data-cell navds-body-short navds-body-short--medium">
+    <td class="navds-table__data-cell navds-body-short navds-body-short--small">
     </td>
-    <td class="navds-table__data-cell navds-body-short navds-body-short--medium">
+    <td class="navds-table__data-cell navds-body-short navds-body-short--small">
       Q2 - Q3 2023
     </td>
-    <td class="navds-table__data-cell navds-body-short navds-body-short--medium">
+    <td class="navds-table__data-cell navds-body-short navds-body-short--small">
       <div class="faktura_status_wrapper">
         <div class="dott green">
         </div>
         Bestilt
       </div>
     </td>
-    <td class="navds-table__data-cell navds-body-short navds-body-short--medium">
+    <td class="navds-table__data-cell navds-body-short navds-body-short--small">
       -
     </td>
   </tr>
@@ -136,28 +136,28 @@ exports[`Faktura > snapshot test 1`] = `
                 </div>
               </div>
             </div>
-            <table class="navds-table navds-table--medium">
+            <table class="navds-table navds-table--small">
               <thead class="navds-table__header">
                 <tr class="navds-table__row">
                   <th
-                    class="navds-table__header-cell navds-label"
+                    class="navds-table__header-cell navds-label navds-label--small"
                     scope="col"
                   >
                   </th>
                   <th
-                    class="navds-table__header-cell navds-label"
+                    class="navds-table__header-cell navds-label navds-label--small"
                     scope="col"
                   >
                     Antall
                   </th>
                   <th
-                    class="navds-table__header-cell navds-label"
+                    class="navds-table__header-cell navds-label navds-label--small"
                     scope="col"
                   >
                     Enhetspris
                   </th>
                   <th
-                    class="navds-table__header-cell navds-label"
+                    class="navds-table__header-cell navds-label navds-label--small"
                     scope="col"
                   >
                     Beløp

@@ -1,8 +1,8 @@
 import PT from "prop-types";
 import { submit, Field } from "redux-form";
-import { Checkbox as NavCheckbox } from "@navikt/ds-react";
 import "../skjema.css";
 import * as Utils from "../../../utils";
+import * as Nav from "../../../navFrontend";
 
 function InnerCheckboxComponent({ input, meta, label, submitOnChange, onClick, disabled, className }) {
   const feil = meta.error && meta.touched && !meta.active ? meta.error : undefined;
@@ -15,7 +15,7 @@ function InnerCheckboxComponent({ input, meta, label, submitOnChange, onClick, d
   };
 
   return (
-    <NavCheckbox
+    <Nav.Checkbox
       feil={feil}
       checked={input.value}
       onClick={onClick}
@@ -24,10 +24,9 @@ function InnerCheckboxComponent({ input, meta, label, submitOnChange, onClick, d
       disabled={disabled}
       className={className}
       id={Utils._uuid()}
-      size="small"
     >
       {label}
-    </NavCheckbox>
+    </Nav.Checkbox>
   );
 }
 

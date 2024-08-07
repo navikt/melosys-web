@@ -1,12 +1,13 @@
 import { useSelector } from "react-redux";
-import { Alert, BodyShort, Heading, Tag } from "@navikt/ds-react";
-import { PersonGroupIcon, ChildEyesIcon } from "@navikt/aksel-icons";
+import { BodyShort, Heading } from "@navikt/ds-react";
+import { ChildEyesIcon, PersonGroupIcon } from "@navikt/aksel-icons";
 import { useHentFamiliemedlemmerQuery } from "./hentFamiliemedlemmer.generated";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import { Familierelasjonsrolle } from "../../../../../graphql";
 import bem from "../../../../../bemUtils";
 import { BarnTable } from "./tables/barnTable";
 import { EktefelleTable } from "./tables/ektefelleTable";
+import * as Nav from "../../../../../navFrontend";
 
 import "./familiemedlemmer.css";
 
@@ -14,7 +15,7 @@ const Familiemedlemmer = () => {
   const behandlingID: number = useSelector(behandlingerSelectors.BehandlingIDSelector) as number;
   const { loading, error, data } = useHentFamiliemedlemmerQuery({ variables: { behandlingID } });
 
-  if (error) return <Alert variant="error">Kunne ikke hente familiemedlemmer!</Alert>;
+  if (error) return <Nav.Alert variant="error">Kunne ikke hente familiemedlemmer!</Nav.Alert>;
   if (loading) return <div>Henter familiemedlemmer...</div>;
 
   const barn =
@@ -35,9 +36,9 @@ const Familiemedlemmer = () => {
   return (
     <div className={familiemedlemmerClassName.block}>
       <div className={familiemedlemmerClassName.element("padding-bottom")}>
-        <Tag size="small" variant="info" className={familiemedlemmerClassName.element("fra-register-etikett")}>
+        <Nav.Tag variant="info" className={familiemedlemmerClassName.element("fra-register-etikett")}>
           Fra register
-        </Tag>
+        </Nav.Tag>
       </div>
       <Heading size="xsmall" level="2" spacing className={familiemedlemmerClassName.element("understrek")}>
         <ChildEyesIcon aria-hidden="true" fontSize="1.5rem" className="mellomrom-ikon-tekst" /> Barn

@@ -18,7 +18,7 @@ exports[`VurderingArtikkel13_x_Vedtak > snapshot test 1`] = `
     <div>
       <div class="row forkortLovvalgsperiode">
         <div class="col col-xs-8">
-          <div class="navds-checkbox navds-checkbox--small">
+          <div class="navds-checkbox navds-checkbox--medium">
             <input
               name="333"
               class="navds-checkbox__input"
@@ -54,7 +54,7 @@ exports[`VurderingArtikkel13_x_Vedtak > snapshot test 1`] = `
                 <span
                   id="333"
                   aria-hidden="true"
-                  class="navds-checkbox__label-text navds-body-short navds-body-short--small"
+                  class="navds-checkbox__label-text navds-body-short navds-body-short--medium"
                 >
                   Lovvalget innvilges for en kortere periode
                 </span>
@@ -152,17 +152,17 @@ exports[`VurderingArtikkel13_x_Vedtak > snapshot test 1`] = `
           <table class="navds-table navds-table--small">
             <thead class="navds-table__header">
               <tr class="navds-table__row navds-table__row--shade-on-hover">
-                <th class="navds-table__header-cell navds-label">
+                <th class="navds-table__header-cell navds-label navds-label--small">
                   Forhåndsvisning av brev
                 </th>
-                <th class="navds-table__header-cell navds-label">
+                <th class="navds-table__header-cell navds-label navds-label--small">
                   Mottaker
                 </th>
               </tr>
             </thead>
             <tbody class="navds-table__body">
               <tr class="navds-table__row navds-table__row--shade-on-hover">
-                <td class="navds-table__data-cell navds-body-short navds-body-short--medium">
+                <td class="navds-table__data-cell navds-body-short navds-body-short--small">
                   <a
                     href="#"
                     class="navds-link navds-link--action"
@@ -170,12 +170,12 @@ exports[`VurderingArtikkel13_x_Vedtak > snapshot test 1`] = `
                     Innvilgelse yrkesaktiv i flere land (åpnes i ny fane)
                   </a>
                 </td>
-                <td class="navds-table__data-cell navds-body-short navds-body-short--medium">
+                <td class="navds-table__data-cell navds-body-short navds-body-short--small">
                   BRUKER
                 </td>
               </tr>
               <tr class="navds-table__row navds-table__row--shade-on-hover">
-                <td class="navds-table__data-cell navds-body-short navds-body-short--medium">
+                <td class="navds-table__data-cell navds-body-short navds-body-short--small">
                   <a
                     href="#"
                     class="navds-link navds-link--action"
@@ -183,7 +183,7 @@ exports[`VurderingArtikkel13_x_Vedtak > snapshot test 1`] = `
                     SED A003 (åpnes i ny fane)
                   </a>
                 </td>
-                <td class="navds-table__data-cell navds-body-short navds-body-short--medium">
+                <td class="navds-table__data-cell navds-body-short navds-body-short--small">
                 </td>
               </tr>
             </tbody>

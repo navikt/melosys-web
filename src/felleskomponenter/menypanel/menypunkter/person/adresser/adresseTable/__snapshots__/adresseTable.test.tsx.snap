@@ -4,26 +4,26 @@ exports[`AdresseTable  > aktiv AdresseTable renders correctly 1`] = `
 
 <div>
   <div class="adresseTable menypanel__table-wrapper">
-    <table class="navds-table navds-table--medium menypanel__table">
+    <table class="navds-table navds-table--small menypanel__table">
       <thead class="navds-table__header">
         <tr class="navds-table__row navds-table__row--shade-on-hover">
-          <th class="navds-table__header-cell navds-label fixed-width ">
+          <th class="navds-table__header-cell navds-label fixed-width  navds-label--small">
             Bostedsadresse
           </th>
-          <th class="navds-table__header-cell navds-label">
+          <th class="navds-table__header-cell navds-label navds-label--small">
             Register
           </th>
-          <th class="navds-table__header-cell navds-label">
+          <th class="navds-table__header-cell navds-label navds-label--small">
             Kilde
           </th>
-          <th class="navds-table__header-cell navds-label fixed-width">
+          <th class="navds-table__header-cell navds-label fixed-width navds-label--small">
             Gyldig f.o.m.
           </th>
         </tr>
       </thead>
       <tbody class="navds-table__body">
         <tr class="navds-table__row navds-table__row--shade-on-hover">
-          <td class="navds-table__data-cell navds-body-short navds-body-short--medium">
+          <td class="navds-table__data-cell navds-body-short navds-body-short--small">
             <address>
               <div>
                 Co Yo 1
@@ -41,13 +41,13 @@ exports[`AdresseTable  > aktiv AdresseTable renders correctly 1`] = `
               </div>
             </address>
           </td>
-          <td class="navds-table__data-cell navds-body-short navds-body-short--medium">
+          <td class="navds-table__data-cell navds-body-short navds-body-short--small">
             Freg
           </td>
-          <td class="navds-table__data-cell navds-body-short navds-body-short--medium">
+          <td class="navds-table__data-cell navds-body-short navds-body-short--small">
             Folkeregisteret
           </td>
-          <td class="navds-table__data-cell gyldig-label navds-body-short navds-body-short--medium">
+          <td class="navds-table__data-cell gyldig-label navds-body-short navds-body-short--small">
             03.11.2012
           </td>
         </tr>

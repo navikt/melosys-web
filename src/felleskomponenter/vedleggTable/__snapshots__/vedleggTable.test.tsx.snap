@@ -6,18 +6,18 @@ exports[`vedleggTable > snapshot test 1`] = `
   <table class="navds-table navds-table--small vedleggtable">
     <thead class="navds-table__header">
       <tr class="navds-table__row navds-table__row--shade-on-hover">
-        <th class="navds-table__header-cell navds-label">
+        <th class="navds-table__header-cell navds-label navds-label--small">
           a
         </th>
-        <th class="navds-table__header-cell navds-label">
+        <th class="navds-table__header-cell navds-label navds-label--small">
         </th>
-        <th class="navds-table__header-cell navds-label">
+        <th class="navds-table__header-cell navds-label navds-label--small">
         </th>
       </tr>
     </thead>
     <tbody class="navds-table__body">
       <tr class="navds-table__row navds-table__row--shade-on-hover">
-        <td class="navds-table__data-cell navds-body-short navds-body-short--medium">
+        <td class="navds-table__data-cell navds-body-short navds-body-short--small">
           <a
             href="#"
             class="navds-link navds-link--action"
@@ -25,9 +25,9 @@ exports[`vedleggTable > snapshot test 1`] = `
             123
           </a>
         </td>
-        <td class="navds-table__data-cell navds-body-short navds-body-short--medium">
+        <td class="navds-table__data-cell navds-body-short navds-body-short--small">
         </td>
-        <td class="navds-table__data-cell icon__cell navds-body-short navds-body-short--medium">
+        <td class="navds-table__data-cell icon__cell navds-body-short navds-body-short--small">
           <button
             type="button"
             aria-label="Rediger vedlegg"
@@ -116,7 +116,7 @@ exports[`vedleggTable > snapshot test 1`] = `
         </dialog>
       </tr>
       <tr class="navds-table__row vedlegg navds-table__row--shade-on-hover">
-        <td class="navds-table__data-cell navds-body-short navds-body-short--medium">
+        <td class="navds-table__data-cell navds-body-short navds-body-short--small">
           <a
             href="#"
             class="navds-link navds-link--action"
@@ -124,11 +124,11 @@ exports[`vedleggTable > snapshot test 1`] = `
             test (åpnes i ny fane)
           </a>
         </td>
-        <td class="navds-table__data-cell navds-body-short navds-body-short--medium">
+        <td class="navds-table__data-cell navds-body-short navds-body-short--small">
           <span>
           </span>
         </td>
-        <td class="navds-table__data-cell icon__cell navds-body-short navds-body-short--medium">
+        <td class="navds-table__data-cell icon__cell navds-body-short navds-body-short--small">
           <button
             type="button"
             aria-label="Fjern vedlegg"
