@@ -27,10 +27,9 @@ const ValgAlternativer = ({
   const label = renderLabel(beskrivelse, hjelpetekst);
   if (valg.valgType === DokumenterV2.ValgType.CHECKBOX) {
     return (
-      <Nav.CheckboxGroup legend={label} name={`felt.${feltKode}.valg`} disabled={!redigerbart}>
+      <Nav.CheckboxGroup legend={label} name={`felt.${feltKode}.valg`} readOnly={!redigerbart}>
         {valg.valgAlternativer.map((alternativ) => (
           <Nav.Checkbox
-            size="small"
             value={alternativ.kode}
             id={`${feltKode}.${alternativ.kode}`}
             key={`${feltKode}.${alternativ.kode}`}

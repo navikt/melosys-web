@@ -5,7 +5,7 @@ import { formValueSelector } from "redux-form";
 import * as KV from "../../../../../kodeverk";
 import * as Nav from "../../../../../navFrontend";
 import * as MPT from "../../../../../proptypes";
-import CheckableLandLinje from "../checkableLandLinje/checkableLandLinje";
+import MarginaltArbeidCheckbox from "./marginaltArbeidCheckbox.jsx";
 
 const MarginaltArbeid = ({ arbeidsland, redigerbart, marginaltArbeid, oppdaterData }) => {
   const { flereLandUkjentHvilke } = useSelector((state) => formValueSelector(KV.Form.SOKNAD)(state, "soknadsland"));
@@ -30,7 +30,7 @@ const MarginaltArbeid = ({ arbeidsland, redigerbart, marginaltArbeid, oppdaterDa
                   );
                   const key = `marginaltArbeidslandListe${land.kode}`;
                   return (
-                    <CheckableLandLinje
+                    <MarginaltArbeidCheckbox
                       key={key}
                       arbeidsland={land}
                       avklartMarginaltArbeidILand={avklartMarginaltArbeidILand}

@@ -34,24 +34,17 @@ const BrevMottakerNorskMyndighet = () => {
   };
 
   return (
-    <>
-      <Nav.Typo.Element className="brevmottaker__norskeMyndigheter">
-        Hvilke etater skal brevet sendes til?
-      </Nav.Typo.Element>
-      <Nav.Row>
-        <Nav.Column xs="12">
-          {tilgjengeligeNorskeMyndigheter?.map((norskMyndighet) => (
-            <Nav.Checkbox
-              key={norskMyndighet.orgnr}
-              checked={valgteNorskeMyndigheter.includes(norskMyndighet.orgnr)}
-              onChange={() => handleCheckboxChange(norskMyndighet.orgnr)}
-            >
-              {norskMyndighet.navn}
-            </Nav.Checkbox>
-          ))}
-        </Nav.Column>
-      </Nav.Row>
-    </>
+    <Nav.CheckboxGroup legend="Hvilke etater skal brevet sendes til?" defaultValue={valgteNorskeMyndigheter}>
+      {tilgjengeligeNorskeMyndigheter?.map((norskMyndighet) => (
+        <Nav.Checkbox
+          key={norskMyndighet.orgnr}
+          value={norskMyndighet.orgnr}
+          onChange={() => handleCheckboxChange(norskMyndighet.orgnr)}
+        >
+          {norskMyndighet.navn}
+        </Nav.Checkbox>
+      ))}
+    </Nav.CheckboxGroup>
   );
 };
 
