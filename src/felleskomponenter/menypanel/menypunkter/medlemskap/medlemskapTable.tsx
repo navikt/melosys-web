@@ -3,8 +3,8 @@ import { useState } from "react";
 import * as Utils from "../../../../utils";
 import * as KV from "../../../../kodeverk";
 import * as Api from "../../../../services/api";
+import * as Nav from "../../../../navFrontend";
 import ChevronKnapp from "../../../chevronKnapp/chevronKnapp";
-import { Table } from "@navikt/ds-react";
 
 interface MedlemskapTableProps {
   perioder: Api.Behandlinger.behandling.Medlemsperiode[];
@@ -15,28 +15,28 @@ const MedlemskapTable = ({ perioder }: MedlemskapTableProps) => {
 
   return (
     <div className="menypanel__table-wrapper">
-      <Table>
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell>Fra og med</Table.HeaderCell>
-            <Table.HeaderCell>Til og med</Table.HeaderCell>
-            <Table.HeaderCell>Land</Table.HeaderCell>
-            <Table.HeaderCell>Status</Table.HeaderCell>
-            <Table.HeaderCell>Hjemmel</Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
+      <Nav.Table>
+        <Nav.Table.Header>
+          <Nav.Table.Row>
+            <Nav.Table.HeaderCell>Fra og med</Nav.Table.HeaderCell>
+            <Nav.Table.HeaderCell>Til og med</Nav.Table.HeaderCell>
+            <Nav.Table.HeaderCell>Land</Nav.Table.HeaderCell>
+            <Nav.Table.HeaderCell>Status</Nav.Table.HeaderCell>
+            <Nav.Table.HeaderCell>Hjemmel</Nav.Table.HeaderCell>
+          </Nav.Table.Row>
+        </Nav.Table.Header>
+        <Nav.Table.Body>
           {(expanded ? perioder : perioder.slice(0, 2)).map((periode) => (
-            <Table.Row key={Utils._uuid()}>
-              <Table.DataCell>{Utils.dato.formatterDatoTilNorsk(periode.periode.fom)}</Table.DataCell>
-              <Table.DataCell>{Utils.dato.formatterDatoTilNorsk(periode.periode.tom)}</Table.DataCell>
-              <Table.DataCell>{KV.objektTilTerm(periode.land)}</Table.DataCell>
-              <Table.DataCell>{KV.objektTilTerm(periode.status)}</Table.DataCell>
-              <Table.DataCell>{KV.objektTilTerm(periode.grunnlagstype)}</Table.DataCell>
-            </Table.Row>
+            <Nav.Table.Row key={Utils._uuid()}>
+              <Nav.Table.DataCell>{Utils.dato.formatterDatoTilNorsk(periode.periode.fom)}</Nav.Table.DataCell>
+              <Nav.Table.DataCell>{Utils.dato.formatterDatoTilNorsk(periode.periode.tom)}</Nav.Table.DataCell>
+              <Nav.Table.DataCell>{KV.objektTilTerm(periode.land)}</Nav.Table.DataCell>
+              <Nav.Table.DataCell>{KV.objektTilTerm(periode.status)}</Nav.Table.DataCell>
+              <Nav.Table.DataCell>{KV.objektTilTerm(periode.grunnlagstype)}</Nav.Table.DataCell>
+            </Nav.Table.Row>
           ))}
-        </Table.Body>
-      </Table>
+        </Nav.Table.Body>
+      </Nav.Table>
       {perioder.length > 2 && (
         <ChevronKnapp
           expanded={expanded}

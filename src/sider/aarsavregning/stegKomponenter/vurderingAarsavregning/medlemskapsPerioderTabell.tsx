@@ -1,36 +1,36 @@
-import { Table } from "@navikt/ds-react";
 import { Medlemskapsperiode } from "../../../../services/modules/aarsavregning/aarsavregning";
 import * as Utils from "../../../../utils";
 import "./vurderingAarsavregning.css";
 import * as KV from "../../../../kodeverk";
+import * as Nav from "../../../../navFrontend";
 import MKV from "../../../../melosyskodeverk";
 
 const MedlemskapsPerioderTabell = ({ perioder }: { perioder?: Medlemskapsperiode[] }) => {
   if (!perioder) return null;
 
   return (
-    <Table size="small" className="periode_tabell">
-      <Table.Header className="header_row">
-        <Table.Row>
-          <Table.HeaderCell scope="col">Medlemskap</Table.HeaderCell>
-          <Table.HeaderCell scope="col">Dekning</Table.HeaderCell>
-        </Table.Row>
-      </Table.Header>
-      <Table.Body>
+    <Nav.Table size="small" className="periode_tabell">
+      <Nav.Table.Header className="header_row">
+        <Nav.Table.Row>
+          <Nav.Table.HeaderCell scope="col">Medlemskap</Nav.Table.HeaderCell>
+          <Nav.Table.HeaderCell scope="col">Dekning</Nav.Table.HeaderCell>
+        </Nav.Table.Row>
+      </Nav.Table.Header>
+      <Nav.Table.Body>
         {perioder.map((medlemskapsPeriode) => (
-          <Table.Row className="border_top" key={Utils._uuid()}>
-            <Table.DataCell key={Utils._uuid()}>
+          <Nav.Table.Row className="border_top" key={Utils._uuid()}>
+            <Nav.Table.DataCell key={Utils._uuid()}>
               {`${Utils.dato.formatterDatoTilNorsk(medlemskapsPeriode.fom)} - ${Utils.dato.formatterDatoTilNorsk(
                 medlemskapsPeriode.tom
               )}`}
-            </Table.DataCell>
-            <Table.DataCell key={Utils._uuid()}>
+            </Nav.Table.DataCell>
+            <Nav.Table.DataCell key={Utils._uuid()}>
               {KV.kodeTilTerm(medlemskapsPeriode.trygdedekning, MKV.KTObjects.trygdedekninger)}
-            </Table.DataCell>
-          </Table.Row>
+            </Nav.Table.DataCell>
+          </Nav.Table.Row>
         ))}
-      </Table.Body>
-    </Table>
+      </Nav.Table.Body>
+    </Nav.Table>
   );
 };
 

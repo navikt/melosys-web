@@ -6,7 +6,6 @@ import { dokumenterOperations } from "../../ducks/dokumenter";
 import { apnePdfINyFane } from "../../services/utils";
 
 import "./dokumentliste.css";
-import { Table } from "@navikt/ds-react";
 import * as KV from "../../kodeverk";
 import * as Utils from "../../utils";
 import MKV from "../../melosyskodeverk";
@@ -67,28 +66,28 @@ const Dokumentliste = ({ behandlingID, dokumenter, validateOnClick }: Dokumentli
   const tittel = (dokumentnavn: string) => `${dokumentnavn} (åpnes i ny fane)`;
 
   const mapBrev = (dokument: BrevDokumentMetadataType) => (
-    <Table.Row key={Utils._uuid()}>
-      <Table.DataCell>
+    <Nav.Table.Row key={Utils._uuid()}>
+      <Nav.Table.DataCell>
         <Nav.Link href="#" onClick={(e) => e.preventDefault()} onMouseDown={() => klikk(dokument)}>
           {tittel(
             dokument.dokumentNavn ??
               KV.kodeTilTerm(dokument.dokumentData?.produserbardokument, MKV.KTObjects.brev.produserbaredokumenter)
           )}
         </Nav.Link>
-      </Table.DataCell>
-      <Table.DataCell>{dokument.mottakerNavn ?? dokument.dokumentData?.mottaker}</Table.DataCell>
-    </Table.Row>
+      </Nav.Table.DataCell>
+      <Nav.Table.DataCell>{dokument.mottakerNavn ?? dokument.dokumentData?.mottaker}</Nav.Table.DataCell>
+    </Nav.Table.Row>
   );
 
   const mapSED = (dokument: SedDokumentMetadataType) => (
-    <Table.Row key={Utils._uuid()}>
-      <Table.DataCell>
+    <Nav.Table.Row key={Utils._uuid()}>
+      <Nav.Table.DataCell>
         <Nav.Link href="#" onClick={(e) => e.preventDefault()} onMouseDown={() => klikk(dokument)}>
           {tittel(dokument.dokumentNavn ?? `SED ${dokument.sedType}`)}
         </Nav.Link>
-      </Table.DataCell>
-      <Table.DataCell>{dokument.mottakerNavn}</Table.DataCell>
-    </Table.Row>
+      </Nav.Table.DataCell>
+      <Nav.Table.DataCell>{dokument.mottakerNavn}</Nav.Table.DataCell>
+    </Nav.Table.Row>
   );
 
   const mapDokument = (dokument: BrevDokumentMetadataType | SedDokumentMetadataType) => {
@@ -99,15 +98,15 @@ const Dokumentliste = ({ behandlingID, dokumenter, validateOnClick }: Dokumentli
 
   return (
     <div className="dokumentliste">
-      <Table size="small">
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell>Forhåndsvisning av brev</Table.HeaderCell>
-            <Table.HeaderCell>Mottaker</Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>{dokumenter.map(mapDokument)}</Table.Body>
-      </Table>
+      <Nav.Table size="small">
+        <Nav.Table.Header>
+          <Nav.Table.Row>
+            <Nav.Table.HeaderCell>Forhåndsvisning av brev</Nav.Table.HeaderCell>
+            <Nav.Table.HeaderCell>Mottaker</Nav.Table.HeaderCell>
+          </Nav.Table.Row>
+        </Nav.Table.Header>
+        <Nav.Table.Body>{dokumenter.map(mapDokument)}</Nav.Table.Body>
+      </Nav.Table>
       {feilmelding && (
         <Nav.Alert variant="warning" className="varsel">
           {feilmelding}

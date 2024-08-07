@@ -46,7 +46,6 @@ KodeTermCheckboxGroup.propTypes = {
   disabled: PT.bool,
   onChange: PT.func.isRequired,
   defaultValg: PT.arrayOf(PT.string),
-  size: PT.string,
 };
 
 KodeTermCheckboxGroup.defaultProps = {

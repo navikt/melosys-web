@@ -1,38 +1,37 @@
 import * as KV from "../../../../../kodeverk";
+import * as Nav from "../../../../../navFrontend";
 
 import MKV from "../../../../../melosyskodeverk";
 
 import { EnRedigeringsknappListeRedigeringUtfort } from "../../editerbartElementListe";
 
-import { Table } from "@navikt/ds-react";
-
 const RedigeringUtfort = ({ verdier }: EnRedigeringsknappListeRedigeringUtfort<KV.Form.ArbeidsstedSkip>) => (
   <div className="arbeidssted__utland__redigeringutfort-wrapper">
-    <Table>
-      <Table.Header>
-        <Table.Row>
-          <Table.HeaderCell>Navn på skip</Table.HeaderCell>
-          <Table.HeaderCell>Fartsområde</Table.HeaderCell>
-          <Table.HeaderCell>Flaggstat/lands territorialfarvann</Table.HeaderCell>
-        </Table.Row>
-      </Table.Header>
-      <Table.Body>
+    <Nav.Table>
+      <Nav.Table.Header>
+        <Nav.Table.Row>
+          <Nav.Table.HeaderCell>Navn på skip</Nav.Table.HeaderCell>
+          <Nav.Table.HeaderCell>Fartsområde</Nav.Table.HeaderCell>
+          <Nav.Table.HeaderCell>Flaggstat/lands territorialfarvann</Nav.Table.HeaderCell>
+        </Nav.Table.Row>
+      </Nav.Table.Header>
+      <Nav.Table.Body>
         {verdier.map((arbeidsstedSkip) => (
-          <Table.Row key={arbeidsstedSkip.enhetNavn}>
-            <Table.DataCell>{arbeidsstedSkip.enhetNavn}</Table.DataCell>
-            <Table.DataCell>
+          <Nav.Table.Row key={arbeidsstedSkip.enhetNavn}>
+            <Nav.Table.DataCell>{arbeidsstedSkip.enhetNavn}</Nav.Table.DataCell>
+            <Nav.Table.DataCell>
               {KV.kodeTilTerm(arbeidsstedSkip.fartsomradeKode, MKV.KTObjects.begrunnelser.fartsomrader)}
-            </Table.DataCell>
-            <Table.DataCell>
+            </Nav.Table.DataCell>
+            <Nav.Table.DataCell>
               {KV.kodeTilTerm(
                 arbeidsstedSkip.flaggLandkode ?? arbeidsstedSkip.territorialfarvann,
                 MKV.KTObjects.landkoder
               )}
-            </Table.DataCell>
-          </Table.Row>
+            </Nav.Table.DataCell>
+          </Nav.Table.Row>
         ))}
-      </Table.Body>
-    </Table>
+      </Nav.Table.Body>
+    </Nav.Table>
   </div>
 );
 

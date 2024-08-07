@@ -1,5 +1,5 @@
 import { KodeTermSelect } from "./kodeTermSelect";
-import KodeTermCheckboxGroup from "./kodeTermCheckboxGroup.jsx";
+import KodeTermCheckboxGroup from "./kodeTermCheckboxGroup";
 import Lenkeknapp from "./lenkeknapp";
 import ListevelgerFlervalg from "./listevelgerFlervalg";
 import Undertittel from "./undertittel";

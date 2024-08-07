@@ -1,4 +1,3 @@
-import { Table } from "@navikt/ds-react";
 import KopierbarTekst from "../../../kopierbarTekst";
 import * as Utils from "../../../../utils";
 import { fakturaserierTypes } from "../../../../ducks/fakturaserier";
@@ -26,40 +25,40 @@ export const FakturaLinjeContainer = ({ faktura }: FakturaLinjeContainerProps) =
         )}
       </div>
 
-      <Table>
-        <Table.Header>
-          <Table.Row shadeOnHover={false}>
-            <Table.HeaderCell scope="col" />
-            <Table.HeaderCell scope="col">Antall</Table.HeaderCell>
-            <Table.HeaderCell scope="col">Enhetspris</Table.HeaderCell>
-            <Table.HeaderCell scope="col">Beløp</Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
+      <Nav.Table>
+        <Nav.Table.Header>
+          <Nav.Table.Row shadeOnHover={false}>
+            <Nav.Table.HeaderCell scope="col" />
+            <Nav.Table.HeaderCell scope="col">Antall</Nav.Table.HeaderCell>
+            <Nav.Table.HeaderCell scope="col">Enhetspris</Nav.Table.HeaderCell>
+            <Nav.Table.HeaderCell scope="col">Beløp</Nav.Table.HeaderCell>
+          </Nav.Table.Row>
+        </Nav.Table.Header>
+        <Nav.Table.Body>
           {faktura.fakturaLinje.map((fakturaLinje) => (
-            <Table.Row key={Utils._uuid()} shadeOnHover={false}>
-              <Table.DataCell>
+            <Nav.Table.Row key={Utils._uuid()} shadeOnHover={false}>
+              <Nav.Table.DataCell>
                 {fakturaLinje.beskrivelse.split("\n").map((line: string) => {
                   return <div key={Utils._uuid()}>{line}</div>;
                 })}
-              </Table.DataCell>
-              <Table.DataCell>{fakturaLinje.antall}</Table.DataCell>
-              <Table.DataCell>{Utils.formaterTilNorskBelop(fakturaLinje.enhetsprisPerManed)}</Table.DataCell>
-              <Table.DataCell>{Utils.formaterTilNorskBelop(fakturaLinje.belop)}</Table.DataCell>
-            </Table.Row>
+              </Nav.Table.DataCell>
+              <Nav.Table.DataCell>{fakturaLinje.antall}</Nav.Table.DataCell>
+              <Nav.Table.DataCell>{Utils.formaterTilNorskBelop(fakturaLinje.enhetsprisPerManed)}</Nav.Table.DataCell>
+              <Nav.Table.DataCell>{Utils.formaterTilNorskBelop(fakturaLinje.belop)}</Nav.Table.DataCell>
+            </Nav.Table.Row>
           ))}
           {!Utils._isEmpty(faktura.fakturaLinje) && (
-            <Table.Row shadeOnHover={false}>
-              <Table.HeaderCell className="uten-border" />
-              <Table.HeaderCell className="uten-border" />
-              <Table.HeaderCell className="uten-border">Totalt</Table.HeaderCell>
-              <Table.DataCell className="uten-border">
+            <Nav.Table.Row shadeOnHover={false}>
+              <Nav.Table.HeaderCell className="uten-border" />
+              <Nav.Table.HeaderCell className="uten-border" />
+              <Nav.Table.HeaderCell className="uten-border">Totalt</Nav.Table.HeaderCell>
+              <Nav.Table.DataCell className="uten-border">
                 {Utils.formaterTilNorskBelop(faktura.fakturaLinje.map((linje) => linje.belop).reduce((a, b) => a + b))}
-              </Table.DataCell>
-            </Table.Row>
+              </Nav.Table.DataCell>
+            </Nav.Table.Row>
           )}
-        </Table.Body>
-      </Table>
+        </Nav.Table.Body>
+      </Nav.Table>
     </div>
   );
 };

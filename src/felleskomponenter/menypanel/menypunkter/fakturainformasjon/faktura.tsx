@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { useState } from "react";
 import * as Utils from "../../../../utils";
-import { Table } from "@navikt/ds-react";
+import * as Nav from "../../../../navFrontend";
 import moment from "moment";
 import { FakturaLinjeContainer } from "./fakturalinjecontainer";
 import { formatterDatoTilNorsk } from "../../../../utils/dato";
@@ -43,16 +43,16 @@ export const Faktura = ({ faktura }: FakturaProps) => {
   const fakturastatus = fakturastatusMap.get(faktura.status);
 
   return (
-    <Table.ExpandableRow key={faktura.fakturaReferanse} content={<FakturaLinjeContainer faktura={faktura} />}>
-      <Table.DataCell>{formatterDatoTilNorsk(faktura.sistOppdatert)}</Table.DataCell>
-      <Table.DataCell>{mapPeriodeTilKvartalString(faktura.periodeFra, faktura.periodeTil)}</Table.DataCell>
-      <Table.DataCell>
+    <Nav.Table.ExpandableRow key={faktura.fakturaReferanse} content={<FakturaLinjeContainer faktura={faktura} />}>
+      <Nav.Table.DataCell>{formatterDatoTilNorsk(faktura.sistOppdatert)}</Nav.Table.DataCell>
+      <Nav.Table.DataCell>{mapPeriodeTilKvartalString(faktura.periodeFra, faktura.periodeTil)}</Nav.Table.DataCell>
+      <Nav.Table.DataCell>
         <div className="faktura_status_wrapper">
           <div className={`dott ${fakturastatus?.farge || ""}`} />
           {fakturastatus?.beskrivelse}
         </div>
-      </Table.DataCell>
-      <Table.DataCell>{Utils.formaterTilNorskBelop(nyesteFakturaStatus?.ubetaltBelop) || "-"}</Table.DataCell>
-    </Table.ExpandableRow>
+      </Nav.Table.DataCell>
+      <Nav.Table.DataCell>{Utils.formaterTilNorskBelop(nyesteFakturaStatus?.ubetaltBelop) || "-"}</Nav.Table.DataCell>
+    </Nav.Table.ExpandableRow>
   );
 };

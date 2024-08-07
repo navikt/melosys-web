@@ -1,7 +1,7 @@
 import MKV from "../../melosyskodeverk";
 
-import KodeTermCheckboxGroup from "./kodeTermCheckboxGroup.jsx";
 import { render } from "@testing-library/react";
+import { KodeTermCheckboxGroup } from "./index";
 
 describe("KodeTermCheckboxGroup", () => {
   let props = null;

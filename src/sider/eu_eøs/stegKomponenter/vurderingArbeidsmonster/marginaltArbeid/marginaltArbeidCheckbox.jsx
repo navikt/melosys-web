@@ -1,16 +1,13 @@
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
-import {
-  konverterAvklartfaktaTilStegData,
-  lagAvklartfakta,
-} from "../../../../../felleskomponenter/stegvelger/index.js";
-import MKV from "../../../../../melosyskodeverk/index.js";
-import { BOOLSK_STRING } from "../../../../../constants.js";
+import { konverterAvklartfaktaTilStegData, lagAvklartfakta } from "../../../../../felleskomponenter/stegvelger/index";
+import MKV from "../../../../../melosyskodeverk/index";
+import { BOOLSK_STRING } from "../../../../../constants";
 import { reset } from "redux-form";
-import * as KV from "../../../../../kodeverk/index.js";
+import * as KV from "../../../../../kodeverk/index";
 import PT from "prop-types";
-import * as MPT from "../../../../../proptypes/index.js";
-import * as Nav from "../../../../../navFrontend/index.js";
+import * as MPT from "../../../../../proptypes/index";
+import * as Nav from "../../../../../navFrontend/index";
 
 const MarginaltArbeidCheckbox = (props) => {
   const { arbeidsland, avklartMarginaltArbeidILand, oppdaterData } = props;

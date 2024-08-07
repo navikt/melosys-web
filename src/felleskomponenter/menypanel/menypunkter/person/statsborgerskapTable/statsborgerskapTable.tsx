@@ -1,9 +1,9 @@
 import { useState } from "react";
 
 import * as Utils from "../../../../../utils";
+import * as Nav from "../../../../../navFrontend";
 import ChevronKnapp from "../../../../chevronKnapp/chevronKnapp";
 import { Statsborgerskap } from "../../../../../graphql";
-import { Table } from "@navikt/ds-react";
 
 interface StatsborgerskapTableProps {
   statsborgerskapList: Statsborgerskap[];
@@ -26,30 +26,32 @@ const StatsborgerskapTable = ({ statsborgerskapList, historisk }: Statsborgerska
   return (
     <div className="menypanel__table-wrapper">
       {!historisk || expanded ? (
-        <Table className="menypanel__table">
-          <Table.Header>
-            <Table.Row>
-              <Table.HeaderCell className={historisk ? "transparent" : ""}>Land</Table.HeaderCell>
-              <Table.HeaderCell className={historisk ? "transparent" : ""}>Register</Table.HeaderCell>
-              <Table.HeaderCell className={historisk ? "transparent" : ""}>Kilde</Table.HeaderCell>
-              <Table.HeaderCell className={historisk ? "transparent" : ""}>Bekreftelsesdato</Table.HeaderCell>
-              <Table.HeaderCell className="fixed-width">{periodetekst}</Table.HeaderCell>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
+        <Nav.Table className="menypanel__table">
+          <Nav.Table.Header>
+            <Nav.Table.Row>
+              <Nav.Table.HeaderCell className={historisk ? "transparent" : ""}>Land</Nav.Table.HeaderCell>
+              <Nav.Table.HeaderCell className={historisk ? "transparent" : ""}>Register</Nav.Table.HeaderCell>
+              <Nav.Table.HeaderCell className={historisk ? "transparent" : ""}>Kilde</Nav.Table.HeaderCell>
+              <Nav.Table.HeaderCell className={historisk ? "transparent" : ""}>Bekreftelsesdato</Nav.Table.HeaderCell>
+              <Nav.Table.HeaderCell className="fixed-width">{periodetekst}</Nav.Table.HeaderCell>
+            </Nav.Table.Row>
+          </Nav.Table.Header>
+          <Nav.Table.Body>
             {statsborgerskapList.map((statsborgerskap) => (
-              <Table.Row key={Utils._uuid()}>
-                <Table.DataCell>{statsborgerskap.land}</Table.DataCell>
-                <Table.DataCell>{statsborgerskap.master}</Table.DataCell>
-                <Table.DataCell>{statsborgerskap.kilde}</Table.DataCell>
-                <Table.DataCell>{Utils.dato.formatterDatoTilNorsk(statsborgerskap.bekreftelsesdato)}</Table.DataCell>
-                <Table.DataCell className={historisk ? "historisk-label" : "gyldig-label"}>
+              <Nav.Table.Row key={Utils._uuid()}>
+                <Nav.Table.DataCell>{statsborgerskap.land}</Nav.Table.DataCell>
+                <Nav.Table.DataCell>{statsborgerskap.master}</Nav.Table.DataCell>
+                <Nav.Table.DataCell>{statsborgerskap.kilde}</Nav.Table.DataCell>
+                <Nav.Table.DataCell>
+                  {Utils.dato.formatterDatoTilNorsk(statsborgerskap.bekreftelsesdato)}
+                </Nav.Table.DataCell>
+                <Nav.Table.DataCell className={historisk ? "historisk-label" : "gyldig-label"}>
                   {renderPeriode(statsborgerskap, historisk)}
-                </Table.DataCell>
-              </Table.Row>
+                </Nav.Table.DataCell>
+              </Nav.Table.Row>
             ))}
-          </Table.Body>
-        </Table>
+          </Nav.Table.Body>
+        </Nav.Table>
       ) : null}
       {historisk && (
         <ChevronKnapp

@@ -16,7 +16,6 @@ import PdfLink from "../pdfLink";
 import LagredeUtkast from "./sendBrev/brevutkast/lagredeUtkast";
 
 import "./sideDialogDokumenter.css";
-import { Table } from "@navikt/ds-react";
 
 interface MottaksretningIkonProps {
   mottaksretning: Mottaksretning;
@@ -74,11 +73,11 @@ const OversiktRad = ({
     vedlegg,
   },
 }: OversiktradProps) => (
-  <Table.Row>
-    <Table.DataCell>
+  <Nav.Table.Row>
+    <Nav.Table.DataCell>
       <MottaksretningIkon mottaksretning={mottaksretning} />
-    </Table.DataCell>
-    <Table.DataCell>
+    </Nav.Table.DataCell>
+    <Nav.Table.DataCell>
       <span>
         <PdfLink journalpostID={journalpostID} dokumentID={hoveddokument.dokumentID} tittel={hoveddokument.tittel} />
         {hoveddokument.logiskeVedlegg.map((logiskVedlegg) => (
@@ -88,10 +87,12 @@ const OversiktRad = ({
           <VedleggLink key={uuid()} journalpostID={journalpostID} dokument={vedleggDokument} />
         ))}
       </span>
-    </Table.DataCell>
-    <Table.DataCell>{avsenderEllerMottaker}</Table.DataCell>
-    <Table.DataCell>{formatterDatoTilNorsk(hentDato(mottaksretning, mottattDato, journalforingDato))}</Table.DataCell>
-  </Table.Row>
+    </Nav.Table.DataCell>
+    <Nav.Table.DataCell>{avsenderEllerMottaker}</Nav.Table.DataCell>
+    <Nav.Table.DataCell>
+      {formatterDatoTilNorsk(hentDato(mottaksretning, mottattDato, journalforingDato))}
+    </Nav.Table.DataCell>
+  </Nav.Table.Row>
 );
 interface SideDialogDokumenterProps {
   behandlingID: number;
@@ -109,21 +110,21 @@ const SideDialogDokumenter = ({ behandlingID, dokumentOversikt, setAktivTab }: S
   return (
     <div className="sideDialogDokumenter">
       <LagredeUtkast alleUtkast={utkast} settAktivtUtkast={handleValgtUtkast} />
-      <Table size="small" aria-label="Liste over dokumenter knyttet til saken">
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell aria-label="Mottaksretning" />
-            <Table.HeaderCell>Dokument</Table.HeaderCell>
-            <Table.HeaderCell>Avsender/mottaker</Table.HeaderCell>
-            <Table.HeaderCell>Dato</Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
+      <Nav.Table size="small" aria-label="Liste over dokumenter knyttet til saken">
+        <Nav.Table.Header>
+          <Nav.Table.Row>
+            <Nav.Table.HeaderCell aria-label="Mottaksretning" />
+            <Nav.Table.HeaderCell>Dokument</Nav.Table.HeaderCell>
+            <Nav.Table.HeaderCell>Avsender/mottaker</Nav.Table.HeaderCell>
+            <Nav.Table.HeaderCell>Dato</Nav.Table.HeaderCell>
+          </Nav.Table.Row>
+        </Nav.Table.Header>
+        <Nav.Table.Body>
           {dokumentOversikt.map((oversikt) => (
             <OversiktRad key={uuid()} dokumentOversikt={oversikt} />
           ))}
-        </Table.Body>
-      </Table>
+        </Nav.Table.Body>
+      </Nav.Table>
     </div>
   );
 };
