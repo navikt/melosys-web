@@ -23,7 +23,6 @@ const Lenkeknapp = ({ onClick, children, className, ikon: Ikon, value, disabled 
       value={value}
       disabled={disabled}
       variant="tertiary"
-      size="small"
     >
       {children}
     </Nav.Button>

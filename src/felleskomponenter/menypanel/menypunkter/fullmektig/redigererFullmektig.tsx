@@ -198,7 +198,6 @@ const RedigererFullmektig = ({
             <div className="knapperad">
               <Nav.Button
                 variant="secondary"
-                size="small"
                 icon={<Ikoner.Bin aria-hidden className="slett_ikon" />}
                 onClick={() => handleSlett(index)}
               >

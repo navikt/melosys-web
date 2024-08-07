@@ -390,7 +390,6 @@ const VurderingVedtak = ({
                 <Skjema.Datovelger label="" feltNavn="lovvalgsperiodeTom" disabled={!redigerbart} />
                 <Nav.Button
                   variant="primary"
-                  size="small"
                   disabled={!redigerbart || !periodeIsValid}
                   onClick={handleLagreTomEndring}
                 >

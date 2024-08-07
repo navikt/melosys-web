@@ -239,7 +239,6 @@ const Oppsummering = ({
                     <div className="knapp__container">
                       <Nav.Button
                         variant="secondary"
-                        size="small"
                         disabled={disableEndreKnapp}
                         onClick={() => setSkalViseEndreModal(true)}
                         icon={<Ikoner.BlyantActive />}

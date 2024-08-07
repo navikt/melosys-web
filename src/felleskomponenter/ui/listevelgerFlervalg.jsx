@@ -31,7 +31,6 @@ const ListevelgerValgtElement = ({ label, slettElement, oppdaterElement, tillatF
       <div className="listevelgerFlervalg__innhold">{element}</div>
       <Nav.Button
         variant="secondary"
-        size="small"
         disabled={disabled}
         className="listevelgerFlervalg__linje__knapp"
         onClick={slettElement}
@@ -212,7 +211,6 @@ class ListevelgerFlervalg extends Component {
           />
           <Nav.Button
             variant="secondary"
-            size="small"
             className="listevelgerFlervalg__linje__knapp listevelgerFlervalg__linje__knapp--leggtil"
             onClick={this.leggValgTilListe}
             disabled={disabled}

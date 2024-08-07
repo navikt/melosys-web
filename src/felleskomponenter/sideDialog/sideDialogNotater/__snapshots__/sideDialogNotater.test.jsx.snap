@@ -5,8 +5,8 @@ exports[`SideDialogNotater > snapshot test 1`] = `
 <div>
   <div class="panel">
     <div>
-      <button class="navds-button navds-button--primary navds-button--medium">
-        <span class="navds-label">
+      <button class="navds-button navds-button--primary navds-button--small">
+        <span class="navds-label navds-label--small">
           Legg til nytt notat
         </span>
       </button>

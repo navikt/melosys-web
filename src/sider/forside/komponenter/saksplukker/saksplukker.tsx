@@ -173,10 +173,8 @@ export const Saksplukker = ({
         )}
         <Nav.Row className="saksplukker__knapperad">
           <Nav.Column xs="12">
-            <Nav.Button variant="secondary" size="small">
-              Behandle sak
-            </Nav.Button>
-            <Nav.Button variant="tertiary" onClick={nullstill} size="small">
+            <Nav.Button variant="secondary">Behandle sak</Nav.Button>
+            <Nav.Button variant="tertiary" onClick={nullstill}>
               Nullstill
             </Nav.Button>
           </Nav.Column>
