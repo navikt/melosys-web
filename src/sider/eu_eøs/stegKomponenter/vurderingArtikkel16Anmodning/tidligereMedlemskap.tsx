@@ -1,5 +1,4 @@
 import { formatterDatoTilNorsk } from "../../../../utils/dato";
-import * as Mui from "../../../../felleskomponenter/ui";
 import * as Nav from "../../../../navFrontend";
 import { v4 as uuid } from "uuid";
 import { FieldArray, WrappedFieldArrayProps } from "redux-form";
@@ -39,15 +38,14 @@ const TidligereMedlemskapsperioder = ({ medlemskap, redigerbart, fields, land }:
       legend={`Velg direkte forutgående perioder i ${land}`}
       readOnly={!redigerbart}
       defaultValue={alleValgtePeriodeID}
+      size="small"
     >
       {medlemskap?.perioderMed?.map((periodeMed) => {
         const { periodeID, periode } = periodeMed;
         return (
-          <Mui.Checkbox
-            key={uuid()}
-            onCheck={() => onChange(periodeID)}
-            label={`Periode: ${formatterDatoTilNorsk(periode.fom)} - ${formatterDatoTilNorsk(periode.tom)}`}
-          />
+          <Nav.Checkbox key={uuid()} value={periodeID} onChange={() => onChange(periodeID)}>
+            {`Periode: ${formatterDatoTilNorsk(periode.fom)} - ${formatterDatoTilNorsk(periode.tom)}`}
+          </Nav.Checkbox>
         );
       })}
     </Nav.CheckboxGroup>
