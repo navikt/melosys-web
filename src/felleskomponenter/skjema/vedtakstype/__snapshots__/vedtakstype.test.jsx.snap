@@ -71,7 +71,7 @@ exports[`Vedtakstype > snapshot test 1`] = `
         >
         </div>
       </fieldset>
-      <div class="melosys-select  navds-form-field navds-form-field--small">
+      <div class="navds-form-field navds-form-field--small">
         <label
           for="333"
           class="navds-form-field__label navds-label navds-label--small"

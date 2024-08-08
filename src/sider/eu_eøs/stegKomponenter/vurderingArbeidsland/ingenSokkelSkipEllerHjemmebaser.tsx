@@ -49,8 +49,8 @@ const IngenSokkelSkipEllerHjemmebaser = ({
         Panelene er ikke utfylt med informasjon om arbeid på sokkel, skip eller hjemmebaser. Fyll ut feltene hvis det er
         relevant for å vurdere arbeidsland.
       </Nav.Alert>
-      <Nav.CheckboxGroup legend="" hideLegend readOnly={!redigerbart}>
-        <Nav.Checkbox checked={erChecked} onChange={vedEndring}>
+      <Nav.CheckboxGroup legend="" hideLegend readOnly={!redigerbart} defaultValue={[erChecked]}>
+        <Nav.Checkbox value={true} onChange={vedEndring}>
           Arbeid utføres i land som er oppgitt
         </Nav.Checkbox>
       </Nav.CheckboxGroup>

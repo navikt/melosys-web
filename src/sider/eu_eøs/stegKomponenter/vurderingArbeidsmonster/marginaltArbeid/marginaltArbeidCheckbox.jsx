@@ -40,7 +40,6 @@ const MarginaltArbeidCheckbox = (props) => {
       value={arbeidsland.kode}
       id={`marginaltArbeidslandListe.${arbeidsland.kode}`}
       key={`marginaltArbeidslandListe.${arbeidsland.kode}`}
-      checked={erMarginaltArbeidIArbeidsland}
       onChange={(changeEvent) => oppdaterDataOnCheck(changeEvent)}
     >
       {arbeidsland.term}
