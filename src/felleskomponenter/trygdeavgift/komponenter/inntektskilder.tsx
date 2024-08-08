@@ -1,21 +1,21 @@
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { Control, FieldArrayWithId } from "react-hook-form";
 
-import MKV from "../../../../../../melosyskodeverk";
-import * as Forms from "../../../../../../felleskomponenter/forms";
-import * as Nav from "../../../../../../navFrontend";
-import * as Utils from "../../../../../../utils";
-import * as Mui from "../../../../../../felleskomponenter/ui";
-import * as Ikoner from "../../../../../../resources/images";
+import MKV from "../../../melosyskodeverk";
+import * as Forms from "../../forms";
+import * as Nav from "../../../navFrontend";
+import * as Utils from "../../../utils";
+import * as Mui from "../../ui";
+import * as Ikoner from "../../../resources/images";
 
-import LabelMedHjelpetekst from "../../../../../../felleskomponenter/labelMedHjelpetekst";
-import { BOOLSK_STRING } from "../../../../../../constants";
+import LabelMedHjelpetekst from "../../labelMedHjelpetekst";
+import { BOOLSK_STRING } from "../../../constants";
 import { FieldArrayProps, FormValuesProps, Inntektskilde } from "./types";
 import {
   arbAvgBetalesKreves,
   bruttoInntektKreves,
   erBrukerSkattepliktigIHelePerioden,
-} from "../vurderingTrygdeavgiftSchema";
+} from "../../../sider/ftrl/saksbehandling/stegKomponenter/vurderingTrygdeavgift/vurderingTrygdeavgiftSchema";
 import "./inntektskilder.css";
 
 const {

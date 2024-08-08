@@ -1,9 +1,9 @@
-import MKV from "../../../../../../melosyskodeverk";
-import * as KV from "../../../../../../kodeverk";
-import * as Utils from "../../../../../../utils";
-import { Trygdeavgiftsperiode } from "../../../../../../services/modules/trygdeavgift";
+import MKV from "../../../melosyskodeverk";
+import * as KV from "../../../kodeverk";
+import * as Utils from "../../../utils";
+import { Trygdeavgiftsperiode } from "../../../services/modules/trygdeavgift";
 import { Table } from "@navikt/ds-react";
-import { Spinner } from "../../../../../../felleskomponenter/spinner";
+import { Spinner } from "../../spinner";
 
 import "./trygdeavgiftsperioderTabell.css";
 

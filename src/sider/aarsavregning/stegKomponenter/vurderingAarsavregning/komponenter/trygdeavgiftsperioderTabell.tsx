@@ -1,9 +1,9 @@
 import { HStack, Table, VStack } from "@navikt/ds-react";
-import { Avgift, Trygdeavgiftsperiode } from "../../../../services/modules/aarsavregning/aarsavregning";
-import MKV from "../../../../melosyskodeverk";
-import * as KV from "../../../../kodeverk";
-import * as Utils from "../../../../utils";
-import "./vurderingAarsavregning.css";
+import { Avgift, Trygdeavgiftsperiode } from "../../../../../services/modules/aarsavregning/aarsavregning";
+import MKV from "../../../../../melosyskodeverk";
+import * as KV from "../../../../../kodeverk";
+import * as Utils from "../../../../../utils";
+import "../vurderingAarsavregning.css";
 
 const TrygdeavgiftsperioderTabell = ({ perioder, avgift }: { perioder?: Trygdeavgiftsperiode[]; avgift?: Avgift }) => {
   if (!perioder) return null;

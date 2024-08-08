@@ -1,9 +1,9 @@
 import { Table } from "@navikt/ds-react";
-import { Medlemskapsperiode } from "../../../../services/modules/aarsavregning/aarsavregning";
-import * as Utils from "../../../../utils";
-import "./vurderingAarsavregning.css";
-import * as KV from "../../../../kodeverk";
-import MKV from "../../../../melosyskodeverk";
+import { Medlemskapsperiode } from "../../../../../services/modules/aarsavregning/aarsavregning";
+import * as Utils from "../../../../../utils";
+import "../vurderingAarsavregning.css";
+import * as KV from "../../../../../kodeverk";
+import MKV from "../../../../../melosyskodeverk";
 
 const MedlemskapsPerioderTabell = ({ perioder }: { perioder?: Medlemskapsperiode[] }) => {
   if (!perioder) return null;

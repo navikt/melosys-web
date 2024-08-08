@@ -1,14 +1,14 @@
 import { Control, FieldArrayWithId } from "react-hook-form";
 
-import MKV from "../../../../../../melosyskodeverk";
-import * as Forms from "../../../../../../felleskomponenter/forms";
-import * as Nav from "../../../../../../navFrontend";
-import * as Mui from "../../../../../../felleskomponenter/ui";
-import * as Ikoner from "../../../../../../resources/images";
+import MKV from "../../../melosyskodeverk";
+import * as Forms from "../../forms";
+import * as Nav from "../../../navFrontend";
+import * as Mui from "../../ui";
+import * as Ikoner from "../../../resources/images";
 
-import LabelMedHjelpetekst from "../../../../../../felleskomponenter/labelMedHjelpetekst";
+import LabelMedHjelpetekst from "../../labelMedHjelpetekst";
 import { FieldArrayProps, FormValuesProps, Skatteforhold } from "./types";
-import * as Utils from "../../../../../../utils";
+import * as Utils from "../../../utils";
 import "./skatteforholdsperioder.css";
 
 interface SkatteforholdsperioderProps {
