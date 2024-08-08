@@ -24,6 +24,7 @@ function InnerCheckboxComponent({ input, meta, label, submitOnChange, onClick, d
       disabled={disabled}
       className={className}
       id={Utils._uuid()}
+      size="small"
     >
       {label}
     </Nav.Checkbox>

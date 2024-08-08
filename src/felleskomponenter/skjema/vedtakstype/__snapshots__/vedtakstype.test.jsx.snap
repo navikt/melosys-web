@@ -7,7 +7,7 @@ exports[`Vedtakstype > snapshot test 1`] = `
     <div class="col col-xs-6">
       <fieldset
         id="333"
-        class="skjema-radiogroup  navds-radio-group navds-radio-group--small navds-fieldset navds-fieldset--small"
+        class="navds-radio-group navds-radio-group--small navds-fieldset navds-fieldset--small"
       >
         <legend class="navds-fieldset__legend navds-label navds-label--small">
           vedtakstypeLabel

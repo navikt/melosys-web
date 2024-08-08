@@ -78,6 +78,7 @@ const FagsakVelger = (props) => {
           legend=""
           hideLegend
           size="medium"
+          className="horisontal_radiogruppe"
         >
           <HStack gap="3" justify="space-between">
             <EnkelNavBox focused={valgtVisning === EKSISTERENDE}>

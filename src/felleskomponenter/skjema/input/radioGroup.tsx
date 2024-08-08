@@ -3,7 +3,6 @@ import { Field } from "redux-form";
 import * as Nav from "../../../navFrontend";
 import * as Utils from "../../../utils";
 import { ReactNode } from "react";
-import "./radioGroup.css";
 
 /** Redux støtter i utgangspunktet ikke boolske valg i
  * radioknapper. Det betyr at alle true/false settes som string
@@ -49,7 +48,7 @@ const InnerRadioGroup = ({
       legend={legend}
       value={input.value}
       name={`${name}-radiogroup`}
-      className={`skjema-radiogroup ${className ?? ""}`}
+      className={className ?? ""}
       error={error}
       onChange={innerChange}
       size={size}

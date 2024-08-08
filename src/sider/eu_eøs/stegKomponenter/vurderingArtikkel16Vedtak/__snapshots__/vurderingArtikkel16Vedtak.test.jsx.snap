@@ -37,7 +37,7 @@ exports[`VurderingArtikkel16Vedtak > snapshot test 1`] = `
         <div>
           <div class="row forkortLovvalgsperiode">
             <div class="col col-xs-8">
-              <div class="navds-checkbox navds-checkbox--medium">
+              <div class="navds-checkbox navds-checkbox--small">
                 <input
                   name="333"
                   class="navds-checkbox__input"
@@ -73,7 +73,7 @@ exports[`VurderingArtikkel16Vedtak > snapshot test 1`] = `
                     <span
                       id="333"
                       aria-hidden="true"
-                      class="navds-checkbox__label-text navds-body-short navds-body-short--medium"
+                      class="navds-checkbox__label-text navds-body-short navds-body-short--small"
                     >
                       Lovvalget innvilges for en kortere periode
                     </span>

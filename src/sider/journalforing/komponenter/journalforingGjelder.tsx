@@ -68,7 +68,14 @@ const JournalforingGjelder = ({
       ikon={Ikoner.FindAccount}
       tittel="Hvem skal dokumentet journalføres på?"
       innhold={
-        <Nav.RadioGroup onChange={handleClick} defaultValue={journalforingGjelder} legend="" hideLegend size="medium">
+        <Nav.RadioGroup
+          onChange={handleClick}
+          defaultValue={journalforingGjelder}
+          legend=""
+          hideLegend
+          size="medium"
+          className="horisontal_radiogruppe"
+        >
           <HStack gap="3" justify="space-between">
             <EnkelNavBox focused={journalforingGjelder === BRUKER}>
               <Nav.Radio value={BRUKER} id={BRUKER}>

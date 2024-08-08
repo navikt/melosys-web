@@ -23,7 +23,6 @@ import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { useSelector } from "react-redux";
 import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 import { anmodningsperioderSelectors } from "../../../ducks/anmodningsperioder";
-import "./vurderingYrkesgruppe.css";
 
 const { lovvalgbestemmelser_konv_efta_storbritannia } = MKV.KTObjects.lovvalgsbestemmelser;
 const { lovvalgbestemmelser_883_2004 } = MKV.KTObjects.lovvalgsbestemmelser;

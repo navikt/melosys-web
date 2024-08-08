@@ -3,8 +3,6 @@ import * as Skjema from "../../../felleskomponenter/skjema";
 import * as KV from "../../../kodeverk";
 import MKV from "../../../melosyskodeverk";
 
-import "./sendForvaltningsMelding.css";
-
 const { BRUKER, AVSENDER, INGEN } = MKV.Koder.forvaltningsmeldingMottaker;
 
 interface SendForvaltningsMeldingProps {

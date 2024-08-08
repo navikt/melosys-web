@@ -4,8 +4,6 @@ import * as Nav from "../../../../navFrontend";
 import * as MPT from "../../../../proptypes";
 import * as Mui from "../../../../felleskomponenter/ui";
 
-import "./enkeltVilkaar.css";
-
 import { konverterVilkarTilStegData, lagVilkarbegrunnelse, lagVilkaar } from "../../../../felleskomponenter/stegvelger";
 
 const EnkeltVilkaar = (props) => {
