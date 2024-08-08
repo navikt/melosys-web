@@ -26,17 +26,9 @@ const MottaksretningIkon = ({ mottaksretning }: MottaksretningIkonProps) => {
 
   switch (kode) {
     case MKV.Koder.mottaksretning.INN:
-      return (
-        <Nav.Tag variant="info" size="small">
-          inn
-        </Nav.Tag>
-      );
+      return <Nav.Tag variant="info">inn</Nav.Tag>;
     case MKV.Koder.mottaksretning.UT:
-      return (
-        <Nav.Tag variant="neutral" size="small">
-          ut
-        </Nav.Tag>
-      );
+      return <Nav.Tag variant="neutral">ut</Nav.Tag>;
     case MKV.Koder.mottaksretning.NOTAT:
       return <Nav.Tag variant="neutral">notat</Nav.Tag>;
     default:
@@ -74,7 +66,7 @@ const OversiktRad = ({
   },
 }: OversiktradProps) => (
   <Nav.Table.Row>
-    <Nav.Table.DataCell>
+    <Nav.Table.DataCell className="mottaksretning">
       <MottaksretningIkon mottaksretning={mottaksretning} />
     </Nav.Table.DataCell>
     <Nav.Table.DataCell>

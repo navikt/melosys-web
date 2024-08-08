@@ -274,7 +274,7 @@ const Oppsummering = ({
                       className="behandlingsstatus"
                     />
                     {MKVUtils.erAvsluttetEllerMidlertidigBeslutning(behandlingsstatus.kode) && (
-                      <Nav.Tag variant="info" size="small" className="behandlingsresultattype">
+                      <Nav.Tag variant="info" className="behandlingsresultattype">
                         {behandlingsresultattype.term}
                       </Nav.Tag>
                     )}

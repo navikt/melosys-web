@@ -144,7 +144,7 @@ exports[`SideDialog > snapshot test 1`] = `
               </thead>
               <tbody class="navds-table__body">
                 <tr class="navds-table__row navds-table__row--shade-on-hover">
-                  <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+                  <td class="navds-table__data-cell mottaksretning navds-body-short navds-body-short--small">
                     <span class="navds-tag navds-tag--info navds-tag--small navds-body-short navds-body-short--small">
                       inn
                     </span>
