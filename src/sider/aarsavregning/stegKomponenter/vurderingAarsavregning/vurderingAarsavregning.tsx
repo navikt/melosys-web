@@ -23,6 +23,9 @@ export const VurderingAarsavregning = () => {
   const antallÅrTilbakeITid = 6;
   const muligeAar = Array.from({ length: antallÅrTilbakeITid }, (_, i) => sisteMuligeÅr - i);
 
+  //TODO: Kan slettes, laget for å skjule radioknapper lengre nede fram til vi har funksjonalitet for å sette endelig trygdeavgift.
+  const endeligTrygdeavgift = useState(undefined);
+
   useEffect(() => {
     fetchAvregningsData();
   }, []);
@@ -98,7 +101,7 @@ export const VurderingAarsavregning = () => {
           ;
         </>
       )}
-      {lagretTrygdeavgift && (
+      {lagretTrygdeavgift && endeligTrygdeavgift && (
         <Nav.RadioGroup legend="Er det avvik i opplysningene fra skatt eller bruker?">
           <Nav.Radio value="10">Ja</Nav.Radio>
           <Nav.Radio value="20">Nei</Nav.Radio>
@@ -107,7 +110,6 @@ export const VurderingAarsavregning = () => {
       <Nav.Button variant="primary" disabled={!redigerbart}>
         Bekreft og fortsett
       </Nav.Button>
-      ;
     </div>
   );
 };
