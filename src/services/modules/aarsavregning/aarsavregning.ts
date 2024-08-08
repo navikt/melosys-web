@@ -1,5 +1,6 @@
 import { getAsJson, postAsJson } from "../../utils";
 import { API_BASE_URL, AARSAVREGNING } from "../../api-constants";
+import { InntektskildeDto, SkatteforholdDto } from "../trygdeavgift";
 
 export type AarsavregningResponse = {
   aar: number;
@@ -13,8 +14,8 @@ export type AarsavregningResponse = {
 export type AarsavregningRequest = {
   aar: number;
   tidligereFakturertBeloep?: number;
-  skatteforholdsperioder: Skatteforholdsperiode[];
-  inntektskperioder: Inntektsperiode[];
+  skatteforholdsperioder: SkatteforholdDto[];
+  inntektskperioder: InntektskildeDto[];
 };
 
 export type TidligereGrunnlagsopplysninger = {
@@ -24,8 +25,8 @@ export type TidligereGrunnlagsopplysninger = {
 
 export type Trygdeavgiftsgrunnlag = {
   medlemskapsperioder: Medlemskapsperiode[];
-  skatteforholdsperioder: Skatteforholdsperiode[];
-  inntektskperioder: Inntektsperiode[];
+  skatteforholdsperioder: SkatteforholdDto[];
+  inntektskperioder: InntektskildeDto[];
 };
 
 export type Avgift = {
@@ -34,11 +35,11 @@ export type Avgift = {
   totalAvgiftPerMd: number;
 };
 
-export type Skatteforholdsperiode = {
-  fom: string;
-  tom: string;
-  skatteplikttype: String;
-};
+// export type Skatteforholdsperiode = {
+//   fom: string;
+//   tom: string;
+//   skatteplikttype: String;
+// };
 
 export type Medlemskapsperiode = {
   fom: string;
@@ -55,14 +56,14 @@ export type Trygdeavgiftsperiode = {
   avgiftssats: number;
   avgiftPerMd: number;
 };
-
-export type Inntektsperiode = {
-  fom: string;
-  tom: string;
-  type: String;
-  arbeidsgiversavgiftBetales: boolean;
-  inntektPerMd: number;
-};
+//
+// export type Inntektsperiode = {
+//   fom: string;
+//   tom: string;
+//   type: String;
+//   arbeidsgiversavgiftBetales: boolean;
+//   inntektPerMd: number;
+// };
 
 export type Avregning = {
   nyttTotalbeloep: number;
