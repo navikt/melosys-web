@@ -50,7 +50,7 @@ const Innvilgelse = ({
       dokumentData: {
         produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_EFTA_STORBRITANNIA,
         mottaker: MKV.Koder.mottakerroller.BRUKER,
-        fritekst: vedtaksbrevFritekst,
+        begrunnelseFritekst: vedtaksbrevFritekst,
       },
     });
     pdfDokumenter.push({
