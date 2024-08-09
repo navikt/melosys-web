@@ -1,6 +1,7 @@
 import { getAsJson, postAsJson } from "../../utils";
 import { API_BASE_URL, AARSAVREGNING } from "../../api-constants";
 import { InntektskildeDto, SkatteforholdDto } from "../trygdeavgift";
+import { Medlemskapsperiode } from "../medlemavfolketrygden/medlemskapsperioder";
 
 export type AarsavregningResponse = {
   aar: number;
@@ -31,8 +32,8 @@ export type Trygdeavgiftsgrunnlag = {
 
 export type Avgift = {
   trygdeavgiftsperioder: Trygdeavgiftsperiode[];
-  totalInntektPerMd: number;
-  totalAvgiftPerMd: number;
+  totalInntekt: number;
+  totalAvgift: number;
 };
 
 // export type Skatteforholdsperiode = {
@@ -41,11 +42,11 @@ export type Avgift = {
 //   skatteplikttype: String;
 // };
 
-export type Medlemskapsperiode = {
-  fom: string;
-  tom: string;
-  trygdedekning: String;
-};
+// export type Medlemskapsperiode = {
+//   fom: string;
+//   tom: string;
+//   trygdedekning: String;
+// };
 
 export type Trygdeavgiftsperiode = {
   fom: string;

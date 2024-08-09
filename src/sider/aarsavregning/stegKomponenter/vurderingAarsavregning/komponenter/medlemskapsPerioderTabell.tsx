@@ -1,9 +1,9 @@
 import { Table } from "@navikt/ds-react";
-import { Medlemskapsperiode } from "../../../../../services/modules/aarsavregning/aarsavregning";
 import * as Utils from "../../../../../utils";
 import "../vurderingAarsavregning.css";
 import * as KV from "../../../../../kodeverk";
 import MKV from "../../../../../melosyskodeverk";
+import { Medlemskapsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 
 const MedlemskapsPerioderTabell = ({ perioder }: { perioder?: Medlemskapsperiode[] }) => {
   if (!perioder) return null;
@@ -20,8 +20,8 @@ const MedlemskapsPerioderTabell = ({ perioder }: { perioder?: Medlemskapsperiode
         {perioder.map((medlemskapsPeriode) => (
           <Table.Row className="border_top" key={Utils._uuid()}>
             <Table.DataCell key={Utils._uuid()}>
-              {`${Utils.dato.formatterDatoTilNorsk(medlemskapsPeriode.fom)} - ${Utils.dato.formatterDatoTilNorsk(
-                medlemskapsPeriode.tom
+              {`${Utils.dato.formatterDatoTilNorsk(medlemskapsPeriode.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(
+                medlemskapsPeriode.tomDato
               )}`}
             </Table.DataCell>
             <Table.DataCell key={Utils._uuid()}>

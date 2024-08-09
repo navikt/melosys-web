@@ -5,6 +5,13 @@ import * as KV from "../../../../../kodeverk";
 import * as Utils from "../../../../../utils";
 import "../vurderingAarsavregning.css";
 
+const formatNorwegianNumber = (amount: number | undefined): string => {
+  if (amount === undefined) {
+    return "-";
+  }
+
+  return new Intl.NumberFormat("nb-NO").format(amount);
+};
 const TrygdeavgiftsperioderTabell = ({ perioder, avgift }: { perioder?: Trygdeavgiftsperiode[]; avgift?: Avgift }) => {
   if (!perioder) return null;
 
@@ -55,10 +62,10 @@ const TrygdeavgiftsperioderTabell = ({ perioder, avgift }: { perioder?: Trygdeav
       <HStack className="totaltForPerioden" gap="16" align="center" justify="end">
         <p>Totalt for perioden:</p>
         <div>
-          <b>{avgift?.totalInntektPerMd}</b> nkr
+          <b>{formatNorwegianNumber(avgift?.totalInntekt)}</b> nkr
         </div>
         <div>
-          <b>{avgift?.totalAvgiftPerMd}</b> nkr
+          <b>{formatNorwegianNumber(avgift?.totalAvgift)}</b> nkr
         </div>
       </HStack>
     </VStack>
