@@ -3,7 +3,7 @@ import { BekreftValgTypes } from "../../../modals/bekreftValgTypes";
 import { modalerOperations } from "../../../ducks/modaler";
 import { useDispatch } from "react-redux";
 
-const AvsluttAArsavregning = () => {
+const FerdigstillAarsavregning = () => {
   const dispatch = useDispatch();
   const apneBekreftValgModal = (type: BekreftValgTypes) => dispatch(modalerOperations.visBekreftValg(type));
 
@@ -15,4 +15,4 @@ const AvsluttAArsavregning = () => {
   );
 };
 
-export default AvsluttAArsavregning;
+export default FerdigstillAarsavregning;

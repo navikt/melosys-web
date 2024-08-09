@@ -8,7 +8,7 @@ import { Accordion } from "@navikt/ds-react";
 import { useSelector } from "react-redux";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import MKV from "../../../melosyskodeverk";
-import AvsluttAArsavregning from "./avsluttAArsavregning";
+import FerdigstillAarsavregning from "./ferdigstillAarsavregning";
 
 const { ÅRSAVREGNING } = MKV.Koder.behandlinger.behandlingstyper;
 export const Behandlingsmeny = () => {
@@ -52,7 +52,7 @@ export const Behandlingsmeny = () => {
             </Accordion.Item>
             <Accordion.Item>
               <Accordion.Header>{erAArsavregning ? "Avslutt årsavregning" : "Avslutt sak"}</Accordion.Header>
-              <Accordion.Content>{erAArsavregning ? <AvsluttAArsavregning /> : <AvsluttSak />}</Accordion.Content>
+              <Accordion.Content>{erAArsavregning ? <FerdigstillAarsavregning /> : <AvsluttSak />}</Accordion.Content>
             </Accordion.Item>
           </Accordion>
         </div>
