@@ -21,7 +21,7 @@ const MarginaltArbeid = ({ arbeidsland, redigerbart, marginaltArbeid, oppdaterDa
           ) : (
             <div>
               <Nav.CheckboxGroup
-                size={"small"}
+                size="small"
                 legend="Kryss av for land hvor det utføres marginalt arbeid (> 5%)"
                 readOnly={!redigerbart}
               >
