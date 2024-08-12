@@ -8,14 +8,14 @@ import { Accordion } from "@navikt/ds-react";
 import { useSelector } from "react-redux";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import MKV from "../../../melosyskodeverk";
-import FerdigstillAarsavregning from "./ferdigstillAarsavregning";
+import FerdigbehandleAarsavregning from "./ferdigbehandleAarsavregning";
 
 const { ÅRSAVREGNING } = MKV.Koder.behandlinger.behandlingstyper;
 export const Behandlingsmeny = () => {
   const [visBehandlingsmeny, setVisBehandlingsmeny] = useState(false);
   const toggleBehandlingsmeny = () => setVisBehandlingsmeny(!visBehandlingsmeny);
 
-  const erAArsavregning = useSelector(behandlingerSelectors.BehandlingstypeKodeSelector, (a) => a === ÅRSAVREGNING);
+  const erÅrsavregning = useSelector(behandlingerSelectors.BehandlingstypeKodeSelector, (a) => a === ÅRSAVREGNING);
 
   const handleKeyPress = (e: KeyboardEvent<HTMLDivElement>) => {
     if (e.key === "Enter") {
@@ -51,8 +51,8 @@ export const Behandlingsmeny = () => {
               </Accordion.Content>
             </Accordion.Item>
             <Accordion.Item>
-              <Accordion.Header>{erAArsavregning ? "Avslutt årsavregning" : "Avslutt sak"}</Accordion.Header>
-              <Accordion.Content>{erAArsavregning ? <FerdigstillAarsavregning /> : <AvsluttSak />}</Accordion.Content>
+              <Accordion.Header>Avslutt sak/behandling</Accordion.Header>
+              <Accordion.Content>{erÅrsavregning ? <FerdigbehandleAarsavregning /> : <AvsluttSak />}</Accordion.Content>
             </Accordion.Item>
           </Accordion>
         </div>

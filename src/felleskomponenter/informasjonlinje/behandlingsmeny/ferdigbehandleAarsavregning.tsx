@@ -3,16 +3,16 @@ import { BekreftValgTypes } from "../../../modals/bekreftValgTypes";
 import { modalerOperations } from "../../../ducks/modaler";
 import { useDispatch } from "react-redux";
 
-const FerdigstillAarsavregning = () => {
+const FerdigbehandleAarsavregning = () => {
   const dispatch = useDispatch();
   const apneBekreftValgModal = (type: BekreftValgTypes) => dispatch(modalerOperations.visBekreftValg(type));
 
   return (
     <Handling
       tekst="Ferdigbehandlet"
-      onClick={() => apneBekreftValgModal(BekreftValgTypes.FERDIGSTILL_AARSAVREGNING)}
+      onClick={() => apneBekreftValgModal(BekreftValgTypes.FERDIGBEHANDLE_ÅRSAVREGNING)}
     />
   );
 };
 
-export default FerdigstillAarsavregning;
+export default FerdigbehandleAarsavregning;
