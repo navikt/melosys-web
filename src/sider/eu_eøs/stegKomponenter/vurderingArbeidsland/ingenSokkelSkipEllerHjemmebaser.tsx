@@ -50,7 +50,7 @@ const IngenSokkelSkipEllerHjemmebaser = ({
         relevant for å vurdere arbeidsland.
       </Nav.Alert>
       <Nav.CheckboxGroup legend="" hideLegend readOnly={!redigerbart} defaultValue={[erChecked]}>
-        <Nav.Checkbox value={true} onChange={vedEndring}>
+        <Nav.Checkbox value onChange={vedEndring}>
           Arbeid utføres i land som er oppgitt
         </Nav.Checkbox>
       </Nav.CheckboxGroup>
