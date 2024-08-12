@@ -3,8 +3,6 @@ import { RootState } from "AppTypes";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import MKV from "../../melosyskodeverk";
 import { SakstypeKodeSelector } from "../fagsaker/selectors";
-import { erFeatureToggleEnabled } from "../../featuretoggle";
-import { MELOSYS_TRYGDEAVTALE_KOREA } from "../../featuretoggle/toggleNavn";
 
 export const LandkoderSelector: Selector<RootState, KTObject[]> = createSelector(
   (state: RootState) => state.landkoder,
@@ -14,14 +12,10 @@ export const LandkoderSelector: Selector<RootState, KTObject[]> = createSelector
 export const LandkoderFraSakstypeSelector = createSelector(
   (state: RootState) => LandkoderSelector(state),
   (state: RootState) => SakstypeKodeSelector(state),
-  (state: RootState) => erFeatureToggleEnabled(MELOSYS_TRYGDEAVTALE_KOREA, state),
-  (landkoder, sakstype, koreaToggleEnabled): KTObject[] => {
+  (landkoder, sakstype): KTObject[] => {
     switch (sakstype) {
       case MKV.Koder.sakstyper.TRYGDEAVTALE:
-        if (koreaToggleEnabled) {
-          return MKV.KTObjects.trygdeavtale_myndighetsland;
-        }
-        return MKV.KTObjects.trygdeavtale_myndighetsland.filter((land: KTObject) => land.kode !== "KR");
+        return MKV.KTObjects.trygdeavtale_myndighetsland;
       case MKV.Koder.sakstyper.FTRL:
         return landkoder;
       case MKV.Koder.sakstyper.EU_EOS:
