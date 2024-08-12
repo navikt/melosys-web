@@ -1,4 +1,4 @@
-import { getAsJson, postAsJson, putAsJson } from "../../utils";
+import { getAsJson, postAsJson } from "../../utils";
 import { API_BASE_URL, AARSAVREGNING } from "../../api-constants";
 
 export type AarsavregningResponse = {
