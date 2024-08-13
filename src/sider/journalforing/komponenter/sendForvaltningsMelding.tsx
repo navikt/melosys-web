@@ -1,5 +1,4 @@
 import * as Nav from "../../../navFrontend";
-import * as Skjema from "../../../felleskomponenter/skjema";
 import * as KV from "../../../kodeverk";
 import MKV from "../../../melosyskodeverk";
 
@@ -13,15 +12,11 @@ interface SendForvaltningsMeldingProps {
 }
 
 const SendForvaltningsMelding = ({ avsenderType, harRegistrertAdresse }: SendForvaltningsMeldingProps) => {
-  var defaultChecked = BRUKER;
-  if (!harRegistrertAdresse) {
-    defaultChecked = INGEN;
-  }
   return (
     <div className="sendForvaltningsmelding">
       <Nav.RadioGroup
-        legend={"Skal melding om saksbehandlingtid sendes automatisk?"}
-        defaultValue={defaultChecked}
+        legend="Skal melding om saksbehandlingtid sendes automatisk?"
+        defaultValue={!harRegistrertAdresse ? INGEN : BRUKER}
         name="meldingvalg"
         size="small"
       >
