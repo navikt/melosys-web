@@ -17,7 +17,7 @@ const SendForvaltningsMelding = ({ avsenderType, harRegistrertAdresse }: SendFor
       <Nav.RadioGroup
         legend="Skal melding om saksbehandlingtid sendes automatisk?"
         defaultValue={!harRegistrertAdresse ? INGEN : BRUKER}
-        name="meldingvalg"
+        name="forvaltningsmeldingMottaker"
         size="small"
       >
         <Nav.Radio disabled={!harRegistrertAdresse} value={BRUKER}>
