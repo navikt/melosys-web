@@ -13,11 +13,17 @@ interface SendForvaltningsMeldingProps {
 }
 
 const SendForvaltningsMelding = ({ avsenderType, harRegistrertAdresse }: SendForvaltningsMeldingProps) => {
+  var defaultChecked = BRUKER;
+  if (!harRegistrertAdresse) {
+    defaultChecked = INGEN;
+  }
   return (
     <div className="sendForvaltningsmelding">
-      <Skjema.RadioGroup
-        legend="Skal melding om saksbehandlingtid sendes automatisk?"
-        name="forvaltningsmeldingMottaker"
+      <Nav.RadioGroup
+        legend={"Skal melding om saksbehandlingtid sendes automatisk?"}
+        defaultValue={defaultChecked}
+        name="meldingvalg"
+        size="small"
       >
         <Nav.Radio disabled={!harRegistrertAdresse} value={BRUKER}>
           Ja, melding skal sendes automatisk til <b>bruker</b>
@@ -28,7 +34,7 @@ const SendForvaltningsMelding = ({ avsenderType, harRegistrertAdresse }: SendFor
           </Nav.Radio>
         ) : null}
         <Nav.Radio value={INGEN}>Nei, jeg vil sende melding senere eller behandle saken innen kort tid</Nav.Radio>
-      </Skjema.RadioGroup>
+      </Nav.RadioGroup>
 
       {!harRegistrertAdresse && (
         <Nav.Alert className="feilmelding" variant="warning">
