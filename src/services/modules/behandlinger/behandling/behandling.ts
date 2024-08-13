@@ -7,4 +7,4 @@ export const hentBehandling = (behandlingID: number): Promise<BehandlingResDto> 
   getAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}`);
 
 export const ferdigbehandleÅrsavregning = (behandlingID: number) =>
-  putAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/ferdigbehandleAarsavregning`);
+  putAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/ferdigbehandle`);
