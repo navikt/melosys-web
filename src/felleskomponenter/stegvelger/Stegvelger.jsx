@@ -40,7 +40,10 @@ import { Innsynsmelding, NyVurderingMelding, StatsborgerskapFeil } from "../aler
 import { AvklartefaktaStore, EnkelDataStore, StegStoreTyper, VilkaarStore } from "./StegState";
 import "./stegvelger.css";
 import { erFeatureToggleEnabled } from "../../featuretoggle";
-import { MELOSYS_ARBEID_KUN_NORGE, MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../featuretoggle/toggleNavn";
+import {
+  MELOSYS_ARBEID_KUN_NORGE,
+  MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA,
+} from "../../featuretoggle/toggleNavn";
 
 class Stegvelger extends Component {
   state = {

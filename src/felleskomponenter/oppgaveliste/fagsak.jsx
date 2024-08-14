@@ -14,8 +14,8 @@ import { sorterElementerEtterDato } from "../sorterbarListe";
 import Soknadsland from "../soknadsland";
 
 import "./fagsak.css";
-import { useFeatureToggle } from '../../featuretoggle';
-import { MELOSYS_ARBEID_KUN_NORGE } from '../../featuretoggle/toggleNavn';
+import { useFeatureToggle } from "../../featuretoggle";
+import { MELOSYS_ARBEID_KUN_NORGE } from "../../featuretoggle/toggleNavn";
 
 /**
  * Dette er enkeltlinjen for én sak som inneholder sakstittel og metadata

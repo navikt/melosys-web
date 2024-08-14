@@ -15,8 +15,8 @@ import { lagUrl } from "../../../url";
 import { BehandlingsstatusMedSvarfrist } from "../../../felleskomponenter/behandlingsstatus";
 
 import "./enkeltSak.css";
-import { useFeatureToggle } from '../../../featuretoggle';
-import { MELOSYS_ARBEID_KUN_NORGE } from '../../../featuretoggle/toggleNavn';
+import { useFeatureToggle } from "../../../featuretoggle";
+import { MELOSYS_ARBEID_KUN_NORGE } from "../../../featuretoggle/toggleNavn";
 
 /** Den enkelte sak-elementet som brukes i iterasjon i listen
  */

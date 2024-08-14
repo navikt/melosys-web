@@ -5,7 +5,7 @@ import MKV from "../../../../melosyskodeverk";
 
 import SokkelSkip from "./sokkel_skip";
 import Yrkesgruppe from "./yrkesgruppe";
-import { hentFakta } from '../../../../domeneUtils';
+import { hentFakta } from "../../../../domeneUtils";
 
 class SaksbehandlingVirksomheter extends Virksomheter {
   constructor(propsLight, stegPosisjon) {
@@ -22,17 +22,16 @@ class SaksbehandlingVirksomheter extends Virksomheter {
     );
 
     const arbeidslandErNorge = propsLight.arbeidsland[0].kode === MKV.Koder.landkoder.NO;
-    
-    const erYrkesaktiv = hentFakta(
-      KV.Koder.avklartefaktaKoder.YRKESGRUPPE,
-      propsLight.avklartefakta
-    ).fakta.includes(KV.Koder.VurderingYrkesgruppeTyper.ORDINAER);
+
+    const erYrkesaktiv = hentFakta(KV.Koder.avklartefaktaKoder.YRKESGRUPPE, propsLight.avklartefakta).fakta.includes(
+      KV.Koder.VurderingYrkesgruppeTyper.ORDINAER
+    );
 
     const arbeidKunNorgeFlyt = [
       MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
-        MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG,
-        MKV.Koder.behandlinger.behandlingstema.ARBEID_KUN_NORGE,
-    ].includes(propsLight.behandlingstema.kode)   
+      MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG,
+      MKV.Koder.behandlinger.behandlingstema.ARBEID_KUN_NORGE,
+    ].includes(propsLight.behandlingstema.kode);
 
     this.kriterier = [
       {
@@ -47,8 +46,8 @@ class SaksbehandlingVirksomheter extends Virksomheter {
         exec: () =>
           propsLight.arbeidKunNorgeToggleEnabled &&
           harValgtArbeidsgiver &&
-          arbeidKunNorgeFlyt && 
-          arbeidslandErNorge && 
+          arbeidKunNorgeFlyt &&
+          arbeidslandErNorge &&
           erYrkesaktiv,
         nesteSteg: STEG.VEDTAK,
       },

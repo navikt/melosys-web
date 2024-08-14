@@ -17,8 +17,8 @@ import { fagsakSelectors } from "../../ducks/fagsaker";
 import OppdaterRegisteropplysninger from "./oppdaterRegisteropplysninger";
 import { LinkGroupsFactory } from "./linkgroups";
 import "./menypanel.css";
-import { useFeatureToggle } from '../../featuretoggle';
-import { MELOSYS_ARBEID_KUN_NORGE } from '../../featuretoggle/toggleNavn';
+import { useFeatureToggle } from "../../featuretoggle";
+import { MELOSYS_ARBEID_KUN_NORGE } from "../../featuretoggle/toggleNavn";
 
 const { SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS } = MKV.Koder.mottatteopplysningertyper;
 
@@ -54,7 +54,7 @@ export const Menypanel = ({
   visOppdaterRegisteropplysninger = true,
 }: MenypanelProps) => {
   const [[activeGroupIndex, activeLinkIndex], setActive] = useState<[number, number]>([0, 0]);
-  const erArbeidKunNorgeToggleEnabled = useFeatureToggle(MELOSYS_ARBEID_KUN_NORGE)
+  const erArbeidKunNorgeToggleEnabled = useFeatureToggle(MELOSYS_ARBEID_KUN_NORGE);
   const [endreFokus, setEndreFokus] = useState(false);
 
   const visMottatteOpplysningerData = !(

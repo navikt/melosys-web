@@ -93,7 +93,15 @@ export const lagUrl = (
     return lagÅrsavregningFlytUrl(sakstypeKode, saksnummer, behandlingID);
   }
 
-  if (skalViseIngenFlyt(sakstypeKode, sakstemaKode, behandlingstemaKode, behandlingstypeKode, erArbeidKunNorgeToggleEnabled)) {
+  if (
+    skalViseIngenFlyt(
+      sakstypeKode,
+      sakstemaKode,
+      behandlingstemaKode,
+      behandlingstypeKode,
+      erArbeidKunNorgeToggleEnabled
+    )
+  ) {
     return lagIngenFlytUrl(sakstypeKode, saksnummer, behandlingID);
   }
 
@@ -153,8 +161,8 @@ export const skalViseIngenFlyt = (
     return true;
   }
 
-  if(behandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_KUN_NORGE) {
-    return !erArbeidKunNorgeToggleEnabled
+  if (behandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_KUN_NORGE) {
+    return !erArbeidKunNorgeToggleEnabled;
   }
   return [
     MKV.Koder.behandlinger.behandlingstema.PENSJONIST,

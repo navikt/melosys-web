@@ -17,8 +17,8 @@ import { oppgaverOperations } from "../../../../ducks/oppgaver";
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import saksplukkerSchema from "./saksplukkerSchema";
 import "./saksplukker.css";
-import { useFeatureToggle } from '../../../../featuretoggle';
-import { MELOSYS_ARBEID_KUN_NORGE } from '../../../../featuretoggle/toggleNavn';
+import { useFeatureToggle } from "../../../../featuretoggle";
+import { MELOSYS_ARBEID_KUN_NORGE } from "../../../../featuretoggle/toggleNavn";
 
 const compareTerm = (a: KTObject, b: KTObject) => {
   if (!a.term) return 1;

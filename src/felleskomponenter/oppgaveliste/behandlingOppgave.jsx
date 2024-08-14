@@ -15,8 +15,8 @@ import Soknadsland from "../soknadsland";
 import { formatterDatoTilNorsk } from "../../utils/dato";
 
 import "./behandlingOppgave.css";
-import { MELOSYS_ARBEID_KUN_NORGE } from '../../featuretoggle/toggleNavn';
-import { useFeatureToggle } from '../../featuretoggle';
+import { MELOSYS_ARBEID_KUN_NORGE } from "../../featuretoggle/toggleNavn";
+import { useFeatureToggle } from "../../featuretoggle";
 
 const BehandlingOppgavesLinjeWrapper = ({ link, stengt, children }) =>
   stengt ? (

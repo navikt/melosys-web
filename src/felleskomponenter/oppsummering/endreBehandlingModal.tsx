@@ -22,8 +22,8 @@ import Knapperad from "../knapperad";
 
 import "./endreBehandlingModal.css";
 import { useAsyncCallbackState } from "../../hooks";
-import { useFeatureToggle } from '../../featuretoggle';
-import { MELOSYS_ARBEID_KUN_NORGE } from '../../featuretoggle/toggleNavn';
+import { useFeatureToggle } from "../../featuretoggle";
+import { MELOSYS_ARBEID_KUN_NORGE } from "../../featuretoggle/toggleNavn";
 
 enum FeltVerdier {
   sakstype = "sakstype",
@@ -83,7 +83,7 @@ function EndreBehandlingModal({
   const [muligeSakstemaer, setMuligeSakstemaer] = useState([]);
   const [muligeBehandlingstemaer, setMuligeBehandlingstemaer] = useState([]);
   const [muligeBehandlingstyper, setMuligeBehandlingstyper] = useState([]);
-  const erArbeidKunNorgeToggleEnabled = useFeatureToggle(MELOSYS_ARBEID_KUN_NORGE)
+  const erArbeidKunNorgeToggleEnabled = useFeatureToggle(MELOSYS_ARBEID_KUN_NORGE);
 
   const typeTemaKanEndres = !anmodningsperioderSendtTilUtlandet;
   const fagsakKanEndres = muligeSakstyper.length !== 0 || muligeSakstemaer.length !== 0;
