@@ -85,16 +85,18 @@ const JournalforingForm = ({
 
   const sjekkAdresse = () => {
     if (!visForvaltningsmelding || !avsenderType || (!brukerID && !avsenderID)) return;
-    if (forvaltningsmeldingMottaker === MKV.Koder.forvaltningsmeldingMottaker.INGEN) return;
+
+    if (brukerID === null) {
+      return;
+    }
 
     let brukerIDPerson = "";
     let orgnr = "";
 
     const gyldigBrukerFnrEllerDnr = Utils.person.erGyldigFnrEllerDnr(brukerID);
-
     if (
       avsenderType === ANNEN_PERSON_ELLER_VIRKSOMHET &&
-      forvaltningsmeldingMottaker === MKV.Koder.forvaltningsmeldingMottaker.AVSENDER
+      forvaltningsmeldingMottaker === MKV.Koder.forvaltningsmeldingMottaker.AVSENDER // blir satt som et bruker-valg i sendForvaltningsmelding
     ) {
       const avsenderErGyldigFnrDnr = Utils.person.erGyldigFnrEllerDnr(avsenderID);
       const avsenderErGyldigOrgNr = Utils.organisasjon.erOrgnrGyldig(avsenderID);
