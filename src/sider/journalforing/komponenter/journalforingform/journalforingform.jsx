@@ -96,7 +96,7 @@ const JournalforingForm = ({
     const gyldigBrukerFnrEllerDnr = Utils.person.erGyldigFnrEllerDnr(brukerID);
     if (
       avsenderType === ANNEN_PERSON_ELLER_VIRKSOMHET &&
-      forvaltningsmeldingMottaker === MKV.Koder.forvaltningsmeldingMottaker.AVSENDER // blir satt som et bruker-valg i sendForvaltningsmelding
+      forvaltningsmeldingMottaker === MKV.Koder.forvaltningsmeldingMottaker.AVSENDER
     ) {
       const avsenderErGyldigFnrDnr = Utils.person.erGyldigFnrEllerDnr(avsenderID);
       const avsenderErGyldigOrgNr = Utils.organisasjon.erOrgnrGyldig(avsenderID);
