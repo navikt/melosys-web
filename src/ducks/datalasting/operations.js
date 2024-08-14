@@ -16,13 +16,16 @@ import { oppsummertfaktaOperations } from "../oppsummertfakta";
 import { medlemskapsperioderOperations } from "../medlemskapsperioder";
 // noinspection ES6PreferShortImport
 import { harIkkeYrkesaktivFlyt, harUnntaksregistreringFlyt, skalViseIngenFlyt } from "../../url/url";
+import { erFeatureToggleEnabled } from '../../featuretoggle';
+import { MELOSYS_ARBEID_KUN_NORGE } from '../../featuretoggle/toggleNavn';
 
 const harIngenFlyt = async (sakstype, state) => {
   const sakstema = fagsakSelectors.SakstemaKodeSelector(state);
   const behandlingstema = behandlingerSelectors.BehandlingstemaKodeSelector(state);
   const behandlingstype = behandlingerSelectors.BehandlingstypeKodeSelector(state);
 
-  return skalViseIngenFlyt(sakstype, sakstema, behandlingstema, behandlingstype);
+  const erArbeidKunNorgeToggleEnabled = erFeatureToggleEnabled(MELOSYS_ARBEID_KUN_NORGE, state)
+  return skalViseIngenFlyt(sakstype, sakstema, behandlingstema, behandlingstype, erArbeidKunNorgeToggleEnabled);
 };
 const harUnntaksregistreringEllerIkkeYrkesaktivFlyt = (sakstype, state) => {
   const sakstema = fagsakSelectors.SakstemaKodeSelector(state);

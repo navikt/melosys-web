@@ -23,6 +23,8 @@ import OppsummeringVerdiPar from "./verdiPar/oppsummeringVerdiPar";
 import EndreBehandlingModal from "./endreBehandlingModal";
 import "./oppsummering.css";
 import { useAsyncCallbackState } from "../../hooks";
+import { useFeatureToggle } from '../../featuretoggle';
+import { MELOSYS_ARBEID_KUN_NORGE } from '../../featuretoggle/toggleNavn';
 
 const { AVSLUTTET, IVERKSETTER_VEDTAK, MIDLERTIDIG_LOVVALGSBESLUTNING } = MKV.Koder.behandlinger.behandlingsstatus;
 const behandlingsStatusMedBegrensetRettigheter = [AVSLUTTET, IVERKSETTER_VEDTAK, MIDLERTIDIG_LOVVALGSBESLUTNING];
@@ -71,6 +73,7 @@ const Oppsummering = ({
     behandlingID,
   ]);
   const [skalViseEndreModal, setSkalViseEndreModal] = useState(false);
+  const erArbeidKunNorgeToggleEnabled = useFeatureToggle(MELOSYS_ARBEID_KUN_NORGE)
 
   if (Utils._isEmpty(fagsak) || Utils._isEmpty(oppsummering)) return <div />;
 
@@ -95,7 +98,7 @@ const Oppsummering = ({
   const erFTRL = sakstype.kode === MKV.Koder.sakstyper.FTRL;
   const erUnntaksregistrering = harUnntaksregistreringFlyt(sakstype.kode, sakstema.kode, behandlingstema.kode);
   const erIkkeYrkesaktivFlyt = harIkkeYrkesaktivFlyt(sakstype.kode, behandlingstema.kode);
-  const erIngenFlyt = skalViseIngenFlyt(sakstype.kode, sakstema.kode, behandlingstema.kode, behandlingstype.kode);
+  const erIngenFlyt = skalViseIngenFlyt(sakstype.kode, sakstema.kode, behandlingstema.kode, behandlingstype.kode, erArbeidKunNorgeToggleEnabled);
   const hovedpartErVirksomhet = hovedpartRolle === MKV.Koder.aktoersroller.VIRKSOMHET;
 
   const landStorBokstav = (land?: KTObject) =>

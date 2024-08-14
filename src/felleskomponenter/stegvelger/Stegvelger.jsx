@@ -40,7 +40,7 @@ import { Innsynsmelding, NyVurderingMelding, StatsborgerskapFeil } from "../aler
 import { AvklartefaktaStore, EnkelDataStore, StegStoreTyper, VilkaarStore } from "./StegState";
 import "./stegvelger.css";
 import { erFeatureToggleEnabled } from "../../featuretoggle";
-import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../featuretoggle/toggleNavn";
+import { MELOSYS_ARBEID_KUN_NORGE, MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../featuretoggle/toggleNavn";
 
 class Stegvelger extends Component {
   state = {
@@ -437,6 +437,7 @@ class Stegvelger extends Component {
       soknadsperiode: props.soknadsperiode,
       harFeilmeldinger: !Utils._isEmpty(props.feilmeldinger) || !Utils._isEmpty(props.kontrollfeil),
       konvensjonStorbritanniaToggleEnabled: props.konvensjonStorbritanniaToggleEnabled,
+      arbeidKunNorgeToggleEnabled: props.arbeidKunNorgeToggleEnabled,
       utsendingsvilkår: props.utsendingsvilkår,
       unntaksvilkår: props.unntaksvilkår,
       behandlingOppfriskes: props.behandlingOppfriskes,
@@ -655,6 +656,7 @@ Stegvelger.propTypes = {
     })
   ),
   konvensjonStorbritanniaToggleEnabled: PT.bool.isRequired,
+  arbeidKunNorgeToggleEnabled: PT.bool.isRequired,
   utsendingsvilkår: PT.object.isRequired,
   unntaksvilkår: PT.object.isRequired,
   art11_3Aeller13_3A: PT.object.isRequired,
@@ -739,6 +741,7 @@ const mapStateToProps = (state) => ({
   feilmeldinger: feiletResponsSelectors.FeilmeldingerSelector(state),
   kontrollfeil: kontrollSelectors.KontrollFeilSelector(state),
   konvensjonStorbritanniaToggleEnabled: erFeatureToggleEnabled(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA, state),
+  arbeidKunNorgeToggleEnabled: erFeatureToggleEnabled(MELOSYS_ARBEID_KUN_NORGE, state),
 });
 
 /* eslint no-alert:off */

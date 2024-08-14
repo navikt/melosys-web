@@ -1,9 +1,11 @@
 import { Virksomheter } from "../../stegMap";
 import { STEG } from "../../../../felleskomponenter/stegvelger";
 import * as KV from "../../../../kodeverk";
+import MKV from "../../../../melosyskodeverk";
 
 import SokkelSkip from "./sokkel_skip";
 import Yrkesgruppe from "./yrkesgruppe";
+import { hentFakta } from '../../../../domeneUtils';
 
 class SaksbehandlingVirksomheter extends Virksomheter {
   constructor(propsLight, stegPosisjon) {
@@ -19,6 +21,19 @@ class SaksbehandlingVirksomheter extends Virksomheter {
       KV.Koder.VurderingYrkesgruppeTyper.ORDINAER_UTEN_ART12
     );
 
+    const arbeidslandErNorge = propsLight.arbeidsland[0].kode === MKV.Koder.landkoder.NO;
+    
+    const erYrkesaktiv = hentFakta(
+      KV.Koder.avklartefaktaKoder.YRKESGRUPPE,
+      propsLight.avklartefakta
+    ).fakta.includes(KV.Koder.VurderingYrkesgruppeTyper.ORDINAER);
+
+    const arbeidKunNorgeFlyt = [
+      MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
+        MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG,
+        MKV.Koder.behandlinger.behandlingstema.ARBEID_KUN_NORGE,
+    ].includes(propsLight.behandlingstema.kode)   
+
     this.kriterier = [
       {
         exec: () =>
@@ -27,6 +42,15 @@ class SaksbehandlingVirksomheter extends Virksomheter {
           gårDirekteTilArtikkel16 &&
           propsLight.unntaksvilkår?.oppfylt,
         nesteSteg: STEG.ARTIKKEL_16_ANMODNING,
+      },
+      {
+        exec: () =>
+          propsLight.arbeidKunNorgeToggleEnabled &&
+          harValgtArbeidsgiver &&
+          arbeidKunNorgeFlyt && 
+          arbeidslandErNorge && 
+          erYrkesaktiv,
+        nesteSteg: STEG.VEDTAK,
       },
       {
         exec: () => harValgtArbeidsgiver && (gårDirekteTilArtikkel16 || propsLight.erArbeidTjenestepersonEllerFly),

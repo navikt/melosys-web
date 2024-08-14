@@ -14,6 +14,8 @@ import { sorterElementerEtterDato } from "../sorterbarListe";
 import Soknadsland from "../soknadsland";
 
 import "./fagsak.css";
+import { useFeatureToggle } from '../../featuretoggle';
+import { MELOSYS_ARBEID_KUN_NORGE } from '../../featuretoggle/toggleNavn';
 
 /**
  * Dette er enkeltlinjen for én sak som inneholder sakstittel og metadata
@@ -21,6 +23,8 @@ import "./fagsak.css";
  * seg inn på den.
  */
 const Fagsak = ({ sak, landkoder }) => {
+  const erArbeidKunNorgeToggleEnabled = useFeatureToggle(MELOSYS_ARBEID_KUN_NORGE);
+
   const { opprettetDato, sakstype, saksstatus, saksnummer, sakstema, behandlingOversikter } = sak;
 
   const { land } = behandlingOversikter.find((behandlingOversikt) => behandlingOversikt.soknadsperiode != null) ?? {};
@@ -35,7 +39,8 @@ const Fagsak = ({ sak, landkoder }) => {
       sakstype.kode,
       sakstema.kode,
       behandling.behandlingstema.kode,
-      behandling.behandlingstype.kode
+      behandling.behandlingstype.kode,
+      erArbeidKunNorgeToggleEnabled
     );
 
   const customMargin = { marginLeft: "1em" };
