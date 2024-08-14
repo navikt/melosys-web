@@ -49,7 +49,7 @@ const JournalforingGjelder = ({
     oppdaterFelt(FormValues.opprettnysak_behandlingstema, null);
     oppdaterFelt(FormValues.opprettnysak_behandlingstype, null);
     if (value === BRUKER) {
-      oppdaterFelt("forvaltningsmeldingMottaker", MKV.Koder.forvaltningsmeldingMottaker.BRUKER); // todo thomas
+      oppdaterFelt("forvaltningsmeldingMottaker", MKV.Koder.forvaltningsmeldingMottaker.BRUKER);
       oppdaterFelt("brukerID", journalpostBrukerID);
       oppdaterFelt("virksomhetOrgnr", null);
       oppdaterFelt("virksomhetNavn", null);
