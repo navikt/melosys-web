@@ -3,18 +3,36 @@ import * as KV from "../../../kodeverk";
 import MKV from "../../../melosyskodeverk";
 
 import "./sendForvaltningsMelding.css";
+import { useEffect } from "react";
 
 const { BRUKER, AVSENDER, INGEN } = MKV.Koder.forvaltningsmeldingMottaker;
 
 interface SendForvaltningsMeldingProps {
   avsenderType: string;
-  harRegistrertAdresse?: boolean;
+  settFeltInnhold: (felt: string, innhold: any) => void;
+  harRegistrertAdresse: boolean;
 }
 
-const SendForvaltningsMelding = ({ avsenderType, harRegistrertAdresse }: SendForvaltningsMeldingProps) => {
+const SendForvaltningsMelding = ({
+  avsenderType,
+  settFeltInnhold,
+  harRegistrertAdresse,
+}: SendForvaltningsMeldingProps) => {
+  const endreForvaltningsmeldingMottaker = (value: string) => {
+    settFeltInnhold("forvaltningsmeldingMottaker", value);
+  };
+
+  useEffect(() => {
+    console.log("harregistrertadresse: ", harRegistrertAdresse);
+    if (!harRegistrertAdresse) {
+      endreForvaltningsmeldingMottaker(INGEN);
+    }
+  }, [harRegistrertAdresse]);
+
   return (
     <div className="sendForvaltningsmelding">
       <Nav.RadioGroup
+        onChange={endreForvaltningsmeldingMottaker}
         legend="Skal melding om saksbehandlingtid sendes automatisk?"
         defaultValue={!harRegistrertAdresse ? INGEN : BRUKER}
         name="forvaltningsmeldingMottaker"
