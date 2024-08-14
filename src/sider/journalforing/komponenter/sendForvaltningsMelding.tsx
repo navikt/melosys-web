@@ -23,7 +23,6 @@ const SendForvaltningsMelding = ({
   };
 
   useEffect(() => {
-    console.log("harregistrertadresse: ", harRegistrertAdresse);
     if (!harRegistrertAdresse) {
       endreForvaltningsmeldingMottaker(INGEN);
     }
