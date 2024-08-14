@@ -1,23 +1,41 @@
 import * as Nav from "../../../navFrontend";
-import * as Skjema from "../../../felleskomponenter/skjema";
 import * as KV from "../../../kodeverk";
 import MKV from "../../../melosyskodeverk";
 
 import "./sendForvaltningsMelding.css";
+import { useEffect } from "react";
 
 const { BRUKER, AVSENDER, INGEN } = MKV.Koder.forvaltningsmeldingMottaker;
 
 interface SendForvaltningsMeldingProps {
   avsenderType: string;
-  harRegistrertAdresse?: boolean;
+  settFeltInnhold: (felt: string, innhold: any) => void;
+  harRegistrertAdresse: boolean;
 }
 
-const SendForvaltningsMelding = ({ avsenderType, harRegistrertAdresse }: SendForvaltningsMeldingProps) => {
+const SendForvaltningsMelding = ({
+  avsenderType,
+  settFeltInnhold,
+  harRegistrertAdresse,
+}: SendForvaltningsMeldingProps) => {
+  const endreForvaltningsmeldingMottaker = (value: string) => {
+    settFeltInnhold("forvaltningsmeldingMottaker", value);
+  };
+
+  useEffect(() => {
+    if (!harRegistrertAdresse) {
+      endreForvaltningsmeldingMottaker(INGEN);
+    }
+  }, [harRegistrertAdresse]);
+
   return (
     <div className="sendForvaltningsmelding">
-      <Skjema.RadioGroup
+      <Nav.RadioGroup
+        onChange={endreForvaltningsmeldingMottaker}
         legend="Skal melding om saksbehandlingtid sendes automatisk?"
+        defaultValue={!harRegistrertAdresse ? INGEN : BRUKER}
         name="forvaltningsmeldingMottaker"
+        size="small"
       >
         <Nav.Radio disabled={!harRegistrertAdresse} value={BRUKER}>
           Ja, melding skal sendes automatisk til <b>bruker</b>
@@ -28,7 +46,7 @@ const SendForvaltningsMelding = ({ avsenderType, harRegistrertAdresse }: SendFor
           </Nav.Radio>
         ) : null}
         <Nav.Radio value={INGEN}>Nei, jeg vil sende melding senere eller behandle saken innen kort tid</Nav.Radio>
-      </Skjema.RadioGroup>
+      </Nav.RadioGroup>
 
       {!harRegistrertAdresse && (
         <Nav.Alert className="feilmelding" variant="warning">
