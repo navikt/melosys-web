@@ -41,6 +41,8 @@ import { BOOLSK_STRING } from "../../../../constants";
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import VurderingArbeidTjenestepersonEllerFlyVedtakSchema from "./vurderingArbeidTjenestepersonEllerFlyVedtakSchema";
 import "./vurderingArbeidTjenestepersonEllerFlyVedtak.css";
+import { useFeatureToggle } from "../../../../featuretoggle";
+import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../../featuretoggle/toggleNavn";
 
 const InformertMyndighetVelger = ({ redigerbart, oppdaterData, slettData, informertMyndighetFakta }) => {
   useEffect(() => {
@@ -131,6 +133,7 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
   selvstendigArbeid,
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
+  const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
   let oppdaterFørKontroll = true;
 
   useEffect(() => {
@@ -194,12 +197,22 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
   }
   const { kopiTilArbeidsgiver } = formValues;
   if (skalSendeOrienteringsbrev(selvstendigArbeid) && kopiTilArbeidsgiver) {
-    pdfDokumenter.push({
-      dokumentData: {
-        produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
-        mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
-      },
-    });
+    if (konvensjonStorbritanniaToggleEnabled) {
+      pdfDokumenter.push({
+        dokumentData: {
+          produserbardokument: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_TIL_ARBEIDSGIVER_OM_VEDTAK,
+          erInnvilgelse: true,
+          mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
+        },
+      });
+    } else {
+      pdfDokumenter.push({
+        dokumentData: {
+          produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
+          mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
+        },
+      });
+    }
   }
 
   const fom = Utils.dato.formatterDatoTilNorsk(soknadsperiode.fom);
