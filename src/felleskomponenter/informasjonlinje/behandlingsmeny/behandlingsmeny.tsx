@@ -15,7 +15,8 @@ export const Behandlingsmeny = () => {
   const [visBehandlingsmeny, setVisBehandlingsmeny] = useState(false);
   const toggleBehandlingsmeny = () => setVisBehandlingsmeny(!visBehandlingsmeny);
 
-  const erÅrsavregning = useSelector(behandlingerSelectors.BehandlingstypeKodeSelector, (a) => a === ÅRSAVREGNING);
+  const erÅrsavregning =
+    useSelector(behandlingerSelectors.BehandlingstypeKodeSelector, (a) => a === ÅRSAVREGNING) === true;
 
   const handleKeyPress = (e: KeyboardEvent<HTMLDivElement>) => {
     if (e.key === "Enter") {
