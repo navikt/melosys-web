@@ -9,6 +9,7 @@ const {
   UTSENDT_ARBEIDSTAKER,
   UTSENDT_SELVSTENDIG,
   ARBEID_FLERE_LAND,
+  ARBEID_KUN_NORGE,
   ARBEID_TJENESTEPERSON_ELLER_FLY,
   ARBEID_NORGE_BOSATT_ANNET_LAND,
   REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING,
@@ -29,6 +30,7 @@ interface LinkGroupsConfig {
   mottatteOpplysningerType: string;
   contentProps: ContentProps;
   sakstema: string;
+  erArbeidKunNorgeToggleEnabled: boolean | undefined;
 }
 
 class LinkGroupsFactory {
@@ -39,8 +41,9 @@ class LinkGroupsFactory {
     behandlingstema,
     behandlingstype,
     sakstema,
+    erArbeidKunNorgeToggleEnabled,
   }: LinkGroupsConfig): LinkGroup[] {
-    if (skalViseIngenFlyt(sakstype, sakstema, behandlingstema, behandlingstype)) {
+    if (skalViseIngenFlyt(sakstype, sakstema, behandlingstema, behandlingstype, erArbeidKunNorgeToggleEnabled)) {
       return new LinkgroupsBuilder().addUtenLabel(new LinksBuilder(contentProps).addFullmektig().build()).build();
     }
 
@@ -75,6 +78,7 @@ class LinkGroupsFactory {
       case UTSENDT_ARBEIDSTAKER:
       case UTSENDT_SELVSTENDIG:
       case ARBEID_FLERE_LAND:
+      case ARBEID_KUN_NORGE:
       case ARBEID_TJENESTEPERSON_ELLER_FLY:
       case ARBEID_NORGE_BOSATT_ANNET_LAND: {
         const fraBruker = new LinksBuilder(contentProps).addArbeidsgiverEllerVirksomhet();
