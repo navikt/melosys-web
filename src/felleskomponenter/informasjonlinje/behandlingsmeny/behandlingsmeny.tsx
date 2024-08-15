@@ -14,9 +14,7 @@ const { ÅRSAVREGNING } = MKV.Koder.behandlinger.behandlingstyper;
 export const Behandlingsmeny = () => {
   const [visBehandlingsmeny, setVisBehandlingsmeny] = useState(false);
   const toggleBehandlingsmeny = () => setVisBehandlingsmeny(!visBehandlingsmeny);
-
-  const erÅrsavregning =
-    useSelector(behandlingerSelectors.BehandlingstypeKodeSelector, (a) => a === ÅRSAVREGNING) === true;
+  const erÅrsavregning = useSelector(behandlingerSelectors.BehandlingstypeKodeSelector) === ÅRSAVREGNING;
 
   const handleKeyPress = (e: KeyboardEvent<HTMLDivElement>) => {
     if (e.key === "Enter") {
