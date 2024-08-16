@@ -76,7 +76,6 @@ const JournalforingForm = ({
   mottaksKanalErEessi,
   mottaksKanalErElektronisk,
 }) => {
-  const [temp, setTemp] = useState(true);
   const visForvaltningsmelding = skalViseForvaltningsmelding(formValues, fagsakListe);
   const visFagsakVelger = formValues?.brukerNavn || formValues?.virksomhetNavn;
   const visSkalTilordnes = !fagsakListe.find(
@@ -152,6 +151,7 @@ const sjekkAdresse = async () => {
         return false;
       }
     } else if (gyldigBrukerFnrEllerDnr) {
+      console.log("sett brukeridperson");
       brukerIDPerson = brukerID;
     } else {
       return false;
@@ -162,9 +162,12 @@ const sjekkAdresse = async () => {
       orgnr,
     })
       .then((res) => {
-        return !(res.kontrollfeilList && res.kontrollfeilList.length > 0);
+        const temp = !(res.kontrollfeilList && res.kontrollfeilList.length > 0);
+        console.log("result from api: ", temp);
+        return temp;
       })
       .catch(() => {
+        console.log("failed to fetch Adress");
         return false;
       });
 
@@ -172,25 +175,22 @@ const sjekkAdresse = async () => {
   };
 
   const sjekkAdresser = async () => {
-    console.log("i sjekkadresser");
     const harBrukerAdresse = await sjekkAdresse(MKV.Koder.forvaltningsmeldingMottaker.BRUKER);
     const harAvsenderAdresse = await sjekkAdresse(MKV.Koder.forvaltningsmeldingMottaker.AVSENDER);
-
-    console.log("resultat fra sjekkAdresser");
-    setAdresseOpplysninger({
+    return {
       harBrukerAdresse: harBrukerAdresse,
       harAvsenderAdresse: harAvsenderAdresse,
-    });
+    };
   };
 
   useEffect(() => {
-    setTemp(false);
-    if (!visForvaltningsmelding || !avsenderType || (!brukerID && !avsenderID)) return;
-    sjekkAdresser().then(() => {
-      setTemp(true);
-      console.log("satte adresseverdier");
+    setAdresseOpplysninger(null);
+
+    if (!avsenderType || (!brukerID && !avsenderID)) return;
+    sjekkAdresser().then((res) => {
+      setAdresseOpplysninger(res);
     });
-  }, [brukerID, avsenderType, avsenderID, visForvaltningsmelding]);
+  }, [brukerID, avsenderID, avsenderType]);
 
   return (
     <form onSubmit={handleSubmit} className="journalforingform">
@@ -220,7 +220,7 @@ const sjekkAdresse = async () => {
         />
       )}
 
-      {visForvaltningsmelding && adresseOpplysninger && temp && (
+      {visForvaltningsmelding && adresseOpplysninger && (
         <Komponent
           ikon={Ikoner.Hourglass}
           tittel="Melding om saksbehandlingstid"
