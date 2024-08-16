@@ -33,10 +33,6 @@ const { ANNEN_PERSON_ELLER_VIRKSOMHET } = KV.AvsenderTyper;
 const skalViseForvaltningsmelding = (formValues, fagsakListe) => {
   const { saksnummer, journalforingGjelder, sakstema, opprettnysak_behandlingstype, behandlingstype } = formValues;
   if (saksnummer === "-1") {
-    console.log("skalViseForvaltningsmelding fra ny sak");
-    console.log("journalforingGjelder", journalforingGjelder);
-    console.log("sakstema", sakstema);
-    console.log("opprettnysak_behandlingstype", opprettnysak_behandlingstype);
     // Opprett ny sak
     return (
       journalforingGjelder === BRUKER &&
@@ -55,6 +51,17 @@ const skalViseForvaltningsmelding = (formValues, fagsakListe) => {
     );
   }
   return false;
+};
+
+const kontrollerAdresse = (brukerIDPerson, orgnr) => {
+  return Api.Kontroll.kontrollerAdresse({ brukerID: brukerIDPerson, orgnr })
+    .then((res) => {
+      return !(res.kontrollfeilList && res.kontrollfeilList.length > 0);
+    })
+    .catch(() => {
+      console.log("failed to fetch Address");
+      return false;
+    });
 };
 
 const JournalforingForm = ({
@@ -83,53 +90,13 @@ const JournalforingForm = ({
       sak.saksnummer === formValues?.saksnummer &&
       MKVUtils.erOpphørtEllerHenlagtEllerBortfaltEllerAnnullert(sak.saksstatus.kode)
   );
-  //const [harRegistrertAdresse, setHarRegistrertAdresse] = useState(undefined);
+
   const [adresseOpplysninger, setAdresseOpplysninger] = useState({
     harBrukerAdresse: false,
     harAvsenderAdresse: false,
   });
 
-  const { brukerID, avsenderType, avsenderID, forvaltningsmeldingMottaker } = formValues;
-  /*
-const sjekkAdresse = async () => {
-    let brukerIDPerson = "";
-    let orgnr = "";
-
-    const gyldigBrukerFnrEllerDnr = Utils.person.erGyldigFnrEllerDnr(brukerID);
-    if (
-      avsenderType === ANNEN_PERSON_ELLER_VIRKSOMHET &&
-      forvaltningsmeldingMottaker === MKV.Koder.forvaltningsmeldingMottaker.AVSENDER
-    ) {
-      const avsenderErGyldigFnrDnr = Utils.person.erGyldigFnrEllerDnr(avsenderID);
-      const avsenderErGyldigOrgNr = Utils.organisasjon.erOrgnrGyldig(avsenderID);
-
-      if (avsenderErGyldigFnrDnr) {
-        brukerIDPerson = avsenderID;
-      } else if (avsenderErGyldigOrgNr) {
-        orgnr = avsenderID;
-      } else {
-        return false;
-      }
-    } else if (gyldigBrukerFnrEllerDnr) {
-      brukerIDPerson = brukerID;
-    } else {
-      return false;
-    }
-
-    const res = Api.Kontroll.kontrollerAdresse({
-      brukerID: brukerIDPerson,
-      orgnr,
-    })
-      .then((res) => {
-        return !(res.kontrollfeilList && res.kontrollfeilList.length > 0);
-      })
-      .catch(() => {
-        return false;
-      });
-
-    return await res;
-  };
- */
+  const { brukerID, avsenderType, avsenderID } = formValues;
 
   const sjekkAdresse = async (mottakerType) => {
     let brukerIDPerson = "";
@@ -151,27 +118,13 @@ const sjekkAdresse = async () => {
         return false;
       }
     } else if (gyldigBrukerFnrEllerDnr) {
-      console.log("sett brukeridperson");
       brukerIDPerson = brukerID;
     } else {
       return false;
     }
 
-    const res = Api.Kontroll.kontrollerAdresse({
-      brukerID: brukerIDPerson,
-      orgnr,
-    })
-      .then((res) => {
-        const temp = !(res.kontrollfeilList && res.kontrollfeilList.length > 0);
-        console.log("result from api: ", temp);
-        return temp;
-      })
-      .catch(() => {
-        console.log("failed to fetch Adress");
-        return false;
-      });
-
-    return await res;
+    const resultat = kontrollerAdresse(brukerIDPerson, orgnr);
+    return await resultat;
   };
 
   const sjekkAdresser = async () => {
