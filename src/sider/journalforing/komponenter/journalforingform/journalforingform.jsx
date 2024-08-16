@@ -33,6 +33,10 @@ const { ANNEN_PERSON_ELLER_VIRKSOMHET } = KV.AvsenderTyper;
 const skalViseForvaltningsmelding = (formValues, fagsakListe) => {
   const { saksnummer, journalforingGjelder, sakstema, opprettnysak_behandlingstype, behandlingstype } = formValues;
   if (saksnummer === "-1") {
+    console.log("skalViseForvaltningsmelding fra ny sak");
+    console.log("journalforingGjelder", journalforingGjelder);
+    console.log("sakstema", sakstema);
+    console.log("opprettnysak_behandlingstype", opprettnysak_behandlingstype);
     // Opprett ny sak
     return (
       journalforingGjelder === BRUKER &&
@@ -72,6 +76,7 @@ const JournalforingForm = ({
   mottaksKanalErEessi,
   mottaksKanalErElektronisk,
 }) => {
+  const [temp, setTemp] = useState(true);
   const visForvaltningsmelding = skalViseForvaltningsmelding(formValues, fagsakListe);
   const visFagsakVelger = formValues?.brukerNavn || formValues?.virksomhetNavn;
   const visSkalTilordnes = !fagsakListe.find(
@@ -79,17 +84,15 @@ const JournalforingForm = ({
       sak.saksnummer === formValues?.saksnummer &&
       MKVUtils.erOpphørtEllerHenlagtEllerBortfaltEllerAnnullert(sak.saksstatus.kode)
   );
-  const [harRegistrertAdresse, setHarRegistrertAdresse] = useState(undefined);
+  //const [harRegistrertAdresse, setHarRegistrertAdresse] = useState(undefined);
+  const [adresseOpplysninger, setAdresseOpplysninger] = useState({
+    harBrukerAdresse: false,
+    harAvsenderAdresse: false,
+  });
 
   const { brukerID, avsenderType, avsenderID, forvaltningsmeldingMottaker } = formValues;
-
-  const sjekkAdresse = () => {
-    if (!visForvaltningsmelding || !avsenderType || (!brukerID && !avsenderID)) return;
-
-    if (brukerID === null) {
-      return;
-    }
-
+  /*
+const sjekkAdresse = async () => {
     let brukerIDPerson = "";
     let orgnr = "";
 
@@ -106,28 +109,88 @@ const JournalforingForm = ({
       } else if (avsenderErGyldigOrgNr) {
         orgnr = avsenderID;
       } else {
-        return;
+        return false;
       }
     } else if (gyldigBrukerFnrEllerDnr) {
       brukerIDPerson = brukerID;
     } else {
-      return;
+      return false;
     }
 
-    Api.Kontroll.kontrollerAdresse({
+    const res = Api.Kontroll.kontrollerAdresse({
       brukerID: brukerIDPerson,
       orgnr,
     })
       .then((res) => {
-        const adresseFunnet = !(res.kontrollfeilList && res.kontrollfeilList.length > 0);
-        setHarRegistrertAdresse(adresseFunnet);
+        return !(res.kontrollfeilList && res.kontrollfeilList.length > 0);
       })
-      .catch(() => setHarRegistrertAdresse(false));
+      .catch(() => {
+        return false;
+      });
+
+    return await res;
+  };
+ */
+
+  const sjekkAdresse = async (mottakerType) => {
+    let brukerIDPerson = "";
+    let orgnr = "";
+
+    const gyldigBrukerFnrEllerDnr = Utils.person.erGyldigFnrEllerDnr(brukerID);
+    if (
+      avsenderType === ANNEN_PERSON_ELLER_VIRKSOMHET &&
+      mottakerType === MKV.Koder.forvaltningsmeldingMottaker.AVSENDER
+    ) {
+      const avsenderErGyldigFnrDnr = Utils.person.erGyldigFnrEllerDnr(avsenderID);
+      const avsenderErGyldigOrgNr = Utils.organisasjon.erOrgnrGyldig(avsenderID);
+
+      if (avsenderErGyldigFnrDnr) {
+        brukerIDPerson = avsenderID;
+      } else if (avsenderErGyldigOrgNr) {
+        orgnr = avsenderID;
+      } else {
+        return false;
+      }
+    } else if (gyldigBrukerFnrEllerDnr) {
+      brukerIDPerson = brukerID;
+    } else {
+      return false;
+    }
+
+    const res = Api.Kontroll.kontrollerAdresse({
+      brukerID: brukerIDPerson,
+      orgnr,
+    })
+      .then((res) => {
+        return !(res.kontrollfeilList && res.kontrollfeilList.length > 0);
+      })
+      .catch(() => {
+        return false;
+      });
+
+    return await res;
+  };
+
+  const sjekkAdresser = async () => {
+    console.log("i sjekkadresser");
+    const harBrukerAdresse = await sjekkAdresse(MKV.Koder.forvaltningsmeldingMottaker.BRUKER);
+    const harAvsenderAdresse = await sjekkAdresse(MKV.Koder.forvaltningsmeldingMottaker.AVSENDER);
+
+    console.log("resultat fra sjekkAdresser");
+    setAdresseOpplysninger({
+      harBrukerAdresse: harBrukerAdresse,
+      harAvsenderAdresse: harAvsenderAdresse,
+    });
   };
 
   useEffect(() => {
-    sjekkAdresse();
-  }, [brukerID, avsenderType, avsenderID, forvaltningsmeldingMottaker]);
+    setTemp(false);
+    if (!visForvaltningsmelding || !avsenderType || (!brukerID && !avsenderID)) return;
+    sjekkAdresser().then(() => {
+      setTemp(true);
+      console.log("satte adresseverdier");
+    });
+  }, [brukerID, avsenderType, avsenderID, visForvaltningsmelding]);
 
   return (
     <form onSubmit={handleSubmit} className="journalforingform">
@@ -157,15 +220,15 @@ const JournalforingForm = ({
         />
       )}
 
-      {visForvaltningsmelding && (
+      {visForvaltningsmelding && adresseOpplysninger && temp && (
         <Komponent
           ikon={Ikoner.Hourglass}
           tittel="Melding om saksbehandlingstid"
           innhold={
             <SendForvaltningsMelding
               avsenderType={avsenderType}
+              adresseOpplysninger={adresseOpplysninger}
               settFeltInnhold={settFeltInnhold}
-              harRegistrertAdresse={harRegistrertAdresse}
             />
           }
         />
