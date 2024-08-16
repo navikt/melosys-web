@@ -26,7 +26,7 @@ const SendForvaltningsMelding = ({
   };
 
   console.log("adresseopplysninger", JSON.stringify(adresseOpplysninger));
-
+  // todo scenario: {"harBrukerAdresse":false,"harAvsenderAdresse":true} and KV.AvsenderTyper.ANNEN_PERSON_ELLER_VIRKSOMHET default til AVSENDER
   return (
     adresseOpplysninger && (
       <div className="sendForvaltningsmelding">
