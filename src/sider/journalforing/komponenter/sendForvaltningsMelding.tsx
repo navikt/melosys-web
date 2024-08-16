@@ -7,9 +7,14 @@ import { useState } from "react";
 
 const { BRUKER, AVSENDER, INGEN } = MKV.Koder.forvaltningsmeldingMottaker;
 
+interface AdresseOpplysning {
+  harBrukerAdresse: boolean | false;
+  harAvsenderAdresse: boolean | false;
+}
+
 interface SendForvaltningsMeldingProps {
   avsenderType: string;
-  adresseOpplysninger: any; // TODO fix thomas
+  adresseOpplysninger: AdresseOpplysning;
   settFeltInnhold: (felt: string, innhold: any) => void;
 }
 
@@ -45,8 +50,8 @@ const SendForvaltningsMelding = ({
           <Nav.Radio value={INGEN}>Nei, jeg vil sende melding senere eller behandle saken innen kort tid</Nav.Radio>
         </Nav.RadioGroup>
 
-        {(mottaker === BRUKER && adresseOpplysninger.harBrukerAdresse === false) ||
-          (mottaker === AVSENDER && adresseOpplysninger.harAvsenderAdresse === false && (
+        {(mottaker === BRUKER && !adresseOpplysninger.harBrukerAdresse) ||
+          (mottaker === AVSENDER && !adresseOpplysninger.harAvsenderAdresse && (
             <Nav.Alert className="feilmelding" variant="warning">
               <Nav.Typo.Element>
                 Melding kan ikke sendes automatisk pga. manglende eller ugyldig adresse
