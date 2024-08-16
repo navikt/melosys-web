@@ -54,17 +54,15 @@ const skalViseForvaltningsmelding = (formValues, fagsakListe) => {
 };
 
 const kontrollerAdresse = (identifikator) => {
-  const erBrukerId = Utils.person.erGyldigFnrEllerDnr(identifikator);
-  let data = erBrukerId ? { brukerID: identifikator, orgnr: "" } : { brukerID: "", orgnr: identifikator };
-  console.log("kontrollerer adresse for: ", identifikator);
+  const avsenderErGyldigFnrDnr = Utils.person.erGyldigFnrEllerDnr(identifikator);
+
+  const data = avsenderErGyldigFnrDnr ? { brukerID: identifikator } : { orgnr: identifikator };
+
   return Api.Kontroll.kontrollerAdresse(data)
     .then((res) => {
-      const resss = !(res.kontrollfeilList && res.kontrollfeilList.length > 0);
-      console.log("resultat fra API", resss);
-      return resss;
+      return !(res.kontrollfeilList && res.kontrollfeilList.length > 0);
     })
     .catch(() => {
-      console.log("failed to fetch");
       return false;
     });
 };
@@ -106,32 +104,30 @@ const JournalforingForm = ({
   const sjekkAdresse = async (mottakerType) => {
     switch (mottakerType) {
       case MKV.Koder.forvaltningsmeldingMottaker.BRUKER:
-        const gyldigBrukerFnrEllerDnr = Utils.person.erGyldigFnrEllerDnr(brukerID);
-        if (!gyldigBrukerFnrEllerDnr) {
+        if (!Utils.person.erGyldigFnrEllerDnr(brukerID)) {
           return false;
         }
-        return await kontrollerAdresse(brukerID);
+        return kontrollerAdresse(brukerID);
       case MKV.Koder.forvaltningsmeldingMottaker.AVSENDER:
-        const avsenderErGyldigFnrDnr = Utils.person.erGyldigFnrEllerDnr(avsenderID);
-        const avsenderErGyldigOrgNr = Utils.organisasjon.erOrgnrGyldig(avsenderID);
-        if (!(avsenderErGyldigFnrDnr || avsenderErGyldigOrgNr)) {
+        if (!(Utils.person.erGyldigFnrEllerDnr(avsenderID) || Utils.organisasjon.erOrgnrGyldig(avsenderID))) {
           return false;
         }
-        return await kontrollerAdresse(avsenderID);
+        return kontrollerAdresse(avsenderID);
       default:
         return false;
     }
   };
 
   const sjekkAdresser = async () => {
-    const harBrukerAdresse = await sjekkAdresse(MKV.Koder.forvaltningsmeldingMottaker.BRUKER);
-    let harAvsenderAdresse = false;
+    const adrKontrollBruker = await sjekkAdresse(MKV.Koder.forvaltningsmeldingMottaker.BRUKER);
+    let adrKontrollAvsender = false;
     if (avsenderType === ANNEN_PERSON_ELLER_VIRKSOMHET) {
-      harAvsenderAdresse = await sjekkAdresse(MKV.Koder.forvaltningsmeldingMottaker.AVSENDER);
+      adrKontrollAvsender = await sjekkAdresse(MKV.Koder.forvaltningsmeldingMottaker.AVSENDER);
     }
+
     return {
-      harBrukerAdresse: harBrukerAdresse,
-      harAvsenderAdresse: harAvsenderAdresse,
+      harBrukerAdresse: adrKontrollBruker,
+      harAvsenderAdresse: adrKontrollAvsender,
     };
   };
 

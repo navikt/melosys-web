@@ -3,7 +3,7 @@ import * as KV from "../../../kodeverk";
 import MKV from "../../../melosyskodeverk";
 
 import "./sendForvaltningsMelding.css";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const { BRUKER, AVSENDER, INGEN } = MKV.Koder.forvaltningsmeldingMottaker;
 
@@ -20,20 +20,17 @@ const SendForvaltningsMelding = ({
 }: SendForvaltningsMeldingProps) => {
   const [mottaker, setMottaker] = useState("");
   const endreForvaltningsmeldingMottaker = (value: string) => {
-    console.log("endrer forvaltningsmeldingmottaker til: ", value);
     settFeltInnhold("forvaltningsmeldingMottaker", value);
     setMottaker(value);
   };
 
-  console.log("adresseopplysninger", JSON.stringify(adresseOpplysninger));
-  // todo scenario: {"harBrukerAdresse":false,"harAvsenderAdresse":true} and KV.AvsenderTyper.ANNEN_PERSON_ELLER_VIRKSOMHET default til AVSENDER
   return (
     adresseOpplysninger && (
       <div className="sendForvaltningsmelding">
         <Nav.RadioGroup
           onChange={endreForvaltningsmeldingMottaker}
-          legend={adresseOpplysninger.harBrukerAdresse}
-          defaultValue={adresseOpplysninger.harBrukerAdresse === true ? BRUKER : INGEN}
+          legend="Skal melding om saksbehandlingtid sendes automatisk?"
+          defaultValue={adresseOpplysninger.harBrukerAdresse ? BRUKER : INGEN}
           name="forvaltningsmeldingMottaker"
           size="small"
         >
