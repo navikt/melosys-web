@@ -27,26 +27,28 @@ const isDevelopmentProfile = environment === "local";
 
 const sentryIntegrations = [
   new BrowserTracing({
-    routingInstrumentation: Sentry.reactRouterV5Instrumentation(browserHistory),
+    routingInstrumentation: Sentry.reactRouterV5Instrumentation(browserHistory)
   }),
   new CaptureConsole({
-    levels: ["error", "warn"],
+    levels: ["error", "warn"]
   }),
-  new Breadcrumbs({ console: false }),
+  new Breadcrumbs({ console: false })
 ];
 
-Sentry.init({
-  dsn: "https://69e47f5f658e4a7c956dbaf975f6b575@sentry.gc.nav.no/156",
-  integrations: sentryIntegrations,
-  tracesSampleRate: 1.0,
-  environment,
-  beforeSend: (event) => {
-    if (isDevelopmentProfile) {
-      return null;
+if (!isDevelopmentProfile) {
+  Sentry.init({
+    dsn: "https://69e47f5f658e4a7c956dbaf975f6b575@sentry.gc.nav.no/156",
+    integrations: sentryIntegrations,
+    tracesSampleRate: 1.0,
+    environment,
+    beforeSend: (event) => {
+      if (isDevelopmentProfile) {
+        return null;
+      }
+      return event;
     }
-    return event;
-  },
-});
+  });
+}
 
 const store = createStore(browserHistory);
 
