@@ -1,7 +1,7 @@
 import { FANE_STATUS } from "../../felleskomponenter/stegvelger";
-import { VurderingInngang } from "./stegKomponenter/vurderingInngang/vurderingInngang";
-import { VurderingBestemmelse } from "./stegKomponenter/vurderingBestemmelse/vurderingBestemmelse";
-import { VurderingVedtak } from "./stegKomponenter/vurderingVedtak/vurderingVedtak";
+import { VurderingInngang } from "./stegKomponenter/vurderinginngang/vurderingInngang";
+import { VurderingBestemmelse } from "./stegKomponenter/vurderingbestemmelse/vurderingBestemmelse";
+import { VurderingVedtak } from "./stegKomponenter/vurderingvedtak/vurderingVedtak";
 
 const initialInngangSteg = {
   id: "Inngang",

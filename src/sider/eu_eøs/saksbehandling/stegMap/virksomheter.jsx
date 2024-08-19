@@ -23,9 +23,12 @@ class SaksbehandlingVirksomheter extends Virksomheter {
 
     const arbeidslandErNorge = propsLight.arbeidsland[0].kode === MKV.Koder.landkoder.NO;
 
+    console.log(propsLight.avklartefakta);
+    console.log(hentFakta(KV.Koder.avklartefaktaKoder.YRKESGRUPPE, propsLight.avklartefakta).fakta);
     const erYrkesaktiv = hentFakta(KV.Koder.avklartefaktaKoder.YRKESGRUPPE, propsLight.avklartefakta).fakta.includes(
       KV.Koder.VurderingYrkesgruppeTyper.ORDINAER
     );
+    console.log(erYrkesaktiv);
 
     const arbeidKunNorgeFlyt = [
       MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
