@@ -46,13 +46,12 @@ const komponentDispatch = (dispatch: ThunkDispatch<RootState, unknown, Action>) 
 export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const dispatch = useDispatch();
   const [valgtÅr, setValgtÅr] = useState<number | undefined>(undefined);
-  const [lagretTrygdeavgift, setLagretTrygdeavgift] = useState<AarsavregningResponse | undefined>(undefined);
   const [vedtakPending, setVedtakPending] = useState<boolean>(false);
   const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
 
-  const { kontrollerFerdigbehandling, fattVedtak } = komponentDispatch(dispatch);
+  const { fattVedtak } = komponentDispatch(dispatch);
 
   const {
     watch,
@@ -70,15 +69,8 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const fetchAvregningsData = () => {
     return Api.Aarsavregning.hentAvregningsData(behandlingID)
       .then((response: AarsavregningResponse) => {
-        setLagretTrygdeavgift(response);
         setValgtÅr(response.aar);
         return response;
-      })
-      .catch((error: any) => {
-        if (error.response?.status === 404) {
-          setLagretTrygdeavgift(undefined);
-          setValgtÅr(undefined);
-        }
       });
   };
 
@@ -91,12 +83,9 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   };
 
   useEffect(() => {
-    hentMuligeMottakere();
-  }, []);
-
-  useEffect(() => {
     if (aktivtSteg) {
       fetchAvregningsData();
+      hentMuligeMottakere();
     }
   }, [aktivtSteg]);
 

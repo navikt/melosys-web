@@ -18,7 +18,7 @@ interface Props {
   oppdaterStatus: (isValid: boolean) => void;
 }
 
-export const VurderingAarsavregning = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) => {
+export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
   const [valgtÅr, setValgtÅr] = useState<number | undefined>(undefined);
 
   const [feil, setFeil] = useState<undefined | string>(undefined);
