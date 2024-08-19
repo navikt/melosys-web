@@ -49,6 +49,13 @@ class Vedtak extends Steg {
         });
         pdfDokumenter.push({
           dokumentData: {
+            produserbardokument: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_TIL_ARBEIDSGIVER_OM_VEDTAK,
+            erInnvilgelse: true,
+            mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
+          },
+        });
+        pdfDokumenter.push({
+          dokumentData: {
             produserbardokument: MKV.Koder.brev.produserbaredokumenter.ATTEST_A1,
             mottaker: MKV.Koder.mottakerroller.BRUKER,
           },
@@ -62,6 +69,19 @@ class Vedtak extends Steg {
           },
         });
         if (
+          propsLight.konvensjonStorbritanniaToggleEnabled &&
+          lovvalgSomKodeTerm &&
+          visSedLenkeForLovvalgsbestemmelser.includes(lovvalgSomKodeTerm.kode) &&
+          formValues?.kopiTilArbeidsgiver
+        ) {
+          pdfDokumenter.push({
+            dokumentData: {
+              produserbardokument: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_TIL_ARBEIDSGIVER_OM_VEDTAK,
+              erInnvilgelse: true,
+              mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
+            },
+          });
+        } else if (
           lovvalgSomKodeTerm &&
           visSedLenkeForLovvalgsbestemmelser.includes(lovvalgSomKodeTerm.kode) &&
           formValues?.kopiTilArbeidsgiver
