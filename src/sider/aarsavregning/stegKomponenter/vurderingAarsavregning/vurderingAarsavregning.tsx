@@ -67,8 +67,7 @@ export const VurderingAarsavregning = () => {
           setTrygdeavgiftsperioder(result);
         })
         .catch((error) => {
-          console.error("Failed to fetch trygdeavgiftsperioder:", error);
-          setFeil("Failed to fetch trygdeavgiftsperioder");
+          setFeil(error);
         })
         .finally(() => {
           setTrygdeavgiftsperioderHentingPending(false);
@@ -272,18 +271,6 @@ export const VurderingAarsavregning = () => {
   };
 
   useEffect(() => {
-    if (errors) {
-      console.log("errors", errors);
-    }
-    if (errors.skatteforholdsperioder) {
-      console.log("Skatteforholdsperioder Errors:", errors.skatteforholdsperioder);
-    }
-    if (errors.inntektskilder) {
-      console.log("Inntektskilder Errors:", errors.inntektskilder);
-    }
-  }, [errors.skatteforholdsperioder, errors.inntektskilder]);
-
-  useEffect(() => {
     if (!valgtÅr || lagretTrygdeavgift?.aar === valgtÅr) {
       return;
     }
@@ -374,6 +361,10 @@ export const VurderingAarsavregning = () => {
           medlemskapsTypeErPliktig={medlemskapsTypeErPliktig}
         />
       )}
+
+      {console.log(lagretTrygdeavgiftsperioder)}
+      {console.log(lagrePending)}
+      {console.log(trygdeavgiftsperioderHentingPending)}
 
       <Feilmelding type={aktivFeilmeldingType} />
 

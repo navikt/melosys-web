@@ -1,4 +1,4 @@
-import { deleteAsJson, getAsJson, postAsJson } from "../../utils";
+import { getAsJson, postAsJson } from "../../utils";
 import { API_BASE_URL, AARSAVREGNING } from "../../api-constants";
 import { InntektskildeDto, SkatteforholdDto } from "../trygdeavgift";
 import { Medlemskapsperiode } from "../medlemavfolketrygden/medlemskapsperioder";
