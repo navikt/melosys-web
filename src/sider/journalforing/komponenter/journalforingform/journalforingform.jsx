@@ -53,6 +53,20 @@ const skalViseForvaltningsmelding = (formValues, fagsakListe) => {
   return false;
 };
 
+const kontrollerAdresse = (identifikator) => {
+  const avsenderErGyldigFnrDnr = Utils.person.erGyldigFnrEllerDnr(identifikator);
+
+  const data = avsenderErGyldigFnrDnr ? { brukerID: identifikator } : { orgnr: identifikator };
+
+  return Api.Kontroll.kontrollerAdresse(data)
+    .then((res) => {
+      return !(res.kontrollfeilList && res.kontrollfeilList.length > 0);
+    })
+    .catch(() => {
+      return false;
+    });
+};
+
 const JournalforingForm = ({
   journalpostID,
   hoveddokumentID,
@@ -79,55 +93,52 @@ const JournalforingForm = ({
       sak.saksnummer === formValues?.saksnummer &&
       MKVUtils.erOpphørtEllerHenlagtEllerBortfaltEllerAnnullert(sak.saksstatus.kode)
   );
-  const [harRegistrertAdresse, setHarRegistrertAdresse] = useState(undefined);
 
-  const { brukerID, avsenderType, avsenderID, forvaltningsmeldingMottaker } = formValues;
+  const [adresseOpplysninger, setAdresseOpplysninger] = useState({
+    harBrukerAdresse: false,
+    harAvsenderAdresse: false,
+  });
 
-  const sjekkAdresse = () => {
-    if (!visForvaltningsmelding || !avsenderType || (!brukerID && !avsenderID)) return;
+  const { brukerID, avsenderType, avsenderID } = formValues;
 
-    if (brukerID === null) {
-      return;
+  const sjekkAdresse = async (mottakerType) => {
+    switch (mottakerType) {
+      case MKV.Koder.forvaltningsmeldingMottaker.BRUKER:
+        if (!Utils.person.erGyldigFnrEllerDnr(brukerID)) {
+          return false;
+        }
+        return kontrollerAdresse(brukerID);
+      case MKV.Koder.forvaltningsmeldingMottaker.AVSENDER:
+        if (!(Utils.person.erGyldigFnrEllerDnr(avsenderID) || Utils.organisasjon.erOrgnrGyldig(avsenderID))) {
+          return false;
+        }
+        return kontrollerAdresse(avsenderID);
+      default:
+        return false;
+    }
+  };
+
+  const sjekkAdresser = async () => {
+    const adrKontrollBruker = await sjekkAdresse(MKV.Koder.forvaltningsmeldingMottaker.BRUKER);
+    let adrKontrollAvsender = false;
+    if (avsenderType === ANNEN_PERSON_ELLER_VIRKSOMHET) {
+      adrKontrollAvsender = await sjekkAdresse(MKV.Koder.forvaltningsmeldingMottaker.AVSENDER);
     }
 
-    let brukerIDPerson = "";
-    let orgnr = "";
-
-    const gyldigBrukerFnrEllerDnr = Utils.person.erGyldigFnrEllerDnr(brukerID);
-    if (
-      avsenderType === ANNEN_PERSON_ELLER_VIRKSOMHET &&
-      forvaltningsmeldingMottaker === MKV.Koder.forvaltningsmeldingMottaker.AVSENDER
-    ) {
-      const avsenderErGyldigFnrDnr = Utils.person.erGyldigFnrEllerDnr(avsenderID);
-      const avsenderErGyldigOrgNr = Utils.organisasjon.erOrgnrGyldig(avsenderID);
-
-      if (avsenderErGyldigFnrDnr) {
-        brukerIDPerson = avsenderID;
-      } else if (avsenderErGyldigOrgNr) {
-        orgnr = avsenderID;
-      } else {
-        return;
-      }
-    } else if (gyldigBrukerFnrEllerDnr) {
-      brukerIDPerson = brukerID;
-    } else {
-      return;
-    }
-
-    Api.Kontroll.kontrollerAdresse({
-      brukerID: brukerIDPerson,
-      orgnr,
-    })
-      .then((res) => {
-        const adresseFunnet = !(res.kontrollfeilList && res.kontrollfeilList.length > 0);
-        setHarRegistrertAdresse(adresseFunnet);
-      })
-      .catch(() => setHarRegistrertAdresse(false));
+    return {
+      harBrukerAdresse: adrKontrollBruker,
+      harAvsenderAdresse: adrKontrollAvsender,
+    };
   };
 
   useEffect(() => {
-    sjekkAdresse();
-  }, [brukerID, avsenderType, avsenderID, forvaltningsmeldingMottaker]);
+    setAdresseOpplysninger(null);
+    if (!avsenderType || (!brukerID && !avsenderID)) return;
+
+    sjekkAdresser().then((res) => {
+      setAdresseOpplysninger(res);
+    });
+  }, [brukerID, avsenderID, avsenderType]);
 
   return (
     <form onSubmit={handleSubmit} className="journalforingform">
@@ -157,15 +168,15 @@ const JournalforingForm = ({
         />
       )}
 
-      {visForvaltningsmelding && (
+      {visForvaltningsmelding && adresseOpplysninger && (
         <Komponent
           ikon={Ikoner.Hourglass}
           tittel="Melding om saksbehandlingstid"
           innhold={
             <SendForvaltningsMelding
               avsenderType={avsenderType}
+              adresseOpplysninger={adresseOpplysninger}
               settFeltInnhold={settFeltInnhold}
-              harRegistrertAdresse={harRegistrertAdresse}
             />
           }
         />
