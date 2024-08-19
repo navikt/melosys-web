@@ -15,10 +15,19 @@ import { STATUS } from "../../../../../services";
 
 import { Inntektskilder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/inntektskilder";
 import TrygdeavgiftsperioderTabell from "../../../../../felleskomponenter/trygdeavgift/komponenter/trygdeavgiftsperioderTabell";
-import { FieldArrayProps, FormValuesProps, Inntektskilde, Skatteforhold } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
+import {
+  FieldArrayProps,
+  FormValuesProps,
+  Inntektskilde,
+  Skatteforhold,
+} from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
 import vurderingTrygdeavgiftSchema, { erBrukerSkattepliktigIHelePerioden } from "./vurderingTrygdeavgiftSchema";
 import "./vurderingTrygdeavgift.css";
-import { Feilmelding, feilMeldingBlokkerer, finnAktivFeilmelding } from "../../../../../felleskomponenter/trygdeavgift/komponenter/meldinger";
+import {
+  Feilmelding,
+  feilMeldingBlokkerer,
+  finnAktivFeilmelding,
+} from "../../../../../felleskomponenter/trygdeavgift/komponenter/meldinger";
 import { Skatteforholdsperioder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/skatteforholdsperioder";
 import MKV from "../../../../../melosyskodeverk";
 import { BeregnetTrygdeavgift, TrygdeavgiftsgrunnlagDto } from "../../../../../services/modules/trygdeavgift";

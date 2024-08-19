@@ -27,12 +27,12 @@ const isDevelopmentProfile = environment === "local";
 
 const sentryIntegrations = [
   new BrowserTracing({
-    routingInstrumentation: Sentry.reactRouterV5Instrumentation(browserHistory)
+    routingInstrumentation: Sentry.reactRouterV5Instrumentation(browserHistory),
   }),
   new CaptureConsole({
-    levels: ["error", "warn"]
+    levels: ["error", "warn"],
   }),
-  new Breadcrumbs({ console: false })
+  new Breadcrumbs({ console: false }),
 ];
 
 if (!isDevelopmentProfile) {
@@ -46,7 +46,7 @@ if (!isDevelopmentProfile) {
         return null;
       }
       return event;
-    }
+    },
   });
 }
 
