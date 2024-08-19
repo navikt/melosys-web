@@ -271,6 +271,18 @@ export const VurderingAarsavregning = () => {
   };
 
   useEffect(() => {
+    if (errors) {
+      console.log("errors", errors);
+    }
+    if (errors.skatteforholdsperioder) {
+      console.log("Skatteforholdsperioder Errors:", errors.skatteforholdsperioder);
+    }
+    if (errors.inntektskilder) {
+      console.log("Inntektskilder Errors:", errors.inntektskilder);
+    }
+  }, [errors.skatteforholdsperioder, errors.inntektskilder]);
+
+  useEffect(() => {
     if (!valgtÅr || lagretTrygdeavgift?.aar === valgtÅr) {
       return;
     }
