@@ -1,7 +1,7 @@
 import * as Nav from "../../../../navFrontend";
 import { Inntektskilde, Skatteforhold } from "../../../../felleskomponenter/trygdeavgift/komponenter/types";
-import { Medlemskapsperiode } from "../../../../services/modules/aarsavregning/aarsavregning";
 import * as Utils from "../../../../utils";
+import { Medlemskapsperiode } from "../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 
 const HoyManedinntekt = (
   <Nav.Alert variant="warning" className="alertstripe_feilmelding">
@@ -29,7 +29,7 @@ enum TypeMelding {
 
 const finnesSkatteforholdPeriodeUtenforMedlemskapsperiode = (
   skatteforholdsperioder: Skatteforhold[],
-  innvilgetMedlemskapsperiode: { fom: string; tom: string }
+  innvilgetMedlemskapsperiode: { fom: string | undefined; tom: string | undefined }
 ) => {
   if (Utils._isEmpty(skatteforholdsperioder)) return false;
   const sorterteSkatteforhold = [...skatteforholdsperioder]
@@ -47,7 +47,7 @@ const finnesSkatteforholdPeriodeUtenforMedlemskapsperiode = (
 
 const finnesInntektskildeperiodeUtenforMedlemskapsperiode = (
   inntektskilder: Inntektskilde[],
-  innvilgetMedlemskapsperiode: { fom: string; tom: string }
+  innvilgetMedlemskapsperiode: { fom: string | undefined; tom: string | undefined }
 ) => {
   if (Utils._isEmpty(inntektskilder)) return false;
   const sorterteInntektskilder = [...inntektskilder]
