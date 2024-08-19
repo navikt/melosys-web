@@ -20,6 +20,6 @@ const vedtakSteg = {
   aktivtSteg: false,
   vedtakSteg: false,
   komponent: VurderingVedtak,
-}
+};
 
 export const alleSteg = [aarsavregningSteg, vedtakSteg];
