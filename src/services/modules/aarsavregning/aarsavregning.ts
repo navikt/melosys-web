@@ -59,9 +59,6 @@ export type LagAarsavregningRequest = {
   aar: number;
 };
 
-export const slettTrygdeavgiftsperioder = (behandlingID: number): Promise<null> =>
-  deleteAsJson(`${API_BASE_URL}${AARSAVREGNING}/${behandlingID}`);
-
 export const lagAvregningsData = (
   behandlingID: number,
   request: LagAarsavregningRequest
