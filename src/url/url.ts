@@ -19,6 +19,7 @@ const lagUrlForEuEøsFlyter = (saksnummer: number | string, behandlingID: number
     case MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG:
     case MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY:
     case MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND:
+    case MKV.Koder.behandlinger.behandlingstema.ARBEID_KUN_NORGE:
     case MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND:
       return `/${EU_EOS}/saksbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
     case MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE:
@@ -85,13 +86,22 @@ export const lagUrl = (
   sakstypeKode: string,
   sakstemaKode: string,
   behandlingstemaKode: string,
-  behandlingstypeKode: string
+  behandlingstypeKode: string,
+  erArbeidKunNorgeToggleEnabled: boolean | undefined
 ) => {
   if (behandlingstypeKode === MKV.Koder.behandlinger.behandlingstyper.ÅRSAVREGNING) {
     return lagÅrsavregningFlytUrl(sakstypeKode, saksnummer, behandlingID);
   }
 
-  if (skalViseIngenFlyt(sakstypeKode, sakstemaKode, behandlingstemaKode, behandlingstypeKode)) {
+  if (
+    skalViseIngenFlyt(
+      sakstypeKode,
+      sakstemaKode,
+      behandlingstemaKode,
+      behandlingstypeKode,
+      erArbeidKunNorgeToggleEnabled
+    )
+  ) {
     return lagIngenFlytUrl(sakstypeKode, saksnummer, behandlingID);
   }
 
@@ -129,7 +139,8 @@ export const skalViseIngenFlyt = (
   sakstype: string,
   sakstema: string,
   behandlingstema: string,
-  behandlingstype: string
+  behandlingstype: string,
+  erArbeidKunNorgeToggleEnabled: boolean = false
 ) => {
   if (sakstema === MKV.Koder.sakstemaer.TRYGDEAVGIFT) {
     return true;
@@ -150,8 +161,10 @@ export const skalViseIngenFlyt = (
     return true;
   }
 
+  if (behandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_KUN_NORGE) {
+    return !erArbeidKunNorgeToggleEnabled;
+  }
   return [
-    MKV.Koder.behandlinger.behandlingstema.ARBEID_KUN_NORGE,
     MKV.Koder.behandlinger.behandlingstema.PENSJONIST,
     MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK,
     MKV.Koder.behandlinger.behandlingstema.UNNTAK_MEDLEMSKAP,

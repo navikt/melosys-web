@@ -23,6 +23,8 @@ import Dokumentliste from "../../../felleskomponenter/dokumentliste";
 
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import VurderingAvslagArtikkel12Og16Schema from "./vurderingAvslag12_x_og_16Schema";
+import { useFeatureToggle } from "../../../featuretoggle";
+import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../featuretoggle/toggleNavn";
 
 const skalViseSendOrienteringsbrev = (sakstype, behandlingstema) =>
   sakstype === MKV.Koder.sakstyper.EU_EOS &&
@@ -52,6 +54,8 @@ const VurderingAvslag12_x_og_16 = ({
   aktivtSteg,
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
+  const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
+
   const dispatch = useDispatch();
 
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
@@ -68,7 +72,16 @@ const VurderingAvslag12_x_og_16 = ({
 
   const { kopiTilArbeidsgiver, vedtakstype } = formValues;
 
-  if (!erNyVurdering && kopiTilArbeidsgiver) {
+  if (konvensjonStorbritanniaToggleEnabled && !erNyVurdering && kopiTilArbeidsgiver) {
+    pdfDokumenter.push({
+      navn: "Orientering til arbeidsgiver om vedtak",
+      data: {
+        produserbardokument: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_TIL_ARBEIDSGIVER_OM_VEDTAK,
+        erInnvilgelse: false,
+        mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
+      },
+    });
+  } else if (!erNyVurdering && kopiTilArbeidsgiver) {
     pdfDokumenter.push({
       navn: "Orientering til arbeidsgiver om avslag",
       data: {
