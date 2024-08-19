@@ -260,6 +260,7 @@ export const VurderingAarsavregning = () => {
       Api.Trygdeavgift.slettTrygdeavgiftsperioder(behandlingID).then(() => {
         resetSkatteforholdsperioder([]);
         resetInntektskilder([]);
+        fetchAvregningsData();
       });
     }
   }, [erAvvik]);
