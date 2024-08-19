@@ -1,4 +1,4 @@
-import { getAsJson, postAsJson } from "../../utils";
+import { deleteAsJson, getAsJson, postAsJson } from "../../utils";
 import { API_BASE_URL, AARSAVREGNING } from "../../api-constants";
 import { InntektskildeDto, SkatteforholdDto } from "../trygdeavgift";
 import { Medlemskapsperiode } from "../medlemavfolketrygden/medlemskapsperioder";
@@ -36,18 +36,6 @@ export type Avgift = {
   totalAvgift: number;
 };
 
-// export type Skatteforholdsperiode = {
-//   fom: string;
-//   tom: string;
-//   skatteplikttype: String;
-// };
-
-// export type Medlemskapsperiode = {
-//   fom: string;
-//   tom: string;
-//   trygdedekning: String;
-// };
-
 export type Trygdeavgiftsperiode = {
   fom: string;
   tom: string;
@@ -57,14 +45,6 @@ export type Trygdeavgiftsperiode = {
   avgiftssats: number;
   avgiftPerMd: number;
 };
-//
-// export type Inntektsperiode = {
-//   fom: string;
-//   tom: string;
-//   type: String;
-//   arbeidsgiversavgiftBetales: boolean;
-//   inntektPerMd: number;
-// };
 
 export type Avregning = {
   nyttTotalbeloep: number;
@@ -78,6 +58,9 @@ export const hentAvregningsData = (behandlingID: number): Promise<AarsavregningR
 export type LagAarsavregningRequest = {
   aar: number;
 };
+
+export const slettTrygdeavgiftsperioder = (behandlingID: number): Promise<null> =>
+  deleteAsJson(`${API_BASE_URL}${AARSAVREGNING}/${behandlingID}`);
 
 export const lagAvregningsData = (
   behandlingID: number,

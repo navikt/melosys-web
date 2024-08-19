@@ -12,7 +12,12 @@ import { redigerbartSelectors } from "../../../../ducks/redigerbart";
 import SkatteforholdsPerioderTabell from "./komponenter/skatteforholdsPerioderTabell";
 import { TidligereGrunnlagsopplysningerFinnesIkke } from "./komponenter/tidligereGrunnlagsopplysningerFinnesIkke";
 import { FieldValue, useFieldArray, useForm } from "react-hook-form";
-import { FieldArrayProps, FormValuesProps, Inntektskilde, Skatteforhold } from "../../../../felleskomponenter/trygdeavgift/komponenter/types";
+import {
+  FieldArrayProps,
+  FormValuesProps,
+  Inntektskilde,
+  Skatteforhold,
+} from "../../../../felleskomponenter/trygdeavgift/komponenter/types";
 import { Skatteforholdsperioder } from "../../../../felleskomponenter/trygdeavgift/komponenter/skatteforholdsperioder";
 import { Inntektskilder } from "../../../../felleskomponenter/trygdeavgift/komponenter/inntektskilder";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -51,9 +56,8 @@ export const VurderingAarsavregning = () => {
     lagretTrygdeavgift?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.medlemskapsperioder;
   const innvilgetMedlemskapsperiode = {
     fom: defaultPeriode?.fomDato,
-    tom: defaultPeriode?.tomDato
+    tom: defaultPeriode?.tomDato,
   };
-
 
   useEffect(() => {
     if (behandlingID) {
@@ -72,9 +76,6 @@ export const VurderingAarsavregning = () => {
     }
   }, [behandlingID]);
 
-  const alleTrygdeavgiftsperioderHarNullBeløp = lagretTrygdeavgiftsperioder?.trygdeavgiftsperioder.every(
-    (periode) => periode.avgiftPerMd === 0
-  );
   const medlemskapsTypeErPliktig = medlemskapsperioder?.every(
     (periode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG
   );
@@ -82,27 +83,26 @@ export const VurderingAarsavregning = () => {
   const {
     control,
     watch,
-    formState: { isValid: formIsValid, isValidating, errors }
+    formState: { isValid: formIsValid, isValidating, errors },
   } = useForm({
     resolver: yupResolver(vurderingAarsavregningSchema),
     context: {
       medlemskapsperiode: innvilgetMedlemskapsperiode,
       medlemskapsTypeErPliktig,
-      erÅpenSluttDato: false
+      erÅpenSluttDato: false,
     },
     mode: "onChange",
     defaultValues: {
       skatteforholdsperioder: [{}],
-      inntektskilder: [{}]
-
-    } as FieldValue<FormValuesProps>
+      inntektskilder: [{}],
+    } as FieldValue<FormValuesProps>,
   });
 
   const {
     fields: skattFields,
     append: skattAppend,
     remove: skattRemove,
-    replace: resetSkatteforholdsperioder
+    replace: resetSkatteforholdsperioder,
   } = useFieldArray<FieldArrayProps, "skatteforholdsperioder", "id">({ control, name: "skatteforholdsperioder" });
 
   const {
@@ -110,7 +110,7 @@ export const VurderingAarsavregning = () => {
     append: inntektAppend,
     remove: inntektRemove,
     update: inntektUpdate,
-    replace: resetInntektskilder
+    replace: resetInntektskilder,
   } = useFieldArray<FieldArrayProps, "inntektskilder", "id">({ control, name: "inntektskilder" });
 
   const formValues = watch();
@@ -141,34 +141,37 @@ export const VurderingAarsavregning = () => {
       });
   };
 
-  const beregnTrygdeavgiftsperioder = useCallback((formVerdier: FieldValue<FormValuesProps>) => {
-    setFeil(undefined);
-    setLagrePending(true);
-    const erBrukerPliktigMedlemOgSkattepliktig =
-      medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(formVerdier.skatteforholdsperioder);
-    Api.Trygdeavgift.beregnTrygdeavgiftsperioder(behandlingID, {
-      skatteforholdsperioder: formVerdier.skatteforholdsperioder.map((skatteforhold: Skatteforhold) => ({
-        fomDato: Utils.dato.formatterDatoTilISO(skatteforhold.fomDato),
-        tomDato: Utils.dato.formatterDatoTilISO(skatteforhold.tomDato, null),
-        skatteplikttype: skatteforhold.skatteplikttype
-      })),
-      inntektskilder: !erBrukerPliktigMedlemOgSkattepliktig
-        ? formVerdier.inntektskilder.map((inntektskilde: Inntektskilde) => ({
-          type: inntektskilde.kildetype,
-          arbeidsgiversavgiftBetales: Utils.streng.uppercaseStrengTilBool(inntektskilde.arbAvgBetales) || false,
-          avgiftspliktigInntektMnd: inntektskilde.bruttoInntekt,
-          fomDato: Utils.dato.formatterDatoTilISO(inntektskilde.fomDato),
-          tomDato: Utils.dato.formatterDatoTilISO(inntektskilde.tomDato, null)
-        }))
-        : []
-    })
-      .then((beregnetTrygdeavgift) => {
-        setFeil(undefined);
-        setTrygdeavgiftsperioder(beregnetTrygdeavgift);
+  const beregnTrygdeavgiftsperioder = useCallback(
+    (formVerdier: FieldValue<FormValuesProps>) => {
+      setFeil(undefined);
+      setLagrePending(true);
+      const erBrukerPliktigMedlemOgSkattepliktig =
+        medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(formVerdier.skatteforholdsperioder);
+      Api.Trygdeavgift.beregnTrygdeavgiftsperioder(behandlingID, {
+        skatteforholdsperioder: formVerdier.skatteforholdsperioder.map((skatteforhold: Skatteforhold) => ({
+          fomDato: Utils.dato.formatterDatoTilISO(skatteforhold.fomDato),
+          tomDato: Utils.dato.formatterDatoTilISO(skatteforhold.tomDato, null),
+          skatteplikttype: skatteforhold.skatteplikttype,
+        })),
+        inntektskilder: !erBrukerPliktigMedlemOgSkattepliktig
+          ? formVerdier.inntektskilder.map((inntektskilde: Inntektskilde) => ({
+              type: inntektskilde.kildetype,
+              arbeidsgiversavgiftBetales: Utils.streng.uppercaseStrengTilBool(inntektskilde.arbAvgBetales) || false,
+              avgiftspliktigInntektMnd: inntektskilde.bruttoInntekt,
+              fomDato: Utils.dato.formatterDatoTilISO(inntektskilde.fomDato),
+              tomDato: Utils.dato.formatterDatoTilISO(inntektskilde.tomDato, null),
+            }))
+          : [],
       })
-      .catch((error) => setFeil(mapFeilmelding(error)))
-      .finally(() => setLagrePending(false));
-  }, [behandlingID, medlemskapsTypeErPliktig, setFeil, setLagrePending, setTrygdeavgiftsperioder]);
+        .then((beregnetTrygdeavgift) => {
+          setFeil(undefined);
+          setTrygdeavgiftsperioder(beregnetTrygdeavgift);
+        })
+        .catch((error) => setFeil(mapFeilmelding(error)))
+        .finally(() => setLagrePending(false));
+    },
+    [behandlingID, medlemskapsTypeErPliktig, setFeil, setLagrePending, setTrygdeavgiftsperioder]
+  );
 
   const debounceBeregnTrygdeavgiftsperioder = useCallback(
     Utils._debounce((formVerdier, isValid) => isValid && beregnTrygdeavgiftsperioder(formVerdier), 500),
@@ -186,7 +189,7 @@ export const VurderingAarsavregning = () => {
     formValues?.inntektskilder?.length,
     formValues?.skatteforholdsperioder?.length,
     redigerbart,
-    debounceBeregnTrygdeavgiftsperioder
+    debounceBeregnTrygdeavgiftsperioder,
   ]);
 
   const mapFeilmelding = (error: any) => {
@@ -208,21 +211,21 @@ export const VurderingAarsavregning = () => {
     resetSkatteforholdsperioder(
       !Utils._isEmpty(sorterteSkatteforhold)
         ? sorterteSkatteforhold.map((skatteforhold) => ({
-          fomDato: Utils.dato.formatterDatoTilNorsk(skatteforhold.fomDato),
-          tomDato: Utils.dato.formatterDatoTilNorsk(skatteforhold.tomDato),
-          skatteplikttype: skatteforhold.skatteplikttype
-        }))
+            fomDato: Utils.dato.formatterDatoTilNorsk(skatteforhold.fomDato),
+            tomDato: Utils.dato.formatterDatoTilNorsk(skatteforhold.tomDato),
+            skatteplikttype: skatteforhold.skatteplikttype,
+          }))
         : [defaultPeriode!]
     );
     resetInntektskilder(
       !Utils._isEmpty(sorterteInntekstkilder)
         ? sorterteInntekstkilder.map((inntektskilde) => ({
-          kildetype: inntektskilde.type,
-          arbAvgBetales: Utils.streng.boolTilUppercaseStreng(inntektskilde.arbeidsgiversavgiftBetales),
-          bruttoInntekt: inntektskilde.avgiftspliktigInntektMnd,
-          fomDato: Utils.dato.formatterDatoTilNorsk(inntektskilde.fomDato),
-          tomDato: Utils.dato.formatterDatoTilNorsk(inntektskilde.tomDato)
-        }))
+            kildetype: inntektskilde.type,
+            arbAvgBetales: Utils.streng.boolTilUppercaseStreng(inntektskilde.arbeidsgiversavgiftBetales),
+            bruttoInntekt: inntektskilde.avgiftspliktigInntektMnd,
+            fomDato: Utils.dato.formatterDatoTilNorsk(inntektskilde.fomDato),
+            tomDato: Utils.dato.formatterDatoTilNorsk(inntektskilde.tomDato),
+          }))
         : [defaultPeriode!]
     );
   };
@@ -251,6 +254,16 @@ export const VurderingAarsavregning = () => {
       resetInntektskilder([defaultPeriode]);
     }
   };
+
+  useEffect(() => {
+    if (erAvvik === false) {
+      Api.Aarsavregning.slettTrygdeavgiftsperioder(behandlingID).then(() => {
+        resetSkatteforholdsperioder([]);
+        resetInntektskilder([]);
+      });
+      fetchAvregningsData();
+    }
+  }, [erAvvik]);
 
   const håndterEndringAvÅr = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const år = event.target.value ? parseInt(event.target.value, 10) : undefined;
@@ -323,12 +336,12 @@ export const VurderingAarsavregning = () => {
       )}
       {lagretTrygdeavgift?.tidligereGrunnlagsopplysninger && (
         <Nav.RadioGroup
-          onChange={(value) => håndterAvvik(value === 'true')}
-          value={erAvvik == true ? 'true' :  'false'}
+          onChange={(value) => håndterAvvik(value === "true")}
+          value={erAvvik === true ? "true" : "false"}
           legend="Er det avvik i opplysningene fra skatt eller bruker?"
         >
-          <Nav.Radio value={"true"}>Ja</Nav.Radio>
-          <Nav.Radio value={"false"}>Nei</Nav.Radio>
+          <Nav.Radio value="true">Ja</Nav.Radio>
+          <Nav.Radio value="false">Nei</Nav.Radio>
         </Nav.RadioGroup>
       )}
 
