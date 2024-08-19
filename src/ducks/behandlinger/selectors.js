@@ -406,6 +406,7 @@ export const ErArbeidEttLand = createSelector(BehandlingstemaKodeSelector, (beha
   [
     MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
     MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG,
+    MKV.Koder.behandlinger.behandlingstema.ARBEID_KUN_NORGE,
     MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY,
     MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND,
   ].includes(behandlingstema)

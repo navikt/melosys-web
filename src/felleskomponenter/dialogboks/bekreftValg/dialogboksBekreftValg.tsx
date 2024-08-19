@@ -61,13 +61,25 @@ export const DialogboksBekreftValg = () => {
       .catch((error) => setFeil(error?.body?.message ?? error));
 
   const avsluttSakSomBortfalt = () => håndterKall(Api.Fagsaker.fagsak.bortfall(saksnummer));
+
+  const ferdigbehandleÅrsavregning = () =>
+    håndterKall(Api.Behandlinger.behandling.ferdigbehandleÅrsavregning(behandlingID));
+
   const ferdigbehandleSak = () => håndterKall(Api.Fagsaker.fagsak.ferdigbehandleSak(saksnummer));
+
   const angiBehandlingsresultattype = (type: string) =>
     håndterKall(Api.Behandlinger.resultat.angiBehandlingsresultattype(behandlingID, { type }));
+
   const annullerFagsak = () => håndterKall(Api.Fagsaker.fagsak.annullerFagsak(saksnummer));
 
   const hentBekreftValgDialogDataFraType = () => {
     switch (bekreftValgType) {
+      case BekreftValgTypes.FERDIGBEHANDLE_ÅRSAVREGNING:
+        return {
+          tittel: "Ferdigbehandlet",
+          tekst: "Er du sikker på at årsavregningen skal ferdigbehandles?",
+          handleBekreft: ferdigbehandleÅrsavregning,
+        };
       case BekreftValgTypes.FERDIGBEHANDLET:
         return {
           tittel: "Ferdigbehandlet",
