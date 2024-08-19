@@ -9,7 +9,7 @@ describe("MedlemskapsPerioderTabell", () => {
   });
 
   it("rendrer tabell med data", () => {
-    const perioder = [{ fom: "2022-01-01", tom: "2022-12-31", trygdedekning: "Full" }];
+    const perioder = [{ fomDato: "2022-01-01", tomDato: "2022-12-31", trygdedekning: "Full" }];
     render(<MedlemskapsPerioderTabell perioder={perioder} />);
     expect(screen.getByText(/Medlemskap/i)).toBeInTheDocument();
     expect(screen.getByText(/Dekning/i)).toBeInTheDocument();
@@ -17,8 +17,8 @@ describe("MedlemskapsPerioderTabell", () => {
 
   it("rendrer tabell med flere perioder", () => {
     const perioder = [
-      { fom: "2022-01-01", tom: "2022-12-31", trygdedekning: "Full" },
-      { fom: "2023-01-01", tom: "2023-12-31", trygdedekning: "Delvis" },
+      { fomDato: "2022-01-01", tomDato: "2022-12-31", trygdedekning: "Full" },
+      { fomDato: "2023-01-01", tomDato: "2023-12-31", trygdedekning: "Delvis" },
     ];
     render(<MedlemskapsPerioderTabell perioder={perioder} />);
     const rows = screen.getAllByRole("row");
@@ -26,7 +26,7 @@ describe("MedlemskapsPerioderTabell", () => {
   });
 
   it("formaterer og viser riktig fom og tom datoer", () => {
-    const perioder = [{ fom: "2022-01-01", tom: "2022-12-31", trygdedekning: "Full" }];
+    const perioder = [{ fomDato: "2022-01-01", tomDato: "2022-12-31", trygdedekning: "Full" }];
     render(<MedlemskapsPerioderTabell perioder={perioder} />);
     expect(screen.getByText("01.01.2022 - 31.12.2022")).toBeInTheDocument();
   });
@@ -34,8 +34,8 @@ describe("MedlemskapsPerioderTabell", () => {
   it("viser riktig trygdedekning verdi", () => {
     const perioder = [
       {
-        fom: "2022-01-01",
-        tom: "2022-12-31",
+        fomDato: "2022-01-01",
+        tomDato: "2022-12-31",
         trygdedekning: "FTRL_2_9_FØRSTE_LEDD_C_ANDRE_LEDD_HELSE_PENSJON_SYKE_FORELDREPENGER",
       },
     ];
