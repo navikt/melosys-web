@@ -125,6 +125,7 @@ export type OpprettBrevReqDto = {
   ytterligereInformasjon?: string | null;
   opphoerDato?: string | null;
   institusjonID?: string | null;
+  erInnvilgelse?: boolean | null;
 };
 
 export type MuligMottaker = {
