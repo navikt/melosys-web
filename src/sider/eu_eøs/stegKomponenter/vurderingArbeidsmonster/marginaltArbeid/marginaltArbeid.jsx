@@ -11,7 +11,7 @@ const MarginaltArbeid = ({ arbeidsland, redigerbart, marginaltArbeid, oppdaterDa
   const { flereLandUkjentHvilke } = useSelector((state) => formValueSelector(KV.Form.SOKNAD)(state, "soknadsland"));
 
   return (
-    <Nav.Fieldset>
+    <Nav.Fieldset legend="">
       <div className="marginaltArbeid">
         <div className="landliste_innhold">
           {flereLandUkjentHvilke ? (
