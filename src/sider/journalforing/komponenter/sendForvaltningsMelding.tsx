@@ -3,7 +3,8 @@ import * as KV from "../../../kodeverk";
 import MKV from "../../../melosyskodeverk";
 
 import "./sendForvaltningsMelding.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import * as Utils from "../../../utils";
 
 const { BRUKER, AVSENDER, INGEN } = MKV.Koder.forvaltningsmeldingMottaker;
 
@@ -18,24 +19,33 @@ interface SendForvaltningsMeldingProps {
   settFeltInnhold: (felt: string, innhold: any) => void;
 }
 
+enum feilmeldingTyper {
+  BRUKER_MANGLER_ADRESSE = "Avsender må enten registrere adresse i Folkeregisteret eller kontaktadresse via nav.no.",
+}
+
 const SendForvaltningsMelding = ({
   avsenderType,
   adresseOpplysninger,
   settFeltInnhold,
 }: SendForvaltningsMeldingProps) => {
-  const [mottaker, setMottaker] = useState("");
-  const endreForvaltningsmeldingMottaker = (value: string) => {
-    settFeltInnhold("forvaltningsmeldingMottaker", value);
-    setMottaker(value);
-  };
+  const [mottaker, setMottaker] = useState(adresseOpplysninger.harBrukerAdresse ? BRUKER : INGEN);
+  const [feilmeldinger, setFeilmeldinger] = useState<feilmeldingTyper[]>([]);
+
+  useEffect(() => {
+    if (!adresseOpplysninger.harBrukerAdresse) {
+      setFeilmeldinger([feilmeldingTyper.BRUKER_MANGLER_ADRESSE]);
+    }
+
+    settFeltInnhold("forvaltningsmeldingMottaker", mottaker);
+  }, [mottaker]);
 
   return (
     adresseOpplysninger && (
       <div className="sendForvaltningsmelding">
         <Nav.RadioGroup
-          onChange={endreForvaltningsmeldingMottaker}
+          onChange={setMottaker}
           legend="Skal melding om saksbehandlingtid sendes automatisk?"
-          defaultValue={adresseOpplysninger.harBrukerAdresse ? BRUKER : INGEN}
+          defaultValue={mottaker}
           name="forvaltningsmeldingMottaker"
           size="small"
         >
@@ -50,17 +60,16 @@ const SendForvaltningsMelding = ({
           <Nav.Radio value={INGEN}>Nei, jeg vil sende melding senere eller behandle saken innen kort tid</Nav.Radio>
         </Nav.RadioGroup>
 
-        {(mottaker === BRUKER && !adresseOpplysninger.harBrukerAdresse) ||
-          (mottaker === AVSENDER && !adresseOpplysninger.harAvsenderAdresse && (
-            <Nav.Alert className="feilmelding" variant="warning">
-              <Nav.Typo.Element>
-                Melding kan ikke sendes automatisk pga. manglende eller ugyldig adresse
-              </Nav.Typo.Element>
-              <ul>
-                <li>Avsender må enten registrere adresse i Folkeregisteret eller kontaktadresse via nav.no.</li>
-              </ul>
-            </Nav.Alert>
-          ))}
+        {feilmeldinger.length > 0 && (
+          <Nav.Alert className="feilmelding" variant="warning">
+            <Nav.Typo.Element>Melding kan ikke sendes automatisk pga. manglende eller ugyldig adresse</Nav.Typo.Element>
+            <ul>
+              {feilmeldinger.map((feilmelding) => {
+                return <li key={Utils._uuid()}>{feilmelding}</li>;
+              })}
+            </ul>
+          </Nav.Alert>
+        )}
       </div>
     )
   );
