@@ -5,11 +5,19 @@ import MKV from "../../../../melosyskodeverk";
 import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
 import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
 import VurderingVedtak from "../../stegKomponenter/vurderingVedtak/vurderingVedtak";
+import { VurderingVedtak11_3_og_13_3a } from "../../stegKomponenter/vurderingVedtak/vurderingVedtak11_3_og_13_3a";
 import { erStorbritanniaKonvBestemmelse } from "../../../../melosyskodeverk/utils";
 
 class Vedtak extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
+    const erUtsendt =
+      MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER === propsLight.behandlingstema.kode ||
+      MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG === propsLight.behandlingstema.kode;
+
+    const skalViseArbeidKunNorgeFlyt =
+      (erUtsendt || propsLight.behandlingstema.kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_KUN_NORGE) &&
+      propsLight.arbeidKunNorgeToggleEnabled;
     this.kriterier = [
       {
         exec: () => true,
@@ -18,17 +26,13 @@ class Vedtak extends Steg {
     ];
     this.id = STEG.VEDTAK;
     this.tittel = "Vedtak";
-    this.komponent = VurderingVedtak;
+    this.komponent = skalViseArbeidKunNorgeFlyt ? VurderingVedtak11_3_og_13_3a : VurderingVedtak;
     this.samleRelevanteData = (_propsLight) => {
       const formValues = _propsLight.artikkel12_vedtak_skjema;
       const lovvalgSomKodeTerm = KV.finnEnkeltKodeFraListe(
         _propsLight.valgteLovvalgsVilkarBestemmelse,
         MKV.Kodekombinasjoner.alleLovvalg
       );
-
-      const erUtsendt =
-        MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER === _propsLight.behandlingstema.kode ||
-        MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG === _propsLight.behandlingstema.kode;
 
       const erStorbritanniaBestemmelse = erStorbritanniaKonvBestemmelse(_propsLight.lovvalgsbestemmelse);
 
@@ -39,7 +43,10 @@ class Vedtak extends Steg {
       ];
 
       const pdfDokumenter = [];
-      if (erUtsendt && erStorbritanniaBestemmelse && _propsLight.konvensjonStorbritanniaToggleEnabled) {
+      if (
+        (erUtsendt && erStorbritanniaBestemmelse && _propsLight.konvensjonStorbritanniaToggleEnabled) ||
+        skalViseArbeidKunNorgeFlyt
+      ) {
         pdfDokumenter.push({
           dokumentData: {
             produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_EFTA_STORBRITANNIA,
