@@ -23,8 +23,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
 
   const [feil, setFeil] = useState<undefined | string>(undefined);
   const [lagretTrygdeavgift, setLagretTrygdeavgift] = useState<AarsavregningResponse | undefined>(undefined);
-  // TODO: Må legges inn som avklart fakta
-  const [avvikIOpplysninger, setAvvikIOpplysninger] = useState<boolean | undefined>(undefined);
+  const [avvikIOpplysninger, setAvvikIOpplysninger] = useState<boolean | undefined>(undefined); // Hent initialState fra grunnlag
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const sisteMuligeÅr = new Date().getFullYear() - 1;

@@ -18,7 +18,7 @@ const vedtakSteg = {
   stegPosisjon: 1,
   status: FANE_STATUS.UBEHANDLET,
   aktivtSteg: false,
-  vedtakSteg: false,
+  vedtakSteg: true,
   komponent: VurderingVedtak,
 };
 

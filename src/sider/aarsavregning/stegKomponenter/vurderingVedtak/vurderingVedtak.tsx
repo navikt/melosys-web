@@ -2,7 +2,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import * as Nav from "../../../../navFrontend";
 import { redigerbartSelectors } from "../../../../ducks/redigerbart";
-import "./vurderingVedtak.css";
 import Dokumentliste from "../../../../felleskomponenter/dokumentliste";
 import * as Mui from "../../../../felleskomponenter/ui";
 import { useCallback, useEffect, useState } from "react";
@@ -67,11 +66,10 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const formValues = watch();
 
   const fetchAvregningsData = () => {
-    return Api.Aarsavregning.hentAvregningsData(behandlingID)
-      .then((response: AarsavregningResponse) => {
-        setValgtÅr(response.aar);
-        return response;
-      });
+    return Api.Aarsavregning.hentAvregningsData(behandlingID).then((response: AarsavregningResponse) => {
+      setValgtÅr(response.aar);
+      return response;
+    });
   };
 
   const hentMuligeMottakere = async () => {
@@ -89,6 +87,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
     }
   }, [aktivtSteg]);
 
+  // FIXME: Fatting av årsavregningsvedtak skal i fremtiden være uavhengig av sakstype
   const lagFattVedtakFTRLReqDto = (): Api.Saksflyt.Vedtak.FattVedtakFTRLReqDto => {
     return {
       behandlingsresultatTypeKode: FERDIGBEHANDLET,
