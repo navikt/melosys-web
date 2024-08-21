@@ -38,6 +38,17 @@ class Vedtak extends Steg {
         MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia.KONV_EFTA_STORBRITANNIA_ART16_1,
       ];
 
+      const artikkel11_4Bestemmelser = [
+        MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_4_2,
+        MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART11_4_1,
+        MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia.KONV_EFTA_STORBRITANNIA_ART13_4_2,
+        MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_konv_efta_storbritannia.KONV_EFTA_STORBRITANNIA_ART13_4_1,
+      ];
+
+      const erArtikkel11_4 =
+        artikkel11_4Bestemmelser.includes(propsLight.lovvalgsbestemmelse) ||
+        artikkel11_4Bestemmelser.includes(propsLight.tilleggsbestemmelse);
+
       const pdfDokumenter = [];
       if (erUtsendt && erStorbritanniaBestemmelse && _propsLight.konvensjonStorbritanniaToggleEnabled) {
         pdfDokumenter.push({
@@ -47,13 +58,15 @@ class Vedtak extends Steg {
             fritekst: formValues.vedtaksbrevFritekst,
           },
         });
-        pdfDokumenter.push({
-          dokumentData: {
-            produserbardokument: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_TIL_ARBEIDSGIVER_OM_VEDTAK,
-            erInnvilgelse: true,
-            mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
-          },
-        });
+        if (!erArtikkel11_4) {
+          pdfDokumenter.push({
+            dokumentData: {
+              produserbardokument: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_TIL_ARBEIDSGIVER_OM_VEDTAK,
+              erInnvilgelse: true,
+              mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
+            },
+          });
+        }
         pdfDokumenter.push({
           dokumentData: {
             produserbardokument: MKV.Koder.brev.produserbaredokumenter.ATTEST_A1,
