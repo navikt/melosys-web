@@ -180,6 +180,7 @@ export const VurderingArtikkel16Vedtak = ({
         const request = {
           behandlingsresultatTypeKode: FASTSATT_LOVVALGSLAND,
           fritekst: formValues.vedtaksbrevFritekst,
+          begrunnelseFritekst: formValues.vedtaksbrevFritekst,
           fritekstSed: null,
           mottakerinstitusjoner: null,
           vedtakstype: formValues.vedtakstype || FØRSTEGANGSVEDTAK,

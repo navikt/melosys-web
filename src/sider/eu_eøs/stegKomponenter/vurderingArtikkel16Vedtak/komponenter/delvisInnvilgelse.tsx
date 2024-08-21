@@ -51,7 +51,14 @@ const DelvisInnvilgelse = ({
       dokumentData: {
         produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_EFTA_STORBRITANNIA,
         mottaker: MKV.Koder.mottakerroller.BRUKER,
-        fritekst: vedtaksbrevFritekst,
+        begrunnelseFritekst: vedtaksbrevFritekst,
+      },
+    });
+    pdfDokumenter.push({
+      dokumentData: {
+        produserbardokument: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_TIL_ARBEIDSGIVER_OM_VEDTAK,
+        erInnvilgelse: true,
+        mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
       },
     });
     pdfDokumenter.push({
@@ -70,12 +77,22 @@ const DelvisInnvilgelse = ({
     });
 
     if (visOrienteringsbrevArbeidsgiver) {
-      pdfDokumenter.push({
-        dokumentData: {
-          produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
-          mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
-        },
-      });
+      if (konvensjonStorbritanniaToggleEnabled) {
+        pdfDokumenter.push({
+          dokumentData: {
+            produserbardokument: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_TIL_ARBEIDSGIVER_OM_VEDTAK,
+            erInnvilgelse: true,
+            mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
+          },
+        });
+      } else {
+        pdfDokumenter.push({
+          dokumentData: {
+            produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
+            mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
+          },
+        });
+      }
     }
   }
 

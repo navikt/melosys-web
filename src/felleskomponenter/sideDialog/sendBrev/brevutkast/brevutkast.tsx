@@ -144,7 +144,7 @@ const Brevutkast = ({
       settFeltForInnledningFritekst();
       settFeltVerdi("MANGLER_FRITEKST", utkast.manglerFritekst);
       settFeltVerdi("FRITEKST", utkast.fritekst);
-      settFeltVerdi("STANDARDTEKST_KONTAKTINFORMASJON", utkast.kontaktopplysninger);
+      settFeltVerdi("STANDARDTEKST_KONTAKTINFORMASJON", utkast.skalViseStandardTekstOmkontaktopplysninger);
       setFritekstvedlegg(utkast.fritekstvedlegg || []);
       settFeltForSaksvedlegg(utkast.saksvedlegg || []);
       settKopiTilBruker(utkast.kopiMottakere || []);

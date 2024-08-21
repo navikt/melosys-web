@@ -219,6 +219,7 @@ const VurderingVedtak = ({
           behandlingsresultatTypeKode: FASTSATT_LOVVALGSLAND,
           vedtakstype: formValues.vedtakstype || FØRSTEGANGSVEDTAK,
           fritekst: formValues.vedtaksbrevFritekst,
+          begrunnelseFritekst: formValues.vedtaksbrevFritekst,
           fritekstSed: formValues.fritekstSed,
           kopiTilArbeidsgiver: formValues.kopiTilArbeidsgiver,
           mottakerinstitusjoner: visMottakerinstitusjoner ? [formValues.mottakerinstitusjon] : [],
@@ -250,6 +251,7 @@ const VurderingVedtak = ({
     return dokumenter.map((dokument: BrevDokumentMetadataType) => {
       if (dokument.dokumentData !== undefined) {
         dokument.dokumentData.nyVurderingBakgrunn = formValues?.vedtakstypebegrunnelse;
+        dokument.dokumentData.begrunnelseFritekst = formValues?.vedtaksbrevFritekst;
       }
       return dokument;
     });
