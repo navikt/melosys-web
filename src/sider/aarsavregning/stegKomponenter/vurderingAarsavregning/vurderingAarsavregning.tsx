@@ -12,11 +12,18 @@ import { redigerbartSelectors } from "../../../../ducks/redigerbart";
 import SkatteforholdsPerioderTabell from "./skatteforholdsPerioderTabell";
 import { TidligereGrunnlagsopplysningerFinnesIkke } from "./tidligereGrunnlagsopplysningerFinnesIkke";
 
-export const VurderingAarsavregning = () => {
+interface Props {
+  bekreft: () => void;
+  aktivtSteg: boolean;
+  oppdaterStatus: (isValid: boolean) => void;
+}
+
+export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
   const [valgtÅr, setValgtÅr] = useState<number | undefined>(undefined);
 
   const [feil, setFeil] = useState<undefined | string>(undefined);
   const [lagretTrygdeavgift, setLagretTrygdeavgift] = useState<AarsavregningResponse | undefined>(undefined);
+  const [avvikIOpplysninger, setAvvikIOpplysninger] = useState<boolean | undefined>(undefined); // Hent initialState fra grunnlag
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const sisteMuligeÅr = new Date().getFullYear() - 1;
@@ -60,6 +67,13 @@ export const VurderingAarsavregning = () => {
       });
   }, [valgtÅr]);
 
+  // TODO: 0 grunnlag og 0 avvik må også kreve at totalt tidligere fakturert trygdeavgift er registrert
+  const stegErGyldig = redigerbart && avvikIOpplysninger === false;
+
+  useEffect(() => {
+    oppdaterStatus(stegErGyldig);
+  }, [stegErGyldig]);
+
   return (
     <div className="vurderingAarsavregning">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Årsavregning</Nav.Typo.Innholdstittel>
@@ -99,12 +113,12 @@ export const VurderingAarsavregning = () => {
         </>
       )}
       {lagretTrygdeavgift && (
-        <Nav.RadioGroup legend="Er det avvik i opplysningene fra skatt eller bruker?">
-          <Nav.Radio value="10">Ja</Nav.Radio>
-          <Nav.Radio value="20">Nei</Nav.Radio>
+        <Nav.RadioGroup legend="Er det avvik i opplysningene fra skatt eller bruker?" onChange={setAvvikIOpplysninger}>
+          <Nav.Radio value>Ja</Nav.Radio>
+          <Nav.Radio value={false}>Nei</Nav.Radio>
         </Nav.RadioGroup>
       )}
-      <Nav.Button variant="primary" disabled={!redigerbart}>
+      <Nav.Button variant="primary" disabled={!stegErGyldig} onClick={bekreft}>
         Bekreft og fortsett
       </Nav.Button>
       ;
