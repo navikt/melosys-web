@@ -31,6 +31,7 @@ class Vedtak extends Steg {
         MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG === _propsLight.behandlingstema.kode;
 
       const erStorbritanniaBestemmelse = erStorbritanniaKonvBestemmelse(_propsLight.lovvalgsbestemmelse);
+      const { UTSENDT_ARBEIDSTAKER, ARBEID_TJENESTEPERSON_ELLER_FLY } = MKV.Koder.behandlinger.behandlingstema;
 
       const visSedLenkeForLovvalgsbestemmelser = [
         MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_1,
@@ -48,7 +49,6 @@ class Vedtak extends Steg {
       const erArtikkel11_4 =
         artikkel11_4Bestemmelser.includes(propsLight.lovvalgsbestemmelse) ||
         artikkel11_4Bestemmelser.includes(propsLight.tilleggsbestemmelse);
-
       const pdfDokumenter = [];
       if (erUtsendt && erStorbritanniaBestemmelse && _propsLight.konvensjonStorbritanniaToggleEnabled) {
         pdfDokumenter.push({
@@ -58,7 +58,10 @@ class Vedtak extends Steg {
             fritekst: formValues.vedtaksbrevFritekst,
           },
         });
-        if (!erArtikkel11_4) {
+        if (
+          !erArtikkel11_4 &&
+          [UTSENDT_ARBEIDSTAKER, ARBEID_TJENESTEPERSON_ELLER_FLY].includes(propsLight.behandlingstema.kode)
+        ) {
           pdfDokumenter.push({
             dokumentData: {
               produserbardokument: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_TIL_ARBEIDSGIVER_OM_VEDTAK,
@@ -82,7 +85,10 @@ class Vedtak extends Steg {
           },
         });
         if (propsLight.konvensjonStorbritanniaToggleEnabled && lovvalgSomKodeTerm && formValues?.kopiTilArbeidsgiver) {
-          if (!erArtikkel11_4) {
+          if (
+            !erArtikkel11_4 &&
+            [UTSENDT_ARBEIDSTAKER, ARBEID_TJENESTEPERSON_ELLER_FLY].includes(propsLight.behandlingstema.kode)
+          ) {
             pdfDokumenter.push({
               dokumentData: {
                 produserbardokument: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_TIL_ARBEIDSGIVER_OM_VEDTAK,
@@ -138,6 +144,7 @@ class Vedtak extends Steg {
 
       return {
         redigerbart: _propsLight.generiskStegRedigerbart,
+        erArtikkel11_4,
         pdfDokumenter,
         harFeilmeldinger: _propsLight.harFeilmeldinger,
       };

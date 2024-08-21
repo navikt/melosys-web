@@ -139,7 +139,7 @@ const VurderingAvslag12_x_og_16 = ({
             behandlingsresultatTypeKode,
             fritekst: formValues.vedtaksbrevFritekst,
             fritekstSed: null,
-            kopiTilArbeidsgiver: formValues.kopiTilArbeidsgiver,
+            kopiTilArbeidsgiver: formValues.kopiTilArbeidsgiver === undefined ? false : formValues.kopiTilArbeidsgiver,
             mottakerinstitusjoner: null,
             vedtakstype: formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
             nyVurderingBakgrunn: formValues.vedtakstypebegrunnelse,
