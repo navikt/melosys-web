@@ -71,11 +71,10 @@ const VurderingAvslag12_x_og_16 = ({
   ];
 
   const { kopiTilArbeidsgiver, vedtakstype } = formValues;
-
   if (konvensjonStorbritanniaToggleEnabled && !erNyVurdering && kopiTilArbeidsgiver) {
     pdfDokumenter.push({
       navn: "Orientering til arbeidsgiver om vedtak",
-      data: {
+      dokumentData: {
         produserbardokument: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_TIL_ARBEIDSGIVER_OM_VEDTAK,
         erInnvilgelse: false,
         mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
@@ -84,7 +83,7 @@ const VurderingAvslag12_x_og_16 = ({
   } else if (!erNyVurdering && kopiTilArbeidsgiver) {
     pdfDokumenter.push({
       navn: "Orientering til arbeidsgiver om avslag",
-      data: {
+      dokumentData: {
         produserbardokument: MKV.Koder.brev.produserbaredokumenter.AVSLAG_ARBEIDSGIVER,
         mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
       },

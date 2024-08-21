@@ -68,12 +68,7 @@ class Vedtak extends Steg {
             fritekst: formValues.vedtaksbrevFritekst,
           },
         });
-        if (
-          propsLight.konvensjonStorbritanniaToggleEnabled &&
-          lovvalgSomKodeTerm &&
-          visSedLenkeForLovvalgsbestemmelser.includes(lovvalgSomKodeTerm.kode) &&
-          formValues?.kopiTilArbeidsgiver
-        ) {
+        if (propsLight.konvensjonStorbritanniaToggleEnabled && lovvalgSomKodeTerm && formValues?.kopiTilArbeidsgiver) {
           pdfDokumenter.push({
             dokumentData: {
               produserbardokument: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_TIL_ARBEIDSGIVER_OM_VEDTAK,
