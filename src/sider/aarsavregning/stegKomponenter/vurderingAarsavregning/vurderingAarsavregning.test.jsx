@@ -42,7 +42,7 @@ describe("VurderingAarsavreging", () => {
   const props = {
     bekreft: vi.fn(),
     oppdaterStatus: vi.fn(),
-  }
+  };
   // @ts-ignore
   const WrappedVurderingAarsavregning = reduxForm({ form: "test" })(VurderingAarsavregning);
 
