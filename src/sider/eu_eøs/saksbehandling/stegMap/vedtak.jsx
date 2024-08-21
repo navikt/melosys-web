@@ -82,13 +82,15 @@ class Vedtak extends Steg {
           },
         });
         if (propsLight.konvensjonStorbritanniaToggleEnabled && lovvalgSomKodeTerm && formValues?.kopiTilArbeidsgiver) {
-          pdfDokumenter.push({
-            dokumentData: {
-              produserbardokument: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_TIL_ARBEIDSGIVER_OM_VEDTAK,
-              erInnvilgelse: true,
-              mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
-            },
-          });
+          if (!erArtikkel11_4) {
+            pdfDokumenter.push({
+              dokumentData: {
+                produserbardokument: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_TIL_ARBEIDSGIVER_OM_VEDTAK,
+                erInnvilgelse: true,
+                mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
+              },
+            });
+          }
         } else if (
           lovvalgSomKodeTerm &&
           visSedLenkeForLovvalgsbestemmelser.includes(lovvalgSomKodeTerm.kode) &&
