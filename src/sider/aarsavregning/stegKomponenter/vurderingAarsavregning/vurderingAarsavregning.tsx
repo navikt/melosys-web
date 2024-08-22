@@ -150,6 +150,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
       setLagrePending(true);
       const erBrukerPliktigMedlemOgSkattepliktig =
         medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(formVerdier.skatteforholdsperioder);
+      if (!lagretTrygdeavgift?.tidligereGrunnlagsopplysninger) return;
       Api.Trygdeavgift.beregnTrygdeavgiftsperioder(behandlingID, {
         skatteforholdsperioder: formVerdier.skatteforholdsperioder.map((skatteforhold: Skatteforhold) => ({
           fomDato: Utils.dato.formatterDatoTilISO(skatteforhold.fomDato),
@@ -294,6 +295,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
       .catch((error: any) => {
         setFeil(error.body?.message || error);
       });
+    setErAvvik(undefined);
   }, [valgtÅr, behandlingID, lagretTrygdeavgift?.aar]);
 
   // TODO: 0 grunnlag og 0 avvik må også kreve at totalt tidligere fakturert trygdeavgift er registrert

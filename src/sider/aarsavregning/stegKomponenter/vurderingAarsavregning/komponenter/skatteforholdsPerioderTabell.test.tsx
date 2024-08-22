@@ -18,7 +18,7 @@ describe("SkatteforholdsPerioderTabell", () => {
   it("rendrer tabell med flere perioder", () => {
     const perioder = [
       { fomDato: "2022-01-01", tomDato: "2022-12-31", skatteplikttype: "SKATTEPLIKTIG" },
-      { fomDato: "2023-01-01", tomDato: "2023-12-31", skatteplikttype: "false" },
+      { fomDato: "2023-01-01", tomDato: "2023-12-31", skatteplikttype: "IKKE_SKATTEPLIKTIG" },
     ];
     render(<SkatteforholdsPerioderTabell perioder={perioder} />);
     const rows = screen.getAllByRole("row");
