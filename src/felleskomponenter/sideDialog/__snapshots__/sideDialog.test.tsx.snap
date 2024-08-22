@@ -127,29 +127,29 @@ exports[`SideDialog > snapshot test 1`] = `
               <thead class="navds-table__header">
                 <tr class="navds-table__row navds-table__row--shade-on-hover">
                   <th
-                    class="navds-table__header-cell navds-label"
+                    class="navds-table__header-cell navds-label navds-label--small"
                     aria-label="Mottaksretning"
                   >
                   </th>
-                  <th class="navds-table__header-cell navds-label">
+                  <th class="navds-table__header-cell navds-label navds-label--small">
                     Dokument
                   </th>
-                  <th class="navds-table__header-cell navds-label">
+                  <th class="navds-table__header-cell navds-label navds-label--small">
                     Avsender/mottaker
                   </th>
-                  <th class="navds-table__header-cell navds-label">
+                  <th class="navds-table__header-cell navds-label navds-label--small">
                     Dato
                   </th>
                 </tr>
               </thead>
               <tbody class="navds-table__body">
                 <tr class="navds-table__row navds-table__row--shade-on-hover">
-                  <td class="navds-table__data-cell navds-body-short navds-body-short--medium">
+                  <td class="navds-table__data-cell mottaksretning navds-body-short navds-body-short--small">
                     <span class="navds-tag navds-tag--info navds-tag--small navds-body-short navds-body-short--small">
                       inn
                     </span>
                   </td>
-                  <td class="navds-table__data-cell navds-body-short navds-body-short--medium">
+                  <td class="navds-table__data-cell navds-body-short navds-body-short--small">
                     <span>
                       <a
                         href="#"
@@ -159,10 +159,10 @@ exports[`SideDialog > snapshot test 1`] = `
                       </a>
                     </span>
                   </td>
-                  <td class="navds-table__data-cell navds-body-short navds-body-short--medium">
+                  <td class="navds-table__data-cell navds-body-short navds-body-short--small">
                     avsendernavn
                   </td>
-                  <td class="navds-table__data-cell navds-body-short navds-body-short--medium">
+                  <td class="navds-table__data-cell navds-body-short navds-body-short--small">
                   </td>
                 </tr>
               </tbody>

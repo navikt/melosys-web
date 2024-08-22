@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Pagination, Table } from "@navikt/ds-react";
+import { Pagination } from "@navikt/ds-react";
 import * as Nav from "../../../../navFrontend";
 import * as Utils from "../../../../utils";
 
@@ -20,24 +20,24 @@ export const TabellArbeidsgiver = ({ kolonneNavn, tabellData, linjerPerSide }: T
   return (
     <div>
       <Nav.Typo.Undertittel className="arbeidsavtaler__historisk__overskrift">Inntekt</Nav.Typo.Undertittel>
-      <Table className="melosys__table">
-        <Table.Header>
-          <Table.Row>
+      <Nav.Table className="melosys__table">
+        <Nav.Table.Header>
+          <Nav.Table.Row>
             {kolonneNavn.map((navn) => (
-              <Table.HeaderCell scope="col">{navn}</Table.HeaderCell>
+              <Nav.Table.HeaderCell scope="col">{navn}</Nav.Table.HeaderCell>
             ))}
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
+          </Nav.Table.Row>
+        </Nav.Table.Header>
+        <Nav.Table.Body>
           {tabellSide.map((rad) => (
-            <Table.Row key={Utils._uuid()}>
+            <Nav.Table.Row key={Utils._uuid()}>
               {rad.map((celle) => (
-                <Table.DataCell>{celle}</Table.DataCell>
+                <Nav.Table.DataCell>{celle}</Nav.Table.DataCell>
               ))}
-            </Table.Row>
+            </Nav.Table.Row>
           ))}
-        </Table.Body>
-      </Table>
+        </Nav.Table.Body>
+      </Nav.Table>
       {skalVisePaginering && (
         <Pagination
           page={page}

@@ -4,7 +4,6 @@ import { Folkeregisterpersonstatus } from "../../../../../../graphql";
 import { GyldighetshistorikkInfo } from "../../historikk/gyldighetshistorikkInfo";
 import bem from "../../../../../../bemUtils";
 import "./personstatusModal.css";
-import { Table } from "@navikt/ds-react";
 
 interface PersonstatusTabellProps {
   personstatuser: Folkeregisterpersonstatus[];
@@ -16,26 +15,26 @@ export const PersonstatusTabell = ({ personstatuser }: PersonstatusTabellProps) 
   }
 
   return (
-    <Table>
-      <Table.Header>
-        <Table.Row>
-          <Table.HeaderCell>Personstatus</Table.HeaderCell>
-          <Table.HeaderCell>Kilde</Table.HeaderCell>
-          <Table.HeaderCell>Register</Table.HeaderCell>
-          <Table.HeaderCell>Gyldighetsdato</Table.HeaderCell>
-        </Table.Row>
-      </Table.Header>
-      <Table.Body>
+    <Nav.Table>
+      <Nav.Table.Header>
+        <Nav.Table.Row>
+          <Nav.Table.HeaderCell>Personstatus</Nav.Table.HeaderCell>
+          <Nav.Table.HeaderCell>Kilde</Nav.Table.HeaderCell>
+          <Nav.Table.HeaderCell>Register</Nav.Table.HeaderCell>
+          <Nav.Table.HeaderCell>Gyldighetsdato</Nav.Table.HeaderCell>
+        </Nav.Table.Row>
+      </Nav.Table.Header>
+      <Nav.Table.Body>
         {personstatuser.map((status) => (
-          <Table.Row key={Utils._uuid()}>
-            <Table.DataCell>{status.tekst}</Table.DataCell>
-            <Table.DataCell>{status.kilde}</Table.DataCell>
-            <Table.DataCell>{status.master}</Table.DataCell>
-            <Table.DataCell>{Utils.dato.formatterDatoTilNorsk(status.fregGyldighetstidspunkt)}</Table.DataCell>
-          </Table.Row>
+          <Nav.Table.Row key={Utils._uuid()}>
+            <Nav.Table.DataCell>{status.tekst}</Nav.Table.DataCell>
+            <Nav.Table.DataCell>{status.kilde}</Nav.Table.DataCell>
+            <Nav.Table.DataCell>{status.master}</Nav.Table.DataCell>
+            <Nav.Table.DataCell>{Utils.dato.formatterDatoTilNorsk(status.fregGyldighetstidspunkt)}</Nav.Table.DataCell>
+          </Nav.Table.Row>
         ))}
-      </Table.Body>
-    </Table>
+      </Nav.Table.Body>
+    </Nav.Table>
   );
 };
 

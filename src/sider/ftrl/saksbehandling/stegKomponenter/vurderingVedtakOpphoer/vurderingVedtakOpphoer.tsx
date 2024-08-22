@@ -15,7 +15,6 @@ import * as Mui from "../../../../../felleskomponenter/ui";
 import MKV from "../../../../../melosyskodeverk";
 import { vedtakOperations } from "../../../../../ducks/vedtak";
 import Dokumentliste from "../../../../../felleskomponenter/dokumentliste";
-import { Table } from "@navikt/ds-react";
 import { medlemskapsperioderSelectors } from "../../../../../ducks/medlemskapsperioder";
 import * as KV from "../../../../../kodeverk";
 
@@ -153,26 +152,26 @@ export const VurderingVedtakOpphoer = ({ tilbake, aktivtSteg }: Props) => {
         Opphør av frivillig medlemskap etter § 2-15
       </Nav.Typo.Innholdstittel>
 
-      <Table size="small" className="melosys__table">
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell scope="col">Periode</Table.HeaderCell>
-            <Table.HeaderCell scope="col">Bestemmelse</Table.HeaderCell>
-            <Table.HeaderCell scope="col">Resultat</Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
+      <Nav.Table size="small" className="melosys__table">
+        <Nav.Table.Header>
+          <Nav.Table.Row>
+            <Nav.Table.HeaderCell scope="col">Periode</Nav.Table.HeaderCell>
+            <Nav.Table.HeaderCell scope="col">Bestemmelse</Nav.Table.HeaderCell>
+            <Nav.Table.HeaderCell scope="col">Resultat</Nav.Table.HeaderCell>
+          </Nav.Table.Row>
+        </Nav.Table.Header>
+        <Nav.Table.Body>
           {mapPeriodeRader(forventetOpphørteMedlemskapsperioder()).map((rad) => {
             return (
-              <Table.Row key={Utils._uuid()}>
-                <Table.DataCell>{rad.periode}</Table.DataCell>
-                <Table.DataCell>{rad.bestemmelse}</Table.DataCell>
-                <Table.DataCell>{rad.resultat}</Table.DataCell>
-              </Table.Row>
+              <Nav.Table.Row key={Utils._uuid()}>
+                <Nav.Table.DataCell>{rad.periode}</Nav.Table.DataCell>
+                <Nav.Table.DataCell>{rad.bestemmelse}</Nav.Table.DataCell>
+                <Nav.Table.DataCell>{rad.resultat}</Nav.Table.DataCell>
+              </Nav.Table.Row>
             );
           })}
-        </Table.Body>
-      </Table>
+        </Nav.Table.Body>
+      </Nav.Table>
 
       <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
         Fritekst til begrunnelse

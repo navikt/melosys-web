@@ -4,22 +4,11 @@ import * as Nav from "../../../../navFrontend";
 import * as MPT from "../../../../proptypes";
 import * as Mui from "../../../../felleskomponenter/ui";
 
-import "./enkeltVilkaar.css";
-
 import { konverterVilkarTilStegData, lagVilkarbegrunnelse, lagVilkaar } from "../../../../felleskomponenter/stegvelger";
 
 const EnkeltVilkaar = (props) => {
-  const {
-    redigerbart,
-    begrunnelser,
-    tittel,
-    labelOppfylt,
-    labelIkkeOppfylt,
-    vilkaar,
-    vilkaarKode,
-    oppdaterData,
-    size,
-  } = props;
+  const { redigerbart, begrunnelser, tittel, labelOppfylt, labelIkkeOppfylt, vilkaar, vilkaarKode, oppdaterData } =
+    props;
 
   useEffect(() => {
     oppdaterData(konverterVilkarTilStegData(vilkaarKode, vilkaar));
@@ -43,7 +32,6 @@ const EnkeltVilkaar = (props) => {
             defaultValue={vilkaar.oppfylt}
             readOnly={!redigerbart}
             name={vilkaarKode}
-            size={size}
           >
             <Nav.Radio value>{labelOppfylt}</Nav.Radio>
             <Nav.Radio value={false}>{labelIkkeOppfylt}</Nav.Radio>
@@ -79,13 +67,11 @@ EnkeltVilkaar.propTypes = {
   labelIkkeOppfylt: PT.string.isRequired,
   begrunnelser: PT.arrayOf(MPT.Kodeverk),
   oppdaterData: PT.func.isRequired,
-  size: PT.string,
 };
 
 EnkeltVilkaar.defaultProps = {
   begrunnelser: [],
   tittel: "",
-  size: "medium",
 };
 
 export default EnkeltVilkaar;

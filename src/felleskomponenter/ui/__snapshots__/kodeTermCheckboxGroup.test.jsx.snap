@@ -1,14 +1,14 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Checkboxgruppe > snapshot test 1`] = `
+exports[`KodeTermCheckboxGroup > snapshot test 1`] = `
 
 <div>
-  <fieldset class="navds-checkbox-group navds-checkbox-group--medium navds-fieldset navds-fieldset--medium">
-    <legend class="navds-fieldset__legend navds-label">
+  <fieldset class="navds-checkbox-group navds-checkbox-group--small navds-fieldset navds-fieldset--small">
+    <legend class="navds-fieldset__legend navds-label navds-label--small">
       Checkboxer
     </legend>
     <div class="navds-checkboxes">
-      <div class="navds-checkbox navds-checkbox--medium">
+      <div class="navds-checkbox navds-checkbox--small">
         <input
           name="333"
           id="333"
@@ -43,14 +43,14 @@ exports[`Checkboxgruppe > snapshot test 1`] = `
             <span
               id="333"
               aria-hidden="true"
-              class="navds-checkbox__label-text navds-body-short navds-body-short--medium"
+              class="navds-checkbox__label-text navds-body-short navds-body-short--small"
             >
               Territorialfarvann
             </span>
           </span>
         </label>
       </div>
-      <div class="navds-checkbox navds-checkbox--medium">
+      <div class="navds-checkbox navds-checkbox--small">
         <input
           name="333"
           id="333"
@@ -85,14 +85,14 @@ exports[`Checkboxgruppe > snapshot test 1`] = `
             <span
               id="333"
               aria-hidden="true"
-              class="navds-checkbox__label-text navds-body-short navds-body-short--medium"
+              class="navds-checkbox__label-text navds-body-short navds-body-short--small"
             >
               Flaggland
             </span>
           </span>
         </label>
       </div>
-      <div class="navds-checkbox navds-checkbox--medium">
+      <div class="navds-checkbox navds-checkbox--small">
         <input
           name="333"
           id="333"
@@ -128,7 +128,7 @@ exports[`Checkboxgruppe > snapshot test 1`] = `
             <span
               id="333"
               aria-hidden="true"
-              class="navds-checkbox__label-text navds-body-short navds-body-short--medium"
+              class="navds-checkbox__label-text navds-body-short navds-body-short--small"
             >
               Hjemmebaseland
             </span>

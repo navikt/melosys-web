@@ -169,7 +169,7 @@ export const KontaktOpplysninger = ({
       {sokeResultat && (
         <OrganisasjonsAdresse visTittel={false} className="kontaktopplysninger__adresse" organisasjon={sokeResultat} />
       )}
-      <Nav.Button variant="secondary" size="small" disabled={!redigerbart} onClick={slettKnappClickHandler}>
+      <Nav.Button variant="secondary" disabled={!redigerbart} onClick={slettKnappClickHandler}>
         Slett kontaktopplysninger
       </Nav.Button>
       <div role="alert" className="kontaktopplysninger__slett-feilmelding">

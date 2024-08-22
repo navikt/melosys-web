@@ -1,7 +1,6 @@
 import { FysiskDokument } from "Domene";
-
 import VedleggVelgerRow from "./vedleggVelgerRow";
-import { Table } from "@navikt/ds-react";
+import * as Nav from "../../navFrontend";
 
 interface VedleggTableProps {
   valgteVedlegg: FysiskDokument[];
@@ -14,8 +13,8 @@ const VedleggVelgerTable = ({ valgteVedlegg, alleVedlegg, slettVedlegg, leggTilV
   const vedleggErMarkert = (vedleggID: string) => Boolean(valgteVedlegg.find((vedlegg) => vedlegg.id === vedleggID));
 
   return (
-    <Table>
-      <Table.Body>
+    <Nav.Table>
+      <Nav.Table.Body>
         {alleVedlegg.map((enkeltVedlegg) => (
           <VedleggVelgerRow
             key={enkeltVedlegg.id}
@@ -25,8 +24,8 @@ const VedleggVelgerTable = ({ valgteVedlegg, alleVedlegg, slettVedlegg, leggTilV
             vedleggErMarkert={vedleggErMarkert(enkeltVedlegg.id)}
           />
         ))}
-      </Table.Body>
-    </Table>
+      </Nav.Table.Body>
+    </Nav.Table>
   );
 };
 

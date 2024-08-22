@@ -77,8 +77,10 @@ const finnSedMottakerLand = (
   return arbeidsland[0]?.kode;
 };
 
-const skalViseSendOrienteringsbrev = (sakstype: string, behandlingstema: string) =>
-  sakstype === EU_EOS && [UTSENDT_ARBEIDSTAKER, ARBEID_TJENESTEPERSON_ELLER_FLY].includes(behandlingstema);
+const skalViseSendOrienteringsbrev = (sakstype: string, behandlingstema: string, erArtikkel11_4: boolean) =>
+  !erArtikkel11_4 &&
+  sakstype === EU_EOS &&
+  [UTSENDT_ARBEIDSTAKER, ARBEID_TJENESTEPERSON_ELLER_FLY].includes(behandlingstema);
 
 const skalViseMottakerinstitusjoner = (
   sakstype: string,
@@ -126,6 +128,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type VurderingVedtakProps = PropsFromRedux & {
   tilbake: () => void;
   redigerbart: boolean;
+  erArtikkel11_4: boolean;
   pdfDokumenter: (BrevDokumentMetadataType | SedDokumentMetadataType)[];
   harFeilmeldinger: boolean;
   aktivtSteg?: boolean;
@@ -144,6 +147,7 @@ const VurderingVedtak = ({
   aktivtSteg = false,
   validerMottatteOpplysninger,
   lovvalgsperiode,
+  erArtikkel11_4,
 }: VurderingVedtakProps & InjectedFormProps<FormValuesProps, VurderingVedtakProps>) => {
   const dispatch = useDispatch();
   const [vedtakPending, setVedtakPending] = useState(false);
@@ -319,7 +323,7 @@ const VurderingVedtak = ({
             </Nav.Column>
           </Nav.Row>
         )}
-        {redigerbart && skalViseSendOrienteringsbrev(sakstype, behandlingstema) && (
+        {redigerbart && skalViseSendOrienteringsbrev(sakstype, behandlingstema, erArtikkel11_4) && (
           <Skjema.Checkbox feltNavn="kopiTilArbeidsgiver" label="Send orienteringsbrev til arbeidsgiver/virksomhet" />
         )}
         <Nav.Row>

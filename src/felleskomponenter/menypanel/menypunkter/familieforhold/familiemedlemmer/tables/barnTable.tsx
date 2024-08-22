@@ -1,41 +1,42 @@
-import { Table } from "@navikt/ds-react";
-
 import { Familiemedlem } from "../../../../../../graphql";
 
 import Ident from "../ident";
 import * as StringUtils from "../../../../../../utils/streng";
 import * as Tags from "../../../../tags";
 import * as Utils from "../../../../../../utils";
+import * as Nav from "../../../../../../navFrontend";
 
 export const BarnTable = ({ barnListe }: { barnListe: Familiemedlem[] }) => {
   return (
     <div className="menypanel__table-wrapper">
-      <Table size="small">
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell textSize="small">Navn</Table.HeaderCell>
-            <Table.HeaderCell textSize="small">F.nr./d-nr.</Table.HeaderCell>
-            <Table.HeaderCell textSize="small">Foreldreansvar</Table.HeaderCell>
-            <Table.HeaderCell textSize="small">F.nr. annen forelder</Table.HeaderCell>
-            <Table.HeaderCell>&nbsp;</Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
+      <Nav.Table size="small">
+        <Nav.Table.Header>
+          <Nav.Table.Row>
+            <Nav.Table.HeaderCell textSize="small">Navn</Nav.Table.HeaderCell>
+            <Nav.Table.HeaderCell textSize="small">F.nr./d-nr.</Nav.Table.HeaderCell>
+            <Nav.Table.HeaderCell textSize="small">Foreldreansvar</Nav.Table.HeaderCell>
+            <Nav.Table.HeaderCell textSize="small">F.nr. annen forelder</Nav.Table.HeaderCell>
+            <Nav.Table.HeaderCell>&nbsp;</Nav.Table.HeaderCell>
+          </Nav.Table.Row>
+        </Nav.Table.Header>
+        <Nav.Table.Body>
           {barnListe.map((barn) => (
-            <Table.Row key={Utils._uuid()}>
-              <Table.DataCell textSize="small">{barn.navn}</Table.DataCell>
-              <Table.DataCell textSize="small">
+            <Nav.Table.Row key={Utils._uuid()}>
+              <Nav.Table.DataCell textSize="small">{barn.navn}</Nav.Table.DataCell>
+              <Nav.Table.DataCell textSize="small">
                 <Ident ident={barn.ident} />
-              </Table.DataCell>
-              <Table.DataCell textSize="small">{StringUtils.storeForbokstaver(barn.foreldreansvar)}</Table.DataCell>
-              <Table.DataCell textSize="small">{barn.fnrAnnenForelder}</Table.DataCell>
-              <Table.DataCell textSize="small">
+              </Nav.Table.DataCell>
+              <Nav.Table.DataCell textSize="small">
+                {StringUtils.storeForbokstaver(barn.foreldreansvar)}
+              </Nav.Table.DataCell>
+              <Nav.Table.DataCell textSize="small">{barn.fnrAnnenForelder}</Nav.Table.DataCell>
+              <Nav.Table.DataCell textSize="small">
                 {barn.alder && barn.alder < 18 ? <Tags.Under18Aar /> : ""}
-              </Table.DataCell>
-            </Table.Row>
+              </Nav.Table.DataCell>
+            </Nav.Table.Row>
           ))}
-        </Table.Body>
-      </Table>
+        </Nav.Table.Body>
+      </Nav.Table>
     </div>
   );
 };

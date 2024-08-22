@@ -2,7 +2,6 @@ import * as Nav from "../../../navFrontend";
 import * as KV from "../../../kodeverk";
 import MKV from "../../../melosyskodeverk";
 
-import "./sendForvaltningsMelding.css";
 import { useEffect, useState } from "react";
 import * as Utils from "../../../utils";
 
@@ -47,7 +46,6 @@ const SendForvaltningsMelding = ({
           legend="Skal melding om saksbehandlingtid sendes automatisk?"
           defaultValue={mottaker}
           name="forvaltningsmeldingMottaker"
-          size="small"
         >
           <Nav.Radio disabled={!adresseOpplysninger.harBrukerAdresse} value={BRUKER}>
             Ja, melding skal sendes automatisk til <b>bruker</b>

@@ -228,10 +228,10 @@ exports[`VurderingForretningssted > snapshot test 1`] = `
         </fieldset>
       </div>
     </fieldset>
-    <div class="navds-form-field navds-form-field--medium">
+    <div class="navds-form-field navds-form-field--small">
       <label
         for="333"
-        class="navds-form-field__label navds-label"
+        class="navds-form-field__label navds-label navds-label--small"
       >
         Velg...
       </label>
@@ -239,7 +239,7 @@ exports[`VurderingForretningssted > snapshot test 1`] = `
         <select
           name="333"
           id="333"
-          class="navds-select__input navds-body-short navds-body-short--medium"
+          class="navds-select__input navds-body-short navds-body-short--small"
         >
           <option value>
             Velg artikkel

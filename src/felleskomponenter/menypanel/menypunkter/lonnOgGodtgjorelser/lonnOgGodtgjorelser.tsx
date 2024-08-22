@@ -142,7 +142,7 @@ const LonnOgNaturalytelserRedigerer = ({ redigerbart }: { redigerbart: boolean }
           />
         </Nav.Column>
       </Nav.Row>
-      <Nav.Row className="input__row">
+      <Nav.Row>
         <InntektRedigerer feltNavn="bruttoLoennPerMnd" tittel="Lønn fra Norge" redigerbart={redigerbart} />
         <InntektRedigerer feltNavn="bruttoLoennUtlandPerMnd" tittel="Lønn fra utlandet" redigerbart={redigerbart} />
         <InntektRedigerer

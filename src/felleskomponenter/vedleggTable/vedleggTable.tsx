@@ -3,8 +3,8 @@ import { FysiskDokument } from "Domene";
 import { Fritekstvedlegg } from "../sideDialog/sendBrev/sendBrev";
 import FritekstvedleggRow from "./fritekstvedleggRow";
 import VedleggRow from "./vedleggRow";
+import * as Nav from "../../navFrontend";
 import "./vedleggTable.css";
-import { Table } from "@navikt/ds-react";
 
 interface VedleggTableProps {
   valgteVedlegg: FysiskDokument[];
@@ -32,16 +32,16 @@ const VedleggTable = ({
   };
 
   return (
-    <Table className="vedleggtable" size="small">
-      <Table.Header>
-        <Table.Row>
-          <Table.HeaderCell>{label}</Table.HeaderCell>
-          <Table.HeaderCell />
-          <Table.HeaderCell />
-        </Table.Row>
-      </Table.Header>
+    <Nav.Table className="vedleggtable" size="small">
+      <Nav.Table.Header>
+        <Nav.Table.Row>
+          <Nav.Table.HeaderCell>{label}</Nav.Table.HeaderCell>
+          <Nav.Table.HeaderCell />
+          <Nav.Table.HeaderCell />
+        </Nav.Table.Row>
+      </Nav.Table.Header>
       {(valgteVedlegg.length > 0 || (fritekstvedlegg && fritekstvedlegg.length > 0)) && (
-        <Table.Body>
+        <Nav.Table.Body>
           {fritekstvedlegg?.map((vedlegg, index) => (
             <FritekstvedleggRow
               fritekstvedlegg={vedlegg}
@@ -61,9 +61,9 @@ const VedleggTable = ({
               redigerbart={redigerbart}
             />
           ))}
-        </Table.Body>
+        </Nav.Table.Body>
       )}
-    </Table>
+    </Nav.Table>
   );
 };
 

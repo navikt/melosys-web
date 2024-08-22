@@ -10,13 +10,7 @@ const Knapperad = ({ bekreft, bekreftTekst, avbryt, avbrytTekst, redigerbart, be
 
   return (
     <div className={cls}>
-      <Nav.Button
-        variant="primary"
-        size={size}
-        onClick={bekreft}
-        disabled={!redigerbart || !bekreftRedigerbart}
-        loading={spinner}
-      >
+      <Nav.Button variant="primary" onClick={bekreft} disabled={!redigerbart || !bekreftRedigerbart} loading={spinner}>
         {bekreftTekst}
       </Nav.Button>
       <Nav.Button variant="tertiary" size={size} onClick={avbryt} disabled={!redigerbart}>

@@ -29,12 +29,7 @@ const VIRKSOMHET_HELPTEXT = (
   </>
 );
 
-/**
- * Enkeltsjekkboks for ett arbeidsgiver.
- *
- * @param props Objekt Diverse props (se propTypes)
- */
-const VirksomheterLinje = (props) => {
+const VirksomhetCheckbox = (props) => {
   const { virksomheten, avklartVirksomhet, oppdaterData, slettData } = props;
   const dispatch = useDispatch();
 
@@ -57,29 +52,24 @@ const VirksomheterLinje = (props) => {
   };
 
   return (
-    <Mui.Checkbox onCheck={virksomhetKlikkHandler} value={virksomheten.virksomhetId} label={`${virksomheten.navn}`} />
+    <Nav.Checkbox onClick={virksomhetKlikkHandler} value={virksomheten.virksomhetId}>
+      {virksomheten.navn}
+    </Nav.Checkbox>
   );
 };
 
-VirksomheterLinje.propTypes = {
+VirksomhetCheckbox.propTypes = {
   virksomheten: MPT.Virksomhet.isRequired,
   avklartVirksomhet: MPT.Avklartefakta,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
 };
 
-VirksomheterLinje.defaultProps = {
+VirksomhetCheckbox.defaultProps = {
   avklartVirksomhet: null,
 };
 
-/**
- * FieldArray trenger en egen komponent-container for å rendre ut hvert enkelt felt som er lagret i store (dvs avkryssede arbeidsgivere).
- * Rendre ut ALLE arbeidsgiver. og kryss av de som samsvarer med orgnr.
- *
- *
- * @param props Objekt Diverse props Se prop types
- */
-const VirksomheterListe = (props) => {
+const VirksomheterCheckboxGroup = (props) => {
   const { virksomheterIPerioden, redigerbart, avklarteVirksomheter, oppdaterData, slettData } = props;
 
   const ingenVirksomheterVarsel = virksomheterIPerioden.length === 0 && (
@@ -105,7 +95,7 @@ const VirksomheterListe = (props) => {
 
         const key = `avklartVirksomhet${virksomheten.virksomhetId}`;
         return (
-          <VirksomheterLinje
+          <VirksomhetCheckbox
             virksomheten={virksomheten}
             avklartVirksomhet={avklartfaktaForVirksomhet}
             key={key}
@@ -119,7 +109,7 @@ const VirksomheterListe = (props) => {
   );
 };
 
-VirksomheterListe.propTypes = {
+VirksomheterCheckboxGroup.propTypes = {
   virksomheterIPerioden: PT.arrayOf(MPT.Virksomhet),
   avklarteVirksomheter: PT.array,
   redigerbart: PT.bool.isRequired,
@@ -127,7 +117,7 @@ VirksomheterListe.propTypes = {
   slettData: PT.func.isRequired,
 };
 
-VirksomheterListe.defaultProps = {
+VirksomheterCheckboxGroup.defaultProps = {
   virksomheterIPerioden: [],
   avklarteVirksomheter: [],
 };
@@ -154,7 +144,7 @@ const VurderingVirksomhet = (props) => {
     <div className="vurderingArbeidsgiver">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Virksomhet</Nav.Typo.Innholdstittel>
       <div className="arbeidsgiver">
-        <VirksomheterListe
+        <VirksomheterCheckboxGroup
           avklarteVirksomheter={virksomheter}
           virksomheterIPerioden={virksomheterIPerioden}
           {...props}

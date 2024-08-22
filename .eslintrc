@@ -40,7 +40,12 @@
     ],
     "no-return-assign": ["error", "except-parens"],
     "wrap-iife": "off",
-    "no-param-reassign": ["error", { "props": false }],
+    "no-param-reassign": [
+      "error",
+      {
+        "props": false
+      }
+    ],
     "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": [
       2,
@@ -66,7 +71,12 @@
     "import/no-extraneous-dependencies": [0],
     "import/prefer-default-export": 0,
     "import/no-named-as-default": 0,
-    "import/no-unresolved": [2, { "ignore": ["AppTypes", "Domene", "melosys-api", "nav-frontend-grid"] }],
+    "import/no-unresolved": [
+      2,
+      {
+        "ignore": ["AppTypes", "Domene", "melosys-api", "nav-frontend-grid"]
+      }
+    ],
     "import/no-cycle": 0,
     "jsx-a11y/aria-props": 2,
     "jsx-a11y/aria-proptypes": 2,
@@ -102,11 +112,22 @@
       }
     ],
     "linebreak-style": "off",
-    "no-bitwise": ["error", { "allow": ["^"] }],
+    "no-bitwise": [
+      "error",
+      {
+        "allow": ["^"]
+      }
+    ],
     "no-extra-semi": "off",
     "@typescript-eslint/no-extra-semi": ["error"],
     // Støtt typescript reference, hvor det trengs tre slash(///)
-    "spaced-comment": ["error", "always", { "markers": ["/"] }],
+    "spaced-comment": [
+      "error",
+      "always",
+      {
+        "markers": ["/"]
+      }
+    ],
     "no-shadow": "off",
     "@typescript-eslint/no-shadow": ["error"],
     "no-use-before-define": "off",

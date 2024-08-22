@@ -14,11 +14,7 @@ const StatusEtikett = ({ status }) => {
     return null;
   }
 
-  const lagTag = (variant, statusStreng) => (
-    <Nav.Tag size="small" variant={variant}>
-      {statusStreng}
-    </Nav.Tag>
-  );
+  const lagTag = (variant, statusStreng) => <Nav.Tag variant={variant}>{statusStreng}</Nav.Tag>;
 
   switch (status.toUpperCase()) {
     case KV.Koder.SedStatus.UTKAST:
