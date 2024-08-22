@@ -39,6 +39,10 @@ describe("VurderingAarsavreging", () => {
       status: STATUS.OK,
     },
   };
+  const props = {
+    bekreft: vi.fn(),
+    oppdaterStatus: vi.fn(),
+  };
   // @ts-ignore
   const WrappedVurderingAarsavregning = reduxForm({ form: "test" })(VurderingAarsavregning);
 
@@ -51,7 +55,7 @@ describe("VurderingAarsavreging", () => {
 
   describe("VurderingAarsavregning", () => {
     it("snapshot test", () => {
-      const { container } = renderWithProviders(<WrappedVurderingAarsavregning />, {
+      const { container } = renderWithProviders(<WrappedVurderingAarsavregning {...props} />, {
         // @ts-ignore
         preloadedState: initialReduxState,
       });

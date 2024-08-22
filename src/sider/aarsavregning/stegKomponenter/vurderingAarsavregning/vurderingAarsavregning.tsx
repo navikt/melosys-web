@@ -28,7 +28,13 @@ import { erBrukerSkattepliktigIHelePerioden } from "../../../ftrl/saksbehandling
 import MKV from "../../../../melosyskodeverk";
 import { BeregnetTrygdeavgift } from "../../../../services/modules/trygdeavgift";
 
-export const VurderingAarsavregning = () => {
+interface Props {
+  bekreft: () => void;
+  aktivtSteg: boolean;
+  oppdaterStatus: (isValid: boolean) => void;
+}
+
+export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
   const [valgtÅr, setValgtÅr] = useState<number | null>(null);
   const [erAvvik, setErAvvik] = useState<boolean | undefined>(undefined);
   const [feil, setFeil] = useState<undefined | string>(undefined);
@@ -120,8 +126,6 @@ export const VurderingAarsavregning = () => {
     medlemskapsperioder,
     innvilgetMedlemskapsperiode
   );
-
-  const stegErGyldig = formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType) && !feil;
 
   useEffect(() => {
     fetchAvregningsData();
@@ -235,13 +239,11 @@ export const VurderingAarsavregning = () => {
     if (lagretTrygdeavgift) {
       if (lagretTrygdeavgift.avvikFunnet === true) {
         håndterAvvik(lagretTrygdeavgift.avvikFunnet);
-      } else {
-        håndterAvvik(undefined);
       }
     }
   }, [lagretTrygdeavgift]);
 
-  const håndterAvvik = (avvik: boolean | undefined) => {
+  const håndterAvvik = (avvik: boolean) => {
     setErAvvik(avvik);
 
     if (avvik && lagretTrygdeavgift?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag) {
@@ -287,14 +289,19 @@ export const VurderingAarsavregning = () => {
       return;
     }
 
-    håndterAvvik(undefined);
-
     Api.Aarsavregning.lagAvregningsData(behandlingID, { aar: valgtÅr })
       .then((nyAvregningsData) => setLagretTrygdeavgift(nyAvregningsData))
       .catch((error: any) => {
         setFeil(error.body?.message || error);
       });
   }, [valgtÅr, behandlingID, lagretTrygdeavgift?.aar]);
+
+  // TODO: 0 grunnlag og 0 avvik må også kreve at totalt tidligere fakturert trygdeavgift er registrert
+  const stegErGyldig = redigerbart && erAvvik === false;
+
+  useEffect(() => {
+    oppdaterStatus(stegErGyldig);
+  }, [stegErGyldig]);
 
   return (
     <div className="vurderingAarsavregning">
@@ -335,12 +342,12 @@ export const VurderingAarsavregning = () => {
       )}
       {lagretTrygdeavgift?.tidligereGrunnlagsopplysninger && (
         <Nav.RadioGroup
-          onChange={(value) => håndterAvvik(value === "true")}
-          value={erAvvik === true ? "true" : "false"}
+          onChange={(value) => håndterAvvik(value)}
+          value={erAvvik}
           legend="Er det avvik i opplysningene fra skatt eller bruker?"
         >
-          <Nav.Radio value="true">Ja</Nav.Radio>
-          <Nav.Radio value="false">Nei</Nav.Radio>
+          <Nav.Radio value>Ja</Nav.Radio>
+          <Nav.Radio value={false}>Nei</Nav.Radio>
         </Nav.RadioGroup>
       )}
 
@@ -380,7 +387,7 @@ export const VurderingAarsavregning = () => {
 
       <Feilmelding type={aktivFeilmeldingType} />
 
-      <Nav.Button variant="primary" disabled={!redigerbart || !stegErGyldig}>
+      <Nav.Button variant="primary" disabled={!stegErGyldig} onClick={bekreft}>
         Bekreft og fortsett
       </Nav.Button>
     </div>
