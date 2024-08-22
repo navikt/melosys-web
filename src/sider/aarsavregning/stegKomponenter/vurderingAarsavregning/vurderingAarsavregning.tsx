@@ -38,6 +38,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
   const [valgtÅr, setValgtÅr] = useState<number | null>(null);
   const [erAvvik, setErAvvik] = useState<boolean | undefined>(undefined);
   const [feil, setFeil] = useState<undefined | string>(undefined);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [lagretTrygdeavgiftsperioder, setTrygdeavgiftsperioder] = useState<BeregnetTrygdeavgift | undefined>(undefined);
   const [lagretTrygdeavgift, setLagretTrygdeavgift] = useState<AarsavregningResponse | undefined>(undefined);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
@@ -45,7 +46,9 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
   const sisteMuligeÅr = new Date().getFullYear() - 1;
   const antallÅrTilbakeITid = 6;
   const muligeAar = Array.from({ length: antallÅrTilbakeITid }, (_, i) => sisteMuligeÅr - i);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [lagrePending, setLagrePending] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [trygdeavgiftsperioderHentingPending, setTrygdeavgiftsperioderHentingPending] = useState(false);
 
   const defaultPeriode = useMemo(() => {
@@ -382,10 +385,6 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
           medlemskapsTypeErPliktig={medlemskapsTypeErPliktig}
         />
       )}
-
-      {console.log(lagretTrygdeavgiftsperioder)}
-      {console.log(lagrePending)}
-      {console.log(trygdeavgiftsperioderHentingPending)}
 
       <Feilmelding type={aktivFeilmeldingType} />
 
