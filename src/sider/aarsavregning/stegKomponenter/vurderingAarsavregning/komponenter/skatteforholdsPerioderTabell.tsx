@@ -1,7 +1,6 @@
 import { SkatteforholdDto } from "../../../../../services/modules/trygdeavgift";
-import * as Utils from "../../../../utils";
-import * as Nav from "../../../../navFrontend";
-import "./vurderingAarsavregning.css";
+import * as Utils from "../../../../../utils";
+import * as Nav from "../../../../../navFrontend";
 import MKV from "../../../../../melosyskodeverk";
 
 const { SKATTEPLIKTIG } = MKV.Koder.skatteplikttype;

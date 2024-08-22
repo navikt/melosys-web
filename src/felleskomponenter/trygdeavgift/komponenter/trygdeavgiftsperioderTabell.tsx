@@ -1,9 +1,9 @@
-import MKV from "../../../../../../melosyskodeverk";
-import * as KV from "../../../../../../kodeverk";
-import * as Utils from "../../../../../../utils";
-import * as Nav from "../../../../../../navFrontend";
-import { Trygdeavgiftsperiode } from "../../../../../../services/modules/trygdeavgift";
-import { Spinner } from "../../../../../../felleskomponenter/spinner";
+import MKV from "../../../melosyskodeverk";
+import * as KV from "../../../kodeverk";
+import * as Utils from "../../../utils";
+import * as Nav from "../../../navFrontend";
+import { Trygdeavgiftsperiode } from "../../../services/modules/trygdeavgift";
+import { Spinner } from "../../spinner";
 
 import "./trygdeavgiftsperioderTabell.css";
 

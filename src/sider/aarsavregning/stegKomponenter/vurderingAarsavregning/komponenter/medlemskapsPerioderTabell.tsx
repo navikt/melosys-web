@@ -1,9 +1,8 @@
 import { Medlemskapsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
-import * as Utils from "../../../../utils";
-import "./vurderingAarsavregning.css";
-import * as KV from "../../../../kodeverk";
-import * as Nav from "../../../../navFrontend";
-import MKV from "../../../../melosyskodeverk";
+import * as Utils from "../../../../../utils";
+import * as KV from "../../../../../kodeverk";
+import * as Nav from "../../../../../navFrontend";
+import MKV from "../../../../../melosyskodeverk";
 
 const MedlemskapsPerioderTabell = ({ perioder }: { perioder?: Medlemskapsperiode[] }) => {
   if (!perioder) return null;

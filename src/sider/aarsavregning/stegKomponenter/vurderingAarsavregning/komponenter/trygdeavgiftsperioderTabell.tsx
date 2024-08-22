@@ -1,10 +1,9 @@
 import { HStack, VStack } from "@navikt/ds-react";
-import { Avgift, Trygdeavgiftsperiode } from "../../../../services/modules/aarsavregning/aarsavregning";
-import MKV from "../../../../melosyskodeverk";
-import * as KV from "../../../../kodeverk";
-import * as Utils from "../../../../utils";
-import * as Nav from "../../../../navFrontend";
-import "./vurderingAarsavregning.css";
+import { Avgift, Trygdeavgiftsperiode } from "../../../../../services/modules/aarsavregning/aarsavregning";
+import MKV from "../../../../../melosyskodeverk";
+import * as KV from "../../../../../kodeverk";
+import * as Utils from "../../../../../utils";
+import * as Nav from "../../../../../navFrontend";
 
 const formatNorwegianNumber = (amount: number | undefined): string => {
   if (amount === undefined) {
