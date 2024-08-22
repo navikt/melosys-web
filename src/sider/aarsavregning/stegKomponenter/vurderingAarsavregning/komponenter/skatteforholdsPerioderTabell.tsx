@@ -1,9 +1,11 @@
-import { Skatteforholdsperiode } from "../../../../services/modules/aarsavregning/aarsavregning";
-import * as Utils from "../../../../utils";
-import * as Nav from "../../../../navFrontend";
-import "./vurderingAarsavregning.css";
+import { SkatteforholdDto } from "../../../../../services/modules/trygdeavgift";
+import * as Utils from "../../../../../utils";
+import * as Nav from "../../../../../navFrontend";
+import MKV from "../../../../../melosyskodeverk";
 
-const SkatteforholdsPerioderTabell = ({ perioder }: { perioder?: Skatteforholdsperiode[] }) => {
+const { SKATTEPLIKTIG } = MKV.Koder.skatteplikttype;
+
+const SkatteforholdsPerioderTabell = ({ perioder }: { perioder?: SkatteforholdDto[] }) => {
   if (!perioder) return null;
 
   return (
@@ -18,12 +20,12 @@ const SkatteforholdsPerioderTabell = ({ perioder }: { perioder?: Skatteforholdsp
         {perioder.map((skatteforholdsPeriode) => (
           <Nav.Table.Row className="border_top" key={Utils._uuid()}>
             <Nav.Table.DataCell key={Utils._uuid()}>
-              {`${Utils.dato.formatterDatoTilNorsk(skatteforholdsPeriode.fom)} - ${Utils.dato.formatterDatoTilNorsk(
-                skatteforholdsPeriode.tom
+              {`${Utils.dato.formatterDatoTilNorsk(skatteforholdsPeriode.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(
+                skatteforholdsPeriode.tomDato
               )}`}
             </Nav.Table.DataCell>
             <Nav.Table.DataCell key={Utils._uuid()}>
-              {skatteforholdsPeriode.skatteplikttype ? "Ja" : "Nei"}
+              {skatteforholdsPeriode.skatteplikttype === SKATTEPLIKTIG ? "Ja" : "Nei"}
             </Nav.Table.DataCell>
           </Nav.Table.Row>
         ))}

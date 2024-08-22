@@ -1,9 +1,8 @@
-import { Medlemskapsperiode } from "../../../../services/modules/aarsavregning/aarsavregning";
-import * as Utils from "../../../../utils";
-import "./vurderingAarsavregning.css";
-import * as KV from "../../../../kodeverk";
-import * as Nav from "../../../../navFrontend";
-import MKV from "../../../../melosyskodeverk";
+import { Medlemskapsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import * as Utils from "../../../../../utils";
+import * as KV from "../../../../../kodeverk";
+import * as Nav from "../../../../../navFrontend";
+import MKV from "../../../../../melosyskodeverk";
 
 const MedlemskapsPerioderTabell = ({ perioder }: { perioder?: Medlemskapsperiode[] }) => {
   if (!perioder) return null;
@@ -20,8 +19,8 @@ const MedlemskapsPerioderTabell = ({ perioder }: { perioder?: Medlemskapsperiode
         {perioder.map((medlemskapsPeriode) => (
           <Nav.Table.Row className="border_top" key={Utils._uuid()}>
             <Nav.Table.DataCell key={Utils._uuid()}>
-              {`${Utils.dato.formatterDatoTilNorsk(medlemskapsPeriode.fom)} - ${Utils.dato.formatterDatoTilNorsk(
-                medlemskapsPeriode.tom
+              {`${Utils.dato.formatterDatoTilNorsk(medlemskapsPeriode.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(
+                medlemskapsPeriode.tomDato
               )}`}
             </Nav.Table.DataCell>
             <Nav.Table.DataCell key={Utils._uuid()}>

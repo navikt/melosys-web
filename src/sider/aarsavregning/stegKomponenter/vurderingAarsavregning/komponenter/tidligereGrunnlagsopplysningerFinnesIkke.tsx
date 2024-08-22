@@ -1,5 +1,5 @@
-import * as Nav from "../../../../navFrontend";
-import "./vurderingAarsavregning.css";
+import * as Nav from "../../../../../navFrontend";
+import "../vurderingAarsavregning.css";
 
 const informasjonsmeldingIngenInformasjonOmPerioder = (
   <Nav.Alert variant="info" size="small" className="informasjonsmeldingIngenInformasjonOmPerioder">

@@ -9,7 +9,7 @@ describe("SkatteforholdsPerioderTabell", () => {
   });
 
   it("rendrer tabell med data", () => {
-    const perioder = [{ fom: "2022-01-01", tom: "2022-12-31", skatteplikttype: "true" }];
+    const perioder = [{ fomDato: "2022-01-01", tomDato: "2022-12-31", skatteplikttype: "SKATTEPLIKTIG" }];
     render(<SkatteforholdsPerioderTabell perioder={perioder} />);
     expect(screen.getByText(/Skatteforhold/i)).toBeInTheDocument();
     expect(screen.getByText(/Skattepliktig/i)).toBeInTheDocument();
@@ -17,8 +17,8 @@ describe("SkatteforholdsPerioderTabell", () => {
 
   it("rendrer tabell med flere perioder", () => {
     const perioder = [
-      { fom: "2022-01-01", tom: "2022-12-31", skatteplikttype: "true" },
-      { fom: "2023-01-01", tom: "2023-12-31", skatteplikttype: "false" },
+      { fomDato: "2022-01-01", tomDato: "2022-12-31", skatteplikttype: "SKATTEPLIKTIG" },
+      { fomDato: "2023-01-01", tomDato: "2023-12-31", skatteplikttype: "IKKE_SKATTEPLIKTIG" },
     ];
     render(<SkatteforholdsPerioderTabell perioder={perioder} />);
     const rows = screen.getAllByRole("row");
@@ -26,13 +26,13 @@ describe("SkatteforholdsPerioderTabell", () => {
   });
 
   it("formaterer og viser riktig fom og tom datoer", () => {
-    const perioder = [{ fom: "2022-01-01", tom: "2022-12-31", skatteplikttype: "true" }];
+    const perioder = [{ fomDato: "2022-01-01", tomDato: "2022-12-31", skatteplikttype: "SKATTEPLIKTIG" }];
     render(<SkatteforholdsPerioderTabell perioder={perioder} />);
     expect(screen.getByText("01.01.2022 - 31.12.2022")).toBeInTheDocument();
   });
 
   it("viser riktig skatteplikttype verdi", () => {
-    const perioder = [{ fom: "2022-01-01", tom: "2022-12-31", skatteplikttype: "true" }];
+    const perioder = [{ fomDato: "2022-01-01", tomDato: "2022-12-31", skatteplikttype: "SKATTEPLIKTIG" }];
     render(<SkatteforholdsPerioderTabell perioder={perioder} />);
     expect(screen.getByText("Ja")).toBeInTheDocument();
   });
