@@ -48,6 +48,7 @@ export const Avslag = ({
     pdfDokumenter.push({
       dokumentData: {
         produserbardokument: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_TIL_ARBEIDSGIVER_OM_VEDTAK,
+        erInnvilgelse: false,
         mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
       },
     });
