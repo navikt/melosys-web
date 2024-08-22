@@ -32,7 +32,6 @@ import { KTObject } from "@navikt/melosys-kodeverk";
 import { feiletResponsSelectors } from "../../../../../ducks/feiletRespons";
 import { NY_VURDERING_BAKGRUNN_HJELPETEKST } from "../../../../ikkeYrkesaktiv/stegKomponenter/vurderingVedtak/tekster";
 import { FRITEKST_VALG } from "../../../../../kodeverk/koder";
-import { Table } from "@navikt/ds-react";
 import { menypanelOperations, menypanelSelectors } from "../../../../../ducks/menypanel";
 
 const { NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingstyper;
@@ -352,28 +351,28 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
           : "Frivillig medlemskap etter folketrygdloven"}
       </Nav.Typo.Innholdstittel>
 
-      <Table size="small" className="melosys__table">
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell scope="col">Periode</Table.HeaderCell>
-            <Table.HeaderCell scope="col">Bestemmelse</Table.HeaderCell>
-            <Table.HeaderCell scope="col">Dekning</Table.HeaderCell>
-            <Table.HeaderCell scope="col">Resultat</Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
+      <Nav.Table size="small" className="melosys__table">
+        <Nav.Table.Header>
+          <Nav.Table.Row>
+            <Nav.Table.HeaderCell scope="col">Periode</Nav.Table.HeaderCell>
+            <Nav.Table.HeaderCell scope="col">Bestemmelse</Nav.Table.HeaderCell>
+            <Nav.Table.HeaderCell scope="col">Dekning</Nav.Table.HeaderCell>
+            <Nav.Table.HeaderCell scope="col">Resultat</Nav.Table.HeaderCell>
+          </Nav.Table.Row>
+        </Nav.Table.Header>
+        <Nav.Table.Body>
           {mapPeriodeRader(medlemskapsperioder).map((medlemskapsperiode) => {
             return (
-              <Table.Row key={Utils._uuid()}>
-                <Table.DataCell>{medlemskapsperiode.periode}</Table.DataCell>
-                <Table.DataCell>{medlemskapsperiode.bestemmelse}</Table.DataCell>
-                <Table.DataCell>{medlemskapsperiode.dekning}</Table.DataCell>
-                <Table.DataCell>{medlemskapsperiode.resultat}</Table.DataCell>
-              </Table.Row>
+              <Nav.Table.Row key={Utils._uuid()}>
+                <Nav.Table.DataCell>{medlemskapsperiode.periode}</Nav.Table.DataCell>
+                <Nav.Table.DataCell>{medlemskapsperiode.bestemmelse}</Nav.Table.DataCell>
+                <Nav.Table.DataCell>{medlemskapsperiode.dekning}</Nav.Table.DataCell>
+                <Nav.Table.DataCell>{medlemskapsperiode.resultat}</Nav.Table.DataCell>
+              </Nav.Table.Row>
             );
           })}
-        </Table.Body>
-      </Table>
+        </Nav.Table.Body>
+      </Nav.Table>
 
       <Nav.Row className="arbeidsland">
         <Nav.Column xs="5">

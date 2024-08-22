@@ -36,8 +36,8 @@ export const VurderingGodkjennUtpekingAnnetLand = ({
     });
   }, []);
 
-  const sendA012CheckHandler = ({ checked }) => {
-    setVarsleUtland(checked);
+  const sendA012CheckHandler = (event) => {
+    setVarsleUtland(event.target.checked);
   };
 
   const hovedknappClickHandler = async () => {
@@ -92,7 +92,9 @@ export const VurderingGodkjennUtpekingAnnetLand = ({
         <>
           <Nav.Row className="sendA012">
             <Nav.Column xs="12">
-              <Mui.Checkbox disabled={skjemaDisabled} label="Send A012" onCheck={sendA012CheckHandler} />
+              <Nav.CheckboxGroup legend="" hideLegend readOnly={skjemaDisabled}>
+                <Nav.Checkbox onChange={sendA012CheckHandler}>Send A012</Nav.Checkbox>
+              </Nav.CheckboxGroup>
             </Nav.Column>
           </Nav.Row>
           <Nav.Row>

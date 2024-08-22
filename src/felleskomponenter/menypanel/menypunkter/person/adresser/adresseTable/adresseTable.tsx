@@ -1,11 +1,11 @@
 import { useState } from "react";
 
 import * as Utils from "../../../../../../utils";
+import * as Nav from "../../../../../../navFrontend";
 
 import { Bostedsadresse, Kontaktadresse, Oppholdsadresse } from "../../../../../../graphql";
 import { SemistrukturertAdresse, StrukturertAdresse } from "../../../../../adresser";
 import ChevronKnapp from "../../../../../chevronKnapp/chevronKnapp";
-import { Table } from "@navikt/ds-react";
 
 type Adresse = Bostedsadresse | Oppholdsadresse | Kontaktadresse;
 
@@ -58,30 +58,30 @@ const AdresseTable = ({ adressetype, adresser, historisk }: AdresseTableProps) =
   return (
     <div className="adresseTable menypanel__table-wrapper">
       {!historisk || expanded ? (
-        <Table className="menypanel__table">
-          <Table.Header>
-            <Table.Row>
-              <Table.HeaderCell className={`fixed-width ${historisk ? "transparent" : ""}`}>
+        <Nav.Table className="menypanel__table">
+          <Nav.Table.Header>
+            <Nav.Table.Row>
+              <Nav.Table.HeaderCell className={`fixed-width ${historisk ? "transparent" : ""}`}>
                 {adressetype}
-              </Table.HeaderCell>
-              <Table.HeaderCell className={historisk ? "transparent" : ""}>Register</Table.HeaderCell>
-              <Table.HeaderCell className={historisk ? "transparent" : ""}>Kilde</Table.HeaderCell>
-              <Table.HeaderCell className="fixed-width">{periodetekst}</Table.HeaderCell>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
+              </Nav.Table.HeaderCell>
+              <Nav.Table.HeaderCell className={historisk ? "transparent" : ""}>Register</Nav.Table.HeaderCell>
+              <Nav.Table.HeaderCell className={historisk ? "transparent" : ""}>Kilde</Nav.Table.HeaderCell>
+              <Nav.Table.HeaderCell className="fixed-width">{periodetekst}</Nav.Table.HeaderCell>
+            </Nav.Table.Row>
+          </Nav.Table.Header>
+          <Nav.Table.Body>
             {adresser.map((adresse) => (
-              <Table.Row key={Utils._uuid()}>
-                <Table.DataCell>{renderAdressekomponent(adresse)}</Table.DataCell>
-                <Table.DataCell>{adresse.master}</Table.DataCell>
-                <Table.DataCell>{adresse.kilde}</Table.DataCell>
-                <Table.DataCell className={historisk ? "historisk-label" : "gyldig-label"}>
+              <Nav.Table.Row key={Utils._uuid()}>
+                <Nav.Table.DataCell>{renderAdressekomponent(adresse)}</Nav.Table.DataCell>
+                <Nav.Table.DataCell>{adresse.master}</Nav.Table.DataCell>
+                <Nav.Table.DataCell>{adresse.kilde}</Nav.Table.DataCell>
+                <Nav.Table.DataCell className={historisk ? "historisk-label" : "gyldig-label"}>
                   {renderPeriode(adresse, historisk)}
-                </Table.DataCell>
-              </Table.Row>
+                </Nav.Table.DataCell>
+              </Nav.Table.Row>
             ))}
-          </Table.Body>
-        </Table>
+          </Nav.Table.Body>
+        </Nav.Table>
       ) : null}
       {historisk && (
         <ChevronKnapp

@@ -194,7 +194,7 @@ const VurderingForretningssted = (props) => {
         id="vurdering13_1"
         label="Velg..."
         onChange={lovvalgsbestemmelseEndret}
-        disabled={!redigerbart}
+        readOnly={!redigerbart}
         value={finnLovvalgsbestemmelse(lovvalgsbestemmelse, stegetsLovvalgsbestemmelser) ?? ""}
       >
         <option

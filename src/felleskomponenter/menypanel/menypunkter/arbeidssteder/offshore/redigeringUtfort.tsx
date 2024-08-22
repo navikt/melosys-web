@@ -1,35 +1,33 @@
 import * as KV from "../../../../../kodeverk";
-
+import * as Nav from "../../../../../navFrontend";
 import MKV from "../../../../../melosyskodeverk";
 
 import { EnRedigeringsknappListeRedigeringUtfort } from "../../editerbartElementListe";
 
-import { Table } from "@navikt/ds-react";
-
 const RedigeringUtfort = ({ verdier }: EnRedigeringsknappListeRedigeringUtfort<KV.Form.ArbeidsstedOffshore>) => (
   <div className="arbeidssted__offshore__redigeringutfort-wrapper">
-    <Table>
-      <Table.Header>
-        <Table.Row>
-          <Table.HeaderCell>Navn på innretning</Table.HeaderCell>
-          <Table.HeaderCell>Type innretning</Table.HeaderCell>
-          <Table.HeaderCell>Lands sokkel</Table.HeaderCell>
-        </Table.Row>
-      </Table.Header>
-      <Table.Body>
+    <Nav.Table>
+      <Nav.Table.Header>
+        <Nav.Table.Row>
+          <Nav.Table.HeaderCell>Navn på innretning</Nav.Table.HeaderCell>
+          <Nav.Table.HeaderCell>Type innretning</Nav.Table.HeaderCell>
+          <Nav.Table.HeaderCell>Lands sokkel</Nav.Table.HeaderCell>
+        </Nav.Table.Row>
+      </Nav.Table.Header>
+      <Nav.Table.Body>
         {verdier.map((arbeidsstedOffshore) => (
-          <Table.Row key={arbeidsstedOffshore.enhetNavn}>
-            <Table.DataCell>{arbeidsstedOffshore.enhetNavn}</Table.DataCell>
-            <Table.DataCell>
+          <Nav.Table.Row key={arbeidsstedOffshore.enhetNavn}>
+            <Nav.Table.DataCell>{arbeidsstedOffshore.enhetNavn}</Nav.Table.DataCell>
+            <Nav.Table.DataCell>
               {KV.kodeTilTerm(arbeidsstedOffshore.innretningstype, MKV.KTObjects.innretningstyper)}
-            </Table.DataCell>
-            <Table.DataCell>
+            </Nav.Table.DataCell>
+            <Nav.Table.DataCell>
               {KV.kodeTilTerm(arbeidsstedOffshore.innretningLandkode, MKV.KTObjects.landkoder)}
-            </Table.DataCell>
-          </Table.Row>
+            </Nav.Table.DataCell>
+          </Nav.Table.Row>
         ))}
-      </Table.Body>
-    </Table>
+      </Nav.Table.Body>
+    </Nav.Table>
   </div>
 );
 

@@ -62,7 +62,6 @@ const MedfolgendeBarn = ({
           onChange={onCheck}
           defaultValue={omfattet}
           name={radioName}
-          size="small"
         >
           <Nav.Radio value={BOOLSK_STRING.SANN}>Ja</Nav.Radio>
           <Nav.Radio value={BOOLSK_STRING.USANN}>Nei</Nav.Radio>
@@ -73,7 +72,7 @@ const MedfolgendeBarn = ({
               <Nav.Select
                 onChange={(e) => onBegrunnelseChange(e.target.value)}
                 value={begrunnelse}
-                disabled={!redigerbart}
+                readOnly={!redigerbart}
                 label="Begrunnelse for avslag:"
               >
                 <option key={Utils._uuid()} value="" disabled>

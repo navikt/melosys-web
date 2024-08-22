@@ -315,6 +315,8 @@ const OpprettNySak = ({
                   onChange={(value) => change("hovedpart", value)}
                   legend=""
                   hideLegend
+                  size="medium"
+                  className="horisontal_radiogruppe"
                 >
                   <HStack gap="3" justify="space-between">
                     <EnkelNavBox focused={hovedpartErBruker}>

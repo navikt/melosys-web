@@ -1,15 +1,15 @@
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
-import { konverterAvklartfaktaTilStegData, lagAvklartfakta } from "../../../../../felleskomponenter/stegvelger";
-import MKV from "../../../../../melosyskodeverk";
+import { konverterAvklartfaktaTilStegData, lagAvklartfakta } from "../../../../../felleskomponenter/stegvelger/index";
+import MKV from "../../../../../melosyskodeverk/index";
 import { BOOLSK_STRING } from "../../../../../constants";
 import { reset } from "redux-form";
-import * as KV from "../../../../../kodeverk";
+import * as KV from "../../../../../kodeverk/index";
 import PT from "prop-types";
-import * as MPT from "../../../../../proptypes";
-import * as Nav from "../../../../../navFrontend";
+import * as MPT from "../../../../../proptypes/index";
+import * as Nav from "../../../../../navFrontend/index";
 
-const CheckableLandLinje = (props) => {
+const MarginaltArbeidCheckbox = (props) => {
   const { arbeidsland, avklartMarginaltArbeidILand, oppdaterData } = props;
   const dispatch = useDispatch();
 
@@ -37,7 +37,6 @@ const CheckableLandLinje = (props) => {
 
   return (
     <Nav.Checkbox
-      size="small"
       value={arbeidsland.kode}
       id={`marginaltArbeidslandListe.${arbeidsland.kode}`}
       key={`marginaltArbeidslandListe.${arbeidsland.kode}`}
@@ -48,14 +47,14 @@ const CheckableLandLinje = (props) => {
   );
 };
 
-CheckableLandLinje.propTypes = {
+MarginaltArbeidCheckbox.propTypes = {
   oppdaterData: PT.func.isRequired,
   arbeidsland: MPT.Kodeverk.isRequired,
   avklartMarginaltArbeidILand: PT.object,
 };
 
-CheckableLandLinje.defaultProps = {
+MarginaltArbeidCheckbox.defaultProps = {
   avklartMarginaltArbeidILand: undefined,
 };
 
-export default CheckableLandLinje;
+export default MarginaltArbeidCheckbox;

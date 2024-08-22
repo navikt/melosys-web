@@ -32,13 +32,12 @@ const StegKnapper = ({
 
   return (
     <div className={cls}>
-      <Nav.Button variant="primary" size="small" {...bekreftKnappProps} className={bekreftKnappCls}>
+      <Nav.Button variant="primary" {...bekreftKnappProps} className={bekreftKnappCls}>
         {bekreftTekst}
       </Nav.Button>
       {tilbakeKnappProps && (
         <Nav.Button
           variant="tertiary"
-          size="small"
           className={tilbakeKnappCls}
           icon={tilbakeKnappProps.disabled ? <Ikoner.ArrowLeftWhite /> : <Ikoner.ArrowLeftBlue />}
           {...tilbakeKnappProps}

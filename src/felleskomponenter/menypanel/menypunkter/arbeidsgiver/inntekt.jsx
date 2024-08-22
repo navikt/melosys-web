@@ -83,12 +83,7 @@ class Inntekt extends Component {
       <div className="inntekt">
         <div className="inntekt__graf">
           <HighchartsReact highcharts={Highcharts} options={options} />
-          <Nav.Button
-            variant="secondary"
-            size="small"
-            onClick={this.toggleInntektTabellHandler}
-            className="vistabell__knapp"
-          >
+          <Nav.Button variant="secondary" onClick={this.toggleInntektTabellHandler} className="vistabell__knapp">
             {this.state.visInntektTabell ? "Skjul tabellen" : "Vis grafen som tabell"}
           </Nav.Button>
         </div>

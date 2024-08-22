@@ -204,7 +204,6 @@ const VurderingArtikkel11_4 = ({
             readOnly={!redigerbart}
             name="artikkel11"
             defaultValue={artikkelValg}
-            size="small"
           >
             <Nav.Radio value={ArtikkelValg.ART11_4_1}>
               {konvensjonStorbritanniaToggleEnabled ? "Arbeider på norsk skip" : "11.4 i - Norge er arbeidslandet"}
@@ -238,7 +237,6 @@ const VurderingArtikkel11_4 = ({
               name="nis"
               readOnly={!redigerbart}
               defaultValue={Utils.streng.boolTilUppercaseStreng(nis.oppfylt)}
-              size="small"
             >
               <Nav.Radio value={BOOLSK_STRING.USANN}>Nei</Nav.Radio>
               <Nav.Radio value={BOOLSK_STRING.SANN}>Ja</Nav.Radio>

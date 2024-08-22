@@ -1,39 +1,40 @@
-import { Tag, TagProps as DsTagProps } from "@navikt/ds-react";
+import { TagProps as DsTagProps } from "@navikt/ds-react";
+import * as Nav from "../../navFrontend";
 
 type TagProps = Omit<DsTagProps, "variant" | "children">;
 
 export const FraRegister = (props: TagProps) => (
-  <Tag {...props} variant="info" size="small">
+  <Nav.Tag {...props} variant="info">
     Fra register
-  </Tag>
+  </Nav.Tag>
 );
 
 export const FraBruker = (props: TagProps) => (
-  <Tag {...props} variant="warning" size="small">
+  <Nav.Tag {...props} variant="warning">
     Fra bruker
-  </Tag>
+  </Nav.Tag>
 );
 
 export const BrukersDel = (props: TagProps) => (
-  <Tag {...props} variant="warning" size="small">
+  <Nav.Tag {...props} variant="warning">
     Brukers del
-  </Tag>
+  </Nav.Tag>
 );
 
 export const ArbeidstakersDel = (props: TagProps) => (
-  <Tag {...props} variant="warning" size="small">
+  <Nav.Tag {...props} variant="warning">
     Arbeidstakers del
-  </Tag>
+  </Nav.Tag>
 );
 
 export const ArbeidsgiversDel = (props: TagProps) => (
-  <Tag {...props} variant="warning" size="small">
+  <Nav.Tag {...props} variant="warning">
     Arbeidsgivers del
-  </Tag>
+  </Nav.Tag>
 );
 
 export const Under18Aar = (props: TagProps) => (
-  <Tag {...props} variant="neutral" size="small">
+  <Nav.Tag {...props} variant="neutral">
     Under 18 år
-  </Tag>
+  </Nav.Tag>
 );

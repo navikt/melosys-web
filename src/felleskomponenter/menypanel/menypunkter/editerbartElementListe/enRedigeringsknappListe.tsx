@@ -1,10 +1,9 @@
 import { ElementType, MouseEvent } from "react";
 import { FieldArrayFieldsProps } from "redux-form";
 import classNames from "classnames";
-import { Button } from "@navikt/ds-react";
 import { PlusCircleIcon } from "@navikt/aksel-icons";
-
 import EditerbartElement, { SymbolsynlighetConfig } from "../editerbartElement";
+import * as Nav from "../../../../navFrontend";
 
 import "./enRedigeringsknappListe.css";
 
@@ -92,8 +91,7 @@ function EnRedigeringsKnappListe<T>({
             <IngenDataKomponent />
           </div>
           {redigerbart && (
-            <Button
-              size="small"
+            <Nav.Button
               variant="tertiary"
               onClick={() => {
                 apneRedigering();
@@ -102,7 +100,7 @@ function EnRedigeringsKnappListe<T>({
               icon={<PlusCircleIcon />}
             >
               {leggTilTekst}
-            </Button>
+            </Nav.Button>
           )}
         </>
       )
@@ -153,9 +151,9 @@ function EnRedigeringsKnappListe<T>({
           })}
           {redigerbart && kanLeggeTilFlereElementer && (
             <div>
-              <Button size="small" variant="tertiary" onClick={leggTil} icon={<PlusCircleIcon />}>
+              <Nav.Button variant="tertiary" onClick={leggTil} icon={<PlusCircleIcon />}>
                 {leggTilTekst}
-              </Button>
+              </Nav.Button>
             </div>
           )}
         </div>

@@ -63,12 +63,7 @@ class Arbeidsavtaler extends Component {
 
     const visMerKnappElement =
       historiskeArbeidsavtaler.length > 0 ? (
-        <Nav.Button
-          variant="secondary"
-          size="small"
-          onClick={this.toggleInntektTabellHandler}
-          className="vistabell__knapp"
-        >
+        <Nav.Button variant="secondary" onClick={this.toggleInntektTabellHandler} className="vistabell__knapp">
           {visHistoriskeArbeidsavtaler ? "Skjul" : "Vis"} tidligere arbeidsavtaler
         </Nav.Button>
       ) : null;

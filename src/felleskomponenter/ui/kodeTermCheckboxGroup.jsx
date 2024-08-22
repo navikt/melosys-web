@@ -4,9 +4,8 @@ import PT from "prop-types";
 import * as Nav from "../../navFrontend";
 import * as MPT from "../../proptypes";
 import * as Utils from "../../utils";
-import Checkbox from "./checkbox";
 
-const Checkboxgruppe = ({ legend, muligeValg, defaultValg, onChange, disabled, size }) => {
+const KodeTermCheckboxGroup = ({ legend, muligeValg, defaultValg, onChange, disabled }) => {
   const [valgteCheckboxer, setValgteCheckboxer] = useState(
     muligeValg.map((valg) => valg.kode).filter((kode) => defaultValg.includes(kode))
   );
@@ -15,48 +14,44 @@ const Checkboxgruppe = ({ legend, muligeValg, defaultValg, onChange, disabled, s
     setValgteCheckboxer(muligeValg.map((valg) => valg.kode).filter((kode) => defaultValg.includes(kode)));
   }, [defaultValg]);
 
-  const onChangeHandler = ({ value }) => {
-    const verdi = value;
-
-    const nyeValgteCheckboxer = valgteCheckboxer.includes(verdi)
-      ? valgteCheckboxer.filter((checkbox) => checkbox !== verdi)
-      : [...valgteCheckboxer, verdi];
+  const onChangeHandler = (kode) => {
+    const nyeValgteCheckboxer = valgteCheckboxer.includes(kode)
+      ? valgteCheckboxer.filter((checkbox) => checkbox !== kode)
+      : [...valgteCheckboxer, kode];
 
     setValgteCheckboxer(nyeValgteCheckboxer);
     onChange(nyeValgteCheckboxer);
   };
 
   return (
-    <Nav.CheckboxGroup legend={legend} defaultValue={valgteCheckboxer} size={size}>
+    <Nav.CheckboxGroup legend={legend} defaultValue={valgteCheckboxer} readOnly={disabled}>
       {muligeValg.map((valg) => (
-        <Checkbox
+        <Nav.Checkbox
           key={valg.kode}
           name="annetBostedsland"
-          label={valg.term}
           value={valg.kode}
-          disabled={disabled}
-          onCheck={onChangeHandler}
+          onClick={() => onChangeHandler(valg.kode)}
           id={Utils._uuid()}
-        />
+        >
+          {valg.term}
+        </Nav.Checkbox>
       ))}
     </Nav.CheckboxGroup>
   );
 };
 
-Checkboxgruppe.propTypes = {
+KodeTermCheckboxGroup.propTypes = {
   legend: PT.string,
   muligeValg: PT.arrayOf(MPT.Kodeverk).isRequired,
   disabled: PT.bool,
   onChange: PT.func.isRequired,
   defaultValg: PT.arrayOf(PT.string),
-  size: PT.string,
 };
 
-Checkboxgruppe.defaultProps = {
+KodeTermCheckboxGroup.defaultProps = {
   legend: "",
   disabled: false,
   defaultValg: [],
-  size: "medium",
 };
 
-export default Checkboxgruppe;
+export default KodeTermCheckboxGroup;

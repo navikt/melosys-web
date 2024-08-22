@@ -65,7 +65,6 @@ export const Lovvalgsperiode = ({ kontrollerFerdigbehandling, onRedigeringErAkti
   const EndrePeriodeKnapp = () => (
     <Nav.Button
       variant="secondary"
-      size="small"
       onClick={() => setVisPeriodeEndringFelter(true)}
       onKeyDown={(event) => {
         if ([" ", "Enter"].includes(event.key)) {

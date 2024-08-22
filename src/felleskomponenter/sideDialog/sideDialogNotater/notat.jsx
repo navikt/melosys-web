@@ -84,11 +84,11 @@ const Notat = ({ redigerbart, tekst, opprettetDato, endretDato, forfatter, onUpd
             </Nav.Row>
             <div className="knapperad">
               {visLagreKnapp && (
-                <Nav.Button variant="primary" size="small" onClick={lagre}>
+                <Nav.Button variant="primary" onClick={lagre}>
                   <span>Lagre</span>
                 </Nav.Button>
               )}
-              <Nav.Button variant="secondary" size="small" onClick={avbrytEndring}>
+              <Nav.Button variant="secondary" onClick={avbrytEndring}>
                 <span>Avbryt</span>
               </Nav.Button>
             </div>
@@ -104,7 +104,7 @@ const Notat = ({ redigerbart, tekst, opprettetDato, endretDato, forfatter, onUpd
             <Nav.Row>
               {redigerbart && (
                 <div className="knapperad">
-                  <Nav.Button variant="secondary" size="small" icon={<Ikoner.Pencil />} onClick={apneEndring}>
+                  <Nav.Button variant="secondary" icon={<Ikoner.Pencil />} onClick={apneEndring}>
                     Endre
                   </Nav.Button>
                 </div>

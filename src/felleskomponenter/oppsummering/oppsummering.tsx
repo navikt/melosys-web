@@ -248,7 +248,6 @@ const Oppsummering = ({
                     <div className="knapp__container">
                       <Nav.Button
                         variant="secondary"
-                        size="small"
                         disabled={disableEndreKnapp}
                         onClick={() => setSkalViseEndreModal(true)}
                         icon={<Ikoner.BlyantActive />}
@@ -284,7 +283,7 @@ const Oppsummering = ({
                       className="behandlingsstatus"
                     />
                     {MKVUtils.erAvsluttetEllerMidlertidigBeslutning(behandlingsstatus.kode) && (
-                      <Nav.Tag variant="info" size="small" className="behandlingsresultattype">
+                      <Nav.Tag variant="info" className="behandlingsresultattype">
                         {behandlingsresultattype.term}
                       </Nav.Tag>
                     )}

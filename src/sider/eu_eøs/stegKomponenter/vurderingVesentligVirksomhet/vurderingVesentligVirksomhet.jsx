@@ -47,7 +47,6 @@ const VurderingVesentligVirksomhet = (props) => {
         labelIkkeOppfylt="Nei"
         oppdaterData={oppdaterData}
         tittel={`Har ${arbeidsgivereTekst} vesentlig virksomhet i Norge?`}
-        size="small"
       />
       <Mui.StegKnapper
         bekreftKnappProps={{

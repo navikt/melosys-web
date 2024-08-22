@@ -7,7 +7,6 @@ import { Sivilstand } from "../../../../../../graphql";
 import { GyldighetshistorikkInfo } from "../../historikk/gyldighetshistorikkInfo";
 
 import "./sivilstandModal.css";
-import { Table } from "@navikt/ds-react";
 
 interface SivilstandTabellProps {
   sivilstander: Sivilstand[];
@@ -15,34 +14,34 @@ interface SivilstandTabellProps {
 
 export const SivilstandTabell = ({ sivilstander }: SivilstandTabellProps) => {
   return (
-    <Table>
-      <Table.Header>
-        <Table.Row>
-          <Table.HeaderCell>Sivilstand</Table.HeaderCell>
-          <Table.HeaderCell>Relasjon til</Table.HeaderCell>
-          <Table.HeaderCell>Kilde</Table.HeaderCell>
-          <Table.HeaderCell>Register</Table.HeaderCell>
-          <Table.HeaderCell>Bekreftelsesdato</Table.HeaderCell>
-          <Table.HeaderCell>Gyldig f.o.m</Table.HeaderCell>
-        </Table.Row>
-      </Table.Header>
-      <Table.Body>
+    <Nav.Table>
+      <Nav.Table.Header>
+        <Nav.Table.Row>
+          <Nav.Table.HeaderCell>Sivilstand</Nav.Table.HeaderCell>
+          <Nav.Table.HeaderCell>Relasjon til</Nav.Table.HeaderCell>
+          <Nav.Table.HeaderCell>Kilde</Nav.Table.HeaderCell>
+          <Nav.Table.HeaderCell>Register</Nav.Table.HeaderCell>
+          <Nav.Table.HeaderCell>Bekreftelsesdato</Nav.Table.HeaderCell>
+          <Nav.Table.HeaderCell>Gyldig f.o.m</Nav.Table.HeaderCell>
+        </Nav.Table.Row>
+      </Nav.Table.Header>
+      <Nav.Table.Body>
         {sivilstander.map((sivilstand) => (
-          <Table.Row key={Utils._uuid()}>
-            <Table.DataCell>{sivilstand.type}</Table.DataCell>
-            <Table.DataCell>
+          <Nav.Table.Row key={Utils._uuid()}>
+            <Nav.Table.DataCell>{sivilstand.type}</Nav.Table.DataCell>
+            <Nav.Table.DataCell>
               {sivilstand.relatertVedSivilstand && (
                 <KopierbarTekst hovertekst="Kopier fødselsnummer">{sivilstand.relatertVedSivilstand}</KopierbarTekst>
               )}
-            </Table.DataCell>
-            <Table.DataCell>{sivilstand.kilde}</Table.DataCell>
-            <Table.DataCell>{sivilstand.master}</Table.DataCell>
-            <Table.DataCell>{Utils.dato.formatterDatoTilNorsk(sivilstand.bekreftelsesdato)}</Table.DataCell>
-            <Table.DataCell>{Utils.dato.formatterDatoTilNorsk(sivilstand.gyldigFraOgMed)}</Table.DataCell>
-          </Table.Row>
+            </Nav.Table.DataCell>
+            <Nav.Table.DataCell>{sivilstand.kilde}</Nav.Table.DataCell>
+            <Nav.Table.DataCell>{sivilstand.master}</Nav.Table.DataCell>
+            <Nav.Table.DataCell>{Utils.dato.formatterDatoTilNorsk(sivilstand.bekreftelsesdato)}</Nav.Table.DataCell>
+            <Nav.Table.DataCell>{Utils.dato.formatterDatoTilNorsk(sivilstand.gyldigFraOgMed)}</Nav.Table.DataCell>
+          </Nav.Table.Row>
         ))}
-      </Table.Body>
-    </Table>
+      </Nav.Table.Body>
+    </Nav.Table>
   );
 };
 

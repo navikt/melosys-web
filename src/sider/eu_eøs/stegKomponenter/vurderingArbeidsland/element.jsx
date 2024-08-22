@@ -25,24 +25,12 @@ const Element = ({ kode, term, onFjern, onAngreFjern, fjernbar, redigerbar, defa
       {fjernbar && (
         <Nav.Column xs="6">
           {!fjernet && (
-            <Nav.Button
-              variant="secondary"
-              size="small"
-              icon={<Ikoner.RemoveOne />}
-              disabled={!redigerbar}
-              onClick={fjern}
-            >
+            <Nav.Button variant="secondary" icon={<Ikoner.RemoveOne />} disabled={!redigerbar} onClick={fjern}>
               Fjern
             </Nav.Button>
           )}
           {fjernet && (
-            <Nav.Button
-              variant="secondary"
-              size="small"
-              icon={<Ikoner.AddOne />}
-              disabled={!redigerbar}
-              onClick={angreFjern}
-            >
+            <Nav.Button variant="secondary" icon={<Ikoner.AddOne />} disabled={!redigerbar} onClick={angreFjern}>
               Angre fjern
             </Nav.Button>
           )}
