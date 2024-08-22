@@ -86,7 +86,10 @@ exports[`VurderingAarsavreging > VurderingAarsavregning > snapshot test 1`] = `
         </div>
       </div>
     </fieldset>
-    <button class="navds-button navds-button--primary navds-button--small">
+    <button
+      class="navds-button navds-button--primary navds-button--small navds-button--disabled"
+      disabled
+    >
       <span class="navds-label navds-label--small">
         Bekreft og fortsett
       </span>
