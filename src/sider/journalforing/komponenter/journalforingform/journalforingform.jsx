@@ -132,6 +132,12 @@ const JournalforingForm = ({
   };
 
   useEffect(() => {
+    if (!visForvaltningsmelding) {
+      settFeltInnhold("forvaltningsmeldingMottaker", MKV.Koder.forvaltningsmeldingMottaker.INGEN);
+    }
+  }, [visForvaltningsmelding]);
+
+  useEffect(() => {
     setAdresseOpplysninger(null);
     if (!avsenderType || (!brukerID && !avsenderID)) return;
 
