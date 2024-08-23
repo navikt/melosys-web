@@ -21,7 +21,7 @@ function InnerCheckboxComponent({ input, meta, label, submitOnChange, onClick, d
       onClick={onClick}
       {...input}
       onChange={onChange}
-      disabled={disabled}
+      readOnly={disabled}
       className={className}
       id={Utils._uuid()}
       size="small"
