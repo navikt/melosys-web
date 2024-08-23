@@ -26,7 +26,8 @@ import VurderingAvslagArtikkel12Og16Schema from "./vurderingAvslag12_x_og_16Sche
 import { useFeatureToggle } from "../../../featuretoggle";
 import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../featuretoggle/toggleNavn";
 
-const skalViseSendOrienteringsbrev = (sakstype, behandlingstema) =>
+const skalViseSendOrienteringsbrev = (sakstype, behandlingstema, erNyVurdering) =>
+  !erNyVurdering &&
   sakstype === MKV.Koder.sakstyper.EU_EOS &&
   [
     MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
@@ -195,7 +196,7 @@ const VurderingAvslag12_x_og_16 = ({
           />
         </Nav.Column>
       </Nav.Row>
-      {redigerbart && skalViseSendOrienteringsbrev(sakstype, behandlingstema) && (
+      {redigerbart && skalViseSendOrienteringsbrev(sakstype, behandlingstema, erNyVurdering) && (
         <Skjema.Checkbox feltNavn="kopiTilArbeidsgiver" label="Send orienteringsbrev til arbeidsgiver/virksomhet" />
       )}
       {erNyVurdering && <Skjema.Vedtakstype redigerbart={redigerbart} />}
