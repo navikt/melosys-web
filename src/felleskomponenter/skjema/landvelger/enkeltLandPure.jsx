@@ -130,7 +130,7 @@ class EnkeltLandPure extends Component {
           onFocus={fokusInnHandler}
           onChange={inputEndringHandler}
           onKeyDown={inputTastNedHandler}
-          disabled={disabled}
+          readOnly={disabled}
           id={Utils._uuid()}
         />
         <div className="landliste__dataliste">

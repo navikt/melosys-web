@@ -294,7 +294,7 @@ const VurderingVedtak = ({
             <Skjema.Textarea
               feltNavn="vedtaksbrevFritekst"
               label="Fritekstfelt til begrunnelse"
-              disabled={!redigerbart}
+              readOnly={!redigerbart}
             />
           </Nav.Column>
         </Nav.Row>
@@ -304,7 +304,7 @@ const VurderingVedtak = ({
               <Skjema.Textarea
                 label="Ytterligere informasjon til SED (valgfri)"
                 feltNavn="fritekstSed"
-                disabled={!redigerbart}
+                readOnly={!redigerbart}
                 visTellerFra={maksAntallTegn}
                 maxLength={maksAntallTegn}
               />

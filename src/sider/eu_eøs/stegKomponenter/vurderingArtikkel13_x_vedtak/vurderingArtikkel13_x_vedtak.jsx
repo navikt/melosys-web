@@ -190,7 +190,7 @@ export const VurderingArtikkel13_x_vedtak = ({
             feltNavn="vedtaksbrevFritekst"
             label="Fritekst til vedtaksbrev"
             placeholder="Skriv inn tekst til vedtaksbrevet..."
-            disabled={!redigerbart}
+            readOnly={!redigerbart}
           />
         </Nav.Column>
       </Nav.Row>
@@ -200,7 +200,7 @@ export const VurderingArtikkel13_x_vedtak = ({
             <Skjema.Textarea
               label="Ytterligere informasjon til SED (valgfri)"
               feltNavn="fritekstSed"
-              disabled={!redigerbart}
+              readOnly={!redigerbart}
               visTellerFra={500}
               maxLength={500}
             />

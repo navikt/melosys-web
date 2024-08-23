@@ -74,7 +74,7 @@ export const VurderingVideresend = ({
               feltNavn="orienteringsbrevFritekst"
               label="Fritekst til orienteringsbrev"
               placeholder="Skriv inn tekst til orienteringsbrevet..."
-              disabled={!redigerbart}
+              readOnly={!redigerbart}
             />
           </Nav.Column>
         </Nav.Row>

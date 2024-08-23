@@ -231,7 +231,7 @@ export const Bestemmelser = ({
           <Nav.RadioGroup
             legend={
               konvensjonStorbritanniaToggleEnabled
-                ? "Fyller bruker kriteriene for for utsendingsbestemmelsen?"
+                ? "Fyller bruker kriteriene for utsendingsbestemmelsen?"
                 : `Fyller bruker kriteriene for artikkel ${vilkaarNavn12}?`
             }
             onChange={handleEndreVedtakValg}
