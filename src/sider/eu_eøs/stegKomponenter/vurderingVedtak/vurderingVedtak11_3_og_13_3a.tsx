@@ -117,12 +117,7 @@ export const VurderingVedtak11_3_og_13_3a = ({
       )}
       <Nav.Row className="fritekst">
         <Nav.Column xs="8">
-          <Skjema.Textarea
-            feltNavn="vedtaksbrevFritekst"
-            label="Fritekst til vedtaksbrev"
-            placeholder="Skriv inn tekst til vedtaksbrevet..."
-            disabled={!redigerbart}
-          />
+          <Nav.Textarea value={""} label="Fritekstfelt til begrunnelse" maxLength={100} />
         </Nav.Column>
       </Nav.Row>
       <Nav.Row>
