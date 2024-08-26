@@ -192,7 +192,7 @@ const VurderingAvslag12_x_og_16 = ({
             feltNavn="vedtaksbrevFritekst"
             label="Fritekst til vedtaksbrev"
             placeholder="Skriv inn tekst til vedtaksbrevet..."
-            disabled={!redigerbart}
+            readOnly={!redigerbart}
           />
         </Nav.Column>
       </Nav.Row>

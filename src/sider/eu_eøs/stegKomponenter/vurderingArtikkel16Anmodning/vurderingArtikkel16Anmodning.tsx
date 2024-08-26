@@ -405,7 +405,7 @@ const VurderingArtikkel16Anmodning = ({
               <Skjema.Textarea
                 label={<Nav.Typo.Element>Ytterligere informasjon til SED (valgfri)</Nav.Typo.Element>}
                 feltNavn="fritekstSed"
-                disabled={!redigerbart}
+                readOnly={!redigerbart}
                 visTellerFra={maksAntallTegn}
                 maxLength={maksAntallTegn}
               />
