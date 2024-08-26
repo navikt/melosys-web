@@ -50,7 +50,7 @@ export const Behandlingsmeny = () => {
               </Accordion.Content>
             </Accordion.Item>
             <Accordion.Item>
-              <Accordion.Header>Avslutt sak/behandling</Accordion.Header>
+              <Accordion.Header>Avslutt behandling</Accordion.Header>
               <Accordion.Content>{erÅrsavregning ? <AvsluttAarsavregning /> : <AvsluttSak />}</Accordion.Content>
             </Accordion.Item>
           </Accordion>
