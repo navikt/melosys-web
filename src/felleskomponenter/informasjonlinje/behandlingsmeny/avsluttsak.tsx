@@ -287,6 +287,7 @@ const AvsluttSak = () => {
           onClick={() => apneBekreftValgModal(BekreftValgTypes.SAKEN_ER_ANNULLERT)}
         />
       )}
+      <div className="divider" />
       {skalViseFerdigbehandlet() && (
         <Handling tekst="Ferdigbehandlet" onClick={() => apneBekreftValgModal(BekreftValgTypes.FERDIGBEHANDLET)} />
       )}
