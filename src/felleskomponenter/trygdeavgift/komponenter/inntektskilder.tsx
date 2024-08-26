@@ -55,19 +55,19 @@ export const Inntektskilder = ({
   fields,
   medlemskapsTypeErPliktig,
 }: InntektskilderProps) => {
-  const settesDefaultArbAvgBetales = (kildetype?: string) => ![INNTEKT_FRA_UTLANDET, MISJONÆR].includes(kildetype);
+    const settesDefaultArbAvgBetales = (kildetype?: string) => ![INNTEKT_FRA_UTLANDET, MISJONÆR].includes(kildetype);
 
-  const handleEndreKildetype = (index: number, kildetype: string) => {
-    let defaultArbAvgBetales;
-    if (settesDefaultArbAvgBetales(kildetype)) {
-      defaultArbAvgBetales = kildetype === ARBEIDSINNTEKT_FRA_NORGE ? BOOLSK_STRING.SANN : BOOLSK_STRING.USANN;
-    }
-    update(index, { ...formValues.inntektskilder[index], kildetype, arbAvgBetales: defaultArbAvgBetales });
-  };
+    const handleEndreKildetype = (index: number, kildetype: string) => {
+      let defaultArbAvgBetales;
+      if (settesDefaultArbAvgBetales(kildetype)) {
+        defaultArbAvgBetales = kildetype === ARBEIDSINNTEKT_FRA_NORGE ? BOOLSK_STRING.SANN : BOOLSK_STRING.USANN;
+      }
+      update(index, { ...formValues.inntektskilder[index], kildetype, arbAvgBetales: defaultArbAvgBetales });
+    };
 
-  const handleEndreArbAvgBetales = (index: number, arbAvgBetales: string) => {
-    update(index, { ...formValues.inntektskilder[index], arbAvgBetales, bruttoInntekt: undefined });
-  };
+    const handleEndreArbAvgBetales = (index: number, arbAvgBetales: string) => {
+      update(index, { ...formValues.inntektskilder[index], arbAvgBetales, bruttoInntekt: undefined });
+    };
 
   return (
     <div className="inntektskilder">
