@@ -46,8 +46,8 @@ export interface HenleggReqDto {
 export const henlegg = (saksnummer: string, body: HenleggReqDto) =>
   postAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/henlegg`, body);
 
-export const bortfall = (saksnummer: string) =>
-  putAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/henlegg-som-bortfalt`);
+export const bortfall = (behandlingID: number) =>
+  putAsJson(`${API_BASE_URL}${FAGSAKER}/${behandlingID}/henlegg-som-bortfalt`);
 
 interface Vedlegg {
   journalpostID: string;

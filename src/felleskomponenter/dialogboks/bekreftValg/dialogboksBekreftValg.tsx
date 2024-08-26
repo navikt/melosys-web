@@ -60,7 +60,7 @@ export const DialogboksBekreftValg = () => {
       })
       .catch((error) => setFeil(error?.body?.message ?? error));
 
-  const avsluttSakSomBortfalt = () => håndterKall(Api.Fagsaker.fagsak.bortfall(saksnummer));
+  const avsluttSakSomBortfalt = () => håndterKall(Api.Fagsaker.fagsak.bortfall(behandlingID));
 
   const ferdigbehandleÅrsavregning = () =>
     håndterKall(Api.Behandlinger.behandling.ferdigbehandleÅrsavregning(behandlingID));
@@ -155,7 +155,7 @@ export const DialogboksBekreftValg = () => {
 
       case BekreftValgTypes.AVSLUTT_SAK_SOM_BORTFALT:
         return {
-          tittel: "Avslutt sak som bortfalt",
+          tittel: "Avslutt sak/behandling som bortfalt",
           tekst: "Er du sikker på at saken ikke kan behandles i Melosys? Vurder om du må opprette sak i annet system.",
           handleBekreft: avsluttSakSomBortfalt,
         };
