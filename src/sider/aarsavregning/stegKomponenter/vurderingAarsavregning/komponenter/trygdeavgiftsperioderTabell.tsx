@@ -4,14 +4,8 @@ import MKV from "../../../../../melosyskodeverk";
 import * as KV from "../../../../../kodeverk";
 import * as Utils from "../../../../../utils";
 import * as Nav from "../../../../../navFrontend";
+import { formaterTilNorskBelop } from "../../../../../utils";
 
-const formatNorwegianNumber = (amount: number | undefined): string => {
-  if (amount === undefined) {
-    return "-";
-  }
-
-  return new Intl.NumberFormat("nb-NO").format(amount);
-};
 const TrygdeavgiftsperioderTabell = ({ perioder, avgift }: { perioder?: Trygdeavgiftsperiode[]; avgift?: Avgift }) => {
   if (!perioder) return null;
 
@@ -47,13 +41,13 @@ const TrygdeavgiftsperioderTabell = ({ perioder, avgift }: { perioder?: Trygdeav
                 {trygdeavgiftsperiode.arbeidsgiversavgiftBetales ? "Ja" : "Nei"}
               </Nav.Table.DataCell>
               <Nav.Table.DataCell align="right" key={Utils._uuid()}>
-                {trygdeavgiftsperiode.inntektPerMd}
+                {formaterTilNorskBelop(trygdeavgiftsperiode.inntektPerMd)} kr
               </Nav.Table.DataCell>
               <Nav.Table.DataCell align="right" key={Utils._uuid()}>
                 {trygdeavgiftsperiode.avgiftssats}
               </Nav.Table.DataCell>
               <Nav.Table.DataCell align="right" key={Utils._uuid()}>
-                <b>{trygdeavgiftsperiode.avgiftPerMd}</b> nkr
+                <b>{formaterTilNorskBelop(trygdeavgiftsperiode.avgiftPerMd)}</b> kr
               </Nav.Table.DataCell>
             </Nav.Table.Row>
           ))}
@@ -62,10 +56,10 @@ const TrygdeavgiftsperioderTabell = ({ perioder, avgift }: { perioder?: Trygdeav
       <HStack className="totaltForPerioden" gap="16" align="center" justify="end">
         <p>Totalt for perioden:</p>
         <div>
-          <b>{formatNorwegianNumber(avgift?.totalInntekt)}</b> nkr
+          <b>{formaterTilNorskBelop(avgift?.totalInntekt)}</b> kr
         </div>
         <div>
-          <b>{formatNorwegianNumber(avgift?.totalAvgift)}</b> nkr
+          <b>{formaterTilNorskBelop(avgift?.totalAvgift)}</b> kr
         </div>
       </HStack>
     </VStack>
