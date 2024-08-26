@@ -29,7 +29,6 @@ const ArbeidslandRadioButtons = ({ landliste, onChange, arbeidslandType, disable
       defaultValue={arbeidslandType}
       name={unikRadioButtonGruppeID}
       disabled={disabled}
-      size="small"
     >
       {utfylteLand.map((land) => (
         <Nav.Radio id={Utils._uuid()} key={land.type} value={land.type} onChange={() => onChange(land)}>

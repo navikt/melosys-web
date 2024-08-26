@@ -187,7 +187,7 @@ export const VurderingArtikkel13UtpekLand = ({
             feltNavn="fritekstOrienteringsbrev"
             label="Fritekst til orienteringsbrev"
             placeholder="Skriv inn tekst til orienteringsbrevet..."
-            disabled={!redigerbart}
+            readOnly={!redigerbart}
           />
         </Nav.Column>
       </Nav.Row>
@@ -197,7 +197,7 @@ export const VurderingArtikkel13UtpekLand = ({
             <Skjema.Textarea
               label="Ytterligere informasjon til SED (valgfri)"
               feltNavn="fritekstSed"
-              disabled={!redigerbart}
+              readOnly={!redigerbart}
               visTellerFra={500}
               maxLength={500}
             />

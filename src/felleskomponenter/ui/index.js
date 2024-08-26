@@ -1,18 +1,16 @@
 import { KodeTermSelect } from "./kodeTermSelect";
-import Checkboxgruppe from "./checkboxgruppe";
+import KodeTermCheckboxGroup from "./kodeTermCheckboxGroup";
 import Lenkeknapp from "./lenkeknapp";
 import ListevelgerFlervalg from "./listevelgerFlervalg";
 import Undertittel from "./undertittel";
 import Elementskrift from "./elementskrift";
 import LesMerPanel from "./lesmerpanel";
-import Checkbox from "./checkbox";
 import StegKnapper from "./stegKnapp";
 import IkonKnapp from "./ikonKnapp";
 
 export {
   KodeTermSelect,
-  Checkbox,
-  Checkboxgruppe,
+  KodeTermCheckboxGroup,
   Lenkeknapp,
   ListevelgerFlervalg,
   Undertittel,

@@ -132,17 +132,17 @@ exports[`VurderingArtikkel16Vedtak > snapshot test 1`] = `
           <table class="navds-table navds-table--small">
             <thead class="navds-table__header">
               <tr class="navds-table__row navds-table__row--shade-on-hover">
-                <th class="navds-table__header-cell navds-label">
+                <th class="navds-table__header-cell navds-label navds-label--small">
                   Forhåndsvisning av brev
                 </th>
-                <th class="navds-table__header-cell navds-label">
+                <th class="navds-table__header-cell navds-label navds-label--small">
                   Mottaker
                 </th>
               </tr>
             </thead>
             <tbody class="navds-table__body">
               <tr class="navds-table__row navds-table__row--shade-on-hover">
-                <td class="navds-table__data-cell navds-body-short navds-body-short--medium">
+                <td class="navds-table__data-cell navds-body-short navds-body-short--small">
                   <a
                     href="#"
                     class="navds-link navds-link--action"
@@ -150,7 +150,7 @@ exports[`VurderingArtikkel16Vedtak > snapshot test 1`] = `
                     Innvilgelse yrkesaktiv (åpnes i ny fane)
                   </a>
                 </td>
-                <td class="navds-table__data-cell navds-body-short navds-body-short--medium">
+                <td class="navds-table__data-cell navds-body-short navds-body-short--small">
                   BRUKER
                 </td>
               </tr>

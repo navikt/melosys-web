@@ -16,7 +16,7 @@ exports[`Soknadsperiode > snapshot test 1`] = `
           type="button"
           aria-label="Rediger"
           title="Rediger"
-          class="ikon-knapp navds-button navds-button--tertiary navds-button--medium navds-button--icon-only"
+          class="ikon-knapp navds-button navds-button--tertiary navds-button--small navds-button--icon-only"
         >
           <span class="navds-button__icon">
             <svg

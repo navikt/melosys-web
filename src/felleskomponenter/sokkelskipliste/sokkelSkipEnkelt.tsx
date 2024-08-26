@@ -89,7 +89,6 @@ const SokkelSkipEnkelt = ({
           disabled={sokkelSkipDisabled}
           defaultValue={installasjonsType}
           name={key}
-          size="small"
         >
           <Nav.Radio value={SOKKEL} id={Utils._uuid()}>
             Sokkel
@@ -103,7 +102,7 @@ const SokkelSkipEnkelt = ({
         <Nav.Column xs="3">
           <Nav.Select
             name={`${key}_begrunnelser`}
-            disabled={sokkelSkipDisabled}
+            readOnly={sokkelSkipDisabled}
             id="installasjonsTypeBegrunnelser"
             label="Begrunnelse hvis sokkel"
             onChange={begrunnelserEndret}

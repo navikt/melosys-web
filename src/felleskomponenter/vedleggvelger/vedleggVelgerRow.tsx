@@ -4,7 +4,6 @@ import PdfLink from "../pdfLink";
 import * as Utils from "../../utils";
 import * as Nav from "../../navFrontend";
 import { ChangeEvent } from "react";
-import { Table } from "@navikt/ds-react";
 
 interface VedleggVelgerRowProps {
   vedlegg: FysiskDokument;
@@ -23,19 +22,19 @@ const VedleggVelgerRow = ({ vedlegg, leggTilVedlegg, slettVedlegg, vedleggErMark
   };
 
   return (
-    <Table.Row>
-      <Table.DataCell>
+    <Nav.Table.Row>
+      <Nav.Table.DataCell>
         <Nav.Checkbox className="vedleggvelger__checkbox" onChange={checkboxChangeHandler} checked={vedleggErMarkert}>
           &nbsp;
         </Nav.Checkbox>
-      </Table.DataCell>
-      <Table.DataCell>
+      </Nav.Table.DataCell>
+      <Nav.Table.DataCell>
         <PdfLink journalpostID={vedlegg.journalpostID} dokumentID={vedlegg.dokumentID} tittel={vedlegg.tittel} />
-      </Table.DataCell>
-      <Table.DataCell>
+      </Nav.Table.DataCell>
+      <Nav.Table.DataCell>
         <span>{Utils.dato.formatterDatoTilNorsk(vedlegg.dato)}</span>
-      </Table.DataCell>
-    </Table.Row>
+      </Nav.Table.DataCell>
+    </Nav.Table.Row>
   );
 };
 

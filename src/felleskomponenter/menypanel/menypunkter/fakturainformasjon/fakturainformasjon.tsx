@@ -9,7 +9,6 @@ import "./fakturainformasjon.css";
 import { Faktura } from "./faktura";
 import { STATUS } from "../../../../services";
 import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
-import { Table } from "@navikt/ds-react";
 import { useFeatureToggle } from "../../../../featuretoggle";
 import { MELOSYS_FAKTURERINGSKOMPONENTEN_VIS_REFERANSE } from "../../../../featuretoggle/toggleNavn";
 import moment from "moment";
@@ -57,27 +56,27 @@ const Fakturainformasjon = () => {
         <Nav.Row>
           <Nav.Column xs="12">
             <Nav.Typo.Systemtittel>Fakturainformasjon</Nav.Typo.Systemtittel>
-            <Table>
-              <Table.Header>
-                <Table.Row shadeOnHover={false}>
-                  <Table.HeaderCell />
-                  <Table.HeaderCell scope="col">
+            <Nav.Table>
+              <Nav.Table.Header>
+                <Nav.Table.Row shadeOnHover={false}>
+                  <Nav.Table.HeaderCell />
+                  <Nav.Table.HeaderCell scope="col">
                     <LabelMedHjelpetekst
                       label="Dato"
                       hjelpetekst="Viser når status sist ble oppdatert, for eksempel når faktura ble bestilt."
                     />
-                  </Table.HeaderCell>
-                  <Table.HeaderCell scope="col">Kvartal</Table.HeaderCell>
-                  <Table.HeaderCell scope="col">Status</Table.HeaderCell>
-                  <Table.HeaderCell scope="col">Utestående betaling</Table.HeaderCell>
-                </Table.Row>
-              </Table.Header>
-              <Table.Body>
+                  </Nav.Table.HeaderCell>
+                  <Nav.Table.HeaderCell scope="col">Kvartal</Nav.Table.HeaderCell>
+                  <Nav.Table.HeaderCell scope="col">Status</Nav.Table.HeaderCell>
+                  <Nav.Table.HeaderCell scope="col">Utestående betaling</Nav.Table.HeaderCell>
+                </Nav.Table.Row>
+              </Nav.Table.Header>
+              <Nav.Table.Body>
                 {alleFakturaer.map((faktura) => (
                   <Faktura key={faktura.fakturaReferanse} faktura={faktura} />
                 ))}
-              </Table.Body>
-            </Table>
+              </Nav.Table.Body>
+            </Nav.Table>
           </Nav.Column>
         </Nav.Row>
       </div>

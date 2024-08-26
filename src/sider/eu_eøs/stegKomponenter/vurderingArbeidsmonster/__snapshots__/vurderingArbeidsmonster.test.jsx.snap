@@ -10,7 +10,6 @@ exports[`VurderingArbeidsmonster > snapshot test 1`] = `
     <div class="arbeidsmonster">
       <fieldset class="fieldset">
         <legend class="fieldset__legend">
-          Er det marginalt arbeid i noen av landene?
         </legend>
         <div class="marginaltArbeid">
           <div class="landliste_innhold">

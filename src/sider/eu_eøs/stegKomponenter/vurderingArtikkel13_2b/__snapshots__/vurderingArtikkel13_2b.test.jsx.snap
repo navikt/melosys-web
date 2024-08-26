@@ -7,12 +7,12 @@ exports[`vurderingArtikkel13_2b > snapshot test dersom Norge er valgt 1`] = `
     <h1 class="typo-innholdstittel stegvelgertittel">
       Vurdering av artikkel 13 nr. 2 bokstav b
     </h1>
-    <fieldset class="navds-radio-group navds-radio-group--medium navds-fieldset navds-fieldset--medium">
-      <legend class="navds-fieldset__legend navds-label">
+    <fieldset class="navds-radio-group navds-radio-group--small navds-fieldset navds-fieldset--small">
+      <legend class="navds-fieldset__legend navds-label navds-label--small">
         I hvilket land har virksomheten sitt interessesenter?
       </legend>
       <div class="navds-radio-buttons">
-        <div class="navds-radio navds-radio--medium">
+        <div class="navds-radio navds-radio--small">
           <input
             id="333"
             name="333"
@@ -29,14 +29,14 @@ exports[`vurderingArtikkel13_2b > snapshot test dersom Norge er valgt 1`] = `
               <span
                 id="333"
                 aria-hidden="true"
-                class="navds-body-short navds-body-short--medium"
+                class="navds-body-short navds-body-short--small"
               >
                 Norge
               </span>
             </span>
           </label>
         </div>
-        <div class="navds-radio navds-radio--medium">
+        <div class="navds-radio navds-radio--small">
           <input
             id="333"
             name="333"
@@ -53,7 +53,7 @@ exports[`vurderingArtikkel13_2b > snapshot test dersom Norge er valgt 1`] = `
               <span
                 id="333"
                 aria-hidden="true"
-                class="navds-body-short navds-body-short--medium"
+                class="navds-body-short navds-body-short--small"
               >
                 Annet
               </span>
@@ -110,12 +110,12 @@ exports[`vurderingArtikkel13_2b > snapshot test dersom Norge ikke er valgt 1`] =
     <h1 class="typo-innholdstittel stegvelgertittel">
       Vurdering av artikkel 13 nr. 2 bokstav b
     </h1>
-    <fieldset class="navds-radio-group navds-radio-group--medium navds-fieldset navds-fieldset--medium">
-      <legend class="navds-fieldset__legend navds-label">
+    <fieldset class="navds-radio-group navds-radio-group--small navds-fieldset navds-fieldset--small">
+      <legend class="navds-fieldset__legend navds-label navds-label--small">
         I hvilket land har virksomheten sitt interessesenter?
       </legend>
       <div class="navds-radio-buttons">
-        <div class="navds-radio navds-radio--medium">
+        <div class="navds-radio navds-radio--small">
           <input
             id="333"
             name="333"
@@ -132,14 +132,14 @@ exports[`vurderingArtikkel13_2b > snapshot test dersom Norge ikke er valgt 1`] =
               <span
                 id="333"
                 aria-hidden="true"
-                class="navds-body-short navds-body-short--medium"
+                class="navds-body-short navds-body-short--small"
               >
                 Norge
               </span>
             </span>
           </label>
         </div>
-        <div class="navds-radio navds-radio--medium">
+        <div class="navds-radio navds-radio--small">
           <input
             id="333"
             name="333"
@@ -156,7 +156,7 @@ exports[`vurderingArtikkel13_2b > snapshot test dersom Norge ikke er valgt 1`] =
               <span
                 id="333"
                 aria-hidden="true"
-                class="navds-body-short navds-body-short--medium"
+                class="navds-body-short navds-body-short--small"
               >
                 Annet
               </span>

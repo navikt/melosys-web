@@ -82,7 +82,7 @@ const VurderingAvslaaUtpeking = ({
           <Skjema.Textarea
             label="Begrunnelse til utenlandsk myndighet (engelsk)"
             feltNavn="begrunnelseUtenlandskMyndighet"
-            disabled={!redigerbart}
+            readOnly={!redigerbart}
             visTellerFra={500}
             maxLength={500}
           />
@@ -102,7 +102,7 @@ const VurderingAvslaaUtpeking = ({
           <Skjema.Textarea
             label="Ytterligere informasjon (valgfri)"
             feltNavn="fritekst"
-            disabled={!redigerbart}
+            readOnly={!redigerbart}
             visTellerFra={500}
             maxLength={500}
           />

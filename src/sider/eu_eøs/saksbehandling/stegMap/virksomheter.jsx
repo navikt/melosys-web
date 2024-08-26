@@ -21,11 +21,10 @@ class SaksbehandlingVirksomheter extends Virksomheter {
       KV.Koder.VurderingYrkesgruppeTyper.ORDINAER_UTEN_ART12
     );
 
-    const arbeidslandErNorge = propsLight.arbeidsland[0].kode === MKV.Koder.landkoder.NO;
+    const arbeidslandErNorge = propsLight.arbeidsland[0]?.kode === MKV.Koder.landkoder.NO;
 
-    const erYrkesaktiv = hentFakta(KV.Koder.avklartefaktaKoder.YRKESGRUPPE, propsLight.avklartefakta).fakta.includes(
-      KV.Koder.VurderingYrkesgruppeTyper.ORDINAER
-    );
+    const yrkesgruppe = hentFakta(KV.Koder.avklartefaktaKoder.YRKESGRUPPE, propsLight.avklartefakta);
+    const erYrkesaktiv = yrkesgruppe.fakta?.includes(KV.Koder.VurderingYrkesgruppeTyper.ORDINAER) || false;
 
     const arbeidKunNorgeFlyt = [
       MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,

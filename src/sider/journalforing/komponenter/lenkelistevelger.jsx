@@ -47,10 +47,10 @@ function LenkeListeVelger(props) {
             placeholdere="Velg eller skriv inn egen tittel"
             muligeValg={muligeValg}
           />
-          <Nav.Button variant="primary" size="small" disabled={erTomTittel()} onClick={lagre} className="knapper">
+          <Nav.Button variant="primary" disabled={erTomTittel()} onClick={lagre} className="knapper">
             Lagre
           </Nav.Button>
-          <Nav.Button variant="tertiary" size="small" onClick={avbryt} className="knapper">
+          <Nav.Button variant="tertiary" onClick={avbryt} className="knapper">
             Avbryt
           </Nav.Button>
         </Nav.Column>

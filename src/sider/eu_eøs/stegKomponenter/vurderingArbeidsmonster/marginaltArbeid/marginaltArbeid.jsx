@@ -5,13 +5,13 @@ import { formValueSelector } from "redux-form";
 import * as KV from "../../../../../kodeverk";
 import * as Nav from "../../../../../navFrontend";
 import * as MPT from "../../../../../proptypes";
-import CheckableLandLinje from "../checkableLandLinje/checkableLandLinje";
+import MarginaltArbeidCheckbox from "./marginaltArbeidCheckbox";
 
 const MarginaltArbeid = ({ arbeidsland, redigerbart, marginaltArbeid, oppdaterData }) => {
   const { flereLandUkjentHvilke } = useSelector((state) => formValueSelector(KV.Form.SOKNAD)(state, "soknadsland"));
 
   return (
-    <Nav.Fieldset legend="Er det marginalt arbeid i noen av landene?">
+    <Nav.Fieldset legend="">
       <div className="marginaltArbeid">
         <div className="landliste_innhold">
           {flereLandUkjentHvilke ? (
@@ -21,8 +21,10 @@ const MarginaltArbeid = ({ arbeidsland, redigerbart, marginaltArbeid, oppdaterDa
           ) : (
             <div>
               <Nav.CheckboxGroup
+                size="small"
                 legend="Kryss av for land hvor det utføres marginalt arbeid (> 5%)"
                 readOnly={!redigerbart}
+                defaultValue={marginaltArbeid.map((ma) => ma.subjektID)}
               >
                 {arbeidsland.map(({ land }) => {
                   const avklartMarginaltArbeidILand = marginaltArbeid.find(
@@ -30,7 +32,7 @@ const MarginaltArbeid = ({ arbeidsland, redigerbart, marginaltArbeid, oppdaterDa
                   );
                   const key = `marginaltArbeidslandListe${land.kode}`;
                   return (
-                    <CheckableLandLinje
+                    <MarginaltArbeidCheckbox
                       key={key}
                       arbeidsland={land}
                       avklartMarginaltArbeidILand={avklartMarginaltArbeidILand}

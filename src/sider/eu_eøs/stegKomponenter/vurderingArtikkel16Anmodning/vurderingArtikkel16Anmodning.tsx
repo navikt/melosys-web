@@ -332,7 +332,6 @@ const VurderingArtikkel16Anmodning = ({
               value={unntakFraBestemmelse || ""}
               readOnly={!redigerbart}
               label={<Nav.Typo.Element>Artikkelen det søkes unntak fra</Nav.Typo.Element>}
-              size="small"
             >
               <option key={uuid()} value="" label="Velg..." disabled={!!unntakFraBestemmelse} />
               {hentUnntaksbestemmelser().map((kodeObjekt) => (
@@ -350,7 +349,6 @@ const VurderingArtikkel16Anmodning = ({
               value={unntaksvilkår.begrunnelseKoder ? unntaksvilkår.begrunnelseKoder[0] : ""}
               readOnly={!redigerbart}
               label={<Nav.Typo.Element>Legg til begrunnelse</Nav.Typo.Element>}
-              size="small"
             >
               <option
                 key={uuid()}
@@ -407,7 +405,7 @@ const VurderingArtikkel16Anmodning = ({
               <Skjema.Textarea
                 label={<Nav.Typo.Element>Ytterligere informasjon til SED (valgfri)</Nav.Typo.Element>}
                 feltNavn="fritekstSed"
-                disabled={!redigerbart}
+                readOnly={!redigerbart}
                 visTellerFra={maksAntallTegn}
                 maxLength={maksAntallTegn}
               />

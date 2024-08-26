@@ -59,7 +59,6 @@ const EnkeltAvklartfakta = (props) => {
             defaultValue={fakta}
             disabled={!redigerbart}
             name={avklartfaktaKode}
-            size="small"
           >
             {avklartefaktaTyper.map((af) => {
               const id = Utils._uuid();

@@ -200,7 +200,7 @@ export const VurderingArtikkel16Vedtak = ({
 
   const renderFritekstFelt = useCallback(
     () => (
-      <Skjema.Textarea feltNavn="vedtaksbrevFritekst" label="Fritekstfelt til begrunnelse" disabled={!redigerbart} />
+      <Skjema.Textarea feltNavn="vedtaksbrevFritekst" label="Fritekstfelt til begrunnelse" readOnly={!redigerbart} />
     ),
     [formValues?.vedtaksbrevFritekst, redigerbart]
   );

@@ -149,16 +149,11 @@ const RedigererFullmektig = ({
 
             {adresseErGyldig && (
               <>
-                <Nav.Typo.Element className="overskrift_fullmakt">
-                  Hvilke fullmakter har organisasjonen/personen
-                </Nav.Typo.Element>
-                <div className="fullmakt__container">
+                <Nav.CheckboxGroup legend="Hvilke fullmakter har organisasjonen/personen" defaultValue={fullmakter}>
                   {gyldigeFullmakter(type).map((fullmakt: KTObject) => (
                     <Nav.Checkbox
-                      className="fullmakt"
                       key={fullmakt.kode}
                       value={fullmakt.kode}
-                      checked={fullmakter.includes(fullmakt.kode)}
                       onChange={(event) => handleFullmaktChange(event.target.value, index, Boolean(manglerFullmakt))}
                       disabled={fullmaktErDisabled(index, fullmakt.kode)}
                       error={Boolean(manglerFullmakt)}
@@ -166,7 +161,7 @@ const RedigererFullmektig = ({
                       {fullmakt.term}
                     </Nav.Checkbox>
                   ))}
-                </div>
+                </Nav.CheckboxGroup>
                 {manglerFullmakt && <SkjemaelementFeilmelding>{manglerFullmakt}</SkjemaelementFeilmelding>}
               </>
             )}
@@ -203,7 +198,6 @@ const RedigererFullmektig = ({
             <div className="knapperad">
               <Nav.Button
                 variant="secondary"
-                size="small"
                 icon={<Ikoner.Bin aria-hidden className="slett_ikon" />}
                 onClick={() => handleSlett(index)}
               >

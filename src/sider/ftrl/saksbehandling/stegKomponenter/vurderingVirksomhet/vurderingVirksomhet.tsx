@@ -100,9 +100,9 @@ export const VurderingVirksomhet = ({ bekreft, tilbake, aktivtSteg, oppdaterStat
         <LabelMedHjelpetekst label="Velg virksomhet" hjelpetekst={hjelpetekst} />
       </Nav.Typo.Innholdstittel>
       {!Utils._isEmpty(virksomheterListe) ? (
-        <Mui.Checkboxgruppe
+        <Mui.KodeTermCheckboxGroup
           muligeValg={virksomheterListe}
-          onChange={(checkedVirksomheter) =>
+          onChange={(checkedVirksomheter: string[]) =>
             setValue("valgteVirksomheter", checkedVirksomheter, { shouldValidate: true })
           }
           disabled={!redigerbart}

@@ -22,7 +22,7 @@ exports[`ArbeidsforholdNorgeListe > snapshot test 1`] = `
                 type="button"
                 aria-label="Slett"
                 title="Slett"
-                class="ikon-knapp navds-button navds-button--tertiary navds-button--medium navds-button--icon-only"
+                class="ikon-knapp navds-button navds-button--tertiary navds-button--small navds-button--icon-only"
               >
                 <span class="navds-button__icon">
                   <svg

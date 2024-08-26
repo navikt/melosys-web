@@ -1,8 +1,8 @@
 import { Inntektskilde, Skatteforhold } from "./types";
-import * as Nav from "../../../../../../navFrontend";
-import * as Utils from "../../../../../../utils";
-import MKV from "../../../../../../melosyskodeverk";
-import { Medlemskapsperiode } from "../../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import * as Nav from "../../../navFrontend";
+import * as Utils from "../../../utils";
+import MKV from "../../../melosyskodeverk";
+import { Medlemskapsperiode } from "../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 
 const { PENSJON_UFØRETRYGD, PENSJON_UFØRETRYGD_KILDESKATT } = MKV.Koder.inntektskildetype;
 const { INNVILGET } = MKV.Koder.innvilgelsesResultat;

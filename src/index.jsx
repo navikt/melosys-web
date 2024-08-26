@@ -35,18 +35,20 @@ const sentryIntegrations = [
   new Breadcrumbs({ console: false }),
 ];
 
-Sentry.init({
-  dsn: "https://69e47f5f658e4a7c956dbaf975f6b575@sentry.gc.nav.no/156",
-  integrations: sentryIntegrations,
-  tracesSampleRate: 1.0,
-  environment,
-  beforeSend: (event) => {
-    if (isDevelopmentProfile) {
-      return null;
-    }
-    return event;
-  },
-});
+if (!isDevelopmentProfile) {
+  Sentry.init({
+    dsn: "https://69e47f5f658e4a7c956dbaf975f6b575@sentry.gc.nav.no/156",
+    integrations: sentryIntegrations,
+    tracesSampleRate: 1.0,
+    environment,
+    beforeSend: (event) => {
+      if (isDevelopmentProfile) {
+        return null;
+      }
+      return event;
+    },
+  });
+}
 
 const store = createStore(browserHistory);
 

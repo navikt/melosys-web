@@ -1,9 +1,9 @@
-import { Table } from "@navikt/ds-react";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { fagsakSelectors } from "../../../../ducks/fagsaker";
 import MKV from "../../../../melosyskodeverk";
 import * as KV from "../../../../kodeverk";
+import * as Nav from "../../../../navFrontend";
 import { formatterDatoTilNorsk } from "../../../../utils/dato";
 import { AdresseOgFeil } from "./types";
 import { HentKontaktopplysningerResponse } from "../../../../services/modules/fagsaker/kontaktopplysninger";
@@ -69,37 +69,37 @@ const FullmektigHistorikk = ({ finnOrganisasjonAdresse, finnPersonAdresse }: Ful
   // };
 
   return (
-    <Table>
-      <Table.Header>
-        <Table.Row shadeOnHover={false}>
-          <Table.HeaderCell scope="col">Registrert fra</Table.HeaderCell>
-          <Table.HeaderCell scope="col">Registrert til</Table.HeaderCell>
-          <Table.HeaderCell scope="col">Fullmakt</Table.HeaderCell>
-          <Table.HeaderCell scope="col">Fullmektig Org.nr./F.nr.</Table.HeaderCell>
-        </Table.Row>
-      </Table.Header>
-      <Table.Body>
+    <Nav.Table>
+      <Nav.Table.Header>
+        <Nav.Table.Row shadeOnHover={false}>
+          <Nav.Table.HeaderCell scope="col">Registrert fra</Nav.Table.HeaderCell>
+          <Nav.Table.HeaderCell scope="col">Registrert til</Nav.Table.HeaderCell>
+          <Nav.Table.HeaderCell scope="col">Fullmakt</Nav.Table.HeaderCell>
+          <Nav.Table.HeaderCell scope="col">Fullmektig Org.nr./F.nr.</Nav.Table.HeaderCell>
+        </Nav.Table.Row>
+      </Nav.Table.Header>
+      <Nav.Table.Body>
         {fullmektige?.map((fullmektig) => (
-          <Table.Row>
-            <Table.DataCell>{formatterDatoTilNorsk(fullmektig.registrertFra)}</Table.DataCell>
-            <Table.DataCell>{formatterDatoTilNorsk(fullmektig.registrertTil)}</Table.DataCell>
-            <Table.DataCell>
+          <Nav.Table.Row>
+            <Nav.Table.DataCell>{formatterDatoTilNorsk(fullmektig.registrertFra)}</Nav.Table.DataCell>
+            <Nav.Table.DataCell>{formatterDatoTilNorsk(fullmektig.registrertTil)}</Nav.Table.DataCell>
+            <Nav.Table.DataCell>
               {fullmektig.fullmakter.map((kode: string) => (
                 <>
                   {KV.kodeTilTerm(kode, MKV.KTObjects.fullmaktstype)}
                   <br />
                 </>
               ))}
-            </Table.DataCell>
-            <Table.DataCell>
+            </Nav.Table.DataCell>
+            <Nav.Table.DataCell>
               <>{fullmektig.brevadresse?.adresse?.mottakerNavn || ""}</>
               <br />
               <>{fullmektig.orgnr || fullmektig.personIdent}</>
-            </Table.DataCell>
-          </Table.Row>
+            </Nav.Table.DataCell>
+          </Nav.Table.Row>
         ))}
-      </Table.Body>
-    </Table>
+      </Nav.Table.Body>
+    </Nav.Table>
   );
 };
 

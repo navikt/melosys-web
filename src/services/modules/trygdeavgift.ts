@@ -1,8 +1,8 @@
-import { getAsJson, putAsJson } from "../utils";
+import { deleteAsJson, getAsJson, putAsJson } from "../utils";
 import { API_BASE_URL, TRYGDEAVGIFT } from "../api-constants";
 import { KTObject } from "@navikt/melosys-kodeverk";
 
-export type Inntektskilde = {
+export type InntektskildeDto = {
   type: string;
   arbeidsgiversavgiftBetales: boolean;
   avgiftspliktigInntektMnd?: number;
@@ -10,15 +10,15 @@ export type Inntektskilde = {
   tomDato: string;
 };
 
-export type Skatteforhold = {
+export type SkatteforholdDto = {
   fomDato: string;
   tomDato: string;
   skatteplikttype: string;
 };
 
 export type TrygdeavgiftsgrunnlagDto = {
-  skatteforholdsperioder: Skatteforhold[];
-  inntektskilder: Inntektskilde[];
+  skatteforholdsperioder: SkatteforholdDto[];
+  inntektskilder: InntektskildeDto[];
 };
 
 export type TrygdeavgiftMottakerDto = {
@@ -60,3 +60,6 @@ export const hentOpprinneligTrygdeavgiftsgrunnlag = (behandlingID: number): Prom
 
 export const hentFakturamottaker = (behandlingID: number): Promise<Fakturamottaker> =>
   getAsJson(`${API_BASE_URL}/behandlinger/${behandlingID}/${TRYGDEAVGIFT}/fakturamottaker`);
+
+export const slettTrygdeavgiftsperioder = (behandlingID: number): Promise<null> =>
+  deleteAsJson(`${API_BASE_URL}/behandlinger/${behandlingID}/${TRYGDEAVGIFT}`);

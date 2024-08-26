@@ -46,7 +46,6 @@ const NormaltDriverVirksomhet = (props) => {
         vilkaar={normaltDriverVirksomhet}
         vilkaarKode="normaltDriverVirksomhet"
         tittel={`Driver ${arbeidsgivereTekst} vanligvis virksomhet i Norge?`}
-        size="small"
       />
       <Mui.StegKnapper
         bekreftKnappProps={{

@@ -15,7 +15,6 @@ import {
   konverterAvklartfaktaTilStegData,
 } from "../../../../felleskomponenter/stegvelger";
 import { hentFaktaVerdi } from "../../../../domeneUtils";
-import "./vurderingArtikkel13_2b.css";
 
 const radioValg = {
   NORGE: "NORGE",

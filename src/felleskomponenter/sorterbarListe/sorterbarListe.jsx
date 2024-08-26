@@ -5,8 +5,6 @@ import * as Utils from "../../utils";
 import * as Nav from "../../navFrontend";
 import sorterElementerEtterDato from "./sorterElementerEtterDato";
 
-import "./sorterbarListe.css";
-
 const SorterbarListe = ({
   elementer,
   defaultChecked,
@@ -28,14 +26,7 @@ const SorterbarListe = ({
   return (
     <div className={className}>
       {elementer.length > 1 && (
-        <Nav.RadioGroup
-          onChange={setSortOrder}
-          legend={sortingLegend}
-          defaultValue={defaultChecked}
-          size="small"
-          name={uniqueName}
-          className="sorteringRadiogruppe"
-        >
+        <Nav.RadioGroup onChange={setSortOrder} legend={sortingLegend} defaultValue={defaultChecked} name={uniqueName}>
           <Nav.Radio value="descending">Nyeste først</Nav.Radio>
           <Nav.Radio value="ascending">Eldste først</Nav.Radio>
         </Nav.RadioGroup>

@@ -2,7 +2,6 @@ import { ReactElement, forwardRef, ReactNode } from "react";
 import { Controller, UseControllerProps } from "react-hook-form";
 import * as Nav from "../../navFrontend";
 import { getErrorMessage } from "./misc/mapFeilmelding";
-import "./select.less";
 
 interface SelectComponentProps extends Omit<React.SelectHTMLAttributes<HTMLSelectElement>, "size" | "multiple"> {
   label?: string | ReactElement;
@@ -34,8 +33,8 @@ const Select = forwardRef<HTMLSelectElement, SelectComponentProps & UseControlle
               if (onChange) onChange(event?.target?.value);
             }}
             error={getErrorMessage(field, formState)}
-            size={size || "small"}
-            className={`melosys-select ${className ?? ""}`}
+            size={size}
+            className={className ?? ""}
             {...rest}
           >
             <option disabled={emptyFieldDisabled} value="">
