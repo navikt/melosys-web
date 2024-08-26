@@ -369,10 +369,11 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
               fields={skattFields}
             />
           </Nav.Column>
+          medlemskapsTypeErPliktig
         </Nav.Row>
       )}
 
-      {erAvvik && medlemskapsTypeErPliktig && (
+      {erAvvik && (
         <Inntektskilder
           formValues={formValues}
           redigerbart={redigerbart}
@@ -382,7 +383,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
           control={control}
           defaultPeriode={defaultPeriode}
           fields={inntektFields}
-          medlemskapsTypeErPliktig={medlemskapsTypeErPliktig}
+          medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!!}
         />
       )}
 
