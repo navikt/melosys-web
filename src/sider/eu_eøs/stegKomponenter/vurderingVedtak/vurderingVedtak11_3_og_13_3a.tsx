@@ -11,10 +11,10 @@ import { useSelector } from "react-redux";
 import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
 import * as Utils from "../../../../utils";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
-import { useRangeDatepicker } from "@navikt/ds-react";
 import { useEffect, useState } from "react";
 import Datovelger from "../../../../felleskomponenter/datovelger";
 import feilmeldinger from "../../../../felleskomponenter/feilmeldinger/feilmeldinger";
+import * as Skjema from "../../../../felleskomponenter/skjema";
 
 type VurderingVedtakProps = {
   tilbake: () => void;
@@ -67,7 +67,7 @@ export const VurderingVedtak11_3_og_13_3a = ({
     }
   };
 
-  const oppdaterFom = () => {
+  const oppdaterTom = () => {
     console.log("test")
   }
 
@@ -101,18 +101,30 @@ export const VurderingVedtak11_3_og_13_3a = ({
       </Nav.Checkbox>
 
 
-      {skalViseLovvalg && (
+      {!skalViseLovvalg && (
           <Nav.HStack>
             <Datovelger label="Startdato"
                         value={Utils.dato.norskStringTilDate(fom)}
-                        onChange={oppdaterFom}
                         feil={feilmeldinger.name}
-                        disabled={!redigerbart}>
+                        disabled={true}>
             </Datovelger>
-            <Datovelger label="Sluttdato">
+            <Datovelger label="Sluttdato"
+                        value={Utils.dato.norskStringTilDate(tom)}
+                        onChange={oppdaterTom}
+                        disabled={!redigerbart}>
             </Datovelger>
           </Nav.HStack>
       )}
+      <Nav.Row className="fritekst">
+        <Nav.Column xs="8">
+          <Skjema.Textarea
+            feltNavn="vedtaksbrevFritekst"
+            label="Fritekst til vedtaksbrev"
+            placeholder="Skriv inn tekst til vedtaksbrevet..."
+            disabled={!redigerbart}
+          />
+        </Nav.Column>
+      </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="7">
           {stegErGyldig && (
