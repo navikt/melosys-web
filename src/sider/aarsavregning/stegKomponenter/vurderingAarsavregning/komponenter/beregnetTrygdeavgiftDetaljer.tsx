@@ -23,9 +23,11 @@ interface DetaljerInterface {
 export const BeregnetTrygdeavgiftDetaljer = ({
   grunnlag,
   medlemskapsTypeErPliktig,
+  tittel,
 }: {
   grunnlag: Grunnlagsopplysninger | undefined;
   medlemskapsTypeErPliktig: boolean;
+  tittel: string;
 }) => {
   const hentDetaljer = (data: Grunnlagsopplysninger | undefined): DetaljerInterface[] => {
     if (data === undefined) return [];
@@ -60,9 +62,9 @@ export const BeregnetTrygdeavgiftDetaljer = ({
   const arbAvgBetalesKreves = (kildetype: String) => !medlemskapsTypeErPliktig && kildetype !== MISJONÆR;
 
   return (
-    <Nav.ExpansionCard>
+    <Nav.ExpansionCard aria-label="trygdeavgiftdetaljer">
       <Nav.ExpansionCard.Header>
-        <Nav.ExpansionCard.Title>Endelig beregnet trygdeavgift</Nav.ExpansionCard.Title>
+        <Nav.ExpansionCard.Title>{tittel}</Nav.ExpansionCard.Title>
       </Nav.ExpansionCard.Header>
       <Nav.ExpansionCard.Content>
         <div className="skjema__panel">
@@ -98,7 +100,7 @@ export const BeregnetTrygdeavgiftDetaljer = ({
                     {formaterTilNorskBelop(detaljer.inntektPerMd)} kr
                   </Nav.Table.DataCell>
                   <Nav.Table.DataCell key={Utils._uuid()}>
-                    {arbAvgBetalesKreves(detaljer.inntektskildetype, medlemskapsTypeErPliktig)
+                    {arbAvgBetalesKreves(detaljer.inntektskildetype)
                       ? detaljer.arbeidsgiversavgiftBetales
                       : "Ikke relevant"}
                   </Nav.Table.DataCell>
