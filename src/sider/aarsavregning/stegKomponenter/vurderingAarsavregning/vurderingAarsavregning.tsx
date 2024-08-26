@@ -12,12 +12,7 @@ import { redigerbartSelectors } from "../../../../ducks/redigerbart";
 import SkatteforholdsPerioderTabell from "./komponenter/skatteforholdsPerioderTabell";
 import { TidligereGrunnlagsopplysningerFinnesIkke } from "./komponenter/tidligereGrunnlagsopplysningerFinnesIkke";
 import { FieldValue, useFieldArray, useForm } from "react-hook-form";
-import {
-  FieldArrayProps,
-  FormValuesProps,
-  Inntektskilde,
-  Skatteforhold,
-} from "../../../../felleskomponenter/trygdeavgift/komponenter/types";
+import { FieldArrayProps, FormValuesProps, Inntektskilde, Skatteforhold } from "../../../../felleskomponenter/trygdeavgift/komponenter/types";
 import { Skatteforholdsperioder } from "../../../../felleskomponenter/trygdeavgift/komponenter/skatteforholdsperioder";
 import { Inntektskilder } from "../../../../felleskomponenter/trygdeavgift/komponenter/inntektskilder";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -368,11 +363,11 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
               defaultPeriode={defaultPeriode}
               fields={skattFields}
             />
-          </Nav.Column>
+          </Nav.Column>medlemskapsTypeErPliktig
         </Nav.Row>
       )}
 
-      {erAvvik && medlemskapsTypeErPliktig && (
+      {erAvvik  && (
         <Inntektskilder
           formValues={formValues}
           redigerbart={redigerbart}
@@ -382,7 +377,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
           control={control}
           defaultPeriode={defaultPeriode}
           fields={inntektFields}
-          medlemskapsTypeErPliktig={medlemskapsTypeErPliktig}
+          medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!!}
         />
       )}
 
