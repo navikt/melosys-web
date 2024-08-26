@@ -5,13 +5,16 @@ import Dokumentliste, {
   BrevDokumentMetadataType,
   SedDokumentMetadataType,
 } from "../../../../felleskomponenter/dokumentliste";
-import { useEffect, useState } from "react";
 import MKV from "../../../../melosyskodeverk";
 import * as KV from "../../../../kodeverk";
 import { useSelector } from "react-redux";
 import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
 import * as Utils from "../../../../utils";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
+import { useRangeDatepicker } from "@navikt/ds-react";
+import { useEffect, useState } from "react";
+import Datovelger from "../../../../felleskomponenter/datovelger";
+import feilmeldinger from "../../../../felleskomponenter/feilmeldinger/feilmeldinger";
 
 type VurderingVedtakProps = {
   tilbake: () => void;
@@ -56,6 +59,18 @@ export const VurderingVedtak11_3_og_13_3a = ({
     });
   };
 
+  let skalViseLovvalg = false;
+
+  const handleCheckboxChange = (checked: boolean) => {
+    if (checked) {
+      skalViseLovvalg = true
+    }
+  };
+
+  const oppdaterFom = () => {
+    console.log("test")
+  }
+
   console.log({ tilbake, pdfDokumenter, harFeilmeldinger, aktivtSteg, validerMottatteOpplysninger });
 
   return (
@@ -76,6 +91,28 @@ export const VurderingVedtak11_3_og_13_3a = ({
         {fom} - {tom}
       </Nav.Column>
 
+      <Nav.Checkbox
+        key="korterePeriode"
+        onChange={(a) => {
+          handleCheckboxChange(a.target.checked);
+        }}
+      >
+        Lovvalget innvilges for en kortere periode
+      </Nav.Checkbox>
+
+
+      {skalViseLovvalg && (
+          <Nav.HStack>
+            <Datovelger label="Startdato"
+                        value={Utils.dato.norskStringTilDate(fom)}
+                        onChange={oppdaterFom}
+                        feil={feilmeldinger.name}
+                        disabled={!redigerbart}>
+            </Datovelger>
+            <Datovelger label="Sluttdato">
+            </Datovelger>
+          </Nav.HStack>
+      )}
       <Nav.Row>
         <Nav.Column xs="7">
           {stegErGyldig && (

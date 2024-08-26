@@ -13,6 +13,8 @@ import {
   RadioGroup,
   Select,
   CheckboxGroup,
+  DatePicker,
+  HStack
 } from "@navikt/ds-react";
 import Alert from "./alert";
 import TextField from "./skjema/textfield";
@@ -44,4 +46,6 @@ export {
   Radio,
   RadioGroup,
   CheckboxGroup,
+  DatePicker,
+  HStack
 };
