@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
 import * as Utils from "../../../../utils";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Datovelger from "../../../../felleskomponenter/datovelger";
 import feilmeldinger from "../../../../felleskomponenter/feilmeldinger/feilmeldinger";
 import { FieldValues, useForm } from "react-hook-form";
@@ -18,6 +18,8 @@ import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresul
 import { yupResolver } from "@hookform/resolvers/yup";
 import vurderingVedtak_11_3_og_13_3a from "./vurderingVedtak11_3_og_13_3aSchema";
 import { vedtakOperations } from "../../../../ducks/vedtak";
+import { lovvalgsperioderOperations } from "../../../../ducks/lovvalgsperioder";
+import { kontrollOperations } from "../../../../ducks/kontroll";
 
 type VurderingVedtakProps = {
   tilbake: () => void;
@@ -36,19 +38,11 @@ export const VurderingVedtak11_3_og_13_3a = ({
 }: VurderingVedtakProps) => {
   const dispatch = useDispatch();
 
-  const [muligeLovvalgsbestemmelser] = useState<any>([
-    KV.kodeTilObjekt(
-      MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3A,
-      MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004
-    ),
-
-    KV.kodeTilObjekt(
-      MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia.KONV_EFTA_STORBRITANNIA_ART13_3A,
-      MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia
-    ),
-  ]);
   const soknadsperiode = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
+  const behandling = useSelector(behandlingerSelectors.BehandlingerSelector) as any;
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as number;
+  const vedtakstype = useSelector(behandlingsresultatSelectors.VedtakstypeSelector);
+  const [kontrollerPending, setKontrollerPending] = useState(false);
   const [vedtakPending, setVedtakPending] = useState(false);
   const {
     watch,
@@ -67,7 +61,33 @@ export const VurderingVedtak11_3_og_13_3a = ({
   });
   const formValues = watch();
 
-  const stegErGyldig = redigerbart && formIsValid && !harFeilmeldinger;
+  const lagreLovvalgsperiode = async (lovvalgsperiode?: any) => {
+    await dispatch(lovvalgsperioderOperations.opprettLovvalgsperiode(behandlingID, lovvalgsperiode));
+  };
+
+  const { lovvalgsbestemmelse, fom, tom } = formValues;
+
+  const kontroller = async () => {
+    await dispatch(
+      kontrollOperations.kontrollerFerdigbehandling({
+        behandlingID,
+        vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+        behandlingsresultattype: behandling.oppsummering.behandlingsresultattype.kode,
+        skalRegisteropplysningerOppdateres: false,
+      })
+    );
+  };
+
+  useEffect(() => {
+    setKontrollerPending(true);
+    lagreLovvalgsperiode({
+      fom,
+      tom,
+      lovvalgsbestemmelse,
+    }).then(() => kontroller().then(() => setKontrollerPending(false)));
+  }, [tom, fom, lovvalgsbestemmelse]);
+
+  const stegErGyldig = redigerbart && formIsValid && !harFeilmeldinger && !kontrollerPending;
 
   const mapDokumenter = (dokumenter: BrevDokumentMetadataType[]) => {
     return dokumenter.map((dokument: BrevDokumentMetadataType) => {
@@ -103,7 +123,17 @@ export const VurderingVedtak11_3_og_13_3a = ({
         onChange={(e) => setValue("lovvalgsbestemmelse", e.target.value)}
         label="Velg en lovvalgsbestemmelse"
         value={formValues.lovvalgsbestemmelse}
-        koder={muligeLovvalgsbestemmelser}
+        koder={[
+          KV.kodeTilObjekt(
+            MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3A,
+            MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004
+          ),
+
+          KV.kodeTilObjekt(
+            MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia.KONV_EFTA_STORBRITANNIA_ART13_3A,
+            MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia
+          ),
+        ]}
         redigerbart={redigerbart}
         disableForsteValg
         className="ktselect__slim"
