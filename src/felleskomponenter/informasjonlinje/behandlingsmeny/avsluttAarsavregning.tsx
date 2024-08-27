@@ -9,10 +9,7 @@ const AvsluttAarsavregning = () => {
 
   return (
     <>
-      <Handling
-        tekst="Ferdigbehandlet"
-        onClick={() => apneBekreftValgModal(BekreftValgTypes.FERDIGBEHANDLE_ÅRSAVREGNING)}
-      />
+      <Handling tekst="Ferdigbehandlet" onClick={() => apneBekreftValgModal(BekreftValgTypes.FERDIGBEHANDLET)} />
       <Handling
         tekst="Behandlingen er bortfalt"
         onClick={() => apneBekreftValgModal(BekreftValgTypes.AVSLUTT_SAK_SOM_BORTFALT)}
