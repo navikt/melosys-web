@@ -1,0 +1,181 @@
+import * as Nav from "../../../../navFrontend";
+import * as Mui from "../../../../felleskomponenter/ui";
+import Dokumentliste, {
+  BrevDokumentMetadataType,
+  SedDokumentMetadataType,
+} from "../../../../felleskomponenter/dokumentliste";
+import MKV from "../../../../melosyskodeverk";
+import * as KV from "../../../../kodeverk";
+import { useDispatch, useSelector } from "react-redux";
+import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
+import * as Utils from "../../../../utils";
+import { behandlingerSelectors } from "../../../../ducks/behandlinger";
+import { useState } from "react";
+import Datovelger from "../../../../felleskomponenter/datovelger";
+import feilmeldinger from "../../../../felleskomponenter/feilmeldinger/feilmeldinger";
+import { FieldValues, useForm } from "react-hook-form";
+import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
+import { yupResolver } from "@hookform/resolvers/yup";
+import vurderingVedtak_11_3_og_13_3a from "./vurderingVedtak11_3_og_13_3aSchema";
+import { vedtakOperations } from "../../../../ducks/vedtak";
+
+type VurderingVedtakProps = {
+  tilbake: () => void;
+  redigerbart: boolean;
+  pdfDokumenter: (BrevDokumentMetadataType | SedDokumentMetadataType)[];
+  harFeilmeldinger: boolean;
+  validerMottatteOpplysninger: () => Promise<void>;
+};
+
+export const VurderingVedtak11_3_og_13_3a = ({
+  redigerbart,
+  tilbake,
+  pdfDokumenter,
+  harFeilmeldinger,
+  validerMottatteOpplysninger,
+}: VurderingVedtakProps) => {
+  const dispatch = useDispatch();
+
+  const [muligeLovvalgsbestemmelser] = useState<any>([
+    KV.kodeTilObjekt(
+      MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3A,
+      MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004
+    ),
+
+    KV.kodeTilObjekt(
+      MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia.KONV_EFTA_STORBRITANNIA_ART13_3A,
+      MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia
+    ),
+  ]);
+  const soknadsperiode = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
+  const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as number;
+  const [vedtakPending, setVedtakPending] = useState(false);
+  const {
+    watch,
+    setValue,
+    formState: { isValid: formIsValid },
+  } = useForm({
+    resolver: yupResolver(vurderingVedtak_11_3_og_13_3a),
+    defaultValues: {
+      vedtakstypebegrunnelse: useSelector(behandlingsresultatSelectors.BegrunnelseKoderSelector)[0],
+      lovvalgsbestemmelse: "",
+      fom: Utils.dato.formatterDatoTilNorsk(soknadsperiode.fom),
+      tom: Utils.dato.formatterDatoTilNorsk(soknadsperiode.tom),
+      korterePeriodeChecked: false,
+      begrunnelseFritekst: useSelector(behandlingsresultatSelectors.BegrunnelseFritekstSelector) || "",
+    } as FieldValues,
+  });
+  const formValues = watch();
+
+  const stegErGyldig = redigerbart && formIsValid && !harFeilmeldinger;
+
+  const mapDokumenter = (dokumenter: BrevDokumentMetadataType[]) => {
+    return dokumenter.map((dokument: BrevDokumentMetadataType) => {
+      return dokument;
+    });
+  };
+
+  const onSubmit = async () => {
+    setVedtakPending(true);
+
+    validerMottatteOpplysninger()
+      .then(() => {
+        dispatch(
+          vedtakOperations.fatt(behandlingID, {
+            begrunnelseFritekst: formValues.vedtaksbrevFritekst,
+            nyVurderingBakgrunn: formValues.vedtakstypebegrunnelse,
+          })
+        )
+          // @ts-ignore
+          .then((res: any) => {
+            if (res.data?.data?.error) {
+              setVedtakPending(false);
+            }
+          });
+      })
+      .catch(() => setVedtakPending(false));
+  };
+
+  return (
+    <div className="vedtak">
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">Omfattet av norsk trygdelovgivning</Nav.Typo.Innholdstittel>
+      <Mui.KodeTermSelect
+        onChange={(e) => setValue("lovvalgsbestemmelse", e.target.value)}
+        label="Velg en lovvalgsbestemmelse"
+        value={formValues.lovvalgsbestemmelse}
+        koder={muligeLovvalgsbestemmelser}
+        redigerbart={redigerbart}
+        disableForsteValg
+        className="ktselect__slim"
+      />
+
+      <Nav.Typo.Element className="undertittel">Søknadsperiode</Nav.Typo.Element>
+      <Nav.Column>
+        {formValues.fom} - {formValues.tom}
+      </Nav.Column>
+
+      <Nav.Checkbox
+        key="korterePeriode"
+        value={formValues.korterePeriodeChecked}
+        onChange={(a) => {
+          setValue("korterePeriodeChecked", a.target.checked);
+        }}
+      >
+        Lovvalget innvilges for en kortere periode
+      </Nav.Checkbox>
+
+      {formValues.korterePeriodeChecked && (
+        <Nav.Row>
+          <Nav.Column xs="3">
+            <Datovelger
+              label="Startdato"
+              onChange={() => {}}
+              value={Utils.dato.norskStringTilDate(formValues.fom)}
+              feil={feilmeldinger.name}
+              disabled
+            />
+          </Nav.Column>
+          <Nav.Column xs="3">
+            <Datovelger
+              label="Sluttdato"
+              minDate={Utils.dato.norskStringTilDate(formValues.fom)}
+              value={Utils.dato.norskStringTilDate(formValues.tom)}
+              onChange={(tomValue) => setValue("tom", Utils.dato.formatterDatoTilNorsk(tomValue))}
+              disabled={!redigerbart}
+            />
+          </Nav.Column>
+        </Nav.Row>
+      )}
+      <Nav.Row>
+        <Nav.Column xs="7">
+          <Nav.Textarea
+            onChange={(e: any) => setValue("begrunnelseFritekst", e.target.value)}
+            value={formValues.begrunnelseFritekst}
+            label="Fritekstfelt til begrunnelse"
+            maxLength={4000}
+          />
+        </Nav.Column>
+      </Nav.Row>
+      <Nav.Row>
+        <Nav.Column xs="7">
+          {stegErGyldig && (
+            <Dokumentliste
+              behandlingID={behandlingID}
+              dokumenter={mapDokumenter(pdfDokumenter as BrevDokumentMetadataType[])}
+            />
+          )}
+        </Nav.Column>
+      </Nav.Row>
+
+      <Mui.StegKnapper
+        bekreftKnappProps={{
+          onClick: onSubmit,
+          disabled: !stegErGyldig,
+          loading: vedtakPending,
+        }}
+        bekreftTekst="Fatt vedtak"
+        tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
+      />
+    </div>
+  );
+};

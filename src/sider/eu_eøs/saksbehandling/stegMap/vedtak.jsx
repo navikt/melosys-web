@@ -5,7 +5,7 @@ import MKV from "../../../../melosyskodeverk";
 import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
 import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
 import VurderingVedtak from "../../stegKomponenter/vurderingVedtak/vurderingVedtak";
-import { VurderingVedtak11_3_og_13_3a } from "../../stegKomponenter/vurderingVedtak/vurderingVedtak11_3_og_13_3a";
+import { VurderingVedtak11_3_og_13_3a } from "../../stegKomponenter/vurderingVedtak11_3_og_13_3a/vurderingVedtak11_3_og_13_3a";
 import { erStorbritanniaKonvBestemmelse } from "../../../../melosyskodeverk/utils";
 
 class Vedtak extends Steg {
