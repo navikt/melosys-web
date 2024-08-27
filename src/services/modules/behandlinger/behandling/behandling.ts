@@ -1,4 +1,4 @@
-import { getAsJson, putAsJson } from "../../../utils";
+import { getAsJson } from "../../../utils";
 import { API_BASE_URL, BEHANDLINGER } from "../../../api-constants";
 
 import { BehandlingResDto } from "./types";
