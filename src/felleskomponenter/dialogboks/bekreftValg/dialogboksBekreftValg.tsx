@@ -65,7 +65,7 @@ export const DialogboksBekreftValg = () => {
   const ferdigbehandleÅrsavregning = () =>
     håndterKall(Api.Behandlinger.behandling.ferdigbehandleÅrsavregning(behandlingID));
 
-  const ferdigbehandleSak = () => håndterKall(Api.Fagsaker.fagsak.ferdigbehandleSak(saksnummer));
+  const ferdigbehandle = () => håndterKall(Api.Fagsaker.fagsak.ferdigbehandle(behandlingID));
 
   const angiBehandlingsresultattype = (type: string) =>
     håndterKall(Api.Behandlinger.resultat.angiBehandlingsresultattype(behandlingID, { type }));
@@ -83,8 +83,8 @@ export const DialogboksBekreftValg = () => {
       case BekreftValgTypes.FERDIGBEHANDLET:
         return {
           tittel: "Ferdigbehandlet",
-          tekst: "Er du sikker på at saken er ferdigbehandlet? Vurder om du bør skrive et notat og/eller brev.",
-          handleBekreft: ferdigbehandleSak,
+          tekst: "Er du sikker på at behandlingen er ferdigbehandlet? Vurder om du bør skrive et notat og/eller brev.",
+          handleBekreft: ferdigbehandle,
         };
 
       case BekreftValgTypes.VEDTAKET_ER_OMGJORT:
