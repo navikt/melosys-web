@@ -27,6 +27,8 @@ import { Feilmelding, feilMeldingBlokkerer, finnAktivFeilmelding } from "./meldi
 import { erBrukerSkattepliktigIHelePerioden } from "../../../ftrl/saksbehandling/stegKomponenter/vurderingTrygdeavgift/vurderingTrygdeavgiftSchema";
 import MKV from "../../../../melosyskodeverk";
 import { BeregnetTrygdeavgift } from "../../../../services/modules/trygdeavgift";
+import { SumArsavregningTabell } from "./komponenter/sumArsavregningTabell";
+import { BeregnetTrygdeavgiftDetaljer } from "./komponenter/beregnetTrygdeavgiftDetaljer";
 
 interface Props {
   bekreft: () => void;
@@ -132,7 +134,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
 
   useEffect(() => {
     fetchAvregningsData();
-  }, []);
+  }, [lagretTrygdeavgiftsperioder]);
 
   const fetchAvregningsData = () => {
     return Api.Aarsavregning.hentAvregningsData(behandlingID)
@@ -252,7 +254,8 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
 
     if (avvik && lagretTrygdeavgift?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag) {
       håndterLagretTrygdeavgiftsgrunnlag(
-        lagretTrygdeavgift.nyttGrunnlag || lagretTrygdeavgift.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag
+        lagretTrygdeavgift.nyttGrunnlag?.trygdeavgiftsgrunnlag ||
+          lagretTrygdeavgift.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag
       );
     } else if (defaultPeriode) {
       resetSkatteforholdsperioder([defaultPeriode]);
@@ -294,7 +297,11 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
     }
 
     Api.Aarsavregning.lagAvregningsData(behandlingID, { aar: valgtÅr })
-      .then((nyAvregningsData) => setLagretTrygdeavgift(nyAvregningsData))
+      .then((nyAvregningsData) => {
+        setLagretTrygdeavgift(nyAvregningsData);
+        resetSkatteforholdsperioder([]);
+        resetInntektskilder([]);
+      })
       .catch((error: any) => {
         setFeil(error.body?.message || error);
       });
@@ -345,6 +352,15 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
           />
         </>
       )}
+
+      {lagretTrygdeavgift?.tidligereGrunnlagsopplysninger && (
+        <BeregnetTrygdeavgiftDetaljer
+          grunnlag={lagretTrygdeavgift?.tidligereGrunnlagsopplysninger}
+          medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!!}
+          tittel="Forskuddsvis beregnet trygdeavgift"
+        />
+      )}
+
       {lagretTrygdeavgift?.tidligereGrunnlagsopplysninger && (
         <Nav.RadioGroup
           onChange={(value) => håndterAvvik(value)}
@@ -369,7 +385,6 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
               fields={skattFields}
             />
           </Nav.Column>
-          medlemskapsTypeErPliktig
         </Nav.Row>
       )}
 
@@ -384,6 +399,21 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
           defaultPeriode={defaultPeriode}
           fields={inntektFields}
           medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!!}
+        />
+      )}
+
+      {erAvvik && lagretTrygdeavgift?.nyttGrunnlag && (
+        <SumArsavregningTabell
+          trygdeavgift={lagretTrygdeavgift?.nyttGrunnlag?.avgift.totalAvgift}
+          tidligereTrygdeavgift={lagretTrygdeavgift?.tidligereGrunnlagsopplysninger?.avgift.totalAvgift}
+        />
+      )}
+
+      {erAvvik && lagretTrygdeavgift?.nyttGrunnlag && (
+        <BeregnetTrygdeavgiftDetaljer
+          grunnlag={lagretTrygdeavgift.nyttGrunnlag}
+          medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!!}
+          tittel="Endelig beregnet trygdeavgift"
         />
       )}
 

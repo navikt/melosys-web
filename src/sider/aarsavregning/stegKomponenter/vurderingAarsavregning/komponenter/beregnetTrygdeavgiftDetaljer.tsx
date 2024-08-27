@@ -1,0 +1,119 @@
+import { Grunnlagsopplysninger } from "../../../../../services/modules/aarsavregning/aarsavregning";
+import * as Nav from "../../../../../navFrontend";
+import * as Utils from "../../../../../utils";
+import MKV from "../../../../../melosyskodeverk";
+import * as KV from "../../../../../kodeverk";
+import { formaterTilNorskBelop } from "../../../../../utils";
+
+const { SKATTEPLIKTIG } = MKV.Koder.skatteplikttype;
+const { MISJONÆR } = MKV.Koder.inntektskildetype;
+
+interface DetaljerInterface {
+  fom: string;
+  tom: string;
+  inntektskildetype: string;
+  arbeidsgiversavgiftBetales: string;
+  inntektPerMd: number;
+  avgiftssats: number;
+  avgiftPerMd: number;
+  skattepliktig: string;
+  dekning: string;
+}
+
+export const BeregnetTrygdeavgiftDetaljer = ({
+  grunnlag,
+  medlemskapsTypeErPliktig,
+  tittel,
+}: {
+  grunnlag: Grunnlagsopplysninger | undefined;
+  medlemskapsTypeErPliktig: boolean;
+  tittel: string;
+}) => {
+  const hentDetaljer = (data: Grunnlagsopplysninger | undefined): DetaljerInterface[] => {
+    if (data === undefined) return [];
+    return data.avgift.trygdeavgiftsperioder
+      .map((period) => {
+        const overlappingMedlemskap = data.trygdeavgiftsgrunnlag.medlemskapsperioder.find(
+          (m) => new Date(m.fomDato) <= new Date(period.tom) && new Date(m.tomDato) >= new Date(period.fom)
+        );
+
+        const overlappingSkatteforhold = data.trygdeavgiftsgrunnlag.skatteforholdsperioder.find(
+          (s) => new Date(s.fomDato) <= new Date(period.tom) && new Date(s.tomDato) >= new Date(period.fom)
+        );
+
+        return {
+          fom: period.fom,
+          tom: period.tom,
+          inntektskildetype: period.inntektskildetype,
+          arbeidsgiversavgiftBetales: period.arbeidsgiversavgiftBetales ? "Ja" : "Nei",
+          inntektPerMd: period.inntektPerMd,
+          avgiftssats: period.avgiftssats,
+          avgiftPerMd: period.avgiftPerMd,
+          skattepliktig:
+            overlappingSkatteforhold && overlappingSkatteforhold.skatteplikttype === SKATTEPLIKTIG ? "Ja" : "Nei",
+          dekning: overlappingMedlemskap ? overlappingMedlemskap.trygdedekning : "Unknown",
+        };
+      })
+      .sort(
+        (periode1, periode2) => (new Date(periode1.fom)?.getTime() ?? 0) - (new Date(periode2.fom)?.getTime() ?? 0)
+      );
+  };
+
+  const arbAvgBetalesKreves = (kildetype: String) => !medlemskapsTypeErPliktig && kildetype !== MISJONÆR;
+
+  return (
+    <Nav.ExpansionCard aria-label="trygdeavgiftdetaljer">
+      <Nav.ExpansionCard.Header>
+        <Nav.ExpansionCard.Title>{tittel}</Nav.ExpansionCard.Title>
+      </Nav.ExpansionCard.Header>
+      <Nav.ExpansionCard.Content>
+        <div className="skjema__panel">
+          <Nav.Table size="small" className="periode_tabell">
+            <Nav.Table.Header className="header_row">
+              <Nav.Table.Row>
+                <Nav.Table.HeaderCell scope="col">Trygdeavgift</Nav.Table.HeaderCell>
+                <Nav.Table.HeaderCell scope="col">Sats</Nav.Table.HeaderCell>
+                <Nav.Table.HeaderCell scope="col">Avgift md.</Nav.Table.HeaderCell>
+                <Nav.Table.HeaderCell scope="col">Inntektskilde</Nav.Table.HeaderCell>
+                <Nav.Table.HeaderCell scope="col">Brutto inntekt md.</Nav.Table.HeaderCell>
+                <Nav.Table.HeaderCell scope="col">Betalt aga.</Nav.Table.HeaderCell>
+                <Nav.Table.HeaderCell scope="col">Skattepliktig</Nav.Table.HeaderCell>
+                <Nav.Table.HeaderCell scope="col">Dekning</Nav.Table.HeaderCell>
+              </Nav.Table.Row>
+            </Nav.Table.Header>
+            <Nav.Table.Body>
+              {hentDetaljer(grunnlag).map((detaljer) => (
+                <Nav.Table.Row className="border_top" key={Utils._uuid()}>
+                  <Nav.Table.DataCell key={Utils._uuid()}>
+                    {`${Utils.dato.formatterDatoTilNorsk(detaljer.fom)} - ${Utils.dato.formatterDatoTilNorsk(
+                      detaljer.tom
+                    )}`}
+                  </Nav.Table.DataCell>
+                  <Nav.Table.DataCell key={Utils._uuid()}>{detaljer.avgiftssats}</Nav.Table.DataCell>
+                  <Nav.Table.DataCell key={Utils._uuid()}>
+                    {formaterTilNorskBelop(detaljer.avgiftPerMd)} kr
+                  </Nav.Table.DataCell>
+                  <Nav.Table.DataCell key={Utils._uuid()}>
+                    {KV.finnTermFraListe(MKV.KTObjects.inntektskildetype, detaljer.inntektskildetype)}
+                  </Nav.Table.DataCell>
+                  <Nav.Table.DataCell key={Utils._uuid()}>
+                    {formaterTilNorskBelop(detaljer.inntektPerMd)} kr
+                  </Nav.Table.DataCell>
+                  <Nav.Table.DataCell key={Utils._uuid()}>
+                    {arbAvgBetalesKreves(detaljer.inntektskildetype)
+                      ? detaljer.arbeidsgiversavgiftBetales
+                      : "Ikke relevant"}
+                  </Nav.Table.DataCell>
+                  <Nav.Table.DataCell key={Utils._uuid()}>{detaljer.skattepliktig}</Nav.Table.DataCell>
+                  <Nav.Table.DataCell key={Utils._uuid()}>
+                    {KV.finnTermFraListe(MKV.KTObjects.trygdedekninger, detaljer.dekning)}
+                  </Nav.Table.DataCell>
+                </Nav.Table.Row>
+              ))}
+            </Nav.Table.Body>
+          </Nav.Table>
+        </div>
+      </Nav.ExpansionCard.Content>
+    </Nav.ExpansionCard>
+  );
+};

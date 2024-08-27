@@ -5,9 +5,9 @@ import { Medlemskapsperiode } from "../medlemavfolketrygden/medlemskapsperioder"
 
 export type AarsavregningResponse = {
   aar: number;
-  tidligereGrunnlagsopplysninger?: TidligereGrunnlagsopplysninger;
+  tidligereGrunnlagsopplysninger?: Grunnlagsopplysninger;
   avvikFunnet?: boolean;
-  nyttGrunnlag?: Trygdeavgiftsgrunnlag;
+  nyttGrunnlag?: Grunnlagsopplysninger;
   endeligAvgift?: Avgift;
   avregning?: Avregning;
 };
@@ -19,7 +19,7 @@ export type AarsavregningRequest = {
   inntektskperioder: InntektskildeDto[];
 };
 
-export type TidligereGrunnlagsopplysninger = {
+export type Grunnlagsopplysninger = {
   trygdeavgiftsgrunnlag: Trygdeavgiftsgrunnlag;
   avgift: Avgift;
 };
@@ -39,7 +39,7 @@ export type Avgift = {
 export type Trygdeavgiftsperiode = {
   fom: string;
   tom: string;
-  inntektskildetype: String;
+  inntektskildetype: string;
   arbeidsgiversavgiftBetales: boolean;
   inntektPerMd: number;
   avgiftssats: number;
