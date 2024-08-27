@@ -81,8 +81,8 @@ export const VurderingVedtak11_3_og_13_3a = ({
   useEffect(() => {
     setKontrollerPending(true);
     lagreLovvalgsperiode({
-      fom,
-      tom,
+      fomDato: Utils.dato.formatterDatoTilISO(fom),
+      tomDato: Utils.dato.formatterDatoTilISO(tom),
       lovvalgsbestemmelse,
     }).then(() => kontroller().then(() => setKontrollerPending(false)));
   }, [tom, fom, lovvalgsbestemmelse]);
