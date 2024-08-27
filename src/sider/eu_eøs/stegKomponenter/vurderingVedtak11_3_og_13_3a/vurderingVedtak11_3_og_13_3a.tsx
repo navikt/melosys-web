@@ -18,7 +18,7 @@ import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresul
 import { yupResolver } from "@hookform/resolvers/yup";
 import vurderingVedtak_11_3_og_13_3a from "./vurderingVedtak11_3_og_13_3aSchema";
 import { vedtakOperations } from "../../../../ducks/vedtak";
-import { lovvalgsperioderOperations } from "../../../../ducks/lovvalgsperioder";
+import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
 import { kontrollOperations } from "../../../../ducks/kontroll";
 
 type VurderingVedtakProps = {
@@ -37,7 +37,7 @@ export const VurderingVedtak11_3_og_13_3a = ({
   validerMottatteOpplysninger,
 }: VurderingVedtakProps) => {
   const dispatch = useDispatch();
-
+  const lovvalgsperiode = useSelector(lovvalgsperioderSelectors.LovvalgsperiodeSelector);
   const soknadsperiode = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
   const behandling = useSelector(behandlingerSelectors.BehandlingerSelector) as any;
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as number;
@@ -52,17 +52,24 @@ export const VurderingVedtak11_3_og_13_3a = ({
     resolver: yupResolver(vurderingVedtak_11_3_og_13_3a),
     defaultValues: {
       vedtakstypebegrunnelse: useSelector(behandlingsresultatSelectors.BegrunnelseKoderSelector)[0],
-      lovvalgsbestemmelse: "",
-      fom: Utils.dato.formatterDatoTilNorsk(soknadsperiode.fom),
-      tom: Utils.dato.formatterDatoTilNorsk(soknadsperiode.tom),
+      lovvalgsbestemmelse: lovvalgsperiode !== null ? lovvalgsperiode.lovvalgsbestemmelse : "",
+      fom:
+        lovvalgsperiode !== null
+          ? Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.fomDato)
+          : Utils.dato.formatterDatoTilNorsk(soknadsperiode.fom),
+      tom:
+        lovvalgsperiode !== null
+          ? Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.tomDato)
+          : Utils.dato.formatterDatoTilNorsk(soknadsperiode.tom),
       korterePeriodeChecked: false,
       begrunnelseFritekst: useSelector(behandlingsresultatSelectors.BegrunnelseFritekstSelector) || "",
     } as FieldValues,
   });
+  console.log({ lovvalgsperiode });
   const formValues = watch();
 
-  const lagreLovvalgsperiode = async (lovvalgsperiode?: any) => {
-    await dispatch(lovvalgsperioderOperations.opprettLovvalgsperiode(behandlingID, lovvalgsperiode));
+  const lagreLovvalgsperiode = async (lovvalgsperiodeData?: any) => {
+    await dispatch(lovvalgsperioderOperations.opprettLovvalgsperiode(behandlingID, lovvalgsperiodeData));
   };
 
   const { lovvalgsbestemmelse, fom, tom } = formValues;
