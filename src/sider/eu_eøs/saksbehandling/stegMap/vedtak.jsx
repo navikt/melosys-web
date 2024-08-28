@@ -15,8 +15,19 @@ class Vedtak extends Steg {
       MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER === propsLight.behandlingstema.kode ||
       MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG === propsLight.behandlingstema.kode;
 
+    const erOrdinaerYrkesgruppe =
+      propsLight.avklartefakta.find(
+        (avklartfakta) =>
+          avklartfakta.avklartefaktaKode === MKV.Koder.avklartefaktatyper.YRKESGRUPPE &&
+          avklartfakta.fakta[0] === MKV.Koder.yrker.yrkesgrupper.ORDINAER
+      ) !== undefined;
+    console.log({
+      fakta: propsLight.avklartefakta,
+      erOrdinaerYrkesgruppe,
+    });
     const skalViseArbeidKunNorgeFlyt =
       (erUtsendt || propsLight.behandlingstema.kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_KUN_NORGE) &&
+      erOrdinaerYrkesgruppe &&
       propsLight.arbeidKunNorgeToggleEnabled;
     this.kriterier = [
       {

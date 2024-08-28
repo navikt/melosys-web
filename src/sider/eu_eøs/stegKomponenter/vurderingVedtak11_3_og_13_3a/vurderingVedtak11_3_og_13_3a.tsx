@@ -65,7 +65,7 @@ export const VurderingVedtak11_3_og_13_3a = ({
       begrunnelseFritekst: useSelector(behandlingsresultatSelectors.BegrunnelseFritekstSelector) || "",
     } as FieldValues,
   });
-  console.log({ lovvalgsperiode });
+
   const formValues = watch();
 
   const lagreLovvalgsperiode = async (lovvalgsperiodeData?: any) => {
