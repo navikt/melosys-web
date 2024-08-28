@@ -147,7 +147,8 @@ export const DialogboksBekreftValg = () => {
       case BekreftValgTypes.AVSLUTT_SAK_SOM_BORTFALT:
         return {
           tittel: "Avslutt behandling som bortfalt",
-          tekst: "Er du sikker på at saken ikke kan behandles i Melosys? Vurder om du må opprette sak i annet system.",
+          tekst:
+            "Er du sikker på at behandlingen ikke kan behandles i Melosys? Vurder om du må behandling sak i annet system.",
           handleBekreft: avsluttSakSomBortfalt,
         };
 
