@@ -22,7 +22,7 @@ const {
   ARBEID_FLERE_LAND,
   A1_ANMODNING_OM_UNNTAK_PAPIR,
 } = MKV.Koder.behandlinger.behandlingstema;
-const { NY_VURDERING, FØRSTEGANG, KLAGE, HENVENDELSE, MANGLENDE_INNBETALING_TRYGDEAVGIFT } =
+const { NY_VURDERING, FØRSTEGANG, KLAGE, HENVENDELSE, MANGLENDE_INNBETALING_TRYGDEAVGIFT, ÅRSAVREGNING } =
   MKV.Koder.behandlinger.behandlingstyper;
 const { EU_EOS, FTRL, TRYGDEAVTALE } = MKV.Koder.sakstyper;
 const { MEDLEMSKAP_LOVVALG, UNNTAK } = MKV.Koder.sakstemaer;
@@ -114,7 +114,7 @@ const AvsluttSak = () => {
         return (
           redigerbart &&
           sakstype === EU_EOS &&
-          [NY_VURDERING, HENVENDELSE, MANGLENDE_INNBETALING_TRYGDEAVGIFT].includes(behandlingstype)
+          [NY_VURDERING, HENVENDELSE, MANGLENDE_INNBETALING_TRYGDEAVGIFT, ÅRSAVREGNING].includes(behandlingstype)
         );
       case ARBEID_FLERE_LAND:
         return redigerbart && sakstype === EU_EOS;
