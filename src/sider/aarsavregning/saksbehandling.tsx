@@ -10,7 +10,6 @@ import SideDialog, { defaultTabs } from "../../felleskomponenter/sideDialog";
 import SaksoversiktLenke from "../../felleskomponenter/saksoversiktLenke";
 
 import { EnkelStegvelger } from "../../felleskomponenter/enkelStegvelger";
-// import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../ducks/mottatteOpplysninger";
 import { behandlingsresultatOperations } from "../../ducks/behandlingsresultat";
 import { behandlingerOperations, behandlingerSelectors } from "../../ducks/behandlinger";
 import { fagsakOperations } from "../../ducks/fagsaker";
@@ -21,7 +20,7 @@ import { menypanelOperations } from "../../ducks/menypanel";
 import { MatchParams } from "../../@types";
 import { alleSteg } from "./initialStegArray";
 import { FellesHandlersContext } from "../../contexts";
-import { mottatteOpplysningerSelectors } from "../../ducks/mottatteOpplysninger";
+import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../ducks/mottatteOpplysninger";
 import Oppsummering from "../../felleskomponenter/oppsummering";
 import { lovvalgsperioderSelectors } from "../../ducks/lovvalgsperioder";
 
@@ -76,7 +75,7 @@ const Saksbehandling = ({ match, location }: Props) => {
         return false;
       }
 
-      // await dispatch(mottatteOpplysningerOperations.hent(behandlingId));
+      await dispatch(mottatteOpplysningerOperations.hent(behandlingId));
       await dispatch(dokumenterOperations.hentDokumentOversikt(saksnr));
       setSaksopplysningerLastet(true);
       return true;
@@ -92,7 +91,7 @@ const Saksbehandling = ({ match, location }: Props) => {
       dispatch(fagsakOperations.resetFagsakState());
       dispatch(behandlingerOperations.resetBehandlingerState());
       dispatch(behandlingsresultatOperations.resetBehandlingsresultatState());
-      // dispatch(mottatteOpplysningerOperations.resetState());
+      dispatch(mottatteOpplysningerOperations.resetState());
       dispatch(dokumenterOperations.resetDokument());
     };
   }, []);
