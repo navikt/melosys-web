@@ -148,7 +148,7 @@ export const DialogboksBekreftValg = () => {
         return {
           tittel: "Avslutt behandling som bortfalt",
           tekst:
-            "Er du sikker på at behandlingen ikke kan behandles i Melosys? Vurder om du må behandling sak i annet system.",
+            "Er du sikker på at behandlingen ikke kan behandles i Melosys? Vurder om du må opprette behandlingen i et annet system.",
           handleBekreft: avsluttSakSomBortfalt,
         };
 
