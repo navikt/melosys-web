@@ -5,15 +5,10 @@ import LeggBehandlingTilbake from "./leggbehandlingtilbake";
 import AvsluttSak from "./avsluttsak";
 import "./behandlingsmeny.css";
 import { Accordion } from "@navikt/ds-react";
-import { useSelector } from "react-redux";
-import { behandlingerSelectors } from "../../../ducks/behandlinger";
-import MKV from "../../../melosyskodeverk";
 
-const { ÅRSAVREGNING } = MKV.Koder.behandlinger.behandlingstyper;
 export const Behandlingsmeny = () => {
   const [visBehandlingsmeny, setVisBehandlingsmeny] = useState(false);
   const toggleBehandlingsmeny = () => setVisBehandlingsmeny(!visBehandlingsmeny);
-  const erÅrsavregning = useSelector(behandlingerSelectors.BehandlingstypeKodeSelector) === ÅRSAVREGNING;
 
   const handleKeyPress = (e: KeyboardEvent<HTMLDivElement>) => {
     if (e.key === "Enter") {
@@ -50,7 +45,9 @@ export const Behandlingsmeny = () => {
             </Accordion.Item>
             <Accordion.Item>
               <Accordion.Header>Avslutt behandling</Accordion.Header>
-              <Accordion.Content>{<AvsluttSak />}</Accordion.Content>
+              <Accordion.Content>
+                <AvsluttSak />
+              </Accordion.Content>
             </Accordion.Item>
           </Accordion>
         </div>
