@@ -52,13 +52,16 @@ export const VurderingVedtak11_3_og_13_3a = ({
     resolver: yupResolver(vurderingVedtak_11_3_og_13_3a),
     defaultValues: {
       vedtakstypebegrunnelse: useSelector(behandlingsresultatSelectors.BegrunnelseKoderSelector)[0],
-      lovvalgsbestemmelse: lovvalgsperiode !== null ? lovvalgsperiode.lovvalgsbestemmelse : "",
+      lovvalgsbestemmelse:
+        lovvalgsperiode !== null && !Utils._isEmpty(lovvalgsperiode)
+          ? lovvalgsperiode.lovvalgsbestemmelse
+          : MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3A,
       fom:
-        lovvalgsperiode !== null
+        lovvalgsperiode !== null && !Utils._isEmpty(lovvalgsperiode)
           ? Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.fomDato)
           : Utils.dato.formatterDatoTilNorsk(soknadsperiode.fom),
       tom:
-        lovvalgsperiode !== null
+        lovvalgsperiode !== null && !Utils._isEmpty(lovvalgsperiode)
           ? Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.tomDato)
           : Utils.dato.formatterDatoTilNorsk(soknadsperiode.tom),
       korterePeriodeChecked: false,

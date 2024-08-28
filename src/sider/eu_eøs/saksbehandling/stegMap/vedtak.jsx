@@ -21,10 +21,6 @@ class Vedtak extends Steg {
           avklartfakta.avklartefaktaKode === MKV.Koder.avklartefaktatyper.YRKESGRUPPE &&
           avklartfakta.fakta[0] === MKV.Koder.yrker.yrkesgrupper.ORDINAER
       ) !== undefined;
-    console.log({
-      fakta: propsLight.avklartefakta,
-      erOrdinaerYrkesgruppe,
-    });
     const skalViseArbeidKunNorgeFlyt =
       (erUtsendt || propsLight.behandlingstema.kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_KUN_NORGE) &&
       erOrdinaerYrkesgruppe &&
