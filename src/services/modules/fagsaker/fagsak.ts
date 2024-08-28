@@ -46,8 +46,8 @@ export interface HenleggReqDto {
 export const henlegg = (saksnummer: string, body: HenleggReqDto) =>
   postAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/henlegg`, body);
 
-export const bortfall = (saksnummer: string) =>
-  putAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/henlegg-som-bortfalt`);
+export const bortfall = (behandlingID: number) =>
+  putAsJson(`${API_BASE_URL}${FAGSAKER}/${behandlingID}/henlegg-som-bortfalt`);
 
 interface Vedlegg {
   journalpostID: string;
@@ -88,8 +88,8 @@ export interface TrygdeavgiftOppsummering {
 export const endreFagsak = (saksnummer: string, body: EndreSakDto) =>
   postAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/endre`, body);
 
-export const ferdigbehandleSak = (saksnummer: string) =>
-  putAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/ferdigbehandle`);
+export const ferdigbehandle = (behandlingID: number) =>
+  putAsJson(`${API_BASE_URL}${FAGSAKER}/${behandlingID}/ferdigbehandle`);
 
 export const hentTrygdeavgiftOppsummering = (saksnummer: string): Promise<TrygdeavgiftOppsummering> =>
   getAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/trygdeavgift/oppsummering`);

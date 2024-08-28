@@ -19,7 +19,7 @@ describe("Behandlingsmeny", () => {
     await user.click(getByRole("button"));
 
     expect(await findByText("Legg behandling tilbake")).toBeInTheDocument();
-    expect(await findByText("Avslutt sak/behandling")).toBeInTheDocument();
+    expect(await findByText("Avslutt behandling")).toBeInTheDocument();
   });
 
   it("snapshot test", async () => {

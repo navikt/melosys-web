@@ -121,13 +121,15 @@ exports[`Behandlingsmeny > snapshot test 1`] = `
               </svg>
             </span>
             <span class="navds-accordion__header-content navds-heading navds-heading--small">
-              Avslutt sak/behandling
+              Avslutt behandling
             </span>
           </button>
           <div
             aria-hidden="true"
             class="navds-accordion__content navds-accordion__content--closed navds-body-long navds-body-long--medium"
           >
+            <div class="divider">
+            </div>
             <div
               class="behandlingsmeny__handling"
               role="button"

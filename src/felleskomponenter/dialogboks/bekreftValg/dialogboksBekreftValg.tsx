@@ -60,12 +60,9 @@ export const DialogboksBekreftValg = () => {
       })
       .catch((error) => setFeil(error?.body?.message ?? error));
 
-  const avsluttSakSomBortfalt = () => håndterKall(Api.Fagsaker.fagsak.bortfall(saksnummer));
+  const avsluttSakSomBortfalt = () => håndterKall(Api.Fagsaker.fagsak.bortfall(behandlingID));
 
-  const ferdigbehandleÅrsavregning = () =>
-    håndterKall(Api.Behandlinger.behandling.ferdigbehandleÅrsavregning(behandlingID));
-
-  const ferdigbehandleSak = () => håndterKall(Api.Fagsaker.fagsak.ferdigbehandleSak(saksnummer));
+  const ferdigbehandle = () => håndterKall(Api.Fagsaker.fagsak.ferdigbehandle(behandlingID));
 
   const angiBehandlingsresultattype = (type: string) =>
     håndterKall(Api.Behandlinger.resultat.angiBehandlingsresultattype(behandlingID, { type }));
@@ -74,17 +71,11 @@ export const DialogboksBekreftValg = () => {
 
   const hentBekreftValgDialogDataFraType = () => {
     switch (bekreftValgType) {
-      case BekreftValgTypes.FERDIGBEHANDLE_ÅRSAVREGNING:
-        return {
-          tittel: "Ferdigbehandlet",
-          tekst: "Er du sikker på at årsavregningen skal ferdigbehandles?",
-          handleBekreft: ferdigbehandleÅrsavregning,
-        };
       case BekreftValgTypes.FERDIGBEHANDLET:
         return {
           tittel: "Ferdigbehandlet",
-          tekst: "Er du sikker på at saken er ferdigbehandlet? Vurder om du bør skrive et notat og/eller brev.",
-          handleBekreft: ferdigbehandleSak,
+          tekst: "Er du sikker på at behandlingen er ferdigbehandlet? Vurder om du bør skrive et notat og/eller brev.",
+          handleBekreft: ferdigbehandle,
         };
 
       case BekreftValgTypes.VEDTAKET_ER_OMGJORT:
@@ -155,8 +146,9 @@ export const DialogboksBekreftValg = () => {
 
       case BekreftValgTypes.AVSLUTT_SAK_SOM_BORTFALT:
         return {
-          tittel: "Avslutt sak som bortfalt",
-          tekst: "Er du sikker på at saken ikke kan behandles i Melosys? Vurder om du må opprette sak i annet system.",
+          tittel: "Avslutt behandling som bortfalt",
+          tekst:
+            "Er du sikker på at behandlingen ikke kan behandles i Melosys? Vurder om du må opprette behandlingen i et annet system.",
           handleBekreft: avsluttSakSomBortfalt,
         };
 
