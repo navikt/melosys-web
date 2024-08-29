@@ -27,11 +27,9 @@ const Varsler = ({
 }: VarslerProps) => {
   const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
   const inngangsvilkaarBegrunnelseKoder = inngangsvilkaar?.begrunnelseKoder || [];
-
   const { data: statsborgerskapData } = useHentStatsborgerskapQuery({
     variables: { behandlingID },
   });
-
   const statsborgerskapLand =
     statsborgerskapData?.hentSaksopplysninger?.persondata?.statsborgerskap?.map(
       (statsborgerskap) => statsborgerskap.land
@@ -84,7 +82,7 @@ const Varsler = ({
             </li>
           ))}
       </ul>
-      {inngangsvilkaarErOverstyrtEllerIkkeOppfylt && (
+      {(inngangsvilkaarErOverstyrtEllerIkkeOppfylt || visStorbritanniaKonvensjonTekst) && (
         <Nav.Alert variant="info">
           {visStorbritanniaKonvensjonTekst && (
             <p className="storbritannia-konv-tekst">
