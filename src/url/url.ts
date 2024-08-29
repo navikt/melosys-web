@@ -160,7 +160,6 @@ export const skalViseIngenFlyt = (
   ) {
     return true;
   }
-
   if (behandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_KUN_NORGE) {
     return !erArbeidKunNorgeToggleEnabled;
   }

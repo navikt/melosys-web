@@ -25,8 +25,12 @@ export interface OpprettLovvalgsperiode {
 export const hent = (behandlingID: number): Promise<Lovvalgsperiode[]> =>
   getAsJson(`${API_BASE_URL}${LOVVALGSPERIODER}/${behandlingID}`);
 
-export const send = (behandlingID: number, data: Lovvalgsperiode[]): Promise<Lovvalgsperiode[]> =>
-  postAsJson(`${API_BASE_URL}${LOVVALGSPERIODER}/${behandlingID}`, data);
+export const send = (behandlingID: number, data: Lovvalgsperiode[]): Promise<Lovvalgsperiode[]> => {
+  if (data.length === 0) {
+    return Promise.resolve([]);
+  }
+  return postAsJson(`${API_BASE_URL}${LOVVALGSPERIODER}/${behandlingID}`, data);
+};
 
 export const hentOpprinnelig = (behandlingID: number) =>
   getAsJson(`${API_BASE_URL}${LOVVALGSPERIODER}/${behandlingID}/opprinnelig`);
