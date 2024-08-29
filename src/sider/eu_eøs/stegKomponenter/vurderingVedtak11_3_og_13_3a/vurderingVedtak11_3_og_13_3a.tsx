@@ -90,6 +90,7 @@ export const VurderingVedtak11_3_og_13_3a = ({
   };
 
   useEffect(() => {
+    if (!redigerbart) return;
     setKontrollerPending(true);
     lagreLovvalgsperiode({
       fomDato: Utils.dato.formatterDatoTilISO(fom),
