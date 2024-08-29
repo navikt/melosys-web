@@ -96,6 +96,8 @@ export const VurderingVedtak11_3_og_13_3a = ({
       fomDato: Utils.dato.formatterDatoTilISO(fom),
       tomDato: Utils.dato.formatterDatoTilISO(tom),
       lovvalgsbestemmelse,
+      trygdeDekning: MKV.Koder.trygdedekninger.FULL_DEKNING_EOSFO,
+      medlemskapstype: MKV.Koder.medlemskapstyper.PLIKTIG,
     }).then(() => kontroller().then(() => setKontrollerPending(false)));
   }, [tom, fom, lovvalgsbestemmelse]);
 
