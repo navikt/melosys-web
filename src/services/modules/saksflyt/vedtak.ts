@@ -7,6 +7,7 @@ export type FattVedtakReqDto = FattVedtakEOSReqDto | FattVedtakFTRLReqDto | Fatt
 export interface FattVedtakEOSReqDto {
   behandlingsresultatTypeKode: string;
   vedtakstype: string | null;
+  begrunnelseFritekst?: string | null;
   fritekst?: string | null;
   fritekstSed?: string | null;
   mottakerinstitusjoner: string[];

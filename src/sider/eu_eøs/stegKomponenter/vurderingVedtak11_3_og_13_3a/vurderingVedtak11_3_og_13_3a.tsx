@@ -51,6 +51,7 @@ export const VurderingVedtak11_3_og_13_3a = ({
   } = useForm({
     resolver: yupResolver(vurderingVedtak_11_3_og_13_3a),
     defaultValues: {
+      kopiTilArbeidsgiver: false,
       vedtakstypebegrunnelse: useSelector(behandlingsresultatSelectors.BegrunnelseKoderSelector)[0],
       lovvalgsbestemmelse:
         lovvalgsperiode !== null && !Utils._isEmpty(lovvalgsperiode)
@@ -90,6 +91,7 @@ export const VurderingVedtak11_3_og_13_3a = ({
 
   useEffect(() => {
     setKontrollerPending(true);
+    console.log({ fom, tom, lovvalgsbestemmelse });
     lagreLovvalgsperiode({
       fomDato: Utils.dato.formatterDatoTilISO(fom),
       tomDato: Utils.dato.formatterDatoTilISO(tom),
@@ -110,12 +112,7 @@ export const VurderingVedtak11_3_og_13_3a = ({
 
     validerMottatteOpplysninger()
       .then(() => {
-        dispatch(
-          vedtakOperations.fatt(behandlingID, {
-            begrunnelseFritekst: formValues.vedtaksbrevFritekst,
-            nyVurderingBakgrunn: formValues.vedtakstypebegrunnelse,
-          })
-        )
+        dispatch(vedtakOperations.fatt(behandlingID, lagFattVedtakEOSReqDto()))
           // @ts-ignore
           .then((res: any) => {
             if (res.data?.data?.error) {
@@ -124,6 +121,16 @@ export const VurderingVedtak11_3_og_13_3a = ({
           });
       })
       .catch(() => setVedtakPending(false));
+  };
+
+  const lagFattVedtakEOSReqDto = () => {
+    return {
+      behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
+      kopiTilArbeidsgiver: formValues.kopiTilArbeidsgiver,
+      vedtakstype: formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+      begrunnelseFritekst: formValues.begrunnelseFritekst,
+      nyVurderingBakgrunn: formValues.vedtakstypebegrunnelse,
+    };
   };
 
   return (
@@ -196,6 +203,28 @@ export const VurderingVedtak11_3_og_13_3a = ({
           />
         </Nav.Column>
       </Nav.Row>
+      {stegErGyldig && (
+        <Nav.Checkbox
+          key="kopiTilArbeidsgiver"
+          value={formValues.kopiTilArbeidsgiver}
+          onChange={(a) => {
+            setValue("kopiTilArbeidsgiver", a.target.checked);
+            if (a.target.checked) {
+              pdfDokumenter.push({
+                dokumentData: {
+                  produserbardokument: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_TIL_ARBEIDSGIVER_OM_VEDTAK,
+                  erInnvilgelse: true,
+                  mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
+                },
+              });
+            } else {
+              pdfDokumenter.pop();
+            }
+          }}
+        >
+          Send kopi til arbeidsgiver/virksomhet
+        </Nav.Checkbox>
+      )}
       <Nav.Row>
         <Nav.Column xs="7">
           {stegErGyldig && (
