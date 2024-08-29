@@ -71,7 +71,7 @@ exports[`VurderingArtikkel13_x_Vedtak > snapshot test 1`] = `
             class="skjemaelement__label"
             for="333"
           >
-            Fritekst til vedtaksbrev
+            Fritekst til begrunnelse
           </label>
           <div class="textarea--medMeta__wrapper">
             <span
@@ -87,7 +87,6 @@ exports[`VurderingArtikkel13_x_Vedtak > snapshot test 1`] = `
               style="height: 30px;"
               aria-inval
               aria-describedby="333"
-              placeholder="Skriv inn tekst til vedtaksbrevet..."
               spellcheck="true"
             >
             </textarea>
