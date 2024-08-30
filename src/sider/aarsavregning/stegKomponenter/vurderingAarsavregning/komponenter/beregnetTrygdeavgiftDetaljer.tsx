@@ -23,11 +23,9 @@ interface DetaljerInterface {
 export const BeregnetTrygdeavgiftDetaljer = ({
   grunnlag,
   medlemskapsTypeErPliktig,
-  tittel,
 }: {
   grunnlag: Grunnlagsopplysninger | undefined;
   medlemskapsTypeErPliktig: boolean;
-  tittel: string;
 }) => {
   const hentDetaljer = (data: Grunnlagsopplysninger | undefined): DetaljerInterface[] => {
     if (data === undefined) return [];
@@ -64,7 +62,7 @@ export const BeregnetTrygdeavgiftDetaljer = ({
   return (
     <Nav.ExpansionCard aria-label="trygdeavgiftdetaljer">
       <Nav.ExpansionCard.Header>
-        <Nav.ExpansionCard.Title>{tittel}</Nav.ExpansionCard.Title>
+        <Nav.ExpansionCard.Title>Endelig beregnet trygdeavgift</Nav.ExpansionCard.Title>
       </Nav.ExpansionCard.Header>
       <Nav.ExpansionCard.Content>
         <div className="skjema__panel">

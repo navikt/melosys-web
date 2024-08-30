@@ -19,7 +19,7 @@ export const SumArsavregningTabell = ({
             Endelig beregnet trygdeavgift
           </Nav.Table.DataCell>
           <Nav.Table.DataCell align="right" key={Utils._uuid()}>
-            {formaterTilNorskBelop(trygdeavgift)} kr
+            {formaterTilNorskBelop(trygdeavgift || tidligereTrygdeavgift)} kr
           </Nav.Table.DataCell>
         </Nav.Table.Row>
         <Nav.Table.Row>
@@ -33,7 +33,11 @@ export const SumArsavregningTabell = ({
           <Nav.Table.DataCell scope="col">=</Nav.Table.DataCell>
           <Nav.Table.DataCell scope="col">Sum til faktura/refusjon </Nav.Table.DataCell>
           <Nav.Table.DataCell align="right" key={Utils._uuid()}>
-            <b>{formaterTilNorskBelop((trygdeavgift || 0) - (tidligereTrygdeavgift || 0)) || "0,00"} kr </b>
+            <b>
+              {formaterTilNorskBelop((trygdeavgift || tidligereTrygdeavgift || 0) - (tidligereTrygdeavgift || 0)) ||
+                "0"}{" "}
+              kr{" "}
+            </b>
           </Nav.Table.DataCell>
         </Nav.Table.Row>
       </Nav.Table>

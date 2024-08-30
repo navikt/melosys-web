@@ -20,6 +20,8 @@ import { kontrollOperations } from "../../../../ducks/kontroll";
 import MKV from "../../../../melosyskodeverk";
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
 import * as Forms from "../../../../felleskomponenter/forms";
+import { SumArsavregningTabell } from "../vurderingAarsavregning/komponenter/sumArsavregningTabell";
+import { KTObject } from "@navikt/melosys-kodeverk";
 
 const { FERDIGBEHANDLET } = MKV.Koder.behandlinger.behandlingsresultattyper;
 const { FØRSTEGANGSVEDTAK } = MKV.Koder.vedtakstyper;
@@ -44,9 +46,10 @@ const komponentDispatch = (dispatch: ThunkDispatch<RootState, unknown, Action>) 
 
 export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const dispatch = useDispatch();
-  const [valgtÅr, setValgtÅr] = useState<number | undefined>(undefined);
   const [vedtakPending, setVedtakPending] = useState<boolean>(false);
   const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
+  const [lagretAarsavregning, setLagretAarsavregning] = useState<AarsavregningResponse | undefined>(undefined);
+  const [fakturaMottaker, setFakturaMottaker] = useState<string | undefined>(undefined);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
 
@@ -67,8 +70,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
 
   const fetchAvregningsData = () => {
     return Api.Aarsavregning.hentAvregningsData(behandlingID).then((response: AarsavregningResponse) => {
-      setValgtÅr(response.aar);
-      return response;
+      setLagretAarsavregning(response);
     });
   };
 
@@ -84,6 +86,10 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
     if (aktivtSteg) {
       fetchAvregningsData();
       hentMuligeMottakere();
+
+      Api.Trygdeavgift.hentFakturamottaker(behandlingID).then((dto) => {
+        setFakturaMottaker(dto.navn);
+      });
     }
   }, [aktivtSteg]);
 
@@ -145,11 +151,34 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
 
   const stegErGyldig = formIsValid;
 
+  const tidligereTrygdeavgift = lagretAarsavregning?.tidligereGrunnlagsopplysninger?.avgift.totalAvgift;
+  const nyTrygdeavgift = lagretAarsavregning?.nyttGrunnlag?.avgift.totalAvgift;
+  const erDifferanseUnderMinstebeløp =
+    tidligereTrygdeavgift && nyTrygdeavgift && Math.abs(tidligereTrygdeavgift - nyTrygdeavgift) < 101;
+
   return (
     <div className="vurderingVedtak">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">
-        Vedtak årsavregning {valgtÅr ?? ""}
+        Vedtak årsavregning {lagretAarsavregning ? lagretAarsavregning.aar : ""}
       </Nav.Typo.Innholdstittel>
+
+      <SumArsavregningTabell trygdeavgift={nyTrygdeavgift} tidligereTrygdeavgift={tidligereTrygdeavgift} />
+
+      {fakturaMottaker && nyTrygdeavgift ? (
+        <Nav.Row className="trygdeavgift">
+          <Nav.Column xs="12">
+            <Nav.Typo.Normaltekst className="info">
+              {erDifferanseUnderMinstebeløp ? (
+                <b>Beløpet er under minstegrensen på +/- 100,-</b>
+              ) : (
+                <>
+                  Faktura/refusjon sendes til: <b>{fakturaMottaker}</b>
+                </>
+              )}
+            </Nav.Typo.Normaltekst>
+          </Nav.Column>
+        </Nav.Row>
+      ) : null}
 
       <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
         <LabelMedHjelpetekst label="Fritekst til innledning" hjelpetekst="" />
