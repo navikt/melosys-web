@@ -414,6 +414,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
         <BeregnetTrygdeavgiftDetaljer
           grunnlag={lagretTrygdeavgift.nyttGrunnlag}
           medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!!}
+          tittel="Endelig beregnet trygdeavgift"
         />
       )}
 
