@@ -21,7 +21,7 @@ const Knapperad = ({
   avbryt,
   avbrytTekst,
   redigerbart,
-  bekreftRedigerbart,
+  bekreftRedigerbart = true,
   spinner,
   size,
 }: KnapperadProps) => {
