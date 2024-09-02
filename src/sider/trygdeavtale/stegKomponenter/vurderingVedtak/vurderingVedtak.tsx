@@ -208,6 +208,7 @@ const VurderingVedtak = ({
       setVedtakPending(false);
     }
   }
+
   const debouncedKontrollerBehandling = useCallback(Utils._debounce(kontroller, 500), [kontrollerFerdigbehandling]);
 
   useEffect(() => {
@@ -330,30 +331,6 @@ const VurderingVedtak = ({
     }
   };
 
-  // TODO: Skriv om til Mui.Knapp
-  const EndreTom = () =>
-    redigerbart ? (
-      <div
-        role="button"
-        className={vurderingVedtakCls.element("endreTom")}
-        tabIndex={0}
-        onClick={() => setVisTomEndringFelt(true)}
-        onKeyDown={(event) => {
-          if ([" ", "Enter"].includes(event.key)) {
-            event.preventDefault();
-            setVisTomEndringFelt(true);
-          }
-        }}
-      >
-        <Ikoner.BlyantActive className={vurderingVedtakCls.element("ikon")} />
-        <span className={vurderingVedtakCls.element("endreTomTekst")}>Endre</span>
-      </div>
-    ) : (
-      <div className={vurderingVedtakCls.elementWithModifier("endreTom", "disabled")}>
-        <Ikoner.BlyantDisabled className={vurderingVedtakCls.element("ikon")} />
-      </div>
-    );
-
   const stegErGyldig =
     steg.status === StegStatus.FERDIG &&
     formIsValid &&
@@ -384,7 +361,9 @@ const VurderingVedtak = ({
             <LabelMedHjelpetekst label="Periode" hjelpetekst={PERIODE_HJELPETEKST} />
           </Nav.Typo.Element>
           <Nav.Typo.Normaltekst className={vurderingVedtakCls.element("datofelt_wrapper")} tag="div">
-            {`${formValues?.lovvalgsperiodeFom ? formValues?.lovvalgsperiodeFom : ""} - `}
+            <span className={vurderingVedtakCls.element("datofelt_fom")}>
+              {`${formValues?.lovvalgsperiodeFom ? formValues?.lovvalgsperiodeFom : ""} -`}&nbsp;
+            </span>
             {visTomEndringFelt ? (
               <span className={vurderingVedtakCls.element("datofelt")}>
                 <Skjema.Datovelger label="" feltNavn="lovvalgsperiodeTom" disabled={!redigerbart} />
@@ -397,9 +376,18 @@ const VurderingVedtak = ({
                 </Nav.Button>
               </span>
             ) : (
-              Utils.dato.formatterDatoTilNorsk(formValues?.lovvalgsperiodeTom)
+              <span>{Utils.dato.formatterDatoTilNorsk(formValues?.lovvalgsperiodeTom)}</span>
             )}
-            {!visTomEndringFelt && <EndreTom />}
+            {!visTomEndringFelt && (
+              <Nav.Button
+                icon={<Ikoner.BlyantActive />}
+                variant="tertiary"
+                onClick={() => setVisTomEndringFelt(true)}
+                disabled={!redigerbart}
+              >
+                Endre
+              </Nav.Button>
+            )}
           </Nav.Typo.Normaltekst>
         </Nav.Column>
 

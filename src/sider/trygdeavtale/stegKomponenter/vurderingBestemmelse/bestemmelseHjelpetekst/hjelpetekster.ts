@@ -57,7 +57,6 @@ const hjelpeteksterCaArt7 = [
   Hjelpetekster.MAX_FEM_ÅR,
 ];
 
-// TODO: Legg til vilkår
 const hjelpeteksterCaArt9 = ["placeholder"];
 
 const hjelpeteksterCaArt10 = [

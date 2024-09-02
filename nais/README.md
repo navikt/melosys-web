@@ -3,7 +3,6 @@ Frontend deployes i en nginx-container. `proxy.nginx` definerer proxy til Melosy
 
 ## Automatisk deploy
 Melosys-web deployer automatisk til dev ved push på `master`-branch
-(TODO: utfyll etter flere miljøer legges til)
 
 ## Manuell deploy
 For manuell deploy, så kan man gå til https://github.com/navikt/melosys-web/actions/, velge deploy-workflow og trykke "run workflow".

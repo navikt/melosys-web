@@ -7,7 +7,6 @@ import * as KV from "../../../../kodeverk";
 import { reduxForm } from "redux-form";
 import { renderWithProviders } from "../../../../ducks/test-utils/renderWithProviders";
 
-// TODO: Enkel snapshot test når vitest snapshot serializer er på plass
 describe("VurderingArtikkel16MottaSvar", () => {
   let props = null;
   let initialReduxState = null;
@@ -100,5 +99,12 @@ describe("VurderingArtikkel16MottaSvar", () => {
       preloadedState: initialReduxState,
     });
     expect(getByRole("textbox", { name: "Begrunnelse" })).toBeInTheDocument();
+  });
+
+  it("snapshot test", () => {
+    const { container } = renderWithProviders(<ConnectedVurderingArtikkel16MottaSvar {...props} />, {
+      preloadedState: initialReduxState,
+    });
+    expect(container).toMatchSnapshot();
   });
 });
