@@ -405,7 +405,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
 
       {erAvvik && lagretTrygdeavgift?.nyttGrunnlag && (
         <SumArsavregningTabell
-          trygdeavgift={lagretTrygdeavgift?.nyttGrunnlag?.avgift.totalAvgift}
+          nyTrygdeavgift={lagretTrygdeavgift?.nyttGrunnlag?.avgift.totalAvgift}
           tidligereTrygdeavgift={lagretTrygdeavgift?.tidligereGrunnlagsopplysninger?.avgift.totalAvgift}
         />
       )}

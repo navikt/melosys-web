@@ -4,10 +4,10 @@ import "./sumArsavregningTabell.css";
 import { formaterTilNorskBelop } from "../../../../../utils";
 
 export const SumArsavregningTabell = ({
-  trygdeavgift,
+  nyTrygdeavgift,
   tidligereTrygdeavgift,
 }: {
-  trygdeavgift?: number;
+  nyTrygdeavgift?: number;
   tidligereTrygdeavgift?: number;
 }) => {
   return (
@@ -19,7 +19,7 @@ export const SumArsavregningTabell = ({
             Endelig beregnet trygdeavgift
           </Nav.Table.DataCell>
           <Nav.Table.DataCell align="right" key={Utils._uuid()}>
-            {formaterTilNorskBelop(trygdeavgift || tidligereTrygdeavgift)} kr
+            {formaterTilNorskBelop(nyTrygdeavgift || tidligereTrygdeavgift)} kr
           </Nav.Table.DataCell>
         </Nav.Table.Row>
         <Nav.Table.Row>
@@ -34,7 +34,7 @@ export const SumArsavregningTabell = ({
           <Nav.Table.DataCell scope="col">Sum til faktura/refusjon </Nav.Table.DataCell>
           <Nav.Table.DataCell align="right" key={Utils._uuid()}>
             <b>
-              {formaterTilNorskBelop((trygdeavgift || tidligereTrygdeavgift || 0) - (tidligereTrygdeavgift || 0)) ||
+              {formaterTilNorskBelop((nyTrygdeavgift || tidligereTrygdeavgift || 0) - (tidligereTrygdeavgift || 0)) ||
                 "0"}{" "}
               kr{" "}
             </b>

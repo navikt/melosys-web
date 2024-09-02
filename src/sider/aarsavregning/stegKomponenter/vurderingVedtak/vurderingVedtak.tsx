@@ -36,6 +36,8 @@ interface Props {
   aktivtSteg: boolean;
 }
 
+const MINSTEBELOP_FAKTURERING_ELLER_REFUSJON = 100;
+
 const komponentDispatch = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   kontrollerFerdigbehandling: (data: Api.Kontroll.FerdigbehandlingKontrollData) =>
     dispatch(kontrollOperations.kontrollerFerdigbehandling(data)),
@@ -153,7 +155,9 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const tidligereTrygdeavgift = lagretAarsavregning?.tidligereGrunnlagsopplysninger?.avgift.totalAvgift;
   const nyTrygdeavgift = lagretAarsavregning?.nyttGrunnlag?.avgift.totalAvgift;
   const erDifferanseUnderMinstebeløp =
-    tidligereTrygdeavgift && nyTrygdeavgift && Math.abs(tidligereTrygdeavgift - nyTrygdeavgift) < 101;
+    tidligereTrygdeavgift &&
+    nyTrygdeavgift &&
+    Math.abs(tidligereTrygdeavgift - nyTrygdeavgift) <= MINSTEBELOP_FAKTURERING_ELLER_REFUSJON;
 
   return (
     <div className="vurderingVedtak">
@@ -161,7 +165,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
         Vedtak årsavregning {lagretAarsavregning ? lagretAarsavregning.aar : ""}
       </Nav.Typo.Innholdstittel>
 
-      <SumArsavregningTabell trygdeavgift={nyTrygdeavgift} tidligereTrygdeavgift={tidligereTrygdeavgift} />
+      <SumArsavregningTabell nyTrygdeavgift={nyTrygdeavgift} tidligereTrygdeavgift={tidligereTrygdeavgift} />
 
       {fakturaMottaker && nyTrygdeavgift ? (
         <Nav.Row className="trygdeavgift">
