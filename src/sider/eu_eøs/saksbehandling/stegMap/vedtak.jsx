@@ -34,7 +34,7 @@ class Vedtak extends Steg {
     ];
     this.id = STEG.VEDTAK;
     this.tittel = "Vedtak";
-    this.komponent = VurderingVedtak; // skalViseArbeidKunNorgeFlyt ? VurderingVedtak11_3_og_13_3a : VurderingVedtak;
+    this.komponent = skalViseArbeidKunNorgeFlyt ? VurderingVedtak11_3_og_13_3a : VurderingVedtak;
     this.samleRelevanteData = (_propsLight) => {
       const formValues = _propsLight.artikkel12_vedtak_skjema;
       const lovvalgSomKodeTerm = KV.finnEnkeltKodeFraListe(
