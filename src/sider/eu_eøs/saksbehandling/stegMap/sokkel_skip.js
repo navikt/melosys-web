@@ -24,8 +24,6 @@ class SokkelSkip extends Steg {
       installasjonArbeidslandListe
     );
 
-    console.log(alleErAvklart);
-
     this.kriterier = [
       {
         exec: (avklartefakta) =>
@@ -87,7 +85,6 @@ class SokkelSkip extends Steg {
   };
 
   static alleErAvklart = (sokkelEllerSkipListe, sokkelSkipKonklusjon, arbeidslandListe) => {
-    console.log("test");
     const avklartSokkelEllerSkip =
       sokkelEllerSkipListe.length > 0 &&
       sokkelEllerSkipListe
@@ -102,9 +99,6 @@ class SokkelSkip extends Steg {
           return true;
         })
         .every((enkelt) => enkelt === true);
-
-    console.log(avklartSokkelEllerSkip);
-    console.log(hentFaktaVerdi(sokkelSkipKonklusjon));
 
     return avklartSokkelEllerSkip && hentFaktaVerdi(sokkelSkipKonklusjon);
   };
