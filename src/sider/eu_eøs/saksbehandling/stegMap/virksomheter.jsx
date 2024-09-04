@@ -5,7 +5,6 @@ import MKV from "../../../../melosyskodeverk";
 
 import SokkelSkip from "./sokkel_skip";
 import Yrkesgruppe from "./yrkesgruppe";
-import { hentFakta } from "../../../../domeneUtils";
 
 class SaksbehandlingVirksomheter extends Virksomheter {
   constructor(propsLight, stegPosisjon) {
@@ -22,9 +21,6 @@ class SaksbehandlingVirksomheter extends Virksomheter {
     );
 
     const arbeidslandErNorge = propsLight.arbeidsland[0]?.kode === MKV.Koder.landkoder.NO;
-
-    const yrkesgruppe = hentFakta(KV.Koder.avklartefaktaKoder.YRKESGRUPPE, propsLight.avklartefakta);
-    console.log("Yrkeshgruppe" + yrkesgruppe.fakta);
 
     const arbeidKunNorgeFlyt = [
       MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
