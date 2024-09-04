@@ -13,6 +13,10 @@ import { useFeatureToggle } from "../../../../../featuretoggle";
 import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../../../featuretoggle/toggleNavn";
 import DatoOgBestemmelse from "./datoOgBestemmelse";
 import VedtakBegrunnelser from "./vedtakBegrunnelser";
+import * as Api from "../../../../../services/api";
+import { useSelector } from "react-redux";
+import { fagsakSelectors } from "../../../../../ducks/fagsaker";
+import { avklartefaktaSelectors } from "../../../../../ducks/avklartefakta";
 
 interface DelvisInnvilgelseProps {
   redigerbart: boolean;
@@ -45,7 +49,9 @@ const DelvisInnvilgelse = ({
 }: DelvisInnvilgelseProps) => {
   const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
   const pdfDokumenter: (BrevDokumentMetadataType | SedDokumentMetadataType)[] = [];
-
+  const saksnummer = useSelector(fagsakSelectors.SaksnummerSelector) as string;
+  const erSelvstendigNaeringsdrivende =
+    useSelector(avklartefaktaSelectors.YrkesaktivitetSelector) === "SELVSTENDIG_NAERINGSDRIVENDE";
   if (erUtsendt && erStorbrittaniaArt18_1Bestemmelse && konvensjonStorbritanniaToggleEnabled) {
     pdfDokumenter.push({
       dokumentData: {
@@ -54,12 +60,27 @@ const DelvisInnvilgelse = ({
         begrunnelseFritekst: vedtaksbrevFritekst,
       },
     });
-    pdfDokumenter.push({
-      dokumentData: {
-        produserbardokument: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_TIL_ARBEIDSGIVER_OM_VEDTAK,
-        erInnvilgelse: true,
-        mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
-      },
+    if (!erSelvstendigNaeringsdrivende) {
+      pdfDokumenter.push({
+        dokumentData: {
+          produserbardokument: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_TIL_ARBEIDSGIVER_OM_VEDTAK,
+          erInnvilgelse: true,
+          mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
+        },
+      });
+    }
+    Api.Fagsaker.aktoer.hent(saksnummer, MKV.Koder.aktoersroller.FULLMEKTIG).then((fullmektigListe) => {
+      if (
+        fullmektigListe?.length > 0 &&
+        fullmektigListe?.find((fullmektig) => fullmektig.fullmakter?.includes("FULLMEKTIG_SØKNAD"))
+      ) {
+        pdfDokumenter.push({
+          dokumentData: {
+            produserbardokument: MKV.Koder.brev.produserbaredokumenter.ATTEST_A1,
+            mottaker: MKV.Koder.mottakerroller.FULLMEKTIG,
+          },
+        });
+      }
     });
     pdfDokumenter.push({
       dokumentData: {
@@ -77,7 +98,7 @@ const DelvisInnvilgelse = ({
     });
 
     if (visOrienteringsbrevArbeidsgiver) {
-      if (konvensjonStorbritanniaToggleEnabled) {
+      if (konvensjonStorbritanniaToggleEnabled && !erSelvstendigNaeringsdrivende) {
         pdfDokumenter.push({
           dokumentData: {
             produserbardokument: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_TIL_ARBEIDSGIVER_OM_VEDTAK,

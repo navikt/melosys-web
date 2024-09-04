@@ -77,10 +77,16 @@ const finnSedMottakerLand = (
   return arbeidsland[0]?.kode;
 };
 
-const skalViseSendOrienteringsbrev = (sakstype: string, behandlingstema: string, erArtikkel11_4: boolean) =>
+const skalViseSendOrienteringsbrev = (
+  sakstype: string,
+  behandlingstema: string,
+  erArtikkel11_4: boolean,
+  erSelvstendigNaeringsdrivende: boolean
+) =>
   !erArtikkel11_4 &&
   sakstype === EU_EOS &&
-  [UTSENDT_ARBEIDSTAKER, ARBEID_TJENESTEPERSON_ELLER_FLY].includes(behandlingstema);
+  [UTSENDT_ARBEIDSTAKER, ARBEID_TJENESTEPERSON_ELLER_FLY].includes(behandlingstema) &&
+  !erSelvstendigNaeringsdrivende;
 
 const skalViseMottakerinstitusjoner = (
   sakstype: string,
@@ -158,6 +164,8 @@ const VurderingVedtak = ({
   const arbeidsland = useSelector(avklartefaktaSelectors.ArbeidslandKTSelector);
   const bostedsland = useSelector(avklartefaktaSelectors.BostedslandSelector);
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
+  const erSelvstendigNaeringsdrivende =
+    useSelector(avklartefaktaSelectors.YrkesaktivitetSelector) === "SELVSTENDIG_NAERINGSDRIVENDE";
   const sakstype = useSelector(fagsakSelectors.SakstypeKodeSelector);
   const sakstema = useSelector(fagsakSelectors.SakstemaKodeSelector);
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
@@ -250,7 +258,6 @@ const VurderingVedtak = ({
   const lovvalgsbestemmelseKT = MKVUtils.lovvalgsbestemmelseTilObjekt(lovvalgsbestemmelse);
   const tilleggBestemmelseKT = MKVUtils.lovvalgsbestemmelseTilObjekt(tilleggBestemmelse);
   const maksAntallTegn = MKVUtils.erStorbritanniaKonvBestemmelse(lovvalgsbestemmelse) ? 500 - 38 : 500;
-
   const mapDokumenter = (dokumenter: BrevDokumentMetadataType[]) => {
     return dokumenter.map((dokument: BrevDokumentMetadataType) => {
       if (dokument.dokumentData !== undefined) {
@@ -265,7 +272,7 @@ const VurderingVedtak = ({
     <div className="vedtak">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">
         {konvensjonStorbritanniaToggleEnabled
-          ? "Omfattet av norsk trygdelovgivning"
+          ? "Omfattet av norsk trygdelovgivsdsdsdning"
           : `Omfattet av norsk trygdelovgivning etter ${finnLovvalgSomTerm(
               lovvalgsbestemmelseKT,
               tilleggBestemmelseKT
@@ -323,9 +330,10 @@ const VurderingVedtak = ({
             </Nav.Column>
           </Nav.Row>
         )}
-        {redigerbart && skalViseSendOrienteringsbrev(sakstype, behandlingstema, erArtikkel11_4) && (
-          <Skjema.Checkbox feltNavn="kopiTilArbeidsgiver" label="Send orienteringsbrev til arbeidsgiver/virksomhet" />
-        )}
+        {redigerbart &&
+          skalViseSendOrienteringsbrev(sakstype, behandlingstema, erArtikkel11_4, erSelvstendigNaeringsdrivende) && (
+            <Skjema.Checkbox feltNavn="kopiTilArbeidsgiver" label="Send orienteringsbrev til arbeidsgiver/virksomhet" />
+          )}
         <Nav.Row>
           <Nav.Column xs="7">
             {stegErGyldig && (
