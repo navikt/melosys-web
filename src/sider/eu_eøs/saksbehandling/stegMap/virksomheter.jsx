@@ -24,7 +24,7 @@ class SaksbehandlingVirksomheter extends Virksomheter {
     const arbeidslandErNorge = propsLight.arbeidsland[0]?.kode === MKV.Koder.landkoder.NO;
 
     const yrkesgruppe = hentFakta(KV.Koder.avklartefaktaKoder.YRKESGRUPPE, propsLight.avklartefakta);
-    const erYrkesaktiv = yrkesgruppe.fakta?.includes(KV.Koder.VurderingYrkesgruppeTyper.ORDINAER) || false;
+    console.log("Yrkeshgruppe" + yrkesgruppe.fakta);
 
     const arbeidKunNorgeFlyt = [
       MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
@@ -43,11 +43,7 @@ class SaksbehandlingVirksomheter extends Virksomheter {
       },
       {
         exec: () =>
-          propsLight.arbeidKunNorgeToggleEnabled &&
-          harValgtArbeidsgiver &&
-          arbeidKunNorgeFlyt &&
-          arbeidslandErNorge &&
-          erYrkesaktiv,
+          propsLight.arbeidKunNorgeToggleEnabled && harValgtArbeidsgiver && arbeidKunNorgeFlyt && arbeidslandErNorge,
         nesteSteg: STEG.VEDTAK,
       },
       {
