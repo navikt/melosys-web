@@ -28,7 +28,7 @@ class SokkelSkip extends Steg {
       {
         exec: (avklartefakta) =>
           SokkelSkip.finnAvklaring(avklartefakta, KV.Koder.VurderingSokkelSkipTyper.SOKKEL_NORSK) && alleErAvklart,
-        nesteSteg: STEG.VEDTAK,
+        nesteSteg: STEG.VIRKSOMHETER,
       },
       {
         exec: (avklartefakta) =>
