@@ -16,6 +16,7 @@ import * as Api from "../../../../../services/api";
 import { useSelector } from "react-redux";
 import { fagsakSelectors } from "../../../../../ducks/fagsaker";
 import { avklartefaktaSelectors } from "../../../../../ducks/avklartefakta";
+import { VurderingYrkesaktivitetTyper } from "../../../../../kodeverk/koder";
 
 interface InnvilgelseProps {
   redigerbart: boolean;
@@ -50,7 +51,8 @@ const Innvilgelse = ({
   const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
   const pdfDokumenter: (BrevDokumentMetadataType | SedDokumentMetadataType)[] = [];
   const erSelvstendigNaeringsdrivende =
-    useSelector(avklartefaktaSelectors.YrkesaktivitetSelector) === "SELVSTENDIG_NAERINGSDRIVENDE";
+    useSelector(avklartefaktaSelectors.YrkesaktivitetSelector) ===
+    VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE;
   if (erUtsendt && erStorbrittaniaArt18_1Bestemmelse && konvensjonStorbritanniaToggleEnabled) {
     pdfDokumenter.push({
       dokumentData: {
@@ -71,7 +73,9 @@ const Innvilgelse = ({
     Api.Fagsaker.aktoer.hent(saksnummer, MKV.Koder.aktoersroller.FULLMEKTIG).then((fullmektigListe) => {
       if (
         fullmektigListe?.length > 0 &&
-        fullmektigListe?.find((fullmektig) => fullmektig.fullmakter?.includes("FULLMEKTIG_SØKNAD"))
+        fullmektigListe?.find((fullmektig) =>
+          fullmektig.fullmakter?.includes(MKV.Koder.fullmaktstype.FULLMEKTIG_SØKNAD)
+        )
       ) {
         pdfDokumenter.push({
           dokumentData: {

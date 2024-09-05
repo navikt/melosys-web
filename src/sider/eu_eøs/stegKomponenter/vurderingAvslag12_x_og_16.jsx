@@ -25,6 +25,7 @@ import { lagYupToReduxformErrorMapper } from "../../../yup";
 import VurderingAvslagArtikkel12Og16Schema from "./vurderingAvslag12_x_og_16Schema";
 import { useFeatureToggle } from "../../../featuretoggle";
 import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../featuretoggle/toggleNavn";
+import { VurderingYrkesaktivitetTyper } from "../../../kodeverk/koder";
 
 const skalViseSendOrienteringsbrev = (sakstype, behandlingstema, erNyVurdering, erSelvstendigNaeringsdrivende) =>
   !erNyVurdering &&
@@ -58,7 +59,8 @@ const VurderingAvslag12_x_og_16 = ({
   const [vedtakPending, setVedtakPending] = useState(false);
   const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
   const erSelvstendigNaeringsdrivende =
-    useSelector(avklartefaktaSelectors.YrkesaktivitetSelector) === "SELVSTENDIG_NAERINGSDRIVENDE";
+    useSelector(avklartefaktaSelectors.YrkesaktivitetSelector) ===
+    VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE;
   const dispatch = useDispatch();
 
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;

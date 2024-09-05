@@ -33,6 +33,7 @@ import { lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
 import { useFeatureToggle } from "../../../../featuretoggle";
 import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../../featuretoggle/toggleNavn";
 import EnkeltDato from "../../../../felleskomponenter/enkeltDato";
+import { VurderingYrkesaktivitetTyper } from "../../../../kodeverk/koder";
 
 const { FO_883_2004_ART11_3A } = MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004;
 const { FO_883_2004_ART11_4_1 } = MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004;
@@ -165,7 +166,8 @@ const VurderingVedtak = ({
   const bostedsland = useSelector(avklartefaktaSelectors.BostedslandSelector);
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const erSelvstendigNaeringsdrivende =
-    useSelector(avklartefaktaSelectors.YrkesaktivitetSelector) === "SELVSTENDIG_NAERINGSDRIVENDE";
+    useSelector(avklartefaktaSelectors.YrkesaktivitetSelector) ===
+    VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE;
   const sakstype = useSelector(fagsakSelectors.SakstypeKodeSelector);
   const sakstema = useSelector(fagsakSelectors.SakstemaKodeSelector);
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
