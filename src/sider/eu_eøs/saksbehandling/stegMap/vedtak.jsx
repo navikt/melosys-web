@@ -25,6 +25,7 @@ class Vedtak extends Steg {
     const skalViseArbeidKunNorgeFlyt =
       (erUtsendt || propsLight.behandlingstema.kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_KUN_NORGE) &&
       erOrdinaerYrkesgruppe &&
+      propsLight.arbeidsland.find((land) => land.kode === "NO") !== undefined &&
       propsLight.arbeidKunNorgeToggleEnabled;
     this.kriterier = [
       {
@@ -34,17 +35,17 @@ class Vedtak extends Steg {
     ];
     this.id = STEG.VEDTAK;
     this.tittel = "Vedtak";
+
     this.komponent = skalViseArbeidKunNorgeFlyt ? VurderingVedtak11_3_og_13_3a : VurderingVedtak;
     this.samleRelevanteData = (_propsLight) => {
       const formValues = _propsLight.artikkel12_vedtak_skjema;
+
       const lovvalgSomKodeTerm = KV.finnEnkeltKodeFraListe(
         _propsLight.valgteLovvalgsVilkarBestemmelse,
         MKV.Kodekombinasjoner.alleLovvalg
       );
-
       const erStorbritanniaBestemmelse = erStorbritanniaKonvBestemmelse(_propsLight.lovvalgsbestemmelse);
       const { UTSENDT_ARBEIDSTAKER, ARBEID_TJENESTEPERSON_ELLER_FLY } = MKV.Koder.behandlinger.behandlingstema;
-
       const visSedLenkeForLovvalgsbestemmelser = [
         MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_1,
         MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia.KONV_EFTA_STORBRITANNIA_ART14_1,
@@ -82,7 +83,8 @@ class Vedtak extends Steg {
         if (
           !erArtikkel11_4 &&
           [UTSENDT_ARBEIDSTAKER, ARBEID_TJENESTEPERSON_ELLER_FLY].includes(propsLight.behandlingstema.kode) &&
-          !erSelvstendigNaeringsdrivende
+          !erSelvstendigNaeringsdrivende &&
+          formValues.kopiTilArbeidsgiver
         ) {
           pdfDokumenter.push({
             dokumentData: {
@@ -126,7 +128,8 @@ class Vedtak extends Steg {
           if (
             !erArtikkel11_4 &&
             [UTSENDT_ARBEIDSTAKER, ARBEID_TJENESTEPERSON_ELLER_FLY].includes(propsLight.behandlingstema.kode) &&
-            !erSelvstendigNaeringsdrivende
+            !erSelvstendigNaeringsdrivende &&
+            formValues.kopiTilArbeidsgiver
           ) {
             pdfDokumenter.push({
               dokumentData: {
