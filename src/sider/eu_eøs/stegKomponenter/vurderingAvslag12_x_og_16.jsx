@@ -25,9 +25,11 @@ import { lagYupToReduxformErrorMapper } from "../../../yup";
 import VurderingAvslagArtikkel12Og16Schema from "./vurderingAvslag12_x_og_16Schema";
 import { useFeatureToggle } from "../../../featuretoggle";
 import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../featuretoggle/toggleNavn";
+import { VurderingYrkesaktivitetTyper } from "../../../kodeverk/koder";
 
-const skalViseSendOrienteringsbrev = (sakstype, behandlingstema, erNyVurdering) =>
+const skalViseSendOrienteringsbrev = (sakstype, behandlingstema, erNyVurdering, erSelvstendigNaeringsdrivende) =>
   !erNyVurdering &&
+  !erSelvstendigNaeringsdrivende &&
   sakstype === MKV.Koder.sakstyper.EU_EOS &&
   [
     MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
@@ -56,7 +58,9 @@ const VurderingAvslag12_x_og_16 = ({
 }) => {
   const [vedtakPending, setVedtakPending] = useState(false);
   const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
-
+  const erSelvstendigNaeringsdrivende =
+    useSelector(avklartefaktaSelectors.YrkesaktivitetSelector) ===
+    VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE;
   const dispatch = useDispatch();
 
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
@@ -72,7 +76,7 @@ const VurderingAvslag12_x_og_16 = ({
   ];
 
   const { kopiTilArbeidsgiver, vedtakstype } = formValues;
-  if (konvensjonStorbritanniaToggleEnabled && !erNyVurdering && kopiTilArbeidsgiver) {
+  if (konvensjonStorbritanniaToggleEnabled && !erNyVurdering && kopiTilArbeidsgiver && !erSelvstendigNaeringsdrivende) {
     pdfDokumenter.push({
       navn: "Orientering til arbeidsgiver om vedtak",
       dokumentData: {
