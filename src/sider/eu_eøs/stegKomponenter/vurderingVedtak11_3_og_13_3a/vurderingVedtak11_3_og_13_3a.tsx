@@ -77,7 +77,6 @@ export const VurderingVedtak11_3_og_13_3a = ({
   };
 
   const { lovvalgsbestemmelse, fom, tom } = formValues;
-
   const kontroller = async () => {
     await dispatch(
       kontrollOperations.kontrollerFerdigbehandling({
@@ -131,6 +130,34 @@ export const VurderingVedtak11_3_og_13_3a = ({
       begrunnelseFritekst: formValues.begrunnelseFritekst,
       nyVurderingBakgrunn: formValues.vedtakstypebegrunnelse,
     };
+  };
+
+  const leggTilEllerFjernOrienteringsbrev = (kopiTilArbeidsgiverChecked: boolean) => {
+    const harInnvilgelseEFTAStorbritanniaPDF = pdfDokumenter.some(
+      (dokument: any) =>
+        dokument.dokumentData.produserbardokument ===
+        MKV.Koder.brev.produserbaredokumenter.ORIENTERING_TIL_ARBEIDSGIVER_OM_VEDTAK
+    );
+
+    if (!harInnvilgelseEFTAStorbritanniaPDF && kopiTilArbeidsgiverChecked) {
+      pdfDokumenter.push({
+        dokumentData: {
+          produserbardokument: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_TIL_ARBEIDSGIVER_OM_VEDTAK,
+          erInnvilgelse: true,
+          mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
+        },
+      });
+    } else {
+      const index = pdfDokumenter.findIndex(
+        (dokument: any) =>
+          dokument.dokumentData.produserbardokument ===
+          MKV.Koder.brev.produserbaredokumenter.ORIENTERING_TIL_ARBEIDSGIVER_OM_VEDTAK
+      );
+
+      if (index > -1) {
+        pdfDokumenter.splice(index, 1);
+      }
+    }
   };
 
   return (
@@ -209,18 +236,9 @@ export const VurderingVedtak11_3_og_13_3a = ({
           value={formValues.kopiTilArbeidsgiver}
           onChange={(a) => {
             setValue("kopiTilArbeidsgiver", a.target.checked);
-            if (a.target.checked) {
-              pdfDokumenter.push({
-                dokumentData: {
-                  produserbardokument: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_TIL_ARBEIDSGIVER_OM_VEDTAK,
-                  erInnvilgelse: true,
-                  mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
-                },
-              });
-            } else {
-              pdfDokumenter.pop();
-            }
+            leggTilEllerFjernOrienteringsbrev(a.target.checked);
           }}
+          disabled={!redigerbart}
         >
           Send kopi til arbeidsgiver/virksomhet
         </Nav.Checkbox>
