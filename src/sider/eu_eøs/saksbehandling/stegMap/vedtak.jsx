@@ -7,7 +7,6 @@ import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
 import VurderingVedtak from "../../stegKomponenter/vurderingVedtak/vurderingVedtak";
 import { VurderingVedtak11_3_og_13_3a } from "../../stegKomponenter/vurderingVedtak11_3_og_13_3a/vurderingVedtak11_3_og_13_3a";
 import { erStorbritanniaKonvBestemmelse } from "../../../../melosyskodeverk/utils";
-import * as Api from "../../../../services/api";
 
 class Vedtak extends Steg {
   constructor(propsLight, stegPosisjon) {
