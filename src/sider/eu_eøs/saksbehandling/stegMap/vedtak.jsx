@@ -7,6 +7,7 @@ import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
 import VurderingVedtak from "../../stegKomponenter/vurderingVedtak/vurderingVedtak";
 import { VurderingVedtak11_3_og_13_3a } from "../../stegKomponenter/vurderingVedtak11_3_og_13_3a/vurderingVedtak11_3_og_13_3a";
 import { erStorbritanniaKonvBestemmelse } from "../../../../melosyskodeverk/utils";
+import { VurderingYrkesaktivitetTyper } from "../../../../kodeverk/koder";
 
 class Vedtak extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -62,6 +63,12 @@ class Vedtak extends Steg {
         artikkel11_4Bestemmelser.includes(propsLight.lovvalgsbestemmelse) ||
         artikkel11_4Bestemmelser.includes(propsLight.tilleggsbestemmelse);
       const pdfDokumenter = [];
+
+      const erSelvstendigNaeringsdrivende =
+        propsLight.avklartefakta.find((avklartfakta) =>
+          avklartfakta.fakta.includes(VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE)
+        ) != null;
+
       if (
         (erUtsendt && erStorbritanniaBestemmelse && _propsLight.konvensjonStorbritanniaToggleEnabled) ||
         skalViseArbeidKunNorgeFlyt
@@ -76,6 +83,7 @@ class Vedtak extends Steg {
         if (
           !erArtikkel11_4 &&
           [UTSENDT_ARBEIDSTAKER, ARBEID_TJENESTEPERSON_ELLER_FLY].includes(propsLight.behandlingstema.kode) &&
+          !erSelvstendigNaeringsdrivende &&
           formValues.kopiTilArbeidsgiver
         ) {
           pdfDokumenter.push({
@@ -86,6 +94,22 @@ class Vedtak extends Steg {
             },
           });
         }
+        _propsLight.tilgjengeligeHandlers.hentFullmektig().then((fullmektigListe) => {
+          if (
+            fullmektigListe?.length > 0 &&
+            fullmektigListe?.find((fullmektig) =>
+              fullmektig.fullmakter?.includes(MKV.Koder.fullmaktstype.FULLMEKTIG_SØKNAD)
+            )
+          ) {
+            pdfDokumenter.push({
+              dokumentData: {
+                produserbardokument: MKV.Koder.brev.produserbaredokumenter.ATTEST_A1,
+                mottaker: MKV.Koder.mottakerroller.FULLMEKTIG,
+              },
+            });
+          }
+        });
+
         pdfDokumenter.push({
           dokumentData: {
             produserbardokument: MKV.Koder.brev.produserbaredokumenter.ATTEST_A1,
@@ -104,6 +128,7 @@ class Vedtak extends Steg {
           if (
             !erArtikkel11_4 &&
             [UTSENDT_ARBEIDSTAKER, ARBEID_TJENESTEPERSON_ELLER_FLY].includes(propsLight.behandlingstema.kode) &&
+            !erSelvstendigNaeringsdrivende &&
             formValues.kopiTilArbeidsgiver
           ) {
             pdfDokumenter.push({

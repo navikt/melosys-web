@@ -64,7 +64,6 @@ class Stegvelger extends Component {
 
   async componentDidMount() {
     this.aktiv = true;
-
     const { behandlingID, sakstype } = this.props;
     const { aktivtStegNummer } = this.state;
 
@@ -116,6 +115,13 @@ class Stegvelger extends Component {
    * opp for nye tilgjengelige faner etter at saksbehandler
    * har bekreftet valgene.
    */
+
+  hentFullmektig = () => {
+    const { saksnummer } = this.props;
+
+    return Api.Fagsaker.aktoer.hent(saksnummer, MKV.Koder.aktoersroller.FULLMEKTIG);
+  };
+
   bekreftOgFortsett = () => {
     this.publiserStegdata();
     this.validerSoknadOgGaTilSteg(this.beregnNesteSteg());
@@ -370,6 +376,7 @@ class Stegvelger extends Component {
       oppdaterStegData: this.oppdaterStegData,
       slettStegData: this.slettStegData,
       lagreVilkarHandler: this.props.lagreVilkarHandler,
+      hentFullmektig: this.hentFullmektig,
       lagreAnmodningsperioderHandler: this.props.lagreAnmodningsperioderHandler,
       endreVedtak: this.endreVedtak,
       endreLovvalgsperioderHandler: this.endreLovvalgsperioderHandler,
@@ -414,6 +421,7 @@ class Stegvelger extends Component {
       artikkel16_anmodning_skjema: props.artikkel16_anmodning_skjema,
       artikkel16_motta_svar_skjema: props.artikkel16_motta_svar_skjema,
       vurder_utpeking_skjema: props.vurder_utpeking_skjema,
+      saksnummer: props.saksnummer,
       tilgjengeligeHandlers,
       saksopplysninger: props.saksopplysninger,
       arbeidsland: props.arbeidsland,
@@ -667,6 +675,7 @@ Stegvelger.propTypes = {
   art11_3Aeller13_3A: PT.object.isRequired,
   art11_4_1eller13_4_1: PT.object.isRequired,
   art11_4_2eller13_4_2: PT.object.isRequired,
+  hentFullmektig: PT.func,
   behandlingOppfriskes: PT.bool,
 };
 
@@ -674,6 +683,7 @@ Stegvelger.defaultProps = {
   arbeidsgivereIPerioden: [],
   avklartefakta: [],
   behandlingOppfriskes: false,
+  hentFullmektig: () => {},
   bestemmelser: [],
   oppsummering: {},
   valgteVirksomheter: [],
