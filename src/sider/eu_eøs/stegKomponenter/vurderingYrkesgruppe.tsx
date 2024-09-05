@@ -18,11 +18,15 @@ import {
 } from "../../../felleskomponenter/stegvelger";
 import { finnTilleggBestemmelse, hentFaktaVerdi } from "../../../domeneUtils";
 import { useFeatureToggle } from "../../../featuretoggle";
-import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../featuretoggle/toggleNavn";
+import {
+  MELOSYS_ARBEID_KUN_NORGE,
+  MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA,
+} from "../../../featuretoggle/toggleNavn";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { useSelector } from "react-redux";
 import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 import { anmodningsperioderSelectors } from "../../../ducks/anmodningsperioder";
+import { avklartefaktaSelectors } from "../../../ducks/avklartefakta";
 
 const { lovvalgbestemmelser_konv_efta_storbritannia } = MKV.KTObjects.lovvalgsbestemmelser;
 const { lovvalgbestemmelser_883_2004 } = MKV.KTObjects.lovvalgsbestemmelser;
@@ -52,6 +56,8 @@ interface VurderingYrkesgruppeProps {
   redigerbart: boolean;
 }
 
+const { UTSENDT_ARBEIDSTAKER, UTSENDT_SELVSTENDIG, ARBEID_KUN_NORGE } = MKV.Koder.behandlinger.behandlingstema;
+
 const VurderingYrkesgruppe = ({
   bekreftOgFortsett,
   tilstand: { harAvklaring, yrkesgruppe, tilleggbestemmelse },
@@ -67,7 +73,15 @@ const VurderingYrkesgruppe = ({
   const søknadslandkoder = useSelector(mottatteOpplysningerSelectors.SoknadslandkoderSelector);
   const visStorbritanniaKonvensjon = MKVUtils.enesteLandErStorbritannia(søknadslandkoder);
   const fakta = hentFaktaVerdi(yrkesgruppe);
+  const arbeidKunNorgeToggleEnabled = useFeatureToggle(MELOSYS_ARBEID_KUN_NORGE);
+  const erUtsendt = [UTSENDT_ARBEIDSTAKER, UTSENDT_SELVSTENDIG].includes(behandlingstema);
+  const erArbeidslandNorge = useSelector(avklartefaktaSelectors.ArbeidslandKTSelector).some(
+    (land: any) => land.kode === "NO"
+  );
+  const erArbeidKunNorgeBehandlingstema = behandlingstema === ARBEID_KUN_NORGE;
 
+  const skalViseArbeidKunNorgeFlyt =
+    (erUtsendt || erArbeidKunNorgeBehandlingstema) && erArbeidslandNorge && arbeidKunNorgeToggleEnabled;
   useEffect(() => {
     oppdaterData(konverterAvklartfaktaTilStegData(KV.Koder.YRKESGRUPPE, yrkesgruppe));
     const tilleggBestemmelseFunnet = finnTilleggBestemmelse(tilleggbestemmelse, stegetsTilleggsbestemmelser);
@@ -145,20 +159,24 @@ const VurderingYrkesgruppe = ({
       >
         <Nav.Radio value={ORDINAER}>Yrkesaktiv</Nav.Radio>
         <Nav.Radio value={SOKKEL_ELLER_SKIP}>Yrkesaktiv på sokkel eller skip</Nav.Radio>
-        <Nav.Radio value={FLYENDE_PERSONELL}>Yrkesaktiv, som flygende personell</Nav.Radio>
-        <Nav.Radio value={ORDINAER_UTEN_ART12}>
-          {konvensjonStorbritanniaToggleEnabled
-            ? "Yrkesaktiv, direkte til vurdering av anmodning om unntak"
-            : "Yrkesaktiv, direkte til vurdering av artikkel 16"}
-        </Nav.Radio>
-        {!(konvensjonStorbritanniaToggleEnabled && MKVUtils.erUtsendt(behandlingstema)) && (
+        {!skalViseArbeidKunNorgeFlyt && (
           <>
-            <Nav.Radio readOnly value={IKKE_YRKESAKTIV}>
-              Ikke yrkesaktiv
+            <Nav.Radio value={FLYENDE_PERSONELL}>Yrkesaktiv, som flygende personell</Nav.Radio>
+            <Nav.Radio value={ORDINAER_UTEN_ART12}>
+              {konvensjonStorbritanniaToggleEnabled
+                ? "Yrkesaktiv, direkte til vurdering av anmodning om unntak"
+                : "Yrkesaktiv, direkte til vurdering av artikkel 16"}
             </Nav.Radio>
-            <Nav.Radio readOnly value={KONTANTYTELSESMOTTAKER}>
-              Kontantytelsesmottaker
-            </Nav.Radio>
+            {!(konvensjonStorbritanniaToggleEnabled && MKVUtils.erUtsendt(behandlingstema)) && (
+              <>
+                <Nav.Radio readOnly value={IKKE_YRKESAKTIV}>
+                  Ikke yrkesaktiv
+                </Nav.Radio>
+                <Nav.Radio readOnly value={KONTANTYTELSESMOTTAKER}>
+                  Kontantytelsesmottaker
+                </Nav.Radio>
+              </>
+            )}
           </>
         )}
 

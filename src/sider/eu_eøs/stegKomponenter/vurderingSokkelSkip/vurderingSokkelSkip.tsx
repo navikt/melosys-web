@@ -21,7 +21,10 @@ import "./vurderingSokkelSkip.css";
 import { Avklartfakta } from "../../../../services/modules/avklartefakta";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { useFeatureToggle } from "../../../../featuretoggle";
-import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../../featuretoggle/toggleNavn";
+import {
+  MELOSYS_ARBEID_KUN_NORGE,
+  MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA,
+} from "../../../../featuretoggle/toggleNavn";
 import { Feilmelding, finnAktivFeilmelding } from "./feilmeldinger";
 
 interface Props {
@@ -58,6 +61,7 @@ const VurderingSokkelSkip = ({
   tilbake,
 }: Props) => {
   const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
+  const arbeidKunNorgeToggleEnabled = useFeatureToggle(MELOSYS_ARBEID_KUN_NORGE);
   const maritimtArbeid = useSelector(formSelectors.MaritimtArbeidSelector);
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   useEffect(() => {
@@ -146,8 +150,20 @@ const VurderingSokkelSkip = ({
         >
           På norsk sokkel eller innenfor norsk territorialfarvann (art. 11.3.a)
         </Nav.Radio>
-        <Nav.Radio value={VurderingSokkelSkipTyper.SKIP_ETT_LAND}>På skip registrert i ett land</Nav.Radio>
-        <Nav.Radio value={VurderingSokkelSkipTyper.SOKKEL_UTLAND}>
+        <Nav.Radio
+          disabled={
+            arbeidKunNorgeToggleEnabled && behandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_KUN_NORGE
+          }
+          value={VurderingSokkelSkipTyper.SKIP_ETT_LAND}
+        >
+          På skip registrert i ett land
+        </Nav.Radio>
+        <Nav.Radio
+          disabled={
+            arbeidKunNorgeToggleEnabled && behandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_KUN_NORGE
+          }
+          value={VurderingSokkelSkipTyper.SOKKEL_UTLAND}
+        >
           {konvensjonStorbritanniaToggleEnabled
             ? "Utsendt til sokkel eller til annet lands territorialfarvann"
             : "Utsendt til sokkel eller til annet lands territorialfarvann (art. 12)"}
