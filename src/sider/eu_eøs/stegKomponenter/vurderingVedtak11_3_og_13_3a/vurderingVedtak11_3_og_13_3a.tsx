@@ -133,13 +133,13 @@ export const VurderingVedtak11_3_og_13_3a = ({
   };
 
   const leggTilEllerFjernOrienteringsbrev = (kopiTilArbeidsgiverChecked: boolean) => {
-    const harInnvilgelseEFTAStorbritanniaPDF = pdfDokumenter.some(
+    const harOrienteringsbrev = pdfDokumenter.some(
       (dokument: any) =>
         dokument.dokumentData.produserbardokument ===
         MKV.Koder.brev.produserbaredokumenter.ORIENTERING_TIL_ARBEIDSGIVER_OM_VEDTAK
     );
 
-    if (!harInnvilgelseEFTAStorbritanniaPDF && kopiTilArbeidsgiverChecked) {
+    if (!harOrienteringsbrev && kopiTilArbeidsgiverChecked) {
       pdfDokumenter.push({
         dokumentData: {
           produserbardokument: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_TIL_ARBEIDSGIVER_OM_VEDTAK,
