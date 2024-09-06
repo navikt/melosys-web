@@ -156,7 +156,7 @@ export const VurderingVedtak11_3_og_13_3a = ({
       }
     }
   };
-  console.log({ a: formValues.lovvalgsbestemmelse });
+
   return (
     <div className="vedtak">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Omfattet av norsk trygdelovgivning</Nav.Typo.Innholdstittel>
