@@ -53,10 +53,7 @@ export const VurderingVedtak11_3_og_13_3a = ({
     defaultValues: {
       kopiTilArbeidsgiver: false,
       vedtakstypebegrunnelse: useSelector(behandlingsresultatSelectors.BegrunnelseKoderSelector)[0],
-      lovvalgsbestemmelse:
-        lovvalgsperiode !== null && !Utils._isEmpty(lovvalgsperiode)
-          ? lovvalgsperiode.lovvalgsbestemmelse
-          : MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3A,
+      lovvalgsbestemmelse: lovvalgsperiode?.lovvalgsbestemmelse ?? null,
       fom:
         lovvalgsperiode !== null && !Utils._isEmpty(lovvalgsperiode)
           ? Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.fomDato)
