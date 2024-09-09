@@ -71,11 +71,13 @@ export function finnVerdierMedKey(obj, key, finnParent = false) {
   return finnVerdierMedKeyHjelper(obj, key, [], finnParent);
 }
 
-export const formaterTilNorskBelop = (belop) => {
+export const formaterTilNorskBelop = (belop, antallDesimaler) => {
   if (!belop) return undefined;
 
   return belop.toLocaleString("nb-NO", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
+    minimumFractionDigits: antallDesimaler ?? 2,
+    maximumFractionDigits: antallDesimaler ?? 2,
   });
 };
+
+export const formaterTilNorskBelopUtenDesimaler = (belop) => formaterTilNorskBelop(belop, 0);

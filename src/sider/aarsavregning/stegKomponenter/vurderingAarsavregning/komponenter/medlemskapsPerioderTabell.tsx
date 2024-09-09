@@ -12,18 +12,22 @@ const MedlemskapsPerioderTabell = ({ perioder }: { perioder?: Medlemskapsperiode
       <Nav.Table.Header className="header_row">
         <Nav.Table.Row>
           <Nav.Table.HeaderCell scope="col">Medlemskap</Nav.Table.HeaderCell>
+          <Nav.Table.HeaderCell scope="col">Type</Nav.Table.HeaderCell>
           <Nav.Table.HeaderCell scope="col">Dekning</Nav.Table.HeaderCell>
         </Nav.Table.Row>
       </Nav.Table.Header>
       <Nav.Table.Body>
         {perioder.map((medlemskapsPeriode) => (
           <Nav.Table.Row className="border_top" key={Utils._uuid()}>
-            <Nav.Table.DataCell key={Utils._uuid()}>
+            <Nav.Table.DataCell>
               {`${Utils.dato.formatterDatoTilNorsk(medlemskapsPeriode.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(
                 medlemskapsPeriode.tomDato
               )}`}
             </Nav.Table.DataCell>
-            <Nav.Table.DataCell key={Utils._uuid()}>
+            <Nav.Table.DataCell>
+              {KV.kodeTilTerm(medlemskapsPeriode.medlemskapstype, MKV.KTObjects.medlemskapstyper)}
+            </Nav.Table.DataCell>
+            <Nav.Table.DataCell>
               {KV.kodeTilTerm(medlemskapsPeriode.trygdedekning, MKV.KTObjects.trygdedekninger)}
             </Nav.Table.DataCell>
           </Nav.Table.Row>
