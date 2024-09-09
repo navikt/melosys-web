@@ -11,15 +11,14 @@ import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysn
 import * as Utils from "../../../../utils";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { useEffect, useState } from "react";
-import Datovelger from "../../../../felleskomponenter/datovelger";
-import feilmeldinger from "../../../../felleskomponenter/feilmeldinger/feilmeldinger";
 import { FieldValues, useForm } from "react-hook-form";
 import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
 import { yupResolver } from "@hookform/resolvers/yup";
-import vurderingVedtak_11_3_og_13_3a from "./vurderingVedtak11_3_og_13_3aSchema";
+import vurderingVedtak_11_3_og_13_3aSchema from "./vurderingVedtak11_3_og_13_3aSchema";
 import { vedtakOperations } from "../../../../ducks/vedtak";
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
 import { kontrollOperations } from "../../../../ducks/kontroll";
+import { Datovelger } from "../../../../felleskomponenter/forms";
 
 type VurderingVedtakProps = {
   tilbake: () => void;
@@ -47,13 +46,15 @@ export const VurderingVedtak11_3_og_13_3a = ({
   const {
     watch,
     setValue,
+    control,
     formState: { isValid: formIsValid },
   } = useForm({
-    resolver: yupResolver(vurderingVedtak_11_3_og_13_3a),
+    resolver: yupResolver(vurderingVedtak_11_3_og_13_3aSchema),
+    mode: "all",
     defaultValues: {
       kopiTilArbeidsgiver: false,
       vedtakstypebegrunnelse: useSelector(behandlingsresultatSelectors.BegrunnelseKoderSelector)[0],
-      lovvalgsbestemmelse: lovvalgsperiode?.lovvalgsbestemmelse ?? null,
+      lovvalgsbestemmelse: lovvalgsperiode?.lovvalgsbestemmelse ?? "",
       fom:
         lovvalgsperiode !== null && !Utils._isEmpty(lovvalgsperiode)
           ? Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.fomDato)
@@ -66,7 +67,6 @@ export const VurderingVedtak11_3_og_13_3a = ({
       begrunnelseFritekst: useSelector(behandlingsresultatSelectors.BegrunnelseFritekstSelector) || "",
     } as FieldValues,
   });
-
   const formValues = watch();
 
   const lagreLovvalgsperiode = async (lovvalgsperiodeData?: any) => {
@@ -99,6 +99,7 @@ export const VurderingVedtak11_3_og_13_3a = ({
 
   const mapDokumenter = (dokumenter: BrevDokumentMetadataType[]) => {
     return dokumenter.map((dokument: BrevDokumentMetadataType) => {
+      dokument.dokumentData.begrunnelseFritekst = formValues?.begrunnelseFritekst;
       return dokument;
     });
   };
@@ -169,7 +170,6 @@ export const VurderingVedtak11_3_og_13_3a = ({
             MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3A,
             MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004
           ),
-
           KV.kodeTilObjekt(
             MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia.KONV_EFTA_STORBRITANNIA_ART13_3A,
             MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia
@@ -196,23 +196,16 @@ export const VurderingVedtak11_3_og_13_3a = ({
       </Nav.Checkbox>
 
       {formValues.korterePeriodeChecked && (
-        <Nav.Row>
-          <Nav.Column xs="3">
-            <Datovelger
-              label="Startdato"
-              onChange={() => {}}
-              value={Utils.dato.norskStringTilDate(formValues.fom)}
-              feil={feilmeldinger.name}
-              disabled
-            />
+        <Nav.Row className="skjema__panel__rad">
+          <Nav.Column xs="3" className="dato">
+            <Datovelger name="fom" label="Startdato" control={control} />
           </Nav.Column>
-          <Nav.Column xs="3">
+          <Nav.Column xs="3" className="dato">
             <Datovelger
-              label="Sluttdato"
+              name="tom"
               minDate={Utils.dato.norskStringTilDate(formValues.fom)}
-              value={Utils.dato.norskStringTilDate(formValues.tom)}
-              onChange={(tomValue) => setValue("tom", Utils.dato.formatterDatoTilNorsk(tomValue))}
-              disabled={!redigerbart}
+              label="Sluttdato"
+              control={control}
             />
           </Nav.Column>
         </Nav.Row>
