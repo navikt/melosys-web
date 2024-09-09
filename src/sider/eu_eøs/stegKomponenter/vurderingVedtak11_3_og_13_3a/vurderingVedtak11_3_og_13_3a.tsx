@@ -47,13 +47,13 @@ export const VurderingVedtak11_3_og_13_3a = ({
   const {
     watch,
     setValue,
-    formState: { isValid: formIsValid },
+    formState: { isValid: formIsValid, errors },
   } = useForm({
     resolver: yupResolver(vurderingVedtak_11_3_og_13_3a),
     defaultValues: {
       kopiTilArbeidsgiver: false,
       vedtakstypebegrunnelse: useSelector(behandlingsresultatSelectors.BegrunnelseKoderSelector)[0],
-      lovvalgsbestemmelse: lovvalgsperiode?.lovvalgsbestemmelse ?? null,
+      lovvalgsbestemmelse: lovvalgsperiode?.lovvalgsbestemmelse ?? "",
       fom:
         lovvalgsperiode !== null && !Utils._isEmpty(lovvalgsperiode)
           ? Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.fomDato)
@@ -66,7 +66,7 @@ export const VurderingVedtak11_3_og_13_3a = ({
       begrunnelseFritekst: useSelector(behandlingsresultatSelectors.BegrunnelseFritekstSelector) || "",
     } as FieldValues,
   });
-
+  console.log({ errors });
   const formValues = watch();
 
   const lagreLovvalgsperiode = async (lovvalgsperiodeData?: any) => {
@@ -99,6 +99,7 @@ export const VurderingVedtak11_3_og_13_3a = ({
 
   const mapDokumenter = (dokumenter: BrevDokumentMetadataType[]) => {
     return dokumenter.map((dokument: BrevDokumentMetadataType) => {
+      dokument.dokumentData.begrunnelseFritekst = formValues?.begrunnelseFritekst;
       return dokument;
     });
   };
@@ -169,7 +170,6 @@ export const VurderingVedtak11_3_og_13_3a = ({
             MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3A,
             MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004
           ),
-
           KV.kodeTilObjekt(
             MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia.KONV_EFTA_STORBRITANNIA_ART13_3A,
             MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia
@@ -213,6 +213,8 @@ export const VurderingVedtak11_3_og_13_3a = ({
               value={Utils.dato.norskStringTilDate(formValues.tom)}
               onChange={(tomValue) => setValue("tom", Utils.dato.formatterDatoTilNorsk(tomValue))}
               disabled={!redigerbart}
+              feil="Må fylles ut"
+              brukInternValidering
             />
           </Nav.Column>
         </Nav.Row>
