@@ -1,7 +1,5 @@
-/* eslint-disable */
-
 import { useEffect, useState } from "react";
-import { connect, useDispatch } from "react-redux";
+import { connect, useDispatch, useSelector } from "react-redux";
 import { getFormValues, isValid, reduxForm } from "redux-form";
 import PT from "prop-types";
 import MKV from "../../../melosyskodeverk";
@@ -26,6 +24,7 @@ import VurderingAvslagArtikkel12Og16Schema from "./vurderingAvslag12_x_og_16Sche
 import { useFeatureToggle } from "../../../featuretoggle";
 import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../featuretoggle/toggleNavn";
 import { VurderingYrkesaktivitetTyper } from "../../../kodeverk/koder";
+import { avklartefaktaSelectors } from "../../../ducks/avklartefakta";
 
 const skalViseSendOrienteringsbrev = (sakstype, behandlingstema, erNyVurdering, erSelvstendigNaeringsdrivende) =>
   !erNyVurdering &&
