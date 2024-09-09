@@ -11,15 +11,14 @@ import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysn
 import * as Utils from "../../../../utils";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { useEffect, useState } from "react";
-import Datovelger from "../../../../felleskomponenter/datovelger";
-import feilmeldinger from "../../../../felleskomponenter/feilmeldinger/feilmeldinger";
 import { FieldValues, useForm } from "react-hook-form";
 import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
 import { yupResolver } from "@hookform/resolvers/yup";
-import vurderingVedtak_11_3_og_13_3a from "./vurderingVedtak11_3_og_13_3aSchema";
+import vurderingVedtak_11_3_og_13_3aSchema from "./vurderingVedtak11_3_og_13_3aSchema";
 import { vedtakOperations } from "../../../../ducks/vedtak";
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
 import { kontrollOperations } from "../../../../ducks/kontroll";
+import { Datovelger } from "../../../../felleskomponenter/forms";
 
 type VurderingVedtakProps = {
   tilbake: () => void;
@@ -47,9 +46,11 @@ export const VurderingVedtak11_3_og_13_3a = ({
   const {
     watch,
     setValue,
-    formState: { isValid: formIsValid, errors },
+    control,
+    formState: { isValid: formIsValid },
   } = useForm({
-    resolver: yupResolver(vurderingVedtak_11_3_og_13_3a),
+    resolver: yupResolver(vurderingVedtak_11_3_og_13_3aSchema),
+    mode: "all",
     defaultValues: {
       kopiTilArbeidsgiver: false,
       vedtakstypebegrunnelse: useSelector(behandlingsresultatSelectors.BegrunnelseKoderSelector)[0],
@@ -66,7 +67,6 @@ export const VurderingVedtak11_3_og_13_3a = ({
       begrunnelseFritekst: useSelector(behandlingsresultatSelectors.BegrunnelseFritekstSelector) || "",
     } as FieldValues,
   });
-  console.log({ errors });
   const formValues = watch();
 
   const lagreLovvalgsperiode = async (lovvalgsperiodeData?: any) => {
@@ -196,25 +196,16 @@ export const VurderingVedtak11_3_og_13_3a = ({
       </Nav.Checkbox>
 
       {formValues.korterePeriodeChecked && (
-        <Nav.Row>
-          <Nav.Column xs="3">
-            <Datovelger
-              label="Startdato"
-              onChange={() => {}}
-              value={Utils.dato.norskStringTilDate(formValues.fom)}
-              feil={feilmeldinger.name}
-              disabled
-            />
+        <Nav.Row className="skjema__panel__rad">
+          <Nav.Column xs="3" className="dato">
+            <Datovelger name="fom" label="Startdato" control={control} />
           </Nav.Column>
-          <Nav.Column xs="3">
+          <Nav.Column xs="3" className="dato">
             <Datovelger
-              label="Sluttdato"
+              name="tom"
               minDate={Utils.dato.norskStringTilDate(formValues.fom)}
-              value={Utils.dato.norskStringTilDate(formValues.tom)}
-              onChange={(tomValue) => setValue("tom", Utils.dato.formatterDatoTilNorsk(tomValue))}
-              disabled={!redigerbart}
-              feil="Må fylles ut"
-              brukInternValidering
+              label="Sluttdato"
+              control={control}
             />
           </Nav.Column>
         </Nav.Row>
