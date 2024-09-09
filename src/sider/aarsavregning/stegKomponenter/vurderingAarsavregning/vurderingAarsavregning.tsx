@@ -136,6 +136,16 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
     fetchAvregningsData();
   }, [lagretTrygdeavgiftsperioder]);
 
+  useEffect(() => {
+    if (redigerbart && lagretTrygdeavgift) {
+      Api.Aarsavregning.oppdaterTotalBelop(behandlingID, {
+        avregning: {
+          nyttTotalbeloep: lagretTrygdeavgift?.nyttGrunnlag?.avgift.totalAvgift,
+        },
+      });
+    }
+  }, [lagretTrygdeavgift?.nyttGrunnlag?.avgift.totalAvgift]);
+
   const fetchAvregningsData = () => {
     return Api.Aarsavregning.hentAvregningsData(behandlingID)
       .then((response: AarsavregningResponse) => {
