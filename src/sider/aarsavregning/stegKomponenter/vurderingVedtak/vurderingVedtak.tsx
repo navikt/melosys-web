@@ -95,7 +95,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   }, [aktivtSteg]);
 
   // FIXME: Fatting av årsavregningsvedtak skal i fremtiden være uavhengig av sakstype
-  const lagFattVedtakFTRLReqDto = (): Api.Saksflyt.Vedtak.FattVedtakReqDto => {
+  const lagFattVedtakReqDto = (): Api.Saksflyt.Vedtak.FattVedtakReqDto => {
     return {
       behandlingsresultatTypeKode: FERDIGBEHANDLET,
       innledningFritekst: formValues?.innledningFritekst || null,
@@ -107,7 +107,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
 
   const fattVedtakOnClick = async () => {
     setVedtakPending(true);
-    fattVedtak(behandlingID, lagFattVedtakFTRLReqDto()).then((res) => {
+    fattVedtak(behandlingID, lagFattVedtakReqDto()).then((res) => {
       if (res.data?.data?.error) {
         setVedtakPending(false);
       }
