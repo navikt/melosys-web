@@ -64,7 +64,7 @@ const trygdeavgiftFritekstHjelpetekst =
 const komponentDispatch = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   kontrollerFerdigbehandling: (data: Api.Kontroll.FerdigbehandlingKontrollData) =>
     dispatch(kontrollOperations.kontrollerFerdigbehandling(data)),
-  fattVedtak: (behandlingID: number, body: Api.Saksflyt.Vedtak.FattVedtakFTRLReqDto) =>
+  fattVedtak: (behandlingID: number, body: Api.Saksflyt.Vedtak.FattVedtakReqDto) =>
     dispatch(vedtakOperations.fatt(behandlingID, body)),
 });
 
@@ -243,7 +243,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
     return FØRSTEGANGSVEDTAK;
   };
 
-  const lagFattVedtakFTRLReqDto = (): Api.Saksflyt.Vedtak.FattVedtakFTRLReqDto => {
+  const lagFattVedtakReqDto = (): Api.Saksflyt.Vedtak.FattVedtakReqDto => {
     return {
       behandlingsresultatTypeKode: erDelvisOpphør ? DELVIS_OPPHØRT : MEDLEM_I_FOLKETRYGDEN,
       innledningFritekst: formValues?.innledningFritekst || null,
@@ -283,7 +283,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const onSubmit = async () => {
     setVedtakPending(true);
     if (mottatteOpplysningerErGyldig()) {
-      fattVedtak(behandlingID, lagFattVedtakFTRLReqDto()).then((res) => {
+      fattVedtak(behandlingID, lagFattVedtakReqDto()).then((res) => {
         if (res.data?.data?.error) {
           setVedtakPending(false);
         }

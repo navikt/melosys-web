@@ -41,7 +41,7 @@ const MINSTEBELOP_FAKTURERING_ELLER_REFUSJON = 100;
 const komponentDispatch = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   kontrollerFerdigbehandling: (data: Api.Kontroll.FerdigbehandlingKontrollData) =>
     dispatch(kontrollOperations.kontrollerFerdigbehandling(data)),
-  fattVedtak: (behandlingID: number, body: Api.Saksflyt.Vedtak.FattVedtakFTRLReqDto) =>
+  fattVedtak: (behandlingID: number, body: Api.Saksflyt.Vedtak.FattVedtakReqDto) =>
     dispatch(vedtakOperations.fatt(behandlingID, body)),
 });
 
@@ -95,7 +95,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   }, [aktivtSteg]);
 
   // FIXME: Fatting av årsavregningsvedtak skal i fremtiden være uavhengig av sakstype
-  const lagFattVedtakFTRLReqDto = (): Api.Saksflyt.Vedtak.FattVedtakFTRLReqDto => {
+  const lagFattVedtakFTRLReqDto = (): Api.Saksflyt.Vedtak.FattVedtakReqDto => {
     return {
       behandlingsresultatTypeKode: FERDIGBEHANDLET,
       innledningFritekst: formValues?.innledningFritekst || null,
