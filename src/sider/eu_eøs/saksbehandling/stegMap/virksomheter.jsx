@@ -33,6 +33,16 @@ class SaksbehandlingVirksomheter extends Virksomheter {
 
     this.kriterier = [
       {
+        exec: (avklartefakta) => {
+          const erSkipEttLand = SokkelSkip.finnAvklaring(
+            avklartefakta,
+            KV.Koder.VurderingSokkelSkipTyper.SKIP_ETT_LAND
+          );
+          return harValgtArbeidsgiver && arbeiderPaSokkelEllerSkip && erSkipEttLand;
+        },
+        nesteSteg: STEG.BOSTEDSLAND,
+      },
+      {
         exec: () =>
           propsLight.konvensjonStorbritanniaToggleEnabled &&
           harValgtArbeidsgiver &&
@@ -83,16 +93,6 @@ class SaksbehandlingVirksomheter extends Virksomheter {
           );
         },
         nesteSteg: STEG.YRKESAKTIVITET,
-      },
-      {
-        exec: (avklartefakta) => {
-          const erSkipEttLand = SokkelSkip.finnAvklaring(
-            avklartefakta,
-            KV.Koder.VurderingSokkelSkipTyper.SKIP_ETT_LAND
-          );
-          return harValgtArbeidsgiver && arbeiderPaSokkelEllerSkip && erSkipEttLand;
-        },
-        nesteSteg: STEG.BOSTEDSLAND,
       },
     ];
   }
