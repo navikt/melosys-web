@@ -2,7 +2,19 @@ import { postAsJson } from "../../utils";
 import { API_BASE_URL, SAKSFLYT, VEDTAK } from "../../api-constants";
 import { KopiMottaker } from "../dokumenter-v2";
 
-export type FattVedtakReqDto = FattVedtakEOSReqDto | FattVedtakFTRLReqDto | FattVedtakTrygdeavtaleReqDto;
+export type FattVedtakReqDto =
+  | FattVedtakEOSReqDto
+  | FattVedtakFTRLReqDto
+  | FattVedtakTrygdeavtaleReqDto
+  | FattVedtakÅrsavregningReqDto;
+
+export interface FattVedtakÅrsavregningReqDto {
+  behandlingsresultatTypeKode: string;
+  innledningFritekst?: string | null;
+  begrunnelseFritekst?: string | null;
+  vedtakstype: string | null;
+  kopiMottakere?: KopiMottaker[];
+}
 
 export interface FattVedtakEOSReqDto {
   behandlingsresultatTypeKode: string;
