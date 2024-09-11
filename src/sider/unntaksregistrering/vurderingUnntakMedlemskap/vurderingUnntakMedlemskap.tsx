@@ -213,7 +213,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
               <Forms.Datovelger
                 label="Fra og med"
                 name="fom"
-                disabled={!redigerbart}
+                readOnly={!redigerbart}
                 control={control}
                 onChange={lagreFom}
               />
@@ -222,7 +222,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
               <Forms.Datovelger
                 label="Til og med"
                 name="tom"
-                disabled={!redigerbart}
+                readOnly={!redigerbart}
                 minDate={Utils.dato.norskStringTilDate(formValues?.fom)}
                 control={control}
                 onChange={lagreTom}

@@ -10,7 +10,7 @@ import { getErrorMessage } from "./misc/mapFeilmelding";
 
 interface DatovelgerComponentProps {
   label?: ReactNode;
-  disabled?: boolean;
+  readOnly?: boolean;
   bredde?: string;
   minDate?: Date;
   maxDate?: Date;
@@ -23,7 +23,7 @@ type InnerDatovelgerComponentProps = DatovelgerComponentProps & RegisterHookForm
 
 const InnerDatovelgerComponent = forwardRef<HTMLSelectElement, InnerDatovelgerComponentProps>(
   (
-    { label, disabled, bredde, minDate, maxDate, feil, onChange, ...rest }: InnerDatovelgerComponentProps,
+    { label, readOnly, bredde, minDate, maxDate, feil, onChange, ...rest }: InnerDatovelgerComponentProps,
     _ref: any
   ) => {
     return (
@@ -35,7 +35,7 @@ const InnerDatovelgerComponent = forwardRef<HTMLSelectElement, InnerDatovelgerCo
           value={Utils.norskStringTilDate(rest.value)}
           feil={feil}
           bredde={bredde}
-          disabled={disabled}
+          readOnly={readOnly}
           minDate={minDate}
           maxDate={maxDate}
         />
@@ -57,7 +57,7 @@ const Datovelger = forwardRef<HTMLSelectElement, DatovelgerProps>(
             {...field}
             {...rest}
             label={rest.label}
-            disabled={rest.disabled}
+            readOnly={rest.readOnly}
             bredde={rest.bredde}
             minDate={rest.minDate}
             maxDate={rest.maxDate}

@@ -206,7 +206,7 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
           <Nav.Column xs="6">
             <Forms.Select
               name="nyVurderingBakgrunnValg"
-              disabled={!redigerbart}
+              readOnly={!redigerbart}
               emptyFieldDisabled={!!formValues?.nyVurderingBakgrunnValg}
               control={control}
               onChange={oppdaterNyVurderingBakgrunnValg}

@@ -44,7 +44,7 @@ export const BestemmelseSelect = ({
           control={control}
           label="Bestemmelse"
           emptyFieldDisabled={!!formValues.bestemmelse}
-          disabled={!redigerbart}
+          readOnly={!redigerbart}
           onChange={lagreBestemmelse}
         >
           {bestemmelser?.map((item: KTObject) => (
@@ -62,7 +62,7 @@ export const BestemmelseSelect = ({
               control={control}
               label="Dekning"
               emptyFieldDisabled={!!formValues.trygdedekning}
-              disabled={!redigerbart}
+              readOnly={!redigerbart}
               onChange={lagreTrygdedekning}
             >
               <option value={UTEN_DEKNING.kode}>{UTEN_DEKNING.term}</option>

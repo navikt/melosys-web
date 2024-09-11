@@ -147,7 +147,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
                   name="bestemmelse"
                   control={control}
                   label=""
-                  disabled={!redigerbart}
+                  readOnly={!redigerbart}
                   onChange={lagreBestemmelse}
                   emptyFieldDisabled={!!formValues.bestemmelse}
                 >
