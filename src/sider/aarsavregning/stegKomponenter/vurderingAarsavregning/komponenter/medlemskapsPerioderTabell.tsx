@@ -4,6 +4,24 @@ import * as KV from "../../../../../kodeverk";
 import * as Nav from "../../../../../navFrontend";
 import MKV from "../../../../../melosyskodeverk";
 
+const { PLIKTIG, FRIVILLIG, UNNTATT, DELVIS_UNNTATT } = MKV.Koder.medlemskapstyper;
+
+const mapMedlemskapstypeTekst = (kode: string) => {
+  if (kode === PLIKTIG) {
+    return "Pliktig";
+  }
+  if (kode === FRIVILLIG) {
+    return "Frivillig";
+  }
+  if (kode === UNNTATT) {
+    return "Unntatt";
+  }
+  if (kode === DELVIS_UNNTATT) {
+    return "Delvis unntatt";
+  }
+  return "";
+};
+
 const MedlemskapsPerioderTabell = ({ perioder }: { perioder?: Medlemskapsperiode[] }) => {
   if (!perioder) return null;
 
@@ -24,9 +42,7 @@ const MedlemskapsPerioderTabell = ({ perioder }: { perioder?: Medlemskapsperiode
                 medlemskapsPeriode.tomDato
               )}`}
             </Nav.Table.DataCell>
-            <Nav.Table.DataCell>
-              {KV.kodeTilTerm(medlemskapsPeriode.medlemskapstype, MKV.KTObjects.medlemskapstyper)}
-            </Nav.Table.DataCell>
+            <Nav.Table.DataCell>{mapMedlemskapstypeTekst(medlemskapsPeriode.medlemskapstype)}</Nav.Table.DataCell>
             <Nav.Table.DataCell>
               {KV.kodeTilTerm(medlemskapsPeriode.trygdedekning, MKV.KTObjects.trygdedekninger)}
             </Nav.Table.DataCell>

@@ -324,7 +324,6 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
   useEffect(() => {
     oppdaterStatus(stegErGyldig);
   }, [stegErGyldig]);
-  console.log(lagretTrygdeavgift?.tidligereGrunnlagsopplysninger);
 
   return (
     <div className="vurderingAarsavregning">
