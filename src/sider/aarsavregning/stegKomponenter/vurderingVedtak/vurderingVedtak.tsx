@@ -41,7 +41,7 @@ const MINSTEBELOP_FAKTURERING_ELLER_REFUSJON = 100;
 const komponentDispatch = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   kontrollerFerdigbehandling: (data: Api.Kontroll.FerdigbehandlingKontrollData) =>
     dispatch(kontrollOperations.kontrollerFerdigbehandling(data)),
-  fattVedtak: (behandlingID: number, body: Api.Saksflyt.Vedtak.FattVedtakReqDto) =>
+  fattVedtak: (behandlingID: number, body: Api.Saksflyt.Vedtak.FattVedtakÅrsavregningReqDto) =>
     dispatch(vedtakOperations.fatt(behandlingID, body)),
 });
 
