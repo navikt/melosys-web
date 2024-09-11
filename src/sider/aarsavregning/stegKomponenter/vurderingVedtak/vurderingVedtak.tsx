@@ -21,7 +21,6 @@ import MKV from "../../../../melosyskodeverk";
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
 import * as Forms from "../../../../felleskomponenter/forms";
 import { SumArsavregningTabell } from "../vurderingAarsavregning/komponenter/sumArsavregningTabell";
-import { FattVedtakÅrsavregningReqDto } from "../../../../services/modules/saksflyt/vedtak";
 
 const { FERDIGBEHANDLET } = MKV.Koder.behandlinger.behandlingsresultattyper;
 const { FØRSTEGANGSVEDTAK } = MKV.Koder.vedtakstyper;
