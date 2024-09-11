@@ -90,7 +90,7 @@ export const VurderingVedtak11_3_og_13_3a = ({
     setKontrollerPending(true);
     lagreLovvalgsperiode({
       fomDato: Utils.dato.formatterDatoTilISO(fom),
-      tomDato: Utils.dato.formatterDatoTilISO(tom),
+      tomDato: Utils.dato.formatterDatoTilISO(tom, ""),
       lovvalgsbestemmelse,
     }).then(() => kontroller().then(() => setKontrollerPending(false)));
   }, [tom, fom, lovvalgsbestemmelse]);
