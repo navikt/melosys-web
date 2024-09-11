@@ -28,10 +28,10 @@ export interface FattVedtakEOSReqDto {
 
 export interface FattVedtakFTRLReqDto {
   behandlingsresultatTypeKode: string;
-  vedtakstype: string;
   innledningFritekst?: string | null;
   begrunnelseFritekst?: string | null;
   trygdeavgiftFritekst?: string | null;
+  vedtakstype: string;
   kopiMottakere?: KopiMottaker[];
   nyVurderingBakgrunn?: string | null;
   opphoerDato?: string | null;

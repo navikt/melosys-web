@@ -21,6 +21,7 @@ import MKV from "../../../../melosyskodeverk";
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
 import * as Forms from "../../../../felleskomponenter/forms";
 import { SumArsavregningTabell } from "../vurderingAarsavregning/komponenter/sumArsavregningTabell";
+import { FattVedtakÅrsavregningReqDto } from "../../../../services/modules/saksflyt/vedtak";
 
 const { FERDIGBEHANDLET } = MKV.Koder.behandlinger.behandlingsresultattyper;
 const { FØRSTEGANGSVEDTAK } = MKV.Koder.vedtakstyper;
@@ -94,8 +95,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
     }
   }, [aktivtSteg]);
 
-  // FIXME: Fatting av årsavregningsvedtak skal i fremtiden være uavhengig av sakstype
-  const lagFattVedtakReqDto = (): Api.Saksflyt.Vedtak.FattVedtakReqDto => {
+  const lagFattVedtakReqDto = (): Api.Saksflyt.Vedtak.FattVedtakÅrsavregningReqDto => {
     return {
       behandlingsresultatTypeKode: FERDIGBEHANDLET,
       innledningFritekst: formValues?.innledningFritekst || null,

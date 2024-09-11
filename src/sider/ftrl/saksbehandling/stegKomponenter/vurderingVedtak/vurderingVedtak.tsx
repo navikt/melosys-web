@@ -64,7 +64,7 @@ const trygdeavgiftFritekstHjelpetekst =
 const komponentDispatch = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   kontrollerFerdigbehandling: (data: Api.Kontroll.FerdigbehandlingKontrollData) =>
     dispatch(kontrollOperations.kontrollerFerdigbehandling(data)),
-  fattVedtak: (behandlingID: number, body: Api.Saksflyt.Vedtak.FattVedtakReqDto) =>
+  fattVedtak: (behandlingID: number, body: Api.Saksflyt.Vedtak.FattVedtakFTRLReqDto) =>
     dispatch(vedtakOperations.fatt(behandlingID, body)),
 });
 
@@ -243,7 +243,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
     return FØRSTEGANGSVEDTAK;
   };
 
-  const lagFattVedtakReqDto = (): Api.Saksflyt.Vedtak.FattVedtakReqDto => {
+  const lagFattVedtakReqDto = (): Api.Saksflyt.Vedtak.FattVedtakFTRLReqDto => {
     return {
       behandlingsresultatTypeKode: erDelvisOpphør ? DELVIS_OPPHØRT : MEDLEM_I_FOLKETRYGDEN,
       innledningFritekst: formValues?.innledningFritekst || null,
