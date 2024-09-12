@@ -5,6 +5,17 @@ import * as Nav from "../../navFrontend";
 
 import "./alertmeldinger.css";
 
+export const NyBehandlingForTidligereAarsavregningMelding = () => (
+  <Nav.Alert variant="warning" className="nyVurderingMelding">
+    <Nav.Typo.Normaltekst className="nyVurderingMelding__overskrift">
+      Ny behandling for en tidligere årsavregning
+    </Nav.Typo.Normaltekst>
+    <Nav.Typo.Normaltekst>
+      Du har startet en ny årsavregningbehandling for et tidligere årsavregnet år
+    </Nav.Typo.Normaltekst>
+  </Nav.Alert>
+);
+
 export const Innsynsmelding = ({ className = "" }) => (
   <Nav.Alert variant="info" className={`innsynsmelding ${className}`}>
     Innsynsmodus

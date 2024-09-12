@@ -29,6 +29,7 @@ import MKV from "../../../../melosyskodeverk";
 import { BeregnetTrygdeavgift } from "../../../../services/modules/trygdeavgift";
 import { SumArsavregningTabell } from "./komponenter/sumArsavregningTabell";
 import { BeregnetTrygdeavgiftDetaljer } from "./komponenter/beregnetTrygdeavgiftDetaljer";
+import { NyBehandlingForTidligereAarsavregningMelding } from "../../../../felleskomponenter/alertmeldinger/alertmeldinger";
 
 interface Props {
   bekreft: () => void;
@@ -329,7 +330,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
   return (
     <div className="vurderingAarsavregning">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Årsavregning</Nav.Typo.Innholdstittel>
-      <Nav.Fieldset className="select" legend={<LabelMedHjelpetekst bold label="År" placement="left-start" />}>
+      <Nav.Fieldset className="select" legend={<LabelMedHjelpetekst bold label="Års" placement="left-start" />}>
         <Nav.Row>
           <Nav.Column xs="4">
             <Nav.Select label="" id="aarVelger" value={valgtÅr?.toString() ?? ""} onChange={håndterEndringAvÅr}>
@@ -343,6 +344,11 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
               ))}
             </Nav.Select>
           </Nav.Column>
+        </Nav.Row>
+        <Nav.Row>
+          {lagretTrygdeavgift?.tidligereGrunnlagsopplysninger !== null && lagretTrygdeavgift?.aar === valgtÅr && (
+            <NyBehandlingForTidligereAarsavregningMelding />
+          )}
         </Nav.Row>
       </Nav.Fieldset>
       {feil && <Nav.Alert variant="error">{feil}</Nav.Alert>}
