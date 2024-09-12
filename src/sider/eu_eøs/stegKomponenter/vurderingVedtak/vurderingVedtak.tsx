@@ -297,7 +297,7 @@ const VurderingVedtak = ({
             {tilleggBestemmelseKT?.term}
           </Nav.Column>
         </Nav.Row>
-        {erNyVurdering && <Skjema.Vedtakstype redigerbart={redigerbart} />}
+        {erNyVurdering && <Skjema.Vedtakstype className="vedtaksType" redigerbart={redigerbart} />}
         <Nav.Row className="fritekst">
           <Nav.Column xs="7">
             <Skjema.Textarea

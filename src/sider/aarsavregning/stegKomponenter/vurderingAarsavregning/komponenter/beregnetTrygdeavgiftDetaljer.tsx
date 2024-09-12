@@ -62,9 +62,9 @@ export const BeregnetTrygdeavgiftDetaljer = ({
   const arbAvgBetalesKreves = (kildetype: String) => !medlemskapsTypeErPliktig && kildetype !== MISJONÆR;
 
   return (
-    <Nav.ExpansionCard aria-label="trygdeavgiftdetaljer">
+    <Nav.ExpansionCard aria-label="trygdeavgiftdetaljer" size="small">
       <Nav.ExpansionCard.Header>
-        <Nav.ExpansionCard.Title>{tittel}</Nav.ExpansionCard.Title>
+        <Nav.ExpansionCard.Title size="small">{tittel}</Nav.ExpansionCard.Title>
       </Nav.ExpansionCard.Header>
       <Nav.ExpansionCard.Content>
         <div className="skjema__panel">
