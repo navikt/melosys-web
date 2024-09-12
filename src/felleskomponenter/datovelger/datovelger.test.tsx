@@ -36,7 +36,7 @@ describe("Datovelger", () => {
   });
 
   it("viser riktige verdier dersom datovelger er disabled", () => {
-    render(<Datovelger {...{ ...props, disabled: true }} />);
+    render(<Datovelger {...{ ...props, readOnly: true }} />);
 
     const datePicker = screen.getByLabelText("Dato");
     expect(datePicker).toHaveAttribute("readonly");
