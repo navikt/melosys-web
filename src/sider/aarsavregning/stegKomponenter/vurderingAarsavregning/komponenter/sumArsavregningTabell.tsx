@@ -11,7 +11,7 @@ export const SumArsavregningTabell = ({
   tidligereTrygdeavgift?: number;
 }) => {
   return (
-    <div className="skjema__panel">
+    <div className="sumArsavregningTabell">
       <Nav.Table size="small" width={500} className="periode_tabell">
         <Nav.Table.Row>
           <Nav.Table.DataCell scope="col" />
