@@ -10,7 +10,7 @@ describe("Datovelger", () => {
     onChange: (nyDatoString: string) => (dato = Utils.dato.norskStringTilDate(nyDatoString)),
     value: dato,
     label: "Dato",
-    disabled: false,
+    readOnly: false,
     feil: undefined,
     bredde: undefined,
   };

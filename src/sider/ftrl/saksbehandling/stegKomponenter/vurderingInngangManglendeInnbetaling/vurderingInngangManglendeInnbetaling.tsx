@@ -88,7 +88,7 @@ export const VurderingInngangManglendeInnbetaling = ({ bekreft, aktivtSteg, oppd
         name="fullstendigManglendeInnbetaling"
         control={control}
         onChange={handleChange}
-        disabled={!redigerbart}
+        readOnly={!redigerbart}
         size="medium"
       >
         <Nav.Radio value={BOOLSK_STRING.SANN}>

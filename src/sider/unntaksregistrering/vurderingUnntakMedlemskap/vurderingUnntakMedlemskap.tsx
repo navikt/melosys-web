@@ -182,7 +182,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
           <Forms.RadioGroup
             legend={<Nav.Typo.Normaltekst className="formLabel">Vurder unntaksperiode</Nav.Typo.Normaltekst>}
             name="utfallRegistreringUnntak"
-            disabled={!redigerbart}
+            readOnly={!redigerbart}
             onChange={lagreUtfallRegistreringUnntak}
             control={control}
           >
