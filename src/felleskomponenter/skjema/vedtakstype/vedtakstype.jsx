@@ -20,17 +20,13 @@ const Vedtakstype = ({ className, redigerbart, vedtakstypebegrunnelseFeltNavn, v
 Vedtakstype.propTypes = {
   className: PT.string,
   redigerbart: PT.bool.isRequired,
-  vedtakstypeFeltNavn: PT.string,
   vedtakstypebegrunnelseFeltNavn: PT.string,
-  vedtakstypeLabel: PT.string,
   vedtakstypebegrunnelseLabel: PT.string,
 };
 
 Vedtakstype.defaultProps = {
   className: undefined,
-  vedtakstypeFeltNavn: "vedtakstype",
   vedtakstypebegrunnelseFeltNavn: "vedtakstypebegrunnelse",
-  vedtakstypeLabel: "Hvilken type vedtak skal fattes?",
   vedtakstypebegrunnelseLabel: (
     <LabelMedHjelpetekst
       label="Oppgi grunn for nytt vedtak (Obligatorisk)"
