@@ -110,7 +110,7 @@ export const VurderingVirksomhet = ({ bekreft, tilbake, aktivtSteg, oppdaterStat
           }
         >
           {virksomheterListe.map((fullmakt: KTObject) => (
-            <Nav.Checkbox key={fullmakt.kode} value={fullmakt.kode} disabled={!redigerbart}>
+            <Nav.Checkbox key={fullmakt.kode} value={fullmakt.kode} readOnly={!redigerbart}>
               {fullmakt.term}
             </Nav.Checkbox>
           ))}
