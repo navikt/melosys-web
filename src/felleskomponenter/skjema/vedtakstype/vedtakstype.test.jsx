@@ -10,9 +10,7 @@ describe("Vedtakstype", () => {
     props = {
       className: "artikkel",
       redigerbart: true,
-      vedtakstypeFeltNavn: "vedtakstypeFeltNavn",
       vedtakstypebegrunnelseFeltNavn: "vedtakstypebegrunnelseFeltNavn",
-      vedtakstypeLabel: "vedtakstypeLabel",
       vedtakstypebegrunnelseLabel: "vedtakstypebegrunnelseLabel",
     };
   });

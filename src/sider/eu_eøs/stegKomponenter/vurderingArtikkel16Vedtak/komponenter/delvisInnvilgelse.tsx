@@ -18,6 +18,7 @@ import { useSelector } from "react-redux";
 import { fagsakSelectors } from "../../../../../ducks/fagsaker";
 import { avklartefaktaSelectors } from "../../../../../ducks/avklartefakta";
 import { VurderingYrkesaktivitetTyper } from "../../../../../kodeverk/koder";
+import { mottatteOpplysningerSelectors } from "../../../../../ducks/mottatteOpplysninger";
 
 interface DelvisInnvilgelseProps {
   redigerbart: boolean;
@@ -51,9 +52,17 @@ const DelvisInnvilgelse = ({
   const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
   const pdfDokumenter: (BrevDokumentMetadataType | SedDokumentMetadataType)[] = [];
   const saksnummer = useSelector(fagsakSelectors.SaksnummerSelector) as string;
+
+  const selvstendigeVirksomheter = useSelector(mottatteOpplysningerSelectors.SelvstendigNaringsvirksomhetSelector);
+  const avklartVirksomhet = useSelector(avklartefaktaSelectors.AvklarteVirksomheterSelector)[0];
+  const erSelvstendigVirksomhet =
+    selvstendigeVirksomheter.find((virksomhet: any) => virksomhet.orgnr === avklartVirksomhet.virksomhetId) !==
+    undefined;
+
   const erSelvstendigNaeringsdrivende =
     useSelector(avklartefaktaSelectors.YrkesaktivitetSelector) ===
-    VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE;
+      VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE || erSelvstendigVirksomhet;
+
   if (erUtsendt && erStorbrittaniaArt18_1Bestemmelse && konvensjonStorbritanniaToggleEnabled) {
     pdfDokumenter.push({
       dokumentData: {

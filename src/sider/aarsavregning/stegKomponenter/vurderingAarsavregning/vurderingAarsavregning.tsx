@@ -1,4 +1,3 @@
-import TrygdeavgiftsperioderTabell from "./komponenter/trygdeavgiftsperioderTabell";
 import * as Api from "../../../../services/api";
 import MedlemskapsPerioderTabell from "./komponenter/medlemskapsPerioderTabell";
 import "./vurderingAarsavregning.css";
@@ -9,7 +8,6 @@ import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import * as Nav from "../../../../navFrontend";
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
 import { redigerbartSelectors } from "../../../../ducks/redigerbart";
-import SkatteforholdsPerioderTabell from "./komponenter/skatteforholdsPerioderTabell";
 import { TidligereGrunnlagsopplysningerFinnesIkke } from "./komponenter/tidligereGrunnlagsopplysningerFinnesIkke";
 import { FieldValue, useFieldArray, useForm } from "react-hook-form";
 import {
@@ -29,6 +27,7 @@ import MKV from "../../../../melosyskodeverk";
 import { BeregnetTrygdeavgift } from "../../../../services/modules/trygdeavgift";
 import { SumArsavregningTabell } from "./komponenter/sumArsavregningTabell";
 import { BeregnetTrygdeavgiftDetaljer } from "./komponenter/beregnetTrygdeavgiftDetaljer";
+import TidligereGrunnlagsoversikt from "./komponenter/tidligereGrunnlagsoversikt";
 
 interface Props {
   bekreft: () => void;
@@ -354,11 +353,11 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
           <MedlemskapsPerioderTabell
             perioder={lagretTrygdeavgift.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag.medlemskapsperioder}
           />
-          <SkatteforholdsPerioderTabell
-            perioder={lagretTrygdeavgift.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag.skatteforholdsperioder}
-          />
-          <TrygdeavgiftsperioderTabell
-            perioder={lagretTrygdeavgift.tidligereGrunnlagsopplysninger.avgift.trygdeavgiftsperioder}
+          <TidligereGrunnlagsoversikt
+            skatteforholdsperioder={
+              lagretTrygdeavgift.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag.skatteforholdsperioder
+            }
+            inntektsperioder={lagretTrygdeavgift.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag.inntektskperioder}
             avgift={lagretTrygdeavgift.tidligereGrunnlagsopplysninger.avgift}
           />
         </>
