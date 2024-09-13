@@ -12,7 +12,7 @@ interface DatovelgerProps {
   onChange: (norskStringDato: string) => void;
   value?: Date;
   label?: ReactNode;
-  disabled?: boolean;
+  readOnly?: boolean;
   feil?: string;
   bredde?: string;
   minDate?: Date;
@@ -26,7 +26,7 @@ const Datovelger = ({
   onChange,
   value,
   label,
-  disabled = false,
+  readOnly = false,
   feil = undefined,
   bredde = "fullbredde",
   minDate,
@@ -77,7 +77,7 @@ const Datovelger = ({
           })}
           size="small"
           onBlur={onBlur}
-          readOnly={disabled}
+          readOnly={readOnly}
           onChange={handleOnChange}
         />
       </DatePicker>

@@ -1,4 +1,12 @@
 .inntektskilder {
+  .skjema__panel__rad {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+
+  .arbgiverskatt {
+    min-width: 13rem;
+  }
   .skjema__panel {
     // Litt hacky, men ordner alignment av labels da to av de har faste linebreaks
     .typo-element {
@@ -11,24 +19,32 @@
     }
 
     .brutto_inntekt {
+      min-width: 15rem;
+      display: flex;
       white-space: break-spaces;
-      max-width: 7.5rem;
-      justify-content: left;
+      justify-content: center;
+      flex-direction: row;
+      align-items: flex-end;
+
+      .ikon-knapp {
+        margin-left: 0.5rem;
+        margin-bottom: 0.25rem;
+      }
+    }
+
+    .navds-label--small {
+      line-height: normal;
     }
 
     .ikkeRelevant {
       margin: 0 0 1rem 0;
-      height: 2.5rem;
+      height: 2rem;
       display: flex;
       align-items: center;
 
       p {
         margin: 0;
       }
-    }
-
-    .brutto_inntekt__input {
-      gap: unset;
     }
   }
 }
