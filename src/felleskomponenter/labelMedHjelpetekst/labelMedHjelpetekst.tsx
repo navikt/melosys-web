@@ -6,7 +6,6 @@ type LabelMedHjelpetekstProps = {
   label: string;
   hjelpetekst?: string | null;
   bold?: boolean;
-  undertittel?: boolean;
   small?: boolean;
   placement?:
     | "top"
@@ -23,20 +22,9 @@ type LabelMedHjelpetekstProps = {
     | "left-end";
 };
 
-const LabelMedHjelpetekst = ({
-  label,
-  hjelpetekst,
-  undertittel,
-  placement = "top",
-  bold,
-  small,
-}: LabelMedHjelpetekstProps) => (
+const LabelMedHjelpetekst = ({ label, hjelpetekst, placement = "top", bold, small }: LabelMedHjelpetekstProps) => (
   <div className="labelMedHjelpetekst__wrapper">
-    {undertittel ? (
-      <Nav.Typo.Undertittel className="undertittel">{label}</Nav.Typo.Undertittel>
-    ) : (
-      <span className={small ? "small" : undefined}>{bold ? <b>{label}</b> : label}</span>
-    )}
+    <span className={small ? "small" : undefined}>{bold ? <b>{label}</b> : label}</span>
     {hjelpetekst && (
       <Nav.HelpText title={`${label} hjelpetekst`} placement={placement} className="labelMedHjelpetekst__hjelpetekst">
         {hjelpetekst}

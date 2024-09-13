@@ -40,7 +40,7 @@ function InnerDatovelgerComponent({
         value={Utils.norskStringTilDate(input.value)}
         feil={feil}
         bredde={bredde}
-        readOnly={disabled}
+        disabled={disabled}
         minDate={minDate}
         maxDate={maxDate}
       />

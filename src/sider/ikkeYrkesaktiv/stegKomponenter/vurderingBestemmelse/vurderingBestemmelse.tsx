@@ -130,7 +130,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
         legend="Hva er din vurdering av søknaden?"
         name="innvilgelsesResultat"
         control={control}
-        readOnly={!redigerbart}
+        disabled={!redigerbart}
         size="medium"
       >
         <Nav.Radio value={INNVILGET}>Jeg vil innvilge søknaden</Nav.Radio>
@@ -147,7 +147,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
                   name="bestemmelse"
                   control={control}
                   label=""
-                  readOnly={!redigerbart}
+                  disabled={!redigerbart}
                   onChange={lagreBestemmelse}
                   emptyFieldDisabled={!!formValues.bestemmelse}
                 >

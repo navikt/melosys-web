@@ -95,7 +95,7 @@ export const Lovvalgsperiode = ({ kontrollerFerdigbehandling, onRedigeringErAkti
             <Forms.Datovelger
               label="Fra og med"
               name="fom"
-              readOnly={!redigerbart}
+              disabled={!redigerbart}
               control={control}
               onChange={() => trigger("tom")}
             />
@@ -103,7 +103,7 @@ export const Lovvalgsperiode = ({ kontrollerFerdigbehandling, onRedigeringErAkti
               label="Til og med"
               name="tom"
               minDate={Utils.dato.norskStringTilDate(formValues.fom)}
-              readOnly={!redigerbart}
+              disabled={!redigerbart}
               control={control}
             />
           </div>

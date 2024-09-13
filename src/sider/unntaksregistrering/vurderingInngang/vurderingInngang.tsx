@@ -130,7 +130,7 @@ const VurderingInngang = ({ bekreft, oppdaterStatus }: VurderingInngangProps) =>
           <Forms.Datovelger
             label="Fra og med"
             name="fom"
-            readOnly={!redigerbart}
+            disabled={!redigerbart}
             control={control}
             onChange={lagreFom}
           />
@@ -140,7 +140,7 @@ const VurderingInngang = ({ bekreft, oppdaterStatus }: VurderingInngangProps) =>
             label="Til og med"
             name="tom"
             minDate={Utils.dato.norskStringTilDate(formValues?.fom)}
-            readOnly={!redigerbart}
+            disabled={!redigerbart}
             control={control}
             onChange={lagreTom}
           />
@@ -151,7 +151,7 @@ const VurderingInngang = ({ bekreft, oppdaterStatus }: VurderingInngangProps) =>
             control={control}
             label="Avsenderland"
             emptyFieldDisabled={!!formValues.avsenderland}
-            readOnly={!redigerbart}
+            disabled={!redigerbart}
             onChange={lagreAvsenderland}
           >
             {gyldigeLandkoder(sakstype).map((item: KTObject) => (
@@ -168,7 +168,7 @@ const VurderingInngang = ({ bekreft, oppdaterStatus }: VurderingInngangProps) =>
               control={control}
               label="Lovvalgsland"
               emptyFieldDisabled={!!formValues.lovvalgsland}
-              readOnly={!redigerbart}
+              disabled={!redigerbart}
               onChange={lagreLovvalgsland}
             >
               {gyldigeLandkoder(sakstype).map((item: KTObject) => (

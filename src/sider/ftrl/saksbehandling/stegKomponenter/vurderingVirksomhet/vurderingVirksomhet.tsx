@@ -19,7 +19,6 @@ import { mottatteOpplysningerOperations } from "../../../../../ducks/mottatteOpp
 import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 
 import vurderingVirksomhetSchema from "./vurderingVirksomhetSchema";
-import { KTObject } from "@navikt/melosys-kodeverk";
 
 const komponentState = (state: RootState) => {
   const lagredeValgtevirksomheter = oppsummertfaktaSelectors.VirksomhetIDerSelector(state);
@@ -98,23 +97,17 @@ export const VurderingVirksomhet = ({ bekreft, tilbake, aktivtSteg, oppdaterStat
   return (
     <>
       <Nav.Typo.Innholdstittel className="stegvelgertittel">
-        <LabelMedHjelpetekst label="Virksomhet" />
+        <LabelMedHjelpetekst label="Velg virksomhet" hjelpetekst={hjelpetekst} />
       </Nav.Typo.Innholdstittel>
       {!Utils._isEmpty(virksomheterListe) ? (
-        <Nav.CheckboxGroup
-          legend={<LabelMedHjelpetekst label="Velg virksomhet(er)" hjelpetekst={hjelpetekst} bold small />}
-          readOnly={!redigerbart}
-          defaultValue={lagredeValgtevirksomheter}
+        <Mui.KodeTermCheckboxGroup
+          muligeValg={virksomheterListe}
           onChange={(checkedVirksomheter: string[]) =>
             setValue("valgteVirksomheter", checkedVirksomheter, { shouldValidate: true })
           }
-        >
-          {virksomheterListe.map((fullmakt: KTObject) => (
-            <Nav.Checkbox key={fullmakt.kode} value={fullmakt.kode} readOnly={!redigerbart}>
-              {fullmakt.term}
-            </Nav.Checkbox>
-          ))}
-        </Nav.CheckboxGroup>
+          disabled={!redigerbart}
+          defaultValg={lagredeValgtevirksomheter}
+        />
       ) : (
         <Nav.Alert variant="error" className="alertstripe">
           {INGEN_VIRKSOMHETER_TEKST}
