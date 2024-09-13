@@ -182,7 +182,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
           <Forms.RadioGroup
             legend={<Nav.Typo.Normaltekst className="formLabel">Vurder unntaksperiode</Nav.Typo.Normaltekst>}
             name="utfallRegistreringUnntak"
-            readOnly={!redigerbart}
+            disabled={!redigerbart}
             onChange={lagreUtfallRegistreringUnntak}
             control={control}
           >
@@ -213,7 +213,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
               <Forms.Datovelger
                 label="Fra og med"
                 name="fom"
-                readOnly={!redigerbart}
+                disabled={!redigerbart}
                 control={control}
                 onChange={lagreFom}
               />
@@ -222,7 +222,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
               <Forms.Datovelger
                 label="Til og med"
                 name="tom"
-                readOnly={!redigerbart}
+                disabled={!redigerbart}
                 minDate={Utils.dato.norskStringTilDate(formValues?.fom)}
                 control={control}
                 onChange={lagreTom}

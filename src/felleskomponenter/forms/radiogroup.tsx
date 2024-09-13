@@ -9,7 +9,7 @@ interface RadioGroupComponentProps {
   className?: string;
   value?: string;
   label?: string | ReactNode;
-  readOnly?: boolean;
+  disabled?: boolean;
   onChange?: (value: any) => void;
   feil?: any;
   children: ReactNode;

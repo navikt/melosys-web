@@ -10,7 +10,7 @@ describe("Datovelger", () => {
     onChange: (nyDatoString: string) => (dato = Utils.dato.norskStringTilDate(nyDatoString)),
     value: dato,
     label: "Dato",
-    readOnly: false,
+    disabled: false,
     feil: undefined,
     bredde: undefined,
   };
@@ -36,7 +36,7 @@ describe("Datovelger", () => {
   });
 
   it("viser riktige verdier dersom datovelger er disabled", () => {
-    render(<Datovelger {...{ ...props, readOnly: true }} />);
+    render(<Datovelger {...{ ...props, disabled: true }} />);
 
     const datePicker = screen.getByLabelText("Dato");
     expect(datePicker).toHaveAttribute("readonly");

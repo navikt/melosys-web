@@ -110,7 +110,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
           <Forms.Datovelger
             label="Fra og med"
             name="fom"
-            readOnly={!redigerbart}
+            disabled={!redigerbart}
             control={control}
             onChange={() => trigger("tom")}
           />
@@ -125,7 +125,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
             }
             minDate={Utils.dato.norskStringTilDate(formValues?.fom)}
             name="tom"
-            readOnly={!redigerbart}
+            disabled={!redigerbart}
             control={control}
           />
         </Nav.Column>
@@ -134,7 +134,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
             label="Land"
             emptyFieldDisabled={!!formValues.land}
             name="land"
-            readOnly={!redigerbart}
+            disabled={!redigerbart}
             control={control}
           >
             {landkoder.map((item: KTObject) => (

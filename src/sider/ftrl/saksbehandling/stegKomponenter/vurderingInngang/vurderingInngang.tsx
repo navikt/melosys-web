@@ -147,7 +147,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
       <div className="søknads_periode_wrapper">
         <Nav.Row className="søknads_periode">
           <Nav.Column className="fomDato">
-            <Forms.Datovelger label="Fra og med" name="fom" readOnly={!redigerbart} control={control} />
+            <Forms.Datovelger label="Fra og med" name="fom" disabled={!redigerbart} control={control} />
           </Nav.Column>
           <Nav.Column>
             <Forms.Datovelger
@@ -159,7 +159,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
               }
               name="tom"
               minDate={Utils.dato.norskStringTilDate(formValues.fom)}
-              readOnly={!redigerbart}
+              disabled={!redigerbart}
               control={control}
             />
           </Nav.Column>
@@ -178,7 +178,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
               }
               control={control}
               name="flereLandUkjentHvilke"
-              readOnly={!redigerbart}
+              disabled={!redigerbart}
             >
               <Nav.Radio value={BOOLSK_STRING.SANN} onChange={() => setValue("land", [])}>
                 Flere land, ikke kjent hvilke
@@ -203,7 +203,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
               control={control}
               label="Trygdedekning"
               emptyFieldDisabled={!!formValues.trygdedekning}
-              readOnly={!redigerbart}
+              disabled={!redigerbart}
             >
               {gyldigeTrygdedekninger.map((dekning) => (
                 <option key={dekning} value={dekning}>
@@ -228,7 +228,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
           control={control}
           label="Hent registeropplysninger for siste 5 år"
           value="Hent registeropplysninger for siste 5 år"
-          readOnly={!redigerbart}
+          disabled={!redigerbart}
         />
       </Nav.Row>
 
