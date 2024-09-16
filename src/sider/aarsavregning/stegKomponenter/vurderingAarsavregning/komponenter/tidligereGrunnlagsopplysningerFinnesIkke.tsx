@@ -24,11 +24,7 @@ const informasjonsmeldingIngenInformasjonOmPerioder = (
   </Nav.Alert>
 );
 
-export const TidligereGrunnlagsopplysningerFinnesIkke = ({
-  formValues,
-  control,
-  redigerbart,
-}: TidligereGrunnlagProps) => (
+export const TidligereGrunnlagsopplysningerFinnesIkke = ({ control, redigerbart }: TidligereGrunnlagProps) => (
   <div className="skjema__panel">
     <Nav.Typo.Undertittel className="ingenInformasjonOmPerioderTittel">
       Grunnlagsopplysninger for trygdeavgift
