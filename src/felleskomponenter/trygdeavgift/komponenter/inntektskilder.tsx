@@ -149,7 +149,7 @@ export const Inntektskilder = ({
               </Nav.Column>
 
               <Nav.Column className="arbgiverskatt">
-                {!skalFylleInnArbAvgBetales ? (
+                {skalFylleInnArbAvgBetales ? (
                   <Forms.RadioGroup
                     legend={index === 0 ? "Betales arb.avg. til skatt?" : ""}
                     hideLegend={index !== 0}
