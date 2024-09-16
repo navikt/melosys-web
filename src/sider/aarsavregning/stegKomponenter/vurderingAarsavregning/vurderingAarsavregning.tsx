@@ -138,9 +138,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
   );
 
   useEffect(() => {
-    // This effect will run every time totaltForskuddsvisFakturert changes
     if (formValues.totaltForskuddsvisFakturert !== undefined) {
-      // Save the value or perform any other action
       Api.Aarsavregning.oppdaterTotalBelop(behandlingID, {
         avregning: {
           tidligereFakturertBeloep: formValues.totaltForskuddsvisFakturert,
