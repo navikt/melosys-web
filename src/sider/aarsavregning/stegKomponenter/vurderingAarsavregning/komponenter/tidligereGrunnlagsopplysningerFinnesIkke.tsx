@@ -1,5 +1,14 @@
 import * as Nav from "../../../../../navFrontend";
 import "../vurderingAarsavregning.css";
+import { FormValuesProps } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
+import { Control } from "react-hook-form";
+import * as Forms from "../../../../../felleskomponenter/forms";
+
+interface TidligereGrunnlagProps {
+  formValues: FormValuesProps;
+  control: Control;
+  redigerbart: boolean;
+}
 
 const informasjonsmeldingIngenInformasjonOmPerioder = (
   <Nav.Alert variant="info" size="small" className="informasjonsmeldingIngenInformasjonOmPerioder">
@@ -15,7 +24,11 @@ const informasjonsmeldingIngenInformasjonOmPerioder = (
   </Nav.Alert>
 );
 
-export const TidligereGrunnlagsopplysningerFinnesIkke = () => (
+export const TidligereGrunnlagsopplysningerFinnesIkke = ({
+  formValues,
+  control,
+  redigerbart,
+}: TidligereGrunnlagProps) => (
   <div className="skjema__panel">
     <Nav.Typo.Undertittel className="ingenInformasjonOmPerioderTittel">
       Grunnlagsopplysninger for trygdeavgift
@@ -23,12 +36,13 @@ export const TidligereGrunnlagsopplysningerFinnesIkke = () => (
 
     {informasjonsmeldingIngenInformasjonOmPerioder}
 
-    <Nav.Fieldset legend="" className="skjema__fieldset">
-      <Nav.Row>
-        <Nav.Column xs="4">
-          <Nav.TextField label="Totalt tidligere fakturert trygdeavgift:" type="number" />
-        </Nav.Column>
-      </Nav.Row>
-    </Nav.Fieldset>
+    <Nav.Typo.Element>Totalt tidligere fakturert trygdeavgift:</Nav.Typo.Element>
+    <Forms.Input
+      label=""
+      name="totaltForskuddsvisFakturert"
+      control={control}
+      disabled={!redigerbart}
+      className="tidligere_fakturert_input"
+    />
   </div>
 );
