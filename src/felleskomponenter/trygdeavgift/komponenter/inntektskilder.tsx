@@ -165,8 +165,8 @@ export const Inntektskilder = ({
                   </Forms.RadioGroup>
                 ) : (
                   <div className="ikkeRelevant">
-                    <Nav.Typo.Element>Betales arb.avg. til skatt?</Nav.Typo.Element>
-                    <p>Ikke relevant</p>
+                    {index === 0 && <Nav.Typo.Element>Betales arb.avg. til skatt?</Nav.Typo.Element>}
+                    <p className="undertekst">Ikke relevant</p>
                   </div>
                 )}
               </Nav.Column>
