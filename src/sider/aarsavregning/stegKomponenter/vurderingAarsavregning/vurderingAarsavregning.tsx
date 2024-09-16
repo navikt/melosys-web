@@ -35,6 +35,10 @@ interface Props {
   oppdaterStatus: (isValid: boolean) => void;
 }
 
+interface AarsavregningFormValuesProps extends FormValuesProps {
+  totaltForskuddsvisFakturert?: number | string;
+}
+
 export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
   const [valgtÅr, setValgtÅr] = useState<number | null>(null);
   const [erAvvik, setErAvvik] = useState<boolean | undefined>(undefined);
@@ -92,6 +96,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
   const {
     control,
     watch,
+    setValue,
     formState: { isValid: formIsValid, isValidating, errors },
   } = useForm({
     resolver: yupResolver(vurderingAarsavregningSchema),
@@ -104,7 +109,8 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
     defaultValues: {
       skatteforholdsperioder: [{}],
       inntektskilder: [{}],
-    } as FieldValue<FormValuesProps>,
+      totaltForskuddsvisFakturert: "",
+    } as FieldValue<AarsavregningFormValuesProps>,
   });
 
   const {
@@ -132,6 +138,16 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
   );
 
   useEffect(() => {
+    if (formValues.totaltForskuddsvisFakturert !== undefined) {
+      Api.Aarsavregning.oppdaterTotalBelop(behandlingID, {
+        avregning: {
+          tidligereFakturertBeloep: formValues.totaltForskuddsvisFakturert,
+        },
+      });
+    }
+  }, [formValues.totaltForskuddsvisFakturert]);
+
+  useEffect(() => {
     fetchAvregningsData();
   }, [lagretTrygdeavgiftsperioder]);
 
@@ -149,6 +165,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
     return Api.Aarsavregning.hentAvregningsData(behandlingID)
       .then((response: AarsavregningResponse) => {
         setLagretTrygdeavgift(response);
+        setValue("totaltForskuddsvisFakturert", response.avregning?.tidligereFakturertBeloep);
         return response;
       })
       .catch((error: any) => {
@@ -315,6 +332,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
         setFeil(error.body?.message || error);
       });
     setErAvvik(undefined);
+    setValue("totaltForskuddsvisFakturert", undefined);
   }, [valgtÅr, behandlingID, lagretTrygdeavgift?.aar]);
 
   // TODO: 0 grunnlag og 0 avvik må også kreve at totalt tidligere fakturert trygdeavgift er registrert
@@ -346,7 +364,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
       </Nav.Fieldset>
       {feil && <Nav.Alert variant="error">{feil}</Nav.Alert>}
       {lagretTrygdeavgift?.tidligereGrunnlagsopplysninger === null && lagretTrygdeavgift.aar === valgtÅr && (
-        <TidligereGrunnlagsopplysningerFinnesIkke />
+        <TidligereGrunnlagsopplysningerFinnesIkke formValues={formValues} control={control} redigerbart={redigerbart} />
       )}
       {lagretTrygdeavgift?.tidligereGrunnlagsopplysninger && (
         <>
