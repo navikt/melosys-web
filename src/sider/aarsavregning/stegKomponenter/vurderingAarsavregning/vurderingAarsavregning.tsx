@@ -345,7 +345,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
           </Nav.Column>
         </Nav.Row>
         <Nav.Row>
-          {lagretTrygdeavgift?.tidligereGrunnlagsopplysninger !== null && lagretTrygdeavgift?.aar === valgtÅr && (
+          {lagretTrygdeavgift && lagretTrygdeavgift.antallFerdigBehandledeÅrsavregninger > 0 && (
             <NyBehandlingForTidligereAarsavregningMelding />
           )}
         </Nav.Row>

@@ -10,6 +10,7 @@ export type AarsavregningResponse = {
   nyttGrunnlag?: Grunnlagsopplysninger;
   endeligAvgift?: Avgift;
   avregning?: Avregning;
+  antallFerdigBehandledeÅrsavregninger: number;
 };
 
 export type AarsavregningRequest = {
