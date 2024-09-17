@@ -4,6 +4,24 @@ import * as KV from "../../../../../kodeverk";
 import * as Nav from "../../../../../navFrontend";
 import MKV from "../../../../../melosyskodeverk";
 
+const { PLIKTIG, FRIVILLIG, UNNTATT, DELVIS_UNNTATT } = MKV.Koder.medlemskapstyper;
+
+const mapMedlemskapstypeTekst = (kode: string) => {
+  if (kode === PLIKTIG) {
+    return "Pliktig";
+  }
+  if (kode === FRIVILLIG) {
+    return "Frivillig";
+  }
+  if (kode === UNNTATT) {
+    return "Unntatt";
+  }
+  if (kode === DELVIS_UNNTATT) {
+    return "Delvis unntatt";
+  }
+  return "";
+};
+
 const MedlemskapsPerioderTabell = ({ perioder }: { perioder?: Medlemskapsperiode[] }) => {
   if (!perioder) return null;
 
@@ -12,18 +30,20 @@ const MedlemskapsPerioderTabell = ({ perioder }: { perioder?: Medlemskapsperiode
       <Nav.Table.Header className="header_row">
         <Nav.Table.Row>
           <Nav.Table.HeaderCell scope="col">Medlemskap</Nav.Table.HeaderCell>
+          <Nav.Table.HeaderCell scope="col">Type</Nav.Table.HeaderCell>
           <Nav.Table.HeaderCell scope="col">Dekning</Nav.Table.HeaderCell>
         </Nav.Table.Row>
       </Nav.Table.Header>
       <Nav.Table.Body>
         {perioder.map((medlemskapsPeriode) => (
           <Nav.Table.Row className="border_top" key={Utils._uuid()}>
-            <Nav.Table.DataCell key={Utils._uuid()}>
+            <Nav.Table.DataCell>
               {`${Utils.dato.formatterDatoTilNorsk(medlemskapsPeriode.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(
                 medlemskapsPeriode.tomDato
               )}`}
             </Nav.Table.DataCell>
-            <Nav.Table.DataCell key={Utils._uuid()}>
+            <Nav.Table.DataCell>{mapMedlemskapstypeTekst(medlemskapsPeriode.medlemskapstype)}</Nav.Table.DataCell>
+            <Nav.Table.DataCell>
               {KV.kodeTilTerm(medlemskapsPeriode.trygdedekning, MKV.KTObjects.trygdedekninger)}
             </Nav.Table.DataCell>
           </Nav.Table.Row>

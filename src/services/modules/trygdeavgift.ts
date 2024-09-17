@@ -8,6 +8,7 @@ export type InntektskildeDto = {
   avgiftspliktigInntektMnd?: number;
   fomDato: string;
   tomDato: string;
+  totalInntektForPerioden?: number;
 };
 
 export type SkatteforholdDto = {
