@@ -9,12 +9,16 @@ import { createSelector } from "reselect";
 import moment from "moment/moment";
 
 import MKV from "../../melosyskodeverk";
-import { datoDiff } from "../../utils/dato";
+import { datoDiff, sorterEtterISOFomDato } from "../../utils/dato";
 import * as KV from "../../kodeverk";
 import * as mottatteOpplysningerSelectors from "../mottatteOpplysninger/selectors";
 import * as Utils from "../../utils";
 import * as lovvalgsperioderSelectors from "../lovvalgsperioder/selectors";
 import { SakstypeKodeSelector } from "../fagsaker/selectors";
+import {
+  AarsavregningAarSelector,
+  AarsavregningTidligereGrunnlagMedlemskapsperioderSelector,
+} from "../aarsavregning/selectors";
 
 export const BehandlingerSelector = createSelector(
   (state) => (state.behandlinger.data ? state.behandlinger.data : {}),
@@ -309,6 +313,23 @@ const byggNyArbeidsforholdGruppe = (arbeidsforholdet, organisasjoner, inntekter,
   inntektListe: filtrerOgSpreInntekt(relevantPeriode, arbeidsforholdet.opplysningspliktigID, inntekter),
 });
 
+const utledPeriodeForAarsavregning = (aar, medlemskapsperioder) => {
+  if (medlemskapsperioder) {
+    const sortertePerioder = medlemskapsperioder.sort(sorterEtterISOFomDato);
+    return {
+      fom: sortertePerioder[0].fomDato,
+      tom: sortertePerioder[sortertePerioder.length - 1].tomDato,
+    };
+  }
+  if (aar) {
+    return {
+      fom: `${aar}-01-01`,
+      tom: `${aar}-12-31`,
+    };
+  }
+  return undefined;
+};
+
 /** Denne funksjonen gjør følgende:
  * 1. Itererer alle arbeidsforhold og grupperer de inn etter opplysningspliktigID (dvs juridisk arbeidsgiver)
  * 2. Dersom en gruppe av opplysningspliktigID ikke eksisterer fra før, lages den via byggNyArbeidsforholdGruppe
@@ -324,11 +345,27 @@ export const ArbeidsgivereNorgeSelector = createSelector(
   InntekterPrAarMaanedSelector,
   mottatteOpplysningerSelectors.PeriodeSelector,
   LovvalgsperiodeSelector,
-  (organisasjoner, arbeidsforholdene, inntekter, oppholdsPeriode, sedLovvalgsperiode) => {
+  AarsavregningAarSelector,
+  AarsavregningTidligereGrunnlagMedlemskapsperioderSelector,
+  (
+    organisasjoner,
+    arbeidsforholdene,
+    inntekter,
+    oppholdsPeriode,
+    sedLovvalgsperiode,
+    aarsavregningAar,
+    aarsavregningMedlemskapsperioder
+  ) => {
     // Inntekten skal vises 6 måneder forut for startdato. Dersom søknaden gjelder en periode
     // tilbake i tid, skal også inntekt i selve perioden vises.
     let { fom: soknadPeriodeStart, tom: soknadPeriodeSlutt } = oppholdsPeriode;
     const { fom: sedLovvalgsperiodeFom, tom: sedLovvalgsperiodeTom } = sedLovvalgsperiode;
+
+    if (aarsavregningAar || !Utils._isEmpty(aarsavregningMedlemskapsperioder)) {
+      const periode = utledPeriodeForAarsavregning(aarsavregningAar, aarsavregningMedlemskapsperioder);
+      soknadPeriodeStart = periode.fom;
+      soknadPeriodeSlutt = periode.tom;
+    }
 
     if (!soknadPeriodeStart && !soknadPeriodeSlutt) {
       if (!sedLovvalgsperiodeFom && !sedLovvalgsperiodeTom) {

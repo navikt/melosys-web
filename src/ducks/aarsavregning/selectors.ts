@@ -1,0 +1,36 @@
+/**
+ * Selectors
+ * -----------------------------------------------------------------------------------------
+ * Målet med selectorer er å samle funksjonalitet som behandler, itererer og omformer
+ * data slik at denne logikken kan benyttes flere steder i applikasjonen - ikke bare ett sted.
+ */
+
+import { createSelector, Selector } from "reselect";
+import { RootState, StateSection } from "AppTypes";
+import { AarsavregningResponse, Trygdeavgiftsgrunnlag } from "../../services/modules/aarsavregning/aarsavregning";
+import { Medlemskapsperiode } from "../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+
+const AarsavregningSelector: Selector<RootState, StateSection<AarsavregningResponse>> = createSelector(
+  (state: RootState) => state.aarsavregning,
+  (aarsavregning) => aarsavregning
+);
+
+const AarsavregningDataSelector: Selector<RootState, AarsavregningResponse> = createSelector(
+  AarsavregningSelector,
+  (aarsavregning) => aarsavregning.data
+);
+
+export const AarsavregningAarSelector: Selector<RootState, number | undefined> = createSelector(
+  AarsavregningDataSelector,
+  (aarsavregning) => aarsavregning.aar
+);
+
+const AarsavregningTidligereGrunnlagSelector: Selector<RootState, Trygdeavgiftsgrunnlag | undefined> = createSelector(
+  AarsavregningDataSelector,
+  (aarsavregning) => aarsavregning?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag
+);
+
+export const AarsavregningTidligereGrunnlagMedlemskapsperioderSelector: Selector<RootState, Medlemskapsperiode[]> =
+  createSelector(AarsavregningTidligereGrunnlagSelector, (tidligereGrunnlag) =>
+    tidligereGrunnlag ? tidligereGrunnlag.medlemskapsperioder : []
+  );

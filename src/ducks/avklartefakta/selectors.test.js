@@ -40,6 +40,9 @@ describe("Avklartefaktaselectors", () => {
     utpekingsperioder: {
       data: utpekingsperioder,
     },
+    aarsavregning: {
+      data: {},
+    },
   });
 
   describe("ArbeidslandKTSelector", () => {
