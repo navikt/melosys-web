@@ -27,10 +27,7 @@ import MKV from "../../../../melosyskodeverk";
 import { BeregnetTrygdeavgift } from "../../../../services/modules/trygdeavgift";
 import { SumArsavregningTabell } from "./komponenter/sumArsavregningTabell";
 import { BeregnetTrygdeavgiftDetaljer } from "./komponenter/beregnetTrygdeavgiftDetaljer";
-import {
-  NyBehandlingForTidligereAarsavregningMelding,
-  NyBehandlingForTidligereAarsavregningMelding2,
-} from "../../../../felleskomponenter/alertmeldinger/alertmeldinger";
+import { NyBehandlingForTidligereAarsavregningMelding } from "../../../../felleskomponenter/alertmeldinger/alertmeldinger";
 import TidligereGrunnlagsoversikt from "./komponenter/tidligereGrunnlagsoversikt";
 
 interface Props {
@@ -350,7 +347,6 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
         {lagretTrygdeavgift && lagretTrygdeavgift.antallFerdigBehandledeÅrsavregninger > 0 && (
           <Nav.Row>
             <NyBehandlingForTidligereAarsavregningMelding />
-            <NyBehandlingForTidligereAarsavregningMelding2 />
           </Nav.Row>
         )}
       </Nav.Fieldset>
