@@ -189,6 +189,7 @@ const VurderingAvslag12_x_og_16 = ({
           fritekst={art16_1_fritekst}
         />
       )}
+      {erNyVurdering && <Skjema.Vedtakstype redigerbart={redigerbart} />}
       <Nav.Row>
         <Nav.Column xs="8">
           <Skjema.Textarea feltNavn="vedtaksbrevFritekst" label="Fritekst til begrunnelse" readOnly={!redigerbart} />
@@ -197,7 +198,6 @@ const VurderingAvslag12_x_og_16 = ({
       {redigerbart && skalViseSendOrienteringsbrev(sakstype, behandlingstema, erNyVurdering) && (
         <Skjema.Checkbox feltNavn="kopiTilArbeidsgiver" label="Send orienteringsbrev til arbeidsgiver/virksomhet" />
       )}
-      {erNyVurdering && <Skjema.Vedtakstype redigerbart={redigerbart} />}
       {stegErGyldig && <Dokumentliste behandlingID={behandlingID} dokumenter={pdfDokumenter} />}
       {erNyVurdering && redigerbart && (
         <Nav.Alert variant="info">{KV.Koder.AlertstripeTekst.NY_VURDERING_MEDL_TEKST}</Nav.Alert>
