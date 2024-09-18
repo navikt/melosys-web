@@ -166,7 +166,7 @@ export const Inntektskilder = ({
                 ) : (
                   <div className="ikkeRelevant">
                     {index === 0 && <Nav.Typo.Element>Betales arb.avg. til skatt?</Nav.Typo.Element>}
-                    <p className="undertekst">Ikke relevant</p>
+                    <p className={`undertekst ${index === 0 ? "med-overskrift" : "uten-overskrift"}`}>Ikke relevant</p>
                   </div>
                 )}
               </Nav.Column>
@@ -187,6 +187,9 @@ export const Inntektskilder = ({
                     <p>Ikke relevant</p>
                   </div>
                 )}
+              </Nav.Column>
+
+              <Nav.Column className="fjernlinje">
                 {redigerbart && formValues.inntektskilder.length > 1 && (
                   <Mui.IkonKnapp ariaLabel="Slett inntektskilde" ikon={Ikoner.Bin} onClick={() => remove(index)} />
                 )}

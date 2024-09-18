@@ -27,15 +27,20 @@
       display: flex;
       white-space: break-spaces;
       flex-direction: row;
-      align-items: flex-end;
-
       input {
         min-width: 12rem;
+        max-height: 2rem;
+        min-height: 2rem;
       }
+    }
+    > :first-child  {
       .ikon-knapp {
-        margin-left: 0.5rem;
-        margin-bottom: 0.25rem;
+        margin-top: 2rem;
       }
+    }
+
+    .ikon-knapp {
+      margin-left: 1.5rem;
     }
 
     .navds-label--small {
@@ -52,7 +57,12 @@
       }
 
       .undertekst {
-        padding-top: 0.25rem;
+        &.med-overskrift {
+          padding-top: 1rem;
+        }
+        &.uten-overskrift {
+          padding-top: 0.25rem;
+        }
       }
     }
   }
