@@ -30,6 +30,8 @@ import { BeregnetTrygdeavgift } from "../../../../services/modules/trygdeavgift"
 import { SumArsavregningTabell } from "./komponenter/sumArsavregningTabell";
 import { BeregnetTrygdeavgiftDetaljer } from "./komponenter/beregnetTrygdeavgiftDetaljer";
 import { OK } from "../../../../ducks/aarsavregning/types";
+import { resetAarsavregning } from "../../../../ducks/aarsavregning/operations";
+import { aarsavregningOperations } from "../../../../ducks/aarsavregning";
 
 interface Props {
   bekreft: () => void;
@@ -149,6 +151,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
       .catch((error: any) => {
         if (error.response?.status === 404) {
           setLagretTrygdeavgift(undefined);
+          dispatch(aarsavregningOperations.resetAarsavregning());
         }
       });
   };
