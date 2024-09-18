@@ -22,13 +22,26 @@ class SaksbehandlingVirksomheter extends Virksomheter {
 
     const arbeidslandErNorge = propsLight.arbeidsland[0]?.kode === MKV.Koder.landkoder.NO;
 
-    const arbeidKunNorgeFlyt = [
-      MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
-      MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG,
-      MKV.Koder.behandlinger.behandlingstema.ARBEID_KUN_NORGE,
-    ].includes(propsLight.behandlingstema.kode);
+    const erUtsendtOgArbeidslandNorge =
+      [
+        MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
+        MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG,
+      ].includes(propsLight.behandlingstema.kode) && arbeidslandErNorge;
+
+    const erArbeidKunNorge =
+      MKV.Koder.behandlinger.behandlingstema.ARBEID_KUN_NORGE === propsLight.behandlingstema.kode;
 
     this.kriterier = [
+      {
+        exec: (avklartefakta) => {
+          const erSkipEttLand = SokkelSkip.finnAvklaring(
+            avklartefakta,
+            KV.Koder.VurderingSokkelSkipTyper.SKIP_ETT_LAND
+          );
+          return harValgtArbeidsgiver && arbeiderPaSokkelEllerSkip && erSkipEttLand;
+        },
+        nesteSteg: STEG.BOSTEDSLAND,
+      },
       {
         exec: () =>
           propsLight.konvensjonStorbritanniaToggleEnabled &&
@@ -38,8 +51,13 @@ class SaksbehandlingVirksomheter extends Virksomheter {
         nesteSteg: STEG.ARTIKKEL_16_ANMODNING,
       },
       {
-        exec: () =>
-          propsLight.arbeidKunNorgeToggleEnabled && harValgtArbeidsgiver && arbeidKunNorgeFlyt && arbeidslandErNorge,
+        exec: () => {
+          return (
+            propsLight.arbeidKunNorgeToggleEnabled &&
+            harValgtArbeidsgiver &&
+            (erUtsendtOgArbeidslandNorge || erArbeidKunNorge)
+          );
+        },
         nesteSteg: STEG.VEDTAK,
       },
       {
@@ -75,16 +93,6 @@ class SaksbehandlingVirksomheter extends Virksomheter {
           );
         },
         nesteSteg: STEG.YRKESAKTIVITET,
-      },
-      {
-        exec: (avklartefakta) => {
-          const erSkipEttLand = SokkelSkip.finnAvklaring(
-            avklartefakta,
-            KV.Koder.VurderingSokkelSkipTyper.SKIP_ETT_LAND
-          );
-          return harValgtArbeidsgiver && arbeiderPaSokkelEllerSkip && erSkipEttLand;
-        },
-        nesteSteg: STEG.BOSTEDSLAND,
       },
     ];
   }

@@ -1,7 +1,5 @@
-/* eslint-disable */
-
 import { useEffect, useState } from "react";
-import { connect, useDispatch } from "react-redux";
+import { connect, useDispatch, useSelector } from "react-redux";
 import { getFormValues, isValid, reduxForm } from "redux-form";
 import PT from "prop-types";
 import MKV from "../../../melosyskodeverk";
@@ -26,6 +24,7 @@ import VurderingAvslagArtikkel12Og16Schema from "./vurderingAvslag12_x_og_16Sche
 import { useFeatureToggle } from "../../../featuretoggle";
 import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../featuretoggle/toggleNavn";
 import { VurderingYrkesaktivitetTyper } from "../../../kodeverk/koder";
+import { avklartefaktaSelectors } from "../../../ducks/avklartefakta";
 
 const skalViseSendOrienteringsbrev = (sakstype, behandlingstema, erNyVurdering, erSelvstendigNaeringsdrivende) =>
   !erNyVurdering &&
@@ -190,6 +189,7 @@ const VurderingAvslag12_x_og_16 = ({
           fritekst={art16_1_fritekst}
         />
       )}
+      {erNyVurdering && <Skjema.Vedtakstype redigerbart={redigerbart} />}
       <Nav.Row>
         <Nav.Column xs="8">
           <Skjema.Textarea feltNavn="vedtaksbrevFritekst" label="Fritekst til begrunnelse" readOnly={!redigerbart} />
@@ -198,7 +198,6 @@ const VurderingAvslag12_x_og_16 = ({
       {redigerbart && skalViseSendOrienteringsbrev(sakstype, behandlingstema, erNyVurdering) && (
         <Skjema.Checkbox feltNavn="kopiTilArbeidsgiver" label="Send orienteringsbrev til arbeidsgiver/virksomhet" />
       )}
-      {erNyVurdering && <Skjema.Vedtakstype redigerbart={redigerbart} />}
       {stegErGyldig && <Dokumentliste behandlingID={behandlingID} dokumenter={pdfDokumenter} />}
       {erNyVurdering && redigerbart && (
         <Nav.Alert variant="info">{KV.Koder.AlertstripeTekst.NY_VURDERING_MEDL_TEKST}</Nav.Alert>

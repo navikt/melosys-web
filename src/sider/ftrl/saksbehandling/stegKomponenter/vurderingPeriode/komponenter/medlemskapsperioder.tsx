@@ -49,32 +49,32 @@ export const Medlemskapsperioder = ({
           <div key={field.id}>
             <Nav.Row className="skjema__panel__rad">
               <Nav.Column className="dato">
-                {index === 0 ? <Nav.Typo.Element>Fra og med</Nav.Typo.Element> : null}
                 <Forms.Datovelger
+                  label={index === 0 ? "Fra og med" : ""}
                   control={control}
                   name={`medlemskapsperioder[${index}].fomDato`}
                   aria-label={`Fra og med periode ${index + 1}`}
-                  disabled={!redigerbart}
+                  readOnly={!redigerbart}
                   onChange={(value) => handleChange([{ ...field, fomDato: value }], formIsValid, index)}
                 />
               </Nav.Column>
               <Nav.Column className="dato">
-                {index === 0 ? <Nav.Typo.Element>Til og med</Nav.Typo.Element> : null}
                 <Forms.Datovelger
+                  label={index === 0 ? "Til og med" : ""}
                   control={control}
                   name={`medlemskapsperioder[${index}].tomDato`}
                   aria-label={`Til og med periode ${index + 1}`}
-                  disabled={!redigerbart}
+                  readOnly={!redigerbart}
                   onChange={(value) => handleChange([{ ...field, tomDato: value }], formIsValid, index)}
                 />
               </Nav.Column>
               <Nav.Column className="trygdedekning">
-                {index === 0 ? <Nav.Typo.Element>Trygdedekning</Nav.Typo.Element> : null}
                 <Forms.Select
                   name={`medlemskapsperioder[${index}].trygdedekning`}
+                  label={index === 0 ? "Trygdedekning" : ""}
                   aria-label={`Trygdedekning periode ${index + 1}`}
                   control={control}
-                  disabled={!redigerbart}
+                  readOnly={!redigerbart}
                   emptyFieldDisabled={!!field.trygdedekning}
                   onChange={(value) => handleChange([{ ...field, trygdedekning: value }], formIsValid, index)}
                 >
@@ -86,12 +86,12 @@ export const Medlemskapsperioder = ({
                 </Forms.Select>
               </Nav.Column>
               <Nav.Column>
-                {index === 0 ? <Nav.Typo.Element>Resultat</Nav.Typo.Element> : null}
                 <Forms.Select
+                  label={index === 0 ? "Resultat" : ""}
                   name={`medlemskapsperioder[${index}].innvilgelsesResultat`}
                   aria-label={`Resultat periode ${index + 1}`}
                   control={control}
-                  disabled={!redigerbart}
+                  readOnly={!redigerbart}
                   emptyFieldDisabled={!!field.innvilgelsesResultat}
                   onChange={(value) => handleChange([{ ...field, innvilgelsesResultat: value }], formIsValid, index)}
                 >

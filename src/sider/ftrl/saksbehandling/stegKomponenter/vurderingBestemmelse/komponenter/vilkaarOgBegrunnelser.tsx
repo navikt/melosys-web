@@ -10,6 +10,7 @@ import HtmlEditor from "../../../../../../felleskomponenter/htmlEditor";
 import { IngenFlytMelding } from "../../../../../../felleskomponenter/alertmeldinger";
 import { Begrunnelse, VilkårOgBegrunnelser } from "./typer";
 import { kodeInkludererFritekst } from "../vurderingBestemmelse";
+import { Stack } from "@navikt/ds-react";
 
 const hjelpetekster = new Map([
   [
@@ -62,8 +63,10 @@ export const VilkaarOgBegrunnelser = ({
         defaultValue={vilkårErValgt}
         disabled={!redigerbart}
       >
-        <Nav.Radio value>Ja</Nav.Radio>
-        <Nav.Radio value={false}>Nei</Nav.Radio>
+        <Stack gap="6" direction={{ xs: "column", sm: "row" }} wrap={false}>
+          <Nav.Radio value>Ja</Nav.Radio>
+          <Nav.Radio value={false}>Nei</Nav.Radio>
+        </Stack>
       </Nav.RadioGroup>
       {selvstendigNæringValgt && harValgtFTRL_ARBEIDSTAKER && (
         <Nav.Alert variant="error">

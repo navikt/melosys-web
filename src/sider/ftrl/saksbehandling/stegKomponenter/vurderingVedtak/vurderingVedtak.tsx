@@ -243,7 +243,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
     return FØRSTEGANGSVEDTAK;
   };
 
-  const lagFattVedtakFTRLReqDto = (): Api.Saksflyt.Vedtak.FattVedtakFTRLReqDto => {
+  const lagFattVedtakReqDto = (): Api.Saksflyt.Vedtak.FattVedtakFTRLReqDto => {
     return {
       behandlingsresultatTypeKode: erDelvisOpphør ? DELVIS_OPPHØRT : MEDLEM_I_FOLKETRYGDEN,
       innledningFritekst: formValues?.innledningFritekst || null,
@@ -283,7 +283,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const onSubmit = async () => {
     setVedtakPending(true);
     if (mottatteOpplysningerErGyldig()) {
-      fattVedtak(behandlingID, lagFattVedtakFTRLReqDto()).then((res) => {
+      fattVedtak(behandlingID, lagFattVedtakReqDto()).then((res) => {
         if (res.data?.data?.error) {
           setVedtakPending(false);
         }
@@ -411,7 +411,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
               </Nav.Typo.Element>
               <Forms.Select
                 name="nyVurderingBakgrunnValg"
-                disabled={!redigerbart}
+                readOnly={!redigerbart}
                 emptyFieldDisabled={!!formValues?.nyVurderingBakgrunnValg}
                 control={control}
                 onChange={oppdaterNyVurderingBakgrunnValg}

@@ -21,8 +21,12 @@ import "./vurderingSokkelSkip.css";
 import { Avklartfakta } from "../../../../services/modules/avklartefakta";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { useFeatureToggle } from "../../../../featuretoggle";
-import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../../featuretoggle/toggleNavn";
+import {
+  MELOSYS_ARBEID_KUN_NORGE,
+  MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA,
+} from "../../../../featuretoggle/toggleNavn";
 import { Feilmelding, finnAktivFeilmelding } from "./feilmeldinger";
+import { avklartefaktaSelectors } from "../../../../ducks/avklartefakta";
 
 interface Props {
   begrunnelser: KTObject[];
@@ -40,6 +44,7 @@ interface Props {
   slettData: (objekt?: any) => void;
   tilbake: () => void;
 }
+const { UTSENDT_ARBEIDSTAKER, UTSENDT_SELVSTENDIG, ARBEID_KUN_NORGE } = MKV.Koder.behandlinger.behandlingstema;
 
 const VurderingSokkelSkip = ({
   tilstand: {
@@ -58,8 +63,19 @@ const VurderingSokkelSkip = ({
   tilbake,
 }: Props) => {
   const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
+  const arbeidKunNorgeToggleEnabled = useFeatureToggle(MELOSYS_ARBEID_KUN_NORGE);
   const maritimtArbeid = useSelector(formSelectors.MaritimtArbeidSelector);
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
+
+  const erUtsendt = [UTSENDT_ARBEIDSTAKER, UTSENDT_SELVSTENDIG].includes(behandlingstema);
+  const erArbeidslandNorge = useSelector(avklartefaktaSelectors.ArbeidslandKTSelector).some(
+    (land: any) => land.kode === "NO"
+  );
+  const erArbeidKunNorgeBehandlingstema = behandlingstema === ARBEID_KUN_NORGE;
+
+  const skalViseArbeidKunNorgeFlyt =
+    (erUtsendt || erArbeidKunNorgeBehandlingstema) && erArbeidslandNorge && arbeidKunNorgeToggleEnabled;
+
   useEffect(() => {
     oppdaterData(
       konverterAvklartfaktaTilStegData(KV.Koder.avklartefaktaKoder.ARBEID_SOKKEL_SKIP, sokkelSkipKonklusjon)
@@ -132,22 +148,22 @@ const VurderingSokkelSkip = ({
       <Nav.RadioGroup
         legend="Hvordan arbeider søkeren:"
         onChange={konklusjonEndretHandler}
-        disabled={!redigerbart}
+        readOnly={!redigerbart}
         name={KV.Koder.avklartefaktaKoder.ARBEID_SOKKEL_SKIP}
         defaultValue={fakta}
       >
         <Nav.Radio
-          disabled={
-            konvensjonStorbritanniaToggleEnabled
+          readOnly={
+            (konvensjonStorbritanniaToggleEnabled
               ? MKVUtils.erUtsendt(behandlingstema)
-              : behandlingstema === MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER
+              : behandlingstema === MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER) && !erArbeidslandNorge
           }
           value={VurderingSokkelSkipTyper.SOKKEL_NORSK}
         >
           På norsk sokkel eller innenfor norsk territorialfarvann (art. 11.3.a)
         </Nav.Radio>
         <Nav.Radio value={VurderingSokkelSkipTyper.SKIP_ETT_LAND}>På skip registrert i ett land</Nav.Radio>
-        <Nav.Radio value={VurderingSokkelSkipTyper.SOKKEL_UTLAND}>
+        <Nav.Radio readOnly={skalViseArbeidKunNorgeFlyt} value={VurderingSokkelSkipTyper.SOKKEL_UTLAND}>
           {konvensjonStorbritanniaToggleEnabled
             ? "Utsendt til sokkel eller til annet lands territorialfarvann"
             : "Utsendt til sokkel eller til annet lands territorialfarvann (art. 12)"}

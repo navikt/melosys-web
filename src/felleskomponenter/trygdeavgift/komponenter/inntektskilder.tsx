@@ -17,6 +17,7 @@ import {
   erBrukerSkattepliktigIHelePerioden,
 } from "../../../sider/ftrl/saksbehandling/stegKomponenter/vurderingTrygdeavgift/vurderingTrygdeavgiftSchema";
 import "./inntektskilder.css";
+import { Stack } from "@navikt/ds-react";
 
 const {
   ARBEIDSINNTEKT_FRA_NORGE,
@@ -74,8 +75,9 @@ export const Inntektskilder = ({
       <LabelMedHjelpetekst
         label="Oppgi informasjon om brukers inntekt"
         hjelpetekst="Hvis bruker har flere inntekter, f.eks. fra Norge og fra utlandet, så må de legges til enkeltvis."
-        bold
+        undertittel
       />
+
       <div className="skjema__panel">
         {formValues.inntektskilder.map((inntektskilde, index) => {
           const brukerSkattepliktigIHelePerioden = erBrukerSkattepliktigIHelePerioden(
@@ -96,26 +98,30 @@ export const Inntektskilder = ({
           return (
             <Nav.Row className="skjema__panel__rad" key={fields[index].id}>
               <Nav.Column className="dato">
-                {index === 0 ? <Nav.Typo.Element>Fra og med</Nav.Typo.Element> : null}
-                <Forms.Datovelger name={`inntektskilder[${index}].fomDato`} disabled={!redigerbart} control={control} />
+                <Forms.Datovelger
+                  label={index === 0 ? "Fra og med" : ""}
+                  name={`inntektskilder[${index}].fomDato`}
+                  readOnly={!redigerbart}
+                  control={control}
+                />
               </Nav.Column>
               <Nav.Column className="dato">
-                {index === 0 ? <Nav.Typo.Element>Til og med</Nav.Typo.Element> : null}
                 <Forms.Datovelger
+                  label={index === 0 ? "Til og med" : ""}
                   name={`inntektskilder[${index}].tomDato`}
-                  disabled={!redigerbart}
+                  readOnly={!redigerbart}
                   control={control}
                   minDate={Utils.dato.norskStringTilDate(formValues.inntektskilder[index].fomDato)}
                 />
               </Nav.Column>
 
               <Nav.Column className="inntektskilde">
-                {index === 0 ? <Nav.Typo.Element>Inntektskilde</Nav.Typo.Element> : null}
                 <Forms.Select
-                  label=""
+                  label={index === 0 ? "Inntektskilde" : ""}
+                  hideLabel={index !== 0}
                   name={`inntektskilder[${index}].kildetype`}
                   control={control}
-                  disabled={!redigerbart}
+                  readOnly={!redigerbart}
                   emptyFieldDisabled={visArbAvgBetales}
                   onChange={(value) => handleEndreKildetype(index, value)}
                 >
@@ -142,57 +148,52 @@ export const Inntektskilder = ({
                 </Forms.Select>
               </Nav.Column>
 
-              <Nav.Column>
-                {index === 0 ? (
-                  <Nav.Typo.Element>
-                    Betales arb.avg. <br /> til skatt?
-                  </Nav.Typo.Element>
-                ) : null}
+              <Nav.Column className="arbgiverskatt">
                 {skalFylleInnArbAvgBetales ? (
                   <Forms.RadioGroup
-                    legend=""
-                    hideLegend
+                    legend={index === 0 ? "Betales arb.avg. til skatt?" : ""}
+                    hideLegend={index !== 0}
                     name={`inntektskilder[${index}].arbAvgBetales`}
-                    disabled={!redigerbart || settesDefaultArbAvgBetales(inntektskilde.kildetype)}
+                    readOnly={!redigerbart || settesDefaultArbAvgBetales(inntektskilde.kildetype)}
                     control={control}
                     onChange={(value) => handleEndreArbAvgBetales(index, value)}
                   >
-                    <Nav.Radio value={BOOLSK_STRING.SANN}>Ja</Nav.Radio>
-                    <Nav.Radio value={BOOLSK_STRING.USANN}>Nei</Nav.Radio>
+                    <Stack gap="6" direction={{ xs: "column", sm: "row" }} wrap={false}>
+                      <Nav.Radio value={BOOLSK_STRING.SANN}>Ja</Nav.Radio>
+                      <Nav.Radio value={BOOLSK_STRING.USANN}>Nei</Nav.Radio>
+                    </Stack>
                   </Forms.RadioGroup>
                 ) : (
                   <div className="ikkeRelevant">
-                    <p>Ikke relevant</p>
+                    {index === 0 && <Nav.Typo.Element>Betales arb.avg. til skatt?</Nav.Typo.Element>}
+                    <p className={`undertekst ${index === 0 ? "med-overskrift" : "uten-overskrift"}`}>Ikke relevant</p>
                   </div>
                 )}
               </Nav.Column>
 
               <Nav.Column className="brutto_inntekt">
-                {index === 0 ? (
-                  <Nav.Typo.Element>
-                    Brutto inntekt <br /> per md.
-                  </Nav.Typo.Element>
-                ) : null}
                 {skalFylleInnBruttoInntekt ? (
                   <Forms.Input
-                    label=""
+                    label={index === 0 ? "Brutto inntekt per md." : ""}
+                    hideLabel={index !== 0}
                     name={`inntektskilder[${index}].bruttoInntekt`}
                     control={control}
-                    disabled={!redigerbart}
+                    readOnly={!redigerbart}
                     className="brutto_inntekt__input"
                   />
                 ) : (
                   <div className="ikkeRelevant">
+                    <Nav.Typo.Element>Brutto inntekt per md.</Nav.Typo.Element>
                     <p>Ikke relevant</p>
                   </div>
                 )}
               </Nav.Column>
 
-              {redigerbart && formValues.inntektskilder.length > 1 && (
-                <Nav.Column className={index === 0 ? "slett slett__first" : "slett"}>
+              <Nav.Column className="fjernlinje">
+                {redigerbart && formValues.inntektskilder.length > 1 && (
                   <Mui.IkonKnapp ariaLabel="Slett inntektskilde" ikon={Ikoner.Bin} onClick={() => remove(index)} />
-                </Nav.Column>
-              )}
+                )}
+              </Nav.Column>
             </Nav.Row>
           );
         })}

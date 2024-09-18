@@ -33,11 +33,20 @@ import * as feilmelding from "./feilmelding";
 import * as mediaQuery from "./mediaQuery";
 import * as navigasjon from "./navigasjon";
 
-import { fn, isJSON, formaterTilNorskBelop, queryParamsTilObjekt, erPropertyUnik, finnVerdierMedKey } from "./utils";
+import {
+  fn,
+  isJSON,
+  formaterTilNorskBelop,
+  formaterTilNorskBelopUtenDesimaler,
+  queryParamsTilObjekt,
+  erPropertyUnik,
+  finnVerdierMedKey,
+} from "./utils";
 
 export {
   fn,
   formaterTilNorskBelop,
+  formaterTilNorskBelopUtenDesimaler,
   isJSON,
   queryParamsTilObjekt,
   erPropertyUnik,

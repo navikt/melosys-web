@@ -19,7 +19,7 @@ interface SelectComponentProps extends Omit<React.SelectHTMLAttributes<HTMLSelec
 }
 
 const Select = forwardRef<HTMLSelectElement, SelectComponentProps & UseControllerProps>(
-  ({ name, control, label, emptyFieldDisabled, onChange, children, className, size, ...rest }) => {
+  ({ name, readOnly, control, label, emptyFieldDisabled, onChange, children, className, size, ...rest }) => {
     return (
       <Controller
         name={name}
@@ -27,6 +27,7 @@ const Select = forwardRef<HTMLSelectElement, SelectComponentProps & UseControlle
         render={({ field, formState }) => (
           <Nav.Select
             {...field}
+            readOnly={readOnly}
             label={label}
             onChange={(event) => {
               field.onChange(event);
