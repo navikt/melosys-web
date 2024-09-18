@@ -349,7 +349,13 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
       <Nav.Fieldset className="select" legend={<LabelMedHjelpetekst bold label="År" placement="left-start" />}>
         <Nav.Row>
           <Nav.Column xs="4">
-            <Nav.Select label="" id="aarVelger" value={valgtÅr?.toString() ?? ""} onChange={håndterEndringAvÅr}>
+            <Nav.Select
+              label=""
+              id="aarVelger"
+              value={valgtÅr?.toString() ?? ""}
+              onChange={håndterEndringAvÅr}
+              readOnly={!redigerbart}
+            >
               <option value="" disabled>
                 Velg...
               </option>
@@ -394,6 +400,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
           onChange={(value) => håndterAvvik(value)}
           value={erAvvik}
           legend="Er det avvik i opplysningene fra skatt eller bruker?"
+          readOnly={!redigerbart}
         >
           <Nav.Radio value>Ja</Nav.Radio>
           <Nav.Radio value={false}>Nei</Nav.Radio>
