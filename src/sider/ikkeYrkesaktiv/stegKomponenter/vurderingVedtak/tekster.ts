@@ -9,4 +9,6 @@ export const BEGRUNNELSE_FRITEKST_HJELPETEKST =
   "Teksten du skriver her vil vises etter standard begrunnelse for bestemmelsen.";
 
 export const NY_VURDERING_BAKGRUNN_HJELPETEKST =
-  "Velg en innledningstekst til vedtaket. Teksten kommer først i vedtaket og skal forklare hvorfor vi har gjort nytt vedtak. Hvis ingen av standardtekstene passer, velger du fritekst og skriver egen innledning til vedtaket.";
+  "Velg en innledningstekst til vedtaket. " +
+  "Teksten kommer først i vedtaket og skal forklare " +
+  "hvorfor vi har gjort nytt vedtak.";

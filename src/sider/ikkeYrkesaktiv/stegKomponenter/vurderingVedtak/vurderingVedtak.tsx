@@ -197,14 +197,14 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
 
       {erNyVurdering && (
         <Nav.Row className="nyVurderingBakgrunn">
-          <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
-            <LabelMedHjelpetekst
-              label="Oppgi grunn for nytt vedtak (Obligatorisk)"
-              hjelpetekst={NY_VURDERING_BAKGRUNN_HJELPETEKST}
-            />
-          </Nav.Typo.Element>
           <Nav.Column xs="6">
             <Forms.Select
+              label={
+                <LabelMedHjelpetekst
+                  label="Oppgi grunn for nytt vedtak (Obligatorisk)"
+                  hjelpetekst={NY_VURDERING_BAKGRUNN_HJELPETEKST}
+                />
+              }
               name="nyVurderingBakgrunnValg"
               readOnly={!redigerbart}
               emptyFieldDisabled={!!formValues?.nyVurderingBakgrunnValg}
