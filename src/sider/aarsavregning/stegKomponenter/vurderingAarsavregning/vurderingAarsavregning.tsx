@@ -340,8 +340,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
   useEffect(() => {}, [erAvvik]);
 
   // TODO: 0 grunnlag og 0 avvik må også kreve at totalt tidligere fakturert trygdeavgift er registrert
-  const stegErGyldig =
-    (redigerbart && erAvvik === false) || (redigerbart && erAvvik && lagretTrygdeavgift?.nyttGrunnlag);
+  const stegErGyldig = Boolean(erAvvik === false || (erAvvik && lagretTrygdeavgift?.nyttGrunnlag));
 
   useEffect(() => {
     oppdaterStatus(stegErGyldig);
