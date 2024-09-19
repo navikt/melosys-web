@@ -314,7 +314,7 @@ const byggNyArbeidsforholdGruppe = (arbeidsforholdet, organisasjoner, inntekter,
 });
 
 const utledPeriodeForAarsavregning = (aar, medlemskapsperioder) => {
-  if (medlemskapsperioder) {
+  if (!Utils._isEmpty(medlemskapsperioder)) {
     const sortertePerioder = medlemskapsperioder.sort(sorterEtterISOFomDato);
     return {
       fom: sortertePerioder[0].fomDato,
