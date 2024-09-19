@@ -37,6 +37,7 @@ import vedtakReducer from "./ducks/vedtak";
 import customFormReducer from "./ducks/form";
 import fakturaserierReducers from "./ducks/fakturaserier";
 import featureToggleReducers from "./ducks/featuretoggle";
+import aarsavregningReducers from "./ducks/aarsavregning";
 
 const createRootReducer = (history: History) =>
   combineReducers({
@@ -78,6 +79,7 @@ export const rootReducer = {
   vedtak: vedtakReducer,
   videresending: videresendingReducer,
   vilkar: vilkarReducer,
+  aarsavregning: aarsavregningReducers,
 };
 
 export default createRootReducer;

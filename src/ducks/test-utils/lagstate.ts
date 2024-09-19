@@ -56,6 +56,7 @@ function lagState({
   vedtak = { status: STATUS.OK, data: {} },
   videresending = { status: STATUS.OK, data: {} },
   vilkar = { status: STATUS.OK, data: [] },
+  aarsavregning = { status: STATUS.OK, data: [] },
 }: Partial<RootState>): RootState {
   return {
     form,
@@ -92,6 +93,7 @@ function lagState({
     vedtak,
     videresending,
     vilkar,
+    aarsavregning,
   };
 }
 

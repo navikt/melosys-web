@@ -3,7 +3,7 @@ import MedlemskapsPerioderTabell from "./komponenter/medlemskapsPerioderTabell";
 import "./vurderingAarsavregning.css";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { AarsavregningResponse, Trygdeavgiftsgrunnlag } from "../../../../services/modules/aarsavregning/aarsavregning";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import * as Nav from "../../../../navFrontend";
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
@@ -27,6 +27,8 @@ import MKV from "../../../../melosyskodeverk";
 import { BeregnetTrygdeavgift } from "../../../../services/modules/trygdeavgift";
 import { SumArsavregningTabell } from "./komponenter/sumArsavregningTabell";
 import { BeregnetTrygdeavgiftDetaljer } from "./komponenter/beregnetTrygdeavgiftDetaljer";
+import { OK } from "../../../../ducks/aarsavregning/types";
+import { aarsavregningOperations } from "../../../../ducks/aarsavregning";
 import TidligereGrunnlagsoversikt from "./komponenter/tidligereGrunnlagsoversikt";
 
 interface Props {
@@ -55,6 +57,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
   const [lagrePending, setLagrePending] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [trygdeavgiftsperioderHentingPending, setTrygdeavgiftsperioderHentingPending] = useState(false);
+  const dispatch = useDispatch();
 
   const defaultPeriode = useMemo(() => {
     if (lagretTrygdeavgift?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag?.skatteforholdsperioder) {
@@ -164,6 +167,8 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
   const fetchAvregningsData = () => {
     return Api.Aarsavregning.hentAvregningsData(behandlingID)
       .then((response: AarsavregningResponse) => {
+        // Benyttes for innhenting av saksopplysninger ifm. årsavregningsbehandlinger
+        dispatch({ type: OK, data: response });
         setLagretTrygdeavgift(response);
         setValue("totaltForskuddsvisFakturert", response.avregning?.tidligereFakturertBeloep);
         return response;
@@ -171,6 +176,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
       .catch((error: any) => {
         if (error.response?.status === 404) {
           setLagretTrygdeavgift(undefined);
+          dispatch(aarsavregningOperations.resetAarsavregning());
         }
       });
   };

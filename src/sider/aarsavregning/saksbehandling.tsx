@@ -23,6 +23,7 @@ import { FellesHandlersContext } from "../../contexts";
 import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../ducks/mottatteOpplysninger";
 import Oppsummering from "../../felleskomponenter/oppsummering";
 import { lovvalgsperioderSelectors } from "../../ducks/lovvalgsperioder";
+import { aarsavregningOperations } from "../../ducks/aarsavregning";
 
 interface Props extends RouteComponentProps<MatchParams> {
   behandlingOppfriskes: boolean;
@@ -93,6 +94,7 @@ const Saksbehandling = ({ match, location }: Props) => {
       dispatch(behandlingsresultatOperations.resetBehandlingsresultatState());
       dispatch(mottatteOpplysningerOperations.resetState());
       dispatch(dokumenterOperations.resetDokument());
+      dispatch(aarsavregningOperations.resetAarsavregning());
     };
   }, []);
 

@@ -71,6 +71,9 @@ describe("Behandlingerselectors", () => {
         },
       },
     },
+    aarsavregning: {
+      data: {},
+    },
   });
 
   describe("ArbeidsgivereNorgeSelector", () => {
