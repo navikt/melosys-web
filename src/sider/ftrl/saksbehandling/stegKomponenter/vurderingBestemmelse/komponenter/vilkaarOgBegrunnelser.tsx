@@ -61,7 +61,7 @@ export const VilkaarOgBegrunnelser = ({
         onChange={(value) => handleEndreVilkår(vilkår, value)}
         name={vilkår}
         defaultValue={vilkårErValgt}
-        disabled={!redigerbart}
+        readOnly={!redigerbart}
       >
         <Stack gap="6" direction={{ xs: "column", sm: "row" }} wrap={false}>
           <Nav.Radio value>Ja</Nav.Radio>
