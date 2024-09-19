@@ -104,6 +104,12 @@ export const VurderingVedtak11_3_og_13_3a = ({
     });
   };
 
+  const behandlingstemaUtenOrienteringsbrev = [
+    MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
+    MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG,
+    MKV.Koder.behandlinger.behandlingstema.ARBEID_KUN_NORGE,
+  ];
+
   const onSubmit = async () => {
     setVedtakPending(true);
 
@@ -220,7 +226,7 @@ export const VurderingVedtak11_3_og_13_3a = ({
           />
         </Nav.Column>
       </Nav.Row>
-      {stegErGyldig && (
+      {stegErGyldig && !behandlingstemaUtenOrienteringsbrev.includes(behandling.behandlingstema.kode) && (
         <Nav.Checkbox
           key="kopiTilArbeidsgiver"
           value={formValues.kopiTilArbeidsgiver}
