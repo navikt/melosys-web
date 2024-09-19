@@ -72,6 +72,7 @@ export const Medlemskapsperioder = ({
                 <Forms.Select
                   name={`medlemskapsperioder[${index}].trygdedekning`}
                   label={index === 0 ? "Trygdedekning" : ""}
+                  hideLabel={index !== 0}
                   aria-label={`Trygdedekning periode ${index + 1}`}
                   control={control}
                   readOnly={!redigerbart}
@@ -88,6 +89,7 @@ export const Medlemskapsperioder = ({
               <Nav.Column>
                 <Forms.Select
                   label={index === 0 ? "Resultat" : ""}
+                  hideLabel={index !== 0}
                   name={`medlemskapsperioder[${index}].innvilgelsesResultat`}
                   aria-label={`Resultat periode ${index + 1}`}
                   control={control}
