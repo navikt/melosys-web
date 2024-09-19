@@ -226,7 +226,7 @@ export const VurderingVedtak11_3_og_13_3a = ({
           />
         </Nav.Column>
       </Nav.Row>
-      {stegErGyldig && !behandlingstemaUtenOrienteringsbrev.includes(behandling.behandlingstema?.kode) && (
+      {stegErGyldig && !behandlingstemaUtenOrienteringsbrev.includes(behandling.oppsummering.behandlingstema?.kode) && (
         <Nav.Checkbox
           key="kopiTilArbeidsgiver"
           value={formValues.kopiTilArbeidsgiver}
