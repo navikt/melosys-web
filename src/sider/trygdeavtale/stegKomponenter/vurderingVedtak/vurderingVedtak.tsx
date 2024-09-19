@@ -401,31 +401,26 @@ const VurderingVedtak = ({
 
       {erNyVurdering && (
         <>
-          <Nav.Fieldset
-            className={vurderingVedtakCls.element("nyvurdering")}
-            legend={
-              <LabelMedHjelpetekst
-                label="Oppgi grunn for nytt vedtak (Obligatorisk)"
-                hjelpetekst={NY_VURDERING_BAKGRUNN_HJELPETEKST}
-              />
-            }
-          >
-            <Nav.Row>
-              <Nav.Column xs="6">
-                <Skjema.Select
-                  label=""
-                  feltNavn="nyVurderingBakgrunn"
-                  disabled={!redigerbart}
-                  emptyFieldDisabled={!!formValues?.nyVurderingBakgrunn}
-                >
-                  {MKV.KTObjects.begrunnelser.nyvurderingbakgrunner?.map((bakgrunn: KTObject) => (
-                    <option key={bakgrunn.kode} value={bakgrunn.kode} label={bakgrunn.term || ""} />
-                  ))}
-                  <option key={FRITEKST} value={FRITEKST} label={FRITEKST} />
-                </Skjema.Select>
-              </Nav.Column>
-            </Nav.Row>
-          </Nav.Fieldset>
+          <Nav.Row>
+            <Nav.Column xs="6">
+              <Skjema.Select
+                label={
+                  <LabelMedHjelpetekst
+                    label="Oppgi grunn for nytt vedtak (Obligatorisk)"
+                    hjelpetekst={NY_VURDERING_BAKGRUNN_HJELPETEKST}
+                  />
+                }
+                feltNavn="nyVurderingBakgrunn"
+                disabled={!redigerbart}
+                emptyFieldDisabled={!!formValues?.nyVurderingBakgrunn}
+              >
+                {MKV.KTObjects.begrunnelser.nyvurderingbakgrunner?.map((bakgrunn: KTObject) => (
+                  <option key={bakgrunn.kode} value={bakgrunn.kode} label={bakgrunn.term || ""} />
+                ))}
+                <option key={FRITEKST} value={FRITEKST} label={FRITEKST} />
+              </Skjema.Select>
+            </Nav.Column>
+          </Nav.Row>
           {formValues?.nyVurderingBakgrunn === FRITEKST && (
             <Skjema.HTMLEditor
               feltNavn="nyVurderingBakgrunnFritekst"

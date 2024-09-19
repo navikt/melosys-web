@@ -410,6 +410,12 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
                 />
               </Nav.Typo.Element>
               <Forms.Select
+                label={
+                  <LabelMedHjelpetekst
+                    label="Oppgi grunn for nytt vedtak (Obligatorisk)"
+                    hjelpetekst={NY_VURDERING_BAKGRUNN_HJELPETEKST}
+                  />
+                }
                 name="nyVurderingBakgrunnValg"
                 readOnly={!redigerbart}
                 emptyFieldDisabled={!!formValues?.nyVurderingBakgrunnValg}
