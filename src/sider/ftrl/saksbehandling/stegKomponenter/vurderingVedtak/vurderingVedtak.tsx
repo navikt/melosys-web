@@ -343,13 +343,6 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
       : `Finner ikke ${erIkkeYrkesaktiv ? "land" : "arbeidsland"}`;
   };
 
-  const vedtakstypebegrunnelseLabel = (
-    <LabelMedHjelpetekst
-      label="Oppgi grunn for nytt vedtak (Obligatorisk)"
-      hjelpetekst={NY_VURDERING_BAKGRUNN_HJELPETEKST}
-    />
-  );
-
   return (
     <div className="vurderingVedtak">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">
