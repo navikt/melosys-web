@@ -457,7 +457,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
 
       <Feilmelding type={aktivFeilmeldingType} />
 
-      <Nav.Button variant="primary" disabled={!stegErGyldig} onClick={bekreft}>
+      <Nav.Button variant="primary" disabled={!stegErGyldig || !redigerbart} onClick={bekreft}>
         Bekreft og fortsett
       </Nav.Button>
     </div>
