@@ -337,8 +337,6 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
     setValue("totaltForskuddsvisFakturert", undefined);
   }, [valgtÅr, behandlingID, lagretTrygdeavgift?.aar]);
 
-  useEffect(() => {}, [erAvvik]);
-
   // TODO: 0 grunnlag og 0 avvik må også kreve at totalt tidligere fakturert trygdeavgift er registrert
   const stegErGyldig = Boolean(erAvvik === false || (erAvvik && lagretTrygdeavgift?.nyttGrunnlag));
 
