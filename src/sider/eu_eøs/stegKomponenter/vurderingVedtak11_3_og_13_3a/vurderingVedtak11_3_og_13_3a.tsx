@@ -197,6 +197,7 @@ export const VurderingVedtak11_3_og_13_3a = ({
         onChange={(a) => {
           setValue("korterePeriodeChecked", a.target.checked);
         }}
+        readOnly={!redigerbart}
       >
         Lovvalget innvilges for en kortere periode
       </Nav.Checkbox>
@@ -204,10 +205,11 @@ export const VurderingVedtak11_3_og_13_3a = ({
       {formValues.korterePeriodeChecked && (
         <Nav.Row className="skjema__panel__rad">
           <Nav.Column xs="3" className="dato">
-            <Datovelger name="fom" label="Startdato" control={control} />
+            <Datovelger readOnly={!redigerbart} name="fom" label="Startdato" control={control} />
           </Nav.Column>
           <Nav.Column xs="3" className="dato">
             <Datovelger
+              readOnly={!redigerbart}
               name="tom"
               minDate={Utils.dato.norskStringTilDate(formValues.fom)}
               label="Sluttdato"
@@ -223,6 +225,7 @@ export const VurderingVedtak11_3_og_13_3a = ({
             value={formValues.begrunnelseFritekst}
             label="Fritekstfelt til begrunnelse"
             maxLength={4000}
+            disabled={!redigerbart}
           />
         </Nav.Column>
       </Nav.Row>
