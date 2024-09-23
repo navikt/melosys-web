@@ -33,7 +33,7 @@ import { lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
 import { useFeatureToggle } from "../../../../featuretoggle";
 import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../../featuretoggle/toggleNavn";
 import EnkeltDato from "../../../../felleskomponenter/enkeltDato";
-import { VurderingYrkesaktivitetTyper } from "../../../../kodeverk/koder";
+import { VurderingYrkesaktivitetTyper, VurderingYrkesgruppeTyper } from "../../../../kodeverk/koder";
 
 const { FO_883_2004_ART11_3A } = MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004;
 const { FO_883_2004_ART11_4_1 } = MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004;
@@ -82,12 +82,14 @@ const skalViseSendOrienteringsbrev = (
   sakstype: string,
   behandlingstema: string,
   erArtikkel11_4: boolean,
-  erSelvstendigNaeringsdrivende: boolean
+  erSelvstendigNaeringsdrivende: boolean,
+  erSokkelSkip: boolean
 ) =>
   !erArtikkel11_4 &&
   sakstype === EU_EOS &&
   [UTSENDT_ARBEIDSTAKER, ARBEID_TJENESTEPERSON_ELLER_FLY].includes(behandlingstema) &&
-  !erSelvstendigNaeringsdrivende;
+  !erSelvstendigNaeringsdrivende &&
+  !erSokkelSkip;
 
 const skalViseMottakerinstitusjoner = (
   sakstype: string,
@@ -121,7 +123,7 @@ const mapStateToProps = (state: RootState) => ({
   initialValues: {
     vedtakstypebegrunnelse: behandlingsresultatSelectors.BegrunnelseKoderSelector(state)[0],
     vedtaksbrevFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
-    kopiTilArbeidsgiver: true,
+    kopiTilArbeidsgiver: false,
     mottakerinstitusjon: "",
     kreverMottakerinstitusjon: false,
     fritekstSed: null,
@@ -168,6 +170,8 @@ const VurderingVedtak = ({
   const erSelvstendigNaeringsdrivende =
     useSelector(avklartefaktaSelectors.YrkesaktivitetSelector) ===
     VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE;
+  const erSokkelSkip =
+    useSelector(avklartefaktaSelectors.YrkesgruppeSelector) === VurderingYrkesgruppeTyper.SOKKEL_ELLER_SKIP;
   const sakstype = useSelector(fagsakSelectors.SakstypeKodeSelector);
   const sakstema = useSelector(fagsakSelectors.SakstemaKodeSelector);
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
@@ -333,7 +337,13 @@ const VurderingVedtak = ({
           </Nav.Row>
         )}
         {redigerbart &&
-          skalViseSendOrienteringsbrev(sakstype, behandlingstema, erArtikkel11_4, erSelvstendigNaeringsdrivende) && (
+          skalViseSendOrienteringsbrev(
+            sakstype,
+            behandlingstema,
+            erArtikkel11_4,
+            erSelvstendigNaeringsdrivende,
+            erSokkelSkip
+          ) && (
             <Skjema.Checkbox feltNavn="kopiTilArbeidsgiver" label="Send orienteringsbrev til arbeidsgiver/virksomhet" />
           )}
         <Nav.Row>
