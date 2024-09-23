@@ -43,6 +43,16 @@ export const VurderingVedtak11_3_og_13_3a = ({
   const vedtakstype = useSelector(behandlingsresultatSelectors.VedtakstypeSelector);
   const [kontrollerPending, setKontrollerPending] = useState(false);
   const [vedtakPending, setVedtakPending] = useState(false);
+
+  const endretLovvalgsperiode = (soknadsPeriode: any, lovvalgsperiode: any): boolean => {
+    if (lovvalgsperiode === null) return false;
+
+    return (
+      Utils.dato.datoDiffPure(soknadsPeriode.fom, lovvalgsperiode.fomDato, "days") !== 0 ||
+      Utils.dato.datoDiffPure(soknadsPeriode.tom, lovvalgsperiode.tomDato, "days") !== 0
+    );
+  };
+
   const {
     watch,
     setValue,
@@ -63,7 +73,7 @@ export const VurderingVedtak11_3_og_13_3a = ({
         lovvalgsperiode !== null && !Utils._isEmpty(lovvalgsperiode)
           ? Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.tomDato)
           : Utils.dato.formatterDatoTilNorsk(soknadsperiode.tom),
-      korterePeriodeChecked: false,
+      korterePeriodeChecked: endretLovvalgsperiode(soknadsperiode, lovvalgsperiode),
       begrunnelseFritekst: useSelector(behandlingsresultatSelectors.BegrunnelseFritekstSelector) || "",
     } as FieldValues,
   });
@@ -194,6 +204,7 @@ export const VurderingVedtak11_3_og_13_3a = ({
       <Nav.Checkbox
         key="korterePeriode"
         value={formValues.korterePeriodeChecked}
+        checked={formValues.korterePeriodeChecked}
         onChange={(a) => {
           setValue("korterePeriodeChecked", a.target.checked);
         }}
