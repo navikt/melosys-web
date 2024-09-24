@@ -43,6 +43,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [lagretTrygdeavgiftsperioder, setTrygdeavgiftsperioder] = useState<BeregnetTrygdeavgift | undefined>(undefined);
   const [lagretTrygdeavgift, setLagretTrygdeavgift] = useState<AarsavregningResponse | undefined>(undefined);
+  const [erFørstegangsårsavregning, setErFørstegangsårsavregning] = useState<Boolean | undefined>(true);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const sisteMuligeÅr = new Date().getFullYear() - 1;
@@ -302,9 +303,13 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
   }, [errors.skatteforholdsperioder, errors.inntektskilder]);
 
   useEffect(() => {
-    if (!valgtÅr || lagretTrygdeavgift?.aar === valgtÅr) {
-      return;
-    }
+    if (!valgtÅr) return;
+
+    Api.Aarsavregning.erForstegangsAarsavregning(behandlingID, valgtÅr).then((res) => {
+      setErFørstegangsårsavregning(res);
+    });
+
+    if (lagretTrygdeavgift?.aar === valgtÅr) return;
 
     Api.Aarsavregning.lagAvregningsData(behandlingID, { aar: valgtÅr })
       .then((nyAvregningsData) => {
@@ -344,7 +349,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
             </Nav.Select>
           </Nav.Column>
         </Nav.Row>
-        {lagretTrygdeavgift && lagretTrygdeavgift.antallFerdigBehandledeÅrsavregninger > 0 && (
+        {!erFørstegangsårsavregning && (
           <Nav.Row>
             <NyBehandlingForTidligereAarsavregningMelding />
           </Nav.Row>

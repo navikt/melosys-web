@@ -53,6 +53,9 @@ export type Avregning = {
 export const hentAvregningsData = (behandlingID: number): Promise<AarsavregningResponse> =>
   getAsJson(`${API_BASE_URL}${AARSAVREGNING}/${behandlingID}`);
 
+export const erForstegangsAarsavregning = (behandlingID: number, aar: number): Promise<Boolean> =>
+  getAsJson(`${API_BASE_URL}${AARSAVREGNING}/${behandlingID}/${aar}/forstegangsaarsavregning`);
+
 export type LagAarsavregningRequest = {
   aar: number;
 };
