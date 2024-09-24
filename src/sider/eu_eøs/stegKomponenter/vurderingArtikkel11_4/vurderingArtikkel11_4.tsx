@@ -17,7 +17,10 @@ import {
 import { Vilkaar } from "../../../../services/modules/vilkar";
 import { BOOLSK_STRING } from "../../../../constants";
 import { useFeatureToggle } from "../../../../featuretoggle";
-import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../../featuretoggle/toggleNavn";
+import {
+  MELOSYS_ARBEID_KUN_NORGE,
+  MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA,
+} from "../../../../featuretoggle/toggleNavn";
 import { useSelector } from "react-redux";
 import { lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
 import LandInformasjon from "./landInformasjon";
@@ -85,6 +88,7 @@ const VurderingArtikkel11_4 = ({
   redigerbart,
   tilbake,
 }: VurderingArtikkel11_4Props) => {
+  const arbeidKunNorgeToggleEnabled = useFeatureToggle(MELOSYS_ARBEID_KUN_NORGE);
   const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
   const alleLand = useSelector(avklartefaktaSelectors.AlleRelevanteLandSelector);
   const lovvalgsbestemmelse = useSelector(lovvalgsperioderSelectors.LovvalgBestemmelseSelector);
@@ -97,7 +101,9 @@ const VurderingArtikkel11_4 = ({
   );
   const [bestemmelse, setBestemmelse] = useState(lovvalgsbestemmelse);
   const visStorbritanniaKonvensjon = alleLand.some((landkode) => landkode === MKV.Koder.landkoder.GB);
-
+  const erArbeidslandNorge = useSelector(avklartefaktaSelectors.ArbeidslandKTSelector).some(
+    (land: any) => land.kode === "NO"
+  );
   useEffect(() => {
     oppdaterData(konverterVilkarTilStegData(finnFeltNavn(art11_4_1eller13_4_1?.vilkaar), art11_4_1eller13_4_1));
     oppdaterData(konverterVilkarTilStegData(finnFeltNavn(art11_4_2eller13_4_2?.vilkaar), art11_4_2eller13_4_2));
@@ -205,15 +211,18 @@ const VurderingArtikkel11_4 = ({
             name="artikkel11"
             defaultValue={artikkelValg}
           >
-            <Nav.Radio value={ArtikkelValg.ART11_4_1}>
+            <Nav.Radio value={ArtikkelValg.ART11_4_1} readOnly={arbeidKunNorgeToggleEnabled && !erArbeidslandNorge}>
               {konvensjonStorbritanniaToggleEnabled ? "Arbeider på norsk skip" : "11.4 i - Norge er arbeidslandet"}
             </Nav.Radio>
-            <Nav.Radio value={ArtikkelValg.ART11_4_2}>
+            <Nav.Radio value={ArtikkelValg.ART11_4_2} readOnly={arbeidKunNorgeToggleEnabled && erArbeidslandNorge}>
               {konvensjonStorbritanniaToggleEnabled
                 ? "Arbeider på utenlandsk skip, er bosatt i Norge og har norsk arbeidsgiver"
                 : "11.4 ii - arbeidsgiver i bostedslandet"}
             </Nav.Radio>
-            <Nav.Radio value={ArtikkelValg.ART11_4_1_TIL_VURDERING_12_1}>
+            <Nav.Radio
+              value={ArtikkelValg.ART11_4_1_TIL_VURDERING_12_1}
+              readOnly={arbeidKunNorgeToggleEnabled && erArbeidslandNorge}
+            >
               {konvensjonStorbritanniaToggleEnabled
                 ? "Utsendt til utenlandsk skip"
                 : "11.4 i - arbeidslandet er ikke Norge, men jeg vil vurdere Artikkel 12.1"}
