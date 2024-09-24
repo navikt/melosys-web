@@ -764,7 +764,6 @@ const mapStateToProps = (state) => ({
 /* eslint no-alert:off */
 const mapDispatchToProps = (dispatch) => ({
   hentVilkar: (behandlingID) => dispatch(vilkarOperations.hent(behandlingID)),
-  endreVedtak: (behandlingID, body) => dispatch(vedtakOperations.endre(behandlingID, body)),
   kontrollerFerdigbehandling: (data) => dispatch(kontrollOperations.kontrollerFerdigbehandling(data)),
   videresend: (saksnummer, videresending) => dispatch(videresendingOperations.send(saksnummer, videresending)),
   hentAvklartefakta: (behandlingID) => dispatch(avklartefaktaOperations.hent(behandlingID)),
