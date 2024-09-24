@@ -23,7 +23,6 @@ import { flytSelectors } from "../../ducks/flyt";
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../ducks/lovvalgsperioder";
 import { vilkarOperations, vilkarSelectors } from "../../ducks/vilkar";
 import { redigerbartSelectors } from "../../ducks/redigerbart";
-import { vedtakOperations } from "../../ducks/vedtak";
 import { formSelectors } from "../../ducks/form";
 import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../ducks/mottatteOpplysninger";
 import { utpekOperations } from "../../ducks/utpek";
