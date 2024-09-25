@@ -126,6 +126,7 @@ const VurderingBestemmelse = ({
           resetField("tilleggsbestemmelse");
           resetField("bestemmelse");
         }}
+        size="medium"
       >
         {vedtakValg?.map((valg) => (
           <Nav.Radio key={valg.kode} value={valg.kode} disabled={valg.kode === NEI_SENDE_TIL_DEPARTEMENTET}>
