@@ -4,7 +4,7 @@ import { Box, List } from "@navikt/ds-react";
 const UnntakHjelpetekst = () => {
   return (
     <Box padding="4" background="surface-subtle">
-      <List title="For å søke om unntak, må du:">
+      <List title="For å søke om unntak, må du:" size="small">
         <List.Item>
           sende nødvendige brev via «Send brev» -menyen.
           <List>
@@ -16,7 +16,7 @@ const UnntakHjelpetekst = () => {
         <List.Item>registrere perioden i MEDL som uavklart.</List.Item>
       </List>
       <br />
-      <List title="Når du får svar, må du:">
+      <List title="Når du får svar, må du:" size="small">
         <List.Item>avvise den uavklarte perioden i MEDL.</List.Item>
         <List.Item>
           endre valget på dette steget til «Jeg vil innvilge søknaden» eller «Jeg vil avslå søknaden» .
