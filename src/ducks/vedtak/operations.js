@@ -28,19 +28,3 @@ export function fatt(behandlingID, body) {
     }
   );
 }
-
-export function endre(behandlingID, body) {
-  return doThenDispatch(
-    () => Api.Saksflyt.Vedtak.endre(behandlingID, body),
-    {
-      OK: Types.OK,
-      FEILET: Types.FEILET,
-      PENDING: Types.PENDING,
-    },
-    {
-      success: (dispatch) => {
-        dispatch(navigeringOperations.tilForsiden());
-      },
-    }
-  );
-}

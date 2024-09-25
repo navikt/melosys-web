@@ -48,14 +48,5 @@ export type FattVedtakTrygdeavtaleReqDto = {
   nyVurderingBakgrunn: string | null | undefined;
 };
 
-interface EndreVedtakReqDto {
-  begrunnelseKode: string;
-  fritekst?: string | null;
-  fritekstSed?: string | null;
-}
-
 export const fatt = (behandlingID: number, data: FattVedtakReqDto) =>
   postAsJson(`${API_BASE_URL}${SAKSFLYT}/${VEDTAK}/${behandlingID}/fatt`, data);
-
-export const endre = (behandlingID: number, data: EndreVedtakReqDto) =>
-  postAsJson(`${API_BASE_URL}${SAKSFLYT}/${VEDTAK}/${behandlingID}/endre`, data);

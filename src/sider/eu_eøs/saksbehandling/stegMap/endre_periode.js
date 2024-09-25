@@ -25,7 +25,6 @@ class EndrePeriode extends Steg {
       ),
     });
     this.handlers = {
-      endreVedtak: this._propsLight.tilgjengeligeHandlers.endreVedtak,
       tilbake: propsLight.tilgjengeligeHandlers.tilbake,
       endreLovvalgsperioderHandler: this._propsLight.tilgjengeligeHandlers.endreLovvalgsperioderHandler,
       oppdaterData: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, verdi),
