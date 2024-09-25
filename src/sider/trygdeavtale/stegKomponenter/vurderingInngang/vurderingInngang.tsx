@@ -30,6 +30,7 @@ import { DialogboksOppfriskSak } from "../../../../felleskomponenter/dialogboks"
 import { FellesHandlersContext } from "../../../../contexts";
 import { navigeringOperations } from "../../../../ducks/navigering";
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
+import Select from "../../../../felleskomponenter/skjema/input/select";
 
 interface Periode {
   fom?: string | null;
@@ -199,21 +200,21 @@ const VurderingInngang = ({
           />
         </Nav.Column>
         <Nav.Column xs="5">
-          <Skjema.Select
+          <Select
+            emptyFieldDisabled={!!formValues?.arbeidsland}
+            feltNavn="arbeidsland"
+            redigerbart={redigerbart}
             label={
               <LabelMedHjelpetekst
                 label="Arbeidsland"
                 hjelpetekst="Oppgi landet der arbeidet utføres. Hvis søker arbeider på skip, skal du oppgi flagglandet."
               />
             }
-            feltNavn="arbeidsland"
-            disabled={!redigerbart}
-            emptyFieldDisabled={!!formValues?.arbeidsland}
           >
             <LandValgSomOptions landValg={landValg} />
             {landValg && landValgUtenStøtte && <option disabled>{"\u2500"}</option>}
             <LandValgSomOptions landValg={landValgUtenStøtte} />
-          </Skjema.Select>
+          </Select>
         </Nav.Column>
       </Nav.Row>
 
