@@ -14,9 +14,17 @@ export interface Skatteforhold {
   skatteplikttype?: string;
 }
 
+export interface Medlemskapsperiode {
+  fomDato?: string;
+  tomDato?: string;
+  bestemmelse?: string;
+  dekning?: string;
+}
+
 export interface FieldArrayProps {
   inntektskilder: Inntektskilde[];
   skatteforholdsperioder: Skatteforhold[];
+  medlemskapsperioder: Medlemskapsperiode[];
 }
 
 export type FormValuesProps = FieldValues & FieldArrayProps;

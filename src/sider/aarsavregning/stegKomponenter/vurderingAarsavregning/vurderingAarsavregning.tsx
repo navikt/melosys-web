@@ -30,6 +30,7 @@ import { BeregnetTrygdeavgiftDetaljer } from "./komponenter/beregnetTrygdeavgift
 import { OK } from "../../../../ducks/aarsavregning/types";
 import { aarsavregningOperations } from "../../../../ducks/aarsavregning";
 import TidligereGrunnlagsoversikt from "./komponenter/tidligereGrunnlagsoversikt";
+import { Medlemskapsperioder } from "../../../../felleskomponenter/trygdeavgift/komponenter/medlemskapsperioder";
 
 interface Props {
   bekreft: () => void;
@@ -414,7 +415,22 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
         </Nav.RadioGroup>
       )}
 
-      {erAvvik && (
+      {(erAvvik ||
+        (lagretTrygdeavgift?.tidligereGrunnlagsopplysninger === null && lagretTrygdeavgift.aar === valgtÅr)) && (
+        <Nav.Row>
+          <Nav.Column>
+            <Medlemskapsperioder
+              formValues={formValues}
+              redigerbart={redigerbart}
+              control={control}
+              fields={skattFields}
+            />
+          </Nav.Column>
+        </Nav.Row>
+      )}
+
+      {(erAvvik ||
+        (lagretTrygdeavgift?.tidligereGrunnlagsopplysninger === null && lagretTrygdeavgift.aar === valgtÅr)) && (
         <Nav.Row>
           <Nav.Column>
             <Skatteforholdsperioder
@@ -430,7 +446,8 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
         </Nav.Row>
       )}
 
-      {erAvvik && (
+      {(erAvvik ||
+        (lagretTrygdeavgift?.tidligereGrunnlagsopplysninger === null && lagretTrygdeavgift.aar === valgtÅr)) && (
         <Inntektskilder
           formValues={formValues}
           redigerbart={redigerbart}
@@ -444,20 +461,24 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
         />
       )}
 
-      {erAvvik && lagretTrygdeavgift?.nyttGrunnlag && (
-        <SumArsavregningTabell
-          nyTrygdeavgift={lagretTrygdeavgift?.nyttGrunnlag?.avgift.totalAvgift}
-          tidligereTrygdeavgift={lagretTrygdeavgift?.tidligereGrunnlagsopplysninger?.avgift.totalAvgift}
-        />
-      )}
+      {(erAvvik ||
+        (lagretTrygdeavgift?.tidligereGrunnlagsopplysninger === null && lagretTrygdeavgift.aar === valgtÅr)) &&
+        lagretTrygdeavgift?.nyttGrunnlag && (
+          <SumArsavregningTabell
+            nyTrygdeavgift={lagretTrygdeavgift?.nyttGrunnlag?.avgift.totalAvgift}
+            tidligereTrygdeavgift={lagretTrygdeavgift?.tidligereGrunnlagsopplysninger?.avgift.totalAvgift}
+          />
+        )}
 
-      {erAvvik && lagretTrygdeavgift?.nyttGrunnlag && (
-        <BeregnetTrygdeavgiftDetaljer
-          grunnlag={lagretTrygdeavgift.nyttGrunnlag}
-          medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!!}
-          tittel="Endelig beregnet trygdeavgift"
-        />
-      )}
+      {(erAvvik ||
+        (lagretTrygdeavgift?.tidligereGrunnlagsopplysninger === null && lagretTrygdeavgift.aar === valgtÅr)) &&
+        lagretTrygdeavgift?.nyttGrunnlag && (
+          <BeregnetTrygdeavgiftDetaljer
+            grunnlag={lagretTrygdeavgift.nyttGrunnlag}
+            medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!!}
+            tittel="Endelig beregnet trygdeavgift"
+          />
+        )}
 
       <Feilmelding type={aktivFeilmeldingType} />
 
