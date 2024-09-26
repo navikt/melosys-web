@@ -93,9 +93,6 @@ const VurderingBestemmelse = ({
   const skalLagreVedtaksvalg = formValues?.vedtak !== NEI_ANMODE_OM_UNNTAK && formValues?.vedtak !== NEI_AVSLAG;
 
   useEffect(() => {
-    console.log(vedtakValg);
-  });
-  useEffect(() => {
     if (redigerbart && formValues && aktivtSteg) {
       setUpdatePending(true);
       oppdaterFlyt(
