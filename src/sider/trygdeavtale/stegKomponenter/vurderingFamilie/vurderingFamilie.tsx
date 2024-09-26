@@ -21,6 +21,8 @@ import vurdering_familie from "./vurderingFamilieSchema";
 
 import "./vurderingFamilie.css";
 import { HJELPETEKST, OBS_TEKST } from "./tekster";
+import { Stack } from "@navikt/ds-react";
+import Select from "../../../../felleskomponenter/skjema/input/select";
 
 const initializeFamilieFormValues = (data: Api.Trygdeavtale.StegData, resultat: Api.Trygdeavtale.Resultat) => ({
   barn: {
@@ -149,49 +151,49 @@ const VurderingFamilie = ({
 
   return (
     <div className="vurderingFamilie">
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">
-        Skal familiemedlemmer oppgitt i søknaden innvilges medlemskap?
-      </Nav.Typo.Innholdstittel>
+      <Nav.Typo.Innholdstittel className="stegvelgertittel">Familie</Nav.Typo.Innholdstittel>
 
       {Utils._isEmpty(tilknyttedeBarn) && !tilknyttetEktefelle ? (
         <div>
-          <Nav.Alert className="alertstripe" variant="success">
+          <Nav.Alert className="alertstripe" variant="info">
             Ingen medfølgende familiemedlemmer.
+            <p>{OBS_TEKST}</p>
           </Nav.Alert>
-          <span>{OBS_TEKST}</span>
         </div>
       ) : (
         <div>
           {!Utils._isEmpty(tilknyttedeBarn) && (
-            <Nav.Fieldset legend="Barn" className="barn">
+            <Nav.Fieldset legend={<h4>Skal barn oppgitt i søknaden innvilges medlemskap</h4>}>
               {tilknyttedeBarn?.map(
                 (barn: Api.Trygdeavtale.FamilieValg) =>
                   finnBarn(barn?.uuid, formValues.barn) && (
-                    <Nav.Row key={barn.uuid} className="barnet">
-                      <Nav.Column xs="8">
+                    <Nav.Row key={barn.uuid}>
+                      <Nav.Column lg="6">
                         <Skjema.RadioGroup
-                          legend={`${Utils.streng.storeForbokstaver(barn.navn)} (F.nr: ${barn.fnr})`}
+                          legend={`${Utils.streng.storeForbokstaver(barn.navn)} (F.dato-/f.nr./d-nr.: ${barn.fnr})`}
                           readOnly={!redigerbart}
                           id={Utils._uuid()}
                           name={`barn.${barn.uuid}.innvilget`}
                         >
-                          <Nav.Radio value={BOOLSK_STRING.SANN}>Ja</Nav.Radio>
-                          <Nav.Radio value={BOOLSK_STRING.USANN}>Nei</Nav.Radio>
+                          <Stack gap="6" direction={{ xs: "column", sm: "row" }} wrap={false}>
+                            <Nav.Radio value={BOOLSK_STRING.SANN}>Ja</Nav.Radio>
+                            <Nav.Radio value={BOOLSK_STRING.USANN}>Nei</Nav.Radio>
+                          </Stack>
                         </Skjema.RadioGroup>
                         {erIkkeInnvilget(finnBarn(barn?.uuid, formValues.barn)?.innvilget) && (
-                          <Skjema.Select
-                            label="Begrunnelse:"
+                          <Select
+                            label="Begrunnelse"
                             feltNavn={`barn.${barn.uuid}.begrunnelse`}
                             emptyFieldDisabled={!redigerbart || !!finnBarn(barn?.uuid, formValues.barn)?.begrunnelse}
                             name={barn.uuid}
-                            disabled={!redigerbart}
+                            redigerbart={redigerbart}
                           >
                             {barnBegrunnelseValg?.map((begrunnelse: KTObject) => (
                               <option key={begrunnelse.kode} value={begrunnelse.kode}>
                                 {begrunnelse.term}
                               </option>
                             ))}
-                          </Skjema.Select>
+                          </Select>
                         )}
                       </Nav.Column>
                     </Nav.Row>
@@ -211,35 +213,37 @@ const VurderingFamilie = ({
               )}
             </Nav.Fieldset>
           )}
-
+          <br />
           {tilknyttetEktefelle && (
-            <Nav.Fieldset legend="Ektefelle/partner/samboer" className="ektefelle">
+            <Nav.Fieldset legend="Ektefelle/partner/samboer">
               <Nav.Row>
-                <Nav.Column xs="8">
+                <Nav.Column lg="6">
                   <Skjema.RadioGroup
-                    legend={`${Utils.streng.storeForbokstaver(tilknyttetEktefelle.navn)} (F.nr: ${
+                    legend={`${Utils.streng.storeForbokstaver(tilknyttetEktefelle.navn)} (F.dato-/f.nr./d-nr.: ${
                       tilknyttetEktefelle.fnr
                     })`}
                     readOnly={!redigerbart}
                     id={Utils._uuid()}
                     name="ektefelle.innvilget"
                   >
-                    <Nav.Radio value={BOOLSK_STRING.SANN}>Ja</Nav.Radio>
-                    <Nav.Radio value={BOOLSK_STRING.USANN}>Nei</Nav.Radio>
+                    <Stack gap="6" direction={{ xs: "column", sm: "row" }} wrap={false}>
+                      <Nav.Radio value={BOOLSK_STRING.SANN}>Ja</Nav.Radio>
+                      <Nav.Radio value={BOOLSK_STRING.USANN}>Nei</Nav.Radio>
+                    </Stack>
                   </Skjema.RadioGroup>
                   {erIkkeInnvilget(formValues.ektefelle?.innvilget) && (
-                    <Skjema.Select
-                      label="Begrunnelse:"
+                    <Select
+                      label="Begrunnelse"
                       feltNavn="ektefelle.begrunnelse"
                       emptyFieldDisabled={!redigerbart || !!formValues.ektefelle.begrunnelse}
-                      disabled={!redigerbart}
+                      redigerbart={redigerbart}
                     >
                       {ektefelleBegrunnelseValg?.map((begrunnelse: KTObject) => (
                         <option key={begrunnelse.kode} value={begrunnelse.kode}>
                           {begrunnelse.term}
                         </option>
                       ))}
-                    </Skjema.Select>
+                    </Select>
                   )}
                 </Nav.Column>
               </Nav.Row>
