@@ -163,7 +163,9 @@ const VurderingFamilie = ({
       ) : (
         <div>
           {!Utils._isEmpty(tilknyttedeBarn) && (
-            <Nav.Fieldset legend={<h4>Skal barn oppgitt i søknaden innvilges medlemskap</h4>}>
+            <Nav.Fieldset
+              legend={<h2 className="typo-undertittel">Skal barn oppgitt i søknaden innvilges medlemskap</h2>}
+            >
               {tilknyttedeBarn?.map(
                 (barn: Api.Trygdeavtale.FamilieValg) =>
                   finnBarn(barn?.uuid, formValues.barn) && (
