@@ -27,7 +27,7 @@ import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { Box } from "@navikt/ds-react";
 import Select from "../../../../felleskomponenter/skjema/input/select";
 
-const { NEI_ANMODE_OM_UNNTAK, NEI_AVSLAG, NEI_SENDE_TIL_DEPARTEMENTET, JA_FATTE_VEDTAK } = KV.Koder.AVTALELAND_UTFALL;
+const { NEI_ANMODE_OM_UNNTAK, NEI_AVSLAG, JA_FATTE_VEDTAK } = KV.Koder.AVTALELAND_UTFALL;
 
 const mapStateToProps = (state: RootState, ownProps: Props) => ({
   formIsValid: formSelectors.TrygdeavtaleBestemmelseFormValidSelector(state),
@@ -93,6 +93,9 @@ const VurderingBestemmelse = ({
   const skalLagreVedtaksvalg = formValues?.vedtak !== NEI_ANMODE_OM_UNNTAK && formValues?.vedtak !== NEI_AVSLAG;
 
   useEffect(() => {
+    console.log(vedtakValg);
+  });
+  useEffect(() => {
     if (redigerbart && formValues && aktivtSteg) {
       setUpdatePending(true);
       oppdaterFlyt(
@@ -129,7 +132,7 @@ const VurderingBestemmelse = ({
         size="medium"
       >
         {vedtakValg?.map((valg) => (
-          <Nav.Radio key={valg.kode} value={valg.kode} disabled={valg.kode === NEI_SENDE_TIL_DEPARTEMENTET}>
+          <Nav.Radio key={valg.kode} value={valg.kode}>
             {valg.term}
           </Nav.Radio>
         ))}
