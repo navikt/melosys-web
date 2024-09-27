@@ -243,7 +243,7 @@ export const VurderingVedtak11_3_og_13_3a = ({
             value={formValues.begrunnelseFritekst}
             label="Fritekstfelt til begrunnelse"
             maxLength={4000}
-            disabled={!redigerbart}
+            readOnly={!redigerbart}
           />
         </Nav.Column>
       </Nav.Row>
@@ -255,7 +255,7 @@ export const VurderingVedtak11_3_og_13_3a = ({
             setValue("kopiTilArbeidsgiver", a.target.checked);
             leggTilEllerFjernOrienteringsbrev(a.target.checked);
           }}
-          disabled={!redigerbart}
+          readOnly={!redigerbart}
         >
           Send kopi til arbeidsgiver/virksomhet
         </Nav.Checkbox>
