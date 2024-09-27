@@ -25,7 +25,6 @@ import { IngenFlytMelding, UnntakHjelpetekst } from "../../../../felleskomponent
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { Box } from "@navikt/ds-react";
-import Select from "../../../../felleskomponenter/skjema/input/select";
 
 const { NEI_ANMODE_OM_UNNTAK, NEI_AVSLAG, JA_FATTE_VEDTAK } = KV.Koder.AVTALELAND_UTFALL;
 
@@ -138,7 +137,7 @@ const VurderingBestemmelse = ({
         <Nav.Fieldset legend="">
           <Nav.Row>
             <Nav.Column lg="6">
-              <Select
+              <Skjema.Select
                 label="Velg bestemmelse"
                 feltNavn="bestemmelse"
                 redigerbart={redigerbart && !updatePending}
@@ -150,7 +149,7 @@ const VurderingBestemmelse = ({
                     {bestemmelse.term}
                   </option>
                 ))}
-              </Select>
+              </Skjema.Select>
             </Nav.Column>
           </Nav.Row>
         </Nav.Fieldset>

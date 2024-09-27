@@ -22,7 +22,6 @@ import vurdering_familie from "./vurderingFamilieSchema";
 import "./vurderingFamilie.css";
 import { HJELPETEKST, OBS_TEKST } from "./tekster";
 import { Stack } from "@navikt/ds-react";
-import Select from "../../../../felleskomponenter/skjema/input/select";
 
 const initializeFamilieFormValues = (data: Api.Trygdeavtale.StegData, resultat: Api.Trygdeavtale.Resultat) => ({
   barn: {
@@ -183,7 +182,7 @@ const VurderingFamilie = ({
                           </Stack>
                         </Skjema.RadioGroup>
                         {erIkkeInnvilget(finnBarn(barn?.uuid, formValues.barn)?.innvilget) && (
-                          <Select
+                          <Skjema.Select
                             label="Begrunnelse"
                             feltNavn={`barn.${barn.uuid}.begrunnelse`}
                             emptyFieldDisabled={!redigerbart || !!finnBarn(barn?.uuid, formValues.barn)?.begrunnelse}
@@ -195,7 +194,7 @@ const VurderingFamilie = ({
                                 {begrunnelse.term}
                               </option>
                             ))}
-                          </Select>
+                          </Skjema.Select>
                         )}
                       </Nav.Column>
                     </Nav.Row>
@@ -234,7 +233,7 @@ const VurderingFamilie = ({
                     </Stack>
                   </Skjema.RadioGroup>
                   {erIkkeInnvilget(formValues.ektefelle?.innvilget) && (
-                    <Select
+                    <Skjema.Select
                       label="Begrunnelse"
                       feltNavn="ektefelle.begrunnelse"
                       emptyFieldDisabled={!redigerbart || !!formValues.ektefelle.begrunnelse}
@@ -245,7 +244,7 @@ const VurderingFamilie = ({
                           {begrunnelse.term}
                         </option>
                       ))}
-                    </Select>
+                    </Skjema.Select>
                   )}
                 </Nav.Column>
               </Nav.Row>
