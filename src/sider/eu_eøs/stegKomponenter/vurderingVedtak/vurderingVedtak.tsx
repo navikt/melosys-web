@@ -311,7 +311,7 @@ const VurderingVedtak = ({
             />
           </Nav.Column>
         </Nav.Row>
-        {redigerbart && !bucLukketOgLovvalgNorge && (
+        {redigerbart && !bucLukketOgLovvalgNorge && !erSokkelSkip && (
           <Nav.Row className="fritekstSed">
             <Nav.Column xs="7">
               <Skjema.Textarea
