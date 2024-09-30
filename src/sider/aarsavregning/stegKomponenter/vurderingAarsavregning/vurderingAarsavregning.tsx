@@ -46,18 +46,18 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
   const [valgtÅr, setValgtÅr] = useState<number | null>(null);
   const [erAvvik, setErAvvik] = useState<boolean | undefined>(undefined);
   const [feil, setFeil] = useState<undefined | string>(undefined);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [lagretTrygdeavgiftsperioder, setTrygdeavgiftsperioder] = useState<BeregnetTrygdeavgift | undefined>(undefined);
   const [lagretTrygdeavgift, setLagretTrygdeavgift] = useState<AarsavregningResponse | undefined>(undefined);
-  const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
-  const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
+  const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
+  const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as any;
+  const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
+
+  const [bestemmelser, setBestemmelser] = useState<[]>([]);
   const sisteMuligeÅr = new Date().getFullYear() - 1;
   const antallÅrTilbakeITid = 6;
   const muligeAar = Array.from({ length: antallÅrTilbakeITid }, (_, i) => sisteMuligeÅr - i);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [lagrePending, setLagrePending] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [trygdeavgiftsperioderHentingPending, setTrygdeavgiftsperioderHentingPending] = useState(false);
+  const [, setLagrePending] = useState(false);
+  const [, setTrygdeavgiftsperioderHentingPending] = useState(false);
   const dispatch = useDispatch();
 
   const defaultPeriode = useMemo(() => {
@@ -72,6 +72,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
 
   const medlemskapsperioder =
     lagretTrygdeavgift?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.medlemskapsperioder;
+
   const innvilgetMedlemskapsperiode = {
     fom: defaultPeriode?.fomDato,
     tom: defaultPeriode?.tomDato,
@@ -79,6 +80,8 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
 
   useEffect(() => {
     if (behandlingID) {
+      Api.Ftrl.hentBestemmelser(behandlingstema).then((res: any) => setBestemmelser(res.bestemmelser));
+
       setTrygdeavgiftsperioderHentingPending(true);
       Api.Trygdeavgift.hentBeregnetTrygdeavgift(behandlingID)
         .then((result) => {
@@ -111,11 +114,18 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
     },
     mode: "onChange",
     defaultValues: {
+      medlemskapsperioder: [{}],
       skatteforholdsperioder: [{}],
       inntektskilder: [{}],
       totaltForskuddsvisFakturert: "",
     } as FieldValue<AarsavregningFormValuesProps>,
   });
+  const {
+    fields: medlemskapsperioderFields,
+    append: medlemskapsperioderAppend,
+    remove: medlemskapsperioderRemove,
+    replace: resetMedlemskapsperioder,
+  } = useFieldArray<FieldArrayProps, "medlemskapsperioder", "id">({ control, name: "medlemskapsperioder" });
 
   const {
     fields: skattFields,
@@ -133,6 +143,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
   } = useFieldArray<FieldArrayProps, "inntektskilder", "id">({ control, name: "inntektskilder" });
 
   const formValues = watch();
+  console.log({ errors, formValues });
 
   const aktivFeilmeldingType = finnAktivFeilmelding(
     formValues?.inntektskilder,
@@ -301,6 +312,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
   useEffect(() => {
     if (erAvvik === false) {
       Api.Trygdeavgift.slettTrygdeavgiftsperioder(behandlingID).then(() => {
+        resetMedlemskapsperioder([]);
         resetSkatteforholdsperioder([]);
         resetInntektskilder([]);
         fetchAvregningsData();
@@ -313,18 +325,6 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
     setFeil(undefined);
     setValgtÅr(år || null);
   };
-
-  useEffect(() => {
-    if (errors) {
-      console.log("errors", errors);
-    }
-    if (errors.skatteforholdsperioder) {
-      console.log("Skatteforholdsperioder Errors:", errors.skatteforholdsperioder);
-    }
-    if (errors.inntektskilder) {
-      console.log("Inntektskilder Errors:", errors.inntektskilder);
-    }
-  }, [errors.skatteforholdsperioder, errors.inntektskilder]);
 
   useEffect(() => {
     if (!valgtÅr || lagretTrygdeavgift?.aar === valgtÅr) {
@@ -345,7 +345,8 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
   }, [valgtÅr, behandlingID, lagretTrygdeavgift?.aar]);
 
   // TODO: 0 grunnlag og 0 avvik må også kreve at totalt tidligere fakturert trygdeavgift er registrert
-  const stegErGyldig = Boolean(erAvvik === false || (erAvvik && lagretTrygdeavgift?.nyttGrunnlag));
+  const stegErGyldig =
+    Boolean(erAvvik === false || (erAvvik && lagretTrygdeavgift?.nyttGrunnlag)) && Utils._isEmpty(errors);
 
   useEffect(() => {
     oppdaterStatus(stegErGyldig);
@@ -420,10 +421,14 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
         <Nav.Row>
           <Nav.Column>
             <Medlemskapsperioder
+              tittel="Medlemskapsperiode"
               formValues={formValues}
               redigerbart={redigerbart}
               control={control}
-              fields={skattFields}
+              fields={medlemskapsperioderFields}
+              remove={medlemskapsperioderRemove}
+              append={medlemskapsperioderAppend}
+              bestemmelser={bestemmelser}
             />
           </Nav.Column>
         </Nav.Row>
@@ -434,6 +439,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
         <Nav.Row>
           <Nav.Column>
             <Skatteforholdsperioder
+              tittel="Skatteforhold"
               formValues={formValues}
               redigerbart={redigerbart}
               remove={skattRemove}
@@ -449,6 +455,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
       {(erAvvik ||
         (lagretTrygdeavgift?.tidligereGrunnlagsopplysninger === null && lagretTrygdeavgift.aar === valgtÅr)) && (
         <Inntektskilder
+          tittel="Inntektsperiode"
           formValues={formValues}
           redigerbart={redigerbart}
           update={inntektUpdate}
@@ -458,6 +465,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
           defaultPeriode={defaultPeriode}
           fields={inntektFields}
           medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!!}
+          visTotalPeriode
         />
       )}
 

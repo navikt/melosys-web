@@ -1,4 +1,5 @@
 import { Control, FieldArrayWithId } from "react-hook-form";
+import * as Api from "../../../services/api";
 
 import MKV from "../../../melosyskodeverk";
 import * as KV from "../../../kodeverk";
@@ -9,33 +10,42 @@ import * as Mui from "../../ui";
 import * as Ikoner from "../../../resources/images";
 
 import { FieldArrayProps, FormValuesProps, Medlemskapsperiode } from "./types";
+import { useEffect, useState } from "react";
 
 export interface PeriodeElementerProps {
   redigerbart: boolean;
-  trygdedekninger: string[];
-  innvilgelsesResultater: string[];
   control: Control;
   fields: FieldArrayWithId<FieldArrayProps, "medlemskapsperioder">[];
-  handleSlett: (index: number) => void;
-  handleChange: (medlemskapsperiode: Medlemskapsperiode[], index: number) => void;
+  remove: (index: number) => void;
+  append: (medlemskapsperiode: Medlemskapsperiode) => void;
   formValues: FormValuesProps;
-  handleLeggTil: () => void;
-  visLeggTil: boolean;
+  bestemmelser: [];
+  tittel?: string;
 }
 
 export const Medlemskapsperioder = ({
   redigerbart,
   fields,
   control,
-  handleSlett,
-  handleChange,
-  handleLeggTil,
-  visLeggTil,
+  remove,
+  append,
+  bestemmelser,
+  tittel,
 }: PeriodeElementerProps) => {
+  const [dekninger, setDekninger] = useState<[]>([]);
+  const [valgtBestemmelse, setValgtBestemmelse] = useState<string>();
+  useEffect(() => {
+    if (valgtBestemmelse) {
+      Api.LovligeKombinasjoner.hentTrygdedekninger(valgtBestemmelse).then(setDekninger);
+    }
+  }, [valgtBestemmelse]);
+
   const kanSlettePeriode = redigerbart && fields.length !== 1;
 
   return (
     <div className="medlemskapsperioder">
+      <Nav.Typo.Undertittel>{tittel}</Nav.Typo.Undertittel>
+
       <div className="skjema__panel">
         {fields?.map((field, index) => (
           <div key={field.id}>
@@ -47,7 +57,6 @@ export const Medlemskapsperioder = ({
                   name={`medlemskapsperioder[${index}].fomDato`}
                   aria-label={`Fra og med periode ${index + 1}`}
                   readOnly={!redigerbart}
-                  onChange={(value) => handleChange([{ ...field, fomDato: value }], index)}
                 />
               </Nav.Column>
               <Nav.Column className="dato">
@@ -57,20 +66,35 @@ export const Medlemskapsperioder = ({
                   name={`medlemskapsperioder[${index}].tomDato`}
                   aria-label={`Til og med periode ${index + 1}`}
                   readOnly={!redigerbart}
-                  onChange={(value) => handleChange([{ ...field, tomDato: value }], index)}
                 />
               </Nav.Column>
-              <Nav.Column className="trygdedekning">
+              <Nav.Column>
                 <Forms.Select
-                  name={`medlemskapsperioder[${index}].trygdedekning`}
-                  label={index === 0 ? "Trygdedekning" : ""}
+                  name={`medlemskapsperioder[${index}].bestemmelse`}
+                  label={index === 0 ? "Bestemmelse" : ""}
+                  hideLabel={index !== 0}
+                  aria-label={`Bestemmelse periode ${index + 1}`}
+                  control={control}
+                  readOnly={!redigerbart}
+                  onChange={setValgtBestemmelse}
+                >
+                  {bestemmelser.map((bestemmelse: any) => (
+                    <option key={bestemmelse} value={bestemmelse}>
+                      {KV.kodeTilTerm(bestemmelse, MKV.KTObjects.folketrygdloven_kap2_bestemmelser)}
+                    </option>
+                  ))}
+                </Forms.Select>
+              </Nav.Column>
+              <Nav.Column>
+                <Forms.Select
+                  name={`medlemskapsperioder[${index}].dekning`}
+                  label={index === 0 ? "Dekning" : ""}
                   hideLabel={index !== 0}
                   aria-label={`Trygdedekning periode ${index + 1}`}
                   control={control}
                   readOnly={!redigerbart}
-                  onChange={(value) => handleChange([{ ...field, dekning: value }], index)}
                 >
-                  {trygdedekninger.map((dekning) => (
+                  {dekninger.map((dekning: any) => (
                     <option key={dekning} value={dekning}>
                       {KV.kodeTilTerm(dekning, MKV.KTObjects.trygdedekninger)}
                     </option>
@@ -79,15 +103,15 @@ export const Medlemskapsperioder = ({
               </Nav.Column>
               {kanSlettePeriode && (
                 <Nav.Column className={index === 0 ? "slett slett__first" : "slett"}>
-                  <Mui.IkonKnapp ikon={Ikoner.Bin} onClick={() => handleSlett(index)} ariaLabel="Slett periode" />
+                  <Mui.IkonKnapp ikon={Ikoner.Bin} onClick={() => remove(index)} ariaLabel="Slett periode" />
                 </Nav.Column>
               )}
             </Nav.Row>
           </div>
         ))}
-        {visLeggTil && (
+        {redigerbart && (
           <Nav.Row className="skillestrek">
-            <Mui.Lenkeknapp onClick={handleLeggTil} ikon={Ikoner.Add}>
+            <Mui.Lenkeknapp onClick={() => append({})} ikon={Ikoner.Add}>
               Legg til periode
             </Mui.Lenkeknapp>
           </Nav.Row>

@@ -43,6 +43,8 @@ interface InntektskilderProps {
   redigerbart: boolean;
   defaultPeriode?: { fomDato: string; tomDato: string };
   medlemskapsTypeErPliktig: boolean;
+  tittel?: string;
+  visTotalPeriode?: boolean;
 }
 
 export const Inntektskilder = ({
@@ -55,6 +57,8 @@ export const Inntektskilder = ({
   defaultPeriode,
   fields,
   medlemskapsTypeErPliktig,
+  tittel,
+  visTotalPeriode,
 }: InntektskilderProps) => {
   const settesDefaultArbAvgBetales = (kildetype?: string) => ![INNTEKT_FRA_UTLANDET, MISJONÆR].includes(kildetype);
 
@@ -73,8 +77,12 @@ export const Inntektskilder = ({
   return (
     <div className="inntektskilder">
       <LabelMedHjelpetekst
-        label="Oppgi informasjon om brukers inntekt"
-        hjelpetekst="Hvis bruker har flere inntekter, f.eks. fra Norge og fra utlandet, så må de legges til enkeltvis."
+        label={tittel || "Oppgi informasjon om brukers inntekt"}
+        hjelpetekst={
+          tittel !== undefined
+            ? undefined
+            : "Hvis bruker har flere inntekter, f.eks. fra Norge og fra utlandet, så må de legges til enkeltvis."
+        }
         undertittel
       />
 
@@ -172,7 +180,7 @@ export const Inntektskilder = ({
               </Nav.Column>
 
               <Nav.Column className="brutto_inntekt">
-                {skalFylleInnBruttoInntekt ? (
+                {!skalFylleInnBruttoInntekt ? (
                   <Forms.Input
                     label={index === 0 ? "Brutto inntekt per md." : ""}
                     hideLabel={index !== 0}
@@ -188,6 +196,18 @@ export const Inntektskilder = ({
                   </div>
                 )}
               </Nav.Column>
+
+              {visTotalPeriode && (
+                <Nav.Column className="total_periode">
+                  <Forms.Input
+                    label={index === 0 ? "Total periode" : ""}
+                    hideLabel={index !== 0}
+                    name={`inntektskilder[${index}].totalPeriode`}
+                    control={control}
+                    readOnly={!redigerbart}
+                  />
+                </Nav.Column>
+              )}
 
               <Nav.Column className="fjernlinje">
                 {redigerbart && formValues.inntektskilder.length > 1 && (

@@ -15,6 +15,9 @@ const {
 } = MKV.Koder.inntektskildetype;
 const { IKKE_SKATTEPLIKTIG } = MKV.Koder.skatteplikttype;
 const UTENFOR_MEDLEMSKAPSPERIODEN = { melding: "Utenfor medlemskapsperioden" };
+const INNGILGELSESRESULTAT_FELT_KREVES = { melding: "Du må velge innvilgelsesresultat" };
+const BESTEMMELSE_FELT_KREVES = { melding: "Du må velge bestemmelse" };
+const TRYGDEDEKNING_FELT_KREVES = { melding: "Du må velge trygdedekning" };
 
 export const arbAvgBetalesKreves = (kildetype, medlemskapsTypeErPliktig) =>
   !medlemskapsTypeErPliktig && kildetype !== MISJONÆR;
@@ -67,7 +70,7 @@ const vurdering_aarsavregning = object().shape({
   skatteforholdsperioder: array().when(["$erÅpenSluttDato"], {
     is: (erÅpenSluttDato) => !erÅpenSluttDato,
     then: array()
-      .min(1)
+      .min(1, "Minst en skatteforholdsperiode")
       .of(
         object().shape({
           fomDato: string()
@@ -88,7 +91,7 @@ const vurdering_aarsavregning = object().shape({
       is: (medlemskapsTypeErPliktig, erÅpenSluttDato) =>
         !erÅpenSluttDato && kreverInntektskilder(medlemskapsTypeErPliktig, options),
       then: array()
-        .min(1)
+        .min(1, "Minst en inntektskilde")
         .of(
           object().shape({
             kildetype: string().required(MAA_FYLLES_UT),
@@ -107,6 +110,23 @@ const vurdering_aarsavregning = object().shape({
         ),
     });
   }),
+  medlemskapsperioder: array()
+    .min(1, "Minst en medlemskapsperiode")
+    .of(
+      object().shape({
+        fomDato: string()
+          .erGyldigDato()
+          .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
+          .required(MAA_FYLLES_UT),
+        tomDato: string()
+          .erGyldigDato()
+          .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
+          .erEtterDatofelt("fomDato"),
+        innvilgelsesResultat: string().required(INNGILGELSESRESULTAT_FELT_KREVES),
+        dekning: string().required(TRYGDEDEKNING_FELT_KREVES),
+        bestemmelse: string().required(BESTEMMELSE_FELT_KREVES),
+      })
+    ),
 });
 
 export default vurdering_aarsavregning;

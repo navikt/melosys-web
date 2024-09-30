@@ -19,6 +19,7 @@ interface SkatteforholdsperioderProps {
   append: (skatteforhold: Skatteforhold) => void;
   redigerbart: boolean;
   defaultPeriode?: { fomDato: string; tomDato: string };
+  tittel?: string;
 }
 
 export const Skatteforholdsperioder = ({
@@ -29,10 +30,11 @@ export const Skatteforholdsperioder = ({
   redigerbart,
   defaultPeriode,
   fields,
+  tittel,
 }: SkatteforholdsperioderProps) => {
   return (
     <div className="skatteforholdsperioder">
-      <Nav.Typo.Undertittel>Oppgi informasjon om brukers skatteforhold</Nav.Typo.Undertittel>
+      <Nav.Typo.Undertittel>{tittel || "Oppgi informasjon om brukers skatteforhold"}</Nav.Typo.Undertittel>
 
       <div className="skjema__panel">
         {formValues.skatteforholdsperioder.map((skatteforhold, index) => {
