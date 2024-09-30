@@ -70,7 +70,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const formValues = watch();
 
   const fetchAvregningsData = () => {
-    return Api.Aarsavregning.hentAvregningsData(behandlingID).then((response: AarsavregningResponse) => {
+    return Api.Aarsavregning.hentAarsavregning(behandlingID).then((response: AarsavregningResponse) => {
       setLagretAarsavregning(response);
     });
   };
