@@ -35,15 +35,6 @@ export const VurderingVedtak11_3_og_13_3a = ({
   harFeilmeldinger,
   validerMottatteOpplysninger,
 }: VurderingVedtakProps) => {
-  const dispatch = useDispatch();
-  const lovvalgsperiode = useSelector(lovvalgsperioderSelectors.LovvalgsperiodeSelector);
-  const soknadsperiode = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
-  const behandling = useSelector(behandlingerSelectors.BehandlingerSelector) as any;
-  const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as number;
-  const vedtakstype = useSelector(behandlingsresultatSelectors.VedtakstypeSelector);
-  const [kontrollerPending, setKontrollerPending] = useState(false);
-  const [vedtakPending, setVedtakPending] = useState(false);
-
   const velgLovvalgsperiode = () => {
     const fom =
       lovvalgsperiode !== null && !Utils._isEmpty(lovvalgsperiode) ? lovvalgsperiode.fomDato : soknadsperiode.fom;
@@ -58,13 +49,23 @@ export const VurderingVedtak11_3_og_13_3a = ({
   };
 
   const endretLovvalgsperiode = (): boolean => {
-    if (lovvalgsperiode === null) return false;
+    if (Utils._isEmpty(lovvalgsperiode)) return false;
 
     return (
       Utils.dato.datoDiffPure(soknadsperiode.fom, lovvalgsperiode.fomDato, "days") !== 0 ||
       Utils.dato.datoDiffPure(soknadsperiode.tom, lovvalgsperiode.tomDato, "days") !== 0
     );
   };
+
+  const dispatch = useDispatch();
+  const lovvalgsperiode = useSelector(lovvalgsperioderSelectors.LovvalgsperiodeSelector);
+  const soknadsperiode = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
+  const behandling = useSelector(behandlingerSelectors.BehandlingerSelector) as any;
+  const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as number;
+  const vedtakstype = useSelector(behandlingsresultatSelectors.VedtakstypeSelector);
+  const [kontrollerPending, setKontrollerPending] = useState(false);
+  const [vedtakPending, setVedtakPending] = useState(false);
+  const [initiellLovvalgsperiode] = useState(velgLovvalgsperiode());
 
   const {
     watch,
@@ -78,8 +79,8 @@ export const VurderingVedtak11_3_og_13_3a = ({
       kopiTilArbeidsgiver: false,
       vedtakstypebegrunnelse: useSelector(behandlingsresultatSelectors.BegrunnelseKoderSelector)[0],
       lovvalgsbestemmelse: lovvalgsperiode?.lovvalgsbestemmelse ?? "",
-      fom: velgLovvalgsperiode().formattedFom,
-      tom: velgLovvalgsperiode().formattedTom,
+      fom: initiellLovvalgsperiode.formattedFom,
+      tom: initiellLovvalgsperiode.formattedTom,
       korterePeriodeChecked: endretLovvalgsperiode(),
       begrunnelseFritekst: useSelector(behandlingsresultatSelectors.BegrunnelseFritekstSelector) || "",
     } as FieldValues,
@@ -220,16 +221,24 @@ export const VurderingVedtak11_3_og_13_3a = ({
         Lovvalget innvilges for en kortere periode
       </Nav.Checkbox>
 
-      {formValues.korterePeriodeChecked && (
+      {formValues.korterePeriodeChecked && soknadsperiode.fom && (
         <Nav.Row className="skjema__panel__rad">
           <Nav.Column xs="3" className="dato">
-            <Datovelger readOnly={!redigerbart} name="fom" label="Startdato" control={control} />
+            <Datovelger
+              readOnly={!redigerbart}
+              name="fom"
+              minDate={Utils.dato.norskStringTilDate(initiellLovvalgsperiode.formattedFom)}
+              maxDate={Utils.dato.norskStringTilDate(initiellLovvalgsperiode.formattedTom)}
+              label="Startdato"
+              control={control}
+            />
           </Nav.Column>
           <Nav.Column xs="3" className="dato">
             <Datovelger
               readOnly={!redigerbart}
               name="tom"
-              minDate={Utils.dato.norskStringTilDate(formValues.fom)}
+              minDate={Utils.dato.norskStringTilDate(initiellLovvalgsperiode.formattedFom)}
+              maxDate={Utils.dato.norskStringTilDate(initiellLovvalgsperiode.formattedTom)}
               label="Sluttdato"
               control={control}
             />
