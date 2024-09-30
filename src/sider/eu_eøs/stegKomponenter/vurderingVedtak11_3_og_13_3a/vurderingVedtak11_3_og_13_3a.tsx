@@ -203,7 +203,7 @@ export const VurderingVedtak11_3_og_13_3a = ({
         className="ktselect__slim"
       />
 
-      <Nav.Typo.Element className="undertittel">Søknadsperiode</Nav.Typo.Element>
+      <Nav.Typo.Element className="undertittel">Lovvalgsperiode</Nav.Typo.Element>
       <Nav.Column>
         {formValues.fom} - {formValues.tom}
       </Nav.Column>
