@@ -31,6 +31,9 @@ import { OK } from "../../../../ducks/aarsavregning/types";
 import { aarsavregningOperations } from "../../../../ducks/aarsavregning";
 import TidligereGrunnlagsoversikt from "./komponenter/tidligereGrunnlagsoversikt";
 import { Medlemskapsperioder } from "../../../../felleskomponenter/trygdeavgift/komponenter/medlemskapsperioder";
+import { MedlemskapsperiodeProp } from "../../../ftrl/saksbehandling/stegKomponenter/vurderingPeriode/komponenter/types";
+import { medlemskapsperioderOperations, medlemskapsperioderTypes } from "../../../../ducks/medlemskapsperioder";
+import { update } from "lodash";
 
 interface Props {
   bekreft: () => void;
@@ -351,6 +354,31 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
   useEffect(() => {
     oppdaterStatus(stegErGyldig);
   }, [stegErGyldig]);
+
+  useEffect(() => {
+    if (
+      formValues.medlemskapsperioder[0]?.fomDato !== undefined &&
+      formValues.medlemskapsperioder[0]?.tomDato !== undefined &&
+      formValues.medlemskapsperioder[0]?.bestemmelse !== undefined &&
+      formValues.medlemskapsperioder[0]?.dekning !== undefined
+    ) {
+      console.log("SEND");
+      const periodeRequest = {
+        fomDato: Utils.dato.formatterDatoTilISO(formValues.medlemskapsperioder[0]?.fomDato, "") as string,
+        tomDato: Utils.dato.formatterDatoTilISO(formValues.medlemskapsperioder[0]?.tomDato, "") as string,
+        trygdedekning: formValues.medlemskapsperioder[0]?.dekning,
+        innvilgelsesResultat: "INNVILGET",
+        bestemmelse: formValues.medlemskapsperioder[0]?.bestemmelse,
+      };
+
+      const response: any = dispatch(
+        medlemskapsperioderOperations.opprettMedlemskapsperiode(behandlingID, periodeRequest)
+      );
+
+      console.log("test: " + response.data);
+    }
+    console.log(formValues.medlemskapsperioder);
+  }, [formValues]);
 
   return (
     <div className="vurderingAarsavregning">
