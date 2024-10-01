@@ -35,19 +35,6 @@ export const VurderingVedtak11_3_og_13_3a = ({
   harFeilmeldinger,
   validerMottatteOpplysninger,
 }: VurderingVedtakProps) => {
-  const velgLovvalgsperiode = () => {
-    const fom =
-      lovvalgsperiode !== null && !Utils._isEmpty(lovvalgsperiode) ? lovvalgsperiode.fomDato : soknadsperiode.fom;
-
-    const tom =
-      lovvalgsperiode !== null && !Utils._isEmpty(lovvalgsperiode) ? lovvalgsperiode.tomDato : soknadsperiode.tom;
-
-    const formattedFom = Utils.dato.formatterDatoTilNorsk(fom);
-    const formattedTom = Utils.dato.formatterDatoTilNorsk(tom);
-
-    return { formattedFom, formattedTom };
-  };
-
   const endretLovvalgsperiode = (): boolean => {
     if (Utils._isEmpty(lovvalgsperiode)) return false;
 
@@ -66,14 +53,14 @@ export const VurderingVedtak11_3_og_13_3a = ({
   const [kontrollerPending, setKontrollerPending] = useState(false);
   const [vedtakPending, setVedtakPending] = useState(false);
 
-  const [initiellLovvalgsperiode] = useState(velgLovvalgsperiode());
-
   const formattedFom = Utils.dato.formatterDatoTilNorsk(
     lovvalgsperiode !== null && !Utils._isEmpty(lovvalgsperiode) ? lovvalgsperiode.fomDato : soknadsperiode.fom
   );
   const formattedTom = Utils.dato.formatterDatoTilNorsk(
     lovvalgsperiode !== null && !Utils._isEmpty(lovvalgsperiode) ? lovvalgsperiode.tomDato : soknadsperiode.tom
   );
+
+  const [initiellLovvalgsperiode] = useState({ formattedFom, formattedTom });
 
   const {
     watch,
@@ -236,7 +223,7 @@ export const VurderingVedtak11_3_og_13_3a = ({
               readOnly={!redigerbart}
               name="fom"
               minDate={Utils.dato.norskStringTilDate(initiellLovvalgsperiode.formattedFom)}
-              maxDate={Utils.dato.norskStringTilDate(initiellLovvalgsperiode.formattedTom)}
+              maxDate={Utils.dato.norskStringTilDate(tom)}
               label="Startdato"
               control={control}
             />
@@ -245,7 +232,7 @@ export const VurderingVedtak11_3_og_13_3a = ({
             <Datovelger
               readOnly={!redigerbart}
               name="tom"
-              minDate={Utils.dato.norskStringTilDate(initiellLovvalgsperiode.formattedFom)}
+              minDate={Utils.dato.norskStringTilDate(fom)}
               maxDate={Utils.dato.norskStringTilDate(initiellLovvalgsperiode.formattedTom)}
               label="Sluttdato"
               control={control}
