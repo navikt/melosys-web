@@ -44,18 +44,12 @@ export const VurderingVedtak11_3_og_13_3a = ({
   const [kontrollerPending, setKontrollerPending] = useState(false);
   const [vedtakPending, setVedtakPending] = useState(false);
 
-  const velgLovvalgsperiode = () => {
-    const fom =
-      lovvalgsperiode !== null && !Utils._isEmpty(lovvalgsperiode) ? lovvalgsperiode.fomDato : soknadsperiode.fom;
-
-    const tom =
-      lovvalgsperiode !== null && !Utils._isEmpty(lovvalgsperiode) ? lovvalgsperiode.tomDato : soknadsperiode.tom;
-
-    const formattedFom = Utils.dato.formatterDatoTilNorsk(fom);
-    const formattedTom = Utils.dato.formatterDatoTilNorsk(tom);
-
-    return { formattedFom, formattedTom };
-  };
+  const formattedFom = Utils.dato.formatterDatoTilNorsk(
+    lovvalgsperiode !== null && !Utils._isEmpty(lovvalgsperiode) ? lovvalgsperiode.fomDato : soknadsperiode.fom
+  );
+  const formattedTom = Utils.dato.formatterDatoTilNorsk(
+    lovvalgsperiode !== null && !Utils._isEmpty(lovvalgsperiode) ? lovvalgsperiode.tomDato : soknadsperiode.tom
+  );
 
   const endretLovvalgsperiode = (): boolean => {
     if (lovvalgsperiode === null) return false;
@@ -78,8 +72,8 @@ export const VurderingVedtak11_3_og_13_3a = ({
       kopiTilArbeidsgiver: false,
       vedtakstypebegrunnelse: useSelector(behandlingsresultatSelectors.BegrunnelseKoderSelector)[0],
       lovvalgsbestemmelse: lovvalgsperiode?.lovvalgsbestemmelse ?? "",
-      fom: velgLovvalgsperiode().formattedFom,
-      tom: velgLovvalgsperiode().formattedTom,
+      fom: formattedFom,
+      tom: formattedTom,
       korterePeriodeChecked: endretLovvalgsperiode(),
       begrunnelseFritekst: useSelector(behandlingsresultatSelectors.BegrunnelseFritekstSelector) || "",
     } as FieldValues,
