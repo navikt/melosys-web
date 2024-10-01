@@ -1,7 +1,7 @@
 import * as Api from "../../../../services/api";
 import MedlemskapsPerioderTabell from "./komponenter/medlemskapsPerioderTabell";
 import "./vurderingAarsavregning.css";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { ChangeEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { AarsavregningResponse, Trygdeavgiftsgrunnlag } from "../../../../services/modules/aarsavregning/aarsavregning";
 import { useDispatch, useSelector } from "react-redux";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
@@ -24,7 +24,6 @@ import vurderingAarsavregningSchema from "./vurderingAarsavregningSchema";
 import { Feilmelding, feilMeldingBlokkerer, finnAktivFeilmelding } from "./meldinger";
 import { erBrukerSkattepliktigIHelePerioden } from "../../../ftrl/saksbehandling/stegKomponenter/vurderingTrygdeavgift/vurderingTrygdeavgiftSchema";
 import MKV from "../../../../melosyskodeverk";
-import { BeregnetTrygdeavgift } from "../../../../services/modules/trygdeavgift";
 import { SumArsavregningTabell } from "./komponenter/sumArsavregningTabell";
 import { BeregnetTrygdeavgiftDetaljer } from "./komponenter/beregnetTrygdeavgiftDetaljer";
 import { OK } from "../../../../ducks/aarsavregning/types";
@@ -53,20 +52,20 @@ const mapFeilmelding = (error: any) => {
   return error.body?.feilkoder || error.body?.message || error;
 };
 
+// TODO: Error handling ved hentÅrsavregning
+// TODO: Boolean for årsavregningstype mangler. Automatisk opprettet årsavregning skal ha år tilknyttet og dermed skal årvelger skjules
 export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
   const [valgtÅr, setValgtÅr] = useState<number | null>(null);
   const [initieltÅr, setInitieltÅr] = useState<number | null>(null);
   const [erAvvik, setErAvvik] = useState<boolean | undefined>(undefined);
   const [feil, setFeil] = useState<undefined | string>(undefined);
   const [aarsavregningResponse, setAarsavregningResponse] = useState<AarsavregningResponse | undefined>(undefined);
+  const [avvikPending, setAvvikPending] = useState<boolean>(false);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const sisteMuligeÅr = new Date().getFullYear() - 1;
   const antallÅrTilbakeITid = 6;
   const muligeAar = Array.from({ length: antallÅrTilbakeITid }, (_, i) => sisteMuligeÅr - i);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [lagrePending, setLagrePending] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const dispatch = useDispatch();
 
   // TODO: Refaktorere perioder
@@ -88,7 +87,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
     tom: defaultPeriode?.tomDato,
   };
 
-  const håndterLagretTrygdeavgiftsgrunnlag = (trygdeavgiftsgrunnlag: Trygdeavgiftsgrunnlag) => {
+  const setSkjemaverdierFraTrygdeavgiftsgrunnlag = (trygdeavgiftsgrunnlag: Trygdeavgiftsgrunnlag) => {
     const { inntektskperioder, skatteforholdsperioder } = trygdeavgiftsgrunnlag;
     const sorterteInntekstkilder = [...inntektskperioder].sort(Utils.dato.sorterEtterISOFomDato);
     const sorterteSkatteforhold = [...skatteforholdsperioder].sort(Utils.dato.sorterEtterISOFomDato);
@@ -114,37 +113,66 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
     );
   };
 
+  // Initiell innlasting
   useEffect(() => {
     Api.Aarsavregning.hentAarsavregning(behandlingID)
       .then((res) => {
-        // TODO: Set nødvendig state for påbegynt behandling
-        setInitieltÅr(res.aar);
         setAarsavregningResponse(res);
-        setErAvvik(res.avvikFunnet);
-        if (res?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag) {
-          håndterLagretTrygdeavgiftsgrunnlag(
+
+        // Benyttes for innhenting av saksopplysninger ifm. årsavregningsbehandlinger
+        dispatch({ type: OK, data: res });
+
+        setInitieltÅr(res.aar);
+        setValue("totaltForskuddsvisFakturert", res.avregning?.tidligereFakturertBeloep);
+        if (res.avvikFunnet !== null) {
+          setErAvvik(res.avvikFunnet);
+        }
+        if (res.avvikFunnet && res?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag) {
+          setSkjemaverdierFraTrygdeavgiftsgrunnlag(
             res.nyttGrunnlag?.trygdeavgiftsgrunnlag || res.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag
           );
         }
       })
       .catch((err) => {
-        // vis årvelger
+        if (err.response?.status === 404) {
+          setAarsavregningResponse(undefined);
+          dispatch(aarsavregningOperations.resetAarsavregning());
+        }
       });
   }, []);
 
+  // Innlasting ved valg av år, oppretter eller henter årsavregning
   useEffect(() => {
-    if (valgtÅr) {
+    /* TODO: Refaktorert api skal ha nytt endepunkt som lar oss sjekke om et gitt år og behandlingID har en aktiv årsavregning.
+        Legg til kall mot dette endepunktet og kjør enten hent eller lag basert på responsen.
+     */
+    if (redigerbart && valgtÅr && valgtÅr !== aarsavregningResponse?.aar) {
       Api.Aarsavregning.lagAarsavregning(behandlingID, { aar: valgtÅr })
         .then((res) => {
           setAarsavregningResponse(res);
-          resetSkatteforholdsperioder([]);
-          resetInntektskilder([]);
+          if (res?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag) {
+            setSkjemaverdierFraTrygdeavgiftsgrunnlag(res?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag);
+          }
+          setValue("totaltForskuddsvisFakturert", "");
+          setErAvvik(undefined);
         })
         .catch((error: any) => {
           setFeil(error.body?.message || error);
         });
     }
   }, [valgtÅr]);
+
+  useEffect(() => {
+    if (redigerbart && aarsavregningResponse?.nyttGrunnlag) {
+      if (aarsavregningResponse.nyttGrunnlag?.avgift.totalAvgift !== aarsavregningResponse.avregning?.nyttTotalbeloep) {
+        Api.Aarsavregning.oppdaterTotalBelop(behandlingID, {
+          avregning: {
+            nyttTotalbeloep: aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift,
+          },
+        });
+      }
+    }
+  }, [aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift]);
 
   const medlemskapsTypeErPliktig = medlemskapsperioder?.every(
     (periode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG
@@ -154,7 +182,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
     control,
     watch,
     setValue,
-    formState: { isValid: formIsValid, isValidating, errors },
+    formState: { isValid: formIsValid, isValidating },
   } = useForm({
     resolver: yupResolver(vurderingAarsavregningSchema),
     context: {
@@ -187,15 +215,12 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
 
   const formValues = watch();
 
-  const aktivFeilmeldingType = finnAktivFeilmelding(
-    formValues?.inntektskilder,
-    formValues?.skatteforholdsperioder,
-    medlemskapsperioder,
-    innvilgetMedlemskapsperiode
-  );
-
   useEffect(() => {
-    if (redigerbart && formValues.totaltForskuddsvisFakturert) {
+    if (
+      redigerbart &&
+      formValues.totaltForskuddsvisFakturert &&
+      formValues.totaltForskuddsvisFakturert !== aarsavregningResponse?.avregning?.tidligereFakturertBeloep
+    ) {
       Api.Aarsavregning.oppdaterTotalBelop(behandlingID, {
         avregning: {
           tidligereFakturertBeloep: formValues.totaltForskuddsvisFakturert,
@@ -204,37 +229,9 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
     }
   }, [formValues.totaltForskuddsvisFakturert]);
 
-  useEffect(() => {
-    if (redigerbart && aarsavregningResponse) {
-      Api.Aarsavregning.oppdaterTotalBelop(behandlingID, {
-        avregning: {
-          nyttTotalbeloep: aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift,
-        },
-      });
-    }
-  }, [aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift]);
-
-  const fetchAarsavregning = () => {
-    return Api.Aarsavregning.hentAarsavregning(behandlingID)
-      .then((response: AarsavregningResponse) => {
-        // Benyttes for innhenting av saksopplysninger ifm. årsavregningsbehandlinger
-        dispatch({ type: OK, data: response });
-        setAarsavregningResponse(response);
-        setValue("totaltForskuddsvisFakturert", response.avregning?.tidligereFakturertBeloep);
-        return response;
-      })
-      .catch((error: any) => {
-        if (error.response?.status === 404) {
-          setAarsavregningResponse(undefined);
-          dispatch(aarsavregningOperations.resetAarsavregning());
-        }
-      });
-  };
-
   const beregnTrygdeavgiftsperioder = useCallback(
     (formVerdier: FieldValue<FormValuesProps>) => {
       setFeil(undefined);
-      setLagrePending(true);
       const erBrukerPliktigMedlemOgSkattepliktig =
         medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(formVerdier.skatteforholdsperioder);
       if (!aarsavregningResponse?.tidligereGrunnlagsopplysninger) return;
@@ -255,104 +252,66 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
           : [],
       })
         .then(() => {
-          fetchAarsavregning(); // TODO: refaktorer fetchAarsavregning
+          Api.Aarsavregning.hentAarsavregning(behandlingID).then((response: AarsavregningResponse) => {
+            setAarsavregningResponse(response);
+          });
           setFeil(undefined);
         })
-        .catch((error) => setFeil(mapFeilmelding(error)))
-        .finally(() => setLagrePending(false));
+        .catch((error) => setFeil(mapFeilmelding(error)));
     },
-    [behandlingID, medlemskapsTypeErPliktig]
+    [behandlingID, medlemskapsTypeErPliktig, setFeil, setAarsavregningResponse]
   );
 
   const debounceBeregnTrygdeavgiftsperioder = useCallback(
-    Utils._debounce((formVerdier, isValid) => isValid && beregnTrygdeavgiftsperioder(formVerdier), 500),
+    Utils._debounce((formVerdier) => beregnTrygdeavgiftsperioder(formVerdier), 500),
     [beregnTrygdeavgiftsperioder]
   );
 
+  const aktivFeilmeldingType = finnAktivFeilmelding(
+    formValues?.inntektskilder,
+    formValues?.skatteforholdsperioder,
+    medlemskapsperioder,
+    innvilgetMedlemskapsperiode
+  );
+
+  // erAvvik trigger en beregning på gammelt grunnlag etter å ha oppdatert skjemaverdier i håndterAvvik. Dette må gjøres for å oppdatere lagrede verdier
   useEffect(() => {
-    if (redigerbart) {
-      debounceBeregnTrygdeavgiftsperioder(formValues, formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType));
+    if (redigerbart && erAvvik && !isValidating && formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType)) {
+      debounceBeregnTrygdeavgiftsperioder(formValues);
     }
-  }, [formIsValid, aktivFeilmeldingType]);
+  }, [formIsValid, isValidating, aktivFeilmeldingType, erAvvik]);
 
-  //  useEffect(() => {
-  //    setValgtÅr(aarsavregningResponse?.aar || null);
-  //
-  //    if (aarsavregningResponse) {
-  //      if (aarsavregningResponse.avvikFunnet === true) {
-  //        håndterAvvik(aarsavregningResponse.avvikFunnet);
-  //      }
-  //    }
-  //
-  //    setErAvvik(aarsavregningResponse?.avvikFunnet);
-  //  }, [aarsavregningResponse]);
-  //
-  //  const håndterAvvik = (avvik: boolean) => {
-  //    setErAvvik(avvik);
-  //
-  //    if (avvik && aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag) {
-  //      håndterLagretTrygdeavgiftsgrunnlag(
-  //        aarsavregningResponse.nyttGrunnlag?.trygdeavgiftsgrunnlag ||
-  //          aarsavregningResponse.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag
-  //      );
-  //    } else if (defaultPeriode) {
-  //      resetSkatteforholdsperioder([defaultPeriode]);
-  //      resetInntektskilder([defaultPeriode]);
-  //    }
-  //  };
-
+  const stegErGyldig = Boolean(
+    (erAvvik === false && formIsValid) || (formIsValid && erAvvik && aarsavregningResponse?.nyttGrunnlag)
+  );
   useEffect(() => {
-    if (erAvvik === false) {
+    oppdaterStatus(stegErGyldig);
+  }, [stegErGyldig]);
+
+  const håndterAvvik = (value: boolean) => {
+    if (!value) {
       Api.Trygdeavgift.slettTrygdeavgiftsperioder(behandlingID).then(() => {
         resetSkatteforholdsperioder([]);
         resetInntektskilder([]);
-        fetchAarsavregning();
+        Api.Aarsavregning.hentAarsavregning(behandlingID).then((response: AarsavregningResponse) => {
+          setAarsavregningResponse(response);
+        });
       });
+    } else {
+      if (aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag) {
+        setSkjemaverdierFraTrygdeavgiftsgrunnlag(
+          aarsavregningResponse.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag
+        );
+      }
     }
-  }, [erAvvik]);
+    setErAvvik(value);
+  };
 
-  const håndterEndringAvÅr = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const håndterEndringAvÅr = (event: ChangeEvent<HTMLSelectElement>) => {
     const år = event.target.value ? parseInt(event.target.value, 10) : undefined;
     setFeil(undefined);
     setValgtÅr(år || null);
   };
-
-  useEffect(() => {
-    if (errors) {
-      console.log("errors", errors);
-    }
-    if (errors.skatteforholdsperioder) {
-      console.log("Skatteforholdsperioder Errors:", errors.skatteforholdsperioder);
-    }
-    if (errors.inntektskilder) {
-      console.log("Inntektskilder Errors:", errors.inntektskilder);
-    }
-  }, [errors.skatteforholdsperioder, errors.inntektskilder]);
-
-  // TODO: Skal fjernes, undersøk om setting av totaltForskuddsvisFakturert må legges til annet sted
-  useEffect(() => {
-    if (!valgtÅr || aarsavregningResponse?.aar === valgtÅr) {
-      return;
-    }
-
-    Api.Aarsavregning.lagAarsavregning(behandlingID, { aar: valgtÅr })
-      .then((nyAvregningsData) => {
-        setAarsavregningResponse(nyAvregningsData);
-        resetSkatteforholdsperioder([]);
-        resetInntektskilder([]);
-      })
-      .catch((error: any) => {
-        setFeil(error.body?.message || error);
-      });
-    setErAvvik(undefined);
-    setValue("totaltForskuddsvisFakturert", undefined);
-  }, [valgtÅr, behandlingID, aarsavregningResponse?.aar]);
-
-  const stegErGyldig = Boolean(erAvvik === false || (erAvvik && aarsavregningResponse?.nyttGrunnlag));
-
-  useEffect(() => {
-    oppdaterStatus(stegErGyldig);
-  }, [stegErGyldig]);
 
   return (
     <div className="vurderingAarsavregning">
@@ -363,7 +322,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
             <Nav.Select
               label=""
               id="aarVelger"
-              value={valgtÅr?.toString() ?? ""}
+              value={(valgtÅr || initieltÅr)?.toString() ?? ""}
               onChange={håndterEndringAvÅr}
               readOnly={!redigerbart}
             >
@@ -380,9 +339,14 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
         </Nav.Row>
       </Nav.Fieldset>
       {feil && <Nav.Alert variant="error">{feil}</Nav.Alert>}
-      {aarsavregningResponse?.tidligereGrunnlagsopplysninger === null && aarsavregningResponse.aar === valgtÅr && (
-        <TidligereGrunnlagsopplysningerFinnesIkke formValues={formValues} control={control} redigerbart={redigerbart} />
-      )}
+      {aarsavregningResponse?.tidligereGrunnlagsopplysninger === null &&
+        aarsavregningResponse.aar === (valgtÅr || initieltÅr) && (
+          <TidligereGrunnlagsopplysningerFinnesIkke
+            formValues={formValues}
+            control={control}
+            redigerbart={redigerbart}
+          />
+        )}
       {aarsavregningResponse?.tidligereGrunnlagsopplysninger && (
         <>
           <MedlemskapsPerioderTabell
@@ -410,7 +374,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
 
       {aarsavregningResponse?.tidligereGrunnlagsopplysninger && (
         <Nav.RadioGroup
-          onChange={(value) => håndterAvvik(value)}
+          onChange={håndterAvvik}
           value={erAvvik}
           legend="Er det avvik i opplysningene fra skatt eller bruker?"
           readOnly={!redigerbart}
@@ -420,7 +384,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
         </Nav.RadioGroup>
       )}
 
-      {erAvvik && (
+      {erAvvik && !avvikPending && (
         <Nav.Row>
           <Nav.Column>
             <Skatteforholdsperioder
@@ -436,7 +400,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
         </Nav.Row>
       )}
 
-      {erAvvik && (
+      {erAvvik && !avvikPending && (
         <Inntektskilder
           formValues={formValues}
           redigerbart={redigerbart}
