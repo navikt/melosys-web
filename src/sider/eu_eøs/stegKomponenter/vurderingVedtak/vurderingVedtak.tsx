@@ -254,6 +254,7 @@ const VurderingVedtak = ({
   };
 
   const { fomDato, tomDato, lovvalgsbestemmelse, tilleggBestemmelse } = lovvalgsperiode;
+  const erArtikkel11_3 = lovvalgsbestemmelse === FO_883_2004_ART11_3A;
 
   const sedMottakerLand = finnSedMottakerLand(arbeidsland, bostedsland || {}, lovvalgsbestemmelse, tilleggBestemmelse);
   const flereSoknadslandEnnTillatt = arbeidsland.length > 1 && !MKVUtils.kanHaFlereSoknadsland(behandlingstema);
@@ -272,6 +273,9 @@ const VurderingVedtak = ({
       }
       return dokument;
     });
+  };
+  const skalViseFritekstSed = () => {
+    return !(bucLukketOgLovvalgNorge || (erSokkelSkip && erArtikkel11_3));
   };
 
   return (
@@ -311,7 +315,7 @@ const VurderingVedtak = ({
             />
           </Nav.Column>
         </Nav.Row>
-        {redigerbart && !bucLukketOgLovvalgNorge && !erSokkelSkip && (
+        {skalViseFritekstSed() && (
           <Nav.Row className="fritekstSed">
             <Nav.Column xs="7">
               <Skjema.Textarea
