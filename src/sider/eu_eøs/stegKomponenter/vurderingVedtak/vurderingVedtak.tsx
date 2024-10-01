@@ -274,9 +274,7 @@ const VurderingVedtak = ({
       return dokument;
     });
   };
-  const skalViseFritekstSed = () => {
-    return !(bucLukketOgLovvalgNorge || (erSokkelSkip && erArtikkel11_3));
-  };
+  const skalViseFritekstSed = !(bucLukketOgLovvalgNorge || (erSokkelSkip && erArtikkel11_3));
 
   return (
     <div className="vedtak">
@@ -315,7 +313,7 @@ const VurderingVedtak = ({
             />
           </Nav.Column>
         </Nav.Row>
-        {skalViseFritekstSed() && (
+        {skalViseFritekstSed && (
           <Nav.Row className="fritekstSed">
             <Nav.Column xs="7">
               <Skjema.Textarea
