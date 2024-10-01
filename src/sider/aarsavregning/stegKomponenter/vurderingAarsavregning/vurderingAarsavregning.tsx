@@ -141,7 +141,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
   );
 
   useEffect(() => {
-    if (formValues.totaltForskuddsvisFakturert !== undefined) {
+    if (redigerbart && formValues.totaltForskuddsvisFakturert) {
       Api.Aarsavregning.oppdaterTotalBelop(behandlingID, {
         avregning: {
           tidligereFakturertBeloep: formValues.totaltForskuddsvisFakturert,
@@ -247,8 +247,8 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
 
   const håndterLagretTrygdeavgiftsgrunnlag = (trygdeavgiftsgrunnlag: Trygdeavgiftsgrunnlag) => {
     const { inntektskperioder, skatteforholdsperioder } = trygdeavgiftsgrunnlag;
-    const sorterteInntekstkilder = inntektskperioder?.sort(Utils.dato.sorterEtterISOFomDato);
-    const sorterteSkatteforhold = skatteforholdsperioder?.sort(Utils.dato.sorterEtterISOFomDato);
+    const sorterteInntekstkilder = [...inntektskperioder].sort(Utils.dato.sorterEtterISOFomDato);
+    const sorterteSkatteforhold = [...skatteforholdsperioder].sort(Utils.dato.sorterEtterISOFomDato);
     resetSkatteforholdsperioder(
       !Utils._isEmpty(sorterteSkatteforhold)
         ? sorterteSkatteforhold.map((skatteforhold) => ({
@@ -279,6 +279,8 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
         håndterAvvik(lagretTrygdeavgift.avvikFunnet);
       }
     }
+
+    setErAvvik(lagretTrygdeavgift?.avvikFunnet);
   }, [lagretTrygdeavgift]);
 
   const håndterAvvik = (avvik: boolean) => {
@@ -342,8 +344,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
   }, [valgtÅr, behandlingID, lagretTrygdeavgift?.aar]);
 
   // TODO: 0 grunnlag og 0 avvik må også kreve at totalt tidligere fakturert trygdeavgift er registrert
-  const stegErGyldig =
-    (redigerbart && erAvvik === false) || (redigerbart && erAvvik && lagretTrygdeavgift?.nyttGrunnlag);
+  const stegErGyldig = Boolean(erAvvik === false || (erAvvik && lagretTrygdeavgift?.nyttGrunnlag));
 
   useEffect(() => {
     oppdaterStatus(stegErGyldig);
@@ -355,7 +356,13 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
       <Nav.Fieldset className="select" legend={<LabelMedHjelpetekst bold label="År" placement="left-start" />}>
         <Nav.Row>
           <Nav.Column xs="4">
-            <Nav.Select label="" id="aarVelger" value={valgtÅr?.toString() ?? ""} onChange={håndterEndringAvÅr}>
+            <Nav.Select
+              label=""
+              id="aarVelger"
+              value={valgtÅr?.toString() ?? ""}
+              onChange={håndterEndringAvÅr}
+              readOnly={!redigerbart}
+            >
               <option value="" disabled>
                 Velg...
               </option>
@@ -400,6 +407,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
           onChange={(value) => håndterAvvik(value)}
           value={erAvvik}
           legend="Er det avvik i opplysningene fra skatt eller bruker?"
+          readOnly={!redigerbart}
         >
           <Nav.Radio value>Ja</Nav.Radio>
           <Nav.Radio value={false}>Nei</Nav.Radio>
@@ -453,7 +461,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
 
       <Feilmelding type={aktivFeilmeldingType} />
 
-      <Nav.Button variant="primary" disabled={!stegErGyldig} onClick={bekreft}>
+      <Nav.Button variant="primary" disabled={!stegErGyldig || !redigerbart} onClick={bekreft}>
         Bekreft og fortsett
       </Nav.Button>
     </div>

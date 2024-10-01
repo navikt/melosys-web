@@ -403,12 +403,6 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
         <div className="nyVurderingBakgrunn">
           <Nav.Row>
             <Nav.Column xs="6">
-              <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
-                <LabelMedHjelpetekst
-                  label="Oppgi grunn for nytt vedtak (Obligatorisk)"
-                  hjelpetekst={NY_VURDERING_BAKGRUNN_HJELPETEKST}
-                />
-              </Nav.Typo.Element>
               <Forms.Select
                 label={
                   <LabelMedHjelpetekst

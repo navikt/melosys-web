@@ -65,7 +65,15 @@ export const VurderingVedtak11_3_og_13_3a = ({
   const vedtakstype = useSelector(behandlingsresultatSelectors.VedtakstypeSelector);
   const [kontrollerPending, setKontrollerPending] = useState(false);
   const [vedtakPending, setVedtakPending] = useState(false);
+
   const [initiellLovvalgsperiode] = useState(velgLovvalgsperiode());
+
+  const formattedFom = Utils.dato.formatterDatoTilNorsk(
+    lovvalgsperiode !== null && !Utils._isEmpty(lovvalgsperiode) ? lovvalgsperiode.fomDato : soknadsperiode.fom
+  );
+  const formattedTom = Utils.dato.formatterDatoTilNorsk(
+    lovvalgsperiode !== null && !Utils._isEmpty(lovvalgsperiode) ? lovvalgsperiode.tomDato : soknadsperiode.tom
+  );
 
   const {
     watch,

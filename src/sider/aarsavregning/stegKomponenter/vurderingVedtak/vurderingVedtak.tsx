@@ -209,7 +209,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
       <Mui.StegKnapper
         bekreftKnappProps={{
           onClick: fattVedtakOnClick,
-          disabled: !stegErGyldig,
+          disabled: !stegErGyldig || !formIsValid || !redigerbart,
           loading: vedtakPending,
         }}
         bekreftTekst="Fatt vedtak"
