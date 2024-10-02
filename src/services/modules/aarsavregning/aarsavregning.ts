@@ -8,7 +8,6 @@ export type AarsavregningResponse = {
   tidligereGrunnlagsopplysninger?: Grunnlagsopplysninger;
   avvikFunnet?: boolean;
   nyttGrunnlag?: Grunnlagsopplysninger;
-  endeligAvgift?: Avgift;
   avregning?: Avregning;
 };
 
@@ -49,14 +48,14 @@ export type Avregning = {
   tilFaktureringBeloep?: number;
 };
 
-export const hentAvregningsData = (behandlingID: number): Promise<AarsavregningResponse> =>
+export const hentAarsavregning = (behandlingID: number): Promise<AarsavregningResponse> =>
   getAsJson(`${API_BASE_URL}${AARSAVREGNING}/${behandlingID}`);
 
 export type LagAarsavregningRequest = {
   aar: number;
 };
 
-export const lagAvregningsData = (
+export const lagAarsavregning = (
   behandlingID: number,
   request: LagAarsavregningRequest
 ): Promise<AarsavregningResponse> => postAsJson(`${API_BASE_URL}${AARSAVREGNING}/${behandlingID}`, request);
