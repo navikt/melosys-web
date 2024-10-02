@@ -72,7 +72,7 @@ export function finnVerdierMedKey(obj, key, finnParent = false) {
 }
 
 export const formaterTilNorskBelop = (belop, antallDesimaler) => {
-  if (!belop) return undefined;
+  if (belop === undefined) return undefined;
 
   return belop.toLocaleString("nb-NO", {
     minimumFractionDigits: antallDesimaler ?? 2,
