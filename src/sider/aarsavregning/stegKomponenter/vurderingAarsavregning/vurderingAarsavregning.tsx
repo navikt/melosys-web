@@ -293,12 +293,10 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
           setAarsavregningResponse(response);
         });
       });
-    } else {
-      if (aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag) {
-        setSkjemaverdierFraTrygdeavgiftsgrunnlag(
-          aarsavregningResponse.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag
-        );
-      }
+    } else if (aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag) {
+      setSkjemaverdierFraTrygdeavgiftsgrunnlag(
+        aarsavregningResponse.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag
+      );
     }
     setErAvvik(value);
   };
