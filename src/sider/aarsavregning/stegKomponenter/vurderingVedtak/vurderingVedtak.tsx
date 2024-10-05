@@ -51,6 +51,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
   const [lagretAarsavregning, setLagretAarsavregning] = useState<AarsavregningResponse | undefined>(undefined);
   const [fakturaMottaker, setFakturaMottaker] = useState<string | undefined>(undefined);
+  const aarsavregningID = useSelector(behandlingerSelectors.ÅrsavregningIDSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
 
@@ -70,9 +71,11 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const formValues = watch();
 
   const fetchAvregningsData = () => {
-    return Api.Aarsavregning.hentAarsavregning(behandlingID).then((response: AarsavregningResponse) => {
-      setLagretAarsavregning(response);
-    });
+    return Api.Aarsavregning.hentAarsavregning(behandlingID, aarsavregningID).then(
+      (response: AarsavregningResponse) => {
+        setLagretAarsavregning(response);
+      }
+    );
   };
 
   const hentMuligeMottakere = async () => {
