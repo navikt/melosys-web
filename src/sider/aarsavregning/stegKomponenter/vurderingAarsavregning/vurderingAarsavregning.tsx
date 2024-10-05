@@ -29,6 +29,9 @@ import { BeregnetTrygdeavgiftDetaljer } from "./komponenter/beregnetTrygdeavgift
 import { OK } from "../../../../ducks/aarsavregning/types";
 import TidligereGrunnlagsoversikt from "./komponenter/tidligereGrunnlagsoversikt";
 import { sorterEtterISOFomDato } from "../../../../utils/dato";
+import { fagsakSelectors } from "../../../../ducks/fagsaker";
+import { boolean } from "yup";
+import { NyBehandlingForTidligereAarsavregningMelding } from "../../../../felleskomponenter/alertmeldinger/alertmeldinger";
 
 interface Props {
   bekreft: () => void;
@@ -52,6 +55,8 @@ const mapFeilmelding = (error: any) => {
   return error.body?.feilkoder || error.body?.message || error;
 };
 
+const { FERDIGBEHANDLET } = MKV.Koder.behandlinger.behandlingsresultattyper;
+
 // TODO: Error handling ved hentÅrsavregning
 // TODO: Boolean for årsavregningstype mangler. Automatisk opprettet årsavregning skal ha år tilknyttet og dermed skal årvelger skjules
 export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
@@ -60,9 +65,11 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
   const [erAvvik, setErAvvik] = useState<boolean | undefined>(undefined);
   const [feil, setFeil] = useState<undefined | string>(undefined);
   const [aarsavregningResponse, setAarsavregningResponse] = useState<AarsavregningResponse | undefined>(undefined);
+  const [nyVurderingÅrsavregning, setNyVurderingÅrsavregning] = useState<boolean>(false);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const aarsavregningID = useSelector(behandlingerSelectors.ÅrsavregningIDSelector);
+  const saksnummer = useSelector(fagsakSelectors.SaksnummerSelector);
   const sisteMuligeÅr = new Date().getFullYear() - 1;
   const antallÅrTilbakeITid = 6;
   const muligeAar = Array.from({ length: antallÅrTilbakeITid }, (_, i) => sisteMuligeÅr - i);
@@ -142,6 +149,14 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
         Legg til kall mot dette endepunktet og kjør enten hent eller lag basert på responsen.
      */
     if (redigerbart && valgtÅr && valgtÅr !== aarsavregningResponse?.aar) {
+      Api.Aarsavregning.hentFiltrertAarsavregningList(saksnummer, valgtÅr, FERDIGBEHANDLET).then((res) => {
+        if (res.length > 0) {
+          setNyVurderingÅrsavregning(true);
+        } else {
+          setNyVurderingÅrsavregning(false);
+        }
+      });
+
       Api.Aarsavregning.lagAarsavregning(behandlingID, { aar: valgtÅr })
         .then((res) => {
           setAarsavregningResponse(res);
@@ -332,6 +347,11 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
             </Nav.Select>
           </Nav.Column>
         </Nav.Row>
+        {nyVurderingÅrsavregning && (
+          <Nav.Row>
+            <NyBehandlingForTidligereAarsavregningMelding />
+          </Nav.Row>
+        )}
       </Nav.Fieldset>
       {feil && <Nav.Alert variant="error">{feil}</Nav.Alert>}
       {aarsavregningResponse?.tidligereGrunnlagsopplysninger === null &&
