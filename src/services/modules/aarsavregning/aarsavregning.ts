@@ -1,5 +1,5 @@
 import { getAsJson, postAsJson, putAsJson } from "../../utils";
-import { API_BASE_URL, AARSAVREGNING } from "../../api-constants";
+import { API_BASE_URL, AARSAVREGNING, BEHANDLINGER } from "../../api-constants";
 import { InntektskildeDto, SkatteforholdDto } from "../trygdeavgift";
 import { Medlemskapsperiode } from "../medlemavfolketrygden/medlemskapsperioder";
 
@@ -48,8 +48,8 @@ export type Avregning = {
   tilFaktureringBeloep?: number;
 };
 
-export const hentAarsavregning = (behandlingID: number): Promise<AarsavregningResponse> =>
-  getAsJson(`${API_BASE_URL}${AARSAVREGNING}/${behandlingID}`);
+export const hentAarsavregning = (behandlingID: number, aarsavregningID: number): Promise<AarsavregningResponse> =>
+  getAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${AARSAVREGNING}/${aarsavregningID}`);
 
 export type LagAarsavregningRequest = {
   aar: number;
@@ -58,9 +58,12 @@ export type LagAarsavregningRequest = {
 export const lagAarsavregning = (
   behandlingID: number,
   request: LagAarsavregningRequest
-): Promise<AarsavregningResponse> => postAsJson(`${API_BASE_URL}${AARSAVREGNING}/${behandlingID}`, request);
+): Promise<AarsavregningResponse> =>
+  postAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${AARSAVREGNING}`, request);
 
 export const oppdaterTotalBelop = (
   behandlingID: number,
+  aarsavregningID: number,
   request: AarsavregningRequest
-): Promise<AarsavregningResponse> => putAsJson(`${API_BASE_URL}${AARSAVREGNING}/${behandlingID}`, request);
+): Promise<AarsavregningResponse> =>
+  putAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${AARSAVREGNING}/${aarsavregningID}`, request);

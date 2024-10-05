@@ -145,6 +145,7 @@ interface Inntekt {
 
 export interface BehandlingResDto {
   behandlingID: number;
+  aarsavregningID: number | undefined;
   redigerbart: boolean;
   saksopplysninger: {
     arbeidsforhold: Arbeidsforhold[];

@@ -62,6 +62,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
   const [aarsavregningResponse, setAarsavregningResponse] = useState<AarsavregningResponse | undefined>(undefined);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
+  const aarsavregningID = useSelector(behandlingerSelectors.ÅrsavregningIDSelector);
   const sisteMuligeÅr = new Date().getFullYear() - 1;
   const antallÅrTilbakeITid = 6;
   const muligeAar = Array.from({ length: antallÅrTilbakeITid }, (_, i) => sisteMuligeÅr - i);
@@ -112,7 +113,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
 
   // Initiell innlasting
   useEffect(() => {
-    Api.Aarsavregning.hentAarsavregning(behandlingID)
+    Api.Aarsavregning.hentAarsavregning(behandlingID, aarsavregningID)
       .then((res) => {
         setAarsavregningResponse(res);
         // Benyttes for innhenting av saksopplysninger ifm. årsavregningsbehandlinger
@@ -161,7 +162,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
   useEffect(() => {
     if (redigerbart && aarsavregningResponse?.nyttGrunnlag) {
       if (aarsavregningResponse.nyttGrunnlag?.avgift.totalAvgift !== aarsavregningResponse.avregning?.nyttTotalbeloep) {
-        Api.Aarsavregning.oppdaterTotalBelop(behandlingID, {
+        Api.Aarsavregning.oppdaterTotalBelop(behandlingID, aarsavregningID, {
           avregning: {
             nyttTotalbeloep: aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift,
           },
@@ -217,7 +218,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
       formValues.totaltForskuddsvisFakturert &&
       formValues.totaltForskuddsvisFakturert !== aarsavregningResponse?.avregning?.tidligereFakturertBeloep
     ) {
-      Api.Aarsavregning.oppdaterTotalBelop(behandlingID, {
+      Api.Aarsavregning.oppdaterTotalBelop(behandlingID, aarsavregningID, {
         avregning: {
           tidligereFakturertBeloep: formValues.totaltForskuddsvisFakturert,
         },
@@ -248,7 +249,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
           : [],
       })
         .then(() => {
-          Api.Aarsavregning.hentAarsavregning(behandlingID).then((response: AarsavregningResponse) => {
+          Api.Aarsavregning.hentAarsavregning(behandlingID, aarsavregningID).then((response: AarsavregningResponse) => {
             setAarsavregningResponse(response);
           });
           setFeil(undefined);
@@ -289,7 +290,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
       Api.Trygdeavgift.slettTrygdeavgiftsperioder(behandlingID).then(() => {
         resetSkatteforholdsperioder([]);
         resetInntektskilder([]);
-        Api.Aarsavregning.hentAarsavregning(behandlingID).then((response: AarsavregningResponse) => {
+        Api.Aarsavregning.hentAarsavregning(behandlingID, aarsavregningID).then((response: AarsavregningResponse) => {
           setAarsavregningResponse(response);
         });
       });
