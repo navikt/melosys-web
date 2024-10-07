@@ -62,14 +62,12 @@ export const VurderingVedtak11_3_og_13_3a = ({
 
   const [initiellLovvalgsperiode] = useState({ formattedFom, formattedTom });
 
-  const {
-    watch,
-    setValue,
-    control,
-    formState: { isValid: formIsValid },
-  } = useForm({
+  const { watch, setValue, control, formState } = useForm({
+    context: {
+      soknadsperiode: soknadsperiode,
+    },
     resolver: yupResolver(vurderingVedtak_11_3_og_13_3aSchema),
-    mode: "all",
+    mode: "onChange",
     defaultValues: {
       kopiTilArbeidsgiver: false,
       vedtakstypebegrunnelse: useSelector(behandlingsresultatSelectors.BegrunnelseKoderSelector)[0],
@@ -98,17 +96,7 @@ export const VurderingVedtak11_3_og_13_3a = ({
     );
   };
 
-  useEffect(() => {
-    if (!redigerbart) return;
-    setKontrollerPending(true);
-    lagreLovvalgsperiode({
-      fomDato: Utils.dato.formatterDatoTilISO(fom),
-      tomDato: Utils.dato.formatterDatoTilISO(tom, ""),
-      lovvalgsbestemmelse,
-    }).then(() => kontroller().then(() => setKontrollerPending(false)));
-  }, [tom, fom, lovvalgsbestemmelse]);
-
-  const stegErGyldig = redigerbart && formIsValid && !harFeilmeldinger && !kontrollerPending;
+  const stegErGyldig = redigerbart && formState.isValid && !harFeilmeldinger && !kontrollerPending;
 
   const mapDokumenter = (dokumenter: BrevDokumentMetadataType[]) => {
     return dokumenter.map((dokument: BrevDokumentMetadataType) => {
@@ -176,6 +164,17 @@ export const VurderingVedtak11_3_og_13_3a = ({
       }
     }
   };
+
+  useEffect(() => {
+    if (formState.isValid && !formState.isValidating) {
+      setKontrollerPending(true);
+      lagreLovvalgsperiode({
+        fomDato: Utils.dato.formatterDatoTilISO(fom),
+        tomDato: Utils.dato.formatterDatoTilISO(tom, ""),
+        lovvalgsbestemmelse,
+      }).then(() => kontroller().then(() => setKontrollerPending(false)));
+    }
+  }, [formState.isValid, formState.isValidating, lovvalgsbestemmelse]);
 
   return (
     <div className="vedtak">
