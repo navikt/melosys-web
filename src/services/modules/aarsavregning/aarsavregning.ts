@@ -2,7 +2,6 @@ import { getAsJson, postAsJson, putAsJson } from "../../utils";
 import { API_BASE_URL, AARSAVREGNING, BEHANDLINGER, FAGSAKER } from "../../api-constants";
 import { InntektskildeDto, SkatteforholdDto } from "../trygdeavgift";
 import { Medlemskapsperiode } from "../medlemavfolketrygden/medlemskapsperioder";
-import MKV from "../../../melosyskodeverk";
 
 export type AarsavregningResponse = {
   aar: number;

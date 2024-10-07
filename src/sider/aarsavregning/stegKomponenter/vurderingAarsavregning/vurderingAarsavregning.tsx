@@ -30,7 +30,6 @@ import { OK } from "../../../../ducks/aarsavregning/types";
 import TidligereGrunnlagsoversikt from "./komponenter/tidligereGrunnlagsoversikt";
 import { sorterEtterISOFomDato } from "../../../../utils/dato";
 import { fagsakSelectors } from "../../../../ducks/fagsaker";
-import { boolean } from "yup";
 import { NyBehandlingForTidligereAarsavregningMelding } from "../../../../felleskomponenter/alertmeldinger/alertmeldinger";
 
 interface Props {
