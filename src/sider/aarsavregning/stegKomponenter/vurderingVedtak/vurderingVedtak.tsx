@@ -153,10 +153,13 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
 
   const tidligereTrygdeavgift = lagretAarsavregning?.tidligereGrunnlagsopplysninger?.avgift.totalAvgift;
   const nyTrygdeavgift = lagretAarsavregning?.nyttGrunnlag?.avgift.totalAvgift;
+
   const erDifferanseUnderMinstebeløp =
     tidligereTrygdeavgift &&
     nyTrygdeavgift &&
     Math.abs(tidligereTrygdeavgift - nyTrygdeavgift) <= MINSTEBELOP_FAKTURERING_ELLER_REFUSJON;
+
+  const skalFaktureres = tidligereTrygdeavgift && nyTrygdeavgift && nyTrygdeavgift - tidligereTrygdeavgift > 0;
 
   return (
     <div className="vurderingVedtak">
@@ -171,10 +174,15 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
           <Nav.Column xs="12">
             <Nav.Typo.Normaltekst className="info">
               {erDifferanseUnderMinstebeløp ? (
-                <b>Beløpet er under minstegrensen på +/- 100,-</b>
+                <b>Beløpet er under minstegrensen for fakturering/refusjon (100kr).-</b>
               ) : (
                 <>
-                  Faktura/refusjon sendes til: <b>{fakturaMottaker}</b>
+                  {`${skalFaktureres ? "Faktura" : "Kredittnota"} på kr ${
+                    Utils.formaterTilNorskBelop(
+                      Math.abs((nyTrygdeavgift || tidligereTrygdeavgift || 0) - (tidligereTrygdeavgift || 0))
+                    ) || "0"
+                  } sendes til: `}{" "}
+                  <b>{fakturaMottaker}</b>
                 </>
               )}
             </Nav.Typo.Normaltekst>

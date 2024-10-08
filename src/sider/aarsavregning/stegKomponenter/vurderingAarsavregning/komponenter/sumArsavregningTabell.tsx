@@ -32,7 +32,7 @@ export const SumArsavregningTabell = ({
         </Nav.Table.Row>
         <Nav.Table.Row>
           <Nav.Table.DataCell scope="col">=</Nav.Table.DataCell>
-          <Nav.Table.DataCell scope="col">Sum til faktura/refusjon </Nav.Table.DataCell>
+          <Nav.Table.DataCell scope="col">Differanse</Nav.Table.DataCell>
           <Nav.Table.DataCell align="right" key={Utils._uuid()}>
             <b>
               {formaterTilNorskBelop(sumTilFakturaEllerRefusjon)}
