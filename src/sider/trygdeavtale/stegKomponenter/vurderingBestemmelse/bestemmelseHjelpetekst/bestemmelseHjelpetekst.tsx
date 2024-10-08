@@ -1,5 +1,6 @@
 import MKV from "../../../../../melosyskodeverk";
 import * as Hjelpetekster from "./hjelpetekster";
+import { List } from "@navikt/ds-react";
 
 const BestemmelseHjelpetekst = ({ bestemmelse }: { bestemmelse?: string }) => {
   if (!bestemmelse) return null;
@@ -59,15 +60,14 @@ const BestemmelseHjelpetekst = ({ bestemmelse }: { bestemmelse?: string }) => {
   if (hjelpetekster.length === 0) return null;
 
   return (
-    <div>
-      <b>Følgende vilkår må være oppfylt</b>
-      <ul>
+    <>
+      <List title="Følgende vilkår må være oppfylt" size="small">
         {hjelpetekster.map((hjelpetekst) => (
-          <li key={hjelpetekst}>{hjelpetekst}</li>
+          <List.Item key={hjelpetekst}>{hjelpetekst}</List.Item>
         ))}
-      </ul>
+      </List>
       {ikkeKravOmTidsbegrensning && <p>Det er ikke krav om at utsendingsperioden/arbeidsperioden er tidsbegrenset.</p>}
-    </div>
+    </>
   );
 };
 

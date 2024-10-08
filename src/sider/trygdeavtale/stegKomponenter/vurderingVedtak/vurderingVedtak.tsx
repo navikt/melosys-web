@@ -411,7 +411,7 @@ const VurderingVedtak = ({
                   />
                 }
                 feltNavn="nyVurderingBakgrunn"
-                disabled={!redigerbart}
+                redigerbart={redigerbart}
                 emptyFieldDisabled={!!formValues?.nyVurderingBakgrunn}
               >
                 {MKV.KTObjects.begrunnelser.nyvurderingbakgrunner?.map((bakgrunn: KTObject) => (
