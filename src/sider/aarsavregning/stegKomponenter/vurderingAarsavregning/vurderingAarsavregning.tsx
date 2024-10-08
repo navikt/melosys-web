@@ -31,6 +31,7 @@ import TidligereGrunnlagsoversikt from "./komponenter/tidligereGrunnlagsoversikt
 import { sorterEtterISOFomDato } from "../../../../utils/dato";
 import { fagsakSelectors } from "../../../../ducks/fagsaker";
 import { NyBehandlingForTidligereAarsavregningMelding } from "../../../../felleskomponenter/alertmeldinger/alertmeldinger";
+import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
 
 interface Props {
   bekreft: () => void;
@@ -67,7 +68,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
   const [nyVurderingÅrsavregning, setNyVurderingÅrsavregning] = useState<boolean>(false);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
-  const aarsavregningID = useSelector(behandlingerSelectors.ÅrsavregningIDSelector);
+  const aarsavregningID = useSelector(behandlingsresultatSelectors.ÅrsavregningIDSelector);
   const saksnummer = useSelector(fagsakSelectors.SaksnummerSelector);
   const sisteMuligeÅr = new Date().getFullYear() - 1;
   const antallÅrTilbakeITid = 6;

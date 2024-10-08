@@ -51,7 +51,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
   const [lagretAarsavregning, setLagretAarsavregning] = useState<AarsavregningResponse | undefined>(undefined);
   const [fakturaMottaker, setFakturaMottaker] = useState<string | undefined>(undefined);
-  const aarsavregningID = useSelector(behandlingerSelectors.ÅrsavregningIDSelector);
+  const aarsavregningID = useSelector(behandlingsresultatSelectors.ÅrsavregningIDSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
 
