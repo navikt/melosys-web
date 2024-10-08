@@ -64,7 +64,7 @@ export const VurderingVedtak11_3_og_13_3a = ({
 
   const { watch, setValue, control, formState } = useForm({
     context: {
-      soknadsperiode: soknadsperiode,
+      soknadsperiode,
     },
     resolver: yupResolver(vurderingVedtak_11_3_og_13_3aSchema),
     mode: "onChange",
