@@ -157,7 +157,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const erDifferanseUnderMinstebeløp =
     tidligereTrygdeavgift &&
     nyTrygdeavgift &&
-    Math.abs(tidligereTrygdeavgift - nyTrygdeavgift) <= MINSTEBELOP_FAKTURERING_ELLER_REFUSJON;
+    Math.abs(tidligereTrygdeavgift - nyTrygdeavgift) < MINSTEBELOP_FAKTURERING_ELLER_REFUSJON;
 
   const skalFaktureres = tidligereTrygdeavgift && nyTrygdeavgift && nyTrygdeavgift - tidligereTrygdeavgift > 0;
 
