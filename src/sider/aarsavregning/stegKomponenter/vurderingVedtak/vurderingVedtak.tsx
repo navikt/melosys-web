@@ -174,7 +174,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
           <Nav.Column xs="12">
             <Nav.Typo.Normaltekst className="info">
               {erDifferanseUnderMinstebeløp ? (
-                <b>Beløpet er under minstegrensen for fakturering/refusjon (100kr).-</b>
+                <b>Beløpet er under minstegrensen for fakturering/refusjon (100kr).</b>
               ) : (
                 <>
                   {`${skalFaktureres ? "Faktura" : "Kredittnota"} på kr ${
