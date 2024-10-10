@@ -169,7 +169,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
 
       <SumArsavregningTabell nyTrygdeavgift={nyTrygdeavgift} tidligereTrygdeavgift={tidligereTrygdeavgift} />
 
-      {fakturaMottaker && nyTrygdeavgift ? (
+      {fakturaMottaker ? (
         <Nav.Row className="trygdeavgift">
           <Nav.Column xs="12">
             <Nav.Typo.Normaltekst className="info">
