@@ -28,7 +28,6 @@ export const BehandlingIDSelector = createSelector(
   (state) => BehandlingerSelector(state).behandlingID || -1,
   (behandlingID) => behandlingID
 );
-
 export const OppsummeringSelector = createSelector(
   (state) => BehandlingerSelector(state).oppsummering || {},
   (oppsummering) => oppsummering
