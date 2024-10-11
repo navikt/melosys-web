@@ -52,7 +52,7 @@ export type AarsavregningListResponse = {
   aarsavregningId: number;
   behandlingID: number;
   aar: number;
-  type: string;
+  resultattype: string;
 };
 
 export const hentAarsavregning = (behandlingID: number, aarsavregningID: number): Promise<AarsavregningResponse> =>
@@ -78,6 +78,6 @@ export const oppdaterTotalBelop = (
 export const hentFiltrertAarsavregningList = (
   saksnummer: string,
   aar: number,
-  type: string
+  resultattype: string
 ): Promise<AarsavregningListResponse[]> =>
-  getAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/${AARSAVREGNING}?aar=${aar}&type=${type}`);
+  getAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/${AARSAVREGNING}?aar=${aar}&resultattype=${resultattype}`);
