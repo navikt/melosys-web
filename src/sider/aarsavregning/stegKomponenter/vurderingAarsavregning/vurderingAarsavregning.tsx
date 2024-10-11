@@ -150,11 +150,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
      */
     if (redigerbart && valgtÅr && valgtÅr !== aarsavregningResponse?.aar) {
       Api.Aarsavregning.hentFiltrertAarsavregningList(saksnummer, valgtÅr, FERDIGBEHANDLET).then((res) => {
-        if (res.length > 0) {
-          setNyVurderingÅrsavregning(true);
-        } else {
-          setNyVurderingÅrsavregning(false);
-        }
+        setNyVurderingÅrsavregning(res.length > 0);
       });
 
       Api.Aarsavregning.lagAarsavregning(behandlingID, { aar: valgtÅr })
