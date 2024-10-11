@@ -157,7 +157,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const erDifferanseUnderMinstebeløp =
     tidligereTrygdeavgift &&
     nyTrygdeavgift &&
-    Math.abs(tidligereTrygdeavgift - nyTrygdeavgift) <= MINSTEBELOP_FAKTURERING_ELLER_REFUSJON;
+    Math.abs(tidligereTrygdeavgift - nyTrygdeavgift) < MINSTEBELOP_FAKTURERING_ELLER_REFUSJON;
 
   const skalFaktureres = tidligereTrygdeavgift && nyTrygdeavgift && nyTrygdeavgift - tidligereTrygdeavgift > 0;
 
@@ -169,19 +169,19 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
 
       <SumArsavregningTabell nyTrygdeavgift={nyTrygdeavgift} tidligereTrygdeavgift={tidligereTrygdeavgift} />
 
-      {fakturaMottaker && nyTrygdeavgift ? (
+      {fakturaMottaker ? (
         <Nav.Row className="trygdeavgift">
           <Nav.Column xs="12">
             <Nav.Typo.Normaltekst className="info">
               {erDifferanseUnderMinstebeløp ? (
-                <b>Beløpet er under minstegrensen for fakturering/refusjon (100kr).-</b>
+                <b>Beløpet er under minstegrensen for fakturering/refusjon (100 kr).</b>
               ) : (
                 <>
-                  {`${skalFaktureres ? "Faktura" : "Kredittnota"} på kr ${
+                  {`${skalFaktureres ? "Faktura" : "Kreditnota"} på ${
                     Utils.formaterTilNorskBelop(
                       Math.abs((nyTrygdeavgift || tidligereTrygdeavgift || 0) - (tidligereTrygdeavgift || 0))
                     ) || "0"
-                  } sendes til: `}{" "}
+                  } kr sendes til: `}{" "}
                   <b>{fakturaMottaker}</b>
                 </>
               )}
