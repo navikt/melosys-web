@@ -34,7 +34,6 @@ export const IngenFlytMelding = () => (
 export const NyVurderingMelding = () => (
   <Nav.Alert variant="warning" className="nyVurderingMelding">
     <Nav.Typo.Systemtittel>Ny behandling av sak</Nav.Typo.Systemtittel>
-    <Nav.Typo.Normaltekst className="nyVurderingMelding__overskrift">Ny behandling av sak</Nav.Typo.Normaltekst>
     <Nav.Typo.Normaltekst>
       Du har startet en ny behandling av en sak der tidligere behandling er avsluttet. Sjekk sakens opplysninger og
       vurder videre behandling.
