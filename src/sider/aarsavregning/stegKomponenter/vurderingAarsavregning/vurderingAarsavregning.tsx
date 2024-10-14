@@ -289,9 +289,8 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
     }
   }, [formIsValid, isValidating, aktivFeilmeldingType, erAvvik]);
 
-  const stegErGyldig = Boolean(
-    (erAvvik === false && formIsValid) || (formIsValid && erAvvik && aarsavregningResponse?.nyttGrunnlag)
-  );
+  const stegErGyldig = Boolean(erAvvik === false || (formIsValid && erAvvik && aarsavregningResponse?.nyttGrunnlag));
+
   useEffect(() => {
     oppdaterStatus(stegErGyldig);
   }, [stegErGyldig]);
