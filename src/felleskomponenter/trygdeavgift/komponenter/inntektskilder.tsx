@@ -7,8 +7,6 @@ import * as Nav from "../../../navFrontend";
 import * as Utils from "../../../utils";
 import * as Mui from "../../ui";
 import * as Ikoner from "../../../resources/images";
-
-import LabelMedHjelpetekst from "../../labelMedHjelpetekst";
 import { BOOLSK_STRING } from "../../../constants";
 import { FieldArrayProps, FormValuesProps, Inntektskilde } from "./types";
 import {
@@ -72,13 +70,7 @@ export const Inntektskilder = ({
 
   return (
     <div className="inntektskilder">
-      <LabelMedHjelpetekst
-        label="Oppgi informasjon om brukers inntekt"
-        hjelpetekst="Hvis bruker har flere inntekter, f.eks. fra Norge og fra utlandet, så må de legges til enkeltvis."
-        undertittel
-      />
-
-      <div className="skjema__panel">
+      <div className="inntetskilder__container">
         {formValues.inntektskilder.map((inntektskilde, index) => {
           const brukerSkattepliktigIHelePerioden = erBrukerSkattepliktigIHelePerioden(
             formValues.skatteforholdsperioder
@@ -96,114 +88,140 @@ export const Inntektskilder = ({
           }
 
           return (
-            <Nav.Row className="skjema__panel__rad" key={fields[index].id}>
-              <Nav.Column className="dato">
-                <Forms.Datovelger
-                  label={index === 0 ? "Fra og med" : ""}
-                  name={`inntektskilder[${index}].fomDato`}
-                  readOnly={!redigerbart}
-                  control={control}
-                />
-              </Nav.Column>
-              <Nav.Column className="dato">
-                <Forms.Datovelger
-                  label={index === 0 ? "Til og med" : ""}
-                  name={`inntektskilder[${index}].tomDato`}
-                  readOnly={!redigerbart}
-                  control={control}
-                  minDate={Utils.dato.norskStringTilDate(formValues.inntektskilder[index].fomDato)}
-                />
-              </Nav.Column>
-
-              <Nav.Column className="inntektskilde">
-                <Forms.Select
-                  label={index === 0 ? "Inntektskilde" : ""}
-                  hideLabel={index !== 0}
-                  name={`inntektskilder[${index}].kildetype`}
-                  control={control}
-                  readOnly={!redigerbart}
-                  emptyFieldDisabled={visArbAvgBetales}
-                  onChange={(value) => handleEndreKildetype(index, value)}
-                >
-                  {MKV.KTObjects.inntektskildetype
-                    .filter((kt: KTObject) => {
-                      const gyldigeInntektskilder = medlemskapsTypeErPliktig
-                        ? [ARBEIDSINNTEKT, NÆRINGSINNTEKT, PENSJON, UFØRETRYGD]
-                        : [
-                            ARBEIDSINNTEKT_FRA_NORGE,
-                            NÆRINGSINNTEKT_FRA_NORGE,
-                            INNTEKT_FRA_UTLANDET,
-                            FN_SKATTEFRITAK,
-                            MISJONÆR,
-                            PENSJON_UFØRETRYGD,
-                            PENSJON_UFØRETRYGD_KILDESKATT,
-                          ];
-                      return gyldigeInntektskilder.includes(kt.kode);
-                    })
-                    .map((kt: KTObject) => (
-                      <option key={kt.kode} value={kt.kode}>
-                        {kt.term}
-                      </option>
-                    ))}
-                </Forms.Select>
-              </Nav.Column>
-
-              <Nav.Column className="arbgiverskatt">
-                {skalFylleInnArbAvgBetales ? (
-                  <Forms.RadioGroup
-                    legend={index === 0 ? "Betales arb.avg. til skatt?" : ""}
-                    hideLegend={index !== 0}
-                    name={`inntektskilder[${index}].arbAvgBetales`}
-                    readOnly={!redigerbart || settesDefaultArbAvgBetales(inntektskilde.kildetype)}
+            <div className="inntektskilde__rad__outer">
+              <Nav.Row className="inntektskilde__rad" key={fields[index].id}>
+                <Nav.Column className="dato">
+                  <Forms.Datovelger
+                    label={index === 0 ? "Inntektsperiode" : ""}
+                    name={`inntektskilder[${index}].fomDato`}
+                    readOnly={!redigerbart}
                     control={control}
-                    onChange={(value) => handleEndreArbAvgBetales(index, value)}
-                  >
-                    <Stack gap="6" direction={{ xs: "column", sm: "row" }} wrap={false}>
-                      <Nav.Radio value={BOOLSK_STRING.SANN}>Ja</Nav.Radio>
-                      <Nav.Radio value={BOOLSK_STRING.USANN}>Nei</Nav.Radio>
-                    </Stack>
-                  </Forms.RadioGroup>
-                ) : (
-                  <div className="ikkeRelevant">
-                    {index === 0 && <Nav.Typo.Element>Betales arb.avg. til skatt?</Nav.Typo.Element>}
-                    <p className={`undertekst ${index === 0 ? "med-overskrift" : "uten-overskrift"}`}>Ikke relevant</p>
-                  </div>
-                )}
-              </Nav.Column>
+                  />
+                </Nav.Column>
+                <Nav.Column className="dato dato__tom">
+                  <Forms.Datovelger
+                    label=""
+                    name={`inntektskilder[${index}].tomDato`}
+                    readOnly={!redigerbart}
+                    control={control}
+                    minDate={Utils.dato.norskStringTilDate(formValues.inntektskilder[index].fomDato)}
+                  />
+                </Nav.Column>
 
-              <Nav.Column className="brutto_inntekt">
-                {skalFylleInnBruttoInntekt ? (
-                  <Forms.Input
-                    label={index === 0 ? "Brutto inntekt per md." : ""}
+                <Nav.Column className="inntektskilde">
+                  <Forms.Select
+                    label={index === 0 ? "Inntektskilde" : ""}
                     hideLabel={index !== 0}
-                    name={`inntektskilder[${index}].bruttoInntekt`}
+                    name={`inntektskilder[${index}].kildetype`}
                     control={control}
                     readOnly={!redigerbart}
-                    className="brutto_inntekt__input"
-                  />
-                ) : (
-                  <div className="ikkeRelevant">
-                    {index === 0 && <Nav.Typo.Element>Brutto inntekt per md.</Nav.Typo.Element>}
-                    <p className={`undertekst ${index === 0 ? "med-overskrift" : "uten-overskrift"}`}>Ikke relevant</p>
-                  </div>
-                )}
-              </Nav.Column>
+                    emptyFieldDisabled={visArbAvgBetales}
+                    onChange={(value) => handleEndreKildetype(index, value)}
+                  >
+                    {MKV.KTObjects.inntektskildetype
+                      .filter((kt: KTObject) => {
+                        const gyldigeInntektskilder = medlemskapsTypeErPliktig
+                          ? [ARBEIDSINNTEKT, NÆRINGSINNTEKT, PENSJON, UFØRETRYGD]
+                          : [
+                              ARBEIDSINNTEKT_FRA_NORGE,
+                              NÆRINGSINNTEKT_FRA_NORGE,
+                              INNTEKT_FRA_UTLANDET,
+                              FN_SKATTEFRITAK,
+                              MISJONÆR,
+                              PENSJON_UFØRETRYGD,
+                              PENSJON_UFØRETRYGD_KILDESKATT,
+                            ];
+                        return gyldigeInntektskilder.includes(kt.kode);
+                      })
+                      .map((kt: KTObject) => (
+                        <option key={kt.kode} value={kt.kode}>
+                          {kt.term}
+                        </option>
+                      ))}
+                  </Forms.Select>
+                </Nav.Column>
 
-              <Nav.Column className="fjernlinje">
-                {redigerbart && formValues.inntektskilder.length > 1 && (
-                  <Mui.IkonKnapp ariaLabel="Slett inntektskilde" ikon={Ikoner.Bin} onClick={() => remove(index)} />
-                )}
-              </Nav.Column>
-            </Nav.Row>
+                <Nav.Column className="arbgiverskatt">
+                  {skalFylleInnArbAvgBetales ? (
+                    <Forms.RadioGroup
+                      legend={index === 0 ? "Betales aga.?" : ""}
+                      hideLegend={index !== 0}
+                      name={`inntektskilder[${index}].arbAvgBetales`}
+                      readOnly={!redigerbart || settesDefaultArbAvgBetales(inntektskilde.kildetype)}
+                      control={control}
+                      onChange={(value) => handleEndreArbAvgBetales(index, value)}
+                    >
+                      <Stack gap="6" direction={{ xs: "column", sm: "row" }} wrap={false}>
+                        <Nav.Radio value={BOOLSK_STRING.SANN}>Ja</Nav.Radio>
+                        <Nav.Radio value={BOOLSK_STRING.USANN}>Nei</Nav.Radio>
+                      </Stack>
+                    </Forms.RadioGroup>
+                  ) : (
+                    <div className="ikkeRelevant">
+                      {index === 0 && <Nav.Typo.Element>Betales aga.?</Nav.Typo.Element>}
+                      <p className={`undertekst ${index === 0 ? "med-overskrift" : "uten-overskrift"}`}>
+                        Ikke relevant
+                      </p>
+                    </div>
+                  )}
+                </Nav.Column>
+
+                <Nav.Column className="brutto_inntekt">
+                  {skalFylleInnBruttoInntekt ? (
+                    <Forms.Input
+                      label={index === 0 ? "Bruttoinntekt md." : ""}
+                      hideLabel={index !== 0}
+                      name={`inntektskilder[${index}].bruttoInntekt`}
+                      control={control}
+                      readOnly={!redigerbart}
+                      className="brutto_inntekt__input"
+                    />
+                  ) : (
+                    <div className="ikkeRelevant">
+                      {index === 0 && <Nav.Typo.Element>Brutto inntekt md.</Nav.Typo.Element>}
+                      <p className={`undertekst ${index === 0 ? "med-overskrift" : "uten-overskrift"}`}>
+                        Ikke relevant
+                      </p>
+                    </div>
+                  )}
+                </Nav.Column>
+
+                <Nav.Column className="brutto_inntekt">
+                  {skalFylleInnBruttoInntekt ? (
+                    <Forms.Input
+                      label={index === 0 ? "Total periode" : ""}
+                      hideLabel={index !== 0}
+                      name={`inntektskilder[${index}].totalInntekt`}
+                      control={control}
+                      readOnly={!redigerbart}
+                      className="brutto_inntekt__input"
+                    />
+                  ) : (
+                    <div className="ikkeRelevant">
+                      {index === 0 && <Nav.Typo.Element>Total periode</Nav.Typo.Element>}
+                      <p className={`undertekst ${index === 0 ? "med-overskrift" : "uten-overskrift"}`}>
+                        Ikke relevant
+                      </p>
+                    </div>
+                  )}
+                </Nav.Column>
+
+                <Nav.Column className="slett__knapp">
+                  {redigerbart && formValues.inntektskilder.length > 1 && (
+                    <Mui.IkonKnapp ariaLabel="Slett inntektskilde" ikon={Ikoner.Bin} onClick={() => remove(index)} />
+                  )}
+                </Nav.Column>
+              </Nav.Row>
+            </div>
           );
         })}
 
         {redigerbart && (
-          <Nav.Row className="skillestrek">
+          <div className="legg-til__rad">
             <Mui.Lenkeknapp ikon={Ikoner.Add} onClick={() => append(defaultPeriode || {})}>
               Legg til inntekt
             </Mui.Lenkeknapp>
-          </Nav.Row>
+          </div>
         )}
       </div>
     </div>

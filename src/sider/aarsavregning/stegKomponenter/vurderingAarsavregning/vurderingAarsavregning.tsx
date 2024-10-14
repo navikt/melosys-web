@@ -16,8 +16,6 @@ import {
   Inntektskilde,
   Skatteforhold,
 } from "../../../../felleskomponenter/trygdeavgift/komponenter/types";
-import { Skatteforholdsperioder } from "../../../../felleskomponenter/trygdeavgift/komponenter/skatteforholdsperioder";
-import { Inntektskilder } from "../../../../felleskomponenter/trygdeavgift/komponenter/inntektskilder";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Utils from "../../../../utils";
 import vurderingAarsavregningSchema from "./vurderingAarsavregningSchema";
@@ -29,6 +27,7 @@ import { BeregnetTrygdeavgiftDetaljer } from "./komponenter/beregnetTrygdeavgift
 import { OK } from "../../../../ducks/aarsavregning/types";
 import TidligereGrunnlagsoversikt from "./komponenter/tidligereGrunnlagsoversikt";
 import { sorterEtterISOFomDato } from "../../../../utils/dato";
+import GrunnlagsopplysningerSkjema from "./komponenter/grunnlagsopplysningerSkjema";
 
 interface Props {
   bekreft: () => void;
@@ -379,29 +378,17 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
       )}
 
       {erAvvik && (
-        <Nav.Row>
-          <Nav.Column>
-            <Skatteforholdsperioder
-              formValues={formValues}
-              redigerbart={redigerbart}
-              remove={skattRemove}
-              append={skattAppend}
-              control={control}
-              fields={skattFields}
-            />
-          </Nav.Column>
-        </Nav.Row>
-      )}
-
-      {erAvvik && (
-        <Inntektskilder
+        <GrunnlagsopplysningerSkjema
           formValues={formValues}
-          redigerbart={redigerbart}
-          update={inntektUpdate}
-          remove={inntektRemove}
-          append={inntektAppend}
+          inntektFields={inntektFields}
+          skattFields={skattFields}
           control={control}
-          fields={inntektFields}
+          inntektUpdate={inntektUpdate}
+          inntektRemove={inntektRemove}
+          inntektAppend={inntektAppend}
+          skattRemove={skattRemove}
+          skattAppend={skattAppend}
+          redigerbart={redigerbart}
           medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!!}
         />
       )}
