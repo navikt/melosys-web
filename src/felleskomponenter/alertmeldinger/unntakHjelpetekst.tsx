@@ -1,26 +1,23 @@
 import "./alertmeldinger.css";
 import { Box, List } from "@navikt/ds-react";
+import { MelList, MelListItem } from "../liste/melListe";
 
 const UnntakHjelpetekst = () => {
   return (
     <Box padding="4" background="surface-subtle">
-      <List title="For å søke om unntak, må du:" size="small">
-        <List.Item>
-          sende nødvendige brev via «Send brev» -menyen.
-          <List>
-            <List.Item>send søknad om unntak, som fritekstbrev, til «Utenlandsk trygdemyndighet» </List.Item>
-            <List.Item>send orienteringsbrev, som fritekstbrev, til «Bruker eller brukers fullmektig» </List.Item>
-          </List>
-        </List.Item>
-        <List.Item>endre behandlingsstatus til «Avventer svar fra utenlandsk trygdemyndighet» .</List.Item>
-        <List.Item>registrere perioden i MEDL som uavklart.</List.Item>
-      </List>
+      <MelList title="For å søke om unntak, må du:">
+        <MelListItem text="sende nødvendige brev via «Send brev» -menyen.">
+          <MelListItem text="send søknad om unntak, som fritekstbrev, til «Utenlandsk trygdemyndighet»" />
+          <MelListItem text="send orienteringsbrev, som fritekstbrev, til «Bruker eller brukers fullmektig»" />
+        </MelListItem>
+
+        <MelListItem text="endre behandlingsstatus til «Avventer svar fra utenlandsk trygdemyndighet»." />
+        <MelListItem text="registrere perioden i MEDL som uavklart." />
+      </MelList>
       <br />
       <List title="Når du får svar, må du:" size="small">
-        <List.Item>avvise den uavklarte perioden i MEDL.</List.Item>
-        <List.Item>
-          endre valget på dette steget til «Jeg vil innvilge søknaden» eller «Jeg vil avslå søknaden» .
-        </List.Item>
+        <MelListItem text="avvise den uavklarte perioden i MEDL." />
+        <MelListItem text="endre valget på dette steget til «Jeg vil innvilge søknaden» eller «Jeg vil avslå søknaden» ." />
       </List>
     </Box>
   );
