@@ -1,6 +1,5 @@
 import MKV from "../../../../../melosyskodeverk";
 import * as Hjelpetekster from "./hjelpetekster";
-import { List } from "@navikt/ds-react";
 import { MelList, MelListItem } from "../../../../../felleskomponenter/liste/melListe";
 
 const BestemmelseHjelpetekst = ({ bestemmelse }: { bestemmelse?: string }) => {
