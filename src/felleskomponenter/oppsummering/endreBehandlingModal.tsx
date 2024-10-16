@@ -53,6 +53,7 @@ type EndreBehandlingModalProps = PropsFromRedux &
     oppsummering: Api.Behandlinger.behandling.Oppsummering;
     mottattDato?: string;
     skalViseModal: boolean;
+    erÅrsavregning?: boolean;
     lukkModal: () => void;
   };
 
@@ -68,6 +69,7 @@ function EndreBehandlingModal({
   tilAnnenSide,
   location,
   anmodningsperioderSendtTilUtlandet,
+  erÅrsavregning,
 }: EndreBehandlingModalProps) {
   const [generellFeil, setGenerellFeil] = useState("");
   const [behandlingEndret, setBehandlingEndret] = useState(false);
@@ -82,7 +84,7 @@ function EndreBehandlingModal({
   const [muligeSakstyper, setMuligeSakstyper] = useState([]);
   const [muligeSakstemaer, setMuligeSakstemaer] = useState([]);
   const [muligeBehandlingstemaer, setMuligeBehandlingstemaer] = useState([]);
-  const [muligeBehandlingstyper, setMuligeBehandlingstyper] = useState([]);
+  const [muligeBehandlingstyper, setMuligeBehandlingstyper] = useState<KTObject[]>([]);
   const erArbeidKunNorgeToggleEnabled = useFeatureToggle(MELOSYS_ARBEID_KUN_NORGE);
 
   const typeTemaKanEndres = !anmodningsperioderSendtTilUtlandet;
@@ -120,6 +122,15 @@ function EndreBehandlingModal({
   }, [sakstype, sakstema]);
 
   useEffect(() => {
+    console.log({ behandlingstype });
+  }, [behandlingstype]);
+
+  useEffect(() => {
+    if (erÅrsavregning) {
+      setBehandlingstype(oppsummering.behandlingstype?.kode);
+      setMuligeBehandlingstyper([oppsummering.behandlingstype]);
+      return;
+    }
     if (sakstype && sakstema && behandlingstema) {
       Api.LovligeKombinasjoner.hentBehandlingstyperForEndring(
         fagsak.hovedpartRolle,
@@ -131,7 +142,7 @@ function EndreBehandlingModal({
         setMuligeBehandlingstyper(alleMuligeBehandlingstyper);
       });
     }
-  }, [sakstype, sakstema, behandlingstema]);
+  }, [sakstype, sakstema, behandlingstema, erÅrsavregning]);
 
   useEffect(() => {
     if (skalViseModal) {
@@ -314,7 +325,7 @@ function EndreBehandlingModal({
           label="Behandlingstype"
           value={behandlingstype}
           koder={muligeBehandlingstyper}
-          redigerbart={!erBehandlingAvSed && typeTemaKanEndres}
+          redigerbart={!erBehandlingAvSed && typeTemaKanEndres && !erÅrsavregning}
           feil={skalViseFeilmeldinger ? behandlingstypeFeilmelding : null}
           disableForsteValg
         />

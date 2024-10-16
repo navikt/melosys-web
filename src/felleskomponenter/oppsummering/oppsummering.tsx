@@ -27,7 +27,10 @@ import { useFeatureToggle } from "../../featuretoggle";
 import { MELOSYS_ARBEID_KUN_NORGE } from "../../featuretoggle/toggleNavn";
 
 const { AVSLUTTET, IVERKSETTER_VEDTAK, MIDLERTIDIG_LOVVALGSBESLUTNING } = MKV.Koder.behandlinger.behandlingsstatus;
+const { ÅRSAVREGNING } = MKV.Koder.behandlinger.behandlingstyper;
+
 const behandlingsStatusMedBegrensetRettigheter = [AVSLUTTET, IVERKSETTER_VEDTAK, MIDLERTIDIG_LOVVALGSBESLUTNING];
+const behandlingstypeMedBegrensetRettigheter = [ÅRSAVREGNING];
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
@@ -91,6 +94,7 @@ const Oppsummering = ({
   } = oppsummering;
 
   const disableEndreKnapp = behandlingsStatusMedBegrensetRettigheter.includes(behandlingsstatus.kode) || !redigerbart;
+  const erÅrsavregning = behandlingstypeMedBegrensetRettigheter.includes(behandlingstype.kode);
   const erLitenSkjerm = Utils.mediaQuery.useMediaQuery({ maxWidth: 1440 });
 
   const erSed = MKVUtils.erBehandlingAvSed(sakstype.kode, behandlingstema.kode);
@@ -218,6 +222,7 @@ const Oppsummering = ({
       <EndreBehandlingModal
         fagsak={fagsak}
         oppsummering={oppsummering}
+        erÅrsavregning={erÅrsavregning}
         mottattDato={mottaksdato}
         skalViseModal={skalViseEndreModal}
         lukkModal={() => setSkalViseEndreModal(false)}
