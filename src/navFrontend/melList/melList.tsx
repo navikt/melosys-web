@@ -13,15 +13,15 @@ interface MelListItemProps {
   children?: ReactNode;
 }
 
-export const MelList = ({ title, size = "small", children }: MelListProps) => {
+const MelList = ({ title, size = "small", children }: MelListProps) => {
   return (
-    <List title={title} size={size}>
+    <List title={title} size={size} className="melosys-list">
       {children}
     </List>
   );
 };
 
-export const MelListItem = ({ text, spacing = 2, children }: MelListItemProps) => {
+const MelListItem = ({ text, spacing = 0, children }: MelListItemProps) => {
   const margin = {
     marginBlockEnd: `var(--a-spacing-${spacing})`,
   };
@@ -33,3 +33,6 @@ export const MelListItem = ({ text, spacing = 2, children }: MelListItemProps) =
     </List.Item>
   );
 };
+MelList.MelItem = MelListItem;
+
+export default MelList;
