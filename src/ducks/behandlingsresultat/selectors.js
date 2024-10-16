@@ -24,6 +24,11 @@ export const BehandlingsresultatStatusErOkSelector = createSelector(
   (behandlingsresultatStatus) => behandlingsresultatStatus === Utils.STATUS.OK
 );
 
+export const ÅrsavregningIDSelector = createSelector(
+  (state) => BehandlingsresultatSelector(state),
+  (behandlingsresultat) => behandlingsresultat.aarsavregningID
+);
+
 export const BehandlingsresultatTypeSelector = createSelector(
   (state) => BehandlingsresultatSelector(state),
   (behandlingsresultat) => behandlingsresultat.behandlingsresultatTypeKode

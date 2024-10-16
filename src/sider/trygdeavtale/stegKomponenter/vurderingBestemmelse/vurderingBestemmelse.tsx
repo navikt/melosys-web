@@ -24,8 +24,9 @@ import BestemmelseHjelpetekst from "./bestemmelseHjelpetekst/bestemmelseHjelpete
 import { IngenFlytMelding, UnntakHjelpetekst } from "../../../../felleskomponenter/alertmeldinger";
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
+import { Box } from "@navikt/ds-react";
 
-const { NEI_ANMODE_OM_UNNTAK, NEI_AVSLAG, NEI_SENDE_TIL_DEPARTEMENTET, JA_FATTE_VEDTAK } = KV.Koder.AVTALELAND_UTFALL;
+const { NEI_ANMODE_OM_UNNTAK, NEI_AVSLAG, JA_FATTE_VEDTAK } = KV.Koder.AVTALELAND_UTFALL;
 
 const mapStateToProps = (state: RootState, ownProps: Props) => ({
   formIsValid: formSelectors.TrygdeavtaleBestemmelseFormValidSelector(state),
@@ -124,22 +125,22 @@ const VurderingBestemmelse = ({
           resetField("tilleggsbestemmelse");
           resetField("bestemmelse");
         }}
+        size="medium"
       >
         {vedtakValg?.map((valg) => (
-          <Nav.Radio key={valg.kode} value={valg.kode} disabled={valg.kode === NEI_SENDE_TIL_DEPARTEMENTET}>
+          <Nav.Radio key={valg.kode} value={valg.kode}>
             {valg.term}
           </Nav.Radio>
         ))}
       </Skjema.RadioGroup>
-
       {formValues?.vedtak && !Utils._isEmpty(bestemmelseValg) && (
-        <Nav.Fieldset legend="Velg bestemmelse" className="bestemmelseValg">
+        <Nav.Fieldset legend="">
           <Nav.Row>
-            <Nav.Column xs="10">
+            <Nav.Column lg="6">
               <Skjema.Select
-                label=""
+                label="Velg bestemmelse"
                 feltNavn="bestemmelse"
-                disabled={!redigerbart || updatePending}
+                redigerbart={redigerbart && !updatePending}
                 emptyFieldDisabled={!!formValues.bestemmelse}
                 onChange={() => resetField("tilleggsbestemmelse")}
               >
@@ -153,7 +154,6 @@ const VurderingBestemmelse = ({
           </Nav.Row>
         </Nav.Fieldset>
       )}
-
       {formValues?.vedtak && !Utils._isEmpty(tilleggsbestemmelseValg) && (
         <Nav.Row>
           <Nav.Column xs="10">
@@ -165,7 +165,6 @@ const VurderingBestemmelse = ({
           </Nav.Column>
         </Nav.Row>
       )}
-
       {formValues?.vedtak === NEI_ANMODE_OM_UNNTAK && (
         <Nav.Row>
           <Nav.Column xs="10" className="unntakHjelpetektsWrapper">
@@ -173,7 +172,6 @@ const VurderingBestemmelse = ({
           </Nav.Column>
         </Nav.Row>
       )}
-
       {formValues?.vedtak === NEI_AVSLAG && (
         <Nav.Row>
           <Nav.Column xs="10">
@@ -181,12 +179,11 @@ const VurderingBestemmelse = ({
           </Nav.Column>
         </Nav.Row>
       )}
-
-      <Nav.Row>
-        <Nav.Column xs="10" className="bestemmelseHjelptetekst">
+      {formValues?.bestemmelse && (
+        <Box padding="4" background="surface-subtle">
           <BestemmelseHjelpetekst bestemmelse={formValues.bestemmelse} />
-        </Nav.Column>
-      </Nav.Row>
+        </Box>
+      )}
 
       <Mui.StegKnapper
         bekreftKnappProps={{

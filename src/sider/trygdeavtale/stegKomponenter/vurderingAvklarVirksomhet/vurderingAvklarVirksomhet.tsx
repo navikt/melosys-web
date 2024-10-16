@@ -74,11 +74,16 @@ const VurderingAvklarVirksomhet = ({
   return (
     <div className="vurderingAvklarVirksomhet">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">
-        <LabelMedHjelpetekst label="Velg virksomhet" hjelpetekst={HJELPETEKST} bold />
+        <LabelMedHjelpetekst label="Virksomhet" bold />
       </Nav.Typo.Innholdstittel>
 
       {virksomheterListe?.length !== 0 ? (
-        <Skjema.RadioGroup legend="" hideLegend name="virksomhet" readOnly={!redigerbart}>
+        <Skjema.RadioGroup
+          legend={<LabelMedHjelpetekst label="Velg virksomhet" hjelpetekst={HJELPETEKST} bold small />}
+          hideLegend
+          name="virksomhet"
+          readOnly={!redigerbart}
+        >
           {virksomheterListe?.map((virksomhet) => (
             <Nav.Radio key={virksomhet.kode} value={virksomhet.kode}>
               {virksomhet.term}

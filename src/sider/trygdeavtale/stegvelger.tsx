@@ -46,7 +46,7 @@ interface AktueltSteg {
 
 const stegMap = {
   INNGANG: { tittel: "Inngang", komponent: Steg.VurderingInngang },
-  AVKLAR_VIRKSOMHET: { tittel: "Avklar virksomhet", komponent: Steg.VurderingAvklarVirksomhet },
+  AVKLAR_VIRKSOMHET: { tittel: "Virksomhet", komponent: Steg.VurderingAvklarVirksomhet },
   BESTEMMELSE: { tittel: "Bestemmelse", komponent: Steg.VurderingBestemmelse },
   FAMILIE: { tittel: "Familie", komponent: Steg.VurderingFamilie },
   VEDTAK: { tittel: "Vedtak", komponent: Steg.VurderingVedtak },
