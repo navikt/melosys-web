@@ -156,7 +156,7 @@ const VurderingFamilie = ({
         <div>
           <Nav.Alert className="alertstripe" variant="info">
             Ingen medfølgende familiemedlemmer.
-            {OBS_TEKST}
+            <div>{OBS_TEKST}</div>
           </Nav.Alert>
         </div>
       ) : (
