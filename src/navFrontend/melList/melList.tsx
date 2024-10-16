@@ -1,5 +1,6 @@
 import { List } from "@navikt/ds-react";
 import { ReactNode } from "react";
+import "./melList.css";
 
 interface MelListProps {
   title: string;
@@ -15,19 +16,15 @@ interface MelListItemProps {
 
 const MelList = ({ title, size = "small", children }: MelListProps) => {
   return (
-    <List title={title} size={size} className="melosys-list">
+    <List title={title} size={size}>
       {children}
     </List>
   );
 };
 
-const MelListItem = ({ text, spacing = 0, children }: MelListItemProps) => {
-  const margin = {
-    marginBlockEnd: `var(--a-spacing-${spacing})`,
-  };
-
+const MelListItem = ({ text, spacing = 2, children }: MelListItemProps) => {
   return (
-    <List.Item style={margin}>
+    <List.Item className={`mb-${spacing}`}>
       {text}
       {children}
     </List.Item>

@@ -1,0 +1,8 @@
+.generate-mb-classes(@i) when (@i >= 0) {
+  .mb-@{i} {
+    margin-block-end: ~"var(--a-spacing-@{i}) !important";
+  }
+  .generate-mb-classes(@i - 1);
+}
+
+.generate-mb-classes(5);
