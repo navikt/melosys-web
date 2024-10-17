@@ -1,7 +1,6 @@
 import { ReactNode } from "react";
 import "./list.css";
-import { List as NavList } from "@navikt/ds-react";
-import { ListProps } from "@navikt/ds-react/src/list/types";
+import { List as NavList, ListProps } from "@navikt/ds-react";
 
 interface ItemProps {
   text: string;
