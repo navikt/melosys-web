@@ -122,10 +122,6 @@ function EndreBehandlingModal({
   }, [sakstype, sakstema]);
 
   useEffect(() => {
-    console.log({ behandlingstype });
-  }, [behandlingstype]);
-
-  useEffect(() => {
     if (erÅrsavregning) {
       setBehandlingstype(oppsummering.behandlingstype?.kode);
       setMuligeBehandlingstyper([oppsummering.behandlingstype]);
