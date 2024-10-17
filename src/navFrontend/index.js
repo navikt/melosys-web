@@ -10,6 +10,7 @@ import CheckboxGroup from "./skjema/checkboxGroup";
 import Button from "./button";
 import Table from "./table";
 import Tag from "./tag";
+import List from "./list/list";
 
 // Egne implementasjoner av pakker fra nav-frontend. Noen av disse har blitt fjernet fra nav-frontend, men vi implementerer de selv fordi vi fortsatt har bruk for de.
 import { Fieldset, SkjemaGruppe, Textarea } from "./skjema";
@@ -42,4 +43,5 @@ export {
   HStack,
   Table,
   ExpansionCard,
+  List,
 };

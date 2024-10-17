@@ -1,6 +1,6 @@
 import MKV from "../../../../../melosyskodeverk";
 import * as Hjelpetekster from "./hjelpetekster";
-import MelList from "../../../../../navFrontend/melList/melList";
+import * as Nav from "../../../../../navFrontend";
 
 const BestemmelseHjelpetekst = ({ bestemmelse }: { bestemmelse?: string }) => {
   if (!bestemmelse) return null;
@@ -61,11 +61,11 @@ const BestemmelseHjelpetekst = ({ bestemmelse }: { bestemmelse?: string }) => {
 
   return (
     <>
-      <MelList title="Følgende vilkår må være oppfylt" size="small">
+      <Nav.List title="Følgende vilkår må være oppfylt" size="small">
         {hjelpetekster.map((hjelpetekst) => (
-          <MelList.MelItem key={hjelpetekst} text={hjelpetekst} spacing={0} />
+          <Nav.List.Item key={hjelpetekst} text={hjelpetekst} spacing={0} />
         ))}
-      </MelList>
+      </Nav.List>
       {ikkeKravOmTidsbegrensning && <p>Det er ikke krav om at utsendingsperioden/arbeidsperioden er tidsbegrenset.</p>}
     </>
   );
