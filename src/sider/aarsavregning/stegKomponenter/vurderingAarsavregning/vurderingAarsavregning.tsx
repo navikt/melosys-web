@@ -32,6 +32,8 @@ import { sorterEtterISOFomDato } from "../../../../utils/dato";
 import { fagsakSelectors } from "../../../../ducks/fagsaker";
 import { NyBehandlingForTidligereAarsavregningMelding } from "../../../../felleskomponenter/alertmeldinger/alertmeldinger";
 import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
+import { medlemskapsperioderOperations } from "../../../../ducks/medlemskapsperioder";
+import { Medlemskapsperioder } from "../../../../felleskomponenter/trygdeavgift/komponenter/medlemskapsperioder";
 
 interface Props {
   bekreft: () => void;
@@ -60,6 +62,7 @@ const { FERDIGBEHANDLET } = MKV.Koder.behandlinger.behandlingsresultattyper;
 // TODO: Error handling ved hentÅrsavregning
 // TODO: Boolean for årsavregningstype mangler. Automatisk opprettet årsavregning skal ha år tilknyttet og dermed skal årvelger skjules
 export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
+  const [bestemmelser, setBestemmelser] = useState<[]>([]);
   const [valgtÅr, setValgtÅr] = useState<number | null>(null);
   const [initieltÅr, setInitieltÅr] = useState<number | null>(null);
   const [erAvvik, setErAvvik] = useState<boolean | undefined>(undefined);
@@ -70,6 +73,8 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as number;
   const aarsavregningID = useSelector(behandlingsresultatSelectors.ÅrsavregningIDSelector);
   const saksnummer = useSelector(fagsakSelectors.SaksnummerSelector) as string;
+  const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
+
   const sisteMuligeÅr = new Date().getFullYear() - 1;
   const antallÅrTilbakeITid = 6;
   const muligeAar = Array.from({ length: antallÅrTilbakeITid }, (_, i) => sisteMuligeÅr - i);
@@ -117,6 +122,12 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
         : []
     );
   };
+
+  useEffect(() => {
+    if (behandlingstema) {
+      Api.Ftrl.hentBestemmelser(behandlingstema).then((res: any) => setBestemmelser(res.bestemmelser));
+    }
+  }, [behandlingstema]);
 
   // Initiell innlasting
   useEffect(() => {
@@ -200,11 +211,19 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
     },
     mode: "onChange",
     defaultValues: {
+      medlemskapsperioder: [{}],
       skatteforholdsperioder: [{}],
       inntektskilder: [{}],
       totaltForskuddsvisFakturert: "",
     } as FieldValue<AarsavregningFormValuesProps>,
   });
+
+  const {
+    fields: medlemskapsperioderFields,
+    append: medlemskapsperioderAppend,
+    remove: medlemskapsperioderRemove,
+    replace: resetMedlemskapsperioder,
+  } = useFieldArray<FieldArrayProps, "medlemskapsperioder", "id">({ control, name: "medlemskapsperioder" });
 
   const {
     fields: skattFields,
@@ -295,11 +314,37 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
     oppdaterStatus(stegErGyldig);
   }, [stegErGyldig]);
 
+  useEffect(() => {
+    if (
+      formValues.medlemskapsperioder[0]?.fomDato !== undefined &&
+      formValues.medlemskapsperioder[0]?.tomDato !== undefined &&
+      formValues.medlemskapsperioder[0]?.bestemmelse !== undefined &&
+      formValues.medlemskapsperioder[0]?.dekning !== undefined
+    ) {
+      console.log("SEND");
+      const periodeRequest = {
+        fomDato: Utils.dato.formatterDatoTilISO(formValues.medlemskapsperioder[0]?.fomDato, "") as string,
+        tomDato: Utils.dato.formatterDatoTilISO(formValues.medlemskapsperioder[0]?.tomDato, "") as string,
+        trygdedekning: formValues.medlemskapsperioder[0]?.dekning,
+        innvilgelsesResultat: "INNVILGET",
+        bestemmelse: formValues.medlemskapsperioder[0]?.bestemmelse,
+      };
+
+      const response: any = dispatch(
+        medlemskapsperioderOperations.opprettMedlemskapsperiode(behandlingID, periodeRequest)
+      );
+
+      console.log(`test: ${response.data}`);
+    }
+    console.log(formValues.medlemskapsperioder);
+  }, [formValues]);
+
   const håndterAvvik = (value: boolean) => {
     if (!value) {
       Api.Trygdeavgift.slettTrygdeavgiftsperioder(behandlingID).then(() => {
         resetSkatteforholdsperioder([]);
         resetInntektskilder([]);
+        resetMedlemskapsperioder([]);
         Api.Aarsavregning.hentAarsavregning(behandlingID, aarsavregningID).then((response: AarsavregningResponse) => {
           setAarsavregningResponse(response);
         });
@@ -317,6 +362,10 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
     setFeil(undefined);
     setValgtÅr(år || null);
   };
+
+  const erAvvikEllerLagretTrygdeavgiftErValgtÅr =
+    erAvvik ||
+    (aarsavregningResponse?.tidligereGrunnlagsopplysninger === null && aarsavregningResponse.aar === valgtÅr);
 
   return (
     <div className="vurderingAarsavregning">
@@ -394,7 +443,24 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
         </Nav.RadioGroup>
       )}
 
-      {erAvvik && (
+      {erAvvikEllerLagretTrygdeavgiftErValgtÅr && (
+        <Nav.Row>
+          <Nav.Column>
+            <Medlemskapsperioder
+              tittel="Medlemskapsperiode"
+              formValues={formValues}
+              redigerbart={redigerbart}
+              control={control}
+              fields={medlemskapsperioderFields}
+              remove={medlemskapsperioderRemove}
+              append={medlemskapsperioderAppend}
+              bestemmelser={bestemmelser}
+            />
+          </Nav.Column>
+        </Nav.Row>
+      )}
+
+      {erAvvikEllerLagretTrygdeavgiftErValgtÅr && (
         <Nav.Row>
           <Nav.Column>
             <Skatteforholdsperioder
@@ -409,7 +475,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
         </Nav.Row>
       )}
 
-      {erAvvik && (
+      {erAvvikEllerLagretTrygdeavgiftErValgtÅr && (
         <Inntektskilder
           formValues={formValues}
           redigerbart={redigerbart}
