@@ -200,15 +200,15 @@ const VurderingInngang = ({
         </Nav.Column>
         <Nav.Column xs="5">
           <Skjema.Select
+            emptyFieldDisabled={!!formValues?.arbeidsland}
+            feltNavn="arbeidsland"
+            redigerbart={redigerbart}
             label={
               <LabelMedHjelpetekst
                 label="Arbeidsland"
                 hjelpetekst="Oppgi landet der arbeidet utføres. Hvis søker arbeider på skip, skal du oppgi flagglandet."
               />
             }
-            feltNavn="arbeidsland"
-            disabled={!redigerbart}
-            emptyFieldDisabled={!!formValues?.arbeidsland}
           >
             <LandValgSomOptions landValg={landValg} />
             {landValg && landValgUtenStøtte && <option disabled>{"\u2500"}</option>}

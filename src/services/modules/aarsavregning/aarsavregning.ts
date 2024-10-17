@@ -1,5 +1,5 @@
 import { getAsJson, postAsJson, putAsJson } from "../../utils";
-import { API_BASE_URL, AARSAVREGNING } from "../../api-constants";
+import { API_BASE_URL, AARSAVREGNING, BEHANDLINGER, FAGSAKER } from "../../api-constants";
 import { InntektskildeDto, SkatteforholdDto } from "../trygdeavgift";
 import { Medlemskapsperiode } from "../medlemavfolketrygden/medlemskapsperioder";
 
@@ -8,7 +8,6 @@ export type AarsavregningResponse = {
   tidligereGrunnlagsopplysninger?: Grunnlagsopplysninger;
   avvikFunnet?: boolean;
   nyttGrunnlag?: Grunnlagsopplysninger;
-  endeligAvgift?: Avgift;
   avregning?: Avregning;
 };
 
@@ -49,19 +48,36 @@ export type Avregning = {
   tilFaktureringBeloep?: number;
 };
 
-export const hentAvregningsData = (behandlingID: number): Promise<AarsavregningResponse> =>
-  getAsJson(`${API_BASE_URL}${AARSAVREGNING}/${behandlingID}`);
+export type AarsavregningListResponse = {
+  aarsavregningId: number;
+  behandlingID: number;
+  aar: number;
+  resultattype: string;
+};
+
+export const hentAarsavregning = (behandlingID: number, aarsavregningID: number): Promise<AarsavregningResponse> =>
+  getAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${AARSAVREGNING}/${aarsavregningID}`);
 
 export type LagAarsavregningRequest = {
   aar: number;
 };
 
-export const lagAvregningsData = (
+export const lagAarsavregning = (
   behandlingID: number,
   request: LagAarsavregningRequest
-): Promise<AarsavregningResponse> => postAsJson(`${API_BASE_URL}${AARSAVREGNING}/${behandlingID}`, request);
+): Promise<AarsavregningResponse> =>
+  postAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${AARSAVREGNING}`, request);
 
 export const oppdaterTotalBelop = (
   behandlingID: number,
+  aarsavregningID: number,
   request: AarsavregningRequest
-): Promise<AarsavregningResponse> => putAsJson(`${API_BASE_URL}${AARSAVREGNING}/${behandlingID}`, request);
+): Promise<AarsavregningResponse> =>
+  putAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${AARSAVREGNING}/${aarsavregningID}`, request);
+
+export const hentFiltrertAarsavregningList = (
+  saksnummer: string,
+  aar: number,
+  resultattype: string
+): Promise<AarsavregningListResponse[]> =>
+  getAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/${AARSAVREGNING}?aar=${aar}&resultattype=${resultattype}`);

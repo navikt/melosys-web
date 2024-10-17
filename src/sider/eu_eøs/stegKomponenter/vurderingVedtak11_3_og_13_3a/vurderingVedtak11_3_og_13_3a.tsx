@@ -35,6 +35,15 @@ export const VurderingVedtak11_3_og_13_3a = ({
   harFeilmeldinger,
   validerMottatteOpplysninger,
 }: VurderingVedtakProps) => {
+  const endretLovvalgsperiode = (): boolean => {
+    if (Utils._isEmpty(lovvalgsperiode)) return false;
+
+    return (
+      Utils.dato.datoDiffPure(soknadsperiode.fom, lovvalgsperiode.fomDato, "days") !== 0 ||
+      Utils.dato.datoDiffPure(soknadsperiode.tom, lovvalgsperiode.tomDato, "days") !== 0
+    );
+  };
+
   const dispatch = useDispatch();
   const lovvalgsperiode = useSelector(lovvalgsperioderSelectors.LovvalgsperiodeSelector);
   const soknadsperiode = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
@@ -43,27 +52,29 @@ export const VurderingVedtak11_3_og_13_3a = ({
   const vedtakstype = useSelector(behandlingsresultatSelectors.VedtakstypeSelector);
   const [kontrollerPending, setKontrollerPending] = useState(false);
   const [vedtakPending, setVedtakPending] = useState(false);
-  const {
-    watch,
-    setValue,
-    control,
-    formState: { isValid: formIsValid },
-  } = useForm({
+
+  const formattedFom = Utils.dato.formatterDatoTilNorsk(
+    lovvalgsperiode !== null && !Utils._isEmpty(lovvalgsperiode) ? lovvalgsperiode.fomDato : soknadsperiode.fom
+  );
+  const formattedTom = Utils.dato.formatterDatoTilNorsk(
+    lovvalgsperiode !== null && !Utils._isEmpty(lovvalgsperiode) ? lovvalgsperiode.tomDato : soknadsperiode.tom
+  );
+
+  const [initiellLovvalgsperiode] = useState({ formattedFom, formattedTom });
+
+  const { watch, setValue, control, formState } = useForm({
+    context: {
+      soknadsperiode,
+    },
     resolver: yupResolver(vurderingVedtak_11_3_og_13_3aSchema),
-    mode: "all",
+    mode: "onChange",
     defaultValues: {
       kopiTilArbeidsgiver: false,
       vedtakstypebegrunnelse: useSelector(behandlingsresultatSelectors.BegrunnelseKoderSelector)[0],
       lovvalgsbestemmelse: lovvalgsperiode?.lovvalgsbestemmelse ?? "",
-      fom:
-        lovvalgsperiode !== null && !Utils._isEmpty(lovvalgsperiode)
-          ? Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.fomDato)
-          : Utils.dato.formatterDatoTilNorsk(soknadsperiode.fom),
-      tom:
-        lovvalgsperiode !== null && !Utils._isEmpty(lovvalgsperiode)
-          ? Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.tomDato)
-          : Utils.dato.formatterDatoTilNorsk(soknadsperiode.tom),
-      korterePeriodeChecked: false,
+      fom: initiellLovvalgsperiode.formattedFom,
+      tom: initiellLovvalgsperiode.formattedTom,
+      korterePeriodeChecked: endretLovvalgsperiode(),
       begrunnelseFritekst: useSelector(behandlingsresultatSelectors.BegrunnelseFritekstSelector) || "",
     } as FieldValues,
   });
@@ -85,17 +96,7 @@ export const VurderingVedtak11_3_og_13_3a = ({
     );
   };
 
-  useEffect(() => {
-    if (!redigerbart) return;
-    setKontrollerPending(true);
-    lagreLovvalgsperiode({
-      fomDato: Utils.dato.formatterDatoTilISO(fom),
-      tomDato: Utils.dato.formatterDatoTilISO(tom, ""),
-      lovvalgsbestemmelse,
-    }).then(() => kontroller().then(() => setKontrollerPending(false)));
-  }, [tom, fom, lovvalgsbestemmelse]);
-
-  const stegErGyldig = redigerbart && formIsValid && !harFeilmeldinger && !kontrollerPending;
+  const stegErGyldig = redigerbart && formState.isValid && !harFeilmeldinger && !kontrollerPending;
 
   const mapDokumenter = (dokumenter: BrevDokumentMetadataType[]) => {
     return dokumenter.map((dokument: BrevDokumentMetadataType) => {
@@ -164,6 +165,17 @@ export const VurderingVedtak11_3_og_13_3a = ({
     }
   };
 
+  useEffect(() => {
+    if (formState.isValid && !formState.isValidating) {
+      setKontrollerPending(true);
+      lagreLovvalgsperiode({
+        fomDato: Utils.dato.formatterDatoTilISO(fom),
+        tomDato: Utils.dato.formatterDatoTilISO(tom, ""),
+        lovvalgsbestemmelse,
+      }).then(() => kontroller().then(() => setKontrollerPending(false)));
+    }
+  }, [formState.isValid, formState.isValidating, lovvalgsbestemmelse]);
+
   return (
     <div className="vedtak">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Omfattet av norsk trygdelovgivning</Nav.Typo.Innholdstittel>
@@ -186,7 +198,7 @@ export const VurderingVedtak11_3_og_13_3a = ({
         className="ktselect__slim"
       />
 
-      <Nav.Typo.Element className="undertittel">Søknadsperiode</Nav.Typo.Element>
+      <Nav.Typo.Element className="undertittel">Lovvalgsperiode</Nav.Typo.Element>
       <Nav.Column>
         {formValues.fom} - {formValues.tom}
       </Nav.Column>
@@ -194,22 +206,33 @@ export const VurderingVedtak11_3_og_13_3a = ({
       <Nav.Checkbox
         key="korterePeriode"
         value={formValues.korterePeriodeChecked}
+        checked={formValues.korterePeriodeChecked}
         onChange={(a) => {
           setValue("korterePeriodeChecked", a.target.checked);
         }}
+        readOnly={!redigerbart}
       >
         Lovvalget innvilges for en kortere periode
       </Nav.Checkbox>
 
-      {formValues.korterePeriodeChecked && (
+      {formValues.korterePeriodeChecked && soknadsperiode.fom && (
         <Nav.Row className="skjema__panel__rad">
           <Nav.Column xs="3" className="dato">
-            <Datovelger name="fom" label="Startdato" control={control} />
+            <Datovelger
+              readOnly={!redigerbart}
+              name="fom"
+              minDate={Utils.dato.norskStringTilDate(initiellLovvalgsperiode.formattedFom)}
+              maxDate={Utils.dato.norskStringTilDate(tom)}
+              label="Startdato"
+              control={control}
+            />
           </Nav.Column>
           <Nav.Column xs="3" className="dato">
             <Datovelger
+              readOnly={!redigerbart}
               name="tom"
-              minDate={Utils.dato.norskStringTilDate(formValues.fom)}
+              minDate={Utils.dato.norskStringTilDate(fom)}
+              maxDate={Utils.dato.norskStringTilDate(initiellLovvalgsperiode.formattedTom)}
               label="Sluttdato"
               control={control}
             />
@@ -223,6 +246,7 @@ export const VurderingVedtak11_3_og_13_3a = ({
             value={formValues.begrunnelseFritekst}
             label="Fritekstfelt til begrunnelse"
             maxLength={4000}
+            readOnly={!redigerbart}
           />
         </Nav.Column>
       </Nav.Row>
@@ -234,7 +258,7 @@ export const VurderingVedtak11_3_og_13_3a = ({
             setValue("kopiTilArbeidsgiver", a.target.checked);
             leggTilEllerFjernOrienteringsbrev(a.target.checked);
           }}
-          disabled={!redigerbart}
+          readOnly={!redigerbart}
         >
           Send kopi til arbeidsgiver/virksomhet
         </Nav.Checkbox>

@@ -10,6 +10,7 @@ export const SumArsavregningTabell = ({
   nyTrygdeavgift?: number;
   tidligereTrygdeavgift?: number;
 }) => {
+  const sumTilFakturaEllerRefusjon = (nyTrygdeavgift ?? 0) - (tidligereTrygdeavgift ?? 0);
   return (
     <div className="sumArsavregningTabell">
       <Nav.Table size="small" width={500} className="periode_tabell">
@@ -19,7 +20,7 @@ export const SumArsavregningTabell = ({
             Endelig beregnet trygdeavgift
           </Nav.Table.DataCell>
           <Nav.Table.DataCell align="right" key={Utils._uuid()}>
-            {formaterTilNorskBelop(nyTrygdeavgift || tidligereTrygdeavgift)} kr
+            {formaterTilNorskBelop(nyTrygdeavgift !== undefined ? nyTrygdeavgift : tidligereTrygdeavgift)} kr
           </Nav.Table.DataCell>
         </Nav.Table.Row>
         <Nav.Table.Row>
@@ -31,12 +32,11 @@ export const SumArsavregningTabell = ({
         </Nav.Table.Row>
         <Nav.Table.Row>
           <Nav.Table.DataCell scope="col">=</Nav.Table.DataCell>
-          <Nav.Table.DataCell scope="col">Sum til faktura/refusjon </Nav.Table.DataCell>
+          <Nav.Table.DataCell scope="col">Differanse</Nav.Table.DataCell>
           <Nav.Table.DataCell align="right" key={Utils._uuid()}>
             <b>
-              {formaterTilNorskBelop((nyTrygdeavgift || tidligereTrygdeavgift || 0) - (tidligereTrygdeavgift || 0)) ||
-                "0"}{" "}
-              kr{" "}
+              {formaterTilNorskBelop(sumTilFakturaEllerRefusjon)}
+              &nbsp;kr&nbsp;
             </b>
           </Nav.Table.DataCell>
         </Nav.Table.Row>

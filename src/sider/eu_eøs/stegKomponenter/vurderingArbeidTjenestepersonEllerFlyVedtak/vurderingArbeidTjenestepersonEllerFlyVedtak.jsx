@@ -331,7 +331,7 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
       </Nav.Row>
       {redigerbart && (
         <Fragment>
-          <Nav.Typo.Element className="undertittel">Søknadsperiode</Nav.Typo.Element>
+          <Nav.Typo.Element className="undertittel">Lovvalgsperiode</Nav.Typo.Element>
           <Nav.Row className="lovvalgsperiode">
             <Nav.Column xs="6">
               {fom} - {tom}

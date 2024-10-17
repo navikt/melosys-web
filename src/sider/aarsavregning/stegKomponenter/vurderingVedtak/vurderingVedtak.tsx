@@ -51,6 +51,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
   const [lagretAarsavregning, setLagretAarsavregning] = useState<AarsavregningResponse | undefined>(undefined);
   const [fakturaMottaker, setFakturaMottaker] = useState<string | undefined>(undefined);
+  const aarsavregningID = useSelector(behandlingsresultatSelectors.ÅrsavregningIDSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
 
@@ -70,9 +71,11 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const formValues = watch();
 
   const fetchAvregningsData = () => {
-    return Api.Aarsavregning.hentAvregningsData(behandlingID).then((response: AarsavregningResponse) => {
-      setLagretAarsavregning(response);
-    });
+    return Api.Aarsavregning.hentAarsavregning(behandlingID, aarsavregningID).then(
+      (response: AarsavregningResponse) => {
+        setLagretAarsavregning(response);
+      }
+    );
   };
 
   const hentMuligeMottakere = async () => {
@@ -153,10 +156,13 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
 
   const tidligereTrygdeavgift = lagretAarsavregning?.tidligereGrunnlagsopplysninger?.avgift.totalAvgift;
   const nyTrygdeavgift = lagretAarsavregning?.nyttGrunnlag?.avgift.totalAvgift;
+
   const erDifferanseUnderMinstebeløp =
     tidligereTrygdeavgift &&
     nyTrygdeavgift &&
-    Math.abs(tidligereTrygdeavgift - nyTrygdeavgift) <= MINSTEBELOP_FAKTURERING_ELLER_REFUSJON;
+    Math.abs(tidligereTrygdeavgift - nyTrygdeavgift) < MINSTEBELOP_FAKTURERING_ELLER_REFUSJON;
+
+  const skalFaktureres = tidligereTrygdeavgift && nyTrygdeavgift && nyTrygdeavgift - tidligereTrygdeavgift > 0;
 
   return (
     <div className="vurderingVedtak">
@@ -166,15 +172,20 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
 
       <SumArsavregningTabell nyTrygdeavgift={nyTrygdeavgift} tidligereTrygdeavgift={tidligereTrygdeavgift} />
 
-      {fakturaMottaker && nyTrygdeavgift ? (
+      {fakturaMottaker ? (
         <Nav.Row className="trygdeavgift">
           <Nav.Column xs="12">
             <Nav.Typo.Normaltekst className="info">
               {erDifferanseUnderMinstebeløp ? (
-                <b>Beløpet er under minstegrensen på +/- 100,-</b>
+                <b>Beløpet er under minstegrensen for fakturering/refusjon (100 kr).</b>
               ) : (
                 <>
-                  Faktura/refusjon sendes til: <b>{fakturaMottaker}</b>
+                  {`${skalFaktureres ? "Faktura" : "Kreditnota"} på ${
+                    Utils.formaterTilNorskBelop(
+                      Math.abs((nyTrygdeavgift || tidligereTrygdeavgift || 0) - (tidligereTrygdeavgift || 0))
+                    ) || "0"
+                  } kr sendes til: `}{" "}
+                  <b>{fakturaMottaker}</b>
                 </>
               )}
             </Nav.Typo.Normaltekst>
@@ -202,7 +213,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
         disabled={!redigerbart}
       />
 
-      {stegErGyldig && muligeMottakere && (
+      {stegErGyldig && redigerbart && muligeMottakere && (
         <Dokumentliste behandlingID={behandlingID} dokumenter={mapMottakerRader(muligeMottakere)} />
       )}
 
