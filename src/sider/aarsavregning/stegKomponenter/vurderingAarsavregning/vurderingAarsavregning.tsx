@@ -201,7 +201,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
     control,
     watch,
     setValue,
-    formState: { isValid: formIsValid, isValidating },
+    formState: { isValid: formIsValid, isValidating, errors },
   } = useForm({
     resolver: yupResolver(vurderingAarsavregningSchema),
     context: {
@@ -302,11 +302,10 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
 
   // erAvvik trigger en beregning på gammelt grunnlag etter å ha oppdatert skjemaverdier i håndterAvvik. Dette må gjøres for å oppdatere lagrede verdier i api
   useEffect(() => {
-    if (redigerbart && erAvvik && !isValidating && !feilMeldingBlokkerer(aktivFeilmeldingType)) {
-      console.log({ formValues });
+    if (redigerbart && formIsValid && erAvvik && !isValidating && !feilMeldingBlokkerer(aktivFeilmeldingType)) {
       debounceBeregnTrygdeavgiftsperioder(formValues);
     }
-  }, [isValidating, aktivFeilmeldingType, erAvvik]);
+  }, [isValidating, aktivFeilmeldingType, erAvvik, formIsValid]);
 
   const stegErGyldig = Boolean(erAvvik === false || (formIsValid && erAvvik && aarsavregningResponse?.nyttGrunnlag));
 

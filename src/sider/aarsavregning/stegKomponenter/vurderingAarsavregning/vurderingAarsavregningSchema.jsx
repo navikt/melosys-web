@@ -15,7 +15,6 @@ const {
 } = MKV.Koder.inntektskildetype;
 const { IKKE_SKATTEPLIKTIG } = MKV.Koder.skatteplikttype;
 const UTENFOR_MEDLEMSKAPSPERIODEN = { melding: "Utenfor medlemskapsperioden" };
-const INNGILGELSESRESULTAT_FELT_KREVES = { melding: "Du må velge innvilgelsesresultat" };
 const BESTEMMELSE_FELT_KREVES = { melding: "Du må velge bestemmelse" };
 const TRYGDEDEKNING_FELT_KREVES = { melding: "Du må velge trygdedekning" };
 
@@ -59,12 +58,12 @@ const bruttoInntektFyltUtNårDetKrevesTest = {
   },
 };
 
-// const kreverInntektskilder = (medlemskapsTypeErPliktig, options) => {
-//   if (options?.parent?.skatteforholdsperioder) {
-//     return !(medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(options.parent.skatteforholdsperioder));
-//   }
-//   return true;
-// };
+const kreverInntektskilder = (medlemskapsTypeErPliktig, options) => {
+  if (options?.parent?.skatteforholdsperioder) {
+    return !(medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(options.parent.skatteforholdsperioder));
+  }
+  return true;
+};
 
 const vurdering_aarsavregning = object().shape({
   medlemskapsperioder: array()
@@ -79,7 +78,6 @@ const vurdering_aarsavregning = object().shape({
           .erGyldigDato()
           .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
           .erEtterDatofelt("fomDato"),
-        innvilgelsesResultat: string().required(INNGILGELSESRESULTAT_FELT_KREVES),
         dekning: string().required(TRYGDEDEKNING_FELT_KREVES),
         bestemmelse: string().required(BESTEMMELSE_FELT_KREVES),
       })
@@ -103,9 +101,10 @@ const vurdering_aarsavregning = object().shape({
         })
       ),
   }),
-  inntektskilder: lazy((_value) => {
+  inntektskilder: lazy((_value, options) => {
     return array().when(["$medlemskapsTypeErPliktig", "$erÅpenSluttDato"], {
-      is: (medlemskapsTypeErPliktig, erÅpenSluttDato) => !erÅpenSluttDato, // && kreverInntektskilder(medlemskapsTypeErPliktig, options),
+      is: (medlemskapsTypeErPliktig, erÅpenSluttDato) =>
+        !erÅpenSluttDato && kreverInntektskilder(medlemskapsTypeErPliktig, options),
       then: array()
         .min(1, "Minst en inntektskilde")
         .of(
