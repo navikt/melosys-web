@@ -378,7 +378,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
         <BeregnetTrygdeavgiftDetaljer
           grunnlag={aarsavregningResponse?.tidligereGrunnlagsopplysninger}
           medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!!}
-          tittel="Forskuddsvis beregnet trygdeavgift"
+          tittel="Tidligere beregnet trygdeavgift"
         />
       )}
 
