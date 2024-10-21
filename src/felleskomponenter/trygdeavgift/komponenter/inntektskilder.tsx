@@ -99,6 +99,7 @@ export const Inntektskilder = ({
             inntektskilde.kildetype,
             inntektskilde.arbAvgBetales
           );
+
           if (!skalFylleInnBruttoInntekt && inntektskilde.bruttoInntekt) {
             update(index, { ...inntektskilde, bruttoInntekt: undefined });
           }
@@ -180,7 +181,7 @@ export const Inntektskilder = ({
               </Nav.Column>
 
               <Nav.Column className="brutto_inntekt">
-                {!skalFylleInnBruttoInntekt ? (
+                {skalFylleInnBruttoInntekt ? (
                   <Forms.Input
                     label={index === 0 ? "Brutto inntekt per md." : ""}
                     hideLabel={index !== 0}

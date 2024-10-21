@@ -309,7 +309,6 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
   }, [formIsValid, isValidating, aktivFeilmeldingType, erAvvik]);
 
   const stegErGyldig = Boolean(erAvvik === false || (formIsValid && erAvvik && aarsavregningResponse?.nyttGrunnlag));
-
   useEffect(() => {
     oppdaterStatus(stegErGyldig);
   }, [stegErGyldig]);
@@ -321,7 +320,6 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
       formValues.medlemskapsperioder[0]?.bestemmelse !== undefined &&
       formValues.medlemskapsperioder[0]?.dekning !== undefined
     ) {
-      console.log("SEND");
       const periodeRequest = {
         fomDato: Utils.dato.formatterDatoTilISO(formValues.medlemskapsperioder[0]?.fomDato, "") as string,
         tomDato: Utils.dato.formatterDatoTilISO(formValues.medlemskapsperioder[0]?.tomDato, "") as string,
@@ -330,13 +328,8 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
         bestemmelse: formValues.medlemskapsperioder[0]?.bestemmelse,
       };
 
-      const response: any = dispatch(
-        medlemskapsperioderOperations.opprettMedlemskapsperiode(behandlingID, periodeRequest)
-      );
-
-      console.log(`test: ${response.data}`);
+      dispatch(medlemskapsperioderOperations.opprettMedlemskapsperiode(behandlingID, periodeRequest));
     }
-    console.log(formValues.medlemskapsperioder);
   }, [formValues]);
 
   const håndterAvvik = (value: boolean) => {
