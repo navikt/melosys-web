@@ -36,10 +36,10 @@ const InntektsperioderTabell = ({ perioder, avgift }: { perioder?: Inntektskilde
                 {inntektsperiode.arbeidsgiversavgiftBetales ? "Ja" : "Nei"}
               </Nav.Table.DataCell>
               <Nav.Table.DataCell align="right" key={Utils._uuid()}>
-                {Utils.formaterTilNorskBelopUtenDesimaler(inntektsperiode.avgiftspliktigInntektMnd)} kr
+                {Utils.formaterTilNorskBelopUtenDesimaler(inntektsperiode.avgiftspliktigInntekt)} kr
               </Nav.Table.DataCell>
               <Nav.Table.DataCell align="right" key={Utils._uuid()}>
-                {Utils.formaterTilNorskBelopUtenDesimaler(inntektsperiode.totalInntektForPerioden)} kr
+                {Utils.formaterTilNorskBelopUtenDesimaler(inntektsperiode.avgiftspliktigInntektTotal)} kr
               </Nav.Table.DataCell>
             </Nav.Table.Row>
           ))}

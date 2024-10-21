@@ -31,6 +31,8 @@ import {
 import { Skatteforholdsperioder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/skatteforholdsperioder";
 import MKV from "../../../../../melosyskodeverk";
 import { BeregnetTrygdeavgift, TrygdeavgiftsgrunnlagDto } from "../../../../../services/modules/trygdeavgift";
+import { BOOLSK_STRING } from "../../../../../constants";
+import LabelMedHjelpetekst from "../../../../../felleskomponenter/labelMedHjelpetekst";
 
 interface Props {
   bekreft: () => void;
@@ -145,11 +147,12 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
         ? sorterteInntekstkilder.map((inntektskilde) => ({
             kildetype: inntektskilde.type,
             arbAvgBetales: Utils.streng.boolTilUppercaseStreng(inntektskilde.arbeidsgiversavgiftBetales),
-            bruttoInntekt: inntektskilde.avgiftspliktigInntektMnd,
+            bruttoInntekt: inntektskilde.avgiftspliktigInntekt,
             fomDato: Utils.dato.formatterDatoTilNorsk(inntektskilde.fomDato),
             tomDato: Utils.dato.formatterDatoTilNorsk(inntektskilde.tomDato),
+            erMaanedsbelop: Utils.streng.boolTilUppercaseStreng(inntektskilde.erMaanedsbelop),
           }))
-        : [defaultPeriode]
+        : [{ ...defaultPeriode, erMaanedsbelop: BOOLSK_STRING.SANN }]
     );
   };
 
@@ -199,9 +202,10 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
         ? formVerdier.inntektskilder.map((inntektskilde: Inntektskilde) => ({
             type: inntektskilde.kildetype,
             arbeidsgiversavgiftBetales: Utils.streng.uppercaseStrengTilBool(inntektskilde.arbAvgBetales) || false,
-            avgiftspliktigInntektMnd: inntektskilde.bruttoInntekt,
+            avgiftspliktigInntekt: inntektskilde.bruttoInntekt,
             fomDato: Utils.dato.formatterDatoTilISO(inntektskilde.fomDato),
             tomDato: Utils.dato.formatterDatoTilISO(inntektskilde.tomDato, null),
+            erMaanedsbelop: true,
           }))
         : [],
     })
@@ -276,34 +280,40 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
       )}
 
       {!erÅpenSluttDato && (
-        <Nav.Row>
-          <Nav.Column>
-            <Skatteforholdsperioder
-              formValues={formValues}
-              redigerbart={redigerbart}
-              remove={skattRemove}
-              append={skattAppend}
-              control={control}
-              defaultPeriode={defaultPeriode}
-              fields={skattFields}
-            />
-          </Nav.Column>
-        </Nav.Row>
+        <>
+          <Nav.Typo.Undertittel>Oppgi informasjon om brukers skatteforhold</Nav.Typo.Undertittel>
+          <Skatteforholdsperioder
+            formValues={formValues}
+            redigerbart={redigerbart}
+            remove={skattRemove}
+            append={skattAppend}
+            control={control}
+            defaultPeriode={defaultPeriode}
+            fields={skattFields}
+          />
+        </>
       )}
 
       {!(medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder)) &&
         !erÅpenSluttDato && (
-          <Inntektskilder
-            formValues={formValues}
-            redigerbart={redigerbart}
-            update={inntektUpdate}
-            remove={inntektRemove}
-            append={inntektAppend}
-            control={control}
-            defaultPeriode={defaultPeriode}
-            fields={inntektFields}
-            medlemskapsTypeErPliktig={medlemskapsTypeErPliktig}
-          />
+          <>
+            <LabelMedHjelpetekst
+              label="Oppgi informasjon om brukers inntekt"
+              hjelpetekst="Hvis bruker har flere inntekter, f.eks. fra Norge og fra utlandet, så må de legges til enkeltvis."
+              undertittel
+            />
+            <Inntektskilder
+              formValues={formValues}
+              redigerbart={redigerbart}
+              update={inntektUpdate}
+              remove={inntektRemove}
+              append={inntektAppend}
+              control={control}
+              defaultPeriode={defaultPeriode}
+              fields={inntektFields}
+              medlemskapsTypeErPliktig={medlemskapsTypeErPliktig}
+            />
+          </>
         )}
 
       <Feilmelding type={aktivFeilmeldingType} />

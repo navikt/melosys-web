@@ -41,6 +41,7 @@ interface InntektskilderProps {
   redigerbart: boolean;
   defaultPeriode?: { fomDato: string; tomDato: string };
   medlemskapsTypeErPliktig: boolean;
+  skalViseErMaanedsBelopRadioGroup?: boolean;
 }
 
 export const Inntektskilder = ({
@@ -53,6 +54,7 @@ export const Inntektskilder = ({
   defaultPeriode,
   fields,
   medlemskapsTypeErPliktig,
+  skalViseErMaanedsBelopRadioGroup,
 }: InntektskilderProps) => {
   const settesDefaultArbAvgBetales = (kildetype?: string) => ![INNTEKT_FRA_UTLANDET, MISJONÆR].includes(kildetype);
 
@@ -141,7 +143,7 @@ export const Inntektskilder = ({
                   </Forms.Select>
                 </Nav.Column>
 
-                <Nav.Column className="arbgiverskatt">
+                <Nav.Column className="radio-group">
                   {skalFylleInnArbAvgBetales ? (
                     <Forms.RadioGroup
                       legend={index === 0 ? "Betales aga.?" : ""}
@@ -166,10 +168,33 @@ export const Inntektskilder = ({
                   )}
                 </Nav.Column>
 
+                {skalViseErMaanedsBelopRadioGroup && (
+                  <Nav.Column className="radio-group">
+                    {skalFylleInnBruttoInntekt ? (
+                      <Forms.RadioGroup
+                        legend=""
+                        hideLegend
+                        name={`inntektskilder[${index}].erMaanedsbelop`}
+                        readOnly={!redigerbart}
+                        control={control}
+                      >
+                        <Stack gap="6" direction={{ xs: "column", sm: "row" }} wrap={false}>
+                          <Nav.Radio value={BOOLSK_STRING.SANN}>Md.</Nav.Radio>
+                          <Nav.Radio value={BOOLSK_STRING.USANN}>Total</Nav.Radio>
+                        </Stack>
+                      </Forms.RadioGroup>
+                    ) : (
+                      <div className="ikkeRelevant">
+                        <p className="undertekst uten-overskrift">Ikke relevant</p>
+                      </div>
+                    )}
+                  </Nav.Column>
+                )}
+
                 <Nav.Column className="brutto_inntekt">
                   {skalFylleInnBruttoInntekt ? (
                     <Forms.Input
-                      label={index === 0 ? "Bruttoinntekt md." : ""}
+                      label={index === 0 ? "Brutto inntekt" : ""}
                       hideLabel={index !== 0}
                       name={`inntektskilder[${index}].bruttoInntekt`}
                       control={control}
@@ -178,27 +203,7 @@ export const Inntektskilder = ({
                     />
                   ) : (
                     <div className="ikkeRelevant">
-                      {index === 0 && <Nav.Typo.Element>Brutto inntekt md.</Nav.Typo.Element>}
-                      <p className={`undertekst ${index === 0 ? "med-overskrift" : "uten-overskrift"}`}>
-                        Ikke relevant
-                      </p>
-                    </div>
-                  )}
-                </Nav.Column>
-
-                <Nav.Column className="brutto_inntekt">
-                  {skalFylleInnBruttoInntekt ? (
-                    <Forms.Input
-                      label={index === 0 ? "Total periode" : ""}
-                      hideLabel={index !== 0}
-                      name={`inntektskilder[${index}].totalInntekt`}
-                      control={control}
-                      readOnly={!redigerbart}
-                      className="brutto_inntekt__input"
-                    />
-                  ) : (
-                    <div className="ikkeRelevant">
-                      {index === 0 && <Nav.Typo.Element>Total periode</Nav.Typo.Element>}
+                      {index === 0 && <Nav.Typo.Element>Inntekt</Nav.Typo.Element>}
                       <p className={`undertekst ${index === 0 ? "med-overskrift" : "uten-overskrift"}`}>
                         Ikke relevant
                       </p>
@@ -218,7 +223,14 @@ export const Inntektskilder = ({
 
         {redigerbart && (
           <div className="legg-til__rad">
-            <Mui.Lenkeknapp ikon={Ikoner.Add} onClick={() => append(defaultPeriode || {})}>
+            <Mui.Lenkeknapp
+              ikon={Ikoner.Add}
+              onClick={() =>
+                append(
+                  { ...defaultPeriode, erMaanedsbelop: BOOLSK_STRING.SANN } || { erMaanedsbelop: BOOLSK_STRING.SANN }
+                )
+              }
+            >
               Legg til inntekt
             </Mui.Lenkeknapp>
           </div>
