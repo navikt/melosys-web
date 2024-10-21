@@ -261,7 +261,6 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
       setFeil(undefined);
       const erBrukerPliktigMedlemOgSkattepliktig =
         medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(formVerdier.skatteforholdsperioder);
-      if (!aarsavregningResponse?.tidligereGrunnlagsopplysninger) return;
       Api.Trygdeavgift.beregnTrygdeavgiftsperioder(behandlingID, {
         skatteforholdsperioder: formVerdier.skatteforholdsperioder.map((skatteforhold: Skatteforhold) => ({
           fomDato: Utils.dato.formatterDatoTilISO(skatteforhold.fomDato),
@@ -303,12 +302,14 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
 
   // erAvvik trigger en beregning på gammelt grunnlag etter å ha oppdatert skjemaverdier i håndterAvvik. Dette må gjøres for å oppdatere lagrede verdier i api
   useEffect(() => {
-    if (redigerbart && erAvvik && !isValidating && formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType)) {
+    if (redigerbart && erAvvik && !isValidating && !feilMeldingBlokkerer(aktivFeilmeldingType)) {
+      console.log({ formValues });
       debounceBeregnTrygdeavgiftsperioder(formValues);
     }
-  }, [formIsValid, isValidating, aktivFeilmeldingType, erAvvik]);
+  }, [isValidating, aktivFeilmeldingType, erAvvik]);
 
   const stegErGyldig = Boolean(erAvvik === false || (formIsValid && erAvvik && aarsavregningResponse?.nyttGrunnlag));
+
   useEffect(() => {
     oppdaterStatus(stegErGyldig);
   }, [stegErGyldig]);
@@ -327,7 +328,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
         innvilgelsesResultat: "INNVILGET",
         bestemmelse: formValues.medlemskapsperioder[0]?.bestemmelse,
       };
-
+      setErAvvik(true);
       dispatch(medlemskapsperioderOperations.opprettMedlemskapsperiode(behandlingID, periodeRequest));
     }
   }, [formValues]);
@@ -359,7 +360,6 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
   const erAvvikEllerLagretTrygdeavgiftErValgtÅr =
     erAvvik ||
     (aarsavregningResponse?.tidligereGrunnlagsopplysninger === null && aarsavregningResponse.aar === valgtÅr);
-
   return (
     <div className="vurderingAarsavregning">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Årsavregning</Nav.Typo.Innholdstittel>
@@ -481,16 +481,16 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
         />
       )}
 
-      {erAvvik && aarsavregningResponse?.nyttGrunnlag && (
+      {erAvvikEllerLagretTrygdeavgiftErValgtÅr && (
         <SumArsavregningTabell
           nyTrygdeavgift={aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift}
           tidligereTrygdeavgift={aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift.totalAvgift}
         />
       )}
 
-      {erAvvik && aarsavregningResponse?.nyttGrunnlag && (
+      {erAvvikEllerLagretTrygdeavgiftErValgtÅr && (
         <BeregnetTrygdeavgiftDetaljer
-          grunnlag={aarsavregningResponse.nyttGrunnlag}
+          grunnlag={aarsavregningResponse?.nyttGrunnlag}
           medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!!}
           tittel="Endelig beregnet trygdeavgift"
         />

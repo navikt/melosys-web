@@ -30,7 +30,7 @@ export const BeregnetTrygdeavgiftDetaljer = ({
   tittel: string;
 }) => {
   const hentDetaljer = (data: Grunnlagsopplysninger | undefined): DetaljerInterface[] => {
-    if (data === undefined) return [];
+    if (data === undefined || data === null) return [];
     return data.avgift.trygdeavgiftsperioder
       .map((period) => {
         const overlappingMedlemskap = data.trygdeavgiftsgrunnlag.medlemskapsperioder.find(

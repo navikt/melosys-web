@@ -67,6 +67,23 @@ const bruttoInntektFyltUtNårDetKrevesTest = {
 // };
 
 const vurdering_aarsavregning = object().shape({
+  medlemskapsperioder: array()
+    .min(1, "Minst en medlemskapsperiode")
+    .of(
+      object().shape({
+        fomDato: string()
+          .erGyldigDato()
+          .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
+          .required(MAA_FYLLES_UT),
+        tomDato: string()
+          .erGyldigDato()
+          .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
+          .erEtterDatofelt("fomDato"),
+        innvilgelsesResultat: string().required(INNGILGELSESRESULTAT_FELT_KREVES),
+        dekning: string().required(TRYGDEDEKNING_FELT_KREVES),
+        bestemmelse: string().required(BESTEMMELSE_FELT_KREVES),
+      })
+    ),
   skatteforholdsperioder: array().when(["$erÅpenSluttDato"], {
     is: (erÅpenSluttDato) => !erÅpenSluttDato,
     then: array()
@@ -109,23 +126,6 @@ const vurdering_aarsavregning = object().shape({
         ),
     });
   }),
-  medlemskapsperioder: array()
-    .min(1, "Minst en medlemskapsperiode")
-    .of(
-      object().shape({
-        fomDato: string()
-          .erGyldigDato()
-          .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
-          .required(MAA_FYLLES_UT),
-        tomDato: string()
-          .erGyldigDato()
-          .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
-          .erEtterDatofelt("fomDato"),
-        innvilgelsesResultat: string().required(INNGILGELSESRESULTAT_FELT_KREVES),
-        dekning: string().required(TRYGDEDEKNING_FELT_KREVES),
-        bestemmelse: string().required(BESTEMMELSE_FELT_KREVES),
-      })
-    ),
 });
 
 export default vurdering_aarsavregning;

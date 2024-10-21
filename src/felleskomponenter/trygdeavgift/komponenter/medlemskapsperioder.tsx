@@ -8,6 +8,7 @@ import * as Forms from "../../forms";
 import * as Nav from "../../../navFrontend";
 import * as Mui from "../../ui";
 import * as Ikoner from "../../../resources/images";
+import * as Utils from "../../../utils";
 
 import { FieldArrayProps, FormValuesProps, Medlemskapsperiode } from "./types";
 import { useEffect, useState } from "react";
@@ -31,6 +32,7 @@ export const Medlemskapsperioder = ({
   append,
   bestemmelser,
   tittel,
+  formValues,
 }: PeriodeElementerProps) => {
   const [dekninger, setDekninger] = useState<[]>([]);
   const [valgtBestemmelse, setValgtBestemmelse] = useState<string>();
@@ -65,6 +67,7 @@ export const Medlemskapsperioder = ({
                   control={control}
                   name={`medlemskapsperioder[${index}].tomDato`}
                   aria-label={`Til og med periode ${index + 1}`}
+                  minDate={Utils.dato.norskStringTilDate(formValues.medlemskapsperioder[index].fomDato)}
                   readOnly={!redigerbart}
                 />
               </Nav.Column>
