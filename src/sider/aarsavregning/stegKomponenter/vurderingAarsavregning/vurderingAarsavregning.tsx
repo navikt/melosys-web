@@ -161,6 +161,8 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
 
   // Initiell innlasting
   useEffect(() => {
+    dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(behandlingID));
+
     Api.Aarsavregning.hentAarsavregning(behandlingID, aarsavregningID)
       .then((res) => {
         if (res.tidligereGrunnlagsopplysninger === null) {
@@ -186,6 +188,10 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
         }
       });
   }, []);
+
+  useEffect(() => {
+    setValue("medlemskapsperioder", mapInitialMedlemskapsperioder(lagredeMedlemskapsperioder));
+  }, [lagredeMedlemskapsperioder]);
 
   // Innlasting ved valg av år, oppretter eller henter årsavregning
   useEffect(() => {
@@ -251,7 +257,6 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
       totaltForskuddsvisFakturert: "",
     } as FieldValue<AarsavregningFormValuesProps>,
   });
-
   const {
     fields: medlemskapsperioderFields,
     append: medlemskapsperioderAppend,
@@ -433,6 +438,23 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
     medlemskapsperioderAppend(nyMedlemskapsperiode);
   };
 
+  const handleSlett = async (index: number) => {
+    const medlemskapsperiode = formValues.medlemskapsperioder[index];
+
+    if (medlemskapsperiode.ny) {
+      medlemskapsperioderRemove(index);
+    } else {
+      const response = await dispatch(
+        medlemskapsperioderOperations.slettMedlemskapsperiode(behandlingID, medlemskapsperiode.periodeId)
+      );
+      if (kallFeilet(response)) {
+        medlemskapsperioderUpdate(index, { ...medlemskapsperiode, feil: mapFeil(response) });
+      } else {
+        medlemskapsperioderRemove(index);
+      }
+    }
+  };
+
   return (
     <div className="vurderingAarsavregning">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Årsavregning</Nav.Typo.Innholdstittel>
@@ -512,18 +534,20 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
         <Nav.Typo.Systemtittel>Inntekts- og skatteopplysninger for endelig trygdeavgift</Nav.Typo.Systemtittel>
       )}
 
-      {erIngenGrunnlag && (
-        <Medlemskapsperioder
-          redigerbart={redigerbart}
-          control={control}
-          fields={medlemskapsperioderFields}
-          remove={medlemskapsperioderRemove}
-          formValues={formValues}
-          bestemmelser={bestemmelser}
-          handleChange={debouncedLagreMedlemskapsperioder}
-          handleLeggTil={handleLeggTilMedlemskapsperiode}
-        />
-      )}
+      {erIngenGrunnlag &&
+        medlemskapsperioderFields.map((field, index) => (
+          <Medlemskapsperioder
+            redigerbart={redigerbart}
+            control={control}
+            field={field}
+            index={index}
+            remove={handleSlett}
+            formValues={formValues}
+            bestemmelser={bestemmelser}
+            handleChange={debouncedLagreMedlemskapsperioder}
+            handleLeggTil={handleLeggTilMedlemskapsperiode}
+          />
+        ))}
 
       {(erAvvik || erIngenGrunnlag) && (
         <GrunnlagsopplysningerSkjema
