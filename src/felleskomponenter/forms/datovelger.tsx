@@ -17,13 +17,14 @@ interface DatovelgerComponentProps {
   feil?: string;
   onChange?: (dato: string) => void;
   className?: string;
+  visFeil?: boolean;
 }
 
 type InnerDatovelgerComponentProps = DatovelgerComponentProps & RegisterHookFormProps;
 
 const InnerDatovelgerComponent = forwardRef<HTMLSelectElement, InnerDatovelgerComponentProps>(
   (
-    { label, readOnly, bredde, minDate, maxDate, feil, onChange, ...rest }: InnerDatovelgerComponentProps,
+    { label, readOnly, bredde, minDate, maxDate, feil, onChange, visFeil, ...rest }: InnerDatovelgerComponentProps,
     _ref: any
   ) => {
     return (
@@ -38,6 +39,7 @@ const InnerDatovelgerComponent = forwardRef<HTMLSelectElement, InnerDatovelgerCo
           readOnly={readOnly}
           minDate={minDate}
           maxDate={maxDate}
+          visFeil={visFeil}
         />
       </div>
     );

@@ -19,6 +19,7 @@ interface SkatteforholdsperioderProps {
   append: (skatteforhold: Skatteforhold) => void;
   redigerbart: boolean;
   defaultPeriode?: { fomDato: string; tomDato: string };
+  visValideringsfeilmelding?: boolean;
 }
 
 export const Skatteforholdsperioder = ({
@@ -29,6 +30,7 @@ export const Skatteforholdsperioder = ({
   redigerbart,
   defaultPeriode,
   fields,
+  visValideringsfeilmelding = true,
 }: SkatteforholdsperioderProps) => {
   return (
     <div className="skatteforholdsperioder">
@@ -41,6 +43,7 @@ export const Skatteforholdsperioder = ({
                 name={`skatteforholdsperioder[${index}].fomDato`}
                 readOnly={!redigerbart}
                 control={control}
+                visFeil={visValideringsfeilmelding}
               />
             </Nav.Column>
 
@@ -50,6 +53,7 @@ export const Skatteforholdsperioder = ({
                 readOnly={!redigerbart}
                 control={control}
                 minDate={Utils.dato.norskStringTilDate(formValues.skatteforholdsperioder[index].fomDato)}
+                visFeil={visValideringsfeilmelding}
               />
             </Nav.Column>
 
