@@ -338,9 +338,6 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
 
   // erAvvik trigger en beregning på gammelt grunnlag etter å ha oppdatert skjemaverdier i håndterAvvik. Dette må gjøres for å oppdatere lagrede verdier i api
   useEffect(() => {
-    console.log(redigerbart && erAvvik && !isValidating && formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType));
-
-    console.log({ redigerbart });
     if (
       redigerbart &&
       (erAvvik || erIngenGrunnlag) &&
@@ -396,9 +393,9 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
       tomDato: Utils.dato.formatterDatoTilISO(medlemskapsperiode.tomDato, "") as string,
       trygdedekning: medlemskapsperiode.trygdedekning,
       bestemmelse: medlemskapsperiode.bestemmelse,
-      innvilgelsesResultat: "INNVILGET",
+      innvilgelsesResultat: MKV.Koder.innvilgelsesResultat.INNVILGET,
     };
-
+    console.log({ medlemskapsperiode });
     const response: any = await (medlemskapsperiode.ny
       ? dispatch(medlemskapsperioderOperations.opprettMedlemskapsperiode(behandlingID, periodeRequest))
       : dispatch(
@@ -520,6 +517,10 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
           <Nav.Radio value={false}>Nei</Nav.Radio>
         </Nav.RadioGroup>
       )}
+      {(erAvvik || erIngenGrunnlag) && (
+        <Nav.Typo.Systemtittel>Inntekts- og skatteopplysninger for endelig trygdeavgift</Nav.Typo.Systemtittel>
+      )}
+
       {erIngenGrunnlag && (
         <Medlemskapsperioder
           redigerbart={redigerbart}
@@ -534,22 +535,21 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
         />
       )}
 
-      {erAvvik ||
-        (erIngenGrunnlag && (
-          <GrunnlagsopplysningerSkjema
-            formValues={formValues}
-            inntektFields={inntektFields}
-            skattFields={skattFields}
-            control={control}
-            inntektUpdate={inntektUpdate}
-            inntektRemove={inntektRemove}
-            inntektAppend={inntektAppend}
-            skattRemove={skattRemove}
-            skattAppend={skattAppend}
-            redigerbart={redigerbart}
-            medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!!}
-          />
-        ))}
+      {(erAvvik || erIngenGrunnlag) && (
+        <GrunnlagsopplysningerSkjema
+          formValues={formValues}
+          inntektFields={inntektFields}
+          skattFields={skattFields}
+          control={control}
+          inntektUpdate={inntektUpdate}
+          inntektRemove={inntektRemove}
+          inntektAppend={inntektAppend}
+          skattRemove={skattRemove}
+          skattAppend={skattAppend}
+          redigerbart={redigerbart}
+          medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!!}
+        />
+      )}
 
       {(erAvvik || erIngenGrunnlag) && formIsValid && aarsavregningResponse?.nyttGrunnlag && (
         <SumArsavregningTabell

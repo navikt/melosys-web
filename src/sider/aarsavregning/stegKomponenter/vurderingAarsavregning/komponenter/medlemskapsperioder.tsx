@@ -13,7 +13,7 @@ import * as Utils from "../../../../../utils";
 import { useEffect, useState } from "react";
 import { FieldArrayProps, FormValuesProps } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
 import { Medlemskapsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
-import "./medlemskapsperioder.less";
+import "./medlemskapsperioder.css";
 
 export interface PeriodeElementerProps {
   redigerbart: boolean;
@@ -54,13 +54,13 @@ export const Medlemskapsperioder = ({
     <div className="medlemskapsperioder">
       <Nav.Typo.Undertittel>{tittel}</Nav.Typo.Undertittel>
 
-      <div className="skjema__panel">
+      <div>
         {fields?.map((field, index) => (
           <div key={field.id}>
-            <Nav.Row className="skjema__panel__rad">
+            <Nav.Row className="medlemskapsperioder__rad">
               <Nav.Column className="dato">
                 <Forms.Datovelger
-                  label={index === 0 ? "Fra og med" : ""}
+                  label={index === 0 ? "Medlemskapsperiode" : ""}
                   control={control}
                   name={`medlemskapsperioder[${index}].fomDato`}
                   aria-label={`Fra og med periode ${index + 1}`}
@@ -72,7 +72,7 @@ export const Medlemskapsperioder = ({
               </Nav.Column>
               <Nav.Column className="dato">
                 <Forms.Datovelger
-                  label={index === 0 ? "Til og med" : ""}
+                  label=""
                   control={control}
                   name={`medlemskapsperioder[${index}].tomDato`}
                   aria-label={`Til og med periode ${index + 1}`}
@@ -83,7 +83,7 @@ export const Medlemskapsperioder = ({
                   }
                 />
               </Nav.Column>
-              <Nav.Column>
+              <Nav.Column className="bestemmelse">
                 <Forms.Select
                   name={`medlemskapsperioder[${index}].bestemmelse`}
                   label={index === 0 ? "Bestemmelse" : ""}
@@ -103,7 +103,7 @@ export const Medlemskapsperioder = ({
                   ))}
                 </Forms.Select>
               </Nav.Column>
-              <Nav.Column>
+              <Nav.Column className="trygdedekning">
                 <Forms.Select
                   name={`medlemskapsperioder[${index}].trygdedekning`}
                   label={index === 0 ? "Dekning" : ""}
@@ -131,11 +131,11 @@ export const Medlemskapsperioder = ({
           </div>
         ))}
         {visLeggTil && redigerbart && (
-          <Nav.Row className="skillestrek">
+          <div className="legg-til__rad">
             <Mui.Lenkeknapp onClick={handleLeggTil} ikon={Ikoner.Add}>
               Legg til periode
             </Mui.Lenkeknapp>
-          </Nav.Row>
+          </div>
         )}
       </div>
     </div>
