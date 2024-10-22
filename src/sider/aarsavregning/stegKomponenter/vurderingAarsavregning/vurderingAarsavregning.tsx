@@ -378,15 +378,6 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
     setValgtÅr(år || null);
   };
 
-  const feltErFyltInn = !formValues.medlemskapsperioder.some(
-    (periode: MedlemskapsperiodeProp) =>
-      Utils._isEmpty(periode.fomDato) ||
-      Utils._isEmpty(periode.trygdedekning) ||
-      Utils._isEmpty(periode.innvilgelsesResultat)
-  );
-
-  const visLeggTilNyPeriode = redigerbart && feltErFyltInn;
-
   const lagreMedlemskapsperiode = async (medlemskapsperiode: MedlemskapsperiodeProp, index: number) => {
     const periodeRequest = {
       fomDato: Utils.dato.formatterDatoTilISO(medlemskapsperiode.fomDato, "") as string,
@@ -395,7 +386,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
       bestemmelse: medlemskapsperiode.bestemmelse,
       innvilgelsesResultat: MKV.Koder.innvilgelsesResultat.INNVILGET,
     };
-    console.log({ medlemskapsperiode });
+
     const response: any = await (medlemskapsperiode.ny
       ? dispatch(medlemskapsperioderOperations.opprettMedlemskapsperiode(behandlingID, periodeRequest))
       : dispatch(
@@ -531,7 +522,6 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
           bestemmelser={bestemmelser}
           handleChange={debouncedLagreMedlemskapsperioder}
           handleLeggTil={handleLeggTilMedlemskapsperiode}
-          visLeggTil={visLeggTilNyPeriode}
         />
       )}
 

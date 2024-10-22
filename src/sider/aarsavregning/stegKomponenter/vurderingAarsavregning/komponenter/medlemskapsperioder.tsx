@@ -25,7 +25,6 @@ export interface PeriodeElementerProps {
   tittel?: string;
   handleChange: (medlemskapsperiode: Medlemskapsperiode[], index: number) => void;
   handleLeggTil: () => void;
-  visLeggTil: boolean;
 }
 
 export const Medlemskapsperioder = ({
@@ -38,7 +37,6 @@ export const Medlemskapsperioder = ({
   tittel,
   handleChange,
   handleLeggTil,
-  visLeggTil,
 }: PeriodeElementerProps) => {
   const [dekninger, setDekninger] = useState<[]>([]);
   const [valgtBestemmelse, setValgtBestemmelse] = useState<string>();
@@ -130,7 +128,7 @@ export const Medlemskapsperioder = ({
             </Nav.Row>
           </div>
         ))}
-        {visLeggTil && redigerbart && (
+        {redigerbart && (
           <div className="legg-til__rad">
             <Mui.Lenkeknapp onClick={handleLeggTil} ikon={Ikoner.Add}>
               Legg til periode
