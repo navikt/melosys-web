@@ -32,11 +32,39 @@ import { fagsakSelectors } from "../../../../ducks/fagsaker";
 import { NyBehandlingForTidligereAarsavregningMelding } from "../../../../felleskomponenter/alertmeldinger/alertmeldinger";
 import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
 
+import {
+  medlemskapsperioderOperations,
+  medlemskapsperioderSelectors,
+  medlemskapsperioderTypes,
+} from "../../../../ducks/medlemskapsperioder";
+import { MedlemskapsperiodeProp } from "../../../ftrl/saksbehandling/stegKomponenter/vurderingPeriode/komponenter/types";
+import { Medlemskapsperioder } from "./komponenter/medlemskapsperioder";
+
 interface Props {
   bekreft: () => void;
   aktivtSteg: boolean;
   oppdaterStatus: (isValid: boolean) => void;
 }
+
+const kallFeilet = (response: any): boolean => response.type === medlemskapsperioderTypes.FEILET;
+
+const mapFeil = (response: any) => response?.data?.message || response.data;
+
+const mapTilMedlemskapsperiodeProps = (
+  medlemskapsperiode: Api.MedlemAvFolketrygden.Medlemskapsperioder.Medlemskapsperiode
+): MedlemskapsperiodeProp => ({
+  ...medlemskapsperiode,
+  fomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.fomDato),
+  tomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.tomDato),
+  ny: false,
+  feil: undefined,
+  periodeId: medlemskapsperiode.id,
+});
+
+const mapInitialMedlemskapsperioder = (
+  medlemskapsperioder: Api.MedlemAvFolketrygden.Medlemskapsperioder.Medlemskapsperiode[]
+): MedlemskapsperiodeProp[] =>
+  [...medlemskapsperioder].sort((a, b) => Utils.dato.sorterEtterISOFomDato(a, b)).map(mapTilMedlemskapsperiodeProps);
 
 interface AarsavregningFormValuesProps extends FormValuesProps {
   totaltForskuddsvisFakturert?: number | string;
@@ -65,14 +93,25 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
   const [feil, setFeil] = useState<undefined | string>(undefined);
   const [aarsavregningResponse, setAarsavregningResponse] = useState<AarsavregningResponse | undefined>(undefined);
   const [nyVurderingÅrsavregning, setNyVurderingÅrsavregning] = useState<boolean>(false);
-  const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
-  const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
+  const [bestemmelser, setBestemmelser] = useState<[]>([]);
+
+  const lagretBestemmelse = useSelector(medlemskapsperioderSelectors.BestemmelseSelector);
+  const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
+  const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as any;
   const aarsavregningID = useSelector(behandlingsresultatSelectors.ÅrsavregningIDSelector);
-  const saksnummer = useSelector(fagsakSelectors.SaksnummerSelector);
+  const saksnummer = useSelector(fagsakSelectors.SaksnummerSelector) as any;
+  const lagredeMedlemskapsperioder = useSelector(medlemskapsperioderSelectors.AlleMedlemskapsperioderSelector);
+  const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const sisteMuligeÅr = new Date().getFullYear() - 1;
   const antallÅrTilbakeITid = 6;
   const muligeAar = Array.from({ length: antallÅrTilbakeITid }, (_, i) => sisteMuligeÅr - i);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (behandlingstema) {
+      Api.Ftrl.hentBestemmelser(behandlingstema).then((res: any) => setBestemmelser(res.bestemmelser));
+    }
+  }, [behandlingstema]);
 
   // TODO: Medlemskapsperioder må tilpasses behandlinger uten grunnlag.
   let innvilgetMedlemskapsperiode: { fom: string | undefined; tom: string | undefined } = {
@@ -191,6 +230,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
     control,
     watch,
     setValue,
+    trigger,
     formState: { isValid: formIsValid, isValidating },
   } = useForm({
     resolver: yupResolver(vurderingAarsavregningSchema),
@@ -201,11 +241,19 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
     },
     mode: "onChange",
     defaultValues: {
+      medlemskapsperioder: mapInitialMedlemskapsperioder(lagredeMedlemskapsperioder),
       skatteforholdsperioder: [{}],
       inntektskilder: [{}],
       totaltForskuddsvisFakturert: "",
     } as FieldValue<AarsavregningFormValuesProps>,
   });
+
+  const {
+    fields: medlemskapsperioderFields,
+    append: medlemskapsperioderAppend,
+    remove: medlemskapsperioderRemove,
+    update: medlemskapsperioderUpdate,
+  } = useFieldArray<FieldArrayProps, "medlemskapsperioder", "id">({ control, name: "medlemskapsperioder" });
 
   const {
     fields: skattFields,
@@ -320,6 +368,71 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
     setValgtÅr(år || null);
   };
 
+  const feltErFyltInn = !formValues.medlemskapsperioder.some(
+    (periode: MedlemskapsperiodeProp) =>
+      Utils._isEmpty(periode.fomDato) ||
+      Utils._isEmpty(periode.trygdedekning) ||
+      Utils._isEmpty(periode.innvilgelsesResultat)
+  );
+
+  const visLeggTilNyPeriode = redigerbart && feltErFyltInn;
+
+  const lagreMedlemskapsperiode = async (medlemskapsperiode: MedlemskapsperiodeProp, index: number) => {
+    const periodeRequest = {
+      fomDato: Utils.dato.formatterDatoTilISO(medlemskapsperiode.fomDato, "") as string,
+      tomDato: Utils.dato.formatterDatoTilISO(medlemskapsperiode.tomDato, "") as string,
+      trygdedekning: medlemskapsperiode.trygdedekning,
+      bestemmelse: medlemskapsperiode.bestemmelse,
+      innvilgelsesResultat: "INNVILGET",
+    };
+
+    const response: any = await (medlemskapsperiode.ny
+      ? dispatch(medlemskapsperioderOperations.opprettMedlemskapsperiode(behandlingID, periodeRequest))
+      : dispatch(
+          medlemskapsperioderOperations.oppdaterMedlemskapsperiode(
+            behandlingID,
+            medlemskapsperiode.periodeId,
+            periodeRequest
+          )
+        ));
+
+    if (kallFeilet(response)) {
+      medlemskapsperioderUpdate(index, { ...formValues.medlemskapsperioder[index], feil: mapFeil(response) });
+    } else {
+      // @ts-ignore
+      medlemskapsperioderUpdate(index, mapTilMedlemskapsperiodeProps(response.data));
+    }
+  };
+
+  const debouncedLagreMedlemskapsperioder = useCallback(
+    Utils._debounce(async (alleMedlemskapsperioder, overskrevetIndex) => {
+      const isValid = await trigger("medlemskapsperioder");
+      console.log({ alleMedlemskapsperioder });
+      if (isValid) {
+        // eslint-disable-next-line no-restricted-syntax
+        for (const periode of alleMedlemskapsperioder) {
+          const index = overskrevetIndex !== undefined ? overskrevetIndex : alleMedlemskapsperioder.indexOf(periode);
+          await lagreMedlemskapsperiode(periode, index);
+        }
+      }
+    }, 500),
+    []
+  );
+
+  const handleLeggTilMedlemskapsperiode = () => {
+    const nyMedlemskapsperiode = {
+      periodeId: Utils._uuid(),
+      ny: true,
+      fomDato: "",
+      tomDato: "",
+      innvilgelsesResultat: "",
+      trygdedekning: "",
+      bestemmelse: lagretBestemmelse,
+    };
+    // @ts-ignore
+    medlemskapsperioderAppend(nyMedlemskapsperiode);
+  };
+
   return (
     <div className="vurderingAarsavregning">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Årsavregning</Nav.Typo.Innholdstittel>
@@ -395,6 +508,18 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
           <Nav.Radio value={false}>Nei</Nav.Radio>
         </Nav.RadioGroup>
       )}
+
+      <Medlemskapsperioder
+        redigerbart={redigerbart}
+        control={control}
+        fields={medlemskapsperioderFields}
+        remove={medlemskapsperioderRemove}
+        formValues={formValues}
+        bestemmelser={bestemmelser}
+        handleChange={debouncedLagreMedlemskapsperioder}
+        handleLeggTil={handleLeggTilMedlemskapsperiode}
+        visLeggTil={visLeggTilNyPeriode}
+      />
 
       {erAvvik && (
         <GrunnlagsopplysningerSkjema
