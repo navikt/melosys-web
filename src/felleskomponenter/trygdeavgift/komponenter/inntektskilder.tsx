@@ -42,7 +42,6 @@ interface InntektskilderProps {
   defaultPeriode?: { fomDato: string; tomDato: string };
   medlemskapsTypeErPliktig: boolean;
   skalViseErMaanedsBelopRadioGroup?: boolean;
-  visValideringsfeilmelding?: boolean;
 }
 
 export const Inntektskilder = ({
@@ -56,7 +55,6 @@ export const Inntektskilder = ({
   fields,
   medlemskapsTypeErPliktig,
   skalViseErMaanedsBelopRadioGroup,
-  visValideringsfeilmelding = true,
 }: InntektskilderProps) => {
   const settesDefaultArbAvgBetales = (kildetype?: string) => ![INNTEKT_FRA_UTLANDET, MISJONÆR].includes(kildetype);
 
@@ -96,7 +94,6 @@ export const Inntektskilder = ({
                   name={`inntektskilder[${index}].fomDato`}
                   readOnly={!redigerbart}
                   control={control}
-                  visFeil={visValideringsfeilmelding}
                 />
               </Nav.Column>
               <Nav.Column className="dato dato__tom">
@@ -105,7 +102,6 @@ export const Inntektskilder = ({
                   readOnly={!redigerbart}
                   control={control}
                   minDate={Utils.dato.norskStringTilDate(formValues.inntektskilder[index].fomDato)}
-                  visFeil={visValideringsfeilmelding}
                 />
               </Nav.Column>
 

@@ -47,7 +47,6 @@ const GrunnlagsopplysningerSkjema = ({
         append={skattAppend}
         control={control}
         fields={skattFields}
-        visValideringsfeilmelding={false}
       />
       <Inntektskilder
         formValues={formValues}
@@ -59,7 +58,6 @@ const GrunnlagsopplysningerSkjema = ({
         fields={inntektFields}
         medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!!}
         skalViseErMaanedsBelopRadioGroup
-        visValideringsfeilmelding={false}
       />
     </div>
   );
