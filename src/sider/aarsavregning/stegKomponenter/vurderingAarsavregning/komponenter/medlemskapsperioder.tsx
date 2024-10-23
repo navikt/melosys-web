@@ -1,4 +1,4 @@
-import { Control, FieldArrayWithId } from "react-hook-form";
+import { Control, FieldArrayWithId, UseFieldArrayUpdate } from "react-hook-form";
 import * as Api from "../../../../../services/api";
 
 import MKV from "../../../../../melosyskodeverk";
@@ -25,6 +25,7 @@ export interface PeriodeElementerProps {
   tittel?: string;
   handleChange: (medlemskapsperiode: Medlemskapsperiode[], index: number) => void;
   handleLeggTil: () => void;
+  handleUpdate: UseFieldArrayUpdate<FieldArrayProps, "medlemskapsperioder">;
   index: number;
 }
 
@@ -38,17 +39,18 @@ export const Medlemskapsperioder = ({
   tittel,
   handleChange,
   handleLeggTil,
+  handleUpdate,
   index,
 }: PeriodeElementerProps) => {
-  const [dekninger, setDekninger] = useState<[]>([]);
-  const [valgtBestemmelse, setValgtBestemmelse] = useState<string>(field.bestemmelse);
-  useEffect(() => {
-    if (valgtBestemmelse) {
-      Api.LovligeKombinasjoner.hentTrygdedekninger(valgtBestemmelse).then(setDekninger);
-    }
-  }, [valgtBestemmelse]);
-  const kanSlettePeriode = redigerbart && formValues.medlemskapsperioder.length !== 1;
+  const [trygdedekninger, setTrygdedekninger] = useState<[]>([]);
 
+  useEffect(() => {
+    if (field.bestemmelse) {
+      Api.LovligeKombinasjoner.hentTrygdedekninger(field.bestemmelse).then(setTrygdedekninger);
+    }
+  }, [field.bestemmelse]);
+
+  const kanSlettePeriode = redigerbart && formValues.medlemskapsperioder.length !== 1;
   return (
     <div className="medlemskapsperioder">
       <Nav.Typo.Undertittel>{tittel}</Nav.Typo.Undertittel>
@@ -60,12 +62,17 @@ export const Medlemskapsperioder = ({
               <Forms.Datovelger
                 label={index === 0 ? "Medlemskapsperiode" : ""}
                 control={control}
+                minDate={
+                  formValues.medlemskapsperioder[index - 1] !== undefined
+                    ? Utils.dato.norskStringTilDate(formValues.medlemskapsperioder[index - 1].tomDato)
+                    : undefined
+                }
                 name={`medlemskapsperioder[${index}].fomDato`}
                 aria-label={`Fra og med periode ${index + 1}`}
                 readOnly={!redigerbart}
-                onChange={(value) =>
-                  handleChange([{ ...formValues.medlemskapsperioder[index], fomDato: value }], index)
-                }
+                onChange={(value) => {
+                  handleChange([{ ...formValues.medlemskapsperioder[index], fomDato: value }], index);
+                }}
               />
             </Nav.Column>
             <Nav.Column className="dato">
@@ -76,9 +83,9 @@ export const Medlemskapsperioder = ({
                 aria-label={`Til og med periode ${index + 1}`}
                 minDate={Utils.dato.norskStringTilDate(formValues.medlemskapsperioder[index].fomDato)}
                 readOnly={!redigerbart}
-                onChange={(value) =>
-                  handleChange([{ ...formValues.medlemskapsperioder[index], tomDato: value }], index)
-                }
+                onChange={(value) => {
+                  handleChange([{ ...formValues.medlemskapsperioder[index], tomDato: value }], index);
+                }}
               />
             </Nav.Column>
             <Nav.Column className="bestemmelse">
@@ -90,8 +97,8 @@ export const Medlemskapsperioder = ({
                 control={control}
                 readOnly={!redigerbart}
                 onChange={(bestemmelse) => {
-                  setValgtBestemmelse(bestemmelse);
                   handleChange([{ ...formValues.medlemskapsperioder[index], bestemmelse }], index);
+                  handleUpdate(index, { ...formValues.medlemskapsperioder[index], trygdedekning: "" });
                 }}
               >
                 {bestemmelser.map((bestemmelse: any) => (
@@ -113,7 +120,7 @@ export const Medlemskapsperioder = ({
                   handleChange([{ ...formValues.medlemskapsperioder[index], trygdedekning: value }], index)
                 }
               >
-                {dekninger.map((dekning: any) => (
+                {trygdedekninger.map((dekning: any) => (
                   <option key={dekning} value={dekning}>
                     {KV.kodeTilTerm(dekning, MKV.KTObjects.trygdedekninger)}
                   </option>

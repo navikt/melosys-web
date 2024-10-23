@@ -15,8 +15,6 @@ const {
 } = MKV.Koder.inntektskildetype;
 const { IKKE_SKATTEPLIKTIG } = MKV.Koder.skatteplikttype;
 const UTENFOR_MEDLEMSKAPSPERIODEN = { melding: "Utenfor medlemskapsperioden" };
-const BESTEMMELSE_FELT_KREVES = { melding: "Du må velge bestemmelse" };
-const TRYGDEDEKNING_FELT_KREVES = { melding: "Du må velge trygdedekning" };
 
 export const arbAvgBetalesKreves = (kildetype, medlemskapsTypeErPliktig) =>
   !medlemskapsTypeErPliktig && kildetype !== MISJONÆR;
@@ -65,6 +63,20 @@ const kreverInntektskilder = (medlemskapsTypeErPliktig, options) => {
   return true;
 };
 
+const erPeriodeSisteMedlemskapsperiode = (periodeId, formValues) => {
+  const medlemskapsperioder = formValues?.medlemskapsperioder || [];
+  return medlemskapsperioder[medlemskapsperioder.length - 1]?.periodeId?.toString() === periodeId;
+};
+
+const åpenTomNårIkkeSistePeriodeTest = {
+  name: "Åpen sluttdato ved etterfølgende perioder",
+  message: { melding: "Sluttdato må fylles ut når det finnes etterfølgende perioder" },
+  test: (tomDato, schema) => {
+    const erSisteMedlemskapsperiode = erPeriodeSisteMedlemskapsperiode(schema.parent.periodeId, schema.from[1].value);
+    return !(!erSisteMedlemskapsperiode && Utils._isEmpty(tomDato));
+  },
+};
+
 const vurdering_aarsavregning = object().shape({
   medlemskapsperioder: array()
     .min(1, "Minst en medlemskapsperiode")
@@ -76,10 +88,11 @@ const vurdering_aarsavregning = object().shape({
           .required(MAA_FYLLES_UT),
         tomDato: string()
           .erGyldigDato()
+          .erEtterDatofelt("fomDato")
           .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
-          .erEtterDatofelt("fomDato"),
-        trygdedekning: string().required(TRYGDEDEKNING_FELT_KREVES),
-        bestemmelse: string().required(BESTEMMELSE_FELT_KREVES),
+          .test(åpenTomNårIkkeSistePeriodeTest),
+        trygdedekning: string().required(),
+        bestemmelse: string().required(),
       })
     ),
   skatteforholdsperioder: array().when(["$erÅpenSluttDato"], {

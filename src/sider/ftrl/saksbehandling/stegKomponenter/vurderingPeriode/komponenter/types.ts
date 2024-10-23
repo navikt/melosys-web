@@ -9,6 +9,7 @@ export type MedlemskapsperiodeProp = {
   innvilgelsesResultat: string;
   bestemmelse: string;
   trygdedekning: string;
+  trygdedekninger?: [];
 };
 
 export interface FieldArrayProps {
