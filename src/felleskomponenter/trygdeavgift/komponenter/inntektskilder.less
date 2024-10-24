@@ -1,78 +1,82 @@
 .inntektskilder {
+  overflow-y: hidden;
+  margin-bottom: 2rem;
+
   .navds-form-field {
     margin-bottom: 0;
     gap: unset;
   }
 
-  .inntetskilder__container {
-    overflow-y: hidden;
-    margin-bottom: 2rem;
+  .legg-til__rad {
+    margin: 0.5rem 0;
+  }
 
-    .legg-til__rad {
-      margin: 0.5rem 0;
-    }
+  .inntektskilde__rad__outer {
+    width: fit-content;
+    border-bottom: 1px solid #979797;
 
-    .inntektskilde__rad__outer {
-      width: fit-content;
-      border-bottom: 1px solid #979797;
+    .inntektskilde__rad {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-end;
+      padding: 0.25rem 0.5rem 0.25rem 0;
+      margin: 0;
 
-      .inntektskilde__rad {
+      > * {
+        min-width: 7.5rem;
+        margin-left: 0.75rem;
+      }
+
+      :first-child {
+        margin-left: 0;
+      }
+
+      .inntektskilde {
+        min-width: 12rem;
+      }
+
+      .brutto_inntekt {
         display: flex;
+        white-space: break-spaces;
         flex-direction: row;
-        align-items: flex-end;
-        padding: 0.25rem 0.5rem 0.25rem 0;
+        min-width: 9rem;
+        min-height: 2rem;
+        align-items: center;
+
+        input {
+          max-height: 2rem;
+        }
+      }
+
+      .radio-group {
+        display: flex;
+        min-width: 10rem;
+        min-height: 2rem;
+        align-items: center;
+      }
+
+      .ikkeRelevant {
+        min-width: 12rem;
         margin: 0;
+        display: flex;
+        flex-direction: column;
+        line-height: 1.25rem;
 
-        > * {
-          min-width: 7.5rem;
-          margin-left: 0.75rem;
-        }
-
-        :first-child {
-          margin-left: 0;
-        }
-
-        .inntektskilde {
-          min-width: 12rem;
-        }
-
-        .brutto_inntekt {
-          display: flex;
-          white-space: break-spaces;
-          flex-direction: row;
-          min-width: 9rem;
-          min-height: 2rem;
-          align-items: center;
-          input {
-            max-height: 2rem;
-          }
-        }
-
-        .radio-group {
-          display: flex;
-          min-width: 10rem;
-          min-height: 2rem;
-          align-items: center;
-        }
-
-        .ikkeRelevant {
-          min-width: 12rem;
+        p {
           margin: 0;
-          display: flex;
-          flex-direction: column;
-          line-height: 1.25rem;
-          p {
-            margin: 0;
-          }
-
-          .med-overskrift {
-            padding: 0.375rem 0;
-          }
         }
 
-        .slett__knapp {
-          min-width: unset;
+        .med-overskrift {
+          padding: 0.375rem 0;
         }
+      }
+
+      .slett__knapp {
+        min-width: unset;
+      }
+
+      .datovelger__feilmelding {
+        margin-bottom: 0;
       }
     }
   }
