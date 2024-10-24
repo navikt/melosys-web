@@ -79,7 +79,7 @@ export const Medlemskapsperioder = ({
             </Nav.Column>
             <Nav.Column className="dato">
               <Forms.Datovelger
-                label=""
+                label=" "
                 control={control}
                 name={`medlemskapsperioder[${index}].tomDato`}
                 aria-label={`Til og med periode ${index + 1}`}
