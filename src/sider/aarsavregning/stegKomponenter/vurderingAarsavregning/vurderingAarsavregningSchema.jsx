@@ -85,7 +85,7 @@ const vurdering_aarsavregning = object().shape({
         fomDato: string()
           .erGyldigDato()
           .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
-          .required(MAA_FYLLES_UT),
+          .required(),
         tomDato: string()
           .erGyldigDato()
           .erEtterDatofelt("fomDato")

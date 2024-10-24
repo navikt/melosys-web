@@ -91,7 +91,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
   const [aarsavregningResponse, setAarsavregningResponse] = useState<AarsavregningResponse | undefined>(undefined);
   const [nyVurderingÅrsavregning, setNyVurderingÅrsavregning] = useState<boolean>(false);
   const [bestemmelser, setBestemmelser] = useState<[]>([]);
-
+  const [visLeggTilMedlemskapsperioder, setVisLeggTilMedlemskapsperioder] = useState<boolean>(false);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as any;
   const aarsavregningID = useSelector(behandlingsresultatSelectors.ÅrsavregningIDSelector);
@@ -414,6 +414,9 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
           const index = overskrevetIndex !== undefined ? overskrevetIndex : alleMedlemskapsperioder.indexOf(periode);
           await lagreMedlemskapsperiode(periode, index);
         }
+        setVisLeggTilMedlemskapsperioder(true);
+      } else {
+        setVisLeggTilMedlemskapsperioder(false);
       }
     }, 1000),
     []
@@ -431,6 +434,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
     };
     // @ts-ignore
     medlemskapsperioderAppend(nyMedlemskapsperiode);
+    debouncedLagreMedlemskapsperioder(formValues.medlemskapsperioder, undefined);
   };
 
   const handleSlett = async (index: number) => {
@@ -441,6 +445,8 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
     } else {
       await dispatch(medlemskapsperioderOperations.slettMedlemskapsperiode(behandlingID, medlemskapsperiode.periodeId));
     }
+
+    setVisLeggTilMedlemskapsperioder(await trigger("medlemskapsperioder"));
   };
 
   return (
@@ -535,6 +541,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
             handleChange={debouncedLagreMedlemskapsperioder}
             handleUpdate={medlemskapsperioderUpdate}
             handleLeggTil={handleLeggTilMedlemskapsperiode}
+            visLeggTil={visLeggTilMedlemskapsperioder}
           />
         ))}
 

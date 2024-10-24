@@ -27,6 +27,7 @@ export interface PeriodeElementerProps {
   handleLeggTil: () => void;
   handleUpdate: UseFieldArrayUpdate<FieldArrayProps, "medlemskapsperioder">;
   index: number;
+  visLeggTil: boolean;
 }
 
 export const Medlemskapsperioder = ({
@@ -41,6 +42,7 @@ export const Medlemskapsperioder = ({
   handleLeggTil,
   handleUpdate,
   index,
+  visLeggTil,
 }: PeriodeElementerProps) => {
   const [trygdedekninger, setTrygdedekninger] = useState<[]>([]);
 
@@ -136,7 +138,7 @@ export const Medlemskapsperioder = ({
         </div>
         {redigerbart && formValues.medlemskapsperioder.length === index + 1 && (
           <div className="legg-til__rad">
-            <Mui.Lenkeknapp onClick={handleLeggTil} ikon={Ikoner.Add}>
+            <Mui.Lenkeknapp onClick={handleLeggTil} ikon={Ikoner.Add} disabled={!visLeggTil}>
               Legg til periode
             </Mui.Lenkeknapp>
           </div>
