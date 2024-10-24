@@ -83,8 +83,6 @@ const VurderingAvslaaUtpeking = ({
             label="Begrunnelse til utenlandsk myndighet (engelsk)"
             feltNavn="begrunnelseUtenlandskMyndighet"
             readOnly={!redigerbart}
-            visTellerFra={500}
-            maxLength={500}
           />
           <Skjema.RadioGroup
             legend="Anmodning om mer informasjon vil bli sendt"
@@ -99,13 +97,7 @@ const VurderingAvslaaUtpeking = ({
             label="Foreslå nytt lovvalgsland (valgfri)"
             disabled={!redigerbart}
           />
-          <Skjema.Textarea
-            label="Ytterligere informasjon (valgfri)"
-            feltNavn="fritekst"
-            readOnly={!redigerbart}
-            visTellerFra={500}
-            maxLength={500}
-          />
+          <Skjema.Textarea label="Ytterligere informasjon (valgfri)" feltNavn="fritekst" readOnly={!redigerbart} />
           <Dokumentliste behandlingID={behandlingID} dokumenter={pdfDokumenter} validateOnClick={vedKlikkForhandsvis} />
         </Fragment>
       )}

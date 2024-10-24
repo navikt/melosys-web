@@ -35,11 +35,9 @@ exports[`Notat > snapshot test 1`] = `
       </div>
       <div class="row uredigerbarTekst">
         <div class="col col-xs-12">
-          <div>
-            <p class="typo-normal">
-              Testtekst
-            </p>
-          </div>
+          <p class="typo-normal">
+            Testtekst
+          </p>
         </div>
       </div>
       <div class="row">

@@ -404,13 +404,12 @@ const Saksopplysninger = ({
                     <Nav.Column xs="6">
                       {ikkeGodkjentBegrunnelseKoder.includes("ANNET") && (
                         <Nav.Textarea
-                          disabled={!redigerbart}
+                          readOnly={!redigerbart}
                           label="Skriv inn begrunnelse for avslaget..."
                           onChange={textAreaOnChange}
                           value={begrunnelseFritekst}
                           maxLength={255}
-                          feil={ikkeGodkjentFeilmeldinger.begrunnelseFritekst}
-                          bredde="fullbredde"
+                          error={ikkeGodkjentFeilmeldinger.begrunnelseFritekst}
                         />
                       )}
                     </Nav.Column>

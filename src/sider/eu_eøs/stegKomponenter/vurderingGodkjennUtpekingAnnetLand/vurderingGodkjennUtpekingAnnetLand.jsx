@@ -103,7 +103,7 @@ export const VurderingGodkjennUtpekingAnnetLand = ({
               value={fritekst}
               onChange={(e) => setFritekst(e.target.value)}
               maxLength={500}
-              disabled={skjemaDisabled}
+              readOnly={skjemaDisabled}
             />
           </Nav.Row>
           <Nav.Row>{erBucAapen && <Dokumentliste behandlingID={behandlingID} dokumenter={dokumenter} />}</Nav.Row>
