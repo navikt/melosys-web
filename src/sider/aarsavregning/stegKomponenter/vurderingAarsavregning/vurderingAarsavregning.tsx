@@ -35,6 +35,7 @@ import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresul
 import { medlemskapsperioderOperations, medlemskapsperioderSelectors } from "../../../../ducks/medlemskapsperioder";
 import { MedlemskapsperiodeProp } from "../../../ftrl/saksbehandling/stegKomponenter/vurderingPeriode/komponenter/types";
 import { Medlemskapsperioder } from "./komponenter/medlemskapsperioder";
+import { InntektskildeDto, SkatteforholdDto } from "../../../../services/modules/trygdeavgift";
 
 interface Props {
   bekreft: () => void;
@@ -54,6 +55,31 @@ const mapTilMedlemskapsperiodeProps = (
   feil: undefined,
   periodeId: medlemskapsperiode.id,
 });
+
+const mapTilSkatteforholdProps = (skatteforhold?: SkatteforholdDto[]) => {
+  if (skatteforhold !== undefined) {
+    return skatteforhold?.map((forhold) => ({
+      fomDato: Utils.dato.formatterDatoTilNorsk(forhold.fomDato),
+      tomDato: Utils.dato.formatterDatoTilNorsk(forhold.tomDato),
+      skatteplikttype: forhold.skatteplikttype,
+    }));
+  }
+  return [{}];
+};
+
+const mapTilInntektskilderProps = (inntektskilder?: InntektskildeDto[]) => {
+  if (inntektskilder !== undefined) {
+    return inntektskilder?.map((kilde) => ({
+      fomDato: Utils.dato.formatterDatoTilNorsk(kilde.fomDato),
+      tomDato: Utils.dato.formatterDatoTilNorsk(kilde.tomDato),
+      kildetype: kilde.type,
+      arbAvgBetales: Utils.streng.boolTilUppercaseStreng(kilde.arbeidsgiversavgiftBetales),
+      bruttoInntekt: kilde.avgiftspliktigInntekt,
+      erMaanedsbelop: Utils.streng.boolTilUppercaseStreng(kilde.erMaanedsbelop),
+    }));
+  }
+  return [{}];
+};
 
 const mapInitialMedlemskapsperioder = (
   medlemskapsperioder: Api.MedlemAvFolketrygden.Medlemskapsperioder.Medlemskapsperiode[]
@@ -114,6 +140,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
     fom: undefined,
     tom: undefined,
   };
+
   const medlemskapsperioder =
     aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.medlemskapsperioder;
   if (medlemskapsperioder && !Utils._isEmpty(medlemskapsperioder)) {
@@ -140,6 +167,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
           }))
         : []
     );
+
     resetInntektskilder(
       !Utils._isEmpty(sorterteInntekstkilder)
         ? sorterteInntekstkilder.map((inntektskilde) => ({
@@ -185,8 +213,17 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
   }, []);
 
   useEffect(() => {
-    setValue("medlemskapsperioder", mapInitialMedlemskapsperioder(lagredeMedlemskapsperioder));
-  }, [lagredeMedlemskapsperioder]);
+    if (erIngenGrunnlag && lagredeMedlemskapsperioder)
+      setValue("medlemskapsperioder", mapInitialMedlemskapsperioder(lagredeMedlemskapsperioder));
+    setValue(
+      "skatteforholdsperioder",
+      mapTilSkatteforholdProps(aarsavregningResponse?.nyttGrunnlag?.trygdeavgiftsgrunnlag.skatteforholdsperioder)
+    );
+    setValue(
+      "inntektskilder",
+      mapTilInntektskilderProps(aarsavregningResponse?.nyttGrunnlag?.trygdeavgiftsgrunnlag.inntektskperioder)
+    );
+  }, [lagredeMedlemskapsperioder, erIngenGrunnlag]);
 
   // Innlasting ved valg av år, oppretter eller henter årsavregning
   useEffect(() => {
@@ -247,12 +284,13 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
     mode: "onChange",
     defaultValues: {
       medlemskapsperioder: mapInitialMedlemskapsperioder(lagredeMedlemskapsperioder),
-      skatteforholdsperioder: [{}],
+      skatteforholdsperioder: mapTilSkatteforholdProps(
+        aarsavregningResponse?.nyttGrunnlag?.trygdeavgiftsgrunnlag.skatteforholdsperioder
+      ),
       inntektskilder: [{}],
       totaltForskuddsvisFakturert: "",
     } as FieldValue<AarsavregningFormValuesProps>,
   });
-
   const {
     fields: medlemskapsperioderFields,
     append: medlemskapsperioderAppend,
@@ -351,7 +389,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
     ) {
       debounceBeregnTrygdeavgiftsperioder(formValues);
     }
-  }, [isValidating, erAvvik]);
+  }, [isValidating, erAvvik, erIngenGrunnlag]);
 
   const stegErGyldig = Boolean(
     erAvvik === false || (formIsValid && (erAvvik || erIngenGrunnlag) && aarsavregningResponse?.nyttGrunnlag)
