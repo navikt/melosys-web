@@ -320,7 +320,6 @@ const VurderingVedtak = ({
                 label="Ytterligere informasjon til SED (valgfri)"
                 feltNavn="fritekstSed"
                 readOnly={!redigerbart}
-                visTellerFra={maksAntallTegn}
                 maxLength={maksAntallTegn}
               />
             </Nav.Column>

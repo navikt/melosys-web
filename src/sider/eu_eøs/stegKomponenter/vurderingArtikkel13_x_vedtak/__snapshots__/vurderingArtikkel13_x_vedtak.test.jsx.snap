@@ -66,36 +66,45 @@ exports[`VurderingArtikkel13_x_Vedtak > snapshot test 1`] = `
     </div>
     <div class="row fritekst">
       <div class="col col-xs-8">
-        <div class="skjemaelement textarea__container">
+        <div class="melosys-textarea navds-form-field navds-form-field--small">
           <label
-            class="skjemaelement__label"
             for="333"
+            class="navds-form-field__label navds-label navds-label--small"
           >
             Fritekst til begrunnelse
           </label>
-          <div class="textarea--medMeta__wrapper">
-            <span
-              id="333"
-              class="sr-only"
-            >
-              Tekstområde med plass til 20 tegn.
-            </span>
-            <textarea
-              class="skjemaelement__input input--fullbredde skjemaelement__input textarea--medMeta"
-              id="333"
-              name="333"
-              style="height: 30px;"
-              aria-inval
-              aria-describedby="333"
-              spellcheck="true"
-            >
-            </textarea>
-            <p class="textarea--medMeta__teller">
-            </p>
-          </div>
-          <div
-            class="textareamirror"
+          <textarea
+            rows="2"
+            style="--__ac-textarea-height: -4px; overflow: hidden;"
+            textareaclass="skjemaelement__input input--fullbredde"
+            name="333"
+            id="333"
+            class="navds-textarea__input navds-body-short navds-body-short--small"
+            aria-describedby="333"
+          >
+          </textarea>
+          <textarea
             aria-hidden="true"
+            class="navds-textarea__input navds-body-short navds-body-short--small"
+            readonly
+            tabindex="-1"
+            style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0);"
+          >
+          </textarea>
+          <span
+            id="333"
+            class="navds-sr-only"
+          >
+            Tekstområde med plass til 500 tegn.
+          </span>
+          <p class="navds-textarea__counter navds-body-short navds-body-short--small">
+            500 tegn igjen
+          </p>
+          <div
+            class="navds-form-field__error"
+            id="333"
+            aria-relevant="additions removals"
+            aria-live="polite"
           >
           </div>
         </div>
@@ -103,39 +112,45 @@ exports[`VurderingArtikkel13_x_Vedtak > snapshot test 1`] = `
     </div>
     <div class="row fritekstSed">
       <div class="col col-xs-8">
-        <div class="skjemaelement textarea__container">
+        <div class="melosys-textarea navds-form-field navds-form-field--small">
           <label
-            class="skjemaelement__label"
             for="333"
+            class="navds-form-field__label navds-label navds-label--small"
           >
             Ytterligere informasjon til SED (valgfri)
           </label>
-          <div class="textarea--medMeta__wrapper">
-            <span
-              id="333"
-              class="sr-only"
-            >
-              Tekstområde med plass til 20 tegn.
-            </span>
-            <textarea
-              class="skjemaelement__input input--fullbredde skjemaelement__input textarea--medMeta"
-              id="333"
-              name="333"
-              style="height: 30px;"
-              aria-inval
-              aria-describedby="333"
-              spellcheck="true"
-            >
-            </textarea>
-            <p class="textarea--medMeta__teller">
-              <span>
-                Du har 500 tegn igjen.
-              </span>
-            </p>
-          </div>
-          <div
-            class="textareamirror"
+          <textarea
+            rows="2"
+            style="--__ac-textarea-height: -4px; overflow: hidden;"
+            textareaclass="skjemaelement__input input--fullbredde"
+            name="333"
+            id="333"
+            class="navds-textarea__input navds-body-short navds-body-short--small"
+            aria-describedby="333"
+          >
+          </textarea>
+          <textarea
             aria-hidden="true"
+            class="navds-textarea__input navds-body-short navds-body-short--small"
+            readonly
+            tabindex="-1"
+            style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0);"
+          >
+          </textarea>
+          <span
+            id="333"
+            class="navds-sr-only"
+          >
+            Tekstområde med plass til 500 tegn.
+          </span>
+          <p class="navds-textarea__counter navds-body-short navds-body-short--small">
+            500 tegn igjen
+          </p>
+          <div
+            class="navds-form-field__error"
+            id="333"
+            aria-relevant="additions removals"
+            aria-live="polite"
           >
           </div>
         </div>

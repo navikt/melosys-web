@@ -167,13 +167,13 @@ const VurderingArtikkel16Anmodning = ({
     setLovvalgFeilmelding(undefined);
   };
 
-  const handleEndretBegrunnelseFritekst = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleEndretBegrunnelseFritekst = (event: ChangeEvent<HTMLTextAreaElement>) => {
     setFritekstFeilmelding(undefined);
     const { id, value } = event.target;
     oppdaterData(lagVilkarbegrunnelse(id, null, value));
   };
 
-  const handleEndretBegrunnelseFritekstEngelsk = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleEndretBegrunnelseFritekstEngelsk = (event: ChangeEvent<HTMLTextAreaElement>) => {
     setFritekstSEDFeilmelding(undefined);
     const { id, value } = event.target;
     oppdaterData(lagVilkarbegrunnelse(id, null, null, value));
@@ -370,13 +370,12 @@ const VurderingArtikkel16Anmodning = ({
                 id={feltNavnFraBestemmelse}
                 label={begrunnelseFritekstBrevLabel}
                 placeholder="Skriv begrunnelsen her."
-                disabled={!redigerbart}
+                readOnly={!redigerbart}
                 onBlur={lagreVilkarHandler}
                 onChange={handleEndretBegrunnelseFritekst}
                 value={unntaksvilkår.begrunnelseFritekst ?? ""}
-                feil={fritekstFeilmelding}
+                error={fritekstFeilmelding}
                 maxLength={1500}
-                bredde="fullbredde"
               />
               {redigerbart && (
                 <Nav.Textarea
@@ -386,9 +385,8 @@ const VurderingArtikkel16Anmodning = ({
                   onBlur={lagreVilkarHandler}
                   onChange={handleEndretBegrunnelseFritekstEngelsk}
                   value={unntaksvilkår.begrunnelseFritekstEngelsk ?? ""}
-                  feil={fritekstSEDFeilmelding}
+                  error={fritekstSEDFeilmelding}
                   maxLength={255}
-                  bredde="fullbredde"
                 />
               )}
             </Nav.Column>
@@ -406,7 +404,6 @@ const VurderingArtikkel16Anmodning = ({
                 label={<Nav.Typo.Element>Ytterligere informasjon til SED (valgfri)</Nav.Typo.Element>}
                 feltNavn="fritekstSed"
                 readOnly={!redigerbart}
-                visTellerFra={maksAntallTegn}
                 maxLength={maksAntallTegn}
               />
             </Nav.Column>

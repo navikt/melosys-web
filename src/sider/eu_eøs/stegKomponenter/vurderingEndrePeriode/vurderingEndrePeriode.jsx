@@ -272,7 +272,7 @@ class VurderingEndrePeriode extends Component {
                 label="Ytterligere informasjon til SED (valgfri)"
                 value={fritekstSed}
                 onChange={(e) => this.setState({ fritekstSed: e.target.value })}
-                disabled={!redigerbart}
+                readOnly={!redigerbart}
                 maxLength={500}
               />
             </Nav.Column>

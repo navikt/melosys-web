@@ -204,8 +204,6 @@ export const VurderingArtikkel13UtpekLand = ({
               label="Ytterligere informasjon til SED (valgfri)"
               feltNavn="fritekstSed"
               readOnly={!redigerbart}
-              visTellerFra={500}
-              maxLength={500}
             />
           </Nav.Column>
         </Nav.Row>
