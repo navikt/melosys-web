@@ -149,6 +149,15 @@ export const VurderingArtikkel13UtpekLand = ({
 
   const visLandvelger = erOffentligArbeidUtland || harLonnetArbeidAnnetLand;
   const lovvalgslandTittel = visLandvelger ? "Velg lovvalgsland" : "Lovvalgsland";
+  const mottakerInstitusjonKrevesMenErIkkeSatt =
+    !Utils._isEmpty(formValues.mottakerinstitusjoner) &&
+    formValues.mottakerinstitusjoner.some((mottakerInstitusjon) => {
+      return (
+        mottakerInstitusjon.kode === lovvalgsland &&
+        mottakerInstitusjon.kreverMottakerinstitusjon &&
+        !mottakerInstitusjon.id
+      );
+    });
 
   return (
     <div className="vurderingArtikkel13UtpekLand">
@@ -220,8 +229,8 @@ export const VurderingArtikkel13UtpekLand = ({
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="7">
-          {redigerbart && (
-            <Dokumentliste behandlingID={behandlingID} dokumenter={pdfDokumenter} validateOnClick={validerForm()} />
+          {redigerbart && !mottakerInstitusjonKrevesMenErIkkeSatt && (
+            <Dokumentliste behandlingID={behandlingID} dokumenter={pdfDokumenter} validateOnClick={validerForm} />
           )}
         </Nav.Column>
       </Nav.Row>
