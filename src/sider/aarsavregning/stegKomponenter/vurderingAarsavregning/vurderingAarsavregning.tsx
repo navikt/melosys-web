@@ -30,7 +30,7 @@ import { sorterEtterISOFomDato } from "../../../../utils/dato";
 import GrunnlagsopplysningerSkjema from "./komponenter/grunnlagsopplysningerSkjema";
 import { fagsakSelectors } from "../../../../ducks/fagsaker";
 import { NyBehandlingForTidligereAarsavregningMelding } from "../../../../felleskomponenter/alertmeldinger/alertmeldinger";
-import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
+import { behandlingsresultatOperations, behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
 
 import { medlemskapsperioderOperations, medlemskapsperioderSelectors } from "../../../../ducks/medlemskapsperioder";
 import { MedlemskapsperiodeProp } from "../../../ftrl/saksbehandling/stegKomponenter/vurderingPeriode/komponenter/types";
@@ -182,35 +182,38 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
     );
   };
 
-  // Initiell innlasting
+  console.log({ erAvvik });
+
   useEffect(() => {
     dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(behandlingID));
+    if (behandlingID && aarsavregningID) {
+      Api.Aarsavregning.hentAarsavregning(behandlingID, aarsavregningID)
+        .then((res) => {
+          if (res.tidligereGrunnlagsopplysninger === null) {
+            setErIngenGrunnlag(true);
+          }
+          setAarsavregningResponse(res);
+          // Benyttes for innhenting av saksopplysninger ifm. årsavregningsbehandlinger
+          dispatch({ type: OK, data: res });
+          setInitieltÅr(res.aar);
+          setValue("totaltForskuddsvisFakturert", res.avregning?.tidligereFakturertBeloep);
 
-    Api.Aarsavregning.hentAarsavregning(behandlingID, aarsavregningID)
-      .then((res) => {
-        if (res.tidligereGrunnlagsopplysninger === null) {
-          setErIngenGrunnlag(true);
-        }
-        setAarsavregningResponse(res);
-        // Benyttes for innhenting av saksopplysninger ifm. årsavregningsbehandlinger
-        dispatch({ type: OK, data: res });
-        setInitieltÅr(res.aar);
-        setValue("totaltForskuddsvisFakturert", res.avregning?.tidligereFakturertBeloep);
-        if (res.avvikFunnet !== null) {
-          setErAvvik(res.avvikFunnet);
-        }
-        if (res.avvikFunnet && res?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag) {
-          setSkjemaverdierFraTrygdeavgiftsgrunnlag(
-            res.nyttGrunnlag?.trygdeavgiftsgrunnlag || res.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag
-          );
-        }
-      })
-      .catch((err) => {
-        if (err.response?.status === 404) {
-          setAarsavregningResponse(undefined);
-        }
-      });
-  }, []);
+          if (res.avvikFunnet !== null) {
+            setErAvvik(res.avvikFunnet);
+          }
+          if (res.avvikFunnet && res?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag) {
+            setSkjemaverdierFraTrygdeavgiftsgrunnlag(
+              res.nyttGrunnlag?.trygdeavgiftsgrunnlag || res.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag
+            );
+          }
+        })
+        .catch((err) => {
+          if (err.response?.status === 404) {
+            setAarsavregningResponse(undefined);
+          }
+        });
+    }
+  }, [behandlingID, aarsavregningID]);
 
   useEffect(() => {
     if (erIngenGrunnlag && lagredeMedlemskapsperioder)
@@ -223,13 +226,12 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
       "inntektskilder",
       mapTilInntektskilderProps(aarsavregningResponse?.nyttGrunnlag?.trygdeavgiftsgrunnlag.inntektskperioder)
     );
-  }, [lagredeMedlemskapsperioder, erIngenGrunnlag]);
-
+  }, [lagredeMedlemskapsperioder, erIngenGrunnlag, aarsavregningResponse]);
   // Innlasting ved valg av år, oppretter eller henter årsavregning
   useEffect(() => {
     /* TODO: Refaktorert api skal ha nytt endepunkt som lar oss sjekke om et gitt år og behandlingID har en aktiv årsavregning.
-        Legg til kall mot dette endepunktet og kjør enten hent eller lag basert på responsen.
-     */
+    Legg til kall mot dette endepunktet og kjør enten hent eller lag basert på responsen.
+    */
     if (redigerbart && valgtÅr && valgtÅr !== aarsavregningResponse?.aar) {
       Api.Aarsavregning.hentFiltrertAarsavregningList(saksnummer, valgtÅr, FERDIGBEHANDLET).then((res) => {
         setNyVurderingÅrsavregning(res.length > 0);
@@ -244,11 +246,12 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
             setSkjemaverdierFraTrygdeavgiftsgrunnlag(res?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag);
           }
           setValue("totaltForskuddsvisFakturert", "");
-          setErAvvik(true);
+          dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(behandlingID));
         })
         .catch((error: any) => {
           setFeil(error.body?.message || error);
         });
+      dispatch(behandlingsresultatOperations.hent(behandlingID));
     }
   }, [valgtÅr]);
 
@@ -391,9 +394,9 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
     }
   }, [isValidating, erAvvik, erIngenGrunnlag]);
 
-  const stegErGyldig = Boolean(
-    erAvvik === false || (formIsValid && (erAvvik || erIngenGrunnlag) && aarsavregningResponse?.nyttGrunnlag)
-  );
+  const stegErGyldig =
+    (erAvvik === false && !erIngenGrunnlag) ||
+    Boolean(formIsValid && (erAvvik || erIngenGrunnlag) && aarsavregningResponse?.nyttGrunnlag);
 
   useEffect(() => {
     oppdaterStatus(stegErGyldig);
@@ -564,7 +567,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
           <Nav.Radio value={false}>Nei</Nav.Radio>
         </Nav.RadioGroup>
       )}
-      {(erAvvik || erIngenGrunnlag) && (
+      {(erAvvik || erIngenGrunnlag) && valgtÅr && (
         <Nav.Typo.Systemtittel>Inntekts- og skatteopplysninger for endelig trygdeavgift</Nav.Typo.Systemtittel>
       )}
 
