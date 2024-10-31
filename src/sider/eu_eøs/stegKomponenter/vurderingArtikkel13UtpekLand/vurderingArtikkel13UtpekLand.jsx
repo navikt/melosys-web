@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { change, getFormValues, isValid, reduxForm } from "redux-form";
 import PT from "prop-types";
@@ -32,6 +32,13 @@ import VurderingArtikkel13UtpekLandSchema from "./vurderingArtikkel13UtpekLandSc
 
 import "./vurderingArtikkel13UtpekLand.css";
 
+const nyUtpekingsperiodeErInnenforSoknadsperioden = (soknadsperiode, isoFomDato, isoTomDato) => {
+  return (
+    Utils.dato.erIPeriode(soknadsperiode.fom, soknadsperiode.tom, isoFomDato, "[]") &&
+    Utils.dato.erIPeriode(soknadsperiode.fom, soknadsperiode.tom, isoTomDato, "[]")
+  );
+};
+
 export const VurderingArtikkel13UtpekLand = ({
   redigerbart,
   behandlingID,
@@ -51,11 +58,17 @@ export const VurderingArtikkel13UtpekLand = ({
   tilbake,
   lagreUtpekingsperioder,
   landMedVesentligEllerRegistrertArbeid,
-  oppdaterMottakerinstitusjoner,
   byggUtpekingsperioder: gjenopprettOpprinneligUtpekingsperiode,
   endreUtpekingsperiode,
+  oppdaterForm,
 }) => {
   const [utpekingPending, setUtpekingPending] = useState(false);
+  const [fomDato, setFomDato] = useState(
+    Utils.dato.formatterDatoTilNorsk(utpekingsperiode?.fomDato || soknadsperiode.fom)
+  );
+  const [tomDato, setTomDato] = useState(
+    Utils.dato.formatterDatoTilNorsk(utpekingsperiode?.tomDato || soknadsperiode.tom)
+  );
   const isMounted = Hooks.useIsMounted();
 
   const oppdaterUtpekingsperiode = async (fomdato, tomdato) => {
@@ -63,24 +76,36 @@ export const VurderingArtikkel13UtpekLand = ({
     lagreUtpekingsperioder();
   };
 
+  const debouncedOppdaterUtpekingsperiode = useCallback(
+    Utils._debounce((fomDato, tomDato) => oppdaterUtpekingsperiode(fomDato, tomDato), 500),
+    []
+  );
+
   useEffect(() => {
-    if (!(formValues.fomDato && formValues.tomDato)) {
+    const isoFomDato = Utils.dato.formatterDatoTilISO(formValues.fomDato, null);
+    const isoTomDato = Utils.dato.formatterDatoTilISO(formValues.tomDato, null);
+
+    if (!redigerbart || !nyUtpekingsperiodeErInnenforSoknadsperioden(soknadsperiode, isoFomDato, isoTomDato)) {
       return;
     }
 
     if (!formValues.forkortUtpekingsperiode) {
-      oppdaterUtpekingsperiode(utpekingsperiode.fomDato, utpekingsperiode.tomDato);
+      debouncedOppdaterUtpekingsperiode(soknadsperiode.fom, soknadsperiode.tom);
     } else {
-      const isoTomDato = Utils.dato.formatterDatoTilISO(formValues.tomDato, null);
+      setTomDato(formValues.tomDato);
+      setFomDato(formValues.fomDato);
       if (isoTomDato) {
-        oppdaterUtpekingsperiode(utpekingsperiode.fomDato, isoTomDato);
+        debouncedOppdaterUtpekingsperiode(isoFomDato, isoTomDato);
       }
     }
-  }, [formValues.tomDato, formValues.forkortUtpekingsperiode]);
+  }, [formValues.fomDato, formValues.tomDato, formValues.forkortUtpekingsperiode]);
 
-  // TODO usikker på om vi egentlig behøver denne her, ettersom vi i andre forms ønsker å beholde mellomlagrede datas
   useEffect(() => {
-    oppdaterData(konverterLovvalgslandTilStegData(lovvalgsland));
+    if (redigerbart) {
+      oppdaterData(konverterLovvalgslandTilStegData(lovvalgsland));
+      oppdaterForm("fomDato", Utils.dato.formatterDatoTilNorsk(utpekingsperiode?.fomDato || soknadsperiode.fom));
+      oppdaterForm("tomDato", Utils.dato.formatterDatoTilNorsk(utpekingsperiode?.tomDato || soknadsperiode.tom));
+    }
 
     return () => {
       slettData();
@@ -119,7 +144,8 @@ export const VurderingArtikkel13UtpekLand = ({
     if (land !== formValues.lovvalgsland) {
       oppdaterData(lagLovvalgsland(land));
 
-      oppdaterMottakerinstitusjoner(
+      oppdaterForm(
+        "mottakerinstitusjoner",
         [...new Set([...landMedVesentligEllerRegistrertArbeid, land])].map((landkode) =>
           KV.kodeTilObjekt(landkode, MKV.KTObjects.landkoder)
         )
@@ -143,9 +169,6 @@ export const VurderingArtikkel13UtpekLand = ({
       },
     },
   ];
-
-  const fom = Utils.dato.formatterDatoTilNorsk(soknadsperiode.fom);
-  const tom = Utils.dato.formatterDatoTilNorsk(soknadsperiode.tom);
 
   const visLandvelger = erOffentligArbeidUtland || harLonnetArbeidAnnetLand;
   const lovvalgslandTittel = visLandvelger ? "Velg lovvalgsland" : "Lovvalgsland";
@@ -178,12 +201,12 @@ export const VurderingArtikkel13UtpekLand = ({
       </Nav.Typo.Undertittel>
       <Nav.Row>
         <Nav.Column xs="6">
-          {fom} - {tom}
+          {fomDato} - {tomDato}
         </Nav.Column>
       </Nav.Row>
       <Skjema.PeriodeForkorter
         redigerbart={redigerbart}
-        fomRedigerbar={false}
+        fomRedigerbar
         checkboxClassName="forkortUtpekingsperiode"
         checkboxLabel="Utpekingen gjelder for en kortere periode"
         checkboxFeltnavn="forkortUtpekingsperiode"
@@ -191,8 +214,8 @@ export const VurderingArtikkel13UtpekLand = ({
         forkortPeriode={formValues.forkortUtpekingsperiode}
         fomLabel="Startdato"
         fomFeltNavn="fomDato"
-        minDate={Utils.dato.norskStringTilDate(fom)}
-        maxDate={Utils.dato.norskStringTilDate(tom)}
+        minDate={Utils.dato.norskStringTilDate(soknadsperiode.fom)}
+        maxDate={Utils.dato.norskStringTilDate(soknadsperiode.tom)}
         tomLabel="Sluttdato"
         tomFeltNavn="tomDato"
       />
@@ -270,7 +293,7 @@ VurderingArtikkel13UtpekLand.propTypes = {
   byggUtpekingsperioder: PT.func.isRequired,
   soknadsperiode: MPT.Periode.isRequired,
   landMedVesentligEllerRegistrertArbeid: PT.array.isRequired,
-  oppdaterMottakerinstitusjoner: PT.func.isRequired,
+  oppdaterForm: PT.func.isRequired,
 };
 
 VurderingArtikkel13UtpekLand.defaultProps = {
@@ -318,8 +341,7 @@ const mapDispatchToProps = (dispatch) => ({
   touchAll: () => dispatch(formOperations.touchAll(KV.Form.ARTIKKEL_13_UTPEKLAND)),
   lagreUtpekingsperioder: () => dispatch(utpekingsperioderOperations.lagre()),
   endreUtpekingsperiode: (fomdato, tomdato) => dispatch(utpekingsperioderOperations.endrePeriode(fomdato, tomdato)),
-  oppdaterMottakerinstitusjoner: (mottakerinstitusjoner) =>
-    dispatch(change(KV.Form.ARTIKKEL_13_UTPEKLAND, "mottakerinstitusjoner", mottakerinstitusjoner)),
+  oppdaterForm: (field, value) => dispatch(change(KV.Form.ARTIKKEL_13_UTPEKLAND, field, value)),
 });
 
 const VurderingArtikkel13UtpekLand_form = reduxForm({
