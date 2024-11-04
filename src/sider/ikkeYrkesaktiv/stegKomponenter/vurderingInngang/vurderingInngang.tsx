@@ -105,46 +105,41 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Oppgi opplysninger fra søknaden</Nav.Typo.Innholdstittel>
 
       <Nav.Typo.Undertittel className="periode_label">Periode</Nav.Typo.Undertittel>
-      <Nav.Row>
-        <Nav.Column xs="3">
-          <Forms.Datovelger
-            label="Fra og med"
-            name="fom"
-            readOnly={!redigerbart}
-            control={control}
-            onChange={() => trigger("tom")}
-          />
-        </Nav.Column>
-        <Nav.Column xs="3">
-          <Forms.Datovelger
-            label={
-              <LabelMedHjelpetekst
-                label="Til og med"
-                hjelpetekst={`Ved åpen søknadsperiode lar du "Til og med" feltet stå tomt. Lovvalgsperiode registreres senere.`}
-              />
-            }
-            minDate={Utils.dato.norskStringTilDate(formValues?.fom)}
-            name="tom"
-            readOnly={!redigerbart}
-            control={control}
-          />
-        </Nav.Column>
-        <Nav.Column xs="5">
-          <Forms.Select
-            label="Land"
-            emptyFieldDisabled={!!formValues.land}
-            name="land"
-            readOnly={!redigerbart}
-            control={control}
-          >
-            {landkoder.map((item: KTObject) => (
-              <option key={item.kode} value={item.kode}>
-                {item.term}
-              </option>
-            ))}
-          </Forms.Select>
-        </Nav.Column>
-      </Nav.Row>
+      <div className="skjema__container">
+        <Forms.Datovelger
+          label="Fra og med"
+          name="fom"
+          readOnly={!redigerbart}
+          control={control}
+          onChange={() => trigger("tom")}
+        />
+        <Forms.Datovelger
+          label={
+            <LabelMedHjelpetekst
+              label="Til og med"
+              hjelpetekst={`Ved åpen søknadsperiode lar du "Til og med" feltet stå tomt. Lovvalgsperiode registreres senere.`}
+            />
+          }
+          minDate={Utils.dato.norskStringTilDate(formValues?.fom)}
+          name="tom"
+          readOnly={!redigerbart}
+          control={control}
+        />
+        <Forms.Select
+          label="Land"
+          emptyFieldDisabled={!!formValues.land}
+          name="land"
+          className="land__select"
+          readOnly={!redigerbart}
+          control={control}
+        >
+          {landkoder.map((item: KTObject) => (
+            <option key={item.kode} value={item.kode}>
+              {item.term}
+            </option>
+          ))}
+        </Forms.Select>
+      </div>
 
       {landUtenStøtteValgt && <IngenFlytMelding />}
 
