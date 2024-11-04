@@ -77,7 +77,7 @@ export const VurderingArtikkel13UtpekLand = ({
   };
 
   const debouncedOppdaterUtpekingsperiode = useCallback(
-    Utils._debounce((fomDato, tomDato) => oppdaterUtpekingsperiode(fomDato, tomDato), 500),
+    Utils._debounce((nyFomDato, nyTomDato) => oppdaterUtpekingsperiode(nyFomDato, nyTomDato), 500),
     []
   );
 

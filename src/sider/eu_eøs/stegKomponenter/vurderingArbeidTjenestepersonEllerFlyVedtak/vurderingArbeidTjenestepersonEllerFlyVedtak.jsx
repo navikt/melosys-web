@@ -103,7 +103,6 @@ const skalViseSendOrienteringsbrev = (sakstype, behandlingstema) =>
 export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
   redigerbart,
   behandlingID,
-  lovvalgsperiode,
   formIsValid,
   formValues,
   form,
@@ -525,7 +524,6 @@ const mapStateToProps = (state, ownProps) => {
     behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
     sakstype: fagsakSelectors.SakstypeKodeSelector(state),
     behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
-    lovvalgsperiode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
     soknadsperiode: mottatteOpplysningerSelectors.PeriodeSelector(state),
     selvstendigArbeid: mottatteOpplysningerSelectors.SelvstendigArbeidSelector(state),
     formIsValid: isValid(KV.Form.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK)(state),
