@@ -5,10 +5,10 @@ import { KTObject } from "@navikt/melosys-kodeverk";
 export type InntektskildeDto = {
   type: string;
   arbeidsgiversavgiftBetales: boolean;
-  avgiftspliktigInntektMnd?: number;
+  avgiftspliktigInntekt?: number;
   fomDato: string;
   tomDato: string;
-  totalInntektForPerioden?: number;
+  erMaanedsbelop: boolean;
 };
 
 export type SkatteforholdDto = {

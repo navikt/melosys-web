@@ -16,8 +16,6 @@ import {
   Inntektskilde,
   Skatteforhold,
 } from "../../../../felleskomponenter/trygdeavgift/komponenter/types";
-import { Skatteforholdsperioder } from "../../../../felleskomponenter/trygdeavgift/komponenter/skatteforholdsperioder";
-import { Inntektskilder } from "../../../../felleskomponenter/trygdeavgift/komponenter/inntektskilder";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Utils from "../../../../utils";
 import vurderingAarsavregningSchema from "./vurderingAarsavregningSchema";
@@ -29,6 +27,7 @@ import { BeregnetTrygdeavgiftDetaljer } from "./komponenter/beregnetTrygdeavgift
 import { OK } from "../../../../ducks/aarsavregning/types";
 import TidligereGrunnlagsoversikt from "./komponenter/tidligereGrunnlagsoversikt";
 import { sorterEtterISOFomDato } from "../../../../utils/dato";
+import GrunnlagsopplysningerSkjema from "./komponenter/grunnlagsopplysningerSkjema";
 import { fagsakSelectors } from "../../../../ducks/fagsaker";
 import { NyBehandlingForTidligereAarsavregningMelding } from "../../../../felleskomponenter/alertmeldinger/alertmeldinger";
 import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
@@ -92,7 +91,8 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
     };
   }
 
-  const setSkjemaverdierFraTrygdeavgiftsgrunnlag = (trygdeavgiftsgrunnlag: Trygdeavgiftsgrunnlag) => {
+  const setSkjemaverdierFraTrygdeavgiftsgrunnlag = (trygdeavgiftsgrunnlag?: Trygdeavgiftsgrunnlag) => {
+    if (!trygdeavgiftsgrunnlag) return;
     const { inntektskperioder, skatteforholdsperioder } = trygdeavgiftsgrunnlag;
     const sorterteInntekstkilder = [...inntektskperioder].sort(Utils.dato.sorterEtterISOFomDato);
     const sorterteSkatteforhold = [...skatteforholdsperioder].sort(Utils.dato.sorterEtterISOFomDato);
@@ -110,9 +110,10 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
         ? sorterteInntekstkilder.map((inntektskilde) => ({
             kildetype: inntektskilde.type,
             arbAvgBetales: Utils.streng.boolTilUppercaseStreng(inntektskilde.arbeidsgiversavgiftBetales),
-            bruttoInntekt: inntektskilde.avgiftspliktigInntektMnd,
+            bruttoInntekt: inntektskilde.avgiftspliktigInntekt,
             fomDato: Utils.dato.formatterDatoTilNorsk(inntektskilde.fomDato),
             tomDato: Utils.dato.formatterDatoTilNorsk(inntektskilde.tomDato),
+            erMaanedsbelop: Utils.streng.boolTilUppercaseStreng(inntektskilde.erMaanedsbelop),
           }))
         : []
     );
@@ -253,9 +254,10 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
           ? formVerdier.inntektskilder.map((inntektskilde: Inntektskilde) => ({
               type: inntektskilde.kildetype,
               arbeidsgiversavgiftBetales: Utils.streng.uppercaseStrengTilBool(inntektskilde.arbAvgBetales) || false,
-              avgiftspliktigInntektMnd: inntektskilde.bruttoInntekt,
+              avgiftspliktigInntekt: inntektskilde.bruttoInntekt,
               fomDato: Utils.dato.formatterDatoTilISO(inntektskilde.fomDato),
               tomDato: Utils.dato.formatterDatoTilISO(inntektskilde.tomDato, null),
+              erMaanedsbelop: Utils.streng.uppercaseStrengTilBool(inntektskilde.erMaanedsbelop) || false,
             }))
           : [],
       })
@@ -271,7 +273,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
   );
 
   const debounceBeregnTrygdeavgiftsperioder = useCallback(
-    Utils._debounce((formVerdier) => beregnTrygdeavgiftsperioder(formVerdier), 500),
+    Utils._debounce((formVerdier) => beregnTrygdeavgiftsperioder(formVerdier), 1000),
     [beregnTrygdeavgiftsperioder]
   );
 
@@ -287,7 +289,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
     if (redigerbart && erAvvik && !isValidating && formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType)) {
       debounceBeregnTrygdeavgiftsperioder(formValues);
     }
-  }, [formIsValid, isValidating, aktivFeilmeldingType, erAvvik]);
+  }, [isValidating, erAvvik]);
 
   const stegErGyldig = Boolean(erAvvik === false || (formIsValid && erAvvik && aarsavregningResponse?.nyttGrunnlag));
 
@@ -395,41 +397,29 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
       )}
 
       {erAvvik && (
-        <Nav.Row>
-          <Nav.Column>
-            <Skatteforholdsperioder
-              formValues={formValues}
-              redigerbart={redigerbart}
-              remove={skattRemove}
-              append={skattAppend}
-              control={control}
-              fields={skattFields}
-            />
-          </Nav.Column>
-        </Nav.Row>
-      )}
-
-      {erAvvik && (
-        <Inntektskilder
+        <GrunnlagsopplysningerSkjema
           formValues={formValues}
-          redigerbart={redigerbart}
-          update={inntektUpdate}
-          remove={inntektRemove}
-          append={inntektAppend}
+          inntektFields={inntektFields}
+          skattFields={skattFields}
           control={control}
-          fields={inntektFields}
+          inntektUpdate={inntektUpdate}
+          inntektRemove={inntektRemove}
+          inntektAppend={inntektAppend}
+          skattRemove={skattRemove}
+          skattAppend={skattAppend}
+          redigerbart={redigerbart}
           medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!!}
         />
       )}
 
-      {erAvvik && aarsavregningResponse?.nyttGrunnlag && (
+      {erAvvik && formIsValid && aarsavregningResponse?.nyttGrunnlag && (
         <SumArsavregningTabell
           nyTrygdeavgift={aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift}
           tidligereTrygdeavgift={aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift.totalAvgift}
         />
       )}
 
-      {erAvvik && aarsavregningResponse?.nyttGrunnlag && (
+      {erAvvik && formIsValid && aarsavregningResponse?.nyttGrunnlag && (
         <BeregnetTrygdeavgiftDetaljer
           grunnlag={aarsavregningResponse.nyttGrunnlag}
           medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!!}

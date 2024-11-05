@@ -32,62 +32,59 @@ export const Skatteforholdsperioder = ({
 }: SkatteforholdsperioderProps) => {
   return (
     <div className="skatteforholdsperioder">
-      <Nav.Typo.Undertittel>Oppgi informasjon om brukers skatteforhold</Nav.Typo.Undertittel>
+      {formValues.skatteforholdsperioder.map((skatteforhold, index) => {
+        return (
+          <Nav.Row className="skatteforhold__rad" key={fields[index].id}>
+            <Nav.Column className="dato">
+              <Forms.Datovelger
+                label={index === 0 ? "Skatteforhold" : ""}
+                name={`skatteforholdsperioder[${index}].fomDato`}
+                readOnly={!redigerbart}
+                control={control}
+              />
+            </Nav.Column>
 
-      <div className="skjema__panel">
-        {formValues.skatteforholdsperioder.map((skatteforhold, index) => {
-          return (
-            <Nav.Row className="skjema__panel__rad" key={fields[index].id}>
-              <Nav.Column className="dato">
-                <Forms.Datovelger
-                  label={index === 0 ? "Fra og med" : ""}
-                  name={`skatteforholdsperioder[${index}].fomDato`}
-                  readOnly={!redigerbart}
-                  control={control}
-                />
-              </Nav.Column>
+            <Nav.Column className="dato dato__tom">
+              <Forms.Datovelger
+                name={`skatteforholdsperioder[${index}].tomDato`}
+                readOnly={!redigerbart}
+                control={control}
+                minDate={Utils.dato.norskStringTilDate(formValues.skatteforholdsperioder[index].fomDato)}
+              />
+            </Nav.Column>
 
-              <Nav.Column className="dato">
-                <Forms.Datovelger
-                  label={index === 0 ? "Til og med" : ""}
-                  name={`skatteforholdsperioder[${index}].tomDato`}
-                  readOnly={!redigerbart}
-                  control={control}
-                  minDate={Utils.dato.norskStringTilDate(formValues.skatteforholdsperioder[index].fomDato)}
-                />
-              </Nav.Column>
+            <Nav.Column className="skattepliktig">
+              <Forms.RadioGroup
+                legend={index === 0 ? "Skattepliktig" : ""}
+                hideLegend={index !== 0}
+                name={`skatteforholdsperioder[${index}].skatteplikttype`}
+                readOnly={!redigerbart}
+                control={control}
+                className="skatteforholdsperioder-radio-group"
+              >
+                <Stack gap="6" direction={{ xs: "column", sm: "row" }} wrap={false}>
+                  <Nav.Radio value={MKV.Koder.skatteplikttype.SKATTEPLIKTIG}>Ja</Nav.Radio>
+                  <Nav.Radio value={MKV.Koder.skatteplikttype.IKKE_SKATTEPLIKTIG}>Nei</Nav.Radio>
+                </Stack>
+              </Forms.RadioGroup>
+            </Nav.Column>
 
-              <Nav.Column className="skattepliktig">
-                <Forms.RadioGroup
-                  legend={index === 0 ? "Er bruker skattepliktig?" : ""}
-                  hideLegend={index !== 0}
-                  name={`skatteforholdsperioder[${index}].skatteplikttype`}
-                  readOnly={!redigerbart}
-                  control={control}
-                  className="skatteforholdsperioder-radio-group"
-                >
-                  <Stack gap="6" direction={{ xs: "column", sm: "row" }} wrap={false}>
-                    <Nav.Radio value={MKV.Koder.skatteplikttype.SKATTEPLIKTIG}>Ja</Nav.Radio>
-                    <Nav.Radio value={MKV.Koder.skatteplikttype.IKKE_SKATTEPLIKTIG}>Nei</Nav.Radio>
-                  </Stack>
-                </Forms.RadioGroup>
-
-                {redigerbart && formValues.skatteforholdsperioder.length > 1 && (
-                  <Mui.IkonKnapp ariaLabel="Slett skatteforhold" ikon={Ikoner.Bin} onClick={() => remove(index)} />
-                )}
-              </Nav.Column>
-            </Nav.Row>
-          );
-        })}
-
-        {redigerbart && (
-          <Nav.Row className="skillestrek">
-            <Mui.Lenkeknapp ikon={Ikoner.Add} onClick={() => append(defaultPeriode || {})}>
-              Legg til skatteforhold
-            </Mui.Lenkeknapp>
+            <Nav.Column className="slett__knapp">
+              {redigerbart && formValues.skatteforholdsperioder.length > 1 && (
+                <Mui.IkonKnapp ariaLabel="Slett skatteforhold" ikon={Ikoner.Bin} onClick={() => remove(index)} />
+              )}
+            </Nav.Column>
           </Nav.Row>
-        )}
-      </div>
+        );
+      })}
+
+      {redigerbart && (
+        <Nav.Row className="legg-til__rad">
+          <Mui.Lenkeknapp ikon={Ikoner.Add} onClick={() => append(defaultPeriode || {})}>
+            Legg til skatteforhold
+          </Mui.Lenkeknapp>
+        </Nav.Row>
+      )}
     </div>
   );
 };

@@ -20,6 +20,7 @@ interface DatovelgerProps {
   onBlur?: FocusEventHandler;
   onCalendarClose?: () => void;
   brukInternValidering?: boolean;
+  visFeil?: boolean;
 }
 
 const Datovelger = ({
@@ -33,6 +34,7 @@ const Datovelger = ({
   maxDate,
   onBlur,
   brukInternValidering = false,
+  visFeil = true,
 }: DatovelgerProps) => {
   const [erUgyldigDato, setErUgyldigDato] = useState<boolean>(false);
   const { datepickerProps, inputProps } = useDatepicker({
@@ -81,7 +83,7 @@ const Datovelger = ({
           onChange={handleOnChange}
         />
       </DatePicker>
-      {(feil || erUgyldigDato) && (
+      {visFeil && (feil || erUgyldigDato) && (
         <div role="alert" aria-live="assertive" className="datovelger__feilmelding">
           {feil ?? SKRIV_INN_GYLDIG_DATO.melding}
         </div>
