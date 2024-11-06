@@ -1,5 +1,5 @@
 import { TextField as NavTextField, TextFieldProps } from "@navikt/ds-react";
-import "./textField.css";
+import "./textField.less";
 
 const TextField = (props: TextFieldProps) => {
   const { size, children, className, ...rest } = props;

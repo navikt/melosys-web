@@ -182,8 +182,6 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
     );
   };
 
-  console.log({ erAvvik });
-
   useEffect(() => {
     dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(behandlingID));
     if (behandlingID && aarsavregningID) {
@@ -239,6 +237,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
 
       Api.Aarsavregning.lagAarsavregning(behandlingID, { aar: valgtÅr })
         .then((res) => {
+          setErIngenGrunnlag(true);
           setAarsavregningResponse(res);
           // Benyttes for innhenting av saksopplysninger ifm. årsavregningsbehandlinger
           dispatch({ type: OK, data: res });
@@ -491,6 +490,8 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
 
     setVisLeggTilMedlemskapsperioder(await trigger("medlemskapsperioder"));
   };
+
+  console.log({ erIngenGrunnlag });
 
   return (
     <div className="vurderingAarsavregning">
