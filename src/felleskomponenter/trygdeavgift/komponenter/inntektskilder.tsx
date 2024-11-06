@@ -86,7 +86,7 @@ export const Inntektskilder = ({
         }
 
         return (
-          <div className="inntektskilde__rad__outer">
+          <div className="inntektskilde__rad__outer" key={index}>
             <Nav.Row className="inntektskilde__rad" key={fields[index].id}>
               <Nav.Column className="dato">
                 <Forms.Datovelger

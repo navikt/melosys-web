@@ -146,7 +146,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
       !Utils._isEmpty(sorterteInntekstkilder)
         ? sorterteInntekstkilder.map((inntektskilde) => ({
             kildetype: inntektskilde.type,
-            arbAvgBetales: Utils.streng.boolTilUppercaseStreng(inntektskilde.arbeidsgiversavgiftBetales),
+            arbAvgBetales: "FALSE",
             bruttoInntekt: inntektskilde.avgiftspliktigInntekt,
             fomDato: Utils.dato.formatterDatoTilNorsk(inntektskilde.fomDato),
             tomDato: Utils.dato.formatterDatoTilNorsk(inntektskilde.tomDato),
@@ -235,6 +235,8 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
   );
 
   useEffect(() => {
+    console.log("formvalues", formValues);
+
     if (redigerbart && aktivtSteg && !isValidating && !erÅpenSluttDato) {
       debounceBeregnTrygdeavgiftsperioder(formValues, formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType));
     }
@@ -247,6 +249,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
   ]);
 
   useEffect(() => {
+    console.log("formvalues: ", JSON.stringify(formValues));
     if (redigerbart && aktivtSteg) {
       if (!formIsValid) {
         formValues?.skatteforholdsperioder?.forEach((_periode: any, index: number) => {
