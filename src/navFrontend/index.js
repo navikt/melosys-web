@@ -3,16 +3,12 @@ import NavFrontendSpinner from "nav-frontend-spinner";
 import Tekstomrade from "nav-frontend-tekstomrade";
 import { Box, HelpText, Link, Modal, Checkbox, Radio, DatePicker, HStack, ExpansionCard } from "@navikt/ds-react";
 import Alert from "./alert";
-import TextField from "./skjema/textfield";
-import RadioGroup from "./skjema/radiogroup";
-import Select from "./skjema/select";
-import CheckboxGroup from "./skjema/checkboxGroup";
 import Button from "./button";
 import Table from "./table";
 import Tag from "./tag";
+import List from "./list/list";
+import { Textarea, TextField, RadioGroup, Select, CheckboxGroup, Fieldset, SkjemaGruppe } from "./skjema";
 
-// Egne implementasjoner av pakker fra nav-frontend. Noen av disse har blitt fjernet fra nav-frontend, men vi implementerer de selv fordi vi fortsatt har bruk for de.
-import { Fieldset, SkjemaGruppe, Textarea } from "./skjema";
 import * as Typo from "./typografi";
 
 export {
@@ -23,7 +19,6 @@ export {
   SkjemaGruppe,
   Fieldset,
   Select,
-  Textarea,
   Typo,
   NavFrontendSpinner,
   Tekstomrade,
@@ -42,4 +37,6 @@ export {
   HStack,
   Table,
   ExpansionCard,
+  List,
+  Textarea,
 };

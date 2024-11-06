@@ -58,6 +58,27 @@ export const VurderingArtikkel13UtpekLand = ({
   const [utpekingPending, setUtpekingPending] = useState(false);
   const isMounted = Hooks.useIsMounted();
 
+  const oppdaterUtpekingsperiode = async (fomdato, tomdato) => {
+    await endreUtpekingsperiode(fomdato, tomdato);
+    lagreUtpekingsperioder();
+  };
+
+  useEffect(() => {
+    if (!(formValues.fomDato && formValues.tomDato)) {
+      return;
+    }
+
+    if (!formValues.forkortUtpekingsperiode) {
+      oppdaterUtpekingsperiode(utpekingsperiode.fomDato, utpekingsperiode.tomDato);
+    } else {
+      const isoTomDato = Utils.dato.formatterDatoTilISO(formValues.tomDato, null);
+      if (isoTomDato) {
+        oppdaterUtpekingsperiode(utpekingsperiode.fomDato, isoTomDato);
+      }
+    }
+  }, [formValues.tomDato, formValues.forkortUtpekingsperiode]);
+
+  // TODO usikker på om vi egentlig behøver denne her, ettersom vi i andre forms ønsker å beholde mellomlagrede datas
   useEffect(() => {
     oppdaterData(konverterLovvalgslandTilStegData(lovvalgsland));
 
@@ -65,9 +86,6 @@ export const VurderingArtikkel13UtpekLand = ({
       slettData();
     };
   }, []);
-
-  const forkortUtpekingsperiode = () =>
-    endreUtpekingsperiode(utpekingsperiode.fomDato, Utils.dato.formatterDatoTilISO(formValues.tomDato));
 
   const validerForm = () => {
     touchAll();
@@ -131,18 +149,15 @@ export const VurderingArtikkel13UtpekLand = ({
 
   const visLandvelger = erOffentligArbeidUtland || harLonnetArbeidAnnetLand;
   const lovvalgslandTittel = visLandvelger ? "Velg lovvalgsland" : "Lovvalgsland";
-
-  const vedKlikkForhandsvis = async () => {
-    const formValid = validerForm();
-    if (!formValid) return false;
-
-    if (formValues.forkortUtpekingsperiode) {
-      await forkortUtpekingsperiode();
-    }
-
-    lagreUtpekingsperioder();
-    return true;
-  };
+  const mottakerInstitusjonKrevesMenErIkkeSatt =
+    !Utils._isEmpty(formValues.mottakerinstitusjoner) &&
+    formValues.mottakerinstitusjoner.some((mottakerInstitusjon) => {
+      return (
+        mottakerInstitusjon.kode === lovvalgsland &&
+        mottakerInstitusjon.kreverMottakerinstitusjon &&
+        !mottakerInstitusjon.id
+      );
+    });
 
   return (
     <div className="vurderingArtikkel13UtpekLand">
@@ -176,8 +191,8 @@ export const VurderingArtikkel13UtpekLand = ({
         forkortPeriode={formValues.forkortUtpekingsperiode}
         fomLabel="Startdato"
         fomFeltNavn="fomDato"
-        minDate={Utils.dato.norskStringTilDate(soknadsperiode.fom)}
-        maxDate={Utils.dato.norskStringTilDate(soknadsperiode.tom)}
+        minDate={Utils.dato.norskStringTilDate(fom)}
+        maxDate={Utils.dato.norskStringTilDate(tom)}
         tomLabel="Sluttdato"
         tomFeltNavn="tomDato"
       />
@@ -198,8 +213,6 @@ export const VurderingArtikkel13UtpekLand = ({
               label="Ytterligere informasjon til SED (valgfri)"
               feltNavn="fritekstSed"
               readOnly={!redigerbart}
-              visTellerFra={500}
-              maxLength={500}
             />
           </Nav.Column>
         </Nav.Row>
@@ -216,12 +229,8 @@ export const VurderingArtikkel13UtpekLand = ({
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="7">
-          {redigerbart && (
-            <Dokumentliste
-              behandlingID={behandlingID}
-              dokumenter={pdfDokumenter}
-              validateOnClick={vedKlikkForhandsvis}
-            />
+          {redigerbart && !mottakerInstitusjonKrevesMenErIkkeSatt && (
+            <Dokumentliste behandlingID={behandlingID} dokumenter={pdfDokumenter} validateOnClick={validerForm} />
           )}
         </Nav.Column>
       </Nav.Row>

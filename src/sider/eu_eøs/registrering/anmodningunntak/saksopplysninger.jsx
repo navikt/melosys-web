@@ -282,13 +282,12 @@ const Saksopplysninger = ({
     <Nav.Row>
       <Nav.Column xs="6">
         <Nav.Textarea
-          disabled={!redigerbart}
+          readOnly={!redigerbart}
           label="Skriv begrunnelse til SED"
           onChange={begrunnelseTextAreaOnChange}
           value={begrunnelseFritekst}
           maxLength={255}
-          feil={valideringFeil.fritekst}
-          bredde="fullbredde"
+          error={valideringFeil.fritekst}
         />
       </Nav.Column>
     </Nav.Row>
@@ -298,12 +297,10 @@ const Saksopplysninger = ({
     <Nav.Row>
       <Nav.Column xs="6">
         <Nav.Textarea
-          disabled={!redigerbart}
+          readOnly={!redigerbart}
           label="Ytterligere informasjon til SED (valgfri)"
           onChange={ytterligereInfoTextAreaOnChange}
           value={ytterligereInfoFritekst}
-          maxLength={500}
-          bredde="fullbredde"
         />
       </Nav.Column>
     </Nav.Row>

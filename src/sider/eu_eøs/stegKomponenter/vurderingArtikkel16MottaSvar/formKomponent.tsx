@@ -117,12 +117,7 @@ const FormKomponent = ({ redigerbart, formValues, oppdaterData, formIsValid }: F
       {visFritekstFelt && (
         <Nav.Row>
           <Nav.Column xs="12">
-            <Skjema.Textarea
-              feltNavn="begrunnelseFritekst"
-              readOnly={!redigerbart}
-              label="Begrunnelse"
-              tellerTekst={() => {}}
-            />
+            <Skjema.Textarea feltNavn="begrunnelseFritekst" readOnly={!redigerbart} label="Begrunnelse" />
           </Nav.Column>
         </Nav.Row>
       )}

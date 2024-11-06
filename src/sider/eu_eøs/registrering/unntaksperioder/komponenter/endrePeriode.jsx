@@ -90,8 +90,8 @@ const EndrePeriode = ({
             maxLength={255}
             onChange={(e) => oppdaterFelt(e, oppdaterFritekst)}
             value={fritekst}
-            feil={feilmeldinger.fritekst}
-            disabled={!redigerbart}
+            error={feilmeldinger.fritekst}
+            readOnly={!redigerbart}
           />
         </Nav.Column>
       )}

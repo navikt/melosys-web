@@ -1,6 +1,6 @@
 import MKV from "../../../../../melosyskodeverk";
 import * as Hjelpetekster from "./hjelpetekster";
-import { List } from "@navikt/ds-react";
+import * as Nav from "../../../../../navFrontend";
 
 const BestemmelseHjelpetekst = ({ bestemmelse }: { bestemmelse?: string }) => {
   if (!bestemmelse) return null;
@@ -61,11 +61,11 @@ const BestemmelseHjelpetekst = ({ bestemmelse }: { bestemmelse?: string }) => {
 
   return (
     <>
-      <List title="Følgende vilkår må være oppfylt" size="small">
+      <Nav.List title="Følgende vilkår må være oppfylt" size="small">
         {hjelpetekster.map((hjelpetekst) => (
-          <List.Item key={hjelpetekst}>{hjelpetekst}</List.Item>
+          <Nav.List.Item key={hjelpetekst} text={hjelpetekst} spacing={0} />
         ))}
-      </List>
+      </Nav.List>
       {ikkeKravOmTidsbegrensning && <p>Det er ikke krav om at utsendingsperioden/arbeidsperioden er tidsbegrenset.</p>}
     </>
   );

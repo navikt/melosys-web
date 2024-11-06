@@ -217,8 +217,7 @@ const VurderingMedfolgendeBarn = ({
           onChange={onMedfolgendeBarnFritekstChange}
           label="Fritekst til avsnitt om barn i vedtaksbrev"
           placeholder="Skriv inn tilleggsinformasjon..."
-          maxLength={500}
-          disabled={!redigerbart}
+          readOnly={!redigerbart}
         />
       )}
       {medfolgendeBarn.length === 0 && <Nav.Alert variant="info">Ingen barn oppgitt i søknaden</Nav.Alert>}

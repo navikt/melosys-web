@@ -318,10 +318,9 @@ export const Bestemmelser = ({
                       id={`${finnFeltNavn(unntaksvilkår?.vilkaar)}_avslag`}
                       label="Begrunnelse for avslag (fritekst)"
                       maxLength={255}
-                      bredde="fullbredde"
                       value={unntaksvilkår.begrunnelseFritekst || ""}
                       onChange={handleEndreFritekst}
-                      disabled={!redigerbart}
+                      readOnly={!redigerbart}
                     />
                   )}
                 </>
@@ -340,10 +339,9 @@ export const Bestemmelser = ({
                       id="art16_1_avslag"
                       label="Begrunnelse for avslag (fritekst):"
                       maxLength={255}
-                      bredde="fullbredde"
                       value={unntaksvilkår.begrunnelseFritekst || ""}
                       onChange={handleEndreFritekst}
-                      disabled={!redigerbart}
+                      readOnly={!redigerbart}
                     />
                   )}
                 </Nav.Fieldset>

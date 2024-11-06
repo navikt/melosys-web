@@ -125,7 +125,7 @@ const VurderingBestemmelse = ({
           resetField("tilleggsbestemmelse");
           resetField("bestemmelse");
         }}
-        size="medium"
+        size="small"
       >
         {vedtakValg?.map((valg) => (
           <Nav.Radio key={valg.kode} value={valg.kode}>
@@ -136,7 +136,7 @@ const VurderingBestemmelse = ({
       {formValues?.vedtak && !Utils._isEmpty(bestemmelseValg) && (
         <Nav.Fieldset legend="">
           <Nav.Row>
-            <Nav.Column lg="6">
+            <Nav.Column lg="8">
               <Skjema.Select
                 label="Velg bestemmelse"
                 feltNavn="bestemmelse"

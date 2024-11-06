@@ -79,6 +79,8 @@ const SideDialogNotater = ({ saksnummer, redigerbart }) => {
   };
 
   const opprettNotat = async () => {
+    if (Utils._isEmpty(nyttNotatTekst)) return;
+
     setNyttNotatFeilmelding("");
 
     try {
@@ -130,8 +132,8 @@ const SideDialogNotater = ({ saksnummer, redigerbart }) => {
         {leggTilNotatDialogSynlig && (
           <Fragment>
             <Nav.Textarea
-              label={skrivInnNotatLabel}
-              placeholder="Skriv inn et notat"
+              label="Notat"
+              description={skrivInnNotatLabel}
               value={nyttNotatTekst}
               onChange={endreNyttNotatTekst}
               maxLength={500}

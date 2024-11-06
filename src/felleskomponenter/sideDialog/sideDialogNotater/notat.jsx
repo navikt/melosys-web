@@ -98,7 +98,7 @@ const Notat = ({ redigerbart, tekst, opprettetDato, endretDato, forfatter, onUpd
           <Fragment>
             <Nav.Row className="uredigerbarTekst">
               <Nav.Column xs="12">
-                <Nav.Tekstomrade>{tekst}</Nav.Tekstomrade>
+                <Nav.Typo.Normaltekst>{tekst}</Nav.Typo.Normaltekst>
               </Nav.Column>
             </Nav.Row>
             <Nav.Row>
