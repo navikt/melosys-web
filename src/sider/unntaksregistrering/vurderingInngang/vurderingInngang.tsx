@@ -125,34 +125,40 @@ const VurderingInngang = ({ bekreft, oppdaterStatus }: VurderingInngangProps) =>
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Oppgi opplysninger fra attesten</Nav.Typo.Innholdstittel>
 
       <Nav.Typo.Undertittel className="periode_label">Periode</Nav.Typo.Undertittel>
-      <Nav.Row>
-        <Nav.Column xs="2">
-          <Forms.Datovelger
-            label="Fra og med"
-            name="fom"
-            readOnly={!redigerbart}
-            control={control}
-            onChange={lagreFom}
-          />
-        </Nav.Column>
-        <Nav.Column xs="2">
-          <Forms.Datovelger
-            label="Til og med"
-            name="tom"
-            minDate={Utils.dato.norskStringTilDate(formValues?.fom)}
-            readOnly={!redigerbart}
-            control={control}
-            onChange={lagreTom}
-          />
-        </Nav.Column>
-        <Nav.Column xs="4">
+      <div className="skjema__container">
+        <Forms.Datovelger label="Fra og med" name="fom" readOnly={!redigerbart} control={control} onChange={lagreFom} />
+        <Forms.Datovelger
+          label="Til og med"
+          name="tom"
+          minDate={Utils.dato.norskStringTilDate(formValues?.fom)}
+          readOnly={!redigerbart}
+          control={control}
+          onChange={lagreTom}
+        />
+        <Forms.Select
+          name="avsenderland"
+          control={control}
+          label="Avsenderland"
+          emptyFieldDisabled={!!formValues.avsenderland}
+          readOnly={!redigerbart}
+          onChange={lagreAvsenderland}
+          className="land__select"
+        >
+          {gyldigeLandkoder(sakstype).map((item: KTObject) => (
+            <option key={item.kode} value={item.kode}>
+              {item.term}
+            </option>
+          ))}
+        </Forms.Select>
+        {sakstype === EU_EOS && (
           <Forms.Select
-            name="avsenderland"
+            name="lovvalgsland"
             control={control}
-            label="Avsenderland"
-            emptyFieldDisabled={!!formValues.avsenderland}
+            label="Lovvalgsland"
+            emptyFieldDisabled={!!formValues.lovvalgsland}
             readOnly={!redigerbart}
-            onChange={lagreAvsenderland}
+            onChange={lagreLovvalgsland}
+            className="land__select"
           >
             {gyldigeLandkoder(sakstype).map((item: KTObject) => (
               <option key={item.kode} value={item.kode}>
@@ -160,26 +166,8 @@ const VurderingInngang = ({ bekreft, oppdaterStatus }: VurderingInngangProps) =>
               </option>
             ))}
           </Forms.Select>
-        </Nav.Column>
-        {sakstype === EU_EOS && (
-          <Nav.Column xs="4">
-            <Forms.Select
-              name="lovvalgsland"
-              control={control}
-              label="Lovvalgsland"
-              emptyFieldDisabled={!!formValues.lovvalgsland}
-              readOnly={!redigerbart}
-              onChange={lagreLovvalgsland}
-            >
-              {gyldigeLandkoder(sakstype).map((item: KTObject) => (
-                <option key={item.kode} value={item.kode}>
-                  {item.term}
-                </option>
-              ))}
-            </Forms.Select>
-          </Nav.Column>
         )}
-      </Nav.Row>
+      </div>
 
       {sakstype === EU_EOS && (
         <Nav.Alert variant="info" className="vurderingInngang_unntaksregistrering__alertstripe">
