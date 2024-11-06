@@ -88,6 +88,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
 
   useEffect(() => {
     if (aktivtSteg) {
+      window.scrollTo(0, 0);
       fetchAvregningsData();
       hentMuligeMottakere();
 
