@@ -149,7 +149,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
             arbAvgBetales:
               inntektskilde.arbeidsgiversavgiftBetales !== null
                 ? Utils.streng.boolTilUppercaseStreng(inntektskilde.arbeidsgiversavgiftBetales)
-                : "NULL",
+                : "FALSE",
             bruttoInntekt: inntektskilde.avgiftspliktigInntekt,
             fomDato: Utils.dato.formatterDatoTilNorsk(inntektskilde.fomDato),
             tomDato: Utils.dato.formatterDatoTilNorsk(inntektskilde.tomDato),
