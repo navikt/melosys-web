@@ -14,7 +14,7 @@ const InntektsperioderTabell = ({ perioder, avgift }: { perioder?: Inntektskilde
       <Nav.Table size="small" className="periode_tabell">
         <Nav.Table.Header className="header_row">
           <Nav.Table.Row>
-            <Nav.Table.HeaderCell scope="col">Inntekt</Nav.Table.HeaderCell>
+            <Nav.Table.HeaderCell scope="col">Inntektsperiode</Nav.Table.HeaderCell>
             <Nav.Table.HeaderCell scope="col">Inntektskilde</Nav.Table.HeaderCell>
             <Nav.Table.HeaderCell scope="col">Betalt aga.</Nav.Table.HeaderCell>
             <Nav.Table.HeaderCell scope="col">Brutto inntekt md.</Nav.Table.HeaderCell>
