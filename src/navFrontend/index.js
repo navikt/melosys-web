@@ -20,7 +20,6 @@ export {
   Select,
   Typo,
   NavFrontendSpinner,
-  Tekstomrade,
   Tag,
   HelpText,
   Button,
