@@ -21,10 +21,15 @@ import MKV from "../../../../melosyskodeverk";
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
 import * as Forms from "../../../../felleskomponenter/forms";
 import { SumArsavregningTabell } from "../vurderingAarsavregning/komponenter/sumArsavregningTabell";
+import { menypanelOperations, menypanelSelectors } from "../../../../ducks/menypanel";
+import { fagsakSelectors } from "../../../../ducks/fagsaker";
+import FullmaktForTrygdeavgiftConfirmationPanel from "../../../../felleskomponenter/fullmaktForTrygdeavgiftConfirmationPanel/fullmaktForTrygdeavgiftConfirmationPanel";
 
 const { FERDIGBEHANDLET } = MKV.Koder.behandlinger.behandlingsresultattyper;
 const { FØRSTEGANGSVEDTAK } = MKV.Koder.vedtakstyper;
 const { AARSAVREGNING_VEDTAKSBREV } = MKV.Koder.brev.produserbaredokumenter;
+const { FULLMEKTIG_TRYGDEAVGIFT } = MKV.Koder.fullmaktstype;
+const { FULLMEKTIG } = MKV.Koder.aktoersroller;
 
 interface FormValuesProps {
   innledningFritekst?: string;
@@ -51,9 +56,14 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
   const [lagretAarsavregning, setLagretAarsavregning] = useState<AarsavregningResponse | undefined>(undefined);
   const [fakturaMottaker, setFakturaMottaker] = useState<string | undefined>(undefined);
+  const [harFullmaktForTrygdeavgift, setHarFullmaktForTrygdeavgift] = useState(false);
+  const [harBekreftetFullmaktForTrygdeavgift, setHarBekreftetFullmaktForTrygdeavgift] = useState(false);
+
   const aarsavregningID = useSelector(behandlingsresultatSelectors.ÅrsavregningIDSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
+  const erFullmektigEndret = useSelector(menypanelSelectors.MenypanelErFullmektigEndretSelector);
+  const saksnummer = useSelector(fagsakSelectors.SaksnummerSelector);
 
   const { fattVedtak } = komponentDispatch(dispatch);
 
@@ -85,6 +95,27 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
     });
     setMuligeMottakere(res);
   };
+
+  const hentOgSetHarFullmaktForTrygdeavgift = async () => {
+    await Api.Fagsaker.aktoer.hent(saksnummer, FULLMEKTIG).then((res) => {
+      setHarBekreftetFullmaktForTrygdeavgift(false);
+      setHarFullmaktForTrygdeavgift(
+        res.some((aktoer) => aktoer.fullmakter?.some((fullmakt) => fullmakt === FULLMEKTIG_TRYGDEAVGIFT))
+      );
+    });
+  };
+
+  useEffect(() => {
+    hentOgSetHarFullmaktForTrygdeavgift();
+  }, []);
+
+  useEffect(() => {
+    if (erFullmektigEndret) {
+      hentOgSetHarFullmaktForTrygdeavgift();
+
+      dispatch(menypanelOperations.setErFullmektigEndret(false));
+    }
+  }, [erFullmektigEndret]);
 
   useEffect(() => {
     if (aktivtSteg) {
@@ -152,17 +183,18 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
     ];
   };
 
-  const stegErGyldig = formIsValid;
-
   const tidligereTrygdeavgift = lagretAarsavregning?.tidligereGrunnlagsopplysninger?.avgift.totalAvgift;
-  const nyTrygdeavgift = lagretAarsavregning?.nyttGrunnlag?.avgift.totalAvgift;
 
+  const nyTrygdeavgift = lagretAarsavregning?.nyttGrunnlag?.avgift.totalAvgift;
   const erDifferanseUnderMinstebeløp =
     tidligereTrygdeavgift &&
     nyTrygdeavgift &&
     Math.abs(tidligereTrygdeavgift - nyTrygdeavgift) < MINSTEBELOP_FAKTURERING_ELLER_REFUSJON;
 
   const skalFaktureres = tidligereTrygdeavgift && nyTrygdeavgift && nyTrygdeavgift - tidligereTrygdeavgift > 0;
+
+  const stegErGyldig =
+    formIsValid && (!harFullmaktForTrygdeavgift || (harBekreftetFullmaktForTrygdeavgift && skalFaktureres));
 
   return (
     <div className="vurderingVedtak">
@@ -191,6 +223,13 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
             </Nav.Typo.Normaltekst>
           </Nav.Column>
         </Nav.Row>
+      ) : null}
+
+      {harFullmaktForTrygdeavgift && skalFaktureres ? (
+        <FullmaktForTrygdeavgiftConfirmationPanel
+          harBekreftet={harBekreftetFullmaktForTrygdeavgift}
+          onChange={setHarBekreftetFullmaktForTrygdeavgift}
+        />
       ) : null}
 
       <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
