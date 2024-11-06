@@ -146,7 +146,10 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
       !Utils._isEmpty(sorterteInntekstkilder)
         ? sorterteInntekstkilder.map((inntektskilde) => ({
             kildetype: inntektskilde.type,
-            arbAvgBetales: Utils.streng.boolTilUppercaseStreng(inntektskilde.arbeidsgiversavgiftBetales),
+            arbAvgBetales:
+              inntektskilde.arbeidsgiversavgiftBetales !== null
+                ? Utils.streng.boolTilUppercaseStreng(inntektskilde.arbeidsgiversavgiftBetales)
+                : "FALSE",
             bruttoInntekt: inntektskilde.avgiftspliktigInntekt,
             fomDato: Utils.dato.formatterDatoTilNorsk(inntektskilde.fomDato),
             tomDato: Utils.dato.formatterDatoTilNorsk(inntektskilde.tomDato),
