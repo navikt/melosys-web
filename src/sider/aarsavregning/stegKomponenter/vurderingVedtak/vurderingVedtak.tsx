@@ -181,6 +181,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
                 <b>Beløpet er under minstegrensen for fakturering/refusjon (100 kr).</b>
               ) : (
                 <>
+                  <br />
                   {`${skalFaktureres ? "Faktura" : "Kreditnota"} på ${
                     Utils.formaterTilNorskBelop(
                       Math.abs((nyTrygdeavgift || tidligereTrygdeavgift || 0) - (tidligereTrygdeavgift || 0))
