@@ -11,11 +11,17 @@
   .skatteforhold__rad {
     display: flex;
     flex-direction: row;
-    align-items: flex-end;
-    padding: 0.25rem 0.5rem 0.25rem 0;
+    //align-items: flex-end; TODO remove before merge 6829
+    padding: 0.25rem 0.5rem 0.8rem 0;
     margin: 0;
     border-bottom: 1px solid #979797;
     width: fit-content;
+
+    &:first-child {
+      .slett__knapp {
+        display: flex;
+      }
+    }
 
     .slett__knapp {
       margin-left: 0.75rem;
@@ -31,8 +37,8 @@
     }
 
     .dato__tom {
-      display: flex;
-      align-items: flex-end;
+      //display: flex;            TODO remove before merge 6829
+      //align-items: flex-end;
     }
 
     .datovelger__feilmelding {

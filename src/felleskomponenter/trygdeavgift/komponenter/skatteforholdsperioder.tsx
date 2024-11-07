@@ -46,6 +46,7 @@ export const Skatteforholdsperioder = ({
 
             <Nav.Column className="dato dato__tom">
               <Forms.Datovelger
+                label={index === 0 && <span className="invisible" />}
                 name={`skatteforholdsperioder[${index}].tomDato`}
                 readOnly={!redigerbart}
                 control={control}
