@@ -34,7 +34,7 @@ const InntektsperioderTabell = ({ perioder, avgift }: { perioder?: Inntektskilde
               <Nav.Table.DataCell key={Utils._uuid()}>
                 {inntektsperiode.arbeidsgiversavgiftBetales ? "Ja" : "Nei"}
               </Nav.Table.DataCell>
-              <Nav.Table.DataCell align="right" key={Utils._uuid()}>
+              <Nav.Table.DataCell key={Utils._uuid()}>
                 {Utils.formaterTilNorskBelopUtenDesimaler(inntektsperiode.avgiftspliktigInntekt)} kr
               </Nav.Table.DataCell>
             </Nav.Table.Row>
