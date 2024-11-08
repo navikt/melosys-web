@@ -12,7 +12,7 @@ interface TidligereGrunnlagProps {
 
 const informasjonsmeldingIngenInformasjonOmPerioder = (
   <Nav.Alert variant="info" size="small" className="informasjonsmeldingIngenInformasjonOmPerioder">
-    Det er ingen informasjon om perioder med medlemskap og forskuddsvis fakturert trygdeavgift i Melosys.
+    <h3>Det er ingen informasjon om perioder med medlemskap og forskuddsvis fakturert trygdeavgift i Melosys.</h3>
     <ul>
       <li>Hvis trygdeavgiften er forskuddsvis fakturert fra avgiftssystemet, oppgi totalbeløpet som er fakturert.</li>
       <li>
