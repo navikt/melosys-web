@@ -11,15 +11,17 @@
   .skatteforhold__rad {
     display: flex;
     flex-direction: row;
-    //align-items: flex-end; TODO remove before merge 6829
-    padding: 0.25rem 0.5rem 0.8rem 0;
+    align-items: flex-start;
+    padding: 1rem 0 0 0;
     margin: 0;
     border-bottom: 1px solid #979797;
     width: fit-content;
 
     &:first-child {
       .slett__knapp {
+        margin-top: 1rem;
         display: flex;
+        justify-content: flex-start;
       }
     }
 
@@ -34,11 +36,7 @@
 
     .skattepliktig {
       line-height: 1.5rem;
-    }
-
-    .dato__tom {
-      //display: flex;            TODO remove before merge 6829
-      //align-items: flex-end;
+      display: grid;
     }
 
     .datovelger__feilmelding {
