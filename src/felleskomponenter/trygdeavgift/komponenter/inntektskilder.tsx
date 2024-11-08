@@ -199,7 +199,7 @@ export const Inntektskilder = ({
                   />
                 ) : (
                   <div className="ikkeRelevant">
-                    {index === 0 && <Nav.Typo.Element>Brutto inntekt</Nav.Typo.Element>}
+                    {index === 0 && <Nav.Typo.Element>Bruttoinntekt</Nav.Typo.Element>}
                     <p className={`undertekst ${index === 0 ? "med-overskrift" : "uten-overskrift"}`}>Ikke relevant</p>
                   </div>
                 )}
