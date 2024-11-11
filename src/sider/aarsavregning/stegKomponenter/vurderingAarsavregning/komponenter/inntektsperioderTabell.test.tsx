@@ -15,8 +15,8 @@ describe("TrygdeavgiftsperioderTabell", () => {
         tomDato: "2022-12-31",
         type: "Arbeid",
         arbeidsgiversavgiftBetales: true,
-        avgiftspliktigInntektMnd: 50000,
-        totalInntektForPerioden: 250000,
+        avgiftspliktigInntekt: 50000,
+        erMaanedsbelop: true,
       },
     ];
     render(<InntektsperioderTabell perioder={perioder} />);
@@ -31,16 +31,16 @@ describe("TrygdeavgiftsperioderTabell", () => {
         tomDato: "2022-12-31",
         type: "Arbeid",
         arbeidsgiversavgiftBetales: true,
-        avgiftspliktigInntektMnd: 50000,
-        totalInntektForPerioden: 250000,
+        avgiftspliktigInntekt: 50000,
+        erMaanedsbelop: true,
       },
       {
         fomDato: "2022-01-01",
         tomDato: "2022-12-31",
         type: "Pensjon",
         arbeidsgiversavgiftBetales: false,
-        avgiftspliktigInntektMnd: 4000,
-        totalInntektForPerioden: 48000,
+        avgiftspliktigInntekt: 4000,
+        erMaanedsbelop: true,
       },
     ];
     render(<InntektsperioderTabell perioder={perioder} />);
@@ -55,8 +55,8 @@ describe("TrygdeavgiftsperioderTabell", () => {
         tomDato: "2022-12-31",
         type: "Arbeid",
         arbeidsgiversavgiftBetales: true,
-        avgiftspliktigInntektMnd: 50000,
-        totalInntektForPerioden: 250000,
+        avgiftspliktigInntekt: 50000,
+        erMaanedsbelop: true,
       },
     ];
     render(<InntektsperioderTabell perioder={perioder} />);

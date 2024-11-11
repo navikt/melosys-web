@@ -1,12 +1,11 @@
 import { Column, Container, Row } from "./grid";
-import NavFrontendSpinner from "nav-frontend-spinner";
-import Tekstomrade from "nav-frontend-tekstomrade";
 import { Box, HelpText, Link, Modal, Checkbox, Radio, DatePicker, HStack, ExpansionCard } from "@navikt/ds-react";
 import Alert from "./alert";
 import Button from "./button";
 import Table from "./table";
 import Tag from "./tag";
 import List from "./list/list";
+import Loader from "./loader";
 import ConfirmationPanel from "./confirmationPanel";
 import { Textarea, TextField, RadioGroup, Select, CheckboxGroup, Fieldset, SkjemaGruppe } from "./skjema";
 
@@ -21,8 +20,6 @@ export {
   Fieldset,
   Select,
   Typo,
-  NavFrontendSpinner,
-  Tekstomrade,
   Tag,
   HelpText,
   Button,
@@ -40,5 +37,6 @@ export {
   ExpansionCard,
   List,
   Textarea,
+  Loader,
   ConfirmationPanel,
 };

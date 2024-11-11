@@ -160,7 +160,7 @@ export const VurderingArtikkel13_x_vedtak = ({
       <Nav.Typo.Innholdstittel className="stegvelgertittel">{overskrift}</Nav.Typo.Innholdstittel>
       {redigerbart && (
         <Fragment>
-          <Nav.Typo.Element className="undertittel">Søknadsperiode</Nav.Typo.Element>
+          <Nav.Typo.Element className="undertittel">Lovvalgsperiode</Nav.Typo.Element>
           <Nav.Row className="lovvalgsperiode">
             <Nav.Column xs="6">
               {fom} - {tom}

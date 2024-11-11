@@ -114,7 +114,7 @@ EnkeltBuc.propTypes = {
 
 const HenterOpplysningerSpinner = () => (
   <div className="henter_opplysninger">
-    <Nav.NavFrontendSpinner />
+    <Nav.Loader />
     <Nav.Typo.Normaltekst>Henter BUCer knyttet til saken</Nav.Typo.Normaltekst>
   </div>
 );

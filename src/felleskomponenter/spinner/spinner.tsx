@@ -1,3 +1,3 @@
 import * as Nav from "../../navFrontend";
 
-export const Spinner = () => <Nav.NavFrontendSpinner type="XXL" className="spinner" />;
+export const Spinner = () => <Nav.Loader size="3xlarge" />;

@@ -2,6 +2,7 @@ import * as Nav from "../../../../navFrontend";
 import { Inntektskilde, Skatteforhold } from "../../../../felleskomponenter/trygdeavgift/komponenter/types";
 import * as Utils from "../../../../utils";
 import { Medlemskapsperiode } from "../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import { BOOLSK_STRING } from "../../../../constants";
 
 const HoyManedinntekt = (
   <Nav.Alert variant="warning" className="alertstripe_feilmelding">
@@ -67,7 +68,7 @@ const finnesInntektskildeperiodeUtenforMedlemskapsperiode = (
 };
 
 const finnesInntektskildeMedBruttoInntektOver250k = (inntektskilder: Inntektskilde[]) =>
-  inntektskilder.some((periode) => periode.bruttoInntekt! > 250000);
+  inntektskilder.some((periode) => periode.bruttoInntekt! > 250000 && periode.erMaanedsbelop === BOOLSK_STRING.SANN);
 
 export const finnAktivFeilmelding = (
   inntektskilder: Inntektskilde[],

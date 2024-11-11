@@ -18,7 +18,6 @@ const InntektsperioderTabell = ({ perioder, avgift }: { perioder?: Inntektskilde
             <Nav.Table.HeaderCell scope="col">Inntektskilde</Nav.Table.HeaderCell>
             <Nav.Table.HeaderCell scope="col">Betalt aga.</Nav.Table.HeaderCell>
             <Nav.Table.HeaderCell scope="col">Brutto inntekt md.</Nav.Table.HeaderCell>
-            <Nav.Table.HeaderCell scope="col">Total periode</Nav.Table.HeaderCell>
           </Nav.Table.Row>
         </Nav.Table.Header>
         <Nav.Table.Body>
@@ -36,10 +35,7 @@ const InntektsperioderTabell = ({ perioder, avgift }: { perioder?: Inntektskilde
                 {inntektsperiode.arbeidsgiversavgiftBetales ? "Ja" : "Nei"}
               </Nav.Table.DataCell>
               <Nav.Table.DataCell align="right" key={Utils._uuid()}>
-                {Utils.formaterTilNorskBelopUtenDesimaler(inntektsperiode.avgiftspliktigInntektMnd)} kr
-              </Nav.Table.DataCell>
-              <Nav.Table.DataCell align="right" key={Utils._uuid()}>
-                {Utils.formaterTilNorskBelopUtenDesimaler(inntektsperiode.totalInntektForPerioden)} kr
+                {Utils.formaterTilNorskBelopUtenDesimaler(inntektsperiode.avgiftspliktigInntekt)} kr
               </Nav.Table.DataCell>
             </Nav.Table.Row>
           ))}

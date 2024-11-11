@@ -103,7 +103,6 @@ const skalViseSendOrienteringsbrev = (sakstype, behandlingstema) =>
 export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
   redigerbart,
   behandlingID,
-  lovvalgsperiode,
   formIsValid,
   formValues,
   form,
@@ -157,9 +156,6 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
 
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
 
-  const forkortLovvalgsperiode = () =>
-    endreLovvalgsPeriode(lovvalgsperiode.fomDato, Utils.dato.formatterDatoTilISO(formValues.tomDato));
-
   const vedKlikkForhandsvis = async () => {
     if (!formIsValid) {
       touchAll();
@@ -167,7 +163,10 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
     }
 
     if (formValues.forkortLovvalgsperiode) {
-      await forkortLovvalgsperiode();
+      await endreLovvalgsPeriode(
+        Utils.dato.formatterDatoTilISO(formValues.fomDato),
+        Utils.dato.formatterDatoTilISO(formValues.tomDato)
+      );
     }
 
     lagreLovvalgsperioder();
@@ -214,9 +213,6 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
       });
     }
   }
-
-  const fom = Utils.dato.formatterDatoTilNorsk(soknadsperiode.fom);
-  const tom = Utils.dato.formatterDatoTilNorsk(soknadsperiode.tom);
 
   const lovvalgsbestemmelseTerm = KV.kodeTilTerm(lovvalgsbestemmelseSomSkalVises, MKV.Kodekombinasjoner.alleLovvalg);
   const overskrift = `Omfattet av norsk lovgivning etter ${lovvalgsbestemmelseTerm || "..."}`;
@@ -299,7 +295,10 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
     setVedtakPending(true);
 
     if (values.forkortLovvalgsperiode) {
-      await props.endreLovvalgsPeriode(props.lovvalgsperiode.fomDato, Utils.dato.formatterDatoTilISO(values.tomDato));
+      await props.endreLovvalgsPeriode(
+        Utils.dato.formatterDatoTilISO(values.fomDato),
+        Utils.dato.formatterDatoTilISO(values.tomDato)
+      );
     }
 
     validerMottatteOpplysninger()
@@ -313,6 +312,12 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
       .catch(() => setVedtakPending(false));
   };
 
+  const fom = Utils.dato.formatterDatoTilNorsk(
+    (formValues.forkortLovvalgsperiode && formValues.fomDato) || soknadsperiode.fom
+  );
+  const tom = Utils.dato.formatterDatoTilNorsk(
+    (formValues.forkortLovvalgsperiode && formValues.tomDato) || soknadsperiode.tom
+  );
   const stegErGyldig = redigerbart && formIsValid && !harFeilmeldinger;
 
   return (
@@ -342,7 +347,7 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
       <Skjema.PeriodeForkorter
         className="periodeForkorter"
         redigerbart={redigerbart}
-        fomRedigerbar={false}
+        fomRedigerbar
         checkboxClassName="forkortLovvalgsperiode"
         checkboxLabel="Lovvalget innvilges for en kortere periode"
         checkboxFeltnavn="forkortLovvalgsperiode"
@@ -519,16 +524,13 @@ const mapStateToProps = (state, ownProps) => {
     behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
     sakstype: fagsakSelectors.SakstypeKodeSelector(state),
     behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
-    lovvalgsperiode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
     soknadsperiode: mottatteOpplysningerSelectors.PeriodeSelector(state),
     selvstendigArbeid: mottatteOpplysningerSelectors.SelvstendigArbeidSelector(state),
     formIsValid: isValid(KV.Form.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK)(state),
     formValues: getFormValues(KV.Form.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK)(state),
     initialValues: {
       forkortLovvalgsperiode,
-      tomDato: forkortLovvalgsperiode
-        ? Utils.dato.formatterDatoTilNorsk(lovvalgsperioderSelectors.TomDatoSelector(state))
-        : "",
+      tomDato: Utils.dato.formatterDatoTilNorsk(lovvalgsperioderSelectors.TomDatoSelector(state)),
       fomDato: Utils.dato.formatterDatoTilNorsk(lovvalgsperioderSelectors.FomDatoSelector(state)),
       vedtakstypebegrunnelse: behandlingsresultatSelectors.BegrunnelseKoderSelector(state)[0],
       vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),

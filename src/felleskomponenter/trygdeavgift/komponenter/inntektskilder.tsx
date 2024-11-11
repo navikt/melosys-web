@@ -7,8 +7,6 @@ import * as Nav from "../../../navFrontend";
 import * as Utils from "../../../utils";
 import * as Mui from "../../ui";
 import * as Ikoner from "../../../resources/images";
-
-import LabelMedHjelpetekst from "../../labelMedHjelpetekst";
 import { BOOLSK_STRING } from "../../../constants";
 import { FieldArrayProps, FormValuesProps, Inntektskilde } from "./types";
 import {
@@ -43,6 +41,7 @@ interface InntektskilderProps {
   redigerbart: boolean;
   defaultPeriode?: { fomDato: string; tomDato: string };
   medlemskapsTypeErPliktig: boolean;
+  skalViseErMaanedsBelopRadioGroup?: boolean;
 }
 
 export const Inntektskilder = ({
@@ -55,6 +54,7 @@ export const Inntektskilder = ({
   defaultPeriode,
   fields,
   medlemskapsTypeErPliktig,
+  skalViseErMaanedsBelopRadioGroup,
 }: InntektskilderProps) => {
   const settesDefaultArbAvgBetales = (kildetype?: string) => ![INNTEKT_FRA_UTLANDET, MISJONÆR].includes(kildetype);
 
@@ -72,42 +72,32 @@ export const Inntektskilder = ({
 
   return (
     <div className="inntektskilder">
-      <LabelMedHjelpetekst
-        label="Oppgi informasjon om brukers inntekt"
-        hjelpetekst="Hvis bruker har flere inntekter, f.eks. fra Norge og fra utlandet, så må de legges til enkeltvis."
-        undertittel
-      />
+      {formValues.inntektskilder.map((inntektskilde, index) => {
+        const brukerSkattepliktigIHelePerioden = erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder);
 
-      <div className="skjema__panel">
-        {formValues.inntektskilder.map((inntektskilde, index) => {
-          const brukerSkattepliktigIHelePerioden = erBrukerSkattepliktigIHelePerioden(
-            formValues.skatteforholdsperioder
-          );
+        const skalFylleInnArbAvgBetales = arbAvgBetalesKreves(inntektskilde.kildetype, medlemskapsTypeErPliktig);
+        const skalFylleInnBruttoInntekt = bruttoInntektKreves(
+          brukerSkattepliktigIHelePerioden,
+          inntektskilde.kildetype,
+          inntektskilde.arbAvgBetales
+        );
+        if (!skalFylleInnBruttoInntekt && inntektskilde.bruttoInntekt) {
+          update(index, { ...inntektskilde, bruttoInntekt: undefined });
+        }
 
-          const visArbAvgBetales = !Utils._isEmpty(inntektskilde.kildetype);
-          const skalFylleInnArbAvgBetales = arbAvgBetalesKreves(inntektskilde.kildetype, medlemskapsTypeErPliktig);
-          const skalFylleInnBruttoInntekt = bruttoInntektKreves(
-            brukerSkattepliktigIHelePerioden,
-            inntektskilde.kildetype,
-            inntektskilde.arbAvgBetales
-          );
-          if (!skalFylleInnBruttoInntekt && inntektskilde.bruttoInntekt) {
-            update(index, { ...inntektskilde, bruttoInntekt: undefined });
-          }
-
-          return (
-            <Nav.Row className="skjema__panel__rad" key={fields[index].id}>
+        return (
+          <div className="inntektskilde__rad__outer" key={fields[index].id}>
+            <Nav.Row className="inntektskilde__rad">
               <Nav.Column className="dato">
                 <Forms.Datovelger
-                  label={index === 0 ? "Fra og med" : ""}
+                  label={index === 0 ? "Inntektsperiode" : ""}
                   name={`inntektskilder[${index}].fomDato`}
                   readOnly={!redigerbart}
                   control={control}
                 />
               </Nav.Column>
-              <Nav.Column className="dato">
+              <Nav.Column className="dato dato__tom">
                 <Forms.Datovelger
-                  label={index === 0 ? "Til og med" : ""}
                   name={`inntektskilder[${index}].tomDato`}
                   readOnly={!redigerbart}
                   control={control}
@@ -122,7 +112,6 @@ export const Inntektskilder = ({
                   name={`inntektskilder[${index}].kildetype`}
                   control={control}
                   readOnly={!redigerbart}
-                  emptyFieldDisabled={visArbAvgBetales}
                   onChange={(value) => handleEndreKildetype(index, value)}
                 >
                   {MKV.KTObjects.inntektskildetype
@@ -148,10 +137,10 @@ export const Inntektskilder = ({
                 </Forms.Select>
               </Nav.Column>
 
-              <Nav.Column className="arbgiverskatt">
+              <Nav.Column className="radio-group">
                 {skalFylleInnArbAvgBetales ? (
                   <Forms.RadioGroup
-                    legend={index === 0 ? "Betales arb.avg. til skatt?" : ""}
+                    legend={index === 0 ? "Betales aga.?" : ""}
                     hideLegend={index !== 0}
                     name={`inntektskilder[${index}].arbAvgBetales`}
                     readOnly={!redigerbart || settesDefaultArbAvgBetales(inntektskilde.kildetype)}
@@ -165,47 +154,80 @@ export const Inntektskilder = ({
                   </Forms.RadioGroup>
                 ) : (
                   <div className="ikkeRelevant">
-                    {index === 0 && <Nav.Typo.Element>Betales arb.avg. til skatt?</Nav.Typo.Element>}
+                    {index === 0 && <Nav.Typo.Element>Betales aga.?</Nav.Typo.Element>}
                     <p className={`undertekst ${index === 0 ? "med-overskrift" : "uten-overskrift"}`}>Ikke relevant</p>
                   </div>
                 )}
               </Nav.Column>
 
+              {skalViseErMaanedsBelopRadioGroup && (
+                <Nav.Column className="radio-group">
+                  {skalFylleInnBruttoInntekt ? (
+                    <Forms.RadioGroup
+                      legend={index === 0 ? "Periode" : ""}
+                      name={`inntektskilder[${index}].erMaanedsbelop`}
+                      readOnly={!redigerbart}
+                      control={control}
+                    >
+                      <Stack gap="6" direction={{ xs: "column", sm: "row" }} wrap={false}>
+                        <Nav.Radio value={BOOLSK_STRING.SANN}>Md.</Nav.Radio>
+                        <Nav.Radio value={BOOLSK_STRING.USANN}>Total</Nav.Radio>
+                      </Stack>
+                    </Forms.RadioGroup>
+                  ) : (
+                    <div className="ikkeRelevant">
+                      {index === 0 && <Nav.Typo.Element>Periode</Nav.Typo.Element>}
+                      <p className={`undertekst ${index === 0 ? "med-overskrift" : "uten-overskrift"}`}>
+                        Ikke relevant
+                      </p>
+                    </div>
+                  )}
+                </Nav.Column>
+              )}
+
               <Nav.Column className="brutto_inntekt">
                 {skalFylleInnBruttoInntekt ? (
                   <Forms.Input
-                    label={index === 0 ? "Brutto inntekt per md." : ""}
+                    label={index === 0 ? "Brutto inntekt" : ""}
                     hideLabel={index !== 0}
                     name={`inntektskilder[${index}].bruttoInntekt`}
                     control={control}
                     readOnly={!redigerbart}
                     className="brutto_inntekt__input"
+                    type="number"
                   />
                 ) : (
                   <div className="ikkeRelevant">
-                    {index === 0 && <Nav.Typo.Element>Brutto inntekt per md.</Nav.Typo.Element>}
+                    {index === 0 && <Nav.Typo.Element>Brutto inntekt</Nav.Typo.Element>}
                     <p className={`undertekst ${index === 0 ? "med-overskrift" : "uten-overskrift"}`}>Ikke relevant</p>
                   </div>
                 )}
               </Nav.Column>
 
-              <Nav.Column className="fjernlinje">
+              <Nav.Column className="slett__knapp">
                 {redigerbart && formValues.inntektskilder.length > 1 && (
                   <Mui.IkonKnapp ariaLabel="Slett inntektskilde" ikon={Ikoner.Bin} onClick={() => remove(index)} />
                 )}
               </Nav.Column>
             </Nav.Row>
-          );
-        })}
+          </div>
+        );
+      })}
 
-        {redigerbart && (
-          <Nav.Row className="skillestrek">
-            <Mui.Lenkeknapp ikon={Ikoner.Add} onClick={() => append(defaultPeriode || {})}>
-              Legg til inntekt
-            </Mui.Lenkeknapp>
-          </Nav.Row>
-        )}
-      </div>
+      {redigerbart && (
+        <div className="legg-til__rad">
+          <Mui.Lenkeknapp
+            ikon={Ikoner.Add}
+            onClick={() =>
+              append(
+                { ...defaultPeriode, erMaanedsbelop: BOOLSK_STRING.SANN } || { erMaanedsbelop: BOOLSK_STRING.SANN }
+              )
+            }
+          >
+            Legg til inntekt
+          </Mui.Lenkeknapp>
+        </div>
+      )}
     </div>
   );
 };

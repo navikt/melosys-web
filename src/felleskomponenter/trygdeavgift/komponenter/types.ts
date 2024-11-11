@@ -6,6 +6,7 @@ export interface Inntektskilde {
   bruttoInntekt?: number;
   fomDato?: string;
   tomDato?: string;
+  erMaanedsbelop?: string;
 }
 
 export interface Skatteforhold {
