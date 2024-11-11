@@ -350,7 +350,11 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
           </Nav.Row>
         )}
       </Nav.Fieldset>
-      {feil && <Nav.Alert variant="error" className={"alertstripe_feilmelding"}>{feil}</Nav.Alert>}
+      {feil && (
+        <Nav.Alert variant="error" className={"alertstripe_feilmelding"}>
+          {feil}
+        </Nav.Alert>
+      )}
       {aarsavregningResponse?.tidligereGrunnlagsopplysninger === null &&
         aarsavregningResponse.aar === (valgtÅr || initieltÅr) && (
           <TidligereGrunnlagsopplysningerFinnesIkke
