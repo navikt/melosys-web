@@ -25,6 +25,7 @@ import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import VurderingVedtakSchema from "./vurderingVedtakSchema";
 import "./vurderingVedtak.css";
 import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
+import * as Api from "../../../../services/api";
 import { RootState } from "AppTypes";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { kontrollOperations } from "../../../../ducks/kontroll";
@@ -42,8 +43,13 @@ const { KONV_EFTA_STORBRITANNIA_ART13_4_1 } =
 const { EU_EOS } = MKV.Koder.sakstyper;
 const { FØRSTEGANGSVEDTAK } = MKV.Koder.vedtakstyper;
 const { FASTSATT_LOVVALGSLAND } = MKV.Koder.behandlinger.behandlingsresultattyper;
-const { UTSENDT_ARBEIDSTAKER, UTSENDT_SELVSTENDIG, ARBEID_FLERE_LAND, ARBEID_TJENESTEPERSON_ELLER_FLY } =
-  MKV.Koder.behandlinger.behandlingstema;
+const {
+  UTSENDT_ARBEIDSTAKER,
+  UTSENDT_SELVSTENDIG,
+  ARBEID_FLERE_LAND,
+  ARBEID_TJENESTEPERSON_ELLER_FLY,
+  BESLUTNING_LOVVALG_NORGE,
+} = MKV.Koder.behandlinger.behandlingstema;
 const { LA_BUC_04, LA_BUC_05 } = EKV.Koder.buctyper.legislation;
 
 const finnLovvalgSomTerm = (lovvalgsbestemmelseKT?: KTObject, tilleggBestemmelseKT?: KTObject) => {
@@ -154,6 +160,7 @@ const VurderingVedtak = ({
 }: VurderingVedtakProps & InjectedFormProps<FormValuesProps, VurderingVedtakProps>) => {
   const dispatch = useDispatch();
   const [vedtakPending, setVedtakPending] = useState(false);
+  const [erBucAapen, setErBucAapen] = useState(true);
   const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
   let oppdaterFørKontroll = true;
 
@@ -173,6 +180,14 @@ const VurderingVedtak = ({
   const mottatteOpplysningerStatus = useSelector(mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector);
 
   const visMottakerinstitusjoner = skalViseMottakerinstitusjoner(sakstype, sakstema, behandlingstema, behandlingstype);
+
+  useEffect(() => {
+    if (behandlingstema === BESLUTNING_LOVVALG_NORGE) {
+      Api.Kontroll.erBucAapen(behandlingID).then((res) => {
+        setErBucAapen(res);
+      });
+    }
+  }, []);
 
   async function kontroller(data: {
     aktivtSteg: boolean;
@@ -244,6 +259,7 @@ const VurderingVedtak = ({
   const sedMottakerLand = finnSedMottakerLand(arbeidsland, bostedsland || {}, lovvalgsbestemmelse, tilleggBestemmelse);
   const flereSoknadslandEnnTillatt = arbeidsland.length > 1 && !MKVUtils.kanHaFlereSoknadsland(behandlingstema);
   const stegErGyldig = redigerbart && formIsValid && !harFeilmeldinger && !flereSoknadslandEnnTillatt;
+  const bucLukketOgLovvalgNorge = !erBucAapen && behandlingstema === BESLUTNING_LOVVALG_NORGE;
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
 
   const lovvalgsbestemmelseKT = MKVUtils.lovvalgsbestemmelseTilObjekt(lovvalgsbestemmelse);
@@ -258,7 +274,7 @@ const VurderingVedtak = ({
       return dokument;
     });
   };
-  const skalViseFritekstSed = !(erSokkelSkip && erArtikkel11_3);
+  const skalViseFritekstSed = !(bucLukketOgLovvalgNorge || (erSokkelSkip && erArtikkel11_3));
 
   return (
     <div className="vedtak">
@@ -336,7 +352,7 @@ const VurderingVedtak = ({
             {stegErGyldig && (
               <Dokumentliste
                 behandlingID={behandlingID}
-                dokumenter={mapDokumenter(pdfDokumenter as BrevDokumentMetadataType[])}
+                dokumenter={ mapDokumenter(pdfDokumenter as BrevDokumentMetadataType[]) }
               />
             )}
           </Nav.Column>
