@@ -154,7 +154,9 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
 
   const stegErGyldig = formIsValid;
 
-  const tidligereTrygdeavgift = lagretAarsavregning?.tidligereGrunnlagsopplysninger?.avgift.totalAvgift;
+  const tidligereTrygdeavgift =
+    lagretAarsavregning?.tidligereGrunnlagsopplysninger?.avgift.totalAvgift ??
+    lagretAarsavregning?.avregning?.tidligereFakturertBeloep;
   const nyTrygdeavgift = lagretAarsavregning?.nyttGrunnlag?.avgift.totalAvgift;
 
   const erDifferanseUnderMinstebeløp =

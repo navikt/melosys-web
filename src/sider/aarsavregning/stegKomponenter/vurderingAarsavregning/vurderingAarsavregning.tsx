@@ -490,7 +490,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
 
     setVisLeggTilMedlemskapsperioder(await trigger("medlemskapsperioder"));
   };
-
+  console.log({ aarsavregningResponse });
   return (
     <div className="vurderingAarsavregning">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Årsavregning</Nav.Typo.Innholdstittel>
@@ -606,7 +606,10 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
       {(erAvvik || erIngenGrunnlag) && formIsValid && aarsavregningResponse?.nyttGrunnlag && (
         <SumArsavregningTabell
           nyTrygdeavgift={aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift}
-          tidligereTrygdeavgift={aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift.totalAvgift}
+          tidligereTrygdeavgift={
+            aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift.totalAvgift ??
+            aarsavregningResponse.avregning?.tidligereFakturertBeloep
+          }
         />
       )}
 
