@@ -352,7 +352,7 @@ const VurderingVedtak = ({
             {stegErGyldig && (
               <Dokumentliste
                 behandlingID={behandlingID}
-                dokumenter={ mapDokumenter(pdfDokumenter as BrevDokumentMetadataType[]) }
+                dokumenter={mapDokumenter(pdfDokumenter as BrevDokumentMetadataType[])}
               />
             )}
           </Nav.Column>
