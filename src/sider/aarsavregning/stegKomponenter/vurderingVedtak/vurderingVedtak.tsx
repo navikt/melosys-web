@@ -183,9 +183,8 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
     ];
   };
 
-  const tidligereTrygdeavgift = lagretAarsavregning?.tidligereGrunnlagsopplysninger?.avgift.totalAvgift;
-
-  const nyTrygdeavgift = lagretAarsavregning?.nyttGrunnlag?.avgift.totalAvgift;
+  const tidligereTrygdeavgift = lagretAarsavregning?.avregning?.tidligereFakturertBeloep;
+  const nyTrygdeavgift = lagretAarsavregning?.avregning?.nyttTotalbeloep;
   const erDifferanseUnderMinstebeløp =
     tidligereTrygdeavgift &&
     nyTrygdeavgift &&
