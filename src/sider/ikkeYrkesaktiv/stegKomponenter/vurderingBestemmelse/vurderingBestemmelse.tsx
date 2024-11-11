@@ -22,7 +22,7 @@ import vurdering_bestemmelse from "./vurderingBestemmelseSchema";
 import "./vurderingBestemmelse.css";
 
 const { INNVILGET, AVSLAATT } = MKV.Koder.innvilgelsesResultat;
-const { EU_EOS, TRYGDEAVTALE } = MKV.Koder.sakstyper;
+const { EU_EOS } = MKV.Koder.sakstyper;
 const UNNTAK = "UNNTAK";
 
 interface Props {
@@ -131,7 +131,6 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
         name="innvilgelsesResultat"
         control={control}
         readOnly={!redigerbart}
-        size="medium"
       >
         <Nav.Radio value={INNVILGET}>Jeg vil innvilge søknaden</Nav.Radio>
         <Nav.Radio value={UNNTAK}>Jeg vil søke om unntak</Nav.Radio>
@@ -140,26 +139,24 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
 
       {formValues?.innvilgelsesResultat === INNVILGET && (
         <>
-          <Nav.Fieldset legend="Velg bestemmelse">
-            <Nav.Row className="bestemmelse__rad">
-              <Nav.Column xs="7">
-                <Forms.Select
-                  name="bestemmelse"
-                  control={control}
-                  label=""
-                  readOnly={!redigerbart}
-                  onChange={lagreBestemmelse}
-                  emptyFieldDisabled={!!formValues.bestemmelse}
-                >
-                  {muligeBestemmelser.map((muligBestemmelse) => (
-                    <option value={muligBestemmelse.kode} key={muligBestemmelse.kode}>
-                      {muligBestemmelse.term}
-                    </option>
-                  ))}
-                </Forms.Select>
-              </Nav.Column>
-            </Nav.Row>
-          </Nav.Fieldset>
+          <Nav.Row className="bestemmelse__rad">
+            <Nav.Column xs="7" lg="6">
+              <Forms.Select
+                name="bestemmelse"
+                control={control}
+                label="Velg bestemmelse"
+                readOnly={!redigerbart}
+                onChange={lagreBestemmelse}
+                emptyFieldDisabled={!!formValues.bestemmelse}
+              >
+                {muligeBestemmelser.map((muligBestemmelse) => (
+                  <option value={muligBestemmelse.kode} key={muligBestemmelse.kode}>
+                    {muligBestemmelse.term}
+                  </option>
+                ))}
+              </Forms.Select>
+            </Nav.Column>
+          </Nav.Row>
           {formValues.bestemmelse ===
             MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3E && (
             <Forms.RadioGroup
@@ -167,15 +164,10 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
               legend="Velg brukers situasjon"
               control={control}
               onChange={lagreIkkeYrkesaktivSituasjontype}
-              size="medium"
+              readOnly={!redigerbart}
             >
               {MKV.KTObjects.begrunnelser.ikkeyrkesaktivsituasjontype.map((value: KTObject) => (
-                <Nav.Radio
-                  name="ikkeYrkesaktivSituasjontype"
-                  value={value.kode}
-                  disabled={!redigerbart}
-                  key={value.kode}
-                >
+                <Nav.Radio name="ikkeYrkesaktivSituasjontype" value={value.kode} key={value.kode}>
                   {value.term || ""}
                 </Nav.Radio>
               ))}
@@ -184,29 +176,10 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
         </>
       )}
 
-      {innvilgelsesResultatErUNNTAK && sakstype === TRYGDEAVTALE && (
+      {innvilgelsesResultatErUNNTAK && (
         <Nav.Row>
           <Nav.Column xs="10">
             <UnntakHjelpetekst />
-          </Nav.Column>
-        </Nav.Row>
-      )}
-
-      {innvilgelsesResultatErUNNTAK && sakstype === EU_EOS && (
-        <Nav.Row>
-          <Nav.Column xs="12" className="unntakHjelpetekst">
-            <Nav.Alert variant="info">
-              <ul>
-                <li>Opprett LA_BUC_01 i &quot;Opprett ny BUC&quot;-menyen</li>
-                <li>Fyll ut og send A001 direkte i Rina</li>
-                <li>Send orienteringsbrev til bruker/fullmektig i &quot;Send brev&quot;-menyen</li>
-                <li>Endre behandlingsstatus til &quot;Avventer svar fra utenlandsk trygdemyndighet&quot;</li>
-                <li>Registrer perioden i MEDL som uavklart</li>
-              </ul>
-              <p>
-                Når du får svar fra utenlandsk trygdemyndighet, må du endre valget på dette steget, og fatte vedtak.
-              </p>
-            </Nav.Alert>
           </Nav.Column>
         </Nav.Row>
       )}

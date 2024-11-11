@@ -1,6 +1,5 @@
 import { Column, Container, Row } from "./grid";
 import NavFrontendSpinner from "nav-frontend-spinner";
-import Tekstomrade from "nav-frontend-tekstomrade";
 import { Box, HelpText, Link, Modal, Checkbox, Radio, DatePicker, HStack, ExpansionCard } from "@navikt/ds-react";
 import Alert from "./alert";
 import Button from "./button";
@@ -21,7 +20,6 @@ export {
   Select,
   Typo,
   NavFrontendSpinner,
-  Tekstomrade,
   Tag,
   HelpText,
   Button,
