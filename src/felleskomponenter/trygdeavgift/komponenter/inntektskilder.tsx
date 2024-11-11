@@ -113,7 +113,6 @@ export const Inntektskilder = ({
                   control={control}
                   readOnly={!redigerbart}
                   onChange={(value) => handleEndreKildetype(index, value)}
-                  emptyFieldDisabled
                 >
                   {MKV.KTObjects.inntektskildetype
                     .filter((kt: KTObject) => {
