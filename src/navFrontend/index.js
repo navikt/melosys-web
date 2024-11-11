@@ -1,5 +1,4 @@
 import { Column, Container, Row } from "./grid";
-import NavFrontendSpinner from "nav-frontend-spinner";
 import { Box, HelpText, Link, Modal, Checkbox, Radio, DatePicker, HStack, ExpansionCard } from "@navikt/ds-react";
 import Alert from "./alert";
 import Button from "./button";
@@ -20,7 +19,6 @@ export {
   Fieldset,
   Select,
   Typo,
-  NavFrontendSpinner,
   Tag,
   HelpText,
   Button,
