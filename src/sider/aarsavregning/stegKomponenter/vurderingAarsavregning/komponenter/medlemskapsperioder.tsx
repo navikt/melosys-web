@@ -57,93 +57,91 @@ export const Medlemskapsperioder = ({
     <div className="medlemskapsperioder">
       <Nav.Typo.Undertittel>{tittel}</Nav.Typo.Undertittel>
 
-      <div>
-        <div key={field.id}>
-          <Nav.Row className="medlemskapsperioder__rad">
-            <Nav.Column className="dato">
-              <Forms.Datovelger
-                label={index === 0 ? "Medlemskapsperiode" : ""}
-                control={control}
-                minDate={
-                  formValues.medlemskapsperioder[index - 1] !== undefined
-                    ? Utils.dato.norskStringTilDate(formValues.medlemskapsperioder[index - 1].tomDato)
-                    : undefined
-                }
-                name={`medlemskapsperioder[${index}].fomDato`}
-                aria-label={`Fra og med periode ${index + 1}`}
-                readOnly={!redigerbart}
-                onChange={(value) => {
-                  handleChange([{ ...formValues.medlemskapsperioder[index], fomDato: value }], index);
-                }}
-              />
+      <div key={field.id}>
+        <Nav.Row className="medlemskapsperioder__rad">
+          <Nav.Column className="dato">
+            <Forms.Datovelger
+              label={index === 0 ? "Medlemskapsperiode" : ""}
+              control={control}
+              minDate={
+                formValues.medlemskapsperioder[index - 1] !== undefined
+                  ? Utils.dato.norskStringTilDate(formValues.medlemskapsperioder[index - 1].tomDato)
+                  : undefined
+              }
+              name={`medlemskapsperioder[${index}].fomDato`}
+              aria-label={`Fra og med periode ${index + 1}`}
+              readOnly={!redigerbart}
+              onChange={(value) => {
+                handleChange([{ ...formValues.medlemskapsperioder[index], fomDato: value }], index);
+              }}
+            />
+          </Nav.Column>
+          <Nav.Column className="dato">
+            <Forms.Datovelger
+              label=" "
+              control={control}
+              name={`medlemskapsperioder[${index}].tomDato`}
+              aria-label={`Til og med periode ${index + 1}`}
+              minDate={Utils.dato.norskStringTilDate(formValues.medlemskapsperioder[index].fomDato)}
+              readOnly={!redigerbart}
+              onChange={(value) => {
+                handleChange([{ ...formValues.medlemskapsperioder[index], tomDato: value }], index);
+              }}
+            />
+          </Nav.Column>
+          <Nav.Column className="bestemmelse">
+            <Forms.Select
+              name={`medlemskapsperioder[${index}].bestemmelse`}
+              label={index === 0 ? "Bestemmelse" : ""}
+              hideLabel={index !== 0}
+              aria-label={`Bestemmelse periode ${index + 1}`}
+              control={control}
+              readOnly={!redigerbart}
+              onChange={(bestemmelse) => {
+                handleChange([{ ...formValues.medlemskapsperioder[index], bestemmelse }], index);
+                handleUpdate(index, { ...formValues.medlemskapsperioder[index], trygdedekning: "" });
+              }}
+            >
+              {bestemmelser.map((bestemmelse: any) => (
+                <option key={bestemmelse} value={bestemmelse}>
+                  {KV.kodeTilTerm(bestemmelse, MKV.KTObjects.folketrygdloven_kap2_bestemmelser)}
+                </option>
+              ))}
+            </Forms.Select>
+          </Nav.Column>
+          <Nav.Column className="trygdedekning">
+            <Forms.Select
+              name={`medlemskapsperioder[${index}].trygdedekning`}
+              label={index === 0 ? "Dekning" : ""}
+              hideLabel={index !== 0}
+              aria-label={`Trygdedekning periode ${index + 1}`}
+              control={control}
+              readOnly={!redigerbart}
+              onChange={(value) =>
+                handleChange([{ ...formValues.medlemskapsperioder[index], trygdedekning: value }], index)
+              }
+            >
+              {trygdedekninger.map((dekning: any) => (
+                <option key={dekning} value={dekning}>
+                  {KV.kodeTilTerm(dekning, MKV.KTObjects.trygdedekninger)}
+                </option>
+              ))}
+            </Forms.Select>
+          </Nav.Column>
+          {kanSlettePeriode && (
+            <Nav.Column className={index === 0 ? "slett slett__first" : "slett"}>
+              <Mui.IkonKnapp ikon={Ikoner.Bin} onClick={() => remove(index)} ariaLabel="Slett periode" />
             </Nav.Column>
-            <Nav.Column className="dato">
-              <Forms.Datovelger
-                label=" "
-                control={control}
-                name={`medlemskapsperioder[${index}].tomDato`}
-                aria-label={`Til og med periode ${index + 1}`}
-                minDate={Utils.dato.norskStringTilDate(formValues.medlemskapsperioder[index].fomDato)}
-                readOnly={!redigerbart}
-                onChange={(value) => {
-                  handleChange([{ ...formValues.medlemskapsperioder[index], tomDato: value }], index);
-                }}
-              />
-            </Nav.Column>
-            <Nav.Column className="bestemmelse">
-              <Forms.Select
-                name={`medlemskapsperioder[${index}].bestemmelse`}
-                label={index === 0 ? "Bestemmelse" : ""}
-                hideLabel={index !== 0}
-                aria-label={`Bestemmelse periode ${index + 1}`}
-                control={control}
-                readOnly={!redigerbart}
-                onChange={(bestemmelse) => {
-                  handleChange([{ ...formValues.medlemskapsperioder[index], bestemmelse }], index);
-                  handleUpdate(index, { ...formValues.medlemskapsperioder[index], trygdedekning: "" });
-                }}
-              >
-                {bestemmelser.map((bestemmelse: any) => (
-                  <option key={bestemmelse} value={bestemmelse}>
-                    {KV.kodeTilTerm(bestemmelse, MKV.KTObjects.folketrygdloven_kap2_bestemmelser)}
-                  </option>
-                ))}
-              </Forms.Select>
-            </Nav.Column>
-            <Nav.Column className="trygdedekning">
-              <Forms.Select
-                name={`medlemskapsperioder[${index}].trygdedekning`}
-                label={index === 0 ? "Dekning" : ""}
-                hideLabel={index !== 0}
-                aria-label={`Trygdedekning periode ${index + 1}`}
-                control={control}
-                readOnly={!redigerbart}
-                onChange={(value) =>
-                  handleChange([{ ...formValues.medlemskapsperioder[index], trygdedekning: value }], index)
-                }
-              >
-                {trygdedekninger.map((dekning: any) => (
-                  <option key={dekning} value={dekning}>
-                    {KV.kodeTilTerm(dekning, MKV.KTObjects.trygdedekninger)}
-                  </option>
-                ))}
-              </Forms.Select>
-            </Nav.Column>
-            {kanSlettePeriode && (
-              <Nav.Column className={index === 0 ? "slett slett__first" : "slett"}>
-                <Mui.IkonKnapp ikon={Ikoner.Bin} onClick={() => remove(index)} ariaLabel="Slett periode" />
-              </Nav.Column>
-            )}
-          </Nav.Row>
-        </div>
-        {redigerbart && formValues.medlemskapsperioder.length === index + 1 && (
-          <div className="legg-til__rad">
-            <Mui.Lenkeknapp onClick={handleLeggTil} ikon={Ikoner.Add} disabled={!visLeggTil}>
-              Legg til periode
-            </Mui.Lenkeknapp>
-          </div>
-        )}
+          )}
+        </Nav.Row>
       </div>
+      {redigerbart && formValues.medlemskapsperioder.length === index + 1 && (
+        <div className="legg-til__rad">
+          <Mui.Lenkeknapp onClick={handleLeggTil} ikon={Ikoner.Add} disabled={!visLeggTil}>
+            Legg til periode
+          </Mui.Lenkeknapp>
+        </div>
+      )}
     </div>
   );
 };
