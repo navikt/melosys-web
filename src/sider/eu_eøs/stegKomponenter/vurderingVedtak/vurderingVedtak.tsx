@@ -16,16 +16,12 @@ import { vedtakOperations } from "../../../../ducks/vedtak";
 import { fagsakSelectors } from "../../../../ducks/fagsaker";
 import { flytSelectors } from "../../../../ducks/flyt";
 import { skalViseIngenFlyt } from "../../../../url";
-import Dokumentliste, {
-  BrevDokumentMetadataType,
-  SedDokumentMetadataType,
-} from "../../../../felleskomponenter/dokumentliste";
+import Dokumentliste, { BrevDokumentMetadataType, SedDokumentMetadataType } from "../../../../felleskomponenter/dokumentliste";
 import Mottakerinstitusjonvelger from "../../../../felleskomponenter/mottakerinstitusjonvelger";
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import VurderingVedtakSchema from "./vurderingVedtakSchema";
 import "./vurderingVedtak.css";
 import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
-import * as Api from "../../../../services/api";
 import { RootState } from "AppTypes";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { kontrollOperations } from "../../../../ducks/kontroll";
@@ -47,8 +43,7 @@ const {
   UTSENDT_ARBEIDSTAKER,
   UTSENDT_SELVSTENDIG,
   ARBEID_FLERE_LAND,
-  ARBEID_TJENESTEPERSON_ELLER_FLY,
-  BESLUTNING_LOVVALG_NORGE,
+  ARBEID_TJENESTEPERSON_ELLER_FLY
 } = MKV.Koder.behandlinger.behandlingstema;
 const { LA_BUC_04, LA_BUC_05 } = EKV.Koder.buctyper.legislation;
 
@@ -126,8 +121,8 @@ const mapStateToProps = (state: RootState) => ({
     kopiTilArbeidsgiver: false,
     mottakerinstitusjon: "",
     kreverMottakerinstitusjon: false,
-    fritekstSed: null,
-  },
+    fritekstSed: null
+  }
 });
 
 const connector = connect(mapStateToProps);
@@ -145,22 +140,21 @@ type VurderingVedtakProps = PropsFromRedux & {
 };
 
 const VurderingVedtak = ({
-  redigerbart,
-  tilbake,
-  behandlingstype,
-  touch,
-  form,
-  formValues,
-  pdfDokumenter,
-  harFeilmeldinger,
-  aktivtSteg = false,
-  validerMottatteOpplysninger,
-  lovvalgsperiode,
-  erArtikkel11_4,
-}: VurderingVedtakProps & InjectedFormProps<FormValuesProps, VurderingVedtakProps>) => {
+                           redigerbart,
+                           tilbake,
+                           behandlingstype,
+                           touch,
+                           form,
+                           formValues,
+                           pdfDokumenter,
+                           harFeilmeldinger,
+                           aktivtSteg = false,
+                           validerMottatteOpplysninger,
+                           lovvalgsperiode,
+                           erArtikkel11_4
+                         }: VurderingVedtakProps & InjectedFormProps<FormValuesProps, VurderingVedtakProps>) => {
   const dispatch = useDispatch();
   const [vedtakPending, setVedtakPending] = useState(false);
-  const [erBucAapen, setErBucAapen] = useState(true);
   const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
   let oppdaterFørKontroll = true;
 
@@ -181,14 +175,6 @@ const VurderingVedtak = ({
 
   const visMottakerinstitusjoner = skalViseMottakerinstitusjoner(sakstype, sakstema, behandlingstema, behandlingstype);
 
-  useEffect(() => {
-    if (behandlingstema === BESLUTNING_LOVVALG_NORGE) {
-      Api.Kontroll.erBucAapen(behandlingID).then((res) => {
-        setErBucAapen(res);
-      });
-    }
-  }, []);
-
   async function kontroller(data: {
     aktivtSteg: boolean;
     formValues: FormValuesProps;
@@ -203,7 +189,7 @@ const VurderingVedtak = ({
         kontrollerSomSkalIgnoreres: data.formValues.kopiTilArbeidsgiver
           ? []
           : [MKV.Koder.begrunnelser.kontroll_begrunnelser.OPPHØRT_ARBEIDSGIVER],
-        skalRegisteropplysningerOppdateres: oppdaterFørKontroll,
+        skalRegisteropplysningerOppdateres: oppdaterFørKontroll
       };
       oppdaterFørKontroll = false;
       await dispatch(kontrollOperations.kontrollerFerdigbehandling(request));
@@ -241,7 +227,7 @@ const VurderingVedtak = ({
           fritekstSed: formValues.fritekstSed,
           kopiTilArbeidsgiver: formValues.kopiTilArbeidsgiver,
           mottakerinstitusjoner: visMottakerinstitusjoner ? [formValues.mottakerinstitusjon] : [],
-          nyVurderingBakgrunn: formValues.vedtakstypebegrunnelse,
+          nyVurderingBakgrunn: formValues.vedtakstypebegrunnelse
         };
         // @ts-ignore
         dispatch(vedtakOperations.fatt(behandlingID, vedtakRequest)).then((res) => {
@@ -281,9 +267,9 @@ const VurderingVedtak = ({
         {konvensjonStorbritanniaToggleEnabled
           ? "Omfattet av norsk trygdelovgivning"
           : `Omfattet av norsk trygdelovgivning etter ${finnLovvalgSomTerm(
-              lovvalgsbestemmelseKT,
-              tilleggBestemmelseKT
-            )}`}
+            lovvalgsbestemmelseKT,
+            tilleggBestemmelseKT
+          )}`}
       </Nav.Typo.Innholdstittel>
       <div>
         <Nav.Row>
@@ -351,7 +337,7 @@ const VurderingVedtak = ({
             {stegErGyldig && (
               <Dokumentliste
                 behandlingID={behandlingID}
-                dokumenter={ mapDokumenter(pdfDokumenter as BrevDokumentMetadataType[]) }
+                dokumenter={mapDokumenter(pdfDokumenter as BrevDokumentMetadataType[])}
               />
             )}
           </Nav.Column>
@@ -368,12 +354,12 @@ const VurderingVedtak = ({
               bekreftKnappProps={{
                 loading: vedtakPending,
                 disabled: !stegErGyldig,
-                onClick: onSubmit,
+                onClick: onSubmit
               }}
               bekreftTekst="Fatt vedtak"
               tilbakeKnappProps={{
                 onClick: tilbake,
-                disabled: !redigerbart,
+                disabled: !redigerbart
               }}
             />
           </Nav.Column>
@@ -393,9 +379,9 @@ const VurderingVedtakForm = reduxForm<FormValuesProps, VurderingVedtakProps>({
     lagYupToReduxformErrorMapper(VurderingVedtakSchema, {
       context: {
         behandlingstype: props.behandlingstype,
-        bestemmelse: props.lovvalgsperiode?.lovvalgsbestemmelse,
-      },
-    })(values),
+        bestemmelse: props.lovvalgsperiode?.lovvalgsbestemmelse
+      }
+    })(values)
 })(VurderingVedtak);
 
 export default connector(VurderingVedtakForm);
