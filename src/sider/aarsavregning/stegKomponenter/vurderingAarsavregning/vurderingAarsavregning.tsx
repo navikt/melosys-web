@@ -491,7 +491,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
     setVisLeggTilMedlemskapsperioder(await trigger("medlemskapsperioder"));
   };
 
-  console.log({ erIngenGrunnlag });
+  console.log({ aj: aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift.totalAvgift || 0 });
 
   return (
     <div className="vurderingAarsavregning">

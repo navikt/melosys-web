@@ -29,6 +29,7 @@ export const BeregnetTrygdeavgiftDetaljer = ({
   medlemskapsTypeErPliktig: boolean;
   tittel: string;
 }) => {
+  console.log({ grunnlag, medlemskapsTypeErPliktig, tittel });
   const hentDetaljer = (data: Grunnlagsopplysninger | undefined): DetaljerInterface[] => {
     if (data === undefined) return [];
     return data.avgift.trygdeavgiftsperioder
