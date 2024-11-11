@@ -323,12 +323,13 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
   useEffect(() => {
     if (
       redigerbart &&
-      formValues.totaltForskuddsvisFakturert &&
+      (formValues.totaltForskuddsvisFakturert || formValues.totaltForskuddsvisFakturert === "") &&
       formValues.totaltForskuddsvisFakturert !== aarsavregningResponse?.avregning?.tidligereFakturertBeloep
     ) {
       Api.Aarsavregning.oppdaterTotalBelop(behandlingID, aarsavregningID, {
         avregning: {
-          tidligereFakturertBeloep: formValues.totaltForskuddsvisFakturert,
+          tidligereFakturertBeloep:
+            formValues.totaltForskuddsvisFakturert === "" ? 0 : formValues.totaltForskuddsvisFakturert,
         },
       });
     }
@@ -339,7 +340,6 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
       setFeil(undefined);
       const erBrukerPliktigMedlemOgSkattepliktig =
         medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(formVerdier.skatteforholdsperioder);
-      // if (!aarsavregningResponse?.tidligereGrunnlagsopplysninger) return;
       Api.Trygdeavgift.beregnTrygdeavgiftsperioder(behandlingID, {
         skatteforholdsperioder: formVerdier.skatteforholdsperioder.map((skatteforhold: Skatteforhold) => ({
           fomDato: Utils.dato.formatterDatoTilISO(skatteforhold.fomDato),
@@ -490,7 +490,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
 
     setVisLeggTilMedlemskapsperioder(await trigger("medlemskapsperioder"));
   };
-  console.log({ aarsavregningResponse });
+
   return (
     <div className="vurderingAarsavregning">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">Årsavregning</Nav.Typo.Innholdstittel>
