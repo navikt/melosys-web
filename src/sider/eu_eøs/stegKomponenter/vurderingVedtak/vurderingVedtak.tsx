@@ -274,7 +274,7 @@ const VurderingVedtak = ({
       return dokument;
     });
   };
-  const skalViseFritekstSed = !(bucLukketOgLovvalgNorge || (erSokkelSkip && erArtikkel11_3));
+  const skalViseFritekstSed = !(erSokkelSkip && erArtikkel11_3);
 
   return (
     <div className="vedtak">
@@ -352,11 +352,7 @@ const VurderingVedtak = ({
             {stegErGyldig && (
               <Dokumentliste
                 behandlingID={behandlingID}
-                dokumenter={
-                  bucLukketOgLovvalgNorge
-                    ? pdfDokumenter.filter((dok) => "sedType" in dok && dok.sedType !== EKV.Koder.sedtyper.A012)
-                    : mapDokumenter(pdfDokumenter as BrevDokumentMetadataType[])
-                }
+                dokumenter={ mapDokumenter(pdfDokumenter as BrevDokumentMetadataType[]) }
               />
             )}
           </Nav.Column>
