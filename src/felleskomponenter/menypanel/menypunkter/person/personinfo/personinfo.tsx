@@ -38,7 +38,7 @@ const PersonInfo = ({ behandlingID, ...props }: PersonInfoProps) => {
   const personinfoLoadingContent = (
     <>
       Henter personinfo...
-      <Nav.NavFrontendSpinner />
+      <Nav.Loader />
     </>
   );
   const personinfoErrorContent = <Nav.Alert variant="error">Feil ved henting av personinfo!</Nav.Alert>;
