@@ -7,7 +7,6 @@ import { KTObject } from "@navikt/melosys-kodeverk";
 import * as Ikoner from "../../../../resources/images";
 import * as Mui from "../../../ui";
 import { AdresseOgFeil, FieldArrayProps, Fullmektig, Type } from "./types";
-import { SkjemaelementFeilmelding } from "nav-frontend-skjema";
 import BrevAdresse from "../../../adresser/brevAdresse";
 
 const { FULLMEKTIG_SØKNAD, FULLMEKTIG_ARBEIDSGIVER } = MKV.Koder.fullmaktstype;
@@ -162,7 +161,9 @@ const RedigererFullmektig = ({
                     </Nav.Checkbox>
                   ))}
                 </Nav.CheckboxGroup>
-                {manglerFullmakt && <SkjemaelementFeilmelding>{manglerFullmakt}</SkjemaelementFeilmelding>}
+                {manglerFullmakt && (
+                  <Nav.Typo.Element className="fullmakt_errortext">{manglerFullmakt}</Nav.Typo.Element>
+                )}
               </>
             )}
 
