@@ -78,7 +78,7 @@ const Redigerer = ({
           feltNavn={`${overordnetFeltNavn}.navn`}
           disabled={!redigerbart || disableNavnInput}
         />
-        {visNavnSpinner && <Nav.NavFrontendSpinner className="navn-spinner" />}
+        {visNavnSpinner && <Nav.Loader className="navn-spinner" />}
       </Nav.Column>
       <Nav.Column xs="2" className="slett__symbol">
         <Mui.IkonKnapp ariaLabel="Slett barn" ikon={Ikoner.Bin} onClick={slett} />

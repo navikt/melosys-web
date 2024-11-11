@@ -3,6 +3,7 @@ import "../vurderingAarsavregning.css";
 import { FormValuesProps } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
 import { Control } from "react-hook-form";
 import * as Forms from "../../../../../felleskomponenter/forms";
+import { Heading } from "@navikt/ds-react";
 
 interface TidligereGrunnlagProps {
   formValues: FormValuesProps;
@@ -12,7 +13,9 @@ interface TidligereGrunnlagProps {
 
 const informasjonsmeldingIngenInformasjonOmPerioder = (
   <Nav.Alert variant="info" size="small" className="informasjonsmeldingIngenInformasjonOmPerioder">
-    Det er ingen informasjon om perioder med medlemskap og forskuddsvis fakturert trygdeavgift i Melosys.
+    <Heading size="small">
+      Det er ingen informasjon om perioder med medlemskap og forskuddsvis fakturert trygdeavgift i Melosys.
+    </Heading>
     <ul>
       <li>Hvis trygdeavgiften er forskuddsvis fakturert fra avgiftssystemet, oppgi totalbeløpet som er fakturert.</li>
       <li>
