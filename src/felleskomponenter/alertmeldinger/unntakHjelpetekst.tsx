@@ -22,7 +22,7 @@ const UnntakHjelpetekst = () => {
       <Nav.List title="Når du får svar, må du:">
         <Nav.List.Item>avvise den uavklarte perioden i MEDL.</Nav.List.Item>
         <Nav.List.Item>
-          endre valget på dette steget til «Jeg vil innvilge søknaden» eller «Jeg vil avslå søknaden» .
+          endre valget på dette steget til «Jeg vil innvilge søknaden» eller «Jeg vil avslå søknaden».
         </Nav.List.Item>
       </Nav.List>
     </Box>
