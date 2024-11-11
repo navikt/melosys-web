@@ -259,7 +259,6 @@ const VurderingVedtak = ({
   const sedMottakerLand = finnSedMottakerLand(arbeidsland, bostedsland || {}, lovvalgsbestemmelse, tilleggBestemmelse);
   const flereSoknadslandEnnTillatt = arbeidsland.length > 1 && !MKVUtils.kanHaFlereSoknadsland(behandlingstema);
   const stegErGyldig = redigerbart && formIsValid && !harFeilmeldinger && !flereSoknadslandEnnTillatt;
-  const bucLukketOgLovvalgNorge = !erBucAapen && behandlingstema === BESLUTNING_LOVVALG_NORGE;
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
 
   const lovvalgsbestemmelseKT = MKVUtils.lovvalgsbestemmelseTilObjekt(lovvalgsbestemmelse);
