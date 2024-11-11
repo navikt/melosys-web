@@ -63,7 +63,9 @@ const BestemmelseHjelpetekst = ({ bestemmelse }: { bestemmelse?: string }) => {
     <>
       <Nav.List title="Følgende vilkår må være oppfylt" size="small">
         {hjelpetekster.map((hjelpetekst) => (
-          <Nav.List.Item key={hjelpetekst} text={hjelpetekst} spacing={0} />
+          <Nav.List.Item key={hjelpetekst} spacing={0}>
+            {hjelpetekst}
+          </Nav.List.Item>
         ))}
       </Nav.List>
       {ikkeKravOmTidsbegrensning && <p>Det er ikke krav om at utsendingsperioden/arbeidsperioden er tidsbegrenset.</p>}

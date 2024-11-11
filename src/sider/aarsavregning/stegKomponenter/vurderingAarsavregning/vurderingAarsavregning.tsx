@@ -521,7 +521,11 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
           </Nav.Row>
         )}
       </Nav.Fieldset>
-      {feil && <Nav.Alert variant="error">{feil}</Nav.Alert>}
+      {feil && (
+        <Nav.Alert variant="error" className="alertstripe_feilmelding">
+          {feil}
+        </Nav.Alert>
+      )}
       {aarsavregningResponse?.tidligereGrunnlagsopplysninger === null &&
         aarsavregningResponse.aar === (valgtÅr || initieltÅr) && (
           <TidligereGrunnlagsopplysningerFinnesIkke
@@ -605,11 +609,8 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
 
       {(erAvvik || erIngenGrunnlag) && formIsValid && aarsavregningResponse?.nyttGrunnlag && (
         <SumArsavregningTabell
-          nyTrygdeavgift={aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift}
-          tidligereTrygdeavgift={
-            aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift.totalAvgift ??
-            aarsavregningResponse.avregning?.tidligereFakturertBeloep
-          }
+          nyTrygdeavgift={aarsavregningResponse?.avregning?.nyttTotalbeloep}
+          tidligereTrygdeavgift={aarsavregningResponse.avregning?.tidligereFakturertBeloep}
         />
       )}
 

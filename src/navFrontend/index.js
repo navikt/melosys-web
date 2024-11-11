@@ -6,6 +6,7 @@ import Table from "./table";
 import Tag from "./tag";
 import List from "./list/list";
 import Loader from "./loader";
+import ConfirmationPanel from "./confirmationPanel";
 import { Textarea, TextField, RadioGroup, Select, CheckboxGroup, Fieldset, SkjemaGruppe } from "./skjema";
 
 import * as Typo from "./typografi";
@@ -37,4 +38,5 @@ export {
   List,
   Textarea,
   Loader,
+  ConfirmationPanel,
 };
