@@ -351,7 +351,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
         )}
       </Nav.Fieldset>
       {feil && (
-        <Nav.Alert variant="error" className={"alertstripe_feilmelding"}>
+        <Nav.Alert variant="error" className="alertstripe_feilmelding">
           {feil}
         </Nav.Alert>
       )}
