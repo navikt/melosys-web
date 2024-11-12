@@ -91,13 +91,13 @@ export const BeregnetTrygdeavgiftDetaljer = ({
                   </Nav.Table.DataCell>
                   <Nav.Table.DataCell key={Utils._uuid()}>{detaljer.avgiftssats}</Nav.Table.DataCell>
                   <Nav.Table.DataCell key={Utils._uuid()}>
-                    {formaterTilNorskBelop(detaljer.avgiftPerMd)} kr
+                    {formaterTilNorskBelop(detaljer.avgiftPerMd, 0)} kr
                   </Nav.Table.DataCell>
                   <Nav.Table.DataCell key={Utils._uuid()}>
                     {KV.finnTermFraListe(MKV.KTObjects.inntektskildetype, detaljer.inntektskildetype)}
                   </Nav.Table.DataCell>
                   <Nav.Table.DataCell key={Utils._uuid()}>
-                    {formaterTilNorskBelop(detaljer.inntektPerMd)} kr
+                    {formaterTilNorskBelop(detaljer.inntektPerMd, 0)} kr
                   </Nav.Table.DataCell>
                   <Nav.Table.DataCell key={Utils._uuid()}>
                     {arbAvgBetalesKreves(detaljer.inntektskildetype)
