@@ -352,7 +352,11 @@ const VurderingVedtak = ({
             {stegErGyldig && (
               <Dokumentliste
                 behandlingID={behandlingID}
-                dokumenter={mapDokumenter(pdfDokumenter as BrevDokumentMetadataType[])}
+                dokumenter={
+                  bucLukketOgLovvalgNorge
+                    ? pdfDokumenter.filter((dok) => !("sedType" in dok))
+                    : mapDokumenter(pdfDokumenter as BrevDokumentMetadataType[])
+                }
               />
             )}
           </Nav.Column>
