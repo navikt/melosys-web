@@ -76,7 +76,7 @@ export const BeregnetTrygdeavgiftDetaljer = ({
                 <Nav.Table.HeaderCell scope="col">Avgift md.</Nav.Table.HeaderCell>
                 <Nav.Table.HeaderCell scope="col">Inntektskilde</Nav.Table.HeaderCell>
                 <Nav.Table.HeaderCell scope="col">Bruttoinntekt md.</Nav.Table.HeaderCell>
-                <Nav.Table.HeaderCell scope="col">Betalt aga.</Nav.Table.HeaderCell>
+                <Nav.Table.HeaderCell scope="col">Betalt aga.?</Nav.Table.HeaderCell>
                 <Nav.Table.HeaderCell scope="col">Skattepliktig</Nav.Table.HeaderCell>
                 <Nav.Table.HeaderCell scope="col">Dekning</Nav.Table.HeaderCell>
               </Nav.Table.Row>
