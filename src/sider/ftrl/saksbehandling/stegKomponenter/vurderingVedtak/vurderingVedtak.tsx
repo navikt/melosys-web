@@ -33,11 +33,15 @@ import { feiletResponsSelectors } from "../../../../../ducks/feiletRespons";
 import { NY_VURDERING_BAKGRUNN_HJELPETEKST } from "../../../../ikkeYrkesaktiv/stegKomponenter/vurderingVedtak/tekster";
 import { FRITEKST_VALG } from "../../../../../kodeverk/koder";
 import { menypanelOperations, menypanelSelectors } from "../../../../../ducks/menypanel";
+import { fagsakSelectors } from "../../../../../ducks/fagsaker";
+import FullmaktForTrygdeavgiftConfirmationPanel from "../../../../../felleskomponenter/fullmaktForTrygdeavgiftConfirmationPanel/fullmaktForTrygdeavgiftConfirmationPanel";
 
 const { NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingstyper;
 const { IKKE_YRKESAKTIV } = MKV.Koder.behandlinger.behandlingstema;
 const { OPPHØRT } = MKV.Koder.innvilgelsesResultat;
 const { OPPHØRSVEDTAK, FØRSTEGANGSVEDTAK, ENDRINGSVEDTAK } = MKV.Koder.vedtakstyper;
+const { FULLMEKTIG_TRYGDEAVGIFT } = MKV.Koder.fullmaktstype;
+const { FULLMEKTIG } = MKV.Koder.aktoersroller;
 const {
   INNVILGELSE_FOLKETRYGDLOVEN,
   VEDTAK_OPPHOERT_MEDLEMSKAP,
@@ -96,7 +100,15 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const erFullmektigEndret = useSelector(menypanelSelectors.MenypanelErFullmektigEndretSelector);
   const feilmeldinger = useSelector(feiletResponsSelectors.FeilmeldingerSelector);
   const kontrollfeil = useSelector(kontrollSelectors.KontrollFeilSelector);
+  const saksnummer = useSelector(fagsakSelectors.SaksnummerSelector);
   const { kontrollerFerdigbehandling, fattVedtak } = komponentDispatch(dispatch);
+
+  const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
+  const [trygdeavgiftMottaker, setTrygdeavgiftMottaker] = useState<KTObject | undefined>(undefined);
+  const [fakturamottaker, setFakturamottaker] = useState<string | undefined>(undefined);
+  const [vedtakPending, setVedtakPending] = useState(false);
+  const [harFullmaktForTrygdeavgift, setHarFullmaktForTrygdeavgift] = useState(false);
+  const [harBekreftetFullmaktForTrygdeavgift, setHarBekreftetFullmaktForTrygdeavgift] = useState(false);
 
   const erNyVurdering = behandlingstype === NY_VURDERING;
   const erManglendeInnbetalingTrygdeavgift = behandlingstype === MANGLENDE_INNBETALING_TRYGDEAVGIFT;
@@ -147,12 +159,6 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
     } as FieldValues,
   });
   const formValues = watch();
-
-  const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
-  const [trygdeavgiftMottaker, setTrygdeavgiftMottaker] = useState<KTObject | undefined>(undefined);
-  const [fakturamottaker, setFakturamottaker] = useState<string | undefined>(undefined);
-  const [vedtakPending, setVedtakPending] = useState(false);
-  const stegErGyldig = redigerbart && formIsValid && Utils._isEmpty(feilmeldinger) && Utils._isEmpty(kontrollfeil);
 
   const mottatteOpplysningerErGyldig = () => Utils._isEmpty(mottatteOpplysningerFeilmeldinger);
   let oppdaterFørKontroll = true;
@@ -206,6 +212,13 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
 
   useEffect(() => {
     if (aktivtSteg && (erFullmektigEndret || !fakturamottaker)) {
+      Api.Fagsaker.aktoer.hent(saksnummer, FULLMEKTIG).then((res) => {
+        setHarBekreftetFullmaktForTrygdeavgift(false);
+        setHarFullmaktForTrygdeavgift(
+          res.some((aktoer) => aktoer.fullmakter?.some((fullmakt) => fullmakt === FULLMEKTIG_TRYGDEAVGIFT))
+        );
+      });
+
       Api.Trygdeavgift.hentFakturamottaker(behandlingID).then((mottaker) => {
         setFakturamottaker(mottaker.navn);
       });
@@ -343,6 +356,13 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
       : `Finner ikke ${erIkkeYrkesaktiv ? "land" : "arbeidsland"}`;
   };
 
+  const stegErGyldig =
+    redigerbart &&
+    formIsValid &&
+    Utils._isEmpty(feilmeldinger) &&
+    Utils._isEmpty(kontrollfeil) &&
+    (!harFullmaktForTrygdeavgift || harBekreftetFullmaktForTrygdeavgift);
+
   return (
     <div className="vurderingVedtak">
       <Nav.Typo.Innholdstittel className="stegvelgertittel">
@@ -397,6 +417,13 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
             <Nav.Typo.Normaltekst className="bold">{fakturamottaker}</Nav.Typo.Normaltekst>
           </Nav.Column>
         </Nav.Row>
+      ) : null}
+
+      {harFullmaktForTrygdeavgift && redigerbart ? (
+        <FullmaktForTrygdeavgiftConfirmationPanel
+          harBekreftet={harBekreftetFullmaktForTrygdeavgift}
+          onChange={setHarBekreftetFullmaktForTrygdeavgift}
+        />
       ) : null}
 
       {(erNyVurdering || (erManglendeInnbetalingTrygdeavgift && !erDelvisOpphør)) && (

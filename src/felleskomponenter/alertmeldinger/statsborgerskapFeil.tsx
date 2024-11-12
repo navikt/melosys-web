@@ -4,14 +4,14 @@ import { behandlingerSelectors } from "../../ducks/behandlinger";
 import * as Utils from "../../utils";
 import * as Nav from "../../navFrontend";
 
+const uoppgittEllerUkjenteLand = ["UOPPGITT", "UKJENT", "KOSOVO"];
+
 const StatsborgerskapFeil = ({ className }: { className: string }) => {
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const personopplysninger = useHentPersonopplysninger(behandlingID, false);
-
   if (!personopplysninger) return null;
 
-  const erUoppgittEllerUkjent = (statsborgerskap: string) =>
-    statsborgerskap.includes("UOPPGITT") || statsborgerskap.includes("UKJENT");
+  const erUoppgittEllerUkjent = (statsborgerskap: string) => uoppgittEllerUkjenteLand.includes(statsborgerskap);
 
   const statsborgerskapErUoppgittUkjent =
     Utils._isEmpty(personopplysninger.statsborgerskap) ||

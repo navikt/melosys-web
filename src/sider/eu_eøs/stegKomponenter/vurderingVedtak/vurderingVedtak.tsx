@@ -354,7 +354,7 @@ const VurderingVedtak = ({
                 behandlingID={behandlingID}
                 dokumenter={
                   bucLukketOgLovvalgNorge
-                    ? pdfDokumenter.filter((dok) => "sedType" in dok && dok.sedType !== EKV.Koder.sedtyper.A012)
+                    ? mapDokumenter(pdfDokumenter.filter((dok) => !("sedType" in dok)) as BrevDokumentMetadataType[])
                     : mapDokumenter(pdfDokumenter as BrevDokumentMetadataType[])
                 }
               />

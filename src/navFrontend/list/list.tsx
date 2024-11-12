@@ -3,26 +3,20 @@ import "./list.css";
 import { List as NavList, ListProps } from "@navikt/ds-react";
 
 interface ItemProps {
-  text: string;
   spacing?: number;
-  children?: ReactNode;
+  children: ReactNode;
 }
 
-const List = ({ title, size = "small", children }: ListProps) => {
+const List = ({ size = "small", children, ...rest }: ListProps) => {
   return (
-    <NavList title={title} size={size}>
+    <NavList {...rest} size={size}>
       {children}
     </NavList>
   );
 };
 
-const ListItem = ({ text, spacing = 2, children }: ItemProps) => {
-  return (
-    <NavList.Item className={`mb-${spacing}`}>
-      {text}
-      {children}
-    </NavList.Item>
-  );
+const ListItem = ({ spacing = 2, children }: ItemProps) => {
+  return <NavList.Item className={`mb-${spacing}`}>{children}</NavList.Item>;
 };
 
 List.Item = ListItem;
