@@ -161,19 +161,18 @@ export const Inntektskilder = ({
               </Nav.Column>
 
               {skalViseErMaanedsBelopRadioGroup && (
-                <Nav.Column className="radio-group">
+                <Nav.Column>
                   {skalFylleInnBruttoInntekt ? (
-                    <Forms.RadioGroup
-                      legend={index === 0 ? "Periode" : ""}
+                    <Forms.Select
+                      emptyFieldDisabled={true}
+                      label={index === 0 ? "Periode" : ""}
                       name={`inntektskilder[${index}].erMaanedsbelop`}
                       readOnly={!redigerbart}
                       control={control}
                     >
-                      <Stack gap="6" direction={{ xs: "column", sm: "row" }} wrap={false}>
-                        <Nav.Radio value={BOOLSK_STRING.SANN}>Md.</Nav.Radio>
-                        <Nav.Radio value={BOOLSK_STRING.USANN}>Total</Nav.Radio>
-                      </Stack>
-                    </Forms.RadioGroup>
+                      <option value={BOOLSK_STRING.SANN}>Md.</option>
+                      <option value={BOOLSK_STRING.USANN}>Total</option>
+                    </Forms.Select>
                   ) : (
                     <div className="ikkeRelevant">
                       {index === 0 && <Nav.Typo.Element>Periode</Nav.Typo.Element>}
