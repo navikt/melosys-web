@@ -192,8 +192,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
 
   const skalFaktureres = tidligereTrygdeavgift && nyTrygdeavgift && nyTrygdeavgift - tidligereTrygdeavgift > 0;
 
-  const stegErGyldig =
-    formIsValid && (!harFullmaktForTrygdeavgift || (harBekreftetFullmaktForTrygdeavgift && skalFaktureres));
+  const stegErGyldig = formIsValid && (!harFullmaktForTrygdeavgift || harBekreftetFullmaktForTrygdeavgift);
 
   return (
     <div className="vurderingVedtak">
