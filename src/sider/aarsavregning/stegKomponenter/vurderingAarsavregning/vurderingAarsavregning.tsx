@@ -31,6 +31,7 @@ import GrunnlagsopplysningerSkjema from "./komponenter/grunnlagsopplysningerSkje
 import { fagsakSelectors } from "../../../../ducks/fagsaker";
 import { NyBehandlingForTidligereAarsavregningMelding } from "../../../../felleskomponenter/alertmeldinger/alertmeldinger";
 import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
+import { FeilmeldingOppsummering } from "./feilmeldingOppsummering";
 
 interface Props {
   bekreft: () => void;
@@ -63,6 +64,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
   const [initieltÅr, setInitieltÅr] = useState<number | null>(null);
   const [erAvvik, setErAvvik] = useState<boolean | undefined>(undefined);
   const [feil, setFeil] = useState<undefined | string>(undefined);
+  const [formBekreftet, setFormBekreftet] = useState(false);
   const [aarsavregningResponse, setAarsavregningResponse] = useState<AarsavregningResponse | undefined>(undefined);
   const [nyVurderingÅrsavregning, setNyVurderingÅrsavregning] = useState<boolean>(false);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
@@ -191,7 +193,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
     control,
     watch,
     setValue,
-    formState: { isValid: formIsValid, isValidating },
+    formState: { errors: formErrors, isValid: formIsValid, isValidating },
   } = useForm({
     resolver: yupResolver(vurderingAarsavregningSchema),
     context: {
@@ -223,6 +225,12 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
   } = useFieldArray<FieldArrayProps, "inntektskilder", "id">({ control, name: "inntektskilder" });
 
   const formValues = watch();
+
+  useEffect(() => {
+    if (formBekreftet && Object.keys(formErrors).length === 0) {
+      setFormBekreftet(false);
+    }
+  }, [formValues]);
 
   useEffect(() => {
     if (
@@ -318,6 +326,13 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
     const år = event.target.value ? parseInt(event.target.value, 10) : undefined;
     setFeil(undefined);
     setValgtÅr(år || null);
+  };
+
+  const bekreftOnClick = () => {
+    setFormBekreftet(true);
+    if (stegErGyldig) {
+      bekreft();
+    }
   };
 
   return (
@@ -433,9 +448,10 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
         />
       )}
 
-      <Feilmelding type={aktivFeilmeldingType} />
+      {/* <Feilmelding type={aktivFeilmeldingType} />  TODO remove} */}
+      {formBekreftet && <FeilmeldingOppsummering errors={formErrors}></FeilmeldingOppsummering>}
 
-      <Nav.Button variant="primary" disabled={!stegErGyldig || !redigerbart} onClick={bekreft}>
+      <Nav.Button variant="primary" disabled={!redigerbart} onClick={bekreftOnClick}>
         Bekreft og fortsett
       </Nav.Button>
     </div>

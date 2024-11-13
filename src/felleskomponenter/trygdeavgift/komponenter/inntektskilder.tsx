@@ -16,6 +16,7 @@ import {
 } from "../../../sider/ftrl/saksbehandling/stegKomponenter/vurderingTrygdeavgift/vurderingTrygdeavgiftSchema";
 import "./inntektskilder.css";
 import { Stack } from "@navikt/ds-react";
+import { Alert } from "../../../navFrontend";
 
 const {
   ARBEIDSINNTEKT_FRA_NORGE,
@@ -68,6 +69,10 @@ export const Inntektskilder = ({
 
   const handleEndreArbAvgBetales = (index: number, arbAvgBetales: string) => {
     update(index, { ...formValues.inntektskilder[index], arbAvgBetales, bruttoInntekt: undefined });
+  };
+
+  const erHoyInntekt = (inntekt: any) => {
+    return inntekt.bruttoInntekt > 250000 && inntekt.erMaanedsbelop === BOOLSK_STRING.SANN;
   };
 
   return (
@@ -202,6 +207,18 @@ export const Inntektskilder = ({
                   <p className={`undertekst ${index === 0 ? "med-overskrift" : "uten-overskrift"}`}>Ikke relevant</p>
                 </div>
               )}
+            </Nav.Column>
+
+            <Nav.Column
+              className={`column ${
+                erHoyInntekt(formValues.inntektskilder[index])
+                  ? "hoy_inntekt_advarsel"
+                  : "hoy_inntekt_advarsel invisible"
+              }`}
+            >
+              <Alert variant="warning" size="small" inlist={true}>
+                Høy inntekt!
+              </Alert>
             </Nav.Column>
 
             <Nav.Column className="slett__knapp">
