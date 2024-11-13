@@ -395,8 +395,10 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
           legend="Er det avvik i opplysningene fra skatt eller bruker?"
           readOnly={!redigerbart}
         >
-          <Nav.Radio value>Ja</Nav.Radio>
-          <Nav.Radio value={false}>Nei</Nav.Radio>
+          <Nav.HStack gap="6">
+            <Nav.Radio value>Ja</Nav.Radio>
+            <Nav.Radio value={false}>Nei</Nav.Radio>
+          </Nav.HStack>
         </Nav.RadioGroup>
       )}
 

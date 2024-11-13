@@ -26,7 +26,7 @@ const TrygdeavgiftsperioderTabell = ({
       <Nav.Table size="small" className="periode_tabell">
         <Nav.Table.Header className="header_row">
           <Nav.Table.Row>
-            <Nav.Table.HeaderCell scope="col">Periode</Nav.Table.HeaderCell>
+            <Nav.Table.HeaderCell scope="col">Trygdeperiode</Nav.Table.HeaderCell>
             <Nav.Table.HeaderCell scope="col">Dekning</Nav.Table.HeaderCell>
             <Nav.Table.HeaderCell scope="col">Inntektskilde</Nav.Table.HeaderCell>
             <Nav.Table.HeaderCell scope="col">Sats</Nav.Table.HeaderCell>

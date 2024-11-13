@@ -3,7 +3,7 @@ import * as Nav from "../../../../../navFrontend";
 import * as Utils from "../../../../../utils";
 import MKV from "../../../../../melosyskodeverk";
 import * as KV from "../../../../../kodeverk";
-import { formaterTilNorskBelop } from "../../../../../utils";
+import { formaterTilNorskBelopUtenDesimaler } from "../../../../../utils";
 
 const { SKATTEPLIKTIG } = MKV.Koder.skatteplikttype;
 const { MISJONÆR } = MKV.Koder.inntektskildetype;
@@ -71,12 +71,12 @@ export const BeregnetTrygdeavgiftDetaljer = ({
           <Nav.Table size="small" className="periode_tabell">
             <Nav.Table.Header className="header_row">
               <Nav.Table.Row>
-                <Nav.Table.HeaderCell scope="col">Trygdeavgift</Nav.Table.HeaderCell>
+                <Nav.Table.HeaderCell scope="col">Trygdeperiode</Nav.Table.HeaderCell>
                 <Nav.Table.HeaderCell scope="col">Sats</Nav.Table.HeaderCell>
                 <Nav.Table.HeaderCell scope="col">Avgift md.</Nav.Table.HeaderCell>
                 <Nav.Table.HeaderCell scope="col">Inntektskilde</Nav.Table.HeaderCell>
-                <Nav.Table.HeaderCell scope="col">Brutto inntekt md.</Nav.Table.HeaderCell>
-                <Nav.Table.HeaderCell scope="col">Betalt aga.</Nav.Table.HeaderCell>
+                <Nav.Table.HeaderCell scope="col">Bruttoinntekt md.</Nav.Table.HeaderCell>
+                <Nav.Table.HeaderCell scope="col">Betalt aga.?</Nav.Table.HeaderCell>
                 <Nav.Table.HeaderCell scope="col">Skattepliktig</Nav.Table.HeaderCell>
                 <Nav.Table.HeaderCell scope="col">Dekning</Nav.Table.HeaderCell>
               </Nav.Table.Row>
@@ -91,13 +91,13 @@ export const BeregnetTrygdeavgiftDetaljer = ({
                   </Nav.Table.DataCell>
                   <Nav.Table.DataCell key={Utils._uuid()}>{detaljer.avgiftssats}</Nav.Table.DataCell>
                   <Nav.Table.DataCell key={Utils._uuid()}>
-                    {formaterTilNorskBelop(detaljer.avgiftPerMd)} kr
+                    {formaterTilNorskBelopUtenDesimaler(detaljer.avgiftPerMd)} kr
                   </Nav.Table.DataCell>
                   <Nav.Table.DataCell key={Utils._uuid()}>
                     {KV.finnTermFraListe(MKV.KTObjects.inntektskildetype, detaljer.inntektskildetype)}
                   </Nav.Table.DataCell>
                   <Nav.Table.DataCell key={Utils._uuid()}>
-                    {formaterTilNorskBelop(detaljer.inntektPerMd)} kr
+                    {formaterTilNorskBelopUtenDesimaler(detaljer.inntektPerMd)} kr
                   </Nav.Table.DataCell>
                   <Nav.Table.DataCell key={Utils._uuid()}>
                     {arbAvgBetalesKreves(detaljer.inntektskildetype)
