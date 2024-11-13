@@ -57,7 +57,7 @@ const VirksomhetenINorge = ({
     <Nav.Container fluid className="virksomheten-i-norge">
       <Nav.Row className="tittel">
         <Nav.Column xs="12" className="col">
-          <Nav.Typo.Systemtittel>{KV.Menypunkter.OmVirksomhetenINorge.tittel}</Nav.Typo.Systemtittel>
+          <Nav.Heading size="small">{KV.Menypunkter.OmVirksomhetenINorge.tittel}</Nav.Heading>
           {visArbeidsforholdRolleEtiketter && <Tags.ArbeidsgiversDel />}
         </Nav.Column>
       </Nav.Row>

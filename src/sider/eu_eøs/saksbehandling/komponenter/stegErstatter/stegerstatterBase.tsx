@@ -13,7 +13,7 @@ const StegerstatterBase = ({ tittel, beskrivelse }: StegerstatterBaseProps) => (
   <section className="panelSeksjon stegerstatter">
     <div className="panel">
       <Nav.Row>
-        <Nav.Typo.Systemtittel>{tittel}</Nav.Typo.Systemtittel>
+        <Nav.Heading size="small">{tittel}</Nav.Heading>
       </Nav.Row>
       <p>{parse(beskrivelse)}</p>
     </div>

@@ -19,9 +19,9 @@ const LagretFullmektig = ({ fullmektige }: LagretFullmektigProps) => {
             <div className="lagretFullmektig_container" key={fullmektig.ident}>
               <div className="overskrift">
                 <Ikon.Fullmakt className="inline_felt ikon" aria-hidden />
-                <Nav.Typo.Systemtittel className="inline_felt">
+                <Nav.Heading size="small" className="inline_felt">
                   {fullmektig.adresse?.mottakerNavn}
-                </Nav.Typo.Systemtittel>
+                </Nav.Heading>
               </div>
               <Nav.Row>
                 <Nav.Column xs="6">
@@ -41,7 +41,9 @@ const LagretFullmektig = ({ fullmektige }: LagretFullmektigProps) => {
           <div className="lagretFullmektig_container" key={fullmektig.ident}>
             <div className="overskrift">
               <Ikon.Fullmakt className="inline_felt ikon" aria-hidden />
-              <Nav.Typo.Systemtittel className="inline_felt">{fullmektig.adresse?.mottakerNavn}</Nav.Typo.Systemtittel>
+              <Nav.Heading size="small" className="inline_felt">
+                {fullmektig.adresse?.mottakerNavn}
+              </Nav.Heading>
             </div>
             <Nav.Row>
               <Nav.Column xs="6">

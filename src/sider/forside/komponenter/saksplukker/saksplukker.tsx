@@ -133,7 +133,7 @@ export const Saksplukker = ({
 
   return (
     <div className="panel saksplukker">
-      <Nav.Typo.Systemtittel>Behandle sak</Nav.Typo.Systemtittel>
+      <Nav.Heading size="small">Behandle sak</Nav.Heading>
       <p>Velg sakstype, saks- og behandlingstema for å få tildelt en sak.</p>
 
       <form className="saksplukker__skjema" onSubmit={submitOgVideresend}>

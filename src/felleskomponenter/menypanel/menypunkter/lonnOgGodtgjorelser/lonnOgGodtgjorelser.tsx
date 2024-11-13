@@ -296,9 +296,9 @@ const LonnOgGodtgjorelser = ({ redigerbart, visArbeidsforholdRolleEtiketter }: L
     <Nav.Container fluid className="lonnOgGodtgjorelser">
       <Nav.Row className="tittel">
         <Nav.Column xs="12">
-          <Nav.Typo.Systemtittel style={{ display: "inline", marginRight: "1em" }}>
+          <Nav.Heading size="small" style={{ display: "inline", marginRight: "1em" }}>
             {KV.Menypunkter.LonnOgGodtgjorelser.tittel}
-          </Nav.Typo.Systemtittel>
+          </Nav.Heading>
           {visArbeidsforholdRolleEtiketter && <Tags.ArbeidsgiversDel style={{ marginLeft: "0.3em" }} />}
           <LonnOgNaturalytelser
             redigerbart={redigerbart}

@@ -13,7 +13,7 @@ import { FellesHandlersContext } from "../../../contexts";
 
 const OppfriskBekreft = ({ bekreft, avbryt }) => (
   <div>
-    <Nav.Typo.Systemtittel>Vil du oppdatere registeropplysninger?</Nav.Typo.Systemtittel>
+    <Nav.Heading size="small">Vil du oppdatere registeropplysninger?</Nav.Heading>
     <Nav.Typo.Normaltekst>
       Oppdatering av registeropplysning kan ta noe tid. Du kan velge om du vil gå tilbake til forsiden for å behandle en
       annen oppgave imens.
@@ -112,7 +112,7 @@ BekreftEllerOppfrisk.propTypes = {
 
 const AnnenBehandlingOppfriskes = ({ avbryt }) => (
   <div>
-    <Nav.Typo.Systemtittel>Kan ikke oppdatere registeropplysninger</Nav.Typo.Systemtittel>
+    <Nav.Heading size="small">Kan ikke oppdatere registeropplysninger</Nav.Heading>
     <Nav.Alert variant="warning">
       Registeropplysningene i en annen behandling er i ferd med å bli oppdatert. Vent til den behandlingen er oppdatert
       før du starter å oppdatere denne.

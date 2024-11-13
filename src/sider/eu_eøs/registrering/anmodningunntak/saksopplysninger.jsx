@@ -360,7 +360,7 @@ const Saksopplysninger = ({
       <form name="anmodningunntak" id="anmodningunntak" onSubmit={overstyrSubmit}>
         <div className="panelSeksjon">
           <div className="panel stegFane steg0 stegFane--aktiv">
-            <Nav.Typo.Systemtittel>Vurder anmodning om unntak</Nav.Typo.Systemtittel>
+            <Nav.Heading size="small">Vurder anmodning om unntak</Nav.Heading>
             <br />
             <div className="vurderUnntaksperiode">
               <Nav.Row className="seksjon">

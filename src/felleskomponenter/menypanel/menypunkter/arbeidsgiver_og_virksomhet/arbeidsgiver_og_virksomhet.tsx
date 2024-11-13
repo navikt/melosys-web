@@ -79,9 +79,9 @@ export const ArbeidsgiverOgVirksomhet = ({
   return (
     <Nav.Container fluid className="arbeidsgiver__og__virksomhet">
       <div className="tittel">
-        <Nav.Typo.Systemtittel style={{ display: "inline", marginRight: "1em" }}>
+        <Nav.Heading size="small" style={{ display: "inline", marginRight: "1em" }}>
           {KV.Menypunkter.ArbeidsgiverOgVirksomhet.tittel}
-        </Nav.Typo.Systemtittel>
+        </Nav.Heading>
         {visArbeidsforholdRolleEtiketter && <Tags.ArbeidsgiversDel style={{ marginLeft: "0.3em" }} />}
       </div>
       {ekstraArbeidsgivere.length === 0 && (

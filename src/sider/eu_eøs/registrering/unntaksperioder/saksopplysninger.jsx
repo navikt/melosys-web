@@ -331,7 +331,7 @@ const Saksopplysninger = ({
       <form name="registrering" id="registrering" onSubmit={overstyrSubmit}>
         <div className="stegvelger panelSeksjon">
           <div className="panel stegFane steg0 stegFane--aktiv">
-            <Nav.Typo.Systemtittel>Registrering av unntaksperioder</Nav.Typo.Systemtittel>
+            <Nav.Heading size="small">Registrering av unntaksperioder</Nav.Heading>
             <br />
             <div className="vurderingEndrePeriode">
               {vurderingBegrunnelser.length > 0 && (

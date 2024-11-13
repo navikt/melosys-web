@@ -33,7 +33,7 @@ export const IngenFlytMelding = () => (
 
 export const NyVurderingMelding = () => (
   <Nav.Alert variant="warning" className="nyVurderingMelding">
-    <Nav.Typo.Systemtittel>Ny behandling av sak</Nav.Typo.Systemtittel>
+    <Nav.Heading size="small">Ny behandling av sak</Nav.Heading>
     <Nav.Typo.Normaltekst>
       Du har startet en ny behandling av en sak der tidligere behandling er avsluttet. Sjekk sakens opplysninger og
       vurder videre behandling.
@@ -43,7 +43,7 @@ export const NyVurderingMelding = () => (
 
 export const NyBehandlingForTidligereAarsavregningMelding = () => (
   <Nav.Alert variant="warning" className="nyVurderingMelding">
-    <Nav.Typo.Systemtittel>Ny behandling for en tidligere årsavregning</Nav.Typo.Systemtittel>
+    <Nav.Heading size="small">Ny behandling for en tidligere årsavregning</Nav.Heading>
     <Nav.Typo.Normaltekst>
       Du har startet en ny årsavregningbehandling for et tidligere årsavregnet år
     </Nav.Typo.Normaltekst>

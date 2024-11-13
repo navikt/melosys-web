@@ -39,7 +39,7 @@ const GrunnlagsopplysningerSkjema = ({
 }: GrunnlagsopplysningerSkjemaProps) => {
   return (
     <div className="grunnlagsopplysningerSkjema">
-      <Nav.Typo.Systemtittel>Inntekts- og skatteopplysninger for endelig trygdeavgift</Nav.Typo.Systemtittel>
+      <Nav.Heading size="small">Inntekts- og skatteopplysninger for endelig trygdeavgift</Nav.Heading>
       <Skatteforholdsperioder
         formValues={formValues}
         redigerbart={redigerbart}

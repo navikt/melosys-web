@@ -55,7 +55,7 @@ const Fakturainformasjon = () => {
       <div key={fakturaserieReferanseFraBehandling}>
         <Nav.Row>
           <Nav.Column xs="12">
-            <Nav.Typo.Systemtittel>Fakturainformasjon</Nav.Typo.Systemtittel>
+            <Nav.Heading size="small">Fakturainformasjon</Nav.Heading>
             <Nav.Table>
               <Nav.Table.Header>
                 <Nav.Table.Row shadeOnHover={false}>
