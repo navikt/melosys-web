@@ -3,7 +3,7 @@ import * as Nav from "../../../../../navFrontend";
 import * as Utils from "../../../../../utils";
 import MKV from "../../../../../melosyskodeverk";
 import * as KV from "../../../../../kodeverk";
-import { formaterTilNorskBelop, formaterTilNorskBelopUtenDesimaler } from "../../../../../utils";
+import { formaterTilNorskBelopUtenDesimaler } from "../../../../../utils";
 
 const { SKATTEPLIKTIG } = MKV.Koder.skatteplikttype;
 const { MISJONÆR } = MKV.Koder.inntektskildetype;
