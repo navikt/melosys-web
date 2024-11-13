@@ -15,6 +15,7 @@ import Arbeidsforholdene from "../arbeidsgiver/arbeidsforhold";
 import Inntekt from "../arbeidsgiver/inntekt";
 
 import "./arbeidsgivereNorge.css";
+import { Accordion } from "@navikt/ds-react";
 
 const ArbeidsgivereEnkeltNorge = (props) => {
   const { kilde, organisasjon, arbeidsforholdene, inntektListe, wrapIPanel } = props;
@@ -33,14 +34,14 @@ const ArbeidsgivereEnkeltNorge = (props) => {
   );
 
   const seksjonerWrappetIPanel = (
-    <Mui.LesMerPanel
-      intro={<Mui.Undertittel ikon={Ikoner.Arbeidsgiver} tekst={organisasjon.navn} />}
-      apneTekst="Vis info"
-      lukkTekst="Skjul info"
-      border
-    >
-      {seksjoner}
-    </Mui.LesMerPanel>
+    <Accordion>
+      <Accordion.Item>
+        <Accordion.Header>
+          <Mui.Undertittel ikon={Ikoner.Arbeidsgiver} tekst={organisasjon.navn} />
+        </Accordion.Header>
+        <Accordion.Content>{seksjoner}</Accordion.Content>
+      </Accordion.Item>
+    </Accordion>
   );
 
   const seksjonerIkkeWrappetIPanel = (
