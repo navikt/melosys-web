@@ -2,7 +2,7 @@ import InntektsperioderTabell from "./inntektsperioderTabell";
 import { render, screen } from "@testing-library/react";
 
 describe("TrygdeavgiftsperioderTabell", () => {
-  it("ikke rendrer tabell dersom undefined", () => {
+  it("rendre tabell med dasher som verdier for kolonner på forste rad", () => {
     render(<InntektsperioderTabell />);
 
     const tdElements = screen.getAllByRole("cell");
