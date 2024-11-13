@@ -216,7 +216,7 @@ export const Inntektskilder = ({
                   : "hoy_inntekt_advarsel invisible"
               }`}
             >
-              <Alert variant="warning" size="small" inlist={true}>
+              <Alert variant="warning" size="small">
                 Høy inntekt!
               </Alert>
             </Nav.Column>

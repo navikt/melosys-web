@@ -19,7 +19,7 @@ import {
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Utils from "../../../../utils";
 import vurderingAarsavregningSchema from "./vurderingAarsavregningSchema";
-import { Feilmelding, feilMeldingBlokkerer, finnAktivFeilmelding } from "./meldinger";
+import { feilMeldingBlokkerer, finnAktivFeilmelding } from "./meldinger";
 import { erBrukerSkattepliktigIHelePerioden } from "../../../ftrl/saksbehandling/stegKomponenter/vurderingTrygdeavgift/vurderingTrygdeavgiftSchema";
 import MKV from "../../../../melosyskodeverk";
 import { SumArsavregningTabell } from "./komponenter/sumArsavregningTabell";
@@ -449,7 +449,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
       )}
 
       {/* <Feilmelding type={aktivFeilmeldingType} />  TODO remove} */}
-      {formBekreftet && <FeilmeldingOppsummering errors={formErrors}></FeilmeldingOppsummering>}
+      {formBekreftet && <FeilmeldingOppsummering errors={formErrors} />}
 
       <Nav.Button variant="primary" disabled={!redigerbart} onClick={bekreftOnClick}>
         Bekreft og fortsett
