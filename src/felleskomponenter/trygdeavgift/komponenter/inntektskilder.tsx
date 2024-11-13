@@ -165,7 +165,7 @@ export const Inntektskilder = ({
               <Nav.Column>
                 {skalFylleInnBruttoInntekt ? (
                   <Forms.Select
-                    emptyFieldDisabled={true}
+                    emptyFieldDisabled
                     label={index === 0 ? "Periode" : ""}
                     hideLabel={index !== 0}
                     name={`inntektskilder[${index}].erMaanedsbelop`}
