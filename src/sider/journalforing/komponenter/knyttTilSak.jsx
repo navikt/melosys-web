@@ -156,7 +156,9 @@ export const KnyttTilSak = (props) => {
 
         {erJournalføring && (
           <div className="panelElement">
-            <Nav.Typo.Undertittel className="overskrift">Velg hva du vil gjøre med dokumentet</Nav.Typo.Undertittel>
+            <Nav.Heading size="xsmall" className="overskrift">
+              Velg hva du vil gjøre med dokumentet
+            </Nav.Heading>
             <Skjema.RadioGroup legend="" name={feltNavn.opprettBehandling}>
               <Nav.Radio value>Opprett ny behandling</Nav.Radio>
               <Nav.Radio value={false}>Uten å opprette behandling</Nav.Radio>
@@ -165,7 +167,9 @@ export const KnyttTilSak = (props) => {
         )}
         {opprettBehandling && (
           <div className="panelElement">
-            <Nav.Typo.Undertittel className="overskrift">Velg tema og type for ny behandling</Nav.Typo.Undertittel>
+            <Nav.Heading size="xsmall" className="overskrift">
+              Velg tema og type for ny behandling
+            </Nav.Heading>
             <Skjema.Select
               feltNavn={feltNavn.behandlingstema}
               label="Behandlingstema"

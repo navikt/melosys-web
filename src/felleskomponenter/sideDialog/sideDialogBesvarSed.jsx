@@ -71,9 +71,9 @@ const bucTypeTerm = (bucType) => EKV.Selectors.alleBucer[bucType];
 
 const EnkeltBucHeading = ({ bucType, opprettetDato }) => (
   <div>
-    <Nav.Typo.Undertittel>
+    <Nav.Heading size="xsmall">
       {bucType} - {bucTypeTerm(bucType)}
-    </Nav.Typo.Undertittel>
+    </Nav.Heading>
     <Nav.BodyLong size="small">Opprettet: {Utils.dato.formatterDatoTilNorsk(opprettetDato)}</Nav.BodyLong>
   </div>
 );

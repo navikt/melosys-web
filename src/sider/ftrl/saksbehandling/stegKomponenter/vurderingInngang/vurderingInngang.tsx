@@ -142,7 +142,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
       </Nav.Heading>
 
       <div className="label__container">
-        <Nav.Typo.Undertittel>Søknadsperiode</Nav.Typo.Undertittel>
+        <Nav.Heading size="xsmall">Søknadsperiode</Nav.Heading>
         {erNyVurdering && <Nav.Typo.Undertekst>{nyVurderingPeriodetekst}</Nav.Typo.Undertekst>}
       </div>
 

@@ -14,7 +14,9 @@ const Komponent = ({ ikon: Ikon, tittel, innhold }: KomponentProps) => {
     <div className="journalføringKomponent">
       <div className="journalføringKomponent__overskrift">
         <Ikon className="journalføringKomponent__ikon" />
-        <Nav.Typo.Undertittel className="journalføringKomponent__tittel">{tittel}</Nav.Typo.Undertittel>
+        <Nav.Heading size="xsmall" className="journalføringKomponent__tittel">
+          {tittel}
+        </Nav.Heading>
       </div>
       <div className="journalføringKomponent__innhold">{innhold}</div>
     </div>

@@ -64,7 +64,9 @@ const PersonstatusModal = ({
       <Nav.Modal.Body>
         <PersonstatusTabell personstatuser={aktivePersonstatuser} />
 
-        <Nav.Typo.Undertittel className={personstatusModalCls.element("historikk")}>Historikk</Nav.Typo.Undertittel>
+        <Nav.Heading size="xsmall" className={personstatusModalCls.element("historikk")}>
+          Historikk
+        </Nav.Heading>
         <GyldighetshistorikkInfo />
         <PersonstatusTabell personstatuser={historiskePersonstatuser} />
       </Nav.Modal.Body>

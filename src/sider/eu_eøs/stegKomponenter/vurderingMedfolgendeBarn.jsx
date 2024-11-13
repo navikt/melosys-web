@@ -162,9 +162,9 @@ const VurderingMedfolgendeBarn = ({
 
   return (
     <Nav.Container fluid className="vurdering-medfolgende-barn">
-      <Nav.Typo.Undertittel className="undertittel">
+      <Nav.Heading size="xsmall" className="undertittel">
         Skal barn oppgitt i søknaden være omfattet av norsk lovgivning?
-      </Nav.Typo.Undertittel>
+      </Nav.Heading>
       {medfolgendeBarn.map((barn) => {
         const medfolgendeBarnEnkeltfakta = vurderingLovvalgBarnFakta.find((af) => af.subjektID === barn.uuid);
         const begrunnelse =

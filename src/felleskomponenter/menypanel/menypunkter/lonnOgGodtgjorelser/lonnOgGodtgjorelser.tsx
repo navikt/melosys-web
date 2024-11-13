@@ -83,9 +83,9 @@ export const InntektRedigeringUtfortUndertittel = ({ verdi }: { verdi: number | 
   const inntekt = Utils.streng.tryParseFloat(verdi);
 
   return (
-    <Nav.Typo.Undertittel className="inntekt-undertittel">
+    <Nav.Heading size="xsmall" className="inntekt-undertittel">
       {inntekt !== null ? <FormatertInntekt inntekt={inntekt} /> : "-"}
-    </Nav.Typo.Undertittel>
+    </Nav.Heading>
   );
 };
 
