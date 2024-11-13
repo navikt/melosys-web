@@ -113,6 +113,10 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
     if (erFullmektigEndret) {
       hentOgSetHarFullmaktForTrygdeavgift();
 
+      Api.Trygdeavgift.hentFakturamottaker(behandlingID).then((dto) => {
+        setFakturaMottaker(dto.navn);
+      });
+
       dispatch(menypanelOperations.setErFullmektigEndret(false));
     }
   }, [erFullmektigEndret]);
