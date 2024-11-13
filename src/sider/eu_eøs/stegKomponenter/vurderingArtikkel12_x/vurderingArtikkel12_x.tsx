@@ -42,9 +42,9 @@ const VurderingArtikkel12_x = ({
 
   return (
     <div className="vurderingArtikkel12_x">
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">
+      <Nav.Heading size="large" className="stegvelgertittel">
         Vurdering {erVurderingArbeidstaker ? "arbeidstaker" : "næringsdrivende"}
-      </Nav.Typo.Innholdstittel>
+      </Nav.Heading>
       <Bestemmelser
         oppdaterData={oppdaterData}
         slettData={slettData}

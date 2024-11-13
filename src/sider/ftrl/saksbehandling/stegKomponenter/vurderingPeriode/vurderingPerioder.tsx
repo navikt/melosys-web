@@ -243,7 +243,9 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
 
   return (
     <div className="vurderingPerioder">
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">Medlemskapsperioder</Nav.Typo.Innholdstittel>
+      <Nav.Heading size="large" className="stegvelgertittel">
+        Medlemskapsperioder
+      </Nav.Heading>
 
       <Nav.Typo.Normaltekst className="informasjonstekst">
         {hentInformasjonstekst(behandlingstype, medlemskapsTypeErPliktig)}

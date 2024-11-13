@@ -273,7 +273,9 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const visFeilFraLagring = feil && formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType);
   return (
     <div className="vurderingTrygdeavgift">
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">Trygdeavgift</Nav.Typo.Innholdstittel>
+      <Nav.Heading size="large" className="stegvelgertittel">
+        Trygdeavgift
+      </Nav.Heading>
 
       {behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING && (
         <Nav.Typo.Normaltekst className="nyVurderingTekst">

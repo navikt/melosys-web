@@ -341,7 +341,9 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
   let harReturnertNullIVilkårListe = false;
   return (
     <div className="vurderingBestemmelse_ftrl">
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">Bestemmelse</Nav.Typo.Innholdstittel>
+      <Nav.Heading size="large" className="stegvelgertittel">
+        Bestemmelse
+      </Nav.Heading>
 
       <ListeVelger
         muligeAlternativer={bestemmelser}

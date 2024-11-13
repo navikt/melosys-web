@@ -94,9 +94,9 @@ const VurderingBostedsland = (props) => {
 
   return (
     <div className="vurderingBostedsland">
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">
+      <Nav.Heading size="large" className="stegvelgertittel">
         Vurder bosted (&#171;sentrum for livsinteresser&#187;)
-      </Nav.Typo.Innholdstittel>
+      </Nav.Heading>
       <div className="vurderingBostedsland__skjemafelt">
         <Nav.Row>
           <Nav.Column xs="12">

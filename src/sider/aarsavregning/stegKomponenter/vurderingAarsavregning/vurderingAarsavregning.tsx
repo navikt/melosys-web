@@ -322,7 +322,9 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
 
   return (
     <div className="vurderingAarsavregning">
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">Årsavregning</Nav.Typo.Innholdstittel>
+      <Nav.Heading size="large" className="stegvelgertittel">
+        Årsavregning
+      </Nav.Heading>
       <Nav.Fieldset className="select" legend={<LabelMedHjelpetekst bold label="År" placement="left-start" />}>
         <Nav.Row>
           <Nav.Column xs="4">

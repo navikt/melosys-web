@@ -184,7 +184,9 @@ export const VurderingArtikkel13UtpekLand = ({
 
   return (
     <div className="vurderingArtikkel13UtpekLand">
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">{overskrift}</Nav.Typo.Innholdstittel>
+      <Nav.Heading size="large" className="stegvelgertittel">
+        {overskrift}
+      </Nav.Heading>
       <Nav.Typo.Undertittel>
         <Nav.Typo.Element className="undertittel">{lovvalgslandTittel}</Nav.Typo.Element>
       </Nav.Typo.Undertittel>

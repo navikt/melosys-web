@@ -142,7 +142,9 @@ const VurderingVirksomhet = (props) => {
 
   return (
     <div className="vurderingArbeidsgiver">
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">Virksomhet</Nav.Typo.Innholdstittel>
+      <Nav.Heading size="large" className="stegvelgertittel">
+        Virksomhet
+      </Nav.Heading>
       <div className="arbeidsgiver">
         <VirksomheterCheckboxGroup
           avklarteVirksomheter={virksomheter}

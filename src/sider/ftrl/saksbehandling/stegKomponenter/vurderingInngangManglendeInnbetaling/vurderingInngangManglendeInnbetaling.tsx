@@ -73,7 +73,9 @@ export const VurderingInngangManglendeInnbetaling = ({ bekreft, aktivtSteg, oppd
 
   return (
     <div className="vurderingInngangManglendeInnbetaling">
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">Manglende innbetaling</Nav.Typo.Innholdstittel>
+      <Nav.Heading size="large" className="stegvelgertittel">
+        Manglende innbetaling
+      </Nav.Heading>
 
       <div className="label__container">
         <Nav.Typo.Normaltekst>

@@ -77,7 +77,9 @@ export const VurderingInngang = ({
 
   return (
     <div className="vurderinginngang_eu_eos">
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">Kontroller inngangsvilkår</Nav.Typo.Innholdstittel>
+      <Nav.Heading size="large" className="stegvelgertittel">
+        Kontroller inngangsvilkår
+      </Nav.Heading>
       <Varsler
         oppfyllerInngangsvilkar={oppfyllerInngangsvilkar}
         inngangsvilkaar={inngangsvilkaar}

@@ -122,7 +122,9 @@ const VurderingInngang = ({ bekreft, oppdaterStatus }: VurderingInngangProps) =>
 
   return (
     <div className="vurderingInngang_unntaksregistrering">
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">Oppgi opplysninger fra attesten</Nav.Typo.Innholdstittel>
+      <Nav.Heading size="large" className="stegvelgertittel">
+        Oppgi opplysninger fra attesten
+      </Nav.Heading>
 
       <Nav.Typo.Undertittel className="periode_label">Periode</Nav.Typo.Undertittel>
       <div className="skjema__container">

@@ -137,7 +137,9 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
 
   return (
     <div className="vurderingInngang_ftrl">
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">Oppgi opplysninger fra søknaden</Nav.Typo.Innholdstittel>
+      <Nav.Heading size="large" className="stegvelgertittel">
+        Oppgi opplysninger fra søknaden
+      </Nav.Heading>
 
       <div className="label__container">
         <Nav.Typo.Undertittel>Søknadsperiode</Nav.Typo.Undertittel>

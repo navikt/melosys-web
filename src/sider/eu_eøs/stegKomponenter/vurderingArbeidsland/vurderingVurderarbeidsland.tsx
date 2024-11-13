@@ -184,7 +184,9 @@ export const VurderingVurderarbeidsland = ({
 
   return (
     <div className="vurderingVurderArbeidsland">
-      <Nav.Typo.Innholdstittel className="stegvelgertittel overskrift">Vurder arbeidsland</Nav.Typo.Innholdstittel>
+      <Nav.Heading size="large" className="stegvelgertittel overskrift">
+        Vurder arbeidsland
+      </Nav.Heading>
       {innhold}
       <Mui.StegKnapper
         bekreftKnappProps={{ disabled: !(redigerbart && harAvklaring), onClick: bekreftOgFortsett }}

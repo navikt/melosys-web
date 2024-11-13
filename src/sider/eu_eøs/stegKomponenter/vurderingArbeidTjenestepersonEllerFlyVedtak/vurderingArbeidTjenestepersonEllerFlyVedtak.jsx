@@ -322,7 +322,9 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="vurderingArbeidTjenestepersonEllerFlyVedtak">
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">{overskrift}</Nav.Typo.Innholdstittel>
+      <Nav.Heading size="large" className="stegvelgertittel">
+        {overskrift}
+      </Nav.Heading>
       <Nav.Row className="velgLovvalgsbestemmelse">
         <Nav.Column xs="7">
           <Skjema.Select label="Velg en lovvalgsbestemmelse" feltNavn="lovvalgsbestemmelse" disabled={!redigerbart}>

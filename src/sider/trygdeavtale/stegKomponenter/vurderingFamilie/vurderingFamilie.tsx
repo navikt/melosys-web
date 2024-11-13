@@ -150,7 +150,9 @@ const VurderingFamilie = ({
 
   return (
     <div className="vurderingFamilie">
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">Familie</Nav.Typo.Innholdstittel>
+      <Nav.Heading size="large" className="stegvelgertittel">
+        Familie
+      </Nav.Heading>
 
       {Utils._isEmpty(tilknyttedeBarn) && !tilknyttetEktefelle ? (
         <div>

@@ -286,9 +286,9 @@ const VurderingArtikkel16Anmodning = ({
 
   return (
     <div className="vurderingArtikkel16Anmodning">
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">
+      <Nav.Heading size="large" className="stegvelgertittel">
         {konvensjonStorbritanniaToggleEnabled ? "Anmodning om unntak" : "Anmodning om unntak etter artikkel 16.1"}
-      </Nav.Typo.Innholdstittel>
+      </Nav.Heading>
       <div className="artikkel16__innhold">
         {erIDirekteTilArtikkel16Flyt && !konvensjonStorbritanniaToggleEnabled && (
           <Nav.Row>

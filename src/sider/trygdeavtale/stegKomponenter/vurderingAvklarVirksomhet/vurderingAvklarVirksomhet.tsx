@@ -73,9 +73,9 @@ const VurderingAvklarVirksomhet = ({
 
   return (
     <div className="vurderingAvklarVirksomhet">
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">
+      <Nav.Heading size="large" className="stegvelgertittel">
         <LabelMedHjelpetekst label="Virksomhet" bold />
-      </Nav.Typo.Innholdstittel>
+      </Nav.Heading>
 
       {virksomheterListe?.length !== 0 ? (
         <Skjema.RadioGroup

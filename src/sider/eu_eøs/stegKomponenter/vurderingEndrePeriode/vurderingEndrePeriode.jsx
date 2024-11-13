@@ -221,7 +221,9 @@ class VurderingEndrePeriode extends Component {
 
     return (
       <div className="vurderingEndrePeriode">
-        <Nav.Typo.Innholdstittel className="stegvelgertittel">Endre lovvalgsperiode</Nav.Typo.Innholdstittel>
+        <Nav.Heading size="large" className="stegvelgertittel">
+          Endre lovvalgsperiode
+        </Nav.Heading>
         <Nav.Typo.Element className="mindreTittel">Opprinnelig lovvalgsperiode</Nav.Typo.Element>
         <Nav.Row>
           <Nav.Column xs="3">

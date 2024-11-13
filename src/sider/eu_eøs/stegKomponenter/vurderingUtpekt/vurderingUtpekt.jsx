@@ -126,7 +126,9 @@ export const VurderingUtpekt = ({
           </ul>
         </Nav.Alert>
       ) : null}
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">Vurder lovvalgsbeslutningen (A003)</Nav.Typo.Innholdstittel>
+      <Nav.Heading size="large" className="stegvelgertittel">
+        Vurder lovvalgsbeslutningen (A003)
+      </Nav.Heading>
       <Nav.Row className="rad">
         <Nav.Column xs="7">
           {vurderingBegrunnelser.length > 0 && (

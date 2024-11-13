@@ -200,9 +200,9 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
 
   return (
     <div className="vurderingVedtak">
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">
+      <Nav.Heading size="large" className="stegvelgertittel">
         Vedtak årsavregning {lagretAarsavregning ? lagretAarsavregning.aar : ""}
-      </Nav.Typo.Innholdstittel>
+      </Nav.Heading>
 
       <SumArsavregningTabell nyTrygdeavgift={nyTrygdeavgift} tidligereTrygdeavgift={tidligereTrygdeavgift} />
 

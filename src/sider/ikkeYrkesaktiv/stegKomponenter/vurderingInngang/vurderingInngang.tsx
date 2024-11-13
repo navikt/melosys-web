@@ -102,7 +102,9 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
 
   return (
     <div className="vurderingInngang_ikkeYrkesaktiv">
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">Oppgi opplysninger fra søknaden</Nav.Typo.Innholdstittel>
+      <Nav.Heading size="large" className="stegvelgertittel">
+        Oppgi opplysninger fra søknaden
+      </Nav.Heading>
 
       <Nav.Typo.Undertittel className="periode_label">Periode</Nav.Typo.Undertittel>
       <div className="skjema__container">

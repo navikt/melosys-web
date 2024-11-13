@@ -67,7 +67,9 @@ export const VurderingVideresend = ({
   return (
     <div className="videresendSoknad">
       <form onSubmit={handleSubmit(videresendSoknad)}>
-        <Nav.Typo.Innholdstittel className="stegvelgertittel">Videresending av søknad</Nav.Typo.Innholdstittel>
+        <Nav.Heading size="large" className="stegvelgertittel">
+          Videresending av søknad
+        </Nav.Heading>
         <Nav.Row>
           <Nav.Column xs="8">
             <Skjema.Textarea

@@ -118,7 +118,9 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
 
   return (
     <div className="vurderingBestemmelse_ikkeyrkesaktiv">
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">Bestemmelse og vurdering</Nav.Typo.Innholdstittel>
+      <Nav.Heading size="large" className="stegvelgertittel">
+        Bestemmelse og vurdering
+      </Nav.Heading>
 
       {sakstype === EU_EOS && (
         <Nav.Alert variant="info" className="infomelding">

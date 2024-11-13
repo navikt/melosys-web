@@ -278,14 +278,14 @@ const VurderingVedtak = ({
 
   return (
     <div className="vedtak">
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">
+      <Nav.Heading size="large" className="stegvelgertittel">
         {konvensjonStorbritanniaToggleEnabled
           ? "Omfattet av norsk trygdelovgivning"
           : `Omfattet av norsk trygdelovgivning etter ${finnLovvalgSomTerm(
               lovvalgsbestemmelseKT,
               tilleggBestemmelseKT
             )}`}
-      </Nav.Typo.Innholdstittel>
+      </Nav.Heading>
       <div>
         <Nav.Row>
           <Nav.Column xs="4">

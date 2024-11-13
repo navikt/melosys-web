@@ -21,7 +21,9 @@ const VurderingForutgaendeMedlemskap = (props) => {
 
   return (
     <>
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">Forutgående medlemskap</Nav.Typo.Innholdstittel>
+      <Nav.Heading size="large" className="stegvelgertittel">
+        Forutgående medlemskap
+      </Nav.Heading>
       <EnkeltVilkaar
         tittel="Har bruker tilstrekkelig forutgående medlemskap i folketrygden?"
         redigerbart={redigerbart}

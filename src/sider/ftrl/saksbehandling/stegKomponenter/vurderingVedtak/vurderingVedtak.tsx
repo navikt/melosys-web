@@ -365,11 +365,11 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
 
   return (
     <div className="vurderingVedtak">
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">
+      <Nav.Heading size="large" className="stegvelgertittel">
         {medlemskapsTypeErPliktig
           ? "Pliktig medlemskap etter folketrygdloven"
           : "Frivillig medlemskap etter folketrygdloven"}
-      </Nav.Typo.Innholdstittel>
+      </Nav.Heading>
 
       <Nav.Table size="small" className="melosys__table">
         <Nav.Table.Header>
