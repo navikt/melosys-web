@@ -3,7 +3,7 @@ import * as Nav from "../../../../../navFrontend";
 import * as Utils from "../../../../../utils";
 import MKV from "../../../../../melosyskodeverk";
 import * as KV from "../../../../../kodeverk";
-import { formaterTilNorskBelop } from "../../../../../utils";
+import { formaterTilNorskBelop, formaterTilNorskBelopUtenDesimaler } from "../../../../../utils";
 
 const { SKATTEPLIKTIG } = MKV.Koder.skatteplikttype;
 const { MISJONÆR } = MKV.Koder.inntektskildetype;
@@ -91,13 +91,13 @@ export const BeregnetTrygdeavgiftDetaljer = ({
                   </Nav.Table.DataCell>
                   <Nav.Table.DataCell key={Utils._uuid()}>{detaljer.avgiftssats}</Nav.Table.DataCell>
                   <Nav.Table.DataCell key={Utils._uuid()}>
-                    {formaterTilNorskBelop(detaljer.avgiftPerMd, 0)} kr
+                    {formaterTilNorskBelopUtenDesimaler(detaljer.avgiftPerMd)} kr
                   </Nav.Table.DataCell>
                   <Nav.Table.DataCell key={Utils._uuid()}>
                     {KV.finnTermFraListe(MKV.KTObjects.inntektskildetype, detaljer.inntektskildetype)}
                   </Nav.Table.DataCell>
                   <Nav.Table.DataCell key={Utils._uuid()}>
-                    {formaterTilNorskBelop(detaljer.inntektPerMd, 0)} kr
+                    {formaterTilNorskBelopUtenDesimaler(detaljer.inntektPerMd)} kr
                   </Nav.Table.DataCell>
                   <Nav.Table.DataCell key={Utils._uuid()}>
                     {arbAvgBetalesKreves(detaljer.inntektskildetype)
