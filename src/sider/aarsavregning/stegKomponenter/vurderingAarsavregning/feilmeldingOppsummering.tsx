@@ -22,10 +22,6 @@ export const FeilmeldingOppsummering = ({ errors }: any) => {
               Inntektskildeperioden(e) kan ikke starte før eller slutte etter medlemskapsperioden(e).
             </NavList.Item>
           )}
-
-        {errors.inntektskilder?.some((error: any) => error.bruttoInntekt !== undefined) && (
-          <NavList.Item>trøbbel med inntekta.</NavList.Item>
-        )}
       </NavList>
     </Alert>
   );
