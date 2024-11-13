@@ -209,7 +209,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
       {fakturaMottaker ? (
         <Nav.Row className="trygdeavgift">
           <Nav.Column xs="12">
-            <Nav.Typo.Normaltekst className="info">
+            <Nav.BodyLong size="small" className="info">
               {erDifferanseUnderMinstebeløp ? (
                 <b>Beløpet er under minstegrensen for fakturering/refusjon (100 kr).</b>
               ) : (
@@ -222,7 +222,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
                   <b>{fakturaMottaker}</b>
                 </>
               )}
-            </Nav.Typo.Normaltekst>
+            </Nav.BodyLong>
           </Nav.Column>
         </Nav.Row>
       ) : null}

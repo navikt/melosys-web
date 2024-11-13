@@ -435,9 +435,9 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
 
       {ulovligBestemmelseValgt && (
         <Nav.Alert variant="error">
-          <Nav.Typo.Normaltekst>
+          <Nav.BodyLong size="small">
             Dekning på steg Inngang kan ikke gis i kombinasjon med denne bestemmelsen.
-          </Nav.Typo.Normaltekst>
+          </Nav.BodyLong>
         </Nav.Alert>
       )}
 

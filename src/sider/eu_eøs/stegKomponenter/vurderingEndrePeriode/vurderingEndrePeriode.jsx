@@ -227,10 +227,10 @@ class VurderingEndrePeriode extends Component {
         <Nav.Typo.Element className="mindreTittel">Opprinnelig lovvalgsperiode</Nav.Typo.Element>
         <Nav.Row>
           <Nav.Column xs="3">
-            <Nav.Typo.Normaltekst>Fra {formattertOpprinneligFom}</Nav.Typo.Normaltekst>
+            <Nav.BodyLong size="small">Fra {formattertOpprinneligFom}</Nav.BodyLong>
           </Nav.Column>
           <Nav.Column xs="3">
-            <Nav.Typo.Normaltekst>Til {formattertOpprinneligTom}</Nav.Typo.Normaltekst>
+            <Nav.BodyLong size="small">Til {formattertOpprinneligTom}</Nav.BodyLong>
           </Nav.Column>
         </Nav.Row>
         <Nav.Typo.Element className="mindreTittel">Ny lovvalgsperiode</Nav.Typo.Element>

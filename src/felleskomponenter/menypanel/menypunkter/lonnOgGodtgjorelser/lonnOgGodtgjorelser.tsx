@@ -47,7 +47,9 @@ type BooleanFeltRedigeringUtfortProps = {
 export const BooleanFeltRedigeringUtfort = ({ tekst, verdi }: BooleanFeltRedigeringUtfortProps) => (
   <Nav.Row>
     <Nav.Column xs="12" className="boolean-felt-redigering-utfort">
-      <Nav.Typo.Normaltekst className="typo-normal">{tekst}</Nav.Typo.Normaltekst>
+      <Nav.BodyLong size="small" className="typo-normal">
+        {tekst}
+      </Nav.BodyLong>
       <Nav.Typo.Element className="typo-element">
         {verdi === null ? "-" : Utils._capitalize(Utils.streng.boolTilNorsk(verdi))}
       </Nav.Typo.Element>
@@ -94,7 +96,7 @@ type InntektRedigeringUtfortProps = {
 
 const InntektRedigeringUtfort = ({ tittel, verdi }: InntektRedigeringUtfortProps) => (
   <Nav.Column xs="4" className="inntekt-redigering-utfort">
-    <Nav.Typo.Normaltekst>{tittel}</Nav.Typo.Normaltekst>
+    <Nav.BodyLong size="small">{tittel}</Nav.BodyLong>
     <InntektRedigeringUtfortUndertittel verdi={verdi} />
   </Nav.Column>
 );

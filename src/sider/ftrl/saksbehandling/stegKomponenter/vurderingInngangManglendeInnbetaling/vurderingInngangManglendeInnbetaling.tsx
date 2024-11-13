@@ -78,10 +78,10 @@ export const VurderingInngangManglendeInnbetaling = ({ bekreft, aktivtSteg, oppd
       </Nav.Heading>
 
       <div className="label__container">
-        <Nav.Typo.Normaltekst>
+        <Nav.BodyLong size="small">
           Vurder konsekvens av manglende innbetaling. Du må sjekke OeBS for å se om betaling er mottatt innen fristen.
           <br /> Hvis betaling er mottatt og du ikke skal fatte nytt vedtak kan du ferdigstille denne behandlingen.
-        </Nav.Typo.Normaltekst>
+        </Nav.BodyLong>
       </div>
 
       <Forms.RadioGroup

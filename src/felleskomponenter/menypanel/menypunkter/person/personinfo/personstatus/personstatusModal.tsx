@@ -11,7 +11,7 @@ interface PersonstatusTabellProps {
 
 export const PersonstatusTabell = ({ personstatuser }: PersonstatusTabellProps) => {
   if (personstatuser.length < 1) {
-    return <Nav.Typo.Normaltekst>Ingen historikk registrert i folkeregisteret.</Nav.Typo.Normaltekst>;
+    return <Nav.BodyLong size="small">Ingen historikk registrert i folkeregisteret.</Nav.BodyLong>;
   }
 
   return (

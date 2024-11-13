@@ -46,9 +46,9 @@ const JournalforingSED = ({
         <Nav.Row>
           <Nav.Column xs="6">
             <Nav.Typo.Element>Avsender ID</Nav.Typo.Element>
-            <Nav.Typo.Normaltekst>{avsenderID}</Nav.Typo.Normaltekst>
+            <Nav.BodyLong size="small">{avsenderID}</Nav.BodyLong>
             <Nav.Typo.Element>Avsenders navn</Nav.Typo.Element>
-            <Nav.Typo.Normaltekst>{avsenderNavn}</Nav.Typo.Normaltekst>
+            <Nav.BodyLong size="small">{avsenderNavn}</Nav.BodyLong>
           </Nav.Column>
         </Nav.Row>
       }
@@ -60,11 +60,11 @@ const JournalforingSED = ({
         <Nav.Row>
           <Nav.Column xs="5">
             <Nav.Typo.Element>Sakstype</Nav.Typo.Element>
-            <Nav.Typo.Normaltekst>{sakstype.term}</Nav.Typo.Normaltekst>
+            <Nav.BodyLong size="small">{sakstype.term}</Nav.BodyLong>
           </Nav.Column>
           <Nav.Column xs="7">
             <Nav.Typo.Element>Behandlingstema</Nav.Typo.Element>
-            <Nav.Typo.Normaltekst>{behandlingstema.term}</Nav.Typo.Normaltekst>
+            <Nav.BodyLong size="small">{behandlingstema.term}</Nav.BodyLong>
           </Nav.Column>
         </Nav.Row>
       }

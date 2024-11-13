@@ -19,7 +19,9 @@ const IdentOgNavn = ({ tittel, feltNavn, label, navn }: IdentOgNavnProps) => (
       {!Utils._isEmpty(navn) && (
         <span>
           <Nav.Typo.Element className="navnTittel">Navn:</Nav.Typo.Element>
-          <Nav.Typo.Normaltekst className="navn">{navn}</Nav.Typo.Normaltekst>
+          <Nav.BodyLong size="small" className="navn">
+            {navn}
+          </Nav.BodyLong>
         </span>
       )}
     </div>

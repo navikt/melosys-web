@@ -75,10 +75,10 @@ const VirksomhetenINorge = ({
           </Nav.Row>
 
           {erOffentligVirksomhet && (
-            <Nav.Typo.Normaltekst className="er-offentlig-virksomhet-hjelpetekst">
+            <Nav.BodyLong size="small" className="er-offentlig-virksomhet-hjelpetekst">
               Arbeidsgiveren opplyser å være en offentlig virksomhet, derfor har vi ikke bedt om opplysninger for å
               vurdere vesentlig virksomhet i Norge.
-            </Nav.Typo.Normaltekst>
+            </Nav.BodyLong>
           )}
 
           {erOffentligVirksomhet === false && (

@@ -76,7 +76,7 @@ const SivilstandModal = ({
           {historiskeSivilstander.length > 0 ? (
             <SivilstandTabell sivilstander={historiskeSivilstander} />
           ) : (
-            <Nav.Typo.Normaltekst>Ingen historikk registrert i folkeregisteret.</Nav.Typo.Normaltekst>
+            <Nav.BodyLong size="small">Ingen historikk registrert i folkeregisteret.</Nav.BodyLong>
           )}
         </div>
       </Nav.Modal.Body>

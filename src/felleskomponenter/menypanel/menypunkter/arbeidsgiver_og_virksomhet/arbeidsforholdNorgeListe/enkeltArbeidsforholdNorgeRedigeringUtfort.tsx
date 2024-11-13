@@ -36,11 +36,11 @@ const EnkeltArbeidsforholdNorgeRedigeringUtfort = ({
         <Nav.Typo.Element>Kontaktopplysninger</Nav.Typo.Element>
         <Nav.Row>
           <Nav.Column xs="5">
-            <Nav.Typo.Normaltekst>Kontaktperson:</Nav.Typo.Normaltekst>
+            <Nav.BodyLong size="small">Kontaktperson:</Nav.BodyLong>
             <Nav.Typo.Element>{kontaktopplysninger.kontaktnavn || "Ikke oppgitt"}</Nav.Typo.Element>
           </Nav.Column>
           <Nav.Column xs="5">
-            <Nav.Typo.Normaltekst>Telefonnummer:</Nav.Typo.Normaltekst>
+            <Nav.BodyLong size="small">Telefonnummer:</Nav.BodyLong>
             <Nav.Typo.Element>{kontaktopplysninger.kontakttelefon || "Ikke oppgitt"}</Nav.Typo.Element>
           </Nav.Column>
         </Nav.Row>
@@ -51,7 +51,7 @@ const EnkeltArbeidsforholdNorgeRedigeringUtfort = ({
                 <OrganisasjonsAdresse organisasjon={kontaktopplysningerOrg} visTittel={false} />
               </Nav.Column>
               <Nav.Column xs="3">
-                <Nav.Typo.Normaltekst>Organisasjonsnummer</Nav.Typo.Normaltekst>
+                <Nav.BodyLong size="small">Organisasjonsnummer</Nav.BodyLong>
                 <Nav.Typo.Element>{kontaktopplysningerOrg.orgnr}</Nav.Typo.Element>
               </Nav.Column>
             </Nav.Row>
@@ -64,7 +64,7 @@ const EnkeltArbeidsforholdNorgeRedigeringUtfort = ({
         ) : (
           <Nav.Row>
             <Nav.Column xs="5">
-              <Nav.Typo.Normaltekst>Organisasjonsnummer</Nav.Typo.Normaltekst>
+              <Nav.BodyLong size="small">Organisasjonsnummer</Nav.BodyLong>
               <Nav.Typo.Element>Ikke oppgitt</Nav.Typo.Element>
             </Nav.Column>
           </Nav.Row>
@@ -79,7 +79,9 @@ const EnkeltArbeidsforholdNorgeRedigeringUtfort = ({
           <OrganisasjonsAdresse organisasjon={org} visNavn={false} visTittel={false} />
         </Nav.Column>
         <Nav.Column xs="3">
-          <Nav.Typo.Normaltekst style={{ marginTop: "0.5em" }}>Organisasjonsnummer:</Nav.Typo.Normaltekst>
+          <Nav.BodyLong size="small" style={{ marginTop: "0.5em" }}>
+            Organisasjonsnummer:
+          </Nav.BodyLong>
           <Nav.Typo.Element>{org.orgnr}</Nav.Typo.Element>
         </Nav.Column>
       </Nav.Row>

@@ -397,14 +397,18 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
       <Nav.Row className="arbeidsland">
         <Nav.Column xs="5">
           <Nav.Typo.Element className="info">{erIkkeYrkesaktiv ? "Land" : "Arbeidsland"}</Nav.Typo.Element>
-          <Nav.Typo.Normaltekst className="info">{landEllerArbeidslandTekst()}</Nav.Typo.Normaltekst>
+          <Nav.BodyLong size="small" className="info">
+            {landEllerArbeidslandTekst()}
+          </Nav.BodyLong>
         </Nav.Column>
       </Nav.Row>
 
       {trygdeavgiftMottaker ? (
         <Nav.Row className="trygdeavgift">
           <Nav.Column xs="12">
-            <Nav.Typo.Normaltekst className="info">{trygdeavgiftMottaker.term}</Nav.Typo.Normaltekst>
+            <Nav.BodyLong size="small" className="info">
+              {trygdeavgiftMottaker.term}
+            </Nav.BodyLong>
           </Nav.Column>
         </Nav.Row>
       ) : null}
@@ -412,9 +416,13 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
       {fakturamottaker && !erIkkeYrkesaktiv ? (
         <Nav.Row>
           <Nav.Column xs="12" className="fakturamottaker">
-            <Nav.Typo.Normaltekst className="info">Faktura sendes til:</Nav.Typo.Normaltekst>
+            <Nav.BodyLong size="small" className="info">
+              Faktura sendes til:
+            </Nav.BodyLong>
             &nbsp;
-            <Nav.Typo.Normaltekst className="bold">{fakturamottaker}</Nav.Typo.Normaltekst>
+            <Nav.BodyLong size="small" className="bold">
+              {fakturamottaker}
+            </Nav.BodyLong>
           </Nav.Column>
         </Nav.Row>
       ) : null}

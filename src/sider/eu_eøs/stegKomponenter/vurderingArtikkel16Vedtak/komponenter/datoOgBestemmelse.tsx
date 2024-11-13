@@ -30,7 +30,7 @@ const DatoOgBestemmelse = ({ fomDato, tomDato }: DatoOgBestemmelseProps) => {
           <EnkeltDato dato={tomDato} />
         </Nav.Column>
         <Nav.Column xs="7">
-          <Nav.Typo.Normaltekst>{lovvalgsbestemmelseKT?.term}</Nav.Typo.Normaltekst>
+          <Nav.BodyLong size="small">{lovvalgsbestemmelseKT?.term}</Nav.BodyLong>
         </Nav.Column>
       </Nav.Row>
     </>

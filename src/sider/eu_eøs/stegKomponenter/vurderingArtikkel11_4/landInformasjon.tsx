@@ -30,13 +30,13 @@ const LandInformasjon = () => {
   return (
     <div className="land_informasjon">
       <Nav.Typo.Element className="info_label">Arbeidsland er</Nav.Typo.Element>
-      <Nav.Typo.Normaltekst>{arbeidsLandSetning}</Nav.Typo.Normaltekst>
+      <Nav.BodyLong size="small">{arbeidsLandSetning}</Nav.BodyLong>
       <Nav.Typo.Element className="info_label">
         Arbeidsgiver / selvstendig næringsdrivende har virksomhet i
       </Nav.Typo.Element>
-      <Nav.Typo.Normaltekst>{virksomhetsLandSetning}</Nav.Typo.Normaltekst>
+      <Nav.BodyLong size="small">{virksomhetsLandSetning}</Nav.BodyLong>
       <Nav.Typo.Element className="info_label">Søker er bosatt i</Nav.Typo.Element>
-      <Nav.Typo.Normaltekst>{KV.objektTilTerm(bostedsland)}</Nav.Typo.Normaltekst>
+      <Nav.BodyLong size="small">{KV.objektTilTerm(bostedsland)}</Nav.BodyLong>
     </div>
   );
 };

@@ -23,7 +23,7 @@ const InnerAdresselinjer = (props: InnerAdresselinjerProps) => {
 
   return (
     <div className={adresselinjerCls.block}>
-      <Nav.Typo.Normaltekst>Fullstendig adresse</Nav.Typo.Normaltekst>
+      <Nav.BodyLong size="small">Fullstendig adresse</Nav.BodyLong>
       {felter &&
         felter.map((felt, index) => (
           /* eslint-disable-next-line react/no-array-index-key */

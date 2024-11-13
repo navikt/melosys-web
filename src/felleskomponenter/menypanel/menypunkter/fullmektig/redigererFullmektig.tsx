@@ -171,7 +171,7 @@ const RedigererFullmektig = ({
               <div className="kontaktperson_container">
                 <span className="kontaktperson_labels">
                   <Nav.Typo.Element>Kontaktopplysninger </Nav.Typo.Element>
-                  <Nav.Typo.Normaltekst>(valgfritt)</Nav.Typo.Normaltekst>
+                  <Nav.BodyLong size="small">(valgfritt)</Nav.BodyLong>
                 </span>
                 <Nav.Typo.EtikettLiten className="kontaktperson_info">
                   Brev sendes til denne personen/adressen.

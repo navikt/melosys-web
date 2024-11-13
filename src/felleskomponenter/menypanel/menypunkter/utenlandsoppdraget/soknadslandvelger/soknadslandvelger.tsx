@@ -52,7 +52,9 @@ const Soknadslandvelger = ({ redigerbart, lagreSoknadOgOppfriskSaksopplysninger 
 
   return (
     <div className="soknadslandvelger">
-      <Nav.Typo.Normaltekst className="soknadsland__etikett">Land</Nav.Typo.Normaltekst>
+      <Nav.BodyLong size="small" className="soknadsland__etikett">
+        Land
+      </Nav.BodyLong>
       {redigerbart && status === Status.Redigerer ? (
         <RedigererKomponent lagre={lagre} avbryt={avbryt} />
       ) : (

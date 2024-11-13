@@ -16,10 +16,10 @@ const SlettFritekstvedleggModal = ({ open, lukkModal, slettVedlegg }: SlettFrite
       closeOnBackdropClick
     >
       <Nav.Modal.Body>
-        <Nav.Typo.Normaltekst>
+        <Nav.BodyLong size="small">
           Er du sikker på at du vil slette fritekstvedlegget?
           <br /> Dokumentet vil bli permanent slettet fra Melosys
-        </Nav.Typo.Normaltekst>
+        </Nav.BodyLong>
       </Nav.Modal.Body>
       <Nav.Modal.Footer>
         <Knapperad

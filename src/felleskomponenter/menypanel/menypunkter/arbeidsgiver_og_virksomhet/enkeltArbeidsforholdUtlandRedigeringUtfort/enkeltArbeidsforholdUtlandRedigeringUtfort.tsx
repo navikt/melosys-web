@@ -13,7 +13,7 @@ const EnkeltArbeidsforholdUtlandRedigeringUtfort = ({ verdier }: EnkeltArbeidsfo
     <Nav.Column xs="4">
       {verdier.orgnr && (
         <>
-          <Nav.Typo.Normaltekst>Registreringsnummer</Nav.Typo.Normaltekst>
+          <Nav.BodyLong size="small">Registreringsnummer</Nav.BodyLong>
           <Nav.Typo.Element>{verdier.orgnr}</Nav.Typo.Element>
         </>
       )}

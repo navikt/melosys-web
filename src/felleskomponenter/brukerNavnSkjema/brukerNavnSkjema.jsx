@@ -67,10 +67,10 @@ export const BrukerNavnSkjema = ({
       {sammensattNavn && (
         <div className={cls.element("navn")}>
           <Nav.Typo.Element>Brukers fulle navn</Nav.Typo.Element>
-          <Nav.Typo.Normaltekst>
+          <Nav.BodyLong size="small">
             {brukerSpinner && <Nav.Loader />}
             {sammensattNavn}
-          </Nav.Typo.Normaltekst>
+          </Nav.BodyLong>
         </div>
       )}
     </div>

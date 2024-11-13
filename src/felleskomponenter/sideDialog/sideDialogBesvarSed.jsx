@@ -49,7 +49,7 @@ const EnkeltSed = ({ sed }) => (
       <Nav.Typo.Element className="lenkepanel__heading">
         {sed.sedType} - {sedTypeTerm(sed.sedType)}
       </Nav.Typo.Element>
-      <Nav.Typo.Normaltekst>Opprettet: {Utils.dato.formatterDatoTilNorsk(sed.opprettetDato)}</Nav.Typo.Normaltekst>
+      <Nav.BodyLong size="small">Opprettet: {Utils.dato.formatterDatoTilNorsk(sed.opprettetDato)}</Nav.BodyLong>
     </div>
     <div className="kolonne__status">
       <StatusEtikett status={sed.status} />
@@ -74,7 +74,7 @@ const EnkeltBucHeading = ({ bucType, opprettetDato }) => (
     <Nav.Typo.Undertittel>
       {bucType} - {bucTypeTerm(bucType)}
     </Nav.Typo.Undertittel>
-    <Nav.Typo.Normaltekst>Opprettet: {Utils.dato.formatterDatoTilNorsk(opprettetDato)}</Nav.Typo.Normaltekst>
+    <Nav.BodyLong size="small">Opprettet: {Utils.dato.formatterDatoTilNorsk(opprettetDato)}</Nav.BodyLong>
   </div>
 );
 
@@ -115,7 +115,7 @@ EnkeltBuc.propTypes = {
 const HenterOpplysningerSpinner = () => (
   <div className="henter_opplysninger">
     <Nav.Loader />
-    <Nav.Typo.Normaltekst>Henter BUCer knyttet til saken</Nav.Typo.Normaltekst>
+    <Nav.BodyLong size="small">Henter BUCer knyttet til saken</Nav.BodyLong>
   </div>
 );
 

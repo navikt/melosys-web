@@ -143,7 +143,7 @@ export const VurderingUtpekt = ({
         <Nav.Row className="rad">
           <Nav.Column xs="5">
             <Nav.Typo.Element>Lovvalgsland</Nav.Typo.Element>
-            <Nav.Typo.Normaltekst>{lovvalgslandTerm}</Nav.Typo.Normaltekst>
+            <Nav.BodyLong size="small">{lovvalgslandTerm}</Nav.BodyLong>
           </Nav.Column>
         </Nav.Row>
       )}
@@ -201,7 +201,7 @@ export const VurderingUtpekt = ({
         {ytterligereInformasjon && (
           <Nav.Column xs="12">
             <Nav.Typo.Element>Ytterligere informasjon fra SED</Nav.Typo.Element>
-            <Nav.Typo.Normaltekst>{ytterligereInformasjon}</Nav.Typo.Normaltekst>
+            <Nav.BodyLong size="small">{ytterligereInformasjon}</Nav.BodyLong>
           </Nav.Column>
         )}
       </Nav.Row>

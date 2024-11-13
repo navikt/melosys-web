@@ -13,7 +13,9 @@ const Beskrivelse = ({ label, tekst, className }: BeskrivelseProps) => (
     <Nav.Column xs="10">
       <div className="ovrig-om-arbeidstaker__beskrivelse">
         <Nav.Typo.Element>{label}</Nav.Typo.Element>
-        <Nav.Typo.Normaltekst className="tekst">{tekst || "-"}</Nav.Typo.Normaltekst>
+        <Nav.BodyLong size="small" className="tekst">
+          {tekst || "-"}
+        </Nav.BodyLong>
       </div>
     </Nav.Column>
   </Nav.Row>

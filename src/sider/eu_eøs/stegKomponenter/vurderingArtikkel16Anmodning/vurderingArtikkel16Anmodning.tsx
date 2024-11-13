@@ -274,10 +274,10 @@ const VurderingArtikkel16Anmodning = ({
     <Fragment>
       <Nav.Typo.Element>Begrunnelse til orienteringsbrev til bruker</Nav.Typo.Element>
       {!konvensjonStorbritanniaToggleEnabled && (
-        <Nav.Typo.Normaltekst>
+        <Nav.BodyLong size="small">
           Begrunnelsen kommer ut i vedtaksbrevet som en setning som starter med «Vi har bedt trygdemyndighetene i [land]
           om en avtale for deg, fordi», og slutter med teksten du har tilføyd.
-        </Nav.Typo.Normaltekst>
+        </Nav.BodyLong>
       )}
     </Fragment>
   );
@@ -306,7 +306,7 @@ const VurderingArtikkel16Anmodning = ({
         <Nav.Row>
           <Nav.Column xs="12">
             <Nav.Typo.Element>Det lands lovgivning det søkes unntak fra</Nav.Typo.Element>
-            <Nav.Typo.Normaltekst>{landSomTekstListe}</Nav.Typo.Normaltekst>
+            <Nav.BodyLong size="small">{landSomTekstListe}</Nav.BodyLong>
           </Nav.Column>
         </Nav.Row>
 
@@ -318,9 +318,9 @@ const VurderingArtikkel16Anmodning = ({
             <EnkeltDato dato={anmodningsperiode.fomDato} />
             &nbsp;-&nbsp;
             <EnkeltDato dato={anmodningsperiode.tomDato} />
-            <Nav.Typo.Normaltekst>
+            <Nav.BodyLong size="small">
               {datoDiffMenneskelig(anmodningsperiode.fomDato, anmodningsperiode.tomDato)}
-            </Nav.Typo.Normaltekst>
+            </Nav.BodyLong>
           </Nav.Column>
         </Nav.Row>
 

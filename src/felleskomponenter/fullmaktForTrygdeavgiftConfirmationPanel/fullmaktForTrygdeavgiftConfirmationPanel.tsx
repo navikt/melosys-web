@@ -16,12 +16,12 @@ const FullmaktForTrygdeavgiftConfirmationPanel = ({
       label="Jeg bekrefter at fullmektig for betaling er riktig"
     >
       <Nav.Typo.Element>Husk at det vanligvis er arbeidsgiver som skal motta faktura</Nav.Typo.Element>
-      <Nav.Typo.Normaltekst>
+      <Nav.BodyLong size="small">
         Hvis bruker har oppgitt en annen fullmektig for betaling, skal du spørre bruker om det er riktig.
         <br />
         <br />
         Kontroller at
-      </Nav.Typo.Normaltekst>
+      </Nav.BodyLong>
       <Nav.List>
         <Nav.List.Item>organisasjonsnummeret som er oppgitt tilhører riktig enhet i virksomheten</Nav.List.Item>
         <Nav.List.Item>organisasjonsnummeret er registrert i OeBS</Nav.List.Item>

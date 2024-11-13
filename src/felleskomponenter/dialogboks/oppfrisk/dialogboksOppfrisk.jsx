@@ -14,10 +14,10 @@ import { FellesHandlersContext } from "../../../contexts";
 const OppfriskBekreft = ({ bekreft, avbryt }) => (
   <div>
     <Nav.Heading size="small">Vil du oppdatere registeropplysninger?</Nav.Heading>
-    <Nav.Typo.Normaltekst>
+    <Nav.BodyLong size="small">
       Oppdatering av registeropplysning kan ta noe tid. Du kan velge om du vil gå tilbake til forsiden for å behandle en
       annen oppgave imens.
-    </Nav.Typo.Normaltekst>
+    </Nav.BodyLong>
     <div className="knapperadcontainer">
       <Knapperad
         bekreft={bekreft}

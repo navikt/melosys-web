@@ -7,9 +7,13 @@ import "./avsender/avsender.css";
 const PreutfyltAvsender = ({ className, avsenderID, avsenderNavn }) => (
   <div className={className}>
     <Nav.Typo.Element className="linje">Avsender ID</Nav.Typo.Element>
-    <Nav.Typo.Normaltekst className="linje">{avsenderID}</Nav.Typo.Normaltekst>
+    <Nav.BodyLong size="small" className="linje">
+      {avsenderID}
+    </Nav.BodyLong>
     <Nav.Typo.Element className="linje">Avsenders navn</Nav.Typo.Element>
-    <Nav.Typo.Normaltekst className="linje">{avsenderNavn}</Nav.Typo.Normaltekst>
+    <Nav.BodyLong size="small" className="linje">
+      {avsenderNavn}
+    </Nav.BodyLong>
   </div>
 );
 

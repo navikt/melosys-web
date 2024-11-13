@@ -32,9 +32,9 @@ const AvsenderUtenlandskTrygdemyndighet = ({
       <div className="avsender__navn">
         <Nav.Typo.Element className="avsender__navn__label">Avsender:</Nav.Typo.Element>
         {utenlandskTrygdemyndighetLandkode && (
-          <Nav.Typo.Normaltekst>
+          <Nav.BodyLong size="small">
             Trygdemyndighet i {KV.kodeTilTerm(utenlandskTrygdemyndighetLandkode, landkoderTilUtenlandskTrygdemyndighet)}
-          </Nav.Typo.Normaltekst>
+          </Nav.BodyLong>
         )}
       </div>
     </div>

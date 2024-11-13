@@ -254,7 +254,7 @@ class Informasjon extends Component {
                 {!Utils._isEmpty(virksomhetNavn) && (
                   <span className="bruker-eller-org-navn">
                     <Nav.Typo.Element className="term">Navn:</Nav.Typo.Element>
-                    <Nav.Typo.Normaltekst>{virksomhetNavn}</Nav.Typo.Normaltekst>
+                    <Nav.BodyLong size="small">{virksomhetNavn}</Nav.BodyLong>
                   </span>
                 )}
               </>
@@ -270,7 +270,7 @@ class Informasjon extends Component {
                 {!Utils._isEmpty(brukerNavn) && (
                   <span className="bruker-eller-org-navn">
                     <Nav.Typo.Element className="term">Navn:</Nav.Typo.Element>
-                    <Nav.Typo.Normaltekst>{brukerNavn}</Nav.Typo.Normaltekst>
+                    <Nav.BodyLong size="small">{brukerNavn}</Nav.BodyLong>
                   </span>
                 )}
               </>
@@ -286,9 +286,9 @@ class Informasjon extends Component {
               <Nav.Row>
                 <Nav.Column xs="6">
                   <Nav.Typo.Element>Avsender ID</Nav.Typo.Element>
-                  <Nav.Typo.Normaltekst>{avsenderIDFraJournalpost}</Nav.Typo.Normaltekst>
+                  <Nav.BodyLong size="small">{avsenderIDFraJournalpost}</Nav.BodyLong>
                   <Nav.Typo.Element>Avsenders navn</Nav.Typo.Element>
-                  <Nav.Typo.Normaltekst>{avsenderNavnFraJournalpost}</Nav.Typo.Normaltekst>
+                  <Nav.BodyLong size="small">{avsenderNavnFraJournalpost}</Nav.BodyLong>
                 </Nav.Column>
               </Nav.Row>
             }

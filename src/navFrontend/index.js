@@ -10,6 +10,7 @@ import {
   HStack,
   ExpansionCard,
   Heading,
+  BodyLong,
 } from "@navikt/ds-react";
 import Alert from "./alert";
 import Button from "./button";
@@ -50,4 +51,5 @@ export {
   Loader,
   ConfirmationPanel,
   Heading,
+  BodyLong,
 };

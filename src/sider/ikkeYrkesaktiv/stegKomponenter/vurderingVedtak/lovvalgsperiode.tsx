@@ -118,12 +118,12 @@ export const Lovvalgsperiode = ({ kontrollerFerdigbehandling, onRedigeringErAkti
           />
         </>
       ) : (
-        <Nav.Typo.Normaltekst className="periode" tag="div">
+        <Nav.BodyLong size="small" className="periode" tag="div">
           <span>
             {lovvalgsperiodeFom} - {lovvalgsperiodeTom}
           </span>
           <EndrePeriodeKnapp />
-        </Nav.Typo.Normaltekst>
+        </Nav.BodyLong>
       )}
     </Nav.Column>
   );

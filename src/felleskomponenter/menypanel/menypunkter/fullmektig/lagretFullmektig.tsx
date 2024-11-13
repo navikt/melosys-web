@@ -26,7 +26,9 @@ const LagretFullmektig = ({ fullmektige }: LagretFullmektigProps) => {
               <Nav.Row>
                 <Nav.Column xs="6">
                   <Nav.Typo.Element className="inline_felt">Org.nr.: </Nav.Typo.Element>
-                  <Nav.Typo.Normaltekst className="inline_felt">{fullmektig.ident}</Nav.Typo.Normaltekst>
+                  <Nav.BodyLong size="small" className="inline_felt">
+                    {fullmektig.ident}
+                  </Nav.BodyLong>
                   {fullmektig.adresse && <BrevAdresse {...fullmektig.adresse} visNavn={false} />}
                   <Kontaktperson fullmektig={fullmektig} />
                 </Nav.Column>
@@ -48,7 +50,9 @@ const LagretFullmektig = ({ fullmektige }: LagretFullmektigProps) => {
             <Nav.Row>
               <Nav.Column xs="6">
                 <Nav.Typo.Element className="inline_felt">F.nr./d-nr.: </Nav.Typo.Element>
-                <Nav.Typo.Normaltekst className="inline_felt">{fullmektig.ident}</Nav.Typo.Normaltekst>
+                <Nav.BodyLong size="small" className="inline_felt">
+                  {fullmektig.ident}
+                </Nav.BodyLong>
                 {fullmektig.adresse && <BrevAdresse {...fullmektig.adresse} visNavn={false} />}
               </Nav.Column>
               <Nav.Column xs="6">
@@ -85,21 +89,27 @@ const Kontaktperson = ({ fullmektig }: { fullmektig: Fullmektig }) => {
       {fullmektig.kontaktperson ? (
         <div>
           <Nav.Typo.Element className="inline_felt">Kontaktperson: </Nav.Typo.Element>
-          <Nav.Typo.Normaltekst className="inline_felt">{fullmektig.kontaktperson}</Nav.Typo.Normaltekst>
+          <Nav.BodyLong size="small" className="inline_felt">
+            {fullmektig.kontaktperson}
+          </Nav.BodyLong>
         </div>
       ) : (
-        <Nav.Typo.Normaltekst>Ingen registrert</Nav.Typo.Normaltekst>
+        <Nav.BodyLong size="small">Ingen registrert</Nav.BodyLong>
       )}
       {fullmektig.kontaktTelefon && (
         <div>
           <Nav.Typo.Element className="inline_felt">Telefon: </Nav.Typo.Element>
-          <Nav.Typo.Normaltekst className="inline_felt">{fullmektig.kontaktTelefon}</Nav.Typo.Normaltekst>
+          <Nav.BodyLong size="small" className="inline_felt">
+            {fullmektig.kontaktTelefon}
+          </Nav.BodyLong>
         </div>
       )}
       {fullmektig.kontaktOrgnr && (
         <div>
           <Nav.Typo.Element className="inline_felt">Org.nr.: </Nav.Typo.Element>
-          <Nav.Typo.Normaltekst className="inline_felt">{fullmektig.kontaktOrgnr}</Nav.Typo.Normaltekst>
+          <Nav.BodyLong size="small" className="inline_felt">
+            {fullmektig.kontaktOrgnr}
+          </Nav.BodyLong>
         </div>
       )}
       {fullmektig.kontaktOrgnr && fullmektig.kontaktOrgAdresse && (

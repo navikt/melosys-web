@@ -10,10 +10,10 @@ const Utfyltfoedestedogland = ({ foedestedOgLand }: UtfyltFoedestedProps) => (
   <>
     <Nav.Row>
       <Nav.Column xs="6">
-        <Nav.Typo.Normaltekst>Fødested</Nav.Typo.Normaltekst>
+        <Nav.BodyLong size="small">Fødested</Nav.BodyLong>
       </Nav.Column>
       <Nav.Column xs="6">
-        <Nav.Typo.Normaltekst>Fødeland</Nav.Typo.Normaltekst>
+        <Nav.BodyLong size="small">Fødeland</Nav.BodyLong>
       </Nav.Column>
     </Nav.Row>
     {foedestedOgLand && (

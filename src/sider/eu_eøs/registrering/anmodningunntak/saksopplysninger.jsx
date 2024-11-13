@@ -366,9 +366,9 @@ const Saksopplysninger = ({
               <Nav.Row className="seksjon">
                 <Nav.Column xs="12">
                   <Nav.Typo.Element>Land:</Nav.Typo.Element>
-                  <Nav.Typo.Normaltekst>
+                  <Nav.BodyLong size="small">
                     {KV.kodeTilTerm(sed.lovvalgslandKode, MKV.KTObjects.landkoder)}&nbsp;({sed.lovvalgslandKode})
-                  </Nav.Typo.Normaltekst>
+                  </Nav.BodyLong>
                 </Nav.Column>
                 {sed.lovvalgslandKode === MKV.Koder.landkoder.NO ? (
                   <Nav.Column xs="12">

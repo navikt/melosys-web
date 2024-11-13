@@ -345,7 +345,7 @@ function EndreBehandlingModal({
 
         {skalViseFeilmeldinger && (
           <Nav.Alert variant="error">
-            <Nav.Typo.Normaltekst>Følgende feil ble funnet</Nav.Typo.Normaltekst>
+            <Nav.BodyLong size="small">Følgende feil ble funnet</Nav.BodyLong>
             <ul className="feilmeldingliste">
               {alleFeilmeldinger.map((feilmelding) => (
                 <li key={feilmelding}>{feilmelding}</li>

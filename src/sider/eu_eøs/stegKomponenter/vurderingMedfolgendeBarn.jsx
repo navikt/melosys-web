@@ -53,7 +53,7 @@ const MedfolgendeBarn = ({
               &nbsp;
             </>
           )}
-          {idNummer && <Nav.Typo.Normaltekst>(F.nr/d-nr.: {idNummer})</Nav.Typo.Normaltekst>}
+          {idNummer && <Nav.BodyLong size="small">(F.nr/d-nr.: {idNummer})</Nav.BodyLong>}
         </div>
         <Nav.RadioGroup
           legend=""

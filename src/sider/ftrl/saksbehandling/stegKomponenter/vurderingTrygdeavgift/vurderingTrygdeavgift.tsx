@@ -278,10 +278,10 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
       </Nav.Heading>
 
       {behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING && (
-        <Nav.Typo.Normaltekst className="nyVurderingTekst">
+        <Nav.BodyLong size="small" className="nyVurderingTekst">
           Ved ny vurdering vises tidligere perioder med skatteforhold og inntekt. Gjør nødvendige endringer eller legg
           til en ny periode.
-        </Nav.Typo.Normaltekst>
+        </Nav.BodyLong>
       )}
 
       {!erÅpenSluttDato && (

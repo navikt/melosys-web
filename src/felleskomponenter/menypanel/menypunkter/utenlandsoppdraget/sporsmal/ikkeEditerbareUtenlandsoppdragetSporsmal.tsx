@@ -39,7 +39,7 @@ interface SporsmalOgSvarProps {
 const SporsmalOgSvar = ({ sporsmal, svar }: SporsmalOgSvarProps) => (
   <Nav.Row>
     <Nav.Column xs="8">
-      <Nav.Typo.Normaltekst>{sporsmal}</Nav.Typo.Normaltekst>
+      <Nav.BodyLong size="small">{sporsmal}</Nav.BodyLong>
     </Nav.Column>
     <Nav.Column xs="4">{svar}</Nav.Column>
   </Nav.Row>
