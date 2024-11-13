@@ -4,5 +4,3 @@ export { default as RadioGroup } from "./radiogroup";
 export { default as Fieldset } from "./fieldset";
 export { default as Select } from "./select";
 export { default as CheckboxGroup } from "./checkboxGroup";
-
-export { SkjemaGruppe } from "nav-frontend-skjema";
