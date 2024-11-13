@@ -16,7 +16,6 @@ import {
 } from "../../../sider/ftrl/saksbehandling/stegKomponenter/vurderingTrygdeavgift/vurderingTrygdeavgiftSchema";
 import "./inntektskilder.css";
 import { Stack } from "@navikt/ds-react";
-import { useEffect } from "react";
 
 const {
   ARBEIDSINNTEKT_FRA_NORGE,
@@ -70,10 +69,6 @@ export const Inntektskilder = ({
   const handleEndreArbAvgBetales = (index: number, arbAvgBetales: string) => {
     update(index, { ...formValues.inntektskilder[index], arbAvgBetales, bruttoInntekt: undefined });
   };
-
-  useEffect(() => {
-    console.log(formValues);
-  }, [formValues]);
 
   return (
     <div className="perioder">
