@@ -156,7 +156,7 @@ export const Inntektskilder = ({
               ) : (
                 <div className="ikkeRelevant">
                   {index === 0 && <Nav.Typo.Element>Betales aga.?</Nav.Typo.Element>}
-                  <p className={`undertekst ${index === 0 ? "med-overskrift" : "uten-overskrift"}`}>Irrelevant</p>
+                  <p className={`undertekst ${index === 0 ? "med-overskrift" : "uten-overskrift"}`}>Ikke relevant</p>
                 </div>
               )}
             </Nav.Column>
