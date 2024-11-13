@@ -16,6 +16,7 @@ import {
 } from "../../../sider/ftrl/saksbehandling/stegKomponenter/vurderingTrygdeavgift/vurderingTrygdeavgiftSchema";
 import "./inntektskilder.css";
 import { Stack } from "@navikt/ds-react";
+import { useEffect } from "react";
 
 const {
   ARBEIDSINNTEKT_FRA_NORGE,
@@ -70,8 +71,12 @@ export const Inntektskilder = ({
     update(index, { ...formValues.inntektskilder[index], arbAvgBetales, bruttoInntekt: undefined });
   };
 
+  useEffect(() => {
+    console.log(formValues);
+  }, [formValues]);
+
   return (
-    <div className="inntektskilder">
+    <div className="perioder">
       {formValues.inntektskilder.map((inntektskilde, index) => {
         const brukerSkattepliktigIHelePerioden = erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder);
 
@@ -86,8 +91,8 @@ export const Inntektskilder = ({
         }
 
         return (
-          <Nav.Row className="inntektskilde__rad" key={fields[index].id}>
-            <Nav.Column className="dato">
+          <Nav.Row className="periode__rad" key={fields[index].id}>
+            <Nav.Column>
               <Forms.Datovelger
                 label={index === 0 ? "Inntektsperiode" : ""}
                 name={`inntektskilder[${index}].fomDato`}
@@ -172,7 +177,9 @@ export const Inntektskilder = ({
                     readOnly={!redigerbart}
                     control={control}
                   >
-                    <option value={BOOLSK_STRING.SANN}>Md.</option>
+                    <option defaultValue={BOOLSK_STRING.SANN} value={BOOLSK_STRING.SANN}>
+                      Md.
+                    </option>
                     <option value={BOOLSK_STRING.USANN}>Total</option>
                   </Forms.Select>
                 ) : (

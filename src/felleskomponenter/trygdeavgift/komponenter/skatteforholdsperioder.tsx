@@ -31,11 +31,11 @@ export const Skatteforholdsperioder = ({
   fields,
 }: SkatteforholdsperioderProps) => {
   return (
-    <div className="skatteforholdsperioder">
+    <div className="perioder">
       {formValues.skatteforholdsperioder.map((skatteforhold, index) => {
         return (
-          <Nav.Row className="skatteforhold__rad" key={fields[index].id}>
-            <Nav.Column className="dato">
+          <Nav.Row className="periode__rad" key={fields[index].id}>
+            <Nav.Column>
               <Forms.Datovelger
                 label={index === 0 ? "Skatteforhold" : ""}
                 name={`skatteforholdsperioder[${index}].fomDato`}
