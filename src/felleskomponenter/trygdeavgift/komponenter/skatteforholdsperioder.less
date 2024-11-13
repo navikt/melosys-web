@@ -4,12 +4,8 @@
     gap: unset;
   }
 
-  .navds-radio-buttons {
-    margin-bottom: 0;
-  }
-
   .legg-til__rad {
-    margin: 0.5rem 0 1rem 0;
+    margin: 0.5rem 0;
   }
 
   .skatteforhold__rad {
@@ -21,24 +17,28 @@
     border-bottom: 1px solid #979797;
     width: fit-content;
 
+    > * {
+      min-width: 7.5rem;
+      margin-left: 0.5rem;
+    }
+
+    :first-child {
+      margin-left: 0;
+    }
+
     &:first-child {
       .slett__knapp {
-        margin-top: 1rem;
+        margin-top: 1.5rem;
       }
     }
 
     .slett__knapp {
-      margin-left: 0.75rem;
+      display: flex;
+      justify-content: flex-end;
     }
 
-    .dato {
-      width: 7.5rem;
-      margin-right: 0.75rem;
-    }
-
-    .skattepliktig {
-      line-height: 1.5rem;
-      display: grid;
+    .navds-radio-buttons {
+      margin-bottom: 0;
     }
 
     .datovelger__feilmelding {

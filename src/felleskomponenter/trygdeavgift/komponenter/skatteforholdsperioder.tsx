@@ -44,7 +44,7 @@ export const Skatteforholdsperioder = ({
               />
             </Nav.Column>
 
-            <Nav.Column className="dato dato__tom">
+            <Nav.Column>
               <Forms.Datovelger
                 label={index === 0 && <span className="invisible" />}
                 name={`skatteforholdsperioder[${index}].tomDato`}
@@ -54,7 +54,7 @@ export const Skatteforholdsperioder = ({
               />
             </Nav.Column>
 
-            <Nav.Column className="skattepliktig">
+            <Nav.Column>
               <Forms.RadioGroup
                 legend={index === 0 ? "Skattepliktig" : ""}
                 hideLegend={index !== 0}

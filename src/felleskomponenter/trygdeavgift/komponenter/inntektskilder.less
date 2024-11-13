@@ -1,6 +1,5 @@
 .inntektskilder {
   overflow-y: hidden;
-  margin-bottom: 2rem;
 
   .navds-form-field {
     margin-bottom: 0;
@@ -11,73 +10,73 @@
     margin: 0.5rem 0;
   }
 
-  .inntektskilde__rad__outer {
-    width: fit-content;
+  .inntektskilde__rad {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    padding: 0.25rem 5rem 0.25rem 0;
+    margin: 0;
     border-bottom: 1px solid #979797;
+    width: fit-content;
 
-    .inntektskilde__rad {
-      display: flex;
-      flex-direction: row;
-      align-items: flex-end;
-      padding: 0.25rem 0.5rem 0.25rem 0;
-      margin: 0;
+    > * {
+      min-width: 7.5rem;
+      margin-left: 0.5rem;
+    }
 
-      > * {
-        min-width: 7.5rem;
-        margin-left: 0.75rem;
-      }
+    :first-child {
+      margin-left: 0;
+    }
 
-      :first-child {
-        margin-left: 0;
-      }
-
-      .inntektskilde {
-        min-width: 12rem;
-      }
-
-      .brutto_inntekt {
-        display: flex;
-        white-space: break-spaces;
-        flex-direction: row;
-        min-width: 9rem;
-        min-height: 2rem;
-        align-items: center;
-
-        input {
-          max-height: 2rem;
-        }
-      }
-
-      .radio-group {
-        display: flex;
-        min-width: 10rem;
-        min-height: 2rem;
-        align-items: center;
-      }
-
-      .ikkeRelevant {
-        min-width: 12rem;
-        margin: 0;
-        display: flex;
-        flex-direction: column;
-        line-height: 1.25rem;
-
-        p {
-          margin: 0;
-        }
-
-        .med-overskrift {
-          padding: 0.375rem 0;
-        }
-      }
-
+    &:first-child {
       .slett__knapp {
-        min-width: unset;
+        margin-top: 1.5rem;
+      }
+    }
+
+    .slett__knapp {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .navds-radio-buttons {
+      margin-bottom: 0;
+    }
+
+    .navds-label--small {
+      min-height: 1.5rem;
+    }
+
+    .inntektskilde {
+      min-width: 10rem;
+    }
+
+    .brutto_inntekt {
+      input {
+        max-height: 2rem;
+      }
+    }
+
+    .ikkeRelevant {
+      display: flex;
+      flex-direction: column;
+      width: 6rem;
+
+      p {
+        margin: 0;
       }
 
-      .datovelger__feilmelding {
-        margin-bottom: 0;
+      .med-overskrift {
+        padding: 0.375rem 0;
       }
+
+      .uten-overskrift {
+        padding: 0.375rem 0;
+      }
+    }
+
+    .datovelger__feilmelding {
+      margin-bottom: 0;
     }
   }
 }
