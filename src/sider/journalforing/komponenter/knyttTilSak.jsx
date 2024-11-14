@@ -182,9 +182,9 @@ export const KnyttTilSak = (props) => {
               ))}
             </Skjema.Select>
             {harBehandlingMedTrygdeavgift && (
-              <Nav.Typo.EtikettLiten className="behandlingstema__label">
+              <Nav.Detail className="behandlingstema__label">
                 Du kan ikke endre behandlingstema når saken har en tilknyttet fakturaserie.
-              </Nav.Typo.EtikettLiten>
+              </Nav.Detail>
             )}
             <Skjema.RadioGroup legend="Behandlingstype" name={feltNavn.behandlingstype}>
               {muligeBehandlingstyper?.map((elem) => (

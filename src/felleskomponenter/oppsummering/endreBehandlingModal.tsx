@@ -311,9 +311,9 @@ function EndreBehandlingModal({
           className={harBehandlingMedTrygdeavgift ? "ktselect__slim" : undefined}
         />
         {harBehandlingMedTrygdeavgift && (
-          <Nav.Typo.EtikettLiten className="behandlingstema__label">
+          <Nav.Detail className="behandlingstema__label">
             Du kan ikke endre behandlingstema når saken har en tilknyttet fakturaserie.
-          </Nav.Typo.EtikettLiten>
+          </Nav.Detail>
         )}
 
         <Mui.KodeTermSelect

@@ -177,9 +177,7 @@ const RedigererFullmektig = ({
                   </Nav.BodyLong>
                   <Nav.BodyLong size="small">(valgfritt)</Nav.BodyLong>
                 </span>
-                <Nav.Typo.EtikettLiten className="kontaktperson_info">
-                  Brev sendes til denne personen/adressen.
-                </Nav.Typo.EtikettLiten>
+                <Nav.Detail className="kontaktperson_info">Brev sendes til denne personen/adressen.</Nav.Detail>
                 <Nav.Row>
                   <Nav.Column xs="5">
                     <Forms.Input name={`fullmektige[${index}].kontaktperson`} control={control} label="Kontaktperson" />

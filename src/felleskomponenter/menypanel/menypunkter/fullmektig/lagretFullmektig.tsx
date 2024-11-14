@@ -127,7 +127,7 @@ const Kontaktperson = ({ fullmektig }: { fullmektig: Fullmektig }) => {
       {fullmektig.kontaktOrgnr && fullmektig.kontaktOrgAdresse && (
         <>
           <BrevAdresse visNavn={false} {...fullmektig.kontaktOrgAdresse} />
-          <Nav.Typo.EtikettLiten className="brev_sendes">(Brev sendes til denne adressen)</Nav.Typo.EtikettLiten>
+          <Nav.Detail className="brev_sendes">(Brev sendes til denne adressen)</Nav.Detail>
         </>
       )}
     </div>

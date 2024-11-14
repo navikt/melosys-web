@@ -1,4 +1,3 @@
-export { default as EtikettLiten } from "./etikettLiten";
 export {
   Element,
   Undertittel,

@@ -65,7 +65,7 @@ const EnkeltArbeidsforholdNorgeRedigeringUtfort = ({
             </Nav.Row>
             <Nav.Row>
               <Nav.Column xs="12">
-                <Nav.Typo.EtikettLiten>*Brev til arbeidsgiver sendes til denne adressen</Nav.Typo.EtikettLiten>
+                <Nav.Detail>*Brev til arbeidsgiver sendes til denne adressen</Nav.Detail>
               </Nav.Column>
             </Nav.Row>
           </>
