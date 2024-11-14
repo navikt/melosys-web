@@ -173,7 +173,7 @@ export const VurderingVedtakOpphoer = ({ tilbake, aktivtSteg }: Props) => {
         </Nav.Table.Body>
       </Nav.Table>
 
-      <Nav.BodyLong weight="semibold" size="small" className="fritekst_overskrift" tag="h3">
+      <Nav.BodyLong weight="semibold" size="small" className="fritekst_overskrift">
         Fritekst til begrunnelse
       </Nav.BodyLong>
       <Forms.HtmlEditor

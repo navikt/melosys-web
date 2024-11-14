@@ -357,10 +357,10 @@ const VurderingVedtak = ({
         </Nav.Column>
 
         <Nav.Column xs="5">
-          <Nav.BodyLong weight="semibold" size="small" className={vurderingVedtakCls.element("info")} tag="div">
+          <Nav.BodyLong weight="semibold" size="small" className={vurderingVedtakCls.element("info")}>
             <LabelMedHjelpetekst label="Periode" hjelpetekst={PERIODE_HJELPETEKST} />
           </Nav.BodyLong>
-          <Nav.BodyLong size="small" className={vurderingVedtakCls.element("datofelt_wrapper")} tag="div">
+          <Nav.BodyLong size="small" className={vurderingVedtakCls.element("datofelt_wrapper")}>
             <span className={vurderingVedtakCls.element("datofelt_fom")}>
               {`${formValues?.lovvalgsperiodeFom ? formValues?.lovvalgsperiodeFom : ""} -`}&nbsp;
             </span>
@@ -433,12 +433,7 @@ const VurderingVedtak = ({
         </>
       )}
 
-      <Nav.BodyLong
-        weight="semibold"
-        size="small"
-        className={vurderingVedtakCls.element("fritekst_overskrift")}
-        tag="h3"
-      >
+      <Nav.BodyLong weight="semibold" size="small" className={vurderingVedtakCls.element("fritekst_overskrift")}>
         <LabelMedHjelpetekst label="Fritekst til innledning" hjelpetekst={INNLEDNING_FRITEKST} />
       </Nav.BodyLong>
       <Skjema.HTMLEditor
@@ -447,12 +442,7 @@ const VurderingVedtak = ({
         disabled={!redigerbart}
       />
 
-      <Nav.BodyLong
-        weight="semibold"
-        size="small"
-        className={vurderingVedtakCls.element("fritekst_overskrift")}
-        tag="h3"
-      >
+      <Nav.BodyLong weight="semibold" size="small" className={vurderingVedtakCls.element("fritekst_overskrift")}>
         <LabelMedHjelpetekst label="Fritekst til begrunnelse" hjelpetekst={BEGRUNNELSE_FRITEKST_HJELPETEKST} />
       </Nav.BodyLong>
       <Skjema.HTMLEditor

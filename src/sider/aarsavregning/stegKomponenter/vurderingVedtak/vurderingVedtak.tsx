@@ -236,7 +236,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
         />
       ) : null}
 
-      <Nav.BodyLong weight="semibold" size="small" className="fritekst_overskrift" tag="h3">
+      <Nav.BodyLong weight="semibold" size="small" className="fritekst_overskrift">
         <LabelMedHjelpetekst label="Fritekst til innledning" hjelpetekst="" />
       </Nav.BodyLong>
       <Forms.HtmlEditor
@@ -246,7 +246,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
         disabled={!redigerbart}
       />
 
-      <Nav.BodyLong weight="semibold" size="small" className="fritekst_overskrift" tag="h3">
+      <Nav.BodyLong weight="semibold" size="small" className="fritekst_overskrift">
         <LabelMedHjelpetekst label="Fritekst til begrunnelse" hjelpetekst="" />
       </Nav.BodyLong>
       <Forms.HtmlEditor

@@ -85,7 +85,7 @@ export const Lovvalgsperiode = ({ kontrollerFerdigbehandling, onRedigeringErAkti
 
   return (
     <Nav.Column>
-      <Nav.BodyLong weight="semibold" size="small" className="info" tag="div">
+      <Nav.BodyLong weight="semibold" size="small" className="info">
         <LabelMedHjelpetekst label="Periode" hjelpetekst={PERIODE_HJELPETEKST} />
       </Nav.BodyLong>
 
@@ -118,7 +118,7 @@ export const Lovvalgsperiode = ({ kontrollerFerdigbehandling, onRedigeringErAkti
           />
         </>
       ) : (
-        <Nav.BodyLong size="small" className="periode" tag="div">
+        <Nav.BodyLong size="small" className="periode">
           <span>
             {lovvalgsperiodeFom} - {lovvalgsperiodeTom}
           </span>

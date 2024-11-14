@@ -477,7 +477,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
 
       {!erDelvisOpphør && (
         <>
-          <Nav.BodyLong weight="semibold" size="small" className="fritekst_overskrift" tag="h3">
+          <Nav.BodyLong weight="semibold" size="small" className="fritekst_overskrift">
             <LabelMedHjelpetekst label="Fritekst til innledning" hjelpetekst={innledningFritekstHjelpetekst} />
           </Nav.BodyLong>
           <Forms.HtmlEditor
@@ -489,7 +489,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
         </>
       )}
 
-      <Nav.BodyLong weight="semibold" size="small" className="fritekst_overskrift" tag="h3">
+      <Nav.BodyLong weight="semibold" size="small" className="fritekst_overskrift">
         <LabelMedHjelpetekst label="Fritekst til begrunnelse" hjelpetekst={begrunnelseFritekstHjelpetekst} />
       </Nav.BodyLong>
       <Forms.HtmlEditor
@@ -501,7 +501,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
 
       {!erIkkeYrkesaktiv && !erDelvisOpphør && (
         <>
-          <Nav.BodyLong weight="semibold" size="small" className="fritekst_overskrift" tag="h3">
+          <Nav.BodyLong weight="semibold" size="small" className="fritekst_overskrift">
             <LabelMedHjelpetekst
               label="Fritekst til avsnitt om trygdeavgift"
               hjelpetekst={trygdeavgiftFritekstHjelpetekst}

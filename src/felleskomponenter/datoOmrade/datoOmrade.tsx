@@ -56,13 +56,13 @@ export const DatoOmradeMedVarighet = ({ periode, label = "" }: DatoOmradeProps) 
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="4">
-          <Nav.BodyLong weight="semibold" size="small" tag="span">
+          <Nav.BodyLong weight="semibold" size="small">
             Fra{" "}
           </Nav.BodyLong>
           <EnkeltDato dato={periode.fom} />
         </Nav.Column>
         <Nav.Column xs="4">
-          <Nav.BodyLong weight="semibold" size="small" tag="span">
+          <Nav.BodyLong weight="semibold" size="small">
             Til{" "}
           </Nav.BodyLong>
           <EnkeltDato dato={periode.tom} />
