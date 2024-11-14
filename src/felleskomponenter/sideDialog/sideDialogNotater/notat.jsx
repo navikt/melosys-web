@@ -84,9 +84,7 @@ const Notat = ({ redigerbart, tekst, opprettetDato, endretDato, forfatter, onUpd
               <Nav.Textarea label="" value={endretTekst} onChange={endreTekst} maxLength={maksTekstLengde} />
             </Nav.Row>
             <Nav.Row>
-              <div role="alert">
-                {lagringFeilmelding && <Nav.Typo.Feilmelding>{lagringFeilmelding}</Nav.Typo.Feilmelding>}
-              </div>
+              <div role="alert">{lagringFeilmelding && <Nav.ErrorMessage>{lagringFeilmelding}</Nav.ErrorMessage>}</div>
             </Nav.Row>
             <div className="knapperad">
               {visLagreKnapp && (
