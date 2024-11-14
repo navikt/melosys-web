@@ -45,11 +45,11 @@ describe("Legend", () => {
     expect(screen.queryByText("tittel-ikon")).toBeInTheDocument();
   });
 
-  it("rendrer UndertittelH3 med korrekt tekst", () => {
+  it("rendrer tittel med korrekt tekst", () => {
     props.tittel = "Test Title";
     renderWithProviders(<Legend {...props} />);
 
-    const undertittelH3 = screen.queryByText("Test Title");
-    expect(undertittelH3).toBeInTheDocument();
+    const tittel = screen.queryByText("Test Title");
+    expect(tittel).toBeInTheDocument();
   });
 });
