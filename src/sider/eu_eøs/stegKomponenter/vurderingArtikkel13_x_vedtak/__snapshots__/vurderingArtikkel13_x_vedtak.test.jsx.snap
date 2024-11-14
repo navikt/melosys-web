@@ -4,10 +4,10 @@ exports[`VurderingArtikkel13_x_Vedtak > snapshot test 1`] = `
 
 <div>
   <form class="vurderingArtikkel13_x_vedtak">
-    <h1 class="typo-innholdstittel stegvelgertittel">
+    <h1 class="stegvelgertittel navds-heading navds-heading--large">
       Omfattet av norsk lovgivning, etter artikkel 13, nr 1, a
     </h1>
-    <p class="typo-element undertittel">
+    <p class="undertittel navds-body-long navds-body-long--small navds-typo--semibold">
       Lovvalgsperiode
     </p>
     <div class="row lovvalgsperiode">

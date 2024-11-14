@@ -5,9 +5,9 @@ exports[`CustomRadioPanelElement > snapshot test 1`] = `
 <div>
   <div class="customRadioPanelElement">
     <div class="customRadioPanelTittel">
-      <h2 class="typo-undertittel">
+      <h1 class="navds-heading navds-heading--xsmall">
         test
-      </h2>
+      </h1>
     </div>
     <dl>
       <dt>

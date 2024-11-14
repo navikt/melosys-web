@@ -72,7 +72,7 @@ exports[`SokkelSkipEnkelt > snapshot test 1`] = `
       </fieldset>
     </div>
     <div class="col col-xs-4">
-      <p class="typo-element arbeidsland_label">
+      <p class="arbeidsland_label navds-body-long navds-body-long--small navds-typo--semibold">
         Velg arbeidsland
       </p>
       <fieldset class="navds-radio-group navds-radio-group--small navds-fieldset navds-fieldset--small">

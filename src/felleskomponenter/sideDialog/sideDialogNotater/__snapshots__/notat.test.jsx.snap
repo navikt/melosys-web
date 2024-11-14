@@ -7,14 +7,14 @@ exports[`Notat > snapshot test 1`] = `
     <div class="col col-xs-4">
       <div class="row endretDato">
         <div class="col col-xs-12">
-          <p class="typo-element">
+          <p class="navds-body-long navds-body-long--small navds-typo--semibold">
             Endret: 24.04.2019
           </p>
         </div>
       </div>
       <div class="row opprettetDato">
         <div class="col col-xs-12">
-          <p class="typo-element">
+          <p class="navds-body-long navds-body-long--small navds-typo--semibold">
             Opprettet: 23.04.2019
           </p>
         </div>
@@ -28,14 +28,14 @@ exports[`Notat > snapshot test 1`] = `
     <div class="col col-xs-8">
       <div class="row overskrift">
         <div class="col col-xs-12">
-          <p class="typo-element">
+          <p class="navds-body-long navds-body-long--small navds-typo--semibold">
             Søknad
           </p>
         </div>
       </div>
       <div class="row uredigerbarTekst">
         <div class="col col-xs-12">
-          <p class="typo-normal">
+          <p class="navds-body-long navds-body-long--small">
             Testtekst
           </p>
         </div>

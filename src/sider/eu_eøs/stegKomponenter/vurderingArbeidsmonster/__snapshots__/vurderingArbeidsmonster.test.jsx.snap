@@ -4,7 +4,7 @@ exports[`VurderingArbeidsmonster > snapshot test 1`] = `
 
 <div>
   <div class="vurderingArbeidsmonster">
-    <h1 class="typo-innholdstittel stegvelgertittel">
+    <h1 class="stegvelgertittel navds-heading navds-heading--large">
       Arbeidsmønster
     </h1>
     <div class="arbeidsmonster">

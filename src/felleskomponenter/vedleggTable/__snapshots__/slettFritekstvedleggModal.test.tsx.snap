@@ -19,7 +19,7 @@ exports[`slettFritekstvedleggModal > snapshot test 1`] = `
       </h1>
     </div>
     <div class="navds-modal__body">
-      <p class="typo-normal">
+      <p class="navds-body-long navds-body-long--small">
         Er du sikker på at du vil slette fritekstvedlegget?
         <br>
         Dokumentet vil bli permanent slettet fra Melosys
