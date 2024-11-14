@@ -37,7 +37,7 @@ const FritekstvedleggSkjema = ({
       <Nav.BodyLong weight="semibold" size="small" className={cls.element("heading")}>
         Fritekstvedlegg
       </Nav.BodyLong>
-      <Nav.Typo.Undertekst>Dokumentet journalføres og legges til som et vedlegg til brevet</Nav.Typo.Undertekst>
+      <Nav.Detail>Dokumentet journalføres og legges til som et vedlegg til brevet</Nav.Detail>
       <div className={`panel ${cls.element("skjema")}`}>
         <Nav.Row>
           <Nav.Column xs={width}>
