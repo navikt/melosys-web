@@ -14,32 +14,34 @@ export const SumArsavregningTabell = ({
   return (
     <div className="sumArsavregningTabell">
       <Nav.Table size="small" width={500} className="periode_tabell">
-        <Nav.Table.Row>
-          <Nav.Table.DataCell scope="col" />
-          <Nav.Table.DataCell width={400} scope="col">
-            Endelig beregnet trygdeavgift
-          </Nav.Table.DataCell>
-          <Nav.Table.DataCell align="right" key={Utils._uuid()}>
-            {formaterTilNorskBelop(nyTrygdeavgift !== undefined ? nyTrygdeavgift : tidligereTrygdeavgift)} kr
-          </Nav.Table.DataCell>
-        </Nav.Table.Row>
-        <Nav.Table.Row>
-          <Nav.Table.DataCell scope="col">-</Nav.Table.DataCell>
-          <Nav.Table.DataCell scope="col">Tidligere beregnet trygdeavgift</Nav.Table.DataCell>
-          <Nav.Table.DataCell align="right" key={Utils._uuid()}>
-            {formaterTilNorskBelop(tidligereTrygdeavgift)} kr
-          </Nav.Table.DataCell>
-        </Nav.Table.Row>
-        <Nav.Table.Row>
-          <Nav.Table.DataCell scope="col">=</Nav.Table.DataCell>
-          <Nav.Table.DataCell scope="col">Differanse</Nav.Table.DataCell>
-          <Nav.Table.DataCell align="right" key={Utils._uuid()}>
-            <b>
-              {formaterTilNorskBelop(sumTilFakturaEllerRefusjon)}
-              &nbsp;kr&nbsp;
-            </b>
-          </Nav.Table.DataCell>
-        </Nav.Table.Row>
+        <Nav.Table.Body>
+          <Nav.Table.Row>
+            <Nav.Table.DataCell scope="col" />
+            <Nav.Table.DataCell width={400} scope="col">
+              Endelig beregnet trygdeavgift
+            </Nav.Table.DataCell>
+            <Nav.Table.DataCell align="right" key={Utils._uuid()}>
+              {formaterTilNorskBelop(nyTrygdeavgift !== undefined ? nyTrygdeavgift : tidligereTrygdeavgift)} kr
+            </Nav.Table.DataCell>
+          </Nav.Table.Row>
+          <Nav.Table.Row>
+            <Nav.Table.DataCell scope="col">-</Nav.Table.DataCell>
+            <Nav.Table.DataCell scope="col">Tidligere beregnet trygdeavgift</Nav.Table.DataCell>
+            <Nav.Table.DataCell align="right" key={Utils._uuid()}>
+              {formaterTilNorskBelop(tidligereTrygdeavgift)} kr
+            </Nav.Table.DataCell>
+          </Nav.Table.Row>
+          <Nav.Table.Row>
+            <Nav.Table.DataCell scope="col">=</Nav.Table.DataCell>
+            <Nav.Table.DataCell scope="col">Differanse</Nav.Table.DataCell>
+            <Nav.Table.DataCell align="right" key={Utils._uuid()}>
+              <b>
+                {formaterTilNorskBelop(sumTilFakturaEllerRefusjon)}
+                &nbsp;kr&nbsp;
+              </b>
+            </Nav.Table.DataCell>
+          </Nav.Table.Row>
+        </Nav.Table.Body>
       </Nav.Table>
     </div>
   );

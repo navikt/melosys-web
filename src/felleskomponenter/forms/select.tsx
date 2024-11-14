@@ -1,7 +1,8 @@
-import { ReactElement, forwardRef, ReactNode } from "react";
+import { ReactElement, forwardRef, ReactNode, ComponentProps } from "react";
 import { Controller, UseControllerProps } from "react-hook-form";
 import * as Nav from "../../navFrontend";
 import { getErrorMessage } from "./misc/mapFeilmelding";
+import { RegisterHookFormProps } from "./misc/reacthookProps";
 
 interface SelectComponentProps extends Omit<React.SelectHTMLAttributes<HTMLSelectElement>, "size" | "multiple"> {
   label?: string | ReactElement;
@@ -18,31 +19,53 @@ interface SelectComponentProps extends Omit<React.SelectHTMLAttributes<HTMLSelec
   id?: string;
 }
 
+type SelectInnerComponentProps = ComponentProps<typeof Nav.Select> & RegisterHookFormProps;
+
+const SelectInnerComponent = forwardRef<HTMLSelectElement, SelectInnerComponentProps>(
+  ({ ...props }: SelectInnerComponentProps, _ref: any) => {
+    return <Nav.Select {...props} children={props.children} />;
+  }
+);
+
 const Select = forwardRef<HTMLSelectElement, SelectComponentProps & UseControllerProps>(
-  ({ name, readOnly, control, label, emptyFieldDisabled, onChange, children, className, size, ...rest }) => {
+  (
+    {
+      name,
+      readOnly,
+      control,
+      label,
+      emptyFieldDisabled,
+      onChange,
+      children,
+      className,
+      size,
+      ...rest
+    }: SelectComponentProps & UseControllerProps,
+    _ref: any
+  ) => {
     return (
       <Controller
         name={name}
         control={control}
         render={({ field, formState }) => (
-          <Nav.Select
+          <SelectInnerComponent
             {...field}
+            {...rest}
             readOnly={readOnly}
             label={label}
-            onChange={(event) => {
+            onChange={(event: any) => {
               field.onChange(event);
               if (onChange) onChange(event?.target?.value);
             }}
             error={getErrorMessage(field, formState)}
             size={size}
             className={className ?? ""}
-            {...rest}
           >
             <option disabled={emptyFieldDisabled} value="">
               Velg...
             </option>
             {children}
-          </Nav.Select>
+          </SelectInnerComponent>
         )}
       />
     );

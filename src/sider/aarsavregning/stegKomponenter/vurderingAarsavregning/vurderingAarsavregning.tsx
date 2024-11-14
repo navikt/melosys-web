@@ -62,7 +62,7 @@ const { FERDIGBEHANDLET } = MKV.Koder.behandlinger.behandlingsresultattyper;
 export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
   const [valgtÅr, setValgtÅr] = useState<number | null>(null);
   const [initieltÅr, setInitieltÅr] = useState<number | null>(null);
-  const [erAvvik, setErAvvik] = useState<boolean | undefined>(undefined);
+  const [erAvvik, setErAvvik] = useState<boolean>(false);
   const [feil, setFeil] = useState<undefined | string>(undefined);
   const [formBekreftet, setFormBekreftet] = useState(false);
   const [aarsavregningResponse, setAarsavregningResponse] = useState<AarsavregningResponse | undefined>(undefined);
@@ -126,13 +126,14 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
     Api.Aarsavregning.hentAarsavregning(behandlingID, aarsavregningID)
       .then((res) => {
         setAarsavregningResponse(res);
-        // Benyttes for innhenting av saksopplysninger ifm. årsavregningsbehandlinger
-        dispatch({ type: OK, data: res });
+        dispatch({ type: OK, data: res }); // Benyttes for innhenting av saksopplysninger ifm. årsavregningsbehandlinger
         setInitieltÅr(res.aar);
         setValue("totaltForskuddsvisFakturert", res.avregning?.tidligereFakturertBeloep);
+
         if (res.avvikFunnet !== null) {
-          setErAvvik(res.avvikFunnet);
+          setErAvvik(res.avvikFunnet ?? false);
         }
+
         if (res.avvikFunnet && res?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag) {
           setSkjemaverdierFraTrygdeavgiftsgrunnlag(
             res.nyttGrunnlag?.trygdeavgiftsgrunnlag || res.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag
@@ -165,7 +166,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
             setSkjemaverdierFraTrygdeavgiftsgrunnlag(res?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag);
           }
           setValue("totaltForskuddsvisFakturert", "");
-          setErAvvik(undefined);
+          setErAvvik(false);
         })
         .catch((error: any) => {
           setFeil(error.body?.message || error);

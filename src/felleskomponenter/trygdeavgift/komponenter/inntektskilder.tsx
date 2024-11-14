@@ -55,7 +55,6 @@ export const Inntektskilder = ({
   defaultPeriode,
   fields,
   medlemskapsTypeErPliktig,
-  skalViseErMaanedsBelopRadioGroup,
 }: InntektskilderProps) => {
   const settesDefaultArbAvgBetales = (kildetype?: string) => ![INNTEKT_FRA_UTLANDET, MISJONÆR].includes(kildetype);
 
@@ -166,30 +165,28 @@ export const Inntektskilder = ({
               )}
             </Nav.Column>
 
-            {skalViseErMaanedsBelopRadioGroup && (
-              <Nav.Column>
-                {skalFylleInnBruttoInntekt ? (
-                  <Forms.Select
-                    emptyFieldDisabled
-                    label={index === 0 ? "Periode" : ""}
-                    hideLabel={index !== 0}
-                    name={`inntektskilder[${index}].erMaanedsbelop`}
-                    readOnly={!redigerbart}
-                    control={control}
-                  >
-                    <option defaultValue={BOOLSK_STRING.SANN} value={BOOLSK_STRING.SANN}>
-                      Md.
-                    </option>
-                    <option value={BOOLSK_STRING.USANN}>Total</option>
-                  </Forms.Select>
-                ) : (
-                  <div className="ikkeRelevant">
-                    {index === 0 && <Nav.Typo.Element>Periode</Nav.Typo.Element>}
-                    <p className={`undertekst ${index === 0 ? "med-overskrift" : "uten-overskrift"}`}>Ikke relevant</p>
-                  </div>
-                )}
-              </Nav.Column>
-            )}
+            <Nav.Column>
+              {skalFylleInnBruttoInntekt ? (
+                <Forms.Select
+                  emptyFieldDisabled
+                  label={index === 0 ? "Periode" : ""}
+                  hideLabel={index !== 0}
+                  name={`inntektskilder[${index}].erMaanedsbelop`}
+                  readOnly={!redigerbart}
+                  control={control}
+                >
+                  <option defaultValue={BOOLSK_STRING.SANN} value={BOOLSK_STRING.SANN}>
+                    Md.
+                  </option>
+                  <option value={BOOLSK_STRING.USANN}>Total</option>
+                </Forms.Select>
+              ) : (
+                <div className="ikkeRelevant">
+                  {index === 0 && <Nav.Typo.Element>Periode</Nav.Typo.Element>}
+                  <p className={`undertekst ${index === 0 ? "med-overskrift" : "uten-overskrift"}`}>Ikke relevant</p>
+                </div>
+              )}
+            </Nav.Column>
 
             <Nav.Column className="brutto_inntekt">
               {skalFylleInnBruttoInntekt ? (
