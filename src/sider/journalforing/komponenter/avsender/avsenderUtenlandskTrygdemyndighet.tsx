@@ -30,7 +30,9 @@ const AvsenderUtenlandskTrygdemyndighet = ({
         landkoder={landkoderTilUtenlandskTrygdemyndighet}
       />
       <div className="avsender__navn">
-        <Nav.Typo.Element className="avsender__navn__label">Avsender:</Nav.Typo.Element>
+        <Nav.BodyLong weight="semibold" size="small" className="avsender__navn__label">
+          Avsender:
+        </Nav.BodyLong>
         {utenlandskTrygdemyndighetLandkode && (
           <Nav.BodyLong size="small">
             Trygdemyndighet i {KV.kodeTilTerm(utenlandskTrygdemyndighetLandkode, landkoderTilUtenlandskTrygdemyndighet)}

@@ -188,7 +188,9 @@ export const VurderingArtikkel13UtpekLand = ({
         {overskrift}
       </Nav.Heading>
       <Nav.Heading size="xsmall">
-        <Nav.Typo.Element className="undertittel">{lovvalgslandTittel}</Nav.Typo.Element>
+        <Nav.BodyLong weight="semibold" size="small" className="undertittel">
+          {lovvalgslandTittel}
+        </Nav.BodyLong>
       </Nav.Heading>
       <Nav.Row>
         <Nav.Column xs="6">
@@ -199,7 +201,9 @@ export const VurderingArtikkel13UtpekLand = ({
         </Nav.Column>
       </Nav.Row>
       <Nav.Heading size="xsmall">
-        <Nav.Typo.Element className="undertittel">Lovvalgsperiode</Nav.Typo.Element>
+        <Nav.BodyLong weight="semibold" size="small" className="undertittel">
+          Lovvalgsperiode
+        </Nav.BodyLong>
       </Nav.Heading>
       <Nav.Row>
         <Nav.Column xs="6">

@@ -15,7 +15,9 @@ const FullmaktForTrygdeavgiftConfirmationPanel = ({
       onChange={() => onChange(!harBekreftet)}
       label="Jeg bekrefter at fullmektig for betaling er riktig"
     >
-      <Nav.Typo.Element>Husk at det vanligvis er arbeidsgiver som skal motta faktura</Nav.Typo.Element>
+      <Nav.BodyLong weight="semibold" size="small">
+        Husk at det vanligvis er arbeidsgiver som skal motta faktura
+      </Nav.BodyLong>
       <Nav.BodyLong size="small">
         Hvis bruker har oppgitt en annen fullmektig for betaling, skal du spørre bruker om det er riktig.
         <br />

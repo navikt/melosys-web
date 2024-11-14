@@ -338,7 +338,9 @@ const Saksopplysninger = ({
                 <Nav.Row className="seksjon">
                   <Nav.Column xs="12">
                     <Fragment>
-                      <Nav.Typo.Element>Treff ved automatisk kontroll</Nav.Typo.Element>
+                      <Nav.BodyLong weight="semibold" size="small">
+                        Treff ved automatisk kontroll
+                      </Nav.BodyLong>
                       <RegisterkontrollTreff vurderingBegrunnelser={vurderingBegrunnelser} />
                     </Fragment>
                   </Nav.Column>

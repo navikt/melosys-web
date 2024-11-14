@@ -289,17 +289,23 @@ const VurderingVedtak = ({
       <div>
         <Nav.Row>
           <Nav.Column xs="4">
-            <Nav.Typo.Element>Lovvalgsperiode</Nav.Typo.Element>
+            <Nav.BodyLong weight="semibold" size="small">
+              Lovvalgsperiode
+            </Nav.BodyLong>
             <EnkeltDato dato={fomDato} />
             &nbsp;-&nbsp;
             <EnkeltDato dato={tomDato} />
           </Nav.Column>
           <Nav.Column xs="4">
-            <Nav.Typo.Element>Lovvalgsbestemmelse</Nav.Typo.Element>
+            <Nav.BodyLong weight="semibold" size="small">
+              Lovvalgsbestemmelse
+            </Nav.BodyLong>
             {lovvalgsbestemmelseKT?.term}
           </Nav.Column>
           <Nav.Column xs="4">
-            <Nav.Typo.Element>Tilleggsbestemmelse</Nav.Typo.Element>
+            <Nav.BodyLong weight="semibold" size="small">
+              Tilleggsbestemmelse
+            </Nav.BodyLong>
             {tilleggBestemmelseKT?.term}
           </Nav.Column>
         </Nav.Row>

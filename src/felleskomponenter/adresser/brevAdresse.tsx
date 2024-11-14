@@ -18,7 +18,11 @@ const BrevAdresse = ({
   visNavn,
 }: DokumenterV2.BrevAdresse & { className?: string; visNavn?: boolean }) => (
   <div className={className}>
-    {visNavn && <Nav.Typo.Element>{mottakerNavn}</Nav.Typo.Element>}
+    {visNavn && (
+      <Nav.BodyLong weight="semibold" size="small">
+        {mottakerNavn}
+      </Nav.BodyLong>
+    )}
     <Nav.BodyLong size="small">
       {feltPlussKomma(samleFelt(", ", ...adresselinjer))}
       {feltPlussKomma(samleFelt(" ", postnr, poststed))}

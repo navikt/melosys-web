@@ -59,7 +59,9 @@ const Soknadslandvelger = ({ redigerbart, lagreSoknadOgOppfriskSaksopplysninger 
         <RedigererKomponent lagre={lagre} avbryt={avbryt} />
       ) : (
         <div className="redigeringutfort-container">
-          <Nav.Typo.Element>{soknadslandTekst}</Nav.Typo.Element>
+          <Nav.BodyLong weight="semibold" size="small">
+            {soknadslandTekst}
+          </Nav.BodyLong>
           <div>{redigerbart && <Symboler.Rediger onClick={() => setStatus(Status.Redigerer)} />}</div>
         </div>
       )}

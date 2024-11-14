@@ -396,7 +396,9 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
 
       <Nav.Row className="arbeidsland">
         <Nav.Column xs="5">
-          <Nav.Typo.Element className="info">{erIkkeYrkesaktiv ? "Land" : "Arbeidsland"}</Nav.Typo.Element>
+          <Nav.BodyLong weight="semibold" size="small" className="info">
+            {erIkkeYrkesaktiv ? "Land" : "Arbeidsland"}
+          </Nav.BodyLong>
           <Nav.BodyLong size="small" className="info">
             {landEllerArbeidslandTekst()}
           </Nav.BodyLong>
@@ -475,9 +477,9 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
 
       {!erDelvisOpphør && (
         <>
-          <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
+          <Nav.BodyLong weight="semibold" size="small" className="fritekst_overskrift" tag="h3">
             <LabelMedHjelpetekst label="Fritekst til innledning" hjelpetekst={innledningFritekstHjelpetekst} />
-          </Nav.Typo.Element>
+          </Nav.BodyLong>
           <Forms.HtmlEditor
             name="innledningFritekst"
             control={control}
@@ -487,9 +489,9 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
         </>
       )}
 
-      <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
+      <Nav.BodyLong weight="semibold" size="small" className="fritekst_overskrift" tag="h3">
         <LabelMedHjelpetekst label="Fritekst til begrunnelse" hjelpetekst={begrunnelseFritekstHjelpetekst} />
-      </Nav.Typo.Element>
+      </Nav.BodyLong>
       <Forms.HtmlEditor
         name="begrunnelseFritekst"
         control={control}
@@ -499,12 +501,12 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
 
       {!erIkkeYrkesaktiv && !erDelvisOpphør && (
         <>
-          <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
+          <Nav.BodyLong weight="semibold" size="small" className="fritekst_overskrift" tag="h3">
             <LabelMedHjelpetekst
               label="Fritekst til avsnitt om trygdeavgift"
               hjelpetekst={trygdeavgiftFritekstHjelpetekst}
             />
-          </Nav.Typo.Element>
+          </Nav.BodyLong>
           <Forms.HtmlEditor
             name="trygdeavgiftFritekst"
             control={control}

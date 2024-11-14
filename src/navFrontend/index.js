@@ -11,6 +11,7 @@ import {
   ExpansionCard,
   Heading,
   BodyLong,
+  Detail,
 } from "@navikt/ds-react";
 import Alert from "./alert";
 import Button from "./button";
@@ -52,4 +53,5 @@ export {
   ConfirmationPanel,
   Heading,
   BodyLong,
+  Detail,
 };

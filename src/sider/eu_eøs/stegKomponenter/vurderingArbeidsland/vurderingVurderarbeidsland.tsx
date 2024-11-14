@@ -133,7 +133,9 @@ export const VurderingVurderarbeidsland = ({
     <Fragment>
       {maritimtArbeid.length > 0 && (
         <Fragment>
-          <Nav.Typo.Element className="undertittel">Vurdering sokkel/skip</Nav.Typo.Element>
+          <Nav.BodyLong weight="semibold" size="small" className="undertittel">
+            Vurdering sokkel/skip
+          </Nav.BodyLong>
           <SokkelSkipListe
             className="borderBottom"
             sokkelEllerSkipListe={sokkelEllerSkipListe}
@@ -153,7 +155,9 @@ export const VurderingVurderarbeidsland = ({
       {hjemmebaser.length > 0 && (
         <Nav.Row className="borderBottom">
           <Nav.Column xs="6">
-            <Nav.Typo.Element className="undertittel">Hjemmebaser</Nav.Typo.Element>
+            <Nav.BodyLong weight="semibold" size="small" className="undertittel">
+              Hjemmebaser
+            </Nav.BodyLong>
             <Redigerbarliste
               elementer={hjemmebaser.map((base: string) => ({
                 kode: base,
@@ -166,7 +170,9 @@ export const VurderingVurderarbeidsland = ({
       )}
       <Nav.Row>
         <Nav.Column xs="6">
-          <Nav.Typo.Element className="undertittel">Land fra inngangsvilkår</Nav.Typo.Element>
+          <Nav.BodyLong weight="semibold" size="small" className="undertittel">
+            Land fra inngangsvilkår
+          </Nav.BodyLong>
           <Redigerbarliste
             elementer={soknadsland.map((kode: string) => ({
               kode,

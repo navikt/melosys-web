@@ -154,7 +154,11 @@ export const Inntektskilder = ({
                   </Forms.RadioGroup>
                 ) : (
                   <div className="ikkeRelevant">
-                    {index === 0 && <Nav.Typo.Element>Betales aga.?</Nav.Typo.Element>}
+                    {index === 0 && (
+                      <Nav.BodyLong weight="semibold" size="small">
+                        Betales aga.?
+                      </Nav.BodyLong>
+                    )}
                     <p className={`undertekst ${index === 0 ? "med-overskrift" : "uten-overskrift"}`}>Ikke relevant</p>
                   </div>
                 )}
@@ -176,7 +180,11 @@ export const Inntektskilder = ({
                     </Forms.RadioGroup>
                   ) : (
                     <div className="ikkeRelevant">
-                      {index === 0 && <Nav.Typo.Element>Periode</Nav.Typo.Element>}
+                      {index === 0 && (
+                        <Nav.BodyLong weight="semibold" size="small">
+                          Periode
+                        </Nav.BodyLong>
+                      )}
                       <p className={`undertekst ${index === 0 ? "med-overskrift" : "uten-overskrift"}`}>
                         Ikke relevant
                       </p>
@@ -198,7 +206,11 @@ export const Inntektskilder = ({
                   />
                 ) : (
                   <div className="ikkeRelevant">
-                    {index === 0 && <Nav.Typo.Element>Brutto inntekt</Nav.Typo.Element>}
+                    {index === 0 && (
+                      <Nav.BodyLong weight="semibold" size="small">
+                        Brutto inntekt
+                      </Nav.BodyLong>
+                    )}
                     <p className={`undertekst ${index === 0 ? "med-overskrift" : "uten-overskrift"}`}>Ikke relevant</p>
                   </div>
                 )}

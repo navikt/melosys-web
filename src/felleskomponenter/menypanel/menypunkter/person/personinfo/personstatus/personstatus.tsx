@@ -61,7 +61,9 @@ const Personstatus = ({ status, erLitenSkjerm }: PersonstatusProps) => {
       />
 
       <Nav.Column xs={erLitenSkjerm ? "4" : "3"}>
-        <Nav.Typo.Element>Personstatus:</Nav.Typo.Element>
+        <Nav.BodyLong weight="semibold" size="small">
+          Personstatus:
+        </Nav.BodyLong>
       </Nav.Column>
       <PersonstatusVisning />
     </div>

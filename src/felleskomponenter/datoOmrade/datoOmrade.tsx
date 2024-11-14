@@ -19,17 +19,23 @@ const DatoOmrade = ({ periode, label = "" }: DatoOmradeProps) => (
     {label && (
       <Nav.Row>
         <Nav.Column xs="12">
-          <Nav.Typo.Element>{label}</Nav.Typo.Element>
+          <Nav.BodyLong weight="semibold" size="small">
+            {label}
+          </Nav.BodyLong>
         </Nav.Column>
       </Nav.Row>
     )}
     <Nav.Row>
       <Nav.Column xs="6" className="blokk-xs">
-        <Nav.Typo.Element>Fra</Nav.Typo.Element>
+        <Nav.BodyLong weight="semibold" size="small">
+          Fra
+        </Nav.BodyLong>
         <EnkeltDato dato={periode.fom} />
       </Nav.Column>
       <Nav.Column xs="6" className="blokk-xs">
-        <Nav.Typo.Element>Til</Nav.Typo.Element>
+        <Nav.BodyLong weight="semibold" size="small">
+          Til
+        </Nav.BodyLong>
         <EnkeltDato dato={periode.tom} />
       </Nav.Column>
     </Nav.Row>
@@ -43,16 +49,22 @@ export const DatoOmradeMedVarighet = ({ periode, label = "" }: DatoOmradeProps) 
     <div className="datoomradevarighet">
       <Nav.Row>
         <Nav.Column xs="12">
-          <Nav.Typo.Element>{label}</Nav.Typo.Element>
+          <Nav.BodyLong weight="semibold" size="small">
+            {label}
+          </Nav.BodyLong>
         </Nav.Column>
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="4">
-          <Nav.Typo.Element tag="span">Fra </Nav.Typo.Element>
+          <Nav.BodyLong weight="semibold" size="small" tag="span">
+            Fra{" "}
+          </Nav.BodyLong>
           <EnkeltDato dato={periode.fom} />
         </Nav.Column>
         <Nav.Column xs="4">
-          <Nav.Typo.Element tag="span">Til </Nav.Typo.Element>
+          <Nav.BodyLong weight="semibold" size="small" tag="span">
+            Til{" "}
+          </Nav.BodyLong>
           <EnkeltDato dato={periode.tom} />
         </Nav.Column>
         <Nav.Column xs="4">{varighet}</Nav.Column>

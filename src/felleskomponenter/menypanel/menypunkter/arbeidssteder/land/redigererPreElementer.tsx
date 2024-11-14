@@ -12,7 +12,9 @@ const RedigererPreElementer = ({ className, redigerbart }: EnRedigeringsknappLis
 
   return (
     <div className={cls}>
-      <Nav.Typo.Element>Opplysninger om arbeidssted</Nav.Typo.Element>
+      <Nav.BodyLong weight="semibold" size="small">
+        Opplysninger om arbeidssted
+      </Nav.BodyLong>
       <Nav.Row className="radiogroup__rad">
         <Skjema.RadioGroup
           legend="Vil arbeidstakeren ha et fast arbeidssted i utlandet?"

@@ -49,7 +49,9 @@ const MedfolgendeBarn = ({
         <div className="personalia">
           {navn && (
             <>
-              <Nav.Typo.Element>{navn}</Nav.Typo.Element>
+              <Nav.BodyLong weight="semibold" size="small">
+                {navn}
+              </Nav.BodyLong>
               &nbsp;
             </>
           )}

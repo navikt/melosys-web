@@ -79,9 +79,9 @@ export const Soknadsperiode = ({ redigerbart, tittel, lagreSoknadOgOppfriskSakso
       </Nav.BodyLong>
       {!erEndrePeriodeSynlig && (
         <div className="periode__container">
-          <Nav.Typo.Element className="periode">
+          <Nav.BodyLong weight="semibold" size="small" className="periode">
             {soknadsperiodeFom} - {soknadsperiodeTom}
-          </Nav.Typo.Element>
+          </Nav.BodyLong>
           {redigerbart && (
             <div>
               <Symboler.Rediger onClick={visEndrePeriode} />

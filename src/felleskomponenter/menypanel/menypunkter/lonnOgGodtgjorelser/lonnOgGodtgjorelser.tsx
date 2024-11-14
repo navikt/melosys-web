@@ -50,9 +50,9 @@ export const BooleanFeltRedigeringUtfort = ({ tekst, verdi }: BooleanFeltRediger
       <Nav.BodyLong size="small" className="typo-normal">
         {tekst}
       </Nav.BodyLong>
-      <Nav.Typo.Element className="typo-element">
+      <Nav.BodyLong weight="semibold" size="small" className="typo-element">
         {verdi === null ? "-" : Utils._capitalize(Utils.streng.boolTilNorsk(verdi))}
-      </Nav.Typo.Element>
+      </Nav.BodyLong>
     </Nav.Column>
   </Nav.Row>
 );

@@ -35,7 +35,9 @@ export const TidligereGrunnlagsopplysningerFinnesIkke = ({ control, redigerbart 
 
     {informasjonsmeldingIngenInformasjonOmPerioder}
 
-    <Nav.Typo.Element>Totalt tidligere fakturert trygdeavgift:</Nav.Typo.Element>
+    <Nav.BodyLong weight="semibold" size="small">
+      Totalt tidligere fakturert trygdeavgift:
+    </Nav.BodyLong>
     <Forms.Input
       label=""
       name="totaltForskuddsvisFakturert"

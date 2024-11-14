@@ -338,7 +338,9 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
       </Nav.Row>
       {redigerbart && (
         <Fragment>
-          <Nav.Typo.Element className="undertittel">Lovvalgsperiode</Nav.Typo.Element>
+          <Nav.BodyLong weight="semibold" size="small" className="undertittel">
+            Lovvalgsperiode
+          </Nav.BodyLong>
           <Nav.Row className="lovvalgsperiode">
             <Nav.Column xs="6">
               {fom} - {tom}

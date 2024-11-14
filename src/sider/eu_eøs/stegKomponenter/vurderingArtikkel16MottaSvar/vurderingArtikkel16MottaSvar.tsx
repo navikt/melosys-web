@@ -76,7 +76,9 @@ const VurderingArtikkel16MottaSvar = ({
       </Nav.Heading>
       <Nav.Row>
         <Nav.Column xs="4">
-          <Nav.Typo.Element>Land</Nav.Typo.Element>
+          <Nav.BodyLong weight="semibold" size="small">
+            Land
+          </Nav.BodyLong>
           <Nav.BodyLong size="small">
             {gyldigeSoknadsland.map((enkeltLandObjekt: KTObject) => enkeltLandObjekt.term).join(", ")}
           </Nav.BodyLong>
@@ -84,7 +86,9 @@ const VurderingArtikkel16MottaSvar = ({
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="12">
-          <Nav.Typo.Element>Søknadsperiode</Nav.Typo.Element>
+          <Nav.BodyLong weight="semibold" size="small">
+            Søknadsperiode
+          </Nav.BodyLong>
         </Nav.Column>
         <Nav.Column xs="12" className="soknadsperiode__innhold">
           <EnkeltDato dato={soknadsperiode.fom} />

@@ -19,10 +19,14 @@ const Utfyltfoedestedogland = ({ foedestedOgLand }: UtfyltFoedestedProps) => (
     {foedestedOgLand && (
       <Nav.Row>
         <Nav.Column xs="6">
-          <Nav.Typo.Element>{foedestedOgLand.foedested}</Nav.Typo.Element>
+          <Nav.BodyLong weight="semibold" size="small">
+            {foedestedOgLand.foedested}
+          </Nav.BodyLong>
         </Nav.Column>
         <Nav.Column xs="6">
-          <Nav.Typo.Element>{foedestedOgLand.foedeland}</Nav.Typo.Element>
+          <Nav.BodyLong weight="semibold" size="small">
+            {foedestedOgLand.foedeland}
+          </Nav.BodyLong>
         </Nav.Column>
       </Nav.Row>
     )}

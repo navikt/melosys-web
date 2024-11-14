@@ -10,7 +10,11 @@ interface JaNeiSvarProps {
 export const JaNeiSvar = ({ svar }: JaNeiSvarProps) => {
   const svarString = Utils._isNil(svar) ? "-" : Utils._capitalize(Utils.streng.boolTilNorsk(svar));
 
-  return <Nav.Typo.Element>{svarString}</Nav.Typo.Element>;
+  return (
+    <Nav.BodyLong weight="semibold" size="small">
+      {svarString}
+    </Nav.BodyLong>
+  );
 };
 
 interface LabelOgSvarProps {

@@ -53,13 +53,17 @@ const Notat = ({ redigerbart, tekst, opprettetDato, endretDato, forfatter, onUpd
         {notatErEndret && (
           <Nav.Row className="endretDato">
             <Nav.Column xs="12">
-              <Nav.Typo.Element>Endret: {Utils.dato.formatterDatoTilNorsk(endretDato)}</Nav.Typo.Element>
+              <Nav.BodyLong weight="semibold" size="small">
+                Endret: {Utils.dato.formatterDatoTilNorsk(endretDato)}
+              </Nav.BodyLong>
             </Nav.Column>
           </Nav.Row>
         )}
         <Nav.Row className="opprettetDato">
           <Nav.Column xs="12">
-            <Nav.Typo.Element>Opprettet: {Utils.dato.formatterDatoTilNorsk(opprettetDato)}</Nav.Typo.Element>
+            <Nav.BodyLong weight="semibold" size="small">
+              Opprettet: {Utils.dato.formatterDatoTilNorsk(opprettetDato)}
+            </Nav.BodyLong>
           </Nav.Column>
         </Nav.Row>
         <Nav.Row className="forfatter">
@@ -69,7 +73,9 @@ const Notat = ({ redigerbart, tekst, opprettetDato, endretDato, forfatter, onUpd
       <Nav.Column xs="8">
         <Nav.Row className="overskrift">
           <Nav.Column xs="12">
-            <Nav.Typo.Element>{overskrift}</Nav.Typo.Element>
+            <Nav.BodyLong weight="semibold" size="small">
+              {overskrift}
+            </Nav.BodyLong>
           </Nav.Column>
         </Nav.Row>
         {endres && (

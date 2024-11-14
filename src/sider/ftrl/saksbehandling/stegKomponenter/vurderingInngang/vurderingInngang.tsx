@@ -175,7 +175,9 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
                     hjelpetekst="Oppgi landet der arbeidet utføres. Hvis søker arbeider på skip, skal du oppgi flagglandet"
                   />
                 ) : (
-                  <Nav.Typo.Element className="land">Land</Nav.Typo.Element>
+                  <Nav.BodyLong weight="semibold" size="small" className="land">
+                    Land
+                  </Nav.BodyLong>
                 )
               }
               control={control}

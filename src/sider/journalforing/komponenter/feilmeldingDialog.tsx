@@ -25,7 +25,9 @@ export const FeilmeldingDialog = ({ avbryt, feilmeldinger }: FeilmeldingDialogPr
       <Nav.Modal.Body>
         {feilmeldinger.map((feilmelding) => (
           <div className="validering" key={Utils._uuid()}>
-            <Nav.Typo.Element className="valideringKode">{feilmelding.tittel}</Nav.Typo.Element>
+            <Nav.BodyLong weight="semibold" size="small" className="valideringKode">
+              {feilmelding.tittel}
+            </Nav.BodyLong>
             <Nav.BodyLong size="small">{feilmelding.innhold}</Nav.BodyLong>
           </div>
         ))}

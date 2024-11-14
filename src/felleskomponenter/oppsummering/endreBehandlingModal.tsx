@@ -327,7 +327,11 @@ function EndreBehandlingModal({
         />
         <Datovelger
           onChange={(dato) => setMottaksdato(Datoutils.norskStringTilDate(dato))}
-          label={<Nav.Typo.Element>Mottaksdato</Nav.Typo.Element>}
+          label={
+            <Nav.BodyLong weight="semibold" size="small">
+              Mottaksdato
+            </Nav.BodyLong>
+          }
           value={mottaksdato}
           brukInternValidering
         />

@@ -224,7 +224,9 @@ class VurderingEndrePeriode extends Component {
         <Nav.Heading size="large" className="stegvelgertittel">
           Endre lovvalgsperiode
         </Nav.Heading>
-        <Nav.Typo.Element className="mindreTittel">Opprinnelig lovvalgsperiode</Nav.Typo.Element>
+        <Nav.BodyLong weight="semibold" size="small" className="mindreTittel">
+          Opprinnelig lovvalgsperiode
+        </Nav.BodyLong>
         <Nav.Row>
           <Nav.Column xs="3">
             <Nav.BodyLong size="small">Fra {formattertOpprinneligFom}</Nav.BodyLong>
@@ -233,7 +235,9 @@ class VurderingEndrePeriode extends Component {
             <Nav.BodyLong size="small">Til {formattertOpprinneligTom}</Nav.BodyLong>
           </Nav.Column>
         </Nav.Row>
-        <Nav.Typo.Element className="mindreTittel">Ny lovvalgsperiode</Nav.Typo.Element>
+        <Nav.BodyLong weight="semibold" size="small" className="mindreTittel">
+          Ny lovvalgsperiode
+        </Nav.BodyLong>
         <Nav.Row>
           <Nav.Column xs="3">
             <Datovelger

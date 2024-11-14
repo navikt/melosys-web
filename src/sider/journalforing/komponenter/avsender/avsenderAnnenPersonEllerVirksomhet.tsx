@@ -40,7 +40,9 @@ const AvsenderAnnenPersonEllerVirksomhet = ({
         bredde="L"
       />
       <div className="avsender__navn">
-        <Nav.Typo.Element className="avsender__navn__label">Navn: </Nav.Typo.Element>
+        <Nav.BodyLong weight="semibold" size="small" className="avsender__navn__label">
+          Navn:{" "}
+        </Nav.BodyLong>
         <Nav.BodyLong size="small">{avsenderNavn || ""}</Nav.BodyLong>
       </div>
     </div>

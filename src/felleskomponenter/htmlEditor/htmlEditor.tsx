@@ -61,7 +61,13 @@ function HtmlEditor({ value, onChange, ...rest }: TextToHtmlEditorProps) {
 
   return (
     <div className={classNames("htmlEditor", rest?.className)}>
-      {rest?.label ? <Nav.Typo.Element className="editor_label">{rest?.label}</Nav.Typo.Element> : ""}
+      {rest?.label ? (
+        <Nav.BodyLong weight="semibold" size="small" className="editor_label">
+          {rest?.label}
+        </Nav.BodyLong>
+      ) : (
+        ""
+      )}
       <Editor
         handleReturn={handleReturn}
         editorState={currentEditorState}

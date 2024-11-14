@@ -173,9 +173,9 @@ export const VurderingVedtakOpphoer = ({ tilbake, aktivtSteg }: Props) => {
         </Nav.Table.Body>
       </Nav.Table>
 
-      <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
+      <Nav.BodyLong weight="semibold" size="small" className="fritekst_overskrift" tag="h3">
         Fritekst til begrunnelse
-      </Nav.Typo.Element>
+      </Nav.BodyLong>
       <Forms.HtmlEditor
         name="begrunnelseFritekst"
         control={control}

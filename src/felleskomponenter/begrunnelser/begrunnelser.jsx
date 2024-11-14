@@ -7,7 +7,9 @@ import "./begrunnelser.css";
 
 const Begrunnelser = ({ label, valgteBegrunnelser, muligeBegrunnelser, fritekst }) => (
   <div className="begrunnelser">
-    <Nav.Typo.Element className="begrunnelseTittel">{label}</Nav.Typo.Element>
+    <Nav.BodyLong weight="semibold" size="small" className="begrunnelseTittel">
+      {label}
+    </Nav.BodyLong>
     {valgteBegrunnelser.map((begrunnelse) => (
       <Nav.BodyLong size="small" className="begrunnelse" key={begrunnelse}>
         {KV.kodeTilTerm(begrunnelse, muligeBegrunnelser)}

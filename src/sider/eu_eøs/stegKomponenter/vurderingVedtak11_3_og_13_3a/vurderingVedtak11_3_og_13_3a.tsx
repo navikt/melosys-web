@@ -200,7 +200,9 @@ export const VurderingVedtak11_3_og_13_3a = ({
         className="ktselect__slim"
       />
 
-      <Nav.Typo.Element className="undertittel">Lovvalgsperiode</Nav.Typo.Element>
+      <Nav.BodyLong weight="semibold" size="small" className="undertittel">
+        Lovvalgsperiode
+      </Nav.BodyLong>
       <Nav.Column>
         {formValues.fom} - {formValues.tom}
       </Nav.Column>

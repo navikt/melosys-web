@@ -37,7 +37,9 @@ export const VurderingInngang = ({
     if (!behandlingHarPeriodeOgLand) {
       setFeil(
         <>
-          <Nav.Typo.Element>Det mangler periode og/eller land</Nav.Typo.Element>
+          <Nav.BodyLong weight="semibold" size="small">
+            Det mangler periode og/eller land
+          </Nav.BodyLong>
           <ul>
             <li>Du må fylle disse inn under “Periode og land” i sidemenyen og oppdatere registeropplysninger.</li>
           </ul>
@@ -46,7 +48,9 @@ export const VurderingInngang = ({
     } else if (flereEnnEttLand && !MKVUtils.kanHaFlereSoknadsland(behandlingstema)) {
       setFeil(
         <>
-          <Nav.Typo.Element>Du har valgt et behandlingstema som kun tillater ett arbeidsland</Nav.Typo.Element>
+          <Nav.BodyLong weight="semibold" size="small">
+            Du har valgt et behandlingstema som kun tillater ett arbeidsland
+          </Nav.BodyLong>
           <ul>
             <li>Du må fjerne land under “Periode og land” i sidemenyen eller endre behandlingstema.</li>
           </ul>
@@ -55,7 +59,9 @@ export const VurderingInngang = ({
     } else if (!flereEnnEttLand && behandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND) {
       setFeil(
         <>
-          <Nav.Typo.Element>Det er påkrevd med to eller flere land for valgt behandlingstema</Nav.Typo.Element>
+          <Nav.BodyLong weight="semibold" size="small">
+            Det er påkrevd med to eller flere land for valgt behandlingstema
+          </Nav.BodyLong>
           <ul>
             <li>Du må legge til land under “Periode og land” i sidemenyen eller endre behandlingstema.</li>
           </ul>

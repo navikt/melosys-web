@@ -116,7 +116,9 @@ const SokkelSkipEnkelt = ({
         </Nav.Column>
       )}
       <Nav.Column xs="4">
-        <Nav.Typo.Element className="arbeidsland_label">Velg arbeidsland</Nav.Typo.Element>
+        <Nav.BodyLong weight="semibold" size="small" className="arbeidsland_label">
+          Velg arbeidsland
+        </Nav.BodyLong>
         <ArbeidslandRadioButtons
           landliste={[
             {

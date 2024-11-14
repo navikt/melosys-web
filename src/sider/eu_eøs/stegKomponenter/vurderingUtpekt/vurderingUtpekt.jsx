@@ -133,7 +133,9 @@ export const VurderingUtpekt = ({
         <Nav.Column xs="7">
           {vurderingBegrunnelser.length > 0 && (
             <Fragment>
-              <Nav.Typo.Element>Treff ved automatisk kontroll</Nav.Typo.Element>
+              <Nav.BodyLong weight="semibold" size="small">
+                Treff ved automatisk kontroll
+              </Nav.BodyLong>
               <RegisterKontrollTreff vurderingBegrunnelser={vurderingBegrunnelser} />
             </Fragment>
           )}
@@ -142,14 +144,18 @@ export const VurderingUtpekt = ({
       {visLovvalgsland && (
         <Nav.Row className="rad">
           <Nav.Column xs="5">
-            <Nav.Typo.Element>Lovvalgsland</Nav.Typo.Element>
+            <Nav.BodyLong weight="semibold" size="small">
+              Lovvalgsland
+            </Nav.BodyLong>
             <Nav.BodyLong size="small">{lovvalgslandTerm}</Nav.BodyLong>
           </Nav.Column>
         </Nav.Row>
       )}
       <Nav.Row className="rad">
         <Nav.Column xs="5">
-          <Nav.Typo.Element>Grunnlag</Nav.Typo.Element>
+          <Nav.BodyLong weight="semibold" size="small">
+            Grunnlag
+          </Nav.BodyLong>
           <Skjema.Select feltNavn="lovvalgsbestemmelse" label="" disabled={!redigerbart}>
             <option disabled key="VELG" value="">
               Velg
@@ -165,7 +171,9 @@ export const VurderingUtpekt = ({
       {(redigerbart || formValues.overgangsregelbestemmelser) && (
         <Nav.Row className="rad">
           <Nav.Column xs="5">
-            <Nav.Typo.Element>Overgangsregler gjelder:</Nav.Typo.Element>
+            <Nav.BodyLong weight="semibold" size="small">
+              Overgangsregler gjelder:
+            </Nav.BodyLong>
             <Nav.Fieldset>
               <Skjema.ListeVelger
                 feltNavn="overgangsregelbestemmelser"
@@ -181,7 +189,9 @@ export const VurderingUtpekt = ({
       )}
       <Nav.Row className="rad">
         <Nav.Column xs="5">
-          <Nav.Typo.Element>Lovvalgsperiode</Nav.Typo.Element>
+          <Nav.BodyLong weight="semibold" size="small">
+            Lovvalgsperiode
+          </Nav.BodyLong>
           <Nav.Row>
             <Nav.Column xs="6">
               <Skjema.Datovelger label="Fra og med" feltNavn="fom" disabled={!redigerbart} />
@@ -200,7 +210,9 @@ export const VurderingUtpekt = ({
       <Nav.Row className="rad">
         {ytterligereInformasjon && (
           <Nav.Column xs="12">
-            <Nav.Typo.Element>Ytterligere informasjon fra SED</Nav.Typo.Element>
+            <Nav.BodyLong weight="semibold" size="small">
+              Ytterligere informasjon fra SED
+            </Nav.BodyLong>
             <Nav.BodyLong size="small">{ytterligereInformasjon}</Nav.BodyLong>
           </Nav.Column>
         )}

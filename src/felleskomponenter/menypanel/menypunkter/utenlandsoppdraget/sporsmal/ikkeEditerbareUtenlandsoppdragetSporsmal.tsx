@@ -17,7 +17,11 @@ interface RadioknappSvarProps {
 const RadioknappSvar = ({ svar }: RadioknappSvarProps) => {
   const svarString = Utils._isNil(svar) ? "-" : Utils._capitalize(Utils.streng.boolTilNorsk(svar));
 
-  return <Nav.Typo.Element>{svarString}</Nav.Typo.Element>;
+  return (
+    <Nav.BodyLong weight="semibold" size="small">
+      {svarString}
+    </Nav.BodyLong>
+  );
 };
 
 interface PeriodeSvarProps {
@@ -26,9 +30,9 @@ interface PeriodeSvarProps {
 }
 
 const PeriodeSvar = ({ fom, tom }: PeriodeSvarProps) => (
-  <Nav.Typo.Element>
+  <Nav.BodyLong weight="semibold" size="small">
     {fom} - {tom}
-  </Nav.Typo.Element>
+  </Nav.BodyLong>
 );
 
 interface SporsmalOgSvarProps {

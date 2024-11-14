@@ -233,9 +233,9 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
       )}
 
       <Nav.Row>
-        <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
+        <Nav.BodyLong weight="semibold" size="small" className="fritekst_overskrift" tag="h3">
           <LabelMedHjelpetekst label="Fritekst til innledning" hjelpetekst={INNLEDNING_FRITEKST_HJELPETEKST} />
-        </Nav.Typo.Element>
+        </Nav.BodyLong>
         <Forms.HtmlEditor
           name="innledningFritekst"
           control={control}
@@ -245,9 +245,9 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
       </Nav.Row>
 
       <Nav.Row>
-        <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
+        <Nav.BodyLong weight="semibold" size="small" className="fritekst_overskrift" tag="h3">
           <LabelMedHjelpetekst label="Fritekst til begrunnelse" hjelpetekst={BEGRUNNELSE_FRITEKST_HJELPETEKST} />
-        </Nav.Typo.Element>
+        </Nav.BodyLong>
         <Forms.HtmlEditor
           name="begrunnelseFritekst"
           control={control}

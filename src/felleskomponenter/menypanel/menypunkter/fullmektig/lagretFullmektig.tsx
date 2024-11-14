@@ -25,7 +25,9 @@ const LagretFullmektig = ({ fullmektige }: LagretFullmektigProps) => {
               </div>
               <Nav.Row>
                 <Nav.Column xs="6">
-                  <Nav.Typo.Element className="inline_felt">Org.nr.: </Nav.Typo.Element>
+                  <Nav.BodyLong weight="semibold" size="small" className="inline_felt">
+                    Org.nr.:{" "}
+                  </Nav.BodyLong>
                   <Nav.BodyLong size="small" className="inline_felt">
                     {fullmektig.ident}
                   </Nav.BodyLong>
@@ -49,7 +51,9 @@ const LagretFullmektig = ({ fullmektige }: LagretFullmektigProps) => {
             </div>
             <Nav.Row>
               <Nav.Column xs="6">
-                <Nav.Typo.Element className="inline_felt">F.nr./d-nr.: </Nav.Typo.Element>
+                <Nav.BodyLong weight="semibold" size="small" className="inline_felt">
+                  F.nr./d-nr.:{" "}
+                </Nav.BodyLong>
                 <Nav.BodyLong size="small" className="inline_felt">
                   {fullmektig.ident}
                 </Nav.BodyLong>
@@ -72,9 +76,9 @@ const Fullmakter = ({ fullmakter }: { fullmakter: string[] }) => {
       {fullmakter.map((fullmakt) => (
         <div key={fullmakt}>
           <Ikon.GreenCheckmark className="inline_felt ikon" />
-          <Nav.Typo.Element className="inline_felt">
+          <Nav.BodyLong weight="semibold" size="small" className="inline_felt">
             {KV.kodeTilTerm(fullmakt, MKV.KTObjects.fullmaktstype)}
-          </Nav.Typo.Element>
+          </Nav.BodyLong>
         </div>
       ))}
     </>
@@ -85,10 +89,14 @@ const Kontaktperson = ({ fullmektig }: { fullmektig: Fullmektig }) => {
   if (!fullmaktStøtterKontaktperson(fullmektig.fullmakter)) return null;
   return (
     <div className="kontaktperson">
-      <Nav.Typo.Element>Kontaktopplysninger</Nav.Typo.Element>
+      <Nav.BodyLong weight="semibold" size="small">
+        Kontaktopplysninger
+      </Nav.BodyLong>
       {fullmektig.kontaktperson ? (
         <div>
-          <Nav.Typo.Element className="inline_felt">Kontaktperson: </Nav.Typo.Element>
+          <Nav.BodyLong weight="semibold" size="small" className="inline_felt">
+            Kontaktperson:{" "}
+          </Nav.BodyLong>
           <Nav.BodyLong size="small" className="inline_felt">
             {fullmektig.kontaktperson}
           </Nav.BodyLong>
@@ -98,7 +106,9 @@ const Kontaktperson = ({ fullmektig }: { fullmektig: Fullmektig }) => {
       )}
       {fullmektig.kontaktTelefon && (
         <div>
-          <Nav.Typo.Element className="inline_felt">Telefon: </Nav.Typo.Element>
+          <Nav.BodyLong weight="semibold" size="small" className="inline_felt">
+            Telefon:{" "}
+          </Nav.BodyLong>
           <Nav.BodyLong size="small" className="inline_felt">
             {fullmektig.kontaktTelefon}
           </Nav.BodyLong>
@@ -106,7 +116,9 @@ const Kontaktperson = ({ fullmektig }: { fullmektig: Fullmektig }) => {
       )}
       {fullmektig.kontaktOrgnr && (
         <div>
-          <Nav.Typo.Element className="inline_felt">Org.nr.: </Nav.Typo.Element>
+          <Nav.BodyLong weight="semibold" size="small" className="inline_felt">
+            Org.nr.:{" "}
+          </Nav.BodyLong>
           <Nav.BodyLong size="small" className="inline_felt">
             {fullmektig.kontaktOrgnr}
           </Nav.BodyLong>

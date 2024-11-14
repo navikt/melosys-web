@@ -29,7 +29,14 @@ export const OpprettNyOppgave = () => {
 
   return (
     <div className="opprettnyoppgave">
-      <Skjema.Datovelger feltNavn="mottaksdato" label={<Nav.Typo.Element>Mottaksdato</Nav.Typo.Element>} />
+      <Skjema.Datovelger
+        feltNavn="mottaksdato"
+        label={
+          <Nav.BodyLong weight="semibold" size="small">
+            Mottaksdato
+          </Nav.BodyLong>
+        }
+      />
       <Skjema.Select feltNavn="behandlingsaarsakType" label="Årsak" className="aarsakfelt">
         {muligeBehandlingsårsaker.map((aarsak: KTObject) => (
           <option key={aarsak.kode} value={aarsak.kode} label={labelTilÅrsak(aarsak)} />

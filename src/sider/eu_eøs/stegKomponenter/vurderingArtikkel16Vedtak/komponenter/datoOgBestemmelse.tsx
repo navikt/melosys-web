@@ -17,10 +17,14 @@ const DatoOgBestemmelse = ({ fomDato, tomDato }: DatoOgBestemmelseProps) => {
     <>
       <Nav.Row className="lovvalgsperiode__row">
         <Nav.Column xs="5">
-          <Nav.Typo.Element>Lovvalgsperiode</Nav.Typo.Element>
+          <Nav.BodyLong weight="semibold" size="small">
+            Lovvalgsperiode
+          </Nav.BodyLong>
         </Nav.Column>
         <Nav.Column xs="7">
-          <Nav.Typo.Element>Lovvalgsbestemmelse</Nav.Typo.Element>
+          <Nav.BodyLong weight="semibold" size="small">
+            Lovvalgsbestemmelse
+          </Nav.BodyLong>
         </Nav.Column>
       </Nav.Row>
       <Nav.Row>
