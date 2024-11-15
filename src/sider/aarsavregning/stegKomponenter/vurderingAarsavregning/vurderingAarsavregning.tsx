@@ -282,7 +282,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
         })
         .catch((error) => setFeil(mapFeilmelding(error)));
     },
-    [behandlingID, medlemskapsTypeErPliktig, setFeil, setAarsavregningResponse]
+    [behandlingID, medlemskapsTypeErPliktig, setFeil, setAarsavregningResponse, aarsavregningID]
   );
 
   const debounceBeregnTrygdeavgiftsperioder = useCallback(
@@ -302,7 +302,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
     if (redigerbart && erAvvik && !isValidating && formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType)) {
       debounceBeregnTrygdeavgiftsperioder(formValues);
     }
-  }, [isValidating, erAvvik]);
+  }, [isValidating]);
 
   const stegErGyldig = Boolean(erAvvik === false || (formIsValid && erAvvik && aarsavregningResponse?.nyttGrunnlag));
 
@@ -310,6 +310,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
     oppdaterStatus(stegErGyldig);
   }, [stegErGyldig]);
 
+  // TODO legg avvik i schema context, nå trigger ikke endring til true automatisk beregning, man må "touche" brutto inntekt i weben
   const håndterAvvik = (value: boolean) => {
     if (!value) {
       Api.Trygdeavgift.slettTrygdeavgiftsperioder(behandlingID).then(() => {
