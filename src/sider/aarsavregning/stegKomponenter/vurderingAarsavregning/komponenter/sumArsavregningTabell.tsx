@@ -27,7 +27,7 @@ export const SumArsavregningTabell = ({
           <Nav.Table.DataCell scope="col">-</Nav.Table.DataCell>
           <Nav.Table.DataCell scope="col">Tidligere beregnet trygdeavgift</Nav.Table.DataCell>
           <Nav.Table.DataCell align="right" key={Utils._uuid()}>
-            {formaterTilNorskBelop(tidligereTrygdeavgift)} kr
+            {formaterTilNorskBelop(tidligereTrygdeavgift || 0)} kr
           </Nav.Table.DataCell>
         </Nav.Table.Row>
         <Nav.Table.Row>
