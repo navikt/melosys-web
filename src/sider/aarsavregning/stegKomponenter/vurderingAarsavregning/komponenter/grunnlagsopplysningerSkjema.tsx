@@ -1,4 +1,3 @@
-import * as Nav from "../../../../../navFrontend";
 import "./tidligereGrunnlagsoversikt.css";
 import {
   FieldArrayProps,
@@ -39,7 +38,6 @@ const GrunnlagsopplysningerSkjema = ({
 }: GrunnlagsopplysningerSkjemaProps) => {
   return (
     <div className="grunnlagsopplysningerSkjema">
-      <Nav.Typo.Systemtittel>Inntekts- og skatteopplysninger for endelig trygdeavgift</Nav.Typo.Systemtittel>
       <Skatteforholdsperioder
         formValues={formValues}
         redigerbart={redigerbart}
