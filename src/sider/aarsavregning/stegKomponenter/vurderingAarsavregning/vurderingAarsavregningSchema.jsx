@@ -14,7 +14,7 @@ const {
   PENSJON_UFØRETRYGD_KILDESKATT,
 } = MKV.Koder.inntektskildetype;
 const { IKKE_SKATTEPLIKTIG } = MKV.Koder.skatteplikttype;
-const UTENFOR_MEDLEMSKAPSPERIODEN = { melding: "Utenfor medlemskapsperioden" };
+const UTENFOR_MEDLEMSKAPSPERIODEN = { melding: "Utenfor medl.periode" };
 
 export const arbAvgBetalesKreves = (kildetype, medlemskapsTypeErPliktig) =>
   !medlemskapsTypeErPliktig && kildetype !== MISJONÆR;
@@ -63,11 +63,42 @@ const kreverInntektskilder = (medlemskapsTypeErPliktig, options) => {
   return true;
 };
 
+const erPeriodeSisteMedlemskapsperiode = (periodeId, formValues) => {
+  const medlemskapsperioder = formValues?.medlemskapsperioder || [];
+  return medlemskapsperioder[medlemskapsperioder.length - 1]?.periodeId?.toString() === periodeId;
+};
+
+const åpenTomNårIkkeSistePeriodeTest = {
+  name: "Åpen sluttdato ved etterfølgende perioder",
+  message: { melding: "Sluttdato må fylles ut når det finnes etterfølgende perioder" },
+  test: (tomDato, schema) => {
+    const erSisteMedlemskapsperiode = erPeriodeSisteMedlemskapsperiode(schema.parent.periodeId, schema.from[1].value);
+    return !(!erSisteMedlemskapsperiode && Utils._isEmpty(tomDato));
+  },
+};
+
 const vurdering_aarsavregning = object().shape({
+  medlemskapsperioder: array()
+    .min(1, "Minst en medlemskapsperiode")
+    .of(
+      object().shape({
+        fomDato: string()
+          .erGyldigDato()
+          .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
+          .required(),
+        tomDato: string()
+          .erGyldigDato()
+          .erEtterDatofelt("fomDato")
+          .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
+          .test(åpenTomNårIkkeSistePeriodeTest),
+        trygdedekning: string().required(),
+        bestemmelse: string().required(),
+      })
+    ),
   skatteforholdsperioder: array().when(["$erÅpenSluttDato"], {
     is: (erÅpenSluttDato) => !erÅpenSluttDato,
     then: array()
-      .min(1)
+      .min(1, "Minst en skatteforholdsperiode")
       .of(
         object().shape({
           fomDato: string()
@@ -88,7 +119,7 @@ const vurdering_aarsavregning = object().shape({
       is: (medlemskapsTypeErPliktig, erÅpenSluttDato) =>
         !erÅpenSluttDato && kreverInntektskilder(medlemskapsTypeErPliktig, options),
       then: array()
-        .min(1)
+        .min(1, "Minst en inntektskilde")
         .of(
           object().shape({
             kildetype: string().required(MAA_FYLLES_UT),
