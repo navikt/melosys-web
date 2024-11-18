@@ -31,11 +31,11 @@ export const Skatteforholdsperioder = ({
   fields,
 }: SkatteforholdsperioderProps) => {
   return (
-    <div className="skatteforholdsperioder">
+    <div className="perioder">
       {formValues.skatteforholdsperioder.map((skatteforhold, index) => {
         return (
-          <Nav.Row className="skatteforhold__rad" key={fields[index].id}>
-            <Nav.Column className="dato">
+          <Nav.Row className="periode__rad" key={fields[index].id}>
+            <Nav.Column>
               <Forms.Datovelger
                 label={index === 0 ? "Skatteforhold" : ""}
                 name={`skatteforholdsperioder[${index}].fomDato`}
@@ -44,8 +44,9 @@ export const Skatteforholdsperioder = ({
               />
             </Nav.Column>
 
-            <Nav.Column className="dato dato__tom">
+            <Nav.Column>
               <Forms.Datovelger
+                label={index === 0 && <span className="invisible" />}
                 name={`skatteforholdsperioder[${index}].tomDato`}
                 readOnly={!redigerbart}
                 control={control}
@@ -53,7 +54,7 @@ export const Skatteforholdsperioder = ({
               />
             </Nav.Column>
 
-            <Nav.Column className="skattepliktig">
+            <Nav.Column>
               <Forms.RadioGroup
                 legend={index === 0 ? "Skattepliktig" : ""}
                 hideLegend={index !== 0}

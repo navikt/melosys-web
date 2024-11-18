@@ -2,10 +2,16 @@ import InntektsperioderTabell from "./inntektsperioderTabell";
 import { render, screen } from "@testing-library/react";
 
 describe("TrygdeavgiftsperioderTabell", () => {
-  it("ikke rendrer tabell dersom undefined", () => {
+  it("rendre tabell med dasher som verdier for kolonner på forste rad", () => {
     render(<InntektsperioderTabell />);
-    expect(screen.queryByText(/Trygdeavgift/i)).toBeNull();
-    expect(screen.queryByText(/Inntektskilde/i)).toBeNull();
+
+    const tdElements = screen.getAllByRole("cell");
+
+    expect(tdElements.length).toBeGreaterThan(0);
+    tdElements.forEach((td) => {
+      expect(td).toHaveTextContent("-");
+      expect(td.innerHTML.trim()).toBe("-");
+    });
   });
 
   it("rendrer tabell med data", () => {
@@ -20,7 +26,7 @@ describe("TrygdeavgiftsperioderTabell", () => {
       },
     ];
     render(<InntektsperioderTabell perioder={perioder} />);
-    expect(screen.getByText("Inntekt")).toBeInTheDocument();
+    expect(screen.getByText("Inntektsperiode")).toBeInTheDocument();
     expect(screen.getByText("Inntektskilde")).toBeInTheDocument();
   });
 

@@ -246,6 +246,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
           }
           setValue("totaltForskuddsvisFakturert", "");
           dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(behandlingID));
+          setErAvvik(undefined);
         })
         .catch((error: any) => {
           setFeil(error.body?.message || error);
@@ -257,11 +258,15 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
   useEffect(() => {
     if (redigerbart && aarsavregningResponse?.nyttGrunnlag) {
       if (aarsavregningResponse.nyttGrunnlag?.avgift.totalAvgift !== aarsavregningResponse.avregning?.nyttTotalbeloep) {
-        Api.Aarsavregning.oppdaterTotalBelop(behandlingID, aarsavregningID, {
-          avregning: {
-            nyttTotalbeloep: aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift,
+        Api.Aarsavregning.oppdaterTotalBelop(
+          behandlingID,
+          {
+            avregning: {
+              nyttTotalbeloep: aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift,
+            },
           },
-        });
+          aarsavregningID
+        );
       }
     }
   }, [aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift]);
@@ -326,12 +331,16 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
       (formValues.totaltForskuddsvisFakturert || formValues.totaltForskuddsvisFakturert === "") &&
       formValues.totaltForskuddsvisFakturert !== aarsavregningResponse?.avregning?.tidligereFakturertBeloep
     ) {
-      Api.Aarsavregning.oppdaterTotalBelop(behandlingID, aarsavregningID, {
-        avregning: {
-          tidligereFakturertBeloep:
-            formValues.totaltForskuddsvisFakturert === "" ? 0 : formValues.totaltForskuddsvisFakturert,
+      Api.Aarsavregning.oppdaterTotalBelop(
+        behandlingID,
+        {
+          avregning: {
+            tidligereFakturertBeloep:
+              formValues.totaltForskuddsvisFakturert === "" ? 0 : formValues.totaltForskuddsvisFakturert,
+          },
         },
-      });
+        aarsavregningID
+      );
     }
   }, [formValues.totaltForskuddsvisFakturert]);
 
@@ -365,7 +374,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
         })
         .catch((error) => setFeil(mapFeilmelding(error)));
     },
-    [behandlingID, medlemskapsTypeErPliktig, setFeil, setAarsavregningResponse]
+    [behandlingID, medlemskapsTypeErPliktig, setFeil, setAarsavregningResponse, aarsavregningID]
   );
 
   const debounceBeregnTrygdeavgiftsperioder = useCallback(
@@ -401,6 +410,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
     oppdaterStatus(stegErGyldig);
   }, [stegErGyldig]);
 
+  // TODO legg avvik i schema context, nå trigger ikke endring til true automatisk beregning, man må "touche" brutto inntekt i weben
   const håndterAvvik = (value: boolean) => {
     if (!value) {
       Api.Trygdeavgift.slettTrygdeavgiftsperioder(behandlingID).then(() => {
@@ -566,8 +576,10 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
           legend="Er det avvik i opplysningene fra skatt eller bruker?"
           readOnly={!redigerbart}
         >
-          <Nav.Radio value>Ja</Nav.Radio>
-          <Nav.Radio value={false}>Nei</Nav.Radio>
+          <Nav.HStack gap="6">
+            <Nav.Radio value>Ja</Nav.Radio>
+            <Nav.Radio value={false}>Nei</Nav.Radio>
+          </Nav.HStack>
         </Nav.RadioGroup>
       )}
       {(erAvvik || erIngenGrunnlag) && valgtÅr && (

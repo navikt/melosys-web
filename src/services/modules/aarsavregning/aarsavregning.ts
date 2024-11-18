@@ -4,6 +4,7 @@ import { InntektskildeDto, SkatteforholdDto } from "../trygdeavgift";
 import { Medlemskapsperiode } from "../medlemavfolketrygden/medlemskapsperioder";
 
 export type AarsavregningResponse = {
+  aarsavregningID: number;
   aar: number;
   tidligereGrunnlagsopplysninger?: Grunnlagsopplysninger;
   avvikFunnet?: boolean;
@@ -55,7 +56,7 @@ export type AarsavregningListResponse = {
   resultattype: string;
 };
 
-export const hentAarsavregning = (behandlingID: number, aarsavregningID: number): Promise<AarsavregningResponse> =>
+export const hentAarsavregning = (behandlingID: number, aarsavregningID?: number): Promise<AarsavregningResponse> =>
   getAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${AARSAVREGNING}/${aarsavregningID}`);
 
 export type LagAarsavregningRequest = {
@@ -70,8 +71,8 @@ export const lagAarsavregning = (
 
 export const oppdaterTotalBelop = (
   behandlingID: number,
-  aarsavregningID: number,
-  request: AarsavregningRequest
+  request: AarsavregningRequest,
+  aarsavregningID?: number
 ): Promise<AarsavregningResponse> =>
   putAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${AARSAVREGNING}/${aarsavregningID}`, request);
 
