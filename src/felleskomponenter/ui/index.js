@@ -4,7 +4,6 @@ import Lenkeknapp from "./lenkeknapp";
 import ListevelgerFlervalg from "./listevelgerFlervalg";
 import Undertittel from "./undertittel";
 import Elementskrift from "./elementskrift";
-import LesMerPanel from "./lesmerpanel";
 import StegKnapper from "./stegKnapp";
 import IkonKnapp from "./ikonKnapp";
 
@@ -15,7 +14,6 @@ export {
   ListevelgerFlervalg,
   Undertittel,
   Elementskrift,
-  LesMerPanel,
   StegKnapper,
   IkonKnapp,
 };

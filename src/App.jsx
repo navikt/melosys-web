@@ -6,8 +6,6 @@ import Rammeverk from "./sider/rammeverk";
 import { msalConfig } from "./auth/authConfig";
 
 import "./nav-style/grid.css";
-import "nav-frontend-skjema-style";
-import "nav-frontend-snakkeboble-style";
 import "nav-frontend-typografi-style";
 
 export function App({ children, isDevelopmentProfile }) {

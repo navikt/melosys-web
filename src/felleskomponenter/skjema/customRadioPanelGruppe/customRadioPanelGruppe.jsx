@@ -91,7 +91,7 @@ const CustomRadioPanelGruppe = (props) => {
   };
 
   return (
-    <Nav.SkjemaGruppe className={classNames("customRadioPanelGruppe", className)} feil={feil}>
+    <div className={classNames("customRadioPanelGruppe", className)}>
       <Nav.RadioGroup legend={legend} onChange={onChangeAndNotify}>
         {radiosSomVises.map((radio) => (
           <CustomRadioPanel
@@ -120,7 +120,8 @@ const CustomRadioPanelGruppe = (props) => {
           </button>
         </div>
       )}
-    </Nav.SkjemaGruppe>
+      {feil ? <Nav.Alert variant="error">{feil}</Nav.Alert> : null}
+    </div>
   );
 };
 

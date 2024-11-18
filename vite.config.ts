@@ -77,9 +77,6 @@ export default defineConfig({
   resolve: {
     extensions: [".js", ".json", ".jsx", ".mjs", ".ts", ".tsx"],
     alias: {
-      "nav-frontend-lenker-style": fileURLToPath(new URL("./src/nav-style/lenker.css", import.meta.url)),
-      "nav-frontend-skjema-style": fileURLToPath(new URL("./src/nav-style/skjema.css", import.meta.url)),
-      "nav-frontend-snakkeboble-style": fileURLToPath(new URL("./src/nav-style/snakkeboble.css", import.meta.url)),
       "nav-frontend-typografi-style": fileURLToPath(new URL("./src/nav-style/typografi.css", import.meta.url)),
       AppTypes: path.resolve(__dirname, "./src/globalmodules/AppTypes.ts"),
       Domene: path.resolve(__dirname, "./src/globalmodules/Domene.ts"),

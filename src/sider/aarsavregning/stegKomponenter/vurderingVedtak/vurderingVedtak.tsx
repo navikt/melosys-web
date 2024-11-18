@@ -113,6 +113,10 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
     if (erFullmektigEndret) {
       hentOgSetHarFullmaktForTrygdeavgift();
 
+      Api.Trygdeavgift.hentFakturamottaker(behandlingID).then((dto) => {
+        setFakturaMottaker(dto.navn);
+      });
+
       dispatch(menypanelOperations.setErFullmektigEndret(false));
     }
   }, [erFullmektigEndret]);
@@ -192,8 +196,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
 
   const skalFaktureres = tidligereTrygdeavgift && nyTrygdeavgift && nyTrygdeavgift - tidligereTrygdeavgift > 0;
 
-  const stegErGyldig =
-    formIsValid && (!harFullmaktForTrygdeavgift || (harBekreftetFullmaktForTrygdeavgift && skalFaktureres));
+  const stegErGyldig = formIsValid && (!harFullmaktForTrygdeavgift || harBekreftetFullmaktForTrygdeavgift);
 
   return (
     <div className="vurderingVedtak">
@@ -224,7 +227,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
         </Nav.Row>
       ) : null}
 
-      {harFullmaktForTrygdeavgift && skalFaktureres ? (
+      {harFullmaktForTrygdeavgift && redigerbart ? (
         <FullmaktForTrygdeavgiftConfirmationPanel
           harBekreftet={harBekreftetFullmaktForTrygdeavgift}
           onChange={setHarBekreftetFullmaktForTrygdeavgift}
