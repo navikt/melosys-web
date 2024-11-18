@@ -67,7 +67,9 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
   const [nyVurderingÅrsavregning, setNyVurderingÅrsavregning] = useState<boolean>(false);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
-  const aarsavregningID = useSelector(behandlingsresultatSelectors.ÅrsavregningIDSelector);
+  const [aarsavregningID, setAarsavregningID] = useState<number | undefined>(
+    useSelector(behandlingsresultatSelectors.ÅrsavregningIDSelector)
+  );
   const saksnummer = useSelector(fagsakSelectors.SaksnummerSelector);
   const sisteMuligeÅr = new Date().getFullYear() - 1;
   const antallÅrTilbakeITid = 6;
@@ -121,27 +123,29 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
 
   // Initiell innlasting
   useEffect(() => {
-    Api.Aarsavregning.hentAarsavregning(behandlingID, aarsavregningID)
-      .then((res) => {
-        setAarsavregningResponse(res);
-        // Benyttes for innhenting av saksopplysninger ifm. årsavregningsbehandlinger
-        dispatch({ type: OK, data: res });
-        setInitieltÅr(res.aar);
-        setValue("totaltForskuddsvisFakturert", res.avregning?.tidligereFakturertBeloep);
-        if (res.avvikFunnet !== null) {
-          setErAvvik(res.avvikFunnet);
-        }
-        if (res.avvikFunnet && res?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag) {
-          setSkjemaverdierFraTrygdeavgiftsgrunnlag(
-            res.nyttGrunnlag?.trygdeavgiftsgrunnlag || res.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag
-          );
-        }
-      })
-      .catch((err) => {
-        if (err.response?.status === 404) {
-          setAarsavregningResponse(undefined);
-        }
-      });
+    if (aarsavregningID) {
+      Api.Aarsavregning.hentAarsavregning(behandlingID, aarsavregningID)
+        .then((res) => {
+          setAarsavregningResponse(res);
+          // Benyttes for innhenting av saksopplysninger ifm. årsavregningsbehandlinger
+          dispatch({ type: OK, data: res });
+          setInitieltÅr(res.aar);
+          setValue("totaltForskuddsvisFakturert", res.avregning?.tidligereFakturertBeloep);
+          if (res.avvikFunnet !== null) {
+            setErAvvik(res.avvikFunnet);
+          }
+          if (res.avvikFunnet && res?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag) {
+            setSkjemaverdierFraTrygdeavgiftsgrunnlag(
+              res.nyttGrunnlag?.trygdeavgiftsgrunnlag || res.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag
+            );
+          }
+        })
+        .catch((err) => {
+          if (err.response?.status === 404) {
+            setAarsavregningResponse(undefined);
+          }
+        });
+    }
   }, []);
 
   // Innlasting ved valg av år, oppretter eller henter årsavregning
@@ -164,6 +168,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
           }
           setValue("totaltForskuddsvisFakturert", "");
           setErAvvik(undefined);
+          setAarsavregningID(res.aarsavregningID);
         })
         .catch((error: any) => {
           setFeil(error.body?.message || error);
@@ -174,11 +179,15 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
   useEffect(() => {
     if (redigerbart && aarsavregningResponse?.nyttGrunnlag) {
       if (aarsavregningResponse.nyttGrunnlag?.avgift.totalAvgift !== aarsavregningResponse.avregning?.nyttTotalbeloep) {
-        Api.Aarsavregning.oppdaterTotalBelop(behandlingID, aarsavregningID, {
-          avregning: {
-            nyttTotalbeloep: aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift,
+        Api.Aarsavregning.oppdaterTotalBelop(
+          behandlingID,
+          {
+            avregning: {
+              nyttTotalbeloep: aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift,
+            },
           },
-        });
+          aarsavregningID
+        );
       }
     }
   }, [aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift]);
@@ -230,11 +239,15 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
       formValues.totaltForskuddsvisFakturert &&
       formValues.totaltForskuddsvisFakturert !== aarsavregningResponse?.avregning?.tidligereFakturertBeloep
     ) {
-      Api.Aarsavregning.oppdaterTotalBelop(behandlingID, aarsavregningID, {
-        avregning: {
-          tidligereFakturertBeloep: formValues.totaltForskuddsvisFakturert,
+      Api.Aarsavregning.oppdaterTotalBelop(
+        behandlingID,
+        {
+          avregning: {
+            tidligereFakturertBeloep: formValues.totaltForskuddsvisFakturert,
+          },
         },
-      });
+        aarsavregningID
+      );
     }
   }, [formValues.totaltForskuddsvisFakturert]);
 
@@ -269,7 +282,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
         })
         .catch((error) => setFeil(mapFeilmelding(error)));
     },
-    [behandlingID, medlemskapsTypeErPliktig, setFeil, setAarsavregningResponse]
+    [behandlingID, medlemskapsTypeErPliktig, setFeil, setAarsavregningResponse, aarsavregningID]
   );
 
   const debounceBeregnTrygdeavgiftsperioder = useCallback(
@@ -289,7 +302,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
     if (redigerbart && erAvvik && !isValidating && formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType)) {
       debounceBeregnTrygdeavgiftsperioder(formValues);
     }
-  }, [isValidating, erAvvik]);
+  }, [isValidating]);
 
   const stegErGyldig = Boolean(erAvvik === false || (formIsValid && erAvvik && aarsavregningResponse?.nyttGrunnlag));
 
@@ -297,6 +310,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
     oppdaterStatus(stegErGyldig);
   }, [stegErGyldig]);
 
+  // TODO legg avvik i schema context, nå trigger ikke endring til true automatisk beregning, man må "touche" brutto inntekt i weben
   const håndterAvvik = (value: boolean) => {
     if (!value) {
       Api.Trygdeavgift.slettTrygdeavgiftsperioder(behandlingID).then(() => {
