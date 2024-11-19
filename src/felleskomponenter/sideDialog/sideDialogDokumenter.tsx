@@ -2,6 +2,7 @@ import { useDispatch } from "react-redux";
 import { DokumentOversikt, Mottaksretning } from "Domene";
 import { change } from "redux-form";
 import { v4 as uuid } from "uuid";
+import { BodyShort } from "@navikt/ds-react";
 
 import MKV from "../../melosyskodeverk";
 import * as Api from "../../services/api";
@@ -95,28 +96,38 @@ interface SideDialogDokumenterProps {
 const SideDialogDokumenter = ({ behandlingID, dokumentOversikt, setAktivTab }: SideDialogDokumenterProps) => {
   const [utkast] = useAsyncCallbackState(() => Api.Brevutkast.hentBrevutkast(behandlingID), [], []);
   const dispatch = useDispatch();
+
   const handleValgtUtkast = (valgtUtkast: Api.Brevutkast.BrevutkastResDto | null) => {
     dispatch(change(KV.Form.SEND_BREV, "aktivtUtkast", valgtUtkast));
     setAktivTab("brevbestilling");
   };
+
+  const harDokumenter = Array.isArray(dokumentOversikt) && dokumentOversikt.length > 0;
+
   return (
     <div className="sideDialogDokumenter">
       <LagredeUtkast alleUtkast={utkast} settAktivtUtkast={handleValgtUtkast} />
-      <Nav.Table size="small" aria-label="Liste over dokumenter knyttet til saken">
-        <Nav.Table.Header>
-          <Nav.Table.Row>
-            <Nav.Table.HeaderCell aria-label="Mottaksretning" />
-            <Nav.Table.HeaderCell>Dokument</Nav.Table.HeaderCell>
-            <Nav.Table.HeaderCell>Avsender/mottaker</Nav.Table.HeaderCell>
-            <Nav.Table.HeaderCell>Dato</Nav.Table.HeaderCell>
-          </Nav.Table.Row>
-        </Nav.Table.Header>
-        <Nav.Table.Body>
-          {dokumentOversikt.map((oversikt) => (
-            <OversiktRad key={uuid()} dokumentOversikt={oversikt} />
-          ))}
-        </Nav.Table.Body>
-      </Nav.Table>
+      {harDokumenter ? (
+        <Nav.Table size="small" aria-label="Liste over dokumenter knyttet til saken">
+          <Nav.Table.Header>
+            <Nav.Table.Row>
+              <Nav.Table.HeaderCell aria-label="Mottaksretning" />
+              <Nav.Table.HeaderCell>Dokument</Nav.Table.HeaderCell>
+              <Nav.Table.HeaderCell>Avsender/mottaker</Nav.Table.HeaderCell>
+              <Nav.Table.HeaderCell>Dato</Nav.Table.HeaderCell>
+            </Nav.Table.Row>
+          </Nav.Table.Header>
+          <Nav.Table.Body>
+            {dokumentOversikt.map((oversikt) => (
+              <OversiktRad key={uuid()} dokumentOversikt={oversikt} />
+            ))}
+          </Nav.Table.Body>
+        </Nav.Table>
+      ) : (
+        <BodyShort size="small" textColor="subtle">
+          Det er ingen dokumenter tilknyttet saken/behandlingen.
+        </BodyShort>
+      )}
     </div>
   );
 };
