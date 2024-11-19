@@ -49,7 +49,9 @@ const PersonInfo = ({ behandlingID, ...props }: PersonInfoProps) => {
     return (
       <>
         <Nav.Column xs={erLitenSkjerm ? "4" : "6"}>
-          <Nav.Typo.Element>Fødselsnummer:</Nav.Typo.Element>
+          <Nav.BodyLong weight="semibold" size="small">
+            Fødselsnummer:
+          </Nav.BodyLong>
         </Nav.Column>
         <Nav.Column xs={erLitenSkjerm ? "8" : "6"}>{personopplysninger?.fnr || "-"}</Nav.Column>
       </>
@@ -65,7 +67,9 @@ const PersonInfo = ({ behandlingID, ...props }: PersonInfoProps) => {
     return (
       <>
         <Nav.Column xs={erLitenSkjerm ? "4" : "6"}>
-          <Nav.Typo.Element>Fødselsdato:</Nav.Typo.Element>
+          <Nav.BodyLong weight="semibold" size="small">
+            Fødselsdato:
+          </Nav.BodyLong>
         </Nav.Column>
         <Nav.Column xs={erLitenSkjerm ? "8" : "6"}>{fødselsdato}</Nav.Column>
       </>

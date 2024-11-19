@@ -36,7 +36,9 @@ const NormaltDriverVirksomhet = (props) => {
 
   return (
     <>
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">Drift i Norge</Nav.Typo.Innholdstittel>
+      <Nav.Heading size="large" className="stegvelgertittel">
+        Drift i Norge
+      </Nav.Heading>
       <EnkeltVilkaar
         oppdaterData={oppdaterData}
         labelOppfylt="Ja"

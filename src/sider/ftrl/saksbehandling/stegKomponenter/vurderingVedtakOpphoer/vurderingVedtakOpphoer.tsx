@@ -148,9 +148,9 @@ export const VurderingVedtakOpphoer = ({ tilbake, aktivtSteg }: Props) => {
 
   return (
     <div className="vurderingVedtakOpphoer">
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">
+      <Nav.Heading size="large" className="stegvelgertittel">
         Opphør av frivillig medlemskap etter § 2-15
-      </Nav.Typo.Innholdstittel>
+      </Nav.Heading>
 
       <Nav.Table size="small" className="melosys__table">
         <Nav.Table.Header>
@@ -173,9 +173,9 @@ export const VurderingVedtakOpphoer = ({ tilbake, aktivtSteg }: Props) => {
         </Nav.Table.Body>
       </Nav.Table>
 
-      <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
+      <Nav.BodyLong weight="semibold" size="small" className="fritekst_overskrift">
         Fritekst til begrunnelse
-      </Nav.Typo.Element>
+      </Nav.BodyLong>
       <Forms.HtmlEditor
         name="begrunnelseFritekst"
         control={control}

@@ -47,10 +47,12 @@ type BooleanFeltRedigeringUtfortProps = {
 export const BooleanFeltRedigeringUtfort = ({ tekst, verdi }: BooleanFeltRedigeringUtfortProps) => (
   <Nav.Row>
     <Nav.Column xs="12" className="boolean-felt-redigering-utfort">
-      <Nav.Typo.Normaltekst className="typo-normal">{tekst}</Nav.Typo.Normaltekst>
-      <Nav.Typo.Element className="typo-element">
+      <Nav.BodyLong size="small" className="typo-normal">
+        {tekst}
+      </Nav.BodyLong>
+      <Nav.BodyLong weight="semibold" size="small" className="typo-element">
         {verdi === null ? "-" : Utils._capitalize(Utils.streng.boolTilNorsk(verdi))}
-      </Nav.Typo.Element>
+      </Nav.BodyLong>
     </Nav.Column>
   </Nav.Row>
 );
@@ -81,9 +83,9 @@ export const InntektRedigeringUtfortUndertittel = ({ verdi }: { verdi: number | 
   const inntekt = Utils.streng.tryParseFloat(verdi);
 
   return (
-    <Nav.Typo.Undertittel className="inntekt-undertittel">
+    <Nav.Heading size="xsmall" className="inntekt-undertittel">
       {inntekt !== null ? <FormatertInntekt inntekt={inntekt} /> : "-"}
-    </Nav.Typo.Undertittel>
+    </Nav.Heading>
   );
 };
 
@@ -94,7 +96,7 @@ type InntektRedigeringUtfortProps = {
 
 const InntektRedigeringUtfort = ({ tittel, verdi }: InntektRedigeringUtfortProps) => (
   <Nav.Column xs="4" className="inntekt-redigering-utfort">
-    <Nav.Typo.Normaltekst>{tittel}</Nav.Typo.Normaltekst>
+    <Nav.BodyLong size="small">{tittel}</Nav.BodyLong>
     <InntektRedigeringUtfortUndertittel verdi={verdi} />
   </Nav.Column>
 );
@@ -296,9 +298,9 @@ const LonnOgGodtgjorelser = ({ redigerbart, visArbeidsforholdRolleEtiketter }: L
     <Nav.Container fluid className="lonnOgGodtgjorelser">
       <Nav.Row className="tittel">
         <Nav.Column xs="12">
-          <Nav.Typo.Systemtittel style={{ display: "inline", marginRight: "1em" }}>
+          <Nav.Heading size="small" style={{ display: "inline", marginRight: "1em" }}>
             {KV.Menypunkter.LonnOgGodtgjorelser.tittel}
-          </Nav.Typo.Systemtittel>
+          </Nav.Heading>
           {visArbeidsforholdRolleEtiketter && <Tags.ArbeidsgiversDel style={{ marginLeft: "0.3em" }} />}
           <LonnOgNaturalytelser
             redigerbart={redigerbart}

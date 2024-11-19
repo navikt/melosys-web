@@ -137,11 +137,13 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
 
   return (
     <div className="vurderingInngang_ftrl">
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">Oppgi opplysninger fra søknaden</Nav.Typo.Innholdstittel>
+      <Nav.Heading size="large" className="stegvelgertittel">
+        Oppgi opplysninger fra søknaden
+      </Nav.Heading>
 
       <div className="label__container">
-        <Nav.Typo.Undertittel>Søknadsperiode</Nav.Typo.Undertittel>
-        {erNyVurdering && <Nav.Typo.Undertekst>{nyVurderingPeriodetekst}</Nav.Typo.Undertekst>}
+        <Nav.Heading size="xsmall">Søknadsperiode</Nav.Heading>
+        {erNyVurdering && <Nav.Detail>{nyVurderingPeriodetekst}</Nav.Detail>}
       </div>
 
       <div className="søknads_periode_wrapper">
@@ -173,7 +175,9 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
                     hjelpetekst="Oppgi landet der arbeidet utføres. Hvis søker arbeider på skip, skal du oppgi flagglandet"
                   />
                 ) : (
-                  <Nav.Typo.Element className="land">Land</Nav.Typo.Element>
+                  <Nav.BodyLong weight="semibold" size="small" className="land">
+                    Land
+                  </Nav.BodyLong>
                 )
               }
               control={control}

@@ -165,7 +165,7 @@ export const KontaktOpplysninger = ({
           </Nav.Column>
         </Nav.Row>
       </Nav.Fieldset>
-      <div role="alert">{lagreFeilmelding && <Nav.Typo.Feilmelding>{lagreFeilmelding}</Nav.Typo.Feilmelding>}</div>
+      <div role="alert">{lagreFeilmelding && <Nav.ErrorMessage>{lagreFeilmelding}</Nav.ErrorMessage>}</div>
       {sokeResultat && (
         <OrganisasjonsAdresse visTittel={false} className="kontaktopplysninger__adresse" organisasjon={sokeResultat} />
       )}
@@ -173,7 +173,7 @@ export const KontaktOpplysninger = ({
         Slett kontaktopplysninger
       </Nav.Button>
       <div role="alert" className="kontaktopplysninger__slett-feilmelding">
-        {slettFeilmelding && <Nav.Typo.Feilmelding>{slettFeilmelding}</Nav.Typo.Feilmelding>}
+        {slettFeilmelding && <Nav.ErrorMessage>{slettFeilmelding}</Nav.ErrorMessage>}
       </div>
     </div>
   );

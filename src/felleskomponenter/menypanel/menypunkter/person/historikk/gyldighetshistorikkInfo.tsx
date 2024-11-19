@@ -3,7 +3,7 @@ import "./gyldighetshistorikkInfo.css";
 
 export const GyldighetshistorikkInfo = () => (
   <div className="gyldighetshistorikk-info">
-    <Nav.Typo.EtikettLiten>Gyldighetshistorikk fra Folkeregisteret kan være unøyaktig.</Nav.Typo.EtikettLiten>
+    <Nav.Detail>Gyldighetshistorikk fra Folkeregisteret kan være unøyaktig.</Nav.Detail>
     <Nav.HelpText title="Historikk hjelpetekst" strategy="fixed">
       <p>Det kan variere hvordan gyldighetsdato benyttes i Folkeregisteret.</p>
       <p>

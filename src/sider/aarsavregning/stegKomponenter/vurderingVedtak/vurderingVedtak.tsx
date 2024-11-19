@@ -201,16 +201,16 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
 
   return (
     <div className="vurderingVedtak">
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">
+      <Nav.Heading size="large" className="stegvelgertittel">
         Vedtak årsavregning {lagretAarsavregning ? lagretAarsavregning.aar : ""}
-      </Nav.Typo.Innholdstittel>
+      </Nav.Heading>
 
       <SumArsavregningTabell nyTrygdeavgift={nyTrygdeavgift} tidligereTrygdeavgift={tidligereTrygdeavgift} />
 
       {fakturaMottaker ? (
         <Nav.Row className="trygdeavgift">
           <Nav.Column xs="12">
-            <Nav.Typo.Normaltekst className="info">
+            <Nav.BodyLong size="small" className="info">
               {erDifferanseUnderMinstebeløp ? (
                 <b>Beløpet er under minstegrensen for fakturering/refusjon (100 kr).</b>
               ) : (
@@ -224,7 +224,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
                   <b>{fakturaMottaker}</b>
                 </>
               )}
-            </Nav.Typo.Normaltekst>
+            </Nav.BodyLong>
           </Nav.Column>
         </Nav.Row>
       ) : null}
@@ -236,9 +236,9 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
         />
       ) : null}
 
-      <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
+      <Nav.BodyLong weight="semibold" size="small" className="fritekst_overskrift">
         <LabelMedHjelpetekst label="Fritekst til innledning" hjelpetekst="" />
-      </Nav.Typo.Element>
+      </Nav.BodyLong>
       <Forms.HtmlEditor
         name="innledningFritekst"
         control={control}
@@ -246,9 +246,9 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
         disabled={!redigerbart}
       />
 
-      <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
+      <Nav.BodyLong weight="semibold" size="small" className="fritekst_overskrift">
         <LabelMedHjelpetekst label="Fritekst til begrunnelse" hjelpetekst="" />
-      </Nav.Typo.Element>
+      </Nav.BodyLong>
       <Forms.HtmlEditor
         name="begrunnelseFritekst"
         control={control}

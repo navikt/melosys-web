@@ -6,9 +6,9 @@ exports[`ArbeidsgivereNorge > snapshot test 1`] = `
   <div class="arbeidsgivereNorge panelSeksjon">
     <div class="arbeidsgivereEnkeltNorge">
       <div class="undertittel">
-        <h3
-          class="typo-undertittel undertittel__navUndertittel"
+        <h1
           id="333"
+          class="undertittel__navUndertittel navds-heading navds-heading--small"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -89,7 +89,7 @@ exports[`ArbeidsgivereNorge > snapshot test 1`] = `
           </span>
           <span>
           </span>
-        </h3>
+        </h1>
       </div>
       <div class="organisasjonSeksjon">
         <div class="row">
@@ -101,11 +101,11 @@ exports[`ArbeidsgivereNorge > snapshot test 1`] = `
           <div class="col col-xs-6">
             <p
               style="margin-top: 0.5em;"
-              class="typo-element"
+              class="navds-body-long navds-body-long--small navds-typo--semibold"
             >
               Org.nr. juridisk enhet
             </p>
-            <p class="typo-normal">
+            <p class="navds-body-long navds-body-long--small">
               123
             </p>
           </div>
@@ -114,9 +114,9 @@ exports[`ArbeidsgivereNorge > snapshot test 1`] = `
       <div>
       </div>
       <div class="undertittel">
-        <h3
-          class="typo-undertittel undertittel--understrek undertittel__navUndertittel"
+        <h1
           id="333"
+          class="undertittel--understrek undertittel__navUndertittel navds-heading navds-heading--small"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -157,7 +157,7 @@ exports[`ArbeidsgivereNorge > snapshot test 1`] = `
           </span>
           <span>
           </span>
-        </h3>
+        </h1>
       </div>
     </div>
   </div>

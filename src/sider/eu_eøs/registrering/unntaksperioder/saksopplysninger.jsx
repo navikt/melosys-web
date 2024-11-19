@@ -331,14 +331,16 @@ const Saksopplysninger = ({
       <form name="registrering" id="registrering" onSubmit={overstyrSubmit}>
         <div className="stegvelger panelSeksjon">
           <div className="panel stegFane steg0 stegFane--aktiv">
-            <Nav.Typo.Systemtittel>Registrering av unntaksperioder</Nav.Typo.Systemtittel>
+            <Nav.Heading size="small">Registrering av unntaksperioder</Nav.Heading>
             <br />
             <div className="vurderingEndrePeriode">
               {vurderingBegrunnelser.length > 0 && (
                 <Nav.Row className="seksjon">
                   <Nav.Column xs="12">
                     <Fragment>
-                      <Nav.Typo.Element>Treff ved automatisk kontroll</Nav.Typo.Element>
+                      <Nav.BodyLong weight="semibold" size="small">
+                        Treff ved automatisk kontroll
+                      </Nav.BodyLong>
                       <RegisterkontrollTreff vurderingBegrunnelser={vurderingBegrunnelser} />
                     </Fragment>
                   </Nav.Column>

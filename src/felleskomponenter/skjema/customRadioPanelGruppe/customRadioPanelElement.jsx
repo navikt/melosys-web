@@ -9,7 +9,7 @@ import "./customRadioPanelGruppe.css";
 const CustomRadioPanelElement = ({ tittel, hoyreSideTittel, data }) => (
   <div className="customRadioPanelElement">
     <div className="customRadioPanelTittel">
-      <Nav.Typo.Undertittel>{tittel}</Nav.Typo.Undertittel>
+      <Nav.Heading size="xsmall">{tittel}</Nav.Heading>
       {hoyreSideTittel && <>{hoyreSideTittel}</>}
     </div>
     <dl>

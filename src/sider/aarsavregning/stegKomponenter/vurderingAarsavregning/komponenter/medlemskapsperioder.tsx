@@ -55,7 +55,7 @@ export const Medlemskapsperioder = ({
   const kanSlettePeriode = redigerbart && formValues.medlemskapsperioder.length !== 1;
   return (
     <div className="medlemskapsperioder">
-      <Nav.Typo.Undertittel>{tittel}</Nav.Typo.Undertittel>
+      <Nav.Heading size="small">{tittel}</Nav.Heading>
 
       <div key={field.id}>
         <Nav.Row className="medlemskapsperioder__rad">

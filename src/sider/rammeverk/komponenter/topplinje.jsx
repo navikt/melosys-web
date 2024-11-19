@@ -25,7 +25,7 @@ const Topplinje = (props) => {
   return (
     <header className="topplinje">
       <a className="skip-link" href="#main-container">
-        <Nav.Typo.Systemtittel>Hopp til hovedinnhold</Nav.Typo.Systemtittel>
+        <Nav.Heading size="small">Hopp til hovedinnhold</Nav.Heading>
       </a>
       <div className="topplinje__brand">
         <button onClick={tilForsidenHandler} className="topplinje__brandKnapp" type="button">

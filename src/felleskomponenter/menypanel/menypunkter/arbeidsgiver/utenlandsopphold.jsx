@@ -16,7 +16,7 @@ const Utenlandsopphold = ({ utenlandsopphold }) => {
 
   return utenlandsopphold.length > 0 ? (
     <div>
-      <Nav.Typo.Undertittel>Lønn opptjent i utlandet</Nav.Typo.Undertittel>
+      <Nav.Heading size="xsmall">Lønn opptjent i utlandet</Nav.Heading>
       <TabellArbeidsgiver
         kolonneNavn={["Startdato", "Sluttdato", "Rapporteringsperiode", "Land"]}
         tabellData={utenlandsoppholdArrayed}

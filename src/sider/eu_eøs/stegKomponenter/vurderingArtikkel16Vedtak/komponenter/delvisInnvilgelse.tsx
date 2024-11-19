@@ -132,11 +132,11 @@ const DelvisInnvilgelse = ({
 
   return (
     <Fragment>
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">
+      <Nav.Heading size="large" className="stegvelgertittel">
         {konvensjonStorbritanniaToggleEnabled
           ? "Delvis innvilgelse"
           : "Delvis innvilgelse - omfattet av norsk trygdelovgivning etter Fo 883/2004 Artikkel 16 nr. 1. i deler av søknadsperioden"}
-      </Nav.Typo.Innholdstittel>
+      </Nav.Heading>
       <DatoOgBestemmelse fomDato={gjeldendePeriode.fom} tomDato={gjeldendePeriode.tom} />
       <Nav.Row>
         <Nav.Column xs="12">

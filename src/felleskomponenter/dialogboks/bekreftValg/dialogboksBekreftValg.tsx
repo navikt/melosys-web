@@ -184,7 +184,9 @@ export const DialogboksBekreftValg = () => {
       closeOnBackdropClick
     >
       <Nav.Modal.Body>
-        <Nav.Typo.Normaltekst className="normaltekst">{bekreftValgTypeData.tekst}</Nav.Typo.Normaltekst>
+        <Nav.BodyLong size="small" className="normaltekst">
+          {bekreftValgTypeData.tekst}
+        </Nav.BodyLong>
         {feil && (
           <Nav.Alert variant="error" className="feilmelding">
             {feil}

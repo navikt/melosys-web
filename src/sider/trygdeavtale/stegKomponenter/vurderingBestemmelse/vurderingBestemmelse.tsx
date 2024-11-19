@@ -115,7 +115,9 @@ const VurderingBestemmelse = ({
 
   return (
     <div className="vurderingBestemmelse_trygdeavtale">
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">Bestemmelse og vurdering</Nav.Typo.Innholdstittel>
+      <Nav.Heading size="large" className="stegvelgertittel">
+        Bestemmelse og vurdering
+      </Nav.Heading>
 
       <Skjema.RadioGroup
         legend="Hva er din vurdering av søknaden?"

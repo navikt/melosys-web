@@ -16,9 +16,9 @@ exports[`Behandlingsoppgaver > viser behandlingsoppgave 1`] = `
                 <div class="panelheader">
                   <div class="panelheader__tittel">
                     <div class="panelheader__tittel__hoved">
-                      <h2 class="typo-undertittel">
+                      <h1 class="navds-heading navds-heading--xsmall">
                         Peter Petersen - Z123456
-                      </h2>
+                      </h1>
                        
                     </div>
                     <span class="panelheader__tittel__under">

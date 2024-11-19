@@ -7,9 +7,9 @@ exports[`arbeidsforhold > snapshot test 1`] = `
     <div class="panelSeksjon arbeidsforholdet">
       <div class="container-fluid">
         <div class="undertittel">
-          <h3
-            class="typo-undertittel undertittel--understrek undertittel__navUndertittel"
+          <h1
             id="333"
+            class="undertittel--understrek undertittel__navUndertittel navds-heading navds-heading--small"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -91,7 +91,7 @@ exports[`arbeidsforhold > snapshot test 1`] = `
             </span>
             <span>
             </span>
-          </h3>
+          </h1>
         </div>
         <div class="row">
           <div class="col col-xs-6">
@@ -102,11 +102,11 @@ exports[`arbeidsforhold > snapshot test 1`] = `
           <div class="col col-xs-4">
             <p
               style="margin-top: 0.5em;"
-              class="typo-element"
+              class="navds-body-long navds-body-long--small navds-typo--semibold"
             >
               Virksomhetsnummer
             </p>
-            <p class="typo-normal">
+            <p class="navds-body-long navds-body-long--small">
               123
             </p>
           </div>

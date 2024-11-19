@@ -184,10 +184,14 @@ export const VurderingArtikkel13UtpekLand = ({
 
   return (
     <div className="vurderingArtikkel13UtpekLand">
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">{overskrift}</Nav.Typo.Innholdstittel>
-      <Nav.Typo.Undertittel>
-        <Nav.Typo.Element className="undertittel">{lovvalgslandTittel}</Nav.Typo.Element>
-      </Nav.Typo.Undertittel>
+      <Nav.Heading size="large" className="stegvelgertittel">
+        {overskrift}
+      </Nav.Heading>
+      <Nav.Heading size="xsmall">
+        <Nav.BodyLong weight="semibold" size="small" className="undertittel">
+          {lovvalgslandTittel}
+        </Nav.BodyLong>
+      </Nav.Heading>
       <Nav.Row>
         <Nav.Column xs="6">
           {visLandvelger && (
@@ -196,9 +200,11 @@ export const VurderingArtikkel13UtpekLand = ({
           {!visLandvelger && <div>{lovvalgsland && KV.kodeTilTerm(lovvalgsland, MKV.KTObjects.landkoder)}</div>}
         </Nav.Column>
       </Nav.Row>
-      <Nav.Typo.Undertittel>
-        <Nav.Typo.Element className="undertittel">Lovvalgsperiode</Nav.Typo.Element>
-      </Nav.Typo.Undertittel>
+      <Nav.Heading size="xsmall">
+        <Nav.BodyLong weight="semibold" size="small" className="undertittel">
+          Lovvalgsperiode
+        </Nav.BodyLong>
+      </Nav.Heading>
       <Nav.Row>
         <Nav.Column xs="6">
           {fomDato} - {tomDato}

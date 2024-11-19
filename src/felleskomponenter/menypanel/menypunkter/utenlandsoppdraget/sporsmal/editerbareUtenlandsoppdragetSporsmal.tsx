@@ -46,7 +46,9 @@ const EditerbareUtenlandsoppdragetSporsmal = () => {
 
       <Nav.Row>
         <Nav.Column xs="12">
-          <Nav.Typo.Element className="utsendingsperiode__label">{Sporsmal.samletUtsendingsperiode}</Nav.Typo.Element>
+          <Nav.BodyLong weight="semibold" size="small" className="utsendingsperiode__label">
+            {Sporsmal.samletUtsendingsperiode}
+          </Nav.BodyLong>
         </Nav.Column>
         <Nav.Column xs="6">
           <Skjema.Datovelger feltNavn="utenlandsoppdraget.samletUtsendingsperiode.fom" label="Fra og med" />

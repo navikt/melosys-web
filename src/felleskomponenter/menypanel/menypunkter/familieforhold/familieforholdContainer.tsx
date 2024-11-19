@@ -39,9 +39,9 @@ const FamilieforholdContainer = ({
     <Nav.Container fluid className="familieforhold-container">
       <Nav.Row>
         <Nav.Column xs="12">
-          <Nav.Typo.Systemtittel style={{ display: "inline", marginRight: "1em" }}>
+          <Nav.Heading size="small" style={{ display: "inline", marginRight: "1em" }}>
             {KV.Menypunkter.Familieforhold.tittel}
-          </Nav.Typo.Systemtittel>
+          </Nav.Heading>
         </Nav.Column>
       </Nav.Row>
       <Nav.Row className="familiemedlemmer-row">

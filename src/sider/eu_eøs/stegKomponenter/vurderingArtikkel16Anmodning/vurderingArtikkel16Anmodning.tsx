@@ -272,12 +272,14 @@ const VurderingArtikkel16Anmodning = ({
   // TODO: Erstattes med en enkel labeltekst når storbritannia toggle fjernes
   const begrunnelseFritekstBrevLabel = (
     <Fragment>
-      <Nav.Typo.Element>Begrunnelse til orienteringsbrev til bruker</Nav.Typo.Element>
+      <Nav.BodyLong weight="semibold" size="small">
+        Begrunnelse til orienteringsbrev til bruker
+      </Nav.BodyLong>
       {!konvensjonStorbritanniaToggleEnabled && (
-        <Nav.Typo.Normaltekst>
+        <Nav.BodyLong size="small">
           Begrunnelsen kommer ut i vedtaksbrevet som en setning som starter med «Vi har bedt trygdemyndighetene i [land]
           om en avtale for deg, fordi», og slutter med teksten du har tilføyd.
-        </Nav.Typo.Normaltekst>
+        </Nav.BodyLong>
       )}
     </Fragment>
   );
@@ -286,9 +288,9 @@ const VurderingArtikkel16Anmodning = ({
 
   return (
     <div className="vurderingArtikkel16Anmodning">
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">
+      <Nav.Heading size="large" className="stegvelgertittel">
         {konvensjonStorbritanniaToggleEnabled ? "Anmodning om unntak" : "Anmodning om unntak etter artikkel 16.1"}
-      </Nav.Typo.Innholdstittel>
+      </Nav.Heading>
       <div className="artikkel16__innhold">
         {erIDirekteTilArtikkel16Flyt && !konvensjonStorbritanniaToggleEnabled && (
           <Nav.Row>
@@ -305,22 +307,26 @@ const VurderingArtikkel16Anmodning = ({
 
         <Nav.Row>
           <Nav.Column xs="12">
-            <Nav.Typo.Element>Det lands lovgivning det søkes unntak fra</Nav.Typo.Element>
-            <Nav.Typo.Normaltekst>{landSomTekstListe}</Nav.Typo.Normaltekst>
+            <Nav.BodyLong weight="semibold" size="small">
+              Det lands lovgivning det søkes unntak fra
+            </Nav.BodyLong>
+            <Nav.BodyLong size="small">{landSomTekstListe}</Nav.BodyLong>
           </Nav.Column>
         </Nav.Row>
 
         <Nav.Row>
           <Nav.Column xs="12">
-            <Nav.Typo.Element>Søknadsperiode</Nav.Typo.Element>
+            <Nav.BodyLong weight="semibold" size="small">
+              Søknadsperiode
+            </Nav.BodyLong>
           </Nav.Column>
           <Nav.Column xs="12" className="soknadsperiode__inhold">
             <EnkeltDato dato={anmodningsperiode.fomDato} />
             &nbsp;-&nbsp;
             <EnkeltDato dato={anmodningsperiode.tomDato} />
-            <Nav.Typo.Normaltekst>
+            <Nav.BodyLong size="small">
               {datoDiffMenneskelig(anmodningsperiode.fomDato, anmodningsperiode.tomDato)}
-            </Nav.Typo.Normaltekst>
+            </Nav.BodyLong>
           </Nav.Column>
         </Nav.Row>
 
@@ -331,7 +337,11 @@ const VurderingArtikkel16Anmodning = ({
               onChange={handleEndretUnntakFraBestemmelse}
               value={unntakFraBestemmelse || ""}
               readOnly={!redigerbart}
-              label={<Nav.Typo.Element>Artikkelen det søkes unntak fra</Nav.Typo.Element>}
+              label={
+                <Nav.BodyLong weight="semibold" size="small">
+                  Artikkelen det søkes unntak fra
+                </Nav.BodyLong>
+              }
             >
               <option key={uuid()} value="" label="Velg..." disabled={!!unntakFraBestemmelse} />
               {hentUnntaksbestemmelser().map((kodeObjekt) => (
@@ -348,7 +358,11 @@ const VurderingArtikkel16Anmodning = ({
               onChange={handleEndretBegrunnelse}
               value={unntaksvilkår.begrunnelseKoder ? unntaksvilkår.begrunnelseKoder[0] : ""}
               readOnly={!redigerbart}
-              label={<Nav.Typo.Element>Legg til begrunnelse</Nav.Typo.Element>}
+              label={
+                <Nav.BodyLong weight="semibold" size="small">
+                  Legg til begrunnelse
+                </Nav.BodyLong>
+              }
             >
               <option
                 key={uuid()}
@@ -380,7 +394,11 @@ const VurderingArtikkel16Anmodning = ({
               {redigerbart && (
                 <Nav.Textarea
                   id={feltNavnFraBestemmelse}
-                  label={<Nav.Typo.Element>Begrunnelse til SED A001</Nav.Typo.Element>}
+                  label={
+                    <Nav.BodyLong weight="semibold" size="small">
+                      Begrunnelse til SED A001
+                    </Nav.BodyLong>
+                  }
                   placeholder="Skriv begrunnelsen her."
                   onBlur={lagreVilkarHandler}
                   onChange={handleEndretBegrunnelseFritekstEngelsk}
@@ -401,7 +419,11 @@ const VurderingArtikkel16Anmodning = ({
           <Nav.Row className="fritekstSed">
             <Nav.Column xs="7">
               <Skjema.Textarea
-                label={<Nav.Typo.Element>Ytterligere informasjon til SED (valgfri)</Nav.Typo.Element>}
+                label={
+                  <Nav.BodyLong weight="semibold" size="small">
+                    Ytterligere informasjon til SED (valgfri)
+                  </Nav.BodyLong>
+                }
                 feltNavn="fritekstSed"
                 readOnly={!redigerbart}
                 maxLength={maksAntallTegn}

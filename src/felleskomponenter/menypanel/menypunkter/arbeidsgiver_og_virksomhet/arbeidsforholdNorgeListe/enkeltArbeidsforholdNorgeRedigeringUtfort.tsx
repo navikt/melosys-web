@@ -33,15 +33,21 @@ const EnkeltArbeidsforholdNorgeRedigeringUtfort = ({
       "Ingen kontaktopplysninger oppgitt"
     ) : (
       <>
-        <Nav.Typo.Element>Kontaktopplysninger</Nav.Typo.Element>
+        <Nav.BodyLong weight="semibold" size="small">
+          Kontaktopplysninger
+        </Nav.BodyLong>
         <Nav.Row>
           <Nav.Column xs="5">
-            <Nav.Typo.Normaltekst>Kontaktperson:</Nav.Typo.Normaltekst>
-            <Nav.Typo.Element>{kontaktopplysninger.kontaktnavn || "Ikke oppgitt"}</Nav.Typo.Element>
+            <Nav.BodyLong size="small">Kontaktperson:</Nav.BodyLong>
+            <Nav.BodyLong weight="semibold" size="small">
+              {kontaktopplysninger.kontaktnavn || "Ikke oppgitt"}
+            </Nav.BodyLong>
           </Nav.Column>
           <Nav.Column xs="5">
-            <Nav.Typo.Normaltekst>Telefonnummer:</Nav.Typo.Normaltekst>
-            <Nav.Typo.Element>{kontaktopplysninger.kontakttelefon || "Ikke oppgitt"}</Nav.Typo.Element>
+            <Nav.BodyLong size="small">Telefonnummer:</Nav.BodyLong>
+            <Nav.BodyLong weight="semibold" size="small">
+              {kontaktopplysninger.kontakttelefon || "Ikke oppgitt"}
+            </Nav.BodyLong>
           </Nav.Column>
         </Nav.Row>
         {!Utils._isEmpty(kontaktopplysningerOrg) ? (
@@ -51,21 +57,25 @@ const EnkeltArbeidsforholdNorgeRedigeringUtfort = ({
                 <OrganisasjonsAdresse organisasjon={kontaktopplysningerOrg} visTittel={false} />
               </Nav.Column>
               <Nav.Column xs="3">
-                <Nav.Typo.Normaltekst>Organisasjonsnummer</Nav.Typo.Normaltekst>
-                <Nav.Typo.Element>{kontaktopplysningerOrg.orgnr}</Nav.Typo.Element>
+                <Nav.BodyLong size="small">Organisasjonsnummer</Nav.BodyLong>
+                <Nav.BodyLong weight="semibold" size="small">
+                  {kontaktopplysningerOrg.orgnr}
+                </Nav.BodyLong>
               </Nav.Column>
             </Nav.Row>
             <Nav.Row>
               <Nav.Column xs="12">
-                <Nav.Typo.EtikettLiten>*Brev til arbeidsgiver sendes til denne adressen</Nav.Typo.EtikettLiten>
+                <Nav.Detail>*Brev til arbeidsgiver sendes til denne adressen</Nav.Detail>
               </Nav.Column>
             </Nav.Row>
           </>
         ) : (
           <Nav.Row>
             <Nav.Column xs="5">
-              <Nav.Typo.Normaltekst>Organisasjonsnummer</Nav.Typo.Normaltekst>
-              <Nav.Typo.Element>Ikke oppgitt</Nav.Typo.Element>
+              <Nav.BodyLong size="small">Organisasjonsnummer</Nav.BodyLong>
+              <Nav.BodyLong weight="semibold" size="small">
+                Ikke oppgitt
+              </Nav.BodyLong>
             </Nav.Column>
           </Nav.Row>
         )}
@@ -79,8 +89,12 @@ const EnkeltArbeidsforholdNorgeRedigeringUtfort = ({
           <OrganisasjonsAdresse organisasjon={org} visNavn={false} visTittel={false} />
         </Nav.Column>
         <Nav.Column xs="3">
-          <Nav.Typo.Normaltekst style={{ marginTop: "0.5em" }}>Organisasjonsnummer:</Nav.Typo.Normaltekst>
-          <Nav.Typo.Element>{org.orgnr}</Nav.Typo.Element>
+          <Nav.BodyLong size="small" style={{ marginTop: "0.5em" }}>
+            Organisasjonsnummer:
+          </Nav.BodyLong>
+          <Nav.BodyLong weight="semibold" size="small">
+            {org.orgnr}
+          </Nav.BodyLong>
         </Nav.Column>
       </Nav.Row>
       {kontaktopplysningerContent}

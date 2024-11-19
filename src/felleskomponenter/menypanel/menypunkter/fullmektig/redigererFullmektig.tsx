@@ -162,7 +162,9 @@ const RedigererFullmektig = ({
                   ))}
                 </Nav.CheckboxGroup>
                 {manglerFullmakt && (
-                  <Nav.Typo.Element className="fullmakt_errortext">{manglerFullmakt}</Nav.Typo.Element>
+                  <Nav.BodyLong weight="semibold" size="small" className="fullmakt_errortext">
+                    {manglerFullmakt}
+                  </Nav.BodyLong>
                 )}
               </>
             )}
@@ -170,12 +172,12 @@ const RedigererFullmektig = ({
             {adresseErGyldig && kanHaKontaktperson(fullmakter, type) && (
               <div className="kontaktperson_container">
                 <span className="kontaktperson_labels">
-                  <Nav.Typo.Element>Kontaktopplysninger </Nav.Typo.Element>
-                  <Nav.Typo.Normaltekst>(valgfritt)</Nav.Typo.Normaltekst>
+                  <Nav.BodyLong weight="semibold" size="small">
+                    Kontaktopplysninger{" "}
+                  </Nav.BodyLong>
+                  <Nav.BodyLong size="small">(valgfritt)</Nav.BodyLong>
                 </span>
-                <Nav.Typo.EtikettLiten className="kontaktperson_info">
-                  Brev sendes til denne personen/adressen.
-                </Nav.Typo.EtikettLiten>
+                <Nav.Detail className="kontaktperson_info">Brev sendes til denne personen/adressen.</Nav.Detail>
                 <Nav.Row>
                   <Nav.Column xs="5">
                     <Forms.Input name={`fullmektige[${index}].kontaktperson`} control={control} label="Kontaktperson" />

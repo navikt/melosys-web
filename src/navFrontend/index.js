@@ -1,5 +1,19 @@
 import { Column, Container, Row } from "./grid";
-import { Box, HelpText, Link, Modal, Checkbox, Radio, DatePicker, HStack, ExpansionCard } from "@navikt/ds-react";
+import {
+  Box,
+  HelpText,
+  Link,
+  Modal,
+  Checkbox,
+  Radio,
+  DatePicker,
+  HStack,
+  ExpansionCard,
+  Heading,
+  BodyLong,
+  Detail,
+  ErrorMessage,
+} from "@navikt/ds-react";
 import Alert from "./alert";
 import Button from "./button";
 import Table from "./table";
@@ -38,4 +52,8 @@ export {
   Textarea,
   Loader,
   ConfirmationPanel,
+  Heading,
+  BodyLong,
+  Detail,
+  ErrorMessage,
 };

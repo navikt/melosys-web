@@ -18,8 +18,12 @@ const IdentOgNavn = ({ tittel, feltNavn, label, navn }: IdentOgNavnProps) => (
       <Skjema.FellesInputFnrDnrOrgnrSaksnr feltNavn={feltNavn} label={label} bredde="L" />
       {!Utils._isEmpty(navn) && (
         <span>
-          <Nav.Typo.Element className="navnTittel">Navn:</Nav.Typo.Element>
-          <Nav.Typo.Normaltekst className="navn">{navn}</Nav.Typo.Normaltekst>
+          <Nav.BodyLong weight="semibold" size="small" className="navnTittel">
+            Navn:
+          </Nav.BodyLong>
+          <Nav.BodyLong size="small" className="navn">
+            {navn}
+          </Nav.BodyLong>
         </span>
       )}
     </div>

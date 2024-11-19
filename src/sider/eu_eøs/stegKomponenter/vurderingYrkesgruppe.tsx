@@ -149,7 +149,9 @@ const VurderingYrkesgruppe = ({
 
   return (
     <div className="vurderingYrkesgruppe">
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">Yrkessituasjon</Nav.Typo.Innholdstittel>
+      <Nav.Heading size="large" className="stegvelgertittel">
+        Yrkessituasjon
+      </Nav.Heading>
       <Nav.RadioGroup
         legend="Hva er brukers yrkessituasjon?"
         onChange={handleEndreYrkesgruppe}

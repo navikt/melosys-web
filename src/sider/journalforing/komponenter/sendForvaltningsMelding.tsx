@@ -60,7 +60,9 @@ const SendForvaltningsMelding = ({
 
         {feilmeldinger.length > 0 && (
           <Nav.Alert className="feilmelding" variant="warning">
-            <Nav.Typo.Element>Melding kan ikke sendes automatisk pga. manglende eller ugyldig adresse</Nav.Typo.Element>
+            <Nav.BodyLong weight="semibold" size="small">
+              Melding kan ikke sendes automatisk pga. manglende eller ugyldig adresse
+            </Nav.BodyLong>
             <ul>
               {feilmeldinger.map((feilmelding) => {
                 return <li key={Utils._uuid()}>{feilmelding}</li>;

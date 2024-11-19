@@ -245,9 +245,9 @@ const Oppsummering = ({
               <div className="panel saksinfo">
                 <Nav.Row>
                   <Nav.Column xs="8">
-                    <Nav.Typo.Undertittel>
+                    <Nav.Heading size="xsmall">
                       {KV.objektTilTerm(sakstype)} - {KV.objektTilTerm(sakstema)}
-                    </Nav.Typo.Undertittel>
+                    </Nav.Heading>
                   </Nav.Column>
                   <Nav.Column xs="4">
                     <div className="knapp__container">

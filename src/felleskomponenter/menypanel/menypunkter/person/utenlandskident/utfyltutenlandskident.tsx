@@ -19,10 +19,10 @@ const UtfyltUtenlandskIdent = ({ utenlandskeIdenter, landkoder }: UtfyltUtenland
   <>
     <Nav.Row>
       <Nav.Column xs="6">
-        <Nav.Typo.Normaltekst>ID-nummer</Nav.Typo.Normaltekst>
+        <Nav.BodyLong size="small">ID-nummer</Nav.BodyLong>
       </Nav.Column>
       <Nav.Column xs="6">
-        <Nav.Typo.Normaltekst>Land</Nav.Typo.Normaltekst>
+        <Nav.BodyLong size="small">Land</Nav.BodyLong>
       </Nav.Column>
     </Nav.Row>
     <Nav.Row>
@@ -30,10 +30,16 @@ const UtfyltUtenlandskIdent = ({ utenlandskeIdenter, landkoder }: UtfyltUtenland
         /* eslint-disable-next-line react/no-array-index-key */
         <div key={indeks}>
           <Nav.Column xs="6">
-            <Nav.Typo.Element>{ident}</Nav.Typo.Element>
+            <Nav.BodyLong weight="semibold" size="small">
+              {ident}
+            </Nav.BodyLong>
           </Nav.Column>
           <Nav.Column xs="6">
-            {landkode && <Nav.Typo.Element>{KV.kodeTilTerm(landkode, landkoder)}</Nav.Typo.Element>}
+            {landkode && (
+              <Nav.BodyLong weight="semibold" size="small">
+                {KV.kodeTilTerm(landkode, landkoder)}
+              </Nav.BodyLong>
+            )}
           </Nav.Column>
         </div>
       ))}

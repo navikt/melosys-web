@@ -151,9 +151,9 @@ const Arbeidssteder = ({ redigerbart, visArbeidsforholdRolleEtiketter, behandlin
 
   return (
     <div className="arbeidssteder">
-      <Nav.Typo.Systemtittel style={{ display: "inline", marginRight: "1em" }}>
+      <Nav.Heading size="small" style={{ display: "inline", marginRight: "1em" }}>
         {KV.Menypunkter.Arbeidssteder.tittel}
-      </Nav.Typo.Systemtittel>
+      </Nav.Heading>
       {visArbeidsforholdRolleEtiketter && <Tags.ArbeidsgiversDel style={{ marginLeft: "0.3em" }} />}
       <div className="innhold">
         {visRepresentantIUtlandet ? <RepresentantIUtlandet redigerbart={redigerbart} /> : arbeidssteder}

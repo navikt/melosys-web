@@ -13,9 +13,9 @@ exports[`ArbeidsforholdNorgeListe > snapshot test 1`] = `
                 <span>
                 </span>
               </span>
-              <h3 class="typo-undertittel editerbart-element__legend__tittel-container__tittel">
+              <h1 class="editerbart-element__legend__tittel-container__tittel navds-heading navds-heading--small">
                 tittel
-              </h3>
+              </h1>
             </span>
             <span class="editerbart-element__legend__symboler">
               <button
@@ -56,7 +56,7 @@ exports[`ArbeidsforholdNorgeListe > snapshot test 1`] = `
                   for="333"
                   class="navds-form-field__label navds-label navds-label--small"
                 >
-                  <p class="typo-element">
+                  <p class="navds-body-long navds-body-long--small navds-typo--semibold">
                     Organisasjonsnummer
                   </p>
                 </label>

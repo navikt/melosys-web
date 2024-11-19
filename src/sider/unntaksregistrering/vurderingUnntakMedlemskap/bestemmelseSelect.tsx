@@ -72,9 +72,11 @@ export const BestemmelseSelect = ({
             </Forms.Select>
           ) : (
             <>
-              <Nav.Typo.Element className="trygdedekning__label">Dekning</Nav.Typo.Element>
+              <Nav.BodyLong weight="semibold" size="small" className="trygdedekning__label">
+                Dekning
+              </Nav.BodyLong>
               <div className="trygdedekning__panel">
-                <Nav.Typo.Normaltekst>{hentTrygdedekningterm(formValues?.bestemmelse)}</Nav.Typo.Normaltekst>
+                <Nav.BodyLong size="small">{hentTrygdedekningterm(formValues?.bestemmelse)}</Nav.BodyLong>
               </div>
             </>
           )}

@@ -311,9 +311,9 @@ function EndreBehandlingModal({
           className={harBehandlingMedTrygdeavgift ? "ktselect__slim" : undefined}
         />
         {harBehandlingMedTrygdeavgift && (
-          <Nav.Typo.EtikettLiten className="behandlingstema__label">
+          <Nav.Detail className="behandlingstema__label">
             Du kan ikke endre behandlingstema når saken har en tilknyttet fakturaserie.
-          </Nav.Typo.EtikettLiten>
+          </Nav.Detail>
         )}
 
         <Mui.KodeTermSelect
@@ -327,7 +327,11 @@ function EndreBehandlingModal({
         />
         <Datovelger
           onChange={(dato) => setMottaksdato(Datoutils.norskStringTilDate(dato))}
-          label={<Nav.Typo.Element>Mottaksdato</Nav.Typo.Element>}
+          label={
+            <Nav.BodyLong weight="semibold" size="small">
+              Mottaksdato
+            </Nav.BodyLong>
+          }
           value={mottaksdato}
           brukInternValidering
         />
@@ -345,7 +349,7 @@ function EndreBehandlingModal({
 
         {skalViseFeilmeldinger && (
           <Nav.Alert variant="error">
-            <Nav.Typo.Normaltekst>Følgende feil ble funnet</Nav.Typo.Normaltekst>
+            <Nav.BodyLong size="small">Følgende feil ble funnet</Nav.BodyLong>
             <ul className="feilmeldingliste">
               {alleFeilmeldinger.map((feilmelding) => (
                 <li key={feilmelding}>{feilmelding}</li>

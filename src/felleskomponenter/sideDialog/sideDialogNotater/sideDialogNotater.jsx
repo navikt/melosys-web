@@ -147,7 +147,7 @@ const SideDialogNotater = ({ saksnummer, redigerbart }) => {
               redigerbart
             />
             <div role="alert" className="sidedialog-notater__nytt-notat-feilmelding">
-              {nyttNotatFeilmelding && <Nav.Typo.Feilmelding>{nyttNotatFeilmelding}</Nav.Typo.Feilmelding>}
+              {nyttNotatFeilmelding && <Nav.ErrorMessage>{nyttNotatFeilmelding}</Nav.ErrorMessage>}
             </div>
           </Fragment>
         )}

@@ -18,7 +18,9 @@ export const Medlemskap = (props: PropsFromRedux) => {
 
   return (
     <div className="medlemskap panelSeksjon">
-      <Nav.Typo.UndertittelH3 className="medlemskap__gruppeoverskrift">Perioder med medlemskap</Nav.Typo.UndertittelH3>
+      <Nav.Heading size="small" className="medlemskap__gruppeoverskrift">
+        Perioder med medlemskap
+      </Nav.Heading>
       <section className="medlemskapgruppe__liste">
         {medlemskap.perioderMed.length > 0 ? (
           <MedlemskapTable perioder={medlemskap.perioderMed} />
@@ -26,7 +28,9 @@ export const Medlemskap = (props: PropsFromRedux) => {
           "(ingen data funnet)"
         )}
       </section>
-      <Nav.Typo.UndertittelH3 className="medlemskap__gruppeoverskrift">Perioder uten medlemskap</Nav.Typo.UndertittelH3>
+      <Nav.Heading size="small" className="medlemskap__gruppeoverskrift">
+        Perioder uten medlemskap
+      </Nav.Heading>
       <section className="medlemskapgruppe__liste">
         {medlemskap.perioderUten.length > 0 ? (
           <MedlemskapTable perioder={medlemskap.perioderUten} />

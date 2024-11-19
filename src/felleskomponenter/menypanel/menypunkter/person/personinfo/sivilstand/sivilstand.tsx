@@ -61,7 +61,9 @@ const Sivilstand = ({ sivilstand, erLitenSkjerm }: SivilstandProps) => {
       />
 
       <Nav.Column xs={erLitenSkjerm ? "4" : "3"}>
-        <Nav.Typo.Element>Sivilstand:</Nav.Typo.Element>
+        <Nav.BodyLong weight="semibold" size="small">
+          Sivilstand:
+        </Nav.BodyLong>
       </Nav.Column>
       <SivilstatusVisning />
     </div>

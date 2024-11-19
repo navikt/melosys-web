@@ -9,10 +9,10 @@ const Elementskrift = ({ ikon: Ikon, tekst, className }) => {
   const cl = classNames("elementskrift", className);
 
   return (
-    <Nav.Typo.Element className={cl}>
+    <Nav.BodyLong weight="semibold" size="small" className={cl}>
       <Ikon className="ikon" />
       {tekst}
-    </Nav.Typo.Element>
+    </Nav.BodyLong>
   );
 };
 
