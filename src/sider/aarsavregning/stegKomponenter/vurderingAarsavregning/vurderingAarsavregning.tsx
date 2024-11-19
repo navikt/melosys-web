@@ -585,7 +585,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
         </Nav.RadioGroup>
       )}
       {(erAvvik || erIngenGrunnlag) && valgtÅr && (
-        <Nav.Typo.Systemtittel>Inntekts- og skatteopplysninger for endelig trygdeavgift</Nav.Typo.Systemtittel>
+        <Nav.Heading size="large">Inntekts- og skatteopplysninger for endelig trygdeavgift</Nav.Heading>
       )}
 
       {erIngenGrunnlag &&
