@@ -19,14 +19,18 @@ const LagretFullmektig = ({ fullmektige }: LagretFullmektigProps) => {
             <div className="lagretFullmektig_container" key={fullmektig.ident}>
               <div className="overskrift">
                 <Ikon.Fullmakt className="inline_felt ikon" aria-hidden />
-                <Nav.Typo.Systemtittel className="inline_felt">
+                <Nav.Heading size="small" className="inline_felt">
                   {fullmektig.adresse?.mottakerNavn}
-                </Nav.Typo.Systemtittel>
+                </Nav.Heading>
               </div>
               <Nav.Row>
                 <Nav.Column xs="6">
-                  <Nav.Typo.Element className="inline_felt">Org.nr.: </Nav.Typo.Element>
-                  <Nav.Typo.Normaltekst className="inline_felt">{fullmektig.ident}</Nav.Typo.Normaltekst>
+                  <Nav.BodyLong weight="semibold" size="small" className="inline_felt">
+                    Org.nr.:{" "}
+                  </Nav.BodyLong>
+                  <Nav.BodyLong size="small" className="inline_felt">
+                    {fullmektig.ident}
+                  </Nav.BodyLong>
                   {fullmektig.adresse && <BrevAdresse {...fullmektig.adresse} visNavn={false} />}
                   <Kontaktperson fullmektig={fullmektig} />
                 </Nav.Column>
@@ -41,12 +45,18 @@ const LagretFullmektig = ({ fullmektige }: LagretFullmektigProps) => {
           <div className="lagretFullmektig_container" key={fullmektig.ident}>
             <div className="overskrift">
               <Ikon.Fullmakt className="inline_felt ikon" aria-hidden />
-              <Nav.Typo.Systemtittel className="inline_felt">{fullmektig.adresse?.mottakerNavn}</Nav.Typo.Systemtittel>
+              <Nav.Heading size="small" className="inline_felt">
+                {fullmektig.adresse?.mottakerNavn}
+              </Nav.Heading>
             </div>
             <Nav.Row>
               <Nav.Column xs="6">
-                <Nav.Typo.Element className="inline_felt">F.nr./d-nr.: </Nav.Typo.Element>
-                <Nav.Typo.Normaltekst className="inline_felt">{fullmektig.ident}</Nav.Typo.Normaltekst>
+                <Nav.BodyLong weight="semibold" size="small" className="inline_felt">
+                  F.nr./d-nr.:{" "}
+                </Nav.BodyLong>
+                <Nav.BodyLong size="small" className="inline_felt">
+                  {fullmektig.ident}
+                </Nav.BodyLong>
                 {fullmektig.adresse && <BrevAdresse {...fullmektig.adresse} visNavn={false} />}
               </Nav.Column>
               <Nav.Column xs="6">
@@ -66,9 +76,9 @@ const Fullmakter = ({ fullmakter }: { fullmakter: string[] }) => {
       {fullmakter.map((fullmakt) => (
         <div key={fullmakt}>
           <Ikon.GreenCheckmark className="inline_felt ikon" />
-          <Nav.Typo.Element className="inline_felt">
+          <Nav.BodyLong weight="semibold" size="small" className="inline_felt">
             {KV.kodeTilTerm(fullmakt, MKV.KTObjects.fullmaktstype)}
-          </Nav.Typo.Element>
+          </Nav.BodyLong>
         </div>
       ))}
     </>
@@ -79,31 +89,45 @@ const Kontaktperson = ({ fullmektig }: { fullmektig: Fullmektig }) => {
   if (!fullmaktStøtterKontaktperson(fullmektig.fullmakter)) return null;
   return (
     <div className="kontaktperson">
-      <Nav.Typo.Element>Kontaktopplysninger</Nav.Typo.Element>
+      <Nav.BodyLong weight="semibold" size="small">
+        Kontaktopplysninger
+      </Nav.BodyLong>
       {fullmektig.kontaktperson ? (
         <div>
-          <Nav.Typo.Element className="inline_felt">Kontaktperson: </Nav.Typo.Element>
-          <Nav.Typo.Normaltekst className="inline_felt">{fullmektig.kontaktperson}</Nav.Typo.Normaltekst>
+          <Nav.BodyLong weight="semibold" size="small" className="inline_felt">
+            Kontaktperson:{" "}
+          </Nav.BodyLong>
+          <Nav.BodyLong size="small" className="inline_felt">
+            {fullmektig.kontaktperson}
+          </Nav.BodyLong>
         </div>
       ) : (
-        <Nav.Typo.Normaltekst>Ingen registrert</Nav.Typo.Normaltekst>
+        <Nav.BodyLong size="small">Ingen registrert</Nav.BodyLong>
       )}
       {fullmektig.kontaktTelefon && (
         <div>
-          <Nav.Typo.Element className="inline_felt">Telefon: </Nav.Typo.Element>
-          <Nav.Typo.Normaltekst className="inline_felt">{fullmektig.kontaktTelefon}</Nav.Typo.Normaltekst>
+          <Nav.BodyLong weight="semibold" size="small" className="inline_felt">
+            Telefon:{" "}
+          </Nav.BodyLong>
+          <Nav.BodyLong size="small" className="inline_felt">
+            {fullmektig.kontaktTelefon}
+          </Nav.BodyLong>
         </div>
       )}
       {fullmektig.kontaktOrgnr && (
         <div>
-          <Nav.Typo.Element className="inline_felt">Org.nr.: </Nav.Typo.Element>
-          <Nav.Typo.Normaltekst className="inline_felt">{fullmektig.kontaktOrgnr}</Nav.Typo.Normaltekst>
+          <Nav.BodyLong weight="semibold" size="small" className="inline_felt">
+            Org.nr.:{" "}
+          </Nav.BodyLong>
+          <Nav.BodyLong size="small" className="inline_felt">
+            {fullmektig.kontaktOrgnr}
+          </Nav.BodyLong>
         </div>
       )}
       {fullmektig.kontaktOrgnr && fullmektig.kontaktOrgAdresse && (
         <>
           <BrevAdresse visNavn={false} {...fullmektig.kontaktOrgAdresse} />
-          <Nav.Typo.EtikettLiten className="brev_sendes">(Brev sendes til denne adressen)</Nav.Typo.EtikettLiten>
+          <Nav.Detail className="brev_sendes">(Brev sendes til denne adressen)</Nav.Detail>
         </>
       )}
     </div>

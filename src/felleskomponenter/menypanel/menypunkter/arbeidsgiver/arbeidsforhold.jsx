@@ -40,8 +40,10 @@ export const Arbeidsforholdet = (props) => {
             <OrganisasjonsAdresse visNavn={false} visTittel={false} className="adresse" organisasjon={arbeidsgiver} />
           </Nav.Column>
           <Nav.Column xs="4">
-            <Nav.Typo.Element style={{ marginTop: "0.5em" }}>Virksomhetsnummer</Nav.Typo.Element>
-            <Nav.Typo.Normaltekst>{arbeidsgiver.orgnr}</Nav.Typo.Normaltekst>
+            <Nav.BodyLong weight="semibold" size="small" style={{ marginTop: "0.5em" }}>
+              Virksomhetsnummer
+            </Nav.BodyLong>
+            <Nav.BodyLong size="small">{arbeidsgiver.orgnr}</Nav.BodyLong>
           </Nav.Column>
         </Nav.Row>
         <Nav.Row className="arbeidsforholdet__enkelt">

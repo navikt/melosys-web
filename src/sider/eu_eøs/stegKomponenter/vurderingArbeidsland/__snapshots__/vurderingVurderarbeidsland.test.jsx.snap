@@ -4,10 +4,10 @@ exports[`VurderingVurderarbeidsland > snapshot test 1`] = `
 
 <div>
   <div class="vurderingVurderArbeidsland">
-    <h1 class="typo-innholdstittel stegvelgertittel overskrift">
+    <h1 class="stegvelgertittel overskrift navds-heading navds-heading--large">
       Vurder arbeidsland
     </h1>
-    <p class="typo-element undertittel">
+    <p class="undertittel navds-body-long navds-body-long--small navds-typo--semibold">
       Vurdering sokkel/skip
     </p>
     <div class="borderBottom">
@@ -79,7 +79,7 @@ exports[`VurderingVurderarbeidsland > snapshot test 1`] = `
           </fieldset>
         </div>
         <div class="col col-xs-4">
-          <p class="typo-element arbeidsland_label">
+          <p class="arbeidsland_label navds-body-long navds-body-long--small navds-typo--semibold">
             Velg arbeidsland
           </p>
           <fieldset class="navds-radio-group navds-radio-group--small navds-fieldset navds-fieldset--small">
@@ -172,7 +172,7 @@ exports[`VurderingVurderarbeidsland > snapshot test 1`] = `
     </div>
     <div class="row">
       <div class="col col-xs-6">
-        <p class="typo-element undertittel">
+        <p class="undertittel navds-body-long navds-body-long--small navds-typo--semibold">
           Land fra inngangsvilkår
         </p>
         <div>

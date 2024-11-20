@@ -178,9 +178,13 @@ const VurderingInngang = ({
 
   return (
     <div className="vurderingInngang_trygdeavtale">
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">Oppgi opplysninger fra søknaden</Nav.Typo.Innholdstittel>
+      <Nav.Heading size="large" className="stegvelgertittel">
+        Oppgi opplysninger fra søknaden
+      </Nav.Heading>
 
-      <Nav.Typo.Undertittel className="periode_label">Periode</Nav.Typo.Undertittel>
+      <Nav.Heading size="xsmall" className="periode_label">
+        Periode
+      </Nav.Heading>
       <div className="skjema__container">
         <Skjema.Datovelger label="Fra og med" feltNavn="fom" disabled={!redigerbart} />
         <Skjema.Datovelger

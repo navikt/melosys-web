@@ -29,13 +29,15 @@ const informasjonsmeldingIngenInformasjonOmPerioder = (
 
 export const TidligereGrunnlagsopplysningerFinnesIkke = ({ control, redigerbart }: TidligereGrunnlagProps) => (
   <div className="skjema__panel">
-    <Nav.Typo.Undertittel className="ingenInformasjonOmPerioderTittel">
+    <Nav.Heading size="xsmall" className="ingenInformasjonOmPerioderTittel">
       Grunnlagsopplysninger for trygdeavgift
-    </Nav.Typo.Undertittel>
+    </Nav.Heading>
 
     {informasjonsmeldingIngenInformasjonOmPerioder}
 
-    <Nav.Typo.Element>Totalt tidligere fakturert trygdeavgift:</Nav.Typo.Element>
+    <Nav.BodyLong weight="semibold" size="small">
+      Totalt tidligere fakturert trygdeavgift:
+    </Nav.BodyLong>
     <Forms.Input
       label=""
       name="totaltForskuddsvisFakturert"

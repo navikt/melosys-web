@@ -328,10 +328,10 @@ const Fullmektige = ({ redigerbart, finnOrganisasjonAdresse, finnPersonAdresse }
           header={{ heading: "Er du sikker?", closeButton: false }}
         >
           <Nav.Modal.Body>
-            <Nav.Typo.Normaltekst>
+            <Nav.BodyLong size="small">
               Er du sikker på at du vil fjerne/endre fullmektig for betaling av trygdeavgift? I så fall endres mottaker
               av eventuelle nye fakturaer når du avslutter denne behandlingen.
-            </Nav.Typo.Normaltekst>
+            </Nav.BodyLong>
           </Nav.Modal.Body>
           <Nav.Modal.Footer>
             <Knapperad

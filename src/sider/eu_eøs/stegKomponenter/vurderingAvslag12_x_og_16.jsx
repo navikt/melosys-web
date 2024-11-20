@@ -160,7 +160,9 @@ const VurderingAvslag12_x_og_16 = ({
 
   return (
     <div>
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">Avslag</Nav.Typo.Innholdstittel>
+      <Nav.Heading size="large" className="stegvelgertittel">
+        Avslag
+      </Nav.Heading>
       {valgte_utsendt_arbeidstaker_begrunnelser.length > 0 && (
         <Begrunnelser
           label="Søkeren fyller ikke kriteriene for artikkel 12. nr. 1:"

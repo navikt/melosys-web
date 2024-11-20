@@ -35,8 +35,8 @@ const Forside = (props) => {
     <div className="forside">
       <div className="forside__header">
         <div>
-          <Nav.Typo.Innholdstittel>Mine oppgaver</Nav.Typo.Innholdstittel>
-          <Nav.Typo.Normaltekst>{oppgaverTotalt} oppgaver</Nav.Typo.Normaltekst>
+          <Nav.Heading size="large">Mine oppgaver</Nav.Heading>
+          <Nav.BodyLong size="small">{oppgaverTotalt} oppgaver</Nav.BodyLong>
         </div>
         <div>
           <Nav.Button onClick={tilOpprettNySak} variant="primary" icon={<Ikoner.AddOneWhite />}>

@@ -18,7 +18,7 @@ const TidligereGrunnlagsoversikt = ({
 
   return (
     <div className="tidligereGrunnlagsoversikt">
-      <Nav.Typo.Systemtittel>Inntekts- og skatteopplysninger for tidligere beregnet trygdeavgift</Nav.Typo.Systemtittel>
+      <Nav.Heading size="small">Inntekts- og skatteopplysninger for tidligere beregnet trygdeavgift</Nav.Heading>
       <SkatteforholdsPerioderTabell perioder={skatteforholdsperioder} />
       <InntektsperioderTabell perioder={inntektsperioder} avgift={avgift} />
     </div>

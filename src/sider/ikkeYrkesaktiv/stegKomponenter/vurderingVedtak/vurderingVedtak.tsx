@@ -172,14 +172,14 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
   return (
     <div className="vurderingVedtakIkkeYrkesaktiv">
       {sakstype === MKV.Koder.sakstyper.EU_EOS && (
-        <Nav.Typo.Innholdstittel className="stegvelgertittel">
+        <Nav.Heading size="large" className="stegvelgertittel">
           Omfattet av norsk trygdelovgivning - trygdeforordning 883/2004
-        </Nav.Typo.Innholdstittel>
+        </Nav.Heading>
       )}
       {sakstype === MKV.Koder.sakstyper.TRYGDEAVTALE && (
-        <Nav.Typo.Innholdstittel className="stegvelgertittel">
+        <Nav.Heading size="large" className="stegvelgertittel">
           Omfattet av norsk trygdelovgivning - trygdeavtale
-        </Nav.Typo.Innholdstittel>
+        </Nav.Heading>
       )}
 
       <Nav.Row>
@@ -233,9 +233,9 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
       )}
 
       <Nav.Row>
-        <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
+        <Nav.BodyLong weight="semibold" size="small" className="fritekst_overskrift">
           <LabelMedHjelpetekst label="Fritekst til innledning" hjelpetekst={INNLEDNING_FRITEKST_HJELPETEKST} />
-        </Nav.Typo.Element>
+        </Nav.BodyLong>
         <Forms.HtmlEditor
           name="innledningFritekst"
           control={control}
@@ -245,9 +245,9 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
       </Nav.Row>
 
       <Nav.Row>
-        <Nav.Typo.Element className="fritekst_overskrift" tag="h3">
+        <Nav.BodyLong weight="semibold" size="small" className="fritekst_overskrift">
           <LabelMedHjelpetekst label="Fritekst til begrunnelse" hjelpetekst={BEGRUNNELSE_FRITEKST_HJELPETEKST} />
-        </Nav.Typo.Element>
+        </Nav.BodyLong>
         <Forms.HtmlEditor
           name="begrunnelseFritekst"
           control={control}

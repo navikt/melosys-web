@@ -71,12 +71,14 @@ const SivilstandModal = ({
       <Nav.Modal.Body>
         <div className={sivilstandModalCls.element("main-content")}>
           {aktiveSivilstander.length > 0 && <SivilstandTabell sivilstander={aktiveSivilstander} />}
-          <Nav.Typo.Element className={sivilstandModalCls.element("historikk")}>Historikk</Nav.Typo.Element>
+          <Nav.BodyLong weight="semibold" size="small" className={sivilstandModalCls.element("historikk")}>
+            Historikk
+          </Nav.BodyLong>
           <GyldighetshistorikkInfo />
           {historiskeSivilstander.length > 0 ? (
             <SivilstandTabell sivilstander={historiskeSivilstander} />
           ) : (
-            <Nav.Typo.Normaltekst>Ingen historikk registrert i folkeregisteret.</Nav.Typo.Normaltekst>
+            <Nav.BodyLong size="small">Ingen historikk registrert i folkeregisteret.</Nav.BodyLong>
           )}
         </div>
       </Nav.Modal.Body>

@@ -4,9 +4,9 @@ exports[`undertittel > snapshot test 1`] = `
 
 <div>
   <div class="undertittel">
-    <h3
-      class="typo-undertittel undertittel__navUndertittel"
+    <h1
       id="333"
+      class="undertittel__navUndertittel navds-heading navds-heading--small"
     >
       <svg
         contentscripttype="text/ecmascript"
@@ -40,7 +40,7 @@ exports[`undertittel > snapshot test 1`] = `
       </span>
       <span>
       </span>
-    </h3>
+    </h1>
   </div>
 </div>
 

@@ -4,21 +4,21 @@ exports[`VurderingArtikkel16MottaSvar > snapshot test 1`] = `
 
 <div>
   <div class="vurderingArtikkel16MottaSvar">
-    <h1 class="typo-innholdstittel stegvelgertittel">
+    <h1 class="stegvelgertittel navds-heading navds-heading--large">
       Svar på anmodning om unntak, etter artikkel 16, nr. 1
     </h1>
     <div class="row">
       <div class="col col-xs-4">
-        <p class="typo-element">
+        <p class="navds-body-long navds-body-long--small navds-typo--semibold">
           Land
         </p>
-        <p class="typo-normal">
+        <p class="navds-body-long navds-body-long--small">
         </p>
       </div>
     </div>
     <div class="row">
       <div class="col col-xs-12">
-        <p class="typo-element">
+        <p class="navds-body-long navds-body-long--small navds-typo--semibold">
           Søknadsperiode
         </p>
       </div>
@@ -30,7 +30,7 @@ exports[`VurderingArtikkel16MottaSvar > snapshot test 1`] = `
         <time datetime="2024-03-31">
           31.03.2024
         </time>
-        <p class="typo-normal">
+        <p class="navds-body-long navds-body-long--small">
           0 måneder og 20 dager
         </p>
       </div>

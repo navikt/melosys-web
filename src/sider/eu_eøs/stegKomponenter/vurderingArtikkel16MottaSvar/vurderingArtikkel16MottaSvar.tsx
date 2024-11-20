@@ -69,28 +69,32 @@ const VurderingArtikkel16MottaSvar = ({
 
   return (
     <div className="vurderingArtikkel16MottaSvar">
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">
+      <Nav.Heading size="large" className="stegvelgertittel">
         {konvensjonStorbritanniaToggleEnabled
           ? "Svar på anmodning om unntak"
           : "Svar på anmodning om unntak, etter artikkel 16, nr. 1"}
-      </Nav.Typo.Innholdstittel>
+      </Nav.Heading>
       <Nav.Row>
         <Nav.Column xs="4">
-          <Nav.Typo.Element>Land</Nav.Typo.Element>
-          <Nav.Typo.Normaltekst>
+          <Nav.BodyLong weight="semibold" size="small">
+            Land
+          </Nav.BodyLong>
+          <Nav.BodyLong size="small">
             {gyldigeSoknadsland.map((enkeltLandObjekt: KTObject) => enkeltLandObjekt.term).join(", ")}
-          </Nav.Typo.Normaltekst>
+          </Nav.BodyLong>
         </Nav.Column>
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="12">
-          <Nav.Typo.Element>Søknadsperiode</Nav.Typo.Element>
+          <Nav.BodyLong weight="semibold" size="small">
+            Søknadsperiode
+          </Nav.BodyLong>
         </Nav.Column>
         <Nav.Column xs="12" className="soknadsperiode__innhold">
           <EnkeltDato dato={soknadsperiode.fom} />
           &nbsp;-&nbsp;
           <EnkeltDato dato={soknadsperiode.tom} />
-          <Nav.Typo.Normaltekst>{datoDiffMenneskelig(soknadsperiode.fom, soknadsperiode.tom)}</Nav.Typo.Normaltekst>
+          <Nav.BodyLong size="small">{datoDiffMenneskelig(soknadsperiode.fom, soknadsperiode.tom)}</Nav.BodyLong>
         </Nav.Column>
       </Nav.Row>
       {anmodningsperioderSvarHentet && (

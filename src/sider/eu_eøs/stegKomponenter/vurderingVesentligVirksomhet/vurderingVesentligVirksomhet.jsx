@@ -37,7 +37,9 @@ const VurderingVesentligVirksomhet = (props) => {
 
   return (
     <>
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">Vesentlig virksomhet</Nav.Typo.Innholdstittel>
+      <Nav.Heading size="large" className="stegvelgertittel">
+        Vesentlig virksomhet
+      </Nav.Heading>
       <EnkeltVilkaar
         redigerbart={redigerbart}
         begrunnelser={begrunnelser}

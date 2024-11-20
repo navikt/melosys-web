@@ -4,11 +4,11 @@ exports[`Soknadsperiode > snapshot test 1`] = `
 
 <div>
   <div class="soknadsperiode">
-    <p class="typo-normal soknadsperiode__etikett">
+    <p class="soknadsperiode__etikett navds-body-long navds-body-long--small">
       Tittel
     </p>
     <div class="periode__container">
-      <p class="typo-element periode">
+      <p class="periode navds-body-long navds-body-long--small navds-typo--semibold">
         01.01.2023 - 01.04.2023
       </p>
       <div>

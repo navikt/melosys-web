@@ -33,7 +33,9 @@ const LabelMedHjelpetekst = ({
 }: LabelMedHjelpetekstProps) => (
   <div className="labelMedHjelpetekst__wrapper">
     {undertittel ? (
-      <Nav.Typo.Undertittel className="undertittel">{label}</Nav.Typo.Undertittel>
+      <Nav.Heading size="xsmall" className="undertittel">
+        {label}
+      </Nav.Heading>
     ) : (
       <span className={small ? "small" : undefined}>{bold ? <b>{label}</b> : label}</span>
     )}

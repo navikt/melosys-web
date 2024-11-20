@@ -57,7 +57,7 @@ const VirksomhetenINorge = ({
     <Nav.Container fluid className="virksomheten-i-norge">
       <Nav.Row className="tittel">
         <Nav.Column xs="12" className="col">
-          <Nav.Typo.Systemtittel>{KV.Menypunkter.OmVirksomhetenINorge.tittel}</Nav.Typo.Systemtittel>
+          <Nav.Heading size="small">{KV.Menypunkter.OmVirksomhetenINorge.tittel}</Nav.Heading>
           {visArbeidsforholdRolleEtiketter && <Tags.ArbeidsgiversDel />}
         </Nav.Column>
       </Nav.Row>
@@ -75,10 +75,10 @@ const VirksomhetenINorge = ({
           </Nav.Row>
 
           {erOffentligVirksomhet && (
-            <Nav.Typo.Normaltekst className="er-offentlig-virksomhet-hjelpetekst">
+            <Nav.BodyLong size="small" className="er-offentlig-virksomhet-hjelpetekst">
               Arbeidsgiveren opplyser å være en offentlig virksomhet, derfor har vi ikke bedt om opplysninger for å
               vurdere vesentlig virksomhet i Norge.
-            </Nav.Typo.Normaltekst>
+            </Nav.BodyLong>
           )}
 
           {erOffentligVirksomhet === false && (

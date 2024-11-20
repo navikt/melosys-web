@@ -341,7 +341,9 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
   let harReturnertNullIVilkårListe = false;
   return (
     <div className="vurderingBestemmelse_ftrl">
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">Bestemmelse</Nav.Typo.Innholdstittel>
+      <Nav.Heading size="large" className="stegvelgertittel">
+        Bestemmelse
+      </Nav.Heading>
 
       <ListeVelger
         muligeAlternativer={bestemmelser}
@@ -433,9 +435,9 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
 
       {ulovligBestemmelseValgt && (
         <Nav.Alert variant="error">
-          <Nav.Typo.Normaltekst>
+          <Nav.BodyLong size="small">
             Dekning på steg Inngang kan ikke gis i kombinasjon med denne bestemmelsen.
-          </Nav.Typo.Normaltekst>
+          </Nav.BodyLong>
         </Nav.Alert>
       )}
 

@@ -11,7 +11,7 @@ interface PersonstatusTabellProps {
 
 export const PersonstatusTabell = ({ personstatuser }: PersonstatusTabellProps) => {
   if (personstatuser.length < 1) {
-    return <Nav.Typo.Normaltekst>Ingen historikk registrert i folkeregisteret.</Nav.Typo.Normaltekst>;
+    return <Nav.BodyLong size="small">Ingen historikk registrert i folkeregisteret.</Nav.BodyLong>;
   }
 
   return (
@@ -64,7 +64,9 @@ const PersonstatusModal = ({
       <Nav.Modal.Body>
         <PersonstatusTabell personstatuser={aktivePersonstatuser} />
 
-        <Nav.Typo.Undertittel className={personstatusModalCls.element("historikk")}>Historikk</Nav.Typo.Undertittel>
+        <Nav.Heading size="xsmall" className={personstatusModalCls.element("historikk")}>
+          Historikk
+        </Nav.Heading>
         <GyldighetshistorikkInfo />
         <PersonstatusTabell personstatuser={historiskePersonstatuser} />
       </Nav.Modal.Body>

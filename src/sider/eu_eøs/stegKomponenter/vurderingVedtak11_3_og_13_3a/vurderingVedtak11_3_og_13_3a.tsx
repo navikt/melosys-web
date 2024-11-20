@@ -178,7 +178,9 @@ export const VurderingVedtak11_3_og_13_3a = ({
 
   return (
     <div className="vedtak">
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">Omfattet av norsk trygdelovgivning</Nav.Typo.Innholdstittel>
+      <Nav.Heading size="large" className="stegvelgertittel">
+        Omfattet av norsk trygdelovgivning
+      </Nav.Heading>
       <Mui.KodeTermSelect
         onChange={(e) => setValue("lovvalgsbestemmelse", e.target.value)}
         label="Velg en lovvalgsbestemmelse"
@@ -198,7 +200,9 @@ export const VurderingVedtak11_3_og_13_3a = ({
         className="ktselect__slim"
       />
 
-      <Nav.Typo.Element className="undertittel">Lovvalgsperiode</Nav.Typo.Element>
+      <Nav.BodyLong weight="semibold" size="small" className="undertittel">
+        Lovvalgsperiode
+      </Nav.BodyLong>
       <Nav.Column>
         {formValues.fom} - {formValues.tom}
       </Nav.Column>

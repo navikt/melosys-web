@@ -46,10 +46,10 @@ const EnkeltSed = ({ sed }) => (
     borderColor="border-default"
   >
     <div className="kolonne__navn">
-      <Nav.Typo.Element className="lenkepanel__heading">
+      <Nav.BodyLong weight="semibold" size="small" className="lenkepanel__heading">
         {sed.sedType} - {sedTypeTerm(sed.sedType)}
-      </Nav.Typo.Element>
-      <Nav.Typo.Normaltekst>Opprettet: {Utils.dato.formatterDatoTilNorsk(sed.opprettetDato)}</Nav.Typo.Normaltekst>
+      </Nav.BodyLong>
+      <Nav.BodyLong size="small">Opprettet: {Utils.dato.formatterDatoTilNorsk(sed.opprettetDato)}</Nav.BodyLong>
     </div>
     <div className="kolonne__status">
       <StatusEtikett status={sed.status} />
@@ -71,10 +71,10 @@ const bucTypeTerm = (bucType) => EKV.Selectors.alleBucer[bucType];
 
 const EnkeltBucHeading = ({ bucType, opprettetDato }) => (
   <div>
-    <Nav.Typo.Undertittel>
+    <Nav.Heading size="xsmall">
       {bucType} - {bucTypeTerm(bucType)}
-    </Nav.Typo.Undertittel>
-    <Nav.Typo.Normaltekst>Opprettet: {Utils.dato.formatterDatoTilNorsk(opprettetDato)}</Nav.Typo.Normaltekst>
+    </Nav.Heading>
+    <Nav.BodyLong size="small">Opprettet: {Utils.dato.formatterDatoTilNorsk(opprettetDato)}</Nav.BodyLong>
   </div>
 );
 
@@ -93,8 +93,12 @@ const EnkeltBuc = ({ buc }) => (
       </Accordion.Header>
       <Accordion.Content>
         <div className="buc_tabell">
-          <Nav.Typo.Element className="tabell_header kolonne__navn">Navn på SED</Nav.Typo.Element>
-          <Nav.Typo.Element className="tabell_header kolonne__status">Status</Nav.Typo.Element>
+          <Nav.BodyLong weight="semibold" size="small" className="tabell_header kolonne__navn">
+            Navn på SED
+          </Nav.BodyLong>
+          <Nav.BodyLong weight="semibold" size="small" className="tabell_header kolonne__status">
+            Status
+          </Nav.BodyLong>
           {sorterEtterDato(buc.seder).map((sed) => (
             <EnkeltSed key={sed.sedId} sed={sed} />
           ))}
@@ -115,7 +119,7 @@ EnkeltBuc.propTypes = {
 const HenterOpplysningerSpinner = () => (
   <div className="henter_opplysninger">
     <Nav.Loader />
-    <Nav.Typo.Normaltekst>Henter BUCer knyttet til saken</Nav.Typo.Normaltekst>
+    <Nav.BodyLong size="small">Henter BUCer knyttet til saken</Nav.BodyLong>
   </div>
 );
 

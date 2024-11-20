@@ -63,7 +63,9 @@ export const Avslag = ({
 
   return (
     <Fragment>
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">Avslag</Nav.Typo.Innholdstittel>
+      <Nav.Heading size="large" className="stegvelgertittel">
+        Avslag
+      </Nav.Heading>
       <DatoOgBestemmelse fomDato={gjeldendePeriode.fom} tomDato={gjeldendePeriode.tom} />
       <Nav.Row>
         <Nav.Column xs="7">

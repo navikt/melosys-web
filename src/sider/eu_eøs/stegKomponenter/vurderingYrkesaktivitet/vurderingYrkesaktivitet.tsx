@@ -68,7 +68,9 @@ const VurderingYrkesaktivitet = (props: VurderingYrkesaktivitetProps) => {
   // @ts-ignore
   return (
     <>
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">Yrkesaktivitet</Nav.Typo.Innholdstittel>
+      <Nav.Heading size="large" className="stegvelgertittel">
+        Yrkesaktivitet
+      </Nav.Heading>
       <Nav.RadioGroup
         legend="Hva slags type yrkesaktivitet skal bruker utøve?"
         onChange={radioEndret}

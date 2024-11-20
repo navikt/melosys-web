@@ -22,7 +22,7 @@ const Permisjoner = ({ permisjoner }) => {
 
   return permisjoner.length > 0 ? (
     <div className="permisjoner">
-      <Nav.Typo.Undertittel>Permisjoner</Nav.Typo.Undertittel>
+      <Nav.Heading size="xsmall">Permisjoner</Nav.Heading>
       <TabellArbeidsgiver
         kolonneNavn={["Startdato", "Sluttdato", "Type", "Prosent"]}
         tabellData={permisjonerArrayed}

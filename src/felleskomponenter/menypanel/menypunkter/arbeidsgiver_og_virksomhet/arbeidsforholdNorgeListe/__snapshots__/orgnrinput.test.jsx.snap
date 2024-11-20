@@ -9,7 +9,7 @@ exports[`Orgnrinput > snapshot test 1`] = `
         for="333"
         class="navds-form-field__label navds-label navds-label--small"
       >
-        <p class="typo-element">
+        <p class="navds-body-long navds-body-long--small navds-typo--semibold">
           Organisasjonsnummer
         </p>
       </label>

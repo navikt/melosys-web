@@ -85,9 +85,9 @@ export const Lovvalgsperiode = ({ kontrollerFerdigbehandling, onRedigeringErAkti
 
   return (
     <Nav.Column>
-      <Nav.Typo.Element className="info" tag="div">
+      <Nav.BodyLong weight="semibold" size="small" className="info">
         <LabelMedHjelpetekst label="Periode" hjelpetekst={PERIODE_HJELPETEKST} />
-      </Nav.Typo.Element>
+      </Nav.BodyLong>
 
       {visPeriodeEndringFelter ? (
         <>
@@ -118,12 +118,12 @@ export const Lovvalgsperiode = ({ kontrollerFerdigbehandling, onRedigeringErAkti
           />
         </>
       ) : (
-        <Nav.Typo.Normaltekst className="periode" tag="div">
+        <Nav.BodyLong size="small" className="periode">
           <span>
             {lovvalgsperiodeFom} - {lovvalgsperiodeTom}
           </span>
           <EndrePeriodeKnapp />
-        </Nav.Typo.Normaltekst>
+        </Nav.BodyLong>
       )}
     </Nav.Column>
   );

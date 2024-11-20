@@ -157,10 +157,14 @@ export const VurderingArtikkel13_x_vedtak = ({
   const stegErGyldig = redigerbart && formIsValid && !harFeilmeldinger;
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="vurderingArtikkel13_x_vedtak">
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">{overskrift}</Nav.Typo.Innholdstittel>
+      <Nav.Heading size="large" className="stegvelgertittel">
+        {overskrift}
+      </Nav.Heading>
       {redigerbart && (
         <Fragment>
-          <Nav.Typo.Element className="undertittel">Lovvalgsperiode</Nav.Typo.Element>
+          <Nav.BodyLong weight="semibold" size="small" className="undertittel">
+            Lovvalgsperiode
+          </Nav.BodyLong>
           <Nav.Row className="lovvalgsperiode">
             <Nav.Column xs="6">
               {fom} - {tom}

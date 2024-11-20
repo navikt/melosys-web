@@ -6,9 +6,9 @@ exports[`StegerstatterBase > snapshot test 1`] = `
   <section class="panelSeksjon stegerstatter">
     <div class="panel">
       <div class="row">
-        <h2 class="typo-systemtittel">
+        <h1 class="navds-heading navds-heading--small">
           Tittel
-        </h2>
+        </h1>
       </div>
       <p>
         Beskrivelse

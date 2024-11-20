@@ -4,7 +4,7 @@ exports[`VurderingAarsavreging > VurderingAarsavregning > snapshot test 1`] = `
 
 <div>
   <div class="vurderingAarsavregning">
-    <h1 class="typo-innholdstittel stegvelgertittel">
+    <h1 class="stegvelgertittel navds-heading navds-heading--large">
       Årsavregning
     </h1>
     <fieldset class="fieldset select">

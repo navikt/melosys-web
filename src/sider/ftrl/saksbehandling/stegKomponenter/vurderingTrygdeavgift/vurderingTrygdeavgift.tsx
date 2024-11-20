@@ -273,18 +273,20 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const visFeilFraLagring = feil && formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType);
   return (
     <div className="vurderingTrygdeavgift">
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">Trygdeavgift</Nav.Typo.Innholdstittel>
+      <Nav.Heading size="large" className="stegvelgertittel">
+        Trygdeavgift
+      </Nav.Heading>
 
       {behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING && (
-        <Nav.Typo.Normaltekst className="nyVurderingTekst">
+        <Nav.BodyLong size="small" className="nyVurderingTekst">
           Ved ny vurdering vises tidligere perioder med skatteforhold og inntekt. Gjør nødvendige endringer eller legg
           til en ny periode.
-        </Nav.Typo.Normaltekst>
+        </Nav.BodyLong>
       )}
 
       {!erÅpenSluttDato && (
         <>
-          <Nav.Typo.Undertittel>Oppgi informasjon om brukers skatteforhold</Nav.Typo.Undertittel>
+          <Nav.Heading size="xsmall">Oppgi informasjon om brukers skatteforhold</Nav.Heading>
           <Skatteforholdsperioder
             formValues={formValues}
             redigerbart={redigerbart}
@@ -323,7 +325,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
 
       {trygdeavgiftErIkkeTom && !alleTrygdeavgiftsperioderHarNullBeløp && stegErGyldig && (
         <>
-          <Nav.Typo.Undertittel>Foreløpig beregnet trygdeavgift</Nav.Typo.Undertittel>
+          <Nav.Heading size="xsmall">Foreløpig beregnet trygdeavgift</Nav.Heading>
           <TrygdeavgiftsperioderTabell
             lagrePending={lagrePending}
             perioder={lagretTrygdeavgift?.trygdeavgiftsperioder!!}

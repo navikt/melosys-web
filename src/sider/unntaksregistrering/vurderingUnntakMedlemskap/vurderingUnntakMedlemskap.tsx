@@ -176,11 +176,17 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
 
   return (
     <div className="vurderingUnntakMedlemskap">
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">Unntak medlemskap</Nav.Typo.Innholdstittel>
+      <Nav.Heading size="large" className="stegvelgertittel">
+        Unntak medlemskap
+      </Nav.Heading>
       <Nav.Row>
         <Nav.Column xs="8">
           <Forms.RadioGroup
-            legend={<Nav.Typo.Normaltekst className="formLabel">Vurder unntaksperiode</Nav.Typo.Normaltekst>}
+            legend={
+              <Nav.BodyLong size="small" className="formLabel">
+                Vurder unntaksperiode
+              </Nav.BodyLong>
+            }
             name="utfallRegistreringUnntak"
             readOnly={!redigerbart}
             onChange={lagreUtfallRegistreringUnntak}

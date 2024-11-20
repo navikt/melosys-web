@@ -13,7 +13,7 @@ const PanelHeader = ({ ikon: Ikon, tittel, undertittel = "" }: PanelHeaderProps)
     {Ikon && <Ikon className="panelheader__ikon" />}
     <div className="panelheader__tittel">
       <div className="panelheader__tittel__hoved">
-        <Nav.Typo.Undertittel>{tittel}</Nav.Typo.Undertittel>&emsp;
+        <Nav.Heading size="xsmall">{tittel}</Nav.Heading>&emsp;
       </div>
       <span className="panelheader__tittel__under">{undertittel}</span>
     </div>

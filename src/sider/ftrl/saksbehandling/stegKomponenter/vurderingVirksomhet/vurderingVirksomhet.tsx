@@ -97,9 +97,9 @@ export const VurderingVirksomhet = ({ bekreft, tilbake, aktivtSteg, oppdaterStat
   }
   return (
     <>
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">
+      <Nav.Heading size="large" className="stegvelgertittel">
         <LabelMedHjelpetekst label="Virksomhet" />
-      </Nav.Typo.Innholdstittel>
+      </Nav.Heading>
       {!Utils._isEmpty(virksomheterListe) ? (
         <Nav.CheckboxGroup
           legend={<LabelMedHjelpetekst label="Velg virksomhet(er)" hjelpetekst={hjelpetekst} bold small />}

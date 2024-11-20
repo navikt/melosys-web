@@ -4,17 +4,17 @@ exports[`VurderingArtikkel16Vedtak > snapshot test 1`] = `
 
 <div>
   <div class="vurderingArtikkel16Vedtak">
-    <h1 class="typo-innholdstittel stegvelgertittel">
+    <h1 class="stegvelgertittel navds-heading navds-heading--large">
       Delvis innvilgelse - omfattet av norsk trygdelovgivning etter Fo 883/2004 Artikkel 16 nr. 1. i deler av søknadsperioden
     </h1>
     <div class="row lovvalgsperiode__row">
       <div class="col col-xs-5">
-        <p class="typo-element">
+        <p class="navds-body-long navds-body-long--small navds-typo--semibold">
           Lovvalgsperiode
         </p>
       </div>
       <div class="col col-xs-7">
-        <p class="typo-element">
+        <p class="navds-body-long navds-body-long--small navds-typo--semibold">
           Lovvalgsbestemmelse
         </p>
       </div>
@@ -28,7 +28,7 @@ exports[`VurderingArtikkel16Vedtak > snapshot test 1`] = `
         </time>
       </div>
       <div class="col col-xs-7">
-        <p class="typo-normal">
+        <p class="navds-body-long navds-body-long--small">
         </p>
       </div>
     </div>

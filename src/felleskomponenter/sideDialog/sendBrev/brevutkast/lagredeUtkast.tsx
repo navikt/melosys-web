@@ -23,10 +23,14 @@ const LagredeUtkast = ({ alleUtkast, settAktivtUtkast }: LagredeUtkastProps) => 
         <div className="lagredeUtkast">
           <Nav.Row>
             <Nav.Column xs="9">
-              <Nav.Typo.Element>Lagrede utkast</Nav.Typo.Element>
+              <Nav.BodyLong weight="semibold" size="small">
+                Lagrede utkast
+              </Nav.BodyLong>
             </Nav.Column>
             <Nav.Column xs="3">
-              <Nav.Typo.Element>Eier</Nav.Typo.Element>
+              <Nav.BodyLong weight="semibold" size="small">
+                Eier
+              </Nav.BodyLong>
             </Nav.Column>
           </Nav.Row>
 

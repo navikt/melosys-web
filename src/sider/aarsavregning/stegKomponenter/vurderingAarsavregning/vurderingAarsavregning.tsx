@@ -520,7 +520,9 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
 
   return (
     <div className="vurderingAarsavregning">
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">Årsavregning</Nav.Typo.Innholdstittel>
+      <Nav.Heading size="large" className="stegvelgertittel">
+        Årsavregning
+      </Nav.Heading>
       <Nav.Fieldset className="select" legend={<LabelMedHjelpetekst bold label="År" placement="left-start" />}>
         <Nav.Row>
           <Nav.Column xs="4">
@@ -600,7 +602,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
         </Nav.RadioGroup>
       )}
       {(erAvvik || erIngenGrunnlag) && valgtÅr && (
-        <Nav.Typo.Systemtittel>Inntekts- og skatteopplysninger for endelig trygdeavgift</Nav.Typo.Systemtittel>
+        <Nav.Heading size="large">Inntekts- og skatteopplysninger for endelig trygdeavgift</Nav.Heading>
       )}
 
       {erIngenGrunnlag &&

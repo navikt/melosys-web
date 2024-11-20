@@ -340,27 +340,27 @@ const VurderingVedtak = ({
 
   return (
     <div className={vurderingVedtakCls.block}>
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">
+      <Nav.Heading size="large" className="stegvelgertittel">
         Omfattet av norsk trygdelovgivning - trygdeavtale
-      </Nav.Typo.Innholdstittel>
+      </Nav.Heading>
 
       <Nav.Row className={vurderingVedtakCls.element("infolinje")}>
         <Nav.Column xs="4">
-          <Nav.Typo.Element className={vurderingVedtakCls.element("info")}>
+          <Nav.BodyLong weight="semibold" size="small" className={vurderingVedtakCls.element("info")}>
             {Utils.streng.storeForbokstaver(
               KV.finnTermFraListe(bestemmelseValg, resultat.bestemmelse)?.split(" - ")[1]
             )}
-          </Nav.Typo.Element>
-          <Nav.Typo.Normaltekst className={vurderingVedtakCls.element("info")}>
+          </Nav.BodyLong>
+          <Nav.BodyLong size="small" className={vurderingVedtakCls.element("info")}>
             {KV.finnTermFraListe(bestemmelseValg, resultat.bestemmelse)?.split(" - ")[0]}
-          </Nav.Typo.Normaltekst>
+          </Nav.BodyLong>
         </Nav.Column>
 
         <Nav.Column xs="5">
-          <Nav.Typo.Element className={vurderingVedtakCls.element("info")} tag="div">
+          <Nav.BodyLong weight="semibold" size="small" className={vurderingVedtakCls.element("info")}>
             <LabelMedHjelpetekst label="Periode" hjelpetekst={PERIODE_HJELPETEKST} />
-          </Nav.Typo.Element>
-          <Nav.Typo.Normaltekst className={vurderingVedtakCls.element("datofelt_wrapper")} tag="div">
+          </Nav.BodyLong>
+          <Nav.BodyLong size="small" className={vurderingVedtakCls.element("datofelt_wrapper")}>
             <span className={vurderingVedtakCls.element("datofelt_fom")}>
               {`${formValues?.lovvalgsperiodeFom ? formValues?.lovvalgsperiodeFom : ""} -`}&nbsp;
             </span>
@@ -388,14 +388,16 @@ const VurderingVedtak = ({
                 Endre
               </Nav.Button>
             )}
-          </Nav.Typo.Normaltekst>
+          </Nav.BodyLong>
         </Nav.Column>
 
         <Nav.Column xs="3">
-          <Nav.Typo.Element className={vurderingVedtakCls.element("info")}>Familiemedlemmer</Nav.Typo.Element>
-          <Nav.Typo.Normaltekst className={vurderingVedtakCls.element("info")}>
+          <Nav.BodyLong weight="semibold" size="small" className={vurderingVedtakCls.element("info")}>
+            Familiemedlemmer
+          </Nav.BodyLong>
+          <Nav.BodyLong size="small" className={vurderingVedtakCls.element("info")}>
             {resultat.ektefelle || !Utils._isEmpty(resultat.barn) ? "Ja" : "-"}
-          </Nav.Typo.Normaltekst>
+          </Nav.BodyLong>
         </Nav.Column>
       </Nav.Row>
 
@@ -431,18 +433,18 @@ const VurderingVedtak = ({
         </>
       )}
 
-      <Nav.Typo.Element className={vurderingVedtakCls.element("fritekst_overskrift")} tag="h3">
+      <Nav.BodyLong weight="semibold" size="small" className={vurderingVedtakCls.element("fritekst_overskrift")}>
         <LabelMedHjelpetekst label="Fritekst til innledning" hjelpetekst={INNLEDNING_FRITEKST} />
-      </Nav.Typo.Element>
+      </Nav.BodyLong>
       <Skjema.HTMLEditor
         feltNavn="innledningFritekst"
         className={vurderingVedtakCls.element("fritekst_editor")}
         disabled={!redigerbart}
       />
 
-      <Nav.Typo.Element className={vurderingVedtakCls.element("fritekst_overskrift")} tag="h3">
+      <Nav.BodyLong weight="semibold" size="small" className={vurderingVedtakCls.element("fritekst_overskrift")}>
         <LabelMedHjelpetekst label="Fritekst til begrunnelse" hjelpetekst={BEGRUNNELSE_FRITEKST_HJELPETEKST} />
-      </Nav.Typo.Element>
+      </Nav.BodyLong>
       <Skjema.HTMLEditor
         feltNavn="begrunnelseFritekst"
         className={vurderingVedtakCls.element("fritekst_editor")}

@@ -129,11 +129,11 @@ const Innvilgelse = ({
 
   return (
     <Fragment>
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">
+      <Nav.Heading size="large" className="stegvelgertittel">
         {konvensjonStorbritanniaToggleEnabled
           ? "Omfattet av norsk trygdelovgivning"
           : "Omfattet av norsk trygdelovgivning etter Fo 883/2004 Artikkel 16 nr. 1."}
-      </Nav.Typo.Innholdstittel>
+      </Nav.Heading>
       <DatoOgBestemmelse fomDato={gjeldendePeriode.fom} tomDato={gjeldendePeriode.tom} />
       <Nav.Row>
         <Nav.Column xs="7">

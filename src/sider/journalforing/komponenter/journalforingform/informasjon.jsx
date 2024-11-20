@@ -253,8 +253,10 @@ class Informasjon extends Component {
                 <Skjema.FellesInputFnrDnrOrgnrSaksnr feltNavn="virksomhetOrgnr" label="Org.nr." />
                 {!Utils._isEmpty(virksomhetNavn) && (
                   <span className="bruker-eller-org-navn">
-                    <Nav.Typo.Element className="term">Navn:</Nav.Typo.Element>
-                    <Nav.Typo.Normaltekst>{virksomhetNavn}</Nav.Typo.Normaltekst>
+                    <Nav.BodyLong weight="semibold" size="small" className="term">
+                      Navn:
+                    </Nav.BodyLong>
+                    <Nav.BodyLong size="small">{virksomhetNavn}</Nav.BodyLong>
                   </span>
                 )}
               </>
@@ -269,8 +271,10 @@ class Informasjon extends Component {
                 <Skjema.FellesInputFnrDnrOrgnrSaksnr feltNavn="brukerID" label="Brukers f.nr/d-nr." />
                 {!Utils._isEmpty(brukerNavn) && (
                   <span className="bruker-eller-org-navn">
-                    <Nav.Typo.Element className="term">Navn:</Nav.Typo.Element>
-                    <Nav.Typo.Normaltekst>{brukerNavn}</Nav.Typo.Normaltekst>
+                    <Nav.BodyLong weight="semibold" size="small" className="term">
+                      Navn:
+                    </Nav.BodyLong>
+                    <Nav.BodyLong size="small">{brukerNavn}</Nav.BodyLong>
                   </span>
                 )}
               </>
@@ -285,10 +289,14 @@ class Informasjon extends Component {
             innhold={
               <Nav.Row>
                 <Nav.Column xs="6">
-                  <Nav.Typo.Element>Avsender ID</Nav.Typo.Element>
-                  <Nav.Typo.Normaltekst>{avsenderIDFraJournalpost}</Nav.Typo.Normaltekst>
-                  <Nav.Typo.Element>Avsenders navn</Nav.Typo.Element>
-                  <Nav.Typo.Normaltekst>{avsenderNavnFraJournalpost}</Nav.Typo.Normaltekst>
+                  <Nav.BodyLong weight="semibold" size="small">
+                    Avsender ID
+                  </Nav.BodyLong>
+                  <Nav.BodyLong size="small">{avsenderIDFraJournalpost}</Nav.BodyLong>
+                  <Nav.BodyLong weight="semibold" size="small">
+                    Avsenders navn
+                  </Nav.BodyLong>
+                  <Nav.BodyLong size="small">{avsenderNavnFraJournalpost}</Nav.BodyLong>
                 </Nav.Column>
               </Nav.Row>
             }
@@ -323,13 +331,19 @@ class Informasjon extends Component {
           innhold={
             <>
               <Skjema.Datovelger
-                label={<Nav.Typo.Element>Mottatt</Nav.Typo.Element>}
+                label={
+                  <Nav.BodyLong weight="semibold" size="small">
+                    Mottatt
+                  </Nav.BodyLong>
+                }
                 feltNavn="mottattDato"
                 bredde="S"
               />
 
               <div className="dokumentblokk">
-                <Nav.Typo.Element>Hoveddokument</Nav.Typo.Element>
+                <Nav.BodyLong weight="semibold" size="small">
+                  Hoveddokument
+                </Nav.BodyLong>
                 <LenkeListeVelger
                   feltNavn="hoveddokument.tittel"
                   muligeValg={dokumenttitler}
@@ -339,7 +353,9 @@ class Informasjon extends Component {
                 />
               </div>
 
-              <Nav.Typo.Element>Vedlegg</Nav.Typo.Element>
+              <Nav.BodyLong weight="semibold" size="small">
+                Vedlegg
+              </Nav.BodyLong>
               {(vedlegg.length > 0 || logiskeVedlegg.length > 0) && (
                 <div className="dokumentblokk">
                   {vedlegg.length > 0 &&

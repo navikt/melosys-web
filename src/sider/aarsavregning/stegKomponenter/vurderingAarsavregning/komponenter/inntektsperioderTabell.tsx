@@ -52,9 +52,9 @@ const InntektsperioderTabell = ({ perioder, avgift }: { perioder?: Inntektskilde
         </Nav.Table.Body>
       </Nav.Table>
       <HStack className="totaltForPerioden" gap="8" align="center" justify="end">
-        <Nav.Typo.Normaltekst>
+        <Nav.BodyLong size="small">
           <b>Årstotal: {Utils.formaterTilNorskBelopUtenDesimaler(avgift?.totalInntekt)}</b> kr
-        </Nav.Typo.Normaltekst>
+        </Nav.BodyLong>
       </HStack>
     </VStack>
   );

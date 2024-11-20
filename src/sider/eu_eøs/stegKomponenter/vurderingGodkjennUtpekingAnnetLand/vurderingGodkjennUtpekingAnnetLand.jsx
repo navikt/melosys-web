@@ -87,7 +87,9 @@ export const VurderingGodkjennUtpekingAnnetLand = ({
           </ul>
         </Nav.Alert>
       ) : null}
-      <Nav.Typo.Innholdstittel className="stegvelgertittel">{overskrift}</Nav.Typo.Innholdstittel>
+      <Nav.Heading size="large" className="stegvelgertittel">
+        {overskrift}
+      </Nav.Heading>
       {redigerbart && (
         <>
           <Nav.Row className="sendA012">

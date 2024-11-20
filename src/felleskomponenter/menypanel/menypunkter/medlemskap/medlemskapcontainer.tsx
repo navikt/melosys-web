@@ -7,9 +7,9 @@ const MedlemskapContainer = () => (
   <Nav.Container fluid>
     <Nav.Row className="tittel">
       <Nav.Column xs="12">
-        <Nav.Typo.Systemtittel style={{ display: "inline", marginRight: "1em" }}>
+        <Nav.Heading size="small" style={{ display: "inline", marginRight: "1em" }}>
           {KV.Menypunkter.Medlemskap.tittel}
-        </Nav.Typo.Systemtittel>
+        </Nav.Heading>
       </Nav.Column>
     </Nav.Row>
     <Nav.Row>
