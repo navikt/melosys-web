@@ -61,53 +61,30 @@ const DateRangePicker = ({
       isInitialRender.current = false;
       return;
     }
-    setIsValidating(true);
 
-    if (!error) {
-      // create event when both dates are valid
-      onChange({ fomDato: from, tomDato: to });
-      setIsValidating(false);
-    }
+    onChange({ fomDato: from, tomDato: to });
   }, [from, to]);
 
   return (
     <>
       <DatePicker {...datepickerProps}>
         <HStack gap={{ sm: "2" }} justify="center" wrap={false}>
-          <Controller
-            control={control}
-            name="inntektskilder.0.fomDato"
-            render={({ field }) => {
-              return (
-                <DatePicker.Input
-                  id={_uuid()}
-                  label={label}
-                  hideLabel={hideLabel}
-                  size="small"
-                  readOnly={readOnly}
-                  {...fromInputProps}
-                />
-              );
-            }}
+          <DatePicker.Input
+            id={_uuid()}
+            label={label}
+            hideLabel={hideLabel}
+            size="small"
+            readOnly={readOnly}
+            {...fromInputProps}
           />
 
-          <Controller
-            control={control}
-            name="inntektskilder.0.tomDato"
-            render={({ field }) => {
-              return (
-                <>
-                  <DatePicker.Input
-                    id={_uuid()}
-                    label=""
-                    hideLabel={hideLabel}
-                    size="small"
-                    readOnly={readOnly}
-                    {...toInputProps}
-                  />
-                </>
-              );
-            }}
+          <DatePicker.Input
+            id={_uuid()}
+            label=""
+            hideLabel={hideLabel}
+            size="small"
+            readOnly={readOnly}
+            {...toInputProps}
           />
         </HStack>
         {fieldError && (
@@ -136,7 +113,6 @@ const ControlledDateRangePicker = forwardRef<HTMLSelectElement, DatovelgerPropsN
     _ref: any
   ) => {
     const rendring = (field: any, fieldError: any) => {
-      console.log("field: ", field);
       return (
         <>
           <DateRangePicker
