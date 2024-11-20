@@ -18,6 +18,9 @@ import "./inntektskilder.css";
 import { Stack } from "@navikt/ds-react";
 import { Alert } from "../../../navFrontend";
 
+import { useEffect } from "react";
+import ControlledDateRangePicker from "./controlledDateRangePicker";
+
 const {
   ARBEIDSINNTEKT_FRA_NORGE,
   INNTEKT_FRA_UTLANDET,
@@ -91,22 +94,19 @@ export const Inntektskilder = ({
 
         return (
           <Nav.Row className="periode__rad" key={fields[index].id}>
-            <Nav.Column>
-              <Forms.Datovelger
-                label={index === 0 ? "Inntektsperiode" : ""}
-                name={`inntektskilder[${index}].fomDato`}
-                readOnly={!redigerbart}
+            <Nav.Column className="inntektsperiodeblabla">
+              <ControlledDateRangePicker
+                name={`inntektskilder[${index}]`}
+                hideLabel={index !== 0}
                 control={control}
-              />
-            </Nav.Column>
-
-            <Nav.Column>
-              <Forms.Datovelger
-                label={index === 0 && <span className="invisible" />}
-                name={`inntektskilder[${index}].tomDato`}
+                label="Inntektsperiode"
                 readOnly={!redigerbart}
-                control={control}
-                minDate={Utils.dato.norskStringTilDate(formValues.inntektskilder[index].fomDato)}
+                defaultSelected={{
+                  from: Utils.dato.norskStringTilDate(formValues.inntektskilder[index].fomDato),
+                  to: Utils.dato.norskStringTilDate(formValues.inntektskilder[index].tomDato),
+                }}
+                fromDate={Utils.dato.norskStringTilDate(formValues.inntektskilder[index].fomDato)}
+                toDate={Utils.dato.norskStringTilDate(formValues.inntektskilder[index].tomDato)}
               />
             </Nav.Column>
 
