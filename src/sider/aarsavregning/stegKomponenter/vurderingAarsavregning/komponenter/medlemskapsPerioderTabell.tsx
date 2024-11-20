@@ -31,6 +31,7 @@ const MedlemskapsPerioderTabell = ({ perioder }: { perioder?: Medlemskapsperiode
         <Nav.Table.Row>
           <Nav.Table.HeaderCell scope="col">Medlemskap</Nav.Table.HeaderCell>
           <Nav.Table.HeaderCell scope="col">Type</Nav.Table.HeaderCell>
+          <Nav.Table.HeaderCell scope="col">Bestemmelse</Nav.Table.HeaderCell>
           <Nav.Table.HeaderCell scope="col">Dekning</Nav.Table.HeaderCell>
         </Nav.Table.Row>
       </Nav.Table.Header>
@@ -43,6 +44,9 @@ const MedlemskapsPerioderTabell = ({ perioder }: { perioder?: Medlemskapsperiode
               )}`}
             </Nav.Table.DataCell>
             <Nav.Table.DataCell>{mapMedlemskapstypeTekst(medlemskapsPeriode.medlemskapstype)}</Nav.Table.DataCell>
+            <Nav.Table.DataCell>
+              {KV.kodeTilTerm(medlemskapsPeriode.bestemmelse, MKV.KTObjects.folketrygdloven_kap2_bestemmelser)}
+            </Nav.Table.DataCell>
             <Nav.Table.DataCell>
               {KV.kodeTilTerm(medlemskapsPeriode.trygdedekning, MKV.KTObjects.trygdedekninger)}
             </Nav.Table.DataCell>

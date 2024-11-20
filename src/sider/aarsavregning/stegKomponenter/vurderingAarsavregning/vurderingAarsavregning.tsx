@@ -19,7 +19,7 @@ import {
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Utils from "../../../../utils";
 import vurderingAarsavregningSchema from "./vurderingAarsavregningSchema";
-import { Feilmelding, feilMeldingBlokkerer, finnAktivFeilmelding } from "./meldinger";
+import { feilMeldingBlokkerer, finnAktivFeilmelding } from "./meldinger";
 import { erBrukerSkattepliktigIHelePerioden } from "../../../ftrl/saksbehandling/stegKomponenter/vurderingTrygdeavgift/vurderingTrygdeavgiftSchema";
 import MKV from "../../../../melosyskodeverk";
 import { SumArsavregningTabell } from "./komponenter/sumArsavregningTabell";
@@ -30,12 +30,14 @@ import { sorterEtterISOFomDato } from "../../../../utils/dato";
 import GrunnlagsopplysningerSkjema from "./komponenter/grunnlagsopplysningerSkjema";
 import { fagsakSelectors } from "../../../../ducks/fagsaker";
 import { NyBehandlingForTidligereAarsavregningMelding } from "../../../../felleskomponenter/alertmeldinger/alertmeldinger";
+
 import { behandlingsresultatOperations, behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
 
 import { medlemskapsperioderOperations, medlemskapsperioderSelectors } from "../../../../ducks/medlemskapsperioder";
 import { MedlemskapsperiodeProp } from "../../../ftrl/saksbehandling/stegKomponenter/vurderingPeriode/komponenter/types";
 import { Medlemskapsperioder } from "./komponenter/medlemskapsperioder";
 import { InntektskildeDto, SkatteforholdDto } from "../../../../services/modules/trygdeavgift";
+import { FeilmeldingOppsummering } from "./feilmeldingOppsummering";
 
 interface Props {
   bekreft: () => void;
@@ -111,9 +113,10 @@ const { FERDIGBEHANDLET } = MKV.Koder.behandlinger.behandlingsresultattyper;
 export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
   const [valgtÅr, setValgtÅr] = useState<number | null>(null);
   const [initieltÅr, setInitieltÅr] = useState<number | null>(null);
-  const [erAvvik, setErAvvik] = useState<boolean | undefined>(undefined);
+  const [erAvvik, setErAvvik] = useState<boolean>(false);
   const [erIngenGrunnlag, setErIngenGrunnlag] = useState<boolean | undefined>(undefined);
   const [feil, setFeil] = useState<undefined | string>(undefined);
+  const [formBekreftet, setFormBekreftet] = useState(false);
   const [aarsavregningResponse, setAarsavregningResponse] = useState<AarsavregningResponse | undefined>(undefined);
   const [nyVurderingÅrsavregning, setNyVurderingÅrsavregning] = useState<boolean>(false);
   const [bestemmelser, setBestemmelser] = useState<[]>([]);
@@ -197,7 +200,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
           setValue("totaltForskuddsvisFakturert", res.avregning?.tidligereFakturertBeloep);
 
           if (res.avvikFunnet !== null) {
-            setErAvvik(res.avvikFunnet);
+            setErAvvik(res.avvikFunnet ?? false);
           }
           if (res.avvikFunnet && res?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag) {
             setSkjemaverdierFraTrygdeavgiftsgrunnlag(
@@ -246,7 +249,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
           }
           setValue("totaltForskuddsvisFakturert", "");
           dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(behandlingID));
-          setErAvvik(undefined);
+          setErAvvik(false);
         })
         .catch((error: any) => {
           setFeil(error.body?.message || error);
@@ -280,7 +283,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
     watch,
     setValue,
     trigger,
-    formState: { isValid: formIsValid, isValidating },
+    formState: { errors: formErrors, isValid: formIsValid, isValidating },
   } = useForm({
     resolver: yupResolver(vurderingAarsavregningSchema),
     context: {
@@ -320,6 +323,13 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
     replace: resetInntektskilder,
   } = useFieldArray<FieldArrayProps, "inntektskilder", "id">({ control, name: "inntektskilder" });
   const formValues = watch();
+
+  useEffect(() => {
+    if (formBekreftet && Object.keys(formErrors).length === 0) {
+      setFormBekreftet(false);
+    }
+  }, [formValues]);
+
   useEffect(() => {
     if (medlemskapsperioderFields.length === 0) {
       handleLeggTilMedlemskapsperiode();
@@ -432,6 +442,13 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
     const år = event.target.value ? parseInt(event.target.value, 10) : undefined;
     setFeil(undefined);
     setValgtÅr(år || null);
+  };
+
+  const bekreftOnClick = () => {
+    setFormBekreftet(true);
+    if (stegErGyldig) {
+      bekreft();
+    }
   };
 
   const lagreMedlemskapsperiode = async (medlemskapsperiode: MedlemskapsperiodeProp, index: number) => {
@@ -636,9 +653,9 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
         />
       )}
 
-      <Feilmelding type={aktivFeilmeldingType} />
+      {formBekreftet && <FeilmeldingOppsummering errors={formErrors} />}
 
-      <Nav.Button variant="primary" disabled={!stegErGyldig || !redigerbart} onClick={bekreft}>
+      <Nav.Button variant="primary" disabled={!redigerbart} onClick={bekreftOnClick}>
         Bekreft og fortsett
       </Nav.Button>
     </div>

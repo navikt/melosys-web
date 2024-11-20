@@ -55,7 +55,6 @@ const GrunnlagsopplysningerSkjema = ({
         control={control}
         fields={inntektFields}
         medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!!}
-        skalViseErMaanedsBelopRadioGroup
       />
     </div>
   );
