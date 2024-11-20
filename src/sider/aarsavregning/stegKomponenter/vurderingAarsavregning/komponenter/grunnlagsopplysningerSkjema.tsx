@@ -21,6 +21,7 @@ interface GrunnlagsopplysningerSkjemaProps {
   skattAppend: (skatteforhold: Skatteforhold) => void;
   redigerbart: boolean;
   medlemskapsTypeErPliktig: boolean;
+  formBekreftet: boolean;
 }
 
 const GrunnlagsopplysningerSkjema = ({
@@ -35,6 +36,7 @@ const GrunnlagsopplysningerSkjema = ({
   skattAppend,
   redigerbart,
   medlemskapsTypeErPliktig,
+  formBekreftet,
 }: GrunnlagsopplysningerSkjemaProps) => {
   return (
     <div className="grunnlagsopplysningerSkjema">
@@ -55,6 +57,7 @@ const GrunnlagsopplysningerSkjema = ({
         control={control}
         fields={inntektFields}
         medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!!}
+        formBekreftet={formBekreftet}
       />
     </div>
   );

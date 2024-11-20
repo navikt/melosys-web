@@ -518,6 +518,10 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
     setVisLeggTilMedlemskapsperioder(await trigger("medlemskapsperioder"));
   };
 
+  useEffect(() => {
+    console.log("formvalues: ", JSON.stringify(formValues.inntektskilder));
+  }, [formValues]);
+
   return (
     <div className="vurderingAarsavregning">
       <Nav.Heading size="large" className="stegvelgertittel">
@@ -635,6 +639,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
           skattAppend={skattAppend}
           redigerbart={redigerbart}
           medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!!}
+          formBekreftet={formBekreftet}
         />
       )}
 

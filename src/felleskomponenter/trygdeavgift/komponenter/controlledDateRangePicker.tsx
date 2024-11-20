@@ -1,8 +1,7 @@
 import { Box, DatePicker, DatePickerProps, HStack, useDatepicker, useRangeDatepicker, VStack } from "@navikt/ds-react";
 import { forwardRef, useEffect, useRef, useState } from "react";
-import { Controller, UseControllerProps } from "react-hook-form";
+import { Controller, FieldError, UseControllerProps } from "react-hook-form";
 import { DateRange } from "react-day-picker";
-import * as Nav from "../../../navFrontend";
 import { SKRIV_INN_GYLDIG_DATO } from "../../../kodeverk/feilmeldinger";
 import { _uuid } from "../../../utils";
 import * as Utils from "../../../utils";
@@ -13,14 +12,14 @@ interface ChangeProps {
   hideLabel?: boolean;
   readOnly: boolean;
   onChange: any;
-  fieldError: any;
+  fieldError?: FieldError;
+  showFieldError?: boolean;
 }
 
 type DatovelgerPropsNoOnChange = Omit<ChangeProps & DatePickerProps & UseControllerProps, "onChange" | "fieldError">;
 type DateRangePickerProps = ChangeProps & DatePickerProps;
 
 const DateRangePicker = ({
-  control,
   label,
   hideLabel,
   fromDate,
@@ -29,33 +28,29 @@ const DateRangePicker = ({
   readOnly,
   onChange,
   fieldError,
-  ...rest
+  showFieldError,
 }: DateRangePickerProps) => {
+  console.log("dates:::", fromDate, toDate);
   const isInitialRender = useRef(true);
-  const [error, setError] = useState(false);
-
-  const [localFromDate, setLocalFromDate] = useState(fromDate ?? new Date(0));
-  const [localToDate, setLocalToDate] = useState(new Date(2100, 1, 1));
 
   const [from, setFrom] = useState<String>();
   const [to, setTo] = useState<String>();
 
-  const [isValidating, setIsValidating] = useState(false);
+  const [defaultFromDate] = useState(fromDate ? fromDate : new Date(0));
+  const [defaultToDate] = useState(toDate ?? new Date(2100, 1, 1));
+
   const { datepickerProps, toInputProps, fromInputProps, selectedRange } = useRangeDatepicker({
     defaultSelected: defaultSelected as DateRange,
-    fromDate: localFromDate,
-    toDate: localToDate,
+    fromDate: defaultFromDate,
+    toDate: defaultToDate,
 
     onRangeChange: (value?: DateRange) => {
       setFrom(Utils.dato.formatterDatoTilNorsk(value?.from, false, undefined));
       setTo(Utils.dato.formatterDatoTilNorsk(value?.to, false, undefined));
     },
-
-    onValidate: (err) => {
-      err.from.isValidDate && err.to.isValidDate ? setError(false) : setError(true);
-    },
   });
 
+  // Oppdater FormFields med state verdi
   useEffect(() => {
     if (isInitialRender.current) {
       isInitialRender.current = false;
@@ -87,7 +82,7 @@ const DateRangePicker = ({
             {...toInputProps}
           />
         </HStack>
-        {fieldError && (
+        {showFieldError && fieldError && (
           <div role="alert" aria-live="assertive" className="datovelger__feilmelding">
             {SKRIV_INN_GYLDIG_DATO.melding}
           </div>
@@ -108,11 +103,12 @@ const ControlledDateRangePicker = forwardRef<HTMLSelectElement, DatovelgerPropsN
       toDate,
       defaultSelected,
       readOnly,
+      showFieldError = true,
       ...rest
     }: DatovelgerPropsNoOnChange,
     _ref: any
   ) => {
-    const rendring = (field: any, fieldError: any) => {
+    const rendring = (field: any, fieldError?: FieldError) => {
       return (
         <>
           <DateRangePicker
@@ -127,6 +123,7 @@ const ControlledDateRangePicker = forwardRef<HTMLSelectElement, DatovelgerPropsN
               field.onChange({ ...field.value, fomDato: value.fomDato || "", tomDato: value.tomDato || "" });
             }}
             fieldError={fieldError}
+            showFieldError={showFieldError}
             mode="range"
           />
         </>
@@ -137,7 +134,7 @@ const ControlledDateRangePicker = forwardRef<HTMLSelectElement, DatovelgerPropsN
       <Controller
         name={name}
         control={control}
-        render={({ field, fieldState: { error }, formState: { errors } }) => rendring(field, error)}
+        render={({ field, fieldState: { error } }) => rendring(field, error)}
         {...rest}
       />
     );

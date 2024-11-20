@@ -46,6 +46,7 @@ interface InntektskilderProps {
   defaultPeriode?: { fomDato: string; tomDato: string };
   medlemskapsTypeErPliktig: boolean;
   skalViseErMaanedsBelopRadioGroup?: boolean;
+  formBekreftet?: boolean;
 }
 
 export const Inntektskilder = ({
@@ -58,6 +59,7 @@ export const Inntektskilder = ({
   defaultPeriode,
   fields,
   medlemskapsTypeErPliktig,
+  formBekreftet,
 }: InntektskilderProps) => {
   const settesDefaultArbAvgBetales = (kildetype?: string) => ![INNTEKT_FRA_UTLANDET, MISJONÆR].includes(kildetype);
 
@@ -107,6 +109,7 @@ export const Inntektskilder = ({
                 }}
                 fromDate={Utils.dato.norskStringTilDate(formValues.inntektskilder[index].fomDato)}
                 toDate={Utils.dato.norskStringTilDate(formValues.inntektskilder[index].tomDato)}
+                showFieldError={formBekreftet ?? true}
               />
             </Nav.Column>
 
