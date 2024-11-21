@@ -18,7 +18,8 @@ import "./inntektskilder.css";
 import { Stack } from "@navikt/ds-react";
 import { Alert } from "../../../navFrontend";
 
-import ControlledDateRangePicker from "./controlledDateRangePicker";
+import DateRangePicker from "../../forms/dateRangePicker";
+import { useEffect } from "react";
 
 const {
   ARBEIDSINNTEKT_FRA_NORGE,
@@ -78,6 +79,10 @@ export const Inntektskilder = ({
     return inntekt.bruttoInntekt > 250000 && inntekt.erMaanedsbelop === BOOLSK_STRING.SANN;
   };
 
+  useEffect(() => {
+    console.log("formvalues", formValues);
+  }, [formValues]);
+
   return (
     <div className="perioder">
       {formValues.inntektskilder.map((inntektskilde, index) => {
@@ -95,8 +100,8 @@ export const Inntektskilder = ({
 
         return (
           <Nav.Row className="periode__rad" key={fields[index].id}>
-            <Nav.Column className="inntektsperiodeblabla">
-              <ControlledDateRangePicker
+            <Nav.Column className="daterangepicker">
+              <DateRangePicker
                 name={`inntektskilder[${index}]`}
                 control={control}
                 label="Inntektsperiode"

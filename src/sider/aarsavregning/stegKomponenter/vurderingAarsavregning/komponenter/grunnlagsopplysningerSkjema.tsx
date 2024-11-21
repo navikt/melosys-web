@@ -47,6 +47,7 @@ const GrunnlagsopplysningerSkjema = ({
         append={skattAppend}
         control={control}
         fields={skattFields}
+        formBekreftet={formBekreftet}
       />
       <Inntektskilder
         formValues={formValues}

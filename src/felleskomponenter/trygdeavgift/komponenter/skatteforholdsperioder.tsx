@@ -10,6 +10,7 @@ import { FieldArrayProps, FormValuesProps, Skatteforhold } from "./types";
 import * as Utils from "../../../utils";
 import "./skatteforholdsperioder.css";
 import { Stack } from "@navikt/ds-react";
+import DateRangePicker from "../../forms/dateRangePicker";
 
 interface SkatteforholdsperioderProps {
   formValues: FormValuesProps;
@@ -19,6 +20,7 @@ interface SkatteforholdsperioderProps {
   append: (skatteforhold: Skatteforhold) => void;
   redigerbart: boolean;
   defaultPeriode?: { fomDato: string; tomDato: string };
+  formBekreftet?: boolean;
 }
 
 export const Skatteforholdsperioder = ({
@@ -29,12 +31,29 @@ export const Skatteforholdsperioder = ({
   redigerbart,
   defaultPeriode,
   fields,
+  formBekreftet,
 }: SkatteforholdsperioderProps) => {
   return (
     <div className="perioder">
       {formValues.skatteforholdsperioder.map((skatteforhold, index) => {
         return (
           <Nav.Row className="periode__rad" key={fields[index].id}>
+            <Nav.Column className="daterangepicker">
+              <DateRangePicker
+                name={`skatteforholdsperioder[${index}]`}
+                control={control}
+                label="Skatteforholdsperiode"
+                hideLabel={index !== 0}
+                defaultSelected={{
+                  from: Utils.dato.norskStringTilDate(formValues.skatteforholdsperioder[index].fomDato),
+                  to: Utils.dato.norskStringTilDate(formValues.skatteforholdsperioder[index].tomDato),
+                }}
+                fromDate={Utils.dato.norskStringTilDate(formValues.skatteforholdsperioder[index].fomDato)}
+                toDate={Utils.dato.norskStringTilDate(formValues.skatteforholdsperioder[index].tomDato)}
+                showFieldError={formBekreftet ?? true}
+                readOnly={!redigerbart}
+              />
+            </Nav.Column>
             <Nav.Column>
               <Forms.Datovelger
                 label={index === 0 ? "Skatteforhold" : ""}

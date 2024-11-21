@@ -517,7 +517,9 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
 
     setVisLeggTilMedlemskapsperioder(await trigger("medlemskapsperioder"));
   };
-
+  useEffect(() => {
+    console.log("errors", formErrors);
+  }, [formErrors]);
   return (
     <div className="vurderingAarsavregning">
       <Nav.Heading size="large" className="stegvelgertittel">

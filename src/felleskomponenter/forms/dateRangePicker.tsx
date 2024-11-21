@@ -1,10 +1,10 @@
-import { DatePicker, DatePickerProps, HStack, useRangeDatepicker } from "@navikt/ds-react";
+import { Bleed, DatePicker, DatePickerProps, HStack, useRangeDatepicker } from "@navikt/ds-react";
 import { forwardRef, useState } from "react";
 import { Control, Controller, FieldError } from "react-hook-form";
 import { DateRange } from "react-day-picker";
-import { SKRIV_INN_GYLDIG_DATO } from "../../../kodeverk/feilmeldinger";
-import { _uuid } from "../../../utils";
-import * as Utils from "../../../utils";
+import { SKRIV_INN_GYLDIG_DATO } from "../../kodeverk/feilmeldinger";
+import { _uuid } from "../../utils";
+import * as Utils from "../../utils";
 
 interface DateRangeText {
   from: string;
@@ -25,7 +25,7 @@ interface Props {
 type DateRangePickerProps = Omit<Props & DatePickerProps, "name">;
 type ExternalDateRangePickerProps = Omit<Props & DatePickerProps, "onRangeChange" | "fieldError">;
 
-const DateRangePicker = ({
+const InnerDateRangePicker = ({
   label,
   hideLabel,
   fromDate,
@@ -58,7 +58,7 @@ const DateRangePicker = ({
       <HStack gap={{ sm: "2" }} justify="center" wrap={false}>
         <DatePicker.Input
           id={_uuid()}
-          label={label}
+          label={<Bleed marginInline="12">{label}</Bleed>}
           hideLabel={hideLabel}
           size="small"
           readOnly={readOnly}
@@ -83,7 +83,7 @@ const DateRangePicker = ({
   );
 };
 
-const ControlledDateRangePicker = forwardRef<HTMLSelectElement, ExternalDateRangePickerProps>(
+const DateRangePicker = forwardRef<HTMLSelectElement, ExternalDateRangePickerProps>(
   (
     {
       name,
@@ -101,7 +101,7 @@ const ControlledDateRangePicker = forwardRef<HTMLSelectElement, ExternalDateRang
   ) => {
     const renderDateRangePicker = (field: any, fieldError?: FieldError) => {
       return (
-        <DateRangePicker
+        <InnerDateRangePicker
           control={control}
           label={label}
           hideLabel={hideLabel}
@@ -129,4 +129,4 @@ const ControlledDateRangePicker = forwardRef<HTMLSelectElement, ExternalDateRang
   }
 );
 
-export default ControlledDateRangePicker;
+export default DateRangePicker;
