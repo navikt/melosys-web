@@ -105,24 +105,26 @@ const SideDialogDokumenter = ({ behandlingID, dokumentOversikt, setAktivTab }: S
   const harDokumenter = Array.isArray(dokumentOversikt) && dokumentOversikt.length > 0;
 
   return (
-    <div className="sideDialogDokumenter">
+    <div>
       <LagredeUtkast alleUtkast={utkast} settAktivtUtkast={handleValgtUtkast} />
       {harDokumenter ? (
-        <Nav.Table size="small" aria-label="Liste over dokumenter knyttet til saken">
-          <Nav.Table.Header>
-            <Nav.Table.Row>
-              <Nav.Table.HeaderCell aria-label="Mottaksretning" />
-              <Nav.Table.HeaderCell>Dokument</Nav.Table.HeaderCell>
-              <Nav.Table.HeaderCell>Avsender/mottaker</Nav.Table.HeaderCell>
-              <Nav.Table.HeaderCell>Dato</Nav.Table.HeaderCell>
-            </Nav.Table.Row>
-          </Nav.Table.Header>
-          <Nav.Table.Body>
-            {dokumentOversikt.map((oversikt) => (
-              <OversiktRad key={uuid()} dokumentOversikt={oversikt} />
-            ))}
-          </Nav.Table.Body>
-        </Nav.Table>
+        <div className="sideDialogDokumenter">
+          <Nav.Table size="small" aria-label="Liste over dokumenter knyttet til saken">
+            <Nav.Table.Header>
+              <Nav.Table.Row>
+                <Nav.Table.HeaderCell aria-label="Mottaksretning" />
+                <Nav.Table.HeaderCell>Dokument</Nav.Table.HeaderCell>
+                <Nav.Table.HeaderCell>Avsender/mottaker</Nav.Table.HeaderCell>
+                <Nav.Table.HeaderCell>Dato</Nav.Table.HeaderCell>
+              </Nav.Table.Row>
+            </Nav.Table.Header>
+            <Nav.Table.Body>
+              {dokumentOversikt.map((oversikt) => (
+                <OversiktRad key={uuid()} dokumentOversikt={oversikt} />
+              ))}
+            </Nav.Table.Body>
+          </Nav.Table>
+        </div>
       ) : (
         <BodyShort size="small" textColor="subtle">
           Det er ingen dokumenter tilknyttet saken/behandlingen.
