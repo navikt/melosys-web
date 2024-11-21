@@ -18,7 +18,6 @@ import "./inntektskilder.css";
 import { Stack } from "@navikt/ds-react";
 import { Alert } from "../../../navFrontend";
 
-import { useEffect } from "react";
 import ControlledDateRangePicker from "./controlledDateRangePicker";
 
 const {
@@ -99,10 +98,9 @@ export const Inntektskilder = ({
             <Nav.Column className="inntektsperiodeblabla">
               <ControlledDateRangePicker
                 name={`inntektskilder[${index}]`}
-                hideLabel={index !== 0}
                 control={control}
                 label="Inntektsperiode"
-                readOnly={!redigerbart}
+                hideLabel={index !== 0}
                 defaultSelected={{
                   from: Utils.dato.norskStringTilDate(formValues.inntektskilder[index].fomDato),
                   to: Utils.dato.norskStringTilDate(formValues.inntektskilder[index].tomDato),
@@ -110,17 +108,18 @@ export const Inntektskilder = ({
                 fromDate={Utils.dato.norskStringTilDate(formValues.inntektskilder[index].fomDato)}
                 toDate={Utils.dato.norskStringTilDate(formValues.inntektskilder[index].tomDato)}
                 showFieldError={formBekreftet ?? true}
+                readOnly={!redigerbart}
               />
             </Nav.Column>
 
             <Nav.Column className="inntektskilde">
               <Forms.Select
-                label={index === 0 ? "Inntektskilde" : ""}
-                hideLabel={index !== 0}
                 name={`inntektskilder[${index}].kildetype`}
                 control={control}
-                readOnly={!redigerbart}
+                label={index === 0 ? "Inntektskilde" : ""}
+                hideLabel={index !== 0}
                 onChange={(value) => handleEndreKildetype(index, value)}
+                readOnly={!redigerbart}
               >
                 {MKV.KTObjects.inntektskildetype
                   .filter((kt: KTObject) => {
@@ -148,12 +147,12 @@ export const Inntektskilder = ({
             <Nav.Column>
               {skalFylleInnArbAvgBetales ? (
                 <Forms.RadioGroup
+                  name={`inntektskilder[${index}].arbAvgBetales`}
+                  control={control}
                   legend={index === 0 ? "Betales aga.?" : ""}
                   hideLegend={index !== 0}
-                  name={`inntektskilder[${index}].arbAvgBetales`}
-                  readOnly={!redigerbart || settesDefaultArbAvgBetales(inntektskilde.kildetype)}
-                  control={control}
                   onChange={(value) => handleEndreArbAvgBetales(index, value)}
+                  readOnly={!redigerbart || settesDefaultArbAvgBetales(inntektskilde.kildetype)}
                 >
                   <Stack gap="6" direction={{ xs: "column", sm: "row" }} wrap={false}>
                     <Nav.Radio value={BOOLSK_STRING.SANN}>Ja</Nav.Radio>
@@ -175,12 +174,12 @@ export const Inntektskilder = ({
             <Nav.Column>
               {skalFylleInnBruttoInntekt ? (
                 <Forms.Select
-                  emptyFieldDisabled
+                  name={`inntektskilder[${index}].erMaanedsbelop`}
+                  control={control}
                   label={index === 0 ? "Periode" : ""}
                   hideLabel={index !== 0}
-                  name={`inntektskilder[${index}].erMaanedsbelop`}
+                  emptyFieldDisabled
                   readOnly={!redigerbart}
-                  control={control}
                 >
                   <option defaultValue={BOOLSK_STRING.SANN} value={BOOLSK_STRING.SANN}>
                     Md.
@@ -202,12 +201,12 @@ export const Inntektskilder = ({
             <Nav.Column className="brutto_inntekt">
               {skalFylleInnBruttoInntekt ? (
                 <Forms.Input
-                  label={index === 0 ? "Brutto inntekt" : ""}
-                  hideLabel={index !== 0}
                   name={`inntektskilder[${index}].bruttoInntekt`}
                   control={control}
-                  readOnly={!redigerbart}
+                  label={index === 0 ? "Brutto inntekt" : ""}
+                  hideLabel={index !== 0}
                   type="number"
+                  readOnly={!redigerbart}
                 />
               ) : (
                 <div className="ikkeRelevant">
