@@ -3,12 +3,14 @@ const MELOSYS_FTRL_BEGRENSE_PERIODE_VEDTAK = "melosys.ftrl.begrense_periode_vedt
 const FEATURE_TOGGLE = "feature-toggle";
 const MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA = "melosys.konvensjon.efta.land.og.storbritannia";
 const MELOSYS_ARBEID_KUN_NORGE = "melosys.arbeid.kun.norge";
+const MELOSYS_SPESIELLE_GRUPPER = "melosys.spesielle_grupper";
 
 const alleToggleNavn = [
   MELOSYS_FAKTURERINGSKOMPONENTEN_VIS_REFERANSE,
   MELOSYS_FTRL_BEGRENSE_PERIODE_VEDTAK,
   MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA,
   MELOSYS_ARBEID_KUN_NORGE,
+  MELOSYS_SPESIELLE_GRUPPER,
 ];
 
 export {
@@ -18,4 +20,5 @@ export {
   MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA,
   MELOSYS_ARBEID_KUN_NORGE,
   alleToggleNavn,
+  MELOSYS_SPESIELLE_GRUPPER,
 };
