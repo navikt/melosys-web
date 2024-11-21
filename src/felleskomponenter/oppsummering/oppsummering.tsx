@@ -126,7 +126,15 @@ const Oppsummering = ({
     data.forEach((row) =>
       rows.push(
         <Nav.Row className="datarad" key={`datarad-${row[0]}`}>
-          <OppsummeringVerdiPar nokkel={row[0]} verdi={row[1]} ekstrafelt={<span className="italic">{row[2]}</span>} />
+          <OppsummeringVerdiPar
+            nokkel={row[0]}
+            verdi={
+              <>
+                {row[1]}
+                {row[2] && <span className="italic">{row[2]}</span>}
+              </>
+            }
+          />
         </Nav.Row>
       )
     );
@@ -142,8 +150,12 @@ const Oppsummering = ({
             {i < col1.length && (
               <OppsummeringVerdiPar
                 nokkel={col1[i][0]}
-                verdi={col1[i][1]}
-                ekstrafelt={<span className="kursiv">{col1[i][2]}</span>}
+                verdi={
+                  <>
+                    {col1[i][1]}
+                    {col1[i][2] && <span className="kursiv">{col1[i][2]}</span>}
+                  </>
+                }
               />
             )}
           </Nav.Column>
@@ -151,8 +163,12 @@ const Oppsummering = ({
             {i < col2.length && (
               <OppsummeringVerdiPar
                 nokkel={col2[i][0]}
-                verdi={col2[i][1]}
-                ekstrafelt={<span className="kursiv">{col2[i][2]}</span>}
+                verdi={
+                  <>
+                    {col2[i][1]}
+                    {col2[i][2] && <span className="kursiv">{col2[i][2]}</span>}
+                  </>
+                }
               />
             )}
           </Nav.Column>
@@ -203,7 +219,12 @@ const Oppsummering = ({
         ["Sak opprettet", Utils.dato.formatterDatoTilNorsk(sakRegistrertDato)],
         ["Beh. opprettet", Utils.dato.formatterDatoTilNorsk(behRegistrertDato)],
       ];
-      col2 = [["Sist oppdatert", Utils.dato.formatterDatoTilNorsk(endretDato), `  ${endretAvNavn}`]];
+      col2 = [
+        [
+          "Sist oppdatert",
+          `${Utils.dato.formatterDatoTilNorsk(endretDato)} ${endretAvNavn ? ` (${endretAvNavn})` : ""}`,
+        ],
+      ];
     } else {
       col1 = lagCol1();
       col2 = [
