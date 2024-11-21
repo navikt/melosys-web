@@ -20,7 +20,6 @@ import {
   slettTilleggBestemmelse,
 } from "../../../../felleskomponenter/stegvelger";
 import { hentFaktaVerdi } from "../../../../domeneUtils";
-import "./vurderingArbeidsmonster.css";
 
 /**
  * Dette er hovedkomponenten for fanen "Arbeidsmønster". Denne trekker inn MarginaltArbeid som er utlistingen av sjekkbokser og håndtereren
