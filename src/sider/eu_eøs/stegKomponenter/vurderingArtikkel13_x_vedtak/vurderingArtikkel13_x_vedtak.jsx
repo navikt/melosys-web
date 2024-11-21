@@ -56,8 +56,12 @@ export const VurderingArtikkel13_x_vedtak = ({
 
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
 
-  const fom = Utils.dato.formatterDatoTilNorsk(soknadsperiode.fom);
-  const tom = Utils.dato.formatterDatoTilNorsk(soknadsperiode.tom);
+  const fom = Utils.dato.formatterDatoTilNorsk(
+    (formValues.forkortLovvalgsperiode && formValues.fomDato) || soknadsperiode.fom
+  );
+  const tom = Utils.dato.formatterDatoTilNorsk(
+    (formValues.forkortLovvalgsperiode && formValues.tomDato) || soknadsperiode.tom
+  );
 
   const kontrollerBehandling = async (data) => {
     if (redigerbart && data.mottatteOpplysningerStatus === "OK" && data.aktivtSteg && data.formIsValid) {
@@ -174,7 +178,7 @@ export const VurderingArtikkel13_x_vedtak = ({
       )}
       <Skjema.PeriodeForkorter
         redigerbart={redigerbart}
-        fomRedigerbar={false}
+        fomRedigerbar
         checkboxClassName="forkortLovvalgsperiode"
         checkboxLabel="Lovvalget innvilges for en kortere periode"
         checkboxFeltnavn="forkortLovvalgsperiode"
@@ -300,9 +304,7 @@ const mapStateToProps = (state) => {
     formValues: getFormValues(KV.Form.ARTIKKEL_13_X_VEDTAK)(state),
     initialValues: {
       forkortLovvalgsperiode,
-      tomDato: forkortLovvalgsperiode
-        ? Utils.dato.formatterDatoTilNorsk(lovvalgsperioderSelectors.TomDatoSelector(state))
-        : "",
+      tomDato: Utils.dato.formatterDatoTilNorsk(lovvalgsperioderSelectors.TomDatoSelector(state)),
       fomDato: Utils.dato.formatterDatoTilNorsk(lovvalgsperioderSelectors.FomDatoSelector(state)),
       vedtakstypebegrunnelse: behandlingsresultatSelectors.BegrunnelseKoderSelector(state)[0],
       vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
