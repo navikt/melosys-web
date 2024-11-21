@@ -36,10 +36,10 @@ const DateRangePicker = ({
   showFieldError,
   readOnly,
 }: DateRangePickerProps) => {
-  const [defaultFromDate] = useState(fromDate ? fromDate : new Date(0));
+  const [defaultFromDate] = useState(fromDate ?? new Date(0));
   const [defaultToDate] = useState(toDate ?? new Date(2100, 1, 1));
 
-  const { datepickerProps, toInputProps, fromInputProps, selectedRange } = useRangeDatepicker({
+  const { datepickerProps, toInputProps, fromInputProps } = useRangeDatepicker({
     defaultSelected: defaultSelected as DateRange,
     fromDate: defaultFromDate,
     toDate: defaultToDate,
