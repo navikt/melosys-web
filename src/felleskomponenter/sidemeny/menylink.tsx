@@ -43,10 +43,8 @@ const MenyLink = ({ label, active, onClick, iconSrc, iconAltText }: MenyLinkProp
         onClick={handleOnClick}
         type="button"
       >
-        <TypografiBase type={labeltype} tag="span" className={labelCls}>
           {brukWbrTagVedSlash(label)}
           {iconSrc && <img src={iconSrc} alt={iconAltText || ""} className={menyLinkCls.element("icon")} />}
-        </TypografiBase>
       </button>
     </li>
   );
