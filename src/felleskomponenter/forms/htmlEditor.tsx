@@ -17,24 +17,22 @@ type HtmlEditorComponentProps = {
 
 type InnerHtmlEditorComponentProps = HtmlEditorComponentProps & RegisterHookFormProps;
 
-const InnerHTMLEditorComponent = forwardRef<HTMLEditorProps, InnerHtmlEditorComponentProps>(
-  ({ spellcheck = true, ...rest }: InnerHtmlEditorComponentProps, _ref: any) => {
-    return (
-      <div className={`${rest.className} editor_content`}>
-        <HtmlEditor
-          value={rest.value}
-          onChange={rest.onChange}
-          placeholder={rest.placeholder || ""}
-          readOnly={rest?.disabled}
-          spellCheck={spellcheck}
-          label={rest?.label}
-          feil={rest.feil}
-          disabled={rest?.disabled}
-        />
-      </div>
-    );
-  }
-);
+const InnerHTMLEditorComponent = ({ spellcheck = true, ...rest }: InnerHtmlEditorComponentProps) => {
+  return (
+    <div className={`${rest.className} editor_content`}>
+      <HtmlEditor
+        value={rest.value}
+        onChange={rest.onChange}
+        placeholder={rest.placeholder || ""}
+        readOnly={rest?.disabled}
+        spellCheck={spellcheck}
+        label={rest?.label}
+        feil={rest.feil}
+        disabled={rest?.disabled}
+      />
+    </div>
+  );
+};
 
 type HTMLEditorProps = HtmlEditorComponentProps & UseControllerProps;
 

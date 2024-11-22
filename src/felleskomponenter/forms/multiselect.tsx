@@ -12,27 +12,31 @@ type MultiSelectComponentProps = Omit<ComponentProps<typeof MultiSelectPlain>, "
 
 type MultiSelectInnerComponentProps = MultiSelectComponentProps & RegisterHookFormProps;
 
-const MultiSelectInnerComponent = forwardRef<HTMLSelectElement, MultiSelectInnerComponentProps>(
-  (
-    { label, redigerbart, onChange, name, feil, options, values, ...rest }: MultiSelectInnerComponentProps,
-    _ref: any
-  ) => {
-    return (
-      <MultiSelectPlain
-        label={label}
-        redigerbart={redigerbart}
-        onChange={(selectedOptions) => {
-          const selectedValues = selectedOptions.map(({ value }) => value);
-          onChange(selectedValues);
-        }}
-        values={values}
-        options={options}
-        feil={feil}
-        {...rest}
-      />
-    );
-  }
-);
+const MultiSelectInnerComponent = ({
+     label,
+     redigerbart,
+     onChange,
+     name,
+     feil,
+     options,
+     values,
+     ...rest
+  }: MultiSelectInnerComponentProps) => {
+  return (
+    <MultiSelectPlain
+      label={label}
+      redigerbart={redigerbart}
+      onChange={(selectedOptions) => {
+        const selectedValues = selectedOptions.map(({ value }) => value);
+        onChange(selectedValues);
+      }}
+      values={values}
+      options={options}
+      feil={feil}
+      {...rest}
+    />
+  );
+};
 
 type MultiSelectProps = Omit<MultiSelectComponentProps, "onChange" | "values"> &
   UseControllerProps & {

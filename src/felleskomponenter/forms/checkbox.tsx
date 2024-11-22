@@ -20,26 +20,24 @@ interface CheckboxComponentProps {
 
 type CheckboxInnerComponentProps = CheckboxComponentProps & RegisterHookFormProps;
 
-const InnerCheckboxComponent = forwardRef<HTMLSelectElement, CheckboxInnerComponentProps>(
-  ({ readOnly, ...rest }: CheckboxInnerComponentProps, _ref: any) => {
-    return (
-      <Nav.Checkbox
-        className={rest.className}
-        onChange={rest.onChange}
-        onBlur={rest.onBlur}
-        value={rest.value}
-        name={rest.name}
-        error={rest.feil}
-        checked={rest.checked}
-        size={rest.size}
-        readOnly={readOnly}
-        id={_uuid()}
-      >
-        {rest.label}
-      </Nav.Checkbox>
-    );
-  }
-);
+const InnerCheckboxComponent = ({ readOnly, ...rest }: CheckboxInnerComponentProps) => {
+  return (
+    <Nav.Checkbox
+      className={rest.className}
+      onChange={rest.onChange}
+      onBlur={rest.onBlur}
+      value={rest.value}
+      name={rest.name}
+      error={rest.feil}
+      checked={rest.checked}
+      size={rest.size}
+      readOnly={readOnly}
+      id={_uuid()}
+    >
+      {rest.label}
+    </Nav.Checkbox>
+  );
+};
 
 type CheckboxProps = CheckboxComponentProps & UseControllerProps;
 
