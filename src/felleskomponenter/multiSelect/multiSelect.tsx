@@ -1,5 +1,5 @@
-import { CSSProperties, ReactNode } from "react";
-import Select, { Styles } from "react-select";
+import { ReactNode } from "react";
+import Select from "react-select";
 
 import "./multiSelect.less";
 import * as Utils from "../../utils";
@@ -22,52 +22,6 @@ interface MultiSelectProps<T> {
 function MultiSelect<T extends OptionBase>(props: MultiSelectProps<T>) {
   const { label, values, onChange, options, feil, redigerbart = true } = props;
 
-  const getBorderColor = (hover = false) => {
-    if (hover && redigerbart) return "#0067C5";
-    if (redigerbart && feil) return "#BA3A26";
-    return "#78706A";
-  };
-
-  const getBackgroundColor = () => {
-    if (!redigerbart) return "#E9E7E7";
-    return "#FFFFFF";
-  };
-
-  const getBoxShadow = () => {
-    if (feil) return "0 0 0 1px #ba3a26";
-    return "none";
-  };
-
-  const styles: Styles<T, true> = {
-    control: (provided: CSSProperties) => ({
-      ...provided,
-      borderColor: getBorderColor(),
-      boxShadow: getBoxShadow(),
-      "&:hover": {
-        borderColor: getBorderColor(true),
-      },
-      backgroundColor: getBackgroundColor(),
-    }),
-    placeholder: (provided: CSSProperties) => ({
-      ...provided,
-      fontFamily: "'Source Sans Pro', Arial, sans-serif",
-      fontSize: "1rem",
-      fontWeight: 400,
-      color: "#000000",
-    }),
-    menu: (provided: CSSProperties) => ({
-      ...provided,
-      marginTop: 0,
-    }),
-    indicatorSeparator: () => ({
-      display: "none",
-    }),
-    dropdownIndicator: (provided: CSSProperties) => ({
-      ...provided,
-      color: "#000000",
-    }),
-  };
-
   const selectId = `select${Utils._uuid()}`;
   return (
     <div className={props.className} style={{ cursor: redigerbart ? "default" : "not-allowed" }}>
@@ -76,7 +30,6 @@ function MultiSelect<T extends OptionBase>(props: MultiSelectProps<T>) {
       </label>
       <Select
         id={selectId}
-        styles={styles}
         onChange={(selectedOptions) => onChange(selectedOptions || [])}
         menuPortalTarget={document.body}
         options={options}
