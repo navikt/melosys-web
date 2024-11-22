@@ -442,7 +442,7 @@ const VurderingVedtak = ({
         disabled={!redigerbart}
       />
 
-      <Nav.BodyLong weight="semibold" size="small" className={vurderingVedtakCls.element("fritekst_overskrift")}>
+      <Nav.BodyLong size="small" className={vurderingVedtakCls.element("fritekst_overskrift")}>
         <LabelMedHjelpetekst label="Fritekst til begrunnelse" hjelpetekst={BEGRUNNELSE_FRITEKST_HJELPETEKST} />
       </Nav.BodyLong>
       <Skjema.HTMLEditor
