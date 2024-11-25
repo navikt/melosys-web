@@ -78,25 +78,28 @@ const åpenTomNårIkkeSistePeriodeTest = {
 };
 
 const vurdering_aarsavregning = object().shape({
-  medlemskapsperioder: array()
-    .min(1, "Minst en medlemskapsperiode")
-    .of(
-      object().shape({
-        fomDato: string()
-          .erGyldigDato()
-          .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
-          .required(),
-        tomDato: string()
-          .erGyldigDato()
-          .erEtterDatofelt("fomDato")
-          .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
-          .test(åpenTomNårIkkeSistePeriodeTest),
-        trygdedekning: string().required(),
-        bestemmelse: string().required(),
-      })
-    ),
-  skatteforholdsperioder: array().when(["$erÅpenSluttDato"], {
-    is: (erÅpenSluttDato) => !erÅpenSluttDato,
+  medlemskapsperioder: array().when(["$medlemskapsperiode"], {
+    is: (medlemskapsperiode) => !medlemskapsperiode,
+    then: array()
+      .min(1, "Minst en medlemskapsperiode")
+      .of(
+        object().shape({
+          fomDato: string()
+            .erGyldigDato()
+            .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
+            .required(),
+          tomDato: string()
+            .erGyldigDato()
+            .erEtterDatofelt("fomDato")
+            .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
+            .test(åpenTomNårIkkeSistePeriodeTest),
+          trygdedekning: string().required(),
+          bestemmelse: string().required(),
+        })
+      ),
+  }),
+  skatteforholdsperioder: array().when(["$erÅpenSluttDato", "$erAvvik"], {
+    is: (erÅpenSluttDato, erAvvik) => !erÅpenSluttDato && erAvvik,
     then: array()
       .min(1, "Minst en skatteforholdsperiode")
       .of(
@@ -115,9 +118,9 @@ const vurdering_aarsavregning = object().shape({
       ),
   }),
   inntektskilder: lazy((_value, options) => {
-    return array().when(["$medlemskapsTypeErPliktig", "$erÅpenSluttDato"], {
-      is: (medlemskapsTypeErPliktig, erÅpenSluttDato) =>
-        !erÅpenSluttDato && kreverInntektskilder(medlemskapsTypeErPliktig, options),
+    return array().when(["$medlemskapsTypeErPliktig", "$erÅpenSluttDato", "$erAvvik"], {
+      is: (medlemskapsTypeErPliktig, erÅpenSluttDato, erAvvik) =>
+        !erÅpenSluttDato && kreverInntektskilder(medlemskapsTypeErPliktig, options) && erAvvik,
       then: array()
         .min(1, "Minst en inntektskilde")
         .of(

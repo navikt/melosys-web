@@ -11,6 +11,9 @@ export const SumArsavregningTabell = ({
   tidligereTrygdeavgift?: number;
 }) => {
   const sumTilFakturaEllerRefusjon = (nyTrygdeavgift ?? 0) - (tidligereTrygdeavgift ?? 0);
+
+  if (nyTrygdeavgift === null || tidligereTrygdeavgift === null) return null;
+
   return (
     <div className="sumArsavregningTabell">
       <Nav.Table size="small" width={500} className="periode_tabell">
