@@ -63,10 +63,10 @@ export const unntaksbestemmelserStorbritanniaKonv: KTObject[] = [
   MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia.KONV_EFTA_STORBRITANNIA_ART16_1,
   MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia.KONV_EFTA_STORBRITANNIA_ART16_3,
 ].map((kode) =>
-  kodeTilObjekt(kode, [
-    ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia,
-    ...MKV.KTObjects.lovvalgsbestemmelser.tilleggsbestemmelser_konv_efta_storbritannia,
-  ])
+    kodeTilObjekt(kode, [
+      ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia,
+      ...MKV.KTObjects.lovvalgsbestemmelser.tilleggsbestemmelser_konv_efta_storbritannia,
+    ])
 );
 
 export const unikeAvtaleland: KTObject[] = MKV.KTObjects.landkoder
