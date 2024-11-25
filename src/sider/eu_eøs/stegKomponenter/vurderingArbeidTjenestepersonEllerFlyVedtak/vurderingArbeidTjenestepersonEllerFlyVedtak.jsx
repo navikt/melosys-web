@@ -1,10 +1,10 @@
 import { Fragment, useCallback, useEffect, useState } from "react";
-import { connect } from "react-redux";
+import { connect, useSelector } from "react-redux";
 import { getFormValues, isValid, reduxForm } from "redux-form";
 import PT from "prop-types";
 import * as EKV from "eessi-kodeverk";
 
-import MKV from "../../../../melosyskodeverk";
+import MKV, { MKVUtils } from "../../../../melosyskodeverk";
 
 import * as Nav from "../../../../navFrontend";
 import * as Utils from "../../../../utils";
@@ -134,6 +134,9 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
   const [vedtakPending, setVedtakPending] = useState(false);
   const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
   let oppdaterFørKontroll = true;
+
+  const arbeidsland = useSelector(avklartefaktaSelectors.ArbeidslandKTSelector);
+  const flereSoknadslandEnnTillatt = arbeidsland.length > 1 && !MKVUtils.kanHaFlereSoknadsland(behandlingstema);
 
   useEffect(() => {
     if (lovvalgsbestemmelseSomSkalLagres) {
@@ -318,7 +321,8 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
   const tom = Utils.dato.formatterDatoTilNorsk(
     (formValues.forkortLovvalgsperiode && formValues.tomDato) || soknadsperiode.tom
   );
-  const stegErGyldig = redigerbart && formIsValid && !harFeilmeldinger;
+
+  const stegErGyldig = redigerbart && formIsValid && !harFeilmeldinger && !flereSoknadslandEnnTillatt;
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="vurderingArbeidTjenestepersonEllerFlyVedtak">
@@ -441,6 +445,11 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
           )}
         </Nav.Column>
       </Nav.Row>
+
+      {flereSoknadslandEnnTillatt && (
+        <Nav.Alert variant="error">Det er kun tillatt med ett arbeidsland i vedtaket.</Nav.Alert>
+      )}
+
       {erNyVurdering && redigerbart && (
         <Nav.Alert variant="info">{KV.Koder.AlertstripeTekst.NY_VURDERING_MEDL_TEKST}</Nav.Alert>
       )}
