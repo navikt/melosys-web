@@ -1,49 +1,64 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`SideMeny > snapshot test 1`] = `
-
 <div>
-  <div class="side-meny">
-    <div class="side-meny__container">
-      <nav aria-labelledby="333">
-        <ul class="side-meny__link-list">
-          <div class="linkgroup">
-            <p class="linkgroup__label navds-body-long navds-body-long--small">
+  <div
+    class="side-meny"
+  >
+    <div
+      class="side-meny__container"
+    >
+      <nav
+        aria-labelledby="opplysninger"
+      >
+        <ul
+          class="side-meny__link-list"
+        >
+          <div
+            class="linkgroup"
+          >
+            <p
+              class="linkgroup__label navds-body-long navds-body-long--small"
+            >
               Sukker
             </p>
-            <li class="meny-link">
+            <li
+              class="meny-link"
+            >
               <button
                 class="meny-link__button"
                 type="button"
               >
-                <span class="typo-normal meny-link__label">
-                  Hvitt sukker
-                </span>
+                Hvitt sukker
               </button>
             </li>
-            <li class="meny-link">
+            <li
+              class="meny-link"
+            >
               <button
                 class="meny-link__button"
                 type="button"
               >
-                <span class="typo-normal meny-link__label">
-                  Brunt sukker
-                </span>
+                Brunt sukker
               </button>
             </li>
           </div>
-          <div class="linkgroup">
-            <p class="linkgroup__label navds-body-long navds-body-long--small">
+          <div
+            class="linkgroup"
+          >
+            <p
+              class="linkgroup__label navds-body-long navds-body-long--small"
+            >
               Salt
             </p>
-            <li class="meny-link">
+            <li
+              class="meny-link"
+            >
               <button
                 class="meny-link__button"
                 type="button"
               >
-                <span class="typo-normal meny-link__label">
-                  Bordsalt
-                </span>
+                Bordsalt
               </button>
             </li>
           </div>
@@ -52,5 +67,4 @@ exports[`SideMeny > snapshot test 1`] = `
     </div>
   </div>
 </div>
-
 `;

@@ -1,95 +1,160 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`Behandlingsoppgaver > viser behandlingsoppgave 1`] = `
-
 <div>
-  <div class="behandlingsOppgaver">
+  <div
+    class="behandlingsOppgaver"
+  >
     <div>
       <a
         class="behandlingOppgave__link"
         href="/TRYGDEAVTALE/saksbehandling/4/?behandlingID=4"
       >
-        <div class="panel behandlingOppgave">
-          <div class="row behandlingOppgave__info">
-            <div class="col col-xs-6 col-md-6 col-lg-8">
-              <div class="col col-md-12 col-lg-6">
-                <div class="panelheader">
-                  <div class="panelheader__tittel">
-                    <div class="panelheader__tittel__hoved">
-                      <h1 class="navds-heading navds-heading--xsmall">
+        <div
+          class="panel behandlingOppgave"
+        >
+          <div
+            class="row behandlingOppgave__info"
+          >
+            <div
+              class="col col-xs-6 col-md-6 col-lg-8"
+            >
+              <div
+                class="col col-md-12 col-lg-6"
+              >
+                <div
+                  class="panelheader"
+                >
+                  <div
+                    class="panelheader__tittel"
+                  >
+                    <div
+                      class="panelheader__tittel__hoved"
+                    >
+                      <h1
+                        class="navds-heading navds-heading--xsmall"
+                      >
                         Peter Petersen - Z123456
                       </h1>
                        
                     </div>
-                    <span class="panelheader__tittel__under">
-                    </span>
+                    <span
+                      class="panelheader__tittel__under"
+                    />
                   </div>
                 </div>
-                <div class="behandlingOppgave__uthevetKolonne">
-                  <div class="row infoTerm">
-                    Avtaleland - Medlemskap lovvalg
+                <div
+                  class="behandlingOppgave__uthevetKolonne"
+                >
+                  <div
+                    class="row infoTerm"
+                  >
+                    Avtaleland
+                     - 
+                    Medlemskap lovvalg
                   </div>
-                  <div class="row infoTerm">
+                  <div
+                    class="row infoTerm"
+                  >
                     Yrkesaktiv
                   </div>
-                  <div class="row infoTerm">
+                  <div
+                    class="row infoTerm"
+                  >
                     Førstegang
                   </div>
                 </div>
               </div>
-              <div class="col behandlingOppgave__kolonne col-md-12 col-lg-6">
-                <div class="row behandlingOppgave__statusOgFrist">
-                  <div class="behandlingsstatus__behandlingsstatusMedSaksfrist">
-                    <div class="behandlingsstatus__behandlingsstatus">
-                      <span class="behandlingsstatus__span">
+              <div
+                class="col behandlingOppgave__kolonne col-md-12 col-lg-6"
+              >
+                <div
+                  class="row behandlingOppgave__statusOgFrist"
+                >
+                  <div
+                    class="behandlingsstatus__behandlingsstatusMedSaksfrist"
+                  >
+                    <div
+                      class="behandlingsstatus__behandlingsstatus"
+                    >
+                      <span
+                        class="behandlingsstatus__span"
+                      >
                         Under behandling
                       </span>
                     </div>
                   </div>
                 </div>
-                <dl class="detaljer">
-                  <dt class="infoTerm">
+                <dl
+                  class="detaljer"
+                >
+                  <dt
+                    class="infoTerm"
+                  >
                     Frist:
                   </dt>
-                  <dd class="infoDetalj">
-                    <time datetime="2018-01-28">
+                  <dd
+                    class="infoDetalj"
+                  >
+                    <time
+                      datetime="2018-01-28"
+                    >
                       28.01.2018
                     </time>
                   </dd>
-                  <dt class="infoTerm">
+                  <dt
+                    class="infoTerm"
+                  >
                     Land:
                   </dt>
-                  <dd class="infoDetalj">
+                  <dd
+                    class="infoDetalj"
+                  >
                     Flere land. Ikke kjent hvilke.
                   </dd>
-                  <dt class="infoTerm">
+                  <dt
+                    class="infoTerm"
+                  >
                     Opprettelsesdato:
                   </dt>
-                  <dd class="infoDetalj">
-                    <time datetime="2018-12-11T16:30:00.622Z">
+                  <dd
+                    class="infoDetalj"
+                  >
+                    <time
+                      datetime="2018-12-11T16:30:00.622Z"
+                    >
                       11.12.2018
                     </time>
                   </dd>
-                  <dt class="infoTerm">
+                  <dt
+                    class="infoTerm"
+                  >
                     Sist oppdatert:
                   </dt>
-                  <dd class="infoDetalj">
+                  <dd
+                    class="infoDetalj"
+                  >
                     10.08.2018
                   </dd>
                 </dl>
               </div>
             </div>
-            <div class="col behandlingOppgave__kolonne__notater col-xs-6 col-md-6 col-lg-4">
+            <div
+              class="col behandlingOppgave__kolonne__notater col-xs-6 col-md-6 col-lg-4"
+            >
               <span>
                 <b>
                   Behandlingsnotat:
                 </b>
+                 
               </span>
-              <div class="row">
+              <div
+                class="row"
+              >
                 <b>
                   Gosys beskrivelseshistorikk:
                 </b>
-                <br>
+                <br />
               </div>
             </div>
           </div>
@@ -98,5 +163,4 @@ exports[`Behandlingsoppgaver > viser behandlingsoppgave 1`] = `
     </div>
   </div>
 </div>
-
 `;

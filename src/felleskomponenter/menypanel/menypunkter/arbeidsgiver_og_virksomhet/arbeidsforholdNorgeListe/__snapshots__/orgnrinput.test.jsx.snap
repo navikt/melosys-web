@@ -1,34 +1,35 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`Orgnrinput > snapshot test 1`] = `
-
 <div>
   <div>
-    <div class="melosys-textfield  navds-form-field navds-form-field--small">
+    <div
+      class="melosys-textfield  navds-form-field navds-form-field--small"
+    >
       <label
-        for="333"
         class="navds-form-field__label navds-label navds-label--small"
+        for="a20d7ef0-39df-4712-a723-0780cb84f632"
       >
-        <p class="navds-body-long navds-body-long--small navds-typo--semibold">
+        <p
+          class="navds-body-long navds-body-long--small navds-typo--semibold"
+        >
           Organisasjonsnummer
         </p>
       </label>
       <input
-        id="333"
+        class="navds-text-field__input navds-body-short navds-body-short--small"
+        id="a20d7ef0-39df-4712-a723-0780cb84f632"
         placeholder="Skriv inn..."
         type="text"
-        class="navds-text-field__input navds-body-short navds-body-short--small"
         value="123"
-      >
+      />
       <div
-        class="navds-form-field__error"
-        id="333"
-        aria-relevant="additions removals"
         aria-live="polite"
-      >
-      </div>
+        aria-relevant="additions removals"
+        class="navds-form-field__error"
+        id="textField-error-r0"
+      />
     </div>
   </div>
 </div>
-
 `;

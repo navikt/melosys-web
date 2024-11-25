@@ -1,34 +1,33 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`Input > snapshot test 1`] = `
-
 <div>
-  <div class="melosys-textfield  navds-form-field navds-form-field--small">
+  <div
+    class="melosys-textfield  navds-form-field navds-form-field--small"
+  >
     <label
-      for="333"
       class="navds-form-field__label navds-label navds-label--small"
+      for="4c151bde-b068-4271-8d0c-7c71f73cfb16"
     >
       test
     </label>
     <input
-      name="333"
-      meta="[object Object]"
       array="[object Object]"
-      form="test"
-      navn="Test"
-      id="333"
-      type="text"
       class="navds-text-field__input navds-body-short navds-body-short--small"
-      value
-    >
+      form="test"
+      id="4c151bde-b068-4271-8d0c-7c71f73cfb16"
+      meta="[object Object]"
+      name="Test"
+      navn="Test"
+      type="text"
+      value=""
+    />
     <div
-      class="navds-form-field__error"
-      id="333"
-      aria-relevant="additions removals"
       aria-live="polite"
-    >
-    </div>
+      aria-relevant="additions removals"
+      class="navds-form-field__error"
+      id="textField-error-r0"
+    />
   </div>
 </div>
-
 `;

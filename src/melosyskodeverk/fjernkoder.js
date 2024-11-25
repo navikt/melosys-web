@@ -1,7 +1,6 @@
 import { unset, get, set, cloneDeep } from "lodash";
 
 const fjernKode = (kodeverk, path, kode) => {
-  console.log(get(kodeverk.KTObjects, path, [])); // Add this to inspect the value
   set(
     kodeverk.KTObjects,
     path,

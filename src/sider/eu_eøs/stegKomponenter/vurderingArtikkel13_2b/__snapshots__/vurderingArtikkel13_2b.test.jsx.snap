@@ -1,59 +1,76 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`vurderingArtikkel13_2b > snapshot test dersom Norge er valgt 1`] = `
-
 <div>
-  <div class="vurderingArtikkel13_2b">
-    <h1 class="stegvelgertittel navds-heading navds-heading--large">
+  <div
+    class="vurderingArtikkel13_2b"
+  >
+    <h1
+      class="stegvelgertittel navds-heading navds-heading--large"
+    >
       Vurdering av artikkel 13 nr. 2 bokstav b
     </h1>
-    <fieldset class="navds-radio-group navds-radio-group--small navds-fieldset navds-fieldset--small">
-      <legend class="navds-fieldset__legend navds-label navds-label--small">
+    <fieldset
+      class="navds-radio-group navds-radio-group--small navds-fieldset navds-fieldset--small"
+    >
+      <legend
+        class="navds-fieldset__legend navds-label navds-label--small"
+      >
         I hvilket land har virksomheten sitt interessesenter?
       </legend>
-      <div class="navds-radio-buttons">
-        <div class="navds-radio navds-radio--small">
+      <div
+        class="navds-radio-buttons"
+      >
+        <div
+          class="navds-radio navds-radio--small"
+        >
           <input
-            id="333"
-            name="333"
-            type="radio"
-            aria-labelledby="333"
+            aria-labelledby="rc"
             class="navds-radio__input"
+            id="radio-rb"
+            name="interessesenter"
+            type="radio"
             value="NORGE"
-          >
+          />
           <label
-            for="333"
             class="navds-radio__label"
+            for="radio-rb"
           >
-            <span class="navds-radio__content">
+            <span
+              class="navds-radio__content"
+            >
               <span
-                id="333"
                 aria-hidden="true"
                 class="navds-body-short navds-body-short--small"
+                id="rc"
               >
                 Norge
               </span>
             </span>
           </label>
         </div>
-        <div class="navds-radio navds-radio--small">
+        <div
+          class="navds-radio navds-radio--small"
+        >
           <input
-            id="333"
-            name="333"
-            type="radio"
-            aria-labelledby="333"
+            aria-labelledby="rf"
             class="navds-radio__input"
+            id="radio-re"
+            name="interessesenter"
+            type="radio"
             value="ANNET"
-          >
+          />
           <label
-            for="333"
             class="navds-radio__label"
+            for="radio-re"
           >
-            <span class="navds-radio__content">
+            <span
+              class="navds-radio__content"
+            >
               <span
-                id="333"
                 aria-hidden="true"
                 class="navds-body-short navds-body-short--small"
+                id="rf"
               >
                 Annet
               </span>
@@ -62,101 +79,127 @@ exports[`vurderingArtikkel13_2b > snapshot test dersom Norge er valgt 1`] = `
         </div>
       </div>
       <div
-        id="333"
-        aria-relevant="additions removals"
         aria-live="polite"
+        aria-relevant="additions removals"
         class="navds-fieldset__error"
-      >
-      </div>
+        id="fieldset-error-ra"
+      />
     </fieldset>
-    <div class="stegKnapper">
-      <button class="stegKnapper__bekreft navds-button navds-button--primary navds-button--small">
-        <span class="navds-label navds-label--small">
+    <div
+      class="stegKnapper"
+    >
+      <button
+        class="stegKnapper__bekreft navds-button navds-button--primary navds-button--small"
+      >
+        <span
+          class="navds-label navds-label--small"
+        >
           Bekreft og fortsett
         </span>
       </button>
-      <button class="stegKnapper__tilbake navds-button navds-button--tertiary navds-button--small">
-        <span class="navds-button__icon">
+      <button
+        class="stegKnapper__tilbake navds-button navds-button--tertiary navds-button--small"
+      >
+        <span
+          class="navds-button__icon"
+        >
           <svg
-            width="16"
-            height="14"
-            viewbox="0 0 16 14"
             fill="none"
+            height="14"
+            viewBox="0 0 16 14"
+            width="16"
             xmlns="http://www.w3.org/2000/svg"
           >
             <path
-              fill-rule="evenodd"
               clip-rule="evenodd"
               d="M16 7.66732L2.47 7.66732L7.33333 12.6976L6.41697 13.6673L0 7.00065L6.41697 0.333984L7.33333 1.30368L2.47 6.33398L16 6.33398V7.66732Z"
               fill="#0067C5"
-            >
-            </path>
+              fill-rule="evenodd"
+            />
           </svg>
         </span>
-        <span class="navds-label navds-label--small">
+        <span
+          class="navds-label navds-label--small"
+        >
           Tilbake
         </span>
       </button>
     </div>
   </div>
 </div>
-
 `;
 
 exports[`vurderingArtikkel13_2b > snapshot test dersom Norge ikke er valgt 1`] = `
-
 <div>
-  <div class="vurderingArtikkel13_2b">
-    <h1 class="stegvelgertittel navds-heading navds-heading--large">
+  <div
+    class="vurderingArtikkel13_2b"
+  >
+    <h1
+      class="stegvelgertittel navds-heading navds-heading--large"
+    >
       Vurdering av artikkel 13 nr. 2 bokstav b
     </h1>
-    <fieldset class="navds-radio-group navds-radio-group--small navds-fieldset navds-fieldset--small">
-      <legend class="navds-fieldset__legend navds-label navds-label--small">
+    <fieldset
+      class="navds-radio-group navds-radio-group--small navds-fieldset navds-fieldset--small"
+    >
+      <legend
+        class="navds-fieldset__legend navds-label navds-label--small"
+      >
         I hvilket land har virksomheten sitt interessesenter?
       </legend>
-      <div class="navds-radio-buttons">
-        <div class="navds-radio navds-radio--small">
+      <div
+        class="navds-radio-buttons"
+      >
+        <div
+          class="navds-radio navds-radio--small"
+        >
           <input
-            id="333"
-            name="333"
-            type="radio"
-            aria-labelledby="333"
+            aria-labelledby="r3"
             class="navds-radio__input"
+            id="radio-r2"
+            name="interessesenter"
+            type="radio"
             value="NORGE"
-          >
+          />
           <label
-            for="333"
             class="navds-radio__label"
+            for="radio-r2"
           >
-            <span class="navds-radio__content">
+            <span
+              class="navds-radio__content"
+            >
               <span
-                id="333"
                 aria-hidden="true"
                 class="navds-body-short navds-body-short--small"
+                id="r3"
               >
                 Norge
               </span>
             </span>
           </label>
         </div>
-        <div class="navds-radio navds-radio--small">
+        <div
+          class="navds-radio navds-radio--small"
+        >
           <input
-            id="333"
-            name="333"
-            type="radio"
-            aria-labelledby="333"
+            aria-labelledby="r6"
             class="navds-radio__input"
+            id="radio-r5"
+            name="interessesenter"
+            type="radio"
             value="ANNET"
-          >
+          />
           <label
-            for="333"
             class="navds-radio__label"
+            for="radio-r5"
           >
-            <span class="navds-radio__content">
+            <span
+              class="navds-radio__content"
+            >
               <span
-                id="333"
                 aria-hidden="true"
                 class="navds-body-short navds-body-short--small"
+                id="r6"
               >
                 Annet
               </span>
@@ -165,256 +208,238 @@ exports[`vurderingArtikkel13_2b > snapshot test dersom Norge ikke er valgt 1`] =
         </div>
       </div>
       <div
-        id="333"
-        aria-relevant="additions removals"
         aria-live="polite"
+        aria-relevant="additions removals"
         class="navds-fieldset__error"
-      >
-      </div>
+        id="fieldset-error-r1"
+      />
     </fieldset>
-    <div class="row">
-      <div class="col col-xs-8 col-md-6 col-lg-4">
+    <div
+      class="row"
+    >
+      <div
+        class="col col-xs-8 col-md-6 col-lg-4"
+      >
         <div>
-          <div class="melosys-textfield landliste__linje__input  navds-form-field navds-form-field--small">
+          <div
+            class="melosys-textfield landliste__linje__input navds-form-field navds-form-field--small"
+          >
             <label
-              for="333"
               class="navds-form-field__label navds-label navds-label--small"
+              for="a2536b4b-d891-4d2d-a9ff-fd528adc9c5c"
             >
               Velg land:
             </label>
             <input
-              list="333"
               bredde="fullbredde"
-              id="333"
-              type="text"
               class="navds-text-field__input navds-body-short navds-body-short--small"
+              id="a2536b4b-d891-4d2d-a9ff-fd528adc9c5c"
+              list="datalist-4ddaf395-f5fc-4e28-91e1-91f94bd29201"
+              type="text"
               value="Kypros (CY)"
-            >
+            />
             <div
-              class="navds-form-field__error"
-              id="333"
-              aria-relevant="additions removals"
               aria-live="polite"
-            >
-            </div>
+              aria-relevant="additions removals"
+              class="navds-form-field__error"
+              id="textField-error-r8"
+            />
           </div>
-          <div class="landliste__dataliste">
-            <datalist id="333">
+          <div
+            class="landliste__dataliste"
+          >
+            <datalist
+              id="datalist-4ddaf395-f5fc-4e28-91e1-91f94bd29201"
+            >
               <option
-                value="Belgia (BE)"
                 label="Belgia (BE)"
-              >
-              </option>
+                value="Belgia (BE)"
+              />
               <option
-                value="Bulgaria (BG)"
                 label="Bulgaria (BG)"
-              >
-              </option>
+                value="Bulgaria (BG)"
+              />
               <option
-                value="Danmark (DK)"
                 label="Danmark (DK)"
-              >
-              </option>
+                value="Danmark (DK)"
+              />
               <option
-                value="Estland (EE)"
                 label="Estland (EE)"
-              >
-              </option>
+                value="Estland (EE)"
+              />
               <option
-                value="Finland (FI)"
                 label="Finland (FI)"
-              >
-              </option>
+                value="Finland (FI)"
+              />
               <option
-                value="Frankrike (FR)"
                 label="Frankrike (FR)"
-              >
-              </option>
+                value="Frankrike (FR)"
+              />
               <option
-                value="Færøyene (FO)"
                 label="Færøyene (FO)"
-              >
-              </option>
+                value="Færøyene (FO)"
+              />
               <option
-                value="Grønland (GL)"
                 label="Grønland (GL)"
-              >
-              </option>
+                value="Grønland (GL)"
+              />
               <option
-                value="Hellas (GR)"
                 label="Hellas (GR)"
-              >
-              </option>
+                value="Hellas (GR)"
+              />
               <option
-                value="Irland (IE)"
                 label="Irland (IE)"
-              >
-              </option>
+                value="Irland (IE)"
+              />
               <option
-                value="Island (IS)"
                 label="Island (IS)"
-              >
-              </option>
+                value="Island (IS)"
+              />
               <option
-                value="Italia (IT)"
                 label="Italia (IT)"
-              >
-              </option>
+                value="Italia (IT)"
+              />
               <option
-                value="Kroatia (HR)"
                 label="Kroatia (HR)"
-              >
-              </option>
+                value="Kroatia (HR)"
+              />
               <option
-                value="Kypros (CY)"
                 label="Kypros (CY)"
-              >
-              </option>
+                value="Kypros (CY)"
+              />
               <option
-                value="Latvia (LV)"
                 label="Latvia (LV)"
-              >
-              </option>
+                value="Latvia (LV)"
+              />
               <option
-                value="Liechtenstein (LI)"
                 label="Liechtenstein (LI)"
-              >
-              </option>
+                value="Liechtenstein (LI)"
+              />
               <option
-                value="Litauen (LT)"
                 label="Litauen (LT)"
-              >
-              </option>
+                value="Litauen (LT)"
+              />
               <option
-                value="Luxembourg (LU)"
                 label="Luxembourg (LU)"
-              >
-              </option>
+                value="Luxembourg (LU)"
+              />
               <option
-                value="Malta (MT)"
                 label="Malta (MT)"
-              >
-              </option>
+                value="Malta (MT)"
+              />
               <option
-                value="Nederland (NL)"
                 label="Nederland (NL)"
-              >
-              </option>
+                value="Nederland (NL)"
+              />
               <option
-                value="Norge (NO)"
                 label="Norge (NO)"
-              >
-              </option>
+                value="Norge (NO)"
+              />
               <option
-                value="Polen (PL)"
                 label="Polen (PL)"
-              >
-              </option>
+                value="Polen (PL)"
+              />
               <option
-                value="Portugal (PT)"
                 label="Portugal (PT)"
-              >
-              </option>
+                value="Portugal (PT)"
+              />
               <option
-                value="Romania (RO)"
                 label="Romania (RO)"
-              >
-              </option>
+                value="Romania (RO)"
+              />
               <option
-                value="Slovakia (SK)"
                 label="Slovakia (SK)"
-              >
-              </option>
+                value="Slovakia (SK)"
+              />
               <option
-                value="Slovenia (SI)"
                 label="Slovenia (SI)"
-              >
-              </option>
+                value="Slovenia (SI)"
+              />
               <option
-                value="Spania (ES)"
                 label="Spania (ES)"
-              >
-              </option>
+                value="Spania (ES)"
+              />
               <option
-                value="Storbritannia (GB)"
                 label="Storbritannia (GB)"
-              >
-              </option>
+                value="Storbritannia (GB)"
+              />
               <option
-                value="Svalbard og Jan Mayen (SJ)"
                 label="Svalbard og Jan Mayen (SJ)"
-              >
-              </option>
+                value="Svalbard og Jan Mayen (SJ)"
+              />
               <option
-                value="Sveits (CH)"
                 label="Sveits (CH)"
-              >
-              </option>
+                value="Sveits (CH)"
+              />
               <option
-                value="Sverige (SE)"
                 label="Sverige (SE)"
-              >
-              </option>
+                value="Sverige (SE)"
+              />
               <option
-                value="Tsjekkia (CZ)"
                 label="Tsjekkia (CZ)"
-              >
-              </option>
+                value="Tsjekkia (CZ)"
+              />
               <option
-                value="Tyskland (DE)"
                 label="Tyskland (DE)"
-              >
-              </option>
+                value="Tyskland (DE)"
+              />
               <option
-                value="Ungarn (HU)"
                 label="Ungarn (HU)"
-              >
-              </option>
+                value="Ungarn (HU)"
+              />
               <option
-                value="Østerrike (AT)"
                 label="Østerrike (AT)"
-              >
-              </option>
+                value="Østerrike (AT)"
+              />
               <option
-                value="Åland (AX)"
                 label="Åland (AX)"
-              >
-              </option>
+                value="Åland (AX)"
+              />
             </datalist>
           </div>
         </div>
       </div>
     </div>
-    <div class="stegKnapper">
-      <button class="stegKnapper__bekreft navds-button navds-button--primary navds-button--small">
-        <span class="navds-label navds-label--small">
+    <div
+      class="stegKnapper"
+    >
+      <button
+        class="stegKnapper__bekreft navds-button navds-button--primary navds-button--small"
+      >
+        <span
+          class="navds-label navds-label--small"
+        >
           Bekreft og fortsett
         </span>
       </button>
-      <button class="stegKnapper__tilbake navds-button navds-button--tertiary navds-button--small">
-        <span class="navds-button__icon">
+      <button
+        class="stegKnapper__tilbake navds-button navds-button--tertiary navds-button--small"
+      >
+        <span
+          class="navds-button__icon"
+        >
           <svg
-            width="16"
-            height="14"
-            viewbox="0 0 16 14"
             fill="none"
+            height="14"
+            viewBox="0 0 16 14"
+            width="16"
             xmlns="http://www.w3.org/2000/svg"
           >
             <path
-              fill-rule="evenodd"
               clip-rule="evenodd"
               d="M16 7.66732L2.47 7.66732L7.33333 12.6976L6.41697 13.6673L0 7.00065L6.41697 0.333984L7.33333 1.30368L2.47 6.33398L16 6.33398V7.66732Z"
               fill="#0067C5"
-            >
-            </path>
+              fill-rule="evenodd"
+            />
           </svg>
         </span>
-        <span class="navds-label navds-label--small">
+        <span
+          class="navds-label navds-label--small"
+        >
           Tilbake
         </span>
       </button>
     </div>
   </div>
 </div>
-
 `;

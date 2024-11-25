@@ -1,67 +1,73 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`Behandlingsmeny > snapshot test 1`] = `
-
 <div>
-  <div class="behandlingsmeny">
+  <div
+    class="behandlingsmeny"
+  >
     <div
+      aria-label="Behandlingsmeny"
       class="behandlingsmeny__knapp behandlingsmeny__knapp__aapen"
       role="button"
       tabindex="0"
-      aria-label="Behandlingsmeny"
       title="Behandlingsmeny"
     >
       <svg
-        width="1em"
-        height="1em"
-        viewbox="0 0 24 24"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
         class="behandlingsmeny__hamburger behandlingsmeny__hamburger__aapen"
+        fill="none"
+        height="1em"
+        viewBox="0 0 24 24"
+        width="1em"
+        xmlns="http://www.w3.org/2000/svg"
       >
         <path
-          fill-rule="evenodd"
           clip-rule="evenodd"
           d="M0 1h24v4H0V1zm0 9h24v4H0v-4zm24 9H0v4h24v-4z"
           fill="currentColor"
-        >
-        </path>
+          fill-rule="evenodd"
+        />
       </svg>
     </div>
-    <div class="behandlingsmeny__meny">
-      <div class="navds-accordion navds-accordion--medium navds-accordion--indent">
-        <div class="navds-accordion__item">
+    <div
+      class="behandlingsmeny__meny"
+    >
+      <div
+        class="navds-accordion navds-accordion--medium navds-accordion--indent"
+      >
+        <div
+          class="navds-accordion__item"
+          data-expanded="false"
+        >
           <button
-            class="navds-accordion__header"
             aria-expanded="false"
+            class="navds-accordion__header"
             type="button"
           >
-            <span class="navds-accordion__icon-wrapper">
+            <span
+              class="navds-accordion__icon-wrapper"
+            >
               <svg
-                width="1em"
-                height="1em"
-                viewbox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                focusable="false"
-                role="img"
-                aria-labelledby="333"
-                class="navds-accordion__header-chevron"
                 aria-hidden="true"
+                class="navds-accordion__header-chevron"
+                fill="none"
+                focusable="false"
+                height="1em"
+                role="img"
+                viewBox="0 0 24 24"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <title id="333">
-                  Vis mer
-                </title>
                 <path
-                  fill-rule="evenodd"
                   clip-rule="evenodd"
-                  d="M5.97 9.47a.75.75 0 0 1 1.06 0L12 14.44l4.97-4.97a.75.75 0 1 1 1.06 1.06l-5.5 5.5a.75.75 0 0 1-1.06 0l-5.5-5.5a.75.75 0 0 1 0-1.06Z"
+                  d="M5.97 9.47a.75.75 0 0 1 1.06 0L12 14.44l4.97-4.97a.75.75 0 1 1 1.06 1.06l-5.5 5.5a.75.75 0 0 1-1.06 0l-5.5-5.5a.75.75 0 0 1 0-1.06"
                   fill="currentColor"
-                >
-                </path>
+                  fill-rule="evenodd"
+                />
               </svg>
             </span>
-            <span class="navds-accordion__header-content navds-heading navds-heading--small">
+            <span
+              class="navds-accordion__header-content navds-heading navds-heading--small"
+            >
               Legg behandling tilbake
             </span>
           </button>
@@ -74,7 +80,9 @@ exports[`Behandlingsmeny > snapshot test 1`] = `
               role="button"
               tabindex="0"
             >
-              <div class="behandlingsmeny__handling__tekst">
+              <div
+                class="behandlingsmeny__handling__tekst"
+              >
                 Til min oppgaveliste
               </div>
             </div>
@@ -83,44 +91,48 @@ exports[`Behandlingsmeny > snapshot test 1`] = `
               role="button"
               tabindex="0"
             >
-              <div class="behandlingsmeny__handling__tekst">
+              <div
+                class="behandlingsmeny__handling__tekst"
+              >
                 Til felles oppgaveliste
               </div>
             </div>
           </div>
         </div>
-        <div class="navds-accordion__item">
+        <div
+          class="navds-accordion__item"
+          data-expanded="false"
+        >
           <button
-            class="navds-accordion__header"
             aria-expanded="false"
+            class="navds-accordion__header"
             type="button"
           >
-            <span class="navds-accordion__icon-wrapper">
+            <span
+              class="navds-accordion__icon-wrapper"
+            >
               <svg
-                width="1em"
-                height="1em"
-                viewbox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                focusable="false"
-                role="img"
-                aria-labelledby="333"
-                class="navds-accordion__header-chevron"
                 aria-hidden="true"
+                class="navds-accordion__header-chevron"
+                fill="none"
+                focusable="false"
+                height="1em"
+                role="img"
+                viewBox="0 0 24 24"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <title id="333">
-                  Vis mer
-                </title>
                 <path
-                  fill-rule="evenodd"
                   clip-rule="evenodd"
-                  d="M5.97 9.47a.75.75 0 0 1 1.06 0L12 14.44l4.97-4.97a.75.75 0 1 1 1.06 1.06l-5.5 5.5a.75.75 0 0 1-1.06 0l-5.5-5.5a.75.75 0 0 1 0-1.06Z"
+                  d="M5.97 9.47a.75.75 0 0 1 1.06 0L12 14.44l4.97-4.97a.75.75 0 1 1 1.06 1.06l-5.5 5.5a.75.75 0 0 1-1.06 0l-5.5-5.5a.75.75 0 0 1 0-1.06"
                   fill="currentColor"
-                >
-                </path>
+                  fill-rule="evenodd"
+                />
               </svg>
             </span>
-            <span class="navds-accordion__header-content navds-heading navds-heading--small">
+            <span
+              class="navds-accordion__header-content navds-heading navds-heading--small"
+            >
               Avslutt behandling
             </span>
           </button>
@@ -128,14 +140,17 @@ exports[`Behandlingsmeny > snapshot test 1`] = `
             aria-hidden="true"
             class="navds-accordion__content navds-accordion__content--closed navds-body-long navds-body-long--medium"
           >
-            <div class="divider">
-            </div>
+            <div
+              class="divider"
+            />
             <div
               class="behandlingsmeny__handling"
               role="button"
               tabindex="0"
             >
-              <div class="behandlingsmeny__handling__tekst">
+              <div
+                class="behandlingsmeny__handling__tekst"
+              >
                 Ferdigbehandlet
               </div>
             </div>
@@ -144,7 +159,9 @@ exports[`Behandlingsmeny > snapshot test 1`] = `
               role="button"
               tabindex="0"
             >
-              <div class="behandlingsmeny__handling__tekst">
+              <div
+                class="behandlingsmeny__handling__tekst"
+              >
                 Behandlingen er bortfalt
               </div>
             </div>
@@ -154,5 +171,4 @@ exports[`Behandlingsmeny > snapshot test 1`] = `
     </div>
   </div>
 </div>
-
 `;

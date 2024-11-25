@@ -1,66 +1,110 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`Notat > snapshot test 1`] = `
-
 <div>
-  <div class="row notat">
-    <div class="col col-xs-4">
-      <div class="row endretDato">
-        <div class="col col-xs-12">
-          <p class="navds-body-long navds-body-long--small navds-typo--semibold">
-            Endret: 24.04.2019
+  <div
+    class="row notat"
+  >
+    <div
+      class="col col-xs-4"
+    >
+      <div
+        class="row endretDato"
+      >
+        <div
+          class="col col-xs-12"
+        >
+          <p
+            class="navds-body-long navds-body-long--small navds-typo--semibold"
+          >
+            Endret: 
+            24.04.2019
           </p>
         </div>
       </div>
-      <div class="row opprettetDato">
-        <div class="col col-xs-12">
-          <p class="navds-body-long navds-body-long--small navds-typo--semibold">
-            Opprettet: 23.04.2019
+      <div
+        class="row opprettetDato"
+      >
+        <div
+          class="col col-xs-12"
+        >
+          <p
+            class="navds-body-long navds-body-long--small navds-typo--semibold"
+          >
+            Opprettet: 
+            23.04.2019
           </p>
         </div>
       </div>
-      <div class="row forfatter">
-        <div class="col col-xs-12">
+      <div
+        class="row forfatter"
+      >
+        <div
+          class="col col-xs-12"
+        >
           LILLA HEST
         </div>
       </div>
     </div>
-    <div class="col col-xs-8">
-      <div class="row overskrift">
-        <div class="col col-xs-12">
-          <p class="navds-body-long navds-body-long--small navds-typo--semibold">
+    <div
+      class="col col-xs-8"
+    >
+      <div
+        class="row overskrift"
+      >
+        <div
+          class="col col-xs-12"
+        >
+          <p
+            class="navds-body-long navds-body-long--small navds-typo--semibold"
+          >
             Søknad
           </p>
         </div>
       </div>
-      <div class="row uredigerbarTekst">
-        <div class="col col-xs-12">
-          <p class="navds-body-long navds-body-long--small">
+      <div
+        class="row uredigerbarTekst"
+      >
+        <div
+          class="col col-xs-12"
+        >
+          <p
+            class="navds-body-long navds-body-long--small"
+          >
             Testtekst
           </p>
         </div>
       </div>
-      <div class="row">
-        <div class="knapperad">
-          <button class="navds-button navds-button--secondary navds-button--small">
-            <span class="navds-button__icon">
+      <div
+        class="row"
+      >
+        <div
+          class="knapperad"
+        >
+          <button
+            class="navds-button navds-button--secondary navds-button--small"
+          >
+            <span
+              class="navds-button__icon"
+            >
               <svg
-                width="24"
-                height="24"
-                viewbox="0 0 24 24"
                 fill="none"
+                height="24"
+                viewBox="0 0 24 24"
+                width="24"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
-                  fill-rule="evenodd"
                   clip-rule="evenodd"
                   d="M22.8353 1.16464C24.3882 2.7175 24.3882 5.23518 22.8353 6.78804L8.07288 21.5494L0.682007 24L0 23.318L2.44911 15.926L17.2115 1.16464C18.7645 -0.388214 21.2823 -0.388214 22.8353 1.16464ZM18.6175 8.19388L15.8056 5.38219L4.18826 16.9987L2.79497 21.2036L7.00155 19.809L18.6175 8.19388ZM21.4293 2.57049C20.6882 1.82935 19.5074 1.79567 18.7262 2.46943L18.6175 2.57049L17.2115 3.97634L20.0234 6.78804L21.4293 5.38219C22.1705 4.64105 22.2042 3.46036 21.5304 2.67927L21.4293 2.57049Z"
                   fill="#0067C5"
-                >
-                </path>
+                  fill-rule="evenodd"
+                />
               </svg>
             </span>
-            <span class="navds-label navds-label--small">
+            <span
+              class="navds-label navds-label--small"
+            >
               Endre
             </span>
           </button>
@@ -69,5 +113,4 @@ exports[`Notat > snapshot test 1`] = `
     </div>
   </div>
 </div>
-
 `;

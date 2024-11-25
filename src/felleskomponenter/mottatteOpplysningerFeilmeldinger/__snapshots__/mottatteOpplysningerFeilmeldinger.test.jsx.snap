@@ -1,49 +1,56 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`MottatteOpplysningerFeilmeldinger > snapshot test 1`] = `
-
 <div>
-  <div class="mottatteopplysninger_feilmeldinger navds-alert navds-alert--warning navds-alert--small">
+  <div
+    class="mottatteopplysninger_feilmeldinger navds-alert navds-alert--warning navds-alert--small"
+  >
     <svg
-      width="1em"
-      height="1em"
-      viewbox="0 0 24 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      focusable="false"
-      role="img"
-      aria-labelledby="333"
+      aria-labelledby="title-r0"
       class="navds-alert__icon"
+      fill="none"
+      focusable="false"
+      height="1em"
+      role="img"
+      viewBox="0 0 24 24"
+      width="1em"
+      xmlns="http://www.w3.org/2000/svg"
     >
-      <title id="333">
+      <title
+        id="title-r0"
+      >
         Advarsel
       </title>
       <path
-        fill-rule="evenodd"
         clip-rule="evenodd"
-        d="M12 2.25a.75.75 0 0 1 .656.387l9.527 17.25A.75.75 0 0 1 21.526 21H2.474a.75.75 0 0 1-.657-1.113l9.526-17.25A.75.75 0 0 1 12 2.25ZM12 8.75a.75.75 0 0 1 .75.75v4a.75.75 0 0 1-1.5 0v-4a.75.75 0 0 1 .75-.75Zm-1 7.75a1 1 0 1 1 2 0 1 1 0 0 1-2 0Z"
+        d="M12 2.25a.75.75 0 0 1 .656.387l9.527 17.25A.75.75 0 0 1 21.526 21H2.474a.75.75 0 0 1-.657-1.113l9.526-17.25A.75.75 0 0 1 12 2.25M12 8.75a.75.75 0 0 1 .75.75v4a.75.75 0 0 1-1.5 0v-4a.75.75 0 0 1 .75-.75m-1 7.75a1 1 0 1 1 2 0 1 1 0 0 1-2 0"
         fill="currentColor"
-      >
-      </path>
+        fill-rule="evenodd"
+      />
     </svg>
-    <div class="navds-alert__wrapper navds-body-long navds-body-long--small">
+    <div
+      class="navds-alert__wrapper navds-alert__wrapper--maxwidth navds-body-long navds-body-long--small"
+    >
       Ugyldige felter. Sjekk følgende menypunkt(er):
       <ul>
         <li>
           Soknadsperiode
         </li>
-        <li class="feilElement">
+        <li
+          class="feilElement"
+        >
           Åpen sluttdato
         </li>
         <li>
           Personlig info
         </li>
-        <li class="feilElement">
+        <li
+          class="feilElement"
+        >
           Ugyldig fnr
         </li>
       </ul>
     </div>
   </div>
 </div>
-
 `;

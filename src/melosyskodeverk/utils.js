@@ -15,7 +15,6 @@ export const erBehandlingAvSed = (sakstype, behandlingstema) => {
 };
 
 export const lovvalgsbestemmelseTilObjekt = (bestemmelseKode) => {
-  console.log("test")
   return KV.kodeTilObjekt(bestemmelseKode, MKV.Kodekombinasjoner.alleLovvalg);
 };
 

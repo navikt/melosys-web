@@ -1,79 +1,113 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`VurderingArtikkel16Vedtak > snapshot test 1`] = `
-
 <div>
-  <div class="vurderingArtikkel16Vedtak">
-    <h1 class="stegvelgertittel navds-heading navds-heading--large">
+  <div
+    class="vurderingArtikkel16Vedtak"
+  >
+    <h1
+      class="stegvelgertittel navds-heading navds-heading--large"
+    >
       Delvis innvilgelse - omfattet av norsk trygdelovgivning etter Fo 883/2004 Artikkel 16 nr. 1. i deler av søknadsperioden
     </h1>
-    <div class="row lovvalgsperiode__row">
-      <div class="col col-xs-5">
-        <p class="navds-body-long navds-body-long--small navds-typo--semibold">
+    <div
+      class="row lovvalgsperiode__row"
+    >
+      <div
+        class="col col-xs-5"
+      >
+        <p
+          class="navds-body-long navds-body-long--small navds-typo--semibold"
+        >
           Lovvalgsperiode
         </p>
       </div>
-      <div class="col col-xs-7">
-        <p class="navds-body-long navds-body-long--small navds-typo--semibold">
+      <div
+        class="col col-xs-7"
+      >
+        <p
+          class="navds-body-long navds-body-long--small navds-typo--semibold"
+        >
           Lovvalgsbestemmelse
         </p>
       </div>
     </div>
-    <div class="row">
-      <div class="col col-xs-5">
-        <time datetime="datofom">
-        </time>
-        &nbsp;-&nbsp;
-        <time datetime="datotom">
-        </time>
+    <div
+      class="row"
+    >
+      <div
+        class="col col-xs-5"
+      >
+        <time
+          datetime="datofom"
+        />
+         - 
+        <time
+          datetime="datotom"
+        />
       </div>
-      <div class="col col-xs-7">
-        <p class="navds-body-long navds-body-long--small">
-        </p>
+      <div
+        class="col col-xs-7"
+      >
+        <p
+          class="navds-body-long navds-body-long--small"
+        />
       </div>
     </div>
-    <div class="row">
-      <div class="col col-xs-12">
+    <div
+      class="row"
+    >
+      <div
+        class="col col-xs-12"
+      >
         <div>
-          <div class="row forkortLovvalgsperiode">
-            <div class="col col-xs-8">
-              <div class="navds-checkbox navds-checkbox--small">
+          <div
+            class="row forkortLovvalgsperiode"
+          >
+            <div
+              class="col col-xs-8"
+            >
+              <div
+                class="navds-checkbox navds-checkbox--small"
+              >
                 <input
-                  name="333"
+                  aria-labelledby="rd"
                   class="navds-checkbox__input"
-                  id="333"
+                  id="ccbc477a-49ca-498b-8e82-e50682cd8cf3"
+                  name="forkortLovvalgsperiode"
                   type="checkbox"
-                  aria-checked
-                  aria-labelledby="333"
-                  value
-                >
+                  value=""
+                />
                 <label
-                  for="333"
                   class="navds-checkbox__label"
+                  for="ccbc477a-49ca-498b-8e82-e50682cd8cf3"
                 >
-                  <span class="navds-checkbox__icon">
+                  <span
+                    class="navds-checkbox__icon"
+                  >
                     <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="0.8125rem"
-                      height="0.625rem"
-                      viewbox="0 0 13 10"
+                      aria-hidden="true"
                       fill="none"
                       focusable="false"
+                      height="0.625rem"
                       role="img"
-                      aria-hidden="true"
+                      viewBox="0 0 13 10"
+                      width="0.8125rem"
+                      xmlns="http://www.w3.org/2000/svg"
                     >
                       <path
                         d="M4.03524 6.41478L10.4752 0.404669C11.0792 -0.160351 12.029 -0.130672 12.5955 0.47478C13.162 1.08027 13.1296 2.03007 12.5245 2.59621L5.02111 9.59934C4.74099 9.85904 4.37559 10 4.00025 10C3.60651 10 3.22717 9.84621 2.93914 9.56111L0.439143 7.06111C-0.146381 6.47558 -0.146381 5.52542 0.439143 4.93989C1.02467 4.35437 1.97483 4.35437 2.56036 4.93989L4.03524 6.41478Z"
                         fill="currentColor"
-                      >
-                      </path>
+                      />
                     </svg>
                   </span>
-                  <span class="navds-checkbox__content">
+                  <span
+                    class="navds-checkbox__content"
+                  >
                     <span
-                      id="333"
                       aria-hidden="true"
                       class="navds-checkbox__label-text navds-body-short navds-body-short--small"
+                      id="rd"
                     >
                       Lovvalget innvilges for en kortere periode
                     </span>
@@ -85,81 +119,113 @@ exports[`VurderingArtikkel16Vedtak > snapshot test 1`] = `
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col col-xs-7">
-      </div>
+    <div
+      class="row"
+    >
+      <div
+        class="col col-xs-7"
+      />
     </div>
-    <div class="row">
-      <div class="col col-xs-7">
-        <div class="melosys-textarea navds-form-field navds-form-field--small">
+    <div
+      class="row"
+    >
+      <div
+        class="col col-xs-7"
+      >
+        <div
+          class="melosys-textarea navds-form-field navds-form-field--small"
+        >
           <label
-            for="333"
             class="navds-form-field__label navds-label navds-label--small"
+            for="textarea-rf"
           >
             Fritekstfelt til begrunnelse
           </label>
           <textarea
+            aria-describedby="rg"
+            class="navds-textarea__input navds-body-short navds-body-short--small"
+            id="textarea-rf"
+            name="vedtaksbrevFritekst"
             rows="2"
             style="--__ac-textarea-height: -4px; overflow: hidden;"
             textareaclass="skjemaelement__input input--fullbredde"
-            name="333"
-            id="333"
-            class="navds-textarea__input navds-body-short navds-body-short--small"
-            aria-describedby="333"
-          >
-          </textarea>
+          />
           <textarea
             aria-hidden="true"
             class="navds-textarea__input navds-body-short navds-body-short--small"
-            readonly
-            tabindex="-1"
+            readonly=""
             style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0);"
-          >
-          </textarea>
+            tabindex="-1"
+          />
           <span
-            id="333"
             class="navds-sr-only"
+            id="rg"
           >
             Tekstområde med plass til 500 tegn.
           </span>
-          <p class="navds-textarea__counter navds-body-short navds-body-short--small">
+          <p
+            class="navds-textarea__counter navds-body-short navds-body-short--small"
+          >
             500 tegn igjen
           </p>
           <div
-            class="navds-form-field__error"
-            id="333"
-            aria-relevant="additions removals"
             aria-live="polite"
-          >
-          </div>
+            aria-relevant="additions removals"
+            class="navds-form-field__error"
+            id="textarea-error-rf"
+          />
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col col-xs-10">
-        <div class="dokumentliste">
-          <table class="navds-table navds-table--small">
-            <thead class="navds-table__header">
-              <tr class="navds-table__row navds-table__row--shade-on-hover">
-                <th class="navds-table__header-cell navds-label navds-label--small">
+    <div
+      class="row"
+    >
+      <div
+        class="col col-xs-10"
+      >
+        <div
+          class="dokumentliste"
+        >
+          <table
+            class="navds-table navds-table--small"
+          >
+            <thead
+              class="navds-table__header"
+            >
+              <tr
+                class="navds-table__row navds-table__row--shade-on-hover"
+              >
+                <th
+                  class="navds-table__header-cell navds-label navds-label--small"
+                >
                   Forhåndsvisning av brev
                 </th>
-                <th class="navds-table__header-cell navds-label navds-label--small">
+                <th
+                  class="navds-table__header-cell navds-label navds-label--small"
+                >
                   Mottaker
                 </th>
               </tr>
             </thead>
-            <tbody class="navds-table__body">
-              <tr class="navds-table__row navds-table__row--shade-on-hover">
-                <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+            <tbody
+              class="navds-table__body"
+            >
+              <tr
+                class="navds-table__row navds-table__row--shade-on-hover"
+              >
+                <td
+                  class="navds-table__data-cell navds-body-short navds-body-short--small"
+                >
                   <a
-                    href="#"
                     class="navds-link navds-link--action"
+                    href="#"
                   >
                     Innvilgelse yrkesaktiv (åpnes i ny fane)
                   </a>
                 </td>
-                <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+                <td
+                  class="navds-table__data-cell navds-body-short navds-body-short--small"
+                >
                   BRUKER
                 </td>
               </tr>
@@ -168,33 +234,48 @@ exports[`VurderingArtikkel16Vedtak > snapshot test 1`] = `
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col col-xs-7">
-        <div class="stegKnapper">
-          <button class="stegKnapper__bekreft navds-button navds-button--primary navds-button--small">
-            <span class="navds-label navds-label--small">
+    <div
+      class="row"
+    >
+      <div
+        class="col col-xs-7"
+      >
+        <div
+          class="stegKnapper"
+        >
+          <button
+            class="stegKnapper__bekreft navds-button navds-button--primary navds-button--small"
+          >
+            <span
+              class="navds-label navds-label--small"
+            >
               Fatt vedtak
             </span>
           </button>
-          <button class="stegKnapper__tilbake navds-button navds-button--tertiary navds-button--small">
-            <span class="navds-button__icon">
+          <button
+            class="stegKnapper__tilbake navds-button navds-button--tertiary navds-button--small"
+          >
+            <span
+              class="navds-button__icon"
+            >
               <svg
-                width="16"
-                height="14"
-                viewbox="0 0 16 14"
                 fill="none"
+                height="14"
+                viewBox="0 0 16 14"
+                width="16"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
-                  fill-rule="evenodd"
                   clip-rule="evenodd"
                   d="M16 7.66732L2.47 7.66732L7.33333 12.6976L6.41697 13.6673L0 7.00065L6.41697 0.333984L7.33333 1.30368L2.47 6.33398L16 6.33398V7.66732Z"
                   fill="#0067C5"
-                >
-                </path>
+                  fill-rule="evenodd"
+                />
               </svg>
             </span>
-            <span class="navds-label navds-label--small">
+            <span
+              class="navds-label navds-label--small"
+            >
               Tilbake
             </span>
           </button>
@@ -203,5 +284,4 @@ exports[`VurderingArtikkel16Vedtak > snapshot test 1`] = `
     </div>
   </div>
 </div>
-
 `;
