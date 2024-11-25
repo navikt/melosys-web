@@ -183,7 +183,7 @@ exports[`vurderingArtikkel13_2b > snapshot test dersom Norge ikke er valgt 1`] =
               Velg land:
             </label>
             <input
-              list="datalist-11dbbd7c-815a-4a70-bd9e-18799947ae53"
+              list="333"
               bredde="fullbredde"
               id="333"
               type="text"

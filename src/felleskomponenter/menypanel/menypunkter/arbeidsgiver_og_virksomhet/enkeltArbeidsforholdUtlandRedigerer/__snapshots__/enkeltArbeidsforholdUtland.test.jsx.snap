@@ -251,7 +251,7 @@ exports[`EnkeltArbeidsforholdUtland > snapshot test 1`] = `
                 Land
               </label>
               <input
-                list="datalist-5065f37c-212b-4a65-83c0-c6552555cb3b"
+                list="333"
                 id="333"
                 type="text"
                 class="navds-text-field__input navds-body-short navds-body-short--small"

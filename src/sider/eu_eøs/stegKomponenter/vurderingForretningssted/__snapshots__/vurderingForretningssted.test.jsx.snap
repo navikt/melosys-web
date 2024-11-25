@@ -25,7 +25,7 @@ exports[`VurderingForretningssted > snapshot test 1`] = `
                 Har forretningssted i
               </label>
               <input
-                list="datalist-e59a941f-945d-48a8-bebc-44134255a94b"
+                list="333"
                 bredde="fullbredde"
                 id="333"
                 type="text"

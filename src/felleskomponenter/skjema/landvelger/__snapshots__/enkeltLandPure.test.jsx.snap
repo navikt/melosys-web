@@ -12,7 +12,7 @@ exports[`EnkeltLandPure > snapshot test 1`] = `
         Test
       </label>
       <input
-        list="datalist-8b9e65be-bc01-400f-9b79-5d5a9e533b6c"
+        list="333"
         bredde="fullbredde"
         id="333"
         type="text"
