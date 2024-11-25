@@ -1,34 +1,33 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`brukernavnskjema > snapshot test 1`] = `
+
 <div>
-  <div
-    class="brukerNavnSkjema"
-  >
-    <div
-      class="melosys-textfield brukerNavnSkjema__fetTekst navds-form-field navds-form-field--small"
-    >
+  <div class="brukerNavnSkjema">
+    <div class="melosys-textfield brukerNavnSkjema__fetTekst navds-form-field navds-form-field--small">
       <label
+        for="333"
         class="navds-form-field__label navds-label navds-label--small"
-        for="75309125-4167-4aae-95b0-c6881914bf63"
       >
         Brukers f.nr. eller d-nr.
       </label>
       <input
-        class="navds-text-field__input navds-body-short navds-body-short--small"
-        id="75309125-4167-4aae-95b0-c6881914bf63"
+        name="333"
         meta="[object Object]"
-        name="brukerID"
+        id="333"
         type="text"
-        value=""
-      />
+        class="navds-text-field__input navds-body-short navds-body-short--small"
+        value
+      >
       <div
-        aria-live="polite"
-        aria-relevant="additions removals"
         class="navds-form-field__error"
-        id="textField-error-r0"
-      />
+        id="333"
+        aria-relevant="additions removals"
+        aria-live="polite"
+      >
+      </div>
     </div>
   </div>
 </div>
+
 `;

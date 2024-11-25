@@ -1,165 +1,121 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`VurderingArtikkel16MottaSvar > snapshot test 1`] = `
+
 <div>
-  <div
-    class="vurderingArtikkel16MottaSvar"
-  >
-    <h1
-      class="stegvelgertittel navds-heading navds-heading--large"
-    >
+  <div class="vurderingArtikkel16MottaSvar">
+    <h1 class="stegvelgertittel navds-heading navds-heading--large">
       Svar på anmodning om unntak, etter artikkel 16, nr. 1
     </h1>
-    <div
-      class="row"
-    >
-      <div
-        class="col col-xs-4"
-      >
-        <p
-          class="navds-body-long navds-body-long--small navds-typo--semibold"
-        >
+    <div class="row">
+      <div class="col col-xs-4">
+        <p class="navds-body-long navds-body-long--small navds-typo--semibold">
           Land
         </p>
-        <p
-          class="navds-body-long navds-body-long--small"
-        />
+        <p class="navds-body-long navds-body-long--small">
+        </p>
       </div>
     </div>
-    <div
-      class="row"
-    >
-      <div
-        class="col col-xs-12"
-      >
-        <p
-          class="navds-body-long navds-body-long--small navds-typo--semibold"
-        >
+    <div class="row">
+      <div class="col col-xs-12">
+        <p class="navds-body-long navds-body-long--small navds-typo--semibold">
           Søknadsperiode
         </p>
       </div>
-      <div
-        class="col soknadsperiode__innhold col-xs-12"
-      >
-        <time
-          datetime="2024-03-12"
-        >
+      <div class="col soknadsperiode__innhold col-xs-12">
+        <time datetime="2024-03-12">
           12.03.2024
         </time>
-         - 
-        <time
-          datetime="2024-03-31"
-        >
+        &nbsp;-&nbsp;
+        <time datetime="2024-03-31">
           31.03.2024
         </time>
-        <p
-          class="navds-body-long navds-body-long--small"
-        >
+        <p class="navds-body-long navds-body-long--small">
           0 måneder og 20 dager
         </p>
       </div>
     </div>
     <form
-      id="anmodningSvar"
-      name="anmodningSvar"
+      name="333"
+      id="333"
     >
-      <div
-        class="row svarFraMyndighetRow"
-      >
-        <div
-          class="col col-xs-6"
-        >
+      <div class="row svarFraMyndighetRow">
+        <div class="col col-xs-6">
           <fieldset
+            id="333"
             class="navds-radio-group navds-radio-group--small navds-fieldset navds-fieldset--small"
-            id="0e8b4fb3-3c28-483b-a5da-c2be582ff5ff"
           >
-            <legend
-              class="navds-fieldset__legend navds-label navds-label--small"
-            >
+            <legend class="navds-fieldset__legend navds-label navds-label--small">
               Svar fra myndighetene
             </legend>
-            <div
-              class="navds-radio-buttons"
-            >
-              <div
-                class="navds-radio navds-radio--small"
-              >
+            <div class="navds-radio-buttons">
+              <div class="navds-radio navds-radio--small">
                 <input
-                  aria-labelledby="r1s"
-                  checked=""
-                  class="navds-radio__input"
-                  id="radio-r1r"
-                  name="anmodningsperiodeSvarType-radiogroup"
+                  id="333"
+                  name="333"
                   type="radio"
+                  aria-labelledby="333"
+                  class="navds-radio__input"
                   value="INNVILGELSE"
-                />
-                <label
-                  class="navds-radio__label"
-                  for="radio-r1r"
+                  checked
                 >
-                  <span
-                    class="navds-radio__content"
-                  >
+                <label
+                  for="333"
+                  class="navds-radio__label"
+                >
+                  <span class="navds-radio__content">
                     <span
+                      id="333"
                       aria-hidden="true"
                       class="navds-body-short navds-body-short--small"
-                      id="r1s"
                     >
                       Innvilgelse
                     </span>
                   </span>
                 </label>
               </div>
-              <div
-                class="navds-radio navds-radio--small"
-              >
+              <div class="navds-radio navds-radio--small">
                 <input
-                  aria-labelledby="r1v"
-                  class="navds-radio__input"
-                  id="radio-r1u"
-                  name="anmodningsperiodeSvarType-radiogroup"
+                  id="333"
+                  name="333"
                   type="radio"
+                  aria-labelledby="333"
+                  class="navds-radio__input"
                   value="DELVIS_INNVILGELSE"
-                />
-                <label
-                  class="navds-radio__label"
-                  for="radio-r1u"
                 >
-                  <span
-                    class="navds-radio__content"
-                  >
+                <label
+                  for="333"
+                  class="navds-radio__label"
+                >
+                  <span class="navds-radio__content">
                     <span
+                      id="333"
                       aria-hidden="true"
                       class="navds-body-short navds-body-short--small"
-                      id="r1v"
                     >
                       Delvis innvilgelse
                     </span>
                   </span>
                 </label>
               </div>
-              <div
-                class="navds-radio navds-radio--small"
-              >
+              <div class="navds-radio navds-radio--small">
                 <input
-                  aria-labelledby="r22"
-                  class="navds-radio__input"
-                  id="radio-r21"
-                  name="anmodningsperiodeSvarType-radiogroup"
+                  id="333"
+                  name="333"
                   type="radio"
+                  aria-labelledby="333"
+                  class="navds-radio__input"
                   value="AVSLAG"
-                />
-                <label
-                  class="navds-radio__label"
-                  for="radio-r21"
                 >
-                  <span
-                    class="navds-radio__content"
-                  >
+                <label
+                  for="333"
+                  class="navds-radio__label"
+                >
+                  <span class="navds-radio__content">
                     <span
+                      id="333"
                       aria-hidden="true"
                       class="navds-body-short navds-body-short--small"
-                      id="r22"
                     >
                       Avslag
                     </span>
@@ -168,56 +124,49 @@ exports[`VurderingArtikkel16MottaSvar > snapshot test 1`] = `
               </div>
             </div>
             <div
-              aria-live="polite"
+              id="333"
               aria-relevant="additions removals"
+              aria-live="polite"
               class="navds-fieldset__error"
-              id="fieldset-error-r1q"
-            />
+            >
+            </div>
           </fieldset>
         </div>
       </div>
     </form>
-    <div
-      class="stegKnapper"
-    >
+    <div class="stegKnapper">
       <button
         class="stegKnapper__bekreft navds-button navds-button--primary navds-button--small navds-button--disabled"
-        disabled=""
+        disabled
       >
-        <span
-          class="navds-label navds-label--small"
-        >
+        <span class="navds-label navds-label--small">
           Bekreft og fortsett
         </span>
       </button>
-      <button
-        class="stegKnapper__tilbake navds-button navds-button--tertiary navds-button--small"
-      >
-        <span
-          class="navds-button__icon"
-        >
+      <button class="stegKnapper__tilbake navds-button navds-button--tertiary navds-button--small">
+        <span class="navds-button__icon">
           <svg
-            fill="none"
-            height="14"
-            viewBox="0 0 16 14"
             width="16"
+            height="14"
+            viewbox="0 0 16 14"
+            fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
             <path
+              fill-rule="evenodd"
               clip-rule="evenodd"
               d="M16 7.66732L2.47 7.66732L7.33333 12.6976L6.41697 13.6673L0 7.00065L6.41697 0.333984L7.33333 1.30368L2.47 6.33398L16 6.33398V7.66732Z"
               fill="#0067C5"
-              fill-rule="evenodd"
-            />
+            >
+            </path>
           </svg>
         </span>
-        <span
-          class="navds-label navds-label--small"
-        >
+        <span class="navds-label navds-label--small">
           Tilbake
         </span>
       </button>
     </div>
   </div>
 </div>
+
 `;

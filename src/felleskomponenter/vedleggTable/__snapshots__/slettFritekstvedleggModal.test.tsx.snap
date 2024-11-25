@@ -1,56 +1,39 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`slettFritekstvedleggModal > snapshot test 1`] = `
+
 <div>
   <dialog
-    aria-labelledby="r0"
     class="navds-modal navds-modal--polyfilled navds-modal--autowidth"
-    open=""
+    aria-labelledby="333"
     role="dialog"
     style="z-index: 100149; top: 384px;"
+    open
   >
-    <div
-      class="navds-modal__header"
-    >
+    <div class="navds-modal__header">
       <h1
+        id="333"
         class="navds-heading navds-heading--medium"
-        id="r0"
       >
         Slett fritekstvedlegg?
       </h1>
     </div>
-    <div
-      class="navds-modal__body"
-    >
-      <p
-        class="navds-body-long navds-body-long--small"
-      >
+    <div class="navds-modal__body">
+      <p class="navds-body-long navds-body-long--small">
         Er du sikker på at du vil slette fritekstvedlegget?
-        <br />
-         Dokumentet vil bli permanent slettet fra Melosys
+        <br>
+        Dokumentet vil bli permanent slettet fra Melosys
       </p>
     </div>
-    <div
-      class="navds-modal__footer"
-    >
-      <div
-        class="container__knapperad"
-      >
-        <button
-          class="navds-button navds-button--primary navds-button--small"
-        >
-          <span
-            class="navds-label navds-label--small"
-          >
+    <div class="navds-modal__footer">
+      <div class="container__knapperad">
+        <button class="navds-button navds-button--primary navds-button--small">
+          <span class="navds-label navds-label--small">
             Ja, slett
           </span>
         </button>
-        <button
-          class="navds-button navds-button--tertiary navds-button--small"
-        >
-          <span
-            class="navds-label navds-label--small"
-          >
+        <button class="navds-button navds-button--tertiary navds-button--small">
+          <span class="navds-label navds-label--small">
             Avbryt
           </span>
         </button>
@@ -60,10 +43,13 @@ exports[`slettFritekstvedleggModal > snapshot test 1`] = `
   <div
     class="backdrop"
     style="z-index: 100148;"
-  />
+  >
+  </div>
   <div
     class="_dialog_overlay"
     style="z-index: 100147;"
-  />
+  >
+  </div>
 </div>
+
 `;

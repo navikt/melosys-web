@@ -1,128 +1,108 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`SideDialog > snapshot test 1`] = `
+
 <div>
-  <div
-    class="dialog"
-  >
+  <div class="dialog">
     <aside>
-      <div
-        class="navds-tabs navds-tabs--medium"
-      >
+      <div class="navds-tabs navds-tabs--medium">
         <nav>
-          <div
-            class="navds-tabs__tablist-wrapper"
-          >
+          <div class="navds-tabs__tablist-wrapper">
             <div
-              aria-orientation="horizontal"
               class="navds-tabs__tablist"
               role="tablist"
+              aria-orientation="horizontal"
             >
               <button
-                aria-controls="tabs-r0--tabpanel-dokumenter"
-                aria-selected="true"
                 class="navds-tabs__tab navds-tabs__tab--medium navds-tabs__tab-icon--left"
-                data-index="0"
-                data-state="active"
-                id="tabs-r0--tab-dokumenter"
                 role="tab"
-                tabindex="0"
                 type="button"
+                aria-selected="true"
+                data-state="active"
+                tabindex="0"
+                aria-controls="tabs-r0--tabpanel-dokumenter"
+                id="333"
+                data-index="0"
               >
-                <span
-                  class="navds-tabs__tab-inner navds-body-short navds-body-short--medium"
-                >
-                  <span
-                    aria-hidden="true"
-                  />
+                <span class="navds-tabs__tab-inner navds-body-short navds-body-short--medium">
+                  <span aria-hidden="true">
+                  </span>
                   <span>
                     Dokumenter
                   </span>
                 </span>
               </button>
               <button
-                aria-controls="tabs-r0--tabpanel-notat"
-                aria-selected="false"
                 class="navds-tabs__tab navds-tabs__tab--medium navds-tabs__tab-icon--left"
-                data-index="1"
-                data-state="inactive"
-                id="tabs-r0--tab-notat"
                 role="tab"
-                tabindex="-1"
                 type="button"
+                aria-selected="false"
+                data-state="inactive"
+                tabindex="-1"
+                aria-controls="tabs-r0--tabpanel-notat"
+                id="333"
+                data-index="1"
               >
-                <span
-                  class="navds-tabs__tab-inner navds-body-short navds-body-short--medium"
-                >
-                  <span
-                    aria-hidden="true"
-                  />
+                <span class="navds-tabs__tab-inner navds-body-short navds-body-short--medium">
+                  <span aria-hidden="true">
+                  </span>
                   <span>
                     Behandlingsnotat
                   </span>
                 </span>
               </button>
               <button
-                aria-controls="tabs-r0--tabpanel-brevbestilling"
-                aria-selected="false"
                 class="navds-tabs__tab navds-tabs__tab--medium navds-tabs__tab-icon--left"
-                data-index="2"
-                data-state="inactive"
-                id="tabs-r0--tab-brevbestilling"
                 role="tab"
-                tabindex="-1"
                 type="button"
+                aria-selected="false"
+                data-state="inactive"
+                tabindex="-1"
+                aria-controls="tabs-r0--tabpanel-brevbestilling"
+                id="333"
+                data-index="2"
               >
-                <span
-                  class="navds-tabs__tab-inner navds-body-short navds-body-short--medium"
-                >
-                  <span
-                    aria-hidden="true"
-                  />
+                <span class="navds-tabs__tab-inner navds-body-short navds-body-short--medium">
+                  <span aria-hidden="true">
+                  </span>
                   <span>
                     Send brev
                   </span>
                 </span>
               </button>
               <button
-                aria-controls="tabs-r0--tabpanel-sedbestilling"
-                aria-selected="false"
                 class="navds-tabs__tab navds-tabs__tab--medium navds-tabs__tab-icon--left"
-                data-index="3"
-                data-state="inactive"
-                id="tabs-r0--tab-sedbestilling"
                 role="tab"
-                tabindex="-1"
                 type="button"
+                aria-selected="false"
+                data-state="inactive"
+                tabindex="-1"
+                aria-controls="tabs-r0--tabpanel-sedbestilling"
+                id="333"
+                data-index="3"
               >
-                <span
-                  class="navds-tabs__tab-inner navds-body-short navds-body-short--medium"
-                >
-                  <span
-                    aria-hidden="true"
-                  />
+                <span class="navds-tabs__tab-inner navds-body-short navds-body-short--medium">
+                  <span aria-hidden="true">
+                  </span>
                   <span>
                     Opprett ny BUC
                   </span>
                 </span>
               </button>
               <button
-                aria-controls="tabs-r0--tabpanel-besvarsed"
-                aria-selected="false"
                 class="navds-tabs__tab navds-tabs__tab--medium navds-tabs__tab-icon--left"
-                data-index="4"
-                data-state="inactive"
-                id="tabs-r0--tab-besvarsed"
                 role="tab"
-                tabindex="-1"
                 type="button"
+                aria-selected="false"
+                data-state="inactive"
+                tabindex="-1"
+                aria-controls="tabs-r0--tabpanel-besvarsed"
+                id="333"
+                data-index="4"
               >
-                <span
-                  class="navds-tabs__tab-inner navds-body-short navds-body-short--medium"
-                >
-                  <span
-                    aria-hidden="true"
-                  />
+                <span class="navds-tabs__tab-inner navds-body-short navds-body-short--medium">
+                  <span aria-hidden="true">
+                  </span>
                   <span>
                     SED-utveksling
                   </span>
@@ -132,83 +112,59 @@ exports[`SideDialog > snapshot test 1`] = `
           </div>
         </nav>
         <div
-          aria-labelledby="tabs-r0--tab-dokumenter"
           class="navds-tabs__tabpanel"
-          data-state="active"
-          id="tabs-r0--tabpanel-dokumenter"
           role="tabpanel"
           tabindex="0"
+          aria-labelledby="333"
+          id="333"
+          data-state="active"
         >
           <div>
-            <div
-              class="sideDialogDokumenter"
-            >
+            <div class="sideDialogDokumenter">
               <table
                 aria-label="Liste over dokumenter knyttet til saken"
                 class="navds-table navds-table--small"
               >
-                <thead
-                  class="navds-table__header"
-                >
-                  <tr
-                    class="navds-table__row navds-table__row--shade-on-hover"
-                  >
+                <thead class="navds-table__header">
+                  <tr class="navds-table__row navds-table__row--shade-on-hover">
                     <th
+                      class="navds-table__header-cell navds-label navds-label--small"
                       aria-label="Mottaksretning"
-                      class="navds-table__header-cell navds-label navds-label--small"
-                    />
-                    <th
-                      class="navds-table__header-cell navds-label navds-label--small"
                     >
+                    </th>
+                    <th class="navds-table__header-cell navds-label navds-label--small">
                       Dokument
                     </th>
-                    <th
-                      class="navds-table__header-cell navds-label navds-label--small"
-                    >
+                    <th class="navds-table__header-cell navds-label navds-label--small">
                       Avsender/mottaker
                     </th>
-                    <th
-                      class="navds-table__header-cell navds-label navds-label--small"
-                    >
+                    <th class="navds-table__header-cell navds-label navds-label--small">
                       Dato
                     </th>
                   </tr>
                 </thead>
-                <tbody
-                  class="navds-table__body"
-                >
-                  <tr
-                    class="navds-table__row navds-table__row--shade-on-hover"
-                  >
-                    <td
-                      class="navds-table__data-cell mottaksretning navds-body-short navds-body-short--small"
-                    >
-                      <span
-                        class="navds-tag navds-tag--info navds-tag--small navds-body-short navds-body-short--small"
-                      >
+                <tbody class="navds-table__body">
+                  <tr class="navds-table__row navds-table__row--shade-on-hover">
+                    <td class="navds-table__data-cell mottaksretning navds-body-short navds-body-short--small">
+                      <span class="navds-tag navds-tag--info navds-tag--small navds-body-short navds-body-short--small">
                         inn
                       </span>
                     </td>
-                    <td
-                      class="navds-table__data-cell navds-body-short navds-body-short--small"
-                    >
+                    <td class="navds-table__data-cell navds-body-short navds-body-short--small">
                       <span>
                         <a
-                          class="navds-link navds-link--action"
                           href="#"
+                          class="navds-link navds-link--action"
                         >
                           tittel (åpnes i ny fane)
                         </a>
                       </span>
                     </td>
-                    <td
-                      class="navds-table__data-cell navds-body-short navds-body-short--small"
-                    >
+                    <td class="navds-table__data-cell navds-body-short navds-body-short--small">
                       avsendernavn
                     </td>
-                    <td
-                      class="navds-table__data-cell navds-body-short navds-body-short--small"
-                    />
+                    <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -216,43 +172,48 @@ exports[`SideDialog > snapshot test 1`] = `
           </div>
         </div>
         <div
-          aria-labelledby="tabs-r0--tab-notat"
           class="navds-tabs__tabpanel"
-          data-state="inactive"
-          hidden=""
-          id="tabs-r0--tabpanel-notat"
           role="tabpanel"
           tabindex="0"
-        />
+          aria-labelledby="333"
+          id="333"
+          hidden
+          data-state="inactive"
+        >
+        </div>
         <div
-          aria-labelledby="tabs-r0--tab-brevbestilling"
           class="navds-tabs__tabpanel"
-          data-state="inactive"
-          hidden=""
-          id="tabs-r0--tabpanel-brevbestilling"
           role="tabpanel"
           tabindex="0"
-        />
+          aria-labelledby="333"
+          id="333"
+          hidden
+          data-state="inactive"
+        >
+        </div>
         <div
-          aria-labelledby="tabs-r0--tab-sedbestilling"
           class="navds-tabs__tabpanel"
-          data-state="inactive"
-          hidden=""
-          id="tabs-r0--tabpanel-sedbestilling"
           role="tabpanel"
           tabindex="0"
-        />
+          aria-labelledby="333"
+          id="333"
+          hidden
+          data-state="inactive"
+        >
+        </div>
         <div
-          aria-labelledby="tabs-r0--tab-besvarsed"
           class="navds-tabs__tabpanel"
-          data-state="inactive"
-          hidden=""
-          id="tabs-r0--tabpanel-besvarsed"
           role="tabpanel"
           tabindex="0"
-        />
+          aria-labelledby="333"
+          id="333"
+          hidden
+          data-state="inactive"
+        >
+        </div>
       </div>
     </aside>
   </div>
 </div>
+
 `;

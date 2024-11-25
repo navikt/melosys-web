@@ -1,62 +1,45 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`ArbeidsforholdNorgeListe > snapshot test 1`] = `
+
 <div>
-  <div
-    class="innerArbeidsforholdNorgeListe"
-  >
-    <div
-      class="redigerbartElement editerbart__element"
-    >
-      <h2
-        class="navds-heading navds-heading--small navds-typo--spacing"
-      >
-        <div
-          class="heading-margin"
-        >
-          <div
-            class="editerbart-element__legend editerbart-element__legend--understrek"
-          >
-            <span
-              class="editerbart-element__legend__tittel-container"
-            >
-              <span
-                class="editerbart-element__legend__tittel-container__tittelikon"
-              >
-                <span />
+  <div class="innerArbeidsforholdNorgeListe">
+    <div class="redigerbartElement editerbart__element">
+      <h2 class="navds-heading navds-heading--small navds-typo--spacing">
+        <div class="heading-margin">
+          <div class="editerbart-element__legend editerbart-element__legend--understrek">
+            <span class="editerbart-element__legend__tittel-container">
+              <span class="editerbart-element__legend__tittel-container__tittelikon">
+                <span>
+                </span>
               </span>
-              <h1
-                class="editerbart-element__legend__tittel-container__tittel navds-heading navds-heading--small"
-              >
+              <h1 class="editerbart-element__legend__tittel-container__tittel navds-heading navds-heading--small">
                 tittel
               </h1>
             </span>
-            <span
-              class="editerbart-element__legend__symboler"
-            >
+            <span class="editerbart-element__legend__symboler">
               <button
-                aria-label="Slett"
-                class="ikon-knapp navds-button navds-button--tertiary navds-button--small navds-button--icon-only"
-                title="Slett"
                 type="button"
+                aria-label="Slett"
+                title="Slett"
+                class="ikon-knapp navds-button navds-button--tertiary navds-button--small navds-button--icon-only"
               >
-                <span
-                  class="navds-button__icon"
-                >
+                <span class="navds-button__icon">
                   <svg
-                    class="ikon"
-                    fill="none"
-                    height="24"
-                    viewBox="0 0 22 24"
                     width="22"
+                    height="24"
+                    viewbox="0 0 22 24"
+                    fill="none"
                     xmlns="http://www.w3.org/2000/svg"
+                    class="ikon"
                   >
                     <path
+                      fill-rule="evenodd"
                       clip-rule="evenodd"
                       d="M11 0C13.4189 0 15.4366 1.71767 15.8999 3.99981L22 4V6H20V20C20 22.2091 18.2091 24 16 24H6C3.79086 24 2 22.2091 2 20V6H0V4L6.10006 3.99981C6.5634 1.71767 8.58111 0 11 0ZM8.17004 4H8.66856H8.70601H9.26735H12.7327H13.2598H13.3079H13.829L13.7533 3.80669C13.6245 3.50979 13.449 3.23782 13.2362 3C12.7661 2.47481 12.1137 2.11621 11.3786 2.02365L11.1763 2.00509L11 2C10.1115 2 9.31326 2.38625 8.76394 3C8.54865 3.24054 8.3716 3.51603 8.24235 3.8169L8.17004 4ZM4 6H18V20L17.9945 20.1493C17.9182 21.1841 17.0544 22 16 22H6L5.85074 21.9945C4.81588 21.9182 4 21.0544 4 20V6ZM9 9V19H7V9H9ZM15 9V19H13V9H15Z"
                       fill="#0067C5"
-                      fill-rule="evenodd"
-                    />
+                    >
+                    </path>
                   </svg>
                 </span>
               </button>
@@ -64,83 +47,67 @@ exports[`ArbeidsforholdNorgeListe > snapshot test 1`] = `
           </div>
         </div>
       </h2>
-      <div
-        class="padding-left"
-      >
-        <div
-          class="row enkeltArbeidsforholdNorgeRedigerer"
-        >
-          <div
-            class="col col-xs-5"
-          >
+      <div class="padding-left">
+        <div class="row enkeltArbeidsforholdNorgeRedigerer">
+          <div class="col col-xs-5">
             <div>
-              <div
-                class="melosys-textfield  navds-form-field navds-form-field--small"
-              >
+              <div class="melosys-textfield  navds-form-field navds-form-field--small">
                 <label
+                  for="333"
                   class="navds-form-field__label navds-label navds-label--small"
-                  for="0bc7a350-e546-4f83-bf5f-cd34c0aac2e6"
                 >
-                  <p
-                    class="navds-body-long navds-body-long--small navds-typo--semibold"
-                  >
+                  <p class="navds-body-long navds-body-long--small navds-typo--semibold">
                     Organisasjonsnummer
                   </p>
                 </label>
                 <input
-                  class="navds-text-field__input navds-body-short navds-body-short--small"
-                  id="0bc7a350-e546-4f83-bf5f-cd34c0aac2e6"
+                  id="333"
                   placeholder="Skriv inn..."
                   type="text"
-                  value=""
-                />
+                  class="navds-text-field__input navds-body-short navds-body-short--small"
+                  value
+                >
                 <div
-                  aria-live="polite"
-                  aria-relevant="additions removals"
                   class="navds-form-field__error"
-                  id="textField-error-r0"
-                />
+                  id="333"
+                  aria-relevant="additions removals"
+                  aria-live="polite"
+                >
+                </div>
               </div>
             </div>
           </div>
-          <div
-            class="col col-xs-7"
-          />
+          <div class="col col-xs-7">
+          </div>
         </div>
       </div>
     </div>
-    <div
-      class="leggTilKnapp"
-    >
-      <button
-        class="navds-button navds-button--tertiary navds-button--small"
-      >
-        <span
-          class="navds-button__icon"
-        >
+    <div class="leggTilKnapp">
+      <button class="navds-button navds-button--tertiary navds-button--small">
+        <span class="navds-button__icon">
           <svg
-            class="ikon"
-            fill="none"
-            height="20"
-            viewBox="-1 0 22 23"
             width="20"
+            height="20"
+            viewbox="-1 0 22 23"
+            fill="none"
             xmlns="http://www.w3.org/2000/svg"
+            class="ikon"
           >
             <path
+              fill-rule="evenodd"
               clip-rule="evenodd"
               d="M10 0C15.5228 0 20 4.47715 20 10C20 15.5228 15.5228 20 10 20C4.47715 20 0 15.5228 0 10C0 4.47715 4.47715 0 10 0ZM10 1.66667C5.39763 1.66667 1.66667 5.39763 1.66667 10C1.66667 14.6024 5.39763 18.3333 10 18.3333C14.6024 18.3333 18.3333 14.6024 18.3333 10C18.3333 5.39763 14.6024 1.66667 10 1.66667ZM10.8333 5V9.16667H15V10.8333H10.8333V15H9.16667V10.8333H5V9.16667H9.16667V5H10.8333Z"
               fill="#0067C5"
-              fill-rule="evenodd"
-            />
+            >
+            </path>
           </svg>
         </span>
-        <span
-          class="navds-label navds-label--small"
-        >
+        <span class="navds-label navds-label--small">
           Legg til
         </span>
       </button>
     </div>
   </div>
 </div>
+
 `;

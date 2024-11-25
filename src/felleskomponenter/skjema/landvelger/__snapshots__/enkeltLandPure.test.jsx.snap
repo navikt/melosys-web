@@ -1,184 +1,217 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`EnkeltLandPure > snapshot test 1`] = `
+
 <div>
   <div>
-    <div
-      class="melosys-textfield landliste__linje__input navds-form-field navds-form-field--small"
-    >
+    <div class="melosys-textfield landliste__linje__input navds-form-field navds-form-field--small">
       <label
+        for="333"
         class="navds-form-field__label navds-label navds-label--small"
-        for="381665df-61af-40fb-95b0-aa2c1acf6210"
       >
         Test
       </label>
       <input
+        list="datalist-8b9e65be-bc01-400f-9b79-5d5a9e533b6c"
         bredde="fullbredde"
-        class="navds-text-field__input navds-body-short navds-body-short--small"
-        id="381665df-61af-40fb-95b0-aa2c1acf6210"
-        list="datalist-a7aa84d8-b317-4646-b1ca-ef9053b62959"
+        id="333"
         type="text"
+        class="navds-text-field__input navds-body-short navds-body-short--small"
         value="Norge (NO)"
-      />
-      <div
-        aria-live="polite"
-        aria-relevant="additions removals"
-        class="navds-form-field__error"
-        id="textField-error-r0"
-      />
-    </div>
-    <div
-      class="landliste__dataliste"
-    >
-      <datalist
-        id="datalist-a7aa84d8-b317-4646-b1ca-ef9053b62959"
       >
+      <div
+        class="navds-form-field__error"
+        id="333"
+        aria-relevant="additions removals"
+        aria-live="polite"
+      >
+      </div>
+    </div>
+    <div class="landliste__dataliste">
+      <datalist id="333">
         <option
-          label="Belgia (BE)"
           value="Belgia (BE)"
-        />
+          label="Belgia (BE)"
+        >
+        </option>
         <option
-          label="Bulgaria (BG)"
           value="Bulgaria (BG)"
-        />
+          label="Bulgaria (BG)"
+        >
+        </option>
         <option
-          label="Danmark (DK)"
           value="Danmark (DK)"
-        />
+          label="Danmark (DK)"
+        >
+        </option>
         <option
-          label="Estland (EE)"
           value="Estland (EE)"
-        />
+          label="Estland (EE)"
+        >
+        </option>
         <option
-          label="Finland (FI)"
           value="Finland (FI)"
-        />
+          label="Finland (FI)"
+        >
+        </option>
         <option
-          label="Frankrike (FR)"
           value="Frankrike (FR)"
-        />
+          label="Frankrike (FR)"
+        >
+        </option>
         <option
-          label="Færøyene (FO)"
           value="Færøyene (FO)"
-        />
+          label="Færøyene (FO)"
+        >
+        </option>
         <option
-          label="Grønland (GL)"
           value="Grønland (GL)"
-        />
+          label="Grønland (GL)"
+        >
+        </option>
         <option
-          label="Hellas (GR)"
           value="Hellas (GR)"
-        />
+          label="Hellas (GR)"
+        >
+        </option>
         <option
-          label="Irland (IE)"
           value="Irland (IE)"
-        />
+          label="Irland (IE)"
+        >
+        </option>
         <option
-          label="Island (IS)"
           value="Island (IS)"
-        />
+          label="Island (IS)"
+        >
+        </option>
         <option
-          label="Italia (IT)"
           value="Italia (IT)"
-        />
+          label="Italia (IT)"
+        >
+        </option>
         <option
-          label="Kroatia (HR)"
           value="Kroatia (HR)"
-        />
+          label="Kroatia (HR)"
+        >
+        </option>
         <option
-          label="Kypros (CY)"
           value="Kypros (CY)"
-        />
+          label="Kypros (CY)"
+        >
+        </option>
         <option
-          label="Latvia (LV)"
           value="Latvia (LV)"
-        />
+          label="Latvia (LV)"
+        >
+        </option>
         <option
-          label="Liechtenstein (LI)"
           value="Liechtenstein (LI)"
-        />
+          label="Liechtenstein (LI)"
+        >
+        </option>
         <option
-          label="Litauen (LT)"
           value="Litauen (LT)"
-        />
+          label="Litauen (LT)"
+        >
+        </option>
         <option
-          label="Luxembourg (LU)"
           value="Luxembourg (LU)"
-        />
+          label="Luxembourg (LU)"
+        >
+        </option>
         <option
-          label="Malta (MT)"
           value="Malta (MT)"
-        />
+          label="Malta (MT)"
+        >
+        </option>
         <option
-          label="Nederland (NL)"
           value="Nederland (NL)"
-        />
+          label="Nederland (NL)"
+        >
+        </option>
         <option
-          label="Norge (NO)"
           value="Norge (NO)"
-        />
+          label="Norge (NO)"
+        >
+        </option>
         <option
-          label="Polen (PL)"
           value="Polen (PL)"
-        />
+          label="Polen (PL)"
+        >
+        </option>
         <option
-          label="Portugal (PT)"
           value="Portugal (PT)"
-        />
+          label="Portugal (PT)"
+        >
+        </option>
         <option
-          label="Romania (RO)"
           value="Romania (RO)"
-        />
+          label="Romania (RO)"
+        >
+        </option>
         <option
-          label="Slovakia (SK)"
           value="Slovakia (SK)"
-        />
+          label="Slovakia (SK)"
+        >
+        </option>
         <option
-          label="Slovenia (SI)"
           value="Slovenia (SI)"
-        />
+          label="Slovenia (SI)"
+        >
+        </option>
         <option
-          label="Spania (ES)"
           value="Spania (ES)"
-        />
+          label="Spania (ES)"
+        >
+        </option>
         <option
-          label="Storbritannia (GB)"
           value="Storbritannia (GB)"
-        />
+          label="Storbritannia (GB)"
+        >
+        </option>
         <option
-          label="Svalbard og Jan Mayen (SJ)"
           value="Svalbard og Jan Mayen (SJ)"
-        />
+          label="Svalbard og Jan Mayen (SJ)"
+        >
+        </option>
         <option
-          label="Sveits (CH)"
           value="Sveits (CH)"
-        />
+          label="Sveits (CH)"
+        >
+        </option>
         <option
-          label="Sverige (SE)"
           value="Sverige (SE)"
-        />
+          label="Sverige (SE)"
+        >
+        </option>
         <option
-          label="Tsjekkia (CZ)"
           value="Tsjekkia (CZ)"
-        />
+          label="Tsjekkia (CZ)"
+        >
+        </option>
         <option
-          label="Tyskland (DE)"
           value="Tyskland (DE)"
-        />
+          label="Tyskland (DE)"
+        >
+        </option>
         <option
-          label="Ungarn (HU)"
           value="Ungarn (HU)"
-        />
+          label="Ungarn (HU)"
+        >
+        </option>
         <option
-          label="Østerrike (AT)"
           value="Østerrike (AT)"
-        />
+          label="Østerrike (AT)"
+        >
+        </option>
         <option
-          label="Åland (AX)"
           value="Åland (AX)"
-        />
+          label="Åland (AX)"
+        >
+        </option>
       </datalist>
     </div>
   </div>
 </div>
+
 `;

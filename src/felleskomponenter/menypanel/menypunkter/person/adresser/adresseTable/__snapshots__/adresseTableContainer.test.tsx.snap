@@ -1,313 +1,213 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`AdresseTableContainer > snapshot test 1`] = `
+
 <div>
-  <div
-    class="adresseTable menypanel__table-wrapper"
-  >
-    <table
-      class="navds-table navds-table--small menypanel__table"
-    >
-      <thead
-        class="navds-table__header"
-      >
-        <tr
-          class="navds-table__row navds-table__row--shade-on-hover"
-        >
-          <th
-            class="navds-table__header-cell navds-label fixed-width  navds-label--small"
-          >
+  <div class="adresseTable menypanel__table-wrapper">
+    <table class="navds-table navds-table--small menypanel__table">
+      <thead class="navds-table__header">
+        <tr class="navds-table__row navds-table__row--shade-on-hover">
+          <th class="navds-table__header-cell navds-label fixed-width  navds-label--small">
             Bostedsadresse
           </th>
-          <th
-            class="navds-table__header-cell navds-label navds-label--small"
-          >
+          <th class="navds-table__header-cell navds-label navds-label--small">
             Register
           </th>
-          <th
-            class="navds-table__header-cell navds-label navds-label--small"
-          >
+          <th class="navds-table__header-cell navds-label navds-label--small">
             Kilde
           </th>
-          <th
-            class="navds-table__header-cell navds-label fixed-width navds-label--small"
-          >
+          <th class="navds-table__header-cell navds-label fixed-width navds-label--small">
             Gyldig f.o.m.
           </th>
         </tr>
       </thead>
-      <tbody
-        class="navds-table__body"
-      >
-        <tr
-          class="navds-table__row navds-table__row--shade-on-hover"
-        >
-          <td
-            class="navds-table__data-cell navds-body-short navds-body-short--small"
-          >
+      <tbody class="navds-table__body">
+        <tr class="navds-table__row navds-table__row--shade-on-hover">
+          <td class="navds-table__data-cell navds-body-short navds-body-short--small">
             <address>
               <div>
                 Co Yo 1
               </div>
-              <div />
               <div>
-                bosted gata 3
-                 
-                42
               </div>
               <div>
-                 
+                bosted gata 3 42
+              </div>
+              <div>
                 0001
-                 
               </div>
               <div>
-                 
                 STORBRITANNIA
               </div>
             </address>
           </td>
-          <td
-            class="navds-table__data-cell navds-body-short navds-body-short--small"
-          >
+          <td class="navds-table__data-cell navds-body-short navds-body-short--small">
             FREG
           </td>
-          <td
-            class="navds-table__data-cell navds-body-short navds-body-short--small"
-          >
+          <td class="navds-table__data-cell navds-body-short navds-body-short--small">
             Folkeregisteret
           </td>
-          <td
-            class="navds-table__data-cell gyldig-label navds-body-short navds-body-short--small"
-          >
+          <td class="navds-table__data-cell gyldig-label navds-body-short navds-body-short--small">
             16.06.1995
           </td>
         </tr>
       </tbody>
     </table>
   </div>
-  <div
-    class="adresseTable menypanel__table-wrapper"
-  >
-    <div
-      class="chevronKnapp"
-    >
-      <button
-        type="button"
-      >
+  <div class="adresseTable menypanel__table-wrapper">
+    <div class="chevronKnapp">
+      <button type="button">
         Åpne historikk
         <svg
-          fill="none"
-          focusable="false"
-          height="24"
-          role="img"
-          viewBox="0 0 24 24"
           width="24"
+          height="24"
+          viewbox="0 0 24 24"
+          fill="none"
           xmlns="http://www.w3.org/2000/svg"
+          focusable="false"
+          role="img"
         >
           <path
+            fill-rule="evenodd"
             clip-rule="evenodd"
             d="M5.97 9.47a.75.75 0 0 1 1.06 0L12 14.44l4.97-4.97a.75.75 0 1 1 1.06 1.06l-5.5 5.5a.75.75 0 0 1-1.06 0l-5.5-5.5a.75.75 0 0 1 0-1.06Z"
             fill="currentColor"
-            fill-rule="evenodd"
-          />
+          >
+          </path>
         </svg>
       </button>
     </div>
   </div>
 </div>
+
 `;
 
 exports[`AdresseTableContainer > snapshot test historisk åpnet 1`] = `
+
 <div>
-  <div
-    class="adresseTable menypanel__table-wrapper"
-  >
-    <table
-      class="navds-table navds-table--small menypanel__table"
-    >
-      <thead
-        class="navds-table__header"
-      >
-        <tr
-          class="navds-table__row navds-table__row--shade-on-hover"
-        >
-          <th
-            class="navds-table__header-cell navds-label fixed-width  navds-label--small"
-          >
+  <div class="adresseTable menypanel__table-wrapper">
+    <table class="navds-table navds-table--small menypanel__table">
+      <thead class="navds-table__header">
+        <tr class="navds-table__row navds-table__row--shade-on-hover">
+          <th class="navds-table__header-cell navds-label fixed-width  navds-label--small">
             Bostedsadresse
           </th>
-          <th
-            class="navds-table__header-cell navds-label navds-label--small"
-          >
+          <th class="navds-table__header-cell navds-label navds-label--small">
             Register
           </th>
-          <th
-            class="navds-table__header-cell navds-label navds-label--small"
-          >
+          <th class="navds-table__header-cell navds-label navds-label--small">
             Kilde
           </th>
-          <th
-            class="navds-table__header-cell navds-label fixed-width navds-label--small"
-          >
+          <th class="navds-table__header-cell navds-label fixed-width navds-label--small">
             Gyldig f.o.m.
           </th>
         </tr>
       </thead>
-      <tbody
-        class="navds-table__body"
-      >
-        <tr
-          class="navds-table__row navds-table__row--shade-on-hover"
-        >
-          <td
-            class="navds-table__data-cell navds-body-short navds-body-short--small"
-          >
+      <tbody class="navds-table__body">
+        <tr class="navds-table__row navds-table__row--shade-on-hover">
+          <td class="navds-table__data-cell navds-body-short navds-body-short--small">
             <address>
               <div>
                 Co Yo 1
               </div>
-              <div />
               <div>
-                bosted gata 3
-                 
-                42
               </div>
               <div>
-                 
+                bosted gata 3 42
+              </div>
+              <div>
                 0001
-                 
               </div>
               <div>
-                 
                 STORBRITANNIA
               </div>
             </address>
           </td>
-          <td
-            class="navds-table__data-cell navds-body-short navds-body-short--small"
-          >
+          <td class="navds-table__data-cell navds-body-short navds-body-short--small">
             FREG
           </td>
-          <td
-            class="navds-table__data-cell navds-body-short navds-body-short--small"
-          >
+          <td class="navds-table__data-cell navds-body-short navds-body-short--small">
             Folkeregisteret
           </td>
-          <td
-            class="navds-table__data-cell gyldig-label navds-body-short navds-body-short--small"
-          >
+          <td class="navds-table__data-cell gyldig-label navds-body-short navds-body-short--small">
             16.06.1995
           </td>
         </tr>
       </tbody>
     </table>
   </div>
-  <div
-    class="adresseTable menypanel__table-wrapper"
-  >
-    <table
-      class="navds-table navds-table--small menypanel__table"
-    >
-      <thead
-        class="navds-table__header"
-      >
-        <tr
-          class="navds-table__row navds-table__row--shade-on-hover"
-        >
-          <th
-            class="navds-table__header-cell navds-label fixed-width transparent navds-label--small"
-          >
+  <div class="adresseTable menypanel__table-wrapper">
+    <table class="navds-table navds-table--small menypanel__table">
+      <thead class="navds-table__header">
+        <tr class="navds-table__row navds-table__row--shade-on-hover">
+          <th class="navds-table__header-cell navds-label fixed-width transparent navds-label--small">
             Bostedsadresse
           </th>
-          <th
-            class="navds-table__header-cell navds-label transparent navds-label--small"
-          >
+          <th class="navds-table__header-cell navds-label transparent navds-label--small">
             Register
           </th>
-          <th
-            class="navds-table__header-cell navds-label transparent navds-label--small"
-          >
+          <th class="navds-table__header-cell navds-label transparent navds-label--small">
             Kilde
           </th>
-          <th
-            class="navds-table__header-cell navds-label fixed-width navds-label--small"
-          >
+          <th class="navds-table__header-cell navds-label fixed-width navds-label--small">
             Gyldig f.o.m. - t.o.m.
           </th>
         </tr>
       </thead>
-      <tbody
-        class="navds-table__body"
-      >
-        <tr
-          class="navds-table__row navds-table__row--shade-on-hover"
-        >
-          <td
-            class="navds-table__data-cell navds-body-short navds-body-short--small"
-          >
+      <tbody class="navds-table__body">
+        <tr class="navds-table__row navds-table__row--shade-on-hover">
+          <td class="navds-table__data-cell navds-body-short navds-body-short--small">
             <address>
-              <div />
+              <div>
+              </div>
               <div>
                 tilleggg navn
               </div>
               <div>
-                 
               </div>
               <div>
-                 
-                2414
-                 
-                ELVERUM
+                2414 ELVERUM
               </div>
               <div>
-                 
                 NORGE
               </div>
             </address>
           </td>
-          <td
-            class="navds-table__data-cell navds-body-short navds-body-short--small"
-          >
+          <td class="navds-table__data-cell navds-body-short navds-body-short--small">
             FREG
           </td>
-          <td
-            class="navds-table__data-cell navds-body-short navds-body-short--small"
-          >
+          <td class="navds-table__data-cell navds-body-short navds-body-short--small">
             Folkeregisteret
           </td>
-          <td
-            class="navds-table__data-cell historisk-label navds-body-short navds-body-short--small"
-          >
-            12.09.1957 - 
+          <td class="navds-table__data-cell historisk-label navds-body-short navds-body-short--small">
+            12.09.1957 -
           </td>
         </tr>
       </tbody>
     </table>
-    <div
-      class="chevronKnapp"
-    >
-      <button
-        type="button"
-      >
+    <div class="chevronKnapp">
+      <button type="button">
         Lukk historikk
         <svg
-          fill="none"
-          focusable="false"
-          height="24"
-          role="img"
-          viewBox="0 0 24 24"
           width="24"
+          height="24"
+          viewbox="0 0 24 24"
+          fill="none"
           xmlns="http://www.w3.org/2000/svg"
+          focusable="false"
+          role="img"
         >
           <path
+            fill-rule="evenodd"
             clip-rule="evenodd"
             d="M11.47 7.97a.75.75 0 0 1 1.06 0l5.5 5.5a.75.75 0 1 1-1.06 1.06L12 9.56l-4.97 4.97a.75.75 0 0 1-1.06-1.06l5.5-5.5Z"
             fill="currentColor"
-            fill-rule="evenodd"
-          />
+          >
+          </path>
         </svg>
       </button>
     </div>
   </div>
 </div>
+
 `;

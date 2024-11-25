@@ -3,8 +3,19 @@
 import createFetchMock from "vitest-fetch-mock";
 import matchers from "@testing-library/jest-dom/matchers";
 import { vi, expect } from "vitest";
+import toDiffableHtml from "diffable-html";
 
 expect.extend(matchers);
+
+// Example: Custom snapshot serializer
+expect.addSnapshotSerializer({
+  test: (val) => typeof val === "string" || (val && typeof val.outerHTML === "string"),
+  serialize: (val) => {
+    const html = typeof val === "string" ? val : val.outerHTML;
+    const cleanedHtml = html.replace(/(id|name|for|aria-labelledby|aria-describedby)="[^"]*"/g, ' $1="333"');
+    return toDiffableHtml(cleanedHtml);
+  },
+});
 
 // Oppsettfilen for Yup kjøres ikke uten videre av vi. Derfor er det nødvendig å importere den manuelt her.
 import "./setupYup";
