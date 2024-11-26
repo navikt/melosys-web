@@ -6,47 +6,55 @@ exports[`SideMeny > snapshot test 1`] = `
   <div class="side-meny">
     <div class="side-meny__container">
       <nav aria-labelledby="333">
-        <ul class="side-meny__link-list">
-          <div class="linkgroup">
-            <p class="linkgroup__label navds-body-long navds-body-long--small">
+        <ul class="linkgroup">
+          <li class="linkgroup__label">
+            <p class="navds-body-long navds-body-long--small">
               Sukker
             </p>
-            <li class="meny-link">
-              <button
-                class="meny-link__button"
-                type="button"
-              >
-                <span class="typo-normal meny-link__label">
-                  Hvitt sukker
-                </span>
-              </button>
-            </li>
-            <li class="meny-link">
-              <button
-                class="meny-link__button"
-                type="button"
-              >
-                <span class="typo-normal meny-link__label">
-                  Brunt sukker
-                </span>
-              </button>
-            </li>
-          </div>
-          <div class="linkgroup">
-            <p class="linkgroup__label navds-body-long navds-body-long--small">
+          </li>
+          <li>
+          </li>
+          <li class="meny-link">
+            <button
+              class="meny-link__button"
+              type="button"
+            >
+              <span class="typo-normal meny-link__label">
+                Hvitt sukker
+              </span>
+            </button>
+          </li>
+          <li>
+          </li>
+          <li class="meny-link">
+            <button
+              class="meny-link__button"
+              type="button"
+            >
+              <span class="typo-normal meny-link__label">
+                Brunt sukker
+              </span>
+            </button>
+          </li>
+        </ul>
+        <ul class="linkgroup">
+          <li class="linkgroup__label">
+            <p class="navds-body-long navds-body-long--small">
               Salt
             </p>
-            <li class="meny-link">
-              <button
-                class="meny-link__button"
-                type="button"
-              >
-                <span class="typo-normal meny-link__label">
-                  Bordsalt
-                </span>
-              </button>
-            </li>
-          </div>
+          </li>
+          <li>
+          </li>
+          <li class="meny-link">
+            <button
+              class="meny-link__button"
+              type="button"
+            >
+              <span class="typo-normal meny-link__label">
+                Bordsalt
+              </span>
+            </button>
+          </li>
         </ul>
       </nav>
     </div>
