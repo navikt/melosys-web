@@ -58,7 +58,12 @@ const bruttoInntektFyltUtNårDetKrevesTest = {
 
 const kreverInntektskilder = (medlemskapsTypeErPliktig, options) => {
   if (options?.parent?.skatteforholdsperioder) {
-    return !(medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(options.parent.skatteforholdsperioder));
+    const inntektkilderErTom = options.parent.inntektskilder.length === 0;
+    return !(
+      medlemskapsTypeErPliktig &&
+      erBrukerSkattepliktigIHelePerioden(options.parent.skatteforholdsperioder) &&
+      inntektkilderErTom
+    );
   }
   return true;
 };
@@ -119,8 +124,9 @@ const vurdering_aarsavregning = object().shape({
   }),
   inntektskilder: lazy((_value, options) => {
     return array().when(["$medlemskapsTypeErPliktig", "$erÅpenSluttDato", "$erAvvik"], {
-      is: (medlemskapsTypeErPliktig, erÅpenSluttDato, erAvvik) =>
-        !erÅpenSluttDato && kreverInntektskilder(medlemskapsTypeErPliktig, options) && erAvvik,
+      is: (medlemskapsTypeErPliktig, erÅpenSluttDato, erAvvik) => {
+        return !erÅpenSluttDato && kreverInntektskilder(medlemskapsTypeErPliktig, options) && erAvvik;
+      },
       then: array()
         .min(1, "Minst en inntektskilde")
         .of(
