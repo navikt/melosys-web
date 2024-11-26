@@ -332,7 +332,6 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
     replace: resetInntektskilder,
   } = useFieldArray<FieldArrayProps, "inntektskilder", "id">({ control, name: "inntektskilder" });
   const formValues = watch();
-  console.log({ formErrors, formIsValid });
   useEffect(() => {
     if (formBekreftet && Object.keys(formErrors).length === 0) {
       setFormBekreftet(false);
