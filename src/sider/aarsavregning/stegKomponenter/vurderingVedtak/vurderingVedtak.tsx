@@ -191,11 +191,14 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const tidligereTrygdeavgift = lagretAarsavregning?.avregning?.tidligereFakturertBeloep;
   const nyTrygdeavgift = lagretAarsavregning?.avregning?.nyttTotalbeloep;
   const erDifferanseUnderMinstebeløp =
-    tidligereTrygdeavgift &&
-    nyTrygdeavgift &&
+    typeof tidligereTrygdeavgift === "number" &&
+    typeof nyTrygdeavgift === "number" &&
     Math.abs(tidligereTrygdeavgift - nyTrygdeavgift) < MINSTEBELOP_FAKTURERING_ELLER_REFUSJON;
 
-  const skalFaktureres = tidligereTrygdeavgift && nyTrygdeavgift && nyTrygdeavgift - tidligereTrygdeavgift > 0;
+  const skalFaktureres =
+    typeof tidligereTrygdeavgift === "number" &&
+    typeof nyTrygdeavgift === "number" &&
+    nyTrygdeavgift - tidligereTrygdeavgift > 0;
 
   const stegErGyldig = formIsValid && (!harFullmaktForTrygdeavgift || harBekreftetFullmaktForTrygdeavgift);
 
