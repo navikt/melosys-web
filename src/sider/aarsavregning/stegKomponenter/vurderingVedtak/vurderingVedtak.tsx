@@ -217,9 +217,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
                 <>
                   <br />
                   {`${skalFaktureres ? "Faktura" : "Kreditnota"} på ${
-                    Utils.formaterTilNorskBelop(
-                      Math.abs((nyTrygdeavgift || tidligereTrygdeavgift || 0) - (tidligereTrygdeavgift || 0))
-                    ) || "0"
+                    Utils.formaterTilNorskBelop(Math.abs((nyTrygdeavgift || 0) - (tidligereTrygdeavgift || 0))) || "0"
                   } kr sendes til: `}{" "}
                   <b>{fakturaMottaker}</b>
                 </>
