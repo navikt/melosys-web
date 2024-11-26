@@ -16,23 +16,24 @@ const linkgroupCls = bem("linkgroup");
 const labelCls = linkgroupCls.element("label");
 
 const LinkGroup = ({ label, links, onClick }: LinkGroupProps) => (
-  <div className={linkgroupCls.block}>
+  <ul className={linkgroupCls.block}>
     {label && (
-      <Nav.BodyLong size="small" className={labelCls}>
-        {label}
-      </Nav.BodyLong>
+      <li className={labelCls}>
+        <Nav.BodyLong size="small">{label}</Nav.BodyLong>
+      </li>
     )}
     {links.map(({ label: linkLabel, active, iconSrc, iconAltText }, index) => (
-      <MenyLink
-        key={linkLabel.split(" ").join("")}
-        label={linkLabel}
-        active={active}
-        onClick={() => onClick(index)}
-        iconSrc={iconSrc}
-        iconAltText={iconAltText}
-      />
+      <li key={linkLabel.split(" ").join("")}>
+        <MenyLink
+          label={linkLabel}
+          active={active}
+          onClick={() => onClick(index)}
+          iconSrc={iconSrc}
+          iconAltText={iconAltText}
+        />
+      </li>
     ))}
-  </div>
+  </ul>
 );
 
 export default LinkGroup;
