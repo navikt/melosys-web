@@ -364,7 +364,6 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
   const beregnTrygdeavgiftsperioder = useCallback(
     (formVerdier: FieldValue<FormValuesProps>) => {
       setFeil(undefined);
-      console.log({ a: erBrukerSkattepliktigIHelePerioden(formVerdier.skatteforholdsperioder) });
       const erBrukerPliktigMedlemOgSkattepliktig =
         medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(formVerdier.skatteforholdsperioder);
       Api.Trygdeavgift.beregnTrygdeavgiftsperioder(behandlingID, {
