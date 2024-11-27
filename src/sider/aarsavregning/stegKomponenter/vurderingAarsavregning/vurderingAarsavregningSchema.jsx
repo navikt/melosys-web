@@ -104,7 +104,10 @@ const vurdering_aarsavregning = object().shape({
       ),
   }),
   skatteforholdsperioder: array().when(["$erÅpenSluttDato", "$erAvvik", "$erIngenGrunnlag"], {
-    is: (erÅpenSluttDato, erAvvik, erIngenGrunnlag) => !erÅpenSluttDato && (erAvvik || erIngenGrunnlag),
+    is: (erÅpenSluttDato, erAvvik, erIngenGrunnlag) => {
+      if ((erAvvik || erIngenGrunnlag) === undefined) return true;
+      return !erÅpenSluttDato && (erAvvik || erIngenGrunnlag);
+    },
     then: array()
       .min(1, "Minst en skatteforholdsperiode")
       .of(
