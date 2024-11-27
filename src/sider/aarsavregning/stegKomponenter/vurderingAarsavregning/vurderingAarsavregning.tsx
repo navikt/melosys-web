@@ -261,18 +261,22 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
     }
   }, [valgtÅr]);
 
+  const oppdaterNyttTotalbeloep = async (totalAvgift?: number) => {
+    return Api.Aarsavregning.oppdaterTotalBelop(
+      behandlingID,
+      {
+        avregning: {
+          nyttTotalbeloep: totalAvgift,
+        },
+      },
+      aarsavregningID
+    );
+  };
+
   useEffect(() => {
     if (redigerbart && aarsavregningResponse?.nyttGrunnlag) {
       if (aarsavregningResponse.nyttGrunnlag?.avgift.totalAvgift !== aarsavregningResponse.avregning?.nyttTotalbeloep) {
-        Api.Aarsavregning.oppdaterTotalBelop(
-          behandlingID,
-          {
-            avregning: {
-              nyttTotalbeloep: aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift,
-            },
-          },
-          aarsavregningID
-        ).then(() =>
+        oppdaterNyttTotalbeloep(aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift).then(() =>
           Api.Aarsavregning.hentAarsavregning(behandlingID, aarsavregningID).then((response: AarsavregningResponse) => {
             setAarsavregningResponse(response);
           })
@@ -434,8 +438,11 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
       Api.Trygdeavgift.slettTrygdeavgiftsperioder(behandlingID).then(() => {
         resetSkatteforholdsperioder([]);
         resetInntektskilder([]);
-        Api.Aarsavregning.hentAarsavregning(behandlingID, aarsavregningID).then((response: AarsavregningResponse) => {
-          setAarsavregningResponse(response);
+        oppdaterNyttTotalbeloep(aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift.totalAvgift).then(() => {
+          Api.Aarsavregning.hentAarsavregning(behandlingID, aarsavregningID).then((response: AarsavregningResponse) => {
+            setAarsavregningResponse(response);
+            setSkjemaverdierFraTrygdeavgiftsgrunnlag(response.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag);
+          });
         });
       });
     } else if (aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag) {
