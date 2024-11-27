@@ -428,24 +428,14 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
     oppdaterStatus(stegErGyldig);
   }, [stegErGyldig]);
 
+  // TODO legg avvik i schema context, nå trigger ikke endring til true automatisk beregning, man må "touche" brutto inntekt i weben
   const håndterAvvik = (value: boolean) => {
     if (!value) {
       Api.Trygdeavgift.slettTrygdeavgiftsperioder(behandlingID).then(() => {
+        resetSkatteforholdsperioder([]);
+        resetInntektskilder([]);
         Api.Aarsavregning.hentAarsavregning(behandlingID, aarsavregningID).then((response: AarsavregningResponse) => {
-          const tidligereSkatteforfold = mapTilSkatteforholdProps(
-            aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.skatteforholdsperioder
-          );
-          const tidligereInntektskilder = mapTilInntektskilderProps(
-            aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.inntektskperioder
-          );
-          resetSkatteforholdsperioder(tidligereSkatteforfold);
-          resetInntektskilder(tidligereInntektskilder);
           setAarsavregningResponse(response);
-          debounceBeregnTrygdeavgiftsperioder({
-            ...formValues,
-            skatteforholdsperioder: tidligereSkatteforfold,
-            inntektskilder: tidligereInntektskilder,
-          });
         });
       });
     } else if (aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag) {
