@@ -190,7 +190,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
     if (behandlingID && aarsavregningID) {
       Api.Aarsavregning.hentAarsavregning(behandlingID, aarsavregningID)
         .then((res) => {
-          if (res.tidligereGrunnlagsopplysninger === null && !innvilgetMedlemskapsperiode) {
+          if (res.tidligereGrunnlagsopplysninger === null && Utils._isEmpty(innvilgetMedlemskapsperiode.fom)) {
             setErIngenGrunnlag(true);
           }
 
@@ -302,6 +302,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
       medlemskapsTypeErPliktig,
       erÅpenSluttDato: false,
       erAvvik,
+      erIngenGrunnlag,
     },
     mode: "onChange",
     defaultValues: {
