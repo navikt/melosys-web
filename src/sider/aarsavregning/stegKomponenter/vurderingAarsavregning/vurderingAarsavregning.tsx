@@ -187,6 +187,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
 
   useEffect(() => {
     dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(behandlingID));
+    trigger("medlemskapsperioder").then((isValid) => setVisLeggTilMedlemskapsperioder(isValid));
     if (behandlingID && aarsavregningID) {
       Api.Aarsavregning.hentAarsavregning(behandlingID, aarsavregningID)
         .then((res) => {
