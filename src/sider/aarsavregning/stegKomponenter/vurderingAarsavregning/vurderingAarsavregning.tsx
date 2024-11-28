@@ -204,6 +204,11 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
           dispatch({ type: OK, data: res });
           setInitieltÅr(res.aar);
           setValue("totaltForskuddsvisFakturert", res.avregning?.tidligereFakturertBeloep);
+          console.log({ res });
+
+          if (res.nyttGrunnlag !== null) {
+            setErAvvik(res.avvikFunnet ?? false);
+          }
 
           if (res.avvikFunnet && res?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag) {
             setSkjemaverdierFraTrygdeavgiftsgrunnlag(
