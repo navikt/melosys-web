@@ -17,7 +17,6 @@ import {
 import "./inntektskilder.css";
 import { Stack } from "@navikt/ds-react";
 import { Alert } from "../../../navFrontend";
-import { useEffect } from "react";
 
 const {
   ARBEIDSINNTEKT_FRA_NORGE,
