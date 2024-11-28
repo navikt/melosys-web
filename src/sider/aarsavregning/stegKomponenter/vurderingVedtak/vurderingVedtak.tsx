@@ -191,11 +191,14 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const tidligereTrygdeavgift = lagretAarsavregning?.avregning?.tidligereFakturertBeloep;
   const nyTrygdeavgift = lagretAarsavregning?.avregning?.nyttTotalbeloep;
   const erDifferanseUnderMinstebeløp =
-    tidligereTrygdeavgift &&
-    nyTrygdeavgift &&
+    typeof tidligereTrygdeavgift === "number" &&
+    typeof nyTrygdeavgift === "number" &&
     Math.abs(tidligereTrygdeavgift - nyTrygdeavgift) < MINSTEBELOP_FAKTURERING_ELLER_REFUSJON;
 
-  const skalFaktureres = tidligereTrygdeavgift && nyTrygdeavgift && nyTrygdeavgift - tidligereTrygdeavgift > 0;
+  const skalFaktureres =
+    typeof tidligereTrygdeavgift === "number" &&
+    typeof nyTrygdeavgift === "number" &&
+    nyTrygdeavgift - tidligereTrygdeavgift > 0;
 
   const stegErGyldig = formIsValid && (!harFullmaktForTrygdeavgift || harBekreftetFullmaktForTrygdeavgift);
 
@@ -217,9 +220,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
                 <>
                   <br />
                   {`${skalFaktureres ? "Faktura" : "Kreditnota"} på ${
-                    Utils.formaterTilNorskBelop(
-                      Math.abs((nyTrygdeavgift || tidligereTrygdeavgift || 0) - (tidligereTrygdeavgift || 0))
-                    ) || "0"
+                    Utils.formaterTilNorskBelop(Math.abs((nyTrygdeavgift || 0) - (tidligereTrygdeavgift || 0))) || "0"
                   } kr sendes til: `}{" "}
                   <b>{fakturaMottaker}</b>
                 </>
