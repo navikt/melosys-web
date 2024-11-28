@@ -12,8 +12,6 @@ export const SumArsavregningTabell = ({
 }) => {
   const sumTilFakturaEllerRefusjon = (nyTrygdeavgift ?? 0) - (tidligereTrygdeavgift ?? 0);
 
-  if (nyTrygdeavgift === null || tidligereTrygdeavgift === null) return null;
-
   return (
     <div className="sumArsavregningTabell">
       <Nav.Table size="small" width={500} className="periode_tabell">
@@ -24,14 +22,14 @@ export const SumArsavregningTabell = ({
               Endelig beregnet trygdeavgift
             </Nav.Table.DataCell>
             <Nav.Table.DataCell align="right" key={Utils._uuid()}>
-              {formaterTilNorskBelop(nyTrygdeavgift !== undefined ? nyTrygdeavgift : tidligereTrygdeavgift)} kr
+              {formaterTilNorskBelop(nyTrygdeavgift || 0)} kr
             </Nav.Table.DataCell>
           </Nav.Table.Row>
           <Nav.Table.Row>
             <Nav.Table.DataCell scope="col">-</Nav.Table.DataCell>
             <Nav.Table.DataCell scope="col">Tidligere beregnet trygdeavgift</Nav.Table.DataCell>
             <Nav.Table.DataCell align="right" key={Utils._uuid()}>
-              {formaterTilNorskBelop(tidligereTrygdeavgift)} kr
+              {formaterTilNorskBelop(tidligereTrygdeavgift || 0)} kr
             </Nav.Table.DataCell>
           </Nav.Table.Row>
           <Nav.Table.Row>

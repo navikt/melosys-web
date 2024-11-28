@@ -201,9 +201,6 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
           setInitieltÅr(res.aar);
           setValue("totaltForskuddsvisFakturert", res.avregning?.tidligereFakturertBeloep);
 
-          if (res.avvikFunnet !== null) {
-            setErAvvik(res.avvikFunnet ?? false);
-          }
           if (res.avvikFunnet && res?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag) {
             setSkjemaverdierFraTrygdeavgiftsgrunnlag(
               res.nyttGrunnlag?.trygdeavgiftsgrunnlag || res.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag
@@ -253,12 +250,12 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
             setSkjemaverdierFraTrygdeavgiftsgrunnlag(res?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag);
           }
           setValue("totaltForskuddsvisFakturert", "");
+          dispatch(behandlingsresultatOperations.hent(behandlingID));
           dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(behandlingID));
         })
         .catch((error: any) => {
           setFeil(error.body?.message || error);
         });
-      dispatch(behandlingsresultatOperations.hent(behandlingID));
     }
   }, [valgtÅr]);
 
@@ -655,10 +652,10 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
         />
       )}
 
-      {(erAvvik || erIngenGrunnlag) && formIsValid && aarsavregningResponse?.avregning && (
+      {(erAvvik || erIngenGrunnlag) && formIsValid && (
         <SumArsavregningTabell
           nyTrygdeavgift={aarsavregningResponse?.avregning?.nyttTotalbeloep}
-          tidligereTrygdeavgift={aarsavregningResponse.avregning?.tidligereFakturertBeloep}
+          tidligereTrygdeavgift={aarsavregningResponse?.avregning?.tidligereFakturertBeloep}
         />
       )}
 
