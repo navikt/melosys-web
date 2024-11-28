@@ -96,6 +96,11 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
     Boolean(lagretBestemmelse) && behandlingstatus === MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET;
   const stegErGyldig = (formIsValid || behandlingErAvsluttetMedLagretBestemmelse) && !harSkjeddEndringer;
 
+  const kodeverkKoderIBestemmelserNedtrekk: string[] = [
+    ...Object.values(MKV.KTObjects.folketrygdloven_kap2_bestemmelser),
+    ...Object.values(MKV.KTObjects.vertslandsavtale_bestemmelser),
+  ] as string[];
+
   useEffect(() => {
     setSkalHenteVilkår(false);
     if (skalInitialisere) {
@@ -347,7 +352,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
 
       <ListeVelger
         muligeAlternativer={bestemmelser}
-        kodeverkKoder={Object.values(MKV.KTObjects.folketrygdloven_kap2_bestemmelser)}
+        kodeverkKoder={kodeverkKoderIBestemmelserNedtrekk}
         name="bestemmelser"
         tittel="Hvilken bestemmelse skal søknaden vurderes etter?"
         redigerbart={redigerbart}
