@@ -197,7 +197,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
       Api.Aarsavregning.hentAarsavregning(behandlingID, aarsavregningID)
         .then((res) => {
           setAarsavregningResponse(res);
-
+          oppdaterErIngenGrunnlag(res);
           // Benyttes for innhenting av saksopplysninger ifm. årsavregningsbehandlinger
           dispatch({ type: OK, data: res });
           setInitieltÅr(res.aar);
@@ -214,6 +214,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
         .catch((err) => {
           if (err.response?.status === 404) {
             setAarsavregningResponse(undefined);
+            oppdaterErIngenGrunnlag(undefined);
           }
         });
     }
@@ -249,7 +250,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
       Api.Aarsavregning.lagAarsavregning(behandlingID, { aar: valgtÅr })
         .then((res) => {
           setAarsavregningResponse(res);
-
+          oppdaterErIngenGrunnlag(res);
           // Benyttes for innhenting av saksopplysninger ifm. årsavregningsbehandlinger
           dispatch({ type: OK, data: res });
           if (res?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag) {
@@ -265,18 +266,18 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
     }
   }, [valgtÅr]);
 
-  useEffect(() => {
+  const oppdaterErIngenGrunnlag = (nyAarsavregningResponse?: AarsavregningResponse) => {
     innvilgetMedlemskapsperiode = lagInnvilgetMedlemskapsPeriode(
-      aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.medlemskapsperioder
+      nyAarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.medlemskapsperioder
     );
 
     if (
-      aarsavregningResponse?.tidligereGrunnlagsopplysninger === null &&
+      nyAarsavregningResponse?.tidligereGrunnlagsopplysninger === null &&
       Utils._isEmpty(innvilgetMedlemskapsperiode.fom)
     ) {
       setErIngenGrunnlag(true);
     }
-  }, [aarsavregningResponse]);
+  };
 
   const oppdaterNyttTotalbeloep = async (totalAvgift?: number) => {
     return Api.Aarsavregning.oppdaterTotalBelop(
@@ -296,6 +297,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
         oppdaterNyttTotalbeloep(aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift).then(() =>
           Api.Aarsavregning.hentAarsavregning(behandlingID, aarsavregningID).then((response: AarsavregningResponse) => {
             setAarsavregningResponse(response);
+            oppdaterErIngenGrunnlag(response);
           })
         );
       }
@@ -409,6 +411,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
         .then(() => {
           Api.Aarsavregning.hentAarsavregning(behandlingID, aarsavregningID).then((response: AarsavregningResponse) => {
             setAarsavregningResponse(response);
+            oppdaterErIngenGrunnlag(response);
           });
           setFeil(undefined);
         })
@@ -460,6 +463,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
         oppdaterNyttTotalbeloep(aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift.totalAvgift).then(() => {
           Api.Aarsavregning.hentAarsavregning(behandlingID, aarsavregningID).then((response: AarsavregningResponse) => {
             setAarsavregningResponse(response);
+            oppdaterErIngenGrunnlag(response);
             setSkjemaverdierFraTrygdeavgiftsgrunnlag(response.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag);
           });
         });
