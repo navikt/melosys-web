@@ -214,7 +214,6 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
         .catch((err) => {
           if (err.response?.status === 404) {
             setAarsavregningResponse(undefined);
-            oppdaterErIngenGrunnlag(undefined);
           }
         });
     }
