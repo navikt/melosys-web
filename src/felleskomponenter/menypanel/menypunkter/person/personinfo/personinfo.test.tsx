@@ -1,7 +1,7 @@
 import { ComponentProps } from "react";
 import { instance, mock } from "ts-mockito";
 import { MockedProvider } from "@apollo/client/testing";
-import { render, screen, within, waitFor } from "@testing-library/react";
+import { render, screen, within, waitFor, prettyDOM } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import { HentPersoninfoDocument } from "./hentPersoninfo.generated";
@@ -185,9 +185,9 @@ describe("Personinfo", () => {
 
     await user.click(detaljerKnapper[1]);
 
-    const dialog = await screen.findByRole("dialog");
-    expect(dialog).toBeInTheDocument();
+    const dialog = await screen.findByLabelText("Sivilstand");
 
+    expect(dialog).toBeInTheDocument();
     expect(within(dialog).getByText("Historikk")).toBeInTheDocument();
     expect(within(dialog).getByText("Gift")).toBeInTheDocument();
     expect(within(dialog).getByText("Ugift")).toBeInTheDocument();
@@ -206,7 +206,7 @@ describe("Personinfo", () => {
 
     await user.click(detaljerKnapper[0]);
 
-    const dialog = await screen.findByRole("dialog");
+    const dialog = await screen.findByLabelText("Personstatus");
     expect(dialog).toBeInTheDocument();
 
     expect(within(dialog).getByText("Historikk")).toBeInTheDocument();
