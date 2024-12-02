@@ -58,7 +58,12 @@ const bruttoInntektFyltUtNårDetKrevesTest = {
 
 const kreverInntektskilder = (medlemskapsTypeErPliktig, options) => {
   if (options?.parent?.skatteforholdsperioder) {
-    return !(medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(options.parent.skatteforholdsperioder));
+    const inntektkilderErTom = options.parent.inntektskilder.length === 0;
+    return !(
+      medlemskapsTypeErPliktig &&
+      erBrukerSkattepliktigIHelePerioden(options.parent.skatteforholdsperioder) &&
+      inntektkilderErTom
+    );
   }
   return true;
 };
@@ -78,25 +83,31 @@ const åpenTomNårIkkeSistePeriodeTest = {
 };
 
 const vurdering_aarsavregning = object().shape({
-  medlemskapsperioder: array()
-    .min(1, "Minst en medlemskapsperiode")
-    .of(
-      object().shape({
-        fomDato: string()
-          .erGyldigDato()
-          .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
-          .required(),
-        tomDato: string()
-          .erGyldigDato()
-          .erEtterDatofelt("fomDato")
-          .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
-          .test(åpenTomNårIkkeSistePeriodeTest),
-        trygdedekning: string().required(),
-        bestemmelse: string().required(),
-      })
-    ),
-  skatteforholdsperioder: array().when(["$erÅpenSluttDato"], {
-    is: (erÅpenSluttDato) => !erÅpenSluttDato,
+  medlemskapsperioder: array().when(["$medlemskapsperiode", "$erIngenGrunnlag"], {
+    is: (medlemskapsperiode, erIngenGrunnlag) => !medlemskapsperiode.fom || erIngenGrunnlag,
+    then: array()
+      .min(1, "Minst en medlemskapsperiode")
+      .of(
+        object().shape({
+          fomDato: string()
+            .erGyldigDato()
+            .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
+            .required(),
+          tomDato: string()
+            .erGyldigDato()
+            .erEtterDatofelt("fomDato")
+            .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
+            .test(åpenTomNårIkkeSistePeriodeTest),
+          trygdedekning: string().required(),
+          bestemmelse: string().required(),
+        })
+      ),
+  }),
+  skatteforholdsperioder: array().when(["$erÅpenSluttDato", "$erAvvik", "$erIngenGrunnlag"], {
+    is: (erÅpenSluttDato, erAvvik, erIngenGrunnlag) => {
+      if ((erAvvik || erIngenGrunnlag) === undefined) return true;
+      return !erÅpenSluttDato && (erAvvik || erIngenGrunnlag);
+    },
     then: array()
       .min(1, "Minst en skatteforholdsperiode")
       .of(
@@ -115,9 +126,12 @@ const vurdering_aarsavregning = object().shape({
       ),
   }),
   inntektskilder: lazy((_value, options) => {
-    return array().when(["$medlemskapsTypeErPliktig", "$erÅpenSluttDato"], {
-      is: (medlemskapsTypeErPliktig, erÅpenSluttDato) =>
-        !erÅpenSluttDato && kreverInntektskilder(medlemskapsTypeErPliktig, options),
+    return array().when(["$medlemskapsTypeErPliktig", "$erÅpenSluttDato", "$erAvvik", "$erIngenGrunnlag"], {
+      is: (medlemskapsTypeErPliktig, erÅpenSluttDato, erAvvik, erIngenGrunnlag) => {
+        return (
+          !erÅpenSluttDato && kreverInntektskilder(medlemskapsTypeErPliktig, options) && (erAvvik || erIngenGrunnlag)
+        );
+      },
       then: array()
         .min(1, "Minst en inntektskilde")
         .of(
