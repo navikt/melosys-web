@@ -136,7 +136,7 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
   let oppdaterFørKontroll = true;
 
   const arbeidsland = useSelector(avklartefaktaSelectors.ArbeidslandKTSelector);
-  const flereSoknadslandEnnTillatt = arbeidsland.length > 1 && !MKVUtils.kanHaFlereSoknadsland(behandlingstema);
+  const harFlereSoknadslandEnnTillatt = arbeidsland.length > 1 && !MKVUtils.kanHaFlereSoknadsland(behandlingstema);
 
   useEffect(() => {
     if (lovvalgsbestemmelseSomSkalLagres) {
@@ -322,7 +322,7 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
     (formValues.forkortLovvalgsperiode && formValues.tomDato) || soknadsperiode.tom
   );
 
-  const stegErGyldig = redigerbart && formIsValid && !harFeilmeldinger && !flereSoknadslandEnnTillatt;
+  const stegErGyldig = redigerbart && formIsValid && !harFeilmeldinger && !harFlereSoknadslandEnnTillatt;
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="vurderingArbeidTjenestepersonEllerFlyVedtak">
@@ -446,7 +446,7 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
         </Nav.Column>
       </Nav.Row>
 
-      {flereSoknadslandEnnTillatt && (
+      {harFlereSoknadslandEnnTillatt && (
         <Nav.Alert variant="error">Det er kun tillatt med ett arbeidsland i vedtaket.</Nav.Alert>
       )}
 
