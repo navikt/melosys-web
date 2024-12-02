@@ -53,25 +53,6 @@ export const Skatteforholdsperioder = ({
               />
             </Nav.Column>
             <Nav.Column>
-              <Forms.Datovelger
-                label={index === 0 ? "Skatteforhold" : ""}
-                name={`skatteforholdsperioder[${index}].fomDato`}
-                readOnly={!redigerbart}
-                control={control}
-              />
-            </Nav.Column>
-
-            <Nav.Column>
-              <Forms.Datovelger
-                label={index === 0 && <span className="invisible" />}
-                name={`skatteforholdsperioder[${index}].tomDato`}
-                readOnly={!redigerbart}
-                control={control}
-                minDate={Utils.dato.norskStringTilDate(formValues.skatteforholdsperioder[index].fomDato)}
-              />
-            </Nav.Column>
-
-            <Nav.Column>
               <Forms.RadioGroup
                 legend={index === 0 ? "Skattepliktig" : ""}
                 hideLegend={index !== 0}

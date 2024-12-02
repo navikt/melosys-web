@@ -75,7 +75,7 @@ const InnerDateRangePicker = ({
         />
       </HStack>
       {showFieldError && fieldError && (
-        <div role="alert" aria-live="assertive" className="datovelger__feilmelding">
+        <div role="alert" aria-live="assertive" className="navds-error-message navds-label navds-label--small">
           {SKRIV_INN_GYLDIG_DATO.melding}
         </div>
       )}
