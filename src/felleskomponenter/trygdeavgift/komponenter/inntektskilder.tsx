@@ -170,7 +170,7 @@ export const Inntektskilder = ({
             </Nav.Column>
 
             {skalViseErMaanedsBelopRadioGroup && (
-              <Nav.Column>
+              <Nav.Column className="periode">
                 {skalFylleInnBruttoInntekt ? (
                   <Forms.Select
                     emptyFieldDisabled
