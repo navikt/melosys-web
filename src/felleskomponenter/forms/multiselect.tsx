@@ -13,15 +13,15 @@ type MultiSelectComponentProps = Omit<ComponentProps<typeof MultiSelectPlain>, "
 type MultiSelectInnerComponentProps = MultiSelectComponentProps & RegisterHookFormProps;
 
 const MultiSelectInnerComponent = ({
-     label,
-     redigerbart,
-     onChange,
-     name,
-     feil,
-     options,
-     values,
-     ...rest
-  }: MultiSelectInnerComponentProps) => {
+  label,
+  redigerbart,
+  onChange,
+  name,
+  feil,
+  options,
+  values,
+  ...rest
+}: MultiSelectInnerComponentProps) => {
   return (
     <MultiSelectPlain
       label={label}

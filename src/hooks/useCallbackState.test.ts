@@ -13,8 +13,6 @@ describe("useCallbackState", () => {
 });
 
 describe("useAsyncCallbackState", () => {
-
-
   it("kaller errorHandler når callback rejectes", async () => {
     const rejectionReason = new Error();
     const rejected = () => Promise.reject(rejectionReason);
