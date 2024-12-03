@@ -34,7 +34,7 @@ import vurderingUtpektSchema from "./vurderingUtpektSchema";
 
 import "./vurderingUtpekt.css";
 import { useFeatureToggle } from "../../../../featuretoggle";
-import { MELOSYS_11_3_A_NORGE_ER_UTPEKT } from "../../../../featuretoggle/toggleNavn";
+import { MELOSYS_NORGE_ER_UTPEKT_11_3_A } from "../../../../featuretoggle/toggleNavn";
 
 export const VurderingUtpekt = ({
   vurderingBegrunnelser,
@@ -50,7 +50,7 @@ export const VurderingUtpekt = ({
   behandlingstema,
   behandlingID,
 }) => {
-  const erToggle11_3_A_NorgeErUtpektEnabled = useFeatureToggle(MELOSYS_11_3_A_NORGE_ER_UTPEKT);
+  const erToggle11_3_A_NorgeErUtpektEnabled = useFeatureToggle(MELOSYS_NORGE_ER_UTPEKT_11_3_A);
 
   const lovvalgsbestemmelserStottetAvBrevVedNorgeUtpekt = MKV.Kodekombinasjoner.alleEØSLovvalg.filter(
     ({ kode }) =>
