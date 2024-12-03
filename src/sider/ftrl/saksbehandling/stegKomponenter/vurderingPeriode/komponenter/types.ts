@@ -1,6 +1,6 @@
 import { FieldValues } from "react-hook-form";
 
-export type MedlemskapsperiodeProp = {
+export interface MedlemskapsperiodeProp {
   ny: boolean;
   feil?: string;
   periodeId: number;
@@ -9,7 +9,7 @@ export type MedlemskapsperiodeProp = {
   innvilgelsesResultat: string;
   bestemmelse: string;
   trygdedekning: string;
-};
+}
 
 export interface FieldArrayProps {
   medlemskapsperioder: MedlemskapsperiodeProp[];

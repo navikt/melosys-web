@@ -1,7 +1,7 @@
 import { deleteAsJson, getAsJson, postAsJson, putAsJson } from "../../utils";
 import { API_BASE_URL, BEHANDLINGER, MEDLEMSKAPSPERIODER } from "../../api-constants";
 
-export type Medlemskapsperiode = {
+export interface Medlemskapsperiode {
   id: number;
   fomDato: string;
   tomDato: string;
@@ -9,15 +9,15 @@ export type Medlemskapsperiode = {
   innvilgelsesResultat: string;
   trygdedekning: string;
   medlemskapstype: string;
-};
+}
 
-export type OppdaterMedlemskapsperiode = {
+export interface OppdaterMedlemskapsperiode {
   fomDato: string;
   tomDato?: string | null;
   innvilgelsesResultat: string;
   bestemmelse: string;
   trygdedekning: string;
-};
+}
 
 export const hentMedlemskapsperioder = (behandlingID: number) =>
   getAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${MEDLEMSKAPSPERIODER}`);

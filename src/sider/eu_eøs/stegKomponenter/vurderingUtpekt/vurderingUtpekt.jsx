@@ -47,7 +47,7 @@ const lovvalgsbestemmelserStottetAvBrevVedNorgeUtpekt = MKV.Kodekombinasjoner.al
     kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_4,
 );
 
-export const VurderingUtpekt = ({
+export function VurderingUtpekt({
   vurderingBegrunnelser,
   slettData,
   tilbake,
@@ -60,7 +60,7 @@ export const VurderingUtpekt = ({
   ytterligereInformasjon,
   behandlingstema,
   behandlingID,
-}) => {
+}) {
   const [erBucAapen, setErBucAapen] = useState(true);
   const dispatch = useDispatch();
 
@@ -132,12 +132,12 @@ export const VurderingUtpekt = ({
       <Nav.Row className="rad">
         <Nav.Column xs="7">
           {vurderingBegrunnelser.length > 0 && (
-            <Fragment>
+            <>
               <Nav.BodyLong weight="semibold" size="small">
                 Treff ved automatisk kontroll
               </Nav.BodyLong>
               <RegisterKontrollTreff vurderingBegrunnelser={vurderingBegrunnelser} />
-            </Fragment>
+            </>
           )}
         </Nav.Column>
       </Nav.Row>
@@ -243,7 +243,7 @@ export const VurderingUtpekt = ({
       />
     </form>
   );
-};
+}
 
 VurderingUtpekt.propTypes = {
   vurderingBegrunnelser: PT.arrayOf(PT.string),

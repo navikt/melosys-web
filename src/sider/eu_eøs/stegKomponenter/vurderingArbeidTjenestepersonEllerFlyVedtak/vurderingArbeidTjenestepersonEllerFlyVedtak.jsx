@@ -44,7 +44,7 @@ import "./vurderingArbeidTjenestepersonEllerFlyVedtak.css";
 import { useFeatureToggle } from "../../../../featuretoggle";
 import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../../featuretoggle/toggleNavn";
 
-const InformertMyndighetVelger = ({ redigerbart, oppdaterData, slettData, informertMyndighetFakta }) => {
+function InformertMyndighetVelger({ redigerbart, oppdaterData, slettData, informertMyndighetFakta }) {
   useEffect(() => {
     oppdaterData(
       konverterAvklartfaktaTilStegData(MKV.Koder.avklartefaktatyper.INFORMERT_MYNDIGHET, informertMyndighetFakta),
@@ -67,7 +67,7 @@ const InformertMyndighetVelger = ({ redigerbart, oppdaterData, slettData, inform
       onChange={oppdaterInformertMyndighetFakta}
     />
   );
-};
+}
 
 InformertMyndighetVelger.propTypes = {
   redigerbart: PT.bool.isRequired,
@@ -100,7 +100,7 @@ const skalViseSendOrienteringsbrev = (sakstype, behandlingstema) =>
     MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY,
   ].includes(behandlingstema);
 
-export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
+export function VurderingArbeidTjenestepersonEllerFlyVedtak({
   redigerbart,
   behandlingID,
   formIsValid,
@@ -130,7 +130,7 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
   validerMottatteOpplysninger,
   fattVedtak,
   selvstendigArbeid,
-}) => {
+}) {
   const [vedtakPending, setVedtakPending] = useState(false);
   const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
   let oppdaterFørKontroll = true;
@@ -341,7 +341,7 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
         </Nav.Column>
       </Nav.Row>
       {redigerbart && (
-        <Fragment>
+        <>
           <Nav.BodyLong weight="semibold" size="small" className="undertittel">
             Lovvalgsperiode
           </Nav.BodyLong>
@@ -350,7 +350,7 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
               {fom} - {tom}
             </Nav.Column>
           </Nav.Row>
-        </Fragment>
+        </>
       )}
       <Skjema.PeriodeForkorter
         className="periodeForkorter"
@@ -469,7 +469,7 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
       />
     </form>
   );
-};
+}
 
 VurderingArbeidTjenestepersonEllerFlyVedtak.propTypes = {
   redigerbart: PT.bool.isRequired,

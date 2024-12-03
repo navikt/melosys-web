@@ -52,6 +52,8 @@
     "prettier/prettier": "error",
     "react/react-in-jsx-scope": "off",
     "react/prop-types": "off",
+    "import/order": "off",
+    "no-underscore-dangle": "off",
     "import/no-extraneous-dependencies": [
       "error",
       {

@@ -27,7 +27,7 @@ const lagNotatOverskrift = (behandlingstype, behandlingstema) => {
   return `${behandlingstypeString} - ${behandlingstemaString}`;
 };
 
-const SideDialogNotater = ({ saksnummer, redigerbart }) => {
+function SideDialogNotater({ saksnummer, redigerbart }) {
   const [notater, setNotater] = useState([]);
   const [leggTilNotatDialogSynlig, setLeggTilNotatDialogSynlig] = useState(false);
   const [nyttNotatTekst, setNyttNotatTekst] = useState("");
@@ -130,7 +130,7 @@ const SideDialogNotater = ({ saksnummer, redigerbart }) => {
       )}
       <div>
         {leggTilNotatDialogSynlig && (
-          <Fragment>
+          <>
             <Nav.Textarea
               label="Notat"
               description={skrivInnNotatLabel}
@@ -149,7 +149,7 @@ const SideDialogNotater = ({ saksnummer, redigerbart }) => {
             <div role="alert" className="sidedialog-notater__nytt-notat-feilmelding">
               {nyttNotatFeilmelding && <Nav.ErrorMessage>{nyttNotatFeilmelding}</Nav.ErrorMessage>}
             </div>
-          </Fragment>
+          </>
         )}
         {!leggTilNotatDialogSynlig && (
           <Nav.Button disabled={!redigerbart} variant="primary" onClick={visLeggTilNotatDialog}>
@@ -159,7 +159,7 @@ const SideDialogNotater = ({ saksnummer, redigerbart }) => {
       </div>
     </div>
   );
-};
+}
 
 SideDialogNotater.propTypes = {
   saksnummer: PT.string.isRequired,

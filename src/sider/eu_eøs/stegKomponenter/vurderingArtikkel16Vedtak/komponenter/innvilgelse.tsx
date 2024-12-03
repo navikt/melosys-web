@@ -34,7 +34,7 @@ interface InnvilgelseProps {
   erUtsendt: boolean;
 }
 
-const Innvilgelse = ({
+function Innvilgelse({
   redigerbart,
   behandlingID,
   gjeldendePeriode,
@@ -47,7 +47,7 @@ const Innvilgelse = ({
   stegErGyldig,
   erStorbrittaniaArt18_1Bestemmelse,
   erUtsendt,
-}: InnvilgelseProps) => {
+}: InnvilgelseProps) {
   const saksnummer = useSelector(fagsakSelectors.SaksnummerSelector) as string;
   const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
   const pdfDokumenter: (BrevDokumentMetadataType | SedDokumentMetadataType)[] = [];
@@ -128,7 +128,7 @@ const Innvilgelse = ({
   }
 
   return (
-    <Fragment>
+    <>
       <Nav.Heading size="large" className="stegvelgertittel">
         {konvensjonStorbritanniaToggleEnabled
           ? "Omfattet av norsk trygdelovgivning"
@@ -147,7 +147,7 @@ const Innvilgelse = ({
             forkortPeriode={formValues.forkortLovvalgsperiode}
             fomLabel="Startdato"
             fomFeltNavn="fomDato"
-            minDate={Utils.dato.norskStringTilDate(formValues.fomDato)!!}
+            minDate={Utils.dato.norskStringTilDate(formValues.fomDato)!}
             maxDate={Utils.dato.norskStringTilDate(formValues.tomDato)}
             tomLabel="Sluttdato"
             tomFeltNavn="tomDato"
@@ -168,8 +168,8 @@ const Innvilgelse = ({
           </Nav.Column>
         </Nav.Row>
       )}
-    </Fragment>
+    </>
   );
-};
+}
 
 export default Innvilgelse;

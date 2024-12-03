@@ -5,17 +5,19 @@ import * as Nav from "../../../navFrontend";
 import VedtakstypeBegrunnelseSkjema from "./vedtakstypebegrunnelseskjema";
 import LabelMedHjelpetekst from "../../labelMedHjelpetekst/labelMedHjelpetekst";
 
-const Vedtakstype = ({ className, redigerbart, vedtakstypebegrunnelseFeltNavn, vedtakstypebegrunnelseLabel }) => (
-  <Nav.Row className={className}>
-    <Nav.Column xs="7">
-      <VedtakstypeBegrunnelseSkjema
-        redigerbart={redigerbart}
-        feltNavn={vedtakstypebegrunnelseFeltNavn}
-        label={vedtakstypebegrunnelseLabel}
-      />
-    </Nav.Column>
-  </Nav.Row>
-);
+function Vedtakstype({ className, redigerbart, vedtakstypebegrunnelseFeltNavn, vedtakstypebegrunnelseLabel }) {
+  return (
+    <Nav.Row className={className}>
+      <Nav.Column xs="7">
+        <VedtakstypeBegrunnelseSkjema
+          redigerbart={redigerbart}
+          feltNavn={vedtakstypebegrunnelseFeltNavn}
+          label={vedtakstypebegrunnelseLabel}
+        />
+      </Nav.Column>
+    </Nav.Row>
+  );
+}
 
 Vedtakstype.propTypes = {
   className: PT.string,

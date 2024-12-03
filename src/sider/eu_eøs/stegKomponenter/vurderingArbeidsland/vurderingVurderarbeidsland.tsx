@@ -41,7 +41,7 @@ interface VurderingVurderarbeidslandProps {
   };
 }
 
-export const VurderingVurderarbeidsland = ({
+export function VurderingVurderarbeidsland({
   bekreftOgFortsett,
   tilbake,
   tilstand: {
@@ -59,7 +59,7 @@ export const VurderingVurderarbeidsland = ({
   oppdaterData,
   slettData,
   begrunnelser,
-}: VurderingVurderarbeidslandProps) => {
+}: VurderingVurderarbeidslandProps) {
   const [initialized, setInitialized] = useState(false);
   const maritimtArbeid = useSelector(formSelectors.MaritimtArbeidSelector);
   const hjemmebaser = useSelector(mottatteOpplysningerSelectors.HjemmebaserSelector);
@@ -130,9 +130,9 @@ export const VurderingVurderarbeidsland = ({
       arbeidUtforesIOppgittLandFakta={arbeidUtforesIOppgittLandFakta}
     />
   ) : (
-    <Fragment>
+    <>
       {maritimtArbeid.length > 0 && (
-        <Fragment>
+        <>
           <Nav.BodyLong weight="semibold" size="small" className="undertittel">
             Vurdering sokkel/skip
           </Nav.BodyLong>
@@ -150,7 +150,7 @@ export const VurderingVurderarbeidsland = ({
             oppdaterData={oppdaterData}
             slettData={slettData}
           />
-        </Fragment>
+        </>
       )}
       {hjemmebaser.length > 0 && (
         <Nav.Row className="borderBottom">
@@ -185,7 +185,7 @@ export const VurderingVurderarbeidsland = ({
           />
         </Nav.Column>
       </Nav.Row>
-    </Fragment>
+    </>
   );
 
   return (
@@ -200,6 +200,6 @@ export const VurderingVurderarbeidsland = ({
       />
     </div>
   );
-};
+}
 
 export default VurderingVurderarbeidsland;

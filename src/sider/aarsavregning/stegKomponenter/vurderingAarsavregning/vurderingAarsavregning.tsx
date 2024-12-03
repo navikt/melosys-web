@@ -127,7 +127,7 @@ const { FERDIGBEHANDLET } = MKV.Koder.behandlinger.behandlingsresultattyper;
 
 // TODO: Error handling ved hentÅrsavregning
 // TODO: Boolean for årsavregningstype mangler. Automatisk opprettet årsavregning skal ha år tilknyttet og dermed skal årvelger skjules
-export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
+export function VurderingAarsavregning({ bekreft, oppdaterStatus }: Props) {
   const [valgtÅr, setValgtÅr] = useState<number | null>(null);
   const [initieltÅr, setInitieltÅr] = useState<number | null>(null);
   const [erAvvik, setErAvvik] = useState<boolean | undefined>(undefined);
@@ -619,7 +619,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
       {aarsavregningResponse?.tidligereGrunnlagsopplysninger && (
         <BeregnetTrygdeavgiftDetaljer
           grunnlag={aarsavregningResponse?.tidligereGrunnlagsopplysninger}
-          medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!!}
+          medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!}
           tittel="Tidligere beregnet trygdeavgift"
         />
       )}
@@ -670,7 +670,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
           skattRemove={skattRemove}
           skattAppend={skattAppend}
           redigerbart={redigerbart}
-          medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!!}
+          medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!}
         />
       )}
 
@@ -684,7 +684,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
       {(erAvvik || erIngenGrunnlag) && formIsValid && aarsavregningResponse?.nyttGrunnlag && (
         <BeregnetTrygdeavgiftDetaljer
           grunnlag={aarsavregningResponse.nyttGrunnlag}
-          medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!!}
+          medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!}
           tittel="Endelig beregnet trygdeavgift"
         />
       )}
@@ -696,4 +696,4 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
       </Nav.Button>
     </div>
   );
-};
+}

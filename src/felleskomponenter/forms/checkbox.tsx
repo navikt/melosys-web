@@ -20,7 +20,7 @@ interface CheckboxComponentProps {
 
 type CheckboxInnerComponentProps = CheckboxComponentProps & RegisterHookFormProps;
 
-const InnerCheckboxComponent = ({ readOnly, ...rest }: CheckboxInnerComponentProps) => {
+function InnerCheckboxComponent({ readOnly, ...rest }: CheckboxInnerComponentProps) {
   return (
     <Nav.Checkbox
       className={rest.className}
@@ -37,7 +37,7 @@ const InnerCheckboxComponent = ({ readOnly, ...rest }: CheckboxInnerComponentPro
       {rest.label}
     </Nav.Checkbox>
   );
-};
+}
 
 type CheckboxProps = CheckboxComponentProps & UseControllerProps;
 

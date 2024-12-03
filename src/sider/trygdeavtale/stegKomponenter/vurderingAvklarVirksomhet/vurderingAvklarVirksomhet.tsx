@@ -50,7 +50,7 @@ interface Props {
   aktivtSteg: boolean;
 }
 
-const VurderingAvklarVirksomhet = ({
+function VurderingAvklarVirksomhet({
   formValues,
   formIsValid,
   fortsett,
@@ -61,7 +61,7 @@ const VurderingAvklarVirksomhet = ({
   tilbake,
   virksomheterListe,
   aktivtSteg,
-}: PropsFromRedux & Props) => {
+}: PropsFromRedux & Props) {
   useEffect(() => {
     if (redigerbart && formValues && aktivtSteg) {
       oppdaterFlyt({
@@ -105,7 +105,7 @@ const VurderingAvklarVirksomhet = ({
       />
     </div>
   );
-};
+}
 
 const VurderingAvklarVirksomhetForm = reduxForm<{}, PropsFromRedux & Props>({
   form: KV.Form.Trygdeavtale.AVKLAR_VIRKSOMHET,

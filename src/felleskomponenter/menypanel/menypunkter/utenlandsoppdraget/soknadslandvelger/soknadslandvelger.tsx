@@ -21,7 +21,7 @@ interface SoknadslandvelgerProps {
   lagreSoknadOgOppfriskSaksopplysninger: () => void;
 }
 
-const Soknadslandvelger = ({ redigerbart, lagreSoknadOgOppfriskSaksopplysninger }: SoknadslandvelgerProps) => {
+function Soknadslandvelger({ redigerbart, lagreSoknadOgOppfriskSaksopplysninger }: SoknadslandvelgerProps) {
   const dispatch = useDispatch();
   const [status, setStatus] = useState<Status>(Status.RedigeringUtfort);
 
@@ -67,6 +67,6 @@ const Soknadslandvelger = ({ redigerbart, lagreSoknadOgOppfriskSaksopplysninger 
       )}
     </div>
   );
-};
+}
 
 export default Soknadslandvelger;

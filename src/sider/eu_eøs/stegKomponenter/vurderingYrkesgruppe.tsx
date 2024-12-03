@@ -58,14 +58,14 @@ interface VurderingYrkesgruppeProps {
 
 const { UTSENDT_ARBEIDSTAKER, UTSENDT_SELVSTENDIG, ARBEID_KUN_NORGE } = MKV.Koder.behandlinger.behandlingstema;
 
-const VurderingYrkesgruppe = ({
+function VurderingYrkesgruppe({
   bekreftOgFortsett,
   tilstand: { harAvklaring, yrkesgruppe, tilleggbestemmelse },
   redigerbart,
   oppdaterData,
   slettData,
   tilbake,
-}: VurderingYrkesgruppeProps) => {
+}: VurderingYrkesgruppeProps) {
   const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
   const lovvalgsbestemmelse = useSelector(anmodningsperioderSelectors.LovvalgsbestemmelseSelector);
   const [bestemmelse, setBestemmelse] = useState(lovvalgsbestemmelse ?? "");
@@ -208,7 +208,7 @@ const VurderingYrkesgruppe = ({
       />
     </div>
   );
-};
+}
 
 VurderingYrkesgruppe.ID = "YRKESGRUPPE";
 export default VurderingYrkesgruppe;

@@ -22,7 +22,7 @@ import {
 
 import "./vurderingMedfolgendeBarn.css";
 
-const MedfolgendeBarn = ({
+function MedfolgendeBarn({
   navn,
   idNummer,
   omfattet,
@@ -32,7 +32,7 @@ const MedfolgendeBarn = ({
   onUnmount,
   begrunnelse,
   onBegrunnelseChange,
-}) => {
+}) {
   const radioName = Utils._uuid();
 
   useEffect(() => {
@@ -92,7 +92,7 @@ const MedfolgendeBarn = ({
       </Nav.Column>
     </Nav.Row>
   );
-};
+}
 
 MedfolgendeBarn.propTypes = {
   navn: PT.string,
@@ -113,7 +113,7 @@ MedfolgendeBarn.defaultProps = {
   begrunnelse: "",
 };
 
-const VurderingMedfolgendeBarn = ({
+function VurderingMedfolgendeBarn({
   vurderingLovvalgBarnFakta,
   medfolgendeBarn,
   bekreftOgFortsett,
@@ -122,7 +122,7 @@ const VurderingMedfolgendeBarn = ({
   slettData,
   tilstand: { harAvklaring },
   tilbake,
-}) => {
+}) {
   const medfolgendeBarnMedFritekst = vurderingLovvalgBarnFakta.find((af) => af.begrunnelseFritekst);
   const defaultMedfolgendeBarnFritekst = medfolgendeBarnMedFritekst
     ? medfolgendeBarnMedFritekst.begrunnelseFritekst
@@ -235,7 +235,7 @@ const VurderingMedfolgendeBarn = ({
       />
     </Nav.Container>
   );
-};
+}
 
 VurderingMedfolgendeBarn.propTypes = {
   vurderingLovvalgBarnFakta: MPT.AvklartefaktaListe,

@@ -20,14 +20,14 @@ interface VurderingArtikkel12_xProps {
   redigerbart: boolean;
 }
 
-const VurderingArtikkel12_x = ({
+function VurderingArtikkel12_x({
   bekreftOgFortsett,
   tilstand: { harAvklaring, artikkelNavn },
   redigerbart,
   oppdaterData,
   slettData,
   tilbake,
-}: VurderingArtikkel12_xProps) => {
+}: VurderingArtikkel12_xProps) {
   const erVurderingArbeidstaker = artikkelNavn === "12.1";
   const arbeidsland = useSelector(avklartefaktaSelectors.ArbeidslandSelector);
   const visStorbritanniaKonvensjon = MKVUtils.enesteLandErStorbritannia(arbeidsland);
@@ -63,6 +63,6 @@ const VurderingArtikkel12_x = ({
       />
     </div>
   );
-};
+}
 
 export default VurderingArtikkel12_x;

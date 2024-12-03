@@ -16,7 +16,7 @@ import Fotknapper from "./fotknapper";
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import journalforingsedSchema from "./journalforingsedSchema";
 
-const JournalforingSED = ({
+function JournalforingSED({
   avsenderID,
   avsenderNavn,
   sakstype,
@@ -25,62 +25,64 @@ const JournalforingSED = ({
   submitSpinner,
   avbrytJournalforing,
   handleSubmit,
-}) => (
-  <form onSubmit={handleSubmit}>
-    <Komponent
-      ikon={Ikoner.AccountCircle}
-      tittel="Informasjon om bruker"
-      innhold={
-        <Nav.Row>
-          <Nav.Column xs="6">
-            <BrukerNavnSkjema form={form} />
-          </Nav.Column>
-        </Nav.Row>
-      }
-    />
+}) {
+  return (
+    <form onSubmit={handleSubmit}>
+      <Komponent
+        ikon={Ikoner.AccountCircle}
+        tittel="Informasjon om bruker"
+        innhold={
+          <Nav.Row>
+            <Nav.Column xs="6">
+              <BrukerNavnSkjema form={form} />
+            </Nav.Column>
+          </Nav.Row>
+        }
+      />
 
-    <Komponent
-      ikon={Ikoner.Globe}
-      tittel="Informasjon om avsender"
-      innhold={
-        <Nav.Row>
-          <Nav.Column xs="6">
-            <Nav.BodyLong weight="semibold" size="small">
-              Avsender ID
-            </Nav.BodyLong>
-            <Nav.BodyLong size="small">{avsenderID}</Nav.BodyLong>
-            <Nav.BodyLong weight="semibold" size="small">
-              Avsenders navn
-            </Nav.BodyLong>
-            <Nav.BodyLong size="small">{avsenderNavn}</Nav.BodyLong>
-          </Nav.Column>
-        </Nav.Row>
-      }
-    />
-    <Komponent
-      ikon={Ikoner.ParagraphTwoColumns}
-      tittel="Saksinformasjon"
-      innhold={
-        <Nav.Row>
-          <Nav.Column xs="5">
-            <Nav.BodyLong weight="semibold" size="small">
-              Sakstype
-            </Nav.BodyLong>
-            <Nav.BodyLong size="small">{sakstype.term}</Nav.BodyLong>
-          </Nav.Column>
-          <Nav.Column xs="7">
-            <Nav.BodyLong weight="semibold" size="small">
-              Behandlingstema
-            </Nav.BodyLong>
-            <Nav.BodyLong size="small">{behandlingstema.term}</Nav.BodyLong>
-          </Nav.Column>
-        </Nav.Row>
-      }
-    />
+      <Komponent
+        ikon={Ikoner.Globe}
+        tittel="Informasjon om avsender"
+        innhold={
+          <Nav.Row>
+            <Nav.Column xs="6">
+              <Nav.BodyLong weight="semibold" size="small">
+                Avsender ID
+              </Nav.BodyLong>
+              <Nav.BodyLong size="small">{avsenderID}</Nav.BodyLong>
+              <Nav.BodyLong weight="semibold" size="small">
+                Avsenders navn
+              </Nav.BodyLong>
+              <Nav.BodyLong size="small">{avsenderNavn}</Nav.BodyLong>
+            </Nav.Column>
+          </Nav.Row>
+        }
+      />
+      <Komponent
+        ikon={Ikoner.ParagraphTwoColumns}
+        tittel="Saksinformasjon"
+        innhold={
+          <Nav.Row>
+            <Nav.Column xs="5">
+              <Nav.BodyLong weight="semibold" size="small">
+                Sakstype
+              </Nav.BodyLong>
+              <Nav.BodyLong size="small">{sakstype.term}</Nav.BodyLong>
+            </Nav.Column>
+            <Nav.Column xs="7">
+              <Nav.BodyLong weight="semibold" size="small">
+                Behandlingstema
+              </Nav.BodyLong>
+              <Nav.BodyLong size="small">{behandlingstema.term}</Nav.BodyLong>
+            </Nav.Column>
+          </Nav.Row>
+        }
+      />
 
-    <Fotknapper avbrytJournalforing={avbrytJournalforing} spinner={submitSpinner} />
-  </form>
-);
+      <Fotknapper avbrytJournalforing={avbrytJournalforing} spinner={submitSpinner} />
+    </form>
+  );
+}
 
 JournalforingSED.propTypes = {
   avsenderNavn: PT.string.isRequired,

@@ -20,7 +20,7 @@ interface DetaljerInterface {
   dekning: string;
 }
 
-export const BeregnetTrygdeavgiftDetaljer = ({
+export function BeregnetTrygdeavgiftDetaljer({
   grunnlag,
   medlemskapsTypeErPliktig,
   tittel,
@@ -28,7 +28,7 @@ export const BeregnetTrygdeavgiftDetaljer = ({
   grunnlag: Grunnlagsopplysninger | undefined;
   medlemskapsTypeErPliktig: boolean;
   tittel: string;
-}) => {
+}) {
   const hentDetaljer = (data: Grunnlagsopplysninger | undefined): DetaljerInterface[] => {
     if (data === undefined) return [];
     return data.avgift.trygdeavgiftsperioder
@@ -59,7 +59,7 @@ export const BeregnetTrygdeavgiftDetaljer = ({
       );
   };
 
-  const arbAvgBetalesKreves = (kildetype: String) => !medlemskapsTypeErPliktig && kildetype !== MISJONÆR;
+  const arbAvgBetalesKreves = (kildetype: string) => !medlemskapsTypeErPliktig && kildetype !== MISJONÆR;
 
   return (
     <Nav.ExpansionCard aria-label="trygdeavgiftdetaljer" size="small">
@@ -116,4 +116,4 @@ export const BeregnetTrygdeavgiftDetaljer = ({
       </Nav.ExpansionCard.Content>
     </Nav.ExpansionCard>
   );
-};
+}

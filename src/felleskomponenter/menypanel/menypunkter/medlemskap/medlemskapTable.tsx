@@ -10,7 +10,7 @@ interface MedlemskapTableProps {
   perioder: Api.Behandlinger.behandling.Medlemsperiode[];
 }
 
-const MedlemskapTable = ({ perioder }: MedlemskapTableProps) => {
+function MedlemskapTable({ perioder }: MedlemskapTableProps) {
   const [expanded, setExpanded] = useState(false);
 
   return (
@@ -46,6 +46,6 @@ const MedlemskapTable = ({ perioder }: MedlemskapTableProps) => {
       )}
     </div>
   );
-};
+}
 
 export default MedlemskapTable;

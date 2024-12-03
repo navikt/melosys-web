@@ -2,7 +2,7 @@ import MKV from "../../../../../melosyskodeverk";
 import * as Hjelpetekster from "./hjelpetekster";
 import * as Nav from "../../../../../navFrontend";
 
-const BestemmelseHjelpetekst = ({ bestemmelse }: { bestemmelse?: string }) => {
+function BestemmelseHjelpetekst({ bestemmelse }: { bestemmelse?: string }) {
   if (!bestemmelse) return null;
 
   const { USA_ART5_2, USA_ART5_4, USA_ART5_5, USA_ART5_6 } =
@@ -71,6 +71,6 @@ const BestemmelseHjelpetekst = ({ bestemmelse }: { bestemmelse?: string }) => {
       {ikkeKravOmTidsbegrensning && <p>Det er ikke krav om at utsendingsperioden/arbeidsperioden er tidsbegrenset.</p>}
     </>
   );
-};
+}
 
 export default BestemmelseHjelpetekst;

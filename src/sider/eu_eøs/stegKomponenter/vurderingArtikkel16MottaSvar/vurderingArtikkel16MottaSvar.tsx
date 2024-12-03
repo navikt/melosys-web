@@ -33,14 +33,14 @@ interface VurderingArtikkel16MottaSvarProps {
   slettData: () => void;
 }
 
-const VurderingArtikkel16MottaSvar = ({
+function VurderingArtikkel16MottaSvar({
   redigerbart,
   bekreftOgFortsett,
   slettData,
   tilbake,
   tilstand,
   oppdaterData,
-}: VurderingArtikkel16MottaSvarProps) => {
+}: VurderingArtikkel16MottaSvarProps) {
   const dispatch = useDispatch();
   const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
   const anmodningsperiodeID = useSelector(anmodningsperioderSelectors.AnmodningsperiodeIDSelector);
@@ -117,6 +117,6 @@ const VurderingArtikkel16MottaSvar = ({
       />
     </div>
   );
-};
+}
 
 export default VurderingArtikkel16MottaSvar;

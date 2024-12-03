@@ -13,10 +13,10 @@ interface EnkeltArbeidsforholdNorgeRedigeringUtfortProps {
   saksnummer: string;
 }
 
-const EnkeltArbeidsforholdNorgeRedigeringUtfort = ({
+function EnkeltArbeidsforholdNorgeRedigeringUtfort({
   org,
   saksnummer,
-}: EnkeltArbeidsforholdNorgeRedigeringUtfortProps) => {
+}: EnkeltArbeidsforholdNorgeRedigeringUtfortProps) {
   const [kontaktopplysninger] = useAsyncCallbackState(
     () => Api.Fagsaker.kontaktopplysninger.hent(saksnummer, org.orgnr),
     { kontaktnavn: null, kontaktorgnr: null, kontakttelefon: null },
@@ -100,6 +100,6 @@ const EnkeltArbeidsforholdNorgeRedigeringUtfort = ({
       {kontaktopplysningerContent}
     </div>
   );
-};
+}
 
 export default EnkeltArbeidsforholdNorgeRedigeringUtfort;

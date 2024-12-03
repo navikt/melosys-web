@@ -10,7 +10,7 @@ interface LagretFullmektigProps {
   fullmektige: Fullmektig[];
 }
 
-const LagretFullmektig = ({ fullmektige }: LagretFullmektigProps) => {
+function LagretFullmektig({ fullmektige }: LagretFullmektigProps) {
   return (
     <>
       {fullmektige.map((fullmektig: Fullmektig) => {
@@ -68,9 +68,9 @@ const LagretFullmektig = ({ fullmektige }: LagretFullmektigProps) => {
       })}
     </>
   );
-};
+}
 
-const Fullmakter = ({ fullmakter }: { fullmakter: string[] }) => {
+function Fullmakter({ fullmakter }: { fullmakter: string[] }) {
   return (
     <>
       {fullmakter.map((fullmakt) => (
@@ -83,9 +83,9 @@ const Fullmakter = ({ fullmakter }: { fullmakter: string[] }) => {
       ))}
     </>
   );
-};
+}
 
-const Kontaktperson = ({ fullmektig }: { fullmektig: Fullmektig }) => {
+function Kontaktperson({ fullmektig }: { fullmektig: Fullmektig }) {
   if (!fullmaktStøtterKontaktperson(fullmektig.fullmakter)) return null;
   return (
     <div className="kontaktperson">
@@ -132,6 +132,6 @@ const Kontaktperson = ({ fullmektig }: { fullmektig: Fullmektig }) => {
       )}
     </div>
   );
-};
+}
 
 export default LagretFullmektig;

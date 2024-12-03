@@ -42,12 +42,12 @@ type VirksomhetenINorgeProps = PropsFromRedux & {
   redigerbart: boolean;
 };
 
-const VirksomhetenINorge = ({
+function VirksomhetenINorge({
   redigerbart,
   visArbeidsforholdRolleEtiketter,
   erOffentligVirksomhet,
   oppdaterMottatteOpplysninger,
-}: VirksomhetenINorgeProps) => {
+}: VirksomhetenINorgeProps) {
   const lagreHandler = () => {
     oppdaterMottatteOpplysninger();
     return true;
@@ -101,6 +101,6 @@ const VirksomhetenINorge = ({
       </Nav.Row>
     </Nav.Container>
   );
-};
+}
 
 export default connector(VirksomhetenINorge);

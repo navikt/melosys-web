@@ -80,14 +80,14 @@ interface VurderingArtikkel11_4Props {
   tilbake: () => void;
 }
 
-const VurderingArtikkel11_4 = ({
+function VurderingArtikkel11_4({
   oppdaterData,
   tilstand: { harAvklaring, nis },
   slettData,
   bekreftOgFortsett,
   redigerbart,
   tilbake,
-}: VurderingArtikkel11_4Props) => {
+}: VurderingArtikkel11_4Props) {
   const arbeidKunNorgeToggleEnabled = useFeatureToggle(MELOSYS_ARBEID_KUN_NORGE);
   const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
   const alleLand = useSelector(avklartefaktaSelectors.AlleRelevanteLandSelector);
@@ -260,6 +260,6 @@ const VurderingArtikkel11_4 = ({
       />
     </div>
   );
-};
+}
 
 export default VurderingArtikkel11_4;

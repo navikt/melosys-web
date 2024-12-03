@@ -50,7 +50,7 @@ export const ikkeVisBinIngenDataSymbolsynlighet: SymbolsynlighetConfig = {
   [Status.RedigeringUtfort]: { bin: true, pencil: true },
 };
 
-const EditerbartElement = ({
+function EditerbartElement({
   redigererRender,
   ingenDataRender,
   redigeringUtfortRender,
@@ -66,7 +66,7 @@ const EditerbartElement = ({
   className,
   onLagreClick,
   symbolsynlighet = {},
-}: EditerbartElementProps) => {
+}: EditerbartElementProps) {
   const hentNesteStatus = (): Status => {
     if (harData) {
       return Status.RedigeringUtfort;
@@ -144,6 +144,6 @@ const EditerbartElement = ({
       </div>
     </div>
   );
-};
+}
 
 export default EditerbartElement;

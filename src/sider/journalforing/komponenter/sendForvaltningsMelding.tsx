@@ -22,11 +22,7 @@ enum feilmeldingTyper {
   BRUKER_MANGLER_ADRESSE = "Avsender må enten registrere adresse i Folkeregisteret eller kontaktadresse via nav.no.",
 }
 
-const SendForvaltningsMelding = ({
-  avsenderType,
-  adresseOpplysninger,
-  settFeltInnhold,
-}: SendForvaltningsMeldingProps) => {
+function SendForvaltningsMelding({ avsenderType, adresseOpplysninger, settFeltInnhold }: SendForvaltningsMeldingProps) {
   const [mottaker, setMottaker] = useState(adresseOpplysninger.harBrukerAdresse ? BRUKER : INGEN);
   const [feilmeldinger, setFeilmeldinger] = useState<feilmeldingTyper[]>([]);
 
@@ -73,6 +69,6 @@ const SendForvaltningsMelding = ({
       </div>
     )
   );
-};
+}
 
 export default SendForvaltningsMelding;

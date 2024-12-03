@@ -52,14 +52,14 @@ interface BestemmelserProps {
   visStorbritanniaKonvensjon: boolean;
 }
 
-export const Bestemmelser = ({
+export function Bestemmelser({
   oppdaterData,
   slettData,
   vilkaarNavn12,
   begrunnelserUtsending,
   redigerbart,
   visStorbritanniaKonvensjon,
-}: BestemmelserProps) => {
+}: BestemmelserProps) {
   const erArbeidstaker = vilkaarNavn12 === "12.1";
   const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
   const lovvalgsperiodeBestemmelse = useSelector(lovvalgsperioderSelectors.LovvalgBestemmelseSelector);
@@ -352,6 +352,6 @@ export const Bestemmelser = ({
       </Nav.Row>
     </div>
   );
-};
+}
 
 export default Bestemmelser;

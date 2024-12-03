@@ -50,7 +50,7 @@ const komponentDispatch = (dispatch: ThunkDispatch<RootState, unknown, Action>) 
     dispatch(vedtakOperations.fatt(behandlingID, body)),
 });
 
-export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
+export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   const dispatch = useDispatch();
   const [vedtakPending, setVedtakPending] = useState<boolean>(false);
   const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
@@ -272,4 +272,4 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
       />
     </div>
   );
-};
+}

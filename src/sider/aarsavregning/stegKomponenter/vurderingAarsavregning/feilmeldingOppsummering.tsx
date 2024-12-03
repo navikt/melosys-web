@@ -1,7 +1,7 @@
 import { Alert, List as NavList } from "../../../../navFrontend";
 import { Heading } from "@navikt/ds-react";
 
-export const FeilmeldingOppsummering = ({ errors }: any) => {
+export function FeilmeldingOppsummering({ errors }: any) {
   return (
     <Alert variant="warning">
       <Heading spacing size="small" level="3">
@@ -25,4 +25,4 @@ export const FeilmeldingOppsummering = ({ errors }: any) => {
       </NavList>
     </Alert>
   );
-};
+}

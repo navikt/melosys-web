@@ -33,7 +33,7 @@ enum ResetTyper {
 
 const { IKKE_YRKESAKTIV_FTRL_2_1_OPPHOLD, IKKE_YRKESAKTIV_RELASJON, ARBEIDSSITUASJON } = MKV.Koder.avklartefaktatyper;
 
-export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: VurderingBestemmelseProps) => {
+export function VurderingBestemmelse({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: VurderingBestemmelseProps) {
   const dispatch = useDispatch();
 
   const behandlingstatus = useSelector(behandlingerSelectors.BehandlingsstatusKodeSelector);
@@ -427,7 +427,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
               setValgteBegrunnelser(
                 new Map(
                   valgteBegrunnelser.set(valgtBegrunnelse, {
-                    begrunnelseKode: valgteBegrunnelser.get(valgtBegrunnelse)!!.begrunnelseKode,
+                    begrunnelseKode: valgteBegrunnelser.get(valgtBegrunnelse)!.begrunnelseKode,
                     begrunnelseFritekst,
                   }),
                 ),
@@ -455,4 +455,4 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
       />
     </div>
   );
-};
+}

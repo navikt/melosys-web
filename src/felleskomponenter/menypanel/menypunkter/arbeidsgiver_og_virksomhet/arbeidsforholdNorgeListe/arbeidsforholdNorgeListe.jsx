@@ -16,7 +16,7 @@ import EnkeltArbeidsforholdNorgeRedigeringUtfort from "./enkeltArbeidsforholdNor
 import "./arbeidsforholdNorgeListe.css";
 import Orgnrinput from "./orgnrinput";
 
-const EnkeltArbeidsforholdNorgeRedigerer = ({
+function EnkeltArbeidsforholdNorgeRedigerer({
   erstatt,
   valideringer,
   hentVedMount,
@@ -29,7 +29,7 @@ const EnkeltArbeidsforholdNorgeRedigerer = ({
   kontaktopplysninger,
   onKontaktopplysningerInputBlur,
   onKontaktopplysningerSlettClick,
-}) => {
+}) {
   const orgFinnes = !Utils._isEmpty(organisasjon) && !Utils._isEmpty(organisasjon.orgnr);
 
   return (
@@ -68,7 +68,7 @@ const EnkeltArbeidsforholdNorgeRedigerer = ({
       </Nav.Column>
     </Nav.Row>
   );
-};
+}
 
 EnkeltArbeidsforholdNorgeRedigerer.propTypes = {
   valideringer: PT.arrayOf(
@@ -99,7 +99,7 @@ EnkeltArbeidsforholdNorgeRedigerer.defaultProps = {
   orgFeilVedHentingTekst: undefined,
 };
 
-const EnkeltArbeidsforholdNorge = ({
+function EnkeltArbeidsforholdNorge({
   fields,
   redigerbart,
   hentOrganisasjon,
@@ -112,7 +112,7 @@ const EnkeltArbeidsforholdNorge = ({
   indeks,
   element,
   elementer,
-}) => {
+}) {
   const organisasjon = findOrganisasjon(element) || {};
 
   const [kontaktopplysninger, setKontaktopplysninger, slettKontaktOpplysninger, lagreKontaktOpplysninger] =
@@ -165,7 +165,7 @@ const EnkeltArbeidsforholdNorge = ({
       )}
     />
   );
-};
+}
 
 EnkeltArbeidsforholdNorge.propTypes = {
   fields: PT.object.isRequired,
@@ -186,7 +186,7 @@ EnkeltArbeidsforholdNorge.defaultProps = {
   element: {},
 };
 
-const InnerArbeidsforholdNorgeListe = ({
+function InnerArbeidsforholdNorgeListe({
   leggTilTekst,
   fields,
   redigerbart,
@@ -199,7 +199,7 @@ const InnerArbeidsforholdNorgeListe = ({
   tittelTekst,
   tittelIkon,
   className,
-}) => {
+}) {
   const elementer = fields.getAll() || [];
 
   const leggTilDefault = () => {
@@ -237,7 +237,7 @@ const InnerArbeidsforholdNorgeListe = ({
       )}
     </div>
   );
-};
+}
 
 InnerArbeidsforholdNorgeListe.propTypes = {
   leggTilTekst: PT.string.isRequired,
@@ -260,9 +260,11 @@ InnerArbeidsforholdNorgeListe.defaultProps = {
   className: undefined,
 };
 
-const ArbeidsforholdNorgeListe = ({ feltNavn, ...rest }) => (
-  <FieldArray rerenderOnEveryChange name={feltNavn} component={InnerArbeidsforholdNorgeListe} props={{ ...rest }} />
-);
+function ArbeidsforholdNorgeListe({ feltNavn, ...rest }) {
+  return (
+    <FieldArray rerenderOnEveryChange name={feltNavn} component={InnerArbeidsforholdNorgeListe} props={{ ...rest }} />
+  );
+}
 
 ArbeidsforholdNorgeListe.propTypes = {
   feltNavn: PT.string.isRequired,

@@ -14,10 +14,10 @@ import FritekstvedleggSkjema from "./fritekstvedleggSkjema";
 
 const FORHANDSVIS_ERROR_MESSAGE = "Det oppstod en feil da vedlegget skulle forhåndsvises";
 
-export type Fritekstvedlegg = {
+export interface Fritekstvedlegg {
   tittel: string;
   fritekst: string;
-};
+}
 
 interface BrevVedleggProps {
   fritekstvedlegg: Fritekstvedlegg[];
@@ -38,7 +38,7 @@ interface BrevVedleggProps {
   setRedigerFritekstvedleggIndex: (value: number | undefined) => void;
 }
 
-const BrevVedlegg = ({
+function BrevVedlegg({
   fritekstvedlegg,
   setFritekstvedlegg,
   valgteVedlegg,
@@ -55,7 +55,7 @@ const BrevVedlegg = ({
   setVisFritekstvedleggSkjema,
   redigerFritekstvedleggIndex,
   setRedigerFritekstvedleggIndex,
-}: BrevVedleggProps) => {
+}: BrevVedleggProps) {
   const [forhandsvisFritekstvedleggError, setForhandsvisFritekstvedleggError] = useState(false);
 
   const lagFritekstPdfUrl = async (index: number) => {
@@ -182,6 +182,6 @@ const BrevVedlegg = ({
         ))}
     </>
   );
-};
+}
 
 export default BrevVedlegg;

@@ -7,10 +7,12 @@ interface SletteradProps {
   onClick: () => void;
 }
 
-const Sletterad = ({ onClick }: SletteradProps) => (
-  <div className="sletterad">
-    <Mui.IkonKnapp ikon={Ikoner.Bin} ariaLabel="Slett arbeidssted" onClick={onClick} />
-  </div>
-);
+function Sletterad({ onClick }: SletteradProps) {
+  return (
+    <div className="sletterad">
+      <Mui.IkonKnapp ikon={Ikoner.Bin} ariaLabel="Slett arbeidssted" onClick={onClick} />
+    </div>
+  );
+}
 
 export default Sletterad;

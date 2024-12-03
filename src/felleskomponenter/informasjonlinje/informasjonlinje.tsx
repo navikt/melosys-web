@@ -23,12 +23,12 @@ type InformasjonlinjeProps = PropsFromRedux & {
   visBehandlingsmeny?: boolean;
 };
 
-const Informasjonlinje = ({
+function Informasjonlinje({
   behandlingID,
   saksnummer,
   hovedpartRolle,
   visBehandlingsmeny = true,
-}: InformasjonlinjeProps) => {
+}: InformasjonlinjeProps) {
   const visPersonLinje = hovedpartRolle === MKV.Koder.aktoersroller.BRUKER;
   const visVirksomhetLinje = hovedpartRolle === MKV.Koder.aktoersroller.VIRKSOMHET;
 
@@ -41,6 +41,6 @@ const Informasjonlinje = ({
       {visBehandlingsmeny && <Behandlingsmeny />}
     </div>
   );
-};
+}
 
 export default connector(Informasjonlinje);

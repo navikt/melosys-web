@@ -363,7 +363,7 @@ export function feilMeldingBlokkerer(type?: string): boolean {
   }
 }
 
-export const Feilmelding = ({ type }: { type?: string }) => {
+export function Feilmelding({ type }: { type?: string }) {
   switch (type) {
     case TypeFeilmelding.INGEN_MEDLEMSKAPSPERIODER:
       return IngenMedlemskapsperioder;
@@ -396,4 +396,4 @@ export const Feilmelding = ({ type }: { type?: string }) => {
     default:
       return null;
   }
-};
+}

@@ -13,7 +13,7 @@ import * as Utils from "../../../utils";
 import "./knyttTilSak.css";
 import { useAsyncCallbackState } from "../../../hooks";
 
-export const KnyttTilSak = (props) => {
+export function KnyttTilSak(props) {
   const { sak, erJournalføring, changeField, feltNavn, formValues } = props;
   const { behandlingstema, behandlingstype, journalforingGjelder, opprettBehandling } = {
     opprettBehandling: formValues[feltNavn.opprettBehandling],
@@ -118,9 +118,9 @@ export const KnyttTilSak = (props) => {
     }
   }, [opprettBehandling, behandlingstema, behandlingstype, sisteBehandling?.behandlingstema?.kode]);
 
-  const VurderDokumentCheckbox = () => (
-    <Skjema.Checkbox feltNavn="vurderDokument" label={`Oppdater behandlingsstatus til "Vurder dokument"`} />
-  );
+  function VurderDokumentCheckbox() {
+    return <Skjema.Checkbox feltNavn="vurderDokument" label={`Oppdater behandlingsstatus til "Vurder dokument"`} />;
+  }
 
   if (sakKanIkkeViderebehandles) {
     return (
@@ -215,7 +215,7 @@ export const KnyttTilSak = (props) => {
       )}
     </div>
   );
-};
+}
 
 KnyttTilSak.propTypes = {
   sak: MPT.Fagsak.isRequired,

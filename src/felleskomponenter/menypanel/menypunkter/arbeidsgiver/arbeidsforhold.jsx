@@ -15,7 +15,7 @@ import Arbeidsavtaler from "./arbeidsavtaler";
 
 import "./arbeidsforhold.css";
 
-export const Arbeidsforholdet = (props) => {
+export function Arbeidsforholdet(props) {
   const {
     ansettelsesPeriode,
     sistBekreftet,
@@ -83,13 +83,13 @@ export const Arbeidsforholdet = (props) => {
       </Nav.Container>
     </div>
   );
-};
+}
 
 Arbeidsforholdet.propTypes = {
   arbeidsforholdet: MPT.Arbeidsforholdet.isRequired,
 };
 
-const Arbeidsforholdene = (props) => {
+function Arbeidsforholdene(props) {
   const { arbeidsforholdene } = props;
   return (
     <div>
@@ -98,7 +98,7 @@ const Arbeidsforholdene = (props) => {
       ))}
     </div>
   );
-};
+}
 
 Arbeidsforholdene.propTypes = {
   arbeidsforholdene: MPT.Arbeidsforholdene.isRequired,

@@ -39,13 +39,7 @@ interface Props extends RouteComponentProps<MatchParams> {
   visOppfriskModal: () => void;
 }
 
-const Saksbehandling = ({
-  behandlingOppfriskes,
-  startOgVisOppfriskModal,
-  visOppfriskModal,
-  match,
-  location,
-}: Props) => {
+function Saksbehandling({ behandlingOppfriskes, startOgVisOppfriskModal, visOppfriskModal, match, location }: Props) {
   const [behandlingID, setBehandlingID] = useState(-1);
   const [saksopplysningerLastet, setSaksopplysningerLastet] = useState(false);
 
@@ -178,6 +172,6 @@ const Saksbehandling = ({
       </div>
     </>
   );
-};
+}
 
 export default Saksbehandling;

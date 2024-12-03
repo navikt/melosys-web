@@ -6,7 +6,7 @@ import * as Tags from "../../../../tags";
 import * as Utils from "../../../../../../utils";
 import * as Nav from "../../../../../../navFrontend";
 
-export const BarnTable = ({ barnListe }: { barnListe: Familiemedlem[] }) => {
+export function BarnTable({ barnListe }: { barnListe: Familiemedlem[] }) {
   return (
     <div className="menypanel__table-wrapper">
       <Nav.Table size="small">
@@ -39,4 +39,4 @@ export const BarnTable = ({ barnListe }: { barnListe: Familiemedlem[] }) => {
       </Nav.Table>
     </div>
   );
-};
+}

@@ -6,7 +6,7 @@ import * as Ikon from "../../resources/images";
 
 import KopierbarTekst from "../kopierbarTekst";
 
-const Virksomhetlinje = ({ saksnummer }: { saksnummer: string }) => {
+function Virksomhetlinje({ saksnummer }: { saksnummer: string }) {
   const [organisasjon, setOrganisasjon] = useState<Api.Organisasjon>();
 
   useEffect(() => {
@@ -41,6 +41,6 @@ const Virksomhetlinje = ({ saksnummer }: { saksnummer: string }) => {
       )}
     </>
   );
-};
+}
 
 export default Virksomhetlinje;

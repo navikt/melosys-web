@@ -90,7 +90,7 @@ interface Props {
   aktivtSteg: boolean;
 }
 
-const VurderingFamilie = ({
+function VurderingFamilie({
   data: {
     barnValg: tilknyttedeBarn,
     barnBegrunnelseValg,
@@ -106,7 +106,7 @@ const VurderingFamilie = ({
   steg,
   oppdaterFlyt,
   aktivtSteg,
-}: PropsFromRedux & Props) => {
+}: PropsFromRedux & Props) {
   const erIkkeInnvilget = (innvilget?: string | null): boolean => innvilget === BOOLSK_STRING.USANN;
   const finnBarn = (uuid: string, barn?: BarnProps): undefined | FamilieProps => barn && barn[uuid];
 
@@ -274,7 +274,7 @@ const VurderingFamilie = ({
       />
     </div>
   );
-};
+}
 
 const VurderingFamilieForm = reduxForm<{}, PropsFromRedux & Props>({
   form: KV.Form.Trygdeavtale.FAMILIE,

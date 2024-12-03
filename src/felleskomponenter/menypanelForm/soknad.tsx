@@ -187,14 +187,14 @@ type SoknadProps = PropsFromRedux & {
   visOppdaterRegisteropplysninger?: boolean;
 };
 
-const Soknad = ({
+function Soknad({
   lagreMottatteOpplysninger,
   startOgVisOppfriskModal,
   formValues,
   redigerbart,
   visOppdaterRegisteropplysninger,
   mottatteOpplysningerFeilmeldinger,
-}: SoknadProps & InjectedFormProps<KV.Form.SoknadFormData, SoknadProps>) => {
+}: SoknadProps & InjectedFormProps<KV.Form.SoknadFormData, SoknadProps>) {
   const debouncedLagreMottatteOpplysninger = useCallback(Utils._debounce(lagreMottatteOpplysninger, 1000), []);
   const validertOk = Utils._isEmpty(mottatteOpplysningerFeilmeldinger);
 
@@ -220,7 +220,7 @@ const Soknad = ({
       />
     </form>
   );
-};
+}
 
 const MenypanelForm = reduxForm<KV.Form.SoknadFormData, SoknadProps>({
   form: KV.Form.SOKNAD,

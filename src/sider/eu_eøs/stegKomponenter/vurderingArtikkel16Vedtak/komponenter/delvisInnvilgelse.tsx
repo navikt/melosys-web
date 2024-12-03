@@ -35,7 +35,7 @@ interface DelvisInnvilgelseProps {
   erUtsendt: boolean;
 }
 
-const DelvisInnvilgelse = ({
+function DelvisInnvilgelse({
   redigerbart,
   behandlingID,
   gjeldendePeriode,
@@ -48,7 +48,7 @@ const DelvisInnvilgelse = ({
   stegErGyldig,
   erStorbrittaniaArt18_1Bestemmelse,
   erUtsendt,
-}: DelvisInnvilgelseProps) => {
+}: DelvisInnvilgelseProps) {
   const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
   const pdfDokumenter: (BrevDokumentMetadataType | SedDokumentMetadataType)[] = [];
   const saksnummer = useSelector(fagsakSelectors.SaksnummerSelector) as string;
@@ -131,7 +131,7 @@ const DelvisInnvilgelse = ({
   }
 
   return (
-    <Fragment>
+    <>
       <Nav.Heading size="large" className="stegvelgertittel">
         {konvensjonStorbritanniaToggleEnabled
           ? "Delvis innvilgelse"
@@ -150,7 +150,7 @@ const DelvisInnvilgelse = ({
             forkortPeriode={formValues.forkortLovvalgsperiode}
             fomLabel="Startdato"
             fomFeltNavn="fomDato"
-            minDate={Utils.dato.norskStringTilDate(formValues.fomDato)!!}
+            minDate={Utils.dato.norskStringTilDate(formValues.fomDato)!}
             maxDate={Utils.dato.norskStringTilDate(formValues.tomDato)}
             tomLabel="Sluttdato"
             tomFeltNavn="tomDato"
@@ -176,8 +176,8 @@ const DelvisInnvilgelse = ({
           </Nav.Column>
         </Nav.Row>
       )}
-    </Fragment>
+    </>
   );
-};
+}
 
 export default DelvisInnvilgelse;

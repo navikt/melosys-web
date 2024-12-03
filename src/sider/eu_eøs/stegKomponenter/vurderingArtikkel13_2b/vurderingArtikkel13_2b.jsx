@@ -21,14 +21,14 @@ const radioValg = {
   ANNET: "ANNET",
 };
 
-const VurderingArtikkel13_2b = ({
+function VurderingArtikkel13_2b({
   redigerbart,
   tilstand: { omfattesILandFakta, harAvklaring },
   slettData,
   tilbake,
   oppdaterData,
   bekreftOgFortsett,
-}) => {
+}) {
   useEffect(() => {
     oppdaterData(konverterAvklartfaktaTilStegData(KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND, omfattesILandFakta));
 
@@ -104,7 +104,7 @@ const VurderingArtikkel13_2b = ({
       />
     </div>
   );
-};
+}
 
 VurderingArtikkel13_2b.propTypes = {
   redigerbart: PT.bool.isRequired,

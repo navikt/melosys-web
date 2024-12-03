@@ -3,11 +3,13 @@ import PT from "prop-types";
 import * as RegistreringContext from "./registreringContext";
 import { initialState as registreringInitialState, reducer as registreringReducer } from "./reducer";
 
-export const RegistreringStateProvider = ({ reducer, initialState, children }) => (
-  <RegistreringContext.Context.Provider value={useReducer(reducer, initialState)}>
-    {children}
-  </RegistreringContext.Context.Provider>
-);
+export function RegistreringStateProvider({ reducer, initialState, children }) {
+  return (
+    <RegistreringContext.Context.Provider value={useReducer(reducer, initialState)}>
+      {children}
+    </RegistreringContext.Context.Provider>
+  );
+}
 
 RegistreringStateProvider.propTypes = {
   reducer: PT.func.isRequired,
@@ -19,8 +21,11 @@ RegistreringStateProvider.defaultProps = {
   children: null,
 };
 
-export const RegistreringStateProviderWrapper = (mapStateToProps, mapDispatchToProps) => (component) => (props) => (
-  <RegistreringStateProvider initialState={registreringInitialState} reducer={registreringReducer}>
-    {RegistreringContext.connect(mapStateToProps, mapDispatchToProps)(component)(props)}
-  </RegistreringStateProvider>
-);
+export const RegistreringStateProviderWrapper = (mapStateToProps, mapDispatchToProps) => (component) =>
+  function (props) {
+    return (
+      <RegistreringStateProvider initialState={registreringInitialState} reducer={registreringReducer}>
+        {RegistreringContext.connect(mapStateToProps, mapDispatchToProps)(component)(props)}
+      </RegistreringStateProvider>
+    );
+  };

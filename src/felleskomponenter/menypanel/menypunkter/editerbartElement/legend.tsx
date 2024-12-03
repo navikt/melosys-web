@@ -18,7 +18,7 @@ interface LegendProps {
   symbolsynlighet: Symbolsynlighet;
 }
 
-const Legend = ({
+function Legend({
   tittelIkon: TittelIkon,
   tittelUnderstrek,
   tittel,
@@ -26,7 +26,7 @@ const Legend = ({
   onBinClick,
   onPencilClick,
   symbolsynlighet,
-}: LegendProps) => {
+}: LegendProps) {
   const legendCls = classnames("editerbart-element__legend", {
     "editerbart-element__legend--understrek": tittelUnderstrek,
   });
@@ -59,6 +59,6 @@ const Legend = ({
       {renderSymboler()}
     </div>
   );
-};
+}
 
 export default Legend;

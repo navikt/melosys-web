@@ -124,7 +124,7 @@ interface Props {
   aktivtSteg: boolean;
 }
 
-const VurderingVedtak = ({
+function VurderingVedtak({
   behandlingID,
   mottatteOpplysningerStatus,
   data: { bestemmelseValg },
@@ -145,7 +145,7 @@ const VurderingVedtak = ({
   feilmeldinger,
   kontrollfeil,
   aktivtSteg,
-}: Props & PropsFromRedux) => {
+}: Props & PropsFromRedux) {
   const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
   const [visTomEndringFelt, setVisTomEndringFelt] = useState(false);
   const [vedtakPending, setVedtakPending] = useState(false);
@@ -479,7 +479,7 @@ const VurderingVedtak = ({
       />
     </div>
   );
-};
+}
 
 const VurderingVedtakForm = reduxForm<{}, PropsFromRedux & Props>({
   form: KV.Form.Trygdeavtale.VEDTAK,

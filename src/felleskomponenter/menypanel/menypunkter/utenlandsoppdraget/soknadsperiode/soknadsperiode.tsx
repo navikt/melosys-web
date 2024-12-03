@@ -17,13 +17,13 @@ import Knapperad from "../../../../knapperad";
 import soknadsperiodeSchema from "./soknadsperiodeSchema";
 import "./soknadsperiode.css";
 
-type SoknadsperiodeProps = {
+interface SoknadsperiodeProps {
   redigerbart: boolean;
   lagreSoknadOgOppfriskSaksopplysninger: () => void;
   tittel: string;
-};
+}
 
-export const Soknadsperiode = ({ redigerbart, tittel, lagreSoknadOgOppfriskSaksopplysninger }: SoknadsperiodeProps) => {
+export function Soknadsperiode({ redigerbart, tittel, lagreSoknadOgOppfriskSaksopplysninger }: SoknadsperiodeProps) {
   const dispatch = useDispatch();
   const [erEndrePeriodeSynlig, setErEndrePeriodeSynlig] = useState(false);
   const behandlingHarLand = useSelector(mottatteOpplysningerSelectors.HarLandSelector);
@@ -115,6 +115,6 @@ export const Soknadsperiode = ({ redigerbart, tittel, lagreSoknadOgOppfriskSakso
       )}
     </div>
   );
-};
+}
 
 export default Soknadsperiode;

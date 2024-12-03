@@ -5,15 +5,15 @@ import * as KV from "../../../../kodeverk";
 import MKV from "../../../../melosyskodeverk";
 import { sorterLandOgGjørOmTilStoreForbokstaver } from "../../../../utils/land";
 
-type AvsenderUtenlandskTrygdemyndighetProps = {
+interface AvsenderUtenlandskTrygdemyndighetProps {
   utenlandskTrygdemyndighetLandkode?: string;
   fullmektigLandEndret: (landkode: string) => void;
-};
+}
 
-const AvsenderUtenlandskTrygdemyndighet = ({
+function AvsenderUtenlandskTrygdemyndighet({
   utenlandskTrygdemyndighetLandkode,
   fullmektigLandEndret,
-}: AvsenderUtenlandskTrygdemyndighetProps) => {
+}: AvsenderUtenlandskTrygdemyndighetProps) {
   const landkoderTilUtenlandskTrygdemyndighet = sorterLandOgGjørOmTilStoreForbokstaver(
     MKV.Kodekombinasjoner.unikeAvtaleland,
   );
@@ -41,6 +41,6 @@ const AvsenderUtenlandskTrygdemyndighet = ({
       </div>
     </div>
   );
-};
+}
 
 export default AvsenderUtenlandskTrygdemyndighet;

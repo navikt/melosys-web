@@ -35,13 +35,13 @@ interface SaksbehandlingProps extends RouteComponentProps<MatchParams> {
   startOgVisOppfriskModal: () => void;
 }
 
-const Saksbehandling = ({
+function Saksbehandling({
   location,
   match,
   visOppfriskModal,
   behandlingOppfriskes,
   startOgVisOppfriskModal,
-}: SaksbehandlingProps) => {
+}: SaksbehandlingProps) {
   const dispatch = useDispatch();
   const [saksopplysningerLastet, setSaksopplysningerLastet] = useState(false);
   const saksnummer = match?.params?.saksnr;
@@ -135,6 +135,6 @@ const Saksbehandling = ({
       </div>
     </>
   );
-};
+}
 
 export default Saksbehandling;

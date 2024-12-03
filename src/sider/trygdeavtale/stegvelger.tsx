@@ -144,6 +144,7 @@ class Stegvelger extends Component<PropsFromRedux, State> {
       if (callBack) callBack();
     });
   };
+
   debouncedOppdaterFlyt = Utils._debounce(this.oppdaterFlyt, 200);
 
   mapFlytResDtoOmTilAktuelleSteg = (response: Api.Trygdeavtale.FlytResDto): AktueltSteg[] => {
@@ -188,6 +189,7 @@ class Stegvelger extends Component<PropsFromRedux, State> {
       hentFlytOgOppdaterAktuelleSteg();
     }
   };
+
   debouncedOppdaterSteg = Utils._debounce(this.oppdaterSteg, 1250);
 
   harMottatteOpplysningerFeilmeldinger = () => {

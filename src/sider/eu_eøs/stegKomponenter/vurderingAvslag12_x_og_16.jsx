@@ -35,7 +35,7 @@ const skalViseSendOrienteringsbrev = (sakstype, behandlingstema, erNyVurdering, 
     MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY,
   ].includes(behandlingstema);
 
-const VurderingAvslag12_x_og_16 = ({
+function VurderingAvslag12_x_og_16({
   valgte_utsendt_arbeidstaker_begrunnelser,
   valgte_utsendt_naeringsdrivende_begrunnelser,
   valgte_art_16_1_begrunnelser,
@@ -54,7 +54,7 @@ const VurderingAvslag12_x_og_16 = ({
   validerMottatteOpplysninger,
   mottatteOpplysningerStatus,
   aktivtSteg,
-}) => {
+}) {
   const [vedtakPending, setVedtakPending] = useState(false);
   const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
   const erSelvstendigNaeringsdrivende =
@@ -218,7 +218,7 @@ const VurderingAvslag12_x_og_16 = ({
       />
     </div>
   );
-};
+}
 
 VurderingAvslag12_x_og_16.propTypes = {
   valgte_utsendt_arbeidstaker_begrunnelser: PT.array.isRequired,

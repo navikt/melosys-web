@@ -6,26 +6,28 @@ import * as Utils from "../../../utils";
 
 import "./customRadioPanelGruppe.css";
 
-const CustomRadioPanelElement = ({ tittel, hoyreSideTittel, data }) => (
-  <div className="customRadioPanelElement">
-    <div className="customRadioPanelTittel">
-      <Nav.Heading size="xsmall">{tittel}</Nav.Heading>
-      {hoyreSideTittel && <>{hoyreSideTittel}</>}
-    </div>
-    <dl>
-      {data.map(({ term, description }) => {
-        if (!description) return null;
+function CustomRadioPanelElement({ tittel, hoyreSideTittel, data }) {
+  return (
+    <div className="customRadioPanelElement">
+      <div className="customRadioPanelTittel">
+        <Nav.Heading size="xsmall">{tittel}</Nav.Heading>
+        {hoyreSideTittel && <>{hoyreSideTittel}</>}
+      </div>
+      <dl>
+        {data.map(({ term, description }) => {
+          if (!description) return null;
 
-        return (
-          <Fragment key={Utils._uuid()}>
-            <dt>{term}</dt>
-            <dd>{description}</dd>
-          </Fragment>
-        );
-      })}
-    </dl>
-  </div>
-);
+          return (
+            <Fragment key={Utils._uuid()}>
+              <dt>{term}</dt>
+              <dd>{description}</dd>
+            </Fragment>
+          );
+        })}
+      </dl>
+    </div>
+  );
+}
 
 CustomRadioPanelElement.propTypes = {
   tittel: PT.node,

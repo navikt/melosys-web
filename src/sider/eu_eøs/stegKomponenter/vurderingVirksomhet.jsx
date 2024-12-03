@@ -29,7 +29,7 @@ const VIRKSOMHET_HELPTEXT = (
   </>
 );
 
-const VirksomhetCheckbox = (props) => {
+function VirksomhetCheckbox(props) {
   const { virksomheten, avklartVirksomhet, oppdaterData, slettData } = props;
   const dispatch = useDispatch();
 
@@ -56,7 +56,7 @@ const VirksomhetCheckbox = (props) => {
       {virksomheten.navn}
     </Nav.Checkbox>
   );
-};
+}
 
 VirksomhetCheckbox.propTypes = {
   virksomheten: MPT.Virksomhet.isRequired,
@@ -69,7 +69,7 @@ VirksomhetCheckbox.defaultProps = {
   avklartVirksomhet: null,
 };
 
-const VirksomheterCheckboxGroup = (props) => {
+function VirksomheterCheckboxGroup(props) {
   const { virksomheterIPerioden, redigerbart, avklarteVirksomheter, oppdaterData, slettData } = props;
 
   const ingenVirksomheterVarsel = virksomheterIPerioden.length === 0 && (
@@ -107,7 +107,7 @@ const VirksomheterCheckboxGroup = (props) => {
       {ingenVirksomheterVarsel}
     </Nav.CheckboxGroup>
   );
-};
+}
 
 VirksomheterCheckboxGroup.propTypes = {
   virksomheterIPerioden: PT.arrayOf(MPT.Virksomhet),
@@ -128,7 +128,7 @@ VirksomheterCheckboxGroup.defaultProps = {
  *
  * @param props
  */
-const VurderingVirksomhet = (props) => {
+function VurderingVirksomhet(props) {
   const { bekreftOgFortsett, virksomheterIPerioden, tilstand, redigerbart, slettData, tilbake } = props;
   const { harAvklaring, virksomheter } = tilstand;
 
@@ -165,7 +165,7 @@ const VurderingVirksomhet = (props) => {
       </div>
     </div>
   );
-};
+}
 
 VurderingVirksomhet.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,

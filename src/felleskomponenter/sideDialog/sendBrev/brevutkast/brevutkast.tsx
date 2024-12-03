@@ -22,7 +22,7 @@ interface BrevutkastProps {
   setFritekstvedlegg: (vedlegg: Fritekstvedlegg[]) => void;
 }
 
-const Brevutkast = ({
+function Brevutkast({
   changeField,
   dokumenter,
   formValues,
@@ -30,7 +30,7 @@ const Brevutkast = ({
   utkastPåBehandlingen,
   setSaksvedlegg,
   setFritekstvedlegg,
-}: BrevutkastProps) => {
+}: BrevutkastProps) {
   const aktivtUtkast = formValues?.aktivtUtkast;
 
   const aktivtUtkastTittel = aktivtUtkast?.tittel || null;
@@ -158,6 +158,6 @@ const Brevutkast = ({
       settAktivtUtkast={(valgtUtkast) => changeField("aktivtUtkast", valgtUtkast)}
     />
   );
-};
+}
 
 export default Brevutkast;

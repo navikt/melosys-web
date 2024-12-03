@@ -1,14 +1,14 @@
 import { ReactNode, KeyboardEvent } from "react";
 import "./handling.css";
 
-type handlingProps = {
+interface handlingProps {
   ikon?: ReactNode;
   tekst: string;
   onClick: () => void;
   disabled?: boolean;
-};
+}
 
-const Handling = ({ ikon, tekst, onClick, disabled = false }: handlingProps) => {
+function Handling({ ikon, tekst, onClick, disabled = false }: handlingProps) {
   const handleKeyPress = (e: KeyboardEvent<HTMLDivElement>) => {
     if (e.key === "Enter") {
       onClick();
@@ -26,6 +26,6 @@ const Handling = ({ ikon, tekst, onClick, disabled = false }: handlingProps) => 
       <div className="behandlingsmeny__handling__tekst">{tekst}</div>
     </div>
   );
-};
+}
 
 export default Handling;

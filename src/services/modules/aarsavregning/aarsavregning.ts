@@ -3,37 +3,37 @@ import { API_BASE_URL, AARSAVREGNING, BEHANDLINGER, FAGSAKER } from "../../api-c
 import { InntektskildeDto, SkatteforholdDto } from "../trygdeavgift";
 import { Medlemskapsperiode } from "../medlemavfolketrygden/medlemskapsperioder";
 
-export type AarsavregningResponse = {
+export interface AarsavregningResponse {
   aarsavregningID: number;
   aar: number;
   tidligereGrunnlagsopplysninger?: Grunnlagsopplysninger;
   avvikFunnet?: boolean;
   nyttGrunnlag?: Grunnlagsopplysninger;
   avregning?: Avregning;
-};
+}
 
-export type AarsavregningRequest = {
+export interface AarsavregningRequest {
   avregning: Avregning;
-};
+}
 
-export type Grunnlagsopplysninger = {
+export interface Grunnlagsopplysninger {
   trygdeavgiftsgrunnlag: Trygdeavgiftsgrunnlag;
   avgift: Avgift;
-};
+}
 
-export type Trygdeavgiftsgrunnlag = {
+export interface Trygdeavgiftsgrunnlag {
   medlemskapsperioder: Medlemskapsperiode[];
   skatteforholdsperioder: SkatteforholdDto[];
   inntektskperioder: InntektskildeDto[];
-};
+}
 
-export type Avgift = {
+export interface Avgift {
   trygdeavgiftsperioder: Trygdeavgiftsperiode[];
   totalInntekt: number;
   totalAvgift: number;
-};
+}
 
-export type Trygdeavgiftsperiode = {
+export interface Trygdeavgiftsperiode {
   fom: string;
   tom: string;
   inntektskildetype: string;
@@ -41,27 +41,27 @@ export type Trygdeavgiftsperiode = {
   inntektPerMd: number;
   avgiftssats: number;
   avgiftPerMd: number;
-};
+}
 
-export type Avregning = {
+export interface Avregning {
   nyttTotalbeloep?: number;
   tidligereFakturertBeloep?: number;
   tilFaktureringBeloep?: number;
-};
+}
 
-export type AarsavregningListResponse = {
+export interface AarsavregningListResponse {
   aarsavregningId: number;
   behandlingID: number;
   aar: number;
   resultattype: string;
-};
+}
 
 export const hentAarsavregning = (behandlingID: number, aarsavregningID?: number): Promise<AarsavregningResponse> =>
   getAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${AARSAVREGNING}/${aarsavregningID}`);
 
-export type LagAarsavregningRequest = {
+export interface LagAarsavregningRequest {
   aar: number;
-};
+}
 
 export const lagAarsavregning = (
   behandlingID: number,

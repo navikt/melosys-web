@@ -7,7 +7,7 @@ import { EnRedigeringsknappListeRedigererPreElementer } from "../../editerbartEl
 
 import "./redigererPreElementer.css";
 
-const RedigererPreElementer = ({ className, redigerbart }: EnRedigeringsknappListeRedigererPreElementer) => {
+function RedigererPreElementer({ className, redigerbart }: EnRedigeringsknappListeRedigererPreElementer) {
   const cls = classNames(className, "arbeidsstedland__redigerer__preelementer");
 
   return (
@@ -37,6 +37,6 @@ const RedigererPreElementer = ({ className, redigerbart }: EnRedigeringsknappLis
       </Nav.Row>
     </div>
   );
-};
+}
 
 export default RedigererPreElementer;

@@ -6,11 +6,11 @@ export const useCustomContext = (context) => {
   return [state, (arg) => (typeof arg === "function" ? arg(dispatch) : dispatch(arg))];
 };
 
-const ContextMapper = ({ stateToProps, dispatchToProps, childProps, children: Child, context }) => {
+function ContextMapper({ stateToProps, dispatchToProps, childProps, children: Child, context }) {
   const [state, dispatch] = useCustomContext(context);
   const mappedProps = { ...childProps, ...stateToProps(state), ...dispatchToProps(dispatch) };
   return <Child {...mappedProps} />;
-};
+}
 
 ContextMapper.propTypes = {
   stateToProps: PT.func,
@@ -26,8 +26,11 @@ ContextMapper.defaultProps = {
   childProps: {},
 };
 
-export const connectCustomContext = (stateToProps, dispatchToProps) => (component) => (props) => (context) => (
-  <ContextMapper stateToProps={stateToProps} dispatchToProps={dispatchToProps} childProps={props} context={context}>
-    {component}
-  </ContextMapper>
-);
+export const connectCustomContext = (stateToProps, dispatchToProps) => (component) => (props) =>
+  function (context) {
+    return (
+      <ContextMapper stateToProps={stateToProps} dispatchToProps={dispatchToProps} childProps={props} context={context}>
+        {component}
+      </ContextMapper>
+    );
+  };

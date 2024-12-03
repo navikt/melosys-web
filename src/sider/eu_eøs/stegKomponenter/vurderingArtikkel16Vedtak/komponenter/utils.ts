@@ -16,7 +16,7 @@ export const hentLovvalgsperiode = (
 
   if (anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE) {
     return {
-      fom: endretPeriode.fom!!,
+      fom: endretPeriode.fom!,
       tom: endretPeriode.tom,
     };
   }

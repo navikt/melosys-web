@@ -52,7 +52,7 @@ export const skalViseSoknadsperiodeOgLand = (
   behandlingstema !== MKV.Koder.behandlinger.behandlingstema.A1_ANMODNING_OM_UNNTAK_PAPIR &&
   !skalViseIngenFlyt(sakstype, sakstema, behandlingstema, behandlingstype, erArbeidKunNorgeToggleEnabled);
 
-export const OpprettSak = (props) => {
+export function OpprettSak(props) {
   const { settFeltInnhold, formValues, feltNavn } = props;
   const {
     valgtSakstype,
@@ -191,7 +191,7 @@ export const OpprettSak = (props) => {
         valgtBehandlingstype,
         erArbeidKunNorgeToggleEnabled,
       ) && (
-        <Fragment>
+        <>
           <Nav.Fieldset legend="Søknadsperiode:" className="opprettnysak__soknadsperiode">
             <Nav.Row className="">
               <Nav.Column xs="6">
@@ -238,11 +238,11 @@ export const OpprettSak = (props) => {
               </Nav.Row>
             )}
           </Nav.Fieldset>
-        </Fragment>
+        </>
       )}
     </div>
   );
-};
+}
 OpprettSak.propTypes = {
   errors: PT.object,
   formValues: PT.object.isRequired,

@@ -2,7 +2,9 @@ import { ErrorResponse } from "melosys-api";
 
 class ApiError extends Error {
   response: Response;
+
   body: ErrorResponse;
+
   status: number;
 
   constructor(message: string | undefined, response: Response, body: ErrorResponse, status: number) {

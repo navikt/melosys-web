@@ -22,7 +22,7 @@ import { MELOSYS_ARBEID_KUN_NORGE } from "../../featuretoggle/toggleNavn";
  * for å gi saksbehandler oversikt over sakens innhold før hun klikker
  * seg inn på den.
  */
-const Fagsak = ({ sak, landkoder }) => {
+function Fagsak({ sak, landkoder }) {
   const erArbeidKunNorgeToggleEnabled = useFeatureToggle(MELOSYS_ARBEID_KUN_NORGE);
 
   const { opprettetDato, sakstype, saksstatus, saksnummer, sakstema, behandlingOversikter } = sak;
@@ -94,7 +94,7 @@ const Fagsak = ({ sak, landkoder }) => {
       </Nav.Container>
     </div>
   );
-};
+}
 
 Fagsak.propTypes = {
   sak: MPT.BehandligOversikt,

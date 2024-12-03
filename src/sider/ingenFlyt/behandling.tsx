@@ -54,7 +54,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface Props extends RouteComponentProps<MatchParams> {}
 
-const Behandling = ({
+function Behandling({
   arbeidsland,
   behandlingstema,
   behandlingsresultatType,
@@ -69,7 +69,7 @@ const Behandling = ({
   mottatteOpplysningerPeriodeTom,
   redigerbart,
   resetSaksopplysninger,
-}: Props & PropsFromRedux) => {
+}: Props & PropsFromRedux) {
   const behandlingID = Utils._toInteger(Utils.queryString.getParam(location, "behandlingID"));
   const saksopplysningerErLastet = !!behandlingstema;
 
@@ -131,6 +131,6 @@ const Behandling = ({
       </div>
     </>
   );
-};
+}
 
 export default connector(Behandling);

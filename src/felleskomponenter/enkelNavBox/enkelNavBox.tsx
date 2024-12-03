@@ -7,7 +7,7 @@ interface EnkelNavBoxProps {
   children: ReactNode;
 }
 
-const EnkelNavBox = ({ focused, children }: EnkelNavBoxProps) => {
+function EnkelNavBox({ focused, children }: EnkelNavBoxProps) {
   return (
     <Nav.Box
       padding="3"
@@ -19,6 +19,6 @@ const EnkelNavBox = ({ focused, children }: EnkelNavBoxProps) => {
       {children}
     </Nav.Box>
   );
-};
+}
 
 export default EnkelNavBox;

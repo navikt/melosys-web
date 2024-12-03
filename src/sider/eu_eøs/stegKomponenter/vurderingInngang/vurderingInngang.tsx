@@ -10,19 +10,19 @@ import "./vurderingInngang.css";
 import { ReactElement, useEffect, useState } from "react";
 import Varsler from "./varsler";
 
-type VurderingInngangProps = {
+interface VurderingInngangProps {
   bekreftOgFortsett: () => void;
   redigerbart: boolean;
   oppfyllerInngangsvilkar: boolean;
   inngangsvilkaar: Api.Vilkar.Vilkaar | undefined;
-};
+}
 
-export const VurderingInngang = ({
+export function VurderingInngang({
   bekreftOgFortsett,
   redigerbart,
   oppfyllerInngangsvilkar,
   inngangsvilkaar,
-}: VurderingInngangProps) => {
+}: VurderingInngangProps) {
   const dispatch = useDispatch();
   const [feil, setFeil] = useState<ReactElement | undefined>(undefined);
   const behandlingID: number = useSelector(behandlingerSelectors.BehandlingIDSelector) as number;
@@ -106,6 +106,6 @@ export const VurderingInngang = ({
       />
     </div>
   );
-};
+}
 
 export default VurderingInngang;

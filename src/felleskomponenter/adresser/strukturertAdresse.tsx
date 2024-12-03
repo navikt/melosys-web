@@ -4,7 +4,7 @@ interface StrukturertAdresseProps {
   adresse: Partial<Api.StrukturertAdresse>;
 }
 
-const StrukturertAdresse = ({
+function StrukturertAdresse({
   adresse: {
     tilleggsnavn,
     gatenavn,
@@ -16,20 +16,22 @@ const StrukturertAdresse = ({
     landkode,
     coAdressenavn,
   },
-}: StrukturertAdresseProps) => (
-  <address>
-    <div>{coAdressenavn}</div>
-    <div>{tilleggsnavn}</div>
-    <div>
-      {gatenavn} {husnummerEtasjeLeilighet}
-    </div>
-    <div>
-      {postboks} {postnummer} {poststed}
-    </div>
-    <div>
-      {region} {landkode}
-    </div>
-  </address>
-);
+}: StrukturertAdresseProps) {
+  return (
+    <address>
+      <div>{coAdressenavn}</div>
+      <div>{tilleggsnavn}</div>
+      <div>
+        {gatenavn} {husnummerEtasjeLeilighet}
+      </div>
+      <div>
+        {postboks} {postnummer} {poststed}
+      </div>
+      <div>
+        {region} {landkode}
+      </div>
+    </address>
+  );
+}
 
 export default StrukturertAdresse;

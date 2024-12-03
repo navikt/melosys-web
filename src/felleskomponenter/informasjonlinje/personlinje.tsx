@@ -4,7 +4,7 @@ import * as Ikon from "../../resources/images";
 import useHentPersonopplysninger from "./useHentpersonopplysninger";
 import KopierbarTekst from "../kopierbarTekst";
 
-const Personlinje = ({ behandlingID }: { behandlingID: number }) => {
+function Personlinje({ behandlingID }: { behandlingID: number }) {
   const skipHentPersonopplysninger = behandlingID < 0;
   const personopplysninger = useHentPersonopplysninger(behandlingID, skipHentPersonopplysninger);
 
@@ -35,6 +35,6 @@ const Personlinje = ({ behandlingID }: { behandlingID: number }) => {
       )}
     </>
   );
-};
+}
 
 export default Personlinje;

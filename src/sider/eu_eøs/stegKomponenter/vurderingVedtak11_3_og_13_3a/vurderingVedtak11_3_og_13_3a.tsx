@@ -20,21 +20,21 @@ import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../
 import { kontrollOperations } from "../../../../ducks/kontroll";
 import { Datovelger } from "../../../../felleskomponenter/forms";
 
-type VurderingVedtakProps = {
+interface VurderingVedtakProps {
   tilbake: () => void;
   redigerbart: boolean;
   pdfDokumenter: (BrevDokumentMetadataType | SedDokumentMetadataType)[];
   harFeilmeldinger: boolean;
   validerMottatteOpplysninger: () => Promise<void>;
-};
+}
 
-export const VurderingVedtak11_3_og_13_3a = ({
+export function VurderingVedtak11_3_og_13_3a({
   redigerbart,
   tilbake,
   pdfDokumenter,
   harFeilmeldinger,
   validerMottatteOpplysninger,
-}: VurderingVedtakProps) => {
+}: VurderingVedtakProps) {
   const endretLovvalgsperiode = (): boolean => {
     if (Utils._isEmpty(lovvalgsperiode)) return false;
 
@@ -289,4 +289,4 @@ export const VurderingVedtak11_3_og_13_3a = ({
       />
     </div>
   );
-};
+}

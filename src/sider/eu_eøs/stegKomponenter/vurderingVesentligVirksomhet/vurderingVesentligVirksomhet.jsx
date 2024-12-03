@@ -9,7 +9,7 @@ import { arrayTilKonjunksjon } from "../../../../utils/streng";
 
 import EnkeltVilkaar from "../felles/enkeltVilkaar";
 
-const VurderingVesentligVirksomhet = (props) => {
+function VurderingVesentligVirksomhet(props) {
   const {
     bekreftOgFortsett,
     begrunnelser,
@@ -63,7 +63,7 @@ const VurderingVesentligVirksomhet = (props) => {
       />
     </>
   );
-};
+}
 
 VurderingVesentligVirksomhet.ID = "VESENTLIG_VIRKSOMHET";
 

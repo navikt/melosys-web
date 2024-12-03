@@ -26,7 +26,7 @@ import { endrePeriodeSkjema, ikkeGodkjentBegrunnelseSkjema } from "./validering/
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import "../saksopplysninger.css";
 
-const Saksopplysninger = ({
+function Saksopplysninger({
   match,
   behandlingID,
   redigerbart,
@@ -44,7 +44,7 @@ const Saksopplysninger = ({
   behandlingsresultatErHentet,
   kontrollerUnntaksperiode,
   unntaksperiodeKontrollfeil,
-}) => {
+}) {
   const [unntaksperiodeVurdering, setUnntaksperiodeVurdering] = useState(KV.Koder.Unntaksperiode.AVSLAG);
   const [begrunnelseFritekst, setBegrunnelseFritekst] = useState("");
   const [ikkeGodkjentBegrunnelseKoder, setIkkeGodkjentBegrunnelseKoder] = useState([]);
@@ -337,12 +337,12 @@ const Saksopplysninger = ({
               {vurderingBegrunnelser.length > 0 && (
                 <Nav.Row className="seksjon">
                   <Nav.Column xs="12">
-                    <Fragment>
+                    <>
                       <Nav.BodyLong weight="semibold" size="small">
                         Treff ved automatisk kontroll
                       </Nav.BodyLong>
                       <RegisterkontrollTreff vurderingBegrunnelser={vurderingBegrunnelser} />
-                    </Fragment>
+                    </>
                   </Nav.Column>
                 </Nav.Row>
               )}
@@ -386,7 +386,7 @@ const Saksopplysninger = ({
                 </Nav.Column>
               </Nav.Row>
               {unntaksperiodeVurdering === KV.Koder.Unntaksperiode.AVSLAG && behandlingsresultatErHentet && (
-                <Fragment>
+                <>
                   <Nav.Row>
                     <Nav.Column xs="6">
                       <Nav.Fieldset legend="Begrunnelse for ikke godkjent unntaksperiode">
@@ -416,7 +416,7 @@ const Saksopplysninger = ({
                       )}
                     </Nav.Column>
                   </Nav.Row>
-                </Fragment>
+                </>
               )}
               {durationWarningMessage && visPeriodeVarselStripe()}
               <Nav.Row className="seksjon">
@@ -438,7 +438,7 @@ const Saksopplysninger = ({
       <RegistreringMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
     </div>
   );
-};
+}
 
 Saksopplysninger.propTypes = {
   redigerbart: PT.bool.isRequired,

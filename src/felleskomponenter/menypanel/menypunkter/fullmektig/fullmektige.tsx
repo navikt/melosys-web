@@ -27,13 +27,13 @@ const { FULLMEKTIG } = MKV.Koder.aktoersroller;
 const { FULLMEKTIG_TRYGDEAVGIFT } = MKV.Koder.fullmaktstype;
 const { HENVENDELSE, NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingstyper;
 
-type FullmektigeProps = {
+interface FullmektigeProps {
   redigerbart: boolean;
   finnOrganisasjonAdresse: (orgnr: string) => Promise<AdresseOgFeil>;
   finnPersonAdresse: (personIdent: string) => Promise<AdresseOgFeil>;
-};
+}
 
-const Fullmektige = ({ redigerbart, finnOrganisasjonAdresse, finnPersonAdresse }: FullmektigeProps) => {
+function Fullmektige({ redigerbart, finnOrganisasjonAdresse, finnPersonAdresse }: FullmektigeProps) {
   const dispatch = useDispatch();
   const saksnummer = useSelector(fagsakSelectors.SaksnummerSelector);
   const behandlingstype = useSelector(behandlingerSelectors.BehandlingstypeKodeSelector);
@@ -85,7 +85,7 @@ const Fullmektige = ({ redigerbart, finnOrganisasjonAdresse, finnPersonAdresse }
     const mappedFullmektige =
       lagredeFullmektige?.map((aktør) => ({
         databaseID: aktør.databaseID,
-        ident: aktør.orgnr ? aktør.orgnr : aktør.personIdent!!,
+        ident: aktør.orgnr ? aktør.orgnr : aktør.personIdent!,
         type: aktør.orgnr ? Type.ORGANISASJON : Type.PERSON,
         fullmakter: aktør.fullmakter ?? [],
         originalAktør: aktør,
@@ -346,6 +346,6 @@ const Fullmektige = ({ redigerbart, finnOrganisasjonAdresse, finnPersonAdresse }
       )}
     </div>
   );
-};
+}
 
 export default Fullmektige;

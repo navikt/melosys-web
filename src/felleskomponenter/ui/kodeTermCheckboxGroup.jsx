@@ -5,7 +5,7 @@ import * as Nav from "../../navFrontend";
 import * as MPT from "../../proptypes";
 import * as Utils from "../../utils";
 
-const KodeTermCheckboxGroup = ({ legend, muligeValg, defaultValg, onChange, disabled }) => {
+function KodeTermCheckboxGroup({ legend, muligeValg, defaultValg, onChange, disabled }) {
   const [valgteCheckboxer, setValgteCheckboxer] = useState(
     muligeValg.map((valg) => valg.kode).filter((kode) => defaultValg.includes(kode)),
   );
@@ -38,7 +38,7 @@ const KodeTermCheckboxGroup = ({ legend, muligeValg, defaultValg, onChange, disa
       ))}
     </Nav.CheckboxGroup>
   );
-};
+}
 
 KodeTermCheckboxGroup.propTypes = {
   legend: PT.string,

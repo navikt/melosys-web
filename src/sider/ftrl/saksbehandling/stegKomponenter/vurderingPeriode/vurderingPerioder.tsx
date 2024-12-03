@@ -67,7 +67,7 @@ const mapInitialMedlemskapsperioder = (
     .sort((a, b) => Utils.dato.sorterEtterISOFomDato(a, b) || (a.innvilgelsesResultat === AVSLAATT ? -1 : 1))
     .map(mapTilMedlemskapsperiodeProps);
 
-export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: VurderingPerioderProps) => {
+export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: VurderingPerioderProps) {
   const dispatch = useDispatch();
   const [lovligeDekninger, setLovligeDekninger] = useState<string[]>([]);
   const [lovligeInnvilgelsesresultat, setLovligeInnvilgelsesresultat] = useState<string[]>([]);
@@ -275,4 +275,4 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
       />
     </div>
   );
-};
+}

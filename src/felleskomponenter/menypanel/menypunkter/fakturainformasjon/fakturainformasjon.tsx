@@ -21,7 +21,7 @@ const gyldigeFakturaStatuser = [
   fakturaserierTypes.FakturaStatus.INNE_I_OEBS,
 ];
 
-const Fakturainformasjon = () => {
+function Fakturainformasjon() {
   const dispatch = useDispatch();
   const visReferanseEnabled = useFeatureToggle(MELOSYS_FAKTURERINGSKOMPONENTEN_VIS_REFERANSE);
   const fakturaserier = useSelector(fakturaserierSelectors.FakturaserierSelector);
@@ -82,6 +82,6 @@ const Fakturainformasjon = () => {
       </div>
     </Nav.Container>
   );
-};
+}
 
 export default Fakturainformasjon;

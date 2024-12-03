@@ -20,7 +20,7 @@ import { MELOSYS_ARBEID_KUN_NORGE } from "../../../featuretoggle/toggleNavn";
 
 /** Den enkelte sak-elementet som brukes i iterasjon i listen
  */
-const EnkeltSak = (props) => {
+function EnkeltSak(props) {
   const erArbeidKunNorgeToggleEnabled = useFeatureToggle(MELOSYS_ARBEID_KUN_NORGE);
   const { landkoder } = props;
   const { behandlingOversikter, sakstype, saksnummer, sakstema } = props.sak;
@@ -69,9 +69,9 @@ const EnkeltSak = (props) => {
           {
             term: "Periode:",
             description: periode ? (
-              <Fragment>
+              <>
                 <EnkeltDato dato={periode.fom} defaultValue="" /> - <EnkeltDato dato={periode.tom} defaultValue="" />
-              </Fragment>
+              </>
             ) : null,
           },
           {
@@ -89,7 +89,7 @@ const EnkeltSak = (props) => {
       />
     </div>
   );
-};
+}
 
 EnkeltSak.propTypes = {
   sak: MPT.Fagsak.isRequired,

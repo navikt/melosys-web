@@ -41,7 +41,7 @@ interface Props {
   oppdaterStatus: (isValid: boolean) => void;
 }
 
-export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: Props) => {
+export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: Props) {
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const behandlingstype = useSelector(behandlingerSelectors.BehandlingstypeKodeSelector);
@@ -328,7 +328,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
           <Nav.Heading size="xsmall">Foreløpig beregnet trygdeavgift</Nav.Heading>
           <TrygdeavgiftsperioderTabell
             lagrePending={lagrePending}
-            perioder={lagretTrygdeavgift?.trygdeavgiftsperioder!!}
+            perioder={lagretTrygdeavgift?.trygdeavgiftsperioder!}
           />
         </>
       )}
@@ -361,4 +361,4 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
       />
     </div>
   );
-};
+}

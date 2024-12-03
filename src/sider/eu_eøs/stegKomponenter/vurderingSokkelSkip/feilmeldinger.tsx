@@ -98,7 +98,7 @@ export const finnAktivFeilmelding = (
   return undefined;
 };
 
-export const Feilmelding = ({ type }: { type?: string }) => {
+export function Feilmelding({ type }: { type?: string }) {
   switch (type) {
     case TypeFeilmelding.ULOGISK_KOMBINASJON_ERROR:
       return UlogiskKombinasjonError;
@@ -107,4 +107,4 @@ export const Feilmelding = ({ type }: { type?: string }) => {
     default:
       return null;
   }
-};
+}

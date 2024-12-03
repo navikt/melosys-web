@@ -56,7 +56,7 @@ type ArbeidsgiverOgVirksomhetProps = PropsFromRedux & {
   visArbeidsforholdRolleEtiketter: boolean;
 };
 
-export const ArbeidsgiverOgVirksomhet = ({
+export function ArbeidsgiverOgVirksomhet({
   redigerbart,
   organisasjoner,
   hentOrganisasjon,
@@ -66,7 +66,7 @@ export const ArbeidsgiverOgVirksomhet = ({
   selvstendigForetak = [],
   arbeidsforholdUtland = [],
   selvstendigNaeringsvirksomhetUtland = [],
-}: ArbeidsgiverOgVirksomhetProps) => {
+}: ArbeidsgiverOgVirksomhetProps) {
   const finnOrganisasjon = (orgnr: string) => {
     const org: Organisasjon = organisasjoner.find((o: Organisasjon) => o.orgnr === orgnr);
     return org || { orgnr };
@@ -181,6 +181,6 @@ export const ArbeidsgiverOgVirksomhet = ({
       />
     </Nav.Container>
   );
-};
+}
 
 export default connector(ArbeidsgiverOgVirksomhet);

@@ -21,7 +21,7 @@ interface DatovelgerComponentProps {
 
 type InnerDatovelgerComponentProps = DatovelgerComponentProps & RegisterHookFormProps;
 
-const InnerDatovelgerComponent = ({
+function InnerDatovelgerComponent({
   label,
   readOnly,
   bredde,
@@ -30,7 +30,7 @@ const InnerDatovelgerComponent = ({
   feil,
   onChange,
   ...rest
-}: InnerDatovelgerComponentProps) => {
+}: InnerDatovelgerComponentProps) {
   return (
     <div {...rest}>
       <PlainDatovelger
@@ -46,7 +46,7 @@ const InnerDatovelgerComponent = ({
       />
     </div>
   );
-};
+}
 
 type DatovelgerProps = DatovelgerComponentProps & UseControllerProps;
 

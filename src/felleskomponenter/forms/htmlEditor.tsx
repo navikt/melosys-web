@@ -5,7 +5,7 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { RegisterHookFormProps } from "./misc/reacthookProps";
 import { getErrorMessage } from "./misc/mapFeilmelding";
 
-type HtmlEditorComponentProps = {
+interface HtmlEditorComponentProps {
   spellcheck?: boolean;
   className?: string;
   placeholder?: string;
@@ -13,11 +13,11 @@ type HtmlEditorComponentProps = {
   label?: ReactNode;
   feil?: string;
   onChange?: any;
-};
+}
 
 type InnerHtmlEditorComponentProps = HtmlEditorComponentProps & RegisterHookFormProps;
 
-const InnerHTMLEditorComponent = ({ spellcheck = true, ...rest }: InnerHtmlEditorComponentProps) => {
+function InnerHTMLEditorComponent({ spellcheck = true, ...rest }: InnerHtmlEditorComponentProps) {
   return (
     <div className={`${rest.className} editor_content`}>
       <HtmlEditor
@@ -32,7 +32,7 @@ const InnerHTMLEditorComponent = ({ spellcheck = true, ...rest }: InnerHtmlEdito
       />
     </div>
   );
-};
+}
 
 type HTMLEditorProps = HtmlEditorComponentProps & UseControllerProps;
 

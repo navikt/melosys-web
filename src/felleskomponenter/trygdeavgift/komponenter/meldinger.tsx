@@ -175,7 +175,7 @@ export function feilMeldingBlokkerer(type?: string): boolean {
   }
 }
 
-export const Feilmelding = ({ type }: { type?: string }) => {
+export function Feilmelding({ type }: { type?: string }) {
   switch (type) {
     case TypeMelding.INNTEKTSKILDE_UTENFOR_MEDLEMSKAPSPERIODE:
       return InntektskildeUtenforMedlemskapsperiode;
@@ -190,4 +190,4 @@ export const Feilmelding = ({ type }: { type?: string }) => {
     default:
       return null;
   }
-};
+}

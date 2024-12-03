@@ -3,9 +3,9 @@ import { Field, WrappedFieldProps } from "redux-form";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import HtmlEditor from "../../htmlEditor";
 
-type InnerHtmlEditorComponentProps = {
+interface InnerHtmlEditorComponentProps {
   [x: string]: any;
-};
+}
 
 function InnerHTMLEditorComponent({
   input,

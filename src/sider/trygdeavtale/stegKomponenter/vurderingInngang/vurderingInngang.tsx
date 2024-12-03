@@ -88,7 +88,7 @@ interface Props {
   aktivtSteg: boolean;
 }
 
-const VurderingInngang = ({
+function VurderingInngang({
   data: { landValg, landValgUtenStøtte },
   formValues,
   formIsValid,
@@ -109,7 +109,7 @@ const VurderingInngang = ({
   behandlingID,
   slettLovvalgsperiode,
   lovvalgsperiode,
-}: PropsFromRedux & Props) => {
+}: PropsFromRedux & Props) {
   const { oppfriskOgLastInnSaksopplysninger } = useContext(FellesHandlersContext) as any;
   const [initialFomTomLand, setInitialFomTomLand] = useState<{ fom?: string; tom?: string; arbeidsland?: string }>({});
   const [landUtenStøtteValgt, setLandUtenStøtteValgt] = useState(false);
@@ -254,7 +254,7 @@ const VurderingInngang = ({
       )}
     </div>
   );
-};
+}
 
 const VurderingInngangForm = reduxForm<{}, PropsFromRedux & Props>({
   form: KV.Form.Trygdeavtale.INNGANG,

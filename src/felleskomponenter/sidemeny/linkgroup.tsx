@@ -15,24 +15,26 @@ interface LinkGroupProps {
 const linkgroupCls = bem("linkgroup");
 const labelCls = linkgroupCls.element("label");
 
-const LinkGroup = ({ label, links, onClick }: LinkGroupProps) => (
-  <div className={linkgroupCls.block}>
-    {label && (
-      <Nav.BodyLong size="small" className={labelCls}>
-        {label}
-      </Nav.BodyLong>
-    )}
-    {links.map(({ label: linkLabel, active, iconSrc, iconAltText }, index) => (
-      <MenyLink
-        key={linkLabel.split(" ").join("")}
-        label={linkLabel}
-        active={active}
-        onClick={() => onClick(index)}
-        iconSrc={iconSrc}
-        iconAltText={iconAltText}
-      />
-    ))}
-  </div>
-);
+function LinkGroup({ label, links, onClick }: LinkGroupProps) {
+  return (
+    <div className={linkgroupCls.block}>
+      {label && (
+        <Nav.BodyLong size="small" className={labelCls}>
+          {label}
+        </Nav.BodyLong>
+      )}
+      {links.map(({ label: linkLabel, active, iconSrc, iconAltText }, index) => (
+        <MenyLink
+          key={linkLabel.split(" ").join("")}
+          label={linkLabel}
+          active={active}
+          onClick={() => onClick(index)}
+          iconSrc={iconSrc}
+          iconAltText={iconAltText}
+        />
+      ))}
+    </div>
+  );
+}
 
 export default LinkGroup;

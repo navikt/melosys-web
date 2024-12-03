@@ -11,7 +11,7 @@ interface LagredeUtkastProps {
   settAktivtUtkast: (utkast: Api.Brevutkast.BrevutkastResDto | null) => void;
 }
 
-const LagredeUtkast = ({ alleUtkast, settAktivtUtkast }: LagredeUtkastProps) => {
+function LagredeUtkast({ alleUtkast, settAktivtUtkast }: LagredeUtkastProps) {
   const velgUtkast = (value: string) => {
     const valgtUtkast = alleUtkast.find((utkast) => utkast.tittel === value);
     settAktivtUtkast(valgtUtkast || null);
@@ -53,6 +53,6 @@ const LagredeUtkast = ({ alleUtkast, settAktivtUtkast }: LagredeUtkastProps) => 
       )}
     </>
   );
-};
+}
 
 export default LagredeUtkast;

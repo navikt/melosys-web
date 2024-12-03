@@ -42,7 +42,7 @@ const hentForsteSteg = (behandlingstema) => {
   }
 };
 
-const Vurderutpeking = ({
+function Vurderutpeking({
   match: {
     params: { saksnr: saksnummer },
   },
@@ -67,7 +67,7 @@ const Vurderutpeking = ({
   mottatteOpplysninger,
   vurderUtpekingFormValues,
   hentLandkoder,
-}) => {
+}) {
   const behandlingID = Utils._toInteger(Utils.queryString.getParam(location, "behandlingID"));
 
   useEffect(() => {
@@ -149,7 +149,7 @@ const Vurderutpeking = ({
       </div>
     </>
   );
-};
+}
 
 Vurderutpeking.propTypes = {
   lastInnSaksopplysninger: PT.func.isRequired,

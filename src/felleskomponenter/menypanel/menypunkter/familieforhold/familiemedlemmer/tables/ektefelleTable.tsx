@@ -4,7 +4,7 @@ import { Familiemedlem } from "../../../../../../graphql";
 
 import Ident from "../ident";
 
-export const EktefelleTable = ({ ektefelleListe }: { ektefelleListe: Familiemedlem[] }) => {
+export function EktefelleTable({ ektefelleListe }: { ektefelleListe: Familiemedlem[] }) {
   return (
     <div className="menypanel__table-wrapper">
       <Nav.Table>
@@ -33,4 +33,4 @@ export const EktefelleTable = ({ ektefelleListe }: { ektefelleListe: Familiemedl
       </Nav.Table>
     </div>
   );
-};
+}

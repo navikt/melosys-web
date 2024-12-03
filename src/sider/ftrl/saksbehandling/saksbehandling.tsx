@@ -98,7 +98,7 @@ interface Props extends RouteComponentProps<MatchParams> {
   visOppfriskModal: () => void;
 }
 
-const Saksbehandling = ({
+function Saksbehandling({
   arbeidsland,
   hovedpartRolle,
   behandlingOppfriskes,
@@ -140,7 +140,7 @@ const Saksbehandling = ({
   behandlingstype,
   behandlingstema,
   resetFakturaInformasjon,
-}: Props & PropsFromRedux) => {
+}: Props & PropsFromRedux) {
   const [behandlingID, setBehandlingID] = useState(-1);
   const [saksopplysningerLastet, setSaksopplysningerLastet] = useState(false);
 
@@ -276,6 +276,6 @@ const Saksbehandling = ({
       </div>
     </>
   );
-};
+}
 
 export default connector(Saksbehandling);

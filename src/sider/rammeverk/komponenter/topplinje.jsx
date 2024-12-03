@@ -7,7 +7,7 @@ import * as Nav from "../../../navFrontend";
 
 import "./topplinje.css";
 
-const Topplinje = (props) => {
+function Topplinje(props) {
   const { saksbehandler } = props;
 
   const tilForsidenHandler = (event) => {
@@ -50,7 +50,7 @@ const Topplinje = (props) => {
       </div>
     </header>
   );
-};
+}
 
 Topplinje.propTypes = {
   saksbehandler: PT.string,

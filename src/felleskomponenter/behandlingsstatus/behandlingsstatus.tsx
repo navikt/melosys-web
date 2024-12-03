@@ -15,11 +15,11 @@ interface BehandlingsstatusMedSvarfristProps {
   className?: string;
 }
 
-export const BehandlingsstatusMedSvarfrist = ({
+export function BehandlingsstatusMedSvarfrist({
   behandlingsstatus,
   svarFrist,
   className,
-}: BehandlingsstatusMedSvarfristProps) => {
+}: BehandlingsstatusMedSvarfristProps) {
   const visSvarFrist =
     svarFrist &&
     [
@@ -34,7 +34,7 @@ export const BehandlingsstatusMedSvarfrist = ({
       )}
     </div>
   );
-};
+}
 
 const getIkon = (status: string) => {
   switch (status) {
@@ -64,13 +64,13 @@ interface BehandlingsstatusProps {
   behandlingsstatus: KTObject;
 }
 
-const Behandlingsstatus = ({ behandlingsstatus }: BehandlingsstatusProps) => {
+function Behandlingsstatus({ behandlingsstatus }: BehandlingsstatusProps) {
   return (
     <div className="behandlingsstatus__behandlingsstatus">
       {getIkon(behandlingsstatus?.kode)}
       <span className="behandlingsstatus__span">{KV.objektTilTerm(behandlingsstatus)}</span>
     </div>
   );
-};
+}
 
 export default Behandlingsstatus;

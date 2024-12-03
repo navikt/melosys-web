@@ -51,7 +51,7 @@ interface Props {
   overstyrBlurEvent: (event: FocusEvent) => void;
 }
 
-const BrevMottaker = ({
+function BrevMottaker({
   tilgjengeligeMottakere,
   formValues,
   redigerbart,
@@ -59,7 +59,7 @@ const BrevMottaker = ({
   orgnrValid,
   changeField,
   overstyrBlurEvent,
-}: Props & PropsFromRedux) => {
+}: Props & PropsFromRedux) {
   const [feil, setFeil] = useState<FeilmeldingProps | undefined>(undefined);
   const [adresse, setAdresse] = useState<{
     mottakerAdresse?: DokumenterV2.BrevAdresse;
@@ -257,6 +257,6 @@ const BrevMottaker = ({
       )}
     </>
   );
-};
+}
 
 export default connector(BrevMottaker);

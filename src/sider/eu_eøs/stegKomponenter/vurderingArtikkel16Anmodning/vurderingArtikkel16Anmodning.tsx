@@ -90,7 +90,7 @@ interface Props {
   lagreOgBestillAnmodningsperioder: (bestillAnmodningsperioderBody: any) => Promise<void>;
 }
 
-const VurderingArtikkel16Anmodning = ({
+function VurderingArtikkel16Anmodning({
   oppdaterData,
   tilstand: { unntaksvilkår, muligeBegrunnelseValg, erIDirekteTilArtikkel16Flyt },
   slettData,
@@ -106,7 +106,7 @@ const VurderingArtikkel16Anmodning = ({
   tilbake,
   aktivtSteg,
   lovvalgsbestemmelse,
-}: Props & PropsFromRedux & InjectedFormProps<FormValuesProps, Props & PropsFromRedux>) => {
+}: Props & PropsFromRedux & InjectedFormProps<FormValuesProps, Props & PropsFromRedux>) {
   const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
   const dispatch = useDispatch();
   const isMounted = useIsMounted();
@@ -271,7 +271,7 @@ const VurderingArtikkel16Anmodning = ({
 
   // TODO: Erstattes med en enkel labeltekst når storbritannia toggle fjernes
   const begrunnelseFritekstBrevLabel = (
-    <Fragment>
+    <>
       <Nav.BodyLong weight="semibold" size="small">
         Begrunnelse til orienteringsbrev til bruker
       </Nav.BodyLong>
@@ -281,7 +281,7 @@ const VurderingArtikkel16Anmodning = ({
           om en avtale for deg, fordi», og slutter med teksten du har tilføyd.
         </Nav.BodyLong>
       )}
-    </Fragment>
+    </>
   );
 
   const maksAntallTegn = MKVUtils.erStorbritanniaKonvBestemmelse(lovvalgsbestemmelse) ? 500 - 38 : 500;
@@ -484,7 +484,7 @@ const VurderingArtikkel16Anmodning = ({
       </div>
     </div>
   );
-};
+}
 
 const VurderingArtikkel16AnmodningForm = reduxForm<FormValuesProps, PropsFromRedux & Props>({
   form: KV.Form.ARTIKKEL_16_ANMODNING,

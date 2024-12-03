@@ -81,7 +81,7 @@ type VurderingArtikkel16VedtakProps = PropsFromRedux & {
   validerMottatteOpplysninger: () => Promise<void>;
 };
 
-export const VurderingArtikkel16Vedtak = ({
+export function VurderingArtikkel16Vedtak({
   redigerbart,
   anmodningsperiode,
   anmodningsperiodesvar,
@@ -93,7 +93,7 @@ export const VurderingArtikkel16Vedtak = ({
   harFeilmeldinger,
   aktivtSteg = false,
   validerMottatteOpplysninger,
-}: VurderingArtikkel16VedtakProps & InjectedFormProps<FormValuesProps, VurderingArtikkel16VedtakProps>) => {
+}: VurderingArtikkel16VedtakProps & InjectedFormProps<FormValuesProps, VurderingArtikkel16VedtakProps>) {
   const dispatch = useDispatch();
   const [vedtakPending, setVedtakPending] = useState(false);
   let oppdaterFørKontroll = true;
@@ -299,7 +299,7 @@ export const VurderingArtikkel16Vedtak = ({
       </Nav.Row>
     </div>
   );
-};
+}
 
 const VurderingArtikkel16VedtakForm = reduxForm<FormValuesProps, VurderingArtikkel16VedtakProps>({
   form: KV.Form.ARTIKKEL_16_1_VEDTAK,

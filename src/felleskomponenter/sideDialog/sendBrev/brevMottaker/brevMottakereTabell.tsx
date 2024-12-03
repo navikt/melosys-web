@@ -29,14 +29,14 @@ interface BrevMottakereTabellProps {
   hentBrevRequest: any;
 }
 
-const BrevMottakereTabell = ({
+function BrevMottakereTabell({
   muligeMottakere,
   muligeMottakereNorskMyndighet,
   behandlingID,
   formValues,
   formIsValid,
   hentBrevRequest,
-}: BrevMottakereTabellProps & PropsFromRedux) => {
+}: BrevMottakereTabellProps & PropsFromRedux) {
   const mapKopiMottakere = (
     muligeBrevMottakere: Api.DokumenterV2.HentMuligeMottakereResDto,
   ): BrevDokumentMetadataType[] => {
@@ -95,6 +95,6 @@ const BrevMottakereTabell = ({
       )}
     </>
   );
-};
+}
 
 export default connector(BrevMottakereTabell);

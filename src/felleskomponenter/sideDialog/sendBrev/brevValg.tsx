@@ -15,7 +15,7 @@ interface BrevValgProps {
   finnValgAlternativ: (felt: Api.DokumenterV2.Felt) => Api.DokumenterV2.ValgAlternativ | undefined;
 }
 
-const BrevValg = ({ formValues, width, redigerbart, changeField, finnValgAlternativ }: BrevValgProps) => {
+function BrevValg({ formValues, width, redigerbart, changeField, finnValgAlternativ }: BrevValgProps) {
   const skalViseBrevFelt = (felt: Api.DokumenterV2.Felt) => felt.valg === null || finnValgAlternativ(felt)?.visFelt;
 
   return (
@@ -43,6 +43,6 @@ const BrevValg = ({ formValues, width, redigerbart, changeField, finnValgAlterna
       ))}
     </>
   );
-};
+}
 
 export default BrevValg;

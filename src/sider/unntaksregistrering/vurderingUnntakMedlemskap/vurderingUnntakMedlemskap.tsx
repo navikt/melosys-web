@@ -36,7 +36,7 @@ interface VurderingUnntakMedlemskapProps {
   aktivtSteg: boolean;
 }
 
-const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: VurderingUnntakMedlemskapProps) => {
+function VurderingUnntakMedlemskap({ oppdaterStatus, tilbake, aktivtSteg }: VurderingUnntakMedlemskapProps) {
   const [bestemmelser, setBestemmelser] = useState<KTObject[] | undefined>(undefined);
   const [skalOppdatereRegisteropplysninger, setSkalOppdatereRegisteropplysninger] = useState(true);
 
@@ -269,6 +269,6 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
       />
     </div>
   );
-};
+}
 
 export default VurderingUnntakMedlemskap;

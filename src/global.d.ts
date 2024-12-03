@@ -34,7 +34,10 @@ declare module "Domene" {
 }
 
 declare module "@navikt/melosys-kodeverk" {
-  export type KTObject = { kode: string; term: string | null };
+  export interface KTObject {
+    kode: string;
+    term: string | null;
+  }
 }
 
 declare module "melosys-api" {

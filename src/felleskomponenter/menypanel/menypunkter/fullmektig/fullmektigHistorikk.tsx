@@ -15,12 +15,12 @@ type FullmektigHistorikkInfo = FullmektigHistorikkType & {
   kontaktinfo: HentKontaktopplysningerResponse | undefined;
 };
 
-type FullmektigHistorikkProps = {
+interface FullmektigHistorikkProps {
   finnOrganisasjonAdresse: (orgnr: string) => Promise<AdresseOgFeil>;
   finnPersonAdresse: (personIdent: string) => Promise<AdresseOgFeil>;
-};
+}
 
-const FullmektigHistorikk = ({ finnOrganisasjonAdresse, finnPersonAdresse }: FullmektigHistorikkProps) => {
+function FullmektigHistorikk({ finnOrganisasjonAdresse, finnPersonAdresse }: FullmektigHistorikkProps) {
   const [fullmektigHistorikk, setFullmektigHistorikk] = useState<FullmektigHistorikkType[]>([]);
   const saksnummer = useSelector(fagsakSelectors.SaksnummerSelector);
   const [fullmektige, setFullmektige] = useState<FullmektigHistorikkInfo[]>([]);
@@ -101,6 +101,6 @@ const FullmektigHistorikk = ({ finnOrganisasjonAdresse, finnPersonAdresse }: Ful
       </Nav.Table.Body>
     </Nav.Table>
   );
-};
+}
 
 export default FullmektigHistorikk;

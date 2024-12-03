@@ -25,7 +25,7 @@ interface VurderingYrkesaktivitetProps {
   erSoknadArbeidFlereLand: boolean;
 }
 
-const VurderingYrkesaktivitet = (props: VurderingYrkesaktivitetProps) => {
+function VurderingYrkesaktivitet(props: VurderingYrkesaktivitetProps) {
   const {
     bekreftOgFortsett,
     tilstand = {},
@@ -107,6 +107,6 @@ const VurderingYrkesaktivitet = (props: VurderingYrkesaktivitetProps) => {
       />
     </>
   );
-};
+}
 
 export default VurderingYrkesaktivitet;

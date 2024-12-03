@@ -30,7 +30,7 @@ export interface FaneViserProps {
   setAktivTab: (fanenavn: string) => void;
 }
 
-export const FaneViser = ({
+export function FaneViser({
   navn,
   behandlingID,
   behandlingstema,
@@ -40,7 +40,7 @@ export const FaneViser = ({
   dokumentOversikt,
   dokumenter,
   setAktivTab,
-}: FaneViserProps) => {
+}: FaneViserProps) {
   switch (navn) {
     case "dokumenter":
       return (
@@ -77,9 +77,12 @@ export const FaneViser = ({
     default:
       throw new Error("Navn er en påkrevd prop");
   }
-};
+}
 
-type Tab = { navn: string; tittel: string };
+interface Tab {
+  navn: string;
+  tittel: string;
+}
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
@@ -98,7 +101,7 @@ interface SideDialogProps {
   tabs?: Tab[];
 }
 
-const SideDialog = ({
+function SideDialog({
   behandlingID,
   behandlingstema,
   saksnummer,
@@ -107,7 +110,7 @@ const SideDialog = ({
   dokumentOversikt,
   dokumenter,
   tabs = defaultTabs,
-}: SideDialogProps & PropsFromRedux) => {
+}: SideDialogProps & PropsFromRedux) {
   const [aktivTab, setAktivTab] = useState<string>(tabs[0].navn);
   const [endreFokus, setEndreFokus] = useState(false);
 
@@ -148,7 +151,7 @@ const SideDialog = ({
       </aside>
     </div>
   );
-};
+}
 
 export const defaultTabs: Tab[] = [
   { navn: "dokumenter", tittel: "Dokumenter" },

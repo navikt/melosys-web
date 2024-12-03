@@ -16,14 +16,14 @@ interface FritekstvedleggRowProps {
   redigerbart: boolean;
 }
 
-const FritekstvedleggRow = ({
+function FritekstvedleggRow({
   fritekstvedlegg,
   redigerFritekstvedlegg,
   slettFritekstvedlegg,
   index,
   lagFritekstPdfUrl,
   redigerbart,
-}: FritekstvedleggRowProps) => {
+}: FritekstvedleggRowProps) {
   const [visBekreftelseModal, setVisBekreftelseModal] = useState<boolean>(false);
 
   const aapnePdf = async (event: MouseEvent<HTMLAnchorElement>) => {
@@ -63,6 +63,6 @@ const FritekstvedleggRow = ({
       />
     </Nav.Table.Row>
   );
-};
+}
 
 export default FritekstvedleggRow;

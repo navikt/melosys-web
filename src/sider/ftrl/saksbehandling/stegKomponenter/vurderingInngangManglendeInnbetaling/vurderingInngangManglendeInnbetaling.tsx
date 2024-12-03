@@ -21,7 +21,7 @@ interface Props {
   oppdaterStatus: (isValid: boolean, nesteStegId?: string) => void;
 }
 
-export const VurderingInngangManglendeInnbetaling = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) => {
+export function VurderingInngangManglendeInnbetaling({ bekreft, aktivtSteg, oppdaterStatus }: Props) {
   const dispatch = useDispatch();
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
@@ -109,4 +109,4 @@ export const VurderingInngangManglendeInnbetaling = ({ bekreft, aktivtSteg, oppd
       />
     </div>
   );
-};
+}

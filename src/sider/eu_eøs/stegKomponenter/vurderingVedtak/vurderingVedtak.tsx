@@ -142,7 +142,7 @@ type VurderingVedtakProps = PropsFromRedux & {
   validerMottatteOpplysninger: () => Promise<void>;
 };
 
-const VurderingVedtak = ({
+function VurderingVedtak({
   redigerbart,
   tilbake,
   behandlingstype,
@@ -155,7 +155,7 @@ const VurderingVedtak = ({
   validerMottatteOpplysninger,
   lovvalgsperiode,
   erArtikkel11_4,
-}: VurderingVedtakProps & InjectedFormProps<FormValuesProps, VurderingVedtakProps>) => {
+}: VurderingVedtakProps & InjectedFormProps<FormValuesProps, VurderingVedtakProps>) {
   const dispatch = useDispatch();
   const [vedtakPending, setVedtakPending] = useState(false);
   const [erBucAapen, setErBucAapen] = useState(true);
@@ -384,7 +384,7 @@ const VurderingVedtak = ({
       </div>
     </div>
   );
-};
+}
 
 const VurderingVedtakForm = reduxForm<FormValuesProps, VurderingVedtakProps>({
   form: KV.Form.ARTIKKEL_12_VEDTAK,

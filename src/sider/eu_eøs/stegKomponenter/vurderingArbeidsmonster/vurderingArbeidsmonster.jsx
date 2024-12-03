@@ -27,7 +27,7 @@ import { hentFaktaVerdi } from "../../../../domeneUtils";
  *
  * @param props
  */
-export const VurderingArbeidsmonster = ({
+export function VurderingArbeidsmonster({
   bekreftOgFortsett,
   arbeidsland,
   tilstand,
@@ -35,7 +35,7 @@ export const VurderingArbeidsmonster = ({
   oppdaterData,
   slettData,
   tilbake,
-}) => {
+}) {
   const {
     marginaltArbeid,
     aktivitetINorge,
@@ -255,7 +255,7 @@ export const VurderingArbeidsmonster = ({
       </div>
     </div>
   );
-};
+}
 
 VurderingArbeidsmonster.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,

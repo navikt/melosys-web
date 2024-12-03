@@ -17,7 +17,7 @@ import {
   SedDokumentMetadataType,
 } from "./dokumentlisteTyper";
 
-const Dokumentliste = ({ behandlingID, dokumenter, validateOnClick }: DokumentlisteType) => {
+function Dokumentliste({ behandlingID, dokumenter, validateOnClick }: DokumentlisteType) {
   const [feilmelding, setFeilmelding] = useState<string | null>(null);
 
   const klikk = async (dokument: BrevDokumentMetadataType | SedDokumentMetadataType) => {
@@ -114,6 +114,6 @@ const Dokumentliste = ({ behandlingID, dokumenter, validateOnClick }: Dokumentli
       )}
     </div>
   );
-};
+}
 
 export default Dokumentliste;

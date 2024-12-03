@@ -19,13 +19,13 @@ interface PersonstatusProps {
   erLitenSkjerm: boolean;
 }
 
-const Personstatus = ({ status, erLitenSkjerm }: PersonstatusProps) => {
+function Personstatus({ status, erLitenSkjerm }: PersonstatusProps) {
   const [visPersonstatusModal, setVisPersonstatusModal] = useState(false);
 
   const aktivePersonstatuser = status?.filter((s) => !s.erHistorisk) || [];
   const historiskePersonstatuser = status?.filter((s) => s.erHistorisk) || [];
 
-  const PersonstatusVisning = () => {
+  function PersonstatusVisning() {
     if (!status) {
       return null;
     }
@@ -49,7 +49,7 @@ const Personstatus = ({ status, erLitenSkjerm }: PersonstatusProps) => {
         </Nav.Column>
       </div>
     );
-  };
+  }
 
   return (
     <div className="personstatus">
@@ -68,6 +68,6 @@ const Personstatus = ({ status, erLitenSkjerm }: PersonstatusProps) => {
       <PersonstatusVisning />
     </div>
   );
-};
+}
 
 export default Personstatus;

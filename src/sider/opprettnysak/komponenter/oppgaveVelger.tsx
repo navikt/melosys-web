@@ -18,12 +18,12 @@ interface OppgaveVelgerProps {
   formValues: OpprettNySakFormData;
 }
 
-export const OppgaveVelger = ({
+export function OppgaveVelger({
   oppgaverForsoktHentet,
   formValues: { saksnummer, oppretterOppgave },
   oppgaver,
   change,
-}: OppgaveVelgerProps) => {
+}: OppgaveVelgerProps) {
   const oppgaverFinnes = oppgaver.length > 0;
 
   const settJournalpostID = (oppgaveID: string) => {
@@ -99,4 +99,4 @@ export const OppgaveVelger = ({
       )}
     </div>
   );
-};
+}

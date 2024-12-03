@@ -11,7 +11,7 @@ import {
   DialogboksOppfriskSak,
 } from "../felleskomponenter/dialogboks";
 
-const Modals = ({
+function Modals({
   skjulOppfriskModalOgNavigerTilForside,
   visOppfriskDialog,
   lagreMottatteOpplysningerOgOppfriskSaksopplysninger,
@@ -22,21 +22,23 @@ const Modals = ({
   visAvslagSoknadDialog,
   skjulAvslagSoknadDialogHandle,
   visBekreftValgDialog,
-}) => (
-  <Fragment>
-    {visOppfriskDialog && (
-      <DialogboksOppfriskSak
-        oppfrisk={lagreMottatteOpplysningerOgOppfriskSaksopplysninger}
-        avbryt={skjulOppfriskModal}
-        lukk={lukkOppfriskModal}
-        tilForsiden={skjulOppfriskModalOgNavigerTilForside}
-      />
-    )}
-    {visHenleggDialog && <DialogboksHenleggSak avbryt={skjulHenleggDialogHandle} />}
-    {visAvslagSoknadDialog && <DialogboksAvslagSoknad avbryt={skjulAvslagSoknadDialogHandle} />}
-    {visBekreftValgDialog && <DialogboksBekreftValg />}
-  </Fragment>
-);
+}) {
+  return (
+    <>
+      {visOppfriskDialog && (
+        <DialogboksOppfriskSak
+          oppfrisk={lagreMottatteOpplysningerOgOppfriskSaksopplysninger}
+          avbryt={skjulOppfriskModal}
+          lukk={lukkOppfriskModal}
+          tilForsiden={skjulOppfriskModalOgNavigerTilForside}
+        />
+      )}
+      {visHenleggDialog && <DialogboksHenleggSak avbryt={skjulHenleggDialogHandle} />}
+      {visAvslagSoknadDialog && <DialogboksAvslagSoknad avbryt={skjulAvslagSoknadDialogHandle} />}
+      {visBekreftValgDialog && <DialogboksBekreftValg />}
+    </>
+  );
+}
 
 Modals.propTypes = {
   skjulOppfriskModalOgNavigerTilForside: PT.func.isRequired,
@@ -68,8 +70,10 @@ const mapDispatchToProps = (dispatch) => ({
 
 const ConnectedModals = connect(mapStateToProps, mapDispatchToProps)(Modals);
 
-export default () => (
-  <FellesHandlersContext.Consumer>
-    {(fellesHandlers) => <ConnectedModals {...fellesHandlers} />}
-  </FellesHandlersContext.Consumer>
-);
+export default function () {
+  return (
+    <FellesHandlersContext.Consumer>
+      {(fellesHandlers) => <ConnectedModals {...fellesHandlers} />}
+    </FellesHandlersContext.Consumer>
+  );
+}

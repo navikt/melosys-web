@@ -45,7 +45,7 @@ interface InntektskilderProps {
   skalViseErMaanedsBelopRadioGroup?: boolean;
 }
 
-export const Inntektskilder = ({
+export function Inntektskilder({
   formValues,
   control,
   update,
@@ -56,7 +56,7 @@ export const Inntektskilder = ({
   fields,
   medlemskapsTypeErPliktig,
   skalViseErMaanedsBelopRadioGroup,
-}: InntektskilderProps) => {
+}: InntektskilderProps) {
   const settesDefaultArbAvgBetales = (kildetype?: string) => ![INNTEKT_FRA_UTLANDET, MISJONÆR].includes(kildetype);
 
   const handleEndreKildetype = (index: number, kildetype: string) => {
@@ -258,4 +258,4 @@ export const Inntektskilder = ({
       )}
     </div>
   );
-};
+}

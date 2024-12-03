@@ -58,10 +58,10 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-export type Fritekstvedlegg = {
+export interface Fritekstvedlegg {
   tittel: string;
   fritekst: string;
-};
+}
 
 interface Props {
   redigerbart: boolean;
@@ -76,7 +76,7 @@ interface Props {
   saksnummer: string;
 }
 
-const SendBrev = ({
+function SendBrev({
   behandlingID,
   changeField,
   formValues,
@@ -93,7 +93,7 @@ const SendBrev = ({
   saksnummer,
   soknadsland,
   sakstype,
-}: Props & PropsFromRedux) => {
+}: Props & PropsFromRedux) {
   const [tilgjengeligeMaler, setTilgjengeligeMaler] = useState<Api.DokumenterV2.TilgjengeligeMalerResDto>();
   const [muligeMottakere, setMuligeMottakere] = useState<Api.DokumenterV2.HentMuligeMottakereResDto>();
   const [muligeMottakereFeil, setMuligeMottakereFeil] = useState<string | undefined>(undefined);
@@ -564,7 +564,7 @@ const SendBrev = ({
       )}
     </div>
   );
-};
+}
 
 const SendBrevForm = reduxForm<{}, Props & PropsFromRedux>({
   form: KV.Form.SEND_BREV,

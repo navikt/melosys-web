@@ -18,7 +18,7 @@ import { formOperations } from "../../../../ducks/form";
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import VurderingAvslaaUtpekingSchema from "./vurderingAvslaaUtpekingSchema";
 
-const VurderingAvslaaUtpeking = ({
+function VurderingAvslaaUtpeking({
   redigerbart,
   behandlingID,
   handleSubmit,
@@ -29,7 +29,7 @@ const VurderingAvslaaUtpeking = ({
   touchAll,
   formIsValid,
   tilbake,
-}) => {
+}) {
   const [avslagPending, setAvslagPending] = useState(false);
   const isMounted = Hooks.useIsMounted();
 
@@ -78,7 +78,7 @@ const VurderingAvslaaUtpeking = ({
         Avvis utpeking — informasjon til SED
       </Nav.Heading>
       {redigerbart && (
-        <Fragment>
+        <>
           <Skjema.Textarea
             label="Begrunnelse til utenlandsk myndighet (engelsk)"
             feltNavn="begrunnelseUtenlandskMyndighet"
@@ -99,7 +99,7 @@ const VurderingAvslaaUtpeking = ({
           />
           <Skjema.Textarea label="Ytterligere informasjon (valgfri)" feltNavn="fritekst" readOnly={!redigerbart} />
           <Dokumentliste behandlingID={behandlingID} dokumenter={pdfDokumenter} validateOnClick={vedKlikkForhandsvis} />
-        </Fragment>
+        </>
       )}
       <Mui.StegKnapper
         bekreftKnappProps={{
@@ -117,7 +117,7 @@ const VurderingAvslaaUtpeking = ({
       />
     </form>
   );
-};
+}
 
 VurderingAvslaaUtpeking.propTypes = {
   redigerbart: PT.bool.isRequired,

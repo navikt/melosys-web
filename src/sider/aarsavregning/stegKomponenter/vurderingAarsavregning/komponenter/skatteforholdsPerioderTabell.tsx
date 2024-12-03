@@ -5,7 +5,7 @@ import MKV from "../../../../../melosyskodeverk";
 
 const { SKATTEPLIKTIG } = MKV.Koder.skatteplikttype;
 
-const SkatteforholdsPerioderTabell = ({ perioder }: { perioder?: SkatteforholdDto[] }) => {
+function SkatteforholdsPerioderTabell({ perioder }: { perioder?: SkatteforholdDto[] }) {
   if (!perioder) return null;
 
   return (
@@ -32,6 +32,6 @@ const SkatteforholdsPerioderTabell = ({ perioder }: { perioder?: SkatteforholdDt
       </Nav.Table.Body>
     </Nav.Table>
   );
-};
+}
 
 export default SkatteforholdsPerioderTabell;

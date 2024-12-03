@@ -2,7 +2,7 @@ import { SemistrukturertAdresseformat } from "../../graphql";
 
 type PostnrStedLandLinjeProps = Pick<SemistrukturertAdresseProps["adresse"], "land" | "postnummer" | "poststed">;
 
-export const PostnrStedLandLinje = ({ land, postnummer, poststed }: PostnrStedLandLinjeProps) => {
+export function PostnrStedLandLinje({ land, postnummer, poststed }: PostnrStedLandLinjeProps) {
   const skalViseKomma = (postnummer || poststed) && land;
   const skalViseMellomrom = postnummer && poststed;
   const postNrStedLandLinje = `${postnummer ?? ""}${skalViseMellomrom ? " " : ""}${poststed ?? ""}${
@@ -10,15 +10,15 @@ export const PostnrStedLandLinje = ({ land, postnummer, poststed }: PostnrStedLa
   }${land ?? ""}`;
 
   return <>{postNrStedLandLinje}</>;
-};
+}
 
 interface SemistrukturertAdresseProps {
   adresse: Partial<SemistrukturertAdresseformat>;
 }
 
-const SemistrukturertAdresse = ({
+function SemistrukturertAdresse({
   adresse: { adresselinje1, adresselinje2, adresselinje3, adresselinje4, postnummer, poststed, land },
-}: SemistrukturertAdresseProps) => {
+}: SemistrukturertAdresseProps) {
   const visPostnrStedLandLinje = [postnummer, poststed, land].some((element) => element);
 
   return (
@@ -34,6 +34,6 @@ const SemistrukturertAdresse = ({
       )}
     </address>
   );
-};
+}
 
 export default SemistrukturertAdresse;

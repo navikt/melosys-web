@@ -27,7 +27,7 @@ interface RedigererFullmektigProps {
   fields: FieldArrayWithId<FieldArrayProps, "fullmektige">[];
 }
 
-const RedigererFullmektig = ({
+function RedigererFullmektig({
   fullmektige,
   control,
   update,
@@ -38,7 +38,7 @@ const RedigererFullmektig = ({
   errors,
   trigger,
   fields,
-}: RedigererFullmektigProps) => {
+}: RedigererFullmektigProps) {
   const handleIdChange = (ident: string, index: number) => {
     if (Utils.organisasjon.erOrgnrGyldig(ident)) {
       finnOrganisasjonAdresse(ident).then((response) =>
@@ -217,6 +217,6 @@ const RedigererFullmektig = ({
       )}
     </>
   );
-};
+}
 
 export default RedigererFullmektig;

@@ -24,7 +24,7 @@ type InnerRadioGroupProps = RadioGroupProps & {
   meta: any;
 };
 
-const InnerRadioGroup = ({
+function InnerRadioGroup({
   input,
   meta,
   id,
@@ -35,7 +35,7 @@ const InnerRadioGroup = ({
   size,
   children,
   readOnly,
-}: InnerRadioGroupProps) => {
+}: InnerRadioGroupProps) {
   const innerChange = (value: any) => {
     if (onChange) onChange(value);
     input.onChange(value);
@@ -58,7 +58,7 @@ const InnerRadioGroup = ({
       {children}
     </Nav.RadioGroup>
   );
-};
+}
 
 interface RadioGroupProps {
   onChange?: (value: any) => void;
@@ -72,7 +72,7 @@ interface RadioGroupProps {
   readOnly?: boolean;
 }
 
-const RadioGroup = ({ ...props }: RadioGroupProps) => {
+function RadioGroup({ ...props }: RadioGroupProps) {
   return (
     <Field
       name={props.name}
@@ -82,6 +82,6 @@ const RadioGroup = ({ ...props }: RadioGroupProps) => {
       normalize={normaliserReduxBoolean}
     />
   );
-};
+}
 
 export default RadioGroup;

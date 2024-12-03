@@ -47,7 +47,7 @@ interface Props {
   oppdaterStatus: (isValid: boolean) => void;
 }
 
-export const VurderingVirksomhet = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: Props) => {
+export function VurderingVirksomhet({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: Props) {
   const dispatch = useDispatch();
 
   const { sendVirksomheter, hentMottatteOpplysninger } = komponentDispatch(dispatch);
@@ -127,4 +127,4 @@ export const VurderingVirksomhet = ({ bekreft, tilbake, aktivtSteg, oppdaterStat
       />
     </>
   );
-};
+}

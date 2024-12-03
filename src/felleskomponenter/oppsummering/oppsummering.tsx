@@ -55,7 +55,7 @@ type OppsummeringProps = PropsFromRedux & {
   className?: string;
 };
 
-const Oppsummering = ({
+function Oppsummering({
   oppsummering,
   fagsak,
   arbeidsland,
@@ -70,7 +70,7 @@ const Oppsummering = ({
   className,
   redigerbart,
   behandlingID,
-}: OppsummeringProps) => {
+}: OppsummeringProps) {
   const [{ mottaksdato }] = useAsyncCallbackState(() => Api.Behandlinger.aarsak.hentMottaksdato(behandlingID), {}, [
     behandlingID,
   ]);
@@ -324,6 +324,6 @@ const Oppsummering = ({
       </div>
     </section>
   );
-};
+}
 
 export default connector(Oppsummering);

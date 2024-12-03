@@ -16,15 +16,17 @@ import "./listevelger.css";
  * Komponenten forventer en array av strings for å vise listevalg. Det betyr at
  * kodeverk-baserte objekter må reduces.
  */
-const Listevelger = ({ feltNavn, className, gruppe, ...rest }) => (
-  <div className={classNames("listevelger", className)}>
-    {gruppe ? (
-      <FieldArray name={feltNavn} multiListe={gruppe} component={ListevelgerFlervalg} {...rest} />
-    ) : (
-      <Field name={feltNavn} component={ListevelgerEnkelt} {...rest} />
-    )}
-  </div>
-);
+function Listevelger({ feltNavn, className, gruppe, ...rest }) {
+  return (
+    <div className={classNames("listevelger", className)}>
+      {gruppe ? (
+        <FieldArray name={feltNavn} multiListe={gruppe} component={ListevelgerFlervalg} {...rest} />
+      ) : (
+        <Field name={feltNavn} component={ListevelgerEnkelt} {...rest} />
+      )}
+    </div>
+  );
+}
 
 Listevelger.propTypes = {
   feltNavn: PT.string.isRequired,

@@ -13,13 +13,13 @@ interface VedleggVelgerModalProps {
   leggTilVedlegg: (vedlegg: FysiskDokument) => void;
 }
 
-const VedleggVelgerModal = ({
+function VedleggVelgerModal({
   onRequestClose,
   valgteVedlegg,
   alleVedlegg,
   leggTilVedlegg,
   slettVedlegg,
-}: VedleggVelgerModalProps) => {
+}: VedleggVelgerModalProps) {
   const harDokumenter = !Utils._isEmpty(alleVedlegg);
   return (
     <Nav.Modal
@@ -49,6 +49,6 @@ const VedleggVelgerModal = ({
       </Nav.Modal.Footer>
     </Nav.Modal>
   );
-};
+}
 
 export default VedleggVelgerModal;

@@ -23,7 +23,7 @@ interface GrunnlagsopplysningerSkjemaProps {
   medlemskapsTypeErPliktig: boolean;
 }
 
-const GrunnlagsopplysningerSkjema = ({
+function GrunnlagsopplysningerSkjema({
   formValues,
   inntektFields,
   skattFields,
@@ -35,7 +35,7 @@ const GrunnlagsopplysningerSkjema = ({
   skattAppend,
   redigerbart,
   medlemskapsTypeErPliktig,
-}: GrunnlagsopplysningerSkjemaProps) => {
+}: GrunnlagsopplysningerSkjemaProps) {
   return (
     <div className="grunnlagsopplysningerSkjema">
       <Skatteforholdsperioder
@@ -54,11 +54,11 @@ const GrunnlagsopplysningerSkjema = ({
         append={inntektAppend}
         control={control}
         fields={inntektFields}
-        medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!!}
+        medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!}
         skalViseErMaanedsBelopRadioGroup
       />
     </div>
   );
-};
+}
 
 export default GrunnlagsopplysningerSkjema;

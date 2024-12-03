@@ -13,19 +13,21 @@ interface LabelOgSvarProps {
   percent?: boolean;
 }
 
-const LabelOgSvar = ({ label, svar, percent }: LabelOgSvarProps) => (
-  <Nav.Row>
-    <Nav.Column xs="10">
-      <Nav.BodyLong size="small">{label}</Nav.BodyLong>
-    </Nav.Column>
-    <Nav.Column xs="2">
-      <Nav.BodyLong weight="semibold" size="small">
-        {svar || "-"}
-        {percent && svar && String.fromCharCode(37)}
-      </Nav.BodyLong>
-    </Nav.Column>
-  </Nav.Row>
-);
+function LabelOgSvar({ label, svar, percent }: LabelOgSvarProps) {
+  return (
+    <Nav.Row>
+      <Nav.Column xs="10">
+        <Nav.BodyLong size="small">{label}</Nav.BodyLong>
+      </Nav.Column>
+      <Nav.Column xs="2">
+        <Nav.BodyLong weight="semibold" size="small">
+          {svar || "-"}
+          {percent && svar && String.fromCharCode(37)}
+        </Nav.BodyLong>
+      </Nav.Column>
+    </Nav.Row>
+  );
+}
 
 const soknadFormValueSelector = formValueSelector<KV.Form.SoknadFormData>(KV.Form.SOKNAD);
 
@@ -43,7 +45,7 @@ const mapStateToProps = (state: RootState) => {
 const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-const IkkeRedigerbarSamletVirksomhetINorge = ({ juridiskArbeidsgiverNorge }: PropsFromRedux) => {
+function IkkeRedigerbarSamletVirksomhetINorge({ juridiskArbeidsgiverNorge }: PropsFromRedux) {
   return (
     <div className="ikke-redigerbar-samlet-virksomhet-i-norge">
       <LabelOgSvar label="Antall ansatte" svar={juridiskArbeidsgiverNorge.antallAnsatte} />
@@ -67,6 +69,6 @@ const IkkeRedigerbarSamletVirksomhetINorge = ({ juridiskArbeidsgiverNorge }: Pro
       <LabelOgSvar label="Andel oppdrag utført i Norge" svar={juridiskArbeidsgiverNorge.andelOppdragINorge} percent />
     </div>
   );
-};
+}
 
 export default connector(IkkeRedigerbarSamletVirksomhetINorge);

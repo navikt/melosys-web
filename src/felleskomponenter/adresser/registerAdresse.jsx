@@ -8,7 +8,7 @@ import "./registerAdresse.css";
  * varierende keys i objektet.
  *
  */
-const RegisterAdresse = ({ adresse }) => {
+function RegisterAdresse({ adresse }) {
   const INGEN_TILGJENGELIG_TEKST = <>(ingen tilgjengelig)</>;
   if (!adresse) {
     return INGEN_TILGJENGELIG_TEKST;
@@ -38,7 +38,7 @@ const RegisterAdresse = ({ adresse }) => {
   ) : (
     INGEN_TILGJENGELIG_TEKST
   );
-};
+}
 
 RegisterAdresse.propTypes = {
   adresse: MPT.RegisterAdresse,

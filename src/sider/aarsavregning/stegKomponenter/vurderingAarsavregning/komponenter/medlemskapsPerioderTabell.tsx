@@ -22,7 +22,7 @@ const mapMedlemskapstypeTekst = (kode: string) => {
   return "";
 };
 
-const MedlemskapsPerioderTabell = ({ perioder }: { perioder?: Medlemskapsperiode[] }) => {
+function MedlemskapsPerioderTabell({ perioder }: { perioder?: Medlemskapsperiode[] }) {
   if (!perioder) return null;
 
   return (
@@ -55,6 +55,6 @@ const MedlemskapsPerioderTabell = ({ perioder }: { perioder?: Medlemskapsperiode
       </Nav.Table.Body>
     </Nav.Table>
   );
-};
+}
 
 export default MedlemskapsPerioderTabell;

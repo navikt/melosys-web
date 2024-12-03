@@ -9,7 +9,7 @@ interface SporsmalOgSvarProps {
   feltNavn: string;
 }
 
-const SporsmalOgSvar = ({ sporsmal, feltNavn }: SporsmalOgSvarProps) => {
+function SporsmalOgSvar({ sporsmal, feltNavn }: SporsmalOgSvarProps) {
   return (
     <Nav.Row className="sporsmal-og-svar">
       <Skjema.RadioGroup legend={sporsmal} name={feltNavn}>
@@ -18,9 +18,9 @@ const SporsmalOgSvar = ({ sporsmal, feltNavn }: SporsmalOgSvarProps) => {
       </Skjema.RadioGroup>
     </Nav.Row>
   );
-};
+}
 
-const EditerbareUtenlandsoppdragetSporsmal = () => {
+function EditerbareUtenlandsoppdragetSporsmal() {
   return (
     <div className="editerbare-utenlandsoppdrag-sporsmal">
       <SporsmalOgSvar
@@ -59,6 +59,6 @@ const EditerbareUtenlandsoppdragetSporsmal = () => {
       </Nav.Row>
     </div>
   );
-};
+}
 
 export default EditerbareUtenlandsoppdragetSporsmal;

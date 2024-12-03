@@ -6,7 +6,7 @@ import * as Mui from "../../../../felleskomponenter/ui";
 
 import { konverterVilkarTilStegData, lagVilkarbegrunnelse, lagVilkaar } from "../../../../felleskomponenter/stegvelger";
 
-const EnkeltVilkaar = (props) => {
+function EnkeltVilkaar(props) {
   const { redigerbart, begrunnelser, tittel, labelOppfylt, labelIkkeOppfylt, vilkaar, vilkaarKode, oppdaterData } =
     props;
 
@@ -56,7 +56,7 @@ const EnkeltVilkaar = (props) => {
       )}
     </div>
   );
-};
+}
 
 EnkeltVilkaar.propTypes = {
   redigerbart: PT.bool.isRequired,

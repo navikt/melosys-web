@@ -67,7 +67,7 @@ const kontrollerAdresse = (identifikator) => {
     });
 };
 
-const JournalforingForm = ({
+function JournalforingForm({
   journalpostID,
   hoveddokumentID,
   vedlegg,
@@ -85,7 +85,7 @@ const JournalforingForm = ({
   avsenderNavnFraJournalpost,
   mottaksKanalErEessi,
   mottaksKanalErElektronisk,
-}) => {
+}) {
   const visForvaltningsmelding = skalViseForvaltningsmelding(formValues, fagsakListe);
   const visFagsakVelger = formValues?.brukerNavn || formValues?.virksomhetNavn;
   const visSkalTilordnes = !fagsakListe.find(
@@ -203,7 +203,7 @@ const JournalforingForm = ({
       />
     </form>
   );
-};
+}
 
 JournalforingForm.propTypes = {
   journalpostID: PT.string.isRequired,

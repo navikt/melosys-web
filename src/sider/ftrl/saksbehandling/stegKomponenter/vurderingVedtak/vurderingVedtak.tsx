@@ -83,7 +83,7 @@ interface Props {
   aktivtSteg: boolean;
 }
 
-export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
+export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   const dispatch = useDispatch();
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const medlemskapsperioder = useSelector(medlemskapsperioderSelectors.AlleMedlemskapsperioderSelector);
@@ -531,4 +531,4 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
       />
     </div>
   );
-};
+}

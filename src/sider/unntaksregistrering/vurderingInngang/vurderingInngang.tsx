@@ -32,7 +32,7 @@ interface VurderingInngangProps {
   bekreft: () => void;
 }
 
-const VurderingInngang = ({ bekreft, oppdaterStatus }: VurderingInngangProps) => {
+function VurderingInngang({ bekreft, oppdaterStatus }: VurderingInngangProps) {
   const dispatch = useDispatch();
   const sakstype = useSelector(fagsakSelectors.SakstypeKodeSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
@@ -204,6 +204,6 @@ const VurderingInngang = ({ bekreft, oppdaterStatus }: VurderingInngangProps) =>
       )}
     </div>
   );
-};
+}
 
 export default VurderingInngang;

@@ -32,7 +32,7 @@ interface Props {
   aktivtSteg: boolean;
 }
 
-export const VurderingVedtakOpphoer = ({ tilbake, aktivtSteg }: Props) => {
+export function VurderingVedtakOpphoer({ tilbake, aktivtSteg }: Props) {
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const lagretVedtakstype = useSelector(behandlingsresultatSelectors.VedtakstypeSelector);
@@ -198,4 +198,4 @@ export const VurderingVedtakOpphoer = ({ tilbake, aktivtSteg }: Props) => {
       />
     </div>
   );
-};
+}

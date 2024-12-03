@@ -7,7 +7,7 @@ interface JaNeiSvarProps {
   svar: boolean | null | undefined;
 }
 
-export const JaNeiSvar = ({ svar }: JaNeiSvarProps) => {
+export function JaNeiSvar({ svar }: JaNeiSvarProps) {
   const svarString = Utils._isNil(svar) ? "-" : Utils._capitalize(Utils.streng.boolTilNorsk(svar));
 
   return (
@@ -15,18 +15,20 @@ export const JaNeiSvar = ({ svar }: JaNeiSvarProps) => {
       {svarString}
     </Nav.BodyLong>
   );
-};
+}
 
 interface LabelOgSvarProps {
   label: string;
   svar: ReactNode;
 }
 
-export const LabelOgSvar = ({ label, svar }: LabelOgSvarProps) => (
-  <Nav.Row>
-    <Nav.Column xs="10">
-      <Nav.BodyLong size="small">{label}</Nav.BodyLong>
-    </Nav.Column>
-    <Nav.Column xs="2">{svar}</Nav.Column>
-  </Nav.Row>
-);
+export function LabelOgSvar({ label, svar }: LabelOgSvarProps) {
+  return (
+    <Nav.Row>
+      <Nav.Column xs="10">
+        <Nav.BodyLong size="small">{label}</Nav.BodyLong>
+      </Nav.Column>
+      <Nav.Column xs="2">{svar}</Nav.Column>
+    </Nav.Row>
+  );
+}

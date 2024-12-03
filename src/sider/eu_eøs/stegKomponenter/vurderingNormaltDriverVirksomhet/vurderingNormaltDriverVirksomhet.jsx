@@ -7,7 +7,7 @@ import EnkeltVilkaar from "../felles/enkeltVilkaar";
 
 import { arrayTilKonjunksjon } from "../../../../utils/streng";
 
-const NormaltDriverVirksomhet = (props) => {
+function NormaltDriverVirksomhet(props) {
   const {
     bekreftOgFortsett,
     begrunnelser,
@@ -62,7 +62,7 @@ const NormaltDriverVirksomhet = (props) => {
       />
     </>
   );
-};
+}
 
 NormaltDriverVirksomhet.ID = "NORMALT_DRIVER_VIRKSOMHET";
 

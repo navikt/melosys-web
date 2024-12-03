@@ -22,7 +22,7 @@ interface LovvalgsperiodeProps {
   onRedigeringErAktiv: (redigeringErAktiv: boolean) => void;
 }
 
-export const Lovvalgsperiode = ({ kontrollerFerdigbehandling, onRedigeringErAktiv }: LovvalgsperiodeProps) => {
+export function Lovvalgsperiode({ kontrollerFerdigbehandling, onRedigeringErAktiv }: LovvalgsperiodeProps) {
   const dispatch = useDispatch();
 
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
@@ -62,21 +62,23 @@ export const Lovvalgsperiode = ({ kontrollerFerdigbehandling, onRedigeringErAkti
     kontrollerFerdigbehandling();
   };
 
-  const EndrePeriodeKnapp = () => (
-    <Nav.Button
-      variant="secondary"
-      onClick={() => setVisPeriodeEndringFelter(true)}
-      onKeyDown={(event) => {
-        if ([" ", "Enter"].includes(event.key)) {
-          event.preventDefault();
-          setVisPeriodeEndringFelter(true);
-        }
-      }}
-      disabled={!redigerbart}
-    >
-      Endre
-    </Nav.Button>
-  );
+  function EndrePeriodeKnapp() {
+    return (
+      <Nav.Button
+        variant="secondary"
+        onClick={() => setVisPeriodeEndringFelter(true)}
+        onKeyDown={(event) => {
+          if ([" ", "Enter"].includes(event.key)) {
+            event.preventDefault();
+            setVisPeriodeEndringFelter(true);
+          }
+        }}
+        disabled={!redigerbart}
+      >
+        Endre
+      </Nav.Button>
+    );
+  }
 
   const handleLagrePeriodeEndring = async () => {
     await lagreLovvalgsperiodeOgKontroller({ fom: formValues.fom, tom: formValues.tom });
@@ -127,4 +129,4 @@ export const Lovvalgsperiode = ({ kontrollerFerdigbehandling, onRedigeringErAkti
       )}
     </Nav.Column>
   );
-};
+}

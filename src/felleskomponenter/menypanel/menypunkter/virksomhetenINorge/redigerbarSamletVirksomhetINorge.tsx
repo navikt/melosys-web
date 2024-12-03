@@ -3,7 +3,7 @@ import { normalizeDecimal, normalizeInt } from "../../../../utils/normalisering"
 
 import "./redigerbarSamletVirksomhetINorge.css";
 
-const RedigerbarSamletVirksomhetINorge = () => {
+function RedigerbarSamletVirksomhetINorge() {
   return (
     <div className="redigerbar-samlet-virksomhet-i-norge">
       <Skjema.Input
@@ -62,6 +62,6 @@ const RedigerbarSamletVirksomhetINorge = () => {
       </div>
     </div>
   );
-};
+}
 
 export default RedigerbarSamletVirksomhetINorge;

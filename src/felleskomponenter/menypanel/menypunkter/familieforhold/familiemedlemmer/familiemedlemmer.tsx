@@ -11,7 +11,7 @@ import * as Nav from "../../../../../navFrontend";
 
 import "./familiemedlemmer.css";
 
-const Familiemedlemmer = () => {
+function Familiemedlemmer() {
   const behandlingID: number = useSelector(behandlingerSelectors.BehandlingIDSelector) as number;
   const { loading, error, data } = useHentFamiliemedlemmerQuery({ variables: { behandlingID } });
 
@@ -67,6 +67,6 @@ const Familiemedlemmer = () => {
       </div>
     </div>
   );
-};
+}
 
 export default Familiemedlemmer;

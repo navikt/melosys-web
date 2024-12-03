@@ -50,13 +50,13 @@ const fysiskArbeidsstedDefaultElement: KV.Form.FysiskArbeidssted = {
   virksomhetNavn: "",
 };
 
-type ArbeidsstederProps = {
+interface ArbeidsstederProps {
   redigerbart: boolean;
   visArbeidsforholdRolleEtiketter: boolean;
   behandlingstema: string;
-};
+}
 
-const Arbeidssteder = ({ redigerbart, visArbeidsforholdRolleEtiketter, behandlingstema }: ArbeidsstederProps) => {
+function Arbeidssteder({ redigerbart, visArbeidsforholdRolleEtiketter, behandlingstema }: ArbeidsstederProps) {
   const dispatch = useDispatch();
   const slettFastArbeidsstedOgHjemmekontorAvklaring = () => {
     dispatch(change(KV.Form.SOKNAD, "arbeidPaaLand.erFastArbeidssted", null));
@@ -160,6 +160,6 @@ const Arbeidssteder = ({ redigerbart, visArbeidsforholdRolleEtiketter, behandlin
       </div>
     </div>
   );
-};
+}
 
 export default Arbeidssteder;

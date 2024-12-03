@@ -25,7 +25,7 @@ import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import vurderingVideresendSchema from "../vurderingVideresendSchema";
 import "./vurderingVideresend.css";
 
-export const VurderingVideresend = ({
+export function VurderingVideresend({
   redigerbart,
   behandlingID,
   bostedsland,
@@ -34,7 +34,7 @@ export const VurderingVideresend = ({
   form,
   formValues,
   tilbake,
-}) => {
+}) {
   const pdfDokumenter = [
     {
       dokumentData: {
@@ -134,7 +134,7 @@ export const VurderingVideresend = ({
       </form>
     </div>
   );
-};
+}
 
 VurderingVideresend.propTypes = {
   redigerbart: PT.bool.isRequired,

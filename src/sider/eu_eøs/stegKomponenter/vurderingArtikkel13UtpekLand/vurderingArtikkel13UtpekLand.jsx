@@ -39,7 +39,7 @@ const nyUtpekingsperiodeErInnenforSoknadsperioden = (soknadsperiode, isoFomDato,
   );
 };
 
-export const VurderingArtikkel13UtpekLand = ({
+export function VurderingArtikkel13UtpekLand({
   redigerbart,
   behandlingID,
   lovvalgsland,
@@ -61,7 +61,7 @@ export const VurderingArtikkel13UtpekLand = ({
   byggUtpekingsperioder: gjenopprettOpprinneligUtpekingsperiode,
   endreUtpekingsperiode,
   oppdaterForm,
-}) => {
+}) {
   const [utpekingPending, setUtpekingPending] = useState(false);
   const [fomDato, setFomDato] = useState(
     Utils.dato.formatterDatoTilNorsk(utpekingsperiode?.fomDato || soknadsperiode.fom),
@@ -274,7 +274,7 @@ export const VurderingArtikkel13UtpekLand = ({
       />
     </div>
   );
-};
+}
 
 VurderingArtikkel13UtpekLand.propTypes = {
   tilstand: PT.shape({

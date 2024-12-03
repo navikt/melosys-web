@@ -7,21 +7,23 @@ interface FotknapperProps {
   spinner?: boolean;
 }
 
-const Fotknapper = ({ avbrytJournalforing, spinner = false }: FotknapperProps) => (
-  <div className="fotknapper">
-    <Nav.Button variant="primary" loading={spinner}>
-      Journalfør
-    </Nav.Button>
-    <Nav.Button
-      variant="tertiary"
-      onClick={(e) => {
-        e.preventDefault();
-        avbrytJournalforing();
-      }}
-    >
-      Avbryt
-    </Nav.Button>
-  </div>
-);
+function Fotknapper({ avbrytJournalforing, spinner = false }: FotknapperProps) {
+  return (
+    <div className="fotknapper">
+      <Nav.Button variant="primary" loading={spinner}>
+        Journalfør
+      </Nav.Button>
+      <Nav.Button
+        variant="tertiary"
+        onClick={(e) => {
+          e.preventDefault();
+          avbrytJournalforing();
+        }}
+      >
+        Avbryt
+      </Nav.Button>
+    </div>
+  );
+}
 
 export default Fotknapper;

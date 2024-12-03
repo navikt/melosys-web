@@ -25,95 +25,97 @@ const SentryRoute = Sentry.withSentryRouting(Route);
 
 const { EU_EOS, FTRL, TRYGDEAVTALE } = MKV.Koder.sakstyper;
 
-const Routing = () => (
-  <FellesHandlersContext.Consumer>
-    {(fellesHandlers) => (
-      <Switch>
-        <SentryRoute
-          exact
-          path="/"
-          render={(props) => (
-            <ErrorBoundary
-              kontekster={[
-                {
-                  slice: "fagsaker",
-                  varselTekst: "Det har oppstått en feil: Kunne ikke hente fagsaker",
-                },
-              ]}
-            >
-              <Forside {...props} {...fellesHandlers} />
-            </ErrorBoundary>
-          )}
-        />
-        <SentryRoute
-          exact
-          path="/sok"
-          render={(props) => (
-            <ErrorBoundary
-              kontekster={[
-                { slice: "fagsaker", varselTekst: "Det har oppstått en feil: Kunne ikke hente fagsaker" },
-                { slice: "oppgaver", varselTekst: "Det har oppstått en feil: Kunne ikke søke etter oppgaver" },
-              ]}
-            >
-              <Sok {...props} />
-            </ErrorBoundary>
-          )}
-        />
-        <SentryRoute
-          exact
-          path={`/${EU_EOS}/registrering/:saksnr/unntaksperioder`}
-          render={(props) => <Unntaksperioder {...props} {...fellesHandlers} />}
-        />
-        <SentryRoute
-          exact
-          path={`/${EU_EOS}/registrering/:saksnr/anmodningunntak`}
-          render={(props) => <Anmodningsunntak {...props} {...fellesHandlers} />}
-        />
-        <SentryRoute
-          path={`/${EU_EOS}/saksbehandling/:saksnr`}
-          render={(props) => <EuEøsSaksbehandling {...props} {...fellesHandlers} />}
-        />
-        <SentryRoute
-          path={`/${FTRL}/saksbehandling/:saksnr`}
-          render={(props) => <FtrlSaksbehandling {...props} {...fellesHandlers} />}
-        />
-        <SentryRoute
-          path="/:sakstype/ikkeYrkesaktiv/:saksnr"
-          render={(props) => <IkkeYrkesaktiv {...props} {...fellesHandlers} />}
-        />
-        <SentryRoute
-          path={`/${TRYGDEAVTALE}/saksbehandling/:saksnr`}
-          render={(props) => <TrygdeavtaleSaksbehandling {...props} {...fellesHandlers} />}
-        />
-        <SentryRoute
-          path="/:sakstype/aarsavregning/:saksnr"
-          render={(props) => <Årsavregning {...props} {...fellesHandlers} />}
-        />
-        <SentryRoute
-          path="/:sakstype/behandling/:saksnr"
-          render={(props) => <IngenFlytBehandling {...props} {...fellesHandlers} />}
-        />
-        <SentryRoute
-          path="/journalforing/:journalpostID/:oppgaveID"
-          render={(props) => <Journalforing {...props} {...fellesHandlers} />}
-        />
-        <SentryRoute path="/opprettnysak" render={(props) => <OpprettNySak {...props} {...fellesHandlers} />} />;
-        <SentryRoute
-          path={`/${EU_EOS}/vurderutpeking/:saksnr`}
-          render={(props) => <VurderUtpeking {...props} {...fellesHandlers} />}
-        />
-        <SentryRoute
-          path="/sendbrev/:behandlingID/:snr"
-          render={(props) => <Sendbrev {...props} {...fellesHandlers} />}
-        />
-        <SentryRoute
-          path="/:sakstype/unntaksregistrering/:saksnr"
-          render={(props) => <Unntaksregistrering {...props} {...fellesHandlers} />}
-        />
-        <SentryRoute component={UkjentSide} />
-      </Switch>
-    )}
-  </FellesHandlersContext.Consumer>
-);
+function Routing() {
+  return (
+    <FellesHandlersContext.Consumer>
+      {(fellesHandlers) => (
+        <Switch>
+          <SentryRoute
+            exact
+            path="/"
+            render={(props) => (
+              <ErrorBoundary
+                kontekster={[
+                  {
+                    slice: "fagsaker",
+                    varselTekst: "Det har oppstått en feil: Kunne ikke hente fagsaker",
+                  },
+                ]}
+              >
+                <Forside {...props} {...fellesHandlers} />
+              </ErrorBoundary>
+            )}
+          />
+          <SentryRoute
+            exact
+            path="/sok"
+            render={(props) => (
+              <ErrorBoundary
+                kontekster={[
+                  { slice: "fagsaker", varselTekst: "Det har oppstått en feil: Kunne ikke hente fagsaker" },
+                  { slice: "oppgaver", varselTekst: "Det har oppstått en feil: Kunne ikke søke etter oppgaver" },
+                ]}
+              >
+                <Sok {...props} />
+              </ErrorBoundary>
+            )}
+          />
+          <SentryRoute
+            exact
+            path={`/${EU_EOS}/registrering/:saksnr/unntaksperioder`}
+            render={(props) => <Unntaksperioder {...props} {...fellesHandlers} />}
+          />
+          <SentryRoute
+            exact
+            path={`/${EU_EOS}/registrering/:saksnr/anmodningunntak`}
+            render={(props) => <Anmodningsunntak {...props} {...fellesHandlers} />}
+          />
+          <SentryRoute
+            path={`/${EU_EOS}/saksbehandling/:saksnr`}
+            render={(props) => <EuEøsSaksbehandling {...props} {...fellesHandlers} />}
+          />
+          <SentryRoute
+            path={`/${FTRL}/saksbehandling/:saksnr`}
+            render={(props) => <FtrlSaksbehandling {...props} {...fellesHandlers} />}
+          />
+          <SentryRoute
+            path="/:sakstype/ikkeYrkesaktiv/:saksnr"
+            render={(props) => <IkkeYrkesaktiv {...props} {...fellesHandlers} />}
+          />
+          <SentryRoute
+            path={`/${TRYGDEAVTALE}/saksbehandling/:saksnr`}
+            render={(props) => <TrygdeavtaleSaksbehandling {...props} {...fellesHandlers} />}
+          />
+          <SentryRoute
+            path="/:sakstype/aarsavregning/:saksnr"
+            render={(props) => <Årsavregning {...props} {...fellesHandlers} />}
+          />
+          <SentryRoute
+            path="/:sakstype/behandling/:saksnr"
+            render={(props) => <IngenFlytBehandling {...props} {...fellesHandlers} />}
+          />
+          <SentryRoute
+            path="/journalforing/:journalpostID/:oppgaveID"
+            render={(props) => <Journalforing {...props} {...fellesHandlers} />}
+          />
+          <SentryRoute path="/opprettnysak" render={(props) => <OpprettNySak {...props} {...fellesHandlers} />} />;
+          <SentryRoute
+            path={`/${EU_EOS}/vurderutpeking/:saksnr`}
+            render={(props) => <VurderUtpeking {...props} {...fellesHandlers} />}
+          />
+          <SentryRoute
+            path="/sendbrev/:behandlingID/:snr"
+            render={(props) => <Sendbrev {...props} {...fellesHandlers} />}
+          />
+          <SentryRoute
+            path="/:sakstype/unntaksregistrering/:saksnr"
+            render={(props) => <Unntaksregistrering {...props} {...fellesHandlers} />}
+          />
+          <SentryRoute component={UkjentSide} />
+        </Switch>
+      )}
+    </FellesHandlersContext.Consumer>
+  );
+}
 
 export default Routing;

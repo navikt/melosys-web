@@ -1,7 +1,7 @@
 import * as Nav from "../../../../../../navFrontend";
 import * as KV from "../../../../../../kodeverk";
 
-type ListeVelgerProps = {
+interface ListeVelgerProps {
   muligeAlternativer: string[] | undefined;
   kodeverkKoder: string[];
   valgtAlternativ: string;
@@ -9,9 +9,9 @@ type ListeVelgerProps = {
   name: string;
   tittel: string;
   endretAlternativ: (kode: string) => void;
-};
+}
 
-export const ListeVelger = ({
+export function ListeVelger({
   muligeAlternativer,
   redigerbart,
   valgtAlternativ,
@@ -19,7 +19,7 @@ export const ListeVelger = ({
   kodeverkKoder,
   tittel,
   endretAlternativ,
-}: ListeVelgerProps) => {
+}: ListeVelgerProps) {
   if (muligeAlternativer?.length === 0) return null;
 
   return (
@@ -44,4 +44,4 @@ export const ListeVelger = ({
       </Nav.Column>
     </Nav.Row>
   );
-};
+}

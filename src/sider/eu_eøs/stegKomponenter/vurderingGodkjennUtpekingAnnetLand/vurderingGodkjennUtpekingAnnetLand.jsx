@@ -15,14 +15,14 @@ import { formSelectors } from "../../../../ducks/form";
 import "./vurderingGodkjennUtpekingAnnetLand.css";
 import * as Api from "../../../../services/api";
 
-export const VurderingGodkjennUtpekingAnnetLand = ({
+export function VurderingGodkjennUtpekingAnnetLand({
   lagreOgGodkjennUnntaksperioder,
   redigerbart,
   overskrift,
   behandlingID,
   vurderUtpekingFormValues,
   tilbake,
-}) => {
+}) {
   const [varsleUtland, setVarsleUtland] = useState(false);
   const [godkjenningPending, setGodkjenningPending] = useState(false);
   const [fritekst, setFritekst] = useState("");
@@ -129,7 +129,7 @@ export const VurderingGodkjennUtpekingAnnetLand = ({
       </Nav.Row>
     </div>
   );
-};
+}
 
 const mapStateToProps = (state) => ({
   vurderUtpekingFormValues: formSelectors.VurderUtpekingFormValuesSelector(state),

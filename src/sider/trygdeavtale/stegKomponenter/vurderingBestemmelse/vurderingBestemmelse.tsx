@@ -71,7 +71,7 @@ interface Props {
   aktivtSteg: boolean;
 }
 
-const VurderingBestemmelse = ({
+function VurderingBestemmelse({
   data: { vedtakValg, bestemmelseValg, tilleggsbestemmelseValg },
   formIsValid,
   formValues,
@@ -86,7 +86,7 @@ const VurderingBestemmelse = ({
   lovvalgsperiode,
   slettLovvalgsperiode,
   behandlingID,
-}: PropsFromRedux & Props) => {
+}: PropsFromRedux & Props) {
   const [updatePending, setUpdatePending] = useState(false);
 
   const skalLagreVedtaksvalg = formValues?.vedtak !== NEI_ANMODE_OM_UNNTAK && formValues?.vedtak !== NEI_AVSLAG;
@@ -196,7 +196,7 @@ const VurderingBestemmelse = ({
       />
     </div>
   );
-};
+}
 
 const VurderingBestemmelseForm = reduxForm<{}, PropsFromRedux & Props>({
   form: KV.Form.Trygdeavtale.BESTEMMELSE,

@@ -28,7 +28,7 @@ const {
   UNNTATT_MEDLEMSKAP,
 } = MKV.Koder.behandlinger.behandlingsresultattyper;
 
-export const DialogboksBekreftValg = () => {
+export function DialogboksBekreftValg() {
   const dispatch = useDispatch();
   const [feil, setFeil] = useState(undefined);
 
@@ -205,6 +205,6 @@ export const DialogboksBekreftValg = () => {
       </Nav.Modal.Footer>
     </Nav.Modal>
   );
-};
+}
 
 export default DialogboksBekreftValg;

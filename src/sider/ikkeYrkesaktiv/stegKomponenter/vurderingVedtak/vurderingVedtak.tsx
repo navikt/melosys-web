@@ -43,7 +43,7 @@ interface FormValuesProps {
   begrunnelseFritekst?: string;
 }
 
-export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
+export function VurderingVedtak({ aktivtSteg, tilbake }: Props) {
   const sakstype = useSelector(fagsakSelectors.SakstypeKodeSelector);
 
   const dispatch = useDispatch();
@@ -273,4 +273,4 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
       />
     </div>
   );
-};
+}

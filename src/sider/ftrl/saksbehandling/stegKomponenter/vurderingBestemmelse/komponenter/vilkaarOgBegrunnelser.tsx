@@ -30,7 +30,7 @@ interface VilkaarOgBegrunnelserProps {
   selvstendigNæringValgt?: boolean;
 }
 
-export const VilkaarOgBegrunnelser = ({
+export function VilkaarOgBegrunnelser({
   vilkårOgBegrunnelser: { vilkår, muligeBegrunnelser },
   alleValgteVilkår,
   alleValgteBegrunnelser,
@@ -39,10 +39,10 @@ export const VilkaarOgBegrunnelser = ({
   handleEndreBegrunnelseFritekst,
   redigerbart,
   selvstendigNæringValgt,
-}: VilkaarOgBegrunnelserProps) => {
+}: VilkaarOgBegrunnelserProps) {
   const hjelpetekstForVilkaar = hjelpetekster.get(vilkår);
   const vilkårErValgt = alleValgteVilkår.get(`${vilkår}`);
-  const valgtBegrunnelseForVilkår = alleValgteBegrunnelser.get(`${vilkår}`)!!;
+  const valgtBegrunnelseForVilkår = alleValgteBegrunnelser.get(`${vilkår}`)!;
   const visBegrunnelseFritekst = kodeInkludererFritekst(
     MKV.KTObjects.begrunnelser.folketrygdloven,
     valgtBegrunnelseForVilkår?.begrunnelseKode,
@@ -119,4 +119,4 @@ export const VilkaarOgBegrunnelser = ({
       )}
     </>
   );
-};
+}

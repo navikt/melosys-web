@@ -2,47 +2,47 @@ import { deleteAsJson, getAsJson, putAsJson } from "../utils";
 import { API_BASE_URL, TRYGDEAVGIFT } from "../api-constants";
 import { KTObject } from "@navikt/melosys-kodeverk";
 
-export type InntektskildeDto = {
+export interface InntektskildeDto {
   type: string;
   arbeidsgiversavgiftBetales: boolean;
   avgiftspliktigInntekt?: number;
   fomDato: string;
   tomDato: string;
   erMaanedsbelop: boolean;
-};
+}
 
-export type SkatteforholdDto = {
+export interface SkatteforholdDto {
   fomDato: string;
   tomDato: string;
   skatteplikttype: string;
-};
+}
 
-export type TrygdeavgiftsgrunnlagDto = {
+export interface TrygdeavgiftsgrunnlagDto {
   skatteforholdsperioder: SkatteforholdDto[];
   inntektskilder: InntektskildeDto[];
-};
+}
 
-export type TrygdeavgiftMottakerDto = {
+export interface TrygdeavgiftMottakerDto {
   trygdeavgiftMottaker: KTObject;
-};
+}
 
-export type Trygdeavgiftsperiode = {
+export interface Trygdeavgiftsperiode {
   fom: string;
   tom: string;
   trygdedekning: string;
   inntektskildetype: string;
   avgiftssats: number;
   avgiftPerMd: number;
-};
+}
 
-export type BeregnetTrygdeavgift = {
+export interface BeregnetTrygdeavgift {
   trygdeavgiftsperioder: Trygdeavgiftsperiode[];
   trygdeavgiftsgrunnlag: TrygdeavgiftsgrunnlagDto;
-};
+}
 
-export type Fakturamottaker = {
+export interface Fakturamottaker {
   navn: string;
-};
+}
 
 export const hentTrygdeavgiftMottaker = (behandlingID: number): Promise<TrygdeavgiftMottakerDto> =>
   getAsJson(`${API_BASE_URL}/behandlinger/${behandlingID}/${TRYGDEAVGIFT}/mottaker`);

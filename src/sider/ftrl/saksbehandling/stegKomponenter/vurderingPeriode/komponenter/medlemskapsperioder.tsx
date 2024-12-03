@@ -26,7 +26,7 @@ export interface PeriodeElementerProps {
   visLeggTil: boolean;
 }
 
-export const Medlemskapsperioder = ({
+export function Medlemskapsperioder({
   redigerbart,
   trygdedekninger,
   innvilgelsesResultater,
@@ -37,7 +37,7 @@ export const Medlemskapsperioder = ({
   handleChange,
   handleLeggTil,
   visLeggTil,
-}: PeriodeElementerProps) => {
+}: PeriodeElementerProps) {
   const kanSlettePeriode = redigerbart && fields.length !== 1;
   const medlemskapsperioder = useSelector(medlemskapsperioderSelectors.AlleMedlemskapsperioderSelector);
   const medlemskapsTypeErPliktig = medlemskapsperioder.some((periode) => periode.medlemskapstype === PLIKTIG);
@@ -127,4 +127,4 @@ export const Medlemskapsperioder = ({
       </div>
     </div>
   );
-};
+}
