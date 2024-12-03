@@ -7,6 +7,8 @@ import { DokumenterV2 } from "../../../services/api";
 import { begrensAntallTegn } from "../../../utils/normalisering";
 import LabelMedHjelpetekst from "../../labelMedHjelpetekst";
 
+import "./brevFelt.css";
+
 interface BrevFeltProps {
   felt: DokumenterV2.Felt;
   visFeltBeskrivelse: boolean;

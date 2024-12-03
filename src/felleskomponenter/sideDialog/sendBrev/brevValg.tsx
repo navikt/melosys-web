@@ -11,16 +11,32 @@ interface BrevValgProps {
   formValues: SendBrevFormValues;
   width: ColumnWidth;
   redigerbart: boolean;
-  changeField: (felt: string, data: any) => void;
+  changeField: (felt: string, data: string | number | boolean | null) => void;
   finnValgAlternativ: (felt: Api.DokumenterV2.Felt) => Api.DokumenterV2.ValgAlternativ | undefined;
 }
 
 const BrevValg = ({ formValues, width, redigerbart, changeField, finnValgAlternativ }: BrevValgProps) => {
   const skalViseBrevFelt = (felt: Api.DokumenterV2.Felt) => felt.valg === null || finnValgAlternativ(felt)?.visFelt;
 
+  const felter = formValues.valgtBrev?.felter || [];
+
+  const sorterteFelter = [
+    ...felter.filter((felt) => felt.kode === "BREV_TITTEL"),
+    ...felter.filter((felt) => felt.kode === "FRITEKST"),
+    ...felter.filter((felt) => felt.kode === "STANDARDTEKST_KONTAKTINFORMASJON"),
+    ...felter.filter(
+      (felt) =>
+        felt.kode !== "BREV_TITTEL" &&
+        felt.kode !== "FRITEKST" &&
+        felt.kode !== "STANDARDTEKST_KONTAKTINFORMASJON" &&
+        felt.kode !== "DOKUMENTTITTEL"
+    ),
+    ...felter.filter((felt) => felt.kode === "DOKUMENTTITTEL"),
+  ];
+
   return (
     <>
-      {formValues.valgtBrev?.felter?.map((felt) => (
+      {sorterteFelter.map((felt) => (
         <Fragment key={felt.kode}>
           {felt.valg && (
             <Nav.Row>
