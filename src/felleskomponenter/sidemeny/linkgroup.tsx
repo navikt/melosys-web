@@ -23,15 +23,14 @@ const LinkGroup = ({ label, links, onClick }: LinkGroupProps) => (
       </li>
     )}
     {links.map(({ label: linkLabel, active, iconSrc, iconAltText }, index) => (
-      <li key={linkLabel.split(" ").join("")}>
-        <MenyLink
-          label={linkLabel}
-          active={active}
-          onClick={() => onClick(index)}
-          iconSrc={iconSrc}
-          iconAltText={iconAltText}
-        />
-      </li>
+      <MenyLink
+        key={linkLabel.replace(/ /g, "")}
+        label={linkLabel}
+        active={active}
+        onClick={() => onClick(index)}
+        iconSrc={iconSrc}
+        iconAltText={iconAltText}
+      />
     ))}
   </ul>
 );
