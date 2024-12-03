@@ -32,16 +32,14 @@ const SideMeny = ({ linkGroups, heading, onClick }: SideMenyProps): JSX.Element 
           </h2>
         )}
         <nav aria-labelledby="opplysninger">
-          <ul className={sideMenyCls.element("link-list")}>
-            {linkGroups.map(({ label, links }, index) => (
-              <LinkGroup
-                key={label || Utils._uuid()}
-                label={label}
-                links={links}
-                onClick={(linkIndex) => onClick(index, linkIndex)}
-              />
-            ))}
-          </ul>
+          {linkGroups.map(({ label, links }, index) => (
+            <LinkGroup
+              key={label || Utils._uuid()}
+              label={label}
+              links={links}
+              onClick={(linkIndex) => onClick(index, linkIndex)}
+            />
+          ))}
         </nav>
       </div>
     </div>
