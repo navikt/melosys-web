@@ -82,14 +82,12 @@ const skalViseSendOrienteringsbrev = (
   sakstype: string,
   behandlingstema: string,
   erArtikkel11_4: boolean,
-  erSelvstendigNaeringsdrivende: boolean,
-  erSokkelSkip: boolean
+  erSelvstendigNaeringsdrivende: boolean
 ) =>
   !erArtikkel11_4 &&
   sakstype === EU_EOS &&
   [UTSENDT_ARBEIDSTAKER, ARBEID_TJENESTEPERSON_ELLER_FLY].includes(behandlingstema) &&
-  !erSelvstendigNaeringsdrivende &&
-  !erSokkelSkip;
+  !erSelvstendigNaeringsdrivende;
 
 const skalViseMottakerinstitusjoner = (
   sakstype: string,
@@ -344,13 +342,7 @@ const VurderingVedtak = ({
           </Nav.Row>
         )}
         {redigerbart &&
-          skalViseSendOrienteringsbrev(
-            sakstype,
-            behandlingstema,
-            erArtikkel11_4,
-            erSelvstendigNaeringsdrivende,
-            erSokkelSkip
-          ) && (
+          skalViseSendOrienteringsbrev(sakstype, behandlingstema, erArtikkel11_4, erSelvstendigNaeringsdrivende) && (
             <Skjema.Checkbox feltNavn="kopiTilArbeidsgiver" label="Send orienteringsbrev til arbeidsgiver/virksomhet" />
           )}
         <Nav.Row>
