@@ -38,7 +38,7 @@ class GodkjennUtpekingNorge extends Steg {
         },
       ];
 
-      const godkjennUtpekingNorge = [
+      const pdfDokumenterGodkjennUtpekingNorge = [
         {
           dokumentData: {
             produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV_FLERE_LAND,
@@ -59,7 +59,7 @@ class GodkjennUtpekingNorge extends Steg {
         _propsLight.lovvalgsbestemmelse ===
           MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3A
           ? pdfDokumenterNorgeErUtpekt11_3_a
-          : godkjennUtpekingNorge;
+          : pdfDokumenterGodkjennUtpekingNorge;
 
       return {
         redigerbart: _propsLight.generiskStegRedigerbart,
