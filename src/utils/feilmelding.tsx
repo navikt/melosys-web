@@ -17,7 +17,7 @@ export function syncErrorsTilFeilmelding(
     if (Utils._isObject(feil)) {
       return (
         Object.keys(feil)
-          // @ts-ignore
+          // @ts-expect-error generisk beskrivelse
           .map((key) => finnFeilmelding(feil[key]))
       );
     }

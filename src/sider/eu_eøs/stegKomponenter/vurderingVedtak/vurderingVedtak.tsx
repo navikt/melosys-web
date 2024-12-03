@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { connect, ConnectedProps, useDispatch, useSelector } from "react-redux";
 import { getFormValues, InjectedFormProps, isValid, reduxForm } from "redux-form";
-// @ts-ignore
+// @ts-expect-error generisk beskrivelse
 import * as EKV from "eessi-kodeverk";
 import MKV, { MKVUtils } from "../../../../melosyskodeverk";
 import * as KV from "../../../../kodeverk";
@@ -241,7 +241,7 @@ function VurderingVedtak({
           mottakerinstitusjoner: visMottakerinstitusjoner ? [formValues.mottakerinstitusjon] : [],
           nyVurderingBakgrunn: formValues.vedtakstypebegrunnelse,
         };
-        // @ts-ignore
+        // @ts-expect-error generisk beskrivelse
         dispatch(vedtakOperations.fatt(behandlingID, vedtakRequest)).then((res) => {
           if (res.data?.data?.error) {
             setVedtakPending(false);

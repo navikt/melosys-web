@@ -1,7 +1,7 @@
 import { ChangeEvent, Fragment, useCallback, useEffect, useState } from "react";
 import { connect, ConnectedProps, useDispatch, useSelector } from "react-redux";
 import { getFormValues, InjectedFormProps, isValid, reduxForm } from "redux-form";
-// @ts-ignore
+// @ts-expect-error generisk beskrivelse
 import * as EKV from "eessi-kodeverk";
 import { v4 as uuid } from "uuid";
 import * as Utils from "../../../../utils";

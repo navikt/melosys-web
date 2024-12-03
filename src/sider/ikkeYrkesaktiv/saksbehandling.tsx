@@ -78,7 +78,7 @@ function Saksbehandling({ behandlingOppfriskes, startOgVisOppfriskModal, visOppf
       setBehandlingID(behandlingId);
       await dispatch(fagsakOperations.hent(saksnr));
       const response = await dispatch(behandlingerOperations.hentBehandling(behandlingId));
-      // @ts-ignore
+      // @ts-expect-error generisk beskrivelse
       const behandling = response.data;
       if (!behandling) return false;
 

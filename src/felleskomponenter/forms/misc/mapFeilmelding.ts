@@ -9,10 +9,10 @@ export const getErrorMessage = (
 
   if (match) {
     const [, arrayName, index, propertyName] = match;
-    // @ts-ignore
+    // @ts-expect-error generisk beskrivelse
     return formState.errors?.[arrayName]?.[index]?.[propertyName]?.message?.melding;
   }
 
-  // @ts-ignore
+  // @ts-expect-error generisk beskrivelse
   return formState.errors?.[field.name]?.message?.melding;
 };

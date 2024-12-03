@@ -352,7 +352,7 @@ export function oppdaterLovvalgsperioderState(stegState: PerioderStegState) {
     if (alleLovvalgsvilkar.length > 0) {
       const oppfyltLovvalg = finnOppfyltVilkar(alleLovvalgsvilkar);
       const lovvalgsperioder = byggLovvalgsperioderFraVilkaar(oppfyltLovvalg, stegState, reduxState);
-      // @ts-ignore
+      // @ts-expect-error generisk beskrivelse
       dispatch(Actions.oppdaterLovvalgsperioderState(lovvalgsperioder));
     } else if (
       stegState.lovvalgsbestemmelse ||
@@ -362,7 +362,7 @@ export function oppdaterLovvalgsperioderState(stegState: PerioderStegState) {
       stegState.lovvalgsperiode
     ) {
       const lovvalgsperioder = byggLovvalgsperioder(stegState, reduxState);
-      // @ts-ignore
+      // @ts-expect-error generisk beskrivelse
       dispatch(Actions.oppdaterLovvalgsperioderState(lovvalgsperioder));
     } else {
       dispatch(Actions.resetLovvalgsperioderState());

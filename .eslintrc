@@ -52,8 +52,13 @@
     "prettier/prettier": "error",
     "react/react-in-jsx-scope": "off",
     "react/prop-types": "off",
-    "import/order": "off",
+    "react/forbid-prop-types": "off",
+    "react/no-unused-prop-types": "off",
     "no-underscore-dangle": "off",
+    "import/order": "off",
+    "import/no-cycle": "off",
+    "import/prefer-default-export": "off",
+    "import/no-named-as-default": "off",
     "import/no-extraneous-dependencies": [
       "error",
       {

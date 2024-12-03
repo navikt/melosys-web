@@ -130,7 +130,7 @@ function RedigererFullmektig({
     <>
       {fullmektige.map(({ type, fullmakter, feil, adresse, kontaktOrgAdresse }: Fullmektig, index) => {
         const adresseErGyldig = !feil && adresse;
-        // @ts-ignore
+        // @ts-expect-error generisk beskrivelse
         const manglerFullmakt = errors?.fullmektige?.[index]?.fullmakter?.message?.melding;
 
         return (

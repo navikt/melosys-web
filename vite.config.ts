@@ -39,7 +39,6 @@ export default defineConfig({
         };
       },
     },
-    // @ts-ignore
     react({
       include: /\.(js|jsx|ts|tsx)$/,
       jsxImportSource: "react",

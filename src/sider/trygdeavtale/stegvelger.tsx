@@ -111,7 +111,7 @@ class Stegvelger extends Component<PropsFromRedux, State> {
     }
 
     if (this.state.endreFokus) {
-      // @ts-ignore
+      // @ts-expect-error generisk beskrivelse
       const aktueltStegId = this.state.aktuelleSteg[this.state.aktivtStegIndex].id;
       Utils.navigasjon.flyttFokusTilHtmlElementFraId(aktueltStegId);
       this.setState({ endreFokus: false });

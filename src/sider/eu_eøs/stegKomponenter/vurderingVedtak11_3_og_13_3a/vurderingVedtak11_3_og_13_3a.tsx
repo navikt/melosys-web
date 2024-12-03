@@ -117,7 +117,7 @@ export function VurderingVedtak11_3_og_13_3a({
     validerMottatteOpplysninger()
       .then(() => {
         dispatch(vedtakOperations.fatt(behandlingID, lagFattVedtakEOSReqDto()))
-          // @ts-ignore
+          // @ts-expect-error generisk beskrivelse
           .then((res: any) => {
             if (res.data?.data?.error) {
               setVedtakPending(false);

@@ -221,7 +221,7 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
       trygdedekning: "",
       bestemmelse: lagretBestemmelse,
     };
-    // @ts-ignore
+    // @ts-expect-error generisk beskrivelse
     append(nyMedlemskapsperiode);
   };
 

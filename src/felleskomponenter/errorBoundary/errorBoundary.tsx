@@ -53,7 +53,7 @@ function ErrorBoundary({ kontekster, children }: ErrorBoundaryProps) {
   const feilSamling: ErrorObject[] = [];
 
   kontekster.forEach(({ slice, varselTekst }) => {
-    // @ts-ignore
+    // @ts-expect-error generisk beskrivelse
     const currentSlice = rootState[slice];
     const { status: feilStatus } = currentSlice;
     if (feilStatus === "ERROR") {

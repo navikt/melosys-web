@@ -45,7 +45,7 @@ describe("syncErrorsTilFeilmelding", () => {
         },
       },
     };
-    // @ts-ignore
+    // @ts-expect-error generisk beskrivelse
     render(syncErrorsTilFeilmelding(syncErrors));
 
     const items = screen.getAllByRole("listitem");

@@ -507,7 +507,7 @@ export function VurderingAarsavregning({ bekreft, oppdaterStatus }: Props) {
           ),
         ));
 
-    // @ts-ignore
+    // @ts-expect-error generisk beskrivelse
     medlemskapsperioderUpdate(index, mapTilMedlemskapsperiodeProps(response.data));
   };
 
@@ -538,7 +538,7 @@ export function VurderingAarsavregning({ bekreft, oppdaterStatus }: Props) {
       trygdedekning: "",
       bestemmelse: "",
     };
-    // @ts-ignore
+    // @ts-expect-error generisk beskrivelse
     medlemskapsperioderAppend(nyMedlemskapsperiode);
     debouncedLagreMedlemskapsperioder(formValues.medlemskapsperioder, undefined);
   };

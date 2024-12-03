@@ -40,7 +40,7 @@ describe("Utenlandsoppdraget", () => {
 
   it("viser ikke soknadslandvelger dersom sakstype er FTRL", () => {
     renderWithProviders(<Utenlandsoppdraget {...props} />, {
-      // @ts-ignore
+      // @ts-expect-error generisk beskrivelse
       preloadedState: initialState(MKV.Koder.sakstyper.FTRL),
     });
 
@@ -49,7 +49,7 @@ describe("Utenlandsoppdraget", () => {
 
   it("viser soknadslandvelger dersom sakstype ikke er FTRL", () => {
     renderWithProviders(<Utenlandsoppdraget {...props} />, {
-      // @ts-ignore
+      // @ts-expect-error generisk beskrivelse
       preloadedState: initialState(MKV.Koder.sakstyper.EU_EOS),
     });
 

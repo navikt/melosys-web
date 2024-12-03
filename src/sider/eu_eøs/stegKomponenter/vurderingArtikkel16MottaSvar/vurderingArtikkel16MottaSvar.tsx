@@ -51,7 +51,7 @@ function VurderingArtikkel16MottaSvar({
   const [anmodningsperioderSvarHentet, setAnmodningsperioderSvarHentet] = useState(false);
 
   useEffect(() => {
-    // @ts-ignore
+    // @ts-expect-error generisk beskrivelse
     dispatch(anmodningsperiodesvarOperations.hent(anmodningsperiodeID)).then(
       (svar: { data: AnmodningsperiodesvarResDto }) => oppdaterData(lagAnmodningsperiodesvar(svar.data)),
     );

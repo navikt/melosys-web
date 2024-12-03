@@ -186,7 +186,7 @@ export function VurderingArtikkel16Vedtak({
           vedtakstype: formValues.vedtakstype || FØRSTEGANGSVEDTAK,
           nyVurderingBakgrunn: formValues.vedtakstypebegrunnelse,
         };
-        // @ts-ignore
+        // @ts-expect-error generisk beskrivelse
         dispatch(vedtakOperations.fatt(behandlingID, request)).then((res) => {
           if (res.data?.data?.error) {
             setVedtakPending(false);
