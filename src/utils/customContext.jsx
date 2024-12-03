@@ -26,9 +26,8 @@ ContextMapper.defaultProps = {
   childProps: {},
 };
 
-export const connectCustomContext = (stateToProps, dispatchToProps) => (component) => (props) => (context) =>
-  (
-    <ContextMapper stateToProps={stateToProps} dispatchToProps={dispatchToProps} childProps={props} context={context}>
-      {component}
-    </ContextMapper>
-  );
+export const connectCustomContext = (stateToProps, dispatchToProps) => (component) => (props) => (context) => (
+  <ContextMapper stateToProps={stateToProps} dispatchToProps={dispatchToProps} childProps={props} context={context}>
+    {component}
+  </ContextMapper>
+);

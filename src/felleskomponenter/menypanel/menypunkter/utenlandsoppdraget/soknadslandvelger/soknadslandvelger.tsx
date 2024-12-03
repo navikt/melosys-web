@@ -47,7 +47,7 @@ const Soknadslandvelger = ({ redigerbart, lagreSoknadOgOppfriskSaksopplysninger 
   const soknadslandTekst = flereLandUkjentHvilke
     ? "Flere land. Ikke kjent hvilke."
     : Utils.streng.arrayTilKonjunksjon(
-        soknadsland.map((land: string) => KV.kodeTilTerm(land, MKV.KTObjects.landkoder))
+        soknadsland.map((land: string) => KV.kodeTilTerm(land, MKV.KTObjects.landkoder)),
       ) || "Ingen land valgt";
 
   return (

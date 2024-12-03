@@ -42,7 +42,7 @@ export const skalViseSoknadsperiodeOgLand = (
   sakstema,
   behandlingstema,
   behandlingstype,
-  erArbeidKunNorgeToggleEnabled = false
+  erArbeidKunNorgeToggleEnabled = false,
 ) =>
   sakstype === MKV.Koder.sakstyper.EU_EOS &&
   sakstema &&
@@ -102,7 +102,7 @@ export const OpprettSak = (props) => {
       Api.LovligeKombinasjoner.hentBehandlingstemaer(hovedpart, valgtSakstype, valgtSakstema).then(
         (muligeBehandlingstemaer) => {
           setBehandlingstemaer(muligeBehandlingstemaer);
-        }
+        },
       );
       setBehandlingstyper([]);
     }
@@ -117,10 +117,10 @@ export const OpprettSak = (props) => {
             settFeltInnhold(
               formNavn,
               feltNavn.opprettnysak_behandlingstype,
-              MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG
+              MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
             );
           }
-        }
+        },
       );
     }
   }, [hovedpart, valgtSakstype, valgtSakstema, valgtBehandlingstema]);
@@ -131,7 +131,7 @@ export const OpprettSak = (props) => {
     !Utils._isEmpty(formValues?.utenlandskTrygdemyndighetLandkode) &&
     !KV.erKodeIListe(
       formValues.utenlandskTrygdemyndighetLandkode,
-      MKV.Kodekombinasjoner.landSomErTrygdeavtaleMyndighetslandOgEuEøsLand
+      MKV.Kodekombinasjoner.landSomErTrygdeavtaleMyndighetslandOgEuEøsLand,
     );
 
   return (
@@ -189,7 +189,7 @@ export const OpprettSak = (props) => {
         valgtSakstema,
         valgtBehandlingstema,
         valgtBehandlingstype,
-        erArbeidKunNorgeToggleEnabled
+        erArbeidKunNorgeToggleEnabled,
       ) && (
         <Fragment>
           <Nav.Fieldset legend="Søknadsperiode:" className="opprettnysak__soknadsperiode">

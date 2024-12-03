@@ -20,7 +20,7 @@ export const BrevMottakereTabell = () => {
         orgnr: null,
       }),
     Api.DokumenterV2.tomHentMuligeMottakereResDto(),
-    []
+    [],
   );
 
   const mapDokumenter = (muligmottaker: Api.DokumenterV2.HentMuligeMottakereResDto) => {

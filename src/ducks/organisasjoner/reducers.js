@@ -19,7 +19,7 @@ const initialState = {
 const flettOrganisasjoner = (nyeOrganisasjoner, eksisterendeOrganisasjoner) => {
   const normalisertOrganisasjonsArray = Array.isArray(nyeOrganisasjoner) ? [...nyeOrganisasjoner] : [nyeOrganisasjoner];
   const kunNye = normalisertOrganisasjonsArray.filter(
-    (organisasjon) => !eksisterendeOrganisasjoner.find((eksisterende) => eksisterende.orgnr === organisasjon.orgnr)
+    (organisasjon) => !eksisterendeOrganisasjoner.find((eksisterende) => eksisterende.orgnr === organisasjon.orgnr),
   );
   return [...eksisterendeOrganisasjoner, ...kunNye];
 };

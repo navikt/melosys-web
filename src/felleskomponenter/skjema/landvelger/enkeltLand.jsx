@@ -80,7 +80,7 @@ class InnerEnkeltLand extends Component {
     const { landkoder } = this.props;
     if (!inputVerdi) return [];
     return landkoder.filter((land) =>
-      Utils.land.landTekstFormat(land).toLowerCase().includes(inputVerdi.toLowerCase())
+      Utils.land.landTekstFormat(land).toLowerCase().includes(inputVerdi.toLowerCase()),
     );
   };
 

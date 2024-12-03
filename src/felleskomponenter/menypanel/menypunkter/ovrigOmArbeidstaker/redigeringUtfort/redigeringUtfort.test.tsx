@@ -9,7 +9,7 @@ import { renderWithProviders } from "../../../../../ducks/test-utils/renderWithP
 describe("RedigeringUtført", () => {
   const reduxStore = (
     harLoennetArbeidMinstEnMndFoerUtsending = true,
-    harAndreArbeidsgivereIUtsendingsperioden = true
+    harAndreArbeidsgivereIUtsendingsperioden = true,
   ) => ({
     form: {
       [KV.Form.SOKNAD]: {

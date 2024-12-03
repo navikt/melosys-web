@@ -23,9 +23,9 @@ export interface DokumentlisteType {
 }
 
 export const isSed = (
-  dokument: BrevDokumentMetadataType | SedDokumentMetadataType
+  dokument: BrevDokumentMetadataType | SedDokumentMetadataType,
 ): dokument is SedDokumentMetadataType => "sedType" in dokument;
 
 export const isBrev = (
-  dokument: BrevDokumentMetadataType | SedDokumentMetadataType
+  dokument: BrevDokumentMetadataType | SedDokumentMetadataType,
 ): dokument is BrevDokumentMetadataType => "dokumentData" in dokument;

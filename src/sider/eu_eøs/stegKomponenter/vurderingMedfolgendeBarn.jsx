@@ -133,7 +133,7 @@ const VurderingMedfolgendeBarn = ({
     () => () => {
       slettData();
     },
-    []
+    [],
   );
 
   const visFritekstFelt = vurderingLovvalgBarnFakta.some((af) => hentFaktaVerdi(af) === BOOLSK_STRING.USANN);
@@ -147,8 +147,8 @@ const VurderingMedfolgendeBarn = ({
             af.subjektID,
             ...af.fakta,
             [...af.begrunnelseKoder],
-            fritekst || null
-          )
+            fritekst || null,
+          ),
         );
       }
     });
@@ -179,8 +179,8 @@ const VurderingMedfolgendeBarn = ({
             oppdaterData(
               konverterAvklartfaktaTilStegData(
                 MKV.Koder.avklartefaktatyper.VURDERING_LOVVALG_BARN,
-                medfolgendeBarnEnkeltfakta
-              )
+                medfolgendeBarnEnkeltfakta,
+              ),
             );
           }
         };
@@ -194,7 +194,7 @@ const VurderingMedfolgendeBarn = ({
           oppdaterData(
             lagAvklartefaktaBegrunnelse(MKV.Koder.avklartefaktatyper.VURDERING_LOVVALG_BARN, barn.uuid, [
               begrunnelseKode,
-            ])
+            ]),
           );
         };
 

@@ -23,7 +23,7 @@ const Notat = ({ redigerbart, tekst, opprettetDato, endretDato, forfatter, onUpd
     } catch (e) {
       if (e.status >= 500) {
         setLagringFeilmelding(
-          "Det oppsto en teknisk feil. Ta kontakt med brukerstøtte dersom problemet oppstår gjentatte ganger."
+          "Det oppsto en teknisk feil. Ta kontakt med brukerstøtte dersom problemet oppstår gjentatte ganger.",
         );
       } else if (e.status >= 400) {
         setLagringFeilmelding(e.body.message);

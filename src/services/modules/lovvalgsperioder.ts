@@ -37,13 +37,13 @@ export const hentOpprinnelig = (behandlingID: number) =>
 
 export const opprettLovvalgsperiode = (
   behandlingID: number,
-  data: OpprettLovvalgsperiode
+  data: OpprettLovvalgsperiode,
 ): Promise<Lovvalgsperiode[]> => postAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${LOVVALGSPERIODER}`, data);
 
 export const oppdaterLovvalgsperiode = (
   behandlingID: number,
   lovvalgsperiodeID: number,
-  data: Lovvalgsperiode
+  data: Lovvalgsperiode,
 ): Promise<Lovvalgsperiode> =>
   putAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${LOVVALGSPERIODER}/${lovvalgsperiodeID}`, data);
 

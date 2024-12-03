@@ -1,6 +1,6 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import eslint from 'vite-plugin-eslint';
+import eslint from "vite-plugin-eslint";
 import viteTsconfigPaths from "vite-tsconfig-paths";
 import svgrPlugin from "vite-plugin-svgr";
 import { fileURLToPath, URL } from "node:url";
@@ -49,8 +49,8 @@ export default defineConfig({
     svgrPlugin(),
     eslint({
       cache: true,
-      include: ['src/**/*.ts', 'src/**/*.tsx'],
-    })
+      include: ["src/**/*.ts", "src/**/*.tsx"],
+    }),
   ],
   server: {
     port: 3000,

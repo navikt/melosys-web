@@ -65,20 +65,20 @@ export type LagAarsavregningRequest = {
 
 export const lagAarsavregning = (
   behandlingID: number,
-  request: LagAarsavregningRequest
+  request: LagAarsavregningRequest,
 ): Promise<AarsavregningResponse> =>
   postAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${AARSAVREGNING}`, request);
 
 export const oppdaterTotalBelop = (
   behandlingID: number,
   request: AarsavregningRequest,
-  aarsavregningID?: number
+  aarsavregningID?: number,
 ): Promise<AarsavregningResponse> =>
   putAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${AARSAVREGNING}/${aarsavregningID}`, request);
 
 export const hentFiltrertAarsavregningList = (
   saksnummer: string,
   aar: number,
-  resultattype: string
+  resultattype: string,
 ): Promise<AarsavregningListResponse[]> =>
   getAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/${AARSAVREGNING}?aar=${aar}&resultattype=${resultattype}`);

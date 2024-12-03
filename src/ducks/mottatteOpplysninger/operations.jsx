@@ -33,7 +33,7 @@ export function hent(behandlingID) {
       ...Selectors.SelvstendigArbeidForetakOrgnumreSelector(getState()),
     ];
     const ekstraOrganisasjonerPromises = ekstraOrganisasjoner.map((orgnr) =>
-      dispatch(OrganisasjonOperations.hent(orgnr))
+      dispatch(OrganisasjonOperations.hent(orgnr)),
     );
     await Promise.all(ekstraOrganisasjonerPromises);
 
@@ -51,7 +51,7 @@ export function send(bid, mottatteOpplysninger) {
     },
     {
       success: (dispatch, data) => Validering.Felles.forsokValidering(dispatch, data),
-    }
+    },
   );
 }
 
@@ -67,7 +67,7 @@ export function oppdaterState() {
 
     if (mottatteOpplysningerType === MKV.Koder.mottatteopplysningertyper.SED) {
       mottatteOpplysningerData.overgangsregelbestemmelser = hentOvergangsregelbestemmelser(
-        formSelectors.VurderUtpekingFormSelector(getState()).values
+        formSelectors.VurderUtpekingFormSelector(getState()).values,
       );
     }
 

@@ -215,7 +215,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
       Api.Fagsaker.aktoer.hent(saksnummer, FULLMEKTIG).then((res) => {
         setHarBekreftetFullmaktForTrygdeavgift(false);
         setHarFullmaktForTrygdeavgift(
-          res.some((aktoer) => aktoer.fullmakter?.some((fullmakt) => fullmakt === FULLMEKTIG_TRYGDEAVGIFT))
+          res.some((aktoer) => aktoer.fullmakter?.some((fullmakt) => fullmakt === FULLMEKTIG_TRYGDEAVGIFT)),
         );
       });
 
@@ -351,7 +351,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
 
     return alleLandkoder
       ? Utils.streng.arrayTilKonjunksjon(
-          soknadsland.map((enkeltLand: string) => KV.finnTermFraListe(alleLandkoder, enkeltLand))
+          soknadsland.map((enkeltLand: string) => KV.finnTermFraListe(alleLandkoder, enkeltLand)),
         )
       : `Finner ikke ${erIkkeYrkesaktiv ? "land" : "arbeidsland"}`;
   };

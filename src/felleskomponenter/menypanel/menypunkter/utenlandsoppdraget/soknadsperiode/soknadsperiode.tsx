@@ -56,7 +56,7 @@ export const Soknadsperiode = ({ redigerbart, tittel, lagreSoknadOgOppfriskSakso
       mottatteOpplysningerOperations.oppdaterPeriode({
         fom: Utils.dato.formatterDatoTilISO(formValues.fom, ""),
         tom: Utils.dato.formatterDatoTilISO(formValues.tom, ""),
-      })
+      }),
     );
     if (skalOppfriskeSaksopplysninger()) {
       lagreSoknadOgOppfriskSaksopplysninger();

@@ -12,25 +12,25 @@ import { Medlemskapsperiode } from "../../services/modules/medlemavfolketrygden/
 
 const AarsavregningSelector: Selector<RootState, StateSection<AarsavregningResponse>> = createSelector(
   (state: RootState) => state.aarsavregning,
-  (aarsavregning) => aarsavregning
+  (aarsavregning) => aarsavregning,
 );
 
 const AarsavregningDataSelector: Selector<RootState, AarsavregningResponse> = createSelector(
   AarsavregningSelector,
-  (aarsavregning) => aarsavregning.data
+  (aarsavregning) => aarsavregning.data,
 );
 
 export const AarsavregningAarSelector: Selector<RootState, number | undefined> = createSelector(
   AarsavregningDataSelector,
-  (aarsavregning) => aarsavregning.aar
+  (aarsavregning) => aarsavregning.aar,
 );
 
 const AarsavregningTidligereGrunnlagSelector: Selector<RootState, Trygdeavgiftsgrunnlag | undefined> = createSelector(
   AarsavregningDataSelector,
-  (aarsavregning) => aarsavregning?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag
+  (aarsavregning) => aarsavregning?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag,
 );
 
 export const AarsavregningTidligereGrunnlagMedlemskapsperioderSelector: Selector<RootState, Medlemskapsperiode[]> =
   createSelector(AarsavregningTidligereGrunnlagSelector, (tidligereGrunnlag) =>
-    tidligereGrunnlag ? tidligereGrunnlag.medlemskapsperioder : []
+    tidligereGrunnlag ? tidligereGrunnlag.medlemskapsperioder : [],
   );

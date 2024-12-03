@@ -45,7 +45,7 @@ const finnesInntektskildeMedBruttoInntektOver250k = (inntektskilder: Inntektskil
 
 const finnesInntektskildeperiodeUtenforMedlemskapsperiode = (
   inntektskilder: Inntektskilde[],
-  innvilgetMedlemskapsperiode: { fom: string; tom: string }
+  innvilgetMedlemskapsperiode: { fom: string; tom: string },
 ) => {
   if (Utils._isEmpty(inntektskilder)) return false;
   const sorterteInntektskilder = [...inntektskilder]
@@ -59,14 +59,14 @@ const finnesInntektskildeperiodeUtenforMedlemskapsperiode = (
     Utils.dato.erFør(sorterteInntektskilder[0].fomDato, innvilgetMedlemskapsperiode.fom) ||
     Utils.dato.erEtter(
       sorterteInntektskilder[sorterteInntektskilder.length - 1].tomDato,
-      innvilgetMedlemskapsperiode.tom
+      innvilgetMedlemskapsperiode.tom,
     )
   );
 };
 
 const finnesSkatteforholdPeriodeUtenforMedlemskapsperiode = (
   skatteforholdsperioder: Skatteforhold[],
-  innvilgetMedlemskapsperiode: { fom: string; tom: string }
+  innvilgetMedlemskapsperiode: { fom: string; tom: string },
 ) => {
   if (Utils._isEmpty(skatteforholdsperioder)) return false;
   const sorterteSkatteforhold = [...skatteforholdsperioder]
@@ -84,27 +84,27 @@ const finnesSkatteforholdPeriodeUtenforMedlemskapsperiode = (
 
 const erSkattepliktigOgPensjonUføreMedKildeskatt = (
   skatteforholdsperioder: Skatteforhold[],
-  inntektskilder: Inntektskilde[]
+  inntektskilder: Inntektskilde[],
 ) => {
   const skattepliktigePerioder = skatteforholdsperioder.filter(
-    (skatteforhold) => skatteforhold.skatteplikttype === SKATTEPLIKTIG
+    (skatteforhold) => skatteforhold.skatteplikttype === SKATTEPLIKTIG,
   );
   const inntektskilderPensjonUføreMedKildeskatt = inntektskilder.filter(
-    (inntektskilde) => inntektskilde.kildetype === PENSJON_UFØRETRYGD_KILDESKATT
+    (inntektskilde) => inntektskilde.kildetype === PENSJON_UFØRETRYGD_KILDESKATT,
   );
   return skattepliktigePerioder.some((skatteforhold) =>
     inntektskilderPensjonUføreMedKildeskatt.some((kilder) =>
-      Utils.dato.perioderOverlapper(kilder.fomDato, kilder.tomDato, skatteforhold.fomDato, skatteforhold.tomDato)
-    )
+      Utils.dato.perioderOverlapper(kilder.fomDato, kilder.tomDato, skatteforhold.fomDato, skatteforhold.tomDato),
+    ),
   );
 };
 
 const erPensjonUføretrygdLagtInnForPeriodeMedKunPensjon = (
   inntektskilder: Inntektskilde[],
-  medlemskapsperioder: Medlemskapsperiode[]
+  medlemskapsperioder: Medlemskapsperiode[],
 ) => {
   const pensjonuføretrygdKilder = inntektskilder.filter((inntektskilde) =>
-    [PENSJON_UFØRETRYGD, PENSJON_UFØRETRYGD_KILDESKATT].includes(inntektskilde.kildetype)
+    [PENSJON_UFØRETRYGD, PENSJON_UFØRETRYGD_KILDESKATT].includes(inntektskilde.kildetype),
   );
   const overlappendeMedlemskapsperioder = medlemskapsperioder
     .filter((periode) => periode.innvilgelsesResultat === INNVILGET)
@@ -114,9 +114,9 @@ const erPensjonUføretrygdLagtInnForPeriodeMedKunPensjon = (
           inntektskilde.fomDato,
           inntektskilde.tomDato,
           Utils.dato.formatterDatoTilNorsk(periode.fomDato),
-          Utils.dato.formatterDatoTilNorsk(periode.tomDato)
-        )
-      )
+          Utils.dato.formatterDatoTilNorsk(periode.tomDato),
+        ),
+      ),
     );
   return (
     !Utils._isEmpty(overlappendeMedlemskapsperioder) &&
@@ -136,7 +136,7 @@ export const finnAktivFeilmelding = (
   inntektskilder: Inntektskilde[],
   skatteforholdsperioder: Skatteforhold[],
   medlemskapsperioder: Medlemskapsperiode[],
-  innvilgetMedlemskapsperiode?: { fom: string; tom: string }
+  innvilgetMedlemskapsperiode?: { fom: string; tom: string },
 ): string | undefined => {
   if (!innvilgetMedlemskapsperiode || innvilgetMedlemskapsperiode.tom == null) return undefined;
 

@@ -45,7 +45,7 @@ export const VilkaarOgBegrunnelser = ({
   const valgtBegrunnelseForVilkår = alleValgteBegrunnelser.get(`${vilkår}`)!!;
   const visBegrunnelseFritekst = kodeInkludererFritekst(
     MKV.KTObjects.begrunnelser.folketrygdloven,
-    valgtBegrunnelseForVilkår?.begrunnelseKode
+    valgtBegrunnelseForVilkår?.begrunnelseKode,
   );
   const harValgtFTRL_ARBEIDSTAKER = vilkår === MKV.Koder.vilkaar.FTRL_ARBEIDSTAKER && vilkårErValgt;
 

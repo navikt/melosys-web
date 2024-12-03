@@ -44,7 +44,7 @@ describe("Arbeidssteder", () => {
     renderWithProviders(<Arbeidssteder {...props} />, { preloadedState: reduxStore(true) });
 
     const alertstripe = screen.getByText(
-      "Ikke mulig å legge til arbeidssted(er) når det ikke er oppgitt land. Du kan endre dette under sidemenypunkt “Periode og land”."
+      "Ikke mulig å legge til arbeidssted(er) når det ikke er oppgitt land. Du kan endre dette under sidemenypunkt “Periode og land”.",
     );
     expect(alertstripe).toBeInTheDocument();
   });

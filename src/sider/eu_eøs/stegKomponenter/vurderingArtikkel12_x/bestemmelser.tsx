@@ -197,7 +197,7 @@ export const Bestemmelser = ({
       return visStorbritanniaKonvensjon
         ? [
             MKVUtils.lovvalgsbestemmelseTilObjekt(
-              erSokkel ? KONV_EFTA_STORBRITANNIA_ART16 : KONV_EFTA_STORBRITANNIA_ART14
+              erSokkel ? KONV_EFTA_STORBRITANNIA_ART16 : KONV_EFTA_STORBRITANNIA_ART14,
             ),
             MKVUtils.lovvalgsbestemmelseTilObjekt(FO_883_2004_ART12),
           ]

@@ -109,19 +109,19 @@ describe("Behandlingerselectors", () => {
         expect(resultatet.organisasjon.orgnr).toBe("12345");
 
         expect(resultatet.inntektListe.map((inntekt) => inntekt.aarMaaned)).toEqual(
-          expect.arrayContaining(["2019-08", "2019-09", "2019-10", "2019-11", "2019-12", "2020-01", "2020-02"])
+          expect.arrayContaining(["2019-08", "2019-09", "2019-10", "2019-11", "2019-12", "2020-01", "2020-02"]),
         );
 
         expect(
           resultatet.inntektListe
             .filter((inntekt) => ["2019-08", "2019-09"].includes(inntekt.aarMaaned))
-            .map((inntekt) => inntekt.beloep)
+            .map((inntekt) => inntekt.beloep),
         ).toEqual(expect.arrayContaining([0, 0]));
 
         expect(
           resultatet.inntektListe
             .filter((inntekt) => !["2019-08", "2019-09"].includes(inntekt.aarMaaned))
-            .map((inntekt) => inntekt.beloep)
+            .map((inntekt) => inntekt.beloep),
         ).toEqual(expect.arrayContaining([30000, 30000, 30000, 30000, 30000, 30000]));
       });
     });

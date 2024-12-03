@@ -117,7 +117,7 @@ export const Saksplukker = ({
           formValues.sakstema,
           behandlingstema,
           behandlingstype,
-          erArbeidKunNorgeToggleEnabled
+          erArbeidKunNorgeToggleEnabled,
         );
 
         history.push(redirectURL);

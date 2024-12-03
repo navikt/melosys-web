@@ -29,7 +29,7 @@ const MenyLink = ({ label, active, onClick, iconSrc, iconAltText }: MenyLinkProp
     active ? menyLinkCls.elementWithModifier("label", "active") : menyLinkCls.element("label"),
     {
       [menyLinkCls.elementWithModifier("label", "with-icon")]: !!iconSrc,
-    }
+    },
   );
 
   const containerClassnames = classnames(menyLinkCls.block);

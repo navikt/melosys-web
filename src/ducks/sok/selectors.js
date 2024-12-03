@@ -9,5 +9,5 @@ import { createSelector } from "reselect";
 
 export const FagsakSokSelector = createSelector(
   (state) => (state.sok.data.fagsakListe ? state.sok.data.fagsakListe : []),
-  (sokResultat) => sokResultat || []
+  (sokResultat) => sokResultat || [],
 );

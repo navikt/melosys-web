@@ -79,11 +79,11 @@ const VurderingInngang = ({ bekreft, oppdaterStatus }: VurderingInngangProps) =>
           mottatteOpplysningerOperations.oppdaterPeriode({
             fom: Utils.dato.formatterDatoTilISO(data.fom, ""),
             tom: Utils.dato.formatterDatoTilISO(data.tom, ""),
-          })
+          }),
         ),
-      500
+      500,
     ),
-    []
+    [],
   );
 
   const lagreFom = (fom: string) => {

@@ -2,7 +2,7 @@ import { createSelector } from "reselect";
 
 export const ModalerSelector = createSelector(
   (state) => state.modaler.data,
-  (modaler) => modaler
+  (modaler) => modaler,
 );
 
 export const AvslagSoknadSelector = createSelector(ModalerSelector, (modaler) => modaler.avslagSoknad);
@@ -27,5 +27,5 @@ export const InkluderSiste5AarSelector = createSelector(OppfriskSelector, (oppfr
 
 export const BehandlingUnderOppfriskningSelector = createSelector(
   OppfriskSelector,
-  (oppfrisk) => oppfrisk.behandlingUnderOppfriskning
+  (oppfrisk) => oppfrisk.behandlingUnderOppfriskning,
 );

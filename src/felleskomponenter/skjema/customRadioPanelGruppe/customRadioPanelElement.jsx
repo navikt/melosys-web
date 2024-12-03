@@ -34,7 +34,7 @@ CustomRadioPanelElement.propTypes = {
     PT.shape({
       term: PT.string,
       description: PT.node,
-    })
+    }),
   ).isRequired,
 };
 

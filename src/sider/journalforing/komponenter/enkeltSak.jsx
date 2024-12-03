@@ -40,7 +40,7 @@ const EnkeltSak = (props) => {
     sakstema.kode,
     behandlingstema.kode,
     behandlingstype.kode,
-    erArbeidKunNorgeToggleEnabled
+    erArbeidKunNorgeToggleEnabled,
   );
 
   const avsluttendePeriode = sakstype.kode === MKV.Koder.sakstyper.FTRL ? medlemskapsperiode : lovvalgsperiode;

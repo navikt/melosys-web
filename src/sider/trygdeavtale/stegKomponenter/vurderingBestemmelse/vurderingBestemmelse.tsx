@@ -106,7 +106,7 @@ const VurderingBestemmelse = ({
           if (formValues?.vedtak && formValues.vedtak !== JA_FATTE_VEDTAK && lovvalgsperiode?.periodeID) {
             slettLovvalgsperiode(behandlingID, lovvalgsperiode.periodeID);
           }
-        }
+        },
       );
     }
   }, [formValues?.vedtak, formValues?.bestemmelse, formValues?.tilleggsbestemmelse]);

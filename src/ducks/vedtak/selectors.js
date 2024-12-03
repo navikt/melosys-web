@@ -4,7 +4,7 @@ import { STATUS } from "../../services/utils";
 
 const VedtakSelector = createSelector(
   (state) => state.vedtak,
-  (vedtak) => vedtak
+  (vedtak) => vedtak,
 );
 
 const ReduxStatusSelector = createSelector(VedtakSelector, (vedtak) => vedtak.status);

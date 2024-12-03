@@ -30,7 +30,7 @@ enum TypeMelding {
 
 const finnesSkatteforholdPeriodeUtenforMedlemskapsperiode = (
   skatteforholdsperioder: Skatteforhold[],
-  innvilgetMedlemskapsperiode: { fom: string | undefined; tom: string | undefined }
+  innvilgetMedlemskapsperiode: { fom: string | undefined; tom: string | undefined },
 ) => {
   if (Utils._isEmpty(skatteforholdsperioder)) return false;
   const sorterteSkatteforhold = [...skatteforholdsperioder]
@@ -48,7 +48,7 @@ const finnesSkatteforholdPeriodeUtenforMedlemskapsperiode = (
 
 const finnesInntektskildeperiodeUtenforMedlemskapsperiode = (
   inntektskilder: Inntektskilde[],
-  innvilgetMedlemskapsperiode: { fom: string | undefined; tom: string | undefined }
+  innvilgetMedlemskapsperiode: { fom: string | undefined; tom: string | undefined },
 ) => {
   if (Utils._isEmpty(inntektskilder)) return false;
   const sorterteInntektskilder = [...inntektskilder]
@@ -62,7 +62,7 @@ const finnesInntektskildeperiodeUtenforMedlemskapsperiode = (
     Utils.dato.erFør(sorterteInntektskilder[0].fomDato, innvilgetMedlemskapsperiode.fom) ||
     Utils.dato.erEtter(
       sorterteInntektskilder[sorterteInntektskilder.length - 1].tomDato,
-      innvilgetMedlemskapsperiode.tom
+      innvilgetMedlemskapsperiode.tom,
     )
   );
 };
@@ -74,7 +74,7 @@ export const finnAktivFeilmelding = (
   inntektskilder: Inntektskilde[],
   skatteforholdsperioder: Skatteforhold[],
   medlemskapsperioder: Medlemskapsperiode[] | undefined,
-  innvilgetMedlemskapsperiode?: { fom: string | undefined; tom: string | undefined }
+  innvilgetMedlemskapsperiode?: { fom: string | undefined; tom: string | undefined },
 ): string | undefined => {
   if (!medlemskapsperioder || !innvilgetMedlemskapsperiode || innvilgetMedlemskapsperiode.tom == null) return undefined;
 

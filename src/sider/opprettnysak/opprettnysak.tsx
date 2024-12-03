@@ -220,7 +220,7 @@ const OpprettNySak = ({
       sakstema,
       behandlingstema,
       behandlingstype,
-      erArbeidKunNorgeToggleEnabled
+      erArbeidKunNorgeToggleEnabled,
     );
 
     const fom = skalSendePeriodeOgLand && periodeFraOgMed ? Utils.dato.formatterDatoTilISO(periodeFraOgMed) : null;

@@ -75,7 +75,7 @@ EnkeltArbeidsforholdNorgeRedigerer.propTypes = {
     PT.shape({
       validering: PT.func.isRequired,
       feilmelding: PT.string.isRequired,
-    })
+    }),
   ).isRequired,
   hentVedMount: PT.bool,
   organisasjon: MPT.Organisasjon.isRequired,

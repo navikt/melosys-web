@@ -15,7 +15,7 @@ const AvsenderUtenlandskTrygdemyndighet = ({
   fullmektigLandEndret,
 }: AvsenderUtenlandskTrygdemyndighetProps) => {
   const landkoderTilUtenlandskTrygdemyndighet = sorterLandOgGjørOmTilStoreForbokstaver(
-    MKV.Kodekombinasjoner.unikeAvtaleland
+    MKV.Kodekombinasjoner.unikeAvtaleland,
   );
 
   return (

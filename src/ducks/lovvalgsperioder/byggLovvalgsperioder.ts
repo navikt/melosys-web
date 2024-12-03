@@ -95,7 +95,7 @@ const byggLovvalgsperiodeUtsending = (stegState: PerioderStegState, reduxState: 
 const byggLovvalgsperiodeArtikkel11_3Aeller13_3A = (
   stegState: PerioderStegState,
   reduxState: RootState,
-  oppfyltLovvalg: string
+  oppfyltLovvalg: string,
 ): Lovvalgsperiode[] => {
   const søknadsperiode = mottatteOpplysningerSelectors.PeriodeSelector(reduxState);
   const tilleggsbestemmelseFraVilkar = finnOppfyltVilkar(vilkarSelectors.ValgteTilleggsVilkar(reduxState));
@@ -141,7 +141,7 @@ const byggLovvalgsperiodeArtikkel11_3A = (stegState: PerioderStegState, reduxSta
 const byggLovvalgsperiodeArtikkel11_4_2eller13_4_2 = (
   stegState: PerioderStegState,
   reduxState: RootState,
-  oppfyltLovvalg: string
+  oppfyltLovvalg: string,
 ): Lovvalgsperiode[] => {
   const søknadsperiode = mottatteOpplysningerSelectors.PeriodeSelector(reduxState);
   const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
@@ -232,11 +232,11 @@ const hentLovvalgsbestemmelseForAvslag = (reduxState: RootState) => {
 const byggLovvalgsperioderFraVilkaar = (
   oppfyltLovvalg: string | undefined,
   stegState: PerioderStegState,
-  reduxState: RootState
+  reduxState: RootState,
 ) => {
   const konvensjonStorbritanniaToggleEnabled = erFeatureToggleEnabled(
     MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA,
-    reduxState
+    reduxState,
   );
 
   if (!oppfyltLovvalg) {

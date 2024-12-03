@@ -657,7 +657,7 @@ Stegvelger.propTypes = {
       PT.shape({
         kode: PT.string.isRequired,
         felter: PT.arrayOf(PT.string).isRequired,
-      })
+      }),
     ),
     PT.string,
   ]),
@@ -665,7 +665,7 @@ Stegvelger.propTypes = {
     PT.shape({
       kode: PT.string.isRequired,
       felter: PT.arrayOf(PT.string).isRequired,
-    })
+    }),
   ),
   konvensjonStorbritanniaToggleEnabled: PT.bool.isRequired,
   arbeidKunNorgeToggleEnabled: PT.bool.isRequired,

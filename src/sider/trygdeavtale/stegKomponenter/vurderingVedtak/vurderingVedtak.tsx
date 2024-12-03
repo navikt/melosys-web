@@ -67,7 +67,7 @@ const mapStateToProps = (state: RootState, ownProps: Props) => {
     behandlingerSelectors.BehandlingstypeKodeSelector(state) === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
   const [initialNyVurderingBakgrunn, initialNyVurderingBakgrunnFritekst] = setNyVurderingBakgrunnFelt(
     ownProps.resultat.nyVurderingBakgrunn,
-    erNyVurdering
+    erNyVurdering,
   );
   return {
     behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
@@ -240,7 +240,7 @@ const VurderingVedtak = ({
   const debouncedHentMuligeMottakere = useCallback(Utils._debounce(hentMuligeMottakere, 300), []);
   const debouncedOppdaterFlyten = useCallback(
     Utils._debounce((trygdeavtaleresultat: Api.Trygdeavtale.Resultat) => oppdaterFlyt(trygdeavtaleresultat), 2000),
-    []
+    [],
   );
 
   useEffect(() => {
@@ -286,7 +286,7 @@ const VurderingVedtak = ({
           lovvalgsperiodeFom: Utils.dato.formatterDatoTilISO(formValues.lovvalgsperiodeFom, null),
           lovvalgsperiodeTom: Utils.dato.formatterDatoTilISO(formValues.lovvalgsperiodeTom, null),
         },
-        () => hentLovvalgsperiode(behandlingID)
+        () => hentLovvalgsperiode(behandlingID),
       );
       setVisTomEndringFelt(false);
     }
@@ -348,7 +348,7 @@ const VurderingVedtak = ({
         <Nav.Column xs="4">
           <Nav.BodyLong weight="semibold" size="small" className={vurderingVedtakCls.element("info")}>
             {Utils.streng.storeForbokstaver(
-              KV.finnTermFraListe(bestemmelseValg, resultat.bestemmelse)?.split(" - ")[1]
+              KV.finnTermFraListe(bestemmelseValg, resultat.bestemmelse)?.split(" - ")[1],
             )}
           </Nav.BodyLong>
           <Nav.BodyLong size="small" className={vurderingVedtakCls.element("info")}>

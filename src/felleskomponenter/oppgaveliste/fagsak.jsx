@@ -40,7 +40,7 @@ const Fagsak = ({ sak, landkoder }) => {
       sakstema.kode,
       behandling.behandlingstema.kode,
       behandling.behandlingstype.kode,
-      erArbeidKunNorgeToggleEnabled
+      erArbeidKunNorgeToggleEnabled,
     );
 
   const customMargin = { marginLeft: "1em" };

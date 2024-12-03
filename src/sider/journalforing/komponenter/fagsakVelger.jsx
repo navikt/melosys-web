@@ -60,7 +60,7 @@ const FagsakVelger = (props) => {
         footer: <KnyttTilSak sak={sak} erJournalføring={erJournalføring} feltNavn={feltNavn} formValues={formValues} />,
       },
     ],
-    []
+    [],
   );
 
   return (

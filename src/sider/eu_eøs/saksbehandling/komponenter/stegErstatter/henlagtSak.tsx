@@ -17,7 +17,7 @@ function hentBeskrivelse(begrunnelseKoder?: string[], begrunnelseFritekst?: stri
 
 const HenlagtSak = () => {
   const { begrunnelseKoder, begrunnelseFritekst } = useSelector(
-    behandlingsresultatSelectors.BehandlingsresultatSelector
+    behandlingsresultatSelectors.BehandlingsresultatSelector,
   );
 
   return (

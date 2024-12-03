@@ -10,7 +10,7 @@ describe("url", () => {
         "MEL-1",
         1,
         "En sakstype vi ikke støtter",
-        "tilfeldig behandlingstemaKode"
+        "tilfeldig behandlingstemaKode",
       );
 
       expect(url).toContain("/flyt-finnes-ikke-for-behandling");
@@ -39,7 +39,7 @@ describe("url", () => {
         "MEL-1",
         1,
         EU_EOS,
-        MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER
+        MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
       );
 
       expect(url).toContain("/EU_EOS/saksbehandling/");
@@ -50,7 +50,7 @@ describe("url", () => {
         "MEL-1",
         1,
         FTRL,
-        MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV
+        MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV,
       );
 
       expect(url).toContain("/FTRL/saksbehandling/");
@@ -64,7 +64,7 @@ describe("url", () => {
         MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG,
         MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV,
         MKV.Koder.behandlinger.behandlingstyper.ÅRSAVREGNING,
-        false
+        false,
       );
 
       expect(url).toContain("/FTRL/aarsavregning/");
@@ -75,7 +75,7 @@ describe("url", () => {
         "MEL-1",
         1,
         TRYGDEAVTALE,
-        MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV
+        MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV,
       );
 
       expect(url).toContain("/TRYGDEAVTALE/saksbehandling/");
@@ -86,7 +86,7 @@ describe("url", () => {
         "MEL-1",
         1,
         TRYGDEAVTALE,
-        MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV
+        MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV,
       );
 
       expect(url).toContain("/TRYGDEAVTALE/ikkeYrkesaktiv/");
@@ -99,7 +99,7 @@ describe("url", () => {
         "MEL-1",
         1,
         EU_EOS,
-        MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING
+        MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING,
       );
 
       expect(url).toContain("/EU_EOS/registrering/");
@@ -111,7 +111,7 @@ describe("url", () => {
         "MEL-1",
         1,
         EU_EOS,
-        MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL
+        MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL,
       );
 
       expect(url).toContain("/EU_EOS/registrering/");
@@ -123,7 +123,7 @@ describe("url", () => {
         "MEL-1",
         1,
         EU_EOS,
-        MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE
+        MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE,
       );
 
       expect(url).toContain("/EU_EOS/vurderutpeking/");
@@ -139,7 +139,7 @@ describe("url", () => {
         MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG,
         MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV,
         MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
-        false
+        false,
       );
 
       expect(url).toContain("/FTRL/saksbehandling/");
@@ -153,7 +153,7 @@ describe("url", () => {
         MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG,
         MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV,
         MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
-        false
+        false,
       );
 
       expect(url).toContain("/EU_EOS/ikkeYrkesaktiv/");
@@ -167,7 +167,7 @@ describe("url", () => {
         MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG,
         MKV.Koder.behandlinger.behandlingstema.TRYGDETID,
         MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
-        false
+        false,
       );
 
       expect(url).toContain("/EU_EOS/behandling/");
@@ -181,7 +181,7 @@ describe("url", () => {
         MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG,
         MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV,
         MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
-        false
+        false,
       );
 
       expect(url).toContain("/FTRL/saksbehandling/");
@@ -195,7 +195,7 @@ describe("url", () => {
         MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG,
         MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV,
         MKV.Koder.behandlinger.behandlingstyper.MANGLENDE_INNBETALING_TRYGDEAVGIFT,
-        false
+        false,
       );
 
       expect(url).toContain("/FTRL/saksbehandling/");
@@ -209,7 +209,7 @@ describe("url", () => {
         MKV.Koder.sakstemaer.UNNTAK,
         MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK,
         MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
-        false
+        false,
       );
 
       expect(url).toContain("/TRYGDEAVTALE/unntaksregistrering/");

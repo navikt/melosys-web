@@ -9,7 +9,7 @@ export const FeilmeldingOppsummering = ({ errors }: any) => {
       </Heading>
       <NavList>
         {errors.skatteforholdsperioder?.some(
-          (error: any) => error.fomDato !== undefined || error.tomDato !== undefined
+          (error: any) => error.fomDato !== undefined || error.tomDato !== undefined,
         ) && (
           <NavList.Item>
             Skatteforholdsperioden(e) kan ikke starte før eller slutte etter medlemskapsperioden(e).-

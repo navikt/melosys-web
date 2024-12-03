@@ -28,7 +28,7 @@ export const MottakerinstitusjonvelgerSchema = ({
   const [mottakerinstitusjoner] = useAsyncCallbackState(
     hentMottakerinstitusjoner,
     [],
-    [landkode, bucType, lovvalgsland ?? landkode]
+    [landkode, bucType, lovvalgsland ?? landkode],
   );
 
   useEffect(() => {
@@ -147,7 +147,7 @@ const MottakerinstitusjonvelgerFlervalgInner = ({
           label: `Velg institusjon i ${hentFelt(`${mottakerinstitusjon}.term`)} som skal motta SED`,
           oppdaterKreverMottakerinstitusjon: oppdaterKreverMottakerinstitusjon(
             form,
-            `${mottakerinstitusjon}.kreverMottakerinstitusjon`
+            `${mottakerinstitusjon}.kreverMottakerinstitusjon`,
           ),
           data_cy,
         }}
@@ -178,5 +178,5 @@ MottakerinstitusjonvelgerFlervalgWrapper.propTypes = {
 
 export const MottakerinstitusjonvelgerFlervalg = connect(
   mapStateToPropsFlervalg,
-  mapDispatchToPropsFlervalg
+  mapDispatchToPropsFlervalg,
 )(MottakerinstitusjonvelgerFlervalgWrapper);

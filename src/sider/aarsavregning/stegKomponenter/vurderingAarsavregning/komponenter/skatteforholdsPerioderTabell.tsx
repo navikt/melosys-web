@@ -21,7 +21,7 @@ const SkatteforholdsPerioderTabell = ({ perioder }: { perioder?: SkatteforholdDt
           <Nav.Table.Row className="border_top" key={Utils._uuid()}>
             <Nav.Table.DataCell key={Utils._uuid()}>
               {`${Utils.dato.formatterDatoTilNorsk(skatteforholdsPeriode.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(
-                skatteforholdsPeriode.tomDato
+                skatteforholdsPeriode.tomDato,
               )}`}
             </Nav.Table.DataCell>
             <Nav.Table.DataCell key={Utils._uuid()}>

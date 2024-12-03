@@ -15,7 +15,7 @@ export const VedtakBegrunnelser = ({ anmodningsperiodeSvarType }: VedtakBegrunne
   const vilkarBegrunnelser = useSelector(vilkarSelectors.VilkarBegrunnelserSelector);
   const utsendtArbeidstakerBegrunnelser = useSelector(vilkarSelectors.UtsendingsvilkårArbeidstakerBegrunnelserSelector);
   const utsendtNaeringsdrivendeBegrunnelser = useSelector(
-    vilkarSelectors.UtsendingsvilkårNæringsdrivendeBegrunnelserSelector
+    vilkarSelectors.UtsendingsvilkårNæringsdrivendeBegrunnelserSelector,
   );
 
   const muligeVirksomhetBegrunnelser = [

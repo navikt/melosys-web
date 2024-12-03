@@ -66,7 +66,7 @@ root.render(
         </App>
       </ApolloProvider>
     </Router>
-  </ReduxProvider>
+  </ReduxProvider>,
 );
 
 unregister();

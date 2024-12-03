@@ -60,7 +60,7 @@ const Saksopplysninger = ({
   const [endrePeriodeFom, setEndrePeriodeFom] = useState("");
   const [endrePeriodeTom, setEndrePeriodeTom] = useState("");
   const [endrePeriodeBegrunnelse, setEndrePeriodeBegrunnelse] = useState(
-    MKV.Koder.begrunnelser.folketrygdloven.endret_unntaksperiode.PERIODE_FEILREGISTRERT
+    MKV.Koder.begrunnelser.folketrygdloven.endret_unntaksperiode.PERIODE_FEILREGISTRERT,
   );
   const [endrePeriodeFritekst, setEndrePeriodeFritekst] = useState("");
   const [periodeOver5aarVarslet, setPeriodeOver5aarVarslet] = useState(false);
@@ -91,7 +91,7 @@ const Saksopplysninger = ({
       kontrollerUnntaksperiode(
         behandlingID,
         Utils.dato.formatterDatoTilISO(endrePeriodeFom),
-        Utils.dato.formatterDatoTilISO(endrePeriodeTom)
+        Utils.dato.formatterDatoTilISO(endrePeriodeTom),
       );
     }
   }, [endrePeriodeFom, endrePeriodeTom]);
@@ -118,7 +118,7 @@ const Saksopplysninger = ({
 
   const godkjentUnntaksperiode = async () => {
     const endretPeriodeFakta = avklartefakta.find(
-      (value) => value.referanse === MKV.Koder.avklartefaktatyper.AARSAK_ENDRING_PERIODE
+      (value) => value.referanse === MKV.Koder.avklartefaktatyper.AARSAK_ENDRING_PERIODE,
     );
     if (endretPeriodeFakta) {
       settEndretPeriodeOpplysninger(endretPeriodeFakta);
@@ -187,7 +187,7 @@ const Saksopplysninger = ({
           tom: Utils.dato.formatterDatoTilISO(endrePeriodeTom),
         },
         lovvalgsbestemmelse: sedLovvalgsbestemmelse,
-      })
+      }),
     );
 
   const kanEndrePeriode = () => unntaksperiodeVurdering === KV.Koder.Unntaksperiode.DELVIS_GODKJENT;

@@ -65,7 +65,7 @@ const MultiSelect = forwardRef<HTMLSelectElement, MultiSelectProps>(
         )}
       />
     );
-  }
+  },
 );
 
 export default MultiSelect;

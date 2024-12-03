@@ -48,8 +48,8 @@ class VurderingEndrePeriode extends Component {
     oppdaterData(
       konverterAvklartfaktaTilStegData(
         MKV.Koder.avklartefaktatyper.AARSAK_ENDRING_PERIODE,
-        aarsakEndringPeriodeAvklartfakta
-      )
+        aarsakEndringPeriodeAvklartfakta,
+      ),
     );
 
     this.hentOpprinneligPeriode(behandlingID);

@@ -171,7 +171,7 @@ describe("JournalforingForm", () => {
   it("sending av forvaltningsmelding vises ikke når man journalfører på virksomhet", async () => {
     const { findByLabelText, getByLabelText, queryByText, findByText } = renderWithProviders(
       <Journalforingform {...props} />,
-      { preloadedState: testReduxState }
+      { preloadedState: testReduxState },
     );
     const user = userEvent.setup();
 

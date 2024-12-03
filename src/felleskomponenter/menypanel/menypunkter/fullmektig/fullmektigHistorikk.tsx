@@ -55,7 +55,7 @@ const FullmektigHistorikk = ({ finnOrganisasjonAdresse, finnPersonAdresse }: Ful
             brevadresse: brevAdresse,
             kontaktinfo: kontaktInfo,
           } as FullmektigHistorikkInfo;
-        })
+        }),
       );
       setFullmektige(updatedFullmektige);
     };

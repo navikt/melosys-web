@@ -25,13 +25,13 @@ import "./arbeidsgiver_og_virksomhet.css";
 
 const arbeidsforholdUtlandHarData = (
   elementListe: KV.Form.ArbeidsforholdUtland[],
-  element: KV.Form.ArbeidsforholdUtland
+  element: KV.Form.ArbeidsforholdUtland,
 ): boolean =>
   Boolean(
     element.navn ||
       element.orgnr ||
       Utils._isBoolean(element.selvstendigNaeringsvirksomhet) ||
-      (element.adresse ? Utils.adresse.erStrukturertAdresseObjektTomt(element.adresse) : false)
+      (element.adresse ? Utils.adresse.erStrukturertAdresseObjektTomt(element.adresse) : false),
   );
 
 const soknadFormValueSelector = formValueSelector<KV.Form.SoknadFormData>(KV.Form.SOKNAD);

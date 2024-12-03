@@ -20,7 +20,7 @@ const Familiemedlemmer = () => {
 
   const barn =
     data?.hentSaksopplysninger.persondata.familiemedlemmer.filter(
-      (fm) => fm.relasjonsrolle === Familierelasjonsrolle.Barn
+      (fm) => fm.relasjonsrolle === Familierelasjonsrolle.Barn,
     ) || [];
 
   const ektefellePartner =
@@ -28,7 +28,7 @@ const Familiemedlemmer = () => {
       (fm) =>
         fm.relasjonsrolle === Familierelasjonsrolle.RelatertVedSivilstand &&
         fm.sivilstand != null &&
-        !fm.sivilstand.erHistorisk
+        !fm.sivilstand.erHistorisk,
     ) || [];
 
   const familiemedlemmerClassName = bem("familiemedlemmer");

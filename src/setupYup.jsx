@@ -130,7 +130,7 @@ addMethod(string, "erFnrEllerDnrEllerFødselsdato", function (message) {
   return this.test("er et Fnr eller Dnr eller en fødselsdato", message, function (value) {
     if (Utils._isEmpty(value)) return true;
     return Boolean(
-      Utils.person.erGyldigFnr(value) || Utils.person.erGyldigDnr(value) || Utils.dato.vaskInputDato(value)
+      Utils.person.erGyldigFnr(value) || Utils.person.erGyldigDnr(value) || Utils.dato.vaskInputDato(value),
     );
   });
 });

@@ -8,7 +8,7 @@ import { reduxForm } from "redux-form";
 describe("Redigerer", () => {
   const reduxStore = (
     harLoennetArbeidMinstEnMndFoerUtsending = true,
-    harAndreArbeidsgivereIUtsendingsperioden = true
+    harAndreArbeidsgivereIUtsendingsperioden = true,
   ) => ({
     form: {
       [KV.Form.SOKNAD]: {

@@ -43,7 +43,7 @@ describe("AvklartefaktaStore oppdatering av eksisterende data med subjektID", ()
       expect.arrayContaining([
         expect.objectContaining({ subjektID: "Seven Kestrel", fakta: ["GB"] }),
         expect.objectContaining({ subjektID: "Olympic Bibby", fakta: ["NO"] }),
-      ])
+      ]),
     );
   });
 
@@ -66,7 +66,7 @@ describe("AvklartefaktaStore oppdatering av eksisterende data med subjektID", ()
           fakta: ["GB"],
           begrunnelseKoder: [],
         }),
-      ])
+      ]),
     );
   });
 });
@@ -93,22 +93,22 @@ describe("AvklartefaktaStore sletting av avklartefakta", () => {
 
     const avklartefaktaListe = store.hent();
     expect(avklartefaktaListe.INSTALLASJON_ARBEIDSLAND).toEqual(
-      expect.arrayContaining([expect.objectContaining({ fakta: ["GB"] }), expect.objectContaining({ fakta: ["NO"] })])
+      expect.arrayContaining([expect.objectContaining({ fakta: ["GB"] }), expect.objectContaining({ fakta: ["NO"] })]),
     );
   });
 
   it("Sletter kun avklartefakta som matcher subjektID", () => {
     store.slettStegData(
       "TESTSTEG-1",
-      slettAvklartfakta(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND, "Olympic Bibby")
+      slettAvklartfakta(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND, "Olympic Bibby"),
     );
 
     const avklartefaktaListe = store.hent();
     expect(avklartefaktaListe.INSTALLASJON_ARBEIDSLAND).toEqual(
-      expect.arrayContaining([expect.objectContaining({ fakta: ["GB"] })])
+      expect.arrayContaining([expect.objectContaining({ fakta: ["GB"] })]),
     );
     expect(avklartefaktaListe.INSTALLASJON_ARBEIDSLAND).not.toEqual(
-      expect.arrayContaining([expect.objectContaining({ fakta: ["NO"] })])
+      expect.arrayContaining([expect.objectContaining({ fakta: ["NO"] })]),
     );
   });
 
@@ -124,7 +124,7 @@ describe("AvklartefaktaStore sletting av avklartefakta", () => {
     store.slettStegData("TESTSTEG-1");
     const avklartefaktaListe = store.hent();
     expect(avklartefaktaListe.INSTALLASJON_ARBEIDSLAND).toEqual(
-      expect.arrayContaining([expect.objectContaining({ fakta: ["SE"] })])
+      expect.arrayContaining([expect.objectContaining({ fakta: ["SE"] })]),
     );
   });
 });

@@ -17,7 +17,7 @@ const BrevMottakerNorskMyndighet = () => {
 
   useEffect(() => {
     Api.DokumenterV2.hentTilgjengeligeNorskeMyndigheter().then((response) =>
-      setTilgjengeligeNorskeMyndigheter(response)
+      setTilgjengeligeNorskeMyndigheter(response),
     );
   }, []);
 

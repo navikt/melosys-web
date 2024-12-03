@@ -133,7 +133,7 @@ describe("Personinfo", () => {
     render(
       <MockedProvider {...requestResultMock}>
         <Personinfo {...props} />
-      </MockedProvider>
+      </MockedProvider>,
     );
 
     expect(screen.getByText("Henter personinfo...")).toBeInTheDocument();
@@ -164,7 +164,7 @@ describe("Personinfo", () => {
         ]}
       >
         <Personinfo {...props} />
-      </MockedProvider>
+      </MockedProvider>,
     );
 
     await waitFor(() => {
@@ -176,7 +176,7 @@ describe("Personinfo", () => {
     render(
       <MockedProvider {...requestResultMock}>
         <Personinfo {...props} />
-      </MockedProvider>
+      </MockedProvider>,
     );
 
     const user = userEvent.setup();
@@ -197,7 +197,7 @@ describe("Personinfo", () => {
     render(
       <MockedProvider {...requestResultMock}>
         <Personinfo {...props} />
-      </MockedProvider>
+      </MockedProvider>,
     );
 
     const user = userEvent.setup();

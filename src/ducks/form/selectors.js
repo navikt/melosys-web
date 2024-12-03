@@ -24,40 +24,40 @@ const getFormState = (state, formName, defaultValue = {}) =>
 export const RegisteredFieldsSelector = Utils._memoize((formName) =>
   createSelector(
     (state) => state,
-    (state) => getFormState(state, formName).registeredFields || []
-  )
+    (state) => getFormState(state, formName).registeredFields || [],
+  ),
 );
 
 export const OpprettNySakFormValuesSelector = createSelector(
   (state) => getFormState(state, KV.Form.OPPRETT_NY_SAK, {}),
-  (opprett_ny_sak) => opprett_ny_sak.values
+  (opprett_ny_sak) => opprett_ny_sak.values,
 );
 
 export const SoknadFormSelector = createSelector(
   (state) => getFormState(state, KV.Form.SOKNAD, {}),
-  (soknadForm) => soknadForm
+  (soknadForm) => soknadForm,
 );
 
 export const SoknadFormValuesSelector = createSelector(SoknadFormSelector, (soknadForm) => soknadForm.values);
 
 export const VedtakArtikkel12FormSelector = createSelector(
   (state) => getFormState(state, KV.Form.ARTIKKEL_12_VEDTAK, {}),
-  (vedtakForm) => vedtakForm
+  (vedtakForm) => vedtakForm,
 );
 
 export const VedtakArtikkel12FormValuesSelector = createSelector(
   VedtakArtikkel12FormSelector,
-  (vedtakArtikkel12Form) => vedtakArtikkel12Form.values
+  (vedtakArtikkel12Form) => vedtakArtikkel12Form.values,
 );
 
 export const VurderUtpekingFormSelector = createSelector(
   (state) => getFormState(state, KV.Form.VURDER_UTPEKING, {}),
-  (vurderUtpekingForm) => vurderUtpekingForm
+  (vurderUtpekingForm) => vurderUtpekingForm,
 );
 
 export const VurderUtpekingFormValuesSelector = createSelector(
   VurderUtpekingFormSelector,
-  (vurderUtpekingForm) => vurderUtpekingForm.values || {}
+  (vurderUtpekingForm) => vurderUtpekingForm.values || {},
 );
 
 export const VurderUtpekingFomSelector = createSelector(VurderUtpekingFormValuesSelector, (values) => values.fom);
@@ -66,57 +66,57 @@ export const VurderUtpekingTomSelector = createSelector(VurderUtpekingFormValues
 
 export const VurderUtpekingVurderingSelector = createSelector(
   VurderUtpekingFormValuesSelector,
-  (values) => values.utpekingVurdering
+  (values) => values.utpekingVurdering,
 );
 
 export const UtpekingAvvistSelector = createSelector(
   VurderUtpekingVurderingSelector,
-  (vurdering) => vurdering === MKV.Koder.utfallregistreringunntak.IKKE_GODKJENT
+  (vurdering) => vurdering === MKV.Koder.utfallregistreringunntak.IKKE_GODKJENT,
 );
 
 export const VurderUtpekingValid = createSelector(
   (state) => VurderUtpekingFormSelector(state).syncErrors || {},
-  (errors) => Utils._isEmpty(errors)
+  (errors) => Utils._isEmpty(errors),
 );
 
 export const Artikkel16AnmodningFormSelector = createSelector(
   (state) => getFormState(state, KV.Form.ARTIKKEL_16_ANMODNING, {}),
-  (artikkel16Anmodning) => artikkel16Anmodning
+  (artikkel16Anmodning) => artikkel16Anmodning,
 );
 
 export const Artikkel16MottaSvarFormSelector = createSelector(
   (state) => getFormState(state, KV.Form.ARTIKKEL_16_MOTTA_SVAR, {}),
-  (artikkel16MottaSvar) => artikkel16MottaSvar
+  (artikkel16MottaSvar) => artikkel16MottaSvar,
 );
 
 export const JournalforingFormSelector = createSelector(
   (state) => getFormState(state, KV.Form.JOURNALFORING, {}),
-  (journalforing) => journalforing
+  (journalforing) => journalforing,
 );
 
 export const SendBrevFormSelector = createSelector(
   (state) => getFormState(state, KV.Form.SEND_BREV, {}),
-  (sendbrev) => sendbrev
+  (sendbrev) => sendbrev,
 );
 
 export const SendBrevValidSelector = createSelector(
   (state) => SendBrevFormSelector(state).syncErrors || {},
-  (errors) => Utils._isEmpty(errors)
+  (errors) => Utils._isEmpty(errors),
 );
 
 export const SendBrevOrgnummerValidSelector = createSelector(
   (state) => SendBrevFormSelector(state).syncErrors || {},
-  (errors) => !errors?.organisasjonsnummer
+  (errors) => !errors?.organisasjonsnummer,
 );
 
 export const MaritimtArbeidSelector = createSelector(
   (state) => SoknadFormSelector(state).values,
-  (skjemaverdier) => [...skjemaverdier.arbeidsstedOffshore, ...skjemaverdier.arbeidsstedSkip]
+  (skjemaverdier) => [...skjemaverdier.arbeidsstedOffshore, ...skjemaverdier.arbeidsstedSkip],
 );
 
 export const Artikkel16MottaSvarSyncErrorsSelector = createSelector(
   (state) => Artikkel16MottaSvarFormSelector(state).syncErrors,
-  (errors) => errors
+  (errors) => errors,
 );
 
 export const SoknadOppgittAdresseSelector = createSelector(
@@ -131,12 +131,12 @@ export const SoknadOppgittAdresseSelector = createSelector(
     tilleggsnavn: soknad.oppgittAdresseTilleggsnavn,
     postboks: soknad.oppgittAdressePostboks,
     coAdressenavn: soknad.coAdressenavn,
-  })
+  }),
 );
 
 export const SoknadOppgittAdresseHarVerdierSelector = createSelector(
   (state) => SoknadOppgittAdresseSelector(state),
-  (oppgittadresse) => !Object.values(oppgittadresse).every((felt) => Utils._isNil(felt) || felt === "")
+  (oppgittadresse) => !Object.values(oppgittadresse).every((felt) => Utils._isNil(felt) || felt === ""),
 );
 
 export const SoknadErrorsSelector = createSelector(
@@ -159,7 +159,7 @@ export const SoknadErrorsSelector = createSelector(
     const soknadformErrors = lagYupToReduxformErrorMapper(soknadSchema, settings)(soknadformValues);
 
     return Utils._merge(soknadformErrors, soknadformSyncErrors);
-  }
+  },
 );
 
 const finnPanelFeil = (errors) => {
@@ -186,56 +186,56 @@ export const PanelFeilSelector = createSelector(SoknadErrorsSelector, (soknadErr
 /* Trygdeavtale-selectors start */
 export const TrygdeavtaleInngangFormSelector = createSelector(
   (state) => getFormState(state, KV.Form.Trygdeavtale.INNGANG, {}),
-  (inngang) => inngang
+  (inngang) => inngang,
 );
 
 export const TrygdeavtaleInngangFormValidSelector = createSelector(
   (state) => TrygdeavtaleInngangFormSelector(state).syncErrors || {},
-  (errors) => Utils._isEmpty(errors)
+  (errors) => Utils._isEmpty(errors),
 );
 
 export const TrygdeavtaleAvklarVirksomhetFormSelector = createSelector(
   (state) => getFormState(state, KV.Form.Trygdeavtale.AVKLAR_VIRKSOMHET, {}),
-  (avklarVirksomhet) => avklarVirksomhet
+  (avklarVirksomhet) => avklarVirksomhet,
 );
 
 export const TrygdeavtaleAvklarVirksomhetFormValidSelector = createSelector(
   (state) => TrygdeavtaleAvklarVirksomhetFormSelector(state).syncErrors || {},
-  (errors) => Utils._isEmpty(errors)
+  (errors) => Utils._isEmpty(errors),
 );
 
 export const TrygdeavtaleBestemmelseFormSelector = createSelector(
   (state) => getFormState(state, KV.Form.Trygdeavtale.BESTEMMELSE, {}),
-  (bestemmelse) => bestemmelse
+  (bestemmelse) => bestemmelse,
 );
 
 export const TrygdeavtaleBestemmelseFormValidSelector = createSelector(
   (state) => TrygdeavtaleBestemmelseFormSelector(state).syncErrors || {},
-  (errors) => Utils._isEmpty(errors)
+  (errors) => Utils._isEmpty(errors),
 );
 
 export const TrygdeavtaleFamileFormSelector = createSelector(
   (state) => getFormState(state, KV.Form.Trygdeavtale.FAMILIE, {}),
-  (familie) => familie
+  (familie) => familie,
 );
 
 export const TrygdeavtaleFamilieFormValidSelector = createSelector(
   (state) => TrygdeavtaleFamileFormSelector(state).syncErrors || {},
-  (errors) => Utils._isEmpty(errors)
+  (errors) => Utils._isEmpty(errors),
 );
 
 export const TrygdeavtaleVedtakFormSelector = createSelector(
   (state) => getFormState(state, KV.Form.Trygdeavtale.VEDTAK, {}),
-  (vedtak) => vedtak
+  (vedtak) => vedtak,
 );
 
 export const TrygdeavtaleVedtakFormValidSelector = createSelector(
   (state) => TrygdeavtaleVedtakFormSelector(state).syncErrors || {},
-  (errors) => Utils._isEmpty(errors)
+  (errors) => Utils._isEmpty(errors),
 );
 
 export const TrygdeavtaleVedtakFormPeriodeValidSelector = createSelector(
   (state) => TrygdeavtaleVedtakFormSelector(state).syncErrors || {},
-  (errors) => Utils._isEmpty(errors.lovvalgsperiodeFom) && Utils._isEmpty(errors.lovvalgsperiodeTom)
+  (errors) => Utils._isEmpty(errors.lovvalgsperiodeFom) && Utils._isEmpty(errors.lovvalgsperiodeTom),
 );
 /* Trygdeavtale-selectors slutt */

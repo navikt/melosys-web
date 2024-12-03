@@ -34,11 +34,11 @@ export const BeregnetTrygdeavgiftDetaljer = ({
     return data.avgift.trygdeavgiftsperioder
       .map((period) => {
         const overlappingMedlemskap = data.trygdeavgiftsgrunnlag.medlemskapsperioder.find(
-          (m) => new Date(m.fomDato) <= new Date(period.tom) && new Date(m.tomDato) >= new Date(period.fom)
+          (m) => new Date(m.fomDato) <= new Date(period.tom) && new Date(m.tomDato) >= new Date(period.fom),
         );
 
         const overlappingSkatteforhold = data.trygdeavgiftsgrunnlag.skatteforholdsperioder.find(
-          (s) => new Date(s.fomDato) <= new Date(period.tom) && new Date(s.tomDato) >= new Date(period.fom)
+          (s) => new Date(s.fomDato) <= new Date(period.tom) && new Date(s.tomDato) >= new Date(period.fom),
         );
 
         return {
@@ -55,7 +55,7 @@ export const BeregnetTrygdeavgiftDetaljer = ({
         };
       })
       .sort(
-        (periode1, periode2) => (new Date(periode1.fom)?.getTime() ?? 0) - (new Date(periode2.fom)?.getTime() ?? 0)
+        (periode1, periode2) => (new Date(periode1.fom)?.getTime() ?? 0) - (new Date(periode2.fom)?.getTime() ?? 0),
       );
   };
 
@@ -86,7 +86,7 @@ export const BeregnetTrygdeavgiftDetaljer = ({
                 <Nav.Table.Row className="border_top" key={Utils._uuid()}>
                   <Nav.Table.DataCell key={Utils._uuid()}>
                     {`${Utils.dato.formatterDatoTilNorsk(detaljer.fom)} - ${Utils.dato.formatterDatoTilNorsk(
-                      detaljer.tom
+                      detaljer.tom,
                     )}`}
                   </Nav.Table.DataCell>
                   <Nav.Table.DataCell key={Utils._uuid()}>{detaljer.avgiftssats}</Nav.Table.DataCell>

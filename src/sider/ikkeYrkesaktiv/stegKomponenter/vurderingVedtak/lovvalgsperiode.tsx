@@ -57,7 +57,7 @@ export const Lovvalgsperiode = ({ kontrollerFerdigbehandling, onRedigeringErAkti
         ...lovvalgsperiode,
         fomDato: Utils.dato.formatterDatoTilISO(values.fom, ""),
         tomDato: Utils.dato.formatterDatoTilISO(values.tom, ""),
-      })
+      }),
     );
     kontrollerFerdigbehandling();
   };

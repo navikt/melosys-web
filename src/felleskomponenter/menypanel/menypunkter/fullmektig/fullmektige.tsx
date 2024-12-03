@@ -40,7 +40,7 @@ const Fullmektige = ({ redigerbart, finnOrganisasjonAdresse, finnPersonAdresse }
   const [{ harBehandlingMedTrygdeavgift }] = useAsyncCallbackState(
     () => Api.Fagsaker.fagsak.hentTrygdeavgiftOppsummering(saksnummer),
     { harBehandlingMedTrygdeavgift: false },
-    [saksnummer]
+    [saksnummer],
   );
   const [visFeilFullmektigHarIkkeFullmakter, setVisFeilFullmektigHarIkkeFullmakter] = useState(false);
   const [redigerer, setRedigerer] = useState(false);
@@ -48,7 +48,7 @@ const Fullmektige = ({ redigerbart, finnOrganisasjonAdresse, finnPersonAdresse }
   const [visModal, setVisModal] = useState(false);
   const [modalFunksjon, setModalFunksjon] = useState<(sjekk: boolean) => void>(() => () => {});
   const harBehandlingstypeSomSkalSjekkes = [HENVENDELSE, NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT].includes(
-    behandlingstype
+    behandlingstype,
   );
 
   const {
@@ -98,7 +98,7 @@ const Fullmektige = ({ redigerbart, finnOrganisasjonAdresse, finnPersonAdresse }
             ...fullmektig,
             adresse: adresseOgFeil.adresse,
             feil: adresseOgFeil.feil,
-          })
+          }),
         );
       } else {
         let oppdatertFullmektig: Fullmektig = { ...fullmektig };
@@ -122,7 +122,7 @@ const Fullmektige = ({ redigerbart, finnOrganisasjonAdresse, finnPersonAdresse }
             };
             if (kontaktopplysning.kontaktorgnr) {
               finnOrganisasjonAdresse(kontaktopplysning.kontaktorgnr).then((adresseOgFeil) =>
-                update(index, { ...oppdatertFullmektig, kontaktOrgAdresse: adresseOgFeil.adresse })
+                update(index, { ...oppdatertFullmektig, kontaktOrgAdresse: adresseOgFeil.adresse }),
               );
             } else {
               update(index, oppdatertFullmektig);
@@ -176,7 +176,7 @@ const Fullmektige = ({ redigerbart, finnOrganisasjonAdresse, finnPersonAdresse }
 
     const fullmektigMedBetalingHarForsvunnet = formValues.fullmektige.some(
       (fullmektig: Fullmektig) =>
-        originalAktørHarFullmaktTrygdeavgift(fullmektig) && !fullmektig.fullmakter?.includes(FULLMEKTIG_TRYGDEAVGIFT)
+        originalAktørHarFullmaktTrygdeavgift(fullmektig) && !fullmektig.fullmakter?.includes(FULLMEKTIG_TRYGDEAVGIFT),
     );
     const skalViseErDuSikkerModal =
       sjekkEndretFullmakt &&

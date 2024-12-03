@@ -13,7 +13,7 @@ export function hentMedlemskapsperioder(behandlingID: number) {
 
 export function opprettMedlemskapsperiode(
   behandlingID: number,
-  medlemskapsperiode: Api.MedlemAvFolketrygden.Medlemskapsperioder.OppdaterMedlemskapsperiode
+  medlemskapsperiode: Api.MedlemAvFolketrygden.Medlemskapsperioder.OppdaterMedlemskapsperiode,
 ) {
   return doThenDispatch(
     () => Api.MedlemAvFolketrygden.Medlemskapsperioder.opprettMedlemskapsperioder(behandlingID, medlemskapsperiode),
@@ -21,27 +21,27 @@ export function opprettMedlemskapsperiode(
       OK: Types.OK_OPPRETT_MEDLEMSKAPSPERIODE,
       FEILET: Types.FEILET,
       PENDING: Types.PENDING,
-    }
+    },
   );
 }
 
 export function oppdaterMedlemskapsperiode(
   behandlingID: number,
   medlemskapsId: number,
-  medlemskapsperiode: Api.MedlemAvFolketrygden.Medlemskapsperioder.OppdaterMedlemskapsperiode
+  medlemskapsperiode: Api.MedlemAvFolketrygden.Medlemskapsperioder.OppdaterMedlemskapsperiode,
 ) {
   return doThenDispatch(
     () =>
       Api.MedlemAvFolketrygden.Medlemskapsperioder.oppdaterMedlemskapsperioder(
         behandlingID,
         medlemskapsId,
-        medlemskapsperiode
+        medlemskapsperiode,
       ),
     {
       OK: Types.OK_OPPDATER_MEDLEMSKAPSPERIODE,
       FEILET: Types.FEILET,
       PENDING: Types.PENDING,
-    }
+    },
   );
 }
 
@@ -57,7 +57,7 @@ export function slettMedlemskapsperiode(behandlingID: number, medlemskapsId: num
       mapDispatchData: () => ({
         id: medlemskapsId,
       }),
-    }
+    },
   );
 }
 
@@ -80,6 +80,6 @@ export function opprettMedlemskapsperioderForslag(behandlingID: number, bestemme
       OK: Types.OK_MEDLEMSKAPSPERIODE,
       FEILET: Types.FEILET,
       PENDING: Types.PENDING,
-    }
+    },
   );
 }

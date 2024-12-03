@@ -16,7 +16,7 @@ const VurderingForutgaendeMedlemskap = (props) => {
       function cleanup() {
         slettData();
       },
-    []
+    [],
   );
 
   return (

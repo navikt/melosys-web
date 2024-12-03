@@ -53,7 +53,7 @@ const VurderingArtikkel16MottaSvar = ({
   useEffect(() => {
     // @ts-ignore
     dispatch(anmodningsperiodesvarOperations.hent(anmodningsperiodeID)).then(
-      (svar: { data: AnmodningsperiodesvarResDto }) => oppdaterData(lagAnmodningsperiodesvar(svar.data))
+      (svar: { data: AnmodningsperiodesvarResDto }) => oppdaterData(lagAnmodningsperiodesvar(svar.data)),
     );
 
     return () => {

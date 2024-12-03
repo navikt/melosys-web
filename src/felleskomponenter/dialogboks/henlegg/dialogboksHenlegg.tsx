@@ -46,7 +46,7 @@ export const DialogboksHenleggSak = ({ avbryt }: DialogboksHenleggSakProps) => {
         vedtakstype: MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
         behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.HENLEGGELSE,
         skalRegisteropplysningerOppdateres: false,
-      })
+      }),
     );
   }, []);
 

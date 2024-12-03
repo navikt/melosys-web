@@ -34,7 +34,7 @@ const InntektsperioderTabell = ({ perioder, avgift }: { perioder?: Inntektskilde
                 <Nav.Table.Row className="border_top" key={Utils._uuid()}>
                   <Nav.Table.DataCell key={Utils._uuid()}>
                     {`${Utils.dato.formatterDatoTilNorsk(inntektsperiode.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(
-                      inntektsperiode.tomDato
+                      inntektsperiode.tomDato,
                     )}`}
                   </Nav.Table.DataCell>
                   <Nav.Table.DataCell key={Utils._uuid()}>

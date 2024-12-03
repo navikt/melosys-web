@@ -120,7 +120,7 @@ class Stegvelger extends Component<PropsFromRedux, State> {
 
   hentFlytOgOppdaterAktuelleSteg = () => {
     Api.Trygdeavtale.hentFlyt(this.props.behandlingID).then((response) =>
-      this.setState({ aktuelleSteg: this.mapFlytResDtoOmTilAktuelleSteg(response) })
+      this.setState({ aktuelleSteg: this.mapFlytResDtoOmTilAktuelleSteg(response) }),
     );
   };
 

@@ -151,7 +151,7 @@ export const VurderingArtikkel16Vedtak = ({
   const forkortLovvalgsperiode = () =>
     endreLovvalgsperiode(
       Utils.dato.formatterDatoTilISO(formValues.fomDato),
-      Utils.dato.formatterDatoTilISO(formValues.tomDato)
+      Utils.dato.formatterDatoTilISO(formValues.tomDato),
     );
 
   const vedKlikkForhandsvis = async () => {
@@ -202,7 +202,7 @@ export const VurderingArtikkel16Vedtak = ({
     () => (
       <Skjema.Textarea feltNavn="vedtaksbrevFritekst" label="Fritekstfelt til begrunnelse" readOnly={!redigerbart} />
     ),
-    [formValues?.vedtaksbrevFritekst, redigerbart]
+    [formValues?.vedtaksbrevFritekst, redigerbart],
   );
 
   if (!formValues) return null;

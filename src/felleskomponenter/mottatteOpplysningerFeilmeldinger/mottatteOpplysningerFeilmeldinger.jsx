@@ -34,7 +34,7 @@ MottatteOpplysningerFeilmeldinger.propTypes = {
     PT.shape({
       feil: PT.arrayOf(PT.string),
       panel: PT.string.isRequired,
-    })
+    }),
   ),
 };
 

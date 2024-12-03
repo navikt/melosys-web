@@ -65,7 +65,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
   useEffect(() => {
     if (aktivtSteg && soeknadsland) {
       Api.Lovvalgsbestemmelser.getLovvalgsbestemmelser(sakstype, sakstema, behandlingstema, soeknadsland).then((res) =>
-        setMuligeBestemmelser(res)
+        setMuligeBestemmelser(res),
       );
     }
   }, [aktivtSteg, soeknadsland]);
@@ -97,7 +97,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
       lovvalgsperioderOperations.opprettLovvalgsperiode(behandlingID, {
         innvilgelsesResultat,
         lovvalgsbestemmelse,
-      })
+      }),
     );
   };
 
@@ -108,7 +108,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
     }
     setLagreLovvalgsperiodePending(true);
     lagreLovvalgsperiode(formValues.innvilgelsesResultat, bestemmelse).finally(() =>
-      setLagreLovvalgsperiodePending(false)
+      setLagreLovvalgsperiodePending(false),
     );
   };
 

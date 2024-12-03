@@ -9,7 +9,7 @@ import { navigeringOperations } from "../navigering";
 
 export function bestill(
   behandlingID: number,
-  bestilling: Api.Saksflyt.Anmodningsperioder.AnmodningOmUnntakBestillingReqDto
+  bestilling: Api.Saksflyt.Anmodningsperioder.AnmodningOmUnntakBestillingReqDto,
 ): AppThunk<Promise<Types.Action>, Types.Action> {
   return doThenDispatch(
     () => Api.Saksflyt.Anmodningsperioder.bestill(behandlingID, bestilling),
@@ -22,13 +22,13 @@ export function bestill(
       success: (dispatch: ThunkDispatch<RootState, unknown, Types.Action>) => {
         dispatch(navigeringOperations.tilForsiden());
       },
-    }
+    },
   );
 }
 
 export function svar(
   behandlingID: number,
-  data: Api.Saksflyt.Anmodningsperioder.AnmodningOmUnntakSvarReqDto
+  data: Api.Saksflyt.Anmodningsperioder.AnmodningOmUnntakSvarReqDto,
 ): AppThunk<Promise<Types.Action>, Types.Action> {
   return doThenDispatch(
     () => Api.Saksflyt.Anmodningsperioder.svar(behandlingID, data),
@@ -41,7 +41,7 @@ export function svar(
       success: (dispatch: ThunkDispatch<RootState, unknown, Types.Action>) => {
         dispatch(navigeringOperations.tilForsiden());
       },
-    }
+    },
   );
 }
 

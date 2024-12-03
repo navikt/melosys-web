@@ -130,10 +130,10 @@ const BrevVedlegg = ({
   };
 
   const vedleggFelt = formValues.valgtBrev?.felter?.find(
-    (felt: any) => felt.kode === Api.DokumenterV2.FeltType.VEDLEGG
+    (felt: any) => felt.kode === Api.DokumenterV2.FeltType.VEDLEGG,
   );
   const fritekstvedleggFelt = formValues.valgtBrev?.felter?.find(
-    (felt: any) => felt.kode === Api.DokumenterV2.FeltType.FRITEKSTVEDLEGG
+    (felt: any) => felt.kode === Api.DokumenterV2.FeltType.FRITEKSTVEDLEGG,
   );
 
   return (

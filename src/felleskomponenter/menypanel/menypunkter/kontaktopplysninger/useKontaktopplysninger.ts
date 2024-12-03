@@ -10,7 +10,7 @@ import { KontaktOpplysning } from "./types";
 
 const useKontaktopplysninger = (
   saksnummer: string,
-  orgnr: string
+  orgnr: string,
 ): [KontaktOpplysning, Dispatch<SetStateAction<KontaktOpplysning>>, () => Promise<void>, () => Promise<void>] => {
   const [kontaktopplysninger, setKontaktopplysninger] = useState<KontaktOpplysning>({
     kontaktorgnr: "",

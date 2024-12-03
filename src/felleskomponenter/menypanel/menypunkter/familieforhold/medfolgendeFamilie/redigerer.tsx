@@ -53,7 +53,7 @@ const Redigerer = ({
 
   const debounceNormalizeDate = useCallback(
     Utils._debounce((fnr) => settVerdi("fnr", normalizeDate(fnr)), 800),
-    []
+    [],
   );
 
   useEffect(() => {

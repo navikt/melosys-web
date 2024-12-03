@@ -20,7 +20,7 @@ class ArbeidTjenestepersonEllerFlyVedtak extends Steg {
 
     const informertMyndighetFakta = hentFakta(
       MKV.Koder.avklartefaktatyper.INFORMERT_MYNDIGHET,
-      propsLight.avklartefakta
+      propsLight.avklartefakta,
     );
 
     this.kriterier = [];

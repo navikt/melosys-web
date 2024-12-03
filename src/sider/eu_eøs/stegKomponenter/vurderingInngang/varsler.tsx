@@ -32,7 +32,7 @@ const Varsler = ({
   });
   const statsborgerskapLand =
     statsborgerskapData?.hentSaksopplysninger?.persondata?.statsborgerskap?.map(
-      (statsborgerskap) => statsborgerskap.land
+      (statsborgerskap) => statsborgerskap.land,
     ) ?? [];
 
   const inngangsvilkaarErOverstyrtAvSaksbehandler =
@@ -62,7 +62,7 @@ const Varsler = ({
   }inngangsvilkårene for EU/EØS-saker etter forordning 883/2004.`;
 
   const visbareInngangsvilkaarBegrunnelseKoder = inngangsvilkaarBegrunnelseKoder.filter(
-    (kode) => kode !== OVERSTYRT_AV_SAKSBEHANDLER
+    (kode) => kode !== OVERSTYRT_AV_SAKSBEHANDLER,
   );
 
   const erFraEllerSkalTilStorbritannia =

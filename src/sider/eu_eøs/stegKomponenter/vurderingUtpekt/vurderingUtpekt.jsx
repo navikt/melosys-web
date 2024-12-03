@@ -44,7 +44,7 @@ const lovvalgsbestemmelserStottetAvBrevVedNorgeUtpekt = MKV.Kodekombinasjoner.al
     kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_2A ||
     kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_2B ||
     kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_3 ||
-    kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_4
+    kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_4,
 );
 
 export const VurderingUtpekt = ({
@@ -97,7 +97,7 @@ export const VurderingUtpekt = ({
         lagLovvalgsperiode({
           fomDato: Utils.dato.formatterDatoTilISO(formValues.fom),
           tomDato: Utils.dato.formatterDatoTilISO(formValues.tom),
-        })
+        }),
       );
     } else {
       slettData(slettLovvalgsperiode());

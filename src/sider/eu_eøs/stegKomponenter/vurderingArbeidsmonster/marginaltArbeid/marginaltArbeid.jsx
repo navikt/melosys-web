@@ -28,7 +28,7 @@ const MarginaltArbeid = ({ arbeidsland, redigerbart, marginaltArbeid, oppdaterDa
               >
                 {arbeidsland.map(({ land }) => {
                   const avklartMarginaltArbeidILand = marginaltArbeid.find(
-                    (enkeltAvklaring) => enkeltAvklaring.subjektID === land.kode
+                    (enkeltAvklaring) => enkeltAvklaring.subjektID === land.kode,
                   );
                   const key = `marginaltArbeidslandListe${land.kode}`;
                   return (

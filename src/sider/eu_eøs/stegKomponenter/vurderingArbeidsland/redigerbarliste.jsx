@@ -26,7 +26,7 @@ Redigerbarliste.propTypes = {
       term: PT.string.isRequired,
       fjernbar: PT.bool,
       defaultFjernet: PT.bool,
-    })
+    }),
   ).isRequired,
   onFjern: PT.func,
   onAngreFjern: PT.func,

@@ -47,7 +47,7 @@ import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../../featu
 const InformertMyndighetVelger = ({ redigerbart, oppdaterData, slettData, informertMyndighetFakta }) => {
   useEffect(() => {
     oppdaterData(
-      konverterAvklartfaktaTilStegData(MKV.Koder.avklartefaktatyper.INFORMERT_MYNDIGHET, informertMyndighetFakta)
+      konverterAvklartfaktaTilStegData(MKV.Koder.avklartefaktatyper.INFORMERT_MYNDIGHET, informertMyndighetFakta),
     );
 
     return () => {
@@ -148,7 +148,7 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
         lagLovvalgsperiode({
           fomDato: mottatteOpplysningerFom,
           tomDato: mottatteOpplysningerTom,
-        })
+        }),
       );
     }
 
@@ -168,7 +168,7 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
     if (formValues.forkortLovvalgsperiode) {
       await endreLovvalgsPeriode(
         Utils.dato.formatterDatoTilISO(formValues.fomDato),
-        Utils.dato.formatterDatoTilISO(formValues.tomDato)
+        Utils.dato.formatterDatoTilISO(formValues.tomDato),
       );
     }
 
@@ -222,10 +222,10 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
 
   const valgbareLovvalgsbestemmelser = [
     ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.filter(
-      ({ kode }) => kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3B
+      ({ kode }) => kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3B,
     ),
     ...MKV.KTObjects.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.filter(
-      ({ kode }) => kode === MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART11_5
+      ({ kode }) => kode === MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART11_5,
     ),
   ];
 
@@ -235,10 +235,10 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
       MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART11_5
     ) {
       oppdaterData(
-        lagLovvalgsbestemmelse(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3A)
+        lagLovvalgsbestemmelse(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3A),
       );
       oppdaterData(
-        lagTilleggBestemmelse(MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART11_5)
+        lagTilleggBestemmelse(MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART11_5),
       );
     } else if (formValues.lovvalgsbestemmelse) {
       oppdaterData(lagLovvalgsbestemmelse(formValues.lovvalgsbestemmelse));
@@ -300,7 +300,7 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
     if (values.forkortLovvalgsperiode) {
       await props.endreLovvalgsPeriode(
         Utils.dato.formatterDatoTilISO(values.fomDato),
-        Utils.dato.formatterDatoTilISO(values.tomDato)
+        Utils.dato.formatterDatoTilISO(values.tomDato),
       );
     }
 
@@ -316,10 +316,10 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
   };
 
   const fom = Utils.dato.formatterDatoTilNorsk(
-    (formValues.forkortLovvalgsperiode && formValues.fomDato) || soknadsperiode.fom
+    (formValues.forkortLovvalgsperiode && formValues.fomDato) || soknadsperiode.fom,
   );
   const tom = Utils.dato.formatterDatoTilNorsk(
-    (formValues.forkortLovvalgsperiode && formValues.tomDato) || soknadsperiode.tom
+    (formValues.forkortLovvalgsperiode && formValues.tomDato) || soknadsperiode.tom,
   );
 
   const stegErGyldig = redigerbart && formIsValid && !harFeilmeldinger && !harFlereSoknadslandEnnTillatt;
@@ -523,7 +523,7 @@ const mapStateToProps = (state, ownProps) => {
     : Utils.dato.datoDiffPure(
         mottatteOpplysningerSelectors.PeriodeSelector(state).tom,
         lovvalgsperioderSelectors.TomDatoSelector(state),
-        "days"
+        "days",
       ) !== 0;
 
   const informerUtenlandskTrygdemyndighet = !Utils._isEmpty(ownProps.informertMyndighetFakta);

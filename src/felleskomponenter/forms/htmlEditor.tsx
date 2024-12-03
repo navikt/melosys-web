@@ -56,7 +56,7 @@ const HTMLEditor = forwardRef<HTMLEditorProps, HTMLEditorProps>(
         )}
       />
     );
-  }
+  },
 );
 
 export default HTMLEditor;

@@ -48,25 +48,25 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const medlemskapsperiodeStatus = useSelector(medlemskapsperioderSelectors.MedlemskapsperioderStatusSelector);
   const medlemskapsperioder = useSelector(medlemskapsperioderSelectors.AlleMedlemskapsperioderSelector);
   const innvilgetMedlemskapsperiode = useSelector(
-    medlemskapsperioderSelectors.SamletInnvilgetMedlemskapsperiodeSelector
+    medlemskapsperioderSelectors.SamletInnvilgetMedlemskapsperiodeSelector,
   );
   const [lagretTrygdeavgift, setTrygdeavgift] = useAsyncCallbackState(
     () => Api.Trygdeavgift.hentBeregnetTrygdeavgift(behandlingID),
     undefined,
-    [behandlingID, medlemskapsperiodeStatus === STATUS.OK]
+    [behandlingID, medlemskapsperiodeStatus === STATUS.OK],
   );
   const [feil, setFeil] = useState<string | undefined>(undefined);
   const [lagrePending, setLagrePending] = useState(false);
   const [harEndretInnvilgetMedlemskapsperiode, setHarEndretInnvilgetMedlemskapsperiode] = useState<boolean | undefined>(
-    undefined
+    undefined,
   );
 
   const alleTrygdeavgiftsperioderHarNullBeløp = lagretTrygdeavgift?.trygdeavgiftsperioder.every(
-    (periode) => periode.avgiftPerMd === 0
+    (periode) => periode.avgiftPerMd === 0,
   );
 
   const medlemskapsTypeErPliktig = medlemskapsperioder.every(
-    (periode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG
+    (periode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG,
   );
   const defaultPeriode = {
     fomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.fom),
@@ -107,7 +107,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
     formValues?.inntektskilder,
     formValues?.skatteforholdsperioder,
     medlemskapsperioder,
-    innvilgetMedlemskapsperiode
+    innvilgetMedlemskapsperiode,
   );
 
   const stegErGyldig = formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType) && !feil;
@@ -115,7 +115,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
     stegErGyldig &&
     !(medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder)) &&
     formValues?.inntektskilder.some(
-      (inntektskilde: Inntektskilde) => inntektskilde.bruttoInntekt && inntektskilde.bruttoInntekt !== 0
+      (inntektskilde: Inntektskilde) => inntektskilde.bruttoInntekt && inntektskilde.bruttoInntekt !== 0,
     );
 
   const trygdeavgiftErIkkeTom = !Utils._isEmpty(lagretTrygdeavgift?.trygdeavgiftsperioder);
@@ -140,7 +140,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
             tomDato: Utils.dato.formatterDatoTilNorsk(skatteforhold.tomDato),
             skatteplikttype: skatteforhold.skatteplikttype,
           }))
-        : [defaultPeriode]
+        : [defaultPeriode],
     );
     resetInntektskilder(
       !Utils._isEmpty(sorterteInntekstkilder)
@@ -155,7 +155,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
             tomDato: Utils.dato.formatterDatoTilNorsk(inntektskilde.tomDato),
             erMaanedsbelop: Utils.streng.boolTilUppercaseStreng(inntektskilde.erMaanedsbelop),
           }))
-        : [{ ...defaultPeriode, erMaanedsbelop: BOOLSK_STRING.SANN }]
+        : [{ ...defaultPeriode, erMaanedsbelop: BOOLSK_STRING.SANN }],
     );
   };
 
@@ -224,7 +224,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
     const feilmelding = "Finner ikke trygdeavgiftssats. Melosys har ikke satser for årene før 2014.";
 
     const ingenGjeldendeSats = error.body?.feilkoder?.some((feilkode: string) =>
-      feilkode.startsWith("Ingen gjeldende sats finnes for perioden")
+      feilkode.startsWith("Ingen gjeldende sats finnes for perioden"),
     );
 
     if (ingenGjeldendeSats) return feilmelding;
@@ -234,7 +234,7 @@ export const VurderingTrygdeavgift = ({ bekreft, tilbake, aktivtSteg, oppdaterSt
 
   const debounceBeregnTrygdeavgiftsperioder = useCallback(
     Utils._debounce((formVerdier, isValid) => isValid && beregnTrygdeavgiftsperioder(formVerdier), 500),
-    []
+    [],
   );
 
   useEffect(() => {

@@ -74,7 +74,7 @@ const Saksopplysninger = ({
   sendAnmodningUnntakSvar,
 }) => {
   const [anmodningsperiodeSvarType, setAnmodningsperiodeSvarType] = useState(
-    MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE
+    MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE,
   );
   const [begrunnelseFritekst, setBegrunnelseFritekst] = useState("");
   const [ytterligereInfoFritekst, setYtterligereInfoFritekst] = useState("");
@@ -179,7 +179,7 @@ const Saksopplysninger = ({
             fom: Utils.dato.formatterDatoTilISO(endretPeriodeFom),
             tom: Utils.dato.formatterDatoTilISO(endretPeriodeTom),
           },
-          begrunnelseFritekst
+          begrunnelseFritekst,
         );
       case AVSLAG:
         return makeResponse(tomPeriode, begrunnelseFritekst);

@@ -26,7 +26,7 @@ const Fakturainformasjon = () => {
   const visReferanseEnabled = useFeatureToggle(MELOSYS_FAKTURERINGSKOMPONENTEN_VIS_REFERANSE);
   const fakturaserier = useSelector(fakturaserierSelectors.FakturaserierSelector);
   const fakturaserieReferanseFraBehandling = useSelector((state) =>
-    behandlingsresultatSelectors.fakturaserieReferanseSelector(state)
+    behandlingsresultatSelectors.fakturaserieReferanseSelector(state),
   );
 
   useEffect(() => {

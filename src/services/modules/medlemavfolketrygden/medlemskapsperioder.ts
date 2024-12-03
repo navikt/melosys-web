@@ -28,7 +28,7 @@ export const opprettMedlemskapsperioder = (behandlingID: number, data: OppdaterM
 export const oppdaterMedlemskapsperioder = (
   behandlingID: number,
   medlemskapsID: number,
-  data: OppdaterMedlemskapsperiode
+  data: OppdaterMedlemskapsperiode,
 ) => putAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${MEDLEMSKAPSPERIODER}/${medlemskapsID}`, data);
 
 export const slettMedlemskapsperiode = (behandlingID: number, medlemskapsID: number) =>

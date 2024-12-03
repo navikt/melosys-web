@@ -37,7 +37,7 @@ class Generator {
     const birthYear = birthDate.getFullYear();
     const individNumberRange = this.getIndividNumberRange(birthYear);
     const randomIndividNumber = Math.round(
-      Math.random() * (individNumberRange[1] - individNumberRange[0]) + individNumberRange[0]
+      Math.random() * (individNumberRange[1] - individNumberRange[0]) + individNumberRange[0],
     );
     const individNumberAdjustedForGender = this.genderOddEven(randomIndividNumber, gender);
     return String(individNumberAdjustedForGender).padStart(3, "0");
@@ -47,7 +47,7 @@ class Generator {
 
   getMonthDayYear = (date) =>
     `${String(date.getDate()).padStart(2, "0")}${String(date.getMonth()).padStart(2, "0")}${String(
-      date.getFullYear()
+      date.getFullYear(),
     ).substr(2, 2)}`;
 
   generatePartialBirthNumber = () => {

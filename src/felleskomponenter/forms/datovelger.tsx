@@ -74,7 +74,7 @@ const Datovelger = forwardRef<HTMLSelectElement, DatovelgerProps>(
         )}
       />
     );
-  }
+  },
 );
 
 export default Datovelger;

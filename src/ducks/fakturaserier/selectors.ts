@@ -11,5 +11,5 @@ import * as Types from "./types";
 
 export const FakturaserierSelector: Selector<RootState, StateSection<Types.Fakturaserie[]>> = createSelector(
   (state: RootState) => state.fakturaserier,
-  (fakturaserier) => fakturaserier
+  (fakturaserier) => fakturaserier,
 );

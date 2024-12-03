@@ -3,7 +3,7 @@ import * as Utils from "./index";
 
 export function syncErrorsTilFeilmelding(
   syncErrors: { [key: string]: { melding?: string; _error?: { melding: string } } } | FormErrors<any>,
-  tittel: string = "Følgende feil ble funnet"
+  tittel: string = "Følgende feil ble funnet",
 ) {
   const finnFeilmelding = (feil: any): any => {
     if (!feil) {

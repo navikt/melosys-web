@@ -38,7 +38,7 @@ const TrygdeavgiftsperioderTabell = ({
             <Nav.Table.Row className="border_top" key={Utils._uuid()}>
               <Nav.Table.DataCell key={Utils._uuid()}>
                 {`${Utils.dato.formatterDatoTilNorsk(trygdeavgiftsperiode.fom)} - ${Utils.dato.formatterDatoTilNorsk(
-                  trygdeavgiftsperiode.tom
+                  trygdeavgiftsperiode.tom,
                 )}`}
               </Nav.Table.DataCell>
               <Nav.Table.DataCell key={Utils._uuid()}>

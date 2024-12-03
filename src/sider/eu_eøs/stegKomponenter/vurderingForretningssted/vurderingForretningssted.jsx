@@ -31,13 +31,13 @@ const Forretningsstedet = (props) => {
       oppdaterData(
         konverterAvklartfaktaTilStegData(
           MKV.Koder.avklartefaktatyper.ARBEIDSGIVERS_FORRETNINGSSTED,
-          avklartForretningsland
-        )
+          avklartForretningsland,
+        ),
       );
     }
     return () => {
       slettData(
-        slettAvklartfakta(MKV.Koder.avklartefaktatyper.ARBEIDSGIVERS_FORRETNINGSSTED, forretningsstedet.virksomhetId)
+        slettAvklartfakta(MKV.Koder.avklartefaktatyper.ARBEIDSGIVERS_FORRETNINGSSTED, forretningsstedet.virksomhetId),
       );
     };
   }, []);
@@ -89,7 +89,7 @@ const Forretningssteder = (props) => {
         .map((valgtVirksomhet) => {
           const key = `forretningssted${valgtVirksomhet.virksomhetId}-${valgtVirksomhet.navn}`;
           const avklartForretningsland = avklarteForretningsland.find(
-            (enkeltAvklaring) => enkeltAvklaring.subjektID === valgtVirksomhet.virksomhetId
+            (enkeltAvklaring) => enkeltAvklaring.subjektID === valgtVirksomhet.virksomhetId,
           );
 
           return (

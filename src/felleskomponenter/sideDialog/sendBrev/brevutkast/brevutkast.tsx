@@ -53,8 +53,8 @@ const Brevutkast = ({
         changeField(
           "mottaker",
           tilgjengeligeMottakere.find((mottaker) =>
-            mottaker.adresser?.find((adresse) => adresse.orgnr === valgtUtkast.orgNr)
-          )?.uuid
+            mottaker.adresser?.find((adresse) => adresse.orgnr === valgtUtkast.orgNr),
+          )?.uuid,
         );
         changeField("arbeidsgiver", valgtUtkast.orgNr);
         break;
@@ -94,7 +94,7 @@ const Brevutkast = ({
     const valgAlternativer = formValues?.valgtBrev?.felter?.find((felt) => felt.kode === "BREV_TITTEL")?.valg
       ?.valgAlternativer;
     const valgAlternativFraFritekstTittel = valgAlternativer?.find(
-      (alternativ) => alternativ.beskrivelse === aktivtUtkast.brevbestilling.fritekstTittel
+      (alternativ) => alternativ.beskrivelse === aktivtUtkast.brevbestilling.fritekstTittel,
     );
 
     if (valgAlternativFraFritekstTittel) {
@@ -124,8 +124,8 @@ const Brevutkast = ({
     const journalpostIDer = saksvedlegg?.map((vedlegg) => vedlegg.journalpostID);
     setSaksvedlegg(
       dokumenter?.filter(
-        (dokument) => dokumentIDer.includes(dokument.dokumentID) && journalpostIDer.includes(dokument.journalpostID)
-      )
+        (dokument) => dokumentIDer.includes(dokument.dokumentID) && journalpostIDer.includes(dokument.journalpostID),
+      ),
     );
   };
 

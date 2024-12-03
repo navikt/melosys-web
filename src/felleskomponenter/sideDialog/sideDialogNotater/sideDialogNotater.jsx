@@ -47,7 +47,7 @@ const SideDialogNotater = ({ saksnummer, redigerbart }) => {
 
   const oppdaterNotatState = (oppdatertNotat) => {
     setNotater((prevNotater) =>
-      prevNotater.map((notat) => (notat.notatId === oppdatertNotat.notatId ? oppdatertNotat : notat))
+      prevNotater.map((notat) => (notat.notatId === oppdatertNotat.notatId ? oppdatertNotat : notat)),
     );
   };
 
@@ -92,7 +92,7 @@ const SideDialogNotater = ({ saksnummer, redigerbart }) => {
     } catch (e) {
       if (e.status >= 500) {
         setNyttNotatFeilmelding(
-          "Det oppsto en teknisk feil. Ta kontakt med brukerstøtte dersom problemet oppstår gjentatte ganger."
+          "Det oppsto en teknisk feil. Ta kontakt med brukerstøtte dersom problemet oppstår gjentatte ganger.",
         );
       } else if (e.status >= 400) {
         setNyttNotatFeilmelding(e.body.message);

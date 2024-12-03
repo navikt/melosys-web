@@ -36,7 +36,7 @@ export const VurderingInngangManglendeInnbetaling = ({ bekreft, aktivtSteg, oppd
     mode: "all",
     defaultValues: {
       fullstendigManglendeInnbetaling: Utils.streng.boolTilUppercaseStreng(
-        useSelector(oppsummertfaktaSelectors.FullstendigManglendeInnbetalingSelector)
+        useSelector(oppsummertfaktaSelectors.FullstendigManglendeInnbetalingSelector),
       ),
     } as FieldValues,
   });
@@ -44,7 +44,7 @@ export const VurderingInngangManglendeInnbetaling = ({ bekreft, aktivtSteg, oppd
 
   const handleChange = (value: string) => {
     dispatch(
-      oppsummertfaktaOperations.sendInnbetalingsstatus(behandlingID, Utils.streng.uppercaseStrengTilBool(value))
+      oppsummertfaktaOperations.sendInnbetalingsstatus(behandlingID, Utils.streng.uppercaseStrengTilBool(value)),
     );
     oppdaterStatus(formIsValid, value === BOOLSK_STRING.SANN ? vedtakOpphoerSteg.id : inngangSteg.id);
   };
@@ -53,7 +53,7 @@ export const VurderingInngangManglendeInnbetaling = ({ bekreft, aktivtSteg, oppd
     if (aktivtSteg) {
       oppdaterStatus(
         formIsValid,
-        formValues.fullstendigManglendeInnbetaling === BOOLSK_STRING.SANN ? vedtakOpphoerSteg.id : inngangSteg.id
+        formValues.fullstendigManglendeInnbetaling === BOOLSK_STRING.SANN ? vedtakOpphoerSteg.id : inngangSteg.id,
       );
     }
   }, [formIsValid]);
@@ -63,8 +63,8 @@ export const VurderingInngangManglendeInnbetaling = ({ bekreft, aktivtSteg, oppd
       dispatch(
         oppsummertfaktaOperations.sendInnbetalingsstatus(
           behandlingID,
-          Utils.streng.uppercaseStrengTilBool(formValues.fullstendigManglendeInnbetaling)
-        )
+          Utils.streng.uppercaseStrengTilBool(formValues.fullstendigManglendeInnbetaling),
+        ),
       );
     }
   }, [behandlingOppfriskes]);

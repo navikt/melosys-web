@@ -49,7 +49,7 @@ export const hentTrygdeavgiftMottaker = (behandlingID: number): Promise<Trygdeav
 
 export const beregnTrygdeavgiftsperioder = (
   behandlingID: number,
-  trygdeavgiftsgrunnlag: TrygdeavgiftsgrunnlagDto
+  trygdeavgiftsgrunnlag: TrygdeavgiftsgrunnlagDto,
 ): Promise<BeregnetTrygdeavgift> =>
   putAsJson(`${API_BASE_URL}/behandlinger/${behandlingID}/${TRYGDEAVGIFT}/beregning`, trygdeavgiftsgrunnlag);
 

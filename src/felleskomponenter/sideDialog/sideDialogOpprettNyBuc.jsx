@@ -155,7 +155,7 @@ const SideDialogOpprettNyBuc = ({ behandlingID, behandlingstema, sakstype, dokum
     }
   };
   const ignorerteLABucer = EKV.KTObjects.buctyper.legislation.filter(
-    ({ kode }) => kode === EKV.Koder.buctyper.legislation.LA_BUC_01 && !kanVelgeLA_BUC_01()
+    ({ kode }) => kode === EKV.Koder.buctyper.legislation.LA_BUC_01 && !kanVelgeLA_BUC_01(),
   );
 
   const tilgjengeligeBucer = (fagomrade) =>

@@ -15,16 +15,16 @@ class Arbeidsmonster extends Steg {
     const aktivitetINorge = hentFakta(KV.Koder.avklartefaktaKoder.AKTIVITET_I_NORGE, propsLight.avklartefakta);
     const loennetArbeidAntallLandFakta = hentFakta(
       KV.Koder.avklartefaktaKoder.LOENNET_ARBEID_ANTALL_LAND,
-      propsLight.avklartefakta
+      propsLight.avklartefakta,
     );
     const offentligArbeidAntallLandFakta = hentFakta(
       KV.Koder.avklartefaktaKoder.OFFENTLIG_ARBEID_ANTALL_LAND,
-      propsLight.avklartefakta
+      propsLight.avklartefakta,
     );
     const erArbeidstaker = Yrkesaktivitet.erArbeidstaker(propsLight.avklartefakta);
     const erSelvstendigNaeringsdrivende = Yrkesaktivitet.erSelvstendigNaeringsdrivende(propsLight.avklartefakta);
     const erArbeidstakerOgSelvstendigNaeringsdrivende = Yrkesaktivitet.erArbeidstakerOgSelvstendigNaeringsdrivende(
-      propsLight.avklartefakta
+      propsLight.avklartefakta,
     );
     const erOffentligTjenestemann = Yrkesaktivitet.erOffentligTjenestemann(propsLight.avklartefakta);
     const offentligArbeidNorge =
@@ -105,7 +105,7 @@ class Arbeidsmonster extends Steg {
     });
     this.beregnRelevantUI = (_propsLight) => {
       const yrkesaktivitet = hentFaktaVerdi(
-        hentFakta(KV.Koder.avklartefaktaKoder.YRKESAKTIVITET, _propsLight.avklartefakta)
+        hentFakta(KV.Koder.avklartefaktaKoder.YRKESAKTIVITET, _propsLight.avklartefakta),
       );
 
       return {

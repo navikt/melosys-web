@@ -137,7 +137,7 @@ class ListevelgerFlervalg extends Component {
   oppdaterEksisterendeValg = (verdi, index) => {
     this.setState((prevState) => ({
       valgteElementer: prevState.valgteElementer.map((element, i) =>
-        i !== index ? element : { ...element, ...verdi }
+        i !== index ? element : { ...element, ...verdi },
       ),
     }));
   };

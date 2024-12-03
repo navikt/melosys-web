@@ -20,7 +20,7 @@ vi.mock(
         },
       },
     }),
-  })
+  }),
 );
 
 describe("VurderingInngang", () => {
@@ -97,7 +97,7 @@ describe("VurderingInngang", () => {
     });
 
     expect(
-      await screen.findByText("Du har valgt et behandlingstema som kun tillater ett arbeidsland")
+      await screen.findByText("Du har valgt et behandlingstema som kun tillater ett arbeidsland"),
     ).toBeInTheDocument();
   });
 
@@ -107,7 +107,7 @@ describe("VurderingInngang", () => {
     });
 
     expect(
-      await screen.findByText("Du har valgt et behandlingstema som kun tillater ett arbeidsland")
+      await screen.findByText("Du har valgt et behandlingstema som kun tillater ett arbeidsland"),
     ).toBeInTheDocument();
   });
 
@@ -117,7 +117,7 @@ describe("VurderingInngang", () => {
     });
 
     expect(
-      await screen.findByText("Det er påkrevd med to eller flere land for valgt behandlingstema")
+      await screen.findByText("Det er påkrevd med to eller flere land for valgt behandlingstema"),
     ).toBeInTheDocument();
   });
 

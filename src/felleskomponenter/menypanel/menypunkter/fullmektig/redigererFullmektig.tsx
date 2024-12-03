@@ -47,7 +47,7 @@ const RedigererFullmektig = ({
           type: Type.ORGANISASJON,
           feil: response.feil,
           adresse: response.adresse,
-        })
+        }),
       );
     } else if (Utils.person.erGyldigFnrEllerDnr(ident)) {
       finnPersonAdresse(ident).then((response) =>
@@ -56,7 +56,7 @@ const RedigererFullmektig = ({
           type: Type.PERSON,
           feil: response.feil,
           adresse: response.adresse,
-        })
+        }),
       );
     } else if (fullmektige[index].type) {
       update(index, {
@@ -76,7 +76,7 @@ const RedigererFullmektig = ({
   const handleKontaktOrgnrChange = (orgnr: string, index: number) => {
     if (Utils.organisasjon.erOrgnrGyldig(orgnr)) {
       finnOrganisasjonAdresse(orgnr).then((response) =>
-        update(index, { ...fullmektige[index], kontaktOrgAdresse: response.adresse })
+        update(index, { ...fullmektige[index], kontaktOrgAdresse: response.adresse }),
       );
     } else if (fullmektige[index].kontaktOrgAdresse) {
       update(index, { ...fullmektige[index], kontaktOrgAdresse: undefined });

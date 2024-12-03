@@ -47,7 +47,7 @@ describe("AdresseTable ", () => {
 
   it("historisk AdresseTable renders correctly", () => {
     const { container } = render(
-      <AdresseTable adressetype="Bostedsadresse" adresser={[historiskBostedsadresse]} historisk />
+      <AdresseTable adressetype="Bostedsadresse" adresser={[historiskBostedsadresse]} historisk />,
     );
     expect(container).toMatchSnapshot();
   });

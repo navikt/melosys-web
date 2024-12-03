@@ -45,7 +45,7 @@ const Oppfrisk = ({ oppfrisk, lukk }) => {
       await oppfrisk();
     },
     [],
-    CACHE_LIFESPAN_MS
+    CACHE_LIFESPAN_MS,
   );
 
   return (

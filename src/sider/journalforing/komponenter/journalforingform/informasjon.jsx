@@ -55,11 +55,11 @@ class Informasjon extends Component {
       vedlegg.reduce((acc, elem) => {
         acc.push(elem.tittel);
         return acc;
-      }, [])
+      }, []),
     );
     await this.oppdaterState(
       "logiskeVedleggTittler",
-      journalforingSkjemaVerdier.hoveddokument.logiskeVedlegg.map((tittel) => ({ tittel, ny: false }))
+      journalforingSkjemaVerdier.hoveddokument.logiskeVedlegg.map((tittel) => ({ tittel, ny: false })),
     );
     await this.oppdaterFelter(this.props, true);
   }
@@ -174,7 +174,7 @@ class Informasjon extends Component {
 
   kopierBrukerTilAvsender = (
     brukerID = this.props.journalforingSkjemaVerdier.brukerID,
-    brukerNavn = this.props.journalforingSkjemaVerdier.brukerNavn
+    brukerNavn = this.props.journalforingSkjemaVerdier.brukerNavn,
   ) => {
     const { settFeltInnhold } = this.props;
     settFeltInnhold("avsenderID", brukerID);
@@ -183,7 +183,7 @@ class Informasjon extends Component {
 
   kopierVirksomhetTilAvsender = (
     virksomhetOrgnr = this.props.journalforingSkjemaVerdier.virksomhetOrgnr,
-    virksomhetNavn = this.props.journalforingSkjemaVerdier.virksomhetNavn
+    virksomhetNavn = this.props.journalforingSkjemaVerdier.virksomhetNavn,
   ) => {
     const { settFeltInnhold } = this.props;
     settFeltInnhold("avsenderType", MKV.Koder.avsendertyper.ORGANISASJON);

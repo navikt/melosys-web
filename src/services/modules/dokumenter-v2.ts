@@ -182,13 +182,13 @@ export const hentTilgjengeligeNorskeMyndigheter = (): Promise<TilgjengeligeNorsk
 
 export const hentMuligeMottakere = (
   behandlingID: number,
-  data: HentMuligeMottakereReqDto
+  data: HentMuligeMottakereReqDto,
 ): Promise<HentMuligeMottakereResDto> =>
   postAsJson(`${API_BASE_URL}${DOKUMENTER}/v2/mulige-mottakere/${behandlingID}`, data);
 
 export const hentMuligeMottakereNorskMyndighet = (
   behandlingID: number,
-  data: HentMuligeMottakereNorskMyndighetReqDto
+  data: HentMuligeMottakereNorskMyndighetReqDto,
 ): Promise<MuligMottaker[]> =>
   postAsJson(`${API_BASE_URL}${DOKUMENTER}/v2/mulige-mottakere-norske-myndigheter/${behandlingID}`, data);
 

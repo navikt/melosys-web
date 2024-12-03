@@ -69,7 +69,7 @@ const VurderingSokkelSkip = ({
 
   const erUtsendt = [UTSENDT_ARBEIDSTAKER, UTSENDT_SELVSTENDIG].includes(behandlingstema);
   const erArbeidslandNorge = useSelector(avklartefaktaSelectors.ArbeidslandKTSelector).some(
-    (land: any) => land.kode === "NO"
+    (land: any) => land.kode === "NO",
   );
   const erArbeidKunNorgeBehandlingstema = behandlingstema === ARBEID_KUN_NORGE;
 
@@ -78,7 +78,7 @@ const VurderingSokkelSkip = ({
 
   useEffect(() => {
     oppdaterData(
-      konverterAvklartfaktaTilStegData(KV.Koder.avklartefaktaKoder.ARBEID_SOKKEL_SKIP, sokkelSkipKonklusjon)
+      konverterAvklartfaktaTilStegData(KV.Koder.avklartefaktaKoder.ARBEID_SOKKEL_SKIP, sokkelSkipKonklusjon),
     );
     return () => {
       slettData();
@@ -108,14 +108,14 @@ const VurderingSokkelSkip = ({
   const { VurderingSokkelSkipTyper } = KV.Koder;
   const harMaritimeArbeidUnikeNavn = Utils.erPropertyUnik(
     maritimtArbeid,
-    (enkeltMaritimtArbeid) => enkeltMaritimtArbeid.enhetNavn
+    (enkeltMaritimtArbeid) => enkeltMaritimtArbeid.enhetNavn,
   );
 
   const aktivFeilmelding = finnAktivFeilmelding(
     sokkelSkipKonklusjon,
     sokkelEllerSkipListe,
     arbeidslandListe,
-    maritimtArbeid
+    maritimtArbeid,
   );
   const visFeilmeldinger = redigerbart && aktivFeilmelding;
 

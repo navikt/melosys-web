@@ -107,7 +107,7 @@ const Oppsummering = ({
     sakstema.kode,
     behandlingstema.kode,
     behandlingstype.kode,
-    erArbeidKunNorgeToggleEnabled
+    erArbeidKunNorgeToggleEnabled,
   );
   const hovedpartErVirksomhet = hovedpartRolle === MKV.Koder.aktoersroller.VIRKSOMHET;
 
@@ -117,7 +117,7 @@ const Oppsummering = ({
   const landTilSetning = (land?: KTObject[]) =>
     land && land.length > 0
       ? Utils.streng.arrayTilKonjunksjon(
-          land.map((enkeltLand) => Utils.streng.storeForbokstaverForLand(enkeltLand.term || ""))
+          land.map((enkeltLand) => Utils.streng.storeForbokstaverForLand(enkeltLand.term || "")),
         )
       : "Ukjent";
 
@@ -135,8 +135,8 @@ const Oppsummering = ({
               </>
             }
           />
-        </Nav.Row>
-      )
+        </Nav.Row>,
+      ),
     );
     return rows;
   };
@@ -172,7 +172,7 @@ const Oppsummering = ({
               />
             )}
           </Nav.Column>
-        </Nav.Row>
+        </Nav.Row>,
       );
     }
     return rows;

@@ -83,7 +83,7 @@ const Innvilgelse = ({
       if (
         fullmektigListe?.length > 0 &&
         fullmektigListe?.find((fullmektig) =>
-          fullmektig.fullmakter?.includes(MKV.Koder.fullmaktstype.FULLMEKTIG_SØKNAD)
+          fullmektig.fullmakter?.includes(MKV.Koder.fullmaktstype.FULLMEKTIG_SØKNAD),
         )
       ) {
         pdfDokumenter.push({

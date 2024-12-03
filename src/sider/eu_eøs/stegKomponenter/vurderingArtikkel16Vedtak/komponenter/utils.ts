@@ -10,7 +10,7 @@ import { Periode } from "../../../../../services/modules/types";
 
 export const hentLovvalgsperiode = (
   anmodningsperiodesvar: AnmodningsperiodesvarResDto,
-  anmodningsperiode: Anmodningsperiode
+  anmodningsperiode: Anmodningsperiode,
 ): Partial<Periode> => {
   const { anmodningsperiodeSvarType, endretPeriode } = anmodningsperiodesvar;
 

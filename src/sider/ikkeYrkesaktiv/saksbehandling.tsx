@@ -54,10 +54,10 @@ const Saksbehandling = ({
   const land = useSelector(mottatteOpplysningerSelectors.SoknadslandkoderSelector);
   const mottatteOpplysninger = useSelector(mottatteOpplysningerSelectors.MottatteOpplysningerDataSelector);
   const mottatteOpplysningerPeriodeFom = useSelector((state) =>
-    Utils.dato.formatterDatoTilNorsk(mottatteOpplysningerSelectors.PeriodeSelector(state).fom)
+    Utils.dato.formatterDatoTilNorsk(mottatteOpplysningerSelectors.PeriodeSelector(state).fom),
   );
   const mottatteOpplysningerPeriodeTom = useSelector((state) =>
-    Utils.dato.formatterDatoTilNorsk(mottatteOpplysningerSelectors.PeriodeSelector(state).tom)
+    Utils.dato.formatterDatoTilNorsk(mottatteOpplysningerSelectors.PeriodeSelector(state).tom),
   );
   const lovvalgsperiode = useSelector(lovvalgsperioderSelectors.LovvalgsperiodeSelector);
   const behandlingsresultat = useSelector(behandlingsresultatSelectors.BehandlingsresultatSelector);
@@ -162,7 +162,7 @@ const Saksbehandling = ({
               <Nav.Column xs="5">
                 <Oppsummering
                   arbeidsland={MKV.KTObjects.land_iso2.filter((landkodeObjekt: KTObject) =>
-                    land.includes(landkodeObjekt.kode)
+                    land.includes(landkodeObjekt.kode),
                   )}
                   lovvalgsperiodeFom={Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.fomDato, false, "")}
                   lovvalgsperiodeTom={Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.tomDato, false, "")}

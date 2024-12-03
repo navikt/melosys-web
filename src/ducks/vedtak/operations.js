@@ -25,6 +25,6 @@ export function fatt(behandlingID, body) {
       success: (dispatch) => {
         dispatch(navigeringOperations.tilForsiden());
       },
-    }
+    },
   );
 }

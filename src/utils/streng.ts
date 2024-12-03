@@ -57,7 +57,7 @@ export function tekstEllerDash(data?: string): string {
 export function storeForbokstaver(originalOrd?: string | null): string | undefined {
   return originalOrd?.replace(
     /(\w|\u00C6|\u00D8|\u00C5)\S*/g,
-    (ord) => ord.charAt(0).toUpperCase() + ord.substr(1).toLowerCase()
+    (ord) => ord.charAt(0).toUpperCase() + ord.substr(1).toLowerCase(),
   );
 }
 

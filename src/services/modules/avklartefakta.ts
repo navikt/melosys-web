@@ -30,7 +30,7 @@ export const sendIkkeYrkesaktivOppholdstype = (behandlingID: number, oppholdstyp
 
 export const sendIkkeYrkesaktivRelasjonstype = (
   behandlingID: number,
-  familierelasjonstype: string
+  familierelasjonstype: string,
 ): Promise<Oppsummering> =>
   postAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/familierelasjonstype`, familierelasjonstype);
 
@@ -63,6 +63,6 @@ export const sendArbeidsland = (behandlingID: number, arbeidsland: Arbeidsland):
 
 export const sendInnbetalingsstatus = (
   behandlingID: number,
-  fullstendigManglendeInnbetaling?: boolean
+  fullstendigManglendeInnbetaling?: boolean,
 ): Promise<Oppsummering> =>
   postAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/innbetalingsstatus`, fullstendigManglendeInnbetaling);

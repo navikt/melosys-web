@@ -76,7 +76,7 @@ const VurderingYrkesgruppe = ({
   const arbeidKunNorgeToggleEnabled = useFeatureToggle(MELOSYS_ARBEID_KUN_NORGE);
   const erUtsendt = [UTSENDT_ARBEIDSTAKER, UTSENDT_SELVSTENDIG].includes(behandlingstema);
   const erArbeidslandNorge = useSelector(avklartefaktaSelectors.ArbeidslandKTSelector).some(
-    (land: any) => land.kode === "NO"
+    (land: any) => land.kode === "NO",
   );
   const erArbeidKunNorgeBehandlingstema = behandlingstema === ARBEID_KUN_NORGE;
 

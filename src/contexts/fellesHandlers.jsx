@@ -101,7 +101,7 @@ const FellesHandlersProviderUnconnected = ({
       behandlingOppfriskes,
       annenBehandlingOppfriskes,
       startOgVisOppfriskModal,
-    ]
+    ],
   );
 
   return <FellesHandlersContext.Provider value={fellesHandlers}>{children}</FellesHandlersContext.Provider>;
@@ -157,5 +157,5 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 export const FellesHandlersProvider = withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(FellesHandlersProviderUnconnected)
+  connect(mapStateToProps, mapDispatchToProps)(FellesHandlersProviderUnconnected),
 );

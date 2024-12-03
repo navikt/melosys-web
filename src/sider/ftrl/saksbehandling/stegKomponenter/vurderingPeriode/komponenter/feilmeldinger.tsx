@@ -95,7 +95,7 @@ const erIkkeStøttetIMelosys = (medlemskapsperioder: MedlemskapsperiodeProp[]) =
 const søknadsperiodeStarterFørEllerSlutterEtterPeriodene = (
   medlemskapsperioder: MedlemskapsperiodeProp[],
   søknadsperiodeFomDato: string,
-  søknadsperiodeTomDato?: string
+  søknadsperiodeTomDato?: string,
 ) => {
   if (Utils._isEmpty(medlemskapsperioder)) return false;
   const sortertePerioder = [...medlemskapsperioder].sort(Utils.dato.sorterEtterNorskFomDato).map((p) => ({
@@ -124,8 +124,8 @@ const finnesOverlappIInnvilgedePerioder = (medlemskapsperioder: Medlemskapsperio
       perioder
         .slice(index + 1)
         .some((nestePeriode) =>
-          Utils.dato.perioderOverlapper(periode.fomDato, periode.tomDato, nestePeriode.fomDato, nestePeriode.tomDato)
-        )
+          Utils.dato.perioderOverlapper(periode.fomDato, periode.tomDato, nestePeriode.fomDato, nestePeriode.tomDato),
+        ),
     );
 };
 const finnesOverlappIOpphørtePerioder = (medlemskapsperioder: MedlemskapsperiodeProp[]) =>
@@ -136,8 +136,8 @@ const finnesOverlappIOpphørtePerioder = (medlemskapsperioder: Medlemskapsperiod
       perioder
         .slice(index + 1)
         .some((nestePeriode) =>
-          Utils.dato.perioderOverlapper(periode.fomDato, periode.tomDato, nestePeriode.fomDato, nestePeriode.tomDato)
-        )
+          Utils.dato.perioderOverlapper(periode.fomDato, periode.tomDato, nestePeriode.fomDato, nestePeriode.tomDato),
+        ),
     );
 
 const opphørtPeriodeOverlapperInnvilgetPeriode = (medlemskapsperioder: MedlemskapsperiodeProp[]) =>
@@ -151,9 +151,9 @@ const opphørtPeriodeOverlapperInnvilgetPeriode = (medlemskapsperioder: Medlemsk
             opphørtPeriode.fomDato,
             opphørtPeriode.tomDato,
             innvilgetPeriode.fomDato,
-            innvilgetPeriode.tomDato
-          )
-        )
+            innvilgetPeriode.tomDato,
+          ),
+        ),
     );
 
 const finnesOppholdIInnvilgedePerioder = (medlemskapsperioder: MedlemskapsperiodeProp[]) => {
@@ -169,7 +169,7 @@ const finnesOppholdIInnvilgedePerioder = (medlemskapsperioder: Medlemskapsperiod
 
     const nestePeriodeErPåfølgende = Utils.dato.erLikeDatoer(
       nestePeriode.fomDato,
-      Utils.dato.plussEnDag(periode.tomDato)
+      Utils.dato.plussEnDag(periode.tomDato),
     );
     if (!(nestePeriodeErPåfølgende || perioderErLike(periode, nestePeriode))) {
       return true;
@@ -235,7 +235,7 @@ export const harIkkeLovligSluttDato = (medlemskapsperioder: MedlemskapsperiodePr
 const periodeOver12MånederIkkeTillatt = (
   medlemskapsperioder: MedlemskapsperiodeProp[],
   ikkeyrkesaktivOppholdstype?: string,
-  arbeidssituasjonType?: string
+  arbeidssituasjonType?: string,
 ) => {
   const periode = medlemskapsperioder[0];
   const periodeOverstiger12Mnd = Utils.dato.datoDiffNorskFormat(periode.fomDato, periode.tomDato, "years") > 1;
@@ -270,7 +270,7 @@ export function finnAktivFeilmelding(
   søknadsperiodeFomDato: string,
   søknadsperiodeTomDato?: string,
   ikkeyrkesaktivOppholdstype?: string,
-  arbeidssituasjonType?: string
+  arbeidssituasjonType?: string,
 ): string | undefined {
   // Sjekk feil
   const ingenMedlemskapsperioder = medlemskapsperioder?.length === undefined || medlemskapsperioder?.length === 0;
@@ -332,7 +332,7 @@ export function finnAktivFeilmelding(
     søknadsperiodeStarterFørEllerSlutterEtterPeriodene(
       medlemskapsperioder,
       søknadsperiodeFomDato,
-      søknadsperiodeTomDato
+      søknadsperiodeTomDato,
     )
   ) {
     return TypeFeilmelding.STARTER_SENERE_ELLER_SLUTTER_FØR_SØKNADSPERIODE;

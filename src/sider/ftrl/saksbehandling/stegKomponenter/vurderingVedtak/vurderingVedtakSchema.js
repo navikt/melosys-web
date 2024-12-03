@@ -28,7 +28,7 @@ const vurdering_vedtak = object().shape({
         otherwise: string().nullable(),
       }),
       otherwise: string().nullable(),
-    }
+    },
   ),
 });
 

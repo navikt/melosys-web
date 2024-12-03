@@ -11,7 +11,7 @@ const ArbeidsgivereNorgePropType = PT.arrayOf(
       arbeidsforhold: Arbeidsforholdene,
       inntektListe: Inntekt,
     }),
-  })
+  }),
 );
 
 export { ArbeidsgivereNorgePropType as ArbeidsgivereNorge };

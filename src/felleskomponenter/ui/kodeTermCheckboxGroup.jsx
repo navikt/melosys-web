@@ -7,7 +7,7 @@ import * as Utils from "../../utils";
 
 const KodeTermCheckboxGroup = ({ legend, muligeValg, defaultValg, onChange, disabled }) => {
   const [valgteCheckboxer, setValgteCheckboxer] = useState(
-    muligeValg.map((valg) => valg.kode).filter((kode) => defaultValg.includes(kode))
+    muligeValg.map((valg) => valg.kode).filter((kode) => defaultValg.includes(kode)),
   );
 
   useEffect(() => {

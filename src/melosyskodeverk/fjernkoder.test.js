@@ -9,15 +9,15 @@ describe("fjernFlereKoder", () => {
     ]);
 
     expect(
-      rensetKodeverk.Koder.begrunnelser.vesentlig_virksomhet_begrunnelser.KONTRAKTER_IKKE_NORSK_LOV
+      rensetKodeverk.Koder.begrunnelser.vesentlig_virksomhet_begrunnelser.KONTRAKTER_IKKE_NORSK_LOV,
     ).toBeUndefined();
     expect(
-      rensetKodeverk.Terms.begrunnelser.vesentlig_virksomhet_begrunnelser.KONTRAKTER_IKKE_NORSK_LOV
+      rensetKodeverk.Terms.begrunnelser.vesentlig_virksomhet_begrunnelser.KONTRAKTER_IKKE_NORSK_LOV,
     ).toBeUndefined();
     expect(
       rensetKodeverk.KTObjects.begrunnelser.vesentlig_virksomhet_begrunnelser.find(
-        ({ kode }) => kode === MKV.Koder.begrunnelser.vesentlig_virksomhet_begrunnelser.KONTRAKTER_IKKE_NORSK_LOV
-      )
+        ({ kode }) => kode === MKV.Koder.begrunnelser.vesentlig_virksomhet_begrunnelser.KONTRAKTER_IKKE_NORSK_LOV,
+      ),
     ).toBeUndefined();
   });
 
@@ -30,8 +30,8 @@ describe("fjernFlereKoder", () => {
     expect(MKV.Terms.begrunnelser.vesentlig_virksomhet_begrunnelser.KONTRAKTER_IKKE_NORSK_LOV).toBeDefined();
     expect(
       MKV.KTObjects.begrunnelser.vesentlig_virksomhet_begrunnelser.find(
-        ({ kode }) => kode === MKV.Koder.begrunnelser.vesentlig_virksomhet_begrunnelser.KONTRAKTER_IKKE_NORSK_LOV
-      )
+        ({ kode }) => kode === MKV.Koder.begrunnelser.vesentlig_virksomhet_begrunnelser.KONTRAKTER_IKKE_NORSK_LOV,
+      ),
     ).toBeDefined();
   });
 });

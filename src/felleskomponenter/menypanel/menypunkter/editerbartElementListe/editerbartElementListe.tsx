@@ -38,7 +38,7 @@ type InnerEditerbartElementListeProps = WrappedFieldArrayProps & BaseProps;
 
 const mapDispatchToProps = (
   dispatch: ThunkDispatch<RootState, unknown, Action>,
-  ownProps: InnerEditerbartElementListeProps
+  ownProps: InnerEditerbartElementListeProps,
 ) => ({
   settFeltVerdi: (field: string, value: any) => dispatch(change(ownProps.meta.form, field, value)),
 });

@@ -39,7 +39,7 @@ const Select = forwardRef<HTMLSelectElement, SelectComponentProps & UseControlle
       size,
       ...rest
     }: SelectComponentProps & UseControllerProps,
-    _ref: any
+    _ref: any,
   ) => {
     return (
       <Controller
@@ -67,7 +67,7 @@ const Select = forwardRef<HTMLSelectElement, SelectComponentProps & UseControlle
         )}
       />
     );
-  }
+  },
 );
 
 export default Select;

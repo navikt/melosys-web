@@ -32,7 +32,7 @@ const soknadFormValueSelector = formValueSelector<KV.Form.SoknadFormData>(KV.For
 const mapStateToProps = (state: RootState) => {
   const juridiskArbeidsgiverNorge = soknadFormValueSelector(
     state,
-    "juridiskArbeidsgiverNorge"
+    "juridiskArbeidsgiverNorge",
   ) as KV.Form.JuridiskArbeidsgiverNorge;
 
   return {

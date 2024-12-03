@@ -11,7 +11,7 @@ describe("fritekstvedleggRow", () => {
         index={1}
         lagFritekstPdfUrl={vi.fn()}
         redigerbart
-      />
+      />,
     );
     expect(container).toMatchSnapshot();
   });

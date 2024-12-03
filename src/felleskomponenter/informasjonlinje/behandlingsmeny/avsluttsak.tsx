@@ -211,7 +211,7 @@ const AvsluttSak = () => {
       redigerbart &&
         sakstype === FTRL &&
         sakstema === MEDLEMSKAP_LOVVALG &&
-        [NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT].includes(behandlingstype)
+        [NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT].includes(behandlingstype),
     );
   };
 

@@ -34,10 +34,10 @@ const mapStateToProps = (state: RootState) => ({
   fagsakStatus: fagsakSelectors.FagsakStatusSelector(state),
   hovedpartRolle: fagsakSelectors.HovedpartRolleSelector(state),
   mottatteOpplysningerPeriodeFom: Utils.dato.formatterDatoTilNorsk(
-    mottatteOpplysningerSelectors.PeriodeFomSelector(state)
+    mottatteOpplysningerSelectors.PeriodeFomSelector(state),
   ),
   mottatteOpplysningerPeriodeTom: Utils.dato.formatterDatoTilNorsk(
-    mottatteOpplysningerSelectors.PeriodeTomSelector(state)
+    mottatteOpplysningerSelectors.PeriodeTomSelector(state),
   ),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
 });

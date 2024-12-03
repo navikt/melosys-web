@@ -69,7 +69,7 @@ const BehandlingOppgave = ({ sak, landkoder }) => {
     sakstema.kode,
     behandlingstema.kode,
     behandlingstype.kode,
-    erArbeidKunNorgeToggleEnabled
+    erArbeidKunNorgeToggleEnabled,
   );
   const oppdateringStatus = erUnderOppdatering && "(oppdateres nå)";
 

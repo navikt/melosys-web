@@ -84,7 +84,7 @@ export const Inntektskilder = ({
         const skalFylleInnBruttoInntekt = bruttoInntektKreves(
           brukerSkattepliktigIHelePerioden,
           inntektskilde.kildetype,
-          inntektskilde.arbAvgBetales
+          inntektskilde.arbAvgBetales,
         );
         if (!skalFylleInnBruttoInntekt && inntektskilde.bruttoInntekt) {
           update(index, { ...inntektskilde, bruttoInntekt: undefined });
@@ -248,7 +248,7 @@ export const Inntektskilder = ({
             ikon={Ikoner.Add}
             onClick={() =>
               append(
-                { ...defaultPeriode, erMaanedsbelop: BOOLSK_STRING.SANN } || { erMaanedsbelop: BOOLSK_STRING.SANN }
+                { ...defaultPeriode, erMaanedsbelop: BOOLSK_STRING.SANN } || { erMaanedsbelop: BOOLSK_STRING.SANN },
               )
             }
           >

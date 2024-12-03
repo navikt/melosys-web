@@ -46,7 +46,7 @@ export const DialogboksAvslagSoknad = ({ avbryt }: DialogboksAvslagSoknadProps) 
           vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
           behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL,
           skalRegisteropplysningerOppdateres: false,
-        })
+        }),
       );
       setUtførerKontroll(false);
     })();

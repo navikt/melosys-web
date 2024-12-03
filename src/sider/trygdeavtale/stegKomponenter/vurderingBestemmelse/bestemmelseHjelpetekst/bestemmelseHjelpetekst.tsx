@@ -53,7 +53,7 @@ const BestemmelseHjelpetekst = ({ bestemmelse }: { bestemmelse?: string }) => {
   };
 
   const ikkeKravOmTidsbegrensning = [UK_ART6_5, UK_ART7_3, UK_ART8_2, USA_ART5_5, CAN_ART10, AUS_ART9_2].includes(
-    bestemmelse
+    bestemmelse,
   );
   const hjelpetekster = hjelpeteksterTilBestemmelse();
 

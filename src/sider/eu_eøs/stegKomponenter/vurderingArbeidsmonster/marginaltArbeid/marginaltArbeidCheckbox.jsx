@@ -16,7 +16,7 @@ const MarginaltArbeidCheckbox = (props) => {
   useEffect(() => {
     if (avklartMarginaltArbeidILand) {
       oppdaterData(
-        konverterAvklartfaktaTilStegData(MKV.Koder.avklartefaktatyper.MARGINALT_ARBEID, avklartMarginaltArbeidILand)
+        konverterAvklartfaktaTilStegData(MKV.Koder.avklartefaktatyper.MARGINALT_ARBEID, avklartMarginaltArbeidILand),
       );
     }
   }, []);

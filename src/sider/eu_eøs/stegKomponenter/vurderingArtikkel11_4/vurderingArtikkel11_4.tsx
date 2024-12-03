@@ -54,7 +54,7 @@ const finnFeltNavn = (vilkårKode?: string): string => {
 const initialiserArtikkelValg = (
   art11_3Aeller13_3A: Partial<Vilkaar>,
   art11_4_1eller13_4_1: Partial<Vilkaar>,
-  art11_4_2eller13_4_2: Partial<Vilkaar>
+  art11_4_2eller13_4_2: Partial<Vilkaar>,
 ): ArtikkelValg | undefined => {
   if (art11_4_1eller13_4_1.oppfylt === true && art11_3Aeller13_3A.oppfylt === true) {
     return ArtikkelValg.ART11_4_1;
@@ -97,12 +97,12 @@ const VurderingArtikkel11_4 = ({
   const art11_4_1eller13_4_1: Partial<Vilkaar> = useSelector(vilkarSelectors.Artikkel11_4_1Eller13_4_1Selector);
   const art11_4_2eller13_4_2: Partial<Vilkaar> = useSelector(vilkarSelectors.Artikkel11_4_2Eller13_4_2Selector);
   const [artikkelValg, setArtikkelValg] = useState(
-    initialiserArtikkelValg(art11_3Aeller13_3A, art11_4_1eller13_4_1, art11_4_2eller13_4_2)
+    initialiserArtikkelValg(art11_3Aeller13_3A, art11_4_1eller13_4_1, art11_4_2eller13_4_2),
   );
   const [bestemmelse, setBestemmelse] = useState(lovvalgsbestemmelse);
   const visStorbritanniaKonvensjon = alleLand.some((landkode) => landkode === MKV.Koder.landkoder.GB);
   const erArbeidslandNorge = useSelector(avklartefaktaSelectors.ArbeidslandKTSelector).some(
-    (land: any) => land.kode === "NO"
+    (land: any) => land.kode === "NO",
   );
   useEffect(() => {
     oppdaterData(konverterVilkarTilStegData(finnFeltNavn(art11_4_1eller13_4_1?.vilkaar), art11_4_1eller13_4_1));
