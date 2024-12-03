@@ -40,6 +40,7 @@ import { AvklartefaktaStore, EnkelDataStore, StegStoreTyper, VilkaarStore } from
 import "./stegvelger.css";
 import { erFeatureToggleEnabled } from "../../featuretoggle";
 import {
+  MELOSYS_NORGE_ER_UTPEKT_11_3_A,
   MELOSYS_ARBEID_KUN_NORGE,
   MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA,
 } from "../../featuretoggle/toggleNavn";
@@ -449,6 +450,7 @@ class Stegvelger extends Component {
       harFeilmeldinger: !Utils._isEmpty(props.feilmeldinger) || !Utils._isEmpty(props.kontrollfeil),
       konvensjonStorbritanniaToggleEnabled: props.konvensjonStorbritanniaToggleEnabled,
       arbeidKunNorgeToggleEnabled: props.arbeidKunNorgeToggleEnabled,
+      norgeErUtpekt11_3AToggleEnabled: props.norgeErUtpekt11_3AToggleEnabled,
       utsendingsvilkår: props.utsendingsvilkår,
       unntaksvilkår: props.unntaksvilkår,
       behandlingOppfriskes: props.behandlingOppfriskes,
@@ -669,6 +671,7 @@ Stegvelger.propTypes = {
   ),
   konvensjonStorbritanniaToggleEnabled: PT.bool.isRequired,
   arbeidKunNorgeToggleEnabled: PT.bool.isRequired,
+  norgeErUtpekt11_3AToggleEnabled: PT.bool.isRequired,
   utsendingsvilkår: PT.object.isRequired,
   unntaksvilkår: PT.object.isRequired,
   art11_3Aeller13_3A: PT.object.isRequired,
@@ -758,6 +761,7 @@ const mapStateToProps = (state) => ({
   kontrollfeil: kontrollSelectors.KontrollFeilSelector(state),
   konvensjonStorbritanniaToggleEnabled: erFeatureToggleEnabled(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA, state),
   arbeidKunNorgeToggleEnabled: erFeatureToggleEnabled(MELOSYS_ARBEID_KUN_NORGE, state),
+  norgeErUtpekt11_3AToggleEnabled: erFeatureToggleEnabled(MELOSYS_NORGE_ER_UTPEKT_11_3_A, state),
 });
 
 /* eslint no-alert:off */

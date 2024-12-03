@@ -2,7 +2,7 @@ import * as EKV from "eessi-kodeverk";
 
 import MKV from "../../../../melosyskodeverk";
 import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
-import { STEG, FANE_STATUS } from "../../../../felleskomponenter/stegvelger";
+import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
 import VurderingVedtak from "../../stegKomponenter/vurderingVedtak/vurderingVedtak";
 
 class GodkjennUtpekingNorge extends Steg {
@@ -15,8 +15,31 @@ class GodkjennUtpekingNorge extends Steg {
     this.komponent = VurderingVedtak;
     this.samleRelevanteData = (_propsLight) => {
       const formValues = _propsLight.artikkel12_vedtak_skjema;
+      const norgeErUtpekt11_3AToggleEnabled = _propsLight.norgeErUtpekt11_3AToggleEnabled;
 
-      const pdfDokumenter = [
+      let pdfDokumenterNorgeErUtpekt11_3_a = [
+        {
+          dokumentData: {
+            produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_EFTA_STORBRITANNIA,
+            mottaker: MKV.Koder.mottakerroller.BRUKER,
+            fritekst: formValues.vedtaksbrevFritekst,
+          },
+        },
+        {
+          dokumentData: {
+            produserbardokument: MKV.Koder.brev.produserbaredokumenter.ATTEST_A1,
+            mottaker: MKV.Koder.mottakerroller.BRUKER,
+          },
+        },
+        {
+          sedType: EKV.Koder.sedtyper.A012,
+          sedData: {
+            fritekst: formValues.fritekstSed,
+          },
+        },
+      ];
+
+      const godkjennUtpekingNorge = [
         {
           dokumentData: {
             produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV_FLERE_LAND,
@@ -31,6 +54,8 @@ class GodkjennUtpekingNorge extends Steg {
           },
         },
       ];
+
+      const pdfDokumenter = norgeErUtpekt11_3AToggleEnabled ? pdfDokumenterNorgeErUtpekt11_3_a : godkjennUtpekingNorge;
 
       return {
         redigerbart: _propsLight.generiskStegRedigerbart,
