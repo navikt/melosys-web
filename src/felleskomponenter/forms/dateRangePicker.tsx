@@ -36,8 +36,8 @@ const InnerDateRangePicker = ({
   showFieldError,
   readOnly,
 }: DateRangePickerProps) => {
-  const [defaultFromDate] = useState(fromDate ?? new Date(0));
-  const [defaultToDate] = useState(toDate ?? new Date(2100, 1, 1));
+  const [defaultFromDate] = useState(fromDate);
+  const [defaultToDate] = useState(toDate);
 
   const { datepickerProps, toInputProps, fromInputProps } = useRangeDatepicker({
     defaultSelected: defaultSelected as DateRange,
