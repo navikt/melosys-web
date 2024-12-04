@@ -4,7 +4,7 @@ const FEATURE_TOGGLE = "feature-toggle";
 const MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA = "melosys.konvensjon.efta.land.og.storbritannia";
 const MELOSYS_ARBEID_KUN_NORGE = "melosys.arbeid.kun.norge";
 const MELOSYS_SPESIELLE_GRUPPER = "melosys.spesielle_grupper";
-const MELOSYS_11_3_A_NORGE_ER_UTPEKT = "melosys.11_3_a_Norge_er_utpekt";
+const MELOSYS_NORGE_ER_UTPEKT_11_3_A = "melosys.11_3_a_Norge_er_utpekt";
 
 const alleToggleNavn = [
   MELOSYS_FAKTURERINGSKOMPONENTEN_VIS_REFERANSE,
@@ -12,7 +12,7 @@ const alleToggleNavn = [
   MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA,
   MELOSYS_ARBEID_KUN_NORGE,
   MELOSYS_SPESIELLE_GRUPPER,
-  MELOSYS_11_3_A_NORGE_ER_UTPEKT,
+  MELOSYS_NORGE_ER_UTPEKT_11_3_A,
 ];
 
 export {
@@ -22,6 +22,6 @@ export {
   MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA,
   MELOSYS_ARBEID_KUN_NORGE,
   MELOSYS_SPESIELLE_GRUPPER,
-  MELOSYS_11_3_A_NORGE_ER_UTPEKT,
+  MELOSYS_NORGE_ER_UTPEKT_11_3_A,
   alleToggleNavn,
 };
