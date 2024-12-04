@@ -10,6 +10,7 @@ import { FieldArrayProps, FormValuesProps, Skatteforhold } from "./types";
 import * as Utils from "../../../utils";
 import "./skatteforholdsperioder.css";
 import { Stack } from "@navikt/ds-react";
+import { DateRangePicker } from "../../forms";
 
 interface SkatteforholdsperioderProps {
   formValues: FormValuesProps;
@@ -36,24 +37,21 @@ export const Skatteforholdsperioder = ({
         return (
           <Nav.Row className="periode__rad" key={fields[index].id}>
             <Nav.Column>
-              <Forms.Datovelger
-                label={index === 0 ? "Skatteforhold" : ""}
-                name={`skatteforholdsperioder[${index}].fomDato`}
-                readOnly={!redigerbart}
+              <DateRangePicker
+                name={`skatteforholdsperioder[${index}]`}
                 control={control}
+                label="Skatteforholdsperiode"
+                hideLabel={index !== 0}
+                defaultSelected={{
+                  from: Utils.dato.norskStringTilDate(formValues.skatteforholdsperioder[index].fomDato),
+                  to: Utils.dato.norskStringTilDate(formValues.skatteforholdsperioder[index].tomDato),
+                }}
+                fromDate={Utils.dato.norskStringTilDate(formValues.skatteforholdsperioder[index].fomDato)}
+                toDate={Utils.dato.norskStringTilDate(formValues.skatteforholdsperioder[index].tomDato)}
+                showFieldError
+                readOnly={!redigerbart}
               />
             </Nav.Column>
-
-            <Nav.Column>
-              <Forms.Datovelger
-                label={index === 0 && <span className="invisible" />}
-                name={`skatteforholdsperioder[${index}].tomDato`}
-                readOnly={!redigerbart}
-                control={control}
-                minDate={Utils.dato.norskStringTilDate(formValues.skatteforholdsperioder[index].fomDato)}
-              />
-            </Nav.Column>
-
             <Nav.Column>
               <Forms.RadioGroup
                 legend={index === 0 ? "Skattepliktig" : ""}
