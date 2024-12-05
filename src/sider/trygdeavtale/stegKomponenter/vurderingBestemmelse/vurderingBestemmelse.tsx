@@ -26,7 +26,7 @@ import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { Box } from "@navikt/ds-react";
 
-const { NEI_ANMODE_OM_UNNTAK, NEI_AVSLAG, JA_FATTE_VEDTAK } = KV.Koder.AVTALELAND_UTFALL;
+const { NEI_ANMODE_OM_UNNTAK, NEI_AVSLAG, JA_FATTE_VEDTAK } = KV.Koder.AvtalelandUtfall;
 
 const mapStateToProps = (state: RootState, ownProps: Props) => ({
   formIsValid: formSelectors.TrygdeavtaleBestemmelseFormValidSelector(state),

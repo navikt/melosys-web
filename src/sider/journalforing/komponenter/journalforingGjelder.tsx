@@ -18,7 +18,7 @@ import { EnkelNavBox } from "../../../felleskomponenter/enkelNavBox";
 import { HStack } from "@navikt/ds-react";
 
 const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
-const { JOURNALFORING_VALUES: FormValues } = KV.Form;
+const { JournalforingValues: FormValues } = KV.Form;
 
 const mapStateToProps = (state: RootState) => ({
   journalforingGjelder: formSelectors.JournalforingFormSelector(state).values?.journalforingGjelder,

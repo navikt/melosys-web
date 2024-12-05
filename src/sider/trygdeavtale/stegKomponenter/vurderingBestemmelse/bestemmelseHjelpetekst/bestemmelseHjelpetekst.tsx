@@ -43,9 +43,9 @@ function BestemmelseHjelpetekst({ bestemmelse }: { bestemmelse?: string }) {
         return Hjelpetekster.hjelpeteksterCaArt10;
 
       case AUS_ART9_2:
-        return Hjelpetekster.hjelpeteksterAuArt9_2;
+        return Hjelpetekster.hjelpeteksterAuArt92;
       case AUS_ART9_3:
-        return Hjelpetekster.hjelpeteksterAuArt9_3;
+        return Hjelpetekster.hjelpeteksterAuArt93;
 
       default:
         return [];

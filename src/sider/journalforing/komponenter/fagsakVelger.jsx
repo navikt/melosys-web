@@ -21,7 +21,7 @@ import { EnkelNavBox } from "../../../felleskomponenter/enkelNavBox";
 const EKSISTERENDE = "Eksisterende sak";
 const OPPRETT = "Opprett ny sak";
 
-const { JOURNALFORING_VALUES: FormValuesJournalforing, OPPRETT_NY_SAK_VALUES: FormValuesOpprettNySak } = KV.Form;
+const { JournalforingValues: FormValuesJournalforing, OpprettNySakValues: FormValuesOpprettNySak } = KV.Form;
 
 function FagsakVelger(props) {
   const { fagsakListe, settJournalforingHensikt, landkoder, formValues, erJournalføring, nullstillFormVerdier } = props;

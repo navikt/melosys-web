@@ -12,7 +12,7 @@ import { behandlingsresultatSelectors } from "../behandlingsresultat";
 import { harUnntaksregistreringFlyt } from "../../url/url";
 import { fagsakSelectors } from "../fagsaker";
 
-export const ErIArtikkel11_4Eller13_4FlytSelector = createSelector(
+export const ErIArtikkel114Eller134FlytSelector = createSelector(
   (state: RootState) => vilkarSelectors.Artikkel11_4_1Eller13_4_1Selector(state),
   (state: RootState) => vilkarSelectors.Artikkel11_4_2Eller13_4_2Selector(state),
   (...vilkar) => vilkar.some((enkeltVilkar) => enkeltVilkar.oppfylt),

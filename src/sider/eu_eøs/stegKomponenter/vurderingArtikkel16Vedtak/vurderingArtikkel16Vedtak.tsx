@@ -207,7 +207,7 @@ export function VurderingArtikkel16Vedtak({
 
   if (!formValues) return null;
 
-  const erStorbrittaniaArt18_1Bestemmelse =
+  const erStorbrittaniaArt181Bestemmelse =
     lovvalgsbestemmelse ===
     MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia.KONV_EFTA_STORBRITANNIA_ART18_1;
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
@@ -233,7 +233,7 @@ export function VurderingArtikkel16Vedtak({
             formValues={formValues}
             vedKlikkForhandsvis={vedKlikkForhandsvis}
             stegErGyldig={stegErGyldig}
-            erStorbrittaniaArt18_1Bestemmelse={erStorbrittaniaArt18_1Bestemmelse}
+            erStorbrittaniaArt18_1Bestemmelse={erStorbrittaniaArt181Bestemmelse}
             erUtsendt={erUtsendt}
           />
         );
@@ -250,7 +250,7 @@ export function VurderingArtikkel16Vedtak({
             formValues={formValues}
             vedKlikkForhandsvis={vedKlikkForhandsvis}
             stegErGyldig={stegErGyldig}
-            erStorbrittaniaArt18_1Bestemmelse={erStorbrittaniaArt18_1Bestemmelse}
+            erStorbrittaniaArt18_1Bestemmelse={erStorbrittaniaArt181Bestemmelse}
             erUtsendt={erUtsendt}
           />
         );
@@ -263,7 +263,7 @@ export function VurderingArtikkel16Vedtak({
             vedtaksbrevFritekst={formValues.vedtaksbrevFritekst}
             visOrienteringsbrevArbeidsgiver={visOrienteringsbrevArbeidsgiver}
             gjeldendePeriode={gjeldendePeriode}
-            erStorbrittaniaArt18_1Bestemmelse={erStorbrittaniaArt18_1Bestemmelse}
+            erStorbrittaniaArt18_1Bestemmelse={erStorbrittaniaArt181Bestemmelse}
           />
         );
       default:

@@ -47,7 +47,7 @@ export function VilkaarOgBegrunnelser({
     MKV.KTObjects.begrunnelser.folketrygdloven,
     valgtBegrunnelseForVilkår?.begrunnelseKode,
   );
-  const harValgtFTRL_ARBEIDSTAKER = vilkår === MKV.Koder.vilkaar.FTRL_ARBEIDSTAKER && vilkårErValgt;
+  const harValgtFtrlArbeidstaker = vilkår === MKV.Koder.vilkaar.FTRL_ARBEIDSTAKER && vilkårErValgt;
 
   return (
     <>
@@ -68,7 +68,7 @@ export function VilkaarOgBegrunnelser({
           <Nav.Radio value={false}>Nei</Nav.Radio>
         </Stack>
       </Nav.RadioGroup>
-      {selvstendigNæringValgt && harValgtFTRL_ARBEIDSTAKER && (
+      {selvstendigNæringValgt && harValgtFtrlArbeidstaker && (
         <Nav.Alert variant="error">
           Virksomheten du har valgt på steget &quot;Virksomhet&quot; er en selvstendig virksomhet
         </Nav.Alert>

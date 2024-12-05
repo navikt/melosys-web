@@ -215,8 +215,8 @@ export function Bestemmelser({
   };
 
   const hentBegrunnelser = (): KTObject[] => {
-    const bestemmelseErStorbritanniaKonvensjon18_1 = bestemmelse === KONV_EFTA_STORBRITANNIA_ART18_1;
-    if (!bestemmelseErStorbritanniaKonvensjon18_1 || !erSokkel) return begrunnelserUtsending;
+    const bestemmelseErStorbritanniaKonvensjon181 = bestemmelse === KONV_EFTA_STORBRITANNIA_ART18_1;
+    if (!bestemmelseErStorbritanniaKonvensjon181 || !erSokkel) return begrunnelserUtsending;
 
     return begrunnelserUtsending.filter((value) => begrunnelseKoderForSokkelStorbritannia.includes(value.kode));
   };

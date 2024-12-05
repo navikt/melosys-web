@@ -217,13 +217,9 @@ const periodeStarterFoer2023 = (medlemskapsperioder: MedlemskapsperiodeProp[]) =
   return false;
 };
 
-const bestemmelseEr2_2_1 = (bestemmelse: string) => {
-  return bestemmelse === FTRL_KAP2_2_1;
-};
-
 export const tillattMedManglendeSluttDato = (land: string[], bestemmelse: string) => {
   const landErKunNorge = land.length === 1 && land[0] === MKV.Koder.landkoder.NO;
-  return landErKunNorge && bestemmelseEr2_2_1(bestemmelse);
+  return landErKunNorge && bestemmelse === FTRL_KAP2_2_1;
 };
 
 export const harIkkeLovligSluttDato = (medlemskapsperioder: MedlemskapsperiodeProp[], land: string[]) => {
@@ -240,7 +236,7 @@ const periodeOver12MånederIkkeTillatt = (
   const periode = medlemskapsperioder[0];
   const periodeOverstiger12Mnd = Utils.dato.datoDiffNorskFormat(periode.fomDato, periode.tomDato, "years") > 1;
   const periodeOver12MndIkkeTillatt =
-    (bestemmelseEr2_2_1(periode.bestemmelse) && ikkeyrkesaktivOppholdstype === MIDLERTIDIG_2_1_FJERDE_LEDD) ||
+    (periode.bestemmelse === FTRL_KAP2_2_1 && ikkeyrkesaktivOppholdstype === MIDLERTIDIG_2_1_FJERDE_LEDD) ||
     arbeidssituasjonType === MIDLERTIDIG_ARBEID_2_1_FJERDE_LEDD;
   return periodeOverstiger12Mnd && periodeOver12MndIkkeTillatt;
 };

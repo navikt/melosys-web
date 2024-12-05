@@ -174,7 +174,7 @@ function VurderingVedtak({
   const sakstema = useSelector(fagsakSelectors.SakstemaKodeSelector);
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const formIsValid = useSelector(isValid(KV.Form.ARTIKKEL_12_VEDTAK));
-  const erArtikkel11_4Eller13_4 = useSelector(flytSelectors.ErIArtikkel11_4Eller13_4FlytSelector);
+  const erArtikkel114Eller134 = useSelector(flytSelectors.ErIArtikkel114Eller134FlytSelector);
   const mottatteOpplysningerStatus = useSelector(mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector);
 
   const visMottakerinstitusjoner = skalViseMottakerinstitusjoner(sakstype, sakstema, behandlingstema, behandlingstype);
@@ -252,7 +252,7 @@ function VurderingVedtak({
   };
 
   const { fomDato, tomDato, lovvalgsbestemmelse, tilleggBestemmelse } = lovvalgsperiode;
-  const erArtikkel11_3 = lovvalgsbestemmelse === FO_883_2004_ART11_3A;
+  const erArtikkel113 = lovvalgsbestemmelse === FO_883_2004_ART11_3A;
 
   const sedMottakerLand = finnSedMottakerLand(arbeidsland, bostedsland || {}, lovvalgsbestemmelse, tilleggBestemmelse);
   const flereSoknadslandEnnTillatt = arbeidsland.length > 1 && !MKVUtils.kanHaFlereSoknadsland(behandlingstema);
@@ -272,7 +272,7 @@ function VurderingVedtak({
       return dokument;
     });
   };
-  const skalViseFritekstSed = !(bucLukketOgLovvalgNorge || (erSokkelSkip && erArtikkel11_3));
+  const skalViseFritekstSed = !(bucLukketOgLovvalgNorge || (erSokkelSkip && erArtikkel113));
 
   return (
     <div className="vedtak">
@@ -336,7 +336,7 @@ function VurderingVedtak({
                 form={form}
                 redigerbart={redigerbart}
                 landkode={sedMottakerLand}
-                bucType={erArtikkel11_4Eller13_4 ? LA_BUC_05 : LA_BUC_04}
+                bucType={erArtikkel114Eller134 ? LA_BUC_05 : LA_BUC_04}
               />
             </Nav.Column>
           </Nav.Row>
