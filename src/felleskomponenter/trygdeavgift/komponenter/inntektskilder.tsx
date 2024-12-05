@@ -17,7 +17,6 @@ import {
 import "./inntektskilder.css";
 import { Stack } from "@navikt/ds-react";
 import { Alert } from "../../../navFrontend";
-import { DateRangePicker } from "../../forms";
 
 const {
   ARBEIDSINNTEKT_FRA_NORGE,
@@ -94,19 +93,21 @@ export const Inntektskilder = ({
         return (
           <Nav.Row className="periode__rad" key={fields[index].id}>
             <Nav.Column>
-              <DateRangePicker
-                name={`inntektskilder[${index}]`}
-                control={control}
-                label="Inntektsperiode"
-                hideLabel={index !== 0}
-                defaultSelected={{
-                  from: Utils.dato.norskStringTilDate(formValues.inntektskilder[index].fomDato),
-                  to: Utils.dato.norskStringTilDate(formValues.inntektskilder[index].tomDato),
-                }}
-                fromDate={Utils.dato.norskStringTilDate(formValues.inntektskilder[index].fomDato)}
-                toDate={Utils.dato.norskStringTilDate(formValues.inntektskilder[index].tomDato)}
-                showFieldError
+              <Forms.Datovelger
+                label={index === 0 ? "Inntektsperiode" : ""}
+                name={`inntektskilder[${index}].fomDato`}
                 readOnly={!redigerbart}
+                control={control}
+              />
+            </Nav.Column>
+
+            <Nav.Column>
+              <Forms.Datovelger
+                label={index === 0 && <span className="invisible" />}
+                name={`inntektskilder[${index}].tomDato`}
+                readOnly={!redigerbart}
+                control={control}
+                minDate={Utils.dato.norskStringTilDate(formValues.inntektskilder[index].fomDato)}
               />
             </Nav.Column>
 
@@ -170,7 +171,7 @@ export const Inntektskilder = ({
             </Nav.Column>
 
             {skalViseErMaanedsBelopRadioGroup && (
-              <Nav.Column className="periode">
+              <Nav.Column>
                 {skalFylleInnBruttoInntekt ? (
                   <Forms.Select
                     emptyFieldDisabled
