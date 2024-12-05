@@ -3,7 +3,6 @@ import react from "@vitejs/plugin-react";
 import eslint from "vite-plugin-eslint";
 import viteTsconfigPaths from "vite-tsconfig-paths";
 import svgrPlugin from "vite-plugin-svgr";
-import { fileURLToPath, URL } from "node:url";
 import * as path from "path";
 
 const LOCAL_API_PORT = 8080;
