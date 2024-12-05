@@ -86,16 +86,14 @@ export function OppgaveVelger({
       {oppretterOppgave ? (
         <OpprettNyOppgave />
       ) : (
-        <>
-          {oppgaverFinnes && (
-            <>
-              <Nav.Alert className="alertstripe" variant="info">
-                Du kan kun velge mellom følgende oppgaver som er knyttet til et inngående dokument
-              </Nav.Alert>
-              <Skjema.CustomRadioPanelGruppe feltNavn="oppgaveID" radios={radioValg} notify={settJournalpostID} />
-            </>
-          )}
-        </>
+        oppgaverFinnes && (
+          <>
+            <Nav.Alert className="alertstripe" variant="info">
+              Du kan kun velge mellom følgende oppgaver som er knyttet til et inngående dokument
+            </Nav.Alert>
+            <Skjema.CustomRadioPanelGruppe feltNavn="oppgaveID" radios={radioValg} notify={settJournalpostID} />
+          </>
+        )
       )}
     </div>
   );

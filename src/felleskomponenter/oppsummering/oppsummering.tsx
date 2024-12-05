@@ -131,7 +131,7 @@ function Oppsummering({
             verdi={
               <>
                 {row[1]}
-                {row[2] && <>{row[2]}</>}
+                {row[2] && row[2]}
               </>
             }
           />
@@ -153,7 +153,7 @@ function Oppsummering({
                 verdi={
                   <>
                     {col1[i][1]}
-                    {col1[i][2] && <>{col1[i][2]}</>}
+                    {col1[i][2] && col1[i][2]}
                   </>
                 }
               />
@@ -166,7 +166,7 @@ function Oppsummering({
                 verdi={
                   <>
                     {col2[i][1]}
-                    {col2[i][2] && <>{col2[i][2]}</>}
+                    {col2[i][2] && col2[i][2]}
                   </>
                 }
               />

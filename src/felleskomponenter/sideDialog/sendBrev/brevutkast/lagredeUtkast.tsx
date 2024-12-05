@@ -18,40 +18,38 @@ function LagredeUtkast({ alleUtkast, settAktivtUtkast }: LagredeUtkastProps) {
   };
 
   return (
-    <>
-      {!Utils._isEmpty(alleUtkast) && (
-        <div className="lagredeUtkast">
-          <Nav.Row>
-            <Nav.Column xs="9">
-              <Nav.BodyLong weight="semibold" size="small">
-                Lagrede utkast
-              </Nav.BodyLong>
-            </Nav.Column>
-            <Nav.Column xs="3">
-              <Nav.BodyLong weight="semibold" size="small">
-                Eier
-              </Nav.BodyLong>
-            </Nav.Column>
-          </Nav.Row>
+    !Utils._isEmpty(alleUtkast) && (
+      <div className="lagredeUtkast">
+        <Nav.Row>
+          <Nav.Column xs="9">
+            <Nav.BodyLong weight="semibold" size="small">
+              Lagrede utkast
+            </Nav.BodyLong>
+          </Nav.Column>
+          <Nav.Column xs="3">
+            <Nav.BodyLong weight="semibold" size="small">
+              Eier
+            </Nav.BodyLong>
+          </Nav.Column>
+        </Nav.Row>
 
-          {alleUtkast.map((utkast) => (
-            <Nav.Row key={utkast.tittel}>
-              <Nav.Column xs="9">
-                <Mui.Lenkeknapp
-                  value={utkast.tittel}
-                  onClick={() => velgUtkast(utkast.tittel)}
-                  ikon={Ikoner.Draft}
-                  className="lagredeUtkast__utkast"
-                >
-                  {utkast.tittel}
-                </Mui.Lenkeknapp>
-              </Nav.Column>
-              <Nav.Column xs="3">{utkast.lagretAvSaksbehandlerIdent}</Nav.Column>
-            </Nav.Row>
-          ))}
-        </div>
-      )}
-    </>
+        {alleUtkast.map((utkast) => (
+          <Nav.Row key={utkast.tittel}>
+            <Nav.Column xs="9">
+              <Mui.Lenkeknapp
+                value={utkast.tittel}
+                onClick={() => velgUtkast(utkast.tittel)}
+                ikon={Ikoner.Draft}
+                className="lagredeUtkast__utkast"
+              >
+                {utkast.tittel}
+              </Mui.Lenkeknapp>
+            </Nav.Column>
+            <Nav.Column xs="3">{utkast.lagretAvSaksbehandlerIdent}</Nav.Column>
+          </Nav.Row>
+        ))}
+      </div>
+    )
   );
 }
 

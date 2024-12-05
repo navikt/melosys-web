@@ -270,83 +270,78 @@ export function Bestemmelser({
               ))}
             </Nav.Select>
           )}
-          {utsendingsvilkår.oppfylt === false && !pending && bestemmelseErGyldig && (
-            <>
-              {konvensjonStorbritanniaToggleEnabled ? (
-                <Mui.ListevelgerFlervalg
-                  muligeValg={hentBegrunnelser()}
-                  label="Legg til begrunnelse for at utsendingsbestemmelse ikke er oppfylt"
-                  tillatFritekst={false}
-                  onChange={(event: ListevelgerFlervalgEvent) =>
-                    handleEndreBegrunnelse(event, finnFeltNavn(utsendingsvilkår?.vilkaar))
-                  }
-                  defaultElementer={utsendingsvilkår.begrunnelseKoder}
-                  disabled={!redigerbart}
-                />
-              ) : (
-                <Nav.Fieldset legend={`Begrunnelse artikkel ${vilkaarNavn12}:`}>
-                  <Mui.ListevelgerFlervalg
-                    muligeValg={begrunnelserUtsending}
-                    label="Legg til begrunnelse for ikke oppfylt:"
-                    tillatFritekst={false}
-                    onChange={(event: ListevelgerFlervalgEvent) =>
-                      handleEndreBegrunnelse(event, finnFeltNavn(FO_883_2004_ART12))
-                    }
-                    defaultElementer={utsendingsvilkår.begrunnelseKoder}
-                    disabled={!redigerbart}
-                  />
-                </Nav.Fieldset>
-              )}
-            </>
+          {utsendingsvilkår.oppfylt === false &&
+          !pending &&
+          bestemmelseErGyldig &&
+          konvensjonStorbritanniaToggleEnabled ? (
+            <Mui.ListevelgerFlervalg
+              muligeValg={hentBegrunnelser()}
+              label="Legg til begrunnelse for at utsendingsbestemmelse ikke er oppfylt"
+              tillatFritekst={false}
+              onChange={(event: ListevelgerFlervalgEvent) =>
+                handleEndreBegrunnelse(event, finnFeltNavn(utsendingsvilkår?.vilkaar))
+              }
+              defaultElementer={utsendingsvilkår.begrunnelseKoder}
+              disabled={!redigerbart}
+            />
+          ) : (
+            <Nav.Fieldset legend={`Begrunnelse artikkel ${vilkaarNavn12}:`}>
+              <Mui.ListevelgerFlervalg
+                muligeValg={begrunnelserUtsending}
+                label="Legg til begrunnelse for ikke oppfylt:"
+                tillatFritekst={false}
+                onChange={(event: ListevelgerFlervalgEvent) =>
+                  handleEndreBegrunnelse(event, finnFeltNavn(FO_883_2004_ART12))
+                }
+                defaultElementer={utsendingsvilkår.begrunnelseKoder}
+                disabled={!redigerbart}
+              />
+            </Nav.Fieldset>
           )}
-          {unntaksvilkår.oppfylt === false && !pending && (
+          {unntaksvilkår.oppfylt === false && !pending && konvensjonStorbritanniaToggleEnabled ? (
             <>
-              {konvensjonStorbritanniaToggleEnabled ? (
-                <>
-                  <Mui.ListevelgerFlervalg
-                    muligeValg={MKV.KTObjects.begrunnelser.avslag_anmodning_begrunnelser}
-                    label="Legg til begrunnelse for at unntaksbestemmelse ikke er oppfylt"
-                    tillatFritekst={false}
-                    onChange={(event: ListevelgerFlervalgEvent) =>
-                      handleEndreBegrunnelse(event, `${finnFeltNavn(unntaksvilkår?.vilkaar)}_avslag`)
-                    }
-                    defaultElementer={unntaksvilkår.begrunnelseKoder}
-                    disabled={!redigerbart}
-                  />
-                  {visFritekstfelt && (
-                    <Nav.Textarea
-                      id={`${finnFeltNavn(unntaksvilkår?.vilkaar)}_avslag`}
-                      label="Begrunnelse for avslag (fritekst)"
-                      maxLength={255}
-                      value={unntaksvilkår.begrunnelseFritekst || ""}
-                      onChange={handleEndreFritekst}
-                      readOnly={!redigerbart}
-                    />
-                  )}
-                </>
-              ) : (
-                <Nav.Fieldset legend="Begrunnelse artikkel 16.1:">
-                  <Mui.ListevelgerFlervalg
-                    muligeValg={MKV.KTObjects.begrunnelser.avslag_anmodning_begrunnelser}
-                    label="Legg til begrunnelse for avslag:"
-                    tillatFritekst={false}
-                    onChange={(event: ListevelgerFlervalgEvent) => handleEndreBegrunnelse(event, "art16_1_avslag")}
-                    defaultElementer={unntaksvilkår.begrunnelseKoder}
-                    disabled={!redigerbart}
-                  />
-                  {visFritekstfelt && (
-                    <Nav.Textarea
-                      id="art16_1_avslag"
-                      label="Begrunnelse for avslag (fritekst):"
-                      maxLength={255}
-                      value={unntaksvilkår.begrunnelseFritekst || ""}
-                      onChange={handleEndreFritekst}
-                      readOnly={!redigerbart}
-                    />
-                  )}
-                </Nav.Fieldset>
+              <Mui.ListevelgerFlervalg
+                muligeValg={MKV.KTObjects.begrunnelser.avslag_anmodning_begrunnelser}
+                label="Legg til begrunnelse for at unntaksbestemmelse ikke er oppfylt"
+                tillatFritekst={false}
+                onChange={(event: ListevelgerFlervalgEvent) =>
+                  handleEndreBegrunnelse(event, `${finnFeltNavn(unntaksvilkår?.vilkaar)}_avslag`)
+                }
+                defaultElementer={unntaksvilkår.begrunnelseKoder}
+                disabled={!redigerbart}
+              />
+              {visFritekstfelt && (
+                <Nav.Textarea
+                  id={`${finnFeltNavn(unntaksvilkår?.vilkaar)}_avslag`}
+                  label="Begrunnelse for avslag (fritekst)"
+                  maxLength={255}
+                  value={unntaksvilkår.begrunnelseFritekst || ""}
+                  onChange={handleEndreFritekst}
+                  readOnly={!redigerbart}
+                />
               )}
             </>
+          ) : (
+            <Nav.Fieldset legend="Begrunnelse artikkel 16.1:">
+              <Mui.ListevelgerFlervalg
+                muligeValg={MKV.KTObjects.begrunnelser.avslag_anmodning_begrunnelser}
+                label="Legg til begrunnelse for avslag:"
+                tillatFritekst={false}
+                onChange={(event: ListevelgerFlervalgEvent) => handleEndreBegrunnelse(event, "art16_1_avslag")}
+                defaultElementer={unntaksvilkår.begrunnelseKoder}
+                disabled={!redigerbart}
+              />
+              {visFritekstfelt && (
+                <Nav.Textarea
+                  id="art16_1_avslag"
+                  label="Begrunnelse for avslag (fritekst):"
+                  maxLength={255}
+                  value={unntaksvilkår.begrunnelseFritekst || ""}
+                  onChange={handleEndreFritekst}
+                  readOnly={!redigerbart}
+                />
+              )}
+            </Nav.Fieldset>
           )}
         </Nav.Column>
       </Nav.Row>

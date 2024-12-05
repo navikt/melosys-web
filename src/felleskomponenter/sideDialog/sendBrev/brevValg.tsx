@@ -18,31 +18,27 @@ interface BrevValgProps {
 function BrevValg({ formValues, width, redigerbart, changeField, finnValgAlternativ }: BrevValgProps) {
   const skalViseBrevFelt = (felt: Api.DokumenterV2.Felt) => felt.valg === null || finnValgAlternativ(felt)?.visFelt;
 
-  return (
-    <>
-      {formValues.valgtBrev?.felter?.map((felt) => (
-        <Fragment key={felt.kode}>
-          {felt.valg && (
-            <Nav.Row>
-              <Nav.Column xs={width}>
-                <ValgAlternativer
-                  valg={felt.valg}
-                  feltKode={felt.kode}
-                  redigerbart={redigerbart}
-                  changeField={changeField}
-                  beskrivelse={felt.beskrivelse}
-                  hjelpetekst={felt.hjelpetekst}
-                />
-              </Nav.Column>
-            </Nav.Row>
-          )}
-          {skalViseBrevFelt(felt) && (
-            <BrevFelt felt={felt} visFeltBeskrivelse={felt.valg === null} width={width} redigerbart={redigerbart} />
-          )}
-        </Fragment>
-      ))}
-    </>
-  );
+  return formValues.valgtBrev?.felter?.map((felt) => (
+    <Fragment key={felt.kode}>
+      {felt.valg && (
+        <Nav.Row>
+          <Nav.Column xs={width}>
+            <ValgAlternativer
+              valg={felt.valg}
+              feltKode={felt.kode}
+              redigerbart={redigerbart}
+              changeField={changeField}
+              beskrivelse={felt.beskrivelse}
+              hjelpetekst={felt.hjelpetekst}
+            />
+          </Nav.Column>
+        </Nav.Row>
+      )}
+      {skalViseBrevFelt(felt) && (
+        <BrevFelt felt={felt} visFeltBeskrivelse={felt.valg === null} width={width} redigerbart={redigerbart} />
+      )}
+    </Fragment>
+  ));
 }
 
 export default BrevValg;

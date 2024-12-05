@@ -9,7 +9,7 @@ export function PostnrStedLandLinje({ land, postnummer, poststed }: PostnrStedLa
     skalViseKomma ? ", " : ""
   }${land ?? ""}`;
 
-  return <>{postNrStedLandLinje}</>;
+  return <span>{postNrStedLandLinje}</span>;
 }
 
 interface SemistrukturertAdresseProps {

@@ -11,7 +11,7 @@ function CustomRadioPanelElement({ tittel, hoyreSideTittel, data }) {
     <div className="customRadioPanelElement">
       <div className="customRadioPanelTittel">
         <Nav.Heading size="xsmall">{tittel}</Nav.Heading>
-        {hoyreSideTittel && <>{hoyreSideTittel}</>}
+        {hoyreSideTittel && hoyreSideTittel}
       </div>
       <dl>
         {data.map(({ term, description }) => {

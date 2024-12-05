@@ -92,9 +92,9 @@ function FullmektigHistorikk({ finnOrganisasjonAdresse, finnPersonAdresse }: Ful
               ))}
             </Nav.Table.DataCell>
             <Nav.Table.DataCell>
-              <>{fullmektig.brevadresse?.adresse?.mottakerNavn || ""}</>
+              {fullmektig.brevadresse?.adresse?.mottakerNavn || ""}
               <br />
-              <>{fullmektig.orgnr || fullmektig.personIdent}</>
+              {fullmektig.orgnr || fullmektig.personIdent}
             </Nav.Table.DataCell>
           </Nav.Table.Row>
         ))}
