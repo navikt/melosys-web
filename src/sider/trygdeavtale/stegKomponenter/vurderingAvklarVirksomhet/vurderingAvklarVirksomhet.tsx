@@ -107,7 +107,7 @@ function VurderingAvklarVirksomhet({
   );
 }
 
-const VurderingAvklarVirksomhetForm = reduxForm<{}, PropsFromRedux & Props>({
+const VurderingAvklarVirksomhetForm = reduxForm<object, PropsFromRedux & Props>({
   form: KV.Form.Trygdeavtale.AVKLAR_VIRKSOMHET,
   destroyOnUnmount: true,
   enableReinitialize: true,

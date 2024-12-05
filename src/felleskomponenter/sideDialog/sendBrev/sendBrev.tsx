@@ -566,7 +566,7 @@ function SendBrev({
   );
 }
 
-const SendBrevForm = reduxForm<{}, Props & PropsFromRedux>({
+const SendBrevForm = reduxForm<object, Props & PropsFromRedux>({
   form: KV.Form.SEND_BREV,
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,

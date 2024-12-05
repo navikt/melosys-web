@@ -198,7 +198,7 @@ function VurderingBestemmelse({
   );
 }
 
-const VurderingBestemmelseForm = reduxForm<{}, PropsFromRedux & Props>({
+const VurderingBestemmelseForm = reduxForm<object, PropsFromRedux & Props>({
   form: KV.Form.Trygdeavtale.BESTEMMELSE,
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,

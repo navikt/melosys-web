@@ -481,7 +481,7 @@ function VurderingVedtak({
   );
 }
 
-const VurderingVedtakForm = reduxForm<{}, PropsFromRedux & Props>({
+const VurderingVedtakForm = reduxForm<object, PropsFromRedux & Props>({
   form: KV.Form.Trygdeavtale.VEDTAK,
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,

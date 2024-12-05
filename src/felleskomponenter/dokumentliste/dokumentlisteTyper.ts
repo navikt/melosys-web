@@ -19,7 +19,7 @@ export interface SedDokumentMetadataType extends DokumentMetadataType {
 export interface DokumentlisteType {
   behandlingID: number;
   dokumenter: (BrevDokumentMetadataType | SedDokumentMetadataType)[];
-  validateOnClick?: () => Promise<unknown> | {};
+  validateOnClick?: () => Promise<unknown> | object;
 }
 
 export const isSed = (

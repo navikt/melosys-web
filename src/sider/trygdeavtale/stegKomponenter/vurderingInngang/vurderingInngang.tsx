@@ -256,7 +256,7 @@ function VurderingInngang({
   );
 }
 
-const VurderingInngangForm = reduxForm<{}, PropsFromRedux & Props>({
+const VurderingInngangForm = reduxForm<object, PropsFromRedux & Props>({
   form: KV.Form.Trygdeavtale.INNGANG,
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
