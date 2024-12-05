@@ -17,8 +17,8 @@ type InnerUtenlandskIdComponentProps = WrappedFieldArrayProps<UtenlandskIdent> &
 
 function InnerUtenlandskIdComponent(props: InnerUtenlandskIdComponentProps) {
   const { redigerbart, fields } = props;
-  const { push, remove } = fields;
-  const felter = props.fields.getAll();
+  const { push, remove, getAll } = fields;
+  const felter = getAll();
   const leggTilTomtFelt = () => push({ ident: "", landkode: "" });
 
   if (felter === undefined) return null;

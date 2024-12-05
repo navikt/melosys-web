@@ -92,7 +92,8 @@ class Stegvelger extends Component<PropsFromRedux, State> {
   }
 
   componentDidUpdate(prevProps: Readonly<PropsFromRedux>) {
-    const soknadValues = this.props.soknadForm?.values;
+    const { behandlingUnderOppfriskning, soknadForm } = this.props;
+    const soknadValues = soknadForm?.values;
     const prevSoknadValues = prevProps.soknadForm?.values;
 
     if (
@@ -106,20 +107,22 @@ class Stegvelger extends Component<PropsFromRedux, State> {
       this.debouncedOppdaterSteg();
     }
 
-    if (prevProps.behandlingUnderOppfriskning && !this.props.behandlingUnderOppfriskning) {
+    if (prevProps.behandlingUnderOppfriskning && !behandlingUnderOppfriskning) {
       this.oppfriskFlyt();
     }
 
-    if (this.state.endreFokus) {
+    const { endreFokus, aktuelleSteg, aktivtStegIndex } = this.state;
+    if (endreFokus) {
       // @ts-expect-error generisk beskrivelse
-      const aktueltStegId = this.state.aktuelleSteg[this.state.aktivtStegIndex].id;
+      const aktueltStegId = aktuelleSteg[aktivtStegIndex].id;
       Utils.navigasjon.flyttFokusTilHtmlElementFraId(aktueltStegId);
       this.setState({ endreFokus: false });
     }
   }
 
   hentFlytOgOppdaterAktuelleSteg = () => {
-    Api.Trygdeavtale.hentFlyt(this.props.behandlingID).then((response) =>
+    const { behandlingID } = this.props;
+    Api.Trygdeavtale.hentFlyt(behandlingID).then((response) =>
       this.setState({ aktuelleSteg: this.mapFlytResDtoOmTilAktuelleSteg(response) }),
     );
   };
@@ -131,7 +134,8 @@ class Stegvelger extends Component<PropsFromRedux, State> {
   };
 
   oppfriskFlyt = () => {
-    Api.Trygdeavtale.oppfriskFlyt(this.props.behandlingID).then((response) => {
+    const { behandlingID } = this.props;
+    Api.Trygdeavtale.oppfriskFlyt(behandlingID).then((response) => {
       const nyeSteg = this.mapFlytResDtoOmTilAktuelleSteg(response);
       this.setState({ aktuelleSteg: nyeSteg });
       this.oppdaterAktivtSteg(nyeSteg.length - 1);
@@ -139,7 +143,8 @@ class Stegvelger extends Component<PropsFromRedux, State> {
   };
 
   oppdaterFlyt = (resultat: Api.Trygdeavtale.Resultat, callBack?: () => void) => {
-    Api.Trygdeavtale.sendFlyt(this.props.behandlingID, resultat).then((response) => {
+    const { behandlingID } = this.props;
+    Api.Trygdeavtale.sendFlyt(behandlingID, resultat).then((response) => {
       this.setState({ aktuelleSteg: this.mapFlytResDtoOmTilAktuelleSteg(response) });
       if (callBack) callBack();
     });
@@ -148,10 +153,11 @@ class Stegvelger extends Component<PropsFromRedux, State> {
   debouncedOppdaterFlyt = Utils._debounce(this.oppdaterFlyt, 200);
 
   mapFlytResDtoOmTilAktuelleSteg = (response: Api.Trygdeavtale.FlytResDto): AktueltSteg[] => {
+    const { redigerbart } = this.props;
     const data = {
       data: response.data,
       resultat: response.resultat,
-      redigerbart: this.props.redigerbart,
+      redigerbart: redigerbart,
     };
 
     const handlers = {
@@ -165,11 +171,12 @@ class Stegvelger extends Component<PropsFromRedux, State> {
 
     return response.steg?.map((enkeltSteg: Api.Trygdeavtale.Steg) => {
       const stegMapElement = stegMap[enkeltSteg.navn];
+      const { aktivtStegIndex } = this.state;
       return {
         id: enkeltSteg.navn,
         tittel: stegMapElement.tittel,
         stegPosisjon: enkeltSteg.nummer,
-        aktivtSteg: this.state.aktivtStegIndex === enkeltSteg.nummer,
+        aktivtSteg: aktivtStegIndex === enkeltSteg.nummer,
         komponent: stegMapElement.komponent,
         status: enkeltSteg.status === StegStatus.FERDIG ? FANE_STATUS.OK : FANE_STATUS.UBEHANDLET,
         data: { ...data, steg: enkeltSteg },
@@ -193,7 +200,8 @@ class Stegvelger extends Component<PropsFromRedux, State> {
   debouncedOppdaterSteg = Utils._debounce(this.oppdaterSteg, 1250);
 
   harMottatteOpplysningerFeilmeldinger = () => {
-    const harFeilmeldinger = !Utils._isEmpty(this.props.mottatteOpplysningerFeilmeldinger);
+    const { mottatteOpplysningerFeilmeldinger } = this.props;
+    const harFeilmeldinger = !Utils._isEmpty(mottatteOpplysningerFeilmeldinger);
     this.setState({ visMottatteOpplysningerFeilmeldinger: harFeilmeldinger });
     return harFeilmeldinger;
   };
@@ -230,11 +238,13 @@ class Stegvelger extends Component<PropsFromRedux, State> {
   };
 
   fortsett = () => {
-    this.oppdaterAktivtSteg(this.state.aktivtStegIndex + 1);
+    const { aktivtStegIndex } = this.state;
+    this.oppdaterAktivtSteg(aktivtStegIndex + 1);
   };
 
   tilbake = () => {
-    this.oppdaterAktivtSteg(this.state.aktivtStegIndex - 1);
+    const { aktivtStegIndex } = this.state;
+    this.oppdaterAktivtSteg(aktivtStegIndex - 1);
   };
 
   render() {

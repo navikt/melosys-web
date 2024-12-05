@@ -20,11 +20,11 @@ interface MultiSelectProps<T> {
 }
 
 function MultiSelect<T extends OptionBase>(props: MultiSelectProps<T>) {
-  const { label, values, onChange, options, feil, redigerbart = true } = props;
+  const { label, values, onChange, options, feil, className, redigerbart = true } = props;
 
   const selectId = `select${Utils._uuid()}`;
   return (
-    <div className={props.className} style={{ cursor: redigerbart ? "default" : "not-allowed" }}>
+    <div className={className} style={{ cursor: redigerbart ? "default" : "not-allowed" }}>
       <label htmlFor={selectId} style={{ display: "block", paddingBottom: "0.5rem" }}>
         {label}
       </label>

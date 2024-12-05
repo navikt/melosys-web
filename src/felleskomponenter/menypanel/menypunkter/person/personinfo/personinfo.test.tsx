@@ -1,7 +1,7 @@
 import { ComponentProps } from "react";
 import { instance, mock } from "ts-mockito";
 import { MockedProvider } from "@apollo/client/testing";
-import { render, screen, within, waitFor, prettyDOM } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import { HentPersoninfoDocument } from "./hentPersoninfo.generated";

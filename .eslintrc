@@ -65,6 +65,7 @@
     "import/prefer-default-export": "off",
     "import/no-named-as-default": "off",
     "import/no-named-as-default-member": "off",
+    "@typescript-eslint/no-explicit-any": "off",
     "import/no-extraneous-dependencies": [
       "error",
       {
@@ -79,11 +80,12 @@
       }
     ],
     "@typescript-eslint/explicit-function-return-type": "off",
-    "@typescript-eslint/no-explicit-any": "warn",
+    // TODO: Skru på "@typescript-eslint/no-explicit-any": "warn",
     "@typescript-eslint/consistent-type-definitions": [
       "error",
       "interface"
     ],
+    "@typescript-eslint/no-use-before-define": "off",
     "jsx-a11y/anchor-is-valid": [
       "warn",
       {

@@ -7,9 +7,11 @@ type IkonKnappProps = ComponentProps<typeof Mui.IkonKnapp>;
 type SymbolProps = Omit<IkonKnappProps, "ikon" | "ariaLabel">;
 
 export function Rediger(props: SymbolProps) {
-  return <Mui.IkonKnapp {...props} onClick={props.onClick} ariaLabel="Rediger" ikon={Ikoner.Pencil} />;
+  const { onClick } = props;
+  return <Mui.IkonKnapp {...props} onClick={onClick} ariaLabel="Rediger" ikon={Ikoner.Pencil} />;
 }
 
 export function Slett(props: SymbolProps) {
-  return <Mui.IkonKnapp {...props} onClick={props.onClick} ariaLabel="Slett" ikon={Ikoner.Bin} />;
+  const { onClick } = props;
+  return <Mui.IkonKnapp {...props} onClick={onClick} ariaLabel="Slett" ikon={Ikoner.Bin} />;
 }

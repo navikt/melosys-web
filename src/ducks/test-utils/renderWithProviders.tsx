@@ -5,7 +5,6 @@ import type { PreloadedState } from "@reduxjs/toolkit";
 import { configureStore } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
 import { RootState } from "AppTypes";
-import { createBrowserHistory } from "history";
 import rootReducer from "../../reducer";
 
 // This type interface extends the default options for render from RTL, as well
