@@ -276,7 +276,7 @@ function VurderingFamilie({
   );
 }
 
-const VurderingFamilieForm = reduxForm<{}, PropsFromRedux & Props>({
+const VurderingFamilieForm = reduxForm<object, PropsFromRedux & Props>({
   form: KV.Form.Trygdeavtale.FAMILIE,
   destroyOnUnmount: true,
   enableReinitialize: true,

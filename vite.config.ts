@@ -80,7 +80,6 @@ export default defineConfig({
   resolve: {
     extensions: [".js", ".json", ".jsx", ".mjs", ".ts", ".tsx"],
     alias: {
-      "nav-frontend-typografi-style": fileURLToPath(new URL("./src/nav-style/typografi.css", import.meta.url)),
       AppTypes: path.resolve(__dirname, "./src/globalmodules/AppTypes.ts"),
       Domene: path.resolve(__dirname, "./src/globalmodules/Domene.ts"),
       "melosys-api": path.resolve(__dirname, "./src/globalmodules/melosys-api.ts"),
