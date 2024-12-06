@@ -47,7 +47,7 @@ interface InntektskilderProps {
   bestemmelse?: string;
 }
 
-const hentInntektskilde = (bestemmelse: string, medlemskapsTypeErPliktig: boolean): KTObject[] => {
+const hentInntektskilde = (bestemmelse: string | undefined, medlemskapsTypeErPliktig: boolean): KTObject[] => {
   return MKV.KTObjects.inntektskildetype.filter((kt: KTObject) => {
     if (!medlemskapsTypeErPliktig) {
       return [
@@ -61,7 +61,7 @@ const hentInntektskilde = (bestemmelse: string, medlemskapsTypeErPliktig: boolea
       ].includes(kt.kode);
     }
     if (bestemmelse === "TILLEGGSAVTALE_NATO") {
-      return [INNTEKT_NATO_JWC].includes(kt.kode);
+      return kt.kode === INNTEKT_NATO_JWC;
     }
     return [ARBEIDSINNTEKT, NÆRINGSINNTEKT, PENSJON, UFØRETRYGD].includes(kt.kode);
   });
