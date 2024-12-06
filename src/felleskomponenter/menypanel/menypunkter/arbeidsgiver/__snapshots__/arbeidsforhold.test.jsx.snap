@@ -126,7 +126,9 @@ exports[`arbeidsforhold > snapshot test 1`] = `
                     Bekreftet
                   </dt>
                   <dd>
-                    -
+                    <span>
+                      -
+                    </span>
                   </dd>
                   <dt>
                     Type arbeidsforhold
