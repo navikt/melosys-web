@@ -19,11 +19,6 @@ export default defineConfig({
     outDir: "./build",
     emptyOutDir: true,
   },
-  test: {
-    globals: true,
-    environment: "jsdom",
-    setupFiles: "./src/setupTests.js",
-  },
   plugins: [
     {
       name: "vite-plugin-disable-import-analysis",
@@ -40,8 +35,6 @@ export default defineConfig({
     },
     react({
       include: /\.(js|jsx|ts|tsx)$/,
-      jsxImportSource: "react",
-      jsxRuntime: "classic",
     }),
     viteTsconfigPaths(),
     svgrPlugin(),
