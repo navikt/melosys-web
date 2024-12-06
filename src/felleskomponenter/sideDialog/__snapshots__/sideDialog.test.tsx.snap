@@ -120,6 +120,8 @@ exports[`SideDialog > snapshot test 1`] = `
           data-state="active"
         >
           <div>
+            <div>
+            </div>
             <div class="sideDialogDokumenter">
               <table
                 aria-label="Liste over dokumenter knyttet til saken"
