@@ -17,15 +17,15 @@ const labelCls = linkgroupCls.element("label");
 
 function LinkGroup({ label, links, onClick }: LinkGroupProps) {
   return (
-    <div className={linkgroupCls.block}>
+    <ul className={linkgroupCls.block}>
       {label && (
-        <Nav.BodyLong size="small" className={labelCls}>
-          {label}
-        </Nav.BodyLong>
+        <li className={labelCls}>
+          <Nav.BodyLong size="small">{label}</Nav.BodyLong>
+        </li>
       )}
       {links.map(({ label: linkLabel, active, iconSrc, iconAltText }, index) => (
         <MenyLink
-          key={linkLabel.split(" ").join("")}
+          key={linkLabel.replace(/ /g, "")}
           label={linkLabel}
           active={active}
           onClick={() => onClick(index)}
@@ -33,7 +33,7 @@ function LinkGroup({ label, links, onClick }: LinkGroupProps) {
           iconAltText={iconAltText}
         />
       ))}
-    </div>
+    </ul>
   );
 }
 
