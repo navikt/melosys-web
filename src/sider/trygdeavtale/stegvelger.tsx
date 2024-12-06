@@ -3,7 +3,6 @@ import { RootState } from "AppTypes";
 import { connect, ConnectedProps } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
-import { get as getValueAtPath } from "lodash";
 
 import MKV from "../../melosyskodeverk";
 import * as Api from "../../services/api";
@@ -26,6 +25,7 @@ import { redigerbartSelectors } from "../../ducks/redigerbart";
 
 import "./stegvelger.css";
 import { modalerSelectors } from "../../ducks/modaler";
+import { get as getValueAtPath } from "lodash";
 
 export enum StegStatus {
   FERDIG = "FERDIG",
@@ -80,12 +80,21 @@ interface State {
 }
 
 class Stegvelger extends Component<PropsFromRedux, State> {
-  state = {
-    aktivtStegIndex: 0,
-    aktuelleSteg: [],
-    visMottatteOpplysningerFeilmeldinger: false,
-    endreFokus: false,
+  static harEndringer = (propsObject: any, prevPropsObject: any, path: string) => {
+    const propsValue = getValueAtPath(propsObject, path);
+    const prevPropsValue = getValueAtPath(prevPropsObject, path);
+    return propsValue && prevPropsValue && !Utils._isEqual(propsValue, prevPropsValue);
   };
+
+  constructor(props: PropsFromRedux) {
+    super(props);
+    this.state = {
+      aktivtStegIndex: 0,
+      aktuelleSteg: [],
+      visMottatteOpplysningerFeilmeldinger: false,
+      endreFokus: false,
+    };
+  }
 
   componentDidMount() {
     this.hentFlytOgOppdaterAktuelleSteg();
@@ -97,12 +106,12 @@ class Stegvelger extends Component<PropsFromRedux, State> {
     const prevSoknadValues = prevProps.soknadForm?.values;
 
     if (
-      this.harEndringer(soknadValues, prevSoknadValues, "juridiskArbeidsgiverNorge.ekstraArbeidsgivere") ||
-      this.harEndringer(soknadValues, prevSoknadValues, "selvstendigForetak") ||
-      this.harEndringer(soknadValues, prevSoknadValues, "arbeidsforholdUtland") ||
-      this.harEndringer(soknadValues, prevSoknadValues, "selvstendigNaeringsvirksomhetUtland") ||
-      this.harEndringer(soknadValues, prevSoknadValues, "medfolgendeBarn") ||
-      this.harEndringer(soknadValues, prevSoknadValues, "medfolgendeEktefelleSamboer")
+      Stegvelger.harEndringer(soknadValues, prevSoknadValues, "juridiskArbeidsgiverNorge.ekstraArbeidsgivere") ||
+      Stegvelger.harEndringer(soknadValues, prevSoknadValues, "selvstendigForetak") ||
+      Stegvelger.harEndringer(soknadValues, prevSoknadValues, "arbeidsforholdUtland") ||
+      Stegvelger.harEndringer(soknadValues, prevSoknadValues, "selvstendigNaeringsvirksomhetUtland") ||
+      Stegvelger.harEndringer(soknadValues, prevSoknadValues, "medfolgendeBarn") ||
+      Stegvelger.harEndringer(soknadValues, prevSoknadValues, "medfolgendeEktefelleSamboer")
     ) {
       this.debouncedOppdaterSteg();
     }
@@ -113,10 +122,11 @@ class Stegvelger extends Component<PropsFromRedux, State> {
 
     const { endreFokus, aktuelleSteg, aktivtStegIndex } = this.state;
     if (endreFokus) {
-      // @ts-expect-error generisk beskrivelse
       const aktueltStegId = aktuelleSteg[aktivtStegIndex].id;
       Utils.navigasjon.flyttFokusTilHtmlElementFraId(aktueltStegId);
+      /* eslint-disable-next-line react/no-did-update-set-state */
       this.setState({ endreFokus: false });
+      /* eslint-enable-next-line react/no-did-update-set-state */
     }
   }
 
@@ -125,12 +135,6 @@ class Stegvelger extends Component<PropsFromRedux, State> {
     Api.Trygdeavtale.hentFlyt(behandlingID).then((response) =>
       this.setState({ aktuelleSteg: this.mapFlytResDtoOmTilAktuelleSteg(response) }),
     );
-  };
-
-  harEndringer = (propsObject: any, prevPropsObject: any, path: string) => {
-    const propsValue = getValueAtPath(propsObject, path);
-    const prevPropsValue = getValueAtPath(prevPropsObject, path);
-    return propsValue && prevPropsValue && !Utils._isEqual(propsValue, prevPropsValue);
   };
 
   oppfriskFlyt = () => {
@@ -150,6 +154,7 @@ class Stegvelger extends Component<PropsFromRedux, State> {
     });
   };
 
+  /* eslint-disable-next-line react/sort-comp */
   debouncedOppdaterFlyt = Utils._debounce(this.oppdaterFlyt, 200);
 
   mapFlytResDtoOmTilAktuelleSteg = (response: Api.Trygdeavtale.FlytResDto): AktueltSteg[] => {
@@ -157,7 +162,7 @@ class Stegvelger extends Component<PropsFromRedux, State> {
     const data = {
       data: response.data,
       resultat: response.resultat,
-      redigerbart: redigerbart,
+      redigerbart,
     };
 
     const handlers = {

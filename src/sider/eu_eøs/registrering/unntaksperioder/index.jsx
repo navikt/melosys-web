@@ -1,6 +1,8 @@
 import Registrering from "../registrering";
 import Saksopplysninger from "./saksopplysninger";
 
-export default function (props) {
+function Unntaksperioder(props) {
   return <Registrering Saksopplysninger={Saksopplysninger} {...props} />;
 }
+
+export default Unntaksperioder;

@@ -25,16 +25,7 @@ function MenyLink({ label, active, onClick, iconSrc, iconAltText }: MenyLinkProp
     onClick();
   };
 
-  const labelCls = classnames(
-    active ? menyLinkCls.elementWithModifier("label", "active") : menyLinkCls.element("label"),
-    {
-      [menyLinkCls.elementWithModifier("label", "with-icon")]: !!iconSrc,
-    },
-  );
-
   const containerClassnames = classnames(menyLinkCls.block);
-
-  const labeltype = "normaltekst";
 
   return (
     <li className={containerClassnames} aria-current={active ? true : undefined}>

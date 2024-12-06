@@ -57,6 +57,7 @@ function Datovelger({
   });
 
   const handleOnChange = (event: ChangeEvent<HTMLInputElement>) => {
+    /* eslint-disable-next-line no-param-reassign */
     event.target.value = event.target.value.trim();
     if (inputProps?.onChange) {
       inputProps.onChange(event);

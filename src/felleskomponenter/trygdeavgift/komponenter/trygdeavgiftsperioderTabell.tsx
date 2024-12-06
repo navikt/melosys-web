@@ -11,7 +11,7 @@ function TrygdeavgiftsperioderTabell({
   perioder,
   lagrePending,
 }: {
-  perioder: Trygdeavgiftsperiode[];
+  perioder?: Trygdeavgiftsperiode[];
   lagrePending: boolean;
 }) {
   if (!perioder) return null;

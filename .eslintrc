@@ -59,7 +59,9 @@
     "react/jsx-props-no-spreading": "off",
     "react/require-default-props": "off",
     "react-hooks/exhaustive-deps": "off",
+    "react/no-unstable-nested-components": "off",
     "no-underscore-dangle": "off",
+    "no-await-in-loop": "off",
     "import/order": "off",
     "import/no-cycle": "off",
     "import/prefer-default-export": "off",
@@ -103,7 +105,7 @@
         "**/reducers.js"
       ],
       "rules": {
-        "default-param-last": "off"
+        "@typescript-eslint/default-param-last": "off"
       }
     },
     {
@@ -123,6 +125,8 @@
         "@typescript-eslint/no-useless-constructor": "off",
         "@typescript-eslint/lines-between-class-members": "off",
         "react/destructuring-assignment": "off",
+        "react/state-in-constructor": "off",
+        "react/sort-comp": "off",
         "class-methods-use-this": "off"
       }
     }

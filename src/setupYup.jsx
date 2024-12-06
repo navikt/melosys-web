@@ -104,7 +104,7 @@ addMethod(string, "erNummer", function (message) {
 
     const { path } = this;
 
-    if (new RegExp(/^\d+$/).test(value)) return true;
+    if (/^\d+$/.test(value)) return true;
 
     throw this.createError({
       path,
@@ -117,7 +117,7 @@ addMethod(string, "erNummerTolerererEttMellomrom", function (message) {
   return this.test("er et nummer", message, function (value) {
     const { path } = this;
 
-    if (new RegExp(/^\d+$/).test(value?.replace(" ", ""))) return true;
+    if (/^\d+$/.test(value?.replace(" ", ""))) return true;
 
     throw this.createError({
       path,

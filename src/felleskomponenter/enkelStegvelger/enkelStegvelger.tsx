@@ -24,7 +24,7 @@ interface EnkelStegvelgerProps {
   alleSteg: AktueltSteg[];
 }
 
-export default function ({ alleSteg }: EnkelStegvelgerProps) {
+function EnkelStegvelger({ alleSteg }: EnkelStegvelgerProps) {
   const [aktuelleSteg, setAktuellesteg] = useState<AktueltSteg[]>([alleSteg[0]]);
   const [aktivtStegIndex, setAktivtStegIndex] = useState(0);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
@@ -105,3 +105,5 @@ export default function ({ alleSteg }: EnkelStegvelgerProps) {
     </div>
   );
 }
+
+export default EnkelStegvelger;

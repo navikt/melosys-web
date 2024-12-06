@@ -12,7 +12,7 @@ import "./listevelgerFlervalg.css";
 /** Dette er komponent for ett enkeltvalg. Dersom tillatFritekst === true, vil Nav.Input brukes
  * slik at brukeren kan redigere innholdet i feltet også ETTER at det er lagt til.
  */
-const ListevelgerValgtElement = ({ label, slettElement, oppdaterElement, tillatFritekst, disabled }) => {
+function ListevelgerValgtElement({ label, slettElement, oppdaterElement, tillatFritekst, disabled }) {
   const element = tillatFritekst ? (
     <Nav.TextField
       disabled={disabled}
@@ -39,7 +39,7 @@ const ListevelgerValgtElement = ({ label, slettElement, oppdaterElement, tillatF
       </Nav.Button>
     </div>
   );
-};
+}
 
 ListevelgerValgtElement.propTypes = {
   disabled: PT.bool,

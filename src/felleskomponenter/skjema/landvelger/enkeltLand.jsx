@@ -185,7 +185,9 @@ InnerEnkeltLand.defaultProps = {
   placeholder: undefined,
 };
 
-const EnkeltLand = ({ feltNavn, ...rest }) => <Field name={feltNavn} component={InnerEnkeltLand} props={{ ...rest }} />;
+function EnkeltLand({ feltNavn, ...rest }) {
+  return <Field name={feltNavn} component={InnerEnkeltLand} props={{ ...rest }} />;
+}
 
 EnkeltLand.propTypes = {
   feltNavn: PT.string.isRequired,

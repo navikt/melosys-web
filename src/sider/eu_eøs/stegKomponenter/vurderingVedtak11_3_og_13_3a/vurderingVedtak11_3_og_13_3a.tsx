@@ -101,7 +101,9 @@ export function VurderingVedtak11_3_og_13_3a({
 
   const mapDokumenter = (dokumenter: BrevDokumentMetadataType[]) => {
     return dokumenter.map((dokument: BrevDokumentMetadataType) => {
+      /* eslint-disable no-param-reassign */
       dokument.dokumentData.begrunnelseFritekst = formValues?.begrunnelseFritekst;
+      /* eslint-enable no-param-reassign */
       return dokument;
     });
   };

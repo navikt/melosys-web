@@ -20,7 +20,7 @@ export function renderWithProviders(
     preloadedState = {},
     // Automatically create a store instance if no store was passed in
     store = configureStore({
-      // @ts-ignore
+      // @ts-expect-error Forenklet reducerstruktur i test skaper ts krøll
       reducer: rootReducer,
       preloadedState,
     }),

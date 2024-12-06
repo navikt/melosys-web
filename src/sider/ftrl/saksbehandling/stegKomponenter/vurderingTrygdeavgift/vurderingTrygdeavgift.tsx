@@ -328,7 +328,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
           <Nav.Heading size="xsmall">Foreløpig beregnet trygdeavgift</Nav.Heading>
           <TrygdeavgiftsperioderTabell
             lagrePending={lagrePending}
-            perioder={lagretTrygdeavgift?.trygdeavgiftsperioder!}
+            perioder={lagretTrygdeavgift?.trygdeavgiftsperioder}
           />
         </>
       )}

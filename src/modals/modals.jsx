@@ -11,7 +11,7 @@ import {
   DialogboksOppfriskSak,
 } from "../felleskomponenter/dialogboks";
 
-function Modals({
+function ModalsInner({
   skjulOppfriskModalOgNavigerTilForside,
   visOppfriskDialog,
   lagreMottatteOpplysningerOgOppfriskSaksopplysninger,
@@ -68,12 +68,14 @@ const mapDispatchToProps = (dispatch) => ({
   skjulAvslagSoknadDialogHandle: () => dispatch(modalerOperations.skjulAvslagSoknad()),
 });
 
-const ConnectedModals = connect(mapStateToProps, mapDispatchToProps)(Modals);
+const ConnectedModals = connect(mapStateToProps, mapDispatchToProps)(ModalsInner);
 
-export default function () {
+function Modals() {
   return (
     <FellesHandlersContext.Consumer>
       {(fellesHandlers) => <ConnectedModals {...fellesHandlers} />}
     </FellesHandlersContext.Consumer>
   );
 }
+
+export default Modals;

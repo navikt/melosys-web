@@ -61,6 +61,8 @@ class Stegvelger extends Component {
     visMottatteOpplysningerFeilmeldinger: false,
   };
 
+  aktiv = true;
+
   async componentDidMount() {
     this.aktiv = true;
     const { behandlingID, sakstype } = this.props;
@@ -107,8 +109,6 @@ class Stegvelger extends Component {
   componentWillUnmount() {
     this.aktiv = false;
   }
-
-  aktiv = true;
 
   /** Her vil validering på hver enkelt felt / fane kunne åpne
    * opp for nye tilgjengelige faner etter at saksbehandler
@@ -538,11 +538,6 @@ class Stegvelger extends Component {
     return aktivtStegNummer - 1;
   };
 
-  erSisteSteg(stegNummer) {
-    const maksSteg = this.state.aktuelleSteg.length - 1;
-    return stegNummer >= maksSteg;
-  }
-
   erVedtakSteg(stegNummer) {
     return this.state.aktuelleSteg[stegNummer]?.vedtakSteg;
   }
@@ -554,6 +549,11 @@ class Stegvelger extends Component {
   kontrollerFerdigbehandling = (data) => {
     return this.props.kontrollerFerdigbehandling(data);
   };
+
+  erSisteSteg(stegNummer) {
+    const maksSteg = this.state.aktuelleSteg.length - 1;
+    return stegNummer >= maksSteg;
+  }
 
   render() {
     const { visMottatteOpplysningerFeilmeldinger, aktivtStegNummer, aktuelleSteg } = this.state;

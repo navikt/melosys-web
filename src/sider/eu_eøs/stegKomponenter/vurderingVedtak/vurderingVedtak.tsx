@@ -266,8 +266,10 @@ function VurderingVedtak({
   const mapDokumenter = (dokumenter: BrevDokumentMetadataType[]) => {
     return dokumenter.map((dokument: BrevDokumentMetadataType) => {
       if (dokument.dokumentData !== undefined) {
+        /* eslint-disable no-param-reassign */
         dokument.dokumentData.nyVurderingBakgrunn = formValues?.vedtakstypebegrunnelse;
         dokument.dokumentData.begrunnelseFritekst = formValues?.vedtaksbrevFritekst;
+        /* eslint-enable no-param-reassign */
       }
       return dokument;
     });

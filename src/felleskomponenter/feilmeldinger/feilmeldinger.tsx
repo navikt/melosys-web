@@ -14,7 +14,7 @@ interface FeilmeldingerProps {
   className?: string;
 }
 
-export default function ({ className }: FeilmeldingerProps) {
+function Feilmeldinger({ className }: FeilmeldingerProps) {
   const exceptionFeilmeldinger = useSelector(feiletResponsSelectors.FeilmeldingerSelector);
   const kontrollFeil = useSelector(kontrollSelectors.KontrollFeilSelector);
   const kontrollAdvarsler = useSelector(kontrollSelectors.KontrollAdvarslerSelector);
@@ -89,3 +89,5 @@ export default function ({ className }: FeilmeldingerProps) {
     </div>
   );
 }
+
+export default Feilmeldinger;
