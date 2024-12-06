@@ -1,13 +1,13 @@
-import { defineConfig } from 'vitest/config';
-import react from '@vitejs/plugin-react';
-import tsconfigPaths from 'vite-tsconfig-paths';
-import * as path from 'path';
+import { defineConfig } from "vitest/config";
+import react from "@vitejs/plugin-react";
+import tsconfigPaths from "vite-tsconfig-paths";
+import * as path from "path";
 import svgrPlugin from "vite-plugin-svgr";
 
 export default defineConfig({
   plugins: [
     react({
-      jsxRuntime: 'automatic',
+      jsxRuntime: "automatic",
     }),
     tsconfigPaths(),
     svgrPlugin(),
@@ -17,27 +17,27 @@ export default defineConfig({
   },
   test: {
     globals: true,
-    environment: 'jsdom',
-    setupFiles: './src/setupTests.js',
+    environment: "jsdom",
+    setupFiles: "./src/setupTests.js",
     include: [
-      'src/**/*.{test,spec}.{js,jsx,ts,tsx}',
+      "src/**/*.{test,spec}.{js,jsx,ts,tsx}",
       // Also include __tests__ directories
-      'src/**/__tests__/**/*.{js,jsx,ts,tsx}'
+      "src/**/__tests__/**/*.{js,jsx,ts,tsx}",
     ],
     // Adding these for better debugging
-    reporters: ['verbose'],
+    reporters: ["verbose"],
     testTimeout: 10000,
-    watchExclude: ['**/node_modules/**', '**/dist/**'],
+    watchExclude: ["**/node_modules/**", "**/dist/**"],
     // Add this to see more details about test discovery
     sequence: {
-      shuffle: false
+      shuffle: false,
     },
   },
   resolve: {
     alias: {
-      AppTypes: path.resolve(__dirname, './src/globalmodules/AppTypes.ts'),
-      Domene: path.resolve(__dirname, './src/globalmodules/Domene.ts'),
-      'melosys-api': path.resolve(__dirname, './src/globalmodules/melosys-api.ts'),
-    }
-  }
+      AppTypes: path.resolve(__dirname, "./src/globalmodules/AppTypes.ts"),
+      Domene: path.resolve(__dirname, "./src/globalmodules/Domene.ts"),
+      "melosys-api": path.resolve(__dirname, "./src/globalmodules/melosys-api.ts"),
+    },
+  },
 });
