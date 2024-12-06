@@ -65,7 +65,6 @@ function VurderingYrkesaktivitet(props: VurderingYrkesaktivitetProps) {
       ];
 
   const fakta = hentFaktaVerdi(yrkesaktivitet);
-  // @ts-expect-error generisk beskrivelse
   return (
     <>
       <Nav.Heading size="large" className="stegvelgertittel">
@@ -99,7 +98,6 @@ function VurderingYrkesaktivitet(props: VurderingYrkesaktivitetProps) {
           "data-cy-nesteknapp": "knapp_steg4",
           onClick: bekreftOgFortsett,
         }}
-        // @ts-expect-error generisk beskrivelse
         tilbakeKnappProps={{
           onClick: tilbake,
           disabled: !redigerbart,
