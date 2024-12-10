@@ -116,6 +116,11 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
   const erIkkeYrkesaktiv = behandlingstema === IKKE_YRKESAKTIV;
   const medlemskapsTypeErPliktig = medlemskapsperioder.some((periode) => periode.medlemskapstype === PLIKTIG);
 
+  const bestemmelserkodeverk: string[] = [
+    ...Object.values(MKV.KTObjects.folketrygdloven_kap2_bestemmelser),
+    ...Object.values(MKV.KTObjects.vertslandsavtale_bestemmelser),
+  ] as string[];
+
   const hentProduserbardokumentType = () => {
     if (erDelvisOpphør) {
       return VEDTAK_OPPHOERT_MEDLEMSKAP;
@@ -312,7 +317,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
     [...perioder].sort(Utils.dato.sorterEtterISOFomDato).map((it) => {
       return {
         periode: `${Utils.dato.formatterDatoTilNorsk(it.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(it.tomDato)}`,
-        bestemmelse: KV.finnTermFraListe(MKV.KTObjects.folketrygdloven_kap2_bestemmelser, it.bestemmelse),
+        bestemmelse: KV.finnTermFraListe(bestemmelserkodeverk, it.bestemmelse),
         dekning: KV.finnTermFraListe(MKV.KTObjects.trygdedekninger, it.trygdedekning),
         resultat: KV.finnTermFraListe(MKV.KTObjects.innvilgelsesResultat, it.innvilgelsesResultat),
       };
