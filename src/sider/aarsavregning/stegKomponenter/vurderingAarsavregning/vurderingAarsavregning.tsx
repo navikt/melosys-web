@@ -160,6 +160,10 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
     aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.medlemskapsperioder;
 
   let innvilgetMedlemskapsperiode = lagInnvilgetMedlemskapsPeriode(medlemskapsperioder);
+  const defaultPeriode = {
+    fomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.fom),
+    tomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.tom),
+  };
 
   const setSkjemaverdierFraTrygdeavgiftsgrunnlag = (trygdeavgiftsgrunnlag?: Trygdeavgiftsgrunnlag) => {
     if (!trygdeavgiftsgrunnlag) return;
@@ -586,11 +590,6 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
           </Nav.Row>
         )}
       </Nav.Fieldset>
-      {feil && (
-        <Nav.Alert variant="error" className="alertstripe_feilmelding">
-          {feil}
-        </Nav.Alert>
-      )}
       {aarsavregningResponse?.tidligereGrunnlagsopplysninger === null &&
         aarsavregningResponse.aar === (valgtÅr || initieltÅr) && (
           <TidligereGrunnlagsopplysningerFinnesIkke
@@ -660,6 +659,7 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
 
       {(erAvvik || erIngenGrunnlag) && (
         <GrunnlagsopplysningerSkjema
+          defaultPeriode={defaultPeriode}
           formValues={formValues}
           inntektFields={inntektFields}
           skattFields={skattFields}
@@ -690,6 +690,12 @@ export const VurderingAarsavregning = ({ bekreft, oppdaterStatus }: Props) => {
       )}
 
       {formBekreftet && <FeilmeldingOppsummering errors={formErrors} />}
+
+      {feil && (
+        <Nav.Alert variant="error" className="alertstripe_feilmelding">
+          {feil}
+        </Nav.Alert>
+      )}
 
       <Nav.Button variant="primary" disabled={!redigerbart || !formIsValid} onClick={bekreftOnClick}>
         Bekreft og fortsett
