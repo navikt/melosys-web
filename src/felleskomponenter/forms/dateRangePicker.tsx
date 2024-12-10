@@ -48,17 +48,14 @@ const InnerDateRangePicker = ({
   const { datepickerProps, toInputProps, fromInputProps } = useRangeDatepicker({
     locale: "nb",
     defaultSelected: defaultSelected as DateRange,
-    fromDate: fromDate,
-    toDate: toDate,
+    fromDate,
+    toDate,
     onRangeChange: (dateRange?: DateRange) => {
       const from = Utils.dato.formatterDatoTilNorsk(dateRange?.from, false, undefined);
       const to = Utils.dato.formatterDatoTilNorsk(dateRange?.to, false, undefined);
       if (!from || !to) return; // vent med oppdatering til begge verdier er satt
 
-      onRangeChange({
-        from: from,
-        to: to,
-      });
+      onRangeChange({ from, to });
 
       if (from) {
         setLocalFromDate(from);
@@ -99,19 +96,21 @@ const InnerDateRangePicker = ({
     setLocalToDate(trimmedValue);
   };
 
-  const getErrorMessage = (): string | undefined => {
-    if (!fieldError) return;
+  const getErrorMessage = (): string | null => {
+    if (!fieldError) return null;
     let fomDatoError = "";
     let tomDatoError = "";
-    if (fieldError["fomDato"]) {
-      fomDatoError = fieldError["fomDato"].message.melding;
+    if (fieldError.fomDato) {
+      fomDatoError = fieldError.fomDato.message.melding;
       return fomDatoError.toLowerCase();
     }
 
-    if (fieldError["tomDato"]) {
-      tomDatoError = fieldError["tomDato"].message.melding;
+    if (fieldError.tomDato) {
+      tomDatoError = fieldError.tomDato.message.melding;
       return tomDatoError.toLowerCase();
     }
+
+    return null;
   };
 
   const hasError = (field: string): boolean => {
