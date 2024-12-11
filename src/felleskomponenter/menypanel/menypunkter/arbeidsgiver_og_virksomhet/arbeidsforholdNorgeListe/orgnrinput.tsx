@@ -70,6 +70,7 @@ const Orgnrinput = ({
         error={!hasFocus && feil ? feil : undefined}
         onFocus={() => setHasFocus(true)}
         onBlur={() => setHasFocus(false)}
+        redigerbart={true}
       />
     </div>
   );
