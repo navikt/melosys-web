@@ -48,8 +48,8 @@ const InnerDateRangePicker = ({
   const { datepickerProps, toInputProps, fromInputProps } = useRangeDatepicker({
     locale: "nb",
     defaultSelected: defaultSelected as DateRange,
-    fromDate,
-    toDate,
+    fromDate: fromDate || new Date(0),
+    toDate: toDate || new Date(2100, 0, 1),
     onRangeChange: (dateRange?: DateRange) => {
       const from = Utils.dato.formatterDatoTilNorsk(dateRange?.from, false, undefined);
       const to = Utils.dato.formatterDatoTilNorsk(dateRange?.to, false, undefined);
