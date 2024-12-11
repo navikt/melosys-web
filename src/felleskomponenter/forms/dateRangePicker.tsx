@@ -101,12 +101,12 @@ const InnerDateRangePicker = ({
     let fomDatoError = "";
     let tomDatoError = "";
     if (fieldError.fomDato) {
-      fomDatoError = fieldError.fomDato.message.melding;
+      fomDatoError = fieldError.fomDato.message.melding || fieldError.fomDato.message;
       return fomDatoError.toLowerCase();
     }
 
     if (fieldError.tomDato) {
-      tomDatoError = fieldError.tomDato.message.melding;
+      tomDatoError = fieldError.tomDato.message.melding || fieldError.tomDato.message;
       return tomDatoError.toLowerCase();
     }
 
