@@ -8,6 +8,7 @@ export type FellesInputFnrDnrOrgnrSaksnrProps = InputProps & {
   value?: string;
   onChange?: (ident: string) => void;
   onBlur?: (ident: string) => void;
+  redigerbart: boolean;
 };
 
 const EnkelFellesInputFnrDnrOrgnrSaksnr = ({
@@ -15,6 +16,7 @@ const EnkelFellesInputFnrDnrOrgnrSaksnr = ({
   error,
   onChange,
   onBlur,
+  redigerbart,
   ...props
 }: FellesInputFnrDnrOrgnrSaksnrProps) => {
   const [inputVerdi, setInputVerdi] = useState<string>(props?.value || "");
@@ -41,6 +43,7 @@ const EnkelFellesInputFnrDnrOrgnrSaksnr = ({
 
   return (
     <Nav.TextField
+      readOnly={!redigerbart}
       label={label}
       value={inputVerdi}
       error={error}

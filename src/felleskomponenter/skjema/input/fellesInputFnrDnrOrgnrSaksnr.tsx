@@ -11,6 +11,7 @@ const InnerFellesInputFnrDnrOrgnrSaksnr = ({
   label,
   onBlur,
   onChange,
+  redigerbart,
   ...rest
 }: FellesInputFnrDnrOrgnrSaksnrProps & WrappedFieldProps) => {
   const {
@@ -37,7 +38,14 @@ const InnerFellesInputFnrDnrOrgnrSaksnr = ({
     onChange: innerChange,
   };
 
-  return <EnkelFellesInputFnrDnrOrgnrSaksnr label={label} error={feil || undefined} {...inputProps} />;
+  return (
+    <EnkelFellesInputFnrDnrOrgnrSaksnr
+      label={label}
+      error={feil || undefined}
+      redigerbart={redigerbart}
+      {...inputProps}
+    />
+  );
 };
 
 const FellesInputFnrDnrOrgnrSaksnr = ({ feltNavn = "", bredde = "fullbredde", className = "", ...rest }) => (
