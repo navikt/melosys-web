@@ -50,6 +50,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const innvilgetMedlemskapsperiode = useSelector(
     medlemskapsperioderSelectors.SamletInnvilgetMedlemskapsperiodeSelector,
   );
+  const bestemmelse = useSelector(medlemskapsperioderSelectors.BestemmelseSelector);
   const [lagretTrygdeavgift, setTrygdeavgift] = useAsyncCallbackState(
     () => Api.Trygdeavgift.hentBeregnetTrygdeavgift(behandlingID),
     undefined,
@@ -317,6 +318,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
               defaultPeriode={defaultPeriode}
               fields={inntektFields}
               medlemskapsTypeErPliktig={medlemskapsTypeErPliktig}
+              bestemmelse={bestemmelse}
             />
           </>
         )}

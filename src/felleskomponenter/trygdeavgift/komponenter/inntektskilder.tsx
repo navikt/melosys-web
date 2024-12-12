@@ -30,6 +30,7 @@ const {
   NÆRINGSINNTEKT,
   PENSJON,
   UFØRETRYGD,
+  INNTEKT_NATO_JWC,
 } = MKV.Koder.inntektskildetype;
 
 interface InntektskilderProps {
@@ -43,7 +44,28 @@ interface InntektskilderProps {
   defaultPeriode?: { fomDato: string; tomDato: string };
   medlemskapsTypeErPliktig: boolean;
   skalViseErMaanedsBelopRadioGroup?: boolean;
+  bestemmelse?: string;
 }
+
+const hentInntektskilde = (bestemmelse: string | undefined, medlemskapsTypeErPliktig: boolean): KTObject[] => {
+  return MKV.KTObjects.inntektskildetype.filter((kt: KTObject) => {
+    if (!medlemskapsTypeErPliktig) {
+      return [
+        ARBEIDSINNTEKT_FRA_NORGE,
+        NÆRINGSINNTEKT_FRA_NORGE,
+        INNTEKT_FRA_UTLANDET,
+        FN_SKATTEFRITAK,
+        MISJONÆR,
+        PENSJON_UFØRETRYGD,
+        PENSJON_UFØRETRYGD_KILDESKATT,
+      ].includes(kt.kode);
+    }
+    if (bestemmelse === "TILLEGGSAVTALE_NATO") {
+      return kt.kode === INNTEKT_NATO_JWC;
+    }
+    return [ARBEIDSINNTEKT, NÆRINGSINNTEKT, PENSJON, UFØRETRYGD].includes(kt.kode);
+  });
+};
 
 export function Inntektskilder({
   formValues,
@@ -56,6 +78,7 @@ export function Inntektskilder({
   fields,
   medlemskapsTypeErPliktig,
   skalViseErMaanedsBelopRadioGroup,
+  bestemmelse,
 }: InntektskilderProps) {
   const settesDefaultArbAvgBetales = (kildetype?: string) => ![INNTEKT_FRA_UTLANDET, MISJONÆR].includes(kildetype);
 
@@ -120,26 +143,11 @@ export function Inntektskilder({
                 readOnly={!redigerbart}
                 onChange={(value) => handleEndreKildetype(index, value)}
               >
-                {MKV.KTObjects.inntektskildetype
-                  .filter((kt: KTObject) => {
-                    const gyldigeInntektskilder = medlemskapsTypeErPliktig
-                      ? [ARBEIDSINNTEKT, NÆRINGSINNTEKT, PENSJON, UFØRETRYGD]
-                      : [
-                          ARBEIDSINNTEKT_FRA_NORGE,
-                          NÆRINGSINNTEKT_FRA_NORGE,
-                          INNTEKT_FRA_UTLANDET,
-                          FN_SKATTEFRITAK,
-                          MISJONÆR,
-                          PENSJON_UFØRETRYGD,
-                          PENSJON_UFØRETRYGD_KILDESKATT,
-                        ];
-                    return gyldigeInntektskilder.includes(kt.kode);
-                  })
-                  .map((kt: KTObject) => (
-                    <option key={kt.kode} value={kt.kode}>
-                      {kt.term}
-                    </option>
-                  ))}
+                {hentInntektskilde(bestemmelse, medlemskapsTypeErPliktig).map((kt: KTObject) => (
+                  <option key={kt.kode} value={kt.kode}>
+                    {kt.term}
+                  </option>
+                ))}
               </Forms.Select>
             </Nav.Column>
 
