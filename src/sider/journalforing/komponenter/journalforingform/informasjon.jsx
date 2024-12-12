@@ -268,7 +268,11 @@ class Informasjon extends Component {
             tittel="Informasjon om bruker"
             innhold={
               <>
-                <Skjema.FellesInputFnrDnrOrgnrSaksnr feltNavn="brukerID" label="Brukers f.nr/d-nr." />
+                <Skjema.FellesInputFnrDnrOrgnrSaksnr
+                  feltNavn="brukerID"
+                  label="Brukers f.nr/d-nr."
+                  disabled={mottaksKanalErElektronisk}
+                />
                 {!Utils._isEmpty(brukerNavn) && (
                   <span className="bruker-eller-org-navn">
                     <Nav.BodyLong weight="semibold" size="small" className="term">
