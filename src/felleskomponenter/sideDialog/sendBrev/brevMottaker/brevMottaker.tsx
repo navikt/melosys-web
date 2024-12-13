@@ -157,7 +157,7 @@ const BrevMottaker = ({
 
       {(mottakerErBruker || mottakerErVirksomhet) && (
         <Nav.Row>
-          <Nav.Column xs="12">
+          <Nav.Column>
             {feil && (
               <Nav.Alert variant="error" className="alertstripe_feil">
                 <Nav.BodyLong weight="semibold" size="small">
