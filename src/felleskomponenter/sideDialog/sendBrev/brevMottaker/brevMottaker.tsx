@@ -22,6 +22,8 @@ import BrevMottakerNorskMyndighet from "./brevMottakerNorskMyndighet";
 import { FeilmeldingProps, Underpunkt } from "../../../../services/modules/dokumenter-v2";
 import LabelMedHjelpetekst from "../../../labelMedHjelpetekst";
 
+import "./brevMottaker.css";
+
 const { BRUKER, ARBEIDSGIVER, VIRKSOMHET, ANNEN_ORGANISASJON, NORSK_MYNDIGHET, UTENLANDSK_TRYGDEMYNDIGHET } =
   MKV.Koder.mottakerroller;
 
@@ -133,6 +135,7 @@ const BrevMottaker = ({
   return (
     <>
       <Skjema.Select
+        className="mottaker"
         feltNavn="mottaker"
         label={
           <LabelMedHjelpetekst
