@@ -119,7 +119,6 @@ describe("JournalforingForm", () => {
       submitJournalforing: vi.fn(),
       avbrytJournalforing: vi.fn(),
       settFeltInnhold: vi.fn(),
-      mottaksKanalErEessi: false,
     };
   });
 
