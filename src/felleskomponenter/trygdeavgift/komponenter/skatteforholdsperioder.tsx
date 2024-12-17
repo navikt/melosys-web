@@ -10,7 +10,7 @@ import { FieldArrayProps, FormValuesProps, Skatteforhold } from "./types";
 import * as Utils from "../../../utils";
 import "./skatteforholdsperioder.css";
 import { Stack } from "@navikt/ds-react";
-import { DateRangePicker } from "../../forms";
+import { DateRangeController } from "../../forms";
 
 interface SkatteforholdsperioderProps {
   formValues: FormValuesProps;
@@ -36,7 +36,7 @@ export const Skatteforholdsperioder = ({
       {formValues.skatteforholdsperioder.map((skatteforhold, index) => {
         return (
           <Nav.Row className="periode__rad" key={fields[index].id}>
-            <DateRangePicker
+            <DateRangeController
               name={`skatteforholdsperioder[${index}]`}
               control={control}
               label="Skatteforholdsperiode"

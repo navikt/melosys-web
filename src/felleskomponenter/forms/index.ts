@@ -5,6 +5,6 @@ import Input from "./input";
 import Checkbox from "./checkbox";
 import MultiSelect from "./multiselect";
 import RadioGroup from "./radiogroup";
-import DateRangePicker from "./dateRangePicker/dateRangePicker";
+import DateRangeController from "./dateRangePicker/dateRangeController";
 
-export { Datovelger, Select, HtmlEditor, Input, Checkbox, MultiSelect, RadioGroup, DateRangePicker };
+export { Datovelger, Select, HtmlEditor, Input, Checkbox, MultiSelect, RadioGroup, DateRangeController };

@@ -17,7 +17,7 @@ import {
 import "./inntektskilder.css";
 import { Stack } from "@navikt/ds-react";
 import { Alert } from "../../../navFrontend";
-import { DateRangePicker } from "../../forms";
+import { DateRangeController } from "../../forms";
 
 const {
   ARBEIDSINNTEKT_FRA_NORGE,
@@ -94,7 +94,7 @@ export const Inntektskilder = ({
         return (
           <Nav.Row className="periode__rad" key={fields[index].id}>
             <Nav.Column>
-              <DateRangePicker
+              <DateRangeController
                 name={`inntektskilder[${index}]`}
                 control={control}
                 label="Inntektsperiode"

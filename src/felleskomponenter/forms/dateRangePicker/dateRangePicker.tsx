@@ -15,6 +15,7 @@ export const DateRangePicker = ({
   fieldError,
   showFieldError,
   readOnly,
+  ...rest
 }: DateRangePickerProps) => {
   const [localFromDate, setLocalFromDate] = useState<string>();
   const [localToDate, setLocalToDate] = useState<string>();
