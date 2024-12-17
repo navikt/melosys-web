@@ -1,30 +1,11 @@
-import { Bleed, DatePicker, DatePickerProps, HStack, useRangeDatepicker } from "@navikt/ds-react";
-import { ChangeEvent, forwardRef, useEffect, useState } from "react";
-import { Control, Controller } from "react-hook-form";
+import { Bleed, DatePicker, HStack, useRangeDatepicker } from "@navikt/ds-react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { DateRange } from "react-day-picker";
-import { _uuid } from "../../utils";
-import * as Utils from "../../utils";
+import { _uuid } from "../../../utils";
+import * as Utils from "../../../utils";
+import { DateRangePickerProps } from "./types";
 
-interface DateRangeText {
-  from?: string;
-  to?: string;
-}
-
-interface Props {
-  name: string;
-  control: Control;
-  label: string;
-  hideLabel?: boolean;
-  onRangeChange: (dateRange: DateRangeText) => void;
-  fieldError?: any;
-  showFieldError?: boolean;
-  readOnly: boolean;
-}
-
-type DateRangePickerProps = Omit<Props & DatePickerProps, "name">;
-type ExternalDateRangePickerProps = Omit<Props & DatePickerProps, "onRangeChange" | "fieldError">;
-
-const InnerDateRangePicker = ({
+export const DateRangePicker = ({
   label,
   hideLabel,
   fromDate,
@@ -150,53 +131,3 @@ const InnerDateRangePicker = ({
     </DatePicker>
   );
 };
-
-const DateRangePicker = forwardRef<HTMLSelectElement, ExternalDateRangePickerProps>(
-  (
-    {
-      name,
-      control,
-      label,
-      hideLabel,
-      fromDate,
-      toDate,
-      defaultSelected,
-      readOnly,
-      showFieldError = true,
-      ...rest
-    }: ExternalDateRangePickerProps,
-    _ref: any
-  ) => {
-    const renderDateRangePicker = (field: any, fieldError?: any) => {
-      return (
-        <InnerDateRangePicker
-          control={control}
-          label={label}
-          hideLabel={hideLabel}
-          defaultSelected={defaultSelected as DateRange}
-          fromDate={fromDate}
-          toDate={toDate}
-          onRangeChange={(dateRange: DateRangeText) => {
-            field.onChange({ ...field.value, fomDato: dateRange.from, tomDato: dateRange.to });
-          }}
-          fieldError={fieldError}
-          showFieldError={showFieldError}
-          readOnly={readOnly}
-        />
-      );
-    };
-
-    return (
-      <Controller
-        name={name}
-        control={control}
-        render={({ field, fieldState: { error } }) => {
-          return renderDateRangePicker(field, error);
-        }}
-        {...rest}
-      />
-    );
-  }
-);
-
-export default DateRangePicker;
