@@ -35,13 +35,14 @@ const DateRangeController = forwardRef<HTMLSelectElement, ExternalDateRangePicke
           fieldError={fieldError}
           showFieldError={showFieldError}
           readOnly={readOnly}
+          mode="range"
         />
       );
     };
 
     return (
       <Controller
-        name={name}
+        name={name!!}
         control={control}
         render={({ field, fieldState: { error } }) => {
           return renderDateRangePicker(field, error);
