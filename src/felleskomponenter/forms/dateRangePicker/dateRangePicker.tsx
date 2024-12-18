@@ -10,7 +10,6 @@ export const DateRangePicker = ({
   hideLabel,
   fromDate,
   toDate,
-  defaultSelected,
   onRangeChange,
   fieldError,
   showFieldError,
@@ -21,7 +20,7 @@ export const DateRangePicker = ({
   const [localToDate, setLocalToDate] = useState<string>();
 
   useEffect(() => {
-    const { from, to } = defaultSelected as DateRange;
+    const { from, to } = rest.defaultSelected as DateRange;
 
     setLocalFromDate(Utils.dato.formatterDatoTilNorsk(from, false, undefined));
     setLocalToDate(Utils.dato.formatterDatoTilNorsk(to, false, undefined));
@@ -29,7 +28,7 @@ export const DateRangePicker = ({
 
   const { datepickerProps, toInputProps, fromInputProps } = useRangeDatepicker({
     locale: "nb",
-    defaultSelected: defaultSelected as DateRange,
+    defaultSelected: rest.defaultSelected as DateRange,
     fromDate: fromDate || new Date(0),
     toDate: toDate || new Date(2100, 0, 1),
     onRangeChange: (dateRange?: DateRange) => {
