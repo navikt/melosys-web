@@ -14,5 +14,5 @@ interface Props {
 }
 
 export type { DateRangeText };
-export type DateRangePickerProps = Props & DatePickerProps & DateInputProps;
-export type DateRangeControllerProps = Omit<DateRangePickerProps, "mode" | "onRangeChange">;
+export type DateRangePickerProps = Props & Omit<DatePickerProps, "mode"> & DateInputProps;
+export type DateRangeControllerProps = Omit<DateRangePickerProps, "onRangeChange">;

@@ -5,22 +5,14 @@ import { _uuid } from "../../../utils";
 import * as Utils from "../../../utils";
 import { DateRangePickerProps } from "./types";
 
-export const DateRangePicker = ({
-  label,
-  hideLabel,
-  fromDate,
-  toDate,
-  onRangeChange,
-  fieldError,
-  showFieldError,
-  readOnly,
-  ...rest
-}: DateRangePickerProps) => {
+export const DateRangePicker = ({ onRangeChange, fieldError, showFieldError, ...rest }: DateRangePickerProps) => {
+  const { fromDate, toDate, defaultSelected, label, hideLabel, readOnly } = rest;
+
   const [localFromDate, setLocalFromDate] = useState<string>();
   const [localToDate, setLocalToDate] = useState<string>();
 
   useEffect(() => {
-    const { from, to } = rest.defaultSelected as DateRange;
+    const { from, to } = defaultSelected as DateRange;
 
     setLocalFromDate(Utils.dato.formatterDatoTilNorsk(from, false, undefined));
     setLocalToDate(Utils.dato.formatterDatoTilNorsk(to, false, undefined));
