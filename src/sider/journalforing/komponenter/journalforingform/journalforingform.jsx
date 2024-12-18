@@ -83,7 +83,6 @@ const JournalforingForm = ({
   landkoder,
   avsenderIDFraJournalpost,
   avsenderNavnFraJournalpost,
-  mottaksKanalErEessi,
   mottaksKanalErElektronisk,
 }) => {
   const visForvaltningsmelding = skalViseForvaltningsmelding(formValues, fagsakListe);
