@@ -2,9 +2,9 @@ import { forwardRef } from "react";
 import { DateRange } from "react-day-picker";
 import { Controller } from "react-hook-form";
 import { DateRangePicker } from "./dateRangePicker";
-import { DateRangeText, ExternalDateRangePickerProps } from "./types";
+import { DateRangeText, DateRangeControllerProps } from "./types";
 
-const DateRangeController = forwardRef<HTMLSelectElement, ExternalDateRangePickerProps>(
+const DateRangeController = forwardRef<HTMLSelectElement, DateRangeControllerProps>(
   (
     {
       name,
@@ -17,7 +17,7 @@ const DateRangeController = forwardRef<HTMLSelectElement, ExternalDateRangePicke
       readOnly,
       showFieldError = true,
       ...rest
-    }: ExternalDateRangePickerProps,
+    }: DateRangeControllerProps,
     _ref: any
   ) => {
     const renderDateRangePicker = (field: any, fieldError?: any) => {

@@ -15,4 +15,4 @@ interface Props {
 
 export type { DateRangeText };
 export type DateRangePickerProps = Props & DatePickerProps & DateInputProps;
-export type ExternalDateRangePickerProps = Omit<DateRangePickerProps, "mode" | "onRangeChange">;
+export type DateRangeControllerProps = Omit<DateRangePickerProps, "mode" | "onRangeChange">;
