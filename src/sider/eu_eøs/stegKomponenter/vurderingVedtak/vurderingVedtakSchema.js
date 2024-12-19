@@ -32,7 +32,7 @@ const vedtak = object().shape({
   fritekstSed: string().when("$bestemmelse", {
     is: MKVUtils.erStorbritanniaKonvBestemmelse,
     then: string().nullable().max(462, DU_KAN_IKKE_SKRIVE_MER_ENN_462_TEGN),
-    otherwise: string().max(500, DU_KAN_IKKE_SKRIVE_MER_ENN_500_TEGN).required(),
+    otherwise: string().nullable().max(500, DU_KAN_IKKE_SKRIVE_MER_ENN_500_TEGN),
   }),
 });
 
