@@ -26,7 +26,7 @@ const BrevValg = ({ formValues, width, redigerbart, changeField, finnValgAlterna
             (felt.valg.valgAlternativer.length === 1 &&
             felt.valg.valgAlternativer[0].kode === "FRITEKST" &&
             felt.valg.valgType !== "CHECKBOX" ? (
-              <BrevFelt felt={felt} visFeltBeskrivelse={true} width={width} redigerbart={redigerbart} />
+              <BrevFelt felt={felt} visFeltBeskrivelse width={width} redigerbart={redigerbart} />
             ) : (
               <Nav.Row>
                 <Nav.Column xs={width}>
