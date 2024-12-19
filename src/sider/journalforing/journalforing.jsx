@@ -404,6 +404,7 @@ class Journalforing extends Component {
         behandlingsInformasjon,
         avsenderID,
         avsenderNavn,
+        mottaksKanalErEessi,
         mottaksKanalErElektronisk,
       },
       settFeltInnhold,
@@ -441,6 +442,7 @@ class Journalforing extends Component {
                         <JournalforingForm
                           avsenderIDFraJournalpost={avsenderID}
                           avsenderNavnFraJournalpost={avsenderNavn}
+                          mottaksKanalErEessi={mottaksKanalErEessi}
                           journalpostID={journalpostID}
                           hoveddokumentID={hoveddokumentID}
                           hoveddokumentTittel={hoveddokumentTittel}

@@ -220,6 +220,7 @@ JournalforingForm.propTypes = {
   landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   avsenderIDFraJournalpost: PT.string,
   avsenderNavnFraJournalpost: PT.string,
+  mottaksKanalErEessi: PT.bool.isRequired,
   mottaksKanalErElektronisk: PT.bool.isRequired,
 };
 
@@ -286,6 +287,7 @@ const form = {
     const options = {
       context: {
         erAvsenderPreutfylt: props.erAvsenderPreutfylt,
+        mottaksKanalErEessi: props.mottaksKanalErEessi,
         registeredFields: props.registeredFields,
         journalforingKnappErTryktPå: Boolean(values.journalforingHensikt),
       },
