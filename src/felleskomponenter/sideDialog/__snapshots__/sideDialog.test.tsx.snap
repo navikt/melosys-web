@@ -5,7 +5,7 @@ exports[`SideDialog > snapshot test 1`] = `
 <div>
   <div class="dialog">
     <aside>
-      <div class="navds-tabs navds-tabs--medium">
+      <div class="navds-tabs navds-tabs--small">
         <nav>
           <div class="navds-tabs__tablist-wrapper">
             <div
@@ -14,7 +14,7 @@ exports[`SideDialog > snapshot test 1`] = `
               aria-orientation="horizontal"
             >
               <button
-                class="navds-tabs__tab navds-tabs__tab--medium navds-tabs__tab-icon--left"
+                class="navds-tabs__tab navds-tabs__tab--small navds-tabs__tab-icon--left"
                 role="tab"
                 type="button"
                 aria-selected="true"
@@ -24,7 +24,7 @@ exports[`SideDialog > snapshot test 1`] = `
                 id="333"
                 data-index="0"
               >
-                <span class="navds-tabs__tab-inner navds-body-short navds-body-short--medium">
+                <span class="navds-tabs__tab-inner navds-body-short navds-body-short--small">
                   <span aria-hidden="true">
                   </span>
                   <span>
@@ -33,7 +33,7 @@ exports[`SideDialog > snapshot test 1`] = `
                 </span>
               </button>
               <button
-                class="navds-tabs__tab navds-tabs__tab--medium navds-tabs__tab-icon--left"
+                class="navds-tabs__tab navds-tabs__tab--small navds-tabs__tab-icon--left"
                 role="tab"
                 type="button"
                 aria-selected="false"
@@ -43,7 +43,7 @@ exports[`SideDialog > snapshot test 1`] = `
                 id="333"
                 data-index="1"
               >
-                <span class="navds-tabs__tab-inner navds-body-short navds-body-short--medium">
+                <span class="navds-tabs__tab-inner navds-body-short navds-body-short--small">
                   <span aria-hidden="true">
                   </span>
                   <span>
@@ -52,7 +52,7 @@ exports[`SideDialog > snapshot test 1`] = `
                 </span>
               </button>
               <button
-                class="navds-tabs__tab navds-tabs__tab--medium navds-tabs__tab-icon--left"
+                class="navds-tabs__tab navds-tabs__tab--small navds-tabs__tab-icon--left"
                 role="tab"
                 type="button"
                 aria-selected="false"
@@ -62,7 +62,7 @@ exports[`SideDialog > snapshot test 1`] = `
                 id="333"
                 data-index="2"
               >
-                <span class="navds-tabs__tab-inner navds-body-short navds-body-short--medium">
+                <span class="navds-tabs__tab-inner navds-body-short navds-body-short--small">
                   <span aria-hidden="true">
                   </span>
                   <span>
@@ -71,7 +71,7 @@ exports[`SideDialog > snapshot test 1`] = `
                 </span>
               </button>
               <button
-                class="navds-tabs__tab navds-tabs__tab--medium navds-tabs__tab-icon--left"
+                class="navds-tabs__tab navds-tabs__tab--small navds-tabs__tab-icon--left"
                 role="tab"
                 type="button"
                 aria-selected="false"
@@ -81,7 +81,7 @@ exports[`SideDialog > snapshot test 1`] = `
                 id="333"
                 data-index="3"
               >
-                <span class="navds-tabs__tab-inner navds-body-short navds-body-short--medium">
+                <span class="navds-tabs__tab-inner navds-body-short navds-body-short--small">
                   <span aria-hidden="true">
                   </span>
                   <span>
@@ -90,7 +90,7 @@ exports[`SideDialog > snapshot test 1`] = `
                 </span>
               </button>
               <button
-                class="navds-tabs__tab navds-tabs__tab--medium navds-tabs__tab-icon--left"
+                class="navds-tabs__tab navds-tabs__tab--small navds-tabs__tab-icon--left"
                 role="tab"
                 type="button"
                 aria-selected="false"
@@ -100,7 +100,7 @@ exports[`SideDialog > snapshot test 1`] = `
                 id="333"
                 data-index="4"
               >
-                <span class="navds-tabs__tab-inner navds-body-short navds-body-short--medium">
+                <span class="navds-tabs__tab-inner navds-body-short navds-body-short--small">
                   <span aria-hidden="true">
                   </span>
                   <span>
