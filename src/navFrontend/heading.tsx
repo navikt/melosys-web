@@ -3,7 +3,8 @@ import { Heading as NavHeading } from "@navikt/ds-react";
 type HeadingLevel = "1" | "2" | "3";
 type HeadingSize = "medium" | "small" | "xsmall";
 
-type HeadingProps = React.ComponentProps<typeof NavHeading> & {
+type HeadingProps = Omit<React.ComponentProps<typeof NavHeading>, "as"> & {
+  as?: React.ElementType;
   level: HeadingLevel;
   size?: HeadingSize;
   children: React.ReactNode;
