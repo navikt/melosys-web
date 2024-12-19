@@ -22,9 +22,6 @@ const BrevValg = ({ formValues, width, redigerbart, changeField, finnValgAlterna
     <>
       {formValues.valgtBrev?.felter?.map((felt) => (
         <Fragment key={felt.kode}>
-          {console.log("BrevValg: ", formValues.valgtBrev?.felter?.length)}
-          {console.log("BrevValg: ", formValues.valgtBrev?.felter)}
-
           {felt.valg &&
             (felt.valg.valgAlternativer.length === 1 &&
             felt.valg.valgAlternativer[0].kode === "FRITEKST" &&
