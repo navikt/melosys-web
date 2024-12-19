@@ -9,7 +9,7 @@ const VELG_OM_ANMODNING_OM_MER_INFORMASJON_VIL_BLI_SENDT = {
 const avslaa_utpeking = object().shape({
   begrunnelseUtenlandskMyndighet: string().max(500, DU_KAN_IKKE_SKRIVE_MER_ENN_500_TEGN).required(OPPGI_EN_BEGRUNNELSE),
   vilSendeAnmodningOmMerInformasjon: bool().required(VELG_OM_ANMODNING_OM_MER_INFORMASJON_VIL_BLI_SENDT),
-  fritekst: string().max(500, DU_KAN_IKKE_SKRIVE_MER_ENN_500_TEGN),
+  fritekst: string().max(500, DU_KAN_IKKE_SKRIVE_MER_ENN_500_TEGN).required(OPPGI_EN_BEGRUNNELSE),
 });
 
 export default avslaa_utpeking;
