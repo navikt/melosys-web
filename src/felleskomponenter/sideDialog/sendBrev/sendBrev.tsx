@@ -192,7 +192,7 @@ const SendBrev = ({
   useEffect(() => {
     if (
       tilgjengeligeBrevtyper?.length === 1 &&
-      (krevesLandForUtenlandskTrygdemyndighetMottaker() || erMottakerGyldig(formValues))
+      (krevesLandForUtenlandskTrygdemyndighetMottaker() || erMottakerGyldig(formValues) || mottakerErNorskMyndighet)
     ) {
       changeField("type", tilgjengeligeBrevtyper[0].type.kode);
     } else if (tilgjengeligeBrevtyper?.length === 1 && !erMottakerGyldig(formValues)) {
@@ -459,8 +459,8 @@ const SendBrev = ({
           <Nav.Column xs={brevTypeSelectWidth}>
             <Skjema.Select
               feltNavn="type"
-              label={<LabelMedHjelpetekst label="Velg brev" bold small />}
-              disabled={!redigerbart || tilgjengeligeBrevtyper.length === 1 || !!formValues.valgtMottaker?.feilmelding}
+              label={<LabelMedHjelpetekst label="Velg brevmal" bold small />}
+              redigerbart={!(tilgjengeligeBrevtyper.length === 1 || !!formValues.valgtMottaker?.feilmelding)}
               emptyFieldDisabled={!!formValues.type}
               onBlur={overstyrBlurEvent}
             >

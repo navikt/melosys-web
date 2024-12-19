@@ -22,6 +22,26 @@ const BrevValg = ({ formValues, width, redigerbart, changeField, finnValgAlterna
     <>
       {formValues.valgtBrev?.felter?.map((felt) => (
         <Fragment key={felt.kode}>
+          {console.log("BrevValg: ", felt)}
+          {/*          {felt.valg && (
+            (felt.valg.valgAlternativer.length === 1 && felt.valg.valgAlternativer[0].kode === "FRITEKST" ? (
+              <BrevFelt felt={felt} visFeltBeskrivelse={true} width={width} redigerbart={redigerbart} />
+            ):(
+              <Nav.Row>
+                <Nav.Column xs={width}>
+                  <ValgAlternativer
+                    valg={felt.valg}
+                    feltKode={felt.kode}
+                    redigerbart={redigerbart}
+                    changeField={changeField}
+                    beskrivelse={felt.beskrivelse}
+                    hjelpetekst={felt.hjelpetekst}
+                  />
+                </Nav.Column>
+              </Nav.Row>
+            ))
+          )}*/}
+
           {felt.valg && (
             <Nav.Row>
               <Nav.Column xs={width}>
@@ -36,6 +56,7 @@ const BrevValg = ({ formValues, width, redigerbart, changeField, finnValgAlterna
               </Nav.Column>
             </Nav.Row>
           )}
+
           {skalViseBrevFelt(felt) && (
             <BrevFelt felt={felt} visFeltBeskrivelse={felt.valg === null} width={width} redigerbart={redigerbart} />
           )}
