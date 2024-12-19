@@ -17,15 +17,16 @@ interface BrevValgProps {
 
 const BrevValg = ({ formValues, width, redigerbart, changeField, finnValgAlternativ }: BrevValgProps) => {
   const skalViseBrevFelt = (felt: Api.DokumenterV2.Felt) => felt.valg === null || finnValgAlternativ(felt)?.visFelt;
-
+  const erstattFritekstValgMedBrevFelt = (felt: Api.DokumenterV2.Felt) =>
+    felt.valg!.valgAlternativer.length === 1 &&
+    felt.valg!.valgAlternativer[0].kode === "FRITEKST" &&
+    felt.valg!.valgType !== "CHECKBOX";
   return (
     <>
       {formValues.valgtBrev?.felter?.map((felt) => (
         <Fragment key={felt.kode}>
           {felt.valg &&
-            (felt.valg.valgAlternativer.length === 1 &&
-            felt.valg.valgAlternativer[0].kode === "FRITEKST" &&
-            felt.valg.valgType !== "CHECKBOX" ? (
+            (erstattFritekstValgMedBrevFelt(felt) ? (
               <BrevFelt felt={felt} visFeltBeskrivelse width={width} redigerbart={redigerbart} />
             ) : (
               <Nav.Row>

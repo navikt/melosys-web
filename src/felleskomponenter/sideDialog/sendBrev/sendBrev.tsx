@@ -460,7 +460,9 @@ const SendBrev = ({
             <Skjema.Select
               feltNavn="type"
               label={<LabelMedHjelpetekst label="Velg brevmal" bold small />}
-              redigerbart={!(tilgjengeligeBrevtyper.length === 1 || !!formValues.valgtMottaker?.feilmelding)}
+              redigerbart={
+                !(!redigerbart || tilgjengeligeBrevtyper.length === 1 || !!formValues.valgtMottaker?.feilmelding)
+              }
               emptyFieldDisabled={!!formValues.type}
               onBlur={overstyrBlurEvent}
             >
