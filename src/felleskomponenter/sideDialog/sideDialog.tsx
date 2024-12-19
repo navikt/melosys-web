@@ -121,7 +121,7 @@ const SideDialog = ({
   return (
     <div className="dialog">
       <aside>
-        <Tabs value={aktivTab} onChange={setAktivTab}>
+        <Tabs value={aktivTab} onChange={setAktivTab} size="small">
           <nav>
             <Tabs.List>
               {tabs.map((tab) => (

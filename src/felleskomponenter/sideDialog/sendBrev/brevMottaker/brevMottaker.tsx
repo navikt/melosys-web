@@ -22,6 +22,8 @@ import BrevMottakerNorskMyndighet from "./brevMottakerNorskMyndighet";
 import { FeilmeldingProps, Underpunkt } from "../../../../services/modules/dokumenter-v2";
 import LabelMedHjelpetekst from "../../../labelMedHjelpetekst";
 
+import "./brevMottaker.css";
+
 const { BRUKER, ARBEIDSGIVER, VIRKSOMHET, ANNEN_ORGANISASJON, NORSK_MYNDIGHET, UTENLANDSK_TRYGDEMYNDIGHET } =
   MKV.Koder.mottakerroller;
 
@@ -124,6 +126,10 @@ const BrevMottaker = ({
           (mottakerAdresse: DokumenterV2.BrevAdresse) => mottakerAdresse.orgnr === formValues.arbeidsgiver
         ),
       });
+
+      if (valgtMottaker.adresser?.length === 1) {
+        changeField("arbeidsgiver", valgtMottaker.adresser[0].orgnr);
+      }
     }
 
     if (erAnnenOrganisasjon(valgtMottaker.rolle)) {
@@ -133,6 +139,7 @@ const BrevMottaker = ({
   return (
     <>
       <Skjema.Select
+        className="mottaker"
         feltNavn="mottaker"
         label={
           <LabelMedHjelpetekst
@@ -157,7 +164,7 @@ const BrevMottaker = ({
 
       {(mottakerErBruker || mottakerErVirksomhet) && (
         <Nav.Row>
-          <Nav.Column xs="12">
+          <Nav.Column>
             {feil && (
               <Nav.Alert variant="error" className="alertstripe_feil">
                 <Nav.BodyLong weight="semibold" size="small">
@@ -190,12 +197,17 @@ const BrevMottaker = ({
           ) : (
             <Nav.Column xs="12" className="arbeidsgiver">
               <Skjema.RadioGroup
-                legend={<LabelMedHjelpetekst label="Velg: " hjelpetekst={arbeidsgiverHjelptekst} bold small />}
+                legend={
+                  <LabelMedHjelpetekst label="Velg arbeidsgiver" hjelpetekst={arbeidsgiverHjelptekst} bold small />
+                }
                 name="arbeidsgiver"
               >
                 {formValues?.valgtMottaker?.adresser?.map((virksomhet: DokumenterV2.BrevAdresse) => (
                   <Fragment key={`arbeidsgiver.${virksomhet.orgnr}`}>
-                    <Nav.Radio value={virksomhet.orgnr}>
+                    <Nav.Radio
+                      readOnly={(formValues?.valgtMottaker?.adresser?.length ?? 0) === 1}
+                      value={virksomhet.orgnr}
+                    >
                       {`${virksomhet.mottakerNavn} (org.nr. ${virksomhet.orgnr})`}
                     </Nav.Radio>
                     {formValues.arbeidsgiver === virksomhet.orgnr && adresse?.mottakerAdresse && (
@@ -211,13 +223,8 @@ const BrevMottaker = ({
 
       {mottakerErAnnenOrganisasjon && (
         <Nav.Row>
-          <Nav.Column xs="6">
-            <Skjema.Input
-              feltNavn="organisasjonsnummer"
-              label="Organisasjonsnummer"
-              placeholder="Skriv inn..."
-              disabled={!redigerbart}
-            />
+          <Nav.Column xs="4">
+            <Skjema.Input feltNavn="organisasjonsnummer" label="Org.nr." disabled={!redigerbart} />
             {adresse?.organisasjonsAdresse && (
               <OrganisasjonsAdresse
                 className="organisasjonsAdresse"
@@ -228,13 +235,8 @@ const BrevMottaker = ({
               />
             )}
           </Nav.Column>
-          <Nav.Column xs="6">
-            <Skjema.Input
-              feltNavn="kontaktperson"
-              label="Kontaktperson"
-              placeholder="Skriv inn..."
-              disabled={!redigerbart}
-            />
+          <Nav.Column xs="8">
+            <Skjema.Input feltNavn="kontaktperson" label="Kontaktperson" disabled={!redigerbart} />
           </Nav.Column>
           {feil && (
             <Nav.Column xs="12">
