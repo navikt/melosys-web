@@ -79,7 +79,7 @@ export const VurderingGodkjennUtpekingAnnetLand = ({
   ];
   const skjemaDisabled = !redigerbart || !erBucAapen;
 
-  const stegErGyldig = redigerbart || fritekst.length() <= fritekstMaxLength;
+  const stegErGyldig = redigerbart && fritekst.length <= fritekstMaxLength;
 
   return (
     <div className="vurderingGodkjennUtpeking">
