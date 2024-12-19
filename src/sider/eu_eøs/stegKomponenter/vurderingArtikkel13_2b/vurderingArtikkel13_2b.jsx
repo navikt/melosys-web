@@ -65,7 +65,7 @@ const VurderingArtikkel13_2b = ({
 
   return (
     <div className="vurderingArtikkel13_2b">
-      <Nav.Heading size="large" className="stegvelgertittel">
+      <Nav.Heading level="1" className="stegvelgertittel">
         Vurdering av artikkel 13 nr. 2 bokstav b
       </Nav.Heading>
       <Nav.RadioGroup

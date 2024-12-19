@@ -160,7 +160,7 @@ const VurderingAvslag12_x_og_16 = ({
 
   return (
     <div>
-      <Nav.Heading size="large" className="stegvelgertittel">
+      <Nav.Heading level="1" className="stegvelgertittel">
         Avslag
       </Nav.Heading>
       {valgte_utsendt_arbeidstaker_begrunnelser.length > 0 && (

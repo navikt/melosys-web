@@ -118,7 +118,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
 
   return (
     <div className="vurderingBestemmelse_ikkeyrkesaktiv">
-      <Nav.Heading size="large" className="stegvelgertittel">
+      <Nav.Heading level="1" className="stegvelgertittel">
         Bestemmelse og vurdering
       </Nav.Heading>
 

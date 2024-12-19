@@ -148,7 +148,7 @@ export const VurderingVedtakOpphoer = ({ tilbake, aktivtSteg }: Props) => {
 
   return (
     <div className="vurderingVedtakOpphoer">
-      <Nav.Heading size="large" className="stegvelgertittel">
+      <Nav.Heading level="1" className="stegvelgertittel">
         Opphør av frivillig medlemskap etter § 2-15
       </Nav.Heading>
 

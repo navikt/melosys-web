@@ -184,7 +184,7 @@ export const VurderingArtikkel13UtpekLand = ({
 
   return (
     <div className="vurderingArtikkel13UtpekLand">
-      <Nav.Heading size="large" className="stegvelgertittel">
+      <Nav.Heading level="1" className="stegvelgertittel">
         {overskrift}
       </Nav.Heading>
       <Nav.Heading size="xsmall">

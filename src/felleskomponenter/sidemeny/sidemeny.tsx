@@ -28,7 +28,7 @@ const SideMeny = ({ linkGroups, heading, onClick }: SideMenyProps): JSX.Element 
     <div className={sideMenyRootClassnames}>
       <div className={sideMenyCls.element("container")}>
         {heading && (
-          <Nav.Heading size="small" className={sideMenyCls.element("heading")} id="opplysninger">
+          <Nav.Heading level="2" className={sideMenyCls.element("heading")} id="opplysninger">
             {heading}
           </Nav.Heading>
         )}

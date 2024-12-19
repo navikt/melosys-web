@@ -83,7 +83,7 @@ export const VurderingInngang = ({
 
   return (
     <div className="vurderinginngang_eu_eos">
-      <Nav.Heading size="large" className="stegvelgertittel">
+      <Nav.Heading level="1" className="stegvelgertittel">
         Kontroller inngangsvilkår
       </Nav.Heading>
       <Varsler

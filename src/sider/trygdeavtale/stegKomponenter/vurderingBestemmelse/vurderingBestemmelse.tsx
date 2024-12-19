@@ -115,7 +115,7 @@ const VurderingBestemmelse = ({
 
   return (
     <div className="vurderingBestemmelse_trygdeavtale">
-      <Nav.Heading size="large" className="stegvelgertittel">
+      <Nav.Heading level="1" className="stegvelgertittel">
         Bestemmelse og vurdering
       </Nav.Heading>
 

@@ -132,7 +132,7 @@ export const VurderingUtpekt = ({
           </ul>
         </Nav.Alert>
       ) : null}
-      <Nav.Heading size="large" className="stegvelgertittel">
+      <Nav.Heading level="1" className="stegvelgertittel">
         Vurder lovvalgsbeslutningen (A003)
       </Nav.Heading>
       <Nav.Row className="rad">

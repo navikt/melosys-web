@@ -150,7 +150,7 @@ const VurderingFamilie = ({
 
   return (
     <div className="vurderingFamilie">
-      <Nav.Heading size="large" className="stegvelgertittel">
+      <Nav.Heading level="1" className="stegvelgertittel">
         Familie
       </Nav.Heading>
 

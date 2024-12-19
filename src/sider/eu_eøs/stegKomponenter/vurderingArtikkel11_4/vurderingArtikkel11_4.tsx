@@ -196,7 +196,7 @@ const VurderingArtikkel11_4 = ({
 
   return (
     <div className="vurderingArtikkel11_4">
-      <Nav.Heading size="large" className="stegvelgertittel">
+      <Nav.Heading level="1" className="stegvelgertittel">
         {konvensjonStorbritanniaToggleEnabled ? "Vurdering av skipsbestemmelse" : "Vurdering av artikkel 11.4"}
       </Nav.Heading>
 

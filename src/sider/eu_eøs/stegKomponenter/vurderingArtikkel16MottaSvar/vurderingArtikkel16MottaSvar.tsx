@@ -69,7 +69,7 @@ const VurderingArtikkel16MottaSvar = ({
 
   return (
     <div className="vurderingArtikkel16MottaSvar">
-      <Nav.Heading size="large" className="stegvelgertittel">
+      <Nav.Heading level="1" className="stegvelgertittel">
         {konvensjonStorbritanniaToggleEnabled
           ? "Svar på anmodning om unntak"
           : "Svar på anmodning om unntak, etter artikkel 16, nr. 1"}

@@ -326,7 +326,7 @@ export const VurderingArbeidTjenestepersonEllerFlyVedtak = ({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="vurderingArbeidTjenestepersonEllerFlyVedtak">
-      <Nav.Heading size="large" className="stegvelgertittel">
+      <Nav.Heading level="1" className="stegvelgertittel">
         {overskrift}
       </Nav.Heading>
       <Nav.Row className="velgLovvalgsbestemmelse">

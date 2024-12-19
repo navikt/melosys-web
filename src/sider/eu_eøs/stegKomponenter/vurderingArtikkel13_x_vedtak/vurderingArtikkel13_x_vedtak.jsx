@@ -161,7 +161,7 @@ export const VurderingArtikkel13_x_vedtak = ({
   const stegErGyldig = redigerbart && formIsValid && !harFeilmeldinger;
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="vurderingArtikkel13_x_vedtak">
-      <Nav.Heading size="large" className="stegvelgertittel">
+      <Nav.Heading level="1" className="stegvelgertittel">
         {overskrift}
       </Nav.Heading>
       {redigerbart && (

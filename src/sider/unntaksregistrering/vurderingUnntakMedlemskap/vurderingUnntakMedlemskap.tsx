@@ -176,7 +176,7 @@ const VurderingUnntakMedlemskap = ({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
 
   return (
     <div className="vurderingUnntakMedlemskap">
-      <Nav.Heading size="large" className="stegvelgertittel">
+      <Nav.Heading level="1" className="stegvelgertittel">
         Unntak medlemskap
       </Nav.Heading>
       <Nav.Row>

@@ -178,7 +178,7 @@ const VurderingInngang = ({
 
   return (
     <div className="vurderingInngang_trygdeavtale">
-      <Nav.Heading size="large" className="stegvelgertittel">
+      <Nav.Heading level="1" className="stegvelgertittel">
         Oppgi opplysninger fra søknaden
       </Nav.Heading>
 

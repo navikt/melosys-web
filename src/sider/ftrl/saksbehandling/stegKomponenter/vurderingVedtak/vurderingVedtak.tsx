@@ -370,7 +370,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
 
   return (
     <div className="vurderingVedtak">
-      <Nav.Heading size="large" className="stegvelgertittel">
+      <Nav.Heading level="1" className="stegvelgertittel">
         {medlemskapsTypeErPliktig
           ? "Pliktig medlemskap etter folketrygdloven"
           : "Frivillig medlemskap etter folketrygdloven"}

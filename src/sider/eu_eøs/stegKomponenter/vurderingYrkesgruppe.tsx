@@ -149,7 +149,7 @@ const VurderingYrkesgruppe = ({
 
   return (
     <div className="vurderingYrkesgruppe">
-      <Nav.Heading size="large" className="stegvelgertittel">
+      <Nav.Heading level="1" className="stegvelgertittel">
         Yrkessituasjon
       </Nav.Heading>
       <Nav.RadioGroup

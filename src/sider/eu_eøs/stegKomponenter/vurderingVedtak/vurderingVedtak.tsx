@@ -276,7 +276,7 @@ const VurderingVedtak = ({
 
   return (
     <div className="vedtak">
-      <Nav.Heading size="large" className="stegvelgertittel">
+      <Nav.Heading level="1" className="stegvelgertittel">
         {konvensjonStorbritanniaToggleEnabled
           ? "Omfattet av norsk trygdelovgivning"
           : `Omfattet av norsk trygdelovgivning etter ${finnLovvalgSomTerm(
