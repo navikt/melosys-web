@@ -10,6 +10,7 @@ import { FieldArrayProps, FormValuesProps, Skatteforhold } from "./types";
 import * as Utils from "../../../utils";
 import "./skatteforholdsperioder.css";
 import { Stack } from "@navikt/ds-react";
+import { DateRangeController } from "../../forms";
 
 interface SkatteforholdsperioderProps {
   formValues: FormValuesProps;
@@ -35,24 +36,20 @@ export const Skatteforholdsperioder = ({
       {formValues.skatteforholdsperioder.map((skatteforhold, index) => {
         return (
           <Nav.Row className="periode__rad" key={fields[index].id}>
-            <Nav.Column>
-              <Forms.Datovelger
-                label={index === 0 ? "Skatteforhold" : ""}
-                name={`skatteforholdsperioder[${index}].fomDato`}
-                readOnly={!redigerbart}
-                control={control}
-              />
-            </Nav.Column>
-
-            <Nav.Column>
-              <Forms.Datovelger
-                label={index === 0 && <span className="invisible" />}
-                name={`skatteforholdsperioder[${index}].tomDato`}
-                readOnly={!redigerbart}
-                control={control}
-                minDate={Utils.dato.norskStringTilDate(formValues.skatteforholdsperioder[index].fomDato)}
-              />
-            </Nav.Column>
+            <DateRangeController
+              name={`skatteforholdsperioder[${index}]`}
+              control={control}
+              label="Skatteforholdsperiode"
+              hideLabel={index !== 0}
+              defaultSelected={{
+                from: Utils.dato.norskStringTilDate(formValues.skatteforholdsperioder[index].fomDato),
+                to: Utils.dato.norskStringTilDate(formValues.skatteforholdsperioder[index].tomDato),
+              }}
+              fromDate={Utils.dato.norskStringTilDate(defaultPeriode?.fomDato)}
+              toDate={Utils.dato.norskStringTilDate(defaultPeriode?.tomDato)}
+              showFieldError
+              readOnly={!redigerbart}
+            />
 
             <Nav.Column>
               <Forms.RadioGroup
