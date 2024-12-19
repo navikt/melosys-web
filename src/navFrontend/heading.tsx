@@ -5,12 +5,12 @@ type HeadingSize = "medium" | "small" | "xsmall";
 
 type HeadingProps = Omit<React.ComponentProps<typeof NavHeading>, "as"> & {
   as?: React.ElementType;
-  level: HeadingLevel;
+  level?: HeadingLevel;
   size?: HeadingSize;
   children: React.ReactNode;
 };
 
-export const Heading = ({ level, size, children, ...props }: HeadingProps) => {
+export const Heading = ({ level = "1", size, children, ...props }: HeadingProps) => {
   const sizeMapping: Record<HeadingLevel, HeadingSize> = {
     "1": "medium",
     "2": "small",
