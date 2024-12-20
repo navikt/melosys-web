@@ -15,6 +15,8 @@ import { formSelectors } from "../../../../ducks/form";
 import "./vurderingGodkjennUtpekingAnnetLand.css";
 import * as Api from "../../../../services/api";
 
+const fritekstMaxLength = 500;
+
 export const VurderingGodkjennUtpekingAnnetLand = ({
   lagreOgGodkjennUnntaksperioder,
   redigerbart,
@@ -77,6 +79,8 @@ export const VurderingGodkjennUtpekingAnnetLand = ({
   ];
   const skjemaDisabled = !redigerbart || !erBucAapen;
 
+  const stegErGyldig = redigerbart && fritekst.length <= fritekstMaxLength;
+
   return (
     <div className="vurderingGodkjennUtpeking">
       {!erBucAapen ? (
@@ -116,7 +120,7 @@ export const VurderingGodkjennUtpekingAnnetLand = ({
           <Mui.StegKnapper
             bekreftKnappProps={{
               loading: godkjenningPending,
-              disabled: !redigerbart,
+              disabled: !stegErGyldig,
               onClick: hovedknappClickHandler,
             }}
             bekreftTekst="Bekreft"
