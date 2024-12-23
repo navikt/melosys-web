@@ -252,7 +252,7 @@ export const VurderingVedtak11_3_og_13_3a = ({
       )}
 
       {erNyVurdering && (
-        <Nav.Row className={"2"}>
+        <Nav.Row className="2">
           <Nav.Column xs="7">
             <Forms.Select
               label={
