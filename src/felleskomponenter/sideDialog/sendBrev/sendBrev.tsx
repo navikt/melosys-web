@@ -443,7 +443,7 @@ const SendBrev = ({
         </div>
       )}
 
-      <Nav.Row>
+      <Nav.Row className="mottaker_og_brukeradresse">
         <Nav.Column xs={mottakerSelectWidth}>
           <BrevMottaker
             redigerbart={redigerbart}
@@ -455,7 +455,7 @@ const SendBrev = ({
       </Nav.Row>
 
       {mottakerErValgt && !valgtMottakerHarFeilmelding && (
-        <Nav.Row>
+        <Nav.Row className="brevmal">
           <Nav.Column xs={brevTypeSelectWidth}>
             <Skjema.Select
               feltNavn="type"

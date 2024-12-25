@@ -7,6 +7,7 @@ import * as Utils from "../../utils";
 import RegisterAdresse from "./registerAdresse";
 
 import "./organisasjonsAdresse.css";
+import * as Nav from "../../navFrontend/index.js";
 
 const OrganisasjonsAdresse = ({ organisasjon, className, visNavn, visTittel, boldNavn }) => {
   const { postadresse, forretningsadresse, navn } = organisasjon;
@@ -18,14 +19,14 @@ const OrganisasjonsAdresse = ({ organisasjon, className, visNavn, visTittel, bol
   const tittel = visPostadresse ? "Postadresse" : "Forretningsadresse";
 
   const cl = classNames("organisasjonsAdresse", className);
-  const navnCls = classNames({
-    bold: boldNavn,
-    "break-word": true,
-  });
 
   return (
     <div className={cl}>
-      {visNavn && <div className={navnCls}>{navn}</div>}
+      {visNavn && (
+        <Nav.BodyLong weight="semibold" size="small">
+          {navn}
+        </Nav.BodyLong>
+      )}
       {visTittel && <div className="tittel">{tittel}</div>}
       <RegisterAdresse adresse={adresse} />
     </div>
