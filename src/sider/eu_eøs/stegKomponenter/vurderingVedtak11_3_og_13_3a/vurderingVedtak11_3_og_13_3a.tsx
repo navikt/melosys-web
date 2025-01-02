@@ -19,6 +19,10 @@ import { vedtakOperations } from "../../../../ducks/vedtak";
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
 import { kontrollOperations } from "../../../../ducks/kontroll";
 import { Datovelger } from "../../../../felleskomponenter/forms";
+import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
+import { NY_VURDERING_BAKGRUNN_HJELPETEKST } from "../../../ikkeYrkesaktiv/stegKomponenter/vurderingVedtak/tekster";
+import { KTObject } from "@navikt/melosys-kodeverk";
+import * as Forms from "../../../../felleskomponenter/forms";
 
 type VurderingVedtakProps = {
   tilbake: () => void;
@@ -165,6 +169,9 @@ export const VurderingVedtak11_3_og_13_3a = ({
     }
   };
 
+  const erNyVurdering =
+    behandling.oppsummering.behandlingstype.kode === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
+
   useEffect(() => {
     if (formState.isValid && !formState.isValidating) {
       setKontrollerPending(true);
@@ -243,6 +250,30 @@ export const VurderingVedtak11_3_og_13_3a = ({
           </Nav.Column>
         </Nav.Row>
       )}
+
+      {erNyVurdering && (
+        <Nav.Row className="2">
+          <Nav.Column xs="7">
+            <Forms.Select
+              label={
+                <LabelMedHjelpetekst
+                  label="Oppgi grunn for nytt vedtak (Obligatorisk)"
+                  hjelpetekst={NY_VURDERING_BAKGRUNN_HJELPETEKST}
+                />
+              }
+              name="vedtakstypebegrunnelse"
+              readOnly={!redigerbart}
+              emptyFieldDisabled={!!formValues?.vedtakstypebegrunnelse}
+              control={control}
+            >
+              {MKV.KTObjects.begrunnelser.nyvurderingbakgrunner?.map((bakgrunn: KTObject) => (
+                <option key={bakgrunn.kode} value={bakgrunn.kode} label={bakgrunn.term || ""} />
+              ))}
+            </Forms.Select>
+          </Nav.Column>
+        </Nav.Row>
+      )}
+
       <Nav.Row>
         <Nav.Column xs="7">
           <Nav.Textarea
