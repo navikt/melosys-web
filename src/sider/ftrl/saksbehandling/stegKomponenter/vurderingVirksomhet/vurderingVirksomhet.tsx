@@ -97,7 +97,7 @@ export const VurderingVirksomhet = ({ bekreft, tilbake, aktivtSteg, oppdaterStat
   }
   return (
     <>
-      <Nav.Heading size="large" className="stegvelgertittel">
+      <Nav.Heading level="1" className="stegvelgertittel">
         <LabelMedHjelpetekst label="Virksomhet" />
       </Nav.Heading>
       {!Utils._isEmpty(virksomheterListe) ? (

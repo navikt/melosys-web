@@ -243,7 +243,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
 
   return (
     <div className="vurderingPerioder">
-      <Nav.Heading size="large" className="stegvelgertittel">
+      <Nav.Heading level="1" className="stegvelgertittel">
         Medlemskapsperioder
       </Nav.Heading>
 

@@ -7,7 +7,7 @@ exports[`EditerbartElementListe > snapshot test 1`] = `
     <div class="flere__redigeringsknapper__liste">
       <div class="elementer__container">
         <div class="editerbart__element">
-          <h2 class="navds-heading navds-heading--small navds-typo--spacing">
+          <h3 class="navds-heading navds-heading--xsmall navds-typo--spacing">
             <div class="heading-margin">
               <div class="editerbart-element__legend editerbart-element__legend--understrek">
                 <span class="editerbart-element__legend__tittel-container">
@@ -73,7 +73,7 @@ exports[`EditerbartElementListe > snapshot test 1`] = `
                 </span>
               </div>
             </div>
-          </h2>
+          </h3>
           <div class="padding-left">
             <div>
               Element
@@ -83,7 +83,7 @@ exports[`EditerbartElementListe > snapshot test 1`] = `
       </div>
       <div class="elementer__container">
         <div class="editerbart__element">
-          <h2 class="navds-heading navds-heading--small navds-typo--spacing">
+          <h3 class="navds-heading navds-heading--xsmall navds-typo--spacing">
             <div class="heading-margin">
               <div class="editerbart-element__legend editerbart-element__legend--understrek">
                 <span class="editerbart-element__legend__tittel-container">
@@ -149,7 +149,7 @@ exports[`EditerbartElementListe > snapshot test 1`] = `
                 </span>
               </div>
             </div>
-          </h2>
+          </h3>
           <div class="padding-left">
             <div>
               Element

@@ -4,7 +4,7 @@ exports[`vurderingArtikkel13_2b > snapshot test dersom Norge er valgt 1`] = `
 
 <div>
   <div class="vurderingArtikkel13_2b">
-    <h1 class="stegvelgertittel navds-heading navds-heading--large">
+    <h1 class="stegvelgertittel navds-heading navds-heading--medium">
       Vurdering av artikkel 13 nr. 2 bokstav b
     </h1>
     <fieldset class="navds-radio-group navds-radio-group--small navds-fieldset navds-fieldset--small">
@@ -107,7 +107,7 @@ exports[`vurderingArtikkel13_2b > snapshot test dersom Norge ikke er valgt 1`] =
 
 <div>
   <div class="vurderingArtikkel13_2b">
-    <h1 class="stegvelgertittel navds-heading navds-heading--large">
+    <h1 class="stegvelgertittel navds-heading navds-heading--medium">
       Vurdering av artikkel 13 nr. 2 bokstav b
     </h1>
     <fieldset class="navds-radio-group navds-radio-group--small navds-fieldset navds-fieldset--small">

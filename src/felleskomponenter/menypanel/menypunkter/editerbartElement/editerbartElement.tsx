@@ -5,7 +5,6 @@ import Legend from "./legend";
 import { Status, SymbolsynlighetConfig } from "./types";
 
 import "./editerbartElement.css";
-import { Heading } from "@navikt/ds-react";
 import * as Nav from "../../../../navFrontend";
 
 interface EditerbartElementProps {
@@ -131,9 +130,9 @@ const EditerbartElement = ({
 
   return (
     <div className={cls}>
-      <Heading level="2" size="small" spacing>
+      <Nav.Heading level="3" spacing>
         <div className="heading-margin">{legend}</div>
-      </Heading>
+      </Nav.Heading>
       <div className="padding-left">
         {hentAktivtInnhold()}
         {skalRendreLagreKnapp && (

@@ -65,10 +65,10 @@ const VurderingYrkesaktivitet = (props: VurderingYrkesaktivitetProps) => {
       ];
 
   const fakta = hentFaktaVerdi(yrkesaktivitet);
-  // @ts-ignore
+
   return (
     <>
-      <Nav.Heading size="large" className="stegvelgertittel">
+      <Nav.Heading level="1" className="stegvelgertittel">
         Yrkesaktivitet
       </Nav.Heading>
       <Nav.RadioGroup
@@ -99,7 +99,6 @@ const VurderingYrkesaktivitet = (props: VurderingYrkesaktivitetProps) => {
           "data-cy-nesteknapp": "knapp_steg4",
           onClick: bekreftOgFortsett,
         }}
-        // @ts-ignore
         tilbakeKnappProps={{
           onClick: tilbake,
           disabled: !redigerbart,

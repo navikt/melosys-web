@@ -91,7 +91,7 @@ export const VurderingGodkjennUtpekingAnnetLand = ({
           </ul>
         </Nav.Alert>
       ) : null}
-      <Nav.Heading size="large" className="stegvelgertittel">
+      <Nav.Heading level="1" className="stegvelgertittel">
         {overskrift}
       </Nav.Heading>
       {redigerbart && (

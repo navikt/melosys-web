@@ -182,7 +182,7 @@ const VurderingForretningssted = (props) => {
 
   return (
     <div className="vurderingForretningssted">
-      <Nav.Heading size="large" className="stegvelgertittel">
+      <Nav.Heading level="1" className="stegvelgertittel">
         Vurdering av artikkel 13 nr. 1 bokstav b
       </Nav.Heading>
       <Nav.Fieldset legend="Velg hvor virksomhetene har forretningssted" className="forretningssteder">

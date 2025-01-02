@@ -42,7 +42,7 @@ const VurderingArtikkel12_x = ({
 
   return (
     <div className="vurderingArtikkel12_x">
-      <Nav.Heading size="large" className="stegvelgertittel">
+      <Nav.Heading level="1" className="stegvelgertittel">
         Vurdering {erVurderingArbeidstaker ? "arbeidstaker" : "næringsdrivende"}
       </Nav.Heading>
       <Bestemmelser

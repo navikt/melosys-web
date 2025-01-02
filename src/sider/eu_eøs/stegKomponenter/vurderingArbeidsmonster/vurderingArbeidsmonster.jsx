@@ -201,7 +201,7 @@ export const VurderingArbeidsmonster = ({
 
   return (
     <div className="vurderingArbeidsmonster">
-      <Nav.Heading size="large" className="stegvelgertittel">
+      <Nav.Heading level="1" className="stegvelgertittel">
         Arbeidsmønster
       </Nav.Heading>
       <div className="arbeidsmonster">

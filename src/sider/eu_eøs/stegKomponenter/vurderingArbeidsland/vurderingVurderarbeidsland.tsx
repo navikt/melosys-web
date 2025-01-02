@@ -190,7 +190,7 @@ export const VurderingVurderarbeidsland = ({
 
   return (
     <div className="vurderingVurderArbeidsland">
-      <Nav.Heading size="large" className="stegvelgertittel overskrift">
+      <Nav.Heading level="1" className="stegvelgertittel overskrift">
         Vurder arbeidsland
       </Nav.Heading>
       {innhold}

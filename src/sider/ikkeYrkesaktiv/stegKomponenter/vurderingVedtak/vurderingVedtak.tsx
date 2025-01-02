@@ -172,12 +172,12 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
   return (
     <div className="vurderingVedtakIkkeYrkesaktiv">
       {sakstype === MKV.Koder.sakstyper.EU_EOS && (
-        <Nav.Heading size="large" className="stegvelgertittel">
+        <Nav.Heading level="1" className="stegvelgertittel">
           Omfattet av norsk trygdelovgivning - trygdeforordning 883/2004
         </Nav.Heading>
       )}
       {sakstype === MKV.Koder.sakstyper.TRYGDEAVTALE && (
-        <Nav.Heading size="large" className="stegvelgertittel">
+        <Nav.Heading level="1" className="stegvelgertittel">
           Omfattet av norsk trygdelovgivning - trygdeavtale
         </Nav.Heading>
       )}

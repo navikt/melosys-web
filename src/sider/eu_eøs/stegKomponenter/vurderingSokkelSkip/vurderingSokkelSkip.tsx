@@ -121,7 +121,7 @@ const VurderingSokkelSkip = ({
 
   return (
     <div className="vurderingSokkelSkip">
-      <Nav.Heading size="large" className="stegvelgertittel">
+      <Nav.Heading level="1" className="stegvelgertittel">
         Vurdering av sokkel eller skip
       </Nav.Heading>
       <SokkelSkipListe

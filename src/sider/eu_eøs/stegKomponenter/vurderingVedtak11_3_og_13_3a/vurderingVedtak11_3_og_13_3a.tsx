@@ -185,7 +185,7 @@ export const VurderingVedtak11_3_og_13_3a = ({
 
   return (
     <div className="vedtak">
-      <Nav.Heading size="large" className="stegvelgertittel">
+      <Nav.Heading level="1" className="stegvelgertittel">
         Omfattet av norsk trygdelovgivning
       </Nav.Heading>
       <Mui.KodeTermSelect

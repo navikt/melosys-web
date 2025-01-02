@@ -9,13 +9,13 @@ import {
   DatePicker,
   HStack,
   ExpansionCard,
-  Heading,
   BodyLong,
   Detail,
   ErrorMessage,
 } from "@navikt/ds-react";
 import Alert from "./alert";
 import Button from "./button";
+import { Heading } from "./heading";
 import Table from "./table";
 import Tag from "./tag";
 import List from "./list/list";
