@@ -7,9 +7,9 @@ import * as Utils from "../../utils";
 import RegisterAdresse from "./registerAdresse";
 
 import "./organisasjonsAdresse.css";
-import * as Nav from "../../navFrontend/index.js";
+import * as Nav from "../../navFrontend/index";
 
-const OrganisasjonsAdresse = ({ organisasjon, className, visNavn, visTittel, boldNavn }) => {
+const OrganisasjonsAdresse = ({ organisasjon, className, visNavn, visTittel }) => {
   const { postadresse, forretningsadresse, navn } = organisasjon;
 
   if (!postadresse && !forretningsadresse) return <div>(Ingen adresse tilgjengelig)</div>;
