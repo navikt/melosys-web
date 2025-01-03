@@ -23,7 +23,7 @@ const OrganisasjonsAdresse = ({ organisasjon, className, visNavn, visTittel, bol
   return (
     <div className={cl}>
       {visNavn && (
-        <Nav.BodyLong weight="semibold" size="small">
+        <Nav.BodyLong weight="semibold" size="medium">
           {navn}
         </Nav.BodyLong>
       )}
