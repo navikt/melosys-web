@@ -45,6 +45,10 @@ export const Medlemskapsperioder = ({
   visLeggTil,
 }: PeriodeElementerProps) => {
   const [trygdedekninger, setTrygdedekninger] = useState<[]>([]);
+  const kodeverkKoderIBestemmelserNedtrekk: string[] = [
+    ...Object.values(MKV.KTObjects.folketrygdloven_kap2_bestemmelser),
+    ...Object.values(MKV.KTObjects.vertslandsavtale_bestemmelser),
+  ] as string[];
 
   useEffect(() => {
     if (field.bestemmelse) {
@@ -104,7 +108,7 @@ export const Medlemskapsperioder = ({
             >
               {bestemmelser.map((bestemmelse: any) => (
                 <option key={bestemmelse} value={bestemmelse}>
-                  {KV.kodeTilTerm(bestemmelse, MKV.KTObjects.folketrygdloven_kap2_bestemmelser)}
+                  {KV.kodeTilTerm(bestemmelse, kodeverkKoderIBestemmelserNedtrekk)}
                 </option>
               ))}
             </Forms.Select>
