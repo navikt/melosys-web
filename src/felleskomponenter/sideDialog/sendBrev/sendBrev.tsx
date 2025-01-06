@@ -443,7 +443,7 @@ const SendBrev = ({
         </div>
       )}
 
-      <Nav.Row>
+      <Nav.Row className="brevmottaker__wrapper">
         <Nav.Column xs={mottakerSelectWidth}>
           <BrevMottaker
             redigerbart={redigerbart}

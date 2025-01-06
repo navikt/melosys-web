@@ -224,8 +224,25 @@ const BrevMottaker = ({
       {mottakerErAnnenOrganisasjon && (
         <Nav.Row>
           <Nav.Column xs="4">
-            <Skjema.Input feltNavn="organisasjonsnummer" label="Org.nr." disabled={!redigerbart} />
-            {adresse?.organisasjonsAdresse && (
+            <Skjema.Input
+              className="organisasjonsnummer"
+              feltNavn="organisasjonsnummer"
+              label="Org.nr."
+              disabled={!redigerbart}
+            />
+          </Nav.Column>
+
+          <Nav.Column xs="8">
+            <Skjema.Input
+              className="kontaktperson"
+              feltNavn="kontaktperson"
+              label="Kontaktperson"
+              disabled={!redigerbart}
+            />
+          </Nav.Column>
+
+          {adresse?.organisasjonsAdresse && (
+            <Nav.Column xs="12">
               <OrganisasjonsAdresse
                 className="organisasjonsAdresse"
                 organisasjon={adresse.organisasjonsAdresse}
@@ -233,11 +250,9 @@ const BrevMottaker = ({
                 boldNavn
                 visTittel={false}
               />
-            )}
-          </Nav.Column>
-          <Nav.Column xs="8">
-            <Skjema.Input feltNavn="kontaktperson" label="Kontaktperson" disabled={!redigerbart} />
-          </Nav.Column>
+            </Nav.Column>
+          )}
+
           {feil && (
             <Nav.Column xs="12">
               <Nav.Alert variant="error" className="alertstripe_feil">
