@@ -7,7 +7,7 @@ import * as Utils from "../../utils";
 import RegisterAdresse from "./registerAdresse";
 
 import "./organisasjonsAdresse.css";
-import * as Nav from "../../navFrontend/index";
+import * as Nav from "../../navFrontend";
 
 const OrganisasjonsAdresse = ({ organisasjon, className, visNavn, visTittel }) => {
   const { postadresse, forretningsadresse, navn } = organisasjon;
