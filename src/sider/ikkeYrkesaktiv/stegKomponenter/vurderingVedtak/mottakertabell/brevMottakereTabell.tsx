@@ -7,7 +7,6 @@ import MKV from "../../../../../melosyskodeverk";
 import { useAsyncCallbackState } from "../../../../../hooks";
 import * as Utils from "../../../../../utils";
 import Dokumentliste from "../../../../../felleskomponenter/dokumentliste";
-import dokumenter from "../../../../../ducks/dokumenter";
 
 const { IKKE_YRKESAKTIV_VEDTAKSBREV } = MKV.Koder.brev.produserbaredokumenter;
 
