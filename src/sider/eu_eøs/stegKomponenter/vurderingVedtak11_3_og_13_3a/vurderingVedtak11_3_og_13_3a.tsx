@@ -251,6 +251,7 @@ export const VurderingVedtak11_3_og_13_3a = ({
           </Nav.Column>
         </Nav.Row>
       )}
+
       {erNyVurdering && (
         <Nav.Row className="2">
           <Nav.Column xs="7">
