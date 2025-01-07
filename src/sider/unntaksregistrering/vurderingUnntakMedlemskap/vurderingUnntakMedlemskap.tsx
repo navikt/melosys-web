@@ -75,7 +75,7 @@ function VurderingUnntakMedlemskap({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
         vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
         skalRegisteropplysningerOppdateres: skalOppdatereRegisteropplysninger,
         kontrollerSomSkalIgnoreres,
-      })
+      }),
     );
     if (skalOppdatereRegisteropplysninger) setSkalOppdatereRegisteropplysninger(false);
   };
@@ -89,12 +89,12 @@ function VurderingUnntakMedlemskap({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
   useEffect(() => {
     if (TRYGDEAVTALE === sakstype && lovvalgsland && aktivtSteg) {
       Api.Lovvalgsbestemmelser.getLovvalgsbestemmelser(TRYGDEAVTALE, sakstema, behandlingstema, lovvalgsland).then(
-        (res) => setBestemmelser(res)
+        (res) => setBestemmelser(res),
       );
     }
     if (EU_EOS === sakstype && aktivtSteg) {
       Api.Lovvalgsbestemmelser.getLovvalgsbestemmelser(sakstype, sakstema, behandlingstema, lovvalgsland).then((res) =>
-        setBestemmelser(res)
+        setBestemmelser(res),
       );
     }
   }, [lovvalgsland, aktivtSteg]);
@@ -125,14 +125,14 @@ function VurderingUnntakMedlemskap({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
         tomDato: Utils.dato.formatterDatoTilISO(tom, "") as string,
         lovvalgsbestemmelse: bestemmelse,
         trygdedekning,
-      })
+      }),
     );
   };
 
   const lagreLovvalgsperiodeOgKontroller = async (
     values: FieldValues,
     isValid: boolean,
-    kontrollerSomSkalIgnoreres: string[]
+    kontrollerSomSkalIgnoreres: string[],
   ) => {
     if (isValid && values.utfallRegistreringUnntak !== IKKE_GODKJENT) {
       await lagreLovvalgsperiode(values);
@@ -142,7 +142,7 @@ function VurderingUnntakMedlemskap({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
 
   const debouncedLagreLovvalgsperiodeOgKontroller = useCallback(
     Utils._debounce(lagreLovvalgsperiodeOgKontroller, 500),
-    []
+    [],
   );
 
   const handleEndring = (values: FieldValues) =>

@@ -104,7 +104,7 @@ export function VurderingVedtak({ aktivtSteg, tilbake }: Props) {
         behandlingID,
         vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
         skalRegisteropplysningerOppdateres: false,
-      })
+      }),
     );
     setKontrollEllerVedtakPending(false);
   };
@@ -157,7 +157,7 @@ export function VurderingVedtak({ aktivtSteg, tilbake }: Props) {
       vedtakOperations.fatt(behandlingID, {
         behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
         vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
-      })
+      }),
     );
 
   const handleBekreft = async () => {

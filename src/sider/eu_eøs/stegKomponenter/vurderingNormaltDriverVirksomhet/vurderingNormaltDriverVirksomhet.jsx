@@ -24,7 +24,7 @@ function NormaltDriverVirksomhet(props) {
       function cleanup() {
         slettData();
       },
-    []
+    [],
   );
 
   const { harAvklaring, normaltDriverVirksomhet } = tilstand;

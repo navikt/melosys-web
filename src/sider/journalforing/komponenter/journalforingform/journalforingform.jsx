@@ -90,7 +90,7 @@ function JournalforingForm({
   const visSkalTilordnes = !fagsakListe.find(
     (sak) =>
       sak.saksnummer === formValues?.saksnummer &&
-      MKVUtils.erOpphørtEllerHenlagtEllerBortfaltEllerAnnullert(sak.saksstatus.kode)
+      MKVUtils.erOpphørtEllerHenlagtEllerBortfaltEllerAnnullert(sak.saksstatus.kode),
   );
 
   const [adresseOpplysninger, setAdresseOpplysninger] = useState({

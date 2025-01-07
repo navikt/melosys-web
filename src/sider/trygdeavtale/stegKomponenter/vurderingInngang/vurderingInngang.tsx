@@ -46,7 +46,7 @@ const mapStateToProps = (state: RootState) => ({
   formValues: getFormValues(KV.Form.Trygdeavtale.INNGANG)(state),
   initialValues: initializeValues(
     mottatteOpplysningerSelectors.PeriodeSelector(state),
-    mottatteOpplysningerSelectors.SoknadslandkoderSelector(state)
+    mottatteOpplysningerSelectors.SoknadslandkoderSelector(state),
   ),
   formIsValid: formSelectors.TrygdeavtaleInngangFormValidSelector(state),
   registeropplysningerHentet: behandlingerSelectors.SisteOpplysningerHentetDatoSelector(state),
@@ -133,7 +133,7 @@ function VurderingInngang({
   };
   const debouncedLagremottatteOpplysningerOgOppdaterFlyt = useCallback(
     Utils._debounce(lagreMottatteOpplysningerOgOppdaterFlyt, 300),
-    []
+    [],
   );
 
   useEffect(() => {
@@ -150,7 +150,7 @@ function VurderingInngang({
   useEffect(() => {
     if (redigerbart && formValues && aktivtSteg) {
       setLandUtenStøtteValgt(
-        formValues.arbeidsland ? !landValg.map(({ kode }) => kode).includes(formValues.arbeidsland) : false
+        formValues.arbeidsland ? !landValg.map(({ kode }) => kode).includes(formValues.arbeidsland) : false,
       );
       oppdaterFlyt(resultat);
     }

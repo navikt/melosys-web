@@ -104,7 +104,7 @@ export function VurderingInngang({ bekreft, aktivtSteg, oppdaterStatus }: Props)
         mottatteOpplysningerOperations.oppdaterPeriode({
           fom: Utils.dato.formatterDatoTilISO(formValues.fom, ""),
           tom: Utils.dato.formatterDatoTilISO(formValues.tom, ""),
-        })
+        }),
       ),
       dispatch(mottatteOpplysningerOperations.oppdaterSoeknadsland(mapLandkoder(), mapFlereLandUkjentHvilke())),
       dispatch(mottatteOpplysningerOperations.oppdaterTrygdedekning(formValues.trygdedekning)),
@@ -128,7 +128,7 @@ export function VurderingInngang({ bekreft, aktivtSteg, oppdaterStatus }: Props)
   if (!aktivtSteg) return null;
 
   const valgtLandHarTrygdeavtaleMedNorgeEllerErEøsLand = formValues.land?.some((land: string) =>
-    MKV.Kodekombinasjoner.unikeAvtalelandKoder.includes(land)
+    MKV.Kodekombinasjoner.unikeAvtalelandKoder.includes(land),
   );
   const flereLandUkjentHvilkeErUSANN = formValues.flereLandUkjentHvilke === BOOLSK_STRING.USANN;
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;

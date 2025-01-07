@@ -38,7 +38,7 @@ function VurderingArtikkel12_x({
       function cleanup() {
         slettData();
       },
-    []
+    [],
   );
 
   return (

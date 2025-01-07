@@ -59,10 +59,10 @@ export function VurderingVedtak11_3_og_13_3a({
   const [vedtakPending, setVedtakPending] = useState(false);
 
   const formattedFom = Utils.dato.formatterDatoTilNorsk(
-    lovvalgsperiode !== null && !Utils._isEmpty(lovvalgsperiode) ? lovvalgsperiode.fomDato : soknadsperiode.fom
+    lovvalgsperiode !== null && !Utils._isEmpty(lovvalgsperiode) ? lovvalgsperiode.fomDato : soknadsperiode.fom,
   );
   const formattedTom = Utils.dato.formatterDatoTilNorsk(
-    lovvalgsperiode !== null && !Utils._isEmpty(lovvalgsperiode) ? lovvalgsperiode.tomDato : soknadsperiode.tom
+    lovvalgsperiode !== null && !Utils._isEmpty(lovvalgsperiode) ? lovvalgsperiode.tomDato : soknadsperiode.tom,
   );
 
   const [initiellLovvalgsperiode] = useState({ formattedFom, formattedTom });
@@ -97,7 +97,7 @@ export function VurderingVedtak11_3_og_13_3a({
         vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
         behandlingsresultattype: behandling.oppsummering.behandlingsresultattype.kode,
         skalRegisteropplysningerOppdateres: false,
-      })
+      }),
     );
   };
 
@@ -148,7 +148,7 @@ export function VurderingVedtak11_3_og_13_3a({
     const harOrienteringsbrev = pdfDokumenter.some(
       (dokument: any) =>
         dokument.dokumentData.produserbardokument ===
-        MKV.Koder.brev.produserbaredokumenter.ORIENTERING_TIL_ARBEIDSGIVER_OM_VEDTAK
+        MKV.Koder.brev.produserbaredokumenter.ORIENTERING_TIL_ARBEIDSGIVER_OM_VEDTAK,
     );
 
     if (!harOrienteringsbrev && kopiTilArbeidsgiverChecked) {
@@ -163,7 +163,7 @@ export function VurderingVedtak11_3_og_13_3a({
       const index = pdfDokumenter.findIndex(
         (dokument: any) =>
           dokument.dokumentData.produserbardokument ===
-          MKV.Koder.brev.produserbaredokumenter.ORIENTERING_TIL_ARBEIDSGIVER_OM_VEDTAK
+          MKV.Koder.brev.produserbaredokumenter.ORIENTERING_TIL_ARBEIDSGIVER_OM_VEDTAK,
       );
 
       if (index > -1) {
@@ -198,11 +198,11 @@ export function VurderingVedtak11_3_og_13_3a({
         koder={[
           KV.kodeTilObjekt(
             MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3A,
-            MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004
+            MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004,
           ),
           KV.kodeTilObjekt(
             MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia.KONV_EFTA_STORBRITANNIA_ART13_3A,
-            MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia
+            MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia,
           ),
         ]}
         redigerbart={redigerbart}

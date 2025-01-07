@@ -64,7 +64,7 @@ export function VurderingUtpekt({
       kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_3 ||
       kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_4 ||
       (erToggle11_3_A_NorgeErUtpektEnabled &&
-        kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3A)
+        kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3A),
   );
 
   const [erBucAapen, setErBucAapen] = useState(true);
@@ -103,7 +103,7 @@ export function VurderingUtpekt({
         lagLovvalgsperiode({
           fomDato: Utils.dato.formatterDatoTilISO(formValues.fom),
           tomDato: Utils.dato.formatterDatoTilISO(formValues.tom),
-        })
+        }),
       );
     } else {
       slettData(slettLovvalgsperiode());

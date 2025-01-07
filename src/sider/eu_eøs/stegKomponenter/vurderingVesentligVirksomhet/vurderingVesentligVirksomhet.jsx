@@ -27,7 +27,7 @@ function VurderingVesentligVirksomhet(props) {
       function cleanup() {
         slettData();
       },
-    []
+    [],
   );
 
   const arbeidsgivereTekst =

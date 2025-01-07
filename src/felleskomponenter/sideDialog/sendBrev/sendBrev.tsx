@@ -133,8 +133,8 @@ function SendBrev({
   const krevesLandForUtenlandskTrygdemyndighetMottaker = () => {
     return Boolean(
       tilgjengeligeBrevtyper.find((brevType) =>
-        brevType?.felter?.find((felt) => felt.kode === "UTENLANDSK_TRYGDEMYNDIGHET_MOTTAKER")
-      )
+        brevType?.felter?.find((felt) => felt.kode === "UTENLANDSK_TRYGDEMYNDIGHET_MOTTAKER"),
+      ),
     );
   };
   const erUtenlandskTrygdemyndighetMottakerGyldig = (values: SendBrevFormValues) => {
@@ -217,7 +217,7 @@ function SendBrev({
   useEffect(() => {
     changeField(
       "valgtBrev",
-      tilgjengeligeBrevtyper.find((brevType) => brevType.type.kode === formValues.type)
+      tilgjengeligeBrevtyper.find((brevType) => brevType.type.kode === formValues.type),
     );
   }, [formValues?.type]);
 

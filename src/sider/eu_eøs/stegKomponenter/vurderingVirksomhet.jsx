@@ -90,7 +90,7 @@ function VirksomheterCheckboxGroup(props) {
     >
       {virksomheterIPerioden.map((virksomheten) => {
         const avklartfaktaForVirksomhet = avklarteVirksomheter.find(
-          (enkeltAvklaring) => enkeltAvklaring.subjektID === virksomheten.virksomhetId
+          (enkeltAvklaring) => enkeltAvklaring.subjektID === virksomheten.virksomhetId,
         );
 
         const key = `avklartVirksomhet${virksomheten.virksomhetId}`;
@@ -137,7 +137,7 @@ function VurderingVirksomhet(props) {
       function cleanup() {
         slettData();
       },
-    []
+    [],
   );
 
   return (

@@ -81,7 +81,7 @@ export function VurderingInngang({ bekreft, aktivtSteg, oppdaterStatus }: Props)
         mottatteOpplysningerOperations.oppdaterPeriode({
           fom: Utils.dato.formatterDatoTilISO(formValues.fom, ""),
           tom: Utils.dato.formatterDatoTilISO(formValues.tom, ""),
-        })
+        }),
       ),
     ]);
   };

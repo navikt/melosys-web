@@ -49,7 +49,7 @@ interface Props {
 const { AVSLAATT } = MKV.Koder.innvilgelsesResultat;
 
 const mapTilMedlemskapsperiodeProps = (
-  medlemskapsperiode: Api.MedlemAvFolketrygden.Medlemskapsperioder.Medlemskapsperiode
+  medlemskapsperiode: Api.MedlemAvFolketrygden.Medlemskapsperioder.Medlemskapsperiode,
 ): MedlemskapsperiodeProp => ({
   ...medlemskapsperiode,
   fomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.fomDato),
@@ -85,7 +85,7 @@ const mapTilInntektskilderProps = (inntektskilder?: InntektskildeDto[]) => {
 };
 
 const mapInitialMedlemskapsperioder = (
-  medlemskapsperioder: Api.MedlemAvFolketrygden.Medlemskapsperioder.Medlemskapsperiode[]
+  medlemskapsperioder: Api.MedlemAvFolketrygden.Medlemskapsperioder.Medlemskapsperiode[],
 ): MedlemskapsperiodeProp[] =>
   [...medlemskapsperioder]
     .sort((a, b) => Utils.dato.sorterEtterISOFomDato(a, b) || (a.innvilgelsesResultat === AVSLAATT ? -1 : 1))
@@ -99,7 +99,7 @@ const mapFeilmelding = (error: any) => {
   const feilmelding = "Finner ikke trygdeavgiftssats. Melosys har ikke satser for årene før 2014.";
 
   const ingenGjeldendeSats = error.body?.feilkoder?.some((feilkode: string) =>
-    feilkode.startsWith("Ingen gjeldende sats finnes for perioden")
+    feilkode.startsWith("Ingen gjeldende sats finnes for perioden"),
   );
 
   if (ingenGjeldendeSats) return feilmelding;
@@ -177,7 +177,7 @@ export function VurderingAarsavregning({ bekreft, oppdaterStatus }: Props) {
             tomDato: Utils.dato.formatterDatoTilNorsk(skatteforhold.tomDato),
             skatteplikttype: skatteforhold.skatteplikttype,
           }))
-        : []
+        : [],
     );
 
     resetInntektskilder(
@@ -190,7 +190,7 @@ export function VurderingAarsavregning({ bekreft, oppdaterStatus }: Props) {
             tomDato: Utils.dato.formatterDatoTilNorsk(inntektskilde.tomDato),
             erMaanedsbelop: Utils.streng.boolTilUppercaseStreng(inntektskilde.erMaanedsbelop),
           }))
-        : []
+        : [],
     );
   };
 
@@ -211,7 +211,7 @@ export function VurderingAarsavregning({ bekreft, oppdaterStatus }: Props) {
 
           if (res.avvikFunnet && res?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag) {
             setSkjemaverdierFraTrygdeavgiftsgrunnlag(
-              res.nyttGrunnlag?.trygdeavgiftsgrunnlag || res.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag
+              res.nyttGrunnlag?.trygdeavgiftsgrunnlag || res.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag,
             );
           }
         })
@@ -228,11 +228,11 @@ export function VurderingAarsavregning({ bekreft, oppdaterStatus }: Props) {
       setValue("medlemskapsperioder", mapInitialMedlemskapsperioder(lagredeMedlemskapsperioder));
     setValue(
       "skatteforholdsperioder",
-      mapTilSkatteforholdProps(aarsavregningResponse?.nyttGrunnlag?.trygdeavgiftsgrunnlag.skatteforholdsperioder)
+      mapTilSkatteforholdProps(aarsavregningResponse?.nyttGrunnlag?.trygdeavgiftsgrunnlag.skatteforholdsperioder),
     );
     setValue(
       "inntektskilder",
-      mapTilInntektskilderProps(aarsavregningResponse?.nyttGrunnlag?.trygdeavgiftsgrunnlag.inntektskperioder)
+      mapTilInntektskilderProps(aarsavregningResponse?.nyttGrunnlag?.trygdeavgiftsgrunnlag.inntektskperioder),
     );
   }, [lagredeMedlemskapsperioder, erIngenGrunnlag, aarsavregningResponse]);
   // Innlasting ved valg av år, oppretter eller henter årsavregning
@@ -271,7 +271,7 @@ export function VurderingAarsavregning({ bekreft, oppdaterStatus }: Props) {
 
   const oppdaterErIngenGrunnlag = (nyAarsavregningResponse?: AarsavregningResponse) => {
     innvilgetMedlemskapsperiode = lagInnvilgetMedlemskapsPeriode(
-      nyAarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.medlemskapsperioder
+      nyAarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.medlemskapsperioder,
     );
 
     if (
@@ -290,7 +290,7 @@ export function VurderingAarsavregning({ bekreft, oppdaterStatus }: Props) {
           nyttTotalbeloep: totalAvgift,
         },
       },
-      aarsavregningID
+      aarsavregningID,
     );
   };
 
@@ -301,14 +301,14 @@ export function VurderingAarsavregning({ bekreft, oppdaterStatus }: Props) {
           Api.Aarsavregning.hentAarsavregning(behandlingID, aarsavregningID).then((response: AarsavregningResponse) => {
             setAarsavregningResponse(response);
             oppdaterErIngenGrunnlag(response);
-          })
+          }),
         );
       }
     }
   }, [aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift]);
 
   const medlemskapsTypeErPliktig = medlemskapsperioder?.every(
-    (periode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG
+    (periode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG,
   );
 
   const {
@@ -330,7 +330,7 @@ export function VurderingAarsavregning({ bekreft, oppdaterStatus }: Props) {
     defaultValues: {
       medlemskapsperioder: mapInitialMedlemskapsperioder(lagredeMedlemskapsperioder),
       skatteforholdsperioder: mapTilSkatteforholdProps(
-        aarsavregningResponse?.nyttGrunnlag?.trygdeavgiftsgrunnlag.skatteforholdsperioder
+        aarsavregningResponse?.nyttGrunnlag?.trygdeavgiftsgrunnlag.skatteforholdsperioder,
       ),
       inntektskilder: [{}],
       totaltForskuddsvisFakturert: "",
@@ -384,7 +384,7 @@ export function VurderingAarsavregning({ bekreft, oppdaterStatus }: Props) {
             tidligereFakturertBeloep: formValues.totaltForskuddsvisFakturert,
           },
         },
-        aarsavregningID
+        aarsavregningID,
       );
     }
   }, [formValues.totaltForskuddsvisFakturert]);
@@ -420,19 +420,19 @@ export function VurderingAarsavregning({ bekreft, oppdaterStatus }: Props) {
         })
         .catch((error) => setFeil(mapFeilmelding(error)));
     },
-    [behandlingID, medlemskapsTypeErPliktig, setFeil, setAarsavregningResponse, aarsavregningID]
+    [behandlingID, medlemskapsTypeErPliktig, setFeil, setAarsavregningResponse, aarsavregningID],
   );
 
   const debounceBeregnTrygdeavgiftsperioder = useCallback(
     Utils._debounce((formVerdier) => beregnTrygdeavgiftsperioder(formVerdier), 1000),
-    [beregnTrygdeavgiftsperioder]
+    [beregnTrygdeavgiftsperioder],
   );
 
   const aktivFeilmeldingType = finnAktivFeilmelding(
     formValues?.inntektskilder,
     formValues?.skatteforholdsperioder,
     medlemskapsperioder,
-    innvilgetMedlemskapsperiode
+    innvilgetMedlemskapsperiode,
   );
 
   // erAvvik trigger en beregning på gammelt grunnlag etter å ha oppdatert skjemaverdier i håndterAvvik. Dette må gjøres for å oppdatere lagrede verdier i api
@@ -473,7 +473,7 @@ export function VurderingAarsavregning({ bekreft, oppdaterStatus }: Props) {
       });
     } else if (aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag) {
       setSkjemaverdierFraTrygdeavgiftsgrunnlag(
-        aarsavregningResponse.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag
+        aarsavregningResponse.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag,
       );
     }
     setErAvvik(value);
@@ -507,8 +507,8 @@ export function VurderingAarsavregning({ bekreft, oppdaterStatus }: Props) {
           medlemskapsperioderOperations.oppdaterMedlemskapsperiode(
             behandlingID,
             medlemskapsperiode.periodeId,
-            periodeRequest
-          )
+            periodeRequest,
+          ),
         ));
 
     // @ts-expect-error generisk beskrivelse
@@ -529,7 +529,7 @@ export function VurderingAarsavregning({ bekreft, oppdaterStatus }: Props) {
         setVisLeggTilMedlemskapsperioder(false);
       }
     }, 1000),
-    []
+    [],
   );
 
   const handleLeggTilMedlemskapsperiode = () => {

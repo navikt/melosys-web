@@ -123,7 +123,7 @@ function BrevMottaker({
     if (erArbeidsgiver(valgtMottaker.rolle)) {
       setAdresse({
         mottakerAdresse: valgtMottaker.adresser?.find(
-          (mottakerAdresse: DokumenterV2.BrevAdresse) => mottakerAdresse.orgnr === formValues.arbeidsgiver
+          (mottakerAdresse: DokumenterV2.BrevAdresse) => mottakerAdresse.orgnr === formValues.arbeidsgiver,
         ),
       });
 
@@ -172,9 +172,7 @@ function BrevMottaker({
                 </Nav.BodyLong>
                 {!Utils._isEmpty(feil.underpunkter) && (
                   <ul>
-                    {feil.underpunkter?.map((item: Underpunkt) => (
-                      <li key={item.underpunkt}>{item.underpunkt}</li>
-                    ))}
+                    {feil.underpunkter?.map((item: Underpunkt) => <li key={item.underpunkt}>{item.underpunkt}</li>)}
                   </ul>
                 )}
               </Nav.Alert>

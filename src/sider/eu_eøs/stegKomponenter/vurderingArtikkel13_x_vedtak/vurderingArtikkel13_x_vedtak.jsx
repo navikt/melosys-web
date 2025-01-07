@@ -57,10 +57,10 @@ export function VurderingArtikkel13_x_vedtak({
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
 
   const fom = Utils.dato.formatterDatoTilNorsk(
-    (formValues.forkortLovvalgsperiode && formValues.fomDato) || soknadsperiode.fom
+    (formValues.forkortLovvalgsperiode && formValues.fomDato) || soknadsperiode.fom,
   );
   const tom = Utils.dato.formatterDatoTilNorsk(
-    (formValues.forkortLovvalgsperiode && formValues.tomDato) || soknadsperiode.tom
+    (formValues.forkortLovvalgsperiode && formValues.tomDato) || soknadsperiode.tom,
   );
 
   const kontrollerBehandling = async (data) => {

@@ -23,7 +23,7 @@ const DateRangeController = forwardRef<HTMLSelectElement, DateRangeControllerPro
         {...rest}
       />
     );
-  }
+  },
 );
 
 export default DateRangeController;

@@ -40,7 +40,7 @@ function RegisterAdresse({ adresse }) {
             <div>
               {postnr} {poststed}
             </div>
-          )
+          ),
         )(landNavn && <div>{landNavn}</div>)
       )}
     </address>

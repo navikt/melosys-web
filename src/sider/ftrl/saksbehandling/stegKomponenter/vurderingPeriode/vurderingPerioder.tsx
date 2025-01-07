@@ -50,7 +50,7 @@ const kallFeilet = (response: any): boolean => response.type === medlemskapsperi
 const mapFeil = (response: any) => response?.data?.message || response.data;
 
 const mapTilMedlemskapsperiodeProps = (
-  medlemskapsperiode: Api.MedlemAvFolketrygden.Medlemskapsperioder.Medlemskapsperiode
+  medlemskapsperiode: Api.MedlemAvFolketrygden.Medlemskapsperioder.Medlemskapsperiode,
 ): MedlemskapsperiodeProp => ({
   ...medlemskapsperiode,
   fomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.fomDato),
@@ -61,7 +61,7 @@ const mapTilMedlemskapsperiodeProps = (
 });
 
 const mapInitialMedlemskapsperioder = (
-  medlemskapsperioder: Api.MedlemAvFolketrygden.Medlemskapsperioder.Medlemskapsperiode[]
+  medlemskapsperioder: Api.MedlemAvFolketrygden.Medlemskapsperioder.Medlemskapsperiode[],
 ): MedlemskapsperiodeProp[] =>
   [...medlemskapsperioder]
     .sort((a, b) => Utils.dato.sorterEtterISOFomDato(a, b) || (a.innvilgelsesResultat === AVSLAATT ? -1 : 1))
@@ -118,7 +118,7 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     soknadsperiode.fom,
     soknadsperiode.tom,
     ikkeyrkesaktivOppholdstype,
-    arbeidssituasjonType
+    arbeidssituasjonType,
   );
 
   const stegErGyldig = formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType);
@@ -162,8 +162,8 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
           medlemskapsperioderOperations.oppdaterMedlemskapsperiode(
             behandlingID,
             medlemskapsperiode.periodeId,
-            periodeRequest
-          )
+            periodeRequest,
+          ),
         ));
 
     if (kallFeilet(response)) {
@@ -183,7 +183,7 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
         }
       }
     }, 500),
-    []
+    [],
   );
 
   useEffect(() => {
@@ -201,7 +201,7 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
       remove(index);
     } else {
       const response = await dispatch(
-        medlemskapsperioderOperations.slettMedlemskapsperiode(behandlingID, medlemskapsperiode.periodeId)
+        medlemskapsperioderOperations.slettMedlemskapsperiode(behandlingID, medlemskapsperiode.periodeId),
       );
       if (kallFeilet(response)) {
         update(index, { ...medlemskapsperiode, feil: mapFeil(response) });
@@ -234,7 +234,7 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     (periode: MedlemskapsperiodeProp) =>
       Utils._isEmpty(periode.fomDato) ||
       Utils._isEmpty(periode.trygdedekning) ||
-      Utils._isEmpty(periode.innvilgelsesResultat)
+      Utils._isEmpty(periode.innvilgelsesResultat),
   );
 
   const visLeggTilNyPeriode = redigerbart && feltErFyltInn;
