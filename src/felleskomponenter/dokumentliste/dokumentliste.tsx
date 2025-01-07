@@ -58,7 +58,6 @@ const Dokumentliste = ({ behandlingID, dokumenter, validateOnClick }: Dokumentli
     }
 
     if (fileURL) {
-      console.log("Forhåndsvis", fileURL);
       await apnePdfINyFane(fileURL);
       setFeilmelding(null);
     }

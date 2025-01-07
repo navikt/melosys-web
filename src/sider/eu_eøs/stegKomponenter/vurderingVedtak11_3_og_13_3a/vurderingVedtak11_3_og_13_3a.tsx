@@ -106,7 +106,6 @@ export const VurderingVedtak11_3_og_13_3a = ({
     return dokumenter.map((dokument: BrevDokumentMetadataType) => {
       dokument.dokumentData.begrunnelseFritekst = formValues?.begrunnelseFritekst;
       dokument.dokumentData.nyVurderingBakgrunn = formValues.vedtakstypebegrunnelse;
-      console.log("Dette er dokumenter", dokumenter);
       return dokument;
     });
   };
@@ -134,8 +133,6 @@ export const VurderingVedtak11_3_og_13_3a = ({
   };
 
   const lagFattVedtakEOSReqDto = () => {
-    console.log("FormValues", formValues);
-    console.log("Vedtakstyyyype", vedtakstype);
     return {
       behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
       kopiTilArbeidsgiver: formValues.kopiTilArbeidsgiver,
@@ -272,8 +269,6 @@ export const VurderingVedtak11_3_og_13_3a = ({
               {MKV.KTObjects.begrunnelser.nyvurderingbakgrunner?.map((bakgrunn: KTObject) => (
                 <option key={bakgrunn.kode} value={bakgrunn.kode} label={bakgrunn.term || ""} />
               ))}
-              {console.log("test", formValues.vedtakstypebegrunnelse)}
-              {console.log("vedtakstype", vedtakstype)}
             </Forms.Select>
           </Nav.Column>
         </Nav.Row>

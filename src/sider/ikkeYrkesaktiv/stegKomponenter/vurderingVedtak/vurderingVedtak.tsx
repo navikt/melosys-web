@@ -149,7 +149,6 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
     if (nyVurderingBakgrunnValg === FRITEKST_VALG) {
       debouncedOppdaterNyVurderingBakgrunn(undefined);
     } else {
-      console.log("NyVurderingBakgrunnValg", nyVurderingBakgrunnValg);
       debouncedOppdaterNyVurderingBakgrunn(nyVurderingBakgrunnValg);
     }
     setValue("nyVurderingBakgrunnFritekst", "");
@@ -217,8 +216,6 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
                 <option key={bakgrunn.kode} value={bakgrunn.kode} label={bakgrunn.term || ""} />
               ))}
               <option key={FRITEKST_VALG} value={FRITEKST_VALG} label={FRITEKST_VALG} />
-              {console.log("Vedtakstype", vedtakstype)}
-              {console.log("Ikke yrkesaktiv", "Test")}
             </Forms.Select>
           </Nav.Column>
         </Nav.Row>
