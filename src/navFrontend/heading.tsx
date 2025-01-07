@@ -7,7 +7,7 @@ type HeadingProps = Omit<React.ComponentProps<typeof NavHeading>, "as"> & {
   level?: HeadingLevel;
 };
 
-export const Heading = ({ level = "1", size, children, ...props }: HeadingProps) => {
+export function Heading({ level = "1", size, children, ...props }: HeadingProps) {
   const sizeMapping: Record<HeadingLevel, React.ComponentProps<typeof NavHeading>["size"]> = {
     "1": "medium",
     "2": "small",
@@ -19,4 +19,4 @@ export const Heading = ({ level = "1", size, children, ...props }: HeadingProps)
       {children}
     </NavHeading>
   );
-};
+}

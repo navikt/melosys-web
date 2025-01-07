@@ -1,11 +1,15 @@
 import { Bleed, DatePicker, HStack, useRangeDatepicker } from "@navikt/ds-react";
 import { ChangeEvent, useEffect, useState } from "react";
-import { DateRange } from "react-day-picker";
 import { _uuid } from "../../../utils";
 import * as Utils from "../../../utils";
 import { DateRangePickerProps } from "./types";
 
-export const DateRangePicker = ({ onRangeChange, fieldError, showFieldError, ...rest }: DateRangePickerProps) => {
+interface DateRange {
+  from: Date | undefined;
+  to?: Date | undefined;
+}
+
+export function DateRangePicker({ onRangeChange, fieldError, showFieldError, ...rest }: DateRangePickerProps) {
   const { fromDate, toDate, defaultSelected, label, hideLabel, readOnly } = rest;
 
   const [localFromDate, setLocalFromDate] = useState<string>();
@@ -122,4 +126,4 @@ export const DateRangePicker = ({ onRangeChange, fieldError, showFieldError, ...
       )}
     </DatePicker>
   );
-};
+}
