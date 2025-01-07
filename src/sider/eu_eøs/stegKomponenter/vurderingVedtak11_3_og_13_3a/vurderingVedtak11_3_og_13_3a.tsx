@@ -105,6 +105,8 @@ export const VurderingVedtak11_3_og_13_3a = ({
   const mapDokumenter = (dokumenter: BrevDokumentMetadataType[]) => {
     return dokumenter.map((dokument: BrevDokumentMetadataType) => {
       dokument.dokumentData.begrunnelseFritekst = formValues?.begrunnelseFritekst;
+      dokument.dokumentData.nyVurderingBakgrunn = formValues.vedtakstypebegrunnelse;
+      console.log("Dette er dokumenter", dokumenter);
       return dokument;
     });
   };
@@ -132,10 +134,12 @@ export const VurderingVedtak11_3_og_13_3a = ({
   };
 
   const lagFattVedtakEOSReqDto = () => {
+    console.log("FormValues", formValues);
+    console.log("Vedtakstyyyype", vedtakstype);
     return {
       behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
       kopiTilArbeidsgiver: formValues.kopiTilArbeidsgiver,
-      vedtakstype: formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+      vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
       begrunnelseFritekst: formValues.begrunnelseFritekst,
       nyVurderingBakgrunn: formValues.vedtakstypebegrunnelse,
     };
@@ -250,7 +254,6 @@ export const VurderingVedtak11_3_og_13_3a = ({
           </Nav.Column>
         </Nav.Row>
       )}
-
       {erNyVurdering && (
         <Nav.Row className="2">
           <Nav.Column xs="7">
@@ -269,6 +272,8 @@ export const VurderingVedtak11_3_og_13_3a = ({
               {MKV.KTObjects.begrunnelser.nyvurderingbakgrunner?.map((bakgrunn: KTObject) => (
                 <option key={bakgrunn.kode} value={bakgrunn.kode} label={bakgrunn.term || ""} />
               ))}
+              {console.log("test", formValues.vedtakstypebegrunnelse)}
+              {console.log("vedtakstype", vedtakstype)}
             </Forms.Select>
           </Nav.Column>
         </Nav.Row>

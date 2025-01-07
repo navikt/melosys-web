@@ -7,6 +7,7 @@ import MKV from "../../../../../melosyskodeverk";
 import { useAsyncCallbackState } from "../../../../../hooks";
 import * as Utils from "../../../../../utils";
 import Dokumentliste from "../../../../../felleskomponenter/dokumentliste";
+import dokumenter from "../../../../../ducks/dokumenter";
 
 const { IKKE_YRKESAKTIV_VEDTAKSBREV } = MKV.Koder.brev.produserbaredokumenter;
 
@@ -36,6 +37,8 @@ export const BrevMottakereTabell = () => {
   };
 
   if (Utils._isEmpty(muligeMottakere)) return null;
-
+  {
+    console.log("Dokumenter", mapDokumenter(muligeMottakere));
+  }
   return <Dokumentliste behandlingID={behandlingID} dokumenter={mapDokumenter(muligeMottakere)} />;
 };
