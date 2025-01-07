@@ -36,5 +36,6 @@ export const BrevMottakereTabell = () => {
   };
 
   if (Utils._isEmpty(muligeMottakere)) return null;
+
   return <Dokumentliste behandlingID={behandlingID} dokumenter={mapDokumenter(muligeMottakere)} />;
 };
