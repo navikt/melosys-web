@@ -41,9 +41,7 @@ const Dokumentliste = ({ behandlingID, dokumenter, validateOnClick }: Dokumentli
           }
         );
       } else if (isBrev(dokument)) {
-        console.log("isBrev", dokument.dokumentData);
         fileURL = await dokumenterOperations.forhandsvisBrevV2(behandlingID, dokument.dokumentData);
-        console.log("isBrev url", fileURL);
       } else {
         setFeilmelding("Det oppsto en feil i forhåndsvisning av brev. Mangler data");
       }
