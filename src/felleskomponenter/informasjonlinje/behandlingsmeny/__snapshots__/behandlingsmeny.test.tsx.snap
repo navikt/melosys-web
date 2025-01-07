@@ -30,7 +30,10 @@ exports[`Behandlingsmeny > snapshot test 1`] = `
     </div>
     <div class="behandlingsmeny__meny">
       <div class="navds-accordion navds-accordion--medium navds-accordion--indent">
-        <div class="navds-accordion__item">
+        <div
+          class="navds-accordion__item"
+          data-expanded="false"
+        >
           <button
             class="navds-accordion__header"
             aria-expanded="false"
@@ -38,25 +41,21 @@ exports[`Behandlingsmeny > snapshot test 1`] = `
           >
             <span class="navds-accordion__icon-wrapper">
               <svg
+                xmlns="http://www.w3.org/2000/svg"
                 width="1em"
                 height="1em"
-                viewbox="0 0 24 24"
                 fill="none"
-                xmlns="http://www.w3.org/2000/svg"
+                viewbox="0 0 24 24"
                 focusable="false"
                 role="img"
-                aria-labelledby="333"
                 class="navds-accordion__header-chevron"
                 aria-hidden="true"
               >
-                <title id="333">
-                  Vis mer
-                </title>
                 <path
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M5.97 9.47a.75.75 0 0 1 1.06 0L12 14.44l4.97-4.97a.75.75 0 1 1 1.06 1.06l-5.5 5.5a.75.75 0 0 1-1.06 0l-5.5-5.5a.75.75 0 0 1 0-1.06Z"
                   fill="currentColor"
+                  fill-rule="evenodd"
+                  d="M5.97 9.47a.75.75 0 0 1 1.06 0L12 14.44l4.97-4.97a.75.75 0 1 1 1.06 1.06l-5.5 5.5a.75.75 0 0 1-1.06 0l-5.5-5.5a.75.75 0 0 1 0-1.06"
+                  clip-rule="evenodd"
                 >
                 </path>
               </svg>
@@ -89,7 +88,10 @@ exports[`Behandlingsmeny > snapshot test 1`] = `
             </div>
           </div>
         </div>
-        <div class="navds-accordion__item">
+        <div
+          class="navds-accordion__item"
+          data-expanded="false"
+        >
           <button
             class="navds-accordion__header"
             aria-expanded="false"
@@ -97,25 +99,21 @@ exports[`Behandlingsmeny > snapshot test 1`] = `
           >
             <span class="navds-accordion__icon-wrapper">
               <svg
+                xmlns="http://www.w3.org/2000/svg"
                 width="1em"
                 height="1em"
-                viewbox="0 0 24 24"
                 fill="none"
-                xmlns="http://www.w3.org/2000/svg"
+                viewbox="0 0 24 24"
                 focusable="false"
                 role="img"
-                aria-labelledby="333"
                 class="navds-accordion__header-chevron"
                 aria-hidden="true"
               >
-                <title id="333">
-                  Vis mer
-                </title>
                 <path
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M5.97 9.47a.75.75 0 0 1 1.06 0L12 14.44l4.97-4.97a.75.75 0 1 1 1.06 1.06l-5.5 5.5a.75.75 0 0 1-1.06 0l-5.5-5.5a.75.75 0 0 1 0-1.06Z"
                   fill="currentColor"
+                  fill-rule="evenodd"
+                  d="M5.97 9.47a.75.75 0 0 1 1.06 0L12 14.44l4.97-4.97a.75.75 0 1 1 1.06 1.06l-5.5 5.5a.75.75 0 0 1-1.06 0l-5.5-5.5a.75.75 0 0 1 0-1.06"
+                  clip-rule="evenodd"
                 >
                 </path>
               </svg>

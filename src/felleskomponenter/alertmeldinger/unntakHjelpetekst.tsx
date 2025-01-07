@@ -2,7 +2,7 @@ import "./alertmeldinger.css";
 import { Box } from "@navikt/ds-react";
 import * as Nav from "../../navFrontend";
 
-const UnntakHjelpetekst = () => {
+function UnntakHjelpetekst() {
   return (
     <Box padding="4" background="surface-subtle">
       <Nav.List title="For å søke om unntak, må du:">
@@ -27,6 +27,6 @@ const UnntakHjelpetekst = () => {
       </Nav.List>
     </Box>
   );
-};
+}
 
 export default UnntakHjelpetekst;

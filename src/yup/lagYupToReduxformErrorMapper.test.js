@@ -20,7 +20,7 @@ describe("lagYupToReduxformErrorMapper", () => {
       expect(
         mapYupToReduxformError({
           verdi: ["ikkeEtNummer", 3],
-        }).verdi
+        }).verdi,
       ).toHaveLength(1);
     });
 

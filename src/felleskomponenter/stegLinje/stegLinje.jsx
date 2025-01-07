@@ -6,7 +6,7 @@ import StegIkon from "./stegIkon";
 import "./stegLinje.css";
 
 // TODO: Skrives om i MELOSYS-6023, hvorfor er Steglinje en <ul> ???
-const StegLinje = (props) => {
+function StegLinje(props) {
   const { steg } = props;
 
   const stegKnapper = steg.map((item, index) => (
@@ -28,7 +28,7 @@ const StegLinje = (props) => {
       </nav>
     </div>
   );
-};
+}
 
 StegLinje.propTypes = {
   steg: PT.arrayOf(PT.object).isRequired,

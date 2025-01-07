@@ -21,7 +21,7 @@ interface SideMenyProps {
   onClick: (groupIndex: number, linkIndex: number) => void;
 }
 
-const SideMeny = ({ linkGroups, heading, onClick }: SideMenyProps): JSX.Element => {
+function SideMeny({ linkGroups, heading, onClick }: SideMenyProps): JSX.Element {
   const sideMenyRootClassnames = classnames(sideMenyCls.block);
 
   return (
@@ -45,6 +45,6 @@ const SideMeny = ({ linkGroups, heading, onClick }: SideMenyProps): JSX.Element 
       </div>
     </div>
   );
-};
+}
 
 export default SideMeny;

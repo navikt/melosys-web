@@ -6,22 +6,22 @@ import { sorterEtterISOFomDato } from "../../utils/dato";
 
 export const MedlemskapsperioderSelector: Selector<RootState, StateSection<Types.Data>> = createSelector(
   (state: RootState) => state.medlemskapsperioder,
-  (medlemskapsperioder) => medlemskapsperioder
+  (medlemskapsperioder) => medlemskapsperioder,
 );
 
 export const MedlemskapsperioderStatusSelector: Selector<RootState, string> = createSelector(
   MedlemskapsperioderSelector,
-  (medlemskapsperioder) => medlemskapsperioder.status
+  (medlemskapsperioder) => medlemskapsperioder.status,
 );
 
 export const MedlemskapsperioderDataSelector: Selector<RootState, Types.Data> = createSelector(
   MedlemskapsperioderSelector,
-  (medlemskapsperioder) => medlemskapsperioder.data
+  (medlemskapsperioder) => medlemskapsperioder.data,
 );
 
 export const AlleMedlemskapsperioderSelector = createSelector(
   MedlemskapsperioderDataSelector,
-  (medlemskapsperioder) => medlemskapsperioder.medlemskapsperioder || []
+  (medlemskapsperioder) => medlemskapsperioder.medlemskapsperioder || [],
 );
 
 export const SamletInnvilgetMedlemskapsperiodeSelector = createSelector(
@@ -37,10 +37,10 @@ export const SamletInnvilgetMedlemskapsperiodeSelector = createSelector(
       fom: sorterteInnvilgedePerioder[0].fomDato,
       tom: sorterteInnvilgedePerioder[sorterteInnvilgedePerioder.length - 1].tomDato,
     };
-  }
+  },
 );
 
 export const BestemmelseSelector = createSelector(
   AlleMedlemskapsperioderSelector,
-  (medlemskapsperioder) => [...medlemskapsperioder].sort(sorterEtterISOFomDato)?.[0]?.bestemmelse || ""
+  (medlemskapsperioder) => [...medlemskapsperioder].sort(sorterEtterISOFomDato)?.[0]?.bestemmelse || "",
 );

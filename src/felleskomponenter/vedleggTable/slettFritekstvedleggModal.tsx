@@ -7,7 +7,7 @@ interface SlettFritekstvedleggModalProps {
   slettVedlegg: () => void;
 }
 
-const SlettFritekstvedleggModal = ({ open, lukkModal, slettVedlegg }: SlettFritekstvedleggModalProps) => {
+function SlettFritekstvedleggModal({ open, lukkModal, slettVedlegg }: SlettFritekstvedleggModalProps) {
   return (
     <Nav.Modal
       onClose={lukkModal}
@@ -35,6 +35,6 @@ const SlettFritekstvedleggModal = ({ open, lukkModal, slettVedlegg }: SlettFrite
       </Nav.Modal.Footer>
     </Nav.Modal>
   );
-};
+}
 
 export default SlettFritekstvedleggModal;

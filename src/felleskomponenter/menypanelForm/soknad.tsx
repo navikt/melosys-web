@@ -50,7 +50,7 @@ const mapStateToProps = (state: RootState) => ({
     trygdeavgiftTrukketGjennomSkatt:
       mottatteOpplysningerSelectors.ArbeidsgiversBekreftelseSelector(state).trygdeavgiftTrukketGjennomSkatt,
     trygdeavgiftTrukketGjennomSkattDato: Utils.dato.formatterDatoTilNorsk(
-      mottatteOpplysningerSelectors.ArbeidsgiversBekreftelseSelector(state).trygdeavgiftTrukketGjennomSkattDato
+      mottatteOpplysningerSelectors.ArbeidsgiversBekreftelseSelector(state).trygdeavgiftTrukketGjennomSkattDato,
     ),
     oppgittAdresseTilleggsnavn: mottatteOpplysningerSelectors.BostedAdresseSelector(state).tilleggsnavn,
     oppgittAdresseGatenavn: mottatteOpplysningerSelectors.BostedAdresseSelector(state).gatenavn,
@@ -67,26 +67,26 @@ const mapStateToProps = (state: RootState) => ({
         null,
       antallAdmAnsatte:
         Math.trunc(
-          mottatteOpplysningerSelectors.JuridiskArbeidsgiverNorgeSelector(state).antallAdmAnsatte
+          mottatteOpplysningerSelectors.JuridiskArbeidsgiverNorgeSelector(state).antallAdmAnsatte,
         ).toString() || null,
       antallAnsatte:
         Math.trunc(mottatteOpplysningerSelectors.JuridiskArbeidsgiverNorgeSelector(state).antallAnsatte).toString() ||
         null,
       andelOmsetningINorge:
         Math.round(
-          mottatteOpplysningerSelectors.JuridiskArbeidsgiverNorgeSelector(state).andelOmsetningINorge
+          mottatteOpplysningerSelectors.JuridiskArbeidsgiverNorgeSelector(state).andelOmsetningINorge,
         ).toString() || null,
       andelOppdragINorge:
         Math.round(
-          mottatteOpplysningerSelectors.JuridiskArbeidsgiverNorgeSelector(state).andelOppdragINorge
+          mottatteOpplysningerSelectors.JuridiskArbeidsgiverNorgeSelector(state).andelOppdragINorge,
         ).toString() || null,
       andelKontrakterINorge:
         Math.round(
-          mottatteOpplysningerSelectors.JuridiskArbeidsgiverNorgeSelector(state).andelKontrakterINorge
+          mottatteOpplysningerSelectors.JuridiskArbeidsgiverNorgeSelector(state).andelKontrakterINorge,
         ).toString() || null,
       andelRekruttertINorge:
         Math.round(
-          mottatteOpplysningerSelectors.JuridiskArbeidsgiverNorgeSelector(state).andelRekruttertINorge
+          mottatteOpplysningerSelectors.JuridiskArbeidsgiverNorgeSelector(state).andelRekruttertINorge,
         ).toString() || null,
       ekstraArbeidsgivere: mottatteOpplysningerSelectors.JuridiskArbeidsgiverNorgeSelector(state).ekstraArbeidsgivere,
       erOffentligVirksomhet:
@@ -95,13 +95,13 @@ const mapStateToProps = (state: RootState) => ({
     loennOgGodtgjoerelse: {
       ...mottatteOpplysningerSelectors.LonnOgGodtgjorelseSelector(state),
       bruttoLoennPerMnd: Utils.streng.tryParseFloat(
-        mottatteOpplysningerSelectors.LonnOgGodtgjorelseSelector(state).bruttoLoennPerMnd
+        mottatteOpplysningerSelectors.LonnOgGodtgjorelseSelector(state).bruttoLoennPerMnd,
       ),
       bruttoLoennUtlandPerMnd: Utils.streng.tryParseFloat(
-        mottatteOpplysningerSelectors.LonnOgGodtgjorelseSelector(state).bruttoLoennUtlandPerMnd
+        mottatteOpplysningerSelectors.LonnOgGodtgjorelseSelector(state).bruttoLoennUtlandPerMnd,
       ),
       samletVerdiNaturalytelser: Utils.streng.tryParseFloat(
-        mottatteOpplysningerSelectors.LonnOgGodtgjorelseSelector(state).samletVerdiNaturalytelser
+        mottatteOpplysningerSelectors.LonnOgGodtgjorelseSelector(state).samletVerdiNaturalytelser,
       ),
     },
     arbeidssituasjonOgOevrig: {
@@ -130,18 +130,18 @@ const mapStateToProps = (state: RootState) => ({
         mottatteOpplysningerSelectors.UtenlandsoppdragetSelector(state).erErstatningTidligereUtsendte,
       samletUtsendingsperiode: {
         fom: Utils.dato.formatterDatoTilNorsk(
-          mottatteOpplysningerSelectors.UtenlandsoppdragetSelector(state).samletUtsendingsperiode.fom
+          mottatteOpplysningerSelectors.UtenlandsoppdragetSelector(state).samletUtsendingsperiode.fom,
         ),
         tom: Utils.dato.formatterDatoTilNorsk(
-          mottatteOpplysningerSelectors.UtenlandsoppdragetSelector(state).samletUtsendingsperiode.tom
+          mottatteOpplysningerSelectors.UtenlandsoppdragetSelector(state).samletUtsendingsperiode.tom,
         ),
       },
     },
     oppholdUtlandFom: Utils.dato.formatterDatoTilNorsk(
-      mottatteOpplysningerSelectors.OppholdUtlandPeriodeSelector(state).fom
+      mottatteOpplysningerSelectors.OppholdUtlandPeriodeSelector(state).fom,
     ),
     oppholdUtlandTom: Utils.dato.formatterDatoTilNorsk(
-      mottatteOpplysningerSelectors.OppholdUtlandPeriodeSelector(state).tom
+      mottatteOpplysningerSelectors.OppholdUtlandPeriodeSelector(state).tom,
     ),
     oppholdsland: mottatteOpplysningerSelectors.OppholdUtlandSelector(state).oppholdslandkoder,
     arbeidPaaLand: mottatteOpplysningerSelectors.ArbeidPaaLandSelector(state),
@@ -187,14 +187,14 @@ type SoknadProps = PropsFromRedux & {
   visOppdaterRegisteropplysninger?: boolean;
 };
 
-const Soknad = ({
+function Soknad({
   lagreMottatteOpplysninger,
   startOgVisOppfriskModal,
   formValues,
   redigerbart,
   visOppdaterRegisteropplysninger,
   mottatteOpplysningerFeilmeldinger,
-}: SoknadProps & InjectedFormProps<KV.Form.SoknadFormData, SoknadProps>) => {
+}: SoknadProps & InjectedFormProps<KV.Form.SoknadFormData, SoknadProps>) {
   const debouncedLagreMottatteOpplysninger = useCallback(Utils._debounce(lagreMottatteOpplysninger, 1000), []);
   const validertOk = Utils._isEmpty(mottatteOpplysningerFeilmeldinger);
 
@@ -220,7 +220,7 @@ const Soknad = ({
       />
     </form>
   );
-};
+}
 
 const MenypanelForm = reduxForm<KV.Form.SoknadFormData, SoknadProps>({
   form: KV.Form.SOKNAD,

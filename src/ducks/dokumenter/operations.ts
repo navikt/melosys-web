@@ -65,6 +65,6 @@ export function hentDokumentOversikt(saksnummer: string): AppThunk<Promise<Types
       mapDispatchData: (data: any) => ({
         dokumentOversikt: data,
       }),
-    }
+    },
   );
 }

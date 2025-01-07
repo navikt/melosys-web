@@ -22,7 +22,7 @@ interface MottaksretningIkonProps {
   mottaksretning: Mottaksretning;
 }
 
-const MottaksretningIkon = ({ mottaksretning }: MottaksretningIkonProps) => {
+function MottaksretningIkon({ mottaksretning }: MottaksretningIkonProps) {
   const { kode } = mottaksretning;
 
   switch (kode) {
@@ -35,27 +35,29 @@ const MottaksretningIkon = ({ mottaksretning }: MottaksretningIkonProps) => {
     default:
       return <Nav.Tag variant="warning">ukjent</Nav.Tag>;
   }
-};
+}
 
 interface VedleggLinkProps {
   journalpostID: string;
   dokument: { dokumentID?: string; tittel: string };
 }
 
-const VedleggLink = ({ journalpostID, dokument: { dokumentID, tittel } }: VedleggLinkProps) => (
-  <div>
-    <Ikoner.Binders />
-    &nbsp;
-    {dokumentID && <PdfLink journalpostID={journalpostID} dokumentID={dokumentID} tittel={tittel} />}
-    {!dokumentID && <span>{tittel}</span>}
-  </div>
-);
+function VedleggLink({ journalpostID, dokument: { dokumentID, tittel } }: VedleggLinkProps) {
+  return (
+    <div>
+      <Ikoner.Binders />
+      &nbsp;
+      {dokumentID && <PdfLink journalpostID={journalpostID} dokumentID={dokumentID} tittel={tittel} />}
+      {!dokumentID && <span>{tittel}</span>}
+    </div>
+  );
+}
 
 interface OversiktradProps {
   dokumentOversikt: DokumentOversikt;
 }
 
-const OversiktRad = ({
+function OversiktRad({
   dokumentOversikt: {
     mottattDato,
     journalforingDato,
@@ -65,35 +67,37 @@ const OversiktRad = ({
     hoveddokument,
     vedlegg,
   },
-}: OversiktradProps) => (
-  <Nav.Table.Row>
-    <Nav.Table.DataCell className="mottaksretning">
-      <MottaksretningIkon mottaksretning={mottaksretning} />
-    </Nav.Table.DataCell>
-    <Nav.Table.DataCell>
-      <span>
-        <PdfLink journalpostID={journalpostID} dokumentID={hoveddokument.dokumentID} tittel={hoveddokument.tittel} />
-        {hoveddokument.logiskeVedlegg.map((logiskVedlegg) => (
-          <VedleggLink key={uuid()} journalpostID={journalpostID} dokument={{ tittel: logiskVedlegg }} />
-        ))}
-        {vedlegg.map((vedleggDokument) => (
-          <VedleggLink key={uuid()} journalpostID={journalpostID} dokument={vedleggDokument} />
-        ))}
-      </span>
-    </Nav.Table.DataCell>
-    <Nav.Table.DataCell>{avsenderEllerMottaker}</Nav.Table.DataCell>
-    <Nav.Table.DataCell>
-      {formatterDatoTilNorsk(hentDato(mottaksretning, mottattDato, journalforingDato))}
-    </Nav.Table.DataCell>
-  </Nav.Table.Row>
-);
+}: OversiktradProps) {
+  return (
+    <Nav.Table.Row>
+      <Nav.Table.DataCell className="mottaksretning">
+        <MottaksretningIkon mottaksretning={mottaksretning} />
+      </Nav.Table.DataCell>
+      <Nav.Table.DataCell>
+        <span>
+          <PdfLink journalpostID={journalpostID} dokumentID={hoveddokument.dokumentID} tittel={hoveddokument.tittel} />
+          {hoveddokument.logiskeVedlegg.map((logiskVedlegg) => (
+            <VedleggLink key={uuid()} journalpostID={journalpostID} dokument={{ tittel: logiskVedlegg }} />
+          ))}
+          {vedlegg.map((vedleggDokument) => (
+            <VedleggLink key={uuid()} journalpostID={journalpostID} dokument={vedleggDokument} />
+          ))}
+        </span>
+      </Nav.Table.DataCell>
+      <Nav.Table.DataCell>{avsenderEllerMottaker}</Nav.Table.DataCell>
+      <Nav.Table.DataCell>
+        {formatterDatoTilNorsk(hentDato(mottaksretning, mottattDato, journalforingDato))}
+      </Nav.Table.DataCell>
+    </Nav.Table.Row>
+  );
+}
 interface SideDialogDokumenterProps {
   behandlingID: number;
   dokumentOversikt: DokumentOversikt[];
   setAktivTab: (fanenavn: string) => void;
 }
 
-const SideDialogDokumenter = ({ behandlingID, dokumentOversikt, setAktivTab }: SideDialogDokumenterProps) => {
+function SideDialogDokumenter({ behandlingID, dokumentOversikt, setAktivTab }: SideDialogDokumenterProps) {
   const [utkast] = useAsyncCallbackState(() => Api.Brevutkast.hentBrevutkast(behandlingID), [], []);
   const dispatch = useDispatch();
 
@@ -132,6 +136,6 @@ const SideDialogDokumenter = ({ behandlingID, dokumentOversikt, setAktivTab }: S
       )}
     </div>
   );
-};
+}
 
 export default SideDialogDokumenter;

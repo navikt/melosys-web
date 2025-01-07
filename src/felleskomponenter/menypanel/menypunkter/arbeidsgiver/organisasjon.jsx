@@ -6,7 +6,7 @@ import * as MPT from "../../../../proptypes";
 
 import OrganisasjonsAdresse from "../../../adresser/organisasjonsAdresse";
 
-const Organisasjon = ({ organisasjon, className, visNavn, visOrgnr, visAdresseTittel, boldAdresseNavn }) => {
+function Organisasjon({ organisasjon, className, visNavn, visOrgnr, visAdresseTittel, boldAdresseNavn }) {
   if (!organisasjon) {
     return null;
   }
@@ -36,7 +36,7 @@ const Organisasjon = ({ organisasjon, className, visNavn, visOrgnr, visAdresseTi
       </Nav.Row>
     </div>
   );
-};
+}
 
 Organisasjon.propTypes = {
   organisasjon: MPT.Organisasjon.isRequired,

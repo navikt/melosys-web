@@ -42,7 +42,7 @@ describe("Journalføringsoppgaver", () => {
       // Trenger en Router på toppnivå her siden vi bruker Link lengre ned.
       <MemoryRouter>
         <JournalforingsOppgaver {...props} />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     const linker = screen.queryAllByRole("link");

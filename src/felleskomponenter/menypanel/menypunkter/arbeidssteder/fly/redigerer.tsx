@@ -10,46 +10,48 @@ import MKV from "../../../../../melosyskodeverk";
 
 import { EnRedigeringsknappListeRedigerer } from "../../editerbartElementListe";
 
-const Redigerer = ({
+function Redigerer({
   redigerbart,
   overordnetFeltNavn,
   slett,
-}: EnRedigeringsknappListeRedigerer<KV.Form.ArbeidsstedFly>) => (
-  <div>
-    <Nav.Row>
-      <Nav.Column xs="6">
-        <Skjema.Input
-          label="Navn på hjemmebase"
-          feltNavn={`${overordnetFeltNavn}.hjemmebaseNavn`}
-          disabled={!redigerbart}
-        />
-      </Nav.Column>
-    </Nav.Row>
-    <Nav.Row>
-      <Nav.Column xs="6">
-        <Skjema.Select
-          label="Type flyvninger"
-          feltNavn={`${overordnetFeltNavn}.typeFlyvninger`}
-          disabled={!redigerbart}
-        >
-          {MKV.KTObjects.flyvningstyper.map((type: KTObject) => (
-            <option key={type.kode} value={type.kode}>
-              {type.term}
-            </option>
-          ))}
-        </Skjema.Select>
-      </Nav.Column>
-      <Nav.Column xs="6">
-        <Skjema.LandVelger
-          label="Hjemmebasens land"
-          feltNavn={`${overordnetFeltNavn}.hjemmebaseLand`}
-          disabled={!redigerbart}
-          bredde="fullbredde"
-        />
-      </Nav.Column>
-    </Nav.Row>
-    <Sletterad onClick={slett} />
-  </div>
-);
+}: EnRedigeringsknappListeRedigerer<KV.Form.ArbeidsstedFly>) {
+  return (
+    <div>
+      <Nav.Row>
+        <Nav.Column xs="6">
+          <Skjema.Input
+            label="Navn på hjemmebase"
+            feltNavn={`${overordnetFeltNavn}.hjemmebaseNavn`}
+            disabled={!redigerbart}
+          />
+        </Nav.Column>
+      </Nav.Row>
+      <Nav.Row>
+        <Nav.Column xs="6">
+          <Skjema.Select
+            label="Type flyvninger"
+            feltNavn={`${overordnetFeltNavn}.typeFlyvninger`}
+            disabled={!redigerbart}
+          >
+            {MKV.KTObjects.flyvningstyper.map((type: KTObject) => (
+              <option key={type.kode} value={type.kode}>
+                {type.term}
+              </option>
+            ))}
+          </Skjema.Select>
+        </Nav.Column>
+        <Nav.Column xs="6">
+          <Skjema.LandVelger
+            label="Hjemmebasens land"
+            feltNavn={`${overordnetFeltNavn}.hjemmebaseLand`}
+            disabled={!redigerbart}
+            bredde="fullbredde"
+          />
+        </Nav.Column>
+      </Nav.Row>
+      <Sletterad onClick={slett} />
+    </div>
+  );
+}
 
 export default Redigerer;

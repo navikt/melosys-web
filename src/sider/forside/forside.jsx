@@ -16,7 +16,7 @@ import { featureToggleOperations } from "../../ducks/featuretoggle";
 import ErrorBoundary from "../../felleskomponenter/errorBoundary";
 import * as Ikoner from "../../resources/images";
 
-const Forside = (props) => {
+function Forside(props) {
   const { tilOpprettNySak } = props;
   const data = useSelector((state) => state.oppgaver.data);
   const dispatch = useDispatch();
@@ -74,7 +74,7 @@ const Forside = (props) => {
       </main>
     </div>
   );
-};
+}
 
 Forside.propTypes = {
   location: PT.object.isRequired,

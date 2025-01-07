@@ -48,14 +48,14 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type SaksplukkerProps = PropsFromRedux & RouteComponentProps;
 
-export const Saksplukker = ({
+export function Saksplukker({
   history,
   formValues,
   change,
   nullstillForm,
   invalid,
   touchField,
-}: InjectedFormProps<SaksplukkerFormData, SaksplukkerProps> & SaksplukkerProps) => {
+}: InjectedFormProps<SaksplukkerFormData, SaksplukkerProps> & SaksplukkerProps) {
   const [muligeSakstyper, setMuligeSakstyper] = useState([]);
   const [muligeSakstemaer, setMuligeSakstemaer] = useState([]);
   const [muligeBehandlingstemaer, setMuligeBehandlingstemaer] = useState([]);
@@ -117,7 +117,7 @@ export const Saksplukker = ({
           formValues.sakstema,
           behandlingstema,
           behandlingstype,
-          erArbeidKunNorgeToggleEnabled
+          erArbeidKunNorgeToggleEnabled,
         );
 
         history.push(redirectURL);
@@ -186,7 +186,7 @@ export const Saksplukker = ({
       </form>
     </div>
   );
-};
+}
 
 const SaksplukkerForm = reduxForm<SaksplukkerFormData, SaksplukkerProps>({
   form: KV.Form.SAKSPLUKKER_FORM,

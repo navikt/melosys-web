@@ -12,7 +12,7 @@ import { useAsyncCallbackState } from "../../hooks";
 const MOTTAKERINSTITUSJON = "mottakerinstitusjon";
 const KREVER_MOTTAKERINSTITUSJON = "kreverMottakerinstitusjon";
 
-export const MottakerinstitusjonvelgerSchema = ({
+export function MottakerinstitusjonvelgerSchema({
   redigerbart,
   bucType,
   form,
@@ -21,14 +21,14 @@ export const MottakerinstitusjonvelgerSchema = ({
   oppdaterKreverMottakerinstitusjon,
   data_cy,
   ...rest
-}) => {
+}) {
   const formValues = useSelector((state) => getFormValues(form)(state));
   const { lovvalgsland } = formValues ?? {};
   const hentMottakerinstitusjoner = async () => Api.Eessi.mottakerinstitusjoner.hent(bucType, [landkode]);
   const [mottakerinstitusjoner] = useAsyncCallbackState(
     hentMottakerinstitusjoner,
     [],
-    [landkode, bucType, lovvalgsland ?? landkode]
+    [landkode, bucType, lovvalgsland ?? landkode],
   );
 
   useEffect(() => {
@@ -52,7 +52,7 @@ export const MottakerinstitusjonvelgerSchema = ({
       ))}
     </SelectWrappedComponent>
   );
-};
+}
 
 MottakerinstitusjonvelgerSchema.propTypes = {
   redigerbart: PT.bool.isRequired,
@@ -68,15 +68,15 @@ MottakerinstitusjonvelgerSchema.defaultProps = {
   label: "Velg utenlandsk institusjon som skal motta SED",
 };
 
-const Mottakerinstitusjonvelger = ({
+function Mottakerinstitusjonvelger({
   form,
   redigerbart,
   landkode,
   bucType,
   oppdaterKreverMottakerinstitusjon,
   data_cy,
-}) =>
-  landkode !== MKV.Koder.landkoder.NO ? (
+}) {
+  return landkode !== MKV.Koder.landkoder.NO ? (
     <Field
       name={MOTTAKERINSTITUSJON}
       component={MottakerinstitusjonvelgerSchema}
@@ -90,6 +90,7 @@ const Mottakerinstitusjonvelger = ({
       }}
     />
   ) : null;
+}
 
 Mottakerinstitusjonvelger.propTypes = {
   form: PT.string.isRequired,
@@ -147,7 +148,7 @@ const MottakerinstitusjonvelgerFlervalgInner = ({
           label: `Velg institusjon i ${hentFelt(`${mottakerinstitusjon}.term`)} som skal motta SED`,
           oppdaterKreverMottakerinstitusjon: oppdaterKreverMottakerinstitusjon(
             form,
-            `${mottakerinstitusjon}.kreverMottakerinstitusjon`
+            `${mottakerinstitusjon}.kreverMottakerinstitusjon`,
           ),
           data_cy,
         }}
@@ -168,9 +169,9 @@ MottakerinstitusjonvelgerFlervalgInner.defaultProps = {
   data_cy: "mottakerinstitusjoner",
 };
 
-const MottakerinstitusjonvelgerFlervalgWrapper = ({ feltnavn, ...rest }) => (
-  <FieldArray name={feltnavn} component={MottakerinstitusjonvelgerFlervalgInner} props={{ ...rest }} />
-);
+function MottakerinstitusjonvelgerFlervalgWrapper({ feltnavn, ...rest }) {
+  return <FieldArray name={feltnavn} component={MottakerinstitusjonvelgerFlervalgInner} props={{ ...rest }} />;
+}
 
 MottakerinstitusjonvelgerFlervalgWrapper.propTypes = {
   feltnavn: PT.string.isRequired,
@@ -178,5 +179,5 @@ MottakerinstitusjonvelgerFlervalgWrapper.propTypes = {
 
 export const MottakerinstitusjonvelgerFlervalg = connect(
   mapStateToPropsFlervalg,
-  mapDispatchToPropsFlervalg
+  mapDispatchToPropsFlervalg,
 )(MottakerinstitusjonvelgerFlervalgWrapper);

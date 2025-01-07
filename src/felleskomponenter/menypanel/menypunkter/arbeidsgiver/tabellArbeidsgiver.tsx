@@ -3,13 +3,13 @@ import { Pagination } from "@navikt/ds-react";
 import * as Nav from "../../../../navFrontend";
 import * as Utils from "../../../../utils";
 
-type TabellArbeidsgiverType = {
+interface TabellArbeidsgiverType {
   kolonneNavn: string[];
   tabellData: string[][];
   linjerPerSide?: number;
-};
+}
 
-export const TabellArbeidsgiver = ({ kolonneNavn, tabellData, linjerPerSide }: TabellArbeidsgiverType) => {
+export function TabellArbeidsgiver({ kolonneNavn, tabellData, linjerPerSide }: TabellArbeidsgiverType) {
   const [page, setPage] = useState(1);
 
   const skalVisePaginering = linjerPerSide && tabellData.length > linjerPerSide;
@@ -50,6 +50,6 @@ export const TabellArbeidsgiver = ({ kolonneNavn, tabellData, linjerPerSide }: T
       )}
     </div>
   );
-};
+}
 
 export default TabellArbeidsgiver;

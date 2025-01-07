@@ -7,7 +7,7 @@ const cls = (
   xs: string | undefined,
   sm: string | undefined,
   md: string | undefined,
-  lg: string | undefined
+  lg: string | undefined,
 ) =>
   classNames("col", className, {
     [`col-xs-${xs}`]: !!xs,

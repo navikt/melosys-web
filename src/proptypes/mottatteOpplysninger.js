@@ -7,7 +7,7 @@ const ArbeidPaaLandPropType = PT.shape({
     PT.shape({
       adresse: StrukturertAdresse,
       virksomhetNavn: PT.string,
-    })
+    }),
   ),
   erHjemmekontor: PT.bool,
   erFastArbeidssted: PT.bool,
@@ -38,7 +38,7 @@ const ForetakUtlandPropType = PT.arrayOf(
     }),
     navn: PT.string,
     orgnr: PT.string,
-  })
+  }),
 );
 const MaritimtArbeidPropType = PT.arrayOf(
   PT.shape({
@@ -48,7 +48,7 @@ const MaritimtArbeidPropType = PT.arrayOf(
     navn: PT.string,
     territorialfarvann: PT.string,
     innretningstype: PT.string,
-  })
+  }),
 );
 const OppholdUtlandPropType = PT.shape({
   ektefelleEllerBarnINorge: PT.bool,
@@ -63,7 +63,7 @@ const PersonOpplysningerPropType = PT.shape({
     PT.shape({
       ident: PT.string,
       landkode: PT.string,
-    })
+    }),
   ),
   foedestedOgLand: PT.shape({
     foedested: PT.string,
@@ -76,7 +76,7 @@ const SelvstendigArbeidPropType = PT.shape({
     PT.shape({
       fortsetterEtterArbeidIUtlandet: PT.bool,
       orgnr: PT.string,
-    })
+    }),
   ),
 });
 const SoeknadslandPropType = PT.shape({

@@ -8,7 +8,7 @@ interface StatsborgerskapTableContainerProps {
   behandlingID: number;
 }
 
-const StatsborgerskapTableContainer = ({ behandlingID }: StatsborgerskapTableContainerProps) => {
+function StatsborgerskapTableContainer({ behandlingID }: StatsborgerskapTableContainerProps) {
   const { loading, error, data } = useHentStatsborgerskapQuery({ variables: { behandlingID } });
 
   if (error) return <Nav.Alert variant="error">Kunne ikke hente statsborgerskap!</Nav.Alert>;
@@ -29,6 +29,6 @@ const StatsborgerskapTableContainer = ({ behandlingID }: StatsborgerskapTableCon
       ) : null}
     </>
   );
-};
+}
 
 export default StatsborgerskapTableContainer;

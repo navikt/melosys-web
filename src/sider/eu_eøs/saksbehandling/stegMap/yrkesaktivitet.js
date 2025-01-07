@@ -12,7 +12,7 @@ class Yrkesaktivitet extends Steg {
 
     const erSokkelEllerSkip = Yrkesgruppe.finnAvklaring(
       propsLight.avklartefakta,
-      KV.Koder.VurderingYrkesgruppeTyper.SOKKEL_ELLER_SKIP
+      KV.Koder.VurderingYrkesgruppeTyper.SOKKEL_ELLER_SKIP,
     );
     const { erArbeidEttLand, erSoknadArbeidFlereLand } = propsLight;
     const erEttLandEllerSokkelSkip = erSokkelEllerSkip || erArbeidEttLand;
@@ -22,7 +22,7 @@ class Yrkesaktivitet extends Steg {
         exec: (avklartefakta) => {
           const erOrdinaerArbeidstaker = Yrkesaktivitet.finnAvklaring(
             avklartefakta,
-            KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_ARBEIDSTAKER
+            KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_ARBEIDSTAKER,
           );
           return erEttLandEllerSokkelSkip && erOrdinaerArbeidstaker;
         },
@@ -41,15 +41,15 @@ class Yrkesaktivitet extends Steg {
             Yrkesaktivitet.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_ARBEIDSTAKER) ||
             Yrkesaktivitet.finnAvklaring(
               avklartefakta,
-              KV.Koder.VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE
+              KV.Koder.VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE,
             ) ||
             Yrkesaktivitet.finnAvklaring(
               avklartefakta,
-              KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_OG_SELVSTENDIG
+              KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_OG_SELVSTENDIG,
             ) ||
             Yrkesaktivitet.finnAvklaring(
               avklartefakta,
-              KV.Koder.VurderingYrkesaktivitetTyper.TJENESTEPERSON_NORSK_STATSFORVANTLING
+              KV.Koder.VurderingYrkesaktivitetTyper.TJENESTEPERSON_NORSK_STATSFORVANTLING,
             );
           return erSoknadArbeidFlereLand && erYrkesAktivitetValgt;
         },
@@ -103,7 +103,7 @@ class Yrkesaktivitet extends Steg {
   static erOffentligTjenestemann = (avklartefakta) =>
     Yrkesaktivitet.finnAvklaring(
       avklartefakta,
-      KV.Koder.VurderingYrkesaktivitetTyper.TJENESTEPERSON_NORSK_STATSFORVANTLING
+      KV.Koder.VurderingYrkesaktivitetTyper.TJENESTEPERSON_NORSK_STATSFORVANTLING,
     );
 }
 

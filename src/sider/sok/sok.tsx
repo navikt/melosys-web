@@ -13,11 +13,11 @@ import { Spinner } from "../../felleskomponenter/spinner";
 import { feiletResponsOperations } from "../../ducks/feiletRespons";
 import { Feilmeldinger } from "../../felleskomponenter/feilmeldinger";
 
-export type SokProps = {
+export interface SokProps {
   children?: ReactElement;
-};
+}
 
-export const Sok = ({ children }: SokProps) => {
+export function Sok({ children }: SokProps) {
   const dispatch = useDispatch();
   const sokResultat = useSelector(sokSelectors.FagsakSokSelector);
   const landkoder = useSelector(landkoderSelectors.LandkoderSelector);
@@ -91,6 +91,6 @@ export const Sok = ({ children }: SokProps) => {
       </Nav.Container>
     </div>
   );
-};
+}
 
 export default Sok;

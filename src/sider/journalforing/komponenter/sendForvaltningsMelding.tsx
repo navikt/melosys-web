@@ -18,21 +18,17 @@ interface SendForvaltningsMeldingProps {
   settFeltInnhold: (felt: string, innhold: any) => void;
 }
 
-enum feilmeldingTyper {
+enum FeilmeldingTyper {
   BRUKER_MANGLER_ADRESSE = "Avsender må enten registrere adresse i Folkeregisteret eller kontaktadresse via nav.no.",
 }
 
-const SendForvaltningsMelding = ({
-  avsenderType,
-  adresseOpplysninger,
-  settFeltInnhold,
-}: SendForvaltningsMeldingProps) => {
+function SendForvaltningsMelding({ avsenderType, adresseOpplysninger, settFeltInnhold }: SendForvaltningsMeldingProps) {
   const [mottaker, setMottaker] = useState(adresseOpplysninger.harBrukerAdresse ? BRUKER : INGEN);
-  const [feilmeldinger, setFeilmeldinger] = useState<feilmeldingTyper[]>([]);
+  const [feilmeldinger, setFeilmeldinger] = useState<FeilmeldingTyper[]>([]);
 
   useEffect(() => {
     if (!adresseOpplysninger.harBrukerAdresse) {
-      setFeilmeldinger([feilmeldingTyper.BRUKER_MANGLER_ADRESSE]);
+      setFeilmeldinger([FeilmeldingTyper.BRUKER_MANGLER_ADRESSE]);
     }
 
     settFeltInnhold("forvaltningsmeldingMottaker", mottaker);
@@ -73,6 +69,6 @@ const SendForvaltningsMelding = ({
       </div>
     )
   );
-};
+}
 
 export default SendForvaltningsMelding;

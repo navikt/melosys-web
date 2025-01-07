@@ -30,11 +30,11 @@ type OvrigOmArbeidstakerProps = PropsFromRedux & {
   redigerbart: boolean;
 };
 
-const OvrigOmArbeidstaker = ({
+function OvrigOmArbeidstaker({
   visArbeidsforholdRolleEtiketter,
   redigerbart,
   oppdaterMottatteOpplysninger,
-}: OvrigOmArbeidstakerProps) => {
+}: OvrigOmArbeidstakerProps) {
   const [status, setStatus] = useState<Status>(Status.RedigeringUtfort);
 
   const lagreHandler = () => {
@@ -74,6 +74,6 @@ const OvrigOmArbeidstaker = ({
       )}
     </Nav.Container>
   );
-};
+}
 
 export default connector(OvrigOmArbeidstaker);

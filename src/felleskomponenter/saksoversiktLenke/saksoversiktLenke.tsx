@@ -24,7 +24,7 @@ const connector = connect(mapStateToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-const SaksoversiktLenke = ({ behandlingID, saksnummer, hovedpartRolle }: PropsFromRedux) => {
+function SaksoversiktLenke({ behandlingID, saksnummer, hovedpartRolle }: PropsFromRedux) {
   const hovedpartErVirksomhet = hovedpartRolle === MKV.Koder.aktoersroller.VIRKSOMHET;
   const personopplysninger = useHentPersonopplysninger(behandlingID, hovedpartErVirksomhet);
 
@@ -61,6 +61,6 @@ const SaksoversiktLenke = ({ behandlingID, saksnummer, hovedpartRolle }: PropsFr
       </div>
     </div>
   );
-};
+}
 
 export default connector(SaksoversiktLenke);

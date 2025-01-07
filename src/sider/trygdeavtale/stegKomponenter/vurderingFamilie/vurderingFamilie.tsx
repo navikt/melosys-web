@@ -32,13 +32,13 @@ const initializeFamilieFormValues = (data: Api.Trygdeavtale.StegData, resultat: 
             barn.uuid,
             {
               innvilget: Utils.streng.boolTilUppercaseStreng(
-                resultat.barn?.find((x: Api.Trygdeavtale.Familiemedlem) => x.uuid === barn.uuid)?.omfattet
+                resultat.barn?.find((x: Api.Trygdeavtale.Familiemedlem) => x.uuid === barn.uuid)?.omfattet,
               ),
               begrunnelse:
                 resultat.barn?.find((x: Api.Trygdeavtale.Familiemedlem) => x.uuid === barn.uuid)?.begrunnelseKode || "",
             },
           ])
-        : []
+        : [],
     ),
   },
   ektefelle: data.ektefelleValg
@@ -90,7 +90,7 @@ interface Props {
   aktivtSteg: boolean;
 }
 
-const VurderingFamilie = ({
+function VurderingFamilie({
   data: {
     barnValg: tilknyttedeBarn,
     barnBegrunnelseValg,
@@ -106,7 +106,7 @@ const VurderingFamilie = ({
   steg,
   oppdaterFlyt,
   aktivtSteg,
-}: PropsFromRedux & Props) => {
+}: PropsFromRedux & Props) {
   const erIkkeInnvilget = (innvilget?: string | null): boolean => innvilget === BOOLSK_STRING.USANN;
   const finnBarn = (uuid: string, barn?: BarnProps): undefined | FamilieProps => barn && barn[uuid];
 
@@ -201,10 +201,10 @@ const VurderingFamilie = ({
                         )}
                       </Nav.Column>
                     </Nav.Row>
-                  )
+                  ),
               )}
               {tilknyttedeBarn?.some((barn: Api.Trygdeavtale.FamilieValg) =>
-                erIkkeInnvilget(finnBarn(barn?.uuid, formValues.barn)?.innvilget)
+                erIkkeInnvilget(finnBarn(barn?.uuid, formValues.barn)?.innvilget),
               ) && (
                 <div className="fritekstWrapper--barn">
                   <LabelMedHjelpetekst
@@ -274,9 +274,9 @@ const VurderingFamilie = ({
       />
     </div>
   );
-};
+}
 
-const VurderingFamilieForm = reduxForm<{}, PropsFromRedux & Props>({
+const VurderingFamilieForm = reduxForm<object, PropsFromRedux & Props>({
   form: KV.Form.Trygdeavtale.FAMILIE,
   destroyOnUnmount: true,
   enableReinitialize: true,

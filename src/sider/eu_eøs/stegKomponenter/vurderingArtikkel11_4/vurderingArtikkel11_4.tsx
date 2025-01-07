@@ -54,7 +54,7 @@ const finnFeltNavn = (vilkårKode?: string): string => {
 const initialiserArtikkelValg = (
   art11_3Aeller13_3A: Partial<Vilkaar>,
   art11_4_1eller13_4_1: Partial<Vilkaar>,
-  art11_4_2eller13_4_2: Partial<Vilkaar>
+  art11_4_2eller13_4_2: Partial<Vilkaar>,
 ): ArtikkelValg | undefined => {
   if (art11_4_1eller13_4_1.oppfylt === true && art11_3Aeller13_3A.oppfylt === true) {
     return ArtikkelValg.ART11_4_1;
@@ -68,7 +68,7 @@ const initialiserArtikkelValg = (
   return undefined;
 };
 
-interface VurderingArtikkel11_4Props {
+interface VurderingArtikkel114Props {
   bekreftOgFortsett: () => void;
   tilstand: {
     harAvklaring: boolean;
@@ -80,34 +80,35 @@ interface VurderingArtikkel11_4Props {
   tilbake: () => void;
 }
 
-const VurderingArtikkel11_4 = ({
+// eslint-disable-next-line @typescript-eslint/naming-convention
+function VurderingArtikkel11_4({
   oppdaterData,
   tilstand: { harAvklaring, nis },
   slettData,
   bekreftOgFortsett,
   redigerbart,
   tilbake,
-}: VurderingArtikkel11_4Props) => {
+}: VurderingArtikkel114Props) {
   const arbeidKunNorgeToggleEnabled = useFeatureToggle(MELOSYS_ARBEID_KUN_NORGE);
   const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
   const alleLand = useSelector(avklartefaktaSelectors.AlleRelevanteLandSelector);
   const lovvalgsbestemmelse = useSelector(lovvalgsperioderSelectors.LovvalgBestemmelseSelector);
   const tilleggsbestemmelse = useSelector(lovvalgsperioderSelectors.TilleggBestemmelseSelector);
-  const art11_3Aeller13_3A: Partial<Vilkaar> = useSelector(vilkarSelectors.Artikkel11_3AEller13_3ASelector);
-  const art11_4_1eller13_4_1: Partial<Vilkaar> = useSelector(vilkarSelectors.Artikkel11_4_1Eller13_4_1Selector);
-  const art11_4_2eller13_4_2: Partial<Vilkaar> = useSelector(vilkarSelectors.Artikkel11_4_2Eller13_4_2Selector);
+  const art113Aeller133A: Partial<Vilkaar> = useSelector(vilkarSelectors.Artikkel11_3AEller13_3ASelector);
+  const art1141eller1341: Partial<Vilkaar> = useSelector(vilkarSelectors.Artikkel11_4_1Eller13_4_1Selector);
+  const art1142eller1342: Partial<Vilkaar> = useSelector(vilkarSelectors.Artikkel11_4_2Eller13_4_2Selector);
   const [artikkelValg, setArtikkelValg] = useState(
-    initialiserArtikkelValg(art11_3Aeller13_3A, art11_4_1eller13_4_1, art11_4_2eller13_4_2)
+    initialiserArtikkelValg(art113Aeller133A, art1141eller1341, art1142eller1342),
   );
   const [bestemmelse, setBestemmelse] = useState(lovvalgsbestemmelse);
   const visStorbritanniaKonvensjon = alleLand.some((landkode) => landkode === MKV.Koder.landkoder.GB);
   const erArbeidslandNorge = useSelector(avklartefaktaSelectors.ArbeidslandKTSelector).some(
-    (land: any) => land.kode === "NO"
+    (land: any) => land.kode === "NO",
   );
   useEffect(() => {
-    oppdaterData(konverterVilkarTilStegData(finnFeltNavn(art11_4_1eller13_4_1?.vilkaar), art11_4_1eller13_4_1));
-    oppdaterData(konverterVilkarTilStegData(finnFeltNavn(art11_4_2eller13_4_2?.vilkaar), art11_4_2eller13_4_2));
-    oppdaterData(konverterVilkarTilStegData(finnFeltNavn(art11_3Aeller13_3A?.vilkaar), art11_3Aeller13_3A));
+    oppdaterData(konverterVilkarTilStegData(finnFeltNavn(art1141eller1341?.vilkaar), art1141eller1341));
+    oppdaterData(konverterVilkarTilStegData(finnFeltNavn(art1142eller1342?.vilkaar), art1142eller1342));
+    oppdaterData(konverterVilkarTilStegData(finnFeltNavn(art113Aeller133A?.vilkaar), art113Aeller133A));
     oppdaterData(konverterVilkarTilStegData("nis", nis));
 
     if (konvensjonStorbritanniaToggleEnabled) {
@@ -260,6 +261,6 @@ const VurderingArtikkel11_4 = ({
       />
     </div>
   );
-};
+}
 
 export default VurderingArtikkel11_4;

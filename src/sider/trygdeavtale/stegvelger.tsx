@@ -3,7 +3,6 @@ import { RootState } from "AppTypes";
 import { connect, ConnectedProps } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
-import { get as getValueAtPath } from "lodash";
 
 import MKV from "../../melosyskodeverk";
 import * as Api from "../../services/api";
@@ -26,6 +25,7 @@ import { redigerbartSelectors } from "../../ducks/redigerbart";
 
 import "./stegvelger.css";
 import { modalerSelectors } from "../../ducks/modaler";
+import { get as getValueAtPath } from "lodash";
 
 export enum StegStatus {
   FERDIG = "FERDIG",
@@ -80,58 +80,66 @@ interface State {
 }
 
 class Stegvelger extends Component<PropsFromRedux, State> {
-  state = {
-    aktivtStegIndex: 0,
-    aktuelleSteg: [],
-    visMottatteOpplysningerFeilmeldinger: false,
-    endreFokus: false,
+  static harEndringer = (propsObject: any, prevPropsObject: any, path: string) => {
+    const propsValue = getValueAtPath(propsObject, path);
+    const prevPropsValue = getValueAtPath(prevPropsObject, path);
+    return propsValue && prevPropsValue && !Utils._isEqual(propsValue, prevPropsValue);
   };
+
+  constructor(props: PropsFromRedux) {
+    super(props);
+    this.state = {
+      aktivtStegIndex: 0,
+      aktuelleSteg: [],
+      visMottatteOpplysningerFeilmeldinger: false,
+      endreFokus: false,
+    };
+  }
 
   componentDidMount() {
     this.hentFlytOgOppdaterAktuelleSteg();
   }
 
   componentDidUpdate(prevProps: Readonly<PropsFromRedux>) {
-    const soknadValues = this.props.soknadForm?.values;
+    const { behandlingUnderOppfriskning, soknadForm } = this.props;
+    const soknadValues = soknadForm?.values;
     const prevSoknadValues = prevProps.soknadForm?.values;
 
     if (
-      this.harEndringer(soknadValues, prevSoknadValues, "juridiskArbeidsgiverNorge.ekstraArbeidsgivere") ||
-      this.harEndringer(soknadValues, prevSoknadValues, "selvstendigForetak") ||
-      this.harEndringer(soknadValues, prevSoknadValues, "arbeidsforholdUtland") ||
-      this.harEndringer(soknadValues, prevSoknadValues, "selvstendigNaeringsvirksomhetUtland") ||
-      this.harEndringer(soknadValues, prevSoknadValues, "medfolgendeBarn") ||
-      this.harEndringer(soknadValues, prevSoknadValues, "medfolgendeEktefelleSamboer")
+      Stegvelger.harEndringer(soknadValues, prevSoknadValues, "juridiskArbeidsgiverNorge.ekstraArbeidsgivere") ||
+      Stegvelger.harEndringer(soknadValues, prevSoknadValues, "selvstendigForetak") ||
+      Stegvelger.harEndringer(soknadValues, prevSoknadValues, "arbeidsforholdUtland") ||
+      Stegvelger.harEndringer(soknadValues, prevSoknadValues, "selvstendigNaeringsvirksomhetUtland") ||
+      Stegvelger.harEndringer(soknadValues, prevSoknadValues, "medfolgendeBarn") ||
+      Stegvelger.harEndringer(soknadValues, prevSoknadValues, "medfolgendeEktefelleSamboer")
     ) {
       this.debouncedOppdaterSteg();
     }
 
-    if (prevProps.behandlingUnderOppfriskning && !this.props.behandlingUnderOppfriskning) {
+    if (prevProps.behandlingUnderOppfriskning && !behandlingUnderOppfriskning) {
       this.oppfriskFlyt();
     }
 
-    if (this.state.endreFokus) {
-      // @ts-ignore
-      const aktueltStegId = this.state.aktuelleSteg[this.state.aktivtStegIndex].id;
+    const { endreFokus, aktuelleSteg, aktivtStegIndex } = this.state;
+    if (endreFokus) {
+      const aktueltStegId = aktuelleSteg[aktivtStegIndex].id;
       Utils.navigasjon.flyttFokusTilHtmlElementFraId(aktueltStegId);
+      /* eslint-disable-next-line react/no-did-update-set-state */
       this.setState({ endreFokus: false });
+      /* eslint-enable-next-line react/no-did-update-set-state */
     }
   }
 
   hentFlytOgOppdaterAktuelleSteg = () => {
-    Api.Trygdeavtale.hentFlyt(this.props.behandlingID).then((response) =>
-      this.setState({ aktuelleSteg: this.mapFlytResDtoOmTilAktuelleSteg(response) })
+    const { behandlingID } = this.props;
+    Api.Trygdeavtale.hentFlyt(behandlingID).then((response) =>
+      this.setState({ aktuelleSteg: this.mapFlytResDtoOmTilAktuelleSteg(response) }),
     );
   };
 
-  harEndringer = (propsObject: any, prevPropsObject: any, path: string) => {
-    const propsValue = getValueAtPath(propsObject, path);
-    const prevPropsValue = getValueAtPath(prevPropsObject, path);
-    return propsValue && prevPropsValue && !Utils._isEqual(propsValue, prevPropsValue);
-  };
-
   oppfriskFlyt = () => {
-    Api.Trygdeavtale.oppfriskFlyt(this.props.behandlingID).then((response) => {
+    const { behandlingID } = this.props;
+    Api.Trygdeavtale.oppfriskFlyt(behandlingID).then((response) => {
       const nyeSteg = this.mapFlytResDtoOmTilAktuelleSteg(response);
       this.setState({ aktuelleSteg: nyeSteg });
       this.oppdaterAktivtSteg(nyeSteg.length - 1);
@@ -139,18 +147,22 @@ class Stegvelger extends Component<PropsFromRedux, State> {
   };
 
   oppdaterFlyt = (resultat: Api.Trygdeavtale.Resultat, callBack?: () => void) => {
-    Api.Trygdeavtale.sendFlyt(this.props.behandlingID, resultat).then((response) => {
+    const { behandlingID } = this.props;
+    Api.Trygdeavtale.sendFlyt(behandlingID, resultat).then((response) => {
       this.setState({ aktuelleSteg: this.mapFlytResDtoOmTilAktuelleSteg(response) });
       if (callBack) callBack();
     });
   };
+
+  /* eslint-disable-next-line react/sort-comp */
   debouncedOppdaterFlyt = Utils._debounce(this.oppdaterFlyt, 200);
 
   mapFlytResDtoOmTilAktuelleSteg = (response: Api.Trygdeavtale.FlytResDto): AktueltSteg[] => {
+    const { redigerbart } = this.props;
     const data = {
       data: response.data,
       resultat: response.resultat,
-      redigerbart: this.props.redigerbart,
+      redigerbart,
     };
 
     const handlers = {
@@ -164,11 +176,12 @@ class Stegvelger extends Component<PropsFromRedux, State> {
 
     return response.steg?.map((enkeltSteg: Api.Trygdeavtale.Steg) => {
       const stegMapElement = stegMap[enkeltSteg.navn];
+      const { aktivtStegIndex } = this.state;
       return {
         id: enkeltSteg.navn,
         tittel: stegMapElement.tittel,
         stegPosisjon: enkeltSteg.nummer,
-        aktivtSteg: this.state.aktivtStegIndex === enkeltSteg.nummer,
+        aktivtSteg: aktivtStegIndex === enkeltSteg.nummer,
         komponent: stegMapElement.komponent,
         status: enkeltSteg.status === StegStatus.FERDIG ? FANE_STATUS.OK : FANE_STATUS.UBEHANDLET,
         data: { ...data, steg: enkeltSteg },
@@ -188,10 +201,12 @@ class Stegvelger extends Component<PropsFromRedux, State> {
       hentFlytOgOppdaterAktuelleSteg();
     }
   };
+
   debouncedOppdaterSteg = Utils._debounce(this.oppdaterSteg, 1250);
 
   harMottatteOpplysningerFeilmeldinger = () => {
-    const harFeilmeldinger = !Utils._isEmpty(this.props.mottatteOpplysningerFeilmeldinger);
+    const { mottatteOpplysningerFeilmeldinger } = this.props;
+    const harFeilmeldinger = !Utils._isEmpty(mottatteOpplysningerFeilmeldinger);
     this.setState({ visMottatteOpplysningerFeilmeldinger: harFeilmeldinger });
     return harFeilmeldinger;
   };
@@ -228,11 +243,13 @@ class Stegvelger extends Component<PropsFromRedux, State> {
   };
 
   fortsett = () => {
-    this.oppdaterAktivtSteg(this.state.aktivtStegIndex + 1);
+    const { aktivtStegIndex } = this.state;
+    this.oppdaterAktivtSteg(aktivtStegIndex + 1);
   };
 
   tilbake = () => {
-    this.oppdaterAktivtSteg(this.state.aktivtStegIndex - 1);
+    const { aktivtStegIndex } = this.state;
+    this.oppdaterAktivtSteg(aktivtStegIndex - 1);
   };
 
   render() {

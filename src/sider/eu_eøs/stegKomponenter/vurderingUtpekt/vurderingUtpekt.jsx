@@ -36,7 +36,7 @@ import "./vurderingUtpekt.css";
 import { useFeatureToggle } from "../../../../featuretoggle";
 import { MELOSYS_NORGE_ER_UTPEKT_11_3_A } from "../../../../featuretoggle/toggleNavn";
 
-export const VurderingUtpekt = ({
+export function VurderingUtpekt({
   vurderingBegrunnelser,
   slettData,
   tilbake,
@@ -49,7 +49,7 @@ export const VurderingUtpekt = ({
   ytterligereInformasjon,
   behandlingstema,
   behandlingID,
-}) => {
+}) {
   const erToggle11_3_A_NorgeErUtpektEnabled = useFeatureToggle(MELOSYS_NORGE_ER_UTPEKT_11_3_A);
 
   const lovvalgsbestemmelserStottetAvBrevVedNorgeUtpekt = MKV.Kodekombinasjoner.alleEØSLovvalg.filter(
@@ -64,7 +64,7 @@ export const VurderingUtpekt = ({
       kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_3 ||
       kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_4 ||
       (erToggle11_3_A_NorgeErUtpektEnabled &&
-        kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3A)
+        kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3A),
   );
 
   const [erBucAapen, setErBucAapen] = useState(true);
@@ -103,7 +103,7 @@ export const VurderingUtpekt = ({
         lagLovvalgsperiode({
           fomDato: Utils.dato.formatterDatoTilISO(formValues.fom),
           tomDato: Utils.dato.formatterDatoTilISO(formValues.tom),
-        })
+        }),
       );
     } else {
       slettData(slettLovvalgsperiode());
@@ -138,12 +138,12 @@ export const VurderingUtpekt = ({
       <Nav.Row className="rad">
         <Nav.Column xs="7">
           {vurderingBegrunnelser.length > 0 && (
-            <Fragment>
+            <>
               <Nav.BodyLong weight="semibold" size="small">
                 Treff ved automatisk kontroll
               </Nav.BodyLong>
               <RegisterKontrollTreff vurderingBegrunnelser={vurderingBegrunnelser} />
-            </Fragment>
+            </>
           )}
         </Nav.Column>
       </Nav.Row>
@@ -249,7 +249,7 @@ export const VurderingUtpekt = ({
       />
     </form>
   );
-};
+}
 
 VurderingUtpekt.propTypes = {
   vurderingBegrunnelser: PT.arrayOf(PT.string),

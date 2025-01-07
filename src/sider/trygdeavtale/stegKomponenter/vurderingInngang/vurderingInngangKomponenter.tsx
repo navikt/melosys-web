@@ -1,6 +1,6 @@
 import { KTObject } from "@navikt/melosys-kodeverk";
 
-export const LandValgSomOptions = ({ landValg }: { landValg: KTObject[] }) => {
+export function LandValgSomOptions({ landValg }: { landValg: KTObject[] }) {
   if (!landValg) return null;
   return (
     <>
@@ -11,4 +11,4 @@ export const LandValgSomOptions = ({ landValg }: { landValg: KTObject[] }) => {
       ))}
     </>
   );
-};
+}

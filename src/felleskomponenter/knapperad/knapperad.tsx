@@ -15,7 +15,7 @@ interface KnapperadProps {
   size?: "small" | "medium" | "xsmall";
 }
 
-const Knapperad = ({
+function Knapperad({
   bekreft,
   bekreftTekst,
   avbryt,
@@ -24,7 +24,7 @@ const Knapperad = ({
   bekreftRedigerbart = true,
   spinner,
   size,
-}: KnapperadProps) => {
+}: KnapperadProps) {
   const cls = classnames("container__knapperad");
 
   return (
@@ -37,6 +37,6 @@ const Knapperad = ({
       </Nav.Button>
     </div>
   );
-};
+}
 
 export default Knapperad;

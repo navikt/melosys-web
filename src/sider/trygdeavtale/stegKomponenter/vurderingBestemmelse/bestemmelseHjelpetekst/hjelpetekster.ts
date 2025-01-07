@@ -65,9 +65,9 @@ const hjelpeteksterCaArt10 = [
   Hjelpetekster.NORSK_STATSBORGER,
 ];
 
-const hjelpeteksterAuArt9_2 = [Hjelpetekster.UTSENDT_FOR_ARBEID, Hjelpetekster.ANSATT_I_DEN_NORSKE_STAT];
+const hjelpeteksterAuArt92 = [Hjelpetekster.UTSENDT_FOR_ARBEID, Hjelpetekster.ANSATT_I_DEN_NORSKE_STAT];
 
-const hjelpeteksterAuArt9_3 = [
+const hjelpeteksterAuArt93 = [
   Hjelpetekster.MEDLEM_I_FOLKETRYGDEN,
   Hjelpetekster.LØNNET_FRA_NORSK_ARBEIDSGIVER,
   Hjelpetekster.MAX_TRE_ÅR,
@@ -86,6 +86,6 @@ export {
   hjelpeteksterCaArt7,
   hjelpeteksterCaArt9,
   hjelpeteksterCaArt10,
-  hjelpeteksterAuArt9_2,
-  hjelpeteksterAuArt9_3,
+  hjelpeteksterAuArt92,
+  hjelpeteksterAuArt93,
 };

@@ -13,7 +13,7 @@ const mapStateToProps = (state: RootState) => ({
 const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-export const Medlemskap = (props: PropsFromRedux) => {
+export function Medlemskap(props: PropsFromRedux) {
   const { medlemskap } = props;
 
   return (
@@ -40,6 +40,6 @@ export const Medlemskap = (props: PropsFromRedux) => {
       </section>
     </div>
   );
-};
+}
 
 export default connector(Medlemskap);

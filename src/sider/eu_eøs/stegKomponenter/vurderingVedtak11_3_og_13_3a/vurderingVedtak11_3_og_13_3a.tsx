@@ -24,21 +24,22 @@ import { NY_VURDERING_BAKGRUNN_HJELPETEKST } from "../../../ikkeYrkesaktiv/stegK
 import { KTObject } from "@navikt/melosys-kodeverk";
 import * as Forms from "../../../../felleskomponenter/forms";
 
-type VurderingVedtakProps = {
+interface VurderingVedtakProps {
   tilbake: () => void;
   redigerbart: boolean;
   pdfDokumenter: (BrevDokumentMetadataType | SedDokumentMetadataType)[];
   harFeilmeldinger: boolean;
   validerMottatteOpplysninger: () => Promise<void>;
-};
+}
 
-export const VurderingVedtak11_3_og_13_3a = ({
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export function VurderingVedtak11_3_og_13_3a({
   redigerbart,
   tilbake,
   pdfDokumenter,
   harFeilmeldinger,
   validerMottatteOpplysninger,
-}: VurderingVedtakProps) => {
+}: VurderingVedtakProps) {
   const endretLovvalgsperiode = (): boolean => {
     if (Utils._isEmpty(lovvalgsperiode)) return false;
 
@@ -58,10 +59,10 @@ export const VurderingVedtak11_3_og_13_3a = ({
   const [vedtakPending, setVedtakPending] = useState(false);
 
   const formattedFom = Utils.dato.formatterDatoTilNorsk(
-    lovvalgsperiode !== null && !Utils._isEmpty(lovvalgsperiode) ? lovvalgsperiode.fomDato : soknadsperiode.fom
+    lovvalgsperiode !== null && !Utils._isEmpty(lovvalgsperiode) ? lovvalgsperiode.fomDato : soknadsperiode.fom,
   );
   const formattedTom = Utils.dato.formatterDatoTilNorsk(
-    lovvalgsperiode !== null && !Utils._isEmpty(lovvalgsperiode) ? lovvalgsperiode.tomDato : soknadsperiode.tom
+    lovvalgsperiode !== null && !Utils._isEmpty(lovvalgsperiode) ? lovvalgsperiode.tomDato : soknadsperiode.tom,
   );
 
   const [initiellLovvalgsperiode] = useState({ formattedFom, formattedTom });
@@ -96,7 +97,7 @@ export const VurderingVedtak11_3_og_13_3a = ({
         vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
         behandlingsresultattype: behandling.oppsummering.behandlingsresultattype.kode,
         skalRegisteropplysningerOppdateres: false,
-      })
+      }),
     );
   };
 
@@ -104,8 +105,10 @@ export const VurderingVedtak11_3_og_13_3a = ({
 
   const mapDokumenter = (dokumenter: BrevDokumentMetadataType[]) => {
     return dokumenter.map((dokument: BrevDokumentMetadataType) => {
+      /* eslint-disable no-param-reassign */
       dokument.dokumentData.begrunnelseFritekst = formValues?.begrunnelseFritekst;
       dokument.dokumentData.nyVurderingBakgrunn = formValues.vedtakstypebegrunnelse;
+      /* eslint-enable no-param-reassign */
       return dokument;
     });
   };
@@ -122,7 +125,7 @@ export const VurderingVedtak11_3_og_13_3a = ({
     validerMottatteOpplysninger()
       .then(() => {
         dispatch(vedtakOperations.fatt(behandlingID, lagFattVedtakEOSReqDto()))
-          // @ts-ignore
+          // @ts-expect-error generisk beskrivelse
           .then((res: any) => {
             if (res.data?.data?.error) {
               setVedtakPending(false);
@@ -146,7 +149,7 @@ export const VurderingVedtak11_3_og_13_3a = ({
     const harOrienteringsbrev = pdfDokumenter.some(
       (dokument: any) =>
         dokument.dokumentData.produserbardokument ===
-        MKV.Koder.brev.produserbaredokumenter.ORIENTERING_TIL_ARBEIDSGIVER_OM_VEDTAK
+        MKV.Koder.brev.produserbaredokumenter.ORIENTERING_TIL_ARBEIDSGIVER_OM_VEDTAK,
     );
 
     if (!harOrienteringsbrev && kopiTilArbeidsgiverChecked) {
@@ -161,7 +164,7 @@ export const VurderingVedtak11_3_og_13_3a = ({
       const index = pdfDokumenter.findIndex(
         (dokument: any) =>
           dokument.dokumentData.produserbardokument ===
-          MKV.Koder.brev.produserbaredokumenter.ORIENTERING_TIL_ARBEIDSGIVER_OM_VEDTAK
+          MKV.Koder.brev.produserbaredokumenter.ORIENTERING_TIL_ARBEIDSGIVER_OM_VEDTAK,
       );
 
       if (index > -1) {
@@ -196,11 +199,11 @@ export const VurderingVedtak11_3_og_13_3a = ({
         koder={[
           KV.kodeTilObjekt(
             MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3A,
-            MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004
+            MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004,
           ),
           KV.kodeTilObjekt(
             MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia.KONV_EFTA_STORBRITANNIA_ART13_3A,
-            MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia
+            MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia,
           ),
         ]}
         redigerbart={redigerbart}
@@ -321,4 +324,4 @@ export const VurderingVedtak11_3_og_13_3a = ({
       />
     </div>
   );
-};
+}

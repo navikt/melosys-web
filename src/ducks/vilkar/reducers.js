@@ -32,14 +32,14 @@ const vilkarTilObjektEnkel = (vilkårKode, action) =>
     vilkårKode,
     action.data.vilkar[vilkårKode],
     action.data.vilkar[`${vilkårKode}_begrunnelser`],
-    action.data.vilkar[`${vilkårKode}_begrunnelser_fritekst`]
+    action.data.vilkar[`${vilkårKode}_begrunnelser_fritekst`],
   );
 
 const velgArt16Objekt = (art16avslag, art16anmodning) => art16avslag || art16anmodning;
 
 const hentIkkeSkrivbareVilkaarData = (state) =>
   Constants.VILKAAR_FRONTEND_MANGLER_SKRIVETILGANG_TIL.map((v) =>
-    state.data.find((enkeltVilkaar) => enkeltVilkaar.vilkaar === v)
+    state.data.find((enkeltVilkaar) => enkeltVilkaar.vilkaar === v),
   ).filter((v) => v != null);
 
 export default function reducer(state = initialState, action = {}) {
@@ -72,28 +72,28 @@ export default function reducer(state = initialState, action = {}) {
         vilkarTilObjekt(
           MKV.Koder.vilkaar.FORUTGAAENDE_MEDLEMSKAP,
           action.data.vilkar.forutgaendeMedlemskap,
-          action.data.vilkar.forutgaendeMedlemskap_begrunnelser
+          action.data.vilkar.forutgaendeMedlemskap_begrunnelser,
         ),
         vilkarTilObjekt(
           MKV.Koder.vilkaar.VESENTLIG_VIRKSOMHET,
           action.data.vilkar.vesentligVirksomhet,
-          action.data.vilkar.vesentligVirksomhet_begrunnelser
+          action.data.vilkar.vesentligVirksomhet_begrunnelser,
         ),
         vilkarTilObjekt(
           MKV.Koder.vilkaar.NORMALT_DRIVER_VIRKSOMHET,
           action.data.vilkar.normaltDriverVirksomhet,
-          action.data.vilkar.normaltDriverVirksomhet_begrunnelser
+          action.data.vilkar.normaltDriverVirksomhet_begrunnelser,
         ),
         vilkarTilObjekt(MKV.Koder.vilkaar.FTRL_2_12_UNNTAK_TURISTSKIP, action.data.vilkar.nis),
         vilkarTilObjekt(
           MKV.Koder.vilkaar.FO_883_2004_ART12_1,
           action.data.vilkar.art12_1,
-          action.data.vilkar.art12_1_begrunnelser
+          action.data.vilkar.art12_1_begrunnelser,
         ),
         vilkarTilObjekt(
           MKV.Koder.vilkaar.FO_883_2004_ART12_2,
           action.data.vilkar.art12_2,
-          action.data.vilkar.art12_2_begrunnelser
+          action.data.vilkar.art12_2_begrunnelser,
         ),
         vilkarTilObjektEnkel(MKV.Koder.vilkaar.KONV_EFTA_STORBRITANNIA_ART14_1, action),
         vilkarTilObjektEnkel(MKV.Koder.vilkaar.KONV_EFTA_STORBRITANNIA_ART14_2, action),
@@ -104,22 +104,22 @@ export default function reducer(state = initialState, action = {}) {
           action.data.vilkar.art18_1_anmodning,
           action.data.vilkar.art18_1_anmodning_begrunnelser,
           action.data.vilkar.art18_1_anmodning_begrunnelser_fritekst,
-          action.data.vilkar.art18_1_anmodning_begrunnelser_fritekst_engelsk
+          action.data.vilkar.art18_1_anmodning_begrunnelser_fritekst_engelsk,
         ),
         velgArt16Objekt(
           vilkarTilObjekt(
             MKV.Koder.vilkaar.FO_883_2004_ART16_1,
             action.data.vilkar.art16_1_avslag,
             action.data.vilkar.art16_1_avslag_begrunnelser,
-            action.data.vilkar.art16_1_avslag_begrunnelser_fritekst
+            action.data.vilkar.art16_1_avslag_begrunnelser_fritekst,
           ),
           vilkarTilObjekt(
             MKV.Koder.vilkaar.FO_883_2004_ART16_1,
             action.data.vilkar.art16_1_anmodning,
             action.data.vilkar.art16_1_anmodning_begrunnelser,
             action.data.vilkar.art16_1_anmodning_begrunnelser_fritekst,
-            action.data.vilkar.art16_1_anmodning_begrunnelser_fritekst_engelsk
-          )
+            action.data.vilkar.art16_1_anmodning_begrunnelser_fritekst_engelsk,
+          ),
         ),
         vilkarTilObjekt(MKV.Koder.vilkaar.FO_883_2004_ART11_3A, action.data.vilkar.art11_3A),
         vilkarTilObjektEnkel(MKV.Koder.vilkaar.KONV_EFTA_STORBRITANNIA_ART13_3A, action),

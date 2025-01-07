@@ -9,7 +9,7 @@ import RegisterAdresse from "./registerAdresse";
 import "./organisasjonsAdresse.css";
 import * as Nav from "../../navFrontend";
 
-const OrganisasjonsAdresse = ({ organisasjon, className, visNavn, visTittel }) => {
+function OrganisasjonsAdresse({ organisasjon, className, visNavn, visTittel }) {
   const { postadresse, forretningsadresse, navn } = organisasjon;
 
   if (!postadresse && !forretningsadresse) return <div>(Ingen adresse tilgjengelig)</div>;
@@ -31,7 +31,7 @@ const OrganisasjonsAdresse = ({ organisasjon, className, visNavn, visTittel }) =
       <RegisterAdresse adresse={adresse} />
     </div>
   );
-};
+}
 
 OrganisasjonsAdresse.propTypes = {
   organisasjon: MPT.Organisasjon.isRequired,

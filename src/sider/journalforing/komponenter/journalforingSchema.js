@@ -45,7 +45,7 @@ const kreverLand = (
   sakstema,
   behandlingstema,
   behandlingstype,
-  flereLandUkjentHvilke
+  flereLandUkjentHvilke,
 ) =>
   !flereLandUkjentHvilke && kreverPeriode(journalforingHensikt, sakstype, sakstema, behandlingstema, behandlingstype);
 
@@ -74,7 +74,7 @@ const hoveddokument = object().shape({
       .when("$journalforingKnappErTryktPå", {
         is: true,
         then: string().test(erIkkeUnderRedigering(DU_MA_LAGRE_TITTEL_VEDLEGG)),
-      })
+      }),
   ),
 });
 
@@ -204,7 +204,7 @@ const journalforing = object().shape({
       {
         is: kreverPeriode,
         then: string().erGyldigDato().required(MAA_FYLLES_UT).nullable(),
-      }
+      },
     )
     .nullable(),
   journalforingPeriodeTilOgMed: string().nullable().erEtterDatofelt("journalforingPeriodeFraOgMed").erGyldigDato(),
@@ -227,7 +227,7 @@ const journalforing = object().shape({
           then: array().min(2, { _error: VELG_MINST_TO_LAND }),
           otherwise: array().min(1, { _error: VELG_MINST_ETT_LAND }),
         }),
-      }
+      },
     ),
 
   /* Følgene felter viser ingen feilmeldinger til bruker, men må være en del av skjemaet for å kunne benytte .when() for andre felter. */

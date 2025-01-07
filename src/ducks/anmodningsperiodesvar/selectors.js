@@ -2,35 +2,35 @@ import { createSelector } from "reselect";
 
 export const AnmodningsperiodesvarSelector = createSelector(
   (state) => state.anmodningsperiodesvar.data || {},
-  (anmodningsperiodesvar) => anmodningsperiodesvar
+  (anmodningsperiodesvar) => anmodningsperiodesvar,
 );
 
 export const ReduxStatusSelector = createSelector(
   (state) => state.anmodningsperiodesvar.status,
-  (status) => status
+  (status) => status,
 );
 
 export const EndretPeriodeSelector = createSelector(
   (state) => AnmodningsperiodesvarSelector(state) || {},
-  (anmodningsperiodesvar) => anmodningsperiodesvar.endretPeriode
+  (anmodningsperiodesvar) => anmodningsperiodesvar.endretPeriode,
 );
 
 export const EndretPeriodeFomSelector = createSelector(
   (state) => EndretPeriodeSelector(state) || {},
-  (periode) => periode.fom
+  (periode) => periode.fom,
 );
 
 export const EndretPeriodeTomSelector = createSelector(
   (state) => EndretPeriodeSelector(state) || {},
-  (periode) => periode.tom
+  (periode) => periode.tom,
 );
 
 export const BegrunnelseFritekstSelector = createSelector(
   (state) => AnmodningsperiodesvarSelector(state),
-  (anmodningsperiodesvar) => anmodningsperiodesvar.begrunnelseFritekst || ""
+  (anmodningsperiodesvar) => anmodningsperiodesvar.begrunnelseFritekst || "",
 );
 
 export const AnmodningsperiodeSvarTypeSelector = createSelector(
   (state) => AnmodningsperiodesvarSelector(state),
-  (anmodningsperiodesvar) => anmodningsperiodesvar.anmodningsperiodeSvarType
+  (anmodningsperiodesvar) => anmodningsperiodesvar.anmodningsperiodeSvarType,
 );

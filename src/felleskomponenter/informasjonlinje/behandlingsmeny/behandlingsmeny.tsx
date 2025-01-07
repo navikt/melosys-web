@@ -6,7 +6,7 @@ import AvsluttSak from "./avsluttsak";
 import "./behandlingsmeny.css";
 import { Accordion } from "@navikt/ds-react";
 
-export const Behandlingsmeny = () => {
+export default function Behandlingsmeny() {
   const [visBehandlingsmeny, setVisBehandlingsmeny] = useState(false);
   const toggleBehandlingsmeny = () => setVisBehandlingsmeny(!visBehandlingsmeny);
 
@@ -54,6 +54,4 @@ export const Behandlingsmeny = () => {
       )}
     </div>
   );
-};
-
-export default Behandlingsmeny;
+}

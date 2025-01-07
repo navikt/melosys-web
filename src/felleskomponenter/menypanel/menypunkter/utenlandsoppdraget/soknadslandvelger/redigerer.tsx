@@ -18,7 +18,7 @@ interface RedigererProps {
   avbryt: MouseEventHandler;
 }
 
-const Redigerer = ({ lagre, avbryt }: RedigererProps) => {
+function Redigerer({ lagre, avbryt }: RedigererProps) {
   const { landkoder, flereLandUkjentHvilke } = useSelector((state) => soknadFormValueSelector(state, "soknadsland"));
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const minstEttLandValgt = landkoder.length > 0;
@@ -46,6 +46,6 @@ const Redigerer = ({ lagre, avbryt }: RedigererProps) => {
       <Knapperad bekreftTekst="Lagre" bekreft={lagre} avbrytTekst="Avbryt" avbryt={avbryt} redigerbart />
     </>
   );
-};
+}
 
 export default Redigerer;

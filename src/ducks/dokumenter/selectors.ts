@@ -14,17 +14,17 @@ import * as Types from "./types";
 
 export const DokumenterSelector: Selector<RootState, StateSection<Types.Data>> = createSelector(
   (state: RootState) => state.dokumenter,
-  (dokumenter) => dokumenter
+  (dokumenter) => dokumenter,
 );
 
 const DokumenterDataSelector: Selector<RootState, Types.Data> = createSelector(
   DokumenterSelector,
-  (dokumenter) => dokumenter.data
+  (dokumenter) => dokumenter.data,
 );
 
 export const DokumentOversiktSelector: Selector<RootState, DokumentOversikt[]> = createSelector(
   DokumenterDataSelector,
-  (dokumenter) => dokumenter.dokumentOversikt || []
+  (dokumenter) => dokumenter.dokumentOversikt || [],
 );
 
 const lagID = (journalpostID: string, dokumentID: string) => `${journalpostID}-${dokumentID}`;
@@ -32,7 +32,7 @@ const lagID = (journalpostID: string, dokumentID: string) => `${journalpostID}-$
 export const hentDato = (
   mottaksretning: Mottaksretning,
   mottattDato: string | null,
-  journalforingDato: string | null
+  journalforingDato: string | null,
 ) => {
   if (mottaksretning.kode === MKV.Koder.mottaksretning.INN && mottattDato) {
     return mottattDato;
@@ -60,7 +60,7 @@ const lagHoveddokument = ({
 
 export const HoveddokumentSelector = createSelector(
   DokumentOversiktSelector,
-  (dokumentOversikt: DokumentOversikt[]) => dokumentOversikt.map(lagHoveddokument) || []
+  (dokumentOversikt: DokumentOversikt[]) => dokumentOversikt.map(lagHoveddokument) || [],
 );
 
 const lagVedlegg = ({
@@ -84,12 +84,12 @@ const lagVedlegg = ({
 
 export const VedleggSelector = createSelector(
   DokumentOversiktSelector,
-  (dokumentOversikt: DokumentOversikt[]) => ([] as FysiskDokument[]).concat(...dokumentOversikt.map(lagVedlegg)) || []
+  (dokumentOversikt: DokumentOversikt[]) => ([] as FysiskDokument[]).concat(...dokumentOversikt.map(lagVedlegg)) || [],
 );
 
 export const AlleFysiskeDokumentSelector = createSelector(
   VedleggSelector,
   HoveddokumentSelector,
   (vedlegg: FysiskDokument[], hoveddokument: FysiskDokument[]) =>
-    ([] as FysiskDokument[]).concat(...vedlegg, ...hoveddokument)
+    ([] as FysiskDokument[]).concat(...vedlegg, ...hoveddokument),
 );

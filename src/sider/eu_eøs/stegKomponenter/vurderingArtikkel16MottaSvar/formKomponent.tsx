@@ -54,7 +54,7 @@ type FormKomponentProps = PropsFromRedux & {
   formIsValid: boolean;
 };
 
-const FormKomponent = ({ redigerbart, formValues, oppdaterData, formIsValid }: FormKomponentProps) => {
+function FormKomponent({ redigerbart, formValues, oppdaterData, formIsValid }: FormKomponentProps) {
   const dispatch = useDispatch();
   const anmodningsperiodeID = useSelector(anmodningsperioderSelectors.AnmodningsperiodeIDSelector);
 
@@ -123,7 +123,7 @@ const FormKomponent = ({ redigerbart, formValues, oppdaterData, formIsValid }: F
       )}
     </form>
   );
-};
+}
 
 const Artikkel16MottaSvarForm = reduxForm<FormValuesProps, FormKomponentProps>({
   form: KV.Form.ARTIKKEL_16_MOTTA_SVAR,

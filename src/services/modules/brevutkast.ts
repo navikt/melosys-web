@@ -3,14 +3,14 @@ import { deleteAsJson, getAsJson, postAsJson, putAsJson } from "../utils";
 import { API_BASE_URL, BREV } from "../api-constants";
 import { OpprettBrevReqDto } from "./dokumenter-v2";
 
-export type BrevutkastResDto = {
+export interface BrevutkastResDto {
   utkastBrevID: number;
   lagretAvSaksbehandlerIdent: string;
   tittel: string;
   brevbestilling: OpprettBrevReqDto & {
     produserbardokument: KTObject;
   };
-};
+}
 
 export const hentBrevutkast = (behandlingID: number): Promise<BrevutkastResDto[]> =>
   getAsJson(`${API_BASE_URL}${BREV}/utkast/${behandlingID}`);

@@ -32,7 +32,7 @@ interface Props {
   oppdaterStatus: (isValid: boolean) => void;
 }
 
-export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) => {
+export function VurderingInngang({ bekreft, aktivtSteg, oppdaterStatus }: Props) {
   const [visOppfrisk, setVisOppfrisk] = useState(false);
   const dispatch = useDispatch();
 
@@ -81,7 +81,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
         mottatteOpplysningerOperations.oppdaterPeriode({
           fom: Utils.dato.formatterDatoTilISO(formValues.fom, ""),
           tom: Utils.dato.formatterDatoTilISO(formValues.tom, ""),
-        })
+        }),
       ),
     ]);
   };
@@ -186,4 +186,4 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
       )}
     </div>
   );
-};
+}

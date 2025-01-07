@@ -15,10 +15,10 @@ type InnerUtenlandskIdComponentProps = WrappedFieldArrayProps<UtenlandskIdent> &
   redigerbart: boolean;
 };
 
-const InnerUtenlandskIdComponent = (props: InnerUtenlandskIdComponentProps) => {
+function InnerUtenlandskIdComponent(props: InnerUtenlandskIdComponentProps) {
   const { redigerbart, fields } = props;
-  const { push, remove } = fields;
-  const felter = props.fields.getAll();
+  const { push, remove, getAll } = fields;
+  const felter = getAll();
   const leggTilTomtFelt = () => push({ ident: "", landkode: "" });
 
   if (felter === undefined) return null;
@@ -67,14 +67,16 @@ const InnerUtenlandskIdComponent = (props: InnerUtenlandskIdComponentProps) => {
       }
     />
   );
-};
+}
 
 interface UtenlandskIdWrapperProps {
   redigerbart: boolean;
 }
 
-const UtenlandskIdWrapper = ({ ...rest }: UtenlandskIdWrapperProps) => (
-  <FieldArray name="utenlandskIdent" component={InnerUtenlandskIdComponent} props={rest} rerenderOnEveryChange />
-);
+function UtenlandskIdWrapper({ ...rest }: UtenlandskIdWrapperProps) {
+  return (
+    <FieldArray name="utenlandskIdent" component={InnerUtenlandskIdComponent} props={rest} rerenderOnEveryChange />
+  );
+}
 
 export default UtenlandskIdWrapper;

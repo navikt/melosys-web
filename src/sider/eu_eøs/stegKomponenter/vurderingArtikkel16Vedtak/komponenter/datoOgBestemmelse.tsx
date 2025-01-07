@@ -9,7 +9,7 @@ interface DatoOgBestemmelseProps {
   tomDato: string | undefined | null;
 }
 
-const DatoOgBestemmelse = ({ fomDato, tomDato }: DatoOgBestemmelseProps) => {
+function DatoOgBestemmelse({ fomDato, tomDato }: DatoOgBestemmelseProps) {
   const bestemmelse = useSelector(lovvalgsperioderSelectors.LovvalgBestemmelseSelector);
   const lovvalgsbestemmelseKT = MKVUtils.lovvalgsbestemmelseTilObjekt(bestemmelse);
 
@@ -39,6 +39,6 @@ const DatoOgBestemmelse = ({ fomDato, tomDato }: DatoOgBestemmelseProps) => {
       </Nav.Row>
     </>
   );
-};
+}
 
 export default DatoOgBestemmelse;

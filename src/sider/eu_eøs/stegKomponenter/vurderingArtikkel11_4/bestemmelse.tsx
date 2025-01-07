@@ -29,13 +29,13 @@ interface BestemmelseProps {
   visStorbritanniaKonvensjon: boolean;
 }
 
-const Bestemmelse = ({
+function Bestemmelse({
   bestemmelse,
   handleEndreBestemmelse,
   artikkelValg,
   redigerbart,
   visStorbritanniaKonvensjon,
-}: BestemmelseProps) => {
+}: BestemmelseProps) {
   const hentBestemmelser = (): KTObject[] => {
     if (artikkelValg === ArtikkelValg.ART11_4_1) {
       return visStorbritanniaKonvensjon
@@ -69,6 +69,6 @@ const Bestemmelse = ({
       ))}
     </Nav.Select>
   );
-};
+}
 
 export default Bestemmelse;

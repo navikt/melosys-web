@@ -5,7 +5,7 @@ import { redigerbartSelectors } from "../../../ducks/redigerbart";
 import { navigeringOperations } from "../../../ducks/navigering";
 import Handling from "./handling";
 
-const LeggBehandlingTilbake = () => {
+function LeggBehandlingTilbake() {
   const dispatch = useDispatch();
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
@@ -26,6 +26,6 @@ const LeggBehandlingTilbake = () => {
       <Handling tekst="Til felles oppgaveliste" onClick={tilbakeleggOppgave} disabled={!redigerbart} />
     </>
   );
-};
+}
 
 export default LeggBehandlingTilbake;

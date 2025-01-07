@@ -27,7 +27,7 @@ interface RedigererFullmektigProps {
   fields: FieldArrayWithId<FieldArrayProps, "fullmektige">[];
 }
 
-const RedigererFullmektig = ({
+function RedigererFullmektig({
   fullmektige,
   control,
   update,
@@ -38,7 +38,7 @@ const RedigererFullmektig = ({
   errors,
   trigger,
   fields,
-}: RedigererFullmektigProps) => {
+}: RedigererFullmektigProps) {
   const handleIdChange = (ident: string, index: number) => {
     if (Utils.organisasjon.erOrgnrGyldig(ident)) {
       finnOrganisasjonAdresse(ident).then((response) =>
@@ -47,7 +47,7 @@ const RedigererFullmektig = ({
           type: Type.ORGANISASJON,
           feil: response.feil,
           adresse: response.adresse,
-        })
+        }),
       );
     } else if (Utils.person.erGyldigFnrEllerDnr(ident)) {
       finnPersonAdresse(ident).then((response) =>
@@ -56,7 +56,7 @@ const RedigererFullmektig = ({
           type: Type.PERSON,
           feil: response.feil,
           adresse: response.adresse,
-        })
+        }),
       );
     } else if (fullmektige[index].type) {
       update(index, {
@@ -76,7 +76,7 @@ const RedigererFullmektig = ({
   const handleKontaktOrgnrChange = (orgnr: string, index: number) => {
     if (Utils.organisasjon.erOrgnrGyldig(orgnr)) {
       finnOrganisasjonAdresse(orgnr).then((response) =>
-        update(index, { ...fullmektige[index], kontaktOrgAdresse: response.adresse })
+        update(index, { ...fullmektige[index], kontaktOrgAdresse: response.adresse }),
       );
     } else if (fullmektige[index].kontaktOrgAdresse) {
       update(index, { ...fullmektige[index], kontaktOrgAdresse: undefined });
@@ -130,7 +130,7 @@ const RedigererFullmektig = ({
     <>
       {fullmektige.map(({ type, fullmakter, feil, adresse, kontaktOrgAdresse }: Fullmektig, index) => {
         const adresseErGyldig = !feil && adresse;
-        // @ts-ignore
+        // @ts-expect-error generisk beskrivelse
         const manglerFullmakt = errors?.fullmektige?.[index]?.fullmakter?.message?.melding;
 
         return (
@@ -217,6 +217,6 @@ const RedigererFullmektig = ({
       )}
     </>
   );
-};
+}
 
 export default RedigererFullmektig;

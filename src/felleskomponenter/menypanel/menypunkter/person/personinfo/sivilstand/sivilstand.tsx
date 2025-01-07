@@ -19,13 +19,13 @@ interface SivilstandProps {
   erLitenSkjerm: boolean;
 }
 
-const Sivilstand = ({ sivilstand, erLitenSkjerm }: SivilstandProps) => {
+function Sivilstand({ sivilstand, erLitenSkjerm }: SivilstandProps) {
   const [visSivilstandModal, setVisSivilstandModal] = useState(false);
 
   const aktiveSivilstander = sivilstand?.filter((s) => !s.erHistorisk) || [];
   const historiskeSivilstander = sivilstand?.filter((s) => s.erHistorisk) || [];
 
-  const SivilstatusVisning = () => {
+  function SivilstatusVisning() {
     if (!sivilstand) {
       return null;
     }
@@ -49,7 +49,7 @@ const Sivilstand = ({ sivilstand, erLitenSkjerm }: SivilstandProps) => {
         </Nav.Column>
       </div>
     );
-  };
+  }
 
   return (
     <div className="sivilstand">
@@ -68,6 +68,6 @@ const Sivilstand = ({ sivilstand, erLitenSkjerm }: SivilstandProps) => {
       <SivilstatusVisning />
     </div>
   );
-};
+}
 
 export default Sivilstand;

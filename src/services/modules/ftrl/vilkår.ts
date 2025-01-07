@@ -6,7 +6,7 @@ export const hentVilkår = (
   bestemmelseID: string,
   avklarteFakta: Map<string, string>,
   behandlingID: string,
-  behandlingstema: string
+  behandlingstema: string,
 ): Promise<{ vilkår: VilkårOgBegrunnelser[] }> => {
   let queryParamsString = "";
 
@@ -16,6 +16,6 @@ export const hentVilkår = (
   }
 
   return getAsJson(
-    `${API_BASE_URL}${FTRL}/bestemmelser/${bestemmelseID}/vilkaar/?behandlingID=${behandlingID}&behandlingstema=${behandlingstema}${queryParamsString}`
+    `${API_BASE_URL}${FTRL}/bestemmelser/${bestemmelseID}/vilkaar/?behandlingID=${behandlingID}&behandlingstema=${behandlingstema}${queryParamsString}`,
   );
 };

@@ -6,7 +6,7 @@ import * as Ikoner from "../../../../resources/images";
 
 import "./element.css";
 
-const Element = ({ kode, term, onFjern, onAngreFjern, fjernbar, redigerbar, defaultFjernet }) => {
+function Element({ kode, term, onFjern, onAngreFjern, fjernbar, redigerbar, defaultFjernet }) {
   const [fjernet, setFjernet] = useState(defaultFjernet);
 
   const fjern = () => {
@@ -38,7 +38,7 @@ const Element = ({ kode, term, onFjern, onAngreFjern, fjernbar, redigerbar, defa
       )}
     </Nav.Row>
   );
-};
+}
 
 Element.propTypes = {
   kode: PT.string.isRequired,

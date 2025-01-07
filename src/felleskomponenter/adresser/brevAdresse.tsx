@@ -7,7 +7,7 @@ function samleFelt(separator: string, ...felt: any[]) {
 
 const feltPlussKomma = (felt?: any) => (felt ? `${felt}, ` : "");
 
-const BrevAdresse = ({
+function BrevAdresse({
   mottakerNavn,
   adresselinjer = [],
   postnr,
@@ -16,20 +16,22 @@ const BrevAdresse = ({
   land,
   className,
   visNavn,
-}: DokumenterV2.BrevAdresse & { className?: string; visNavn?: boolean }) => (
-  <div className={className}>
-    {visNavn && (
-      <Nav.BodyLong weight="semibold" size="small">
-        {mottakerNavn}
+}: DokumenterV2.BrevAdresse & { className?: string; visNavn?: boolean }) {
+  return (
+    <div className={className}>
+      {visNavn && (
+        <Nav.BodyLong weight="semibold" size="small">
+          {mottakerNavn}
+        </Nav.BodyLong>
+      )}
+      <Nav.BodyLong size="small">
+        {feltPlussKomma(samleFelt(", ", ...adresselinjer))}
+        {feltPlussKomma(samleFelt(" ", postnr, poststed))}
+        {feltPlussKomma(region)}
+        {land}
       </Nav.BodyLong>
-    )}
-    <Nav.BodyLong size="small">
-      {feltPlussKomma(samleFelt(", ", ...adresselinjer))}
-      {feltPlussKomma(samleFelt(" ", postnr, poststed))}
-      {feltPlussKomma(region)}
-      {land}
-    </Nav.BodyLong>
-  </div>
-);
+    </div>
+  );
+}
 
 export default BrevAdresse;

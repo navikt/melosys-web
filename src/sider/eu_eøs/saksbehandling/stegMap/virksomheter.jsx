@@ -13,11 +13,11 @@ class SaksbehandlingVirksomheter extends Virksomheter {
     const harValgtArbeidsgiver = Virksomheter.harValgtArbeidsgiver(propsLight.avklartefakta);
     const arbeiderPaSokkelEllerSkip = Virksomheter.finnAvklaring(
       propsLight.avklartefakta,
-      KV.Koder.VurderingYrkesgruppeTyper.SOKKEL_ELLER_SKIP
+      KV.Koder.VurderingYrkesgruppeTyper.SOKKEL_ELLER_SKIP,
     );
     const gårDirekteTilArtikkel16 = Yrkesgruppe.finnAvklaring(
       propsLight.avklartefakta,
-      KV.Koder.VurderingYrkesgruppeTyper.ORDINAER_UTEN_ART12
+      KV.Koder.VurderingYrkesgruppeTyper.ORDINAER_UTEN_ART12,
     );
 
     const arbeidslandErNorge = propsLight.arbeidsland[0]?.kode === MKV.Koder.landkoder.NO;
@@ -36,7 +36,7 @@ class SaksbehandlingVirksomheter extends Virksomheter {
         exec: (avklartefakta) => {
           const erSkipEttLand = SokkelSkip.finnAvklaring(
             avklartefakta,
-            KV.Koder.VurderingSokkelSkipTyper.SKIP_ETT_LAND
+            KV.Koder.VurderingSokkelSkipTyper.SKIP_ETT_LAND,
           );
           return harValgtArbeidsgiver && arbeiderPaSokkelEllerSkip && erSkipEttLand;
         },
@@ -76,15 +76,15 @@ class SaksbehandlingVirksomheter extends Virksomheter {
         exec: (avklartefakta) => {
           const erVanligYrkesaktiv = Virksomheter.finnAvklaring(
             avklartefakta,
-            KV.Koder.VurderingYrkesgruppeTyper.ORDINAER
+            KV.Koder.VurderingYrkesgruppeTyper.ORDINAER,
           );
           const erFlyendePersonell = Virksomheter.finnAvklaring(
             avklartefakta,
-            KV.Koder.VurderingYrkesgruppeTyper.FLYENDE_PERSONELL
+            KV.Koder.VurderingYrkesgruppeTyper.FLYENDE_PERSONELL,
           );
           const erSokkelUtland = SokkelSkip.finnAvklaring(
             avklartefakta,
-            KV.Koder.VurderingSokkelSkipTyper.SOKKEL_UTLAND
+            KV.Koder.VurderingSokkelSkipTyper.SOKKEL_UTLAND,
           );
 
           return (

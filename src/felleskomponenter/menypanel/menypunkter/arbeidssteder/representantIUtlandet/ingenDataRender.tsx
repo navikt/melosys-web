@@ -7,11 +7,12 @@ interface IngenDataRenderProps {
   lenketekst: string;
 }
 
-const IngenDataRender = ({ redigerbart, onClick, lenketekst }: IngenDataRenderProps) =>
-  redigerbart ? (
+function IngenDataRender({ redigerbart, onClick, lenketekst }: IngenDataRenderProps) {
+  return redigerbart ? (
     <Mui.Lenkeknapp onClick={onClick} ikon={Ikoner.Add}>
       {lenketekst}
     </Mui.Lenkeknapp>
   ) : null;
+}
 
 export default IngenDataRender;

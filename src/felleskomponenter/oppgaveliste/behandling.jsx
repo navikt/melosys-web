@@ -10,7 +10,7 @@ import EnkeltDato from "../enkeltDato";
 
 import "./behandling.css";
 
-const BehandlingPanel = ({ behandling, kanVises }) => {
+function BehandlingPanel({ behandling, kanVises }) {
   const { behandlingstema, behandlingstype, behandlingsstatus, behandlingsresultattype, opprettetDato } = behandling;
 
   return (
@@ -50,18 +50,20 @@ const BehandlingPanel = ({ behandling, kanVises }) => {
       </Nav.Row>
     </div>
   );
-};
+}
 
 BehandlingPanel.propTypes = {
   behandling: PT.object.isRequired,
   kanVises: PT.bool.isRequired,
 };
 
-const Behandling = ({ behandling, link }) => (
-  <Link to={link} className="behandling__link">
-    <BehandlingPanel behandling={behandling} kanVises />
-  </Link>
-);
+function Behandling({ behandling, link }) {
+  return (
+    <Link to={link} className="behandling__link">
+      <BehandlingPanel behandling={behandling} kanVises />
+    </Link>
+  );
+}
 
 Behandling.propTypes = {
   behandling: PT.object.isRequired,

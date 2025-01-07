@@ -16,7 +16,7 @@ import { navigeringOperations } from "../ducks/navigering";
 const FellesHandlersContext = createContext({});
 export default FellesHandlersContext;
 
-const FellesHandlersProviderUnconnected = ({
+function FellesHandlersProviderUnconnected({
   children,
   location,
   history,
@@ -34,7 +34,7 @@ const FellesHandlersProviderUnconnected = ({
   behandlingUnderOppfriskning,
   tilForsiden,
   inkluderSiste5Aar,
-}) => {
+}) {
   const behandlingID = Utils._toInteger(Utils.queryString.getParam(location, "behandlingID"));
 
   const oppfriskGraphQLSaksopplysninger = async () => {
@@ -101,11 +101,11 @@ const FellesHandlersProviderUnconnected = ({
       behandlingOppfriskes,
       annenBehandlingOppfriskes,
       startOgVisOppfriskModal,
-    ]
+    ],
   );
 
   return <FellesHandlersContext.Provider value={fellesHandlers}>{children}</FellesHandlersContext.Provider>;
-};
+}
 
 FellesHandlersProviderUnconnected.propTypes = {
   children: PT.node.isRequired,
@@ -157,5 +157,5 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 export const FellesHandlersProvider = withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(FellesHandlersProviderUnconnected)
+  connect(mapStateToProps, mapDispatchToProps)(FellesHandlersProviderUnconnected),
 );

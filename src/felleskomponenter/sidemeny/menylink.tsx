@@ -1,5 +1,4 @@
 import classnames from "classnames";
-import TypografiBase from "nav-frontend-typografi";
 
 import parse from "html-react-parser";
 import bem from "../../bemUtils";
@@ -20,22 +19,13 @@ const menyLinkCls = bem("meny-link");
 // Logikk for å legge inn whitespace etter slash
 const brukWbrTagVedSlash = (label: string) => parse(label.replace("/", "/<wbr>"));
 
-const MenyLink = ({ label, active, onClick, iconSrc, iconAltText }: MenyLinkProps) => {
+function MenyLink({ label, active, onClick, iconSrc, iconAltText }: MenyLinkProps) {
   const handleOnClick = (event: FormEvent<HTMLButtonElement>): void => {
     event.preventDefault();
     onClick();
   };
 
-  const labelCls = classnames(
-    active ? menyLinkCls.elementWithModifier("label", "active") : menyLinkCls.element("label"),
-    {
-      [menyLinkCls.elementWithModifier("label", "with-icon")]: !!iconSrc,
-    }
-  );
-
   const containerClassnames = classnames(menyLinkCls.block);
-
-  const labeltype = "normaltekst";
 
   return (
     <li className={containerClassnames} aria-current={active ? true : undefined}>
@@ -44,13 +34,11 @@ const MenyLink = ({ label, active, onClick, iconSrc, iconAltText }: MenyLinkProp
         onClick={handleOnClick}
         type="button"
       >
-        <TypografiBase type={labeltype} tag="span" className={labelCls}>
-          {brukWbrTagVedSlash(label)}
-          {iconSrc && <img src={iconSrc} alt={iconAltText || ""} className={menyLinkCls.element("icon")} />}
-        </TypografiBase>
+        {brukWbrTagVedSlash(label)}
+        {iconSrc && <img src={iconSrc} alt={iconAltText || ""} className={menyLinkCls.element("icon")} />}
       </button>
     </li>
   );
-};
+}
 
 export default MenyLink;

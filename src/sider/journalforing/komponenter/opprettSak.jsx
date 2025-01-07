@@ -42,7 +42,7 @@ export const skalViseSoknadsperiodeOgLand = (
   sakstema,
   behandlingstema,
   behandlingstype,
-  erArbeidKunNorgeToggleEnabled = false
+  erArbeidKunNorgeToggleEnabled = false,
 ) =>
   sakstype === MKV.Koder.sakstyper.EU_EOS &&
   sakstema &&
@@ -52,7 +52,7 @@ export const skalViseSoknadsperiodeOgLand = (
   behandlingstema !== MKV.Koder.behandlinger.behandlingstema.A1_ANMODNING_OM_UNNTAK_PAPIR &&
   !skalViseIngenFlyt(sakstype, sakstema, behandlingstema, behandlingstype, erArbeidKunNorgeToggleEnabled);
 
-export const OpprettSak = (props) => {
+export function OpprettSak(props) {
   const { settFeltInnhold, formValues, feltNavn } = props;
   const {
     valgtSakstype,
@@ -102,7 +102,7 @@ export const OpprettSak = (props) => {
       Api.LovligeKombinasjoner.hentBehandlingstemaer(hovedpart, valgtSakstype, valgtSakstema).then(
         (muligeBehandlingstemaer) => {
           setBehandlingstemaer(muligeBehandlingstemaer);
-        }
+        },
       );
       setBehandlingstyper([]);
     }
@@ -117,10 +117,10 @@ export const OpprettSak = (props) => {
             settFeltInnhold(
               formNavn,
               feltNavn.opprettnysak_behandlingstype,
-              MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG
+              MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
             );
           }
-        }
+        },
       );
     }
   }, [hovedpart, valgtSakstype, valgtSakstema, valgtBehandlingstema]);
@@ -131,7 +131,7 @@ export const OpprettSak = (props) => {
     !Utils._isEmpty(formValues?.utenlandskTrygdemyndighetLandkode) &&
     !KV.erKodeIListe(
       formValues.utenlandskTrygdemyndighetLandkode,
-      MKV.Kodekombinasjoner.landSomErTrygdeavtaleMyndighetslandOgEuEøsLand
+      MKV.Kodekombinasjoner.landSomErTrygdeavtaleMyndighetslandOgEuEøsLand,
     );
 
   return (
@@ -189,9 +189,9 @@ export const OpprettSak = (props) => {
         valgtSakstema,
         valgtBehandlingstema,
         valgtBehandlingstype,
-        erArbeidKunNorgeToggleEnabled
+        erArbeidKunNorgeToggleEnabled,
       ) && (
-        <Fragment>
+        <>
           <Nav.Fieldset legend="Søknadsperiode:" className="opprettnysak__soknadsperiode">
             <Nav.Row className="">
               <Nav.Column xs="6">
@@ -238,11 +238,11 @@ export const OpprettSak = (props) => {
               </Nav.Row>
             )}
           </Nav.Fieldset>
-        </Fragment>
+        </>
       )}
     </div>
   );
-};
+}
 OpprettSak.propTypes = {
   errors: PT.object,
   formValues: PT.object.isRequired,

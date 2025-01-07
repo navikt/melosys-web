@@ -25,7 +25,7 @@ interface VurderingYrkesaktivitetProps {
   erSoknadArbeidFlereLand: boolean;
 }
 
-const VurderingYrkesaktivitet = (props: VurderingYrkesaktivitetProps) => {
+function VurderingYrkesaktivitet(props: VurderingYrkesaktivitetProps) {
   const {
     bekreftOgFortsett,
     tilstand = {},
@@ -95,7 +95,7 @@ const VurderingYrkesaktivitet = (props: VurderingYrkesaktivitetProps) => {
       <Mui.StegKnapper
         bekreftKnappProps={{
           disabled: !(redigerbart && harAvklaring),
-          // @ts-ignore
+          // @ts-expect-error generisk beskrivelse
           "data-cy-nesteknapp": "knapp_steg4",
           onClick: bekreftOgFortsett,
         }}
@@ -106,6 +106,6 @@ const VurderingYrkesaktivitet = (props: VurderingYrkesaktivitetProps) => {
       />
     </>
   );
-};
+}
 
 export default VurderingYrkesaktivitet;

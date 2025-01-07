@@ -46,13 +46,13 @@ describe("SideDialog", () => {
       status: STATUS.OK,
     },
   };
-  // @ts-ignore
+  // @ts-expect-error generisk beskrivelse
   const WrappedSideDialog = reduxForm({ form: "test" })(SideDialog);
 
   beforeEach(() => {
-    // @ts-ignore
+    // @ts-expect-error generisk beskrivelse
     fetch.resetMocks();
-    // @ts-ignore
+    // @ts-expect-error generisk beskrivelse
     fetch.mockResponse(JSON.stringify({}));
   });
 

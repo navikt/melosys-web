@@ -58,10 +58,10 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-export type Fritekstvedlegg = {
+export interface Fritekstvedlegg {
   tittel: string;
   fritekst: string;
-};
+}
 
 interface Props {
   redigerbart: boolean;
@@ -76,7 +76,7 @@ interface Props {
   saksnummer: string;
 }
 
-const SendBrev = ({
+function SendBrev({
   behandlingID,
   changeField,
   formValues,
@@ -93,7 +93,7 @@ const SendBrev = ({
   saksnummer,
   soknadsland,
   sakstype,
-}: Props & PropsFromRedux) => {
+}: Props & PropsFromRedux) {
   const [tilgjengeligeMaler, setTilgjengeligeMaler] = useState<Api.DokumenterV2.TilgjengeligeMalerResDto>();
   const [muligeMottakere, setMuligeMottakere] = useState<Api.DokumenterV2.HentMuligeMottakereResDto>();
   const [muligeMottakereFeil, setMuligeMottakereFeil] = useState<string | undefined>(undefined);
@@ -123,7 +123,9 @@ const SendBrev = ({
   const hentTilgjengeligeMaler = () =>
     Api.DokumenterV2.hentTilgjengeligeMaler(behandlingID).then((response) => {
       response.forEach((mal) => {
+        /* eslint-disable no-param-reassign */
         mal.mottaker.uuid = Utils._uuid();
+        /* eslint-enable no-param-reassign */
       });
       setTilgjengeligeMaler(response);
     });
@@ -131,8 +133,8 @@ const SendBrev = ({
   const krevesLandForUtenlandskTrygdemyndighetMottaker = () => {
     return Boolean(
       tilgjengeligeBrevtyper.find((brevType) =>
-        brevType?.felter?.find((felt) => felt.kode === "UTENLANDSK_TRYGDEMYNDIGHET_MOTTAKER")
-      )
+        brevType?.felter?.find((felt) => felt.kode === "UTENLANDSK_TRYGDEMYNDIGHET_MOTTAKER"),
+      ),
     );
   };
   const erUtenlandskTrygdemyndighetMottakerGyldig = (values: SendBrevFormValues) => {
@@ -215,7 +217,7 @@ const SendBrev = ({
   useEffect(() => {
     changeField(
       "valgtBrev",
-      tilgjengeligeBrevtyper.find((brevType) => brevType.type.kode === formValues.type)
+      tilgjengeligeBrevtyper.find((brevType) => brevType.type.kode === formValues.type),
     );
   }, [formValues?.type]);
 
@@ -566,9 +568,9 @@ const SendBrev = ({
       )}
     </div>
   );
-};
+}
 
-const SendBrevForm = reduxForm<{}, Props & PropsFromRedux>({
+const SendBrevForm = reduxForm<object, Props & PropsFromRedux>({
   form: KV.Form.SEND_BREV,
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,

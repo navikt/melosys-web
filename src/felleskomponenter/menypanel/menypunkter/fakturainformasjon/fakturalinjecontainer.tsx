@@ -7,7 +7,7 @@ interface FakturaLinjeContainerProps {
   faktura: fakturaserierTypes.Faktura;
 }
 
-export const FakturaLinjeContainer = ({ faktura }: FakturaLinjeContainerProps) => {
+export function FakturaLinjeContainer({ faktura }: FakturaLinjeContainerProps) {
   return (
     <div className="fakturalinje">
       <div className="fakturanr_wrapper">
@@ -61,4 +61,4 @@ export const FakturaLinjeContainer = ({ faktura }: FakturaLinjeContainerProps) =
       </Nav.Table>
     </div>
   );
-};
+}

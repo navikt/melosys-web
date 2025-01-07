@@ -1,12 +1,12 @@
 import * as Ikon from ".";
 import { KjoennType } from "../../graphql";
 
-type KjoennProps = {
+interface KjoennProps {
   className: string;
   kjoenn: KjoennType;
-};
+}
 
-export const Kjoenn = ({ className, kjoenn }: KjoennProps) => {
+export function Kjoenn({ className, kjoenn }: KjoennProps) {
   if (!kjoenn) return <Ikon.Ukjentkjoenn className={className} />;
   switch (kjoenn) {
     case KjoennType.Mann:
@@ -16,4 +16,4 @@ export const Kjoenn = ({ className, kjoenn }: KjoennProps) => {
     default:
       return <Ikon.Ukjentkjoenn className={className} />;
   }
-};
+}

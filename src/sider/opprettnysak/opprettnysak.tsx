@@ -95,7 +95,7 @@ type OpprettNySakProps = {
   tilForsiden: () => void;
 } & PropsFromRedux;
 
-const OpprettNySak = ({
+function OpprettNySak({
   formValues,
   tilForsiden,
   change,
@@ -108,7 +108,7 @@ const OpprettNySak = ({
   sokOrgnr,
   hentLandkoder,
   landkoderListe,
-}: InjectedFormProps<OpprettNySakFormData, OpprettNySakProps> & OpprettNySakProps) => {
+}: InjectedFormProps<OpprettNySakFormData, OpprettNySakProps> & OpprettNySakProps) {
   const [oppgaver, setOppgaver] = useState<Api.Oppgaver.SokOppgaveResDto[]>([]);
   const [bekreftPending, setBekreftPending] = useState(false);
   const [visFeilmeldinger, setVisFeilmeldinger] = useState(false);
@@ -220,7 +220,7 @@ const OpprettNySak = ({
       sakstema,
       behandlingstema,
       behandlingstype,
-      erArbeidKunNorgeToggleEnabled
+      erArbeidKunNorgeToggleEnabled,
     );
 
     const fom = skalSendePeriodeOgLand && periodeFraOgMed ? Utils.dato.formatterDatoTilISO(periodeFraOgMed) : null;
@@ -415,7 +415,7 @@ const OpprettNySak = ({
       </Nav.Row>
     </Nav.Container>
   );
-};
+}
 
 const OpprettNySakForm = reduxForm<OpprettNySakFormData, OpprettNySakProps>({
   form: KV.Form.OPPRETT_NY_SAK,

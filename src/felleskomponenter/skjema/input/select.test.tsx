@@ -7,7 +7,7 @@ import { renderWithProviders } from "../../../ducks/test-utils/renderWithProvide
 
 describe("Select", () => {
   it("snapshot test", () => {
-    // @ts-ignore
+    // @ts-expect-error generisk beskrivelse
     const WrappedSelect = reduxForm({ form: "test" })(Select);
 
     const props = {
@@ -15,7 +15,7 @@ describe("Select", () => {
       feltNavn: "feltnavn",
       className: "className",
     };
-    // @ts-ignore
+    // @ts-expect-error generisk beskrivelse
     const { container } = renderWithProviders(<WrappedSelect {...props} />);
     expect(container).toMatchSnapshot();
   });
@@ -42,7 +42,7 @@ describe("Select", () => {
         error: "err",
       };
 
-      // @ts-ignore
+      // @ts-expect-error generisk beskrivelse
       renderWithProviders(<SelectWrappedComponent {...props(meta)} />);
       expect(screen.getByText("err")).toBeInTheDocument();
     });

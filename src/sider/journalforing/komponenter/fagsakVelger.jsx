@@ -21,9 +21,9 @@ import { EnkelNavBox } from "../../../felleskomponenter/enkelNavBox";
 const EKSISTERENDE = "Eksisterende sak";
 const OPPRETT = "Opprett ny sak";
 
-const { JOURNALFORING_VALUES: FormValuesJournalforing, OPPRETT_NY_SAK_VALUES: FormValuesOpprettNySak } = KV.Form;
+const { JournalforingValues: FormValuesJournalforing, OpprettNySakValues: FormValuesOpprettNySak } = KV.Form;
 
-const FagsakVelger = (props) => {
+function FagsakVelger(props) {
   const { fagsakListe, settJournalforingHensikt, landkoder, formValues, erJournalføring, nullstillFormVerdier } = props;
   const [valgtVisning, setValgtVisning] = useState(EKSISTERENDE);
   const feltNavn = erJournalføring ? FormValuesJournalforing : FormValuesOpprettNySak;
@@ -60,7 +60,7 @@ const FagsakVelger = (props) => {
         footer: <KnyttTilSak sak={sak} erJournalføring={erJournalføring} feltNavn={feltNavn} formValues={formValues} />,
       },
     ],
-    []
+    [],
   );
 
   return (
@@ -105,7 +105,7 @@ const FagsakVelger = (props) => {
       {valgtVisning === OPPRETT && <OpprettSak formValues={formValues} feltNavn={feltNavn} />}
     </div>
   );
-};
+}
 
 FagsakVelger.propTypes = {
   fagsakListe: PT.array.isRequired,

@@ -39,7 +39,7 @@ const nyUtpekingsperiodeErInnenforSoknadsperioden = (soknadsperiode, isoFomDato,
   );
 };
 
-export const VurderingArtikkel13UtpekLand = ({
+export function VurderingArtikkel13UtpekLand({
   redigerbart,
   behandlingID,
   lovvalgsland,
@@ -61,13 +61,13 @@ export const VurderingArtikkel13UtpekLand = ({
   byggUtpekingsperioder: gjenopprettOpprinneligUtpekingsperiode,
   endreUtpekingsperiode,
   oppdaterForm,
-}) => {
+}) {
   const [utpekingPending, setUtpekingPending] = useState(false);
   const [fomDato, setFomDato] = useState(
-    Utils.dato.formatterDatoTilNorsk(utpekingsperiode?.fomDato || soknadsperiode.fom)
+    Utils.dato.formatterDatoTilNorsk(utpekingsperiode?.fomDato || soknadsperiode.fom),
   );
   const [tomDato, setTomDato] = useState(
-    Utils.dato.formatterDatoTilNorsk(utpekingsperiode?.tomDato || soknadsperiode.tom)
+    Utils.dato.formatterDatoTilNorsk(utpekingsperiode?.tomDato || soknadsperiode.tom),
   );
   const isMounted = Hooks.useIsMounted();
 
@@ -78,7 +78,7 @@ export const VurderingArtikkel13UtpekLand = ({
 
   const debouncedOppdaterUtpekingsperiode = useCallback(
     Utils._debounce((nyFomDato, nyTomDato) => oppdaterUtpekingsperiode(nyFomDato, nyTomDato), 500),
-    []
+    [],
   );
 
   useEffect(() => {
@@ -147,8 +147,8 @@ export const VurderingArtikkel13UtpekLand = ({
       oppdaterForm(
         "mottakerinstitusjoner",
         [...new Set([...landMedVesentligEllerRegistrertArbeid, land])].map((landkode) =>
-          KV.kodeTilObjekt(landkode, MKV.KTObjects.landkoder)
-        )
+          KV.kodeTilObjekt(landkode, MKV.KTObjects.landkoder),
+        ),
       );
     }
   };
@@ -274,7 +274,7 @@ export const VurderingArtikkel13UtpekLand = ({
       />
     </div>
   );
-};
+}
 
 VurderingArtikkel13UtpekLand.propTypes = {
   tilstand: PT.shape({

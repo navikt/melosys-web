@@ -1,5 +1,7 @@
 import IkkeEditerbareArbeidPaaLandSporsmal from "./ikkeEditerbareArbeidPaaLandSporsmal";
 
-const IngenData = () => <IkkeEditerbareArbeidPaaLandSporsmal />;
+function IngenData() {
+  return <IkkeEditerbareArbeidPaaLandSporsmal />;
+}
 
 export default IngenData;

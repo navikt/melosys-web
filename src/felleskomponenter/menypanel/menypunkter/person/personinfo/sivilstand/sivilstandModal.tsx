@@ -12,7 +12,7 @@ interface SivilstandTabellProps {
   sivilstander: Sivilstand[];
 }
 
-export const SivilstandTabell = ({ sivilstander }: SivilstandTabellProps) => {
+export function SivilstandTabell({ sivilstander }: SivilstandTabellProps) {
   return (
     <Nav.Table>
       <Nav.Table.Header>
@@ -43,7 +43,7 @@ export const SivilstandTabell = ({ sivilstander }: SivilstandTabellProps) => {
       </Nav.Table.Body>
     </Nav.Table>
   );
-};
+}
 
 interface SivilstandModalProps {
   aktiveSivilstander: Sivilstand[];
@@ -52,12 +52,12 @@ interface SivilstandModalProps {
   lukkModal: () => void;
 }
 
-const SivilstandModal = ({
+function SivilstandModal({
   aktiveSivilstander,
   historiskeSivilstander,
   skalViseModal,
   lukkModal,
-}: SivilstandModalProps) => {
+}: SivilstandModalProps) {
   const sivilstandModalCls = bem("sivilstand-modal");
 
   return (
@@ -84,6 +84,6 @@ const SivilstandModal = ({
       </Nav.Modal.Body>
     </Nav.Modal>
   );
-};
+}
 
 export default SivilstandModal;

@@ -9,36 +9,36 @@ import { createSelector } from "reselect";
 
 const JournalforingSelector = createSelector(
   (state) => state.journalforing || {},
-  (journalforing) => journalforing
+  (journalforing) => journalforing,
 );
 
 export const JournalforingAlle = createSelector(JournalforingSelector, (journalforing) => journalforing.data || {});
 
 export const JournalforingHovedDokument = createSelector(
   JournalforingAlle,
-  (journalforing) => journalforing.hoveddokument || { tittel: "", dokumentID: null, logiskeVedlegg: [] }
+  (journalforing) => journalforing.hoveddokument || { tittel: "", dokumentID: null, logiskeVedlegg: [] },
 );
 
 export const JournalforingHovedDokumentTittelSelector = createSelector(
   JournalforingHovedDokument,
-  (hoveddokument) => hoveddokument.tittel
+  (hoveddokument) => hoveddokument.tittel,
 );
 
 export const JournalforingLogiskeVedleggSelector = createSelector(
   JournalforingHovedDokument,
-  (hoveddokument) => hoveddokument.logiskeVedlegg || []
+  (hoveddokument) => hoveddokument.logiskeVedlegg || [],
 );
 
 export const JournalforingVedleggsDokumenter = createSelector(
   JournalforingAlle,
-  (journalforing) => journalforing.vedlegg || []
+  (journalforing) => journalforing.vedlegg || [],
 );
 
 export const BrukerIDSelector = createSelector(JournalforingAlle, (journalforing) => journalforing.brukerID);
 
 export const VirksomhetOrgnrSelector = createSelector(
   JournalforingAlle,
-  (journalforing) => journalforing.virksomhetOrgnr
+  (journalforing) => journalforing.virksomhetOrgnr,
 );
 
 export const AvsenderIDSelector = createSelector(JournalforingAlle, (journalforing) => journalforing.avsenderID);
@@ -49,7 +49,7 @@ export const AvsenderTypeSelector = createSelector(JournalforingAlle, (journalfo
 
 export const ErHovedpartAvsenderSelector = createSelector(
   JournalforingAlle,
-  (journalforing) => journalforing.erHovedpartAvsender
+  (journalforing) => journalforing.erHovedpartAvsender,
 );
 
 export const MottattDatoSelector = createSelector(JournalforingAlle, (journalforing) => journalforing.mottattDato);
@@ -58,5 +58,5 @@ export const ErAvsenderPreutfyltSelector = createSelector(
   AvsenderIDSelector,
   AvsenderNavnSelector,
   AvsenderTypeSelector,
-  (avsenderID, avsenderNavn, avsenderType) => Boolean(avsenderID) && Boolean(avsenderNavn) && Boolean(avsenderType)
+  (avsenderID, avsenderNavn, avsenderType) => Boolean(avsenderID) && Boolean(avsenderNavn) && Boolean(avsenderType),
 );

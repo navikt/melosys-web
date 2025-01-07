@@ -2,10 +2,12 @@ import IkkeEditerbareArbeidPaaLandSporsmal from "./ikkeEditerbareArbeidPaaLandSp
 
 import { EnRedigeringsknappListeRedigeringUtfortPreElementer } from "../../editerbartElementListe";
 
-const RedigeringUtfortPreElementer = ({ className }: EnRedigeringsknappListeRedigeringUtfortPreElementer) => (
-  <div className={className}>
-    <IkkeEditerbareArbeidPaaLandSporsmal />
-  </div>
-);
+function RedigeringUtfortPreElementer({ className }: EnRedigeringsknappListeRedigeringUtfortPreElementer) {
+  return (
+    <div className={className}>
+      <IkkeEditerbareArbeidPaaLandSporsmal />
+    </div>
+  );
+}
 
 export default RedigeringUtfortPreElementer;

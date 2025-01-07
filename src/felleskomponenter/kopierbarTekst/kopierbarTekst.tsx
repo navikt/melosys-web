@@ -12,7 +12,7 @@ interface KopierbarTekstProps {
   children: string;
 }
 
-const KopierbarTekst = ({ className, hovertekst, children }: KopierbarTekstProps) => {
+function KopierbarTekst({ className, hovertekst, children }: KopierbarTekstProps) {
   const [visHoverTekst, setVisHoverTekst] = useState(false);
   const [erKopiert, setErKopiert] = useState(false);
 
@@ -51,6 +51,6 @@ const KopierbarTekst = ({ className, hovertekst, children }: KopierbarTekstProps
       </span>
     </span>
   );
-};
+}
 
 export default KopierbarTekst;

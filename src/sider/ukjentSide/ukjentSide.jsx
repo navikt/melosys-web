@@ -5,7 +5,7 @@ import * as Nav from "../../navFrontend";
 import "./ukjentSide.css";
 
 /* eslint arrow-body-style:off */
-const UkjentSide = ({ location }) => {
+function UkjentSide({ location }) {
   const logdata = {
     message: "Ukjent Side",
     data: {
@@ -23,7 +23,7 @@ const UkjentSide = ({ location }) => {
       </Nav.Link>
     </Nav.Alert>
   );
-};
+}
 
 UkjentSide.propTypes = {
   location: PT.object.isRequired,

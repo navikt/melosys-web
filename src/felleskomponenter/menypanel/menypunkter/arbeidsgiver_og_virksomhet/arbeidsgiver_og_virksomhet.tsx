@@ -25,13 +25,13 @@ import "./arbeidsgiver_og_virksomhet.css";
 
 const arbeidsforholdUtlandHarData = (
   elementListe: KV.Form.ArbeidsforholdUtland[],
-  element: KV.Form.ArbeidsforholdUtland
+  element: KV.Form.ArbeidsforholdUtland,
 ): boolean =>
   Boolean(
     element.navn ||
       element.orgnr ||
       Utils._isBoolean(element.selvstendigNaeringsvirksomhet) ||
-      (element.adresse ? Utils.adresse.erStrukturertAdresseObjektTomt(element.adresse) : false)
+      (element.adresse ? Utils.adresse.erStrukturertAdresseObjektTomt(element.adresse) : false),
   );
 
 const soknadFormValueSelector = formValueSelector<KV.Form.SoknadFormData>(KV.Form.SOKNAD);
@@ -56,7 +56,7 @@ type ArbeidsgiverOgVirksomhetProps = PropsFromRedux & {
   visArbeidsforholdRolleEtiketter: boolean;
 };
 
-export const ArbeidsgiverOgVirksomhet = ({
+export function ArbeidsgiverOgVirksomhet({
   redigerbart,
   organisasjoner,
   hentOrganisasjon,
@@ -66,7 +66,7 @@ export const ArbeidsgiverOgVirksomhet = ({
   selvstendigForetak = [],
   arbeidsforholdUtland = [],
   selvstendigNaeringsvirksomhetUtland = [],
-}: ArbeidsgiverOgVirksomhetProps) => {
+}: ArbeidsgiverOgVirksomhetProps) {
   const finnOrganisasjon = (orgnr: string) => {
     const org: Organisasjon = organisasjoner.find((o: Organisasjon) => o.orgnr === orgnr);
     return org || { orgnr };
@@ -181,6 +181,6 @@ export const ArbeidsgiverOgVirksomhet = ({
       />
     </Nav.Container>
   );
-};
+}
 
 export default connector(ArbeidsgiverOgVirksomhet);

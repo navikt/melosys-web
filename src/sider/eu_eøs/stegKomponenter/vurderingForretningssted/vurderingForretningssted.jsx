@@ -23,7 +23,7 @@ import { BOOLSK_STRING } from "../../../../constants";
 
 import "./vurderingForretningssted.css";
 
-const Forretningsstedet = (props) => {
+function Forretningsstedet(props) {
   const { forretningsstedet, avklartForretningsland, oppdaterData, slettData, redigerbart } = props;
 
   useEffect(() => {
@@ -31,13 +31,13 @@ const Forretningsstedet = (props) => {
       oppdaterData(
         konverterAvklartfaktaTilStegData(
           MKV.Koder.avklartefaktatyper.ARBEIDSGIVERS_FORRETNINGSSTED,
-          avklartForretningsland
-        )
+          avklartForretningsland,
+        ),
       );
     }
     return () => {
       slettData(
-        slettAvklartfakta(MKV.Koder.avklartefaktatyper.ARBEIDSGIVERS_FORRETNINGSSTED, forretningsstedet.virksomhetId)
+        slettAvklartfakta(MKV.Koder.avklartefaktatyper.ARBEIDSGIVERS_FORRETNINGSSTED, forretningsstedet.virksomhetId),
       );
     };
   }, []);
@@ -61,7 +61,7 @@ const Forretningsstedet = (props) => {
       />
     </Nav.Fieldset>
   );
-};
+}
 
 Forretningsstedet.propTypes = {
   forretningsstedet: PT.object.isRequired,
@@ -75,7 +75,7 @@ Forretningsstedet.defaultProps = {
   avklartForretningsland: null,
 };
 
-const Forretningssteder = (props) => {
+function Forretningssteder(props) {
   const { valgteVirksomheter, avklarteForretningsland, redigerbart } = props;
 
   const ingenValgteVirksomheterVarsel = valgteVirksomheter.length === 0 && (
@@ -89,7 +89,7 @@ const Forretningssteder = (props) => {
         .map((valgtVirksomhet) => {
           const key = `forretningssted${valgtVirksomhet.virksomhetId}-${valgtVirksomhet.navn}`;
           const avklartForretningsland = avklarteForretningsland.find(
-            (enkeltAvklaring) => enkeltAvklaring.subjektID === valgtVirksomhet.virksomhetId
+            (enkeltAvklaring) => enkeltAvklaring.subjektID === valgtVirksomhet.virksomhetId,
           );
 
           return (
@@ -106,7 +106,7 @@ const Forretningssteder = (props) => {
       {ingenValgteVirksomheterVarsel}
     </div>
   );
-};
+}
 
 Forretningssteder.propTypes = {
   valgteVirksomheter: PT.array.isRequired,
@@ -116,7 +116,7 @@ Forretningssteder.propTypes = {
   redigerbart: PT.bool.isRequired,
 };
 
-const VurderingForretningssted = (props) => {
+function VurderingForretningssted(props) {
   const { bekreftOgFortsett, tilstand, redigerbart, oppdaterData, slettData, tilbake } = props;
 
   const { omfattetINorge, omfattetILand, lovvalgsbestemmelse, harAvklaring } = tilstand;
@@ -244,7 +244,7 @@ const VurderingForretningssted = (props) => {
       />
     </div>
   );
-};
+}
 
 VurderingForretningssted.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,

@@ -15,36 +15,38 @@ type UtfyltUtenlandskIdentProps = PropsFromRedux & {
   utenlandskeIdenter: UtenlandskIdent[];
 };
 
-const UtfyltUtenlandskIdent = ({ utenlandskeIdenter, landkoder }: UtfyltUtenlandskIdentProps) => (
-  <>
-    <Nav.Row>
-      <Nav.Column xs="6">
-        <Nav.BodyLong size="small">ID-nummer</Nav.BodyLong>
-      </Nav.Column>
-      <Nav.Column xs="6">
-        <Nav.BodyLong size="small">Land</Nav.BodyLong>
-      </Nav.Column>
-    </Nav.Row>
-    <Nav.Row>
-      {utenlandskeIdenter.map(({ ident, landkode }, indeks) => (
-        /* eslint-disable-next-line react/no-array-index-key */
-        <div key={indeks}>
-          <Nav.Column xs="6">
-            <Nav.BodyLong weight="semibold" size="small">
-              {ident}
-            </Nav.BodyLong>
-          </Nav.Column>
-          <Nav.Column xs="6">
-            {landkode && (
+function UtfyltUtenlandskIdent({ utenlandskeIdenter, landkoder }: UtfyltUtenlandskIdentProps) {
+  return (
+    <>
+      <Nav.Row>
+        <Nav.Column xs="6">
+          <Nav.BodyLong size="small">ID-nummer</Nav.BodyLong>
+        </Nav.Column>
+        <Nav.Column xs="6">
+          <Nav.BodyLong size="small">Land</Nav.BodyLong>
+        </Nav.Column>
+      </Nav.Row>
+      <Nav.Row>
+        {utenlandskeIdenter.map(({ ident, landkode }, indeks) => (
+          /* eslint-disable-next-line react/no-array-index-key */
+          <div key={indeks}>
+            <Nav.Column xs="6">
               <Nav.BodyLong weight="semibold" size="small">
-                {KV.kodeTilTerm(landkode, landkoder)}
+                {ident}
               </Nav.BodyLong>
-            )}
-          </Nav.Column>
-        </div>
-      ))}
-    </Nav.Row>
-  </>
-);
+            </Nav.Column>
+            <Nav.Column xs="6">
+              {landkode && (
+                <Nav.BodyLong weight="semibold" size="small">
+                  {KV.kodeTilTerm(landkode, landkoder)}
+                </Nav.BodyLong>
+              )}
+            </Nav.Column>
+          </div>
+        ))}
+      </Nav.Row>
+    </>
+  );
+}
 
 export default connector(UtfyltUtenlandskIdent);

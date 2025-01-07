@@ -6,7 +6,7 @@ import * as Utils from "../../../../../utils";
 import * as Nav from "../../../../../navFrontend";
 import { InntektskildeDto } from "../../../../../services/modules/trygdeavgift";
 
-const InntektsperioderTabell = ({ perioder, avgift }: { perioder?: InntektskildeDto[]; avgift?: Avgift }) => {
+function InntektsperioderTabell({ perioder, avgift }: { perioder?: InntektskildeDto[]; avgift?: Avgift }) {
   const renderTomRad = (length: number) => {
     return (
       <Nav.Table.Row className="border_top" key={Utils._uuid()}>
@@ -34,7 +34,7 @@ const InntektsperioderTabell = ({ perioder, avgift }: { perioder?: Inntektskilde
                 <Nav.Table.Row className="border_top" key={Utils._uuid()}>
                   <Nav.Table.DataCell key={Utils._uuid()}>
                     {`${Utils.dato.formatterDatoTilNorsk(inntektsperiode.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(
-                      inntektsperiode.tomDato
+                      inntektsperiode.tomDato,
                     )}`}
                   </Nav.Table.DataCell>
                   <Nav.Table.DataCell key={Utils._uuid()}>
@@ -58,6 +58,6 @@ const InntektsperioderTabell = ({ perioder, avgift }: { perioder?: Inntektskilde
       </HStack>
     </VStack>
   );
-};
+}
 
 export default InntektsperioderTabell;

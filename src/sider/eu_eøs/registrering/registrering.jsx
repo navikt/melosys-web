@@ -23,7 +23,7 @@ import { redigerbartSelectors } from "../../../ducks/redigerbart";
 
 import "./registrering.css";
 
-export const Registrering = ({
+export function Registrering({
   match: {
     params: { saksnr: saksnummer },
   },
@@ -44,7 +44,7 @@ export const Registrering = ({
   visOppfriskModal,
   behandlingOppfriskes,
   startOgVisOppfriskModal,
-}) => {
+}) {
   const behandlingID = Utils._toInteger(Utils.queryString.getParam(location, "behandlingID"));
   const dispatch = useDispatch();
   const [saksopplysningerErHentet, setSaksopplysningerErHentet] = useState(false);
@@ -119,7 +119,7 @@ export const Registrering = ({
       </div>
     </>
   );
-};
+}
 Registrering.propTypes = {
   Saksopplysninger: PT.oneOfType([PT.object, PT.func]).isRequired,
   hentAvklartefakta: PT.func.isRequired,

@@ -8,7 +8,7 @@ import { avklartefaktaSelectors } from "../../../../ducks/avklartefakta";
 
 import "./vurderingArtikkel12_x.css";
 
-interface VurderingArtikkel12_xProps {
+interface VurderingArtikkel12xProps {
   bekreftOgFortsett: () => void;
   tilstand: {
     harAvklaring: boolean;
@@ -20,14 +20,15 @@ interface VurderingArtikkel12_xProps {
   redigerbart: boolean;
 }
 
-const VurderingArtikkel12_x = ({
+// eslint-disable-next-line @typescript-eslint/naming-convention
+function VurderingArtikkel12_x({
   bekreftOgFortsett,
   tilstand: { harAvklaring, artikkelNavn },
   redigerbart,
   oppdaterData,
   slettData,
   tilbake,
-}: VurderingArtikkel12_xProps) => {
+}: VurderingArtikkel12xProps) {
   const erVurderingArbeidstaker = artikkelNavn === "12.1";
   const arbeidsland = useSelector(avklartefaktaSelectors.ArbeidslandSelector);
   const visStorbritanniaKonvensjon = MKVUtils.enesteLandErStorbritannia(arbeidsland);
@@ -37,7 +38,7 @@ const VurderingArtikkel12_x = ({
       function cleanup() {
         slettData();
       },
-    []
+    [],
   );
 
   return (
@@ -63,6 +64,6 @@ const VurderingArtikkel12_x = ({
       />
     </div>
   );
-};
+}
 
 export default VurderingArtikkel12_x;

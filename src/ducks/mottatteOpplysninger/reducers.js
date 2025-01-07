@@ -241,7 +241,7 @@ export default function reducer(state = initialState, action = {}) {
             trygdeavgiftTrukketGjennomSkatt: dokument.trygdeavgiftTrukketGjennomSkatt,
             trygdeavgiftTrukketGjennomSkattDato: formatterDatoTilISO(
               dokument.trygdeavgiftTrukketGjennomSkattDato,
-              null
+              null,
             ),
           },
           oppholdUtland: {
@@ -316,13 +316,13 @@ export default function reducer(state = initialState, action = {}) {
           },
           arbeidssituasjonOgOevrig: {
             harLoennetArbeidMinstEnMndFoerUtsending: Utils._isNil(
-              dokument.arbeidssituasjonOgOevrig.harLoennetArbeidMinstEnMndFoerUtsending
+              dokument.arbeidssituasjonOgOevrig.harLoennetArbeidMinstEnMndFoerUtsending,
             )
               ? null
               : dokument.arbeidssituasjonOgOevrig.harLoennetArbeidMinstEnMndFoerUtsending,
             beskrivelseArbeidSisteMnd: dokument.arbeidssituasjonOgOevrig.beskrivelseArbeidSisteMnd,
             harAndreArbeidsgivereIUtsendingsperioden: Utils._isNil(
-              dokument.arbeidssituasjonOgOevrig.harAndreArbeidsgivereIUtsendingsperioden
+              dokument.arbeidssituasjonOgOevrig.harAndreArbeidsgivereIUtsendingsperioden,
             )
               ? null
               : dokument.arbeidssituasjonOgOevrig.harAndreArbeidsgivereIUtsendingsperioden,

@@ -9,7 +9,7 @@ interface PersonstatusTabellProps {
   personstatuser: Folkeregisterpersonstatus[];
 }
 
-export const PersonstatusTabell = ({ personstatuser }: PersonstatusTabellProps) => {
+export function PersonstatusTabell({ personstatuser }: PersonstatusTabellProps) {
   if (personstatuser.length < 1) {
     return <Nav.BodyLong size="small">Ingen historikk registrert i folkeregisteret.</Nav.BodyLong>;
   }
@@ -36,7 +36,7 @@ export const PersonstatusTabell = ({ personstatuser }: PersonstatusTabellProps) 
       </Nav.Table.Body>
     </Nav.Table>
   );
-};
+}
 
 interface PersonstatusModalProps {
   aktivePersonstatuser: Folkeregisterpersonstatus[];
@@ -45,12 +45,12 @@ interface PersonstatusModalProps {
   lukkModal: () => void;
 }
 
-const PersonstatusModal = ({
+function PersonstatusModal({
   aktivePersonstatuser,
   historiskePersonstatuser,
   skalViseModal,
   lukkModal,
-}: PersonstatusModalProps) => {
+}: PersonstatusModalProps) {
   const personstatusModalCls = bem("personstatus-modal");
 
   return (
@@ -72,6 +72,6 @@ const PersonstatusModal = ({
       </Nav.Modal.Body>
     </Nav.Modal>
   );
-};
+}
 
 export default PersonstatusModal;

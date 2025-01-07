@@ -89,7 +89,7 @@ class Artikkel16Anmodning extends Steg {
 
   static harAvklaring({ anmodningsperioder, vilkar, unntaksvilkår, konvensjonStorbritanniaToggleEnabled }) {
     const unntakFraBestemmelseErSatt = anmodningsperioder?.some(
-      (anmodningsperiode) => anmodningsperiode.unntakFraBestemmelse
+      (anmodningsperiode) => anmodningsperiode.unntakFraBestemmelse,
     );
     const minstEnBegrunnelseErValgt = konvensjonStorbritanniaToggleEnabled
       ? !Utils._isEmpty(unntaksvilkår?.begrunnelseKoder)

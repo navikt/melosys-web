@@ -90,9 +90,9 @@ describe("PostnrStedLandLinje", () => {
     ];
 
     data.forEach((testdata) => {
-      // @ts-ignore
+      // @ts-expect-error generisk beskrivelse
       render(<PostnrStedLandLinje {...testdata[0]} />);
-      // @ts-ignore
+      // @ts-expect-error generisk beskrivelse
       expect(screen.getByText(testdata[1])).toBeInTheDocument();
     });
   });

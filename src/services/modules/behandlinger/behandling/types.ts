@@ -153,7 +153,7 @@ export interface BehandlingResDto {
     medlemskap: {
       medlemsperiode: Medlemsperiode[];
     };
-    sakOgBehandling: {};
+    sakOgBehandling: object;
     sed: Sed | null;
   };
   oppsummering: Oppsummering;

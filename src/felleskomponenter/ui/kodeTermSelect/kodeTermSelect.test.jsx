@@ -42,13 +42,13 @@ describe("KodeTermSelect", () => {
     it("true enabler select", () => {
       props.redigerbart = true;
       render(<KodeTermSelect {...props} />);
-      expect(screen.queryByTitle("readonly")).not.toBeInTheDocument();
+      expect(screen.queryByTitle("Skrivebeskyttet")).not.toBeInTheDocument();
     });
 
     it("false disabler select", () => {
       props.redigerbart = false;
       render(<KodeTermSelect {...props} />);
-      expect(screen.getByTitle("readonly")).toBeInTheDocument();
+      expect(screen.getByTitle("Skrivebeskyttet")).toBeInTheDocument();
     });
   });
 });

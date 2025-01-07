@@ -6,17 +6,17 @@ import * as Skjema from "../../../../felleskomponenter/skjema";
 import * as Nav from "../../../../navFrontend";
 import * as KV from "../../../../kodeverk";
 
-type AvsenderVelgerForVirksomhetProps = {
+interface AvsenderVelgerForVirksomhetProps {
   tomAvsender: () => void;
   kopierVirksomhetTilAvsender: () => void;
   mottaksKanalErElektronisk: boolean;
-};
+}
 
-export const AvsenderVelgerForVirksomhet = ({
+export function AvsenderVelgerForVirksomhet({
   tomAvsender,
   kopierVirksomhetTilAvsender,
   mottaksKanalErElektronisk,
-}: AvsenderVelgerForVirksomhetProps) => {
+}: AvsenderVelgerForVirksomhetProps) {
   const formValues = useSelector((state) => getFormValues(KV.Form.JOURNALFORING)(state)) as any;
 
   useEffect(() => {
@@ -39,4 +39,4 @@ export const AvsenderVelgerForVirksomhet = ({
       {formValues.avsenderType === KV.AvsenderTyper.FRITEKST && <Skjema.Input label="" feltNavn="avsenderNavn" />}
     </Skjema.RadioGroup>
   );
-};
+}

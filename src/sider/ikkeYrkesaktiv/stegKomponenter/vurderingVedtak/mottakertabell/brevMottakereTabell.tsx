@@ -10,7 +10,7 @@ import Dokumentliste from "../../../../../felleskomponenter/dokumentliste";
 
 const { IKKE_YRKESAKTIV_VEDTAKSBREV } = MKV.Koder.brev.produserbaredokumenter;
 
-export const BrevMottakereTabell = () => {
+export function BrevMottakereTabell() {
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
 
   const [muligeMottakere] = useAsyncCallbackState(
@@ -20,7 +20,7 @@ export const BrevMottakereTabell = () => {
         orgnr: null,
       }),
     Api.DokumenterV2.tomHentMuligeMottakereResDto(),
-    []
+    [],
   );
 
   const mapDokumenter = (muligmottaker: Api.DokumenterV2.HentMuligeMottakereResDto) => {
@@ -38,4 +38,4 @@ export const BrevMottakereTabell = () => {
   if (Utils._isEmpty(muligeMottakere)) return null;
 
   return <Dokumentliste behandlingID={behandlingID} dokumenter={mapDokumenter(muligeMottakere)} />;
-};
+}

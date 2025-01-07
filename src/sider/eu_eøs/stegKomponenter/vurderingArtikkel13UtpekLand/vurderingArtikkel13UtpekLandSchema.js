@@ -24,7 +24,7 @@ const artikkel13_utpek = object().shape({
         is: true,
         then: string().required(MOTTAKERINSTITUSJON_KREVES),
       }),
-    })
+    }),
   ),
   lovvalgsland: string().when("$validerLovvalgsland", {
     is: true,
