@@ -79,11 +79,11 @@ function VurderingInngang({ bekreft, oppdaterStatus }: VurderingInngangProps) {
           mottatteOpplysningerOperations.oppdaterPeriode({
             fom: Utils.dato.formatterDatoTilISO(data.fom, ""),
             tom: Utils.dato.formatterDatoTilISO(data.tom, ""),
-          }),
+          })
         ),
-      500,
+      500
     ),
-    [],
+    []
   );
 
   const lagreFom = (fom: string) => {
@@ -122,7 +122,7 @@ function VurderingInngang({ bekreft, oppdaterStatus }: VurderingInngangProps) {
 
   return (
     <div className="vurderingInngang_unntaksregistrering">
-      <Nav.Heading size="large" className="stegvelgertittel">
+      <Nav.Heading level="1" className="stegvelgertittel">
         Oppgi opplysninger fra attesten
       </Nav.Heading>
 
@@ -174,9 +174,7 @@ function VurderingInngang({ bekreft, oppdaterStatus }: VurderingInngangProps) {
       </div>
 
       {sakstype === EU_EOS && (
-        <Nav.Alert variant="info" className="vurderingInngang_unntaksregistrering__alertstripe">
-          Hvis avsenderlandet ikke er lovvalgsland, må du endre lovvalgsland.
-        </Nav.Alert>
+        <Nav.Alert variant="info">Hvis avsenderlandet ikke er lovvalgsland, må du endre lovvalgsland.</Nav.Alert>
       )}
 
       <Mui.StegKnapper

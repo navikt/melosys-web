@@ -22,6 +22,8 @@ import BrevMottakerNorskMyndighet from "./brevMottakerNorskMyndighet";
 import { FeilmeldingProps, Underpunkt } from "../../../../services/modules/dokumenter-v2";
 import LabelMedHjelpetekst from "../../../labelMedHjelpetekst";
 
+import "./brevMottaker.css";
+
 const { BRUKER, ARBEIDSGIVER, VIRKSOMHET, ANNEN_ORGANISASJON, NORSK_MYNDIGHET, UTENLANDSK_TRYGDEMYNDIGHET } =
   MKV.Koder.mottakerroller;
 
@@ -121,9 +123,13 @@ function BrevMottaker({
     if (erArbeidsgiver(valgtMottaker.rolle)) {
       setAdresse({
         mottakerAdresse: valgtMottaker.adresser?.find(
-          (mottakerAdresse: DokumenterV2.BrevAdresse) => mottakerAdresse.orgnr === formValues.arbeidsgiver,
+          (mottakerAdresse: DokumenterV2.BrevAdresse) => mottakerAdresse.orgnr === formValues.arbeidsgiver
         ),
       });
+
+      if (valgtMottaker.adresser?.length === 1) {
+        changeField("arbeidsgiver", valgtMottaker.adresser[0].orgnr);
+      }
     }
 
     if (erAnnenOrganisasjon(valgtMottaker.rolle)) {
@@ -133,6 +139,7 @@ function BrevMottaker({
   return (
     <>
       <Skjema.Select
+        className="mottaker"
         feltNavn="mottaker"
         label={
           <LabelMedHjelpetekst
@@ -157,7 +164,7 @@ function BrevMottaker({
 
       {(mottakerErBruker || mottakerErVirksomhet) && (
         <Nav.Row>
-          <Nav.Column xs="12">
+          <Nav.Column>
             {feil && (
               <Nav.Alert variant="error" className="alertstripe_feil">
                 <Nav.BodyLong weight="semibold" size="small">
@@ -165,7 +172,9 @@ function BrevMottaker({
                 </Nav.BodyLong>
                 {!Utils._isEmpty(feil.underpunkter) && (
                   <ul>
-                    {feil.underpunkter?.map((item: Underpunkt) => <li key={item.underpunkt}>{item.underpunkt}</li>)}
+                    {feil.underpunkter?.map((item: Underpunkt) => (
+                      <li key={item.underpunkt}>{item.underpunkt}</li>
+                    ))}
                   </ul>
                 )}
               </Nav.Alert>
@@ -188,12 +197,17 @@ function BrevMottaker({
           ) : (
             <Nav.Column xs="12" className="arbeidsgiver">
               <Skjema.RadioGroup
-                legend={<LabelMedHjelpetekst label="Velg: " hjelpetekst={arbeidsgiverHjelptekst} bold small />}
+                legend={
+                  <LabelMedHjelpetekst label="Velg arbeidsgiver" hjelpetekst={arbeidsgiverHjelptekst} bold small />
+                }
                 name="arbeidsgiver"
               >
                 {formValues?.valgtMottaker?.adresser?.map((virksomhet: DokumenterV2.BrevAdresse) => (
                   <Fragment key={`arbeidsgiver.${virksomhet.orgnr}`}>
-                    <Nav.Radio value={virksomhet.orgnr}>
+                    <Nav.Radio
+                      readOnly={(formValues?.valgtMottaker?.adresser?.length ?? 0) === 1}
+                      value={virksomhet.orgnr}
+                    >
                       {`${virksomhet.mottakerNavn} (org.nr. ${virksomhet.orgnr})`}
                     </Nav.Radio>
                     {formValues.arbeidsgiver === virksomhet.orgnr && adresse?.mottakerAdresse && (
@@ -209,14 +223,26 @@ function BrevMottaker({
 
       {mottakerErAnnenOrganisasjon && (
         <Nav.Row>
-          <Nav.Column xs="6">
+          <Nav.Column xs="4">
             <Skjema.Input
+              className="organisasjonsnummer"
               feltNavn="organisasjonsnummer"
-              label="Organisasjonsnummer"
-              placeholder="Skriv inn..."
+              label="Org.nr."
               disabled={!redigerbart}
             />
-            {adresse?.organisasjonsAdresse && (
+          </Nav.Column>
+
+          <Nav.Column xs="8">
+            <Skjema.Input
+              className="kontaktperson"
+              feltNavn="kontaktperson"
+              label="Kontaktperson"
+              disabled={!redigerbart}
+            />
+          </Nav.Column>
+
+          {adresse?.organisasjonsAdresse && (
+            <Nav.Column xs="12">
               <OrganisasjonsAdresse
                 className="organisasjonsAdresse"
                 organisasjon={adresse.organisasjonsAdresse}
@@ -224,16 +250,9 @@ function BrevMottaker({
                 boldNavn
                 visTittel={false}
               />
-            )}
-          </Nav.Column>
-          <Nav.Column xs="6">
-            <Skjema.Input
-              feltNavn="kontaktperson"
-              label="Kontaktperson"
-              placeholder="Skriv inn..."
-              disabled={!redigerbart}
-            />
-          </Nav.Column>
+            </Nav.Column>
+          )}
+
           {feil && (
             <Nav.Column xs="12">
               <Nav.Alert variant="error" className="alertstripe_feil">

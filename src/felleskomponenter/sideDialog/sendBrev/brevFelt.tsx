@@ -66,7 +66,9 @@ function BrevFelt({ felt, visFeltBeskrivelse, width, redigerbart }: BrevFeltProp
     case DokumenterV2.FeltType.FORMTITTEL:
       return (
         <Nav.Row>
-          <LabelMedHjelpetekst label={felt.beskrivelse} hjelpetekst={felt.hjelpetekst} bold small />
+          <Nav.Column xs={width}>
+            <LabelMedHjelpetekst label={felt.beskrivelse} hjelpetekst={felt.hjelpetekst} bold small />
+          </Nav.Column>
         </Nav.Row>
       );
     default:

@@ -19,6 +19,10 @@ import { vedtakOperations } from "../../../../ducks/vedtak";
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
 import { kontrollOperations } from "../../../../ducks/kontroll";
 import { Datovelger } from "../../../../felleskomponenter/forms";
+import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
+import { NY_VURDERING_BAKGRUNN_HJELPETEKST } from "../../../ikkeYrkesaktiv/stegKomponenter/vurderingVedtak/tekster";
+import { KTObject } from "@navikt/melosys-kodeverk";
+import * as Forms from "../../../../felleskomponenter/forms";
 
 interface VurderingVedtakProps {
   tilbake: () => void;
@@ -55,10 +59,10 @@ export function VurderingVedtak11_3_og_13_3a({
   const [vedtakPending, setVedtakPending] = useState(false);
 
   const formattedFom = Utils.dato.formatterDatoTilNorsk(
-    lovvalgsperiode !== null && !Utils._isEmpty(lovvalgsperiode) ? lovvalgsperiode.fomDato : soknadsperiode.fom,
+    lovvalgsperiode !== null && !Utils._isEmpty(lovvalgsperiode) ? lovvalgsperiode.fomDato : soknadsperiode.fom
   );
   const formattedTom = Utils.dato.formatterDatoTilNorsk(
-    lovvalgsperiode !== null && !Utils._isEmpty(lovvalgsperiode) ? lovvalgsperiode.tomDato : soknadsperiode.tom,
+    lovvalgsperiode !== null && !Utils._isEmpty(lovvalgsperiode) ? lovvalgsperiode.tomDato : soknadsperiode.tom
   );
 
   const [initiellLovvalgsperiode] = useState({ formattedFom, formattedTom });
@@ -93,7 +97,7 @@ export function VurderingVedtak11_3_og_13_3a({
         vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
         behandlingsresultattype: behandling.oppsummering.behandlingsresultattype.kode,
         skalRegisteropplysningerOppdateres: false,
-      }),
+      })
     );
   };
 
@@ -144,7 +148,7 @@ export function VurderingVedtak11_3_og_13_3a({
     const harOrienteringsbrev = pdfDokumenter.some(
       (dokument: any) =>
         dokument.dokumentData.produserbardokument ===
-        MKV.Koder.brev.produserbaredokumenter.ORIENTERING_TIL_ARBEIDSGIVER_OM_VEDTAK,
+        MKV.Koder.brev.produserbaredokumenter.ORIENTERING_TIL_ARBEIDSGIVER_OM_VEDTAK
     );
 
     if (!harOrienteringsbrev && kopiTilArbeidsgiverChecked) {
@@ -159,7 +163,7 @@ export function VurderingVedtak11_3_og_13_3a({
       const index = pdfDokumenter.findIndex(
         (dokument: any) =>
           dokument.dokumentData.produserbardokument ===
-          MKV.Koder.brev.produserbaredokumenter.ORIENTERING_TIL_ARBEIDSGIVER_OM_VEDTAK,
+          MKV.Koder.brev.produserbaredokumenter.ORIENTERING_TIL_ARBEIDSGIVER_OM_VEDTAK
       );
 
       if (index > -1) {
@@ -167,6 +171,9 @@ export function VurderingVedtak11_3_og_13_3a({
       }
     }
   };
+
+  const erNyVurdering =
+    behandling.oppsummering.behandlingstype.kode === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
 
   useEffect(() => {
     if (formState.isValid && !formState.isValidating) {
@@ -181,7 +188,7 @@ export function VurderingVedtak11_3_og_13_3a({
 
   return (
     <div className="vedtak">
-      <Nav.Heading size="large" className="stegvelgertittel">
+      <Nav.Heading level="1" className="stegvelgertittel">
         Omfattet av norsk trygdelovgivning
       </Nav.Heading>
       <Mui.KodeTermSelect
@@ -191,11 +198,11 @@ export function VurderingVedtak11_3_og_13_3a({
         koder={[
           KV.kodeTilObjekt(
             MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3A,
-            MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004,
+            MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004
           ),
           KV.kodeTilObjekt(
             MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia.KONV_EFTA_STORBRITANNIA_ART13_3A,
-            MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia,
+            MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia
           ),
         ]}
         redigerbart={redigerbart}
@@ -246,6 +253,30 @@ export function VurderingVedtak11_3_og_13_3a({
           </Nav.Column>
         </Nav.Row>
       )}
+
+      {erNyVurdering && (
+        <Nav.Row className="2">
+          <Nav.Column xs="7">
+            <Forms.Select
+              label={
+                <LabelMedHjelpetekst
+                  label="Oppgi grunn for nytt vedtak (Obligatorisk)"
+                  hjelpetekst={NY_VURDERING_BAKGRUNN_HJELPETEKST}
+                />
+              }
+              name="vedtakstypebegrunnelse"
+              readOnly={!redigerbart}
+              emptyFieldDisabled={!!formValues?.vedtakstypebegrunnelse}
+              control={control}
+            >
+              {MKV.KTObjects.begrunnelser.nyvurderingbakgrunner?.map((bakgrunn: KTObject) => (
+                <option key={bakgrunn.kode} value={bakgrunn.kode} label={bakgrunn.term || ""} />
+              ))}
+            </Forms.Select>
+          </Nav.Column>
+        </Nav.Row>
+      )}
+
       <Nav.Row>
         <Nav.Column xs="7">
           <Nav.Textarea

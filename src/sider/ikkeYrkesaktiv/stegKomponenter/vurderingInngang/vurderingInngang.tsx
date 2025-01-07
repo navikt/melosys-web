@@ -81,7 +81,7 @@ export function VurderingInngang({ bekreft, aktivtSteg, oppdaterStatus }: Props)
         mottatteOpplysningerOperations.oppdaterPeriode({
           fom: Utils.dato.formatterDatoTilISO(formValues.fom, ""),
           tom: Utils.dato.formatterDatoTilISO(formValues.tom, ""),
-        }),
+        })
       ),
     ]);
   };
@@ -102,7 +102,7 @@ export function VurderingInngang({ bekreft, aktivtSteg, oppdaterStatus }: Props)
 
   return (
     <div className="vurderingInngang_ikkeYrkesaktiv">
-      <Nav.Heading size="large" className="stegvelgertittel">
+      <Nav.Heading level="1" className="stegvelgertittel">
         Oppgi opplysninger fra søknaden
       </Nav.Heading>
 

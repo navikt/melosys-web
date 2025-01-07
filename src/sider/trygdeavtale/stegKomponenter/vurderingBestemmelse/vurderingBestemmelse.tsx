@@ -106,7 +106,7 @@ function VurderingBestemmelse({
           if (formValues?.vedtak && formValues.vedtak !== JA_FATTE_VEDTAK && lovvalgsperiode?.periodeID) {
             slettLovvalgsperiode(behandlingID, lovvalgsperiode.periodeID);
           }
-        },
+        }
       );
     }
   }, [formValues?.vedtak, formValues?.bestemmelse, formValues?.tilleggsbestemmelse]);
@@ -115,7 +115,7 @@ function VurderingBestemmelse({
 
   return (
     <div className="vurderingBestemmelse_trygdeavtale">
-      <Nav.Heading size="large" className="stegvelgertittel">
+      <Nav.Heading level="1" className="stegvelgertittel">
         Bestemmelse og vurdering
       </Nav.Heading>
 

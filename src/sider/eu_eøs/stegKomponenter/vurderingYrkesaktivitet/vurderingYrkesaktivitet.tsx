@@ -65,9 +65,10 @@ function VurderingYrkesaktivitet(props: VurderingYrkesaktivitetProps) {
       ];
 
   const fakta = hentFaktaVerdi(yrkesaktivitet);
+
   return (
     <>
-      <Nav.Heading size="large" className="stegvelgertittel">
+      <Nav.Heading level="1" className="stegvelgertittel">
         Yrkesaktivitet
       </Nav.Heading>
       <Nav.RadioGroup

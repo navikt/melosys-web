@@ -30,7 +30,7 @@ function Undertittel({ ikon: Ikon, tekst, etterTekst, className, understrek = fa
 
   return (
     <div className={cl}>
-      <Nav.Heading size="small" id={undertittelId} className={navUndertittelCl}>
+      <Nav.Heading level="3" id={undertittelId} className={navUndertittelCl}>
         {Ikon && <Ikon className="undertittel__ikon" {...defaultIkonProps} {...ikonProps} />}
         <span className="undertittel__tekst">{tekst}</span>
         <span>{etterTekst}</span>

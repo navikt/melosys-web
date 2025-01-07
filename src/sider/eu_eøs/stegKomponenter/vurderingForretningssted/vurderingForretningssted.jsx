@@ -31,13 +31,13 @@ function Forretningsstedet(props) {
       oppdaterData(
         konverterAvklartfaktaTilStegData(
           MKV.Koder.avklartefaktatyper.ARBEIDSGIVERS_FORRETNINGSSTED,
-          avklartForretningsland,
-        ),
+          avklartForretningsland
+        )
       );
     }
     return () => {
       slettData(
-        slettAvklartfakta(MKV.Koder.avklartefaktatyper.ARBEIDSGIVERS_FORRETNINGSSTED, forretningsstedet.virksomhetId),
+        slettAvklartfakta(MKV.Koder.avklartefaktatyper.ARBEIDSGIVERS_FORRETNINGSSTED, forretningsstedet.virksomhetId)
       );
     };
   }, []);
@@ -89,7 +89,7 @@ function Forretningssteder(props) {
         .map((valgtVirksomhet) => {
           const key = `forretningssted${valgtVirksomhet.virksomhetId}-${valgtVirksomhet.navn}`;
           const avklartForretningsland = avklarteForretningsland.find(
-            (enkeltAvklaring) => enkeltAvklaring.subjektID === valgtVirksomhet.virksomhetId,
+            (enkeltAvklaring) => enkeltAvklaring.subjektID === valgtVirksomhet.virksomhetId
           );
 
           return (
@@ -182,7 +182,7 @@ function VurderingForretningssted(props) {
 
   return (
     <div className="vurderingForretningssted">
-      <Nav.Heading size="large" className="stegvelgertittel">
+      <Nav.Heading level="1" className="stegvelgertittel">
         Vurdering av artikkel 13 nr. 1 bokstav b
       </Nav.Heading>
       <Nav.Fieldset legend="Velg hvor virksomhetene har forretningssted" className="forretningssteder">

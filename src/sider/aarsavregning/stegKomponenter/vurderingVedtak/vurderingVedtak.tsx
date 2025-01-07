@@ -84,7 +84,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
     return Api.Aarsavregning.hentAarsavregning(behandlingID, aarsavregningID).then(
       (response: AarsavregningResponse) => {
         setLagretAarsavregning(response);
-      },
+      }
     );
   };
 
@@ -100,7 +100,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
     await Api.Fagsaker.aktoer.hent(saksnummer, FULLMEKTIG).then((res) => {
       setHarBekreftetFullmaktForTrygdeavgift(false);
       setHarFullmaktForTrygdeavgift(
-        res.some((aktoer) => aktoer.fullmakter?.some((fullmakt) => fullmakt === FULLMEKTIG_TRYGDEAVGIFT)),
+        res.some((aktoer) => aktoer.fullmakter?.some((fullmakt) => fullmakt === FULLMEKTIG_TRYGDEAVGIFT))
       );
     });
   };
@@ -204,7 +204,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
 
   return (
     <div className="vurderingVedtak">
-      <Nav.Heading size="large" className="stegvelgertittel">
+      <Nav.Heading level="1" className="stegvelgertittel">
         Vedtak årsavregning {lagretAarsavregning ? lagretAarsavregning.aar : ""}
       </Nav.Heading>
 

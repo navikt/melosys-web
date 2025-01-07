@@ -5,14 +5,14 @@ import * as SkjemaUtils from "../utils";
 
 function InnerTextAreaComponent({ label, placeholder, maxLength, input, meta, onChange, ...rest }) {
   const { touched, active } = meta;
-  const feil = touched && !active ? SkjemaUtils.mapReduxFormFeilTilNavFeil(meta) : undefined;
+  const error = touched && !active ? SkjemaUtils.mapReduxFormFeilTilNavFeil(meta) : undefined;
 
   const innerOnChange = (e) => {
     if (onChange) onChange(e);
     input.onChange(e);
   };
 
-  const inputProps = { ...input, ...rest, feil, onChange: innerOnChange };
+  const inputProps = { ...input, ...rest, error, onChange: innerOnChange };
 
   return (
     <Nav.Textarea

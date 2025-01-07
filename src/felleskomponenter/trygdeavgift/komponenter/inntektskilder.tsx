@@ -17,6 +17,7 @@ import {
 import "./inntektskilder.css";
 import { Stack } from "@navikt/ds-react";
 import { Alert } from "../../../navFrontend";
+import { DateRangeController } from "../../forms";
 
 const {
   ARBEIDSINNTEKT_FRA_NORGE,
@@ -107,7 +108,7 @@ export function Inntektskilder({
         const skalFylleInnBruttoInntekt = bruttoInntektKreves(
           brukerSkattepliktigIHelePerioden,
           inntektskilde.kildetype,
-          inntektskilde.arbAvgBetales,
+          inntektskilde.arbAvgBetales
         );
         if (!skalFylleInnBruttoInntekt && inntektskilde.bruttoInntekt) {
           update(index, { ...inntektskilde, bruttoInntekt: undefined });
@@ -116,21 +117,19 @@ export function Inntektskilder({
         return (
           <Nav.Row className="periode__rad" key={fields[index].id}>
             <Nav.Column>
-              <Forms.Datovelger
-                label={index === 0 ? "Inntektsperiode" : ""}
-                name={`inntektskilder[${index}].fomDato`}
-                readOnly={!redigerbart}
+              <DateRangeController
+                name={`inntektskilder[${index}]`}
                 control={control}
-              />
-            </Nav.Column>
-
-            <Nav.Column>
-              <Forms.Datovelger
-                label={index === 0 && <span className="invisible" />}
-                name={`inntektskilder[${index}].tomDato`}
+                label="Inntektsperiode"
+                hideLabel={index !== 0}
+                defaultSelected={{
+                  from: Utils.dato.norskStringTilDate(formValues.inntektskilder[index].fomDato),
+                  to: Utils.dato.norskStringTilDate(formValues.inntektskilder[index].tomDato),
+                }}
+                fromDate={Utils.dato.norskStringTilDate(defaultPeriode?.fomDato)}
+                toDate={Utils.dato.norskStringTilDate(defaultPeriode?.tomDato)}
+                showFieldError
                 readOnly={!redigerbart}
-                control={control}
-                minDate={Utils.dato.norskStringTilDate(formValues.inntektskilder[index].fomDato)}
               />
             </Nav.Column>
 
@@ -179,7 +178,7 @@ export function Inntektskilder({
             </Nav.Column>
 
             {skalViseErMaanedsBelopRadioGroup && (
-              <Nav.Column>
+              <Nav.Column className="periode">
                 {skalFylleInnBruttoInntekt ? (
                   <Forms.Select
                     emptyFieldDisabled
@@ -256,7 +255,7 @@ export function Inntektskilder({
             ikon={Ikoner.Add}
             onClick={() =>
               append(
-                { ...defaultPeriode, erMaanedsbelop: BOOLSK_STRING.SANN } || { erMaanedsbelop: BOOLSK_STRING.SANN },
+                { ...defaultPeriode, erMaanedsbelop: BOOLSK_STRING.SANN } || { erMaanedsbelop: BOOLSK_STRING.SANN }
               )
             }
           >

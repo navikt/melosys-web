@@ -73,7 +73,7 @@ function VurderingAvklarVirksomhet({
 
   return (
     <div className="vurderingAvklarVirksomhet">
-      <Nav.Heading size="large" className="stegvelgertittel">
+      <Nav.Heading level="1" className="stegvelgertittel">
         <LabelMedHjelpetekst label="Virksomhet" bold />
       </Nav.Heading>
 

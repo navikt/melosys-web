@@ -10,6 +10,7 @@ import { Skatteforholdsperioder } from "../../../../../felleskomponenter/trygdea
 import { Inntektskilder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/inntektskilder";
 
 interface GrunnlagsopplysningerSkjemaProps {
+  defaultPeriode?: { fomDato: string; tomDato: string };
   formValues: FormValuesProps;
   inntektFields: FieldArrayWithId<FieldArrayProps, "inntektskilder">[];
   skattFields: FieldArrayWithId<FieldArrayProps, "skatteforholdsperioder">[];
@@ -24,6 +25,7 @@ interface GrunnlagsopplysningerSkjemaProps {
 }
 
 function GrunnlagsopplysningerSkjema({
+  defaultPeriode,
   formValues,
   inntektFields,
   skattFields,
@@ -47,6 +49,7 @@ function GrunnlagsopplysningerSkjema({
         fields={skattFields}
       />
       <Inntektskilder
+        defaultPeriode={defaultPeriode}
         formValues={formValues}
         redigerbart={redigerbart}
         update={inntektUpdate}

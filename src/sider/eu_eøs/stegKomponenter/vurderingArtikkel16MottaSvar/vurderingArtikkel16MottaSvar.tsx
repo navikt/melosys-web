@@ -53,7 +53,7 @@ function VurderingArtikkel16MottaSvar({
   useEffect(() => {
     // @ts-expect-error generisk beskrivelse
     dispatch(anmodningsperiodesvarOperations.hent(anmodningsperiodeID)).then(
-      (svar: { data: AnmodningsperiodesvarResDto }) => oppdaterData(lagAnmodningsperiodesvar(svar.data)),
+      (svar: { data: AnmodningsperiodesvarResDto }) => oppdaterData(lagAnmodningsperiodesvar(svar.data))
     );
 
     return () => {
@@ -69,7 +69,7 @@ function VurderingArtikkel16MottaSvar({
 
   return (
     <div className="vurderingArtikkel16MottaSvar">
-      <Nav.Heading size="large" className="stegvelgertittel">
+      <Nav.Heading level="1" className="stegvelgertittel">
         {konvensjonStorbritanniaToggleEnabled
           ? "Svar på anmodning om unntak"
           : "Svar på anmodning om unntak, etter artikkel 16, nr. 1"}

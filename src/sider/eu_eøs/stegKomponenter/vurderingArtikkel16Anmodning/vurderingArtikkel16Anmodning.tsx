@@ -288,7 +288,7 @@ function VurderingArtikkel16Anmodning({
 
   return (
     <div className="vurderingArtikkel16Anmodning">
-      <Nav.Heading size="large" className="stegvelgertittel">
+      <Nav.Heading level="1" className="stegvelgertittel">
         {konvensjonStorbritanniaToggleEnabled ? "Anmodning om unntak" : "Anmodning om unntak etter artikkel 16.1"}
       </Nav.Heading>
       <div className="artikkel16__innhold">

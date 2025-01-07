@@ -16,12 +16,12 @@ function VurderingForutgaendeMedlemskap(props) {
       function cleanup() {
         slettData();
       },
-    [],
+    []
   );
 
   return (
     <>
-      <Nav.Heading size="large" className="stegvelgertittel">
+      <Nav.Heading level="1" className="stegvelgertittel">
         Forutgående medlemskap
       </Nav.Heading>
       <EnkeltVilkaar

@@ -96,7 +96,7 @@ function VurderingBostedsland(props) {
 
   return (
     <div className="vurderingBostedsland">
-      <Nav.Heading size="large" className="stegvelgertittel">
+      <Nav.Heading level="1" className="stegvelgertittel">
         Vurder bosted (&#171;sentrum for livsinteresser&#187;)
       </Nav.Heading>
       <div className="vurderingBostedsland__skjemafelt">

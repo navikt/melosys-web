@@ -67,7 +67,7 @@ export function VurderingVideresend({
   return (
     <div className="videresendSoknad">
       <form onSubmit={handleSubmit(videresendSoknad)}>
-        <Nav.Heading size="large" className="stegvelgertittel">
+        <Nav.Heading level="1" className="stegvelgertittel">
           Videresending av søknad
         </Nav.Heading>
         <Nav.Row>

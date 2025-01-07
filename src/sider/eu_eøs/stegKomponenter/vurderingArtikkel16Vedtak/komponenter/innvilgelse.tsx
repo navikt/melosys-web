@@ -83,7 +83,7 @@ function Innvilgelse({
       if (
         fullmektigListe?.length > 0 &&
         fullmektigListe?.find((fullmektig) =>
-          fullmektig.fullmakter?.includes(MKV.Koder.fullmaktstype.FULLMEKTIG_SØKNAD),
+          fullmektig.fullmakter?.includes(MKV.Koder.fullmaktstype.FULLMEKTIG_SØKNAD)
         )
       ) {
         pdfDokumenter.push({
@@ -129,7 +129,7 @@ function Innvilgelse({
 
   return (
     <>
-      <Nav.Heading size="large" className="stegvelgertittel">
+      <Nav.Heading level="1" className="stegvelgertittel">
         {konvensjonStorbritanniaToggleEnabled
           ? "Omfattet av norsk trygdelovgivning"
           : "Omfattet av norsk trygdelovgivning etter Fo 883/2004 Artikkel 16 nr. 1."}

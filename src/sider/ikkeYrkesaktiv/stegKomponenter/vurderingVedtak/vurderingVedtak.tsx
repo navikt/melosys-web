@@ -104,7 +104,7 @@ export function VurderingVedtak({ aktivtSteg, tilbake }: Props) {
         behandlingID,
         vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
         skalRegisteropplysningerOppdateres: false,
-      }),
+      })
     );
     setKontrollEllerVedtakPending(false);
   };
@@ -157,7 +157,7 @@ export function VurderingVedtak({ aktivtSteg, tilbake }: Props) {
       vedtakOperations.fatt(behandlingID, {
         behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
         vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
-      }),
+      })
     );
 
   const handleBekreft = async () => {
@@ -172,12 +172,12 @@ export function VurderingVedtak({ aktivtSteg, tilbake }: Props) {
   return (
     <div className="vurderingVedtakIkkeYrkesaktiv">
       {sakstype === MKV.Koder.sakstyper.EU_EOS && (
-        <Nav.Heading size="large" className="stegvelgertittel">
+        <Nav.Heading level="1" className="stegvelgertittel">
           Omfattet av norsk trygdelovgivning - trygdeforordning 883/2004
         </Nav.Heading>
       )}
       {sakstype === MKV.Koder.sakstyper.TRYGDEAVTALE && (
-        <Nav.Heading size="large" className="stegvelgertittel">
+        <Nav.Heading level="1" className="stegvelgertittel">
           Omfattet av norsk trygdelovgivning - trygdeavtale
         </Nav.Heading>
       )}

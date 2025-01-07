@@ -100,8 +100,8 @@ export function VurderingVurderarbeidsland({
         KV.Koder.avklartefaktaKoder.SOKNADSLAND,
         land,
         KV.Koder.SoknadslandFaktaTyper.IKKE_ARBEIDSLAND,
-        null,
-      ),
+        null
+      )
     );
   };
 
@@ -111,7 +111,7 @@ export function VurderingVurderarbeidsland({
 
   const harMaritimeArbeidUnikeNavn = Utils.erPropertyUnik(
     maritimtArbeid,
-    (enkeltMaritimtArbeid) => enkeltMaritimtArbeid.enhetNavn,
+    (enkeltMaritimtArbeid) => enkeltMaritimtArbeid.enhetNavn
   );
 
   const avklartefaktaEndret = (type: string, subjektID: string, verdi: string) => {
@@ -190,7 +190,7 @@ export function VurderingVurderarbeidsland({
 
   return (
     <div className="vurderingVurderArbeidsland">
-      <Nav.Heading size="large" className="stegvelgertittel overskrift">
+      <Nav.Heading level="1" className="stegvelgertittel overskrift">
         Vurder arbeidsland
       </Nav.Heading>
       {innhold}

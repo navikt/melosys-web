@@ -74,7 +74,7 @@ function VurderingAvslaaUtpeking({
 
   return (
     <form onSubmit={handleSubmit(avsluttOgSendSed)}>
-      <Nav.Heading size="large" className="stegvelgertittel">
+      <Nav.Heading level="1" className="stegvelgertittel">
         Avvis utpeking — informasjon til SED
       </Nav.Heading>
       {redigerbart && (
@@ -97,14 +97,19 @@ function VurderingAvslaaUtpeking({
             label="Foreslå nytt lovvalgsland (valgfri)"
             disabled={!redigerbart}
           />
-          <Skjema.Textarea label="Ytterligere informasjon (valgfri)" feltNavn="fritekst" readOnly={!redigerbart} />
+          <Skjema.Textarea
+            maxLength={500}
+            label="Ytterligere informasjon (valgfri)"
+            feltNavn="fritekst"
+            readOnly={!redigerbart}
+          />
           <Dokumentliste behandlingID={behandlingID} dokumenter={pdfDokumenter} validateOnClick={vedKlikkForhandsvis} />
         </>
       )}
       <Mui.StegKnapper
         bekreftKnappProps={{
           loading: avslagPending,
-          disabled: !redigerbart,
+          disabled: !redigerbart || !formIsValid,
         }}
         bekreftTekst="Avslutt og send SED"
         tilbakeKnappProps={{

@@ -133,8 +133,8 @@ function SendBrev({
   const krevesLandForUtenlandskTrygdemyndighetMottaker = () => {
     return Boolean(
       tilgjengeligeBrevtyper.find((brevType) =>
-        brevType?.felter?.find((felt) => felt.kode === "UTENLANDSK_TRYGDEMYNDIGHET_MOTTAKER"),
-      ),
+        brevType?.felter?.find((felt) => felt.kode === "UTENLANDSK_TRYGDEMYNDIGHET_MOTTAKER")
+      )
     );
   };
   const erUtenlandskTrygdemyndighetMottakerGyldig = (values: SendBrevFormValues) => {
@@ -194,7 +194,7 @@ function SendBrev({
   useEffect(() => {
     if (
       tilgjengeligeBrevtyper?.length === 1 &&
-      (krevesLandForUtenlandskTrygdemyndighetMottaker() || erMottakerGyldig(formValues))
+      (krevesLandForUtenlandskTrygdemyndighetMottaker() || erMottakerGyldig(formValues) || mottakerErNorskMyndighet)
     ) {
       changeField("type", tilgjengeligeBrevtyper[0].type.kode);
     } else if (tilgjengeligeBrevtyper?.length === 1 && !erMottakerGyldig(formValues)) {
@@ -217,7 +217,7 @@ function SendBrev({
   useEffect(() => {
     changeField(
       "valgtBrev",
-      tilgjengeligeBrevtyper.find((brevType) => brevType.type.kode === formValues.type),
+      tilgjengeligeBrevtyper.find((brevType) => brevType.type.kode === formValues.type)
     );
   }, [formValues?.type]);
 
@@ -445,7 +445,7 @@ function SendBrev({
         </div>
       )}
 
-      <Nav.Row>
+      <Nav.Row className="brevmottaker__wrapper">
         <Nav.Column xs={mottakerSelectWidth}>
           <BrevMottaker
             redigerbart={redigerbart}
@@ -461,8 +461,10 @@ function SendBrev({
           <Nav.Column xs={brevTypeSelectWidth}>
             <Skjema.Select
               feltNavn="type"
-              label={<LabelMedHjelpetekst label="Velg brev" bold small />}
-              disabled={!redigerbart || tilgjengeligeBrevtyper.length === 1 || !!formValues.valgtMottaker?.feilmelding}
+              label={<LabelMedHjelpetekst label="Velg brevmal" bold small />}
+              redigerbart={
+                !(!redigerbart || tilgjengeligeBrevtyper.length === 1 || !!formValues.valgtMottaker?.feilmelding)
+              }
               emptyFieldDisabled={!!formValues.type}
               onBlur={overstyrBlurEvent}
             >

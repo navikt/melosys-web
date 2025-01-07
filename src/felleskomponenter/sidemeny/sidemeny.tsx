@@ -4,6 +4,7 @@ import * as Utils from "../../utils";
 import bem from "../../bemUtils";
 import LinkGroup from "./linkgroup";
 import { Link } from "./types";
+import * as Nav from "../../navFrontend";
 
 import "./sidemeny.css";
 
@@ -27,9 +28,9 @@ function SideMeny({ linkGroups, heading, onClick }: SideMenyProps): JSX.Element 
     <div className={sideMenyRootClassnames}>
       <div className={sideMenyCls.element("container")}>
         {heading && (
-          <h2 className={sideMenyCls.element("heading")} id="opplysninger">
+          <Nav.Heading level="2" className={sideMenyCls.element("heading")} id="opplysninger">
             {heading}
-          </h2>
+          </Nav.Heading>
         )}
         <nav aria-labelledby="opplysninger">
           {linkGroups.map(({ label, links }, index) => (

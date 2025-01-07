@@ -5,7 +5,7 @@ exports[`ArbeidsforholdNorgeListe > snapshot test 1`] = `
 <div>
   <div class="innerArbeidsforholdNorgeListe">
     <div class="redigerbartElement editerbart__element">
-      <h2 class="navds-heading navds-heading--small navds-typo--spacing">
+      <h3 class="navds-heading navds-heading--xsmall navds-typo--spacing">
         <div class="heading-margin">
           <div class="editerbart-element__legend editerbart-element__legend--understrek">
             <span class="editerbart-element__legend__tittel-container">
@@ -46,7 +46,7 @@ exports[`ArbeidsforholdNorgeListe > snapshot test 1`] = `
             </span>
           </div>
         </div>
-      </h2>
+      </h3>
       <div class="padding-left">
         <div class="row enkeltArbeidsforholdNorgeRedigerer">
           <div class="col col-xs-5">

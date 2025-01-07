@@ -84,7 +84,7 @@ function DelvisInnvilgelse({
       if (
         fullmektigListe?.length > 0 &&
         fullmektigListe?.find((fullmektig) =>
-          fullmektig.fullmakter?.includes(MKV.Koder.fullmaktstype.FULLMEKTIG_SØKNAD),
+          fullmektig.fullmakter?.includes(MKV.Koder.fullmaktstype.FULLMEKTIG_SØKNAD)
         )
       ) {
         pdfDokumenter.push({
@@ -132,7 +132,7 @@ function DelvisInnvilgelse({
 
   return (
     <>
-      <Nav.Heading size="large" className="stegvelgertittel">
+      <Nav.Heading level="1" className="stegvelgertittel">
         {konvensjonStorbritanniaToggleEnabled
           ? "Delvis innvilgelse"
           : "Delvis innvilgelse - omfattet av norsk trygdelovgivning etter Fo 883/2004 Artikkel 16 nr. 1. i deler av søknadsperioden"}

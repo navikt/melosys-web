@@ -4,7 +4,7 @@ exports[`VurderingArtikkel16Vedtak > snapshot test 1`] = `
 
 <div>
   <div class="vurderingArtikkel16Vedtak">
-    <h1 class="stegvelgertittel navds-heading navds-heading--large">
+    <h1 class="stegvelgertittel navds-heading navds-heading--medium">
       Delvis innvilgelse - omfattet av norsk trygdelovgivning etter Fo 883/2004 Artikkel 16 nr. 1. i deler av søknadsperioden
     </h1>
     <div class="row lovvalgsperiode__row">

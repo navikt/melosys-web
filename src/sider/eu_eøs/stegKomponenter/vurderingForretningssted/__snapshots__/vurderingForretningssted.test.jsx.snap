@@ -4,7 +4,7 @@ exports[`VurderingForretningssted > snapshot test 1`] = `
 
 <div>
   <div class="vurderingForretningssted">
-    <h1 class="stegvelgertittel navds-heading navds-heading--large">
+    <h1 class="stegvelgertittel navds-heading navds-heading--medium">
       Vurdering av artikkel 13 nr. 1 bokstav b
     </h1>
     <fieldset class="fieldset forretningssteder">

@@ -107,7 +107,7 @@ function Oppsummering({
     sakstema.kode,
     behandlingstema.kode,
     behandlingstype.kode,
-    erArbeidKunNorgeToggleEnabled,
+    erArbeidKunNorgeToggleEnabled
   );
   const hovedpartErVirksomhet = hovedpartRolle === MKV.Koder.aktoersroller.VIRKSOMHET;
 
@@ -117,7 +117,7 @@ function Oppsummering({
   const landTilSetning = (land?: KTObject[]) =>
     land && land.length > 0
       ? Utils.streng.arrayTilKonjunksjon(
-          land.map((enkeltLand) => Utils.streng.storeForbokstaverForLand(enkeltLand.term || "")),
+          land.map((enkeltLand) => Utils.streng.storeForbokstaverForLand(enkeltLand.term || ""))
         )
       : "Ukjent";
 
@@ -135,8 +135,8 @@ function Oppsummering({
               </>
             }
           />
-        </Nav.Row>,
-      ),
+        </Nav.Row>
+      )
     );
     return rows;
   };
@@ -172,7 +172,7 @@ function Oppsummering({
               />
             )}
           </Nav.Column>
-        </Nav.Row>,
+        </Nav.Row>
       );
     }
     return rows;
@@ -266,7 +266,7 @@ function Oppsummering({
               <div className="panel saksinfo">
                 <Nav.Row>
                   <Nav.Column xs="8">
-                    <Nav.Heading size="xsmall">
+                    <Nav.Heading level="2">
                       {KV.objektTilTerm(sakstype)} - {KV.objektTilTerm(sakstema)}
                     </Nav.Heading>
                   </Nav.Column>

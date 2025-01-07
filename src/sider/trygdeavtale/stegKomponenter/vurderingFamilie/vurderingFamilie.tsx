@@ -32,13 +32,13 @@ const initializeFamilieFormValues = (data: Api.Trygdeavtale.StegData, resultat: 
             barn.uuid,
             {
               innvilget: Utils.streng.boolTilUppercaseStreng(
-                resultat.barn?.find((x: Api.Trygdeavtale.Familiemedlem) => x.uuid === barn.uuid)?.omfattet,
+                resultat.barn?.find((x: Api.Trygdeavtale.Familiemedlem) => x.uuid === barn.uuid)?.omfattet
               ),
               begrunnelse:
                 resultat.barn?.find((x: Api.Trygdeavtale.Familiemedlem) => x.uuid === barn.uuid)?.begrunnelseKode || "",
             },
           ])
-        : [],
+        : []
     ),
   },
   ektefelle: data.ektefelleValg
@@ -150,7 +150,7 @@ function VurderingFamilie({
 
   return (
     <div className="vurderingFamilie">
-      <Nav.Heading size="large" className="stegvelgertittel">
+      <Nav.Heading level="1" className="stegvelgertittel">
         Familie
       </Nav.Heading>
 
@@ -201,10 +201,10 @@ function VurderingFamilie({
                         )}
                       </Nav.Column>
                     </Nav.Row>
-                  ),
+                  )
               )}
               {tilknyttedeBarn?.some((barn: Api.Trygdeavtale.FamilieValg) =>
-                erIkkeInnvilget(finnBarn(barn?.uuid, formValues.barn)?.innvilget),
+                erIkkeInnvilget(finnBarn(barn?.uuid, formValues.barn)?.innvilget)
               ) && (
                 <div className="fritekstWrapper--barn">
                   <LabelMedHjelpetekst

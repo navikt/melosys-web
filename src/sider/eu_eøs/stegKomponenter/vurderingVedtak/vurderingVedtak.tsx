@@ -64,7 +64,7 @@ const finnSedMottakerLand = (
   arbeidsland: KTObject[],
   bostedsland: KTObject,
   lovvalgsbestemmelse: string,
-  tilleggBestemmelse: string,
+  tilleggBestemmelse: string
 ) => {
   if (lovvalgsbestemmelse === FO_883_2004_ART11_3A && tilleggBestemmelse === FO_883_2004_ART11_4_1) {
     return bostedsland.kode;
@@ -82,7 +82,7 @@ const skalViseSendOrienteringsbrev = (
   sakstype: string,
   behandlingstema: string,
   erArtikkel11_4: boolean,
-  erSelvstendigNaeringsdrivende: boolean,
+  erSelvstendigNaeringsdrivende: boolean
 ) =>
   !erArtikkel11_4 &&
   sakstype === EU_EOS &&
@@ -93,12 +93,12 @@ const skalViseMottakerinstitusjoner = (
   sakstype: string,
   sakstema: string,
   behandlingstema: string,
-  behandlingstype: string,
+  behandlingstype: string
 ) => {
   return (
     sakstype === EU_EOS &&
     [UTSENDT_ARBEIDSTAKER, UTSENDT_SELVSTENDIG, ARBEID_FLERE_LAND, ARBEID_TJENESTEPERSON_ELLER_FLY].includes(
-      behandlingstema,
+      behandlingstema
     ) &&
     !skalViseIngenFlyt(sakstype, sakstema, behandlingstema, behandlingstype)
   );
@@ -278,12 +278,12 @@ function VurderingVedtak({
 
   return (
     <div className="vedtak">
-      <Nav.Heading size="large" className="stegvelgertittel">
+      <Nav.Heading level="1" className="stegvelgertittel">
         {konvensjonStorbritanniaToggleEnabled
           ? "Omfattet av norsk trygdelovgivning"
           : `Omfattet av norsk trygdelovgivning etter ${finnLovvalgSomTerm(
               lovvalgsbestemmelseKT,
-              tilleggBestemmelseKT,
+              tilleggBestemmelseKT
             )}`}
       </Nav.Heading>
       <div>

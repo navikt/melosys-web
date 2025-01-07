@@ -24,7 +24,7 @@ function NormaltDriverVirksomhet(props) {
       function cleanup() {
         slettData();
       },
-    [],
+    []
   );
 
   const { harAvklaring, normaltDriverVirksomhet } = tilstand;
@@ -36,7 +36,7 @@ function NormaltDriverVirksomhet(props) {
 
   return (
     <>
-      <Nav.Heading size="large" className="stegvelgertittel">
+      <Nav.Heading level="1" className="stegvelgertittel">
         Drift i Norge
       </Nav.Heading>
       <EnkeltVilkaar

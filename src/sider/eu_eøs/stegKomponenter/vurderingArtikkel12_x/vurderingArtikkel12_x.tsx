@@ -38,12 +38,12 @@ function VurderingArtikkel12_x({
       function cleanup() {
         slettData();
       },
-    [],
+    []
   );
 
   return (
     <div className="vurderingArtikkel12_x">
-      <Nav.Heading size="large" className="stegvelgertittel">
+      <Nav.Heading level="1" className="stegvelgertittel">
         Vurdering {erVurderingArbeidstaker ? "arbeidstaker" : "næringsdrivende"}
       </Nav.Heading>
       <Bestemmelser

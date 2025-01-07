@@ -6,9 +6,9 @@ exports[`ArbeidsgivereNorge > snapshot test 1`] = `
   <div class="arbeidsgivereNorge panelSeksjon">
     <div class="arbeidsgivereEnkeltNorge">
       <div class="undertittel">
-        <h1
+        <h3
           id="333"
-          class="undertittel__navUndertittel navds-heading navds-heading--small"
+          class="undertittel__navUndertittel navds-heading navds-heading--xsmall"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -89,7 +89,7 @@ exports[`ArbeidsgivereNorge > snapshot test 1`] = `
           </span>
           <span>
           </span>
-        </h1>
+        </h3>
       </div>
       <div class="organisasjonSeksjon">
         <div class="row">
@@ -114,9 +114,9 @@ exports[`ArbeidsgivereNorge > snapshot test 1`] = `
       <div>
       </div>
       <div class="undertittel">
-        <h1
+        <h3
           id="333"
-          class="undertittel--understrek undertittel__navUndertittel navds-heading navds-heading--small"
+          class="undertittel--understrek undertittel__navUndertittel navds-heading navds-heading--xsmall"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -157,7 +157,7 @@ exports[`ArbeidsgivereNorge > snapshot test 1`] = `
           </span>
           <span>
           </span>
-        </h1>
+        </h3>
       </div>
     </div>
   </div>

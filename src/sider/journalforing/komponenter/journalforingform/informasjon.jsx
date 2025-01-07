@@ -55,11 +55,11 @@ class Informasjon extends Component {
       vedlegg.reduce((acc, elem) => {
         acc.push(elem.tittel);
         return acc;
-      }, []),
+      }, [])
     );
     await this.oppdaterState(
       "logiskeVedleggTittler",
-      journalforingSkjemaVerdier.hoveddokument.logiskeVedlegg.map((tittel) => ({ tittel, ny: false })),
+      journalforingSkjemaVerdier.hoveddokument.logiskeVedlegg.map((tittel) => ({ tittel, ny: false }))
     );
     await this.oppdaterFelter(this.props, true);
   }
@@ -174,7 +174,7 @@ class Informasjon extends Component {
 
   kopierBrukerTilAvsender = (
     brukerID = this.props.journalforingSkjemaVerdier.brukerID,
-    brukerNavn = this.props.journalforingSkjemaVerdier.brukerNavn,
+    brukerNavn = this.props.journalforingSkjemaVerdier.brukerNavn
   ) => {
     const { settFeltInnhold } = this.props;
     settFeltInnhold("avsenderID", brukerID);
@@ -183,7 +183,7 @@ class Informasjon extends Component {
 
   kopierVirksomhetTilAvsender = (
     virksomhetOrgnr = this.props.journalforingSkjemaVerdier.virksomhetOrgnr,
-    virksomhetNavn = this.props.journalforingSkjemaVerdier.virksomhetNavn,
+    virksomhetNavn = this.props.journalforingSkjemaVerdier.virksomhetNavn
   ) => {
     const { settFeltInnhold } = this.props;
     settFeltInnhold("avsenderType", MKV.Koder.avsendertyper.ORGANISASJON);
@@ -229,7 +229,6 @@ class Informasjon extends Component {
       journalforingSkjemaVerdier,
       avsenderIDFraJournalpost,
       avsenderNavnFraJournalpost,
-      mottaksKanalErEessi,
       mottaksKanalErElektronisk,
     } = this.props;
     const {
@@ -268,11 +267,7 @@ class Informasjon extends Component {
             tittel="Informasjon om bruker"
             innhold={
               <>
-                <Skjema.FellesInputFnrDnrOrgnrSaksnr
-                  feltNavn="brukerID"
-                  label="Brukers f.nr/d-nr."
-                  disabled={mottaksKanalErElektronisk}
-                />
+                <Skjema.FellesInputFnrDnrOrgnrSaksnr feltNavn="brukerID" label="Brukers f.nr/d-nr." />
                 {!Utils._isEmpty(brukerNavn) && (
                   <span className="bruker-eller-org-navn">
                     <Nav.BodyLong weight="semibold" size="small" className="term">
@@ -286,7 +281,7 @@ class Informasjon extends Component {
           />
         )}
 
-        {mottaksKanalErEessi ? (
+        {mottaksKanalErElektronisk ? (
           <Komponent
             ikon={Ikoner.Globe}
             tittel="Informasjon om avsender"
@@ -421,7 +416,6 @@ Informasjon.propTypes = {
   sokOrgnr: PT.func.isRequired,
   avsenderIDFraJournalpost: PT.string,
   avsenderNavnFraJournalpost: PT.string,
-  mottaksKanalErEessi: PT.bool.isRequired,
   mottaksKanalErElektronisk: PT.bool.isRequired,
 };
 

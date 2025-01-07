@@ -57,10 +57,10 @@ export function VurderingArtikkel13_x_vedtak({
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
 
   const fom = Utils.dato.formatterDatoTilNorsk(
-    (formValues.forkortLovvalgsperiode && formValues.fomDato) || soknadsperiode.fom,
+    (formValues.forkortLovvalgsperiode && formValues.fomDato) || soknadsperiode.fom
   );
   const tom = Utils.dato.formatterDatoTilNorsk(
-    (formValues.forkortLovvalgsperiode && formValues.tomDato) || soknadsperiode.tom,
+    (formValues.forkortLovvalgsperiode && formValues.tomDato) || soknadsperiode.tom
   );
 
   const kontrollerBehandling = async (data) => {
@@ -161,7 +161,7 @@ export function VurderingArtikkel13_x_vedtak({
   const stegErGyldig = redigerbart && formIsValid && !harFeilmeldinger;
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="vurderingArtikkel13_x_vedtak">
-      <Nav.Heading size="large" className="stegvelgertittel">
+      <Nav.Heading level="1" className="stegvelgertittel">
         {overskrift}
       </Nav.Heading>
       {redigerbart && (

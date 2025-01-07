@@ -83,7 +83,6 @@ function JournalforingForm({
   landkoder,
   avsenderIDFraJournalpost,
   avsenderNavnFraJournalpost,
-  mottaksKanalErEessi,
   mottaksKanalErElektronisk,
 }) {
   const visForvaltningsmelding = skalViseForvaltningsmelding(formValues, fagsakListe);
@@ -91,7 +90,7 @@ function JournalforingForm({
   const visSkalTilordnes = !fagsakListe.find(
     (sak) =>
       sak.saksnummer === formValues?.saksnummer &&
-      MKVUtils.erOpphørtEllerHenlagtEllerBortfaltEllerAnnullert(sak.saksstatus.kode),
+      MKVUtils.erOpphørtEllerHenlagtEllerBortfaltEllerAnnullert(sak.saksstatus.kode)
   );
 
   const [adresseOpplysninger, setAdresseOpplysninger] = useState({
@@ -154,7 +153,6 @@ function JournalforingForm({
         vedlegg={vedlegg}
         avsenderIDFraJournalpost={avsenderIDFraJournalpost}
         avsenderNavnFraJournalpost={avsenderNavnFraJournalpost}
-        mottaksKanalErEessi={mottaksKanalErEessi}
         mottaksKanalErElektronisk={mottaksKanalErElektronisk}
       />
 

@@ -19,7 +19,7 @@ function PersonContainer({
     <Nav.Container fluid className="person">
       <Nav.Row className="tittel">
         <Nav.Column xs="12">
-          <Nav.Heading size="small">{KV.Menypunkter.Person.tittel}</Nav.Heading>
+          <Nav.Heading level="2">{KV.Menypunkter.Person.tittel}</Nav.Heading>
         </Nav.Column>
       </Nav.Row>
       <Nav.Row>

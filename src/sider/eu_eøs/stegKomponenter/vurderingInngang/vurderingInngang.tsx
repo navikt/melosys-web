@@ -43,7 +43,7 @@ export function VurderingInngang({
           <ul>
             <li>Du må fylle disse inn under “Periode og land” i sidemenyen og oppdatere registeropplysninger.</li>
           </ul>
-        </>,
+        </>
       );
     } else if (flereEnnEttLand && !MKVUtils.kanHaFlereSoknadsland(behandlingstema)) {
       setFeil(
@@ -54,7 +54,7 @@ export function VurderingInngang({
           <ul>
             <li>Du må fjerne land under “Periode og land” i sidemenyen eller endre behandlingstema.</li>
           </ul>
-        </>,
+        </>
       );
     } else if (!flereEnnEttLand && behandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND) {
       setFeil(
@@ -65,7 +65,7 @@ export function VurderingInngang({
           <ul>
             <li>Du må legge til land under “Periode og land” i sidemenyen eller endre behandlingstema.</li>
           </ul>
-        </>,
+        </>
       );
     } else {
       setFeil(undefined);
@@ -83,7 +83,7 @@ export function VurderingInngang({
 
   return (
     <div className="vurderinginngang_eu_eos">
-      <Nav.Heading size="large" className="stegvelgertittel">
+      <Nav.Heading level="1" className="stegvelgertittel">
         Kontroller inngangsvilkår
       </Nav.Heading>
       <Varsler

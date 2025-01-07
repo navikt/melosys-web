@@ -220,7 +220,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
       Api.Fagsaker.aktoer.hent(saksnummer, FULLMEKTIG).then((res) => {
         setHarBekreftetFullmaktForTrygdeavgift(false);
         setHarFullmaktForTrygdeavgift(
-          res.some((aktoer) => aktoer.fullmakter?.some((fullmakt) => fullmakt === FULLMEKTIG_TRYGDEAVGIFT)),
+          res.some((aktoer) => aktoer.fullmakter?.some((fullmakt) => fullmakt === FULLMEKTIG_TRYGDEAVGIFT))
         );
       });
 
@@ -356,7 +356,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
 
     return alleLandkoder
       ? Utils.streng.arrayTilKonjunksjon(
-          soknadsland.map((enkeltLand: string) => KV.finnTermFraListe(alleLandkoder, enkeltLand)),
+          soknadsland.map((enkeltLand: string) => KV.finnTermFraListe(alleLandkoder, enkeltLand))
         )
       : `Finner ikke ${erIkkeYrkesaktiv ? "land" : "arbeidsland"}`;
   };
@@ -370,7 +370,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
 
   return (
     <div className="vurderingVedtak">
-      <Nav.Heading size="large" className="stegvelgertittel">
+      <Nav.Heading level="1" className="stegvelgertittel">
         {medlemskapsTypeErPliktig
           ? "Pliktig medlemskap etter folketrygdloven"
           : "Frivillig medlemskap etter folketrygdloven"}

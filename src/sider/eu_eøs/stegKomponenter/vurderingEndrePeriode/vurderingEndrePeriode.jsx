@@ -48,8 +48,8 @@ class VurderingEndrePeriode extends Component {
     oppdaterData(
       konverterAvklartfaktaTilStegData(
         MKV.Koder.avklartefaktatyper.AARSAK_ENDRING_PERIODE,
-        aarsakEndringPeriodeAvklartfakta,
-      ),
+        aarsakEndringPeriodeAvklartfakta
+      )
     );
 
     this.hentOpprinneligPeriode(behandlingID);
@@ -221,7 +221,7 @@ class VurderingEndrePeriode extends Component {
 
     return (
       <div className="vurderingEndrePeriode">
-        <Nav.Heading size="large" className="stegvelgertittel">
+        <Nav.Heading level="1" className="stegvelgertittel">
           Endre lovvalgsperiode
         </Nav.Heading>
         <Nav.BodyLong weight="semibold" size="small" className="mindreTittel">
