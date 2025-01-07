@@ -106,7 +106,6 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
         skalRegisteropplysningerOppdateres: false,
       })
     );
-
     setKontrollEllerVedtakPending(false);
   };
 
