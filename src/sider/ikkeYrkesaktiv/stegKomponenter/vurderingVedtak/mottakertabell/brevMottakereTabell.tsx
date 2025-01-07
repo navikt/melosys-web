@@ -36,8 +36,5 @@ export const BrevMottakereTabell = () => {
   };
 
   if (Utils._isEmpty(muligeMottakere)) return null;
-  {
-    console.log("Dokumenter", mapDokumenter(muligeMottakere));
-  }
   return <Dokumentliste behandlingID={behandlingID} dokumenter={mapDokumenter(muligeMottakere)} />;
 };
