@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 
-type MediaQuery = {
+interface MediaQuery {
   minWidth?: number;
   maxWidth?: number;
-};
+}
 
 const getQueryString = (query: MediaQuery) => {
   const { minWidth, maxWidth } = query;

@@ -4,6 +4,6 @@ import { getAsJson } from "../../utils";
 
 export const hentAvklarteFakta = (
   bestemmelse: string,
-  behandlingID: string
+  behandlingID: string,
 ): Promise<{ avklarteFakta: AvklarteFakta[] }> =>
   getAsJson(`${API_BASE_URL}${FTRL}/bestemmelser/${bestemmelse}/avklartefakta/?behandlingID=${behandlingID}`);

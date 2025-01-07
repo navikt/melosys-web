@@ -8,12 +8,12 @@ export interface Virksomhet {
   navn: string;
 }
 
-export type Familiemedlem = {
+export interface Familiemedlem {
   uuid: string;
   omfattet?: boolean;
   begrunnelseKode: string | null;
   begrunnelseFritekst: string | null;
-};
+}
 
 export interface Resultat {
   virksomhet?: string;
@@ -57,11 +57,11 @@ export interface StegData {
   ektefelleBegrunnelseValg?: KTObject[];
 }
 
-export type FlytResDto = {
+export interface FlytResDto {
   steg: Steg[];
   resultat: Resultat;
   data: StegData;
-};
+}
 
 export const hentFlyt = (behandlingID: number): Promise<FlytResDto> =>
   getAsJson(`${TRYGDEAVTALE_FLYT_BASE_URL}${behandlingID}`);

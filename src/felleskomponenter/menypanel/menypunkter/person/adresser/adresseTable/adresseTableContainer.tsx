@@ -8,7 +8,7 @@ interface AdresseTableContainerProps {
   adresser: Adresse[];
 }
 
-const AdresseTableContainer = ({ adressetype, adresser }: AdresseTableContainerProps) => {
+function AdresseTableContainer({ adressetype, adresser }: AdresseTableContainerProps) {
   const gyldigeAdresser = adresser.filter((adresse) => !adresse.erHistorisk);
   const historiskeAdresser = adresser.filter((adresse) => adresse.erHistorisk);
 
@@ -20,6 +20,6 @@ const AdresseTableContainer = ({ adressetype, adresser }: AdresseTableContainerP
       ) : null}
     </>
   );
-};
+}
 
 export default AdresseTableContainer;

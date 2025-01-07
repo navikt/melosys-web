@@ -5,7 +5,7 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { RegisterHookFormProps } from "./misc/reacthookProps";
 import { getErrorMessage } from "./misc/mapFeilmelding";
 
-type HtmlEditorComponentProps = {
+interface HtmlEditorComponentProps {
   spellcheck?: boolean;
   className?: string;
   placeholder?: string;
@@ -13,28 +13,26 @@ type HtmlEditorComponentProps = {
   label?: ReactNode;
   feil?: string;
   onChange?: any;
-};
+}
 
 type InnerHtmlEditorComponentProps = HtmlEditorComponentProps & RegisterHookFormProps;
 
-const InnerHTMLEditorComponent = forwardRef<HTMLEditorProps, InnerHtmlEditorComponentProps>(
-  ({ spellcheck = true, ...rest }: InnerHtmlEditorComponentProps, _ref: any) => {
-    return (
-      <div className={`${rest.className} editor_content`}>
-        <HtmlEditor
-          value={rest.value}
-          onChange={rest.onChange}
-          placeholder={rest.placeholder || ""}
-          readOnly={rest?.disabled}
-          spellCheck={spellcheck}
-          label={rest?.label}
-          feil={rest.feil}
-          disabled={rest?.disabled}
-        />
-      </div>
-    );
-  }
-);
+function InnerHTMLEditorComponent({ spellcheck = true, ...rest }: InnerHtmlEditorComponentProps) {
+  return (
+    <div className={`${rest.className} editor_content`}>
+      <HtmlEditor
+        value={rest.value}
+        onChange={rest.onChange}
+        placeholder={rest.placeholder || ""}
+        readOnly={rest?.disabled}
+        spellCheck={spellcheck}
+        label={rest?.label}
+        feil={rest.feil}
+        disabled={rest?.disabled}
+      />
+    </div>
+  );
+}
 
 type HTMLEditorProps = HtmlEditorComponentProps & UseControllerProps;
 
@@ -58,7 +56,7 @@ const HTMLEditor = forwardRef<HTMLEditorProps, HTMLEditorProps>(
         )}
       />
     );
-  }
+  },
 );
 
 export default HTMLEditor;

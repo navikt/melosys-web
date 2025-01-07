@@ -18,7 +18,7 @@ interface SokkelSkipListeProps {
   className?: string;
 }
 
-const SokkelSkipListe = ({
+function SokkelSkipListe({
   sokkelEllerSkipListe = [],
   maritimtArbeid = [],
   begrunnelser,
@@ -31,7 +31,7 @@ const SokkelSkipListe = ({
   installasjonArbeidslandTypeListe = [],
   arbeidslandListe = [],
   className,
-}: SokkelSkipListeProps) => {
+}: SokkelSkipListeProps) {
   const finnAvklartfakta = (enkeltArbeid: ArbeidsstedOffshore | ArbeidsstedSkip, avklartfaktaListe: Avklartfakta[]) =>
     avklartfaktaListe.find((avklartfakta) => avklartfakta.subjektID === enkeltArbeid.enhetNavn);
 
@@ -55,6 +55,6 @@ const SokkelSkipListe = ({
       ))}
     </div>
   );
-};
+}
 
 export default SokkelSkipListe;

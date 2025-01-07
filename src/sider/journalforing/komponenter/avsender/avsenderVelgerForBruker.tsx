@@ -19,11 +19,11 @@ const mapStateToProps = (state: RootState) => ({
 const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-type FormValuesProps = {
+interface FormValuesProps {
   avsenderID?: string;
   avsenderType?: string;
   utenlandskTrygdemyndighetLandkode?: string;
-};
+}
 
 type AvsenderVelgerForBrukerProps = PropsFromRedux & {
   kopierBrukerTilAvsender: () => void;
@@ -34,14 +34,14 @@ type AvsenderVelgerForBrukerProps = PropsFromRedux & {
   mottaksKanalErElektronisk: boolean;
 };
 
-const AvsenderVelgerForBruker = ({
+function AvsenderVelgerForBruker({
   kopierBrukerTilAvsender,
   tomAvsender,
   formValues,
   settFeltInnhold,
   hentOgVisAvsender,
   mottaksKanalErElektronisk,
-}: AvsenderVelgerForBrukerProps) => {
+}: AvsenderVelgerForBrukerProps) {
   const avsenderTypeEndret = (avsenderType: string) => {
     if (avsenderType !== MKV.Koder.avsendertyper.UTENLANDSK_TRYGDEMYNDIGHET) {
       settFeltInnhold("sakstype", null);
@@ -114,6 +114,6 @@ const AvsenderVelgerForBruker = ({
       </Skjema.RadioGroup>
     </div>
   );
-};
+}
 
 export default connect(mapStateToProps)(AvsenderVelgerForBruker);

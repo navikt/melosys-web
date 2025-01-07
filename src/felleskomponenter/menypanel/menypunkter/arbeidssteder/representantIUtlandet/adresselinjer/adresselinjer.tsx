@@ -15,10 +15,10 @@ type InnerAdresselinjerProps = WrappedFieldArrayProps<string> & {
   redigerbart: boolean;
 };
 
-const InnerAdresselinjer = (props: InnerAdresselinjerProps) => {
+function InnerAdresselinjer(props: InnerAdresselinjerProps) {
   const { redigerbart, fields } = props;
-  const { push, remove } = fields;
-  const felter = props.fields.getAll();
+  const { push, remove, getAll } = fields;
+  const felter = getAll();
   const leggTilTomtFelt = () => push("");
 
   return (
@@ -50,14 +50,14 @@ const InnerAdresselinjer = (props: InnerAdresselinjerProps) => {
       )}
     </div>
   );
-};
+}
 
 interface AdresselinjerProps {
   redigerbart: boolean;
 }
 
-const Adresselinjer = ({ ...rest }: AdresselinjerProps) => (
-  <FieldArray name="representantIUtlandet.adresselinjer" component={InnerAdresselinjer} props={rest} />
-);
+function Adresselinjer({ ...rest }: AdresselinjerProps) {
+  return <FieldArray name="representantIUtlandet.adresselinjer" component={InnerAdresselinjer} props={rest} />;
+}
 
 export default Adresselinjer;

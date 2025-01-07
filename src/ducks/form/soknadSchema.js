@@ -17,7 +17,7 @@ const lagAndelMellomNullOgHundreMelding = (feltbeskrivelse) =>
   lagMelding(
     KV.Menypunkter.OmVirksomhetenINorge.tittel,
     KV.Menypunkter.OmVirksomhetenINorge.undertitler.samletVirksomhetINorge,
-    `Oppgi en andel ${feltbeskrivelse} som er mellom 0 og 100%`
+    `Oppgi en andel ${feltbeskrivelse} som er mellom 0 og 100%`,
   );
 const tomStringTilNull = (value, originalValue) => (originalValue === "" ? null : value);
 
@@ -72,7 +72,7 @@ const utenlandskIdent = object().shape({
   ident: string()
     .nullable()
     .required(
-      lagMelding(KV.Menypunkter.Person.tittel, KV.Menypunkter.Person.undertitler.utenlandskID, "Utenlandsk ID kreves")
+      lagMelding(KV.Menypunkter.Person.tittel, KV.Menypunkter.Person.undertitler.utenlandskID, "Utenlandsk ID kreves"),
     ),
   landkode: string()
     .nullable()
@@ -80,8 +80,8 @@ const utenlandskIdent = object().shape({
       lagMelding(
         KV.Menypunkter.Person.tittel,
         KV.Menypunkter.Person.undertitler.utenlandskID,
-        "Land for utenlandsk ID kreves"
-      )
+        "Land for utenlandsk ID kreves",
+      ),
     ),
 });
 
@@ -90,13 +90,13 @@ const erFoerTomTest = {
   message: lagMelding(
     KV.Menypunkter.Utenlandsoppdraget.tittel,
     KV.Menypunkter.Utenlandsoppdraget.undertitler.tilleggsopplysninger,
-    SENERE_ENN_TOM.melding
+    SENERE_ENN_TOM.melding,
   ),
   test: (value, { options }) =>
     Utils.dato.datoDiffPure(
       Utils.dato.formatterDatoTilISO(value),
       Utils.dato.formatterDatoTilISO(options.parent.tom),
-      "days"
+      "days",
     ) <= 0,
 };
 
@@ -105,13 +105,13 @@ const erEtterFomTest = {
   message: lagMelding(
     KV.Menypunkter.Utenlandsoppdraget.tittel,
     KV.Menypunkter.Utenlandsoppdraget.undertitler.tilleggsopplysninger,
-    TIDLIGERE_ENN_FOM.melding
+    TIDLIGERE_ENN_FOM.melding,
   ),
   test: (value, { options }) =>
     Utils.dato.datoDiffPure(
       Utils.dato.formatterDatoTilISO(value),
       Utils.dato.formatterDatoTilISO(options.parent.fom),
-      "days"
+      "days",
     ) >= 0,
 };
 
@@ -121,13 +121,13 @@ const lagMeldingForMedfolgendeFamilie = (options, melding) =>
     erTrygdeavtaleEllerFtrl(options.context.sakstype)
       ? KV.Menypunkter.Familieforhold.undertitler.familieMedPaReisen
       : KV.Menypunkter.Familieforhold.undertitler.barnMedPaReisen,
-    melding
+    melding,
   );
 const medfolgendeFamilie = object().shape({
   fnr: lazy((value, options) =>
     string()
       .erFnrEllerDnrEllerFødselsdato(lagMeldingForMedfolgendeFamilie(options, "F.nr./d-nr./dato er ugyldig"))
-      .required(lagMeldingForMedfolgendeFamilie(options, "F.nr./d-nr./dato kreves"))
+      .required(lagMeldingForMedfolgendeFamilie(options, "F.nr./d-nr./dato kreves")),
   ),
   navn: lazy((value, options) =>
     string()
@@ -135,7 +135,7 @@ const medfolgendeFamilie = object().shape({
         is: (fnr) => Boolean(Utils.dato.vaskInputDato(fnr)),
         then: string().required(lagMeldingForMedfolgendeFamilie(options, "Navn kreves")),
       })
-      .nullable()
+      .nullable(),
   ),
 });
 
@@ -144,13 +144,13 @@ const foedestedOgLandSchema = object()
   .shape({
     foedested: string()
       .required(
-        lagMelding(KV.Menypunkter.Person.tittel, KV.Menypunkter.Person.undertitler.foedestedOgLand, "Fødested kreves")
+        lagMelding(KV.Menypunkter.Person.tittel, KV.Menypunkter.Person.undertitler.foedestedOgLand, "Fødested kreves"),
       )
       .erIkkeBlank(
-        lagMelding(KV.Menypunkter.Person.tittel, KV.Menypunkter.Person.undertitler.foedestedOgLand, "Fødested kreves")
+        lagMelding(KV.Menypunkter.Person.tittel, KV.Menypunkter.Person.undertitler.foedestedOgLand, "Fødested kreves"),
       ),
     foedeland: string().required(
-      lagMelding(KV.Menypunkter.Person.tittel, KV.Menypunkter.Person.undertitler.foedestedOgLand, "Fødeland kreves")
+      lagMelding(KV.Menypunkter.Person.tittel, KV.Menypunkter.Person.undertitler.foedestedOgLand, "Fødeland kreves"),
     ),
   });
 
@@ -165,8 +165,8 @@ const soknad = object().when(["$behandlingstema"], {
             lagMelding(
               KV.Menypunkter.ArbeidsgiverOgVirksomhet.tittel,
               KV.Menypunkter.ArbeidsgiverOgVirksomhet.undertitler.arbeidsforholdIUtlandet,
-              "Navn kreves"
-            )
+              "Navn kreves",
+            ),
           ),
         orgnr: string()
           .nullable()
@@ -175,10 +175,10 @@ const soknad = object().when(["$behandlingstema"], {
             lagMelding(
               KV.Menypunkter.ArbeidsgiverOgVirksomhet.tittel,
               KV.Menypunkter.ArbeidsgiverOgVirksomhet.undertitler.arbeidsforholdIUtlandet,
-              "Registreringsnummer kan ikke være lenger enn 25 tegn"
-            )
+              "Registreringsnummer kan ikke være lenger enn 25 tegn",
+            ),
           ),
-      })
+      }),
     ),
     selvstendigNaeringsvirksomhetUtland: array().of(
       object().shape({
@@ -188,8 +188,8 @@ const soknad = object().when(["$behandlingstema"], {
             lagMelding(
               KV.Menypunkter.ArbeidsgiverOgVirksomhet.tittel,
               KV.Menypunkter.ArbeidsgiverOgVirksomhet.undertitler.selvstendigNaeringsdrivendeIUtlandet,
-              "Navn kreves"
-            )
+              "Navn kreves",
+            ),
           ),
         orgnr: string()
           .nullable()
@@ -198,10 +198,10 @@ const soknad = object().when(["$behandlingstema"], {
             lagMelding(
               KV.Menypunkter.ArbeidsgiverOgVirksomhet.tittel,
               KV.Menypunkter.ArbeidsgiverOgVirksomhet.undertitler.selvstendigNaeringsdrivendeIUtlandet,
-              "Registreringsnummer kan ikke være lenger enn 25 tegn"
-            )
+              "Registreringsnummer kan ikke være lenger enn 25 tegn",
+            ),
           ),
-      })
+      }),
     ),
     arbeidsstedOffshore: array().of(
       object()
@@ -212,8 +212,8 @@ const soknad = object().when(["$behandlingstema"], {
               lagMelding(
                 KV.Menypunkter.Arbeidssteder.tittel,
                 KV.Menypunkter.Arbeidssteder.undertitler.arbeidsstedOffshore,
-                "Navn kreves"
-              )
+                "Navn kreves",
+              ),
             ),
         })
         .uniqueProperty(
@@ -221,9 +221,9 @@ const soknad = object().when(["$behandlingstema"], {
           lagMelding(
             KV.Menypunkter.Arbeidssteder.tittel,
             KV.Menypunkter.Arbeidssteder.undertitler.arbeidsstedOffshore,
-            "Navn på enhet må være unikt"
-          )
-        )
+            "Navn på enhet må være unikt",
+          ),
+        ),
     ),
     arbeidsstedSkip: array().of(
       object()
@@ -234,8 +234,8 @@ const soknad = object().when(["$behandlingstema"], {
               lagMelding(
                 KV.Menypunkter.Arbeidssteder.tittel,
                 KV.Menypunkter.Arbeidssteder.undertitler.arbeidsstedSkip,
-                "Navn kreves"
-              )
+                "Navn kreves",
+              ),
             ),
         })
         .uniqueProperty(
@@ -243,9 +243,9 @@ const soknad = object().when(["$behandlingstema"], {
           lagMelding(
             KV.Menypunkter.Arbeidssteder.tittel,
             KV.Menypunkter.Arbeidssteder.undertitler.arbeidsstedSkip,
-            "Navn på enhet må være unikt"
-          )
-        )
+            "Navn på enhet må være unikt",
+          ),
+        ),
     ),
     representantIUtlandet: object()
       .when(["$harUnntaksregistreringFlyt", "$sakstype"], {
@@ -257,8 +257,8 @@ const soknad = object().when(["$behandlingstema"], {
                 lagMelding(
                   KV.Menypunkter.Arbeidssteder.tittel,
                   KV.Menypunkter.Arbeidssteder.undertitler.representantIUtlandet,
-                  "Navn kreves"
-                )
+                  "Navn kreves",
+                ),
               )
               .nullable(),
             adresselinjer: array().of(string()).nullable(),
@@ -273,7 +273,7 @@ const soknad = object().when(["$behandlingstema"], {
         then: string()
           .nullable()
           .required(
-            lagMelding(KV.Menypunkter.Person.tittel, KV.Menypunkter.Person.undertitler.annenAdresse, "Gatenavn kreves")
+            lagMelding(KV.Menypunkter.Person.tittel, KV.Menypunkter.Person.undertitler.annenAdresse, "Gatenavn kreves"),
           ),
       }),
     oppgittAdressePostnummer: string()
@@ -286,8 +286,8 @@ const soknad = object().when(["$behandlingstema"], {
             lagMelding(
               KV.Menypunkter.Person.tittel,
               KV.Menypunkter.Person.undertitler.annenAdresse,
-              "Postnummer kreves"
-            )
+              "Postnummer kreves",
+            ),
           ),
       }),
     oppgittAdressePoststed: string()
@@ -297,7 +297,7 @@ const soknad = object().when(["$behandlingstema"], {
         then: string()
           .nullable()
           .required(
-            lagMelding(KV.Menypunkter.Person.tittel, KV.Menypunkter.Person.undertitler.annenAdresse, "Poststed kreves")
+            lagMelding(KV.Menypunkter.Person.tittel, KV.Menypunkter.Person.undertitler.annenAdresse, "Poststed kreves"),
           ),
       }),
     oppgittAdresseLand: string()
@@ -307,7 +307,7 @@ const soknad = object().when(["$behandlingstema"], {
         then: string()
           .nullable()
           .required(
-            lagMelding(KV.Menypunkter.Person.tittel, KV.Menypunkter.Person.undertitler.annenAdresse, "Land kreves")
+            lagMelding(KV.Menypunkter.Person.tittel, KV.Menypunkter.Person.undertitler.annenAdresse, "Land kreves"),
           ),
       }),
     soknadsperiodeFom: soknadsperiodeFomSchema,
@@ -350,8 +350,8 @@ const soknad = object().when(["$behandlingstema"], {
             lagMelding(
               KV.Menypunkter.Utenlandsoppdraget.tittel,
               KV.Menypunkter.Utenlandsoppdraget.undertitler.tilleggsopplysninger,
-              SKRIV_INN_GYLDIG_DATO.melding
-            )
+              SKRIV_INN_GYLDIG_DATO.melding,
+            ),
           ),
         tom: string()
           .nullable()
@@ -360,8 +360,8 @@ const soknad = object().when(["$behandlingstema"], {
             lagMelding(
               KV.Menypunkter.Utenlandsoppdraget.tittel,
               KV.Menypunkter.Utenlandsoppdraget.undertitler.tilleggsopplysninger,
-              SKRIV_INN_GYLDIG_DATO.melding
-            )
+              SKRIV_INN_GYLDIG_DATO.melding,
+            ),
           ),
       }),
     }),
@@ -377,16 +377,16 @@ const soknad = object().when(["$behandlingstema"], {
               lagMelding(
                 KV.Menypunkter.Utenlandsoppdraget.tittel,
                 KV.Menypunkter.Utenlandsoppdraget.undertitler.land,
-                "Det er påkrevd med to eller flere land for dette behandlingstemaet"
-              )
+                "Det er påkrevd med to eller flere land for dette behandlingstemaet",
+              ),
             ),
             otherwise: array().min(
               1,
               lagMelding(
                 KV.Menypunkter.Utenlandsoppdraget.tittel,
                 KV.Menypunkter.Utenlandsoppdraget.undertitler.land,
-                "Oppgi minst ett søknadsland"
-              )
+                "Oppgi minst ett søknadsland",
+              ),
             ),
           }),
         }),

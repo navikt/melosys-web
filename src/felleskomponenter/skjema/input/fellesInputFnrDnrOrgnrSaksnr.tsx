@@ -6,13 +6,13 @@ import {
 
 import * as SkjemaUtils from "../utils";
 
-const InnerFellesInputFnrDnrOrgnrSaksnr = ({
+function InnerFellesInputFnrDnrOrgnrSaksnr({
   input,
   label,
   onBlur,
   onChange,
   ...rest
-}: FellesInputFnrDnrOrgnrSaksnrProps & WrappedFieldProps) => {
+}: FellesInputFnrDnrOrgnrSaksnrProps & WrappedFieldProps) {
   const {
     meta,
     meta: { touched, active },
@@ -38,17 +38,19 @@ const InnerFellesInputFnrDnrOrgnrSaksnr = ({
   };
 
   return <EnkelFellesInputFnrDnrOrgnrSaksnr label={label} error={feil || undefined} {...inputProps} />;
-};
+}
 
-const FellesInputFnrDnrOrgnrSaksnr = ({ feltNavn = "", bredde = "fullbredde", className = "", ...rest }) => (
-  <Field
-    bredde={bredde}
-    name={feltNavn}
-    component={InnerFellesInputFnrDnrOrgnrSaksnr}
-    className={className}
-    props={{ ...rest }}
-  />
-);
+function FellesInputFnrDnrOrgnrSaksnr({ feltNavn = "", bredde = "fullbredde", className = "", ...rest }) {
+  return (
+    <Field
+      bredde={bredde}
+      name={feltNavn}
+      component={InnerFellesInputFnrDnrOrgnrSaksnr}
+      className={className}
+      props={{ ...rest }}
+    />
+  );
+}
 
 export { InnerFellesInputFnrDnrOrgnrSaksnr };
 export default FellesInputFnrDnrOrgnrSaksnr;

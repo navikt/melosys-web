@@ -5,16 +5,16 @@ import { behandlingerSelectors } from "../behandlinger";
 
 export const RedigerbartSelector = createSelector(
   (state) => behandlingerSelectors.BehandlingerSelector(state).redigerbart || false,
-  (redigerbart) => redigerbart
+  (redigerbart) => redigerbart,
 );
 export const EndreLovvalgsPeriodeRedigerbartSelector = createSelector(
   (state) => behandlingerSelectors.BehandlingerSelector(state).redigerbart || false,
-  (redigerbart) => redigerbart
+  (redigerbart) => redigerbart,
 );
 export const GeneriskStegRedigerbartSelector = createSelector(
   RedigerbartSelector,
   anmodningsperioderSelectors.AlleAnmodningsperioderSendtUtlandSelector,
-  (redigerbart, erArtikkel16AnmodningSendt) => redigerbart && !erArtikkel16AnmodningSendt
+  (redigerbart, erArtikkel16AnmodningSendt) => redigerbart && !erArtikkel16AnmodningSendt,
 );
 export const PanelerRedigerbartSelector = createSelector(
   RedigerbartSelector,
@@ -29,12 +29,12 @@ export const PanelerRedigerbartSelector = createSelector(
     erEndretPeriode,
     erBehandleAnmodningOmUnntak,
     erRegistreringUnntakNorskTrygdUtstasjonering,
-    erRegistreringUnntakNorskTrygdOvrige
+    erRegistreringUnntakNorskTrygdOvrige,
   ) =>
     !erEndretPeriode &&
     !erBehandleAnmodningOmUnntak &&
     !erRegistreringUnntakNorskTrygdUtstasjonering &&
     !erRegistreringUnntakNorskTrygdOvrige &&
     redigerbart &&
-    !erArtikkel16AnmodningSendt
+    !erArtikkel16AnmodningSendt,
 );

@@ -1,7 +1,7 @@
 import { Alert, List as NavList } from "../../../../navFrontend";
 import { Heading } from "@navikt/ds-react";
 
-export const FeilmeldingOppsummering = ({ errors }: any) => {
+export function FeilmeldingOppsummering({ errors }: any) {
   return (
     <Alert variant="warning">
       <Heading spacing size="small" level="3">
@@ -9,7 +9,7 @@ export const FeilmeldingOppsummering = ({ errors }: any) => {
       </Heading>
       <NavList>
         {errors.skatteforholdsperioder?.some(
-          (error: any) => error.fomDato !== undefined || error.tomDato !== undefined
+          (error: any) => error.fomDato !== undefined || error.tomDato !== undefined,
         ) && (
           <NavList.Item>
             Skatteforholdsperioden(e) kan ikke starte før eller slutte etter medlemskapsperioden(e).-
@@ -25,4 +25,4 @@ export const FeilmeldingOppsummering = ({ errors }: any) => {
       </NavList>
     </Alert>
   );
-};
+}

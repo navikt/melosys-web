@@ -46,7 +46,7 @@ const mapStateToProps = (state: RootState) => ({
   formValues: getFormValues(KV.Form.Trygdeavtale.INNGANG)(state),
   initialValues: initializeValues(
     mottatteOpplysningerSelectors.PeriodeSelector(state),
-    mottatteOpplysningerSelectors.SoknadslandkoderSelector(state)
+    mottatteOpplysningerSelectors.SoknadslandkoderSelector(state),
   ),
   formIsValid: formSelectors.TrygdeavtaleInngangFormValidSelector(state),
   registeropplysningerHentet: behandlingerSelectors.SisteOpplysningerHentetDatoSelector(state),
@@ -88,7 +88,7 @@ interface Props {
   aktivtSteg: boolean;
 }
 
-const VurderingInngang = ({
+function VurderingInngang({
   data: { landValg, landValgUtenStøtte },
   formValues,
   formIsValid,
@@ -109,7 +109,7 @@ const VurderingInngang = ({
   behandlingID,
   slettLovvalgsperiode,
   lovvalgsperiode,
-}: PropsFromRedux & Props) => {
+}: PropsFromRedux & Props) {
   const { oppfriskOgLastInnSaksopplysninger } = useContext(FellesHandlersContext) as any;
   const [initialFomTomLand, setInitialFomTomLand] = useState<{ fom?: string; tom?: string; arbeidsland?: string }>({});
   const [landUtenStøtteValgt, setLandUtenStøtteValgt] = useState(false);
@@ -133,7 +133,7 @@ const VurderingInngang = ({
   };
   const debouncedLagremottatteOpplysningerOgOppdaterFlyt = useCallback(
     Utils._debounce(lagreMottatteOpplysningerOgOppdaterFlyt, 300),
-    []
+    [],
   );
 
   useEffect(() => {
@@ -150,7 +150,7 @@ const VurderingInngang = ({
   useEffect(() => {
     if (redigerbart && formValues && aktivtSteg) {
       setLandUtenStøtteValgt(
-        formValues.arbeidsland ? !landValg.map(({ kode }) => kode).includes(formValues.arbeidsland) : false
+        formValues.arbeidsland ? !landValg.map(({ kode }) => kode).includes(formValues.arbeidsland) : false,
       );
       oppdaterFlyt(resultat);
     }
@@ -254,9 +254,9 @@ const VurderingInngang = ({
       )}
     </div>
   );
-};
+}
 
-const VurderingInngangForm = reduxForm<{}, PropsFromRedux & Props>({
+const VurderingInngangForm = reduxForm<object, PropsFromRedux & Props>({
   form: KV.Form.Trygdeavtale.INNGANG,
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,

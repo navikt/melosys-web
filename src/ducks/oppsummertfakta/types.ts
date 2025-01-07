@@ -5,13 +5,13 @@ export const FEILET = "oppsummertfakta/FEILET";
 export const PENDING = "oppsummertfakta/PENDING";
 export const RESET = "oppsummertfakta/RESET";
 
-export type Data = {
+export interface Data {
   virksomheter?: Api.Avklartefakta.Virksomheter;
   fullstendigManglendeInnbetaling?: boolean;
   ikkeYrkesaktivFamilieRelasjonstype?: string;
   ikkeYrkesaktivOppholdstype?: string;
   arbeidssituasjonType?: string;
-};
+}
 
 export interface FeiletAction {
   type: typeof FEILET;

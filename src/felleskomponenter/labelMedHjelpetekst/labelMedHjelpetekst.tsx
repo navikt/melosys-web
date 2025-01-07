@@ -2,7 +2,7 @@ import * as Nav from "../../navFrontend";
 
 import "./labelMedHjelpetekst.css";
 
-type LabelMedHjelpetekstProps = {
+interface LabelMedHjelpetekstProps {
   label: string;
   hjelpetekst?: string | null;
   bold?: boolean;
@@ -21,30 +21,32 @@ type LabelMedHjelpetekstProps = {
     | "right-end"
     | "left-start"
     | "left-end";
-};
+}
 
-const LabelMedHjelpetekst = ({
+function LabelMedHjelpetekst({
   label,
   hjelpetekst,
   undertittel,
   placement = "top",
   bold,
   small,
-}: LabelMedHjelpetekstProps) => (
-  <div className="labelMedHjelpetekst__wrapper">
-    {undertittel ? (
-      <Nav.Heading size="xsmall" className="undertittel">
-        {label}
-      </Nav.Heading>
-    ) : (
-      <span className={small ? "small" : undefined}>{bold ? <b>{label}</b> : label}</span>
-    )}
-    {hjelpetekst && (
-      <Nav.HelpText title={`${label} hjelpetekst`} placement={placement} className="labelMedHjelpetekst__hjelpetekst">
-        {hjelpetekst}
-      </Nav.HelpText>
-    )}
-  </div>
-);
+}: LabelMedHjelpetekstProps) {
+  return (
+    <div className="labelMedHjelpetekst__wrapper">
+      {undertittel ? (
+        <Nav.Heading size="xsmall" className="undertittel">
+          {label}
+        </Nav.Heading>
+      ) : (
+        <span className={small ? "small" : undefined}>{bold ? <b>{label}</b> : label}</span>
+      )}
+      {hjelpetekst && (
+        <Nav.HelpText title={`${label} hjelpetekst`} placement={placement} className="labelMedHjelpetekst__hjelpetekst">
+          {hjelpetekst}
+        </Nav.HelpText>
+      )}
+    </div>
+  );
+}
 
 export default LabelMedHjelpetekst;

@@ -12,7 +12,7 @@ describe("oppdaterRegisteropplysninger", () => {
         oppdaterRegisteropplysninger={vi.fn()}
         sistOppdatert="2020-08-23"
       />,
-      {}
+      {},
     );
     expect(container).toMatchSnapshot();
   });
@@ -24,7 +24,7 @@ describe("oppdaterRegisteropplysninger", () => {
         oppdaterRegisteropplysninger={vi.fn()}
         sistOppdatert="2020-08-23"
       />,
-      {}
+      {},
     );
     expect(container).toMatchSnapshot();
   });

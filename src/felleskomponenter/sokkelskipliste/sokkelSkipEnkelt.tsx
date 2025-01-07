@@ -29,7 +29,7 @@ interface SokkelSkipEnkeltProps {
   slettData: (objekt?: any) => void;
 }
 
-const SokkelSkipEnkelt = ({
+function SokkelSkipEnkelt({
   maritimtArbeid,
   sokkelEllerSkip,
   arbeidslandAvklartfakta,
@@ -41,7 +41,7 @@ const SokkelSkipEnkelt = ({
   avklartefaktaBegrunnelserEndretHandler,
   oppdaterData,
   slettData,
-}: SokkelSkipEnkeltProps) => {
+}: SokkelSkipEnkeltProps) {
   const begrunnelseKode = sokkelEllerSkip?.begrunnelseKoder?.[0];
   const installasjonsType = hentFaktaVerdi(sokkelEllerSkip);
   const arbeidslandType = hentFaktaVerdi(arbeidslandTypeAvklartfakta);
@@ -65,15 +65,15 @@ const SokkelSkipEnkelt = ({
   }, []);
 
   const sokkelSkipEndret = (value: string) =>
-    avklartefaktaEndretHandler(SOKKEL_ELLER_SKIP, maritimtArbeid.enhetNavn!!, value);
+    avklartefaktaEndretHandler(SOKKEL_ELLER_SKIP, maritimtArbeid.enhetNavn!, value);
 
   const begrunnelserEndret = (event: ChangeEvent<HTMLSelectElement>) =>
-    avklartefaktaBegrunnelserEndretHandler(SOKKEL_ELLER_SKIP, maritimtArbeid.enhetNavn!!, event.target.value);
+    avklartefaktaBegrunnelserEndretHandler(SOKKEL_ELLER_SKIP, maritimtArbeid.enhetNavn!, event.target.value);
 
   const arbeidslandEndret = (land: ArbeidslandProp) => {
-    avklartefaktaEndretHandler(INSTALLASJON_ARBEIDSLAND, maritimtArbeid.enhetNavn!!, land.landkode!!);
-    avklartefaktaEndretHandler(ARBEIDSLAND, land.landkode!!, land.landkode!!);
-    avklartefaktaEndretHandler(INSTALLASJON_ARBEIDSLAND_TYPE, maritimtArbeid.enhetNavn!!, land.type);
+    avklartefaktaEndretHandler(INSTALLASJON_ARBEIDSLAND, maritimtArbeid.enhetNavn!, land.landkode!);
+    avklartefaktaEndretHandler(ARBEIDSLAND, land.landkode!, land.landkode!);
+    avklartefaktaEndretHandler(INSTALLASJON_ARBEIDSLAND_TYPE, maritimtArbeid.enhetNavn!, land.type);
   };
 
   const sokkelSkipDisabled = !(redigerbart && maritimtArbeid.enhetNavn);
@@ -141,6 +141,6 @@ const SokkelSkipEnkelt = ({
       </Nav.Column>
     </Nav.Row>
   );
-};
+}
 
 export default SokkelSkipEnkelt;

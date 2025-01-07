@@ -9,6 +9,6 @@ export const hent = (behandlingID: number): Promise<MottatteOpplysningerResDto> 
 
 export const send = (
   behandlingID: number,
-  mottatteOpplysninger: MottatteOpplysningerReqDto
+  mottatteOpplysninger: MottatteOpplysningerReqDto,
 ): Promise<MottatteOpplysningerResDto> =>
   postAsJson(`${API_BASE_URL}${MOTTATTE_OPPLYSNINGER}/${behandlingID}`, mottatteOpplysninger);

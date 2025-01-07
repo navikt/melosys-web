@@ -32,7 +32,7 @@ import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import "../saksopplysninger.css";
 import { StatsborgerskapFeil } from "../../../../felleskomponenter/alertmeldinger";
 
-const LinkForhandsvisningSed = ({ redigerbart, behandlingID, anmodningsperiodeSvarType, vedKlikk, fritekst }) => {
+function LinkForhandsvisningSed({ redigerbart, behandlingID, anmodningsperiodeSvarType, vedKlikk, fritekst }) {
   let pdfDokument = [];
   if (anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE) {
     pdfDokument = [{ sedType: EKV.Koder.sedtyper.A011, sedData: { fritekst } }];
@@ -46,7 +46,7 @@ const LinkForhandsvisningSed = ({ redigerbart, behandlingID, anmodningsperiodeSv
   return (
     redigerbart && <Dokumentliste behandlingID={behandlingID} dokumenter={pdfDokument} validateOnClick={vedKlikk} />
   );
-};
+}
 
 LinkForhandsvisningSed.propTypes = {
   redigerbart: PT.bool.isRequired,
@@ -60,7 +60,7 @@ LinkForhandsvisningSed.defaultProps = {
   fritekst: null,
 };
 
-const Saksopplysninger = ({
+function Saksopplysninger({
   redigerbart,
   behandlingID,
   anmodningsperiodeID,
@@ -72,9 +72,9 @@ const Saksopplysninger = ({
   startOgVisOppfriskModal,
   saksnummer,
   sendAnmodningUnntakSvar,
-}) => {
+}) {
   const [anmodningsperiodeSvarType, setAnmodningsperiodeSvarType] = useState(
-    MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE
+    MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE,
   );
   const [begrunnelseFritekst, setBegrunnelseFritekst] = useState("");
   const [ytterligereInfoFritekst, setYtterligereInfoFritekst] = useState("");
@@ -179,7 +179,7 @@ const Saksopplysninger = ({
             fom: Utils.dato.formatterDatoTilISO(endretPeriodeFom),
             tom: Utils.dato.formatterDatoTilISO(endretPeriodeTom),
           },
-          begrunnelseFritekst
+          begrunnelseFritekst,
         );
       case AVSLAG:
         return makeResponse(tomPeriode, begrunnelseFritekst);
@@ -312,7 +312,7 @@ const Saksopplysninger = ({
         return renderYtterligereInformasjonRow();
       case MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE:
         return (
-          <Fragment>
+          <>
             <Nav.Row>
               <Nav.Column xs="3">
                 <Nav.TextField
@@ -337,14 +337,14 @@ const Saksopplysninger = ({
             </Nav.Row>
             {renderBegrunnelseFritekstRow()}
             {renderYtterligereInformasjonRow()}
-          </Fragment>
+          </>
         );
       case MKV.Koder.anmodningsperiodesvartyper.AVSLAG:
         return (
-          <Fragment>
+          <>
             {renderBegrunnelseFritekstRow()}
             {renderYtterligereInformasjonRow()}
-          </Fragment>
+          </>
         );
       default:
         return null;
@@ -388,12 +388,12 @@ const Saksopplysninger = ({
               {vurderingBegrunnelser.length > 0 && (
                 <Nav.Row className="seksjon">
                   <Nav.Column xs="12">
-                    <Fragment>
+                    <>
                       <Nav.BodyLong weight="semibold" size="small">
                         Treff ved automatisk kontroll
                       </Nav.BodyLong>
                       <RegisterkontrollTreff vurderingBegrunnelser={vurderingBegrunnelser} />
-                    </Fragment>
+                    </>
                   </Nav.Column>
                 </Nav.Row>
               )}
@@ -453,7 +453,7 @@ const Saksopplysninger = ({
       <RegistreringMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
     </div>
   );
-};
+}
 
 Saksopplysninger.propTypes = {
   redigerbart: PT.bool.isRequired,

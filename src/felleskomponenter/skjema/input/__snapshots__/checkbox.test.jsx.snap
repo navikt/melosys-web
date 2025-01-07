@@ -9,7 +9,6 @@ exports[`Checkbox > snapshot test 1`] = `
       class="navds-checkbox__input"
       id="333"
       type="checkbox"
-      aria-checked
       aria-labelledby="333"
       value
     >

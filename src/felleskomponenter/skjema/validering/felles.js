@@ -17,7 +17,7 @@ class Felles {
     const { form: { feilmeldinger } = {} } = data;
     return feilmeldinger.reduce(
       (samling, feilmelding) => ({ ...samling, [feilmelding.skjemaFeltID]: feilmelding.melding }),
-      {}
+      {},
     );
   };
 

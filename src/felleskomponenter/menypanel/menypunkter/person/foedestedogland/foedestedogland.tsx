@@ -22,7 +22,7 @@ const connector = connect(mapStateToProps);
 
 type InnerFoedestedProps = WrappedFieldProps & { redigerbart: boolean } & ConnectedProps<typeof connector>;
 
-const InnerFoedestedComponent = (props: InnerFoedestedProps) => {
+function InnerFoedestedComponent(props: InnerFoedestedProps) {
   const {
     redigerbart,
     mottatteOpplysningerFeilmeldinger,
@@ -59,14 +59,14 @@ const InnerFoedestedComponent = (props: InnerFoedestedProps) => {
       }
     />
   );
-};
+}
 
 interface FoedestedWrapperProps {
   redigerbart: boolean;
 }
 
-const FoedestedWrapper = ({ ...rest }: FoedestedWrapperProps) => (
-  <Field name="foedestedOgLand" component={InnerFoedestedComponent} props={rest} />
-);
+function FoedestedWrapper({ ...rest }: FoedestedWrapperProps) {
+  return <Field name="foedestedOgLand" component={InnerFoedestedComponent} props={rest} />;
+}
 
 export default connector(FoedestedWrapper);

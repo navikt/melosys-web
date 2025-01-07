@@ -5,7 +5,7 @@ import MKV from "../../../../../melosyskodeverk";
 
 const { SKATTEPLIKTIG } = MKV.Koder.skatteplikttype;
 
-const SkatteforholdsPerioderTabell = ({ perioder }: { perioder?: SkatteforholdDto[] }) => {
+function SkatteforholdsPerioderTabell({ perioder }: { perioder?: SkatteforholdDto[] }) {
   if (!perioder) return null;
 
   return (
@@ -21,7 +21,7 @@ const SkatteforholdsPerioderTabell = ({ perioder }: { perioder?: SkatteforholdDt
           <Nav.Table.Row className="border_top" key={Utils._uuid()}>
             <Nav.Table.DataCell key={Utils._uuid()}>
               {`${Utils.dato.formatterDatoTilNorsk(skatteforholdsPeriode.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(
-                skatteforholdsPeriode.tomDato
+                skatteforholdsPeriode.tomDato,
               )}`}
             </Nav.Table.DataCell>
             <Nav.Table.DataCell key={Utils._uuid()}>
@@ -32,6 +32,6 @@ const SkatteforholdsPerioderTabell = ({ perioder }: { perioder?: SkatteforholdDt
       </Nav.Table.Body>
     </Nav.Table>
   );
-};
+}
 
 export default SkatteforholdsPerioderTabell;

@@ -22,16 +22,16 @@ describe("Sok", () => {
   });
 
   beforeAll(() => {
-    // @ts-ignore
+    // @ts-expect-error generisk beskrivelse
     fetch.resetMocks();
-    // @ts-ignore
+    // @ts-expect-error generisk beskrivelse
     fetch.mockResponse(JSON.stringify({}));
     fnr = generator.generateBirthNumber();
     vi.spyOn(window.sessionStorage, "getItem").mockReturnValue(fnr);
   });
 
   afterAll(() => {
-    // @ts-ignore
+    // @ts-expect-error generisk beskrivelse
     fetch.resetMocks();
     vi.clearAllMocks();
   });

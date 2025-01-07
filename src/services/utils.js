@@ -275,7 +275,7 @@ export function doThenDispatch(api, { OK, FEILET, PENDING }, callbacks = {}) {
         sendResultatTilDispatch(dispatch, OK, {
           onDispatch: callbacks.success,
           mapDispatchData: callbacks.mapDispatchData,
-        })
+        }),
       )
       .catch(handterFeil(dispatch, FEILET, callbacks.error));
   };

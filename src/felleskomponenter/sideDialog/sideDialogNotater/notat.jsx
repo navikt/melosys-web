@@ -7,7 +7,7 @@ import * as Ikoner from "../../../resources/images";
 
 import "./notat.css";
 
-const Notat = ({ redigerbart, tekst, opprettetDato, endretDato, forfatter, onUpdate, overskrift, maksTekstLengde }) => {
+function Notat({ redigerbart, tekst, opprettetDato, endretDato, forfatter, onUpdate, overskrift, maksTekstLengde }) {
   const [endres, setEndres] = useState(false);
   const [endretTekst, setEndretTekst] = useState(tekst);
   const [lagringFeilmelding, setLagringFeilmelding] = useState("");
@@ -23,7 +23,7 @@ const Notat = ({ redigerbart, tekst, opprettetDato, endretDato, forfatter, onUpd
     } catch (e) {
       if (e.status >= 500) {
         setLagringFeilmelding(
-          "Det oppsto en teknisk feil. Ta kontakt med brukerstøtte dersom problemet oppstår gjentatte ganger."
+          "Det oppsto en teknisk feil. Ta kontakt med brukerstøtte dersom problemet oppstår gjentatte ganger.",
         );
       } else if (e.status >= 400) {
         setLagringFeilmelding(e.body.message);
@@ -79,7 +79,7 @@ const Notat = ({ redigerbart, tekst, opprettetDato, endretDato, forfatter, onUpd
           </Nav.Column>
         </Nav.Row>
         {endres && (
-          <Fragment>
+          <>
             <Nav.Row>
               <Nav.Textarea label="" value={endretTekst} onChange={endreTekst} maxLength={maksTekstLengde} />
             </Nav.Row>
@@ -96,10 +96,10 @@ const Notat = ({ redigerbart, tekst, opprettetDato, endretDato, forfatter, onUpd
                 <span>Avbryt</span>
               </Nav.Button>
             </div>
-          </Fragment>
+          </>
         )}
         {!endres && (
-          <Fragment>
+          <>
             <Nav.Row className="uredigerbarTekst">
               <Nav.Column xs="12">
                 <Nav.BodyLong size="small">{tekst}</Nav.BodyLong>
@@ -114,12 +114,12 @@ const Notat = ({ redigerbart, tekst, opprettetDato, endretDato, forfatter, onUpd
                 </div>
               )}
             </Nav.Row>
-          </Fragment>
+          </>
         )}
       </Nav.Column>
     </Nav.Row>
   );
-};
+}
 
 Notat.propTypes = {
   redigerbart: PT.bool.isRequired,

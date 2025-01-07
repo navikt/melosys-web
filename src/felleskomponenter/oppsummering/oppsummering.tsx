@@ -55,7 +55,7 @@ type OppsummeringProps = PropsFromRedux & {
   className?: string;
 };
 
-const Oppsummering = ({
+function Oppsummering({
   oppsummering,
   fagsak,
   arbeidsland,
@@ -70,7 +70,7 @@ const Oppsummering = ({
   className,
   redigerbart,
   behandlingID,
-}: OppsummeringProps) => {
+}: OppsummeringProps) {
   const [{ mottaksdato }] = useAsyncCallbackState(() => Api.Behandlinger.aarsak.hentMottaksdato(behandlingID), {}, [
     behandlingID,
   ]);
@@ -107,7 +107,7 @@ const Oppsummering = ({
     sakstema.kode,
     behandlingstema.kode,
     behandlingstype.kode,
-    erArbeidKunNorgeToggleEnabled
+    erArbeidKunNorgeToggleEnabled,
   );
   const hovedpartErVirksomhet = hovedpartRolle === MKV.Koder.aktoersroller.VIRKSOMHET;
 
@@ -117,7 +117,7 @@ const Oppsummering = ({
   const landTilSetning = (land?: KTObject[]) =>
     land && land.length > 0
       ? Utils.streng.arrayTilKonjunksjon(
-          land.map((enkeltLand) => Utils.streng.storeForbokstaverForLand(enkeltLand.term || ""))
+          land.map((enkeltLand) => Utils.streng.storeForbokstaverForLand(enkeltLand.term || "")),
         )
       : "Ukjent";
 
@@ -131,12 +131,12 @@ const Oppsummering = ({
             verdi={
               <>
                 {row[1]}
-                {row[2] && <>{row[2]}</>}
+                {row[2] && row[2]}
               </>
             }
           />
-        </Nav.Row>
-      )
+        </Nav.Row>,
+      ),
     );
     return rows;
   };
@@ -153,7 +153,7 @@ const Oppsummering = ({
                 verdi={
                   <>
                     {col1[i][1]}
-                    {col1[i][2] && <>{col1[i][2]}</>}
+                    {col1[i][2] && col1[i][2]}
                   </>
                 }
               />
@@ -166,13 +166,13 @@ const Oppsummering = ({
                 verdi={
                   <>
                     {col2[i][1]}
-                    {col2[i][2] && <>{col2[i][2]}</>}
+                    {col2[i][2] && col2[i][2]}
                   </>
                 }
               />
             )}
           </Nav.Column>
-        </Nav.Row>
+        </Nav.Row>,
       );
     }
     return rows;
@@ -324,6 +324,6 @@ const Oppsummering = ({
       </div>
     </section>
   );
-};
+}
 
 export default connector(Oppsummering);

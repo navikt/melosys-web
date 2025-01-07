@@ -41,7 +41,7 @@ export function send(behandlingID: number, body: Api.Lovvalgsperioder.Lovvalgspe
 
 export function opprettLovvalgsperiode(
   behandlingID: number,
-  body: Api.Lovvalgsperioder.OpprettLovvalgsperiode
+  body: Api.Lovvalgsperioder.OpprettLovvalgsperiode,
 ): AppThunk<Promise<Types.OkAction>, Types.OkAction> {
   return doThenDispatch(() => Api.Lovvalgsperioder.opprettLovvalgsperiode(behandlingID, body), {
     OK: Types.OK,
@@ -53,7 +53,7 @@ export function opprettLovvalgsperiode(
 export function oppdaterLovvalgsperiode(
   behandlingID: number,
   lovvalgsperiodeID: number,
-  body: Api.Lovvalgsperioder.Lovvalgsperiode
+  body: Api.Lovvalgsperioder.Lovvalgsperiode,
 ): AppThunk<Promise<Types.OppdaterLovvalgsperioderAction>, Types.OppdaterLovvalgsperioderAction> {
   return doThenDispatch(() => Api.Lovvalgsperioder.oppdaterLovvalgsperiode(behandlingID, lovvalgsperiodeID, body), {
     OK: Types.OK_OPPDATER_LOVVALGSPERIODE,
@@ -74,7 +74,7 @@ export function slettLovvalgsperiode(behandlingID: number, lovvalgsperiodeID: nu
       mapDispatchData: () => ({
         periodeID: lovvalgsperiodeID,
       }),
-    }
+    },
   );
 }
 

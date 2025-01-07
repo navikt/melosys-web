@@ -11,14 +11,14 @@ interface LagredeUtkastProps {
   settAktivtUtkast: (utkast: Api.Brevutkast.BrevutkastResDto | null) => void;
 }
 
-const LagredeUtkast = ({ alleUtkast, settAktivtUtkast }: LagredeUtkastProps) => {
+function LagredeUtkast({ alleUtkast, settAktivtUtkast }: LagredeUtkastProps) {
   const velgUtkast = (value: string) => {
     const valgtUtkast = alleUtkast.find((utkast) => utkast.tittel === value);
     settAktivtUtkast(valgtUtkast || null);
   };
 
   return (
-    <>
+    <div>
       {!Utils._isEmpty(alleUtkast) && (
         <div className="lagredeUtkast">
           <Nav.Row>
@@ -51,8 +51,8 @@ const LagredeUtkast = ({ alleUtkast, settAktivtUtkast }: LagredeUtkastProps) => 
           ))}
         </div>
       )}
-    </>
+    </div>
   );
-};
+}
 
 export default LagredeUtkast;

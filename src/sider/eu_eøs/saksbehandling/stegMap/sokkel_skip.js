@@ -11,17 +11,17 @@ class SokkelSkip extends Steg {
 
     const sokkelEllerSkipListe = hentFaktaListe(
       KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP,
-      propsLight.avklartefakta
+      propsLight.avklartefakta,
     );
     const sokkelSkipKonklusjon = hentFakta(KV.Koder.avklartefaktaKoder.ARBEID_SOKKEL_SKIP, propsLight.avklartefakta);
     const installasjonArbeidslandListe = hentFaktaListe(
       KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND,
-      propsLight.avklartefakta
+      propsLight.avklartefakta,
     );
     const alleErAvklart = SokkelSkip.alleErAvklart(
       sokkelEllerSkipListe,
       sokkelSkipKonklusjon,
-      installasjonArbeidslandListe
+      installasjonArbeidslandListe,
     );
 
     this.kriterier = [
@@ -51,7 +51,7 @@ class SokkelSkip extends Steg {
     this.beregnRelevantUI = (_propsLight) => {
       const installasjonArbeidslandTypeListe = hentFaktaListe(
         KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND_TYPE,
-        _propsLight.avklartefakta
+        _propsLight.avklartefakta,
       );
       const arbeidslandListe = hentFaktaListe(MKV.Koder.avklartefaktatyper.ARBEIDSLAND, _propsLight.avklartefakta);
 
@@ -75,7 +75,7 @@ class SokkelSkip extends Steg {
 
   static finnAvklaring = (avklartefakta, typeSomSkalSjekkes) => {
     const enkeltFakta = avklartefakta.find(
-      (fakta) => fakta.referanse === KV.Koder.avklartefaktaKoder.ARBEID_SOKKEL_SKIP
+      (fakta) => fakta.referanse === KV.Koder.avklartefaktaKoder.ARBEID_SOKKEL_SKIP,
     );
 
     if (!enkeltFakta) {

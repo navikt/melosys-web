@@ -56,7 +56,7 @@ describe("SorterbarListe", () => {
     const { findByLabelText, findAllByRole } = renderWithProviders(
       <Router>
         <WrappedSorterbarListe {...props} />
-      </Router>
+      </Router>,
     );
     const user = userEvent.setup();
     await user.click(await findByLabelText("Nyeste først"));
@@ -71,7 +71,7 @@ describe("SorterbarListe", () => {
     const { findByLabelText, findAllByRole } = renderWithProviders(
       <Router>
         <WrappedSorterbarListe {...props} />
-      </Router>
+      </Router>,
     );
     const user = userEvent.setup();
     await user.click(await findByLabelText("Eldste først"));
@@ -87,7 +87,7 @@ describe("SorterbarListe", () => {
     const { container } = renderWithProviders(
       <Router>
         <WrappedSorterbarListe {...props} />
-      </Router>
+      </Router>,
     );
 
     expect(container).toBeEmptyDOMElement();
@@ -98,7 +98,7 @@ describe("SorterbarListe", () => {
     const { queryByLabelText } = renderWithProviders(
       <Router>
         <WrappedSorterbarListe {...props} />
-      </Router>
+      </Router>,
     );
 
     expect(queryByLabelText("Nyeste først")).not.toBeInTheDocument();

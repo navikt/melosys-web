@@ -1,5 +1,5 @@
 import userEvent from "@testing-library/user-event";
-import { Behandlingsmeny } from "./behandlingsmeny";
+import Behandlingsmeny from "./behandlingsmeny";
 import { renderWithProviders } from "../../../ducks/test-utils/renderWithProviders";
 
 describe("Behandlingsmeny", () => {

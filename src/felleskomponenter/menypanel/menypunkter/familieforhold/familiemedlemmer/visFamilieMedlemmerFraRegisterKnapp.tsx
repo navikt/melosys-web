@@ -8,7 +8,7 @@ interface VisFamilieMedlemmerFraRegisterKnappProps {
   onClick: (visFamilieforholdFraRegister: boolean) => void;
 }
 
-const VisFamilieMedlemmerFraRegisterKnapp = ({ onClick }: VisFamilieMedlemmerFraRegisterKnappProps) => {
+function VisFamilieMedlemmerFraRegisterKnapp({ onClick }: VisFamilieMedlemmerFraRegisterKnappProps) {
   const familiemedlemmerClassName = bem("familiemedlemmer");
 
   return (
@@ -25,6 +25,6 @@ const VisFamilieMedlemmerFraRegisterKnapp = ({ onClick }: VisFamilieMedlemmerFra
       </Nav.Button>
     </div>
   );
-};
+}
 
 export default VisFamilieMedlemmerFraRegisterKnapp;

@@ -11,15 +11,15 @@ import * as Types from "./types";
 
 export const BehandlingsstatusSelector: Selector<RootState, StateSection<Types.Data>> = createSelector(
   (state: RootState) => state.behandlingsstatus,
-  (behandlingsstatus) => behandlingsstatus
+  (behandlingsstatus) => behandlingsstatus,
 );
 
 export const BehandlingsstatusDataSelector: Selector<RootState, Types.Data> = createSelector(
   BehandlingsstatusSelector,
-  (behandlingsstatus) => behandlingsstatus.data
+  (behandlingsstatus) => behandlingsstatus.data,
 );
 
 export const MuligeBehandlingsstatusSelector = createSelector(
   BehandlingsstatusDataSelector,
-  (behandlingsstatus) => behandlingsstatus.muligeBehandlingsstatuser || []
+  (behandlingsstatus) => behandlingsstatus.muligeBehandlingsstatuser || [],
 );

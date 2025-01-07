@@ -43,7 +43,7 @@ const arbeid_tjenesteperson_eller_fly_vedtak = object().shape({
         is: true,
         then: string().required(MOTTAKERINSTITUSJON_KREVES),
       }),
-    })
+    }),
   ),
   kreverMottakerinstitusjon: bool().required(),
   mottakerinstitusjon: string().when("kreverMottakerinstitusjon", {

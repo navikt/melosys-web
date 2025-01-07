@@ -43,7 +43,7 @@ interface FormValuesProps {
   begrunnelseFritekst?: string;
 }
 
-export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
+export function VurderingVedtak({ aktivtSteg, tilbake }: Props) {
   const sakstype = useSelector(fagsakSelectors.SakstypeKodeSelector);
 
   const dispatch = useDispatch();
@@ -104,7 +104,7 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
         behandlingID,
         vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
         skalRegisteropplysningerOppdateres: false,
-      })
+      }),
     );
     setKontrollEllerVedtakPending(false);
   };
@@ -157,7 +157,7 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
       vedtakOperations.fatt(behandlingID, {
         behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
         vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
-      })
+      }),
     );
 
   const handleBekreft = async () => {
@@ -273,4 +273,4 @@ export const VurderingVedtak = ({ aktivtSteg, tilbake }: Props) => {
       />
     </div>
   );
-};
+}

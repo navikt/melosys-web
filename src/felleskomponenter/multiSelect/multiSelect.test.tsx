@@ -17,7 +17,7 @@ describe("MultiSelect", () => {
   it("Props er satt", async () => {
     renderWithProviders(<MultiSelect {...props} />);
 
-    const select = screen.getByRole("textbox");
+    const select = screen.getByRole("combobox");
     fireEvent.mouseDown(select);
 
     for (let i = 0; i < props.options.length; i += 1) {

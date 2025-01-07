@@ -28,7 +28,7 @@ import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import VurderingArtikkel13_x_vedtakSchema from "./vurderingArtikkel13_x_vedtakSchema";
 import "./vurderingArtikkel13_x_vedtak.css";
 
-export const VurderingArtikkel13_x_vedtak = ({
+export function VurderingArtikkel13_x_vedtak({
   redigerbart,
   tilbake,
   behandlingID,
@@ -50,17 +50,17 @@ export const VurderingArtikkel13_x_vedtak = ({
   validerMottatteOpplysninger,
   fattVedtak,
   mottatteOpplysningerStatus,
-}) => {
+}) {
   const [vedtakPending, setVedtakPending] = useState(false);
   let oppdaterFørKontroll = true;
 
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
 
   const fom = Utils.dato.formatterDatoTilNorsk(
-    (formValues.forkortLovvalgsperiode && formValues.fomDato) || soknadsperiode.fom
+    (formValues.forkortLovvalgsperiode && formValues.fomDato) || soknadsperiode.fom,
   );
   const tom = Utils.dato.formatterDatoTilNorsk(
-    (formValues.forkortLovvalgsperiode && formValues.tomDato) || soknadsperiode.tom
+    (formValues.forkortLovvalgsperiode && formValues.tomDato) || soknadsperiode.tom,
   );
 
   const kontrollerBehandling = async (data) => {
@@ -165,7 +165,7 @@ export const VurderingArtikkel13_x_vedtak = ({
         {overskrift}
       </Nav.Heading>
       {redigerbart && (
-        <Fragment>
+        <>
           <Nav.BodyLong weight="semibold" size="small" className="undertittel">
             Lovvalgsperiode
           </Nav.BodyLong>
@@ -174,7 +174,7 @@ export const VurderingArtikkel13_x_vedtak = ({
               {fom} - {tom}
             </Nav.Column>
           </Nav.Row>
-        </Fragment>
+        </>
       )}
       <Skjema.PeriodeForkorter
         redigerbart={redigerbart}
@@ -248,7 +248,7 @@ export const VurderingArtikkel13_x_vedtak = ({
       />
     </form>
   );
-};
+}
 
 VurderingArtikkel13_x_vedtak.propTypes = {
   tilstand: PT.shape({

@@ -34,7 +34,7 @@ const erFoerTomTest = {
     Utils.dato.datoDiffPure(
       Utils.dato.formatterDatoTilISO(value),
       Utils.dato.formatterDatoTilISO(options.parent.tomDato),
-      "days"
+      "days",
     ) <= 0,
 };
 
@@ -45,7 +45,7 @@ const erEtterFomTest = {
     Utils.dato.datoDiffPure(
       Utils.dato.formatterDatoTilISO(value),
       Utils.dato.formatterDatoTilISO(options.parent.fomDato),
-      "days"
+      "days",
     ) >= 0,
 };
 

@@ -4,15 +4,15 @@ import * as Nav from "../../navFrontend";
 
 import "./ikonKnapp.css";
 
-type IkonKnappProps = {
+interface IkonKnappProps {
   ikon: ElementType;
   onClick: MouseEventHandler<HTMLButtonElement>;
   ariaLabel: string;
   className?: string;
   disabled?: boolean;
-};
+}
 
-const IkonKnapp = ({ ikon: Ikon, onClick, ariaLabel, className, disabled }: IkonKnappProps) => {
+function IkonKnapp({ ikon: Ikon, onClick, ariaLabel, className, disabled }: IkonKnappProps) {
   const cls = classnames("ikon-knapp", className);
 
   return (
@@ -27,6 +27,6 @@ const IkonKnapp = ({ ikon: Ikon, onClick, ariaLabel, className, disabled }: Ikon
       icon={<Ikon className="ikon" />}
     />
   );
-};
+}
 
 export default IkonKnapp;

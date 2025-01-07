@@ -10,13 +10,13 @@ import { Periode } from "../../../../../services/modules/types";
 
 export const hentLovvalgsperiode = (
   anmodningsperiodesvar: AnmodningsperiodesvarResDto,
-  anmodningsperiode: Anmodningsperiode
+  anmodningsperiode: Anmodningsperiode,
 ): Partial<Periode> => {
   const { anmodningsperiodeSvarType, endretPeriode } = anmodningsperiodesvar;
 
   if (anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE) {
     return {
-      fom: endretPeriode.fom!!,
+      fom: endretPeriode.fom!,
       tom: endretPeriode.tom,
     };
   }

@@ -13,7 +13,7 @@ interface BrevFeltProps {
   width: ColumnWidth;
   redigerbart: boolean;
 }
-const BrevFelt = ({ felt, visFeltBeskrivelse, width, redigerbart }: BrevFeltProps) => {
+function BrevFelt({ felt, visFeltBeskrivelse, width, redigerbart }: BrevFeltProps) {
   switch (felt?.feltType) {
     case DokumenterV2.FeltType.FRITEKST:
       return (
@@ -74,6 +74,6 @@ const BrevFelt = ({ felt, visFeltBeskrivelse, width, redigerbart }: BrevFeltProp
     default:
       return null;
   }
-};
+}
 
 export default BrevFelt;

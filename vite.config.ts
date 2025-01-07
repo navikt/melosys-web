@@ -2,7 +2,6 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import viteTsconfigPaths from "vite-tsconfig-paths";
 import svgrPlugin from "vite-plugin-svgr";
-import { fileURLToPath, URL } from "node:url";
 import * as path from "path";
 
 const LOCAL_API_PORT = 8080;
@@ -19,12 +18,6 @@ export default defineConfig({
     outDir: "./build",
     emptyOutDir: true,
   },
-  test: {
-    globals: true,
-    environment: "jsdom",
-    setupFiles: "./src/setupTests.js",
-    snapshotSerializers: ["./src/customSnapshotSerializer.js"],
-  },
   plugins: [
     {
       name: "vite-plugin-disable-import-analysis",
@@ -39,11 +32,8 @@ export default defineConfig({
         };
       },
     },
-    // @ts-ignore
     react({
       include: /\.(js|jsx|ts|tsx)$/,
-      jsxImportSource: "react",
-      jsxRuntime: "classic",
     }),
     viteTsconfigPaths(),
     svgrPlugin(),
@@ -77,7 +67,6 @@ export default defineConfig({
   resolve: {
     extensions: [".js", ".json", ".jsx", ".mjs", ".ts", ".tsx"],
     alias: {
-      "nav-frontend-typografi-style": fileURLToPath(new URL("./src/nav-style/typografi.css", import.meta.url)),
       AppTypes: path.resolve(__dirname, "./src/globalmodules/AppTypes.ts"),
       Domene: path.resolve(__dirname, "./src/globalmodules/Domene.ts"),
       "melosys-api": path.resolve(__dirname, "./src/globalmodules/melosys-api.ts"),

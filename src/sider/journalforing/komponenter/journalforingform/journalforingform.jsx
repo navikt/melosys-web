@@ -67,7 +67,7 @@ const kontrollerAdresse = (identifikator) => {
     });
 };
 
-const JournalforingForm = ({
+function JournalforingForm({
   journalpostID,
   hoveddokumentID,
   vedlegg,
@@ -84,13 +84,13 @@ const JournalforingForm = ({
   avsenderIDFraJournalpost,
   avsenderNavnFraJournalpost,
   mottaksKanalErElektronisk,
-}) => {
+}) {
   const visForvaltningsmelding = skalViseForvaltningsmelding(formValues, fagsakListe);
   const visFagsakVelger = formValues?.brukerNavn || formValues?.virksomhetNavn;
   const visSkalTilordnes = !fagsakListe.find(
     (sak) =>
       sak.saksnummer === formValues?.saksnummer &&
-      MKVUtils.erOpphørtEllerHenlagtEllerBortfaltEllerAnnullert(sak.saksstatus.kode)
+      MKVUtils.erOpphørtEllerHenlagtEllerBortfaltEllerAnnullert(sak.saksstatus.kode),
   );
 
   const [adresseOpplysninger, setAdresseOpplysninger] = useState({
@@ -201,7 +201,7 @@ const JournalforingForm = ({
       />
     </form>
   );
-};
+}
 
 JournalforingForm.propTypes = {
   journalpostID: PT.string.isRequired,

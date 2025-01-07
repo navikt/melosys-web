@@ -28,7 +28,7 @@ const fullmektige_schema = object().shape({
         .test("Kan ikke ha aktiv feil", { message: KAN_IKKE_HA_AKTIV_FEIL }, (feil) => !feil)
         .nullable(),
       kontaktOrgnr: string().erOrgnr(SKRIV_INN_GYLDIG_ORGNR).nullable(),
-    })
+    }),
   ),
 });
 

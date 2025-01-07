@@ -59,8 +59,8 @@ describe("utils.js:", () => {
             foretakUtland: "foretakUtland",
             arbeidUtland: "arbeidUtland",
           },
-          "inntekt"
-        )
+          "inntekt",
+        ),
       ).toEqual([]);
     });
 
@@ -72,8 +72,8 @@ describe("utils.js:", () => {
               arbeidUtland: [{ panel: "arbeidUtlandPanel" }],
             },
           ],
-          "panel"
-        )
+          "panel",
+        ),
       ).toEqual(["arbeidUtlandPanel"]);
     });
 
@@ -87,8 +87,8 @@ describe("utils.js:", () => {
               },
             },
           },
-          "panel"
-        )
+          "panel",
+        ),
       ).toEqual(["personinfoPanel"]);
     });
 
@@ -104,8 +104,8 @@ describe("utils.js:", () => {
             },
           },
           "panel",
-          true
-        )
+          true,
+        ),
       ).toEqual([
         {
           panel: "personinfoPanel",

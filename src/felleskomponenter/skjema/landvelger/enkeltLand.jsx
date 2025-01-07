@@ -80,7 +80,7 @@ class InnerEnkeltLand extends Component {
     const { landkoder } = this.props;
     if (!inputVerdi) return [];
     return landkoder.filter((land) =>
-      Utils.land.landTekstFormat(land).toLowerCase().includes(inputVerdi.toLowerCase())
+      Utils.land.landTekstFormat(land).toLowerCase().includes(inputVerdi.toLowerCase()),
     );
   };
 
@@ -185,7 +185,9 @@ InnerEnkeltLand.defaultProps = {
   placeholder: undefined,
 };
 
-const EnkeltLand = ({ feltNavn, ...rest }) => <Field name={feltNavn} component={InnerEnkeltLand} props={{ ...rest }} />;
+function EnkeltLand({ feltNavn, ...rest }) {
+  return <Field name={feltNavn} component={InnerEnkeltLand} props={{ ...rest }} />;
+}
 
 EnkeltLand.propTypes = {
   feltNavn: PT.string.isRequired,

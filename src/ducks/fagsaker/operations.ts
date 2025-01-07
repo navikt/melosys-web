@@ -45,7 +45,7 @@ export function lagNySak(body: Api.Fagsaker.fagsak.OpprettReqDto) {
       success: (dispatch: ThunkDispatch<RootState, unknown, Types.Action>) => {
         dispatch(navigeringOperations.tilForsiden());
       },
-    }
+    },
   );
 }
 
@@ -62,7 +62,7 @@ export function lagNyBehandlingForSak(saksnummer: string, body: Api.Fagsaker.fag
       success: (dispatch: ThunkDispatch<RootState, unknown, Types.Action>) => {
         dispatch(navigeringOperations.tilForsiden());
       },
-    }
+    },
   );
 }
 

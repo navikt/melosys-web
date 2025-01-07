@@ -9,5 +9,5 @@ import { createSelector } from "reselect";
 
 export const MineSakerSelector = createSelector(
   (state) => state.oppgaver.data || {},
-  (mineSaker) => mineSaker
+  (mineSaker) => mineSaker,
 );

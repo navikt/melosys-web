@@ -9,14 +9,14 @@ import PT from "prop-types";
 import * as MPT from "../../../../../proptypes/index";
 import * as Nav from "../../../../../navFrontend/index";
 
-const MarginaltArbeidCheckbox = (props) => {
+function MarginaltArbeidCheckbox(props) {
   const { arbeidsland, avklartMarginaltArbeidILand, oppdaterData } = props;
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (avklartMarginaltArbeidILand) {
       oppdaterData(
-        konverterAvklartfaktaTilStegData(MKV.Koder.avklartefaktatyper.MARGINALT_ARBEID, avklartMarginaltArbeidILand)
+        konverterAvklartfaktaTilStegData(MKV.Koder.avklartefaktatyper.MARGINALT_ARBEID, avklartMarginaltArbeidILand),
       );
     }
   }, []);
@@ -45,7 +45,7 @@ const MarginaltArbeidCheckbox = (props) => {
       {arbeidsland.term}
     </Nav.Checkbox>
   );
-};
+}
 
 MarginaltArbeidCheckbox.propTypes = {
   oppdaterData: PT.func.isRequired,

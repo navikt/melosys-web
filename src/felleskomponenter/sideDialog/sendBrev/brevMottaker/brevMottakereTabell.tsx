@@ -29,16 +29,16 @@ interface BrevMottakereTabellProps {
   hentBrevRequest: any;
 }
 
-const BrevMottakereTabell = ({
+function BrevMottakereTabell({
   muligeMottakere,
   muligeMottakereNorskMyndighet,
   behandlingID,
   formValues,
   formIsValid,
   hentBrevRequest,
-}: BrevMottakereTabellProps & PropsFromRedux) => {
+}: BrevMottakereTabellProps & PropsFromRedux) {
   const mapKopiMottakere = (
-    muligeBrevMottakere: Api.DokumenterV2.HentMuligeMottakereResDto
+    muligeBrevMottakere: Api.DokumenterV2.HentMuligeMottakereResDto,
   ): BrevDokumentMetadataType[] => {
     return formValues?.kopiTilBruker
       ? muligeBrevMottakere.kopiMottakere.map((muligMottaker) => mapDokument(muligMottaker))
@@ -47,7 +47,7 @@ const BrevMottakereTabell = ({
 
   const mapDokument = (
     muligMottaker: Api.DokumenterV2.MuligMottaker,
-    erHovedMottaker = false
+    erHovedMottaker = false,
   ): BrevDokumentMetadataType => {
     const rolle = erHovedMottaker ? formValues.valgtMottaker?.rolle : muligMottaker.rolle;
     return {
@@ -61,7 +61,7 @@ const BrevMottakereTabell = ({
   };
 
   const mapMottakerRader = (
-    muligeBrevMottakere: Api.DokumenterV2.HentMuligeMottakereResDto
+    muligeBrevMottakere: Api.DokumenterV2.HentMuligeMottakereResDto,
   ): BrevDokumentMetadataType[] => {
     return [
       mapDokument(muligeBrevMottakere.hovedMottaker, true),
@@ -95,6 +95,6 @@ const BrevMottakereTabell = ({
       )}
     </>
   );
-};
+}
 
 export default connector(BrevMottakereTabell);

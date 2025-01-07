@@ -19,12 +19,12 @@ interface IngenSokkelSkipEllerHjemmebaserProps {
   arbeidUtforesIOppgittLandFakta?: Avklartfakta;
 }
 
-const IngenSokkelSkipEllerHjemmebaser = ({
+function IngenSokkelSkipEllerHjemmebaser({
   oppdaterData,
   slettData,
   redigerbart,
   arbeidUtforesIOppgittLandFakta,
-}: IngenSokkelSkipEllerHjemmebaserProps) => {
+}: IngenSokkelSkipEllerHjemmebaserProps) {
   useEffect(() => {
     oppdaterData(konverterAvklartfaktaTilStegData(ARBEID_UTFORES_I_OPPGITT_LAND, arbeidUtforesIOppgittLandFakta));
 
@@ -44,7 +44,7 @@ const IngenSokkelSkipEllerHjemmebaser = ({
   const erChecked = hentFaktaVerdi(arbeidUtforesIOppgittLandFakta) === BOOLSK_STRING.SANN;
 
   return (
-    <Fragment>
+    <>
       <Nav.Alert variant="info">
         Panelene er ikke utfylt med informasjon om arbeid på sokkel, skip eller hjemmebaser. Fyll ut feltene hvis det er
         relevant for å vurdere arbeidsland.
@@ -54,8 +54,8 @@ const IngenSokkelSkipEllerHjemmebaser = ({
           Arbeid utføres i land som er oppgitt
         </Nav.Checkbox>
       </Nav.CheckboxGroup>
-    </Fragment>
+    </>
   );
-};
+}
 
 export default IngenSokkelSkipEllerHjemmebaser;

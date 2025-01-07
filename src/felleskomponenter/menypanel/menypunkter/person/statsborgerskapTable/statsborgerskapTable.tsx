@@ -19,7 +19,7 @@ const renderPeriode = (statsborgerskap: Statsborgerskap, historisk?: boolean) =>
   return statsborgerskap.gyldigFraOgMed ? Utils.dato.formatterDatoTilNorsk(statsborgerskap.gyldigFraOgMed) : "";
 };
 
-const StatsborgerskapTable = ({ statsborgerskapList, historisk }: StatsborgerskapTableProps) => {
+function StatsborgerskapTable({ statsborgerskapList, historisk }: StatsborgerskapTableProps) {
   const [expanded, setExpanded] = useState(false);
   const periodetekst = `Gyldig f.o.m.${historisk ? " - t.o.m." : ""}`;
 
@@ -62,6 +62,6 @@ const StatsborgerskapTable = ({ statsborgerskapList, historisk }: Statsborgerska
       )}
     </div>
   );
-};
+}
 
 export default StatsborgerskapTable;

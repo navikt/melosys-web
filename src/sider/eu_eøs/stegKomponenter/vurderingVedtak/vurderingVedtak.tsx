@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { connect, ConnectedProps, useDispatch, useSelector } from "react-redux";
 import { getFormValues, InjectedFormProps, isValid, reduxForm } from "redux-form";
-// @ts-ignore
+// @ts-expect-error generisk beskrivelse
 import * as EKV from "eessi-kodeverk";
 import MKV, { MKVUtils } from "../../../../melosyskodeverk";
 import * as KV from "../../../../kodeverk";
@@ -64,7 +64,7 @@ const finnSedMottakerLand = (
   arbeidsland: KTObject[],
   bostedsland: KTObject,
   lovvalgsbestemmelse: string,
-  tilleggBestemmelse: string
+  tilleggBestemmelse: string,
 ) => {
   if (lovvalgsbestemmelse === FO_883_2004_ART11_3A && tilleggBestemmelse === FO_883_2004_ART11_4_1) {
     return bostedsland.kode;
@@ -82,7 +82,7 @@ const skalViseSendOrienteringsbrev = (
   sakstype: string,
   behandlingstema: string,
   erArtikkel11_4: boolean,
-  erSelvstendigNaeringsdrivende: boolean
+  erSelvstendigNaeringsdrivende: boolean,
 ) =>
   !erArtikkel11_4 &&
   sakstype === EU_EOS &&
@@ -93,12 +93,12 @@ const skalViseMottakerinstitusjoner = (
   sakstype: string,
   sakstema: string,
   behandlingstema: string,
-  behandlingstype: string
+  behandlingstype: string,
 ) => {
   return (
     sakstype === EU_EOS &&
     [UTSENDT_ARBEIDSTAKER, UTSENDT_SELVSTENDIG, ARBEID_FLERE_LAND, ARBEID_TJENESTEPERSON_ELLER_FLY].includes(
-      behandlingstema
+      behandlingstema,
     ) &&
     !skalViseIngenFlyt(sakstype, sakstema, behandlingstema, behandlingstype)
   );
@@ -142,7 +142,7 @@ type VurderingVedtakProps = PropsFromRedux & {
   validerMottatteOpplysninger: () => Promise<void>;
 };
 
-const VurderingVedtak = ({
+function VurderingVedtak({
   redigerbart,
   tilbake,
   behandlingstype,
@@ -155,7 +155,7 @@ const VurderingVedtak = ({
   validerMottatteOpplysninger,
   lovvalgsperiode,
   erArtikkel11_4,
-}: VurderingVedtakProps & InjectedFormProps<FormValuesProps, VurderingVedtakProps>) => {
+}: VurderingVedtakProps & InjectedFormProps<FormValuesProps, VurderingVedtakProps>) {
   const dispatch = useDispatch();
   const [vedtakPending, setVedtakPending] = useState(false);
   const [erBucAapen, setErBucAapen] = useState(true);
@@ -174,7 +174,7 @@ const VurderingVedtak = ({
   const sakstema = useSelector(fagsakSelectors.SakstemaKodeSelector);
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const formIsValid = useSelector(isValid(KV.Form.ARTIKKEL_12_VEDTAK));
-  const erArtikkel11_4Eller13_4 = useSelector(flytSelectors.ErIArtikkel11_4Eller13_4FlytSelector);
+  const erArtikkel114Eller134 = useSelector(flytSelectors.ErIArtikkel114Eller134FlytSelector);
   const mottatteOpplysningerStatus = useSelector(mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector);
 
   const visMottakerinstitusjoner = skalViseMottakerinstitusjoner(sakstype, sakstema, behandlingstema, behandlingstype);
@@ -241,7 +241,7 @@ const VurderingVedtak = ({
           mottakerinstitusjoner: visMottakerinstitusjoner ? [formValues.mottakerinstitusjon] : [],
           nyVurderingBakgrunn: formValues.vedtakstypebegrunnelse,
         };
-        // @ts-ignore
+        // @ts-expect-error generisk beskrivelse
         dispatch(vedtakOperations.fatt(behandlingID, vedtakRequest)).then((res) => {
           if (res.data?.data?.error) {
             setVedtakPending(false);
@@ -252,7 +252,7 @@ const VurderingVedtak = ({
   };
 
   const { fomDato, tomDato, lovvalgsbestemmelse, tilleggBestemmelse } = lovvalgsperiode;
-  const erArtikkel11_3 = lovvalgsbestemmelse === FO_883_2004_ART11_3A;
+  const erArtikkel113 = lovvalgsbestemmelse === FO_883_2004_ART11_3A;
 
   const sedMottakerLand = finnSedMottakerLand(arbeidsland, bostedsland || {}, lovvalgsbestemmelse, tilleggBestemmelse);
   const flereSoknadslandEnnTillatt = arbeidsland.length > 1 && !MKVUtils.kanHaFlereSoknadsland(behandlingstema);
@@ -266,13 +266,15 @@ const VurderingVedtak = ({
   const mapDokumenter = (dokumenter: BrevDokumentMetadataType[]) => {
     return dokumenter.map((dokument: BrevDokumentMetadataType) => {
       if (dokument.dokumentData !== undefined) {
+        /* eslint-disable no-param-reassign */
         dokument.dokumentData.nyVurderingBakgrunn = formValues?.vedtakstypebegrunnelse;
         dokument.dokumentData.begrunnelseFritekst = formValues?.vedtaksbrevFritekst;
+        /* eslint-enable no-param-reassign */
       }
       return dokument;
     });
   };
-  const skalViseFritekstSed = !(bucLukketOgLovvalgNorge || (erSokkelSkip && erArtikkel11_3));
+  const skalViseFritekstSed = !(bucLukketOgLovvalgNorge || (erSokkelSkip && erArtikkel113));
 
   return (
     <div className="vedtak">
@@ -281,7 +283,7 @@ const VurderingVedtak = ({
           ? "Omfattet av norsk trygdelovgivning"
           : `Omfattet av norsk trygdelovgivning etter ${finnLovvalgSomTerm(
               lovvalgsbestemmelseKT,
-              tilleggBestemmelseKT
+              tilleggBestemmelseKT,
             )}`}
       </Nav.Heading>
       <div>
@@ -336,7 +338,7 @@ const VurderingVedtak = ({
                 form={form}
                 redigerbart={redigerbart}
                 landkode={sedMottakerLand}
-                bucType={erArtikkel11_4Eller13_4 ? LA_BUC_05 : LA_BUC_04}
+                bucType={erArtikkel114Eller134 ? LA_BUC_05 : LA_BUC_04}
               />
             </Nav.Column>
           </Nav.Row>
@@ -384,7 +386,7 @@ const VurderingVedtak = ({
       </div>
     </div>
   );
-};
+}
 
 const VurderingVedtakForm = reduxForm<FormValuesProps, VurderingVedtakProps>({
   form: KV.Form.ARTIKKEL_12_VEDTAK,

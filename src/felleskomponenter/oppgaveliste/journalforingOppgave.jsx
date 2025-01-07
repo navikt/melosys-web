@@ -7,7 +7,7 @@ import PanelHeader from "../panelHeader";
 
 import "./journalforingOppgave.css";
 
-const JournalforingOppgave = ({ sak }) => {
+function JournalforingOppgave({ sak }) {
   const { journalpostID, oppgaveID, aktivTil, navn } = sak;
   const link = `/journalforing/${journalpostID}/${oppgaveID}`;
 
@@ -27,7 +27,7 @@ const JournalforingOppgave = ({ sak }) => {
       </div>
     </Link>
   );
-};
+}
 
 JournalforingOppgave.propTypes = {
   sak: MPT.JournalforingOppgave,

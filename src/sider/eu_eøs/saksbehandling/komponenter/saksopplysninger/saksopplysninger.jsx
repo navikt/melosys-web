@@ -35,7 +35,7 @@ const hentForsteSteg = (behandlingstype) => {
   }
 };
 
-const Saksopplysninger = ({
+function Saksopplysninger({
   behandlingstype,
   behandlingOppfriskes,
   redigerbart,
@@ -51,7 +51,7 @@ const Saksopplysninger = ({
   lagreAnmodningsperioderHandler,
   startOgVisOppfriskModal,
   anmodningsperioderErSendtUtlandet,
-}) => {
+}) {
   if (Utils._isNil(redigerbart)) return null;
 
   if (!behandlingID || behandlingID < 0) {
@@ -72,7 +72,7 @@ const Saksopplysninger = ({
     behandlingstype !== MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE && !anmodningsperioderErSendtUtlandet;
 
   return (
-    <Fragment>
+    <>
       <main id="main-container">
         {erHenlagtSak && <HenlagtSak />}
         {visAvslåttPgaManglendeOpplysninger && <AvslaattPgaManglendeOpplysninger />}
@@ -96,9 +96,9 @@ const Saksopplysninger = ({
         startOgVisOppfriskModal={startOgVisOppfriskModal}
         visOppdaterRegisteropplysninger={visOppdaterRegisteropplysninger}
       />
-    </Fragment>
+    </>
   );
-};
+}
 
 Saksopplysninger.propTypes = {
   behandlingstype: PT.string.isRequired,

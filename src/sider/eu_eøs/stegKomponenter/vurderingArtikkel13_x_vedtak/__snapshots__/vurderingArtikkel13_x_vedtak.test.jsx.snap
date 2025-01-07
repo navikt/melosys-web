@@ -24,7 +24,6 @@ exports[`VurderingArtikkel13_x_Vedtak > snapshot test 1`] = `
               class="navds-checkbox__input"
               id="333"
               type="checkbox"
-              aria-checked
               aria-labelledby="333"
               value
             >
@@ -79,8 +78,8 @@ exports[`VurderingArtikkel13_x_Vedtak > snapshot test 1`] = `
             textareaclass="skjemaelement__input input--fullbredde"
             name="333"
             id="333"
-            class="navds-textarea__input navds-body-short navds-body-short--small"
             aria-describedby="333"
+            class="navds-textarea__input navds-body-short navds-body-short--small"
           >
           </textarea>
           <textarea
@@ -125,8 +124,8 @@ exports[`VurderingArtikkel13_x_Vedtak > snapshot test 1`] = `
             textareaclass="skjemaelement__input input--fullbredde"
             name="333"
             id="333"
-            class="navds-textarea__input navds-body-short navds-body-short--small"
             aria-describedby="333"
+            class="navds-textarea__input navds-body-short navds-body-short--small"
           >
           </textarea>
           <textarea

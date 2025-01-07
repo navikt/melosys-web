@@ -30,7 +30,7 @@ export const sendIkkeYrkesaktivOppholdstype = (behandlingID: number, oppholdstyp
 
 export const sendIkkeYrkesaktivRelasjonstype = (
   behandlingID: number,
-  familierelasjonstype: string
+  familierelasjonstype: string,
 ): Promise<Oppsummering> =>
   postAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/familierelasjonstype`, familierelasjonstype);
 
@@ -43,17 +43,17 @@ export const slettAvklartefakta = (behandlingID: number, avklartefaktatype: stri
 export const hentOppsummering = (behandlingID: number): Promise<Oppsummering> =>
   getAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/oppsummering`);
 
-export type Virksomheter = {
+export interface Virksomheter {
   virksomhetIDer: string[];
-};
+}
 
-export type Arbeidsland = {
+export interface Arbeidsland {
   arbeidsland: string[];
-};
+}
 
-export type FullstendigManglendeInnbetaling = {
+export interface FullstendigManglendeInnbetaling {
   fullstendigManglendeInnbetaling?: boolean;
-};
+}
 
 export const sendVirksomheter = (behandlingID: number, virksomheter: Virksomheter): Promise<Oppsummering> =>
   postAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/virksomheter`, virksomheter);
@@ -63,6 +63,6 @@ export const sendArbeidsland = (behandlingID: number, arbeidsland: Arbeidsland):
 
 export const sendInnbetalingsstatus = (
   behandlingID: number,
-  fullstendigManglendeInnbetaling?: boolean
+  fullstendigManglendeInnbetaling?: boolean,
 ): Promise<Oppsummering> =>
   postAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/innbetalingsstatus`, fullstendigManglendeInnbetaling);

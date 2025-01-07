@@ -92,7 +92,7 @@ function EndreBehandlingModal({
   const [{ harBehandlingMedTrygdeavgift }] = useAsyncCallbackState(
     () => Api.Fagsaker.fagsak.hentTrygdeavgiftOppsummering(fagsak.saksnummer),
     { harBehandlingMedTrygdeavgift: false },
-    []
+    [],
   );
 
   useEffect(() => {
@@ -106,7 +106,7 @@ function EndreBehandlingModal({
       Api.LovligeKombinasjoner.hentSakstemaer(fagsak.hovedpartRolle, sakstype, fagsak.saksnummer).then(
         (alleMuligeSakstemaer) => {
           setMuligeSakstemaer(alleMuligeSakstemaer);
-        }
+        },
       );
     }
   }, [sakstype]);
@@ -116,7 +116,7 @@ function EndreBehandlingModal({
       Api.LovligeKombinasjoner.hentBehandlingstemaer(fagsak.hovedpartRolle, sakstype, sakstema, behandlingID).then(
         (alleMuligeBehandlingstemaer) => {
           setMuligeBehandlingstemaer(alleMuligeBehandlingstemaer);
-        }
+        },
       );
     }
   }, [sakstype, sakstema]);
@@ -133,7 +133,7 @@ function EndreBehandlingModal({
         sakstype,
         sakstema,
         behandlingstema,
-        fagsak.saksnummer
+        fagsak.saksnummer,
       ).then((alleMuligeBehandlingstyper) => {
         setMuligeBehandlingstyper(alleMuligeBehandlingstyper);
       });
@@ -225,7 +225,7 @@ function EndreBehandlingModal({
           sakstema,
           behandlingstema,
           behandlingstype,
-          erArbeidKunNorgeToggleEnabled
+          erArbeidKunNorgeToggleEnabled,
         );
 
         if (nyGenerertLink && nyGenerertLink !== location.pathname + location.search) {

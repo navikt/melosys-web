@@ -5,34 +5,36 @@ import MKV from "../../../../../melosyskodeverk";
 
 import { EnRedigeringsknappListeRedigeringUtfort } from "../../editerbartElementListe";
 
-const RedigeringUtfort = ({ verdier }: EnRedigeringsknappListeRedigeringUtfort<KV.Form.ArbeidsstedSkip>) => (
-  <div className="arbeidssted__utland__redigeringutfort-wrapper">
-    <Nav.Table>
-      <Nav.Table.Header>
-        <Nav.Table.Row>
-          <Nav.Table.HeaderCell>Navn på skip</Nav.Table.HeaderCell>
-          <Nav.Table.HeaderCell>Fartsområde</Nav.Table.HeaderCell>
-          <Nav.Table.HeaderCell>Flaggstat/lands territorialfarvann</Nav.Table.HeaderCell>
-        </Nav.Table.Row>
-      </Nav.Table.Header>
-      <Nav.Table.Body>
-        {verdier.map((arbeidsstedSkip) => (
-          <Nav.Table.Row key={arbeidsstedSkip.enhetNavn}>
-            <Nav.Table.DataCell>{arbeidsstedSkip.enhetNavn}</Nav.Table.DataCell>
-            <Nav.Table.DataCell>
-              {KV.kodeTilTerm(arbeidsstedSkip.fartsomradeKode, MKV.KTObjects.begrunnelser.fartsomrader)}
-            </Nav.Table.DataCell>
-            <Nav.Table.DataCell>
-              {KV.kodeTilTerm(
-                arbeidsstedSkip.flaggLandkode ?? arbeidsstedSkip.territorialfarvann,
-                MKV.KTObjects.landkoder
-              )}
-            </Nav.Table.DataCell>
+function RedigeringUtfort({ verdier }: EnRedigeringsknappListeRedigeringUtfort<KV.Form.ArbeidsstedSkip>) {
+  return (
+    <div className="arbeidssted__utland__redigeringutfort-wrapper">
+      <Nav.Table>
+        <Nav.Table.Header>
+          <Nav.Table.Row>
+            <Nav.Table.HeaderCell>Navn på skip</Nav.Table.HeaderCell>
+            <Nav.Table.HeaderCell>Fartsområde</Nav.Table.HeaderCell>
+            <Nav.Table.HeaderCell>Flaggstat/lands territorialfarvann</Nav.Table.HeaderCell>
           </Nav.Table.Row>
-        ))}
-      </Nav.Table.Body>
-    </Nav.Table>
-  </div>
-);
+        </Nav.Table.Header>
+        <Nav.Table.Body>
+          {verdier.map((arbeidsstedSkip) => (
+            <Nav.Table.Row key={arbeidsstedSkip.enhetNavn}>
+              <Nav.Table.DataCell>{arbeidsstedSkip.enhetNavn}</Nav.Table.DataCell>
+              <Nav.Table.DataCell>
+                {KV.kodeTilTerm(arbeidsstedSkip.fartsomradeKode, MKV.KTObjects.begrunnelser.fartsomrader)}
+              </Nav.Table.DataCell>
+              <Nav.Table.DataCell>
+                {KV.kodeTilTerm(
+                  arbeidsstedSkip.flaggLandkode ?? arbeidsstedSkip.territorialfarvann,
+                  MKV.KTObjects.landkoder,
+                )}
+              </Nav.Table.DataCell>
+            </Nav.Table.Row>
+          ))}
+        </Nav.Table.Body>
+      </Nav.Table>
+    </div>
+  );
+}
 
 export default RedigeringUtfort;

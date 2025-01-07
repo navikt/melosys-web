@@ -21,11 +21,9 @@ interface SelectComponentProps extends Omit<React.SelectHTMLAttributes<HTMLSelec
 
 type SelectInnerComponentProps = ComponentProps<typeof Nav.Select> & RegisterHookFormProps;
 
-const SelectInnerComponent = forwardRef<HTMLSelectElement, SelectInnerComponentProps>(
-  ({ children, ...rest }: SelectInnerComponentProps, _ref: any) => {
-    return <Nav.Select {...rest}>{children}</Nav.Select>;
-  }
-);
+function SelectInnerComponent({ children, ...rest }: SelectInnerComponentProps) {
+  return <Nav.Select {...rest}>{children}</Nav.Select>;
+}
 
 const Select = forwardRef<HTMLSelectElement, SelectComponentProps & UseControllerProps>(
   (
@@ -41,7 +39,7 @@ const Select = forwardRef<HTMLSelectElement, SelectComponentProps & UseControlle
       size,
       ...rest
     }: SelectComponentProps & UseControllerProps,
-    _ref: any
+    _ref: any,
   ) => {
     return (
       <Controller
@@ -69,7 +67,7 @@ const Select = forwardRef<HTMLSelectElement, SelectComponentProps & UseControlle
         )}
       />
     );
-  }
+  },
 );
 
 export default Select;

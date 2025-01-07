@@ -37,7 +37,7 @@ export interface FattVedtakFTRLReqDto {
   opphoerDato?: string | null;
 }
 
-export type FattVedtakTrygdeavtaleReqDto = {
+export interface FattVedtakTrygdeavtaleReqDto {
   behandlingsresultatTypeKode: string;
   vedtakstype: string | null;
   innledningFritekst: string | null;
@@ -46,7 +46,7 @@ export type FattVedtakTrygdeavtaleReqDto = {
   barnFritekst: string | null;
   kopiMottakere: KopiMottaker[];
   nyVurderingBakgrunn: string | null | undefined;
-};
+}
 
 export const fatt = (behandlingID: number, data: FattVedtakReqDto) =>
   postAsJson(`${API_BASE_URL}${SAKSFLYT}/${VEDTAK}/${behandlingID}/fatt`, data);

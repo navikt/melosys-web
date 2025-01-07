@@ -10,11 +10,11 @@ import "./feilmelding.css";
 import { feiletResponsSelectors } from "../../ducks/feiletRespons";
 import { kontrollSelectors } from "../../ducks/kontroll";
 
-type feilmeldingerProps = {
+interface FeilmeldingerProps {
   className?: string;
-};
+}
 
-export default ({ className }: feilmeldingerProps) => {
+function Feilmeldinger({ className }: FeilmeldingerProps) {
   const exceptionFeilmeldinger = useSelector(feiletResponsSelectors.FeilmeldingerSelector);
   const kontrollFeil = useSelector(kontrollSelectors.KontrollFeilSelector);
   const kontrollAdvarsler = useSelector(kontrollSelectors.KontrollAdvarslerSelector);
@@ -88,4 +88,6 @@ export default ({ className }: feilmeldingerProps) => {
       )}
     </div>
   );
-};
+}
+
+export default Feilmeldinger;

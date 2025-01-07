@@ -20,10 +20,10 @@ type AvsenderAnnenPersonEllerVirksomhetProps = PropsFromRedux & {
   hentOgVisAvsender: (ident: string) => void;
 };
 
-const AvsenderAnnenPersonEllerVirksomhet = ({
+function AvsenderAnnenPersonEllerVirksomhet({
   hentOgVisAvsender,
   avsenderNavn,
-}: AvsenderAnnenPersonEllerVirksomhetProps) => {
+}: AvsenderAnnenPersonEllerVirksomhetProps) {
   const IDFeltTastOppHandler = async (sokStreng: string) => {
     if (Utils.organisasjon.erOrgnrGyldig(sokStreng) || Utils.person.erGyldigFnrEllerDnr(sokStreng)) {
       hentOgVisAvsender(sokStreng);
@@ -47,6 +47,6 @@ const AvsenderAnnenPersonEllerVirksomhet = ({
       </div>
     </div>
   );
-};
+}
 
 export default connector(AvsenderAnnenPersonEllerVirksomhet);

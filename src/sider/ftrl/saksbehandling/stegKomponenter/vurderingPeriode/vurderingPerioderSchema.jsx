@@ -63,7 +63,7 @@ const vurdering_perioder = object().shape({
         innvilgelsesResultat: string().required(INNGILGELSESRESULTAT_FELT_KREVES),
         trygdedekning: string().required(TRYGDEDEKNING_FELT_KREVES),
         bestemmelse: string(),
-      })
+      }),
     )
     .min(1),
   feilPaaPerioder: string().when("medlemskapsperioder", {

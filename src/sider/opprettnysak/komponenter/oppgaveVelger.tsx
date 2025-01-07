@@ -18,12 +18,12 @@ interface OppgaveVelgerProps {
   formValues: OpprettNySakFormData;
 }
 
-export const OppgaveVelger = ({
+export function OppgaveVelger({
   oppgaverForsoktHentet,
   formValues: { saksnummer, oppretterOppgave },
   oppgaver,
   change,
-}: OppgaveVelgerProps) => {
+}: OppgaveVelgerProps) {
   const oppgaverFinnes = oppgaver.length > 0;
 
   const settJournalpostID = (oppgaveID: string) => {
@@ -86,17 +86,15 @@ export const OppgaveVelger = ({
       {oppretterOppgave ? (
         <OpprettNyOppgave />
       ) : (
-        <>
-          {oppgaverFinnes && (
-            <>
-              <Nav.Alert className="alertstripe" variant="info">
-                Du kan kun velge mellom følgende oppgaver som er knyttet til et inngående dokument
-              </Nav.Alert>
-              <Skjema.CustomRadioPanelGruppe feltNavn="oppgaveID" radios={radioValg} notify={settJournalpostID} />
-            </>
-          )}
-        </>
+        oppgaverFinnes && (
+          <>
+            <Nav.Alert className="alertstripe" variant="info">
+              Du kan kun velge mellom følgende oppgaver som er knyttet til et inngående dokument
+            </Nav.Alert>
+            <Skjema.CustomRadioPanelGruppe feltNavn="oppgaveID" radios={radioValg} notify={settJournalpostID} />
+          </>
+        )
       )}
     </div>
   );
-};
+}

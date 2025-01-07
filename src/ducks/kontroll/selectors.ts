@@ -6,7 +6,7 @@ import * as Types from "./types";
 
 const KontrollSelector: Selector<RootState, StateSection<Types.Data>> = createSelector(
   (state: RootState) => state.kontroll,
-  (kontroller) => kontroller
+  (kontroller) => kontroller,
 );
 
 const KontrollDataSelector = createSelector(KontrollSelector, (kontroll) => kontroll.data || {});

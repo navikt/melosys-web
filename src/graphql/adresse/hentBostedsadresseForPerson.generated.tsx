@@ -2,6 +2,7 @@ import * as Types from '../generated/types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+
 const defaultOptions =  {}
 export type HentBostedsadresseForPersonQueryVariables = Types.Exact<{
   ident: Types.Scalars['String'];

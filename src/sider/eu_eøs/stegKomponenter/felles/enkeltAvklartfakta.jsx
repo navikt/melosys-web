@@ -13,7 +13,7 @@ import {
   lagAvklartefaktaBegrunnelse,
 } from "../../../../felleskomponenter/stegvelger";
 
-const EnkeltAvklartfakta = (props) => {
+function EnkeltAvklartfakta(props) {
   const {
     redigerbart,
     begrunnelser,
@@ -89,7 +89,7 @@ const EnkeltAvklartfakta = (props) => {
       )}
     </div>
   );
-};
+}
 
 EnkeltAvklartfakta.propTypes = {
   redigerbart: PT.bool.isRequired,

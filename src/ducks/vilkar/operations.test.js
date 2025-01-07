@@ -85,7 +85,7 @@ describe("vilkar operations", () => {
               vilkaar: MKV.Koder.vilkaar.FO_883_2004_ART12_1,
             },
           ]),
-        })
+        }),
       );
     });
 

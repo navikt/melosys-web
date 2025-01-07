@@ -23,7 +23,7 @@ const mapStateToProps = (state: RootState) => {
 const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-const IkkeEditerbareArbeidPaaLandSporsmal = ({ erFastArbeidssted, erHjemmekontor }: PropsFromRedux) => {
+function IkkeEditerbareArbeidPaaLandSporsmal({ erFastArbeidssted, erHjemmekontor }: PropsFromRedux) {
   const erFastArbeidsstedString = Utils._isNil(erFastArbeidssted)
     ? ""
     : Utils._capitalize(Utils.streng.boolTilNorsk(erFastArbeidssted));
@@ -60,6 +60,6 @@ const IkkeEditerbareArbeidPaaLandSporsmal = ({ erFastArbeidssted, erHjemmekontor
       </Nav.Row>
     </div>
   );
-};
+}
 
 export default connector(IkkeEditerbareArbeidPaaLandSporsmal);

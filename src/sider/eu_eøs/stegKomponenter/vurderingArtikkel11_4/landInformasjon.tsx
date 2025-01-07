@@ -13,7 +13,7 @@ export interface Virksomhet {
   };
 }
 
-const LandInformasjon = () => {
+function LandInformasjon() {
   const valgteVirksomheter = useSelector(avklartefaktaSelectors.AvklarteVirksomheterSelector);
   const arbeidsland = useSelector(avklartefaktaSelectors.ArbeidslandKTSelector);
   const bostedsland = useSelector(avklartefaktaSelectors.BostedslandSelector);
@@ -43,6 +43,6 @@ const LandInformasjon = () => {
       <Nav.BodyLong size="small">{KV.objektTilTerm(bostedsland)}</Nav.BodyLong>
     </div>
   );
-};
+}
 
 export default LandInformasjon;

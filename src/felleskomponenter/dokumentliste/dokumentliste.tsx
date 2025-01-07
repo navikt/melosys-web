@@ -17,7 +17,7 @@ import {
   SedDokumentMetadataType,
 } from "./dokumentlisteTyper";
 
-const Dokumentliste = ({ behandlingID, dokumenter, validateOnClick }: DokumentlisteType) => {
+function Dokumentliste({ behandlingID, dokumenter, validateOnClick }: DokumentlisteType) {
   const [feilmelding, setFeilmelding] = useState<string | null>(null);
 
   const klikk = async (dokument: BrevDokumentMetadataType | SedDokumentMetadataType) => {
@@ -38,7 +38,7 @@ const Dokumentliste = ({ behandlingID, dokumenter, validateOnClick }: Dokumentli
             fritekst: null,
             nyttLovvalgsland: null,
             vilSendeAnmodningOmMerInformasjon: null,
-          }
+          },
         );
       } else if (isBrev(dokument)) {
         fileURL = await dokumenterOperations.forhandsvisBrevV2(behandlingID, dokument.dokumentData);
@@ -71,7 +71,7 @@ const Dokumentliste = ({ behandlingID, dokumenter, validateOnClick }: Dokumentli
         <Nav.Link href="#" onClick={(e) => e.preventDefault()} onMouseDown={() => klikk(dokument)}>
           {tittel(
             dokument.dokumentNavn ??
-              KV.kodeTilTerm(dokument.dokumentData?.produserbardokument, MKV.KTObjects.brev.produserbaredokumenter)
+              KV.kodeTilTerm(dokument.dokumentData?.produserbardokument, MKV.KTObjects.brev.produserbaredokumenter),
           )}
         </Nav.Link>
       </Nav.Table.DataCell>
@@ -114,6 +114,6 @@ const Dokumentliste = ({ behandlingID, dokumenter, validateOnClick }: Dokumentli
       )}
     </div>
   );
-};
+}
 
 export default Dokumentliste;

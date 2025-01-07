@@ -7,7 +7,7 @@ import * as Mui from "../../../../felleskomponenter/ui";
 
 import EnkeltVilkaar from "../felles/enkeltVilkaar";
 
-const VurderingForutgaendeMedlemskap = (props) => {
+function VurderingForutgaendeMedlemskap(props) {
   const { bekreftOgFortsett, begrunnelser, tilstand, redigerbart, oppdaterData, slettData, tilbake } = props;
   const { harAvklaring, forutgaendeMedlemskap } = tilstand;
 
@@ -16,7 +16,7 @@ const VurderingForutgaendeMedlemskap = (props) => {
       function cleanup() {
         slettData();
       },
-    []
+    [],
   );
 
   return (
@@ -47,7 +47,7 @@ const VurderingForutgaendeMedlemskap = (props) => {
       />
     </>
   );
-};
+}
 
 VurderingForutgaendeMedlemskap.ID = "FORUTGAENDE_MEDLEMSKAP";
 

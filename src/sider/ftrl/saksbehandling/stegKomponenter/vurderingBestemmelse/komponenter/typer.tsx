@@ -1,9 +1,9 @@
 import { KTObject } from "@navikt/melosys-kodeverk";
 
-type FaktaType = {
+interface FaktaType {
   tittel: string;
   kodeverk: string;
-};
+}
 
 export const FaktaTypeOverskrifter: Record<string, FaktaType> = {
   IKKE_YRKESAKTIV_RELASJON: {

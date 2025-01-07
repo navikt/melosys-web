@@ -30,7 +30,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type InnerRepresentantIUtlandetProps = WrappedFieldProps & PropsFromRedux & { redigerbart: boolean };
 
-const InnerRepresentantIUtlandet = (props: InnerRepresentantIUtlandetProps) => {
+function InnerRepresentantIUtlandet(props: InnerRepresentantIUtlandetProps) {
   const {
     redigerbart,
     soknadsland,
@@ -70,14 +70,14 @@ const InnerRepresentantIUtlandet = (props: InnerRepresentantIUtlandetProps) => {
       symbolsynlighet={{ [Status.Redigerer]: { pencil: false, bin: true } }}
     />
   );
-};
+}
 
 interface RepresentantIUtlandetWrapperProps {
   redigerbart: boolean;
 }
 
-const RepresentantIUtlandetWrapper = ({ ...rest }: RepresentantIUtlandetWrapperProps) => (
-  <Field name="representantIUtlandet" component={InnerRepresentantIUtlandet} props={rest} />
-);
+function RepresentantIUtlandetWrapper({ ...rest }: RepresentantIUtlandetWrapperProps) {
+  return <Field name="representantIUtlandet" component={InnerRepresentantIUtlandet} props={rest} />;
+}
 
 export default connector(RepresentantIUtlandetWrapper);

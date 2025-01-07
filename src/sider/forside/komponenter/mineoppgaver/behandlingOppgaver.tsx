@@ -19,7 +19,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 /**
  * Lister ut behandlingsoppgaver som saksbehandleren har opprettet
  */
-export const BehandlingOppgaver = ({ mineSaker, landkoder }: PropsFromRedux) => {
+export function BehandlingOppgaver({ mineSaker, landkoder }: PropsFromRedux) {
   const { saksbehandling } = mineSaker as any;
 
   return (
@@ -35,6 +35,6 @@ export const BehandlingOppgaver = ({ mineSaker, landkoder }: PropsFromRedux) => 
       />
     </div>
   );
-};
+}
 
 export default connector(BehandlingOppgaver);

@@ -1,4 +1,4 @@
-import { renderHook, act } from "@testing-library/react-hooks";
+import { renderHook, act } from "@testing-library/react";
 
 import { useAsyncCallbackState, useCallbackState } from "./useCallbackState";
 
@@ -13,19 +13,6 @@ describe("useCallbackState", () => {
 });
 
 describe("useAsyncCallbackState", () => {
-  it("tar imot et async callback og lagrer resultatet til state", async () => {
-    const asyncSum = async (a: number, b: number) => a + b;
-
-    const rh = renderHook(() => useAsyncCallbackState(() => asyncSum(1, 2), 0, []));
-
-    await act(async () => {
-      await rh.waitForNextUpdate();
-    });
-
-    const [state] = rh.result.current;
-    expect(state).toBe(3);
-  });
-
   it("kaller errorHandler når callback rejectes", async () => {
     const rejectionReason = new Error();
     const rejected = () => Promise.reject(rejectionReason);

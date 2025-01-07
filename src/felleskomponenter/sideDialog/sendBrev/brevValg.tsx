@@ -15,14 +15,14 @@ interface BrevValgProps {
   finnValgAlternativ: (felt: Api.DokumenterV2.Felt) => Api.DokumenterV2.ValgAlternativ | undefined;
 }
 
-const BrevValg = ({ formValues, width, redigerbart, changeField, finnValgAlternativ }: BrevValgProps) => {
+function BrevValg({ formValues, width, redigerbart, changeField, finnValgAlternativ }: BrevValgProps) {
   const skalViseBrevFelt = (felt: Api.DokumenterV2.Felt) => felt.valg === null || finnValgAlternativ(felt)?.visFelt;
   const erstattFritekstValgMedBrevFelt = (felt: Api.DokumenterV2.Felt) =>
     felt.valg!.valgAlternativer.length === 1 &&
     felt.valg!.valgAlternativer[0].kode === "FRITEKST" &&
     felt.valg!.valgType !== "CHECKBOX";
   return (
-    <>
+    <div>
       {formValues.valgtBrev?.felter?.map((felt) => (
         <Fragment key={felt.kode}>
           {felt.valg &&
@@ -48,8 +48,8 @@ const BrevValg = ({ formValues, width, redigerbart, changeField, finnValgAlterna
           )}
         </Fragment>
       ))}
-    </>
+    </div>
   );
-};
+}
 
 export default BrevValg;

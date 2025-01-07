@@ -26,7 +26,7 @@ import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { Box } from "@navikt/ds-react";
 
-const { NEI_ANMODE_OM_UNNTAK, NEI_AVSLAG, JA_FATTE_VEDTAK } = KV.Koder.AVTALELAND_UTFALL;
+const { NEI_ANMODE_OM_UNNTAK, NEI_AVSLAG, JA_FATTE_VEDTAK } = KV.Koder.AvtalelandUtfall;
 
 const mapStateToProps = (state: RootState, ownProps: Props) => ({
   formIsValid: formSelectors.TrygdeavtaleBestemmelseFormValidSelector(state),
@@ -71,7 +71,7 @@ interface Props {
   aktivtSteg: boolean;
 }
 
-const VurderingBestemmelse = ({
+function VurderingBestemmelse({
   data: { vedtakValg, bestemmelseValg, tilleggsbestemmelseValg },
   formIsValid,
   formValues,
@@ -86,7 +86,7 @@ const VurderingBestemmelse = ({
   lovvalgsperiode,
   slettLovvalgsperiode,
   behandlingID,
-}: PropsFromRedux & Props) => {
+}: PropsFromRedux & Props) {
   const [updatePending, setUpdatePending] = useState(false);
 
   const skalLagreVedtaksvalg = formValues?.vedtak !== NEI_ANMODE_OM_UNNTAK && formValues?.vedtak !== NEI_AVSLAG;
@@ -106,7 +106,7 @@ const VurderingBestemmelse = ({
           if (formValues?.vedtak && formValues.vedtak !== JA_FATTE_VEDTAK && lovvalgsperiode?.periodeID) {
             slettLovvalgsperiode(behandlingID, lovvalgsperiode.periodeID);
           }
-        }
+        },
       );
     }
   }, [formValues?.vedtak, formValues?.bestemmelse, formValues?.tilleggsbestemmelse]);
@@ -196,9 +196,9 @@ const VurderingBestemmelse = ({
       />
     </div>
   );
-};
+}
 
-const VurderingBestemmelseForm = reduxForm<{}, PropsFromRedux & Props>({
+const VurderingBestemmelseForm = reduxForm<object, PropsFromRedux & Props>({
   form: KV.Form.Trygdeavtale.BESTEMMELSE,
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,

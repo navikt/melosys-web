@@ -36,7 +36,7 @@ interface Props {
   oppdaterStatus: (isValid: boolean) => void;
 }
 
-export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props) => {
+export function VurderingInngang({ bekreft, aktivtSteg, oppdaterStatus }: Props) {
   const [visOppfrisk, setVisOppfrisk] = useState(false);
   const [gyldigeTrygdedekninger, setGyldigeTrygdedekninger] = useState<string[]>([]);
   const dispatch = useDispatch();
@@ -104,7 +104,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
         mottatteOpplysningerOperations.oppdaterPeriode({
           fom: Utils.dato.formatterDatoTilISO(formValues.fom, ""),
           tom: Utils.dato.formatterDatoTilISO(formValues.tom, ""),
-        })
+        }),
       ),
       dispatch(mottatteOpplysningerOperations.oppdaterSoeknadsland(mapLandkoder(), mapFlereLandUkjentHvilke())),
       dispatch(mottatteOpplysningerOperations.oppdaterTrygdedekning(formValues.trygdedekning)),
@@ -128,7 +128,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
   if (!aktivtSteg) return null;
 
   const valgtLandHarTrygdeavtaleMedNorgeEllerErEøsLand = formValues.land?.some((land: string) =>
-    MKV.Kodekombinasjoner.unikeAvtalelandKoder.includes(land)
+    MKV.Kodekombinasjoner.unikeAvtalelandKoder.includes(land),
   );
   const flereLandUkjentHvilkeErUSANN = formValues.flereLandUkjentHvilke === BOOLSK_STRING.USANN;
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
@@ -196,7 +196,7 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
                 className="land_multiselect"
                 redigerbart={redigerbart}
                 control={control}
-                options={alleLandkoder.map((kt) => ({ value: kt.kode, label: kt.term!! }))}
+                options={alleLandkoder.map((kt) => ({ value: kt.kode, label: kt.term! }))}
               />
             )}
           </Nav.Column>
@@ -264,4 +264,4 @@ export const VurderingInngang = ({ bekreft, aktivtSteg, oppdaterStatus }: Props)
       )}
     </div>
   );
-};
+}

@@ -12,12 +12,12 @@ function hentBeskrivelse(begrunnelseKoder?: string[], begrunnelseFritekst?: stri
 
   if (Utils._isEmpty(begrunnelseKoder)) return "Ukjent grunn";
 
-  return KV.kodeTilTerm(begrunnelseKoder!![0], MKV.KTObjects.begrunnelser.henleggelsesgrunner);
+  return KV.kodeTilTerm(begrunnelseKoder![0], MKV.KTObjects.begrunnelser.henleggelsesgrunner);
 }
 
-const HenlagtSak = () => {
+function HenlagtSak() {
   const { begrunnelseKoder, begrunnelseFritekst } = useSelector(
-    behandlingsresultatSelectors.BehandlingsresultatSelector
+    behandlingsresultatSelectors.BehandlingsresultatSelector,
   );
 
   return (
@@ -26,6 +26,6 @@ const HenlagtSak = () => {
       beskrivelse={hentBeskrivelse(begrunnelseKoder, begrunnelseFritekst)}
     />
   );
-};
+}
 
 export default HenlagtSak;

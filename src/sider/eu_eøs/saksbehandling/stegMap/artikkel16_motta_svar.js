@@ -12,7 +12,7 @@ class Artikkel16MottaSvar extends Steg {
 
     const harAvklaring = Artikkel16MottaSvar.finnAvklaring(
       propsLight.anmodningsperiodesvarForm,
-      propsLight.soknadsperiode
+      propsLight.soknadsperiode,
     );
 
     this.kriterier = [

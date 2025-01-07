@@ -10,7 +10,7 @@ export const initialState: StateSection<Types.Data> = {
 
 const finnIndexTilPeriode = (
   perioder: Api.MedlemAvFolketrygden.Medlemskapsperioder.Medlemskapsperiode[],
-  action: Types.OkSlettMedlemskapsperiodeAction | Types.OkOppdaterMedlemskapsperiodeAction
+  action: Types.OkSlettMedlemskapsperiodeAction | Types.OkOppdaterMedlemskapsperiodeAction,
 ) => perioder?.findIndex((periode) => periode.id === action.data.id);
 
 export default function reducer(state = initialState, action: Types.Action): StateSection<Types.Data> {

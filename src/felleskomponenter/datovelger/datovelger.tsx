@@ -23,7 +23,7 @@ interface DatovelgerProps {
   visFeil?: boolean;
 }
 
-const Datovelger = ({
+function Datovelger({
   onChange,
   value,
   label,
@@ -35,7 +35,7 @@ const Datovelger = ({
   onBlur,
   brukInternValidering = false,
   visFeil = true,
-}: DatovelgerProps) => {
+}: DatovelgerProps) {
   const [erUgyldigDato, setErUgyldigDato] = useState<boolean>(false);
   const { datepickerProps, inputProps } = useDatepicker({
     fromDate: minDate ?? new Date(moment(moment.now()).subtract(50, "years").toDate()),
@@ -57,6 +57,7 @@ const Datovelger = ({
   });
 
   const handleOnChange = (event: ChangeEvent<HTMLInputElement>) => {
+    /* eslint-disable-next-line no-param-reassign */
     event.target.value = event.target.value.trim();
     if (inputProps?.onChange) {
       inputProps.onChange(event);
@@ -90,6 +91,6 @@ const Datovelger = ({
       )}
     </div>
   );
-};
+}
 
 export default Datovelger;

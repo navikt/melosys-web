@@ -6,12 +6,12 @@ import ErrorMessage from "./errorMessage";
 import { RootState } from "AppTypes";
 import { ReactNode } from "react";
 
-type ErrorObject = {
+interface ErrorObject {
   varselTekst: string;
   status: number;
   statusTekst: string;
   fetchdata: any;
-};
+}
 
 const parseStructuredPayload = (varselTekst: string, payload: any): ErrorObject => {
   const { data } = payload;
@@ -48,12 +48,11 @@ interface ErrorBoundaryProps {
   children: ReactNode;
 }
 
-const ErrorBoundary = ({ kontekster, children }: ErrorBoundaryProps) => {
+function ErrorBoundary({ kontekster, children }: ErrorBoundaryProps) {
   const rootState = useSelector((state: RootState) => state);
   const feilSamling: ErrorObject[] = [];
 
   kontekster.forEach(({ slice, varselTekst }) => {
-    // @ts-ignore
     const currentSlice = rootState[slice];
     const { status: feilStatus } = currentSlice;
     if (feilStatus === "ERROR") {
@@ -81,6 +80,6 @@ const ErrorBoundary = ({ kontekster, children }: ErrorBoundaryProps) => {
       <ErrorMessage feilobjekt={feilSamling[0]} />
     </div>
   );
-};
+}
 
 export default ErrorBoundary;

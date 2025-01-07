@@ -14,13 +14,13 @@ import { BOOLSK_STRING } from "../../../../constants";
 import EditerbartElement, { Status } from "../editerbartElement";
 import "./lonnOgGodtgjorelser.css";
 
-type BooleanFeltRedigererProps = {
+interface BooleanFeltRedigererProps {
   tekst: string;
   feltNavn: string;
   redigerbart: boolean;
-};
+}
 
-const BooleanFeltRedigerer = ({ tekst, feltNavn, redigerbart }: BooleanFeltRedigererProps) => {
+function BooleanFeltRedigerer({ tekst, feltNavn, redigerbart }: BooleanFeltRedigererProps) {
   const navn = Utils._uuid();
 
   return (
@@ -37,49 +37,55 @@ const BooleanFeltRedigerer = ({ tekst, feltNavn, redigerbart }: BooleanFeltRedig
       </Nav.Column>
     </Nav.Row>
   );
-};
+}
 
-type BooleanFeltRedigeringUtfortProps = {
+interface BooleanFeltRedigeringUtfortProps {
   tekst: string;
   verdi: boolean | null;
-};
+}
 
-export const BooleanFeltRedigeringUtfort = ({ tekst, verdi }: BooleanFeltRedigeringUtfortProps) => (
-  <Nav.Row>
-    <Nav.Column xs="12" className="boolean-felt-redigering-utfort">
-      <Nav.BodyLong size="small" className="typo-normal">
-        {tekst}
-      </Nav.BodyLong>
-      <Nav.BodyLong weight="semibold" size="small" className="typo-element">
-        {verdi === null ? "-" : Utils._capitalize(Utils.streng.boolTilNorsk(verdi))}
-      </Nav.BodyLong>
-    </Nav.Column>
-  </Nav.Row>
-);
+export function BooleanFeltRedigeringUtfort({ tekst, verdi }: BooleanFeltRedigeringUtfortProps) {
+  return (
+    <Nav.Row>
+      <Nav.Column xs="12" className="boolean-felt-redigering-utfort">
+        <Nav.BodyLong size="small" className="typo-normal">
+          {tekst}
+        </Nav.BodyLong>
+        <Nav.BodyLong weight="semibold" size="small" className="typo-element">
+          {verdi === null ? "-" : Utils._capitalize(Utils.streng.boolTilNorsk(verdi))}
+        </Nav.BodyLong>
+      </Nav.Column>
+    </Nav.Row>
+  );
+}
 
-type InntektRedigererProps = {
+interface InntektRedigererProps {
   tittel: string;
   feltNavn: string;
   redigerbart: boolean;
-};
+}
 
-const InntektRedigerer = ({ tittel, feltNavn, redigerbart }: InntektRedigererProps) => (
-  <Nav.Column xs="4" className="inntekt-redigerer">
-    <Skjema.Input feltNavn={`loennOgGodtgjoerelse.${feltNavn}`} label={tittel} disabled={!redigerbart} />
-  </Nav.Column>
-);
+function InntektRedigerer({ tittel, feltNavn, redigerbart }: InntektRedigererProps) {
+  return (
+    <Nav.Column xs="4" className="inntekt-redigerer">
+      <Skjema.Input feltNavn={`loennOgGodtgjoerelse.${feltNavn}`} label={tittel} disabled={!redigerbart} />
+    </Nav.Column>
+  );
+}
 
-export const FormatertInntekt = ({ inntekt }: { inntekt: number }) => (
-  <>
-    {Intl.NumberFormat("NO-nb", {
-      maximumFractionDigits: 2,
-      minimumFractionDigits: 2,
-    }).format(inntekt)}
-    <Ikoner.Inntekt className="inntekt-ikon" />
-  </>
-);
+export function FormatertInntekt({ inntekt }: { inntekt: number }) {
+  return (
+    <>
+      {Intl.NumberFormat("NO-nb", {
+        maximumFractionDigits: 2,
+        minimumFractionDigits: 2,
+      }).format(inntekt)}
+      <Ikoner.Inntekt className="inntekt-ikon" />
+    </>
+  );
+}
 
-export const InntektRedigeringUtfortUndertittel = ({ verdi }: { verdi: number | string | null }) => {
+export function InntektRedigeringUtfortUndertittel({ verdi }: { verdi: number | string | null }) {
   const inntekt = Utils.streng.tryParseFloat(verdi);
 
   return (
@@ -87,21 +93,23 @@ export const InntektRedigeringUtfortUndertittel = ({ verdi }: { verdi: number | 
       {inntekt !== null ? <FormatertInntekt inntekt={inntekt} /> : "-"}
     </Nav.Heading>
   );
-};
+}
 
-type InntektRedigeringUtfortProps = {
+interface InntektRedigeringUtfortProps {
   tittel: string;
   verdi: number | string | null;
-};
+}
 
-const InntektRedigeringUtfort = ({ tittel, verdi }: InntektRedigeringUtfortProps) => (
-  <Nav.Column xs="4" className="inntekt-redigering-utfort">
-    <Nav.BodyLong size="small">{tittel}</Nav.BodyLong>
-    <InntektRedigeringUtfortUndertittel verdi={verdi} />
-  </Nav.Column>
-);
+function InntektRedigeringUtfort({ tittel, verdi }: InntektRedigeringUtfortProps) {
+  return (
+    <Nav.Column xs="4" className="inntekt-redigering-utfort">
+      <Nav.BodyLong size="small">{tittel}</Nav.BodyLong>
+      <InntektRedigeringUtfortUndertittel verdi={verdi} />
+    </Nav.Column>
+  );
+}
 
-type LonnOgNaturalytelserType = {
+interface LonnOgNaturalytelserType {
   norskArbgUtbetalerLoenn: boolean | null;
   erArbeidstakerAnsattHelePerioden: boolean | null;
   utlArbgUtbetalerLoenn: boolean | null;
@@ -110,9 +118,9 @@ type LonnOgNaturalytelserType = {
   mottarNaturalytelser: boolean | null;
   samletVerdiNaturalytelser: number | null;
   utlArbTilhoererSammeKonsern: boolean | null;
-};
+}
 
-const LonnOgNaturalytelserRedigerer = ({ redigerbart }: { redigerbart: boolean }) => {
+function LonnOgNaturalytelserRedigerer({ redigerbart }: { redigerbart: boolean }) {
   return (
     <>
       <Nav.Row>
@@ -155,9 +163,9 @@ const LonnOgNaturalytelserRedigerer = ({ redigerbart }: { redigerbart: boolean }
       </Nav.Row>
     </>
   );
-};
+}
 
-const LonnOgNaturalytelserRedigeringUtfort = ({
+function LonnOgNaturalytelserRedigeringUtfort({
   norskArbgUtbetalerLoenn,
   erArbeidstakerAnsattHelePerioden,
   utlArbgUtbetalerLoenn,
@@ -166,127 +174,137 @@ const LonnOgNaturalytelserRedigeringUtfort = ({
   mottarNaturalytelser,
   samletVerdiNaturalytelser,
   utlArbTilhoererSammeKonsern,
-}: LonnOgNaturalytelserType) => (
-  <>
-    <Nav.Row>
-      <Nav.Column xs="12">
-        <BooleanFeltRedigeringUtfort
-          tekst="Vil arbeidsgiver i Norge utbetale lønn i utsendingsperioden?"
-          verdi={norskArbgUtbetalerLoenn}
-        />
-        <BooleanFeltRedigeringUtfort
-          tekst="Vil arbeidstakeren fortsatt være ansatt i utsendingsperioden?"
-          verdi={erArbeidstakerAnsattHelePerioden}
-        />
-        <BooleanFeltRedigeringUtfort
-          tekst="Vil utenlandsk virksomhet utbetale lønn som ikke blir fakturert arbeidsgiver?"
-          verdi={utlArbgUtbetalerLoenn}
-        />
-        <BooleanFeltRedigeringUtfort
-          tekst="Vil arbeidstakeren motta naturalytelser betalt av en utenlandsk virksomhet?"
-          verdi={mottarNaturalytelser}
-        />
-        <BooleanFeltRedigeringUtfort
-          tekst="Tilhører det utenlandske foretaket samme konsern som arbeidsgiver?"
-          verdi={utlArbTilhoererSammeKonsern}
-        />
-      </Nav.Column>
-    </Nav.Row>
-    <Nav.Row>
-      <InntektRedigeringUtfort tittel="Lønn fra Norge" verdi={bruttoLoennPerMnd} />
-      <InntektRedigeringUtfort tittel="Lønn fra utlandet" verdi={bruttoLoennUtlandPerMnd} />
-      <InntektRedigeringUtfort tittel="Naturalytelser fra utlandet" verdi={samletVerdiNaturalytelser} />
-    </Nav.Row>
-  </>
-);
+}: LonnOgNaturalytelserType) {
+  return (
+    <>
+      <Nav.Row>
+        <Nav.Column xs="12">
+          <BooleanFeltRedigeringUtfort
+            tekst="Vil arbeidsgiver i Norge utbetale lønn i utsendingsperioden?"
+            verdi={norskArbgUtbetalerLoenn}
+          />
+          <BooleanFeltRedigeringUtfort
+            tekst="Vil arbeidstakeren fortsatt være ansatt i utsendingsperioden?"
+            verdi={erArbeidstakerAnsattHelePerioden}
+          />
+          <BooleanFeltRedigeringUtfort
+            tekst="Vil utenlandsk virksomhet utbetale lønn som ikke blir fakturert arbeidsgiver?"
+            verdi={utlArbgUtbetalerLoenn}
+          />
+          <BooleanFeltRedigeringUtfort
+            tekst="Vil arbeidstakeren motta naturalytelser betalt av en utenlandsk virksomhet?"
+            verdi={mottarNaturalytelser}
+          />
+          <BooleanFeltRedigeringUtfort
+            tekst="Tilhører det utenlandske foretaket samme konsern som arbeidsgiver?"
+            verdi={utlArbTilhoererSammeKonsern}
+          />
+        </Nav.Column>
+      </Nav.Row>
+      <Nav.Row>
+        <InntektRedigeringUtfort tittel="Lønn fra Norge" verdi={bruttoLoennPerMnd} />
+        <InntektRedigeringUtfort tittel="Lønn fra utlandet" verdi={bruttoLoennUtlandPerMnd} />
+        <InntektRedigeringUtfort tittel="Naturalytelser fra utlandet" verdi={samletVerdiNaturalytelser} />
+      </Nav.Row>
+    </>
+  );
+}
 
 const symbolsynlighet = { [Status.RedigeringUtfort]: { bin: false, pencil: true } };
 
 type LonnOgNaturalytelserProps = LonnOgNaturalytelserType & { lagreHandler: () => boolean; redigerbart: boolean };
 
-const LonnOgNaturalytelser = ({ redigerbart, lagreHandler, ...lonnOgNaturalytelser }: LonnOgNaturalytelserProps) => (
-  <EditerbartElement
-    redigerbart={redigerbart}
-    harData
-    tittel={KV.Menypunkter.LonnOgGodtgjorelser.undertitler.lonnOgNaturalytelser}
-    visLagreKnapp
-    onLagreClick={lagreHandler}
-    symbolsynlighet={symbolsynlighet}
-    redigererRender={() => <LonnOgNaturalytelserRedigerer redigerbart={redigerbart} />}
-    redigeringUtfortRender={() => <LonnOgNaturalytelserRedigeringUtfort {...lonnOgNaturalytelser} />}
-  />
-);
+function LonnOgNaturalytelser({ redigerbart, lagreHandler, ...lonnOgNaturalytelser }: LonnOgNaturalytelserProps) {
+  return (
+    <EditerbartElement
+      redigerbart={redigerbart}
+      harData
+      tittel={KV.Menypunkter.LonnOgGodtgjorelser.undertitler.lonnOgNaturalytelser}
+      visLagreKnapp
+      onLagreClick={lagreHandler}
+      symbolsynlighet={symbolsynlighet}
+      redigererRender={() => <LonnOgNaturalytelserRedigerer redigerbart={redigerbart} />}
+      redigeringUtfortRender={() => <LonnOgNaturalytelserRedigeringUtfort {...lonnOgNaturalytelser} />}
+    />
+  );
+}
 
-type ArbeidsgiveravgiftOgTrygdeavgiftType = {
+interface ArbeidsgiveravgiftOgTrygdeavgiftType {
   erArbeidsgiveravgiftHelePerioden: boolean | null;
   erTrukketTrygdeavgift: boolean | null;
-};
+}
 
-const ArbeidsgiveravgiftOgTrygdeavgiftRedigerer = ({ redigerbart }: { redigerbart: boolean }) => (
-  <Nav.Row>
-    <Nav.Column xs="12">
-      <BooleanFeltRedigerer
-        tekst="Vil arbeidsgiver betale arbeidsgiveravgift av all lønn utbetalt i hele perioden?"
-        feltNavn="erArbeidsgiveravgiftHelePerioden"
-        redigerbart={redigerbart}
-      />
-      <BooleanFeltRedigerer
-        tekst="Vil det bli trukket trygdeavgift gjennom skatten i hele perioden?"
-        feltNavn="erTrukketTrygdeavgift"
-        redigerbart={redigerbart}
-      />
-    </Nav.Column>
-  </Nav.Row>
-);
+function ArbeidsgiveravgiftOgTrygdeavgiftRedigerer({ redigerbart }: { redigerbart: boolean }) {
+  return (
+    <Nav.Row>
+      <Nav.Column xs="12">
+        <BooleanFeltRedigerer
+          tekst="Vil arbeidsgiver betale arbeidsgiveravgift av all lønn utbetalt i hele perioden?"
+          feltNavn="erArbeidsgiveravgiftHelePerioden"
+          redigerbart={redigerbart}
+        />
+        <BooleanFeltRedigerer
+          tekst="Vil det bli trukket trygdeavgift gjennom skatten i hele perioden?"
+          feltNavn="erTrukketTrygdeavgift"
+          redigerbart={redigerbart}
+        />
+      </Nav.Column>
+    </Nav.Row>
+  );
+}
 
-const ArbeidsgiveravgiftOgTrygdeavgiftRedigeringUtfort = ({
+function ArbeidsgiveravgiftOgTrygdeavgiftRedigeringUtfort({
   erArbeidsgiveravgiftHelePerioden,
   erTrukketTrygdeavgift,
-}: ArbeidsgiveravgiftOgTrygdeavgiftType) => (
-  <Nav.Row>
-    <Nav.Column xs="12">
-      <BooleanFeltRedigeringUtfort
-        tekst="Vil arbeidsgiver betale arbeidsgiveravgift av all lønn utbetalt i hele perioden?"
-        verdi={erArbeidsgiveravgiftHelePerioden}
-      />
-      <BooleanFeltRedigeringUtfort
-        tekst="Vil det bli trukket trygdeavgift gjennom skatten i hele perioden?"
-        verdi={erTrukketTrygdeavgift}
-      />
-    </Nav.Column>
-  </Nav.Row>
-);
+}: ArbeidsgiveravgiftOgTrygdeavgiftType) {
+  return (
+    <Nav.Row>
+      <Nav.Column xs="12">
+        <BooleanFeltRedigeringUtfort
+          tekst="Vil arbeidsgiver betale arbeidsgiveravgift av all lønn utbetalt i hele perioden?"
+          verdi={erArbeidsgiveravgiftHelePerioden}
+        />
+        <BooleanFeltRedigeringUtfort
+          tekst="Vil det bli trukket trygdeavgift gjennom skatten i hele perioden?"
+          verdi={erTrukketTrygdeavgift}
+        />
+      </Nav.Column>
+    </Nav.Row>
+  );
+}
 
 type ArbeidsgiveravgiftOgTrygdeavgiftProps = ArbeidsgiveravgiftOgTrygdeavgiftType & {
   lagreHandler: () => boolean;
   redigerbart: boolean;
 };
 
-const ArbeidsgiveravgiftOgTrygdeavgift = ({
+function ArbeidsgiveravgiftOgTrygdeavgift({
   redigerbart,
   lagreHandler,
   ...arbeidsgiveravgiftOgTrygdeavgift
-}: ArbeidsgiveravgiftOgTrygdeavgiftProps) => (
-  <EditerbartElement
-    redigerbart={redigerbart}
-    harData
-    tittel={KV.Menypunkter.LonnOgGodtgjorelser.undertitler.arbeidsgiveravgiftOgTrygdeavgift}
-    symbolsynlighet={symbolsynlighet}
-    visLagreKnapp
-    onLagreClick={lagreHandler}
-    redigererRender={() => <ArbeidsgiveravgiftOgTrygdeavgiftRedigerer redigerbart={redigerbart} />}
-    redigeringUtfortRender={() => (
-      <ArbeidsgiveravgiftOgTrygdeavgiftRedigeringUtfort {...arbeidsgiveravgiftOgTrygdeavgift} />
-    )}
-  />
-);
+}: ArbeidsgiveravgiftOgTrygdeavgiftProps) {
+  return (
+    <EditerbartElement
+      redigerbart={redigerbart}
+      harData
+      tittel={KV.Menypunkter.LonnOgGodtgjorelser.undertitler.arbeidsgiveravgiftOgTrygdeavgift}
+      symbolsynlighet={symbolsynlighet}
+      visLagreKnapp
+      onLagreClick={lagreHandler}
+      redigererRender={() => <ArbeidsgiveravgiftOgTrygdeavgiftRedigerer redigerbart={redigerbart} />}
+      redigeringUtfortRender={() => (
+        <ArbeidsgiveravgiftOgTrygdeavgiftRedigeringUtfort {...arbeidsgiveravgiftOgTrygdeavgift} />
+      )}
+    />
+  );
+}
 
-type LonnOgGodtgjorelserProps = {
+interface LonnOgGodtgjorelserProps {
   visArbeidsforholdRolleEtiketter: boolean;
   redigerbart: boolean;
-};
+}
 
-const LonnOgGodtgjorelser = ({ redigerbart, visArbeidsforholdRolleEtiketter }: LonnOgGodtgjorelserProps) => {
+function LonnOgGodtgjorelser({ redigerbart, visArbeidsforholdRolleEtiketter }: LonnOgGodtgjorelserProps) {
   const dispatch = useDispatch();
   const lagreHandler = () => {
     dispatch(mottatteOpplysningerOperations.oppdaterState());
@@ -316,6 +334,6 @@ const LonnOgGodtgjorelser = ({ redigerbart, visArbeidsforholdRolleEtiketter }: L
       </Nav.Row>
     </Nav.Container>
   );
-};
+}
 
 export default LonnOgGodtgjorelser;

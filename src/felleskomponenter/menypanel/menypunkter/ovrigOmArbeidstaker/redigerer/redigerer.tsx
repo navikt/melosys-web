@@ -7,7 +7,7 @@ import Beskrivelse from "../beskrivelse";
 
 import "./redigerer.css";
 
-const Redigerer = () => {
+function Redigerer() {
   const arbeidssituasjonOgOevrig = useSelector(formSelectors.SoknadFormValuesSelector)?.arbeidssituasjonOgOevrig ?? {};
   return (
     <div className="ovrig-om-arbeidstaker__redigerer">
@@ -44,6 +44,6 @@ const Redigerer = () => {
       />
     </div>
   );
-};
+}
 
 export default Redigerer;

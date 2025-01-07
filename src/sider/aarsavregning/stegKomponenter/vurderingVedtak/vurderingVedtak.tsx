@@ -50,7 +50,7 @@ const komponentDispatch = (dispatch: ThunkDispatch<RootState, unknown, Action>) 
     dispatch(vedtakOperations.fatt(behandlingID, body)),
 });
 
-export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
+export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   const dispatch = useDispatch();
   const [vedtakPending, setVedtakPending] = useState<boolean>(false);
   const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
@@ -84,7 +84,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
     return Api.Aarsavregning.hentAarsavregning(behandlingID, aarsavregningID).then(
       (response: AarsavregningResponse) => {
         setLagretAarsavregning(response);
-      }
+      },
     );
   };
 
@@ -100,7 +100,7 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
     await Api.Fagsaker.aktoer.hent(saksnummer, FULLMEKTIG).then((res) => {
       setHarBekreftetFullmaktForTrygdeavgift(false);
       setHarFullmaktForTrygdeavgift(
-        res.some((aktoer) => aktoer.fullmakter?.some((fullmakt) => fullmakt === FULLMEKTIG_TRYGDEAVGIFT))
+        res.some((aktoer) => aktoer.fullmakter?.some((fullmakt) => fullmakt === FULLMEKTIG_TRYGDEAVGIFT)),
       );
     });
   };
@@ -272,4 +272,4 @@ export const VurderingVedtak = ({ tilbake, aktivtSteg }: Props) => {
       />
     </div>
   );
-};
+}
