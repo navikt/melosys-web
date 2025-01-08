@@ -94,7 +94,8 @@ function GrunnlagsopplysningerSkjema({
           ),
         ));
 
-    // @ts-ignore
+    // TODO handle mapping
+    // @ts-expect-error
     medlemskapsperioderFields.update(index, mapTilMedlemskapsperiodeProps(response.data));
   };
 
