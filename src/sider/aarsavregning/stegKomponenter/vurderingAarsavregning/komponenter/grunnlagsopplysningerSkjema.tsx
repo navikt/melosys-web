@@ -94,8 +94,7 @@ function GrunnlagsopplysningerSkjema({
           ),
         ));
 
-    // TODO handle mapping
-    // @ts-expect-error
+    // @ts-expect-error to forskjellige modeller er brukt
     medlemskapsperioderFields.update(index, mapTilMedlemskapsperiodeProps(response.data));
   };
 
