@@ -39,3 +39,8 @@ export const slettMedlemskapsperioder = (behandlingID: number) =>
 
 export const opprettForeslåtteMedlemskapsperioder = (behandlingID: number, bestemmelse: string) =>
   postAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${MEDLEMSKAPSPERIODER}/forslag`, { bestemmelse });
+
+export const oppdaterUkjentSluttdato = (behandlingID: number, ukjentSluttdato: boolean) =>
+  putAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${MEDLEMSKAPSPERIODER}/ukjent-sluttdato`, {
+    ukjentSluttdato,
+  });

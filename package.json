@@ -21,7 +21,7 @@
     "@navikt/ds-css": "^6.6.0",
     "@navikt/ds-react": "^6.6.0",
     "@navikt/fnrvalidator": "^1.1.4",
-    "@navikt/melosys-kodeverk": "5.15.288",
+    "@navikt/melosys-kodeverk": "5.15.289-beta.38c2230",
     "@sentry/integrations": "^7.30.0",
     "@sentry/react": "^7.30.0",
     "@sentry/tracing": "^7.30.0",

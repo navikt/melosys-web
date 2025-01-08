@@ -11,6 +11,7 @@ export type Data = {
   ikkeYrkesaktivFamilieRelasjonstype?: string;
   ikkeYrkesaktivOppholdstype?: string;
   arbeidssituasjonType?: string;
+  ukjentSluttdato?: boolean;
 };
 
 export interface FeiletAction {

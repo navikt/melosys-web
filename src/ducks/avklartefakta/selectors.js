@@ -95,6 +95,17 @@ export const YrkesaktivitetSelector = createSelector(
   }
 );
 
+export const UkjentSluttDatoSelector = createSelector(
+  (state) => AvklartefaktaSelector(state),
+  (alleAvklarteFakta) => {
+    const avklartFakta = alleAvklarteFakta.find(
+      (avklaring) => avklaring.referanse === KV.Koder.avklartefaktaKoder.UKJENT_SLUTTDATO
+    );
+    if (!avklartFakta) return null;
+    return avklartFakta.fakta[0];
+  }
+);
+
 const konverterForetakUtlandTilVirksomhet = (foretakUtland) => ({
   navn: foretakUtland.navn,
   virksomhetId: foretakUtland.uuid,

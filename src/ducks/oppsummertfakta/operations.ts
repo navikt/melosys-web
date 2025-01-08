@@ -60,6 +60,14 @@ export function sendArbeidssituasjontype(behandlingID: number, arbeidssituasjont
   });
 }
 
+export function sendUkjentSluttDato(behandlingID: number, ukjentSluttdato: string) {
+  return doThenDispatch(() => Api.Avklartefakta.sendUkjentSluttDato(behandlingID, ukjentSluttdato), {
+    OK: Types.OK,
+    FEILET: Types.FEILET,
+    PENDING: Types.PENDING,
+  });
+}
+
 export function slettAvklartefakta(behandlingID: number, avklartefaktaType: string) {
   return doThenDispatch(() => Api.Avklartefakta.slettAvklartefakta(behandlingID, avklartefaktaType), {
     OK: Types.OK,

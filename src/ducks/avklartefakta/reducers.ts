@@ -65,6 +65,7 @@ export default function reducer(state = initialState, action: Types.Action): Sta
         MARGINALT_ARBEID,
         INFORMERT_MYNDIGHET,
         VURDERING_LOVVALG_BARN,
+        UKJENT_SLUTTDATO,
       } = MKV.Koder.avklartefaktatyper;
 
       const {
@@ -104,6 +105,7 @@ export default function reducer(state = initialState, action: Types.Action): Sta
         ...lagAvklartfaktaObjekterMedKode(avklartefakta[OFFENTLIG_ARBEID_ANTALL_LAND], null),
         ...lagAvklartfaktaObjekterMedKode(avklartefakta[INFORMERT_MYNDIGHET], INFORMERT_MYNDIGHET),
         ...lagAvklartfaktaObjekterMedKode(avklartefakta[VURDERING_LOVVALG_BARN], VURDERING_LOVVALG_BARN),
+        ...lagAvklartfaktaObjekterMedKode(avklartefakta[UKJENT_SLUTTDATO], UKJENT_SLUTTDATO),
       ].filter((fakta) => fakta !== null);
 
       return { ...state, data: [...avklartefaktaUt] };

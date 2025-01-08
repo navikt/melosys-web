@@ -40,6 +40,7 @@ const OverlappOpphørtInnvilgetPeriode = (
   </Nav.Alert>
 );
 
+//TODO: Fjern denne feilmeldingen
 const IngenSluttdato = (
   <Nav.Alert variant="error" className="alertstripe_feilmelding">
     Du må oppgi sluttdato for å kunne angi resultat. Dette blir sluttdatoen på vedtaket.

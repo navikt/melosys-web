@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { FieldValue, useFieldArray, useForm } from "react-hook-form";
+import { Controller, FieldValue, useFieldArray, useForm } from "react-hook-form";
 
 import MKV from "../../../../../melosyskodeverk";
 import * as Api from "../../../../../services/api";
@@ -25,7 +25,7 @@ import vurderingPerioderSchema from "./vurderingPerioderSchema";
 import "./vurderingPerioder.css";
 import { useFeatureToggle } from "../../../../../featuretoggle";
 import { MELOSYS_FTRL_BEGRENSE_PERIODE_VEDTAK } from "../../../../../featuretoggle/toggleNavn";
-import { oppsummertfaktaSelectors } from "../../../../../ducks/oppsummertfakta";
+import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../../ducks/oppsummertfakta";
 
 const { AVSLAATT, OPPHØRT } = MKV.Koder.innvilgelsesResultat;
 const { NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingstyper;
@@ -84,6 +84,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   const ikkeyrkesaktivOppholdstype = useSelector(oppsummertfaktaSelectors.IkkeYrkesaktivOppholdSelector);
   const medlemskapsTypeErPliktig = lagredeMedlemskapsperioder.some((periode) => periode.medlemskapstype === PLIKTIG);
   const arbeidssituasjonType = useSelector(oppsummertfaktaSelectors.ArbeidssituasjonSelector);
+  const ukjentSluttdato = useSelector(oppsummertfaktaSelectors.UkjentSluttDatoSelector);
 
   const {
     control,
@@ -143,6 +144,10 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     Api.LovligeKombinasjoner.hentTrygdedekninger(lagretBestemmelse).then(setLovligeDekninger);
     Api.Ftrl.hentGyldigeInnvilgelsesresultat(behandlingstype).then(setLovligeInnvilgelsesresultat);
   }, [lagretBestemmelse]);
+
+  const lagreUkjentSluttdato = async (ukjentSluttdato: boolean) => {
+    dispatch(oppsummertfaktaOperations.sendUkjentSluttDato(behandlingID, ukjentSluttdato));
+  };
 
   const lagreMedlemskapsperiode = async (medlemskapsperiode: MedlemskapsperiodeProp, index: number) => {
     const periodeRequest = {
@@ -250,6 +255,18 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
       <Nav.BodyLong size="small" className="informasjonstekst">
         {hentInformasjonstekst(behandlingstype, medlemskapsTypeErPliktig)}
       </Nav.BodyLong>
+
+      <div className="ukjentSluttdato">
+        <Nav.Checkbox checked={ukjentSluttdato} onChange={(e) => lagreUkjentSluttdato(e.target.checked)}>
+          Saken er flyttet fra avgiftssystemet og har ikke sluttdato
+        </Nav.Checkbox>
+        {ukjentSluttdato && (
+          <Nav.Alert variant="info" size="small" className="mt-2">
+            Sett sluttdato 10 år frem. Sluttdato vil ikke komme med i vedtaksbrevet. Hvis sluttdato likevel skal komme
+            med i vedtaksbrevet, må du fjerne avhukingen.
+          </Nav.Alert>
+        )}
+      </div>
 
       <Medlemskapsperioder
         trygdedekninger={lovligeDekninger}
