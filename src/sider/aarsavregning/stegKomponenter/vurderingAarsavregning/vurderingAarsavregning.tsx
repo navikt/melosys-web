@@ -35,10 +35,10 @@ import { behandlingsresultatOperations, behandlingsresultatSelectors } from "../
 
 import { medlemskapsperioderOperations, medlemskapsperioderSelectors } from "../../../../ducks/medlemskapsperioder";
 import { MedlemskapsperiodeProp } from "../../../ftrl/saksbehandling/stegKomponenter/vurderingPeriode/komponenter/types";
-import { Medlemskapsperioder } from "./komponenter/medlemskapsperioder";
 import { InntektskildeDto, SkatteforholdDto } from "../../../../services/modules/trygdeavgift";
 import { FeilmeldingOppsummering } from "./feilmeldingOppsummering";
 import { Medlemskapsperiode } from "../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import { mapTilMedlemskapsperiodeProps } from "./util/medlemskapsperiodeMapper";
 
 interface Props {
   bekreft: () => void;
@@ -47,17 +47,6 @@ interface Props {
 }
 
 const { AVSLAATT } = MKV.Koder.innvilgelsesResultat;
-
-const mapTilMedlemskapsperiodeProps = (
-  medlemskapsperiode: Api.MedlemAvFolketrygden.Medlemskapsperioder.Medlemskapsperiode,
-): MedlemskapsperiodeProp => ({
-  ...medlemskapsperiode,
-  fomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.fomDato),
-  tomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.tomDato),
-  ny: false,
-  feil: undefined,
-  periodeId: medlemskapsperiode.id,
-});
 
 const mapTilSkatteforholdProps = (skatteforhold?: SkatteforholdDto[]) => {
   if (skatteforhold !== undefined) {
@@ -237,7 +226,7 @@ export function VurderingAarsavregning({ bekreft, oppdaterStatus }: Props) {
       setErAvvik(undefined);
       resetInntektskilder([]);
       resetSkatteforholdsperioder([]);
-      resetMedlemskapsperioder([]);
+      medlemskapsperioderFields.replace([]);
       Api.Aarsavregning.hentFiltrertAarsavregningList(saksnummer, valgtÅr, FERDIGBEHANDLET).then((res) => {
         setNyVurderingÅrsavregning(res.length > 0);
       });
@@ -329,13 +318,10 @@ export function VurderingAarsavregning({ bekreft, oppdaterStatus }: Props) {
     } as FieldValue<AarsavregningFormValuesProps>,
   });
 
-  const {
-    fields: medlemskapsperioderFields,
-    append: medlemskapsperioderAppend,
-    remove: medlemskapsperioderRemove,
-    update: medlemskapsperioderUpdate,
-    replace: resetMedlemskapsperioder,
-  } = useFieldArray<FieldArrayProps, "medlemskapsperioder", "id">({ control, name: "medlemskapsperioder" });
+  const medlemskapsperioderFields = useFieldArray<FieldArrayProps, "medlemskapsperioder", "id">({
+    control,
+    name: "medlemskapsperioder",
+  });
 
   const {
     fields: skattFields,
@@ -567,9 +553,6 @@ export function VurderingAarsavregning({ bekreft, oppdaterStatus }: Props) {
           formValues={formValues}
           trigger={trigger}
           medlemskapsperioderFields={medlemskapsperioderFields}
-          medlemskapsperioderUpdate={medlemskapsperioderUpdate}
-          medlemskapsperioderRemove={medlemskapsperioderRemove}
-          medlemskapsperioderAppend={medlemskapsperioderAppend}
           erIngenGrunnlag={erIngenGrunnlag}
           defaultPeriode={defaultPeriode}
           inntektFields={inntektFields}

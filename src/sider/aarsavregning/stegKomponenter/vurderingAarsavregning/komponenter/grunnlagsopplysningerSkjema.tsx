@@ -5,7 +5,7 @@ import {
   Inntektskilde,
   Skatteforhold,
 } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
-import { Control, FieldArrayWithId, UseFieldArrayUpdate, UseFormTrigger } from "react-hook-form";
+import { Control, FieldArrayWithId, UseFieldArrayReturn, UseFieldArrayUpdate, UseFormTrigger } from "react-hook-form";
 import { Skatteforholdsperioder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/skatteforholdsperioder";
 import { Inntektskilder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/inntektskilder";
 import { Medlemskapsperioder } from "./medlemskapsperioder";
@@ -18,15 +18,13 @@ import { medlemskapsperioderOperations } from "../../../../../ducks/medlemskapsp
 import * as Utils from "../../../../../utils";
 import { MedlemskapsperiodeProp } from "../../../../ftrl/saksbehandling/stegKomponenter/vurderingPeriode/komponenter/types";
 import MKV from "../../../../../melosyskodeverk";
+import { mapTilMedlemskapsperiodeProps } from "../util/medlemskapsperiodeMapper";
 
 interface GrunnlagsopplysningerSkjemaProps {
   behandlingID: number; // TODO from formvalues?
   formValues: FormValuesProps;
   trigger: UseFormTrigger<any>;
-  medlemskapsperioderFields: FieldArrayWithId<FieldArrayProps, "medlemskapsperioder">[];
-  medlemskapsperioderUpdate: UseFieldArrayUpdate<FieldArrayProps, "medlemskapsperioder">;
-  medlemskapsperioderRemove: (index: number) => void;
-  medlemskapsperioderAppend: (medlemskapsperiode: Medlemskapsperiode) => void;
+  medlemskapsperioderFields: UseFieldArrayReturn<FieldArrayProps, "medlemskapsperioder", "id">;
   erIngenGrunnlag: boolean | undefined;
   defaultPeriode?: { fomDato: string; tomDato: string };
   inntektFields: FieldArrayWithId<FieldArrayProps, "inntektskilder">[];
@@ -46,9 +44,6 @@ function GrunnlagsopplysningerSkjema({
   formValues,
   trigger,
   medlemskapsperioderFields,
-  medlemskapsperioderUpdate,
-  medlemskapsperioderRemove,
-  medlemskapsperioderAppend,
   erIngenGrunnlag,
   defaultPeriode,
   inntektFields,
@@ -70,10 +65,10 @@ function GrunnlagsopplysningerSkjema({
 
   useEffect(() => {
     trigger("medlemskapsperioder").then((isValid) => setVisLeggTilMedlemskapsperioder(isValid));
-    if (medlemskapsperioderFields.length === 0) {
+    if (medlemskapsperioderFields.fields.length === 0) {
       handleLeggTilMedlemskapsperiode();
     }
-  }, [medlemskapsperioderFields]);
+  }, [medlemskapsperioderFields.fields]);
 
   useEffect(() => {
     if (behandlingstema) {
@@ -89,8 +84,7 @@ function GrunnlagsopplysningerSkjema({
       bestemmelse: medlemskapsperiode.bestemmelse,
       innvilgelsesResultat: MKV.Koder.innvilgelsesResultat.INNVILGET,
     };
-
-    const response: any = medlemskapsperiode.ny
+    const response: any = await (medlemskapsperiode.ny
       ? dispatch(medlemskapsperioderOperations.opprettMedlemskapsperiode(behandlingID, periodeRequest))
       : dispatch(
           medlemskapsperioderOperations.oppdaterMedlemskapsperiode(
@@ -98,10 +92,10 @@ function GrunnlagsopplysningerSkjema({
             medlemskapsperiode.periodeId,
             periodeRequest,
           ),
-        );
+        ));
 
-    // @ts-expect-error generisk beskrivelse
-    medlemskapsperioderUpdate(index, mapTilMedlemskapsperiodeProps(response.data));
+    // @ts-ignore
+    medlemskapsperioderFields.update(index, mapTilMedlemskapsperiodeProps(response.data));
   };
 
   const debouncedLagreMedlemskapsperioder = useCallback(
@@ -132,16 +126,15 @@ function GrunnlagsopplysningerSkjema({
       bestemmelse: "",
     };
     // @ts-expect-error generisk beskrivelse
-    medlemskapsperioderAppend(nyMedlemskapsperiode);
+    medlemskapsperioderFields.append(nyMedlemskapsperiode);
     debouncedLagreMedlemskapsperioder(formValues.medlemskapsperioder, undefined);
   };
 
-  // TODO remove
   const handleSlettMedlemskapsperiode = async (index: number) => {
     const medlemskapsperiode = formValues.medlemskapsperioder[index] as any;
 
     if (medlemskapsperiode.ny) {
-      medlemskapsperioderRemove(index);
+      medlemskapsperioderFields.remove(index);
     } else {
       dispatch(medlemskapsperioderOperations.slettMedlemskapsperiode(behandlingID, medlemskapsperiode.periodeId));
     }
@@ -152,7 +145,7 @@ function GrunnlagsopplysningerSkjema({
   return (
     <div className="grunnlagsopplysningerSkjema">
       {erIngenGrunnlag &&
-        medlemskapsperioderFields.map((field, index) => (
+        medlemskapsperioderFields.fields.map((field, index) => (
           <Medlemskapsperioder
             redigerbart={redigerbart}
             control={control}
@@ -162,7 +155,7 @@ function GrunnlagsopplysningerSkjema({
             formValues={formValues}
             bestemmelser={bestemmelser}
             handleChange={debouncedLagreMedlemskapsperioder}
-            handleUpdate={medlemskapsperioderUpdate}
+            handleUpdate={medlemskapsperioderFields.update}
             handleLeggTil={handleLeggTilMedlemskapsperiode}
             visLeggTil={visLeggTilMedlemskapsperioder}
           />
