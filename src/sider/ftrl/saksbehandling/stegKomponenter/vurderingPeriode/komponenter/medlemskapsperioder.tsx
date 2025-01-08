@@ -24,6 +24,7 @@ export interface PeriodeElementerProps {
   formIsValid: boolean;
   handleLeggTil: () => void;
   visLeggTil: boolean;
+  ukjentSluttdato?: boolean;
 }
 
 export const Medlemskapsperioder = ({
@@ -37,6 +38,7 @@ export const Medlemskapsperioder = ({
   handleChange,
   handleLeggTil,
   visLeggTil,
+  ukjentSluttdato,
 }: PeriodeElementerProps) => {
   const kanSlettePeriode = redigerbart && fields.length !== 1;
   const medlemskapsperioder = useSelector(medlemskapsperioderSelectors.AlleMedlemskapsperioderSelector);
@@ -64,7 +66,7 @@ export const Medlemskapsperioder = ({
                   control={control}
                   name={`medlemskapsperioder[${index}].tomDato`}
                   aria-label={`Til og med periode ${index + 1}`}
-                  readOnly={!redigerbart}
+                  readOnly={!redigerbart || ukjentSluttdato}
                   onChange={(value) => handleChange([{ ...field, tomDato: value }], formIsValid, index)}
                 />
               </Nav.Column>

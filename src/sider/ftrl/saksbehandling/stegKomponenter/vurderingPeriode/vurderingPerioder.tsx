@@ -126,7 +126,29 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
 
   useEffect(() => {
     if (aktivtSteg) {
-      resetMedlemskapsperioder(mapInitialMedlemskapsperioder(lagredeMedlemskapsperioder));
+      let initialPerioder = mapInitialMedlemskapsperioder(lagredeMedlemskapsperioder);
+
+      // Hvis ukjentSluttdato er true, sett sluttdatoer til 10 år etter startdato
+      if (ukjentSluttdato) {
+        initialPerioder = initialPerioder.map((periode) => {
+          if (periode.fomDato) {
+            const fomISODate = Utils.dato.formatterDatoTilISO(periode.fomDato, "");
+            if (fomISODate) {
+              const fomDate = new Date(fomISODate);
+              const tomDate = new Date(fomDate);
+              tomDate.setFullYear(tomDate.getFullYear() + 10);
+              return {
+                ...periode,
+                tomDato: Utils.dato.formatterDatoTilNorsk(tomDate.toISOString()),
+              };
+            }
+          }
+          return periode;
+        });
+      }
+
+      resetMedlemskapsperioder(initialPerioder);
+
       if (!formIsValid) {
         lagredeMedlemskapsperioder.forEach((_periode, index) => {
           trigger(`medlemskapsperioder[${index}].fomDato`);
@@ -146,6 +168,32 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   }, [lagretBestemmelse]);
 
   const lagreUkjentSluttdato = async (ukjentSluttdato: boolean) => {
+    if (ukjentSluttdato) {
+      const updatedPerioder = formValues.medlemskapsperioder.map((periode) => {
+        if (periode.fomDato) {
+          const fomISODate = Utils.dato.formatterDatoTilISO(periode.fomDato, "");
+          if (fomISODate) {
+            const fomDate = new Date(fomISODate);
+            const tomDate = new Date(fomDate);
+            tomDate.setFullYear(tomDate.getFullYear() + 10);
+            return {
+              ...periode,
+              tomDato: Utils.dato.formatterDatoTilNorsk(tomDate.toISOString()),
+            };
+          }
+        }
+        return periode;
+      });
+
+      resetMedlemskapsperioder(updatedPerioder);
+
+      // Trigger form validation
+      await trigger("medlemskapsperioder");
+
+      // Save the updated periods
+      await debouncedLagreMedlemskapsperioder(updatedPerioder, true, undefined);
+    }
+
     dispatch(oppsummertfaktaOperations.sendUkjentSluttDato(behandlingID, ukjentSluttdato));
   };
 
@@ -262,7 +310,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
         </Nav.Checkbox>
         {ukjentSluttdato && (
           <Nav.Alert variant="info" size="small" className="mt-2">
-            Sett sluttdato 10 år frem. Sluttdato vil ikke komme med i vedtaksbrevet. Hvis sluttdato likevel skal komme
+            Sluttdato settes 10 år frem. Sluttdato vil ikke komme med i vedtaksbrevet. Hvis sluttdato likevel skal komme
             med i vedtaksbrevet, må du fjerne avhukingen.
           </Nav.Alert>
         )}
@@ -279,6 +327,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
         handleChange={debouncedLagreMedlemskapsperioder}
         handleLeggTil={handleLeggTil}
         visLeggTil={visLeggTilNyPeriode}
+        ukjentSluttdato={ukjentSluttdato}
       />
 
       {visFeilmeldinger && <Feilmelding type={aktivFeilmeldingType} />}
