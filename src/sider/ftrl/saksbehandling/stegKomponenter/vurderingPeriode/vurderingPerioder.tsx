@@ -173,8 +173,8 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     Api.Ftrl.hentGyldigeInnvilgelsesresultat(behandlingstype).then(setLovligeInnvilgelsesresultat);
   }, [lagretBestemmelse]);
 
-  const lagreUkjentSluttdatoMedlemskapsperiode = async (ukjentSluttdatoMedlemskapsperiode: boolean) => {
-    if (ukjentSluttdatoMedlemskapsperiode) {
+  const lagreUkjentSluttdatoMedlemskapsperiode = async (ukjentSluttdato: boolean) => {
+    if (ukjentSluttdato) {
       const updatedPerioder = formValues.medlemskapsperioder.map((periode: MedlemskapsperiodeProp) => {
         if (periode.fomDato) {
           const fomISODate = Utils.dato.formatterDatoTilISO(periode.fomDato, "");
@@ -200,9 +200,7 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
       await debouncedLagreMedlemskapsperioder(updatedPerioder, true, undefined);
     }
 
-    dispatch(
-      oppsummertfaktaOperations.sendUkjentSluttdatoMedlemskapsperiode(behandlingID, ukjentSluttdatoMedlemskapsperiode),
-    );
+    dispatch(oppsummertfaktaOperations.sendUkjentSluttdatoMedlemskapsperiode(behandlingID, ukjentSluttdato));
   };
 
   const lagreMedlemskapsperiode = async (medlemskapsperiode: MedlemskapsperiodeProp, index: number) => {
