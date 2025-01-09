@@ -21,11 +21,14 @@ export function lagreVirksomheter(behandlingID: number, virksomheter: Api.Avklar
 }
 
 export function lagreInnbetalingsstatus(behandlingID: number, fullstendigManglendeInnbetaling?: boolean) {
-  return doThenDispatch(() => Api.Avklartefakta.lagreInnbetalingsstatus(behandlingID, fullstendigManglendeInnbetaling), {
-    OK: Types.OK,
-    FEILET: Types.FEILET,
-    PENDING: Types.PENDING,
-  });
+  return doThenDispatch(
+    () => Api.Avklartefakta.lagreInnbetalingsstatus(behandlingID, fullstendigManglendeInnbetaling),
+    {
+      OK: Types.OK,
+      FEILET: Types.FEILET,
+      PENDING: Types.PENDING,
+    },
+  );
 }
 
 export function lagreArbeidsland(behandlingID: number, arbeidsland: Api.Avklartefakta.Arbeidsland) {

@@ -62,7 +62,10 @@ export const lagreVirksomheter = (behandlingID: number, virksomheter: Virksomhet
 export const lagreArbeidsland = (behandlingID: number, arbeidsland: Arbeidsland): Promise<Oppsummering> =>
   postAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/arbeidsland`, arbeidsland);
 
-export const lagreUkjentSluttdatoMedlemskapsperiode = (behandlingID: number, ukjentSluttdato: boolean): Promise<Oppsummering> =>
+export const lagreUkjentSluttdatoMedlemskapsperiode = (
+  behandlingID: number,
+  ukjentSluttdato: boolean,
+): Promise<Oppsummering> =>
   postAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/ukjent-sluttdato-medlemskapsperiode`, ukjentSluttdato);
 
 export const lagreInnbetalingsstatus = (

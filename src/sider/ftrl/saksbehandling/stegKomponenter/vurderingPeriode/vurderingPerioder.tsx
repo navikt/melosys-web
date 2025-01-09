@@ -19,7 +19,7 @@ import {
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 
 import { Medlemskapsperioder } from "./komponenter/medlemskapsperioder";
-import { UkjentSluttdatoMedlemskapsperiode } from './komponenter/ukjentSluttdatoMedlemskapsperiode';
+import { UkjentSluttdatoMedlemskapsperiode } from "./komponenter/ukjentSluttdatoMedlemskapsperiode";
 import { Feilmelding, feilMeldingBlokkerer, finnAktivFeilmelding } from "./komponenter/feilmeldinger";
 import { FieldArrayProps, FormValuesProps, MedlemskapsperiodeProp, VurderingPerioderProps } from "./komponenter/types";
 import vurderingPerioderSchema from "./vurderingPerioderSchema";
@@ -126,7 +126,6 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     ikkeyrkesaktivOppholdstype,
     arbeidssituasjonType,
   );
-
 
   const stegErGyldig = formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType);
 
@@ -293,7 +292,8 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
       Utils._isEmpty(periode.innvilgelsesResultat),
   );
 
-  const ukjentSluttdatoMedlemskapsperiodeSkalVises = behandlingstema === YRKESAKTIV && lagretBestemmelse !== FTRL_KAP2_2_1;
+  const ukjentSluttdatoMedlemskapsperiodeSkalVises =
+    behandlingstema === YRKESAKTIV && lagretBestemmelse !== FTRL_KAP2_2_1;
   const visLeggTilNyPeriode = redigerbart && feltErFyltInn;
   const visFeilmeldinger = feilMeldingBlokkerer(aktivFeilmeldingType) ? feltErFyltInn : feltErFyltInn && formIsValid;
 
