@@ -71,14 +71,16 @@ export function VurderingArtikkel13UtpekLand({
   );
   const isMounted = Hooks.useIsMounted();
 
-  const oppdaterUtpekingsperiode = async (fomdato, tomdato) => {
+  const oppdaterUtpekingsperiode = async (fomdato, tomdato, valgtLovvalgsland) => {
     await endreUtpekingsperiode(fomdato, tomdato);
-    lagreUtpekingsperioder();
+    if (valgtLovvalgsland) {
+      lagreUtpekingsperioder();
+    }
   };
 
   const debouncedOppdaterUtpekingsperiode = useCallback(
     Utils._debounce(
-      (nyFomDato, nyTomDato, valgtLovvalgsland) => valgtLovvalgsland && oppdaterUtpekingsperiode(nyFomDato, nyTomDato),
+      (nyFomDato, nyTomDato, valgtLovvalgsland) => oppdaterUtpekingsperiode(nyFomDato, nyTomDato, valgtLovvalgsland),
       500,
     ),
     [],
