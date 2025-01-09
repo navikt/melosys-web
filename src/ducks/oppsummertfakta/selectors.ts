@@ -38,7 +38,7 @@ export const ArbeidssituasjonSelector = createSelector(
 
 export const UkjentSluttDatoSelector = createSelector(
   OppsummertFaktaDataSelector,
-  (oppsummertfakta) => oppsummertfakta.ukjentSluttdato
+  (oppsummertfakta) => oppsummertfakta.ukjentSluttdato,
 );
 
 export const IkkeYrkesaktivOppholdSelector = createSelector(

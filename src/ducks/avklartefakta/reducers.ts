@@ -107,7 +107,7 @@ export default function reducer(state = initialState, action: Types.Action): Sta
         ...lagAvklartfaktaObjekterMedKode(avklartefakta[VURDERING_LOVVALG_BARN], VURDERING_LOVVALG_BARN),
         ...lagAvklartfaktaObjekterMedKode(
           avklartefakta[UKJENT_SLUTTDATO_MEDLEMSKAPSPERIODE],
-          UKJENT_SLUTTDATO_MEDLEMSKAPSPERIODE
+          UKJENT_SLUTTDATO_MEDLEMSKAPSPERIODE,
         ),
       ].filter((fakta) => fakta !== null);
 
