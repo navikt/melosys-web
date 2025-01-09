@@ -1,4 +1,4 @@
-import { push } from "connected-react-router";
+import { push } from "redux-first-history";
 import { lagIngenFlytUrl } from "../../url";
 import { fagsakSelectors } from "../fagsaker";
 import { behandlingerSelectors } from "../behandlinger";

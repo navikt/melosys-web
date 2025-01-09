@@ -20,14 +20,7 @@ const renderLabel = (beskrivelse: string, hjelpetekst: string | null) => {
   );
 };
 
-const ValgAlternativer = ({
-  valg,
-  feltKode,
-  redigerbart,
-  changeField,
-  beskrivelse,
-  hjelpetekst,
-}: ValgAlternativProps) => {
+function ValgAlternativer({ valg, feltKode, redigerbart, changeField, beskrivelse, hjelpetekst }: ValgAlternativProps) {
   const label = renderLabel(beskrivelse, hjelpetekst);
   if (valg.valgType === DokumenterV2.ValgType.CHECKBOX) {
     return (
@@ -81,6 +74,6 @@ const ValgAlternativer = ({
     );
   }
   return null;
-};
+}
 
 export default ValgAlternativer;

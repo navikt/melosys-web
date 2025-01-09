@@ -15,12 +15,12 @@ type FullmektigHistorikkInfo = FullmektigHistorikkType & {
   kontaktinfo: HentKontaktopplysningerResponse | undefined;
 };
 
-type FullmektigHistorikkProps = {
+interface FullmektigHistorikkProps {
   finnOrganisasjonAdresse: (orgnr: string) => Promise<AdresseOgFeil>;
   finnPersonAdresse: (personIdent: string) => Promise<AdresseOgFeil>;
-};
+}
 
-const FullmektigHistorikk = ({ finnOrganisasjonAdresse, finnPersonAdresse }: FullmektigHistorikkProps) => {
+function FullmektigHistorikk({ finnOrganisasjonAdresse, finnPersonAdresse }: FullmektigHistorikkProps) {
   const [fullmektigHistorikk, setFullmektigHistorikk] = useState<FullmektigHistorikkType[]>([]);
   const saksnummer = useSelector(fagsakSelectors.SaksnummerSelector);
   const [fullmektige, setFullmektige] = useState<FullmektigHistorikkInfo[]>([]);
@@ -55,7 +55,7 @@ const FullmektigHistorikk = ({ finnOrganisasjonAdresse, finnPersonAdresse }: Ful
             brevadresse: brevAdresse,
             kontaktinfo: kontaktInfo,
           } as FullmektigHistorikkInfo;
-        })
+        }),
       );
       setFullmektige(updatedFullmektige);
     };
@@ -92,15 +92,15 @@ const FullmektigHistorikk = ({ finnOrganisasjonAdresse, finnPersonAdresse }: Ful
               ))}
             </Nav.Table.DataCell>
             <Nav.Table.DataCell>
-              <>{fullmektig.brevadresse?.adresse?.mottakerNavn || ""}</>
+              {fullmektig.brevadresse?.adresse?.mottakerNavn || ""}
               <br />
-              <>{fullmektig.orgnr || fullmektig.personIdent}</>
+              {fullmektig.orgnr || fullmektig.personIdent}
             </Nav.Table.DataCell>
           </Nav.Table.Row>
         ))}
       </Nav.Table.Body>
     </Nav.Table>
   );
-};
+}
 
 export default FullmektigHistorikk;

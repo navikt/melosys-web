@@ -7,11 +7,9 @@ import { getErrorMessage } from "./misc/mapFeilmelding";
 
 type InputInnerComponentProps = ComponentProps<typeof Nav.TextField> & RegisterHookFormProps;
 
-const InputInnerComponent = forwardRef<HTMLInputElement, InputInnerComponentProps>(
-  ({ ...props }: InputInnerComponentProps, _ref: any) => {
-    return <Nav.TextField {...props} />;
-  }
-);
+function InputInnerComponent({ ...props }: InputInnerComponentProps) {
+  return <Nav.TextField {...props} />;
+}
 
 type InputProps = Omit<ComponentProps<typeof Nav.TextField>, "onChange"> &
   UseControllerProps & {

@@ -10,17 +10,17 @@ import MKV from "../../melosyskodeverk";
 
 const { FTRL } = MKV.Koder.sakstyper;
 
-type OppdaterRegisteroppslysningerProps = {
+interface OppdaterRegisteroppslysningerProps {
   sistOppdatert: string;
   oppdaterRegisteropplysninger: (isSiste5aar: boolean) => void;
   sakstype: string;
-};
+}
 
-export const OppdaterRegisteropplysninger = ({
+export function OppdaterRegisteropplysninger({
   sistOppdatert,
   oppdaterRegisteropplysninger,
   sakstype,
-}: OppdaterRegisteroppslysningerProps) => {
+}: OppdaterRegisteroppslysningerProps) {
   const initialValues = {
     inkluderSiste5Aar: useSelector(modalerSelectors.InkluderSiste5AarSelector),
   };
@@ -70,6 +70,6 @@ export const OppdaterRegisteropplysninger = ({
       </span>
     </div>
   );
-};
+}
 
 export default OppdaterRegisteropplysninger;

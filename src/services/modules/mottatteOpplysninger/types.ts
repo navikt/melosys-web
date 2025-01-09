@@ -28,22 +28,22 @@ type ErTrukketTrygdeavgift = boolean | null;
 type UtlArbTilhoererSammeKonsern = boolean | null;
 type Id = string | null;
 type Landkode = string;
-type UtenlandskIdent = {
+interface UtenlandskIdent {
   ident: Id;
   landkode: Landkode;
-};
+}
 type MedfolgendeBarn = {
   uuid: string;
   fnr: string | null;
   navn: string | null;
   relasjonsrolle: "BARN" | "EKTEFELLE_SAMBOER";
 }[];
-type FoedestedOgLand = {
+interface FoedestedOgLand {
   foedested: string;
   foedeland: Landkode;
-};
+}
 type Navn = string | null;
-type Foretakutland = {
+interface Foretakutland {
   uuid: string;
   navn: Navn;
   orgnr: string | null;
@@ -58,7 +58,7 @@ type Foretakutland = {
     poststed: string | null;
     landkode: string | null;
   };
-};
+}
 
 type Oppholdslandkode = string | null;
 type Ektefelleellerbarninorge = boolean | null;
@@ -69,10 +69,10 @@ type Antallmaanederinorge = number | null;
 type Erselvstendig = boolean | null;
 type Orgnr = string | null;
 type Fortsetteretterarbeidiutlandet = boolean | null;
-type Selvstendigforetak = {
+interface Selvstendigforetak {
   orgnr: Orgnr;
   fortsetterEtterArbeidIUtlandet: Fortsetteretterarbeidiutlandet;
-};
+}
 type EnhetNavn = string | null;
 type Fartsomradekode = string | null;
 type Flagglandkode = string | null;

@@ -38,7 +38,7 @@ const kodeverkComparator = ({ kode: k1 }: KTObject, { kode: k2 }: KTObject) => k
 
 export const unntaksbestemmelser: KTObject[] = Utils._uniqBy(
   [...alleEØSLovvalg].filter(({ kode }) => !bestemmelserIkkeRelevanteForUnntak.includes(kode)),
-  ({ kode }) => kode
+  ({ kode }) => kode,
 ).sort(kodeverkComparator);
 
 export const unntaksbestemmelserStorbritanniaKonv: KTObject[] = [
@@ -66,18 +66,18 @@ export const unntaksbestemmelserStorbritanniaKonv: KTObject[] = [
   kodeTilObjekt(kode, [
     ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia,
     ...MKV.KTObjects.lovvalgsbestemmelser.tilleggsbestemmelser_konv_efta_storbritannia,
-  ])
+  ]),
 );
 
 export const unikeAvtaleland: KTObject[] = MKV.KTObjects.landkoder
   .concat(MKV.KTObjects.trygdeavtale_myndighetsland)
   .filter(
     (ktobjectA: KTObject, index: number, self: KTObject[]) =>
-      self.findIndex((ktobjectB) => ktobjectB.kode === ktobjectA.kode) === index
+      self.findIndex((ktobjectB) => ktobjectB.kode === ktobjectA.kode) === index,
   );
 
 export const unikeAvtalelandKoder = unikeAvtaleland.map((ktobject: KTObject) => ktobject.kode);
 
 export const landSomErTrygdeavtaleMyndighetslandOgEuEøsLand = MKV.KTObjects.landkoder.filter(
-  (ktobject: KTObject) => !Utils._isEmpty(MKV.Koder.trygdeavtale_myndighetsland[ktobject.kode])
+  (ktobject: KTObject) => !Utils._isEmpty(MKV.Koder.trygdeavtale_myndighetsland[ktobject.kode]),
 );

@@ -81,7 +81,7 @@ type VurderingArtikkel16VedtakProps = PropsFromRedux & {
   validerMottatteOpplysninger: () => Promise<void>;
 };
 
-export const VurderingArtikkel16Vedtak = ({
+export function VurderingArtikkel16Vedtak({
   redigerbart,
   anmodningsperiode,
   anmodningsperiodesvar,
@@ -93,7 +93,7 @@ export const VurderingArtikkel16Vedtak = ({
   harFeilmeldinger,
   aktivtSteg = false,
   validerMottatteOpplysninger,
-}: VurderingArtikkel16VedtakProps & InjectedFormProps<FormValuesProps, VurderingArtikkel16VedtakProps>) => {
+}: VurderingArtikkel16VedtakProps & InjectedFormProps<FormValuesProps, VurderingArtikkel16VedtakProps>) {
   const dispatch = useDispatch();
   const [vedtakPending, setVedtakPending] = useState(false);
   let oppdaterFørKontroll = true;
@@ -151,7 +151,7 @@ export const VurderingArtikkel16Vedtak = ({
   const forkortLovvalgsperiode = () =>
     endreLovvalgsperiode(
       Utils.dato.formatterDatoTilISO(formValues.fomDato),
-      Utils.dato.formatterDatoTilISO(formValues.tomDato)
+      Utils.dato.formatterDatoTilISO(formValues.tomDato),
     );
 
   const vedKlikkForhandsvis = async () => {
@@ -186,7 +186,7 @@ export const VurderingArtikkel16Vedtak = ({
           vedtakstype: formValues.vedtakstype || FØRSTEGANGSVEDTAK,
           nyVurderingBakgrunn: formValues.vedtakstypebegrunnelse,
         };
-        // @ts-ignore
+        // @ts-expect-error generisk beskrivelse
         dispatch(vedtakOperations.fatt(behandlingID, request)).then((res) => {
           if (res.data?.data?.error) {
             setVedtakPending(false);
@@ -202,12 +202,12 @@ export const VurderingArtikkel16Vedtak = ({
     () => (
       <Skjema.Textarea feltNavn="vedtaksbrevFritekst" label="Fritekstfelt til begrunnelse" readOnly={!redigerbart} />
     ),
-    [formValues?.vedtaksbrevFritekst, redigerbart]
+    [formValues?.vedtaksbrevFritekst, redigerbart],
   );
 
   if (!formValues) return null;
 
-  const erStorbrittaniaArt18_1Bestemmelse =
+  const erStorbrittaniaArt181Bestemmelse =
     lovvalgsbestemmelse ===
     MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia.KONV_EFTA_STORBRITANNIA_ART18_1;
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
@@ -233,7 +233,7 @@ export const VurderingArtikkel16Vedtak = ({
             formValues={formValues}
             vedKlikkForhandsvis={vedKlikkForhandsvis}
             stegErGyldig={stegErGyldig}
-            erStorbrittaniaArt18_1Bestemmelse={erStorbrittaniaArt18_1Bestemmelse}
+            erStorbrittaniaArt18_1Bestemmelse={erStorbrittaniaArt181Bestemmelse}
             erUtsendt={erUtsendt}
           />
         );
@@ -250,7 +250,7 @@ export const VurderingArtikkel16Vedtak = ({
             formValues={formValues}
             vedKlikkForhandsvis={vedKlikkForhandsvis}
             stegErGyldig={stegErGyldig}
-            erStorbrittaniaArt18_1Bestemmelse={erStorbrittaniaArt18_1Bestemmelse}
+            erStorbrittaniaArt18_1Bestemmelse={erStorbrittaniaArt181Bestemmelse}
             erUtsendt={erUtsendt}
           />
         );
@@ -263,7 +263,7 @@ export const VurderingArtikkel16Vedtak = ({
             vedtaksbrevFritekst={formValues.vedtaksbrevFritekst}
             visOrienteringsbrevArbeidsgiver={visOrienteringsbrevArbeidsgiver}
             gjeldendePeriode={gjeldendePeriode}
-            erStorbrittaniaArt18_1Bestemmelse={erStorbrittaniaArt18_1Bestemmelse}
+            erStorbrittaniaArt18_1Bestemmelse={erStorbrittaniaArt181Bestemmelse}
           />
         );
       default:
@@ -299,7 +299,7 @@ export const VurderingArtikkel16Vedtak = ({
       </Nav.Row>
     </div>
   );
-};
+}
 
 const VurderingArtikkel16VedtakForm = reduxForm<FormValuesProps, VurderingArtikkel16VedtakProps>({
   form: KV.Form.ARTIKKEL_16_1_VEDTAK,

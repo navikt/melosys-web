@@ -6,7 +6,7 @@ export const FORSIDE_JOURNALFORINGS_FORM = "journalforingsform";
 export const JOURNALFORING = "journalforing";
 export const JOURNALFORING_SED = "journalforing_sed";
 
-export enum JOURNALFORING_VALUES {
+export enum JournalforingValues {
   sakstype = "sakstype",
   sakstema = "sakstema",
   behandlingstema = "behandlingstema",
@@ -109,7 +109,8 @@ export const ARTIKKEL_16_1_VEDTAK = "artikkel_16_1_vedtak";
 export const ARTIKKEL_13_UTPEKLAND = "artikkel_13_utpekland";
 export const ARTIKKEL_13_X_VEDTAK = "artikkel_13_x_vedtak";
 export const OPPRETT_NY_SAK = "opprett_ny_sak";
-export enum OPPRETT_NY_SAK_VALUES {
+/* eslint-disable @typescript-eslint/no-duplicate-enum-values */
+export enum OpprettNySakValues {
   sakstype = "sakstype",
   sakstema = "sakstema",
   behandlingstema = "behandlingstema",
@@ -125,6 +126,7 @@ export enum OPPRETT_NY_SAK_VALUES {
   hovedpart = "hovedpart",
   formNavn = "opprett_ny_sak",
 }
+/* eslint-enable @typescript-eslint/no-duplicate-enum-values */
 export const VURDERING_VIDERESEND = "vurdering_videresend";
 export const VURDER_UTPEKING = "vurder_utpeking";
 export const AVSLAA_UTPEKING = "avslaa_utpeking";

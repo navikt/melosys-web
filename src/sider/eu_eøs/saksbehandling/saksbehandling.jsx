@@ -283,10 +283,10 @@ const mapStateToProps = (state) => ({
   anmodningsperioderErSendtUtlandet: anmodningsperioderSelectors.AnmodningsperioderErSendtUtlandetSelector(state),
   arbeidsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
   mottatteOpplysningerPeriodeFom: Utils.dato.formatterDatoTilNorsk(
-    mottatteOpplysningerSelectors.PeriodeSelector(state).fom
+    mottatteOpplysningerSelectors.PeriodeSelector(state).fom,
   ),
   mottatteOpplysningerPeriodeTom: Utils.dato.formatterDatoTilNorsk(
-    mottatteOpplysningerSelectors.PeriodeSelector(state).tom
+    mottatteOpplysningerSelectors.PeriodeSelector(state).tom,
   ),
 });
 

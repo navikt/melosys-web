@@ -6,7 +6,7 @@ import { SakstypeKodeSelector } from "../fagsaker/selectors";
 
 export const LandkoderSelector: Selector<RootState, KTObject[]> = createSelector(
   (state: RootState) => state.landkoder,
-  (landkoder) => landkoder.data || []
+  (landkoder) => landkoder.data || [],
 );
 
 export const LandkoderFraSakstypeSelector = createSelector(
@@ -22,5 +22,5 @@ export const LandkoderFraSakstypeSelector = createSelector(
       default:
         return MKV.KTObjects.landkoder;
     }
-  }
+  },
 );

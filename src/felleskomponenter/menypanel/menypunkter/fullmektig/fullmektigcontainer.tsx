@@ -15,7 +15,7 @@ interface FullmektigProps {
   visArbeidsforholdRolleEtiketter: boolean;
 }
 
-const Fullmektig = ({ redigerbart, visArbeidsforholdRolleEtiketter }: FullmektigProps) => {
+function Fullmektig({ redigerbart, visArbeidsforholdRolleEtiketter }: FullmektigProps) {
   const [expanded, setExpanded] = useState(false);
 
   const finnOrganisasjonAdresse = (orgnr: string): Promise<AdresseOgFeil> => {
@@ -74,6 +74,6 @@ const Fullmektig = ({ redigerbart, visArbeidsforholdRolleEtiketter }: Fullmektig
       )}
     </div>
   );
-};
+}
 
 export default Fullmektig;

@@ -10,12 +10,12 @@ interface VedtakBegrunnelserProps {
   anmodningsperiodeSvarType: string;
 }
 
-export const VedtakBegrunnelser = ({ anmodningsperiodeSvarType }: VedtakBegrunnelserProps) => {
+export function VedtakBegrunnelser({ anmodningsperiodeSvarType }: VedtakBegrunnelserProps) {
   const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
   const vilkarBegrunnelser = useSelector(vilkarSelectors.VilkarBegrunnelserSelector);
   const utsendtArbeidstakerBegrunnelser = useSelector(vilkarSelectors.UtsendingsvilkårArbeidstakerBegrunnelserSelector);
   const utsendtNaeringsdrivendeBegrunnelser = useSelector(
-    vilkarSelectors.UtsendingsvilkårNæringsdrivendeBegrunnelserSelector
+    vilkarSelectors.UtsendingsvilkårNæringsdrivendeBegrunnelserSelector,
   );
 
   const muligeVirksomhetBegrunnelser = [
@@ -26,7 +26,7 @@ export const VedtakBegrunnelser = ({ anmodningsperiodeSvarType }: VedtakBegrunne
   ];
 
   return (
-    <Fragment>
+    <>
       {utsendtArbeidstakerBegrunnelser.length > 0 && (
         <Begrunnelser
           label={
@@ -66,8 +66,8 @@ export const VedtakBegrunnelser = ({ anmodningsperiodeSvarType }: VedtakBegrunne
             fritekst="Utenlandske trygdemyndigheter har avslått anmodningen om unntak"
           />
         ))}
-    </Fragment>
+    </>
   );
-};
+}
 
 export default VedtakBegrunnelser;

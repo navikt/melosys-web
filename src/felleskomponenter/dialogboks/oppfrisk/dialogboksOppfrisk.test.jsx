@@ -28,7 +28,7 @@ describe("DialogboksOppfrisk", () => {
     render(
       <FellesHandlersContext.Provider value={context}>
         <DialogboksOppfriskBehandling {...props} />
-      </FellesHandlersContext.Provider>
+      </FellesHandlersContext.Provider>,
     );
 
     expect(screen.getByRole("heading", { name: "Kan ikke oppdatere registeropplysninger" })).toBeInTheDocument();
@@ -51,7 +51,7 @@ describe("DialogboksOppfrisk", () => {
     render(
       <FellesHandlersContext.Provider value={context}>
         <DialogboksOppfriskBehandling {...props} />
-      </FellesHandlersContext.Provider>
+      </FellesHandlersContext.Provider>,
     );
 
     expect(screen.getByRole("dialog")).toBeInTheDocument();

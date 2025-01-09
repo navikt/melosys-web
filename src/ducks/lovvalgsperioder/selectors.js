@@ -13,37 +13,37 @@ import { ValgteLovvalgsVilkar } from "../vilkar/selectors";
 // selector(s)
 export const LovvalgsperioderSelector = createSelector(
   (state) => (state.lovvalgsperioder.data ? state.lovvalgsperioder.data : []),
-  (lovvalgsperioder) => lovvalgsperioder
+  (lovvalgsperioder) => lovvalgsperioder,
 );
 
 export const LovvalgsperiodeSelector = createSelector(
   (state) => LovvalgsperioderSelector(state),
-  (lovvalgsPerioder) => (lovvalgsPerioder[0] ? lovvalgsPerioder[0] : {})
+  (lovvalgsPerioder) => (lovvalgsPerioder[0] ? lovvalgsPerioder[0] : {}),
 );
 
 export const ValgteLovvalgsVilkarBestemmelseSelector = createSelector(
   (state) => ValgteLovvalgsVilkar(state),
-  (lovvalgsvilkar) => (lovvalgsvilkar.length > 0 ? lovvalgsvilkar[0].vilkaar : undefined)
+  (lovvalgsvilkar) => (lovvalgsvilkar.length > 0 ? lovvalgsvilkar[0].vilkaar : undefined),
 );
 
 export const LovvalgBestemmelseSelector = createSelector(
   LovvalgsperiodeSelector,
-  (lovvalgsperiode) => lovvalgsperiode.lovvalgsbestemmelse
+  (lovvalgsperiode) => lovvalgsperiode.lovvalgsbestemmelse,
 );
 
 export const TilleggBestemmelseSelector = createSelector(
   LovvalgsperiodeSelector,
-  (lovvalgsperiode) => lovvalgsperiode.tilleggBestemmelse
+  (lovvalgsperiode) => lovvalgsperiode.tilleggBestemmelse,
 );
 
 export const LovvalgslandSelector = createSelector(
   (state) => LovvalgsperiodeSelector(state),
-  (lovvalgsperiode) => lovvalgsperiode.lovvalgsland
+  (lovvalgsperiode) => lovvalgsperiode.lovvalgsland,
 );
 
 export const MedlemskapsperiodeIDSelector = createSelector(
   (state) => LovvalgsperiodeSelector(state),
-  (lovvalgsperiode) => lovvalgsperiode.medlemskapsperiodeID
+  (lovvalgsperiode) => lovvalgsperiode.medlemskapsperiodeID,
 );
 
 export const PeriodeSelector = createSelector(
@@ -51,19 +51,19 @@ export const PeriodeSelector = createSelector(
   (lovvalgsperiode) => ({
     fom: lovvalgsperiode.fomDato,
     tom: lovvalgsperiode.tomDato,
-  })
+  }),
 );
 
 export const InnvilgelsesResultatSelector = createSelector(
   LovvalgsperiodeSelector,
-  (lovvalgsperiode) => lovvalgsperiode.innvilgelsesResultat
+  (lovvalgsperiode) => lovvalgsperiode.innvilgelsesResultat,
 );
 export const FomDatoSelector = createSelector(
   (state) => LovvalgsperiodeSelector(state),
-  (lovvalgsperiode) => lovvalgsperiode.fomDato
+  (lovvalgsperiode) => lovvalgsperiode.fomDato,
 );
 
 export const TomDatoSelector = createSelector(
   (state) => LovvalgsperiodeSelector(state),
-  (lovvalgsperiode) => lovvalgsperiode.tomDato
+  (lovvalgsperiode) => lovvalgsperiode.tomDato,
 );

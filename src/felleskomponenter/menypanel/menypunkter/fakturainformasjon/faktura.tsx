@@ -37,7 +37,7 @@ const mapPeriodeTilKvartalString = (periodeFra: string, periodeTil: string) => {
 
 export const Faktura = ({ faktura }: FakturaProps) => {
   const [nyesteFakturaStatus] = useState<fakturaserierTypes.FakturaTilbakemelding | undefined>(
-    faktura.eksternFakturaStatus?.slice().sort((a, b) => moment(b.dato).diff(moment(a.dato)))[0]
+    faktura.eksternFakturaStatus?.slice().sort((a, b) => moment(b.dato).diff(moment(a.dato)))[0],
   );
 
   const fakturastatus = fakturastatusMap.get(faktura.status);

@@ -6,6 +6,8 @@ interface UtfyltAdresseProps {
   adresse: StrukturertAdresse;
 }
 
-const UtfyltAdresse = ({ adresse }: UtfyltAdresseProps) => <StrukturertAdresseKomponent adresse={adresse} />;
+function UtfyltAdresse({ adresse }: UtfyltAdresseProps) {
+  return <StrukturertAdresseKomponent adresse={adresse} />;
+}
 
 export default UtfyltAdresse;

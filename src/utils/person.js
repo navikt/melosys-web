@@ -1,10 +1,10 @@
 const erFnrLengde = (verdi) => {
-  const regex = RegExp(/^\d{11}$/);
+  const regex = /^\d{11}$/;
   return regex.test(verdi);
 };
 
 const erDnrLengde = (verdi) => {
-  const regex = RegExp(/^\d{11}$/);
+  const regex = /^\d{11}$/;
   return regex.test(verdi);
 };
 

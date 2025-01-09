@@ -21,7 +21,7 @@ interface AvslagProps {
   erStorbrittaniaArt18_1Bestemmelse: boolean;
 }
 
-export const Avslag = ({
+export function Avslag({
   redigerbart,
   behandlingID,
   vedtaksbrevFritekst,
@@ -29,7 +29,7 @@ export const Avslag = ({
   visOrienteringsbrevArbeidsgiver,
   gjeldendePeriode,
   erStorbrittaniaArt18_1Bestemmelse,
-}: AvslagProps) => {
+}: AvslagProps) {
   const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
 
   const pdfDokumenter: (BrevDokumentMetadataType | SedDokumentMetadataType)[] = [
@@ -62,7 +62,7 @@ export const Avslag = ({
   }
 
   return (
-    <Fragment>
+    <>
       <Nav.Heading level="1" className="stegvelgertittel">
         Avslag
       </Nav.Heading>
@@ -82,6 +82,6 @@ export const Avslag = ({
           </Nav.Column>
         </Nav.Row>
       )}
-    </Fragment>
+    </>
   );
-};
+}

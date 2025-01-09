@@ -3,7 +3,7 @@ import * as Nav from "../../../../../navFrontend";
 import { Organisasjon } from "../../../../../services/api";
 import { EnkelFellesInputFnrDnrOrgnrSaksnr } from "../../../../enkelFellesInputFnrDnrOrgnrSaksnr";
 
-const Orgnrinput = ({
+function Orgnrinput({
   onOrgnrFunnet,
   redigerbart,
   hentOrganisasjon,
@@ -12,7 +12,7 @@ const Orgnrinput = ({
   hentVedMount = false,
   ikkeFunnetFeilmelding = "Kunne ikke finne organisasjon",
   feilVedHentingFeilmelding = "Feil ved henting av organisasjon",
-}: OrgnrinputProps) => {
+}: OrgnrinputProps) {
   const [orgnr, setOrgnr] = useState<string>(defaultOrgnr);
   const [feil, setFeil] = useState<string | undefined>(undefined);
   const [hasFocus, setHasFocus] = useState<boolean>(false);
@@ -73,7 +73,7 @@ const Orgnrinput = ({
       />
     </div>
   );
-};
+}
 
 interface OrgnrinputProps {
   onOrgnrFunnet: (org: Organisasjon) => void;

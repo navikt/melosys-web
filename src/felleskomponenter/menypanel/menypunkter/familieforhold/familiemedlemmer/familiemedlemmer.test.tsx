@@ -83,7 +83,7 @@ describe("Familiemedlemmer", () => {
       >
         <Familiemedlemmer />
       </MockedProvider>,
-      { preloadedState: initialReduxState }
+      { preloadedState: initialReduxState },
     );
 
     expect(getByText("Henter familiemedlemmer...")).toBeInTheDocument();
@@ -106,7 +106,7 @@ describe("Familiemedlemmer", () => {
       >
         <Familiemedlemmer />
       </MockedProvider>,
-      { preloadedState: initialReduxState }
+      { preloadedState: initialReduxState },
     );
 
     expect(await findByText("Kunne ikke hente familiemedlemmer!")).toBeInTheDocument();
@@ -137,7 +137,7 @@ describe("Familiemedlemmer", () => {
       >
         <Familiemedlemmer />
       </MockedProvider>,
-      { preloadedState: initialReduxState }
+      { preloadedState: initialReduxState },
     );
 
     expect(await findAllByRole("table")).toHaveLength(2);
@@ -170,7 +170,7 @@ describe("Familiemedlemmer", () => {
       >
         <Familiemedlemmer />
       </MockedProvider>,
-      { preloadedState: initialReduxState }
+      { preloadedState: initialReduxState },
     );
 
     expect(await findAllByRole("table")).toHaveLength(2);

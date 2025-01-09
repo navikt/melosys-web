@@ -8,15 +8,15 @@ exports[`Faktura > snapshot test 1`] = `
       <button
         class="navds-table__toggle-expand-button"
         type="button"
-        aria-controls="aksel-id-1"
+        aria-controls="r0"
         aria-expanded="false"
       >
         <svg
+          xmlns="http://www.w3.org/2000/svg"
           width="1em"
           height="1em"
-          viewbox="0 0 24 24"
           fill="none"
-          xmlns="http://www.w3.org/2000/svg"
+          viewbox="0 0 24 24"
           focusable="false"
           role="img"
           aria-labelledby="333"
@@ -26,10 +26,10 @@ exports[`Faktura > snapshot test 1`] = `
             Vis mer
           </title>
           <path
-            fill-rule="evenodd"
-            clip-rule="evenodd"
-            d="M5.97 9.47a.75.75 0 0 1 1.06 0L12 14.44l4.97-4.97a.75.75 0 1 1 1.06 1.06l-5.5 5.5a.75.75 0 0 1-1.06 0l-5.5-5.5a.75.75 0 0 1 0-1.06Z"
             fill="currentColor"
+            fill-rule="evenodd"
+            d="M5.97 9.47a.75.75 0 0 1 1.06 0L12 14.44l4.97-4.97a.75.75 0 1 1 1.06 1.06l-5.5 5.5a.75.75 0 0 1-1.06 0l-5.5-5.5a.75.75 0 0 1 0-1.06"
+            clip-rule="evenodd"
           >
           </path>
         </svg>
@@ -110,11 +110,11 @@ exports[`Faktura > snapshot test 1`] = `
             <div class="fakturalinje">
               <div class="navds-alert navds-alert--info navds-alert--small">
                 <svg
+                  xmlns="http://www.w3.org/2000/svg"
                   width="1em"
                   height="1em"
-                  viewbox="0 0 24 24"
                   fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
+                  viewbox="0 0 24 24"
                   focusable="false"
                   role="img"
                   aria-labelledby="333"
@@ -124,14 +124,14 @@ exports[`Faktura > snapshot test 1`] = `
                     Informasjon
                   </title>
                   <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
-                    d="M3.25 4A.75.75 0 0 1 4 3.25h16a.75.75 0 0 1 .75.75v16a.75.75 0 0 1-.75.75H4a.75.75 0 0 1-.75-.75V4ZM11 7.75a1 1 0 1 1 2 0 1 1 0 0 1-2 0Zm-1.25 3a.75.75 0 0 1 .75-.75H12a.75.75 0 0 1 .75.75v4.75h.75a.75.75 0 0 1 0 1.5h-3a.75.75 0 0 1 0-1.5h.75v-4h-.75a.75.75 0 0 1-.75-.75Z"
                     fill="currentColor"
+                    fill-rule="evenodd"
+                    d="M3.25 4A.75.75 0 0 1 4 3.25h16a.75.75 0 0 1 .75.75v16a.75.75 0 0 1-.75.75H4a.75.75 0 0 1-.75-.75zM11 7.75a1 1 0 1 1 2 0 1 1 0 0 1-2 0m-1.25 3a.75.75 0 0 1 .75-.75H12a.75.75 0 0 1 .75.75v4.75h.75a.75.75 0 0 1 0 1.5h-3a.75.75 0 0 1 0-1.5h.75v-4h-.75a.75.75 0 0 1-.75-.75"
+                    clip-rule="evenodd"
                   >
                   </path>
                 </svg>
-                <div class="navds-alert__wrapper navds-body-long navds-body-long--small">
+                <div class="navds-alert__wrapper navds-alert__wrapper--maxwidth navds-body-long navds-body-long--small">
                   Fakturanummer er bare kjent i Melosys når det gjelder en manglende innbetaling, du kan likevel finne faktura i OeBS ved å søke på bruker
                 </div>
               </div>

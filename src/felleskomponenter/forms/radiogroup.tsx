@@ -46,7 +46,7 @@ const RadioGroup = forwardRef<HTMLSelectElement, RadioProps>(
         )}
       />
     );
-  }
+  },
 );
 
 export default RadioGroup;

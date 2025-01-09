@@ -11,7 +11,7 @@ import {
   DialogboksOppfriskSak,
 } from "../felleskomponenter/dialogboks";
 
-const Modals = ({
+function ModalsInner({
   skjulOppfriskModalOgNavigerTilForside,
   visOppfriskDialog,
   lagreMottatteOpplysningerOgOppfriskSaksopplysninger,
@@ -22,21 +22,23 @@ const Modals = ({
   visAvslagSoknadDialog,
   skjulAvslagSoknadDialogHandle,
   visBekreftValgDialog,
-}) => (
-  <Fragment>
-    {visOppfriskDialog && (
-      <DialogboksOppfriskSak
-        oppfrisk={lagreMottatteOpplysningerOgOppfriskSaksopplysninger}
-        avbryt={skjulOppfriskModal}
-        lukk={lukkOppfriskModal}
-        tilForsiden={skjulOppfriskModalOgNavigerTilForside}
-      />
-    )}
-    {visHenleggDialog && <DialogboksHenleggSak avbryt={skjulHenleggDialogHandle} />}
-    {visAvslagSoknadDialog && <DialogboksAvslagSoknad avbryt={skjulAvslagSoknadDialogHandle} />}
-    {visBekreftValgDialog && <DialogboksBekreftValg />}
-  </Fragment>
-);
+}) {
+  return (
+    <>
+      {visOppfriskDialog && (
+        <DialogboksOppfriskSak
+          oppfrisk={lagreMottatteOpplysningerOgOppfriskSaksopplysninger}
+          avbryt={skjulOppfriskModal}
+          lukk={lukkOppfriskModal}
+          tilForsiden={skjulOppfriskModalOgNavigerTilForside}
+        />
+      )}
+      {visHenleggDialog && <DialogboksHenleggSak avbryt={skjulHenleggDialogHandle} />}
+      {visAvslagSoknadDialog && <DialogboksAvslagSoknad avbryt={skjulAvslagSoknadDialogHandle} />}
+      {visBekreftValgDialog && <DialogboksBekreftValg />}
+    </>
+  );
+}
 
 Modals.propTypes = {
   skjulOppfriskModalOgNavigerTilForside: PT.func.isRequired,
@@ -66,10 +68,14 @@ const mapDispatchToProps = (dispatch) => ({
   skjulAvslagSoknadDialogHandle: () => dispatch(modalerOperations.skjulAvslagSoknad()),
 });
 
-const ConnectedModals = connect(mapStateToProps, mapDispatchToProps)(Modals);
+const ConnectedModals = connect(mapStateToProps, mapDispatchToProps)(ModalsInner);
 
-export default () => (
-  <FellesHandlersContext.Consumer>
-    {(fellesHandlers) => <ConnectedModals {...fellesHandlers} />}
-  </FellesHandlersContext.Consumer>
-);
+function Modals() {
+  return (
+    <FellesHandlersContext.Consumer>
+      {(fellesHandlers) => <ConnectedModals {...fellesHandlers} />}
+    </FellesHandlersContext.Consumer>
+  );
+}
+
+export default Modals;

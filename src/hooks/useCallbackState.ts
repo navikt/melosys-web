@@ -16,7 +16,7 @@ export const useCallbackState = <StateType>(
   callback: () => StateType,
   defaultState: StateType,
   deps: any[],
-  errorHandler?: (e: Error) => void
+  errorHandler?: (e: Error) => void,
 ): [StateType, Dispatch<SetStateAction<StateType>>] => {
   const [state, setState] = useState<StateType>(defaultState);
 
@@ -38,7 +38,7 @@ export const useAsyncCallbackState = <StateType>(
   asyncCallback: () => Promise<StateType>,
   defaultState: StateType,
   deps: any[],
-  errorHandler?: (e: Error) => void
+  errorHandler?: (e: Error) => void,
 ): [StateType, Dispatch<SetStateAction<StateType>>] => {
   const [state, setState] = useState(defaultState);
 

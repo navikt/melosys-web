@@ -20,7 +20,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 /**
  * Lister ut journalføringsoppgaver som saksbehandleren har opprettet
  */
-export const JournalforingsOppgaver = ({ mineSaker }: PropsFromRedux) => {
+export function JournalforingsOppgaver({ mineSaker }: PropsFromRedux) {
   const { journalforing } = mineSaker;
 
   const ingenSakerMelding = (
@@ -42,6 +42,6 @@ export const JournalforingsOppgaver = ({ mineSaker }: PropsFromRedux) => {
       {journalforing?.length === 0 && ingenSakerMelding}
     </div>
   );
-};
+}
 
 export default connector(JournalforingsOppgaver);

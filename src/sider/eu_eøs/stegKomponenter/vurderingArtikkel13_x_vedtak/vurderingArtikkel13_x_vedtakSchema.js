@@ -37,7 +37,7 @@ const artikkel13_x_vedtak = object().shape({
         is: true,
         then: string().required(MOTTAKERINSTITUSJON_KREVES),
       }),
-    })
+    }),
   ),
 });
 

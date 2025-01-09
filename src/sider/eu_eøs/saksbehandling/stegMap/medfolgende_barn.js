@@ -12,7 +12,7 @@ class VesentligVirksomhet extends Steg {
 
     const vurderingLovvalgBarnFakta = hentFaktaListe(
       MKV.Koder.avklartefaktatyper.VURDERING_LOVVALG_BARN,
-      propsLight.avklartefakta
+      propsLight.avklartefakta,
     );
 
     const art12_1 = hentVilkar(MKV.Koder.vilkaar.FO_883_2004_ART12_1, propsLight.vilkar);
@@ -67,7 +67,7 @@ class VesentligVirksomhet extends Steg {
     vurderingLovvalgBarnFakta.every(
       (enkeltFakta) =>
         enkeltFakta.fakta.includes(BOOLSK_STRING.SANN) ||
-        (enkeltFakta.fakta.includes(BOOLSK_STRING.USANN) && enkeltFakta.begrunnelseKoder.length > 0)
+        (enkeltFakta.fakta.includes(BOOLSK_STRING.USANN) && enkeltFakta.begrunnelseKoder.length > 0),
     );
 }
 

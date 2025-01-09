@@ -11,23 +11,25 @@ interface IdentOgNavnProps {
   navn: string;
 }
 
-const IdentOgNavn = ({ tittel, feltNavn, label, navn }: IdentOgNavnProps) => (
-  <>
-    <Mui.Undertittel tekst={tittel} ikon={Ikoner.AccountCircle} className="undertittel" understrek />
-    <div className="innrykk">
-      <Skjema.FellesInputFnrDnrOrgnrSaksnr feltNavn={feltNavn} label={label} bredde="L" />
-      {!Utils._isEmpty(navn) && (
-        <span>
-          <Nav.BodyLong weight="semibold" size="small" className="navnTittel">
-            Navn:
-          </Nav.BodyLong>
-          <Nav.BodyLong size="small" className="navn">
-            {navn}
-          </Nav.BodyLong>
-        </span>
-      )}
-    </div>
-  </>
-);
+function IdentOgNavn({ tittel, feltNavn, label, navn }: IdentOgNavnProps) {
+  return (
+    <>
+      <Mui.Undertittel tekst={tittel} ikon={Ikoner.AccountCircle} className="undertittel" understrek />
+      <div className="innrykk">
+        <Skjema.FellesInputFnrDnrOrgnrSaksnr feltNavn={feltNavn} label={label} bredde="L" />
+        {!Utils._isEmpty(navn) && (
+          <span>
+            <Nav.BodyLong weight="semibold" size="small" className="navnTittel">
+              Navn:
+            </Nav.BodyLong>
+            <Nav.BodyLong size="small" className="navn">
+              {navn}
+            </Nav.BodyLong>
+          </span>
+        )}
+      </div>
+    </>
+  );
+}
 
 export default IdentOgNavn;

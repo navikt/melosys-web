@@ -129,7 +129,7 @@ export enum StegNavn {
 
 export const FRITEKST_VALG = "Fritekst";
 
-export enum AVTALELAND_UTFALL {
+export enum AvtalelandUtfall {
   JA_FATTE_VEDTAK = "JA_FATTE_VEDTAK",
   NEI_ANMODE_OM_UNNTAK = "NEI_ANMODE_OM_UNNTAK",
   NEI_AVSLAG = "NEI_AVSLAG",

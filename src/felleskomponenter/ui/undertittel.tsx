@@ -15,7 +15,7 @@ interface UndertittelProps {
   understrek?: boolean;
 }
 
-const Undertittel = ({ ikon: Ikon, tekst, etterTekst, className, understrek = false, ikonProps }: UndertittelProps) => {
+function Undertittel({ ikon: Ikon, tekst, etterTekst, className, understrek = false, ikonProps }: UndertittelProps) {
   const cl = classNames("undertittel", className);
   const navUndertittelCl = classNames({ "undertittel--understrek": understrek }, "undertittel__navUndertittel");
 
@@ -37,6 +37,6 @@ const Undertittel = ({ ikon: Ikon, tekst, etterTekst, className, understrek = fa
       </Nav.Heading>
     </div>
   );
-};
+}
 
 export default Undertittel;

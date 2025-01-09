@@ -9,5 +9,5 @@ import { createSelector } from "reselect";
 
 export const organisasjonerSelector = createSelector(
   (state) => state.organisasjoner.data || [],
-  (organisasjoner) => organisasjoner || []
+  (organisasjoner) => organisasjoner || [],
 );

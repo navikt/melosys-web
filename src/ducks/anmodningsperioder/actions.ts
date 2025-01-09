@@ -2,7 +2,7 @@ import * as Api from "../../services/api";
 import * as Types from "./types";
 
 export function oppdaterAnmodningsperioder(
-  anmodningsperioder: Api.Anmodningsperioder.Anmodningsperiode[]
+  anmodningsperioder: Api.Anmodningsperioder.Anmodningsperiode[],
 ): Types.OppdaterAnmodningsperioderAction {
   return {
     type: Types.OPPDATER_ANMODNINGSPERIODER,

@@ -30,7 +30,7 @@ export interface PeriodeElementerProps {
   visLeggTil: boolean;
 }
 
-export const Medlemskapsperioder = ({
+export function Medlemskapsperioder({
   redigerbart,
   field,
   control,
@@ -43,7 +43,7 @@ export const Medlemskapsperioder = ({
   handleUpdate,
   index,
   visLeggTil,
-}: PeriodeElementerProps) => {
+}: PeriodeElementerProps) {
   const [trygdedekninger, setTrygdedekninger] = useState<[]>([]);
 
   useEffect(() => {
@@ -144,4 +144,4 @@ export const Medlemskapsperioder = ({
       )}
     </div>
   );
-};
+}

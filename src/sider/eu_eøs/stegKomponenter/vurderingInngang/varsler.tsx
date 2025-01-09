@@ -18,13 +18,7 @@ interface VarslerProps {
   behandlingID: number;
 }
 
-const Varsler = ({
-  oppfyllerInngangsvilkar,
-  inngangsvilkaar,
-  landkoder,
-  behandlingstema,
-  behandlingID,
-}: VarslerProps) => {
+function Varsler({ oppfyllerInngangsvilkar, inngangsvilkaar, landkoder, behandlingstema, behandlingID }: VarslerProps) {
   const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
   const inngangsvilkaarBegrunnelseKoder = inngangsvilkaar?.begrunnelseKoder || [];
   const { data: statsborgerskapData } = useHentStatsborgerskapQuery({
@@ -32,7 +26,7 @@ const Varsler = ({
   });
   const statsborgerskapLand =
     statsborgerskapData?.hentSaksopplysninger?.persondata?.statsborgerskap?.map(
-      (statsborgerskap) => statsborgerskap.land
+      (statsborgerskap) => statsborgerskap.land,
     ) ?? [];
 
   const inngangsvilkaarErOverstyrtAvSaksbehandler =
@@ -62,7 +56,7 @@ const Varsler = ({
   }inngangsvilkårene for EU/EØS-saker etter forordning 883/2004.`;
 
   const visbareInngangsvilkaarBegrunnelseKoder = inngangsvilkaarBegrunnelseKoder.filter(
-    (kode) => kode !== OVERSTYRT_AV_SAKSBEHANDLER
+    (kode) => kode !== OVERSTYRT_AV_SAKSBEHANDLER,
   );
 
   const erFraEllerSkalTilStorbritannia =
@@ -99,6 +93,6 @@ const Varsler = ({
       )}
     </div>
   );
-};
+}
 
 export default Varsler;

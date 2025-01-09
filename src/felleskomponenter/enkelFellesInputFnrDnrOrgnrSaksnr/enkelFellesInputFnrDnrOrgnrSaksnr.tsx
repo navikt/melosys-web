@@ -10,13 +10,13 @@ export type FellesInputFnrDnrOrgnrSaksnrProps = InputProps & {
   onBlur?: (ident: string) => void;
 };
 
-const EnkelFellesInputFnrDnrOrgnrSaksnr = ({
+function EnkelFellesInputFnrDnrOrgnrSaksnr({
   label,
   error,
   onChange,
   onBlur,
   ...props
-}: FellesInputFnrDnrOrgnrSaksnrProps) => {
+}: FellesInputFnrDnrOrgnrSaksnrProps) {
   const [inputVerdi, setInputVerdi] = useState<string>(props?.value || "");
 
   const hentTrimmetStrengFraEvent = (event: ChangeEvent<HTMLInputElement>) => {
@@ -50,6 +50,6 @@ const EnkelFellesInputFnrDnrOrgnrSaksnr = ({
       {...props}
     />
   );
-};
+}
 
 export default EnkelFellesInputFnrDnrOrgnrSaksnr;

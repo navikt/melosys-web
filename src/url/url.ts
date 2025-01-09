@@ -60,7 +60,7 @@ export const lagUrlFraSakstypeOgBehandlingstema = (
   saksnummer: number | string,
   behandlingID: number,
   sakstypeKode: string,
-  behandlingstemaKode: string
+  behandlingstemaKode: string,
 ) => {
   if (sakstypeKode === EU_EOS) {
     return lagUrlForEuEøsFlyter(saksnummer, behandlingID, behandlingstemaKode);
@@ -87,7 +87,7 @@ export const lagUrl = (
   sakstemaKode: string,
   behandlingstemaKode: string,
   behandlingstypeKode: string,
-  erArbeidKunNorgeToggleEnabled: boolean | undefined
+  erArbeidKunNorgeToggleEnabled: boolean | undefined,
 ) => {
   if (behandlingstypeKode === MKV.Koder.behandlinger.behandlingstyper.ÅRSAVREGNING) {
     return lagÅrsavregningFlytUrl(sakstypeKode, saksnummer, behandlingID);
@@ -99,7 +99,7 @@ export const lagUrl = (
       sakstemaKode,
       behandlingstemaKode,
       behandlingstypeKode,
-      erArbeidKunNorgeToggleEnabled
+      erArbeidKunNorgeToggleEnabled,
     )
   ) {
     return lagIngenFlytUrl(sakstypeKode, saksnummer, behandlingID);
@@ -140,7 +140,7 @@ export const skalViseIngenFlyt = (
   sakstema: string,
   behandlingstema: string,
   behandlingstype: string,
-  erArbeidKunNorgeToggleEnabled: boolean = false
+  erArbeidKunNorgeToggleEnabled: boolean = false,
 ) => {
   if (sakstema === MKV.Koder.sakstemaer.TRYGDEAVGIFT) {
     return true;

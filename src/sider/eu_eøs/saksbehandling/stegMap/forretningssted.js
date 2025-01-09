@@ -45,7 +45,7 @@ class Forretningssted extends Steg {
       const lovvalgsbestemmelse = hentLovvalgsbestemmelse(perioder);
       const avklarteForretningsland = hentFaktaListe(
         KV.Koder.avklartefaktaKoder.ARBEIDSGIVERS_FORRETNINGSSTED,
-        _propsLight.avklartefakta
+        _propsLight.avklartefakta,
       );
       const omfattetINorge = hentFakta(KV.Koder.avklartefaktaKoder.OMFATTES_I_NORGE, _propsLight.avklartefakta);
       const omfattetILand = hentFakta(KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND, _propsLight.avklartefakta);
@@ -93,18 +93,18 @@ class Forretningssted extends Steg {
   omfattetNorgeVurdert = (propsLight) => {
     const omfattetNorgeAvklarteFakta = hentFakta(
       KV.Koder.avklartefaktaKoder.OMFATTES_I_NORGE,
-      propsLight.avklartefakta
+      propsLight.avklartefakta,
     );
     return !Utils._isEmpty(omfattetNorgeAvklarteFakta);
   };
   harAvklartForretningsland = (propsLight) => {
     const avklarteForretningsland = hentFaktaListe(
       KV.Koder.avklartefaktaKoder.ARBEIDSGIVERS_FORRETNINGSSTED,
-      propsLight.avklartefakta
+      propsLight.avklartefakta,
     );
 
     return propsLight.valgteVirksomheterIkkeNaeringsDrivende.every((vv) =>
-      avklarteForretningsland.some((afl) => afl.subjektID === vv.virksomhetId && !Utils._isNil(hentFaktaVerdi(afl)))
+      avklarteForretningsland.some((afl) => afl.subjektID === vv.virksomhetId && !Utils._isNil(hentFaktaVerdi(afl))),
     );
   };
 }

@@ -27,7 +27,7 @@ const { NY_VURDERING, FØRSTEGANG, KLAGE, HENVENDELSE, MANGLENDE_INNBETALING_TRY
 const { EU_EOS, FTRL, TRYGDEAVTALE } = MKV.Koder.sakstyper;
 const { MEDLEMSKAP_LOVVALG, UNNTAK } = MKV.Koder.sakstemaer;
 
-const AvsluttSak = () => {
+function AvsluttSak() {
   const dispatch = useDispatch();
   const apneBekreftValgModal = (type: BekreftValgTypes) => dispatch(modalerOperations.visBekreftValg(type));
 
@@ -211,7 +211,7 @@ const AvsluttSak = () => {
       redigerbart &&
         sakstype === FTRL &&
         sakstema === MEDLEMSKAP_LOVVALG &&
-        [NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT].includes(behandlingstype)
+        [NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT].includes(behandlingstype),
     );
   };
 
@@ -302,6 +302,6 @@ const AvsluttSak = () => {
       )}
     </>
   );
-};
+}
 
 export default AvsluttSak;

@@ -71,7 +71,7 @@ describe("Behandlingsoppgaver", () => {
       // Trenger en Router på toppnivå her siden vi bruker Link lengre ned.
       <MemoryRouter>
         <BehandlingOppgaver {...props} />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     expect(container).toMatchSnapshot();

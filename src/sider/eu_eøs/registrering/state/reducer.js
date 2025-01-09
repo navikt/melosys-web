@@ -37,7 +37,7 @@ export const reducer = (
     lovvalgsperioder,
     soknad,
   },
-  action
+  action,
 ) => ({
   avklartefakta: avklartefaktaReducer(avklartefakta, action),
   anmodningsperioder: anmodningsperiodeReducer(anmodningsperioder, action),

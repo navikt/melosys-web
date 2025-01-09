@@ -7,6 +7,7 @@ import Datovelger from ".";
 describe("Datovelger", () => {
   let dato: Date | undefined = new Date();
   const props: ComponentProps<typeof Datovelger> = {
+    // eslint-disable-next-line no-return-assign
     onChange: (nyDatoString: string) => (dato = Utils.dato.norskStringTilDate(nyDatoString)),
     value: dato,
     label: "Dato",

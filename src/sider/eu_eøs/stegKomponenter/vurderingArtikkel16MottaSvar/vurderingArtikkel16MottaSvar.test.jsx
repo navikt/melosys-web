@@ -11,7 +11,7 @@ describe("VurderingArtikkel16MottaSvar", () => {
   let props = null;
   let initialReduxState = null;
   const ConnectedVurderingArtikkel16MottaSvar = reduxForm({ form: KV.Form.ARTIKKEL_16_MOTTA_SVAR })(
-    VurderingArtikkel16MottaSvar
+    VurderingArtikkel16MottaSvar,
   );
 
   beforeEach(() => {

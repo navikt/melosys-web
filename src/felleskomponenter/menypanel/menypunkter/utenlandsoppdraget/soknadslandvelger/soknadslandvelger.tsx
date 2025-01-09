@@ -21,7 +21,7 @@ interface SoknadslandvelgerProps {
   lagreSoknadOgOppfriskSaksopplysninger: () => void;
 }
 
-const Soknadslandvelger = ({ redigerbart, lagreSoknadOgOppfriskSaksopplysninger }: SoknadslandvelgerProps) => {
+function Soknadslandvelger({ redigerbart, lagreSoknadOgOppfriskSaksopplysninger }: SoknadslandvelgerProps) {
   const dispatch = useDispatch();
   const [status, setStatus] = useState<Status>(Status.RedigeringUtfort);
 
@@ -47,7 +47,7 @@ const Soknadslandvelger = ({ redigerbart, lagreSoknadOgOppfriskSaksopplysninger 
   const soknadslandTekst = flereLandUkjentHvilke
     ? "Flere land. Ikke kjent hvilke."
     : Utils.streng.arrayTilKonjunksjon(
-        soknadsland.map((land: string) => KV.kodeTilTerm(land, MKV.KTObjects.landkoder))
+        soknadsland.map((land: string) => KV.kodeTilTerm(land, MKV.KTObjects.landkoder)),
       ) || "Ingen land valgt";
 
   return (
@@ -67,6 +67,6 @@ const Soknadslandvelger = ({ redigerbart, lagreSoknadOgOppfriskSaksopplysninger 
       )}
     </div>
   );
-};
+}
 
 export default Soknadslandvelger;

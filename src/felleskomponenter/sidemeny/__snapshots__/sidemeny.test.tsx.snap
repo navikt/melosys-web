@@ -17,9 +17,7 @@ exports[`SideMeny > snapshot test 1`] = `
               class="meny-link__button"
               type="button"
             >
-              <span class="typo-normal meny-link__label">
-                Hvitt sukker
-              </span>
+              Hvitt sukker
             </button>
           </li>
           <li class="meny-link">
@@ -27,9 +25,7 @@ exports[`SideMeny > snapshot test 1`] = `
               class="meny-link__button"
               type="button"
             >
-              <span class="typo-normal meny-link__label">
-                Brunt sukker
-              </span>
+              Brunt sukker
             </button>
           </li>
         </ul>
@@ -44,9 +40,7 @@ exports[`SideMeny > snapshot test 1`] = `
               class="meny-link__button"
               type="button"
             >
-              <span class="typo-normal meny-link__label">
-                Bordsalt
-              </span>
+              Bordsalt
             </button>
           </li>
         </ul>

@@ -4,7 +4,7 @@ import * as Nav from "../../../../navFrontend";
 import EnkeltDato from "../../../enkeltDato";
 import TabellArbeidsgiver from "./tabellArbeidsgiver";
 
-const Permisjoner = ({ permisjoner }) => {
+function Permisjoner({ permisjoner }) {
   if (!permisjoner) return null;
 
   const permisjonerArrayed = permisjoner.map((linje) => {
@@ -30,7 +30,7 @@ const Permisjoner = ({ permisjoner }) => {
       />
     </div>
   ) : null;
-};
+}
 
 Permisjoner.propTypes = {
   permisjoner: MPT.Permisjoner,

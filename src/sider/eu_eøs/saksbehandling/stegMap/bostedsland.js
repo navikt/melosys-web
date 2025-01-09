@@ -14,7 +14,7 @@ class Bostedsland extends Steg {
 
     const erSokkelSkipEttLand = SokkelSkip.finnAvklaring(
       propsLight.avklartefakta,
-      KV.Koder.VurderingSokkelSkipTyper.SKIP_ETT_LAND
+      KV.Koder.VurderingSokkelSkipTyper.SKIP_ETT_LAND,
     );
 
     const bostedslandFakta = hentFakta(KV.Koder.avklartefaktaKoder.BOSTEDSLAND, propsLight.avklartefakta);

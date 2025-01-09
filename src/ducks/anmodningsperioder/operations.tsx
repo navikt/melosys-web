@@ -48,16 +48,16 @@ export function lagre() {
     return dispatch(
       send(behandlingID, {
         anmodningsperioder: anmodningsperioder.map(
-          ({ sendtUtland, ...beholdProperties }: Api.Anmodningsperioder.Anmodningsperiode) => beholdProperties
+          ({ sendtUtland, ...beholdProperties }: Api.Anmodningsperioder.Anmodningsperiode) => beholdProperties,
         ),
-      })
+      }),
     );
   };
 }
 
 const byggAnmodningsperiode = (
   stegState: PerioderStegState,
-  reduxState: RootState
+  reduxState: RootState,
 ): Api.Anmodningsperioder.Anmodningsperiode[] => {
   const søknadsperiode = mottatteOpplysningerSelectors.PeriodeSelector(reduxState);
   const soknadsland = mottatteOpplysningerSelectors.SoknadslandkoderSelector(reduxState);
@@ -80,7 +80,7 @@ const byggAnmodningsperiode = (
 
 const byggAnmodningsperioder = (
   stegState: PerioderStegState,
-  reduxState: RootState
+  reduxState: RootState,
 ): Api.Anmodningsperioder.Anmodningsperiode[] => {
   switch (stegState.lovvalgsbestemmelse) {
     case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1:

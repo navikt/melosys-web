@@ -12,7 +12,7 @@ interface VedleggVelgerRowProps {
   vedleggErMarkert: boolean;
 }
 
-const VedleggVelgerRow = ({ vedlegg, leggTilVedlegg, slettVedlegg, vedleggErMarkert }: VedleggVelgerRowProps) => {
+function VedleggVelgerRow({ vedlegg, leggTilVedlegg, slettVedlegg, vedleggErMarkert }: VedleggVelgerRowProps) {
   const checkboxChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
       leggTilVedlegg();
@@ -36,6 +36,6 @@ const VedleggVelgerRow = ({ vedlegg, leggTilVedlegg, slettVedlegg, vedleggErMark
       </Nav.Table.DataCell>
     </Nav.Table.Row>
   );
-};
+}
 
 export default VedleggVelgerRow;

@@ -9,7 +9,7 @@ import { navigeringOperations } from "../navigering";
 
 export function send(
   saksnummer: string,
-  videresending: Api.Fagsaker.fagsak.VideresendReqDto
+  videresending: Api.Fagsaker.fagsak.VideresendReqDto,
 ): AppThunk<Promise<Types.Action>, Types.Action> {
   return doThenDispatch(
     () => Api.Fagsaker.fagsak.videresend(saksnummer, videresending),
@@ -22,7 +22,7 @@ export function send(
       success: (dispatch: ThunkDispatch<RootState, unknown, Types.Action>) => {
         dispatch(navigeringOperations.tilForsiden());
       },
-    }
+    },
   );
 }
 

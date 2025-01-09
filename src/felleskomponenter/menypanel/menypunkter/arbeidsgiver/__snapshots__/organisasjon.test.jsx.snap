@@ -12,10 +12,7 @@ exports[`organisasjon > snapshot test 1`] = `
           </div>
           <address class="registeradresse">
             <div>
-              0123 Oslo
-            </div>
-            <div>
-              NO
+              Oslo gate 1B, 0123 Oslo, NO
             </div>
           </address>
         </div>

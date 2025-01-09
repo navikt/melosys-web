@@ -28,7 +28,7 @@ class CustomRadioPanel extends Component {
     const { checked, disabled, innhold, footer, feltNavn, inputProps, value } = this.props;
 
     return (
-      <Fragment>
+      <>
         <label className="customRadioPanel" htmlFor={`${feltNavn}-${value}`}>
           <Nav.Radio
             {...inputProps}
@@ -44,7 +44,7 @@ class CustomRadioPanel extends Component {
           <div className="radioPanel__innhold">{innhold}</div>
         </label>
         {checked && footer}
-      </Fragment>
+      </>
     );
   }
 }
@@ -66,7 +66,7 @@ CustomRadioPanel.defaultProps = {
   footer: null,
 };
 
-const CustomRadioPanelGruppe = (props) => {
+function CustomRadioPanelGruppe(props) {
   const {
     radios,
     feltNavn,
@@ -123,7 +123,7 @@ const CustomRadioPanelGruppe = (props) => {
       {feil ? <Nav.Alert variant="error">{feil}</Nav.Alert> : null}
     </div>
   );
-};
+}
 
 CustomRadioPanelGruppe.propTypes = {
   radios: PT.array.isRequired,
@@ -143,9 +143,11 @@ CustomRadioPanelGruppe.defaultProps = {
   className: "",
 };
 
-const CustomRadioPanelGruppeReduxForm = ({ feltNavn, ...rest }) => (
-  <Field name={feltNavn} component={CustomRadioPanelGruppe} props={{ feltNavn, ...rest }} onChange={rest?.onChange} />
-);
+function CustomRadioPanelGruppeReduxForm({ feltNavn, ...rest }) {
+  return (
+    <Field name={feltNavn} component={CustomRadioPanelGruppe} props={{ feltNavn, ...rest }} onChange={rest?.onChange} />
+  );
+}
 CustomRadioPanelGruppeReduxForm.propTypes = { feltNavn: PT.string.isRequired };
 
 export default CustomRadioPanelGruppeReduxForm;

@@ -18,14 +18,15 @@ import "./behandlingOppgave.css";
 import { MELOSYS_ARBEID_KUN_NORGE } from "../../featuretoggle/toggleNavn";
 import { useFeatureToggle } from "../../featuretoggle";
 
-const BehandlingOppgavesLinjeWrapper = ({ link, stengt, children }) =>
-  stengt ? (
+function BehandlingOppgavesLinjeWrapper({ link, stengt, children }) {
+  return stengt ? (
     <div>{children}</div>
   ) : (
     <Link to={link} className="behandlingOppgave__link">
       {children}
     </Link>
   );
+}
 
 BehandlingOppgavesLinjeWrapper.propTypes = {
   link: PT.string.isRequired,
@@ -38,7 +39,7 @@ BehandlingOppgavesLinjeWrapper.propTypes = {
  * for å gi saksbehandler en hent over sakens innhold før hun klikker
  * seg inn på den.
  */
-const BehandlingOppgave = ({ sak, landkoder }) => {
+function BehandlingOppgave({ sak, landkoder }) {
   const erArbeidKunNorgeToggleEnabled = useFeatureToggle(MELOSYS_ARBEID_KUN_NORGE);
   const {
     navn,
@@ -69,7 +70,7 @@ const BehandlingOppgave = ({ sak, landkoder }) => {
     sakstema.kode,
     behandlingstema.kode,
     behandlingstype.kode,
-    erArbeidKunNorgeToggleEnabled
+    erArbeidKunNorgeToggleEnabled,
   );
   const oppdateringStatus = erUnderOppdatering && "(oppdateres nå)";
 
@@ -157,7 +158,7 @@ const BehandlingOppgave = ({ sak, landkoder }) => {
       </div>
     </BehandlingOppgavesLinjeWrapper>
   );
-};
+}
 
 BehandlingOppgave.propTypes = {
   sak: MPT.SaksbehandlingOppgave,

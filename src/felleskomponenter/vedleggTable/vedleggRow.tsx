@@ -12,7 +12,7 @@ interface VedleggRowProps {
   redigerbart: boolean;
 }
 
-const VedleggRow = ({ vedlegg, slettVedlegg, redigerbart }: VedleggRowProps) => {
+function VedleggRow({ vedlegg, slettVedlegg, redigerbart }: VedleggRowProps) {
   return (
     <Nav.Table.Row className="vedlegg">
       <Nav.Table.DataCell>
@@ -26,6 +26,6 @@ const VedleggRow = ({ vedlegg, slettVedlegg, redigerbart }: VedleggRowProps) => 
       </Nav.Table.DataCell>
     </Nav.Table.Row>
   );
-};
+}
 
 export default VedleggRow;

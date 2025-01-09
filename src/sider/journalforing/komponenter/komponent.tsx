@@ -9,7 +9,7 @@ interface KomponentProps {
   innhold: ReactElement;
 }
 
-const Komponent = ({ ikon: Ikon, tittel, innhold }: KomponentProps) => {
+function Komponent({ ikon: Ikon, tittel, innhold }: KomponentProps) {
   return (
     <div className="journalføringKomponent">
       <div className="journalføringKomponent__overskrift">
@@ -21,10 +21,10 @@ const Komponent = ({ ikon: Ikon, tittel, innhold }: KomponentProps) => {
       <div className="journalføringKomponent__innhold">{innhold}</div>
     </div>
   );
-};
+}
 
-export const KomponentUtenOverskrift = ({ innhold }: { innhold: ReactElement }) => (
-  <div className="journalføringKomponent">{innhold}</div>
-);
+export function KomponentUtenOverskrift({ innhold }: { innhold: ReactElement }) {
+  return <div className="journalføringKomponent">{innhold}</div>;
+}
 
 export default Komponent;

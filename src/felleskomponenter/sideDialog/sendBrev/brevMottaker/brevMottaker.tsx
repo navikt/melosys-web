@@ -53,7 +53,7 @@ interface Props {
   overstyrBlurEvent: (event: FocusEvent) => void;
 }
 
-const BrevMottaker = ({
+function BrevMottaker({
   tilgjengeligeMottakere,
   formValues,
   redigerbart,
@@ -61,7 +61,7 @@ const BrevMottaker = ({
   orgnrValid,
   changeField,
   overstyrBlurEvent,
-}: Props & PropsFromRedux) => {
+}: Props & PropsFromRedux) {
   const [feil, setFeil] = useState<FeilmeldingProps | undefined>(undefined);
   const [adresse, setAdresse] = useState<{
     mottakerAdresse?: DokumenterV2.BrevAdresse;
@@ -123,7 +123,7 @@ const BrevMottaker = ({
     if (erArbeidsgiver(valgtMottaker.rolle)) {
       setAdresse({
         mottakerAdresse: valgtMottaker.adresser?.find(
-          (mottakerAdresse: DokumenterV2.BrevAdresse) => mottakerAdresse.orgnr === formValues.arbeidsgiver
+          (mottakerAdresse: DokumenterV2.BrevAdresse) => mottakerAdresse.orgnr === formValues.arbeidsgiver,
         ),
       });
 
@@ -172,9 +172,7 @@ const BrevMottaker = ({
                 </Nav.BodyLong>
                 {!Utils._isEmpty(feil.underpunkter) && (
                   <ul>
-                    {feil.underpunkter?.map((item: Underpunkt) => (
-                      <li key={item.underpunkt}>{item.underpunkt}</li>
-                    ))}
+                    {feil.underpunkter?.map((item: Underpunkt) => <li key={item.underpunkt}>{item.underpunkt}</li>)}
                   </ul>
                 )}
               </Nav.Alert>
@@ -224,8 +222,25 @@ const BrevMottaker = ({
       {mottakerErAnnenOrganisasjon && (
         <Nav.Row>
           <Nav.Column xs="4">
-            <Skjema.Input feltNavn="organisasjonsnummer" label="Org.nr." disabled={!redigerbart} />
-            {adresse?.organisasjonsAdresse && (
+            <Skjema.Input
+              className="organisasjonsnummer"
+              feltNavn="organisasjonsnummer"
+              label="Org.nr."
+              disabled={!redigerbart}
+            />
+          </Nav.Column>
+
+          <Nav.Column xs="8">
+            <Skjema.Input
+              className="kontaktperson"
+              feltNavn="kontaktperson"
+              label="Kontaktperson"
+              disabled={!redigerbart}
+            />
+          </Nav.Column>
+
+          {adresse?.organisasjonsAdresse && (
+            <Nav.Column xs="12">
               <OrganisasjonsAdresse
                 className="organisasjonsAdresse"
                 organisasjon={adresse.organisasjonsAdresse}
@@ -233,11 +248,9 @@ const BrevMottaker = ({
                 boldNavn
                 visTittel={false}
               />
-            )}
-          </Nav.Column>
-          <Nav.Column xs="8">
-            <Skjema.Input feltNavn="kontaktperson" label="Kontaktperson" disabled={!redigerbart} />
-          </Nav.Column>
+            </Nav.Column>
+          )}
+
           {feil && (
             <Nav.Column xs="12">
               <Nav.Alert variant="error" className="alertstripe_feil">
@@ -261,6 +274,6 @@ const BrevMottaker = ({
       )}
     </>
   );
-};
+}
 
 export default connector(BrevMottaker);

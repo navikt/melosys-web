@@ -10,19 +10,19 @@ import "./vurderingInngang.css";
 import { ReactElement, useEffect, useState } from "react";
 import Varsler from "./varsler";
 
-type VurderingInngangProps = {
+interface VurderingInngangProps {
   bekreftOgFortsett: () => void;
   redigerbart: boolean;
   oppfyllerInngangsvilkar: boolean;
   inngangsvilkaar: Api.Vilkar.Vilkaar | undefined;
-};
+}
 
-export const VurderingInngang = ({
+export function VurderingInngang({
   bekreftOgFortsett,
   redigerbart,
   oppfyllerInngangsvilkar,
   inngangsvilkaar,
-}: VurderingInngangProps) => {
+}: VurderingInngangProps) {
   const dispatch = useDispatch();
   const [feil, setFeil] = useState<ReactElement | undefined>(undefined);
   const behandlingID: number = useSelector(behandlingerSelectors.BehandlingIDSelector) as number;
@@ -43,7 +43,7 @@ export const VurderingInngang = ({
           <ul>
             <li>Du må fylle disse inn under “Periode og land” i sidemenyen og oppdatere registeropplysninger.</li>
           </ul>
-        </>
+        </>,
       );
     } else if (flereEnnEttLand && !MKVUtils.kanHaFlereSoknadsland(behandlingstema)) {
       setFeil(
@@ -54,7 +54,7 @@ export const VurderingInngang = ({
           <ul>
             <li>Du må fjerne land under “Periode og land” i sidemenyen eller endre behandlingstema.</li>
           </ul>
-        </>
+        </>,
       );
     } else if (!flereEnnEttLand && behandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND) {
       setFeil(
@@ -65,7 +65,7 @@ export const VurderingInngang = ({
           <ul>
             <li>Du må legge til land under “Periode og land” i sidemenyen eller endre behandlingstema.</li>
           </ul>
-        </>
+        </>,
       );
     } else {
       setFeil(undefined);
@@ -106,6 +106,6 @@ export const VurderingInngang = ({
       />
     </div>
   );
-};
+}
 
 export default VurderingInngang;

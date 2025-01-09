@@ -7,7 +7,7 @@ const DateRangeController = forwardRef<HTMLSelectElement, DateRangeControllerPro
   ({ name, control, showFieldError = true, ...rest }: DateRangeControllerProps, _ref: any) => {
     return (
       <Controller
-        name={name!!}
+        name={name ?? ""}
         control={control}
         render={({ field, fieldState: { error } }) => (
           <DateRangePicker
@@ -23,7 +23,7 @@ const DateRangeController = forwardRef<HTMLSelectElement, DateRangeControllerPro
         {...rest}
       />
     );
-  }
+  },
 );
 
 export default DateRangeController;

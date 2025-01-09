@@ -2,7 +2,7 @@ import { KTObject } from "@navikt/melosys-kodeverk";
 import { Soeknadsland } from "../mottatteOpplysninger/types";
 import Periode from "./periode";
 
-export type FullmektigHistorikk = {
+export interface FullmektigHistorikk {
   registrertFra: string;
   registrertTil: string | undefined;
   aktoerID: string | undefined;
@@ -11,9 +11,9 @@ export type FullmektigHistorikk = {
   orgnr: string | undefined;
   rolle: string;
   fullmakter: string[];
-};
+}
 
-type Fagsak = {
+interface Fagsak {
   saksnummer: string;
   gsakSaksnummer: number;
   sakstype: KTObject;
@@ -22,9 +22,9 @@ type Fagsak = {
   registrertDato: string;
   endretDato: string;
   hovedpartRolle: string;
-};
+}
 
-export type FagsakOppsummering = {
+export interface FagsakOppsummering {
   saksnummer: string;
   navn: string;
   sakstype: KTObject;
@@ -44,6 +44,6 @@ export type FagsakOppsummering = {
     svarFrist: string;
   }[];
   hovedpartRolle: string;
-};
+}
 
 export default Fagsak;

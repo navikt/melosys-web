@@ -12,24 +12,26 @@ interface EnkeltFoedestedOgLandSkjemaProps {
   onBinClick: MouseEventHandler;
 }
 
-const Enkeltfoedestedoglandskjema = ({ redigerbart, onBinClick }: EnkeltFoedestedOgLandSkjemaProps) => (
-  <Nav.Row className="enkeltFoedestedOgLandSkjema">
-    <Nav.Column xs="5">
-      <Skjema.Input disabled={!redigerbart} feltNavn="foedestedOgLand.foedested" label="Fødested" />
-    </Nav.Column>
-    <Nav.Column xs="5">
-      <Skjema.LandVelger
-        disabled={!redigerbart}
-        feltNavn="foedestedOgLand.foedeland"
-        label="Fødeland"
-        bredde="fullbredde"
-        visAlleLandkoder
-      />
-    </Nav.Column>
-    <Nav.Column xs="2" className="slett__symbol">
-      <Mui.IkonKnapp ariaLabel="Slett fødested og -land" ikon={Ikoner.Bin} onClick={onBinClick} />
-    </Nav.Column>
-  </Nav.Row>
-);
+function Enkeltfoedestedoglandskjema({ redigerbart, onBinClick }: EnkeltFoedestedOgLandSkjemaProps) {
+  return (
+    <Nav.Row className="enkeltFoedestedOgLandSkjema">
+      <Nav.Column xs="5">
+        <Skjema.Input disabled={!redigerbart} feltNavn="foedestedOgLand.foedested" label="Fødested" />
+      </Nav.Column>
+      <Nav.Column xs="5">
+        <Skjema.LandVelger
+          disabled={!redigerbart}
+          feltNavn="foedestedOgLand.foedeland"
+          label="Fødeland"
+          bredde="fullbredde"
+          visAlleLandkoder
+        />
+      </Nav.Column>
+      <Nav.Column xs="2" className="slett__symbol">
+        <Mui.IkonKnapp ariaLabel="Slett fødested og -land" ikon={Ikoner.Bin} onClick={onBinClick} />
+      </Nav.Column>
+    </Nav.Row>
+  );
+}
 
 export default Enkeltfoedestedoglandskjema;

@@ -23,7 +23,7 @@ type AnnenAdresseProps = PropsFromRedux & {
   className?: string;
 };
 
-const AnnenAdresse = ({ className, oppgittAdresse, oppgittAdresseHarVerdier }: AnnenAdresseProps) => {
+function AnnenAdresse({ className, oppgittAdresse, oppgittAdresseHarVerdier }: AnnenAdresseProps) {
   const cls = classNames(className);
 
   if (Object.values(oppgittAdresse).every((value) => value === undefined)) return null;
@@ -38,6 +38,6 @@ const AnnenAdresse = ({ className, oppgittAdresse, oppgittAdresseHarVerdier }: A
       />
     </div>
   ) : null;
-};
+}
 
 export default connector(AnnenAdresse);

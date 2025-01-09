@@ -2,17 +2,17 @@ import { ControllerRenderProps, UseFormStateReturn } from "react-hook-form";
 
 export const getErrorMessage = (
   field: ControllerRenderProps<any, any>,
-  formState: UseFormStateReturn<any>
+  formState: UseFormStateReturn<any>,
 ): string | undefined => {
   // Finner ut om feltnavnet inneholder liste-index
   const match = field.name.match(/(.+)\[(\d)]\.(.+)/);
 
   if (match) {
     const [, arrayName, index, propertyName] = match;
-    // @ts-ignore
+    // @ts-expect-error generisk beskrivelse
     return formState.errors?.[arrayName]?.[index]?.[propertyName]?.message?.melding;
   }
 
-  // @ts-ignore
+  // @ts-expect-error generisk beskrivelse
   return formState.errors?.[field.name]?.message?.melding;
 };

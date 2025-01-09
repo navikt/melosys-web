@@ -21,7 +21,7 @@ class EndrePeriode extends Steg {
     this.beregnRelevantUI = (_propsLight) => ({
       aarsakEndringPeriodeAvklartfakta: hentFakta(
         MKV.Koder.avklartefaktatyper.AARSAK_ENDRING_PERIODE,
-        _propsLight.avklartefakta
+        _propsLight.avklartefakta,
       ),
     });
     this.handlers = {

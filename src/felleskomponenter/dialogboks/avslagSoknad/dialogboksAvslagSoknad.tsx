@@ -26,7 +26,7 @@ interface DialogboksAvslagSoknadProps {
   avbryt: () => void;
 }
 
-export const DialogboksAvslagSoknad = ({ avbryt }: DialogboksAvslagSoknadProps) => {
+export function DialogboksAvslagSoknad({ avbryt }: DialogboksAvslagSoknadProps) {
   const dispatch = useDispatch();
   const [feil, setFeil] = useState<undefined | string>(undefined);
 
@@ -46,7 +46,7 @@ export const DialogboksAvslagSoknad = ({ avbryt }: DialogboksAvslagSoknadProps) 
           vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
           behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL,
           skalRegisteropplysningerOppdateres: false,
-        })
+        }),
       );
       setUtførerKontroll(false);
     })();
@@ -108,6 +108,6 @@ export const DialogboksAvslagSoknad = ({ avbryt }: DialogboksAvslagSoknadProps) 
       </Nav.Modal.Footer>
     </Nav.Modal>
   );
-};
+}
 
 export default DialogboksAvslagSoknad;

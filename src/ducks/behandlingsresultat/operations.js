@@ -26,7 +26,7 @@ export function oppdaterUtfallRegistreringUnntak(behandlingID, utfall) {
       OK: Types.OK,
       FEILET: Types.FEILET,
       PENDING: Types.PENDING,
-    }
+    },
   );
 }
 

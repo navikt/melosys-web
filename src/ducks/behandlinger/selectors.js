@@ -22,51 +22,51 @@ import {
 
 export const BehandlingerSelector = createSelector(
   (state) => (state.behandlinger.data ? state.behandlinger.data : {}),
-  (behandling) => behandling
+  (behandling) => behandling,
 );
 export const BehandlingIDSelector = createSelector(
   (state) => BehandlingerSelector(state).behandlingID || -1,
-  (behandlingID) => behandlingID
+  (behandlingID) => behandlingID,
 );
 export const OppsummeringSelector = createSelector(
   (state) => BehandlingerSelector(state).oppsummering || {},
-  (oppsummering) => oppsummering
+  (oppsummering) => oppsummering,
 );
 export const BehandlingstypeKodeSelector = createSelector(
   (state) => OppsummeringSelector(state),
-  (oppsummering) => (oppsummering.behandlingstype ? oppsummering.behandlingstype.kode : "")
+  (oppsummering) => (oppsummering.behandlingstype ? oppsummering.behandlingstype.kode : ""),
 );
 export const BehandlingstemaKodeSelector = createSelector(
   (state) => OppsummeringSelector(state),
-  (oppsummering) => (oppsummering.behandlingstema ? oppsummering.behandlingstema.kode : "")
+  (oppsummering) => (oppsummering.behandlingstema ? oppsummering.behandlingstema.kode : ""),
 );
 
 export const BehandlingsstatusKodeSelector = createSelector(
   (state) => OppsummeringSelector(state),
-  (oppsummering) => (oppsummering.behandlingsstatus ? oppsummering.behandlingsstatus.kode : "")
+  (oppsummering) => (oppsummering.behandlingsstatus ? oppsummering.behandlingsstatus.kode : ""),
 );
 export const SisteOpplysningerHentetDatoSelector = createSelector(
   (state) => OppsummeringSelector(state),
-  (oppsummering) => oppsummering.sisteOpplysningerHentetDato || null
+  (oppsummering) => oppsummering.sisteOpplysningerHentetDato || null,
 );
 
 export const RegisteropplysningerHentetSelector = createSelector(
   (state) => SisteOpplysningerHentetDatoSelector(state),
-  (sisteOpplysningerHentetDato) => Boolean(sisteOpplysningerHentetDato)
+  (sisteOpplysningerHentetDato) => Boolean(sisteOpplysningerHentetDato),
 );
 
 export const SaksopplysningerSelector = createSelector(
   (state) => BehandlingerSelector(state).saksopplysninger || {},
-  (saksopplysninger) => saksopplysninger
+  (saksopplysninger) => saksopplysninger,
 );
 export const SakOgBehandlingSelector = createSelector(
   (state) => SaksopplysningerSelector(state).sakOgBehandling || {},
-  (sakOgBehandling) => sakOgBehandling
+  (sakOgBehandling) => sakOgBehandling,
 );
 
 export const SEDSelector = createSelector(
   (state) => SaksopplysningerSelector(state).sed || {},
-  (sed) => sed
+  (sed) => sed,
 );
 
 export const LovvalgsperiodeSelector = createSelector(
@@ -75,32 +75,32 @@ export const LovvalgsperiodeSelector = createSelector(
   (lovvalgsperiode, sedLovvalgsperiode) => {
     const { fomDato, tomDato } = lovvalgsperiode;
     return fomDato ? { fom: fomDato, tom: tomDato } : sedLovvalgsperiode;
-  }
+  },
 );
 
 export const LovvalgsperiodeFomSelector = createSelector(
   LovvalgsperiodeSelector,
-  (lovvalgsperiode) => lovvalgsperiode.fom
+  (lovvalgsperiode) => lovvalgsperiode.fom,
 );
 
 export const LovvalgsperiodeTomSelector = createSelector(
   LovvalgsperiodeSelector,
-  (lovvalgsperiode) => lovvalgsperiode.tom
+  (lovvalgsperiode) => lovvalgsperiode.tom,
 );
 
 export const LovvalgslandSelector = createSelector(
   (state) => SEDSelector(state).lovvalgslandKode || "",
-  (lovvalgsland) => KV.kodeTilObjekt(lovvalgsland, MKV.KTObjects.landkoder) || {}
+  (lovvalgsland) => KV.kodeTilObjekt(lovvalgsland, MKV.KTObjects.landkoder) || {},
 );
 
 export const OrganisasjonerSelector = createSelector(
   (state) => SaksopplysningerSelector(state).organisasjoner || [],
-  (organisasjoner) => organisasjoner
+  (organisasjoner) => organisasjoner,
 );
 
 export const ArbeidsforholdSelector = createSelector(
   (state) => SaksopplysningerSelector(state).arbeidsforhold || [],
-  (arbeidsforhold) => arbeidsforhold
+  (arbeidsforhold) => arbeidsforhold,
 );
 
 /**
@@ -151,7 +151,7 @@ const summerInntektsTyperFraSammeOpplysningspliktig = (flatInntektListe) =>
     const eksisterendeInntektFunnetVedIndeks = samling.findIndex(
       (element) =>
         element.opplysningspliktigID === enkeltInntekt.opplysningspliktigID &&
-        element.aarMaaned === enkeltInntekt.aarMaaned
+        element.aarMaaned === enkeltInntekt.aarMaaned,
     );
 
     const nyEnkeltInntekt =
@@ -195,7 +195,7 @@ const filtrerOgSpreInntekt = (relevantPeriode, orgnr, inntekter) => {
       const aarMaaned = moment(startDato).add(index, "months").format("YYYY-MM");
 
       const eksisterendeInntektFunnetVedIndeks = filtrerteInntekterFraOpplysningspliktig.findIndex(
-        (enkeltInntekt) => enkeltInntekt.aarMaaned === aarMaaned
+        (enkeltInntekt) => enkeltInntekt.aarMaaned === aarMaaned,
       );
 
       return eksisterendeInntektFunnetVedIndeks > -1
@@ -206,7 +206,7 @@ const filtrerOgSpreInntekt = (relevantPeriode, orgnr, inntekter) => {
 
 export const InntektSelector = createSelector(
   (state) => SaksopplysningerSelector(state).inntekt || {},
-  (inntekt) => inntekt
+  (inntekt) => inntekt,
 );
 
 export const InntekterPrAarMaanedSelector = createSelector(InntektSelector, (inntekt) => {
@@ -243,16 +243,16 @@ export const MedlemskapSelector = createSelector(
       perioderMed: medlemsperiode.filter(
         (periode) =>
           KV.objektTilKode(periode.periodetype) === PERIODE_MED_MEDLEMSKAP &&
-          KV.objektTilKode(periode.status) === GYLDIG_MEDLEMSKAP
+          KV.objektTilKode(periode.status) === GYLDIG_MEDLEMSKAP,
       ),
       perioderUten: medlemsperiode.filter(
         (periode) =>
           KV.objektTilKode(periode.periodetype) === PERIODE_UTEN_MEDLEMSKAP &&
-          KV.objektTilKode(periode.status) !== AVVIST_MEDLEMSKAP
+          KV.objektTilKode(periode.status) !== AVVIST_MEDLEMSKAP,
       ),
       perioderUavklart: medlemsperiode.filter((periode) => KV.objektTilKode(periode.status) === UAVKLART_MEDLEMSKAP),
     };
-  }
+  },
 );
 
 /**
@@ -272,7 +272,7 @@ export const ArbeidsforholdeneSelector = createSelector(
       arbeid.arbeidsgiver = organisasjoner.find((org) => org.orgnr === arbeid.arbeidsgiverID) || {};
       arbeid.inntekt = inntekt.filter((linje) => linje.opplysningspliktigID === arbeid.arbeidsgiverID) || [];
       return arbeid;
-    })
+    }),
 );
 
 export const AlleVirksomheterSelector = createSelector(
@@ -295,7 +295,7 @@ export const AlleVirksomheterSelector = createSelector(
       virksomhetsListe.push({ kode: ekstraArbeidsgiver.orgnr, term: ekstraArbeidsgiver.navn });
     });
     return Utils._uniqBy(virksomhetsListe, ({ kode }) => kode);
-  }
+  },
 );
 
 /** Hjelpefunksjon for ArbeidsgivereNorgeSelector. Funksjonen bygger en ny gruppe av et arbeidsforhold
@@ -354,7 +354,7 @@ export const ArbeidsgivereNorgeSelector = createSelector(
     oppholdsPeriode,
     sedLovvalgsperiode,
     aarsavregningAar,
-    aarsavregningMedlemskapsperioder
+    aarsavregningMedlemskapsperioder,
   ) => {
     // Inntekten skal vises 6 måneder forut for startdato. Dersom søknaden gjelder en periode
     // tilbake i tid, skal også inntekt i selve perioden vises.
@@ -395,8 +395,8 @@ export const ArbeidsgivereNorgeSelector = createSelector(
         // Sjekk om det allerede er laget en gruppe for den aktuelle opplysningspliktigID.
         const arbeidsforholdEksistererVedIndeks = samling.findIndex((enkelt) =>
           enkelt.arbeidsforholdene.some(
-            (enkeltforhold) => enkeltforhold.opplysningspliktigID === arbeidsforholdet.opplysningspliktigID
-          )
+            (enkeltforhold) => enkeltforhold.opplysningspliktigID === arbeidsforholdet.opplysningspliktigID,
+          ),
         );
 
         if (arbeidsforholdEksistererVedIndeks > -1) {
@@ -407,12 +407,12 @@ export const ArbeidsgivereNorgeSelector = createSelector(
         return tmpSamling;
       }, []),
     ];
-  }
+  },
 );
 
 export const ErEndretPeriodeSelector = createSelector(
   BehandlingstypeKodeSelector,
-  (behandlingstype) => behandlingstype === MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE
+  (behandlingstype) => behandlingstype === MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE,
 );
 
 export const ErAnmodningOmUnntakHovedRegelOgHarFlytSelector = createSelector(
@@ -420,23 +420,24 @@ export const ErAnmodningOmUnntakHovedRegelOgHarFlytSelector = createSelector(
   SakstypeKodeSelector,
   (behandlingstema, sakstype) =>
     behandlingstema === MKV.Koder.behandlinger.behandlingstema.ANMODNING_OM_UNNTAK_HOVEDREGEL &&
-    sakstype !== MKV.Koder.sakstyper.TRYGDEAVTALE
+    sakstype !== MKV.Koder.sakstyper.TRYGDEAVTALE,
 );
 
 export const ErRegistreringUnntakNorskTrygdUtstasjoneringSelector = createSelector(
   BehandlingstemaKodeSelector,
   (behandlingstema) =>
-    behandlingstema === MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING
+    behandlingstema === MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING,
 );
 
 export const ErRegistreringUnntakNorskTrygdOvrigeSelector = createSelector(
   BehandlingstemaKodeSelector,
-  (behandlingstema) => behandlingstema === MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE
+  (behandlingstema) =>
+    behandlingstema === MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE,
 );
 
 export const ErUtlMyndUtpektSegSelvSelector = createSelector(
   BehandlingstemaKodeSelector,
-  (behandlingstema) => behandlingstema === MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND
+  (behandlingstema) => behandlingstema === MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND,
 );
 
 export const ErArbeidEttLand = createSelector(BehandlingstemaKodeSelector, (behandlingstema) =>
@@ -446,5 +447,5 @@ export const ErArbeidEttLand = createSelector(BehandlingstemaKodeSelector, (beha
     MKV.Koder.behandlinger.behandlingstema.ARBEID_KUN_NORGE,
     MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY,
     MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND,
-  ].includes(behandlingstema)
+  ].includes(behandlingstema),
 );

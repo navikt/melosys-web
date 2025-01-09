@@ -17,7 +17,7 @@ interface VedleggTableProps {
   redigerbart: boolean;
 }
 
-const VedleggTable = ({
+function VedleggTable({
   valgteVedlegg,
   setValgteVedlegg,
   label,
@@ -26,7 +26,7 @@ const VedleggTable = ({
   slettFritekstvedlegg,
   lagFritekstPdfUrl,
   redigerbart,
-}: VedleggTableProps) => {
+}: VedleggTableProps) {
   const slettVedlegg = (vedleggID: string) => {
     setValgteVedlegg(valgteVedlegg.filter(({ id }) => id !== vedleggID));
   };
@@ -65,6 +65,6 @@ const VedleggTable = ({
       )}
     </Nav.Table>
   );
-};
+}
 
 export default VedleggTable;

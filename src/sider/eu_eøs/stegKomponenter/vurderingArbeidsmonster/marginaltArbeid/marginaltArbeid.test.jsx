@@ -56,7 +56,7 @@ describe("MarginaltArbeid", () => {
     expect(checkboxes[0]).toBeChecked();
     expect(oppdaterDataMock).toBeCalled();
     expect(oppdaterDataMock).toBeCalledWith(
-      lagAvklartfakta(MKV.Koder.avklartefaktatyper.MARGINALT_ARBEID, "SVE", BOOLSK_STRING.SANN)
+      lagAvklartfakta(MKV.Koder.avklartefaktatyper.MARGINALT_ARBEID, "SVE", BOOLSK_STRING.SANN),
     );
   });
 });

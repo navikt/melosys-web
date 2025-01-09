@@ -114,7 +114,7 @@ describe("MottatteOpplysninger operations", () => {
               utenlandsoppdraget: {},
             },
           }),
-        })
+        }),
       );
     });
 
@@ -138,7 +138,7 @@ describe("MottatteOpplysninger operations", () => {
               utenlandsoppdraget: {},
             },
           }),
-        })
+        }),
       );
     });
 
@@ -165,7 +165,7 @@ describe("MottatteOpplysninger operations", () => {
               ytterligereInformasjon: {},
             },
           }),
-        })
+        }),
       );
     });
 
@@ -188,7 +188,7 @@ describe("MottatteOpplysninger operations", () => {
               representantIUtlandet: {},
             },
           }),
-        })
+        }),
       );
     });
 
@@ -209,7 +209,7 @@ describe("MottatteOpplysninger operations", () => {
               ikkeYrkesaktivSituasjontype: null,
             },
           }),
-        })
+        }),
       );
     });
 
@@ -231,7 +231,7 @@ describe("MottatteOpplysninger operations", () => {
               lovvalgsland: null,
             },
           }),
-        })
+        }),
       );
     });
 

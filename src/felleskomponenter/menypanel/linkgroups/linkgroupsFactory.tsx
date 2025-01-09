@@ -55,7 +55,7 @@ class LinkGroupsFactory {
             .addFamilieForhold()
             .addMedlemskap()
             .addArbeidsforholdOgInntekt()
-            .build()
+            .build(),
         )
         .build();
     }
@@ -68,7 +68,7 @@ class LinkGroupsFactory {
             .addFamilieForhold()
             .addMedlemskap()
             .addArbeidsforholdOgInntekt()
-            .build()
+            .build(),
         )
         .addFraBruker(new LinksBuilder(contentProps).addFullmektig().build())
         .build();
@@ -113,7 +113,7 @@ class LinkGroupsFactory {
               .addFamilieForhold()
               .addMedlemskap()
               .addArbeidsforholdOgInntekt()
-              .build()
+              .build(),
           )
           .build();
       }
@@ -127,7 +127,7 @@ class LinkGroupsFactory {
               .addFullmektig()
               .addPeriode()
               .addArbeidssteder()
-              .build()
+              .build(),
           )
           .build();
       }
@@ -139,10 +139,10 @@ class LinkGroupsFactory {
               .addMedlemskap()
               .addArbeidsforholdOgInntekt()
               .addFaktureringskomponenten()
-              .build()
+              .build(),
           )
           .addFraBruker(
-            new LinksBuilder(contentProps).addArbeidsgiverEllerVirksomhet().addFullmektig().addArbeidssteder().build()
+            new LinksBuilder(contentProps).addArbeidsgiverEllerVirksomhet().addFullmektig().addArbeidssteder().build(),
           )
           .build();
       }

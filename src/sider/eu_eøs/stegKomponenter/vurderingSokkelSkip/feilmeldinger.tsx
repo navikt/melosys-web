@@ -25,7 +25,7 @@ enum TypeFeilmelding {
 
 const harArbeidsstedPaaSokkelOgArbeidssituasjonSkipEttLand = (
   sokkelSkipKonklusjon: Avklartfakta,
-  sokkelEllerSkipListe: Avklartfakta[]
+  sokkelEllerSkipListe: Avklartfakta[],
 ) => {
   if (sokkelSkipKonklusjon?.fakta?.length > 0 && sokkelSkipKonklusjon.fakta[0] === SKIP_ETT_LAND) {
     return Boolean(sokkelEllerSkipListe.find((el) => el.fakta?.length > 0 && el.fakta[0] === SOKKEL));
@@ -36,14 +36,14 @@ const harArbeidsstedPaaSokkelOgArbeidssituasjonSkipEttLand = (
 const harArbeidsstedPaaSkipTerritorialFarvannOgArbeidssituasjonSkipEttLand = (
   sokkelSkipKonklusjon: Avklartfakta,
   maritimtArbeid?: (ArbeidsstedOffshore | ArbeidsstedSkip)[],
-  sokkelEllerSkipListe?: Avklartfakta[]
+  sokkelEllerSkipListe?: Avklartfakta[],
 ) => {
   if (sokkelSkipKonklusjon?.fakta?.length > 0 && sokkelSkipKonklusjon.fakta[0] === SKIP_ETT_LAND) {
     const arbeidssted = maritimtArbeid?.find((el) => ("territorialfarvann" in el ? el.territorialfarvann : false));
     return (
       arbeidssted &&
       sokkelEllerSkipListe?.find(
-        (el) => el.subjektID === arbeidssted.enhetNavn && el.fakta?.length > 0 && el.fakta[0] === SKIP
+        (el) => el.subjektID === arbeidssted.enhetNavn && el.fakta?.length > 0 && el.fakta[0] === SKIP,
       )
     );
   }
@@ -53,14 +53,14 @@ const harArbeidsstedPaaSkipTerritorialFarvannOgArbeidssituasjonSkipEttLand = (
 const harArbeidsstedPaaSkipFlaglandOgArbeidssituasjonSokkelUtland = (
   sokkelSkipKonklusjon: Avklartfakta,
   maritimtArbeid?: (ArbeidsstedOffshore | ArbeidsstedSkip)[],
-  sokkelEllerSkipListe?: Avklartfakta[]
+  sokkelEllerSkipListe?: Avklartfakta[],
 ) => {
   if (sokkelSkipKonklusjon?.fakta?.length > 0 && sokkelSkipKonklusjon.fakta[0] === SOKKEL_UTLAND) {
     const arbeidssted = maritimtArbeid?.find((el) => ("flaggLandkode" in el ? el.flaggLandkode : false));
     return (
       arbeidssted &&
       sokkelEllerSkipListe?.find(
-        (el) => el.subjektID === arbeidssted.enhetNavn && el.fakta?.length > 0 && el.fakta[0] === SKIP
+        (el) => el.subjektID === arbeidssted.enhetNavn && el.fakta?.length > 0 && el.fakta[0] === SKIP,
       )
     );
   }
@@ -75,7 +75,7 @@ export const finnAktivFeilmelding = (
   sokkelSkipKonklusjon: Avklartfakta,
   sokkelEllerSkipListe: Avklartfakta[],
   arbeidslandListe: Avklartfakta[],
-  maritimtArbeid?: (ArbeidsstedOffshore | ArbeidsstedSkip)[]
+  maritimtArbeid?: (ArbeidsstedOffshore | ArbeidsstedSkip)[],
 ): string | undefined => {
   if (harFlereArbeidsland(arbeidslandListe)) {
     return TypeFeilmelding.FLERE_ARBEIDSLAND_ERROR;
@@ -85,12 +85,12 @@ export const finnAktivFeilmelding = (
     harArbeidsstedPaaSkipTerritorialFarvannOgArbeidssituasjonSkipEttLand(
       sokkelSkipKonklusjon,
       maritimtArbeid,
-      sokkelEllerSkipListe
+      sokkelEllerSkipListe,
     ) ||
     harArbeidsstedPaaSkipFlaglandOgArbeidssituasjonSokkelUtland(
       sokkelSkipKonklusjon,
       maritimtArbeid,
-      sokkelEllerSkipListe
+      sokkelEllerSkipListe,
     )
   ) {
     return TypeFeilmelding.ULOGISK_KOMBINASJON_ERROR;
@@ -98,7 +98,7 @@ export const finnAktivFeilmelding = (
   return undefined;
 };
 
-export const Feilmelding = ({ type }: { type?: string }) => {
+export function Feilmelding({ type }: { type?: string }) {
   switch (type) {
     case TypeFeilmelding.ULOGISK_KOMBINASJON_ERROR:
       return UlogiskKombinasjonError;
@@ -107,4 +107,4 @@ export const Feilmelding = ({ type }: { type?: string }) => {
     default:
       return null;
   }
-};
+}

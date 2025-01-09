@@ -9,23 +9,25 @@ import { EnRedigeringsknappListeRedigeringUtfort } from "../../editerbartElement
 
 import "./redigeringUtfort.css";
 
-const RedigeringUtfort = ({ verdier }: EnRedigeringsknappListeRedigeringUtfort<KV.Form.FysiskArbeidssted>) => (
-  <div className="arbeidssted__utland__redigeringutfort">
-    {verdier.map((element, index) => (
-      /* eslint-disable-next-line react/no-array-index-key */
-      <Fragment key={index}>
-        <Nav.Row>
-          <Nav.Column xs="12">
-            <Nav.BodyLong weight="semibold" size="small">
-              Navn på virksomhet
-            </Nav.BodyLong>
-            <Nav.BodyLong size="small">{element.virksomhetNavn}</Nav.BodyLong>
-          </Nav.Column>
-        </Nav.Row>
-        <StrukturertAdresse adresse={element.adresse} />
-      </Fragment>
-    ))}
-  </div>
-);
+function RedigeringUtfort({ verdier }: EnRedigeringsknappListeRedigeringUtfort<KV.Form.FysiskArbeidssted>) {
+  return (
+    <div className="arbeidssted__utland__redigeringutfort">
+      {verdier.map((element, index) => (
+        /* eslint-disable-next-line react/no-array-index-key */
+        <Fragment key={index}>
+          <Nav.Row>
+            <Nav.Column xs="12">
+              <Nav.BodyLong weight="semibold" size="small">
+                Navn på virksomhet
+              </Nav.BodyLong>
+              <Nav.BodyLong size="small">{element.virksomhetNavn}</Nav.BodyLong>
+            </Nav.Column>
+          </Nav.Row>
+          <StrukturertAdresse adresse={element.adresse} />
+        </Fragment>
+      ))}
+    </div>
+  );
+}
 
 export default RedigeringUtfort;

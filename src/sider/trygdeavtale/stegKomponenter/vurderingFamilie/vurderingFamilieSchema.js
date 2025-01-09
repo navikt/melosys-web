@@ -30,13 +30,13 @@ const vurdering_familie = object().shape({
             }, {}),
           })
           .nullable()
-      : object().nullable()
+      : object().nullable(),
   ),
   ektefelle: object()
     .shape({
       fritekst: string().nullable(),
       innvilget: lazy((innvilget) =>
-        innvilget && innvilget !== "" ? string().required(INNVILGET_KREVES) : string().nullable()
+        innvilget && innvilget !== "" ? string().required(INNVILGET_KREVES) : string().nullable(),
       ),
       begrunnelse: string()
         .when("innvilget", {

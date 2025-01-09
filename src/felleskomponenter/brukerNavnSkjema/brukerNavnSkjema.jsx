@@ -11,14 +11,7 @@ import * as Nav from "../../navFrontend";
 
 import "./brukerNavnSkjema.css";
 
-export const BrukerNavnSkjema = ({
-  formValues,
-  settFormBrukerNavn,
-  className,
-  onChange,
-  onHentBruker,
-  resetFelter,
-}) => {
+export function BrukerNavnSkjema({ formValues, settFormBrukerNavn, className, onChange, onHentBruker, resetFelter }) {
   const [brukerSpinner, setBrukerSpinner] = useState(false);
   const [brukerHentetVedOppstart, setBrukerHentetVedOppstart] = useState(false);
 
@@ -77,7 +70,7 @@ export const BrukerNavnSkjema = ({
       )}
     </div>
   );
-};
+}
 
 BrukerNavnSkjema.propTypes = {
   form: PT.string.isRequired,

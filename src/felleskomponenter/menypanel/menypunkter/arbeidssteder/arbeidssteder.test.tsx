@@ -44,17 +44,17 @@ describe("Arbeidssteder", () => {
     renderWithProviders(<Arbeidssteder {...props} />, { preloadedState: reduxStore(true) });
 
     const alertstripe = screen.getByText(
-      "Ikke mulig å legge til arbeidssted(er) når det ikke er oppgitt land. Du kan endre dette under sidemenypunkt “Periode og land”."
+      "Ikke mulig å legge til arbeidssted(er) når det ikke er oppgitt land. Du kan endre dette under sidemenypunkt “Periode og land”.",
     );
     expect(alertstripe).toBeInTheDocument();
   });
 
   describe("Arbeidssteder på land", () => {
-    // @ts-ignore
+    // @ts-expect-error generisk beskrivelse
     const WrappedArbeidssteder = reduxForm({ form: KV.Form.SOKNAD })(Arbeidssteder);
 
     it("rendres uten spørsmål fra altinn-søknad dersom mottatteOpplysningerType er annet enn SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS", () => {
-      // @ts-ignore
+      // @ts-expect-error generisk beskrivelse
       renderWithProviders(<WrappedArbeidssteder {...props} />, { preloadedState: reduxStore(false) });
 
       const arbeidsstedPåLand = screen.getByText("Arbeidssted på land");
@@ -65,7 +65,7 @@ describe("Arbeidssteder", () => {
     });
 
     it("rendres med spørsmål fra altinn-søknad dersom mottatteOpplysningerType tilsvarer altinn-søknad", () => {
-      // @ts-ignore
+      // @ts-expect-error generisk beskrivelse
       renderWithProviders(<WrappedArbeidssteder {...props} />, {
         preloadedState: reduxStore(false, MKV.Koder.mottatteopplysningertyper.SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS),
       });

@@ -51,7 +51,7 @@ interface AdresseTableProps {
   historisk?: boolean;
 }
 
-const AdresseTable = ({ adressetype, adresser, historisk }: AdresseTableProps) => {
+function AdresseTable({ adressetype, adresser, historisk }: AdresseTableProps) {
   const [expanded, setExpanded] = useState(false);
   const periodetekst = `Gyldig f.o.m.${historisk ? " - t.o.m." : ""}`;
 
@@ -92,6 +92,6 @@ const AdresseTable = ({ adressetype, adresser, historisk }: AdresseTableProps) =
       )}
     </div>
   );
-};
+}
 
 export default AdresseTable;

@@ -21,28 +21,32 @@ interface DatovelgerComponentProps {
 
 type InnerDatovelgerComponentProps = DatovelgerComponentProps & RegisterHookFormProps;
 
-const InnerDatovelgerComponent = forwardRef<HTMLSelectElement, InnerDatovelgerComponentProps>(
-  (
-    { label, readOnly, bredde, minDate, maxDate, feil, onChange, ...rest }: InnerDatovelgerComponentProps,
-    _ref: any
-  ) => {
-    return (
-      <div {...rest}>
-        <PlainDatovelger
-          label={label}
-          onChange={onChange}
-          onBlur={rest.onBlur}
-          value={Utils.norskStringTilDate(rest.value)}
-          feil={feil}
-          bredde={bredde}
-          readOnly={readOnly}
-          minDate={minDate}
-          maxDate={maxDate}
-        />
-      </div>
-    );
-  }
-);
+function InnerDatovelgerComponent({
+  label,
+  readOnly,
+  bredde,
+  minDate,
+  maxDate,
+  feil,
+  onChange,
+  ...rest
+}: InnerDatovelgerComponentProps) {
+  return (
+    <div {...rest}>
+      <PlainDatovelger
+        label={label}
+        onChange={onChange}
+        onBlur={rest.onBlur}
+        value={Utils.norskStringTilDate(rest.value)}
+        feil={feil}
+        bredde={bredde}
+        readOnly={readOnly}
+        minDate={minDate}
+        maxDate={maxDate}
+      />
+    </div>
+  );
+}
 
 type DatovelgerProps = DatovelgerComponentProps & UseControllerProps;
 
@@ -70,7 +74,7 @@ const Datovelger = forwardRef<HTMLSelectElement, DatovelgerProps>(
         )}
       />
     );
-  }
+  },
 );
 
 export default Datovelger;

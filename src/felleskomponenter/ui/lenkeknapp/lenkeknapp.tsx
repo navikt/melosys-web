@@ -14,7 +14,7 @@ interface LenkeknappProps {
   disabled?: boolean;
 }
 
-const Lenkeknapp = ({ onClick, children, className, ikon: Ikon, value, disabled }: LenkeknappProps) => {
+function Lenkeknapp({ onClick, children, className, ikon: Ikon, value, disabled }: LenkeknappProps) {
   return (
     <Nav.Button
       icon={Ikon && <Ikon className="ikon" />}
@@ -27,6 +27,6 @@ const Lenkeknapp = ({ onClick, children, className, ikon: Ikon, value, disabled 
       {children}
     </Nav.Button>
   );
-};
+}
 
 export default Lenkeknapp;

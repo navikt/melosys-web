@@ -4,7 +4,7 @@ module.exports = function setupProxy(app) {
   app.use(
     createProxyMiddleware(["/api", "/graphql"], {
       target: `http://localhost:${window.env.LOCAL_API_PORT}/`,
-    })
+    }),
   );
   app.use(
     createProxyMiddleware("/melosys/api", {
@@ -12,7 +12,7 @@ module.exports = function setupProxy(app) {
       pathRewrite: {
         "^/melosys": "",
       },
-    })
+    }),
   );
   app.use(
     createProxyMiddleware("/trygdeavtale-flyt", {
@@ -20,7 +20,7 @@ module.exports = function setupProxy(app) {
       pathRewrite: {
         "^/trygdeavtale-flyt": "/flyt",
       },
-    })
+    }),
   );
   app.use(
     createProxyMiddleware("/faktureringskomponenten", {
@@ -28,6 +28,6 @@ module.exports = function setupProxy(app) {
       pathRewrite: {
         "^/faktureringskomponenten": "",
       },
-    })
+    }),
   );
 };
