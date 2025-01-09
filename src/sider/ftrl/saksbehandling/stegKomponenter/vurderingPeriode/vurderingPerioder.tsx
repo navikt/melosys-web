@@ -19,6 +19,7 @@ import {
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 
 import { Medlemskapsperioder } from "./komponenter/medlemskapsperioder";
+import { UkjentSluttdatoMedlemskapsperiode } from './komponenter/ukjentSluttdatoMedlemskapsperiode';
 import { Feilmelding, feilMeldingBlokkerer, finnAktivFeilmelding } from "./komponenter/feilmeldinger";
 import { FieldArrayProps, FormValuesProps, MedlemskapsperiodeProp, VurderingPerioderProps } from "./komponenter/types";
 import vurderingPerioderSchema from "./vurderingPerioderSchema";
@@ -90,6 +91,8 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     oppsummertfaktaSelectors.UkjentSluttdatoMedlemskapsperiodeSelector,
   );
 
+  const ukjentSluttdatoSkalVises = behandlingstema === YRKESAKTIV && lagretBestemmelse !== FTRL_KAP2_2_1;
+
   const {
     control,
     watch,
@@ -126,7 +129,6 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     arbeidssituasjonType,
   );
 
-  const ukjentSluttdatoSkalVises = behandlingstema === YRKESAKTIV && lagretBestemmelse !== FTRL_KAP2_2_1;
 
   const stegErGyldig = formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType);
 
@@ -175,7 +177,7 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
 
   const lagreUkjentSluttdatoMedlemskapsperiode = async (ukjentSluttdato: boolean) => {
     if (ukjentSluttdato) {
-      const updatedPerioder = formValues.medlemskapsperioder.map((periode: MedlemskapsperiodeProp) => {
+      const lagretPerioder = formValues.medlemskapsperioder.map((periode: MedlemskapsperiodeProp) => {
         if (periode.fomDato) {
           const fomISODate = Utils.dato.formatterDatoTilISO(periode.fomDato, "");
           if (fomISODate) {
@@ -191,13 +193,10 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
         return periode;
       });
 
-      resetMedlemskapsperioder(updatedPerioder);
+      resetMedlemskapsperioder(lagretPerioder);
 
-      // Trigger form validation
       await trigger("medlemskapsperioder");
-
-      // Save the updated periods
-      await debouncedLagreMedlemskapsperioder(updatedPerioder, true, undefined);
+      await debouncedLagreMedlemskapsperioder(lagretPerioder, true, undefined);
     }
 
     dispatch(oppsummertfaktaOperations.sendUkjentSluttdatoMedlemskapsperiode(behandlingID, ukjentSluttdato));
@@ -311,20 +310,10 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
       </Nav.BodyLong>
 
       {ukjentSluttdatoSkalVises && (
-        <div className="ukjentSluttdato">
-          <Nav.Checkbox
-            checked={ukjentSluttdatoMedlemskapsperiode}
-            onChange={(e) => lagreUkjentSluttdatoMedlemskapsperiode(e.target.checked)}
-          >
-            Saken er flyttet fra avgiftssystemet og har ikke sluttdato
-          </Nav.Checkbox>
-          {ukjentSluttdatoMedlemskapsperiode && (
-            <Nav.Alert variant="info" size="small" className="mt-2">
-              Sluttdato er automatisk satt 10 år frem i tid. Sluttdato vil ikke komme med i vedtaksbrevet. Hvis
-              sluttdato likevel skal komme med i vedtaksbrevet, må du fjerne avhukingen.
-            </Nav.Alert>
-          )}
-        </div>
+        <UkjentSluttdatoMedlemskapsperiode
+          ukjentSluttdatoMedlemskapsperiode={ukjentSluttdatoMedlemskapsperiode}
+          onUkjentSluttdatoChange={lagreUkjentSluttdatoMedlemskapsperiode}
+        />
       )}
 
       <Medlemskapsperioder
