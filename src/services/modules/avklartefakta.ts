@@ -17,7 +17,7 @@ interface Oppsummering {
   ikkeYrkesaktivFamilieRelasjonstype?: string;
   ikkeYrkesaktivOppholdstype?: string;
   arbeidssituasjonType?: string;
-  ukjentSluttdato?: boolean;
+  ukjentSluttdatoMedlemskapsperiode?: boolean;
 }
 
 export const hent = (behandlingID: number): Promise<Avklartfakta[]> =>
@@ -62,7 +62,7 @@ export const sendVirksomheter = (behandlingID: number, virksomheter: Virksomhete
 export const sendArbeidsland = (behandlingID: number, arbeidsland: Arbeidsland): Promise<Oppsummering> =>
   postAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/arbeidsland`, arbeidsland);
 
-export const sendUkjentSluttdato = (behandlingID: number, ukjentSluttdato: boolean): Promise<Oppsummering> =>
+export const lagreUkjentSluttdatoMedlemskapsperiode = (behandlingID: number, ukjentSluttdato: boolean): Promise<Oppsummering> =>
   postAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/ukjent-sluttdato-medlemskapsperiode`, ukjentSluttdato);
 
 export const sendInnbetalingsstatus = (

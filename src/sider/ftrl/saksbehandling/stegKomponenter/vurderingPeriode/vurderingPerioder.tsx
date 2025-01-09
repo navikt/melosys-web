@@ -91,7 +91,7 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     oppsummertfaktaSelectors.UkjentSluttdatoMedlemskapsperiodeSelector,
   );
 
-  const ukjentSluttdatoSkalVises = behandlingstema === YRKESAKTIV && lagretBestemmelse !== FTRL_KAP2_2_1;
+  const ukjentSluttdatoMedlemskapsperiodeSkalVises = behandlingstema === YRKESAKTIV && lagretBestemmelse !== FTRL_KAP2_2_1;
 
   const {
     control,
@@ -309,7 +309,7 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
         {hentInformasjonstekst(behandlingstype, medlemskapsTypeErPliktig)}
       </Nav.BodyLong>
 
-      {ukjentSluttdatoSkalVises && (
+      {ukjentSluttdatoMedlemskapsperiodeSkalVises && (
         <UkjentSluttdatoMedlemskapsperiode
           ukjentSluttdatoMedlemskapsperiode={ukjentSluttdatoMedlemskapsperiode}
           onUkjentSluttdatoChange={lagreUkjentSluttdatoMedlemskapsperiode}

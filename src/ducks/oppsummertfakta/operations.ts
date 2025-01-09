@@ -61,7 +61,7 @@ export function sendArbeidssituasjontype(behandlingID: number, arbeidssituasjont
 }
 
 export function sendUkjentSluttdatoMedlemskapsperiode(behandlingID: number, ukjentSluttdato: boolean) {
-  return doThenDispatch(() => Api.Avklartefakta.sendUkjentSluttdato(behandlingID, ukjentSluttdato), {
+  return doThenDispatch(() => Api.Avklartefakta.lagreUkjentSluttdatoMedlemskapsperiode(behandlingID, ukjentSluttdato), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
