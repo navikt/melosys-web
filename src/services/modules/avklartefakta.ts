@@ -62,7 +62,7 @@ export const sendVirksomheter = (behandlingID: number, virksomheter: Virksomhete
 export const sendArbeidsland = (behandlingID: number, arbeidsland: Arbeidsland): Promise<Oppsummering> =>
   postAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/arbeidsland`, arbeidsland);
 
-export const sendUkjentSluttDato = (behandlingID: number, ukjentSluttdato: string): Promise<Oppsummering> =>
+export const sendUkjentSluttDato = (behandlingID: number, ukjentSluttdato: boolean): Promise<Oppsummering> =>
   postAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/ukjent-sluttdato`, ukjentSluttdato);
 
 export const sendInnbetalingsstatus = (

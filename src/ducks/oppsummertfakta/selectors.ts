@@ -36,7 +36,7 @@ export const ArbeidssituasjonSelector = createSelector(
   (oppsummertfakta) => oppsummertfakta.arbeidssituasjonType,
 );
 
-export const UkjentSluttDatoSelector = createSelector(
+export const UkjentSluttdatoMedlemskapsperiodeSelector = createSelector(
   OppsummertFaktaDataSelector,
   (oppsummertfakta) => oppsummertfakta.ukjentSluttdato,
 );

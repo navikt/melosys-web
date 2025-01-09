@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Controller, FieldValue, useFieldArray, useForm } from "react-hook-form";
+import { FieldValue, useFieldArray, useForm } from "react-hook-form";
 
 import MKV from "../../../../../melosyskodeverk";
 import * as Api from "../../../../../services/api";
@@ -86,7 +86,9 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   const ikkeyrkesaktivOppholdstype = useSelector(oppsummertfaktaSelectors.IkkeYrkesaktivOppholdSelector);
   const medlemskapsTypeErPliktig = lagredeMedlemskapsperioder.some((periode) => periode.medlemskapstype === PLIKTIG);
   const arbeidssituasjonType = useSelector(oppsummertfaktaSelectors.ArbeidssituasjonSelector);
-  const ukjentSluttdato = useSelector(oppsummertfaktaSelectors.UkjentSluttDatoSelector);
+  const ukjentSluttdatoMedlemskapsperiode = useSelector(
+    oppsummertfaktaSelectors.UkjentSluttdatoMedlemskapsperiodeSelector,
+  );
 
   const {
     control,
@@ -132,8 +134,8 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     if (aktivtSteg) {
       let initialPerioder = mapInitialMedlemskapsperioder(lagredeMedlemskapsperioder);
 
-      // Hvis ukjentSluttdato er true, sett sluttdatoer til 10 år etter startdato
-      if (ukjentSluttdato) {
+      // Hvis ukjentSluttdatoMedlemskapsperiode er true, sett sluttdatoer til 10 år etter startdato
+      if (ukjentSluttdatoMedlemskapsperiode) {
         initialPerioder = initialPerioder.map((periode) => {
           if (periode.fomDato) {
             const fomISODate = Utils.dato.formatterDatoTilISO(periode.fomDato, "");
@@ -171,9 +173,9 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     Api.Ftrl.hentGyldigeInnvilgelsesresultat(behandlingstype).then(setLovligeInnvilgelsesresultat);
   }, [lagretBestemmelse]);
 
-  const lagreUkjentSluttdato = async (ukjentSluttdato: boolean) => {
-    if (ukjentSluttdato) {
-      const updatedPerioder = formValues.medlemskapsperioder.map((periode) => {
+  const lagreUkjentSluttdatoMedlemskapsperiode = async (ukjentSluttdatoMedlemskapsperiode: boolean) => {
+    if (ukjentSluttdatoMedlemskapsperiode) {
+      const updatedPerioder = formValues.medlemskapsperioder.map((periode: MedlemskapsperiodeProp) => {
         if (periode.fomDato) {
           const fomISODate = Utils.dato.formatterDatoTilISO(periode.fomDato, "");
           if (fomISODate) {
@@ -198,7 +200,9 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
       await debouncedLagreMedlemskapsperioder(updatedPerioder, true, undefined);
     }
 
-    dispatch(oppsummertfaktaOperations.sendUkjentSluttDato(behandlingID, ukjentSluttdato));
+    dispatch(
+      oppsummertfaktaOperations.sendUkjentSluttdatoMedlemskapsperiode(behandlingID, ukjentSluttdatoMedlemskapsperiode),
+    );
   };
 
   const lagreMedlemskapsperiode = async (medlemskapsperiode: MedlemskapsperiodeProp, index: number) => {
@@ -310,10 +314,13 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
 
       {ukjentSluttdatoSkalVises && (
         <div className="ukjentSluttdato">
-          <Nav.Checkbox checked={ukjentSluttdato} onChange={(e) => lagreUkjentSluttdato(e.target.checked)}>
+          <Nav.Checkbox
+            checked={ukjentSluttdatoMedlemskapsperiode}
+            onChange={(e) => lagreUkjentSluttdatoMedlemskapsperiode(e.target.checked)}
+          >
             Saken er flyttet fra avgiftssystemet og har ikke sluttdato
           </Nav.Checkbox>
-          {ukjentSluttdato && (
+          {ukjentSluttdatoMedlemskapsperiode && (
             <Nav.Alert variant="info" size="small" className="mt-2">
               Sluttdato er automatisk satt 10 år frem i tid. Sluttdato vil ikke komme med i vedtaksbrevet. Hvis
               sluttdato likevel skal komme med i vedtaksbrevet, må du fjerne avhukingen.
@@ -333,7 +340,7 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
         handleChange={debouncedLagreMedlemskapsperioder}
         handleLeggTil={handleLeggTil}
         visLeggTil={visLeggTilNyPeriode}
-        ukjentSluttdato={ukjentSluttdato}
+        ukjentSluttdato={ukjentSluttdatoMedlemskapsperiode}
       />
 
       {visFeilmeldinger && <Feilmelding type={aktivFeilmeldingType} />}

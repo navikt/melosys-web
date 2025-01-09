@@ -60,7 +60,7 @@ export function sendArbeidssituasjontype(behandlingID: number, arbeidssituasjont
   });
 }
 
-export function sendUkjentSluttDato(behandlingID: number, ukjentSluttdato: string) {
+export function sendUkjentSluttdatoMedlemskapsperiode(behandlingID: number, ukjentSluttdato: boolean) {
   return doThenDispatch(() => Api.Avklartefakta.sendUkjentSluttDato(behandlingID, ukjentSluttdato), {
     OK: Types.OK,
     FEILET: Types.FEILET,
