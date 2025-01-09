@@ -50,7 +50,7 @@ interface Props {
 export function VurderingVirksomhet({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: Props) {
   const dispatch = useDispatch();
 
-  const { lagreVirksomheter: lagreVirksomheter, hentMottatteOpplysninger } = komponentDispatch(dispatch);
+  const { lagreVirksomheter, hentMottatteOpplysninger } = komponentDispatch(dispatch);
   const { redigerbart, virksomheterListe, behandlingID, initialValues, lagredeValgtevirksomheter } =
     useSelector(komponentState);
   const [erMottatteOpplysningerLastetInn, setErMottatteOpplysningerLastetInn] = useState(false);
