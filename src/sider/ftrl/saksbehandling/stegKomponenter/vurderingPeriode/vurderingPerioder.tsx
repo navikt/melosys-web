@@ -29,8 +29,9 @@ import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../..
 
 const { AVSLAATT, OPPHØRT } = MKV.Koder.innvilgelsesResultat;
 const { NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingstyper;
-const { FTRL_KAP2_2_15_ANDRE_LEDD } = MKV.Koder.folketrygdloven_kap2_bestemmelser;
+const { FTRL_KAP2_2_15_ANDRE_LEDD, FTRL_KAP2_2_1 } = MKV.Koder.folketrygdloven_kap2_bestemmelser;
 const { PLIKTIG } = MKV.Koder.medlemskapstyper;
+const { YRKESAKTIV } = MKV.Koder.behandlinger.behandlingstema;
 
 const hentInformasjonstekst = (behandlingstype: string, medlemskapsTypeErPliktig: boolean) => {
   if (medlemskapsTypeErPliktig) {
@@ -77,6 +78,7 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const lagredeMedlemskapsperioder = useSelector(medlemskapsperioderSelectors.AlleMedlemskapsperioderSelector);
   const behandlingstype = useSelector(behandlingerSelectors.BehandlingstypeKodeSelector);
+  const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const soknadsperiode = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const lagretBestemmelse = useSelector(medlemskapsperioderSelectors.BestemmelseSelector);
@@ -121,6 +123,8 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     ikkeyrkesaktivOppholdstype,
     arbeidssituasjonType
   );
+
+  const ukjentSluttdatoSkalVises = behandlingstema === YRKESAKTIV && lagretBestemmelse !== FTRL_KAP2_2_1;
 
   const stegErGyldig = formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType);
 
@@ -304,17 +308,19 @@ export const VurderingPerioder = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus
         {hentInformasjonstekst(behandlingstype, medlemskapsTypeErPliktig)}
       </Nav.BodyLong>
 
-      <div className="ukjentSluttdato">
-        <Nav.Checkbox checked={ukjentSluttdato} onChange={(e) => lagreUkjentSluttdato(e.target.checked)}>
-          Saken er flyttet fra avgiftssystemet og har ikke sluttdato
-        </Nav.Checkbox>
-        {ukjentSluttdato && (
-          <Nav.Alert variant="info" size="small" className="mt-2">
-            Sluttdato er automatisk satt 10 år frem i tid. Sluttdato vil ikke komme med i vedtaksbrevet. Hvis sluttdato
-            likevel skal komme med i vedtaksbrevet, må du fjerne avhukingen.
-          </Nav.Alert>
-        )}
-      </div>
+      {ukjentSluttdatoSkalVises && (
+        <div className="ukjentSluttdato">
+          <Nav.Checkbox checked={ukjentSluttdato} onChange={(e) => lagreUkjentSluttdato(e.target.checked)}>
+            Saken er flyttet fra avgiftssystemet og har ikke sluttdato
+          </Nav.Checkbox>
+          {ukjentSluttdato && (
+            <Nav.Alert variant="info" size="small" className="mt-2">
+              Sluttdato er automatisk satt 10 år frem i tid. Sluttdato vil ikke komme med i vedtaksbrevet. Hvis
+              sluttdato likevel skal komme med i vedtaksbrevet, må du fjerne avhukingen.
+            </Nav.Alert>
+          )}
+        </div>
+      )}
 
       <Medlemskapsperioder
         trygdedekninger={lovligeDekninger}
