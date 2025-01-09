@@ -199,7 +199,7 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
       await debouncedLagreMedlemskapsperioder(lagretPerioder, true, undefined);
     }
 
-    dispatch(oppsummertfaktaOperations.sendUkjentSluttdatoMedlemskapsperiode(behandlingID, ukjentSluttdato));
+    dispatch(oppsummertfaktaOperations.lagreUkjentSluttdatoMedlemskapsperiode(behandlingID, ukjentSluttdato));
   };
 
   const lagreMedlemskapsperiode = async (medlemskapsperiode: MedlemskapsperiodeProp, index: number) => {

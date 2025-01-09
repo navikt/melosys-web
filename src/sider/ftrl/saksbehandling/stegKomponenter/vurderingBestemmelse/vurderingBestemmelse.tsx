@@ -319,15 +319,15 @@ export function VurderingBestemmelse({ bekreft, tilbake, aktivtSteg, oppdaterSta
     // eslint-disable-next-line no-restricted-syntax
     for (const [key, value] of valgtAvklarteFakta.entries()) {
       if (key === IKKE_YRKESAKTIV_FTRL_2_1_OPPHOLD) {
-        await dispatch(oppsummertfaktaOperations.sendIkkeYrkesaktivOppholdtype(behandlingID, value));
+        await dispatch(oppsummertfaktaOperations.lagreIkkeYrkesaktivOppholdtype(behandlingID, value));
       }
 
       if (key === IKKE_YRKESAKTIV_RELASJON) {
-        await dispatch(oppsummertfaktaOperations.sendIkkeYrkesaktivRelasjontype(behandlingID, value));
+        await dispatch(oppsummertfaktaOperations.lagreIkkeYrkesaktivRelasjontype(behandlingID, value));
       }
 
       if (key === ARBEIDSSITUASJON) {
-        await dispatch(oppsummertfaktaOperations.sendArbeidssituasjontype(behandlingID, value));
+        await dispatch(oppsummertfaktaOperations.lagreArbeidssituasjontype(behandlingID, value));
       }
     }
 

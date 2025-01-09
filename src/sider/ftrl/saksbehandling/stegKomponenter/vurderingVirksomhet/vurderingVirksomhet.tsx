@@ -35,8 +35,8 @@ const komponentState = (state: RootState) => {
 };
 
 const komponentDispatch = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
-  sendVirksomheter: (behandlingID: number, virksomheter: Api.Avklartefakta.Virksomheter) =>
-    dispatch(oppsummertfaktaOperations.sendVirksomheter(behandlingID, virksomheter)),
+  lagreVirksomheter: (behandlingID: number, virksomheter: Api.Avklartefakta.Virksomheter) =>
+    dispatch(oppsummertfaktaOperations.lagreVirksomheter(behandlingID, virksomheter)),
   hentMottatteOpplysninger: (behandlingID: number) => dispatch(mottatteOpplysningerOperations.hent(behandlingID)),
 });
 
@@ -50,7 +50,7 @@ interface Props {
 export function VurderingVirksomhet({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: Props) {
   const dispatch = useDispatch();
 
-  const { sendVirksomheter, hentMottatteOpplysninger } = komponentDispatch(dispatch);
+  const { lagreVirksomheter: lagreVirksomheter, hentMottatteOpplysninger } = komponentDispatch(dispatch);
   const { redigerbart, virksomheterListe, behandlingID, initialValues, lagredeValgtevirksomheter } =
     useSelector(komponentState);
   const [erMottatteOpplysningerLastetInn, setErMottatteOpplysningerLastetInn] = useState(false);
@@ -87,7 +87,7 @@ export function VurderingVirksomhet({ bekreft, tilbake, aktivtSteg, oppdaterStat
 
   const handleFortsett = () => {
     if (formValues && formValues.valgteVirksomheter) {
-      sendVirksomheter(behandlingID, { virksomhetIDer: formValues.valgteVirksomheter });
+      lagreVirksomheter(behandlingID, { virksomhetIDer: formValues.valgteVirksomheter });
       bekreft();
     }
   };

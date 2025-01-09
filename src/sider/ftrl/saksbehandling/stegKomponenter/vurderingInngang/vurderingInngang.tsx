@@ -247,7 +247,7 @@ export function VurderingInngang({ bekreft, aktivtSteg, oppdaterStatus }: Props)
         <DialogboksOppfriskSak
           oppfrisk={async () => {
             await lagreMottatteOpplysningerOgOppfriskSaksopplysninger();
-            dispatch(oppsummertfaktaOperations.sendArbeidsland(behandlingID, { arbeidsland: mapLandkoder() }));
+            dispatch(oppsummertfaktaOperations.lagreArbeidsland(behandlingID, { arbeidsland: mapLandkoder() }));
           }}
           avbryt={() => setVisOppfrisk(false)}
           lukk={() => {
