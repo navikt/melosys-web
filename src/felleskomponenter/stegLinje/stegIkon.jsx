@@ -19,7 +19,7 @@ const ikonVelger = (status, vedtakSteg, aktivtSteg) => {
   return status === FANE_STATUS.UBEHANDLET ? Ikoner.Ubehandlet : Ikoner.Ferdig;
 };
 
-const StegIkon = (props) => {
+function StegIkon(props) {
   const { aktivtSteg, status, tittel, onClick, tilgjengelig, vedtakSteg } = props;
 
   const Ikon = ikonVelger(status, vedtakSteg, aktivtSteg);
@@ -38,7 +38,7 @@ const StegIkon = (props) => {
     </li>
   );
   /* eslint-enable react/no-danger */
-};
+}
 
 StegIkon.propTypes = {
   id: PT.string.isRequired,

@@ -7,13 +7,13 @@ import { Spinner } from "../../spinner";
 
 import "./trygdeavgiftsperioderTabell.css";
 
-const TrygdeavgiftsperioderTabell = ({
+function TrygdeavgiftsperioderTabell({
   perioder,
   lagrePending,
 }: {
-  perioder: Trygdeavgiftsperiode[];
-  lagrePending: Boolean;
-}) => {
+  perioder?: Trygdeavgiftsperiode[];
+  lagrePending: boolean;
+}) {
   if (!perioder) return null;
 
   return (
@@ -38,7 +38,7 @@ const TrygdeavgiftsperioderTabell = ({
             <Nav.Table.Row className="border_top" key={Utils._uuid()}>
               <Nav.Table.DataCell key={Utils._uuid()}>
                 {`${Utils.dato.formatterDatoTilNorsk(trygdeavgiftsperiode.fom)} - ${Utils.dato.formatterDatoTilNorsk(
-                  trygdeavgiftsperiode.tom
+                  trygdeavgiftsperiode.tom,
                 )}`}
               </Nav.Table.DataCell>
               <Nav.Table.DataCell key={Utils._uuid()}>
@@ -57,6 +57,6 @@ const TrygdeavgiftsperioderTabell = ({
       </Nav.Table>
     </div>
   );
-};
+}
 
 export default TrygdeavgiftsperioderTabell;

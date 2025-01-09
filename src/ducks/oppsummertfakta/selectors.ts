@@ -4,39 +4,39 @@ import * as Types from "./types";
 
 export const OppsummertFaktaSelector: Selector<RootState, StateSection<Types.Data>> = createSelector(
   (state: RootState) => state.oppsummertfakta,
-  (oppsummertfakta) => oppsummertfakta
+  (oppsummertfakta) => oppsummertfakta,
 );
 
 export const OppsummertFaktaDataSelector: Selector<RootState, Types.Data> = createSelector(
   OppsummertFaktaSelector,
-  (oppsummertfakta) => oppsummertfakta.data
+  (oppsummertfakta) => oppsummertfakta.data,
 );
 
 export const VirksomheterSelector = createSelector(
   OppsummertFaktaDataSelector,
-  (oppsummertfakta) => oppsummertfakta.virksomheter
+  (oppsummertfakta) => oppsummertfakta.virksomheter,
 );
 
 export const VirksomhetIDerSelector = createSelector(VirksomheterSelector, (virksomheter) =>
-  virksomheter ? virksomheter.virksomhetIDer : []
+  virksomheter ? virksomheter.virksomhetIDer : [],
 );
 
 export const FullstendigManglendeInnbetalingSelector = createSelector(
   OppsummertFaktaDataSelector,
-  (oppsummertfakta) => oppsummertfakta.fullstendigManglendeInnbetaling
+  (oppsummertfakta) => oppsummertfakta.fullstendigManglendeInnbetaling,
 );
 
 export const IkkeYrkesaktivRelasjonSelector = createSelector(
   OppsummertFaktaDataSelector,
-  (oppsummertfakta) => oppsummertfakta.ikkeYrkesaktivFamilieRelasjonstype
+  (oppsummertfakta) => oppsummertfakta.ikkeYrkesaktivFamilieRelasjonstype,
 );
 
 export const ArbeidssituasjonSelector = createSelector(
   OppsummertFaktaDataSelector,
-  (oppsummertfakta) => oppsummertfakta.arbeidssituasjonType
+  (oppsummertfakta) => oppsummertfakta.arbeidssituasjonType,
 );
 
 export const IkkeYrkesaktivOppholdSelector = createSelector(
   OppsummertFaktaDataSelector,
-  (oppsummertfakta) => oppsummertfakta.ikkeYrkesaktivOppholdstype
+  (oppsummertfakta) => oppsummertfakta.ikkeYrkesaktivOppholdstype,
 );

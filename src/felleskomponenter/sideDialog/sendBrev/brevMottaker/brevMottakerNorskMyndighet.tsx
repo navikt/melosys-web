@@ -7,7 +7,7 @@ import * as Api from "../../../../services/api";
 import * as Nav from "../../../../navFrontend";
 import { SendBrevFormValues } from "../types";
 
-const BrevMottakerNorskMyndighet = () => {
+function BrevMottakerNorskMyndighet() {
   const formValues = useSelector((state) => getFormValues(KV.Form.SEND_BREV)(state) as SendBrevFormValues);
   const [tilgjengeligeNorskeMyndigheter, setTilgjengeligeNorskeMyndigheter] =
     useState<Api.DokumenterV2.TilgjengeligeNorskeMyndigheterResDto>();
@@ -17,7 +17,7 @@ const BrevMottakerNorskMyndighet = () => {
 
   useEffect(() => {
     Api.DokumenterV2.hentTilgjengeligeNorskeMyndigheter().then((response) =>
-      setTilgjengeligeNorskeMyndigheter(response)
+      setTilgjengeligeNorskeMyndigheter(response),
     );
   }, []);
 
@@ -46,6 +46,6 @@ const BrevMottakerNorskMyndighet = () => {
       ))}
     </Nav.CheckboxGroup>
   );
-};
+}
 
 export default BrevMottakerNorskMyndighet;

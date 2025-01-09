@@ -1,183 +1,134 @@
 {
-  "parser": "@typescript-eslint/parser",
-  "rules": {
-    "space-before-function-paren": "off",
-    "import/named": "off",
-    "import/order": "off",
-    "no-underscore-dangle": "off",
-    "no-await-in-loop": "off",
-    "camelcase": "off",
-    "react/jsx-uses-react": "off",
-    "react/react-in-jsx-scope": "off",
-    "react/jsx-indent-props": "off",
-    "react/forbid-prop-types": "off",
-    "react/no-unused-prop-types": "off",
-    "react/no-typos": "off",
-    "react/jsx-wrap-multilines": "off",
-    "react/jsx-closing-bracket-location": "off",
-    "react/jsx-indent": "off",
-    "react/destructuring-assignment": "off",
-    "react/state-in-constructor": "off",
-    "react/jsx-props-no-spreading": "off",
-    "react/function-component-definition": "off",
-    "react/jsx-fragments": "off",
-    "react/jsx-no-useless-fragment": [
-      "error",
-      {
-        "allowExpressions": true
-      }
-    ],
-    "react/no-unstable-nested-components": "off",
-    "comma-dangle": [
-      "error",
-      {
-        "arrays": "always-multiline",
-        "objects": "always-multiline",
-        "imports": "always-multiline",
-        "exports": "always-multiline",
-        "functions": "never"
-      }
-    ],
-    "no-return-assign": ["error", "except-parens"],
-    "wrap-iife": "off",
-    "no-param-reassign": [
-      "error",
-      {
-        "props": false
-      }
-    ],
-    "no-unused-vars": "off",
-    "@typescript-eslint/no-unused-vars": [
-      2,
-      {
-        "varsIgnorePattern": "^_",
-        "argsIgnorePattern": "^_",
-        "ignoreRestSiblings": true
-      }
-    ],
-    "react/jsx-filename-extension": [0],
-    // Tillat import av ts-filer uten å spesifisere extension(.ts, .tsx)
-    "import/extensions": [
-      "error",
-      "ignorePackages",
-      {
-        "": "never",
-        "js": "never",
-        "jsx": "never",
-        "ts": "never",
-        "tsx": "never"
-      }
-    ],
-    "import/no-extraneous-dependencies": [0],
-    "import/prefer-default-export": 0,
-    "import/no-named-as-default": 0,
-    "import/no-unresolved": [
-      2,
-      {
-        "ignore": ["AppTypes", "Domene", "melosys-api", "nav-frontend-grid"]
-      }
-    ],
-    "import/no-cycle": 0,
-    "jsx-a11y/aria-props": 2,
-    "jsx-a11y/aria-proptypes": 2,
-    "jsx-a11y/aria-role": 2,
-    "jsx-a11y/aria-unsupported-elements": 2,
-    "jsx-a11y/href-no-hash": [0],
-    "jsx-a11y/alt-text": 2,
-    "jsx-a11y/img-redundant-alt": 2,
-    "jsx-a11y/label-has-for": [
-      2,
-      {
-        "components": ["Label"],
-        "required": {
-          "every": ["nesting", "id"]
-        },
-        "allowChildren": true
-      }
-    ],
-    "jsx-a11y/mouse-events-have-key-events": 2,
-    "jsx-a11y/no-onchange": 2,
-    "jsx-a11y/interactive-supports-focus": 2,
-    "jsx-a11y/no-static-element-interactions": 2,
-    "jsx-a11y/no-noninteractive-element-interactions": 2,
-    "jsx-a11y/role-has-required-aria-props": 2,
-    "jsx-a11y/role-supports-aria-props": 2,
-    "jsx-a11y/tabindex-no-positive": 2,
-    "jsx-a11y/no-noninteractive-tabindex": "off",
-    "jsx-a11y/anchor-is-valid": [
-      "error",
-      {
-        "components": ["Link"],
-        "specialLink": ["to"]
-      }
-    ],
-    "linebreak-style": "off",
-    "no-bitwise": [
-      "error",
-      {
-        "allow": ["^"]
-      }
-    ],
-    "no-extra-semi": "off",
-    "@typescript-eslint/no-extra-semi": ["error"],
-    // Støtt typescript reference, hvor det trengs tre slash(///)
-    "spaced-comment": [
-      "error",
-      "always",
-      {
-        "markers": ["/"]
-      }
-    ],
-    "no-shadow": "off",
-    "@typescript-eslint/no-shadow": ["error"],
-    "no-use-before-define": "off",
-    "@typescript-eslint/no-use-before-define": ["error"],
-    "prefer-regex-literals": "off",
-    "lines-between-class-members": "off",
-    "react/sort-comp": "off",
-    "max-classes-per-file": "off",
-    "react-hooks/exhaustive-deps": "off"
-  },
-  "overrides": [
-    {
-      "files": ["**/*.ts", "**/*.tsx"],
-      "rules": {
-        "react/require-default-props": "off",
-        "react/prop-types": "off"
-      }
-    },
-    {
-      "files": ["**/reducers.ts"],
-      "rules": {
-        "default-param-last": "off"
-      }
-    }
-  ],
-  "extends": [
-    "react-app",
-    "airbnb",
-    "plugin:@typescript-eslint/eslint-recommended",
-    "prettier",
-    "prettier/@typescript-eslint",
-    "prettier/react",
-    "plugin:vitest-globals/recommended"
-  ],
-  "plugins": ["jsx-a11y", "@typescript-eslint"],
   "env": {
     "browser": true,
-    "vitest-globals/env": true
+    "vitest-globals/env": true,
+    "es2021": true
   },
   "globals": {
     "shallow": true,
     "mount": true
   },
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    "plugin:jsx-a11y/recommended",
+    "plugin:import/recommended",
+    "plugin:import/typescript",
+    "plugin:@typescript-eslint/recommended",
+    "airbnb",
+    "airbnb-typescript",
+    "plugin:prettier/recommended",
+    "plugin:vitest-globals/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true,
+      "modules": true,
+      "experimentalObjectRestSpread": true
+    },
+    "ecmaVersion": "latest",
+    "sourceType": "module",
+    "project": "./tsconfig.json"
+  },
   "settings": {
-    "import/parsers": {
-      "@typescript-eslint/parser": [".ts", ".tsx"]
+    "react": {
+      "version": "detect"
     },
     "import/resolver": {
-      "typescript": {}
+      "typescript": {
+        "project": "./tsconfig.json"
+      },
+      "node": {
+        "extensions": [
+          ".js",
+          ".jsx",
+          ".ts",
+          ".tsx"
+        ]
+      }
     }
   },
-  "ignorePatterns": ["**/*generated.tsx"]
+  "rules": {
+    "prettier/prettier": "error",
+    "react/react-in-jsx-scope": "off",
+    "react/prop-types": "off",
+    "react/forbid-prop-types": "off",
+    "react/no-unused-prop-types": "off",
+    "react/jsx-props-no-spreading": "off",
+    "react/require-default-props": "off",
+    "react-hooks/exhaustive-deps": "off",
+    "react/no-unstable-nested-components": "off",
+    "no-underscore-dangle": "off",
+    "no-await-in-loop": "off",
+    "import/order": "off",
+    "import/no-cycle": "off",
+    "import/prefer-default-export": "off",
+    "import/no-named-as-default": "off",
+    "import/no-named-as-default-member": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": true
+      }
+    ],
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      {
+        "argsIgnorePattern": "^_"
+      }
+    ],
+    "@typescript-eslint/explicit-function-return-type": "off",
+    // TODO: Skru på "@typescript-eslint/no-explicit-any": "warn",
+    "@typescript-eslint/consistent-type-definitions": [
+      "error",
+      "interface"
+    ],
+    "@typescript-eslint/no-use-before-define": "off",
+    "jsx-a11y/anchor-is-valid": [
+      "warn",
+      {
+        "aspects": [
+          "invalidHref",
+          "preferButton"
+        ]
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": [
+        "**/reducers.ts",
+        "**/reducers.js"
+      ],
+      "rules": {
+        "@typescript-eslint/default-param-last": "off"
+      }
+    },
+    {
+      "files": [
+        "*.js",
+        "*.jsx"
+      ],
+      "rules": {
+        "@typescript-eslint/naming-convention": "off",
+        "@typescript-eslint/no-unused-vars": "off",
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/explicit-function-return-type": "off",
+        "@typescript-eslint/dot-notation": "off",
+        "@typescript-eslint/no-implied-eval": "off",
+        "@typescript-eslint/no-throw-literal": "off",
+        "@typescript-eslint/return-await": "off",
+        "@typescript-eslint/no-useless-constructor": "off",
+        "@typescript-eslint/lines-between-class-members": "off",
+        "react/destructuring-assignment": "off",
+        "react/state-in-constructor": "off",
+        "react/sort-comp": "off",
+        "class-methods-use-this": "off"
+      }
+    }
+  ]
 }

@@ -15,7 +15,7 @@ export function utpek(saksnummer, body) {
       success: (dispatch) => {
         dispatch(navigeringOperations.tilForsiden());
       },
-    }
+    },
   );
 }
 
@@ -31,6 +31,6 @@ export function avvis(behandlingID, body) {
       success: (dispatch) => {
         dispatch(navigeringOperations.tilForsiden());
       },
-    }
+    },
   );
 }

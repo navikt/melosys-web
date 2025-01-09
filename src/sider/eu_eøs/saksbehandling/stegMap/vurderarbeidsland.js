@@ -12,21 +12,21 @@ class Vurderarbeidsland extends Steg {
 
     const sokkelEllerSkipListe = hentFaktaListe(
       KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP,
-      propsLight.avklartefakta
+      propsLight.avklartefakta,
     );
     const installasjonArbeidslandListe = hentFaktaListe(
       KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND,
-      propsLight.avklartefakta
+      propsLight.avklartefakta,
     );
     const arbeidUtforesIOppgittLandFakta = hentFakta(
       KV.Koder.avklartefaktaKoder.ARBEID_UTFORES_I_OPPGITT_LAND,
-      propsLight.avklartefakta
+      propsLight.avklartefakta,
     );
     const soknadslandFaktaListe = hentFaktaListe(KV.Koder.avklartefaktaKoder.SOKNADSLAND, propsLight.avklartefakta);
     const arbeidslandFaktaListe = hentFaktaListe(MKV.Koder.avklartefaktatyper.ARBEIDSLAND, propsLight.avklartefakta);
     const harIngenMaritimeArbeidEllerHjemmebaser = this.harIngenSokkelEllerHjemmebaser(
       propsLight.maritimtarbeid,
-      propsLight.hjemmebaser
+      propsLight.hjemmebaser,
     );
 
     const harAvklaring = this.harAvklaring({
@@ -53,7 +53,7 @@ class Vurderarbeidsland extends Steg {
     this.beregnRelevantUI = (_propsLight) => {
       const installasjonArbeidslandTypeListe = hentFaktaListe(
         KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND_TYPE,
-        _propsLight.avklartefakta
+        _propsLight.avklartefakta,
       );
       const arbeidslandListe = hentFaktaListe(MKV.Koder.avklartefaktatyper.ARBEIDSLAND, _propsLight.avklartefakta);
 
@@ -89,7 +89,7 @@ class Vurderarbeidsland extends Steg {
     const erSokkelSkipAvklart = this.erSokkelSkipAvklart(
       sokkelEllerSkipListe,
       installasjonArbeidslandListe,
-      maritimtarbeid
+      maritimtarbeid,
     );
 
     return harIngenMaritimeArbeidEllerHjemmebaser ? arbeidUtforesIOppgittLand : erSokkelSkipAvklart;

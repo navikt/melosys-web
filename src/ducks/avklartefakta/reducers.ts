@@ -21,7 +21,7 @@ export const initialState: StateSection<Types.Data> = {
 
 const lagAvklartfaktaObjekterMedKode = (
   avklarteFakta: Api.Avklartefakta.Avklartfakta[],
-  avklartefaktaKode: string | null
+  avklartefaktaKode: string | null,
 ): Api.Avklartefakta.Avklartfakta[] => {
   if (Utils._isNil(avklarteFakta)) {
     return [];

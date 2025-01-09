@@ -5,7 +5,7 @@ import SkatteforholdsPerioderTabell from "./skatteforholdsPerioderTabell";
 import InntektsperioderTabell from "./inntektsperioderTabell";
 import "./tidligereGrunnlagsoversikt.css";
 
-const TidligereGrunnlagsoversikt = ({
+function TidligereGrunnlagsoversikt({
   skatteforholdsperioder,
   inntektsperioder,
   avgift,
@@ -13,7 +13,7 @@ const TidligereGrunnlagsoversikt = ({
   skatteforholdsperioder?: SkatteforholdDto[];
   inntektsperioder?: InntektskildeDto[];
   avgift?: Avgift;
-}) => {
+}) {
   if (!skatteforholdsperioder) return null;
 
   return (
@@ -23,6 +23,6 @@ const TidligereGrunnlagsoversikt = ({
       <InntektsperioderTabell perioder={inntektsperioder} avgift={avgift} />
     </div>
   );
-};
+}
 
 export default TidligereGrunnlagsoversikt;

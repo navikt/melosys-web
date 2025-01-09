@@ -17,7 +17,7 @@ interface PersonInfoProps {
   endreFokus: boolean;
 }
 
-const PersonInfo = ({ behandlingID, ...props }: PersonInfoProps) => {
+function PersonInfo({ behandlingID, ...props }: PersonInfoProps) {
   const personopplysninger = useHentPersonopplysninger(behandlingID, false);
   const {
     data: personinfoData,
@@ -45,7 +45,7 @@ const PersonInfo = ({ behandlingID, ...props }: PersonInfoProps) => {
 
   const erLitenSkjerm = Utils.mediaQuery.useMediaQuery({ maxWidth: 1680 });
 
-  const Fødselsnummer = () => {
+  function Fødselsnummer() {
     return (
       <>
         <Nav.Column xs={erLitenSkjerm ? "4" : "6"}>
@@ -56,9 +56,9 @@ const PersonInfo = ({ behandlingID, ...props }: PersonInfoProps) => {
         <Nav.Column xs={erLitenSkjerm ? "8" : "6"}>{personopplysninger?.fnr || "-"}</Nav.Column>
       </>
     );
-  };
+  }
 
-  const Fødselsdato = () => {
+  function Fødselsdato() {
     const foedsel = personinfoData?.hentSaksopplysninger.persondata.foedsel;
     let fødselsdato = null;
     if (foedsel) {
@@ -74,7 +74,7 @@ const PersonInfo = ({ behandlingID, ...props }: PersonInfoProps) => {
         <Nav.Column xs={erLitenSkjerm ? "8" : "6"}>{fødselsdato}</Nav.Column>
       </>
     );
-  };
+  }
 
   return (
     <div className={personinfoClassName.block}>
@@ -96,6 +96,6 @@ const PersonInfo = ({ behandlingID, ...props }: PersonInfoProps) => {
       </Nav.Column>
     </div>
   );
-};
+}
 
 export default PersonInfo;

@@ -5,10 +5,10 @@ interface FullmaktForTrygdeavgiftConfirmationPanelProps {
   onChange: (val: boolean) => void;
 }
 
-const FullmaktForTrygdeavgiftConfirmationPanel = ({
+function FullmaktForTrygdeavgiftConfirmationPanel({
   harBekreftet,
   onChange,
-}: FullmaktForTrygdeavgiftConfirmationPanelProps) => {
+}: FullmaktForTrygdeavgiftConfirmationPanelProps) {
   return (
     <Nav.ConfirmationPanel
       checked={harBekreftet}
@@ -30,6 +30,6 @@ const FullmaktForTrygdeavgiftConfirmationPanel = ({
       </Nav.List>
     </Nav.ConfirmationPanel>
   );
-};
+}
 
 export default FullmaktForTrygdeavgiftConfirmationPanel;

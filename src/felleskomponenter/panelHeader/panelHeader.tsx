@@ -8,16 +8,18 @@ interface PanelHeaderProps {
   undertittel?: ReactNode | string;
 }
 
-const PanelHeader = ({ ikon: Ikon, tittel, undertittel = "" }: PanelHeaderProps) => (
-  <div className="panelheader">
-    {Ikon && <Ikon className="panelheader__ikon" />}
-    <div className="panelheader__tittel">
-      <div className="panelheader__tittel__hoved">
-        <Nav.Heading size="xsmall">{tittel}</Nav.Heading>&emsp;
+function PanelHeader({ ikon: Ikon, tittel, undertittel = "" }: PanelHeaderProps) {
+  return (
+    <div className="panelheader">
+      {Ikon && <Ikon className="panelheader__ikon" />}
+      <div className="panelheader__tittel">
+        <div className="panelheader__tittel__hoved">
+          <Nav.Heading size="xsmall">{tittel}</Nav.Heading>&emsp;
+        </div>
+        <span className="panelheader__tittel__under">{undertittel}</span>
       </div>
-      <span className="panelheader__tittel__under">{undertittel}</span>
     </div>
-  </div>
-);
+  );
+}
 
 export default PanelHeader;

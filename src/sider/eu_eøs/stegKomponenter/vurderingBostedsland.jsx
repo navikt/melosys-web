@@ -22,24 +22,26 @@ import { hentFaktaVerdi } from "../../../domeneUtils";
 
 import "./vurderingBostedsland.css";
 
-const Avklaringer = ({ avklaringer }) => (
-  <div>
-    <ul className="betingelser__liste">
-      {avklaringer.map(({ tekst, status }) => {
-        let iconClassName;
-        if (status === undefined) {
-          iconClassName = "liste__element--varsel";
-        }
-        const cl = classnames({ liste__element: true, [iconClassName]: true });
-        return (
-          <li key={uuid()} className={cl}>
-            {tekst}
-          </li>
-        );
-      })}
-    </ul>
-  </div>
-);
+function Avklaringer({ avklaringer }) {
+  return (
+    <div>
+      <ul className="betingelser__liste">
+        {avklaringer.map(({ tekst, status }) => {
+          let iconClassName;
+          if (status === undefined) {
+            iconClassName = "liste__element--varsel";
+          }
+          const cl = classnames({ liste__element: true, [iconClassName]: true });
+          return (
+            <li key={uuid()} className={cl}>
+              {tekst}
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
 
 Avklaringer.propTypes = {
   avklaringer: PT.array,
@@ -49,7 +51,7 @@ Avklaringer.defaultProps = {
   avklaringer: [],
 };
 
-const VurderingBostedsland = (props) => {
+function VurderingBostedsland(props) {
   const { bekreftOgFortsett, tilstand, begrunnelser, redigerbart, oppdaterData, slettData, tilbake } = props;
 
   useEffect(() => {
@@ -152,7 +154,7 @@ const VurderingBostedsland = (props) => {
       />
     </div>
   );
-};
+}
 
 VurderingBostedsland.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,

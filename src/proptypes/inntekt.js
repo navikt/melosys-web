@@ -19,7 +19,7 @@ const InntektListePropType = PT.arrayOf(
     inntektsmottakerID: PT.string,
     inngaarIGrunnlagForTrekk: PT.bool,
     opptjeningsperiode: Periode,
-  })
+  }),
 );
 
 const ArbeidsInntektInformasjonPropType = PT.shape({
@@ -30,7 +30,7 @@ const ArbeidsInntektMaanedListePropType = PT.arrayOf(
   PT.shape({
     arbeidsInntektInformasjon: ArbeidsInntektInformasjonPropType,
     aarMaaned: PT.string,
-  })
+  }),
 );
 
 // ==============================================================
@@ -39,7 +39,7 @@ const ArbeidsforholdFrilanserListePropType = PT.arrayOf(
   PT.shape({
     frilansPeriode: Periode,
     yrke: PT.string,
-  })
+  }),
 );
 const FrilansInntektInformasjonPropType = PT.shape({
   arbeidsforholdFrilanserListe: ArbeidsforholdFrilanserListePropType,
@@ -48,7 +48,7 @@ const FrilansInntektMaanedListePropType = PT.arrayOf(
   PT.shape({
     frilansInntektInformasjon: FrilansInntektInformasjonPropType,
     aarMaaned: PT.string,
-  })
+  }),
 );
 
 const InntekterPrAarMaanedPropType = PT.arrayOf(
@@ -56,7 +56,7 @@ const InntekterPrAarMaanedPropType = PT.arrayOf(
     opplysningspliktigID: PT.string,
     beloep: PT.number,
     aarMaaned: PT.string,
-  })
+  }),
 );
 // ==============================================================
 const InntektPropType = PT.shape({

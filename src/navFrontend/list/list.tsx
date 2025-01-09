@@ -7,17 +7,17 @@ interface ItemProps {
   children: ReactNode;
 }
 
-const List = ({ size = "small", children, ...rest }: ListProps) => {
+function List({ size = "small", children, ...rest }: ListProps) {
   return (
     <NavList {...rest} size={size}>
       {children}
     </NavList>
   );
-};
+}
 
-const ListItem = ({ spacing = 2, children }: ItemProps) => {
+function ListItem({ spacing = 2, children }: ItemProps) {
   return <NavList.Item className={`mb-${spacing}`}>{children}</NavList.Item>;
-};
+}
 
 List.Item = ListItem;
 

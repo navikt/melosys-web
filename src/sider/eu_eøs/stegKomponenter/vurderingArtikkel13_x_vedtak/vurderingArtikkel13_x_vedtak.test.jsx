@@ -39,7 +39,7 @@ describe("VurderingArtikkel13_x_Vedtak", () => {
   };
 
   const WrappedVurderingArtikkel13_x_vedtak = reduxForm({ form: KV.Form.ARTIKKEL_13_X_VEDTAK })(
-    VurderingArtikkel13_x_vedtak
+    VurderingArtikkel13_x_vedtak,
   );
 
   it("kaller handleSubmit ved submit-event", () => {

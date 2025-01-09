@@ -30,7 +30,7 @@ interface VilkaarOgBegrunnelserProps {
   selvstendigNæringValgt?: boolean;
 }
 
-export const VilkaarOgBegrunnelser = ({
+export function VilkaarOgBegrunnelser({
   vilkårOgBegrunnelser: { vilkår, muligeBegrunnelser },
   alleValgteVilkår,
   alleValgteBegrunnelser,
@@ -39,15 +39,15 @@ export const VilkaarOgBegrunnelser = ({
   handleEndreBegrunnelseFritekst,
   redigerbart,
   selvstendigNæringValgt,
-}: VilkaarOgBegrunnelserProps) => {
+}: VilkaarOgBegrunnelserProps) {
   const hjelpetekstForVilkaar = hjelpetekster.get(vilkår);
   const vilkårErValgt = alleValgteVilkår.get(`${vilkår}`);
-  const valgtBegrunnelseForVilkår = alleValgteBegrunnelser.get(`${vilkår}`)!!;
+  const valgtBegrunnelseForVilkår = alleValgteBegrunnelser.get(`${vilkår}`)!;
   const visBegrunnelseFritekst = kodeInkludererFritekst(
     MKV.KTObjects.begrunnelser.folketrygdloven,
-    valgtBegrunnelseForVilkår?.begrunnelseKode
+    valgtBegrunnelseForVilkår?.begrunnelseKode,
   );
-  const harValgtFTRL_ARBEIDSTAKER = vilkår === MKV.Koder.vilkaar.FTRL_ARBEIDSTAKER && vilkårErValgt;
+  const harValgtFtrlArbeidstaker = vilkår === MKV.Koder.vilkaar.FTRL_ARBEIDSTAKER && vilkårErValgt;
 
   return (
     <>
@@ -68,7 +68,7 @@ export const VilkaarOgBegrunnelser = ({
           <Nav.Radio value={false}>Nei</Nav.Radio>
         </Stack>
       </Nav.RadioGroup>
-      {selvstendigNæringValgt && harValgtFTRL_ARBEIDSTAKER && (
+      {selvstendigNæringValgt && harValgtFtrlArbeidstaker && (
         <Nav.Alert variant="error">
           Virksomheten du har valgt på steget &quot;Virksomhet&quot; er en selvstendig virksomhet
         </Nav.Alert>
@@ -119,4 +119,4 @@ export const VilkaarOgBegrunnelser = ({
       )}
     </>
   );
-};
+}

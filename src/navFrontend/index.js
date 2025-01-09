@@ -23,8 +23,6 @@ import Loader from "./loader";
 import ConfirmationPanel from "./confirmationPanel";
 import { Textarea, TextField, RadioGroup, Select, CheckboxGroup, Fieldset } from "./skjema";
 
-import * as Typo from "./typografi";
-
 export {
   Alert,
   Container,
@@ -32,7 +30,6 @@ export {
   Column,
   Fieldset,
   Select,
-  Typo,
   Tag,
   HelpText,
   Button,

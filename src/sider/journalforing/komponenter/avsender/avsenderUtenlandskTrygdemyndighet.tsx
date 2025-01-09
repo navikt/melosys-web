@@ -5,17 +5,17 @@ import * as KV from "../../../../kodeverk";
 import MKV from "../../../../melosyskodeverk";
 import { sorterLandOgGjørOmTilStoreForbokstaver } from "../../../../utils/land";
 
-type AvsenderUtenlandskTrygdemyndighetProps = {
+interface AvsenderUtenlandskTrygdemyndighetProps {
   utenlandskTrygdemyndighetLandkode?: string;
   fullmektigLandEndret: (landkode: string) => void;
-};
+}
 
-const AvsenderUtenlandskTrygdemyndighet = ({
+function AvsenderUtenlandskTrygdemyndighet({
   utenlandskTrygdemyndighetLandkode,
   fullmektigLandEndret,
-}: AvsenderUtenlandskTrygdemyndighetProps) => {
+}: AvsenderUtenlandskTrygdemyndighetProps) {
   const landkoderTilUtenlandskTrygdemyndighet = sorterLandOgGjørOmTilStoreForbokstaver(
-    MKV.Kodekombinasjoner.unikeAvtaleland
+    MKV.Kodekombinasjoner.unikeAvtaleland,
   );
 
   return (
@@ -23,7 +23,7 @@ const AvsenderUtenlandskTrygdemyndighet = ({
       <Skjema.LandVelger
         feltNavn="utenlandskTrygdemyndighetLandkode"
         label="Land"
-        // @ts-ignore
+        // @ts-expect-error generisk beskrivelse
         onChange={fullmektigLandEndret}
         className="avsender__input"
         bredde="XL"
@@ -41,6 +41,6 @@ const AvsenderUtenlandskTrygdemyndighet = ({
       </div>
     </div>
   );
-};
+}
 
 export default AvsenderUtenlandskTrygdemyndighet;

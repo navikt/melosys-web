@@ -6,7 +6,7 @@ import * as Types from "./types";
 
 const FeiletResponsSelector: Selector<RootState, StateSection<Types.Data>> = createSelector(
   (state: RootState) => state.feiletRespons,
-  (feiletRespons) => feiletRespons
+  (feiletRespons) => feiletRespons,
 );
 
 const ReduxStatusSelector = createSelector(FeiletResponsSelector, (feiletRespons) => feiletRespons.status);
@@ -15,11 +15,11 @@ const FeiletResponsDataSelector = createSelector(FeiletResponsSelector, (feiletR
 
 const HttpResponsDataSelector = createSelector(
   FeiletResponsDataSelector,
-  (feiletResponsData) => feiletResponsData.data
+  (feiletResponsData) => feiletResponsData.data,
 );
 
 export const FeilmeldingerSelector = createSelector(
   HttpResponsDataSelector,
   ReduxStatusSelector,
-  DucksUtils.hentFeilmeldinger
+  DucksUtils.hentFeilmeldinger,
 );

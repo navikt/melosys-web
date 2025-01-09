@@ -1,4 +1,8 @@
 import Registrering from "../registrering";
 import Saksopplysninger from "./saksopplysninger";
 
-export default (props) => <Registrering Saksopplysninger={Saksopplysninger} {...props} />;
+function AnmodningUnntak(props) {
+  return <Registrering Saksopplysninger={Saksopplysninger} {...props} />;
+}
+
+export default AnmodningUnntak;

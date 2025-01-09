@@ -37,7 +37,7 @@ class Virksomheter extends Steg {
   static harValgtArbeidsgiver = (avklartefakta) =>
     avklartefakta.some(
       (enkeltFakta) =>
-        enkeltFakta.referanse === KV.Koder.avklartefaktaKoder.VIRKSOMHET && enkeltFakta.fakta.includes("TRUE")
+        enkeltFakta.referanse === KV.Koder.avklartefaktaKoder.VIRKSOMHET && enkeltFakta.fakta.includes("TRUE"),
     );
 
   static finnAvklaring = (avklartefakta, typeSomSkalSjekkes) => {

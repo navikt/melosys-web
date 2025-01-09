@@ -10,7 +10,11 @@ describe("organisasjon", () => {
         orgnr: "123",
         navn: "Test AS",
         postadresse: {
-          gateadresse: {},
+          gateadresse: {
+            gatenavn: "Oslo gate",
+            husnummer: "1",
+            husbokstav: "B",
+          },
           land: "NO",
           postnr: "0123",
           poststed: "Oslo",

@@ -6,31 +6,33 @@ interface UtfyltFoedestedProps {
   foedestedOgLand: FoedestedOgLand;
 }
 
-const Utfyltfoedestedogland = ({ foedestedOgLand }: UtfyltFoedestedProps) => (
-  <>
-    <Nav.Row>
-      <Nav.Column xs="6">
-        <Nav.BodyLong size="small">Fødested</Nav.BodyLong>
-      </Nav.Column>
-      <Nav.Column xs="6">
-        <Nav.BodyLong size="small">Fødeland</Nav.BodyLong>
-      </Nav.Column>
-    </Nav.Row>
-    {foedestedOgLand && (
+function Utfyltfoedestedogland({ foedestedOgLand }: UtfyltFoedestedProps) {
+  return (
+    <>
       <Nav.Row>
         <Nav.Column xs="6">
-          <Nav.BodyLong weight="semibold" size="small">
-            {foedestedOgLand.foedested}
-          </Nav.BodyLong>
+          <Nav.BodyLong size="small">Fødested</Nav.BodyLong>
         </Nav.Column>
         <Nav.Column xs="6">
-          <Nav.BodyLong weight="semibold" size="small">
-            {foedestedOgLand.foedeland}
-          </Nav.BodyLong>
+          <Nav.BodyLong size="small">Fødeland</Nav.BodyLong>
         </Nav.Column>
       </Nav.Row>
-    )}
-  </>
-);
+      {foedestedOgLand && (
+        <Nav.Row>
+          <Nav.Column xs="6">
+            <Nav.BodyLong weight="semibold" size="small">
+              {foedestedOgLand.foedested}
+            </Nav.BodyLong>
+          </Nav.Column>
+          <Nav.Column xs="6">
+            <Nav.BodyLong weight="semibold" size="small">
+              {foedestedOgLand.foedeland}
+            </Nav.BodyLong>
+          </Nav.Column>
+        </Nav.Row>
+      )}
+    </>
+  );
+}
 
 export default Utfyltfoedestedogland;

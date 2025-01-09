@@ -20,12 +20,12 @@ interface StegKnapperProps {
   className?: string;
 }
 
-const StegKnapper = ({
+function StegKnapper({
   bekreftKnappProps,
   bekreftTekst = "Bekreft og fortsett",
   tilbakeKnappProps,
   className,
-}: StegKnapperProps) => {
+}: StegKnapperProps) {
   const cls = classNames("stegKnapper", className);
   const bekreftKnappCls = classNames("stegKnapper__bekreft", bekreftKnappProps.className);
   const tilbakeKnappCls = classNames("stegKnapper__tilbake", tilbakeKnappProps?.className);
@@ -47,6 +47,6 @@ const StegKnapper = ({
       )}
     </div>
   );
-};
+}
 
 export default StegKnapper;

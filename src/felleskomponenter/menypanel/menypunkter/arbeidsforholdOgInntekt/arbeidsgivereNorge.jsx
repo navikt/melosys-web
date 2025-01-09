@@ -17,11 +17,11 @@ import Inntekt from "../arbeidsgiver/inntekt";
 import "./arbeidsgivereNorge.css";
 import { Accordion } from "@navikt/ds-react";
 
-const ArbeidsgivereEnkeltNorge = (props) => {
+function ArbeidsgivereEnkeltNorge(props) {
   const { kilde, organisasjon, arbeidsforholdene, inntektListe, wrapIPanel } = props;
 
   const seksjoner = (
-    <Fragment>
+    <>
       <Organisasjon organisasjon={organisasjon} className="organisasjonSeksjon" visOrgnr visAdresseTittel={false} />
       <Arbeidsforholdene arbeidsforholdene={arbeidsforholdene} />
       <Mui.Undertittel
@@ -30,7 +30,7 @@ const ArbeidsgivereEnkeltNorge = (props) => {
         understrek
       />
       {kilde && <Inntekt inntektListe={inntektListe} />}
-    </Fragment>
+    </>
   );
 
   const seksjonerWrappetIPanel = (
@@ -45,16 +45,16 @@ const ArbeidsgivereEnkeltNorge = (props) => {
   );
 
   const seksjonerIkkeWrappetIPanel = (
-    <Fragment>
+    <>
       <Mui.Undertittel ikon={Ikoner.Arbeidsgiver} tekst={organisasjon.navn} />
       {seksjoner}
-    </Fragment>
+    </>
   );
 
   return (
     <div className="arbeidsgivereEnkeltNorge">{wrapIPanel ? seksjonerWrappetIPanel : seksjonerIkkeWrappetIPanel}</div>
   );
-};
+}
 
 ArbeidsgivereEnkeltNorge.propTypes = {
   kilde: PT.string,
@@ -69,7 +69,7 @@ ArbeidsgivereEnkeltNorge.defaultProps = {
   wrapIPanel: false,
 };
 
-export const ArbeidsgivereNorge = (props) => {
+export function ArbeidsgivereNorge(props) {
   const { arbeidsgivereNorge } = props;
 
   const wrapIPanel = arbeidsgivereNorge.length > 1;
@@ -81,7 +81,7 @@ export const ArbeidsgivereNorge = (props) => {
       ))}
     </div>
   );
-};
+}
 
 ArbeidsgivereNorge.propTypes = {
   arbeidsgivereNorge: MPT.ArbeidsgivereNorge.isRequired,

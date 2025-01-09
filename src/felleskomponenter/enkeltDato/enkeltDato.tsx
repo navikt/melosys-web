@@ -14,7 +14,7 @@ interface EnkeltDatoProps {
 function EnkeltDato({ dato = "", visTidspunkt = false, defaultValue = "-" }: EnkeltDatoProps) {
   const lesbarDato = formatterDatoTilNorsk(dato, visTidspunkt);
 
-  return dato ? <time dateTime={dato}>{lesbarDato}</time> : <>{defaultValue}</>;
+  return dato ? <time dateTime={dato}>{lesbarDato}</time> : <span>{defaultValue}</span>;
 }
 
 export default EnkeltDato;

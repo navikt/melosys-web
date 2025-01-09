@@ -13,32 +13,34 @@ interface PeriodeProps {
   lagreSoknadOgOppfriskSaksopplysninger: () => void;
 }
 
-const Periode = ({
+function Periode({
   visArbeidsforholdRolleEtiketter,
   redigerbart,
   lagreSoknadOgOppfriskSaksopplysninger,
-}: PeriodeProps) => (
-  <div className="utenlandsoppdraget-periode">
-    <Tittellinje
-      tittel={KV.Menypunkter.Periode.tittel}
-      visArbeidsforholdRolleEtiketter={visArbeidsforholdRolleEtiketter}
-    />
-    <Nav.Row>
-      <Nav.Column xs="6">
-        <Soknadsperiode
-          redigerbart={redigerbart}
-          lagreSoknadOgOppfriskSaksopplysninger={lagreSoknadOgOppfriskSaksopplysninger}
-          tittel={KV.Menypunkter.Periode.undertitler.periode}
-        />
-      </Nav.Column>
-      <Nav.Column xs="6">
-        <Soknadslandvelger
-          redigerbart={redigerbart}
-          lagreSoknadOgOppfriskSaksopplysninger={lagreSoknadOgOppfriskSaksopplysninger}
-        />
-      </Nav.Column>
-    </Nav.Row>
-  </div>
-);
+}: PeriodeProps) {
+  return (
+    <div className="utenlandsoppdraget-periode">
+      <Tittellinje
+        tittel={KV.Menypunkter.Periode.tittel}
+        visArbeidsforholdRolleEtiketter={visArbeidsforholdRolleEtiketter}
+      />
+      <Nav.Row>
+        <Nav.Column xs="6">
+          <Soknadsperiode
+            redigerbart={redigerbart}
+            lagreSoknadOgOppfriskSaksopplysninger={lagreSoknadOgOppfriskSaksopplysninger}
+            tittel={KV.Menypunkter.Periode.undertitler.periode}
+          />
+        </Nav.Column>
+        <Nav.Column xs="6">
+          <Soknadslandvelger
+            redigerbart={redigerbart}
+            lagreSoknadOgOppfriskSaksopplysninger={lagreSoknadOgOppfriskSaksopplysninger}
+          />
+        </Nav.Column>
+      </Nav.Row>
+    </div>
+  );
+}
 
 export default Periode;

@@ -13,7 +13,7 @@ interface FeilmeldingDialogProps {
   feilmeldinger: Feilmelding[];
 }
 
-export const FeilmeldingDialog = ({ avbryt, feilmeldinger }: FeilmeldingDialogProps) => {
+export function FeilmeldingDialog({ avbryt, feilmeldinger }: FeilmeldingDialogProps) {
   return (
     <Nav.Modal
       onClose={avbryt}
@@ -34,6 +34,6 @@ export const FeilmeldingDialog = ({ avbryt, feilmeldinger }: FeilmeldingDialogPr
       </Nav.Modal.Body>
     </Nav.Modal>
   );
-};
+}
 
 export default FeilmeldingDialog;

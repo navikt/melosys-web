@@ -5,7 +5,7 @@ import * as Utils from "../../utils";
 import * as Nav from "../../navFrontend";
 import sorterElementerEtterDato from "./sorterElementerEtterDato";
 
-const SorterbarListe = ({
+function SorterbarListe({
   elementer,
   defaultChecked,
   component,
@@ -14,7 +14,7 @@ const SorterbarListe = ({
   radioGroupName,
   className = undefined,
   ...props
-}) => {
+}) {
   const [sortOrder, setSortOrder] = useState(defaultChecked);
 
   if (!elementer) return null;
@@ -36,7 +36,7 @@ const SorterbarListe = ({
       ))}
     </div>
   );
-};
+}
 
 SorterbarListe.propTypes = {
   elementer: PT.arrayOf(PT.object),

@@ -26,7 +26,7 @@ describe("vedleggTable", () => {
         slettFritekstvedlegg={vi.fn()}
         label="a"
         redigerbart
-      />
+      />,
     );
     expect(container).toMatchSnapshot();
   });

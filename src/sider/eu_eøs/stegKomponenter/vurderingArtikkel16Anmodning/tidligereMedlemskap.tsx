@@ -8,7 +8,7 @@ import { useDispatch } from "react-redux";
 import { behandlingsperioderOperations } from "../../../../ducks/behandlingsperioder";
 
 type TidligereMedlemskapsperioderProps = TidligereMedlemskapProps & WrappedFieldArrayProps<number>;
-const TidligereMedlemskapsperioder = ({ medlemskap, redigerbart, fields, land }: TidligereMedlemskapsperioderProps) => {
+function TidligereMedlemskapsperioder({ medlemskap, redigerbart, fields, land }: TidligereMedlemskapsperioderProps) {
   const dispatch = useDispatch();
   const alleValgtePeriodeID = fields.getAll() ?? [];
 
@@ -50,7 +50,7 @@ const TidligereMedlemskapsperioder = ({ medlemskap, redigerbart, fields, land }:
       })}
     </Nav.CheckboxGroup>
   );
-};
+}
 
 interface TidligereMedlemskapProps {
   redigerbart: boolean;
@@ -62,8 +62,8 @@ interface TidligereMedlemskapProps {
   land: string;
 }
 
-const TidligereMedlemskap = (props: TidligereMedlemskapProps) => (
-  <FieldArray name="tidligeremedlemskap" component={TidligereMedlemskapsperioder} {...props} />
-);
+function TidligereMedlemskap(props: TidligereMedlemskapProps) {
+  return <FieldArray name="tidligeremedlemskap" component={TidligereMedlemskapsperioder} {...props} />;
+}
 
 export default TidligereMedlemskap;

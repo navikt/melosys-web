@@ -29,7 +29,7 @@ import { formSelectors } from "../../ducks/form";
 import Stegvelger from "./stegvelger";
 import "./saksbehandling.css";
 
-const Saksbehandling = ({
+function Saksbehandling({
   arbeidsland,
   hovedpartRolle,
   behandlingOppfriskes,
@@ -60,7 +60,7 @@ const Saksbehandling = ({
   lovvalgsperiodeTom,
   registeropplysningerHentet,
   menypanelSynlig,
-}) => {
+}) {
   const [behandlingID, setBehandlingID] = useState(-1);
   const [saksopplysningerLastet, setSaksopplysningerLastet] = useState(false);
   const saksnummer = match?.params?.saksnr;
@@ -179,7 +179,7 @@ const Saksbehandling = ({
       </div>
     </>
   );
-};
+}
 
 Saksbehandling.propTypes = {
   arbeidsland: PT.arrayOf(MPT.Kodeverk).isRequired,
@@ -225,10 +225,10 @@ const mapStateToProps = (state) => ({
   hovedpartRolle: fagsakSelectors.HovedpartRolleSelector(state),
   mottatteOpplysninger: mottatteOpplysningerSelectors.MottatteOpplysningerDataSelector(state),
   mottatteOpplysningerPeriodeFom: Utils.dato.formatterDatoTilNorsk(
-    mottatteOpplysningerSelectors.PeriodeSelector(state).fom
+    mottatteOpplysningerSelectors.PeriodeSelector(state).fom,
   ),
   mottatteOpplysningerPeriodeTom: Utils.dato.formatterDatoTilNorsk(
-    mottatteOpplysningerSelectors.PeriodeSelector(state).tom
+    mottatteOpplysningerSelectors.PeriodeSelector(state).tom,
   ),
   behandlingsresultatType: behandlingsresultatSelectors.BehandlingsresultatTypeSelector(state),
   fagsakStatusKode: fagsakSelectors.FagsakStatusSelector(state),

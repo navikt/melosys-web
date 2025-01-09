@@ -22,7 +22,7 @@ interface SkatteforholdsperioderProps {
   defaultPeriode?: { fomDato: string; tomDato: string };
 }
 
-export const Skatteforholdsperioder = ({
+export function Skatteforholdsperioder({
   formValues,
   control,
   remove,
@@ -30,7 +30,7 @@ export const Skatteforholdsperioder = ({
   redigerbart,
   defaultPeriode,
   fields,
-}: SkatteforholdsperioderProps) => {
+}: SkatteforholdsperioderProps) {
   return (
     <div className="perioder">
       {formValues.skatteforholdsperioder.map((skatteforhold, index) => {
@@ -85,4 +85,4 @@ export const Skatteforholdsperioder = ({
       )}
     </div>
   );
-};
+}

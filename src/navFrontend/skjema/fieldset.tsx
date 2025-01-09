@@ -11,7 +11,7 @@ interface FieldsetProps extends HTMLAttributes<HTMLFieldSetElement> {
   legend: ReactNode;
 }
 
-const Fieldset = ({ className, children, legend, ...other }: FieldsetProps) => {
+function Fieldset({ className, children, legend, ...other }: FieldsetProps) {
   const cls = bem("fieldset");
 
   return (
@@ -20,6 +20,6 @@ const Fieldset = ({ className, children, legend, ...other }: FieldsetProps) => {
       {children}
     </fieldset>
   );
-};
+}
 
 export default Fieldset;

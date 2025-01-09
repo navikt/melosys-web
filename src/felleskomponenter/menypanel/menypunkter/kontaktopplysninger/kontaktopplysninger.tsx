@@ -25,13 +25,13 @@ interface KontaktOpplysningerProps {
   onSlettKnappClick: (e: MouseEvent<HTMLButtonElement>) => Promise<any> | void;
 }
 
-export const KontaktOpplysninger = ({
+export function KontaktOpplysninger({
   onChange,
   kontaktopplysninger,
   redigerbart,
   onInputBlur,
   onSlettKnappClick,
-}: KontaktOpplysningerProps) => {
+}: KontaktOpplysningerProps) {
   const [sokeResultat, setSokeResultat] = useState<Api.Organisasjon | null>(null);
   const [lagreFeilmelding, setLagreFeilmelding] = useState("");
   const [slettFeilmelding, setSlettFeilmelding] = useState("");
@@ -177,6 +177,6 @@ export const KontaktOpplysninger = ({
       </div>
     </div>
   );
-};
+}
 
 export default KontaktOpplysninger;

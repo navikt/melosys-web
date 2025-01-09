@@ -1,7 +1,7 @@
 import { getAsJson, postAsJson } from "../../utils";
 import { ANMODNINGSPERIODER, API_BASE_URL } from "../../api-constants";
 
-export type Anmodningsperiode = {
+export interface Anmodningsperiode {
   sendtUtland?: boolean;
   id: string | null;
   fomDato: string;
@@ -13,11 +13,11 @@ export type Anmodningsperiode = {
   unntakFraLovvalgsland: string;
   trygdeDekning: string;
   medlemskapsperiodeID: string;
-};
+}
 
-export type Anmodningsperioder = {
+export interface Anmodningsperioder {
   anmodningsperioder: Anmodningsperiode[];
-};
+}
 
 export const send = (behandlingID: number, body: Anmodningsperioder) =>
   postAsJson(`${API_BASE_URL}${ANMODNINGSPERIODER}/${behandlingID}`, body);

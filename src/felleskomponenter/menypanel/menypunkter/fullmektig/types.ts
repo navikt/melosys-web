@@ -5,9 +5,12 @@ export enum Type {
   PERSON = "PERSON",
   ORGANISASJON = "ORGANISASJON",
 }
-export type AdresseOgFeil = { adresse?: BrevAdresse; feil?: string };
+export interface AdresseOgFeil {
+  adresse?: BrevAdresse;
+  feil?: string;
+}
 
-export type Fullmektig = {
+export interface Fullmektig {
   ident: string;
   databaseID?: number;
   fullmakter: string[];
@@ -20,7 +23,7 @@ export type Fullmektig = {
   kontaktOrgnr?: string | null;
   kontaktTelefon?: string | null;
   kontaktOrgAdresse?: BrevAdresse;
-};
+}
 
 export interface FieldArrayProps {
   fullmektige: Fullmektig[];

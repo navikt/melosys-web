@@ -9,7 +9,7 @@ import * as Api from "../../../services/api";
 
 const { FRITEKST } = MKV.Koder.behandlinger.behandlingsaarsaktyper;
 
-export const OpprettNyOppgave = () => {
+export function OpprettNyOppgave() {
   const [muligeBehandlingsårsaker, setMuligeBehandlingsårsaker] = useState<KTObject[]>([]);
   const { behandlingsaarsakType } = useSelector(formSelectors.OpprettNySakFormValuesSelector);
   const { behandlingstype: valgtBehandlingstype } = useSelector(formSelectors.OpprettNySakFormValuesSelector);
@@ -47,4 +47,4 @@ export const OpprettNyOppgave = () => {
       )}
     </div>
   );
-};
+}

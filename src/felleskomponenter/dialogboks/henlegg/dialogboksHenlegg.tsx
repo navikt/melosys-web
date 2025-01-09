@@ -22,11 +22,11 @@ import { fagsakSelectors } from "../../../ducks/fagsaker";
 import "./dialogboksHenlegg.css";
 import Dokumentliste from "../../dokumentliste";
 
-type DialogboksHenleggSakProps = {
+interface DialogboksHenleggSakProps {
   avbryt: () => void;
-};
+}
 
-export const DialogboksHenleggSak = ({ avbryt }: DialogboksHenleggSakProps) => {
+export function DialogboksHenleggSak({ avbryt }: DialogboksHenleggSakProps) {
   const dispatch = useDispatch();
   const [feil, setFeil] = useState<undefined | string>(undefined);
 
@@ -46,7 +46,7 @@ export const DialogboksHenleggSak = ({ avbryt }: DialogboksHenleggSakProps) => {
         vedtakstype: MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
         behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.HENLEGGELSE,
         skalRegisteropplysningerOppdateres: false,
-      })
+      }),
     );
   }, []);
 
@@ -159,6 +159,6 @@ export const DialogboksHenleggSak = ({ avbryt }: DialogboksHenleggSakProps) => {
       </Nav.Modal.Footer>
     </Nav.Modal>
   );
-};
+}
 
 export default DialogboksHenleggSak;

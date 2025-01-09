@@ -37,7 +37,7 @@ describe("sok operations", () => {
             saksnummer: null,
             orgnr: null,
           }),
-        })
+        }),
       );
       expect(store.getActions()).toEqual(expect.arrayContaining(expectedActions));
     });
@@ -60,7 +60,7 @@ describe("sok operations", () => {
             saksnummer,
             orgnr: null,
           }),
-        })
+        }),
       );
       expect(store.getActions()).toEqual(expect.arrayContaining(expectedActions));
     });
@@ -83,7 +83,7 @@ describe("sok operations", () => {
             saksnummer: null,
             orgnr,
           }),
-        })
+        }),
       );
       expect(store.getActions()).toEqual(expect.arrayContaining(expectedActions));
     });

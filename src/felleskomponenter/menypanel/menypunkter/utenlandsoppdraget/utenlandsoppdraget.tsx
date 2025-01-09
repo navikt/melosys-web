@@ -15,17 +15,17 @@ import Tittellinje from "./tittellinje";
 
 import "./utenlandsoppdraget.css";
 
-type UtenlandsoppdragetProps = {
+interface UtenlandsoppdragetProps {
   visArbeidsforholdRolleEtiketter: boolean;
   redigerbart: boolean;
   lagreSoknadOgOppfriskSaksopplysninger: () => void;
-};
+}
 
-export const Utenlandsoppdraget = ({
+export function Utenlandsoppdraget({
   visArbeidsforholdRolleEtiketter,
   redigerbart,
   lagreSoknadOgOppfriskSaksopplysninger,
-}: UtenlandsoppdragetProps) => {
+}: UtenlandsoppdragetProps) {
   const dispatch = useDispatch();
   const sakstype = useSelector(fagsakSelectors.SakstypeKodeSelector);
 
@@ -75,6 +75,6 @@ export const Utenlandsoppdraget = ({
       </Nav.Row>
     </div>
   );
-};
+}
 
 export default Utenlandsoppdraget;

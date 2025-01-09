@@ -31,7 +31,7 @@ interface Props extends RouteComponentProps<MatchParams> {
   visOppfriskModal: () => void;
 }
 
-const Saksbehandling = ({ match, location }: Props) => {
+function Saksbehandling({ match, location }: Props) {
   const [behandlingID, setBehandlingID] = useState(-1);
   const [saksopplysningerLastet, setSaksopplysningerLastet] = useState(false);
 
@@ -65,7 +65,7 @@ const Saksbehandling = ({ match, location }: Props) => {
       setBehandlingID(behandlingId);
       await dispatch(fagsakOperations.hent(saksnr));
       const response = await dispatch(behandlingerOperations.hentBehandling(behandlingId));
-      // @ts-ignore
+      // @ts-expect-error generisk beskrivelse
       const behandling = response.data;
       if (!behandling) return false;
 
@@ -137,6 +137,6 @@ const Saksbehandling = ({ match, location }: Props) => {
       </div>
     </>
   );
-};
+}
 
 export default Saksbehandling;

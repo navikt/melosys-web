@@ -11,7 +11,7 @@ import * as Nav from "../../../../../navFrontend";
 
 import "./familiemedlemmer.css";
 
-const Familiemedlemmer = () => {
+function Familiemedlemmer() {
   const behandlingID: number = useSelector(behandlingerSelectors.BehandlingIDSelector) as number;
   const { loading, error, data } = useHentFamiliemedlemmerQuery({ variables: { behandlingID } });
 
@@ -20,7 +20,7 @@ const Familiemedlemmer = () => {
 
   const barn =
     data?.hentSaksopplysninger.persondata.familiemedlemmer.filter(
-      (fm) => fm.relasjonsrolle === Familierelasjonsrolle.Barn
+      (fm) => fm.relasjonsrolle === Familierelasjonsrolle.Barn,
     ) || [];
 
   const ektefellePartner =
@@ -28,7 +28,7 @@ const Familiemedlemmer = () => {
       (fm) =>
         fm.relasjonsrolle === Familierelasjonsrolle.RelatertVedSivilstand &&
         fm.sivilstand != null &&
-        !fm.sivilstand.erHistorisk
+        !fm.sivilstand.erHistorisk,
     ) || [];
 
   const familiemedlemmerClassName = bem("familiemedlemmer");
@@ -67,6 +67,6 @@ const Familiemedlemmer = () => {
       </div>
     </div>
   );
-};
+}
 
 export default Familiemedlemmer;

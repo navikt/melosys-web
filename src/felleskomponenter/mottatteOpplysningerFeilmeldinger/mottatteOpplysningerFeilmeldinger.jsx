@@ -7,7 +7,7 @@ import * as Nav from "../../navFrontend";
 
 import "./mottatteOpplysningerFeilmeldinger.css";
 
-export const MottatteOpplysningerFeilmeldinger = ({ panelFeil }) => {
+export function MottatteOpplysningerFeilmeldinger({ panelFeil }) {
   if (panelFeil.length === 0) return null;
 
   return (
@@ -27,14 +27,14 @@ export const MottatteOpplysningerFeilmeldinger = ({ panelFeil }) => {
       </ul>
     </Nav.Alert>
   );
-};
+}
 
 MottatteOpplysningerFeilmeldinger.propTypes = {
   panelFeil: PT.arrayOf(
     PT.shape({
       feil: PT.arrayOf(PT.string),
       panel: PT.string.isRequired,
-    })
+    }),
   ),
 };
 

@@ -3,13 +3,13 @@ import * as Utils from "../../../../../utils";
 import "./sumArsavregningTabell.css";
 import { formaterTilNorskBelop } from "../../../../../utils";
 
-export const SumArsavregningTabell = ({
+export function SumArsavregningTabell({
   nyTrygdeavgift,
   tidligereTrygdeavgift,
 }: {
   nyTrygdeavgift?: number;
   tidligereTrygdeavgift?: number;
-}) => {
+}) {
   const sumTilFakturaEllerRefusjon = (nyTrygdeavgift ?? 0) - (tidligereTrygdeavgift ?? 0);
 
   return (
@@ -46,4 +46,4 @@ export const SumArsavregningTabell = ({
       </Nav.Table>
     </div>
   );
-};
+}

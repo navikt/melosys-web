@@ -22,6 +22,6 @@ export function hentMuligeBehandlingsstatuser(behandlingID: number) {
       mapDispatchData: (data: any) => ({
         muligeBehandlingsstatuser: data,
       }),
-    }
+    },
   );
 }

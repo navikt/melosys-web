@@ -447,7 +447,7 @@ describe("Avklartefaktaselectors", () => {
           fagsakOrganisasjoner,
           soknadOrganisasjoner,
           foretakUtland,
-          selvstendigArbeidForetak
+          selvstendigArbeidForetak,
         );
       }).toThrow();
     });
@@ -470,7 +470,7 @@ describe("Avklartefaktaselectors", () => {
       const forventetResultat = [];
 
       expect(
-        resultFunc(alleAvklarteVirksomhetFaktaer, alleOrganisasjoner, foretakUtland, selvstendigArbeidForetak)
+        resultFunc(alleAvklarteVirksomhetFaktaer, alleOrganisasjoner, foretakUtland, selvstendigArbeidForetak),
       ).toEqual(forventetResultat);
     });
 
@@ -494,7 +494,7 @@ describe("Avklartefaktaselectors", () => {
         alleAvklarteVirksomhetFaktaer,
         alleOrganisasjoner,
         foretakUtland,
-        selvstendigArbeidForetak
+        selvstendigArbeidForetak,
       );
 
       expect(resultat[0].virksomhetId).toBe("1");
@@ -521,7 +521,7 @@ describe("Avklartefaktaselectors", () => {
       const forventetResultat = [];
 
       expect(
-        resultFunc(alleAvklarteVirksomhetFaktaer, alleOrganisasjoner, foretakUtland, selvstendigArbeidForetak)
+        resultFunc(alleAvklarteVirksomhetFaktaer, alleOrganisasjoner, foretakUtland, selvstendigArbeidForetak),
       ).toEqual(forventetResultat);
     });
 
@@ -557,7 +557,7 @@ describe("Avklartefaktaselectors", () => {
       ];
 
       expect(
-        resultFunc(alleAvklarteVirksomhetFaktaer, alleOrganisasjoner, foretakUtland, selvstendigArbeidForetak)
+        resultFunc(alleAvklarteVirksomhetFaktaer, alleOrganisasjoner, foretakUtland, selvstendigArbeidForetak),
       ).toMatchObject(forventetResultat);
     });
   });
@@ -665,7 +665,7 @@ describe("Avklartefaktaselectors", () => {
           mottatteOpplysningerData: {
             soeknadsland,
           },
-        })
+        }),
       );
       expect(resultat.length).toBe(0);
     });
@@ -677,7 +677,7 @@ describe("Avklartefaktaselectors", () => {
           mottatteOpplysningerData: {
             soeknadsland,
           },
-        })
+        }),
       );
       expect(resultat.length).toBe(2);
 
@@ -693,7 +693,7 @@ describe("Avklartefaktaselectors", () => {
             soeknadsland,
             foretakUtland,
           },
-        })
+        }),
       );
       expect(resultat.length).toBe(1);
 
@@ -711,7 +711,7 @@ describe("Avklartefaktaselectors", () => {
               fysiskeArbeidssteder: foretakUtland,
             },
           },
-        })
+        }),
       );
       expect(resultat.length).toBe(1);
 
@@ -727,7 +727,7 @@ describe("Avklartefaktaselectors", () => {
               lovvalgsland: "DE",
             },
           ],
-        })
+        }),
       );
       expect(resultat.length).toBe(1);
 
@@ -746,7 +746,7 @@ describe("Avklartefaktaselectors", () => {
               fysiskeArbeidssteder: foretakUtland,
             },
           },
-        })
+        }),
       );
       expect(resultat.length).toBe(2);
 

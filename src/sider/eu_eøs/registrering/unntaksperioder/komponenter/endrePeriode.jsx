@@ -9,7 +9,7 @@ import Datovelger from "../../../../../felleskomponenter/datovelger";
 import "./endrePeriode.css";
 import { useEffect } from "react";
 
-const EndrePeriode = ({
+function EndrePeriode({
   endrePeriode,
   lovvalgsperiode,
   sedLovvalgsperiode,
@@ -19,7 +19,7 @@ const EndrePeriode = ({
   oppdaterFritekst,
   feilmeldinger,
   redigerbart,
-}) => {
+}) {
   const { fom, tom, begrunnelse, fritekst } = endrePeriode;
 
   const tilPeriode = (fomDato, tomDato) => ({
@@ -97,7 +97,7 @@ const EndrePeriode = ({
       )}
     </div>
   );
-};
+}
 
 EndrePeriode.propTypes = {
   endrePeriode: PT.shape({

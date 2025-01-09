@@ -38,7 +38,7 @@ type InnerEditerbartElementListeProps = WrappedFieldArrayProps & BaseProps;
 
 const mapDispatchToProps = (
   dispatch: ThunkDispatch<RootState, unknown, Action>,
-  ownProps: InnerEditerbartElementListeProps
+  ownProps: InnerEditerbartElementListeProps,
 ) => ({
   settFeltVerdi: (field: string, value: any) => dispatch(change(ownProps.meta.form, field, value)),
 });
@@ -46,7 +46,7 @@ const mapDispatchToProps = (
 const connector = connect(null, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-const InnerEditerbartElementListe = ({
+function InnerEditerbartElementListe({
   leggTilTekst,
   redigerbart,
   fields,
@@ -69,7 +69,7 @@ const InnerEditerbartElementListe = ({
   onBinClick,
   symbolsynlighet,
   onLagreClick,
-}: InnerEditerbartElementListeProps & PropsFromRedux) => {
+}: InnerEditerbartElementListeProps & PropsFromRedux) {
   const editerbartElementListeCls = classNames(className);
 
   const leggTil = () => fields.push(hentDefaultElement());
@@ -132,7 +132,7 @@ const InnerEditerbartElementListe = ({
       )}
     </div>
   );
-};
+}
 
 const ConnectedInnerElementListe = connector(InnerEditerbartElementListe);
 
@@ -140,9 +140,9 @@ type EditerbartElementListeProps = BaseProps & {
   feltNavn: string;
 };
 
-const EditerbartElementListe = ({ feltNavn, ...rest }: EditerbartElementListeProps) => (
-  <FieldArray component={ConnectedInnerElementListe} name={feltNavn} props={rest} rerenderOnEveryChange />
-);
+function EditerbartElementListe({ feltNavn, ...rest }: EditerbartElementListeProps) {
+  return <FieldArray component={ConnectedInnerElementListe} name={feltNavn} props={rest} rerenderOnEveryChange />;
+}
 
 EditerbartElementListe.propTypes = {
   feltNavn: PT.string.isRequired,

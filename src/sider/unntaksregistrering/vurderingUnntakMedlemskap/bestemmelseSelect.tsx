@@ -26,14 +26,14 @@ interface BestemmelseSelectProps {
   redigerbart: boolean;
 }
 
-export const BestemmelseSelect = ({
+export function BestemmelseSelect({
   formValues,
   control,
   bestemmelser,
   lagreBestemmelse,
   lagreTrygdedekning,
   redigerbart,
-}: BestemmelseSelectProps) => {
+}: BestemmelseSelectProps) {
   const skalViseDekningSelect = [CAN_ART11, USA_ART5_9].includes(formValues?.bestemmelse);
 
   return (
@@ -84,4 +84,4 @@ export const BestemmelseSelect = ({
       )}
     </Nav.Row>
   );
-};
+}

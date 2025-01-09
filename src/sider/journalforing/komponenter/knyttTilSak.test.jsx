@@ -1,4 +1,4 @@
-import { JOURNALFORING_VALUES } from "../../../kodeverk/form";
+import { JournalforingValues } from "../../../kodeverk/form";
 import MKV from "../../../melosyskodeverk";
 import { KnyttTilSak } from "./knyttTilSak";
 import { renderWithProviders } from "../../../ducks/test-utils/renderWithProviders";
@@ -45,7 +45,7 @@ describe("KnyttTilSak", () => {
         behandlingstype: null,
         journalforingGjelder: null,
       },
-      feltNavn: JOURNALFORING_VALUES,
+      feltNavn: JournalforingValues,
       journalforingGjelder: MKV.Koder.aktoersroller.BRUKER,
       behandlingstyper: [],
       opprettBehandling: false,

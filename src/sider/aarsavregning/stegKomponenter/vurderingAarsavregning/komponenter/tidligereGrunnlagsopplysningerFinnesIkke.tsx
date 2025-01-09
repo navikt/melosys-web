@@ -27,23 +27,25 @@ const informasjonsmeldingIngenInformasjonOmPerioder = (
   </Nav.Alert>
 );
 
-export const TidligereGrunnlagsopplysningerFinnesIkke = ({ control, redigerbart }: TidligereGrunnlagProps) => (
-  <div className="skjema__panel">
-    <Nav.Heading size="xsmall" className="ingenInformasjonOmPerioderTittel">
-      Grunnlagsopplysninger for trygdeavgift
-    </Nav.Heading>
+export function TidligereGrunnlagsopplysningerFinnesIkke({ control, redigerbart }: TidligereGrunnlagProps) {
+  return (
+    <div className="skjema__panel">
+      <Nav.Heading size="xsmall" className="ingenInformasjonOmPerioderTittel">
+        Grunnlagsopplysninger for trygdeavgift
+      </Nav.Heading>
 
-    {informasjonsmeldingIngenInformasjonOmPerioder}
+      {informasjonsmeldingIngenInformasjonOmPerioder}
 
-    <Nav.BodyLong weight="semibold" size="small">
-      Totalt tidligere fakturert trygdeavgift:
-    </Nav.BodyLong>
-    <Forms.Input
-      label=""
-      name="totaltForskuddsvisFakturert"
-      control={control}
-      disabled={!redigerbart}
-      className="tidligere_fakturert_input"
-    />
-  </div>
-);
+      <Nav.BodyLong weight="semibold" size="small">
+        Totalt tidligere fakturert trygdeavgift:
+      </Nav.BodyLong>
+      <Forms.Input
+        label=""
+        name="totaltForskuddsvisFakturert"
+        control={control}
+        disabled={!redigerbart}
+        className="tidligere_fakturert_input"
+      />
+    </div>
+  );
+}

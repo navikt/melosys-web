@@ -22,13 +22,13 @@ interface FritekstvedleggSkjemaProps {
 
 const TEGNBEGRENSNING = 60;
 
-const FritekstvedleggSkjema = ({
+function FritekstvedleggSkjema({
   felt,
   index,
   resetFritekstvedlegg,
   leggTilFritekstvedlegg,
   width,
-}: FritekstvedleggSkjemaProps) => {
+}: FritekstvedleggSkjemaProps) {
   const cls = bem("fritekstvedleggSkjema");
   const placeholder = `Skriv inn tittel, maks ${TEGNBEGRENSNING} tegn`;
 
@@ -63,6 +63,6 @@ const FritekstvedleggSkjema = ({
       </div>
     </Nav.Row>
   );
-};
+}
 
 export default FritekstvedleggSkjema;

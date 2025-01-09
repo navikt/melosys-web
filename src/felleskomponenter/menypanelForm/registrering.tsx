@@ -35,10 +35,10 @@ type RegistreringProps = PropsFromRedux & {
   startOgVisOppfriskModal: () => void;
 };
 
-const Registrering = ({
+function Registrering({
   lagreSoknad,
   startOgVisOppfriskModal,
-}: RegistreringProps & InjectedFormProps<KV.Form.RegistreringPanelerFormData, RegistreringProps>) => {
+}: RegistreringProps & InjectedFormProps<KV.Form.RegistreringPanelerFormData, RegistreringProps>) {
   const submitHandler: FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault();
   };
@@ -53,7 +53,7 @@ const Registrering = ({
       <Menypanel lagreSoknadOgOppfriskSaksopplysninger={lagreSoknadOgOppfriskSaksopplysninger} />
     </form>
   );
-};
+}
 
 const MenypanelForm = reduxForm<KV.Form.RegistreringPanelerFormData, RegistreringProps>({
   form: KV.Form.REGISTRERING_PANELER,

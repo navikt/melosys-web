@@ -12,6 +12,6 @@ export const isDeepEmpty = (element: any): boolean => {
         if (value instanceof Object) return isDeepEmpty(value);
         return false;
       })
-      .filter((b) => !b)
+      .filter((b) => !b),
   );
 };

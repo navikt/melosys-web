@@ -1,5 +1,5 @@
 import { ComponentProps } from "react";
-import { FieldArray, WrappedFieldArrayProps, change } from "redux-form";
+import { change, FieldArray, WrappedFieldArrayProps } from "redux-form";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
@@ -57,7 +57,8 @@ const ConnectedInnerMultiSelectComponent = connector(InnerMultiSelectComponent);
 type ReduxFormConnectedMultiSelectProps = InnerMultiSelectComponentBaseProps;
 
 function ReduxFormConnectedMultiSelect(props: ReduxFormConnectedMultiSelectProps) {
-  return <FieldArray name={props.feltNavn} props={props} component={ConnectedInnerMultiSelectComponent} />;
+  const { feltNavn } = props;
+  return <FieldArray name={feltNavn} props={props} component={ConnectedInnerMultiSelectComponent} />;
 }
 
 export default ReduxFormConnectedMultiSelect;

@@ -308,7 +308,7 @@ describe("AvsluttSak", () => {
       const knapper = await screen.findAllByRole("button");
       expect(knapper.some((knapp) => knapp.textContent === "Medhold på klage")).toBeTruthy();
       expect(
-        knapper.some((knapp) => knapp.textContent === "Klageinnstilling er oversendt til klageinstansen")
+        knapper.some((knapp) => knapp.textContent === "Klageinnstilling er oversendt til klageinstansen"),
       ).toBeTruthy();
       expect(knapper.some((knapp) => knapp.textContent === "Klage er avvist")).toBeTruthy();
     });
@@ -320,7 +320,7 @@ describe("AvsluttSak", () => {
       const knapper = await screen.findAllByRole("button");
       expect(knapper.some((knapp) => knapp.textContent === "Medhold på klage")).toBeFalsy();
       expect(
-        knapper.some((knapp) => knapp.textContent === "Klageinnstilling er oversendt til klageinstansen")
+        knapper.some((knapp) => knapp.textContent === "Klageinnstilling er oversendt til klageinstansen"),
       ).toBeFalsy();
       expect(knapper.some((knapp) => knapp.textContent === "Klage er avvist")).toBeFalsy();
     });

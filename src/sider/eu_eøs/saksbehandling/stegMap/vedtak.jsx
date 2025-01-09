@@ -20,7 +20,7 @@ class Vedtak extends Steg {
       propsLight.avklartefakta.find(
         (avklartfakta) =>
           avklartfakta.avklartefaktaKode === MKV.Koder.avklartefaktatyper.YRKESGRUPPE &&
-          avklartfakta.fakta[0] === MKV.Koder.yrker.yrkesgrupper.ORDINAER
+          avklartfakta.fakta[0] === MKV.Koder.yrker.yrkesgrupper.ORDINAER,
       ) !== undefined;
     const skalViseArbeidKunNorgeFlyt =
       (erUtsendt || propsLight.behandlingstema.kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_KUN_NORGE) &&
@@ -42,7 +42,7 @@ class Vedtak extends Steg {
 
       const lovvalgSomKodeTerm = KV.finnEnkeltKodeFraListe(
         _propsLight.valgteLovvalgsVilkarBestemmelse,
-        MKV.Kodekombinasjoner.alleLovvalg
+        MKV.Kodekombinasjoner.alleLovvalg,
       );
       const erStorbritanniaBestemmelse = erStorbritanniaKonvBestemmelse(_propsLight.lovvalgsbestemmelse);
       const { UTSENDT_ARBEIDSTAKER, ARBEID_TJENESTEPERSON_ELLER_FLY } = MKV.Koder.behandlinger.behandlingstema;
@@ -66,7 +66,7 @@ class Vedtak extends Steg {
 
       const erSelvstendigNaeringsdrivende =
         propsLight.avklartefakta.find((avklartfakta) =>
-          avklartfakta.fakta.includes(VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE)
+          avklartfakta.fakta.includes(VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE),
         ) != null;
 
       if (
@@ -98,7 +98,7 @@ class Vedtak extends Steg {
           if (
             fullmektigListe?.length > 0 &&
             fullmektigListe?.find((fullmektig) =>
-              fullmektig.fullmakter?.includes(MKV.Koder.fullmaktstype.FULLMEKTIG_SØKNAD)
+              fullmektig.fullmakter?.includes(MKV.Koder.fullmaktstype.FULLMEKTIG_SØKNAD),
             )
           ) {
             pdfDokumenter.push({

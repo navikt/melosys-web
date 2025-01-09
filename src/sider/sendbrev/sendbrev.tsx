@@ -45,14 +45,14 @@ interface Props {
 
 type SendbrevProps = RouteComponentProps<RouteParams> & PropsFromRedux & Props;
 
-const Sendbrev = ({
+function Sendbrev({
   match,
   redigerbart,
   hentBehandling,
   sendBrevFormIsPristine,
   dokumenter,
   hentDokumentOversikt,
-}: SendbrevProps) => {
+}: SendbrevProps) {
   const behandlingID = Utils._toInteger(match.params.behandlingID);
   const saksnummer = match.params.snr;
 
@@ -96,6 +96,6 @@ const Sendbrev = ({
       </div>
     </>
   );
-};
+}
 
 export default withRouter(connector(Sendbrev));

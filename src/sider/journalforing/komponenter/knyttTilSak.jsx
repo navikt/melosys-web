@@ -13,7 +13,7 @@ import * as Utils from "../../../utils";
 import "./knyttTilSak.css";
 import { useAsyncCallbackState } from "../../../hooks";
 
-export const KnyttTilSak = (props) => {
+export function KnyttTilSak(props) {
   const { sak, erJournalføring, changeField, feltNavn, formValues } = props;
   const { behandlingstema, behandlingstype, journalforingGjelder, opprettBehandling } = {
     opprettBehandling: formValues[feltNavn.opprettBehandling],
@@ -29,7 +29,7 @@ export const KnyttTilSak = (props) => {
   const [{ harBehandlingMedTrygdeavgift }] = useAsyncCallbackState(
     () => Api.Fagsaker.fagsak.hentTrygdeavgiftOppsummering(sak.saksnummer),
     { harBehandlingMedTrygdeavgift: false },
-    []
+    [],
   );
 
   useEffect(() => {
@@ -42,7 +42,7 @@ export const KnyttTilSak = (props) => {
   }, []);
 
   const sisteBehandlingErInaktiv = MKVUtils.erAvsluttetEllerMidlertidigBeslutning(
-    sisteBehandling.behandlingsstatus.kode
+    sisteBehandling.behandlingsstatus.kode,
   );
   const sakKanIkkeViderebehandles = MKVUtils.erOpphørtEllerHenlagtEllerBortfaltEllerAnnullert(sak.saksstatus.kode);
 
@@ -87,7 +87,7 @@ export const KnyttTilSak = (props) => {
         sakstype.kode,
         sakstema.kode,
         null,
-        sisteBehandling.behandlingstema.kode
+        sisteBehandling.behandlingstema.kode,
       ).then((alleMuligeBehandlingstemaer) => {
         setMuligeBehandlingstemaer(alleMuligeBehandlingstemaer);
       });
@@ -99,7 +99,7 @@ export const KnyttTilSak = (props) => {
       Api.LovligeKombinasjoner.hentBehandlingstyperForKnyttTilSak(
         journalforingGjelder,
         sak.saksnummer,
-        behandlingstema
+        behandlingstema,
       ).then((alleMuligeBehandlingstyper) => {
         setMuligeBehandlingstyper(alleMuligeBehandlingstyper);
       });
@@ -118,9 +118,9 @@ export const KnyttTilSak = (props) => {
     }
   }, [opprettBehandling, behandlingstema, behandlingstype, sisteBehandling?.behandlingstema?.kode]);
 
-  const VurderDokumentCheckbox = () => (
-    <Skjema.Checkbox feltNavn="vurderDokument" label={`Oppdater behandlingsstatus til "Vurder dokument"`} />
-  );
+  function VurderDokumentCheckbox() {
+    return <Skjema.Checkbox feltNavn="vurderDokument" label={`Oppdater behandlingsstatus til "Vurder dokument"`} />;
+  }
 
   if (sakKanIkkeViderebehandles) {
     return (
@@ -215,7 +215,7 @@ export const KnyttTilSak = (props) => {
       )}
     </div>
   );
-};
+}
 
 KnyttTilSak.propTypes = {
   sak: MPT.Fagsak.isRequired,

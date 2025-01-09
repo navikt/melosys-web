@@ -8,7 +8,7 @@ interface AdresserProps {
   data: HentAdresserQuery;
 }
 
-export const Adresser = ({ data }: AdresserProps) => {
+export function Adresser({ data }: AdresserProps) {
   const { bostedsadresser, oppholdsadresser, kontaktadresser } = data.hentSaksopplysninger.persondata;
 
   return (
@@ -20,13 +20,13 @@ export const Adresser = ({ data }: AdresserProps) => {
       {kontaktadresser.length > 0 && <AdresseTableContainer adresser={kontaktadresser} adressetype="Kontaktadresse" />}
     </div>
   );
-};
+}
 
 interface AdresserWrapperProps {
   behandlingID: number;
 }
 
-const AdresserWrapper = ({ behandlingID }: AdresserWrapperProps) => {
+function AdresserWrapper({ behandlingID }: AdresserWrapperProps) {
   const { error, loading, data } = useHentAdresserQuery({ variables: { behandlingID } });
 
   if (error) return <Nav.Alert variant="error">Kunne ikke hente adresser!</Nav.Alert>;
@@ -34,6 +34,6 @@ const AdresserWrapper = ({ behandlingID }: AdresserWrapperProps) => {
   if (!data) return null;
 
   return <Adresser data={data} />;
-};
+}
 
 export default AdresserWrapper;

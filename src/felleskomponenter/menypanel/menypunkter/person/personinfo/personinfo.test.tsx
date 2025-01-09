@@ -1,9 +1,7 @@
 import { ComponentProps } from "react";
 import { instance, mock } from "ts-mockito";
 import { MockedProvider } from "@apollo/client/testing";
-import { act } from "react-dom/test-utils";
-import { render, screen, within } from "@testing-library/react";
-
+import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import { HentPersoninfoDocument } from "./hentPersoninfo.generated";
@@ -80,6 +78,7 @@ describe("Personinfo", () => {
       erHistorisk: true,
     },
   ];
+
   const requestResultMock = {
     mocks: [
       {
@@ -127,32 +126,6 @@ describe("Personinfo", () => {
           },
         },
       },
-      {
-        request: {
-          query: HentPersonopplysningerDocument,
-          variables: {
-            behandlingID: 1,
-          },
-        },
-        result: {
-          data: {
-            hentSaksopplysninger: {
-              persondata: {
-                navn: {
-                  fornavn: "Kent",
-                  mellomnavn: "C",
-                  etternavn: "Dodds",
-                },
-                kjoenn: "",
-                folkeregisterpersonstatuser: [],
-                folkeregisteridentifikator: "123",
-                statsborgerskap: [],
-                sivilstand: [],
-              },
-            },
-          },
-        },
-      },
     ],
   };
 
@@ -160,90 +133,84 @@ describe("Personinfo", () => {
     render(
       <MockedProvider {...requestResultMock}>
         <Personinfo {...props} />
-      </MockedProvider>
+      </MockedProvider>,
     );
 
     expect(screen.getByText("Henter personinfo...")).toBeInTheDocument();
   });
 
-  it("viser melding ved nettverkserror under henting av personinfo", () => {
-    return act(async () => {
-      render(
-        <MockedProvider
-          mocks={[
-            {
-              request: {
-                query: HentPersoninfoDocument,
-                variables: {
-                  behandlingID: 1,
-                },
+  it("viser melding ved nettverkserror under henting av personinfo", async () => {
+    render(
+      <MockedProvider
+        mocks={[
+          {
+            request: {
+              query: HentPersoninfoDocument,
+              variables: {
+                behandlingID: 1,
               },
-              error: new Error("feil"),
             },
-            {
-              request: {
-                query: HentPersonopplysningerDocument,
-                variables: {
-                  behandlingID: 1,
-                },
+            error: new Error("feil"),
+          },
+          {
+            request: {
+              query: HentPersonopplysningerDocument,
+              variables: {
+                behandlingID: 1,
               },
-              error: new Error("feil"),
             },
-          ]}
-        >
-          <Personinfo {...props} />
-        </MockedProvider>
-      );
+            error: new Error("feil"),
+          },
+        ]}
+      >
+        <Personinfo {...props} />
+      </MockedProvider>,
+    );
 
-      expect(await screen.findByText("Feil ved henting av personinfo!")).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText("Feil ved henting av personinfo!")).toBeInTheDocument();
     });
   });
 
-  it("sender sivilstand-data til sivilstandModal etter dataen er hentet", () => {
-    return act(async () => {
-      render(
-        <MockedProvider {...requestResultMock}>
-          <Personinfo {...props} />
-        </MockedProvider>
-      );
+  it("sender sivilstand-data til sivilstandModal etter dataen er hentet", async () => {
+    render(
+      <MockedProvider {...requestResultMock}>
+        <Personinfo {...props} />
+      </MockedProvider>,
+    );
 
-      const user = userEvent.setup();
+    const user = userEvent.setup();
+    const detaljerKnapper = await screen.findAllByText("Vis detaljer");
+    expect(detaljerKnapper).toHaveLength(2);
 
-      const detaljerKnapper = await screen.findAllByText("Vis detaljer");
-      expect(detaljerKnapper).toHaveLength(2);
+    await user.click(detaljerKnapper[1]);
 
-      await user.click(detaljerKnapper[1]);
+    const dialog = await screen.findByLabelText("Sivilstand");
 
-      const dialog = await screen.findByRole("dialog");
-      expect(dialog).toBeInTheDocument();
-
-      expect(within(dialog).getByText("Historikk")).toBeInTheDocument();
-      expect(within(dialog).getByText("Gift")).toBeInTheDocument();
-      expect(within(dialog).getByText("Ugift")).toBeInTheDocument();
-    });
+    expect(dialog).toBeInTheDocument();
+    expect(within(dialog).getByText("Historikk")).toBeInTheDocument();
+    expect(within(dialog).getByText("Gift")).toBeInTheDocument();
+    expect(within(dialog).getByText("Ugift")).toBeInTheDocument();
   });
 
-  it("sender personstatus-data til personstatusModal etter dataen er hentet", () => {
-    return act(async () => {
-      render(
-        <MockedProvider {...requestResultMock}>
-          <Personinfo {...props} />
-        </MockedProvider>
-      );
+  it("sender personstatus-data til personstatusModal etter dataen er hentet", async () => {
+    render(
+      <MockedProvider {...requestResultMock}>
+        <Personinfo {...props} />
+      </MockedProvider>,
+    );
 
-      const user = userEvent.setup();
+    const user = userEvent.setup();
+    const detaljerKnapper = await screen.findAllByText("Vis detaljer");
+    expect(detaljerKnapper).toHaveLength(2);
 
-      const detaljerKnapper = await screen.findAllByText("Vis detaljer");
-      expect(detaljerKnapper).toHaveLength(2);
+    await user.click(detaljerKnapper[0]);
 
-      await user.click(detaljerKnapper[0]);
+    const dialog = await screen.findByLabelText("Personstatus");
+    expect(dialog).toBeInTheDocument();
 
-      const dialog = await screen.findByRole("dialog");
-      expect(dialog).toBeInTheDocument();
-
-      expect(within(dialog).getByText("Historikk")).toBeInTheDocument();
-      expect(within(dialog).getAllByText("Bosatt etter folkeregisterloven")).toHaveLength(2);
-      expect(within(dialog).getByText("Bosatt utenfor Norge")).toBeInTheDocument();
-    });
+    expect(within(dialog).getByText("Historikk")).toBeInTheDocument();
+    expect(within(dialog).getAllByText("Bosatt etter folkeregisterloven")).toHaveLength(2);
+    expect(within(dialog).getByText("Bosatt utenfor Norge")).toBeInTheDocument();
   });
 });

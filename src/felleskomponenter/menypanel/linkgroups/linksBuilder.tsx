@@ -34,6 +34,7 @@ interface ILinksBuilder {
 
 class LinksBuilder implements ILinksBuilder {
   private readonly links: Link[] = [];
+
   private readonly contentProps: ContentProps;
 
   constructor(props: ContentProps) {

@@ -7,8 +7,9 @@ import * as Utils from "../../utils";
 import RegisterAdresse from "./registerAdresse";
 
 import "./organisasjonsAdresse.css";
+import * as Nav from "../../navFrontend";
 
-const OrganisasjonsAdresse = ({ organisasjon, className, visNavn, visTittel, boldNavn }) => {
+function OrganisasjonsAdresse({ organisasjon, className, visNavn, visTittel }) {
   const { postadresse, forretningsadresse, navn } = organisasjon;
 
   if (!postadresse && !forretningsadresse) return <div>(Ingen adresse tilgjengelig)</div>;
@@ -18,19 +19,19 @@ const OrganisasjonsAdresse = ({ organisasjon, className, visNavn, visTittel, bol
   const tittel = visPostadresse ? "Postadresse" : "Forretningsadresse";
 
   const cl = classNames("organisasjonsAdresse", className);
-  const navnCls = classNames({
-    bold: boldNavn,
-    "break-word": true,
-  });
 
   return (
     <div className={cl}>
-      {visNavn && <div className={navnCls}>{navn}</div>}
+      {visNavn && (
+        <Nav.BodyLong weight="semibold" size="medium">
+          {navn}
+        </Nav.BodyLong>
+      )}
       {visTittel && <div className="tittel">{tittel}</div>}
       <RegisterAdresse adresse={adresse} />
     </div>
   );
-};
+}
 
 OrganisasjonsAdresse.propTypes = {
   organisasjon: MPT.Organisasjon.isRequired,

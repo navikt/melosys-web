@@ -9,7 +9,7 @@ import * as Api from "../../services/api";
 import "./sideDialogBesvarSed.css";
 import { Accordion } from "@navikt/ds-react";
 
-const StatusEtikett = ({ status }) => {
+function StatusEtikett({ status }) {
   if (!status) {
     return null;
   }
@@ -27,7 +27,7 @@ const StatusEtikett = ({ status }) => {
     default:
       return lagTag("info", Utils.streng.storeForbokstaver(status));
   }
-};
+}
 
 StatusEtikett.propTypes = {
   status: PT.string.isRequired,
@@ -35,27 +35,29 @@ StatusEtikett.propTypes = {
 
 const sedTypeTerm = (sedType) => EKV.Terms.sedtyper[sedType];
 
-const EnkeltSed = ({ sed }) => (
-  <Nav.Box
-    as={Nav.Link}
-    href={sed.rinaUrl}
-    target="_blank"
-    padding="2"
-    borderWidth="1"
-    borderRadius="medium"
-    borderColor="border-default"
-  >
-    <div className="kolonne__navn">
-      <Nav.BodyLong weight="semibold" size="small" className="lenkepanel__heading">
-        {sed.sedType} - {sedTypeTerm(sed.sedType)}
-      </Nav.BodyLong>
-      <Nav.BodyLong size="small">Opprettet: {Utils.dato.formatterDatoTilNorsk(sed.opprettetDato)}</Nav.BodyLong>
-    </div>
-    <div className="kolonne__status">
-      <StatusEtikett status={sed.status} />
-    </div>
-  </Nav.Box>
-);
+function EnkeltSed({ sed }) {
+  return (
+    <Nav.Box
+      as={Nav.Link}
+      href={sed.rinaUrl}
+      target="_blank"
+      padding="2"
+      borderWidth="1"
+      borderRadius="medium"
+      borderColor="border-default"
+    >
+      <div className="kolonne__navn">
+        <Nav.BodyLong weight="semibold" size="small" className="lenkepanel__heading">
+          {sed.sedType} - {sedTypeTerm(sed.sedType)}
+        </Nav.BodyLong>
+        <Nav.BodyLong size="small">Opprettet: {Utils.dato.formatterDatoTilNorsk(sed.opprettetDato)}</Nav.BodyLong>
+      </div>
+      <div className="kolonne__status">
+        <StatusEtikett status={sed.status} />
+      </div>
+    </Nav.Box>
+  );
+}
 
 EnkeltSed.propTypes = {
   sed: PT.shape({
@@ -69,14 +71,16 @@ EnkeltSed.propTypes = {
 
 const bucTypeTerm = (bucType) => EKV.Selectors.alleBucer[bucType];
 
-const EnkeltBucHeading = ({ bucType, opprettetDato }) => (
-  <div>
-    <Nav.Heading size="xsmall">
-      {bucType} - {bucTypeTerm(bucType)}
-    </Nav.Heading>
-    <Nav.BodyLong size="small">Opprettet: {Utils.dato.formatterDatoTilNorsk(opprettetDato)}</Nav.BodyLong>
-  </div>
-);
+function EnkeltBucHeading({ bucType, opprettetDato }) {
+  return (
+    <div>
+      <Nav.Heading size="xsmall">
+        {bucType} - {bucTypeTerm(bucType)}
+      </Nav.Heading>
+      <Nav.BodyLong size="small">Opprettet: {Utils.dato.formatterDatoTilNorsk(opprettetDato)}</Nav.BodyLong>
+    </div>
+  );
+}
 
 EnkeltBucHeading.propTypes = {
   bucType: PT.string.isRequired,
@@ -85,28 +89,30 @@ EnkeltBucHeading.propTypes = {
 
 const sorterEtterDato = (liste) => liste.sort((a, b) => new Date(b.opprettetDato) - new Date(a.opprettetDato));
 
-const EnkeltBuc = ({ buc }) => (
-  <Accordion>
-    <Accordion.Item>
-      <Accordion.Header>
-        <EnkeltBucHeading {...buc} />
-      </Accordion.Header>
-      <Accordion.Content>
-        <div className="buc_tabell">
-          <Nav.BodyLong weight="semibold" size="small" className="tabell_header kolonne__navn">
-            Navn på SED
-          </Nav.BodyLong>
-          <Nav.BodyLong weight="semibold" size="small" className="tabell_header kolonne__status">
-            Status
-          </Nav.BodyLong>
-          {sorterEtterDato(buc.seder).map((sed) => (
-            <EnkeltSed key={sed.sedId} sed={sed} />
-          ))}
-        </div>
-      </Accordion.Content>
-    </Accordion.Item>
-  </Accordion>
-);
+function EnkeltBuc({ buc }) {
+  return (
+    <Accordion>
+      <Accordion.Item>
+        <Accordion.Header>
+          <EnkeltBucHeading {...buc} />
+        </Accordion.Header>
+        <Accordion.Content>
+          <div className="buc_tabell">
+            <Nav.BodyLong weight="semibold" size="small" className="tabell_header kolonne__navn">
+              Navn på SED
+            </Nav.BodyLong>
+            <Nav.BodyLong weight="semibold" size="small" className="tabell_header kolonne__status">
+              Status
+            </Nav.BodyLong>
+            {sorterEtterDato(buc.seder).map((sed) => (
+              <EnkeltSed key={sed.sedId} sed={sed} />
+            ))}
+          </div>
+        </Accordion.Content>
+      </Accordion.Item>
+    </Accordion>
+  );
+}
 
 EnkeltBuc.propTypes = {
   buc: PT.shape({
@@ -116,14 +122,16 @@ EnkeltBuc.propTypes = {
   }).isRequired,
 };
 
-const HenterOpplysningerSpinner = () => (
-  <div className="henter_opplysninger">
-    <Nav.Loader />
-    <Nav.BodyLong size="small">Henter BUCer knyttet til saken</Nav.BodyLong>
-  </div>
-);
+function HenterOpplysningerSpinner() {
+  return (
+    <div className="henter_opplysninger">
+      <Nav.Loader />
+      <Nav.BodyLong size="small">Henter BUCer knyttet til saken</Nav.BodyLong>
+    </div>
+  );
+}
 
-const SideDialogBesvarSed = ({ behandlingID }) => {
+function SideDialogBesvarSed({ behandlingID }) {
   const [bucer, setBucer] = useState([]);
   const [feilmelding, setFeilmelding] = useState("");
   const [henterData, setHenterData] = useState(true);
@@ -167,7 +175,7 @@ const SideDialogBesvarSed = ({ behandlingID }) => {
   };
 
   return <div className="besvar_sed">{hentKomponent()}</div>;
-};
+}
 
 SideDialogBesvarSed.propTypes = {
   behandlingID: PT.number.isRequired,

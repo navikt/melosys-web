@@ -43,7 +43,7 @@ const kreverLand = (
   sakstema,
   behandlingstema,
   behandlingstype,
-  soknadslandFlereLandUkjentHvilke
+  soknadslandFlereLandUkjentHvilke,
 ) =>
   kreverPeriode(saksnummer, sakstype, sakstema, behandlingstema, behandlingstype) && !soknadslandFlereLandUkjentHvilke;
 
@@ -76,7 +76,7 @@ const opprettnysak = object().shape({
     .test(
       "Må settes når du knytter til eksisterende sak",
       VELG_HVILKEN_SAK_DU_ONSKER_A_KNYTTE_BEHANDLINGEN_TIL,
-      (saksnummer) => skalOppretteNySak(saksnummer) || !Utils._isEmpty(saksnummer)
+      (saksnummer) => skalOppretteNySak(saksnummer) || !Utils._isEmpty(saksnummer),
     ),
   sakstype: string()
     .when("saksnummer", {
@@ -110,7 +110,7 @@ const opprettnysak = object().shape({
         then: array().min(2, { _error: VELG_MINST_TO_LAND }),
         otherwise: array().min(1, { _error: VELG_MINST_ETT_LAND }),
       }),
-    }
+    },
   ),
   oppgaveID: string()
     .nullable()

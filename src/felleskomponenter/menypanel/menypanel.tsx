@@ -41,7 +41,7 @@ type MenypanelProps = PropsFromRedux & {
   visOppdaterRegisteropplysninger?: boolean;
 };
 
-export const Menypanel = ({
+export function Menypanel({
   sisteOpplysningerHentetDato,
   mottatteOpplysningerType,
   sakstype,
@@ -52,7 +52,7 @@ export const Menypanel = ({
   redigerbart,
   lagreSoknadOgOppfriskSaksopplysninger,
   visOppdaterRegisteropplysninger = true,
-}: MenypanelProps) => {
+}: MenypanelProps) {
   const [[activeGroupIndex, activeLinkIndex], setActive] = useState<[number, number]>([0, 0]);
   const erArbeidKunNorgeToggleEnabled = useFeatureToggle(MELOSYS_ARBEID_KUN_NORGE);
   const [endreFokus, setEndreFokus] = useState(false);
@@ -134,6 +134,6 @@ export const Menypanel = ({
       </div>
     </>
   );
-};
+}
 
 export default connector(Menypanel);

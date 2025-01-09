@@ -9,5 +9,5 @@ import { createSelector } from "reselect";
 
 export const SaksopplysningerSelector = createSelector(
   (state) => state.saksopplysninger.data,
-  (saksopplysninger) => saksopplysninger
+  (saksopplysninger) => saksopplysninger,
 );

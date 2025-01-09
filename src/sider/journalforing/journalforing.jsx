@@ -507,7 +507,7 @@ Journalforing.propTypes = {
   errors: PT.object.isRequired,
   touch: PT.func.isRequired,
   vedleggsdokumenter: PT.arrayOf(
-    PT.shape({ tittel: PT.string, dokumentID: PT.string, logiskeVedlegg: PT.arrayOf(PT.string) })
+    PT.shape({ tittel: PT.string, dokumentID: PT.string, logiskeVedlegg: PT.arrayOf(PT.string) }),
   ).isRequired,
   tilForsiden: PT.func.isRequired,
   journalforSEDSkjemaIsValid: PT.bool.isRequired,

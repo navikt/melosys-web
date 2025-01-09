@@ -11,75 +11,75 @@ import * as Utils from "../../services/utils";
 
 export const BehandlingsresultatSelector = createSelector(
   (state) => state.behandlingsresultat.data || {},
-  (behandlingsresultat) => behandlingsresultat
+  (behandlingsresultat) => behandlingsresultat,
 );
 
 const BehandlingsresultatStatusSelector = createSelector(
   (state) => state.behandlingsresultat.status,
-  (behandlingsresultatStatus) => behandlingsresultatStatus
+  (behandlingsresultatStatus) => behandlingsresultatStatus,
 );
 
 export const BehandlingsresultatStatusErOkSelector = createSelector(
   BehandlingsresultatStatusSelector,
-  (behandlingsresultatStatus) => behandlingsresultatStatus === Utils.STATUS.OK
+  (behandlingsresultatStatus) => behandlingsresultatStatus === Utils.STATUS.OK,
 );
 
 export const ÅrsavregningIDSelector = createSelector(
   (state) => BehandlingsresultatSelector(state),
-  (behandlingsresultat) => behandlingsresultat.aarsavregningID
+  (behandlingsresultat) => behandlingsresultat.aarsavregningID,
 );
 
 export const BehandlingsresultatTypeSelector = createSelector(
   (state) => BehandlingsresultatSelector(state),
-  (behandlingsresultat) => behandlingsresultat.behandlingsresultatTypeKode
+  (behandlingsresultat) => behandlingsresultat.behandlingsresultatTypeKode,
 );
 
 export const VedtakstypeSelector = createSelector(
   (state) => BehandlingsresultatSelector(state),
-  (behandlingsresultat) => behandlingsresultat.vedtakstype
+  (behandlingsresultat) => behandlingsresultat.vedtakstype,
 );
 
 export const BegrunnelseKoderSelector = createSelector(
   (state) => BehandlingsresultatSelector(state),
-  (behandlingsresultat) => behandlingsresultat.begrunnelseKoder
+  (behandlingsresultat) => behandlingsresultat.begrunnelseKoder,
 );
 
 export const BegrunnelseFritekstSelector = createSelector(
   (state) => BehandlingsresultatSelector(state),
-  (behandlingsresultat) => behandlingsresultat.begrunnelseFritekst
+  (behandlingsresultat) => behandlingsresultat.begrunnelseFritekst,
 );
 
 export const InnledningFritekstSelector = createSelector(
   (state) => BehandlingsresultatSelector(state),
-  (behandlingsresultat) => behandlingsresultat.innledningFritekst
+  (behandlingsresultat) => behandlingsresultat.innledningFritekst,
 );
 
 export const TrygdeavgiftFritekstSelector = createSelector(
   (state) => BehandlingsresultatSelector(state),
-  (behandlingsresultat) => behandlingsresultat.trygdeavgiftFritekst
+  (behandlingsresultat) => behandlingsresultat.trygdeavgiftFritekst,
 );
 
 export const NyVurderingBakgrunnSelector = createSelector(
   (state) => BehandlingsresultatSelector(state),
-  (behandlingsresultat) => behandlingsresultat.nyVurderingBakgrunn
+  (behandlingsresultat) => behandlingsresultat.nyVurderingBakgrunn,
 );
 
 export const KontrollresultatBegrunnelseKoderSelector = createSelector(
   BehandlingsresultatSelector,
-  (behandlingsresultat) => behandlingsresultat.kontrollresultatBegrunnelseKoder
+  (behandlingsresultat) => behandlingsresultat.kontrollresultatBegrunnelseKoder,
 );
 
 export const UtfallRegistreringUnntakSelector = createSelector(
   (state) => BehandlingsresultatSelector(state),
-  (behandlingsresultat) => behandlingsresultat.utfallRegistreringUnntak
+  (behandlingsresultat) => behandlingsresultat.utfallRegistreringUnntak,
 );
 
 export const UtfallUtpekingSelector = createSelector(
   (state) => BehandlingsresultatSelector(state),
-  (behandlingsresultat) => behandlingsresultat.utfallUtpeking
+  (behandlingsresultat) => behandlingsresultat.utfallUtpeking,
 );
 
 export const fakturaserieReferanseSelector = createSelector(
   (state) => BehandlingsresultatSelector(state),
-  (behandlingsresultat) => behandlingsresultat.fakturaserieReferanse
+  (behandlingsresultat) => behandlingsresultat.fakturaserieReferanse,
 );

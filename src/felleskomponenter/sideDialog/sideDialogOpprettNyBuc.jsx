@@ -17,7 +17,9 @@ import "./sideDialogOpprettNyBuc.css";
 import VedleggTable from "../vedleggTable";
 import Knapperad from "../knapperad";
 
-const TomtFelt = ({ tekst }) => <option value="">{tekst}</option>;
+function TomtFelt({ tekst }) {
+  return <option value="">{tekst}</option>;
+}
 
 TomtFelt.propTypes = {
   tekst: PT.string,
@@ -27,7 +29,7 @@ TomtFelt.defaultProps = {
   tekst: "Velg...",
 };
 
-const SideDialogOpprettNyBuc = ({ behandlingID, behandlingstema, sakstype, dokumenter, redigerbart }) => {
+function SideDialogOpprettNyBuc({ behandlingID, behandlingstema, sakstype, dokumenter, redigerbart }) {
   const [tilgjengeligeMottakerinstitusjoner, setTilgjengeligeMottakerinstitusjoner] = useState([]);
 
   const [valgtFagomrade, setValgtFagomrade] = useState(EKV.Koder.sektor.LA);
@@ -155,7 +157,7 @@ const SideDialogOpprettNyBuc = ({ behandlingID, behandlingstema, sakstype, dokum
     }
   };
   const ignorerteLABucer = EKV.KTObjects.buctyper.legislation.filter(
-    ({ kode }) => kode === EKV.Koder.buctyper.legislation.LA_BUC_01 && !kanVelgeLA_BUC_01()
+    ({ kode }) => kode === EKV.Koder.buctyper.legislation.LA_BUC_01 && !kanVelgeLA_BUC_01(),
   );
 
   const tilgjengeligeBucer = (fagomrade) =>
@@ -304,7 +306,7 @@ const SideDialogOpprettNyBuc = ({ behandlingID, behandlingstema, sakstype, dokum
       </form>
     </div>
   );
-};
+}
 
 SideDialogOpprettNyBuc.propTypes = {
   behandlingID: PT.number.isRequired,

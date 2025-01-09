@@ -43,20 +43,20 @@ describe("VurderingAarsavreging", () => {
     bekreft: vi.fn(),
     oppdaterStatus: vi.fn(),
   };
-  // @ts-ignore
+  // @ts-expect-error generisk beskrivelse
   const WrappedVurderingAarsavregning = reduxForm({ form: "test" })(VurderingAarsavregning);
 
   beforeEach(() => {
-    // @ts-ignore
+    // @ts-expect-error generisk beskrivelse
     fetch.resetMocks();
-    // @ts-ignore
+    // @ts-expect-error generisk beskrivelse
     fetch.mockResponse(JSON.stringify({}));
   });
 
   describe("VurderingAarsavregning", () => {
     it("snapshot test", () => {
       const { container } = renderWithProviders(<WrappedVurderingAarsavregning {...props} />, {
-        // @ts-ignore
+        // @ts-expect-error generisk beskrivelse
         preloadedState: initialReduxState,
       });
       expect(container).toMatchSnapshot();

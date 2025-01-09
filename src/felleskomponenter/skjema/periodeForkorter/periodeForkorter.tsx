@@ -20,7 +20,7 @@ interface PeriodeForkorterProps {
   maxDate?: Date;
 }
 
-const PeriodeForkorter = ({
+function PeriodeForkorter({
   className,
   checkboxClassName,
   redigerbart,
@@ -35,7 +35,7 @@ const PeriodeForkorter = ({
   maxDate,
   tomLabel = "",
   tomFeltNavn,
-}: PeriodeForkorterProps) => {
+}: PeriodeForkorterProps) {
   const onCheckboxClick: MouseEventHandler<HTMLInputElement> = (e) => {
     if (!e.currentTarget.checked) {
       if (onUncheck) onUncheck();
@@ -72,6 +72,6 @@ const PeriodeForkorter = ({
       )}
     </div>
   );
-};
+}
 
 export default PeriodeForkorter;

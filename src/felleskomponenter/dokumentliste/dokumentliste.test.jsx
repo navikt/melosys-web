@@ -68,9 +68,9 @@ describe("Dokumentliste", () => {
           screen.getByText(
             `${KV.kodeTilTerm(
               props.dokumenter[0].dokumentData?.produserbardokument,
-              MKV.KTObjects.brev.produserbaredokumenter
-            )} (åpnes i ny fane)`
-          )
+              MKV.KTObjects.brev.produserbaredokumenter,
+            )} (åpnes i ny fane)`,
+          ),
         );
       });
 
@@ -93,9 +93,9 @@ describe("Dokumentliste", () => {
           screen.getByText(
             `${KV.kodeTilTerm(
               props.dokumenter[0].dokumentData?.produserbardokument,
-              MKV.KTObjects.brev.produserbaredokumenter
-            )} (åpnes i ny fane)`
-          )
+              MKV.KTObjects.brev.produserbaredokumenter,
+            )} (åpnes i ny fane)`,
+          ),
         );
       });
 

@@ -8,7 +8,7 @@ import "./registerAdresse.css";
  * varierende keys i objektet.
  *
  */
-const RegisterAdresse = ({ adresse }) => {
+function RegisterAdresse({ adresse }) {
   const INGEN_TILGJENGELIG_TEKST = <>(ingen tilgjengelig)</>;
   if (!adresse) {
     return INGEN_TILGJENGELIG_TEKST;
@@ -23,22 +23,31 @@ const RegisterAdresse = ({ adresse }) => {
 
   return gatenavn || husnummer || husbokstav || land || postnr || poststed ? (
     <address className="registeradresse">
-      {visGate && (
+      {visGate && (postnr || poststed) && landNavn ? (
         <div>
-          {gatenavn} {husnummer} {husbokstav}
+          {gatenavn} {husnummer}
+          {husbokstav}, {postnr} {poststed}, {landNavn}
         </div>
+      ) : (
+        (
+          visGate && (
+            <div>
+              {gatenavn} {husnummer} {husbokstav}
+            </div>
+          )
+        )(
+          (postnr || poststed) && (
+            <div>
+              {postnr} {poststed}
+            </div>
+          ),
+        )(landNavn && <div>{landNavn}</div>)
       )}
-      {(postnr || poststed) && (
-        <div>
-          {postnr} {poststed}
-        </div>
-      )}
-      {landNavn && <div>{landNavn}</div>}
     </address>
   ) : (
     INGEN_TILGJENGELIG_TEKST
   );
-};
+}
 
 RegisterAdresse.propTypes = {
   adresse: MPT.RegisterAdresse,

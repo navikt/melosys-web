@@ -7,7 +7,7 @@ import { JaNeiSvar, LabelOgSvar } from "./labelOgSvar";
 
 import "./redigeringUtfort.css";
 
-const RedigeringUtfort = () => {
+function RedigeringUtfort() {
   const arbeidssituasjonOgOevrig = useSelector(formSelectors.SoknadFormValuesSelector)?.arbeidssituasjonOgOevrig ?? {};
   return (
     <div className="ovrig-om-arbeidstaker__redigering-utfort">
@@ -47,6 +47,6 @@ const RedigeringUtfort = () => {
       />
     </div>
   );
-};
+}
 
 export default RedigeringUtfort;

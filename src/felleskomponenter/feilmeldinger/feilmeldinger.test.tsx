@@ -5,7 +5,7 @@ import MKV from "../../melosyskodeverk";
 
 const getPreloadedState = (
   feilkoder: { kode: string; felter: string[] }[],
-  kontrollFeil: { kode: string; felter: string[]; type: string }[]
+  kontrollFeil: { kode: string; felter: string[]; type: string }[],
 ) => {
   return {
     feiletRespons: {
@@ -36,7 +36,7 @@ describe("Feilmeldinger", () => {
     const { getByText, queryByRole } = renderWithProviders(<Feilmeldinger />, {
       preloadedState: getPreloadedState(
         [],
-        [{ kode: MKV.Koder.begrunnelser.kontroll_begrunnelser.OVERLAPPENDE_MEDL_PERIODER, felter: [], type: "FEIL" }]
+        [{ kode: MKV.Koder.begrunnelser.kontroll_begrunnelser.OVERLAPPENDE_MEDL_PERIODER, felter: [], type: "FEIL" }],
       ),
     });
 
@@ -54,7 +54,7 @@ describe("Feilmeldinger", () => {
             felter: [],
             type: "ADVARSEL",
           },
-        ]
+        ],
       ),
     });
 
@@ -68,7 +68,7 @@ describe("Feilmeldinger", () => {
         [
           { kode: MKV.Koder.begrunnelser.kontroll_begrunnelser.OVERLAPPENDE_MEDL_PERIODER, felter: [], type: "FEIL" },
           { kode: MKV.Koder.begrunnelser.kontroll_begrunnelser.MANGLENDE_BOSTEDSADRESSE, felter: [], type: "FEIL" },
-        ]
+        ],
       ),
     });
 
@@ -86,7 +86,7 @@ describe("Feilmeldinger", () => {
             type: "ADVARSEL",
           },
           { kode: MKV.Koder.begrunnelser.kontroll_begrunnelser.MANGLENDE_BOSTEDSADRESSE, felter: [], type: "FEIL" },
-        ]
+        ],
       ),
     });
 

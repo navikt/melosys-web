@@ -18,7 +18,7 @@ import { EnkelNavBox } from "../../../felleskomponenter/enkelNavBox";
 import { HStack } from "@navikt/ds-react";
 
 const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
-const { JOURNALFORING_VALUES: FormValues } = KV.Form;
+const { JournalforingValues: FormValues } = KV.Form;
 
 const mapStateToProps = (state: RootState) => ({
   journalforingGjelder: formSelectors.JournalforingFormSelector(state).values?.journalforingGjelder,
@@ -34,12 +34,12 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-const JournalforingGjelder = ({
+function JournalforingGjelder({
   journalforingGjelder,
   oppdaterFelt,
   journalpostBrukerID,
   journalpostVirksomhetOrgnr,
-}: PropsFromRedux) => {
+}: PropsFromRedux) {
   const handleClick = (value: string) => {
     oppdaterFelt("journalforingGjelder", value);
     oppdaterFelt(FormValues.sakstype, null);
@@ -90,6 +90,6 @@ const JournalforingGjelder = ({
       }
     />
   );
-};
+}
 
 export default connector(JournalforingGjelder);

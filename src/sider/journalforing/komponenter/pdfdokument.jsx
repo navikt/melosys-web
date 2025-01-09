@@ -5,7 +5,7 @@ import { fetchAsPDFBlob } from "../../../services/utils";
 
 import "./pdfdokument.css";
 
-const PDFDokument = ({ journalpostID, dokumentID }) => {
+function PDFDokument({ journalpostID, dokumentID }) {
   const [pdfDokumentBlob, setPdfDokumentBlob] = useState(null);
 
   const fetchPDFBlob = useCallback(async () => {
@@ -37,7 +37,7 @@ const PDFDokument = ({ journalpostID, dokumentID }) => {
       </div>
     </div>
   );
-};
+}
 
 PDFDokument.propTypes = {
   journalpostID: PropTypes.string.isRequired,

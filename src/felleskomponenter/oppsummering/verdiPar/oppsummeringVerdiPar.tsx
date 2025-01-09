@@ -11,7 +11,7 @@ interface OppsummeringVerdiParProps {
   ekstrafelt: ReactNode;
 }
 
-const OppsummeringVerdiPar = (props: OppsummeringVerdiParProps) => {
+function OppsummeringVerdiPar(props: OppsummeringVerdiParProps) {
   const { className, nokkel, verdi, ekstrafelt } = props;
 
   return (
@@ -21,7 +21,7 @@ const OppsummeringVerdiPar = (props: OppsummeringVerdiParProps) => {
       {ekstrafelt}
     </dl>
   );
-};
+}
 
 OppsummeringVerdiPar.defaultProps = {
   className: "",

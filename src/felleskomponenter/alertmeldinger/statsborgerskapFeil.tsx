@@ -6,7 +6,7 @@ import * as Nav from "../../navFrontend";
 
 const uoppgittEllerUkjenteLand = ["UOPPGITT", "UKJENT", "KOSOVO"];
 
-const StatsborgerskapFeil = ({ className }: { className: string }) => {
+function StatsborgerskapFeil({ className }: { className: string }) {
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const personopplysninger = useHentPersonopplysninger(behandlingID, false);
   if (!personopplysninger) return null;
@@ -25,6 +25,6 @@ const StatsborgerskapFeil = ({ className }: { className: string }) => {
       vurdere om du skal/kan registrere statsborgerskap i PDL, eller gi informasjon i fritekstfelt i SED.
     </Nav.Alert>
   );
-};
+}
 
 export default StatsborgerskapFeil;

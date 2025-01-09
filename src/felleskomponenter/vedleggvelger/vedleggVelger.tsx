@@ -13,7 +13,7 @@ interface VedleggVelgerProps {
   redigerbart: boolean;
 }
 
-const VedleggVelger = ({ dokumenter, valgteVedlegg, onChange, redigerbart }: VedleggVelgerProps) => {
+function VedleggVelger({ dokumenter, valgteVedlegg, onChange, redigerbart }: VedleggVelgerProps) {
   const [redigerer, setRedigerer] = useState<boolean>(false);
 
   const toggleRedigerer = () => setRedigerer(!redigerer);
@@ -41,6 +41,6 @@ const VedleggVelger = ({ dokumenter, valgteVedlegg, onChange, redigerbart }: Ved
       )}
     </>
   );
-};
+}
 
 export default VedleggVelger;

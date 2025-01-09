@@ -29,62 +29,64 @@ type PersonProps = PropsFromRedux & {
   endreFokus: boolean;
 };
 
-export const Person = ({
+export function Person({
   redigerbart,
   visArbeidsforholdRolleEtiketter,
   visMottatteOpplysningerData,
   behandlingID,
   endreFokus,
-}: PersonProps) => (
-  <div className="person">
-    <Nav.Row>
-      <Nav.Column xs="12" className="etikett__container">
-        <Tags.FraRegister />
-      </Nav.Column>
-    </Nav.Row>
-    <Nav.Row>
-      <Nav.Column xs="12">
-        <PersonInfo behandlingID={behandlingID} endreFokus={endreFokus} />
-      </Nav.Column>
-    </Nav.Row>
-    <Nav.Row className="persontabell-row">
-      <Nav.Column xs="12">
-        <Mui.Undertittel ikon={Ikoner.Globe} tekst="Statsborgerskap" className="persontabell-row__tittel" />
-        <StatsborgerskapTableContainer behandlingID={behandlingID} />
-      </Nav.Column>
-    </Nav.Row>
-    <Nav.Row className="persontabell-row">
-      <Nav.Column xs="12">
-        <Mui.Undertittel ikon={Ikoner.Location} tekst="Adresser" className="persontabell-row__tittel" />
-      </Nav.Column>
-      <Nav.Column xs="12">
-        <Adresser behandlingID={behandlingID} />
-      </Nav.Column>
-    </Nav.Row>
-    {visMottatteOpplysningerData && (
-      <>
-        <Nav.Row>
-          <Nav.Column className="etikett__container">
-            <Tags.FraBruker />
-            {visArbeidsforholdRolleEtiketter && <Tags.BrukersDel style={{ marginLeft: "0.3em" }} />}
-          </Nav.Column>
-        </Nav.Row>
-        <Nav.Row>
-          <Nav.Column xs="9">
-            <AnnenAdresse className="oppgittAdresse" />
-          </Nav.Column>
-        </Nav.Row>
-        <Nav.Row>
-          <Nav.Column xs="6">
-            <FoedestedOgLand redigerbart={redigerbart} />
-          </Nav.Column>
-          <Nav.Column xs="6">
-            <UtenlandskIdent redigerbart={redigerbart} />
-          </Nav.Column>
-        </Nav.Row>
-      </>
-    )}
-  </div>
-);
+}: PersonProps) {
+  return (
+    <div className="person">
+      <Nav.Row>
+        <Nav.Column xs="12" className="etikett__container">
+          <Tags.FraRegister />
+        </Nav.Column>
+      </Nav.Row>
+      <Nav.Row>
+        <Nav.Column xs="12">
+          <PersonInfo behandlingID={behandlingID} endreFokus={endreFokus} />
+        </Nav.Column>
+      </Nav.Row>
+      <Nav.Row className="persontabell-row">
+        <Nav.Column xs="12">
+          <Mui.Undertittel ikon={Ikoner.Globe} tekst="Statsborgerskap" className="persontabell-row__tittel" />
+          <StatsborgerskapTableContainer behandlingID={behandlingID} />
+        </Nav.Column>
+      </Nav.Row>
+      <Nav.Row className="persontabell-row">
+        <Nav.Column xs="12">
+          <Mui.Undertittel ikon={Ikoner.Location} tekst="Adresser" className="persontabell-row__tittel" />
+        </Nav.Column>
+        <Nav.Column xs="12">
+          <Adresser behandlingID={behandlingID} />
+        </Nav.Column>
+      </Nav.Row>
+      {visMottatteOpplysningerData && (
+        <>
+          <Nav.Row>
+            <Nav.Column className="etikett__container">
+              <Tags.FraBruker />
+              {visArbeidsforholdRolleEtiketter && <Tags.BrukersDel style={{ marginLeft: "0.3em" }} />}
+            </Nav.Column>
+          </Nav.Row>
+          <Nav.Row>
+            <Nav.Column xs="9">
+              <AnnenAdresse className="oppgittAdresse" />
+            </Nav.Column>
+          </Nav.Row>
+          <Nav.Row>
+            <Nav.Column xs="6">
+              <FoedestedOgLand redigerbart={redigerbart} />
+            </Nav.Column>
+            <Nav.Column xs="6">
+              <UtenlandskIdent redigerbart={redigerbart} />
+            </Nav.Column>
+          </Nav.Row>
+        </>
+      )}
+    </div>
+  );
+}
 
 export default connector(Person);

@@ -11,17 +11,19 @@ interface PdfLinkProps {
   tittel: string;
 }
 
-const PdfLink = ({ journalpostID, dokumentID, tittel }: PdfLinkProps) => (
-  <Nav.Link
-    href="#"
-    onClick={(event) => {
-      event.preventDefault();
-      apnePdfINyFane(lagPdfUrl(journalpostID, dokumentID));
-    }}
-  >
-    {`${tittel} (åpnes i ny fane)`}
-  </Nav.Link>
-);
+function PdfLink({ journalpostID, dokumentID, tittel }: PdfLinkProps) {
+  return (
+    <Nav.Link
+      href="#"
+      onClick={(event) => {
+        event.preventDefault();
+        apnePdfINyFane(lagPdfUrl(journalpostID, dokumentID));
+      }}
+    >
+      {`${tittel} (åpnes i ny fane)`}
+    </Nav.Link>
+  );
+}
 
 PdfLink.propTypes = {
   journalpostID: PT.string.isRequired,

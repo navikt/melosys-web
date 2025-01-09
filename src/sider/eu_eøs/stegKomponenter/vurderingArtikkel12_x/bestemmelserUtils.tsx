@@ -36,7 +36,7 @@ export enum VedtakValg {
 
 export const initializeVedtakValg = (
   utsendingsvilkår: Partial<Vilkaar>,
-  unntaksvilkår: Partial<Vilkaar>
+  unntaksvilkår: Partial<Vilkaar>,
 ): VedtakValg | undefined => {
   if (utsendingsvilkår.oppfylt) {
     return VedtakValg.JA_INNVILGE;
@@ -95,7 +95,7 @@ export const hentRelevantUtsendelseArtikkel16 = (erArbeidstaker: boolean): strin
 export const finnTilleggsbestemmelse = (
   lovvalgsbestemmelse: string,
   yrkesgruppeFakta: string | undefined,
-  arbeidPåSkipFakta: string | undefined
+  arbeidPåSkipFakta: string | undefined,
 ): string | undefined => {
   if (yrkesgruppeFakta === FLYENDE_PERSONELL) {
     switch (lovvalgsbestemmelse) {

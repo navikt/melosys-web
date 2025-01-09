@@ -14,13 +14,13 @@ import { hentSammensattNavn } from "../../../../../graphql/navn";
 
 import "./redigerer.css";
 
-const Redigerer = ({
+function Redigerer({
   redigerbart,
   overordnetFeltNavn,
   slett,
   settVerdi,
   verdier,
-}: EnRedigeringsknappListeRedigerer<KV.Form.MedfolgendeFamilie>) => {
+}: EnRedigeringsknappListeRedigerer<KV.Form.MedfolgendeFamilie>) {
   const [disableNavnInput, setDisableNavnInput] = useState(false);
   const [visNavnSpinner, setVisNavnSpinner] = useState(false);
 
@@ -53,7 +53,7 @@ const Redigerer = ({
 
   const debounceNormalizeDate = useCallback(
     Utils._debounce((fnr) => settVerdi("fnr", normalizeDate(fnr)), 800),
-    []
+    [],
   );
 
   useEffect(() => {
@@ -85,6 +85,6 @@ const Redigerer = ({
       </Nav.Column>
     </Nav.Row>
   );
-};
+}
 
 export default Redigerer;

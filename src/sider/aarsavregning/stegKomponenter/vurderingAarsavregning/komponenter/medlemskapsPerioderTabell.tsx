@@ -22,7 +22,7 @@ const mapMedlemskapstypeTekst = (kode: string) => {
   return "";
 };
 
-const MedlemskapsPerioderTabell = ({ perioder }: { perioder?: Medlemskapsperiode[] }) => {
+function MedlemskapsPerioderTabell({ perioder }: { perioder?: Medlemskapsperiode[] }) {
   if (!perioder) return null;
 
   return (
@@ -40,7 +40,7 @@ const MedlemskapsPerioderTabell = ({ perioder }: { perioder?: Medlemskapsperiode
           <Nav.Table.Row className="border_top" key={Utils._uuid()}>
             <Nav.Table.DataCell>
               {`${Utils.dato.formatterDatoTilNorsk(medlemskapsPeriode.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(
-                medlemskapsPeriode.tomDato
+                medlemskapsPeriode.tomDato,
               )}`}
             </Nav.Table.DataCell>
             <Nav.Table.DataCell>{mapMedlemskapstypeTekst(medlemskapsPeriode.medlemskapstype)}</Nav.Table.DataCell>
@@ -55,6 +55,6 @@ const MedlemskapsPerioderTabell = ({ perioder }: { perioder?: Medlemskapsperiode
       </Nav.Table.Body>
     </Nav.Table>
   );
-};
+}
 
 export default MedlemskapsPerioderTabell;

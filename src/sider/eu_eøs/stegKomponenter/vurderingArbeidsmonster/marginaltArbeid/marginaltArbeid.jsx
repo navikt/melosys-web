@@ -7,7 +7,7 @@ import * as Nav from "../../../../../navFrontend";
 import * as MPT from "../../../../../proptypes";
 import MarginaltArbeidCheckbox from "./marginaltArbeidCheckbox";
 
-const MarginaltArbeid = ({ arbeidsland, redigerbart, marginaltArbeid, oppdaterData }) => {
+function MarginaltArbeid({ arbeidsland, redigerbart, marginaltArbeid, oppdaterData }) {
   const { flereLandUkjentHvilke } = useSelector((state) => formValueSelector(KV.Form.SOKNAD)(state, "soknadsland"));
 
   return (
@@ -28,7 +28,7 @@ const MarginaltArbeid = ({ arbeidsland, redigerbart, marginaltArbeid, oppdaterDa
               >
                 {arbeidsland.map(({ land }) => {
                   const avklartMarginaltArbeidILand = marginaltArbeid.find(
-                    (enkeltAvklaring) => enkeltAvklaring.subjektID === land.kode
+                    (enkeltAvklaring) => enkeltAvklaring.subjektID === land.kode,
                   );
                   const key = `marginaltArbeidslandListe${land.kode}`;
                   return (
@@ -47,7 +47,7 @@ const MarginaltArbeid = ({ arbeidsland, redigerbart, marginaltArbeid, oppdaterDa
       </div>
     </Nav.Fieldset>
   );
-};
+}
 
 MarginaltArbeid.propTypes = {
   arbeidsland: PT.arrayOf(MPT.ArbeidslandMedYrkesaktivitet),

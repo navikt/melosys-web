@@ -11,13 +11,13 @@ import MKV from "../../../../../melosyskodeverk";
 
 import { EnRedigeringsknappListeRedigerer } from "../../editerbartElementListe";
 
-const Redigerer = ({
+function Redigerer({
   redigerbart,
   overordnetFeltNavn,
   slett,
   settVerdi,
   verdier,
-}: EnRedigeringsknappListeRedigerer<KV.Form.ArbeidsstedSkip>) => {
+}: EnRedigeringsknappListeRedigerer<KV.Form.ArbeidsstedSkip>) {
   const fartsomradeChangeHandler: ChangeEventHandler<HTMLSelectElement> = (event) => {
     const fartsomrade = event.target.value;
 
@@ -72,6 +72,6 @@ const Redigerer = ({
       <Sletterad onClick={slett} />
     </div>
   );
-};
+}
 
 export default Redigerer;

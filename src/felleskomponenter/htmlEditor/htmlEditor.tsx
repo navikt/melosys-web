@@ -26,9 +26,9 @@ const editorStateFromHTML = (htmlValue: string) =>
 
 const htmlFromEditorState = (editorState: EditorState) => draftToHtml(convertToRaw(editorState.getCurrentContent()));
 
-type TextToHtmlEditorProps = {
+interface TextToHtmlEditorProps {
   [x: string]: any;
-};
+}
 
 function HtmlEditor({ value, onChange, ...rest }: TextToHtmlEditorProps) {
   const [currentEditorState, setCurrentEditorState] = useState(editorStateFromHTML(value));

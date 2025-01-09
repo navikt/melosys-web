@@ -2,7 +2,7 @@ import MKV from "../../../../../melosyskodeverk";
 import * as Hjelpetekster from "./hjelpetekster";
 import * as Nav from "../../../../../navFrontend";
 
-const BestemmelseHjelpetekst = ({ bestemmelse }: { bestemmelse?: string }) => {
+function BestemmelseHjelpetekst({ bestemmelse }: { bestemmelse?: string }) {
   if (!bestemmelse) return null;
 
   const { USA_ART5_2, USA_ART5_4, USA_ART5_5, USA_ART5_6 } =
@@ -43,9 +43,9 @@ const BestemmelseHjelpetekst = ({ bestemmelse }: { bestemmelse?: string }) => {
         return Hjelpetekster.hjelpeteksterCaArt10;
 
       case AUS_ART9_2:
-        return Hjelpetekster.hjelpeteksterAuArt9_2;
+        return Hjelpetekster.hjelpeteksterAuArt92;
       case AUS_ART9_3:
-        return Hjelpetekster.hjelpeteksterAuArt9_3;
+        return Hjelpetekster.hjelpeteksterAuArt93;
 
       default:
         return [];
@@ -53,7 +53,7 @@ const BestemmelseHjelpetekst = ({ bestemmelse }: { bestemmelse?: string }) => {
   };
 
   const ikkeKravOmTidsbegrensning = [UK_ART6_5, UK_ART7_3, UK_ART8_2, USA_ART5_5, CAN_ART10, AUS_ART9_2].includes(
-    bestemmelse
+    bestemmelse,
   );
   const hjelpetekster = hjelpeteksterTilBestemmelse();
 
@@ -71,6 +71,6 @@ const BestemmelseHjelpetekst = ({ bestemmelse }: { bestemmelse?: string }) => {
       {ikkeKravOmTidsbegrensning && <p>Det er ikke krav om at utsendingsperioden/arbeidsperioden er tidsbegrenset.</p>}
     </>
   );
-};
+}
 
 export default BestemmelseHjelpetekst;

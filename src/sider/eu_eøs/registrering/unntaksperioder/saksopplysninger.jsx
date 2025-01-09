@@ -26,7 +26,7 @@ import { endrePeriodeSkjema, ikkeGodkjentBegrunnelseSkjema } from "./validering/
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import "../saksopplysninger.css";
 
-const Saksopplysninger = ({
+function Saksopplysninger({
   match,
   behandlingID,
   redigerbart,
@@ -44,7 +44,7 @@ const Saksopplysninger = ({
   behandlingsresultatErHentet,
   kontrollerUnntaksperiode,
   unntaksperiodeKontrollfeil,
-}) => {
+}) {
   const [unntaksperiodeVurdering, setUnntaksperiodeVurdering] = useState(KV.Koder.Unntaksperiode.AVSLAG);
   const [begrunnelseFritekst, setBegrunnelseFritekst] = useState("");
   const [ikkeGodkjentBegrunnelseKoder, setIkkeGodkjentBegrunnelseKoder] = useState([]);
@@ -60,7 +60,7 @@ const Saksopplysninger = ({
   const [endrePeriodeFom, setEndrePeriodeFom] = useState("");
   const [endrePeriodeTom, setEndrePeriodeTom] = useState("");
   const [endrePeriodeBegrunnelse, setEndrePeriodeBegrunnelse] = useState(
-    MKV.Koder.begrunnelser.folketrygdloven.endret_unntaksperiode.PERIODE_FEILREGISTRERT
+    MKV.Koder.begrunnelser.folketrygdloven.endret_unntaksperiode.PERIODE_FEILREGISTRERT,
   );
   const [endrePeriodeFritekst, setEndrePeriodeFritekst] = useState("");
   const [periodeOver5aarVarslet, setPeriodeOver5aarVarslet] = useState(false);
@@ -91,7 +91,7 @@ const Saksopplysninger = ({
       kontrollerUnntaksperiode(
         behandlingID,
         Utils.dato.formatterDatoTilISO(endrePeriodeFom),
-        Utils.dato.formatterDatoTilISO(endrePeriodeTom)
+        Utils.dato.formatterDatoTilISO(endrePeriodeTom),
       );
     }
   }, [endrePeriodeFom, endrePeriodeTom]);
@@ -118,7 +118,7 @@ const Saksopplysninger = ({
 
   const godkjentUnntaksperiode = async () => {
     const endretPeriodeFakta = avklartefakta.find(
-      (value) => value.referanse === MKV.Koder.avklartefaktatyper.AARSAK_ENDRING_PERIODE
+      (value) => value.referanse === MKV.Koder.avklartefaktatyper.AARSAK_ENDRING_PERIODE,
     );
     if (endretPeriodeFakta) {
       settEndretPeriodeOpplysninger(endretPeriodeFakta);
@@ -187,7 +187,7 @@ const Saksopplysninger = ({
           tom: Utils.dato.formatterDatoTilISO(endrePeriodeTom),
         },
         lovvalgsbestemmelse: sedLovvalgsbestemmelse,
-      })
+      }),
     );
 
   const kanEndrePeriode = () => unntaksperiodeVurdering === KV.Koder.Unntaksperiode.DELVIS_GODKJENT;
@@ -337,12 +337,12 @@ const Saksopplysninger = ({
               {vurderingBegrunnelser.length > 0 && (
                 <Nav.Row className="seksjon">
                   <Nav.Column xs="12">
-                    <Fragment>
+                    <>
                       <Nav.BodyLong weight="semibold" size="small">
                         Treff ved automatisk kontroll
                       </Nav.BodyLong>
                       <RegisterkontrollTreff vurderingBegrunnelser={vurderingBegrunnelser} />
-                    </Fragment>
+                    </>
                   </Nav.Column>
                 </Nav.Row>
               )}
@@ -386,7 +386,7 @@ const Saksopplysninger = ({
                 </Nav.Column>
               </Nav.Row>
               {unntaksperiodeVurdering === KV.Koder.Unntaksperiode.AVSLAG && behandlingsresultatErHentet && (
-                <Fragment>
+                <>
                   <Nav.Row>
                     <Nav.Column xs="6">
                       <Nav.Fieldset legend="Begrunnelse for ikke godkjent unntaksperiode">
@@ -416,7 +416,7 @@ const Saksopplysninger = ({
                       )}
                     </Nav.Column>
                   </Nav.Row>
-                </Fragment>
+                </>
               )}
               {durationWarningMessage && visPeriodeVarselStripe()}
               <Nav.Row className="seksjon">
@@ -438,7 +438,7 @@ const Saksopplysninger = ({
       <RegistreringMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
     </div>
   );
-};
+}
 
 Saksopplysninger.propTypes = {
   redigerbart: PT.bool.isRequired,

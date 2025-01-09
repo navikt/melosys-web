@@ -5,50 +5,60 @@ import * as Nav from "../../navFrontend";
 
 import "./alertmeldinger.css";
 
-export const Innsynsmelding = ({ className = "" }) => (
-  <Nav.Alert variant="info" className={`innsynsmelding ${className}`}>
-    Innsynsmodus
-  </Nav.Alert>
-);
+export function Innsynsmelding({ className = "" }) {
+  return (
+    <Nav.Alert variant="info" className={`innsynsmelding ${className}`}>
+      Innsynsmodus
+    </Nav.Alert>
+  );
+}
 
-export const VirksomhetMelding = () => (
-  <Nav.Alert variant="info" className="virksomhetMelding">
-    Behandlingen er journalført på virksomhet
-  </Nav.Alert>
-);
+export function VirksomhetMelding() {
+  return (
+    <Nav.Alert variant="info" className="virksomhetMelding">
+      Behandlingen er journalført på virksomhet
+    </Nav.Alert>
+  );
+}
 
-export const IngenFlytMelding = () => (
-  <Nav.Alert variant="warning" className="ingenFlytMelding">
-    <b>Du kan ikke gå videre, men:</b>
-    <ul className="listePadding">
-      <li>
-        du kan bruke &quot;Send brev&quot;-fanen for å sende brev og vedtak, og &quot;Opprett ny BUC&quot;-fanen for å
-        sende SED
-      </li>
-      <li>du må avslutte behandlingen og angi resultatet i behandlingsmenyen</li>
-      <li>periode i MEDL og eventuelt avgiftssystemet må registreres manuelt</li>
-    </ul>
-  </Nav.Alert>
-);
+export function IngenFlytMelding() {
+  return (
+    <Nav.Alert variant="warning" className="ingenFlytMelding">
+      <b>Du kan ikke gå videre, men:</b>
+      <ul className="listePadding">
+        <li>
+          du kan bruke &quot;Send brev&quot;-fanen for å sende brev og vedtak, og &quot;Opprett ny BUC&quot;-fanen for å
+          sende SED
+        </li>
+        <li>du må avslutte behandlingen og angi resultatet i behandlingsmenyen</li>
+        <li>periode i MEDL og eventuelt avgiftssystemet må registreres manuelt</li>
+      </ul>
+    </Nav.Alert>
+  );
+}
 
-export const NyVurderingMelding = () => (
-  <Nav.Alert variant="warning" className="nyVurderingMelding">
-    <Nav.Heading size="small">Ny behandling av sak</Nav.Heading>
-    <Nav.BodyLong size="small">
-      Du har startet en ny behandling av en sak der tidligere behandling er avsluttet. Sjekk sakens opplysninger og
-      vurder videre behandling.
-    </Nav.BodyLong>
-  </Nav.Alert>
-);
+export function NyVurderingMelding() {
+  return (
+    <Nav.Alert variant="warning" className="nyVurderingMelding">
+      <Nav.Heading size="small">Ny behandling av sak</Nav.Heading>
+      <Nav.BodyLong size="small">
+        Du har startet en ny behandling av en sak der tidligere behandling er avsluttet. Sjekk sakens opplysninger og
+        vurder videre behandling.
+      </Nav.BodyLong>
+    </Nav.Alert>
+  );
+}
 
-export const NyBehandlingForTidligereAarsavregningMelding = () => (
-  <Nav.Alert variant="warning" className="nyVurderingMelding">
-    <Nav.Heading size="small">Ny behandling for en tidligere årsavregning</Nav.Heading>
-    <Nav.BodyLong size="small">
-      Du har startet en ny årsavregningbehandling for et tidligere årsavregnet år
-    </Nav.BodyLong>
-  </Nav.Alert>
-);
+export function NyBehandlingForTidligereAarsavregningMelding() {
+  return (
+    <Nav.Alert variant="warning" className="nyVurderingMelding">
+      <Nav.Heading size="small">Ny behandling for en tidligere årsavregning</Nav.Heading>
+      <Nav.BodyLong size="small">
+        Du har startet en ny årsavregningbehandling for et tidligere årsavregnet år
+      </Nav.BodyLong>
+    </Nav.Alert>
+  );
+}
 
 interface StandardMeldingOverstProps {
   variant: "error" | "warning" | "info" | "success";
@@ -56,7 +66,7 @@ interface StandardMeldingOverstProps {
   melding: string;
 }
 
-export const StandardMeldingOverst = ({ variant, actionEtterSynlighet, melding }: StandardMeldingOverstProps) => {
+export function StandardMeldingOverst({ variant, actionEtterSynlighet, melding }: StandardMeldingOverstProps) {
   const [viserMelding, setViserMelding] = useState(true);
   const VARIGHET_MELDING = 3000;
 
@@ -82,4 +92,4 @@ export const StandardMeldingOverst = ({ variant, actionEtterSynlighet, melding }
       </Nav.Alert>
     </div>
   ) : null;
-};
+}

@@ -24,7 +24,7 @@ interface EnkelStegvelgerProps {
   alleSteg: AktueltSteg[];
 }
 
-export default ({ alleSteg }: EnkelStegvelgerProps) => {
+function EnkelStegvelger({ alleSteg }: EnkelStegvelgerProps) {
   const [aktuelleSteg, setAktuellesteg] = useState<AktueltSteg[]>([alleSteg[0]]);
   const [aktivtStegIndex, setAktivtStegIndex] = useState(0);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
@@ -42,7 +42,7 @@ export default ({ alleSteg }: EnkelStegvelgerProps) => {
 
   useEffect(() => {
     setAktuellesteg(
-      aktuelleSteg?.map((steg: AktueltSteg) => ({ ...steg, aktivtSteg: steg.stegPosisjon === aktivtStegIndex }))
+      aktuelleSteg?.map((steg: AktueltSteg) => ({ ...steg, aktivtSteg: steg.stegPosisjon === aktivtStegIndex })),
     );
   }, [aktivtStegIndex]);
 
@@ -51,7 +51,7 @@ export default ({ alleSteg }: EnkelStegvelgerProps) => {
     const stegIndex = aktuelleSteg.findIndex((steg) => steg.id === stegId);
     // Fjerner stegene etter steget som oppdaterer dersom nesteStegId er satt
     const nyeSteg = (nesteStegId ? aktuelleSteg.slice(0, stegIndex + 1) : aktuelleSteg).map((steg) =>
-      steg.id === stegId ? { ...steg, status: isSchemaValid ? FANE_STATUS.OK : FANE_STATUS.UBEHANDLET } : steg
+      steg.id === stegId ? { ...steg, status: isSchemaValid ? FANE_STATUS.OK : FANE_STATUS.UBEHANDLET } : steg,
     );
     const førsteUgyldigeSteg = nyeSteg.find((steg) => steg.status === FANE_STATUS.UBEHANDLET);
 
@@ -104,4 +104,6 @@ export default ({ alleSteg }: EnkelStegvelgerProps) => {
       )}
     </div>
   );
-};
+}
+
+export default EnkelStegvelger;

@@ -9,9 +9,9 @@ export const FEILET = "medlemskapsperioder/FEILET";
 export const PENDING = "medlemskapsperioder/PENDING";
 export const RESET = "medlemskapsperioder/RESET";
 
-export type Data = {
+export interface Data {
   medlemskapsperioder?: Api.MedlemAvFolketrygden.Medlemskapsperioder.Medlemskapsperiode[];
-};
+}
 
 export interface FeiletAction {
   type: typeof FEILET;

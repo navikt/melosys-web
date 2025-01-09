@@ -20,7 +20,7 @@ vi.mock(
         },
       },
     }),
-  })
+  }),
 );
 
 describe("Varsler", () => {
@@ -48,7 +48,7 @@ describe("Varsler", () => {
     render(<Varsler {...props} />);
 
     expect(screen.getByRole("listitem")).toHaveTextContent(
-      "Søknaden oppfyller inngangsvilkårene for EU/EØS-saker etter forordning 883/2004."
+      "Søknaden oppfyller inngangsvilkårene for EU/EØS-saker etter forordning 883/2004.",
     );
   });
 
@@ -70,7 +70,7 @@ describe("Varsler", () => {
 
     expect(screen.getAllByRole("listitem")).toHaveLength(5);
     expect(
-      screen.getByText("Søknaden oppfyller ikke inngangsvilkårene for EU/EØS-saker etter forordning 883/2004.")
+      screen.getByText("Søknaden oppfyller ikke inngangsvilkårene for EU/EØS-saker etter forordning 883/2004."),
     ).toBeInTheDocument();
     expect(screen.getByText(MKV.Terms.begrunnelser.inngangsvilkaar.MANGLER_STATSBORGERSKAP)).toBeInTheDocument();
     expect(screen.getByText(MKV.Terms.begrunnelser.inngangsvilkaar.TEKNISK_FEIL)).toBeInTheDocument();
@@ -96,7 +96,7 @@ describe("Varsler", () => {
 
     expect(screen.getAllByRole("listitem")).toHaveLength(4);
     expect(
-      screen.getByText("Søknaden oppfyller ikke inngangsvilkårene for EU/EØS-saker etter forordning 883/2004.")
+      screen.getByText("Søknaden oppfyller ikke inngangsvilkårene for EU/EØS-saker etter forordning 883/2004."),
     ).toBeInTheDocument();
     expect(screen.getByText(MKV.Terms.begrunnelser.inngangsvilkaar.TEKNISK_FEIL)).toBeInTheDocument();
     expect(screen.getByText("Du har to valg:")).toBeInTheDocument();

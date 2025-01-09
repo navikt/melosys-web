@@ -9,7 +9,7 @@ interface VedleggTableProps {
   leggTilVedlegg: (vedlegg: FysiskDokument) => void;
 }
 
-const VedleggVelgerTable = ({ valgteVedlegg, alleVedlegg, slettVedlegg, leggTilVedlegg }: VedleggTableProps) => {
+function VedleggVelgerTable({ valgteVedlegg, alleVedlegg, slettVedlegg, leggTilVedlegg }: VedleggTableProps) {
   const vedleggErMarkert = (vedleggID: string) => Boolean(valgteVedlegg.find((vedlegg) => vedlegg.id === vedleggID));
 
   return (
@@ -27,6 +27,6 @@ const VedleggVelgerTable = ({ valgteVedlegg, alleVedlegg, slettVedlegg, leggTilV
       </Nav.Table.Body>
     </Nav.Table>
   );
-};
+}
 
 export default VedleggVelgerTable;

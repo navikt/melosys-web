@@ -33,7 +33,7 @@ enum ResetTyper {
 
 const { IKKE_YRKESAKTIV_FTRL_2_1_OPPHOLD, IKKE_YRKESAKTIV_RELASJON, ARBEIDSSITUASJON } = MKV.Koder.avklartefaktatyper;
 
-export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: VurderingBestemmelseProps) => {
+export function VurderingBestemmelse({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: VurderingBestemmelseProps) {
   const dispatch = useDispatch();
 
   const behandlingstatus = useSelector(behandlingerSelectors.BehandlingsstatusKodeSelector);
@@ -49,7 +49,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
 
   const lagredeValgtevirksomheter = useSelector(oppsummertfaktaSelectors.VirksomhetIDerSelector);
   const selvstendigNaeringsvirksomhetUtland = useSelector(
-    mottatteOpplysningerSelectors.SelvstendigNaeringsvirksomhetUtlandSelector
+    mottatteOpplysningerSelectors.SelvstendigNaeringsvirksomhetUtlandSelector,
   );
   const selvstendigNaeringsvirksomhet = useSelector(mottatteOpplysningerSelectors.SelvstendigNaringsvirksomhetSelector);
   const [vilkårOgBegrunnelser, setVilkårOgBegrunnelser] = useState<VilkårOgBegrunnelser[]>([]);
@@ -73,16 +73,16 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
     !pliktigeBestemmelser?.includes(valgtBestemmelse);
 
   const finnesISelvstendigNaeringsvirksomhet = selvstendigNaeringsvirksomhet.some((virksomhet: any) =>
-    lagredeValgtevirksomheter.includes(virksomhet.orgnr)
+    lagredeValgtevirksomheter.includes(virksomhet.orgnr),
   );
   const finnesISelvstendigNaeringsvirksomhetUtland = selvstendigNaeringsvirksomhetUtland.some((virksomhet: any) =>
-    lagredeValgtevirksomheter.includes(virksomhet.uuid)
+    lagredeValgtevirksomheter.includes(virksomhet.uuid),
   );
 
   const alleSelvstendigeVirksomheter = [...selvstendigNaeringsvirksomhetUtland, ...selvstendigNaeringsvirksomhet];
 
   const valgteVirksomheterSomIkkeErSelvstendig = lagredeValgtevirksomheter.filter(
-    (orgnr) => !alleSelvstendigeVirksomheter.find((virksomhet) => (virksomhet.uuid ?? virksomhet.orgnr) === orgnr)
+    (orgnr) => !alleSelvstendigeVirksomheter.find((virksomhet) => (virksomhet.uuid ?? virksomhet.orgnr) === orgnr),
   );
 
   const selvstendigNaeringValgt =
@@ -151,13 +151,13 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
 
     if (skalHenteVilkår) {
       Api.Ftrl.hentVilkår(valgtBestemmelse, valgtAvklarteFakta, behandlingID, behandlingstema).then((res: any) =>
-        setVilkårOgBegrunnelser(res.vilkår)
+        setVilkårOgBegrunnelser(res.vilkår),
       );
     }
 
     if (valgtAvklarteFakta.size > 0 && avklarteFakta.length > 0) {
       Api.Ftrl.hentVilkår(valgtBestemmelse, valgtAvklarteFakta, behandlingID, behandlingstema).then((res: any) =>
-        setVilkårOgBegrunnelser(res.vilkår)
+        setVilkårOgBegrunnelser(res.vilkår),
       );
     }
   }, [valgtBestemmelse, valgtAvklarteFakta, avklarteFakta, ulovligBestemmelseValgt, skalHenteVilkår, behandlingID]);
@@ -203,7 +203,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
   }, [vilkårOgBegrunnelser, skalInitialisere]);
 
   const mapLagredeVilkårTilValgteVilkårOgBegrunnelser = (
-    lagredeVilkårListe: Api.Vilkar.Vilkaar[]
+    lagredeVilkårListe: Api.Vilkar.Vilkaar[],
   ): { tidligereValgteVilkår: Map<string, boolean>; tidligereValgteBegrunnelser: Map<string, Begrunnelse> } => {
     const tidligereValgteVilkår: Map<string, boolean> = new Map();
     const tidligereValgteBegrunnelser: Map<string, Begrunnelse> = new Map();
@@ -419,7 +419,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
             handleEndreBegrunnelseKode={(event) => {
               setHarSkjeddEndringer(true);
               setValgteBegrunnelser(
-                new Map(valgteBegrunnelser.set(event.target.name, { begrunnelseKode: event.target.value }))
+                new Map(valgteBegrunnelser.set(event.target.name, { begrunnelseKode: event.target.value })),
               );
             }}
             handleEndreBegrunnelseFritekst={(valgtBegrunnelse: string, begrunnelseFritekst: string) => {
@@ -427,10 +427,10 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
               setValgteBegrunnelser(
                 new Map(
                   valgteBegrunnelser.set(valgtBegrunnelse, {
-                    begrunnelseKode: valgteBegrunnelser.get(valgtBegrunnelse)!!.begrunnelseKode,
+                    begrunnelseKode: valgteBegrunnelser.get(valgtBegrunnelse)!.begrunnelseKode,
                     begrunnelseFritekst,
-                  })
-                )
+                  }),
+                ),
               );
             }}
             redigerbart={redigerbart}
@@ -455,4 +455,4 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
       />
     </div>
   );
-};
+}

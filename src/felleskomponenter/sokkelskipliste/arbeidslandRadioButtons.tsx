@@ -15,7 +15,7 @@ interface Props {
   disabled: boolean;
 }
 
-const ArbeidslandRadioButtons = ({ landliste, onChange, arbeidslandType, disabled }: Props) => {
+function ArbeidslandRadioButtons({ landliste, onChange, arbeidslandType, disabled }: Props) {
   const utfylteLand = landliste.filter((land) => land.landkode);
 
   if (Utils._isEmpty(utfylteLand)) return <>Ingen flaggland, sokkelland eller territorialfarvannsland valgt.</>;
@@ -37,6 +37,6 @@ const ArbeidslandRadioButtons = ({ landliste, onChange, arbeidslandType, disable
       ))}
     </Nav.RadioGroup>
   );
-};
+}
 
 export default ArbeidslandRadioButtons;

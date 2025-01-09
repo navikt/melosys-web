@@ -1,15 +1,17 @@
 import PT from "prop-types";
 import uuid from "uuid";
 
-const UstrukturertAdresse = ({ adresse: { adresselinjer, landkode } }) => (
-  <address>
-    {adresselinjer.map((adresse) => {
-      if (!adresse) return null;
-      return <div key={uuid()}>{adresse}</div>;
-    })}
-    {landkode}
-  </address>
-);
+function UstrukturertAdresse({ adresse: { adresselinjer, landkode } }) {
+  return (
+    <address>
+      {adresselinjer.map((adresse) => {
+        if (!adresse) return null;
+        return <div key={uuid()}>{adresse}</div>;
+      })}
+      {landkode}
+    </address>
+  );
+}
 
 UstrukturertAdresse.propTypes = {
   adresse: PT.shape({

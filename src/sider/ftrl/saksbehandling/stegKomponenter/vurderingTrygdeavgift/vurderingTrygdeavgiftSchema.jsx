@@ -80,7 +80,7 @@ const vurdering_trygdeavgift = object().shape({
             .erEtterDatofelt("fomDato")
             .required(MAA_FYLLES_UT),
           skatteplikttype: string().required(MAA_FYLLES_UT),
-        })
+        }),
       ),
   }),
   inntektskilder: lazy((_value, options) => {
@@ -103,7 +103,7 @@ const vurdering_trygdeavgift = object().shape({
               .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
               .erEtterDatofelt("fomDato")
               .required(MAA_FYLLES_UT),
-          })
+          }),
         ),
     });
   }),

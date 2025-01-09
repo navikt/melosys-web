@@ -25,12 +25,12 @@ interface FamilieforholdContainerProps {
   behandlingstema: string;
 }
 
-const FamilieforholdContainer = ({
+function FamilieforholdContainer({
   redigerbart,
   visArbeidsforholdRolleEtiketter,
   visMottatteOpplysningerData,
   behandlingstema,
-}: FamilieforholdContainerProps) => {
+}: FamilieforholdContainerProps) {
   const [visFamilieforholdFraRegister, setVisFamilieforholdFraRegister] = useState(false);
   const sjekkAtMedfolgendeFamiliemedlemmerHarFnrOgNavn = (familiemedlemmer: KV.Form.MedfolgendeFamilie[]) =>
     familiemedlemmer.every((familiemedlem) => familiemedlem.fnr && familiemedlem.navn);
@@ -132,6 +132,6 @@ const FamilieforholdContainer = ({
       )}
     </Nav.Container>
   );
-};
+}
 
 export default FamilieforholdContainer;

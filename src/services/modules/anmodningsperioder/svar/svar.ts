@@ -24,6 +24,6 @@ interface AnmodningsperiodesvarReqDto {
 
 export const send = (
   anmodningsperiodeID: number,
-  body: AnmodningsperiodesvarReqDto
+  body: AnmodningsperiodesvarReqDto,
 ): Promise<AnmodningsperiodesvarResDto> =>
   postAsJson(`${API_BASE_URL}${ANMODNINGSPERIODER}/${anmodningsperiodeID}/${SVAR}`, body);
