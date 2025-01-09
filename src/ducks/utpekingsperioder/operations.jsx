@@ -31,15 +31,6 @@ export function lagre() {
   return (dispatch, getState) => {
     const utpekingsperioder = Selectors.UtpekingsperioderSelector(getState());
     const behandlingID = behandlingerSelectors.BehandlingIDSelector(getState());
-
-    const harGyldigePerioder = utpekingsperioder.every(
-      (periode) => periode.lovvalgsland !== null && periode.lovvalgsland !== undefined
-    );
-
-    if (!harGyldigePerioder) {
-      return null;
-    }
-
     return dispatch(send(behandlingID, { utpekingsperioder }));
   };
 }

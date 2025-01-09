@@ -77,7 +77,10 @@ export function VurderingArtikkel13UtpekLand({
   };
 
   const debouncedOppdaterUtpekingsperiode = useCallback(
-    Utils._debounce((nyFomDato, nyTomDato) => oppdaterUtpekingsperiode(nyFomDato, nyTomDato), 500),
+    Utils._debounce(
+      (nyFomDato, nyTomDato, lovvalgsland) => lovvalgsland && oppdaterUtpekingsperiode(nyFomDato, nyTomDato),
+      500,
+    ),
     [],
   );
 
@@ -90,15 +93,15 @@ export function VurderingArtikkel13UtpekLand({
     }
 
     if (!formValues.forkortUtpekingsperiode) {
-      debouncedOppdaterUtpekingsperiode(soknadsperiode.fom, soknadsperiode.tom);
+      debouncedOppdaterUtpekingsperiode(soknadsperiode.fom, soknadsperiode.tom, formValues.lovvalgsland);
     } else {
       setTomDato(formValues.tomDato);
       setFomDato(formValues.fomDato);
       if (isoTomDato) {
-        debouncedOppdaterUtpekingsperiode(isoFomDato, isoTomDato);
+        debouncedOppdaterUtpekingsperiode(isoFomDato, isoTomDato, formValues.lovvalgsland);
       }
     }
-  }, [formValues.fomDato, formValues.tomDato, formValues.forkortUtpekingsperiode]);
+  }, [formValues.fomDato, formValues.tomDato, formValues.forkortUtpekingsperiode, formValues.lovvalgsland]);
 
   useEffect(() => {
     if (redigerbart) {
