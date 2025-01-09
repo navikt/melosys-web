@@ -31,8 +31,12 @@ enum ResetTyper {
   VILKÅR,
 }
 
-const { IKKE_YRKESAKTIV_FTRL_2_1_OPPHOLD, IKKE_YRKESAKTIV_RELASJON, ARBEIDSSITUASJON, UKJENT_SLUTTDATO } =
-  MKV.Koder.avklartefaktatyper;
+const {
+  IKKE_YRKESAKTIV_FTRL_2_1_OPPHOLD,
+  IKKE_YRKESAKTIV_RELASJON,
+  ARBEIDSSITUASJON,
+  UKJENT_SLUTTDATO_MEDLEMSKAPSPERIODE,
+} = MKV.Koder.avklartefaktatyper;
 
 export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: VurderingBestemmelseProps) => {
   const dispatch = useDispatch();
@@ -341,7 +345,7 @@ export const VurderingBestemmelse = ({ bekreft, tilbake, aktivtSteg, oppdaterSta
         dispatch(oppsummertfaktaOperations.slettAvklartefakta(behandlingID, key));
       }
     }
-    dispatch(oppsummertfaktaOperations.slettAvklartefakta(behandlingID, UKJENT_SLUTTDATO));
+    dispatch(oppsummertfaktaOperations.slettAvklartefakta(behandlingID, UKJENT_SLUTTDATO_MEDLEMSKAPSPERIODE));
   };
 
   if (!aktivtSteg) return null;

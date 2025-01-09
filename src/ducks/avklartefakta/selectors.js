@@ -99,7 +99,7 @@ export const UkjentSluttDatoSelector = createSelector(
   (state) => AvklartefaktaSelector(state),
   (alleAvklarteFakta) => {
     const avklartFakta = alleAvklarteFakta.find(
-      (avklaring) => avklaring.referanse === KV.Koder.avklartefaktaKoder.UKJENT_SLUTTDATO
+      (avklaring) => avklaring.referanse === KV.Koder.avklartefaktaKoder.UKJENT_SLUTTDATO_MEDLEMSKAPSPERIODE
     );
     if (!avklartFakta) return null;
     return avklartFakta.fakta[0];
