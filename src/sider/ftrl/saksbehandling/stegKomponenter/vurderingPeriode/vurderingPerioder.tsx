@@ -91,8 +91,6 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     oppsummertfaktaSelectors.UkjentSluttdatoMedlemskapsperiodeSelector,
   );
 
-  const ukjentSluttdatoMedlemskapsperiodeSkalVises = behandlingstema === YRKESAKTIV && lagretBestemmelse !== FTRL_KAP2_2_1;
-
   const {
     control,
     watch,
@@ -295,8 +293,8 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
       Utils._isEmpty(periode.innvilgelsesResultat),
   );
 
+  const ukjentSluttdatoMedlemskapsperiodeSkalVises = behandlingstema === YRKESAKTIV && lagretBestemmelse !== FTRL_KAP2_2_1;
   const visLeggTilNyPeriode = redigerbart && feltErFyltInn;
-
   const visFeilmeldinger = feilMeldingBlokkerer(aktivFeilmeldingType) ? feltErFyltInn : feltErFyltInn && formIsValid;
 
   return (
