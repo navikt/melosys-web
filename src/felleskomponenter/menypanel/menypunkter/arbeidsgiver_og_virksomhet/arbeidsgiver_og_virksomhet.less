@@ -1,3 +1,5 @@
+@import "../../../../constants.less";
+
 .arbeidsgiver__og__virksomhet {
   .arbeidsforhold__liste {
     margin-bottom: 50px;
@@ -9,5 +11,27 @@
 
   .popover {
     width: 30%;
+  }
+
+  .heading-tittel {
+    align-self: flex-end;
+  }
+
+ .arbeidsgiver__og__virksomhet__heading {
+    display: flex;
+}
+
+.arbeidsgiver__og__virksomhet__heading .nav-helptext {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 0.5rem;
+}
+
+  &__understrek {
+    border-bottom: 1px solid @gray-dark;
+  }
+  
+  &__mellomrom_ikon_tekst {
+    margin-right: 0.5rem;
   }
 }

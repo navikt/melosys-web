@@ -52,7 +52,7 @@ function Legend({
             <TittelIkon />
           </span>
         )}
-        <Nav.Heading size="small" className="editerbart-element__legend__tittel-container__tittel">
+        <Nav.Heading level="3" className="editerbart-element__legend__tittel-container__tittel">
           {tittel}
         </Nav.Heading>
       </span>
