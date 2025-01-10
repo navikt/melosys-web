@@ -309,7 +309,7 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
 
       {ukjentSluttdatoMedlemskapsperiodeSkalVises && (
         <UkjentSluttdatoMedlemskapsperiode
-          ukjentSluttdatoMedlemskapsperiode={ukjentSluttdatoMedlemskapsperiode}
+          ukjentSluttdatoMedlemskapsperiode={ukjentSluttdatoMedlemskapsperiode || false}
           onUkjentSluttdatoChange={lagreUkjentSluttdatoMedlemskapsperiode}
         />
       )}
