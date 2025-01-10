@@ -40,12 +40,6 @@ const OverlappOpphørtInnvilgetPeriode = (
   </Nav.Alert>
 );
 
-const IngenSluttdato = (
-  <Nav.Alert variant="error" className="alertstripe_feilmelding">
-    Du må oppgi sluttdato for å kunne angi resultat. Dette blir sluttdatoen på vedtaket.
-  </Nav.Alert>
-);
-
 const MedlemskapsperiodenStarterFør2023 = (
   <Nav.Alert variant="error" className="alertstripe_feilmelding">
     Du kan ikke fatte vedtak i stegvelgeren for årene før 2023. Du kan fatte fritekstvedtak i &quot;Send
@@ -222,12 +216,6 @@ export const tillattMedManglendeSluttDato = (land: string[], bestemmelse: string
   return landErKunNorge && bestemmelse === FTRL_KAP2_2_1;
 };
 
-export const harIkkeLovligSluttDato = (medlemskapsperioder: MedlemskapsperiodeProp[], land: string[]) => {
-  const sortertePerioder = [...medlemskapsperioder].sort(Utils.dato.sorterEtterNorskFomDato);
-  const manglerSluttdato = Utils._isEmpty(sortertePerioder[sortertePerioder.length - 1].tomDato);
-  return manglerSluttdato && !tillattMedManglendeSluttDato(land, sortertePerioder[0].bestemmelse);
-};
-
 const periodeOver12MånederIkkeTillatt = (
   medlemskapsperioder: MedlemskapsperiodeProp[],
   ikkeyrkesaktivOppholdstype?: string,
@@ -244,7 +232,6 @@ const periodeOver12MånederIkkeTillatt = (
 enum TypeFeilmelding {
   INGEN_MEDLEMSKAPSPERIODER = "INGEN_MEDLEMSKAPSPERIODER",
   IKKE_STØTTET_I_MELOSYS = "IKKE_STØTTET_I_MELOSYS",
-  INGEN_SLUTTDATO = "INGEN_SLUTTDATO",
   OVERLAPP_I_INNVILGEDE_PERIODER = "OVERLAPP_I_INNVILGEDE_PERIODER",
   OVERLAPP_I_OPPHØRTE_PERIODER = "OVERLAPP_I_OPPHØRTE_PERIODER",
   OVERLAPP_OPPHØRT_INNVILGET = "OVERLAPP_OPPHØRT_INNVILGET",
@@ -276,10 +263,6 @@ export function finnAktivFeilmelding(
 
   if (erIkkeStøttetIMelosys(medlemskapsperioder)) {
     return TypeFeilmelding.IKKE_STØTTET_I_MELOSYS;
-  }
-
-  if (harIkkeLovligSluttDato(medlemskapsperioder, land)) {
-    return TypeFeilmelding.INGEN_SLUTTDATO;
   }
 
   if (finnesOverlappIInnvilgedePerioder(medlemskapsperioder)) {
@@ -341,7 +324,6 @@ export function feilMeldingBlokkerer(type?: string): boolean {
   switch (type) {
     case TypeFeilmelding.INGEN_MEDLEMSKAPSPERIODER:
     case TypeFeilmelding.IKKE_STØTTET_I_MELOSYS:
-    case TypeFeilmelding.INGEN_SLUTTDATO:
     case TypeFeilmelding.OVERLAPP_I_INNVILGEDE_PERIODER:
     case TypeFeilmelding.OVERLAPP_OPPHØRT_INNVILGET:
     case TypeFeilmelding.OVERLAPP_I_OPPHØRTE_PERIODER:
@@ -365,8 +347,6 @@ export function Feilmelding({ type }: { type?: string }) {
       return IngenMedlemskapsperioder;
     case TypeFeilmelding.IKKE_STØTTET_I_MELOSYS:
       return <IngenFlytMelding />;
-    case TypeFeilmelding.INGEN_SLUTTDATO:
-      return IngenSluttdato;
     case TypeFeilmelding.OVERLAPP_I_INNVILGEDE_PERIODER:
       return OverlappIInnvilgedePerioder;
     case TypeFeilmelding.OVERLAPP_I_OPPHØRTE_PERIODER:
