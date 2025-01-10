@@ -15,9 +15,9 @@ exports[`EditerbartElementListe > snapshot test 1`] = `
                     <div>
                     </div>
                   </span>
-                  <h1 class="editerbart-element__legend__tittel-container__tittel navds-heading navds-heading--small">
+                  <h3 class="editerbart-element__legend__tittel-container__tittel navds-heading navds-heading--xsmall">
                     tittel: Navn
-                  </h1>
+                  </h3>
                 </span>
                 <span class="editerbart-element__legend__symboler">
                   <button
@@ -91,9 +91,9 @@ exports[`EditerbartElementListe > snapshot test 1`] = `
                     <div>
                     </div>
                   </span>
-                  <h1 class="editerbart-element__legend__tittel-container__tittel navds-heading navds-heading--small">
+                  <h3 class="editerbart-element__legend__tittel-container__tittel navds-heading navds-heading--xsmall">
                     tittel: Navn
-                  </h1>
+                  </h3>
                 </span>
                 <span class="editerbart-element__legend__symboler">
                   <button
