@@ -25,7 +25,7 @@ import { menypanelOperations, menypanelSelectors } from "../../../../ducks/menyp
 import { fagsakSelectors } from "../../../../ducks/fagsaker";
 import FullmaktForTrygdeavgiftConfirmationPanel from "../../../../felleskomponenter/fullmaktForTrygdeavgiftConfirmationPanel/fullmaktForTrygdeavgiftConfirmationPanel";
 
-const { FERDIGBEHANDLET } = MKV.Koder.behandlinger.behandlingsresultattyper;
+const { FASTSATT_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingsresultattyper;
 const { FØRSTEGANGSVEDTAK } = MKV.Koder.vedtakstyper;
 const { AARSAVREGNING_VEDTAKSBREV } = MKV.Koder.brev.produserbaredokumenter;
 const { FULLMEKTIG_TRYGDEAVGIFT } = MKV.Koder.fullmaktstype;
@@ -135,7 +135,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
 
   const lagFattVedtakReqDto = (): Api.Saksflyt.Vedtak.FattVedtakÅrsavregningReqDto => {
     return {
-      behandlingsresultatTypeKode: FERDIGBEHANDLET,
+      behandlingsresultatTypeKode: FASTSATT_TRYGDEAVGIFT,
       innledningFritekst: formValues?.innledningFritekst || null,
       begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
       vedtakstype: FØRSTEGANGSVEDTAK,
