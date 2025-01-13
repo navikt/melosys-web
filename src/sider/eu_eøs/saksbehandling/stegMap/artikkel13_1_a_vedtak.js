@@ -18,7 +18,6 @@ class Artikkel13_1_a_vedtak extends Steg {
     });
     this.handlers = {
       tilbake: propsLight.tilgjengeligeHandlers.tilbake,
-      lagreLovvalgsperioder: this._propsLight.tilgjengeligeHandlers.lagreLovvalgsperioder,
       kontrollerFerdigbehandling: this._propsLight.tilgjengeligeHandlers.kontrollerFerdigbehandling,
       validerMottatteOpplysninger: this._propsLight.tilgjengeligeHandlers.validerMottatteOpplysninger,
     };
