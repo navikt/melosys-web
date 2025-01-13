@@ -31,7 +31,6 @@ export function lagre() {
   return (dispatch, getState) => {
     const utpekingsperioder = Selectors.UtpekingsperioderSelector(getState());
     const behandlingID = behandlingerSelectors.BehandlingIDSelector(getState());
-
     return dispatch(send(behandlingID, { utpekingsperioder }));
   };
 }

@@ -71,13 +71,18 @@ export function VurderingArtikkel13UtpekLand({
   );
   const isMounted = Hooks.useIsMounted();
 
-  const oppdaterUtpekingsperiode = async (fomdato, tomdato) => {
+  const oppdaterUtpekingsperiode = async (fomdato, tomdato, valgtLovvalgsland) => {
     await endreUtpekingsperiode(fomdato, tomdato);
-    lagreUtpekingsperioder();
+    if (valgtLovvalgsland) {
+      lagreUtpekingsperioder();
+    }
   };
 
   const debouncedOppdaterUtpekingsperiode = useCallback(
-    Utils._debounce((nyFomDato, nyTomDato) => oppdaterUtpekingsperiode(nyFomDato, nyTomDato), 500),
+    Utils._debounce(
+      (nyFomDato, nyTomDato, valgtLovvalgsland) => oppdaterUtpekingsperiode(nyFomDato, nyTomDato, valgtLovvalgsland),
+      500,
+    ),
     [],
   );
 
@@ -90,15 +95,15 @@ export function VurderingArtikkel13UtpekLand({
     }
 
     if (!formValues.forkortUtpekingsperiode) {
-      debouncedOppdaterUtpekingsperiode(soknadsperiode.fom, soknadsperiode.tom);
+      debouncedOppdaterUtpekingsperiode(soknadsperiode.fom, soknadsperiode.tom, formValues.lovvalgsland);
     } else {
       setTomDato(formValues.tomDato);
       setFomDato(formValues.fomDato);
       if (isoTomDato) {
-        debouncedOppdaterUtpekingsperiode(isoFomDato, isoTomDato);
+        debouncedOppdaterUtpekingsperiode(isoFomDato, isoTomDato, formValues.lovvalgsland);
       }
     }
-  }, [formValues.fomDato, formValues.tomDato, formValues.forkortUtpekingsperiode]);
+  }, [formValues.fomDato, formValues.tomDato, formValues.forkortUtpekingsperiode, formValues.lovvalgsland]);
 
   useEffect(() => {
     if (redigerbart) {
