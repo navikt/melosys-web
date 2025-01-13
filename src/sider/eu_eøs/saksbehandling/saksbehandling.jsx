@@ -126,7 +126,6 @@ class Saksbehandling extends Component {
   lagreLovvalgsperioderHandler = async () => {
     const { behandlingID } = this.state;
     const { sendLovvalgsperioder, lovvalgsperioder, anmodningsperioderErSendtUtlandet } = this.props;
-
     if (anmodningsperioderErSendtUtlandet) return;
 
     sendLovvalgsperioder(behandlingID, lovvalgsperioder);
