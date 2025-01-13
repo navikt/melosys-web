@@ -83,13 +83,13 @@ export function VurderingVurderarbeidsland({
   }, []);
 
   useEffect(() => {
-    if (initialized) {
-      // slettData(slettAvklartfakta(MKV.Koder.avklartefaktatyper.ARBEIDSLAND));
-      // arbeidsland
-      //   .filter((land: string) => land)
-      //   .forEach((land: string) => {
-      //     oppdaterData(lagAvklartfakta(MKV.Koder.avklartefaktatyper.ARBEIDSLAND, land, land, null));
-      //   });
+    if (initialized && redigerbart) {
+      slettData(slettAvklartfakta(MKV.Koder.avklartefaktatyper.ARBEIDSLAND));
+      arbeidsland
+        .filter((land: string) => land)
+        .forEach((land: string) => {
+          oppdaterData(lagAvklartfakta(MKV.Koder.avklartefaktatyper.ARBEIDSLAND, land, land, null));
+        });
     }
   }, [arbeidsland.toString(), initialized]);
 
