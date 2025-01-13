@@ -317,7 +317,8 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  endreLovvalgsPeriode: (fomdato, tomdato) =>
+  lagreLovvalgsperioder: () => dispatch(lovvalgsperioderOperations.lagre()),
+  endreLovvalgsPeriode: async (fomdato, tomdato) =>
     dispatch(lovvalgsperioderOperations.endreLovvalgsPeriode(fomdato, tomdato)),
   touchAll: () => dispatch(formOperations.touchAll(KV.Form.ARTIKKEL_13_X_VEDTAK)),
   fattVedtak: (behandlingID, body) => dispatch(vedtakOperations.fatt(behandlingID, body)),
