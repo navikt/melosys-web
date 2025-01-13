@@ -64,7 +64,7 @@ export function VurderingVurderarbeidsland({
   const maritimtArbeid = useSelector(formSelectors.MaritimtArbeidSelector);
   const hjemmebaser = useSelector(mottatteOpplysningerSelectors.HjemmebaserSelector);
   const soknadsland = useSelector(mottatteOpplysningerSelectors.SoknadslandkoderSelector);
-  const arbeidsland = useSelector(avklartefaktaSelectors.ArbeidslandSelector);
+  const arbeidsland = useSelector(avklartefaktaSelectors.ArbeidslandSelector) as any;
   const fjernedeArbeidsland = useSelector(avklartefaktaSelectors.IkkeArbeidslandSoknadslandSelector);
 
   useEffect(() => {
@@ -84,13 +84,12 @@ export function VurderingVurderarbeidsland({
 
   useEffect(() => {
     if (initialized) {
-      slettData(slettAvklartfakta(MKV.Koder.avklartefaktatyper.ARBEIDSLAND));
-
-      arbeidsland
-        .filter((land: string) => land)
-        .forEach((land: string) => {
-          oppdaterData(lagAvklartfakta(MKV.Koder.avklartefaktatyper.ARBEIDSLAND, land, land, null));
-        });
+      // slettData(slettAvklartfakta(MKV.Koder.avklartefaktatyper.ARBEIDSLAND));
+      // arbeidsland
+      //   .filter((land: string) => land)
+      //   .forEach((land: string) => {
+      //     oppdaterData(lagAvklartfakta(MKV.Koder.avklartefaktatyper.ARBEIDSLAND, land, land, null));
+      //   });
     }
   }, [arbeidsland.toString(), initialized]);
 
