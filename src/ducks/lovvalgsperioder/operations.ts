@@ -92,7 +92,12 @@ export function resetLovvalgsperioderState() {
 }
 
 export function endreLovvalgsPeriode(fomdato: string, tomdato?: string) {
-  return Actions.endrePeriode(fomdato, tomdato);
+  return (dispatch: ThunkDispatch<RootState, unknown, Types.Action>) => {
+    return new Promise<void>((resolve) => {
+      dispatch(Actions.endrePeriode(fomdato, tomdato));
+      resolve();
+    });
+  };
 }
 
 export function oppdaterLovvalgsperioderState(stegState: PerioderStegState) {
