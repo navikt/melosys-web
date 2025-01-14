@@ -1,6 +1,43 @@
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { getAsJson, postAsJson, postAsJsonReceiveAsPDF } from "../utils";
 import { API_BASE_URL, DOKUMENTER } from "../api-constants";
+import { Mottaksretning } from "../../@types";
+
+export interface Dokument {
+  dokumentID: string;
+  tittel: string;
+  logiskeVedlegg: string[];
+}
+
+export interface FysiskDokument extends Dokument {
+  id: string;
+  journalpostID: string;
+  dato: string | null;
+  avsenderEllerMottaker: string;
+}
+
+export interface DokumentOversikt {
+  journalforingDato: string | null;
+  avsenderEllerMottaker: string;
+  journalpostID: string;
+  mottaksretning: Mottaksretning;
+  mottattDato: string | null;
+  hoveddokument: Dokument;
+  vedlegg: Dokument[];
+}
+
+export interface SedPdfData {
+  begrunnelseUtenlandskMyndighet?: string | null;
+  vilSendeAnmodningOmMerInformasjon?: boolean | null;
+  nyttLovvalgsland?: string | null;
+  fritekst?: string | null;
+}
+
+// TODO: Bedre navn?
+export interface BrevVedlegg {
+  saksvedlegg: FysiskDokument[];
+  standardvedlegg: TilgjengeligStandardvedlegg[];
+}
 
 export interface BrevAdresse {
   mottakerNavn: string;
@@ -72,6 +109,18 @@ export interface TilgjengeligMal {
   brevTyper: TilgjengeligBrev[];
 }
 
+export enum StandardvedleggType {
+  VIKTIG_INFORMASJON_RETTIGHETER_PLIKTER_AVSLAG = "info_om_rettigheter_avslag",
+  VIKTIG_INFORMASJON_RETTIGHETER_PLIKTER_INNVILGELSE = "info_om_rettigheter_innvilgelse",
+}
+
+// TODO: Rename til "Standardvedlegg"?
+export interface TilgjengeligStandardvedlegg {
+  malnavn: StandardvedleggType;
+  tittel: string;
+  frontendTittel: string;
+}
+
 export interface TilgjengeligNorskMyndighet {
   navn: string;
   orgnr: string;
@@ -84,6 +133,8 @@ export interface TilgjengeligBrev {
 export type TilgjengeligeMalerResDto = TilgjengeligMal[];
 
 export type TilgjengeligeNorskeMyndigheterResDto = TilgjengeligNorskMyndighet[];
+
+export type TilgjengeligeStandardvedleggResDto = TilgjengeligStandardvedlegg[];
 
 export interface KopiMottaker {
   rolle: string;
@@ -176,6 +227,9 @@ export interface HentMuligeMottakereNorskMyndighetReqDto {
 
 export const hentTilgjengeligeMaler = (behandlingID: number): Promise<TilgjengeligeMalerResDto> =>
   getAsJson(`${API_BASE_URL}${DOKUMENTER}/v2/tilgjengelige-maler/${behandlingID}`);
+
+export const hentStandardvedlegg = (): Promise<TilgjengeligeStandardvedleggResDto> =>
+  getAsJson(`${API_BASE_URL}${DOKUMENTER}/v2/standardvedlegg`);
 
 export const hentTilgjengeligeNorskeMyndigheter = (): Promise<TilgjengeligeNorskeMyndigheterResDto> =>
   getAsJson(`${API_BASE_URL}${DOKUMENTER}/v2/tilgjengelige-norske-myndigheter`);

@@ -1,16 +1,16 @@
-import { FysiskDokument } from "Domene";
 import VedleggVelgerRow from "./vedleggVelgerRow";
 import * as Nav from "../../navFrontend";
+import { FysiskDokument, BrevVedlegg } from "../../services/modules/dokumenter-v2";
 
 interface VedleggTableProps {
-  valgteVedlegg: FysiskDokument[];
+  valgteVedlegg: BrevVedlegg;
   alleVedlegg: FysiskDokument[];
   slettVedlegg: (vedleggID: string) => void;
   leggTilVedlegg: (vedlegg: FysiskDokument) => void;
 }
 
 function VedleggVelgerTable({ valgteVedlegg, alleVedlegg, slettVedlegg, leggTilVedlegg }: VedleggTableProps) {
-  const vedleggErMarkert = (vedleggID: string) => Boolean(valgteVedlegg.find((vedlegg) => vedlegg.id === vedleggID));
+  const vedleggErMarkert = (vedleggID: string) => Boolean(valgteVedlegg.saksvedlegg.find((vedlegg) => vedlegg.id === vedleggID));
 
   return (
     <Nav.Table>
@@ -24,6 +24,15 @@ function VedleggVelgerTable({ valgteVedlegg, alleVedlegg, slettVedlegg, leggTilV
             vedleggErMarkert={vedleggErMarkert(enkeltVedlegg.id)}
           />
         ))}
+        {valgteVedlegg.standardvedlegg.map((enkeltStandardvedlegg) => (
+          <VedleggVelgerRow
+            key={enkeltStandardvedlegg.malnavn}
+            vedlegg={enkeltStandardvedlegg}
+            leggTilVedlegg={() => leggTilVedlegg(enkeltStandardvedlegg)}
+            slettVedlegg={() => slettVedlegg(enkeltStandardvedlegg.id)}
+            vedleggErMarkert={vedleggErMarkert(enkeltStandardvedlegg.id)}
+            />
+          ))}
       </Nav.Table.Body>
     </Nav.Table>
   );

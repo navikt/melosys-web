@@ -4,9 +4,10 @@ import PdfLink from "../pdfLink";
 import * as Utils from "../../utils";
 import * as Nav from "../../navFrontend";
 import { ChangeEvent } from "react";
+import { TilgjengeligStandardvedlegg } from "../../@types/dokument";
 
 interface VedleggVelgerRowProps {
-  vedlegg: FysiskDokument;
+  vedlegg: FysiskDokument | TilgjengeligStandardvedlegg;
   leggTilVedlegg: () => void;
   slettVedlegg: () => void;
   vedleggErMarkert: boolean;

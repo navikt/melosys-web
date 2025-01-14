@@ -1,18 +1,43 @@
-import { FysiskDokument } from "Domene";
-
 import PdfLink from "../pdfLink";
 import * as Utils from "../../utils";
 import * as Mui from "../ui";
 import * as Ikoner from "../../resources/images";
 import * as Nav from "../../navFrontend";
+import { FysiskDokument, TilgjengeligStandardvedlegg } from "../../services/modules/dokumenter-v2";
 
 interface VedleggRowProps {
-  vedlegg: FysiskDokument;
-  slettVedlegg: () => void;
+  vedlegg: FysiskDokument | TilgjengeligStandardvedlegg;
+  slettSaksvedlegg: () => void;
+  slettStandardvedlegg: () => void;
   redigerbart: boolean;
 }
 
-function VedleggRow({ vedlegg, slettVedlegg, redigerbart }: VedleggRowProps) {
+// Type guard function to check if vedlegg is TilgjengeligStandardvedlegg
+function erTilgjengeligStandardvedlegg(
+  vedlegg: FysiskDokument | TilgjengeligStandardvedlegg,
+): vedlegg is TilgjengeligStandardvedlegg {
+  return "malnavn" in vedlegg && "frontendTittel" in vedlegg;
+}
+
+function VedleggRow({ vedlegg, slettSaksvedlegg, slettStandardvedlegg, redigerbart }: VedleggRowProps) {
+  if (erTilgjengeligStandardvedlegg(vedlegg)) {
+    return (
+      <Nav.Table.Row className="vedlegg">
+        <Nav.Table.DataCell>
+          <span>{vedlegg.frontendTittel}</span>
+        </Nav.Table.DataCell>
+        <Nav.Table.DataCell className="icon__cell">
+          <Mui.IkonKnapp
+            ariaLabel="Fjern vedlegg"
+            ikon={Ikoner.Bin}
+            onClick={slettStandardvedlegg}
+            disabled={!redigerbart}
+          />
+        </Nav.Table.DataCell>
+      </Nav.Table.Row>
+    );
+  }
+
   return (
     <Nav.Table.Row className="vedlegg">
       <Nav.Table.DataCell>
@@ -22,7 +47,7 @@ function VedleggRow({ vedlegg, slettVedlegg, redigerbart }: VedleggRowProps) {
         <span>{Utils.dato.formatterDatoTilNorsk(vedlegg.dato)}</span>
       </Nav.Table.DataCell>
       <Nav.Table.DataCell className="icon__cell">
-        <Mui.IkonKnapp ariaLabel="Fjern vedlegg" ikon={Ikoner.Bin} onClick={slettVedlegg} disabled={!redigerbart} />
+        <Mui.IkonKnapp ariaLabel="Fjern vedlegg" ikon={Ikoner.Bin} onClick={slettSaksvedlegg} disabled={!redigerbart} />
       </Nav.Table.DataCell>
     </Nav.Table.Row>
   );

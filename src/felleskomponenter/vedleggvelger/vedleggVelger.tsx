@@ -5,24 +5,32 @@ import * as Ikoner from "../../resources/images";
 
 import "./vedleggVelger.css";
 import VedleggVelgerModal from "./vedleggVelgerModal";
+import * as DokumenterV2 from "../../services/modules/dokumenter-v2";
 
 interface VedleggVelgerProps {
   dokumenter: FysiskDokument[];
-  valgteVedlegg: FysiskDokument[];
-  onChange: (valgteVedlegg: FysiskDokument[]) => void;
+  valgteVedlegg: DokumenterV2.BrevVedlegg;
+  onChange: (valgteVedlegg: DokumenterV2.BrevVedlegg) => void;
   redigerbart: boolean;
+  standardvedlegg: DokumenterV2.TilgjengeligeStandardvedleggResDto | undefined;
 }
 
-function VedleggVelger({ dokumenter, valgteVedlegg, onChange, redigerbart }: VedleggVelgerProps) {
+function VedleggVelger({ dokumenter, valgteVedlegg, onChange, redigerbart, standardvedlegg }: VedleggVelgerProps) {
   const [redigerer, setRedigerer] = useState<boolean>(false);
 
   const toggleRedigerer = () => setRedigerer(!redigerer);
   const leggTilVedlegg = (vedlegg: FysiskDokument) => {
-    onChange([...valgteVedlegg, vedlegg]);
+    onChange({
+      saksvedlegg: [...valgteVedlegg.saksvedlegg, vedlegg],
+      standardvedlegg: valgteVedlegg.standardvedlegg,
+    });
   };
 
   const slettVedlegg = (vedleggID: string) => {
-    onChange(valgteVedlegg.filter(({ id }) => id !== vedleggID));
+    onChange({
+      saksvedlegg: valgteVedlegg.saksvedlegg.filter(({ id }) => id !== vedleggID),
+      standardvedlegg: valgteVedlegg.standardvedlegg,
+    });
   };
 
   return (
@@ -34,6 +42,7 @@ function VedleggVelger({ dokumenter, valgteVedlegg, onChange, redigerbart }: Ved
         <VedleggVelgerModal
           onRequestClose={toggleRedigerer}
           alleVedlegg={dokumenter}
+          standardvedlegg={standardvedlegg}
           valgteVedlegg={valgteVedlegg}
           leggTilVedlegg={leggTilVedlegg}
           slettVedlegg={slettVedlegg}

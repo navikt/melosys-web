@@ -5,12 +5,12 @@ import { connect, ConnectedProps } from "react-redux";
 import { isPristine } from "redux-form";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
-import { FysiskDokument } from "Domene";
 import { useBeforeunload } from "react-beforeunload";
 
 import * as Nav from "../../navFrontend";
 import * as Utils from "../../utils";
 import * as KV from "../../kodeverk";
+import * as DokumenterV2 from "../../services/modules/dokumenter-v2";
 
 import Informasjonlinje from "../../felleskomponenter/informasjonlinje";
 import { SendBrev } from "../../felleskomponenter/sideDialog";
@@ -40,7 +40,7 @@ interface RouteParams {
 }
 
 interface Props {
-  dokumenter: FysiskDokument[];
+  dokumenter: DokumenterV2.FysiskDokument[];
 }
 
 type SendbrevProps = RouteComponentProps<RouteParams> & PropsFromRedux & Props;

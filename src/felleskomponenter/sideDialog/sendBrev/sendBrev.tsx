@@ -4,7 +4,6 @@ import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 import { connect, ConnectedProps } from "react-redux";
 import { change, getFormValues, reduxForm, reset } from "redux-form";
-import { FysiskDokument } from "Domene";
 import { ColumnWidth } from "nav-frontend-grid";
 
 import { useMsal } from "@azure/msal-react";
@@ -17,6 +16,7 @@ import * as Ikoner from "../../../resources/images";
 import * as Nav from "../../../navFrontend";
 import * as Skjema from "../../skjema";
 import * as Utils from "../../../utils";
+import { FysiskDokument, BrevVedlegg } from "../../../services/modules/dokumenter-v2";
 
 import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 import { behandlingerOperations } from "../../../ducks/behandlinger";
@@ -95,13 +95,17 @@ function SendBrev({
   sakstype,
 }: Props & PropsFromRedux) {
   const [tilgjengeligeMaler, setTilgjengeligeMaler] = useState<Api.DokumenterV2.TilgjengeligeMalerResDto>();
+  const [standardvedlegg, setStandardvedlegg] = useState<Api.DokumenterV2.TilgjengeligeStandardvedleggResDto>();
   const [muligeMottakere, setMuligeMottakere] = useState<Api.DokumenterV2.HentMuligeMottakereResDto>();
   const [muligeMottakereFeil, setMuligeMottakereFeil] = useState<string | undefined>(undefined);
   const [muligeMottakereNorskMyndighet, setMuligeMottakereNorskMyndighet] =
     useState<Api.DokumenterV2.MuligMottaker[]>();
   const [brevSendt, setBrevSendt] = useState(false);
   const [feil, setFeil] = useState<string | undefined>();
-  const [valgteVedlegg, setValgteVedlegg] = useState<FysiskDokument[]>([]);
+  const [valgteVedlegg, setValgteVedlegg] = useState<BrevVedlegg>({
+    saksvedlegg: [],
+    standardvedlegg: [],
+  });
   const [visFritekstvedleggSkjema, setVisFritekstvedleggSkjema] = useState(false);
   const [redigerFritekstVedleggIndex, setRedigerFritekstvedleggIndex] = useState<number | undefined>(undefined);
   const [fritekstvedlegg, setFritekstvedlegg] = useState<Fritekstvedlegg[]>([]);
@@ -129,6 +133,9 @@ function SendBrev({
       });
       setTilgjengeligeMaler(response);
     });
+
+  const hentStandardvedlegg = () =>
+    Api.DokumenterV2.hentStandardvedlegg().then((response) => setStandardvedlegg(response));
 
   const krevesLandForUtenlandskTrygdemyndighetMottaker = () => {
     return Boolean(
@@ -188,6 +195,7 @@ function SendBrev({
 
   useEffect(() => {
     hentTilgjengeligeMaler();
+    hentStandardvedlegg();
     hentUtkast();
   }, []);
 
@@ -328,7 +336,7 @@ function SendBrev({
     skalViseStandardTekstOmOpplysninger: hentFormVerdi("STANDARDTEKST_INNTEKTSOPPLYSNINGER"),
     kopiMottakere: hentKopiMottakere() || [],
     skalViseStandardTekstOmkontaktopplysninger: hentFormVerdi("STANDARDTEKST_KONTAKTINFORMASJON"),
-    saksvedlegg: valgteVedlegg.map((vedlegg) => ({
+    saksvedlegg: valgteVedlegg?.saksvedlegg.map((vedlegg) => ({
       dokumentID: vedlegg.dokumentID,
       journalpostID: vedlegg.journalpostID,
     })),
@@ -406,6 +414,13 @@ function SendBrev({
     event.preventDefault();
   };
 
+  const setValgteSaksvedlegg = (vedlegg: FysiskDokument[]) => {
+    setValgteVedlegg({
+      saksvedlegg: vedlegg,
+      standardvedlegg: valgteVedlegg?.standardvedlegg || [],
+    });
+  };
+
   if (!tilgjengeligeMaler || !formValues) return null;
   if (!visInnhold) return null;
 
@@ -432,7 +447,7 @@ function SendBrev({
         formValues={formValues}
         tilgjengeligeMottakere={tilgjengeligeMottakere}
         utkastPåBehandlingen={utkastPåBehandlingen}
-        setSaksvedlegg={setValgteVedlegg}
+        setSaksvedlegg={setValgteSaksvedlegg}
         setFritekstvedlegg={setFritekstvedlegg}
       />
 
@@ -523,6 +538,7 @@ function SendBrev({
           redigerFritekstvedleggIndex={redigerFritekstVedleggIndex}
           setRedigerFritekstvedleggIndex={setRedigerFritekstvedleggIndex}
           muligeMottakere={muligeMottakere}
+          standardvedlegg={standardvedlegg}
         />
       )}
 

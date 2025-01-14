@@ -1,5 +1,5 @@
 import { FysiskDokument } from "Domene";
-
+import * as DokumenterV2 from "../../services/modules/dokumenter-v2";
 import * as Nav from "../../navFrontend";
 import * as Utils from "../../utils";
 import VedleggVelgerTable from "./vedleggVelgerTable";
@@ -7,10 +7,11 @@ import "./vedleggVelger.css";
 
 interface VedleggVelgerModalProps {
   onRequestClose: () => void;
-  valgteVedlegg: FysiskDokument[];
-  alleVedlegg: FysiskDokument[];
+  valgteVedlegg: DokumenterV2.BrevVedlegg;
+  alleVedlegg: DokumenterV2.FysiskDokument[];
   slettVedlegg: (vedleggID: string) => void;
   leggTilVedlegg: (vedlegg: FysiskDokument) => void;
+  standardvedlegg: DokumenterV2.TilgjengeligeStandardvedleggResDto | undefined;
 }
 
 function VedleggVelgerModal({
@@ -19,6 +20,7 @@ function VedleggVelgerModal({
   alleVedlegg,
   leggTilVedlegg,
   slettVedlegg,
+  standardvedlegg,
 }: VedleggVelgerModalProps) {
   const harDokumenter = !Utils._isEmpty(alleVedlegg);
   return (
@@ -35,6 +37,7 @@ function VedleggVelgerModal({
           <VedleggVelgerTable
             valgteVedlegg={valgteVedlegg}
             alleVedlegg={alleVedlegg}
+            standardvedlegg={standardvedlegg}
             leggTilVedlegg={leggTilVedlegg}
             slettVedlegg={slettVedlegg}
           />

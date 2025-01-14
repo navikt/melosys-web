@@ -1,4 +1,4 @@
-import { FysiskDokument } from "Domene";
+import { FysiskDokument, StandardvedleggType, TilgjengeligStandardvedlegg, BrevVedlegg } from "../../services/modules/dokumenter-v2";
 
 import { Fritekstvedlegg } from "../sideDialog/sendBrev/sendBrev";
 import FritekstvedleggRow from "./fritekstvedleggRow";
@@ -7,8 +7,8 @@ import * as Nav from "../../navFrontend";
 import "./vedleggTable.css";
 
 interface VedleggTableProps {
-  valgteVedlegg: FysiskDokument[];
-  setValgteVedlegg: (valgteVedlegg: FysiskDokument[]) => void;
+  valgteVedlegg: BrevVedlegg;
+  setValgteVedlegg: (valgteVedlegg: BrevVedlegg) => void;
   label: string;
   fritekstvedlegg?: Fritekstvedlegg[];
   redigerFritekstvedlegg?: (index: number) => void;
@@ -28,7 +28,17 @@ function VedleggTable({
   redigerbart,
 }: VedleggTableProps) {
   const slettVedlegg = (vedleggID: string) => {
-    setValgteVedlegg(valgteVedlegg.filter(({ id }) => id !== vedleggID));
+    setValgteVedlegg({
+      saksvedlegg: valgteVedlegg.saksvedlegg.filter(({ id }) => id !== vedleggID),
+      standardvedlegg: valgteVedlegg.standardvedlegg,
+    });
+  };
+
+  const slettStandardvedlegg = (standardvedlegg: TilgjengeligStandardvedlegg) => {
+    setValgteVedlegg({
+      saksvedlegg: valgteVedlegg.saksvedlegg,
+      standardvedlegg: valgteVedlegg.standardvedlegg.filter((vedlegg) => vedlegg.malnavn !== standardvedlegg.malnavn),
+    });
   };
 
   return (
@@ -40,7 +50,7 @@ function VedleggTable({
           <Nav.Table.HeaderCell />
         </Nav.Table.Row>
       </Nav.Table.Header>
-      {(valgteVedlegg.length > 0 || (fritekstvedlegg && fritekstvedlegg.length > 0)) && (
+      {(valgteVedlegg.saksvedlegg.length > 0 || (fritekstvedlegg && fritekstvedlegg.length > 0)) && (
         <Nav.Table.Body>
           {fritekstvedlegg?.map((vedlegg, index) => (
             <FritekstvedleggRow
@@ -53,11 +63,21 @@ function VedleggTable({
               redigerbart={redigerbart}
             />
           ))}
-          {valgteVedlegg.map((enkeltVedlegg) => (
+          {valgteVedlegg.saksvedlegg.map((enkeltVedlegg) => (
             <VedleggRow
               key={enkeltVedlegg.id}
               vedlegg={enkeltVedlegg}
-              slettVedlegg={() => slettVedlegg(enkeltVedlegg.id)}
+              slettSaksvedlegg={() => slettVedlegg(enkeltVedlegg.id)}
+              slettStandardvedlegg={() => {}}
+              redigerbart={redigerbart}
+            />
+          ))}
+          {valgteVedlegg.standardvedlegg.map((enkeltVedlegg) => (
+            <VedleggRow
+              key={`standardvedlegg-${enkeltVedlegg.malnavn}`}
+              vedlegg={enkeltVedlegg}
+              slettSaksvedleggg={() => {}}
+              slettStandardvedlegg={() => slettStandardvedlegg(enkeltVedlegg)}
               redigerbart={redigerbart}
             />
           ))}
