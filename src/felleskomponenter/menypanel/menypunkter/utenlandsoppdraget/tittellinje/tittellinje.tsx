@@ -11,7 +11,7 @@ interface TittellinjeProps {
 function Tittellinje({ tittel, visArbeidsforholdRolleEtiketter }: TittellinjeProps) {
   return (
     <div className="utenlandsoppdraget-tittellinje">
-      <Nav.Heading size="small" className="utenlandsoppdraget-tittellinje__tittel">
+      <Nav.Heading level="2" className="utenlandsoppdraget-tittellinje__tittel">
         {tittel}
       </Nav.Heading>
       {visArbeidsforholdRolleEtiketter && (

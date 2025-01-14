@@ -49,7 +49,7 @@ function Fullmektig({ redigerbart, visArbeidsforholdRolleEtiketter }: Fullmektig
   return (
     <div className="fullmektig__container">
       <div className="tittel">
-        <Nav.Heading size="small" style={{ display: "inline", marginRight: "1em" }}>
+        <Nav.Heading level="2" style={{ display: "inline", marginRight: "1em" }}>
           {KV.Menypunkter.Fullmektig.tittel}
         </Nav.Heading>
         {visArbeidsforholdRolleEtiketter && <Tags.ArbeidsgiversDel style={{ marginLeft: "0.3em" }} />}

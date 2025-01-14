@@ -5,7 +5,6 @@ import { ThunkDispatch } from "redux-thunk";
 import { formValueSelector } from "redux-form";
 
 import * as Nav from "../../../../navFrontend";
-import * as Mui from "../../../ui";
 import * as KV from "../../../../kodeverk";
 import * as Tags from "../../tags";
 import * as Ikoner from "../../../../resources/images";
@@ -72,24 +71,22 @@ export function ArbeidsgiverOgVirksomhet({
     return org || { orgnr };
   };
 
-  /* eslint-disable-next-line max-len */
   const arbeidsforholdUtlandHjelpetekst =
     "Her legger du inn informasjon om utenlandsk arbeidsgiver som søker er ansatt og lønnet av. Når det ligger informasjon i dette menypunktet, blir det sendt kopi av vedtak og A1 til Statlig skatteoppkreving. Du skal ikke legge til utenlandsk oppdragsgiver her.";
 
   return (
     <Nav.Container fluid className="arbeidsgiver__og__virksomhet">
       <div className="tittel">
-        <Nav.Heading size="small" style={{ display: "inline", marginRight: "1em" }}>
+        <Nav.Heading level="2" style={{ display: "inline", marginRight: "1em" }}>
           {KV.Menypunkter.ArbeidsgiverOgVirksomhet.tittel}
         </Nav.Heading>
         {visArbeidsforholdRolleEtiketter && <Tags.ArbeidsgiversDel style={{ marginLeft: "0.3em" }} />}
       </div>
       {ekstraArbeidsgivere.length === 0 && (
-        <Mui.Undertittel
-          ikon={Ikoner.Building}
-          tekst={KV.Menypunkter.ArbeidsgiverOgVirksomhet.undertitler.arbeidsforholdINorge}
-          understrek
-        />
+        <Nav.Heading level="3" className="arbeidsgiver__og__virksomhet__understrek">
+          <Ikoner.Building className="arbeidsgiver__og__virksomhet__mellomrom_ikon_tekst" />
+          {KV.Menypunkter.ArbeidsgiverOgVirksomhet.undertitler.arbeidsforholdINorge}
+        </Nav.Heading>
       )}
       <ArbeidsforholdNorgeListe
         className="arbeidsforhold__liste"
@@ -106,11 +103,10 @@ export function ArbeidsgiverOgVirksomhet({
         elementerInneholderOrg={(orgListe: string[], orgnr: string) => orgListe.includes(orgnr)}
       />
       {selvstendigForetak.length === 0 && (
-        <Mui.Undertittel
-          ikon={Ikoner.Man}
-          tekst={KV.Menypunkter.ArbeidsgiverOgVirksomhet.undertitler.selvstendigNaeringsdrivendeINorge}
-          understrek
-        />
+        <Nav.Heading level="3" className="arbeidsgiver__og__virksomhet__understrek">
+          <Ikoner.Man className="arbeidsgiver__og__virksomhet__mellomrom_ikon_tekst" />
+          {KV.Menypunkter.ArbeidsgiverOgVirksomhet.undertitler.selvstendigNaeringsdrivendeINorge}
+        </Nav.Heading>
       )}
       <ArbeidsforholdNorgeListe
         className="arbeidsforhold__liste"
@@ -131,18 +127,21 @@ export function ArbeidsgiverOgVirksomhet({
         }
       />
       {arbeidsforholdUtland.length === 0 && (
-        <Mui.Undertittel
-          ikon={Ikoner.Building}
-          tekst={KV.Menypunkter.ArbeidsgiverOgVirksomhet.undertitler.arbeidsforholdIUtlandet}
-          understrek
-          etterTekst={
-            <Nav.HelpText
-              title={`${KV.Menypunkter.ArbeidsgiverOgVirksomhet.undertitler.arbeidsforholdIUtlandet} hjelpetekst`}
-            >
-              {arbeidsforholdUtlandHjelpetekst}
-            </Nav.HelpText>
-          }
-        />
+        <Nav.Heading
+          level="3"
+          className="arbeidsgiver__og__virksomhet__heading arbeidsgiver__og__virksomhet__understrek"
+        >
+          <Ikoner.Building className="arbeidsgiver__og__virksomhet__mellomrom_ikon_tekst" />
+          <span className="heading-tittel">
+            {KV.Menypunkter.ArbeidsgiverOgVirksomhet.undertitler.arbeidsforholdIUtlandet}
+          </span>
+          <Nav.HelpText
+            className="nav-helptext"
+            title={`${KV.Menypunkter.ArbeidsgiverOgVirksomhet.undertitler.arbeidsforholdIUtlandet} hjelpetekst`}
+          >
+            {arbeidsforholdUtlandHjelpetekst}
+          </Nav.HelpText>
+        </Nav.Heading>
       )}
       <EditerbartElementListe
         redigerbart={redigerbart}
@@ -159,11 +158,10 @@ export function ArbeidsgiverOgVirksomhet({
         tittelIkon={Ikoner.Building}
       />
       {selvstendigNaeringsvirksomhetUtland.length === 0 && (
-        <Mui.Undertittel
-          ikon={Ikoner.Man}
-          tekst={KV.Menypunkter.ArbeidsgiverOgVirksomhet.undertitler.selvstendigNaeringsdrivendeIUtlandet}
-          understrek
-        />
+        <Nav.Heading level="3" className="arbeidsgiver__og__virksomhet__understrek">
+          <Ikoner.Man className="arbeidsgiver__og__virksomhet__mellomrom_ikon_tekst" />
+          {KV.Menypunkter.ArbeidsgiverOgVirksomhet.undertitler.selvstendigNaeringsdrivendeIUtlandet}
+        </Nav.Heading>
       )}
       <EditerbartElementListe
         redigerbart={redigerbart}

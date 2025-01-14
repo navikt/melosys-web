@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { BodyShort, Heading } from "@navikt/ds-react";
+import { BodyShort } from "@navikt/ds-react";
 import { ChildEyesIcon, PersonGroupIcon } from "@navikt/aksel-icons";
 import { useHentFamiliemedlemmerQuery } from "./hentFamiliemedlemmer.generated";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
@@ -40,9 +40,9 @@ function Familiemedlemmer() {
           Fra register
         </Nav.Tag>
       </div>
-      <Heading size="xsmall" level="2" spacing className={familiemedlemmerClassName.element("understrek")}>
+      <Nav.Heading level="3" spacing className={familiemedlemmerClassName.element("understrek")}>
         <ChildEyesIcon aria-hidden="true" fontSize="1.5rem" className="mellomrom-ikon-tekst" /> Barn
-      </Heading>
+      </Nav.Heading>
       <div className="menypanel__table-wrapper--padding-left">
         {barn.length > 0 ? (
           <BarnTable barnListe={barn} />
@@ -52,9 +52,9 @@ function Familiemedlemmer() {
           </BodyShort>
         )}
       </div>
-      <Heading size="xsmall" level="2" spacing className={familiemedlemmerClassName.element("understrek")}>
+      <Nav.Heading level="3" spacing className={familiemedlemmerClassName.element("understrek")}>
         <PersonGroupIcon aria-hidden="true" fontSize="1.5rem" className="mellomrom-ikon-tekst" /> Ektefelle/partner
-      </Heading>
+      </Nav.Heading>
       <div className="menypanel__table-wrapper--padding-left">
         <BodyShort size="small" textColor="subtle" spacing>
           Samboer registreres ikke som relasjon i PDL

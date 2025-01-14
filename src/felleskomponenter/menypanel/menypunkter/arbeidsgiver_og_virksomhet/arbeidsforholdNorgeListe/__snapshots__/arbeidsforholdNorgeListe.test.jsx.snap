@@ -13,9 +13,9 @@ exports[`ArbeidsforholdNorgeListe > snapshot test 1`] = `
                 <span>
                 </span>
               </span>
-              <h1 class="editerbart-element__legend__tittel-container__tittel navds-heading navds-heading--small">
+              <h3 class="editerbart-element__legend__tittel-container__tittel navds-heading navds-heading--xsmall">
                 tittel
-              </h1>
+              </h3>
             </span>
             <span class="editerbart-element__legend__symboler">
               <button
