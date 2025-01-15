@@ -50,8 +50,8 @@ type OppsummeringProps = PropsFromRedux & {
   lovvalgsperiodeTom?: string;
   medlemskapsperiodeFom?: string;
   medlemskapsperiodeTom?: string;
-  mottatteOpplysningerPeriodeFom: string;
-  mottatteOpplysningerPeriodeTom: string;
+  mottatteOpplysningerPeriodeFom?: string;
+  mottatteOpplysningerPeriodeTom?: string;
   className?: string;
 };
 
@@ -65,8 +65,8 @@ function Oppsummering({
   lovvalgsperiodeTom = "",
   medlemskapsperiodeFom = "",
   medlemskapsperiodeTom = "",
-  mottatteOpplysningerPeriodeFom,
-  mottatteOpplysningerPeriodeTom,
+  mottatteOpplysningerPeriodeFom = "",
+  mottatteOpplysningerPeriodeTom = "",
   className,
   redigerbart,
   behandlingID,
