@@ -39,7 +39,7 @@ function Saksbehandling({ match, location }: Props) {
 
   const innvilgetMedlemskapsperiode = useSelector(
     medlemskapsperioderSelectors.SamletInnvilgetMedlemskapsperiodeSelector,
-  )
+  );
 
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const registeropplysningerHentet = useSelector(behandlingerSelectors.RegisteropplysningerHentetSelector);
@@ -122,8 +122,8 @@ function Saksbehandling({ match, location }: Props) {
             </Nav.Column>
             <Nav.Column xs="5">
               <Oppsummering
-                medlemskapsperiodeFom = {innvilgetMedlemskapsperiode?.fom}
-                medlemskapsperiodeTom = {innvilgetMedlemskapsperiode?.tom}
+                medlemskapsperiodeFom={innvilgetMedlemskapsperiode?.fom}
+                medlemskapsperiodeTom={innvilgetMedlemskapsperiode?.tom}
               />
               <SaksoversiktLenke />
               <SideDialog tabs={defaultTabs} />
