@@ -20,7 +20,7 @@ import { menypanelOperations } from "../../ducks/menypanel";
 import { MatchParams } from "../../@types";
 import { alleSteg } from "./initialStegArray";
 import { FellesHandlersContext } from "../../contexts";
-import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../ducks/mottatteOpplysninger";
+import { mottatteOpplysningerOperations } from "../../ducks/mottatteOpplysninger";
 import Oppsummering from "../../felleskomponenter/oppsummering";
 import { aarsavregningOperations } from "../../ducks/aarsavregning";
 import { medlemskapsperioderSelectors } from "../../ducks/medlemskapsperioder";
