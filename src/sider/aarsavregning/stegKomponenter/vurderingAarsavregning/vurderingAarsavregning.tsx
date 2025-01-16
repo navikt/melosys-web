@@ -449,13 +449,6 @@ export function VurderingAarsavregning({ bekreft, oppdaterStatus }: Props) {
     }
   }, [isValidating, erAvvik, formIsValid, erIngenGrunnlag, aarsavregningID]);
 
-  console.log("redigerbart ->")
-  console.log(redigerbart)
-  console.log("formisvalid ->")
-  console.log(formIsValid)
-  console.log("Formvalues ->")
-  console.log(formValues)
-
   const stegErGyldig =
     (erAvvik === false && !erIngenGrunnlag) ||
     Boolean(formIsValid && (erAvvik || erIngenGrunnlag) && aarsavregningResponse?.nyttGrunnlag);
