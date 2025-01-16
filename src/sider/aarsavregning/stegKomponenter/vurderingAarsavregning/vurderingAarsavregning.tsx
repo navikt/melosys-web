@@ -123,7 +123,7 @@ const lagInnvilgetMedlemskapsPeriode = (medlemskapsperioder?: Medlemskapsperiode
   };
 };
 
-const { FERDIGBEHANDLET } = MKV.Koder.behandlinger.behandlingsresultattyper;
+const { FASTSATT_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingsresultattyper;
 
 // TODO: Error handling ved hentÅrsavregning
 // TODO: Boolean for årsavregningstype mangler. Automatisk opprettet årsavregning skal ha år tilknyttet og dermed skal årvelger skjules
@@ -246,7 +246,7 @@ export function VurderingAarsavregning({ bekreft, oppdaterStatus }: Props) {
       resetInntektskilder([]);
       resetSkatteforholdsperioder([]);
       resetMedlemskapsperioder([]);
-      Api.Aarsavregning.hentFiltrertAarsavregningList(saksnummer, valgtÅr, FERDIGBEHANDLET).then((res) => {
+      Api.Aarsavregning.hentFiltrertAarsavregningList(saksnummer, valgtÅr, FASTSATT_TRYGDEAVGIFT).then((res) => {
         setNyVurderingÅrsavregning(res.length > 0);
       });
 
