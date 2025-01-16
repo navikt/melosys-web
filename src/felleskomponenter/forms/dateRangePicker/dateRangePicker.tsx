@@ -14,6 +14,7 @@ export function DateRangePicker({ onRangeChange, fieldError, showFieldError, ...
 
   const [localFromDate, setLocalFromDate] = useState<string>();
   const [localToDate, setLocalToDate] = useState<string>();
+  const [shouldShowErrorMessage, setShouldShowErrorMessage] = useState<boolean>();
 
   useEffect(() => {
     const { from, to } = defaultSelected as DateRange;
@@ -45,6 +46,8 @@ export function DateRangePicker({ onRangeChange, fieldError, showFieldError, ...
 
   // benyttes ettersom verdier utenfor fromDate og toDate settes til undefined ved datoer utenfor range limit
   const fromInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setShouldShowErrorMessage(false);
+
     if (fromInputProps?.onChange) {
       fromInputProps.onChange(event);
     }
@@ -60,6 +63,8 @@ export function DateRangePicker({ onRangeChange, fieldError, showFieldError, ...
 
   // benyttes ettersom verdier utenfor fromDate og toDate settes til undefined ved datoer utenfor range limit
   const toInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setShouldShowErrorMessage(false);
+
     if (toInputProps?.onChange) {
       toInputProps.onChange(event);
     }
@@ -94,6 +99,10 @@ export function DateRangePicker({ onRangeChange, fieldError, showFieldError, ...
     return fieldError && fieldError[field] !== undefined;
   };
 
+  const onUserLeavesInput = () => {
+    setShouldShowErrorMessage(true);
+  };
+
   return (
     <DatePicker {...datepickerProps}>
       <HStack gap={{ sm: "2" }} justify="center" wrap={false}>
@@ -106,6 +115,7 @@ export function DateRangePicker({ onRangeChange, fieldError, showFieldError, ...
           size="small"
           readOnly={readOnly}
           onChange={fromInputChange}
+          onBlur={onUserLeavesInput}
         />
 
         <DatePicker.Input
@@ -117,9 +127,10 @@ export function DateRangePicker({ onRangeChange, fieldError, showFieldError, ...
           size="small"
           readOnly={readOnly}
           onChange={toInputChange}
+          onBlur={onUserLeavesInput}
         />
       </HStack>
-      {showFieldError && fieldError && (
+      {shouldShowErrorMessage && showFieldError && fieldError && (
         <div role="alert" aria-live="assertive" className="navds-error-message navds-label navds-label--small">
           {getErrorMessage()}
         </div>
