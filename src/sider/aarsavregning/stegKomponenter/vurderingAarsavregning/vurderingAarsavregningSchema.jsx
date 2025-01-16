@@ -86,7 +86,7 @@ const vurdering_aarsavregning = object().shape({
   medlemskapsperioder: array().when(["$medlemskapsperiode", "$erIngenGrunnlag", "$erAvvik"], {
     is: (medlemskapsperiode, erIngenGrunnlag, erAvvik) => {
       if (!erAvvik) return false;
-      return !medlemskapsperiode.fom || erIngenGrunnlag
+      return !medlemskapsperiode.fom || erIngenGrunnlag;
     },
     then: array()
       .min(1, "Minst en medlemskapsperiode")
