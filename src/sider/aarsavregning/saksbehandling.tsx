@@ -122,8 +122,8 @@ function Saksbehandling({ match, location }: Props) {
             </Nav.Column>
             <Nav.Column xs="5">
               <Oppsummering
-                medlemskapsperiodeFom={innvilgetMedlemskapsperiode?.fom}
-                medlemskapsperiodeTom={innvilgetMedlemskapsperiode?.tom}
+                medlemskapsperiodeFom={Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.fom)}
+                medlemskapsperiodeTom={Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.tom)}
               />
               <SaksoversiktLenke />
               <SideDialog tabs={defaultTabs} />
