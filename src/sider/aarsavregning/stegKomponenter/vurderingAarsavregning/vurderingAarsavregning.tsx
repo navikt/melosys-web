@@ -391,6 +391,30 @@ export function VurderingAarsavregning({ bekreft, oppdaterStatus }: Props) {
 
   const beregnTrygdeavgiftsperioder = useCallback(
     (formVerdier: FieldValue<FormValuesProps>) => {
+      const { skatteforholdsperioder, inntektskilder } = formVerdier;
+
+      const manglerInformasjonForSkatteforhold = skatteforholdsperioder.some(
+        (skatteforhold: Skatteforhold) =>
+          !skatteforhold.fomDato ||
+          !skatteforhold.tomDato ||
+          !skatteforhold.skatteplikttype
+      );
+
+      const manglerInformasjonForInntektskilde = inntektskilder.some(
+        (inntektskilde: Inntektskilde) =>
+          !inntektskilde.fomDato ||
+          !inntektskilde.tomDato ||
+          !inntektskilde.kildetype ||
+          !inntektskilde.arbAvgBetales ||
+          !inntektskilde.erMaanedsbelop ||
+          !inntektskilde.bruttoInntekt
+      );
+
+      if (manglerInformasjonForSkatteforhold || manglerInformasjonForInntektskilde) {
+        setFeil('Et eller flere felt mangler verdier');
+        return;
+      }
+
       setFeil(undefined);
       const erBrukerPliktigMedlemOgSkattepliktig =
         medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(formVerdier.skatteforholdsperioder);
