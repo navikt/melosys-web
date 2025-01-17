@@ -395,9 +395,7 @@ export function VurderingAarsavregning({ bekreft, oppdaterStatus }: Props) {
 
       const manglerInformasjonForSkatteforhold = skatteforholdsperioder.some(
         (skatteforhold: Skatteforhold) =>
-          !skatteforhold.fomDato ||
-          !skatteforhold.tomDato ||
-          !skatteforhold.skatteplikttype
+          !skatteforhold.fomDato || !skatteforhold.tomDato || !skatteforhold.skatteplikttype,
       );
 
       const manglerInformasjonForInntektskilde = inntektskilder.some(
@@ -407,11 +405,11 @@ export function VurderingAarsavregning({ bekreft, oppdaterStatus }: Props) {
           !inntektskilde.kildetype ||
           !inntektskilde.arbAvgBetales ||
           !inntektskilde.erMaanedsbelop ||
-          !inntektskilde.bruttoInntekt
+          !inntektskilde.bruttoInntekt,
       );
 
       if (manglerInformasjonForSkatteforhold || manglerInformasjonForInntektskilde) {
-        setFeil('Et eller flere felt mangler verdier');
+        setFeil("Et eller flere felt mangler verdier");
         return;
       }
 
