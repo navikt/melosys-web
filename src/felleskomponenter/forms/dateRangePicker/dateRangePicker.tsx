@@ -115,7 +115,13 @@ export function DateRangePicker({ onRangeChange, fieldError, showFieldError, ...
           size="small"
           readOnly={readOnly}
           onChange={fromInputChange}
-          onBlur={onUserLeavesInput}
+          onBlur={(event) => {
+            onUserLeavesInput();
+
+            if (rest.onBlur) {
+              rest.onBlur(event);
+            }
+          }}
         />
 
         <DatePicker.Input
