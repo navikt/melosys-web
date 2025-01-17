@@ -10,7 +10,7 @@ interface Props {
   control: Control;
   onRangeChange: (dateRange: DateRangeText) => void;
   fieldError?: any;
-  showFieldError?: boolean;
+  showFieldError: boolean;
 }
 
 export type { DateRangeText };

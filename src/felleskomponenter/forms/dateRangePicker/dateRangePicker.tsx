@@ -14,7 +14,7 @@ export function DateRangePicker({ onRangeChange, fieldError, showFieldError, ...
 
   const [localFromDate, setLocalFromDate] = useState<string>();
   const [localToDate, setLocalToDate] = useState<string>();
-  const [shouldShowErrorMessage, setShouldShowErrorMessage] = useState<boolean>();
+  const [shouldShowFieldError, setShouldShowFieldError] = useState<boolean>(showFieldError);
 
   useEffect(() => {
     const { from, to } = defaultSelected as DateRange;
@@ -46,7 +46,7 @@ export function DateRangePicker({ onRangeChange, fieldError, showFieldError, ...
 
   // benyttes ettersom verdier utenfor fromDate og toDate settes til undefined ved datoer utenfor range limit
   const fromInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setShouldShowErrorMessage(false);
+    setShouldShowFieldError(false);
 
     if (fromInputProps?.onChange) {
       fromInputProps.onChange(event);
@@ -63,7 +63,7 @@ export function DateRangePicker({ onRangeChange, fieldError, showFieldError, ...
 
   // benyttes ettersom verdier utenfor fromDate og toDate settes til undefined ved datoer utenfor range limit
   const toInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setShouldShowErrorMessage(false);
+    setShouldShowFieldError(false);
 
     if (toInputProps?.onChange) {
       toInputProps.onChange(event);
@@ -100,7 +100,7 @@ export function DateRangePicker({ onRangeChange, fieldError, showFieldError, ...
   };
 
   const onUserLeavesInput = () => {
-    setShouldShowErrorMessage(true);
+    setShouldShowFieldError(true);
   };
 
   return (
@@ -136,7 +136,7 @@ export function DateRangePicker({ onRangeChange, fieldError, showFieldError, ...
           onBlur={onUserLeavesInput}
         />
       </HStack>
-      {shouldShowErrorMessage && showFieldError && fieldError && (
+      {shouldShowFieldError && fieldError && (
         <div role="alert" aria-live="assertive" className="navds-error-message navds-label navds-label--small">
           {getErrorMessage()}
         </div>
