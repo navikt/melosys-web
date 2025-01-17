@@ -409,7 +409,6 @@ export function VurderingAarsavregning({ bekreft, oppdaterStatus }: Props) {
       );
 
       if (manglerInformasjonForSkatteforhold || manglerInformasjonForInntektskilde) {
-        setFeil("Et eller flere felt mangler verdier");
         return;
       }
 
@@ -463,13 +462,12 @@ export function VurderingAarsavregning({ bekreft, oppdaterStatus }: Props) {
       redigerbart &&
       (erAvvik || erIngenGrunnlag) &&
       !isValidating &&
-      formIsValid &&
       aarsavregningID &&
       !feilMeldingBlokkerer(aktivFeilmeldingType)
     ) {
       debounceBeregnTrygdeavgiftsperioder(formValues);
     }
-  }, [isValidating, erAvvik, formIsValid, erIngenGrunnlag, aarsavregningID]);
+  }, [isValidating, erAvvik, erIngenGrunnlag, aarsavregningID]);
 
   const stegErGyldig =
     (erAvvik === false && !erIngenGrunnlag) ||
