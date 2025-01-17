@@ -462,12 +462,13 @@ export function VurderingAarsavregning({ bekreft, oppdaterStatus }: Props) {
       redigerbart &&
       (erAvvik || erIngenGrunnlag) &&
       !isValidating &&
+      formIsValid &&
       aarsavregningID &&
       !feilMeldingBlokkerer(aktivFeilmeldingType)
     ) {
       debounceBeregnTrygdeavgiftsperioder(formValues);
     }
-  }, [isValidating, erAvvik, erIngenGrunnlag, aarsavregningID]);
+  }, [isValidating, erAvvik, formIsValid, erIngenGrunnlag, aarsavregningID]);
 
   const stegErGyldig =
     (erAvvik === false && !erIngenGrunnlag) ||
