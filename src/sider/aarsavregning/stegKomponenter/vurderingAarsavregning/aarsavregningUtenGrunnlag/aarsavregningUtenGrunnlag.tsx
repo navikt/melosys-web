@@ -1,44 +1,44 @@
-import * as Api from "../../../../services/api";
-import MedlemskapsPerioderTabell from "./komponenter/medlemskapsPerioderTabell";
-import "./vurderingAarsavregning.css";
+import * as Api from "../../../../../services/api";
+import MedlemskapsPerioderTabell from "../komponenter/medlemskapsPerioderTabell";
+import "../vurderingAarsavregning.css";
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
-import { AarsavregningResponse, Trygdeavgiftsgrunnlag } from "../../../../services/modules/aarsavregning/aarsavregning";
+import { AarsavregningResponse, Trygdeavgiftsgrunnlag } from "../../../../../services/modules/aarsavregning/aarsavregning";
 import { useDispatch, useSelector } from "react-redux";
-import { behandlingerSelectors } from "../../../../ducks/behandlinger";
-import * as Nav from "../../../../navFrontend";
-import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
-import { redigerbartSelectors } from "../../../../ducks/redigerbart";
-import { TidligereGrunnlagsopplysningerFinnesIkke } from "./komponenter/tidligereGrunnlagsopplysningerFinnesIkke";
+import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
+import * as Nav from "../../../../../navFrontend";
+import LabelMedHjelpetekst from "../../../../../felleskomponenter/labelMedHjelpetekst";
+import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
+import { TidligereGrunnlagsopplysningerFinnesIkke } from "../komponenter/tidligereGrunnlagsopplysningerFinnesIkke";
 import { FieldValue, useFieldArray, useForm } from "react-hook-form";
 import {
   FieldArrayProps,
   FormValuesProps,
   Inntektskilde,
   Skatteforhold,
-} from "../../../../felleskomponenter/trygdeavgift/komponenter/types";
+} from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as Utils from "../../../../utils";
-import vurderingAarsavregningSchema from "./vurderingAarsavregningSchema";
-import { feilMeldingBlokkerer, finnAktivFeilmelding } from "./meldinger";
-import { erBrukerSkattepliktigIHelePerioden } from "../../../ftrl/saksbehandling/stegKomponenter/vurderingTrygdeavgift/vurderingTrygdeavgiftSchema";
-import MKV from "../../../../melosyskodeverk";
-import { SumArsavregningTabell } from "./komponenter/sumArsavregningTabell";
-import { BeregnetTrygdeavgiftDetaljer } from "./komponenter/beregnetTrygdeavgiftDetaljer";
-import { OK } from "../../../../ducks/aarsavregning/types";
-import TidligereGrunnlagsoversikt from "./komponenter/tidligereGrunnlagsoversikt";
-import { sorterEtterISOFomDato } from "../../../../utils/dato";
-import GrunnlagsopplysningerSkjema from "./komponenter/grunnlagsopplysningerSkjema";
-import { fagsakSelectors } from "../../../../ducks/fagsaker";
-import { NyBehandlingForTidligereAarsavregningMelding } from "../../../../felleskomponenter/alertmeldinger/alertmeldinger";
+import * as Utils from "../../../../../utils";
+import { feilMeldingBlokkerer, finnAktivFeilmelding } from "../meldinger";
+import { erBrukerSkattepliktigIHelePerioden } from "../../../../ftrl/saksbehandling/stegKomponenter/vurderingTrygdeavgift/vurderingTrygdeavgiftSchema";
+import MKV from "../../../../../melosyskodeverk";
+import { SumArsavregningTabell } from "../komponenter/sumArsavregningTabell";
+import { BeregnetTrygdeavgiftDetaljer } from "../komponenter/beregnetTrygdeavgiftDetaljer";
+import { OK } from "../../../../../ducks/aarsavregning/types";
+import TidligereGrunnlagsoversikt from "../komponenter/tidligereGrunnlagsoversikt";
+import { sorterEtterISOFomDato } from "../../../../../utils/dato";
+import GrunnlagsopplysningerSkjema from "../komponenter/grunnlagsopplysningerSkjema";
+import { fagsakSelectors } from "../../../../../ducks/fagsaker";
+import { NyBehandlingForTidligereAarsavregningMelding } from "../../../../../felleskomponenter/alertmeldinger/alertmeldinger";
 
-import { behandlingsresultatOperations, behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
+import { behandlingsresultatOperations, behandlingsresultatSelectors } from "../../../../../ducks/behandlingsresultat";
 
-import { medlemskapsperioderOperations, medlemskapsperioderSelectors } from "../../../../ducks/medlemskapsperioder";
-import { MedlemskapsperiodeProp } from "../../../ftrl/saksbehandling/stegKomponenter/vurderingPeriode/komponenter/types";
-import { Medlemskapsperioder } from "./komponenter/medlemskapsperioder";
-import { InntektskildeDto, SkatteforholdDto } from "../../../../services/modules/trygdeavgift";
-import { FeilmeldingOppsummering } from "./feilmeldingOppsummering";
-import { Medlemskapsperiode } from "../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import { medlemskapsperioderOperations, medlemskapsperioderSelectors } from "../../../../../ducks/medlemskapsperioder";
+import { MedlemskapsperiodeProp } from "../../../../ftrl/saksbehandling/stegKomponenter/vurderingPeriode/komponenter/types";
+import { Medlemskapsperioder } from "../komponenter/medlemskapsperioder";
+import { InntektskildeDto, SkatteforholdDto } from "../../../../../services/modules/trygdeavgift";
+import { FeilmeldingOppsummering } from "../feilmeldingOppsummering";
+import { Medlemskapsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import aarsavregningUtenGrunnlagSchema from "./aarsavregningUtenGrunnlagSchema";
 
 interface Props {
   bekreft: () => void;
@@ -126,7 +126,7 @@ const lagInnvilgetMedlemskapsPeriode = (medlemskapsperioder?: Medlemskapsperiode
 const { FASTSATT_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingsresultattyper;
 
 // TODO: Boolean for årsavregningstype mangler. Automatisk opprettet årsavregning skal ha år tilknyttet og dermed skal årvelger skjules
-export function VurderingAarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
+export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
   const [valgtÅr, setValgtÅr] = useState<number | null>(null);
   const [initieltÅr, setInitieltÅr] = useState<number | null>(null);
   const [erAvvik, setErAvvik] = useState<boolean | undefined>(undefined);
@@ -245,7 +245,7 @@ export function VurderingAarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: 
       resetInntektskilder([]);
       resetSkatteforholdsperioder([]);
       resetMedlemskapsperioder([]);
-      Api.Aarsavregning.hentFiltrertAarsavregningList(saksnummer, valgtÅr, FASTSATT_TRYGDEAVGIFT).then((res) => {
+      Api.Aarsavregning.hentFiltrertAarsavregningList(saksnummer, FASTSATT_TRYGDEAVGIFT, valgtÅr).then((res) => {
         setNyVurderingÅrsavregning(res.length > 0);
       });
 
@@ -317,7 +317,7 @@ export function VurderingAarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: 
     trigger,
     formState: { errors: formErrors, isValid: formIsValid, isValidating },
   } = useForm({
-    resolver: yupResolver(vurderingAarsavregningSchema),
+    resolver: yupResolver(aarsavregningUtenGrunnlagSchema),
     context: {
       medlemskapsperiode: innvilgetMedlemskapsperiode,
       medlemskapsTypeErPliktig,

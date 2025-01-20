@@ -246,7 +246,7 @@ export function VurderingAarsavregning({ bekreft, oppdaterStatus }: Props) {
       resetInntektskilder([]);
       resetSkatteforholdsperioder([]);
       resetMedlemskapsperioder([]);
-      Api.Aarsavregning.hentFiltrertAarsavregningList(saksnummer, valgtÅr, FASTSATT_TRYGDEAVGIFT).then((res) => {
+      Api.Aarsavregning.hentFiltrertAarsavregningList(saksnummer, FASTSATT_TRYGDEAVGIFT, valgtÅr).then((res) => {
         setNyVurderingÅrsavregning(res.length > 0);
       });
 
