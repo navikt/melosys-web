@@ -31,7 +31,7 @@ import GrunnlagsopplysningerSkjema from "./komponenter/grunnlagsopplysningerSkje
 import { fagsakSelectors } from "../../../../ducks/fagsaker";
 import { NyBehandlingForTidligereAarsavregningMelding } from "../../../../felleskomponenter/alertmeldinger/alertmeldinger";
 
-import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
+import { behandlingsresultatOperations, behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
 
 import { medlemskapsperioderOperations, medlemskapsperioderSelectors } from "../../../../ducks/medlemskapsperioder";
 import { MedlemskapsperiodeProp } from "../../../ftrl/saksbehandling/stegKomponenter/vurderingPeriode/komponenter/types";
@@ -123,7 +123,7 @@ const lagInnvilgetMedlemskapsPeriode = (medlemskapsperioder?: Medlemskapsperiode
   };
 };
 
-const { FERDIGBEHANDLET } = MKV.Koder.behandlinger.behandlingsresultattyper;
+const { FASTSATT_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingsresultattyper;
 
 // TODO: Boolean for årsavregningstype mangler. Automatisk opprettet årsavregning skal ha år tilknyttet og dermed skal årvelger skjules
 export function VurderingAarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
@@ -172,23 +172,23 @@ export function VurderingAarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: 
     resetSkatteforholdsperioder(
       !Utils._isEmpty(sorterteSkatteforhold)
         ? sorterteSkatteforhold.map((skatteforhold) => ({
-            fomDato: Utils.dato.formatterDatoTilNorsk(skatteforhold.fomDato),
-            tomDato: Utils.dato.formatterDatoTilNorsk(skatteforhold.tomDato),
-            skatteplikttype: skatteforhold.skatteplikttype,
-          }))
+          fomDato: Utils.dato.formatterDatoTilNorsk(skatteforhold.fomDato),
+          tomDato: Utils.dato.formatterDatoTilNorsk(skatteforhold.tomDato),
+          skatteplikttype: skatteforhold.skatteplikttype,
+        }))
         : [],
     );
 
     resetInntektskilder(
       !Utils._isEmpty(sorterteInntekstkilder)
         ? sorterteInntekstkilder.map((inntektskilde) => ({
-            kildetype: inntektskilde.type,
-            arbAvgBetales: Utils.streng.boolTilUppercaseStreng(inntektskilde.arbeidsgiversavgiftBetales),
-            bruttoInntekt: inntektskilde.avgiftspliktigInntekt,
-            fomDato: Utils.dato.formatterDatoTilNorsk(inntektskilde.fomDato),
-            tomDato: Utils.dato.formatterDatoTilNorsk(inntektskilde.tomDato),
-            erMaanedsbelop: Utils.streng.boolTilUppercaseStreng(inntektskilde.erMaanedsbelop),
-          }))
+          kildetype: inntektskilde.type,
+          arbAvgBetales: Utils.streng.boolTilUppercaseStreng(inntektskilde.arbeidsgiversavgiftBetales),
+          bruttoInntekt: inntektskilde.avgiftspliktigInntekt,
+          fomDato: Utils.dato.formatterDatoTilNorsk(inntektskilde.fomDato),
+          tomDato: Utils.dato.formatterDatoTilNorsk(inntektskilde.tomDato),
+          erMaanedsbelop: Utils.streng.boolTilUppercaseStreng(inntektskilde.erMaanedsbelop),
+        }))
         : [],
     );
   };
@@ -234,6 +234,39 @@ export function VurderingAarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: 
       mapTilInntektskilderProps(aarsavregningResponse?.nyttGrunnlag?.trygdeavgiftsgrunnlag.inntektskperioder),
     );
   }, [lagredeMedlemskapsperioder, erIngenGrunnlag, aarsavregningResponse]);
+  // Innlasting ved valg av år, oppretter eller henter årsavregning
+  useEffect(() => {
+    /* TODO: Refaktorert api skal ha nytt endepunkt som lar oss sjekke om et gitt år og behandlingID har en aktiv årsavregning.
+    Legg til kall mot dette endepunktet og kjør enten hent eller lag basert på responsen.
+    */
+    if (redigerbart && valgtÅr && valgtÅr !== aarsavregningResponse?.aar) {
+      setErIngenGrunnlag(undefined);
+      setErAvvik(undefined);
+      resetInntektskilder([]);
+      resetSkatteforholdsperioder([]);
+      resetMedlemskapsperioder([]);
+      Api.Aarsavregning.hentFiltrertAarsavregningList(saksnummer, valgtÅr, FASTSATT_TRYGDEAVGIFT).then((res) => {
+        setNyVurderingÅrsavregning(res.length > 0);
+      });
+
+      Api.Aarsavregning.lagAarsavregning(behandlingID, { aar: valgtÅr })
+        .then((res) => {
+          setAarsavregningResponse(res);
+          oppdaterErIngenGrunnlag(res);
+          // Benyttes for innhenting av saksopplysninger ifm. årsavregningsbehandlinger
+          dispatch({ type: OK, data: res });
+          if (res?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag) {
+            setSkjemaverdierFraTrygdeavgiftsgrunnlag(res?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag);
+          }
+          setValue("totaltForskuddsvisFakturert", "");
+          dispatch(behandlingsresultatOperations.hent(behandlingID));
+          dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(behandlingID));
+        })
+        .catch((error: any) => {
+          setFeil(error.body?.message || error);
+        });
+    }
+  }, [valgtÅr]);
 
   const oppdaterErIngenGrunnlag = (nyAarsavregningResponse?: AarsavregningResponse) => {
     innvilgetMedlemskapsperiode = lagInnvilgetMedlemskapsPeriode(
@@ -368,13 +401,13 @@ export function VurderingAarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: 
         })),
         inntektskilder: !erBrukerPliktigMedlemOgSkattepliktig
           ? formVerdier.inntektskilder.map((inntektskilde: Inntektskilde) => ({
-              type: inntektskilde.kildetype,
-              arbeidsgiversavgiftBetales: Utils.streng.uppercaseStrengTilBool(inntektskilde.arbAvgBetales) || false,
-              avgiftspliktigInntekt: inntektskilde.bruttoInntekt,
-              fomDato: Utils.dato.formatterDatoTilISO(inntektskilde.fomDato),
-              tomDato: Utils.dato.formatterDatoTilISO(inntektskilde.tomDato, null),
-              erMaanedsbelop: Utils.streng.uppercaseStrengTilBool(inntektskilde.erMaanedsbelop) || false,
-            }))
+            type: inntektskilde.kildetype,
+            arbeidsgiversavgiftBetales: Utils.streng.uppercaseStrengTilBool(inntektskilde.arbAvgBetales) || false,
+            avgiftspliktigInntekt: inntektskilde.bruttoInntekt,
+            fomDato: Utils.dato.formatterDatoTilISO(inntektskilde.fomDato),
+            tomDato: Utils.dato.formatterDatoTilISO(inntektskilde.tomDato, null),
+            erMaanedsbelop: Utils.streng.uppercaseStrengTilBool(inntektskilde.erMaanedsbelop) || false,
+          }))
           : [],
       })
         .then(() => {
@@ -470,12 +503,12 @@ export function VurderingAarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: 
     const response: any = await (medlemskapsperiode.ny
       ? dispatch(medlemskapsperioderOperations.opprettMedlemskapsperiode(behandlingID, periodeRequest))
       : dispatch(
-          medlemskapsperioderOperations.oppdaterMedlemskapsperiode(
-            behandlingID,
-            medlemskapsperiode.periodeId,
-            periodeRequest,
-          ),
-        ));
+        medlemskapsperioderOperations.oppdaterMedlemskapsperiode(
+          behandlingID,
+          medlemskapsperiode.periodeId,
+          periodeRequest,
+        ),
+      ));
 
     // @ts-expect-error generisk beskrivelse
     medlemskapsperioderUpdate(index, mapTilMedlemskapsperiodeProps(response.data));
