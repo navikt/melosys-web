@@ -18,7 +18,7 @@ export function Medlemskap(props: PropsFromRedux) {
 
   return (
     <div className="medlemskap panelSeksjon">
-      <Nav.Heading size="small" className="medlemskap__gruppeoverskrift">
+      <Nav.Heading level="3" className="medlemskap__gruppeoverskrift">
         Perioder med medlemskap
       </Nav.Heading>
       <section className="medlemskapgruppe__liste">
@@ -28,7 +28,7 @@ export function Medlemskap(props: PropsFromRedux) {
           "(ingen data funnet)"
         )}
       </section>
-      <Nav.Heading size="small" className="medlemskap__gruppeoverskrift">
+      <Nav.Heading level="3" className="medlemskap__gruppeoverskrift">
         Perioder uten medlemskap
       </Nav.Heading>
       <section className="medlemskapgruppe__liste">

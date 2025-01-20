@@ -51,11 +51,17 @@ function Fakturainformasjon() {
 
   return (
     <Nav.Container fluid className="fakturainformasjon">
-      {visReferanseEnabled && <Nav.Row>Fakturaseriereferanse: {fakturaserieReferanseFraBehandling}</Nav.Row>}
       <div key={fakturaserieReferanseFraBehandling}>
         <Nav.Row>
           <Nav.Column xs="12">
-            <Nav.Heading size="small">Fakturainformasjon</Nav.Heading>
+            <Nav.Heading level="2">Fakturainformasjon</Nav.Heading>
+            {visReferanseEnabled && (
+              <Nav.Column xs="12">
+                <Nav.Row className="mellomrom-tekst-tabell">
+                  Fakturaseriereferanse: {fakturaserieReferanseFraBehandling}
+                </Nav.Row>
+              </Nav.Column>
+            )}
             <Nav.Table>
               <Nav.Table.Header>
                 <Nav.Table.Row shadeOnHover={false}>

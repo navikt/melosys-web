@@ -19,18 +19,23 @@ import {
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 
 import { Medlemskapsperioder } from "./komponenter/medlemskapsperioder";
+import { UkjentSluttdatoMedlemskapsperiode } from "./komponenter/ukjentSluttdatoMedlemskapsperiode";
 import { Feilmelding, feilMeldingBlokkerer, finnAktivFeilmelding } from "./komponenter/feilmeldinger";
 import { FieldArrayProps, FormValuesProps, MedlemskapsperiodeProp, VurderingPerioderProps } from "./komponenter/types";
 import vurderingPerioderSchema from "./vurderingPerioderSchema";
 import "./vurderingPerioder.css";
 import { useFeatureToggle } from "../../../../../featuretoggle";
-import { MELOSYS_FTRL_BEGRENSE_PERIODE_VEDTAK } from "../../../../../featuretoggle/toggleNavn";
-import { oppsummertfaktaSelectors } from "../../../../../ducks/oppsummertfakta";
+import {
+  MELOSYS_FTRL_BEGRENSE_PERIODE_VEDTAK,
+  MELOSYS_SPESIELLE_GRUPPER,
+} from "../../../../../featuretoggle/toggleNavn";
+import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../../ducks/oppsummertfakta";
 
 const { AVSLAATT, OPPHØRT } = MKV.Koder.innvilgelsesResultat;
 const { NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingstyper;
-const { FTRL_KAP2_2_15_ANDRE_LEDD } = MKV.Koder.folketrygdloven_kap2_bestemmelser;
+const { FTRL_KAP2_2_15_ANDRE_LEDD, FTRL_KAP2_2_1 } = MKV.Koder.folketrygdloven_kap2_bestemmelser;
 const { PLIKTIG } = MKV.Koder.medlemskapstyper;
+const { YRKESAKTIV } = MKV.Koder.behandlinger.behandlingstema;
 
 const hentInformasjonstekst = (behandlingstype: string, medlemskapsTypeErPliktig: boolean) => {
   if (medlemskapsTypeErPliktig) {
@@ -73,10 +78,12 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   const [lovligeInnvilgelsesresultat, setLovligeInnvilgelsesresultat] = useState<string[]>([]);
 
   const begrensePeriodeVedtakToggleEnabled = useFeatureToggle(MELOSYS_FTRL_BEGRENSE_PERIODE_VEDTAK);
+  const spesielleGrupperToggleEnabled = useFeatureToggle(MELOSYS_SPESIELLE_GRUPPER);
 
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const lagredeMedlemskapsperioder = useSelector(medlemskapsperioderSelectors.AlleMedlemskapsperioderSelector);
   const behandlingstype = useSelector(behandlingerSelectors.BehandlingstypeKodeSelector);
+  const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const soknadsperiode = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const lagretBestemmelse = useSelector(medlemskapsperioderSelectors.BestemmelseSelector);
@@ -84,6 +91,9 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   const ikkeyrkesaktivOppholdstype = useSelector(oppsummertfaktaSelectors.IkkeYrkesaktivOppholdSelector);
   const medlemskapsTypeErPliktig = lagredeMedlemskapsperioder.some((periode) => periode.medlemskapstype === PLIKTIG);
   const arbeidssituasjonType = useSelector(oppsummertfaktaSelectors.ArbeidssituasjonSelector);
+  const ukjentSluttdatoMedlemskapsperiode = useSelector(
+    oppsummertfaktaSelectors.UkjentSluttdatoMedlemskapsperiodeSelector,
+  );
 
   const {
     control,
@@ -125,7 +135,29 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
 
   useEffect(() => {
     if (aktivtSteg) {
-      resetMedlemskapsperioder(mapInitialMedlemskapsperioder(lagredeMedlemskapsperioder));
+      let initialPerioder = mapInitialMedlemskapsperioder(lagredeMedlemskapsperioder);
+
+      // Hvis ukjentSluttdatoMedlemskapsperiode er true, sett sluttdatoer til 10 år etter startdato
+      if (ukjentSluttdatoMedlemskapsperiode) {
+        initialPerioder = initialPerioder.map((periode) => {
+          if (periode.fomDato) {
+            const fomISODate = Utils.dato.formatterDatoTilISO(periode.fomDato, "");
+            if (fomISODate) {
+              const fomDate = new Date(fomISODate);
+              const tomDate = new Date(fomDate);
+              tomDate.setFullYear(tomDate.getFullYear() + 10);
+              return {
+                ...periode,
+                tomDato: Utils.dato.formatterDatoTilNorsk(tomDate.toISOString()),
+              };
+            }
+          }
+          return periode;
+        });
+      }
+
+      resetMedlemskapsperioder(initialPerioder);
+
       if (!formIsValid) {
         lagredeMedlemskapsperioder.forEach((_periode, index) => {
           trigger(`medlemskapsperioder[${index}].fomDato`);
@@ -143,6 +175,33 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     Api.LovligeKombinasjoner.hentTrygdedekninger(lagretBestemmelse).then(setLovligeDekninger);
     Api.Ftrl.hentGyldigeInnvilgelsesresultat(behandlingstype).then(setLovligeInnvilgelsesresultat);
   }, [lagretBestemmelse]);
+
+  const lagreUkjentSluttdatoMedlemskapsperiode = async (ukjentSluttdato: boolean) => {
+    if (ukjentSluttdato) {
+      const lagretPerioder = formValues.medlemskapsperioder.map((periode: MedlemskapsperiodeProp) => {
+        if (periode.fomDato) {
+          const fomISODate = Utils.dato.formatterDatoTilISO(periode.fomDato, "");
+          if (fomISODate) {
+            const fomDate = new Date(fomISODate);
+            const tomDate = new Date(fomDate);
+            tomDate.setFullYear(tomDate.getFullYear() + 10);
+            return {
+              ...periode,
+              tomDato: Utils.dato.formatterDatoTilNorsk(tomDate.toISOString()),
+            };
+          }
+        }
+        return periode;
+      });
+
+      resetMedlemskapsperioder(lagretPerioder);
+
+      await trigger("medlemskapsperioder");
+      await debouncedLagreMedlemskapsperioder(lagretPerioder, true, undefined);
+    }
+
+    dispatch(oppsummertfaktaOperations.lagreUkjentSluttdatoMedlemskapsperiode(behandlingID, ukjentSluttdato));
+  };
 
   const lagreMedlemskapsperiode = async (medlemskapsperiode: MedlemskapsperiodeProp, index: number) => {
     const periodeRequest = {
@@ -237,8 +296,10 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
       Utils._isEmpty(periode.innvilgelsesResultat),
   );
 
-  const visLeggTilNyPeriode = redigerbart && feltErFyltInn;
+  const ukjentSluttdatoMedlemskapsperiodeSkalVises =
+    spesielleGrupperToggleEnabled && behandlingstema === YRKESAKTIV && lagretBestemmelse !== FTRL_KAP2_2_1;
 
+  const visLeggTilNyPeriode = redigerbart && feltErFyltInn;
   const visFeilmeldinger = feilMeldingBlokkerer(aktivFeilmeldingType) ? feltErFyltInn : feltErFyltInn && formIsValid;
 
   return (
@@ -251,6 +312,13 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
         {hentInformasjonstekst(behandlingstype, medlemskapsTypeErPliktig)}
       </Nav.BodyLong>
 
+      {ukjentSluttdatoMedlemskapsperiodeSkalVises && (
+        <UkjentSluttdatoMedlemskapsperiode
+          ukjentSluttdatoMedlemskapsperiode={ukjentSluttdatoMedlemskapsperiode || false}
+          onUkjentSluttdatoChange={lagreUkjentSluttdatoMedlemskapsperiode}
+        />
+      )}
+
       <Medlemskapsperioder
         trygdedekninger={lovligeDekninger}
         innvilgelsesResultater={lovligeInnvilgelsesresultat}
@@ -262,6 +330,7 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
         handleChange={debouncedLagreMedlemskapsperioder}
         handleLeggTil={handleLeggTil}
         visLeggTil={visLeggTilNyPeriode}
+        ukjentSluttdato={ukjentSluttdatoMedlemskapsperiode}
       />
 
       {visFeilmeldinger && <Feilmelding type={aktivFeilmeldingType} />}

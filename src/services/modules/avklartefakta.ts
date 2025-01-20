@@ -17,6 +17,7 @@ interface Oppsummering {
   ikkeYrkesaktivFamilieRelasjonstype?: string;
   ikkeYrkesaktivOppholdstype?: string;
   arbeidssituasjonType?: string;
+  ukjentSluttdatoMedlemskapsperiode?: boolean;
 }
 
 export const hent = (behandlingID: number): Promise<Avklartfakta[]> =>
@@ -25,16 +26,16 @@ export const hent = (behandlingID: number): Promise<Avklartfakta[]> =>
 export const send = (behandlingID: number, avklartefakta: Avklartfakta[]): Promise<Avklartfakta[]> =>
   postAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}`, avklartefakta);
 
-export const sendIkkeYrkesaktivOppholdstype = (behandlingID: number, oppholdstype: string): Promise<Oppsummering> =>
+export const lagreIkkeYrkesaktivOppholdstype = (behandlingID: number, oppholdstype: string): Promise<Oppsummering> =>
   postAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/oppholdstype`, oppholdstype);
 
-export const sendIkkeYrkesaktivRelasjonstype = (
+export const lagreIkkeYrkesaktivRelasjonstype = (
   behandlingID: number,
   familierelasjonstype: string,
 ): Promise<Oppsummering> =>
   postAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/familierelasjonstype`, familierelasjonstype);
 
-export const sendArbeidssituasjontype = (behandlingID: number, arbeidssituasjontype: string): Promise<Oppsummering> =>
+export const lagreArbeidssituasjontype = (behandlingID: number, arbeidssituasjontype: string): Promise<Oppsummering> =>
   postAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/arbeidssituasjontype`, arbeidssituasjontype);
 
 export const slettAvklartefakta = (behandlingID: number, avklartefaktatype: string): Promise<Oppsummering> =>
@@ -55,13 +56,19 @@ export interface FullstendigManglendeInnbetaling {
   fullstendigManglendeInnbetaling?: boolean;
 }
 
-export const sendVirksomheter = (behandlingID: number, virksomheter: Virksomheter): Promise<Oppsummering> =>
+export const lagreVirksomheter = (behandlingID: number, virksomheter: Virksomheter): Promise<Oppsummering> =>
   postAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/virksomheter`, virksomheter);
 
-export const sendArbeidsland = (behandlingID: number, arbeidsland: Arbeidsland): Promise<Oppsummering> =>
+export const lagreArbeidsland = (behandlingID: number, arbeidsland: Arbeidsland): Promise<Oppsummering> =>
   postAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/arbeidsland`, arbeidsland);
 
-export const sendInnbetalingsstatus = (
+export const lagreUkjentSluttdatoMedlemskapsperiode = (
+  behandlingID: number,
+  ukjentSluttdato: boolean,
+): Promise<Oppsummering> =>
+  postAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/ukjent-sluttdato-medlemskapsperiode`, ukjentSluttdato);
+
+export const lagreInnbetalingsstatus = (
   behandlingID: number,
   fullstendigManglendeInnbetaling?: boolean,
 ): Promise<Oppsummering> =>

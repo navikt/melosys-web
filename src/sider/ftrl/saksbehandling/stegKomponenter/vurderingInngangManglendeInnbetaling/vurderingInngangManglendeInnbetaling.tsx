@@ -44,7 +44,7 @@ export function VurderingInngangManglendeInnbetaling({ bekreft, aktivtSteg, oppd
 
   const handleChange = (value: string) => {
     dispatch(
-      oppsummertfaktaOperations.sendInnbetalingsstatus(behandlingID, Utils.streng.uppercaseStrengTilBool(value)),
+      oppsummertfaktaOperations.lagreInnbetalingsstatus(behandlingID, Utils.streng.uppercaseStrengTilBool(value)),
     );
     oppdaterStatus(formIsValid, value === BOOLSK_STRING.SANN ? vedtakOpphoerSteg.id : inngangSteg.id);
   };
@@ -61,7 +61,7 @@ export function VurderingInngangManglendeInnbetaling({ bekreft, aktivtSteg, oppd
   useEffect(() => {
     if (!behandlingOppfriskes && formIsValid) {
       dispatch(
-        oppsummertfaktaOperations.sendInnbetalingsstatus(
+        oppsummertfaktaOperations.lagreInnbetalingsstatus(
           behandlingID,
           Utils.streng.uppercaseStrengTilBool(formValues.fullstendigManglendeInnbetaling),
         ),

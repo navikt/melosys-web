@@ -1,9 +1,9 @@
 import { useState } from "react";
+import { PersonTallShortIcon } from "@navikt/aksel-icons";
 
 import * as Nav from "../../../../navFrontend";
 import * as Utils from "../../../../utils";
 import * as KV from "../../../../kodeverk";
-import * as Mui from "../../../ui";
 import * as Ikoner from "../../../../resources/images";
 import * as Tags from "../../tags";
 import * as MedfolgendeFamilie from "./medfolgendeFamilie";
@@ -39,9 +39,7 @@ function FamilieforholdContainer({
     <Nav.Container fluid className="familieforhold-container">
       <Nav.Row>
         <Nav.Column xs="12">
-          <Nav.Heading size="small" style={{ display: "inline", marginRight: "1em" }}>
-            {KV.Menypunkter.Familieforhold.tittel}
-          </Nav.Heading>
+          <Nav.Heading level="2">{KV.Menypunkter.Familieforhold.tittel}</Nav.Heading>
         </Nav.Column>
       </Nav.Row>
       <Nav.Row className="familiemedlemmer-row">
@@ -63,11 +61,14 @@ function FamilieforholdContainer({
           </Nav.Row>
           {behandlingstema === YRKESAKTIV ? (
             <div>
-              <Mui.Undertittel
-                tekst={KV.Menypunkter.Familieforhold.undertitler.familieMedPaReisen}
-                ikon={Ikoner.Familie}
-                understrek
-              />
+              <Nav.Heading level="3" className="familieforhold-container__understrek">
+                <PersonTallShortIcon
+                  aria-hidden="true"
+                  fontSize="1.5rem"
+                  className="familieforhold-container__mellomrom_ikon_tekst"
+                />
+                {KV.Menypunkter.Familieforhold.undertitler.familieMedPaReisen}
+              </Nav.Heading>
               <Nav.Row>
                 <Nav.Column xs="12" className="familiemedpareisen">
                   <EditerbartElementListe

@@ -107,6 +107,7 @@ export function VurderingVedtak11_3_og_13_3a({
     return dokumenter.map((dokument: BrevDokumentMetadataType) => {
       /* eslint-disable no-param-reassign */
       dokument.dokumentData.begrunnelseFritekst = formValues?.begrunnelseFritekst;
+      dokument.dokumentData.nyVurderingBakgrunn = formValues.vedtakstypebegrunnelse;
       /* eslint-enable no-param-reassign */
       return dokument;
     });
@@ -138,7 +139,7 @@ export function VurderingVedtak11_3_og_13_3a({
     return {
       behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
       kopiTilArbeidsgiver: formValues.kopiTilArbeidsgiver,
-      vedtakstype: formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+      vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
       begrunnelseFritekst: formValues.begrunnelseFritekst,
       nyVurderingBakgrunn: formValues.vedtakstypebegrunnelse,
     };

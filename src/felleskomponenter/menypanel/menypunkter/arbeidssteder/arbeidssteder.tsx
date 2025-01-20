@@ -151,7 +151,7 @@ function Arbeidssteder({ redigerbart, visArbeidsforholdRolleEtiketter, behandlin
 
   return (
     <div className="arbeidssteder">
-      <Nav.Heading size="small" style={{ display: "inline", marginRight: "1em" }}>
+      <Nav.Heading level="2" style={{ display: "inline", marginRight: "1em" }}>
         {KV.Menypunkter.Arbeidssteder.tittel}
       </Nav.Heading>
       {visArbeidsforholdRolleEtiketter && <Tags.ArbeidsgiversDel style={{ marginLeft: "0.3em" }} />}

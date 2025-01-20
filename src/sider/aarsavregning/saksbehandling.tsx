@@ -20,10 +20,10 @@ import { menypanelOperations } from "../../ducks/menypanel";
 import { MatchParams } from "../../@types";
 import { alleSteg } from "./initialStegArray";
 import { FellesHandlersContext } from "../../contexts";
-import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../ducks/mottatteOpplysninger";
+import { mottatteOpplysningerOperations } from "../../ducks/mottatteOpplysninger";
 import Oppsummering from "../../felleskomponenter/oppsummering";
-import { lovvalgsperioderSelectors } from "../../ducks/lovvalgsperioder";
 import { aarsavregningOperations } from "../../ducks/aarsavregning";
+import { medlemskapsperioderSelectors } from "../../ducks/medlemskapsperioder";
 
 interface Props extends RouteComponentProps<MatchParams> {
   behandlingOppfriskes: boolean;
@@ -37,11 +37,9 @@ function Saksbehandling({ match, location }: Props) {
 
   const dispatch = useDispatch();
 
-  const formatterDato = (dato: string | null) => Utils.dato.formatterDatoTilNorsk(dato, false, undefined);
-  const mottatteOpplysningerFom = formatterDato(useSelector(mottatteOpplysningerSelectors.PeriodeFomSelector));
-  const mottatteOpplysningerTom = formatterDato(useSelector(mottatteOpplysningerSelectors.PeriodeTomSelector));
-  const lovvalgsperiodeFom = formatterDato(useSelector(lovvalgsperioderSelectors.FomDatoSelector));
-  const lovvalgsperiodeTom = formatterDato(useSelector(lovvalgsperioderSelectors.TomDatoSelector));
+  const innvilgetMedlemskapsperiode = useSelector(
+    medlemskapsperioderSelectors.SamletInnvilgetMedlemskapsperiodeSelector,
+  );
 
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const registeropplysningerHentet = useSelector(behandlingerSelectors.RegisteropplysningerHentetSelector);
@@ -63,21 +61,21 @@ function Saksbehandling({ match, location }: Props) {
     try {
       const behandlingId = Utils._toInteger(behandlingIDFraParam);
       setBehandlingID(behandlingId);
-      await dispatch(fagsakOperations.hent(saksnr));
+      dispatch(fagsakOperations.hent(saksnr));
       const response = await dispatch(behandlingerOperations.hentBehandling(behandlingId));
       // @ts-expect-error generisk beskrivelse
       const behandling = response.data;
       if (!behandling) return false;
 
-      await dispatch(behandlingsresultatOperations.hent(behandlingId));
+      dispatch(behandlingsresultatOperations.hent(behandlingId));
 
       if (behandlingOppfriskes) {
         visOppfriskModal();
         return false;
       }
 
-      await dispatch(mottatteOpplysningerOperations.hent(behandlingId));
-      await dispatch(dokumenterOperations.hentDokumentOversikt(saksnr));
+      dispatch(mottatteOpplysningerOperations.hent(behandlingId));
+      dispatch(dokumenterOperations.hentDokumentOversikt(saksnr));
       setSaksopplysningerLastet(true);
       return true;
     } catch (e) {
@@ -124,10 +122,8 @@ function Saksbehandling({ match, location }: Props) {
             </Nav.Column>
             <Nav.Column xs="5">
               <Oppsummering
-                lovvalgsperiodeFom={lovvalgsperiodeFom || mottatteOpplysningerFom}
-                lovvalgsperiodeTom={lovvalgsperiodeTom || mottatteOpplysningerTom}
-                mottatteOpplysningerPeriodeFom={mottatteOpplysningerFom}
-                mottatteOpplysningerPeriodeTom={mottatteOpplysningerTom}
+                medlemskapsperiodeFom={Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.fom)}
+                medlemskapsperiodeTom={Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.tom)}
               />
               <SaksoversiktLenke />
               <SideDialog tabs={defaultTabs} />

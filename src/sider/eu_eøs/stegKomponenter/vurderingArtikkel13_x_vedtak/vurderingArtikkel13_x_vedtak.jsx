@@ -91,6 +91,7 @@ export function VurderingArtikkel13_x_vedtak({
   };
 
   useEffect(() => {
+    if (!redigerbart) return;
     const isoTomDato = Utils.dato.formatterDatoTilISO(formValues.tomDato, null);
     if (isoTomDato) {
       oppdaterLovvalgsperiode(lovvalgsperiode.fomDato, isoTomDato);
@@ -317,7 +318,8 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  endreLovvalgsPeriode: (fomdato, tomdato) =>
+  lagreLovvalgsperioder: () => dispatch(lovvalgsperioderOperations.lagre()),
+  endreLovvalgsPeriode: async (fomdato, tomdato) =>
     dispatch(lovvalgsperioderOperations.endreLovvalgsPeriode(fomdato, tomdato)),
   touchAll: () => dispatch(formOperations.touchAll(KV.Form.ARTIKKEL_13_X_VEDTAK)),
   fattVedtak: (behandlingID, body) => dispatch(vedtakOperations.fatt(behandlingID, body)),

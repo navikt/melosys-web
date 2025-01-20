@@ -83,8 +83,11 @@ const åpenTomNårIkkeSistePeriodeTest = {
 };
 
 const vurdering_aarsavregning = object().shape({
-  medlemskapsperioder: array().when(["$medlemskapsperiode", "$erIngenGrunnlag"], {
-    is: (medlemskapsperiode, erIngenGrunnlag) => !medlemskapsperiode.fom || erIngenGrunnlag,
+  medlemskapsperioder: array().when(["$medlemskapsperiode", "$erIngenGrunnlag", "$erAvvik"], {
+    is: (medlemskapsperiode, erIngenGrunnlag, erAvvik) => {
+      if (!erAvvik) return false;
+      return !medlemskapsperiode.fom || erIngenGrunnlag;
+    },
     then: array()
       .min(1, "Minst en medlemskapsperiode")
       .of(
@@ -105,6 +108,7 @@ const vurdering_aarsavregning = object().shape({
   }),
   skatteforholdsperioder: array().when(["$erÅpenSluttDato", "$erAvvik", "$erIngenGrunnlag"], {
     is: (erÅpenSluttDato, erAvvik, erIngenGrunnlag) => {
+      if (!erAvvik) return false;
       if ((erAvvik || erIngenGrunnlag) === undefined) return true;
       return !erÅpenSluttDato && (erAvvik || erIngenGrunnlag);
     },
@@ -128,6 +132,7 @@ const vurdering_aarsavregning = object().shape({
   inntektskilder: lazy((_value, options) => {
     return array().when(["$medlemskapsTypeErPliktig", "$erÅpenSluttDato", "$erAvvik", "$erIngenGrunnlag"], {
       is: (medlemskapsTypeErPliktig, erÅpenSluttDato, erAvvik, erIngenGrunnlag) => {
+        if (!erAvvik) return false;
         return (
           !erÅpenSluttDato && kreverInntektskilder(medlemskapsTypeErPliktig, options) && (erAvvik || erIngenGrunnlag)
         );

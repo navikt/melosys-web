@@ -12,48 +12,59 @@ export function hentOppsummertFakta(behandlingID: number) {
   });
 }
 
-export function sendVirksomheter(behandlingID: number, virksomheter: Api.Avklartefakta.Virksomheter) {
-  return doThenDispatch(() => Api.Avklartefakta.sendVirksomheter(behandlingID, virksomheter), {
+export function lagreVirksomheter(behandlingID: number, virksomheter: Api.Avklartefakta.Virksomheter) {
+  return doThenDispatch(() => Api.Avklartefakta.lagreVirksomheter(behandlingID, virksomheter), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
   });
 }
 
-export function sendInnbetalingsstatus(behandlingID: number, fullstendigManglendeInnbetaling?: boolean) {
-  return doThenDispatch(() => Api.Avklartefakta.sendInnbetalingsstatus(behandlingID, fullstendigManglendeInnbetaling), {
+export function lagreInnbetalingsstatus(behandlingID: number, fullstendigManglendeInnbetaling?: boolean) {
+  return doThenDispatch(
+    () => Api.Avklartefakta.lagreInnbetalingsstatus(behandlingID, fullstendigManglendeInnbetaling),
+    {
+      OK: Types.OK,
+      FEILET: Types.FEILET,
+      PENDING: Types.PENDING,
+    },
+  );
+}
+
+export function lagreArbeidsland(behandlingID: number, arbeidsland: Api.Avklartefakta.Arbeidsland) {
+  return doThenDispatch(() => Api.Avklartefakta.lagreArbeidsland(behandlingID, arbeidsland), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
   });
 }
 
-export function sendArbeidsland(behandlingID: number, arbeidsland: Api.Avklartefakta.Arbeidsland) {
-  return doThenDispatch(() => Api.Avklartefakta.sendArbeidsland(behandlingID, arbeidsland), {
+export function lagreIkkeYrkesaktivOppholdtype(behandlingID: number, oppholdstype: string) {
+  return doThenDispatch(() => Api.Avklartefakta.lagreIkkeYrkesaktivOppholdstype(behandlingID, oppholdstype), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
   });
 }
 
-export function sendIkkeYrkesaktivOppholdtype(behandlingID: number, oppholdstype: string) {
-  return doThenDispatch(() => Api.Avklartefakta.sendIkkeYrkesaktivOppholdstype(behandlingID, oppholdstype), {
+export function lagreIkkeYrkesaktivRelasjontype(behandlingID: number, relasjonstype: string) {
+  return doThenDispatch(() => Api.Avklartefakta.lagreIkkeYrkesaktivRelasjonstype(behandlingID, relasjonstype), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
   });
 }
 
-export function sendIkkeYrkesaktivRelasjontype(behandlingID: number, relasjonstype: string) {
-  return doThenDispatch(() => Api.Avklartefakta.sendIkkeYrkesaktivRelasjonstype(behandlingID, relasjonstype), {
+export function lagreArbeidssituasjontype(behandlingID: number, arbeidssituasjontype: string) {
+  return doThenDispatch(() => Api.Avklartefakta.lagreArbeidssituasjontype(behandlingID, arbeidssituasjontype), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
   });
 }
 
-export function sendArbeidssituasjontype(behandlingID: number, arbeidssituasjontype: string) {
-  return doThenDispatch(() => Api.Avklartefakta.sendArbeidssituasjontype(behandlingID, arbeidssituasjontype), {
+export function lagreUkjentSluttdatoMedlemskapsperiode(behandlingID: number, ukjentSluttdato: boolean) {
+  return doThenDispatch(() => Api.Avklartefakta.lagreUkjentSluttdatoMedlemskapsperiode(behandlingID, ukjentSluttdato), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
