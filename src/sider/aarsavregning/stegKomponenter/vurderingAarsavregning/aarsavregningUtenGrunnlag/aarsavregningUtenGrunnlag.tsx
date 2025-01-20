@@ -138,12 +138,8 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as any;
   const aarsavregningID = useSelector(behandlingsresultatSelectors.ÅrsavregningIDSelector);
-  const saksnummer = useSelector(fagsakSelectors.SaksnummerSelector) as any;
   const lagredeMedlemskapsperioder = useSelector(medlemskapsperioderSelectors.AlleMedlemskapsperioderSelector);
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
-  const sisteMuligeÅr = new Date().getFullYear() - 1;
-  const antallÅrTilbakeITid = 6;
-  const muligeAar = Array.from({ length: antallÅrTilbakeITid }, (_, i) => sisteMuligeÅr - i);
   const dispatch = useDispatch();
 
 
@@ -365,7 +361,6 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
   const beregnTrygdeavgiftsperioder = useCallback(
     (formVerdier: FieldValue<FormValuesProps>) => {
       setFeil(undefined);
-      return;
       const erBrukerPliktigMedlemOgSkattepliktig =
         medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(formVerdier.skatteforholdsperioder);
       Api.Trygdeavgift.beregnTrygdeavgiftsperioder(behandlingID, {
@@ -462,6 +457,7 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
     Utils._debounce(async (alleMedlemskapsperioder, overskrevetIndex) => {
       //TODO unngå debounce her
       const isValid = await trigger("medlemskapsperioder");
+      console.log(isValid)
       if (isValid) {
         // eslint-disable-next-line no-restricted-syntax
         for (const periode of alleMedlemskapsperioder) {

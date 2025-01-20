@@ -56,18 +56,6 @@ const bruttoInntektFyltUtNårDetKrevesTest = {
   },
 };
 
-const kreverInntektskilder = (medlemskapsTypeErPliktig, options) => {
-  if (options?.parent?.skatteforholdsperioder) {
-    const inntektkilderErTom = options.parent.inntektskilder.length === 0;
-    return !(
-      medlemskapsTypeErPliktig &&
-      erBrukerSkattepliktigIHelePerioden(options.parent.skatteforholdsperioder) &&
-      inntektkilderErTom
-    );
-  }
-  return true;
-};
-
 const erPeriodeSisteMedlemskapsperiode = (periodeId, formValues) => {
   const medlemskapsperioder = formValues?.medlemskapsperioder || [];
   return medlemskapsperioder[medlemskapsperioder.length - 1]?.periodeId?.toString() === periodeId;
@@ -83,80 +71,57 @@ const åpenTomNårIkkeSistePeriodeTest = {
 };
 
 const aarsavregningUtenGrunnlagSchema = object().shape({
-  medlemskapsperioder: array().when(["$medlemskapsperiode", "$erIngenGrunnlag", "$erAvvik"], {
-    is: (medlemskapsperiode, erIngenGrunnlag, erAvvik) => {
-      if (!erAvvik) return false;
-      return !medlemskapsperiode.fom || erIngenGrunnlag;
-    },
-    then: array()
-      .min(1, "Minst en medlemskapsperiode")
-      .of(
-        object().shape({
-          fomDato: string()
-            .erGyldigDato()
-            .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
-            .required(),
-          tomDato: string()
-            .erGyldigDato()
-            .erEtterDatofelt("fomDato")
-            .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
-            .test(åpenTomNårIkkeSistePeriodeTest),
-          trygdedekning: string().required(),
-          bestemmelse: string().required(),
-        }),
-      ),
-  }),
-  skatteforholdsperioder: array().when(["$erÅpenSluttDato", "$erAvvik", "$erIngenGrunnlag"], {
-    is: (erÅpenSluttDato, erAvvik, erIngenGrunnlag) => {
-      if (!erAvvik) return false;
-      if ((erAvvik || erIngenGrunnlag) === undefined) return true;
-      return !erÅpenSluttDato && (erAvvik || erIngenGrunnlag);
-    },
-    then: array()
-      .min(1, "Minst en skatteforholdsperiode")
-      .of(
-        object().shape({
-          fomDato: string()
-            .erGyldigDato()
-            .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
-            .required(MAA_FYLLES_UT),
-          tomDato: string()
-            .erGyldigDato()
-            .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
-            .erEtterDatofelt("fomDato")
-            .required(MAA_FYLLES_UT),
-          skatteplikttype: string().required(MAA_FYLLES_UT),
-        }),
-      ),
-  }),
-  inntektskilder: lazy((_value, options) => {
-    return array().when(["$medlemskapsTypeErPliktig", "$erÅpenSluttDato", "$erAvvik", "$erIngenGrunnlag"], {
-      is: (medlemskapsTypeErPliktig, erÅpenSluttDato, erAvvik, erIngenGrunnlag) => {
-        if (!erAvvik) return false;
-        return (
-          !erÅpenSluttDato && kreverInntektskilder(medlemskapsTypeErPliktig, options) && (erAvvik || erIngenGrunnlag)
-        );
-      },
-      then: array()
-        .min(1, "Minst en inntektskilde")
-        .of(
-          object().shape({
-            kildetype: string().required(MAA_FYLLES_UT),
-            arbAvgBetales: string().test(arbAvgBetalesFyltUtNårDetKrevesTest).nullable(),
-            bruttoInntekt: string().erNummer().test(bruttoInntektFyltUtNårDetKrevesTest).nullable(),
-            fomDato: string()
-              .erGyldigDato()
-              .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
-              .required(MAA_FYLLES_UT),
-            tomDato: string()
-              .erGyldigDato()
-              .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
-              .erEtterDatofelt("fomDato")
-              .required(MAA_FYLLES_UT),
-          }),
-        ),
-    });
-  }),
+  medlemskapsperioder: array()
+    .min(1, "Minst en medlemskapsperiode")
+    .of(
+      object().shape({
+        fomDato: string()
+          .erGyldigDato()
+          .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
+          .required(),
+        tomDato: string()
+          .erGyldigDato()
+          .erEtterDatofelt("fomDato")
+          .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
+          .test(åpenTomNårIkkeSistePeriodeTest),
+        trygdedekning: string().required(),
+        bestemmelse: string().required(),
+      })
+    ),
+  skatteforholdsperioder: array()
+    .min(1, "Minst en skatteforholdsperiode")
+    .of(
+      object().shape({
+        fomDato: string()
+          .erGyldigDato()
+          .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
+          .required(MAA_FYLLES_UT),
+        tomDato: string()
+          .erGyldigDato()
+          .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
+          .erEtterDatofelt("fomDato")
+          .required(MAA_FYLLES_UT),
+        skatteplikttype: string().required(MAA_FYLLES_UT),
+      }),
+    ),
+  inntektskilder: array()
+    .min(1, "Minst en inntektskilde")
+    .of(
+      object().shape({
+        kildetype: string().required(MAA_FYLLES_UT),
+        arbAvgBetales: string().test(arbAvgBetalesFyltUtNårDetKrevesTest).nullable(),
+        bruttoInntekt: string().erNummer().test(bruttoInntektFyltUtNårDetKrevesTest).nullable(),
+        fomDato: string()
+          .erGyldigDato()
+          .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
+          .required(MAA_FYLLES_UT),
+        tomDato: string()
+          .erGyldigDato()
+          .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
+          .erEtterDatofelt("fomDato")
+          .required(MAA_FYLLES_UT),
+      }),
+    ),
 });
 
 export default aarsavregningUtenGrunnlagSchema;
