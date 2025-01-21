@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ColumnWidth } from "nav-frontend-grid";
-import { FysiskDokument, BrevVedlegg as SaksOgStandardvedlegg } from "../../../../services/modules/dokumenter-v2";
+import { FysiskDokument, BrevVedleggInterface } from "../../../../services/modules/dokumenter-v2";
 
 import * as Ikoner from "../../../../resources/images";
 import * as Api from "../../../../services/api";
@@ -23,8 +23,8 @@ interface BrevVedleggProps {
   standardvedlegg: Api.DokumenterV2.TilgjengeligeStandardvedleggResDto | undefined;
   fritekstvedlegg: Fritekstvedlegg[];
   setFritekstvedlegg: (fritekstvedlegg: Fritekstvedlegg[]) => void;
-  valgteVedlegg: SaksOgStandardvedlegg;
-  setValgteVedlegg: (valteVedlegg: SaksOgStandardvedlegg) => void;
+  valgteVedlegg: BrevVedleggInterface;
+  setValgteVedlegg: (valteVedlegg: BrevVedleggInterface) => void;
   changeField: (field: string, value: string) => void;
   formValues: any;
   redigerbart: boolean;

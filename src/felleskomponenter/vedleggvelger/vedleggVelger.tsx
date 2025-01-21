@@ -9,8 +9,8 @@ import * as DokumenterV2 from "../../services/modules/dokumenter-v2";
 
 interface VedleggVelgerProps {
   dokumenter: FysiskDokument[];
-  valgteVedlegg: DokumenterV2.BrevVedlegg;
-  onChange: (valgteVedlegg: DokumenterV2.BrevVedlegg) => void;
+  valgteVedlegg: DokumenterV2.BrevVedleggInterface;
+  onChange: (valgteVedlegg: DokumenterV2.BrevVedleggInterface) => void;
   redigerbart: boolean;
   standardvedlegg: DokumenterV2.TilgjengeligeStandardvedleggResDto | undefined;
 }

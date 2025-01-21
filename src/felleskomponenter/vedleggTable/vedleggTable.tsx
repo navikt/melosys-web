@@ -1,14 +1,14 @@
-import { FysiskDokument, StandardvedleggType, TilgjengeligStandardvedlegg, BrevVedlegg } from "../../services/modules/dokumenter-v2";
+import { BrevVedleggInterface, TilgjengeligStandardvedlegg } from "../../services/modules/dokumenter-v2";
 
+import * as Nav from "../../navFrontend";
 import { Fritekstvedlegg } from "../sideDialog/sendBrev/sendBrev";
 import FritekstvedleggRow from "./fritekstvedleggRow";
 import VedleggRow from "./vedleggRow";
-import * as Nav from "../../navFrontend";
 import "./vedleggTable.css";
 
 interface VedleggTableProps {
-  valgteVedlegg: BrevVedlegg;
-  setValgteVedlegg: (valgteVedlegg: BrevVedlegg) => void;
+  valgteVedlegg: BrevVedleggInterface;
+  setValgteVedlegg: (valgteVedlegg: BrevVedleggInterface) => void;
   label: string;
   fritekstvedlegg?: Fritekstvedlegg[];
   redigerFritekstvedlegg?: (index: number) => void;

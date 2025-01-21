@@ -7,7 +7,7 @@ import "./vedleggVelger.css";
 
 interface VedleggVelgerModalProps {
   onRequestClose: () => void;
-  valgteVedlegg: DokumenterV2.BrevVedlegg;
+  valgteVedlegg: DokumenterV2.BrevVedleggInterface;
   alleVedlegg: DokumenterV2.FysiskDokument[];
   slettVedlegg: (vedleggID: string) => void;
   leggTilVedlegg: (vedlegg: FysiskDokument) => void;

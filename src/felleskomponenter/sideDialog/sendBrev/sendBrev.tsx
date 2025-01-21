@@ -16,7 +16,7 @@ import * as Ikoner from "../../../resources/images";
 import * as Nav from "../../../navFrontend";
 import * as Skjema from "../../skjema";
 import * as Utils from "../../../utils";
-import { FysiskDokument, BrevVedlegg } from "../../../services/modules/dokumenter-v2";
+import { FysiskDokument, BrevVedleggInterface } from "../../../services/modules/dokumenter-v2";
 
 import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 import { behandlingerOperations } from "../../../ducks/behandlinger";
@@ -102,7 +102,7 @@ function SendBrev({
     useState<Api.DokumenterV2.MuligMottaker[]>();
   const [brevSendt, setBrevSendt] = useState(false);
   const [feil, setFeil] = useState<string | undefined>();
-  const [valgteVedlegg, setValgteVedlegg] = useState<BrevVedlegg>({
+  const [valgteVedlegg, setValgteVedlegg] = useState<BrevVedleggInterface>({
     saksvedlegg: [],
     standardvedlegg: [],
   });

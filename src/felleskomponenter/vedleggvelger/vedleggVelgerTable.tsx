@@ -1,9 +1,9 @@
 import VedleggVelgerRow from "./vedleggVelgerRow";
 import * as Nav from "../../navFrontend";
-import { FysiskDokument, BrevVedlegg } from "../../services/modules/dokumenter-v2";
+import { FysiskDokument, BrevVedleggInterface } from "../../services/modules/dokumenter-v2";
 
 interface VedleggTableProps {
-  valgteVedlegg: BrevVedlegg;
+  valgteVedlegg: BrevVedleggInterface;
   alleVedlegg: FysiskDokument[];
   slettVedlegg: (vedleggID: string) => void;
   leggTilVedlegg: (vedlegg: FysiskDokument) => void;

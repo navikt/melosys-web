@@ -34,7 +34,7 @@ export interface SedPdfData {
 }
 
 // TODO: Bedre navn?
-export interface BrevVedlegg {
+export interface BrevVedleggInterface {
   saksvedlegg: FysiskDokument[];
   standardvedlegg: TilgjengeligStandardvedlegg[];
 }
