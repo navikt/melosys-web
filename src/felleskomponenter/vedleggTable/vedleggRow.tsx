@@ -16,7 +16,7 @@ interface VedleggRowProps {
 function erTilgjengeligStandardvedlegg(
   vedlegg: FysiskDokument | TilgjengeligStandardvedlegg,
 ): vedlegg is TilgjengeligStandardvedlegg {
-  return "malnavn" in vedlegg && "frontendTittel" in vedlegg;
+  return "type" in vedlegg && "frontendTittel" in vedlegg;
 }
 
 function VedleggRow({ vedlegg, slettSaksvedlegg, slettStandardvedlegg, redigerbart }: VedleggRowProps) {

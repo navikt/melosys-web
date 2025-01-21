@@ -20,7 +20,7 @@ export interface Fritekstvedlegg {
 }
 
 interface BrevVedleggProps {
-  standardvedlegg: Api.DokumenterV2.TilgjengeligeStandardvedleggResDto | undefined;
+  standardvedlegg: Api.DokumenterV2.TilgjengeligStandardvedlegg[];
   fritekstvedlegg: Fritekstvedlegg[];
   setFritekstvedlegg: (fritekstvedlegg: Fritekstvedlegg[]) => void;
   valgteVedlegg: BrevVedleggInterface;

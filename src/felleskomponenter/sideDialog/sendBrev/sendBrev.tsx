@@ -95,7 +95,7 @@ function SendBrev({
   sakstype,
 }: Props & PropsFromRedux) {
   const [tilgjengeligeMaler, setTilgjengeligeMaler] = useState<Api.DokumenterV2.TilgjengeligeMalerResDto>();
-  const [standardvedlegg, setStandardvedlegg] = useState<Api.DokumenterV2.TilgjengeligeStandardvedleggResDto>();
+  const [standardvedlegg, setStandardvedlegg] = useState<Api.DokumenterV2.TilgjengeligStandardvedlegg[]>([]);
   const [muligeMottakere, setMuligeMottakere] = useState<Api.DokumenterV2.HentMuligeMottakereResDto>();
   const [muligeMottakereFeil, setMuligeMottakereFeil] = useState<string | undefined>(undefined);
   const [muligeMottakereNorskMyndighet, setMuligeMottakereNorskMyndighet] =
@@ -104,7 +104,7 @@ function SendBrev({
   const [feil, setFeil] = useState<string | undefined>();
   const [valgteVedlegg, setValgteVedlegg] = useState<BrevVedleggInterface>({
     saksvedlegg: [],
-    standardvedlegg: [],
+    standardvedlegg: null,
   });
   const [visFritekstvedleggSkjema, setVisFritekstvedleggSkjema] = useState(false);
   const [redigerFritekstVedleggIndex, setRedigerFritekstvedleggIndex] = useState<number | undefined>(undefined);

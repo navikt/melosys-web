@@ -36,7 +36,7 @@ export interface SedPdfData {
 // TODO: Bedre navn?
 export interface BrevVedleggInterface {
   saksvedlegg: FysiskDokument[];
-  standardvedlegg: TilgjengeligStandardvedlegg[];
+  standardvedlegg: TilgjengeligStandardvedlegg | null;
 }
 
 export interface BrevAdresse {
@@ -109,6 +109,7 @@ export interface TilgjengeligMal {
   brevTyper: TilgjengeligBrev[];
 }
 
+// TODO: Skal vi ha frontendtittel her eller?
 export enum StandardvedleggType {
   VIKTIG_INFORMASJON_RETTIGHETER_PLIKTER_AVSLAG = "info_om_rettigheter_avslag",
   VIKTIG_INFORMASJON_RETTIGHETER_PLIKTER_INNVILGELSE = "info_om_rettigheter_innvilgelse",
@@ -116,9 +117,9 @@ export enum StandardvedleggType {
 
 // TODO: Rename til "Standardvedlegg"?
 export interface TilgjengeligStandardvedlegg {
-  malnavn: StandardvedleggType;
-  tittel: string;
+  type: StandardvedleggType;
   frontendTittel: string;
+  dokumentTittel: string;
 }
 
 export interface TilgjengeligNorskMyndighet {
