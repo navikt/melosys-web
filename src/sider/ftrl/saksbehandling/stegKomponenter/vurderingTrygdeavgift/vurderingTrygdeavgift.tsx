@@ -69,9 +69,11 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const medlemskapsTypeErPliktig = medlemskapsperioder.every(
     (periode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG,
   );
-  const defaultPeriode = {
-    fomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.fom),
-    tomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.tom),
+  const formattedDefaultPeriode = () => {
+    return {
+      fomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.fom),
+      tomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.tom),
+    };
   };
   const erÅpenSluttDato = !innvilgetMedlemskapsperiode?.tom;
 
@@ -133,12 +135,12 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
       setHarEndretInnvilgetMedlemskapsperiode(true);
     }
 
-    resetSkatteforholdsperioder([{ ...defaultPeriode }]);
-  }, [innvilgetMedlemskapsperiode]);
+    resetSkatteforholdsperioder([{ ...formattedDefaultPeriode() }]);
+  }, [innvilgetMedlemskapsperiode, skalViseInntektskilder]);
 
   useEffect(() => {
     if (skalViseInntektskilder) {
-      resetInntektskilder([{ ...defaultPeriode }]);
+      resetInntektskilder([{ ...formattedDefaultPeriode() }]);
     }
   }, [skalViseInntektskilder]);
 
@@ -153,7 +155,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
             tomDato: Utils.dato.formatterDatoTilNorsk(skatteforhold.tomDato),
             skatteplikttype: skatteforhold.skatteplikttype,
           }))
-        : [defaultPeriode],
+        : [formattedDefaultPeriode()],
     );
     resetInntektskilder(
       !Utils._isEmpty(sorterteInntekstkilder)
@@ -168,7 +170,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
             tomDato: Utils.dato.formatterDatoTilNorsk(inntektskilde.tomDato),
             erMaanedsbelop: Utils.streng.boolTilUppercaseStreng(inntektskilde.erMaanedsbelop),
           }))
-        : [{ ...defaultPeriode, erMaanedsbelop: BOOLSK_STRING.SANN }],
+        : [{ ...formattedDefaultPeriode(), erMaanedsbelop: BOOLSK_STRING.SANN }],
     );
   };
 
@@ -306,7 +308,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
             remove={skattRemove}
             append={skattAppend}
             control={control}
-            defaultPeriode={defaultPeriode}
+            defaultPeriode={formattedDefaultPeriode()}
             fields={skattFields}
           />
         </>
@@ -326,7 +328,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
             remove={inntektRemove}
             append={inntektAppend}
             control={control}
-            defaultPeriode={defaultPeriode}
+            defaultPeriode={formattedDefaultPeriode()}
             fields={inntektFields}
             medlemskapsTypeErPliktig={medlemskapsTypeErPliktig}
             bestemmelse={bestemmelse}
