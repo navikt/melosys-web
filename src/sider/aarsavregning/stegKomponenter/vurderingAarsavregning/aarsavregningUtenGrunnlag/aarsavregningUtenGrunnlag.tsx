@@ -120,8 +120,6 @@ const lagInnvilgetMedlemskapsPeriode = (medlemskapsperioder?: Medlemskapsperiode
   };
 };
 
-const { FASTSATT_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingsresultattyper;
-
 // TODO: Boolean for årsavregningstype mangler. Automatisk opprettet årsavregning skal ha år tilknyttet og dermed skal årvelger skjules
 export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
   const [valgtÅr, setValgtÅr] = useState<number | null>(null);
@@ -140,7 +138,6 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
   const dispatch = useDispatch();
 
 
-  //TODO kan sikkert kompineres
   useEffect(() => {
     if (behandlingstema) {
       Api.Ftrl.hentBestemmelser(behandlingstema).then((res: any) => setBestemmelser(res.bestemmelser));
@@ -193,7 +190,8 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
           setAarsavregningResponse(res);
           // Benyttes for innhenting av saksopplysninger ifm. årsavregningsbehandlinger
           dispatch({ type: OK, data: res });
-          setInitieltÅr(res.aar);
+          setInitieltÅr(res.aar); //TODO trenger vi disse?
+          setValgtÅr(res.aar)
           setValue("totaltForskuddsvisFakturert", res.avregning?.tidligereFakturertBeloep);
 
           if (res.avvikFunnet && res?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag) {
@@ -213,7 +211,6 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
   console.log(lagredeMedlemskapsperioder)
 
   useEffect(() => {
-
     if (lagredeMedlemskapsperioder)
       setValue("medlemskapsperioder", mapInitialMedlemskapsperioder(lagredeMedlemskapsperioder));
     setValue(
@@ -266,7 +263,7 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
     context: {
       medlemskapsperiode: innvilgetMedlemskapsperiode,
       medlemskapsTypeErPliktig,
-      erÅpenSluttDato: false,
+      valgtår: valgtÅr
     },
     mode: "onChange",
     defaultValues: {
@@ -301,6 +298,7 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
     update: inntektUpdate,
     replace: resetInntektskilder,
   } = useFieldArray<FieldArrayProps, "inntektskilder", "id">({ control, name: "inntektskilder" });
+
   const formValues = watch();
 
   useEffect(() => {
@@ -314,6 +312,7 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
       handleLeggTilMedlemskapsperiode();
     }
   }, [medlemskapsperioderFields]);
+
   useEffect(() => {
     if (
       redigerbart &&
@@ -377,7 +376,6 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
     innvilgetMedlemskapsperiode,
   );
 
-  // erAvvik trigger en beregning på gammelt grunnlag etter å ha oppdatert skjemaverdier i håndterAvvik. Dette må gjøres for å oppdatere lagrede verdier i api
   useEffect(() => {
     if (
       redigerbart &&
@@ -474,14 +472,11 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
   };
   return (
     <div className="vurderingAarsavregning">
-      {aarsavregningResponse?.tidligereGrunnlagsopplysninger === null &&
-        aarsavregningResponse.aar === (valgtÅr || initieltÅr) && (
           <TidligereGrunnlagsopplysningerFinnesIkke
             formValues={formValues}
             control={control}
             redigerbart={redigerbart}
           />
-        )}
 
       {medlemskapsperioderFields.map((field, index) => (
           <Medlemskapsperioder
