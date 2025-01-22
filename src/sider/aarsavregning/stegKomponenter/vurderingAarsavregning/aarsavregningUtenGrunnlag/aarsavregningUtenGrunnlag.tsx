@@ -144,8 +144,6 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
     }
   }, [behandlingstema]);
 
-  console.log(aarsavregningResponse)
-
   let innvilgetMedlemskapsperiode = lagInnvilgetMedlemskapsPeriode(lagredeMedlemskapsperioder);
   const defaultPeriode = {
     fomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.fom),
@@ -206,9 +204,7 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
           }
         });
     }
-  }, [behandlingID, aarsavregningID]);
-
-  console.log(lagredeMedlemskapsperioder)
+  }, []);
 
   useEffect(() => {
     if (lagredeMedlemskapsperioder)
@@ -222,7 +218,6 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
       mapTilInntektskilderProps(aarsavregningResponse?.nyttGrunnlag?.trygdeavgiftsgrunnlag.inntektskperioder),
     );
   }, [lagredeMedlemskapsperioder, aarsavregningResponse]);
-
 
   const oppdaterNyttTotalbeloep = async (totalAvgift?: number) => {
     return Api.Aarsavregning.oppdaterTotalBelop(
@@ -428,7 +423,6 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
   const debouncedLagreMedlemskapsperioder = useCallback(
     Utils._debounce(async (alleMedlemskapsperioder, overskrevetIndex) => {
       const isValid = await trigger("medlemskapsperioder");
-      console.log(isValid)
       if (isValid) {
         // eslint-disable-next-line no-restricted-syntax
         for (const periode of alleMedlemskapsperioder) {
