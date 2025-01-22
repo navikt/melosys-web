@@ -85,7 +85,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     context: { medlemskapsperiode: innvilgetMedlemskapsperiode, medlemskapsTypeErPliktig, erÅpenSluttDato },
     mode: "onChange",
     defaultValues: {
-      skatteforholdsperioder: [{ fomDato: defaultPeriode.fomDato, tomDato: innvilgetMedlemskapsperiode?.tom }],
+      skatteforholdsperioder: [{}],
       inntektskilder: [{}],
     } as FieldValue<FormValuesProps>,
   });
