@@ -270,14 +270,14 @@ export function Bestemmelser({
       <Nav.Row>
         <Nav.Column xs="12">
           <Nav.RadioGroup
-            legend={"Fyller bruker kriteriene for utsendingsbestemmelsen?"}
+            legend="Fyller bruker kriteriene for utsendingsbestemmelsen?"
             onChange={handleEndreVedtakValg}
             defaultValue={vedtakValg}
             readOnly={!redigerbart}
             name="vedtakvalg"
           >
-            <Nav.Radio value={VedtakValg.JA_INNVILGE}>{"Ja, jeg vil innvilge søknaden"}</Nav.Radio>
-            <Nav.Radio value={VedtakValg.NEI_ANMODNING_UNNTAK}>{"Nei, jeg vil vurdere anmodning om unntak"}</Nav.Radio>
+            <Nav.Radio value={VedtakValg.JA_INNVILGE}>Ja, jeg vil innvilge søknaden</Nav.Radio>
+            <Nav.Radio value={VedtakValg.NEI_ANMODNING_UNNTAK}>Nei, jeg vil vurdere anmodning om unntak</Nav.Radio>
             <Nav.Radio value={VedtakValg.NEI_AVSLAG}>
               {`Nei, jeg vil avslå søknaden etter artikkel ${vilkaarNavn12} og 16.1 (kun EØS-forordningen)`}
             </Nav.Radio>
