@@ -108,7 +108,7 @@ function Dokumentliste({ behandlingID, dokumenter, validateOnClick }: Dokumentli
         <Nav.Table.Body>{dokumenter.map(mapDokument)}</Nav.Table.Body>
       </Nav.Table>
       {feilmelding && (
-        <Nav.Alert variant="warning" className="varsel">
+        <Nav.Alert variant="error" className="varsel">
           {feilmelding}
         </Nav.Alert>
       )}
