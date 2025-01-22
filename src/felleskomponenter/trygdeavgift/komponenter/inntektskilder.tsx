@@ -96,7 +96,7 @@ export function Inntektskilder({
   };
 
   const erHoyInntekt = (inntekt: any) => {
-    return inntekt.bruttoInntekt > 250000 && inntekt.erMaanedsbelop === BOOLSK_STRING.SANN;
+    return (inntekt.bruttoInntekt > 250000 && inntekt.erMaanedsbelop === BOOLSK_STRING.SANN) || inntekt.bruttoInntekt > 2999999;
   };
 
   return (
