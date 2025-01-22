@@ -138,8 +138,8 @@ function SendBrev({
       setTilgjengeligeMaler(response);
     });
 
-  const hentStandardvedlegg = () =>
-    Api.DokumenterV2.hentStandardvedlegg().then((response) => setStandardvedleggListe(response));
+  const hentTilgjengeligeStandardvedlegg = () =>
+    Api.DokumenterV2.hentTilgjengeligeStandardvedlegg().then((response) => setStandardvedleggListe(response));
 
   const krevesLandForUtenlandskTrygdemyndighetMottaker = () => {
     return Boolean(
@@ -199,7 +199,7 @@ function SendBrev({
 
   useEffect(() => {
     hentTilgjengeligeMaler();
-    hentStandardvedlegg();
+    hentTilgjengeligeStandardvedlegg();
     hentUtkast();
   }, []);
 

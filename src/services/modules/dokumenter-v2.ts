@@ -230,7 +230,7 @@ export interface HentMuligeMottakereNorskMyndighetReqDto {
 export const hentTilgjengeligeMaler = (behandlingID: number): Promise<TilgjengeligeMalerResDto> =>
   getAsJson(`${API_BASE_URL}${DOKUMENTER}/v2/tilgjengelige-maler/${behandlingID}`);
 
-export const hentStandardvedlegg = (): Promise<TilgjengeligeStandardvedleggResDto> =>
+export const hentTilgjengeligeStandardvedlegg = (): Promise<TilgjengeligeStandardvedleggResDto> =>
   getAsJson(`${API_BASE_URL}${DOKUMENTER}/v2/standardvedlegg`);
 
 export const hentTilgjengeligeNorskeMyndigheter = (): Promise<TilgjengeligeNorskeMyndigheterResDto> =>
