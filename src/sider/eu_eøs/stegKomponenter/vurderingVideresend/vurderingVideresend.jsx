@@ -49,13 +49,16 @@ export function VurderingVideresend({
   ];
 
   const [videresendPending, setVideresendPending] = useState(false);
-  const [valgteVedlegg, setValgteVedlegg] = useState([]);
+  const [valgteVedlegg, setValgteVedlegg] = useState({
+    saksvedlegg: [],
+    standardvedlegg: null,
+  });
   const isMounted = Hooks.useIsMounted();
 
   const videresendSoknad = async (values, dispatch, props) => {
     setVideresendPending(true);
 
-    const vedlegg = valgteVedlegg.map(({ journalpostID, dokumentID }) => ({ journalpostID, dokumentID }));
+    const vedlegg = valgteVedlegg.saksvedlegg.map(({ journalpostID, dokumentID }) => ({ journalpostID, dokumentID }));
     await props.videresendSoknad(values.mottakerinstitusjon, values.orienteringsbrevFritekst, vedlegg);
 
     // Videresend-operation navigerer til forside, og komponenten kan derfor være unmountet.

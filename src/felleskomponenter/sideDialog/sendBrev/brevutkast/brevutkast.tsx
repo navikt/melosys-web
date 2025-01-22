@@ -141,9 +141,10 @@ function Brevutkast({
     const dokumentIDer = saksvedlegg?.map((vedlegg) => vedlegg.dokumentID);
     const journalpostIDer = saksvedlegg?.map((vedlegg) => vedlegg.journalpostID);
     setValgteVedlegg({
-      saksvedlegg: dokumenter?.filter(
-        (dokument) => dokumentIDer.includes(dokument.dokumentID) && journalpostIDer.includes(dokument.journalpostID),
-      ),
+      saksvedlegg:
+        dokumenter?.filter(
+          (dokument) => dokumentIDer.includes(dokument.dokumentID) && journalpostIDer.includes(dokument.journalpostID),
+        ) || [],
       standardvedlegg: getFeltStandardvedlegg(standardvedleggType),
     });
   };
