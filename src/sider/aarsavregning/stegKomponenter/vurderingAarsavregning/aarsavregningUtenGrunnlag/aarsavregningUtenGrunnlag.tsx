@@ -24,11 +24,8 @@ import MKV from "../../../../../melosyskodeverk";
 import { SumArsavregningTabell } from "../komponenter/sumArsavregningTabell";
 import { BeregnetTrygdeavgiftDetaljer } from "../komponenter/beregnetTrygdeavgiftDetaljer";
 import { OK } from "../../../../../ducks/aarsavregning/types";
-import TidligereGrunnlagsoversikt from "../komponenter/tidligereGrunnlagsoversikt";
 import { sorterEtterISOFomDato } from "../../../../../utils/dato";
 import GrunnlagsopplysningerSkjema from "../komponenter/grunnlagsopplysningerSkjema";
-import { fagsakSelectors } from "../../../../../ducks/fagsaker";
-import { NyBehandlingForTidligereAarsavregningMelding } from "../../../../../felleskomponenter/alertmeldinger/alertmeldinger";
 
 import { behandlingsresultatOperations, behandlingsresultatSelectors } from "../../../../../ducks/behandlingsresultat";
 
@@ -150,10 +147,9 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
     }
   }, [behandlingstema]);
 
-  const medlemskapsperioder =
-    aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.medlemskapsperioder;
+  console.log(aarsavregningResponse)
 
-  let innvilgetMedlemskapsperiode = lagInnvilgetMedlemskapsPeriode(medlemskapsperioder);
+  let innvilgetMedlemskapsperiode = lagInnvilgetMedlemskapsPeriode(lagredeMedlemskapsperioder);
   const defaultPeriode = {
     fomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.fom),
     tomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.tom),
@@ -213,6 +209,8 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
         });
     }
   }, [behandlingID, aarsavregningID]);
+
+  console.log(lagredeMedlemskapsperioder)
 
   useEffect(() => {
 
@@ -278,7 +276,7 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
     }
   }, [aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift]);
 
-  const medlemskapsTypeErPliktig = medlemskapsperioder?.every(
+  const medlemskapsTypeErPliktig = lagredeMedlemskapsperioder?.every(
     (periode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG,
   );
 
@@ -329,6 +327,7 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
     replace: resetInntektskilder,
   } = useFieldArray<FieldArrayProps, "inntektskilder", "id">({ control, name: "inntektskilder" });
   const formValues = watch();
+
   useEffect(() => {
     if (formBekreftet && Object.keys(formErrors).length === 0) {
       setFormBekreftet(false);
@@ -399,7 +398,7 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
   const aktivFeilmeldingType = finnAktivFeilmelding(
     formValues?.inntektskilder,
     formValues?.skatteforholdsperioder,
-    medlemskapsperioder,
+    lagredeMedlemskapsperioder,
     innvilgetMedlemskapsperiode,
   );
 
@@ -455,7 +454,6 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
 
   const debouncedLagreMedlemskapsperioder = useCallback(
     Utils._debounce(async (alleMedlemskapsperioder, overskrevetIndex) => {
-      //TODO unngå debounce her
       const isValid = await trigger("medlemskapsperioder");
       console.log(isValid)
       if (isValid) {
@@ -465,6 +463,7 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
           await lagreMedlemskapsperiode(periode, index);
         }
         setVisLeggTilMedlemskapsperioder(true);
+        dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(behandlingID));
       } else {
         setVisLeggTilMedlemskapsperioder(false);
       }
