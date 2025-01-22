@@ -95,13 +95,12 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
         setNyVurderingÅrsavregning(res.length > 0);
       });
 
-      Api.Aarsavregning.lagAarsavregning(behandlingID, { aar: valgtÅr })
-        .then((res) => {
-          utledGrunnlagstypeForAarsavregning(res);
-          // Benyttes for innhenting av saksopplysninger ifm. årsavregningsbehandlinger
-          dispatch({ type: OK, data: res });
-          dispatch(behandlingsresultatOperations.hent(behandlingID));
-        })
+      Api.Aarsavregning.lagAarsavregning(behandlingID, { aar: valgtÅr }).then((res) => {
+        utledGrunnlagstypeForAarsavregning(res);
+        // Benyttes for innhenting av saksopplysninger ifm. årsavregningsbehandlinger
+        dispatch({ type: OK, data: res });
+        dispatch(behandlingsresultatOperations.hent(behandlingID));
+      });
     }
   }, [valgtÅr]);
 
@@ -145,11 +144,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
           <AarsavregningMedGrunnlag bekreft={bekreft} aktivtSteg={aktivtSteg} oppdaterStatus={oppdaterStatus} />
         )}
         {harGrunnlag === false && (
-          <AarsavregningUtenGrunnlag
-            bekreft={bekreft}
-            aktivtSteg={aktivtSteg}
-            oppdaterStatus={oppdaterStatus}
-          />
+          <AarsavregningUtenGrunnlag bekreft={bekreft} aktivtSteg={aktivtSteg} oppdaterStatus={oppdaterStatus} />
         )}
       </Nav.Fieldset>
     </div>

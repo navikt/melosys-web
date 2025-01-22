@@ -86,7 +86,7 @@ const aarsavregningUtenGrunnlagSchema = object().shape({
           .test(åpenTomNårIkkeSistePeriodeTest),
         trygdedekning: string().required(),
         bestemmelse: string().required(),
-      })
+      }),
     ),
   skatteforholdsperioder: array()
     .min(1, "Minst en skatteforholdsperiode")
