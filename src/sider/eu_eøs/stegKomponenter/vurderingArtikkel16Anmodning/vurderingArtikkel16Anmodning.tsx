@@ -41,6 +41,7 @@ import { FysiskDokument } from "Domene";
 import { useFeatureToggle } from "../../../../featuretoggle";
 import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../../featuretoggle/toggleNavn";
 import EnkeltDato from "../../../../felleskomponenter/enkeltDato";
+import { BrevVedleggInterface, TilgjengeligStandardvedlegg } from "../../../../services/modules/dokumenter-v2";
 
 const { KONV_EFTA_STORBRITANNIA_ART18_1 } = MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia;
 const { SAERLIG_GRUNN } = MKV.Koder.begrunnelser.anmodning_begrunnelser;
@@ -114,8 +115,13 @@ function VurderingArtikkel16Anmodning({
   const [begrunnelseFeilmelding, setBegrunnelseFeilmelding] = useState<string | undefined>(undefined);
   const [fritekstFeilmelding, setFritekstFeilmelding] = useState<string | undefined>(undefined);
   const [fritekstSEDFeilmelding, setFritekstSEDFeilmelding] = useState<string | undefined>(undefined);
-  const [valgteVedlegg, setValgteVedlegg] = useState<FysiskDokument[]>([]);
+  const [valgteVedlegg, setValgteVedlegg] = useState<BrevVedleggInterface>({
+    saksvedlegg: [],
+    standardvedlegg: null,
+  });
   const [pending, setPending] = useState(false);
+
+  const tilgjengeligeStandardvedlegg: TilgjengeligStandardvedlegg[] = []; // TODO: Skal implementeres i MELOSYS-7071
 
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const anmodningsperiode = useSelector(anmodningsperioderSelectors.AnmodningsperiodeSelector);
@@ -220,7 +226,7 @@ function VurderingArtikkel16Anmodning({
         mottakerinstitusjon: formValues.mottakerinstitusjon || null,
         fritekstSed: formValues.fritekstSed,
         begrunnelseFritekst: unntaksvilkår.begrunnelseFritekst,
-        vedlegg: valgteVedlegg.map(({ journalpostID, dokumentID }) => ({ journalpostID, dokumentID })),
+        vedlegg: valgteVedlegg.saksvedlegg.map(({ journalpostID, dokumentID }) => ({ journalpostID, dokumentID })),
       };
 
       await lagreOgBestillAnmodningsperioder(body);
@@ -464,6 +470,7 @@ function VurderingArtikkel16Anmodning({
                   onChange={setValgteVedlegg}
                   dokumenter={fysiskeDokumenter}
                   redigerbart={redigerbart}
+                  standardvedlegg={tilgjengeligeStandardvedlegg}
                 />
               </Nav.Column>
             </Nav.Row>

@@ -16,6 +16,7 @@ import Dokumentliste from "../../../../felleskomponenter/dokumentliste";
 import Mottakerinstitusjonvelger from "../../../../felleskomponenter/mottakerinstitusjonvelger";
 import VedleggVelger from "../../../../felleskomponenter/vedleggvelger";
 import VedleggTable from "../../../../felleskomponenter/vedleggTable";
+import { TilgjengeligStandardvedlegg } from "../../../../services/modules/dokumenter-v2";
 
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { avklartefaktaSelectors } from "../../../../ducks/avklartefakta";
@@ -53,6 +54,9 @@ export function VurderingVideresend({
     saksvedlegg: [],
     standardvedlegg: null,
   });
+
+  const tilgjengeligeStandardvedlegg = []; // TODO: Skal implementeres i MELOSYS-7071
+
   const isMounted = Hooks.useIsMounted();
 
   const videresendSoknad = async (values, dispatch, props) => {
@@ -112,6 +116,7 @@ export function VurderingVideresend({
                 onChange={setValgteVedlegg}
                 dokumenter={fysiskeDokument}
                 redigerbart={redigerbart}
+                standardvedlegg={tilgjengeligeStandardvedlegg}
               />
             </Nav.Column>
           </Nav.Row>
