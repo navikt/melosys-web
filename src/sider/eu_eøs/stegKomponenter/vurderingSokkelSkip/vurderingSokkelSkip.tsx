@@ -21,10 +21,7 @@ import "./vurderingSokkelSkip.css";
 import { Avklartfakta } from "../../../../services/modules/avklartefakta";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { useFeatureToggle } from "../../../../featuretoggle";
-import {
-  MELOSYS_ARBEID_KUN_NORGE,
-  MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA,
-} from "../../../../featuretoggle/toggleNavn";
+import { MELOSYS_ARBEID_KUN_NORGE } from "../../../../featuretoggle/toggleNavn";
 import { Feilmelding, finnAktivFeilmelding } from "./feilmeldinger";
 import { avklartefaktaSelectors } from "../../../../ducks/avklartefakta";
 
@@ -62,7 +59,6 @@ function VurderingSokkelSkip({
   redigerbart,
   tilbake,
 }: Props) {
-  const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
   const arbeidKunNorgeToggleEnabled = useFeatureToggle(MELOSYS_ARBEID_KUN_NORGE);
   const maritimtArbeid = useSelector(formSelectors.MaritimtArbeidSelector);
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
@@ -155,26 +151,15 @@ function VurderingSokkelSkip({
         defaultValue={fakta}
       >
         <Nav.Radio
-          readOnly={
-            (konvensjonStorbritanniaToggleEnabled
-              ? MKVUtils.erUtsendt(behandlingstema)
-              : behandlingstema === MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER) && !erArbeidslandNorge
-          }
+          readOnly={MKVUtils.erUtsendt(behandlingstema) && !erArbeidslandNorge}
           value={VurderingSokkelSkipTyper.SOKKEL_NORSK}
         >
           På norsk sokkel eller innenfor norsk territorialfarvann (art. 11.3.a)
         </Nav.Radio>
         <Nav.Radio value={VurderingSokkelSkipTyper.SKIP_ETT_LAND}>På skip registrert i ett land</Nav.Radio>
         <Nav.Radio readOnly={skalViseArbeidKunNorgeFlyt} value={VurderingSokkelSkipTyper.SOKKEL_UTLAND}>
-          {konvensjonStorbritanniaToggleEnabled
-            ? "Utsendt til sokkel eller til annet lands territorialfarvann"
-            : "Utsendt til sokkel eller til annet lands territorialfarvann (art. 12)"}
+          Utsendt til sokkel eller til annet lands territorialfarvann
         </Nav.Radio>
-        {!konvensjonStorbritanniaToggleEnabled && (
-          <Nav.Radio disabled value={VurderingSokkelSkipTyper.SOKKEL_ELLER_SKIP_FLERE_LAND}>
-            To sokler / skip i flere land (art. 13)
-          </Nav.Radio>
-        )}
       </Nav.RadioGroup>
       {visFeilmeldinger && <Feilmelding type={aktivFeilmelding} />}
       <Mui.StegKnapper
