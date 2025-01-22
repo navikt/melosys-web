@@ -30,8 +30,6 @@ import { RootState } from "AppTypes";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { kontrollOperations } from "../../../../ducks/kontroll";
 import { lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
-import { useFeatureToggle } from "../../../../featuretoggle";
-import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../../featuretoggle/toggleNavn";
 import EnkeltDato from "../../../../felleskomponenter/enkeltDato";
 import { VurderingYrkesaktivitetTyper, VurderingYrkesgruppeTyper } from "../../../../kodeverk/koder";
 
@@ -159,7 +157,6 @@ function VurderingVedtak({
   const dispatch = useDispatch();
   const [vedtakPending, setVedtakPending] = useState(false);
   const [erBucAapen, setErBucAapen] = useState(true);
-  const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
   let oppdaterFørKontroll = true;
 
   const arbeidsland = useSelector(avklartefaktaSelectors.ArbeidslandKTSelector);
@@ -279,12 +276,7 @@ function VurderingVedtak({
   return (
     <div className="vedtak">
       <Nav.Heading level="1" className="stegvelgertittel">
-        {konvensjonStorbritanniaToggleEnabled
-          ? "Omfattet av norsk trygdelovgivning"
-          : `Omfattet av norsk trygdelovgivning etter ${finnLovvalgSomTerm(
-              lovvalgsbestemmelseKT,
-              tilleggBestemmelseKT,
-            )}`}
+        Omfattet av norsk trygdelovgivning
       </Nav.Heading>
       <div>
         <Nav.Row>
