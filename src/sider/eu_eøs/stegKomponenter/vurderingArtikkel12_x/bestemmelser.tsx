@@ -96,13 +96,7 @@ export function Bestemmelser({
 
   useEffect(() => {
     const nyTilleggsbestemmelse = finnTilleggsbestemmelse(lovvalgsbestemmelse, yrkesgruppeFakta, arbeidPåSkipFakta);
-    if (
-      redigerbart &&
-      true &&
-      lovvalgsbestemmelse &&
-      vedtakValg &&
-      nyTilleggsbestemmelse !== tilleggsbestemmelse
-    ) {
+    if (redigerbart && lovvalgsbestemmelse && vedtakValg && nyTilleggsbestemmelse !== tilleggsbestemmelse) {
       slettData(slettTilleggBestemmelse());
       if (nyTilleggsbestemmelse) oppdaterData(lagTilleggBestemmelse(nyTilleggsbestemmelse));
     }
@@ -276,20 +270,14 @@ export function Bestemmelser({
       <Nav.Row>
         <Nav.Column xs="12">
           <Nav.RadioGroup
-            legend={
-              "Fyller bruker kriteriene for utsendingsbestemmelsen?"
-            }
+            legend={"Fyller bruker kriteriene for utsendingsbestemmelsen?"}
             onChange={handleEndreVedtakValg}
             defaultValue={vedtakValg}
             readOnly={!redigerbart}
             name="vedtakvalg"
           >
-            <Nav.Radio value={VedtakValg.JA_INNVILGE}>
-              {"Ja, jeg vil innvilge søknaden"}
-            </Nav.Radio>
-            <Nav.Radio value={VedtakValg.NEI_ANMODNING_UNNTAK}>
-              {"Nei, jeg vil vurdere anmodning om unntak"}
-            </Nav.Radio>
+            <Nav.Radio value={VedtakValg.JA_INNVILGE}>{"Ja, jeg vil innvilge søknaden"}</Nav.Radio>
+            <Nav.Radio value={VedtakValg.NEI_ANMODNING_UNNTAK}>{"Nei, jeg vil vurdere anmodning om unntak"}</Nav.Radio>
             <Nav.Radio value={VedtakValg.NEI_AVSLAG}>
               {`Nei, jeg vil avslå søknaden etter artikkel ${vilkaarNavn12} og 16.1 (kun EØS-forordningen)`}
             </Nav.Radio>
