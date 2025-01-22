@@ -85,7 +85,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     context: { medlemskapsperiode: innvilgetMedlemskapsperiode, medlemskapsTypeErPliktig, erÅpenSluttDato },
     mode: "onChange",
     defaultValues: {
-      skatteforholdsperioder: [{}],
+      skatteforholdsperioder: [{ fomDato: defaultPeriode.fomDato, tomDato: innvilgetMedlemskapsperiode?.tom }],
       inntektskilder: [{}],
     } as FieldValue<FormValuesProps>,
   });
@@ -122,13 +122,25 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const trygdeavgiftErIkkeTom = !Utils._isEmpty(lagretTrygdeavgift?.trygdeavgiftsperioder);
 
   const harBeregnetForeløpigTrygdeavgift = !skalBeregneForelopigTrygdeavgift || trygdeavgiftErIkkeTom;
+  const skalViseInntektskilder =
+    !(medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder)) &&
+    !erÅpenSluttDato;
+
   useEffect(() => {
     if (harEndretInnvilgetMedlemskapsperiode === undefined) {
       setHarEndretInnvilgetMedlemskapsperiode(false);
     } else {
       setHarEndretInnvilgetMedlemskapsperiode(true);
     }
+
+    resetSkatteforholdsperioder([{ ...defaultPeriode }]);
   }, [innvilgetMedlemskapsperiode]);
+
+  useEffect(() => {
+    if (skalViseInntektskilder) {
+      resetInntektskilder([{ ...defaultPeriode }]);
+    }
+  }, [skalViseInntektskilder]);
 
   const håndterLagretTrygdeavgiftsgrunnlag = (trygdeavgiftsgrunnlag: TrygdeavgiftsgrunnlagDto) => {
     const { inntektskilder, skatteforholdsperioder } = trygdeavgiftsgrunnlag;
@@ -239,6 +251,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   );
 
   useEffect(() => {
+    console.log("formvalues: ", formValues);
     if (redigerbart && aktivtSteg && !isValidating && !erÅpenSluttDato) {
       debounceBeregnTrygdeavgiftsperioder(formValues, formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType));
     }
@@ -300,28 +313,27 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
         </>
       )}
 
-      {!(medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder)) &&
-        !erÅpenSluttDato && (
-          <>
-            <LabelMedHjelpetekst
-              label="Oppgi informasjon om brukers inntekt"
-              hjelpetekst="Hvis bruker har flere inntekter, f.eks. fra Norge og fra utlandet, så må de legges til enkeltvis."
-              undertittel
-            />
-            <Inntektskilder
-              formValues={formValues}
-              redigerbart={redigerbart}
-              update={inntektUpdate}
-              remove={inntektRemove}
-              append={inntektAppend}
-              control={control}
-              defaultPeriode={defaultPeriode}
-              fields={inntektFields}
-              medlemskapsTypeErPliktig={medlemskapsTypeErPliktig}
-              bestemmelse={bestemmelse}
-            />
-          </>
-        )}
+      {skalViseInntektskilder && (
+        <>
+          <LabelMedHjelpetekst
+            label="Oppgi informasjon om brukers inntekt"
+            hjelpetekst="Hvis bruker har flere inntekter, f.eks. fra Norge og fra utlandet, så må de legges til enkeltvis."
+            undertittel
+          />
+          <Inntektskilder
+            formValues={formValues}
+            redigerbart={redigerbart}
+            update={inntektUpdate}
+            remove={inntektRemove}
+            append={inntektAppend}
+            control={control}
+            defaultPeriode={defaultPeriode}
+            fields={inntektFields}
+            medlemskapsTypeErPliktig={medlemskapsTypeErPliktig}
+            bestemmelse={bestemmelse}
+          />
+        </>
+      )}
 
       <Feilmelding type={aktivFeilmeldingType} />
 
