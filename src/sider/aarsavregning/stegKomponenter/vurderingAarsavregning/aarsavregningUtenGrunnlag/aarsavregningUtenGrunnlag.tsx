@@ -226,31 +226,6 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
     );
   }, [lagredeMedlemskapsperioder, aarsavregningResponse]);
 
-  // Innlasting ved valg av år, oppretter eller henter årsavregning
-  useEffect(() => {
-    /* TODO: Refaktorert api skal ha nytt endepunkt som lar oss sjekke om et gitt år og behandlingID har en aktiv årsavregning.
-    Legg til kall mot dette endepunktet og kjør enten hent eller lag basert på responsen.
-    */
-    if (redigerbart && valgtÅr && valgtÅr !== aarsavregningResponse?.aar) {
-      resetInntektskilder([]);
-      resetSkatteforholdsperioder([]);
-      resetMedlemskapsperioder([]);
-
-      Api.Aarsavregning.lagAarsavregning(behandlingID, { aar: valgtÅr })
-        .then((res) => {
-          setAarsavregningResponse(res);
-          // Benyttes for innhenting av saksopplysninger ifm. årsavregningsbehandlinger
-          dispatch({ type: OK, data: res });
-          setValue("totaltForskuddsvisFakturert", "");
-          dispatch(behandlingsresultatOperations.hent(behandlingID));
-          dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(behandlingID));
-        })
-        .catch((error: any) => {
-          setFeil(error.body?.message || error);
-        });
-    }
-  }, [valgtÅr]);
-
 
   const oppdaterNyttTotalbeloep = async (totalAvgift?: number) => {
     return Api.Aarsavregning.oppdaterTotalBelop(
