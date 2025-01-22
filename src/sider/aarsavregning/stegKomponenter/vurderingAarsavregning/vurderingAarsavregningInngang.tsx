@@ -14,7 +14,7 @@ import { sorterEtterISOFomDato } from "../../../../utils/dato";
 import { fagsakSelectors } from "../../../../ducks/fagsaker";
 import { NyBehandlingForTidligereAarsavregningMelding } from "../../../../felleskomponenter/alertmeldinger/alertmeldinger";
 
-import { behandlingsresultatOperations, behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
+import { behandlingsresultatOperations } from "../../../../ducks/behandlingsresultat";
 import { Medlemskapsperiode } from "../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import { AarsavregningMedGrunnlag } from "./aarsavregningMedGrunnlag/aarsavregningMedGrunnlag";
 import { AarsavregningUtenGrunnlag } from "./aarsavregningUtenGrunnlag/aarsavregningUtenGrunnlag";
@@ -51,7 +51,6 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
   const [nyVurderingÅrsavregning, setNyVurderingÅrsavregning] = useState<boolean>(false);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as any;
-  const aarsavregningID = useSelector(behandlingsresultatSelectors.ÅrsavregningIDSelector);
   const saksnummer = useSelector(fagsakSelectors.SaksnummerSelector) as any;
   const sisteMuligeÅr = new Date().getFullYear() - 1;
   const antallÅrTilbakeITid = 6;
@@ -83,24 +82,19 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
     });
   }, []);
 
-  // Innlasting ved valg av år, oppretter eller henter årsavregning
   useEffect(() => {
-    /* TODO: Refaktorert api skal ha nytt endepunkt som lar oss sjekke om et gitt år og behandlingID har en aktiv årsavregning.
-    Legg til kall mot dette endepunktet og kjør enten hent eller lag basert på responsen.
-    */
     if (redigerbart && valgtÅr) {
       setHarGrunnlag(undefined);
       Api.Aarsavregning.hentFiltrertAarsavregningList(saksnummer, FERDIGBEHANDLET, valgtÅr).then((res) => {
         setNyVurderingÅrsavregning(res.length > 0);
       });
 
-      Api.Aarsavregning.lagAarsavregning(behandlingID, { aar: valgtÅr })
-        .then((res) => {
-          utledGrunnlagstypeForAarsavregning(res);
-          // Benyttes for innhenting av saksopplysninger ifm. årsavregningsbehandlinger
-          dispatch({ type: OK, data: res });
-          dispatch(behandlingsresultatOperations.hent(behandlingID));
-        })
+      Api.Aarsavregning.lagAarsavregning(behandlingID, { aar: valgtÅr }).then((res) => {
+        utledGrunnlagstypeForAarsavregning(res);
+        // Benyttes for innhenting av saksopplysninger ifm. årsavregningsbehandlinger
+        dispatch({ type: OK, data: res });
+        dispatch(behandlingsresultatOperations.hent(behandlingID));
+      });
     }
   }, [valgtÅr]);
 
@@ -135,22 +129,18 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
             </Nav.Select>
           </Nav.Column>
         </Nav.Row>
-        {nyVurderingÅrsavregning && (
-          <Nav.Row>
-            <NyBehandlingForTidligereAarsavregningMelding />
-          </Nav.Row>
-        )}
-        {harGrunnlag === true && (
-          <AarsavregningMedGrunnlag bekreft={bekreft} aktivtSteg={aktivtSteg} oppdaterStatus={oppdaterStatus} />
-        )}
-        {harGrunnlag === false && (
-          <AarsavregningUtenGrunnlag
-            bekreft={bekreft}
-            aktivtSteg={aktivtSteg}
-            oppdaterStatus={oppdaterStatus}
-          />
-        )}
       </Nav.Fieldset>
+      {nyVurderingÅrsavregning && (
+        <Nav.Row>
+          <NyBehandlingForTidligereAarsavregningMelding />
+        </Nav.Row>
+      )}
+      {harGrunnlag === true && (
+        <AarsavregningMedGrunnlag bekreft={bekreft} aktivtSteg={aktivtSteg} oppdaterStatus={oppdaterStatus} />
+      )}
+      {harGrunnlag === false && (
+        <AarsavregningUtenGrunnlag bekreft={bekreft} aktivtSteg={aktivtSteg} oppdaterStatus={oppdaterStatus} />
+      )}
     </div>
   );
 }
