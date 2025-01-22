@@ -165,6 +165,7 @@ export interface OpprettBrevReqDto {
   kopiMottakere?: KopiMottaker[];
   skalViseStandardTekstOmkontaktopplysninger?: boolean | null;
   saksvedlegg?: Saksvedlegg[];
+  standardvedleggType?: StandardvedleggType | null;
   fritekstvedlegg?: {
     tittel: string;
     fritekst: string;

@@ -16,7 +16,11 @@ import * as Ikoner from "../../../resources/images";
 import * as Nav from "../../../navFrontend";
 import * as Skjema from "../../skjema";
 import * as Utils from "../../../utils";
-import { FysiskDokument, BrevVedleggInterface } from "../../../services/modules/dokumenter-v2";
+import {
+  FysiskDokument,
+  BrevVedleggInterface,
+  TilgjengeligStandardvedlegg,
+} from "../../../services/modules/dokumenter-v2";
 
 import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 import { behandlingerOperations } from "../../../ducks/behandlinger";
@@ -95,7 +99,7 @@ function SendBrev({
   sakstype,
 }: Props & PropsFromRedux) {
   const [tilgjengeligeMaler, setTilgjengeligeMaler] = useState<Api.DokumenterV2.TilgjengeligeMalerResDto>();
-  const [standardvedlegg, setStandardvedlegg] = useState<Api.DokumenterV2.TilgjengeligStandardvedlegg[]>([]);
+  const [standardvedleggListe, setStandardvedleggListe] = useState<Api.DokumenterV2.TilgjengeligStandardvedlegg[]>([]);
   const [muligeMottakere, setMuligeMottakere] = useState<Api.DokumenterV2.HentMuligeMottakereResDto>();
   const [muligeMottakereFeil, setMuligeMottakereFeil] = useState<string | undefined>(undefined);
   const [muligeMottakereNorskMyndighet, setMuligeMottakereNorskMyndighet] =
@@ -135,7 +139,7 @@ function SendBrev({
     });
 
   const hentStandardvedlegg = () =>
-    Api.DokumenterV2.hentStandardvedlegg().then((response) => setStandardvedlegg(response));
+    Api.DokumenterV2.hentStandardvedlegg().then((response) => setStandardvedleggListe(response));
 
   const krevesLandForUtenlandskTrygdemyndighetMottaker = () => {
     return Boolean(
@@ -340,6 +344,7 @@ function SendBrev({
       dokumentID: vedlegg.dokumentID,
       journalpostID: vedlegg.journalpostID,
     })),
+    standardvedleggType: valgteVedlegg?.standardvedlegg?.type,
     fritekstvedlegg,
     distribusjonstype: hentFormVerdi("DISTRIBUSJONSTYPE", true, true),
     dokumentTittel: hentFormVerdi("DOKUMENT_TITTEL", true),
@@ -414,13 +419,6 @@ function SendBrev({
     event.preventDefault();
   };
 
-  const setValgteSaksvedlegg = (vedlegg: FysiskDokument[]) => {
-    setValgteVedlegg({
-      saksvedlegg: vedlegg,
-      standardvedlegg: valgteVedlegg?.standardvedlegg || [],
-    });
-  };
-
   if (!tilgjengeligeMaler || !formValues) return null;
   if (!visInnhold) return null;
 
@@ -444,11 +442,12 @@ function SendBrev({
       <Brevutkast
         changeField={changeField}
         dokumenter={dokumenter}
+        standardvedleggListe={standardvedleggListe}
         formValues={formValues}
         tilgjengeligeMottakere={tilgjengeligeMottakere}
         utkastPåBehandlingen={utkastPåBehandlingen}
-        setSaksvedlegg={setValgteSaksvedlegg}
         setFritekstvedlegg={setFritekstvedlegg}
+        setValgteVedlegg={setValgteVedlegg}
       />
 
       {visApneINyttVindu && (
@@ -538,7 +537,7 @@ function SendBrev({
           redigerFritekstvedleggIndex={redigerFritekstVedleggIndex}
           setRedigerFritekstvedleggIndex={setRedigerFritekstvedleggIndex}
           muligeMottakere={muligeMottakere}
-          standardvedlegg={standardvedlegg}
+          standardvedlegg={standardvedleggListe}
         />
       )}
 
