@@ -136,7 +136,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     }
 
     resetSkatteforholdsperioder([{ ...formattedDefaultPeriode() }]);
-  }, [innvilgetMedlemskapsperiode, skalViseInntektskilder]);
+  }, [innvilgetMedlemskapsperiode]);
 
   useEffect(() => {
     if (skalViseInntektskilder) {
