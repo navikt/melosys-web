@@ -251,7 +251,6 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   );
 
   useEffect(() => {
-    console.log("formvalues: ", formValues);
     if (redigerbart && aktivtSteg && !isValidating && !erÅpenSluttDato) {
       debounceBeregnTrygdeavgiftsperioder(formValues, formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType));
     }
