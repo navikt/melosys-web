@@ -34,10 +34,10 @@ function VedleggTable({
     });
   };
 
-  const slettStandardvedlegg = (standardvedlegg: TilgjengeligStandardvedlegg) => {
+  const slettStandardvedlegg = () => {
     setValgteVedlegg({
       saksvedlegg: valgteVedlegg.saksvedlegg,
-      standardvedlegg: valgteVedlegg.standardvedlegg.filter((vedlegg) => vedlegg.malnavn !== standardvedlegg.malnavn),
+      standardvedlegg: null,
     });
   };
 
@@ -50,7 +50,9 @@ function VedleggTable({
           <Nav.Table.HeaderCell />
         </Nav.Table.Row>
       </Nav.Table.Header>
-      {(valgteVedlegg.saksvedlegg.length > 0 || (fritekstvedlegg && fritekstvedlegg.length > 0)) && (
+      {(valgteVedlegg.saksvedlegg.length > 0 ||
+        (fritekstvedlegg && fritekstvedlegg.length > 0) ||
+        valgteVedlegg.standardvedlegg) && (
         <Nav.Table.Body>
           {fritekstvedlegg?.map((vedlegg, index) => (
             <FritekstvedleggRow
@@ -72,15 +74,15 @@ function VedleggTable({
               redigerbart={redigerbart}
             />
           ))}
-          {valgteVedlegg.standardvedlegg.map((enkeltVedlegg) => (
+          {valgteVedlegg.standardvedlegg && (
             <VedleggRow
-              key={`standardvedlegg-${enkeltVedlegg.malnavn}`}
-              vedlegg={enkeltVedlegg}
-              slettSaksvedleggg={() => {}}
-              slettStandardvedlegg={() => slettStandardvedlegg(enkeltVedlegg)}
+              key={`standardvedlegg-${valgteVedlegg.standardvedlegg.type}`}
+              vedlegg={valgteVedlegg.standardvedlegg}
+              slettSaksvedlegg={() => {}}
+              slettStandardvedlegg={() => slettStandardvedlegg()}
               redigerbart={redigerbart}
             />
-          ))}
+          )}
         </Nav.Table.Body>
       )}
     </Nav.Table>

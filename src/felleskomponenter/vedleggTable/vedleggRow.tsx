@@ -4,6 +4,7 @@ import * as Mui from "../ui";
 import * as Ikoner from "../../resources/images";
 import * as Nav from "../../navFrontend";
 import { FysiskDokument, TilgjengeligStandardvedlegg } from "../../services/modules/dokumenter-v2";
+import PdfLinkStandardvedlegg from "../pdfLink/pdfLinkStandardvedlegg";
 
 interface VedleggRowProps {
   vedlegg: FysiskDokument | TilgjengeligStandardvedlegg;
@@ -24,8 +25,9 @@ function VedleggRow({ vedlegg, slettSaksvedlegg, slettStandardvedlegg, redigerba
     return (
       <Nav.Table.Row className="vedlegg">
         <Nav.Table.DataCell>
-          <span>{vedlegg.frontendTittel}</span>
+          <PdfLinkStandardvedlegg standardvedlegg={vedlegg} />
         </Nav.Table.DataCell>
+        <Nav.Table.DataCell />
         <Nav.Table.DataCell className="icon__cell">
           <Mui.IkonKnapp
             ariaLabel="Fjern vedlegg"
