@@ -64,8 +64,9 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
 
     if (res?.tidligereGrunnlagsopplysninger === null && Utils._isEmpty(innvilgetPeriode.fom)) {
       setHarGrunnlag(false);
+    } else {
+      setHarGrunnlag(true);
     }
-    setHarGrunnlag(true);
   };
 
   useEffect(() => {

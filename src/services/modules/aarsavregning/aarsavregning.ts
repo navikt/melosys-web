@@ -92,4 +92,4 @@ export const hentFiltrertAarsavregningList = (
     }
   }
   return getAsJson(url);
-}
+};
