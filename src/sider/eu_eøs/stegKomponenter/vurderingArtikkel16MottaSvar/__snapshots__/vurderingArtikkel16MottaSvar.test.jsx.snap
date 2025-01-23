@@ -5,7 +5,7 @@ exports[`VurderingArtikkel16MottaSvar > snapshot test 1`] = `
 <div>
   <div class="vurderingArtikkel16MottaSvar">
     <h1 class="stegvelgertittel navds-heading navds-heading--medium">
-      Svar på anmodning om unntak, etter artikkel 16, nr. 1
+      Svar på anmodning om unntak
     </h1>
     <div class="row">
       <div class="col col-xs-4">

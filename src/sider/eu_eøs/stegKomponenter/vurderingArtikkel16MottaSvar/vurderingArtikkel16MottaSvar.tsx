@@ -15,8 +15,6 @@ import { lagAnmodningsperiodesvar } from "../../../../felleskomponenter/stegvelg
 import { KTObject } from "@navikt/melosys-kodeverk";
 import FormKomponent from "./formKomponent";
 import { AnmodningsperiodesvarResDto } from "../../../../services/modules/anmodningsperioder/svar/svar";
-import { useFeatureToggle } from "../../../../featuretoggle";
-import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../../featuretoggle/toggleNavn";
 import EnkeltDato from "../../../../felleskomponenter/enkeltDato";
 import { datoDiffMenneskelig } from "../../../../utils/dato";
 
@@ -42,7 +40,6 @@ function VurderingArtikkel16MottaSvar({
   oppdaterData,
 }: VurderingArtikkel16MottaSvarProps) {
   const dispatch = useDispatch();
-  const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
   const anmodningsperiodeID = useSelector(anmodningsperioderSelectors.AnmodningsperiodeIDSelector);
   const gyldigeSoknadsland = useSelector(avklartefaktaSelectors.ArbeidslandKTSelector);
   const soknadsperiode = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
@@ -70,9 +67,7 @@ function VurderingArtikkel16MottaSvar({
   return (
     <div className="vurderingArtikkel16MottaSvar">
       <Nav.Heading level="1" className="stegvelgertittel">
-        {konvensjonStorbritanniaToggleEnabled
-          ? "Svar på anmodning om unntak"
-          : "Svar på anmodning om unntak, etter artikkel 16, nr. 1"}
+        Svar på anmodning om unntak
       </Nav.Heading>
       <Nav.Row>
         <Nav.Column xs="4">
