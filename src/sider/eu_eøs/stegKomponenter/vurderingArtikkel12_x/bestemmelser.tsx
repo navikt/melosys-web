@@ -109,38 +109,19 @@ export function Bestemmelser({
     setVedtakValg(value);
     setBestemmelse("");
 
-    if (true) {
-      slettAlleVilkår();
-      slettData(slettTilleggBestemmelse());
-      slettData(slettLovvalgsbestemmelse());
-      if (value === VedtakValg.JA_INNVILGE) {
-        if (!visStorbritanniaKonvensjon) handleEndreBestemmelse(FO_883_2004_ART12, value);
-        setPending(false);
-      } else if (value === VedtakValg.NEI_ANMODNING_UNNTAK) {
-        if (!visStorbritanniaKonvensjon) handleEndreBestemmelse(FO_883_2004_ART16_1, value);
-        setPending(false);
-      } else if (value === VedtakValg.NEI_AVSLAG) {
-        oppdaterData(lagVilkaar(finnFeltNavn(FO_883_2004_ART12), false));
-        oppdaterData(lagVilkaar("art16_1_avslag", false));
-        setTimeout(() => setPending(false), 100);
-      }
-    } else {
-      if (value === VedtakValg.JA_INNVILGE) {
-        oppdaterData(lagVilkaar(finnFeltNavn(FO_883_2004_ART12), true));
-        slettData(slettVilkar("art16_1_avslag"));
-        slettData(slettVilkar("art16_1_anmodning"));
-      }
-      if (value === VedtakValg.NEI_ANMODNING_UNNTAK) {
-        oppdaterData(lagVilkaar(finnFeltNavn(FO_883_2004_ART12), false));
-        slettData(slettVilkar("art16_1_avslag"));
-        oppdaterData(lagVilkaar("art16_1_anmodning", true));
-      }
-      if (value === VedtakValg.NEI_AVSLAG) {
-        oppdaterData(lagVilkaar(finnFeltNavn(FO_883_2004_ART12), false));
-        slettData(slettVilkar("art16_1_anmodning"));
-        oppdaterData(lagVilkaar("art16_1_avslag", false));
-      }
+    slettAlleVilkår();
+    slettData(slettTilleggBestemmelse());
+    slettData(slettLovvalgsbestemmelse());
+    if (value === VedtakValg.JA_INNVILGE) {
+      if (!visStorbritanniaKonvensjon) handleEndreBestemmelse(FO_883_2004_ART12, value);
       setPending(false);
+    } else if (value === VedtakValg.NEI_ANMODNING_UNNTAK) {
+      if (!visStorbritanniaKonvensjon) handleEndreBestemmelse(FO_883_2004_ART16_1, value);
+      setPending(false);
+    } else if (value === VedtakValg.NEI_AVSLAG) {
+      oppdaterData(lagVilkaar(finnFeltNavn(FO_883_2004_ART12), false));
+      oppdaterData(lagVilkaar("art16_1_avslag", false));
+      setTimeout(() => setPending(false), 100);
     }
   };
 
