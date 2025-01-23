@@ -9,19 +9,14 @@ import {
   konverterTilleggBestemmelseTilStegData,
   lagAvklartfakta,
   lagLovvalgsbestemmelse,
-  lagTilleggBestemmelse,
   lagVilkaar,
   slettLovvalgsbestemmelse,
   slettTilleggBestemmelse,
-  slettVilkar,
   slettVilkarIAlleSteg,
 } from "../../../felleskomponenter/stegvelger";
 import { finnTilleggBestemmelse, hentFaktaVerdi } from "../../../domeneUtils";
 import { useFeatureToggle } from "../../../featuretoggle";
-import {
-  MELOSYS_ARBEID_KUN_NORGE,
-  MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA,
-} from "../../../featuretoggle/toggleNavn";
+import { MELOSYS_ARBEID_KUN_NORGE } from "../../../featuretoggle/toggleNavn";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { useSelector } from "react-redux";
 import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
@@ -68,7 +63,6 @@ function VurderingYrkesgruppe({
   slettData,
   tilbake,
 }: VurderingYrkesgruppeProps) {
-  const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
   const lovvalgsbestemmelse = useSelector(anmodningsperioderSelectors.LovvalgsbestemmelseSelector);
   const [bestemmelse, setBestemmelse] = useState(lovvalgsbestemmelse ?? "");
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
@@ -87,8 +81,7 @@ function VurderingYrkesgruppe({
   useEffect(() => {
     oppdaterData(konverterAvklartfaktaTilStegData(KV.Koder.YRKESGRUPPE, yrkesgruppe));
     const tilleggBestemmelseFunnet = finnTilleggBestemmelse(tilleggbestemmelse, stegetsTilleggsbestemmelser);
-    if (konvensjonStorbritanniaToggleEnabled && lovvalgsbestemmelse)
-      oppdaterData(konverterLovvalgsbestemmelseTilStegData(lovvalgsbestemmelse));
+    if (lovvalgsbestemmelse) oppdaterData(konverterLovvalgsbestemmelseTilStegData(lovvalgsbestemmelse));
     if (tilleggBestemmelseFunnet) oppdaterData(konverterTilleggBestemmelseTilStegData(tilleggbestemmelse));
 
     return () => {
@@ -104,25 +97,11 @@ function VurderingYrkesgruppe({
     const yrkessituasjon = value;
     oppdaterData(lagAvklartfakta(KV.Koder.YRKESGRUPPE, null, yrkessituasjon));
 
-    if (yrkessituasjon === FLYENDE_PERSONELL && !konvensjonStorbritanniaToggleEnabled) {
-      oppdaterData(lagTilleggBestemmelse(FO_883_2004_ART11_5));
-    } else {
-      slettData(slettTilleggBestemmelse());
-    }
-
-    if (konvensjonStorbritanniaToggleEnabled) {
-      slettData(slettLovvalgsbestemmelse());
-      slettVilkår();
-      if (yrkessituasjon === ORDINAER_UTEN_ART12 && !visStorbritanniaKonvensjon) {
-        handleEndreBestemmelse(FO_883_2004_ART16_1);
-      }
-    } else {
-      /* eslint-disable no-lonely-if */
-      if (yrkessituasjon === ORDINAER_UTEN_ART12) {
-        oppdaterData(lagVilkaar("art16_1_anmodning", true));
-      } else {
-        slettData(slettVilkar("art16_1_anmodning"));
-      }
+    slettData(slettTilleggBestemmelse());
+    slettData(slettLovvalgsbestemmelse());
+    slettVilkår();
+    if (yrkessituasjon === ORDINAER_UTEN_ART12 && !visStorbritanniaKonvensjon) {
+      handleEndreBestemmelse(FO_883_2004_ART16_1);
     }
   };
 
@@ -166,12 +145,8 @@ function VurderingYrkesgruppe({
         {!skalViseArbeidKunNorgeFlyt && (
           <>
             <Nav.Radio value={FLYENDE_PERSONELL}>Yrkesaktiv, som flygende personell</Nav.Radio>
-            <Nav.Radio value={ORDINAER_UTEN_ART12}>
-              {konvensjonStorbritanniaToggleEnabled
-                ? "Yrkesaktiv, direkte til vurdering av anmodning om unntak"
-                : "Yrkesaktiv, direkte til vurdering av artikkel 16"}
-            </Nav.Radio>
-            {!(konvensjonStorbritanniaToggleEnabled && MKVUtils.erUtsendt(behandlingstema)) && (
+            <Nav.Radio value={ORDINAER_UTEN_ART12}>Yrkesaktiv, direkte til vurdering av anmodning om unntak</Nav.Radio>
+            {!MKVUtils.erUtsendt(behandlingstema) && (
               <>
                 <Nav.Radio readOnly value={IKKE_YRKESAKTIV}>
                   Ikke yrkesaktiv
@@ -184,7 +159,7 @@ function VurderingYrkesgruppe({
           </>
         )}
 
-        {konvensjonStorbritanniaToggleEnabled && fakta === ORDINAER_UTEN_ART12 && (
+        {fakta === ORDINAER_UTEN_ART12 && (
           <Nav.Select
             label="Velg bestemmelse"
             value={bestemmelse}
