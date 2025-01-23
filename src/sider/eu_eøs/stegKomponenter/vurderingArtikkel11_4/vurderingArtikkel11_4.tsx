@@ -90,7 +90,6 @@ function VurderingArtikkel11_4({
   tilbake,
 }: VurderingArtikkel114Props) {
   const arbeidKunNorgeToggleEnabled = useFeatureToggle(MELOSYS_ARBEID_KUN_NORGE);
-  const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
   const alleLand = useSelector(avklartefaktaSelectors.AlleRelevanteLandSelector);
   const lovvalgsbestemmelse = useSelector(lovvalgsperioderSelectors.LovvalgBestemmelseSelector);
   const tilleggsbestemmelse = useSelector(lovvalgsperioderSelectors.TilleggBestemmelseSelector);
@@ -111,10 +110,8 @@ function VurderingArtikkel11_4({
     oppdaterData(konverterVilkarTilStegData(finnFeltNavn(art113Aeller133A?.vilkaar), art113Aeller133A));
     oppdaterData(konverterVilkarTilStegData("nis", nis));
 
-    if (konvensjonStorbritanniaToggleEnabled) {
-      if (lovvalgsbestemmelse) oppdaterData(konverterLovvalgsbestemmelseTilStegData(lovvalgsbestemmelse));
-      if (tilleggsbestemmelse) oppdaterData(konverterTilleggBestemmelseTilStegData(tilleggsbestemmelse));
-    }
+    if (lovvalgsbestemmelse) oppdaterData(konverterLovvalgsbestemmelseTilStegData(lovvalgsbestemmelse));
+    if (tilleggsbestemmelse) oppdaterData(konverterTilleggBestemmelseTilStegData(tilleggsbestemmelse));
 
     return () => {
       slettData();
@@ -136,34 +133,15 @@ function VurderingArtikkel11_4({
     setArtikkelValg(value);
     setBestemmelse("");
 
-    if (konvensjonStorbritanniaToggleEnabled) {
-      slettData(slettTilleggBestemmelse());
-      slettData(slettLovvalgsbestemmelse());
-      slettAlleVilkår();
-      if (value === ArtikkelValg.ART11_4_1 && !visStorbritanniaKonvensjon) {
-        handleEndreBestemmelse(FO_883_2004_ART11_3A, value);
-      } else if (value === ArtikkelValg.ART11_4_2 && !visStorbritanniaKonvensjon) {
-        handleEndreBestemmelse(FO_883_2004_ART11_4_2, value);
-      } else if (value === ArtikkelValg.ART11_4_1_TIL_VURDERING_12_1) {
-        oppdaterData(lagVilkaar("art11_4_1", true));
-      }
-    } else {
-      /* eslint-disable no-lonely-if */
-      if (value === ArtikkelValg.ART11_4_1) {
-        oppdaterData(lagVilkaar("art11_4_1", true));
-        oppdaterData(lagVilkaar("art11_3A", true));
-        slettData(slettVilkar("art11_4_2"));
-      } else if (value === ArtikkelValg.ART11_4_2) {
-        slettData(slettVilkar("art11_3A"));
-        slettData(slettVilkar("art11_4_1"));
-        oppdaterData(lagVilkaar("art11_4_2", true));
-        slettData(slettVilkar("nis"));
-      } else {
-        slettData(slettVilkar("art11_3A"));
-        oppdaterData(lagVilkaar("art11_4_1", true));
-        slettData(slettVilkar("art11_4_2"));
-        slettData(slettVilkar("nis"));
-      }
+    slettData(slettTilleggBestemmelse());
+    slettData(slettLovvalgsbestemmelse());
+    slettAlleVilkår();
+    if (value === ArtikkelValg.ART11_4_1 && !visStorbritanniaKonvensjon) {
+      handleEndreBestemmelse(FO_883_2004_ART11_3A, value);
+    } else if (value === ArtikkelValg.ART11_4_2 && !visStorbritanniaKonvensjon) {
+      handleEndreBestemmelse(FO_883_2004_ART11_4_2, value);
+    } else if (value === ArtikkelValg.ART11_4_1_TIL_VURDERING_12_1) {
+      oppdaterData(lagVilkaar("art11_4_1", true));
     }
   };
 
@@ -190,15 +168,13 @@ function VurderingArtikkel11_4({
     oppdaterData(lagVilkaar("nis", value === BOOLSK_STRING.SANN));
   };
 
-  const visBestemmelseAvsnitt =
-    konvensjonStorbritanniaToggleEnabled &&
-    (artikkelValg === ArtikkelValg.ART11_4_1 || artikkelValg === ArtikkelValg.ART11_4_2);
+  const visBestemmelseAvsnitt = artikkelValg === ArtikkelValg.ART11_4_1 || artikkelValg === ArtikkelValg.ART11_4_2;
   const visNISAvsnitt = artikkelValg === ArtikkelValg.ART11_4_1;
 
   return (
     <div className="vurderingArtikkel11_4">
       <Nav.Heading level="1" className="stegvelgertittel">
-        {konvensjonStorbritanniaToggleEnabled ? "Vurdering av skipsbestemmelse" : "Vurdering av artikkel 11.4"}
+        Vurdering av skipsbestemmelse
       </Nav.Heading>
 
       <LandInformasjon />
@@ -206,27 +182,23 @@ function VurderingArtikkel11_4({
       <Nav.Row>
         <Nav.Column xs="12">
           <Nav.RadioGroup
-            legend={konvensjonStorbritanniaToggleEnabled ? "Oppgi brukers situasjon" : "Velg riktig artikkel"}
+            legend="Oppgi brukers situasjon"
             onChange={handleEndretArtikkelValg}
             readOnly={!redigerbart}
             name="artikkel11"
             defaultValue={artikkelValg}
           >
             <Nav.Radio value={ArtikkelValg.ART11_4_1} readOnly={arbeidKunNorgeToggleEnabled && !erArbeidslandNorge}>
-              {konvensjonStorbritanniaToggleEnabled ? "Arbeider på norsk skip" : "11.4 i - Norge er arbeidslandet"}
+              Arbeider på norsk skip
             </Nav.Radio>
             <Nav.Radio value={ArtikkelValg.ART11_4_2} readOnly={arbeidKunNorgeToggleEnabled && erArbeidslandNorge}>
-              {konvensjonStorbritanniaToggleEnabled
-                ? "Arbeider på utenlandsk skip, er bosatt i Norge og har norsk arbeidsgiver"
-                : "11.4 ii - arbeidsgiver i bostedslandet"}
+              Arbeider på utenlandsk skip, er bosatt i Norge og har norsk arbeidsgiver
             </Nav.Radio>
             <Nav.Radio
               value={ArtikkelValg.ART11_4_1_TIL_VURDERING_12_1}
               readOnly={arbeidKunNorgeToggleEnabled && erArbeidslandNorge}
             >
-              {konvensjonStorbritanniaToggleEnabled
-                ? "Utsendt til utenlandsk skip"
-                : "11.4 i - arbeidslandet er ikke Norge, men jeg vil vurdere Artikkel 12.1"}
+              Utsendt til utenlandsk skip
             </Nav.Radio>
           </Nav.RadioGroup>
 
