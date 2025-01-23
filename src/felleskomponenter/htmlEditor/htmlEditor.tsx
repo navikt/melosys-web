@@ -20,7 +20,6 @@ const verktøylinje = {
   toolbar: [
     [{ header: [false, 1, 2] }],
     ["bold", "italic", "underline"],
-    [{ color: ["#3E3832", "#BA3A26", "#06893A"] }],
     [{ align: ["", "center", "right", "justify"] }],
     [{ indent: "-1" }, { indent: "+1" }],
     [{ list: "ordered" }, { list: "bullet" }],
@@ -28,7 +27,7 @@ const verktøylinje = {
   ],
 };
 
-const formater = ["header", "bold", "italic", "underline", "color", "align", "indent", "list", "bullet"];
+const formater = ["header", "bold", "italic", "underline", "align", "indent", "list", "bullet"];
 
 interface TekstEditorProps {
   value: string;
