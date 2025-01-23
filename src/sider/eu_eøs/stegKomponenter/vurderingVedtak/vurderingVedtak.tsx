@@ -50,14 +50,6 @@ const {
 } = MKV.Koder.behandlinger.behandlingstema;
 const { LA_BUC_04, LA_BUC_05 } = EKV.Koder.buctyper.legislation;
 
-const finnLovvalgSomTerm = (lovvalgsbestemmelseKT?: KTObject, tilleggBestemmelseKT?: KTObject) => {
-  if (lovvalgsbestemmelseKT?.kode === FO_883_2004_ART11_3A && tilleggBestemmelseKT?.kode === FO_883_2004_ART11_4_1) {
-    return `${KV.objektTilTerm(tilleggBestemmelseKT)} og ${KV.objektTilTerm(lovvalgsbestemmelseKT)}`;
-  }
-
-  return KV.objektTilTerm(lovvalgsbestemmelseKT);
-};
-
 const finnSedMottakerLand = (
   arbeidsland: KTObject[],
   bostedsland: KTObject,
