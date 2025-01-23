@@ -196,58 +196,113 @@
 @borderRadiusLarge: 6px;
 
 .htmlEditor {
-  .wrapper {
-    border-radius: 4px;
-    border: 1px solid @navGra60;
-    font-family: "Source Sans Pro", Arial, sans-serif;
-    .rdw-editor-main {
-      min-height: 6rem;
-      max-height: 25rem;
-      overflow-y: auto;
-    }
-    .rdw-editor-toolbar {
-      border: none;
-      margin-bottom: 0;
-      background: @navLysGra;
-    }
-    .rdw-dropdown-wrapper {
-      background: @navLysGra;
-    }
-    .rdw-option-wrapper {
-      background: @navLysGra;
-    }
-    .public-DraftStyleDefault-block {
-      margin: 0.5rem 0;
-    }
-
-    &-disabled {
-      background-color: #e9e7e7;
-      border-color: #78706a;
-      box-shadow: none;
-      color: #3e3832;
-    }
-    &-feil {
-      border: 1px solid @redError;
-      background-color: @redErrorLighten80;
-    }
-  }
-
-  .editor {
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-  }
-
   .editor_label {
     margin-top: 1rem;
     padding-bottom: 0.5rem;
   }
 
+  .editor-wrapper {
+    max-width: calc(210mm - 7rem); // A4 med margins
+
+    .ql-toolbar {
+      background: @navLysGra;
+    }
+
+    .ql-container {
+      border: 1px solid @navGra60;
+      border-top: none;
+      border-radius: 0 0 @borderRadiusBase @borderRadiusBase;
+      font-family: Arial, sans-serif;
+    }
+
+    .ql-editor {
+      min-height: 100px;
+      padding: 1rem;
+      font-family: Arial, sans-serif;
+      color: #3e3832;
+      font-size: 12pt;
+      word-wrap: break-word;
+      line-height: 1.5;
+
+      h1 {
+        font-size: 16pt;
+        margin-bottom: 12pt;
+      }
+
+      h2 {
+        font-size: 14pt;
+        margin-bottom: 12pt;
+      }
+
+      p {
+        font-size: 12pt;
+        margin-bottom: 12pt;
+        max-width: 100%;
+      }
+
+      blockquote {
+        border-left: 4px solid @navGra40;
+        margin: 1rem 0;
+        padding-left: 1rem;
+      }
+    }
+
+    &--disabled {
+      .ql-toolbar {
+        display: none;
+      }
+
+      .ql-container {
+        background-color: #e9e7e7;
+        border-color: #78706a;
+      }
+
+      .ql-editor {
+        color: #3e3832;
+      }
+    }
+
+    &--error {
+      .ql-container {
+        border-color: @redError;
+        background-color: @redErrorLighten80;
+      }
+    }
+  }
+
   .feilmelding {
     font-style: italic;
-    color: #ba3a26;
-    font-family: "Source Sans Pro", Arial, sans-serif;
+    color: @redError;
+    font-family: Arial, sans-serif;
     font-size: 1rem;
     line-height: 1.375rem;
-    font-weight: 400;
+  }
+
+  .ql-snow .ql-picker.ql-header .ql-picker-item[data-value="1"]::before {
+    content: "Tittel";
+    font-family: Arial, sans-serif;
+    font-size: 16pt;
+    font-weight: bold;
+  }
+  .ql-snow .ql-picker.ql-header .ql-picker-item[data-value="2"]::before {
+    content: "Undertittel";
+    font-family: Arial, sans-serif;
+    font-size: 14pt;
+    font-weight: bold;
+  }
+  .ql-snow .ql-picker.ql-header .ql-picker-item:not([data-value])::before {
+    content: "Normal";
+    font-family: Arial, sans-serif;
+    font-size: 12pt;
+    font-weight: normal;
+  }
+  .ql-snow .ql-picker.ql-header .ql-picker-label::before {
+    content: "Normal";
+  }
+  .ql-snow .ql-picker.ql-header .ql-picker-label[data-value="1"]::before {
+    content: "Tittel";
+  }
+  .ql-snow .ql-picker.ql-header .ql-picker-label[data-value="2"]::before {
+    content: "Undertittel";
   }
 }
