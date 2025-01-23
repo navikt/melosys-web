@@ -84,10 +84,10 @@ function Sendbrev({
               behandlingID={behandlingID}
               redigerbart={redigerbart}
               visApneINyttVindu={false}
-              brevTypeSelectWidth="5"
-              mottakerSelectWidth="5"
-              mottakerTabellWidth="5"
-              felterWidth="5"
+              brevTypeSelectWidth="12"
+              mottakerSelectWidth="12"
+              mottakerTabellWidth="12"
+              felterWidth="12"
               dokumenter={dokumenter}
               saksnummer={saksnummer}
             />

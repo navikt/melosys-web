@@ -1,6 +1,6 @@
 import { FANE_STATUS } from "../../felleskomponenter/stegvelger";
-import { VurderingAarsavregning } from "./stegKomponenter/vurderingAarsavregning/vurderingAarsavregning";
 import { VurderingVedtak } from "./stegKomponenter/vurderingVedtak/vurderingVedtak";
+import { VurderingAarsavregningInngang } from "./stegKomponenter/vurderingAarsavregning/vurderingAarsavregningInngang";
 
 const aarsavregningSteg = {
   id: "Årsavregning",
@@ -9,7 +9,7 @@ const aarsavregningSteg = {
   status: FANE_STATUS.UBEHANDLET,
   aktivtSteg: true,
   vedtakSteg: false,
-  komponent: VurderingAarsavregning,
+  komponent: VurderingAarsavregningInngang,
 };
 
 const vedtakSteg = {

@@ -1,5 +1,5 @@
 import * as Nav from "../../../../../navFrontend";
-import "../vurderingAarsavregning.css";
+import "../vurderingAarsavregningInngang.css";
 import { FormValuesProps } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
 import { Control } from "react-hook-form";
 import * as Forms from "../../../../../felleskomponenter/forms";

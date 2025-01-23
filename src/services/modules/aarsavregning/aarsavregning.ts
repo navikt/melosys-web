@@ -78,7 +78,18 @@ export const oppdaterTotalBelop = (
 
 export const hentFiltrertAarsavregningList = (
   saksnummer: string,
-  aar: number,
-  resultattype: string,
-): Promise<AarsavregningListResponse[]> =>
-  getAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/${AARSAVREGNING}?aar=${aar}&resultattype=${resultattype}`);
+  resultattype?: string,
+  aar?: number,
+): Promise<AarsavregningListResponse[]> => {
+  let url = `${API_BASE_URL}${FAGSAKER}/${saksnummer}/${AARSAVREGNING}`;
+  if (aar || resultattype) {
+    url = url.concat("?");
+    if (aar) {
+      url = url.concat(`&aar=${aar}`);
+    }
+    if (resultattype) {
+      url = url.concat(`&resultattype=${resultattype}`);
+    }
+  }
+  return getAsJson(url);
+};
