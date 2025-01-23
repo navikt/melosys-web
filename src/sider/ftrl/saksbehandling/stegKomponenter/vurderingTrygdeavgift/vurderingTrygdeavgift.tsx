@@ -69,9 +69,11 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const medlemskapsTypeErPliktig = medlemskapsperioder.every(
     (periode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG,
   );
-  const defaultPeriode = {
-    fomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.fom),
-    tomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.tom),
+  const formattedDefaultPeriode = () => {
+    return {
+      fomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.fom),
+      tomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.tom),
+    };
   };
   const erÅpenSluttDato = !innvilgetMedlemskapsperiode?.tom;
 
@@ -86,7 +88,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     mode: "onChange",
     defaultValues: {
       skatteforholdsperioder: [{}],
-      inntektskilder: [{}],
+      inntektskilder: [],
     } as FieldValue<FormValuesProps>,
   });
   const {
@@ -103,6 +105,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     replace: resetInntektskilder,
   } = useFieldArray<FieldArrayProps, "inntektskilder", "id">({ control, name: "inntektskilder" });
   const formValues = watch();
+  const [mellomLagringInntektskilder, setMellomLagringInntektskilder] = useState<Inntektskilde[]>([]);
 
   const aktivFeilmeldingType = finnAktivFeilmelding(
     formValues?.inntektskilder,
@@ -122,13 +125,34 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const trygdeavgiftErIkkeTom = !Utils._isEmpty(lagretTrygdeavgift?.trygdeavgiftsperioder);
 
   const harBeregnetForeløpigTrygdeavgift = !skalBeregneForelopigTrygdeavgift || trygdeavgiftErIkkeTom;
+  const skalViseInntektskilder =
+    !(medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder)) &&
+    !erÅpenSluttDato;
+
   useEffect(() => {
     if (harEndretInnvilgetMedlemskapsperiode === undefined) {
       setHarEndretInnvilgetMedlemskapsperiode(false);
     } else {
       setHarEndretInnvilgetMedlemskapsperiode(true);
     }
+
+    const formattedPeriode = formattedDefaultPeriode();
+
+    setMellomLagringInntektskilder([]);
+    resetInntektskilder([{ ...formattedPeriode }]);
+    resetSkatteforholdsperioder([{ ...formattedPeriode }]);
   }, [innvilgetMedlemskapsperiode]);
+
+  useEffect(() => {
+    if (!skalViseInntektskilder) {
+      setMellomLagringInntektskilder([...formValues.inntektskilder]);
+      resetInntektskilder([{ ...formattedDefaultPeriode() }]);
+    } else {
+      const defaultInntektskilder =
+        mellomLagringInntektskilder.length > 0 ? mellomLagringInntektskilder : [{ ...formattedDefaultPeriode() }];
+      resetInntektskilder(defaultInntektskilder);
+    }
+  }, [skalViseInntektskilder]);
 
   const håndterLagretTrygdeavgiftsgrunnlag = (trygdeavgiftsgrunnlag: TrygdeavgiftsgrunnlagDto) => {
     const { inntektskilder, skatteforholdsperioder } = trygdeavgiftsgrunnlag;
@@ -141,7 +165,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
             tomDato: Utils.dato.formatterDatoTilNorsk(skatteforhold.tomDato),
             skatteplikttype: skatteforhold.skatteplikttype,
           }))
-        : [defaultPeriode],
+        : [formattedDefaultPeriode()],
     );
     resetInntektskilder(
       !Utils._isEmpty(sorterteInntekstkilder)
@@ -156,7 +180,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
             tomDato: Utils.dato.formatterDatoTilNorsk(inntektskilde.tomDato),
             erMaanedsbelop: Utils.streng.boolTilUppercaseStreng(inntektskilde.erMaanedsbelop),
           }))
-        : [{ ...defaultPeriode, erMaanedsbelop: BOOLSK_STRING.SANN }],
+        : [{ ...formattedDefaultPeriode(), erMaanedsbelop: BOOLSK_STRING.SANN }],
     );
   };
 
@@ -294,34 +318,33 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
             remove={skattRemove}
             append={skattAppend}
             control={control}
-            defaultPeriode={defaultPeriode}
+            defaultPeriode={formattedDefaultPeriode()}
             fields={skattFields}
           />
         </>
       )}
 
-      {!(medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder)) &&
-        !erÅpenSluttDato && (
-          <>
-            <LabelMedHjelpetekst
-              label="Oppgi informasjon om brukers inntekt"
-              hjelpetekst="Hvis bruker har flere inntekter, f.eks. fra Norge og fra utlandet, så må de legges til enkeltvis."
-              undertittel
-            />
-            <Inntektskilder
-              formValues={formValues}
-              redigerbart={redigerbart}
-              update={inntektUpdate}
-              remove={inntektRemove}
-              append={inntektAppend}
-              control={control}
-              defaultPeriode={defaultPeriode}
-              fields={inntektFields}
-              medlemskapsTypeErPliktig={medlemskapsTypeErPliktig}
-              bestemmelse={bestemmelse}
-            />
-          </>
-        )}
+      {skalViseInntektskilder && (
+        <>
+          <LabelMedHjelpetekst
+            label="Oppgi informasjon om brukers inntekt"
+            hjelpetekst="Hvis bruker har flere inntekter, f.eks. fra Norge og fra utlandet, så må de legges til enkeltvis."
+            undertittel
+          />
+          <Inntektskilder
+            formValues={formValues}
+            redigerbart={redigerbart}
+            update={inntektUpdate}
+            remove={inntektRemove}
+            append={inntektAppend}
+            control={control}
+            defaultPeriode={formattedDefaultPeriode()}
+            fields={inntektFields}
+            medlemskapsTypeErPliktig={medlemskapsTypeErPliktig}
+            bestemmelse={bestemmelse}
+          />
+        </>
+      )}
 
       <Feilmelding type={aktivFeilmeldingType} />
 
