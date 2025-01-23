@@ -38,13 +38,10 @@ import { KTObject } from "@navikt/melosys-kodeverk";
 import { RootState } from "AppTypes";
 import { useIsMounted } from "../../../../hooks";
 import { FysiskDokument } from "Domene";
-import { useFeatureToggle } from "../../../../featuretoggle";
-import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../../featuretoggle/toggleNavn";
 import EnkeltDato from "../../../../felleskomponenter/enkeltDato";
 
 const { KONV_EFTA_STORBRITANNIA_ART18_1 } = MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia;
 const { SAERLIG_GRUNN } = MKV.Koder.begrunnelser.anmodning_begrunnelser;
-const { FO_883_2004_ART16_1 } = MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004;
 const { BRUKER, UTENLANDSK_TRYGDEMYNDIGHET } = MKV.Koder.mottakerroller;
 const { ORIENTERING_ANMODNING_UNNTAK, ANMODNING_UNNTAK } = MKV.Koder.brev.produserbaredokumenter;
 
@@ -92,7 +89,7 @@ interface Props {
 
 function VurderingArtikkel16Anmodning({
   oppdaterData,
-  tilstand: { unntaksvilkår, muligeBegrunnelseValg, erIDirekteTilArtikkel16Flyt },
+  tilstand: { unntaksvilkår, muligeBegrunnelseValg },
   slettData,
   formValues,
   lagreOgBestillAnmodningsperioder,
@@ -107,7 +104,6 @@ function VurderingArtikkel16Anmodning({
   aktivtSteg,
   lovvalgsbestemmelse,
 }: Props & PropsFromRedux & InjectedFormProps<FormValuesProps, Props & PropsFromRedux>) {
-  const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
   const dispatch = useDispatch();
   const isMounted = useIsMounted();
   const [lovvalgFeilmelding, setLovvalgFeilmelding] = useState<string | undefined>(undefined);
@@ -129,13 +125,8 @@ function VurderingArtikkel16Anmodning({
     lovvalgsbestemmelse === KONV_EFTA_STORBRITANNIA_ART18_1 ? "art18_1_anmodning" : "art16_1_anmodning";
 
   useEffect(() => {
-    if (konvensjonStorbritanniaToggleEnabled) {
-      oppdaterData(konverterVilkarTilStegData(feltNavnFraBestemmelse, unntaksvilkår));
-      oppdaterData(konverterLovvalgsbestemmelseTilStegData(lovvalgsbestemmelse));
-    } else {
-      oppdaterData(konverterVilkarTilStegData("art16_1_anmodning", unntaksvilkår));
-      oppdaterData(konverterLovvalgsbestemmelseTilStegData(FO_883_2004_ART16_1));
-    }
+    oppdaterData(konverterVilkarTilStegData(feltNavnFraBestemmelse, unntaksvilkår));
+    oppdaterData(konverterLovvalgsbestemmelseTilStegData(lovvalgsbestemmelse));
 
     if (unntakFraBestemmelse) {
       oppdaterData(konverterUnntakFraBestemmelseTilStegData(unntakFraBestemmelse));
@@ -233,7 +224,7 @@ function VurderingArtikkel16Anmodning({
   };
 
   const hentUnntaksbestemmelser = (): KTObject[] => {
-    if (konvensjonStorbritanniaToggleEnabled && lovvalgsbestemmelse === KONV_EFTA_STORBRITANNIA_ART18_1) {
+    if (lovvalgsbestemmelse === KONV_EFTA_STORBRITANNIA_ART18_1) {
       return MKV.Kodekombinasjoner.unntaksbestemmelserStorbritanniaKonv;
     }
     return MKV.Kodekombinasjoner.unntaksbestemmelser;
@@ -271,17 +262,9 @@ function VurderingArtikkel16Anmodning({
 
   // TODO: Erstattes med en enkel labeltekst når storbritannia toggle fjernes
   const begrunnelseFritekstBrevLabel = (
-    <>
-      <Nav.BodyLong weight="semibold" size="small">
-        Begrunnelse til orienteringsbrev til bruker
-      </Nav.BodyLong>
-      {!konvensjonStorbritanniaToggleEnabled && (
-        <Nav.BodyLong size="small">
-          Begrunnelsen kommer ut i vedtaksbrevet som en setning som starter med «Vi har bedt trygdemyndighetene i [land]
-          om en avtale for deg, fordi», og slutter med teksten du har tilføyd.
-        </Nav.BodyLong>
-      )}
-    </>
+    <Nav.BodyLong weight="semibold" size="small">
+      Begrunnelse til orienteringsbrev til bruker
+    </Nav.BodyLong>
   );
 
   const maksAntallTegn = MKVUtils.erStorbritanniaKonvBestemmelse(lovvalgsbestemmelse) ? 500 - 38 : 500;
@@ -289,22 +272,9 @@ function VurderingArtikkel16Anmodning({
   return (
     <div className="vurderingArtikkel16Anmodning">
       <Nav.Heading level="1" className="stegvelgertittel">
-        {konvensjonStorbritanniaToggleEnabled ? "Anmodning om unntak" : "Anmodning om unntak etter artikkel 16.1"}
+        Anmodning om unntak
       </Nav.Heading>
       <div className="artikkel16__innhold">
-        {erIDirekteTilArtikkel16Flyt && !konvensjonStorbritanniaToggleEnabled && (
-          <Nav.Row>
-            <Nav.Column xs="6">
-              <Nav.RadioGroup legend="" hideLegend defaultValue name="vilAnmode" disabled={!redigerbart}>
-                <Nav.Radio value>Ja, jeg vil anmode om unntak</Nav.Radio>
-                <Nav.Radio value={false} disabled>
-                  Nei, jeg vil avslå
-                </Nav.Radio>
-              </Nav.RadioGroup>
-            </Nav.Column>
-          </Nav.Row>
-        )}
-
         <Nav.Row>
           <Nav.Column xs="12">
             <Nav.BodyLong weight="semibold" size="small">
@@ -411,7 +381,7 @@ function VurderingArtikkel16Anmodning({
           </Nav.Row>
         )}
 
-        {(!konvensjonStorbritanniaToggleEnabled || !Utils._isEmpty(medlemskap?.perioderMed)) && (
+        {!Utils._isEmpty(medlemskap?.perioderMed) && (
           <TidligereMedlemskap redigerbart={redigerbart} medlemskap={medlemskap} land={landSomTekstListe} />
         )}
 
