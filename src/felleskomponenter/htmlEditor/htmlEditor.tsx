@@ -9,7 +9,7 @@ interface TekstEditorProps {
   onChange: (value: string) => void;
   disabled?: boolean;
   label?: React.ReactNode;
-  feil?: string | { melding: string };
+  feil?: string | { melding: string } | null;
   className?: string;
   placeholder?: string;
   spellCheck?: boolean;
@@ -35,7 +35,7 @@ interface TekstEditorProps {
   onChange: (value: string) => void;
   disabled?: boolean;
   label?: React.ReactNode;
-  feil?: string | { melding: string };
+  feil?: string | { melding: string } | null;
   className?: string;
   placeholder?: string;
 }
