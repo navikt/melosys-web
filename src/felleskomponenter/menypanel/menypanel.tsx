@@ -19,6 +19,7 @@ import { LinkGroupsFactory } from "./linkgroups";
 import "./menypanel.css";
 import { useFeatureToggle } from "../../featuretoggle";
 import { MELOSYS_ARBEID_KUN_NORGE } from "../../featuretoggle/toggleNavn";
+import { skalViseFullmektigFørPeriodeOgLand } from "../../url/url";
 
 const { SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS } = MKV.Koder.mottatteopplysningertyper;
 
@@ -71,6 +72,13 @@ export function Menypanel({
     endreFokus,
   };
 
+  const visMenypanel =
+    (sakstype === MKV.Koder.sakstyper.EU_EOS &&
+      behandlingstema !== MKV.Koder.behandlinger.behandlingstema.A1_ANMODNING_OM_UNNTAK_PAPIR &&
+      behandlingstema !== MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV) ||
+    menypanel?.synlig ||
+    skalViseIngenFlyt(sakstype, sakstema, behandlingstema, behandlingstype, erArbeidKunNorgeToggleEnabled);
+
   const linkGroupsWithContent = LinkGroupsFactory.createLinkGroups({
     sakstype,
     behandlingstema,
@@ -78,6 +86,7 @@ export function Menypanel({
     contentProps,
     mottatteOpplysningerType,
     sakstema,
+    kunFullmektig: !visMenypanel && skalViseFullmektigFørPeriodeOgLand(behandlingstema),
     erArbeidKunNorgeToggleEnabled,
   });
 
@@ -103,14 +112,9 @@ export function Menypanel({
     setActive([groupIndex, linkIndex]);
     setEndreFokus(true);
   };
-  const visMenypanel =
-    (sakstype === MKV.Koder.sakstyper.EU_EOS &&
-      behandlingstema !== MKV.Koder.behandlinger.behandlingstema.A1_ANMODNING_OM_UNNTAK_PAPIR &&
-      behandlingstema !== MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV) ||
-    menypanel?.synlig ||
-    skalViseIngenFlyt(sakstype, sakstema, behandlingstema, behandlingstype, erArbeidKunNorgeToggleEnabled);
 
-  if (!visMenypanel) return null;
+  if (!visMenypanel && !skalViseFullmektigFørPeriodeOgLand(behandlingstema)) return null;
+
   return (
     <>
       {visOppdaterRegisteropplysninger && redigerbart && (
