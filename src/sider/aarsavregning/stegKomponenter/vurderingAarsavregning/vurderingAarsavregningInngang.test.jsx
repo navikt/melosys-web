@@ -1,9 +1,9 @@
 import { reduxForm } from "redux-form";
-import { VurderingAarsavregning } from "./vurderingAarsavregning";
 import { STATUS } from "../../../../services";
 import { renderWithProviders } from "../../../../ducks/test-utils/renderWithProviders";
+import { VurderingAarsavregningInngang } from "./vurderingAarsavregningInngang";
 
-describe("VurderingAarsavreging", () => {
+describe("VurderingAarsavregningInngang", () => {
   const initialReduxState = {
     behandlinger: {
       data: {
@@ -44,7 +44,7 @@ describe("VurderingAarsavreging", () => {
     oppdaterStatus: vi.fn(),
   };
   // @ts-expect-error generisk beskrivelse
-  const WrappedVurderingAarsavregning = reduxForm({ form: "test" })(VurderingAarsavregning);
+  const WrappedVurderingAarsavregningInngang = reduxForm({ form: "test" })(VurderingAarsavregningInngang);
 
   beforeEach(() => {
     // @ts-expect-error generisk beskrivelse
@@ -53,13 +53,11 @@ describe("VurderingAarsavreging", () => {
     fetch.mockResponse(JSON.stringify({}));
   });
 
-  describe("VurderingAarsavregning", () => {
-    it("snapshot test", () => {
-      const { container } = renderWithProviders(<WrappedVurderingAarsavregning {...props} />, {
-        // @ts-expect-error generisk beskrivelse
-        preloadedState: initialReduxState,
-      });
-      expect(container).toMatchSnapshot();
+  it("snapshot test", () => {
+    const { container } = renderWithProviders(<WrappedVurderingAarsavregningInngang {...props} />, {
+      // @ts-expect-error generisk beskrivelse
+      preloadedState: initialReduxState,
     });
+    expect(container).toMatchSnapshot();
   });
 });

@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`VurderingAarsavreging > VurderingAarsavregning > snapshot test 1`] = `
+exports[`VurderingAarsavregningInngang > snapshot test 1`] = `
 
 <div>
   <div class="vurderingAarsavregning">
@@ -86,14 +86,6 @@ exports[`VurderingAarsavreging > VurderingAarsavregning > snapshot test 1`] = `
         </div>
       </div>
     </fieldset>
-    <button
-      class="navds-button navds-button--primary navds-button--small navds-button--disabled"
-      disabled
-    >
-      <span class="navds-label navds-label--small">
-        Bekreft og fortsett
-      </span>
-    </button>
   </div>
 </div>
 
