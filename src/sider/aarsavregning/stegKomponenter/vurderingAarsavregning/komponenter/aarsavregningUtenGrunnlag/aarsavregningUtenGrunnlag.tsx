@@ -30,7 +30,10 @@ import GrunnlagsopplysningerSkjema from "../grunnlagsopplysningerSkjema";
 
 import { behandlingsresultatSelectors } from "../../../../../../ducks/behandlingsresultat";
 
-import { medlemskapsperioderOperations, medlemskapsperioderSelectors } from "../../../../../../ducks/medlemskapsperioder";
+import {
+  medlemskapsperioderOperations,
+  medlemskapsperioderSelectors,
+} from "../../../../../../ducks/medlemskapsperioder";
 import { MedlemskapsperiodeProp } from "../../../../../ftrl/saksbehandling/stegKomponenter/vurderingPeriode/komponenter/types";
 import { Medlemskapsperioder } from "../medlemskapsperioder";
 import { InntektskildeDto, SkatteforholdDto } from "../../../../../../services/modules/trygdeavgift";
