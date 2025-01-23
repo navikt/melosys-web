@@ -48,7 +48,6 @@ export function Avslag({
         mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
       },
     });
-  } else if (visOrienteringsbrevArbeidsgiver) {
     pdfDokumenter.push({
       dokumentData: {
         produserbardokument: MKV.Koder.brev.produserbaredokumenter.AVSLAG_ARBEIDSGIVER,
