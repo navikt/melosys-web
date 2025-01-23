@@ -86,10 +86,10 @@ export function Bestemmelser({
   useEffect(() => {
     oppdaterData(konverterVilkarTilStegData(finnFeltNavn(utsendingsvilkår?.vilkaar), utsendingsvilkår));
     oppdaterData(konverterVilkarTilStegData(finnFeltNavn(unntaksvilkår?.vilkaar), unntaksvilkår));
-    if (true && lovvalgsbestemmelse) {
+    if (lovvalgsbestemmelse) {
       oppdaterData(konverterLovvalgsbestemmelseTilStegData(lovvalgsbestemmelse));
     }
-    if (true && tilleggsbestemmelse) {
+    if (tilleggsbestemmelse) {
       oppdaterData(konverterTilleggBestemmelseTilStegData(tilleggsbestemmelse));
     }
   }, []);
