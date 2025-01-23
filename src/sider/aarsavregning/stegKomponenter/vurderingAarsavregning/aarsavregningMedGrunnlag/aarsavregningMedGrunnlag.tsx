@@ -11,46 +11,30 @@ import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import * as Nav from "../../../../../navFrontend";
 import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 import { FieldValue, useFieldArray, useForm } from "react-hook-form";
-import {
-  FieldArrayProps,
-  FormValuesProps,
-  Inntektskilde,
-  Skatteforhold,
-} from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
+import { FieldArrayProps, FormValuesProps } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Utils from "../../../../../utils";
 import { feilMeldingBlokkerer, finnAktivFeilmelding } from "../meldinger";
-import { erBrukerSkattepliktigIHelePerioden } from "../../../../ftrl/saksbehandling/stegKomponenter/vurderingTrygdeavgift/vurderingTrygdeavgiftSchema";
 import MKV from "../../../../../melosyskodeverk";
 import { SumArsavregningTabell } from "../komponenter/sumArsavregningTabell";
 import { BeregnetTrygdeavgiftDetaljer } from "../komponenter/beregnetTrygdeavgiftDetaljer";
 import { OK } from "../../../../../ducks/aarsavregning/types";
 import TidligereGrunnlagsoversikt from "../komponenter/tidligereGrunnlagsoversikt";
 import { sorterEtterISOFomDato } from "../../../../../utils/dato";
-import GrunnlagsopplysningerSkjema from "../komponenter/grunnlagsopplysningerSkjema";
 
 import { behandlingsresultatSelectors } from "../../../../../ducks/behandlingsresultat";
 import { FeilmeldingOppsummering } from "../feilmeldingOppsummering";
 import { Medlemskapsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import aarsavregningMedGrunnlagSchema from "./aarsavregningMedGrunnlagSchema";
+import { Skatteforholdsperioder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/skatteforholdsperioder";
+import { Inntektskilder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/inntektskilder";
+import { beregnTrygdeavgiftsperioder } from "../komponenter/utils";
 
 interface Props {
   bekreft: () => void;
   aktivtSteg: boolean;
   oppdaterStatus: (isValid: boolean) => void;
 }
-
-const mapFeilmelding = (error: any) => {
-  const feilmelding = "Finner ikke trygdeavgiftssats. Melosys har ikke satser for årene før 2014.";
-
-  const ingenGjeldendeSats = error.body?.feilkoder?.some((feilkode: string) =>
-    feilkode.startsWith("Ingen gjeldende sats finnes for perioden"),
-  );
-
-  if (ingenGjeldendeSats) return feilmelding;
-
-  return error.body?.feilkoder || error.body?.message || error;
-};
 
 const lagInnvilgetMedlemskapsPeriode = (medlemskapsperioder?: Medlemskapsperiode[]) => {
   if (medlemskapsperioder && !Utils._isEmpty(medlemskapsperioder)) {
@@ -207,42 +191,22 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
     }
   }, [formValues]);
 
-  const beregnTrygdeavgiftsperioder = useCallback(
-    (formVerdier: FieldValue<FormValuesProps>) => {
-      setBeregningError(undefined);
-      const erBrukerPliktigMedlemOgSkattepliktig =
-        medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(formVerdier.skatteforholdsperioder);
-      Api.Trygdeavgift.beregnTrygdeavgiftsperioder(behandlingID, {
-        skatteforholdsperioder: formVerdier.skatteforholdsperioder.map((skatteforhold: Skatteforhold) => ({
-          fomDato: Utils.dato.formatterDatoTilISO(skatteforhold.fomDato),
-          tomDato: Utils.dato.formatterDatoTilISO(skatteforhold.tomDato, null),
-          skatteplikttype: skatteforhold.skatteplikttype,
-        })),
-        inntektskilder: !erBrukerPliktigMedlemOgSkattepliktig
-          ? formVerdier.inntektskilder.map((inntektskilde: Inntektskilde) => ({
-              type: inntektskilde.kildetype,
-              arbeidsgiversavgiftBetales: Utils.streng.uppercaseStrengTilBool(inntektskilde.arbAvgBetales) || false,
-              avgiftspliktigInntekt: inntektskilde.bruttoInntekt,
-              fomDato: Utils.dato.formatterDatoTilISO(inntektskilde.fomDato),
-              tomDato: Utils.dato.formatterDatoTilISO(inntektskilde.tomDato, null),
-              erMaanedsbelop: Utils.streng.uppercaseStrengTilBool(inntektskilde.erMaanedsbelop) || false,
-            }))
-          : [],
-      })
-        .then(() => {
-          Api.Aarsavregning.hentAarsavregning(behandlingID, aarsavregningID).then((response: AarsavregningResponse) => {
-            setAarsavregningResponse(response);
-          });
-          setBeregningError(undefined);
-        })
-        .catch((error) => setBeregningError(mapFeilmelding(error)));
+  const handleBeregnTrygdeavgiftsperioder = useCallback(
+    async (formVerdier: FieldValue<FormValuesProps>) => {
+      await beregnTrygdeavgiftsperioder(formVerdier, {
+        behandlingID,
+        medlemskapsTypeErPliktig,
+        aarsavregningID,
+        setBeregningError,
+        setAarsavregningResponse,
+      });
     },
     [behandlingID, medlemskapsTypeErPliktig, setBeregningError, setAarsavregningResponse, aarsavregningID],
   );
 
   const debounceBeregnTrygdeavgiftsperioder = useCallback(
-    Utils._debounce((formVerdier) => beregnTrygdeavgiftsperioder(formVerdier), 1000),
-    [beregnTrygdeavgiftsperioder],
+    Utils._debounce((formVerdier) => handleBeregnTrygdeavgiftsperioder(formVerdier), 1000),
+    [handleBeregnTrygdeavgiftsperioder],
   );
 
   const aktivFeilmeldingType = finnAktivFeilmelding(
@@ -343,20 +307,28 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
       {erAvvik && <Nav.Heading>Inntekts- og skatteopplysninger for endelig trygdeavgift</Nav.Heading>}
 
       {erAvvik && (
-        <GrunnlagsopplysningerSkjema
-          defaultPeriode={defaultPeriode}
-          formValues={formValues}
-          inntektFields={inntektFields}
-          skattFields={skattFields}
-          control={control}
-          inntektUpdate={inntektUpdate}
-          inntektRemove={inntektRemove}
-          inntektAppend={inntektAppend}
-          skattRemove={skattRemove}
-          skattAppend={skattAppend}
-          redigerbart={redigerbart}
-          medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!}
-        />
+        <>
+          <Skatteforholdsperioder
+            formValues={formValues}
+            redigerbart={redigerbart}
+            remove={skattRemove}
+            append={skattAppend}
+            control={control}
+            fields={skattFields}
+          />
+          <Inntektskilder
+            defaultPeriode={defaultPeriode}
+            formValues={formValues}
+            redigerbart={redigerbart}
+            update={inntektUpdate}
+            remove={inntektRemove}
+            append={inntektAppend}
+            control={control}
+            fields={inntektFields}
+            medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!}
+            skalViseErMaanedsBelopRadioGroup
+          />
+        </>
       )}
 
       {erAvvik && formIsValid && !beregningError && (
