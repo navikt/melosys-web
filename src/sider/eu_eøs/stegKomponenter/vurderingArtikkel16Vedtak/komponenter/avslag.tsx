@@ -8,8 +8,6 @@ import Dokumentliste, {
 import VedtakBegrunnelser from "./vedtakBegrunnelser";
 import { Periode } from "../../../../../services/modules/types";
 import DatoOgBestemmelse from "./datoOgBestemmelse";
-import { useFeatureToggle } from "../../../../../featuretoggle";
-import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../../../featuretoggle/toggleNavn";
 
 interface AvslagProps {
   redigerbart: boolean;
@@ -30,8 +28,6 @@ export function Avslag({
   gjeldendePeriode,
   erStorbrittaniaArt18_1Bestemmelse,
 }: AvslagProps) {
-  const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
-
   const pdfDokumenter: (BrevDokumentMetadataType | SedDokumentMetadataType)[] = [
     {
       dokumentData: {
@@ -44,7 +40,7 @@ export function Avslag({
     },
   ];
 
-  if (konvensjonStorbritanniaToggleEnabled && visOrienteringsbrevArbeidsgiver) {
+  if (visOrienteringsbrevArbeidsgiver) {
     pdfDokumenter.push({
       dokumentData: {
         produserbardokument: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_TIL_ARBEIDSGIVER_OM_VEDTAK,
@@ -52,7 +48,6 @@ export function Avslag({
         mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
       },
     });
-  } else if (visOrienteringsbrevArbeidsgiver) {
     pdfDokumenter.push({
       dokumentData: {
         produserbardokument: MKV.Koder.brev.produserbaredokumenter.AVSLAG_ARBEIDSGIVER,

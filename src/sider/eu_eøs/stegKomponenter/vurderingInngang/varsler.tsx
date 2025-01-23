@@ -1,7 +1,5 @@
 import * as Api from "../../../../services/api";
-import { useFeatureToggle } from "../../../../featuretoggle";
 import { useHentStatsborgerskapQuery } from "../../../../felleskomponenter/menypanel/menypunkter/person/statsborgerskapTable/hentStatsborgerskap.generated";
-import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../../featuretoggle/toggleNavn";
 import classNames from "classnames";
 import * as Utils from "../../../../utils";
 import MKV, { MKVUtils } from "../../../../melosyskodeverk";
@@ -19,7 +17,6 @@ interface VarslerProps {
 }
 
 function Varsler({ oppfyllerInngangsvilkar, inngangsvilkaar, landkoder, behandlingstema, behandlingID }: VarslerProps) {
-  const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
   const inngangsvilkaarBegrunnelseKoder = inngangsvilkaar?.begrunnelseKoder || [];
   const { data: statsborgerskapData } = useHentStatsborgerskapQuery({
     variables: { behandlingID },
@@ -62,8 +59,7 @@ function Varsler({ oppfyllerInngangsvilkar, inngangsvilkaar, landkoder, behandli
   const erFraEllerSkalTilStorbritannia =
     statsborgerskapLand.includes(MKV.Terms.landkoder.GB.toUpperCase()) || MKVUtils.enesteLandErStorbritannia(landkoder);
 
-  const visStorbritanniaKonvensjonTekst =
-    konvensjonStorbritanniaToggleEnabled && MKVUtils.erUtsendt(behandlingstema) && erFraEllerSkalTilStorbritannia;
+  const visStorbritanniaKonvensjonTekst = MKVUtils.erUtsendt(behandlingstema) && erFraEllerSkalTilStorbritannia;
 
   return (
     <div className="vurderinginngang_eu_eos">

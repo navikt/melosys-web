@@ -9,8 +9,6 @@ import Dokumentliste, {
   SedDokumentMetadataType,
 } from "../../../../../felleskomponenter/dokumentliste";
 import { FormValuesProps } from "../vurderingArtikkel16Vedtak";
-import { useFeatureToggle } from "../../../../../featuretoggle";
-import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../../../featuretoggle/toggleNavn";
 import DatoOgBestemmelse from "./datoOgBestemmelse";
 import * as Api from "../../../../../services/api";
 import { useSelector } from "react-redux";
@@ -49,7 +47,6 @@ function Innvilgelse({
   erUtsendt,
 }: InnvilgelseProps) {
   const saksnummer = useSelector(fagsakSelectors.SaksnummerSelector) as string;
-  const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
   const pdfDokumenter: (BrevDokumentMetadataType | SedDokumentMetadataType)[] = [];
 
   const selvstendigeVirksomheter = useSelector(mottatteOpplysningerSelectors.SelvstendigNaringsvirksomhetSelector);
@@ -62,7 +59,7 @@ function Innvilgelse({
     useSelector(avklartefaktaSelectors.YrkesaktivitetSelector) ===
       VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE || erSelvstendigVirksomhet;
 
-  if (erUtsendt && erStorbrittaniaArt18_1Bestemmelse && konvensjonStorbritanniaToggleEnabled) {
+  if (erUtsendt && erStorbrittaniaArt18_1Bestemmelse) {
     pdfDokumenter.push({
       dokumentData: {
         produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_EFTA_STORBRITANNIA,
@@ -109,7 +106,7 @@ function Innvilgelse({
       },
     });
 
-    if (konvensjonStorbritanniaToggleEnabled && visOrienteringsbrevArbeidsgiver && !erSelvstendigNaeringsdrivende) {
+    if (visOrienteringsbrevArbeidsgiver && !erSelvstendigNaeringsdrivende) {
       pdfDokumenter.push({
         dokumentData: {
           produserbardokument: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_TIL_ARBEIDSGIVER_OM_VEDTAK,
@@ -130,9 +127,7 @@ function Innvilgelse({
   return (
     <>
       <Nav.Heading level="1" className="stegvelgertittel">
-        {konvensjonStorbritanniaToggleEnabled
-          ? "Omfattet av norsk trygdelovgivning"
-          : "Omfattet av norsk trygdelovgivning etter Fo 883/2004 Artikkel 16 nr. 1."}
+        Omfattet av norsk trygdelovgivning
       </Nav.Heading>
       <DatoOgBestemmelse fomDato={gjeldendePeriode.fom} tomDato={gjeldendePeriode.tom} />
       <Nav.Row>

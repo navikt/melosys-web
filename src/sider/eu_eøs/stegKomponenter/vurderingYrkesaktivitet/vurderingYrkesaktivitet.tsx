@@ -5,8 +5,6 @@ import * as KV from "../../../../kodeverk";
 import * as Mui from "../../../../felleskomponenter/ui";
 import { konverterAvklartfaktaTilStegData, lagAvklartfakta } from "../../../../felleskomponenter/stegvelger";
 import { hentFaktaVerdi } from "../../../../domeneUtils";
-import { useFeatureToggle } from "../../../../featuretoggle";
-import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../../featuretoggle/toggleNavn";
 import { MKVUtils } from "../../../../melosyskodeverk";
 import { useSelector } from "react-redux";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
@@ -37,7 +35,6 @@ function VurderingYrkesaktivitet(props: VurderingYrkesaktivitetProps) {
   } = props;
   const { skjulArbeidstakerFrilanserOgSelvstendigNaeringsdrivende, harAvklaring, yrkesaktivitet } = tilstand;
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
-  const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
 
   useEffect(() => {
     oppdaterData(konverterAvklartfaktaTilStegData(KV.Koder.YRKESAKTIVITET, yrkesaktivitet));
@@ -83,7 +80,7 @@ function VurderingYrkesaktivitet(props: VurderingYrkesaktivitetProps) {
         {!skjulArbeidstakerFrilanserOgSelvstendigNaeringsdrivende && (
           <Nav.Radio value={KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_OG_SELVSTENDIG}>{labels[2]}</Nav.Radio>
         )}
-        {!(konvensjonStorbritanniaToggleEnabled && MKVUtils.erUtsendt(behandlingstema)) && (
+        {!MKVUtils.erUtsendt(behandlingstema) && (
           <Nav.Radio
             disabled={!erSoknadArbeidFlereLand}
             value={KV.Koder.VurderingYrkesaktivitetTyper.TJENESTEPERSON_NORSK_STATSFORVANTLING}

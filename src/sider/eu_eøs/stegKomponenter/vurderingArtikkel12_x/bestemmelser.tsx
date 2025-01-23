@@ -16,8 +16,6 @@ import * as Mui from "../../../../felleskomponenter/ui";
 import { ChangeEvent, useEffect, useState } from "react";
 import { Vilkaar } from "../../../../services/modules/vilkar";
 import { useSelector } from "react-redux";
-import { useFeatureToggle } from "../../../../featuretoggle";
-import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../../featuretoggle/toggleNavn";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import * as KV from "../../../../kodeverk";
 import { avklartefaktaSelectors } from "../../../../ducks/avklartefakta";
@@ -61,7 +59,6 @@ export function Bestemmelser({
   visStorbritanniaKonvensjon,
 }: BestemmelserProps) {
   const erArbeidstaker = vilkaarNavn12 === "12.1";
-  const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
   const lovvalgsperiodeBestemmelse = useSelector(lovvalgsperioderSelectors.LovvalgBestemmelseSelector);
   const lovvalgsperiodeTilleggsbestemmelse = useSelector(lovvalgsperioderSelectors.TilleggBestemmelseSelector);
   const anmodningsperiodeBestemmelse = useSelector(anmodningsperioderSelectors.LovvalgsbestemmelseSelector);
@@ -89,23 +86,17 @@ export function Bestemmelser({
   useEffect(() => {
     oppdaterData(konverterVilkarTilStegData(finnFeltNavn(utsendingsvilkår?.vilkaar), utsendingsvilkår));
     oppdaterData(konverterVilkarTilStegData(finnFeltNavn(unntaksvilkår?.vilkaar), unntaksvilkår));
-    if (konvensjonStorbritanniaToggleEnabled && lovvalgsbestemmelse) {
+    if (lovvalgsbestemmelse) {
       oppdaterData(konverterLovvalgsbestemmelseTilStegData(lovvalgsbestemmelse));
     }
-    if (konvensjonStorbritanniaToggleEnabled && tilleggsbestemmelse) {
+    if (tilleggsbestemmelse) {
       oppdaterData(konverterTilleggBestemmelseTilStegData(tilleggsbestemmelse));
     }
   }, []);
 
   useEffect(() => {
     const nyTilleggsbestemmelse = finnTilleggsbestemmelse(lovvalgsbestemmelse, yrkesgruppeFakta, arbeidPåSkipFakta);
-    if (
-      redigerbart &&
-      konvensjonStorbritanniaToggleEnabled &&
-      lovvalgsbestemmelse &&
-      vedtakValg &&
-      nyTilleggsbestemmelse !== tilleggsbestemmelse
-    ) {
+    if (redigerbart && lovvalgsbestemmelse && vedtakValg && nyTilleggsbestemmelse !== tilleggsbestemmelse) {
       slettData(slettTilleggBestemmelse());
       if (nyTilleggsbestemmelse) oppdaterData(lagTilleggBestemmelse(nyTilleggsbestemmelse));
     }
@@ -118,38 +109,19 @@ export function Bestemmelser({
     setVedtakValg(value);
     setBestemmelse("");
 
-    if (konvensjonStorbritanniaToggleEnabled) {
-      slettAlleVilkår();
-      slettData(slettTilleggBestemmelse());
-      slettData(slettLovvalgsbestemmelse());
-      if (value === VedtakValg.JA_INNVILGE) {
-        if (!visStorbritanniaKonvensjon) handleEndreBestemmelse(FO_883_2004_ART12, value);
-        setPending(false);
-      } else if (value === VedtakValg.NEI_ANMODNING_UNNTAK) {
-        if (!visStorbritanniaKonvensjon) handleEndreBestemmelse(FO_883_2004_ART16_1, value);
-        setPending(false);
-      } else if (value === VedtakValg.NEI_AVSLAG) {
-        oppdaterData(lagVilkaar(finnFeltNavn(FO_883_2004_ART12), false));
-        oppdaterData(lagVilkaar("art16_1_avslag", false));
-        setTimeout(() => setPending(false), 100);
-      }
-    } else {
-      if (value === VedtakValg.JA_INNVILGE) {
-        oppdaterData(lagVilkaar(finnFeltNavn(FO_883_2004_ART12), true));
-        slettData(slettVilkar("art16_1_avslag"));
-        slettData(slettVilkar("art16_1_anmodning"));
-      }
-      if (value === VedtakValg.NEI_ANMODNING_UNNTAK) {
-        oppdaterData(lagVilkaar(finnFeltNavn(FO_883_2004_ART12), false));
-        slettData(slettVilkar("art16_1_avslag"));
-        oppdaterData(lagVilkaar("art16_1_anmodning", true));
-      }
-      if (value === VedtakValg.NEI_AVSLAG) {
-        oppdaterData(lagVilkaar(finnFeltNavn(FO_883_2004_ART12), false));
-        slettData(slettVilkar("art16_1_anmodning"));
-        oppdaterData(lagVilkaar("art16_1_avslag", false));
-      }
+    slettAlleVilkår();
+    slettData(slettTilleggBestemmelse());
+    slettData(slettLovvalgsbestemmelse());
+    if (value === VedtakValg.JA_INNVILGE) {
+      if (!visStorbritanniaKonvensjon) handleEndreBestemmelse(FO_883_2004_ART12, value);
       setPending(false);
+    } else if (value === VedtakValg.NEI_ANMODNING_UNNTAK) {
+      if (!visStorbritanniaKonvensjon) handleEndreBestemmelse(FO_883_2004_ART16_1, value);
+      setPending(false);
+    } else if (value === VedtakValg.NEI_AVSLAG) {
+      oppdaterData(lagVilkaar(finnFeltNavn(FO_883_2004_ART12), false));
+      oppdaterData(lagVilkaar("art16_1_avslag", false));
+      setTimeout(() => setPending(false), 100);
     }
   };
 
@@ -222,12 +194,12 @@ export function Bestemmelser({
   };
 
   const visFritekstfelt = unntaksvilkår?.begrunnelseKoder?.includes(SAERLIG_AVSLAGSGRUNN);
-  const bestemmelseErGyldig = !!bestemmelse || !konvensjonStorbritanniaToggleEnabled || avslag;
+  const bestemmelseErGyldig = !!bestemmelse || avslag;
 
   // TODO: Fjernes ved togglerydding og flyttes inn i return stmt
   const renderSkjemadelVedAnmodningUnntak = () => {
     if (utsendingsvilkår.oppfylt === false && !pending && bestemmelseErGyldig) {
-      return konvensjonStorbritanniaToggleEnabled ? (
+      return (
         <Mui.ListevelgerFlervalg
           muligeValg={hentBegrunnelser()}
           label="Legg til begrunnelse for at utsendingsbestemmelse ikke er oppfylt"
@@ -238,19 +210,6 @@ export function Bestemmelser({
           defaultElementer={utsendingsvilkår.begrunnelseKoder}
           disabled={!redigerbart}
         />
-      ) : (
-        <Nav.Fieldset legend={`Begrunnelse artikkel ${vilkaarNavn12}:`}>
-          <Mui.ListevelgerFlervalg
-            muligeValg={begrunnelserUtsending}
-            label="Legg til begrunnelse for ikke oppfylt:"
-            tillatFritekst={false}
-            onChange={(event: ListevelgerFlervalgEvent) =>
-              handleEndreBegrunnelse(event, finnFeltNavn(FO_883_2004_ART12))
-            }
-            defaultElementer={utsendingsvilkår.begrunnelseKoder}
-            disabled={!redigerbart}
-          />
-        </Nav.Fieldset>
       );
     }
     return null;
@@ -259,7 +218,7 @@ export function Bestemmelser({
   // TODO: Fjernes ved togglerydding og flyttes inn i return stmt
   const renderSkjemadelVedAvslag = () => {
     if (unntaksvilkår.oppfylt === false && !pending) {
-      return konvensjonStorbritanniaToggleEnabled ? (
+      return (
         <>
           <Mui.ListevelgerFlervalg
             muligeValg={MKV.KTObjects.begrunnelser.avslag_anmodning_begrunnelser}
@@ -282,27 +241,6 @@ export function Bestemmelser({
             />
           )}
         </>
-      ) : (
-        <Nav.Fieldset legend="Begrunnelse artikkel 16.1:">
-          <Mui.ListevelgerFlervalg
-            muligeValg={MKV.KTObjects.begrunnelser.avslag_anmodning_begrunnelser}
-            label="Legg til begrunnelse for avslag:"
-            tillatFritekst={false}
-            onChange={(event: ListevelgerFlervalgEvent) => handleEndreBegrunnelse(event, "art16_1_avslag")}
-            defaultElementer={unntaksvilkår.begrunnelseKoder}
-            disabled={!redigerbart}
-          />
-          {visFritekstfelt && (
-            <Nav.Textarea
-              id="art16_1_avslag"
-              label="Begrunnelse for avslag (fritekst):"
-              maxLength={255}
-              value={unntaksvilkår.begrunnelseFritekst || ""}
-              onChange={handleEndreFritekst}
-              readOnly={!redigerbart}
-            />
-          )}
-        </Nav.Fieldset>
       );
     }
     return null;
@@ -313,35 +251,23 @@ export function Bestemmelser({
       <Nav.Row>
         <Nav.Column xs="12">
           <Nav.RadioGroup
-            legend={
-              konvensjonStorbritanniaToggleEnabled
-                ? "Fyller bruker kriteriene for utsendingsbestemmelsen?"
-                : `Fyller bruker kriteriene for artikkel ${vilkaarNavn12}?`
-            }
+            legend="Fyller bruker kriteriene for utsendingsbestemmelsen?"
             onChange={handleEndreVedtakValg}
             defaultValue={vedtakValg}
             readOnly={!redigerbart}
             name="vedtakvalg"
           >
-            <Nav.Radio value={VedtakValg.JA_INNVILGE}>
-              {konvensjonStorbritanniaToggleEnabled ? "Ja, jeg vil innvilge søknaden" : "Ja"}
-            </Nav.Radio>
-            <Nav.Radio value={VedtakValg.NEI_ANMODNING_UNNTAK}>
-              {konvensjonStorbritanniaToggleEnabled
-                ? "Nei, jeg vil vurdere anmodning om unntak"
-                : "Nei, jeg vil vurdere artikkel 16.1"}
-            </Nav.Radio>
+            <Nav.Radio value={VedtakValg.JA_INNVILGE}>Ja, jeg vil innvilge søknaden</Nav.Radio>
+            <Nav.Radio value={VedtakValg.NEI_ANMODNING_UNNTAK}>Nei, jeg vil vurdere anmodning om unntak</Nav.Radio>
             <Nav.Radio value={VedtakValg.NEI_AVSLAG}>
-              {konvensjonStorbritanniaToggleEnabled
-                ? `Nei, jeg vil avslå søknaden etter artikkel ${vilkaarNavn12} og 16.1 (kun EØS-forordningen)`
-                : `Nei, jeg vil avslå søknaden etter artikkel ${vilkaarNavn12} og 16.1`}
+              {`Nei, jeg vil avslå søknaden etter artikkel ${vilkaarNavn12} og 16.1 (kun EØS-forordningen)`}
             </Nav.Radio>
           </Nav.RadioGroup>
         </Nav.Column>
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="12" md="10" lg="8">
-          {konvensjonStorbritanniaToggleEnabled && (innvilgelse || anmodningOmUnntak) && (
+          {(innvilgelse || anmodningOmUnntak) && (
             <Nav.Select
               label="Velg bestemmelse"
               value={bestemmelse}

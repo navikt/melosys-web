@@ -44,15 +44,14 @@ describe("VurderingArtikkel16Vedtak", () => {
   it("viser innvilgelse-komponent ved innvilgelse", () => {
     props.anmodningsperiodesvar.anmodningsperiodeSvarType = MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE;
     renderWithProviders(<WrappedArtikkel16Vedtak {...props} />);
-    const innvilgelseTekst = "Omfattet av norsk trygdelovgivning etter Fo 883/2004 Artikkel 16 nr. 1.";
+    const innvilgelseTekst = "Omfattet av norsk trygdelovgivning";
     expect(screen.getByText(innvilgelseTekst)).toBeInTheDocument();
   });
 
   it('viser "delvis innvilgelse"-komponent ved delvis innvilgelse', () => {
     props.anmodningsperiodesvar.anmodningsperiodeSvarType = MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE;
     renderWithProviders(<WrappedArtikkel16Vedtak {...props} />);
-    const delvisInnvilgelseTekst =
-      "Delvis innvilgelse - omfattet av norsk trygdelovgivning etter Fo 883/2004 Artikkel 16 nr. 1. i deler av søknadsperioden";
+    const delvisInnvilgelseTekst = "Delvis innvilgelse";
     expect(screen.getByText(delvisInnvilgelseTekst)).toBeInTheDocument();
   });
 

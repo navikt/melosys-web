@@ -30,8 +30,6 @@ import { RootState } from "AppTypes";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { kontrollOperations } from "../../../../ducks/kontroll";
 import { lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
-import { useFeatureToggle } from "../../../../featuretoggle";
-import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../../featuretoggle/toggleNavn";
 import EnkeltDato from "../../../../felleskomponenter/enkeltDato";
 import { VurderingYrkesaktivitetTyper, VurderingYrkesgruppeTyper } from "../../../../kodeverk/koder";
 
@@ -51,14 +49,6 @@ const {
   BESLUTNING_LOVVALG_NORGE,
 } = MKV.Koder.behandlinger.behandlingstema;
 const { LA_BUC_04, LA_BUC_05 } = EKV.Koder.buctyper.legislation;
-
-const finnLovvalgSomTerm = (lovvalgsbestemmelseKT?: KTObject, tilleggBestemmelseKT?: KTObject) => {
-  if (lovvalgsbestemmelseKT?.kode === FO_883_2004_ART11_3A && tilleggBestemmelseKT?.kode === FO_883_2004_ART11_4_1) {
-    return `${KV.objektTilTerm(tilleggBestemmelseKT)} og ${KV.objektTilTerm(lovvalgsbestemmelseKT)}`;
-  }
-
-  return KV.objektTilTerm(lovvalgsbestemmelseKT);
-};
 
 const finnSedMottakerLand = (
   arbeidsland: KTObject[],
@@ -159,7 +149,6 @@ function VurderingVedtak({
   const dispatch = useDispatch();
   const [vedtakPending, setVedtakPending] = useState(false);
   const [erBucAapen, setErBucAapen] = useState(true);
-  const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
   let oppdaterFørKontroll = true;
 
   const arbeidsland = useSelector(avklartefaktaSelectors.ArbeidslandKTSelector);
@@ -279,12 +268,7 @@ function VurderingVedtak({
   return (
     <div className="vedtak">
       <Nav.Heading level="1" className="stegvelgertittel">
-        {konvensjonStorbritanniaToggleEnabled
-          ? "Omfattet av norsk trygdelovgivning"
-          : `Omfattet av norsk trygdelovgivning etter ${finnLovvalgSomTerm(
-              lovvalgsbestemmelseKT,
-              tilleggBestemmelseKT,
-            )}`}
+        Omfattet av norsk trygdelovgivning
       </Nav.Heading>
       <div>
         <Nav.Row>

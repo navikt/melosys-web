@@ -9,8 +9,6 @@ import Dokumentliste, {
 } from "../../../../../felleskomponenter/dokumentliste";
 import { Periode } from "../../../../../services/api";
 import { FormValuesProps } from "../vurderingArtikkel16Vedtak";
-import { useFeatureToggle } from "../../../../../featuretoggle";
-import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../../../featuretoggle/toggleNavn";
 import DatoOgBestemmelse from "./datoOgBestemmelse";
 import VedtakBegrunnelser from "./vedtakBegrunnelser";
 import * as Api from "../../../../../services/api";
@@ -49,7 +47,6 @@ function DelvisInnvilgelse({
   erStorbrittaniaArt18_1Bestemmelse,
   erUtsendt,
 }: DelvisInnvilgelseProps) {
-  const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
   const pdfDokumenter: (BrevDokumentMetadataType | SedDokumentMetadataType)[] = [];
   const saksnummer = useSelector(fagsakSelectors.SaksnummerSelector) as string;
 
@@ -63,7 +60,7 @@ function DelvisInnvilgelse({
     useSelector(avklartefaktaSelectors.YrkesaktivitetSelector) ===
       VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE || erSelvstendigVirksomhet;
 
-  if (erUtsendt && erStorbrittaniaArt18_1Bestemmelse && konvensjonStorbritanniaToggleEnabled) {
+  if (erUtsendt && erStorbrittaniaArt18_1Bestemmelse) {
     pdfDokumenter.push({
       dokumentData: {
         produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_EFTA_STORBRITANNIA,
@@ -111,7 +108,7 @@ function DelvisInnvilgelse({
     });
 
     if (visOrienteringsbrevArbeidsgiver) {
-      if (konvensjonStorbritanniaToggleEnabled && !erSelvstendigNaeringsdrivende) {
+      if (!erSelvstendigNaeringsdrivende) {
         pdfDokumenter.push({
           dokumentData: {
             produserbardokument: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_TIL_ARBEIDSGIVER_OM_VEDTAK,
@@ -133,9 +130,7 @@ function DelvisInnvilgelse({
   return (
     <>
       <Nav.Heading level="1" className="stegvelgertittel">
-        {konvensjonStorbritanniaToggleEnabled
-          ? "Delvis innvilgelse"
-          : "Delvis innvilgelse - omfattet av norsk trygdelovgivning etter Fo 883/2004 Artikkel 16 nr. 1. i deler av søknadsperioden"}
+        Delvis innvilgelse
       </Nav.Heading>
       <DatoOgBestemmelse fomDato={gjeldendePeriode.fom} tomDato={gjeldendePeriode.tom} />
       <Nav.Row>
