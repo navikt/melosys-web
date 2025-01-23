@@ -88,7 +88,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     mode: "onChange",
     defaultValues: {
       skatteforholdsperioder: [{}],
-      inntektskilder: [{}],
+      inntektskilder: [],
     } as FieldValue<FormValuesProps>,
   });
   const {
@@ -135,12 +135,23 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
       setHarEndretInnvilgetMedlemskapsperiode(true);
     }
 
-    resetSkatteforholdsperioder([{ ...formattedDefaultPeriode() }]);
+    const formattedPeriode = formattedDefaultPeriode();
+
+    setMellomLagringInntektskilder([]);
+    resetInntektskilder([{ ...formattedPeriode }]);
+    resetSkatteforholdsperioder([{ ...formattedPeriode }]);
   }, [innvilgetMedlemskapsperiode]);
 
+  const inntektskilder = watch("inntektskilder");
+  const [mellomLagringInntektskilder, setMellomLagringInntektskilder] = useState<Inntektskilde[]>([]);
   useEffect(() => {
-    if (skalViseInntektskilder) {
+    if (!skalViseInntektskilder) {
+      setMellomLagringInntektskilder([...inntektskilder]);
       resetInntektskilder([{ ...formattedDefaultPeriode() }]);
+    } else {
+      const defaultInntektskilder =
+        mellomLagringInntektskilder.length > 0 ? mellomLagringInntektskilder : [{ ...formattedDefaultPeriode() }];
+      resetInntektskilder(defaultInntektskilder);
     }
   }, [skalViseInntektskilder]);
 
