@@ -16,8 +16,8 @@ import { NyBehandlingForTidligereAarsavregningMelding } from "../../../../felles
 
 import { behandlingsresultatOperations } from "../../../../ducks/behandlingsresultat";
 import { Medlemskapsperiode } from "../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
-import { AarsavregningMedGrunnlag } from "./komponenter/aarsavregningMedGrunnlag/aarsavregningMedGrunnlag";
-import { AarsavregningUtenGrunnlag } from "./komponenter/aarsavregningUtenGrunnlag/aarsavregningUtenGrunnlag";
+import { AarsavregningMedGrunnlag } from "./aarsavregningMedGrunnlag/aarsavregningMedGrunnlag";
+import { AarsavregningUtenGrunnlag } from "./aarsavregningUtenGrunnlag/aarsavregningUtenGrunnlag";
 
 interface Props {
   bekreft: () => void;
