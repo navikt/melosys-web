@@ -9,7 +9,6 @@ import Dokumentliste, {
   SedDokumentMetadataType,
 } from "../../../../../felleskomponenter/dokumentliste";
 import { FormValuesProps } from "../vurderingArtikkel16Vedtak";
-import { useFeatureToggle } from "../../../../../featuretoggle";
 import DatoOgBestemmelse from "./datoOgBestemmelse";
 import * as Api from "../../../../../services/api";
 import { useSelector } from "react-redux";
