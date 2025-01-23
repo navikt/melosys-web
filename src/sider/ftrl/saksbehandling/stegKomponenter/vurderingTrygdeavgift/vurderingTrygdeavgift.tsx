@@ -105,6 +105,8 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     replace: resetInntektskilder,
   } = useFieldArray<FieldArrayProps, "inntektskilder", "id">({ control, name: "inntektskilder" });
   const formValues = watch();
+  const inntektskilderWatch = watch("inntektskilder");
+  const [mellomLagringInntektskilder, setMellomLagringInntektskilder] = useState<Inntektskilde[]>([]);
 
   const aktivFeilmeldingType = finnAktivFeilmelding(
     formValues?.inntektskilder,
@@ -142,11 +144,9 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     resetSkatteforholdsperioder([{ ...formattedPeriode }]);
   }, [innvilgetMedlemskapsperiode]);
 
-  const inntektskilder = watch("inntektskilder");
-  const [mellomLagringInntektskilder, setMellomLagringInntektskilder] = useState<Inntektskilde[]>([]);
   useEffect(() => {
     if (!skalViseInntektskilder) {
-      setMellomLagringInntektskilder([...inntektskilder]);
+      setMellomLagringInntektskilder([...inntektskilderWatch]);
       resetInntektskilder([{ ...formattedDefaultPeriode() }]);
     } else {
       const defaultInntektskilder =
