@@ -1,8 +1,6 @@
 import MKV from "../../../../../melosyskodeverk";
 import { Fragment } from "react";
 import Begrunnelser from "../../../../../felleskomponenter/begrunnelser";
-import { useFeatureToggle } from "../../../../../featuretoggle";
-import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../../../featuretoggle/toggleNavn";
 import { useSelector } from "react-redux";
 import { vilkarSelectors } from "../../../../../ducks/vilkar";
 
@@ -11,7 +9,6 @@ interface VedtakBegrunnelserProps {
 }
 
 export function VedtakBegrunnelser({ anmodningsperiodeSvarType }: VedtakBegrunnelserProps) {
-  const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
   const vilkarBegrunnelser = useSelector(vilkarSelectors.VilkarBegrunnelserSelector);
   const utsendtArbeidstakerBegrunnelser = useSelector(vilkarSelectors.UtsendingsvilkårArbeidstakerBegrunnelserSelector);
   const utsendtNaeringsdrivendeBegrunnelser = useSelector(
@@ -29,11 +26,7 @@ export function VedtakBegrunnelser({ anmodningsperiodeSvarType }: VedtakBegrunne
     <>
       {utsendtArbeidstakerBegrunnelser.length > 0 && (
         <Begrunnelser
-          label={
-            konvensjonStorbritanniaToggleEnabled
-              ? "Søkeren fyller ikke kriteriene for utsending av arbeidstaker"
-              : "Søkeren fyller ikke kriteriene for artikkel 12 nr. 1."
-          }
+          label="Søkeren fyller ikke kriteriene for utsending av arbeidstaker"
           valgteBegrunnelser={[...utsendtArbeidstakerBegrunnelser, ...vilkarBegrunnelser]}
           muligeBegrunnelser={[
             ...MKV.KTObjects.begrunnelser.utsendt_arbeidstaker_begrunnelser,
@@ -43,11 +36,7 @@ export function VedtakBegrunnelser({ anmodningsperiodeSvarType }: VedtakBegrunne
       )}
       {utsendtNaeringsdrivendeBegrunnelser.length > 0 && (
         <Begrunnelser
-          label={
-            konvensjonStorbritanniaToggleEnabled
-              ? "Søkeren fyller ikke kriteriene for utsending av næringsdrivende"
-              : "Søkeren fyller ikke kriteriene for artikkel 12 nr. 2."
-          }
+          label="Søkeren fyller ikke kriteriene for utsending av næringsdrivende"
           valgteBegrunnelser={[...utsendtNaeringsdrivendeBegrunnelser, ...vilkarBegrunnelser]}
           muligeBegrunnelser={[
             ...MKV.KTObjects.begrunnelser.utsendt_naeringsdrivende_begrunnelser,
@@ -55,17 +44,12 @@ export function VedtakBegrunnelser({ anmodningsperiodeSvarType }: VedtakBegrunne
           ]}
         />
       )}
-      {!konvensjonStorbritanniaToggleEnabled ||
-        (anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.AVSLAG && (
-          <Begrunnelser
-            label={
-              konvensjonStorbritanniaToggleEnabled
-                ? "Søkeren fyller ikke kriteriene for unntak"
-                : "Søkeren fyller ikke kriteriene for artikkel 16 nr. 1."
-            }
-            fritekst="Utenlandske trygdemyndigheter har avslått anmodningen om unntak"
-          />
-        ))}
+      {anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.AVSLAG && (
+        <Begrunnelser
+          label="Søkeren fyller ikke kriteriene for unntak"
+          fritekst="Utenlandske trygdemyndigheter har avslått anmodningen om unntak"
+        />
+      )}
     </>
   );
 }
