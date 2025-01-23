@@ -17,10 +17,7 @@ import {
 import { Vilkaar } from "../../../../services/modules/vilkar";
 import { BOOLSK_STRING } from "../../../../constants";
 import { useFeatureToggle } from "../../../../featuretoggle";
-import {
-  MELOSYS_ARBEID_KUN_NORGE,
-  MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA,
-} from "../../../../featuretoggle/toggleNavn";
+import { MELOSYS_ARBEID_KUN_NORGE } from "../../../../featuretoggle/toggleNavn";
 import { useSelector } from "react-redux";
 import { lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
 import LandInformasjon from "./landInformasjon";
