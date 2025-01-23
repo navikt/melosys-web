@@ -21,8 +21,6 @@ import Dokumentliste from "../../../felleskomponenter/dokumentliste";
 
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import VurderingAvslagArtikkel12Og16Schema from "./vurderingAvslag12_x_og_16Schema";
-import { useFeatureToggle } from "../../../featuretoggle";
-import { MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA } from "../../../featuretoggle/toggleNavn";
 import { VurderingYrkesaktivitetTyper } from "../../../kodeverk/koder";
 import { avklartefaktaSelectors } from "../../../ducks/avklartefakta";
 
@@ -56,7 +54,6 @@ function VurderingAvslag12_x_og_16({
   aktivtSteg,
 }) {
   const [vedtakPending, setVedtakPending] = useState(false);
-  const konvensjonStorbritanniaToggleEnabled = useFeatureToggle(MELOSYS_KONVENSJON_EFTA_LAND_OG_STORBRITANNIA);
   const erSelvstendigNaeringsdrivende =
     useSelector(avklartefaktaSelectors.YrkesaktivitetSelector) ===
     VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE;
@@ -75,7 +72,7 @@ function VurderingAvslag12_x_og_16({
   ];
 
   const { kopiTilArbeidsgiver, vedtakstype } = formValues;
-  if (konvensjonStorbritanniaToggleEnabled && !erNyVurdering && kopiTilArbeidsgiver && !erSelvstendigNaeringsdrivende) {
+  if (!erNyVurdering && kopiTilArbeidsgiver && !erSelvstendigNaeringsdrivende) {
     pdfDokumenter.push({
       navn: "Orientering til arbeidsgiver om vedtak",
       dokumentData: {
