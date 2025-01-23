@@ -1,37 +1,37 @@
-import * as Api from "../../../../../services/api";
-import MedlemskapsPerioderTabell from "../komponenter/medlemskapsPerioderTabell";
-import "../vurderingAarsavregning.css";
+import * as Api from "../../../../../../services/api";
+import MedlemskapsPerioderTabell from "../medlemskapsPerioderTabell";
+import "../../vurderingAarsavregningInngang.css";
 import { useCallback, useEffect, useState } from "react";
 import {
   AarsavregningResponse,
   Trygdeavgiftsgrunnlag,
-} from "../../../../../services/modules/aarsavregning/aarsavregning";
+} from "../../../../../../services/modules/aarsavregning/aarsavregning";
 import { useDispatch, useSelector } from "react-redux";
-import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
-import * as Nav from "../../../../../navFrontend";
-import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
+import { behandlingerSelectors } from "../../../../../../ducks/behandlinger";
+import * as Nav from "../../../../../../navFrontend";
+import { redigerbartSelectors } from "../../../../../../ducks/redigerbart";
 import { FieldValue, useFieldArray, useForm } from "react-hook-form";
 import {
   FieldArrayProps,
   FormValuesProps,
   Inntektskilde,
   Skatteforhold,
-} from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
+} from "../../../../../../felleskomponenter/trygdeavgift/komponenter/types";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as Utils from "../../../../../utils";
-import { feilMeldingBlokkerer, finnAktivFeilmelding } from "../meldinger";
-import { erBrukerSkattepliktigIHelePerioden } from "../../../../ftrl/saksbehandling/stegKomponenter/vurderingTrygdeavgift/vurderingTrygdeavgiftSchema";
-import MKV from "../../../../../melosyskodeverk";
-import { SumArsavregningTabell } from "../komponenter/sumArsavregningTabell";
-import { BeregnetTrygdeavgiftDetaljer } from "../komponenter/beregnetTrygdeavgiftDetaljer";
-import { OK } from "../../../../../ducks/aarsavregning/types";
-import TidligereGrunnlagsoversikt from "../komponenter/tidligereGrunnlagsoversikt";
-import { sorterEtterISOFomDato } from "../../../../../utils/dato";
-import GrunnlagsopplysningerSkjema from "../komponenter/grunnlagsopplysningerSkjema";
+import * as Utils from "../../../../../../utils";
+import { feilMeldingBlokkerer, finnAktivFeilmelding } from "../../meldinger";
+import { erBrukerSkattepliktigIHelePerioden } from "../../../../../ftrl/saksbehandling/stegKomponenter/vurderingTrygdeavgift/vurderingTrygdeavgiftSchema";
+import MKV from "../../../../../../melosyskodeverk";
+import { SumArsavregningTabell } from "../sumArsavregningTabell";
+import { BeregnetTrygdeavgiftDetaljer } from "../beregnetTrygdeavgiftDetaljer";
+import { OK } from "../../../../../../ducks/aarsavregning/types";
+import TidligereGrunnlagsoversikt from "../tidligereGrunnlagsoversikt";
+import { sorterEtterISOFomDato } from "../../../../../../utils/dato";
+import GrunnlagsopplysningerSkjema from "../grunnlagsopplysningerSkjema";
 
-import { behandlingsresultatSelectors } from "../../../../../ducks/behandlingsresultat";
-import { FeilmeldingOppsummering } from "../feilmeldingOppsummering";
-import { Medlemskapsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import { behandlingsresultatSelectors } from "../../../../../../ducks/behandlingsresultat";
+import { FeilmeldingOppsummering } from "../../feilmeldingOppsummering";
+import { Medlemskapsperiode } from "../../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import aarsavregningMedGrunnlagSchema from "./aarsavregningMedGrunnlagSchema";
 
 interface Props {

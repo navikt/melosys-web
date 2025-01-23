@@ -1,8 +1,8 @@
 import { array, lazy, object, string, boolean } from "yup";
-import MKV from "../../../../../melosyskodeverk";
-import * as KV from "../../../../../kodeverk";
-import * as Utils from "../../../../../utils";
-import { BOOLSK_STRING } from "../../../../../constants";
+import MKV from "../../../../../../melosyskodeverk";
+import * as KV from "../../../../../../kodeverk";
+import * as Utils from "../../../../../../utils";
+import { BOOLSK_STRING } from "../../../../../../constants";
 
 const { MAA_FYLLES_UT } = KV.Feilmeldinger;
 const {
