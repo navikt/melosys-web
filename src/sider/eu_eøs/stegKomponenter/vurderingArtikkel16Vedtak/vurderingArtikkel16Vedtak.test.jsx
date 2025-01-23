@@ -44,7 +44,7 @@ describe("VurderingArtikkel16Vedtak", () => {
   it("viser innvilgelse-komponent ved innvilgelse", () => {
     props.anmodningsperiodesvar.anmodningsperiodeSvarType = MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE;
     renderWithProviders(<WrappedArtikkel16Vedtak {...props} />);
-    const innvilgelseTekst = "Omfattet av norsk trygdelovgivning etter Fo 883/2004 Artikkel 16 nr. 1.";
+    const innvilgelseTekst = "Omfattet av norsk trygdelovgivning";
     expect(screen.getByText(innvilgelseTekst)).toBeInTheDocument();
   });
 
