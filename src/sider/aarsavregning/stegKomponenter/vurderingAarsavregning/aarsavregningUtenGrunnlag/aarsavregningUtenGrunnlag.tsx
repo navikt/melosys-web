@@ -1,7 +1,6 @@
 import * as Api from "../../../../../services/api";
-import MedlemskapsPerioderTabell from "../komponenter/medlemskapsPerioderTabell";
 import "../vurderingAarsavregning.css";
-import { ChangeEvent, useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   AarsavregningResponse,
   Trygdeavgiftsgrunnlag,
@@ -9,7 +8,6 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import * as Nav from "../../../../../navFrontend";
-import LabelMedHjelpetekst from "../../../../../felleskomponenter/labelMedHjelpetekst";
 import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 import { TidligereGrunnlagsopplysningerFinnesIkke } from "../komponenter/tidligereGrunnlagsopplysningerFinnesIkke";
 import { FieldValue, useFieldArray, useForm } from "react-hook-form";
@@ -30,7 +28,7 @@ import { OK } from "../../../../../ducks/aarsavregning/types";
 import { sorterEtterISOFomDato } from "../../../../../utils/dato";
 import GrunnlagsopplysningerSkjema from "../komponenter/grunnlagsopplysningerSkjema";
 
-import { behandlingsresultatOperations, behandlingsresultatSelectors } from "../../../../../ducks/behandlingsresultat";
+import { behandlingsresultatSelectors } from "../../../../../ducks/behandlingsresultat";
 
 import { medlemskapsperioderOperations, medlemskapsperioderSelectors } from "../../../../../ducks/medlemskapsperioder";
 import { MedlemskapsperiodeProp } from "../../../../ftrl/saksbehandling/stegKomponenter/vurderingPeriode/komponenter/types";
@@ -123,12 +121,10 @@ const lagInnvilgetMedlemskapsPeriode = (medlemskapsperioder?: Medlemskapsperiode
   };
 };
 
-// TODO: Boolean for årsavregningstype mangler. Automatisk opprettet årsavregning skal ha år tilknyttet og dermed skal årvelger skjules
 export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
   const [valgtÅr, setValgtÅr] = useState<number | null>(null);
-  const [initieltÅr, setInitieltÅr] = useState<number | null>(null);
-  const [feil, setFeil] = useState<undefined | string>(undefined);
-  const [formBekreftet, setFormBekreftet] = useState(false);
+  const [beregningError, setBeregningError] = useState<undefined | string>(undefined);
+  const [brukerHarBekreftet, setBrukerHarBekreftet] = useState(false);
 
   const [aarsavregningResponse, setAarsavregningResponse] = useState<AarsavregningResponse | undefined>(undefined);
   const [bestemmelser, setBestemmelser] = useState<[]>([]);
@@ -190,7 +186,6 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
           setAarsavregningResponse(res);
           // Benyttes for innhenting av saksopplysninger ifm. årsavregningsbehandlinger
           dispatch({ type: OK, data: res });
-          setInitieltÅr(res.aar);
           setValgtÅr(res.aar);
           setValue("totaltForskuddsvisFakturert", res.avregning?.tidligereFakturertBeloep);
 
@@ -234,10 +229,10 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
   useEffect(() => {
     if (redigerbart && aarsavregningResponse?.nyttGrunnlag) {
       if (aarsavregningResponse.nyttGrunnlag?.avgift.totalAvgift !== aarsavregningResponse.avregning?.nyttTotalbeloep) {
-        oppdaterNyttTotalbeloep(aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift).then(() =>
-          Api.Aarsavregning.hentAarsavregning(behandlingID, aarsavregningID).then((response: AarsavregningResponse) => {
+        oppdaterNyttTotalbeloep(aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift).then(
+          (response: AarsavregningResponse) => {
             setAarsavregningResponse(response);
-          }),
+          },
         );
       }
     }
@@ -276,7 +271,6 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
     append: medlemskapsperioderAppend,
     remove: medlemskapsperioderRemove,
     update: medlemskapsperioderUpdate,
-    replace: resetMedlemskapsperioder,
   } = useFieldArray<FieldArrayProps, "medlemskapsperioder", "id">({ control, name: "medlemskapsperioder" });
 
   const {
@@ -297,8 +291,8 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
   const formValues = watch();
 
   useEffect(() => {
-    if (formBekreftet && Object.keys(formErrors).length === 0) {
-      setFormBekreftet(false);
+    if (brukerHarBekreftet && Object.keys(formErrors).length === 0) {
+      setBrukerHarBekreftet(false);
     }
   }, [formValues]);
 
@@ -328,7 +322,7 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
 
   const beregnTrygdeavgiftsperioder = useCallback(
     (formVerdier: FieldValue<FormValuesProps>) => {
-      setFeil(undefined);
+      setBeregningError(undefined);
       const erBrukerPliktigMedlemOgSkattepliktig =
         medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(formVerdier.skatteforholdsperioder);
       Api.Trygdeavgift.beregnTrygdeavgiftsperioder(behandlingID, {
@@ -352,11 +346,11 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
           Api.Aarsavregning.hentAarsavregning(behandlingID, aarsavregningID).then((response: AarsavregningResponse) => {
             setAarsavregningResponse(response);
           });
-          setFeil(undefined);
+          setBeregningError(undefined);
         })
-        .catch((error) => setFeil(mapFeilmelding(error)));
+        .catch((error) => setBeregningError(mapFeilmelding(error)));
     },
-    [behandlingID, medlemskapsTypeErPliktig, setFeil, setAarsavregningResponse, aarsavregningID],
+    [behandlingID, medlemskapsTypeErPliktig, setBeregningError, setAarsavregningResponse, aarsavregningID],
   );
 
   const debounceBeregnTrygdeavgiftsperioder = useCallback(
@@ -375,7 +369,7 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
     if (redigerbart && !isValidating && formIsValid && aarsavregningID && !feilMeldingBlokkerer(aktivFeilmeldingType)) {
       debounceBeregnTrygdeavgiftsperioder(formValues);
     }
-  }, [isValidating, formIsValid, aarsavregningID]);
+  }, [isValidating, aarsavregningID]);
 
   const stegErGyldig = Boolean(formIsValid && aarsavregningResponse?.nyttGrunnlag);
 
@@ -384,7 +378,7 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
   }, [stegErGyldig]);
 
   const bekreftOnClick = () => {
-    setFormBekreftet(true);
+    setBrukerHarBekreftet(true);
     if (stegErGyldig) {
       bekreft();
     }
@@ -507,11 +501,11 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
         />
       )}
 
-      {formBekreftet && <FeilmeldingOppsummering errors={formErrors} />}
+      {brukerHarBekreftet && <FeilmeldingOppsummering errors={formErrors} />}
 
-      {feil && (
+      {beregningError && (
         <Nav.Alert variant="error" className="alertstripe_feilmelding">
-          {feil}
+          {beregningError}
         </Nav.Alert>
       )}
 

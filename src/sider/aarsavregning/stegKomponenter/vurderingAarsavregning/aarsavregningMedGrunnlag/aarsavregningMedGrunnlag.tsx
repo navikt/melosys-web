@@ -30,7 +30,6 @@ import { sorterEtterISOFomDato } from "../../../../../utils/dato";
 import GrunnlagsopplysningerSkjema from "../komponenter/grunnlagsopplysningerSkjema";
 
 import { behandlingsresultatSelectors } from "../../../../../ducks/behandlingsresultat";
-import { SkatteforholdDto } from "../../../../../services/modules/trygdeavgift";
 import { FeilmeldingOppsummering } from "../feilmeldingOppsummering";
 import { Medlemskapsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import aarsavregningMedGrunnlagSchema from "./aarsavregningMedGrunnlagSchema";
@@ -40,17 +39,6 @@ interface Props {
   aktivtSteg: boolean;
   oppdaterStatus: (isValid: boolean) => void;
 }
-
-const mapTilSkatteforholdProps = (skatteforhold?: SkatteforholdDto[]) => {
-  if (skatteforhold !== undefined) {
-    return skatteforhold?.map((forhold) => ({
-      fomDato: Utils.dato.formatterDatoTilNorsk(forhold.fomDato),
-      tomDato: Utils.dato.formatterDatoTilNorsk(forhold.tomDato),
-      skatteplikttype: forhold.skatteplikttype,
-    }));
-  }
-  return [{}];
-};
 
 const mapFeilmelding = (error: any) => {
   const feilmelding = "Finner ikke trygdeavgiftssats. Melosys har ikke satser for årene før 2014.";
@@ -135,7 +123,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
           setAarsavregningResponse(res);
           // Benyttes for innhenting av saksopplysninger ifm. årsavregningsbehandlinger
           dispatch({ type: OK, data: res });
-          setErAvvik(res.nyttGrunnlag === null ? undefined : res.nyttGrunnlag !== null);
+          setErAvvik(res.nyttGrunnlag === null ? undefined : true);
 
           if (res.avvikFunnet && res?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag) {
             setSkjemaverdierFraTrygdeavgiftsgrunnlag(
@@ -166,7 +154,9 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
   useEffect(() => {
     if (redigerbart && aarsavregningResponse?.nyttGrunnlag) {
       if (aarsavregningResponse.nyttGrunnlag?.avgift.totalAvgift !== aarsavregningResponse.avregning?.nyttTotalbeloep) {
-        oppdaterNyttTotalbeloep(aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift);
+        oppdaterNyttTotalbeloep(aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift).then((res: AarsavregningResponse) => {
+          setAarsavregningResponse(res);
+        });
       }
     }
   }, [aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift]);
@@ -189,9 +179,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
     },
     mode: "onChange",
     defaultValues: {
-      skatteforholdsperioder: mapTilSkatteforholdProps(
-        aarsavregningResponse?.nyttGrunnlag?.trygdeavgiftsgrunnlag.skatteforholdsperioder,
-      ),
+      skatteforholdsperioder: [{}],
       inntektskilder: [{}],
     } as FieldValue<FormValuesProps>,
   });
@@ -288,11 +276,9 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
       Api.Trygdeavgift.slettTrygdeavgiftsperioder(behandlingID).then(() => {
         resetSkatteforholdsperioder([]);
         resetInntektskilder([]);
-        oppdaterNyttTotalbeloep(aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift.totalAvgift).then(() => {
-          Api.Aarsavregning.hentAarsavregning(behandlingID, aarsavregningID).then((response: AarsavregningResponse) => {
-            setAarsavregningResponse(response);
-            setSkjemaverdierFraTrygdeavgiftsgrunnlag(response.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag);
-          });
+        oppdaterNyttTotalbeloep(aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift.totalAvgift).then((res: AarsavregningResponse) => {
+            setAarsavregningResponse(res);
+            setSkjemaverdierFraTrygdeavgiftsgrunnlag(res.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag);
         });
       });
     } else if (aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag) {
