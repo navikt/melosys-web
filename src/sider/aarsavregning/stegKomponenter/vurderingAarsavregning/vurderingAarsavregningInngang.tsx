@@ -70,10 +70,15 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
   };
 
   useEffect(() => {
-    Api.Aarsavregning.hentAarsavregning(behandlingID).then((aarsavregning) => {
-      setInitieltÅr(aarsavregning.aar);
-      dispatch({ type: OK, data: aarsavregning });
-      utledGrunnlagstypeForAarsavregning(aarsavregning);
+    Api.Aarsavregning.hentFiltrertAarsavregningList(saksnummer).then((res) => {
+      if (res.length) {
+        // Kan kun ha 1 årsavregningsbehandling som ikke er fastsatt
+        Api.Aarsavregning.hentAarsavregning(behandlingID).then((aarsavregning) => {
+          setInitieltÅr(aarsavregning.aar);
+          dispatch({ type: OK, data: aarsavregning });
+          utledGrunnlagstypeForAarsavregning(aarsavregning);
+        });
+      }
     });
   }, []);
 
