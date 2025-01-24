@@ -81,11 +81,9 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   const formValues = watch();
 
   const fetchAvregningsData = () => {
-    return Api.Aarsavregning.hentAarsavregning(behandlingID).then(
-      (response: AarsavregningResponse) => {
-        setLagretAarsavregning(response);
-      },
-    );
+    return Api.Aarsavregning.hentAarsavregning(behandlingID).then((response: AarsavregningResponse) => {
+      setLagretAarsavregning(response);
+    });
   };
 
   const hentMuligeMottakere = async () => {
