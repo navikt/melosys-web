@@ -246,6 +246,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
           (res: AarsavregningResponse) => {
             setAarsavregningResponse(res);
             setSkjemaverdierFraTrygdeavgiftsgrunnlag(res.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag);
+            debounceBeregnTrygdeavgiftsperioder(formValues);
           },
         );
       });
