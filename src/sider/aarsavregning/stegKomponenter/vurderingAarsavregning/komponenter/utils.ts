@@ -55,7 +55,7 @@ export function beregnTrygdeavgiftsperioder(
       : [],
   })
     .then(() => {
-      Api.Aarsavregning.hentAarsavregning(behandlingID, aarsavregningID).then((response: AarsavregningResponse) => {
+      Api.Aarsavregning.hentAarsavregning(behandlingID).then((response: AarsavregningResponse) => {
         setAarsavregningResponse(response);
       });
       setBeregningError(undefined);

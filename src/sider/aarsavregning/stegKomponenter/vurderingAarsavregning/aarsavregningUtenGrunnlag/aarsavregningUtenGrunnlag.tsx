@@ -176,8 +176,8 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
   useEffect(() => {
     dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(behandlingID));
     trigger("medlemskapsperioder").then((isValid) => setVisLeggTilMedlemskapsperioder(isValid));
-    if (behandlingID && aarsavregningID) {
-      Api.Aarsavregning.hentAarsavregning(behandlingID, aarsavregningID)
+    if (behandlingID) {
+      Api.Aarsavregning.hentAarsavregning(behandlingID)
         .then((res) => {
           setAarsavregningResponse(res);
           // Benyttes for innhenting av saksopplysninger ifm. årsavregningsbehandlinger
