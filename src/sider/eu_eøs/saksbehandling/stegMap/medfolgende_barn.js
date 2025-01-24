@@ -15,16 +15,8 @@ class VesentligVirksomhet extends Steg {
       propsLight.avklartefakta,
     );
 
-    const art12_1 = hentVilkar(MKV.Koder.vilkaar.FO_883_2004_ART12_1, propsLight.vilkar);
-    const art12_2 = hentVilkar(MKV.Koder.vilkaar.FO_883_2004_ART12_2, propsLight.vilkar);
-    const art16_1 = hentVilkar(MKV.Koder.vilkaar.FO_883_2004_ART16_1, propsLight.vilkar);
-
-    const utsendingsvilkårOppfylt = propsLight.konvensjonStorbritanniaToggleEnabled
-      ? propsLight.utsendingsvilkår?.oppfylt
-      : art12_1.oppfylt || art12_2.oppfylt;
-    const unntaksvilkårOppfylt = propsLight.konvensjonStorbritanniaToggleEnabled
-      ? propsLight.unntaksvilkår?.oppfylt
-      : art16_1.oppfylt;
+    const utsendingsvilkårOppfylt = propsLight.utsendingsvilkår?.oppfylt;
+    const unntaksvilkårOppfylt = propsLight.unntaksvilkår?.oppfylt;
 
     const harAvklaring = this.harAvklaring(vurderingLovvalgBarnFakta, propsLight.medfolgendeBarn);
 

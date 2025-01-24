@@ -91,28 +91,6 @@ const byggLovvalgsperiodeArtikkel1142eller1342 = (
   ];
 };
 
-const byggLovvalgsperiodeArtikkel1142 = (stegState: PerioderStegState, reduxState: RootState) => {
-  const periode = mottatteOpplysningerSelectors.PeriodeSelector(reduxState);
-  const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
-  const unntakFraBestemmelse = stegState.unntakfrabestemmelse;
-
-  return [
-    {
-      fomDato: periode.fom,
-      tomDato: periode.tom,
-      lovvalgsbestemmelse: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_4_2,
-      medlemskapsperiodeID: medlemskapsperiodeID || null,
-      tilleggBestemmelse: stegState.tilleggbestemmelse || null,
-      unntakFraBestemmelse: unntakFraBestemmelse || null,
-      unntakFraLovvalgsland: null,
-      innvilgelsesResultat: MKV.Koder.innvilgelsesResultat.INNVILGET,
-      lovvalgsland: MKV.Koder.landkoder.NO,
-      trygdeDekning: MKV.Koder.trygdedekninger.FULL_DEKNING_EOSFO,
-      medlemskapstype: MKV.Koder.medlemskapstyper.PLIKTIG,
-    },
-  ];
-};
-
 const byggLovvalgsperiodeArtikkelUnntak = (reduxState: RootState): Lovvalgsperiode[] => {
   const erAnmodningsperiodeSendtUtland =
     anmodningsperioderSelectors.AnmodningsperioderErSendtUtlandetSelector(reduxState);

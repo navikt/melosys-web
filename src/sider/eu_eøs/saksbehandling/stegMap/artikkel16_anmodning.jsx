@@ -13,9 +13,7 @@ const { UNDER_BEHANDLING, AVSLUTTET, SVAR_ANMODNING_MOTTATT } = MKV.Koder.behand
 class Artikkel16Anmodning extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
-
-    const art16_1 = hentVilkar(MKV.Koder.vilkaar.FO_883_2004_ART16_1, propsLight.vilkar);
-    const unntaksvilkår = propsLight.konvensjonStorbritanniaToggleEnabled ? propsLight.unntaksvilkår : art16_1;
+    const { unntaksvilkår } = propsLight;
 
     this.kriterier = [
       {
@@ -24,7 +22,7 @@ class Artikkel16Anmodning extends Steg {
       },
     ];
     this.id = STEG.ARTIKKEL_16_ANMODNING;
-    this.tittel = propsLight.konvensjonStorbritanniaToggleEnabled ? "Anmodning om unntak" : "Artikkel 16.1";
+    this.tittel = "Anmodning om unntak";
     this.komponent = VurderingArtikkel16Anmodning;
     this.samleRelevanteData = (_propsLight) => ({
       redigerbart: _propsLight.generiskStegRedigerbart,
@@ -87,14 +85,11 @@ class Artikkel16Anmodning extends Steg {
     );
   }
 
-  static harAvklaring({ anmodningsperioder, vilkar, unntaksvilkår, konvensjonStorbritanniaToggleEnabled }) {
+  static harAvklaring({ anmodningsperioder, vilkar, unntaksvilkår }) {
     const unntakFraBestemmelseErSatt = anmodningsperioder?.some(
       (anmodningsperiode) => anmodningsperiode.unntakFraBestemmelse,
     );
-    const minstEnBegrunnelseErValgt = konvensjonStorbritanniaToggleEnabled
-      ? !Utils._isEmpty(unntaksvilkår?.begrunnelseKoder)
-      : hentBegrunnelser(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1, vilkar)
-          .length > 0;
+    const minstEnBegrunnelseErValgt = !Utils._isEmpty(unntaksvilkår?.begrunnelseKoder);
 
     return unntakFraBestemmelseErSatt && minstEnBegrunnelseErValgt;
   }
