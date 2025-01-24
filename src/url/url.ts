@@ -135,6 +135,13 @@ export const harIkkeYrkesaktivFlyt = (sakstype: string, behandlingstema: string)
   return sakstype !== FTRL && behandlingstema === MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV;
 };
 
+export const skalViseFullmektigFørPeriodeOgLand = (behandlingstema: string) => {
+  if (behandlingstema === MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV) {
+    return true;
+  }
+  return false;
+};
+
 export const skalViseIngenFlyt = (
   sakstype: string,
   sakstema: string,

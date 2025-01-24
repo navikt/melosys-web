@@ -5,7 +5,7 @@ import { RootState } from "AppTypes";
 import MKV, { MKVUtils } from "../../melosyskodeverk";
 import * as Nav from "../../navFrontend";
 import * as Utils from "../../utils";
-import { skalViseIngenFlyt } from "../../url";
+import { skalViseIngenFlyt, skalViseFullmektigFørPeriodeOgLand } from "../../url";
 import Sidemeny from "../sidemeny";
 
 import { mottatteOpplysningerSelectors } from "../../ducks/mottatteOpplysninger";
@@ -71,6 +71,13 @@ export function Menypanel({
     endreFokus,
   };
 
+  const visMenypanel =
+    (sakstype === MKV.Koder.sakstyper.EU_EOS &&
+      behandlingstema !== MKV.Koder.behandlinger.behandlingstema.A1_ANMODNING_OM_UNNTAK_PAPIR &&
+      behandlingstema !== MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV) ||
+    menypanel?.synlig ||
+    skalViseIngenFlyt(sakstype, sakstema, behandlingstema, behandlingstype, erArbeidKunNorgeToggleEnabled);
+
   const linkGroupsWithContent = LinkGroupsFactory.createLinkGroups({
     sakstype,
     behandlingstema,
@@ -78,6 +85,7 @@ export function Menypanel({
     contentProps,
     mottatteOpplysningerType,
     sakstema,
+    kunFullmektig: !visMenypanel && skalViseFullmektigFørPeriodeOgLand(behandlingstema),
     erArbeidKunNorgeToggleEnabled,
   });
 
@@ -103,14 +111,9 @@ export function Menypanel({
     setActive([groupIndex, linkIndex]);
     setEndreFokus(true);
   };
-  const visMenypanel =
-    (sakstype === MKV.Koder.sakstyper.EU_EOS &&
-      behandlingstema !== MKV.Koder.behandlinger.behandlingstema.A1_ANMODNING_OM_UNNTAK_PAPIR &&
-      behandlingstema !== MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV) ||
-    menypanel?.synlig ||
-    skalViseIngenFlyt(sakstype, sakstema, behandlingstema, behandlingstype, erArbeidKunNorgeToggleEnabled);
 
-  if (!visMenypanel) return null;
+  if (!visMenypanel && !skalViseFullmektigFørPeriodeOgLand(behandlingstema)) return null;
+
   return (
     <>
       {visOppdaterRegisteropplysninger && redigerbart && (
