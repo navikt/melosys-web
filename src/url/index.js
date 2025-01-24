@@ -3,8 +3,17 @@ import {
   lagUrl,
   lagIngenFlytUrl,
   skalViseIngenFlyt,
+  skalViseFullmektigFørPeriodeOgLand,
   harUnntaksregistreringFlyt,
   harIkkeYrkesaktivFlyt,
 } from "./url";
 
-export { nyFane, lagUrl, lagIngenFlytUrl, skalViseIngenFlyt, harUnntaksregistreringFlyt, harIkkeYrkesaktivFlyt };
+export {
+  nyFane,
+  lagUrl,
+  lagIngenFlytUrl,
+  skalViseIngenFlyt,
+  harUnntaksregistreringFlyt,
+  harIkkeYrkesaktivFlyt,
+  skalViseFullmektigFørPeriodeOgLand,
+};

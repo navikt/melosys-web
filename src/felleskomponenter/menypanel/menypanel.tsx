@@ -5,7 +5,7 @@ import { RootState } from "AppTypes";
 import MKV, { MKVUtils } from "../../melosyskodeverk";
 import * as Nav from "../../navFrontend";
 import * as Utils from "../../utils";
-import { skalViseIngenFlyt } from "../../url";
+import { skalViseIngenFlyt, skalViseFullmektigFørPeriodeOgLand } from "../../url";
 import Sidemeny from "../sidemeny";
 
 import { mottatteOpplysningerSelectors } from "../../ducks/mottatteOpplysninger";
@@ -19,7 +19,6 @@ import { LinkGroupsFactory } from "./linkgroups";
 import "./menypanel.css";
 import { useFeatureToggle } from "../../featuretoggle";
 import { MELOSYS_ARBEID_KUN_NORGE } from "../../featuretoggle/toggleNavn";
-import { skalViseFullmektigFørPeriodeOgLand } from "../../url/url";
 
 const { SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS } = MKV.Koder.mottatteopplysningertyper;
 
