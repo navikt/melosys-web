@@ -41,7 +41,7 @@ const lagInnvilgetMedlemskapsPeriode = (medlemskapsperioder?: Medlemskapsperiode
   };
 };
 
-const { FERDIGBEHANDLET, IKKE_FASTSATT } = MKV.Koder.behandlinger.behandlingsresultattyper;
+const { FERDIGBEHANDLET, IKKE_FASTSATT, FASTSATT_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingsresultattyper;
 
 export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtSteg }: Props) {
   const [valgtÅr, setValgtÅr] = useState<number | null>(null);
@@ -70,12 +70,11 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
   };
 
   useEffect(() => {
-    Api.Aarsavregning.hentFiltrertAarsavregningList(saksnummer, IKKE_FASTSATT).then((res) => {
+    Api.Aarsavregning.hentFiltrertAarsavregningList(saksnummer).then((res) => {
       if (res.length) {
         // Kan kun ha 1 årsavregningsbehandling som ikke er fastsatt
-        Api.Aarsavregning.hentAarsavregning(behandlingID, res[0].aarsavregningId).then((aarsavregning) => {
+        Api.Aarsavregning.hentAarsavregning(behandlingID).then((aarsavregning) => {
           setInitieltÅr(aarsavregning.aar);
-          // Benyttes for innhenting av saksopplysninger ifm. årsavregningsbehandlinger
           dispatch({ type: OK, data: aarsavregning });
           utledGrunnlagstypeForAarsavregning(aarsavregning);
         });

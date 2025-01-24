@@ -56,8 +56,8 @@ export interface AarsavregningListResponse {
   resultattype: string;
 }
 
-export const hentAarsavregning = (behandlingID: number, aarsavregningID?: number): Promise<AarsavregningResponse> =>
-  getAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${AARSAVREGNING}/${aarsavregningID}`);
+export const hentAarsavregning = (behandlingID: number): Promise<AarsavregningResponse> =>
+  getAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${AARSAVREGNING}`);
 
 export interface LagAarsavregningRequest {
   aar: number;
