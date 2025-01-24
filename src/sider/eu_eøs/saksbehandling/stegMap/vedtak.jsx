@@ -69,10 +69,7 @@ class Vedtak extends Steg {
           avklartfakta.fakta.includes(VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE),
         ) != null;
 
-      if (
-        (erUtsendt && erStorbritanniaBestemmelse && _propsLight.konvensjonStorbritanniaToggleEnabled) ||
-        skalViseArbeidKunNorgeFlyt
-      ) {
+      if ((erUtsendt && erStorbritanniaBestemmelse) || skalViseArbeidKunNorgeFlyt) {
         pdfDokumenter.push({
           dokumentData: {
             produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_EFTA_STORBRITANNIA,
@@ -124,7 +121,7 @@ class Vedtak extends Steg {
             fritekst: formValues.vedtaksbrevFritekst,
           },
         });
-        if (propsLight.konvensjonStorbritanniaToggleEnabled && lovvalgSomKodeTerm && formValues?.kopiTilArbeidsgiver) {
+        if (lovvalgSomKodeTerm && formValues?.kopiTilArbeidsgiver) {
           if (
             !erArtikkel11_4 &&
             [UTSENDT_ARBEIDSTAKER, ARBEID_TJENESTEPERSON_ELLER_FLY].includes(propsLight.behandlingstema.kode) &&
@@ -139,17 +136,6 @@ class Vedtak extends Steg {
               },
             });
           }
-        } else if (
-          lovvalgSomKodeTerm &&
-          visSedLenkeForLovvalgsbestemmelser.includes(lovvalgSomKodeTerm.kode) &&
-          formValues?.kopiTilArbeidsgiver
-        ) {
-          pdfDokumenter.push({
-            dokumentData: {
-              produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
-              mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
-            },
-          });
         }
       }
 

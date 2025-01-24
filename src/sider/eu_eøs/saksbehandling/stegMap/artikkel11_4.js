@@ -8,19 +8,8 @@ class Artikkel11_4 extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
 
-    const art11_3A = hentVilkar(MKV.Koder.vilkaar.FO_883_2004_ART11_3A, propsLight.vilkar);
-    const art11_4_1 = hentVilkar(MKV.Koder.vilkaar.FO_883_2004_ART11_4_1, propsLight.vilkar);
-    const art11_4_2 = hentVilkar(MKV.Koder.vilkaar.FO_883_2004_ART11_4_2, propsLight.vilkar);
     const nis = hentVilkar(MKV.Koder.vilkaar.FTRL_2_12_UNNTAK_TURISTSKIP, propsLight.vilkar);
-    const art11_3Aeller13_3A = propsLight.konvensjonStorbritanniaToggleEnabled
-      ? propsLight.art11_3Aeller13_3A
-      : art11_3A;
-    const art11_4_1eller13_4_1 = propsLight.konvensjonStorbritanniaToggleEnabled
-      ? propsLight.art11_4_1eller13_4_1
-      : art11_4_1;
-    const art11_4_2eller13_4_2 = propsLight.konvensjonStorbritanniaToggleEnabled
-      ? propsLight.art11_4_2eller13_4_2
-      : art11_4_2;
+    const { art11_3Aeller13_3A, art11_4_1eller13_4_1, art11_4_2eller13_4_2 } = propsLight;
 
     const harAvklaring =
       (art11_4_1eller13_4_1.oppfylt && art11_3Aeller13_3A.oppfylt && (nis.oppfylt || nis.oppfylt === false)) ||
@@ -45,7 +34,7 @@ class Artikkel11_4 extends Steg {
       },
     ];
     this.id = STEG.ARTIKKEL_11_4;
-    this.tittel = propsLight.konvensjonStorbritanniaToggleEnabled ? "Vurdering skip" : "Vurdering av 11.4";
+    this.tittel = "Vurdering skip";
     this.komponent = VurderingArtikkel11_4;
     this.samleRelevanteData = (_propsLight) => ({
       redigerbart: _propsLight.generiskStegRedigerbart,

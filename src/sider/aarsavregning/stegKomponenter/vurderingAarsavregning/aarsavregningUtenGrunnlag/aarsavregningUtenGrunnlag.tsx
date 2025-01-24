@@ -89,18 +89,6 @@ interface AarsavregningFormValuesProps extends FormValuesProps {
   totaltForskuddsvisFakturert?: number | string;
 }
 
-const mapFeilmelding = (error: any) => {
-  const feilmelding = "Finner ikke trygdeavgiftssats. Melosys har ikke satser for årene før 2014.";
-
-  const ingenGjeldendeSats = error.body?.feilkoder?.some((feilkode: string) =>
-    feilkode.startsWith("Ingen gjeldende sats finnes for perioden"),
-  );
-
-  if (ingenGjeldendeSats) return feilmelding;
-
-  return error.body?.feilkoder || error.body?.message || error;
-};
-
 const lagInnvilgetMedlemskapsPeriode = (medlemskapsperioder?: Medlemskapsperiode[]) => {
   if (medlemskapsperioder && !Utils._isEmpty(medlemskapsperioder)) {
     const sorterteInnvilgedePerioder = [...medlemskapsperioder]
