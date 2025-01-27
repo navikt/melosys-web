@@ -8,8 +8,7 @@ import PdfLinkStandardvedlegg from "../pdfLink/pdfLinkStandardvedlegg";
 
 interface VedleggRowProps {
   vedlegg: FysiskDokument | TilgjengeligStandardvedlegg;
-  slettSaksvedlegg: () => void;
-  slettStandardvedlegg: () => void;
+  slettVedlegg: () => void;
   redigerbart: boolean;
 }
 
@@ -20,7 +19,7 @@ function erTilgjengeligStandardvedlegg(
   return "type" in vedlegg && "frontendTittel" in vedlegg;
 }
 
-function VedleggRow({ vedlegg, slettSaksvedlegg, slettStandardvedlegg, redigerbart }: VedleggRowProps) {
+function VedleggRow({ vedlegg, slettVedlegg, redigerbart }: VedleggRowProps) {
   if (erTilgjengeligStandardvedlegg(vedlegg)) {
     return (
       <Nav.Table.Row className="vedlegg">
@@ -29,12 +28,7 @@ function VedleggRow({ vedlegg, slettSaksvedlegg, slettStandardvedlegg, redigerba
         </Nav.Table.DataCell>
         <Nav.Table.DataCell />
         <Nav.Table.DataCell className="icon__cell">
-          <Mui.IkonKnapp
-            ariaLabel="Fjern vedlegg"
-            ikon={Ikoner.Bin}
-            onClick={slettStandardvedlegg}
-            disabled={!redigerbart}
-          />
+          <Mui.IkonKnapp ariaLabel="Fjern vedlegg" ikon={Ikoner.Bin} onClick={slettVedlegg} disabled={!redigerbart} />
         </Nav.Table.DataCell>
       </Nav.Table.Row>
     );
@@ -49,7 +43,7 @@ function VedleggRow({ vedlegg, slettSaksvedlegg, slettStandardvedlegg, redigerba
         <span>{Utils.dato.formatterDatoTilNorsk(vedlegg.dato)}</span>
       </Nav.Table.DataCell>
       <Nav.Table.DataCell className="icon__cell">
-        <Mui.IkonKnapp ariaLabel="Fjern vedlegg" ikon={Ikoner.Bin} onClick={slettSaksvedlegg} disabled={!redigerbart} />
+        <Mui.IkonKnapp ariaLabel="Fjern vedlegg" ikon={Ikoner.Bin} onClick={slettVedlegg} disabled={!redigerbart} />
       </Nav.Table.DataCell>
     </Nav.Table.Row>
   );

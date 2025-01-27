@@ -69,8 +69,7 @@ function VedleggTable({
             <VedleggRow
               key={enkeltVedlegg.id}
               vedlegg={enkeltVedlegg}
-              slettSaksvedlegg={() => slettVedlegg(enkeltVedlegg.id)}
-              slettStandardvedlegg={() => {}}
+              slettVedlegg={() => slettVedlegg(enkeltVedlegg.id)}
               redigerbart={redigerbart}
             />
           ))}
@@ -78,8 +77,7 @@ function VedleggTable({
             <VedleggRow
               key={`standardvedlegg-${valgteVedlegg.standardvedlegg.type}`}
               vedlegg={valgteVedlegg.standardvedlegg}
-              slettSaksvedlegg={() => {}}
-              slettStandardvedlegg={() => slettStandardvedlegg()}
+              slettVedlegg={() => slettStandardvedlegg()}
               redigerbart={redigerbart}
             />
           )}
