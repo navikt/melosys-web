@@ -77,12 +77,10 @@ const aarsavregningUtenGrunnlagSchema = object().shape({
       object().shape({
         fomDato: string()
           .erGyldigDato()
-          .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
           .required(),
         tomDato: string()
           .erGyldigDato()
           .erEtterDatofelt("fomDato")
-          .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
           .test(åpenTomNårIkkeSistePeriodeTest),
         trygdedekning: string().required(),
         bestemmelse: string().required(),

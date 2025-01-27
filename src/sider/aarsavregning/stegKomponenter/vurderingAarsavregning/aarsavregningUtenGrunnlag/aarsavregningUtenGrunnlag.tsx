@@ -132,35 +132,6 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
     tomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.tom),
   };
 
-  const setSkjemaverdierFraTrygdeavgiftsgrunnlag = (trygdeavgiftsgrunnlag?: Trygdeavgiftsgrunnlag) => {
-    if (!trygdeavgiftsgrunnlag) return;
-    const { inntektskperioder, skatteforholdsperioder } = trygdeavgiftsgrunnlag;
-    const sorterteInntekstkilder = [...inntektskperioder].sort(Utils.dato.sorterEtterISOFomDato);
-    const sorterteSkatteforhold = [...skatteforholdsperioder].sort(Utils.dato.sorterEtterISOFomDato);
-    resetSkatteforholdsperioder(
-      !Utils._isEmpty(sorterteSkatteforhold)
-        ? sorterteSkatteforhold.map((skatteforhold) => ({
-            fomDato: Utils.dato.formatterDatoTilNorsk(skatteforhold.fomDato),
-            tomDato: Utils.dato.formatterDatoTilNorsk(skatteforhold.tomDato),
-            skatteplikttype: skatteforhold.skatteplikttype,
-          }))
-        : [],
-    );
-
-    resetInntektskilder(
-      !Utils._isEmpty(sorterteInntekstkilder)
-        ? sorterteInntekstkilder.map((inntektskilde) => ({
-            kildetype: inntektskilde.type,
-            arbAvgBetales: Utils.streng.boolTilUppercaseStreng(inntektskilde.arbeidsgiversavgiftBetales),
-            bruttoInntekt: inntektskilde.avgiftspliktigInntekt,
-            fomDato: Utils.dato.formatterDatoTilNorsk(inntektskilde.fomDato),
-            tomDato: Utils.dato.formatterDatoTilNorsk(inntektskilde.tomDato),
-            erMaanedsbelop: Utils.streng.boolTilUppercaseStreng(inntektskilde.erMaanedsbelop),
-          }))
-        : [],
-    );
-  };
-
   useEffect(() => {
     dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(behandlingID));
     trigger("medlemskapsperioder").then((isValid) => setVisLeggTilMedlemskapsperioder(isValid));
@@ -172,10 +143,6 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
           dispatch({ type: OK, data: res });
           setValgtÅr(res.aar);
           setValue("totaltForskuddsvisFakturert", res.avregning?.tidligereFakturertBeloep);
-
-          if (res.avvikFunnet && res?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag) {
-            setSkjemaverdierFraTrygdeavgiftsgrunnlag(res.nyttGrunnlag?.trygdeavgiftsgrunnlag);
-          }
         })
         .catch((err) => {
           if (err.response?.status === 404) {
