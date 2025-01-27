@@ -1,12 +1,17 @@
-import { useEffect } from "react";
 import { FysiskDokument } from "Domene";
+import { useEffect } from "react";
 
 import MKV from "../../../../melosyskodeverk";
 import * as Api from "../../../../services/api";
 import * as Utils from "../../../../utils";
 
-import { SendBrevFormValues } from "../types";
+import {
+  BrevVedleggInterface,
+  StandardvedleggType,
+  TilgjengeligStandardvedlegg,
+} from "../../../../services/modules/dokumenter-v2";
 import { Fritekstvedlegg } from "../sendBrev";
+import { SendBrevFormValues } from "../types";
 import LagredeUtkast from "./lagredeUtkast";
 
 const { BRUKER, VIRKSOMHET, ARBEIDSGIVER, ANNEN_ORGANISASJON, NORSK_MYNDIGHET, UTENLANDSK_TRYGDEMYNDIGHET } =
@@ -15,21 +20,23 @@ const { BRUKER, VIRKSOMHET, ARBEIDSGIVER, ANNEN_ORGANISASJON, NORSK_MYNDIGHET, U
 interface BrevutkastProps {
   changeField: (field: string, data: any) => void;
   dokumenter: FysiskDokument[];
+  standardvedleggListe: TilgjengeligStandardvedlegg[];
   formValues: SendBrevFormValues;
   tilgjengeligeMottakere: Api.DokumenterV2.TilgjengeligMottaker[];
   utkastPåBehandlingen: Api.Brevutkast.BrevutkastResDto[];
-  setSaksvedlegg: (vedlegg: FysiskDokument[]) => void;
+  setValgteVedlegg: (valgteVedlegg: BrevVedleggInterface) => void;
   setFritekstvedlegg: (vedlegg: Fritekstvedlegg[]) => void;
 }
 
 function Brevutkast({
   changeField,
   dokumenter,
+  standardvedleggListe,
   formValues,
   tilgjengeligeMottakere,
   utkastPåBehandlingen,
-  setSaksvedlegg,
   setFritekstvedlegg,
+  setValgteVedlegg,
 }: BrevutkastProps) {
   const aktivtUtkast = formValues?.aktivtUtkast;
 
@@ -119,14 +126,27 @@ function Brevutkast({
     }
   };
 
-  const settFeltForSaksvedlegg = (saksvedlegg: Api.DokumenterV2.Saksvedlegg[]) => {
+  const fitrerStandardvedlegg = (
+    standardvedleggType: StandardvedleggType | null,
+  ): TilgjengeligStandardvedlegg | null => {
+    if (!standardvedleggType) return null;
+
+    return standardvedleggListe.find((vedlegg) => vedlegg.type === standardvedleggType) || null;
+  };
+
+  const settFeltForValgteVedlegg = (
+    saksvedlegg: Api.DokumenterV2.Saksvedlegg[],
+    standardvedleggType: StandardvedleggType | null,
+  ) => {
     const dokumentIDer = saksvedlegg?.map((vedlegg) => vedlegg.dokumentID);
     const journalpostIDer = saksvedlegg?.map((vedlegg) => vedlegg.journalpostID);
-    setSaksvedlegg(
-      dokumenter?.filter(
-        (dokument) => dokumentIDer.includes(dokument.dokumentID) && journalpostIDer.includes(dokument.journalpostID),
-      ),
-    );
+    setValgteVedlegg({
+      saksvedlegg:
+        dokumenter?.filter(
+          (dokument) => dokumentIDer.includes(dokument.dokumentID) && journalpostIDer.includes(dokument.journalpostID),
+        ) || [],
+      standardvedlegg: fitrerStandardvedlegg(standardvedleggType),
+    });
   };
 
   const settKopiTilBruker = (kopiMottakere: Api.DokumenterV2.KopiMottaker[]) => {
@@ -146,7 +166,7 @@ function Brevutkast({
       settFeltVerdi("FRITEKST", utkast.fritekst);
       settFeltVerdi("STANDARDTEKST_KONTAKTINFORMASJON", utkast.skalViseStandardTekstOmkontaktopplysninger);
       setFritekstvedlegg(utkast.fritekstvedlegg || []);
-      settFeltForSaksvedlegg(utkast.saksvedlegg || []);
+      settFeltForValgteVedlegg(utkast.saksvedlegg || [], utkast.standardvedleggType || null);
       settKopiTilBruker(utkast.kopiMottakere || []);
       settFeltValg("UTENLANDSK_TRYGDEMYNDIGHET_MOTTAKER", utkast.institusjonID);
     }

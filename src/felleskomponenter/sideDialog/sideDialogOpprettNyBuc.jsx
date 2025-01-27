@@ -37,7 +37,10 @@ function SideDialogOpprettNyBuc({ behandlingID, behandlingstema, sakstype, dokum
   const [valgtSed, setValgtSed] = useState("");
   const [valgteLand, setValgteLand] = useState([]);
   const [valgteMottakerinstitusjoner, setValgteMottakerinstitusjoner] = useState([]);
-  const [valgteVedlegg, setValgteVedlegg] = useState([]);
+  const [valgteVedlegg, setValgteVedlegg] = useState({
+    saksvedlegg: [],
+    standardvedlegg: [],
+  });
 
   const [opprettetBucUrl, setOpprettetBucUrl] = useState("");
   const [bucOpprettet, setBucOpprettet] = useState(false);
@@ -74,7 +77,10 @@ function SideDialogOpprettNyBuc({ behandlingID, behandlingstema, sakstype, dokum
     setValgteLand([]);
     setValgteMottakerinstitusjoner([]);
     setValgtFagomrade(EKV.Koder.sektor.LA);
-    setValgteVedlegg([]);
+    setValgteVedlegg({
+      saksvedlegg: [],
+      standardvedlegg: [],
+    });
     setFeilmeldinger({ buc: undefined, land: undefined, mottakerinstitusjoner: undefined });
     setOppdaterteFelt({ buc: false, land: false, mottakerinstitusjoner: false });
   };
@@ -108,7 +114,7 @@ function SideDialogOpprettNyBuc({ behandlingID, behandlingstema, sakstype, dokum
         const sedResponse = await Api.Eessi.bucer.opprett(behandlingID, {
           bucType: valgtBuc,
           mottakerInstitusjoner: valgteMottakerinstitusjoner,
-          vedlegg: valgteVedlegg.map(({ journalpostID, dokumentID }) => ({ journalpostID, dokumentID })),
+          vedlegg: valgteVedlegg.saksvedlegg.map(({ journalpostID, dokumentID }) => ({ journalpostID, dokumentID })),
         });
 
         setBucOpprettet(true);

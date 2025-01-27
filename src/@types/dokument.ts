@@ -46,3 +46,10 @@ export interface SedPdfData {
   nyttLovvalgsland?: string | null;
   fritekst?: string | null;
 }
+
+export interface TilgjengeligStandardvedlegg {
+  journalpostID: string;
+  dokumentID: string;
+  tittel: string;
+  dato: string;
+}
