@@ -29,7 +29,7 @@ import { Medlemskapsperioder } from "../komponenter/medlemskapsperioder";
 import { InntektskildeDto, SkatteforholdDto } from "../../../../../services/modules/trygdeavgift";
 import { FeilmeldingOppsummering } from "../feilmeldingOppsummering";
 import { Medlemskapsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
-import aarsavregningUtenGrunnlagSchema from "./aarsavregningUtenGrunnlagSchema";
+import aarsavregningUtenGrunnlagSchema, { erBrukerSkattepliktigIHelePerioden } from "./aarsavregningUtenGrunnlagSchema";
 import { Skatteforholdsperioder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/skatteforholdsperioder";
 import { Inntektskilder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/inntektskilder";
 import { beregnTrygdeavgiftsperioder } from "../komponenter/utils";
@@ -286,6 +286,10 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
 
   const formValues = watch();
 
+  const skalViseInntektskilder = !(
+    medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder)
+  );
+
   useEffect(() => {
     if (brukerHarBekreftet && Object.keys(formErrors).length === 0) {
       setBrukerHarBekreftet(false);
@@ -455,18 +459,20 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
         control={control}
         fields={skattFields}
       />
-      <Inntektskilder
-        defaultPeriode={defaultPeriode}
-        formValues={formValues}
-        redigerbart={redigerbart}
-        update={inntektUpdate}
-        remove={inntektRemove}
-        append={inntektAppend}
-        control={control}
-        fields={inntektFields}
-        medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!}
-        skalViseErMaanedsBelopRadioGroup
-      />
+      {skalViseInntektskilder && (
+        <Inntektskilder
+          defaultPeriode={defaultPeriode}
+          formValues={formValues}
+          redigerbart={redigerbart}
+          update={inntektUpdate}
+          remove={inntektRemove}
+          append={inntektAppend}
+          control={control}
+          fields={inntektFields}
+          medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!}
+          skalViseErMaanedsBelopRadioGroup
+        />
+      )}
 
       {formIsValid && (
         <SumArsavregningTabell
