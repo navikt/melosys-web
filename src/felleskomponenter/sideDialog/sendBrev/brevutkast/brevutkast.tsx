@@ -24,7 +24,7 @@ interface BrevutkastProps {
   formValues: SendBrevFormValues;
   tilgjengeligeMottakere: Api.DokumenterV2.TilgjengeligMottaker[];
   utkastPåBehandlingen: Api.Brevutkast.BrevutkastResDto[];
-  setValgteVedlegg: (valteVedlegg: BrevVedleggInterface) => void;
+  setValgteVedlegg: (valgteVedlegg: BrevVedleggInterface) => void;
   setFritekstvedlegg: (vedlegg: Fritekstvedlegg[]) => void;
 }
 
@@ -126,7 +126,7 @@ function Brevutkast({
     }
   };
 
-  const getFeltStandardvedlegg = (
+  const fitrerStandardvedlegg = (
     standardvedleggType: StandardvedleggType | null,
   ): TilgjengeligStandardvedlegg | null => {
     if (!standardvedleggType) return null;
@@ -145,7 +145,7 @@ function Brevutkast({
         dokumenter?.filter(
           (dokument) => dokumentIDer.includes(dokument.dokumentID) && journalpostIDer.includes(dokument.journalpostID),
         ) || [],
-      standardvedlegg: getFeltStandardvedlegg(standardvedleggType),
+      standardvedlegg: fitrerStandardvedlegg(standardvedleggType),
     });
   };
 

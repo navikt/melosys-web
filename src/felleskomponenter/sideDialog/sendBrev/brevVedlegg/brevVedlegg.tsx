@@ -24,7 +24,7 @@ interface BrevVedleggProps {
   fritekstvedlegg: Fritekstvedlegg[];
   setFritekstvedlegg: (fritekstvedlegg: Fritekstvedlegg[]) => void;
   valgteVedlegg: BrevVedleggInterface;
-  setValgteVedlegg: (valteVedlegg: BrevVedleggInterface) => void;
+  setValgteVedlegg: (valgteVedlegg: BrevVedleggInterface) => void;
   changeField: (field: string, value: string) => void;
   formValues: any;
   redigerbart: boolean;
