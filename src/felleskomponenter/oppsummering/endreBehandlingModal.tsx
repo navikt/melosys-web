@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { connect, ConnectedProps } from "react-redux";
+import { connect, ConnectedProps, useSelector } from "react-redux";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
@@ -24,6 +24,8 @@ import "./endreBehandlingModal.css";
 import { useAsyncCallbackState } from "../../hooks";
 import { useFeatureToggle } from "../../featuretoggle";
 import { MELOSYS_ARBEID_KUN_NORGE } from "../../featuretoggle/toggleNavn";
+import { endreÅrsavregning } from "../../services/modules/aarsavregning/aarsavregning";
+import { behandlingsresultatSelectors } from "../../ducks/behandlingsresultat";
 
 enum FeltVerdier {
   sakstype = "sakstype",
@@ -86,6 +88,7 @@ function EndreBehandlingModal({
   const [muligeBehandlingstemaer, setMuligeBehandlingstemaer] = useState([]);
   const [muligeBehandlingstyper, setMuligeBehandlingstyper] = useState<KTObject[]>([]);
   const erArbeidKunNorgeToggleEnabled = useFeatureToggle(MELOSYS_ARBEID_KUN_NORGE);
+  const aarsavregningID = useSelector(behandlingsresultatSelectors.ÅrsavregningIDSelector);
 
   const typeTemaKanEndres = !anmodningsperioderSendtTilUtlandet;
   const fagsakKanEndres = muligeSakstyper.length !== 0 || muligeSakstemaer.length !== 0;
@@ -197,47 +200,78 @@ function EndreBehandlingModal({
 
     setGenerellFeil("");
     setSkalViseSpinner(true);
-    const {
-      saksnummer,
-      sakstype: { kode: forrigeSakstype },
-    } = fagsak;
 
-    const reqFagsak: Api.Fagsaker.fagsak.EndreSakDto = {
-      sakstype,
-      sakstema,
-      behandlingstema,
-      behandlingstype,
-      mottaksdato: harMottaksdatoEndretSeg() ? Datoutils.dateTilIsoString(mottaksdato) : null,
-      behandlingsstatus,
-    };
+    if (erÅrsavregning) {
+      const {
+        saksnummer,
+        sakstype: { kode: forrigeSakstype },
+      } = fagsak;
 
-    Api.Fagsaker.fagsak
-      .endreFagsak(saksnummer, reqFagsak)
-      .then(async () => {
-        setBehandlingEndret(true);
+      console.log("endreBehandlingHandle -> aarsavregningID", aarsavregningID);
 
-        await håndterTrygdeavtaleFlyt(forrigeSakstype);
+      const reqEndreÅrsavregning: Api.Aarsavregning.AarsavregningEndreRequest = {
+        saksnummer,
+        behandlingsstatus,
+        mottaksdato: harMottaksdatoEndretSeg() ? Datoutils.dateTilIsoString(mottaksdato) : null,
+      };
 
-        const nyGenerertLink = Routing.lagUrl(
-          saksnummer,
-          behandlingID,
-          sakstype,
-          sakstema,
-          behandlingstema,
-          behandlingstype,
-          erArbeidKunNorgeToggleEnabled,
-        );
+      Api.Aarsavregning.endreÅrsavregning(behandlingID, aarsavregningID, reqEndreÅrsavregning)
+        .then(async () => {
+          setBehandlingEndret(true);
 
-        if (nyGenerertLink && nyGenerertLink !== location.pathname + location.search) {
-          tilAnnenSide(nyGenerertLink);
-        }
-        window.location.reload();
-      })
-      .catch(() => {
-        setGenerellFeil("Oppdateringen feilet!");
-        setBehandlingEndret(false);
-      })
-      .finally(() => setSkalViseSpinner(false));
+          await håndterTrygdeavtaleFlyt(forrigeSakstype);
+
+          window.location.reload();
+        })
+        .catch(() => {
+          setGenerellFeil("Oppdateringen feilet!");
+          setBehandlingEndret(false);
+        })
+        .finally(() => setSkalViseSpinner(false));
+    } else {
+
+      const {
+        saksnummer,
+        sakstype: { kode: forrigeSakstype },
+      } = fagsak;
+
+      const reqFagsak: Api.Fagsaker.fagsak.EndreSakDto = {
+        sakstype,
+        sakstema,
+        behandlingstema,
+        behandlingstype,
+        mottaksdato: harMottaksdatoEndretSeg() ? Datoutils.dateTilIsoString(mottaksdato) : null,
+        behandlingsstatus,
+      };
+
+      Api.Fagsaker.fagsak
+        .endreFagsak(saksnummer, reqFagsak)
+        .then(async () => {
+          setBehandlingEndret(true);
+
+          await håndterTrygdeavtaleFlyt(forrigeSakstype);
+
+          const nyGenerertLink = Routing.lagUrl(
+            saksnummer,
+            behandlingID,
+            sakstype,
+            sakstema,
+            behandlingstema,
+            behandlingstype,
+            erArbeidKunNorgeToggleEnabled,
+          );
+
+          if (nyGenerertLink && nyGenerertLink !== location.pathname + location.search) {
+            tilAnnenSide(nyGenerertLink);
+          }
+          window.location.reload();
+        })
+        .catch(() => {
+          setGenerellFeil("Oppdateringen feilet!");
+          setBehandlingEndret(false);
+        })
+        .finally(() => setSkalViseSpinner(false));
+    }
   };
 
   const erBehandlingAvSed = MKVUtils.erBehandlingAvSed(fagsak.sakstype?.kode, oppsummering.behandlingstema?.kode);
@@ -305,7 +339,7 @@ function EndreBehandlingModal({
           label="Behandlingstema"
           value={behandlingstema}
           koder={muligeBehandlingstemaer}
-          redigerbart={!erBehandlingAvSed && typeTemaKanEndres && !harBehandlingMedTrygdeavgift}
+          redigerbart={!erBehandlingAvSed && typeTemaKanEndres && !harBehandlingMedTrygdeavgift && !erÅrsavregning}
           feil={skalViseFeilmeldinger ? behandlingstemaFeilmelding : null}
           disableForsteValg
           className={harBehandlingMedTrygdeavgift ? "ktselect__slim" : undefined}
