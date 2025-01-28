@@ -11,7 +11,11 @@ import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import * as Nav from "../../../../../navFrontend";
 import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 import { FieldValue, useFieldArray, useForm } from "react-hook-form";
-import { FieldArrayProps, FormValuesProps } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
+import {
+  FieldArrayProps,
+  FormValuesProps,
+  Inntektskilde,
+} from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Utils from "../../../../../utils";
 import { feilMeldingBlokkerer, finnAktivFeilmelding } from "../meldinger";
@@ -29,6 +33,8 @@ import aarsavregningMedGrunnlagSchema from "./aarsavregningMedGrunnlagSchema";
 import { Skatteforholdsperioder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/skatteforholdsperioder";
 import { Inntektskilder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/inntektskilder";
 import { beregnTrygdeavgiftsperioder } from "../komponenter/utils";
+import { erBrukerSkattepliktigIHelePerioden } from "../../../../ftrl/saksbehandling/stegKomponenter/vurderingTrygdeavgift/vurderingTrygdeavgiftSchema";
+import form from "../../../../../ducks/form";
 
 interface Props {
   bekreft: () => void;
@@ -216,16 +222,21 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
     innvilgetMedlemskapsperiode,
   );
 
+  const skalBeregneForelopigTrygdeavgift =
+    redigerbart &&
+    erAvvik &&
+    !isValidating &&
+    formIsValid &&
+    aarsavregningID &&
+    !feilMeldingBlokkerer(aktivFeilmeldingType) &&
+    formValues?.inntektskilder.some((inntektskilde: Inntektskilde) => {
+      console.log(inntektskilde);
+      return true;
+    });
+
   // erAvvik trigger en beregning på gammelt grunnlag etter å ha oppdatert skjemaverdier i håndterAvvik. Dette må gjøres for å oppdatere lagrede verdier i api
   useEffect(() => {
-    if (
-      redigerbart &&
-      erAvvik &&
-      !isValidating &&
-      formIsValid &&
-      aarsavregningID &&
-      !feilMeldingBlokkerer(aktivFeilmeldingType)
-    ) {
+    if (skalBeregneForelopigTrygdeavgift) {
       debounceBeregnTrygdeavgiftsperioder(formValues);
     }
   }, [isValidating, erAvvik]);
@@ -265,6 +276,27 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
     }
   };
 
+  const harIkkeskattepliktigInntektskilder = (): boolean => {
+    const tidligereTrygdeavgiftgrunnlag = aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag;
+
+    if (!tidligereTrygdeavgiftgrunnlag) {
+      return false;
+    }
+    if (tidligereTrygdeavgiftgrunnlag.inntektskperioder.length > 0) {
+      return true;
+    }
+
+    if (medlemskapsTypeErPliktig) {
+      const erSkattepliktig =
+        medlemskapsTypeErPliktig &&
+        erBrukerSkattepliktigIHelePerioden(tidligereTrygdeavgiftgrunnlag.skatteforholdsperioder);
+
+      return !erSkattepliktig;
+    }
+
+    return false;
+  };
+
   return (
     <>
       {aarsavregningResponse?.tidligereGrunnlagsopplysninger && (
@@ -273,6 +305,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
             perioder={aarsavregningResponse.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag.medlemskapsperioder}
           />
           <TidligereGrunnlagsoversikt
+            harFakturerbareInntektskilder={harIkkeskattepliktigInntektskilder()}
             skatteforholdsperioder={
               aarsavregningResponse.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag.skatteforholdsperioder
             }
@@ -284,7 +317,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
         </>
       )}
 
-      {aarsavregningResponse?.tidligereGrunnlagsopplysninger && (
+      {harIkkeskattepliktigInntektskilder() && (
         <BeregnetTrygdeavgiftDetaljer
           grunnlag={aarsavregningResponse?.tidligereGrunnlagsopplysninger}
           medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!}

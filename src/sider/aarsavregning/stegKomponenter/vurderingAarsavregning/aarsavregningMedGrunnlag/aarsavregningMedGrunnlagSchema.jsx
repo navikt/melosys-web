@@ -104,7 +104,7 @@ const aarsavregningMedGrunnlagSchema = object().shape({
           object().shape({
             kildetype: string().required(MAA_FYLLES_UT),
             arbAvgBetales: string().test(arbAvgBetalesFyltUtNårDetKrevesTest).nullable(),
-            bruttoInntekt: string().erNummer().test(bruttoInntektFyltUtNårDetKrevesTest).nullable(),
+            bruttoInntekt: string().required(MAA_FYLLES_UT).erNummer().test(bruttoInntektFyltUtNårDetKrevesTest),
             fomDato: string()
               .erGyldigDato()
               .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
