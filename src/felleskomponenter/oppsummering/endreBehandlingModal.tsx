@@ -22,8 +22,6 @@ import Knapperad from "../knapperad";
 
 import "./endreBehandlingModal.css";
 import { useAsyncCallbackState } from "../../hooks";
-import { useFeatureToggle } from "../../featuretoggle";
-import { MELOSYS_ARBEID_KUN_NORGE } from "../../featuretoggle/toggleNavn";
 
 enum FeltVerdier {
   sakstype = "sakstype",
@@ -85,7 +83,6 @@ function EndreBehandlingModal({
   const [muligeSakstemaer, setMuligeSakstemaer] = useState([]);
   const [muligeBehandlingstemaer, setMuligeBehandlingstemaer] = useState([]);
   const [muligeBehandlingstyper, setMuligeBehandlingstyper] = useState<KTObject[]>([]);
-  const erArbeidKunNorgeToggleEnabled = useFeatureToggle(MELOSYS_ARBEID_KUN_NORGE);
 
   const typeTemaKanEndres = !anmodningsperioderSendtTilUtlandet;
   const fagsakKanEndres = muligeSakstyper.length !== 0 || muligeSakstemaer.length !== 0;
@@ -160,7 +157,7 @@ function EndreBehandlingModal({
 
     if (
       sakstype !== MKV.Koder.sakstyper.TRYGDEAVTALE ||
-      Routing.skalViseIngenFlyt(sakstype, sakstema, behandlingstema, behandlingstype, erArbeidKunNorgeToggleEnabled)
+      Routing.skalViseIngenFlyt(sakstype, sakstema, behandlingstema, behandlingstype)
     ) {
       await Api.Trygdeavtale.slettFlyt(behandlingID);
     } else {
@@ -225,7 +222,6 @@ function EndreBehandlingModal({
           sakstema,
           behandlingstema,
           behandlingstype,
-          erArbeidKunNorgeToggleEnabled,
         );
 
         if (nyGenerertLink && nyGenerertLink !== location.pathname + location.search) {

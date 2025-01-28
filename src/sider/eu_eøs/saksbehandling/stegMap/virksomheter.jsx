@@ -48,11 +48,7 @@ class SaksbehandlingVirksomheter extends Virksomheter {
       },
       {
         exec: () => {
-          return (
-            propsLight.arbeidKunNorgeToggleEnabled &&
-            harValgtArbeidsgiver &&
-            (erUtsendtOgArbeidslandNorge || erArbeidKunNorge)
-          );
+          return harValgtArbeidsgiver && (erUtsendtOgArbeidslandNorge || erArbeidKunNorge);
         },
         nesteSteg: STEG.VEDTAK,
       },

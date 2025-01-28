@@ -25,8 +25,7 @@ class Vedtak extends Steg {
     const skalViseArbeidKunNorgeFlyt =
       (erUtsendt || propsLight.behandlingstema.kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_KUN_NORGE) &&
       erOrdinaerYrkesgruppe &&
-      propsLight.arbeidsland.find((land) => land.kode === "NO") !== undefined &&
-      propsLight.arbeidKunNorgeToggleEnabled;
+      propsLight.arbeidsland.find((land) => land.kode === "NO") !== undefined;
     this.kriterier = [
       {
         exec: () => true,
@@ -46,11 +45,6 @@ class Vedtak extends Steg {
       );
       const erStorbritanniaBestemmelse = erStorbritanniaKonvBestemmelse(_propsLight.lovvalgsbestemmelse);
       const { UTSENDT_ARBEIDSTAKER, ARBEID_TJENESTEPERSON_ELLER_FLY } = MKV.Koder.behandlinger.behandlingstema;
-      const visSedLenkeForLovvalgsbestemmelser = [
-        MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_1,
-        MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia.KONV_EFTA_STORBRITANNIA_ART14_1,
-        MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia.KONV_EFTA_STORBRITANNIA_ART16_1,
-      ];
 
       const artikkel11_4Bestemmelser = [
         MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_4_2,

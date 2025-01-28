@@ -15,8 +15,6 @@ import Soknadsland from "../soknadsland";
 import { formatterDatoTilNorsk } from "../../utils/dato";
 
 import "./behandlingOppgave.css";
-import { MELOSYS_ARBEID_KUN_NORGE } from "../../featuretoggle/toggleNavn";
-import { useFeatureToggle } from "../../featuretoggle";
 
 function BehandlingOppgavesLinjeWrapper({ link, stengt, children }) {
   return stengt ? (
@@ -40,7 +38,6 @@ BehandlingOppgavesLinjeWrapper.propTypes = {
  * seg inn på den.
  */
 function BehandlingOppgave({ sak, landkoder }) {
-  const erArbeidKunNorgeToggleEnabled = useFeatureToggle(MELOSYS_ARBEID_KUN_NORGE);
   const {
     navn,
     sakstype,
@@ -70,7 +67,6 @@ function BehandlingOppgave({ sak, landkoder }) {
     sakstema.kode,
     behandlingstema.kode,
     behandlingstype.kode,
-    erArbeidKunNorgeToggleEnabled,
   );
   const oppdateringStatus = erUnderOppdatering && "(oppdateres nå)";
 

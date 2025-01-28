@@ -17,8 +17,6 @@ import { oppgaverOperations } from "../../../../ducks/oppgaver";
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import saksplukkerSchema from "./saksplukkerSchema";
 import "./saksplukker.css";
-import { useFeatureToggle } from "../../../../featuretoggle";
-import { MELOSYS_ARBEID_KUN_NORGE } from "../../../../featuretoggle/toggleNavn";
 
 const compareTerm = (a: KTObject, b: KTObject) => {
   if (!a.term) return 1;
@@ -61,7 +59,6 @@ export function Saksplukker({
   const [muligeBehandlingstemaer, setMuligeBehandlingstemaer] = useState([]);
   const [visIngenOppgaveFunnetAlert, setVisIngenOppgaveFunnetAlert] = useState(false);
   const [antallOppgaver, setAntallOppgaver] = useState(0);
-  const erArbeidKunNorgeToggleEnabled = useFeatureToggle(MELOSYS_ARBEID_KUN_NORGE);
 
   const { sakstype, sakstema } = formValues || {};
 
@@ -117,7 +114,6 @@ export function Saksplukker({
           formValues.sakstema,
           behandlingstema,
           behandlingstype,
-          erArbeidKunNorgeToggleEnabled,
         );
 
         history.push(redirectURL);
