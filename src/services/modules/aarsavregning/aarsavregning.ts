@@ -17,7 +17,7 @@ export interface AarsavregningRequest {
 }
 
 export interface AarsavregningEndreRequest {
-  saksnummer? : string | null;
+  saksnummer?: string | null;
   behandlingsstatus?: string | null;
   mottaksdato?: string | null;
 }
@@ -106,4 +106,3 @@ export const endreÅrsavregningOppsummering = (
   request: AarsavregningEndreRequest,
 ): Promise<AarsavregningResponse> =>
   putAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${AARSAVREGNING}/endre/${aarsavregningID}`, request);
-

@@ -228,7 +228,6 @@ function EndreBehandlingModal({
         })
         .finally(() => setSkalViseSpinner(false));
     } else {
-
       const {
         saksnummer,
         sakstype: { kode: forrigeSakstype },
