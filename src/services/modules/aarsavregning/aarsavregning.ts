@@ -100,9 +100,10 @@ export const hentFiltrertAarsavregningList = (
   return getAsJson(url);
 };
 
-export const endreÅrsavregning = (
+export const endreÅrsavregningOppsummering = (
   behandlingID: number,
   aarsavregningID: number,
   request: AarsavregningEndreRequest,
 ): Promise<AarsavregningResponse> =>
-  postAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${AARSAVREGNING}/${aarsavregningID}`, request);
+  putAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${AARSAVREGNING}/endre/${aarsavregningID}`, request);
+

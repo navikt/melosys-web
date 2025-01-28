@@ -24,7 +24,6 @@ import "./endreBehandlingModal.css";
 import { useAsyncCallbackState } from "../../hooks";
 import { useFeatureToggle } from "../../featuretoggle";
 import { MELOSYS_ARBEID_KUN_NORGE } from "../../featuretoggle/toggleNavn";
-import { endreÅrsavregning } from "../../services/modules/aarsavregning/aarsavregning";
 import { behandlingsresultatSelectors } from "../../ducks/behandlingsresultat";
 
 enum FeltVerdier {
@@ -209,13 +208,13 @@ function EndreBehandlingModal({
 
       console.log("endreBehandlingHandle -> aarsavregningID", aarsavregningID);
 
-      const reqEndreÅrsavregning: Api.Aarsavregning.AarsavregningEndreRequest = {
+      const reqEndreAarsavregning: Api.Aarsavregning.AarsavregningEndreRequest = {
         saksnummer,
         behandlingsstatus,
         mottaksdato: harMottaksdatoEndretSeg() ? Datoutils.dateTilIsoString(mottaksdato) : null,
       };
 
-      Api.Aarsavregning.endreÅrsavregning(behandlingID, aarsavregningID, reqEndreÅrsavregning)
+      Api.Aarsavregning.endreÅrsavregningOppsummering(behandlingID, aarsavregningID, reqEndreAarsavregning)
         .then(async () => {
           setBehandlingEndret(true);
 
