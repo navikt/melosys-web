@@ -39,7 +39,7 @@ function SideDialogOpprettNyBuc({ behandlingID, behandlingstema, sakstype, dokum
   const [valgteMottakerinstitusjoner, setValgteMottakerinstitusjoner] = useState([]);
   const [valgteVedlegg, setValgteVedlegg] = useState({
     saksvedlegg: [],
-    standardvedlegg: [],
+    standardvedlegg: null,
   });
 
   const [opprettetBucUrl, setOpprettetBucUrl] = useState("");
@@ -79,7 +79,7 @@ function SideDialogOpprettNyBuc({ behandlingID, behandlingstema, sakstype, dokum
     setValgtFagomrade(EKV.Koder.sektor.LA);
     setValgteVedlegg({
       saksvedlegg: [],
-      standardvedlegg: [],
+      standardvedlegg: null,
     });
     setFeilmeldinger({ buc: undefined, land: undefined, mottakerinstitusjoner: undefined });
     setOppdaterteFelt({ buc: false, land: false, mottakerinstitusjoner: false });
