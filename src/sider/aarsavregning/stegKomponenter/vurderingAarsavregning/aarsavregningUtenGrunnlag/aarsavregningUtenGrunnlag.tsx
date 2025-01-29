@@ -40,6 +40,21 @@ interface Props {
   oppdaterStatus: (isValid: boolean) => void;
 }
 
+const hentMedlemskapsTomFomDatoProp = (medlemskapsperioder?: MedlemskapsperiodeProp[]) => {
+  if (medlemskapsperioder && !Utils._isEmpty(medlemskapsperioder)) {
+    const sorterteInnvilgedePerioder = [...medlemskapsperioder]
+      .sort(sorterEtterISOFomDato);
+    return {
+      fom: sorterteInnvilgedePerioder[0].fomDato,
+      tom: sorterteInnvilgedePerioder[sorterteInnvilgedePerioder.length - 1].tomDato,
+    };
+  }
+  return {
+    tom: undefined,
+    fom: undefined,
+  };
+};
+
 const mapTilMedlemskapsperiodeProps = (
   medlemskapsperiode: Api.MedlemAvFolketrygden.Medlemskapsperioder.Medlemskapsperiode,
 ): MedlemskapsperiodeProp => ({
@@ -51,18 +66,30 @@ const mapTilMedlemskapsperiodeProps = (
   periodeId: medlemskapsperiode.id,
 });
 
-const mapTilSkatteforholdProps = (skatteforhold?: SkatteforholdDto[]) => {
+const mapTilSkatteforholdProps = (skatteforhold?: SkatteforholdDto[], medlemskapsperioder?: MedlemskapsperiodeProp[]) => {
+
+  const test = hentMedlemskapsTomFomDatoProp(medlemskapsperioder)
+
   if (skatteforhold !== undefined) {
     return skatteforhold?.map((forhold) => ({
       fomDato: Utils.dato.formatterDatoTilNorsk(forhold.fomDato),
       tomDato: Utils.dato.formatterDatoTilNorsk(forhold.tomDato),
       skatteplikttype: forhold.skatteplikttype,
     }));
+  } else if (test.fom !== undefined && test.tom !== undefined) {
+    return [{
+      fomDato: Utils.dato.formatterDatoTilNorsk(test.fom),
+      tomDato: Utils.dato.formatterDatoTilNorsk(test.tom),
+      skatteplikttype: undefined,
+    }]
   }
   return [{}];
 };
 
-const mapTilInntektskilderProps = (inntektskilder?: InntektskildeDto[]) => {
+const mapTilInntektskilderProps = (inntektskilder?: InntektskildeDto[], medlemskapsperioder?: MedlemskapsperiodeProp[]) => {
+
+  const test = hentMedlemskapsTomFomDatoProp(medlemskapsperioder)
+
   if (inntektskilder !== undefined) {
     return inntektskilder?.map((kilde) => ({
       fomDato: Utils.dato.formatterDatoTilNorsk(kilde.fomDato),
@@ -72,6 +99,15 @@ const mapTilInntektskilderProps = (inntektskilder?: InntektskildeDto[]) => {
       bruttoInntekt: kilde.avgiftspliktigInntekt,
       erMaanedsbelop: Utils.streng.boolTilUppercaseStreng(kilde.erMaanedsbelop),
     }));
+  } else if (test.fom !== undefined && test.tom !== undefined) {
+    return [{
+      fomDato: Utils.dato.formatterDatoTilNorsk(test.fom),
+      tomDato: Utils.dato.formatterDatoTilNorsk(test.tom),
+      kildetype: undefined,
+      arbAvgBetales: Utils.streng.boolTilUppercaseStreng(false),
+      bruttoInntekt: 0,
+      erMaanedsbelop: Utils.streng.boolTilUppercaseStreng(false),
+    }]
   }
   return [{}];
 };
@@ -109,7 +145,7 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
 
   const [aarsavregningResponse, setAarsavregningResponse] = useState<AarsavregningResponse | undefined>(undefined);
   const [bestemmelser, setBestemmelser] = useState<[]>([]);
-  const [visLeggTilMedlemskapsperioder, setVisLeggTilMedlemskapsperioder] = useState<boolean>(true);
+  const [visLeggTilMedlemskapsperioder, setVisLeggTilMedlemskapsperioder] = useState<boolean>(true); //TODO diskuter nødvendigheten av denne
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as any;
   const aarsavregningID = useSelector(behandlingsresultatSelectors.ÅrsavregningIDSelector);
@@ -125,7 +161,6 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
 
   useEffect(() => {
     dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(behandlingID));
-    trigger("medlemskapsperioder").then((isValid) => setVisLeggTilMedlemskapsperioder(isValid));
     if (behandlingID) {
       Api.Aarsavregning.hentAarsavregning(behandlingID)
         .then((res) => {
@@ -145,16 +180,18 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
 
   useEffect(() => {
     console.log("test")
-    if (lagredeMedlemskapsperioder)
+    if (lagredeMedlemskapsperioder) {
+      console.log("test2")
       setValue("medlemskapsperioder", mapInitialMedlemskapsperioder(lagredeMedlemskapsperioder));
-    setValue(
-      "skatteforholdsperioder",
-      mapTilSkatteforholdProps(aarsavregningResponse?.nyttGrunnlag?.trygdeavgiftsgrunnlag.skatteforholdsperioder),
-    );
-    setValue(
-      "inntektskilder",
-      mapTilInntektskilderProps(aarsavregningResponse?.nyttGrunnlag?.trygdeavgiftsgrunnlag.inntektskperioder),
-    );
+      setValue(
+        "skatteforholdsperioder",
+        mapTilSkatteforholdProps(aarsavregningResponse?.nyttGrunnlag?.trygdeavgiftsgrunnlag.skatteforholdsperioder, mapInitialMedlemskapsperioder(lagredeMedlemskapsperioder)),
+      );
+      setValue(
+        "inntektskilder",
+        mapTilInntektskilderProps(aarsavregningResponse?.nyttGrunnlag?.trygdeavgiftsgrunnlag.inntektskperioder, mapInitialMedlemskapsperioder(lagredeMedlemskapsperioder)),
+      );
+    }
   }, [lagredeMedlemskapsperioder, aarsavregningResponse]);
 
   const oppdaterNyttTotalbeloep = async (totalAvgift?: number) => {
@@ -342,7 +379,6 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
           const index = overskrevetIndex !== undefined ? overskrevetIndex : alleMedlemskapsperioder.indexOf(periode);
           await lagreMedlemskapsperiode(periode, index);
         }
-        setVisLeggTilMedlemskapsperioder(true);
         dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(behandlingID));
       } else {
        // setVisLeggTilMedlemskapsperioder(false); TODO trenger vi denne
@@ -373,8 +409,6 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
     } else {
       dispatch(medlemskapsperioderOperations.slettMedlemskapsperiode(behandlingID, medlemskapsperiode.periodeId));
     }
-
-    setVisLeggTilMedlemskapsperioder(await trigger("medlemskapsperioder"));
   };
   return (
     <div className="vurderingAarsavregning">
