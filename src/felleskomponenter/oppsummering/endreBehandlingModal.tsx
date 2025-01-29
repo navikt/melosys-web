@@ -87,8 +87,6 @@ function EndreBehandlingModal({
   const [muligeBehandlingstemaer, setMuligeBehandlingstemaer] = useState([]);
   const [muligeBehandlingstyper, setMuligeBehandlingstyper] = useState<KTObject[]>([]);
   const erArbeidKunNorgeToggleEnabled = useFeatureToggle(MELOSYS_ARBEID_KUN_NORGE);
-  const aarsavregningID = useSelector(behandlingsresultatSelectors.ÅrsavregningIDSelector);
-
   const typeTemaKanEndres = !anmodningsperioderSendtTilUtlandet;
   const fagsakKanEndres = muligeSakstyper.length !== 0 || muligeSakstemaer.length !== 0;
   const [{ harBehandlingMedTrygdeavgift }] = useAsyncCallbackState(
@@ -206,15 +204,13 @@ function EndreBehandlingModal({
         sakstype: { kode: forrigeSakstype },
       } = fagsak;
 
-      console.log("endreBehandlingHandle -> aarsavregningID", aarsavregningID);
-
       const reqEndreAarsavregning: Api.Aarsavregning.AarsavregningEndreRequest = {
         saksnummer,
         behandlingsstatus,
         mottaksdato: harMottaksdatoEndretSeg() ? Datoutils.dateTilIsoString(mottaksdato) : null,
       };
 
-      Api.Aarsavregning.endreÅrsavregningOppsummering(behandlingID, aarsavregningID, reqEndreAarsavregning)
+      Api.Aarsavregning.endreÅrsavregningOppsummering(behandlingID, reqEndreAarsavregning)
         .then(async () => {
           setBehandlingEndret(true);
 
