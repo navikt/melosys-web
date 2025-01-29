@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { connect, ConnectedProps, useSelector } from "react-redux";
+import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
@@ -203,7 +203,7 @@ function EndreBehandlingModal({
     } = fagsak;
 
     const reqFagsak: Api.Fagsaker.fagsak.EndreSakDto = {
-      behandlingID: behandlingID,
+      behandlingID,
       sakstype,
       sakstema,
       behandlingstema,
