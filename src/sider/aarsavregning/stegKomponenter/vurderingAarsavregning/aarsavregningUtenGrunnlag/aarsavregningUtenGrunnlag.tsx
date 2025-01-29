@@ -423,7 +423,7 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
           handleChange={debouncedLagreMedlemskapsperioder}
           handleUpdate={medlemskapsperioderUpdate}
           handleLeggTil={handleLeggTilMedlemskapsperiode}
-          visLeggTil={true}
+          visLeggTil
         />
       ))}
 
