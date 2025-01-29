@@ -105,4 +105,4 @@ export const endreÅrsavregningOppsummering = (
   aarsavregningID: number,
   request: AarsavregningEndreRequest,
 ): Promise<AarsavregningResponse> =>
-  putAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${AARSAVREGNING}/endre/${aarsavregningID}`, request);
+  putAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${AARSAVREGNING}/${aarsavregningID}/oppsummering`, request);
