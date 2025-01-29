@@ -77,7 +77,9 @@ const mapTilSkatteforholdProps = (
       tomDato: Utils.dato.formatterDatoTilNorsk(forhold.tomDato),
       skatteplikttype: forhold.skatteplikttype,
     }));
-  } else if (medlemskapsTomFomDato.fom !== undefined && medlemskapsTomFomDato.tom !== undefined) {
+  }
+
+  if (medlemskapsTomFomDato.fom !== undefined && medlemskapsTomFomDato.tom !== undefined) {
     return [
       {
         fomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsTomFomDato.fom),
@@ -104,7 +106,9 @@ const mapTilInntektskilderProps = (
       bruttoInntekt: kilde.avgiftspliktigInntekt,
       erMaanedsbelop: Utils.streng.boolTilUppercaseStreng(kilde.erMaanedsbelop),
     }));
-  } else if (medlemskapsTomFomDato.fom !== undefined && medlemskapsTomFomDato.tom !== undefined) {
+  }
+
+  if (medlemskapsTomFomDato.fom !== undefined && medlemskapsTomFomDato.tom !== undefined) {
     return [
       {
         fomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsTomFomDato.fom),
@@ -135,7 +139,7 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
 
   const [aarsavregningResponse, setAarsavregningResponse] = useState<AarsavregningResponse | undefined>(undefined);
   const [bestemmelser, setBestemmelser] = useState<[]>([]);
-  const [visLeggTilMedlemskapsperioder, setVisLeggTilMedlemskapsperioder] = useState<boolean>(true); //TODO diskuter nødvendigheten av denne
+  const [visLeggTilMedlemskapsperioder, setVisLeggTilMedlemskapsperioder] = useState<boolean>(true); // TODO diskuter nødvendigheten av denne
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as any;
   const aarsavregningID = useSelector(behandlingsresultatSelectors.ÅrsavregningIDSelector);
