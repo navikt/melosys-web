@@ -16,7 +16,6 @@ import Dokumentliste from "../../../../felleskomponenter/dokumentliste";
 import Mottakerinstitusjonvelger from "../../../../felleskomponenter/mottakerinstitusjonvelger";
 import VedleggVelger from "../../../../felleskomponenter/vedleggvelger";
 import VedleggTable from "../../../../felleskomponenter/vedleggTable";
-import { TilgjengeligStandardvedlegg } from "../../../../services/modules/dokumenter-v2";
 
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { avklartefaktaSelectors } from "../../../../ducks/avklartefakta";

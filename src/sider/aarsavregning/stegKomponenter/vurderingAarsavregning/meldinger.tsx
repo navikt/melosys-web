@@ -3,6 +3,7 @@ import { Inntektskilde, Skatteforhold } from "../../../../felleskomponenter/tryg
 import * as Utils from "../../../../utils";
 import { Medlemskapsperiode } from "../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import { BOOLSK_STRING } from "../../../../constants";
+import { MedlemskapTomFomDatoer } from "./aarsavregningUtenGrunnlag/aarsavregningUtenGrunnlag";
 
 const HoyManedinntekt = (
   <Nav.Alert variant="warning" className="alertstripe_feilmelding">
@@ -30,7 +31,7 @@ enum TypeMelding {
 
 const finnesSkatteforholdPeriodeUtenforMedlemskapsperiode = (
   skatteforholdsperioder: Skatteforhold[],
-  innvilgetMedlemskapsperiode: { fom: string | undefined; tom: string | undefined },
+  innvilgetMedlemskapsperiode: MedlemskapTomFomDatoer,
 ) => {
   if (Utils._isEmpty(skatteforholdsperioder)) return false;
   const sorterteSkatteforhold = [...skatteforholdsperioder]
@@ -48,7 +49,7 @@ const finnesSkatteforholdPeriodeUtenforMedlemskapsperiode = (
 
 const finnesInntektskildeperiodeUtenforMedlemskapsperiode = (
   inntektskilder: Inntektskilde[],
-  innvilgetMedlemskapsperiode: { fom: string | undefined; tom: string | undefined },
+  innvilgetMedlemskapsperiode: MedlemskapTomFomDatoer,
 ) => {
   if (Utils._isEmpty(inntektskilder)) return false;
   const sorterteInntektskilder = [...inntektskilder]
@@ -74,7 +75,7 @@ export const finnAktivFeilmelding = (
   inntektskilder: Inntektskilde[],
   skatteforholdsperioder: Skatteforhold[],
   medlemskapsperioder: Medlemskapsperiode[] | undefined,
-  innvilgetMedlemskapsperiode?: { fom: string | undefined; tom: string | undefined },
+  innvilgetMedlemskapsperiode?: MedlemskapTomFomDatoer,
 ): string | undefined => {
   if (!medlemskapsperioder || !innvilgetMedlemskapsperiode || innvilgetMedlemskapsperiode.tom == null) return undefined;
 
