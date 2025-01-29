@@ -75,13 +75,8 @@ const aarsavregningUtenGrunnlagSchema = object().shape({
     .min(1, "Minst en medlemskapsperiode")
     .of(
       object().shape({
-        fomDato: string()
-          .erGyldigDato()
-          .required(),
-        tomDato: string()
-          .erGyldigDato()
-          .erEtterDatofelt("fomDato")
-          .test(åpenTomNårIkkeSistePeriodeTest),
+        fomDato: string().erGyldigDato().required(),
+        tomDato: string().erGyldigDato().erEtterDatofelt("fomDato").test(åpenTomNårIkkeSistePeriodeTest),
         trygdedekning: string().required(),
         bestemmelse: string().required(),
       }),
