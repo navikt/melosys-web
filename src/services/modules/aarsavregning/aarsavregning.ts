@@ -17,7 +17,6 @@ export interface AarsavregningRequest {
 }
 
 export interface AarsavregningEndreRequest {
-  saksnummer?: string | null;
   behandlingsstatus?: string | null;
   mottaksdato?: string | null;
 }

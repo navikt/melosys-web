@@ -200,12 +200,10 @@ function EndreBehandlingModal({
 
     if (erÅrsavregning) {
       const {
-        saksnummer,
         sakstype: { kode: forrigeSakstype },
       } = fagsak;
 
       const reqEndreAarsavregning: Api.Aarsavregning.AarsavregningEndreRequest = {
-        saksnummer,
         behandlingsstatus,
         mottaksdato: harMottaksdatoEndretSeg() ? Datoutils.dateTilIsoString(mottaksdato) : null,
       };
