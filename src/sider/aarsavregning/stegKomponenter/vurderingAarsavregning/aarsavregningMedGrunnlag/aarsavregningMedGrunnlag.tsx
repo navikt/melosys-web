@@ -69,6 +69,12 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
   const aarsavregningID = useSelector(behandlingsresultatSelectors.ÅrsavregningIDSelector);
   const dispatch = useDispatch();
 
+  const nyttGrunnlagHarTrygdeavgiftsperioder = () => {
+    const trygdeavgiftsperioder = aarsavregningResponse?.nyttGrunnlag?.avgift?.trygdeavgiftsperioder;
+
+    return trygdeavgiftsperioder && trygdeavgiftsperioder.length > 0;
+  };
+
   const medlemskapsperioder =
     aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.medlemskapsperioder;
   const innvilgetMedlemskapsperiode = lagInnvilgetMedlemskapsPeriode(medlemskapsperioder);
@@ -365,20 +371,24 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
         </>
       )}
 
-      {erAvvik && formIsValid && !beregningError && (
+      {nyttGrunnlagHarTrygdeavgiftsperioder() && erAvvik && formIsValid && !beregningError && (
         <SumArsavregningTabell
           nyTrygdeavgift={aarsavregningResponse?.avregning?.nyttTotalbeloep}
           tidligereTrygdeavgift={aarsavregningResponse?.avregning?.tidligereFakturertBeloep}
         />
       )}
 
-      {erAvvik && formIsValid && !beregningError && aarsavregningResponse?.nyttGrunnlag && (
-        <BeregnetTrygdeavgiftDetaljer
-          grunnlag={aarsavregningResponse.nyttGrunnlag}
-          medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!}
-          tittel="Endelig beregnet trygdeavgift"
-        />
-      )}
+      {nyttGrunnlagHarTrygdeavgiftsperioder() &&
+        erAvvik &&
+        formIsValid &&
+        !beregningError &&
+        aarsavregningResponse?.nyttGrunnlag && (
+          <BeregnetTrygdeavgiftDetaljer
+            grunnlag={aarsavregningResponse.nyttGrunnlag}
+            medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!}
+            tittel="Endelig beregnet trygdeavgift"
+          />
+        )}
 
       {brukerHarBekreftet && <FeilmeldingOppsummering errors={formErrors} />}
 
