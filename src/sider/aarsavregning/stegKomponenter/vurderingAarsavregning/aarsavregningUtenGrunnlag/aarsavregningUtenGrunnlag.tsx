@@ -40,8 +40,6 @@ interface Props {
   oppdaterStatus: (isValid: boolean) => void;
 }
 
-const { AVSLAATT } = MKV.Koder.innvilgelsesResultat;
-
 const mapTilMedlemskapsperiodeProps = (
   medlemskapsperiode: Api.MedlemAvFolketrygden.Medlemskapsperioder.Medlemskapsperiode,
 ): MedlemskapsperiodeProp => ({
@@ -82,17 +80,16 @@ const mapInitialMedlemskapsperioder = (
   medlemskapsperioder: Api.MedlemAvFolketrygden.Medlemskapsperioder.Medlemskapsperiode[],
 ): MedlemskapsperiodeProp[] =>
   [...medlemskapsperioder]
-    .sort((a, b) => Utils.dato.sorterEtterISOFomDato(a, b) || (a.innvilgelsesResultat === AVSLAATT ? -1 : 1))
+    .sort((a, b) => Utils.dato.sorterEtterISOFomDato(a, b))
     .map(mapTilMedlemskapsperiodeProps);
 
 interface AarsavregningFormValuesProps extends FormValuesProps {
   totaltForskuddsvisFakturert?: number | string;
 }
 
-const lagInnvilgetMedlemskapsPeriode = (medlemskapsperioder?: Medlemskapsperiode[]) => {
+const hentMedlemskapsTomFomDato = (medlemskapsperioder?: Medlemskapsperiode[]) => {
   if (medlemskapsperioder && !Utils._isEmpty(medlemskapsperioder)) {
     const sorterteInnvilgedePerioder = [...medlemskapsperioder]
-      .filter((periode) => periode.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.INNVILGET)
       .sort(sorterEtterISOFomDato);
     return {
       fom: sorterteInnvilgedePerioder[0].fomDato,
@@ -112,7 +109,7 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
 
   const [aarsavregningResponse, setAarsavregningResponse] = useState<AarsavregningResponse | undefined>(undefined);
   const [bestemmelser, setBestemmelser] = useState<[]>([]);
-  const [visLeggTilMedlemskapsperioder, setVisLeggTilMedlemskapsperioder] = useState<boolean>(false);
+  const [visLeggTilMedlemskapsperioder, setVisLeggTilMedlemskapsperioder] = useState<boolean>(true);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as any;
   const aarsavregningID = useSelector(behandlingsresultatSelectors.ÅrsavregningIDSelector);
@@ -125,12 +122,6 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
       Api.Ftrl.hentBestemmelser(behandlingstema).then((res: any) => setBestemmelser(res.bestemmelser));
     }
   }, [behandlingstema]);
-
-  const innvilgetMedlemskapsperiode = lagInnvilgetMedlemskapsPeriode(lagredeMedlemskapsperioder);
-  const defaultPeriode = {
-    fomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.fom),
-    tomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.tom),
-  };
 
   useEffect(() => {
     dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(behandlingID));
@@ -153,6 +144,7 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
   }, []);
 
   useEffect(() => {
+    console.log("test")
     if (lagredeMedlemskapsperioder)
       setValue("medlemskapsperioder", mapInitialMedlemskapsperioder(lagredeMedlemskapsperioder));
     setValue(
@@ -192,6 +184,8 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
   const medlemskapsTypeErPliktig = lagredeMedlemskapsperioder?.every(
     (periode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG,
   );
+
+  const innvilgetMedlemskapsperiode = hentMedlemskapsTomFomDato(lagredeMedlemskapsperioder);
 
   const {
     control,
@@ -341,6 +335,7 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
   const debouncedLagreMedlemskapsperioder = useCallback(
     Utils._debounce(async (alleMedlemskapsperioder, overskrevetIndex) => {
       const isValid = await trigger("medlemskapsperioder");
+      console.log(isValid)
       if (isValid) {
         // eslint-disable-next-line no-restricted-syntax
         for (const periode of alleMedlemskapsperioder) {
@@ -350,7 +345,7 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
         setVisLeggTilMedlemskapsperioder(true);
         dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(behandlingID));
       } else {
-        setVisLeggTilMedlemskapsperioder(false);
+       // setVisLeggTilMedlemskapsperioder(false); TODO trenger vi denne
       }
     }, 1000),
     [],
@@ -368,7 +363,6 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
     };
     // @ts-expect-error generisk beskrivelse
     medlemskapsperioderAppend(nyMedlemskapsperiode);
-    debouncedLagreMedlemskapsperioder(formValues.medlemskapsperioder, undefined);
   };
 
   const handleSlett = async (index: number) => {
@@ -398,7 +392,7 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
           handleChange={debouncedLagreMedlemskapsperioder}
           handleUpdate={medlemskapsperioderUpdate}
           handleLeggTil={handleLeggTilMedlemskapsperiode}
-          visLeggTil={visLeggTilMedlemskapsperioder}
+          visLeggTil={true}
         />
       ))}
 
@@ -411,7 +405,6 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
         fields={skattFields}
       />
       <Inntektskilder
-        defaultPeriode={defaultPeriode}
         formValues={formValues}
         redigerbart={redigerbart}
         update={inntektUpdate}
