@@ -40,7 +40,7 @@ interface Props {
   oppdaterStatus: (isValid: boolean) => void;
 }
 
-const hentMedlemskapsTomFomDatoProp = (medlemskapsperioder?: MedlemskapsperiodeProp[]) => {
+const hentMedlemskapsTomFomDato = (medlemskapsperioder?: MedlemskapsperiodeProp[] | Medlemskapsperiode[]) => {
   if (medlemskapsperioder && !Utils._isEmpty(medlemskapsperioder)) {
     const sorterteInnvilgedePerioder = [...medlemskapsperioder].sort(sorterEtterISOFomDato);
     return {
@@ -69,7 +69,7 @@ const mapTilSkatteforholdProps = (
   skatteforhold?: SkatteforholdDto[],
   medlemskapsperioder?: MedlemskapsperiodeProp[],
 ) => {
-  const test = hentMedlemskapsTomFomDatoProp(medlemskapsperioder);
+  const medlemskapsTomFomDato = hentMedlemskapsTomFomDato(medlemskapsperioder);
 
   if (skatteforhold !== undefined) {
     return skatteforhold?.map((forhold) => ({
@@ -77,11 +77,11 @@ const mapTilSkatteforholdProps = (
       tomDato: Utils.dato.formatterDatoTilNorsk(forhold.tomDato),
       skatteplikttype: forhold.skatteplikttype,
     }));
-  } else if (test.fom !== undefined && test.tom !== undefined) {
+  } else if (medlemskapsTomFomDato.fom !== undefined && medlemskapsTomFomDato.tom !== undefined) {
     return [
       {
-        fomDato: Utils.dato.formatterDatoTilNorsk(test.fom),
-        tomDato: Utils.dato.formatterDatoTilNorsk(test.tom),
+        fomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsTomFomDato.fom),
+        tomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsTomFomDato.tom),
         skatteplikttype: undefined,
       },
     ];
@@ -93,7 +93,7 @@ const mapTilInntektskilderProps = (
   inntektskilder?: InntektskildeDto[],
   medlemskapsperioder?: MedlemskapsperiodeProp[],
 ) => {
-  const test = hentMedlemskapsTomFomDatoProp(medlemskapsperioder);
+  const medlemskapsTomFomDato = hentMedlemskapsTomFomDato(medlemskapsperioder);
 
   if (inntektskilder !== undefined) {
     return inntektskilder?.map((kilde) => ({
@@ -104,11 +104,11 @@ const mapTilInntektskilderProps = (
       bruttoInntekt: kilde.avgiftspliktigInntekt,
       erMaanedsbelop: Utils.streng.boolTilUppercaseStreng(kilde.erMaanedsbelop),
     }));
-  } else if (test.fom !== undefined && test.tom !== undefined) {
+  } else if (medlemskapsTomFomDato.fom !== undefined && medlemskapsTomFomDato.tom !== undefined) {
     return [
       {
-        fomDato: Utils.dato.formatterDatoTilNorsk(test.fom),
-        tomDato: Utils.dato.formatterDatoTilNorsk(test.tom),
+        fomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsTomFomDato.fom),
+        tomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsTomFomDato.tom),
         kildetype: undefined,
         arbAvgBetales: Utils.streng.boolTilUppercaseStreng(false),
         bruttoInntekt: 0,
@@ -127,20 +127,6 @@ const mapInitialMedlemskapsperioder = (
 interface AarsavregningFormValuesProps extends FormValuesProps {
   totaltForskuddsvisFakturert?: number | string;
 }
-
-const hentMedlemskapsTomFomDato = (medlemskapsperioder?: Medlemskapsperiode[]) => {
-  if (medlemskapsperioder && !Utils._isEmpty(medlemskapsperioder)) {
-    const sorterteInnvilgedePerioder = [...medlemskapsperioder].sort(sorterEtterISOFomDato);
-    return {
-      fom: sorterteInnvilgedePerioder[0].fomDato,
-      tom: sorterteInnvilgedePerioder[sorterteInnvilgedePerioder.length - 1].tomDato,
-    };
-  }
-  return {
-    tom: undefined,
-    fom: undefined,
-  };
-};
 
 export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
   const [valgtÅr, setValgtÅr] = useState<number | null>(null);
@@ -183,9 +169,7 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
   }, []);
 
   useEffect(() => {
-    console.log("test");
     if (lagredeMedlemskapsperioder) {
-      console.log("test2");
       setValue("medlemskapsperioder", mapInitialMedlemskapsperioder(lagredeMedlemskapsperioder));
       setValue(
         "skatteforholdsperioder",
@@ -382,7 +366,6 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
   const debouncedLagreMedlemskapsperioder = useCallback(
     Utils._debounce(async (alleMedlemskapsperioder, overskrevetIndex) => {
       const isValid = await trigger("medlemskapsperioder");
-      console.log(isValid);
       if (isValid) {
         // eslint-disable-next-line no-restricted-syntax
         for (const periode of alleMedlemskapsperioder) {
