@@ -16,11 +16,6 @@ export interface AarsavregningRequest {
   avregning: Avregning;
 }
 
-export interface AarsavregningEndreRequest {
-  behandlingsstatus?: string | null;
-  mottaksdato?: string | null;
-}
-
 export interface Grunnlagsopplysninger {
   trygdeavgiftsgrunnlag: Trygdeavgiftsgrunnlag;
   avgift: Avgift;
@@ -98,9 +93,3 @@ export const hentFiltrertAarsavregningList = (
   }
   return getAsJson(url);
 };
-
-export const endreÅrsavregningOppsummering = (
-  behandlingID: number,
-  request: AarsavregningEndreRequest,
-): Promise<AarsavregningResponse> =>
-  putAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${AARSAVREGNING}/oppsummering`, request);

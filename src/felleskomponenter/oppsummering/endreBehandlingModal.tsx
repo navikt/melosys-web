@@ -24,7 +24,6 @@ import "./endreBehandlingModal.css";
 import { useAsyncCallbackState } from "../../hooks";
 import { useFeatureToggle } from "../../featuretoggle";
 import { MELOSYS_ARBEID_KUN_NORGE } from "../../featuretoggle/toggleNavn";
-import { behandlingsresultatSelectors } from "../../ducks/behandlingsresultat";
 
 enum FeltVerdier {
   sakstype = "sakstype",
@@ -198,72 +197,48 @@ function EndreBehandlingModal({
     setGenerellFeil("");
     setSkalViseSpinner(true);
 
-    if (erÅrsavregning) {
-      const {
-        sakstype: { kode: forrigeSakstype },
-      } = fagsak;
+    const {
+      saksnummer,
+      sakstype: { kode: forrigeSakstype },
+    } = fagsak;
 
-      const reqEndreAarsavregning: Api.Aarsavregning.AarsavregningEndreRequest = {
-        behandlingsstatus,
-        mottaksdato: harMottaksdatoEndretSeg() ? Datoutils.dateTilIsoString(mottaksdato) : null,
-      };
+    const reqFagsak: Api.Fagsaker.fagsak.EndreSakDto = {
+      behandlingID: behandlingID,
+      sakstype,
+      sakstema,
+      behandlingstema,
+      behandlingstype,
+      mottaksdato: harMottaksdatoEndretSeg() ? Datoutils.dateTilIsoString(mottaksdato) : null,
+      behandlingsstatus,
+    };
 
-      Api.Aarsavregning.endreÅrsavregningOppsummering(behandlingID, reqEndreAarsavregning)
-        .then(async () => {
-          setBehandlingEndret(true);
+    Api.Fagsaker.fagsak
+      .endreFagsak(saksnummer, reqFagsak)
+      .then(async () => {
+        setBehandlingEndret(true);
 
-          await håndterTrygdeavtaleFlyt(forrigeSakstype);
+        await håndterTrygdeavtaleFlyt(forrigeSakstype);
 
-          window.location.reload();
-        })
-        .catch(() => {
-          setGenerellFeil("Oppdateringen feilet!");
-          setBehandlingEndret(false);
-        })
-        .finally(() => setSkalViseSpinner(false));
-    } else {
-      const {
-        saksnummer,
-        sakstype: { kode: forrigeSakstype },
-      } = fagsak;
+        const nyGenerertLink = Routing.lagUrl(
+          saksnummer,
+          behandlingID,
+          sakstype,
+          sakstema,
+          behandlingstema,
+          behandlingstype,
+          erArbeidKunNorgeToggleEnabled,
+        );
 
-      const reqFagsak: Api.Fagsaker.fagsak.EndreSakDto = {
-        sakstype,
-        sakstema,
-        behandlingstema,
-        behandlingstype,
-        mottaksdato: harMottaksdatoEndretSeg() ? Datoutils.dateTilIsoString(mottaksdato) : null,
-        behandlingsstatus,
-      };
-
-      Api.Fagsaker.fagsak
-        .endreFagsak(saksnummer, reqFagsak)
-        .then(async () => {
-          setBehandlingEndret(true);
-
-          await håndterTrygdeavtaleFlyt(forrigeSakstype);
-
-          const nyGenerertLink = Routing.lagUrl(
-            saksnummer,
-            behandlingID,
-            sakstype,
-            sakstema,
-            behandlingstema,
-            behandlingstype,
-            erArbeidKunNorgeToggleEnabled,
-          );
-
-          if (nyGenerertLink && nyGenerertLink !== location.pathname + location.search) {
-            tilAnnenSide(nyGenerertLink);
-          }
-          window.location.reload();
-        })
-        .catch(() => {
-          setGenerellFeil("Oppdateringen feilet!");
-          setBehandlingEndret(false);
-        })
-        .finally(() => setSkalViseSpinner(false));
-    }
+        if (nyGenerertLink && nyGenerertLink !== location.pathname + location.search) {
+          tilAnnenSide(nyGenerertLink);
+        }
+        window.location.reload();
+      })
+      .catch(() => {
+        setGenerellFeil("Oppdateringen feilet!");
+        setBehandlingEndret(false);
+      })
+      .finally(() => setSkalViseSpinner(false));
   };
 
   const erBehandlingAvSed = MKVUtils.erBehandlingAvSed(fagsak.sakstype?.kode, oppsummering.behandlingstema?.kode);
