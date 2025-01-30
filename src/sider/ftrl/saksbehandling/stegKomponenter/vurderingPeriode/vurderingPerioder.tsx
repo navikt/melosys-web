@@ -25,10 +25,7 @@ import { FieldArrayProps, FormValuesProps, MedlemskapsperiodeProp, VurderingPeri
 import vurderingPerioderSchema from "./vurderingPerioderSchema";
 import "./vurderingPerioder.css";
 import { useFeatureToggle } from "../../../../../featuretoggle";
-import {
-  MELOSYS_FTRL_BEGRENSE_PERIODE_VEDTAK,
-  MELOSYS_SPESIELLE_GRUPPER,
-} from "../../../../../featuretoggle/toggleNavn";
+import { MELOSYS_FTRL_BEGRENSE_PERIODE_VEDTAK } from "../../../../../featuretoggle/toggleNavn";
 import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../../ducks/oppsummertfakta";
 
 const { AVSLAATT, OPPHØRT } = MKV.Koder.innvilgelsesResultat;
@@ -78,7 +75,6 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   const [lovligeInnvilgelsesresultat, setLovligeInnvilgelsesresultat] = useState<string[]>([]);
 
   const begrensePeriodeVedtakToggleEnabled = useFeatureToggle(MELOSYS_FTRL_BEGRENSE_PERIODE_VEDTAK);
-  const spesielleGrupperToggleEnabled = useFeatureToggle(MELOSYS_SPESIELLE_GRUPPER);
 
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const lagredeMedlemskapsperioder = useSelector(medlemskapsperioderSelectors.AlleMedlemskapsperioderSelector);
@@ -297,7 +293,7 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   );
 
   const ukjentSluttdatoMedlemskapsperiodeSkalVises =
-    spesielleGrupperToggleEnabled && behandlingstema === YRKESAKTIV && lagretBestemmelse !== FTRL_KAP2_2_1;
+    behandlingstema === YRKESAKTIV && lagretBestemmelse !== FTRL_KAP2_2_1;
 
   const visLeggTilNyPeriode = redigerbart && feltErFyltInn;
   const visFeilmeldinger = feilMeldingBlokkerer(aktivFeilmeldingType) ? feltErFyltInn : feltErFyltInn && formIsValid;
