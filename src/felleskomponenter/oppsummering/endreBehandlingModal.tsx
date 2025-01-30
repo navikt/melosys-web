@@ -194,12 +194,14 @@ function EndreBehandlingModal({
 
     setGenerellFeil("");
     setSkalViseSpinner(true);
+
     const {
       saksnummer,
       sakstype: { kode: forrigeSakstype },
     } = fagsak;
 
     const reqFagsak: Api.Fagsaker.fagsak.EndreSakDto = {
+      behandlingID,
       sakstype,
       sakstema,
       behandlingstema,
@@ -301,7 +303,7 @@ function EndreBehandlingModal({
           label="Behandlingstema"
           value={behandlingstema}
           koder={muligeBehandlingstemaer}
-          redigerbart={!erBehandlingAvSed && typeTemaKanEndres && !harBehandlingMedTrygdeavgift}
+          redigerbart={!erBehandlingAvSed && typeTemaKanEndres && !harBehandlingMedTrygdeavgift && !erÅrsavregning}
           feil={skalViseFeilmeldinger ? behandlingstemaFeilmelding : null}
           disableForsteValg
           className={harBehandlingMedTrygdeavgift ? "ktselect__slim" : undefined}
