@@ -253,19 +253,8 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
             setSkjemaverdierFraTrygdeavgiftsgrunnlag(res.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag);
             if (res.tidligereGrunnlagsopplysninger !== undefined) {
               Api.Trygdeavgift.beregnTrygdeavgiftsperioder(behandlingID, {
-                skatteforholdsperioder: res.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag.skatteforholdsperioder.map((skatteforhold: SkatteforholdDto) => ({
-                  fomDato: skatteforhold.fomDato,
-                  tomDato: skatteforhold.tomDato,
-                  skatteplikttype: skatteforhold.skatteplikttype,
-                })) as SkatteforholdDto[],
-                inntektskilder: res.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.inntektskperioder.map((inntektskilde: InntektskildeDto) => ({
-                  type: inntektskilde.type,
-                  arbeidsgiversavgiftBetales: inntektskilde.arbeidsgiversavgiftBetales,
-                  avgiftspliktigInntekt: inntektskilde.avgiftspliktigInntekt,
-                  fomDato: inntektskilde.fomDato,
-                  tomDato: inntektskilde.tomDato,
-                  erMaanedsbelop: inntektskilde.erMaanedsbelop
-                })) as InntektskildeDto[]
+                skatteforholdsperioder: res.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag.skatteforholdsperioder,
+                inntektskilder: res.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag.inntektskperioder,
               })
             }
           },
