@@ -1,20 +1,12 @@
-import MKV from "../../../../melosyskodeverk";
-
 import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
 import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
-import { hentVilkar } from "../../../../domeneUtils";
 import * as Utils from "../../../../utils";
 import VurderingArtikkel12_x from "../../stegKomponenter/vurderingArtikkel12_x/vurderingArtikkel12_x";
 
 class Artikkel12_2 extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
-
-    const art12_2 = hentVilkar(MKV.Koder.vilkaar.FO_883_2004_ART12_2, propsLight.vilkar);
-    const art16_1 = hentVilkar(MKV.Koder.vilkaar.FO_883_2004_ART16_1, propsLight.vilkar);
-
-    const utsendingsvilkår = propsLight.konvensjonStorbritanniaToggleEnabled ? propsLight.utsendingsvilkår : art12_2;
-    const unntaksvilkår = propsLight.konvensjonStorbritanniaToggleEnabled ? propsLight.unntaksvilkår : art16_1;
+    const { utsendingsvilkår, unntaksvilkår } = propsLight;
 
     const minstEttAvVilkåreneErUtfylt =
       !Utils._isNil(utsendingsvilkår?.oppfylt) || !Utils._isNil(unntaksvilkår?.oppfylt);
@@ -29,11 +21,11 @@ class Artikkel12_2 extends Steg {
 
     this.kriterier = [
       {
-        exec: () => propsLight.konvensjonStorbritanniaToggleEnabled && utsendingsvilkår?.oppfylt,
+        exec: () => utsendingsvilkår?.oppfylt,
         nesteSteg: STEG.VEDTAK,
       },
       {
-        exec: () => propsLight.konvensjonStorbritanniaToggleEnabled && unntaksvilkår?.oppfylt && harAvklaring,
+        exec: () => unntaksvilkår?.oppfylt && harAvklaring,
         nesteSteg: STEG.ARTIKKEL_16_ANMODNING,
       },
       {
@@ -46,7 +38,7 @@ class Artikkel12_2 extends Steg {
       },
     ];
     this.id = STEG.ARTIKKEL_12_2;
-    this.tittel = propsLight.konvensjonStorbritanniaToggleEnabled ? "Vurdering næringsdrivende" : "Vurdering av 12.2";
+    this.tittel = "Vurdering næringsdrivende";
     this.komponent = VurderingArtikkel12_x;
     this.samleRelevanteData = (_propsLight) => ({
       redigerbart: _propsLight.generiskStegRedigerbart,

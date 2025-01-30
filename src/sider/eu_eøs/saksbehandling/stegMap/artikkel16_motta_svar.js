@@ -22,7 +22,7 @@ class Artikkel16MottaSvar extends Steg {
       },
     ];
     this.id = STEG.ARTIKKEL_16_MOTTA_SVAR;
-    this.tittel = propsLight.konvensjonStorbritanniaToggleEnabled ? "Svar på anmodning" : "Artikkel 16.1 Svar";
+    this.tittel = "Svar på anmodning";
     this.komponent = VurderingArtikkel16MottaSvar;
     this.samleRelevanteData = (_propsLight) => ({
       redigerbart: _propsLight.redigerbart,

@@ -25,8 +25,7 @@ class Vedtak extends Steg {
     const skalViseArbeidKunNorgeFlyt =
       (erUtsendt || propsLight.behandlingstema.kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_KUN_NORGE) &&
       erOrdinaerYrkesgruppe &&
-      propsLight.arbeidsland.find((land) => land.kode === "NO") !== undefined &&
-      propsLight.arbeidKunNorgeToggleEnabled;
+      propsLight.arbeidsland.find((land) => land.kode === "NO") !== undefined;
     this.kriterier = [
       {
         exec: () => true,
@@ -46,11 +45,6 @@ class Vedtak extends Steg {
       );
       const erStorbritanniaBestemmelse = erStorbritanniaKonvBestemmelse(_propsLight.lovvalgsbestemmelse);
       const { UTSENDT_ARBEIDSTAKER, ARBEID_TJENESTEPERSON_ELLER_FLY } = MKV.Koder.behandlinger.behandlingstema;
-      const visSedLenkeForLovvalgsbestemmelser = [
-        MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_1,
-        MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia.KONV_EFTA_STORBRITANNIA_ART14_1,
-        MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia.KONV_EFTA_STORBRITANNIA_ART16_1,
-      ];
 
       const artikkel11_4Bestemmelser = [
         MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_4_2,
@@ -69,10 +63,7 @@ class Vedtak extends Steg {
           avklartfakta.fakta.includes(VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE),
         ) != null;
 
-      if (
-        (erUtsendt && erStorbritanniaBestemmelse && _propsLight.konvensjonStorbritanniaToggleEnabled) ||
-        skalViseArbeidKunNorgeFlyt
-      ) {
+      if ((erUtsendt && erStorbritanniaBestemmelse) || skalViseArbeidKunNorgeFlyt) {
         pdfDokumenter.push({
           dokumentData: {
             produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_EFTA_STORBRITANNIA,
@@ -124,7 +115,7 @@ class Vedtak extends Steg {
             fritekst: formValues.vedtaksbrevFritekst,
           },
         });
-        if (propsLight.konvensjonStorbritanniaToggleEnabled && lovvalgSomKodeTerm && formValues?.kopiTilArbeidsgiver) {
+        if (lovvalgSomKodeTerm && formValues?.kopiTilArbeidsgiver) {
           if (
             !erArtikkel11_4 &&
             [UTSENDT_ARBEIDSTAKER, ARBEID_TJENESTEPERSON_ELLER_FLY].includes(propsLight.behandlingstema.kode) &&
@@ -139,17 +130,6 @@ class Vedtak extends Steg {
               },
             });
           }
-        } else if (
-          lovvalgSomKodeTerm &&
-          visSedLenkeForLovvalgsbestemmelser.includes(lovvalgSomKodeTerm.kode) &&
-          formValues?.kopiTilArbeidsgiver
-        ) {
-          pdfDokumenter.push({
-            dokumentData: {
-              produserbardokument: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
-              mottaker: MKV.Koder.mottakerroller.ARBEIDSGIVER,
-            },
-          });
         }
       }
 

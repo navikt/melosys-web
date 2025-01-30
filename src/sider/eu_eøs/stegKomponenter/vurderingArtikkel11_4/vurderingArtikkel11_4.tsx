@@ -16,8 +16,6 @@ import {
 } from "../../../../felleskomponenter/stegvelger";
 import { Vilkaar } from "../../../../services/modules/vilkar";
 import { BOOLSK_STRING } from "../../../../constants";
-import { useFeatureToggle } from "../../../../featuretoggle";
-import { MELOSYS_ARBEID_KUN_NORGE } from "../../../../featuretoggle/toggleNavn";
 import { useSelector } from "react-redux";
 import { lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
 import LandInformasjon from "./landInformasjon";
@@ -86,7 +84,6 @@ function VurderingArtikkel11_4({
   redigerbart,
   tilbake,
 }: VurderingArtikkel114Props) {
-  const arbeidKunNorgeToggleEnabled = useFeatureToggle(MELOSYS_ARBEID_KUN_NORGE);
   const alleLand = useSelector(avklartefaktaSelectors.AlleRelevanteLandSelector);
   const lovvalgsbestemmelse = useSelector(lovvalgsperioderSelectors.LovvalgBestemmelseSelector);
   const tilleggsbestemmelse = useSelector(lovvalgsperioderSelectors.TilleggBestemmelseSelector);
@@ -185,16 +182,13 @@ function VurderingArtikkel11_4({
             name="artikkel11"
             defaultValue={artikkelValg}
           >
-            <Nav.Radio value={ArtikkelValg.ART11_4_1} readOnly={arbeidKunNorgeToggleEnabled && !erArbeidslandNorge}>
+            <Nav.Radio value={ArtikkelValg.ART11_4_1} readOnly={!erArbeidslandNorge}>
               Arbeider på norsk skip
             </Nav.Radio>
-            <Nav.Radio value={ArtikkelValg.ART11_4_2} readOnly={arbeidKunNorgeToggleEnabled && erArbeidslandNorge}>
+            <Nav.Radio value={ArtikkelValg.ART11_4_2} readOnly={erArbeidslandNorge}>
               Arbeider på utenlandsk skip, er bosatt i Norge og har norsk arbeidsgiver
             </Nav.Radio>
-            <Nav.Radio
-              value={ArtikkelValg.ART11_4_1_TIL_VURDERING_12_1}
-              readOnly={arbeidKunNorgeToggleEnabled && erArbeidslandNorge}
-            >
+            <Nav.Radio value={ArtikkelValg.ART11_4_1_TIL_VURDERING_12_1} readOnly={erArbeidslandNorge}>
               Utsendt til utenlandsk skip
             </Nav.Radio>
           </Nav.RadioGroup>

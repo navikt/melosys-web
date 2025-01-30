@@ -1,87 +1,67 @@
-import { Editor, SyntheticKeyboardEvent } from "react-draft-wysiwyg";
-import { useEffect, useState } from "react";
-import { ContentState, convertToRaw, EditorState, RichUtils } from "draft-js";
-import draftToHtml from "draftjs-to-html";
-import htmlToDraft from "html-to-draftjs";
 import classNames from "classnames";
-
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 import * as Nav from "../../navFrontend";
-import * as Utils from "../../utils";
-
-import FontSize from "./fontSize";
 import "./htmlEditor.css";
 
-const toolbar = {
-  options: ["inline", "fontSize", "list", "link", "history"],
-  inline: { options: ["bold", "italic", "underline", "strikethrough"] },
-  list: { inDropdown: true },
-  fontSize: {
-    options: [11, 12, 14, 16],
-    component: FontSize,
-  },
+interface TekstEditorProps {
+  value: string;
+  onChange: (value: string) => void;
+  disabled?: boolean;
+  label?: React.ReactNode;
+  feil?: string | { melding: string } | null;
+  className?: string;
+  placeholder?: string;
+  spellCheck?: boolean;
+}
+// /src/felleskomponenter/htmlEditor/htmlEditor.tsx
+
+const verktøylinje = {
+  toolbar: [
+    [{ header: [false, 1, 2] }],
+    ["bold", "italic", "underline"],
+    [{ align: ["", "center", "right", "justify"] }],
+    [{ indent: "-1" }, { indent: "+1" }],
+    [{ list: "ordered" }, { list: "bullet" }],
+    ["clean"],
+  ],
 };
 
-const editorStateFromHTML = (htmlValue: string) =>
-  EditorState.createWithContent(ContentState.createFromBlockArray(htmlToDraft(htmlValue).contentBlocks));
+const formater = ["header", "bold", "italic", "underline", "align", "indent", "list", "bullet"];
 
-const htmlFromEditorState = (editorState: EditorState) => draftToHtml(convertToRaw(editorState.getCurrentContent()));
-
-interface TextToHtmlEditorProps {
-  [x: string]: any;
+interface TekstEditorProps {
+  value: string;
+  onChange: (value: string) => void;
+  disabled?: boolean;
+  label?: React.ReactNode;
+  feil?: string | { melding: string } | null;
+  className?: string;
+  placeholder?: string;
 }
 
-function HtmlEditor({ value, onChange, ...rest }: TextToHtmlEditorProps) {
-  const [currentEditorState, setCurrentEditorState] = useState(editorStateFromHTML(value));
-
-  useEffect(() => {
-    const currentHtml = htmlFromEditorState(currentEditorState);
-    if (!Utils._isEmpty(currentHtml) && !Utils._isEmpty(value) && currentHtml !== value) {
-      const editorState = editorStateFromHTML(value);
-      onEditorStateChange(editorState);
-    }
-  }, [value]);
-
-  const onEditorStateChange = (editorState: EditorState) => {
-    setCurrentEditorState(editorState);
-    onChange(htmlFromEditorState(editorState));
-  };
-
-  const handlePastedText = () => {
-    return false; // Benyttes for å få default stateChange ved paste
-  };
-
-  const handleReturn = (e: SyntheticKeyboardEvent) => {
-    if (e.key === "Enter") {
-      const editorState = RichUtils.insertSoftNewline(currentEditorState);
-      onEditorStateChange(editorState);
-      return true;
-    }
-    return false;
-  };
-
+function HtmlEditor({ value, onChange, disabled, label, feil, className }: TekstEditorProps) {
   return (
-    <div className={classNames("htmlEditor", rest?.className)}>
-      {rest?.label ? (
+    <div className={classNames("htmlEditor", className)}>
+      {label && (
         <Nav.BodyLong weight="semibold" size="small" className="editor_label">
-          {rest?.label}
+          {label}
         </Nav.BodyLong>
-      ) : (
-        ""
       )}
-      <Editor
-        handleReturn={handleReturn}
-        editorState={currentEditorState}
-        toolbar={toolbar}
-        wrapperClassName={classNames("wrapper", { "wrapper-disabled": rest?.disabled, "wrapper-feil": rest?.feil })}
-        editorClassName="editor"
-        onEditorStateChange={onEditorStateChange}
-        handlePastedText={handlePastedText}
-        ariaLabel={rest?.label}
-        {...rest}
+      <ReactQuill
+        theme="snow"
+        value={value}
+        onChange={onChange}
+        modules={verktøylinje}
+        formats={formater}
+        readOnly={disabled}
+        className={classNames("editor-wrapper", {
+          "editor-wrapper--disabled": disabled,
+          "editor-wrapper--error": feil,
+        })}
       />
-      {rest?.feil && (
+      {feil && (
         <div role="alert" aria-live="assertive" className="feilmelding">
-          {rest.feil?.melding || rest.feil}
+          {typeof feil === "string" ? feil : feil.melding}
         </div>
       )}
     </div>

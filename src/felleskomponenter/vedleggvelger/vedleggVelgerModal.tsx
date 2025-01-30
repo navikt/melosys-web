@@ -1,26 +1,30 @@
 import { FysiskDokument } from "Domene";
-
 import * as Nav from "../../navFrontend";
-import * as Utils from "../../utils";
-import VedleggVelgerTable from "./vedleggVelgerTable";
+import * as DokumenterV2 from "../../services/modules/dokumenter-v2";
 import "./vedleggVelger.css";
+import VedleggVelgerTable from "./vedleggVelgerTable";
 
 interface VedleggVelgerModalProps {
   onRequestClose: () => void;
-  valgteVedlegg: FysiskDokument[];
-  alleVedlegg: FysiskDokument[];
-  slettVedlegg: (vedleggID: string) => void;
-  leggTilVedlegg: (vedlegg: FysiskDokument) => void;
+  valgteVedlegg: DokumenterV2.BrevVedleggInterface;
+  alleSaksvedlegg: DokumenterV2.FysiskDokument[];
+  slettSaksvedlegg: (vedlegg: FysiskDokument) => void;
+  slettStandardvedlegg: () => void;
+  leggTilSaksvedlegg: (vedlegg: FysiskDokument) => void;
+  velgStandardvedlegg: (vedlegg: DokumenterV2.TilgjengeligStandardvedlegg) => void;
+  standardvedlegg: DokumenterV2.TilgjengeligStandardvedlegg[];
 }
 
 function VedleggVelgerModal({
   onRequestClose,
   valgteVedlegg,
-  alleVedlegg,
-  leggTilVedlegg,
-  slettVedlegg,
+  alleSaksvedlegg,
+  leggTilSaksvedlegg,
+  velgStandardvedlegg,
+  slettSaksvedlegg,
+  slettStandardvedlegg,
+  standardvedlegg,
 }: VedleggVelgerModalProps) {
-  const harDokumenter = !Utils._isEmpty(alleVedlegg);
   return (
     <Nav.Modal
       className="vedleggvelger-modal"
@@ -28,19 +32,17 @@ function VedleggVelgerModal({
       open
       closeOnBackdropClick
       header={{ heading: "Dokumenter tilknyttet saken", closeButton: false }}
-      width={harDokumenter ? undefined : 500}
     >
       <Nav.Modal.Body>
-        {harDokumenter ? (
-          <VedleggVelgerTable
-            valgteVedlegg={valgteVedlegg}
-            alleVedlegg={alleVedlegg}
-            leggTilVedlegg={leggTilVedlegg}
-            slettVedlegg={slettVedlegg}
-          />
-        ) : (
-          <span>Fant ingen dokumenter tilknyttet saken</span>
-        )}
+        <VedleggVelgerTable
+          valgteVedlegg={valgteVedlegg}
+          alleSaksvedlegg={alleSaksvedlegg}
+          standardvedlegg={standardvedlegg}
+          leggTilSaksvedlegg={leggTilSaksvedlegg}
+          velgStandardvedlegg={velgStandardvedlegg}
+          slettSaksvedlegg={slettSaksvedlegg}
+          slettStandardvedlegg={slettStandardvedlegg}
+        />
       </Nav.Modal.Body>
       <Nav.Modal.Footer>
         <Nav.Button variant="primary" onClick={onRequestClose}>

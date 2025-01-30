@@ -109,7 +109,6 @@ export function VilkaarOgBegrunnelser({
                   onChange={(fritekst: string) => handleEndreBegrunnelseFritekst(`${vilkår}`, fritekst)}
                   placeholder="Vennligst spesifiser..."
                   spellCheck
-                  readOnly={!redigerbart}
                   disabled={!redigerbart}
                 />
               </Nav.Column>

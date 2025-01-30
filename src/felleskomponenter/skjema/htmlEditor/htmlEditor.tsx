@@ -1,47 +1,39 @@
 import { Field, WrappedFieldProps } from "redux-form";
-
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import HtmlEditor from "../../htmlEditor";
 
-interface InnerHtmlEditorComponentProps {
-  [x: string]: any;
+interface SkjemaHtmlEditorProps {
+  feltNavn: string;
+  className?: string;
+  disabled?: boolean;
+  label?: React.ReactNode;
+  placeholder?: string;
+  spellCheck?: boolean;
 }
 
-function InnerHTMLEditorComponent({
+function SkjemaHtmlEditorComponent({
   input,
-  spellcheck = true,
+  meta,
+  spellCheck = true,
   ...rest
-}: InnerHtmlEditorComponentProps & WrappedFieldProps) {
-  const inputProps = {
-    ...input,
-    ...rest,
-  };
-
-  const feil = rest?.meta?.touched ? rest?.meta?.error : undefined;
+}: WrappedFieldProps & Omit<SkjemaHtmlEditorProps, "feltNavn">) {
+  const feil = meta.touched ? meta.error : undefined;
 
   return (
-    <div className="editor_content" {...inputProps}>
-      <HtmlEditor
-        value={input.value}
-        onChange={input.onChange}
-        placeholder={rest.placeholder || ""}
-        readOnly={rest?.disabled}
-        spellCheck={spellcheck}
-        label={rest?.label}
-        feil={feil}
-        disabled={rest?.disabled}
-      />
-    </div>
+    <HtmlEditor
+      value={input.value}
+      onChange={input.onChange}
+      placeholder={rest.placeholder || ""}
+      spellCheck={spellCheck}
+      label={rest.label}
+      feil={feil}
+      disabled={rest.disabled}
+      {...rest}
+    />
   );
 }
 
-interface HtmleditorProps extends InnerHtmlEditorComponentProps {
-  feltNavn: string;
-  className?: string;
+function SkjemaHtmlEditor({ feltNavn, className = "", ...rest }: SkjemaHtmlEditorProps) {
+  return <Field name={feltNavn} className={className} component={SkjemaHtmlEditorComponent} props={rest} />;
 }
 
-function HTMLEditor({ feltNavn, className = "", ...rest }: HtmleditorProps) {
-  return <Field name={feltNavn} className={className} component={InnerHTMLEditorComponent} props={rest} />;
-}
-
-export default HTMLEditor;
+export default SkjemaHtmlEditor;

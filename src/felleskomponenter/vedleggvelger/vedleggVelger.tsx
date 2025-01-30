@@ -5,24 +5,48 @@ import * as Ikoner from "../../resources/images";
 
 import "./vedleggVelger.css";
 import VedleggVelgerModal from "./vedleggVelgerModal";
+import * as DokumenterV2 from "../../services/modules/dokumenter-v2";
+import { TilgjengeligStandardvedlegg } from "../../services/modules/dokumenter-v2";
 
 interface VedleggVelgerProps {
   dokumenter: FysiskDokument[];
-  valgteVedlegg: FysiskDokument[];
-  onChange: (valgteVedlegg: FysiskDokument[]) => void;
+  valgteVedlegg: DokumenterV2.BrevVedleggInterface;
+  onChange: (valgteVedlegg: DokumenterV2.BrevVedleggInterface) => void;
   redigerbart: boolean;
+  standardvedlegg: DokumenterV2.TilgjengeligStandardvedlegg[];
 }
 
-function VedleggVelger({ dokumenter, valgteVedlegg, onChange, redigerbart }: VedleggVelgerProps) {
+function VedleggVelger({ dokumenter, valgteVedlegg, onChange, redigerbart, standardvedlegg }: VedleggVelgerProps) {
   const [redigerer, setRedigerer] = useState<boolean>(false);
 
   const toggleRedigerer = () => setRedigerer(!redigerer);
-  const leggTilVedlegg = (vedlegg: FysiskDokument) => {
-    onChange([...valgteVedlegg, vedlegg]);
+
+  const velgStandardvedlegg = (vedlegg: TilgjengeligStandardvedlegg) => {
+    onChange({
+      saksvedlegg: valgteVedlegg.saksvedlegg,
+      standardvedlegg: vedlegg,
+    });
   };
 
-  const slettVedlegg = (vedleggID: string) => {
-    onChange(valgteVedlegg.filter(({ id }) => id !== vedleggID));
+  const leggTilSaksvedlegg = (vedlegg: FysiskDokument) => {
+    onChange({
+      saksvedlegg: [...valgteVedlegg.saksvedlegg, vedlegg],
+      standardvedlegg: valgteVedlegg.standardvedlegg,
+    });
+  };
+
+  const slettSaksvedlegg = (vedlegg: FysiskDokument) => {
+    onChange({
+      saksvedlegg: valgteVedlegg.saksvedlegg.filter(({ id }) => id !== vedlegg.id),
+      standardvedlegg: valgteVedlegg.standardvedlegg,
+    });
+  };
+
+  const slettStandardvedlegg = () => {
+    onChange({
+      saksvedlegg: valgteVedlegg.saksvedlegg,
+      standardvedlegg: null,
+    });
   };
 
   return (
@@ -33,10 +57,13 @@ function VedleggVelger({ dokumenter, valgteVedlegg, onChange, redigerbart }: Ved
       {redigerer && (
         <VedleggVelgerModal
           onRequestClose={toggleRedigerer}
-          alleVedlegg={dokumenter}
+          alleSaksvedlegg={dokumenter}
+          standardvedlegg={standardvedlegg}
           valgteVedlegg={valgteVedlegg}
-          leggTilVedlegg={leggTilVedlegg}
-          slettVedlegg={slettVedlegg}
+          leggTilSaksvedlegg={leggTilSaksvedlegg}
+          velgStandardvedlegg={velgStandardvedlegg}
+          slettSaksvedlegg={slettSaksvedlegg}
+          slettStandardvedlegg={slettStandardvedlegg}
         />
       )}
     </>

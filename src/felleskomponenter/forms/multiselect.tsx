@@ -16,7 +16,6 @@ function MultiSelectInnerComponent({
   label,
   redigerbart,
   onChange,
-  name,
   feil,
   options,
   values,

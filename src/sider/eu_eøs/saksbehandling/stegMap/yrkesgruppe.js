@@ -15,9 +15,7 @@ class Yrkesgruppe extends Steg {
     const yrkesgruppe = hentFakta(KV.Koder.avklartefaktaKoder.YRKESGRUPPE, propsLight.avklartefakta);
     const vilkårManglerForDirekteTilAnmodning =
       yrkesgruppe?.fakta?.[0] === ORDINAER_UTEN_ART12 && !propsLight.unntaksvilkår.oppfylt;
-    const harAvklaring = propsLight.konvensjonStorbritanniaToggleEnabled
-      ? !Utils._isEmpty(yrkesgruppe.fakta) && !vilkårManglerForDirekteTilAnmodning
-      : yrkesgruppe.fakta && yrkesgruppe.fakta.length > 0;
+    const harAvklaring = !Utils._isEmpty(yrkesgruppe.fakta) && !vilkårManglerForDirekteTilAnmodning;
 
     this.kriterier = [
       {

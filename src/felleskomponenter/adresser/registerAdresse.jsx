@@ -15,8 +15,7 @@ function RegisterAdresse({ adresse }) {
   }
 
   const { gateadresse, land, postnr, poststed } = adresse;
-
-  const { gatenavn, husnummer, husbokstav } = gateadresse;
+  const { gatenavn, husnummer, husbokstav } = gateadresse || {};
 
   const landNavn = typeof land === "string" ? land : KV.objektTilTermUtenFeilmelding(land);
   const visGate = gatenavn || husnummer || husbokstav;
@@ -25,23 +24,23 @@ function RegisterAdresse({ adresse }) {
     <address className="registeradresse">
       {visGate && (postnr || poststed) && landNavn ? (
         <div>
-          {gatenavn} {husnummer}
-          {husbokstav}, {postnr} {poststed}, {landNavn}
+          {gatenavn} {husnummer || ""}
+          {husbokstav || ""}, {postnr} {poststed}, {landNavn}
         </div>
       ) : (
-        (
-          visGate && (
+        <>
+          {visGate && (
             <div>
-              {gatenavn} {husnummer} {husbokstav}
+              {gatenavn} {husnummer || ""} {husbokstav || ""}
             </div>
-          )
-        )(
-          (postnr || poststed) && (
+          )}
+          {(postnr || poststed) && (
             <div>
               {postnr} {poststed}
             </div>
-          ),
-        )(landNavn && <div>{landNavn}</div>)
+          )}
+          {landNavn && <div>{landNavn}</div>}
+        </>
       )}
     </address>
   ) : (

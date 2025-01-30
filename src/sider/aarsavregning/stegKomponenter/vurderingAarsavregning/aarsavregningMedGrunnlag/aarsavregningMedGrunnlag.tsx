@@ -101,8 +101,8 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
   };
 
   useEffect(() => {
-    if (behandlingID && aarsavregningID) {
-      Api.Aarsavregning.hentAarsavregning(behandlingID, aarsavregningID)
+    if (behandlingID) {
+      Api.Aarsavregning.hentAarsavregning(behandlingID)
         .then((res) => {
           setAarsavregningResponse(res);
           // Benyttes for innhenting av saksopplysninger ifm. årsavregningsbehandlinger
@@ -246,6 +246,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
           (res: AarsavregningResponse) => {
             setAarsavregningResponse(res);
             setSkjemaverdierFraTrygdeavgiftsgrunnlag(res.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag);
+            debounceBeregnTrygdeavgiftsperioder(formValues);
           },
         );
       });

@@ -1,57 +1,34 @@
-import { ReactNode, forwardRef } from "react";
+import { forwardRef } from "react";
 import { Controller, UseControllerProps } from "react-hook-form";
 import HtmlEditor from "../htmlEditor";
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import { RegisterHookFormProps } from "./misc/reacthookProps";
 import { getErrorMessage } from "./misc/mapFeilmelding";
 
-interface HtmlEditorComponentProps {
-  spellcheck?: boolean;
+interface HtmlEditorProps extends UseControllerProps {
+  spellCheck?: boolean;
   className?: string;
   placeholder?: string;
   disabled?: boolean;
-  label?: ReactNode;
-  feil?: string;
-  onChange?: any;
+  label?: React.ReactNode;
+  onChange?: (value: string) => void;
 }
 
-type InnerHtmlEditorComponentProps = HtmlEditorComponentProps & RegisterHookFormProps;
-
-function InnerHTMLEditorComponent({ spellcheck = true, ...rest }: InnerHtmlEditorComponentProps) {
-  return (
-    <div className={`${rest.className} editor_content`}>
-      <HtmlEditor
-        value={rest.value}
-        onChange={rest.onChange}
-        placeholder={rest.placeholder || ""}
-        readOnly={rest?.disabled}
-        spellCheck={spellcheck}
-        label={rest?.label}
-        feil={rest.feil}
-        disabled={rest?.disabled}
-      />
-    </div>
-  );
-}
-
-type HTMLEditorProps = HtmlEditorComponentProps & UseControllerProps;
-
-const HTMLEditor = forwardRef<HTMLEditorProps, HTMLEditorProps>(
-  ({ name, control, className, onChange, disabled }: HTMLEditorProps, _ref: any) => {
+const HTMLEditor = forwardRef<HtmlEditorProps, HtmlEditorProps>(
+  ({ name, control, className, onChange, disabled, ...rest }, _ref) => {
     return (
       <Controller
         name={name}
         control={control}
         render={({ field, formState }) => (
-          <InnerHTMLEditorComponent
+          <HtmlEditor
             {...field}
             className={className}
-            onChange={(event: any) => {
-              field.onChange(event);
-              if (onChange) onChange(event);
+            onChange={(value: string) => {
+              field.onChange(value);
+              if (onChange) onChange(value);
             }}
             feil={getErrorMessage(field, formState)}
             disabled={disabled}
+            {...rest}
           />
         )}
       />

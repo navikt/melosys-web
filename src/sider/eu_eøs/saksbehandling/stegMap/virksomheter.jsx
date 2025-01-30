@@ -43,20 +43,12 @@ class SaksbehandlingVirksomheter extends Virksomheter {
         nesteSteg: STEG.BOSTEDSLAND,
       },
       {
-        exec: () =>
-          propsLight.konvensjonStorbritanniaToggleEnabled &&
-          harValgtArbeidsgiver &&
-          gårDirekteTilArtikkel16 &&
-          propsLight.unntaksvilkår?.oppfylt,
+        exec: () => harValgtArbeidsgiver && gårDirekteTilArtikkel16 && propsLight.unntaksvilkår?.oppfylt,
         nesteSteg: STEG.ARTIKKEL_16_ANMODNING,
       },
       {
         exec: () => {
-          return (
-            propsLight.arbeidKunNorgeToggleEnabled &&
-            harValgtArbeidsgiver &&
-            (erUtsendtOgArbeidslandNorge || erArbeidKunNorge)
-          );
+          return harValgtArbeidsgiver && (erUtsendtOgArbeidslandNorge || erArbeidKunNorge);
         },
         nesteSteg: STEG.VEDTAK,
       },
