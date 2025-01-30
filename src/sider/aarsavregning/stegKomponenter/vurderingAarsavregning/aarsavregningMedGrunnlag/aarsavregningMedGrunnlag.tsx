@@ -199,7 +199,6 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
 
   const handleBeregnTrygdeavgiftsperioder = useCallback(
     async (formVerdier: FieldValue<FormValuesProps>) => {
-      console.log(formVerdier);
       await beregnTrygdeavgiftsperioder(formVerdier, {
         behandlingID,
         medlemskapsTypeErPliktig,
@@ -223,9 +222,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
     innvilgetMedlemskapsperiode,
   );
 
-  // erAvvik trigger en beregning på gammelt grunnlag etter å ha oppdatert skjemaverdier i håndterAvvik. Dette må gjøres for å oppdatere lagrede verdier i api
   useEffect(() => {
-    console.log(erIkkeAvvik);
     if (
       redigerbart &&
       erIkkeAvvik &&
@@ -247,9 +244,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
   }, [stegErGyldig]);
 
   const håndterAvvik = (erIkkeAvvik: boolean) => {
-    console.log(erIkkeAvvik);
     if (!erIkkeAvvik) {
-      console.log("er avvik skal være " + erIkkeAvvik);
       Api.Trygdeavgift.slettTrygdeavgiftsperioder(behandlingID).then(() => {
         resetSkatteforholdsperioder([]);
         resetInntektskilder([]);
