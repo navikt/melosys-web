@@ -261,6 +261,10 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
           },
         );
       });
+    } else if (aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag) {
+      setSkjemaverdierFraTrygdeavgiftsgrunnlag(
+        aarsavregningResponse.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag,
+      );
     }
     setErAvvik(value);
   };
