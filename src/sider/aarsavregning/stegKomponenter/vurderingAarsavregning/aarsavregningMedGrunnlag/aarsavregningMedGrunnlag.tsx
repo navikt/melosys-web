@@ -59,7 +59,7 @@ const lagInnvilgetMedlemskapsPeriode = (medlemskapsperioder?: Medlemskapsperiode
 };
 
 export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
-  const [erIkkeAvvik, setErIkkeAvvik] = useState<boolean | undefined>(undefined);
+  const [erAvvik, setErAvvik] = useState<boolean | undefined>(undefined);
   const [beregningError, setBeregningError] = useState<undefined | string>(undefined);
   const [brukerHarBekreftet, setBrukerHarBekreftet] = useState(false);
   const [aarsavregningResponse, setAarsavregningResponse] = useState<AarsavregningResponse | undefined>(undefined);
@@ -113,7 +113,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
           setAarsavregningResponse(res);
           // Benyttes for innhenting av saksopplysninger ifm. årsavregningsbehandlinger
           dispatch({ type: OK, data: res });
-          setErIkkeAvvik(res.nyttGrunnlag === null ? undefined : true);
+          setErAvvik(res.nyttGrunnlag === null ? undefined : true);
 
           if (res.avvikFunnet && res?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag) {
             setSkjemaverdierFraTrygdeavgiftsgrunnlag(
@@ -167,7 +167,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
       medlemskapsperiode: innvilgetMedlemskapsperiode,
       medlemskapsTypeErPliktig,
       erÅpenSluttDato: false,
-      erAvvik: erIkkeAvvik,
+      erAvvik: erAvvik,
     },
     mode: "onChange",
     defaultValues: {
@@ -225,7 +225,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
   useEffect(() => {
     if (
       redigerbart &&
-      erIkkeAvvik &&
+      erAvvik &&
       !isValidating &&
       formIsValid &&
       aarsavregningID &&
@@ -233,11 +233,11 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
     ) {
       debounceBeregnTrygdeavgiftsperioder(formValues);
     }
-  }, [isValidating, erIkkeAvvik]);
+  }, [isValidating, erAvvik]);
 
   const stegErGyldig =
-    erIkkeAvvik === false ||
-    Boolean(formIsValid && erIkkeAvvik && aarsavregningResponse?.nyttGrunnlag && !beregningError);
+    erAvvik === false ||
+    Boolean(formIsValid && erAvvik && aarsavregningResponse?.nyttGrunnlag && !beregningError);
 
   useEffect(() => {
     oppdaterStatus(stegErGyldig);
@@ -262,7 +262,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
         );
       });
     }
-    setErIkkeAvvik(erIkkeAvvik);
+    setErAvvik(erAvvik);
   };
 
   const bekreftOnClick = () => {
@@ -302,7 +302,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
       {aarsavregningResponse?.tidligereGrunnlagsopplysninger && (
         <Nav.RadioGroup
           onChange={håndterAvvik}
-          value={erIkkeAvvik}
+          value={erAvvik}
           legend="Er det avvik i opplysningene fra skatt eller bruker?"
           readOnly={!redigerbart}
         >
@@ -312,9 +312,9 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
           </Nav.HStack>
         </Nav.RadioGroup>
       )}
-      {erIkkeAvvik && <Nav.Heading>Inntekts- og skatteopplysninger for endelig trygdeavgift</Nav.Heading>}
+      {erAvvik && <Nav.Heading>Inntekts- og skatteopplysninger for endelig trygdeavgift</Nav.Heading>}
 
-      {erIkkeAvvik && (
+      {erAvvik && (
         <>
           <Skatteforholdsperioder
             formValues={formValues}
@@ -339,14 +339,14 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
         </>
       )}
 
-      {erIkkeAvvik && formIsValid && !beregningError && (
+      {erAvvik && formIsValid && !beregningError && (
         <SumArsavregningTabell
           nyTrygdeavgift={aarsavregningResponse?.avregning?.nyttTotalbeloep}
           tidligereTrygdeavgift={aarsavregningResponse?.avregning?.tidligereFakturertBeloep}
         />
       )}
 
-      {erIkkeAvvik && formIsValid && !beregningError && aarsavregningResponse?.nyttGrunnlag && (
+      {erAvvik && formIsValid && !beregningError && aarsavregningResponse?.nyttGrunnlag && (
         <BeregnetTrygdeavgiftDetaljer
           grunnlag={aarsavregningResponse.nyttGrunnlag}
           medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!}
