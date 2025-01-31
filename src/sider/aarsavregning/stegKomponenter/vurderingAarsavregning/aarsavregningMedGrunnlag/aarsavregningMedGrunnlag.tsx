@@ -262,7 +262,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
         );
       });
     }
-    setErAvvik(erAvvik);
+    setErAvvik(value);
   };
 
   const bekreftOnClick = () => {
