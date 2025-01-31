@@ -167,7 +167,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
       medlemskapsperiode: innvilgetMedlemskapsperiode,
       medlemskapsTypeErPliktig,
       erÅpenSluttDato: false,
-      erAvvik: erAvvik,
+      erAvvik,
     },
     mode: "onChange",
     defaultValues: {
