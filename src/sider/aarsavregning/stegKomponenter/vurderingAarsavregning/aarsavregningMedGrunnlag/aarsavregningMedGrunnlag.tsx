@@ -14,8 +14,6 @@ import { FieldValue, useFieldArray, useForm } from "react-hook-form";
 import {
   FieldArrayProps,
   FormValuesProps,
-  Inntektskilde,
-  Skatteforhold,
 } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Utils from "../../../../../utils";
@@ -34,7 +32,6 @@ import aarsavregningMedGrunnlagSchema from "./aarsavregningMedGrunnlagSchema";
 import { Skatteforholdsperioder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/skatteforholdsperioder";
 import { Inntektskilder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/inntektskilder";
 import { beregnTrygdeavgiftsperioder } from "../komponenter/utils";
-import { InntektskildeDto, SkatteforholdDto } from "../../../../../services/modules/trygdeavgift";
 
 interface Props {
   bekreft: () => void;
