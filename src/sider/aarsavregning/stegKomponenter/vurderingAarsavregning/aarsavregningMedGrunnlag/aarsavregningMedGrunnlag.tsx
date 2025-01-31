@@ -243,8 +243,8 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
     oppdaterStatus(stegErGyldig);
   }, [stegErGyldig]);
 
-  const håndterAvvik = (erIkkeAvvik: boolean) => {
-    if (!erIkkeAvvik) {
+  const håndterAvvik = (value: boolean) => {
+    if (!value) {
       Api.Trygdeavgift.slettTrygdeavgiftsperioder(behandlingID).then(() => {
         resetSkatteforholdsperioder([]);
         resetInntektskilder([]);
