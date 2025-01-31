@@ -11,10 +11,7 @@ import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import * as Nav from "../../../../../navFrontend";
 import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 import { FieldValue, useFieldArray, useForm } from "react-hook-form";
-import {
-  FieldArrayProps,
-  FormValuesProps,
-} from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
+import { FieldArrayProps, FormValuesProps } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Utils from "../../../../../utils";
 import { feilMeldingBlokkerer, finnAktivFeilmelding } from "../meldinger";
