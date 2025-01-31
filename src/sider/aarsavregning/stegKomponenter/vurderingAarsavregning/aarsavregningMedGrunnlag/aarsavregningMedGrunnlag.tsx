@@ -216,7 +216,6 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
     innvilgetMedlemskapsperiode,
   );
 
-  // erAvvik trigger en beregning på gammelt grunnlag etter å ha oppdatert skjemaverdier i håndterAvvik. Dette må gjøres for å oppdatere lagrede verdier i api
   useEffect(() => {
     if (
       redigerbart &&
@@ -246,7 +245,12 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
           (res: AarsavregningResponse) => {
             setAarsavregningResponse(res);
             setSkjemaverdierFraTrygdeavgiftsgrunnlag(res.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag);
-            debounceBeregnTrygdeavgiftsperioder(formValues);
+            if (res.tidligereGrunnlagsopplysninger !== undefined) {
+              Api.Trygdeavgift.beregnTrygdeavgiftsperioder(behandlingID, {
+                skatteforholdsperioder: res.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag.skatteforholdsperioder,
+                inntektskilder: res.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag.inntektskperioder,
+              });
+            }
           },
         );
       });
