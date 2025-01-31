@@ -199,7 +199,7 @@ function SendBrev({
 
   useEffect(() => {
     hentTilgjengeligeMaler();
-    hentTilgjengeligeStandardvedlegg();
+    hentTilgjengeligeStandardvedlegg()
     hentUtkast();
   }, []);
 
@@ -419,6 +419,10 @@ function SendBrev({
     event.preventDefault();
   };
 
+  const harStandardVedlegg = () => {
+    return formValues?.valgtMottaker?.rolle == "BRUKER" && formValues?.felt?.DISTRIBUSJONSTYPE?.valg == "VEDTAK";
+  };
+
   if (!tilgjengeligeMaler || !formValues) return null;
   if (!visInnhold) return null;
 
@@ -537,7 +541,7 @@ function SendBrev({
           redigerFritekstvedleggIndex={redigerFritekstVedleggIndex}
           setRedigerFritekstvedleggIndex={setRedigerFritekstvedleggIndex}
           muligeMottakere={muligeMottakere}
-          standardvedlegg={standardvedleggListe}
+          standardvedlegg={harStandardVedlegg()? standardvedleggListe : []}
         />
       )}
 
