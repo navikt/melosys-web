@@ -105,11 +105,13 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
       Api.Aarsavregning.hentAarsavregning(behandlingID)
         .then((res) => {
           setAarsavregningResponse(res);
+          if (!redigerbart) {
+            setErAvvik(res.avvikFunnet);
+          }
           // Benyttes for innhenting av saksopplysninger ifm. årsavregningsbehandlinger
           dispatch({ type: OK, data: res });
-          setErAvvik(res.nyttGrunnlag === null ? undefined : true);
 
-          if (res.avvikFunnet && res?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag) {
+          if (res?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag) {
             setSkjemaverdierFraTrygdeavgiftsgrunnlag(
               res.nyttGrunnlag?.trygdeavgiftsgrunnlag || res.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag,
             );
@@ -204,9 +206,16 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
     [behandlingID, medlemskapsTypeErPliktig, setBeregningError, setAarsavregningResponse, aarsavregningID],
   );
 
-  const debounceBeregnTrygdeavgiftsperioder = useCallback(
-    Utils._debounce((formVerdier) => handleBeregnTrygdeavgiftsperioder(formVerdier), 1000),
+  const debounceBeregnTrygdeavgiftsperioderFormVerdier = useCallback(
+    Utils._debounce((formVerdier) => handleBeregnTrygdeavgiftsperioder(formVerdier), 2000),
     [handleBeregnTrygdeavgiftsperioder],
+  );
+
+  const debouncedBeregnTrygdeavgiftsperioder = useCallback(
+    Utils._debounce((trygdeavgiftsGrunnlagDto) => {
+      Api.Trygdeavgift.beregnTrygdeavgiftsperioder(behandlingID, trygdeavgiftsGrunnlagDto);
+    }, 1000), // 1000ms debounce delay
+    [behandlingID], // Dependencies array
   );
 
   const aktivFeilmeldingType = finnAktivFeilmelding(
@@ -225,7 +234,8 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
       aarsavregningID &&
       !feilMeldingBlokkerer(aktivFeilmeldingType)
     ) {
-      debounceBeregnTrygdeavgiftsperioder(formValues);
+      console.log(erAvvik);
+      debounceBeregnTrygdeavgiftsperioderFormVerdier(formValues);
     }
   }, [isValidating, erAvvik]);
 
@@ -238,6 +248,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
 
   const håndterAvvik = (value: boolean) => {
     if (!value) {
+      console.log("Bruk gammelt grunnlag");
       Api.Trygdeavgift.slettTrygdeavgiftsperioder(behandlingID).then(() => {
         resetSkatteforholdsperioder([]);
         resetInntektskilder([]);
@@ -246,7 +257,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
             setAarsavregningResponse(res);
             setSkjemaverdierFraTrygdeavgiftsgrunnlag(res.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag);
             if (res.tidligereGrunnlagsopplysninger !== undefined) {
-              Api.Trygdeavgift.beregnTrygdeavgiftsperioder(behandlingID, {
+              debouncedBeregnTrygdeavgiftsperioder({
                 skatteforholdsperioder: res.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag.skatteforholdsperioder,
                 inntektskilder: res.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag.inntektskperioder,
               });

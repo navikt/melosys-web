@@ -108,6 +108,8 @@ function Saksbehandling({ match, location }: Props) {
   if (!behandlingID || behandlingID < 0) return null;
   if (!saksopplysningerLastet) return null;
 
+  console.log(innvilgetMedlemskapsperiode);
+
   return (
     <>
       <Informasjonlinje />
