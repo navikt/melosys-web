@@ -32,7 +32,7 @@ import { Medlemskapsperiode } from "../../../../../services/modules/medlemavfolk
 import aarsavregningUtenGrunnlagSchema from "./aarsavregningUtenGrunnlagSchema";
 import { Skatteforholdsperioder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/skatteforholdsperioder";
 import { Inntektskilder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/inntektskilder";
-import { beregnTrygdeavgiftsperioder } from "../komponenter/utils";
+import { beregnTrygdeavgiftsperioder } from "../utils";
 
 interface Props {
   bekreft: () => void;

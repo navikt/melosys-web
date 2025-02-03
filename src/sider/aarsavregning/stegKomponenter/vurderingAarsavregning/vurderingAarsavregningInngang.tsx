@@ -5,19 +5,17 @@ import { AarsavregningResponse } from "../../../../services/modules/aarsavregnin
 import { useDispatch, useSelector } from "react-redux";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import * as Nav from "../../../../navFrontend";
-import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
 import { redigerbartSelectors } from "../../../../ducks/redigerbart";
 import * as Utils from "../../../../utils";
 import MKV from "../../../../melosyskodeverk";
 import { OK } from "../../../../ducks/aarsavregning/types";
-import { sorterEtterISOFomDato } from "../../../../utils/dato";
 import { fagsakSelectors } from "../../../../ducks/fagsaker";
 import { NyBehandlingForTidligereAarsavregningMelding } from "../../../../felleskomponenter/alertmeldinger/alertmeldinger";
 
 import { behandlingsresultatOperations } from "../../../../ducks/behandlingsresultat";
-import { Medlemskapsperiode } from "../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import { AarsavregningMedGrunnlag } from "./aarsavregningMedGrunnlag/aarsavregningMedGrunnlag";
 import { AarsavregningUtenGrunnlag } from "./aarsavregningUtenGrunnlag/aarsavregningUtenGrunnlag";
+import { lagInnvilgetMedlemskapsPeriode } from "./utils";
 
 interface Props {
   bekreft: () => void;
@@ -25,28 +23,13 @@ interface Props {
   oppdaterStatus: (isValid: boolean) => void;
 }
 
-const lagInnvilgetMedlemskapsPeriode = (medlemskapsperioder?: Medlemskapsperiode[]) => {
-  if (medlemskapsperioder && !Utils._isEmpty(medlemskapsperioder)) {
-    const sorterteInnvilgedePerioder = [...medlemskapsperioder]
-      .filter((periode) => periode.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.INNVILGET)
-      .sort(sorterEtterISOFomDato);
-    return {
-      fom: sorterteInnvilgedePerioder[0].fomDato,
-      tom: sorterteInnvilgedePerioder[sorterteInnvilgedePerioder.length - 1].tomDato,
-    };
-  }
-  return {
-    tom: undefined,
-    fom: undefined,
-  };
-};
-
-const { FERDIGBEHANDLET, IKKE_FASTSATT, FASTSATT_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingsresultattyper;
+const { FERDIGBEHANDLET } = MKV.Koder.behandlinger.behandlingsresultattyper;
 
 export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtSteg }: Props) {
   const [valgtÅr, setValgtÅr] = useState<number | null>(null);
   const [initieltÅr, setInitieltÅr] = useState<number | null>(null);
   const [harGrunnlag, setHarGrunnlag] = useState<boolean | undefined>(undefined);
+  const [harDeltGrunnlag, setHarDeltGrunnlag] = useState<boolean | undefined>(undefined);
 
   const [nyVurderingÅrsavregning, setNyVurderingÅrsavregning] = useState<boolean>(false);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
@@ -71,8 +54,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
 
   useEffect(() => {
     Api.Aarsavregning.hentFiltrertAarsavregningList(saksnummer).then((res) => {
-      if (res.length) {
-        // Kan kun ha 1 årsavregningsbehandling som ikke er fastsatt
+      if (res?.find((aarsavregning) => aarsavregning.behandlingID === behandlingID)) {
         Api.Aarsavregning.hentAarsavregning(behandlingID).then((aarsavregning) => {
           setInitieltÅr(aarsavregning.aar);
           dispatch({ type: OK, data: aarsavregning });
@@ -103,39 +85,65 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
     setValgtÅr(år || null);
   };
 
+  const håndterDeltGrunnlag = (value: boolean) => {
+    if (harDeltGrunnlag === undefined) {
+      if (value) {
+        // Oppdater nytt felt i årsavregning for å anngi delt grunnlag
+      } else {
+        setHarDeltGrunnlag(false);
+      }
+    } else {
+
+    }
+  };
+
   return (
     <div className="vurderingAarsavregning">
       <Nav.Heading level="1" className="stegvelgertittel">
         Årsavregning
       </Nav.Heading>
-      <Nav.Fieldset className="select" legend={<LabelMedHjelpetekst bold label="År" placement="left-start" />}>
-        <Nav.Row>
-          <Nav.Column xs="4">
-            <Nav.Select
-              label=""
-              id="aarVelger"
-              value={(valgtÅr || initieltÅr)?.toString() ?? ""}
-              onChange={håndterEndringAvÅr}
-              readOnly={!redigerbart}
-            >
-              <option value="" disabled>
-                Velg...
+      <Nav.Row>
+        <Nav.Column xs="4">
+          <Nav.Select
+            label="År"
+            id="aarVelger"
+            value={(valgtÅr || initieltÅr)?.toString() ?? ""}
+            onChange={håndterEndringAvÅr}
+            readOnly={!redigerbart}
+          >
+            <option value="" disabled>
+              Velg...
+            </option>
+            {muligeAar.map((aar) => (
+              <option key={aar} value={aar.toString()}>
+                {aar}
               </option>
-              {muligeAar.map((aar) => (
-                <option key={aar} value={aar.toString()}>
-                  {aar}
-                </option>
-              ))}
-            </Nav.Select>
+            ))}
+          </Nav.Select>
+        </Nav.Column>
+      </Nav.Row>
+      {harGrunnlag && (
+        <Nav.Row>
+          <Nav.Column xs="12">
+            <Nav.RadioGroup
+              onChange={håndterDeltGrunnlag}
+              legend="Skal du legge til informasjon fra Avgiftssystemet til denne årsavregningen?"
+              value={harDeltGrunnlag}
+            >
+              <Nav.HStack gap="6">
+                <Nav.Radio value>Ja</Nav.Radio>
+                <Nav.Radio value={false}>Nei</Nav.Radio>
+              </Nav.HStack>
+            </Nav.RadioGroup>
           </Nav.Column>
         </Nav.Row>
-      </Nav.Fieldset>
+      )}
       {nyVurderingÅrsavregning && (
         <Nav.Row>
           <NyBehandlingForTidligereAarsavregningMelding />
         </Nav.Row>
       )}
-      {harGrunnlag === true && (
+      {harGrunnlag === true && harDeltGrunnlag === false && (
         <AarsavregningMedGrunnlag bekreft={bekreft} aktivtSteg={aktivtSteg} oppdaterStatus={oppdaterStatus} />
       )}
       {harGrunnlag === false && (
