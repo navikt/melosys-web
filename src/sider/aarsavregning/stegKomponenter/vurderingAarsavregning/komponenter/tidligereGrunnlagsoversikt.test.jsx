@@ -1,8 +1,9 @@
 import { reduxForm } from "redux-form";
-import { STATUS } from "../../../../services";
-import { renderWithProviders } from "../../../../ducks/test-utils/renderWithProviders";
-import { VurderingAarsavregningInngang } from "./vurderingAarsavregningInngang";
+
 import MKV from "../../../../../melosyskodeverk";
+import { STATUS } from "../../../../../services";
+import { renderWithProviders } from "../../../../../ducks/test-utils/renderWithProviders";
+import { VurderingAarsavregningInngang } from "../vurderingAarsavregningInngang";
 
 describe("TidligereGrunnlagsoversikt", () => {
   const initialReduxState = {
