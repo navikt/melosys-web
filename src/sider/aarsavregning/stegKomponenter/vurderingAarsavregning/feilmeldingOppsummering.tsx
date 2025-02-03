@@ -2,8 +2,6 @@ import { Alert, List as NavList } from "../../../../navFrontend";
 import { Heading } from "@navikt/ds-react";
 
 export function FeilmeldingOppsummering({ errors }: any) {
-  console.log("errors: ", errors);
-
   const lagNavlistItem = (melding: string) => {
     return <NavList.Item>{melding}</NavList.Item>;
   };

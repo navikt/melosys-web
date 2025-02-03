@@ -2,8 +2,6 @@ import { reduxForm } from "redux-form";
 import { STATUS } from "../../../../services";
 import { renderWithProviders } from "../../../../ducks/test-utils/renderWithProviders";
 import { VurderingAarsavregningInngang } from "./vurderingAarsavregningInngang";
-import { InntektskildeDto, SkatteforholdDto } from "../../../../../services/modules/trygdeavgift";
-import { Avgift, Trygdeavgiftsperiode } from "../../../../../services/modules/aarsavregning/aarsavregning";
 import MKV from "../../../../../melosyskodeverk";
 
 describe("TidligereGrunnlagsoversikt", () => {
