@@ -16,11 +16,7 @@ import * as Ikoner from "../../../resources/images";
 import * as Nav from "../../../navFrontend";
 import * as Skjema from "../../skjema";
 import * as Utils from "../../../utils";
-import {
-  FysiskDokument,
-  BrevVedleggInterface,
-  TilgjengeligStandardvedlegg,
-} from "../../../services/modules/dokumenter-v2";
+import { FysiskDokument, BrevVedleggInterface } from "../../../services/modules/dokumenter-v2";
 
 import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 import { behandlingerOperations } from "../../../ducks/behandlinger";
@@ -199,7 +195,7 @@ function SendBrev({
 
   useEffect(() => {
     hentTilgjengeligeMaler();
-    hentTilgjengeligeStandardvedlegg()
+    hentTilgjengeligeStandardvedlegg();
     hentUtkast();
   }, []);
 
@@ -420,7 +416,7 @@ function SendBrev({
   };
 
   const harStandardVedlegg = () => {
-    return formValues?.valgtMottaker?.rolle == "BRUKER" && formValues?.felt?.DISTRIBUSJONSTYPE?.valg == "VEDTAK";
+    return formValues?.valgtMottaker?.rolle === "BRUKER" && formValues?.felt?.DISTRIBUSJONSTYPE?.valg === "VEDTAK";
   };
 
   if (!tilgjengeligeMaler || !formValues) return null;
@@ -541,7 +537,7 @@ function SendBrev({
           redigerFritekstvedleggIndex={redigerFritekstVedleggIndex}
           setRedigerFritekstvedleggIndex={setRedigerFritekstvedleggIndex}
           muligeMottakere={muligeMottakere}
-          standardvedlegg={harStandardVedlegg()? standardvedleggListe : []}
+          standardvedlegg={harStandardVedlegg() ? standardvedleggListe : []}
         />
       )}
 
