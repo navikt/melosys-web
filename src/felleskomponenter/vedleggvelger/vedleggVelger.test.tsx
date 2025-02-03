@@ -14,7 +14,10 @@ describe("VedleggVelger", () => {
   });
 
   it("rendrer en knapp med tekst 'Legg til vedlegg'", () => {
-    props.valgteVedlegg = [];
+    props.valgteVedlegg = {
+      saksvedlegg: [],
+      standardvedlegg: null,
+    };
     render(<VedleggVelger {...props} />);
     expect(screen.getByRole("button", { name: /legg til vedlegg/i })).toBeInTheDocument();
   });
@@ -23,8 +26,11 @@ describe("VedleggVelger", () => {
 describe("VedleggVelgerModal", () => {
   const mockedProps = mock<ComponentProps<typeof VedleggVelgerModal>>();
   const props = instance(mockedProps);
-  props.valgteVedlegg = [];
-  props.alleVedlegg = [];
+  props.valgteVedlegg = {
+    saksvedlegg: [],
+    standardvedlegg: null,
+  };
+  props.alleSaksvedlegg = [];
 
   it("viser en Nav Modal", () => {
     render(<VedleggVelgerModal {...props} />);

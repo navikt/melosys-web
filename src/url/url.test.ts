@@ -64,7 +64,6 @@ describe("url", () => {
         MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG,
         MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV,
         MKV.Koder.behandlinger.behandlingstyper.ÅRSAVREGNING,
-        false,
       );
 
       expect(url).toContain("/FTRL/aarsavregning/");
@@ -139,7 +138,6 @@ describe("url", () => {
         MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG,
         MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV,
         MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
-        false,
       );
 
       expect(url).toContain("/FTRL/saksbehandling/");
@@ -153,7 +151,6 @@ describe("url", () => {
         MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG,
         MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV,
         MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
-        false,
       );
 
       expect(url).toContain("/EU_EOS/ikkeYrkesaktiv/");
@@ -167,7 +164,6 @@ describe("url", () => {
         MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG,
         MKV.Koder.behandlinger.behandlingstema.TRYGDETID,
         MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
-        false,
       );
 
       expect(url).toContain("/EU_EOS/behandling/");
@@ -181,7 +177,6 @@ describe("url", () => {
         MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG,
         MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV,
         MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
-        false,
       );
 
       expect(url).toContain("/FTRL/saksbehandling/");
@@ -195,7 +190,6 @@ describe("url", () => {
         MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG,
         MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV,
         MKV.Koder.behandlinger.behandlingstyper.MANGLENDE_INNBETALING_TRYGDEAVGIFT,
-        false,
       );
 
       expect(url).toContain("/FTRL/saksbehandling/");
@@ -209,7 +203,6 @@ describe("url", () => {
         MKV.Koder.sakstemaer.UNNTAK,
         MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK,
         MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
-        false,
       );
 
       expect(url).toContain("/TRYGDEAVTALE/unntaksregistrering/");

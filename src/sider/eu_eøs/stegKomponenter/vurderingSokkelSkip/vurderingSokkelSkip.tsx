@@ -20,8 +20,6 @@ import { formSelectors } from "../../../../ducks/form";
 import "./vurderingSokkelSkip.css";
 import { Avklartfakta } from "../../../../services/modules/avklartefakta";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
-import { useFeatureToggle } from "../../../../featuretoggle";
-import { MELOSYS_ARBEID_KUN_NORGE } from "../../../../featuretoggle/toggleNavn";
 import { Feilmelding, finnAktivFeilmelding } from "./feilmeldinger";
 import { avklartefaktaSelectors } from "../../../../ducks/avklartefakta";
 
@@ -59,7 +57,6 @@ function VurderingSokkelSkip({
   redigerbart,
   tilbake,
 }: Props) {
-  const arbeidKunNorgeToggleEnabled = useFeatureToggle(MELOSYS_ARBEID_KUN_NORGE);
   const maritimtArbeid = useSelector(formSelectors.MaritimtArbeidSelector);
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
 
@@ -69,8 +66,7 @@ function VurderingSokkelSkip({
   );
   const erArbeidKunNorgeBehandlingstema = behandlingstema === ARBEID_KUN_NORGE;
 
-  const skalViseArbeidKunNorgeFlyt =
-    (erUtsendt || erArbeidKunNorgeBehandlingstema) && erArbeidslandNorge && arbeidKunNorgeToggleEnabled;
+  const skalViseArbeidKunNorgeFlyt = (erUtsendt || erArbeidKunNorgeBehandlingstema) && erArbeidslandNorge;
 
   useEffect(() => {
     oppdaterData(

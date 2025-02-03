@@ -10,6 +10,12 @@ const dokument = {
   dato: null,
   avsenderEllerMottaker: "a",
 };
+
+const valgteVedlegg = {
+  saksvedlegg: [dokument],
+  standardvedlegg: null,
+};
+
 const fritekstvedlegg = {
   tittel: "123",
   fritekst: "abc",
@@ -19,7 +25,7 @@ describe("vedleggTable", () => {
   it("snapshot test", () => {
     const { container } = render(
       <VedleggTable
-        valgteVedlegg={[dokument]}
+        valgteVedlegg={valgteVedlegg}
         fritekstvedlegg={[fritekstvedlegg]}
         setValgteVedlegg={vi.fn()}
         redigerFritekstvedlegg={vi.fn()}

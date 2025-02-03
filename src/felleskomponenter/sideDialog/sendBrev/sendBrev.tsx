@@ -4,7 +4,6 @@ import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 import { connect, ConnectedProps } from "react-redux";
 import { change, getFormValues, reduxForm, reset } from "redux-form";
-import { FysiskDokument } from "Domene";
 import { ColumnWidth } from "nav-frontend-grid";
 
 import { useMsal } from "@azure/msal-react";
@@ -17,6 +16,11 @@ import * as Ikoner from "../../../resources/images";
 import * as Nav from "../../../navFrontend";
 import * as Skjema from "../../skjema";
 import * as Utils from "../../../utils";
+import {
+  FysiskDokument,
+  BrevVedleggInterface,
+  TilgjengeligStandardvedlegg,
+} from "../../../services/modules/dokumenter-v2";
 
 import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 import { behandlingerOperations } from "../../../ducks/behandlinger";
@@ -95,13 +99,17 @@ function SendBrev({
   sakstype,
 }: Props & PropsFromRedux) {
   const [tilgjengeligeMaler, setTilgjengeligeMaler] = useState<Api.DokumenterV2.TilgjengeligeMalerResDto>();
+  const [standardvedleggListe, setStandardvedleggListe] = useState<Api.DokumenterV2.TilgjengeligStandardvedlegg[]>([]);
   const [muligeMottakere, setMuligeMottakere] = useState<Api.DokumenterV2.HentMuligeMottakereResDto>();
   const [muligeMottakereFeil, setMuligeMottakereFeil] = useState<string | undefined>(undefined);
   const [muligeMottakereNorskMyndighet, setMuligeMottakereNorskMyndighet] =
     useState<Api.DokumenterV2.MuligMottaker[]>();
   const [brevSendt, setBrevSendt] = useState(false);
   const [feil, setFeil] = useState<string | undefined>();
-  const [valgteVedlegg, setValgteVedlegg] = useState<FysiskDokument[]>([]);
+  const [valgteVedlegg, setValgteVedlegg] = useState<BrevVedleggInterface>({
+    saksvedlegg: [],
+    standardvedlegg: null,
+  });
   const [visFritekstvedleggSkjema, setVisFritekstvedleggSkjema] = useState(false);
   const [redigerFritekstVedleggIndex, setRedigerFritekstvedleggIndex] = useState<number | undefined>(undefined);
   const [fritekstvedlegg, setFritekstvedlegg] = useState<Fritekstvedlegg[]>([]);
@@ -129,6 +137,9 @@ function SendBrev({
       });
       setTilgjengeligeMaler(response);
     });
+
+  const hentTilgjengeligeStandardvedlegg = () =>
+    Api.DokumenterV2.hentTilgjengeligeStandardvedlegg().then((response) => setStandardvedleggListe(response));
 
   const krevesLandForUtenlandskTrygdemyndighetMottaker = () => {
     return Boolean(
@@ -188,6 +199,7 @@ function SendBrev({
 
   useEffect(() => {
     hentTilgjengeligeMaler();
+    hentTilgjengeligeStandardvedlegg();
     hentUtkast();
   }, []);
 
@@ -328,10 +340,11 @@ function SendBrev({
     skalViseStandardTekstOmOpplysninger: hentFormVerdi("STANDARDTEKST_INNTEKTSOPPLYSNINGER"),
     kopiMottakere: hentKopiMottakere() || [],
     skalViseStandardTekstOmkontaktopplysninger: hentFormVerdi("STANDARDTEKST_KONTAKTINFORMASJON"),
-    saksvedlegg: valgteVedlegg.map((vedlegg) => ({
+    saksvedlegg: valgteVedlegg?.saksvedlegg.map((vedlegg) => ({
       dokumentID: vedlegg.dokumentID,
       journalpostID: vedlegg.journalpostID,
     })),
+    standardvedleggType: valgteVedlegg?.standardvedlegg?.type,
     fritekstvedlegg,
     distribusjonstype: hentFormVerdi("DISTRIBUSJONSTYPE", true, true),
     dokumentTittel: hentFormVerdi("DOKUMENT_TITTEL", true),
@@ -429,11 +442,12 @@ function SendBrev({
       <Brevutkast
         changeField={changeField}
         dokumenter={dokumenter}
+        standardvedleggListe={standardvedleggListe}
         formValues={formValues}
         tilgjengeligeMottakere={tilgjengeligeMottakere}
         utkastPåBehandlingen={utkastPåBehandlingen}
-        setSaksvedlegg={setValgteVedlegg}
         setFritekstvedlegg={setFritekstvedlegg}
+        setValgteVedlegg={setValgteVedlegg}
       />
 
       {visApneINyttVindu && (
@@ -523,6 +537,7 @@ function SendBrev({
           redigerFritekstvedleggIndex={redigerFritekstVedleggIndex}
           setRedigerFritekstvedleggIndex={setRedigerFritekstvedleggIndex}
           muligeMottakere={muligeMottakere}
+          standardvedlegg={standardvedleggListe}
         />
       )}
 

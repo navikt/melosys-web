@@ -1,18 +1,39 @@
-import { FysiskDokument } from "Domene";
-
 import PdfLink from "../pdfLink";
 import * as Utils from "../../utils";
 import * as Mui from "../ui";
 import * as Ikoner from "../../resources/images";
 import * as Nav from "../../navFrontend";
+import { FysiskDokument, TilgjengeligStandardvedlegg } from "../../services/modules/dokumenter-v2";
+import PdfLinkStandardvedlegg from "../pdfLink/pdfLinkStandardvedlegg";
 
 interface VedleggRowProps {
-  vedlegg: FysiskDokument;
+  vedlegg: FysiskDokument | TilgjengeligStandardvedlegg;
   slettVedlegg: () => void;
   redigerbart: boolean;
 }
 
+// Type guard function to check if vedlegg is TilgjengeligStandardvedlegg
+function erTilgjengeligStandardvedlegg(
+  vedlegg: FysiskDokument | TilgjengeligStandardvedlegg,
+): vedlegg is TilgjengeligStandardvedlegg {
+  return "type" in vedlegg && "frontendTittel" in vedlegg;
+}
+
 function VedleggRow({ vedlegg, slettVedlegg, redigerbart }: VedleggRowProps) {
+  if (erTilgjengeligStandardvedlegg(vedlegg)) {
+    return (
+      <Nav.Table.Row className="vedlegg">
+        <Nav.Table.DataCell>
+          <PdfLinkStandardvedlegg standardvedlegg={vedlegg} />
+        </Nav.Table.DataCell>
+        <Nav.Table.DataCell />
+        <Nav.Table.DataCell className="icon__cell">
+          <Mui.IkonKnapp ariaLabel="Fjern vedlegg" ikon={Ikoner.Bin} onClick={slettVedlegg} disabled={!redigerbart} />
+        </Nav.Table.DataCell>
+      </Nav.Table.Row>
+    );
+  }
+
   return (
     <Nav.Table.Row className="vedlegg">
       <Nav.Table.DataCell>

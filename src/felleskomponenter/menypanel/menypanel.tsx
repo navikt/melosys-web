@@ -17,8 +17,6 @@ import { fagsakSelectors } from "../../ducks/fagsaker";
 import OppdaterRegisteropplysninger from "./oppdaterRegisteropplysninger";
 import { LinkGroupsFactory } from "./linkgroups";
 import "./menypanel.css";
-import { useFeatureToggle } from "../../featuretoggle";
-import { MELOSYS_ARBEID_KUN_NORGE } from "../../featuretoggle/toggleNavn";
 
 const { SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS } = MKV.Koder.mottatteopplysningertyper;
 
@@ -54,7 +52,6 @@ export function Menypanel({
   visOppdaterRegisteropplysninger = true,
 }: MenypanelProps) {
   const [[activeGroupIndex, activeLinkIndex], setActive] = useState<[number, number]>([0, 0]);
-  const erArbeidKunNorgeToggleEnabled = useFeatureToggle(MELOSYS_ARBEID_KUN_NORGE);
   const [endreFokus, setEndreFokus] = useState(false);
 
   const visMottatteOpplysningerData = !(
@@ -76,7 +73,7 @@ export function Menypanel({
       behandlingstema !== MKV.Koder.behandlinger.behandlingstema.A1_ANMODNING_OM_UNNTAK_PAPIR &&
       behandlingstema !== MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV) ||
     menypanel?.synlig ||
-    skalViseIngenFlyt(sakstype, sakstema, behandlingstema, behandlingstype, erArbeidKunNorgeToggleEnabled);
+    skalViseIngenFlyt(sakstype, sakstema, behandlingstema, behandlingstype);
 
   const linkGroupsWithContent = LinkGroupsFactory.createLinkGroups({
     sakstype,
@@ -86,7 +83,6 @@ export function Menypanel({
     mottatteOpplysningerType,
     sakstema,
     kunFullmektig: !visMenypanel && skalViseFullmektigFørPeriodeOgLand(behandlingstema),
-    erArbeidKunNorgeToggleEnabled,
   });
 
   const linkGroups = linkGroupsWithContent.map((linkGroup, groupIndex) => ({

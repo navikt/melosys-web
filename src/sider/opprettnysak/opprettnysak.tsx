@@ -35,8 +35,6 @@ import { Spinner } from "../../felleskomponenter/spinner";
 import { oppgaverOperations } from "../../ducks/oppgaver";
 import { HStack } from "@navikt/ds-react";
 import { EnkelNavBox } from "../../felleskomponenter/enkelNavBox";
-import { useFeatureToggle } from "../../featuretoggle";
-import { MELOSYS_ARBEID_KUN_NORGE } from "../../featuretoggle/toggleNavn";
 
 const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
 
@@ -138,7 +136,6 @@ function OpprettNySak({
   } = formValues || {};
 
   const nullstillFelt = (felt: string, verdi: any = null) => change(felt, verdi);
-  const erArbeidKunNorgeToggleEnabled = useFeatureToggle(MELOSYS_ARBEID_KUN_NORGE);
   useEffect(() => {
     hentLandkoder();
     return () => {
@@ -215,13 +212,7 @@ function OpprettNySak({
   }, [hovedpart]);
 
   const dataForOpprettSak = (fellesData: Api.Fagsaker.fagsak.OpprettReqDto) => {
-    const skalSendePeriodeOgLand = skalViseSoknadsperiodeOgLand(
-      sakstype,
-      sakstema,
-      behandlingstema,
-      behandlingstype,
-      erArbeidKunNorgeToggleEnabled,
-    );
+    const skalSendePeriodeOgLand = skalViseSoknadsperiodeOgLand(sakstype, sakstema, behandlingstema, behandlingstype);
 
     const fom = skalSendePeriodeOgLand && periodeFraOgMed ? Utils.dato.formatterDatoTilISO(periodeFraOgMed) : null;
     const tom = skalSendePeriodeOgLand && periodeTilOgMed ? Utils.dato.formatterDatoTilISO(periodeTilOgMed) : null;
