@@ -206,7 +206,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
     [behandlingID, medlemskapsTypeErPliktig, setBeregningError, setAarsavregningResponse, aarsavregningID],
   );
 
-  const debounceBeregnTrygdeavgiftsperioderFormVerdier = useCallback(
+  const debounceBeregnTrygdeavgiftsperioderOgOppdaterFormVerdier = useCallback(
     Utils._debounce((formVerdier) => handleBeregnTrygdeavgiftsperioder(formVerdier), 2000),
     [handleBeregnTrygdeavgiftsperioder],
   );
@@ -214,8 +214,8 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
   const debouncedBeregnTrygdeavgiftsperioder = useCallback(
     Utils._debounce((trygdeavgiftsGrunnlagDto) => {
       Api.Trygdeavgift.beregnTrygdeavgiftsperioder(behandlingID, trygdeavgiftsGrunnlagDto);
-    }, 1000), // 1000ms debounce delay
-    [behandlingID], // Dependencies array
+    }, 1000),
+    [behandlingID],
   );
 
   const aktivFeilmeldingType = finnAktivFeilmelding(
@@ -234,7 +234,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
       aarsavregningID &&
       !feilMeldingBlokkerer(aktivFeilmeldingType)
     ) {
-      debounceBeregnTrygdeavgiftsperioderFormVerdier(formValues);
+      debounceBeregnTrygdeavgiftsperioderOgOppdaterFormVerdier(formValues);
     }
   }, [isValidating, erAvvik]);
 
