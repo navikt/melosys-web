@@ -15,8 +15,6 @@ import {
   slettVilkarIAlleSteg,
 } from "../../../felleskomponenter/stegvelger";
 import { finnTilleggBestemmelse, hentFaktaVerdi } from "../../../domeneUtils";
-import { useFeatureToggle } from "../../../featuretoggle";
-import { MELOSYS_ARBEID_KUN_NORGE } from "../../../featuretoggle/toggleNavn";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { useSelector } from "react-redux";
 import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
@@ -69,15 +67,13 @@ function VurderingYrkesgruppe({
   const søknadslandkoder = useSelector(mottatteOpplysningerSelectors.SoknadslandkoderSelector);
   const visStorbritanniaKonvensjon = MKVUtils.enesteLandErStorbritannia(søknadslandkoder);
   const fakta = hentFaktaVerdi(yrkesgruppe);
-  const arbeidKunNorgeToggleEnabled = useFeatureToggle(MELOSYS_ARBEID_KUN_NORGE);
   const erUtsendt = [UTSENDT_ARBEIDSTAKER, UTSENDT_SELVSTENDIG].includes(behandlingstema);
   const erArbeidslandNorge = useSelector(avklartefaktaSelectors.ArbeidslandKTSelector).some(
     (land: any) => land.kode === "NO",
   );
   const erArbeidKunNorgeBehandlingstema = behandlingstema === ARBEID_KUN_NORGE;
 
-  const skalViseArbeidKunNorgeFlyt =
-    (erUtsendt || erArbeidKunNorgeBehandlingstema) && erArbeidslandNorge && arbeidKunNorgeToggleEnabled;
+  const skalViseArbeidKunNorgeFlyt = (erUtsendt || erArbeidKunNorgeBehandlingstema) && erArbeidslandNorge;
   useEffect(() => {
     oppdaterData(konverterAvklartfaktaTilStegData(KV.Koder.YRKESGRUPPE, yrkesgruppe));
     const tilleggBestemmelseFunnet = finnTilleggBestemmelse(tilleggbestemmelse, stegetsTilleggsbestemmelser);

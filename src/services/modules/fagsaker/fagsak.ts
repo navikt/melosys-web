@@ -73,6 +73,7 @@ export const utpek = (saksnummer: string, body: UtpekReqDto) =>
   postAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/utpek`, body);
 
 export interface EndreSakDto {
+  behandlingID: number;
   sakstype: string;
   sakstema: string;
   behandlingstema: string;
@@ -86,7 +87,7 @@ export interface TrygdeavgiftOppsummering {
 }
 
 export const endreFagsak = (saksnummer: string, body: EndreSakDto) =>
-  postAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/endre`, body);
+  putAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}`, body);
 
 export const ferdigbehandle = (behandlingID: number) =>
   putAsJson(`${API_BASE_URL}${FAGSAKER}/${behandlingID}/ferdigbehandle`);
