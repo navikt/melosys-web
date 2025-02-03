@@ -23,7 +23,7 @@ import { FellesHandlersContext } from "../../contexts";
 import { mottatteOpplysningerOperations } from "../../ducks/mottatteOpplysninger";
 import Oppsummering from "../../felleskomponenter/oppsummering";
 import { aarsavregningOperations } from "../../ducks/aarsavregning";
-import { medlemskapsperioderOperations, medlemskapsperioderSelectors } from "../../ducks/medlemskapsperioder";
+import { medlemskapsperioderSelectors } from "../../ducks/medlemskapsperioder";
 
 interface Props extends RouteComponentProps<MatchParams> {
   behandlingOppfriskes: boolean;
@@ -76,7 +76,6 @@ function Saksbehandling({ match, location }: Props) {
 
       dispatch(mottatteOpplysningerOperations.hent(behandlingId));
       dispatch(dokumenterOperations.hentDokumentOversikt(saksnr));
-      dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(behandlingID));
       setSaksopplysningerLastet(true);
       return true;
     } catch (e) {
