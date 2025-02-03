@@ -234,7 +234,6 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
       aarsavregningID &&
       !feilMeldingBlokkerer(aktivFeilmeldingType)
     ) {
-      console.log(erAvvik);
       debounceBeregnTrygdeavgiftsperioderFormVerdier(formValues);
     }
   }, [isValidating, erAvvik]);
@@ -248,7 +247,6 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
 
   const håndterAvvik = (value: boolean) => {
     if (!value) {
-      console.log("Bruk gammelt grunnlag");
       Api.Trygdeavgift.slettTrygdeavgiftsperioder(behandlingID).then(() => {
         resetSkatteforholdsperioder([]);
         resetInntektskilder([]);

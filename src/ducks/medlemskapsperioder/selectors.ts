@@ -27,8 +27,6 @@ export const AlleMedlemskapsperioderSelector = createSelector(
 export const SamletInnvilgetMedlemskapsperiodeSelector = createSelector(
   AlleMedlemskapsperioderSelector,
   (medlemskapsperioder) => {
-    console.log("test2");
-    console.log(medlemskapsperioder);
     const sorterteInnvilgedePerioder = [...medlemskapsperioder]
       .filter((periode) => periode.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.INNVILGET)
       .sort(sorterEtterISOFomDato);

@@ -197,7 +197,6 @@ function Oppsummering({
       col1.push(["Lovvalgsperiode", lovvalgsperiode]);
     }
     if (erFTRL && !erIngenFlyt) {
-      console.log(`test${medlemskapsperiodeFom}`);
       col1.push(["Medlemskapsperiode", `${medlemskapsperiodeFom} - ${medlemskapsperiodeTom}`]);
     }
     col1.push(["Land", landTilSetning(arbeidsland)]);
@@ -229,8 +228,6 @@ function Oppsummering({
 
     return erLitenSkjerm ? tabellEnKolonne(col1.concat(col2)) : tabellToKolonner(col1, col2);
   };
-
-  console.log("test3");
 
   return (
     <section aria-label="oppsummeringer" className="oppsummering panelSeksjon">
