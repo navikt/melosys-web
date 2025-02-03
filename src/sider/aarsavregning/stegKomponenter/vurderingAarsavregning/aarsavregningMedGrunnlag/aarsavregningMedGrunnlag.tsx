@@ -350,18 +350,26 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
             control={control}
             fields={skattFields}
           />
-          <Inntektskilder
-            defaultPeriode={defaultPeriode}
-            formValues={formValues}
-            redigerbart={redigerbart}
-            update={inntektUpdate}
-            remove={inntektRemove}
-            append={inntektAppend}
-            control={control}
-            fields={inntektFields}
-            medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!}
-            skalViseErMaanedsBelopRadioGroup
-          />
+          {!(medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder)) && (
+            <Inntektskilder
+              defaultPeriode={defaultPeriode}
+              formValues={formValues}
+              redigerbart={redigerbart}
+              update={inntektUpdate}
+              remove={inntektRemove}
+              append={inntektAppend}
+              control={control}
+              fields={inntektFields}
+              medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!}
+              skalViseErMaanedsBelopRadioGroup
+            />
+          )}
+
+          {medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder) && (
+            <Nav.Alert variant="info" className="alertstripe_feilmelding">
+              Trygdeavgift skal ikke betales til NAV
+            </Nav.Alert>
+          )}
         </>
       )}
 
