@@ -130,6 +130,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     !erÅpenSluttDato;
 
   useEffect(() => {
+    if (!redigerbart) return;
     if (harEndretInnvilgetMedlemskapsperiode === undefined) {
       setHarEndretInnvilgetMedlemskapsperiode(false);
     } else {
@@ -144,6 +145,8 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   }, [innvilgetMedlemskapsperiode]);
 
   useEffect(() => {
+    if (!redigerbart) return;
+
     if (!skalViseInntektskilder) {
       setMellomLagringInntektskilder([...formValues.inntektskilder]);
       resetInntektskilder([{ ...formattedDefaultPeriode() }]);
