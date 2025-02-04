@@ -105,7 +105,6 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     replace: resetInntektskilder,
   } = useFieldArray<FieldArrayProps, "inntektskilder", "id">({ control, name: "inntektskilder" });
   const formValues = watch();
-  const [mellomLagringInntektskilder, setMellomLagringInntektskilder] = useState<Inntektskilde[]>([]);
 
   const aktivFeilmeldingType = finnAktivFeilmelding(
     formValues?.inntektskilder,
@@ -130,32 +129,31 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     !erÅpenSluttDato;
 
   useEffect(() => {
-    if (!redigerbart) return;
+    Api.Trygdeavgift.hentBeregnetTrygdeavgift(behandlingID).then((beregnetTrygdeavgift) => {
+      if (
+        behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING &&
+        beregnetTrygdeavgift.trygdeavgiftsgrunnlag.skatteforholdsperioder.length === 0
+      ) {
+        hentOpprinneligTrygdeavgiftsgrunnlag();
+      } else {
+        håndterTrygdeavgiftsberegning(beregnetTrygdeavgift);
+      }
+    });
+
+    if (!redigerbart) {
+      return;
+    }
+
     if (harEndretInnvilgetMedlemskapsperiode === undefined) {
       setHarEndretInnvilgetMedlemskapsperiode(false);
     } else {
       setHarEndretInnvilgetMedlemskapsperiode(true);
     }
 
-    const formattedPeriode = formattedDefaultPeriode();
-
-    setMellomLagringInntektskilder([]);
-    resetInntektskilder([{ ...formattedPeriode }]);
-    resetSkatteforholdsperioder([{ ...formattedPeriode }]);
-  }, [innvilgetMedlemskapsperiode]);
-
-  useEffect(() => {
-    if (!redigerbart) return;
-
-    if (!skalViseInntektskilder) {
-      setMellomLagringInntektskilder([...formValues.inntektskilder]);
-      resetInntektskilder([{ ...formattedDefaultPeriode() }]);
-    } else {
-      const defaultInntektskilder =
-        mellomLagringInntektskilder.length > 0 ? mellomLagringInntektskilder : [{ ...formattedDefaultPeriode() }];
-      resetInntektskilder(defaultInntektskilder);
+    if (erÅpenSluttDato) {
+      setTrygdeavgift(undefined);
     }
-  }, [skalViseInntektskilder]);
+  }, [innvilgetMedlemskapsperiode]);
 
   const håndterLagretTrygdeavgiftsgrunnlag = (trygdeavgiftsgrunnlag: TrygdeavgiftsgrunnlagDto) => {
     const { inntektskilder, skatteforholdsperioder } = trygdeavgiftsgrunnlag;
@@ -196,23 +194,6 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const hentOpprinneligTrygdeavgiftsgrunnlag = () => {
     Api.Trygdeavgift.hentOpprinneligTrygdeavgiftsgrunnlag(behandlingID).then(håndterLagretTrygdeavgiftsgrunnlag);
   };
-
-  useEffect(() => {
-    if (erÅpenSluttDato) {
-      setTrygdeavgift(undefined);
-      return;
-    }
-    Api.Trygdeavgift.hentBeregnetTrygdeavgift(behandlingID).then((beregnetTrygdeavgift) => {
-      if (
-        behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING &&
-        beregnetTrygdeavgift.trygdeavgiftsgrunnlag.skatteforholdsperioder.length === 0
-      ) {
-        hentOpprinneligTrygdeavgiftsgrunnlag();
-      } else {
-        håndterTrygdeavgiftsberegning(beregnetTrygdeavgift);
-      }
-    });
-  }, []);
 
   useEffect(() => {
     oppdaterStatus(stegErGyldig && harBeregnetForeløpigTrygdeavgift);
