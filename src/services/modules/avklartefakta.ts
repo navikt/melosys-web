@@ -73,3 +73,9 @@ export const lagreInnbetalingsstatus = (
   fullstendigManglendeInnbetaling?: boolean,
 ): Promise<Oppsummering> =>
   postAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/innbetalingsstatus`, fullstendigManglendeInnbetaling);
+
+export const lagreOpplysningerFraAvgiftsystemet = (
+  behandlingID: number,
+  opplysningerFraAvgiftsystemet?: boolean,
+): Promise<Oppsummering> =>
+  postAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/opplysninger-avgiftsystem`, opplysningerFraAvgiftsystemet);

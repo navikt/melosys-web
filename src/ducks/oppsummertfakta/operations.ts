@@ -31,6 +31,17 @@ export function lagreInnbetalingsstatus(behandlingID: number, fullstendigManglen
   );
 }
 
+export function lagreOpplysningerFraAvgiftsystemet(behandlingID: number, opplysningerFraAvgiftsystemet?: boolean) {
+  return doThenDispatch(
+    () => Api.Avklartefakta.lagreOpplysningerFraAvgiftsystemet(behandlingID, opplysningerFraAvgiftsystemet),
+    {
+      OK: Types.OK,
+      FEILET: Types.FEILET,
+      PENDING: Types.PENDING,
+    },
+  );
+}
+
 export function lagreArbeidsland(behandlingID: number, arbeidsland: Api.Avklartefakta.Arbeidsland) {
   return doThenDispatch(() => Api.Avklartefakta.lagreArbeidsland(behandlingID, arbeidsland), {
     OK: Types.OK,

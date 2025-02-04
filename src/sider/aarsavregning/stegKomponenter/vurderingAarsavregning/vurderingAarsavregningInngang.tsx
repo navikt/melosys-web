@@ -16,6 +16,7 @@ import { behandlingsresultatOperations } from "../../../../ducks/behandlingsresu
 import { AarsavregningMedGrunnlag } from "./aarsavregningMedGrunnlag/aarsavregningMedGrunnlag";
 import { AarsavregningUtenGrunnlag } from "./aarsavregningUtenGrunnlag/aarsavregningUtenGrunnlag";
 import { lagInnvilgetMedlemskapsPeriode } from "./utils";
+import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../ducks/oppsummertfakta";
 
 interface Props {
   bekreft: () => void;
@@ -29,7 +30,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
   const [valgtÅr, setValgtÅr] = useState<number | null>(null);
   const [initieltÅr, setInitieltÅr] = useState<number | null>(null);
   const [harGrunnlag, setHarGrunnlag] = useState<boolean | undefined>(undefined);
-  const [harDeltGrunnlag, setHarDeltGrunnlag] = useState<boolean | undefined>(undefined);
+  const [harDeltGrunnlag, setHarDeltGrunnlag] = useState<boolean | undefined>(useSelector(oppsummertfaktaSelectors.OpplysningerFraAvgiftsystemetSelector));
 
   const [nyVurderingÅrsavregning, setNyVurderingÅrsavregning] = useState<boolean>(false);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
@@ -42,15 +43,19 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
 
   const utledGrunnlagstypeForAarsavregning = (res: AarsavregningResponse) => {
     const innvilgetPeriode = lagInnvilgetMedlemskapsPeriode(
-      res?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.medlemskapsperioder,
+      res.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.medlemskapsperioder,
     );
 
-    if (res?.tidligereGrunnlagsopplysninger === null && Utils._isEmpty(innvilgetPeriode.fom)) {
+    if (res.tidligereGrunnlagsopplysninger === null && Utils._isEmpty(innvilgetPeriode.fom)) {
       setHarGrunnlag(false);
     } else {
       setHarGrunnlag(true);
+      if (res.aar !== 2023 && res.aar !== 2024) {
+        setHarDeltGrunnlag(false);
+      }
     }
   };
+
 
   useEffect(() => {
     Api.Aarsavregning.hentFiltrertAarsavregningList(saksnummer).then((res) => {
@@ -86,16 +91,12 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
   };
 
   const håndterDeltGrunnlag = (value: boolean) => {
-    if (harDeltGrunnlag === undefined) {
-      if (value) {
-        // Oppdater nytt felt i årsavregning for å anngi delt grunnlag
-      } else {
-        setHarDeltGrunnlag(false);
-      }
-    } else {
-
-    }
+    dispatch(oppsummertfaktaOperations.lagreOpplysningerFraAvgiftsystemet(behandlingID, value));
+    setHarDeltGrunnlag(value);
   };
+
+  const skalViseDeltGrunnlagRadioGroup =
+    harGrunnlag && ((valgtÅr || initieltÅr) === 2023 || (valgtÅr || initieltÅr) == 2024);
 
   return (
     <div className="vurderingAarsavregning">
@@ -122,7 +123,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
           </Nav.Select>
         </Nav.Column>
       </Nav.Row>
-      {harGrunnlag && (
+      {skalViseDeltGrunnlagRadioGroup && (
         <Nav.Row>
           <Nav.Column xs="12">
             <Nav.RadioGroup
