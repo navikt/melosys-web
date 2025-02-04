@@ -151,7 +151,6 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
       setMellomLagringInntektskilder([...formValues.inntektskilder]);
       resetInntektskilder([{ ...formattedDefaultPeriode() }]);
     } else {
-      console.log("sett defaultverdi");
       const defaultInntektskilder =
         mellomLagringInntektskilder.length > 0 ? mellomLagringInntektskilder : [{ ...formattedDefaultPeriode() }];
       resetInntektskilder(defaultInntektskilder);
@@ -159,7 +158,6 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   }, [skalViseInntektskilder]);
 
   const håndterLagretTrygdeavgiftsgrunnlag = (trygdeavgiftsgrunnlag: TrygdeavgiftsgrunnlagDto) => {
-    console.log("trygdeavgiftsgrunnlag:: ", trygdeavgiftsgrunnlag);
     const { inntektskilder, skatteforholdsperioder } = trygdeavgiftsgrunnlag;
     const sorterteInntekstkilder = inntektskilder?.sort(Utils.dato.sorterEtterISOFomDato);
     const sorterteSkatteforhold = skatteforholdsperioder?.sort(Utils.dato.sorterEtterISOFomDato);
