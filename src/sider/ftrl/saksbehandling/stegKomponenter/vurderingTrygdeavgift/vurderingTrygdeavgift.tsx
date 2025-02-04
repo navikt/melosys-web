@@ -152,7 +152,6 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
 
     if (erÅpenSluttDato) {
       setTrygdeavgift(undefined);
-      return;
     }
   }, [innvilgetMedlemskapsperiode]);
 
