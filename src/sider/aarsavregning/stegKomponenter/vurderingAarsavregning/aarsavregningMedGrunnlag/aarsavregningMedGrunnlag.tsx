@@ -4,6 +4,7 @@ import "../vurderingAarsavregningInngang.css";
 import { useCallback, useEffect, useState } from "react";
 import {
   AarsavregningResponse,
+  harIkkeskattepliktigInntektskilder,
   Trygdeavgiftsgrunnlag,
 } from "../../../../../services/modules/aarsavregning/aarsavregning";
 import { useDispatch, useSelector } from "react-redux";
@@ -276,27 +277,6 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
     }
   };
 
-  const harIkkeskattepliktigInntektskilder = (): boolean => {
-    const tidligereTrygdeavgiftgrunnlag = aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag;
-
-    if (!tidligereTrygdeavgiftgrunnlag) {
-      return false;
-    }
-    if (tidligereTrygdeavgiftgrunnlag.inntektskperioder.length > 0) {
-      return true;
-    }
-
-    if (medlemskapsTypeErPliktig) {
-      const erSkattepliktig =
-        medlemskapsTypeErPliktig &&
-        erBrukerSkattepliktigIHelePerioden(tidligereTrygdeavgiftgrunnlag.skatteforholdsperioder);
-
-      return !erSkattepliktig;
-    }
-
-    return false;
-  };
-
   return (
     <>
       {aarsavregningResponse?.tidligereGrunnlagsopplysninger && (
@@ -305,7 +285,10 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
             perioder={aarsavregningResponse.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag.medlemskapsperioder}
           />
           <TidligereGrunnlagsoversikt
-            harFakturerbareInntektskilder={harIkkeskattepliktigInntektskilder()}
+            harFakturerbareInntektskilder={harIkkeskattepliktigInntektskilder(
+              aarsavregningResponse,
+              medlemskapsTypeErPliktig,
+            )}
             skatteforholdsperioder={
               aarsavregningResponse.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag.skatteforholdsperioder
             }
@@ -314,34 +297,32 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
             }
             avgift={aarsavregningResponse.tidligereGrunnlagsopplysninger.avgift}
           />
+
+          {harIkkeskattepliktigInntektskilder(aarsavregningResponse, medlemskapsTypeErPliktig) && (
+            <BeregnetTrygdeavgiftDetaljer
+              grunnlag={aarsavregningResponse?.tidligereGrunnlagsopplysninger}
+              medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!}
+              tittel="Tidligere beregnet trygdeavgift"
+            />
+          )}
+
+          <Nav.RadioGroup
+            onChange={håndterAvvik}
+            value={erAvvik}
+            legend="Er det avvik i opplysningene fra skatt eller bruker?"
+            readOnly={!redigerbart}
+          >
+            <Nav.HStack gap="6">
+              <Nav.Radio value={true}>Ja</Nav.Radio>
+              <Nav.Radio value={false}>Nei</Nav.Radio>
+            </Nav.HStack>
+          </Nav.RadioGroup>
         </>
       )}
 
-      {harIkkeskattepliktigInntektskilder() && (
-        <BeregnetTrygdeavgiftDetaljer
-          grunnlag={aarsavregningResponse?.tidligereGrunnlagsopplysninger}
-          medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!}
-          tittel="Tidligere beregnet trygdeavgift"
-        />
-      )}
-
-      {aarsavregningResponse?.tidligereGrunnlagsopplysninger && (
-        <Nav.RadioGroup
-          onChange={håndterAvvik}
-          value={erAvvik}
-          legend="Er det avvik i opplysningene fra skatt eller bruker?"
-          readOnly={!redigerbart}
-        >
-          <Nav.HStack gap="6">
-            <Nav.Radio value>Ja</Nav.Radio>
-            <Nav.Radio value={false}>Nei</Nav.Radio>
-          </Nav.HStack>
-        </Nav.RadioGroup>
-      )}
-      {erAvvik && <Nav.Heading>Inntekts- og skatteopplysninger for endelig trygdeavgift</Nav.Heading>}
-
       {erAvvik && (
         <>
+          <Nav.Heading>Inntekts- og skatteopplysninger for endelig trygdeavgift</Nav.Heading>
           <Skatteforholdsperioder
             formValues={formValues}
             redigerbart={redigerbart}

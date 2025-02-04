@@ -2,6 +2,7 @@ import { getAsJson, postAsJson, putAsJson } from "../../utils";
 import { API_BASE_URL, AARSAVREGNING, BEHANDLINGER, FAGSAKER } from "../../api-constants";
 import { InntektskildeDto, SkatteforholdDto } from "../trygdeavgift";
 import { Medlemskapsperiode } from "../medlemavfolketrygden/medlemskapsperioder";
+import { erBrukerSkattepliktigIHelePerioden } from "../../../sider/aarsavregning/stegKomponenter/vurderingAarsavregning/vurderingAarsavregningSchema";
 
 export interface AarsavregningResponse {
   aarsavregningID: number;
@@ -92,4 +93,28 @@ export const hentFiltrertAarsavregningList = (
     }
   }
   return getAsJson(url);
+};
+
+export const harIkkeskattepliktigInntektskilder = (
+  aarsavregningResponse: AarsavregningResponse,
+  medlemskapsTypeErPliktig?: boolean,
+): boolean => {
+  const tidligereTrygdeavgiftgrunnlag = aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag;
+
+  if (!tidligereTrygdeavgiftgrunnlag) {
+    return false;
+  }
+  if (tidligereTrygdeavgiftgrunnlag.inntektskperioder.length > 0) {
+    return true;
+  }
+
+  if (medlemskapsTypeErPliktig) {
+    const erSkattepliktig =
+      medlemskapsTypeErPliktig &&
+      erBrukerSkattepliktigIHelePerioden(tidligereTrygdeavgiftgrunnlag.skatteforholdsperioder);
+
+    return !erSkattepliktig;
+  }
+
+  return false;
 };
