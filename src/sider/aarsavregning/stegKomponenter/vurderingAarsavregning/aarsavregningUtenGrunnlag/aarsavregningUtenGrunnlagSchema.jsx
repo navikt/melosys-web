@@ -57,17 +57,11 @@ const bruttoInntektFyltUtNårDetKrevesTest = {
   },
 };
 
-const erPeriodeSisteMedlemskapsperiode = (periodeId, formValues) => {
-  const medlemskapsperioder = formValues?.medlemskapsperioder || [];
-  return medlemskapsperioder[medlemskapsperioder.length - 1]?.periodeId?.toString() === periodeId;
-};
-
-const åpenTomNårIkkeSistePeriodeTest = {
-  name: "Åpen sluttdato ved etterfølgende perioder",
-  message: { melding: "Sluttdato må fylles ut når det finnes etterfølgende perioder" },
-  test: (tomDato, schema) => {
-    const erSisteMedlemskapsperiode = erPeriodeSisteMedlemskapsperiode(schema.parent.periodeId, schema.from[1].value);
-    return !(!erSisteMedlemskapsperiode && Utils._isEmpty(tomDato));
+const åpenTomTest = {
+  name: "Åpen sluttdato",
+  message: { melding: "Sluttdato mangler" },
+  test: (tomDato) => {
+    return !Utils._isEmpty(tomDato);
   },
 };
 
@@ -90,11 +84,7 @@ const aarsavregningUtenGrunnlagSchema = object().shape({
     .of(
       object().shape({
         fomDato: string().erGyldigDato().test(datoErInnenforAarTest).required(),
-        tomDato: string()
-          .erGyldigDato()
-          .erEtterDatofelt("fomDato")
-          .test(åpenTomNårIkkeSistePeriodeTest)
-          .test(datoErInnenforAarTest),
+        tomDato: string().erGyldigDato().erEtterDatofelt("fomDato").test(åpenTomTest).test(datoErInnenforAarTest),
         trygdedekning: string().required(),
         bestemmelse: string().required(),
       }),
