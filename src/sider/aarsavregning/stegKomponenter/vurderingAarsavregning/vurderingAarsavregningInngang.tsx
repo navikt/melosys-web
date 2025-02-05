@@ -31,7 +31,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
   const [initieltÅr, setInitieltÅr] = useState<number | null>(null);
   const [harGrunnlag, setHarGrunnlag] = useState<boolean | undefined>(undefined);
   const [harDeltGrunnlag, setHarDeltGrunnlag] = useState<boolean | undefined>(useSelector(oppsummertfaktaSelectors.OpplysningerFraAvgiftsystemetSelector));
-
+  const [visDeltGrunnlagRadioGroup, setVisDeltGrunnlagRadioGroup] = useState(false);
   const [nyVurderingÅrsavregning, setNyVurderingÅrsavregning] = useState<boolean>(false);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as any;
@@ -50,7 +50,10 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
       setHarGrunnlag(false);
     } else {
       setHarGrunnlag(true);
-      if (res.aar !== 2023 && res.aar !== 2024) {
+      if (res.aar === 2023 || res.aar === 2024) {
+        setVisDeltGrunnlagRadioGroup(true);
+      } else {
+        setVisDeltGrunnlagRadioGroup(false);
         setHarDeltGrunnlag(false);
       }
     }
@@ -95,9 +98,6 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
     setHarDeltGrunnlag(value);
   };
 
-  const skalViseDeltGrunnlagRadioGroup =
-    harGrunnlag && ((valgtÅr || initieltÅr) === 2023 || (valgtÅr || initieltÅr) == 2024);
-
   return (
     <div className="vurderingAarsavregning">
       <Nav.Heading level="1" className="stegvelgertittel">
@@ -123,7 +123,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
           </Nav.Select>
         </Nav.Column>
       </Nav.Row>
-      {skalViseDeltGrunnlagRadioGroup && (
+      {visDeltGrunnlagRadioGroup && (
         <Nav.Row>
           <Nav.Column xs="12">
             <Nav.RadioGroup
@@ -147,7 +147,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
       {harGrunnlag === true && harDeltGrunnlag === false && (
         <AarsavregningMedGrunnlag bekreft={bekreft} aktivtSteg={aktivtSteg} oppdaterStatus={oppdaterStatus} />
       )}
-      {harGrunnlag === false && (
+      {(harGrunnlag === false || harDeltGrunnlag) && (
         <AarsavregningUtenGrunnlag bekreft={bekreft} aktivtSteg={aktivtSteg} oppdaterStatus={oppdaterStatus} />
       )}
     </div>
