@@ -76,6 +76,7 @@ export function Medlemskapsperioder({
               label={index === 0 ? "Medlemskapsperiode" : ""}
               control={control}
               minDate={forrigeTomDato}
+              maxDate={forrigeTomDato}
               name={`medlemskapsperioder[${index}].fomDato`}
               aria-label={`Fra og med periode ${index + 1}`}
               readOnly={!redigerbart}

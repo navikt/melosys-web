@@ -77,6 +77,7 @@ const datoErInnenforAarTest = {
     melding: `Periode utenfor valgt år`,
   },
   test: (dato, schema) => {
+    if (dato === "") return true;
     const år = schema?.options?.context?.valgtår;
     const isoDato = formatterDatoTilISO(dato);
     return erIPeriode(new Date(år, 0, 1), new Date(år, 11, 31, 23, 59, 59, 999), isoDato, true);
