@@ -3,6 +3,7 @@ import MKV from "../../../../../melosyskodeverk";
 import * as KV from "../../../../../kodeverk";
 import * as Utils from "../../../../../utils";
 import { BOOLSK_STRING } from "../../../../../constants";
+import { erIPeriode, formatterDatoTilISO } from "../../../../../utils/dato";
 
 const { MAA_FYLLES_UT } = KV.Feilmeldinger;
 const {
@@ -70,13 +71,29 @@ const åpenTomNårIkkeSistePeriodeTest = {
   },
 };
 
+const datoErInnenforAarTest = {
+  name: "Åpen sluttdato ved etterfølgende perioder og periode innenfor året",
+  message: {
+    melding: `Periode utenfor valgt år`,
+  },
+  test: (dato, schema) => {
+    const år = schema?.options?.context?.valgtår;
+    const isoDato = formatterDatoTilISO(dato);
+    return erIPeriode(new Date(år, 0, 1), new Date(år, 11, 31, 23, 59, 59, 999), isoDato, true);
+  },
+};
+
 const aarsavregningUtenGrunnlagSchema = object().shape({
   medlemskapsperioder: array()
     .min(1, "Minst en medlemskapsperiode")
     .of(
       object().shape({
-        fomDato: string().erGyldigDato().required(),
-        tomDato: string().erGyldigDato().erEtterDatofelt("fomDato").test(åpenTomNårIkkeSistePeriodeTest),
+        fomDato: string().erGyldigDato().test(datoErInnenforAarTest).required(),
+        tomDato: string()
+          .erGyldigDato()
+          .erEtterDatofelt("fomDato")
+          .test(åpenTomNårIkkeSistePeriodeTest)
+          .test(datoErInnenforAarTest),
         trygdedekning: string().required(),
         bestemmelse: string().required(),
       }),
@@ -88,11 +105,13 @@ const aarsavregningUtenGrunnlagSchema = object().shape({
         fomDato: string()
           .erGyldigDato()
           .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
+          .test(datoErInnenforAarTest)
           .required(MAA_FYLLES_UT),
         tomDato: string()
           .erGyldigDato()
           .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
           .erEtterDatofelt("fomDato")
+          .test(datoErInnenforAarTest)
           .required(MAA_FYLLES_UT),
         skatteplikttype: string().required(MAA_FYLLES_UT),
       }),
@@ -107,11 +126,13 @@ const aarsavregningUtenGrunnlagSchema = object().shape({
         fomDato: string()
           .erGyldigDato()
           .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
+          .test(datoErInnenforAarTest)
           .required(MAA_FYLLES_UT),
         tomDato: string()
           .erGyldigDato()
           .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
           .erEtterDatofelt("fomDato")
+          .test(datoErInnenforAarTest)
           .required(MAA_FYLLES_UT),
       }),
     ),

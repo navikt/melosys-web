@@ -1,10 +1,7 @@
 import * as Api from "../../../../../services/api";
 import "../vurderingAarsavregningInngang.css";
 import { useCallback, useEffect, useState } from "react";
-import {
-  AarsavregningResponse,
-  Trygdeavgiftsgrunnlag,
-} from "../../../../../services/modules/aarsavregning/aarsavregning";
+import { AarsavregningResponse } from "../../../../../services/modules/aarsavregning/aarsavregning";
 import { useDispatch, useSelector } from "react-redux";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import * as Nav from "../../../../../navFrontend";
@@ -146,7 +143,6 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
 
   const [aarsavregningResponse, setAarsavregningResponse] = useState<AarsavregningResponse | undefined>(undefined);
   const [bestemmelser, setBestemmelser] = useState<[]>([]);
-  const [visLeggTilMedlemskapsperioder, setVisLeggTilMedlemskapsperioder] = useState<boolean>(true); // TODO diskuter nødvendigheten av denne
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as any;
   const aarsavregningID = useSelector(behandlingsresultatSelectors.ÅrsavregningIDSelector);
@@ -385,8 +381,6 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
           await lagreMedlemskapsperiode(periode, index);
         }
         dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(behandlingID));
-      } else {
-        // setVisLeggTilMedlemskapsperioder(false); TODO trenger vi denne
       }
     }, 1000),
     [],
