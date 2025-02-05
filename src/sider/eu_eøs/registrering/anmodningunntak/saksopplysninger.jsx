@@ -127,7 +127,6 @@ function Saksopplysninger({
   }, [anmodningsperiodeSvar]);
 
   useEffect(() => {
-    console.log("Setter endret");
     setEndretPeriode();
   }, [sed.lovvalgsperiode, anmodningsperiodeSvar.endretPeriode, lovvalgsperiode.tomDato]);
 
