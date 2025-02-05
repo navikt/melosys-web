@@ -98,7 +98,11 @@ function Saksopplysninger({
       setEndretPeriodeFom(Utils.dato.formatterDatoTilNorsk(sed.lovvalgsperiode.fom));
       setEndretPeriodeTom(Utils.dato.formatterDatoTilNorsk(sed.lovvalgsperiode.tom));
     }
-    if (anmodningsperiodeSvar.endretPeriode) {
+    if (
+      anmodningsperiodeSvar.endretPeriode &&
+      anmodningsperiodeSvar.endretPeriode.fom &&
+      anmodningsperiodeSvar.endretPeriode.tom
+    ) {
       setEndretPeriodeFom(Utils.dato.formatterDatoTilNorsk(anmodningsperiodeSvar.endretPeriode.fom));
       setEndretPeriodeTom(Utils.dato.formatterDatoTilNorsk(anmodningsperiodeSvar.endretPeriode.tom));
     }
@@ -123,6 +127,7 @@ function Saksopplysninger({
   }, [anmodningsperiodeSvar]);
 
   useEffect(() => {
+    console.log("Setter endret");
     setEndretPeriode();
   }, [sed.lovvalgsperiode, anmodningsperiodeSvar.endretPeriode, lovvalgsperiode.tomDato]);
 
