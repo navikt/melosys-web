@@ -12,12 +12,12 @@ import { FieldArrayProps, FormValuesProps, Inntektskilde } from "./types";
 import {
   arbAvgBetalesKreves,
   bruttoInntektKreves,
-  erBrukerSkattepliktigIHelePerioden,
 } from "../../../sider/ftrl/saksbehandling/stegKomponenter/vurderingTrygdeavgift/vurderingTrygdeavgiftSchema";
 import "./inntektskilder.css";
 import { Stack } from "@navikt/ds-react";
 import { Alert } from "../../../navFrontend";
 import { DateRangeController } from "../../forms";
+import { erBrukerSkattepliktigIHelePerioden } from "../../../services/modules/aarsavregning/aarsavregning";
 
 const {
   ARBEIDSINNTEKT_FRA_NORGE,

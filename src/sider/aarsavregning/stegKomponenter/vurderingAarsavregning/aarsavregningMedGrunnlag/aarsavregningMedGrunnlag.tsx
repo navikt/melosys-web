@@ -4,6 +4,7 @@ import "../vurderingAarsavregningInngang.css";
 import { useCallback, useEffect, useState } from "react";
 import {
   AarsavregningResponse,
+  erBrukerSkattepliktigIHelePerioden,
   harIkkeskattepliktigInntektskilder,
   Trygdeavgiftsgrunnlag,
 } from "../../../../../services/modules/aarsavregning/aarsavregning";
@@ -30,7 +31,6 @@ import aarsavregningMedGrunnlagSchema from "./aarsavregningMedGrunnlagSchema";
 import { Skatteforholdsperioder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/skatteforholdsperioder";
 import { Inntektskilder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/inntektskilder";
 import { beregnTrygdeavgiftsperioder } from "../komponenter/utils";
-import { erBrukerSkattepliktigIHelePerioden } from "../../../../ftrl/saksbehandling/stegKomponenter/vurderingTrygdeavgift/vurderingTrygdeavgiftSchema";
 
 interface Props {
   bekreft: () => void;

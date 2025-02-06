@@ -3,6 +3,7 @@ import MKV from "../../../../../melosyskodeverk";
 import * as KV from "../../../../../kodeverk";
 import * as Utils from "../../../../../utils";
 import { BOOLSK_STRING } from "../../../../../constants";
+import { erBrukerSkattepliktigIHelePerioden } from "../../../../../services/modules/aarsavregning/aarsavregning";
 
 const { MAA_FYLLES_UT } = KV.Feilmeldinger;
 const {
@@ -30,10 +31,6 @@ const arbAvgBetalesFyltUtNårDetKrevesTest = {
       Utils._isEmpty(arbAvgBetales)
     );
   },
-};
-
-export const erBrukerSkattepliktigIHelePerioden = (skatteforholdsperioder) => {
-  return !skatteforholdsperioder.some((skatteforhold) => skatteforhold.skatteplikttype === IKKE_SKATTEPLIKTIG);
 };
 
 export const bruttoInntektKreves = (brukerSkattepliktigIHelePerioden, kildetype, arbAvgBetales) =>

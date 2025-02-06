@@ -4,10 +4,12 @@ import {
   Inntektskilde,
   Skatteforhold,
 } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
-import { erBrukerSkattepliktigIHelePerioden } from "../../../../ftrl/saksbehandling/stegKomponenter/vurderingTrygdeavgift/vurderingTrygdeavgiftSchema";
 import * as Api from "../../../../../services/api";
 import * as Utils from "../../../../../utils";
-import { AarsavregningResponse } from "../../../../../services/modules/aarsavregning/aarsavregning";
+import {
+  AarsavregningResponse,
+  erBrukerSkattepliktigIHelePerioden,
+} from "../../../../../services/modules/aarsavregning/aarsavregning";
 
 const mapFeilmelding = (error: any) => {
   const feilmelding = "Finner ikke trygdeavgiftssats. Melosys har ikke satser for årene før 2014.";

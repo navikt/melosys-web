@@ -2,7 +2,9 @@ import { getAsJson, postAsJson, putAsJson } from "../../utils";
 import { API_BASE_URL, AARSAVREGNING, BEHANDLINGER, FAGSAKER } from "../../api-constants";
 import { InntektskildeDto, SkatteforholdDto } from "../trygdeavgift";
 import { Medlemskapsperiode } from "../medlemavfolketrygden/medlemskapsperioder";
-import { erBrukerSkattepliktigIHelePerioden } from "../../../sider/aarsavregning/stegKomponenter/vurderingAarsavregning/vurderingAarsavregningSchema";
+import MKV from "../../../melosyskodeverk";
+
+const { IKKE_SKATTEPLIKTIG } = MKV.Koder.skatteplikttype;
 
 export interface AarsavregningResponse {
   aarsavregningID: number;
@@ -93,6 +95,10 @@ export const hentFiltrertAarsavregningList = (
     }
   }
   return getAsJson(url);
+};
+
+export const erBrukerSkattepliktigIHelePerioden = (skatteforholdsperioder: any) => {
+  return !skatteforholdsperioder.some((skatteforhold: any) => skatteforhold.skatteplikttype === IKKE_SKATTEPLIKTIG);
 };
 
 export const harIkkeskattepliktigInntektskilder = (
