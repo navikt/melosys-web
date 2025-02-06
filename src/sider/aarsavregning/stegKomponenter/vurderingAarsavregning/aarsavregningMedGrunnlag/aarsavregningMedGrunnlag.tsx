@@ -319,7 +319,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
             readOnly={!redigerbart}
           >
             <Nav.HStack gap="6">
-              <Nav.Radio value={true}>Ja</Nav.Radio>
+              <Nav.Radio value>Ja</Nav.Radio>
               <Nav.Radio value={false}>Nei</Nav.Radio>
             </Nav.HStack>
           </Nav.RadioGroup>

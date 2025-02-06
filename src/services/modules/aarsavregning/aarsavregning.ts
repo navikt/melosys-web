@@ -107,7 +107,7 @@ export function harIkkeskattepliktigInntektskilder(
   medlemskapsTypeErPliktig?: boolean,
 ) {
   if (skatteforholdsperioder === undefined || inntektsperioder === undefined) return false;
-  if (inntektsperioder.length == 0) {
+  if (inntektsperioder.length === 0) {
     return false;
   }
 
