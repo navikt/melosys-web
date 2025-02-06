@@ -25,7 +25,7 @@ import { behandlingsresultatSelectors } from "../../../../../ducks/behandlingsre
 
 import { medlemskapsperioderOperations, medlemskapsperioderSelectors } from "../../../../../ducks/medlemskapsperioder";
 import { MedlemskapsperiodeProp } from "../../../../ftrl/saksbehandling/stegKomponenter/vurderingPeriode/komponenter/types";
-import { Medlemskapsperioder } from "../komponenter/medlemskapsperioder";
+import { MedlemskapsperiodeSkjema } from "../komponenter/medlemskapsperiodeSkjema";
 import { InntektskildeDto, SkatteforholdDto } from "../../../../../services/modules/trygdeavgift";
 import { FeilmeldingOppsummering } from "../feilmeldingOppsummering";
 import { Medlemskapsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
@@ -38,6 +38,7 @@ interface Props {
   bekreft: () => void;
   aktivtSteg: boolean;
   oppdaterStatus: (isValid: boolean) => void;
+  harDeltGrunnlag: boolean;
 }
 
 export interface MedlemskapTomFomDatoer {
@@ -63,14 +64,23 @@ const hentMedlemskapsFomTomDato = (
 
 const mapTilMedlemskapsperiodeProps = (
   medlemskapsperiode: Api.MedlemAvFolketrygden.Medlemskapsperioder.Medlemskapsperiode,
-): MedlemskapsperiodeProp => ({
-  ...medlemskapsperiode,
-  fomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.fomDato),
-  tomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.tomDato),
-  ny: false,
-  feil: undefined,
-  periodeId: medlemskapsperiode.id,
-});
+  tidligereGrunnlagsopplysninger?: Api.Aarsavregning.Grunnlagsopplysninger,
+): MedlemskapsperiodeProp => {
+  const grunnlagsperioder = tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.medlemskapsperioder;
+  const redigerbar = !grunnlagsperioder?.some(
+    (periode) => periode.fomDato === medlemskapsperiode.fomDato && periode.tomDato === medlemskapsperiode.tomDato,
+  );
+
+  return {
+    ...medlemskapsperiode,
+    fomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.fomDato),
+    tomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.tomDato),
+    ny: false,
+    feil: undefined,
+    periodeId: medlemskapsperiode.id,
+    redigerbar,
+  };
+};
 
 const mapTilSkatteforholdProps = (
   skatteforhold?: SkatteforholdDto[],
@@ -132,14 +142,17 @@ const mapTilInntektskilderProps = (
 
 const mapInitialMedlemskapsperioder = (
   medlemskapsperioder: Api.MedlemAvFolketrygden.Medlemskapsperioder.Medlemskapsperiode[],
+  tidligereGrunnlagsopplysninger?: Api.Aarsavregning.Grunnlagsopplysninger,
 ): MedlemskapsperiodeProp[] =>
-  [...medlemskapsperioder].sort((a, b) => Utils.dato.sorterEtterISOFomDato(a, b)).map(mapTilMedlemskapsperiodeProps);
+  [...medlemskapsperioder]
+    .sort((a, b) => Utils.dato.sorterEtterISOFomDato(a, b))
+    .map((periode) => mapTilMedlemskapsperiodeProps(periode, tidligereGrunnlagsopplysninger));
 
 interface AarsavregningFormValuesProps extends FormValuesProps {
   totaltForskuddsvisFakturert?: number | string;
 }
 
-export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
+export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus, harDeltGrunnlag }: Props) {
   const [valgtÅr, setValgtÅr] = useState<number | null>(null);
   const [beregningError, setBeregningError] = useState<undefined | string>(undefined);
   const [brukerHarBekreftet, setBrukerHarBekreftet] = useState(false);
@@ -181,7 +194,10 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
 
   useEffect(() => {
     if (lagredeMedlemskapsperioder) {
-      const mappedLagredeMedlemskapsperioder = mapInitialMedlemskapsperioder(lagredeMedlemskapsperioder);
+      const mappedLagredeMedlemskapsperioder = mapInitialMedlemskapsperioder(
+        lagredeMedlemskapsperioder,
+        aarsavregningResponse?.tidligereGrunnlagsopplysninger,
+      );
       setValue("medlemskapsperioder", mappedLagredeMedlemskapsperioder);
       setValue(
         "skatteforholdsperioder",
@@ -245,7 +261,10 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
     },
     mode: "onChange",
     defaultValues: {
-      medlemskapsperioder: mapInitialMedlemskapsperioder(lagredeMedlemskapsperioder),
+      medlemskapsperioder: mapInitialMedlemskapsperioder(
+        lagredeMedlemskapsperioder,
+        aarsavregningResponse?.tidligereGrunnlagsopplysninger,
+      ),
       skatteforholdsperioder: mapTilSkatteforholdProps(
         aarsavregningResponse?.nyttGrunnlag?.trygdeavgiftsgrunnlag.skatteforholdsperioder,
       ),
@@ -265,7 +284,6 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
     fields: skattFields,
     append: skattAppend,
     remove: skattRemove,
-    replace: resetSkatteforholdsperioder,
   } = useFieldArray<FieldArrayProps, "skatteforholdsperioder", "id">({ control, name: "skatteforholdsperioder" });
 
   const {
@@ -273,7 +291,6 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
     append: inntektAppend,
     remove: inntektRemove,
     update: inntektUpdate,
-    replace: resetInntektskilder,
   } = useFieldArray<FieldArrayProps, "inntektskilder", "id">({ control, name: "inntektskilder" });
 
   const formValues = watch();
@@ -313,7 +330,6 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
       await beregnTrygdeavgiftsperioder(formVerdier, {
         behandlingID,
         medlemskapsTypeErPliktig,
-        aarsavregningID,
         setBeregningError,
         setAarsavregningResponse,
       });
@@ -371,8 +387,10 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
           ),
         );
 
-    // @ts-expect-error generisk beskrivelse
-    medlemskapsperioderUpdate(index, mapTilMedlemskapsperiodeProps(response.data));
+    medlemskapsperioderUpdate(
+      index,
+      mapTilMedlemskapsperiodeProps(response.data, aarsavregningResponse?.tidligereGrunnlagsopplysninger),
+    );
   };
 
   const debouncedLagreMedlemskapsperioder = useCallback(
@@ -401,6 +419,7 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
       innvilgelsesResultat: "",
       trygdedekning: "",
       bestemmelse: "",
+      redigerbar: true,
     };
     // @ts-expect-error generisk beskrivelse
     medlemskapsperioderAppend(nyMedlemskapsperiode);
@@ -419,21 +438,23 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
     <div className="vurderingAarsavregning">
       <TidligereGrunnlagsopplysningerFinnesIkke formValues={formValues} control={control} redigerbart={redigerbart} />
 
-      {medlemskapsperioderFields.map((field, index) => (
-        <Medlemskapsperioder
-          redigerbart={redigerbart}
-          control={control}
-          field={field}
-          index={index}
-          remove={handleSlett}
-          formValues={formValues}
-          bestemmelser={bestemmelser}
-          handleChange={debouncedLagreMedlemskapsperioder}
-          handleUpdate={medlemskapsperioderUpdate}
-          handleLeggTil={handleLeggTilMedlemskapsperiode}
-          visLeggTil
-        />
-      ))}
+      <div className="medlemskapsperioder">
+        {medlemskapsperioderFields.map((field, index) => (
+          <MedlemskapsperiodeSkjema
+            redigerbart={redigerbart}
+            control={control}
+            field={field}
+            index={index}
+            remove={handleSlett}
+            formValues={formValues}
+            bestemmelser={bestemmelser}
+            handleChange={debouncedLagreMedlemskapsperioder}
+            handleUpdate={medlemskapsperioderUpdate}
+            handleLeggTil={handleLeggTilMedlemskapsperiode}
+            visLeggTil
+          />
+        ))}
+      </div>
 
       <Skatteforholdsperioder
         formValues={formValues}

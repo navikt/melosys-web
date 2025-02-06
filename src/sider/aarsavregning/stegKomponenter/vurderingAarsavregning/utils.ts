@@ -29,12 +29,11 @@ export async function beregnTrygdeavgiftsperioder(
   options: {
     behandlingID: number;
     medlemskapsTypeErPliktig?: boolean;
-    aarsavregningID: number;
     setBeregningError: (error: any) => void;
     setAarsavregningResponse: (response: AarsavregningResponse) => void;
   },
 ) {
-  const { behandlingID, medlemskapsTypeErPliktig, aarsavregningID, setBeregningError, setAarsavregningResponse } =
+  const { behandlingID, medlemskapsTypeErPliktig, setBeregningError, setAarsavregningResponse } =
     options;
 
   setBeregningError(undefined);
@@ -58,12 +57,12 @@ export async function beregnTrygdeavgiftsperioder(
           }))
         : [],
     });
-    Api.Aarsavregning.hentAarsavregning(behandlingID).then((response_3: AarsavregningResponse) => {
-      setAarsavregningResponse(response_3);
+    Api.Aarsavregning.hentAarsavregning(behandlingID).then((res: AarsavregningResponse) => {
+      setAarsavregningResponse(res);
     });
     setBeregningError(undefined);
-  } catch (error_3) {
-    return setBeregningError(mapFeilmelding(error_3));
+  } catch (error) {
+    return setBeregningError(mapFeilmelding(error));
   }
 }
 

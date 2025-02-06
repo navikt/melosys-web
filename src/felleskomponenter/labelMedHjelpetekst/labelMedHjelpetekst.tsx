@@ -1,10 +1,11 @@
 import * as Nav from "../../navFrontend";
 
 import "./labelMedHjelpetekst.css";
+import { ReactNode } from "react";
 
 interface LabelMedHjelpetekstProps {
   label: string;
-  hjelpetekst?: string | null;
+  hjelpetekst?: string | null | ReactNode;
   bold?: boolean;
   undertittel?: boolean;
   small?: boolean;

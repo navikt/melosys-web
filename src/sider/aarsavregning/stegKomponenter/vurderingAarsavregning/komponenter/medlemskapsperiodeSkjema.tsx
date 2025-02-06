@@ -13,7 +13,7 @@ import * as Utils from "../../../../../utils";
 import { useEffect, useState } from "react";
 import { FieldArrayProps, FormValuesProps } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
 import { Medlemskapsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
-import "./medlemskapsperioder.css";
+import "./medlemskapsperiodeSkjema.css";
 
 export interface PeriodeElementerProps {
   redigerbart: boolean;
@@ -30,7 +30,7 @@ export interface PeriodeElementerProps {
   visLeggTil: boolean;
 }
 
-export function Medlemskapsperioder({
+export function MedlemskapsperiodeSkjema({
   redigerbart,
   field,
   control,
@@ -56,13 +56,15 @@ export function Medlemskapsperioder({
     }
   }, [field.bestemmelse]);
 
+  // @ts-ignore
+  const erPeriodeFraGrunnlag = !formValues.medlemskapsperioder[index].redigerbar;
   const kanSlettePeriode = redigerbart && formValues.medlemskapsperioder.length !== 1;
   return (
-    <div className="medlemskapsperioder">
+    <div className="medlemskapsperiodeSkjema">
       <Nav.Heading size="small">{tittel}</Nav.Heading>
 
       <div key={field.id}>
-        <Nav.Row className="medlemskapsperioder__rad">
+        <Nav.Row className="skjema__rad">
           <Nav.Column className="dato">
             <Forms.Datovelger
               label={index === 0 ? "Medlemskapsperiode" : ""}
@@ -74,20 +76,20 @@ export function Medlemskapsperioder({
               }
               name={`medlemskapsperioder[${index}].fomDato`}
               aria-label={`Fra og med periode ${index + 1}`}
-              readOnly={!redigerbart}
+              readOnly={!redigerbart || erPeriodeFraGrunnlag}
               onChange={(value) => {
                 handleChange([{ ...formValues.medlemskapsperioder[index], fomDato: value }], index);
               }}
             />
           </Nav.Column>
-          <Nav.Column className="dato">
+          <Nav.Column className="dato dato__tom">
             <Forms.Datovelger
-              label=" "
+              label=""
               control={control}
               name={`medlemskapsperioder[${index}].tomDato`}
               aria-label={`Til og med periode ${index + 1}`}
               minDate={Utils.dato.norskStringTilDate(formValues.medlemskapsperioder[index].fomDato)}
-              readOnly={!redigerbart}
+              readOnly={!redigerbart || erPeriodeFraGrunnlag}
               onChange={(value) => {
                 handleChange([{ ...formValues.medlemskapsperioder[index], tomDato: value }], index);
               }}
@@ -100,7 +102,7 @@ export function Medlemskapsperioder({
               hideLabel={index !== 0}
               aria-label={`Bestemmelse periode ${index + 1}`}
               control={control}
-              readOnly={!redigerbart}
+              readOnly={!redigerbart || erPeriodeFraGrunnlag}
               onChange={(bestemmelse) => {
                 handleChange([{ ...formValues.medlemskapsperioder[index], bestemmelse }], index);
                 handleUpdate(index, { ...formValues.medlemskapsperioder[index], trygdedekning: "" });
@@ -120,7 +122,7 @@ export function Medlemskapsperioder({
               hideLabel={index !== 0}
               aria-label={`Trygdedekning periode ${index + 1}`}
               control={control}
-              readOnly={!redigerbart}
+              readOnly={!redigerbart || erPeriodeFraGrunnlag}
               onChange={(value) =>
                 handleChange([{ ...formValues.medlemskapsperioder[index], trygdedekning: value }], index)
               }
@@ -133,8 +135,8 @@ export function Medlemskapsperioder({
             </Forms.Select>
           </Nav.Column>
           {kanSlettePeriode && (
-            <Nav.Column className={index === 0 ? "slett slett__first" : "slett"}>
-              <Mui.IkonKnapp ikon={Ikoner.Bin} onClick={() => remove(index)} ariaLabel="Slett periode" />
+            <Nav.Column className={index === 0 ? "slett__knapp slett__first" : "slett__knapp"}>
+              <Mui.IkonKnapp ikon={Ikoner.Bin} onClick={() => remove(index)} ariaLabel="Slett periode" disabled={erPeriodeFraGrunnlag}/>
             </Nav.Column>
           )}
         </Nav.Row>

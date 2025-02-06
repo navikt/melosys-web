@@ -178,7 +178,6 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
       await beregnTrygdeavgiftsperioder(formVerdier, {
         behandlingID,
         medlemskapsTypeErPliktig,
-        aarsavregningID,
         setBeregningError,
         setAarsavregningResponse,
       });

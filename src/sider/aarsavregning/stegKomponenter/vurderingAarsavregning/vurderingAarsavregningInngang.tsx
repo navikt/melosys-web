@@ -17,6 +17,7 @@ import { AarsavregningMedGrunnlag } from "./aarsavregningMedGrunnlag/aarsavregni
 import { AarsavregningUtenGrunnlag } from "./aarsavregningUtenGrunnlag/aarsavregningUtenGrunnlag";
 import { lagInnvilgetMedlemskapsPeriode } from "./utils";
 import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../ducks/oppsummertfakta";
+import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
 
 interface Props {
   bekreft: () => void;
@@ -25,6 +26,16 @@ interface Props {
 }
 
 const { FERDIGBEHANDLET } = MKV.Koder.behandlinger.behandlingsresultattyper;
+
+const DELT_GRUNNLAG_HJELPETEKST = <>
+  <p>Du skal kun legge til informasjon fra Avgiftssystemet hvis:</p>
+  <ul>
+    <li>perioden er sammenhengende med perioden i Melosys</li>
+    <li>vedtaket er fattet på samme vilkår som i Melosys</li>
+    <li>vedtaket gjelder samme arbeidsforhold/-situasjon</li>
+  </ul>
+  <p>For mer veiledning se rutiner for årsavregning.</p>
+</>
 
 export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtSteg }: Props) {
   const [valgtÅr, setValgtÅr] = useState<number | null>(null);
@@ -128,7 +139,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
           <Nav.Column xs="12">
             <Nav.RadioGroup
               onChange={håndterDeltGrunnlag}
-              legend="Skal du legge til informasjon fra Avgiftssystemet til denne årsavregningen?"
+              legend={<LabelMedHjelpetekst label="Skal du legge til informasjon fra Avgiftssystemet til denne årsavregningen?" hjelpetekst={DELT_GRUNNLAG_HJELPETEKST} />}
               value={harDeltGrunnlag}
             >
               <Nav.HStack gap="6">
@@ -148,7 +159,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
         <AarsavregningMedGrunnlag bekreft={bekreft} aktivtSteg={aktivtSteg} oppdaterStatus={oppdaterStatus} />
       )}
       {(harGrunnlag === false || harDeltGrunnlag) && (
-        <AarsavregningUtenGrunnlag bekreft={bekreft} aktivtSteg={aktivtSteg} oppdaterStatus={oppdaterStatus} />
+        <AarsavregningUtenGrunnlag bekreft={bekreft} aktivtSteg={aktivtSteg} oppdaterStatus={oppdaterStatus} harDeltGrunnlag={Boolean(harDeltGrunnlag)} />
       )}
     </div>
   );

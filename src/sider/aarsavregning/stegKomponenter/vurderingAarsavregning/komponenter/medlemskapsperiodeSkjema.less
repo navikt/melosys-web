@@ -1,4 +1,4 @@
-.medlemskapsperioder {
+.medlemskapsperiodeSkjema {
   .navds-form-field {
     margin-bottom: 0;
     gap: unset;
@@ -13,7 +13,7 @@
     margin: 0.5rem 0 1rem 0;
   }
 
-  .medlemskapsperioder__rad {
+  .skjema__rad {
     display: flex;
     flex-direction: row;
     padding: 0.25rem 0.5rem 0.25rem 0;
@@ -21,8 +21,13 @@
     border-bottom: 1px solid #979797;
     width: fit-content;
 
+    .slett__first {
+      margin-top: 1.5rem;
+    }
+
     .slett__knapp {
-      margin-left: 0.75rem;
+      display: flex;
+      align-items: flex-start;
     }
 
     .dato {
@@ -48,6 +53,7 @@
       display: flex;
       align-items: flex-end;
     }
+
     .datovelger__feilmelding {
       margin-bottom: 0;
     }
