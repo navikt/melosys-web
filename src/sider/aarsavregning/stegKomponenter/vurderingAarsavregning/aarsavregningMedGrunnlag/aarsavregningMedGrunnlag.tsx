@@ -195,6 +195,10 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
     replace: resetInntektskilder,
   } = useFieldArray<FieldArrayProps, "inntektskilder", "id">({ control, name: "inntektskilder" });
   const formValues = watch();
+
+  const beregningsVerdier = () => {
+    return { skatteforholdsperioder: formValues.skatteforholdsperioder, inntektskilder: formValues.inntektskilder };
+  };
   useEffect(() => {
     if (brukerHarBekreftet && Object.keys(formErrors).length === 0) {
       setBrukerHarBekreftet(false);
@@ -247,7 +251,18 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
   }, [isValidating, erAvvik]);
 
   const stegErGyldig =
-    erAvvik === false || Boolean(formIsValid && erAvvik && aarsavregningResponse?.nyttGrunnlag && !beregningError);
+    erAvvik === false ||
+    Boolean(
+      formIsValid &&
+        erAvvik &&
+        aarsavregningResponse?.nyttGrunnlag &&
+        !beregningError &&
+        harIkkeskattepliktigInntektskilder(
+          beregningsVerdier().skatteforholdsperioder,
+          beregningsVerdier().inntektskilder,
+          medlemskapsTypeErPliktig,
+        ),
+    );
 
   useEffect(() => {
     oppdaterStatus(stegErGyldig);
@@ -295,7 +310,8 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
           />
           <TidligereGrunnlagsoversikt
             harFakturerbareInntektskilder={harIkkeskattepliktigInntektskilder(
-              aarsavregningResponse,
+              aarsavregningResponse.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.skatteforholdsperioder,
+              aarsavregningResponse.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.inntektskperioder,
               medlemskapsTypeErPliktig,
             )}
             skatteforholdsperioder={
@@ -307,7 +323,11 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
             avgift={aarsavregningResponse.tidligereGrunnlagsopplysninger.avgift}
           />
 
-          {harIkkeskattepliktigInntektskilder(aarsavregningResponse, medlemskapsTypeErPliktig) && (
+          {harIkkeskattepliktigInntektskilder(
+            aarsavregningResponse.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.skatteforholdsperioder,
+            aarsavregningResponse.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.inntektskperioder,
+            medlemskapsTypeErPliktig,
+          ) && (
             <BeregnetTrygdeavgiftDetaljer
               grunnlag={aarsavregningResponse?.tidligereGrunnlagsopplysninger}
               medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!}
@@ -390,7 +410,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
         </Nav.Alert>
       )}
 
-      <Nav.Button variant="primary" disabled={!redigerbart} onClick={bekreftOnClick}>
+      <Nav.Button variant="primary" disabled={!stegErGyldig || !redigerbart} onClick={bekreftOnClick}>
         Bekreft og fortsett
       </Nav.Button>
     </>

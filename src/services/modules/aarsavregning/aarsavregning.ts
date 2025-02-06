@@ -101,26 +101,21 @@ export const erBrukerSkattepliktigIHelePerioden = (skatteforholdsperioder: any) 
   return !skatteforholdsperioder.some((skatteforhold: any) => skatteforhold.skatteplikttype === IKKE_SKATTEPLIKTIG);
 };
 
-export const harIkkeskattepliktigInntektskilder = (
-  aarsavregningResponse: AarsavregningResponse,
+export function harIkkeskattepliktigInntektskilder(
+  skatteforholdsperioder: any,
+  inntektsperioder: any,
   medlemskapsTypeErPliktig?: boolean,
-): boolean => {
-  const tidligereTrygdeavgiftgrunnlag = aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag;
-
-  if (!tidligereTrygdeavgiftgrunnlag) {
+) {
+  if (skatteforholdsperioder === undefined || inntektsperioder === undefined) return false;
+  if (inntektsperioder.length == 0) {
     return false;
-  }
-  if (tidligereTrygdeavgiftgrunnlag.inntektskperioder.length > 0) {
-    return true;
   }
 
   if (medlemskapsTypeErPliktig) {
-    const erSkattepliktig =
-      medlemskapsTypeErPliktig &&
-      erBrukerSkattepliktigIHelePerioden(tidligereTrygdeavgiftgrunnlag.skatteforholdsperioder);
+    const erSkattepliktig = medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(skatteforholdsperioder);
 
     return !erSkattepliktig;
   }
 
-  return false;
-};
+  return true;
+}
