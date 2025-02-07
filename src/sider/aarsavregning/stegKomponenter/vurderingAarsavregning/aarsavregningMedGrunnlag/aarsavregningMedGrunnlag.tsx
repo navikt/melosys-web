@@ -14,7 +14,6 @@ import { FieldValue, useFieldArray, useForm } from "react-hook-form";
 import { FieldArrayProps, FormValuesProps } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Utils from "../../../../../utils";
-import { feilMeldingBlokkerer, finnAktivFeilmelding } from "../meldinger";
 import MKV from "../../../../../melosyskodeverk";
 import { SumArsavregningTabell } from "../komponenter/sumArsavregningTabell";
 import { BeregnetTrygdeavgiftDetaljer } from "../komponenter/beregnetTrygdeavgiftDetaljer";
@@ -218,22 +217,8 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
     [behandlingID],
   );
 
-  const aktivFeilmeldingType = finnAktivFeilmelding(
-    formValues?.inntektskilder,
-    formValues?.skatteforholdsperioder,
-    medlemskapsperioder,
-    innvilgetMedlemskapsperiode,
-  );
-
   useEffect(() => {
-    if (
-      redigerbart &&
-      erAvvik &&
-      !isValidating &&
-      formIsValid &&
-      aarsavregningID &&
-      !feilMeldingBlokkerer(aktivFeilmeldingType)
-    ) {
+    if (redigerbart && erAvvik && !isValidating && formIsValid && aarsavregningID) {
       debounceBeregnTrygdeavgiftsperioderOgOppdaterFormVerdier(formValues);
     }
   }, [isValidating, erAvvik]);

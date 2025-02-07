@@ -22,7 +22,7 @@ export const arbAvgBetalesKreves = (kildetype, medlemskapsTypeErPliktig) =>
 
 const arbAvgBetalesFyltUtNårDetKrevesTest = {
   name: "Fyll inn arb.avg. betales når det kreves",
-  message: { message: "Velg om arb.avg. betales til skatt" },
+  message: "Velg om arb.avg. betales til skatt",
   test: (arbAvgBetales, schema) => {
     const { kildetype } = schema.from[0].value;
 
@@ -44,7 +44,7 @@ export const bruttoInntektKreves = (brukerSkattepliktigIHelePerioden, kildetype,
 
 const bruttoInntektFyltUtNårDetKrevesTest = {
   name: "Fyll inn brutto inntekt når det kreves",
-  message: { message: "Fyll inn brutto inntekt" },
+  message: "Fyll inn brutto inntekt",
   test: (bruttoInntekt, schema) => {
     const { skatteforholdsperioder } = schema.from[1].value;
     const { kildetype, arbAvgBetales } = schema.from[0].value;
@@ -59,22 +59,9 @@ const bruttoInntektFyltUtNårDetKrevesTest = {
 
 const åpenTomTest = {
   name: "Åpen sluttdato",
-  message: { melding: "Sluttdato mangler" },
+  message: "Sluttdato mangler",
   test: (tomDato) => {
     return !Utils._isEmpty(tomDato);
-  },
-};
-
-const datoErInnenforAarTest = {
-  name: "Åpen sluttdato ved etterfølgende perioder og periode innenfor året",
-  message: {
-    melding: `Periode utenfor valgt år`,
-  },
-  test: (dato, schema) => {
-    if (dato === "") return true;
-    const år = schema?.options?.context?.valgtår;
-    const isoDato = formatterDatoTilISO(dato);
-    return erIPeriode(new Date(år, 0, 1), new Date(år, 11, 31, 23, 59, 59, 999), isoDato, true);
   },
 };
 
@@ -83,8 +70,8 @@ const aarsavregningUtenGrunnlagSchema = object().shape({
     .min(1, "Minst en medlemskapsperiode")
     .of(
       object().shape({
-        fomDato: string().erGyldigDato().test(datoErInnenforAarTest).required(),
-        tomDato: string().erGyldigDato().erEtterDatofelt("fomDato").test(åpenTomTest).test(datoErInnenforAarTest),
+        fomDato: string().erGyldigDato().required(),
+        tomDato: string().erGyldigDato().erEtterDatofelt("fomDato").test(åpenTomTest),
         trygdedekning: string().required(),
         bestemmelse: string().required(),
       }),
@@ -96,13 +83,12 @@ const aarsavregningUtenGrunnlagSchema = object().shape({
         fomDato: string()
           .erGyldigDato()
           .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
-          .test(datoErInnenforAarTest)
           .required(MAA_FYLLES_UT),
         tomDato: string()
           .erGyldigDato()
           .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
           .erEtterDatofelt("fomDato")
-          .test(datoErInnenforAarTest)
+          .test(åpenTomTest)
           .required(MAA_FYLLES_UT),
         skatteplikttype: string().required(MAA_FYLLES_UT),
       }),
@@ -114,17 +100,8 @@ const aarsavregningUtenGrunnlagSchema = object().shape({
         kildetype: string().required(MAA_FYLLES_UT),
         arbAvgBetales: string().test(arbAvgBetalesFyltUtNårDetKrevesTest).nullable(),
         bruttoInntekt: string().erNummer().test(bruttoInntektFyltUtNårDetKrevesTest).nullable(),
-        fomDato: string()
-          .erGyldigDato()
-          .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
-          .test(datoErInnenforAarTest)
-          .required(MAA_FYLLES_UT),
-        tomDato: string()
-          .erGyldigDato()
-          .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
-          .erEtterDatofelt("fomDato")
-          .test(datoErInnenforAarTest)
-          .required(MAA_FYLLES_UT),
+        fomDato: string().erGyldigDato().required(MAA_FYLLES_UT),
+        tomDato: string().erGyldigDato().erEtterDatofelt("fomDato").test(åpenTomTest).required(MAA_FYLLES_UT),
       }),
     ),
 });

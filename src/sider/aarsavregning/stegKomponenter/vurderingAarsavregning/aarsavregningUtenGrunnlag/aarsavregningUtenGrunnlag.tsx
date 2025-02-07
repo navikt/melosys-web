@@ -11,7 +11,6 @@ import { FieldValue, useFieldArray, useForm } from "react-hook-form";
 import { FieldArrayProps, FormValuesProps } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Utils from "../../../../../utils";
-import { feilMeldingBlokkerer, finnAktivFeilmelding } from "../meldinger";
 import MKV from "../../../../../melosyskodeverk";
 import { SumArsavregningTabell } from "../komponenter/sumArsavregningTabell";
 import { BeregnetTrygdeavgiftDetaljer } from "../komponenter/beregnetTrygdeavgiftDetaljer";
@@ -137,7 +136,7 @@ interface AarsavregningFormValuesProps extends FormValuesProps {
 }
 
 export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
-  const [valgtÅr, setValgtÅr] = useState<number | null>(null);
+  const [valgtÅr, setValgtÅr] = useState<number | undefined>();
   const [beregningError, setBeregningError] = useState<undefined | string>(undefined);
   const [brukerHarBekreftet, setBrukerHarBekreftet] = useState(false);
 
@@ -237,7 +236,6 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
     context: {
       medlemskapsperiode: innvilgetMedlemskapsperiode,
       medlemskapsTypeErPliktig,
-      valgtår: valgtÅr,
     },
     mode: "onChange",
     defaultValues: {
@@ -322,15 +320,8 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
     [handleBeregnTrygdeavgiftsperioder],
   );
 
-  const aktivFeilmeldingType = finnAktivFeilmelding(
-    formValues?.inntektskilder,
-    formValues?.skatteforholdsperioder,
-    lagredeMedlemskapsperioder,
-    innvilgetMedlemskapsperiode,
-  );
-
   useEffect(() => {
-    if (redigerbart && !isValidating && formIsValid && aarsavregningID && !feilMeldingBlokkerer(aktivFeilmeldingType)) {
+    if (redigerbart && !isValidating && formIsValid && aarsavregningID) {
       debounceBeregnTrygdeavgiftsperioder(formValues);
     }
   }, [isValidating, aarsavregningID]);
@@ -426,6 +417,8 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
           handleUpdate={medlemskapsperioderUpdate}
           handleLeggTil={handleLeggTilMedlemskapsperiode}
           visLeggTil
+          maksVerdi={valgtÅr !== undefined ? new Date(valgtÅr, 11, 31, 23, 59, 59, 999) : undefined}
+          minVerdi={valgtÅr !== undefined ? new Date(valgtÅr, 0, 1) : undefined}
         />
       ))}
 
