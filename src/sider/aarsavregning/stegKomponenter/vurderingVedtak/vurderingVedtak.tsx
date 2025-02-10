@@ -193,6 +193,11 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
     typeof nyTrygdeavgift === "number" &&
     Math.abs(tidligereTrygdeavgift - nyTrygdeavgift) < MINSTEBELOP_FAKTURERING_ELLER_REFUSJON;
 
+  const erNullKroner =
+    typeof tidligereTrygdeavgift === "number" &&
+    typeof nyTrygdeavgift === "number" &&
+    Math.abs(tidligereTrygdeavgift - nyTrygdeavgift) === 0;
+
   const skalFaktureres =
     typeof tidligereTrygdeavgift === "number" &&
     typeof nyTrygdeavgift === "number" &&
@@ -213,7 +218,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
           <Nav.Column xs="12">
             <Nav.BodyLong size="small" className="info">
               {erDifferanseUnderMinstebeløp ? (
-                <b>Beløpet er under minstegrensen for fakturering/refusjon (100 kr).</b>
+                !erNullKroner && <b>Beløpet er under minstegrensen for fakturering/refusjon (100 kr).</b>
               ) : (
                 <>
                   <br />
