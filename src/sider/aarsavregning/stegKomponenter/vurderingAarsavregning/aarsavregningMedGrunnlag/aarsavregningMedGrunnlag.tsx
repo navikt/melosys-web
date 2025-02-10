@@ -16,28 +16,43 @@ import { FieldValue, useFieldArray, useForm } from "react-hook-form";
 import { FieldArrayProps, FormValuesProps } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Utils from "../../../../../utils";
-import { feilMeldingBlokkerer, finnAktivFeilmelding } from "../meldinger";
 import MKV from "../../../../../melosyskodeverk";
 import { SumArsavregningTabell } from "../komponenter/sumArsavregningTabell";
 import { BeregnetTrygdeavgiftDetaljer } from "../komponenter/beregnetTrygdeavgiftDetaljer";
 import { OK } from "../../../../../ducks/aarsavregning/types";
 import TidligereGrunnlagsoversikt from "../komponenter/tidligereGrunnlagsoversikt";
+import { sorterEtterISOFomDato } from "../../../../../utils/dato";
+
 import { behandlingsresultatSelectors } from "../../../../../ducks/behandlingsresultat";
 import { FeilmeldingOppsummering } from "../feilmeldingOppsummering";
+import { Medlemskapsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import aarsavregningMedGrunnlagSchema from "./aarsavregningMedGrunnlagSchema";
 import { Skatteforholdsperioder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/skatteforholdsperioder";
 import { Inntektskilder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/inntektskilder";
-import {
-  beregnTrygdeavgiftsperioder,
-  lagInnvilgetMedlemskapsPeriode,
-  oppdaterNyttTotalbeloep,
-} from "../komponenter/utils";
+import { beregnTrygdeavgiftsperioder } from "../komponenter/utils";
+import { mapTilInntektskilderProps, mapTilSkatteforholdProps } from "../aarsavregningHelpers";
 
 interface Props {
   bekreft: () => void;
   aktivtSteg: boolean;
   oppdaterStatus: (isValid: boolean) => void;
 }
+
+const lagInnvilgetMedlemskapsPeriode = (medlemskapsperioder?: Medlemskapsperiode[]) => {
+  if (medlemskapsperioder && !Utils._isEmpty(medlemskapsperioder)) {
+    const sorterteInnvilgedePerioder = [...medlemskapsperioder]
+      .filter((periode) => periode.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.INNVILGET)
+      .sort(sorterEtterISOFomDato);
+    return {
+      fom: sorterteInnvilgedePerioder[0].fomDato,
+      tom: sorterteInnvilgedePerioder[sorterteInnvilgedePerioder.length - 1].tomDato,
+    };
+  }
+  return {
+    tom: undefined,
+    fom: undefined,
+  };
+};
 
 export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
   const [erAvvik, setErAvvik] = useState<boolean | undefined>(undefined);
@@ -70,26 +85,11 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
     const sorterteInntekstkilder = [...inntektskperioder].sort(Utils.dato.sorterEtterISOFomDato);
     const sorterteSkatteforhold = [...skatteforholdsperioder].sort(Utils.dato.sorterEtterISOFomDato);
     resetSkatteforholdsperioder(
-      !Utils._isEmpty(sorterteSkatteforhold)
-        ? sorterteSkatteforhold.map((skatteforhold) => ({
-            fomDato: Utils.dato.formatterDatoTilNorsk(skatteforhold.fomDato),
-            tomDato: Utils.dato.formatterDatoTilNorsk(skatteforhold.tomDato),
-            skatteplikttype: skatteforhold.skatteplikttype,
-          }))
-        : [],
+      !Utils._isEmpty(sorterteSkatteforhold) ? mapTilSkatteforholdProps(sorterteSkatteforhold) : [],
     );
 
     resetInntektskilder(
-      !Utils._isEmpty(sorterteInntekstkilder)
-        ? sorterteInntekstkilder.map((inntektskilde) => ({
-            kildetype: inntektskilde.type,
-            arbAvgBetales: Utils.streng.boolTilUppercaseStreng(inntektskilde.arbeidsgiversavgiftBetales),
-            bruttoInntekt: inntektskilde.avgiftspliktigInntekt,
-            fomDato: Utils.dato.formatterDatoTilNorsk(inntektskilde.fomDato),
-            tomDato: Utils.dato.formatterDatoTilNorsk(inntektskilde.tomDato),
-            erMaanedsbelop: Utils.streng.boolTilUppercaseStreng(inntektskilde.erMaanedsbelop),
-          }))
-        : [],
+      !Utils._isEmpty(sorterteInntekstkilder) ? mapTilInntektskilderProps(sorterteInntekstkilder) : [],
     );
   };
 
@@ -118,16 +118,26 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
     }
   }, []);
 
+  const oppdaterNyttTotalbeloep = async (totalAvgift?: number) => {
+    return Api.Aarsavregning.oppdaterTotalBelop(
+      behandlingID,
+      {
+        avregning: {
+          nyttTotalbeloep: totalAvgift,
+        },
+      },
+      aarsavregningID,
+    );
+  };
+
   useEffect(() => {
     if (redigerbart && aarsavregningResponse?.nyttGrunnlag) {
       if (aarsavregningResponse.nyttGrunnlag?.avgift.totalAvgift !== aarsavregningResponse.avregning?.nyttTotalbeloep) {
-        oppdaterNyttTotalbeloep(
-          behandlingID,
-          aarsavregningID,
-          aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift,
-        ).then((res: AarsavregningResponse) => {
-          setAarsavregningResponse(res);
-        });
+        oppdaterNyttTotalbeloep(aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift).then(
+          (res: AarsavregningResponse) => {
+            setAarsavregningResponse(res);
+          },
+        );
       }
     }
   }, [aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift]);
@@ -205,22 +215,8 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
     [behandlingID],
   );
 
-  const aktivFeilmeldingType = finnAktivFeilmelding(
-    formValues?.inntektskilder,
-    formValues?.skatteforholdsperioder,
-    medlemskapsperioder,
-    innvilgetMedlemskapsperiode,
-  );
-
   useEffect(() => {
-    if (
-      redigerbart &&
-      erAvvik &&
-      !isValidating &&
-      formIsValid &&
-      aarsavregningID &&
-      !feilMeldingBlokkerer(aktivFeilmeldingType)
-    ) {
+    if (redigerbart && erAvvik && !isValidating && formIsValid && aarsavregningID) {
       debounceBeregnTrygdeavgiftsperioderOgOppdaterFormVerdier(formValues);
     }
   }, [isValidating, erAvvik]);
@@ -248,20 +244,18 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
       Api.Trygdeavgift.slettTrygdeavgiftsperioder(behandlingID).then(() => {
         resetSkatteforholdsperioder([]);
         resetInntektskilder([]);
-        oppdaterNyttTotalbeloep(
-          behandlingID,
-          aarsavregningID,
-          aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift.totalAvgift,
-        ).then((res: AarsavregningResponse) => {
-          setAarsavregningResponse(res);
-          setSkjemaverdierFraTrygdeavgiftsgrunnlag(res.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag);
-          if (res.tidligereGrunnlagsopplysninger !== undefined) {
-            debouncedBeregnTrygdeavgiftsperioder({
-              skatteforholdsperioder: res.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag.skatteforholdsperioder,
-              inntektskilder: res.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag.inntektskperioder,
-            });
-          }
-        });
+        oppdaterNyttTotalbeloep(aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift.totalAvgift).then(
+          (res: AarsavregningResponse) => {
+            setAarsavregningResponse(res);
+            setSkjemaverdierFraTrygdeavgiftsgrunnlag(res.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag);
+            if (res.tidligereGrunnlagsopplysninger !== undefined) {
+              debouncedBeregnTrygdeavgiftsperioder({
+                skatteforholdsperioder: res.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag.skatteforholdsperioder,
+                inntektskilder: res.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag.inntektskperioder,
+              });
+            }
+          },
+        );
       });
     } else if (aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag) {
       setSkjemaverdierFraTrygdeavgiftsgrunnlag(
