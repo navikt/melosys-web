@@ -1,10 +1,7 @@
 import * as Api from "../../../../../services/api";
 import "../vurderingAarsavregningInngang.css";
 import { useCallback, useEffect, useState } from "react";
-import {
-  AarsavregningResponse,
-  Trygdeavgiftsgrunnlag,
-} from "../../../../../services/modules/aarsavregning/aarsavregning";
+import { AarsavregningResponse } from "../../../../../services/modules/aarsavregning/aarsavregning";
 import { useDispatch, useSelector } from "react-redux";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import * as Nav from "../../../../../navFrontend";
@@ -14,25 +11,27 @@ import { FieldValue, useFieldArray, useForm } from "react-hook-form";
 import { FieldArrayProps, FormValuesProps } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Utils from "../../../../../utils";
-import { feilMeldingBlokkerer, finnAktivFeilmelding } from "../meldinger";
 import MKV from "../../../../../melosyskodeverk";
 import { SumArsavregningTabell } from "../komponenter/sumArsavregningTabell";
 import { BeregnetTrygdeavgiftDetaljer } from "../komponenter/beregnetTrygdeavgiftDetaljer";
 import { OK } from "../../../../../ducks/aarsavregning/types";
-import { sorterEtterISOFomDato } from "../../../../../utils/dato";
 
 import { behandlingsresultatSelectors } from "../../../../../ducks/behandlingsresultat";
 
 import { medlemskapsperioderOperations, medlemskapsperioderSelectors } from "../../../../../ducks/medlemskapsperioder";
 import { MedlemskapsperiodeProp } from "../../../../ftrl/saksbehandling/stegKomponenter/vurderingPeriode/komponenter/types";
 import { Medlemskapsperioder } from "../komponenter/medlemskapsperioder";
-import { InntektskildeDto, SkatteforholdDto } from "../../../../../services/modules/trygdeavgift";
 import { FeilmeldingOppsummering } from "../feilmeldingOppsummering";
-import { Medlemskapsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import aarsavregningUtenGrunnlagSchema from "./aarsavregningUtenGrunnlagSchema";
 import { Skatteforholdsperioder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/skatteforholdsperioder";
 import { Inntektskilder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/inntektskilder";
 import { beregnTrygdeavgiftsperioder } from "../komponenter/utils";
+import {
+  hentMedlemskapsFomTomDato,
+  mapInitialMedlemskapsperioder,
+  mapTilInntektskilderProps,
+  mapTilSkatteforholdProps,
+} from "../aarsavregningHelpers";
 
 interface Props {
   bekreft: () => void;
@@ -45,108 +44,17 @@ export interface MedlemskapTomFomDatoer {
   tom?: string;
 }
 
-const hentMedlemskapsFomTomDato = (
-  medlemskapsperioder?: MedlemskapsperiodeProp[] | Medlemskapsperiode[],
-): MedlemskapTomFomDatoer => {
-  if (medlemskapsperioder && !Utils._isEmpty(medlemskapsperioder)) {
-    const sorterteInnvilgedePerioder = [...medlemskapsperioder].sort(sorterEtterISOFomDato);
-    return {
-      fom: sorterteInnvilgedePerioder[0].fomDato,
-      tom: sorterteInnvilgedePerioder[sorterteInnvilgedePerioder.length - 1].tomDato,
-    };
-  }
-  return {
-    tom: undefined,
-    fom: undefined,
-  };
-};
-
-const mapTilMedlemskapsperiodeProps = (
-  medlemskapsperiode: Api.MedlemAvFolketrygden.Medlemskapsperioder.Medlemskapsperiode,
-): MedlemskapsperiodeProp => ({
-  ...medlemskapsperiode,
-  fomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.fomDato),
-  tomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.tomDato),
-  ny: false,
-  feil: undefined,
-  periodeId: medlemskapsperiode.id,
-});
-
-const mapTilSkatteforholdProps = (
-  skatteforhold?: SkatteforholdDto[],
-  medlemskapsperioder?: MedlemskapsperiodeProp[],
-) => {
-  const medlemskapsFomTomDato = hentMedlemskapsFomTomDato(medlemskapsperioder);
-
-  if (skatteforhold !== undefined) {
-    return skatteforhold?.map((forhold) => ({
-      fomDato: Utils.dato.formatterDatoTilNorsk(forhold.fomDato),
-      tomDato: Utils.dato.formatterDatoTilNorsk(forhold.tomDato),
-      skatteplikttype: forhold.skatteplikttype,
-    }));
-  }
-
-  if (medlemskapsFomTomDato.fom !== undefined && medlemskapsFomTomDato.tom !== undefined) {
-    return [
-      {
-        fomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsFomTomDato.fom),
-        tomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsFomTomDato.tom),
-        skatteplikttype: undefined,
-      },
-    ];
-  }
-  return [{}];
-};
-
-const mapTilInntektskilderProps = (
-  inntektskilder?: InntektskildeDto[],
-  medlemskapsperioder?: MedlemskapsperiodeProp[],
-) => {
-  const medlemskapsTomFomDato = hentMedlemskapsFomTomDato(medlemskapsperioder);
-
-  if (inntektskilder !== undefined) {
-    return inntektskilder?.map((kilde) => ({
-      fomDato: Utils.dato.formatterDatoTilNorsk(kilde.fomDato),
-      tomDato: Utils.dato.formatterDatoTilNorsk(kilde.tomDato),
-      kildetype: kilde.type,
-      arbAvgBetales: Utils.streng.boolTilUppercaseStreng(kilde.arbeidsgiversavgiftBetales),
-      bruttoInntekt: kilde.avgiftspliktigInntekt,
-      erMaanedsbelop: Utils.streng.boolTilUppercaseStreng(kilde.erMaanedsbelop),
-    }));
-  }
-
-  if (medlemskapsTomFomDato.fom !== undefined && medlemskapsTomFomDato.tom !== undefined) {
-    return [
-      {
-        fomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsTomFomDato.fom),
-        tomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsTomFomDato.tom),
-        kildetype: undefined,
-        arbAvgBetales: Utils.streng.boolTilUppercaseStreng(false),
-        bruttoInntekt: undefined,
-        erMaanedsbelop: Utils.streng.boolTilUppercaseStreng(false),
-      },
-    ];
-  }
-  return [{}];
-};
-
-const mapInitialMedlemskapsperioder = (
-  medlemskapsperioder: Api.MedlemAvFolketrygden.Medlemskapsperioder.Medlemskapsperiode[],
-): MedlemskapsperiodeProp[] =>
-  [...medlemskapsperioder].sort((a, b) => Utils.dato.sorterEtterISOFomDato(a, b)).map(mapTilMedlemskapsperiodeProps);
-
 interface AarsavregningFormValuesProps extends FormValuesProps {
   totaltForskuddsvisFakturert?: number | string;
 }
 
 export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
-  const [valgtÅr, setValgtÅr] = useState<number | null>(null);
+  const [valgtÅr, setValgtÅr] = useState<number | undefined>();
   const [beregningError, setBeregningError] = useState<undefined | string>(undefined);
   const [brukerHarBekreftet, setBrukerHarBekreftet] = useState(false);
 
   const [aarsavregningResponse, setAarsavregningResponse] = useState<AarsavregningResponse | undefined>(undefined);
   const [bestemmelser, setBestemmelser] = useState<[]>([]);
-  const [visLeggTilMedlemskapsperioder, setVisLeggTilMedlemskapsperioder] = useState<boolean>(true); // TODO diskuter nødvendigheten av denne
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as any;
   const aarsavregningID = useSelector(behandlingsresultatSelectors.ÅrsavregningIDSelector);
@@ -241,7 +149,6 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
     context: {
       medlemskapsperiode: innvilgetMedlemskapsperiode,
       medlemskapsTypeErPliktig,
-      valgtår: valgtÅr,
     },
     mode: "onChange",
     defaultValues: {
@@ -326,15 +233,8 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
     [handleBeregnTrygdeavgiftsperioder],
   );
 
-  const aktivFeilmeldingType = finnAktivFeilmelding(
-    formValues?.inntektskilder,
-    formValues?.skatteforholdsperioder,
-    lagredeMedlemskapsperioder,
-    innvilgetMedlemskapsperiode,
-  );
-
   useEffect(() => {
-    if (redigerbart && !isValidating && formIsValid && aarsavregningID && !feilMeldingBlokkerer(aktivFeilmeldingType)) {
+    if (redigerbart && !isValidating && formIsValid && aarsavregningID) {
       debounceBeregnTrygdeavgiftsperioder(formValues);
     }
   }, [isValidating, aarsavregningID]);
@@ -385,8 +285,6 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
           await lagreMedlemskapsperiode(periode, index);
         }
         dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(behandlingID));
-      } else {
-        // setVisLeggTilMedlemskapsperioder(false); TODO trenger vi denne
       }
     }, 1000),
     [],
@@ -432,6 +330,8 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
           handleUpdate={medlemskapsperioderUpdate}
           handleLeggTil={handleLeggTilMedlemskapsperiode}
           visLeggTil
+          maksVerdi={valgtÅr !== undefined ? new Date(valgtÅr, 11, 31, 23, 59, 59, 999) : undefined}
+          minVerdi={valgtÅr !== undefined ? new Date(valgtÅr, 0, 1) : undefined}
         />
       ))}
 
