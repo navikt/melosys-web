@@ -31,7 +31,7 @@ import {
   mapInitialMedlemskapsperioder,
   mapTilInntektskilderProps,
   mapTilSkatteforholdProps,
-} from "./aarsavregningHelpers";
+} from "../aarsavregningHelpers";
 
 interface Props {
   bekreft: () => void;

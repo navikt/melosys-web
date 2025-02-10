@@ -1,5 +1,5 @@
-import * as Utils from "../../../../../utils";
-import { sorterEtterISOFomDato } from "../../../../../utils/dato";
+import * as Utils from "../../../../utils";
+import { sorterEtterISOFomDato } from "../../../../utils/dato";
 
 // Returns the first and last dates from a sorted list of membership periods.
 export const hentMedlemskapsFomTomDato = (medlemskapsperioder?: any[]) => {
@@ -50,13 +50,13 @@ export const mapTilSkatteforholdProps = (skatteforhold?: any[], medlemskapsperio
 export const mapTilInntektskilderProps = (inntektskilder?: any[], medlemskapsperioder?: any[]) => {
   const { fom, tom } = hentMedlemskapsFomTomDato(medlemskapsperioder);
   if (inntektskilder) {
-    return inntektskilder.map((k) => ({
-      fomDato: Utils.dato.formatterDatoTilNorsk(k.fomDato),
-      tomDato: Utils.dato.formatterDatoTilNorsk(k.tomDato),
-      kildetype: k.type,
-      arbAvgBetales: Utils.streng.boolTilUppercaseStreng(k.arbeidsgiversavgiftBetales),
-      bruttoInntekt: k.avgiftspliktigInntekt,
-      erMaanedsbelop: Utils.streng.boolTilUppercaseStreng(k.erMaanedsbelop),
+    return inntektskilder.map((inntektskilde) => ({
+      fomDato: Utils.dato.formatterDatoTilNorsk(inntektskilde.fomDato),
+      tomDato: Utils.dato.formatterDatoTilNorsk(inntektskilde.tomDato),
+      kildetype: inntektskilde.type,
+      arbAvgBetales: Utils.streng.boolTilUppercaseStreng(inntektskilde.arbeidsgiversavgiftBetales),
+      bruttoInntekt: inntektskilde.avgiftspliktigInntekt,
+      erMaanedsbelop: Utils.streng.boolTilUppercaseStreng(inntektskilde.erMaanedsbelop),
     }));
   }
   if (fom && tom) {
