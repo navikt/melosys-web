@@ -367,17 +367,13 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
         />
       )}
 
-      {nyttGrunnlagHarTrygdeavgiftsperioder() &&
-        erAvvik &&
-        formIsValid &&
-        !beregningError &&
-        aarsavregningResponse?.nyttGrunnlag && (
-          <BeregnetTrygdeavgiftDetaljer
-            grunnlag={aarsavregningResponse.nyttGrunnlag}
-            medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!}
-            tittel="Endelig beregnet trygdeavgift"
-          />
-        )}
+      {nyttGrunnlagHarTrygdeavgiftsperioder() && erAvvik && formIsValid && !beregningError && (
+        <BeregnetTrygdeavgiftDetaljer
+          grunnlag={aarsavregningResponse?.nyttGrunnlag}
+          medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!}
+          tittel="Endelig beregnet trygdeavgift"
+        />
+      )}
 
       {brukerHarBekreftet && <FeilmeldingOppsummering errors={formErrors} />}
 
