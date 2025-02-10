@@ -15,20 +15,23 @@ import MKV from "../../../../../melosyskodeverk";
 import { SumArsavregningTabell } from "../komponenter/sumArsavregningTabell";
 import { BeregnetTrygdeavgiftDetaljer } from "../komponenter/beregnetTrygdeavgiftDetaljer";
 import { OK } from "../../../../../ducks/aarsavregning/types";
-import { sorterEtterISOFomDato } from "../../../../../utils/dato";
 
 import { behandlingsresultatSelectors } from "../../../../../ducks/behandlingsresultat";
 
 import { medlemskapsperioderOperations, medlemskapsperioderSelectors } from "../../../../../ducks/medlemskapsperioder";
 import { MedlemskapsperiodeProp } from "../../../../ftrl/saksbehandling/stegKomponenter/vurderingPeriode/komponenter/types";
 import { Medlemskapsperioder } from "../komponenter/medlemskapsperioder";
-import { InntektskildeDto, SkatteforholdDto } from "../../../../../services/modules/trygdeavgift";
 import { FeilmeldingOppsummering } from "../feilmeldingOppsummering";
-import { Medlemskapsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import aarsavregningUtenGrunnlagSchema from "./aarsavregningUtenGrunnlagSchema";
 import { Skatteforholdsperioder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/skatteforholdsperioder";
 import { Inntektskilder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/inntektskilder";
 import { beregnTrygdeavgiftsperioder } from "../komponenter/utils";
+import {
+  hentMedlemskapsFomTomDato,
+  mapInitialMedlemskapsperioder,
+  mapTilInntektskilderProps,
+  mapTilSkatteforholdProps,
+} from "./aarsavregningHelpers";
 
 interface Props {
   bekreft: () => void;
@@ -40,96 +43,6 @@ export interface MedlemskapTomFomDatoer {
   fom?: string;
   tom?: string;
 }
-
-const hentMedlemskapsFomTomDato = (
-  medlemskapsperioder?: MedlemskapsperiodeProp[] | Medlemskapsperiode[],
-): MedlemskapTomFomDatoer => {
-  if (medlemskapsperioder && !Utils._isEmpty(medlemskapsperioder)) {
-    const sorterteInnvilgedePerioder = [...medlemskapsperioder].sort(sorterEtterISOFomDato);
-    return {
-      fom: sorterteInnvilgedePerioder[0].fomDato,
-      tom: sorterteInnvilgedePerioder[sorterteInnvilgedePerioder.length - 1].tomDato,
-    };
-  }
-  return {
-    tom: undefined,
-    fom: undefined,
-  };
-};
-
-const mapTilMedlemskapsperiodeProps = (
-  medlemskapsperiode: Api.MedlemAvFolketrygden.Medlemskapsperioder.Medlemskapsperiode,
-): MedlemskapsperiodeProp => ({
-  ...medlemskapsperiode,
-  fomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.fomDato),
-  tomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.tomDato),
-  ny: false,
-  feil: undefined,
-  periodeId: medlemskapsperiode.id,
-});
-
-const mapTilSkatteforholdProps = (
-  skatteforhold?: SkatteforholdDto[],
-  medlemskapsperioder?: MedlemskapsperiodeProp[],
-) => {
-  const medlemskapsFomTomDato = hentMedlemskapsFomTomDato(medlemskapsperioder);
-
-  if (skatteforhold !== undefined) {
-    return skatteforhold?.map((forhold) => ({
-      fomDato: Utils.dato.formatterDatoTilNorsk(forhold.fomDato),
-      tomDato: Utils.dato.formatterDatoTilNorsk(forhold.tomDato),
-      skatteplikttype: forhold.skatteplikttype,
-    }));
-  }
-
-  if (medlemskapsFomTomDato.fom !== undefined && medlemskapsFomTomDato.tom !== undefined) {
-    return [
-      {
-        fomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsFomTomDato.fom),
-        tomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsFomTomDato.tom),
-        skatteplikttype: undefined,
-      },
-    ];
-  }
-  return [{}];
-};
-
-const mapTilInntektskilderProps = (
-  inntektskilder?: InntektskildeDto[],
-  medlemskapsperioder?: MedlemskapsperiodeProp[],
-) => {
-  const medlemskapsTomFomDato = hentMedlemskapsFomTomDato(medlemskapsperioder);
-
-  if (inntektskilder !== undefined) {
-    return inntektskilder?.map((kilde) => ({
-      fomDato: Utils.dato.formatterDatoTilNorsk(kilde.fomDato),
-      tomDato: Utils.dato.formatterDatoTilNorsk(kilde.tomDato),
-      kildetype: kilde.type,
-      arbAvgBetales: Utils.streng.boolTilUppercaseStreng(kilde.arbeidsgiversavgiftBetales),
-      bruttoInntekt: kilde.avgiftspliktigInntekt,
-      erMaanedsbelop: Utils.streng.boolTilUppercaseStreng(kilde.erMaanedsbelop),
-    }));
-  }
-
-  if (medlemskapsTomFomDato.fom !== undefined && medlemskapsTomFomDato.tom !== undefined) {
-    return [
-      {
-        fomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsTomFomDato.fom),
-        tomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsTomFomDato.tom),
-        kildetype: undefined,
-        arbAvgBetales: Utils.streng.boolTilUppercaseStreng(false),
-        bruttoInntekt: undefined,
-        erMaanedsbelop: Utils.streng.boolTilUppercaseStreng(false),
-      },
-    ];
-  }
-  return [{}];
-};
-
-const mapInitialMedlemskapsperioder = (
-  medlemskapsperioder: Api.MedlemAvFolketrygden.Medlemskapsperioder.Medlemskapsperiode[],
-): MedlemskapsperiodeProp[] =>
-  [...medlemskapsperioder].sort((a, b) => Utils.dato.sorterEtterISOFomDato(a, b)).map(mapTilMedlemskapsperiodeProps);
 
 interface AarsavregningFormValuesProps extends FormValuesProps {
   totaltForskuddsvisFakturert?: number | string;
