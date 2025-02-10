@@ -21,8 +21,8 @@ export const arbAvgBetalesKreves = (kildetype, medlemskapsTypeErPliktig) =>
   !medlemskapsTypeErPliktig && kildetype !== MISJONÆR;
 
 const arbAvgBetalesFyltUtNårDetKrevesTest = {
-  name: "Fyll inn arb.avg. betales når det kreves",
-  message: "Velg om arb.avg. betales til skatt",
+  name: "Fyll inn arb.ag. betales når det kreves",
+  message: "Velg om arb.ag. betales til skatt",
   test: (arbAvgBetales, schema) => {
     const { kildetype } = schema.from[0].value;
 

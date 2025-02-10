@@ -61,12 +61,12 @@ export function Medlemskapsperioder({
   }, [field.bestemmelse]);
 
   const kanSlettePeriode = redigerbart && formValues.medlemskapsperioder.length !== 1;
-  const forrigeTomDato =
+  const tilOgMedDatoForrigePeriode =
     formValues.medlemskapsperioder[index - 1] !== undefined
       ? Utils.dato.norskStringTilDate(formValues.medlemskapsperioder[index - 1].tomDato)
       : undefined;
-  if (forrigeTomDato !== undefined) {
-    forrigeTomDato.setDate(forrigeTomDato.getDate() + 1);
+  if (tilOgMedDatoForrigePeriode !== undefined) {
+    tilOgMedDatoForrigePeriode.setDate(tilOgMedDatoForrigePeriode.getDate() + 1);
   }
 
   return (
@@ -79,8 +79,8 @@ export function Medlemskapsperioder({
             <Forms.Datovelger
               label={index === 0 ? "Medlemskapsperiode" : ""}
               control={control}
-              minDate={forrigeTomDato !== undefined ? forrigeTomDato : minVerdi}
-              maxDate={forrigeTomDato !== undefined ? forrigeTomDato : maksVerdi}
+              minDate={tilOgMedDatoForrigePeriode !== undefined ? tilOgMedDatoForrigePeriode : minVerdi}
+              maxDate={tilOgMedDatoForrigePeriode !== undefined ? tilOgMedDatoForrigePeriode : maksVerdi}
               name={`medlemskapsperioder[${index}].fomDato`}
               aria-label={`Fra og med periode ${index + 1}`}
               readOnly={!redigerbart}
