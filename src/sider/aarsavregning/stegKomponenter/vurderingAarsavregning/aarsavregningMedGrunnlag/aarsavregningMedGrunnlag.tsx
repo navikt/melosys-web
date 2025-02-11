@@ -29,7 +29,11 @@ import { Medlemskapsperiode } from "../../../../../services/modules/medlemavfolk
 import aarsavregningMedGrunnlagSchema from "./aarsavregningMedGrunnlagSchema";
 import { Skatteforholdsperioder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/skatteforholdsperioder";
 import { Inntektskilder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/inntektskilder";
-import { beregnTrygdeavgiftsperioder, oppdaterNyttTotalbeloep } from "../komponenter/utils";
+import {
+  beregnTrygdeavgiftsperioder,
+  lagInnvilgetMedlemskapsPeriode,
+  oppdaterNyttTotalbeloep,
+} from "../komponenter/utils";
 import { mapTilInntektskilderProps, mapTilSkatteforholdProps } from "../aarsavregningHelpers";
 
 interface Props {
@@ -37,22 +41,6 @@ interface Props {
   aktivtSteg: boolean;
   oppdaterStatus: (isValid: boolean) => void;
 }
-
-const lagInnvilgetMedlemskapsPeriode = (medlemskapsperioder?: Medlemskapsperiode[]) => {
-  if (medlemskapsperioder && !Utils._isEmpty(medlemskapsperioder)) {
-    const sorterteInnvilgedePerioder = [...medlemskapsperioder]
-      .filter((periode) => periode.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.INNVILGET)
-      .sort(sorterEtterISOFomDato);
-    return {
-      fom: sorterteInnvilgedePerioder[0].fomDato,
-      tom: sorterteInnvilgedePerioder[sorterteInnvilgedePerioder.length - 1].tomDato,
-    };
-  }
-  return {
-    tom: undefined,
-    fom: undefined,
-  };
-};
 
 export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
   const [erAvvik, setErAvvik] = useState<boolean | undefined>(undefined);
