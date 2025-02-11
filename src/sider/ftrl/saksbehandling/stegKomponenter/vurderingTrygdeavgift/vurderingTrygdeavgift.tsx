@@ -21,7 +21,7 @@ import {
   Inntektskilde,
   Skatteforhold,
 } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
-import vurderingTrygdeavgiftSchema, { erBrukerSkattepliktigIHelePerioden } from "./vurderingTrygdeavgiftSchema";
+import vurderingTrygdeavgiftSchema from "./vurderingTrygdeavgiftSchema";
 import "./vurderingTrygdeavgift.css";
 import {
   Feilmelding,
@@ -33,6 +33,8 @@ import MKV from "../../../../../melosyskodeverk";
 import { BeregnetTrygdeavgift, TrygdeavgiftsgrunnlagDto } from "../../../../../services/modules/trygdeavgift";
 import { BOOLSK_STRING } from "../../../../../constants";
 import LabelMedHjelpetekst from "../../../../../felleskomponenter/labelMedHjelpetekst";
+
+import { erBrukerSkattepliktigIHelePerioden } from "../../../../aarsavregning/stegKomponenter/vurderingAarsavregning/komponenter/utils";
 
 interface Props {
   bekreft: () => void;
