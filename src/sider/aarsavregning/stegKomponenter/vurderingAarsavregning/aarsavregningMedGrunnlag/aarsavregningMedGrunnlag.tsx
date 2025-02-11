@@ -91,6 +91,15 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
     resetInntektskilder(
       !Utils._isEmpty(sorterteInntekstkilder) ? mapTilInntektskilderProps(sorterteInntekstkilder) : [],
     );
+
+    const kunSkattepliktigInntekt = !harIkkeskattepliktigInntektskilder(
+      sorterteSkatteforhold,
+      sorterteInntekstkilder,
+      medlemskapsTypeErPliktig,
+    );
+    if (kunSkattepliktigInntekt) {
+      setErAvvik(true);
+    }
   };
 
   useEffect(() => {
@@ -306,17 +315,28 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
             />
           )}
 
-          <Nav.RadioGroup
-            onChange={håndterAvvik}
-            value={erAvvik}
-            legend="Er det avvik i opplysningene fra skatt eller bruker?"
-            readOnly={!redigerbart}
-          >
-            <Nav.HStack gap="6">
-              <Nav.Radio value>Ja</Nav.Radio>
-              <Nav.Radio value={false}>Nei</Nav.Radio>
-            </Nav.HStack>
-          </Nav.RadioGroup>
+          <br />
+          {harIkkeskattepliktigInntektskilder(
+            aarsavregningResponse.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.skatteforholdsperioder,
+            aarsavregningResponse.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.inntektskperioder,
+            medlemskapsTypeErPliktig,
+          ) ? (
+            <Nav.RadioGroup
+              onChange={håndterAvvik}
+              value={erAvvik}
+              legend="Er det avvik i opplysningene fra skatt eller bruker?"
+              readOnly={!redigerbart}
+            >
+              <Nav.HStack gap="6">
+                <Nav.Radio value>Ja</Nav.Radio>
+                <Nav.Radio value={false}>Nei</Nav.Radio>
+              </Nav.HStack>
+            </Nav.RadioGroup>
+          ) : (
+            <Nav.Alert variant="info" className="alertstripe_feilmelding">
+              Trygdeavgift er ikke forskuddsvis fakturert
+            </Nav.Alert>
+          )}
         </>
       )}
 

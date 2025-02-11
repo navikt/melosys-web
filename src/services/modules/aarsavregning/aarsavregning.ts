@@ -112,9 +112,7 @@ export function harIkkeskattepliktigInntektskilder(
   }
 
   if (medlemskapsTypeErPliktig) {
-    const erSkattepliktig = medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(skatteforholdsperioder);
-
-    return !erSkattepliktig;
+    return !erBrukerSkattepliktigIHelePerioden(skatteforholdsperioder);
   }
 
   return true;
