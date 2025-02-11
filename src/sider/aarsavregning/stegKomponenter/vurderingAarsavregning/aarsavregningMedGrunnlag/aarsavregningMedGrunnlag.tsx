@@ -29,7 +29,7 @@ import { Medlemskapsperiode } from "../../../../../services/modules/medlemavfolk
 import aarsavregningMedGrunnlagSchema from "./aarsavregningMedGrunnlagSchema";
 import { Skatteforholdsperioder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/skatteforholdsperioder";
 import { Inntektskilder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/inntektskilder";
-import { beregnTrygdeavgiftsperioder } from "../komponenter/utils";
+import { beregnTrygdeavgiftsperioder, oppdaterNyttTotalbeloep } from "../komponenter/utils";
 import { mapTilInntektskilderProps, mapTilSkatteforholdProps } from "../aarsavregningHelpers";
 
 interface Props {
@@ -127,26 +127,16 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
     }
   }, []);
 
-  const oppdaterNyttTotalbeloep = async (totalAvgift?: number) => {
-    return Api.Aarsavregning.oppdaterTotalBelop(
-      behandlingID,
-      {
-        avregning: {
-          nyttTotalbeloep: totalAvgift,
-        },
-      },
-      aarsavregningID,
-    );
-  };
-
   useEffect(() => {
     if (redigerbart && aarsavregningResponse?.nyttGrunnlag) {
       if (aarsavregningResponse.nyttGrunnlag?.avgift.totalAvgift !== aarsavregningResponse.avregning?.nyttTotalbeloep) {
-        oppdaterNyttTotalbeloep(aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift).then(
-          (res: AarsavregningResponse) => {
-            setAarsavregningResponse(res);
-          },
-        );
+        oppdaterNyttTotalbeloep(
+          behandlingID,
+          aarsavregningID,
+          aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift,
+        ).then((res: AarsavregningResponse) => {
+          setAarsavregningResponse(res);
+        });
       }
     }
   }, [aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift]);
@@ -253,18 +243,20 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
       Api.Trygdeavgift.slettTrygdeavgiftsperioder(behandlingID).then(() => {
         resetSkatteforholdsperioder([]);
         resetInntektskilder([]);
-        oppdaterNyttTotalbeloep(aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift.totalAvgift).then(
-          (res: AarsavregningResponse) => {
-            setAarsavregningResponse(res);
-            setSkjemaverdierFraTrygdeavgiftsgrunnlag(res.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag);
-            if (res.tidligereGrunnlagsopplysninger !== undefined) {
-              debouncedBeregnTrygdeavgiftsperioder({
-                skatteforholdsperioder: res.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag.skatteforholdsperioder,
-                inntektskilder: res.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag.inntektskperioder,
-              });
-            }
-          },
-        );
+        oppdaterNyttTotalbeloep(
+          behandlingID,
+          aarsavregningID,
+          aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift.totalAvgift,
+        ).then((res: AarsavregningResponse) => {
+          setAarsavregningResponse(res);
+          setSkjemaverdierFraTrygdeavgiftsgrunnlag(res.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag);
+          if (res.tidligereGrunnlagsopplysninger !== undefined) {
+            debouncedBeregnTrygdeavgiftsperioder({
+              skatteforholdsperioder: res.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag.skatteforholdsperioder,
+              inntektskilder: res.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag.inntektskperioder,
+            });
+          }
+        });
       });
     } else if (aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag) {
       setSkjemaverdierFraTrygdeavgiftsgrunnlag(
