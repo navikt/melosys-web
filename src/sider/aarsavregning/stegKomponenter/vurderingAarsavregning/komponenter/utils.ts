@@ -7,12 +7,16 @@ import {
 import * as Api from "../../../../../services/api";
 import * as Utils from "../../../../../utils";
 import {
+  AarsavregningListResponse,
+  AarsavregningRequest,
   AarsavregningResponse,
-  erBrukerSkattepliktigIHelePerioden,
 } from "../../../../../services/modules/aarsavregning/aarsavregning";
 import { Medlemskapsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import MKV from "../../../../../melosyskodeverk";
 import { sorterEtterISOFomDato } from "../../../../../utils/dato";
+import { AARSAVREGNING, API_BASE_URL, BEHANDLINGER, FAGSAKER } from "../../../../../services/api-constants";
+import { getAsJson, putAsJson } from "../../../../../services/utils";
+import { erBrukerSkattepliktigIHelePerioden } from "../../../../../utils/trygdeavgiftUtils";
 
 const mapFeilmelding = (error: any) => {
   const feilmelding = "Finner ikke trygdeavgiftssats. Melosys har ikke satser for årene før 2014.";
@@ -25,6 +29,47 @@ const mapFeilmelding = (error: any) => {
 
   return error.body?.feilkoder || error.body?.message || error;
 };
+
+export const oppdaterTotalBelop = (
+  behandlingID: number,
+  request: AarsavregningRequest,
+  aarsavregningID?: number,
+): Promise<AarsavregningResponse> =>
+  putAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${AARSAVREGNING}/${aarsavregningID}`, request);
+export const hentFiltrertAarsavregningList = (
+  saksnummer: string,
+  resultattype?: string,
+  aar?: number,
+): Promise<AarsavregningListResponse[]> => {
+  let url = `${API_BASE_URL}${FAGSAKER}/${saksnummer}/${AARSAVREGNING}`;
+  if (aar || resultattype) {
+    url = url.concat("?");
+    if (aar) {
+      url = url.concat(`&aar=${aar}`);
+    }
+    if (resultattype) {
+      url = url.concat(`&resultattype=${resultattype}`);
+    }
+  }
+  return getAsJson(url);
+};
+
+export function harIkkeskattepliktigInntektskilder(
+  skatteforholdsperioder: any,
+  inntektsperioder: any,
+  medlemskapsTypeErPliktig?: boolean,
+) {
+  if (skatteforholdsperioder === undefined || inntektsperioder === undefined) return false;
+  if (inntektsperioder.length === 0) {
+    return false;
+  }
+
+  if (medlemskapsTypeErPliktig) {
+    return !erBrukerSkattepliktigIHelePerioden(skatteforholdsperioder);
+  }
+
+  return true;
+}
 
 export function beregnTrygdeavgiftsperioder(
   formVerdier: FieldValue<FormValuesProps>,
@@ -85,7 +130,7 @@ export const lagInnvilgetMedlemskapsPeriode = (medlemskapsperioder?: Medlemskaps
 };
 
 export const oppdaterNyttTotalbeloep = async (behandlingID: number, aarsavregningID: number, totalAvgift?: number) => {
-  return Api.Aarsavregning.oppdaterTotalBelop(
+  return oppdaterTotalBelop(
     behandlingID,
     {
       avregning: {

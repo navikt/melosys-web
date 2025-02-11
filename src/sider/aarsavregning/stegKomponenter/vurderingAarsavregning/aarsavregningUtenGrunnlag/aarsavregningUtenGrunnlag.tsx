@@ -25,7 +25,7 @@ import { FeilmeldingOppsummering } from "../feilmeldingOppsummering";
 import aarsavregningUtenGrunnlagSchema from "./aarsavregningUtenGrunnlagSchema";
 import { Skatteforholdsperioder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/skatteforholdsperioder";
 import { Inntektskilder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/inntektskilder";
-import { beregnTrygdeavgiftsperioder } from "../komponenter/utils";
+import { beregnTrygdeavgiftsperioder, oppdaterTotalBelop } from "../komponenter/utils";
 import {
   hentMedlemskapsFomTomDato,
   mapInitialMedlemskapsperioder,
@@ -109,7 +109,7 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
   }, [lagredeMedlemskapsperioder, aarsavregningResponse]);
 
   const oppdaterNyttTotalbeloep = async (totalAvgift?: number) => {
-    return Api.Aarsavregning.oppdaterTotalBelop(
+    return oppdaterTotalBelop(
       behandlingID,
       {
         avregning: {
@@ -203,7 +203,7 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
       (formValues.totaltForskuddsvisFakturert || formValues.totaltForskuddsvisFakturert === "") &&
       formValues.totaltForskuddsvisFakturert !== aarsavregningResponse?.avregning?.tidligereFakturertBeloep
     ) {
-      Api.Aarsavregning.oppdaterTotalBelop(
+      oppdaterTotalBelop(
         behandlingID,
         {
           avregning: {

@@ -1,10 +1,7 @@
-import { getAsJson, postAsJson, putAsJson } from "../../utils";
-import { API_BASE_URL, AARSAVREGNING, BEHANDLINGER, FAGSAKER } from "../../api-constants";
+import { getAsJson, postAsJson } from "../../utils";
+import { AARSAVREGNING, API_BASE_URL, BEHANDLINGER } from "../../api-constants";
 import { InntektskildeDto, SkatteforholdDto } from "../trygdeavgift";
 import { Medlemskapsperiode } from "../medlemavfolketrygden/medlemskapsperioder";
-import MKV from "../../../melosyskodeverk";
-
-const { IKKE_SKATTEPLIKTIG } = MKV.Koder.skatteplikttype;
 
 export interface AarsavregningResponse {
   aarsavregningID: number;
@@ -71,49 +68,3 @@ export const lagAarsavregning = (
   request: LagAarsavregningRequest,
 ): Promise<AarsavregningResponse> =>
   postAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${AARSAVREGNING}`, request);
-
-export const oppdaterTotalBelop = (
-  behandlingID: number,
-  request: AarsavregningRequest,
-  aarsavregningID?: number,
-): Promise<AarsavregningResponse> =>
-  putAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${AARSAVREGNING}/${aarsavregningID}`, request);
-
-export const hentFiltrertAarsavregningList = (
-  saksnummer: string,
-  resultattype?: string,
-  aar?: number,
-): Promise<AarsavregningListResponse[]> => {
-  let url = `${API_BASE_URL}${FAGSAKER}/${saksnummer}/${AARSAVREGNING}`;
-  if (aar || resultattype) {
-    url = url.concat("?");
-    if (aar) {
-      url = url.concat(`&aar=${aar}`);
-    }
-    if (resultattype) {
-      url = url.concat(`&resultattype=${resultattype}`);
-    }
-  }
-  return getAsJson(url);
-};
-
-export const erBrukerSkattepliktigIHelePerioden = (skatteforholdsperioder: any) => {
-  return !skatteforholdsperioder.some((skatteforhold: any) => skatteforhold.skatteplikttype === IKKE_SKATTEPLIKTIG);
-};
-
-export function harIkkeskattepliktigInntektskilder(
-  skatteforholdsperioder: any,
-  inntektsperioder: any,
-  medlemskapsTypeErPliktig?: boolean,
-) {
-  if (skatteforholdsperioder === undefined || inntektsperioder === undefined) return false;
-  if (inntektsperioder.length === 0) {
-    return false;
-  }
-
-  if (medlemskapsTypeErPliktig) {
-    return !erBrukerSkattepliktigIHelePerioden(skatteforholdsperioder);
-  }
-
-  return true;
-}

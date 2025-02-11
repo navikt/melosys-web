@@ -18,6 +18,7 @@ import { behandlingsresultatOperations } from "../../../../ducks/behandlingsresu
 import { Medlemskapsperiode } from "../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import { AarsavregningMedGrunnlag } from "./aarsavregningMedGrunnlag/aarsavregningMedGrunnlag";
 import { AarsavregningUtenGrunnlag } from "./aarsavregningUtenGrunnlag/aarsavregningUtenGrunnlag";
+import { hentFiltrertAarsavregningList } from "./komponenter/utils";
 
 interface Props {
   bekreft: () => void;
@@ -70,7 +71,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
   };
 
   useEffect(() => {
-    Api.Aarsavregning.hentFiltrertAarsavregningList(saksnummer).then((res) => {
+    hentFiltrertAarsavregningList(saksnummer).then((res) => {
       if (res.length) {
         // Kan kun ha 1 årsavregningsbehandling som ikke er fastsatt
         Api.Aarsavregning.hentAarsavregning(behandlingID).then((aarsavregning) => {
@@ -85,7 +86,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
   useEffect(() => {
     if (redigerbart && valgtÅr) {
       setHarGrunnlag(undefined);
-      Api.Aarsavregning.hentFiltrertAarsavregningList(saksnummer, FERDIGBEHANDLET, valgtÅr).then((res) => {
+      hentFiltrertAarsavregningList(saksnummer, FERDIGBEHANDLET, valgtÅr).then((res) => {
         setNyVurderingÅrsavregning(res.length > 0);
       });
 

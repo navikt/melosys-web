@@ -3,7 +3,8 @@ import MKV from "../../../../melosyskodeverk";
 import * as KV from "../../../../kodeverk";
 import * as Utils from "../../../../utils";
 import { BOOLSK_STRING } from "../../../../constants";
-import { erBrukerSkattepliktigIHelePerioden } from "../../../../services/modules/aarsavregning/aarsavregning";
+
+import { erBrukerSkattepliktigIHelePerioden } from "../../../../utils/trygdeavgiftUtils";
 
 const { MAA_FYLLES_UT } = KV.Feilmeldinger;
 const {
@@ -14,7 +15,6 @@ const {
   PENSJON_UFØRETRYGD,
   PENSJON_UFØRETRYGD_KILDESKATT,
 } = MKV.Koder.inntektskildetype;
-const { IKKE_SKATTEPLIKTIG } = MKV.Koder.skatteplikttype;
 const UTENFOR_MEDLEMSKAPSPERIODEN = { melding: "Utenfor medl.periode" };
 
 export const arbAvgBetalesKreves = (kildetype, medlemskapsTypeErPliktig) =>

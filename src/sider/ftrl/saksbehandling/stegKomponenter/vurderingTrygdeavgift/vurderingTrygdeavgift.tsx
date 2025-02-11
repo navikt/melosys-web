@@ -33,7 +33,8 @@ import MKV from "../../../../../melosyskodeverk";
 import { BeregnetTrygdeavgift, TrygdeavgiftsgrunnlagDto } from "../../../../../services/modules/trygdeavgift";
 import { BOOLSK_STRING } from "../../../../../constants";
 import LabelMedHjelpetekst from "../../../../../felleskomponenter/labelMedHjelpetekst";
-import { erBrukerSkattepliktigIHelePerioden } from "../../../../../services/modules/aarsavregning/aarsavregning";
+
+import { erBrukerSkattepliktigIHelePerioden } from "../../../../../utils/trygdeavgiftUtils";
 
 interface Props {
   bekreft: () => void;

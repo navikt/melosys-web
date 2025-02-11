@@ -4,8 +4,6 @@ import "../vurderingAarsavregningInngang.css";
 import { useCallback, useEffect, useState } from "react";
 import {
   AarsavregningResponse,
-  erBrukerSkattepliktigIHelePerioden,
-  harIkkeskattepliktigInntektskilder,
   Trygdeavgiftsgrunnlag,
 } from "../../../../../services/modules/aarsavregning/aarsavregning";
 import { useDispatch, useSelector } from "react-redux";
@@ -31,10 +29,12 @@ import { Skatteforholdsperioder } from "../../../../../felleskomponenter/trygdea
 import { Inntektskilder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/inntektskilder";
 import {
   beregnTrygdeavgiftsperioder,
+  harIkkeskattepliktigInntektskilder,
   lagInnvilgetMedlemskapsPeriode,
   oppdaterNyttTotalbeloep,
 } from "../komponenter/utils";
 import { mapTilInntektskilderProps, mapTilSkatteforholdProps } from "../aarsavregningHelpers";
+import { erBrukerSkattepliktigIHelePerioden } from "../../../../../utils/trygdeavgiftUtils";
 
 interface Props {
   bekreft: () => void;
