@@ -10,7 +10,8 @@ import { AarsavregningResponse } from "../../../../../services/modules/aarsavreg
 import { Medlemskapsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import MKV from "../../../../../melosyskodeverk";
 import { sorterEtterISOFomDato } from "../../../../../utils/dato";
-import { erBrukerSkattepliktigIHelePerioden } from "../../../../../utils/trygdeavgiftUtils";
+
+const { IKKE_SKATTEPLIKTIG } = MKV.Koder.skatteplikttype;
 
 const mapFeilmelding = (error: any) => {
   const feilmelding = "Finner ikke trygdeavgiftssats. Melosys har ikke satser for årene før 2014.";
@@ -22,6 +23,10 @@ const mapFeilmelding = (error: any) => {
   if (ingenGjeldendeSats) return feilmelding;
 
   return error.body?.feilkoder || error.body?.message || error;
+};
+
+export const erBrukerSkattepliktigIHelePerioden = (skatteforholdsperioder: any) => {
+  return !skatteforholdsperioder.some((skatteforhold: any) => skatteforhold.skatteplikttype === IKKE_SKATTEPLIKTIG);
 };
 
 export function harIkkeSkattepliktigInntektskilder(
@@ -51,8 +56,7 @@ export function beregnTrygdeavgiftsperioder(
     setAarsavregningResponse: (response: AarsavregningResponse) => void;
   },
 ) {
-  const { behandlingID, medlemskapsTypeErPliktig, aarsavregningID, setBeregningError, setAarsavregningResponse } =
-    options;
+  const { behandlingID, medlemskapsTypeErPliktig, setBeregningError, setAarsavregningResponse } = options;
 
   setBeregningError(undefined);
   const erBrukerPliktigMedlemOgSkattepliktig =

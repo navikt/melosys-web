@@ -18,7 +18,7 @@ import { Stack } from "@navikt/ds-react";
 import { Alert } from "../../../navFrontend";
 import { DateRangeController } from "../../forms";
 
-import { erBrukerSkattepliktigIHelePerioden } from "../../../utils/trygdeavgiftUtils";
+import { erBrukerSkattepliktigIHelePerioden } from "../../../sider/aarsavregning/stegKomponenter/vurderingAarsavregning/komponenter/utils";
 
 const {
   ARBEIDSINNTEKT_FRA_NORGE,
