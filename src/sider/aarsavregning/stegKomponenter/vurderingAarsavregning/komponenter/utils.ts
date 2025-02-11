@@ -54,7 +54,7 @@ export const hentFiltrertAarsavregningList = (
   return getAsJson(url);
 };
 
-export function harIkkeskattepliktigInntektskilder(
+export function harIkkeSkattepliktigInntektskilder(
   skatteforholdsperioder: any,
   inntektsperioder: any,
   medlemskapsTypeErPliktig?: boolean,

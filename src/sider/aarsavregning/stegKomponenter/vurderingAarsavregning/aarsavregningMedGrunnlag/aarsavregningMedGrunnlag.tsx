@@ -29,7 +29,7 @@ import { Skatteforholdsperioder } from "../../../../../felleskomponenter/trygdea
 import { Inntektskilder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/inntektskilder";
 import {
   beregnTrygdeavgiftsperioder,
-  harIkkeskattepliktigInntektskilder,
+  harIkkeSkattepliktigInntektskilder,
   lagInnvilgetMedlemskapsPeriode,
   oppdaterNyttTotalbeloep,
 } from "../komponenter/utils";
@@ -80,7 +80,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
       !Utils._isEmpty(sorterteInntekstkilder) ? mapTilInntektskilderProps(sorterteInntekstkilder) : [],
     );
 
-    const kunSkattepliktigInntekt = !harIkkeskattepliktigInntektskilder(
+    const kunSkattepliktigInntekt = !harIkkeSkattepliktigInntektskilder(
       sorterteSkatteforhold,
       sorterteInntekstkilder,
       medlemskapsTypeErPliktig,
@@ -215,7 +215,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
         erAvvik &&
         aarsavregningResponse?.nyttGrunnlag &&
         !beregningError &&
-        harIkkeskattepliktigInntektskilder(
+        harIkkeSkattepliktigInntektskilder(
           beregningsVerdier().skatteforholdsperioder,
           beregningsVerdier().inntektskilder,
           medlemskapsTypeErPliktig,
@@ -269,7 +269,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
             perioder={aarsavregningResponse.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag.medlemskapsperioder}
           />
           <TidligereGrunnlagsoversikt
-            harFakturerbareInntektskilder={harIkkeskattepliktigInntektskilder(
+            harFakturerbareInntektskilder={harIkkeSkattepliktigInntektskilder(
               aarsavregningResponse.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.skatteforholdsperioder,
               aarsavregningResponse.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.inntektskperioder,
               medlemskapsTypeErPliktig,
@@ -283,7 +283,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
             avgift={aarsavregningResponse.tidligereGrunnlagsopplysninger.avgift}
           />
 
-          {harIkkeskattepliktigInntektskilder(
+          {harIkkeSkattepliktigInntektskilder(
             aarsavregningResponse.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.skatteforholdsperioder,
             aarsavregningResponse.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.inntektskperioder,
             medlemskapsTypeErPliktig,
@@ -296,7 +296,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
           )}
 
           <br />
-          {harIkkeskattepliktigInntektskilder(
+          {harIkkeSkattepliktigInntektskilder(
             aarsavregningResponse.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.skatteforholdsperioder,
             aarsavregningResponse.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.inntektskperioder,
             medlemskapsTypeErPliktig,
