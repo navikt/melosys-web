@@ -1,7 +1,10 @@
 import * as Api from "../../../../services/api";
 import "./vurderingAarsavregningInngang.css";
 import { ChangeEvent, useEffect, useState } from "react";
-import { AarsavregningResponse } from "../../../../services/modules/aarsavregning/aarsavregning";
+import {
+  AarsavregningResponse,
+  hentFiltrertAarsavregningList,
+} from "../../../../services/modules/aarsavregning/aarsavregning";
 import { useDispatch, useSelector } from "react-redux";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import * as Nav from "../../../../navFrontend";
@@ -18,7 +21,6 @@ import { behandlingsresultatOperations } from "../../../../ducks/behandlingsresu
 import { Medlemskapsperiode } from "../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import { AarsavregningMedGrunnlag } from "./aarsavregningMedGrunnlag/aarsavregningMedGrunnlag";
 import { AarsavregningUtenGrunnlag } from "./aarsavregningUtenGrunnlag/aarsavregningUtenGrunnlag";
-import { hentFiltrertAarsavregningList } from "./komponenter/utils";
 
 interface Props {
   bekreft: () => void;

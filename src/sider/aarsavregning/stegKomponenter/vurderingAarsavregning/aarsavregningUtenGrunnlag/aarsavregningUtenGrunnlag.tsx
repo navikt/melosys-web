@@ -1,7 +1,7 @@
 import * as Api from "../../../../../services/api";
 import "../vurderingAarsavregningInngang.css";
 import { useCallback, useEffect, useState } from "react";
-import { AarsavregningResponse } from "../../../../../services/modules/aarsavregning/aarsavregning";
+import { AarsavregningResponse, oppdaterTotalBelop } from "../../../../../services/modules/aarsavregning/aarsavregning";
 import { useDispatch, useSelector } from "react-redux";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import * as Nav from "../../../../../navFrontend";
@@ -25,7 +25,7 @@ import { FeilmeldingOppsummering } from "../feilmeldingOppsummering";
 import aarsavregningUtenGrunnlagSchema from "./aarsavregningUtenGrunnlagSchema";
 import { Skatteforholdsperioder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/skatteforholdsperioder";
 import { Inntektskilder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/inntektskilder";
-import { beregnTrygdeavgiftsperioder, oppdaterTotalBelop } from "../komponenter/utils";
+import { beregnTrygdeavgiftsperioder } from "../komponenter/utils";
 import {
   hentMedlemskapsFomTomDato,
   mapInitialMedlemskapsperioder,

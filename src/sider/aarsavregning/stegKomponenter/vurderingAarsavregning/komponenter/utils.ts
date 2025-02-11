@@ -6,16 +6,10 @@ import {
 } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
 import * as Api from "../../../../../services/api";
 import * as Utils from "../../../../../utils";
-import {
-  AarsavregningListResponse,
-  AarsavregningRequest,
-  AarsavregningResponse,
-} from "../../../../../services/modules/aarsavregning/aarsavregning";
+import { AarsavregningResponse } from "../../../../../services/modules/aarsavregning/aarsavregning";
 import { Medlemskapsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import MKV from "../../../../../melosyskodeverk";
 import { sorterEtterISOFomDato } from "../../../../../utils/dato";
-import { AARSAVREGNING, API_BASE_URL, BEHANDLINGER, FAGSAKER } from "../../../../../services/api-constants";
-import { getAsJson, putAsJson } from "../../../../../services/utils";
 import { erBrukerSkattepliktigIHelePerioden } from "../../../../../utils/trygdeavgiftUtils";
 
 const mapFeilmelding = (error: any) => {
@@ -28,30 +22,6 @@ const mapFeilmelding = (error: any) => {
   if (ingenGjeldendeSats) return feilmelding;
 
   return error.body?.feilkoder || error.body?.message || error;
-};
-
-export const oppdaterTotalBelop = (
-  behandlingID: number,
-  request: AarsavregningRequest,
-  aarsavregningID?: number,
-): Promise<AarsavregningResponse> =>
-  putAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${AARSAVREGNING}/${aarsavregningID}`, request);
-export const hentFiltrertAarsavregningList = (
-  saksnummer: string,
-  resultattype?: string,
-  aar?: number,
-): Promise<AarsavregningListResponse[]> => {
-  let url = `${API_BASE_URL}${FAGSAKER}/${saksnummer}/${AARSAVREGNING}`;
-  if (aar || resultattype) {
-    url = url.concat("?");
-    if (aar) {
-      url = url.concat(`&aar=${aar}`);
-    }
-    if (resultattype) {
-      url = url.concat(`&resultattype=${resultattype}`);
-    }
-  }
-  return getAsJson(url);
 };
 
 export function harIkkeSkattepliktigInntektskilder(
@@ -127,16 +97,4 @@ export const lagInnvilgetMedlemskapsPeriode = (medlemskapsperioder?: Medlemskaps
     tom: undefined,
     fom: undefined,
   };
-};
-
-export const oppdaterNyttTotalbeloep = async (behandlingID: number, aarsavregningID: number, totalAvgift?: number) => {
-  return oppdaterTotalBelop(
-    behandlingID,
-    {
-      avregning: {
-        nyttTotalbeloep: totalAvgift,
-      },
-    },
-    aarsavregningID,
-  );
 };

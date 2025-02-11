@@ -4,6 +4,7 @@ import "../vurderingAarsavregningInngang.css";
 import { useCallback, useEffect, useState } from "react";
 import {
   AarsavregningResponse,
+  oppdaterNyttTotalbeloep,
   Trygdeavgiftsgrunnlag,
 } from "../../../../../services/modules/aarsavregning/aarsavregning";
 import { useDispatch, useSelector } from "react-redux";
@@ -31,7 +32,6 @@ import {
   beregnTrygdeavgiftsperioder,
   harIkkeSkattepliktigInntektskilder,
   lagInnvilgetMedlemskapsPeriode,
-  oppdaterNyttTotalbeloep,
 } from "../komponenter/utils";
 import { mapTilInntektskilderProps, mapTilSkatteforholdProps } from "../aarsavregningHelpers";
 import { erBrukerSkattepliktigIHelePerioden } from "../../../../../utils/trygdeavgiftUtils";
