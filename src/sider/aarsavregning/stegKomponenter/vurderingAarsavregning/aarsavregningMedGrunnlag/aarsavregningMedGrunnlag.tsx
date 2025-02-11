@@ -266,6 +266,9 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
     medlemskapsTypeErPliktig,
   );
 
+  const trygdeAvgiftSkalIkkeBetalsTilNav =
+    medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder);
+
   return (
     <>
       {aarsavregningResponse?.tidligereGrunnlagsopplysninger && (
@@ -324,7 +327,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
             control={control}
             fields={skattFields}
           />
-          {!(medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder)) && (
+          {!trygdeAvgiftSkalIkkeBetalsTilNav && (
             <Inntektskilder
               defaultPeriode={defaultPeriode}
               formValues={formValues}
@@ -339,7 +342,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
             />
           )}
 
-          {medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder) && (
+          {trygdeAvgiftSkalIkkeBetalsTilNav && (
             <Nav.Alert variant="info" className="alertstripe_feilmelding">
               Trygdeavgift skal ikke betales til NAV
             </Nav.Alert>
