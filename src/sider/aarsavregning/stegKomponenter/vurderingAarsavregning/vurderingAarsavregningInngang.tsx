@@ -1,10 +1,7 @@
 import * as Api from "../../../../services/api";
 import "./vurderingAarsavregningInngang.css";
 import { ChangeEvent, useEffect, useState } from "react";
-import {
-  AarsavregningResponse,
-  hentFiltrertAarsavregningList,
-} from "../../../../services/modules/aarsavregning/aarsavregning";
+import { AarsavregningResponse } from "../../../../services/modules/aarsavregning/aarsavregning";
 import { useDispatch, useSelector } from "react-redux";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import * as Nav from "../../../../navFrontend";
@@ -73,7 +70,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
   };
 
   useEffect(() => {
-    hentFiltrertAarsavregningList(saksnummer).then((res) => {
+    Api.Aarsavregning.hentFiltrertAarsavregningList(saksnummer).then((res) => {
       if (res.length) {
         // Kan kun ha 1 årsavregningsbehandling som ikke er fastsatt
         Api.Aarsavregning.hentAarsavregning(behandlingID).then((aarsavregning) => {
@@ -88,7 +85,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
   useEffect(() => {
     if (redigerbart && valgtÅr) {
       setHarGrunnlag(undefined);
-      hentFiltrertAarsavregningList(saksnummer, FERDIGBEHANDLET, valgtÅr).then((res) => {
+      Api.Aarsavregning.hentFiltrertAarsavregningList(saksnummer, FERDIGBEHANDLET, valgtÅr).then((res) => {
         setNyVurderingÅrsavregning(res.length > 0);
       });
 

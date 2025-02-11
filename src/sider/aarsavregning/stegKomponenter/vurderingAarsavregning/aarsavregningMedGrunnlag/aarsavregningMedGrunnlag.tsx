@@ -4,7 +4,6 @@ import "../vurderingAarsavregningInngang.css";
 import { useCallback, useEffect, useState } from "react";
 import {
   AarsavregningResponse,
-  oppdaterNyttTotalbeloep,
   Trygdeavgiftsgrunnlag,
 } from "../../../../../services/modules/aarsavregning/aarsavregning";
 import { useDispatch, useSelector } from "react-redux";
@@ -118,7 +117,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
   useEffect(() => {
     if (redigerbart && aarsavregningResponse?.nyttGrunnlag) {
       if (aarsavregningResponse.nyttGrunnlag?.avgift.totalAvgift !== aarsavregningResponse.avregning?.nyttTotalbeloep) {
-        oppdaterNyttTotalbeloep(
+        Api.Aarsavregning.oppdaterNyttTotalbeloep(
           behandlingID,
           aarsavregningID,
           aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift,
@@ -231,7 +230,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
       Api.Trygdeavgift.slettTrygdeavgiftsperioder(behandlingID).then(() => {
         resetSkatteforholdsperioder([]);
         resetInntektskilder([]);
-        oppdaterNyttTotalbeloep(
+        Api.Aarsavregning.oppdaterNyttTotalbeloep(
           behandlingID,
           aarsavregningID,
           aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift.totalAvgift,
