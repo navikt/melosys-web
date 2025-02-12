@@ -4,7 +4,6 @@ import "../vurderingAarsavregningInngang.css";
 import { useCallback, useEffect, useState } from "react";
 import {
   AarsavregningResponse,
-  oppdaterAvvik,
   Trygdeavgiftsgrunnlag,
 } from "../../../../../services/modules/aarsavregning/aarsavregning";
 import { useDispatch, useSelector } from "react-redux";
