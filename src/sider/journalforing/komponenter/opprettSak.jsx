@@ -14,6 +14,8 @@ import LabelMedHjelpetekst from "../../../felleskomponenter/labelMedHjelpetekst"
 import { skalViseIngenFlyt } from "../../../url";
 
 import "./opprettSak.css";
+import { useFeatureToggle } from "../../../featuretoggle";
+import { MELOSYS_PENSJONIST } from "../../../featuretoggle/toggleNavn";
 
 const nullstillVerdier = (steg, endreFelt, feltNavn) => {
   switch (steg) {
@@ -35,14 +37,20 @@ const nullstillVerdier = (steg, endreFelt, feltNavn) => {
   }
 };
 
-export const skalViseSoknadsperiodeOgLand = (sakstype, sakstema, behandlingstema, behandlingstype) =>
+export const skalViseSoknadsperiodeOgLand = (
+  sakstype,
+  sakstema,
+  behandlingstema,
+  behandlingstype,
+  erPensjonistToggleEnabled = false,
+) =>
   sakstype === MKV.Koder.sakstyper.EU_EOS &&
   sakstema &&
   behandlingstema &&
   behandlingstype &&
   behandlingstema !== MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV &&
   behandlingstema !== MKV.Koder.behandlinger.behandlingstema.A1_ANMODNING_OM_UNNTAK_PAPIR &&
-  !skalViseIngenFlyt(sakstype, sakstema, behandlingstema, behandlingstype);
+  !skalViseIngenFlyt(sakstype, sakstema, behandlingstema, behandlingstype, erPensjonistToggleEnabled);
 
 export function OpprettSak(props) {
   const { settFeltInnhold, formValues, feltNavn } = props;
@@ -71,6 +79,7 @@ export function OpprettSak(props) {
   const [behandlingstemaer, setBehandlingstemaer] = useState([]);
   const [behandlingstyper, setBehandlingstyper] = useState([]);
   const { formNavn } = feltNavn;
+  const erPensjonistToggleEnabled = useFeatureToggle(MELOSYS_PENSJONIST);
 
   useEffect(() => {
     Api.LovligeKombinasjoner.hentSakstyper().then((muligeSakstyper) => {
@@ -175,7 +184,13 @@ export function OpprettSak(props) {
           </option>
         ))}
       </Skjema.Select>
-      {skalViseSoknadsperiodeOgLand(valgtSakstype, valgtSakstema, valgtBehandlingstema, valgtBehandlingstype) && (
+      {skalViseSoknadsperiodeOgLand(
+        valgtSakstype,
+        valgtSakstema,
+        valgtBehandlingstema,
+        valgtBehandlingstype,
+        erPensjonistToggleEnabled,
+      ) && (
         <>
           <Nav.Fieldset legend="Søknadsperiode:" className="opprettnysak__soknadsperiode">
             <Nav.Row className="">

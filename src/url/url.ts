@@ -34,6 +34,7 @@ const lagUrlForEuEøsFlyter = (saksnummer: number | string, behandlingID: number
 
 const lagUrlForFtrlFlyt = (saksnummer: number | string, behandlingID: number, behandlingstemaKode: string) => {
   switch (behandlingstemaKode) {
+    case MKV.Koder.behandlinger.behandlingstema.PENSJONIST:
     case MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV:
     case MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV:
       return `/${FTRL}/saksbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
@@ -46,6 +47,7 @@ const lagUrlForTrygdeavtaleFlyt = (saksnummer: number | string, behandlingID: nu
   switch (behandlingstemaKode) {
     case MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV:
       return `/${TRYGDEAVTALE}/saksbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
+
     case MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV:
       return `/${TRYGDEAVTALE}/ikkeYrkesaktiv/${saksnummer}/?behandlingID=${behandlingID}`;
     case MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK:
@@ -87,12 +89,15 @@ export const lagUrl = (
   sakstemaKode: string,
   behandlingstemaKode: string,
   behandlingstypeKode: string,
+  erPensjonistToggleEnabled?: boolean,
 ) => {
   if (behandlingstypeKode === MKV.Koder.behandlinger.behandlingstyper.ÅRSAVREGNING) {
     return lagÅrsavregningFlytUrl(sakstypeKode, saksnummer, behandlingID);
   }
 
-  if (skalViseIngenFlyt(sakstypeKode, sakstemaKode, behandlingstemaKode, behandlingstypeKode)) {
+  if (
+    skalViseIngenFlyt(sakstypeKode, sakstemaKode, behandlingstemaKode, behandlingstypeKode, erPensjonistToggleEnabled)
+  ) {
     return lagIngenFlytUrl(sakstypeKode, saksnummer, behandlingID);
   }
 
@@ -138,6 +143,7 @@ export const skalViseIngenFlyt = (
   sakstema: string,
   behandlingstema: string,
   behandlingstype: string,
+  erPensjonsistToggleEnabled?: boolean,
 ) => {
   if (sakstema === MKV.Koder.sakstemaer.TRYGDEAVGIFT) {
     return true;
@@ -158,8 +164,11 @@ export const skalViseIngenFlyt = (
     return true;
   }
 
+  if (behandlingstema === MKV.Koder.behandlinger.behandlingstema.PENSJONIST) {
+    return !erPensjonsistToggleEnabled;
+  }
+
   return [
-    MKV.Koder.behandlinger.behandlingstema.PENSJONIST,
     MKV.Koder.behandlinger.behandlingstema.REGISTRERING_UNNTAK,
     MKV.Koder.behandlinger.behandlingstema.UNNTAK_MEDLEMSKAP,
     MKV.Koder.behandlinger.behandlingstema.FORESPØRSEL_TRYGDEMYNDIGHET,

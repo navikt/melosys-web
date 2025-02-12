@@ -17,6 +17,8 @@ import { oppgaverOperations } from "../../../../ducks/oppgaver";
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import saksplukkerSchema from "./saksplukkerSchema";
 import "./saksplukker.css";
+import { useFeatureToggle } from "../../../../featuretoggle";
+import { MELOSYS_PENSJONIST } from "../../../../featuretoggle/toggleNavn";
 
 const compareTerm = (a: KTObject, b: KTObject) => {
   if (!a.term) return 1;
@@ -59,7 +61,7 @@ export function Saksplukker({
   const [muligeBehandlingstemaer, setMuligeBehandlingstemaer] = useState([]);
   const [visIngenOppgaveFunnetAlert, setVisIngenOppgaveFunnetAlert] = useState(false);
   const [antallOppgaver, setAntallOppgaver] = useState(0);
-
+  const erPensjonistToggleEnabled = useFeatureToggle(MELOSYS_PENSJONIST);
   const { sakstype, sakstema } = formValues || {};
 
   useEffect(() => {
@@ -114,6 +116,7 @@ export function Saksplukker({
           formValues.sakstema,
           behandlingstema,
           behandlingstype,
+          erPensjonistToggleEnabled,
         );
 
         history.push(redirectURL);
