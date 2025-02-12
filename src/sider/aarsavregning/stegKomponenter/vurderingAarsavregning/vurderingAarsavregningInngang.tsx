@@ -16,7 +16,6 @@ import { behandlingsresultatOperations } from "../../../../ducks/behandlingsresu
 import { AarsavregningMedGrunnlag } from "./aarsavregningMedGrunnlag/aarsavregningMedGrunnlag";
 import { AarsavregningUtenGrunnlag } from "./aarsavregningUtenGrunnlag/aarsavregningUtenGrunnlag";
 import { lagInnvilgetMedlemskapsPeriode } from "./utils";
-import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../ducks/oppsummertfakta";
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
 
 interface Props {
@@ -27,23 +26,26 @@ interface Props {
 
 const { FERDIGBEHANDLET } = MKV.Koder.behandlinger.behandlingsresultattyper;
 
-const DELT_GRUNNLAG_HJELPETEKST = <>
-  <p>Du skal kun legge til informasjon fra Avgiftssystemet hvis:</p>
-  <ul>
-    <li>perioden er sammenhengende med perioden i Melosys</li>
-    <li>vedtaket er fattet på samme vilkår som i Melosys</li>
-    <li>vedtaket gjelder samme arbeidsforhold/-situasjon</li>
-  </ul>
-  <p>For mer veiledning se rutiner for årsavregning.</p>
-</>
+const DELT_GRUNNLAG_HJELPETEKST = (
+  <>
+    <p>Du skal kun legge til informasjon fra Avgiftssystemet hvis:</p>
+    <ul>
+      <li>perioden er sammenhengende med perioden i Melosys</li>
+      <li>vedtaket er fattet på samme vilkår som i Melosys</li>
+      <li>vedtaket gjelder samme arbeidsforhold/-situasjon</li>
+    </ul>
+    <p>For mer veiledning se rutiner for årsavregning.</p>
+  </>
+);
 
 export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtSteg }: Props) {
   const [valgtÅr, setValgtÅr] = useState<number | null>(null);
   const [initieltÅr, setInitieltÅr] = useState<number | null>(null);
   const [harGrunnlag, setHarGrunnlag] = useState<boolean | undefined>(undefined);
-  const [harDeltGrunnlag, setHarDeltGrunnlag] = useState<boolean | undefined>(useSelector(oppsummertfaktaSelectors.OpplysningerFraAvgiftsystemetSelector));
+  const [harDeltGrunnlag, setHarDeltGrunnlag] = useState<boolean | undefined>(undefined);
   const [visDeltGrunnlagRadioGroup, setVisDeltGrunnlagRadioGroup] = useState(false);
   const [nyVurderingÅrsavregning, setNyVurderingÅrsavregning] = useState<boolean>(false);
+  const [aarsavregningID, setAarsavregningID] = useState<number | undefined>(undefined);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as any;
   const saksnummer = useSelector(fagsakSelectors.SaksnummerSelector) as any;
@@ -63,6 +65,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
       setHarGrunnlag(true);
       if (res.aar === 2023 || res.aar === 2024) {
         setVisDeltGrunnlagRadioGroup(true);
+        setHarDeltGrunnlag(res.harDeltGrunnlag);
       } else {
         setVisDeltGrunnlagRadioGroup(false);
         setHarDeltGrunnlag(false);
@@ -70,11 +73,11 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
     }
   };
 
-
   useEffect(() => {
     Api.Aarsavregning.hentFiltrertAarsavregningList(saksnummer).then((res) => {
       if (res?.find((aarsavregning) => aarsavregning.behandlingID === behandlingID)) {
         Api.Aarsavregning.hentAarsavregning(behandlingID).then((aarsavregning) => {
+          setAarsavregningID(aarsavregning.aarsavregningID);
           setInitieltÅr(aarsavregning.aar);
           dispatch({ type: OK, data: aarsavregning });
           utledGrunnlagstypeForAarsavregning(aarsavregning);
@@ -91,6 +94,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
       });
 
       Api.Aarsavregning.lagAarsavregning(behandlingID, { aar: valgtÅr }).then((res) => {
+        setAarsavregningID(res.aarsavregningID);
         utledGrunnlagstypeForAarsavregning(res);
         // Benyttes for innhenting av saksopplysninger ifm. årsavregningsbehandlinger
         dispatch({ type: OK, data: res });
@@ -104,9 +108,10 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
     setValgtÅr(år || null);
   };
 
-  const håndterDeltGrunnlag = (value: boolean) => {
-    dispatch(oppsummertfaktaOperations.lagreOpplysningerFraAvgiftsystemet(behandlingID, value));
-    setHarDeltGrunnlag(value);
+  const håndterDeltGrunnlag = (harDeltGrunnlag: boolean) => {
+    Api.Aarsavregning.oppdaterHarDeltGrunnlag(behandlingID, { harDeltGrunnlag }, aarsavregningID).then((res) =>
+      setHarDeltGrunnlag(res.harDeltGrunnlag),
+    );
   };
 
   return (
@@ -139,7 +144,12 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
           <Nav.Column xs="12">
             <Nav.RadioGroup
               onChange={håndterDeltGrunnlag}
-              legend={<LabelMedHjelpetekst label="Skal du legge til informasjon fra Avgiftssystemet til denne årsavregningen?" hjelpetekst={DELT_GRUNNLAG_HJELPETEKST} />}
+              legend={
+                <LabelMedHjelpetekst
+                  label="Skal du legge til informasjon fra Avgiftssystemet til denne årsavregningen?"
+                  hjelpetekst={DELT_GRUNNLAG_HJELPETEKST}
+                />
+              }
               value={harDeltGrunnlag}
             >
               <Nav.HStack gap="6">
@@ -159,7 +169,12 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
         <AarsavregningMedGrunnlag bekreft={bekreft} aktivtSteg={aktivtSteg} oppdaterStatus={oppdaterStatus} />
       )}
       {(harGrunnlag === false || harDeltGrunnlag) && (
-        <AarsavregningUtenGrunnlag bekreft={bekreft} aktivtSteg={aktivtSteg} oppdaterStatus={oppdaterStatus} harDeltGrunnlag={Boolean(harDeltGrunnlag)} />
+        <AarsavregningUtenGrunnlag
+          bekreft={bekreft}
+          aktivtSteg={aktivtSteg}
+          oppdaterStatus={oppdaterStatus}
+          harDeltGrunnlag={Boolean(harDeltGrunnlag)}
+        />
       )}
     </div>
   );

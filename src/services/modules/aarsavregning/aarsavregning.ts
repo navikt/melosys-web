@@ -10,10 +10,15 @@ export interface AarsavregningResponse {
   avvikFunnet?: boolean;
   nyttGrunnlag?: Grunnlagsopplysninger;
   avregning?: Avregning;
+  harDeltGrunnlag?: boolean;
 }
 
 export interface AarsavregningRequest {
   avregning: Avregning;
+}
+
+export interface OppdaterHarDeltGrunnlagRequest {
+  harDeltGrunnlag: boolean;
 }
 
 export interface Grunnlagsopplysninger {
@@ -75,6 +80,13 @@ export const oppdaterTotalBelop = (
   aarsavregningID?: number,
 ): Promise<AarsavregningResponse> =>
   putAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${AARSAVREGNING}/${aarsavregningID}`, request);
+
+export const oppdaterHarDeltGrunnlag = (
+  behandlingID: number,
+  request: OppdaterHarDeltGrunnlagRequest,
+  aarsavregningID?: number,
+): Promise<AarsavregningResponse> =>
+  putAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${AARSAVREGNING}/${aarsavregningID}/grunnlagstype`, request);
 
 export const hentFiltrertAarsavregningList = (
   saksnummer: string,
