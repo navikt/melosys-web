@@ -4,10 +4,14 @@ import {
   Inntektskilde,
   Skatteforhold,
 } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
-import { erBrukerSkattepliktigIHelePerioden } from "../../../../ftrl/saksbehandling/stegKomponenter/vurderingTrygdeavgift/vurderingTrygdeavgiftSchema";
 import * as Api from "../../../../../services/api";
 import * as Utils from "../../../../../utils";
 import { AarsavregningResponse } from "../../../../../services/modules/aarsavregning/aarsavregning";
+import { Medlemskapsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import MKV from "../../../../../melosyskodeverk";
+import { sorterEtterISOFomDato } from "../../../../../utils/dato";
+
+const { IKKE_SKATTEPLIKTIG } = MKV.Koder.skatteplikttype;
 
 const mapFeilmelding = (error: any) => {
   const feilmelding = "Finner ikke trygdeavgiftssats. Melosys har ikke satser for årene før 2014.";
@@ -21,6 +25,27 @@ const mapFeilmelding = (error: any) => {
   return error.body?.feilkoder || error.body?.message || error;
 };
 
+export const erBrukerSkattepliktigIHelePerioden = (skatteforholdsperioder: any) => {
+  return !skatteforholdsperioder.some((skatteforhold: any) => skatteforhold.skatteplikttype === IKKE_SKATTEPLIKTIG);
+};
+
+export function harIkkeSkattepliktigInntektskilder(
+  skatteforholdsperioder: any,
+  inntektsperioder: any,
+  medlemskapsTypeErPliktig?: boolean,
+) {
+  if (skatteforholdsperioder === undefined || inntektsperioder === undefined) return false;
+  if (inntektsperioder.length === 0) {
+    return false;
+  }
+
+  if (medlemskapsTypeErPliktig) {
+    return !erBrukerSkattepliktigIHelePerioden(skatteforholdsperioder);
+  }
+
+  return true;
+}
+
 export function beregnTrygdeavgiftsperioder(
   formVerdier: FieldValue<FormValuesProps>,
   options: {
@@ -31,8 +56,7 @@ export function beregnTrygdeavgiftsperioder(
     setAarsavregningResponse: (response: AarsavregningResponse) => void;
   },
 ) {
-  const { behandlingID, medlemskapsTypeErPliktig, aarsavregningID, setBeregningError, setAarsavregningResponse } =
-    options;
+  const { behandlingID, medlemskapsTypeErPliktig, setBeregningError, setAarsavregningResponse } = options;
 
   setBeregningError(undefined);
   const erBrukerPliktigMedlemOgSkattepliktig =
@@ -62,3 +86,19 @@ export function beregnTrygdeavgiftsperioder(
     })
     .catch((error) => setBeregningError(mapFeilmelding(error)));
 }
+
+export const lagInnvilgetMedlemskapsPeriode = (medlemskapsperioder?: Medlemskapsperiode[]) => {
+  if (medlemskapsperioder && !Utils._isEmpty(medlemskapsperioder)) {
+    const sorterteInnvilgedePerioder = [...medlemskapsperioder]
+      .filter((periode) => periode.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.INNVILGET)
+      .sort(sorterEtterISOFomDato);
+    return {
+      fom: sorterteInnvilgedePerioder[0].fomDato,
+      tom: sorterteInnvilgedePerioder[sorterteInnvilgedePerioder.length - 1].tomDato,
+    };
+  }
+  return {
+    tom: undefined,
+    fom: undefined,
+  };
+};

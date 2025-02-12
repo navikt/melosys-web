@@ -4,6 +4,8 @@ import * as KV from "../../../../../kodeverk";
 import * as Utils from "../../../../../utils";
 import { BOOLSK_STRING } from "../../../../../constants";
 
+import { erBrukerSkattepliktigIHelePerioden } from "../../../../aarsavregning/stegKomponenter/vurderingAarsavregning/komponenter/utils";
+
 const { MAA_FYLLES_UT } = KV.Feilmeldinger;
 const {
   NÆRINGSINNTEKT_FRA_NORGE,
@@ -13,7 +15,6 @@ const {
   PENSJON_UFØRETRYGD,
   PENSJON_UFØRETRYGD_KILDESKATT,
 } = MKV.Koder.inntektskildetype;
-const { IKKE_SKATTEPLIKTIG } = MKV.Koder.skatteplikttype;
 const UTENFOR_MEDLEMSKAPSPERIODEN = { melding: "Utenfor medlemskapsperioden" };
 
 export const arbAvgBetalesKreves = (kildetype, medlemskapsTypeErPliktig) =>
@@ -30,10 +31,6 @@ const arbAvgBetalesFyltUtNårDetKrevesTest = {
       Utils._isEmpty(arbAvgBetales)
     );
   },
-};
-
-export const erBrukerSkattepliktigIHelePerioden = (skatteforholdsperioder) => {
-  return !skatteforholdsperioder.some((skatteforhold) => skatteforhold.skatteplikttype === IKKE_SKATTEPLIKTIG);
 };
 
 export const bruttoInntektKreves = (brukerSkattepliktigIHelePerioden, kildetype, arbAvgBetales) =>

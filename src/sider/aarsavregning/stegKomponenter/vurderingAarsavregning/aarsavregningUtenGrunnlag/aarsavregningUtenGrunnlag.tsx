@@ -1,7 +1,7 @@
 import * as Api from "../../../../../services/api";
 import "../vurderingAarsavregningInngang.css";
 import { useCallback, useEffect, useState } from "react";
-import { AarsavregningResponse } from "../../../../../services/modules/aarsavregning/aarsavregning";
+import { AarsavregningResponse, oppdaterTotalBelop } from "../../../../../services/modules/aarsavregning/aarsavregning";
 import { useDispatch, useSelector } from "react-redux";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import * as Nav from "../../../../../navFrontend";
@@ -109,7 +109,7 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
   }, [lagredeMedlemskapsperioder, aarsavregningResponse]);
 
   const oppdaterNyttTotalbeloep = async (totalAvgift?: number) => {
-    return Api.Aarsavregning.oppdaterTotalBelop(
+    return oppdaterTotalBelop(
       behandlingID,
       {
         avregning: {
@@ -203,7 +203,7 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
       (formValues.totaltForskuddsvisFakturert || formValues.totaltForskuddsvisFakturert === "") &&
       formValues.totaltForskuddsvisFakturert !== aarsavregningResponse?.avregning?.tidligereFakturertBeloep
     ) {
-      Api.Aarsavregning.oppdaterTotalBelop(
+      oppdaterTotalBelop(
         behandlingID,
         {
           avregning: {
