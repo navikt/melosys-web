@@ -31,6 +31,7 @@ import { delvisInnvilgelseSkjema, avslagSkjema } from "./validering/anmodningunn
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import "../saksopplysninger.css";
 import { StatsborgerskapFeil } from "../../../../felleskomponenter/alertmeldinger";
+import Datovelger from "../../../../felleskomponenter/datovelger";
 
 function LinkForhandsvisningSed({ redigerbart, behandlingID, anmodningsperiodeSvarType, vedKlikk, fritekst }) {
   let pdfDokument = [];
@@ -97,7 +98,11 @@ function Saksopplysninger({
       setEndretPeriodeFom(Utils.dato.formatterDatoTilNorsk(sed.lovvalgsperiode.fom));
       setEndretPeriodeTom(Utils.dato.formatterDatoTilNorsk(sed.lovvalgsperiode.tom));
     }
-    if (anmodningsperiodeSvar.endretPeriode) {
+    if (
+      anmodningsperiodeSvar.endretPeriode &&
+      anmodningsperiodeSvar.endretPeriode.fom &&
+      anmodningsperiodeSvar.endretPeriode.tom
+    ) {
       setEndretPeriodeFom(Utils.dato.formatterDatoTilNorsk(anmodningsperiodeSvar.endretPeriode.fom));
       setEndretPeriodeTom(Utils.dato.formatterDatoTilNorsk(anmodningsperiodeSvar.endretPeriode.tom));
     }
@@ -249,18 +254,6 @@ function Saksopplysninger({
     return true;
   };
 
-  const formaterDato = (event, oppdater) => {
-    const nyDato = Utils.dato.vaskInputDato(event.target.value);
-    if (nyDato) {
-      oppdater(nyDato);
-    }
-  };
-
-  const oppdaterDato = (event, oppdater) => {
-    event.stopPropagation();
-    oppdater(event.target.value);
-  };
-
   const oppdaterAnmodningsperiodeSvar = async () => {
     if (!validerFelt()) {
       return false;
@@ -315,21 +308,19 @@ function Saksopplysninger({
           <>
             <Nav.Row>
               <Nav.Column xs="3">
-                <Nav.TextField
+                <Datovelger
                   label="Startdato"
-                  value={endretPeriodeFom}
-                  onChange={(e) => oppdaterDato(e, setEndretPeriodeFom)}
-                  onBlur={(e) => formaterDato(e, setEndretPeriodeFom)}
+                  value={Utils.dato.norskStringTilDate(endretPeriodeFom)}
+                  onChange={setEndretPeriodeFom}
                   error={valideringFeil.fom}
                   disabled={!redigerbart}
                 />
               </Nav.Column>
               <Nav.Column xs="3">
-                <Nav.TextField
+                <Datovelger
                   label="Sluttdato"
-                  value={endretPeriodeTom}
-                  onChange={(e) => oppdaterDato(e, setEndretPeriodeTom)}
-                  onBlur={(e) => formaterDato(e, setEndretPeriodeTom)}
+                  value={Utils.dato.norskStringTilDate(endretPeriodeTom)}
+                  onChange={setEndretPeriodeTom}
                   error={valideringFeil.tom}
                   disabled={!redigerbart}
                 />

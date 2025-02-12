@@ -28,6 +28,8 @@ export interface PeriodeElementerProps {
   handleUpdate: UseFieldArrayUpdate<FieldArrayProps, "medlemskapsperioder">;
   index: number;
   visLeggTil: boolean;
+  maksVerdi?: Date;
+  minVerdi?: Date;
 }
 
 export function MedlemskapsperiodeSkjema({
@@ -43,6 +45,8 @@ export function MedlemskapsperiodeSkjema({
   handleUpdate,
   index,
   visLeggTil,
+  maksVerdi,
+  minVerdi,
 }: PeriodeElementerProps) {
   const [trygdedekninger, setTrygdedekninger] = useState<[]>([]);
   const kodeverkKoderIBestemmelserNedtrekk: string[] = [
@@ -59,6 +63,14 @@ export function MedlemskapsperiodeSkjema({
   // @ts-ignore
   const erPeriodeFraGrunnlag = !formValues.medlemskapsperioder[index].redigerbar;
   const kanSlettePeriode = redigerbart && formValues.medlemskapsperioder.length !== 1;
+  const tilOgMedDatoForrigePeriode =
+    formValues.medlemskapsperioder[index - 1] !== undefined
+      ? Utils.dato.norskStringTilDate(formValues.medlemskapsperioder[index - 1].tomDato)
+      : undefined;
+  if (tilOgMedDatoForrigePeriode !== undefined) {
+    tilOgMedDatoForrigePeriode.setDate(tilOgMedDatoForrigePeriode.getDate() + 1);
+  }
+
   return (
     <div className="medlemskapsperiodeSkjema">
       <Nav.Heading size="small">{tittel}</Nav.Heading>
@@ -69,11 +81,8 @@ export function MedlemskapsperiodeSkjema({
             <Forms.Datovelger
               label={index === 0 ? "Medlemskapsperiode" : ""}
               control={control}
-              minDate={
-                formValues.medlemskapsperioder[index - 1] !== undefined
-                  ? Utils.dato.norskStringTilDate(formValues.medlemskapsperioder[index - 1].tomDato)
-                  : undefined
-              }
+              minDate={tilOgMedDatoForrigePeriode !== undefined ? tilOgMedDatoForrigePeriode : minVerdi}
+              maxDate={tilOgMedDatoForrigePeriode !== undefined ? tilOgMedDatoForrigePeriode : maksVerdi}
               name={`medlemskapsperioder[${index}].fomDato`}
               aria-label={`Fra og med periode ${index + 1}`}
               readOnly={!redigerbart || erPeriodeFraGrunnlag}
@@ -89,6 +98,7 @@ export function MedlemskapsperiodeSkjema({
               name={`medlemskapsperioder[${index}].tomDato`}
               aria-label={`Til og med periode ${index + 1}`}
               minDate={Utils.dato.norskStringTilDate(formValues.medlemskapsperioder[index].fomDato)}
+              maxDate={maksVerdi}
               readOnly={!redigerbart || erPeriodeFraGrunnlag}
               onChange={(value) => {
                 handleChange([{ ...formValues.medlemskapsperioder[index], tomDato: value }], index);

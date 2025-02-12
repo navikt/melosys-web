@@ -4,6 +4,8 @@ import * as KV from "../../../../../kodeverk";
 import * as Utils from "../../../../../utils";
 import { BOOLSK_STRING } from "../../../../../constants";
 
+import { erBrukerSkattepliktigIHelePerioden } from "../komponenter/utils";
+
 const { MAA_FYLLES_UT } = KV.Feilmeldinger;
 const {
   NÆRINGSINNTEKT_FRA_NORGE,
@@ -13,15 +15,14 @@ const {
   PENSJON_UFØRETRYGD,
   PENSJON_UFØRETRYGD_KILDESKATT,
 } = MKV.Koder.inntektskildetype;
-const { IKKE_SKATTEPLIKTIG } = MKV.Koder.skatteplikttype;
 const UTENFOR_MEDLEMSKAPSPERIODEN = { melding: "Utenfor medl.periode" };
 
 export const arbAvgBetalesKreves = (kildetype, medlemskapsTypeErPliktig) =>
   !medlemskapsTypeErPliktig && kildetype !== MISJONÆR;
 
 const arbAvgBetalesFyltUtNårDetKrevesTest = {
-  name: "Fyll inn arb.avg. betales når det kreves",
-  message: { message: "Velg om arb.avg. betales til skatt" },
+  name: "Fyll inn arb.ag. betales når det kreves",
+  message: { message: "Velg om arb.ag. betales til skatt" },
   test: (arbAvgBetales, schema) => {
     const { kildetype } = schema.from[0].value;
 
@@ -30,10 +31,6 @@ const arbAvgBetalesFyltUtNårDetKrevesTest = {
       Utils._isEmpty(arbAvgBetales)
     );
   },
-};
-
-export const erBrukerSkattepliktigIHelePerioden = (skatteforholdsperioder) => {
-  return !skatteforholdsperioder.some((skatteforhold) => skatteforhold.skatteplikttype === IKKE_SKATTEPLIKTIG);
 };
 
 export const bruttoInntektKreves = (brukerSkattepliktigIHelePerioden, kildetype, arbAvgBetales) =>
@@ -104,7 +101,7 @@ const aarsavregningMedGrunnlagSchema = object().shape({
           object().shape({
             kildetype: string().required(MAA_FYLLES_UT),
             arbAvgBetales: string().test(arbAvgBetalesFyltUtNårDetKrevesTest).nullable(),
-            bruttoInntekt: string().erNummer().test(bruttoInntektFyltUtNårDetKrevesTest).nullable(),
+            bruttoInntekt: string().required(MAA_FYLLES_UT).erNummer().test(bruttoInntektFyltUtNårDetKrevesTest),
             fomDato: string()
               .erGyldigDato()
               .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
