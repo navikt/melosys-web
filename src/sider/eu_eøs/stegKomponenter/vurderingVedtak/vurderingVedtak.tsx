@@ -169,7 +169,13 @@ function VurderingVedtak({
   const erArtikkel114Eller134 = useSelector(flytSelectors.ErIArtikkel114Eller134FlytSelector);
   const mottatteOpplysningerStatus = useSelector(mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector);
   const erPensjonistToggleEnabled = useFeatureToggle(MELOSYS_PENSJONIST);
-  const visMottakerinstitusjoner = skalViseMottakerinstitusjoner(sakstype, sakstema, behandlingstema, behandlingstype);
+  const visMottakerinstitusjoner = skalViseMottakerinstitusjoner(
+    sakstype,
+    sakstema,
+    behandlingstema,
+    behandlingstype,
+    erPensjonistToggleEnabled,
+  );
 
   useEffect(() => {
     if (behandlingstema === BESLUTNING_LOVVALG_NORGE) {
