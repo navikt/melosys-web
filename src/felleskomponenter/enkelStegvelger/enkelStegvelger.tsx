@@ -48,7 +48,6 @@ function EnkelStegvelger({ alleSteg }: EnkelStegvelgerProps) {
 
   // Optional param nesteStegId overstyrer vanlig flyt.
   const oppdaterStatus = (stegId: string) => (isSchemaValid: boolean, nesteStegId?: string) => {
-    console.log({ stegId, isSchemaValid, nesteStegId });
     const stegIndex = aktuelleSteg.findIndex((steg) => steg.id === stegId);
     // Fjerner stegene etter steget som oppdaterer dersom nesteStegId er satt
     const nyeSteg = (nesteStegId ? aktuelleSteg.slice(0, stegIndex + 1) : aktuelleSteg).map((steg) =>
