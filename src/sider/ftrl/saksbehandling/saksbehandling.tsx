@@ -38,6 +38,7 @@ import { setErFullmektigEndret } from "../../../ducks/menypanel/operations";
 import { alleStegManglendeInnbetalingFlyt } from "./stegLister/stegListeManglendeInnbetalingFlyt";
 import { fakturaserierOperations } from "../../../ducks/fakturaserier";
 import { alleStegIkkeYrkesaktivFlyt } from "./stegLister/stegListeIkkeYrkesaktivFlyt";
+import { alleStegPensjonistFlyt } from "./stegLister/stegListePensjonistFlyt";
 
 const mapStateToProps = (state: RootState) => ({
   arbeidsland: mottatteOpplysningerSelectors.SoknadslandkoderSelector(state),
@@ -218,6 +219,10 @@ function Saksbehandling({
   if (!saksopplysningerLastet) return null;
 
   const hentStegArray = () => {
+    if (behandlingstema === MKV.Koder.behandlinger.behandlingstema.PENSJONIST) {
+      return alleStegPensjonistFlyt;
+    }
+
     if (behandlingstema === MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV) {
       return alleStegIkkeYrkesaktivFlyt;
     }
