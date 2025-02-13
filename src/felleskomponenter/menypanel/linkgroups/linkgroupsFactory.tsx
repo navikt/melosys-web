@@ -31,6 +31,7 @@ interface LinkGroupsConfig {
   contentProps: ContentProps;
   sakstema: string;
   kunFullmektig?: boolean;
+  erPensjonistToggleEnabled?: boolean | undefined;
 }
 
 class LinkGroupsFactory {
@@ -42,8 +43,12 @@ class LinkGroupsFactory {
     behandlingstype,
     sakstema,
     kunFullmektig,
+    erPensjonistToggleEnabled,
   }: LinkGroupsConfig): LinkGroup[] {
-    if (skalViseIngenFlyt(sakstype, sakstema, behandlingstema, behandlingstype) || kunFullmektig) {
+    if (
+      skalViseIngenFlyt(sakstype, sakstema, behandlingstema, behandlingstype, erPensjonistToggleEnabled) ||
+      kunFullmektig
+    ) {
       return new LinkgroupsBuilder().addUtenLabel(new LinksBuilder(contentProps).addFullmektig().build()).build();
     }
 

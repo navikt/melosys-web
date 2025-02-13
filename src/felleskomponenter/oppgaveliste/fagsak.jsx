@@ -14,6 +14,8 @@ import { sorterElementerEtterDato } from "../sorterbarListe";
 import Soknadsland from "../soknadsland";
 
 import "./fagsak.css";
+import { useFeatureToggle } from "../../featuretoggle";
+import { MELOSYS_PENSJONIST } from "../../featuretoggle/toggleNavn";
 
 /**
  * Dette er enkeltlinjen for én sak som inneholder sakstittel og metadata
@@ -22,7 +24,7 @@ import "./fagsak.css";
  */
 function Fagsak({ sak, landkoder }) {
   const { opprettetDato, sakstype, saksstatus, saksnummer, sakstema, behandlingOversikter } = sak;
-
+  const erPensjonistToggleEnabled = useFeatureToggle(MELOSYS_PENSJONIST);
   const { land } = behandlingOversikter.find((behandlingOversikt) => behandlingOversikt.soknadsperiode != null) ?? {};
   const { lovvalgsperiode } =
     behandlingOversikter.find((behandlingOversikt) => behandlingOversikt.lovvalgsperiode != null) ?? {};
@@ -36,6 +38,7 @@ function Fagsak({ sak, landkoder }) {
       sakstema.kode,
       behandling.behandlingstema.kode,
       behandling.behandlingstype.kode,
+      erPensjonistToggleEnabled,
     );
 
   const customMargin = { marginLeft: "1em" };

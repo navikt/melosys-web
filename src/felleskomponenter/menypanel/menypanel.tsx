@@ -17,6 +17,8 @@ import { fagsakSelectors } from "../../ducks/fagsaker";
 import OppdaterRegisteropplysninger from "./oppdaterRegisteropplysninger";
 import { LinkGroupsFactory } from "./linkgroups";
 import "./menypanel.css";
+import { useFeatureToggle } from "../../featuretoggle";
+import { MELOSYS_PENSJONIST } from "../../featuretoggle/toggleNavn";
 
 const { SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS } = MKV.Koder.mottatteopplysningertyper;
 
@@ -53,6 +55,7 @@ export function Menypanel({
 }: MenypanelProps) {
   const [[activeGroupIndex, activeLinkIndex], setActive] = useState<[number, number]>([0, 0]);
   const [endreFokus, setEndreFokus] = useState(false);
+  const erPensjonistToggleEnabled = useFeatureToggle(MELOSYS_PENSJONIST);
 
   const visMottatteOpplysningerData = !(
     MKVUtils.erBehandlingAvSed(sakstype, behandlingstema) &&
@@ -73,7 +76,7 @@ export function Menypanel({
       behandlingstema !== MKV.Koder.behandlinger.behandlingstema.A1_ANMODNING_OM_UNNTAK_PAPIR &&
       behandlingstema !== MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV) ||
     menypanel?.synlig ||
-    skalViseIngenFlyt(sakstype, sakstema, behandlingstema, behandlingstype);
+    skalViseIngenFlyt(sakstype, sakstema, behandlingstema, behandlingstype, erPensjonistToggleEnabled);
 
   const linkGroupsWithContent = LinkGroupsFactory.createLinkGroups({
     sakstype,
