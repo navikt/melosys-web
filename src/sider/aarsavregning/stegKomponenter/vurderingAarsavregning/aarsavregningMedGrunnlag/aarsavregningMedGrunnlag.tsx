@@ -92,9 +92,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
       Api.Aarsavregning.hentAarsavregning(behandlingID)
         .then((res) => {
           setAarsavregningResponse(res);
-          if (!redigerbart) {
-            setErAvvik(res.avvikFunnet);
-          }
+          setErAvvik(res.harAvvik);
           // Benyttes for innhenting av saksopplysninger ifm. årsavregningsbehandlinger
           dispatch({ type: OK, data: res });
 
@@ -248,6 +246,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
         aarsavregningResponse.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag,
       );
     }
+    Api.Aarsavregning.oppdaterAvvik(behandlingID, value, aarsavregningID);
     setErAvvik(value);
   };
 
