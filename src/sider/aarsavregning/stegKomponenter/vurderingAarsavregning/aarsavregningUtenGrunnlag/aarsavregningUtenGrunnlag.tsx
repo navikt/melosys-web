@@ -18,7 +18,11 @@ import { OK } from "../../../../../ducks/aarsavregning/types";
 
 import { behandlingsresultatSelectors } from "../../../../../ducks/behandlingsresultat";
 
-import { medlemskapsperioderOperations, medlemskapsperioderSelectors } from "../../../../../ducks/medlemskapsperioder";
+import {
+  medlemskapsperioderOperations,
+  medlemskapsperioderSelectors,
+  medlemskapsperioderTypes,
+} from "../../../../../ducks/medlemskapsperioder";
 import { MedlemskapsperiodeProp } from "../../../../ftrl/saksbehandling/stegKomponenter/vurderingPeriode/komponenter/types";
 import { Medlemskapsperioder } from "../komponenter/medlemskapsperioder";
 import { FeilmeldingOppsummering } from "../feilmeldingOppsummering";
@@ -30,6 +34,7 @@ import {
   hentMedlemskapsFomTomDato,
   mapInitialMedlemskapsperioder,
   mapTilInntektskilderProps,
+  mapTilMedlemskapsperiodeProps,
   mapTilSkatteforholdProps,
 } from "../aarsavregningHelpers";
 
@@ -50,7 +55,7 @@ interface AarsavregningFormValuesProps extends FormValuesProps {
 
 export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
   const [valgtÅr, setValgtÅr] = useState<number | undefined>();
-  const [beregningError, setBeregningError] = useState<undefined | string>(undefined);
+  const [feilmelding, setFeilmelding] = useState<undefined | string>(undefined);
   const [brukerHarBekreftet, setBrukerHarBekreftet] = useState(false);
 
   const [aarsavregningResponse, setAarsavregningResponse] = useState<AarsavregningResponse | undefined>(undefined);
@@ -221,11 +226,11 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
         behandlingID,
         medlemskapsTypeErPliktig,
         aarsavregningID,
-        setBeregningError,
+        setFeilmelding,
         setAarsavregningResponse,
       });
     },
-    [behandlingID, medlemskapsTypeErPliktig, setBeregningError, setAarsavregningResponse, aarsavregningID],
+    [behandlingID, medlemskapsTypeErPliktig, setFeilmelding, setAarsavregningResponse, aarsavregningID],
   );
 
   const debounceBeregnTrygdeavgiftsperioder = useCallback(
@@ -252,6 +257,9 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
     }
   };
 
+  const kallFeilet = (response: any): boolean => response.type === medlemskapsperioderTypes.FEILET;
+  const mapFeil = (response: any) => response?.data?.data?.message;
+
   const lagreMedlemskapsperiode = async (medlemskapsperiode: MedlemskapsperiodeProp, index: number) => {
     const periodeRequest = {
       fomDato: Utils.dato.formatterDatoTilISO(medlemskapsperiode.fomDato, "") as string,
@@ -261,7 +269,7 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
       innvilgelsesResultat: MKV.Koder.innvilgelsesResultat.INNVILGET,
     };
 
-    const response: any = medlemskapsperiode.ny
+    const response: any = await (medlemskapsperiode.ny
       ? dispatch(medlemskapsperioderOperations.opprettMedlemskapsperiode(behandlingID, periodeRequest))
       : dispatch(
           medlemskapsperioderOperations.oppdaterMedlemskapsperiode(
@@ -269,9 +277,18 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
             medlemskapsperiode.periodeId,
             periodeRequest,
           ),
-        );
+        ));
 
-    // @ts-expect-error generisk beskrivelse
+    if (kallFeilet(response)) {
+      console.log(response.data);
+      setFeilmelding(mapFeil(response));
+    } else {
+      setFeilmelding(undefined);
+    }
+
+    console.log(response);
+    console.log(feilmelding);
+
     medlemskapsperioderUpdate(index, mapTilMedlemskapsperiodeProps(response.data));
   };
 
@@ -372,9 +389,9 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
 
       {brukerHarBekreftet && <FeilmeldingOppsummering errors={formErrors} />}
 
-      {beregningError && (
+      {feilmelding && (
         <Nav.Alert variant="error" className="alertstripe_feilmelding">
-          {beregningError}
+          {feilmelding}
         </Nav.Alert>
       )}
 

@@ -52,13 +52,13 @@ export function beregnTrygdeavgiftsperioder(
     behandlingID: number;
     medlemskapsTypeErPliktig?: boolean;
     aarsavregningID: number;
-    setBeregningError: (error: any) => void;
+    setFeilmelding: (error: any) => void;
     setAarsavregningResponse: (response: AarsavregningResponse) => void;
   },
 ) {
-  const { behandlingID, medlemskapsTypeErPliktig, setBeregningError, setAarsavregningResponse } = options;
+  const { behandlingID, medlemskapsTypeErPliktig, setFeilmelding, setAarsavregningResponse } = options;
 
-  setBeregningError(undefined);
+  setFeilmelding(undefined);
   const erBrukerPliktigMedlemOgSkattepliktig =
     medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(formVerdier.skatteforholdsperioder);
   return Api.Trygdeavgift.beregnTrygdeavgiftsperioder(behandlingID, {
@@ -82,9 +82,9 @@ export function beregnTrygdeavgiftsperioder(
       Api.Aarsavregning.hentAarsavregning(behandlingID).then((response: AarsavregningResponse) => {
         setAarsavregningResponse(response);
       });
-      setBeregningError(undefined);
+      setFeilmelding(undefined);
     })
-    .catch((error) => setBeregningError(mapFeilmelding(error)));
+    .catch((error) => setFeilmelding(mapFeilmelding(error)));
 }
 
 export const lagInnvilgetMedlemskapsPeriode = (medlemskapsperioder?: Medlemskapsperiode[]) => {

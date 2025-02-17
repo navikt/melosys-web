@@ -41,7 +41,7 @@ interface Props {
 
 export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
   const [erAvvik, setErAvvik] = useState<boolean | undefined>(undefined);
-  const [beregningError, setBeregningError] = useState<undefined | string>(undefined);
+  const [feilmelding, setFeilmelding] = useState<undefined | string>(undefined);
   const [brukerHarBekreftet, setBrukerHarBekreftet] = useState(false);
   const [aarsavregningResponse, setAarsavregningResponse] = useState<AarsavregningResponse | undefined>(undefined);
 
@@ -178,11 +178,11 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
         behandlingID,
         medlemskapsTypeErPliktig,
         aarsavregningID,
-        setBeregningError,
+        setFeilmelding,
         setAarsavregningResponse,
       });
     },
-    [behandlingID, medlemskapsTypeErPliktig, setBeregningError, setAarsavregningResponse, aarsavregningID],
+    [behandlingID, medlemskapsTypeErPliktig, setFeilmelding, setAarsavregningResponse, aarsavregningID],
   );
 
   const debounceBeregnTrygdeavgiftsperioderOgOppdaterFormVerdier = useCallback(
@@ -209,7 +209,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
       formIsValid &&
         erAvvik &&
         aarsavregningResponse?.nyttGrunnlag &&
-        !beregningError &&
+        !feilmelding &&
         harIkkeSkattepliktigInntektskilder(
           beregningsVerdier().skatteforholdsperioder,
           beregningsVerdier().inntektskilder,
@@ -252,7 +252,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
 
   const bekreftOnClick = () => {
     setBrukerHarBekreftet(true);
-    if (stegErGyldig && !beregningError) {
+    if (stegErGyldig && !feilmelding) {
       bekreft();
     }
   };
@@ -347,14 +347,14 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
         </>
       )}
 
-      {nyttGrunnlagHarTrygdeavgiftsperioder() && erAvvik && formIsValid && !beregningError && (
+      {nyttGrunnlagHarTrygdeavgiftsperioder() && erAvvik && formIsValid && !feilmelding && (
         <SumArsavregningTabell
           nyTrygdeavgift={aarsavregningResponse?.avregning?.nyttTotalbeloep}
           tidligereTrygdeavgift={aarsavregningResponse?.avregning?.tidligereFakturertBeloep}
         />
       )}
 
-      {nyttGrunnlagHarTrygdeavgiftsperioder() && erAvvik && formIsValid && !beregningError && (
+      {nyttGrunnlagHarTrygdeavgiftsperioder() && erAvvik && formIsValid && !feilmelding && (
         <BeregnetTrygdeavgiftDetaljer
           grunnlag={aarsavregningResponse?.nyttGrunnlag}
           medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!}
@@ -364,9 +364,9 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
 
       {brukerHarBekreftet && <FeilmeldingOppsummering errors={formErrors} />}
 
-      {beregningError && (
+      {feilmelding && (
         <Nav.Alert variant="error" className="alertstripe_feilmelding">
-          {beregningError}
+          {feilmelding}
         </Nav.Alert>
       )}
 
