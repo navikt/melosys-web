@@ -18,7 +18,7 @@ import { OK } from "../../../../../ducks/aarsavregning/types";
 
 import { behandlingsresultatSelectors } from "../../../../../ducks/behandlingsresultat";
 
-import {
+import medlemskapsperioder, {
   medlemskapsperioderOperations,
   medlemskapsperioderSelectors,
   medlemskapsperioderTypes,
@@ -37,6 +37,7 @@ import {
   mapTilMedlemskapsperiodeProps,
   mapTilSkatteforholdProps,
 } from "../aarsavregningHelpers";
+import { Medlemskapsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 
 interface Props {
   bekreft: () => void;
@@ -92,7 +93,72 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
     }
   }, []);
 
+  function checkPeriods(periods: Medlemskapsperiode[]) {
+    if (periods.length === 0) {
+      return { overlap: false, gap: false, sameBestemmelse: false };
+    }
+    console.log(periods.length);
+
+    // Sort periods by start date
+    const sortedPeriods = [...periods].sort((a, b) => new Date(a.fomDato).getTime() - new Date(b.fomDato).getTime());
+
+    let overlap = false;
+    let gap = false;
+    const bestemmelseSet = new Set<string>();
+
+    // eslint-disable-next-line no-plusplus
+    for (let i = 0; i < sortedPeriods.length; i++) {
+      console.log(sortedPeriods[i].bestemmelse);
+      bestemmelseSet.add(sortedPeriods[i].bestemmelse);
+      if (i > 0) {
+        const prevPeriod = sortedPeriods[i - 1];
+        const currPeriod = sortedPeriods[i];
+
+        const prevEndDate = new Date(prevPeriod.tomDato);
+        const currStartDate = new Date(currPeriod.fomDato);
+
+        if (currStartDate <= prevEndDate) {
+          overlap = true;
+        }
+        if (currStartDate.getTime() - prevEndDate.getTime() > 86400000) {
+          // 1 day gap
+          gap = true;
+        }
+      }
+    }
+
+    console.log(bestemmelseSet.size);
+    const sameBestemmelse = bestemmelseSet.size !== 1;
+    console.log(sameBestemmelse);
+
+    return { overlap, gap, sameBestemmelse };
+  }
+
   useEffect(() => {
+    const test = checkPeriods(lagredeMedlemskapsperioder);
+
+    let nyFeilmelding: string | undefined;
+
+    switch (true) {
+      case test.gap:
+        nyFeilmelding = "Det er opphold mellom medlemskapsperioder";
+        break;
+      case test.overlap:
+        nyFeilmelding = "Medlemskapsperioder overlapper";
+        break;
+      case test.sameBestemmelse:
+        console.log("WHAT");
+        nyFeilmelding = "Bestemmelsene må være like";
+        break;
+      default:
+        nyFeilmelding = undefined;
+    }
+
+    console.log(lagredeMedlemskapsperioder);
+
+    console.log(nyFeilmelding);
+    setFeilmelding(nyFeilmelding);
+
     if (lagredeMedlemskapsperioder) {
       const mappedLagredeMedlemskapsperioder = mapInitialMedlemskapsperioder(lagredeMedlemskapsperioder);
       setValue("medlemskapsperioder", mappedLagredeMedlemskapsperioder);
@@ -330,6 +396,8 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
       dispatch(medlemskapsperioderOperations.slettMedlemskapsperiode(behandlingID, medlemskapsperiode.periodeId));
     }
   };
+
+  console.log(formErrors);
   return (
     <div className="vurderingAarsavregning">
       <TidligereGrunnlagsopplysningerFinnesIkke formValues={formValues} control={control} redigerbart={redigerbart} />
@@ -392,6 +460,12 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
       {feilmelding && (
         <Nav.Alert variant="error" className="alertstripe_feilmelding">
           {feilmelding}
+        </Nav.Alert>
+      )}
+
+      {formErrors.root && (
+        <Nav.Alert variant="error" className="alertstripe_feilmelding">
+          {formErrors.root?.message}
         </Nav.Alert>
       )}
 
