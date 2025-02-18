@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest-8-cores
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v1
+        uses: actions/checkout@v4
 
       - name: Get changed files
         id: changed-files
@@ -17,6 +17,7 @@ jobs:
         run: |
           exceeded_files=()
           for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+             echo "filechange"
             if [[ "$file" == src/**/*.js || "$file" == src/**/*.jsx || "$file" == src/**/*.ts || "$file" == src/**/*.tsx ]]; then
               if [ -f "$file" ]; then
                 line_count=$(wc -l < "$file")
