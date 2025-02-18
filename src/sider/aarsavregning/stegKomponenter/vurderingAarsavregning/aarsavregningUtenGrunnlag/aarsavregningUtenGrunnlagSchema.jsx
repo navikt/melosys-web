@@ -35,7 +35,7 @@ const arbAvgBetalesFyltUtNårDetKrevesTest = {
 };
 
 const erInnenforValgtAarTest = {
-  name: "Åpen sluttdato ved etterfølgende perioder og periode innenfor året",
+  name: "Utenfor valgt år",
   message: {
     melding: `Utenfor valgt år`,
   },
