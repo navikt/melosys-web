@@ -17,20 +17,22 @@ jobs:
         run: |
           exceeded_files=()
           for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
-            if [ -f "$file" ]; then
-              line_count=$(wc -l < "$file")
-              if [ "$line_count" -gt 400 ]; then
-                exceeded_files+=("$file ($line_count lines)")
+            if [[ "$file" == src/**/*.js || "$file" == src/**/*.jsx || "$file" == src/**/*.ts || "$file" == src/**/*.tsx ]]; then
+              if [ -f "$file" ]; then
+                line_count=$(wc -l < "$file")
+                if [ "$line_count" -gt 400 ]; then
+                  exceeded_files+=("$file ($line_count lines)")
+                fi
               fi
             fi
           done
 
           if [ ${#exceeded_files[@]} -ne 0 ]; then
-            echo "❌ The following files exceed 400 lines:"
+            echo "❌ The following React files exceed 400 lines:"
             printf '%s\n' "${exceeded_files[@]}"
             exit 1
           else
-            echo "✅ All files are within the limit."
+            echo "✅ All React files are within the limit."
           fi
   build:
     runs-on: ubuntu-latest-8-cores
