@@ -20,7 +20,7 @@ jobs:
             echo "filechange"
             if [[ $file =~ ^src/.*\.(js|jsx|ts|tsx)$ ]]; then
               if [ -f "$file" ]; then
-                line_count=$(wc -l < "$file")
+                line_count=$(grep -c "^" "$file")
                 printf '%slinecount::\n' "${line_count}"
                 if [ "$line_count" -gt 400 ]; then
                   exceeded_files+=("$file ($line_count lines)")

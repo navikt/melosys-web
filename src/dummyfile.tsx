@@ -391,21 +391,7 @@ const HugeComponent = () => {
         </section>
         <section>
           <h2>Ekstra seksjon 13</h2>
-          <p>Dette er masse ekstra tekst for å gjøre filen stor.</p>
-          <p>En til linje med tekst.</p>
-          <p>Og enda en linje...</p>
-        </section>
-        <section>
-          <h2>Ekstra seksjon 14</h2>
-          <p>Dette er masse ekstra tekst for å gjøre filen stor.</p>
-          <p>En til linje med tekst.</p>
-          <p>Og enda en linje...</p>
-        </section>
-        <section>
-          <h2>Ekstra seksjon 15</h2>
-          <p>Dette er masse ekstra tekst for å gjøre filen stor.</p>
-          <p>En til linje med tekst.</p>
-          <p>Og enda en linje jadda...</p>
+          <h2>Ekstra seksjon 13</h2>
         </section>
       </div>
     </div>
