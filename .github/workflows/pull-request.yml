@@ -18,7 +18,7 @@ jobs:
           exceeded_files=()
           for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
             echo "filechange"
-            if [[ "$file" == src/**/*.js || "$file" == src/**/*.jsx || "$file" == src/**/*.ts || "$file" == src/**/*.tsx ]]; then
+            if [[ $file =~ ^src/.*\.(js|jsx|ts|tsx)$ ]]; then
               if [ -f "$file" ]; then
                 line_count=$(wc -l < "$file")
                 printf '%slinecount::\n' "${line_count}"
