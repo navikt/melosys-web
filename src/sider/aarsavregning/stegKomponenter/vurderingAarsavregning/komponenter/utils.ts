@@ -46,6 +46,14 @@ export function harIkkeSkattepliktigInntektskilder(
   return true;
 }
 
+export function fomTomEralltidFyltUt(
+  inntektskildePerioder: Inntektskilde[],
+  skatteforholdsPerioder: Skatteforhold[],
+): boolean {
+  const allPerioder = [...inntektskildePerioder, ...skatteforholdsPerioder];
+  return allPerioder.every(({ fomDato, tomDato }) => fomDato !== undefined && tomDato !== undefined);
+}
+
 export function beregnTrygdeavgiftsperioder(
   formVerdier: FieldValue<FormValuesProps>,
   options: {
@@ -85,6 +93,40 @@ export function beregnTrygdeavgiftsperioder(
       setFeilmelding(undefined);
     })
     .catch((error) => setFeilmelding(mapFeilmelding(error)));
+}
+
+export function validerMedlemskapsperioder(periods: Medlemskapsperiode[]) {
+  if (periods.length === 0) {
+    return undefined;
+  }
+
+  const sortedPeriods = [...periods].sort((a, b) => new Date(a.fomDato).getTime() - new Date(b.fomDato).getTime());
+  const bestemmelseSet = new Set<string>();
+
+  // eslint-disable-next-line no-plusplus
+  for (let index = 0; index < sortedPeriods.length; index++) {
+    const periode = sortedPeriods[index];
+    bestemmelseSet.add(periode.bestemmelse);
+
+    if (index > 0) {
+      const forrigePeriode = sortedPeriods[index - 1];
+      const forrigeTomDato = new Date(forrigePeriode.tomDato);
+      const nyFomDato = new Date(periode.fomDato);
+
+      if (nyFomDato <= forrigeTomDato) {
+        return "Medlemskapsperioder overlapper";
+      }
+      if (nyFomDato.getTime() - forrigeTomDato.getTime() > 86400000) {
+        return "Det er opphold mellom medlemskapsperioder";
+      }
+    }
+  }
+
+  if (bestemmelseSet.size !== 1) {
+    return "Bestemmelsene må være like";
+  }
+
+  return undefined;
 }
 
 export const lagInnvilgetMedlemskapsPeriode = (medlemskapsperioder?: Medlemskapsperiode[]) => {

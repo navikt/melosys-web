@@ -28,6 +28,7 @@ import { Inntektskilder } from "../../../../../felleskomponenter/trygdeavgift/ko
 import {
   beregnTrygdeavgiftsperioder,
   erBrukerSkattepliktigIHelePerioden,
+  fomTomEralltidFyltUt,
   harIkkeSkattepliktigInntektskilder,
   lagInnvilgetMedlemskapsPeriode,
 } from "../komponenter/utils";
@@ -198,7 +199,14 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
   );
 
   useEffect(() => {
-    if (redigerbart && erAvvik && !isValidating && formIsValid && aarsavregningID) {
+    if (
+      fomTomEralltidFyltUt(formValues.inntektskilder, formValues.skatteforholdsperioder) &&
+      redigerbart &&
+      erAvvik &&
+      !isValidating &&
+      formIsValid &&
+      aarsavregningID
+    ) {
       debounceBeregnTrygdeavgiftsperioderOgOppdaterFormVerdier(formValues);
     }
   }, [isValidating, erAvvik]);

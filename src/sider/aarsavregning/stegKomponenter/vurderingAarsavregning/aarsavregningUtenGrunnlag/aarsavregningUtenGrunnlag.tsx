@@ -8,7 +8,12 @@ import * as Nav from "../../../../../navFrontend";
 import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 import { TidligereGrunnlagsopplysningerFinnesIkke } from "../komponenter/tidligereGrunnlagsopplysningerFinnesIkke";
 import { FieldValue, useFieldArray, useForm } from "react-hook-form";
-import { FieldArrayProps, FormValuesProps } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
+import {
+  FieldArrayProps,
+  FormValuesProps,
+  Inntektskilde,
+  Skatteforhold,
+} from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Utils from "../../../../../utils";
 import MKV from "../../../../../melosyskodeverk";
@@ -18,7 +23,7 @@ import { OK } from "../../../../../ducks/aarsavregning/types";
 
 import { behandlingsresultatSelectors } from "../../../../../ducks/behandlingsresultat";
 
-import medlemskapsperioder, {
+import {
   medlemskapsperioderOperations,
   medlemskapsperioderSelectors,
   medlemskapsperioderTypes,
@@ -29,7 +34,7 @@ import { FeilmeldingOppsummering } from "../feilmeldingOppsummering";
 import aarsavregningUtenGrunnlagSchema from "./aarsavregningUtenGrunnlagSchema";
 import { Skatteforholdsperioder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/skatteforholdsperioder";
 import { Inntektskilder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/inntektskilder";
-import { beregnTrygdeavgiftsperioder } from "../komponenter/utils";
+import { beregnTrygdeavgiftsperioder, fomTomEralltidFyltUt, validerMedlemskapsperioder } from "../komponenter/utils";
 import {
   hentMedlemskapsFomTomDato,
   mapInitialMedlemskapsperioder,
@@ -37,7 +42,6 @@ import {
   mapTilMedlemskapsperiodeProps,
   mapTilSkatteforholdProps,
 } from "../aarsavregningHelpers";
-import { Medlemskapsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 
 interface Props {
   bekreft: () => void;
@@ -93,71 +97,9 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
     }
   }, []);
 
-  function checkPeriods(periods: Medlemskapsperiode[]) {
-    if (periods.length === 0) {
-      return { overlap: false, gap: false, sameBestemmelse: false };
-    }
-    console.log(periods.length);
-
-    // Sort periods by start date
-    const sortedPeriods = [...periods].sort((a, b) => new Date(a.fomDato).getTime() - new Date(b.fomDato).getTime());
-
-    let overlap = false;
-    let gap = false;
-    const bestemmelseSet = new Set<string>();
-
-    // eslint-disable-next-line no-plusplus
-    for (let i = 0; i < sortedPeriods.length; i++) {
-      console.log(sortedPeriods[i].bestemmelse);
-      bestemmelseSet.add(sortedPeriods[i].bestemmelse);
-      if (i > 0) {
-        const prevPeriod = sortedPeriods[i - 1];
-        const currPeriod = sortedPeriods[i];
-
-        const prevEndDate = new Date(prevPeriod.tomDato);
-        const currStartDate = new Date(currPeriod.fomDato);
-
-        if (currStartDate <= prevEndDate) {
-          overlap = true;
-        }
-        if (currStartDate.getTime() - prevEndDate.getTime() > 86400000) {
-          // 1 day gap
-          gap = true;
-        }
-      }
-    }
-
-    console.log(bestemmelseSet.size);
-    const sameBestemmelse = bestemmelseSet.size !== 1;
-    console.log(sameBestemmelse);
-
-    return { overlap, gap, sameBestemmelse };
-  }
-
   useEffect(() => {
-    const test = checkPeriods(lagredeMedlemskapsperioder);
-
-    let nyFeilmelding: string | undefined;
-
-    switch (true) {
-      case test.gap:
-        nyFeilmelding = "Det er opphold mellom medlemskapsperioder";
-        break;
-      case test.overlap:
-        nyFeilmelding = "Medlemskapsperioder overlapper";
-        break;
-      case test.sameBestemmelse:
-        console.log("WHAT");
-        nyFeilmelding = "Bestemmelsene må være like";
-        break;
-      default:
-        nyFeilmelding = undefined;
-    }
-
-    console.log(lagredeMedlemskapsperioder);
-
-    console.log(nyFeilmelding);
-    setFeilmelding(nyFeilmelding);
+    const validerMedlemskapsperioderResultat = validerMedlemskapsperioder(lagredeMedlemskapsperioder);
+    setFeilmelding(validerMedlemskapsperioderResultat);
 
     if (lagredeMedlemskapsperioder) {
       const mappedLagredeMedlemskapsperioder = mapInitialMedlemskapsperioder(lagredeMedlemskapsperioder);
@@ -220,6 +162,7 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
     context: {
       medlemskapsperiode: innvilgetMedlemskapsperiode,
       medlemskapsTypeErPliktig,
+      aar: valgtÅr,
     },
     mode: "onChange",
     defaultValues: {
@@ -305,12 +248,18 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
   );
 
   useEffect(() => {
-    if (redigerbart && !isValidating && formIsValid && aarsavregningID) {
+    if (
+      fomTomEralltidFyltUt(formValues.inntektskilder, formValues.skatteforholdsperioder) &&
+      redigerbart &&
+      !isValidating &&
+      formIsValid &&
+      aarsavregningID
+    ) {
       debounceBeregnTrygdeavgiftsperioder(formValues);
     }
-  }, [isValidating, aarsavregningID]);
+  }, [formIsValid, isValidating]);
 
-  const stegErGyldig = Boolean(formIsValid && aarsavregningResponse?.nyttGrunnlag);
+  const stegErGyldig = Boolean(formIsValid && aarsavregningResponse?.nyttGrunnlag && feilmelding === undefined);
 
   useEffect(() => {
     oppdaterStatus(stegErGyldig);
@@ -346,14 +295,10 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
         ));
 
     if (kallFeilet(response)) {
-      console.log(response.data);
       setFeilmelding(mapFeil(response));
     } else {
       setFeilmelding(undefined);
     }
-
-    console.log(response);
-    console.log(feilmelding);
 
     medlemskapsperioderUpdate(index, mapTilMedlemskapsperiodeProps(response.data));
   };
@@ -397,7 +342,6 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
     }
   };
 
-  console.log(formErrors);
   return (
     <div className="vurderingAarsavregning">
       <TidligereGrunnlagsopplysningerFinnesIkke formValues={formValues} control={control} redigerbart={redigerbart} />
@@ -463,13 +407,7 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
         </Nav.Alert>
       )}
 
-      {formErrors.root && (
-        <Nav.Alert variant="error" className="alertstripe_feilmelding">
-          {formErrors.root?.message}
-        </Nav.Alert>
-      )}
-
-      <Nav.Button variant="primary" disabled={!redigerbart || !formIsValid} onClick={bekreftOnClick}>
+      <Nav.Button variant="primary" disabled={!redigerbart || !stegErGyldig} onClick={bekreftOnClick}>
         Bekreft og fortsett
       </Nav.Button>
     </div>
