@@ -389,10 +389,6 @@ const HugeComponent = () => {
           <p>En til linje med tekst.</p>
           <p>Og enda en linje jadda...</p>
         </section>
-        <section>
-          <h2>Ekstra seksjon 13</h2>
-          <h2>Ekstra seksjon 13</h2>
-        </section>
       </div>
     </div>
   );
