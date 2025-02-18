@@ -3,6 +3,35 @@ name: Build
 on: pull_request
 
 jobs:
+  check-file-length:
+    runs-on: ubuntu-latest-8-cores
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v1
+
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v44
+
+      - name: Check file length
+        run: |
+          exceeded_files=()
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            if [ -f "$file" ]; then
+              line_count=$(wc -l < "$file")
+              if [ "$line_count" -gt 400 ]; then
+                exceeded_files+=("$file ($line_count lines)")
+              fi
+            fi
+          done
+
+          if [ ${#exceeded_files[@]} -ne 0 ]; then
+            echo "❌ The following files exceed 400 lines:"
+            printf '%s\n' "${exceeded_files[@]}"
+            exit 1
+          else
+            echo "✅ All files are within the limit."
+          fi
   build:
     runs-on: ubuntu-latest-8-cores
 
