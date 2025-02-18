@@ -1,4 +1,4 @@
-import { Control, FieldArrayWithId } from "react-hook-form";
+import { Control, FieldArrayWithId, UseFormWatch } from "react-hook-form";
 import * as Forms from "../../../../../../felleskomponenter/forms";
 import * as Ikoner from "../../../../../../resources/images";
 import * as Nav from "../../../../../../navFrontend";
@@ -10,9 +10,9 @@ import * as KV from "../../../../../../kodeverk";
 import MKV from "../../../../../../melosyskodeverk";
 import { useSelector } from "react-redux";
 import { medlemskapsperioderSelectors } from "../../../../../../ducks/medlemskapsperioder";
-import { useEffect } from "react";
 import useFeatureToggle from "../../../../../../featuretoggle/useFeatureToggle";
 import { MELOSYS_PENSJONIST } from "../../../../../../featuretoggle/toggleNavn";
+import { behandlingerSelectors } from "../../../../../../ducks/behandlinger";
 
 const { PLIKTIG } = MKV.Koder.medlemskapstyper;
 
@@ -21,6 +21,7 @@ export interface PeriodeElementerProps {
   trygdedekninger: string[];
   innvilgelsesResultater: string[];
   control: Control;
+  watch: UseFormWatch<any>;
   fields: FieldArrayWithId<FieldArrayProps, "medlemskapsperioder">[];
   handleSlett: (index: number) => void;
   handleChange: (medlemskapsperiode: MedlemskapsperiodeProp[], isValid: boolean, index: number) => void;
@@ -34,6 +35,7 @@ export function Medlemskapsperioder({
   redigerbart,
   trygdedekninger,
   innvilgelsesResultater,
+  watch,
   fields,
   control,
   handleSlett,
@@ -43,22 +45,31 @@ export function Medlemskapsperioder({
   visLeggTil,
   ukjentSluttdato,
 }: PeriodeElementerProps) {
+  const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const kanSlettePeriode = redigerbart && fields.length !== 1;
   const medlemskapsperioder = useSelector(medlemskapsperioderSelectors.AlleMedlemskapsperioderSelector);
   const medlemskapsTypeErPliktig = medlemskapsperioder.some((periode) => periode.medlemskapstype === PLIKTIG);
-  const FTRL_KAP2_2_7_FØRSTE_LEDD =
-    useSelector(medlemskapsperioderSelectors.BestemmelseSelector) === "FTRL_KAP2_2_7_FØRSTE_LEDD";
-  const FULL_DEKNING_FTRL = (trygdedekning: string): boolean => trygdedekning === "FULL_DEKNING_FTRL";
   const erPensonistToggleEnabled = useFeatureToggle(MELOSYS_PENSJONIST);
 
-  const filtrerInnvilgelsesResultater = (trygdedekning: string) => {
-    if (!erPensonistToggleEnabled) {
+  const filtrerInnvilgelsesResultater = (index: number) => {
+    const avslåtteDekninger = [
+      MKV.Koder.trygdedekninger.FULL_DEKNING_FTRL,
+      MKV.Koder.trygdedekninger.FTRL_2_9_FØRSTE_LEDD_A_ANDRE_LEDD_HELSE_SYKE_FORELDREPENGER,
+      MKV.Koder.trygdedekninger.FTRL_2_9_FØRSTE_LEDD_B_PENSJON,
+      MKV.Koder.trygdedekninger.FTRL_2_9_FØRSTE_LEDD_C_HELSE_PENSJON,
+      MKV.Koder.trygdedekninger.FTRL_2_9_FØRSTE_LEDD_C_ANDRE_LEDD_HELSE_PENSJON_SYKE_FORELDREPENGER,
+    ];
+
+    const valgtTrygdedekning = watch(`medlemskapsperioder[${index}].trygdedekning`);
+
+    if (!erPensonistToggleEnabled || behandlingstema !== MKV.Koder.behandlinger.behandlingstema.PENSJONIST) {
       return innvilgelsesResultater;
     }
 
-    if (FULL_DEKNING_FTRL(trygdedekning) && FTRL_KAP2_2_7_FØRSTE_LEDD) {
+    if (avslåtteDekninger.includes(valgtTrygdedekning) && !medlemskapsTypeErPliktig) {
       return innvilgelsesResultater.filter((resultat) => resultat === "AVSLAATT");
     }
+
     return innvilgelsesResultater;
   };
 
@@ -108,22 +119,30 @@ export function Medlemskapsperioder({
                 </Forms.Select>
               </Nav.Column>
               <Nav.Column>
-                <Forms.Select
-                  label={index === 0 ? "Resultat" : ""}
-                  hideLabel={index !== 0}
-                  name={`medlemskapsperioder[${index}].innvilgelsesResultat`}
-                  aria-label={`Resultat periode ${index + 1}`}
-                  control={control}
-                  readOnly={!redigerbart}
-                  emptyFieldDisabled={!!field.innvilgelsesResultat}
-                  onChange={(value) => handleChange([{ ...field, innvilgelsesResultat: value }], formIsValid, index)}
-                >
-                  {filtrerInnvilgelsesResultater(field.trygdedekning).map((resultat) => (
-                    <option key={resultat} value={resultat}>
-                      {KV.kodeTilTerm(resultat, MKV.KTObjects.innvilgelsesResultat)}
-                    </option>
-                  ))}
-                </Forms.Select>
+                {(() => {
+                  const filtrerteResultater = filtrerInnvilgelsesResultater(index);
+
+                  return (
+                    <Forms.Select
+                      label={index === 0 ? "Resultat" : ""}
+                      hideLabel={index !== 0}
+                      name={`medlemskapsperioder[${index}].innvilgelsesResultat`}
+                      aria-label={`Resultat periode ${index + 1}`}
+                      control={control}
+                      readOnly={!redigerbart}
+                      emptyFieldDisabled={!!field.innvilgelsesResultat}
+                      onChange={(value) =>
+                        handleChange([{ ...field, innvilgelsesResultat: value }], formIsValid, index)
+                      }
+                    >
+                      {filtrerteResultater.map((resultat) => (
+                        <option key={resultat} value={resultat}>
+                          {KV.kodeTilTerm(resultat, MKV.KTObjects.innvilgelsesResultat)}
+                        </option>
+                      ))}
+                    </Forms.Select>
+                  );
+                })()}
               </Nav.Column>
               {kanSlettePeriode && (
                 <Nav.Column className={index === 0 ? "slett slett__first" : "slett"}>

@@ -32,7 +32,7 @@ const { AVSLAATT, OPPHØRT } = MKV.Koder.innvilgelsesResultat;
 const { NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingstyper;
 const { FTRL_KAP2_2_15_ANDRE_LEDD, FTRL_KAP2_2_1 } = MKV.Koder.folketrygdloven_kap2_bestemmelser;
 const { PLIKTIG } = MKV.Koder.medlemskapstyper;
-const { YRKESAKTIV } = MKV.Koder.behandlinger.behandlingstema;
+const { YRKESAKTIV, PENSJONIST } = MKV.Koder.behandlinger.behandlingstema;
 
 const hentInformasjonstekst = (behandlingstype: string, medlemskapsTypeErPliktig: boolean) => {
   if (medlemskapsTypeErPliktig) {
@@ -230,8 +230,6 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
 
   const debouncedLagreMedlemskapsperioder = useCallback(
     Utils._debounce(async (medlemskapsperioder, isValid, overskrevetIndex) => {
-      console.log("debouncedLagreMedlemskapsperioder", medlemskapsperioder, isValid, overskrevetIndex);
-
       if (isValid) {
         // eslint-disable-next-line no-restricted-syntax
         for (const periode of medlemskapsperioder) {
@@ -295,7 +293,7 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   );
 
   const ukjentSluttdatoMedlemskapsperiodeSkalVises =
-    behandlingstema === YRKESAKTIV && lagretBestemmelse !== FTRL_KAP2_2_1;
+    (behandlingstema === YRKESAKTIV || behandlingstema === PENSJONIST) && lagretBestemmelse !== FTRL_KAP2_2_1;
 
   const visLeggTilNyPeriode = redigerbart && feltErFyltInn;
   const visFeilmeldinger = feilMeldingBlokkerer(aktivFeilmeldingType) ? feltErFyltInn : feltErFyltInn && formIsValid;
@@ -322,6 +320,7 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
         innvilgelsesResultater={lovligeInnvilgelsesresultat}
         control={control}
         fields={fields}
+        watch={watch}
         handleSlett={handleSlett}
         redigerbart={redigerbart}
         formIsValid={stegErGyldig}
