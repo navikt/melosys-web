@@ -1,7 +1,7 @@
 import * as Api from "../../../../services/api";
 import "./vurderingAarsavregningInngang.css";
 import { ChangeEvent, useEffect, useState } from "react";
-import { AarsavregningResponse } from "../../../../services/modules/aarsavregning/aarsavregning";
+import { AarsavregningResponse, lagAarsavregning } from "../../../../services/modules/aarsavregning/aarsavregning";
 import { useDispatch, useSelector } from "react-redux";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import * as Nav from "../../../../navFrontend";
@@ -46,6 +46,8 @@ const { FERDIGBEHANDLET, IKKE_FASTSATT, FASTSATT_TRYGDEAVGIFT } = MKV.Koder.beha
 export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtSteg }: Props) {
   const [valgtÅr, setValgtÅr] = useState<number | null>(null);
   const [initieltÅr, setInitieltÅr] = useState<number | null>(null);
+  const [apiFeil, setApiFeil] = useState<string | null>(null);
+
   const [harGrunnlag, setHarGrunnlag] = useState<boolean | undefined>(undefined);
 
   const [nyVurderingÅrsavregning, setNyVurderingÅrsavregning] = useState<boolean>(false);
@@ -89,16 +91,22 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
         setNyVurderingÅrsavregning(res.length > 0);
       });
 
-      Api.Aarsavregning.lagAarsavregning(behandlingID, { aar: valgtÅr }).then((res) => {
-        utledGrunnlagstypeForAarsavregning(res);
-        // Benyttes for innhenting av saksopplysninger ifm. årsavregningsbehandlinger
-        dispatch({ type: OK, data: res });
-        dispatch(behandlingsresultatOperations.hent(behandlingID));
-      });
+      Api.Aarsavregning.lagAarsavregning(behandlingID, { aar: valgtÅr })
+        .then((res) => {
+          utledGrunnlagstypeForAarsavregning(res);
+          // Benyttes for innhenting av saksopplysninger ifm. årsavregningsbehandlinger
+          dispatch({ type: OK, data: res });
+          dispatch(behandlingsresultatOperations.hent(behandlingID));
+        })
+        .catch((error) => {
+          setApiFeil(error.body.message);
+        });
     }
   }, [valgtÅr]);
 
   const håndterEndringAvÅr = (event: ChangeEvent<HTMLSelectElement>) => {
+    setApiFeil(null);
+
     const år = event.target.value ? parseInt(event.target.value, 10) : undefined;
     setValgtÅr(år || null);
   };
@@ -135,6 +143,13 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
           <NyBehandlingForTidligereAarsavregningMelding />
         </Nav.Row>
       )}
+
+      {apiFeil && (
+        <Nav.Alert variant="error" className="alertstripe_feilmelding">
+          {apiFeil}
+        </Nav.Alert>
+      )}
+
       {harGrunnlag === true && (
         <AarsavregningMedGrunnlag bekreft={bekreft} aktivtSteg={aktivtSteg} oppdaterStatus={oppdaterStatus} />
       )}
