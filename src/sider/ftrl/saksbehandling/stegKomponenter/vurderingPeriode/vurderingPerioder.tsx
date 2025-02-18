@@ -230,6 +230,8 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
 
   const debouncedLagreMedlemskapsperioder = useCallback(
     Utils._debounce(async (medlemskapsperioder, isValid, overskrevetIndex) => {
+      console.log("debouncedLagreMedlemskapsperioder", medlemskapsperioder, isValid, overskrevetIndex);
+
       if (isValid) {
         // eslint-disable-next-line no-restricted-syntax
         for (const periode of medlemskapsperioder) {

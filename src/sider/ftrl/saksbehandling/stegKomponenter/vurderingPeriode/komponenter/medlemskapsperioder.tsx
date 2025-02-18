@@ -10,6 +10,9 @@ import * as KV from "../../../../../../kodeverk";
 import MKV from "../../../../../../melosyskodeverk";
 import { useSelector } from "react-redux";
 import { medlemskapsperioderSelectors } from "../../../../../../ducks/medlemskapsperioder";
+import { useEffect } from "react";
+import useFeatureToggle from "../../../../../../featuretoggle/useFeatureToggle";
+import { MELOSYS_PENSJONIST } from "../../../../../../featuretoggle/toggleNavn";
 
 const { PLIKTIG } = MKV.Koder.medlemskapstyper;
 
@@ -43,9 +46,25 @@ export function Medlemskapsperioder({
   const kanSlettePeriode = redigerbart && fields.length !== 1;
   const medlemskapsperioder = useSelector(medlemskapsperioderSelectors.AlleMedlemskapsperioderSelector);
   const medlemskapsTypeErPliktig = medlemskapsperioder.some((periode) => periode.medlemskapstype === PLIKTIG);
+  const FTRL_KAP2_2_7_FØRSTE_LEDD =
+    useSelector(medlemskapsperioderSelectors.BestemmelseSelector) === "FTRL_KAP2_2_7_FØRSTE_LEDD";
+  const FULL_DEKNING_FTRL = (trygdedekning: string): boolean => trygdedekning === "FULL_DEKNING_FTRL";
+  const erPensonistToggleEnabled = useFeatureToggle(MELOSYS_PENSJONIST);
+
+  const filtrerInnvilgelsesResultater = (trygdedekning: string) => {
+    if (!erPensonistToggleEnabled) {
+      return innvilgelsesResultater;
+    }
+
+    if (FULL_DEKNING_FTRL(trygdedekning) && FTRL_KAP2_2_7_FØRSTE_LEDD) {
+      return innvilgelsesResultater.filter((resultat) => resultat === "AVSLAATT");
+    }
+    return innvilgelsesResultater;
+  };
 
   return (
     <div className="medlemskapsperioder">
+      {/* eslint-disable-next-line no-console */}
       <div className="skjema__panel">
         {fields?.map((field, index) => (
           <div key={field.id}>
@@ -99,7 +118,7 @@ export function Medlemskapsperioder({
                   emptyFieldDisabled={!!field.innvilgelsesResultat}
                   onChange={(value) => handleChange([{ ...field, innvilgelsesResultat: value }], formIsValid, index)}
                 >
-                  {innvilgelsesResultater.map((resultat) => (
+                  {filtrerInnvilgelsesResultater(field.trygdedekning).map((resultat) => (
                     <option key={resultat} value={resultat}>
                       {KV.kodeTilTerm(resultat, MKV.KTObjects.innvilgelsesResultat)}
                     </option>
