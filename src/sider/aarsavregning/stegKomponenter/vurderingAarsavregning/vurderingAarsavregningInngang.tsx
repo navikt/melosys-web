@@ -15,8 +15,8 @@ import { NyBehandlingForTidligereAarsavregningMelding } from "../../../../felles
 import { behandlingsresultatOperations } from "../../../../ducks/behandlingsresultat";
 import { AarsavregningMedGrunnlag } from "./aarsavregningMedGrunnlag/aarsavregningMedGrunnlag";
 import { AarsavregningUtenGrunnlag } from "./aarsavregningUtenGrunnlag/aarsavregningUtenGrunnlag";
-import { lagInnvilgetMedlemskapsPeriode } from "./utils";
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
+import { lagInnvilgetMedlemskapsPeriode } from "./komponenter/utils";
 
 interface Props {
   bekreft: () => void;

@@ -51,7 +51,6 @@ export function beregnTrygdeavgiftsperioder(
   options: {
     behandlingID: number;
     medlemskapsTypeErPliktig?: boolean;
-    aarsavregningID: number;
     setBeregningError: (error: any) => void;
     setAarsavregningResponse: (response: AarsavregningResponse) => void;
   },

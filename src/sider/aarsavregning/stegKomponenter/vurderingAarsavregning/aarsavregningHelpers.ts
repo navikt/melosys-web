@@ -1,5 +1,6 @@
 import * as Utils from "../../../../utils";
 import { sorterEtterISOFomDato } from "../../../../utils/dato";
+import * as Api from "../../../../services/api";
 
 // Returns the first and last dates from a sorted list of membership periods.
 export const hentMedlemskapsFomTomDato = (medlemskapsperioder?: any[]) => {
@@ -11,20 +12,26 @@ export const hentMedlemskapsFomTomDato = (medlemskapsperioder?: any[]) => {
 };
 
 // Maps a membership period from the API to local props.
-export const mapTilMedlemskapsperiodeProps = (periode: any) => ({
-  ...periode,
-  fomDato: Utils.dato.formatterDatoTilNorsk(periode.fomDato),
-  tomDato: Utils.dato.formatterDatoTilNorsk(periode.tomDato),
-  ny: false,
-  feil: undefined,
-  periodeId: periode.id,
-});
+export const mapTilMedlemskapsperiodeProps = (medlemskapsperiode: any, tidligereGrunnlagsopplysninger?: Api.Aarsavregning.Grunnlagsopplysninger) => {
+  const grunnlagsperioder = tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.medlemskapsperioder;
+  const redigerbar = !grunnlagsperioder?.some(
+    (periode) => periode.fomDato === medlemskapsperiode.fomDato && periode.tomDato === medlemskapsperiode.tomDato,
+  );
 
-// Sorts and maps the membership periods.
-export const mapInitialMedlemskapsperioder = (perioder: any[]) =>
-  [...perioder].sort((a, b) => Utils.dato.sorterEtterISOFomDato(a, b)).map(mapTilMedlemskapsperiodeProps);
+  return {
+    ...medlemskapsperiode,
+    fomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.fomDato),
+    tomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.tomDato),
+    ny: false,
+    feil: undefined,
+    periodeId: medlemskapsperiode.id,
+    redigerbar,
+  };
+};
 
-// Maps tax period data.
+export const mapInitialMedlemskapsperioder = (perioder: any[], tidligereGrunnlagsopplysninger?: Api.Aarsavregning.Grunnlagsopplysninger) =>
+  [...perioder].sort((a, b) => Utils.dato.sorterEtterISOFomDato(a, b)).map((periode) => mapTilMedlemskapsperiodeProps(periode, tidligereGrunnlagsopplysninger));
+
 export const mapTilSkatteforholdProps = (skatteforhold?: any[], medlemskapsperioder?: any[]) => {
   const { fom, tom } = hentMedlemskapsFomTomDato(medlemskapsperioder);
   if (skatteforhold) {
@@ -46,7 +53,6 @@ export const mapTilSkatteforholdProps = (skatteforhold?: any[], medlemskapsperio
   return [{}];
 };
 
-// Maps income period data.
 export const mapTilInntektskilderProps = (inntektskilder?: any[], medlemskapsperioder?: any[]) => {
   const { fom, tom } = hentMedlemskapsFomTomDato(medlemskapsperioder);
   if (inntektskilder) {
