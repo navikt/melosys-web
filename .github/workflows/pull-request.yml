@@ -13,7 +13,7 @@ jobs:
         id: changed-files
         uses: tj-actions/changed-files@v44
 
-      - name: Check file length
+      - name: Check file over 400 lines
         run: |
           exceeded_files=()
           for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
