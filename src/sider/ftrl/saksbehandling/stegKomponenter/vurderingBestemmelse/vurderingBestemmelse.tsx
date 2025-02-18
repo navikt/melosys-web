@@ -40,7 +40,6 @@ const {
 
 export function VurderingBestemmelse({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: VurderingBestemmelseProps) {
   const dispatch = useDispatch();
-
   const behandlingstatus = useSelector(behandlingerSelectors.BehandlingsstatusKodeSelector);
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as any;
   const lagretBestemmelse = useSelector(medlemskapsperioderSelectors.BestemmelseSelector);

@@ -15,6 +15,8 @@ import Soknadsland from "../soknadsland";
 import { formatterDatoTilNorsk } from "../../utils/dato";
 
 import "./behandlingOppgave.css";
+import { useFeatureToggle } from "../../featuretoggle";
+import { MELOSYS_PENSJONIST } from "../../featuretoggle/toggleNavn";
 
 function BehandlingOppgavesLinjeWrapper({ link, stengt, children }) {
   return stengt ? (
@@ -38,6 +40,7 @@ BehandlingOppgavesLinjeWrapper.propTypes = {
  * seg inn på den.
  */
 function BehandlingOppgave({ sak, landkoder }) {
+  const erPensjonistToggleEnabled = useFeatureToggle(MELOSYS_PENSJONIST);
   const {
     navn,
     sakstype,
@@ -67,6 +70,7 @@ function BehandlingOppgave({ sak, landkoder }) {
     sakstema.kode,
     behandlingstema.kode,
     behandlingstype.kode,
+    erPensjonistToggleEnabled,
   );
   const oppdateringStatus = erUnderOppdatering && "(oppdateres nå)";
 

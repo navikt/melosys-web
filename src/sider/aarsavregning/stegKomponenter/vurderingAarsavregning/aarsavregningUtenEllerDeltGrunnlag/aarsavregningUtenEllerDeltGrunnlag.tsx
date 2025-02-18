@@ -21,7 +21,6 @@ import { behandlingsresultatSelectors } from "../../../../../ducks/behandlingsre
 import { medlemskapsperioderOperations, medlemskapsperioderSelectors } from "../../../../../ducks/medlemskapsperioder";
 import { MedlemskapsperiodeProp } from "../../../../ftrl/saksbehandling/stegKomponenter/vurderingPeriode/komponenter/types";
 import { FeilmeldingOppsummering } from "../feilmeldingOppsummering";
-import aarsavregningUtenEllerDeltGrunnlagSchema from "./aarsavregningUtenEllerDeltGrunnlagSchema";
 import { Skatteforholdsperioder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/skatteforholdsperioder";
 import { Inntektskilder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/inntektskilder";
 import {
@@ -38,6 +37,7 @@ import {
 } from "../aarsavregningHelpers";
 import { MedlemskapsperiodeSkjema } from "../komponenter/medlemskapsperiodeSkjema";
 import TidligereGrunnlagsoversikt from "../komponenter/tidligereGrunnlagsoversikt";
+import aarsavregningUtenEllerDeltGrunnlagSchema from "./aarsavregningUtenEllerDeltGrunnlagSchema";
 
 interface Props {
   bekreft: () => void;
