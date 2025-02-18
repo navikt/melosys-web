@@ -34,7 +34,7 @@ import { FeilmeldingOppsummering } from "../feilmeldingOppsummering";
 import aarsavregningUtenGrunnlagSchema from "./aarsavregningUtenGrunnlagSchema";
 import { Skatteforholdsperioder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/skatteforholdsperioder";
 import { Inntektskilder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/inntektskilder";
-import { beregnTrygdeavgiftsperioder, fomTomEralltidFyltUt, validerMedlemskapsperioder } from "../komponenter/utils";
+import { beregnTrygdeavgiftsperioder, fomTomEralltidFyltUt, validerMedlemskapsperioder, erBrukerSkattepliktigIHelePerioden } from "../komponenter/utils";
 import {
   hentMedlemskapsFomTomDato,
   mapInitialMedlemskapsperioder,
@@ -198,6 +198,10 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
   } = useFieldArray<FieldArrayProps, "inntektskilder", "id">({ control, name: "inntektskilder" });
 
   const formValues = watch();
+
+  const skalViseInntektskilder = !(
+    medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder)
+  );
 
   useEffect(() => {
     if (brukerHarBekreftet && Object.keys(formErrors).length === 0) {
@@ -372,17 +376,20 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
         control={control}
         fields={skattFields}
       />
-      <Inntektskilder
-        formValues={formValues}
-        redigerbart={redigerbart}
-        update={inntektUpdate}
-        remove={inntektRemove}
-        append={inntektAppend}
-        control={control}
-        fields={inntektFields}
-        medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!}
-        skalViseErMaanedsBelopRadioGroup
-      />
+
+      {skalViseInntektskilder && (
+        <Inntektskilder
+          formValues={formValues}
+          redigerbart={redigerbart}
+          update={inntektUpdate}
+          remove={inntektRemove}
+          append={inntektAppend}
+          control={control}
+          fields={inntektFields}
+          medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!}
+          skalViseErMaanedsBelopRadioGroup
+        />
+      )}
 
       {formIsValid && (
         <SumArsavregningTabell
