@@ -3,7 +3,7 @@ import { Inntektskilde, Skatteforhold } from "../../../../felleskomponenter/tryg
 import * as Utils from "../../../../utils";
 import { Medlemskapsperiode } from "../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import { BOOLSK_STRING } from "../../../../constants";
-import { MedlemskapTomFomDatoer } from "./aarsavregningUtenGrunnlag/aarsavregningUtenGrunnlag";
+import { MedlemskapTomFomDatoer } from "./aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlag";
 
 const HoyManedinntekt = (
   <Nav.Alert variant="warning" className="alertstripe_feilmelding">

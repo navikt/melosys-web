@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import * as Nav from "../../../../../navFrontend";
 import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
-import { TidligereGrunnlagsopplysningerFinnesIkke } from "../komponenter/tidligereGrunnlagsopplysningerFinnesIkke";
+import { TidligereFakturertIAvgiftssystemetInput } from "../komponenter/tidligereFakturertIAvgiftssystemetInput";
 import { FieldValue, useFieldArray, useForm } from "react-hook-form";
 import { FieldArrayProps, FormValuesProps } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -21,17 +21,23 @@ import { behandlingsresultatSelectors } from "../../../../../ducks/behandlingsre
 import { medlemskapsperioderOperations, medlemskapsperioderSelectors } from "../../../../../ducks/medlemskapsperioder";
 import { MedlemskapsperiodeProp } from "../../../../ftrl/saksbehandling/stegKomponenter/vurderingPeriode/komponenter/types";
 import { FeilmeldingOppsummering } from "../feilmeldingOppsummering";
-import aarsavregningUtenGrunnlagSchema from "./aarsavregningUtenGrunnlagSchema";
+import aarsavregningUtenEllerDeltGrunnlagSchema from "./aarsavregningUtenEllerDeltGrunnlagSchema";
 import { Skatteforholdsperioder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/skatteforholdsperioder";
 import { Inntektskilder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/inntektskilder";
-import { beregnTrygdeavgiftsperioder } from "../komponenter/utils";
+import {
+  beregnTrygdeavgiftsperioder,
+  erBrukerSkattepliktigIHelePerioden,
+  harIkkeSkattepliktigInntektskilder,
+} from "../komponenter/utils";
 import {
   hentMedlemskapsFomTomDato,
   mapInitialMedlemskapsperioder,
-  mapTilInntektskilderProps, mapTilMedlemskapsperiodeProps,
-  mapTilSkatteforholdProps
+  mapTilInntektskilderProps,
+  mapTilMedlemskapsperiodeProps,
+  mapTilSkatteforholdProps,
 } from "../aarsavregningHelpers";
 import { MedlemskapsperiodeSkjema } from "../komponenter/medlemskapsperiodeSkjema";
+import TidligereGrunnlagsoversikt from "../komponenter/tidligereGrunnlagsoversikt";
 
 interface Props {
   bekreft: () => void;
@@ -49,7 +55,7 @@ interface AarsavregningFormValuesProps extends FormValuesProps {
   totaltForskuddsvisFakturert?: number | string;
 }
 
-export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus, harDeltGrunnlag }: Props) {
+export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, harDeltGrunnlag }: Props) {
   const [valgtÅr, setValgtÅr] = useState<number | undefined>();
   const [beregningError, setBeregningError] = useState<undefined | string>(undefined);
   const [brukerHarBekreftet, setBrukerHarBekreftet] = useState(false);
@@ -149,7 +155,7 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus, harDeltGrun
     trigger,
     formState: { errors: formErrors, isValid: formIsValid, isValidating },
   } = useForm({
-    resolver: yupResolver(aarsavregningUtenGrunnlagSchema),
+    resolver: yupResolver(aarsavregningUtenEllerDeltGrunnlagSchema),
     context: {
       medlemskapsperiode: innvilgetMedlemskapsperiode,
       medlemskapsTypeErPliktig,
@@ -320,9 +326,51 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus, harDeltGrun
       dispatch(medlemskapsperioderOperations.slettMedlemskapsperiode(behandlingID, medlemskapsperiode.periodeId));
     }
   };
+
+  const harIkkeskattepliktigInntektskilder =
+    harDeltGrunnlag &&
+    harIkkeSkattepliktigInntektskilder(
+      aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.skatteforholdsperioder,
+      aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.inntektskperioder,
+      medlemskapsTypeErPliktig,
+    );
+
+  const trygdeAvgiftSkalIkkeBetalesTilNav =
+    medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder);
+
   return (
     <div className="vurderingAarsavregning">
-      <TidligereGrunnlagsopplysningerFinnesIkke formValues={formValues} control={control} redigerbart={redigerbart} />
+      {harDeltGrunnlag && (
+        <TidligereGrunnlagsoversikt
+          harFakturerbareInntektskilder={harIkkeskattepliktigInntektskilder}
+          skatteforholdsperioder={
+            aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.skatteforholdsperioder
+          }
+          inntektsperioder={
+            aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.inntektskperioder
+          }
+          avgift={aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift}
+        />
+      )}
+
+      {harIkkeskattepliktigInntektskilder && (
+        <BeregnetTrygdeavgiftDetaljer
+          grunnlag={aarsavregningResponse?.tidligereGrunnlagsopplysninger}
+          medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!}
+          tittel="Tidligere beregnet trygdeavgift"
+        />
+      )}
+
+      <TidligereFakturertIAvgiftssystemetInput
+        formValues={formValues}
+        control={control}
+        redigerbart={redigerbart}
+        harDeltGrunnlag={harDeltGrunnlag}
+      />
+
+      <Nav.Heading className="endelige_opplysninger_heading" level="2">
+        Inntekts- og skatteopplysninger for endelig trygdeavgift
+      </Nav.Heading>
 
       <div className="medlemskapsperioder">
         {medlemskapsperioderFields.map((field, index) => (
@@ -352,17 +400,24 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus, harDeltGrun
         control={control}
         fields={skattFields}
       />
-      <Inntektskilder
-        formValues={formValues}
-        redigerbart={redigerbart}
-        update={inntektUpdate}
-        remove={inntektRemove}
-        append={inntektAppend}
-        control={control}
-        fields={inntektFields}
-        medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!}
-        skalViseErMaanedsBelopRadioGroup
-      />
+      {!trygdeAvgiftSkalIkkeBetalesTilNav && (
+        <Inntektskilder
+          formValues={formValues}
+          redigerbart={redigerbart}
+          update={inntektUpdate}
+          remove={inntektRemove}
+          append={inntektAppend}
+          control={control}
+          fields={inntektFields}
+          medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!}
+          skalViseErMaanedsBelopRadioGroup
+        />
+      )}
+      {trygdeAvgiftSkalIkkeBetalesTilNav && (
+        <Nav.Alert variant="info" className="alertstripe_feilmelding">
+          Trygdeavgift skal ikke betales til NAV
+        </Nav.Alert>
+      )}
 
       {formIsValid && (
         <SumArsavregningTabell

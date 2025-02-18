@@ -292,7 +292,6 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
             />
           )}
 
-          <br />
           {harIkkeskattepliktigInntektskilder ? (
             <Nav.RadioGroup
               onChange={håndterAvvik}
@@ -315,7 +314,9 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
 
       {erAvvik && (
         <>
-          <Nav.Heading>Inntekts- og skatteopplysninger for endelig trygdeavgift</Nav.Heading>
+          <Nav.Heading className="endelige_opplysninger_heading" level="2">
+            Inntekts- og skatteopplysninger for endelig trygdeavgift
+          </Nav.Heading>
           <Skatteforholdsperioder
             formValues={formValues}
             redigerbart={redigerbart}

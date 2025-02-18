@@ -60,7 +60,7 @@ export function MedlemskapsperiodeSkjema({
     }
   }, [field.bestemmelse]);
 
-  // @ts-ignore
+  // @ts-expect-error TODO: Fiks typing for FormValuesProps
   const erPeriodeFraGrunnlag = !formValues.medlemskapsperioder[index].redigerbar;
   const kanSlettePeriode = redigerbart && formValues.medlemskapsperioder.length !== 1;
   const tilOgMedDatoForrigePeriode =
@@ -146,7 +146,12 @@ export function MedlemskapsperiodeSkjema({
           </Nav.Column>
           {kanSlettePeriode && (
             <Nav.Column className={index === 0 ? "slett__knapp slett__first" : "slett__knapp"}>
-              <Mui.IkonKnapp ikon={Ikoner.Bin} onClick={() => remove(index)} ariaLabel="Slett periode" disabled={erPeriodeFraGrunnlag}/>
+              <Mui.IkonKnapp
+                ikon={Ikoner.Bin}
+                onClick={() => remove(index)}
+                ariaLabel="Slett periode"
+                disabled={erPeriodeFraGrunnlag}
+              />
             </Nav.Column>
           )}
         </Nav.Row>

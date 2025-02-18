@@ -12,7 +12,10 @@ export const hentMedlemskapsFomTomDato = (medlemskapsperioder?: any[]) => {
 };
 
 // Maps a membership period from the API to local props.
-export const mapTilMedlemskapsperiodeProps = (medlemskapsperiode: any, tidligereGrunnlagsopplysninger?: Api.Aarsavregning.Grunnlagsopplysninger) => {
+export const mapTilMedlemskapsperiodeProps = (
+  medlemskapsperiode: any,
+  tidligereGrunnlagsopplysninger?: Api.Aarsavregning.Grunnlagsopplysninger,
+) => {
   const grunnlagsperioder = tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.medlemskapsperioder;
   const redigerbar = !grunnlagsperioder?.some(
     (periode) => periode.fomDato === medlemskapsperiode.fomDato && periode.tomDato === medlemskapsperiode.tomDato,
@@ -29,8 +32,13 @@ export const mapTilMedlemskapsperiodeProps = (medlemskapsperiode: any, tidligere
   };
 };
 
-export const mapInitialMedlemskapsperioder = (perioder: any[], tidligereGrunnlagsopplysninger?: Api.Aarsavregning.Grunnlagsopplysninger) =>
-  [...perioder].sort((a, b) => Utils.dato.sorterEtterISOFomDato(a, b)).map((periode) => mapTilMedlemskapsperiodeProps(periode, tidligereGrunnlagsopplysninger));
+export const mapInitialMedlemskapsperioder = (
+  perioder: any[],
+  tidligereGrunnlagsopplysninger?: Api.Aarsavregning.Grunnlagsopplysninger,
+) =>
+  [...perioder]
+    .sort((a, b) => Utils.dato.sorterEtterISOFomDato(a, b))
+    .map((periode) => mapTilMedlemskapsperiodeProps(periode, tidligereGrunnlagsopplysninger));
 
 export const mapTilSkatteforholdProps = (skatteforhold?: any[], medlemskapsperioder?: any[]) => {
   const { fom, tom } = hentMedlemskapsFomTomDato(medlemskapsperioder);

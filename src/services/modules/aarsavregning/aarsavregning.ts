@@ -79,7 +79,10 @@ export const oppdaterHarDeltGrunnlag = (
   request: OppdaterHarDeltGrunnlagRequest,
   aarsavregningID?: number,
 ): Promise<AarsavregningResponse> =>
-  putAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${AARSAVREGNING}/${aarsavregningID}/grunnlagstype`, request);
+  putAsJson(
+    `${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${AARSAVREGNING}/${aarsavregningID}/grunnlagstype`,
+    request,
+  );
 
 export const hentFiltrertAarsavregningList = (
   saksnummer: string,

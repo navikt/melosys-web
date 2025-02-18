@@ -14,7 +14,7 @@ import { NyBehandlingForTidligereAarsavregningMelding } from "../../../../felles
 
 import { behandlingsresultatOperations } from "../../../../ducks/behandlingsresultat";
 import { AarsavregningMedGrunnlag } from "./aarsavregningMedGrunnlag/aarsavregningMedGrunnlag";
-import { AarsavregningUtenGrunnlag } from "./aarsavregningUtenGrunnlag/aarsavregningUtenGrunnlag";
+import { AarsavregningUtenEllerDeltGrunnlag } from "./aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlag";
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
 import { lagInnvilgetMedlemskapsPeriode } from "./komponenter/utils";
 
@@ -108,8 +108,8 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
     setValgtÅr(år || null);
   };
 
-  const håndterDeltGrunnlag = (harDeltGrunnlag: boolean) => {
-    Api.Aarsavregning.oppdaterHarDeltGrunnlag(behandlingID, { harDeltGrunnlag }, aarsavregningID).then((res) =>
+  const håndterDeltGrunnlag = (value: boolean) => {
+    Api.Aarsavregning.oppdaterHarDeltGrunnlag(behandlingID, { harDeltGrunnlag: value }, aarsavregningID).then((res) =>
       setHarDeltGrunnlag(res.harDeltGrunnlag),
     );
   };
@@ -169,7 +169,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
         <AarsavregningMedGrunnlag bekreft={bekreft} aktivtSteg={aktivtSteg} oppdaterStatus={oppdaterStatus} />
       )}
       {(harGrunnlag === false || harDeltGrunnlag) && (
-        <AarsavregningUtenGrunnlag
+        <AarsavregningUtenEllerDeltGrunnlag
           bekreft={bekreft}
           aktivtSteg={aktivtSteg}
           oppdaterStatus={oppdaterStatus}
