@@ -73,6 +73,7 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   const dispatch = useDispatch();
   const [lovligeDekninger, setLovligeDekninger] = useState<string[]>([]);
   const [lovligeInnvilgelsesresultat, setLovligeInnvilgelsesresultat] = useState<string[]>([]);
+  const [disableBekreft, setDisableBekreft] = useState<boolean>(false);
 
   const begrensePeriodeVedtakToggleEnabled = useFeatureToggle(MELOSYS_FTRL_BEGRENSE_PERIODE_VEDTAK);
 
@@ -96,9 +97,10 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     watch,
     formState: { isValid: formIsValid },
     trigger,
+    handleSubmit,
   } = useForm({
     resolver: yupResolver(vurderingPerioderSchema),
-    mode: "all",
+    mode: "onSubmit",
     context: { soknadsperiode, soknadsland },
     defaultValues: {
       medlemskapsperioder: mapInitialMedlemskapsperioder(lagredeMedlemskapsperioder),
@@ -157,7 +159,6 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
       if (!formIsValid) {
         lagredeMedlemskapsperioder.forEach((_periode, index) => {
           trigger(`medlemskapsperioder[${index}].fomDato`);
-          trigger(`medlemskapsperioder[${index}].tomDato`);
         });
       }
     }
@@ -231,11 +232,15 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   const debouncedLagreMedlemskapsperioder = useCallback(
     Utils._debounce(async (medlemskapsperioder, isValid, overskrevetIndex) => {
       if (isValid) {
+        setDisableBekreft(false);
+
         // eslint-disable-next-line no-restricted-syntax
         for (const periode of medlemskapsperioder) {
           const index = overskrevetIndex !== undefined ? overskrevetIndex : medlemskapsperioder.indexOf(periode);
           await lagreMedlemskapsperiode(periode, index);
         }
+      } else {
+        setDisableBekreft(true);
       }
     }, 500),
     [],
@@ -280,10 +285,13 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     append(nyMedlemskapsperiode);
   };
 
-  const handleBekreft = () => {
-    dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(behandlingID));
-    bekreft();
-  };
+  const handleBekreft = handleSubmit(
+    () => {
+      dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(behandlingID));
+      bekreft();
+    },
+    () => setDisableBekreft(true),
+  );
 
   const feltErFyltInn = !formValues.medlemskapsperioder.some(
     (periode: MedlemskapsperiodeProp) =>
@@ -335,7 +343,7 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
       <Mui.StegKnapper
         bekreftKnappProps={{
           onClick: handleBekreft,
-          disabled: !redigerbart || !stegErGyldig,
+          disabled: disableBekreft,
         }}
         tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
       />

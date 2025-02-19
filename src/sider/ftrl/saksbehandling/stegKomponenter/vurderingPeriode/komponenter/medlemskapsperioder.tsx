@@ -74,9 +74,6 @@ export function Medlemskapsperioder({
   };
 
   const filtrerTrygdedekninger = () => {
-    console.log("filtrerTrygdedekninger", trygdedekninger);
-    console.log("filtrerTrygdedekninger dekning", MKV.Koder.trygdedekninger.FULL_DEKNING_FTRL);
-
     const GYLDIGE_TRYGDEDEKNINGER_PENSJONIST = [
       MKV.Koder.trygdedekninger.FULL_DEKNING_FTRL,
       MKV.Koder.trygdedekninger.FTRL_2_9_FØRSTE_LEDD_A_HELSE,
