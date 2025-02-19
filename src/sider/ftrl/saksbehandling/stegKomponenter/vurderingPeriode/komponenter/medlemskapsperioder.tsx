@@ -88,12 +88,11 @@ export function Medlemskapsperioder({
       MKV.Koder.trygdedekninger.FTRL_2_7_TREDJE_LEDD_B_HELSE_SYKE_FORELDREPENGER,
     ];
 
-    const filtrertListe = trygdedekninger.filter((dekninger) => GYLDIGE_TRYGDEDEKNINGER_PENSJONIST.includes(dekninger));
-
-    if (!erPensonistToggleEnabled || behandlingstema === MKV.Koder.behandlinger.behandlingstema.PENSJONIST) {
-      return filtrertListe;
+    if (!erPensonistToggleEnabled || behandlingstema !== MKV.Koder.behandlinger.behandlingstema.PENSJONIST) {
+      return trygdedekninger;
     }
-    return trygdedekninger;
+
+    return trygdedekninger.filter((dekninger) => GYLDIGE_TRYGDEDEKNINGER_PENSJONIST.includes(dekninger));
   };
 
   return (
