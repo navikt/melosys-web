@@ -21,7 +21,7 @@ export interface PeriodeElementerProps {
   trygdedekninger: string[];
   innvilgelsesResultater: string[];
   control: Control;
-  watch: UseFormWatch<any>;
+  watch: UseFormWatch<any> | undefined;
   fields: FieldArrayWithId<FieldArrayProps, "medlemskapsperioder">[];
   handleSlett: (index: number) => void;
   handleChange: (medlemskapsperiode: MedlemskapsperiodeProp[], isValid: boolean, index: number) => void;
@@ -60,10 +60,14 @@ export function Medlemskapsperioder({
       MKV.Koder.trygdedekninger.FTRL_2_9_FØRSTE_LEDD_C_ANDRE_LEDD_HELSE_PENSJON_SYKE_FORELDREPENGER,
     ];
 
-    const valgtTrygdedekning = watch(`medlemskapsperioder[${index}].trygdedekning`);
-
     if (!erPensonistToggleEnabled || behandlingstema !== MKV.Koder.behandlinger.behandlingstema.PENSJONIST) {
       return innvilgelsesResultater;
+    }
+
+    let valgtTrygdedekning;
+
+    if (watch !== undefined) {
+      valgtTrygdedekning = watch(`medlemskapsperioder[${index}].trygdedekning`);
     }
 
     if (avslåtteDekninger.includes(valgtTrygdedekning) && !medlemskapsTypeErPliktig) {
@@ -94,7 +98,6 @@ export function Medlemskapsperioder({
 
   return (
     <div className="medlemskapsperioder">
-      {/* eslint-disable-next-line no-console */}
       <div className="skjema__panel">
         {fields?.map((field, index) => (
           <div key={field.id}>
