@@ -73,6 +73,28 @@ export function Medlemskapsperioder({
     return innvilgelsesResultater;
   };
 
+  const filtrerTrygdedekninger = () => {
+    console.log("filtrerTrygdedekninger", trygdedekninger);
+    console.log("filtrerTrygdedekninger dekning", MKV.Koder.trygdedekninger.FULL_DEKNING_FTRL);
+
+    const GYLDIGE_TRYGDEDEKNINGER_PENSJONIST = [
+      MKV.Koder.trygdedekninger.FULL_DEKNING_FTRL,
+      MKV.Koder.trygdedekninger.FTRL_2_9_FØRSTE_LEDD_A_HELSE,
+      MKV.Koder.trygdedekninger.FTRL_2_9_FØRSTE_LEDD_A_ANDRE_LEDD_HELSE_SYKE_FORELDREPENGER,
+      MKV.Koder.trygdedekninger.FTRL_2_9_FØRSTE_LEDD_B_PENSJON,
+      MKV.Koder.trygdedekninger.FTRL_2_9_FØRSTE_LEDD_C_HELSE_PENSJON,
+      MKV.Koder.trygdedekninger.FTRL_2_9_FØRSTE_LEDD_C_ANDRE_LEDD_HELSE_PENSJON_SYKE_FORELDREPENGER,
+      MKV.Koder.trygdedekninger.FTRL_2_7_TREDJE_LEDD_B_HELSE_SYKE_FORELDREPENGER,
+    ];
+
+    const filtrertListe = trygdedekninger.filter((dekninger) => GYLDIGE_TRYGDEDEKNINGER_PENSJONIST.includes(dekninger));
+
+    if (!erPensonistToggleEnabled || behandlingstema === MKV.Koder.behandlinger.behandlingstema.PENSJONIST) {
+      return filtrertListe;
+    }
+    return trygdedekninger;
+  };
+
   return (
     <div className="medlemskapsperioder">
       {/* eslint-disable-next-line no-console */}
@@ -101,22 +123,28 @@ export function Medlemskapsperioder({
                 />
               </Nav.Column>
               <Nav.Column className="trygdedekning">
-                <Forms.Select
-                  name={`medlemskapsperioder[${index}].trygdedekning`}
-                  label={index === 0 ? "Trygdedekning" : ""}
-                  hideLabel={index !== 0}
-                  aria-label={`Trygdedekning periode ${index + 1}`}
-                  control={control}
-                  readOnly={!redigerbart}
-                  emptyFieldDisabled={!!field.trygdedekning}
-                  onChange={(value) => handleChange([{ ...field, trygdedekning: value }], formIsValid, index)}
-                >
-                  {trygdedekninger.map((dekning) => (
-                    <option key={dekning} value={dekning}>
-                      {KV.kodeTilTerm(dekning, MKV.KTObjects.trygdedekninger)}
-                    </option>
-                  ))}
-                </Forms.Select>
+                {(() => {
+                  const filtrerteDekninger = filtrerTrygdedekninger();
+
+                  return (
+                    <Forms.Select
+                      name={`medlemskapsperioder[${index}].trygdedekning`}
+                      label={index === 0 ? "Trygdedekning" : ""}
+                      hideLabel={index !== 0}
+                      aria-label={`Trygdedekning periode ${index + 1}`}
+                      control={control}
+                      readOnly={!redigerbart}
+                      emptyFieldDisabled={!!field.trygdedekning}
+                      onChange={(value) => handleChange([{ ...field, trygdedekning: value }], formIsValid, index)}
+                    >
+                      {filtrerteDekninger.map((dekning) => (
+                        <option key={dekning} value={dekning}>
+                          {KV.kodeTilTerm(dekning, MKV.KTObjects.trygdedekninger)}
+                        </option>
+                      ))}
+                    </Forms.Select>
+                  );
+                })()}
               </Nav.Column>
               <Nav.Column>
                 {(() => {
