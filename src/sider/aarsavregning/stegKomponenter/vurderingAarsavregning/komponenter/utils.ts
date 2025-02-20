@@ -95,38 +95,38 @@ export function beregnTrygdeavgiftsperioder(
     .catch((error) => setFeilmelding(mapFeilmelding(error)));
 }
 
-export function validerMedlemskapsperioder(periods: Medlemskapsperiode[]) {
-  if (periods.length === 0) {
+export function validerMedlemskapsperioder(perioder: Medlemskapsperiode[]) {
+  if (perioder.length === 0) {
     return undefined;
   }
 
-  const sortedPeriods = [...periods].sort((a, b) => new Date(a.fomDato).getTime() - new Date(b.fomDato).getTime());
+  const sortertePerioder = [...perioder].sort((a, b) => new Date(a.fomDato).getTime() - new Date(b.fomDato).getTime());
   const bestemmelseSet = new Set<string>();
+  const DAY_IN_MILLISECONDS = 86400000;
+  let feilmeldingFraValidering;
 
-  // eslint-disable-next-line no-plusplus
-  for (let index = 0; index < sortedPeriods.length; index++) {
-    const periode = sortedPeriods[index];
+  sortertePerioder.forEach((periode, index) => {
     bestemmelseSet.add(periode.bestemmelse);
 
     if (index > 0) {
-      const forrigePeriode = sortedPeriods[index - 1];
+      const forrigePeriode = sortertePerioder[index - 1];
       const forrigeTomDato = new Date(forrigePeriode.tomDato);
       const nyFomDato = new Date(periode.fomDato);
 
       if (nyFomDato <= forrigeTomDato) {
-        return "Medlemskapsperioder overlapper";
+        feilmeldingFraValidering = "Medlemskapsperioder overlapper";
       }
-      if (nyFomDato.getTime() - forrigeTomDato.getTime() > 86400000) {
-        return "Det er opphold mellom medlemskapsperioder";
+      if (nyFomDato.getTime() - forrigeTomDato.getTime() > DAY_IN_MILLISECONDS) {
+        feilmeldingFraValidering = "Det er opphold mellom medlemskapsperioder";
       }
     }
-  }
+  });
 
   if (bestemmelseSet.size !== 1) {
-    return "Bestemmelsene må være like";
+    feilmeldingFraValidering = "Bestemmelsene må være like";
   }
 
-  return undefined;
+  return feilmeldingFraValidering;
 }
 
 export const lagInnvilgetMedlemskapsPeriode = (medlemskapsperioder?: Medlemskapsperiode[]) => {
