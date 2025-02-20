@@ -51,14 +51,15 @@ interface InntektskilderProps {
   bestemmelse?: string;
 }
 
-const hentInntektskilde = (bestemmelse: string | undefined, medlemskapsTypeErPliktig: boolean, behandlingstema: string): KTObject[] => {
+const hentInntektskilde = (
+  bestemmelse: string | undefined,
+  medlemskapsTypeErPliktig: boolean,
+  behandlingstema: string,
+): KTObject[] => {
   return MKV.KTObjects.inntektskildetype.filter((kt: KTObject) => {
     if (!medlemskapsTypeErPliktig) {
       if (behandlingstema === MKV.Koder.behandlinger.behandlingstema.PENSJONIST) {
-        return [
-          PENSJON_UFØRETRYGD,
-          PENSJON_UFØRETRYGD_KILDESKATT,
-        ].includes(kt.kode);
+        return [PENSJON_UFØRETRYGD, PENSJON_UFØRETRYGD_KILDESKATT].includes(kt.kode);
       }
       return [
         ARBEIDSINNTEKT_FRA_NORGE,
@@ -95,7 +96,6 @@ export function Inntektskilder({
   skalViseErMaanedsBelopRadioGroup,
   bestemmelse,
 }: InntektskilderProps) {
-
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
 
   const settesDefaultArbAvgBetales = (kildetype?: string) => ![INNTEKT_FRA_UTLANDET, MISJONÆR].includes(kildetype);
@@ -249,10 +249,11 @@ export function Inntektskilder({
             </Nav.Column>
 
             <Nav.Column
-              className={`column ${erHoyInntekt(formValues.inntektskilder[index])
+              className={`column ${
+                erHoyInntekt(formValues.inntektskilder[index])
                   ? "hoy_inntekt_advarsel"
                   : "hoy_inntekt_advarsel invisible"
-                }`}
+              }`}
             >
               <Alert variant="warning" size="small">
                 Høy inntekt!
