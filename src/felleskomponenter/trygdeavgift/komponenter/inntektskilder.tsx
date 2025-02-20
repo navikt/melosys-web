@@ -19,6 +19,8 @@ import { Alert } from "../../../navFrontend";
 import { DateRangeController } from "../../forms";
 
 import { erBrukerSkattepliktigIHelePerioden } from "../../../sider/aarsavregning/stegKomponenter/vurderingAarsavregning/komponenter/utils";
+import { useSelector } from "react-redux";
+import { behandlingerSelectors } from "../../../ducks/behandlinger";
 
 const {
   ARBEIDSINNTEKT_FRA_NORGE,
@@ -49,9 +51,15 @@ interface InntektskilderProps {
   bestemmelse?: string;
 }
 
-const hentInntektskilde = (bestemmelse: string | undefined, medlemskapsTypeErPliktig: boolean): KTObject[] => {
+const hentInntektskilde = (bestemmelse: string | undefined, medlemskapsTypeErPliktig: boolean, behandlingstema: string): KTObject[] => {
   return MKV.KTObjects.inntektskildetype.filter((kt: KTObject) => {
     if (!medlemskapsTypeErPliktig) {
+      if (behandlingstema === MKV.Koder.behandlinger.behandlingstema.PENSJONIST) {
+        return [
+          PENSJON_UFØRETRYGD,
+          PENSJON_UFØRETRYGD_KILDESKATT,
+        ].includes(kt.kode);
+      }
       return [
         ARBEIDSINNTEKT_FRA_NORGE,
         NÆRINGSINNTEKT_FRA_NORGE,
@@ -62,6 +70,11 @@ const hentInntektskilde = (bestemmelse: string | undefined, medlemskapsTypeErPli
         PENSJON_UFØRETRYGD_KILDESKATT,
       ].includes(kt.kode);
     }
+
+    if (behandlingstema === MKV.Koder.behandlinger.behandlingstema.PENSJONIST) {
+      return [PENSJON, UFØRETRYGD].includes(kt.kode);
+    }
+
     if (bestemmelse === "TILLEGGSAVTALE_NATO") {
       return kt.kode === INNTEKT_NATO_JWC;
     }
@@ -82,6 +95,9 @@ export function Inntektskilder({
   skalViseErMaanedsBelopRadioGroup,
   bestemmelse,
 }: InntektskilderProps) {
+
+  const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
+
   const settesDefaultArbAvgBetales = (kildetype?: string) => ![INNTEKT_FRA_UTLANDET, MISJONÆR].includes(kildetype);
 
   const handleEndreKildetype = (index: number, kildetype: string) => {
@@ -146,7 +162,7 @@ export function Inntektskilder({
                 readOnly={!redigerbart}
                 onChange={(value) => handleEndreKildetype(index, value)}
               >
-                {hentInntektskilde(bestemmelse, medlemskapsTypeErPliktig).map((kt: KTObject) => (
+                {hentInntektskilde(bestemmelse, medlemskapsTypeErPliktig, behandlingstema).map((kt: KTObject) => (
                   <option key={kt.kode} value={kt.kode}>
                     {kt.term}
                   </option>
@@ -233,11 +249,10 @@ export function Inntektskilder({
             </Nav.Column>
 
             <Nav.Column
-              className={`column ${
-                erHoyInntekt(formValues.inntektskilder[index])
+              className={`column ${erHoyInntekt(formValues.inntektskilder[index])
                   ? "hoy_inntekt_advarsel"
                   : "hoy_inntekt_advarsel invisible"
-              }`}
+                }`}
             >
               <Alert variant="warning" size="small">
                 Høy inntekt!
