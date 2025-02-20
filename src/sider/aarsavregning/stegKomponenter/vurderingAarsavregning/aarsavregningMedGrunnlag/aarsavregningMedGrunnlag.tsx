@@ -322,7 +322,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
             control={control}
             fields={skattFields}
           />
-          {!trygdeAvgiftSkalIkkeBetalesTilNav && ( // TODO dette er feil
+          {!trygdeAvgiftSkalIkkeBetalesTilNav && (
             <Inntektskilder
               defaultPeriode={defaultPeriode}
               formValues={formValues}
