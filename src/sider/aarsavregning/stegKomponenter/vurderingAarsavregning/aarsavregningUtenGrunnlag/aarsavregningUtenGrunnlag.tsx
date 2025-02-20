@@ -281,7 +281,7 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
     }
   };
 
-  const kallFeilet = (response: any): boolean => response.type === medlemskapsperioderTypes.FEILET;
+  const harMedlemskapsPeriodeFeil = (response: any): boolean => response.type === medlemskapsperioderTypes.FEILET;
 
   const lagreMedlemskapsperiode = async (medlemskapsperiode: MedlemskapsperiodeProp, index: number) => {
     const periodeRequest = {
@@ -302,7 +302,7 @@ export function AarsavregningUtenGrunnlag({ bekreft, oppdaterStatus }: Props) {
           ),
         ));
 
-    if (kallFeilet(response)) {
+    if (harMedlemskapsPeriodeFeil(response)) {
       setFeilmelding(response?.data?.data?.message);
     } else {
       setFeilmelding(undefined);
