@@ -203,11 +203,9 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
   }, [isValidating, erAvvik]);
 
   const stegErGyldig =
-    erAvvik === false ||
+    !erAvvik ||
     Boolean(
-      formIsValid &&
-        erAvvik &&
-        aarsavregningResponse?.nyttGrunnlag &&
+      aarsavregningResponse?.nyttGrunnlag &&
         !beregningError &&
         harIkkeSkattepliktigInntektskilder(
           beregningsVerdier().skatteforholdsperioder,
@@ -251,7 +249,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
 
   const bekreftOnClick = () => {
     setBrukerHarBekreftet(true);
-    if (stegErGyldig && !beregningError) {
+    if (formIsValid && stegErGyldig && !beregningError) {
       bekreft();
     }
   };
@@ -324,7 +322,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
             control={control}
             fields={skattFields}
           />
-          {!trygdeAvgiftSkalIkkeBetalesTilNav && (
+          {!trygdeAvgiftSkalIkkeBetalesTilNav && ( // TODO dette er feil
             <Inntektskilder
               defaultPeriode={defaultPeriode}
               formValues={formValues}

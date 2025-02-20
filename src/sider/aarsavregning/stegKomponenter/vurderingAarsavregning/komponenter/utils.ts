@@ -34,6 +34,10 @@ export function harIkkeSkattepliktigInntektskilder(
   inntektsperioder: any,
   medlemskapsTypeErPliktig?: boolean,
 ) {
+  console.log(skatteforholdsperioder);
+  console.log(inntektsperioder);
+  console.log(medlemskapsTypeErPliktig);
+
   if (skatteforholdsperioder === undefined || inntektsperioder === undefined) return false;
   if (inntektsperioder.length === 0) {
     return false;
@@ -42,6 +46,7 @@ export function harIkkeSkattepliktigInntektskilder(
   if (medlemskapsTypeErPliktig) {
     return !erBrukerSkattepliktigIHelePerioden(skatteforholdsperioder);
   }
+  console.log("TEST");
 
   return true;
 }
