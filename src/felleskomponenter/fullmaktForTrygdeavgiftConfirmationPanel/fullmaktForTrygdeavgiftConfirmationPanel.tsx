@@ -20,11 +20,9 @@ function FullmaktForTrygdeavgiftConfirmationPanel({
       {erPensjonist ? (
         <>
           <Nav.BodyLong weight="semibold" size="small">
-            Husk at det vanligvis er arbeidsgiver som skal motta faktura
+            Fullmektig for betaling av trygdeavgift er en virksomhet
           </Nav.BodyLong>
           <Nav.BodyLong size="small">
-            Hvis bruker har oppgitt en annen fullmektig for betaling, skal du spørre bruker om det er riktig.
-            <br />
             <br />
             Kontroller at
           </Nav.BodyLong>
@@ -32,9 +30,11 @@ function FullmaktForTrygdeavgiftConfirmationPanel({
       ) : (
         <>
           <Nav.BodyLong weight="semibold" size="small">
-            Fullmektig for betaling av trygdeavgift er en virksomhet
+            Husk at det vanligvis er arbeidsgiver som skal motta faktura
           </Nav.BodyLong>
           <Nav.BodyLong size="small">
+            Hvis bruker har oppgitt en annen fullmektig for betaling, skal du spørre bruker om det er riktig.
+            <br />
             <br />
             Kontroller at
           </Nav.BodyLong>
