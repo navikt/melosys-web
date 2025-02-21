@@ -202,17 +202,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
     }
   }, [isValidating, erAvvik]);
 
-  const stegErGyldig =
-    !erAvvik ||
-    Boolean(
-      aarsavregningResponse?.nyttGrunnlag &&
-        !beregningError &&
-        harIkkeSkattepliktigInntektskilder(
-          beregningsVerdier().skatteforholdsperioder,
-          beregningsVerdier().inntektskilder,
-          medlemskapsTypeErPliktig,
-        ),
-    );
+  const stegErGyldig = !erAvvik || Boolean(aarsavregningResponse?.nyttGrunnlag && !beregningError);
 
   useEffect(() => {
     oppdaterStatus(stegErGyldig);
