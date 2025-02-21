@@ -1,7 +1,7 @@
 import * as Nav from "../../navFrontend";
 
 interface FullmaktForTrygdeavgiftConfirmationPanelProps {
-  erPensjonist: boolean;
+  erPensjonist?: boolean;
   harBekreftet: boolean;
   onChange: (val: boolean) => void;
 }
