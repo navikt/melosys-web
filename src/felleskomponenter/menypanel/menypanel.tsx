@@ -86,6 +86,7 @@ export function Menypanel({
     mottatteOpplysningerType,
     sakstema,
     kunFullmektig: !visMenypanel && skalViseFullmektigFørPeriodeOgLand(behandlingstema),
+    erPensjonistToggleEnabled,
   });
 
   const linkGroups = linkGroupsWithContent.map((linkGroup, groupIndex) => ({
