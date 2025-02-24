@@ -114,7 +114,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
   useEffect(() => {
     if (redigerbart && aarsavregningResponse?.nyttGrunnlag) {
       if (aarsavregningResponse.nyttGrunnlag?.avgift.totalAvgift !== aarsavregningResponse.avregning?.nyttTotalbeloep) {
-        Api.Aarsavregning.oppdaterNyttTotalbeloep(
+        Api.Aarsavregning.oppdaterTotalAvgift(
           behandlingID,
           aarsavregningID,
           aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift,
@@ -217,12 +217,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
       formIsValid &&
         erAvvik &&
         aarsavregningResponse?.nyttGrunnlag &&
-        !feilmelding &&
-        harIkkeSkattepliktigInntektskilder(
-          beregningsVerdier().skatteforholdsperioder,
-          beregningsVerdier().inntektskilder,
-          medlemskapsTypeErPliktig,
-        ),
+        !feilmelding,
     );
 
   useEffect(() => {
@@ -234,7 +229,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
       Api.Trygdeavgift.slettTrygdeavgiftsperioder(behandlingID).then(() => {
         resetSkatteforholdsperioder([]);
         resetInntektskilder([]);
-        Api.Aarsavregning.oppdaterNyttTotalbeloep(
+        Api.Aarsavregning.oppdaterTotalAvgift(
           behandlingID,
           aarsavregningID,
           aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift.totalAvgift,
@@ -260,7 +255,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
 
   const bekreftOnClick = () => {
     setBrukerHarBekreftet(true);
-    if (stegErGyldig && !feilmelding) {
+    if (formIsValid && stegErGyldig && !feilmelding) {
       bekreft();
     }
   };
@@ -300,7 +295,6 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
             />
           )}
 
-          <br />
           {harIkkeskattepliktigInntektskilder ? (
             <Nav.RadioGroup
               onChange={håndterAvvik}
@@ -323,7 +317,9 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
 
       {erAvvik && (
         <>
-          <Nav.Heading>Inntekts- og skatteopplysninger for endelig trygdeavgift</Nav.Heading>
+          <Nav.Heading className="endelige_opplysninger_heading" level="2">
+            Inntekts- og skatteopplysninger for endelig trygdeavgift
+          </Nav.Heading>
           <Skatteforholdsperioder
             formValues={formValues}
             redigerbart={redigerbart}

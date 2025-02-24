@@ -4,6 +4,7 @@ import { harUnntaksregistreringFlyt, skalViseIngenFlyt } from "../../../url";
 import { ContentProps, LinkGroup } from "./types";
 import LinkgroupsBuilder from "./linkgroupsBuilder";
 import LinksBuilder from "./linksBuilder";
+import { link } from "fs";
 
 const {
   UTSENDT_ARBEIDSTAKER,
@@ -19,6 +20,7 @@ const {
   BESLUTNING_LOVVALG_ANNET_LAND,
   YRKESAKTIV,
   IKKE_YRKESAKTIV,
+  PENSJONIST,
 } = MKV.Koder.behandlinger.behandlingstema;
 
 const { SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS } = MKV.Koder.mottatteopplysningertyper;
@@ -31,7 +33,7 @@ interface LinkGroupsConfig {
   contentProps: ContentProps;
   sakstema: string;
   kunFullmektig?: boolean;
-  erPensjonistToggleEnabled?: boolean | undefined;
+  erPensjonistToggleEnabled: boolean | undefined;
 }
 
 class LinkGroupsFactory {
@@ -62,6 +64,21 @@ class LinkGroupsFactory {
             .addArbeidsforholdOgInntekt()
             .build(),
         )
+        .build();
+    }
+
+    if (behandlingstema === PENSJONIST) {
+      return new LinkgroupsBuilder()
+        .addFraRegister(
+          new LinksBuilder(contentProps)
+            .addPerson()
+            .addFamilieForhold()
+            .addMedlemskap()
+            .addArbeidsforholdOgInntekt()
+            .addFaktureringskomponenten()
+            .build(),
+        )
+        .addFraBruker(new LinksBuilder(contentProps).addFullmektig().build())
         .build();
     }
 

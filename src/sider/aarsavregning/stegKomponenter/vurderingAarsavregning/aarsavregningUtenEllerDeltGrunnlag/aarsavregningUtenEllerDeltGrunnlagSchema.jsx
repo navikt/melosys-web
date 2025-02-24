@@ -77,7 +77,19 @@ const åpenTomTest = {
   },
 };
 
-const aarsavregningUtenGrunnlagSchema = object().shape({
+const kreverInntektskilder = (medlemskapsTypeErPliktig, options) => {
+  if (options?.parent?.skatteforholdsperioder) {
+    const inntektkilderErTom = options.parent.inntektskilder.length === 0;
+    return !(
+      medlemskapsTypeErPliktig &&
+      erBrukerSkattepliktigIHelePerioden(options.parent.skatteforholdsperioder) &&
+      inntektkilderErTom
+    );
+  }
+  return true;
+};
+
+const aarsavregningUtenEllerDeltGrunnlagSchema = object().shape({
   medlemskapsperioder: array()
     .min(1, "Minst en medlemskapsperiode")
     .of(
@@ -107,23 +119,34 @@ const aarsavregningUtenGrunnlagSchema = object().shape({
         skatteplikttype: string().required(MAA_FYLLES_UT),
       }),
     ),
-  inntektskilder: array()
-    .min(1, "Minst en inntektskilde")
-    .of(
-      object().shape({
-        fomDato: string().defined(MAA_FYLLES_UT).erGyldigDato().test(erInnenforValgtAarTest).required(),
-        tomDato: string()
-          .defined(MAA_FYLLES_UT)
-          .erGyldigDato()
-          .erEtterDatofelt("fomDato")
-          .test(åpenTomTest)
-          .test(erInnenforValgtAarTest)
-          .required(),
-        kildetype: string().required(MAA_FYLLES_UT),
-        arbAvgBetales: string().test(arbAvgBetalesFyltUtNårDetKrevesTest).nullable(),
-        bruttoInntekt: string().erNummer().test(bruttoInntektFyltUtNårDetKrevesTest).nullable(),
-      }),
-    ),
+  inntektskilder: lazy((_value, options) => {
+    return array().when(["$medlemskapsTypeErPliktig", "$erÅpenSluttDato", "$erAvvik"], {
+      is: (medlemskapsTypeErPliktig, erÅpenSluttDato, erAvvik) => {
+        if (!erAvvik) return false;
+        return !erÅpenSluttDato && kreverInntektskilder(medlemskapsTypeErPliktig, options) && erAvvik; // TODO denne logikken er korrekt
+      },
+      then: array()
+        .min(1, "Minst en inntektskilde")
+        .of(
+          object().shape({
+            kildetype: string().required(MAA_FYLLES_UT),
+            arbAvgBetales: string().test(arbAvgBetalesFyltUtNårDetKrevesTest).nullable(),
+            bruttoInntekt: string().required(MAA_FYLLES_UT).erNummer().test(bruttoInntektFyltUtNårDetKrevesTest),
+            fomDato: string()
+              .erGyldigDato()
+              .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
+              .required(MAA_FYLLES_UT),
+            tomDato: string()
+              .erGyldigDato()
+              .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
+              .erEtterDatofelt("fomDato")
+              .test(erInnenforValgtAarTest)
+              .test(åpenTomTest)
+              .required(MAA_FYLLES_UT),
+          }),
+        ),
+    });
+  }),
 });
 
-export default aarsavregningUtenGrunnlagSchema;
+export default aarsavregningUtenEllerDeltGrunnlagSchema;

@@ -37,7 +37,7 @@ import { fagsakSelectors } from "../../../../../ducks/fagsaker";
 import FullmaktForTrygdeavgiftConfirmationPanel from "../../../../../felleskomponenter/fullmaktForTrygdeavgiftConfirmationPanel/fullmaktForTrygdeavgiftConfirmationPanel";
 
 const { NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingstyper;
-const { IKKE_YRKESAKTIV } = MKV.Koder.behandlinger.behandlingstema;
+const { IKKE_YRKESAKTIV, PENSJONIST } = MKV.Koder.behandlinger.behandlingstema;
 const { OPPHØRT } = MKV.Koder.innvilgelsesResultat;
 const { OPPHØRSVEDTAK, FØRSTEGANGSVEDTAK, ENDRINGSVEDTAK } = MKV.Koder.vedtakstyper;
 const { FULLMEKTIG_TRYGDEAVGIFT } = MKV.Koder.fullmaktstype;
@@ -114,6 +114,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   const erManglendeInnbetalingTrygdeavgift = behandlingstype === MANGLENDE_INNBETALING_TRYGDEAVGIFT;
   const erDelvisOpphør = medlemskapsperioder.some((periode) => periode.innvilgelsesResultat === OPPHØRT);
   const erIkkeYrkesaktiv = behandlingstema === IKKE_YRKESAKTIV;
+  const erPensjonist = behandlingstema === PENSJONIST;
   const medlemskapsTypeErPliktig = medlemskapsperioder.some((periode) => periode.medlemskapstype === PLIKTIG);
 
   const bestemmelserkodeverk: string[] = [
@@ -402,7 +403,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
       <Nav.Row className="arbeidsland">
         <Nav.Column xs="5">
           <Nav.BodyLong weight="semibold" size="small" className="info">
-            {erIkkeYrkesaktiv ? "Land" : "Arbeidsland"}
+            {erIkkeYrkesaktiv || erPensjonist ? "Land" : "Arbeidsland"}
           </Nav.BodyLong>
           <Nav.BodyLong size="small" className="info">
             {landEllerArbeidslandTekst()}
@@ -436,6 +437,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
 
       {harFullmaktForTrygdeavgift && redigerbart ? (
         <FullmaktForTrygdeavgiftConfirmationPanel
+          erPensjonist={erPensjonist}
           harBekreftet={harBekreftetFullmaktForTrygdeavgift}
           onChange={setHarBekreftetFullmaktForTrygdeavgift}
         />
