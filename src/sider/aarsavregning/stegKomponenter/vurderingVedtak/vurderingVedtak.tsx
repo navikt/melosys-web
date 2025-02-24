@@ -187,21 +187,13 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   };
 
   const tidligereTrygdeavgift = lagretAarsavregning?.avregning?.tidligereFakturertBeloep;
+  const tidligereTrygdeavgiftAvgiftssystem = lagretAarsavregning?.avregning?.tidligereFakturertBeloepAvgiftssystem;
   const nyTrygdeavgift = lagretAarsavregning?.avregning?.nyttTotalbeloep;
-  const erDifferanseUnderMinstebeløp =
-    typeof tidligereTrygdeavgift === "number" &&
-    typeof nyTrygdeavgift === "number" &&
-    Math.abs(tidligereTrygdeavgift - nyTrygdeavgift) < MINSTEBELOP_FAKTURERING_ELLER_REFUSJON;
-
-  const erNullKroner =
-    typeof tidligereTrygdeavgift === "number" &&
-    typeof nyTrygdeavgift === "number" &&
-    Math.abs(tidligereTrygdeavgift - nyTrygdeavgift) === 0;
-
-  const skalFaktureres =
-    typeof tidligereTrygdeavgift === "number" &&
-    typeof nyTrygdeavgift === "number" &&
-    nyTrygdeavgift - tidligereTrygdeavgift > 0;
+  const trygdeavgiftDiff =
+    (nyTrygdeavgift ?? 0) - (tidligereTrygdeavgift ?? 0) - (tidligereTrygdeavgiftAvgiftssystem ?? 0);
+  const erDifferanseUnderMinstebeløp = Math.abs(trygdeavgiftDiff) < MINSTEBELOP_FAKTURERING_ELLER_REFUSJON;
+  const erNullKroner = trygdeavgiftDiff === 0;
+  const skalFaktureres = trygdeavgiftDiff > 0;
 
   const stegErGyldig = formIsValid && (!harFullmaktForTrygdeavgift || harBekreftetFullmaktForTrygdeavgift);
 
@@ -211,7 +203,11 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
         Vedtak årsavregning {lagretAarsavregning ? lagretAarsavregning.aar : ""}
       </Nav.Heading>
 
-      <SumArsavregningTabell nyTrygdeavgift={nyTrygdeavgift} tidligereTrygdeavgift={tidligereTrygdeavgift} />
+      <SumArsavregningTabell
+        nyTrygdeavgift={nyTrygdeavgift}
+        tidligereTrygdeavgift={tidligereTrygdeavgift}
+        tidligereTrygdeavgiftAvgiftssystem={tidligereTrygdeavgiftAvgiftssystem}
+      />
 
       {fakturaMottaker ? (
         <Nav.Row className="trygdeavgift">
@@ -223,7 +219,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
                 <>
                   <br />
                   {`${skalFaktureres ? "Faktura" : "Kreditnota"} på ${
-                    Utils.formaterTilNorskBelop(Math.abs((nyTrygdeavgift || 0) - (tidligereTrygdeavgift || 0))) || "0"
+                    Utils.formaterTilNorskBelop(Math.abs(trygdeavgiftDiff)) || "0"
                   } kr sendes til: `}{" "}
                   <b>{fakturaMottaker}</b>
                 </>

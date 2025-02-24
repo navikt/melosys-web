@@ -113,7 +113,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
   useEffect(() => {
     if (redigerbart && aarsavregningResponse?.nyttGrunnlag) {
       if (aarsavregningResponse.nyttGrunnlag?.avgift.totalAvgift !== aarsavregningResponse.avregning?.nyttTotalbeloep) {
-        Api.Aarsavregning.oppdaterNyttTotalbeloep(
+        Api.Aarsavregning.oppdaterTotalAvgift(
           behandlingID,
           aarsavregningID,
           aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift,
@@ -213,7 +213,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
       Api.Trygdeavgift.slettTrygdeavgiftsperioder(behandlingID).then(() => {
         resetSkatteforholdsperioder([]);
         resetInntektskilder([]);
-        Api.Aarsavregning.oppdaterNyttTotalbeloep(
+        Api.Aarsavregning.oppdaterTotalAvgift(
           behandlingID,
           aarsavregningID,
           aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift.totalAvgift,

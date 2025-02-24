@@ -52,6 +52,7 @@ export interface Avregning {
   nyttTotalbeloep?: number;
   tidligereFakturertBeloep?: number;
   tilFaktureringBeloep?: number;
+  tidligereFakturertBeloepAvgiftssystem?: number;
 }
 
 export interface AarsavregningListResponse {
@@ -108,8 +109,8 @@ export const hentFiltrertAarsavregningList = (
   }
   return getAsJson(url);
 };
-export const oppdaterNyttTotalbeloep = async (behandlingID: number, aarsavregningID: number, totalAvgift?: number) => {
-  return oppdaterTotalBelop(
+export const oppdaterTotalAvgift = async (behandlingID: number, aarsavregningID: number, totalAvgift?: number) => {
+  return oppdaterAarsavregning(
     behandlingID,
     {
       avregning: {
@@ -119,9 +120,10 @@ export const oppdaterNyttTotalbeloep = async (behandlingID: number, aarsavregnin
     aarsavregningID,
   );
 };
-export const oppdaterTotalBelop = (
+export const oppdaterAarsavregning = (
   behandlingID: number,
   request: AarsavregningRequest,
   aarsavregningID?: number,
-): Promise<AarsavregningResponse> =>
-  putAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${AARSAVREGNING}/${aarsavregningID}`, request);
+): Promise<AarsavregningResponse> => {
+  return putAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${AARSAVREGNING}/${aarsavregningID}`, request);
+};

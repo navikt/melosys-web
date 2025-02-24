@@ -117,6 +117,13 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
   };
 
   const håndterDeltGrunnlag = (value: boolean) => {
+    if (harDeltGrunnlag && !value) {
+      Api.Aarsavregning.oppdaterAarsavregning(
+        behandlingID,
+        { avregning: { tidligereFakturertBeloepAvgiftssystem: 0 } },
+        aarsavregningID,
+      );
+    }
     Api.Aarsavregning.oppdaterHarDeltGrunnlag(behandlingID, { harDeltGrunnlag: value }, aarsavregningID).then((res) =>
       setHarDeltGrunnlag(res.harDeltGrunnlag),
     );
