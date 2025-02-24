@@ -61,7 +61,6 @@ const åpenTomTest = {
   },
 };
 
-const aarsavregningUtenEllerDeltGrunnlagSchema = object().shape({
 const kreverInntektskilder = (medlemskapsTypeErPliktig, options) => {
   if (options?.parent?.skatteforholdsperioder) {
     const inntektkilderErTom = options.parent.inntektskilder.length === 0;
