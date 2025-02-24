@@ -30,8 +30,6 @@ export function BeregnetTrygdeavgiftDetaljer({
   tittel: string;
 }) {
   const hentDetaljer = (data: Grunnlagsopplysninger | undefined): DetaljerInterface[] => {
-    console.log("Data: ");
-    console.log(data);
     if (data === undefined) return [];
     return data.avgift.trygdeavgiftsperioder
       .map((period) => {
