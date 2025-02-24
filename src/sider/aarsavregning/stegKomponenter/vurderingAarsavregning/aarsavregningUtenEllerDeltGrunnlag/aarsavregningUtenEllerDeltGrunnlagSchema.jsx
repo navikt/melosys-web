@@ -61,7 +61,7 @@ const åpenTomTest = {
   },
 };
 
-const aarsavregningUtenGrunnlagSchema = object().shape({
+const aarsavregningUtenEllerDeltGrunnlagSchema = object().shape({
   medlemskapsperioder: array()
     .min(1, "Minst en medlemskapsperiode")
     .of(
@@ -102,4 +102,4 @@ const aarsavregningUtenGrunnlagSchema = object().shape({
     ),
 });
 
-export default aarsavregningUtenGrunnlagSchema;
+export default aarsavregningUtenEllerDeltGrunnlagSchema;
