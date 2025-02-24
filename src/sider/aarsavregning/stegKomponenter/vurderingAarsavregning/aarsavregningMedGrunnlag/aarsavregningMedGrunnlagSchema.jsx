@@ -93,7 +93,7 @@ const aarsavregningMedGrunnlagSchema = object().shape({
     return array().when(["$medlemskapsTypeErPliktig", "$erÅpenSluttDato", "$erAvvik"], {
       is: (medlemskapsTypeErPliktig, erÅpenSluttDato, erAvvik) => {
         if (!erAvvik) return false;
-        return !erÅpenSluttDato && kreverInntektskilder(medlemskapsTypeErPliktig, options) && erAvvik; // TODO denne logikken er korrekt
+        return !erÅpenSluttDato && kreverInntektskilder(medlemskapsTypeErPliktig, options) && erAvvik;
       },
       then: array()
         .min(1, "Minst en inntektskilde")

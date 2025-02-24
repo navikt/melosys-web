@@ -311,7 +311,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
       innvilgelsesResultat: "",
       trygdedekning: "",
       bestemmelse: "",
-      redigerbar: true,
+      redigerbart: true,
     };
     // @ts-expect-error generisk beskrivelse
     medlemskapsperioderAppend(nyMedlemskapsperiode);
@@ -327,13 +327,11 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
     }
   };
 
-  const harIkkeskattepliktigInntektskilder =
-    harDeltGrunnlag &&
-    harIkkeSkattepliktigInntektskilder(
-      aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.skatteforholdsperioder,
-      aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.inntektskperioder,
-      medlemskapsTypeErPliktig,
-    );
+  const harIkkeskattepliktigInntektskilder = harIkkeSkattepliktigInntektskilder(
+    aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.skatteforholdsperioder,
+    aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.inntektskperioder,
+    medlemskapsTypeErPliktig,
+  );
 
   const trygdeAvgiftSkalIkkeBetalesTilNav =
     medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder);
@@ -353,7 +351,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
         />
       )}
 
-      {harIkkeskattepliktigInntektskilder && (
+      {harDeltGrunnlag && harIkkeskattepliktigInntektskilder && (
         <BeregnetTrygdeavgiftDetaljer
           grunnlag={aarsavregningResponse?.tidligereGrunnlagsopplysninger}
           medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!}
