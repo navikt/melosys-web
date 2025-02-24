@@ -126,4 +126,4 @@ export const oppdaterAarsavregning = (
   aarsavregningID?: number,
 ): Promise<AarsavregningResponse> => {
   return putAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${AARSAVREGNING}/${aarsavregningID}`, request);
-}
+};

@@ -189,7 +189,8 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   const tidligereTrygdeavgift = lagretAarsavregning?.avregning?.tidligereFakturertBeloep;
   const tidligereTrygdeavgiftAvgiftssystem = lagretAarsavregning?.avregning?.tidligereFakturertBeloepAvgiftssystem;
   const nyTrygdeavgift = lagretAarsavregning?.avregning?.nyttTotalbeloep;
-  const trygdeavgiftDiff = (nyTrygdeavgift ?? 0) - (tidligereTrygdeavgift ?? 0) - (tidligereTrygdeavgiftAvgiftssystem ?? 0);
+  const trygdeavgiftDiff =
+    (nyTrygdeavgift ?? 0) - (tidligereTrygdeavgift ?? 0) - (tidligereTrygdeavgiftAvgiftssystem ?? 0);
   const erDifferanseUnderMinstebeløp = Math.abs(trygdeavgiftDiff) < MINSTEBELOP_FAKTURERING_ELLER_REFUSJON;
   const erNullKroner = trygdeavgiftDiff === 0;
   const skalFaktureres = trygdeavgiftDiff > 0;
