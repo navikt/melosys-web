@@ -311,7 +311,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
       innvilgelsesResultat: "",
       trygdedekning: "",
       bestemmelse: "",
-      redigerbart: true,
+      redigerbar: true,
     };
     // @ts-expect-error generisk beskrivelse
     medlemskapsperioderAppend(nyMedlemskapsperiode);
