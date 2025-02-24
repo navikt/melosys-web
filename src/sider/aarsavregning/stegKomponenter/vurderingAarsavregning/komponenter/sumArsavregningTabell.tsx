@@ -6,11 +6,14 @@ import { formaterTilNorskBelop } from "../../../../../utils";
 export function SumArsavregningTabell({
   nyTrygdeavgift,
   tidligereTrygdeavgift,
+  tidligereTrygdeavgiftAvgiftssystem,
 }: {
   nyTrygdeavgift?: number;
   tidligereTrygdeavgift?: number;
+  tidligereTrygdeavgiftAvgiftssystem?: number;
 }) {
-  const sumTilFakturaEllerRefusjon = (nyTrygdeavgift ?? 0) - (tidligereTrygdeavgift ?? 0);
+  const sumTilFakturaEllerRefusjon =
+    (nyTrygdeavgift ?? 0) - (tidligereTrygdeavgift ?? 0) - (tidligereTrygdeavgiftAvgiftssystem ?? 0);
 
   return (
     <div className="sumArsavregningTabell">
@@ -27,11 +30,20 @@ export function SumArsavregningTabell({
           </Nav.Table.Row>
           <Nav.Table.Row>
             <Nav.Table.DataCell scope="col">-</Nav.Table.DataCell>
-            <Nav.Table.DataCell scope="col">Tidligere beregnet trygdeavgift</Nav.Table.DataCell>
+            <Nav.Table.DataCell scope="col">Tidligere beregnet trygdeavgift fra Melosys</Nav.Table.DataCell>
             <Nav.Table.DataCell align="right" key={Utils._uuid()}>
               {formaterTilNorskBelop(tidligereTrygdeavgift || 0)} kr
             </Nav.Table.DataCell>
           </Nav.Table.Row>
+          {tidligereTrygdeavgiftAvgiftssystem && (
+            <Nav.Table.Row>
+              <Nav.Table.DataCell scope="col">-</Nav.Table.DataCell>
+              <Nav.Table.DataCell scope="col">Tidligere beregnet trygdeavgift fra Avgiftssystemet</Nav.Table.DataCell>
+              <Nav.Table.DataCell align="right" key={Utils._uuid()}>
+                {formaterTilNorskBelop(tidligereTrygdeavgiftAvgiftssystem || 0)} kr
+              </Nav.Table.DataCell>
+            </Nav.Table.Row>
+          )}
           <Nav.Table.Row>
             <Nav.Table.DataCell scope="col">=</Nav.Table.DataCell>
             <Nav.Table.DataCell scope="col">Differanse</Nav.Table.DataCell>

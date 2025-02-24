@@ -1,7 +1,7 @@
 import * as Api from "../../../../../services/api";
 import "../vurderingAarsavregningInngang.css";
 import { useCallback, useEffect, useState } from "react";
-import { AarsavregningResponse, oppdaterTotalBelop } from "../../../../../services/modules/aarsavregning/aarsavregning";
+import { AarsavregningResponse } from "../../../../../services/modules/aarsavregning/aarsavregning";
 import { useDispatch, useSelector } from "react-redux";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import * as Nav from "../../../../../navFrontend";
@@ -38,6 +38,7 @@ import {
 import { MedlemskapsperiodeSkjema } from "../komponenter/medlemskapsperiodeSkjema";
 import TidligereGrunnlagsoversikt from "../komponenter/tidligereGrunnlagsoversikt";
 import aarsavregningUtenEllerDeltGrunnlagSchema from "./aarsavregningUtenEllerDeltGrunnlagSchema";
+import MedlemskapsPerioderTabell from "../komponenter/medlemskapsPerioderTabell";
 
 interface Props {
   bekreft: () => void;
@@ -84,7 +85,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
           // Benyttes for innhenting av saksopplysninger ifm. årsavregningsbehandlinger
           dispatch({ type: OK, data: res });
           setValgtÅr(res.aar);
-          setValue("totaltForskuddsvisFakturert", res.avregning?.tidligereFakturertBeloep);
+          setValue("totaltForskuddsvisFakturert", res.avregning?.tidligereFakturertBeloepAvgiftssystem);
         })
         .catch((err) => {
           if (err.response?.status === 404) {
@@ -118,26 +119,16 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
     }
   }, [lagredeMedlemskapsperioder, aarsavregningResponse]);
 
-  const oppdaterNyttTotalbeloep = async (totalAvgift?: number) => {
-    return oppdaterTotalBelop(
-      behandlingID,
-      {
-        avregning: {
-          nyttTotalbeloep: totalAvgift,
-        },
-      },
-      aarsavregningID,
-    );
-  };
-
   useEffect(() => {
     if (redigerbart && aarsavregningResponse?.nyttGrunnlag) {
       if (aarsavregningResponse.nyttGrunnlag?.avgift.totalAvgift !== aarsavregningResponse.avregning?.nyttTotalbeloep) {
-        oppdaterNyttTotalbeloep(aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift).then(
-          (response: AarsavregningResponse) => {
-            setAarsavregningResponse(response);
-          },
-        );
+        Api.Aarsavregning.oppdaterTotalAvgift(
+          behandlingID,
+          aarsavregningID,
+          aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift,
+        ).then((response: AarsavregningResponse) => {
+          setAarsavregningResponse(response);
+        });
       }
     }
   }, [aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift]);
@@ -170,7 +161,6 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
         aarsavregningResponse?.nyttGrunnlag?.trygdeavgiftsgrunnlag.skatteforholdsperioder,
       ),
       inntektskilder: [{}],
-      totaltForskuddsvisFakturert: "",
     } as FieldValue<AarsavregningFormValuesProps>,
   });
 
@@ -208,21 +198,26 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
     }
   }, [medlemskapsperioderFields]);
 
+  const debouncedOppdaterAarsavregning = useCallback(
+    Utils._debounce(
+      (request: Api.Aarsavregning.AarsavregningRequest) =>
+        Api.Aarsavregning.oppdaterAarsavregning(behandlingID, request, aarsavregningID),
+      1000,
+    ),
+    [behandlingID, aarsavregningID],
+  );
+
   useEffect(() => {
     if (
       redigerbart &&
       (formValues.totaltForskuddsvisFakturert || formValues.totaltForskuddsvisFakturert === "") &&
-      formValues.totaltForskuddsvisFakturert !== aarsavregningResponse?.avregning?.tidligereFakturertBeloep
+      formValues.totaltForskuddsvisFakturert !== aarsavregningResponse?.avregning?.tidligereFakturertBeloepAvgiftssystem
     ) {
-      oppdaterTotalBelop(
-        behandlingID,
-        {
-          avregning: {
-            tidligereFakturertBeloep: formValues.totaltForskuddsvisFakturert,
-          },
+      debouncedOppdaterAarsavregning({
+        avregning: {
+          tidligereFakturertBeloepAvgiftssystem: formValues.totaltForskuddsvisFakturert,
         },
-        aarsavregningID,
-      );
+      });
     }
   }, [formValues.totaltForskuddsvisFakturert]);
 
@@ -341,16 +336,21 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
   return (
     <div className="vurderingAarsavregning">
       {harDeltGrunnlag && (
-        <TidligereGrunnlagsoversikt
-          harFakturerbareInntektskilder={harIkkeskattepliktigInntektskilder}
-          skatteforholdsperioder={
-            aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.skatteforholdsperioder
-          }
-          inntektsperioder={
-            aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.inntektskperioder
-          }
-          avgift={aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift}
-        />
+        <>
+          <MedlemskapsPerioderTabell
+            perioder={aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.medlemskapsperioder}
+          />
+          <TidligereGrunnlagsoversikt
+            harFakturerbareInntektskilder={harIkkeskattepliktigInntektskilder}
+            skatteforholdsperioder={
+              aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.skatteforholdsperioder
+            }
+            inntektsperioder={
+              aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.inntektskperioder
+            }
+            avgift={aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift}
+          />
+        </>
       )}
 
       {harIkkeskattepliktigInntektskilder && (
@@ -423,6 +423,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
         <SumArsavregningTabell
           nyTrygdeavgift={aarsavregningResponse?.avregning?.nyttTotalbeloep}
           tidligereTrygdeavgift={aarsavregningResponse?.avregning?.tidligereFakturertBeloep}
+          tidligereTrygdeavgiftAvgiftssystem={aarsavregningResponse?.avregning?.tidligereFakturertBeloepAvgiftssystem}
         />
       )}
 
