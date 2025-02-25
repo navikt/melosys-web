@@ -1,8 +1,8 @@
 import { defineConfig } from "@playwright/test";
 // create test:  npx playwright codegen
-// test npx playwright test
-// debug test npx playwright test --headed
-// watching tet npx playwright test --ui
+// test: npx playwright test
+// debug test: npx playwright test --headed
+// watching test: npx playwright test --ui
 
 export default defineConfig({
   testDir: "./tests", // Folder where tests are stored

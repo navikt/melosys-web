@@ -138,23 +138,25 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
           </Nav.Column>
         </Nav.Row>
       </Nav.Fieldset>
-      {nyVurderingÅrsavregning && (
-        <Nav.Row>
-          <NyBehandlingForTidligereAarsavregningMelding />
-        </Nav.Row>
-      )}
 
-      {apiFeil && (
+      {apiFeil ? (
         <Nav.Alert variant="error" className="alertstripe_feilmelding">
           {apiFeil}
         </Nav.Alert>
-      )}
+      ) : (
+        <>
+          {nyVurderingÅrsavregning && (
+            <Nav.Row>{nyVurderingÅrsavregning && <NyBehandlingForTidligereAarsavregningMelding />}</Nav.Row>
+          )}
 
-      {harGrunnlag === true && (
-        <AarsavregningMedGrunnlag bekreft={bekreft} aktivtSteg={aktivtSteg} oppdaterStatus={oppdaterStatus} />
-      )}
-      {harGrunnlag === false && (
-        <AarsavregningUtenGrunnlag bekreft={bekreft} aktivtSteg={aktivtSteg} oppdaterStatus={oppdaterStatus} />
+          {harGrunnlag === true && (
+            <AarsavregningMedGrunnlag bekreft={bekreft} aktivtSteg={aktivtSteg} oppdaterStatus={oppdaterStatus} />
+          )}
+
+          {harGrunnlag === false && (
+            <AarsavregningUtenGrunnlag bekreft={bekreft} aktivtSteg={aktivtSteg} oppdaterStatus={oppdaterStatus} />
+          )}
+        </>
       )}
     </div>
   );
