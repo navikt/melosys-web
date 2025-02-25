@@ -46,18 +46,31 @@ export function harIkkeSkattepliktigInntektskilder(
   return true;
 }
 
+export function fomTomErFyltUt(
+  inntektskildePerioder: Inntektskilde[],
+  skatteforholdsPerioder: Skatteforhold[],
+): boolean {
+  const allPerioder = [...inntektskildePerioder, ...skatteforholdsPerioder];
+  return allPerioder.every(({ fomDato, tomDato }) => fomDato !== undefined && tomDato !== undefined);
+}
+
+export function harInntektsKildeType(inntektskildePerioder: Inntektskilde[]) {
+  inntektskildePerioder.every((kildetype) => console.log(kildetype));
+  return inntektskildePerioder.every((inntektskilde) => inntektskilde?.kildetype !== undefined);
+}
+
 export function beregnTrygdeavgiftsperioder(
   formVerdier: FieldValue<FormValuesProps>,
   options: {
     behandlingID: number;
     medlemskapsTypeErPliktig?: boolean;
-    setBeregningError: (error: any) => void;
+    setFeilmelding: (error: any) => void;
     setAarsavregningResponse: (response: AarsavregningResponse) => void;
   },
 ) {
-  const { behandlingID, medlemskapsTypeErPliktig, setBeregningError, setAarsavregningResponse } = options;
+  const { behandlingID, medlemskapsTypeErPliktig, setFeilmelding, setAarsavregningResponse } = options;
 
-  setBeregningError(undefined);
+  setFeilmelding(undefined);
   const erBrukerPliktigMedlemOgSkattepliktig =
     medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(formVerdier.skatteforholdsperioder);
   return Api.Trygdeavgift.beregnTrygdeavgiftsperioder(behandlingID, {
@@ -81,9 +94,43 @@ export function beregnTrygdeavgiftsperioder(
       Api.Aarsavregning.hentAarsavregning(behandlingID).then((response: AarsavregningResponse) => {
         setAarsavregningResponse(response);
       });
-      setBeregningError(undefined);
+      setFeilmelding(undefined);
     })
-    .catch((error) => setBeregningError(mapFeilmelding(error)));
+    .catch((error) => setFeilmelding(mapFeilmelding(error)));
+}
+
+export function validerMedlemskapsperioder(perioder: Medlemskapsperiode[]) {
+  if (perioder.length === 0) {
+    return undefined;
+  }
+
+  const sortertePerioder = [...perioder].sort((a, b) => new Date(a.fomDato).getTime() - new Date(b.fomDato).getTime());
+  const bestemmelseSet = new Set<string>();
+  const DAY_IN_MILLISECONDS = 86400000;
+  let feilmeldingFraValidering;
+
+  sortertePerioder.forEach((periode, index) => {
+    bestemmelseSet.add(periode.bestemmelse);
+
+    if (index > 0) {
+      const forrigePeriode = sortertePerioder[index - 1];
+      const forrigeTomDato = new Date(forrigePeriode.tomDato);
+      const nyFomDato = new Date(periode.fomDato);
+
+      if (nyFomDato <= forrigeTomDato) {
+        feilmeldingFraValidering = "Medlemskapsperioder overlapper";
+      }
+      if (nyFomDato.getTime() - forrigeTomDato.getTime() > DAY_IN_MILLISECONDS) {
+        feilmeldingFraValidering = "Det er opphold mellom medlemskapsperioder";
+      }
+    }
+  });
+
+  if (bestemmelseSet.size !== 1) {
+    feilmeldingFraValidering = "Bestemmelsene må være like";
+  }
+
+  return feilmeldingFraValidering;
 }
 
 export const lagInnvilgetMedlemskapsPeriode = (medlemskapsperioder?: Medlemskapsperiode[]) => {

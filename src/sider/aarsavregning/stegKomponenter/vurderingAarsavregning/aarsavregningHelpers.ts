@@ -2,7 +2,6 @@ import * as Utils from "../../../../utils";
 import { sorterEtterISOFomDato } from "../../../../utils/dato";
 import * as Api from "../../../../services/api";
 
-// Returns the first and last dates from a sorted list of membership periods.
 export const hentMedlemskapsFomTomDato = (medlemskapsperioder?: any[]) => {
   if (medlemskapsperioder && !Utils._isEmpty(medlemskapsperioder)) {
     const sorted = [...medlemskapsperioder].sort(sorterEtterISOFomDato);
@@ -11,7 +10,6 @@ export const hentMedlemskapsFomTomDato = (medlemskapsperioder?: any[]) => {
   return {};
 };
 
-// Maps a membership period from the API to local props.
 export const mapTilMedlemskapsperiodeProps = (
   medlemskapsperiode: any,
   tidligereGrunnlagsopplysninger?: Api.Aarsavregning.Grunnlagsopplysninger,
@@ -43,10 +41,10 @@ export const mapInitialMedlemskapsperioder = (
 export const mapTilSkatteforholdProps = (skatteforhold?: any[], medlemskapsperioder?: any[]) => {
   const { fom, tom } = hentMedlemskapsFomTomDato(medlemskapsperioder);
   if (skatteforhold) {
-    return skatteforhold.map((f) => ({
-      fomDato: Utils.dato.formatterDatoTilNorsk(f.fomDato),
-      tomDato: Utils.dato.formatterDatoTilNorsk(f.tomDato),
-      skatteplikttype: f.skatteplikttype,
+    return skatteforhold.map((skatteForhold) => ({
+      fomDato: Utils.dato.formatterDatoTilNorsk(skatteForhold.fomDato),
+      tomDato: Utils.dato.formatterDatoTilNorsk(skatteForhold.tomDato),
+      skatteplikttype: skatteForhold.skatteplikttype,
     }));
   }
   if (fom && tom) {

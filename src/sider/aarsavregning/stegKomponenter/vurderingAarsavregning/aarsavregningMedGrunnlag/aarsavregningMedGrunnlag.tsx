@@ -28,8 +28,10 @@ import { Inntektskilder } from "../../../../../felleskomponenter/trygdeavgift/ko
 import {
   beregnTrygdeavgiftsperioder,
   erBrukerSkattepliktigIHelePerioden,
+  fomTomErFyltUt,
   harIkkeSkattepliktigInntektskilder,
   lagInnvilgetMedlemskapsPeriode,
+  harInntektsKildeType,
 } from "../komponenter/utils";
 import { mapTilInntektskilderProps, mapTilSkatteforholdProps } from "../aarsavregningHelpers";
 
@@ -41,7 +43,7 @@ interface Props {
 
 export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
   const [erAvvik, setErAvvik] = useState<boolean | undefined>(undefined);
-  const [beregningError, setBeregningError] = useState<undefined | string>(undefined);
+  const [feilmelding, setFeilmelding] = useState<undefined | string>(undefined);
   const [brukerHarBekreftet, setBrukerHarBekreftet] = useState(false);
   const [aarsavregningResponse, setAarsavregningResponse] = useState<AarsavregningResponse | undefined>(undefined);
 
@@ -177,11 +179,11 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
       await beregnTrygdeavgiftsperioder(formVerdier, {
         behandlingID,
         medlemskapsTypeErPliktig,
-        setBeregningError,
+        setFeilmelding,
         setAarsavregningResponse,
       });
     },
-    [behandlingID, medlemskapsTypeErPliktig, setBeregningError, setAarsavregningResponse, aarsavregningID],
+    [behandlingID, medlemskapsTypeErPliktig, setFeilmelding, setAarsavregningResponse],
   );
 
   const debounceBeregnTrygdeavgiftsperioderOgOppdaterFormVerdier = useCallback(
@@ -197,12 +199,21 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
   );
 
   useEffect(() => {
-    if (redigerbart && erAvvik && !isValidating && formIsValid && aarsavregningID) {
+    if (
+      redigerbart &&
+      aarsavregningID &&
+      erAvvik &&
+      !isValidating &&
+      formIsValid &&
+      fomTomErFyltUt(formValues.inntektskilder, formValues.skatteforholdsperioder) &&
+      harInntektsKildeType(formValues.inntektskilder)
+    ) {
       debounceBeregnTrygdeavgiftsperioderOgOppdaterFormVerdier(formValues);
     }
-  }, [isValidating, erAvvik]);
+  }, [isValidating, erAvvik, formValues.inntektskilder.length, formValues.skatteforholdsperioder.length]);
 
-  const stegErGyldig = !erAvvik || Boolean(aarsavregningResponse?.nyttGrunnlag && !beregningError);
+  const stegErGyldig =
+    erAvvik === false || Boolean(formIsValid && erAvvik && aarsavregningResponse?.nyttGrunnlag && !feilmelding);
 
   useEffect(() => {
     oppdaterStatus(stegErGyldig);
@@ -239,7 +250,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
 
   const bekreftOnClick = () => {
     setBrukerHarBekreftet(true);
-    if (formIsValid && stegErGyldig && !beregningError) {
+    if (formIsValid && stegErGyldig && !feilmelding) {
       bekreft();
     }
   };
@@ -335,14 +346,14 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
         </>
       )}
 
-      {nyttGrunnlagHarTrygdeavgiftsperioder() && erAvvik && formIsValid && !beregningError && (
+      {nyttGrunnlagHarTrygdeavgiftsperioder() && erAvvik && formIsValid && !feilmelding && (
         <SumArsavregningTabell
           nyTrygdeavgift={aarsavregningResponse?.avregning?.nyttTotalbeloep}
           tidligereTrygdeavgift={aarsavregningResponse?.avregning?.tidligereFakturertBeloep}
         />
       )}
 
-      {nyttGrunnlagHarTrygdeavgiftsperioder() && erAvvik && formIsValid && !beregningError && (
+      {nyttGrunnlagHarTrygdeavgiftsperioder() && erAvvik && formIsValid && !feilmelding && (
         <BeregnetTrygdeavgiftDetaljer
           grunnlag={aarsavregningResponse?.nyttGrunnlag}
           medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!}
@@ -352,9 +363,9 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
 
       {brukerHarBekreftet && <FeilmeldingOppsummering errors={formErrors} />}
 
-      {beregningError && (
+      {feilmelding && (
         <Nav.Alert variant="error" className="alertstripe_feilmelding">
-          {beregningError}
+          {feilmelding}
         </Nav.Alert>
       )}
 

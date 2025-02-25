@@ -18,7 +18,11 @@ import { OK } from "../../../../../ducks/aarsavregning/types";
 
 import { behandlingsresultatSelectors } from "../../../../../ducks/behandlingsresultat";
 
-import { medlemskapsperioderOperations, medlemskapsperioderSelectors } from "../../../../../ducks/medlemskapsperioder";
+import {
+  medlemskapsperioderOperations,
+  medlemskapsperioderSelectors,
+  medlemskapsperioderTypes,
+} from "../../../../../ducks/medlemskapsperioder";
 import { MedlemskapsperiodeProp } from "../../../../ftrl/saksbehandling/stegKomponenter/vurderingPeriode/komponenter/types";
 import { FeilmeldingOppsummering } from "../feilmeldingOppsummering";
 import { Skatteforholdsperioder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/skatteforholdsperioder";
@@ -27,6 +31,9 @@ import {
   beregnTrygdeavgiftsperioder,
   erBrukerSkattepliktigIHelePerioden,
   harIkkeSkattepliktigInntektskilder,
+  fomTomErFyltUt,
+  validerMedlemskapsperioder,
+  harInntektsKildeType,
 } from "../komponenter/utils";
 import {
   hentMedlemskapsFomTomDato,
@@ -58,7 +65,7 @@ interface AarsavregningFormValuesProps extends FormValuesProps {
 
 export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, harDeltGrunnlag }: Props) {
   const [valgtÅr, setValgtÅr] = useState<number | undefined>();
-  const [beregningError, setBeregningError] = useState<undefined | string>(undefined);
+  const [feilmelding, setFeilmelding] = useState<undefined | string>(undefined);
   const [brukerHarBekreftet, setBrukerHarBekreftet] = useState(false);
 
   const [aarsavregningResponse, setAarsavregningResponse] = useState<AarsavregningResponse | undefined>(undefined);
@@ -69,6 +76,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
   const lagredeMedlemskapsperioder = useSelector(medlemskapsperioderSelectors.AlleMedlemskapsperioderSelector);
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const dispatch = useDispatch();
+  const harMedlemskapsPeriodeFeil = (response: any): boolean => response.type === medlemskapsperioderTypes.FEILET;
 
   useEffect(() => {
     if (behandlingstema) {
@@ -96,6 +104,9 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
   }, []);
 
   useEffect(() => {
+    const validerMedlemskapsperioderResultat = validerMedlemskapsperioder(lagredeMedlemskapsperioder);
+    setFeilmelding(validerMedlemskapsperioderResultat);
+
     if (lagredeMedlemskapsperioder) {
       const mappedLagredeMedlemskapsperioder = mapInitialMedlemskapsperioder(
         lagredeMedlemskapsperioder,
@@ -150,6 +161,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
     context: {
       medlemskapsperiode: innvilgetMedlemskapsperiode,
       medlemskapsTypeErPliktig,
+      aar: valgtÅr,
     },
     mode: "onChange",
     defaultValues: {
@@ -226,11 +238,11 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
       await beregnTrygdeavgiftsperioder(formVerdier, {
         behandlingID,
         medlemskapsTypeErPliktig,
-        setBeregningError,
+        setFeilmelding,
         setAarsavregningResponse,
       });
     },
-    [behandlingID, medlemskapsTypeErPliktig, setBeregningError, setAarsavregningResponse, aarsavregningID],
+    [behandlingID, medlemskapsTypeErPliktig, setFeilmelding, setAarsavregningResponse, aarsavregningID],
   );
 
   const debounceBeregnTrygdeavgiftsperioder = useCallback(
@@ -239,12 +251,19 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
   );
 
   useEffect(() => {
-    if (redigerbart && !isValidating && formIsValid && aarsavregningID) {
+    if (
+      redigerbart &&
+      aarsavregningID &&
+      !isValidating &&
+      formIsValid &&
+      fomTomErFyltUt(formValues.inntektskilder, formValues.skatteforholdsperioder) &&
+      harInntektsKildeType(formValues.inntektskilder)
+    ) {
       debounceBeregnTrygdeavgiftsperioder(formValues);
     }
-  }, [isValidating, aarsavregningID]);
+  }, [formIsValid, isValidating, formValues.inntektskilder.length, formValues.skatteforholdsperioder.length]);
 
-  const stegErGyldig = Boolean(formIsValid && aarsavregningResponse?.nyttGrunnlag);
+  const stegErGyldig = Boolean(formIsValid && aarsavregningResponse?.nyttGrunnlag && feilmelding === undefined);
 
   useEffect(() => {
     oppdaterStatus(stegErGyldig);
@@ -266,7 +285,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
       innvilgelsesResultat: MKV.Koder.innvilgelsesResultat.INNVILGET,
     };
 
-    const response: any = medlemskapsperiode.ny
+    const response: any = await (medlemskapsperiode.ny
       ? dispatch(medlemskapsperioderOperations.opprettMedlemskapsperiode(behandlingID, periodeRequest))
       : dispatch(
           medlemskapsperioderOperations.oppdaterMedlemskapsperiode(
@@ -274,7 +293,13 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
             medlemskapsperiode.periodeId,
             periodeRequest,
           ),
-        );
+        ));
+
+    if (harMedlemskapsPeriodeFeil(response)) {
+      setFeilmelding(response?.data?.data?.message);
+    } else {
+      setFeilmelding(undefined);
+    }
 
     medlemskapsperioderUpdate(
       index,
@@ -437,13 +462,13 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
 
       {brukerHarBekreftet && <FeilmeldingOppsummering errors={formErrors} />}
 
-      {beregningError && (
+      {feilmelding && (
         <Nav.Alert variant="error" className="alertstripe_feilmelding">
-          {beregningError}
+          {feilmelding}
         </Nav.Alert>
       )}
 
-      <Nav.Button variant="primary" disabled={!redigerbart || !formIsValid} onClick={bekreftOnClick}>
+      <Nav.Button variant="primary" disabled={!redigerbart || !stegErGyldig} onClick={bekreftOnClick}>
         Bekreft og fortsett
       </Nav.Button>
     </div>

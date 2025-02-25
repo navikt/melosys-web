@@ -3,6 +3,7 @@ import MKV from "../../../../../melosyskodeverk";
 import * as KV from "../../../../../kodeverk";
 import * as Utils from "../../../../../utils";
 import { BOOLSK_STRING } from "../../../../../constants";
+import * as Datoutils from "../../../../../utils/dato";
 
 import { erBrukerSkattepliktigIHelePerioden } from "../komponenter/utils";
 
@@ -30,6 +31,21 @@ const arbAvgBetalesFyltUtNårDetKrevesTest = {
       arbAvgBetalesKreves(kildetype, schema?.options?.context?.medlemskapsTypeErPliktig) &&
       Utils._isEmpty(arbAvgBetales)
     );
+  },
+};
+
+const erInnenforValgtAarTest = {
+  name: "Utenfor valgt år",
+  message: {
+    melding: `Utenfor valgt år`,
+  },
+  test: (datoString, schema) => {
+    const aar = schema?.options?.context?.aar;
+    if (!datoString) return false;
+    const dato = new Date(Datoutils.formatterDatoTilISO(datoString));
+    const startAar = new Date(aar, 0, 1);
+    const sluttAar = new Date(aar, 11, 31, 23, 59, 59, 999);
+    return dato >= startAar && dato <= sluttAar;
   },
 };
 
@@ -78,8 +94,8 @@ const aarsavregningUtenEllerDeltGrunnlagSchema = object().shape({
     .min(1, "Minst en medlemskapsperiode")
     .of(
       object().shape({
-        fomDato: string().erGyldigDato().required(),
-        tomDato: string().erGyldigDato().erEtterDatofelt("fomDato").test(åpenTomTest),
+        fomDato: string().erGyldigDato().test(erInnenforValgtAarTest).required(),
+        tomDato: string().erGyldigDato().erEtterDatofelt("fomDato").test(åpenTomTest).test(erInnenforValgtAarTest),
         trygdedekning: string().required(),
         bestemmelse: string().required(),
       }),
@@ -90,10 +106,12 @@ const aarsavregningUtenEllerDeltGrunnlagSchema = object().shape({
       object().shape({
         fomDato: string()
           .erGyldigDato()
+          .test(erInnenforValgtAarTest)
           .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
           .required(MAA_FYLLES_UT),
         tomDato: string()
           .erGyldigDato()
+          .test(erInnenforValgtAarTest)
           .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
           .erEtterDatofelt("fomDato")
           .test(åpenTomTest)
@@ -113,7 +131,7 @@ const aarsavregningUtenEllerDeltGrunnlagSchema = object().shape({
           object().shape({
             kildetype: string().required(MAA_FYLLES_UT),
             arbAvgBetales: string().test(arbAvgBetalesFyltUtNårDetKrevesTest).nullable(),
-            bruttoInntekt: string().required(MAA_FYLLES_UT).erNummer().test(bruttoInntektFyltUtNårDetKrevesTest),
+            bruttoInntekt: string().test(bruttoInntektFyltUtNårDetKrevesTest),
             fomDato: string()
               .erGyldigDato()
               .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
@@ -122,6 +140,8 @@ const aarsavregningUtenEllerDeltGrunnlagSchema = object().shape({
               .erGyldigDato()
               .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
               .erEtterDatofelt("fomDato")
+              .test(erInnenforValgtAarTest)
+              .test(åpenTomTest)
               .required(MAA_FYLLES_UT),
           }),
         ),
