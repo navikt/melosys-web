@@ -32,6 +32,7 @@ export async function aapneBehandling(page: any, melNumber: number) {
     })
     .first()
     .click();
+  await page.waitForLoadState("networkidle");
 }
 
 export async function fyllBehandling(page: any, options: any) {
@@ -90,16 +91,20 @@ export async function fyllTrygdeavgiftsperioder(page: any, options: any) {
 }
 
 export async function opprettAarsavregning(page: any, saksnummer: string) {
+  await page.waitForLoadState("networkidle");
+
   await page.getByRole("button", { name: "Opprett ny sak/behandling" }).click();
   await page.getByRole("textbox", { name: "Brukers f.nr. eller d-nr.:" }).click();
   await page.getByRole("textbox", { name: "Brukers f.nr. eller d-nr.:" }).fill("21075114491");
-  //await page.locator(`#saksnummer-MEL-${saksnummer}`).check();
-  await page
-    .getByLabel(/^saksnummer-MEL-/)
-    .first()
-    .check();
+
+  await page.waitForLoadState("networkidle");
+
+  await page.locator('[id^="saksnummer-MEL-"]').first().check();
+
   await page.locator('input[value="ÅRSAVREGNING"]').check();
   await page.getByLabel("Årsak").selectOption("SØKNAD");
   await page.getByRole("checkbox", { name: "Legg behandlingen i mine" }).check();
   await page.getByRole("button", { name: "Opprett ny behandling" }).click();
+
+  await page.waitForLoadState("networkidle");
 }

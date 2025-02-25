@@ -20,7 +20,7 @@ const trygdeavgiftOptions = {
   skatteplikttype: "IKKE_SKATTEPLIKTIG",
 };
 
-test.only("opprettvedtak", async ({ page }) => {
+test("opprettvedtak", async ({ page }) => {
   await page.goto("http://localhost:3000/melosys");
 
   await opprettForstegangsbehandling(page);
@@ -31,7 +31,7 @@ test.only("opprettvedtak", async ({ page }) => {
 
   await fyllTrygdeavgiftsperioder(page, trygdeavgiftOptions);
 
-  bekreft(page);
+  await bekreft(page);
 
   await page.getByRole("button", { name: "Fatt vedtak" }).click();
 
@@ -67,7 +67,7 @@ test("MELOSYS-6528 aarsavregning viser tidligere grunnlag ved valg av år", asyn
   await expect(matchingRows).toHaveCount(1);
 });
 
-test.only("MELOSYS-6528 aarsavregning viser feilmelding ved annen åpen årsavregning", async ({ page }) => {
+test("MELOSYS-6528 aarsavregning viser feilmelding ved annen åpen årsavregning", async ({ page }) => {
   await page.goto("http://localhost:3000/melosys");
   await opprettAarsavregning(page, saksnummer);
 
@@ -77,11 +77,11 @@ test.only("MELOSYS-6528 aarsavregning viser feilmelding ved annen åpen årsavre
   await expect(page.getByText("Det finnes en annen åpen å")).toBeVisible();
 });
 
-test("MELOSYS-6528 aarsavregning ved ingen tidligere fakturert behandling viser infobokser", async ({ page }) => {
+test.only("MELOSYS-6528 aarsavregning ved ingen tidligere fakturert behandling viser infobokser", async ({ page }) => {
   await page.goto("http://localhost:3000/melosys");
 
   await opprettForstegangsbehandling(page);
-  await aapneBehandling(page, 3);
+  await aapneBehandling(page, 1);
 
   const behandlingOptions2 = {
     fromDate: "01.08.2024",
@@ -94,9 +94,16 @@ test("MELOSYS-6528 aarsavregning ved ingen tidligere fakturert behandling viser 
 
   await fyllBehandling(page, behandlingOptions2);
   await fyllTrygdeavgiftsperioder(page, trygdeavgiftOptions2);
-  await page.pause();
   await bekreft(page);
+
+  await page.getByRole("button", { name: "Fatt vedtak" }).click();
 
   await opprettAarsavregning(page, "");
   await aapneBehandling(page, 3);
+  await page.getByLabel("", { exact: true }).selectOption(aar);
+  await expect(page.getByText("Trygdeavgift er ikke forskuddsvis fakturert")).toBeVisible({ timeout: 10000 });
+  await expect(page.getByText("Trygdeavgift skal ikke betales til NAV")).toBeVisible({ timeout: 10000 });
+  await page.waitForTimeout(3000); // sikker på at vi ikke har gjort et beregningskall i tillegg som har vært et gjentakende problem
+  await expect(page.getByText("Kan ikke beregne trygdeavgift")).not.toBeVisible({ timeout: 10000 });
+  await page.pause();
 });
