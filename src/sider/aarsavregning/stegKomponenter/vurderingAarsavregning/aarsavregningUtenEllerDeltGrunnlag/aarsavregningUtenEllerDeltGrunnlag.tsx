@@ -8,12 +8,7 @@ import * as Nav from "../../../../../navFrontend";
 import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 import { TidligereFakturertIAvgiftssystemetInput } from "../komponenter/tidligereFakturertIAvgiftssystemetInput";
 import { FieldValue, useFieldArray, useForm } from "react-hook-form";
-import {
-  FieldArrayProps,
-  FormValuesProps,
-  Inntektskilde,
-  Skatteforhold,
-} from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
+import { FieldArrayProps, FormValuesProps } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Utils from "../../../../../utils";
 import MKV from "../../../../../melosyskodeverk";
@@ -81,6 +76,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
   const lagredeMedlemskapsperioder = useSelector(medlemskapsperioderSelectors.AlleMedlemskapsperioderSelector);
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const dispatch = useDispatch();
+  const harMedlemskapsPeriodeFeil = (response: any): boolean => response.type === medlemskapsperioderTypes.FEILET;
 
   useEffect(() => {
     if (behandlingstema) {
@@ -257,16 +253,16 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
 
   useEffect(() => {
     if (
-      fomTomErFyltUt(formValues.inntektskilder, formValues.skatteforholdsperioder) &&
-      harInntektsKildeType(formValues.inntektskilder) &&
       redigerbart &&
+      aarsavregningID &&
       !isValidating &&
       formIsValid &&
-      aarsavregningID
+      fomTomErFyltUt(formValues.inntektskilder, formValues.skatteforholdsperioder) &&
+      harInntektsKildeType(formValues.inntektskilder)
     ) {
       debounceBeregnTrygdeavgiftsperioder(formValues);
     }
-  }, [formIsValid, isValidating]);
+  }, [formIsValid, isValidating, formValues.inntektskilder.length, formValues.skatteforholdsperioder.length]);
 
   const stegErGyldig = Boolean(formIsValid && aarsavregningResponse?.nyttGrunnlag && feilmelding === undefined);
 
@@ -280,8 +276,6 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
       bekreft();
     }
   };
-
-  const harMedlemskapsPeriodeFeil = (response: any): boolean => response.type === medlemskapsperioderTypes.FEILET;
 
   const lagreMedlemskapsperiode = async (medlemskapsperiode: MedlemskapsperiodeProp, index: number) => {
     const periodeRequest = {
