@@ -238,7 +238,6 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
       await beregnTrygdeavgiftsperioder(formVerdier, {
         behandlingID,
         medlemskapsTypeErPliktig,
-        aarsavregningID,
         setFeilmelding,
         setAarsavregningResponse,
       });

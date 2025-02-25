@@ -179,12 +179,11 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
       await beregnTrygdeavgiftsperioder(formVerdier, {
         behandlingID,
         medlemskapsTypeErPliktig,
-        aarsavregningID,
         setFeilmelding,
         setAarsavregningResponse,
       });
     },
-    [behandlingID, medlemskapsTypeErPliktig, setFeilmelding, setAarsavregningResponse, aarsavregningID],
+    [behandlingID, medlemskapsTypeErPliktig, setFeilmelding, setAarsavregningResponse],
   );
 
   const debounceBeregnTrygdeavgiftsperioderOgOppdaterFormVerdier = useCallback(
