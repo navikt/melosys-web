@@ -46,12 +46,17 @@ export function harIkkeSkattepliktigInntektskilder(
   return true;
 }
 
-export function fomTomEralltidFyltUt(
+export function fomTomErFyltUt(
   inntektskildePerioder: Inntektskilde[],
   skatteforholdsPerioder: Skatteforhold[],
 ): boolean {
   const allPerioder = [...inntektskildePerioder, ...skatteforholdsPerioder];
   return allPerioder.every(({ fomDato, tomDato }) => fomDato !== undefined && tomDato !== undefined);
+}
+
+export function harInntektsKildeType(inntektskildePerioder: Inntektskilde[]) {
+  inntektskildePerioder.every((kildetype) => console.log(kildetype));
+  return inntektskildePerioder.every((inntektskilde) => inntektskilde?.kildetype !== undefined);
 }
 
 export function beregnTrygdeavgiftsperioder(

@@ -36,8 +36,9 @@ import {
   beregnTrygdeavgiftsperioder,
   erBrukerSkattepliktigIHelePerioden,
   harIkkeSkattepliktigInntektskilder,
-  fomTomEralltidFyltUt,
+  fomTomErFyltUt,
   validerMedlemskapsperioder,
+  harInntektsKildeType,
 } from "../komponenter/utils";
 import {
   hentMedlemskapsFomTomDato,
@@ -256,7 +257,8 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
 
   useEffect(() => {
     if (
-      fomTomEralltidFyltUt(formValues.inntektskilder, formValues.skatteforholdsperioder) &&
+      fomTomErFyltUt(formValues.inntektskilder, formValues.skatteforholdsperioder) &&
+      harInntektsKildeType(formValues.inntektskilder) &&
       redigerbart &&
       !isValidating &&
       formIsValid &&

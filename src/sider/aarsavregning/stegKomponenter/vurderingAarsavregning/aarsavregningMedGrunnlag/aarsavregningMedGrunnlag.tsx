@@ -28,9 +28,10 @@ import { Inntektskilder } from "../../../../../felleskomponenter/trygdeavgift/ko
 import {
   beregnTrygdeavgiftsperioder,
   erBrukerSkattepliktigIHelePerioden,
-  fomTomEralltidFyltUt,
+  fomTomErFyltUt,
   harIkkeSkattepliktigInntektskilder,
   lagInnvilgetMedlemskapsPeriode,
+  harInntektsKildeType,
 } from "../komponenter/utils";
 import { mapTilInntektskilderProps, mapTilSkatteforholdProps } from "../aarsavregningHelpers";
 
@@ -200,7 +201,8 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
 
   useEffect(() => {
     if (
-      fomTomEralltidFyltUt(formValues.inntektskilder, formValues.skatteforholdsperioder) &&
+      fomTomErFyltUt(formValues.inntektskilder, formValues.skatteforholdsperioder) &&
+      harInntektsKildeType(formValues.inntektskilder) &&
       redigerbart &&
       erAvvik &&
       !isValidating &&
