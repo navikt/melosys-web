@@ -211,7 +211,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
     ) {
       debounceBeregnTrygdeavgiftsperioderOgOppdaterFormVerdier(formValues);
     }
-  }, [isValidating, erAvvik]);
+  }, [isValidating, erAvvik, formValues.inntektskilder, formValues.skatteforholdsperioder]);
 
   const stegErGyldig =
     erAvvik === false || Boolean(formIsValid && erAvvik && aarsavregningResponse?.nyttGrunnlag && !feilmelding);
