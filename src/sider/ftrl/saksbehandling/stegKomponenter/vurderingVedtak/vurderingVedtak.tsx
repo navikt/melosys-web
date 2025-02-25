@@ -36,7 +36,7 @@ import { menypanelOperations, menypanelSelectors } from "../../../../../ducks/me
 import { fagsakSelectors } from "../../../../../ducks/fagsaker";
 import FullmaktForTrygdeavgiftConfirmationPanel from "../../../../../felleskomponenter/fullmaktForTrygdeavgiftConfirmationPanel/fullmaktForTrygdeavgiftConfirmationPanel";
 
-const { NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingstyper;
+const { NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT, SATSENDRING } = MKV.Koder.behandlinger.behandlingstyper;
 const { IKKE_YRKESAKTIV, PENSJONIST } = MKV.Koder.behandlinger.behandlingstema;
 const { OPPHØRT } = MKV.Koder.innvilgelsesResultat;
 const { OPPHØRSVEDTAK, FØRSTEGANGSVEDTAK, ENDRINGSVEDTAK } = MKV.Koder.vedtakstyper;
@@ -111,6 +111,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   const [harBekreftetFullmaktForTrygdeavgift, setHarBekreftetFullmaktForTrygdeavgift] = useState(false);
 
   const erNyVurdering = behandlingstype === NY_VURDERING;
+  const erSatsendring = behandlingstype === SATSENDRING;
   const erManglendeInnbetalingTrygdeavgift = behandlingstype === MANGLENDE_INNBETALING_TRYGDEAVGIFT;
   const erDelvisOpphør = medlemskapsperioder.some((periode) => periode.innvilgelsesResultat === OPPHØRT);
   const erIkkeYrkesaktiv = behandlingstema === IKKE_YRKESAKTIV;
@@ -482,44 +483,48 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
         </div>
       )}
 
-      {!erDelvisOpphør && (
+      {!erSatsendring && (
         <>
+          {!erDelvisOpphør && (
+            <>
+              <Nav.BodyLong weight="semibold" size="small" className="fritekst_overskrift">
+                <LabelMedHjelpetekst label="Fritekst til innledning" hjelpetekst={innledningFritekstHjelpetekst} />
+              </Nav.BodyLong>
+              <Forms.HtmlEditor
+                name="innledningFritekst"
+                control={control}
+                className="fritekst_editor"
+                disabled={!redigerbart}
+              />
+            </>
+          )}
+
           <Nav.BodyLong weight="semibold" size="small" className="fritekst_overskrift">
-            <LabelMedHjelpetekst label="Fritekst til innledning" hjelpetekst={innledningFritekstHjelpetekst} />
+            <LabelMedHjelpetekst label="Fritekst til begrunnelse" hjelpetekst={begrunnelseFritekstHjelpetekst} />
           </Nav.BodyLong>
           <Forms.HtmlEditor
-            name="innledningFritekst"
+            name="begrunnelseFritekst"
             control={control}
             className="fritekst_editor"
             disabled={!redigerbart}
           />
-        </>
-      )}
 
-      <Nav.BodyLong weight="semibold" size="small" className="fritekst_overskrift">
-        <LabelMedHjelpetekst label="Fritekst til begrunnelse" hjelpetekst={begrunnelseFritekstHjelpetekst} />
-      </Nav.BodyLong>
-      <Forms.HtmlEditor
-        name="begrunnelseFritekst"
-        control={control}
-        className="fritekst_editor"
-        disabled={!redigerbart}
-      />
-
-      {!erIkkeYrkesaktiv && !erDelvisOpphør && (
-        <>
-          <Nav.BodyLong weight="semibold" size="small" className="fritekst_overskrift">
-            <LabelMedHjelpetekst
-              label="Fritekst til avsnitt om trygdeavgift"
-              hjelpetekst={trygdeavgiftFritekstHjelpetekst}
-            />
-          </Nav.BodyLong>
-          <Forms.HtmlEditor
-            name="trygdeavgiftFritekst"
-            control={control}
-            className="fritekst_editor"
-            disabled={!redigerbart}
-          />
+          {!erIkkeYrkesaktiv && !erDelvisOpphør && (
+            <>
+              <Nav.BodyLong weight="semibold" size="small" className="fritekst_overskrift">
+                <LabelMedHjelpetekst
+                  label="Fritekst til avsnitt om trygdeavgift"
+                  hjelpetekst={trygdeavgiftFritekstHjelpetekst}
+                />
+              </Nav.BodyLong>
+              <Forms.HtmlEditor
+                name="trygdeavgiftFritekst"
+                control={control}
+                className="fritekst_editor"
+                disabled={!redigerbart}
+              />
+            </>
+          )}
         </>
       )}
 
