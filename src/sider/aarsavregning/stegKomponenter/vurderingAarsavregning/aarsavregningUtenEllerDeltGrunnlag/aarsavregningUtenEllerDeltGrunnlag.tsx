@@ -46,6 +46,7 @@ import { MedlemskapsperiodeSkjema } from "../komponenter/medlemskapsperiodeSkjem
 import TidligereGrunnlagsoversikt from "../komponenter/tidligereGrunnlagsoversikt";
 import aarsavregningUtenEllerDeltGrunnlagSchema from "./aarsavregningUtenEllerDeltGrunnlagSchema";
 import MedlemskapsPerioderTabell from "../komponenter/medlemskapsPerioderTabell";
+import { Aarsavregningsmeldinger } from "../komponenter/aarsavregningsmeldinger";
 
 interface Props {
   bekreft: () => void;
@@ -358,6 +359,9 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
   const trygdeAvgiftSkalIkkeBetalesTilNav =
     medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder);
 
+  const forskuddsvisFakturertTrygdeavgift =
+    (aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift?.totalAvgift ?? 0) > 0;
+
   return (
     <div className="vurderingAarsavregning">
       {harDeltGrunnlag && (
@@ -377,6 +381,8 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
           />
         </>
       )}
+
+      {!forskuddsvisFakturertTrygdeavgift && <Aarsavregningsmeldinger.TrygdeavgiftErIkkeForskuddsvisFakturert />}
 
       {harIkkeskattepliktigInntektskilder && (
         <BeregnetTrygdeavgiftDetaljer
@@ -438,11 +444,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
           skalViseErMaanedsBelopRadioGroup
         />
       )}
-      {trygdeAvgiftSkalIkkeBetalesTilNav && (
-        <Nav.Alert variant="info" className="alertstripe_feilmelding">
-          Trygdeavgift skal ikke betales til NAV
-        </Nav.Alert>
-      )}
+      {trygdeAvgiftSkalIkkeBetalesTilNav && <Aarsavregningsmeldinger.TrygdeavgiftSkalIkkeBetalesTilNav />}
 
       {formIsValid && (
         <SumArsavregningTabell

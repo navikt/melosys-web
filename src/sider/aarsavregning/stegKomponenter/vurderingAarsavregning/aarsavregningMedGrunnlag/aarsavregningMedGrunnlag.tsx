@@ -34,6 +34,7 @@ import {
   harInntektsKildeType,
 } from "../komponenter/utils";
 import { mapTilInntektskilderProps, mapTilSkatteforholdProps } from "../aarsavregningHelpers";
+import { Aarsavregningsmeldinger } from "../komponenter/aarsavregningsmeldinger";
 
 interface Props {
   bekreft: () => void;
@@ -263,6 +264,8 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
 
   const trygdeAvgiftSkalIkkeBetalesTilNav =
     medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder);
+  const forskuddsvisFakturertTrygdeavgift =
+    (aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift?.totalAvgift ?? 0) > 0;
 
   return (
     <>
@@ -282,6 +285,8 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
             avgift={aarsavregningResponse.tidligereGrunnlagsopplysninger.avgift}
           />
 
+          {!forskuddsvisFakturertTrygdeavgift && <Aarsavregningsmeldinger.TrygdeavgiftErIkkeForskuddsvisFakturert />}
+
           {harIkkeskattepliktigInntektskilder && (
             <BeregnetTrygdeavgiftDetaljer
               grunnlag={aarsavregningResponse?.tidligereGrunnlagsopplysninger}
@@ -290,7 +295,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
             />
           )}
 
-          {harIkkeskattepliktigInntektskilder ? (
+          {harIkkeskattepliktigInntektskilder && (
             <Nav.RadioGroup
               onChange={håndterAvvik}
               value={erAvvik}
@@ -302,10 +307,6 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
                 <Nav.Radio value={false}>Nei</Nav.Radio>
               </Nav.HStack>
             </Nav.RadioGroup>
-          ) : (
-            <Nav.Alert variant="info" className="alertstripe_feilmelding">
-              Trygdeavgift er ikke forskuddsvis fakturert
-            </Nav.Alert>
           )}
         </>
       )}
@@ -338,11 +339,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
             />
           )}
 
-          {trygdeAvgiftSkalIkkeBetalesTilNav && (
-            <Nav.Alert variant="info" className="alertstripe_feilmelding">
-              Trygdeavgift skal ikke betales til NAV
-            </Nav.Alert>
-          )}
+          {trygdeAvgiftSkalIkkeBetalesTilNav && <Aarsavregningsmeldinger.TrygdeavgiftSkalIkkeBetalesTilNav />}
         </>
       )}
 
