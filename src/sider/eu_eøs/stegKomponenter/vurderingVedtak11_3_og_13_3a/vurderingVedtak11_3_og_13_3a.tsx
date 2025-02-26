@@ -193,7 +193,9 @@ export function VurderingVedtak11_3_og_13_3a({
         Omfattet av norsk trygdelovgivning
       </Nav.Heading>
       <Mui.KodeTermSelect
-        onChange={(e) => setValue("lovvalgsbestemmelse", e.target.value)}
+        onChange={(e) => {
+          setValue("lovvalgsbestemmelse", e.target.value, { shouldValidate: true });
+        }}
         label="Velg en lovvalgsbestemmelse"
         value={formValues.lovvalgsbestemmelse}
         koder={[
