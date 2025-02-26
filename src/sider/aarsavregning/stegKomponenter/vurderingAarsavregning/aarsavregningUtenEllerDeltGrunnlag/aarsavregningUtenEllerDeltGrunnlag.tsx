@@ -382,7 +382,9 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
         </>
       )}
 
-      {!forskuddsvisFakturertTrygdeavgift && <Aarsavregningsmeldinger.TrygdeavgiftErIkkeForskuddsvisFakturert />}
+      {harDeltGrunnlag && !forskuddsvisFakturertTrygdeavgift && (
+        <Aarsavregningsmeldinger.TrygdeavgiftErIkkeForskuddsvisFakturert />
+      )}
 
       {harIkkeskattepliktigInntektskilder && (
         <BeregnetTrygdeavgiftDetaljer
