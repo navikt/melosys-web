@@ -95,6 +95,8 @@ export function KnyttTilSak(props) {
   }, [journalforingGjelder, sakstype.kode, sakstema.kode, sisteBehandling?.behandlingstema?.kode]);
 
   useEffect(() => {
+    console.log(sakstype);
+    console.log(behandlingstema); // TODO, dette her er wonky
     if (sakstype.kode && sakstema.kode && behandlingstema) {
       Api.LovligeKombinasjoner.hentBehandlingstyperForKnyttTilSak(
         journalforingGjelder,
