@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "AppTypes";
-import { reduxForm, getFormValues, Field } from "redux-form";
+import { getFormValues, reduxForm } from "redux-form";
 
 import * as Api from "../../../../services/api";
 import * as KV from "../../../../kodeverk";
