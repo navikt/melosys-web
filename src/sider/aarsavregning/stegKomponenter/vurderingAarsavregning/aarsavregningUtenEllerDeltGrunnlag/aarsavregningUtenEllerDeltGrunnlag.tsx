@@ -446,7 +446,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
           skalViseErMaanedsBelopRadioGroup
         />
       )}
-      {harDeltGrunnlag && trygdeAvgiftSkalIkkeBetalesTilNav && (
+      {formIsValid && trygdeAvgiftSkalIkkeBetalesTilNav && (
         <Aarsavregningsmeldinger.TrygdeavgiftSkalIkkeBetalesTilNav />
       )}
 
