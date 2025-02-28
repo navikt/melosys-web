@@ -166,9 +166,6 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
   } = useFieldArray<FieldArrayProps, "inntektskilder", "id">({ control, name: "inntektskilder" });
   const formValues = watch();
 
-  const beregningsVerdier = () => {
-    return { skatteforholdsperioder: formValues.skatteforholdsperioder, inntektskilder: formValues.inntektskilder };
-  };
   useEffect(() => {
     if (brukerHarBekreftet && Object.keys(formErrors).length === 0) {
       setBrukerHarBekreftet(false);
@@ -207,7 +204,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
       !isValidating &&
       formIsValid &&
       fomTomErFyltUt(formValues.inntektskilder, formValues.skatteforholdsperioder) &&
-      harInntektsKildeType(formValues.inntektskilder)
+      harInntektsKildeType(formValues.inntektskilder, trygdeAvgiftSkalIkkeBetalesTilNav)
     ) {
       debounceBeregnTrygdeavgiftsperioderOgOppdaterFormVerdier(formValues);
     }

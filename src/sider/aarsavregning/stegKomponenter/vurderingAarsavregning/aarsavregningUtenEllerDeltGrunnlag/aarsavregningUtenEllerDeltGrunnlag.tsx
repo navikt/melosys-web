@@ -252,17 +252,30 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
   );
 
   useEffect(() => {
+    console.log(formValues);
+    console.log("redigerbart:", redigerbart);
+    console.log("aarsavregningID:", aarsavregningID);
+    console.log("isValidating:", isValidating);
+    console.log("formIsValid:", formIsValid);
+    console.log("fomTomErFyltUt:", fomTomErFyltUt(formValues.inntektskilder, formValues.skatteforholdsperioder));
+    console.log("harInntektsKildeType:", harInntektsKildeType(formValues.inntektskilder));
     if (
       redigerbart &&
       aarsavregningID &&
       !isValidating &&
       formIsValid &&
       fomTomErFyltUt(formValues.inntektskilder, formValues.skatteforholdsperioder) &&
-      harInntektsKildeType(formValues.inntektskilder)
+      harInntektsKildeType(formValues.inntektskilder, trygdeAvgiftSkalIkkeBetalesTilNav)
     ) {
       debounceBeregnTrygdeavgiftsperioder(formValues);
     }
-  }, [formIsValid, isValidating, formValues.inntektskilder.length, formValues.skatteforholdsperioder.length]);
+  }, [
+    formIsValid,
+    isValidating,
+    formValues.inntektskilder.length,
+    formValues.skatteforholdsperioder.length,
+    formValues.totaltForskuddsvisFakturert,
+  ]);
 
   const stegErGyldig = Boolean(formIsValid && aarsavregningResponse?.nyttGrunnlag && feilmelding === undefined);
 

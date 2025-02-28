@@ -38,10 +38,11 @@ export const mapInitialMedlemskapsperioder = (
     .sort((a, b) => Utils.dato.sorterEtterISOFomDato(a, b))
     .map((periode) => mapTilMedlemskapsperiodeProps(periode, tidligereGrunnlagsopplysninger));
 
-export const mapTilSkatteforholdProps = (skatteforhold?: any[], medlemskapsperioder?: any[]) => {
+export const mapTilSkatteforholdProps = (skatteforholdsperioder?: any[], medlemskapsperioder?: any[]) => {
   const { fom, tom } = hentMedlemskapsFomTomDato(medlemskapsperioder);
-  if (skatteforhold) {
-    return skatteforhold.map((skatteForhold) => ({
+  if (skatteforholdsperioder) {
+    console.log(skatteforholdsperioder);
+    return skatteforholdsperioder.map((skatteForhold) => ({
       fomDato: Utils.dato.formatterDatoTilNorsk(skatteForhold.fomDato),
       tomDato: Utils.dato.formatterDatoTilNorsk(skatteForhold.tomDato),
       skatteplikttype: skatteForhold.skatteplikttype,
@@ -52,7 +53,7 @@ export const mapTilSkatteforholdProps = (skatteforhold?: any[], medlemskapsperio
       {
         fomDato: Utils.dato.formatterDatoTilNorsk(fom),
         tomDato: Utils.dato.formatterDatoTilNorsk(tom),
-        skatteplikttype: undefined,
+        skatteplikttype: false,
       },
     ];
   }

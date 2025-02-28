@@ -116,7 +116,7 @@ const aarsavregningUtenEllerDeltGrunnlagSchema = object().shape({
           .erEtterDatofelt("fomDato")
           .test(åpenTomTest)
           .required(MAA_FYLLES_UT),
-        skatteplikttype: string().required(MAA_FYLLES_UT),
+        skatteplikttype: object().defined().required(MAA_FYLLES_UT),
       }),
     ),
   inntektskilder: lazy((_value, options) => {
