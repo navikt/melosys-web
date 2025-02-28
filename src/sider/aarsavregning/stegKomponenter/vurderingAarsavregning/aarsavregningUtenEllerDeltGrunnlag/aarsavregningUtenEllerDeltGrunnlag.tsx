@@ -477,7 +477,11 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
         </Nav.Alert>
       )}
 
-      <Nav.Button variant="primary" disabled={!redigerbart || beregningPaagar || !stegErGyldig} onClick={bekreftOnClick}>
+      <Nav.Button
+        variant="primary"
+        disabled={!redigerbart || beregningPaagar || !stegErGyldig}
+        onClick={bekreftOnClick}
+      >
         Bekreft og fortsett
       </Nav.Button>
     </div>

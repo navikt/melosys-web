@@ -241,7 +241,6 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
               skatteforholdsperioder: res.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag.skatteforholdsperioder,
               inntektskilder: res.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag.inntektskperioder,
             });
-
           }
         });
       });
@@ -371,7 +370,11 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
         </Nav.Alert>
       )}
 
-      <Nav.Button variant="primary" disabled={!redigerbart || beregningPaagar || !stegErGyldig} onClick={bekreftOnClick}>
+      <Nav.Button
+        variant="primary"
+        disabled={!redigerbart || beregningPaagar || !stegErGyldig}
+        onClick={bekreftOnClick}
+      >
         Bekreft og fortsett
       </Nav.Button>
     </>
