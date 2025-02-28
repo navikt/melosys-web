@@ -47,6 +47,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
   const [feilmelding, setFeilmelding] = useState<undefined | string>(undefined);
   const [brukerHarBekreftet, setBrukerHarBekreftet] = useState(false);
   const [aarsavregningResponse, setAarsavregningResponse] = useState<AarsavregningResponse | undefined>(undefined);
+  const [beregningPaagar, setBeregningPaagar] = useState(false);
 
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as any;
@@ -180,6 +181,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
         setFeilmelding,
         setAarsavregningResponse,
       });
+      setBeregningPaagar(false);
     },
     [behandlingID, medlemskapsTypeErPliktig, setFeilmelding, setAarsavregningResponse],
   );
@@ -206,9 +208,10 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
       fomTomErFyltUt(formValues.inntektskilder, formValues.skatteforholdsperioder) &&
       harInntektsKildeType(formValues.inntektskilder, trygdeAvgiftSkalIkkeBetalesTilNav)
     ) {
+      setBeregningPaagar(true);
       debounceBeregnTrygdeavgiftsperioderOgOppdaterFormVerdier(formValues);
     }
-  }, [isValidating, erAvvik, formValues.inntektskilder.length, formValues.skatteforholdsperioder.length]);
+  }, [formIsValid, isValidating, erAvvik, formValues.inntektskilder.length, formValues.skatteforholdsperioder.length]);
 
   const stegErGyldig =
     erAvvik === false || Boolean(formIsValid && erAvvik && aarsavregningResponse?.nyttGrunnlag && !feilmelding);
@@ -230,6 +233,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
           setAarsavregningResponse(res);
           setSkjemaverdierFraTrygdeavgiftsgrunnlag(res.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag);
           if (res.tidligereGrunnlagsopplysninger !== undefined) {
+            setBeregningPaagar(true);
             debouncedBeregnTrygdeavgiftsperioder({
               skatteforholdsperioder: res.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag.skatteforholdsperioder,
               inntektskilder: res.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag.inntektskperioder,
@@ -363,7 +367,11 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
         </Nav.Alert>
       )}
 
-      <Nav.Button variant="primary" disabled={!stegErGyldig || !redigerbart} onClick={bekreftOnClick}>
+      <Nav.Button
+        variant="primary"
+        disabled={!redigerbart || beregningPaagar || !stegErGyldig}
+        onClick={bekreftOnClick}
+      >
         Bekreft og fortsett
       </Nav.Button>
     </>
