@@ -2,6 +2,10 @@ import { expect } from "@playwright/test";
 
 const USER = "21075114491";
 
+export async function home(page: any) {
+  await page.goto("http://localhost:3000/melosys");
+}
+
 export async function bekreft(page: any) {
   await page.getByRole("button", { name: "Bekreft og fortsett" }).click();
 }

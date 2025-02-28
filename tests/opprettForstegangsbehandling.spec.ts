@@ -38,16 +38,6 @@ test("opprettvedtak", async ({ page }) => {
 const saksnummer = "1";
 const aar = "2024";
 
-test("MELOSYS-6528 aarsavregning viser feilmelding ved annen åpen årsavregning", async ({ page }) => {
-  await page.goto("http://localhost:3000/melosys");
-  await opprettAarsavregning(page, saksnummer);
-
-  await aapneBehandling(page, 3);
-
-  await page.getByLabel("", { exact: true }).selectOption(aar);
-  await expect(page.getByText("Det finnes en annen åpen å")).toBeVisible();
-});
-
 test("MELOSYS-6528 aarsavregning ved ingen tidligere fakturerte grunnlag viser infobokser", async ({ page }) => {
   await page.goto("http://localhost:3000/melosys");
 

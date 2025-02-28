@@ -3,11 +3,12 @@ import {
   bekreft,
   fyllBehandling,
   fyllTrygdeavgiftsperioder,
+  home,
   opprettForstegangsbehandling,
 } from "../testutils/utils";
 
 export const OpprettForstegangsbehandling = async (page: any, behandlingOptions: any) => {
-  await page.goto("http://localhost:3000/melosys");
+  await home(page);
 
   await opprettForstegangsbehandling(page);
   await aapneBehandling(page, 1);
