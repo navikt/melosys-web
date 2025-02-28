@@ -1,48 +1,45 @@
 import { Alert, List as NavList } from "../../../../navFrontend";
 import { Heading } from "@navikt/ds-react";
 
+const lagNavlistItem = (melding: string) => {
+  return <NavList.Item>{melding}</NavList.Item>;
+};
+
+const lagDatofeilmelding = (periodeType: string) => {
+  return lagNavlistItem(`${periodeType} kan ikke starte før eller slutte etter medlemskapsperioden(e).`);
+};
+
 export function FeilmeldingOppsummering({ errors }: any) {
-  const lagNavlistItem = (melding: string) => {
-    return <NavList.Item>{melding}</NavList.Item>;
-  };
-  const datofeilmelding = (periodeType: string) => {
-    return lagNavlistItem(`${periodeType} kan ikke starte før eller slutte etter medlemskapsperioden(e).`);
-  };
+  const skatteforholdErrors = [];
+  const harDatofeil = errors.skatteforholdsperioder?.some(
+    (error: any) => error.fomDato !== undefined || error.tomDato !== undefined,
+  );
 
-  const lagSkatteforholdsperiodeError = (skatteforholdsperiodeError: any) => {
-    const navlistItems = [];
-    const harDatofeil = skatteforholdsperiodeError?.some(
-      (error: any) => error.fomDato !== undefined || error.tomDato !== undefined,
-    );
+  if (harDatofeil) {
+    skatteforholdErrors.push(lagDatofeilmelding("Skatteforholdsperioden(e)"));
+  }
 
-    if (harDatofeil) {
-      navlistItems.push(datofeilmelding("Skatteforholdsperioden(e)"));
-    }
+  const inntektskildeErrors = [];
+  const inntektskilderHarDatofeil = errors.inntektskilder?.some(
+    (error: any) => error.fomDato !== undefined || error.tomDato !== undefined,
+  );
+  const harBruttoInntektfeil = errors.inntektskilder?.some((error: any) => error.bruttoInntekt !== undefined);
+  const harKildetypefeil = errors.inntektskilder?.some((error: any) => error.kildetype !== undefined);
 
-    return navlistItems;
-  };
+  if (inntektskilderHarDatofeil) {
+    inntektskildeErrors.push(lagDatofeilmelding("Inntektskildeperioden(e)"));
+  }
+  if (harBruttoInntektfeil) {
+    inntektskildeErrors.push(lagNavlistItem("Bruttoinntekt må fylles ut"));
+  }
 
-  const lagInntektskildeError = (inntektskildeError: any) => {
-    const navlistItems = [];
-    const harDatofeil = inntektskildeError?.some(
-      (error: any) => error.fomDato !== undefined || error.tomDato !== undefined,
-    );
-    const harBruttoInntektfeil = inntektskildeError?.some((error: any) => error.bruttoInntekt !== undefined);
-    const harKildetypefeil = inntektskildeError?.some((error: any) => error.kildetype !== undefined);
+  if (harKildetypefeil) {
+    inntektskildeErrors.push(lagNavlistItem("Inntektskilde må fylles ut"));
+  }
 
-    if (harDatofeil) {
-      navlistItems.push(datofeilmelding("Inntektskildeperioden(e)"));
-    }
-    if (harBruttoInntektfeil) {
-      navlistItems.push(lagNavlistItem("Bruttoinntekt må fylles ut"));
-    }
-
-    if (harKildetypefeil) {
-      navlistItems.push(lagNavlistItem("Inntektskilde må fylles ut"));
-    }
-
-    return navlistItems;
-  };
+  if (!skatteforholdErrors.length && !inntektskildeErrors.length) {
+    return null;
+  }
 
   return (
     <Alert variant="warning">
@@ -50,8 +47,8 @@ export function FeilmeldingOppsummering({ errors }: any) {
         Du må fikse disse feilene før du kan gå videre:
       </Heading>
       <NavList>
-        {errors.skatteforholdsperioder && lagSkatteforholdsperiodeError(errors.skatteforholdsperioder)}
-        {errors.inntektskilder && lagInntektskildeError(errors.inntektskilder)}
+        {skatteforholdErrors}
+        {inntektskildeErrors}
       </NavList>
     </Alert>
   );
