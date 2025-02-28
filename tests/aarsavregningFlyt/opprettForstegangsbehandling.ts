@@ -1,3 +1,5 @@
+import { expect } from "@playwright/test";
+
 import {
   aapneBehandling,
   bekreft,
@@ -14,11 +16,11 @@ export const OpprettForstegangsbehandling = async (page: any, behandlingOptions:
   await aapneBehandling(page, 1);
   await fyllBehandling(page, behandlingOptions);
 
-  //  await page.pause();
-
   await fyllTrygdeavgiftsperioder(page, behandlingOptions.trygdeavgiftOptions);
-
   await bekreft(page);
-
+  await expect(
+    page.getByRole("heading", { name: "Pliktig medlemskap etter folketrygdloven", exact: true }),
+  ).toBeVisible();
+  await page.pause();
   await page.getByRole("button", { name: "Fatt vedtak" }).click();
 };

@@ -76,24 +76,43 @@ test("@2 MELOSYS-6528 aarsavregning viser feilmelding ved annen åpen årsavregn
   await forkastAarsavregning(page);
 });
 
+function logNetwork(page: any) {
+  page.on("request", (request: any) => {
+    if (request.url().includes("beregning")) {
+      const postData = request.postDataJSON(); // Get JSON payload (if applicable)
+      console.log(`Beregning request URL: ${request.url()}`);
+      console.log(`Payload: ${JSON.stringify(postData, null, 2)}`);
+    }
+  });
+}
+
 test("@3 MELOSYS-6528 aarsavregning ved ingen tidligere fakturerte grunnlag viser infobokser", async ({ page }) => {
   const options = {
-    fromDate: "16.03.2024",
-    toDate: "17.03.2024",
+    fromDate: "05.03.2024",
+    toDate: "06.03.2024",
     trygdeavgiftOptions: {
       skatteplikttype: SKATTEPLIKTIG,
     },
   };
 
+  logNetwork(page);
+
   await OpprettForstegangsbehandling(page, options);
+
   await opprettAarsavregning(page, "");
-  await aapneBehandling(page, 0);
+  //await aapneBehandling(page, 0);
+  await page.locator(".behandlingOppgave__link").first().click();
   await page.selectOption("#aarVelger", "2024");
 
   await expect(page.getByText("Trygdeavgift er ikke forskuddsvis fakturert")).toBeVisible({ timeout: 10000 });
   await expect(page.getByText("Trygdeavgift skal ikke betales til NAV")).toBeVisible({ timeout: 10000 });
-  await page.waitForTimeout(3000); // sikker på at vi ikke har gjort et beregningskall i tillegg som har vært et gjentakende problem
-  // await expect(page.getByText("Kan ikke beregne trygdeavgift")).not.toBeVisible({ timeout: 10000 }); TODO dette skal fungere
+  await expect(page.getByText("Tidligere beregnet trygdeavgift").locator("xpath=following-sibling::td")).toHaveText(
+    "0,00 kr",
+  );
+
+  // TODO dette skal fungere
+  //await page.waitForTimeout(3000); // sikker på at vi ikke har gjort et beregningskall i tillegg som har vært et gjentakende problem
+  // await expect(page.getByText("Kan ikke beregne trygdeavgift")).not.toBeVisible({ timeout: 10000 });
 
   await forkastAarsavregning(page);
 });

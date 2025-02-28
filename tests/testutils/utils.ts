@@ -77,6 +77,8 @@ export async function fyllBehandling(page: any, options: any) {
 }
 
 export async function fyllTrygdeavgiftsperioder(page: any, options: any) {
+  await page.waitForLoadState("networkidle");
+
   const radioButton = page.locator(`input[value="${options.skatteplikttype}"]`);
   await radioButton.check();
   await expect(radioButton).toBeChecked();
