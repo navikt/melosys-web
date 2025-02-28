@@ -68,6 +68,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
   const [valgtÅr, setValgtÅr] = useState<number | undefined>();
   const [feilmelding, setFeilmelding] = useState<undefined | string>(undefined);
   const [brukerHarBekreftet, setBrukerHarBekreftet] = useState(false);
+  const [beregningPaagar, setBeregningPaagar] = useState(false);
 
   const [aarsavregningResponse, setAarsavregningResponse] = useState<AarsavregningResponse | undefined>(undefined);
   const [bestemmelser, setBestemmelser] = useState<[]>([]);
@@ -242,6 +243,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
         setFeilmelding,
         setAarsavregningResponse,
       });
+      setBeregningPaagar(false);
     },
     [behandlingID, medlemskapsTypeErPliktig, setFeilmelding, setAarsavregningResponse, aarsavregningID],
   );
@@ -260,6 +262,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
       fomTomErFyltUt(formValues.inntektskilder, formValues.skatteforholdsperioder) &&
       harInntektsKildeType(formValues.inntektskilder)
     ) {
+      setBeregningPaagar(true);
       debounceBeregnTrygdeavgiftsperioder(formValues);
     }
   }, [formIsValid, isValidating, formValues.inntektskilder.length, formValues.skatteforholdsperioder.length]);
@@ -474,7 +477,11 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
         </Nav.Alert>
       )}
 
-      <Nav.Button variant="primary" disabled={!redigerbart || !stegErGyldig} onClick={bekreftOnClick}>
+      <Nav.Button
+        variant="primary"
+        disabled={!redigerbart || beregningPaagar || !stegErGyldig}
+        onClick={bekreftOnClick}
+      >
         Bekreft og fortsett
       </Nav.Button>
     </div>

@@ -42,6 +42,7 @@ export function TidligereFakturertIAvgiftssystemetInput({
         control={control}
         disabled={!redigerbart}
         className="tidligere_fakturert_input"
+        autoComplete="off"
       />
     </>
   );
