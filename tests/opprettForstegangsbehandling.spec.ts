@@ -105,7 +105,7 @@ test("MELOSYS-6528 aarsavregning ved ingen tidligere fakturerte grunnlag viser i
   await page.pause();
 });
 
-test.only("MELOSYS-6529 aarsavregning ved tidligere fakturert grunnlag viser ikke feilmelding", async ({ page }) => {
+test("MELOSYS-6529 aarsavregning ved tidligere fakturert grunnlag viser ikke feilmelding", async ({ page }) => {
   await page.goto("http://localhost:3000/melosys");
 
   await opprettForstegangsbehandling(page);

@@ -1,5 +1,7 @@
 import { expect } from "@playwright/test";
 
+const USER = "21075114491";
+
 export async function bekreft(page: any) {
   await page.getByRole("button", { name: "Bekreft og fortsett" }).click();
 }
@@ -7,8 +9,9 @@ export async function bekreft(page: any) {
 export async function opprettForstegangsbehandling(page: any) {
   await page.getByRole("button", { name: "Opprett ny sak/behandling" }).click();
   await page.getByRole("textbox", { name: "Brukers f.nr. eller d-nr.:" }).click();
-  await page.getByRole("textbox", { name: "Brukers f.nr. eller d-nr.:" }).fill("21075114491");
+  await page.getByRole("textbox", { name: "Brukers f.nr. eller d-nr.:" }).fill(USER);
   await page.waitForLoadState("networkidle");
+
   const isIngenSaker = await page.getByText("Ingen eksisterende saker").isVisible({ timeout: 10000 });
   if (!isIngenSaker) {
     await page.getByRole("radio", { name: "Opprett ny sak" }).check();
@@ -95,7 +98,7 @@ export async function opprettAarsavregning(page: any, saksnummer: string) {
 
   await page.getByRole("button", { name: "Opprett ny sak/behandling" }).click();
   await page.getByRole("textbox", { name: "Brukers f.nr. eller d-nr.:" }).click();
-  await page.getByRole("textbox", { name: "Brukers f.nr. eller d-nr.:" }).fill("21075114491");
+  await page.getByRole("textbox", { name: "Brukers f.nr. eller d-nr.:" }).fill(USER);
 
   await page.waitForLoadState("networkidle");
 
@@ -107,4 +110,11 @@ export async function opprettAarsavregning(page: any, saksnummer: string) {
   await page.getByRole("button", { name: "Opprett ny behandling" }).click();
 
   await page.waitForLoadState("networkidle");
+}
+
+export async function forkastAarsavregning(page: any) {
+  await page.getByRole("button", { name: "Behandlingsmeny" }).click();
+  await page.getByRole("button", { name: "Avslutt behandling" }).click();
+  await page.getByRole("button", { name: "Behandlingen er bortfalt" }).click();
+  await page.getByRole("button", { name: "Bekreft", exact: true }).click();
 }
