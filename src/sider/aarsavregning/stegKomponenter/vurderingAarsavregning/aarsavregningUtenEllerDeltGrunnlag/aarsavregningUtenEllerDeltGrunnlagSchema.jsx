@@ -106,24 +106,23 @@ const aarsavregningUtenEllerDeltGrunnlagSchema = object().shape({
       object().shape({
         fomDato: string()
           .erGyldigDato()
+          .required(MAA_FYLLES_UT)
           .test(erInnenforValgtAarTest)
-          .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
-          .required(MAA_FYLLES_UT),
+          .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN),
         tomDato: string()
           .erGyldigDato()
+          .required(MAA_FYLLES_UT)
+          .test(åpenTomTest)
           .test(erInnenforValgtAarTest)
           .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
-          .erEtterDatofelt("fomDato")
-          .test(åpenTomTest)
-          .required(MAA_FYLLES_UT),
+          .erEtterDatofelt("fomDato"),
         skatteplikttype: string().defined().required(MAA_FYLLES_UT),
       }),
     ),
   inntektskilder: lazy((_value, options) => {
-    return array().when(["$medlemskapsTypeErPliktig", "$erÅpenSluttDato", "$erAvvik"], {
-      is: (medlemskapsTypeErPliktig, erÅpenSluttDato, erAvvik) => {
-        if (!erAvvik) return false;
-        return !erÅpenSluttDato && kreverInntektskilder(medlemskapsTypeErPliktig, options) && erAvvik; // TODO denne logikken er korrekt
+    return array().when(["$medlemskapsTypeErPliktig"], {
+      is: (medlemskapsTypeErPliktig) => {
+        return kreverInntektskilder(medlemskapsTypeErPliktig, options);
       },
       then: array()
         .min(1, "Minst en inntektskilde")
@@ -134,15 +133,13 @@ const aarsavregningUtenEllerDeltGrunnlagSchema = object().shape({
             bruttoInntekt: string().test(bruttoInntektFyltUtNårDetKrevesTest),
             fomDato: string()
               .erGyldigDato()
-              .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
-              .required(MAA_FYLLES_UT),
+              .required(MAA_FYLLES_UT)
+              .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN),
             tomDato: string()
               .erGyldigDato()
+              .required(MAA_FYLLES_UT)
               .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
-              .erEtterDatofelt("fomDato")
-              .test(erInnenforValgtAarTest)
-              .test(åpenTomTest)
-              .required(MAA_FYLLES_UT),
+              .erEtterDatofelt("fomDato"),
           }),
         ),
     });
