@@ -263,6 +263,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
       harInntektsKildeType(formValues.inntektskilder, trygdeAvgiftSkalIkkeBetalesTilNav)
     ) {
       setBeregningPaagar(true);
+      setFeilmelding(undefined);
       debounceBeregnTrygdeavgiftsperioder(formValues);
     }
   }, [
