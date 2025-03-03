@@ -49,9 +49,13 @@ export function harIkkeSkattepliktigInntektskilder(
 export function fomTomErFyltUt(
   inntektskildePerioder: Inntektskilde[],
   skatteforholdsPerioder: Skatteforhold[],
+  medlemskapsperioder?: Medlemskapsperiode[],
 ): boolean {
-  const allPerioder = [...inntektskildePerioder, ...skatteforholdsPerioder];
-  return allPerioder.every(({ fomDato, tomDato }) => fomDato !== undefined && tomDato !== undefined);
+  let allPerioder = [...inntektskildePerioder, ...skatteforholdsPerioder];
+  if (medlemskapsperioder?.length) {
+    allPerioder = [...allPerioder, ...medlemskapsperioder];
+  }
+  return allPerioder.every(({ fomDato, tomDato }) => fomDato !== undefined && fomDato !== "" && tomDato !== undefined && tomDato !== "");
 }
 
 export function harInntektsKildeType(

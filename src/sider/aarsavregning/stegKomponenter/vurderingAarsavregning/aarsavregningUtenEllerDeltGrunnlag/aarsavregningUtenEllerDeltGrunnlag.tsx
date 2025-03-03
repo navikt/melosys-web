@@ -259,7 +259,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
       aarsavregningID &&
       !isValidating &&
       formIsValid &&
-      fomTomErFyltUt(formValues.inntektskilder, formValues.skatteforholdsperioder) &&
+      fomTomErFyltUt(formValues.inntektskilder, formValues.skatteforholdsperioder, formValues.medlemskapsperioder) &&
       harInntektsKildeType(formValues.inntektskilder, trygdeAvgiftSkalIkkeBetalesTilNav)
     ) {
       setBeregningPaagar(true);
