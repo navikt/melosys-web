@@ -254,13 +254,6 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
   );
 
   useEffect(() => {
-    console.log(formValues);
-    console.log("redigerbart:", redigerbart);
-    console.log("aarsavregningID:", aarsavregningID);
-    console.log("isValidating:", isValidating);
-    console.log("formIsValid:", formIsValid);
-    console.log("fomTomErFyltUt:", fomTomErFyltUt(formValues.inntektskilder, formValues.skatteforholdsperioder));
-    console.log("harInntektsKildeType:", harInntektsKildeType(formValues.inntektskilder));
     if (
       redigerbart &&
       aarsavregningID &&

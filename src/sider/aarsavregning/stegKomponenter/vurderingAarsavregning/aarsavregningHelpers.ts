@@ -44,7 +44,6 @@ export const mapInitialMedlemskapsperioder = (
 export const mapTilSkatteforholdProps = (skatteforholdsperioder?: any[], medlemskapsperioder?: any[]) => {
   const { fom, tom } = hentMedlemskapsFomTomDato(medlemskapsperioder);
   if (skatteforholdsperioder) {
-    console.log(skatteforholdsperioder);
     return skatteforholdsperioder.map((skatteForhold) => ({
       fomDato: Utils.dato.formatterDatoTilNorsk(skatteForhold.fomDato),
       tomDato: Utils.dato.formatterDatoTilNorsk(skatteForhold.tomDato),
