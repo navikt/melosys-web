@@ -31,7 +31,11 @@ import { useIsMounted } from "../../../../hooks";
 import * as KV from "../../../../kodeverk";
 import MKV, { MKVUtils } from "../../../../melosyskodeverk";
 import * as Nav from "../../../../navFrontend";
-import { BrevVedleggInterface, BrevVedleggVisningstabellInterface, TilgjengeligStandardvedlegg } from "../../../../services/modules/dokumenter-v2";
+import {
+  BrevVedleggInterface,
+  BrevVedleggVisningstabellInterface,
+  TilgjengeligStandardvedlegg,
+} from "../../../../services/modules/dokumenter-v2";
 import { Vilkaar } from "../../../../services/modules/vilkar";
 import * as Utils from "../../../../utils";
 import { datoDiffMenneskelig } from "../../../../utils/dato";

@@ -27,7 +27,6 @@ function VedleggTable({
   lagFritekstPdfUrl,
   redigerbart,
 }: VedleggTableProps) {
-  
   const slettVedlegg = (vedleggID: string) => {
     setValgteVedlegg({
       saksvedlegg: valgteVedlegg.saksvedlegg.filter(({ id }) => id !== vedleggID),
