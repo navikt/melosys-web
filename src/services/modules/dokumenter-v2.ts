@@ -39,6 +39,11 @@ export interface BrevVedleggInterface {
   standardvedlegg: TilgjengeligStandardvedlegg | null;
 }
 
+export interface BrevVedleggVisningstabellInterface {
+  saksvedlegg: FysiskDokument[];
+  standardvedlegg: TilgjengeligStandardvedlegg[];
+}
+
 export interface BrevAdresse {
   mottakerNavn: string;
   orgnr: string | null;
@@ -232,6 +237,9 @@ export const hentTilgjengeligeMaler = (behandlingID: number): Promise<Tilgjengel
 
 export const hentTilgjengeligeStandardvedlegg = (): Promise<TilgjengeligeStandardvedleggResDto> =>
   getAsJson(`${API_BASE_URL}${DOKUMENTER}/v2/standardvedlegg`);
+
+export const hentStandardvedleggForBrev = (produserbartdokument: string) =>
+  getAsJson(`${API_BASE_URL}${DOKUMENTER}/v2/standardvedlegg/${produserbartdokument}`);
 
 export const hentTilgjengeligeNorskeMyndigheter = (): Promise<TilgjengeligeNorskeMyndigheterResDto> =>
   getAsJson(`${API_BASE_URL}${DOKUMENTER}/v2/tilgjengelige-norske-myndigheter`);

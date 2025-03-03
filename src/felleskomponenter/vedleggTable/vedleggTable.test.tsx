@@ -13,7 +13,7 @@ const dokument = {
 
 const valgteVedlegg = {
   saksvedlegg: [dokument],
-  standardvedlegg: null,
+  standardvedlegg: [],
 };
 
 const fritekstvedlegg = {

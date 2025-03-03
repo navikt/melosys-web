@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { ColumnWidth } from "nav-frontend-grid";
-import { FysiskDokument, BrevVedleggInterface } from "../../../../services/modules/dokumenter-v2";
+import {
+  FysiskDokument,
+  BrevVedleggInterface,
+  BrevVedleggVisningstabellInterface,
+} from "../../../../services/modules/dokumenter-v2";
 
 import * as Ikoner from "../../../../resources/images";
 import * as Api from "../../../../services/api";
@@ -24,7 +28,7 @@ interface BrevVedleggProps {
   fritekstvedlegg: Fritekstvedlegg[];
   setFritekstvedlegg: (fritekstvedlegg: Fritekstvedlegg[]) => void;
   valgteVedlegg: BrevVedleggInterface;
-  setValgteVedlegg: (valgteVedlegg: BrevVedleggInterface) => void;
+  setValgteVedlegg: (valgteVedlegg: BrevVedleggVisningstabellInterface) => void;
   changeField: (field: string, value: string) => void;
   formValues: any;
   redigerbart: boolean;
@@ -148,7 +152,10 @@ function BrevVedlegg({
 
       {(vedleggFelt || fritekstvedleggFelt) && (
         <VedleggTable
-          valgteVedlegg={valgteVedlegg}
+          valgteVedlegg={{
+            saksvedlegg: valgteVedlegg.saksvedlegg,
+            standardvedlegg: valgteVedlegg.standardvedlegg ? [valgteVedlegg.standardvedlegg] : [],
+          }}
           fritekstvedlegg={fritekstvedlegg}
           redigerFritekstvedlegg={redigerFritekstvedlegg}
           slettFritekstvedlegg={slettFritekstvedlegg}
