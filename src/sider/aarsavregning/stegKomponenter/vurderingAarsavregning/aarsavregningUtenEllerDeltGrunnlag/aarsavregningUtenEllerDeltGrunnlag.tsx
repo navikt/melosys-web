@@ -260,12 +260,18 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
       !isValidating &&
       formIsValid &&
       fomTomErFyltUt(formValues.inntektskilder, formValues.skatteforholdsperioder) &&
-      harInntektsKildeType(formValues.inntektskilder)
+      harInntektsKildeType(formValues.inntektskilder, trygdeAvgiftSkalIkkeBetalesTilNav)
     ) {
       setBeregningPaagar(true);
       debounceBeregnTrygdeavgiftsperioder(formValues);
     }
-  }, [formIsValid, isValidating, formValues.inntektskilder.length, formValues.skatteforholdsperioder.length]);
+  }, [
+    formIsValid,
+    isValidating,
+    formValues.inntektskilder.length,
+    formValues.skatteforholdsperioder.length,
+    formValues.totaltForskuddsvisFakturert,
+  ]);
 
   const stegErGyldig = Boolean(formIsValid && aarsavregningResponse?.nyttGrunnlag && feilmelding === undefined);
 

@@ -54,8 +54,13 @@ export function fomTomErFyltUt(
   return allPerioder.every(({ fomDato, tomDato }) => fomDato !== undefined && tomDato !== undefined);
 }
 
-export function harInntektsKildeType(inntektskildePerioder: Inntektskilde[]) {
-  inntektskildePerioder.every((kildetype) => console.log(kildetype));
+export function harInntektsKildeType(
+  inntektskildePerioder: Inntektskilde[],
+  trygdeAvgiftSkalIkkeBetalesTilNav?: boolean | undefined,
+) {
+  if (trygdeAvgiftSkalIkkeBetalesTilNav) {
+    return true;
+  }
   return inntektskildePerioder.every((inntektskilde) => inntektskilde?.kildetype !== undefined);
 }
 

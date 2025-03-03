@@ -1,6 +1,9 @@
 import * as Utils from "../../../../utils";
 import { sorterEtterISOFomDato } from "../../../../utils/dato";
 import * as Api from "../../../../services/api";
+import MKV from "../../../../melosyskodeverk";
+
+const { IKKE_SKATTEPLIKTIG } = MKV.Koder.skatteplikttype;
 
 export const hentMedlemskapsFomTomDato = (medlemskapsperioder?: any[]) => {
   if (medlemskapsperioder && !Utils._isEmpty(medlemskapsperioder)) {
@@ -38,10 +41,10 @@ export const mapInitialMedlemskapsperioder = (
     .sort((a, b) => Utils.dato.sorterEtterISOFomDato(a, b))
     .map((periode) => mapTilMedlemskapsperiodeProps(periode, tidligereGrunnlagsopplysninger));
 
-export const mapTilSkatteforholdProps = (skatteforhold?: any[], medlemskapsperioder?: any[]) => {
+export const mapTilSkatteforholdProps = (skatteforholdsperioder?: any[], medlemskapsperioder?: any[]) => {
   const { fom, tom } = hentMedlemskapsFomTomDato(medlemskapsperioder);
-  if (skatteforhold) {
-    return skatteforhold.map((skatteForhold) => ({
+  if (skatteforholdsperioder) {
+    return skatteforholdsperioder.map((skatteForhold) => ({
       fomDato: Utils.dato.formatterDatoTilNorsk(skatteForhold.fomDato),
       tomDato: Utils.dato.formatterDatoTilNorsk(skatteForhold.tomDato),
       skatteplikttype: skatteForhold.skatteplikttype,
@@ -52,7 +55,7 @@ export const mapTilSkatteforholdProps = (skatteforhold?: any[], medlemskapsperio
       {
         fomDato: Utils.dato.formatterDatoTilNorsk(fom),
         tomDato: Utils.dato.formatterDatoTilNorsk(tom),
-        skatteplikttype: undefined,
+        skatteplikttype: IKKE_SKATTEPLIKTIG,
       },
     ];
   }
