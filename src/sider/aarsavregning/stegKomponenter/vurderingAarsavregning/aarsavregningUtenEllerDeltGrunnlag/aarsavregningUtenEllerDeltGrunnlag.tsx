@@ -47,6 +47,7 @@ import TidligereGrunnlagsoversikt from "../komponenter/tidligereGrunnlagsoversik
 import aarsavregningUtenEllerDeltGrunnlagSchema from "./aarsavregningUtenEllerDeltGrunnlagSchema";
 import MedlemskapsPerioderTabell from "../komponenter/medlemskapsPerioderTabell";
 import { Aarsavregningsmeldinger } from "../komponenter/aarsavregningsmeldinger";
+import { Medlemskapsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 
 interface Props {
   bekreft: () => void;
@@ -69,16 +70,20 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
   const [feilmelding, setFeilmelding] = useState<undefined | string>(undefined);
   const [brukerHarBekreftet, setBrukerHarBekreftet] = useState(false);
   const [beregningPaagar, setBeregningPaagar] = useState(false);
-
   const [aarsavregningResponse, setAarsavregningResponse] = useState<AarsavregningResponse | undefined>(undefined);
   const [bestemmelser, setBestemmelser] = useState<[]>([]);
+
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as any;
   const aarsavregningID = useSelector(behandlingsresultatSelectors.ÅrsavregningIDSelector);
   const lagredeMedlemskapsperioder = useSelector(medlemskapsperioderSelectors.AlleMedlemskapsperioderSelector);
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const dispatch = useDispatch();
-  const harMedlemskapsPeriodeFeil = (response: any): boolean => response.type === medlemskapsperioderTypes.FEILET;
+
+  const medlemskapsTypeErPliktig = lagredeMedlemskapsperioder?.every(
+    (periode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG,
+  );
+  const innvilgetMedlemskapsperiode = hentMedlemskapsFomTomDato(lagredeMedlemskapsperioder);
 
   useEffect(() => {
     if (behandlingstema) {
@@ -105,30 +110,44 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
     }
   }, []);
 
+  const setSkjemaverdierFraTrygdeavgiftsgrunnlag = (
+    aarsavregningResponse: AarsavregningResponse | undefined,
+    lagredeMedlemskapsperioder: Medlemskapsperiode[],
+  ) => {
+    const mappedLagredeMedlemskapsperioder = mapInitialMedlemskapsperioder(
+      lagredeMedlemskapsperioder,
+      aarsavregningResponse?.tidligereGrunnlagsopplysninger,
+    );
+    const erInitiellMappingForDeltGrunnlag =
+      harDeltGrunnlag && aarsavregningResponse && !aarsavregningResponse.nyttGrunnlag;
+
+    setValue("medlemskapsperioder", mappedLagredeMedlemskapsperioder);
+    setValue(
+      "skatteforholdsperioder",
+      mapTilSkatteforholdProps(
+        erInitiellMappingForDeltGrunnlag
+          ? aarsavregningResponse.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.skatteforholdsperioder
+          : aarsavregningResponse?.nyttGrunnlag?.trygdeavgiftsgrunnlag.skatteforholdsperioder,
+        mappedLagredeMedlemskapsperioder,
+      ),
+    );
+    setValue(
+      "inntektskilder",
+      mapTilInntektskilderProps(
+        erInitiellMappingForDeltGrunnlag
+          ? aarsavregningResponse.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.inntektskperioder
+          : aarsavregningResponse?.nyttGrunnlag?.trygdeavgiftsgrunnlag.inntektskperioder,
+        mappedLagredeMedlemskapsperioder,
+      ),
+    );
+  };
+
   useEffect(() => {
     const validerMedlemskapsperioderResultat = validerMedlemskapsperioder(lagredeMedlemskapsperioder);
     setFeilmelding(validerMedlemskapsperioderResultat);
 
     if (lagredeMedlemskapsperioder) {
-      const mappedLagredeMedlemskapsperioder = mapInitialMedlemskapsperioder(
-        lagredeMedlemskapsperioder,
-        aarsavregningResponse?.tidligereGrunnlagsopplysninger,
-      );
-      setValue("medlemskapsperioder", mappedLagredeMedlemskapsperioder);
-      setValue(
-        "skatteforholdsperioder",
-        mapTilSkatteforholdProps(
-          aarsavregningResponse?.nyttGrunnlag?.trygdeavgiftsgrunnlag.skatteforholdsperioder,
-          mappedLagredeMedlemskapsperioder,
-        ),
-      );
-      setValue(
-        "inntektskilder",
-        mapTilInntektskilderProps(
-          aarsavregningResponse?.nyttGrunnlag?.trygdeavgiftsgrunnlag.inntektskperioder,
-          mappedLagredeMedlemskapsperioder,
-        ),
-      );
+      setSkjemaverdierFraTrygdeavgiftsgrunnlag(aarsavregningResponse, lagredeMedlemskapsperioder);
     }
   }, [lagredeMedlemskapsperioder, aarsavregningResponse]);
 
@@ -145,12 +164,6 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
       }
     }
   }, [aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift]);
-
-  const medlemskapsTypeErPliktig = lagredeMedlemskapsperioder?.every(
-    (periode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG,
-  );
-
-  const innvilgetMedlemskapsperiode = hentMedlemskapsFomTomDato(lagredeMedlemskapsperioder);
 
   const {
     control,
@@ -171,9 +184,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
         lagredeMedlemskapsperioder,
         aarsavregningResponse?.tidligereGrunnlagsopplysninger,
       ),
-      skatteforholdsperioder: mapTilSkatteforholdProps(
-        aarsavregningResponse?.nyttGrunnlag?.trygdeavgiftsgrunnlag.skatteforholdsperioder,
-      ),
+      skatteforholdsperioder: [{}],
       inntektskilder: [{}],
     } as FieldValue<AarsavregningFormValuesProps>,
   });
@@ -306,7 +317,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
           ),
         ));
 
-    if (harMedlemskapsPeriodeFeil(response)) {
+    if (response.type === medlemskapsperioderTypes.FEILET) {
       setFeilmelding(response?.data?.data?.message);
     } else {
       setFeilmelding(undefined);
