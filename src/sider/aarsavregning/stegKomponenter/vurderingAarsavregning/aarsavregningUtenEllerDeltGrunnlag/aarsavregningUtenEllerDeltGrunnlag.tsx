@@ -110,10 +110,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
     }
   }, []);
 
-  const setSkjemaverdierFraTrygdeavgiftsgrunnlag = (
-    aarsavregningResponse: AarsavregningResponse | undefined,
-    lagredeMedlemskapsperioder: Medlemskapsperiode[],
-  ) => {
+  const setSkjemaverdierFraTrygdeavgiftsgrunnlag = () => {
     const mappedLagredeMedlemskapsperioder = mapInitialMedlemskapsperioder(
       lagredeMedlemskapsperioder,
       aarsavregningResponse?.tidligereGrunnlagsopplysninger,
@@ -147,7 +144,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
     setFeilmelding(validerMedlemskapsperioderResultat);
 
     if (lagredeMedlemskapsperioder) {
-      setSkjemaverdierFraTrygdeavgiftsgrunnlag(aarsavregningResponse, lagredeMedlemskapsperioder);
+      setSkjemaverdierFraTrygdeavgiftsgrunnlag();
     }
   }, [lagredeMedlemskapsperioder, aarsavregningResponse]);
 
