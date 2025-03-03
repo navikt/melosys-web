@@ -24,7 +24,7 @@ interface Props {
   oppdaterStatus: (isValid: boolean) => void;
 }
 
-const { FERDIGBEHANDLET } = MKV.Koder.behandlinger.behandlingsresultattyper;
+const { FASTSATT_TRYGDEAVGIFT, IKKE_FASTSATT } = MKV.Koder.behandlinger.behandlingsresultattyper;
 
 const DELT_GRUNNLAG_HJELPETEKST = (
   <>
@@ -47,6 +47,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
   const [harDeltGrunnlag, setHarDeltGrunnlag] = useState<boolean | undefined>(undefined);
   const [visDeltGrunnlagRadioGroup, setVisDeltGrunnlagRadioGroup] = useState(false);
   const [nyVurderingÅrsavregning, setNyVurderingÅrsavregning] = useState<boolean>(false);
+  const [flereAktiveAarsavregninger, setFlereAktiveAarsavregninger] = useState<boolean>(false);
   const [aarsavregningID, setAarsavregningID] = useState<number | undefined>(undefined);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as any;
@@ -91,8 +92,11 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
   useEffect(() => {
     if (redigerbart && valgtÅr) {
       setHarGrunnlag(undefined);
-      Api.Aarsavregning.hentFiltrertAarsavregningList(saksnummer, FERDIGBEHANDLET, valgtÅr).then((res) => {
+      Api.Aarsavregning.hentFiltrertAarsavregningList(saksnummer, FASTSATT_TRYGDEAVGIFT, valgtÅr).then((res) => {
         setNyVurderingÅrsavregning(res.length > 0);
+      });
+      Api.Aarsavregning.hentFiltrertAarsavregningList(saksnummer, IKKE_FASTSATT, valgtÅr).then((res) => {
+        setFlereAktiveAarsavregninger(res.length > 0);
       });
 
       Api.Aarsavregning.lagAarsavregning(behandlingID, { aar: valgtÅr })
@@ -166,6 +170,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
                 />
               }
               value={harDeltGrunnlag}
+              readOnly={flereAktiveAarsavregninger}
             >
               <Nav.HStack gap="6">
                 <Nav.Radio value>Ja</Nav.Radio>
@@ -173,6 +178,14 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
               </Nav.HStack>
             </Nav.RadioGroup>
           </Nav.Column>
+        </Nav.Row>
+      )}
+      {flereAktiveAarsavregninger && (
+        <Nav.Row>
+          <Nav.Alert variant="error" className="alertstripe_feilmelding">
+            Det finnes en annen åpen årsavregningsbehandling for samme år på saken. Vurder hvilken behandling du vil
+            fortsette med og avslutt den som ikke er aktuell via behandlingsmenyen.
+          </Nav.Alert>
         </Nav.Row>
       )}
       {nyVurderingÅrsavregning && (
