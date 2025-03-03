@@ -122,7 +122,7 @@ const vurdering_aarsavregning = object().shape({
             .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
             .erEtterDatofelt("fomDato")
             .required(MAA_FYLLES_UT),
-          skatteplikttype: string().required(MAA_FYLLES_UT),
+          skatteplikttype: string().defined().required(MAA_FYLLES_UT),
         }),
       ),
   }),

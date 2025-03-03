@@ -1,6 +1,9 @@
 import * as Utils from "../../../../utils";
 import { sorterEtterISOFomDato } from "../../../../utils/dato";
 import * as Api from "../../../../services/api";
+import MKV from "../../../../melosyskodeverk";
+
+const { IKKE_SKATTEPLIKTIG } = MKV.Koder.skatteplikttype;
 
 export const hentMedlemskapsFomTomDato = (medlemskapsperioder?: any[]) => {
   if (medlemskapsperioder && !Utils._isEmpty(medlemskapsperioder)) {
@@ -53,7 +56,7 @@ export const mapTilSkatteforholdProps = (skatteforholdsperioder?: any[], medlems
       {
         fomDato: Utils.dato.formatterDatoTilNorsk(fom),
         tomDato: Utils.dato.formatterDatoTilNorsk(tom),
-        skatteplikttype: false,
+        skatteplikttype: IKKE_SKATTEPLIKTIG,
       },
     ];
   }
