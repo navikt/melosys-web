@@ -170,7 +170,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
                 />
               }
               value={harDeltGrunnlag}
-              disabled={flereAktiveAarsavregninger}
+              readOnly={flereAktiveAarsavregninger}
             >
               <Nav.HStack gap="6">
                 <Nav.Radio value>Ja</Nav.Radio>
