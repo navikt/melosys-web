@@ -180,14 +180,6 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
           </Nav.Column>
         </Nav.Row>
       )}
-      {flereAktiveAarsavregninger && (
-        <Nav.Row>
-          <Nav.Alert variant="error" className="alertstripe_feilmelding">
-            Det finnes en annen åpen årsavregningsbehandling for samme år på saken. Vurder hvilken behandling du vil
-            fortsette med og avslutt den som ikke er aktuell via behandlingsmenyen.
-          </Nav.Alert>
-        </Nav.Row>
-      )}
       {nyVurderingÅrsavregning && (
         <Nav.Row>
           <NyBehandlingForTidligereAarsavregningMelding />
