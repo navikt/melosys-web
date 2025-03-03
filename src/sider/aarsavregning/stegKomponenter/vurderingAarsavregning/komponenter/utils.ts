@@ -55,7 +55,9 @@ export function fomTomErFyltUt(
   if (medlemskapsperioder?.length) {
     allPerioder = [...allPerioder, ...medlemskapsperioder];
   }
-  return allPerioder.every(({ fomDato, tomDato }) => fomDato !== undefined && fomDato !== "" && tomDato !== undefined && tomDato !== "");
+  return allPerioder.every(
+    ({ fomDato, tomDato }) => fomDato !== undefined && fomDato !== "" && tomDato !== undefined && tomDato !== "",
+  );
 }
 
 export function harInntektsKildeType(
