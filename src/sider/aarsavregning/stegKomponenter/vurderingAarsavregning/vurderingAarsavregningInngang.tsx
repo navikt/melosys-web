@@ -162,6 +162,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
         <Nav.Row>
           <Nav.Column xs="12">
             <Nav.RadioGroup
+              test-id="harInformasjonFraAvgiftssystemetValg"
               onChange={håndterDeltGrunnlag}
               legend={
                 <LabelMedHjelpetekst
