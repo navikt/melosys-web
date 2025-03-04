@@ -27,12 +27,15 @@ test("@1 MELOSYS-6528 aarsavregning viser tidligere grunnlag ved valg av år", a
     },
   };
 
-  await OpprettForstegangsbehandling(page, options);
+  //await OpprettForstegangsbehandling(page, options);
+  await home(page);
   await opprettAarsavregning(page, "");
   await aapneBehandling(page, 0);
 
   await page.selectOption("#aarVelger", "2024");
-
+  await page.waitForLoadState("networkidle");
+  await page.getByRole("radio", { name: "Nei" }).check();
+  await page.waitForLoadState("networkidle");
   // Verify
   await expect(page.getByRole("heading", { name: "Inntekts- og skatteopplysninger" })).toBeVisible({ timeout: 10000 });
   await page.getByRole("button", { name: "Vis mer" }).click();
@@ -54,7 +57,7 @@ test("@1 MELOSYS-6528 aarsavregning viser tidligere grunnlag ved valg av år", a
 
 test("@2 MELOSYS-6528 aarsavregning viser feilmelding ved annen åpen årsavregning", async ({ page }) => {
   const options = {
-    fromDate: "02.03.2024",
+    fromDate: "03.03.2024",
     toDate: "05.03.2024",
     trygdeavgiftOptions: {
       skatteplikttype: IKKE_SKATTEPLIKTIG,
@@ -91,8 +94,8 @@ function logNetwork(page: any) {
 
 test("@3 MELOSYS-6528 aarsavregning ved ingen tidligere fakturerte grunnlag viser infobokser", async ({ page }) => {
   const options = {
-    fromDate: "05.03.2024",
-    toDate: "06.03.2024",
+    fromDate: "06.03.2024",
+    toDate: "07.03.2024",
     trygdeavgiftOptions: {
       skatteplikttype: SKATTEPLIKTIG,
     },
@@ -113,9 +116,7 @@ test("@3 MELOSYS-6528 aarsavregning ved ingen tidligere fakturerte grunnlag vise
     "0,00 kr",
   );
 
-  // TODO dette skal fungere
-  //await page.waitForTimeout(3000); // sikker på at vi ikke har gjort et beregningskall i tillegg som har vært et gjentakende problem
-  // await expect(page.getByText("Kan ikke beregne trygdeavgift")).not.toBeVisible({ timeout: 10000 });
+  await apiKallOK(page, "beregning");
 
   await forkastAarsavregning(page);
 });
@@ -123,8 +124,8 @@ test("@3 MELOSYS-6528 aarsavregning ved ingen tidligere fakturerte grunnlag vise
 test.describe("@4 MELOSYS-6529 aarsavregning med grunnlag, når jeg velger avvik", () => {
   test("prep", async ({ page }) => {
     const options = {
-      fromDate: "04.05.2024",
-      toDate: "06.05.2024",
+      fromDate: "08.05.2024",
+      toDate: "09.05.2024",
       trygdeavgiftOptions: {
         skatteplikttype: IKKE_SKATTEPLIKTIG,
       },
