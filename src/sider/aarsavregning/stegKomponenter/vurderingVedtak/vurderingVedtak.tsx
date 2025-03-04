@@ -195,7 +195,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   const erNullKroner = trygdeavgiftDiff === 0;
   const skalFaktureres = trygdeavgiftDiff > 0;
 
-  const stegErGyldig = formIsValid && (!harFullmaktForTrygdeavgift || harBekreftetFullmaktForTrygdeavgift);
+  const stegErGyldig = formIsValid && (!harFullmaktForTrygdeavgift || erDifferanseUnderMinstebeløp || harBekreftetFullmaktForTrygdeavgift);
 
   return (
     <div className="vurderingVedtak">
@@ -229,7 +229,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
         </Nav.Row>
       ) : null}
 
-      {harFullmaktForTrygdeavgift && redigerbart ? (
+      {redigerbart && skalFaktureres && !erDifferanseUnderMinstebeløp && harFullmaktForTrygdeavgift ? (
         <FullmaktForTrygdeavgiftConfirmationPanel
           harBekreftet={harBekreftetFullmaktForTrygdeavgift}
           onChange={setHarBekreftetFullmaktForTrygdeavgift}
