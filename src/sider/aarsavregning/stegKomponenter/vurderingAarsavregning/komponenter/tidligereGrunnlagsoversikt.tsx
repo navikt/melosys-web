@@ -6,25 +6,20 @@ import InntektsperioderTabell from "./inntektsperioderTabell";
 import "./tidligereGrunnlagsoversikt.css";
 
 interface Props {
-  harFakturerbareInntektskilder: boolean;
   skatteforholdsperioder?: SkatteforholdDto[];
   inntektsperioder?: InntektskildeDto[];
   avgift?: Avgift;
 }
 
-function TidligereGrunnlagsoversikt({
-  harFakturerbareInntektskilder,
-  skatteforholdsperioder,
-  inntektsperioder,
-  avgift,
-}: Props) {
-  if (!skatteforholdsperioder) return null;
+function TidligereGrunnlagsoversikt({ skatteforholdsperioder, inntektsperioder, avgift }: Props) {
+  if (!skatteforholdsperioder && !inntektsperioder) return null;
+  const harGrunnlagAvgift = avgift && avgift.totalAvgift > 0;
 
   return (
     <div className="tidligereGrunnlagsoversikt">
       <Nav.Heading size="small">Inntekts- og skatteopplysninger for tidligere beregnet trygdeavgift</Nav.Heading>
       <SkatteforholdsPerioderTabell perioder={skatteforholdsperioder} />
-      {harFakturerbareInntektskilder && <InntektsperioderTabell perioder={inntektsperioder} avgift={avgift} />}
+      {harGrunnlagAvgift && <InntektsperioderTabell perioder={inntektsperioder} avgift={avgift} />}
     </div>
   );
 }

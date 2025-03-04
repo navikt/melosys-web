@@ -30,10 +30,9 @@ import { Inntektskilder } from "../../../../../felleskomponenter/trygdeavgift/ko
 import {
   beregnTrygdeavgiftsperioder,
   erBrukerSkattepliktigIHelePerioden,
-  harIkkeSkattepliktigInntektskilder,
   fomTomErFyltUt,
-  validerMedlemskapsperioder,
   harInntektsKildeType,
+  validerMedlemskapsperioder,
 } from "../komponenter/utils";
 import {
   hentMedlemskapsFomTomDato,
@@ -47,7 +46,6 @@ import TidligereGrunnlagsoversikt from "../komponenter/tidligereGrunnlagsoversik
 import aarsavregningUtenEllerDeltGrunnlagSchema from "./aarsavregningUtenEllerDeltGrunnlagSchema";
 import MedlemskapsPerioderTabell from "../komponenter/medlemskapsPerioderTabell";
 import { Aarsavregningsmeldinger } from "../komponenter/aarsavregningsmeldinger";
-import { Medlemskapsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 
 interface Props {
   bekreft: () => void;
@@ -366,14 +364,6 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
     }
   };
 
-  const harIkkeskattepliktigInntektskilder =
-    harDeltGrunnlag &&
-    harIkkeSkattepliktigInntektskilder(
-      aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.skatteforholdsperioder,
-      aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.inntektskperioder,
-      medlemskapsTypeErPliktig,
-    );
-
   const trygdeAvgiftSkalIkkeBetalesTilNav =
     medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder);
 
@@ -388,7 +378,6 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
             perioder={aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.medlemskapsperioder}
           />
           <TidligereGrunnlagsoversikt
-            harFakturerbareInntektskilder={harIkkeskattepliktigInntektskilder}
             skatteforholdsperioder={
               aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.skatteforholdsperioder
             }
@@ -397,19 +386,15 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
             }
             avgift={aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift}
           />
+
+          {!forskuddsvisFakturertTrygdeavgift && <Aarsavregningsmeldinger.TrygdeavgiftErIkkeForskuddsvisFakturert />}
+
+          <BeregnetTrygdeavgiftDetaljer
+            grunnlag={aarsavregningResponse?.tidligereGrunnlagsopplysninger}
+            medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!}
+            tittel="Tidligere beregnet trygdeavgift"
+          />
         </>
-      )}
-
-      {harDeltGrunnlag && !forskuddsvisFakturertTrygdeavgift && (
-        <Aarsavregningsmeldinger.TrygdeavgiftErIkkeForskuddsvisFakturert />
-      )}
-
-      {harIkkeskattepliktigInntektskilder && (
-        <BeregnetTrygdeavgiftDetaljer
-          grunnlag={aarsavregningResponse?.tidligereGrunnlagsopplysninger}
-          medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!}
-          tittel="Tidligere beregnet trygdeavgift"
-        />
       )}
 
       <TidligereFakturertIAvgiftssystemetInput

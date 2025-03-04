@@ -29,8 +29,9 @@ export function BeregnetTrygdeavgiftDetaljer({
   medlemskapsTypeErPliktig: boolean;
   tittel: string;
 }) {
-  const hentDetaljer = (data: Grunnlagsopplysninger | undefined): DetaljerInterface[] => {
-    if (data === undefined) return [];
+  if (!grunnlag || !grunnlag.avgift || grunnlag.avgift.totalAvgift === 0) return null;
+
+  const hentDetaljer = (data: Grunnlagsopplysninger): DetaljerInterface[] => {
     return data.avgift.trygdeavgiftsperioder
       .map((period) => {
         const overlappingMedlemskap = data.trygdeavgiftsgrunnlag.medlemskapsperioder.find(

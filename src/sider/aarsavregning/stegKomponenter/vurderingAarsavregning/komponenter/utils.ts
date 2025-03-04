@@ -29,23 +29,6 @@ export const erBrukerSkattepliktigIHelePerioden = (skatteforholdsperioder: any) 
   return !skatteforholdsperioder.some((skatteforhold: any) => skatteforhold.skatteplikttype === IKKE_SKATTEPLIKTIG);
 };
 
-export function harIkkeSkattepliktigInntektskilder(
-  skatteforholdsperioder: any,
-  inntektsperioder: any,
-  medlemskapsTypeErPliktig?: boolean,
-) {
-  if (skatteforholdsperioder === undefined || inntektsperioder === undefined) return false;
-  if (inntektsperioder.length === 0) {
-    return false;
-  }
-
-  if (medlemskapsTypeErPliktig) {
-    return !erBrukerSkattepliktigIHelePerioden(skatteforholdsperioder);
-  }
-
-  return true;
-}
-
 export function fomTomErFyltUt(
   inntektskildePerioder: Inntektskilde[],
   skatteforholdsPerioder: Skatteforhold[],
