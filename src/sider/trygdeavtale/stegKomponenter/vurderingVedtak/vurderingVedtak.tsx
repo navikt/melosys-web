@@ -29,8 +29,11 @@ import bem from "../../../../bemUtils";
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
 import { StegStatus } from "../../stegvelger";
 
+import { useFeatureToggle } from "../../../../featuretoggle";
+import { STANDARDVEDLEGG_EGET_VEDLEGG_AVTALELAND } from "../../../../featuretoggle/toggleNavn";
 import Dokumentliste from "../../../../felleskomponenter/dokumentliste";
 import VedleggTable from "../../../../felleskomponenter/vedleggTable";
+import { BrevVedleggVisningstabellInterface } from "../../../../services/modules/dokumenter-v2";
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import {
   BEGRUNNELSE_FRITEKST_HJELPETEKST,
@@ -40,9 +43,6 @@ import {
 } from "./tekster";
 import "./vurderingVedtak.css";
 import vurdering_vedtak from "./vurderingVedtakSchema";
-import { BrevVedleggInterface, BrevVedleggVisningstabellInterface } from "../../../../services/modules/dokumenter-v2";
-import { useFeatureToggle } from "../../../../featuretoggle";
-import { STANDARDVEDLEGG_EGET_VEDLEGG_AUSTRALIA } from "../../../../featuretoggle/toggleNavn";
 
 const { TRYGDEAVTALE_GB, TRYGDEAVTALE_US, TRYGDEAVTALE_CAN, TRYGDEAVTALE_AU } = MKV.Koder.brev.produserbaredokumenter;
 const { CAN_ART6_2 } = MKV.Koder.lovvalgsbestemmelser.trygdeavtale.lovvalgsbestemmelser_trygdeavtale_ca;
@@ -358,7 +358,7 @@ function VurderingVedtak({
   };
 
   const skalViseStandardvedleggEgetVedlegg =
-    erStandardvedleggEgetVedleggAustraliaEnabled &&
+    erStandardvedleggEgetVedleggAvtalelandEnabled &&
     [TRYGDEAVTALE_GB, TRYGDEAVTALE_US, TRYGDEAVTALE_CAN, TRYGDEAVTALE_AU].includes(hentProduserbartDokument());
 
   const stegErGyldig =
@@ -491,7 +491,7 @@ function VurderingVedtak({
       )}
 
       {stegErGyldig && <Dokumentliste behandlingID={behandlingID} dokumenter={mapDokumenter(muligeMottakere)} />}
-      {stegErGyldig && (
+      {stegErGyldig && skalViseStandardvedleggEgetVedlegg && (
         <VedleggTable
           valgteVedlegg={brevVedlegg}
           setValgteVedlegg={() => {
