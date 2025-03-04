@@ -195,7 +195,8 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   const erNullKroner = trygdeavgiftDiff === 0;
   const skalFaktureres = trygdeavgiftDiff > 0;
 
-  const stegErGyldig = formIsValid && (!harFullmaktForTrygdeavgift || erDifferanseUnderMinstebeløp || harBekreftetFullmaktForTrygdeavgift);
+  const stegErGyldig =
+    formIsValid && (!harFullmaktForTrygdeavgift || erDifferanseUnderMinstebeløp || harBekreftetFullmaktForTrygdeavgift);
 
   return (
     <div className="vurderingVedtak">
