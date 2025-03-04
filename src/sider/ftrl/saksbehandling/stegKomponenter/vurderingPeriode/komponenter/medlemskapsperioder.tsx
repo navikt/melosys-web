@@ -71,6 +71,7 @@ export function Medlemskapsperioder({
     }
 
     if (avslåtteDekninger.includes(valgtTrygdedekning) && !medlemskapsTypeErPliktig) {
+      handleChange([{ ...fields[index], innvilgelsesResultat: "AVSLAATT" }], formIsValid, index);
       return innvilgelsesResultater.filter((resultat) => resultat === "AVSLAATT");
     }
 
