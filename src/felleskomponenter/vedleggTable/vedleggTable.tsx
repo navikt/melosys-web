@@ -1,4 +1,4 @@
-import { BrevVedleggInterface, TilgjengeligStandardvedlegg } from "../../services/modules/dokumenter-v2";
+import { BrevVedleggVisningstabellInterface, StandardvedleggType } from "../../services/modules/dokumenter-v2";
 
 import * as Nav from "../../navFrontend";
 import { Fritekstvedlegg } from "../sideDialog/sendBrev/sendBrev";
@@ -7,8 +7,8 @@ import VedleggRow from "./vedleggRow";
 import "./vedleggTable.css";
 
 interface VedleggTableProps {
-  valgteVedlegg: BrevVedleggInterface;
-  setValgteVedlegg: (valgteVedlegg: BrevVedleggInterface) => void;
+  valgteVedlegg: BrevVedleggVisningstabellInterface;
+  setValgteVedlegg: (valgteVedlegg: BrevVedleggVisningstabellInterface) => void;
   label: string;
   fritekstvedlegg?: Fritekstvedlegg[];
   redigerFritekstvedlegg?: (index: number) => void;
@@ -34,10 +34,10 @@ function VedleggTable({
     });
   };
 
-  const slettStandardvedlegg = () => {
+  const slettStandardvedlegg = (standardvedleggType: StandardvedleggType) => {
     setValgteVedlegg({
       saksvedlegg: valgteVedlegg.saksvedlegg,
-      standardvedlegg: null,
+      standardvedlegg: valgteVedlegg.standardvedlegg.filter(({ type }) => type !== standardvedleggType),
     });
   };
 
@@ -73,14 +73,14 @@ function VedleggTable({
               redigerbart={redigerbart}
             />
           ))}
-          {valgteVedlegg.standardvedlegg && (
+          {valgteVedlegg.standardvedlegg.map((enkeltStandardvedlegg) => (
             <VedleggRow
-              key={`standardvedlegg-${valgteVedlegg.standardvedlegg.type}`}
-              vedlegg={valgteVedlegg.standardvedlegg}
-              slettVedlegg={() => slettStandardvedlegg()}
+              key={`standardvedlegg-${enkeltStandardvedlegg.type}`}
+              vedlegg={enkeltStandardvedlegg}
+              slettVedlegg={() => slettStandardvedlegg(enkeltStandardvedlegg.type)}
               redigerbart={redigerbart}
             />
-          )}
+          ))}
         </Nav.Table.Body>
       )}
     </Nav.Table>

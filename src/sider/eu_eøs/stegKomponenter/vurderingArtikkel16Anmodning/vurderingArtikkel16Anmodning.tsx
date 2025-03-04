@@ -1,25 +1,22 @@
-import { ChangeEvent, Fragment, useCallback, useEffect, useState } from "react";
+import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { connect, ConnectedProps, useDispatch, useSelector } from "react-redux";
 import { getFormValues, InjectedFormProps, isValid, reduxForm } from "redux-form";
 // @ts-expect-error generisk beskrivelse
 import * as EKV from "eessi-kodeverk";
+import { KTObject } from "@navikt/melosys-kodeverk";
+import { RootState } from "AppTypes";
 import { v4 as uuid } from "uuid";
-import * as Utils from "../../../../utils";
-import MKV, { MKVUtils } from "../../../../melosyskodeverk";
-import * as Nav from "../../../../navFrontend";
-import * as KV from "../../../../kodeverk";
-import * as Mui from "../../../../felleskomponenter/ui";
-import * as Skjema from "../../../../felleskomponenter/skjema";
+import { anmodningsperioderSelectors } from "../../../../ducks/anmodningsperioder";
 import { avklartefaktaSelectors } from "../../../../ducks/avklartefakta";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
-import { anmodningsperioderSelectors } from "../../../../ducks/anmodningsperioder";
 import { behandlingsperioderSelectors } from "../../../../ducks/behandlingsperioder";
 import { dokumenterSelectors } from "../../../../ducks/dokumenter";
-import { datoDiffMenneskelig } from "../../../../utils/dato";
+import { kontrollOperations, kontrollSelectors } from "../../../../ducks/kontroll";
+import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
 import Dokumentliste from "../../../../felleskomponenter/dokumentliste";
+import EnkeltDato from "../../../../felleskomponenter/enkeltDato";
 import Mottakerinstitusjonvelger from "../../../../felleskomponenter/mottakerinstitusjonvelger";
-import VedleggVelger from "../../../../felleskomponenter/vedleggvelger";
-import VedleggTable from "../../../../felleskomponenter/vedleggTable";
+import * as Skjema from "../../../../felleskomponenter/skjema";
 import {
   konverterLovvalgsbestemmelseTilStegData,
   konverterUnntakFraBestemmelseTilStegData,
@@ -27,19 +24,25 @@ import {
   lagUnntakFraBestemmelse,
   lagVilkarbegrunnelse,
 } from "../../../../felleskomponenter/stegvelger";
-import { lagYupToReduxformErrorMapper } from "../../../../yup";
-import VurderingArtikkel16AnmodningSchema from "./vurderingArtikkel16AnmodningSchema";
-import "./vurderingArtikkel16Anmodning.css";
-import { kontrollOperations, kontrollSelectors } from "../../../../ducks/kontroll";
-import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
-import TidligereMedlemskap from "./tidligereMedlemskap";
-import { Vilkaar } from "../../../../services/modules/vilkar";
-import { KTObject } from "@navikt/melosys-kodeverk";
-import { RootState } from "AppTypes";
+import * as Mui from "../../../../felleskomponenter/ui";
+import VedleggTable from "../../../../felleskomponenter/vedleggTable";
+import VedleggVelger from "../../../../felleskomponenter/vedleggvelger";
 import { useIsMounted } from "../../../../hooks";
-import { FysiskDokument } from "Domene";
-import EnkeltDato from "../../../../felleskomponenter/enkeltDato";
-import { BrevVedleggInterface, TilgjengeligStandardvedlegg } from "../../../../services/modules/dokumenter-v2";
+import * as KV from "../../../../kodeverk";
+import MKV, { MKVUtils } from "../../../../melosyskodeverk";
+import * as Nav from "../../../../navFrontend";
+import {
+  BrevVedleggInterface,
+  BrevVedleggVisningstabellInterface,
+  TilgjengeligStandardvedlegg,
+} from "../../../../services/modules/dokumenter-v2";
+import { Vilkaar } from "../../../../services/modules/vilkar";
+import * as Utils from "../../../../utils";
+import { datoDiffMenneskelig } from "../../../../utils/dato";
+import { lagYupToReduxformErrorMapper } from "../../../../yup";
+import TidligereMedlemskap from "./tidligereMedlemskap";
+import "./vurderingArtikkel16Anmodning.css";
+import VurderingArtikkel16AnmodningSchema from "./vurderingArtikkel16AnmodningSchema";
 
 const { KONV_EFTA_STORBRITANNIA_ART18_1 } = MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia;
 const { SAERLIG_GRUNN } = MKV.Koder.begrunnelser.anmodning_begrunnelser;
@@ -181,6 +184,13 @@ function VurderingArtikkel16Anmodning({
     const begrunnelse = event.target.value;
     oppdaterData(lagVilkarbegrunnelse(feltNavnFraBestemmelse, begrunnelse ? [begrunnelse] : []));
     lagreVilkarHandler();
+  };
+
+  const setValgtSaksvedlegg = (valgtSaksvedlegg: BrevVedleggVisningstabellInterface) => {
+    setValgteVedlegg({
+      saksvedlegg: valgtSaksvedlegg.saksvedlegg,
+      standardvedlegg: null,
+    });
   };
 
   const erFriteksterGyldig = () => {
@@ -430,14 +440,17 @@ function VurderingArtikkel16Anmodning({
             <Nav.Row>
               <Nav.Column xs="10">
                 <VedleggTable
-                  valgteVedlegg={valgteVedlegg}
+                  valgteVedlegg={{
+                    saksvedlegg: valgteVedlegg.saksvedlegg,
+                    standardvedlegg: [],
+                  }}
                   label="Vedlegg til SED"
-                  setValgteVedlegg={setValgteVedlegg}
+                  setValgteVedlegg={setValgtSaksvedlegg}
                   redigerbart={redigerbart}
                 />
                 <VedleggVelger
                   valgteVedlegg={valgteVedlegg}
-                  onChange={setValgteVedlegg}
+                  onChange={setValgtSaksvedlegg}
                   dokumenter={fysiskeDokumenter}
                   redigerbart={redigerbart}
                   standardvedlegg={tilgjengeligeStandardvedlegg}

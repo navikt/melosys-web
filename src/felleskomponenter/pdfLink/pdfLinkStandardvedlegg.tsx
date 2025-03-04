@@ -8,9 +8,10 @@ export const lagPdfUrl = (standardvedlegg: TilgjengeligStandardvedlegg) =>
 
 interface PdfLinkStandardvedleggProps {
   standardvedlegg: TilgjengeligStandardvedlegg;
+  skalViseEgenFrontendTittel: boolean;
 }
 
-function PdfLinkStandardvedlegg({ standardvedlegg }: PdfLinkStandardvedleggProps) {
+function PdfLinkStandardvedlegg({ standardvedlegg, skalViseEgenFrontendTittel }: PdfLinkStandardvedleggProps) {
   return (
     <Nav.Link
       href="#"
@@ -18,8 +19,9 @@ function PdfLinkStandardvedlegg({ standardvedlegg }: PdfLinkStandardvedleggProps
         event.preventDefault();
         apnePdfINyFane(lagPdfUrl(standardvedlegg));
       }}
+      title={skalViseEgenFrontendTittel ? standardvedlegg.frontendTittel : standardvedlegg.dokumentTittel}
     >
-      {`${standardvedlegg.frontendTittel} (åpnes i ny fane)`}
+      {skalViseEgenFrontendTittel ? standardvedlegg.frontendTittel : standardvedlegg.dokumentTittel}
     </Nav.Link>
   );
 }

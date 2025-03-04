@@ -16,7 +16,11 @@ import * as Ikoner from "../../../resources/images";
 import * as Nav from "../../../navFrontend";
 import * as Skjema from "../../skjema";
 import * as Utils from "../../../utils";
-import { FysiskDokument, BrevVedleggInterface } from "../../../services/modules/dokumenter-v2";
+import {
+  FysiskDokument,
+  BrevVedleggInterface,
+  BrevVedleggVisningstabellInterface,
+} from "../../../services/modules/dokumenter-v2";
 
 import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 import { behandlingerOperations } from "../../../ducks/behandlinger";
@@ -118,6 +122,13 @@ function SendBrev({
     tilgjengeligeMaler?.find((mal) => mal?.mottaker.uuid === formValues?.mottaker)?.brevTyper || [];
   const mottakerErNorskMyndighet = erNorskMyndighet(formValues?.valgtMottaker?.rolle);
   const { accounts } = useMsal();
+
+  const setValgteVedleggIState = (valgteVedleggFraVisningstabell: BrevVedleggVisningstabellInterface) => {
+    setValgteVedlegg({
+      saksvedlegg: valgteVedleggFraVisningstabell.saksvedlegg,
+      standardvedlegg: valgteVedleggFraVisningstabell.standardvedlegg[0] ?? null, // Det er kun ett vedlegg i BrevVedleggTableInterface når vi bruker VedleggVelger.
+    });
+  };
 
   const valgtMottakerHarFeilmelding = formValues?.valgtMottaker?.feilmelding;
 
@@ -525,7 +536,7 @@ function SendBrev({
           fritekstvedlegg={fritekstvedlegg}
           setFritekstvedlegg={setFritekstvedlegg}
           valgteVedlegg={valgteVedlegg}
-          setValgteVedlegg={setValgteVedlegg}
+          setValgteVedlegg={setValgteVedleggIState}
           changeField={changeField}
           formValues={formValues}
           redigerbart={redigerbart}

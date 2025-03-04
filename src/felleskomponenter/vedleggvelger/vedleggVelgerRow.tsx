@@ -46,7 +46,7 @@ function VedleggVelgerRow({
         {"journalpostID" in vedlegg && "dokumentID" in vedlegg && "tittel" in vedlegg ? (
           <PdfLink journalpostID={vedlegg.journalpostID} dokumentID={vedlegg.dokumentID} tittel={vedlegg.tittel} />
         ) : (
-          <PdfLinkStandardvedlegg standardvedlegg={vedlegg} />
+          <PdfLinkStandardvedlegg standardvedlegg={vedlegg} skalViseEgenFrontendTittel />
         )}
       </Nav.Table.DataCell>
       <Nav.Table.DataCell>

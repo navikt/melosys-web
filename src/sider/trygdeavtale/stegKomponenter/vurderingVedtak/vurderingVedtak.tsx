@@ -1,44 +1,48 @@
-import { useCallback, useEffect, useState } from "react";
-import { ThunkDispatch } from "redux-thunk";
-import { Action } from "redux";
-import { RootState } from "AppTypes";
-import { connect, ConnectedProps, useDispatch } from "react-redux";
-import { getFormValues, reduxForm } from "redux-form";
 import { KTObject } from "@navikt/melosys-kodeverk";
+import { RootState } from "AppTypes";
+import { useCallback, useEffect, useState } from "react";
+import { connect, ConnectedProps, useDispatch } from "react-redux";
+import { Action } from "redux";
+import { getFormValues, reduxForm } from "redux-form";
+import { ThunkDispatch } from "redux-thunk";
 
-import MKV from "../../../../melosyskodeverk";
-import * as Api from "../../../../services/api";
-import * as Hooks from "../../../../hooks";
-import * as Mui from "../../../../felleskomponenter/ui";
-import * as Nav from "../../../../navFrontend";
-import * as Utils from "../../../../utils";
-import * as KV from "../../../../kodeverk";
-import * as Ikoner from "../../../../resources/images";
 import * as Skjema from "../../../../felleskomponenter/skjema";
+import * as Mui from "../../../../felleskomponenter/ui";
+import * as Hooks from "../../../../hooks";
+import * as KV from "../../../../kodeverk";
+import MKV from "../../../../melosyskodeverk";
+import * as Nav from "../../../../navFrontend";
+import * as Ikoner from "../../../../resources/images";
+import * as Api from "../../../../services/api";
+import * as Utils from "../../../../utils";
 
-import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
-import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
-import { lovvalgsperioderOperations } from "../../../../ducks/lovvalgsperioder";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
-import { kontrollerFerdigbehandling } from "../../../../ducks/kontroll/operations";
+import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
 import { feiletResponsSelectors } from "../../../../ducks/feiletRespons";
-import { kontrollSelectors } from "../../../../ducks/kontroll";
 import { formSelectors } from "../../../../ducks/form";
+import { kontrollSelectors } from "../../../../ducks/kontroll";
+import { kontrollerFerdigbehandling } from "../../../../ducks/kontroll/operations";
+import { lovvalgsperioderOperations } from "../../../../ducks/lovvalgsperioder";
+import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
 
+import bem from "../../../../bemUtils";
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
 import { StegStatus } from "../../stegvelger";
-import bem from "../../../../bemUtils";
 
+import { useFeatureToggle } from "../../../../featuretoggle";
+import { STANDARDVEDLEGG_EGET_VEDLEGG_AVTALELAND } from "../../../../featuretoggle/toggleNavn";
+import Dokumentliste from "../../../../felleskomponenter/dokumentliste";
+import VedleggTable from "../../../../felleskomponenter/vedleggTable";
+import { BrevVedleggVisningstabellInterface } from "../../../../services/modules/dokumenter-v2";
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
-import vurdering_vedtak from "./vurderingVedtakSchema";
-import "./vurderingVedtak.css";
 import {
   BEGRUNNELSE_FRITEKST_HJELPETEKST,
   INNLEDNING_FRITEKST,
   NY_VURDERING_BAKGRUNN_HJELPETEKST,
   PERIODE_HJELPETEKST,
 } from "./tekster";
-import Dokumentliste from "../../../../felleskomponenter/dokumentliste";
+import "./vurderingVedtak.css";
+import vurdering_vedtak from "./vurderingVedtakSchema";
 
 const { TRYGDEAVTALE_GB, TRYGDEAVTALE_US, TRYGDEAVTALE_CAN, TRYGDEAVTALE_AU } = MKV.Koder.brev.produserbaredokumenter;
 const { CAN_ART6_2 } = MKV.Koder.lovvalgsbestemmelser.trygdeavtale.lovvalgsbestemmelser_trygdeavtale_ca;
@@ -150,11 +154,17 @@ function VurderingVedtak({
   const [visTomEndringFelt, setVisTomEndringFelt] = useState(false);
   const [vedtakPending, setVedtakPending] = useState(false);
   const [harOppfrisketLovvalgsperiode, setHarOppfrisketLovvalgsperiode] = useState(false);
+  const [brevVedlegg, setBrevVedlegg] = useState<BrevVedleggVisningstabellInterface>({
+    saksvedlegg: [],
+    standardvedlegg: [],
+  });
   const isMounted = Hooks.useIsMounted();
   const dispatch = useDispatch();
   let oppdaterFørKontroll = true;
 
   const skalViseKopiTilArbeidsgiverCheckbox = ![CAN_ART6_2, USA_ART5_4].includes(resultat.bestemmelse);
+
+  const erStandardvedleggEgetVedleggAvtalelandEnabled = useFeatureToggle(STANDARDVEDLEGG_EGET_VEDLEGG_AVTALELAND);
 
   const getNyVurderingBakgrunn = () =>
     formValues?.nyVurderingBakgrunn === FRITEKST
@@ -230,14 +240,30 @@ function VurderingVedtak({
     }
   };
 
-  const hentMuligeMottakere = async () => {
-    const res = await Api.DokumenterV2.hentMuligeMottakere(behandlingID, {
+  const hentStandardvedleggForBrev = async () => {
+    Api.DokumenterV2.hentStandardvedleggForBrev(hentProduserbartDokument()).then((res) => {
+      setBrevVedlegg({
+        saksvedlegg: [],
+        standardvedlegg: res,
+      });
+    });
+  };
+
+  const hentMuligeMottakereOgStandardvedlegg = async () => {
+    Api.DokumenterV2.hentMuligeMottakere(behandlingID, {
       produserbartdokument: hentProduserbartDokument(),
       orgnr: null,
+    }).then((res) => {
+      setMuligeMottakere(res);
     });
-    setMuligeMottakere(res);
+
+    hentStandardvedleggForBrev();
   };
-  const debouncedHentMuligeMottakere = useCallback(Utils._debounce(hentMuligeMottakere, 300), []);
+
+  const debouncedHentMuligeMottakereOgStandardvedlegg = useCallback(
+    Utils._debounce(hentMuligeMottakereOgStandardvedlegg, 300),
+    [],
+  );
   const debouncedOppdaterFlyten = useCallback(
     Utils._debounce((trygdeavtaleresultat: Api.Trygdeavtale.Resultat) => oppdaterFlyt(trygdeavtaleresultat), 2000),
     [],
@@ -245,9 +271,9 @@ function VurderingVedtak({
 
   useEffect(() => {
     if (steg.status === StegStatus.FERDIG) {
-      debouncedHentMuligeMottakere();
+      debouncedHentMuligeMottakereOgStandardvedlegg();
     } else {
-      debouncedHentMuligeMottakere.cancel();
+      debouncedHentMuligeMottakereOgStandardvedlegg.cancel();
     }
   }, [steg.status, resultat.bestemmelse, resultat.virksomhet]);
 
@@ -330,6 +356,10 @@ function VurderingVedtak({
       setVedtakPending(false);
     }
   };
+
+  const skalViseStandardvedleggEgetVedlegg =
+    erStandardvedleggEgetVedleggAvtalelandEnabled &&
+    [TRYGDEAVTALE_GB, TRYGDEAVTALE_US, TRYGDEAVTALE_CAN, TRYGDEAVTALE_AU].includes(hentProduserbartDokument());
 
   const stegErGyldig =
     steg.status === StegStatus.FERDIG &&
@@ -461,6 +491,16 @@ function VurderingVedtak({
       )}
 
       {stegErGyldig && <Dokumentliste behandlingID={behandlingID} dokumenter={mapDokumenter(muligeMottakere)} />}
+      {stegErGyldig && skalViseStandardvedleggEgetVedlegg && (
+        <VedleggTable
+          valgteVedlegg={brevVedlegg}
+          setValgteVedlegg={() => {
+            /* Readonly */
+          }}
+          label="Vedlegg"
+          redigerbart={false /* Readonly. Ikke vis slett-knapp. */}
+        />
+      )}
 
       {redigerbart && erNyVurdering && (
         <Nav.Alert variant="info" className={vurderingVedtakCls.element("alertstripe")}>

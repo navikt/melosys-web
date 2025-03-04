@@ -11,7 +11,7 @@ import { TilgjengeligStandardvedlegg } from "../../services/modules/dokumenter-v
 interface VedleggVelgerProps {
   dokumenter: FysiskDokument[];
   valgteVedlegg: DokumenterV2.BrevVedleggInterface;
-  onChange: (valgteVedlegg: DokumenterV2.BrevVedleggInterface) => void;
+  onChange: (valgteVedlegg: DokumenterV2.BrevVedleggVisningstabellInterface) => void;
   redigerbart: boolean;
   standardvedlegg: DokumenterV2.TilgjengeligStandardvedlegg[];
 }
@@ -24,28 +24,28 @@ function VedleggVelger({ dokumenter, valgteVedlegg, onChange, redigerbart, stand
   const velgStandardvedlegg = (vedlegg: TilgjengeligStandardvedlegg) => {
     onChange({
       saksvedlegg: valgteVedlegg.saksvedlegg,
-      standardvedlegg: vedlegg,
+      standardvedlegg: [vedlegg],
     });
   };
 
   const leggTilSaksvedlegg = (vedlegg: FysiskDokument) => {
     onChange({
       saksvedlegg: [...valgteVedlegg.saksvedlegg, vedlegg],
-      standardvedlegg: valgteVedlegg.standardvedlegg,
+      standardvedlegg: valgteVedlegg.standardvedlegg ? [valgteVedlegg.standardvedlegg] : [],
     });
   };
 
   const slettSaksvedlegg = (vedlegg: FysiskDokument) => {
     onChange({
       saksvedlegg: valgteVedlegg.saksvedlegg.filter(({ id }) => id !== vedlegg.id),
-      standardvedlegg: valgteVedlegg.standardvedlegg,
+      standardvedlegg: valgteVedlegg.standardvedlegg ? [valgteVedlegg.standardvedlegg] : [],
     });
   };
 
   const slettStandardvedlegg = () => {
     onChange({
       saksvedlegg: valgteVedlegg.saksvedlegg,
-      standardvedlegg: null,
+      standardvedlegg: [],
     });
   };
 
