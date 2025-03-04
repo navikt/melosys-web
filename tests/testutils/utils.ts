@@ -1,4 +1,5 @@
 import { expect } from "@playwright/test";
+import { Response } from "playwright-core";
 
 const USER = "21075114491";
 
@@ -123,4 +124,13 @@ export async function forkastAarsavregning(page: any) {
   await page.getByRole("button", { name: "Avslutt behandling" }).click();
   await page.getByRole("button", { name: "Behandlingen er bortfalt" }).click();
   await page.getByRole("button", { name: "Bekreft", exact: true }).click();
+}
+
+export async function apiKallOK(page: any, url: string) {
+  const response = await page.waitForResponse(
+    (response: Response) => response.url().includes(url) && response.status() >= 200 && response.status() < 300,
+    { timeout: 10000 },
+  );
+
+  expect(response.ok()).toBeTruthy();
 }

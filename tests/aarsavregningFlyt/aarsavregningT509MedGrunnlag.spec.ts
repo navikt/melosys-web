@@ -1,8 +1,11 @@
-import { test, expect } from "@playwright/test";
+import { Page, test, expect, chromium } from "@playwright/test";
+
+test.describe.configure({ mode: "serial" });
 
 import { OpprettForstegangsbehandling } from "./opprettForstegangsbehandling";
 import {
   aapneBehandling,
+  apiKallOK,
   bekreft,
   forkastAarsavregning,
   fyllBehandling,
@@ -115,4 +118,46 @@ test("@3 MELOSYS-6528 aarsavregning ved ingen tidligere fakturerte grunnlag vise
   // await expect(page.getByText("Kan ikke beregne trygdeavgift")).not.toBeVisible({ timeout: 10000 });
 
   await forkastAarsavregning(page);
+});
+
+test.describe("@4 MELOSYS-6529 aarsavregning med grunnlag, når jeg velger avvik", () => {
+  test("prep", async ({ page }) => {
+    const options = {
+      fromDate: "04.05.2024",
+      toDate: "06.05.2024",
+      trygdeavgiftOptions: {
+        skatteplikttype: IKKE_SKATTEPLIKTIG,
+      },
+    };
+
+    await OpprettForstegangsbehandling(page, options);
+  });
+
+  test("skal jeg kunne legge til skatteforholdsperioder uten feilmelding", async ({ page }) => {
+    await home(page);
+    await opprettAarsavregning(page, "");
+    await page.locator(".behandlingOppgave__link").first().click();
+    await page.selectOption("#aarVelger", "2024");
+    await page.pause();
+
+    await page.getByRole("radio", { name: "Ja" }).check();
+    await page.getByRole("button", { name: "Legg til skatteforhold" }).click();
+
+    await apiKallOK(page, "beregning");
+    await forkastAarsavregning(page);
+  });
+
+  test("skal jeg kunne legge til inntektskilder uten feilmelding", async ({ page }) => {
+    await home(page);
+    await opprettAarsavregning(page, "");
+    await page.locator(".behandlingOppgave__link").first().click();
+    await page.selectOption("#aarVelger", "2024");
+    await page.pause();
+
+    await page.getByRole("radio", { name: "Ja" }).check();
+    await page.getByRole("button", { name: "Legg til inntekt" }).click();
+
+    await apiKallOK(page, "beregning");
+    await forkastAarsavregning(page);
+  });
 });

@@ -21,6 +21,6 @@ export const OpprettForstegangsbehandling = async (page: any, behandlingOptions:
   await expect(
     page.getByRole("heading", { name: "Pliktig medlemskap etter folketrygdloven", exact: true }),
   ).toBeVisible();
-  await page.pause();
+  //await page.pause();
   await page.getByRole("button", { name: "Fatt vedtak" }).click();
 };
