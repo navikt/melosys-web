@@ -186,9 +186,11 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
         </Nav.Row>
       )}
       {apiFeil && (
-        <Nav.Alert variant="error" className="alertstripe_feilmelding">
-          {apiFeil}
-        </Nav.Alert>
+        <Nav.Row>
+          <Nav.Alert variant="error" className="alertstripe_feilmelding">
+            {apiFeil}
+          </Nav.Alert>
+        </Nav.Row>
       )}
       {harGrunnlag === true && harDeltGrunnlag === false && (
         <AarsavregningMedGrunnlag bekreft={bekreft} aktivtSteg={aktivtSteg} oppdaterStatus={oppdaterStatus} />
