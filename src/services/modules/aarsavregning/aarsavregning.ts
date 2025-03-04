@@ -10,10 +10,15 @@ export interface AarsavregningResponse {
   harAvvik?: boolean;
   nyttGrunnlag?: Grunnlagsopplysninger;
   avregning?: Avregning;
+  harDeltGrunnlag?: boolean;
 }
 
 export interface AarsavregningRequest {
   avregning: Avregning;
+}
+
+export interface OppdaterHarDeltGrunnlagRequest {
+  harDeltGrunnlag: boolean;
 }
 
 export interface Grunnlagsopplysninger {
@@ -47,6 +52,7 @@ export interface Avregning {
   nyttTotalbeloep?: number;
   tidligereFakturertBeloep?: number;
   tilFaktureringBeloep?: number;
+  tidligereFakturertBeloepAvgiftssystem?: number;
 }
 
 export interface AarsavregningListResponse {
@@ -68,6 +74,16 @@ export const lagAarsavregning = (
   request: LagAarsavregningRequest,
 ): Promise<AarsavregningResponse> =>
   postAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${AARSAVREGNING}`, request);
+
+export const oppdaterHarDeltGrunnlag = (
+  behandlingID: number,
+  request: OppdaterHarDeltGrunnlagRequest,
+  aarsavregningID?: number,
+): Promise<AarsavregningResponse> =>
+  putAsJson(
+    `${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${AARSAVREGNING}/${aarsavregningID}/grunnlagstype`,
+    request,
+  );
 
 export const oppdaterAvvik = (
   behandlingID: number,
@@ -93,8 +109,8 @@ export const hentFiltrertAarsavregningList = (
   }
   return getAsJson(url);
 };
-export const oppdaterNyttTotalbeloep = async (behandlingID: number, aarsavregningID: number, totalAvgift?: number) => {
-  return oppdaterTotalBelop(
+export const oppdaterTotalAvgift = async (behandlingID: number, aarsavregningID: number, totalAvgift?: number) => {
+  return oppdaterAarsavregning(
     behandlingID,
     {
       avregning: {
@@ -104,9 +120,10 @@ export const oppdaterNyttTotalbeloep = async (behandlingID: number, aarsavregnin
     aarsavregningID,
   );
 };
-export const oppdaterTotalBelop = (
+export const oppdaterAarsavregning = (
   behandlingID: number,
   request: AarsavregningRequest,
   aarsavregningID?: number,
-): Promise<AarsavregningResponse> =>
-  putAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${AARSAVREGNING}/${aarsavregningID}`, request);
+): Promise<AarsavregningResponse> => {
+  return putAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${AARSAVREGNING}/${aarsavregningID}`, request);
+};

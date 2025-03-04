@@ -1,7 +1,10 @@
 import * as Utils from "../../../../utils";
 import { sorterEtterISOFomDato } from "../../../../utils/dato";
+import * as Api from "../../../../services/api";
+import MKV from "../../../../melosyskodeverk";
 
-// Returns the first and last dates from a sorted list of membership periods.
+const { IKKE_SKATTEPLIKTIG } = MKV.Koder.skatteplikttype;
+
 export const hentMedlemskapsFomTomDato = (medlemskapsperioder?: any[]) => {
   if (medlemskapsperioder && !Utils._isEmpty(medlemskapsperioder)) {
     const sorted = [...medlemskapsperioder].sort(sorterEtterISOFomDato);
@@ -10,28 +13,41 @@ export const hentMedlemskapsFomTomDato = (medlemskapsperioder?: any[]) => {
   return {};
 };
 
-// Maps a membership period from the API to local props.
-export const mapTilMedlemskapsperiodeProps = (periode: any) => ({
-  ...periode,
-  fomDato: Utils.dato.formatterDatoTilNorsk(periode.fomDato),
-  tomDato: Utils.dato.formatterDatoTilNorsk(periode.tomDato),
-  ny: false,
-  feil: undefined,
-  periodeId: periode.id,
-});
+export const mapTilMedlemskapsperiodeProps = (
+  medlemskapsperiode: any,
+  tidligereGrunnlagsopplysninger?: Api.Aarsavregning.Grunnlagsopplysninger,
+) => {
+  const grunnlagsperioder = tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.medlemskapsperioder;
+  const redigerbar = !grunnlagsperioder?.some(
+    (periode) => periode.fomDato === medlemskapsperiode.fomDato && periode.tomDato === medlemskapsperiode.tomDato,
+  );
 
-// Sorts and maps the membership periods.
-export const mapInitialMedlemskapsperioder = (perioder: any[]) =>
-  [...perioder].sort((a, b) => Utils.dato.sorterEtterISOFomDato(a, b)).map(mapTilMedlemskapsperiodeProps);
+  return {
+    ...medlemskapsperiode,
+    fomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.fomDato),
+    tomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.tomDato),
+    ny: false,
+    feil: undefined,
+    periodeId: medlemskapsperiode.id,
+    redigerbar,
+  };
+};
 
-// Maps tax period data.
-export const mapTilSkatteforholdProps = (skatteforhold?: any[], medlemskapsperioder?: any[]) => {
+export const mapInitialMedlemskapsperioder = (
+  perioder: any[],
+  tidligereGrunnlagsopplysninger?: Api.Aarsavregning.Grunnlagsopplysninger,
+) =>
+  [...perioder]
+    .sort((a, b) => Utils.dato.sorterEtterISOFomDato(a, b))
+    .map((periode) => mapTilMedlemskapsperiodeProps(periode, tidligereGrunnlagsopplysninger));
+
+export const mapTilSkatteforholdProps = (skatteforholdsperioder?: any[], medlemskapsperioder?: any[]) => {
   const { fom, tom } = hentMedlemskapsFomTomDato(medlemskapsperioder);
-  if (skatteforhold) {
-    return skatteforhold.map((f) => ({
-      fomDato: Utils.dato.formatterDatoTilNorsk(f.fomDato),
-      tomDato: Utils.dato.formatterDatoTilNorsk(f.tomDato),
-      skatteplikttype: f.skatteplikttype,
+  if (skatteforholdsperioder) {
+    return skatteforholdsperioder.map((skatteForhold) => ({
+      fomDato: Utils.dato.formatterDatoTilNorsk(skatteForhold.fomDato),
+      tomDato: Utils.dato.formatterDatoTilNorsk(skatteForhold.tomDato),
+      skatteplikttype: skatteForhold.skatteplikttype,
     }));
   }
   if (fom && tom) {
@@ -39,14 +55,13 @@ export const mapTilSkatteforholdProps = (skatteforhold?: any[], medlemskapsperio
       {
         fomDato: Utils.dato.formatterDatoTilNorsk(fom),
         tomDato: Utils.dato.formatterDatoTilNorsk(tom),
-        skatteplikttype: undefined,
+        skatteplikttype: IKKE_SKATTEPLIKTIG,
       },
     ];
   }
   return [{}];
 };
 
-// Maps income period data.
 export const mapTilInntektskilderProps = (inntektskilder?: any[], medlemskapsperioder?: any[]) => {
   const { fom, tom } = hentMedlemskapsFomTomDato(medlemskapsperioder);
   if (inntektskilder) {

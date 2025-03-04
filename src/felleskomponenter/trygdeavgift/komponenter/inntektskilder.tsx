@@ -235,6 +235,7 @@ export function Inntektskilder({
                   control={control}
                   readOnly={!redigerbart}
                   type="number"
+                  autoComplete="off"
                 />
               ) : (
                 <div className="ikkeRelevant">

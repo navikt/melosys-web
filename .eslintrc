@@ -67,6 +67,7 @@
     "import/prefer-default-export": "off",
     "import/no-named-as-default": "off",
     "import/no-named-as-default-member": "off",
+    "max-lines": ["warn", { "max": 400, "skipComments": true, "skipBlankLines": true }],
     "@typescript-eslint/no-explicit-any": "off",
     "import/no-extraneous-dependencies": [
       "error",
@@ -82,7 +83,6 @@
       }
     ],
     "@typescript-eslint/explicit-function-return-type": "off",
-    // TODO: Skru på "@typescript-eslint/no-explicit-any": "warn",
     "@typescript-eslint/consistent-type-definitions": [
       "error",
       "interface"
