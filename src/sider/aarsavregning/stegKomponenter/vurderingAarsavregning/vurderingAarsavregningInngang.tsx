@@ -115,6 +115,9 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
 
   const håndterEndringAvÅr = (event: ChangeEvent<HTMLSelectElement>) => {
     setApiFeil(null);
+    setVisDeltGrunnlagRadioGroup(false);
+    setHarGrunnlag(undefined);
+    setHarDeltGrunnlag(undefined);
 
     const år = event.target.value ? parseInt(event.target.value, 10) : undefined;
     setValgtÅr(år || null);

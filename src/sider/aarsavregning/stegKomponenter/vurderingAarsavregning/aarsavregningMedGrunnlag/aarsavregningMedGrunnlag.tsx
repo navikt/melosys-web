@@ -209,6 +209,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
       harInntektsKildeType(formValues.inntektskilder, trygdeAvgiftSkalIkkeBetalesTilNav)
     ) {
       setBeregningPaagar(true);
+      setFeilmelding(undefined);
       debounceBeregnTrygdeavgiftsperioderOgOppdaterFormVerdier(formValues);
     }
   }, [formIsValid, isValidating, erAvvik, formValues.inntektskilder.length, formValues.skatteforholdsperioder.length]);

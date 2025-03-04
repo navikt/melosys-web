@@ -77,14 +77,14 @@ const aarsavregningMedGrunnlagSchema = object().shape({
       .of(
         object().shape({
           fomDato: string()
+            .required(MAA_FYLLES_UT)
             .erGyldigDato()
-            .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
-            .required(MAA_FYLLES_UT),
+            .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN),
           tomDato: string()
+            .required(MAA_FYLLES_UT)
             .erGyldigDato()
             .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
-            .erEtterDatofelt("fomDato")
-            .required(MAA_FYLLES_UT),
+            .erEtterDatofelt("fomDato"),
           skatteplikttype: string().required(MAA_FYLLES_UT),
         }),
       ),
@@ -103,14 +103,14 @@ const aarsavregningMedGrunnlagSchema = object().shape({
             arbAvgBetales: string().test(arbAvgBetalesFyltUtNårDetKrevesTest).nullable(),
             bruttoInntekt: string().test(bruttoInntektFyltUtNårDetKrevesTest),
             fomDato: string()
+              .required(MAA_FYLLES_UT)
               .erGyldigDato()
-              .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
-              .required(MAA_FYLLES_UT),
+              .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN),
             tomDato: string()
+              .required(MAA_FYLLES_UT)
               .erGyldigDato()
               .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
-              .erEtterDatofelt("fomDato")
-              .required(MAA_FYLLES_UT),
+              .erEtterDatofelt("fomDato"),
           }),
         ),
     });
