@@ -219,15 +219,14 @@ function Saksbehandling({
   if (!saksopplysningerLastet) return null;
 
   const hentStegArray = () => {
-    if (behandlingstema === MKV.Koder.behandlinger.behandlingstema.PENSJONIST) {
-      return alleStegPensjonistFlyt;
-    }
-
     if (behandlingstema === MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV) {
       return alleStegIkkeYrkesaktivFlyt;
     }
     if (behandlingstype === MKV.Koder.behandlinger.behandlingstyper.MANGLENDE_INNBETALING_TRYGDEAVGIFT) {
       return alleStegManglendeInnbetalingFlyt;
+    }
+    if (behandlingstema === MKV.Koder.behandlinger.behandlingstema.PENSJONIST) {
+      return alleStegPensjonistFlyt;
     }
     return alleStegYrkesaktivFlyt;
   };
