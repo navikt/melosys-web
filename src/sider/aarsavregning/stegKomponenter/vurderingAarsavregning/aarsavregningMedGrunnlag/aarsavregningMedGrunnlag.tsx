@@ -199,7 +199,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
   }, [formIsValid, isValidating, erAvvik, formValues.inntektskilder.length, formValues.skatteforholdsperioder.length]);
 
   const stegErGyldig =
-    erAvvik === false || Boolean(formIsValid && erAvvik && aarsavregningResponse?.nyttGrunnlag && !feilmelding);
+    erAvvik === false && !beregningPaagar || Boolean(formIsValid && !beregningPaagar && erAvvik && aarsavregningResponse?.nyttGrunnlag && !feilmelding);
 
   useEffect(() => {
     oppdaterStatus(stegErGyldig);
@@ -344,7 +344,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
 
       <Nav.Button
         variant="primary"
-        disabled={!redigerbart || beregningPaagar || !stegErGyldig}
+        disabled={!redigerbart || !stegErGyldig}
         onClick={bekreftOnClick}
       >
         Bekreft og fortsett
