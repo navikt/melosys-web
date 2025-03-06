@@ -27,8 +27,11 @@ export const AlleMedlemskapsperioderSelector = createSelector(
 
 export const InnvilgetEllerDelvisInnvilgetMedlemskapsperioderSelector = createSelector(
   AlleMedlemskapsperioderSelector,
-  (medlemskapsperioder) => medlemskapsperioder.filter((periode) => periode.innvilgelsesResultat === INNVILGET || periode.innvilgelsesResultat === DELVIS_INNVILGET)
-)
+  (medlemskapsperioder) =>
+    medlemskapsperioder.filter(
+      (periode) => periode.innvilgelsesResultat === INNVILGET || periode.innvilgelsesResultat === DELVIS_INNVILGET,
+    ),
+);
 
 export const SamletInnvilgetMedlemskapsperiodeSelector = createSelector(
   AlleMedlemskapsperioderSelector,
