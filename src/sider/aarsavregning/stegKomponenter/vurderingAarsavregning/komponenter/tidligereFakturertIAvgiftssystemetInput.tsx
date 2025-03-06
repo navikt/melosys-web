@@ -40,7 +40,7 @@ export function TidligereFakturertIAvgiftssystemetInput({
         label="Totalt tidligere fakturert trygdeavgift fra Avgiftssystemet:"
         name="totaltForskuddsvisFakturert"
         control={control}
-        disabled={!redigerbart}
+        readOnly={!redigerbart}
         className="tidligere_fakturert_input"
         autoComplete="off"
       />

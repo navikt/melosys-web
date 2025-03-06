@@ -6,6 +6,11 @@ import MKV from "../../../../../melosyskodeverk";
 
 const { PLIKTIG, FRIVILLIG, UNNTATT, DELVIS_UNNTATT } = MKV.Koder.medlemskapstyper;
 
+const bestemmelseKoder: string[] = [
+  ...Object.values(MKV.KTObjects.folketrygdloven_kap2_bestemmelser),
+  ...Object.values(MKV.KTObjects.vertslandsavtale_bestemmelser),
+] as string[];
+
 const mapMedlemskapstypeTekst = (kode: string) => {
   if (kode === PLIKTIG) {
     return "Pliktig";
@@ -45,7 +50,7 @@ function MedlemskapsPerioderTabell({ perioder }: { perioder?: Medlemskapsperiode
             </Nav.Table.DataCell>
             <Nav.Table.DataCell>{mapMedlemskapstypeTekst(medlemskapsPeriode.medlemskapstype)}</Nav.Table.DataCell>
             <Nav.Table.DataCell>
-              {KV.kodeTilTerm(medlemskapsPeriode.bestemmelse, MKV.KTObjects.folketrygdloven_kap2_bestemmelser)}
+              {KV.kodeTilTerm(medlemskapsPeriode.bestemmelse, bestemmelseKoder)}
             </Nav.Table.DataCell>
             <Nav.Table.DataCell>
               {KV.kodeTilTerm(medlemskapsPeriode.trygdedekning, MKV.KTObjects.trygdedekninger)}
