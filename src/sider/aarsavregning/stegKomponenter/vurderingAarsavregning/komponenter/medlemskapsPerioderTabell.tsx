@@ -49,9 +49,7 @@ function MedlemskapsPerioderTabell({ perioder }: { perioder?: Medlemskapsperiode
               )}`}
             </Nav.Table.DataCell>
             <Nav.Table.DataCell>{mapMedlemskapstypeTekst(medlemskapsPeriode.medlemskapstype)}</Nav.Table.DataCell>
-            <Nav.Table.DataCell>
-              {KV.kodeTilTerm(medlemskapsPeriode.bestemmelse, bestemmelseKoder)}
-            </Nav.Table.DataCell>
+            <Nav.Table.DataCell>{KV.kodeTilTerm(medlemskapsPeriode.bestemmelse, bestemmelseKoder)}</Nav.Table.DataCell>
             <Nav.Table.DataCell>
               {KV.kodeTilTerm(medlemskapsPeriode.trygdedekning, MKV.KTObjects.trygdedekninger)}
             </Nav.Table.DataCell>
