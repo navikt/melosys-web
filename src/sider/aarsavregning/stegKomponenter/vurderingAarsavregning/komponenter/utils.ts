@@ -13,7 +13,7 @@ import { sorterEtterISOFomDato } from "../../../../../utils/dato";
 
 const { IKKE_SKATTEPLIKTIG } = MKV.Koder.skatteplikttype;
 
-const mapFeilmelding = (error: any) => {
+export const mapFeilmelding = (error: any) => {
   const feilmelding = "Finner ikke trygdeavgiftssats. Melosys har ikke satser for årene før 2014.";
 
   const ingenGjeldendeSats = error.body?.feilkoder?.some((feilkode: string) =>

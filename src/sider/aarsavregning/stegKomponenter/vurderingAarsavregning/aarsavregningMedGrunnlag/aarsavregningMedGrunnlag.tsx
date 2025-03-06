@@ -31,6 +31,7 @@ import {
   fomTomErFyltUt,
   harInntektsKildeType,
   lagInnvilgetMedlemskapsPeriode,
+  mapFeilmelding,
 } from "../komponenter/utils";
 import { mapTilInntektskilderProps, mapTilSkatteforholdProps } from "../aarsavregningHelpers";
 import { Aarsavregningsmeldinger } from "../komponenter/aarsavregningsmeldinger";
@@ -175,13 +176,6 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
     [handleBeregnTrygdeavgiftsperioder],
   );
 
-  const debouncedBeregnTrygdeavgiftsperioder = useCallback(
-    Utils._debounce((trygdeavgiftsGrunnlagDto) => {
-      Api.Trygdeavgift.beregnTrygdeavgiftsperioder(behandlingID, trygdeavgiftsGrunnlagDto);
-    }, 1000),
-    [behandlingID],
-  );
-
   useEffect(() => {
     if (
       redigerbart &&
@@ -220,10 +214,14 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
           setSkjemaverdierFraTrygdeavgiftsgrunnlag(res.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag);
           if (res.tidligereGrunnlagsopplysninger !== undefined) {
             setBeregningPaagar(true);
-            debouncedBeregnTrygdeavgiftsperioder({
+            Api.Trygdeavgift.beregnTrygdeavgiftsperioder(behandlingID, {
               skatteforholdsperioder: res.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag.skatteforholdsperioder,
               inntektskilder: res.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag.inntektskperioder,
-            });
+            })
+              .catch((error) => setFeilmelding(mapFeilmelding(error)))
+              .finally(() => {
+                setBeregningPaagar(false);
+              });
           }
         });
       });
