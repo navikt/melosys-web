@@ -29,9 +29,9 @@ import {
   beregnTrygdeavgiftsperioder,
   erBrukerSkattepliktigIHelePerioden,
   fomTomErFyltUt,
-  harIkkeSkattepliktigInntektskilder,
-  lagInnvilgetMedlemskapsPeriode,
   harInntektsKildeType,
+  lagInnvilgetMedlemskapsPeriode,
+  mapFeilmelding,
 } from "../komponenter/utils";
 import { mapTilInntektskilderProps, mapTilSkatteforholdProps } from "../aarsavregningHelpers";
 import { Aarsavregningsmeldinger } from "../komponenter/aarsavregningsmeldinger";
@@ -54,12 +54,6 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
   const aarsavregningID = useSelector(behandlingsresultatSelectors.ÅrsavregningIDSelector);
   const dispatch = useDispatch();
 
-  const nyttGrunnlagHarTrygdeavgiftsperioder = () => {
-    const trygdeavgiftsperioder = aarsavregningResponse?.nyttGrunnlag?.avgift?.trygdeavgiftsperioder;
-
-    return trygdeavgiftsperioder && trygdeavgiftsperioder.length > 0;
-  };
-
   const medlemskapsperioder =
     aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.medlemskapsperioder;
   const innvilgetMedlemskapsperiode = lagInnvilgetMedlemskapsPeriode(medlemskapsperioder);
@@ -80,15 +74,6 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
     resetInntektskilder(
       !Utils._isEmpty(sorterteInntekstkilder) ? mapTilInntektskilderProps(sorterteInntekstkilder) : [],
     );
-
-    const kunSkattepliktigInntekt = !harIkkeSkattepliktigInntektskilder(
-      sorterteSkatteforhold,
-      sorterteInntekstkilder,
-      medlemskapsTypeErPliktig,
-    );
-    if (kunSkattepliktigInntekt) {
-      setErAvvik(true);
-    }
   };
 
   useEffect(() => {
@@ -191,13 +176,6 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
     [handleBeregnTrygdeavgiftsperioder],
   );
 
-  const debouncedBeregnTrygdeavgiftsperioder = useCallback(
-    Utils._debounce((trygdeavgiftsGrunnlagDto) => {
-      Api.Trygdeavgift.beregnTrygdeavgiftsperioder(behandlingID, trygdeavgiftsGrunnlagDto);
-    }, 1000),
-    [behandlingID],
-  );
-
   useEffect(() => {
     if (
       redigerbart &&
@@ -215,7 +193,8 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
   }, [formIsValid, isValidating, erAvvik, formValues.inntektskilder.length, formValues.skatteforholdsperioder.length]);
 
   const stegErGyldig =
-    erAvvik === false || Boolean(formIsValid && erAvvik && aarsavregningResponse?.nyttGrunnlag && !feilmelding);
+    (erAvvik === false && !beregningPaagar) ||
+    Boolean(formIsValid && !beregningPaagar && erAvvik && aarsavregningResponse?.nyttGrunnlag && !feilmelding);
 
   useEffect(() => {
     oppdaterStatus(stegErGyldig);
@@ -235,10 +214,14 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
           setSkjemaverdierFraTrygdeavgiftsgrunnlag(res.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag);
           if (res.tidligereGrunnlagsopplysninger !== undefined) {
             setBeregningPaagar(true);
-            debouncedBeregnTrygdeavgiftsperioder({
+            Api.Trygdeavgift.beregnTrygdeavgiftsperioder(behandlingID, {
               skatteforholdsperioder: res.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag.skatteforholdsperioder,
               inntektskilder: res.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag.inntektskperioder,
-            });
+            })
+              .catch((error) => setFeilmelding(mapFeilmelding(error)))
+              .finally(() => {
+                setBeregningPaagar(false);
+              });
           }
         });
       });
@@ -258,16 +241,11 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
     }
   };
 
-  const harIkkeskattepliktigInntektskilder = harIkkeSkattepliktigInntektskilder(
-    aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.skatteforholdsperioder,
-    aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.inntektskperioder,
-    medlemskapsTypeErPliktig,
-  );
-
   const trygdeAvgiftSkalIkkeBetalesTilNav =
     medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder);
   const forskuddsvisFakturertTrygdeavgift =
     (aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift?.totalAvgift ?? 0) > 0;
+  const nyttGrunnlagHarTrygdeavgiftsperioder = (aarsavregningResponse?.nyttGrunnlag?.avgift?.totalAvgift ?? 0) > 0;
 
   return (
     <>
@@ -277,7 +255,6 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
             perioder={aarsavregningResponse.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag.medlemskapsperioder}
           />
           <TidligereGrunnlagsoversikt
-            harFakturerbareInntektskilder={harIkkeskattepliktigInntektskilder}
             skatteforholdsperioder={
               aarsavregningResponse.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag.skatteforholdsperioder
             }
@@ -289,29 +266,25 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
 
           {!forskuddsvisFakturertTrygdeavgift && <Aarsavregningsmeldinger.TrygdeavgiftErIkkeForskuddsvisFakturert />}
 
-          {harIkkeskattepliktigInntektskilder && (
-            <BeregnetTrygdeavgiftDetaljer
-              grunnlag={aarsavregningResponse?.tidligereGrunnlagsopplysninger}
-              medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!}
-              tittel="Tidligere beregnet trygdeavgift"
-            />
-          )}
-
-          {harIkkeskattepliktigInntektskilder && (
-            <Nav.RadioGroup
-              onChange={håndterAvvik}
-              value={erAvvik}
-              legend="Er det avvik i opplysningene fra skatt eller bruker?"
-              readOnly={!redigerbart}
-            >
-              <Nav.HStack gap="6">
-                <Nav.Radio value>Ja</Nav.Radio>
-                <Nav.Radio value={false}>Nei</Nav.Radio>
-              </Nav.HStack>
-            </Nav.RadioGroup>
-          )}
+          <BeregnetTrygdeavgiftDetaljer
+            grunnlag={aarsavregningResponse?.tidligereGrunnlagsopplysninger}
+            medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!}
+            tittel="Tidligere beregnet trygdeavgift"
+          />
         </>
       )}
+
+      <Nav.RadioGroup
+        onChange={håndterAvvik}
+        value={erAvvik}
+        legend="Er det avvik i opplysningene fra skatt eller bruker?"
+        readOnly={!redigerbart}
+      >
+        <Nav.HStack gap="6">
+          <Nav.Radio value>Ja</Nav.Radio>
+          <Nav.Radio value={false}>Nei</Nav.Radio>
+        </Nav.HStack>
+      </Nav.RadioGroup>
 
       {erAvvik && (
         <>
@@ -342,22 +315,22 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
           )}
 
           {trygdeAvgiftSkalIkkeBetalesTilNav && <Aarsavregningsmeldinger.TrygdeavgiftSkalIkkeBetalesTilNav />}
+
+          {nyttGrunnlagHarTrygdeavgiftsperioder && formIsValid && !feilmelding && (
+            <SumArsavregningTabell
+              nyTrygdeavgift={aarsavregningResponse?.avregning?.nyttTotalbeloep}
+              tidligereTrygdeavgift={aarsavregningResponse?.avregning?.tidligereFakturertBeloep}
+            />
+          )}
+
+          {formIsValid && !feilmelding && (
+            <BeregnetTrygdeavgiftDetaljer
+              grunnlag={aarsavregningResponse?.nyttGrunnlag}
+              medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!}
+              tittel="Endelig beregnet trygdeavgift"
+            />
+          )}
         </>
-      )}
-
-      {nyttGrunnlagHarTrygdeavgiftsperioder() && erAvvik && formIsValid && !feilmelding && (
-        <SumArsavregningTabell
-          nyTrygdeavgift={aarsavregningResponse?.avregning?.nyttTotalbeloep}
-          tidligereTrygdeavgift={aarsavregningResponse?.avregning?.tidligereFakturertBeloep}
-        />
-      )}
-
-      {nyttGrunnlagHarTrygdeavgiftsperioder() && erAvvik && formIsValid && !feilmelding && (
-        <BeregnetTrygdeavgiftDetaljer
-          grunnlag={aarsavregningResponse?.nyttGrunnlag}
-          medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!}
-          tittel="Endelig beregnet trygdeavgift"
-        />
       )}
 
       {brukerHarBekreftet && <FeilmeldingOppsummering errors={formErrors} />}
@@ -368,11 +341,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
         </Nav.Alert>
       )}
 
-      <Nav.Button
-        variant="primary"
-        disabled={!redigerbart || beregningPaagar || !stegErGyldig}
-        onClick={bekreftOnClick}
-      >
+      <Nav.Button variant="primary" disabled={!redigerbart || !stegErGyldig} onClick={bekreftOnClick}>
         Bekreft og fortsett
       </Nav.Button>
     </>
