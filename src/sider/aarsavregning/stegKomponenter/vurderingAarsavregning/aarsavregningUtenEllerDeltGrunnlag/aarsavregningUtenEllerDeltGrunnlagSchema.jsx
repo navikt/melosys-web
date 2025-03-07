@@ -94,24 +94,30 @@ const aarsavregningUtenEllerDeltGrunnlagSchema = object().shape({
     .min(1, "Minst en medlemskapsperiode")
     .of(
       object().shape({
-        fomDato: string().erGyldigDato().test(erInnenforValgtAarTest).required(),
-        tomDato: string().erGyldigDato().erEtterDatofelt("fomDato").test(åpenTomTest).test(erInnenforValgtAarTest),
+        fomDato: string().required(MAA_FYLLES_UT).erGyldigDato().test(erInnenforValgtAarTest),
+        tomDato: string()
+          .required(MAA_FYLLES_UT)
+          .erGyldigDato()
+          .erEtterDatofelt("fomDato")
+          .test(åpenTomTest)
+          .test(erInnenforValgtAarTest),
         trygdedekning: string().required(),
         bestemmelse: string().required(),
       }),
     ),
+  totaltForskuddsvisFakturert: string().nullable().required(MAA_FYLLES_UT),
   skatteforholdsperioder: array()
     .min(1, "Minst en skatteforholdsperiode")
     .of(
       object().shape({
         fomDato: string()
-          .erGyldigDato()
           .required(MAA_FYLLES_UT)
+          .erGyldigDato()
           .test(erInnenforValgtAarTest)
           .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN),
         tomDato: string()
-          .erGyldigDato()
           .required(MAA_FYLLES_UT)
+          .erGyldigDato()
           .test(åpenTomTest)
           .test(erInnenforValgtAarTest)
           .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
@@ -132,12 +138,12 @@ const aarsavregningUtenEllerDeltGrunnlagSchema = object().shape({
             arbAvgBetales: string().test(arbAvgBetalesFyltUtNårDetKrevesTest).nullable(),
             bruttoInntekt: string().test(bruttoInntektFyltUtNårDetKrevesTest),
             fomDato: string()
-              .erGyldigDato()
               .required(MAA_FYLLES_UT)
+              .erGyldigDato()
               .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN),
             tomDato: string()
-              .erGyldigDato()
               .required(MAA_FYLLES_UT)
+              .erGyldigDato()
               .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
               .erEtterDatofelt("fomDato"),
           }),
