@@ -4,6 +4,8 @@ import * as Types from "./types";
 import MKV from "../../melosyskodeverk";
 import { sorterEtterISOFomDato } from "../../utils/dato";
 
+const { DELVIS_INNVILGET, INNVILGET } = MKV.Koder.innvilgelsesResultat;
+
 export const MedlemskapsperioderSelector: Selector<RootState, StateSection<Types.Data>> = createSelector(
   (state: RootState) => state.medlemskapsperioder,
   (medlemskapsperioder) => medlemskapsperioder,
@@ -24,11 +26,19 @@ export const AlleMedlemskapsperioderSelector = createSelector(
   (medlemskapsperioder) => medlemskapsperioder.medlemskapsperioder || [],
 );
 
+export const InnvilgetEllerDelvisInnvilgetMedlemskapsperioderSelector = createSelector(
+  AlleMedlemskapsperioderSelector,
+  (medlemskapsperioder) =>
+    medlemskapsperioder.filter(
+      (periode) => periode.innvilgelsesResultat === INNVILGET || periode.innvilgelsesResultat === DELVIS_INNVILGET,
+    ),
+);
+
 export const SamletInnvilgetMedlemskapsperiodeSelector = createSelector(
   AlleMedlemskapsperioderSelector,
   (medlemskapsperioder) => {
     const sorterteInnvilgedePerioder = [...medlemskapsperioder]
-      .filter((periode) => periode.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.INNVILGET)
+      .filter((periode) => periode.innvilgelsesResultat === INNVILGET)
       .sort(sorterEtterISOFomDato);
 
     if (sorterteInnvilgedePerioder.length === 0) return undefined;
