@@ -3,6 +3,7 @@ import { createSelector, Selector } from "reselect";
 import * as Types from "./types";
 import MKV from "../../melosyskodeverk";
 import { sorterEtterISOFomDato } from "../../utils/dato";
+
 const { DELVIS_INNVILGET, INNVILGET } = MKV.Koder.innvilgelsesResultat;
 
 export const MedlemskapsperioderSelector: Selector<RootState, StateSection<Types.Data>> = createSelector(
