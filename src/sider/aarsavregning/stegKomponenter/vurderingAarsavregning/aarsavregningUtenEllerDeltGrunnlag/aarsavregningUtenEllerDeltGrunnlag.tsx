@@ -176,6 +176,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
       aar: valgtÅr,
     },
     mode: "onChange",
+    reValidateMode: "onChange",
     defaultValues: {
       medlemskapsperioder: mapInitialMedlemskapsperioder(
         lagredeMedlemskapsperioder,
@@ -477,7 +478,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
         </Nav.Alert>
       )}
 
-      <Nav.Button variant="primary" disabled={!redigerbart || beregningPaagar} onClick={bekreftOnClick}>
+      <Nav.Button variant="primary" loading={beregningPaagar} disabled={!redigerbart} onClick={bekreftOnClick}>
         Bekreft og fortsett
       </Nav.Button>
     </div>

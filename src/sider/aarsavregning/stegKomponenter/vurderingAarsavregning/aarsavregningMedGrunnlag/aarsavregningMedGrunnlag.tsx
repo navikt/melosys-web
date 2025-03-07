@@ -131,6 +131,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
       erAvvik,
     },
     mode: "onChange",
+    reValidateMode: "onChange",
     defaultValues: {
       skatteforholdsperioder: [{}],
       inntektskilder: [{}],
@@ -340,7 +341,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
         </Nav.Alert>
       )}
 
-      <Nav.Button variant="primary" disabled={!redigerbart || beregningPaagar} onClick={bekreftOnClick}>
+      <Nav.Button variant="primary" loading={beregningPaagar} disabled={!redigerbart} onClick={bekreftOnClick}>
         Bekreft og fortsett
       </Nav.Button>
     </>
