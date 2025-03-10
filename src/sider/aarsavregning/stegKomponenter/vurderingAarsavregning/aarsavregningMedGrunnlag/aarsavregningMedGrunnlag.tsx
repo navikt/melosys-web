@@ -21,7 +21,6 @@ import { OK } from "../../../../../ducks/aarsavregning/types";
 import TidligereGrunnlagsoversikt from "../komponenter/tidligereGrunnlagsoversikt";
 
 import { behandlingsresultatSelectors } from "../../../../../ducks/behandlingsresultat";
-import { FeilmeldingOppsummering } from "../feilmeldingOppsummering";
 import aarsavregningMedGrunnlagSchema from "./aarsavregningMedGrunnlagSchema";
 import { Skatteforholdsperioder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/skatteforholdsperioder";
 import { Inntektskilder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/inntektskilder";
@@ -48,6 +47,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
   const [brukerHarBekreftet, setBrukerHarBekreftet] = useState(false);
   const [aarsavregningResponse, setAarsavregningResponse] = useState<AarsavregningResponse | undefined>(undefined);
   const [beregningPaagar, setBeregningPaagar] = useState(false);
+  const [harValidertSkjema, setHarValidertSkjema] = useState(false);
 
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as any;
@@ -120,7 +120,8 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
   const {
     control,
     watch,
-    formState: { errors: formErrors, isValid: formIsValid, isValidating },
+    formState: { isValid: formIsValid, isValidating },
+    trigger,
   } = useForm({
     resolver: yupResolver(aarsavregningMedGrunnlagSchema),
     context: {
@@ -130,6 +131,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
       erAvvik,
     },
     mode: "onChange",
+    reValidateMode: "onChange",
     defaultValues: {
       skatteforholdsperioder: [{}],
       inntektskilder: [{}],
@@ -152,12 +154,6 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
   } = useFieldArray<FieldArrayProps, "inntektskilder", "id">({ control, name: "inntektskilder" });
   const formValues = watch();
 
-  useEffect(() => {
-    if (brukerHarBekreftet && Object.keys(formErrors).length === 0) {
-      setBrukerHarBekreftet(false);
-    }
-  }, [formValues]);
-
   const handleBeregnTrygdeavgiftsperioder = useCallback(
     async (formVerdier: FieldValue<FormValuesProps>) => {
       await beregnTrygdeavgiftsperioder(formVerdier, {
@@ -177,6 +173,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
   );
 
   useEffect(() => {
+    setBrukerHarBekreftet(false);
     if (
       redigerbart &&
       aarsavregningID &&
@@ -193,11 +190,12 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
   }, [formIsValid, isValidating, erAvvik, formValues.inntektskilder.length, formValues.skatteforholdsperioder.length]);
 
   const stegErGyldig =
-    (erAvvik === false && !beregningPaagar) ||
-    Boolean(formIsValid && !beregningPaagar && erAvvik && aarsavregningResponse?.nyttGrunnlag && !feilmelding);
+    erAvvik === false || Boolean(formIsValid && erAvvik && aarsavregningResponse?.nyttGrunnlag && !feilmelding);
 
   useEffect(() => {
-    oppdaterStatus(stegErGyldig);
+    if (!beregningPaagar) {
+      oppdaterStatus(stegErGyldig);
+    }
   }, [stegErGyldig]);
 
   const håndterAvvik = (value: boolean) => {
@@ -235,8 +233,12 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
   };
 
   const bekreftOnClick = () => {
+    if (!harValidertSkjema) {
+      trigger();
+      setHarValidertSkjema(true);
+    }
     setBrukerHarBekreftet(true);
-    if (formIsValid && stegErGyldig && !feilmelding) {
+    if (stegErGyldig && !beregningPaagar) {
       bekreft();
     }
   };
@@ -333,15 +335,13 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
         </>
       )}
 
-      {brukerHarBekreftet && <FeilmeldingOppsummering errors={formErrors} />}
-
-      {feilmelding && (
+      {brukerHarBekreftet && feilmelding && (
         <Nav.Alert variant="error" className="alertstripe_feilmelding">
           {feilmelding}
         </Nav.Alert>
       )}
 
-      <Nav.Button variant="primary" disabled={!redigerbart || !stegErGyldig} onClick={bekreftOnClick}>
+      <Nav.Button variant="primary" loading={beregningPaagar} disabled={!redigerbart} onClick={bekreftOnClick}>
         Bekreft og fortsett
       </Nav.Button>
     </>

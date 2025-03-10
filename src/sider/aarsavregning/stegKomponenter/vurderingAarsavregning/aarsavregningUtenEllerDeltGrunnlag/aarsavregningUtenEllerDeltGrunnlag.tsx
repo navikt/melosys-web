@@ -24,7 +24,6 @@ import {
   medlemskapsperioderTypes,
 } from "../../../../../ducks/medlemskapsperioder";
 import { MedlemskapsperiodeProp } from "../../../../ftrl/saksbehandling/stegKomponenter/vurderingPeriode/komponenter/types";
-import { FeilmeldingOppsummering } from "../feilmeldingOppsummering";
 import { Skatteforholdsperioder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/skatteforholdsperioder";
 import { Inntektskilder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/inntektskilder";
 import {
@@ -70,6 +69,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
   const [beregningPaagar, setBeregningPaagar] = useState(false);
   const [aarsavregningResponse, setAarsavregningResponse] = useState<AarsavregningResponse | undefined>(undefined);
   const [bestemmelser, setBestemmelser] = useState<[]>([]);
+  const [harValidertSkjema, setHarValidertSkjema] = useState(false);
 
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as any;
@@ -167,7 +167,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
     watch,
     setValue,
     trigger,
-    formState: { errors: formErrors, isValid: formIsValid, isValidating },
+    formState: { isValid: formIsValid, isValidating },
   } = useForm({
     resolver: yupResolver(aarsavregningUtenEllerDeltGrunnlagSchema),
     context: {
@@ -176,6 +176,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
       aar: valgtÅr,
     },
     mode: "onChange",
+    reValidateMode: "onChange",
     defaultValues: {
       medlemskapsperioder: mapInitialMedlemskapsperioder(
         lagredeMedlemskapsperioder,
@@ -207,12 +208,6 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
   } = useFieldArray<FieldArrayProps, "inntektskilder", "id">({ control, name: "inntektskilder" });
 
   const formValues = watch();
-
-  useEffect(() => {
-    if (brukerHarBekreftet && Object.keys(formErrors).length === 0) {
-      setBrukerHarBekreftet(false);
-    }
-  }, [formValues]);
 
   useEffect(() => {
     if (medlemskapsperioderFields.length === 0) {
@@ -270,6 +265,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
       fomTomErFyltUt(formValues.inntektskilder, formValues.skatteforholdsperioder, formValues.medlemskapsperioder) &&
       harInntektsKildeType(formValues.inntektskilder, trygdeAvgiftSkalIkkeBetalesTilNav)
     ) {
+      setBrukerHarBekreftet(false);
       setBeregningPaagar(true);
       setFeilmelding(undefined);
       debounceBeregnTrygdeavgiftsperioder(formValues);
@@ -285,12 +281,18 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
   const stegErGyldig = Boolean(formIsValid && aarsavregningResponse?.nyttGrunnlag && feilmelding === undefined);
 
   useEffect(() => {
-    oppdaterStatus(stegErGyldig);
+    if (!beregningPaagar) {
+      oppdaterStatus(stegErGyldig);
+    }
   }, [stegErGyldig]);
 
   const bekreftOnClick = () => {
+    if (!harValidertSkjema) {
+      trigger();
+      setHarValidertSkjema(true);
+    }
     setBrukerHarBekreftet(true);
-    if (stegErGyldig) {
+    if (stegErGyldig && !beregningPaagar) {
       bekreft();
     }
   };
@@ -400,7 +402,6 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
       )}
 
       <TidligereFakturertIAvgiftssystemetInput
-        formValues={formValues}
         control={control}
         redigerbart={redigerbart}
         harDeltGrunnlag={harDeltGrunnlag}
@@ -471,19 +472,13 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
         />
       )}
 
-      {brukerHarBekreftet && <FeilmeldingOppsummering errors={formErrors} />}
-
-      {feilmelding && (
+      {brukerHarBekreftet && feilmelding && (
         <Nav.Alert variant="error" className="alertstripe_feilmelding">
           {feilmelding}
         </Nav.Alert>
       )}
 
-      <Nav.Button
-        variant="primary"
-        disabled={!redigerbart || beregningPaagar || !stegErGyldig}
-        onClick={bekreftOnClick}
-      >
+      <Nav.Button variant="primary" loading={beregningPaagar} disabled={!redigerbart} onClick={bekreftOnClick}>
         Bekreft og fortsett
       </Nav.Button>
     </div>

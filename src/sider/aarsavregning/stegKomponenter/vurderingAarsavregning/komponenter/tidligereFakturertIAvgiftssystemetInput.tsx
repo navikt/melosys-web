@@ -1,12 +1,10 @@
 import * as Nav from "../../../../../navFrontend";
 import "../vurderingAarsavregningInngang.css";
-import { FormValuesProps } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
 import { Control } from "react-hook-form";
 import * as Forms from "../../../../../felleskomponenter/forms";
 import { Heading } from "@navikt/ds-react";
 
 interface TidligereGrunnlagProps {
-  formValues: FormValuesProps;
   control: Control;
   redigerbart: boolean;
   harDeltGrunnlag: boolean;
@@ -43,6 +41,7 @@ export function TidligereFakturertIAvgiftssystemetInput({
         readOnly={!redigerbart}
         className="tidligere_fakturert_input"
         autoComplete="off"
+        type="number"
       />
     </>
   );
