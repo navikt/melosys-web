@@ -1,5 +1,5 @@
 @borderRadiusBase: 4px;
-@redError: #ba3a26;
+@redError: #c30000;
 
 .htmlEditor {
   .editor_label {
@@ -15,6 +15,7 @@
       border-top: none;
       border-radius: 0 0 @borderRadiusBase @borderRadiusBase;
       font-family: Arial, sans-serif;
+      margin-bottom: 1.5rem;
     }
 
     .ql-editor {
@@ -51,16 +52,22 @@
     &--error {
       .ql-container {
         border-color: @redError;
+        margin-bottom: 0.5rem;
       }
     }
   }
 
   .feilmelding {
-    font-style: italic;
     color: @redError;
-    font-family: Arial, sans-serif;
+    font-family: "Source Sans Pro", Arial, sans-serif;
     font-size: 1rem;
-    line-height: 1.375rem;
+    font-weight: 600;
+    line-height: 1.25rem;
+
+      &::before {
+          content: "•";
+          margin-right: 0.5rem;
+        }
   }
 
   .ql-snow .ql-picker.ql-header .ql-picker-item[data-value="1"]::before {
