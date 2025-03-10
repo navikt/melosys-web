@@ -115,6 +115,9 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
 
   const håndterEndringAvÅr = (event: ChangeEvent<HTMLSelectElement>) => {
     setApiFeil(null);
+    setVisDeltGrunnlagRadioGroup(false);
+    setHarGrunnlag(undefined);
+    setHarDeltGrunnlag(undefined);
 
     const år = event.target.value ? parseInt(event.target.value, 10) : undefined;
     setValgtÅr(år || null);
@@ -170,7 +173,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
                 />
               }
               value={harDeltGrunnlag}
-              readOnly={flereAktiveAarsavregninger}
+              readOnly={!redigerbart || flereAktiveAarsavregninger}
             >
               <Nav.HStack gap="6">
                 <Nav.Radio value>Ja</Nav.Radio>
@@ -180,23 +183,17 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
           </Nav.Column>
         </Nav.Row>
       )}
-      {flereAktiveAarsavregninger && (
-        <Nav.Row>
-          <Nav.Alert variant="error" className="alertstripe_feilmelding">
-            Det finnes en annen åpen årsavregningsbehandling for samme år på saken. Vurder hvilken behandling du vil
-            fortsette med og avslutt den som ikke er aktuell via behandlingsmenyen.
-          </Nav.Alert>
-        </Nav.Row>
-      )}
       {nyVurderingÅrsavregning && (
         <Nav.Row>
           <NyBehandlingForTidligereAarsavregningMelding />
         </Nav.Row>
       )}
       {apiFeil && (
-        <Nav.Alert variant="error" className="alertstripe_feilmelding">
-          {apiFeil}
-        </Nav.Alert>
+        <Nav.Row>
+          <Nav.Alert variant="error" className="alertstripe_feilmelding">
+            {apiFeil}
+          </Nav.Alert>
+        </Nav.Row>
       )}
       {harGrunnlag === true && harDeltGrunnlag === false && (
         <AarsavregningMedGrunnlag bekreft={bekreft} aktivtSteg={aktivtSteg} oppdaterStatus={oppdaterStatus} />

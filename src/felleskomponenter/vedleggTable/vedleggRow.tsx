@@ -19,16 +19,26 @@ function erTilgjengeligStandardvedlegg(
   return "type" in vedlegg && "frontendTittel" in vedlegg;
 }
 
+// Hvis redigerbart har blitt sendt inn som false, skal vi vise dokumenttittel.
+function skalViseEgenFrontendTittel(redigerbart: boolean) {
+  return redigerbart;
+}
+
 function VedleggRow({ vedlegg, slettVedlegg, redigerbart }: VedleggRowProps) {
   if (erTilgjengeligStandardvedlegg(vedlegg)) {
     return (
       <Nav.Table.Row className="vedlegg">
         <Nav.Table.DataCell>
-          <PdfLinkStandardvedlegg standardvedlegg={vedlegg} />
+          <PdfLinkStandardvedlegg
+            standardvedlegg={vedlegg}
+            skalViseEgenFrontendTittel={skalViseEgenFrontendTittel(redigerbart)}
+          />
         </Nav.Table.DataCell>
         <Nav.Table.DataCell />
         <Nav.Table.DataCell className="icon__cell">
-          <Mui.IkonKnapp ariaLabel="Fjern vedlegg" ikon={Ikoner.Bin} onClick={slettVedlegg} disabled={!redigerbart} />
+          {redigerbart && (
+            <Mui.IkonKnapp ariaLabel="Fjern vedlegg" ikon={Ikoner.Bin} onClick={slettVedlegg} disabled={!redigerbart} />
+          )}
         </Nav.Table.DataCell>
       </Nav.Table.Row>
     );

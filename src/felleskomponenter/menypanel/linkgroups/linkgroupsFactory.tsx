@@ -4,7 +4,6 @@ import { harUnntaksregistreringFlyt, skalViseIngenFlyt } from "../../../url";
 import { ContentProps, LinkGroup } from "./types";
 import LinkgroupsBuilder from "./linkgroupsBuilder";
 import LinksBuilder from "./linksBuilder";
-import { link } from "fs";
 
 const {
   UTSENDT_ARBEIDSTAKER,

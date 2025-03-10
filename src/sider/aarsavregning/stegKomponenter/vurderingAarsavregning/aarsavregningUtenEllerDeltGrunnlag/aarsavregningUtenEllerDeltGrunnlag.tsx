@@ -24,16 +24,14 @@ import {
   medlemskapsperioderTypes,
 } from "../../../../../ducks/medlemskapsperioder";
 import { MedlemskapsperiodeProp } from "../../../../ftrl/saksbehandling/stegKomponenter/vurderingPeriode/komponenter/types";
-import { FeilmeldingOppsummering } from "../feilmeldingOppsummering";
 import { Skatteforholdsperioder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/skatteforholdsperioder";
 import { Inntektskilder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/inntektskilder";
 import {
   beregnTrygdeavgiftsperioder,
   erBrukerSkattepliktigIHelePerioden,
-  harIkkeSkattepliktigInntektskilder,
   fomTomErFyltUt,
-  validerMedlemskapsperioder,
   harInntektsKildeType,
+  validerMedlemskapsperioder,
 } from "../komponenter/utils";
 import {
   hentMedlemskapsFomTomDato,
@@ -69,16 +67,23 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
   const [feilmelding, setFeilmelding] = useState<undefined | string>(undefined);
   const [brukerHarBekreftet, setBrukerHarBekreftet] = useState(false);
   const [beregningPaagar, setBeregningPaagar] = useState(false);
-
   const [aarsavregningResponse, setAarsavregningResponse] = useState<AarsavregningResponse | undefined>(undefined);
   const [bestemmelser, setBestemmelser] = useState<[]>([]);
+  const [harValidertSkjema, setHarValidertSkjema] = useState(false);
+
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as any;
   const aarsavregningID = useSelector(behandlingsresultatSelectors.ÅrsavregningIDSelector);
-  const lagredeMedlemskapsperioder = useSelector(medlemskapsperioderSelectors.AlleMedlemskapsperioderSelector);
+  const lagredeMedlemskapsperioder = useSelector(
+    medlemskapsperioderSelectors.InnvilgetEllerDelvisInnvilgetMedlemskapsperioderSelector,
+  );
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const dispatch = useDispatch();
-  const harMedlemskapsPeriodeFeil = (response: any): boolean => response.type === medlemskapsperioderTypes.FEILET;
+
+  const medlemskapsTypeErPliktig = lagredeMedlemskapsperioder?.every(
+    (periode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG,
+  );
+  const innvilgetMedlemskapsperiode = hentMedlemskapsFomTomDato(lagredeMedlemskapsperioder);
 
   useEffect(() => {
     if (behandlingstema) {
@@ -105,30 +110,41 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
     }
   }, []);
 
+  const setSkjemaverdierFraTrygdeavgiftsgrunnlag = () => {
+    const mappedLagredeMedlemskapsperioder = mapInitialMedlemskapsperioder(
+      lagredeMedlemskapsperioder,
+      aarsavregningResponse?.tidligereGrunnlagsopplysninger,
+    );
+    const erInitiellMappingForDeltGrunnlag =
+      harDeltGrunnlag && aarsavregningResponse && !aarsavregningResponse.nyttGrunnlag;
+
+    setValue("medlemskapsperioder", mappedLagredeMedlemskapsperioder);
+    setValue(
+      "skatteforholdsperioder",
+      mapTilSkatteforholdProps(
+        erInitiellMappingForDeltGrunnlag
+          ? aarsavregningResponse.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.skatteforholdsperioder
+          : aarsavregningResponse?.nyttGrunnlag?.trygdeavgiftsgrunnlag.skatteforholdsperioder,
+        mappedLagredeMedlemskapsperioder,
+      ),
+    );
+    setValue(
+      "inntektskilder",
+      mapTilInntektskilderProps(
+        erInitiellMappingForDeltGrunnlag
+          ? aarsavregningResponse.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.inntektskperioder
+          : aarsavregningResponse?.nyttGrunnlag?.trygdeavgiftsgrunnlag.inntektskperioder,
+        mappedLagredeMedlemskapsperioder,
+      ),
+    );
+  };
+
   useEffect(() => {
     const validerMedlemskapsperioderResultat = validerMedlemskapsperioder(lagredeMedlemskapsperioder);
     setFeilmelding(validerMedlemskapsperioderResultat);
 
     if (lagredeMedlemskapsperioder) {
-      const mappedLagredeMedlemskapsperioder = mapInitialMedlemskapsperioder(
-        lagredeMedlemskapsperioder,
-        aarsavregningResponse?.tidligereGrunnlagsopplysninger,
-      );
-      setValue("medlemskapsperioder", mappedLagredeMedlemskapsperioder);
-      setValue(
-        "skatteforholdsperioder",
-        mapTilSkatteforholdProps(
-          aarsavregningResponse?.nyttGrunnlag?.trygdeavgiftsgrunnlag.skatteforholdsperioder,
-          mappedLagredeMedlemskapsperioder,
-        ),
-      );
-      setValue(
-        "inntektskilder",
-        mapTilInntektskilderProps(
-          aarsavregningResponse?.nyttGrunnlag?.trygdeavgiftsgrunnlag.inntektskperioder,
-          mappedLagredeMedlemskapsperioder,
-        ),
-      );
+      setSkjemaverdierFraTrygdeavgiftsgrunnlag();
     }
   }, [lagredeMedlemskapsperioder, aarsavregningResponse]);
 
@@ -146,18 +162,12 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
     }
   }, [aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift]);
 
-  const medlemskapsTypeErPliktig = lagredeMedlemskapsperioder?.every(
-    (periode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG,
-  );
-
-  const innvilgetMedlemskapsperiode = hentMedlemskapsFomTomDato(lagredeMedlemskapsperioder);
-
   const {
     control,
     watch,
     setValue,
     trigger,
-    formState: { errors: formErrors, isValid: formIsValid, isValidating },
+    formState: { isValid: formIsValid, isValidating },
   } = useForm({
     resolver: yupResolver(aarsavregningUtenEllerDeltGrunnlagSchema),
     context: {
@@ -166,14 +176,13 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
       aar: valgtÅr,
     },
     mode: "onChange",
+    reValidateMode: "onChange",
     defaultValues: {
       medlemskapsperioder: mapInitialMedlemskapsperioder(
         lagredeMedlemskapsperioder,
         aarsavregningResponse?.tidligereGrunnlagsopplysninger,
       ),
-      skatteforholdsperioder: mapTilSkatteforholdProps(
-        aarsavregningResponse?.nyttGrunnlag?.trygdeavgiftsgrunnlag.skatteforholdsperioder,
-      ),
+      skatteforholdsperioder: [{}],
       inntektskilder: [{}],
     } as FieldValue<AarsavregningFormValuesProps>,
   });
@@ -199,12 +208,6 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
   } = useFieldArray<FieldArrayProps, "inntektskilder", "id">({ control, name: "inntektskilder" });
 
   const formValues = watch();
-
-  useEffect(() => {
-    if (brukerHarBekreftet && Object.keys(formErrors).length === 0) {
-      setBrukerHarBekreftet(false);
-    }
-  }, [formValues]);
 
   useEffect(() => {
     if (medlemskapsperioderFields.length === 0) {
@@ -259,10 +262,12 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
       aarsavregningID &&
       !isValidating &&
       formIsValid &&
-      fomTomErFyltUt(formValues.inntektskilder, formValues.skatteforholdsperioder) &&
+      fomTomErFyltUt(formValues.inntektskilder, formValues.skatteforholdsperioder, formValues.medlemskapsperioder) &&
       harInntektsKildeType(formValues.inntektskilder, trygdeAvgiftSkalIkkeBetalesTilNav)
     ) {
+      setBrukerHarBekreftet(false);
       setBeregningPaagar(true);
+      setFeilmelding(undefined);
       debounceBeregnTrygdeavgiftsperioder(formValues);
     }
   }, [
@@ -276,12 +281,18 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
   const stegErGyldig = Boolean(formIsValid && aarsavregningResponse?.nyttGrunnlag && feilmelding === undefined);
 
   useEffect(() => {
-    oppdaterStatus(stegErGyldig);
+    if (!beregningPaagar) {
+      oppdaterStatus(stegErGyldig);
+    }
   }, [stegErGyldig]);
 
   const bekreftOnClick = () => {
+    if (!harValidertSkjema) {
+      trigger();
+      setHarValidertSkjema(true);
+    }
     setBrukerHarBekreftet(true);
-    if (stegErGyldig) {
+    if (stegErGyldig && !beregningPaagar) {
       bekreft();
     }
   };
@@ -305,7 +316,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
           ),
         ));
 
-    if (harMedlemskapsPeriodeFeil(response)) {
+    if (response.type === medlemskapsperioderTypes.FEILET) {
       setFeilmelding(response?.data?.data?.message);
     } else {
       setFeilmelding(undefined);
@@ -357,14 +368,6 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
     }
   };
 
-  const harIkkeskattepliktigInntektskilder =
-    harDeltGrunnlag &&
-    harIkkeSkattepliktigInntektskilder(
-      aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.skatteforholdsperioder,
-      aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.inntektskperioder,
-      medlemskapsTypeErPliktig,
-    );
-
   const trygdeAvgiftSkalIkkeBetalesTilNav =
     medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder);
 
@@ -379,7 +382,6 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
             perioder={aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.medlemskapsperioder}
           />
           <TidligereGrunnlagsoversikt
-            harFakturerbareInntektskilder={harIkkeskattepliktigInntektskilder}
             skatteforholdsperioder={
               aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.skatteforholdsperioder
             }
@@ -388,23 +390,18 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
             }
             avgift={aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift}
           />
+
+          {!forskuddsvisFakturertTrygdeavgift && <Aarsavregningsmeldinger.TrygdeavgiftErIkkeForskuddsvisFakturert />}
+
+          <BeregnetTrygdeavgiftDetaljer
+            grunnlag={aarsavregningResponse?.tidligereGrunnlagsopplysninger}
+            medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!}
+            tittel="Tidligere beregnet trygdeavgift"
+          />
         </>
       )}
 
-      {harDeltGrunnlag && !forskuddsvisFakturertTrygdeavgift && (
-        <Aarsavregningsmeldinger.TrygdeavgiftErIkkeForskuddsvisFakturert />
-      )}
-
-      {harIkkeskattepliktigInntektskilder && (
-        <BeregnetTrygdeavgiftDetaljer
-          grunnlag={aarsavregningResponse?.tidligereGrunnlagsopplysninger}
-          medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!}
-          tittel="Tidligere beregnet trygdeavgift"
-        />
-      )}
-
       <TidligereFakturertIAvgiftssystemetInput
-        formValues={formValues}
         control={control}
         redigerbart={redigerbart}
         harDeltGrunnlag={harDeltGrunnlag}
@@ -459,7 +456,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
         <Aarsavregningsmeldinger.TrygdeavgiftSkalIkkeBetalesTilNav />
       )}
 
-      {formIsValid && (
+      {formIsValid && !feilmelding && (
         <SumArsavregningTabell
           nyTrygdeavgift={aarsavregningResponse?.avregning?.nyttTotalbeloep}
           tidligereTrygdeavgift={aarsavregningResponse?.avregning?.tidligereFakturertBeloep}
@@ -467,7 +464,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
         />
       )}
 
-      {formIsValid && aarsavregningResponse?.nyttGrunnlag && (
+      {formIsValid && !feilmelding && aarsavregningResponse?.nyttGrunnlag && (
         <BeregnetTrygdeavgiftDetaljer
           grunnlag={aarsavregningResponse.nyttGrunnlag}
           medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!}
@@ -475,19 +472,13 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
         />
       )}
 
-      {brukerHarBekreftet && <FeilmeldingOppsummering errors={formErrors} />}
-
-      {feilmelding && (
+      {brukerHarBekreftet && feilmelding && (
         <Nav.Alert variant="error" className="alertstripe_feilmelding">
           {feilmelding}
         </Nav.Alert>
       )}
 
-      <Nav.Button
-        variant="primary"
-        disabled={!redigerbart || beregningPaagar || !stegErGyldig}
-        onClick={bekreftOnClick}
-      >
+      <Nav.Button variant="primary" loading={beregningPaagar} disabled={!redigerbart} onClick={bekreftOnClick}>
         Bekreft og fortsett
       </Nav.Button>
     </div>

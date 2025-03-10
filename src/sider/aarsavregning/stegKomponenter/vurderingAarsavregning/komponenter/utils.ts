@@ -13,7 +13,7 @@ import { sorterEtterISOFomDato } from "../../../../../utils/dato";
 
 const { IKKE_SKATTEPLIKTIG } = MKV.Koder.skatteplikttype;
 
-const mapFeilmelding = (error: any) => {
+export const mapFeilmelding = (error: any) => {
   const feilmelding = "Finner ikke trygdeavgiftssats. Melosys har ikke satser for årene før 2014.";
 
   const ingenGjeldendeSats = error.body?.feilkoder?.some((feilkode: string) =>
@@ -29,29 +29,18 @@ export const erBrukerSkattepliktigIHelePerioden = (skatteforholdsperioder: any) 
   return !skatteforholdsperioder.some((skatteforhold: any) => skatteforhold.skatteplikttype === IKKE_SKATTEPLIKTIG);
 };
 
-export function harIkkeSkattepliktigInntektskilder(
-  skatteforholdsperioder: any,
-  inntektsperioder: any,
-  medlemskapsTypeErPliktig?: boolean,
-) {
-  if (skatteforholdsperioder === undefined || inntektsperioder === undefined) return false;
-  if (inntektsperioder.length === 0) {
-    return false;
-  }
-
-  if (medlemskapsTypeErPliktig) {
-    return !erBrukerSkattepliktigIHelePerioden(skatteforholdsperioder);
-  }
-
-  return true;
-}
-
 export function fomTomErFyltUt(
   inntektskildePerioder: Inntektskilde[],
   skatteforholdsPerioder: Skatteforhold[],
+  medlemskapsperioder?: Medlemskapsperiode[],
 ): boolean {
-  const allPerioder = [...inntektskildePerioder, ...skatteforholdsPerioder];
-  return allPerioder.every(({ fomDato, tomDato }) => fomDato !== undefined && tomDato !== undefined);
+  let allPerioder = [...inntektskildePerioder, ...skatteforholdsPerioder];
+  if (medlemskapsperioder?.length) {
+    allPerioder = [...allPerioder, ...medlemskapsperioder];
+  }
+  return allPerioder.every(
+    ({ fomDato, tomDato }) => fomDato !== undefined && fomDato !== "" && tomDato !== undefined && tomDato !== "",
+  );
 }
 
 export function harInntektsKildeType(
