@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 import { FocusEvent, useEffect, useRef, useState } from "react";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
