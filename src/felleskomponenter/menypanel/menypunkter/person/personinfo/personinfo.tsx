@@ -59,10 +59,10 @@ function PersonInfo({ behandlingID, ...props }: PersonInfoProps) {
   }
 
   function Fødselsdato() {
-    const foedsel = personinfoData?.hentSaksopplysninger.persondata.foedsel;
+    const foedselsdato = personinfoData?.hentSaksopplysninger.persondata.foedselsdato;
     let fødselsdato = null;
-    if (foedsel) {
-      fødselsdato = foedsel.foedselsdato ? <EnkeltDato dato={foedsel.foedselsdato} /> : foedsel.foedselsaar;
+    if (foedselsdato) {
+      fødselsdato = foedselsdato.foedselsdato ? <EnkeltDato dato={foedselsdato.foedselsdato} /> : foedselsdato.foedselsaar;
     }
     return (
       <>

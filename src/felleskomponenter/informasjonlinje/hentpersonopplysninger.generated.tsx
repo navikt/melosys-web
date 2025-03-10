@@ -3,7 +3,7 @@ import * as Types from '../../graphql/generated/types';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 
-const defaultOptions =  {}
+const defaultOptions = {}
 export type HentPersonopplysningerQueryVariables = Types.Exact<{
   behandlingID: Types.Scalars['Long'];
 }>;
@@ -11,26 +11,32 @@ export type HentPersonopplysningerQueryVariables = Types.Exact<{
 
 export type HentPersonopplysningerQuery = (
   { __typename?: 'Query' }
-  & { hentSaksopplysninger: (
-    { __typename?: 'Saksopplysninger' }
-    & { persondata: (
-      { __typename?: 'Personopplysninger' }
-      & Pick<Types.Personopplysninger, 'kjoenn' | 'folkeregisteridentifikator'>
-      & { navn: (
-        { __typename?: 'Navn' }
-        & Pick<Types.Navn, 'fornavn' | 'mellomnavn' | 'etternavn'>
-      ), folkeregisterpersonstatuser: Array<(
-        { __typename?: 'Folkeregisterpersonstatus' }
-        & Pick<Types.Folkeregisterpersonstatus, 'kode' | 'erHistorisk'>
-      )>, statsborgerskap: Array<(
-        { __typename?: 'Statsborgerskap' }
-        & Pick<Types.Statsborgerskap, 'land' | 'erHistorisk'>
-      )>, sivilstand: Array<(
-        { __typename?: 'Sivilstand' }
-        & Pick<Types.Sivilstand, 'type' | 'erHistorisk'>
-      )> }
-    ) }
-  ) }
+  & {
+    hentSaksopplysninger: (
+      { __typename?: 'Saksopplysninger' }
+      & {
+        persondata: (
+          { __typename?: 'Personopplysninger' }
+          & Pick<Types.Personopplysninger, 'kjoenn' | 'folkeregisteridentifikator'>
+          & {
+            navn: (
+              { __typename?: 'Navn' }
+              & Pick<Types.Navn, 'fornavn' | 'mellomnavn' | 'etternavn'>
+            ), folkeregisterpersonstatuser: Array<(
+              { __typename?: 'Folkeregisterpersonstatus' }
+              & Pick<Types.Folkeregisterpersonstatus, 'kode' | 'erHistorisk'>
+            )>, statsborgerskap: Array<(
+              { __typename?: 'Statsborgerskap' }
+              & Pick<Types.Statsborgerskap, 'land' | 'erHistorisk'>
+            )>, sivilstand: Array<(
+              { __typename?: 'Sivilstand' }
+              & Pick<Types.Sivilstand, 'type' | 'erHistorisk'>
+            )>
+          }
+        )
+      }
+    )
+  }
 );
 
 
@@ -79,13 +85,13 @@ export const HentPersonopplysningerDocument = gql`
  * });
  */
 export function useHentPersonopplysningerQuery(baseOptions: Apollo.QueryHookOptions<HentPersonopplysningerQuery, HentPersonopplysningerQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<HentPersonopplysningerQuery, HentPersonopplysningerQueryVariables>(HentPersonopplysningerDocument, options);
-      }
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<HentPersonopplysningerQuery, HentPersonopplysningerQueryVariables>(HentPersonopplysningerDocument, options);
+}
 export function useHentPersonopplysningerLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<HentPersonopplysningerQuery, HentPersonopplysningerQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<HentPersonopplysningerQuery, HentPersonopplysningerQueryVariables>(HentPersonopplysningerDocument, options);
-        }
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<HentPersonopplysningerQuery, HentPersonopplysningerQueryVariables>(HentPersonopplysningerDocument, options);
+}
 export type HentPersonopplysningerQueryHookResult = ReturnType<typeof useHentPersonopplysningerQuery>;
 export type HentPersonopplysningerLazyQueryHookResult = ReturnType<typeof useHentPersonopplysningerLazyQuery>;
 export type HentPersonopplysningerQueryResult = Apollo.QueryResult<HentPersonopplysningerQuery, HentPersonopplysningerQueryVariables>;
