@@ -230,7 +230,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
         </Nav.Row>
       ) : null}
 
-      {redigerbart && skalFaktureres && !erDifferanseUnderMinstebeløp && harFullmaktForTrygdeavgift ? (
+      {redigerbart && !erDifferanseUnderMinstebeløp && harFullmaktForTrygdeavgift ? (
         <FullmaktForTrygdeavgiftConfirmationPanel
           harBekreftet={harBekreftetFullmaktForTrygdeavgift}
           onChange={setHarBekreftetFullmaktForTrygdeavgift}
