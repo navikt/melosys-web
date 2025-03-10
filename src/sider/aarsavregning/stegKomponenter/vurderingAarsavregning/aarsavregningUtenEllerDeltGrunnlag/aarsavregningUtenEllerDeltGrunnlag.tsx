@@ -23,20 +23,13 @@ import {
   medlemskapsperioderSelectors,
   medlemskapsperioderTypes,
 } from "../../../../../ducks/medlemskapsperioder";
-import { MedlemskapsperiodeProp } from "../../../../ftrl/saksbehandling/stegKomponenter/vurderingPeriode/komponenter/types";
 import { Skatteforholdsperioder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/skatteforholdsperioder";
 import { Inntektskilder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/inntektskilder";
-import {
-  beregnTrygdeavgiftsperioder,
-  erBrukerSkattepliktigIHelePerioden,
-  harInntektsKildeType,
-  validerMedlemskapsperioder,
-} from "../komponenter/utils";
+import { beregnTrygdeavgiftsperioder, erBrukerSkattepliktigIHelePerioden } from "../komponenter/utils";
 import {
   hentMedlemskapsFomTomDato,
   mapInitialMedlemskapsperioder,
   mapTilInntektskilderProps,
-  mapTilMedlemskapsperiode,
   mapTilSkatteforholdProps,
 } from "../aarsavregningHelpers";
 import { MedlemskapsperiodeSkjema } from "../komponenter/medlemskapsperiodeSkjema";
@@ -81,7 +74,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const dispatch = useDispatch();
 
-  // TODO: Fix setting av disse i initial load useeffect
+  // TODO: Brukes kun i schema, tilpass schema slik at disse contextvariablene ikke lenger behøves
   const medlemskapsTypeErPliktig = lagredeMedlemskapsperioder?.every(
     (periode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG,
   );
@@ -225,9 +218,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
   const medlemskapsperioderPrevLength = useRef(medlemskapsperioder.length);
   const totaltForskuddsvisFakturert = useWatch({ control, name: "totaltForskuddsvisFakturert" });
   const skatteforholdsperioder = useWatch({ control, name: "skatteforholdsperioder" });
-  const skatteforholdsperioderPrevLength = useRef(skatteforholdsperioder.length);
   const inntektskilder = useWatch({ control, name: "inntektskilder" });
-  const inntektskilderPrevLength = useRef(inntektskilder.length);
 
   const lagreMedlemskapsperiode = async (medlemskapsperiode: Medlemskapsperiode) => {
     const periodeRequest = {
@@ -270,6 +261,8 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
     [],
   );
 
+  // Håndterer endringer i medlemskapsperiodeSkjema.
+  // TODO: Dersom skjema er i gyldig tilstand etter lagring, beregn
   useEffect(() => {
     if (redigerbart) {
       if (medlemskapsperioder.length !== medlemskapsperioderPrevLength.current) {
@@ -318,16 +311,16 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
   useEffect(() => {
     if (
       redigerbart &&
-      (formValues.totaltForskuddsvisFakturert || formValues.totaltForskuddsvisFakturert === "") &&
-      formValues.totaltForskuddsvisFakturert !== aarsavregningResponse?.avregning?.tidligereFakturertBeloepAvgiftssystem
+      (totaltForskuddsvisFakturert || totaltForskuddsvisFakturert === "") &&
+      totaltForskuddsvisFakturert !== aarsavregningResponse?.avregning?.tidligereFakturertBeloepAvgiftssystem
     ) {
       debouncedOppdaterAarsavregning({
         avregning: {
-          tidligereFakturertBeloepAvgiftssystem: formValues.totaltForskuddsvisFakturert,
+          tidligereFakturertBeloepAvgiftssystem: totaltForskuddsvisFakturert,
         },
       });
     }
-  }, [formValues.totaltForskuddsvisFakturert]);
+  }, [totaltForskuddsvisFakturert]);
 
   const handleBeregnTrygdeavgiftsperioder = useCallback(
     async (formVerdier: FieldValue<FormValuesProps>) => {
@@ -348,6 +341,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
     [handleBeregnTrygdeavgiftsperioder],
   );
 
+  // Håndterer endringer i inntektskilder og skatteforhold.
   useEffect(() => {
     if (redigerbart && aarsavregningID) {
       const beregnHvisSkjemaErGyldig = async () => {
@@ -356,10 +350,10 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
           setFeilmelding(undefined);
           debounceBeregnTrygdeavgiftsperioder(formValues);
         }
-      }
+      };
       beregnHvisSkjemaErGyldig();
     }
-  }, [totaltForskuddsvisFakturert, inntektskilder, skatteforholdsperioder]);
+  }, [inntektskilder, skatteforholdsperioder]);
 
   const stegErGyldig = Boolean(formIsValid && aarsavregningResponse?.nyttGrunnlag && feilmelding === undefined);
 
