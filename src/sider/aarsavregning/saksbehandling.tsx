@@ -93,8 +93,7 @@ function Saksbehandling({ match, location }: Props) {
 
   useEffect(() => {
     lastInnSaksopplysninger();
-    if (!aar) return;
-    // eslint-disable-next-line consistent-return
+
     return () => {
       dispatch(fagsakOperations.resetFagsakState());
       dispatch(behandlingerOperations.resetBehandlingerState());
