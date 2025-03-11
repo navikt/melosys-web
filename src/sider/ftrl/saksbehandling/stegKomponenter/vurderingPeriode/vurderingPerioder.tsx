@@ -319,7 +319,7 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
         trygdedekninger={lovligeDekninger}
         innvilgelsesResultater={lovligeInnvilgelsesresultat}
         control={control}
-        fields={fields}
+        fields={watch("medlemskapsperioder")}
         watch={watch}
         handleSlett={handleSlett}
         redigerbart={redigerbart}
