@@ -10,7 +10,7 @@ import SideDialog, { defaultTabs } from "../../felleskomponenter/sideDialog";
 import SaksoversiktLenke from "../../felleskomponenter/saksoversiktLenke";
 
 import { EnkelStegvelger } from "../../felleskomponenter/enkelStegvelger";
-import { behandlingsresultatOperations } from "../../ducks/behandlingsresultat";
+import { behandlingsresultatOperations, behandlingsresultatSelectors } from "../../ducks/behandlingsresultat";
 import { behandlingerOperations, behandlingerSelectors } from "../../ducks/behandlinger";
 import { fagsakOperations } from "../../ducks/fagsaker";
 import { redigerbartSelectors } from "../../ducks/redigerbart";
@@ -22,7 +22,7 @@ import { alleSteg } from "./initialStegArray";
 import { FellesHandlersContext } from "../../contexts";
 import { mottatteOpplysningerOperations } from "../../ducks/mottatteOpplysninger";
 import Oppsummering from "../../felleskomponenter/oppsummering";
-import { aarsavregningOperations } from "../../ducks/aarsavregning";
+import { aarsavregningOperations, aarsavregningSelectors } from "../../ducks/aarsavregning";
 import { medlemskapsperioderSelectors } from "../../ducks/medlemskapsperioder";
 
 interface Props extends RouteComponentProps<MatchParams> {
@@ -40,6 +40,8 @@ function Saksbehandling({ match, location }: Props) {
   const innvilgetMedlemskapsperiode = useSelector(
     medlemskapsperioderSelectors.SamletInnvilgetMedlemskapsperiodeSelector,
   );
+  const aar = useSelector(aarsavregningSelectors.AarsavregningAarSelector);
+  const { oppfriskOgLastInnSaksopplysninger } = useContext(FellesHandlersContext) as any;
 
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const registeropplysningerHentet = useSelector(behandlingerSelectors.RegisteropplysningerHentetSelector);
@@ -84,8 +86,15 @@ function Saksbehandling({ match, location }: Props) {
   };
 
   useEffect(() => {
-    lastInnSaksopplysninger();
+    if (aar !== undefined) {
+      oppfriskOgLastInnSaksopplysninger();
+    }
+  }, [aar]);
 
+  useEffect(() => {
+    lastInnSaksopplysninger();
+    if (!aar) return;
+    // eslint-disable-next-line consistent-return
     return () => {
       dispatch(fagsakOperations.resetFagsakState());
       dispatch(behandlingerOperations.resetBehandlingerState());

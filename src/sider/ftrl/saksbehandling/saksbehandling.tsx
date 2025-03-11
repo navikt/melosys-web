@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "AppTypes";
@@ -39,6 +39,7 @@ import { alleStegManglendeInnbetalingFlyt } from "./stegLister/stegListeManglend
 import { fakturaserierOperations } from "../../../ducks/fakturaserier";
 import { alleStegIkkeYrkesaktivFlyt } from "./stegLister/stegListeIkkeYrkesaktivFlyt";
 import { alleStegPensjonistFlyt } from "./stegLister/stegListePensjonistFlyt";
+import { FellesHandlersContext } from "../../../contexts";
 
 const mapStateToProps = (state: RootState) => ({
   arbeidsland: mottatteOpplysningerSelectors.SoknadslandkoderSelector(state),
