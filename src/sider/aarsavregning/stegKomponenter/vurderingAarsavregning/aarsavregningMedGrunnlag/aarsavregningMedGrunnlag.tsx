@@ -193,9 +193,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
     erAvvik === false || Boolean(formIsValid && erAvvik && aarsavregningResponse?.nyttGrunnlag && !feilmelding);
 
   useEffect(() => {
-    if (!beregningPaagar) {
-      oppdaterStatus(stegErGyldig);
-    }
+    oppdaterStatus(stegErGyldig);
   }, [stegErGyldig]);
 
   const håndterAvvik = (value: boolean) => {
