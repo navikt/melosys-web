@@ -41,10 +41,10 @@ function Saksbehandling({ match, location }: Props) {
     medlemskapsperioderSelectors.SamletInnvilgetMedlemskapsperiodeSelector,
   );
   const aar = useSelector(aarsavregningSelectors.AarsavregningAarSelector);
-  const { oppfriskOgLastInnSaksopplysninger } = useContext(FellesHandlersContext) as any;
-
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
+
   const registeropplysningerHentet = useSelector(behandlingerSelectors.RegisteropplysningerHentetSelector);
+  const { oppfriskOgLastInnSaksopplysninger } = useContext(FellesHandlersContext) as any;
 
   const { startOgVisOppfriskModal, visOppfriskModal, behandlingOppfriskes } = useContext(FellesHandlersContext) as any;
 
