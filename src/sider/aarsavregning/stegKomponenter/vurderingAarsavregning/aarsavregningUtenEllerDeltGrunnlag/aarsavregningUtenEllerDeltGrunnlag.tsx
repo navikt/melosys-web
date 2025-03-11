@@ -90,16 +90,10 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
   );
   const innvilgetMedlemskapsperiode = hentMedlemskapsFomTomDato(lagredeMedlemskapsperioder);
 
-  useEffect(() => {
-    if (behandlingstema) {
-      Api.Ftrl.hentBestemmelser(behandlingstema).then((res: any) => setBestemmelser(res.bestemmelser));
-    }
-  }, [behandlingstema]);
-
   // Initiell innlasting og skjemapopulering
   useEffect(() => {
     if (behandlingID) {
-      dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(behandlingID));
+      Api.Ftrl.hentBestemmelser(behandlingstema).then((res: any) => setBestemmelser(res.bestemmelser));
       Api.Aarsavregning.hentAarsavregning(behandlingID)
         .then((aarsavregningRes) => {
           Api.MedlemAvFolketrygden.Medlemskapsperioder.hentMedlemskapsperioder(behandlingID).then(
@@ -290,7 +284,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
         return;
       }
       // Unngå trigger på skjema dersom default periode er lagt inn
-      if (medlemskapsperioder.some((periode: any) => periode === DEFAULT_MEDLEMSKAPSPERIODE)) {
+      if (!medlemskapsperioder.some((periode: any) => periode.fomDato === undefined || periode.fomDato === "")) {
         debouncedLagreMedlemskapsperioder(medlemskapsperioder);
       }
     }
