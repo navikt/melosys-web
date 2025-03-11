@@ -252,8 +252,10 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
       setFeilmelding(response?.data?.data?.message);
     } else {
       if (medlemskapsperiode.id === -1) {
+        /* eslint-disable no-param-reassign */
         medlemskapsperiode.id = response.id;
         medlemskapsperiode.medlemskapstype = response.medlemskapstype;
+        /* eslint-enable no-param-reassign */
       }
       setFeilmelding(undefined);
     }
@@ -263,6 +265,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
     Utils._debounce(async (medlemskapsperioderFormValues) => {
       const isValid = await trigger("medlemskapsperioder");
       if (isValid) {
+        /* eslint-disable-next-line no-restricted-syntax */
         for (const periode of medlemskapsperioderFormValues) {
           if (periode.redigerbar) {
             await lagreMedlemskapsperiode(periode);
@@ -318,21 +321,19 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
         dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(behandlingID));
       });
     }
-    const formIsValid = await trigger();
-    if (formIsValid) {
+    if (await trigger()) {
       setFeilmelding(undefined);
       await handleBeregnTrygdeavgiftsperioder(watch());
     }
   };
 
   const handleOppdaterTotaltForskuddsvisFakturert = async (
-    behandlingID: number,
+    behandlingid: number,
     request: Api.Aarsavregning.AarsavregningRequest,
-    aarsavregningID?: number,
+    aarsavregningid?: number,
   ) => {
-    await Api.Aarsavregning.oppdaterAarsavregning(behandlingID, request, aarsavregningID);
-    const formIsValid = await trigger();
-    if (formIsValid) {
+    await Api.Aarsavregning.oppdaterAarsavregning(behandlingid, request, aarsavregningid);
+    if (await trigger()) {
       setFeilmelding(undefined);
       await handleBeregnTrygdeavgiftsperioder(watch());
     }
