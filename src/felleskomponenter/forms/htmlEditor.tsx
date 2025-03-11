@@ -4,7 +4,6 @@ import HtmlEditor from "../htmlEditor";
 import { getErrorMessage } from "./misc/mapFeilmelding";
 
 interface HtmlEditorProps extends UseControllerProps {
-  spellCheck?: boolean;
   className?: string;
   placeholder?: string;
   disabled?: boolean;
