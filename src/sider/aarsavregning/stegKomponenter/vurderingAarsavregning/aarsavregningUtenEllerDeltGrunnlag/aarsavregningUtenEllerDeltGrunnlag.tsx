@@ -261,13 +261,11 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
 
     if (response.type === medlemskapsperioderTypes.FEILET) {
       setMedlemskapsperiodeFeilmelding(response?.data?.data?.message);
-    } else {
-      if (medlemskapsperiode.id === -1) {
-        /* eslint-disable no-param-reassign */
-        medlemskapsperiode.id = response.id;
-        medlemskapsperiode.medlemskapstype = response.medlemskapstype;
-        /* eslint-enable no-param-reassign */
-      }
+    } else if (medlemskapsperiode.id === -1) {
+      /* eslint-disable no-param-reassign */
+      medlemskapsperiode.id = response.id;
+      medlemskapsperiode.medlemskapstype = response.medlemskapstype;
+      /* eslint-enable no-param-reassign */
     }
   };
 
