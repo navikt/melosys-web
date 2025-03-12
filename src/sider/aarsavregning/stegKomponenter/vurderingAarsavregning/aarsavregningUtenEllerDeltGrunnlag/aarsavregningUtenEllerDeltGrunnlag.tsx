@@ -259,12 +259,8 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
     Utils._debounce(async (medlemskapsperioderFormValues) => {
       const isValid = await trigger("medlemskapsperioder");
       if (isValid) {
-        /* eslint-disable-next-line no-restricted-syntax */
-        for (const periode of medlemskapsperioderFormValues) {
-          if (periode.redigerbar) {
-            await lagreMedlemskapsperiode(periode);
-          }
-        }
+        await Promise.all(medlemskapsperioderFormValues.map(lagreMedlemskapsperiode));
+
         dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(behandlingID));
         if (initiellBeregningUtført && (await trigger())) {
           setFeilmelding(undefined);
