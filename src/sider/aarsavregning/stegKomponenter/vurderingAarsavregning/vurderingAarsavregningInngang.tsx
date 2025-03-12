@@ -1,6 +1,6 @@
 import * as Api from "../../../../services/api";
 import "./vurderingAarsavregningInngang.css";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useState } from "react";
 import { AarsavregningResponse } from "../../../../services/modules/aarsavregning/aarsavregning";
 import { useDispatch, useSelector } from "react-redux";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
@@ -17,6 +17,7 @@ import { AarsavregningMedGrunnlag } from "./aarsavregningMedGrunnlag/aarsavregni
 import { AarsavregningUtenEllerDeltGrunnlag } from "./aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlag";
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
 import { lagInnvilgetMedlemskapsPeriode } from "./komponenter/utils";
+import { FellesHandlersContext } from "../../../../contexts";
 
 interface Props {
   bekreft: () => void;
@@ -56,6 +57,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
   const antallÅrTilbakeITid = 6;
   const muligeAar = Array.from({ length: antallÅrTilbakeITid }, (_, i) => sisteMuligeÅr - i);
   const dispatch = useDispatch();
+  const { oppfriskOgLastInnSaksopplysninger } = useContext(FellesHandlersContext) as any;
 
   const utledGrunnlagstypeForAarsavregning = (res: AarsavregningResponse) => {
     const innvilgetPeriode = lagInnvilgetMedlemskapsPeriode(
@@ -106,6 +108,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
           // Benyttes for innhenting av saksopplysninger ifm. årsavregningsbehandlinger
           dispatch({ type: OK, data: res });
           dispatch(behandlingsresultatOperations.hent(behandlingID));
+          oppfriskOgLastInnSaksopplysninger();
         })
         .catch((error) => {
           setApiFeil(error.body.message);

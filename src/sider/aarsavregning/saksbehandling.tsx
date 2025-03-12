@@ -86,12 +86,6 @@ function Saksbehandling({ match, location }: Props) {
   };
 
   useEffect(() => {
-    if (aar !== undefined) {
-      oppfriskOgLastInnSaksopplysninger();
-    }
-  }, [aar]);
-
-  useEffect(() => {
     lastInnSaksopplysninger();
 
     return () => {
