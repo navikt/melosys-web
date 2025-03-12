@@ -28,9 +28,10 @@ import { Inntektskilder } from "../../../../../felleskomponenter/trygdeavgift/ko
 import { beregnTrygdeavgiftsperioder, erBrukerSkattepliktigIHelePerioden } from "../komponenter/utils";
 import {
   hentMedlemskapsFomTomDato,
-  mapMedlemskapsperioder, mapMedlemskapsperioderFraGrunnlag,
+  mapMedlemskapsperioder,
+  mapMedlemskapsperioderFraGrunnlag,
   mapTilInntektskilderProps,
-  mapTilSkatteforholdProps
+  mapTilSkatteforholdProps,
 } from "../aarsavregningHelpers";
 import { MedlemskapsperiodeSkjema } from "../komponenter/medlemskapsperiodeSkjema";
 import TidligereGrunnlagsoversikt from "../komponenter/tidligereGrunnlagsoversikt";
@@ -126,16 +127,20 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
     innvilgedeMedlemskapsperioder: Medlemskapsperiode[],
   ) => {
     let mappedMedlemskapsperioder;
-    if (harDeltGrunnlag && innvilgedeMedlemskapsperioder.length === 0 && aarsavregningRes?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag) {
+    if (
+      harDeltGrunnlag &&
+      innvilgedeMedlemskapsperioder.length === 0 &&
+      aarsavregningRes?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag
+    ) {
       // Må opprette medlemskapsperioder fra grunnlag på behandlingsresultat. Overstyrer ID til -1.
       mappedMedlemskapsperioder = mapMedlemskapsperioderFraGrunnlag(
-        aarsavregningRes.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag
-      ).map((periode) => ({...periode, id: -1}));
+        aarsavregningRes.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag,
+      ).map((periode) => ({ ...periode, id: -1 }));
       await Promise.all(mappedMedlemskapsperioder.map(lagreMedlemskapsperiode));
     } else {
       mappedMedlemskapsperioder = mapMedlemskapsperioder(
         innvilgedeMedlemskapsperioder,
-        aarsavregningRes.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag
+        aarsavregningRes.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag,
       );
     }
 
