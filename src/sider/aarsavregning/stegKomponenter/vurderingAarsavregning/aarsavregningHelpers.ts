@@ -13,12 +13,12 @@ export const hentMedlemskapsFomTomDato = (medlemskapsperioder?: any[]) => {
   return {};
 };
 
-export const mapTilMedlemskapsperiode = (
+export const mapTilMedlemskapsperiodeFieldProps = (
   medlemskapsperiode: any,
-  tidligereGrunnlagsopplysninger?: Api.Aarsavregning.Grunnlagsopplysninger,
+  tidligereGrunnlag?: Api.Aarsavregning.Trygdeavgiftsgrunnlag,
 ) => {
-  const grunnlagsperioder = tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.medlemskapsperioder;
-  const redigerbar = !grunnlagsperioder?.some(
+  const grunnlagsperioder = tidligereGrunnlag?.medlemskapsperioder;
+  const medlemskapsperiodeErFraGrunnlag = grunnlagsperioder?.some(
     (periode) => periode.fomDato === medlemskapsperiode.fomDato && periode.tomDato === medlemskapsperiode.tomDato,
   );
 
@@ -27,17 +27,20 @@ export const mapTilMedlemskapsperiode = (
     fomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.fomDato),
     tomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.tomDato),
     feil: undefined,
-    redigerbar,
+    redigerbar: !medlemskapsperiodeErFraGrunnlag,
+    id: medlemskapsperiode.id,
   };
 };
 
-export const mapInitialMedlemskapsperioder = (
-  perioder: any[],
-  tidligereGrunnlagsopplysninger?: Api.Aarsavregning.Grunnlagsopplysninger,
-) =>
+export const mapMedlemskapsperioderFraGrunnlag = (tidligereGrunnlag: Api.Aarsavregning.Trygdeavgiftsgrunnlag) =>
+  [...tidligereGrunnlag.medlemskapsperioder]
+    .sort((a, b) => Utils.dato.sorterEtterISOFomDato(a, b))
+    .map((periode) => mapTilMedlemskapsperiodeFieldProps(periode, tidligereGrunnlag));
+
+export const mapMedlemskapsperioder = (perioder: any[], tidligereGrunnlag?: Api.Aarsavregning.Trygdeavgiftsgrunnlag) =>
   [...perioder]
     .sort((a, b) => Utils.dato.sorterEtterISOFomDato(a, b))
-    .map((periode) => mapTilMedlemskapsperiode(periode, tidligereGrunnlagsopplysninger));
+    .map((periode) => mapTilMedlemskapsperiodeFieldProps(periode, tidligereGrunnlag));
 
 export const mapTilSkatteforholdProps = (skatteforholdsperioder?: any[], medlemskapsperioder?: any[]) => {
   const { fom, tom } = hentMedlemskapsFomTomDato(medlemskapsperioder);
