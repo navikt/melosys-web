@@ -44,7 +44,6 @@ function Saksbehandling({ match, location }: Props) {
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
 
   const registeropplysningerHentet = useSelector(behandlingerSelectors.RegisteropplysningerHentetSelector);
-  const { oppfriskOgLastInnSaksopplysninger } = useContext(FellesHandlersContext) as any;
 
   const { startOgVisOppfriskModal, visOppfriskModal, behandlingOppfriskes } = useContext(FellesHandlersContext) as any;
 
