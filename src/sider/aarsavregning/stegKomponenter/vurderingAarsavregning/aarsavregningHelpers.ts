@@ -13,7 +13,7 @@ export const hentMedlemskapsFomTomDato = (medlemskapsperioder?: any[]) => {
   return {};
 };
 
-export const mapTilMedlemskapsperiodeProps = (
+export const mapTilMedlemskapsperiode = (
   medlemskapsperiode: any,
   tidligereGrunnlagsopplysninger?: Api.Aarsavregning.Grunnlagsopplysninger,
 ) => {
@@ -26,9 +26,7 @@ export const mapTilMedlemskapsperiodeProps = (
     ...medlemskapsperiode,
     fomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.fomDato),
     tomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.tomDato),
-    ny: false,
     feil: undefined,
-    periodeId: medlemskapsperiode.id,
     redigerbar,
   };
 };
@@ -39,7 +37,7 @@ export const mapInitialMedlemskapsperioder = (
 ) =>
   [...perioder]
     .sort((a, b) => Utils.dato.sorterEtterISOFomDato(a, b))
-    .map((periode) => mapTilMedlemskapsperiodeProps(periode, tidligereGrunnlagsopplysninger));
+    .map((periode) => mapTilMedlemskapsperiode(periode, tidligereGrunnlagsopplysninger));
 
 export const mapTilSkatteforholdProps = (skatteforholdsperioder?: any[], medlemskapsperioder?: any[]) => {
   const { fom, tom } = hentMedlemskapsFomTomDato(medlemskapsperioder);

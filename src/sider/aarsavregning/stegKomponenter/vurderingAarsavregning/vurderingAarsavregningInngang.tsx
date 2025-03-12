@@ -123,9 +123,9 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
     setValgtÅr(år || null);
   };
 
-  const håndterDeltGrunnlag = (value: boolean) => {
+  const håndterDeltGrunnlag = async (value: boolean) => {
     if (harDeltGrunnlag && !value) {
-      Api.Aarsavregning.oppdaterAarsavregning(
+      await Api.Aarsavregning.oppdaterAarsavregning(
         behandlingID,
         { avregning: { tidligereFakturertBeloepAvgiftssystem: 0 } },
         aarsavregningID,
