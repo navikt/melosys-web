@@ -115,7 +115,7 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     name: "medlemskapsperioder",
   });
   const formValues = watch();
-
+  const medlemskapsperioder = watch("medlemskapsperioder");
   const aktivFeilmeldingType = finnAktivFeilmelding(
     formValues?.medlemskapsperioder,
     behandlingstype,
@@ -193,7 +193,7 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
       resetMedlemskapsperioder(lagretPerioder);
 
       await trigger("medlemskapsperioder");
-      await debouncedLagreMedlemskapsperioder(lagretPerioder, true, undefined);
+      await debouncedLagreMedlemskapsperioder(lagretPerioder);
     }
 
     dispatch(oppsummertfaktaOperations.lagreUkjentSluttdatoMedlemskapsperiode(behandlingID, ukjentSluttdato));
@@ -229,23 +229,23 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   };
 
   const debouncedLagreMedlemskapsperioder = useCallback(
-    Utils._debounce(async (medlemskapsperioder, isValid, overskrevetIndex) => {
+    Utils._debounce(async (medlemskapsperioderFormvalues) => {
+      const isValid = await trigger("medlemskapsperioder");
       if (isValid) {
-        // eslint-disable-next-line no-restricted-syntax
-        for (const periode of medlemskapsperioder) {
-          const index = overskrevetIndex !== undefined ? overskrevetIndex : medlemskapsperioder.indexOf(periode);
-          await lagreMedlemskapsperiode(periode, index);
-        }
+        await Promise.all(
+          medlemskapsperioderFormvalues.map((periode: any, index: number) => lagreMedlemskapsperiode(periode, index)),
+        );
+        dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(behandlingID as number));
       }
-    }, 500),
+    }, 1000),
     [],
   );
 
   useEffect(() => {
-    if (redigerbart && aktivtSteg) {
-      debouncedLagreMedlemskapsperioder(formValues.medlemskapsperioder, stegErGyldig, undefined);
+    if (redigerbart && aktivtSteg && formIsValid) {
+      debouncedLagreMedlemskapsperioder(formValues.medlemskapsperioder);
     }
-  }, [stegErGyldig]);
+  }, [stegErGyldig, formIsValid]);
 
   if (!aktivtSteg || !formValues) return null;
 
@@ -319,12 +319,12 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
         trygdedekninger={lovligeDekninger}
         innvilgelsesResultater={lovligeInnvilgelsesresultat}
         control={control}
-        fields={watch("medlemskapsperioder")}
+        fields={medlemskapsperioder}
         watch={watch}
         handleSlett={handleSlett}
         redigerbart={redigerbart}
         formIsValid={stegErGyldig}
-        handleChange={debouncedLagreMedlemskapsperioder}
+        handleChange={update}
         handleLeggTil={handleLeggTil}
         visLeggTil={visLeggTilNyPeriode}
         ukjentSluttdato={ukjentSluttdatoMedlemskapsperiode}

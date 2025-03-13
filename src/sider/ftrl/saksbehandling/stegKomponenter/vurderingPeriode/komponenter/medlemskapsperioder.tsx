@@ -1,10 +1,10 @@
-import { Control, FieldArrayWithId, UseFormWatch } from "react-hook-form";
+import { Control, FieldArrayWithId, UseFieldArrayUpdate, UseFormWatch } from "react-hook-form";
 import * as Forms from "../../../../../../felleskomponenter/forms";
 import * as Ikoner from "../../../../../../resources/images";
 import * as Nav from "../../../../../../navFrontend";
 import * as Mui from "../../../../../../felleskomponenter/ui";
 
-import { FieldArrayProps, MedlemskapsperiodeProp } from "./types";
+import { FieldArrayProps } from "./types";
 import "./medlemskapsperioder.css";
 import * as KV from "../../../../../../kodeverk";
 import MKV from "../../../../../../melosyskodeverk";
@@ -13,6 +13,7 @@ import { medlemskapsperioderSelectors } from "../../../../../../ducks/medlemskap
 import useFeatureToggle from "../../../../../../featuretoggle/useFeatureToggle";
 import { MELOSYS_PENSJONIST } from "../../../../../../featuretoggle/toggleNavn";
 import { behandlingerSelectors } from "../../../../../../ducks/behandlinger";
+import { useEffect } from "react";
 
 const { PLIKTIG } = MKV.Koder.medlemskapstyper;
 
@@ -24,7 +25,7 @@ export interface PeriodeElementerProps {
   watch: UseFormWatch<any> | undefined;
   fields: FieldArrayWithId<FieldArrayProps, "medlemskapsperioder">[];
   handleSlett: (index: number) => void;
-  handleChange: (medlemskapsperiode: MedlemskapsperiodeProp[], isValid: boolean, index: number) => void;
+  handleChange: UseFieldArrayUpdate<FieldArrayProps, "medlemskapsperioder">;
   formIsValid: boolean;
   handleLeggTil: () => void;
   visLeggTil: boolean;
@@ -71,7 +72,10 @@ export function Medlemskapsperioder({
     }
 
     if (avslåtteDekninger.includes(valgtTrygdedekning) && !medlemskapsTypeErPliktig) {
-      handleChange([{ ...fields[index], innvilgelsesResultat: "AVSLAATT" }], formIsValid, index);
+      const periodeRad = fields[index];
+      if (periodeRad.innvilgelsesResultat === "") {
+        handleChange(index, { ...fields[index], innvilgelsesResultat: "AVSLAATT" });
+      }
       return innvilgelsesResultater.filter((resultat) => resultat === "AVSLAATT");
     }
 
@@ -109,7 +113,7 @@ export function Medlemskapsperioder({
                   name={`medlemskapsperioder[${index}].fomDato`}
                   aria-label={`Fra og med periode ${index + 1}`}
                   readOnly={!redigerbart}
-                  onChange={(value) => handleChange([{ ...field, fomDato: value }], formIsValid, index)}
+                  onChange={(value) => handleChange(index, { ...field, fomDato: value })}
                 />
               </Nav.Column>
               <Nav.Column className="dato">
@@ -119,7 +123,7 @@ export function Medlemskapsperioder({
                   name={`medlemskapsperioder[${index}].tomDato`}
                   aria-label={`Til og med periode ${index + 1}`}
                   readOnly={!redigerbart || ukjentSluttdato}
-                  onChange={(value) => handleChange([{ ...field, tomDato: value }], formIsValid, index)}
+                  onChange={(value) => handleChange(index, { ...field, tomDato: value })}
                 />
               </Nav.Column>
               <Nav.Column className="trygdedekning">
@@ -135,7 +139,7 @@ export function Medlemskapsperioder({
                       control={control}
                       readOnly={!redigerbart}
                       emptyFieldDisabled={!!field.trygdedekning}
-                      onChange={(value) => handleChange([{ ...field, trygdedekning: value }], formIsValid, index)}
+                      onChange={(value) => handleChange(index, { ...field, trygdedekning: value })}
                     >
                       {filtrerteDekninger.map((dekning) => (
                         <option key={dekning} value={dekning}>
@@ -159,9 +163,7 @@ export function Medlemskapsperioder({
                       control={control}
                       readOnly={!redigerbart}
                       emptyFieldDisabled={!!field.innvilgelsesResultat}
-                      onChange={(value) =>
-                        handleChange([{ ...field, innvilgelsesResultat: value }], formIsValid, index)
-                      }
+                      onChange={(value) => handleChange(index, { ...field, innvilgelsesResultat: value })}
                     >
                       {filtrerteResultater.map((resultat) => (
                         <option key={resultat} value={resultat}>
