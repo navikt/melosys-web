@@ -3,6 +3,7 @@ import { FormErrors } from "redux-form";
 interface ErrorObject {
   melding?: string;
   error?: { melding: string };
+  _error?: { melding: string };
 }
 
 type ErrorsInput = Record<string, ErrorObject | string> | FormErrors<any> | null | undefined;
@@ -26,6 +27,10 @@ const extractErrorMessages = (errors: ErrorsInput): string[] => {
       if (typeof error === "object") {
         if ("melding" in error && typeof error.melding === "string") {
           return error.melding;
+        }
+
+        if ("_error" in error && error._error && typeof error._error === "object" && "melding" in error._error) {
+          return error._error.melding;
         }
 
         return extractErrorMessages(error);
