@@ -193,7 +193,7 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
       resetMedlemskapsperioder(lagretPerioder);
 
       await trigger("medlemskapsperioder");
-      await debouncedLagreMedlemskapsperioder(lagretPerioder);
+      await lagreMedlemskapsperioder(lagretPerioder);
     }
 
     dispatch(oppsummertfaktaOperations.lagreUkjentSluttdatoMedlemskapsperiode(behandlingID, ukjentSluttdato));
@@ -228,24 +228,21 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     }
   };
 
-  const debouncedLagreMedlemskapsperioder = useCallback(
-    Utils._debounce(async (medlemskapsperioderFormvalues) => {
-      const isValid = await trigger("medlemskapsperioder");
-      if (isValid) {
-        await Promise.all(
-          medlemskapsperioderFormvalues.map((periode: any, index: number) => lagreMedlemskapsperiode(periode, index)),
-        );
-        dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(behandlingID as number));
-      }
-    }, 1000),
-    [],
-  );
+  const lagreMedlemskapsperioder = async (medlemskapsperioderFormvalues: any) => {
+    const isValid = await trigger("medlemskapsperioder");
+    if (isValid) {
+      await Promise.all(
+        medlemskapsperioderFormvalues.map((periode: any, index: number) => lagreMedlemskapsperiode(periode, index)),
+      );
+      dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(behandlingID as number));
+    }
+  };
 
   useEffect(() => {
-    if (redigerbart && aktivtSteg && formIsValid) {
-      debouncedLagreMedlemskapsperioder(formValues.medlemskapsperioder);
+    if (redigerbart && aktivtSteg && stegErGyldig) {
+      lagreMedlemskapsperioder(formValues.medlemskapsperioder);
     }
-  }, [stegErGyldig, formIsValid]);
+  }, [stegErGyldig]);
 
   if (!aktivtSteg || !formValues) return null;
 

@@ -71,9 +71,9 @@ export function Medlemskapsperioder({
       valgtTrygdedekning = watch(`medlemskapsperioder[${index}].trygdedekning`);
     }
 
+    const periodeRad = fields[index];
     if (avslåtteDekninger.includes(valgtTrygdedekning) && !medlemskapsTypeErPliktig) {
-      const periodeRad = fields[index];
-      if (periodeRad.innvilgelsesResultat === "") {
+      if (periodeRad.innvilgelsesResultat !== "AVSLAATT") {
         handleChange(index, { ...fields[index], innvilgelsesResultat: "AVSLAATT" });
       }
       return innvilgelsesResultater.filter((resultat) => resultat === "AVSLAATT");
@@ -129,7 +129,6 @@ export function Medlemskapsperioder({
               <Nav.Column className="trygdedekning">
                 {(() => {
                   const filtrerteDekninger = filtrerTrygdedekninger();
-
                   return (
                     <Forms.Select
                       name={`medlemskapsperioder[${index}].trygdedekning`}
@@ -153,7 +152,6 @@ export function Medlemskapsperioder({
               <Nav.Column>
                 {(() => {
                   const filtrerteResultater = filtrerInnvilgelsesResultater(index);
-
                   return (
                     <Forms.Select
                       label={index === 0 ? "Resultat" : ""}
