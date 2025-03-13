@@ -228,8 +228,8 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   };
 
   const lagreMedlemskapsperioder = async (medlemskapsperioderFormvalues: any) => {
-    const isValid = await trigger("medlemskapsperioder");
-    if (isValid) {
+    // const isValid = await trigger("medlemskapsperioder");
+    if (stegErGyldig) {
       await Promise.all(
         medlemskapsperioderFormvalues.map((periode: any, index: number) => lagreMedlemskapsperiode(periode, index)),
       );
@@ -238,6 +238,7 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   };
 
   useEffect(() => {
+    console.log({ stegErGyldig });
     if (redigerbart && aktivtSteg && stegErGyldig) {
       lagreMedlemskapsperioder(formValues.medlemskapsperioder);
     }
