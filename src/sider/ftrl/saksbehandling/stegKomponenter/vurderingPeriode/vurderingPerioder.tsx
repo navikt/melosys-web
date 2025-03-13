@@ -192,7 +192,6 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
 
       resetMedlemskapsperioder(lagretPerioder);
 
-      await trigger("medlemskapsperioder");
       await lagreMedlemskapsperioder(lagretPerioder);
     }
 
