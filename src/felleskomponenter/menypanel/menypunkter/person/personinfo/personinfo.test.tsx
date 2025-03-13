@@ -14,8 +14,8 @@ describe("Personinfo", () => {
     function x() {
       return {
         matches: false,
-        addEventListener: function y() {},
-        removeEventListener: function z() {},
+        addEventListener: function y() { },
+        removeEventListener: function z() { },
       };
     };
 
@@ -93,7 +93,7 @@ describe("Personinfo", () => {
             hentSaksopplysninger: {
               persondata: {
                 folkeregisterpersonstatuser: personstatus,
-                foedsel: [{ foedselsaar: 1995, foedselsdato: "1995-23-09" }],
+                foedselsdato: [{ foedselsaar: 1995, foedselsdato: "1995-23-09" }],
                 sivilstand,
               },
             },

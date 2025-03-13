@@ -32,17 +32,19 @@ function InnerFoedestedComponent(props: InnerFoedestedProps) {
   if (value === undefined) return null;
 
   const slettFoedestedOgLand = () => onChange(null);
+  const ikkeRedigerbart = !redigerbart;
 
   return (
+
     <EditerbartElement
       tittel={KV.Menypunkter.Person.undertitler.foedestedOgLand}
-      redigerbart={redigerbart}
+      redigerbart={ikkeRedigerbart}
       symbolsynlighet={visAldriBinSymbolsynlighet}
       onLagreClick={() => Utils._isEmpty(mottatteOpplysningerFeilmeldinger?.foedestedOgLand)}
       harData={value.foedested && value.foedeland}
       redigererRender={(lukkRedigering) => (
         <Enkeltfoedestedoglandskjema
-          redigerbart={redigerbart}
+          redigerbart={ikkeRedigerbart}
           onBinClick={() => {
             slettFoedestedOgLand();
             lukkRedigering();
@@ -50,13 +52,7 @@ function InnerFoedestedComponent(props: InnerFoedestedProps) {
         />
       )}
       redigeringUtfortRender={() => <Utfyltfoedestedogland foedestedOgLand={value} />}
-      ingenDataRender={(apneRedigering) =>
-        redigerbart ? (
-          <Mui.Lenkeknapp onClick={apneRedigering} ikon={Ikoner.Add}>
-            Legg til fødested og -land
-          </Mui.Lenkeknapp>
-        ) : null
-      }
+      ingenDataRender={(apneRedigering) => null}
     />
   );
 }

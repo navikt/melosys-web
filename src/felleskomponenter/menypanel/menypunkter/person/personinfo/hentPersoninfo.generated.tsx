@@ -21,7 +21,10 @@ export type HentPersoninfoQuery = (
             folkeregisterpersonstatuser: Array<(
               { __typename?: 'Folkeregisterpersonstatus' }
               & Pick<Types.Folkeregisterpersonstatus, 'kode' | 'tekst' | 'master' | 'kilde' | 'fregGyldighetstidspunkt' | 'erHistorisk'>
-            )>, foedselsdato: (
+            )>, foedested: (
+              { __typename?: 'Foedested' }
+              & Pick<Types.Foedested, 'foedested' | 'foedeland'>
+            ), foedselsdato: (
               { __typename?: 'Foedselsdato' }
               & Pick<Types.Foedselsdato, 'foedselsaar' | 'foedselsdato'>
             ), sivilstand: Array<(
@@ -47,6 +50,10 @@ export const HentPersoninfoDocument = gql`
         kilde
         fregGyldighetstidspunkt
         erHistorisk
+      }
+      foedested{
+        foedested
+        foedeland
       }
       foedselsdato {
         foedselsaar

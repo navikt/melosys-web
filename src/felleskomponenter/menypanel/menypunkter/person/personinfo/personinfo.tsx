@@ -76,6 +76,34 @@ function PersonInfo({ behandlingID, ...props }: PersonInfoProps) {
     );
   }
 
+  function Fødested() {
+    const foedested = personinfoData?.hentSaksopplysninger.persondata.foedested.foedested;
+    return (
+      <>
+        <Nav.Column xs={erLitenSkjerm ? "4" : "6"}>
+          <Nav.BodyLong weight="semibold" size="small">
+            Fødested:
+          </Nav.BodyLong>
+        </Nav.Column>
+        <Nav.Column xs={erLitenSkjerm ? "8" : "6"}>{foedested}</Nav.Column>
+      </>
+    );
+  }
+
+  function Fødeland() {
+    const foedeland = personinfoData?.hentSaksopplysninger.persondata.foedested.foedeland;
+    return (
+      <>
+        <Nav.Column xs={erLitenSkjerm ? "4" : "6"}>
+          <Nav.BodyLong weight="semibold" size="small">
+            Fødeland:
+          </Nav.BodyLong>
+        </Nav.Column>
+        <Nav.Column xs={erLitenSkjerm ? "8" : "6"}>{foedeland}</Nav.Column>
+      </>
+    );
+  }
+
   return (
     <div className={personinfoClassName.block}>
       {personinfoLoading && personinfoLoadingContent}
@@ -89,6 +117,8 @@ function PersonInfo({ behandlingID, ...props }: PersonInfoProps) {
           sivilstand={personinfoData?.hentSaksopplysninger.persondata.sivilstand}
           erLitenSkjerm={erLitenSkjerm}
         />
+        <Fødeland />
+        <Fødested />
       </Nav.Column>
       <Nav.Column xs={erLitenSkjerm ? "12" : "5"}>
         <Fødselsnummer />

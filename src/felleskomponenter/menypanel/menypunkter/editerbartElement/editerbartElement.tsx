@@ -54,7 +54,7 @@ function EditerbartElement({
   ingenDataRender,
   redigeringUtfortRender,
   redigerbart,
-  onBinClick = () => {},
+  onBinClick = () => { },
   tittel,
   tittelIkon,
   tittelUnderstrek,

@@ -47,12 +47,10 @@ enum Familierelasjonsrolle {
   RelatertVedSivilstand = 'RELATERT_VED_SIVILSTAND'
 }
 
-type Foedsel = {
-  __typename?: 'Foedsel';
+type Foedselsdato = {
+  __typename?: 'Foedselsdato';
   foedselsaar: Scalars['Int'];
   foedselsdato?: Maybe<Scalars['Date']>;
-  foedeland?: Maybe<Scalars['String']>;
-  foedested?: Maybe<Scalars['String']>;
 };
 
 type Folkeregisterpersonstatus = {
@@ -106,7 +104,7 @@ type Personopplysninger = {
   __typename?: 'Personopplysninger';
   bostedsadresser: Array<Bostedsadresse>;
   familiemedlemmer: Array<Familiemedlem>;
-  foedsel: Foedsel;
+  foedselsdato: Foedselsdato;
   folkeregisteridentifikator?: Maybe<Scalars['String']>;
   folkeregisterpersonstatuser: Array<Folkeregisterpersonstatus>;
   kjoenn: KjoennType;
@@ -185,7 +183,7 @@ type StrukturertAdresseformat = {
 };
 
 
-export type Requester<C= {}> = <R, V>(doc: DocumentNode, vars?: V, options?: C) => Promise<R>
+export type Requester<C = {}> = <R, V>(doc: DocumentNode, vars?: V, options?: C) => Promise<R>
 export function getSdk<C>(requester: Requester<C>) {
   return {
 

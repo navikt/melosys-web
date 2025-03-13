@@ -9,7 +9,7 @@ query hentPersoninfo($behandlingID: Long!) {
         fregGyldighetstidspunkt
         erHistorisk
       }
-      foedsel {
+      foedselsdato {
         foedselsaar
         foedselsdato
       }

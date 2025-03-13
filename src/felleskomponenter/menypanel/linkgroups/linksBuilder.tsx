@@ -42,6 +42,7 @@ class LinksBuilder implements ILinksBuilder {
   }
 
   public addPerson() {
+    console.log(this.contentProps);
     this.links.push({
       label: "Person",
       active: false,

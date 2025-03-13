@@ -187,6 +187,11 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
     setValue("nyVurderingBakgrunnFritekst", "");
   };
 
+  const lagreAvklarteFakta = async (mottaFaktura: boolean) => {
+
+  }
+
+
   useEffect(() => {
     return () => debouncedOppdaterFritekster.cancel();
   }, []);
@@ -358,8 +363,8 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
 
     return alleLandkoder
       ? Utils.streng.arrayTilKonjunksjon(
-          soknadsland.map((enkeltLand: string) => KV.finnTermFraListe(alleLandkoder, enkeltLand)),
-        )
+        soknadsland.map((enkeltLand: string) => KV.finnTermFraListe(alleLandkoder, enkeltLand)),
+      )
       : `Finner ikke ${erIkkeYrkesaktiv ? "land" : "arbeidsland"}`;
   };
 
@@ -433,8 +438,17 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
               {fakturamottaker}
             </Nav.BodyLong>
           </Nav.Column>
+
+          <Nav.Column xs="12" className="fakturaEllerTrekk">
+            <Nav.BodyLong size="small" className="info">
+              <Nav.Checkbox onChange={(e) => lagreAvklarteFakta(e.target.checked)}>
+                Bruker skal motta faktura i stedet for trekk i pensjon/uføretrygd
+              </Nav.Checkbox>
+            </Nav.BodyLong>
+          </Nav.Column>
         </Nav.Row>
       ) : null}
+
 
       {harFullmaktForTrygdeavgift && redigerbart ? (
         <FullmaktForTrygdeavgiftConfirmationPanel

@@ -45,6 +45,12 @@ export enum Familierelasjonsrolle {
   RelatertVedSivilstand = 'RELATERT_VED_SIVILSTAND'
 }
 
+export type Foedested = {
+  __typename?: 'Foedested';
+  foedested: Scalars['String'];
+  foedeland: Scalars['String'];
+};
+
 export type Foedselsdato = {
   __typename?: 'Foedselsdato';
   foedselsaar: Scalars['Int'];
