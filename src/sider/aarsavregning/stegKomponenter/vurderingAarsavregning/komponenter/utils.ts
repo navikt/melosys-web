@@ -93,40 +93,6 @@ export function beregnTrygdeavgiftsperioder(
     .catch((error) => setFeilmelding(mapFeilmelding(error)));
 }
 
-export function validerMedlemskapsperioder(perioder: Medlemskapsperiode[]) {
-  if (perioder.length === 0) {
-    return undefined;
-  }
-
-  const sortertePerioder = [...perioder].sort((a, b) => new Date(a.fomDato).getTime() - new Date(b.fomDato).getTime());
-  const bestemmelseSet = new Set<string>();
-  const DAY_IN_MILLISECONDS = 86400000;
-  let feilmeldingFraValidering;
-
-  sortertePerioder.forEach((periode, index) => {
-    bestemmelseSet.add(periode.bestemmelse);
-
-    if (index > 0) {
-      const forrigePeriode = sortertePerioder[index - 1];
-      const forrigeTomDato = new Date(forrigePeriode.tomDato);
-      const nyFomDato = new Date(periode.fomDato);
-
-      if (nyFomDato <= forrigeTomDato) {
-        feilmeldingFraValidering = "Medlemskapsperioder overlapper";
-      }
-      if (nyFomDato.getTime() - forrigeTomDato.getTime() > DAY_IN_MILLISECONDS) {
-        feilmeldingFraValidering = "Det er opphold mellom medlemskapsperioder";
-      }
-    }
-  });
-
-  if (bestemmelseSet.size !== 1) {
-    feilmeldingFraValidering = "Bestemmelsene må være like";
-  }
-
-  return feilmeldingFraValidering;
-}
-
 export const lagInnvilgetMedlemskapsPeriode = (medlemskapsperioder?: Medlemskapsperiode[]) => {
   if (medlemskapsperioder && !Utils._isEmpty(medlemskapsperioder)) {
     const sorterteInnvilgedePerioder = [...medlemskapsperioder]

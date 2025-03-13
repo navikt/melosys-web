@@ -23,7 +23,6 @@ export interface PeriodeElementerProps {
   formValues: FormValuesProps;
   bestemmelser: [];
   tittel?: string;
-  handleChange: (medlemskapsperiode: Medlemskapsperiode[], index: number) => void;
   handleLeggTil: () => void;
   handleUpdate: UseFieldArrayUpdate<FieldArrayProps, "medlemskapsperioder">;
   index: number;
@@ -40,7 +39,6 @@ export function MedlemskapsperiodeSkjema({
   formValues,
   bestemmelser,
   tittel,
-  handleChange,
   handleLeggTil,
   handleUpdate,
   index,
@@ -60,7 +58,7 @@ export function MedlemskapsperiodeSkjema({
     }
   }, [field.bestemmelse]);
 
-  // @ts-expect-error TODO: Fiks typing for FormValuesProps
+  // @ts-expect-error Fiks typing for FormValuesProps
   const erPeriodeFraGrunnlag = !formValues.medlemskapsperioder[index].redigerbar;
   const kanSlettePeriode = redigerbart && formValues.medlemskapsperioder.length !== 1;
   const tilOgMedDatoForrigePeriode =
@@ -86,9 +84,6 @@ export function MedlemskapsperiodeSkjema({
               name={`medlemskapsperioder[${index}].fomDato`}
               aria-label={`Fra og med periode ${index + 1}`}
               readOnly={!redigerbart || erPeriodeFraGrunnlag}
-              onChange={(value) => {
-                handleChange([{ ...formValues.medlemskapsperioder[index], fomDato: value }], index);
-              }}
             />
           </Nav.Column>
           <Nav.Column className="dato dato__tom">
@@ -100,9 +95,6 @@ export function MedlemskapsperiodeSkjema({
               minDate={Utils.dato.norskStringTilDate(formValues.medlemskapsperioder[index].fomDato)}
               maxDate={maksVerdi}
               readOnly={!redigerbart || erPeriodeFraGrunnlag}
-              onChange={(value) => {
-                handleChange([{ ...formValues.medlemskapsperioder[index], tomDato: value }], index);
-              }}
             />
           </Nav.Column>
           <Nav.Column className="bestemmelse">
@@ -113,8 +105,7 @@ export function MedlemskapsperiodeSkjema({
               aria-label={`Bestemmelse periode ${index + 1}`}
               control={control}
               readOnly={!redigerbart || erPeriodeFraGrunnlag}
-              onChange={(bestemmelse) => {
-                handleChange([{ ...formValues.medlemskapsperioder[index], bestemmelse }], index);
+              onChange={() => {
                 handleUpdate(index, { ...formValues.medlemskapsperioder[index], trygdedekning: "" });
               }}
             >
@@ -133,9 +124,6 @@ export function MedlemskapsperiodeSkjema({
               aria-label={`Trygdedekning periode ${index + 1}`}
               control={control}
               readOnly={!redigerbart || erPeriodeFraGrunnlag}
-              onChange={(value) =>
-                handleChange([{ ...formValues.medlemskapsperioder[index], trygdedekning: value }], index)
-              }
             >
               {trygdedekninger.map((dekning: any) => (
                 <option key={dekning} value={dekning}>
