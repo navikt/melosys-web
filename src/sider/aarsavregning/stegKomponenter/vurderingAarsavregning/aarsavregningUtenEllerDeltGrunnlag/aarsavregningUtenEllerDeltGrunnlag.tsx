@@ -92,6 +92,11 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
   );
   const innvilgetMedlemskapsperiode = hentMedlemskapsFomTomDato(lagredeMedlemskapsperioder);
 
+  const defaultPeriode = {
+    fomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.fom),
+    tomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.tom),
+  };
+
   // Initiell innlasting og skjemapopulering
   useEffect(() => {
     if (behandlingID) {
@@ -476,6 +481,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
       </div>
 
       <Skatteforholdsperioder
+        defaultPeriode={defaultPeriode}
         formValues={formValues}
         redigerbart={redigerbart}
         remove={skattRemove}
@@ -485,6 +491,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
       />
       {!trygdeAvgiftSkalIkkeBetalesTilNav && (
         <Inntektskilder
+          defaultPeriode={defaultPeriode}
           formValues={formValues}
           redigerbart={redigerbart}
           update={inntektUpdate}
