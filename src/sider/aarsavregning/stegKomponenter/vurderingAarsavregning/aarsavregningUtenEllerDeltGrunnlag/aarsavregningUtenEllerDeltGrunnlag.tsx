@@ -248,6 +248,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
   }, [formIsValid]);
 
   const lagreMedlemskapsperiode = async (medlemskapsperiode: Medlemskapsperiode) => {
+    // TODO: Fjern unødvendig lagring/oppretting av medlemskapsperioder som er identiske til eksisterende perioder på behandlingsresultat)
     const periodeRequest = {
       fomDato: Utils.dato.formatterDatoTilISO(medlemskapsperiode.fomDato, "") as string,
       tomDato: Utils.dato.formatterDatoTilISO(medlemskapsperiode.tomDato, "") as string,
@@ -266,11 +267,6 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
 
     if (response.type === medlemskapsperioderTypes.FEILET) {
       setMedlemskapsperiodeFeilmelding(response?.data?.data?.message);
-    } else if (medlemskapsperiode.id === -1) {
-      /* eslint-disable no-param-reassign */
-      medlemskapsperiode.id = response.id;
-      medlemskapsperiode.medlemskapstype = response.medlemskapstype;
-      /* eslint-enable no-param-reassign */
     }
   };
 
@@ -278,7 +274,10 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
     Utils._debounce(async (medlemskapsperioderFormValues) => {
       const isValid = await trigger("medlemskapsperioder");
       if (isValid) {
-        await Promise.all(medlemskapsperioderFormValues.map(lagreMedlemskapsperiode));
+        /* eslint-disable-next-line no-restricted-syntax */
+        for (const periode of medlemskapsperioderFormValues) {
+          await lagreMedlemskapsperiode(periode);
+        }
 
         dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(behandlingID));
         if (initiellBeregningUtført && (await trigger())) {
