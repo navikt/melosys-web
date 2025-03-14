@@ -89,7 +89,7 @@ function PersonInfo({ behandlingID, ...props }: PersonInfoProps) {
             Fødested:
           </Nav.BodyLong>
         </Nav.Column>
-        <Nav.Column xs={erLitenSkjerm ? "8" : "6"}>{foedested}</Nav.Column>
+        <Nav.Column xs={erLitenSkjerm ? "8" : "6"}>{foedested || "-"}</Nav.Column>
       </>
     );
   }
@@ -103,7 +103,7 @@ function PersonInfo({ behandlingID, ...props }: PersonInfoProps) {
             Fødeland:
           </Nav.BodyLong>
         </Nav.Column>
-        <Nav.Column xs={erLitenSkjerm ? "8" : "6"}>{foedeland}</Nav.Column>
+        <Nav.Column xs={erLitenSkjerm ? "8" : "6"}>{foedeland || "-"}</Nav.Column>
       </>
     );
   }
@@ -121,12 +121,12 @@ function PersonInfo({ behandlingID, ...props }: PersonInfoProps) {
           sivilstand={personinfoData?.hentSaksopplysninger.persondata.sivilstand}
           erLitenSkjerm={erLitenSkjerm}
         />
-        <Fødeland />
-        <Fødested />
       </Nav.Column>
       <Nav.Column xs={erLitenSkjerm ? "12" : "5"}>
         <Fødselsnummer />
         <Fødselsdato />
+        <Fødested />
+        <Fødeland />
       </Nav.Column>
     </div>
   );

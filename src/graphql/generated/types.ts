@@ -47,13 +47,13 @@ export enum Familierelasjonsrolle {
 
 export type Foedested = {
   __typename?: 'Foedested';
-  foedested: Scalars['String'];
-  foedeland: Scalars['String'];
+  foedested?: Maybe<Scalars['String']>;
+  foedeland?: Maybe<Scalars['String']>;
 };
 
 export type Foedselsdato = {
   __typename?: 'Foedselsdato';
-  foedselsaar: Scalars['Int'];
+  foedselsaar?: Maybe<Scalars['Int']>;
   foedselsdato?: Maybe<Scalars['Date']>;
 };
 
@@ -108,6 +108,7 @@ export type Personopplysninger = {
   __typename?: 'Personopplysninger';
   bostedsadresser: Array<Bostedsadresse>;
   familiemedlemmer: Array<Familiemedlem>;
+  foedested: Foedested;
   foedselsdato: Foedselsdato;
   folkeregisteridentifikator?: Maybe<Scalars['String']>;
   folkeregisterpersonstatuser: Array<Folkeregisterpersonstatus>;
