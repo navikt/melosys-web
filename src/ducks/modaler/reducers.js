@@ -6,7 +6,6 @@ const modaler = {
   bekreftValg: "bekreftValg",
   henlegg: "henlegg",
   oppfrisk: "oppfrisk",
-  hentNyeSaksOpplysninger: "hentNyeSaksOpplysninger",
 };
 
 const initialState = {
