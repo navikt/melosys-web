@@ -108,7 +108,6 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
           // Benyttes for innhenting av saksopplysninger ifm. årsavregningsbehandlinger
           dispatch({ type: OK, data: res });
           dispatch(behandlingsresultatOperations.hent(behandlingID));
-          oppfriskOgLastInnSaksopplysninger();
         })
         .catch((error) => {
           setApiFeil(error.body.message);
