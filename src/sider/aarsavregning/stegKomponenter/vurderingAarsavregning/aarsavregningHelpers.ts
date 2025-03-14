@@ -31,11 +31,6 @@ export const mapTilMedlemskapsperiodeFieldProps = (
   };
 };
 
-export const mapMedlemskapsperioderFraGrunnlag = (tidligereGrunnlag: Api.Aarsavregning.Trygdeavgiftsgrunnlag) =>
-  [...tidligereGrunnlag.medlemskapsperioder]
-    .sort((a, b) => Utils.dato.sorterEtterISOFomDato(a, b))
-    .map((periode) => mapTilMedlemskapsperiodeFieldProps(periode, tidligereGrunnlag));
-
 export const mapMedlemskapsperioder = (perioder: any[], tidligereGrunnlag?: Api.Aarsavregning.Trygdeavgiftsgrunnlag) =>
   [...perioder]
     .sort((a, b) => Utils.dato.sorterEtterISOFomDato(a, b))
