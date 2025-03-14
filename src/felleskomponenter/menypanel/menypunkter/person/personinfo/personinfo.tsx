@@ -90,8 +90,6 @@ function PersonInfo({ behandlingID, ...props }: PersonInfoProps) {
   }
 
   function Fødeland() {
-    const foedsel = personinfoData?.hentSaksopplysninger.persondata.foedsel;
-
     return (
       <>
         <Nav.Column xs={erLitenSkjerm ? "4" : "6"}>

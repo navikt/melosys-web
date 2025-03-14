@@ -8,8 +8,25 @@ export type HentStatsborgerskapQueryVariables = Types.Exact<{
 }>;
 
 
-export type HentStatsborgerskapQuery = { __typename?: 'Query', hentSaksopplysninger: { __typename?: 'Saksopplysninger', persondata: { __typename?: 'Personopplysninger', statsborgerskap: Array<{ __typename?: 'Statsborgerskap', land: string, bekreftelsesdato?: string | null, gyldigFraOgMed?: string | null, gyldigTilOgMed?: string | null, master: string, kilde?: string | null, erHistorisk: boolean }> } } };
-
+export type HentStatsborgerskapQuery = {
+  __typename?: 'Query';
+  hentSaksopplysninger: {
+    __typename?: 'Saksopplysninger';
+    persondata: {
+      __typename?: 'Personopplysninger';
+      statsborgerskap: Array<{
+        __typename?: 'Statsborgerskap';
+        land: string;
+        bekreftelsesdato?: string | null;
+        gyldigFraOgMed?: string | null;
+        gyldigTilOgMed?: string | null;
+        master: string;
+        kilde?: string | null;
+        erHistorisk: boolean;
+      }>;
+    };
+  };
+ };
 
 export const HentStatsborgerskapDocument = gql`
     query hentStatsborgerskap($behandlingID: Long!) {

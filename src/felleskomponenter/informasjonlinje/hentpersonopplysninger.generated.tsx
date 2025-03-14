@@ -8,7 +8,38 @@ export type HentPersonopplysningerQueryVariables = Types.Exact<{
 }>;
 
 
-export type HentPersonopplysningerQuery = { __typename?: 'Query', hentSaksopplysninger: { __typename?: 'Saksopplysninger', persondata: { __typename?: 'Personopplysninger', kjoenn: Types.KjoennType, folkeregisteridentifikator?: string | null, navn: { __typename?: 'Navn', fornavn: string, mellomnavn?: string | null, etternavn: string }, folkeregisterpersonstatuser: Array<{ __typename?: 'Folkeregisterpersonstatus', kode: string, erHistorisk: boolean }>, statsborgerskap: Array<{ __typename?: 'Statsborgerskap', land: string, erHistorisk: boolean }>, sivilstand: Array<{ __typename?: 'Sivilstand', type: string, erHistorisk: boolean }> } } };
+export type HentPersonopplysningerQuery = {
+  __typename?: 'Query';
+  hentSaksopplysninger: {
+    __typename?: 'Saksopplysninger';
+    persondata: {
+      __typename?: 'Personopplysninger';
+      kjoenn: Types.KjoennType;
+      folkeregisteridentifikator?: string | null;
+      navn: {
+        __typename?: 'Navn';
+        fornavn: string;
+        mellomnavn?: string | null;
+        etternavn: string;
+      };
+      folkeregisterpersonstatuser: Array<{
+        __typename?: 'Folkeregisterpersonstatus';
+        kode: string;
+        erHistorisk: boolean;
+      }>;
+      statsborgerskap: Array<{
+        __typename?: 'Statsborgerskap';
+        land: string;
+        erHistorisk: boolean;
+      }>;
+      sivilstand: Array<{
+        __typename?: 'Sivilstand';
+        type: string;
+        erHistorisk: boolean;
+      }>;
+    };
+  };
+};
 
 
 export const HentPersonopplysningerDocument = gql`

@@ -8,8 +8,31 @@ export type HentFamiliemedlemmerQueryVariables = Types.Exact<{
 }>;
 
 
-export type HentFamiliemedlemmerQuery = { __typename?: 'Query', hentSaksopplysninger: { __typename?: 'Saksopplysninger', persondata: { __typename?: 'Personopplysninger', familiemedlemmer: Array<{ __typename?: 'Familiemedlem', navn: string, ident: string, relasjonsrolle: Types.Familierelasjonsrolle, alder?: number | null, foreldreansvar?: string | null, fnrAnnenForelder?: string | null, sivilstand?: { __typename?: 'Sivilstand', type: string, gyldigFraOgMed?: string | null, erHistorisk: boolean, master: string } | null }> } } };
-
+export type HentFamiliemedlemmerQuery = {
+  __typename?: 'Query';
+  hentSaksopplysninger: {
+    __typename?: 'Saksopplysninger';
+    persondata: {
+      __typename?: 'Personopplysninger';
+      familiemedlemmer: Array<{
+        __typename?: 'Familiemedlem';
+        navn: string;
+        ident: string;
+        relasjonsrolle: Types.Familierelasjonsrolle;
+        alder?: number | null;
+        foreldreansvar?: string | null;
+        fnrAnnenForelder?: string | null;
+        sivilstand?: {
+          __typename?: 'Sivilstand';
+          type: string;
+          gyldigFraOgMed?: string | null;
+          erHistorisk: boolean;
+          master: string;
+        } | null;
+      }>;
+    };
+  };
+};
 
 export const HentFamiliemedlemmerDocument = gql`
     query hentFamiliemedlemmer($behandlingID: Long!) {

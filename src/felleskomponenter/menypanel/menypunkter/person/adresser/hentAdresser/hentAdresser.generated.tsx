@@ -8,8 +8,85 @@ export type HentAdresserQueryVariables = Types.Exact<{
 }>;
 
 
-export type HentAdresserQuery = { __typename?: 'Query', hentSaksopplysninger: { __typename?: 'Saksopplysninger', persondata: { __typename?: 'Personopplysninger', bostedsadresser: Array<{ __typename?: 'Bostedsadresse', coAdressenavn?: string | null, gyldigFraOgMed?: string | null, gyldigTilOgMed?: string | null, kilde?: string | null, master: string, erHistorisk: boolean, adresse: { __typename?: 'StrukturertAdresseformat', tilleggsnavn?: string | null, gatenavn?: string | null, husnummerEtasjeLeilighet?: string | null, postboks?: string | null, postnummer?: string | null, poststed?: string | null, region?: string | null, land: string } }>, oppholdsadresser: Array<{ __typename?: 'Oppholdsadresse', coAdressenavn?: string | null, gyldigFraOgMed?: string | null, gyldigTilOgMed?: string | null, kilde?: string | null, master: string, erHistorisk: boolean, adresse: { __typename?: 'StrukturertAdresseformat', tilleggsnavn?: string | null, gatenavn?: string | null, husnummerEtasjeLeilighet?: string | null, postboks?: string | null, postnummer?: string | null, poststed?: string | null, region?: string | null, land: string } }>, kontaktadresser: Array<{ __typename?: 'Kontaktadresse', coAdressenavn?: string | null, gyldigFraOgMed?: string | null, gyldigTilOgMed?: string | null, master: string, kilde?: string | null, erHistorisk: boolean, semistrukturertAdresse?: { __typename?: 'SemistrukturertAdresseformat', adresselinje1?: string | null, adresselinje2?: string | null, adresselinje3?: string | null, adresselinje4?: string | null, postnummer?: string | null, poststed?: string | null, land: string } | null, strukturertAdresse?: { __typename?: 'StrukturertAdresseformat', tilleggsnavn?: string | null, gatenavn?: string | null, husnummerEtasjeLeilighet?: string | null, postboks?: string | null, postnummer?: string | null, poststed?: string | null, region?: string | null, land: string } | null }> } } };
-
+export type HentAdresserQuery = {
+  __typename?: 'Query';
+  hentSaksopplysninger: {
+    __typename?: 'Saksopplysninger';
+    persondata: {
+      __typename?: 'Personopplysninger';
+      bostedsadresser: Array<{
+        __typename?: 'Bostedsadresse';
+        coAdressenavn?: string | null;
+        gyldigFraOgMed?: string | null;
+        gyldigTilOgMed?: string | null;
+        kilde?: string | null;
+        master: string;
+        erHistorisk: boolean;
+        adresse: {
+          __typename?: 'StrukturertAdresseformat';
+          tilleggsnavn?: string | null;
+          gatenavn?: string | null;
+          husnummerEtasjeLeilighet?: string | null;
+          postboks?: string | null;
+          postnummer?: string | null;
+          poststed?: string | null;
+          region?: string | null;
+          land: string;
+        };
+      }>;
+      oppholdsadresser: Array<{
+        __typename?: 'Oppholdsadresse';
+        coAdressenavn?: string | null;
+        gyldigFraOgMed?: string | null;
+        gyldigTilOgMed?: string | null;
+        kilde?: string | null;
+        master: string;
+        erHistorisk: boolean;
+        adresse: {
+          __typename?: 'StrukturertAdresseformat';
+          tilleggsnavn?: string | null;
+          gatenavn?: string | null;
+          husnummerEtasjeLeilighet?: string | null;
+          postboks?: string | null;
+          postnummer?: string | null;
+          poststed?: string | null;
+          region?: string | null;
+          land: string;
+        };
+      }>;
+      kontaktadresser: Array<{
+        __typename?: 'Kontaktadresse';
+        coAdressenavn?: string | null;
+        gyldigFraOgMed?: string | null;
+        gyldigTilOgMed?: string | null;
+        master: string;
+        kilde?: string | null;
+        erHistorisk: boolean;
+        semistrukturertAdresse?: {
+          __typename?: 'SemistrukturertAdresseformat';
+          adresselinje1?: string | null;
+          adresselinje2?: string | null;
+          adresselinje3?: string | null;
+          adresselinje4?: string | null;
+          postnummer?: string | null;
+          poststed?: string | null;
+          land: string;
+        } | null;
+        strukturertAdresse?: {
+          __typename?: 'StrukturertAdresseformat';
+          tilleggsnavn?: string | null;
+          gatenavn?: string | null;
+          husnummerEtasjeLeilighet?: string | null;
+          postboks?: string | null;
+          postnummer?: string | null;
+          poststed?: string | null;
+          region?: string | null;
+          land: string;
+        } | null;
+      }>;
+    };
+  };
+};
 
 export const HentAdresserDocument = gql`
     query hentAdresser($behandlingID: Long!) {

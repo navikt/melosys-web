@@ -8,8 +8,41 @@ export type HentPersoninfoQueryVariables = Types.Exact<{
 }>;
 
 
-export type HentPersoninfoQuery = { __typename?: 'Query', hentSaksopplysninger: { __typename?: 'Saksopplysninger', persondata: { __typename?: 'Personopplysninger', folkeregisterpersonstatuser: Array<{ __typename?: 'Folkeregisterpersonstatus', kode: string, tekst: string, master: string, kilde?: string | null, fregGyldighetstidspunkt?: string | null, erHistorisk: boolean }>, foedsel: { __typename?: 'Foedsel', foedselsaar: number, foedselsdato?: string | null, foedeland?: string | null, foedested?: string | null }, sivilstand: Array<{ __typename?: 'Sivilstand', type: string, relatertVedSivilstand?: string | null, gyldigFraOgMed?: string | null, bekreftelsesdato?: string | null, master: string, kilde?: string | null, erHistorisk: boolean }> } } };
-
+export type HentPersoninfoQuery = {
+  __typename?: 'Query';
+  hentSaksopplysninger: {
+    __typename?: 'Saksopplysninger';
+    persondata: {
+      __typename?: 'Personopplysninger';
+      folkeregisterpersonstatuser: Array<{
+        __typename?: 'Folkeregisterpersonstatus';
+        kode: string;
+        tekst: string;
+        master: string;
+        kilde?: string | null;
+        fregGyldighetstidspunkt?: string | null;
+        erHistorisk: boolean;
+      }>;
+      foedsel: {
+        __typename?: 'Foedsel';
+        foedselsaar: number;
+        foedselsdato?: string | null;
+        foedeland?: string | null;
+        foedested?: string | null;
+      };
+      sivilstand: Array<{
+        __typename?: 'Sivilstand';
+        type: string;
+        relatertVedSivilstand?: string | null;
+        gyldigFraOgMed?: string | null;
+        bekreftelsesdato?: string | null;
+        master: string;
+        kilde?: string | null;
+        erHistorisk: boolean;
+      }>;
+    };
+  };
+};
 
 export const HentPersoninfoDocument = gql`
     query hentPersoninfo($behandlingID: Long!) {
