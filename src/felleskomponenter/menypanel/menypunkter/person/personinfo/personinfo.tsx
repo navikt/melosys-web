@@ -46,7 +46,6 @@ function PersonInfo({ behandlingID, ...props }: PersonInfoProps) {
   const erLitenSkjerm = Utils.mediaQuery.useMediaQuery({ maxWidth: 1680 });
   const foedsel = personinfoData?.hentSaksopplysninger.persondata.foedsel;
 
-
   function Fødselsnummer() {
     return (
       <>
