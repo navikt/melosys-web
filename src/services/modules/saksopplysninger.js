@@ -7,3 +7,10 @@ export const oppfrisk = (behandlingID, options = {}) => {
   const params = qs.stringify(options);
   return getAsJson(`${API_BASE_URL}${SAKSOPPLYSNINGER}/oppfriskning/${behandlingID}${params ? `?${params}` : ""}`);
 };
+
+export const hentNyeSaksopplysninger = (behandlingID, options = {}) => {
+  const params = qs.stringify(options);
+  return getAsJson(
+    `${API_BASE_URL}${SAKSOPPLYSNINGER}/hentNyeSaksopplysninger/${behandlingID}${params ? `?${params}` : ""}`,
+  );
+};

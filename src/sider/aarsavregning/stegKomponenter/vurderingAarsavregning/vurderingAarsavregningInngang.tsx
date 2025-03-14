@@ -18,6 +18,7 @@ import { AarsavregningUtenEllerDeltGrunnlag } from "./aarsavregningUtenEllerDelt
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
 import { lagInnvilgetMedlemskapsPeriode } from "./komponenter/utils";
 import { FellesHandlersContext } from "../../../../contexts";
+import { datalastingOperations } from "../../../../ducks/datalasting";
 
 interface Props {
   bekreft: () => void;
@@ -57,6 +58,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
   const antallÅrTilbakeITid = 6;
   const muligeAar = Array.from({ length: antallÅrTilbakeITid }, (_, i) => sisteMuligeÅr - i);
   const dispatch = useDispatch();
+  const { oppdaterOgHentSaksopplysninger } = useContext(FellesHandlersContext) as any;
 
   const utledGrunnlagstypeForAarsavregning = (res: AarsavregningResponse) => {
     const innvilgetPeriode = lagInnvilgetMedlemskapsPeriode(
@@ -107,6 +109,8 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
           // Benyttes for innhenting av saksopplysninger ifm. årsavregningsbehandlinger
           dispatch({ type: OK, data: res });
           dispatch(behandlingsresultatOperations.hent(behandlingID));
+          oppdaterOgHentSaksopplysninger();
+          dispatch(datalastingOperations.lastInnSaksopplysninger(MKV.Koder.sakstyper.FTRL, saksnummer, behandlingID));
         })
         .catch((error) => {
           setApiFeil(error.body.message);
