@@ -18,6 +18,9 @@ export const mapTilMedlemskapsperiodeFieldProps = (
   tidligereGrunnlag?: Api.Aarsavregning.Trygdeavgiftsgrunnlag,
 ) => {
   const grunnlagsperioder = tidligereGrunnlag?.medlemskapsperioder;
+
+  // TODO: Sjekk på at nye datoer som er like fom og tomDato som grunnlag, ikke blir låst.
+
   const medlemskapsperiodeErFraGrunnlag = grunnlagsperioder?.some(
     (periode) => periode.fomDato === medlemskapsperiode.fomDato && periode.tomDato === medlemskapsperiode.tomDato,
   );

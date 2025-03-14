@@ -10,7 +10,11 @@ import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import { behandlingsresultatSelectors } from "../../../../../ducks/behandlingsresultat";
 import MKV from "../../../../../melosyskodeverk";
-import { hentMedlemskapsFomTomDato } from "../aarsavregningHelpers";
+import {
+  hentMedlemskapsFomTomDato,
+  mapMedlemskapsperioder,
+  mapTilMedlemskapsperiodeFieldProps,
+} from "../aarsavregningHelpers";
 import * as Utils from "../../../../../utils";
 import { yupResolver } from "@hookform/resolvers/yup";
 import aarsavregningUtenEllerDeltGrunnlagSchema from "./aarsavregningUtenEllerDeltGrunnlagSchema";
@@ -33,6 +37,7 @@ import {
   DEFAULT_MEDLEMSKAPSPERIODE,
   ULAGRET_MEDLEMSKAPSPERIODE_ID,
 } from "./aarsavregningUtenEllerDeltGrunnlag";
+import lagretFullmektig from "../../../../../felleskomponenter/menypanel/menypunkter/fullmektig/lagretFullmektig";
 
 const { DELVIS_INNVILGET, INNVILGET } = MKV.Koder.innvilgelsesResultat;
 
@@ -140,12 +145,15 @@ export function AarsavregningFormComponent({
   const skatteforholdsperioder = useWatch({ control, name: "skatteforholdsperioder" });
   const inntektskilder = useWatch({ control, name: "inntektskilder" });
 
+  const prevMedlemskapsperioder = useRef(medlemskapsperioder);
+
   const prevTotaltForskuddsvisFakturert = useRef(totaltForskuddsvisFakturert);
 
   // Kjør initiell beregning
   useEffect(() => {
     if (formIsValid && !initiellBeregningUtført) {
-      handleBeregnTrygdeavgiftsperioder(watch()).then(() => {
+      const freshFormValues = watch();
+      handleBeregnTrygdeavgiftsperioder(freshFormValues).then(() => {
         setInitiellBeregningUtført(true);
       });
     }
@@ -165,7 +173,7 @@ export function AarsavregningFormComponent({
     }
   }, [aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift]);
 
-  const lagreMedlemskapsperiode = async (medlemskapsperiode: Medlemskapsperiode) => {
+  const lagreMedlemskapsperiodeHvisEndret = async (medlemskapsperiode: Medlemskapsperiode) => {
     const periodeRequest = {
       fomDato: Utils.dato.formatterDatoTilISO(medlemskapsperiode.fomDato, "") as string,
       tomDato: Utils.dato.formatterDatoTilISO(medlemskapsperiode.tomDato, "") as string,
@@ -186,6 +194,7 @@ export function AarsavregningFormComponent({
       if (response.type === medlemskapsperioderTypes.FEILET) {
         setMedlemskapsperiodeFeilmelding(response?.data?.data?.message);
       }
+      return response;
     }
   };
 
@@ -195,9 +204,11 @@ export function AarsavregningFormComponent({
 
       const isValid = await trigger("medlemskapsperioder");
       if (isValid) {
+        let innvilgedeMedlemskapsperioder2: any = [];
         // eslint-disable-next-line no-restricted-syntax
-        for (const periode of medlemskapsperioderFormValues) {
-          await lagreMedlemskapsperiode(periode);
+        for (const [index, periode] of medlemskapsperioderFormValues.entries()) {
+          const lagretPeriode = await lagreMedlemskapsperiodeHvisEndret(periode);
+          if (lagretPeriode) innvilgedeMedlemskapsperioder2.push([{ formValuesIndex: index, ...lagretPeriode }]);
         }
 
         Api.MedlemAvFolketrygden.Medlemskapsperioder.hentMedlemskapsperioder(behandlingID).then(
@@ -206,39 +217,40 @@ export function AarsavregningFormComponent({
               (periode: Medlemskapsperiode) =>
                 periode.innvilgelsesResultat === INNVILGET || periode.innvilgelsesResultat === DELVIS_INNVILGET,
             );
-            setLagredeMedlemskapsperioder(innvilgedeMedlemskapsperioder);
 
-            if (
-              medlemskapsperioderFormValues.some(
-                (periode: Medlemskapsperiode) => periode.id === ULAGRET_MEDLEMSKAPSPERIODE_ID,
-              )
-            ) {
-              setValue(
-                "medlemskapsperioder",
-                medlemskapsperioderFormValues.map((periode: Medlemskapsperiode) => {
-                  if (periode.id === ULAGRET_MEDLEMSKAPSPERIODE_ID) {
-                    const innvilgetPeriode = innvilgedeMedlemskapsperioder.find(
-                      (lagretPeriode: Medlemskapsperiode) =>
-                        lagretPeriode.fomDato === Utils.dato.formatterDatoTilISO(periode.fomDato, ""),
-                    );
-                    return { ...periode, id: innvilgetPeriode?.id };
-                  }
-                  return periode;
-                }),
-                { shouldValidate: false, shouldDirty: false },
-              );
-            }
+            setValue(
+              "medlemskapsperioder",
+              mapMedlemskapsperioder(
+                innvilgedeMedlemskapsperioder,
+                aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag,
+              ),
+            );
+
+            setLagredeMedlemskapsperioder(innvilgedeMedlemskapsperioder);
           },
         );
 
         if (initiellBeregningUtført && (await trigger())) {
           setFeilmelding(undefined);
-          await handleBeregnTrygdeavgiftsperioder(watch());
+          const freshFormValues = watch();
+          await handleBeregnTrygdeavgiftsperioder(freshFormValues);
         }
       }
     }, 1000),
     [initiellBeregningUtført, isDirty],
   );
+
+  const medlemskapsperioderHarKunEndretId = (currentMedlemskapsperioder: any, prevMedlemskapsperioder: any) => {
+    const currentMedlemskapsperioderUtenId = currentMedlemskapsperioder.map((periode: any) => {
+      const { id, ...rest } = periode;
+      return rest;
+    });
+    const prevMedlemskapsperioderUtenId = prevMedlemskapsperioder.map((periode: any) => {
+      const { id, ...rest } = periode;
+      return rest;
+    });
+    return Utils._isEqual(currentMedlemskapsperioderUtenId, prevMedlemskapsperioderUtenId);
+  };
 
   useEffect(() => {
     if (redigerbart && isDirty) {
@@ -247,17 +259,23 @@ export function AarsavregningFormComponent({
         medlemskapsperioderPrevLength.current = medlemskapsperioder.length;
         return;
       }
+      if (medlemskapsperioderHarKunEndretId(medlemskapsperioder, prevMedlemskapsperioder.current)) {
+        prevMedlemskapsperioder.current = medlemskapsperioder;
+        console.log("det skulle være nok å skippe en runde");
+        return;
+      }
+      prevMedlemskapsperioder.current = medlemskapsperioder;
       debouncedLagreMedlemskapsperioder(medlemskapsperioder);
     }
   }, [medlemskapsperioder, isDirty]);
 
-  const handleLeggTilMedlemskapsperiode = () => {
+  const leggTilDefaultMedlemskapsperiode = () => {
     const nyMedlemskapsperiode = DEFAULT_MEDLEMSKAPSPERIODE;
     // @ts-expect-error generisk beskrivelse
     medlemskapsperioderAppend(nyMedlemskapsperiode);
   };
 
-  const handleSlett = async (index: number) => {
+  const slettMedlemskapsperiode = async (index: number) => {
     const periode = medlemskapsperioder[index];
 
     if (periode.id === ULAGRET_MEDLEMSKAPSPERIODE_ID) {
@@ -270,7 +288,8 @@ export function AarsavregningFormComponent({
     }
     if (await trigger()) {
       setFeilmelding(undefined);
-      await handleBeregnTrygdeavgiftsperioder(watch());
+      const freshFormValues = watch();
+      await handleBeregnTrygdeavgiftsperioder(freshFormValues);
     }
   };
 
@@ -282,7 +301,8 @@ export function AarsavregningFormComponent({
     await Api.Aarsavregning.oppdaterAarsavregning(behandlingid, request, aarsavregningid);
     if (await trigger()) {
       setFeilmelding(undefined);
-      await handleBeregnTrygdeavgiftsperioder(watch());
+      const freshFormValues = watch();
+      await handleBeregnTrygdeavgiftsperioder(freshFormValues);
     }
   };
 
@@ -333,12 +353,7 @@ export function AarsavregningFormComponent({
   );
 
   useEffect(() => {
-    if (
-      redigerbart &&
-      aarsavregningID &&
-      initiellBeregningUtført &&
-      isDirty
-    ) {
+    if (redigerbart && aarsavregningID && initiellBeregningUtført && isDirty) {
       const beregnHvisSkjemaErGyldig = async () => {
         const isValid = await trigger();
         if (isValid) {
@@ -417,11 +432,11 @@ export function AarsavregningFormComponent({
             control={control}
             field={field}
             index={index}
-            remove={handleSlett}
+            remove={slettMedlemskapsperiode}
             formValues={formValues}
             bestemmelser={initialData.bestemmelser}
             handleUpdate={medlemskapsperioderUpdate}
-            handleLeggTil={handleLeggTilMedlemskapsperiode}
+            handleLeggTil={leggTilDefaultMedlemskapsperiode}
             visLeggTil
             maksVerdi={
               initialData.valgtÅr !== undefined ? new Date(initialData.valgtÅr, 11, 31, 23, 59, 59, 999) : undefined
