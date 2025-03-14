@@ -1,7 +1,7 @@
 schema:
   - http://localhost:8080/graphql:
       headers:
-        Cookie: ""
+        Cookies: ""
 config:
   scalars:
     # Mapper custom scalars i graphql-skjemaet til typescript-typer.
@@ -10,7 +10,8 @@ config:
     Long: number
 generates:
   src/graphql/generated/types.ts:
-    - typescript
+    plugins:
+      - typescript
 
   # Genererer react-hooks for operations på samme sted som operations er definert.
   src/:

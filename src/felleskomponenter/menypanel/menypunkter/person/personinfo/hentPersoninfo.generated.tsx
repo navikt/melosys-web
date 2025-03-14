@@ -2,32 +2,13 @@ import * as Types from '../../../../../graphql/generated/types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
-
-const defaultOptions =  {}
+const defaultOptions = {} as const;
 export type HentPersoninfoQueryVariables = Types.Exact<{
   behandlingID: Types.Scalars['Long'];
 }>;
 
 
-export type HentPersoninfoQuery = (
-  { __typename?: 'Query' }
-  & { hentSaksopplysninger: (
-    { __typename?: 'Saksopplysninger' }
-    & { persondata: (
-      { __typename?: 'Personopplysninger' }
-      & { folkeregisterpersonstatuser: Array<(
-        { __typename?: 'Folkeregisterpersonstatus' }
-        & Pick<Types.Folkeregisterpersonstatus, 'kode' | 'tekst' | 'master' | 'kilde' | 'fregGyldighetstidspunkt' | 'erHistorisk'>
-      )>, foedsel: (
-        { __typename?: 'Foedsel' }
-        & Pick<Types.Foedsel, 'foedselsaar' | 'foedselsdato'>
-      ), sivilstand: Array<(
-        { __typename?: 'Sivilstand' }
-        & Pick<Types.Sivilstand, 'type' | 'relatertVedSivilstand' | 'gyldigFraOgMed' | 'bekreftelsesdato' | 'master' | 'kilde' | 'erHistorisk'>
-      )> }
-    ) }
-  ) }
-);
+export type HentPersoninfoQuery = { __typename?: 'Query', hentSaksopplysninger: { __typename?: 'Saksopplysninger', persondata: { __typename?: 'Personopplysninger', folkeregisterpersonstatuser: Array<{ __typename?: 'Folkeregisterpersonstatus', kode: string, tekst: string, master: string, kilde?: string | null, fregGyldighetstidspunkt?: string | null, erHistorisk: boolean }>, foedsel: { __typename?: 'Foedsel', foedselsaar: number, foedselsdato?: string | null, foedeland?: string | null, foedested?: string | null }, sivilstand: Array<{ __typename?: 'Sivilstand', type: string, relatertVedSivilstand?: string | null, gyldigFraOgMed?: string | null, bekreftelsesdato?: string | null, master: string, kilde?: string | null, erHistorisk: boolean }> } } };
 
 
 export const HentPersoninfoDocument = gql`
@@ -45,6 +26,8 @@ export const HentPersoninfoDocument = gql`
       foedsel {
         foedselsaar
         foedselsdato
+        foedeland
+        foedested
       }
       sivilstand {
         type
@@ -77,13 +60,13 @@ export const HentPersoninfoDocument = gql`
  * });
  */
 export function useHentPersoninfoQuery(baseOptions: Apollo.QueryHookOptions<HentPersoninfoQuery, HentPersoninfoQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<HentPersoninfoQuery, HentPersoninfoQueryVariables>(HentPersoninfoDocument, options);
-      }
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<HentPersoninfoQuery, HentPersoninfoQueryVariables>(HentPersoninfoDocument, options);
+}
 export function useHentPersoninfoLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<HentPersoninfoQuery, HentPersoninfoQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<HentPersoninfoQuery, HentPersoninfoQueryVariables>(HentPersoninfoDocument, options);
-        }
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<HentPersoninfoQuery, HentPersoninfoQueryVariables>(HentPersoninfoDocument, options);
+}
 export type HentPersoninfoQueryHookResult = ReturnType<typeof useHentPersoninfoQuery>;
 export type HentPersoninfoLazyQueryHookResult = ReturnType<typeof useHentPersoninfoLazyQuery>;
 export type HentPersoninfoQueryResult = Apollo.QueryResult<HentPersoninfoQuery, HentPersoninfoQueryVariables>;

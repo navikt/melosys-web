@@ -2,36 +2,13 @@ import * as Types from '../../graphql/generated/types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
-
-const defaultOptions =  {}
+const defaultOptions = {} as const;
 export type HentPersonopplysningerQueryVariables = Types.Exact<{
   behandlingID: Types.Scalars['Long'];
 }>;
 
 
-export type HentPersonopplysningerQuery = (
-  { __typename?: 'Query' }
-  & { hentSaksopplysninger: (
-    { __typename?: 'Saksopplysninger' }
-    & { persondata: (
-      { __typename?: 'Personopplysninger' }
-      & Pick<Types.Personopplysninger, 'kjoenn' | 'folkeregisteridentifikator'>
-      & { navn: (
-        { __typename?: 'Navn' }
-        & Pick<Types.Navn, 'fornavn' | 'mellomnavn' | 'etternavn'>
-      ), folkeregisterpersonstatuser: Array<(
-        { __typename?: 'Folkeregisterpersonstatus' }
-        & Pick<Types.Folkeregisterpersonstatus, 'kode' | 'erHistorisk'>
-      )>, statsborgerskap: Array<(
-        { __typename?: 'Statsborgerskap' }
-        & Pick<Types.Statsborgerskap, 'land' | 'erHistorisk'>
-      )>, sivilstand: Array<(
-        { __typename?: 'Sivilstand' }
-        & Pick<Types.Sivilstand, 'type' | 'erHistorisk'>
-      )> }
-    ) }
-  ) }
-);
+export type HentPersonopplysningerQuery = { __typename?: 'Query', hentSaksopplysninger: { __typename?: 'Saksopplysninger', persondata: { __typename?: 'Personopplysninger', kjoenn: Types.KjoennType, folkeregisteridentifikator?: string | null, navn: { __typename?: 'Navn', fornavn: string, mellomnavn?: string | null, etternavn: string }, folkeregisterpersonstatuser: Array<{ __typename?: 'Folkeregisterpersonstatus', kode: string, erHistorisk: boolean }>, statsborgerskap: Array<{ __typename?: 'Statsborgerskap', land: string, erHistorisk: boolean }>, sivilstand: Array<{ __typename?: 'Sivilstand', type: string, erHistorisk: boolean }> } } };
 
 
 export const HentPersonopplysningerDocument = gql`

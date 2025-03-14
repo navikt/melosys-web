@@ -2,30 +2,13 @@ import * as Types from '../../../../../graphql/generated/types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
-
-const defaultOptions =  {}
+const defaultOptions = {} as const;
 export type HentFamiliemedlemmerQueryVariables = Types.Exact<{
   behandlingID: Types.Scalars['Long'];
 }>;
 
 
-export type HentFamiliemedlemmerQuery = (
-  { __typename?: 'Query' }
-  & { hentSaksopplysninger: (
-    { __typename?: 'Saksopplysninger' }
-    & { persondata: (
-      { __typename?: 'Personopplysninger' }
-      & { familiemedlemmer: Array<(
-        { __typename?: 'Familiemedlem' }
-        & Pick<Types.Familiemedlem, 'navn' | 'ident' | 'relasjonsrolle' | 'alder' | 'foreldreansvar' | 'fnrAnnenForelder'>
-        & { sivilstand?: Types.Maybe<(
-          { __typename?: 'Sivilstand' }
-          & Pick<Types.Sivilstand, 'type' | 'gyldigFraOgMed' | 'erHistorisk' | 'master'>
-        )> }
-      )> }
-    ) }
-  ) }
-);
+export type HentFamiliemedlemmerQuery = { __typename?: 'Query', hentSaksopplysninger: { __typename?: 'Saksopplysninger', persondata: { __typename?: 'Personopplysninger', familiemedlemmer: Array<{ __typename?: 'Familiemedlem', navn: string, ident: string, relasjonsrolle: Types.Familierelasjonsrolle, alder?: number | null, foreldreansvar?: string | null, fnrAnnenForelder?: string | null, sivilstand?: { __typename?: 'Sivilstand', type: string, gyldigFraOgMed?: string | null, erHistorisk: boolean, master: string } | null }> } } };
 
 
 export const HentFamiliemedlemmerDocument = gql`

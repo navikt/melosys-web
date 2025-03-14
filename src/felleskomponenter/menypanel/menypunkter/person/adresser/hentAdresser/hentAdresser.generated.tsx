@@ -2,47 +2,13 @@ import * as Types from '../../../../../../graphql/generated/types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
-
-const defaultOptions =  {}
+const defaultOptions = {} as const;
 export type HentAdresserQueryVariables = Types.Exact<{
   behandlingID: Types.Scalars['Long'];
 }>;
 
 
-export type HentAdresserQuery = (
-  { __typename?: 'Query' }
-  & { hentSaksopplysninger: (
-    { __typename?: 'Saksopplysninger' }
-    & { persondata: (
-      { __typename?: 'Personopplysninger' }
-      & { bostedsadresser: Array<(
-        { __typename?: 'Bostedsadresse' }
-        & Pick<Types.Bostedsadresse, 'coAdressenavn' | 'gyldigFraOgMed' | 'gyldigTilOgMed' | 'kilde' | 'master' | 'erHistorisk'>
-        & { adresse: (
-          { __typename?: 'StrukturertAdresseformat' }
-          & Pick<Types.StrukturertAdresseformat, 'tilleggsnavn' | 'gatenavn' | 'husnummerEtasjeLeilighet' | 'postboks' | 'postnummer' | 'poststed' | 'region' | 'land'>
-        ) }
-      )>, oppholdsadresser: Array<(
-        { __typename?: 'Oppholdsadresse' }
-        & Pick<Types.Oppholdsadresse, 'coAdressenavn' | 'gyldigFraOgMed' | 'gyldigTilOgMed' | 'kilde' | 'master' | 'erHistorisk'>
-        & { adresse: (
-          { __typename?: 'StrukturertAdresseformat' }
-          & Pick<Types.StrukturertAdresseformat, 'tilleggsnavn' | 'gatenavn' | 'husnummerEtasjeLeilighet' | 'postboks' | 'postnummer' | 'poststed' | 'region' | 'land'>
-        ) }
-      )>, kontaktadresser: Array<(
-        { __typename?: 'Kontaktadresse' }
-        & Pick<Types.Kontaktadresse, 'coAdressenavn' | 'gyldigFraOgMed' | 'gyldigTilOgMed' | 'master' | 'kilde' | 'erHistorisk'>
-        & { semistrukturertAdresse?: Types.Maybe<(
-          { __typename?: 'SemistrukturertAdresseformat' }
-          & Pick<Types.SemistrukturertAdresseformat, 'adresselinje1' | 'adresselinje2' | 'adresselinje3' | 'adresselinje4' | 'postnummer' | 'poststed' | 'land'>
-        )>, strukturertAdresse?: Types.Maybe<(
-          { __typename?: 'StrukturertAdresseformat' }
-          & Pick<Types.StrukturertAdresseformat, 'tilleggsnavn' | 'gatenavn' | 'husnummerEtasjeLeilighet' | 'postboks' | 'postnummer' | 'poststed' | 'region' | 'land'>
-        )> }
-      )> }
-    ) }
-  ) }
-);
+export type HentAdresserQuery = { __typename?: 'Query', hentSaksopplysninger: { __typename?: 'Saksopplysninger', persondata: { __typename?: 'Personopplysninger', bostedsadresser: Array<{ __typename?: 'Bostedsadresse', coAdressenavn?: string | null, gyldigFraOgMed?: string | null, gyldigTilOgMed?: string | null, kilde?: string | null, master: string, erHistorisk: boolean, adresse: { __typename?: 'StrukturertAdresseformat', tilleggsnavn?: string | null, gatenavn?: string | null, husnummerEtasjeLeilighet?: string | null, postboks?: string | null, postnummer?: string | null, poststed?: string | null, region?: string | null, land: string } }>, oppholdsadresser: Array<{ __typename?: 'Oppholdsadresse', coAdressenavn?: string | null, gyldigFraOgMed?: string | null, gyldigTilOgMed?: string | null, kilde?: string | null, master: string, erHistorisk: boolean, adresse: { __typename?: 'StrukturertAdresseformat', tilleggsnavn?: string | null, gatenavn?: string | null, husnummerEtasjeLeilighet?: string | null, postboks?: string | null, postnummer?: string | null, poststed?: string | null, region?: string | null, land: string } }>, kontaktadresser: Array<{ __typename?: 'Kontaktadresse', coAdressenavn?: string | null, gyldigFraOgMed?: string | null, gyldigTilOgMed?: string | null, master: string, kilde?: string | null, erHistorisk: boolean, semistrukturertAdresse?: { __typename?: 'SemistrukturertAdresseformat', adresselinje1?: string | null, adresselinje2?: string | null, adresselinje3?: string | null, adresselinje4?: string | null, postnummer?: string | null, poststed?: string | null, land: string } | null, strukturertAdresse?: { __typename?: 'StrukturertAdresseformat', tilleggsnavn?: string | null, gatenavn?: string | null, husnummerEtasjeLeilighet?: string | null, postboks?: string | null, postnummer?: string | null, poststed?: string | null, region?: string | null, land: string } | null }> } } };
 
 
 export const HentAdresserDocument = gql`

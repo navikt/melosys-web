@@ -12,6 +12,8 @@ query hentPersoninfo($behandlingID: Long!) {
       foedsel {
         foedselsaar
         foedselsdato
+        foedeland
+        foedested
       }
       sivilstand {
         type

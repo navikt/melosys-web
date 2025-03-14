@@ -44,6 +44,8 @@ function PersonInfo({ behandlingID, ...props }: PersonInfoProps) {
   const personinfoErrorContent = <Nav.Alert variant="error">Feil ved henting av personinfo!</Nav.Alert>;
 
   const erLitenSkjerm = Utils.mediaQuery.useMediaQuery({ maxWidth: 1680 });
+  const foedsel = personinfoData?.hentSaksopplysninger.persondata.foedsel;
+
 
   function Fødselsnummer() {
     return (
@@ -59,7 +61,6 @@ function PersonInfo({ behandlingID, ...props }: PersonInfoProps) {
   }
 
   function Fødselsdato() {
-    const foedsel = personinfoData?.hentSaksopplysninger.persondata.foedsel;
     let fødselsdato = null;
     if (foedsel) {
       fødselsdato = foedsel.foedselsdato ? <EnkeltDato dato={foedsel.foedselsdato} /> : foedsel.foedselsaar;
@@ -72,6 +73,34 @@ function PersonInfo({ behandlingID, ...props }: PersonInfoProps) {
           </Nav.BodyLong>
         </Nav.Column>
         <Nav.Column xs={erLitenSkjerm ? "8" : "6"}>{fødselsdato}</Nav.Column>
+      </>
+    );
+  }
+
+  function Fødested() {
+    return (
+      <>
+        <Nav.Column xs={erLitenSkjerm ? "4" : "6"}>
+          <Nav.BodyLong weight="semibold" size="small">
+            Fødested:
+          </Nav.BodyLong>
+        </Nav.Column>
+        <Nav.Column xs={erLitenSkjerm ? "4" : "3"}>{foedsel?.foedested || "-"}</Nav.Column>
+      </>
+    );
+  }
+
+  function Fødeland() {
+    const foedsel = personinfoData?.hentSaksopplysninger.persondata.foedsel;
+
+    return (
+      <>
+        <Nav.Column xs={erLitenSkjerm ? "4" : "6"}>
+          <Nav.BodyLong weight="semibold" size="small">
+            Fødeland:
+          </Nav.BodyLong>
+        </Nav.Column>
+        <Nav.Column xs={erLitenSkjerm ? "4" : "3"}>{foedsel?.foedeland || "-"}</Nav.Column>
       </>
     );
   }
@@ -89,6 +118,8 @@ function PersonInfo({ behandlingID, ...props }: PersonInfoProps) {
           sivilstand={personinfoData?.hentSaksopplysninger.persondata.sivilstand}
           erLitenSkjerm={erLitenSkjerm}
         />
+        <Fødested />
+        <Fødeland />
       </Nav.Column>
       <Nav.Column xs={erLitenSkjerm ? "12" : "5"}>
         <Fødselsnummer />
