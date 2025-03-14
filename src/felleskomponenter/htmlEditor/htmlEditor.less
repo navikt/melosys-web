@@ -15,6 +15,29 @@
       border-top: none;
       border-radius: 0 0 @borderRadiusBase @borderRadiusBase;
       font-family: Arial, sans-serif;
+      max-height: 600px;
+      overflow-y: auto;
+
+      // Style for bracketed text (placeholders)
+      .bracketed-text {
+        font-weight: bold;
+        color: @redError;
+      }
+
+      table {
+        width: auto !important;
+        max-width: 100% !important;
+        margin: 10px 0;
+        border-collapse: collapse;
+        table-layout: auto !important;
+      }
+
+      table td,
+      table th {
+        border: 1px solid #ccc !important;
+        padding: 4px 8px !important;
+        min-width: 30px;
+      }
     }
 
     .ql-editor {
@@ -23,7 +46,14 @@
       font-family: Arial, sans-serif;
       font-size: 12pt;
       word-wrap: break-word;
-      line-height: 1.5;
+      line-height: 1.15;
+
+      p {
+        margin-top: 4px;
+        margin-bottom: 4px;
+        font-size: 12pt;
+        max-width: 100%;
+      }
 
       h1 {
         font-size: 16pt;
@@ -33,12 +63,6 @@
       h2 {
         font-size: 14pt;
         margin-bottom: 12pt;
-      }
-
-      p {
-        font-size: 12pt;
-        margin-bottom: 12pt;
-        max-width: 100%;
       }
     }
 
@@ -53,6 +77,34 @@
         border-color: @redError;
       }
     }
+
+    // Custom styling for undo and redo buttons
+    .ql-undo,
+    .ql-redo {
+      position: relative;
+      &:after {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+
+    .ql-undo:after {
+      content: "←";
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    .ql-redo:after {
+      content: "→";
+      font-size: 16px;
+      font-weight: bold;
+    }
   }
 
   .feilmelding {
@@ -63,12 +115,6 @@
     line-height: 1.375rem;
   }
 
-  .ql-snow .ql-picker.ql-header .ql-picker-item[data-value="1"]::before {
-    content: "Tittel";
-    font-family: Arial, sans-serif;
-    font-size: 16pt;
-    font-weight: bold;
-  }
   .ql-snow .ql-picker.ql-header .ql-picker-item[data-value="2"]::before {
     content: "Undertittel";
     font-family: Arial, sans-serif;
@@ -84,10 +130,17 @@
   .ql-snow .ql-picker.ql-header .ql-picker-label::before {
     content: "Brødtekst";
   }
-  .ql-snow .ql-picker.ql-header .ql-picker-label[data-value="1"]::before {
-    content: "Tittel";
-  }
   .ql-snow .ql-picker.ql-header .ql-picker-label[data-value="2"]::before {
     content: "Undertittel";
+  }
+
+  .ql-snow .ql-tooltip {
+    &::after {
+      content: "Trykk Ctrl+Q for overskrift | ← Angre | → Gjør om";
+      font-size: 10pt;
+      color: #666;
+      display: block;
+      margin-top: 4px;
+    }
   }
 }
