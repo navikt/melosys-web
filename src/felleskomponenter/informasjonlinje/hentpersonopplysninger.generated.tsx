@@ -8,35 +8,28 @@ export type HentPersonopplysningerQueryVariables = Types.Exact<{
   behandlingID: Types.Scalars['Long'];
 }>;
 
-
 export type HentPersonopplysningerQuery = (
   { __typename?: 'Query' }
-  & {
-    hentSaksopplysninger: (
-      { __typename?: 'Saksopplysninger' }
-      & {
-        persondata: (
-          { __typename?: 'Personopplysninger' }
-          & Pick<Types.Personopplysninger, 'kjoenn' | 'folkeregisteridentifikator'>
-          & {
-            navn: (
-              { __typename?: 'Navn' }
-              & Pick<Types.Navn, 'fornavn' | 'mellomnavn' | 'etternavn'>
-            ), folkeregisterpersonstatuser: Array<(
-              { __typename?: 'Folkeregisterpersonstatus' }
-              & Pick<Types.Folkeregisterpersonstatus, 'kode' | 'erHistorisk'>
-            )>, statsborgerskap: Array<(
-              { __typename?: 'Statsborgerskap' }
-              & Pick<Types.Statsborgerskap, 'land' | 'erHistorisk'>
-            )>, sivilstand: Array<(
-              { __typename?: 'Sivilstand' }
-              & Pick<Types.Sivilstand, 'type' | 'erHistorisk'>
-            )>
-          }
-        )
-      }
-    )
-  }
+  & { hentSaksopplysninger: (
+    { __typename?: 'Saksopplysninger' }
+    & { persondata: (
+      { __typename?: 'Personopplysninger' }
+      & Pick<Types.Personopplysninger, 'kjoenn' | 'folkeregisteridentifikator'>
+      & { navn: (
+        { __typename?: 'Navn' }
+        & Pick<Types.Navn, 'fornavn' | 'mellomnavn' | 'etternavn'>
+      ), folkeregisterpersonstatuser: Array<(
+        { __typename?: 'Folkeregisterpersonstatus' }
+        & Pick<Types.Folkeregisterpersonstatus, 'kode' | 'erHistorisk'>
+      )>, statsborgerskap: Array<(
+        { __typename?: 'Statsborgerskap' }
+        & Pick<Types.Statsborgerskap, 'land' | 'erHistorisk'>
+      )>, sivilstand: Array<(
+        { __typename?: 'Sivilstand' }
+        & Pick<Types.Sivilstand, 'type' | 'erHistorisk'>
+      )> }
+    ) }
+  ) }
 );
 
 
