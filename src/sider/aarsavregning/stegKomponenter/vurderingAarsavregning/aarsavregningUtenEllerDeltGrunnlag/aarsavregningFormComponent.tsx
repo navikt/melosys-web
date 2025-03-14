@@ -28,7 +28,11 @@ import { MedlemskapsperiodeSkjema } from "../komponenter/medlemskapsperiodeSkjem
 import { Skatteforholdsperioder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/skatteforholdsperioder";
 import { Inntektskilder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/inntektskilder";
 import { SumArsavregningTabell } from "../komponenter/sumArsavregningTabell";
-import { AarsavregningFormValuesProps, DEFAULT_MEDLEMSKAPSPERIODE, ULAGRET_MEDLEMSKAPSPERIODE_ID } from "./aarsavregningUtenEllerDeltGrunnlag";
+import {
+  AarsavregningFormValuesProps,
+  DEFAULT_MEDLEMSKAPSPERIODE,
+  ULAGRET_MEDLEMSKAPSPERIODE_ID,
+} from "./aarsavregningUtenEllerDeltGrunnlag";
 
 const { DELVIS_INNVILGET, INNVILGET } = MKV.Koder.innvilgelsesResultat;
 
@@ -204,6 +208,7 @@ export function AarsavregningFormComponent({
 
       const isValid = await trigger("medlemskapsperioder");
       if (isValid) {
+        // eslint-disable-next-line no-restricted-syntax
         for (const periode of medlemskapsperioderFormValues) {
           await lagreMedlemskapsperiode(periode);
         }
@@ -225,14 +230,13 @@ export function AarsavregningFormComponent({
                 "medlemskapsperioder",
                 medlemskapsperioderFormValues.map((periode: Medlemskapsperiode) => {
                   if (periode.id === ULAGRET_MEDLEMSKAPSPERIODE_ID) {
-                    const lagretPeriode = innvilgedeMedlemskapsperioder.find(
+                    const innvilgetPeriode = innvilgedeMedlemskapsperioder.find(
                       (lagretPeriode: Medlemskapsperiode) =>
                         lagretPeriode.fomDato === Utils.dato.formatterDatoTilISO(periode.fomDato, ""),
                     );
-                    return { ...periode, id: lagretPeriode?.id };
-                  } else {
-                    return periode;
+                    return { ...periode, id: innvilgetPeriode?.id };
                   }
+                  return periode;
                 }),
                 { shouldValidate: false, shouldDirty: false },
               );
