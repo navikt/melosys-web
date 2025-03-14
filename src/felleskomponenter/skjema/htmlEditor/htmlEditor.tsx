@@ -7,13 +7,11 @@ interface SkjemaHtmlEditorProps {
   disabled?: boolean;
   label?: React.ReactNode;
   placeholder?: string;
-  spellCheck?: boolean;
 }
 
 function SkjemaHtmlEditorComponent({
   input,
   meta,
-  spellCheck = true,
   ...rest
 }: WrappedFieldProps & Omit<SkjemaHtmlEditorProps, "feltNavn">) {
   const feil = meta.touched ? meta.error : undefined;
@@ -23,7 +21,6 @@ function SkjemaHtmlEditorComponent({
       value={input.value}
       onChange={input.onChange}
       placeholder={rest.placeholder || ""}
-      spellCheck={spellCheck}
       label={rest.label}
       feil={feil}
       disabled={rest.disabled}
