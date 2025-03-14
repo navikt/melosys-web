@@ -79,7 +79,6 @@ export function AarsavregningFormComponent({
   );
   const [initiellBeregningUtført, setInitiellBeregningUtført] = useState(false);
   const [harValidertSkjema, setHarValidertSkjema] = useState(false);
-  const [hasUserInput, setHasUserInput] = useState(false);
 
   // Redux selectors
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
@@ -97,7 +96,6 @@ export function AarsavregningFormComponent({
     tomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.tom),
   };
 
-  // Initialize form
   const {
     control,
     watch,
@@ -114,13 +112,6 @@ export function AarsavregningFormComponent({
     reValidateMode: "onChange",
     defaultValues: initialData.formDefaultValues,
   });
-
-  // Track user modifications to the form
-  useEffect(() => {
-    if (isDirty) {
-      setHasUserInput(true);
-    }
-  }, [isDirty]);
 
   const {
     fields: medlemskapsperioderFields,
@@ -150,8 +141,6 @@ export function AarsavregningFormComponent({
   const inntektskilder = useWatch({ control, name: "inntektskilder" });
 
   const prevTotaltForskuddsvisFakturert = useRef(totaltForskuddsvisFakturert);
-  const prevSkatteforholdsperioder = useRef(skatteforholdsperioder);
-  const prevInntektskilder = useRef(inntektskilder);
 
   // Kjør initiell beregning
   useEffect(() => {
@@ -176,7 +165,6 @@ export function AarsavregningFormComponent({
     }
   }, [aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift]);
 
-  // Function to save medlemskapsperiode to the backend
   const lagreMedlemskapsperiode = async (medlemskapsperiode: Medlemskapsperiode) => {
     const periodeRequest = {
       fomDato: Utils.dato.formatterDatoTilISO(medlemskapsperiode.fomDato, "") as string,
@@ -187,7 +175,7 @@ export function AarsavregningFormComponent({
     } as OppdaterMedlemskapsperiode;
 
     if (!harIdentiskMedlemskapsperiodeLagret(periodeRequest, medlemskapsperiode.id, lagredeMedlemskapsperioder)) {
-      const response: any = await (medlemskapsperiode.id === -1
+      const response: any = await (medlemskapsperiode.id === ULAGRET_MEDLEMSKAPSPERIODE_ID
         ? Api.MedlemAvFolketrygden.Medlemskapsperioder.opprettMedlemskapsperioder(behandlingID, periodeRequest)
         : Api.MedlemAvFolketrygden.Medlemskapsperioder.oppdaterMedlemskapsperioder(
             behandlingID,
@@ -201,10 +189,9 @@ export function AarsavregningFormComponent({
     }
   };
 
-  // Handle changes to medlemskapsperioder with debounce
   const debouncedLagreMedlemskapsperioder = useCallback(
     Utils._debounce(async (medlemskapsperioderFormValues) => {
-      if (!hasUserInput) return;
+      if (!isDirty) return;
 
       const isValid = await trigger("medlemskapsperioder");
       if (isValid) {
@@ -250,11 +237,11 @@ export function AarsavregningFormComponent({
         }
       }
     }, 1000),
-    [initiellBeregningUtført, hasUserInput],
+    [initiellBeregningUtført, isDirty],
   );
 
   useEffect(() => {
-    if (redigerbart && hasUserInput) {
+    if (redigerbart && isDirty) {
       setMedlemskapsperiodeFeilmelding(undefined);
       if (medlemskapsperioder.length !== medlemskapsperioderPrevLength.current) {
         medlemskapsperioderPrevLength.current = medlemskapsperioder.length;
@@ -262,17 +249,15 @@ export function AarsavregningFormComponent({
       }
       debouncedLagreMedlemskapsperioder(medlemskapsperioder);
     }
-  }, [medlemskapsperioder, hasUserInput]);
+  }, [medlemskapsperioder, isDirty]);
 
   const handleLeggTilMedlemskapsperiode = () => {
-    setHasUserInput(true);
     const nyMedlemskapsperiode = DEFAULT_MEDLEMSKAPSPERIODE;
     // @ts-expect-error generisk beskrivelse
     medlemskapsperioderAppend(nyMedlemskapsperiode);
   };
 
   const handleSlett = async (index: number) => {
-    setHasUserInput(true);
     const periode = medlemskapsperioder[index];
 
     if (periode.id === ULAGRET_MEDLEMSKAPSPERIODE_ID) {
@@ -313,7 +298,7 @@ export function AarsavregningFormComponent({
   useEffect(() => {
     if (
       redigerbart &&
-      hasUserInput &&
+      isDirty &&
       prevTotaltForskuddsvisFakturert.current !== totaltForskuddsvisFakturert &&
       (totaltForskuddsvisFakturert || totaltForskuddsvisFakturert === "") &&
       totaltForskuddsvisFakturert !== aarsavregningResponse?.avregning?.tidligereFakturertBeloepAvgiftssystem
@@ -326,7 +311,7 @@ export function AarsavregningFormComponent({
     }
 
     prevTotaltForskuddsvisFakturert.current = totaltForskuddsvisFakturert;
-  }, [totaltForskuddsvisFakturert, hasUserInput]);
+  }, [totaltForskuddsvisFakturert, isDirty]);
 
   const handleBeregnTrygdeavgiftsperioder = useCallback(
     async (formVerdier: FieldValue<FormValuesProps>) => {
@@ -352,9 +337,7 @@ export function AarsavregningFormComponent({
       redigerbart &&
       aarsavregningID &&
       initiellBeregningUtført &&
-      hasUserInput &&
-      (JSON.stringify(prevSkatteforholdsperioder.current) !== JSON.stringify(skatteforholdsperioder) ||
-        JSON.stringify(prevInntektskilder.current) !== JSON.stringify(inntektskilder))
+      isDirty
     ) {
       const beregnHvisSkjemaErGyldig = async () => {
         const isValid = await trigger();
@@ -365,11 +348,8 @@ export function AarsavregningFormComponent({
         }
       };
       beregnHvisSkjemaErGyldig();
-
-      prevSkatteforholdsperioder.current = skatteforholdsperioder;
-      prevInntektskilder.current = inntektskilder;
     }
-  }, [inntektskilder, skatteforholdsperioder, hasUserInput]);
+  }, [inntektskilder, skatteforholdsperioder, isDirty]);
 
   const stegErGyldig = Boolean(formIsValid && aarsavregningResponse?.nyttGrunnlag && feilmelding === undefined);
 
