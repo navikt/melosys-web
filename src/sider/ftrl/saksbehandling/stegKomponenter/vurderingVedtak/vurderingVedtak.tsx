@@ -187,11 +187,6 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
     setValue("nyVurderingBakgrunnFritekst", "");
   };
 
-  const lagreAvklarteFakta = async (mottaFaktura: boolean) => {
-
-  }
-
-
   useEffect(() => {
     return () => debouncedOppdaterFritekster.cancel();
   }, []);
@@ -363,8 +358,8 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
 
     return alleLandkoder
       ? Utils.streng.arrayTilKonjunksjon(
-        soknadsland.map((enkeltLand: string) => KV.finnTermFraListe(alleLandkoder, enkeltLand)),
-      )
+          soknadsland.map((enkeltLand: string) => KV.finnTermFraListe(alleLandkoder, enkeltLand)),
+        )
       : `Finner ikke ${erIkkeYrkesaktiv ? "land" : "arbeidsland"}`;
   };
 
@@ -448,7 +443,6 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
           </Nav.Column>
         </Nav.Row>
       ) : null}
-
 
       {harFullmaktForTrygdeavgift && redigerbart ? (
         <FullmaktForTrygdeavgiftConfirmationPanel

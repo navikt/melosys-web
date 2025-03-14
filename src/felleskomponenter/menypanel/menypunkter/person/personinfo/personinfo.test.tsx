@@ -14,8 +14,8 @@ describe("Personinfo", () => {
     function x() {
       return {
         matches: false,
-        addEventListener: function y() { },
-        removeEventListener: function z() { },
+        addEventListener: function y() {},
+        removeEventListener: function z() {},
       };
     };
 

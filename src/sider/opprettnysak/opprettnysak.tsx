@@ -162,9 +162,7 @@ function OpprettNySak({
   };
 
   const hentBruker = async (personIdent: string) => {
-    console.log("Henter bruker", personIdent)
     if (Utils.person.erGyldigFnrEllerDnr(personIdent)) {
-      console.log("Bruker er gyldig", personIdent)
       const navn = await hentSammensattNavn(personIdent);
       change("brukerNavn", navn);
       setFagsakerOgOppgaverHentes(true);
@@ -172,7 +170,6 @@ function OpprettNySak({
       await hentOppgaver(personIdent);
       setFagsakerOgOppgaverHentes(false);
     } else {
-      console.log("Bruker er ugyldig ", personIdent)
       nullstillFelt("brukerNavn");
     }
   };

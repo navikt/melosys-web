@@ -35,7 +35,6 @@ function InnerFoedestedComponent(props: InnerFoedestedProps) {
   const ikkeRedigerbart = !redigerbart;
 
   return (
-
     <EditerbartElement
       tittel={KV.Menypunkter.Person.undertitler.foedestedOgLand}
       redigerbart={ikkeRedigerbart}
