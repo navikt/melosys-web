@@ -8,9 +8,13 @@ config:
     Date: string
     DateTime: string
     Long: number
+
+  preResolveTypes: false # This can affect how types are generated
+  skipTypename: false # Keep __typename fields
 generates:
   src/graphql/generated/types.ts:
-    - typescript
+    plugins:
+      - typescript
 
   # Genererer react-hooks for operations på samme sted som operations er definert.
   src/:

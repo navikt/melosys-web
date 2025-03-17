@@ -9,11 +9,9 @@ query hentPersoninfo($behandlingID: Long!) {
         fregGyldighetstidspunkt
         erHistorisk
       }
-      foedested: {
-        foedested
+      foedsel {
         foedeland
-      }
-      foedselsdato {
+        foedested
         foedselsaar
         foedselsdato
       }

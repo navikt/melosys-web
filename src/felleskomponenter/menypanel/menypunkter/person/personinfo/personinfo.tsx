@@ -59,14 +59,10 @@ function PersonInfo({ behandlingID, ...props }: PersonInfoProps) {
   }
 
   function Fødselsdato() {
-    const foedselsdato = personinfoData?.hentSaksopplysninger.persondata.foedselsdato;
+    const foedsel = personinfoData?.hentSaksopplysninger.persondata.foedsel;
     let fødselsdato = null;
-    if (foedselsdato) {
-      fødselsdato = foedselsdato.foedselsdato ? (
-        <EnkeltDato dato={foedselsdato.foedselsdato} />
-      ) : (
-        foedselsdato.foedselsaar
-      );
+    if (foedsel) {
+      fødselsdato = foedsel.foedselsdato ? <EnkeltDato dato={foedsel.foedselsdato} /> : foedsel.foedselsaar;
     }
     return (
       <>
@@ -81,7 +77,8 @@ function PersonInfo({ behandlingID, ...props }: PersonInfoProps) {
   }
 
   function Fødested() {
-    const foedested = personinfoData?.hentSaksopplysninger.persondata.foedested.foedested;
+    console.log("personinfoData Fødested", personinfoData);
+    const foedested = personinfoData?.hentSaksopplysninger.persondata.foedsel.foedested;
     return (
       <>
         <Nav.Column xs={erLitenSkjerm ? "4" : "6"}>
@@ -95,7 +92,7 @@ function PersonInfo({ behandlingID, ...props }: PersonInfoProps) {
   }
 
   function Fødeland() {
-    const foedeland = personinfoData?.hentSaksopplysninger.persondata.foedested.foedeland;
+    const foedeland = personinfoData?.hentSaksopplysninger.persondata.foedsel.foedeland;
     return (
       <>
         <Nav.Column xs={erLitenSkjerm ? "4" : "6"}>

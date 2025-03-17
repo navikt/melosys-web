@@ -1,4 +1,5 @@
 export type Maybe<T> = T | null;
+export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -9,32 +10,29 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  /** Format: YYYY-MM-DD (ISO-8601), example: 2017-11-24 */
   Date: string;
-  /** Custom scalar for Long */
   Long: number;
 };
 
 export type Bostedsadresse = {
   __typename?: 'Bostedsadresse';
-  coAdressenavn?: Maybe<Scalars['String']>;
   adresse: StrukturertAdresseformat;
+  coAdressenavn?: Maybe<Scalars['String']>;
+  erHistorisk: Scalars['Boolean'];
   gyldigFraOgMed?: Maybe<Scalars['Date']>;
   gyldigTilOgMed?: Maybe<Scalars['Date']>;
-  master: Scalars['String'];
   kilde?: Maybe<Scalars['String']>;
-  erHistorisk: Scalars['Boolean'];
+  master: Scalars['String'];
 };
-
 
 export type Familiemedlem = {
   __typename?: 'Familiemedlem';
-  navn: Scalars['String'];
-  ident: Scalars['String'];
-  relasjonsrolle: Familierelasjonsrolle;
   alder?: Maybe<Scalars['Int']>;
-  foreldreansvar?: Maybe<Scalars['String']>;
   fnrAnnenForelder?: Maybe<Scalars['String']>;
+  foreldreansvar?: Maybe<Scalars['String']>;
+  ident: Scalars['String'];
+  navn: Scalars['String'];
+  relasjonsrolle: Familierelasjonsrolle;
   sivilstand?: Maybe<Sivilstand>;
 };
 
@@ -45,26 +43,22 @@ export enum Familierelasjonsrolle {
   RelatertVedSivilstand = 'RELATERT_VED_SIVILSTAND'
 }
 
-export type Foedested = {
-  __typename?: 'Foedested';
-  foedested?: Maybe<Scalars['String']>;
+export type Foedsel = {
+  __typename?: 'Foedsel';
   foedeland?: Maybe<Scalars['String']>;
-};
-
-export type Foedselsdato = {
-  __typename?: 'Foedselsdato';
-  foedselsaar?: Maybe<Scalars['Int']>;
+  foedested?: Maybe<Scalars['String']>;
+  foedselsaar: Scalars['Int'];
   foedselsdato?: Maybe<Scalars['Date']>;
 };
 
 export type Folkeregisterpersonstatus = {
   __typename?: 'Folkeregisterpersonstatus';
-  kode: Scalars['String'];
-  tekst: Scalars['String'];
-  master: Scalars['String'];
-  kilde?: Maybe<Scalars['String']>;
-  fregGyldighetstidspunkt?: Maybe<Scalars['Date']>;
   erHistorisk: Scalars['Boolean'];
+  fregGyldighetstidspunkt?: Maybe<Scalars['Date']>;
+  kilde?: Maybe<Scalars['String']>;
+  kode: Scalars['String'];
+  master: Scalars['String'];
+  tekst: Scalars['String'];
 };
 
 export enum KjoennType {
@@ -76,40 +70,38 @@ export enum KjoennType {
 export type Kontaktadresse = {
   __typename?: 'Kontaktadresse';
   coAdressenavn?: Maybe<Scalars['String']>;
-  semistrukturertAdresse?: Maybe<SemistrukturertAdresseformat>;
-  strukturertAdresse?: Maybe<StrukturertAdresseformat>;
+  erHistorisk: Scalars['Boolean'];
   gyldigFraOgMed?: Maybe<Scalars['Date']>;
   gyldigTilOgMed?: Maybe<Scalars['Date']>;
-  master: Scalars['String'];
   kilde?: Maybe<Scalars['String']>;
-  erHistorisk: Scalars['Boolean'];
+  master: Scalars['String'];
+  semistrukturertAdresse?: Maybe<SemistrukturertAdresseformat>;
+  strukturertAdresse?: Maybe<StrukturertAdresseformat>;
 };
-
 
 export type Navn = {
   __typename?: 'Navn';
+  etternavn: Scalars['String'];
   fornavn: Scalars['String'];
   mellomnavn?: Maybe<Scalars['String']>;
-  etternavn: Scalars['String'];
 };
 
 export type Oppholdsadresse = {
   __typename?: 'Oppholdsadresse';
-  coAdressenavn?: Maybe<Scalars['String']>;
   adresse: StrukturertAdresseformat;
+  coAdressenavn?: Maybe<Scalars['String']>;
+  erHistorisk: Scalars['Boolean'];
   gyldigFraOgMed?: Maybe<Scalars['Date']>;
   gyldigTilOgMed?: Maybe<Scalars['Date']>;
-  master: Scalars['String'];
   kilde?: Maybe<Scalars['String']>;
-  erHistorisk: Scalars['Boolean'];
+  master: Scalars['String'];
 };
 
 export type Personopplysninger = {
   __typename?: 'Personopplysninger';
   bostedsadresser: Array<Bostedsadresse>;
   familiemedlemmer: Array<Familiemedlem>;
-  foedested: Foedested;
-  foedselsdato: Foedselsdato;
+  foedsel: Foedsel;
   folkeregisteridentifikator?: Maybe<Scalars['String']>;
   folkeregisterpersonstatuser: Array<Folkeregisterpersonstatus>;
   kjoenn: KjoennType;
@@ -122,18 +114,18 @@ export type Personopplysninger = {
 
 export type Query = {
   __typename?: 'Query';
-  hentSaksopplysninger: Saksopplysninger;
   hentPersonopplysninger: Personopplysninger;
-};
-
-
-export type QueryHentSaksopplysningerArgs = {
-  behandlingID: Scalars['Long'];
+  hentSaksopplysninger: Saksopplysninger;
 };
 
 
 export type QueryHentPersonopplysningerArgs = {
   ident: Scalars['String'];
+};
+
+
+export type QueryHentSaksopplysningerArgs = {
+  behandlingID: Scalars['Long'];
 };
 
 export type Saksopplysninger = {
@@ -148,41 +140,41 @@ export type SemistrukturertAdresseformat = {
   adresselinje2?: Maybe<Scalars['String']>;
   adresselinje3?: Maybe<Scalars['String']>;
   adresselinje4?: Maybe<Scalars['String']>;
+  land: Scalars['String'];
   postnummer?: Maybe<Scalars['String']>;
   poststed?: Maybe<Scalars['String']>;
-  land: Scalars['String'];
 };
 
 export type Sivilstand = {
   __typename?: 'Sivilstand';
-  type: Scalars['String'];
-  relatertVedSivilstand?: Maybe<Scalars['String']>;
-  gyldigFraOgMed?: Maybe<Scalars['Date']>;
   bekreftelsesdato?: Maybe<Scalars['Date']>;
-  master: Scalars['String'];
-  kilde?: Maybe<Scalars['String']>;
   erHistorisk: Scalars['Boolean'];
+  gyldigFraOgMed?: Maybe<Scalars['Date']>;
+  kilde?: Maybe<Scalars['String']>;
+  master: Scalars['String'];
+  relatertVedSivilstand?: Maybe<Scalars['String']>;
+  type: Scalars['String'];
 };
 
 export type Statsborgerskap = {
   __typename?: 'Statsborgerskap';
-  land: Scalars['String'];
   bekreftelsesdato?: Maybe<Scalars['Date']>;
+  erHistorisk: Scalars['Boolean'];
   gyldigFraOgMed?: Maybe<Scalars['Date']>;
   gyldigTilOgMed?: Maybe<Scalars['Date']>;
-  master: Scalars['String'];
   kilde?: Maybe<Scalars['String']>;
-  erHistorisk: Scalars['Boolean'];
+  land: Scalars['String'];
+  master: Scalars['String'];
 };
 
 export type StrukturertAdresseformat = {
   __typename?: 'StrukturertAdresseformat';
-  tilleggsnavn?: Maybe<Scalars['String']>;
   gatenavn?: Maybe<Scalars['String']>;
   husnummerEtasjeLeilighet?: Maybe<Scalars['String']>;
+  land: Scalars['String'];
   postboks?: Maybe<Scalars['String']>;
   postnummer?: Maybe<Scalars['String']>;
   poststed?: Maybe<Scalars['String']>;
   region?: Maybe<Scalars['String']>;
-  land: Scalars['String'];
+  tilleggsnavn?: Maybe<Scalars['String']>;
 };
