@@ -71,7 +71,6 @@ export function Medlemskapsperioder({
     }
 
     if (avslåtteDekninger.includes(valgtTrygdedekning) && !medlemskapsTypeErPliktig) {
-      handleChange([{ ...fields[index], innvilgelsesResultat: "AVSLAATT" }], formIsValid, index);
       return innvilgelsesResultater.filter((resultat) => resultat === "AVSLAATT");
     }
 
@@ -96,6 +95,10 @@ export function Medlemskapsperioder({
     return trygdedekninger.filter((dekninger) => GYLDIGE_TRYGDEDEKNINGER_PENSJONIST.includes(dekninger));
   };
 
+  const oppdaterPeriode = (index: number, oppdatertField: any) => {
+    handleChange([...fields.slice(0, index), oppdatertField, ...fields.slice(index + 1)], formIsValid, index);
+  };
+
   return (
     <div className="medlemskapsperioder">
       <div className="skjema__panel">
@@ -109,7 +112,10 @@ export function Medlemskapsperioder({
                   name={`medlemskapsperioder[${index}].fomDato`}
                   aria-label={`Fra og med periode ${index + 1}`}
                   readOnly={!redigerbart}
-                  onChange={(value) => handleChange([{ ...field, fomDato: value }], formIsValid, index)}
+                  onChange={(value) => {
+                    const oppdatertPeriode = { ...field, fomDato: value };
+                    oppdaterPeriode(index, oppdatertPeriode);
+                  }}
                 />
               </Nav.Column>
               <Nav.Column className="dato">
@@ -119,7 +125,10 @@ export function Medlemskapsperioder({
                   name={`medlemskapsperioder[${index}].tomDato`}
                   aria-label={`Til og med periode ${index + 1}`}
                   readOnly={!redigerbart || ukjentSluttdato}
-                  onChange={(value) => handleChange([{ ...field, tomDato: value }], formIsValid, index)}
+                  onChange={(value) => {
+                    const oppdatertPeriode = { ...field, tomDato: value };
+                    oppdaterPeriode(index, oppdatertPeriode);
+                  }}
                 />
               </Nav.Column>
               <Nav.Column className="trygdedekning">
@@ -135,7 +144,10 @@ export function Medlemskapsperioder({
                       control={control}
                       readOnly={!redigerbart}
                       emptyFieldDisabled={!!field.trygdedekning}
-                      onChange={(value) => handleChange([{ ...field, trygdedekning: value }], formIsValid, index)}
+                      onChange={(value) => {
+                        const oppdatertPeriode = { ...field, trygdedekning: value };
+                        oppdaterPeriode(index, oppdatertPeriode);
+                      }}
                     >
                       {filtrerteDekninger.map((dekning) => (
                         <option key={dekning} value={dekning}>
@@ -159,9 +171,10 @@ export function Medlemskapsperioder({
                       control={control}
                       readOnly={!redigerbart}
                       emptyFieldDisabled={!!field.innvilgelsesResultat}
-                      onChange={(value) =>
-                        handleChange([{ ...field, innvilgelsesResultat: value }], formIsValid, index)
-                      }
+                      onChange={(value) => {
+                        const oppdatertPeriode = { ...field, innvilgelsesResultat: value };
+                        oppdaterPeriode(index, oppdatertPeriode);
+                      }}
                     >
                       {filtrerteResultater.map((resultat) => (
                         <option key={resultat} value={resultat}>
