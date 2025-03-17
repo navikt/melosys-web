@@ -25,7 +25,11 @@ import {
 } from "../../../../../ducks/medlemskapsperioder";
 import { Skatteforholdsperioder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/skatteforholdsperioder";
 import { Inntektskilder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/inntektskilder";
-import { beregnTrygdeavgiftsperioder, erBrukerSkattepliktigIHelePerioden } from "../komponenter/utils";
+import {
+  beregnTrygdeavgiftsperioder,
+  erBrukerSkattepliktigIHelePerioden,
+  hentMedlemskapsperiodeBestemmelse,
+} from "../komponenter/utils";
 import {
   hentMedlemskapsFomTomDato,
   mapMedlemskapsperioder,
@@ -500,6 +504,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
           fields={inntektFields}
           medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!}
           skalViseErMaanedsBelopRadioGroup
+          bestemmelse={hentMedlemskapsperiodeBestemmelse(harDeltGrunnlag, medlemskapsperioder)}
         />
       )}
       {formIsValid && trygdeAvgiftSkalIkkeBetalesTilNav && (

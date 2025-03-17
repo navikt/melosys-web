@@ -29,6 +29,7 @@ import {
   erBrukerSkattepliktigIHelePerioden,
   fomTomErFyltUt,
   harInntektsKildeType,
+  hentMedlemskapsperiodeBestemmelse,
   lagInnvilgetMedlemskapsPeriode,
   mapFeilmelding,
 } from "../komponenter/utils";
@@ -57,6 +58,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
   const medlemskapsperioder =
     aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.medlemskapsperioder;
   const innvilgetMedlemskapsperiode = lagInnvilgetMedlemskapsPeriode(medlemskapsperioder);
+  const innvilgetMedlemskapsperiodeBestemmelse = hentMedlemskapsperiodeBestemmelse(false, medlemskapsperioder);
   const defaultPeriode = {
     fomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.fom),
     tomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.tom),
@@ -311,6 +313,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
               fields={inntektFields}
               medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!}
               skalViseErMaanedsBelopRadioGroup
+              bestemmelse={innvilgetMedlemskapsperiodeBestemmelse}
             />
           )}
 
