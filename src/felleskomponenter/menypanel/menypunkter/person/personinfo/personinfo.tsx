@@ -44,6 +44,7 @@ function PersonInfo({ behandlingID, ...props }: PersonInfoProps) {
   const personinfoErrorContent = <Nav.Alert variant="error">Feil ved henting av personinfo!</Nav.Alert>;
 
   const erLitenSkjerm = Utils.mediaQuery.useMediaQuery({ maxWidth: 1680 });
+  const foedsel = personinfoData?.hentSaksopplysninger.persondata.foedsel;
 
   function Fødselsnummer() {
     return (
@@ -59,7 +60,6 @@ function PersonInfo({ behandlingID, ...props }: PersonInfoProps) {
   }
 
   function Fødselsdato() {
-    const foedsel = personinfoData?.hentSaksopplysninger.persondata.foedsel;
     let fødselsdato = null;
     if (foedsel) {
       fødselsdato = foedsel.foedselsdato ? <EnkeltDato dato={foedsel.foedselsdato} /> : foedsel.foedselsaar;
@@ -77,8 +77,7 @@ function PersonInfo({ behandlingID, ...props }: PersonInfoProps) {
   }
 
   function Fødested() {
-    console.log("personinfoData Fødested", personinfoData);
-    const foedested = personinfoData?.hentSaksopplysninger.persondata.foedsel.foedested;
+    const foedested = foedsel?.foedested;
     return (
       <>
         <Nav.Column xs={erLitenSkjerm ? "4" : "6"}>
@@ -92,7 +91,7 @@ function PersonInfo({ behandlingID, ...props }: PersonInfoProps) {
   }
 
   function Fødeland() {
-    const foedeland = personinfoData?.hentSaksopplysninger.persondata.foedsel.foedeland;
+    const foedeland = foedsel?.foedeland;
     return (
       <>
         <Nav.Column xs={erLitenSkjerm ? "4" : "6"}>

@@ -3,6 +3,7 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 
 const defaultOptions = {} as const;
+
 export type HentPersonopplysningerQueryVariables = Types.Exact<{
   behandlingID: Types.Scalars['Long'];
 }>;
