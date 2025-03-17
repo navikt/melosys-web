@@ -40,6 +40,8 @@ import MedlemskapsPerioderTabell from "../komponenter/medlemskapsPerioderTabell"
 import { Aarsavregningsmeldinger } from "../komponenter/aarsavregningsmeldinger";
 import { Medlemskapsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 
+const { SKATTEPLIKTIG, IKKE_SKATTEPLIKTIG } = MKV.Koder.skatteplikttype;
+
 const { DELVIS_INNVILGET, INNVILGET } = MKV.Koder.innvilgelsesResultat;
 
 const DEFAULT_MEDLEMSKAPSPERIODE = {
@@ -195,7 +197,8 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
     watch,
     setValue,
     trigger,
-    formState: { isValid: formIsValid },
+    clearErrors,
+    formState: { isValid: formIsValid, errors: formErrors },
   } = useForm({
     resolver: yupResolver(aarsavregningUtenEllerDeltGrunnlagSchema),
     context: {
@@ -229,6 +232,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
     append: inntektAppend,
     remove: inntektRemove,
     update: inntektUpdate,
+    replace: inntektReplace,
   } = useFieldArray<FieldArrayProps, "inntektskilder", "id">({ control, name: "inntektskilder" });
 
   const formValues = watch();
@@ -246,6 +250,10 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
       });
     }
   }, [formIsValid]);
+
+  useEffect(() => {
+    console.log("formerrors: ", formErrors);
+  }, [formValues]);
 
   const lagreMedlemskapsperiode = async (medlemskapsperiode: Medlemskapsperiode) => {
     // TODO: Fjern unødvendig lagring/oppretting av medlemskapsperioder som er identiske til eksisterende perioder på behandlingsresultat)
@@ -408,6 +416,11 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
   }, [stegErGyldig]);
 
   const bekreftOnClick = () => {
+    console.log("formIsValid", formIsValid);
+    console.log("formErrors", formErrors);
+    console.log("aarsavregningResponse?.nyttGrunnlag", aarsavregningResponse?.nyttGrunnlag);
+    console.log("feilmelding: ", feilmelding);
+    console.log("stegergyldig: ", stegErGyldig);
     if (!harValidertSkjema) {
       trigger();
       setHarValidertSkjema(true);
@@ -422,6 +435,20 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
 
   const forskuddsvisFakturertTrygdeavgift =
     (aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift?.totalAvgift ?? 0) > 0;
+
+  const skatteforholdOnChange = (values: any) => {
+    console.log("endring av skatteforhold:: ", values);
+    if (values == SKATTEPLIKTIG) {
+      console.log("endring");
+      inntektReplace([]);
+    }
+    if (values == IKKE_SKATTEPLIKTIG) {
+      inntektReplace([{ ...defaultPeriode }]);
+      trigger(inntektskilder.name).then(() => {
+        clearErrors(inntektskilder.name);
+      });
+    }
+  };
 
   return (
     <div className="vurderingAarsavregning">
@@ -482,11 +509,12 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
       <Skatteforholdsperioder
         defaultPeriode={defaultPeriode}
         formValues={formValues}
-        redigerbart={redigerbart}
+        redigerbart={redigerbart && !beregningPaagar}
         remove={skattRemove}
         append={skattAppend}
         control={control}
         fields={skattFields}
+        onChange={skatteforholdOnChange}
       />
       {!trygdeAvgiftSkalIkkeBetalesTilNav && (
         <Inntektskilder

@@ -78,15 +78,11 @@ const åpenTomTest = {
 };
 
 const kreverInntektskilder = (medlemskapsTypeErPliktig, options) => {
-  if (options?.parent?.skatteforholdsperioder) {
-    const inntektkilderErTom = options.parent.inntektskilder.length === 0;
-    return !(
-      medlemskapsTypeErPliktig &&
-      erBrukerSkattepliktigIHelePerioden(options.parent.skatteforholdsperioder) &&
-      inntektkilderErTom
-    );
-  }
-  return true;
+  const skatteforholdsperioder = options?.parent?.skatteforholdsperioder;
+  if (!skatteforholdsperioder) return true;
+  if (erBrukerSkattepliktigIHelePerioden(skatteforholdsperioder)) return false;
+
+  return !(medlemskapsTypeErPliktig && (options?.parent?.inntektskilder?.length ?? 0) === 0);
 };
 
 const aarsavregningUtenEllerDeltGrunnlagSchema = object().shape({

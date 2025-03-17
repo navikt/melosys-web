@@ -20,16 +20,18 @@ interface SkatteforholdsperioderProps {
   append: (skatteforhold: Skatteforhold) => void;
   redigerbart: boolean;
   defaultPeriode?: { fomDato: string; tomDato: string };
+  onChange: (values: any) => void;
 }
 
 export function Skatteforholdsperioder({
   formValues,
+  fields,
   control,
   remove,
   append,
   redigerbart,
   defaultPeriode,
-  fields,
+  onChange,
 }: SkatteforholdsperioderProps) {
   return (
     <div className="perioder">
@@ -59,6 +61,7 @@ export function Skatteforholdsperioder({
                 readOnly={!redigerbart}
                 control={control}
                 className="skatteforholdsperioder-radio-group"
+                onChange={onChange}
               >
                 <Stack gap="6" direction={{ xs: "column", sm: "row" }} wrap={false}>
                   <Nav.Radio value={MKV.Koder.skatteplikttype.SKATTEPLIKTIG}>Ja</Nav.Radio>
