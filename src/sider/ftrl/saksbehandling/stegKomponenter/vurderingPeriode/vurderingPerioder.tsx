@@ -94,7 +94,7 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   const {
     control,
     watch,
-    formState: { isValid: formIsValid, isSubmitting, isDirty, isValidating },
+    formState: { isValid: formIsValid },
     trigger,
   } = useForm({
     resolver: yupResolver(vurderingPerioderSchema),
@@ -105,7 +105,6 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     } as FieldValue<FormValuesProps>,
   });
   const {
-    fields,
     append,
     remove,
     update,
