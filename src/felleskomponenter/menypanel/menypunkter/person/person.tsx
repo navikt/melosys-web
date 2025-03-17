@@ -66,7 +66,6 @@ export function Person({
         <>
           <Nav.Row>
             <Nav.Column className="etikett__container">
-              <Tags.FraBruker />
               {visArbeidsforholdRolleEtiketter && <Tags.BrukersDel style={{ marginLeft: "0.3em" }} />}
             </Nav.Column>
           </Nav.Row>
@@ -76,9 +75,6 @@ export function Person({
             </Nav.Column>
           </Nav.Row>
           <Nav.Row>
-            <Nav.Column xs="6">
-              <FoedestedOgLand redigerbart={redigerbart} />
-            </Nav.Column>
             <Nav.Column xs="6">
               <UtenlandskIdent redigerbart={redigerbart} />
             </Nav.Column>

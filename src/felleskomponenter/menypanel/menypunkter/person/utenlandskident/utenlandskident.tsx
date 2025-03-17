@@ -52,7 +52,19 @@ function InnerUtenlandskIdComponent(props: InnerUtenlandskIdComponentProps) {
         </div>
       )}
       redigeringUtfortRender={() => <UtfyltUtenlandskIdent utenlandskeIdenter={felter} />}
-      ingenDataRender={(apneRedigering) => null}
+      ingenDataRender={(apneRedigering) =>
+        redigerbart ? (
+          <Mui.Lenkeknapp
+            onClick={() => {
+              apneRedigering();
+              leggTilTomtFelt();
+            }}
+            ikon={Ikoner.Add}
+          >
+            Legg til ID-nummer
+          </Mui.Lenkeknapp>
+        ) : null
+      }
     />
   );
 }
