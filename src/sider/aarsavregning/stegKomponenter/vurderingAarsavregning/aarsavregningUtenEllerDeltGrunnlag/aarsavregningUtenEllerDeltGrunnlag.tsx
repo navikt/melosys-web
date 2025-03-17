@@ -251,10 +251,6 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
     }
   }, [formIsValid]);
 
-  useEffect(() => {
-    console.log("formerrors: ", formErrors);
-  }, [formValues]);
-
   const lagreMedlemskapsperiode = async (medlemskapsperiode: Medlemskapsperiode) => {
     // TODO: Fjern unødvendig lagring/oppretting av medlemskapsperioder som er identiske til eksisterende perioder på behandlingsresultat)
     const periodeRequest = {
@@ -416,11 +412,6 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
   }, [stegErGyldig]);
 
   const bekreftOnClick = () => {
-    console.log("formIsValid", formIsValid);
-    console.log("formErrors", formErrors);
-    console.log("aarsavregningResponse?.nyttGrunnlag", aarsavregningResponse?.nyttGrunnlag);
-    console.log("feilmelding: ", feilmelding);
-    console.log("stegergyldig: ", stegErGyldig);
     if (!harValidertSkjema) {
       trigger();
       setHarValidertSkjema(true);
@@ -436,17 +427,17 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
   const forskuddsvisFakturertTrygdeavgift =
     (aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift?.totalAvgift ?? 0) > 0;
 
-  const skatteforholdOnChange = (values: any) => {
-    console.log("endring av skatteforhold:: ", values);
-    if (values == SKATTEPLIKTIG) {
-      console.log("endring");
+  const skatteforholdOnChange = async (values: any) => {
+    if (values === SKATTEPLIKTIG) {
       inntektReplace([]);
     }
-    if (values == IKKE_SKATTEPLIKTIG) {
+
+    if (values === IKKE_SKATTEPLIKTIG) {
       inntektReplace([{ ...defaultPeriode }]);
-      trigger(inntektskilder.name).then(() => {
-        clearErrors(inntektskilder.name);
-      });
+
+      // TODO få det her til å fungere
+      await trigger(inntektskilder.name);
+      clearErrors(inntektskilder.name);
     }
   };
 
