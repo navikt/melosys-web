@@ -39,9 +39,8 @@ import aarsavregningUtenEllerDeltGrunnlagSchema from "./aarsavregningUtenEllerDe
 import MedlemskapsPerioderTabell from "../komponenter/medlemskapsPerioderTabell";
 import { Aarsavregningsmeldinger } from "../komponenter/aarsavregningsmeldinger";
 import { Medlemskapsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
-import { BOOLSK_STRING } from "../../../../../constants";
 
-const { SKATTEPLIKTIG, IKKE_SKATTEPLIKTIG } = MKV.Koder.skatteplikttype;
+const { SKATTEPLIKTIG } = MKV.Koder.skatteplikttype;
 
 const { DELVIS_INNVILGET, INNVILGET } = MKV.Koder.innvilgelsesResultat;
 
