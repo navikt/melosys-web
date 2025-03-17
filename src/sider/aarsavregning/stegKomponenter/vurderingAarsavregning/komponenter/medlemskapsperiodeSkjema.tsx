@@ -58,7 +58,6 @@ export function MedlemskapsperiodeSkjema({
     }
   }, [field.bestemmelse]);
 
-  // @ts-expect-error Fiks typing for FormValuesProps
   const erPeriodeFraGrunnlag = !formValues.medlemskapsperioder[index].redigerbar;
   const kanSlettePeriode = redigerbart && formValues.medlemskapsperioder.length !== 1;
   const tilOgMedDatoForrigePeriode =
