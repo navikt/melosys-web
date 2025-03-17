@@ -39,6 +39,7 @@ import aarsavregningUtenEllerDeltGrunnlagSchema from "./aarsavregningUtenEllerDe
 import MedlemskapsPerioderTabell from "../komponenter/medlemskapsPerioderTabell";
 import { Aarsavregningsmeldinger } from "../komponenter/aarsavregningsmeldinger";
 import { Medlemskapsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import { BOOLSK_STRING } from "../../../../../constants";
 
 const { SKATTEPLIKTIG, IKKE_SKATTEPLIKTIG } = MKV.Koder.skatteplikttype;
 
@@ -430,14 +431,6 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
   const skatteforholdOnChange = async (values: any) => {
     if (values === SKATTEPLIKTIG) {
       inntektReplace([]);
-    }
-
-    if (values === IKKE_SKATTEPLIKTIG) {
-      inntektReplace([{ ...defaultPeriode }]);
-
-      // TODO få det her til å fungere
-      await trigger(inntektskilder.name);
-      clearErrors(inntektskilder.name);
     }
   };
 
