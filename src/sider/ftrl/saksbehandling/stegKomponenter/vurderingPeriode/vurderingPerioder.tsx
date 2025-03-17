@@ -94,11 +94,11 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   const {
     control,
     watch,
-    formState: { isValid: formIsValid },
+    formState: { isValid: formIsValid, isSubmitting, isDirty, isValidating },
     trigger,
   } = useForm({
     resolver: yupResolver(vurderingPerioderSchema),
-    mode: "all",
+    mode: "onChange",
     context: { soknadsperiode, soknadsland },
     defaultValues: {
       medlemskapsperioder: mapInitialMedlemskapsperioder(lagredeMedlemskapsperioder),
