@@ -10,7 +10,6 @@ import Adresser from "./adresser";
 import AnnenAdresse from "./annenadresse";
 import UtenlandskIdent from "./utenlandskident";
 import StatsborgerskapTableContainer from "./statsborgerskapTable";
-import FoedestedOgLand from "./foedestedogland";
 
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 
