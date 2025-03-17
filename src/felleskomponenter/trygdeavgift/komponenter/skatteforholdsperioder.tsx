@@ -20,7 +20,7 @@ interface SkatteforholdsperioderProps {
   append: (skatteforhold: Skatteforhold) => void;
   redigerbart: boolean;
   defaultPeriode?: { fomDato: string; tomDato: string };
-  onChange: (values: any) => void;
+  onChange?: (values: any) => void;
 }
 
 export function Skatteforholdsperioder({
