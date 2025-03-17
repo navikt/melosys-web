@@ -95,10 +95,6 @@ export function Medlemskapsperioder({
     return trygdedekninger.filter((dekninger) => GYLDIGE_TRYGDEDEKNINGER_PENSJONIST.includes(dekninger));
   };
 
-  const oppdaterPeriode = (index: number, oppdatertField: any) => {
-    handleChange([...fields.slice(0, index), oppdatertField, ...fields.slice(index + 1)], formIsValid, index);
-  };
-
   return (
     <div className="medlemskapsperioder">
       <div className="skjema__panel">
@@ -114,7 +110,11 @@ export function Medlemskapsperioder({
                   readOnly={!redigerbart}
                   onChange={(value) => {
                     const oppdatertPeriode = { ...field, fomDato: value };
-                    oppdaterPeriode(index, oppdatertPeriode);
+                    handleChange(
+                      [...fields.slice(0, index), oppdatertPeriode, ...fields.slice(index + 1)],
+                      formIsValid,
+                      index,
+                    );
                   }}
                 />
               </Nav.Column>
@@ -127,7 +127,11 @@ export function Medlemskapsperioder({
                   readOnly={!redigerbart || ukjentSluttdato}
                   onChange={(value) => {
                     const oppdatertPeriode = { ...field, tomDato: value };
-                    oppdaterPeriode(index, oppdatertPeriode);
+                    handleChange(
+                      [...fields.slice(0, index), oppdatertPeriode, ...fields.slice(index + 1)],
+                      formIsValid,
+                      index,
+                    );
                   }}
                 />
               </Nav.Column>
@@ -146,7 +150,11 @@ export function Medlemskapsperioder({
                       emptyFieldDisabled={!!field.trygdedekning}
                       onChange={(value) => {
                         const oppdatertPeriode = { ...field, trygdedekning: value };
-                        oppdaterPeriode(index, oppdatertPeriode);
+                        handleChange(
+                          [...fields.slice(0, index), oppdatertPeriode, ...fields.slice(index + 1)],
+                          formIsValid,
+                          index,
+                        );
                       }}
                     >
                       {filtrerteDekninger.map((dekning) => (
@@ -173,7 +181,11 @@ export function Medlemskapsperioder({
                       emptyFieldDisabled={!!field.innvilgelsesResultat}
                       onChange={(value) => {
                         const oppdatertPeriode = { ...field, innvilgelsesResultat: value };
-                        oppdaterPeriode(index, oppdatertPeriode);
+                        handleChange(
+                          [...fields.slice(0, index), oppdatertPeriode, ...fields.slice(index + 1)],
+                          formIsValid,
+                          index,
+                        );
                       }}
                     >
                       {filtrerteResultater.map((resultat) => (
