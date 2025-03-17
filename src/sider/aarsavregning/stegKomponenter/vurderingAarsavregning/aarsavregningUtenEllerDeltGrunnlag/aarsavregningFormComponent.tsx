@@ -42,21 +42,6 @@ import { isValid } from "date-fns";
 
 const { DELVIS_INNVILGET, INNVILGET } = MKV.Koder.innvilgelsesResultat;
 
-const harIdentiskMedlemskapsperiodeLagret = (
-  periodeRequest: OppdaterMedlemskapsperiode,
-  periodeId: number,
-  lagredeMedlemskapsperioder: Medlemskapsperiode[],
-) => {
-  return lagredeMedlemskapsperioder.some(
-    (lagretPeriode) =>
-      lagretPeriode.id === periodeId &&
-      lagretPeriode.fomDato === periodeRequest.fomDato &&
-      lagretPeriode.tomDato === periodeRequest.tomDato &&
-      lagretPeriode.bestemmelse === periodeRequest.bestemmelse &&
-      lagretPeriode.trygdedekning === periodeRequest.trygdedekning,
-  );
-};
-
 export function AarsavregningFormComponent({
   initialData,
   bekreft,
@@ -161,9 +146,7 @@ export function AarsavregningFormComponent({
     }
   }, [formIsValid]);
 
-  // Initiell beregning
   useEffect(() => {
-    console.log("Oppdater context"); // TODO: Fjern senere
     const oppdaterMedlemskapsperiodeContext = () => {
       const gyldigePerioderMedDatoer = medlemskapsperioder.filter(
         (periode: Medlemskapsperiode) => periode.fomDato && periode.tomDato,
@@ -185,20 +168,6 @@ export function AarsavregningFormComponent({
 
     oppdaterMedlemskapsperiodeContext();
   }, [medlemskapsperioder]);
-
-  const hentFeilmeldinger = (errors: any): string[] => {
-    if (!errors) return [];
-
-    if (typeof errors === "string") return [errors];
-
-    if (errors.message) return [errors.message];
-
-    if (Array.isArray(errors)) {
-      return errors.flatMap((err: any) => hentFeilmeldinger(err));
-    }
-
-    return Object.values(errors).flatMap((err: any) => hentFeilmeldinger(err));
-  };
 
   useEffect(() => {
     // Kun vis komplekse feil hvis det ikke finnes andre feil i medlemskapsperioder
@@ -229,7 +198,11 @@ export function AarsavregningFormComponent({
     }
   }, [aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift]);
 
-  const lagreMedlemskapsperiodeHvisEndret = async (medlemskapsperiode: Medlemskapsperiode) => {
+  const lagreMedlemskapsperiodeHvisEndret = async (
+    medlemskapsperiode: Medlemskapsperiode,
+    index: number,
+    previousMedlemskapsperioder: Medlemskapsperiode[],
+  ) => {
     const periodeRequest = {
       fomDato: Utils.dato.formatterDatoTilISO(medlemskapsperiode.fomDato, "") as string,
       tomDato: Utils.dato.formatterDatoTilISO(medlemskapsperiode.tomDato, "") as string,
@@ -238,60 +211,70 @@ export function AarsavregningFormComponent({
       innvilgelsesResultat: MKV.Koder.innvilgelsesResultat.INNVILGET,
     } as OppdaterMedlemskapsperiode;
 
-    if (!harIdentiskMedlemskapsperiodeLagret(periodeRequest, medlemskapsperiode.id, lagredeMedlemskapsperioder)) {
-      const response: any = await (medlemskapsperiode.id === ULAGRET_MEDLEMSKAPSPERIODE_ID
-        ? Api.MedlemAvFolketrygden.Medlemskapsperioder.opprettMedlemskapsperioder(behandlingID, periodeRequest)
-        : Api.MedlemAvFolketrygden.Medlemskapsperioder.oppdaterMedlemskapsperioder(
-            behandlingID,
-            medlemskapsperiode.id,
-            periodeRequest,
-          ));
+    const previousPerioderIndex = previousMedlemskapsperioder[index];
 
-      if (response.type === medlemskapsperioderTypes.FEILET) {
-        setMedlemskapsperiodeFeilmelding(response?.data?.data?.message);
+    if (
+      previousPerioderIndex.id === ULAGRET_MEDLEMSKAPSPERIODE_ID ||
+      previousPerioderIndex.fomDato !== medlemskapsperiode.fomDato ||
+      previousPerioderIndex.tomDato !== medlemskapsperiode.tomDato ||
+      previousPerioderIndex.bestemmelse !== medlemskapsperiode.bestemmelse ||
+      previousPerioderIndex.trygdedekning !== medlemskapsperiode.trygdedekning
+    ) {
+      try {
+        const response: any = await (medlemskapsperiode.id === ULAGRET_MEDLEMSKAPSPERIODE_ID
+          ? Api.MedlemAvFolketrygden.Medlemskapsperioder.opprettMedlemskapsperioder(behandlingID, periodeRequest)
+          : Api.MedlemAvFolketrygden.Medlemskapsperioder.oppdaterMedlemskapsperioder(
+              behandlingID,
+              medlemskapsperiode.id,
+              periodeRequest,
+            ));
+
+        return response;
+      } catch (error) {
+        setMedlemskapsperiodeFeilmelding("Feil ved lagring av medlemskapsperiode");
+        console.error("Feil ved lagring av medlemskapsperiode:", error);
+        return undefined;
       }
-      return response;
     }
 
     return undefined;
   };
 
   const debouncedLagreMedlemskapsperioder = useCallback(
-    Utils._debounce(async (medlemskapsperioderFormValues) => {
+    Utils._debounce(async (medlemskapsperioderFormValues, previousMedlemskapsperioder) => {
       if (!isDirty) return;
 
       const erMedlemskapsperioderGyldig = await trigger("medlemskapsperioder");
       if (erMedlemskapsperioderGyldig) {
-        const innvilgedeMedlemskapsperioder2: any = [];
+        const nyeLagredeMedlemskapsperioder: { formValuesIndex: number; lagretPeriode: Medlemskapsperiode }[] = [];
         // eslint-disable-next-line no-restricted-syntax
         for (const [index, periode] of medlemskapsperioderFormValues.entries()) {
-          const lagretPeriode = await lagreMedlemskapsperiodeHvisEndret(periode);
-          if (lagretPeriode) innvilgedeMedlemskapsperioder2.push([{ formValuesIndex: index, ...lagretPeriode }]);
+          const lagretPeriode = await lagreMedlemskapsperiodeHvisEndret(periode, index, previousMedlemskapsperioder);
+          if (lagretPeriode)
+            nyeLagredeMedlemskapsperioder.push({
+              formValuesIndex: index,
+              lagretPeriode: lagretPeriode as Medlemskapsperiode,
+            });
         }
 
-        Api.MedlemAvFolketrygden.Medlemskapsperioder.hentMedlemskapsperioder(behandlingID).then(
-          (medlemskapsperioderRes) => {
-            const innvilgedeMedlemskapsperioder = medlemskapsperioderRes.filter(
-              (periode: Medlemskapsperiode) =>
-                periode.innvilgelsesResultat === INNVILGET || periode.innvilgelsesResultat === DELVIS_INNVILGET,
-            );
-
-            setValue(
-              "medlemskapsperioder",
-              mapMedlemskapsperioder(
-                innvilgedeMedlemskapsperioder,
-                aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag,
-              ),
-            );
-
-            setLagredeMedlemskapsperioder(innvilgedeMedlemskapsperioder);
-          },
-        );
-
-        if (initiellBeregningUtført && (await trigger())) {
+        if (nyeLagredeMedlemskapsperioder.length > 0) {
           setFeilmelding(undefined);
           const freshFormValues = watch();
+          await trigger();
           await handleBeregnTrygdeavgiftsperioder(freshFormValues);
+
+          setValue(
+            "medlemskapsperioder",
+            medlemskapsperioderFormValues.map((periode: any, index: number) => {
+              const lagretPeriodeMedID = nyeLagredeMedlemskapsperioder.find(
+                (backendPeriode: any) => backendPeriode.formValuesIndex === index,
+              );
+              if (lagretPeriodeMedID) {
+                return { ...periode, id: lagretPeriodeMedID.lagretPeriode.id };
+              }
+              return periode;
+            }),
+          );
         }
       }
     }, 1000),
@@ -359,7 +342,7 @@ export function AarsavregningFormComponent({
 
         console.log("Lagrer medlemskapsperioder nå.");
 
-        debouncedLagreMedlemskapsperioder(medlemskapsperioder);
+        debouncedLagreMedlemskapsperioder(medlemskapsperioder, prevMedlemskapsperioder.current);
         prevMedlemskapsperioder.current = medlemskapsperioder;
       }
     };
@@ -376,18 +359,23 @@ export function AarsavregningFormComponent({
   const slettMedlemskapsperiode = async (index: number) => {
     const periode = medlemskapsperioder[index];
 
-    if (periode.id === ULAGRET_MEDLEMSKAPSPERIODE_ID) {
-      medlemskapsperioderRemove(index);
-    } else {
-      Api.MedlemAvFolketrygden.Medlemskapsperioder.slettMedlemskapsperiode(behandlingID, periode.id).then(() => {
+    try {
+      if (periode.id === ULAGRET_MEDLEMSKAPSPERIODE_ID) {
+        medlemskapsperioderRemove(index);
+      } else {
+        await Api.MedlemAvFolketrygden.Medlemskapsperioder.slettMedlemskapsperiode(behandlingID, periode.id);
         medlemskapsperioderRemove(index);
         dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(behandlingID));
-      });
-    }
-    if (await trigger()) {
-      setFeilmelding(undefined);
-      const freshFormValues = watch();
-      await handleBeregnTrygdeavgiftsperioder(freshFormValues);
+      }
+
+      if (await trigger()) {
+        setFeilmelding(undefined);
+        const freshFormValues = watch();
+        await handleBeregnTrygdeavgiftsperioder(freshFormValues);
+      }
+    } catch (error) {
+      console.error("Feil ved sletting av medlemskapsperiode:", error);
+      setFeilmelding("Feil ved sletting av medlemskapsperiode");
     }
   };
 
@@ -432,8 +420,10 @@ export function AarsavregningFormComponent({
   }, [totaltForskuddsvisFakturert, isDirty]);
 
   const handleBeregnTrygdeavgiftsperioder = useCallback(
+    // TODO: Clear state i frontend, nå som vi har slettet alt i backend uansett.
     async (formVerdier: FieldValue<FormValuesProps>) => {
       setBeregningPaagar(true);
+      console.log("Beregner trygdeavgiftsperioder", formVerdier);
       await beregnTrygdeavgiftsperioder(formVerdier, {
         behandlingID,
         medlemskapsTypeErPliktig,

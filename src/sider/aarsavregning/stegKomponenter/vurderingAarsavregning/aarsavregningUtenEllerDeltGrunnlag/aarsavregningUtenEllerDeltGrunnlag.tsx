@@ -55,7 +55,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
     valgtÅr?: number;
     aarsavregningResponse?: AarsavregningResponse;
     lagredeMedlemskapsperioder: Medlemskapsperiode[];
-    bestemmelser: any[];
+    bestemmelser: string[];
     formDefaultValues: FieldValue<AarsavregningFormValuesProps>;
   }>({
     lagredeMedlemskapsperioder: [],
@@ -91,7 +91,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
   };
 
   useEffect(() => {
-    const loadInitialData = async () => {
+    const lastInitiellData = async () => {
       if (!behandlingID) {
         setIsLoading(false);
         return;
@@ -131,6 +131,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
             (periode) =>
               periode.innvilgelsesResultat === INNVILGET || periode.innvilgelsesResultat === DELVIS_INNVILGET,
           );
+
           // eslint-disable-next-line no-restricted-syntax
           for (const periode of innvilgedeMedlemskapsperioderFraGrunnlag) {
             await opprettMedlemskapsperiode(periode);
@@ -138,6 +139,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
 
           const oppdaterteMedlemskapsperioder =
             await Api.MedlemAvFolketrygden.Medlemskapsperioder.hentMedlemskapsperioder(behandlingID);
+
           const oppdaterteInnvilgedeMedlemskapsperioder = oppdaterteMedlemskapsperioder.filter(
             (periode: Medlemskapsperiode) =>
               periode.innvilgelsesResultat === INNVILGET || periode.innvilgelsesResultat === DELVIS_INNVILGET,
@@ -148,7 +150,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
             aarsavregningRes.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag,
           );
         } else {
-          // Vanlig flyt
+          // Vanlig innlastning. Når det ikke er delt grunnlag initielt.
           mappedMedlemskapsperioder = mapMedlemskapsperioder(
             innvilgedeMedlemskapsperioder,
             aarsavregningRes?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag,
@@ -186,12 +188,12 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
 
         setIsLoading(false);
       } catch (error) {
-        console.error("Initiell mapping feilet:", error);
+        console.error("Feil ved initiell lasting:", error);
         setIsLoading(false);
       }
     };
 
-    loadInitialData();
+    lastInitiellData();
   }, [behandlingID, harDeltGrunnlag]);
 
   if (isLoading) {
