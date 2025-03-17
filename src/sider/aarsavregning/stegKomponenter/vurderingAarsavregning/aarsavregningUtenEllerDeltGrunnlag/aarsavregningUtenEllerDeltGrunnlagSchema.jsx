@@ -16,7 +16,7 @@ const {
   PENSJON_UFØRETRYGD,
   PENSJON_UFØRETRYGD_KILDESKATT,
 } = MKV.Koder.inntektskildetype;
-const UTENFOR_MEDLEMSKAPSPERIODEN = { melding: "Utenfor medl.periode" };
+const UTENFOR_MEDLEMSKAPSPERIODEN = { melding: "Utenfor medlemskapsperiode" };
 
 export const arbAvgBetalesKreves = (kildetype, medlemskapsTypeErPliktig) =>
   !medlemskapsTypeErPliktig && kildetype !== MISJONÆR;
@@ -89,6 +89,123 @@ const kreverInntektskilder = (medlemskapsTypeErPliktig, options) => {
   return true;
 };
 
+const harUgyldigeDatoer = (perioder) => {
+  return perioder.some(
+    (periode) =>
+      !periode.fomDato ||
+      !periode.tomDato ||
+      !Utils.dato.vaskInputDato(periode.fomDato) ||
+      !Utils.dato.vaskInputDato(periode.tomDato),
+  );
+};
+
+// Ny validering for medlemskapsperioder - sjekker at perioder ikke overlapper
+const medlemskapsperioderOverlappTest = {
+  name: "medlemskapsperioderOverlapp",
+  message: "Medlemskapsperiodene kan ikke overlappe hverandre",
+  test: (perioder) => {
+    if (!perioder || perioder.length <= 1) {
+      return true;
+    }
+
+    if (harUgyldigeDatoer(perioder)) {
+      return true;
+    }
+
+    const gyldigePerioder = perioder.filter((periode) => periode.fomDato && periode.tomDato);
+    if (gyldigePerioder.length <= 1) {
+      return true;
+    }
+
+    const sortertePerioder = [...gyldigePerioder].sort(Utils.dato.sorterEtterNorskFomDato);
+
+    // eslint-disable-next-line no-plusplus
+    for (let i = 0; i < sortertePerioder.length; i++) {
+      // eslint-disable-next-line no-plusplus
+      for (let j = i + 1; j < sortertePerioder.length; j++) {
+        if (
+          Utils.dato.perioderOverlapper(
+            sortertePerioder[i].fomDato,
+            sortertePerioder[i].tomDato,
+            sortertePerioder[j].fomDato,
+            sortertePerioder[j].tomDato,
+          )
+        ) {
+          return false;
+        }
+      }
+    }
+
+    return true;
+  },
+};
+
+// Ny validering for kontinuerlige medlemskapsperioder - sikrer at det ikke er opphold
+const medlemskapsperioderKontinuerligTest = {
+  name: "medlemskapsperioderKontinuerlig",
+  message: "Medlemskapsperiodene må danne en sammenhengende periode uten opphold",
+  test: (perioder) => {
+    if (!perioder || perioder.length <= 1) {
+      return true;
+    }
+
+    if (harUgyldigeDatoer(perioder)) {
+      return true;
+    }
+
+    const gyldigePerioder = perioder.filter((periode) => periode.fomDato && periode.tomDato);
+    if (gyldigePerioder.length <= 1) {
+      return true;
+    }
+
+    const sortertePerioder = [...gyldigePerioder].sort(Utils.dato.sorterEtterNorskFomDato);
+
+    // eslint-disable-next-line no-plusplus
+    for (let i = 1; i < sortertePerioder.length; i++) {
+      const forrigePeriode = sortertePerioder[i - 1];
+      const currentPeriode = sortertePerioder[i];
+
+      const forrigeTomDate = Utils.dato.norskStringTilDate(forrigePeriode.tomDato);
+      const currentFomDate = Utils.dato.norskStringTilDate(currentPeriode.fomDato);
+
+      if (!forrigeTomDate || !currentFomDate) {
+        return false;
+      }
+
+      // Sjekk for opphold - neste periode må starte dagen etter forrige sluttet
+      const nesteDag = new Date(forrigeTomDate);
+      nesteDag.setDate(nesteDag.getDate() + 1);
+
+      if (currentFomDate.getTime() !== nesteDag.getTime()) {
+        return false;
+      }
+    }
+
+    return true;
+  },
+};
+
+// Ny validering for lik bestemmelse
+const medlemskapsperioderSammeBestemmelseTest = {
+  name: "medlemskapsperioderSammeBestemmelse",
+  message: "Alle medlemskapsperioder må ha samme bestemmelse",
+  test: (perioder) => {
+    if (!perioder || perioder.length <= 1) {
+      return true;
+    }
+
+    if (harUgyldigeDatoer(perioder)) {
+      return true;
+    }
+
+    const bestemmelseSet = new Set(
+      perioder.filter((periode) => periode.bestemmelse).map((periode) => periode.bestemmelse),
+    );
+
+    return bestemmelseSet.size <= 1;
+  },
+};
+
 const aarsavregningUtenEllerDeltGrunnlagSchema = object().shape({
   medlemskapsperioder: array()
     .min(1, "Minst en medlemskapsperiode")
@@ -104,7 +221,10 @@ const aarsavregningUtenEllerDeltGrunnlagSchema = object().shape({
         trygdedekning: string().required(),
         bestemmelse: string().required(),
       }),
-    ),
+    )
+    .test(medlemskapsperioderOverlappTest)
+    .test(medlemskapsperioderKontinuerligTest)
+    .test(medlemskapsperioderSammeBestemmelseTest),
   totaltForskuddsvisFakturert: string().nullable().required(MAA_FYLLES_UT),
   skatteforholdsperioder: array()
     .min(1, "Minst en skatteforholdsperiode")
