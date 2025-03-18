@@ -155,8 +155,7 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(datalastingOperations.lastInnSaksopplysninger(sakstype, saksnummer, behandlingID)),
   oppfriskSaksopplysninger: (behandlingID, inkluderSiste5Aar) =>
     saksopplysningerOperations.oppfrisk(behandlingID, inkluderSiste5Aar),
-  hentNyeSaksopplysninger: (behandlingID, inkluderSiste5Aar) =>
-    saksopplysningerOperations.hentNyeSaksopplysninger(behandlingID, inkluderSiste5Aar),
+  hentNyeSaksopplysninger: (behandlingID) => saksopplysningerOperations.hentNyeSaksopplysninger(behandlingID),
   leggTilBehandlingOppfriskes: (behandlingID) => dispatch(modalerOperations.leggTilBehandlingOppfriskes(behandlingID)),
   fjernBehandlingOppfriskes: () => dispatch(modalerOperations.fjernBehandlingOppfriskes()),
   skjulOppfriskDialogHandle: () => dispatch(modalerOperations.skjulOppfrisk()),
