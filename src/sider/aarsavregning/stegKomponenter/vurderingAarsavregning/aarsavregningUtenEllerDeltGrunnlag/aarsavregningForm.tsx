@@ -243,8 +243,8 @@ export function AarsavregningForm({
           );
           if (lagretPeriode)
             nyeLagredeMedlemskapsperioder.push({
+              ...(lagretPeriode as Medlemskapsperiode),
               formValuesIndex: index,
-              ...lagretPeriode as Medlemskapsperiode,
             });
         }
 
