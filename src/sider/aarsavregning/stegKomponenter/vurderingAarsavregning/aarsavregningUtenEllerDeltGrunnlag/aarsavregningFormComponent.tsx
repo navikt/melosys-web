@@ -1,5 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useCallback, useEffect, useRef, useState, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { FieldValue, useFieldArray, useForm, useWatch } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
@@ -212,6 +212,20 @@ export function AarsavregningFormComponent({
     return undefined;
   };
 
+  const handleBeregnTrygdeavgiftsperioder = useCallback(
+    async (formVerdier: FieldValue<FormValuesProps>) => {
+      setBeregningPaagar(true);
+      await beregnTrygdeavgiftsperioder(formVerdier, {
+        behandlingID,
+        medlemskapsTypeErPliktig: medlemskapstypeErPliktig,
+        setFeilmelding,
+        setAarsavregningResponse,
+      });
+      setBeregningPaagar(false);
+    },
+    [medlemskapstypeErPliktig, setFeilmelding, setAarsavregningResponse],
+  );
+
   const debouncedLagreMedlemskapsperioder = useCallback(
     Utils._debounce(async (medlemskapsperioderFormValues, tidligereMedlemskapsperiodeListe) => {
       const erMedlemskapsperioderGyldig = await trigger("medlemskapsperioder");
@@ -259,7 +273,7 @@ export function AarsavregningFormComponent({
         }
       }
     }, 1000),
-    [initiellBeregningUtført],
+    [trigger, watch, handleBeregnTrygdeavgiftsperioder, setValue],
   );
 
   const medlemskapsperioderHarBrukerendringer = (
@@ -331,9 +345,7 @@ export function AarsavregningFormComponent({
   }, [medlemskapsperioder]);
 
   const leggTilDefaultMedlemskapsperiode = () => {
-    const nyMedlemskapsperiode = DEFAULT_MEDLEMSKAPSPERIODE;
-    // @ts-expect-error generisk beskrivelse
-    medlemskapsperioderAppend(nyMedlemskapsperiode);
+    medlemskapsperioderAppend(DEFAULT_MEDLEMSKAPSPERIODE);
   };
 
   const slettMedlemskapsperiode = async (indeks: number) => {
@@ -378,14 +390,14 @@ export function AarsavregningFormComponent({
         handleOppdaterTotaltForskuddsvisFakturert(behandlingID, request, aarsavregningID),
       1000,
     ),
-    [behandlingID, aarsavregningID],
+    [aarsavregningID],
   );
 
   useEffect(() => {
     if (
       redigerbart &&
       forrigeTotaltForskuddsvisFakturert.current !== totaltForskuddsvisFakturert &&
-      (totaltForskuddsvisFakturert || totaltForskuddsvisFakturert === undefined) &&
+      (totaltForskuddsvisFakturert || totaltForskuddsvisFakturert === "") &&
       totaltForskuddsvisFakturert !== aarsavregningResponse?.avregning?.tidligereFakturertBeloepAvgiftssystem
     ) {
       debouncedOppdaterTotaltForskuddsvisFakturert({
@@ -397,20 +409,6 @@ export function AarsavregningFormComponent({
 
     forrigeTotaltForskuddsvisFakturert.current = totaltForskuddsvisFakturert;
   }, [totaltForskuddsvisFakturert]);
-
-  const handleBeregnTrygdeavgiftsperioder = useCallback(
-    async (formVerdier: FieldValue<FormValuesProps>) => {
-      setBeregningPaagar(true);
-      await beregnTrygdeavgiftsperioder(formVerdier, {
-        behandlingID,
-        medlemskapsTypeErPliktig: medlemskapstypeErPliktig,
-        setFeilmelding,
-        setAarsavregningResponse,
-      });
-      setBeregningPaagar(false);
-    },
-    [behandlingID, medlemskapstypeErPliktig, setFeilmelding, setAarsavregningResponse, aarsavregningID],
-  );
 
   const debounceBeregnTrygdeavgiftsperioder = useCallback(
     Utils._debounce((formVerdier) => handleBeregnTrygdeavgiftsperioder(formVerdier), 1000),

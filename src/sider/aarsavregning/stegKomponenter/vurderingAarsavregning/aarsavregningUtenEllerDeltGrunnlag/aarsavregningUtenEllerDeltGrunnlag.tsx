@@ -28,6 +28,7 @@ export const DEFAULT_MEDLEMSKAPSPERIODE = {
   fomDato: "",
   tomDato: "",
   innvilgelsesResultat: "",
+  medlemskapstype: "",
   trygdedekning: "",
   bestemmelse: "",
   redigerbar: true,
