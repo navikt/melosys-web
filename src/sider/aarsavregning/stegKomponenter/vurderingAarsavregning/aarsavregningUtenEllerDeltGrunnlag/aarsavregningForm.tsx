@@ -217,7 +217,7 @@ export function AarsavregningForm({
       setBeregningPaagar(true);
       await beregnTrygdeavgiftsperioder(formVerdier, {
         behandlingID,
-        medlemskapsTypeErPliktig: medlemskapstypeErPliktig,
+        medlemskapstypeErPliktig,
         setFeilmelding,
         setAarsavregningResponse,
       });
