@@ -197,8 +197,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
     watch,
     setValue,
     trigger,
-    clearErrors,
-    formState: { isValid: formIsValid, errors: formErrors },
+    formState: { isValid: formIsValid },
   } = useForm({
     resolver: yupResolver(aarsavregningUtenEllerDeltGrunnlagSchema),
     context: {
