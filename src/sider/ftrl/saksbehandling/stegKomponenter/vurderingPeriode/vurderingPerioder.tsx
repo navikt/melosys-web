@@ -98,14 +98,13 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     trigger,
   } = useForm({
     resolver: yupResolver(vurderingPerioderSchema),
-    mode: "all",
+    mode: "onChange",
     context: { soknadsperiode, soknadsland },
     defaultValues: {
       medlemskapsperioder: mapInitialMedlemskapsperioder(lagredeMedlemskapsperioder),
     } as FieldValue<FormValuesProps>,
   });
   const {
-    fields,
     append,
     remove,
     update,

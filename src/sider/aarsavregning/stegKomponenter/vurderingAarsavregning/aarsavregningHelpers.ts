@@ -28,7 +28,6 @@ export const mapTilMedlemskapsperiodeFieldProps = (
     tomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.tomDato),
     feil: undefined,
     redigerbar: !medlemskapsperiodeErFraGrunnlag,
-    id: medlemskapsperiode.id,
   };
 };
 
