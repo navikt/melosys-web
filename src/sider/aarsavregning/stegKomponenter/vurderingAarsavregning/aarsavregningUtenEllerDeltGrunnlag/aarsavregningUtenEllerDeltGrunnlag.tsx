@@ -12,7 +12,7 @@ import MKV from "../../../../../melosyskodeverk";
 import { OK } from "../../../../../ducks/aarsavregning/types";
 
 import { medlemskapsperioderTypes } from "../../../../../ducks/medlemskapsperioder";
-import { mapMedlemskapsperioder, mapTilInntektskilderProps, mapTilSkatteforholdProps } from "../aarsavregningHelpers";
+import { mapTilInntektskilderProps, mapTilSkatteforholdProps } from "../aarsavregningHelpers";
 import {
   Medlemskapsperiode,
   OppdaterMedlemskapsperiode,
@@ -33,6 +33,30 @@ export const DEFAULT_MEDLEMSKAPSPERIODE = {
   bestemmelse: "",
   redigerbar: true,
 };
+
+const mapTilMedlemskapsperiodeFieldProps = (
+  medlemskapsperiode: any,
+  tidligereGrunnlag?: Api.Aarsavregning.Trygdeavgiftsgrunnlag,
+) => {
+  const grunnlagsperioder = tidligereGrunnlag?.medlemskapsperioder;
+
+  const medlemskapsperiodeErFraGrunnlag = grunnlagsperioder?.some(
+    (periode) => periode.fomDato === medlemskapsperiode.fomDato && periode.tomDato === medlemskapsperiode.tomDato,
+  );
+
+  return {
+    ...medlemskapsperiode,
+    fomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.fomDato),
+    tomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.tomDato),
+    feil: undefined,
+    redigerbar: !medlemskapsperiodeErFraGrunnlag,
+  };
+};
+
+const mapMedlemskapsperioder = (perioder: any[], tidligereGrunnlag?: Api.Aarsavregning.Trygdeavgiftsgrunnlag) =>
+  [...perioder]
+    .sort((a, b) => Utils.dato.sorterEtterISOFomDato(a, b))
+    .map((periode) => mapTilMedlemskapsperiodeFieldProps(periode, tidligereGrunnlag));
 
 interface Props {
   bekreft: () => void;
@@ -189,6 +213,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
 
         setIsLoading(false);
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.error("Feil ved initiell lasting:", error);
         setIsLoading(false);
       }
