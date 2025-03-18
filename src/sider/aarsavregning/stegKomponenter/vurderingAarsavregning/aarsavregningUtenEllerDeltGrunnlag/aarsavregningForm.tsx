@@ -230,7 +230,10 @@ export function AarsavregningForm({
     Utils._debounce(async (medlemskapsperioderFormValues, tidligereMedlemskapsperiodeListe) => {
       const erMedlemskapsperioderGyldig = await trigger("medlemskapsperioder");
       if (erMedlemskapsperioderGyldig) {
-        const nyeLagredeMedlemskapsperioder: { formValuesIndex: number; lagretPeriode: Medlemskapsperiode }[] = [];
+        interface LagredeMedlemskapsperioder extends Medlemskapsperiode {
+          formValuesIndex: number;
+        }
+        const nyeLagredeMedlemskapsperioder: LagredeMedlemskapsperioder[] = [];
         // eslint-disable-next-line no-restricted-syntax
         for (const [index, periode] of medlemskapsperioderFormValues.entries()) {
           const lagretPeriode = await lagreMedlemskapsperiodeHvisEndret(
@@ -241,7 +244,7 @@ export function AarsavregningForm({
           if (lagretPeriode)
             nyeLagredeMedlemskapsperioder.push({
               formValuesIndex: index,
-              lagretPeriode: lagretPeriode as Medlemskapsperiode,
+              ...lagretPeriode as Medlemskapsperiode,
             });
         }
 
@@ -263,8 +266,8 @@ export function AarsavregningForm({
               if (lagretPeriodeMedID) {
                 return {
                   ...periode,
-                  medlemskapstype: lagretPeriodeMedID.lagretPeriode.medlemskapstype,
-                  id: lagretPeriodeMedID.lagretPeriode.id,
+                  medlemskapstype: lagretPeriodeMedID.medlemskapstype,
+                  id: lagretPeriodeMedID.id,
                 };
               }
               return periode;
@@ -284,7 +287,6 @@ export function AarsavregningForm({
       return false;
     }
 
-    // Kun plukk ut de spesifikke feltene vi bryr oss om
     const nåværendeListeMedRelevanteFelter = medlemskapsperioderNå.map(
       ({ fomDato, tomDato, bestemmelse, trygdedekning }) => ({
         fomDato,
@@ -303,13 +305,11 @@ export function AarsavregningForm({
       }),
     );
 
-    // Sorter arrayene etter fomDato
     const sorterEtterFomDato = (a: any, b: any) => {
       if (!a.fomDato || !b.fomDato) return 0;
       return a.fomDato.localeCompare(b.fomDato);
     };
 
-    // Bruker Lodash's deep comparison kun for de spesifikke feltene
     return !Utils._isEqual(
       nåværendeListeMedRelevanteFelter.sort(sorterEtterFomDato),
       forrigeListeMedRelevanteFelter.sort(sorterEtterFomDato),
@@ -348,15 +348,15 @@ export function AarsavregningForm({
     medlemskapsperioderAppend(DEFAULT_MEDLEMSKAPSPERIODE);
   };
 
-  const slettMedlemskapsperiode = async (indeks: number) => {
-    const periode = medlemskapsperioder[indeks];
+  const slettMedlemskapsperiode = async (index: number) => {
+    const periode = medlemskapsperioder[index];
 
     try {
       if (periode.id === ULAGRET_MEDLEMSKAPSPERIODE_ID) {
-        medlemskapsperioderRemove(indeks);
+        medlemskapsperioderRemove(index);
       } else {
         await Api.MedlemAvFolketrygden.Medlemskapsperioder.slettMedlemskapsperiode(behandlingID, periode.id);
-        medlemskapsperioderRemove(indeks);
+        medlemskapsperioderRemove(index);
         dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(behandlingID));
       }
 
