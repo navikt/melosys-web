@@ -40,8 +40,6 @@ import MedlemskapsPerioderTabell from "../komponenter/medlemskapsPerioderTabell"
 import { Aarsavregningsmeldinger } from "../komponenter/aarsavregningsmeldinger";
 import { Medlemskapsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 
-const { SKATTEPLIKTIG } = MKV.Koder.skatteplikttype;
-
 const { DELVIS_INNVILGET, INNVILGET } = MKV.Koder.innvilgelsesResultat;
 
 const DEFAULT_MEDLEMSKAPSPERIODE = {
@@ -239,6 +237,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
   const medlemskapsperioderPrevLength = useRef(medlemskapsperioder.length);
   const totaltForskuddsvisFakturert = useWatch({ control, name: "totaltForskuddsvisFakturert" });
   const skatteforholdsperioder = useWatch({ control, name: "skatteforholdsperioder" });
+  const skatteforholdsperioderTemp = watch("skatteforholdsperioder");
   const inntektskilder = useWatch({ control, name: "inntektskilder" });
 
   // Initiell beregning
@@ -427,7 +426,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
     (aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift?.totalAvgift ?? 0) > 0;
 
   const skatteforholdOnChange = async (values: any) => {
-    if (values === SKATTEPLIKTIG) {
+    if (erBrukerSkattepliktigIHelePerioden(watch("skatteforholdsperioder"))) {
       inntektReplace([]);
     }
   };
