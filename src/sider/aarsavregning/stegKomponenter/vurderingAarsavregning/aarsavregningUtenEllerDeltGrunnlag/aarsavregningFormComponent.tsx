@@ -60,8 +60,15 @@ export function AarsavregningFormComponent({
 
   const [initiellBeregningUtført, setInitiellBeregningUtført] = useState(false);
   const [harValidertSkjema, setHarValidertSkjema] = useState(false);
+
+  // TODO: Siden vi ikke bruker dette i context av yup, kan de konverteres til useMemo lenger nede.
   const [medlemskapsperiodeContext, setMedlemskapsperiodeContext] = useState(
     hentMedlemskapsFomTomDato(initialData.lagredeMedlemskapsperioder),
+  );
+  const [medlemskapstypeErPliktigContext, setMedlemskapstypeErPliktigContext] = useState(
+    initialData.lagredeMedlemskapsperioder?.every(
+      (periode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG,
+    ),
   );
 
   // Redux selectors
@@ -70,25 +77,25 @@ export function AarsavregningFormComponent({
   const aarsavregningID = useSelector(behandlingsresultatSelectors.ÅrsavregningIDSelector);
   const dispatch = useDispatch();
 
-  const medlemskapsTypeErPliktig = initialData.lagredeMedlemskapsperioder?.every(
-    (periode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG,
-  ); //TODO: sett på riktig måte
-
   const defaultPeriode = {
     fomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsperiodeContext?.fom),
     tomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsperiodeContext?.tom),
   };
+
+  // Log initial data when component mounts
+  useEffect(() => {
+    console.log("Initial data:", initialData);
+  }, [initialData]);
 
   const {
     control,
     watch,
     setValue,
     trigger,
-    formState: { isValid: formIsValid, isDirty, errors: formErrors },
+    formState: { isValid: formIsValid, errors: formErrors },
   } = useForm({
     resolver: yupResolver(aarsavregningUtenEllerDeltGrunnlagSchema),
     context: {
-      medlemskapsperiode: medlemskapsperiodeContext,
       aar: initialData.valgtÅr,
     },
     mode: "onChange",
@@ -136,27 +143,25 @@ export function AarsavregningFormComponent({
     }
   }, [formIsValid]);
 
+  // Setter context for medlemskapsperiode og medlemskapstypeErPliktig, som brukes i Schema-validering
   useEffect(() => {
-    const oppdaterMedlemskapsperiodeContext = () => {
-      const gyldigePerioderMedDatoer = medlemskapsperioder.filter(
-        (periode: Medlemskapsperiode) => periode.fomDato && periode.tomDato,
-      );
+    const gyldigePerioderMedDatoer = medlemskapsperioder.filter(
+      (periode: Medlemskapsperiode) => periode.fomDato && periode.tomDato,
+    );
+    if (gyldigePerioderMedDatoer.length === 0) {
+      return;
+    }
+    const sortertePerioder = [...gyldigePerioderMedDatoer].sort(Utils.dato.sorterEtterNorskFomDato);
+    const nyMedlemskapsperiodeContext = hentMedlemskapsFomTomDato(sortertePerioder);
+    setMedlemskapsperiodeContext(nyMedlemskapsperiodeContext);
 
-      if (gyldigePerioderMedDatoer.length === 0) {
-        return;
-      }
+    const nyMedlemskapstypeErPliktigContext = sortertePerioder
+      .filter((periode: Medlemskapsperiode) => periode.id !== ULAGRET_MEDLEMSKAPSPERIODE_ID)
+      .every((periode: Medlemskapsperiode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG);
+    setMedlemskapstypeErPliktigContext(nyMedlemskapstypeErPliktigContext);
 
-      const sortertePerioder = [...gyldigePerioderMedDatoer].sort(Utils.dato.sorterEtterNorskFomDato);
-
-      const nyContext = {
-        fom: Utils.dato.formatterDatoTilISO(sortertePerioder[0].fomDato),
-        tom: Utils.dato.formatterDatoTilISO(sortertePerioder[sortertePerioder.length - 1].tomDato),
-      };
-
-      setMedlemskapsperiodeContext(nyContext);
-    };
-
-    oppdaterMedlemskapsperiodeContext();
+    console.log("nyMedlemskapstypeErPliktigContext", nyMedlemskapstypeErPliktigContext);
+    console.log("nyMedlemskapsperiodeContext", nyMedlemskapsperiodeContext);
   }, [medlemskapsperioder]);
 
   useEffect(() => {
@@ -232,8 +237,6 @@ export function AarsavregningFormComponent({
 
   const debouncedLagreMedlemskapsperioder = useCallback(
     Utils._debounce(async (medlemskapsperioderFormValues, previousMedlemskapsperioder) => {
-      if (!isDirty) return;
-
       const erMedlemskapsperioderGyldig = await trigger("medlemskapsperioder");
       if (erMedlemskapsperioderGyldig) {
         const nyeLagredeMedlemskapsperioder: { formValuesIndex: number; lagretPeriode: Medlemskapsperiode }[] = [];
@@ -250,8 +253,12 @@ export function AarsavregningFormComponent({
         if (nyeLagredeMedlemskapsperioder.length > 0) {
           setFeilmelding(undefined);
           const freshFormValues = watch();
-          await trigger();
-          await handleBeregnTrygdeavgiftsperioder(freshFormValues);
+          // Revalider så feilmeldinger forsvinner før beregning
+          const erGyldigSkjema = await trigger();
+          if (erGyldigSkjema) {
+            await handleBeregnTrygdeavgiftsperioder(freshFormValues);
+          }
+          console.log("context fra lagring", medlemskapsperiodeContext, medlemskapstypeErPliktigContext);
 
           setValue(
             "medlemskapsperioder",
@@ -260,7 +267,11 @@ export function AarsavregningFormComponent({
                 (backendPeriode: any) => backendPeriode.formValuesIndex === index,
               );
               if (lagretPeriodeMedID) {
-                return { ...periode, id: lagretPeriodeMedID.lagretPeriode.id };
+                return {
+                  ...periode,
+                  medlemskapstype: lagretPeriodeMedID.lagretPeriode.medlemskapstype,
+                  id: lagretPeriodeMedID.lagretPeriode.id,
+                };
               }
               return periode;
             }),
@@ -268,7 +279,7 @@ export function AarsavregningFormComponent({
         }
       }
     }, 1000),
-    [initiellBeregningUtført, isDirty],
+    [initiellBeregningUtført],
   );
 
   const medlemskapsperioderHarBrukerendringer = (currentArray: any[], prevArray: any[]) => {
@@ -306,7 +317,7 @@ export function AarsavregningFormComponent({
 
   useEffect(() => {
     const lagreMedlemskapsperioder = async () => {
-      if (redigerbart && isDirty) {
+      if (redigerbart) {
         setMedlemskapsperiodeFeilmelding(undefined);
         if (medlemskapsperioder.length !== medlemskapsperioderPrevLength.current) {
           medlemskapsperioderPrevLength.current = medlemskapsperioder.length;
@@ -338,7 +349,7 @@ export function AarsavregningFormComponent({
     };
 
     lagreMedlemskapsperioder();
-  }, [medlemskapsperioder, isDirty]);
+  }, [medlemskapsperioder]);
 
   const leggTilDefaultMedlemskapsperiode = () => {
     const nyMedlemskapsperiode = DEFAULT_MEDLEMSKAPSPERIODE;
@@ -394,9 +405,8 @@ export function AarsavregningFormComponent({
   useEffect(() => {
     if (
       redigerbart &&
-      isDirty &&
       prevTotaltForskuddsvisFakturert.current !== totaltForskuddsvisFakturert &&
-      (totaltForskuddsvisFakturert || totaltForskuddsvisFakturert === "") &&
+      (totaltForskuddsvisFakturert || totaltForskuddsvisFakturert === undefined) &&
       totaltForskuddsvisFakturert !== aarsavregningResponse?.avregning?.tidligereFakturertBeloepAvgiftssystem
     ) {
       debouncedOppdaterTotaltForskuddsvisFakturert({
@@ -407,7 +417,7 @@ export function AarsavregningFormComponent({
     }
 
     prevTotaltForskuddsvisFakturert.current = totaltForskuddsvisFakturert;
-  }, [totaltForskuddsvisFakturert, isDirty]);
+  }, [totaltForskuddsvisFakturert]);
 
   const handleBeregnTrygdeavgiftsperioder = useCallback(
     // TODO: Clear state i frontend, nå som vi har slettet alt i backend uansett.
@@ -416,13 +426,13 @@ export function AarsavregningFormComponent({
       console.log("Beregner trygdeavgiftsperioder", formVerdier);
       await beregnTrygdeavgiftsperioder(formVerdier, {
         behandlingID,
-        medlemskapsTypeErPliktig,
+        medlemskapsTypeErPliktig: medlemskapstypeErPliktigContext,
         setFeilmelding,
         setAarsavregningResponse,
       });
       setBeregningPaagar(false);
     },
-    [behandlingID, medlemskapsTypeErPliktig, setFeilmelding, setAarsavregningResponse, aarsavregningID],
+    [behandlingID, medlemskapstypeErPliktigContext, setFeilmelding, setAarsavregningResponse, aarsavregningID],
   );
 
   const debounceBeregnTrygdeavgiftsperioder = useCallback(
@@ -431,7 +441,7 @@ export function AarsavregningFormComponent({
   );
 
   useEffect(() => {
-    if (redigerbart && aarsavregningID && initiellBeregningUtført && isDirty) {
+    if (redigerbart && aarsavregningID && initiellBeregningUtført) {
       const beregnHvisSkjemaErGyldig = async () => {
         const erSkjemaGyldig = await trigger();
         if (erSkjemaGyldig) {
@@ -440,9 +450,10 @@ export function AarsavregningFormComponent({
           debounceBeregnTrygdeavgiftsperioder(formValues);
         }
       };
+
       beregnHvisSkjemaErGyldig();
     }
-  }, [inntektskilder, skatteforholdsperioder, isDirty]);
+  }, [inntektskilder, skatteforholdsperioder]);
 
   const stegErGyldig = Boolean(formIsValid && aarsavregningResponse?.nyttGrunnlag && feilmelding === undefined);
 
@@ -461,7 +472,7 @@ export function AarsavregningFormComponent({
   };
 
   const trygdeAvgiftSkalIkkeBetalesTilNav =
-    medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder);
+    medlemskapstypeErPliktigContext && erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder);
   const forskuddsvisFakturertTrygdeavgift =
     (aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift?.totalAvgift ?? 0) > 0;
 
@@ -486,7 +497,7 @@ export function AarsavregningFormComponent({
 
           <BeregnetTrygdeavgiftDetaljer
             grunnlag={aarsavregningResponse?.tidligereGrunnlagsopplysninger}
-            medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!}
+            medlemskapsTypeErPliktig={medlemskapstypeErPliktigContext}
             tittel="Tidligere beregnet trygdeavgift"
           />
         </>
@@ -543,7 +554,7 @@ export function AarsavregningFormComponent({
           append={inntektAppend}
           control={control}
           fields={inntektFields}
-          medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!}
+          medlemskapsTypeErPliktig={medlemskapstypeErPliktigContext}
           skalViseErMaanedsBelopRadioGroup
         />
       )}
@@ -562,7 +573,7 @@ export function AarsavregningFormComponent({
       {formIsValid && !beregningPaagar && !feilmelding && aarsavregningResponse?.nyttGrunnlag && (
         <BeregnetTrygdeavgiftDetaljer
           grunnlag={aarsavregningResponse.nyttGrunnlag}
-          medlemskapsTypeErPliktig={medlemskapsTypeErPliktig!}
+          medlemskapsTypeErPliktig={medlemskapstypeErPliktigContext}
           tittel="Endelig beregnet trygdeavgift"
         />
       )}
