@@ -242,7 +242,7 @@ const aarsavregningUtenEllerDeltGrunnlagSchema = object().shape({
           .test(erInnenforValgtAarTest)
           .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
           .erEtterDatofelt("fomDato"),
-        skatteplikttype: string().defined().required(MAA_FYLLES_UT),
+        skatteplikttype: string().required(MAA_FYLLES_UT),
       }),
     ),
   inntektskilder: lazy((_value, options) => {
