@@ -313,22 +313,14 @@ export function AarsavregningFormComponent({
 
         if (!medlemskapsperioderHarBrukerendringer(medlemskapsperioder, forrigeMedlemskapsperioder.current)) {
           forrigeMedlemskapsperioder.current = medlemskapsperioder;
-          console.log("Ingen brukerendringer, ingen lagring");
           return;
         }
 
         const erGyldigSkjema = await trigger("medlemskapsperioder");
 
         if (!erGyldigSkjema) {
-          console.log("Skjemaet er ikke gyldig, ingen lagring");
           return;
         }
-
-        const randomTall = Math.floor(Math.random() * 1000);
-        console.log("forrige medlemskapsperioder ", randomTall.toString(), forrigeMedlemskapsperioder.current);
-        console.log("nåværende medlemskapsperioder ", randomTall.toString(), medlemskapsperioder);
-
-        console.log("Lagrer medlemskapsperioder nå.");
 
         debouncedLagreMedlemskapsperioder(medlemskapsperioder, forrigeMedlemskapsperioder.current);
         forrigeMedlemskapsperioder.current = medlemskapsperioder;
@@ -407,10 +399,8 @@ export function AarsavregningFormComponent({
   }, [totaltForskuddsvisFakturert]);
 
   const handleBeregnTrygdeavgiftsperioder = useCallback(
-    // TODO: Clear state i frontend, nå som vi har slettet alt i backend uansett.
     async (formVerdier: FieldValue<FormValuesProps>) => {
       setBeregningPaagar(true);
-      console.log("Beregner trygdeavgiftsperioder", formVerdier);
       await beregnTrygdeavgiftsperioder(formVerdier, {
         behandlingID,
         medlemskapsTypeErPliktig: medlemskapstypeErPliktig,
