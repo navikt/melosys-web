@@ -1,46 +1,38 @@
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { FieldValue, useFieldArray, useForm, useWatch } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
+import { behandlingsresultatSelectors } from "../../../../../ducks/behandlingsresultat";
+import { medlemskapsperioderOperations } from "../../../../../ducks/medlemskapsperioder";
+import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
+import { Inntektskilder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/inntektskilder";
+import { Skatteforholdsperioder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/skatteforholdsperioder";
+import { FieldArrayProps, FormValuesProps } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
+import MKV from "../../../../../melosyskodeverk";
+import * as Nav from "../../../../../navFrontend";
+import * as Api from "../../../../../services/api";
 import { AarsavregningResponse } from "../../../../../services/modules/aarsavregning/aarsavregning";
 import {
   Medlemskapsperiode,
   OppdaterMedlemskapsperiode,
 } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
-import { FieldValue, useFieldArray, useForm, useWatch } from "react-hook-form";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
-import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
-import { behandlingsresultatSelectors } from "../../../../../ducks/behandlingsresultat";
-import MKV from "../../../../../melosyskodeverk";
-import {
-  hentMedlemskapsFomTomDato,
-  mapMedlemskapsperioder,
-  mapTilMedlemskapsperiodeFieldProps,
-} from "../aarsavregningHelpers";
 import * as Utils from "../../../../../utils";
-import { yupResolver } from "@hookform/resolvers/yup";
-import aarsavregningUtenEllerDeltGrunnlagSchema from "./aarsavregningUtenEllerDeltGrunnlagSchema";
-import { FieldArrayProps, FormValuesProps } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
-import * as Api from "../../../../../services/api";
-import { medlemskapsperioderOperations, medlemskapsperioderTypes } from "../../../../../ducks/medlemskapsperioder";
-import { beregnTrygdeavgiftsperioder, erBrukerSkattepliktigIHelePerioden } from "../komponenter/utils";
-import MedlemskapsPerioderTabell from "../komponenter/medlemskapsPerioderTabell";
-import TidligereGrunnlagsoversikt from "../komponenter/tidligereGrunnlagsoversikt";
+import { hentMedlemskapsFomTomDato } from "../aarsavregningHelpers";
 import { Aarsavregningsmeldinger } from "../komponenter/aarsavregningsmeldinger";
 import { BeregnetTrygdeavgiftDetaljer } from "../komponenter/beregnetTrygdeavgiftDetaljer";
-import { TidligereFakturertIAvgiftssystemetInput } from "../komponenter/tidligereFakturertIAvgiftssystemetInput";
-import * as Nav from "../../../../../navFrontend";
+import MedlemskapsPerioderTabell from "../komponenter/medlemskapsPerioderTabell";
 import { MedlemskapsperiodeSkjema } from "../komponenter/medlemskapsperiodeSkjema";
-import { Skatteforholdsperioder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/skatteforholdsperioder";
-import { Inntektskilder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/inntektskilder";
 import { SumArsavregningTabell } from "../komponenter/sumArsavregningTabell";
+import { TidligereFakturertIAvgiftssystemetInput } from "../komponenter/tidligereFakturertIAvgiftssystemetInput";
+import TidligereGrunnlagsoversikt from "../komponenter/tidligereGrunnlagsoversikt";
+import { beregnTrygdeavgiftsperioder, erBrukerSkattepliktigIHelePerioden } from "../komponenter/utils";
 import {
   AarsavregningFormValuesProps,
   DEFAULT_MEDLEMSKAPSPERIODE,
   ULAGRET_MEDLEMSKAPSPERIODE_ID,
 } from "./aarsavregningUtenEllerDeltGrunnlag";
-import lagretFullmektig from "../../../../../felleskomponenter/menypanel/menypunkter/fullmektig/lagretFullmektig";
-import { isValid } from "date-fns";
-
-const { DELVIS_INNVILGET, INNVILGET } = MKV.Koder.innvilgelsesResultat;
+import aarsavregningUtenEllerDeltGrunnlagSchema from "./aarsavregningUtenEllerDeltGrunnlagSchema";
 
 export function AarsavregningFormComponent({
   initialData,
@@ -65,9 +57,7 @@ export function AarsavregningFormComponent({
   const [aarsavregningResponse, setAarsavregningResponse] = useState<AarsavregningResponse | undefined>(
     initialData.aarsavregningResponse,
   );
-  const [lagredeMedlemskapsperioder, setLagredeMedlemskapsperioder] = useState<Medlemskapsperiode[]>(
-    initialData.lagredeMedlemskapsperioder,
-  );
+
   const [initiellBeregningUtført, setInitiellBeregningUtført] = useState(false);
   const [harValidertSkjema, setHarValidertSkjema] = useState(false);
   const [medlemskapsperiodeContext, setMedlemskapsperiodeContext] = useState(
@@ -80,9 +70,9 @@ export function AarsavregningFormComponent({
   const aarsavregningID = useSelector(behandlingsresultatSelectors.ÅrsavregningIDSelector);
   const dispatch = useDispatch();
 
-  const medlemskapsTypeErPliktig = lagredeMedlemskapsperioder?.every(
+  const medlemskapsTypeErPliktig = initialData.lagredeMedlemskapsperioder?.every(
     (periode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG,
-  );
+  ); //TODO: sett på riktig måte
 
   const defaultPeriode = {
     fomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsperiodeContext?.fom),
