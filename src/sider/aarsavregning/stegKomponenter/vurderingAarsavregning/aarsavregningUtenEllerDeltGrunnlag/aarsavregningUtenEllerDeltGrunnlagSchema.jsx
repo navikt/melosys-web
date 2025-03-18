@@ -246,7 +246,7 @@ const aarsavregningUtenEllerDeltGrunnlagSchema = object().shape({
     )
     .test(medlemskapsperioderOverlappTest)
     .test(medlemskapsperioderKontinuerligTest)
-    .test(medlemskapsperioderSammeBestemmelseTest), // TODO: Hvis delt grunnlag, så kan man ha ulike bestemmelser. Egen commit.
+    .test(medlemskapsperioderSammeBestemmelseTest),
   totaltForskuddsvisFakturert: string().nullable().required(MAA_FYLLES_UT),
   skatteforholdsperioder: array()
     .min(1, "Minst en skatteforholdsperiode")
