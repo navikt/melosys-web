@@ -51,7 +51,7 @@ export interface AarsavregningFormValuesProps extends FormValuesProps {
 
 export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, harDeltGrunnlag }: Props) {
   const [isLoading, setIsLoading] = useState(true);
-  const [initialData, setInitialData] = useState<{
+  const [initiellData, setInitiellData] = useState<{
     valgtÅr?: number;
     aarsavregningResponse?: AarsavregningResponse;
     lagredeMedlemskapsperioder: Medlemskapsperiode[];
@@ -178,7 +178,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
           ),
         };
 
-        setInitialData({
+        setInitiellData({
           valgtÅr: aarsavregningRes?.aar,
           aarsavregningResponse: aarsavregningRes,
           lagredeMedlemskapsperioder: innvilgedeMedlemskapsperioder,
@@ -202,7 +202,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
 
   return (
     <AarsavregningFormComponent
-      initialData={initialData}
+      initiellData={initiellData}
       bekreft={bekreft}
       oppdaterStatus={oppdaterStatus}
       harDeltGrunnlag={harDeltGrunnlag}
