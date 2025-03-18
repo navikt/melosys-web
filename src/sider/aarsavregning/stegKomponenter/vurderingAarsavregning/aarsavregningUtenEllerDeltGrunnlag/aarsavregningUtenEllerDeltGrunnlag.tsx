@@ -17,7 +17,7 @@ import {
   Medlemskapsperiode,
   OppdaterMedlemskapsperiode,
 } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
-import { AarsavregningFormComponent } from "./aarsavregningFormComponent";
+import { AarsavregningForm } from "./aarsavregningForm";
 
 const { DELVIS_INNVILGET, INNVILGET } = MKV.Koder.innvilgelsesResultat;
 
@@ -227,7 +227,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
   }
 
   return (
-    <AarsavregningFormComponent
+    <AarsavregningForm
       initiellData={initiellData}
       bekreft={bekreft}
       oppdaterStatus={oppdaterStatus}
