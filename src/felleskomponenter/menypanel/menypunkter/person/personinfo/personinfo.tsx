@@ -3,7 +3,6 @@ import * as Nav from "../../../../../navFrontend";
 import * as Utils from "../../../../../utils";
 
 import bem from "../../../../../bemUtils";
-import EnkeltDato from "../../../../enkeltDato/enkeltDato";
 import Sivilstand from "./sivilstand/sivilstand";
 import Personstatus from "./personstatus/personstatus";
 import Fødsel from "./fødsel/fødsel";
