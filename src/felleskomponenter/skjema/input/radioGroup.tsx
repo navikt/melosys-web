@@ -1,5 +1,4 @@
 import { Field } from "redux-form";
-
 import * as Nav from "../../../navFrontend";
 import * as Utils from "../../../utils";
 import { ReactNode } from "react";
@@ -10,12 +9,8 @@ import { ReactNode } from "react";
  * radioknapp-valg som urørt.
  */
 const normaliserReduxBoolean = (valg: any) => {
-  if (valg === "true") {
-    return true;
-  }
-  if (valg === "false") {
-    return false;
-  }
+  if (valg === "true") return true;
+  if (valg === "false") return false;
   return valg;
 };
 
@@ -35,13 +30,14 @@ function InnerRadioGroup({
   size,
   children,
   readOnly,
+  error: propError,
 }: InnerRadioGroupProps) {
   const innerChange = (value: any) => {
     if (onChange) onChange(value);
     input.onChange(value);
   };
 
-  const error = meta.error && meta.touched && !meta.active ? meta.error : undefined;
+  const error = propError || (meta.touched && !meta.active ? meta.error : undefined);
 
   return (
     <Nav.RadioGroup
@@ -70,15 +66,16 @@ interface RadioGroupProps {
   children: ReactNode;
   hideLegend?: boolean;
   readOnly?: boolean;
+  error?: string;
 }
 
-function RadioGroup({ ...props }: RadioGroupProps) {
+function RadioGroup({ error, ...props }: RadioGroupProps) {
   return (
     <Field
       name={props.name}
       id={Utils._uuid()}
       component={InnerRadioGroup}
-      props={props}
+      props={{ ...props, error }}
       normalize={normaliserReduxBoolean}
     />
   );

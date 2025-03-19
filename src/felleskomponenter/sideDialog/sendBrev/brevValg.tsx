@@ -9,13 +9,23 @@ import { SendBrevFormValues } from "./types";
 
 interface BrevValgProps {
   formValues: SendBrevFormValues;
+  formErrors: Record<string, any>;
   width: ColumnWidth;
   redigerbart: boolean;
   changeField: (felt: string, data: any) => void;
   finnValgAlternativ: (felt: Api.DokumenterV2.Felt) => Api.DokumenterV2.ValgAlternativ | undefined;
+  visFeil?: boolean;
 }
 
-function BrevValg({ formValues, width, redigerbart, changeField, finnValgAlternativ }: BrevValgProps) {
+function BrevValg({
+  formValues,
+  formErrors,
+  width,
+  redigerbart,
+  changeField,
+  finnValgAlternativ,
+  visFeil,
+}: BrevValgProps) {
   const skalViseBrevFelt = (felt: Api.DokumenterV2.Felt) => felt.valg === null || finnValgAlternativ(felt)?.visFelt;
   const erstattFritekstValgMedBrevFelt = (felt: Api.DokumenterV2.Felt) =>
     felt.valg!.valgAlternativer.length === 1 &&
@@ -27,7 +37,15 @@ function BrevValg({ formValues, width, redigerbart, changeField, finnValgAlterna
         <Fragment key={felt.kode}>
           {felt.valg &&
             (erstattFritekstValgMedBrevFelt(felt) ? (
-              <BrevFelt felt={felt} visFeltBeskrivelse width={width} redigerbart={redigerbart} />
+              <BrevFelt
+                felt={felt}
+                visFeltBeskrivelse
+                width={width}
+                redigerbart={redigerbart}
+                formErrors={formErrors}
+                formValues={formValues}
+                visFeil={visFeil}
+              />
             ) : (
               <Nav.Row>
                 <Nav.Column xs={width}>
@@ -38,13 +56,24 @@ function BrevValg({ formValues, width, redigerbart, changeField, finnValgAlterna
                     changeField={changeField}
                     beskrivelse={felt.beskrivelse}
                     hjelpetekst={felt.hjelpetekst}
+                    formErrors={formErrors}
+                    formValues={formValues}
+                    visFeil={visFeil}
                   />
                 </Nav.Column>
               </Nav.Row>
             ))}
 
           {skalViseBrevFelt(felt) && (
-            <BrevFelt felt={felt} visFeltBeskrivelse={felt.valg === null} width={width} redigerbart={redigerbart} />
+            <BrevFelt
+              felt={felt}
+              visFeltBeskrivelse={felt.valg === null}
+              width={width}
+              redigerbart={redigerbart}
+              formErrors={formErrors}
+              formValues={formValues}
+              visFeil={visFeil}
+            />
           )}
         </Fragment>
       ))}
