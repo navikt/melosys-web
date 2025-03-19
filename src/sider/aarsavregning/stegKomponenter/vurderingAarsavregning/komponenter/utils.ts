@@ -57,16 +57,16 @@ export function beregnTrygdeavgiftsperioder(
   formVerdier: FieldValue<FormValuesProps>,
   options: {
     behandlingID: number;
-    medlemskapsTypeErPliktig?: boolean;
+    medlemskapstypeErPliktig?: boolean;
     setFeilmelding: (error: any) => void;
     setAarsavregningResponse: (response: AarsavregningResponse) => void;
   },
 ) {
-  const { behandlingID, medlemskapsTypeErPliktig, setFeilmelding, setAarsavregningResponse } = options;
+  const { behandlingID, medlemskapstypeErPliktig, setFeilmelding, setAarsavregningResponse } = options;
 
   setFeilmelding(undefined);
   const erBrukerPliktigMedlemOgSkattepliktig =
-    medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(formVerdier.skatteforholdsperioder);
+    medlemskapstypeErPliktig && erBrukerSkattepliktigIHelePerioden(formVerdier.skatteforholdsperioder);
   return Api.Trygdeavgift.beregnTrygdeavgiftsperioder(behandlingID, {
     skatteforholdsperioder: formVerdier.skatteforholdsperioder.map((skatteforhold: Skatteforhold) => ({
       fomDato: Utils.dato.formatterDatoTilISO(skatteforhold.fomDato),

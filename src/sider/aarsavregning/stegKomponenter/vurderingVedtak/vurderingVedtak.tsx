@@ -104,18 +104,22 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   };
 
   useEffect(() => {
-    hentOgSetHarFullmaktForTrygdeavgift();
+    if (aktivtSteg) {
+      hentOgSetHarFullmaktForTrygdeavgift();
+    }
   }, []);
 
   useEffect(() => {
-    if (erFullmektigEndret) {
-      hentOgSetHarFullmaktForTrygdeavgift();
+    if (aktivtSteg) {
+      if (erFullmektigEndret) {
+        hentOgSetHarFullmaktForTrygdeavgift();
 
-      Api.Trygdeavgift.hentFakturamottaker(behandlingID).then((dto) => {
-        setFakturaMottaker(dto.navn);
-      });
+        Api.Trygdeavgift.hentFakturamottaker(behandlingID).then((dto) => {
+          setFakturaMottaker(dto.navn);
+        });
 
-      dispatch(menypanelOperations.setErFullmektigEndret(false));
+        dispatch(menypanelOperations.setErFullmektigEndret(false));
+      }
     }
   }, [erFullmektigEndret]);
 
@@ -161,7 +165,9 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   const debouncedOppdaterFritekster = useCallback(Utils._debounce(oppdaterFritekster, 1000), []);
 
   useEffect(() => {
-    debouncedOppdaterFritekster(formValues);
+    if (aktivtSteg) {
+      debouncedOppdaterFritekster(formValues);
+    }
   }, [formValues?.innledningFritekst, formValues?.begrunnelseFritekst, formValues?.trygdeavgiftFritekst]);
 
   const mapMottakerRad = (muligMottaker: Api.DokumenterV2.MuligMottaker) => {

@@ -21,7 +21,7 @@ export interface PeriodeElementerProps {
   field: FieldArrayWithId<FieldArrayProps, "medlemskapsperioder">;
   remove: (index: number) => void;
   formValues: FormValuesProps;
-  bestemmelser: [];
+  bestemmelser: string[];
   tittel?: string;
   handleLeggTil: () => void;
   handleUpdate: UseFieldArrayUpdate<FieldArrayProps, "medlemskapsperioder">;

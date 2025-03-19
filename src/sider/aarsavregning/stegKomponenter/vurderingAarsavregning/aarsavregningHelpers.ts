@@ -13,34 +13,6 @@ export const hentMedlemskapsFomTomDato = (medlemskapsperioder?: any[]) => {
   return {};
 };
 
-export const mapTilMedlemskapsperiodeFieldProps = (
-  medlemskapsperiode: any,
-  tidligereGrunnlag?: Api.Aarsavregning.Trygdeavgiftsgrunnlag,
-) => {
-  const grunnlagsperioder = tidligereGrunnlag?.medlemskapsperioder;
-  const medlemskapsperiodeErFraGrunnlag = grunnlagsperioder?.some(
-    (periode) => periode.fomDato === medlemskapsperiode.fomDato && periode.tomDato === medlemskapsperiode.tomDato,
-  );
-
-  return {
-    ...medlemskapsperiode,
-    fomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.fomDato),
-    tomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.tomDato),
-    feil: undefined,
-    redigerbar: !medlemskapsperiodeErFraGrunnlag,
-  };
-};
-
-export const mapMedlemskapsperioderFraGrunnlag = (tidligereGrunnlag: Api.Aarsavregning.Trygdeavgiftsgrunnlag) =>
-  [...tidligereGrunnlag.medlemskapsperioder]
-    .sort((a, b) => Utils.dato.sorterEtterISOFomDato(a, b))
-    .map((periode) => mapTilMedlemskapsperiodeFieldProps(periode, tidligereGrunnlag));
-
-export const mapMedlemskapsperioder = (perioder: any[], tidligereGrunnlag?: Api.Aarsavregning.Trygdeavgiftsgrunnlag) =>
-  [...perioder]
-    .sort((a, b) => Utils.dato.sorterEtterISOFomDato(a, b))
-    .map((periode) => mapTilMedlemskapsperiodeFieldProps(periode, tidligereGrunnlag));
-
 export const mapTilSkatteforholdProps = (skatteforholdsperioder?: any[], medlemskapsperioder?: any[]) => {
   const { fom, tom } = hentMedlemskapsFomTomDato(medlemskapsperioder);
   if (skatteforholdsperioder) {
