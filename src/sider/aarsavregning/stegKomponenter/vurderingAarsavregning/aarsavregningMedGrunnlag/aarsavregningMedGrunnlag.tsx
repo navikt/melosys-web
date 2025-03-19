@@ -154,11 +154,12 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
   } = useFieldArray<FieldArrayProps, "inntektskilder", "id">({ control, name: "inntektskilder" });
   const formValues = watch();
 
+  // TODO: Når ryddingen skjer her husk å rename bort fra medlemskapsTypeErPliktig
   const handleBeregnTrygdeavgiftsperioder = useCallback(
     async (formVerdier: FieldValue<FormValuesProps>) => {
       await beregnTrygdeavgiftsperioder(formVerdier, {
         behandlingID,
-        medlemskapsTypeErPliktig,
+        medlemskapstypeErPliktig: medlemskapsTypeErPliktig,
         setFeilmelding,
         setAarsavregningResponse,
       });
