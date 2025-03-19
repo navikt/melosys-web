@@ -22,7 +22,7 @@ function FellesHandlersProviderUnconnected({
   history,
   lastInnSaksopplysninger,
   oppfriskSaksopplysninger,
-  hentNyeSaksopplysninger,
+  oppfriskSaksopplysningerForAarsavregning,
   lagreMottatteOpplysninger,
   saksnummer,
   sakstype,
@@ -58,8 +58,8 @@ function FellesHandlersProviderUnconnected({
     await fjernBehandlingOppfriskes();
   };
 
-  const oppdaterOgHentSaksopplysninger = async () => {
-    await hentNyeSaksopplysninger(behandlingID);
+  const oppfriskOgLastInnSaksopplysningerForAarsavregning = async () => {
+    await oppfriskSaksopplysningerForAarsavregning(behandlingID);
     await lastInnSaksopplysninger(sakstype, saksnummer, behandlingID);
   };
 
@@ -91,7 +91,7 @@ function FellesHandlersProviderUnconnected({
       tilOpprettNySak,
       lagreMottatteOpplysningerOgOppfriskSaksopplysninger,
       oppfriskOgLastInnSaksopplysninger,
-      oppdaterOgHentSaksopplysninger,
+      oppfriskOgLastInnSaksopplysningerForAarsavregning,
       behandlingOppfriskes,
       annenBehandlingOppfriskes,
       startOgVisOppfriskModal,
@@ -105,7 +105,7 @@ function FellesHandlersProviderUnconnected({
       tilOpprettNySak,
       lagreMottatteOpplysningerOgOppfriskSaksopplysninger,
       oppfriskOgLastInnSaksopplysninger,
-      oppdaterOgHentSaksopplysninger,
+      oppfriskOgLastInnSaksopplysningerForAarsavregning,
       behandlingOppfriskes,
       annenBehandlingOppfriskes,
       startOgVisOppfriskModal,
@@ -155,7 +155,8 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(datalastingOperations.lastInnSaksopplysninger(sakstype, saksnummer, behandlingID)),
   oppfriskSaksopplysninger: (behandlingID, inkluderSiste5Aar) =>
     saksopplysningerOperations.oppfrisk(behandlingID, inkluderSiste5Aar),
-  hentNyeSaksopplysninger: (behandlingID) => saksopplysningerOperations.hentNyeSaksopplysninger(behandlingID),
+  oppfriskSaksopplysningerForAarsavregning: (behandlingID) =>
+    saksopplysningerOperations.oppfriskSaksopplysningerForAarsavregning(behandlingID),
   leggTilBehandlingOppfriskes: (behandlingID) => dispatch(modalerOperations.leggTilBehandlingOppfriskes(behandlingID)),
   fjernBehandlingOppfriskes: () => dispatch(modalerOperations.fjernBehandlingOppfriskes()),
   skjulOppfriskDialogHandle: () => dispatch(modalerOperations.skjulOppfrisk()),

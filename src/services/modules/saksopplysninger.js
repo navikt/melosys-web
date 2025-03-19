@@ -8,6 +8,6 @@ export const oppfrisk = (behandlingID, options = {}) => {
   return getAsJson(`${API_BASE_URL}${SAKSOPPLYSNINGER}/oppfriskning/${behandlingID}${params ? `?${params}` : ""}`);
 };
 
-export const hentNyeSaksopplysninger = (behandlingID) => {
+export const oppfriskSaksopplysningerForAarsavregning = (behandlingID) => {
   return postAsJson(`${API_BASE_URL}${SAKSOPPLYSNINGER}/oppfriskning/aarsavregning/${behandlingID}`);
 };

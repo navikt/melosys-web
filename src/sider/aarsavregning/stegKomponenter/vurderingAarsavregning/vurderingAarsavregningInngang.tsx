@@ -58,7 +58,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
   const antallÅrTilbakeITid = 6;
   const muligeAar = Array.from({ length: antallÅrTilbakeITid }, (_, i) => sisteMuligeÅr - i);
   const dispatch = useDispatch();
-  const { oppdaterOgHentSaksopplysninger } = useContext(FellesHandlersContext) as any;
+  const { oppfriskOgLastInnSaksopplysningerForAarsavregning } = useContext(FellesHandlersContext) as any;
 
   const utledGrunnlagstypeForAarsavregning = (res: AarsavregningResponse) => {
     const innvilgetPeriode = lagInnvilgetMedlemskapsPeriode(
@@ -109,7 +109,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
           // Benyttes for innhenting av saksopplysninger ifm. årsavregningsbehandlinger
           dispatch({ type: OK, data: res });
           dispatch(behandlingsresultatOperations.hent(behandlingID));
-          oppdaterOgHentSaksopplysninger();
+          oppfriskOgLastInnSaksopplysningerForAarsavregning();
           dispatch(datalastingOperations.lastInnSaksopplysninger(MKV.Koder.sakstyper.FTRL, saksnummer, behandlingID));
         })
         .catch((error) => {
