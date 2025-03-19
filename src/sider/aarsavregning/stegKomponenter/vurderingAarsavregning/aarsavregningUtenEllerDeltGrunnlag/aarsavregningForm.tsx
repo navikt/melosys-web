@@ -427,6 +427,7 @@ export function AarsavregningForm({
       };
 
       beregnHvisSkjemaErGyldig();
+      console.log(inntektskilder, skatteforholdsperioder);
     }
   }, [inntektskilder, skatteforholdsperioder]);
 
