@@ -121,6 +121,7 @@ export function Menypanel({
           sistOppdatert={Utils.dato.formatterDatoTilNorsk(sisteOpplysningerHentetDato)}
           oppdaterRegisteropplysninger={lagreSoknadOgOppfriskSaksopplysninger}
           sakstype={sakstype}
+          sakstema={sakstema}
         />
       )}
       <div className="menypanel">

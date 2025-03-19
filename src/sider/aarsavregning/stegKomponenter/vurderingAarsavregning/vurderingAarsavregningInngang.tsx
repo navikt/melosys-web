@@ -110,7 +110,6 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
           dispatch({ type: OK, data: res });
           dispatch(behandlingsresultatOperations.hent(behandlingID));
           oppfriskOgLastInnSaksopplysningerForAarsavregning();
-          dispatch(datalastingOperations.lastInnSaksopplysninger(MKV.Koder.sakstyper.FTRL, saksnummer, behandlingID));
         })
         .catch((error) => {
           setApiFeil(error.body.message);

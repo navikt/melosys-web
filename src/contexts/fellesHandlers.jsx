@@ -12,6 +12,8 @@ import { mottatteOpplysningerOperations } from "../ducks/mottatteOpplysninger";
 import { saksopplysningerOperations } from "../ducks/saksopplysninger";
 import { modalerOperations, modalerSelectors } from "../ducks/modaler";
 import { navigeringOperations } from "../ducks/navigering";
+import { hentBehandling } from "../ducks/behandlinger/operations";
+import { behandlingerOperations } from "../ducks/behandlinger";
 
 const FellesHandlersContext = createContext({});
 export default FellesHandlersContext;
@@ -23,6 +25,7 @@ function FellesHandlersProviderUnconnected({
   lastInnSaksopplysninger,
   oppfriskSaksopplysninger,
   oppfriskSaksopplysningerForAarsavregning,
+  hentBehandlingForAarsavregning,
   lagreMottatteOpplysninger,
   saksnummer,
   sakstype,
@@ -60,7 +63,7 @@ function FellesHandlersProviderUnconnected({
 
   const oppfriskOgLastInnSaksopplysningerForAarsavregning = async () => {
     await oppfriskSaksopplysningerForAarsavregning(behandlingID);
-    await lastInnSaksopplysninger(sakstype, saksnummer, behandlingID);
+    await hentBehandlingForAarsavregning(behandlingID);
   };
 
   const startOgVisOppfriskModal = async (inkluderSiste5aar) => {
@@ -153,6 +156,7 @@ const mapDispatchToProps = (dispatch) => ({
   lagreMottatteOpplysninger: () => dispatch(mottatteOpplysningerOperations.lagre()),
   lastInnSaksopplysninger: (sakstype, saksnummer, behandlingID) =>
     dispatch(datalastingOperations.lastInnSaksopplysninger(sakstype, saksnummer, behandlingID)),
+  hentBehandlingForAarsavregning: (behandlingID) => dispatch(behandlingerOperations.hentBehandling(behandlingID)),
   oppfriskSaksopplysninger: (behandlingID, inkluderSiste5Aar) =>
     saksopplysningerOperations.oppfrisk(behandlingID, inkluderSiste5Aar),
   oppfriskSaksopplysningerForAarsavregning: (behandlingID) =>
