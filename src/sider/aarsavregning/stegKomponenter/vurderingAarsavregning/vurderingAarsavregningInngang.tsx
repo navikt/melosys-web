@@ -1,6 +1,6 @@
 import * as Api from "../../../../services/api";
 import "./vurderingAarsavregningInngang.css";
-import { ChangeEvent, useContext, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { AarsavregningResponse } from "../../../../services/modules/aarsavregning/aarsavregning";
 import { useDispatch, useSelector } from "react-redux";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
@@ -17,7 +17,6 @@ import { AarsavregningMedGrunnlag } from "./aarsavregningMedGrunnlag/aarsavregni
 import { AarsavregningUtenEllerDeltGrunnlag } from "./aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlag";
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
 import { lagInnvilgetMedlemskapsPeriode } from "./komponenter/utils";
-import { FellesHandlersContext } from "../../../../contexts";
 
 interface Props {
   bekreft: () => void;
