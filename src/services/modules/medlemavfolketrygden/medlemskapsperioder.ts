@@ -9,6 +9,7 @@ export interface Medlemskapsperiode {
   innvilgelsesResultat: string;
   trygdedekning: string;
   medlemskapstype: string;
+  redigerbar?: boolean;
 }
 
 export interface OppdaterMedlemskapsperiode {
