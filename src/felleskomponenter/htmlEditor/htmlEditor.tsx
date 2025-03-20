@@ -221,9 +221,6 @@ function HtmlEditor({ value, onChange, disabled, label, feil, className, placeho
 
     // Rydder opp ved avmontering
     return () => {
-      if (quill.root) {
-        quill.root.removeEventListener("paste", handlePaste);
-      }
       quill.off("text-change", textChangeHandler);
     };
   }, []);
