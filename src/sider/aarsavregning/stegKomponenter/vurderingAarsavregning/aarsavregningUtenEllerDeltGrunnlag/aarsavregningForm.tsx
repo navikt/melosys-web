@@ -133,6 +133,7 @@ export function AarsavregningForm({
 
   // Kjør initiell beregning
   useEffect(() => {
+    console.log("effect: initial beregning");
     if (formIsValid && !initiellBeregningUtført) {
       const oppdaterteFormValues = watch();
       handleBeregnTrygdeavgiftsperioder(oppdaterteFormValues).then(() => {
@@ -143,6 +144,7 @@ export function AarsavregningForm({
 
   useEffect(() => {
     // Kun vis komplekse feil hvis det ikke finnes andre feil i medlemskapsperioder
+    console.log("effect: medlemskapsperioder Form Errors");
     if (formErrors.medlemskapsperioder) {
       const harFeltFeil = Object.keys(formErrors.medlemskapsperioder).some((key) => !Number.isNaN(parseInt(key, 10)));
 
@@ -157,6 +159,7 @@ export function AarsavregningForm({
   }, [formErrors.medlemskapsperioder]);
 
   useEffect(() => {
+    console.log("effect: oppdaterTotalavgift");
     if (redigerbart && aarsavregningResponse?.nyttGrunnlag) {
       if (aarsavregningResponse.nyttGrunnlag?.avgift.totalAvgift !== aarsavregningResponse.avregning?.nyttTotalbeloep) {
         Api.Aarsavregning.oppdaterTotalAvgift(
@@ -317,6 +320,7 @@ export function AarsavregningForm({
   };
 
   useEffect(() => {
+    console.log("effect: lagreMedlemskapsperioder");
     const lagreMedlemskapsperioder = async () => {
       if (redigerbart) {
         setMedlemskapsperiodeFeilmelding(undefined);
@@ -394,6 +398,7 @@ export function AarsavregningForm({
   );
 
   useEffect(() => {
+    console.log("effect: oppdaterTidligereFakturert");
     if (
       redigerbart &&
       forrigeTotaltForskuddsvisFakturert.current !== totaltForskuddsvisFakturert &&
@@ -416,6 +421,7 @@ export function AarsavregningForm({
   );
 
   useEffect(() => {
+    console.log("effect: beregnHvisGyldig");
     if (redigerbart && aarsavregningID && initiellBeregningUtført) {
       const beregnHvisSkjemaErGyldig = async () => {
         const erSkjemaGyldig = await trigger();
@@ -431,9 +437,13 @@ export function AarsavregningForm({
     }
   }, [inntektskilder, skatteforholdsperioder]);
 
-  const stegErGyldig = Boolean(formIsValid && aarsavregningResponse?.nyttGrunnlag && feilmelding === undefined);
+  const stegErGyldig = useMemo(() =>
+      Boolean(formIsValid && aarsavregningResponse?.nyttGrunnlag && feilmelding === undefined),
+    [formIsValid, aarsavregningResponse?.nyttGrunnlag, feilmelding]
+  );
 
   useEffect(() => {
+    console.log("effect: oppdaterStatus");
     oppdaterStatus(stegErGyldig);
   }, [stegErGyldig, oppdaterStatus]);
 
