@@ -100,7 +100,7 @@ export const hentMedlemskapsperiodeBestemmelse = (
 ) => {
   if (medlemskapsperioder && !Utils._isEmpty(medlemskapsperioder)) {
     const sortertePerioder = [...medlemskapsperioder]
-      .filter((periode) => harDeltGrunnlag ? !periode.redigerbar : true)
+      .filter((periode) => (harDeltGrunnlag ? !periode.redigerbar : true))
       .filter((periode) => periode.id !== ULAGRET_MEDLEMSKAPSPERIODE_ID)
       .sort(sorterEtterISOFomDato);
     return sortertePerioder?.[0]?.bestemmelse;

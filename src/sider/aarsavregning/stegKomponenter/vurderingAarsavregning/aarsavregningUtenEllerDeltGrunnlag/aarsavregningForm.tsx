@@ -237,6 +237,7 @@ export function AarsavregningForm({
         interface LagredeMedlemskapsperioder extends Medlemskapsperiode {
           formValuesIndex: number;
         }
+
         const nyeLagredeMedlemskapsperioder: LagredeMedlemskapsperioder[] = [];
         // eslint-disable-next-line no-restricted-syntax
         for (const [index, periode] of medlemskapsperioderFormValues.entries()) {
@@ -454,6 +455,7 @@ export function AarsavregningForm({
     medlemskapstypeErPliktig && erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder);
   const forskuddsvisFakturertTrygdeavgift =
     (aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift?.totalAvgift ?? 0) > 0;
+  const medlemskapsperiodeBestemmelse = hentMedlemskapsperiodeBestemmelse(harDeltGrunnlag, medlemskapsperioder);
 
   return (
     <div className="vurderingAarsavregning">
@@ -535,7 +537,7 @@ export function AarsavregningForm({
           fields={inntektFields}
           medlemskapsTypeErPliktig={medlemskapstypeErPliktig}
           skalViseErMaanedsBelopRadioGroup
-          bestemmelse={hentMedlemskapsperiodeBestemmelse(harDeltGrunnlag, medlemskapsperioder)}
+          bestemmelse={medlemskapsperiodeBestemmelse}
         />
       )}
       {formIsValid && trygdeAvgiftSkalIkkeBetalesTilNav && (
