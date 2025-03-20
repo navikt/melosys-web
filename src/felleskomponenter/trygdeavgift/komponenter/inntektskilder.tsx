@@ -4,6 +4,7 @@ import { Control, FieldArrayWithId } from "react-hook-form";
 import MKV from "../../../melosyskodeverk";
 import * as Forms from "../../forms";
 import * as Nav from "../../../navFrontend";
+import { Alert } from "../../../navFrontend";
 import * as Utils from "../../../utils";
 import * as Mui from "../../ui";
 import * as Ikoner from "../../../resources/images";
@@ -15,8 +16,6 @@ import {
 } from "../../../sider/ftrl/saksbehandling/stegKomponenter/vurderingTrygdeavgift/vurderingTrygdeavgiftSchema";
 import "./inntektskilder.css";
 import { Stack } from "@navikt/ds-react";
-import { Alert } from "../../../navFrontend";
-import { DateRangeController } from "../../forms";
 
 import { erBrukerSkattepliktigIHelePerioden } from "../../../sider/aarsavregning/stegKomponenter/vurderingAarsavregning/komponenter/utils";
 import { useSelector } from "react-redux";
@@ -136,24 +135,25 @@ export function Inntektskilder({
 
         return (
           <Nav.Row className="periode__rad" key={fields[index].id}>
-            <Nav.Column>
-              <DateRangeController
-                name={`inntektskilder[${index}]`}
-                control={control}
-                label="Inntektsperiode"
-                hideLabel={index !== 0}
-                defaultSelected={{
-                  from: Utils.dato.norskStringTilDate(formValues.inntektskilder[index].fomDato),
-                  to: Utils.dato.norskStringTilDate(formValues.inntektskilder[index].tomDato),
-                }}
-                fromDate={Utils.dato.norskStringTilDate(defaultPeriode?.fomDato)}
-                toDate={Utils.dato.norskStringTilDate(defaultPeriode?.tomDato)}
-                showFieldError
+            <Nav.Column className="dato">
+              <Forms.Datovelger
+                label={index === 0 ? "Inntektsperiode" : ""}
+                name={`inntektskilder[${index}].fomDato`}
                 readOnly={!redigerbart}
+                control={control}
               />
             </Nav.Column>
 
-            <Nav.Column className="inntektskilde">
+            <Nav.Column className="dato">
+              <Forms.Datovelger
+                label={index === 0 && <span className="invisible" />}
+                name={`inntektskilder[${index}].tomDato`}
+                readOnly={!redigerbart}
+                control={control}
+                minDate={Utils.dato.norskStringTilDate(formValues.inntektskilder[index].fomDato)}
+              />
+            </Nav.Column>
+            <Nav.Column className="inntektskildetype">
               <Forms.Select
                 label={index === 0 ? "Inntektskilde" : ""}
                 hideLabel={index !== 0}

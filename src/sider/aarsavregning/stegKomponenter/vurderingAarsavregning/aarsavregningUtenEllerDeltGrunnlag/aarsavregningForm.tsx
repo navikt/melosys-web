@@ -435,7 +435,10 @@ export function AarsavregningForm({
     }
   }, [inntektskilder, skatteforholdsperioder]);
 
-  const stegErGyldig = Boolean(formIsValid && aarsavregningResponse?.nyttGrunnlag && feilmelding === undefined);
+  const stegErGyldig = useMemo(
+    () => Boolean(formIsValid && aarsavregningResponse?.nyttGrunnlag && feilmelding === undefined),
+    [formIsValid, aarsavregningResponse?.nyttGrunnlag, feilmelding],
+  );
 
   useEffect(() => {
     oppdaterStatus(stegErGyldig);

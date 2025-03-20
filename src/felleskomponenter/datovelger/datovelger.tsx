@@ -1,11 +1,9 @@
-import { ChangeEvent, FocusEventHandler, ReactNode, useState } from "react";
+import { ChangeEvent, FocusEventHandler, ReactNode, useId, useState } from "react";
 import classNames from "classnames";
 import { DatePicker, useDatepicker } from "@navikt/ds-react";
 import * as Utils from "../../utils";
 import "./datovelger.css";
 import moment from "moment";
-
-import { _uuid } from "../../utils";
 import { SKRIV_INN_GYLDIG_DATO } from "../../kodeverk/feilmeldinger";
 
 interface DatovelgerProps {
@@ -65,7 +63,7 @@ function Datovelger({
     onChange(event.target.value);
   };
 
-  const datovelgerID = _uuid();
+  const datovelgerID = useId();
   return (
     <div className="datovelger">
       <DatePicker {...datepickerProps} dropdownCaption strategy="fixed">
