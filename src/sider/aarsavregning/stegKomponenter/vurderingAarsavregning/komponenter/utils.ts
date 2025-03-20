@@ -93,6 +93,20 @@ export function beregnTrygdeavgiftsperioder(
     .catch((error) => setFeilmelding(mapFeilmelding(error)));
 }
 
+export const hentMedlemskapsperiodeBestemmelse = (
+  harDeltGrunnlag: boolean,
+  medlemskapsperioder?: Medlemskapsperiode[],
+) => {
+  if (medlemskapsperioder && !Utils._isEmpty(medlemskapsperioder)) {
+    const sorterteInnvilgedePerioder = [...medlemskapsperioder]
+      .filter((periode) => !harDeltGrunnlag || !periode.redigerbar)
+      .filter((periode) => periode.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.INNVILGET)
+      .sort(sorterEtterISOFomDato);
+    return sorterteInnvilgedePerioder?.[0]?.bestemmelse;
+  }
+  return undefined;
+};
+
 export const lagInnvilgetMedlemskapsPeriode = (medlemskapsperioder?: Medlemskapsperiode[]) => {
   if (medlemskapsperioder && !Utils._isEmpty(medlemskapsperioder)) {
     const sorterteInnvilgedePerioder = [...medlemskapsperioder]
