@@ -113,22 +113,19 @@ export function Menypanel({
   };
 
   const { ÅRSAVREGNING } = MKV.Koder.behandlinger.behandlingstyper;
-  const erÅrsavregning = sakstema === ÅRSAVREGNING;
+  const erÅrsavregning = behandlingstype === ÅRSAVREGNING;
 
   if (!visMenypanel && !skalViseFullmektigFørPeriodeOgLand(behandlingstema)) return null;
 
   return (
     <>
-      {visOppdaterRegisteropplysninger &&
-        redigerbart &&
-        sakstema !==
-          ÅRSAVREGNING(
-            <OppdaterRegisteropplysninger
-              sistOppdatert={Utils.dato.formatterDatoTilNorsk(sisteOpplysningerHentetDato)}
-              oppdaterRegisteropplysninger={lagreSoknadOgOppfriskSaksopplysninger}
-              sakstype={sakstype}
-            />,
-          )}
+      {visOppdaterRegisteropplysninger && redigerbart && !erÅrsavregning && (
+        <OppdaterRegisteropplysninger
+          sistOppdatert={Utils.dato.formatterDatoTilNorsk(sisteOpplysningerHentetDato)}
+          oppdaterRegisteropplysninger={lagreSoknadOgOppfriskSaksopplysninger}
+          sakstype={sakstype}
+        />
+      )}
       <div className="menypanel">
         <Nav.Column xs="3" className="utenPadding">
           <Sidemeny heading="Opplysninger" linkGroups={linkGroups} onClick={handleClick} />
