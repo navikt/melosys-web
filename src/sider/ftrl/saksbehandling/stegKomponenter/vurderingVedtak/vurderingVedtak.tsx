@@ -36,7 +36,8 @@ import { menypanelOperations, menypanelSelectors } from "../../../../../ducks/me
 import { fagsakSelectors } from "../../../../../ducks/fagsaker";
 import FullmaktForTrygdeavgiftConfirmationPanel from "../../../../../felleskomponenter/fullmaktForTrygdeavgiftConfirmationPanel/fullmaktForTrygdeavgiftConfirmationPanel";
 
-const { NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT, SATSENDRING } = MKV.Koder.behandlinger.behandlingstyper;
+const { FØRSTEGANG, NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT, SATSENDRING } =
+  MKV.Koder.behandlinger.behandlingstyper;
 const { IKKE_YRKESAKTIV, PENSJONIST } = MKV.Koder.behandlinger.behandlingstema;
 const { OPPHØRT } = MKV.Koder.innvilgelsesResultat;
 const { OPPHØRSVEDTAK, FØRSTEGANGSVEDTAK, ENDRINGSVEDTAK } = MKV.Koder.vedtakstyper;
@@ -109,7 +110,9 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   const [vedtakPending, setVedtakPending] = useState(false);
   const [harFullmaktForTrygdeavgift, setHarFullmaktForTrygdeavgift] = useState(false);
   const [harBekreftetFullmaktForTrygdeavgift, setHarBekreftetFullmaktForTrygdeavgift] = useState(false);
+  const [skalMottaFaktura, setSkalMottaFaktura] = useState(false);
 
+  const erFørstegang = behandlingstype === FØRSTEGANG;
   const erNyVurdering = behandlingstype === NY_VURDERING;
   const erSatsendring = behandlingstype === SATSENDRING;
   const erManglendeInnbetalingTrygdeavgift = behandlingstype === MANGLENDE_INNBETALING_TRYGDEAVGIFT;
@@ -422,9 +425,21 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
         </Nav.Row>
       ) : null}
 
-      {fakturamottaker && !erIkkeYrkesaktiv ? (
+      {erFørstegang && erPensjonist && (
         <Nav.Row>
           <Nav.Column xs="12" className="fakturamottaker">
+            <Nav.Checkbox checked={skalMottaFaktura} onChange={(e) => setSkalMottaFaktura(e.target.checked)}>
+              <Nav.BodyLong size="small" className="info">
+                Bruker skal motta faktura i stedet for trekk i pensjon/uføretrygd
+              </Nav.BodyLong>
+            </Nav.Checkbox>
+          </Nav.Column>
+        </Nav.Row>
+      )}
+
+      {skalMottaFaktura || (fakturamottaker && !erIkkeYrkesaktiv && !erPensjonist) ? (
+        <Nav.Row>
+          <Nav.Column xs="12">
             <Nav.BodyLong size="small" className="info">
               Faktura sendes til:
             </Nav.BodyLong>
