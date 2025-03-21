@@ -1,6 +1,6 @@
 import * as Api from "../../../../services/api";
 import "./vurderingAarsavregningInngang.css";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useState } from "react";
 import { AarsavregningResponse } from "../../../../services/modules/aarsavregning/aarsavregning";
 import { useDispatch, useSelector } from "react-redux";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
@@ -17,6 +17,8 @@ import { AarsavregningMedGrunnlag } from "./aarsavregningMedGrunnlag/aarsavregni
 import { AarsavregningUtenEllerDeltGrunnlag } from "./aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlag";
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
 import { lagInnvilgetMedlemskapsPeriode } from "./komponenter/utils";
+import { FellesHandlersContext } from "../../../../contexts";
+import { datalastingOperations } from "../../../../ducks/datalasting";
 
 interface Props {
   bekreft: () => void;
@@ -56,6 +58,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
   const antallÅrTilbakeITid = 6;
   const muligeAar = Array.from({ length: antallÅrTilbakeITid }, (_, i) => sisteMuligeÅr - i);
   const dispatch = useDispatch();
+  const { oppfriskOgLastInnSaksopplysningerForAarsavregning } = useContext(FellesHandlersContext) as any;
 
   const utledGrunnlagstypeForAarsavregning = (res: AarsavregningResponse) => {
     const innvilgetPeriode = lagInnvilgetMedlemskapsPeriode(
@@ -100,11 +103,12 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
       });
 
       Api.Aarsavregning.lagAarsavregning(behandlingID, { aar: valgtÅr })
-        .then((res) => {
+        .then(async (res) => {
           setAarsavregningID(res.aarsavregningID);
           utledGrunnlagstypeForAarsavregning(res);
           // Benyttes for innhenting av saksopplysninger ifm. årsavregningsbehandlinger
           dispatch({ type: OK, data: res });
+          await oppfriskOgLastInnSaksopplysningerForAarsavregning();
           dispatch(behandlingsresultatOperations.hent(behandlingID));
         })
         .catch((error) => {
