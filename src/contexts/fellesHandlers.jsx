@@ -24,7 +24,7 @@ function FellesHandlersProviderUnconnected({
   lastInnSaksopplysninger,
   oppfriskSaksopplysninger,
   oppfriskSaksopplysningerForAarsavregning,
-  hentBehandlingForAarsavregning,
+  hentBehandling,
   lagreMottatteOpplysninger,
   saksnummer,
   sakstype,
@@ -62,7 +62,7 @@ function FellesHandlersProviderUnconnected({
 
   const oppfriskOgLastInnSaksopplysningerForAarsavregning = async () => {
     await oppfriskSaksopplysningerForAarsavregning(behandlingID);
-    await hentBehandlingForAarsavregning(behandlingID);
+    await hentBehandling(behandlingID);
   };
 
   const startOgVisOppfriskModal = async (inkluderSiste5aar) => {
@@ -155,7 +155,7 @@ const mapDispatchToProps = (dispatch) => ({
   lagreMottatteOpplysninger: () => dispatch(mottatteOpplysningerOperations.lagre()),
   lastInnSaksopplysninger: (sakstype, saksnummer, behandlingID) =>
     dispatch(datalastingOperations.lastInnSaksopplysninger(sakstype, saksnummer, behandlingID)),
-  hentBehandlingForAarsavregning: (behandlingID) => dispatch(behandlingerOperations.hentBehandling(behandlingID)),
+  hentBehandling: (behandlingID) => dispatch(behandlingerOperations.hentBehandling(behandlingID)),
   oppfriskSaksopplysninger: (behandlingID, inkluderSiste5Aar) =>
     saksopplysningerOperations.oppfrisk(behandlingID, inkluderSiste5Aar),
   oppfriskSaksopplysningerForAarsavregning: (behandlingID) =>
