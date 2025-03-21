@@ -103,13 +103,13 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
       });
 
       Api.Aarsavregning.lagAarsavregning(behandlingID, { aar: valgtÅr })
-        .then((res) => {
+        .then(async (res) => {
           setAarsavregningID(res.aarsavregningID);
           utledGrunnlagstypeForAarsavregning(res);
           // Benyttes for innhenting av saksopplysninger ifm. årsavregningsbehandlinger
           dispatch({ type: OK, data: res });
+          await oppfriskOgLastInnSaksopplysningerForAarsavregning();
           dispatch(behandlingsresultatOperations.hent(behandlingID));
-          oppfriskOgLastInnSaksopplysningerForAarsavregning();
         })
         .catch((error) => {
           setApiFeil(error.body.message);

@@ -12,7 +12,6 @@ import { mottatteOpplysningerOperations } from "../ducks/mottatteOpplysninger";
 import { saksopplysningerOperations } from "../ducks/saksopplysninger";
 import { modalerOperations, modalerSelectors } from "../ducks/modaler";
 import { navigeringOperations } from "../ducks/navigering";
-import { hentBehandling } from "../ducks/behandlinger/operations";
 import { behandlingerOperations } from "../ducks/behandlinger";
 
 const FellesHandlersContext = createContext({});
