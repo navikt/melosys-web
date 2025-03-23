@@ -77,7 +77,6 @@ export function AarsavregningForm({
 
   const {
     control,
-    watch,
     setValue,
     trigger,
     formState: { isValid: formIsValid, errors: formErrors },
@@ -110,7 +109,6 @@ export function AarsavregningForm({
     update: inntektUpdate,
   } = useFieldArray<FieldArrayProps, "inntektskilder", "id">({ control, name: "inntektskilder" });
 
-  const formValues = watch();
   const medlemskapsperioder = useWatch({ control, name: "medlemskapsperioder" });
   const medlemskapsperioderForrigeAntall = useRef(medlemskapsperioder.length);
   const totaltForskuddsvisFakturert = useWatch({ control, name: "totaltForskuddsvisFakturert" });
@@ -262,9 +260,7 @@ export function AarsavregningForm({
           // Revalider så feilmeldinger forsvinner før beregning
           const erGyldigSkjema = await trigger();
           if (erGyldigSkjema) {
-            const oppdaterteSkatteforhold = useWatch({ control, name: "skatteforholdsperioder" });
-            const oppdaterteInntektskilder = useWatch({ control, name: "inntektskilder" });
-            await handleBeregnTrygdeavgiftsperioder(oppdaterteSkatteforhold, oppdaterteInntektskilder);
+            await handleBeregnTrygdeavgiftsperioder(skatteforholdsperioder, inntektskilder);
           }
 
           setValue(
@@ -388,9 +384,7 @@ export function AarsavregningForm({
     await Api.Aarsavregning.oppdaterAarsavregning(behandlingid, request, aarsavregningid);
     if (await trigger()) {
       setFeilmelding(undefined);
-      const oppdaterteSkatteforhold = useWatch({ control, name: "skatteforholdsperioder" });
-      const oppdaterteInntektskilder = useWatch({ control, name: "inntektskilder" });
-      await handleBeregnTrygdeavgiftsperioder(oppdaterteSkatteforhold, oppdaterteInntektskilder);
+      await handleBeregnTrygdeavgiftsperioder(skatteforholdsperioder, inntektskilder);
     }
   };
 
@@ -463,6 +457,11 @@ export function AarsavregningForm({
     }
   };
 
+  const formValues = {
+    medlemskapsperioder,
+    skatteforholdsperioder,
+    inntektskilder,
+  };
   const trygdeAvgiftSkalIkkeBetalesTilNav =
     medlemskapstypeErPliktig && erBrukerSkattepliktigIHelePerioden(skatteforholdsperioder);
   const forskuddsvisFakturertTrygdeavgift =
