@@ -217,15 +217,15 @@ export function AarsavregningForm({
   };
 
   const handleBeregnTrygdeavgiftsperioder = useCallback(
-    async (skatteforholdsperioder: Skatteforhold[], inntektskilder: Inntektskilde[]) => {
+    async (currentSkatteforholdsperioder: Skatteforhold[], currentInntektskilder: Inntektskilde[]) => {
       setBeregningPaagar(true);
       await beregnTrygdeavgiftsperioder({
         behandlingID,
         medlemskapstypeErPliktig,
         setFeilmelding,
         setAarsavregningResponse,
-        skatteforholdsperioder,
-        inntektskilder,
+        skatteforholdsperioder: currentSkatteforholdsperioder,
+        inntektskilder: currentInntektskilder,
       });
       setBeregningPaagar(false);
     },

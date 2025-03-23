@@ -32,9 +32,10 @@ export function Skatteforholdsperioder({
 }: SkatteforholdsperioderProps) {
   return (
     <div className="perioder">
-      {formValues.skatteforholdsperioder.map((skatteforhold, index) => {
+      {fields.map((field, index) => {
+        const skatteforhold = formValues.skatteforholdsperioder[index];
         return (
-          <Nav.Row className="periode__rad" key={fields[index].id}>
+          <Nav.Row className="periode__rad" key={field.id}>
             <Nav.Column className="dato">
               <Forms.Datovelger
                 label={index === 0 ? "Skatteforhold" : ""}
@@ -50,7 +51,7 @@ export function Skatteforholdsperioder({
                 name={`skatteforholdsperioder[${index}].tomDato`}
                 readOnly={!redigerbart}
                 control={control}
-                minDate={Utils.dato.norskStringTilDate(formValues.skatteforholdsperioder[index].fomDato)}
+                minDate={skatteforhold?.fomDato ? Utils.dato.norskStringTilDate(skatteforhold.fomDato) : undefined}
               />
             </Nav.Column>
 
@@ -71,7 +72,7 @@ export function Skatteforholdsperioder({
             </Nav.Column>
 
             <Nav.Column className="slett__knapp">
-              {redigerbart && formValues.skatteforholdsperioder.length > 1 && (
+              {redigerbart && fields.length > 1 && (
                 <Mui.IkonKnapp ariaLabel="Slett skatteforhold" ikon={Ikoner.Bin} onClick={() => remove(index)} />
               )}
             </Nav.Column>

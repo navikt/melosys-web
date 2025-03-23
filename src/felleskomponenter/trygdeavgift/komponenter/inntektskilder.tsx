@@ -113,14 +113,17 @@ export function Inntektskilder({
 
   const erHoyInntekt = (inntekt: any) => {
     return (
-      (inntekt.bruttoInntekt > 250000 && inntekt.erMaanedsbelop === BOOLSK_STRING.SANN) ||
-      inntekt.bruttoInntekt > 2999999
+      (inntekt?.bruttoInntekt > 250000 && inntekt?.erMaanedsbelop === BOOLSK_STRING.SANN) ||
+      inntekt?.bruttoInntekt > 2999999
     );
   };
 
   return (
     <div className="perioder">
-      {formValues.inntektskilder.map((inntektskilde, index) => {
+      {fields.map((field, index) => {
+        const inntektskilde = formValues.inntektskilder[index];
+        if (!inntektskilde) return null;
+
         const brukerSkattepliktigIHelePerioden = erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder);
 
         const skalFylleInnArbAvgBetales = arbAvgBetalesKreves(inntektskilde.kildetype, medlemskapsTypeErPliktig);
@@ -134,7 +137,7 @@ export function Inntektskilder({
         }
 
         return (
-          <Nav.Row className="periode__rad" key={fields[index].id}>
+          <Nav.Row className="periode__rad" key={field.id}>
             <Nav.Column className="dato">
               <Forms.Datovelger
                 label={index === 0 ? "Inntektsperiode" : ""}
@@ -150,7 +153,7 @@ export function Inntektskilder({
                 name={`inntektskilder[${index}].tomDato`}
                 readOnly={!redigerbart}
                 control={control}
-                minDate={Utils.dato.norskStringTilDate(formValues.inntektskilder[index].fomDato)}
+                minDate={inntektskilde.fomDato ? Utils.dato.norskStringTilDate(inntektskilde.fomDato) : undefined}
               />
             </Nav.Column>
             <Nav.Column className="inntektskildetype">
@@ -250,11 +253,7 @@ export function Inntektskilder({
             </Nav.Column>
 
             <Nav.Column
-              className={`column ${
-                erHoyInntekt(formValues.inntektskilder[index])
-                  ? "hoy_inntekt_advarsel"
-                  : "hoy_inntekt_advarsel invisible"
-              }`}
+              className={`column ${erHoyInntekt(inntektskilde) ? "hoy_inntekt_advarsel" : "hoy_inntekt_advarsel invisible"}`}
             >
               <Alert variant="warning" size="small">
                 Høy inntekt!
@@ -262,7 +261,7 @@ export function Inntektskilder({
             </Nav.Column>
 
             <Nav.Column className="slett__knapp">
-              {redigerbart && formValues.inntektskilder.length > 1 && (
+              {redigerbart && fields.length > 1 && (
                 <Mui.IkonKnapp ariaLabel="Slett inntektskilde" ikon={Ikoner.Bin} onClick={() => remove(index)} />
               )}
             </Nav.Column>
