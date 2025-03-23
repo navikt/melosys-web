@@ -159,11 +159,13 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
   // TODO: Når ryddingen skjer her husk å rename bort fra medlemskapsTypeErPliktig
   const handleBeregnTrygdeavgiftsperioder = useCallback(
     async (formVerdier: FieldValue<FormValuesProps>) => {
-      await beregnTrygdeavgiftsperioder(formVerdier, {
+      await beregnTrygdeavgiftsperioder({
         behandlingID,
         medlemskapstypeErPliktig: medlemskapsTypeErPliktig,
         setFeilmelding,
         setAarsavregningResponse,
+        skatteforholdsperioder: formVerdier.skatteforholdsperioder,
+        inntektskilder: formVerdier.inntektskilder,
       });
       setBeregningPaagar(false);
     },
