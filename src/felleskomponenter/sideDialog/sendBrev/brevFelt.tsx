@@ -1,23 +1,19 @@
 import { ColumnWidth } from "nav-frontend-grid";
+
 import * as Nav from "../../../navFrontend";
 import * as Skjema from "../../skjema";
-import * as Utils from "../../../utils";
+
 import { DokumenterV2 } from "../../../services/api";
 import { begrensAntallTegn } from "../../../utils/normalisering";
 import LabelMedHjelpetekst from "../../labelMedHjelpetekst";
-import { SendBrevFormValues } from "./types";
 
 interface BrevFeltProps {
   felt: DokumenterV2.Felt;
   visFeltBeskrivelse: boolean;
   width: ColumnWidth;
   redigerbart: boolean;
-  formErrors: Record<string, any>;
-  formValues?: Partial<SendBrevFormValues>;
-  visFeil?: boolean;
 }
-
-function BrevFelt({ felt, visFeltBeskrivelse, width, redigerbart, formErrors, formValues, visFeil }: BrevFeltProps) {
+function BrevFelt({ felt, visFeltBeskrivelse, width, redigerbart }: BrevFeltProps) {
   switch (felt?.feltType) {
     case DokumenterV2.FeltType.FRITEKST:
       return (
@@ -29,13 +25,6 @@ function BrevFelt({ felt, visFeltBeskrivelse, width, redigerbart, formErrors, fo
             feltNavn={`felt.${felt.kode}.feltVerdi`}
             className="brevfelt__fritekst"
             disabled={!redigerbart}
-            feil={
-              visFeil
-                ? Utils.feilmelding.hentEnkeltFeilmelding(
-                    formErrors?.[`felt.${felt.kode}.feltVerdi`] || formErrors?.fritekst,
-                  )
-                : undefined
-            }
           />
         </>
       );
@@ -57,11 +46,6 @@ function BrevFelt({ felt, visFeltBeskrivelse, width, redigerbart, formErrors, fo
               }
               placeholder={`${placeholder}${placeholderMaksAntallTegn}`}
               disabled={!redigerbart}
-              error={
-                visFeil && felt.kode === "BREV_TITTEL" && formValues?.felt?.BREV_TITTEL?.valg === "FRITEKST"
-                  ? Utils.feilmelding.hentEnkeltFeilmelding(formErrors?.fritekstTittel)
-                  : undefined
-              }
             />
           </Nav.Column>
         </Nav.Row>
@@ -75,7 +59,6 @@ function BrevFelt({ felt, visFeltBeskrivelse, width, redigerbart, formErrors, fo
               feltNavn={`felt.${felt.kode}.feltVerdi`}
               label={felt.beskrivelse}
               disabled={!redigerbart}
-              error={visFeil && formErrors?.type ? Utils.feilmelding.hentEnkeltFeilmelding(formErrors.type) : undefined}
             />
           </Nav.Column>
         </Nav.Row>

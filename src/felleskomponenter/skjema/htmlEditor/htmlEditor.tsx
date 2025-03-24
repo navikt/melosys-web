@@ -7,7 +7,6 @@ interface SkjemaHtmlEditorProps {
   disabled?: boolean;
   label?: React.ReactNode;
   placeholder?: string;
-  feil?: string;
 }
 
 function SkjemaHtmlEditorComponent({
