@@ -22,6 +22,8 @@ import { VilkaarOgBegrunnelser } from "./komponenter/vilkaarOgBegrunnelser";
 import * as Utils from "../../../../../utils";
 import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../../ducks/oppsummertfakta";
 import { KTObject } from "@navikt/melosys-kodeverk";
+import { useFeatureToggle } from "../../../../../featuretoggle";
+import { MELOSYS_PENSJONIST } from "../../../../../featuretoggle/toggleNavn";
 
 export const kodeInkludererFritekst = (nestedKtObject: { [key: string]: KTObject[] }, kode?: string) =>
   KV.termFraNestedKTObject(nestedKtObject, kode)?.includes("(fritekst)");
@@ -39,6 +41,7 @@ const {
 } = MKV.Koder.avklartefaktatyper;
 
 export function VurderingBestemmelse({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: VurderingBestemmelseProps) {
+  const erPensjonistToggleEnabled = useFeatureToggle(MELOSYS_PENSJONIST);
   const dispatch = useDispatch();
   const behandlingstatus = useSelector(behandlingerSelectors.BehandlingsstatusKodeSelector);
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as any;
@@ -84,6 +87,8 @@ export function VurderingBestemmelse({ bekreft, tilbake, aktivtSteg, oppdaterSta
   );
 
   const alleSelvstendigeVirksomheter = [...selvstendigNaeringsvirksomhetUtland, ...selvstendigNaeringsvirksomhet];
+
+  const erPensjonist = behandlingstema === MKV.Koder.behandlinger.behandlingstema.PENSJONIST;
 
   const valgteVirksomheterSomIkkeErSelvstendig = lagredeValgtevirksomheter.filter(
     (orgnr) => !alleSelvstendigeVirksomheter.find((virksomhet) => (virksomhet.uuid ?? virksomhet.orgnr) === orgnr),
@@ -154,17 +159,50 @@ export function VurderingBestemmelse({ bekreft, tilbake, aktivtSteg, oppdaterSta
     if (ulovligBestemmelseValgt) return;
 
     if (skalHenteVilkår) {
-      Api.Ftrl.hentVilkår(valgtBestemmelse, valgtAvklarteFakta, behandlingID, behandlingstema).then((res: any) =>
-        setVilkårOgBegrunnelser(res.vilkår),
-      );
+      Api.Ftrl.hentVilkår(valgtBestemmelse, valgtAvklarteFakta, behandlingID, behandlingstema).then((res: any) => {
+        setVilkårOgBegrunnelser(res.vilkår);
+        defaultSettBegunnelserVedPensjonist(res.vilkår);
+      });
     }
 
     if (valgtAvklarteFakta.size > 0 && avklarteFakta.length > 0) {
-      Api.Ftrl.hentVilkår(valgtBestemmelse, valgtAvklarteFakta, behandlingID, behandlingstema).then((res: any) =>
-        setVilkårOgBegrunnelser(res.vilkår),
-      );
+      Api.Ftrl.hentVilkår(valgtBestemmelse, valgtAvklarteFakta, behandlingID, behandlingstema).then((res: any) => {
+        setVilkårOgBegrunnelser(res.vilkår);
+        defaultSettBegunnelserVedPensjonist(res.vilkår);
+      });
     }
   }, [valgtBestemmelse, valgtAvklarteFakta, avklarteFakta, ulovligBestemmelseValgt, skalHenteVilkår, behandlingID]);
+
+  const defaultSettBegunnelserVedPensjonist = (vilkår: any[]) => {
+    if (!erPensjonist || !erPensjonistToggleEnabled) return;
+    // const { FTRL_2_9_FØRSTE_LEDD_B_PENSJON, FTRL_2_8_NÆR_TILKNYTNING_NORGE } = MKV.Koder.trygdedekninger;
+    const muligeBegrunnelserNærTilknyttningNorge =
+      vilkår.find((v) => v.vilkår === "FTRL_2_8_NÆR_TILKNYTNING_NORGE")?.muligeBegrunnelser || [];
+    const muligeBegrunnelserFørsteLedd =
+      vilkår.find((v) => v.vilkår === "FTRL_2_9_FØRSTE_LEDD_B_PENSJON")?.muligeBegrunnelser || [];
+
+    if (muligeBegrunnelserNærTilknyttningNorge.length === 1) {
+      setHarSkjeddEndringer(true);
+      setValgteBegrunnelser(
+        new Map(
+          valgteBegrunnelser.set("FTRL_2_8_NÆR_TILKNYTNING_NORGE", {
+            begrunnelseKode: muligeBegrunnelserNærTilknyttningNorge[0],
+          }),
+        ),
+      );
+    }
+
+    if (muligeBegrunnelserFørsteLedd === 1) {
+      setHarSkjeddEndringer(true);
+      setValgteBegrunnelser(
+        new Map(
+          valgteBegrunnelser.set("FTRL_2_9_FØRSTE_LEDD_B_PENSJON", {
+            begrunnelseKode: muligeBegrunnelserFørsteLedd[0],
+          }),
+        ),
+      );
+    }
+  };
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -195,6 +233,7 @@ export function VurderingBestemmelse({ bekreft, tilbake, aktivtSteg, oppdaterSta
     setSkalInitialisere(true);
     setValgteVilkår(new Map(tidligereValgteVilkår));
     setValgteBegrunnelser(new Map(tidligereValgteBegrunnelser));
+    defaultSettBegunnelserVedPensjonist(vilkårOgBegrunnelser);
   }, [lagredeVilkår]);
 
   useEffect(() => {
@@ -202,6 +241,7 @@ export function VurderingBestemmelse({ bekreft, tilbake, aktivtSteg, oppdaterSta
       vilkårOgBegrunnelser.forEach((vb) => {
         setValgteVilkår(new Map(valgteVilkår.set(vb.vilkår, vb.defaultOppfylt)));
         setValgteBegrunnelser(new Map());
+        defaultSettBegunnelserVedPensjonist(vilkårOgBegrunnelser);
       });
     }
   }, [vilkårOgBegrunnelser, skalInitialisere]);
@@ -254,7 +294,12 @@ export function VurderingBestemmelse({ bekreft, tilbake, aktivtSteg, oppdaterSta
       for (const [, value] of valgteBegrunnelser.entries()) {
         if (vilkår.muligeBegrunnelser.includes(value.begrunnelseKode)) {
           if (kodeInkludererFritekst(MKV.KTObjects.begrunnelser.folketrygdloven, value.begrunnelseKode)) {
-            begrunnelserOK = (value.begrunnelseFritekst?.length ?? 0) <= 3000;
+            if (erPensjonistToggleEnabled && erPensjonist) {
+              begrunnelserOK =
+                (value.begrunnelseFritekst?.length ?? 0) <= 3000 && (value.begrunnelseFritekst?.length ?? 0) > 0;
+            } else {
+              begrunnelserOK = (value.begrunnelseFritekst?.length ?? 0) <= 3000;
+            }
           } else {
             begrunnelserOK = true;
           }

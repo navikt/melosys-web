@@ -1,4 +1,4 @@
-import { ChangeEventHandler } from "react";
+import { ChangeEventHandler, useEffect } from "react";
 
 import MKV from "../../../../../../melosyskodeverk";
 import * as KV from "../../../../../../kodeverk";
@@ -11,6 +11,11 @@ import { IngenFlytMelding } from "../../../../../../felleskomponenter/alertmeldi
 import { Begrunnelse, VilkårOgBegrunnelser } from "./typer";
 import { kodeInkludererFritekst } from "../vurderingBestemmelse";
 import { Stack } from "@navikt/ds-react";
+import { useSelector } from "react-redux";
+import { BehandlingstypeKodeSelector } from "../../../../../../ducks/behandlinger/selectors";
+import { behandlingerSelectors } from "../../../../../../ducks/behandlinger";
+import { useFeatureToggle } from "../../../../../../featuretoggle";
+import { MELOSYS_PENSJONIST } from "../../../../../../featuretoggle/toggleNavn";
 
 const hjelpetekster = new Map([
   [
@@ -40,6 +45,9 @@ export function VilkaarOgBegrunnelser({
   redigerbart,
   selvstendigNæringValgt,
 }: VilkaarOgBegrunnelserProps) {
+  const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
+  const erPensjonistToggleEnabled = useFeatureToggle(MELOSYS_PENSJONIST);
+
   const hjelpetekstForVilkaar = hjelpetekster.get(vilkår);
   const vilkårErValgt = alleValgteVilkår.get(`${vilkår}`);
   const valgtBegrunnelseForVilkår = alleValgteBegrunnelser.get(`${vilkår}`)!;
@@ -48,7 +56,9 @@ export function VilkaarOgBegrunnelser({
     valgtBegrunnelseForVilkår?.begrunnelseKode,
   );
   const harValgtFtrlArbeidstaker = vilkår === MKV.Koder.vilkaar.FTRL_ARBEIDSTAKER && vilkårErValgt;
-
+  const muligeBegrunnelserHarKunAnnenGrunn =
+    muligeBegrunnelser?.length === 1 && muligeBegrunnelser[0] === "ANNEN_GRUNN";
+  const erPensjonist = behandlingstema === MKV.Koder.behandlinger.behandlingstema.PENSJONIST;
   return (
     <>
       <Nav.RadioGroup
@@ -76,31 +86,33 @@ export function VilkaarOgBegrunnelser({
       {vilkårErValgt === false && <IngenFlytMelding />}
       {vilkårErValgt && !Utils._isEmpty(muligeBegrunnelser) && (
         <>
-          <Nav.Row>
-            <Nav.Column xs="7">
-              <Nav.Select
-                label={
-                  <LabelMedHjelpetekst
-                    label="Særlig grunn"
-                    hjelpetekst="Grunnen du velger utløser en standardtekst i vedtaksbrevet."
-                  />
-                }
-                onChange={handleEndreBegrunnelseKode}
-                name={`${vilkår}`}
-                value={valgtBegrunnelseForVilkår?.begrunnelseKode}
-                readOnly={!redigerbart}
-              >
-                <option key="" value="" disabled={!!alleValgteBegrunnelser.get(`${vilkår}`)}>
-                  Velg...
-                </option>
-                {muligeBegrunnelser.map((begrunnelse) => (
-                  <option key={begrunnelse} value={begrunnelse}>
-                    {KV.termFraNestedKTObject(MKV.KTObjects.begrunnelser.folketrygdloven, begrunnelse)}
+          {!(erPensjonist && muligeBegrunnelserHarKunAnnenGrunn && erPensjonistToggleEnabled) && (
+            <Nav.Row>
+              <Nav.Column xs="7">
+                <Nav.Select
+                  label={
+                    <LabelMedHjelpetekst
+                      label="Særlig grunn"
+                      hjelpetekst="Grunnen du velger utløser en standardtekst i vedtaksbrevet."
+                    />
+                  }
+                  onChange={handleEndreBegrunnelseKode}
+                  name={`${vilkår}`}
+                  value={valgtBegrunnelseForVilkår?.begrunnelseKode}
+                  readOnly={!redigerbart}
+                >
+                  <option key="" value="" disabled={!!alleValgteBegrunnelser.get(`${vilkår}`)}>
+                    Velg...
                   </option>
-                ))}
-              </Nav.Select>
-            </Nav.Column>
-          </Nav.Row>
+                  {muligeBegrunnelser.map((begrunnelse) => (
+                    <option key={begrunnelse} value={begrunnelse}>
+                      {KV.termFraNestedKTObject(MKV.KTObjects.begrunnelser.folketrygdloven, begrunnelse)}
+                    </option>
+                  ))}
+                </Nav.Select>
+              </Nav.Column>
+            </Nav.Row>
+          )}
           {visBegrunnelseFritekst && (
             <Nav.Row>
               <Nav.Column xs="12">
