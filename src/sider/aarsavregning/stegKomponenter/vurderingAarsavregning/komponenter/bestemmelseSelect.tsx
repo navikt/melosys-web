@@ -22,7 +22,7 @@ interface BestemmelseSelectProps {
   setFeilmelding: (feilmelding: string | undefined) => void;
 }
 
-export function BestemmelseSelect({
+function BestemmelseSelect({
   control,
   setValue,
   bestemmelser,
@@ -41,13 +41,9 @@ export function BestemmelseSelect({
   const handleBestemmelseChange = useCallback(
     async (nyBestemmelse: string) => {
       try {
-        // If harDeltGrunnlag is false, delete all saved medlemskapsperioder from backend
-        let backendDeleted = false;
-
         if (!harDeltGrunnlag && behandlingID) {
           try {
             await Api.MedlemAvFolketrygden.Medlemskapsperioder.slettMedlemskapsperioder(behandlingID);
-            backendDeleted = true;
 
             // Refresh medlemskapsperioder in Redux store
             dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(behandlingID));
@@ -65,10 +61,7 @@ export function BestemmelseSelect({
           medlemskapsperioder.map((periode: Medlemskapsperiode) => ({
             ...periode,
             trygdedekning: "",
-            id:
-              backendDeleted && periode.id !== ULAGRET_MEDLEMSKAPSPERIODE_ID
-                ? ULAGRET_MEDLEMSKAPSPERIODE_ID
-                : periode.id,
+            id: ULAGRET_MEDLEMSKAPSPERIODE_ID,
           })),
         );
 
@@ -123,3 +116,5 @@ export function BestemmelseSelect({
     </Forms.Select>
   );
 }
+
+export default BestemmelseSelect;
