@@ -37,7 +37,6 @@ function BestemmelseSelect({
   const medlemskapsperioder = useWatch({ control, name: "medlemskapsperioder" });
   const inntektskilder = useWatch({ control, name: "inntektskilder" });
 
-  // Function to handle bestemmelse changes
   const handleBestemmelseChange = useCallback(
     async (nyBestemmelse: string) => {
       try {
