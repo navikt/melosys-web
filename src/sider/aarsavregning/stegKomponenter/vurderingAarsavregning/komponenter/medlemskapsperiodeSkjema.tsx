@@ -1,5 +1,4 @@
 import { Control, FieldArrayWithId } from "react-hook-form";
-import * as Api from "../../../../../services/api";
 
 import MKV from "../../../../../melosyskodeverk";
 import * as KV from "../../../../../kodeverk";
@@ -10,7 +9,6 @@ import * as Mui from "../../../../../felleskomponenter/ui";
 import * as Ikoner from "../../../../../resources/images";
 import * as Utils from "../../../../../utils";
 
-import { useEffect, useState } from "react";
 import { FieldArrayProps, FormValuesProps } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
 import "./medlemskapsperiodeSkjema.css";
 
@@ -26,7 +24,7 @@ export interface PeriodeElementerProps {
   visLeggTil: boolean;
   maksVerdi?: Date;
   minVerdi?: Date;
-  bestemmelse?: string;
+  trygdedekninger?: string[];
 }
 
 export function MedlemskapsperiodeSkjema({
@@ -41,15 +39,8 @@ export function MedlemskapsperiodeSkjema({
   visLeggTil,
   maksVerdi,
   minVerdi,
-  bestemmelse,
+  trygdedekninger = [],
 }: PeriodeElementerProps) {
-  const [trygdedekninger, setTrygdedekninger] = useState<[]>([]);
-
-  useEffect(() => {
-    if (bestemmelse) {
-      Api.LovligeKombinasjoner.hentTrygdedekninger(bestemmelse).then(setTrygdedekninger);
-    }
-  }, [bestemmelse]);
 
   const erPeriodeFraGrunnlag = !formValues.medlemskapsperioder[index]?.redigerbar;
   const kanSlettePeriode = redigerbart && formValues.medlemskapsperioder.length !== 1;
@@ -98,7 +89,7 @@ export function MedlemskapsperiodeSkjema({
               control={control}
               readOnly={!redigerbart || erPeriodeFraGrunnlag}
             >
-              {trygdedekninger.map((dekning: any) => (
+              {trygdedekninger?.map((dekning: any) => (
                 <option key={dekning} value={dekning}>
                   {KV.kodeTilTerm(dekning, MKV.KTObjects.trygdedekninger)}
                 </option>

@@ -32,11 +32,7 @@ import { MedlemskapsperiodeSkjema } from "../komponenter/medlemskapsperiodeSkjem
 import { SumArsavregningTabell } from "../komponenter/sumArsavregningTabell";
 import { TidligereFakturertIAvgiftssystemetInput } from "../komponenter/tidligereFakturertIAvgiftssystemetInput";
 import TidligereGrunnlagsoversikt from "../komponenter/tidligereGrunnlagsoversikt";
-import {
-  beregnTrygdeavgiftsperioder,
-  erBrukerSkattepliktigIHelePerioden,
-  hentMedlemskapsperiodeBestemmelse,
-} from "../komponenter/utils";
+import { beregnTrygdeavgiftsperioder, erBrukerSkattepliktigIHelePerioden } from "../komponenter/utils";
 import {
   AarsavregningFormValuesProps,
   DEFAULT_MEDLEMSKAPSPERIODE,
@@ -67,6 +63,7 @@ export function AarsavregningForm({
   const [aarsavregningResponse, setAarsavregningResponse] = useState<AarsavregningResponse | undefined>(
     initiellData.aarsavregningResponse,
   );
+  const [trygdedekninger, setTrygdedekninger] = useState<string[]>([]);
 
   const [initiellBeregningUtført, setInitiellBeregningUtført] = useState(false);
   const [harValidertSkjema, setHarValidertSkjema] = useState(false);
@@ -110,6 +107,7 @@ export function AarsavregningForm({
     update: inntektUpdate,
   } = useFieldArray<FieldArrayProps, "inntektskilder", "id">({ control, name: "inntektskilder" });
 
+  const bestemmelse = useWatch({ control, name: "bestemmelse" });
   const medlemskapsperioder = useWatch({ control, name: "medlemskapsperioder" });
   const medlemskapsperioderForrigeAntall = useRef(medlemskapsperioder.length);
   const totaltForskuddsvisFakturert = useWatch({ control, name: "totaltForskuddsvisFakturert" });
@@ -316,7 +314,14 @@ export function AarsavregningForm({
     );
   };
 
-  const bestemmelse = useWatch({ control, name: "bestemmelse" });
+  useEffect(() => {
+    if (bestemmelse) {
+      Api.LovligeKombinasjoner.hentTrygdedekninger(bestemmelse).then((res) => {
+        setTrygdedekninger(res);
+        // Nullstill relevante felt i medlemskapsperioder og inntektskilder etter endring av bestemmelse
+      });
+    }
+  }, [bestemmelse]);
 
   useEffect(() => {
     const lagreMedlemskapsperioder = async () => {
@@ -334,7 +339,7 @@ export function AarsavregningForm({
 
         const erGyldigSkjema = await trigger("medlemskapsperioder");
 
-        if (!erGyldigSkjema || bestemmelse) {
+        if (!erGyldigSkjema || !bestemmelse) {
           return;
         }
 
@@ -453,6 +458,7 @@ export function AarsavregningForm({
     }
   };
 
+  console.log(skatteforholdsperioder, inntektskilder);
   const konstruerteFormValuesForUnderliggendeKomponenter = {
     medlemskapsperioder,
     skatteforholdsperioder,
@@ -462,7 +468,6 @@ export function AarsavregningForm({
     medlemskapstypeErPliktig && erBrukerSkattepliktigIHelePerioden(skatteforholdsperioder);
   const forskuddsvisFakturertTrygdeavgift =
     (aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift?.totalAvgift ?? 0) > 0;
-  const medlemskapsperiodeBestemmelse = hentMedlemskapsperiodeBestemmelse(harDeltGrunnlag, medlemskapsperioder);
 
   return (
     <div className="vurderingAarsavregning">
@@ -534,7 +539,7 @@ export function AarsavregningForm({
               initiellData.valgtÅr !== undefined ? new Date(initiellData.valgtÅr, 11, 31, 23, 59, 59, 999) : undefined
             }
             minVerdi={initiellData.valgtÅr !== undefined ? new Date(initiellData.valgtÅr, 0, 1) : undefined}
-            bestemmelse={bestemmelse}
+            trygdedekninger={trygdedekninger}
           />
         ))}
       </div>
@@ -560,7 +565,7 @@ export function AarsavregningForm({
           fields={inntektFields}
           medlemskapsTypeErPliktig={medlemskapstypeErPliktig}
           skalViseErMaanedsBelopRadioGroup
-          bestemmelse={medlemskapsperiodeBestemmelse}
+          bestemmelse={bestemmelse}
         />
       )}
       {formIsValid && trygdeAvgiftSkalIkkeBetalesTilNav && (
