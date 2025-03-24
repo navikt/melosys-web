@@ -163,6 +163,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
             await opprettMedlemskapsperiode(periode);
           }
 
+          // Henter medlemskapsperioder fra behandlingsresultat
           const oppdaterteMedlemskapsperioder =
             await Api.MedlemAvFolketrygden.Medlemskapsperioder.hentMedlemskapsperioder(behandlingID);
 
@@ -176,7 +177,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
             aarsavregningRes.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag,
           );
         } else {
-          // Vanlig innlastning. Når det ikke er delt grunnlag initielt.
+          // Vanlig innlastning. Delt og uten grunnlag
           mappedMedlemskapsperioder = mapMedlemskapsperioder(
             innvilgedeMedlemskapsperioder,
             aarsavregningRes?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag,

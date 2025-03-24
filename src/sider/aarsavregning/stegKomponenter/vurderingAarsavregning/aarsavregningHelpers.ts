@@ -36,11 +36,11 @@ export const mapTilSkatteforholdProps = (skatteforholdsperioder?: any[], medlems
 
 export const mapTilInntektskilderProps = (inntektskilder?: any[], medlemskapsperioder?: any[]) => {
   const { fom, tom } = hentMedlemskapsFomTomDato(medlemskapsperioder);
-  if (inntektskilder) {
+  if (inntektskilder && inntektskilder.length > 0) {
     return inntektskilder.map((inntektskilde) => ({
       fomDato: Utils.dato.formatterDatoTilNorsk(inntektskilde.fomDato),
       tomDato: Utils.dato.formatterDatoTilNorsk(inntektskilde.tomDato),
-      kildetype: inntektskilde.type,
+      kildetype: inntektskilde.type,  // Backend sends "type" instead of "kildetype"
       arbAvgBetales: Utils.streng.boolTilUppercaseStreng(inntektskilde.arbeidsgiversavgiftBetales),
       bruttoInntekt: inntektskilde.avgiftspliktigInntekt,
       erMaanedsbelop: Utils.streng.boolTilUppercaseStreng(inntektskilde.erMaanedsbelop),
@@ -51,7 +51,6 @@ export const mapTilInntektskilderProps = (inntektskilder?: any[], medlemskapsper
       {
         fomDato: Utils.dato.formatterDatoTilNorsk(fom),
         tomDato: Utils.dato.formatterDatoTilNorsk(tom),
-        kildetype: undefined,
         arbAvgBetales: Utils.streng.boolTilUppercaseStreng(false),
         bruttoInntekt: undefined,
         erMaanedsbelop: Utils.streng.boolTilUppercaseStreng(false),

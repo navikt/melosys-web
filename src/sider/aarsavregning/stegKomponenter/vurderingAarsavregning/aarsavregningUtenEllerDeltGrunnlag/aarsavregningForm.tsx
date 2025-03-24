@@ -319,6 +319,7 @@ export function AarsavregningForm({
       Api.LovligeKombinasjoner.hentTrygdedekninger(bestemmelse).then((res) => {
         setTrygdedekninger(res);
         // Nullstill relevante felt i medlemskapsperioder og inntektskilder etter endring av bestemmelse
+        // Kan virke som lagrede medlemskapsperioder må slettes
       });
     }
   }, [bestemmelse]);
@@ -458,7 +459,9 @@ export function AarsavregningForm({
     }
   };
 
-  console.log(skatteforholdsperioder, inntektskilder);
+  console.log("bestemmelse:", bestemmelse);
+  console.log("skatteforholdsperioder:", skatteforholdsperioder);
+  console.log("inntektskilder:", inntektskilder);
   const konstruerteFormValuesForUnderliggendeKomponenter = {
     medlemskapsperioder,
     skatteforholdsperioder,

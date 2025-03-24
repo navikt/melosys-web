@@ -164,6 +164,7 @@ export function Inntektskilder({
                 control={control}
                 readOnly={!redigerbart}
                 onChange={(value) => handleEndreKildetype(index, value)}
+                emptyFieldDisabled
               >
                 {hentInntektskilde(bestemmelse, medlemskapsTypeErPliktig, behandlingstema).map((kt: KTObject) => (
                   <option key={kt.kode} value={kt.kode}>
