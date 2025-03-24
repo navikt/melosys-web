@@ -34,6 +34,7 @@ export function Skatteforholdsperioder({
     <div className="perioder">
       {fields.map((field, index) => {
         const skatteforhold = formValues.skatteforholdsperioder[index];
+        if (!skatteforhold) return null;
         return (
           <Nav.Row className="periode__rad" key={field.id}>
             <Nav.Column className="dato">
@@ -51,7 +52,7 @@ export function Skatteforholdsperioder({
                 name={`skatteforholdsperioder[${index}].tomDato`}
                 readOnly={!redigerbart}
                 control={control}
-                minDate={skatteforhold?.fomDato ? Utils.dato.norskStringTilDate(skatteforhold.fomDato) : undefined}
+                minDate={skatteforhold.fomDato ? Utils.dato.norskStringTilDate(skatteforhold.fomDato) : undefined}
               />
             </Nav.Column>
 
