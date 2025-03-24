@@ -51,8 +51,6 @@ interface Props {
   tilgjengeligeMottakere: DokumenterV2.TilgjengeligMottaker[];
   changeField: (felt: string, data: any) => void;
   overstyrBlurEvent: (event: FocusEvent) => void;
-  formErrors?: Record<string, any>;
-  visFeil?: boolean;
 }
 
 function BrevMottaker({
@@ -63,8 +61,6 @@ function BrevMottaker({
   orgnrValid,
   changeField,
   overstyrBlurEvent,
-  formErrors,
-  visFeil,
 }: Props & PropsFromRedux) {
   const [feil, setFeil] = useState<FeilmeldingProps | undefined>(undefined);
   const [adresse, setAdresse] = useState<{
@@ -154,9 +150,6 @@ function BrevMottaker({
             bold
             small
           />
-        }
-        error={
-          visFeil && formErrors?.mottaker ? Utils.feilmelding.hentEnkeltFeilmelding(formErrors.mottaker) : undefined
         }
         disabled={!redigerbart || tilgjengeligeMottakere?.length === 1}
         emptyFieldDisabled={!!formValues.mottaker}
