@@ -95,7 +95,6 @@ export function AarsavregningForm({
     fields: medlemskapsperioderFields,
     append: medlemskapsperioderAppend,
     remove: medlemskapsperioderRemove,
-    update: medlemskapsperioderUpdate,
   } = useFieldArray<FieldArrayProps, "medlemskapsperioder", "id">({ control, name: "medlemskapsperioder" });
 
   const {
@@ -185,7 +184,7 @@ export function AarsavregningForm({
       fomDato: Utils.dato.formatterDatoTilISO(medlemskapsperiode.fomDato, "") as string,
       tomDato: Utils.dato.formatterDatoTilISO(medlemskapsperiode.tomDato, "") as string,
       trygdedekning: medlemskapsperiode.trygdedekning,
-      bestemmelse: medlemskapsperiode.bestemmelse,
+      bestemmelse,
       innvilgelsesResultat: MKV.Koder.innvilgelsesResultat.INNVILGET,
     } as OppdaterMedlemskapsperiode;
 
@@ -195,7 +194,6 @@ export function AarsavregningForm({
       tidligerePerioderIndex.id === ULAGRET_MEDLEMSKAPSPERIODE_ID ||
       tidligerePerioderIndex.fomDato !== medlemskapsperiode.fomDato ||
       tidligerePerioderIndex.tomDato !== medlemskapsperiode.tomDato ||
-      tidligerePerioderIndex.bestemmelse !== medlemskapsperiode.bestemmelse ||
       tidligerePerioderIndex.trygdedekning !== medlemskapsperiode.trygdedekning
     ) {
       try {
@@ -295,23 +293,17 @@ export function AarsavregningForm({
       return false;
     }
 
-    const nåværendeListeMedRelevanteFelter = medlemskapsperioderNå.map(
-      ({ fomDato, tomDato, bestemmelse, trygdedekning }) => ({
-        fomDato,
-        tomDato,
-        bestemmelse,
-        trygdedekning,
-      }),
-    );
+    const nåværendeListeMedRelevanteFelter = medlemskapsperioderNå.map(({ fomDato, tomDato, trygdedekning }) => ({
+      fomDato,
+      tomDato,
+      trygdedekning,
+    }));
 
-    const forrigeListeMedRelevanteFelter = medlemskapsperioderTidlgere.map(
-      ({ fomDato, tomDato, bestemmelse, trygdedekning }) => ({
-        fomDato,
-        tomDato,
-        bestemmelse,
-        trygdedekning,
-      }),
-    );
+    const forrigeListeMedRelevanteFelter = medlemskapsperioderTidlgere.map(({ fomDato, tomDato, trygdedekning }) => ({
+      fomDato,
+      tomDato,
+      trygdedekning,
+    }));
 
     const sorterEtterFomDato = (a: any, b: any) => {
       if (!a.fomDato || !b.fomDato) return 0;
@@ -325,22 +317,6 @@ export function AarsavregningForm({
   };
 
   const bestemmelse = useWatch({ control, name: "bestemmelse" });
-  const bestemmelsePrevious = useRef(bestemmelse);
-
-  // Effect to sync the global bestemmelse with all medlemskapsperioder
-  useEffect(() => {
-    if (bestemmelse && bestemmelse !== bestemmelsePrevious.current) {
-      // Update all medlemskapsperioder with the new bestemmelse
-      medlemskapsperioder.forEach((periode: Medlemskapsperiode, index: number) => {
-        medlemskapsperioderUpdate(index, {
-          ...medlemskapsperioder[index],
-          bestemmelse,
-          trygdedekning: "", // Reset trygdedekning when bestemmelse changes
-        });
-      });
-      bestemmelsePrevious.current = bestemmelse;
-    }
-  }, [bestemmelse]);
 
   useEffect(() => {
     const lagreMedlemskapsperioder = async () => {
@@ -358,7 +334,7 @@ export function AarsavregningForm({
 
         const erGyldigSkjema = await trigger("medlemskapsperioder");
 
-        if (!erGyldigSkjema) {
+        if (!erGyldigSkjema || bestemmelse) {
           return;
         }
 
@@ -530,20 +506,11 @@ export function AarsavregningForm({
         label="Bestemmelse"
         aria-label="Bestemmelse"
         control={control}
-        readOnly={!redigerbart}
-        onChange={(e) => {
-          medlemskapsperioder.forEach((periode: Medlemskapsperiode, index: number) => {
-            medlemskapsperioderUpdate(index, {
-              ...medlemskapsperioder[index],
-              bestemmelse: e.target.value,
-              trygdedekning: "",
-            });
-          });
-        }}
+        readOnly={!redigerbart || harDeltGrunnlag}
       >
-        {initiellData.bestemmelser.map((bestemmelse: any) => (
-          <option key={bestemmelse} value={bestemmelse}>
-            {KV.kodeTilTerm(bestemmelse, [
+        {initiellData.bestemmelser.map((bestemmelseKode: any) => (
+          <option key={bestemmelseKode} value={bestemmelseKode}>
+            {KV.kodeTilTerm(bestemmelseKode, [
               ...Object.values(MKV.KTObjects.folketrygdloven_kap2_bestemmelser),
               ...Object.values(MKV.KTObjects.vertslandsavtale_bestemmelser),
             ] as string[])}
@@ -567,6 +534,7 @@ export function AarsavregningForm({
               initiellData.valgtÅr !== undefined ? new Date(initiellData.valgtÅr, 11, 31, 23, 59, 59, 999) : undefined
             }
             minVerdi={initiellData.valgtÅr !== undefined ? new Date(initiellData.valgtÅr, 0, 1) : undefined}
+            bestemmelse={bestemmelse}
           />
         ))}
       </div>

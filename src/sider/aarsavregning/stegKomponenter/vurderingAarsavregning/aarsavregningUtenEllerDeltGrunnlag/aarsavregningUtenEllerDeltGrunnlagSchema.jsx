@@ -208,27 +208,8 @@ const medlemskapsperioderKontinuerligTest = {
   },
 };
 
-const medlemskapsperioderSammeBestemmelseTest = {
-  name: "medlemskapsperioderSammeBestemmelse",
-  message: "Alle medlemskapsperioder må ha samme bestemmelse",
-  test: (perioder) => {
-    if (!perioder || perioder.length <= 1) {
-      return true;
-    }
-
-    if (harUgyldigeDatoer(perioder)) {
-      return true;
-    }
-
-    const bestemmelseSet = new Set(
-      perioder.filter((periode) => periode.bestemmelse).map((periode) => periode.bestemmelse),
-    );
-
-    return bestemmelseSet.size <= 1;
-  },
-};
-
 const aarsavregningUtenEllerDeltGrunnlagSchema = object().shape({
+  bestemmelse: string().required("Bestemmelse må fylles ut"),
   medlemskapsperioder: array()
     .min(1, "Minst en medlemskapsperiode")
     .of(
@@ -241,12 +222,10 @@ const aarsavregningUtenEllerDeltGrunnlagSchema = object().shape({
           .test(åpenTomTest)
           .test(erInnenforValgtAarTest),
         trygdedekning: string().required(),
-        bestemmelse: string().required(),
       }),
     )
     .test(medlemskapsperioderOverlappTest)
-    .test(medlemskapsperioderKontinuerligTest)
-    .test(medlemskapsperioderSammeBestemmelseTest),
+    .test(medlemskapsperioderKontinuerligTest),
   totaltForskuddsvisFakturert: string().nullable().required(MAA_FYLLES_UT),
   skatteforholdsperioder: array()
     .min(1, "Minst en skatteforholdsperiode")

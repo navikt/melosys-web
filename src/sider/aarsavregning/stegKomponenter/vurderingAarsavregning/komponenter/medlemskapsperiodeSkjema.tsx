@@ -26,6 +26,7 @@ export interface PeriodeElementerProps {
   visLeggTil: boolean;
   maksVerdi?: Date;
   minVerdi?: Date;
+  bestemmelse?: string;
 }
 
 export function MedlemskapsperiodeSkjema({
@@ -40,14 +41,15 @@ export function MedlemskapsperiodeSkjema({
   visLeggTil,
   maksVerdi,
   minVerdi,
+  bestemmelse,
 }: PeriodeElementerProps) {
   const [trygdedekninger, setTrygdedekninger] = useState<[]>([]);
 
   useEffect(() => {
-    if (field.bestemmelse) {
-      Api.LovligeKombinasjoner.hentTrygdedekninger(field.bestemmelse).then(setTrygdedekninger);
+    if (bestemmelse) {
+      Api.LovligeKombinasjoner.hentTrygdedekninger(bestemmelse).then(setTrygdedekninger);
     }
-  }, [field.bestemmelse]);
+  }, [bestemmelse]);
 
   const erPeriodeFraGrunnlag = !formValues.medlemskapsperioder[index]?.redigerbar;
   const kanSlettePeriode = redigerbart && formValues.medlemskapsperioder.length !== 1;
@@ -59,7 +61,6 @@ export function MedlemskapsperiodeSkjema({
     tilOgMedDatoForrigePeriode.setDate(tilOgMedDatoForrigePeriode.getDate() + 1);
   }
 
-  console.log(formValues.medlemskapsperioder);
   return (
     <div className="medlemskapsperiodeSkjema">
       <Nav.Heading size="small">{tittel}</Nav.Heading>
