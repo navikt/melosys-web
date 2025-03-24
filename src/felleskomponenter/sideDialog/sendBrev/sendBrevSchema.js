@@ -2,15 +2,14 @@ import { array, object, string } from "yup";
 import * as StringUtils from "../../../utils/streng";
 import { erAnnenOrganisasjon, erArbeidsgiver, erVirksomhet } from "./brevMottaker/brevMottaker";
 
-const TYPE_MANGLER = { melding: "Du må velge type brev" };
+const TYPE_MANGLER = { melding: "Velg type brev" };
 const VALGT_MAL_MANGLER = { melding: "Finner ikke mal tilhørende type brev" };
 const MOTTAKER_MANGLER = { melding: "Velg mottaker" };
 const ARBEIDSGIVER_MANGLER = { melding: "Velg arbeidsgiver" };
-const FELT_MANGLER = { melding: "Du må fylle ut alle påkrevde felter" };
+const FELT_MANGLER = { melding: "Fyll ut alle felter" };
 const ORGNUMMER_FELT_MANGLER = { melding: "Fyll ut organisasjonsnummer" };
 const ORGNUMMER_UGYLDIG = { melding: "Ugyldig organisasjonsnummer" };
-const TITTEL_MANGLER = { melding: "Du må velge overskrift" };
-const FRITEKST_MANGLER = { melding: "Du må skrive inn tekst til brevet" };
+const TITTEL_MANGLER = { melding: "Fyll inn tittel" };
 
 const manglerFeltVerdi = (felt) => {
   if (felt && !felt.valg) {
@@ -45,15 +44,6 @@ const send_brev = object().shape({
   type: string().required(TYPE_MANGLER),
   valgtMottaker: object().required(MOTTAKER_MANGLER),
   valgtBrev: object().required(VALGT_MAL_MANGLER),
-  felt: object()
-    .shape({
-      DISTRIBUSJONSTYPE: object()
-        .shape({
-          valg: string().required(TYPE_MANGLER),
-        })
-        .optional(),
-    })
-    .optional(),
   organisasjonsnummer: string()
     .when("valgtMottaker", {
       is: (valgtMottaker) => erAnnenOrganisasjon(valgtMottaker?.rolle),
@@ -68,16 +58,11 @@ const send_brev = object().shape({
       then: string().required(ARBEIDSGIVER_MANGLER).nullable(),
     })
     .nullable(),
-  fritekst: string().test("fritekst-check", FRITEKST_MANGLER, function fritekstCheck(value, context) {
-    if (value) return true;
-    const fritekstValue = context.parent?.felt?.FRITEKST?.feltVerdi;
-    return !!fritekstValue;
-  }),
+  felt: object(),
   fritekstTittel: string().when(["felt", "valgtBrev"], {
     is: manglerFeltMedValg("BREV_TITTEL"),
     then: string().required(TITTEL_MANGLER),
   }),
-  dokumentTittel: string().nullable(),
   erFeltGyldig: string().when(["felt", "valgtBrev"], {
     is: manglerNoenFeltValgt,
     then: string().required(FELT_MANGLER),

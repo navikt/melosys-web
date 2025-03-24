@@ -1,4 +1,4 @@
-import { FocusEvent, useEffect, useRef, useState } from "react";
+import { FocusEvent, useEffect, useState } from "react";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
@@ -38,7 +38,6 @@ import sendBrevSchema from "./sendBrevSchema";
 import "./sendBrev.css";
 import BrevVedlegg from "./brevVedlegg/brevVedlegg";
 import LabelMedHjelpetekst from "../../labelMedHjelpetekst";
-import { visRelevanteFeil } from "./errorUtils";
 
 const { VIRKSOMHET, ARBEIDSGIVER, ANNEN_ORGANISASJON, NORSK_MYNDIGHET, UTENLANDSK_TRYGDEMYNDIGHET } =
   MKV.Koder.mottakerroller;
@@ -46,7 +45,6 @@ const { VIRKSOMHET, ARBEIDSGIVER, ANNEN_ORGANISASJON, NORSK_MYNDIGHET, UTENLANDS
 const mapStateToProps = (state: RootState) => ({
   formIsValid: formSelectors.SendBrevValidSelector(state),
   formValues: getFormValues(KV.Form.SEND_BREV)(state),
-  formErrors: state.form?.[KV.Form.SEND_BREV]?.syncErrors || {},
   initialValues: {
     felt: {},
   },
@@ -90,7 +88,6 @@ function SendBrev({
   oppdaterBehandling,
   redigerbart,
   resetForm,
-  formErrors,
   visApneINyttVindu,
   dokumenter,
   brevTypeSelectWidth = "12",
@@ -108,9 +105,7 @@ function SendBrev({
   const [muligeMottakereNorskMyndighet, setMuligeMottakereNorskMyndighet] =
     useState<Api.DokumenterV2.MuligMottaker[]>();
   const [brevSendt, setBrevSendt] = useState(false);
-  const [, setFeil] = useState<string | undefined>();
-  const [visFeil, setvisFeil] = useState(false);
-  const prevFormValues = useRef(formValues);
+  const [feil, setFeil] = useState<string | undefined>();
   const [valgteVedlegg, setValgteVedlegg] = useState<BrevVedleggInterface>({
     saksvedlegg: [],
     standardvedlegg: null,
@@ -126,7 +121,6 @@ function SendBrev({
   const tilgjengeligeBrevtyper =
     tilgjengeligeMaler?.find((mal) => mal?.mottaker.uuid === formValues?.mottaker)?.brevTyper || [];
   const mottakerErNorskMyndighet = erNorskMyndighet(formValues?.valgtMottaker?.rolle);
-  const mottakerErArbeidsgiver = formValues?.valgtMottaker?.rolle === ARBEIDSGIVER;
   const { accounts } = useMsal();
 
   const setValgteVedleggIState = (valgteVedleggFraVisningstabell: BrevVedleggVisningstabellInterface) => {
@@ -280,12 +274,6 @@ function SendBrev({
     }
   }, [visInnhold]);
 
-  useEffect(() => {
-    if (brevSendt && formValues?.mottaker) {
-      setBrevSendt(false);
-    }
-  }, [formValues?.mottaker]);
-
   const finnValgAlternativ = (felt: Api.DokumenterV2.Felt) => {
     return felt?.valg?.valgAlternativer.find((alternativ) => alternativ.kode === formValues?.felt?.[felt.kode]?.valg);
   };
@@ -371,20 +359,8 @@ function SendBrev({
     institusjonID: hentFormVerdi("UTENLANDSK_TRYGDEMYNDIGHET_MOTTAKER", true, true),
   });
 
-  useEffect(() => {
-    const skjemaHarEndretSeg = JSON.stringify(prevFormValues.current) !== JSON.stringify(formValues);
-    if (skjemaHarEndretSeg) {
-      setvisFeil(false);
-    }
-    prevFormValues.current = formValues;
-  }, [formValues]);
-
   const sendBrev = () => {
-    setvisFeil(true);
-
     if (!formValues?.valgtMottaker) return;
-    if (!formIsValid || (formErrors && Object.keys(formErrors).length)) return;
-
     setSendBrevSpinner(true);
     setFeil(undefined);
 
@@ -394,7 +370,6 @@ function SendBrev({
         oppdaterBehandling();
         slettUtkast();
         resetFormOgFritekstvedleggState();
-        setvisFeil(false);
       })
       .catch(() => setFeil("Brevet er ikke sendt. Det skjedde en feil."))
       .finally(() => setSendBrevSpinner(false));
@@ -414,7 +389,6 @@ function SendBrev({
   const forkastBrev = async () => {
     setForkastBrevSpinner(true);
     resetFormOgFritekstvedleggState();
-    setvisFeil(false);
     setBrevSendt(false);
     setFeil(undefined);
     setMuligeMottakereFeil(undefined);
@@ -503,8 +477,6 @@ function SendBrev({
             tilgjengeligeMottakere={tilgjengeligeMottakere}
             overstyrBlurEvent={overstyrBlurEvent}
             changeField={changeField}
-            formErrors={formErrors}
-            visFeil={visFeil}
           />
         </Nav.Column>
       </Nav.Row>
@@ -520,11 +492,6 @@ function SendBrev({
               }
               emptyFieldDisabled={!!formValues.type}
               onBlur={overstyrBlurEvent}
-              error={
-                visFeil && (formErrors.type || formErrors.valgtBrev)
-                  ? Utils.feilmelding.hentEnkeltFeilmelding(formErrors.type || formErrors.valgtBrev)
-                  : undefined
-              }
             >
               {tilgjengeligeBrevtyper.map((brevType) => (
                 <option key={brevType.type.kode} value={brevType.type.kode}>
@@ -539,12 +506,10 @@ function SendBrev({
       {!valgtMottakerHarFeilmelding && (
         <BrevValg
           formValues={formValues}
-          formErrors={formErrors}
           width={felterWidth}
           redigerbart={redigerbart}
           changeField={changeField}
           finnValgAlternativ={finnValgAlternativ}
-          visFeil={visFeil}
         />
       )}
 
@@ -590,7 +555,7 @@ function SendBrev({
       <div className="send_brev__knapperad">
         <Nav.Button
           variant="primary"
-          disabled={sendBrevSpinner}
+          disabled={knappErDisabled}
           className="brevknapp"
           onClick={sendBrev}
           loading={sendBrevSpinner}
@@ -618,24 +583,14 @@ function SendBrev({
       </div>
 
       {brevSendt && (
-        <Nav.Alert variant="success" className="brev_sendt" closeButton onClose={() => setBrevSendt(false)}>
+        <Nav.Alert variant="success" className="brev_sendt">
           Brevet er bestilt. Det kan ta noe tid før brevet vises i dokumentlisten.
         </Nav.Alert>
       )}
-      {visFeil && Object.keys(formErrors || {}).length > 0 && (
-        <Nav.ErrorSummary heading="Følgende feil ble funnet:" className="valideringsfeil" size="small">
-          {visRelevanteFeil(formErrors, formValues, {
-            mottakerErArbeidsgiver,
-            erAnnenOrganisasjon: erAnnenOrganisasjon(formValues?.valgtMottaker?.rolle),
-          }).map(([field]) => {
-            const errorMessage = Utils.feilmelding.hentEnkeltFeilmelding(formErrors[field]);
-            return errorMessage ? (
-              <Nav.ErrorSummary.Item key={field} href={`#${field}`}>
-                {errorMessage}
-              </Nav.ErrorSummary.Item>
-            ) : null;
-          })}
-        </Nav.ErrorSummary>
+      {feil && (
+        <Nav.Alert variant="error" className="brev_sendt">
+          {feil}
+        </Nav.Alert>
       )}
     </div>
   );
