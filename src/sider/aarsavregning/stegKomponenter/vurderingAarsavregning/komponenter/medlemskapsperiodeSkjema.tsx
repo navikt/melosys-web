@@ -1,4 +1,4 @@
-import { Control, FieldArrayWithId, UseFieldArrayUpdate } from "react-hook-form";
+import { Control, FieldArrayWithId } from "react-hook-form";
 import * as Api from "../../../../../services/api";
 
 import MKV from "../../../../../melosyskodeverk";
@@ -12,7 +12,6 @@ import * as Utils from "../../../../../utils";
 
 import { useEffect, useState } from "react";
 import { FieldArrayProps, FormValuesProps } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
-import { Medlemskapsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import "./medlemskapsperiodeSkjema.css";
 
 export interface PeriodeElementerProps {
@@ -21,10 +20,8 @@ export interface PeriodeElementerProps {
   field: FieldArrayWithId<FieldArrayProps, "medlemskapsperioder">;
   remove: (index: number) => void;
   formValues: FormValuesProps;
-  bestemmelser: string[];
   tittel?: string;
   handleLeggTil: () => void;
-  handleUpdate: UseFieldArrayUpdate<FieldArrayProps, "medlemskapsperioder">;
   index: number;
   visLeggTil: boolean;
   maksVerdi?: Date;
@@ -37,20 +34,14 @@ export function MedlemskapsperiodeSkjema({
   control,
   remove,
   formValues,
-  bestemmelser,
   tittel,
   handleLeggTil,
-  handleUpdate,
   index,
   visLeggTil,
   maksVerdi,
   minVerdi,
 }: PeriodeElementerProps) {
   const [trygdedekninger, setTrygdedekninger] = useState<[]>([]);
-  const kodeverkKoderIBestemmelserNedtrekk: string[] = [
-    ...Object.values(MKV.KTObjects.folketrygdloven_kap2_bestemmelser),
-    ...Object.values(MKV.KTObjects.vertslandsavtale_bestemmelser),
-  ] as string[];
 
   useEffect(() => {
     if (field.bestemmelse) {
@@ -95,25 +86,6 @@ export function MedlemskapsperiodeSkjema({
               maxDate={maksVerdi}
               readOnly={!redigerbart || erPeriodeFraGrunnlag}
             />
-          </Nav.Column>
-          <Nav.Column className="bestemmelse">
-            <Forms.Select
-              name={`medlemskapsperioder[${index}].bestemmelse`}
-              label={index === 0 ? "Bestemmelse" : ""}
-              hideLabel={index !== 0}
-              aria-label={`Bestemmelse periode ${index + 1}`}
-              control={control}
-              readOnly={!redigerbart || erPeriodeFraGrunnlag}
-              onChange={() => {
-                handleUpdate(index, { ...formValues.medlemskapsperioder[index], trygdedekning: "" });
-              }}
-            >
-              {bestemmelser.map((bestemmelse: any) => (
-                <option key={bestemmelse} value={bestemmelse}>
-                  {KV.kodeTilTerm(bestemmelse, kodeverkKoderIBestemmelserNedtrekk)}
-                </option>
-              ))}
-            </Forms.Select>
           </Nav.Column>
           <Nav.Column className="trygdedekning">
             <Forms.Select

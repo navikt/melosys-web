@@ -18,6 +18,8 @@ import {
   OppdaterMedlemskapsperiode,
 } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import * as Utils from "../../../../../utils";
+import * as KV from "../../../../../kodeverk";
+import * as Forms from "../../../../../felleskomponenter/forms";
 import { hentMedlemskapsFomTomDato } from "../aarsavregningHelpers";
 import { Aarsavregningsmeldinger } from "../komponenter/aarsavregningsmeldinger";
 import { BeregnetTrygdeavgiftDetaljer } from "../komponenter/beregnetTrygdeavgiftDetaljer";
@@ -321,6 +323,24 @@ export function AarsavregningForm({
     );
   };
 
+  const bestemmelse = useWatch({ control, name: "bestemmelse" });
+  const bestemmelsePrevious = useRef(bestemmelse);
+
+  // Effect to sync the global bestemmelse with all medlemskapsperioder
+  useEffect(() => {
+    if (bestemmelse && bestemmelse !== bestemmelsePrevious.current) {
+      // Update all medlemskapsperioder with the new bestemmelse
+      medlemskapsperioder.forEach((periode: Medlemskapsperiode, index: number) => {
+        medlemskapsperioderUpdate(index, {
+          ...formValues.medlemskapsperioder[index],
+          bestemmelse,
+          trygdedekning: "", // Reset trygdedekning when bestemmelse changes
+        });
+      });
+      bestemmelsePrevious.current = bestemmelse;
+    }
+  }, [bestemmelse]);
+
   useEffect(() => {
     const lagreMedlemskapsperioder = async () => {
       if (redigerbart) {
@@ -496,6 +516,32 @@ export function AarsavregningForm({
       <Nav.Heading className="endelige_opplysninger_heading" level="2">
         Inntekts- og skatteopplysninger for endelig trygdeavgift
       </Nav.Heading>
+
+      <Forms.Select
+        name="bestemmelse"
+        label="Bestemmelse"
+        aria-label="Bestemmelse"
+        control={control}
+        readOnly={!redigerbart}
+        onChange={(e) => {
+          medlemskapsperioder.forEach((periode: Medlemskapsperiode, index: number) => {
+            medlemskapsperioderUpdate(index, {
+              ...formValues.medlemskapsperioder[index],
+              bestemmelse: e.target.value,
+              trygdedekning: "",
+            });
+          });
+        }}
+      >
+        {initiellData.bestemmelser.map((bestemmelse: any) => (
+          <option key={bestemmelse} value={bestemmelse}>
+            {KV.kodeTilTerm(bestemmelse, [
+              ...Object.values(MKV.KTObjects.folketrygdloven_kap2_bestemmelser),
+              ...Object.values(MKV.KTObjects.vertslandsavtale_bestemmelser),
+            ] as string[])}
+          </option>
+        ))}
+      </Forms.Select>
 
       <div className="medlemskapsperioder">
         {medlemskapsperioderFields.map((field, index) => (

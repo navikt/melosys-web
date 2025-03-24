@@ -72,6 +72,7 @@ export interface MedlemskapTomFomDatoer {
 
 export interface AarsavregningFormValuesProps extends FormValuesProps {
   totaltForskuddsvisFakturert?: number | string;
+  bestemmelse?: string;
 }
 
 export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, harDeltGrunnlag }: Props) {
@@ -184,10 +185,21 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
 
         const erInitiellMappingForDeltGrunnlag = harDeltGrunnlag && aarsavregningRes && !aarsavregningRes.nyttGrunnlag;
 
+        // Get the common bestemmelse value if they're all the same
+        let commonBestemmelse = "";
+        if (mappedMedlemskapsperioder.length > 0) {
+          const firstBestemmelse = mappedMedlemskapsperioder[0].bestemmelse;
+          const allSame = mappedMedlemskapsperioder.every((period) => period.bestemmelse === firstBestemmelse);
+          if (allSame) {
+            commonBestemmelse = firstBestemmelse;
+          }
+        }
+
         const formDefaultValues: FieldValue<AarsavregningFormValuesProps> = {
           medlemskapsperioder: mappedMedlemskapsperioder.length
             ? mappedMedlemskapsperioder
             : [DEFAULT_MEDLEMSKAPSPERIODE],
+          bestemmelse: commonBestemmelse, // Set the common bestemmelse if all are the same
           totaltForskuddsvisFakturert: aarsavregningRes?.avregning?.tidligereFakturertBeloepAvgiftssystem || "",
           skatteforholdsperioder: mapTilSkatteforholdProps(
             erInitiellMappingForDeltGrunnlag
