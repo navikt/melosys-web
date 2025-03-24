@@ -333,7 +333,7 @@ export function AarsavregningForm({
       // Update all medlemskapsperioder with the new bestemmelse
       medlemskapsperioder.forEach((periode: Medlemskapsperiode, index: number) => {
         medlemskapsperioderUpdate(index, {
-          ...formValues.medlemskapsperioder[index],
+          ...medlemskapsperioder[index],
           bestemmelse,
           trygdedekning: "", // Reset trygdedekning when bestemmelse changes
         });
@@ -534,7 +534,7 @@ export function AarsavregningForm({
         onChange={(e) => {
           medlemskapsperioder.forEach((periode: Medlemskapsperiode, index: number) => {
             medlemskapsperioderUpdate(index, {
-              ...formValues.medlemskapsperioder[index],
+              ...medlemskapsperioder[index],
               bestemmelse: e.target.value,
               trygdedekning: "",
             });
@@ -561,8 +561,6 @@ export function AarsavregningForm({
             index={index}
             remove={slettMedlemskapsperiode}
             formValues={konstruerteFormValuesForUnderliggendeKomponenter}
-            bestemmelser={initiellData.bestemmelser}
-            handleUpdate={medlemskapsperioderUpdate}
             handleLeggTil={leggTilDefaultMedlemskapsperiode}
             visLeggTil
             maksVerdi={

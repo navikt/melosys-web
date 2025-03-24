@@ -59,6 +59,7 @@ export function MedlemskapsperiodeSkjema({
     tilOgMedDatoForrigePeriode.setDate(tilOgMedDatoForrigePeriode.getDate() + 1);
   }
 
+  console.log(formValues.medlemskapsperioder);
   return (
     <div className="medlemskapsperiodeSkjema">
       <Nav.Heading size="small">{tittel}</Nav.Heading>
