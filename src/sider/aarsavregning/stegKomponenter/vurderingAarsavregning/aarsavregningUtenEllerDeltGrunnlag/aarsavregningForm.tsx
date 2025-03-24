@@ -51,6 +51,7 @@ export function AarsavregningForm({
     aarsavregningResponse?: AarsavregningResponse;
     bestemmelser: string[];
     formDefaultValues: FieldValue<AarsavregningFormValuesProps>;
+    trygdedekninger?: string[];
   };
   bekreft: () => void;
   oppdaterStatus: (isValid: boolean) => void;
@@ -62,7 +63,7 @@ export function AarsavregningForm({
   const [aarsavregningResponse, setAarsavregningResponse] = useState<AarsavregningResponse | undefined>(
     initiellData.aarsavregningResponse,
   );
-  const [trygdedekninger, setTrygdedekninger] = useState<string[]>([]);
+  const [trygdedekninger, setTrygdedekninger] = useState<string[]>(initiellData.trygdedekninger || []);
 
   const [initiellBeregningUtført, setInitiellBeregningUtført] = useState(false);
   const [harValidertSkjema, setHarValidertSkjema] = useState(false);
@@ -313,15 +314,52 @@ export function AarsavregningForm({
     );
   };
 
-  useEffect(() => {
-    if (bestemmelse) {
-      Api.LovligeKombinasjoner.hentTrygdedekninger(bestemmelse).then((res) => {
-        setTrygdedekninger(res);
-        // Nullstill relevante felt i medlemskapsperioder og inntektskilder etter endring av bestemmelse
-        // Kan virke som lagrede medlemskapsperioder må slettes
-      });
+  const handleBestemmelseChange = async (nyBestemmelse: string) => {
+    try {
+      let harSlettetMedlemskapsperioder = false;
+
+      if (!harDeltGrunnlag && behandlingID) {
+        try {
+          await Api.MedlemAvFolketrygden.Medlemskapsperioder.slettMedlemskapsperioder(behandlingID);
+          harSlettetMedlemskapsperioder = true;
+          dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(behandlingID));
+        } catch (error) {
+          setFeilmelding("Feil ved sletting av medlemskapsperioder");
+          return;
+        }
+      }
+
+      try {
+        const trygdedekningerResponse = await Api.LovligeKombinasjoner.hentTrygdedekninger(nyBestemmelse);
+        setTrygdedekninger(trygdedekningerResponse);
+      } catch (error) {
+        throw error;
+      }
+
+      setValue(
+        "medlemskapsperioder",
+        medlemskapsperioder.map((periode: Medlemskapsperiode) => ({
+          ...periode,
+          trygdedekning: "",
+          id: harSlettetMedlemskapsperioder ? ULAGRET_MEDLEMSKAPSPERIODE_ID : periode.id,
+        })),
+      );
+
+      setValue(
+        "inntektskilder",
+        inntektskilder.map((kilde: Inntektskilde) => ({
+          fomDato: kilde.fomDato,
+          tomDato: kilde.tomDato,
+          kildetype: "",
+          arbAvgBetales: "",
+          bruttoInntekt: "",
+          erMaanedsbelop: Utils.streng.boolTilUppercaseStreng(true),
+        })),
+      );
+    } catch (error) {
+      setFeilmelding("Feil ved håndtering av bestemmelse-endring");
     }
-  }, [bestemmelse]);
+  };
 
   useEffect(() => {
     const lagreMedlemskapsperioder = async () => {
@@ -458,9 +496,6 @@ export function AarsavregningForm({
     }
   };
 
-  console.log("bestemmelse:", bestemmelse);
-  console.log("skatteforholdsperioder:", skatteforholdsperioder);
-  console.log("inntektskilder:", inntektskilder);
   const konstruerteFormValuesForUnderliggendeKomponenter = {
     medlemskapsperioder,
     skatteforholdsperioder,
@@ -514,6 +549,11 @@ export function AarsavregningForm({
         aria-label="Bestemmelse"
         control={control}
         readOnly={!redigerbart || harDeltGrunnlag}
+        onChange={(valgtBestemmelse) => {
+          if (valgtBestemmelse && valgtBestemmelse !== bestemmelse) {
+            handleBestemmelseChange(valgtBestemmelse);
+          }
+        }}
       >
         {initiellData.bestemmelser.map((bestemmelseKode: any) => (
           <option key={bestemmelseKode} value={bestemmelseKode}>

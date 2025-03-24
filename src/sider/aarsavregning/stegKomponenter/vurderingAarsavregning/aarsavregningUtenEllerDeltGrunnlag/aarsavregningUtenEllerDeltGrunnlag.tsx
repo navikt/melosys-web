@@ -82,6 +82,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
     aarsavregningResponse?: AarsavregningResponse;
     bestemmelser: string[];
     formDefaultValues: FieldValue<AarsavregningFormValuesProps>;
+    trygdedekninger?: string[];
   }>({
     bestemmelser: [],
     formDefaultValues: {
@@ -194,6 +195,16 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
           }
         }
 
+        // Fetch trygdedekninger if we have a bestemmelse
+        let trygdedekninger: string[] = [];
+        if (commonBestemmelse) {
+          try {
+            trygdedekninger = await Api.LovligeKombinasjoner.hentTrygdedekninger(commonBestemmelse);
+          } catch (err) {
+            console.error("Feil ved henting av trygdedekninger:", err);
+          }
+        }
+
         const formDefaultValues: FieldValue<AarsavregningFormValuesProps> = {
           medlemskapsperioder: mappedMedlemskapsperioder.length
             ? mappedMedlemskapsperioder
@@ -219,6 +230,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
           aarsavregningResponse: aarsavregningRes,
           bestemmelser: bestemmelsesRes.bestemmelser,
           formDefaultValues,
+          trygdedekninger, // Pass trygdedekninger to AarsavregningForm
         });
 
         setIsLoading(false);
