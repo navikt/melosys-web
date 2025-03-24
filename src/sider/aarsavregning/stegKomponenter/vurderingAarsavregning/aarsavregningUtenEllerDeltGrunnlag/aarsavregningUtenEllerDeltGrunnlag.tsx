@@ -80,11 +80,9 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
   const [initiellData, setInitiellData] = useState<{
     valgtÅr?: number;
     aarsavregningResponse?: AarsavregningResponse;
-    lagredeMedlemskapsperioder: Medlemskapsperiode[];
     bestemmelser: string[];
     formDefaultValues: FieldValue<AarsavregningFormValuesProps>;
   }>({
-    lagredeMedlemskapsperioder: [],
     bestemmelser: [],
     formDefaultValues: {
       medlemskapsperioder: [DEFAULT_MEDLEMSKAPSPERIODE],
@@ -219,7 +217,6 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
         setInitiellData({
           valgtÅr: aarsavregningRes?.aar,
           aarsavregningResponse: aarsavregningRes,
-          lagredeMedlemskapsperioder: innvilgedeMedlemskapsperioder,
           bestemmelser: bestemmelsesRes.bestemmelser,
           formDefaultValues,
         });

@@ -49,7 +49,6 @@ export function AarsavregningForm({
   initiellData: {
     valgtÅr?: number;
     aarsavregningResponse?: AarsavregningResponse;
-    lagredeMedlemskapsperioder: Medlemskapsperiode[];
     bestemmelser: string[];
     formDefaultValues: FieldValue<AarsavregningFormValuesProps>;
   };
