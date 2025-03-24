@@ -40,7 +40,7 @@ export const mapTilInntektskilderProps = (inntektskilder?: any[], medlemskapsper
     return inntektskilder.map((inntektskilde) => ({
       fomDato: Utils.dato.formatterDatoTilNorsk(inntektskilde.fomDato),
       tomDato: Utils.dato.formatterDatoTilNorsk(inntektskilde.tomDato),
-      kildetype: inntektskilde.type,  // Backend sends "type" instead of "kildetype"
+      kildetype: inntektskilde.type, // Backend sends "type" instead of "kildetype"
       arbAvgBetales: Utils.streng.boolTilUppercaseStreng(inntektskilde.arbeidsgiversavgiftBetales),
       bruttoInntekt: inntektskilde.avgiftspliktigInntekt,
       erMaanedsbelop: Utils.streng.boolTilUppercaseStreng(inntektskilde.erMaanedsbelop),

@@ -41,7 +41,6 @@ export function MedlemskapsperiodeSkjema({
   minVerdi,
   trygdedekninger = [],
 }: PeriodeElementerProps) {
-
   const erPeriodeFraGrunnlag = !formValues.medlemskapsperioder[index]?.redigerbar;
   const kanSlettePeriode = redigerbart && formValues.medlemskapsperioder.length !== 1;
   const tilOgMedDatoForrigePeriode =

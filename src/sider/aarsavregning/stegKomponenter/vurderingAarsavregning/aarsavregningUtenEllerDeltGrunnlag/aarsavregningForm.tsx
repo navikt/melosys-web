@@ -4,7 +4,6 @@ import { FieldValue, useFieldArray, useForm, useWatch } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import { behandlingsresultatSelectors } from "../../../../../ducks/behandlingsresultat";
-import { medlemskapsperioderOperations } from "../../../../../ducks/medlemskapsperioder";
 import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 import { Inntektskilder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/inntektskilder";
 import { Skatteforholdsperioder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/skatteforholdsperioder";
@@ -22,8 +21,6 @@ import {
   OppdaterMedlemskapsperiode,
 } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import * as Utils from "../../../../../utils";
-import * as KV from "../../../../../kodeverk";
-import * as Forms from "../../../../../felleskomponenter/forms";
 import { hentMedlemskapsFomTomDato } from "../aarsavregningHelpers";
 import { Aarsavregningsmeldinger } from "../komponenter/aarsavregningsmeldinger";
 import { BeregnetTrygdeavgiftDetaljer } from "../komponenter/beregnetTrygdeavgiftDetaljer";
@@ -33,12 +30,14 @@ import { SumArsavregningTabell } from "../komponenter/sumArsavregningTabell";
 import { TidligereFakturertIAvgiftssystemetInput } from "../komponenter/tidligereFakturertIAvgiftssystemetInput";
 import TidligereGrunnlagsoversikt from "../komponenter/tidligereGrunnlagsoversikt";
 import { beregnTrygdeavgiftsperioder, erBrukerSkattepliktigIHelePerioden } from "../komponenter/utils";
+import { BestemmelseSelect } from "../komponenter/bestemmelseSelect";
 import {
   AarsavregningFormValuesProps,
   DEFAULT_MEDLEMSKAPSPERIODE,
   ULAGRET_MEDLEMSKAPSPERIODE_ID,
 } from "./aarsavregningUtenEllerDeltGrunnlag";
 import aarsavregningUtenEllerDeltGrunnlagSchema from "./aarsavregningUtenEllerDeltGrunnlagSchema";
+import { medlemskapsperioderOperations } from "../../../../../ducks/medlemskapsperioder";
 
 export function AarsavregningForm({
   initiellData,
@@ -314,53 +313,6 @@ export function AarsavregningForm({
     );
   };
 
-  const handleBestemmelseChange = async (nyBestemmelse: string) => {
-    try {
-      let harSlettetMedlemskapsperioder = false;
-
-      if (!harDeltGrunnlag && behandlingID) {
-        try {
-          await Api.MedlemAvFolketrygden.Medlemskapsperioder.slettMedlemskapsperioder(behandlingID);
-          harSlettetMedlemskapsperioder = true;
-          dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(behandlingID));
-        } catch (error) {
-          setFeilmelding("Feil ved sletting av medlemskapsperioder");
-          return;
-        }
-      }
-
-      try {
-        const trygdedekningerResponse = await Api.LovligeKombinasjoner.hentTrygdedekninger(nyBestemmelse);
-        setTrygdedekninger(trygdedekningerResponse);
-      } catch (error) {
-        throw error;
-      }
-
-      setValue(
-        "medlemskapsperioder",
-        medlemskapsperioder.map((periode: Medlemskapsperiode) => ({
-          ...periode,
-          trygdedekning: "",
-          id: harSlettetMedlemskapsperioder ? ULAGRET_MEDLEMSKAPSPERIODE_ID : periode.id,
-        })),
-      );
-
-      setValue(
-        "inntektskilder",
-        inntektskilder.map((kilde: Inntektskilde) => ({
-          fomDato: kilde.fomDato,
-          tomDato: kilde.tomDato,
-          kildetype: "",
-          arbAvgBetales: "",
-          bruttoInntekt: "",
-          erMaanedsbelop: Utils.streng.boolTilUppercaseStreng(true),
-        })),
-      );
-    } catch (error) {
-      setFeilmelding("Feil ved håndtering av bestemmelse-endring");
-    }
-  };
-
   useEffect(() => {
     const lagreMedlemskapsperioder = async () => {
       if (redigerbart) {
@@ -543,27 +495,16 @@ export function AarsavregningForm({
         Inntekts- og skatteopplysninger for endelig trygdeavgift
       </Nav.Heading>
 
-      <Forms.Select
-        name="bestemmelse"
-        label="Bestemmelse"
-        aria-label="Bestemmelse"
+      <BestemmelseSelect
         control={control}
-        readOnly={!redigerbart || harDeltGrunnlag}
-        onChange={(valgtBestemmelse) => {
-          if (valgtBestemmelse && valgtBestemmelse !== bestemmelse) {
-            handleBestemmelseChange(valgtBestemmelse);
-          }
-        }}
-      >
-        {initiellData.bestemmelser.map((bestemmelseKode: any) => (
-          <option key={bestemmelseKode} value={bestemmelseKode}>
-            {KV.kodeTilTerm(bestemmelseKode, [
-              ...Object.values(MKV.KTObjects.folketrygdloven_kap2_bestemmelser),
-              ...Object.values(MKV.KTObjects.vertslandsavtale_bestemmelser),
-            ] as string[])}
-          </option>
-        ))}
-      </Forms.Select>
+        setValue={setValue}
+        bestemmelser={initiellData.bestemmelser}
+        harDeltGrunnlag={harDeltGrunnlag}
+        behandlingID={behandlingID}
+        redigerbart={redigerbart}
+        setTrygdedekninger={setTrygdedekninger}
+        setFeilmelding={setFeilmelding}
+      />
 
       <div className="medlemskapsperioder">
         {medlemskapsperioderFields.map((field, index) => (
