@@ -1,4 +1,4 @@
-import { ChangeEventHandler, useEffect } from "react";
+import { ChangeEventHandler } from "react";
 
 import MKV from "../../../../../../melosyskodeverk";
 import * as KV from "../../../../../../kodeverk";
@@ -12,7 +12,6 @@ import { Begrunnelse, VilkårOgBegrunnelser } from "./typer";
 import { kodeInkludererFritekst } from "../vurderingBestemmelse";
 import { Stack } from "@navikt/ds-react";
 import { useSelector } from "react-redux";
-import { BehandlingstypeKodeSelector } from "../../../../../../ducks/behandlinger/selectors";
 import { behandlingerSelectors } from "../../../../../../ducks/behandlinger";
 import { useFeatureToggle } from "../../../../../../featuretoggle";
 import { MELOSYS_PENSJONIST } from "../../../../../../featuretoggle/toggleNavn";
@@ -93,7 +92,7 @@ export function VilkaarOgBegrunnelser({
                   label={
                     <LabelMedHjelpetekst
                       label="Særlig grunn"
-                      hjelpetekst="Grunnen du velger utløser en standardtekst i vedtaksbrevet."
+                      hjelpetekst="Begrunnelsen du oppgir kommer med i brevet"
                     />
                   }
                   onChange={handleEndreBegrunnelseKode}
@@ -117,6 +116,14 @@ export function VilkaarOgBegrunnelser({
             <Nav.Row>
               <Nav.Column xs="12">
                 <HtmlEditor
+                  label={
+                    erPensjonist && muligeBegrunnelserHarKunAnnenGrunn && erPensjonistToggleEnabled ? (
+                      <LabelMedHjelpetekst
+                        label="Særlig grunn"
+                        hjelpetekst="Begrunnelsen du oppgir kommer med i brevet"
+                      />
+                    ) : null
+                  }
                   value={valgtBegrunnelseForVilkår?.begrunnelseFritekst || ""}
                   onChange={(fritekst: string) => handleEndreBegrunnelseFritekst(`${vilkår}`, fritekst)}
                   placeholder="Vennligst spesifiser..."

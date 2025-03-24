@@ -157,7 +157,6 @@ export function VurderingBestemmelse({ bekreft, tilbake, aktivtSteg, oppdaterSta
 
   useEffect(() => {
     if (ulovligBestemmelseValgt) return;
-
     if (skalHenteVilkår) {
       Api.Ftrl.hentVilkår(valgtBestemmelse, valgtAvklarteFakta, behandlingID, behandlingstema).then((res: any) => {
         setVilkårOgBegrunnelser(res.vilkår);
@@ -174,15 +173,13 @@ export function VurderingBestemmelse({ bekreft, tilbake, aktivtSteg, oppdaterSta
   }, [valgtBestemmelse, valgtAvklarteFakta, avklarteFakta, ulovligBestemmelseValgt, skalHenteVilkår, behandlingID]);
 
   const defaultSettBegunnelserVedPensjonist = (vilkår: any[]) => {
-    if (!erPensjonist || !erPensjonistToggleEnabled) return;
-    // const { FTRL_2_9_FØRSTE_LEDD_B_PENSJON, FTRL_2_8_NÆR_TILKNYTNING_NORGE } = MKV.Koder.trygdedekninger;
+    const { tidligereValgteBegrunnelser } = mapLagredeVilkårTilValgteVilkårOgBegrunnelser(lagredeVilkår);
+    if (!erPensjonist || !erPensjonistToggleEnabled || tidligereValgteBegrunnelser.size > 0) return;
     const muligeBegrunnelserNærTilknyttningNorge =
       vilkår.find((v) => v.vilkår === "FTRL_2_8_NÆR_TILKNYTNING_NORGE")?.muligeBegrunnelser || [];
     const muligeBegrunnelserFørsteLedd =
-      vilkår.find((v) => v.vilkår === "FTRL_2_9_FØRSTE_LEDD_B_PENSJON")?.muligeBegrunnelser || [];
-
+      vilkår.find((v) => v.vilkår === "FTRL_2_7_RIMELIGHETSVURDERING")?.muligeBegrunnelser || [];
     if (muligeBegrunnelserNærTilknyttningNorge.length === 1) {
-      setHarSkjeddEndringer(true);
       setValgteBegrunnelser(
         new Map(
           valgteBegrunnelser.set("FTRL_2_8_NÆR_TILKNYTNING_NORGE", {
@@ -192,11 +189,10 @@ export function VurderingBestemmelse({ bekreft, tilbake, aktivtSteg, oppdaterSta
       );
     }
 
-    if (muligeBegrunnelserFørsteLedd === 1) {
-      setHarSkjeddEndringer(true);
+    if (muligeBegrunnelserFørsteLedd.length === 1) {
       setValgteBegrunnelser(
         new Map(
-          valgteBegrunnelser.set("FTRL_2_9_FØRSTE_LEDD_B_PENSJON", {
+          valgteBegrunnelser.set("FTRL_2_7_RIMELIGHETSVURDERING", {
             begrunnelseKode: muligeBegrunnelserFørsteLedd[0],
           }),
         ),
