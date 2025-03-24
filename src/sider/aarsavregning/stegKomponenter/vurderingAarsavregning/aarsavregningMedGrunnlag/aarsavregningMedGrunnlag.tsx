@@ -42,6 +42,10 @@ interface Props {
   oppdaterStatus: (isValid: boolean) => void;
 }
 
+/* TODO: Komponenten burde refaktoreres på samme måte som ble gjort for aarsavregningUtenEllerDeltGrunnlag i 7209
+ * Dele opp komponenten i initialFetch og en skjemakomponent. Fjern all unødvendig setting av skjemaverdier og endre
+ * react hook form mode til onBlur
+ */
 export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
   const [erAvvik, setErAvvik] = useState<boolean | undefined>(undefined);
   const [feilmelding, setFeilmelding] = useState<undefined | string>(undefined);

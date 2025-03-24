@@ -282,7 +282,7 @@ export function AarsavregningForm({
         }
       }
     }, 1000),
-    [trigger, handleBeregnTrygdeavgiftsperioder, setValue],
+    [trigger, handleBeregnTrygdeavgiftsperioder, setValue, skatteforholdsperioder, inntektskilder],
   );
 
   const medlemskapsperioderHarBrukerendringer = (
@@ -457,7 +457,7 @@ export function AarsavregningForm({
     }
   };
 
-  const formValues = {
+  const konstruerteFormValuesForUnderliggendeKomponenter = {
     medlemskapsperioder,
     skatteforholdsperioder,
     inntektskilder,
@@ -514,7 +514,7 @@ export function AarsavregningForm({
             field={field}
             index={index}
             remove={slettMedlemskapsperiode}
-            formValues={formValues}
+            formValues={konstruerteFormValuesForUnderliggendeKomponenter}
             bestemmelser={initiellData.bestemmelser}
             handleUpdate={medlemskapsperioderUpdate}
             handleLeggTil={leggTilDefaultMedlemskapsperiode}
@@ -529,7 +529,7 @@ export function AarsavregningForm({
 
       <Skatteforholdsperioder
         defaultPeriode={defaultPeriode}
-        formValues={formValues}
+        formValues={konstruerteFormValuesForUnderliggendeKomponenter}
         redigerbart={redigerbart}
         remove={skattRemove}
         append={skattAppend}
@@ -539,7 +539,7 @@ export function AarsavregningForm({
       {!trygdeAvgiftSkalIkkeBetalesTilNav && (
         <Inntektskilder
           defaultPeriode={defaultPeriode}
-          formValues={formValues}
+          formValues={konstruerteFormValuesForUnderliggendeKomponenter}
           redigerbart={redigerbart}
           update={inntektUpdate}
           remove={inntektRemove}

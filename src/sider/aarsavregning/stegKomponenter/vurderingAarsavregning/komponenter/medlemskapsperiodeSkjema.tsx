@@ -104,8 +104,12 @@ export function MedlemskapsperiodeSkjema({
               aria-label={`Bestemmelse periode ${index + 1}`}
               control={control}
               readOnly={!redigerbart || erPeriodeFraGrunnlag}
-              onChange={() => {
-                handleUpdate(index, { ...formValues.medlemskapsperioder[index], trygdedekning: "" });
+              onChange={(value) => {
+                handleUpdate(index, {
+                  ...formValues.medlemskapsperioder[index],
+                  bestemmelse: value,
+                  trygdedekning: "",
+                });
               }}
             >
               {bestemmelser.map((bestemmelse: any) => (
