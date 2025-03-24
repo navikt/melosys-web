@@ -52,8 +52,9 @@ export const mapTilInntektskilderProps = (inntektskilder?: any[], medlemskapsper
         fomDato: Utils.dato.formatterDatoTilNorsk(fom),
         tomDato: Utils.dato.formatterDatoTilNorsk(tom),
         arbAvgBetales: Utils.streng.boolTilUppercaseStreng(false),
-        bruttoInntekt: undefined,
-        erMaanedsbelop: Utils.streng.boolTilUppercaseStreng(false),
+        bruttoInntekt: "",
+        kildetype: "",
+        erMaanedsbelop: Utils.streng.boolTilUppercaseStreng(true),
       },
     ];
   }
