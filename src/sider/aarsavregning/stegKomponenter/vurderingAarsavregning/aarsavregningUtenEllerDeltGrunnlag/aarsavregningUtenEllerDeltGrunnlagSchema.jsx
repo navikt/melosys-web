@@ -86,33 +86,6 @@ const åpenTomTest = {
   },
 };
 
-// Simple test for checking if a date is within medlemskapsperiode range
-const erInnenforMedlemskapsperiodeTest = {
-  name: "erInnenforMedlemskapsperiode",
-  message: UTENFOR_MEDLEMSKAPSPERIODEN,
-  test: (datoString, schema) => {
-    if (Utils._isEmpty(datoString) || !Utils.dato.vaskInputDato(datoString)) return true;
-
-    // Get medlemskapsperioder directly from form values
-    const { medlemskapsperioder } = schema.from[1].value;
-    if (!medlemskapsperioder || medlemskapsperioder.length === 0) return true;
-
-    const gyldigePerioder = medlemskapsperioder.filter((p) => p.fomDato && p.tomDato);
-    if (gyldigePerioder.length === 0) return true;
-
-    const sortertePerioder = [...gyldigePerioder].sort(Utils.dato.sorterEtterNorskFomDato);
-    const fom = sortertePerioder[0].fomDato;
-    const tom = sortertePerioder[sortertePerioder.length - 1].tomDato;
-
-    return Utils.dato.erIPeriode(
-      Utils.dato.formatterDatoTilISO(fom),
-      Utils.dato.formatterDatoTilISO(tom),
-      Utils.dato.formatterDatoTilISO(datoString),
-      "[]",
-    );
-  },
-};
-
 const harUgyldigeDatoer = (perioder) => {
   return perioder.some(
     (periode) =>
@@ -228,6 +201,166 @@ const medlemskapsperioderSammeBestemmelseTest = {
   },
 };
 
+const skatteforholdsperioderHarUlikSkattepliktTest = {
+  name: "skatteforholdsperioderHarUlikSkatteplikt",
+  message: "Skatteforholdsperioder må ha ulik skatteplikttype",
+  test: (skatteforholdsperioder) => {
+    if (!skatteforholdsperioder || skatteforholdsperioder.length <= 1) {
+      return true;
+    }
+
+    const gyldige = skatteforholdsperioder.filter((periode) => periode.skatteplikttype);
+    if (gyldige.length <= 1) {
+      return true;
+    }
+
+    const skattepliktTypes = gyldige.map((periode) => periode.skatteplikttype);
+
+    const uniqueTypes = new Set(skattepliktTypes);
+    return uniqueTypes.size === skattepliktTypes.length;
+  },
+};
+
+const skatteforholdsperioderOverlappTest = {
+  name: "skatteforholdsperioderOverlapp",
+  message: "Skatteforholdsperiodene kan ikke overlappe",
+  test: (skatteforholdsperioder) => {
+    if (!skatteforholdsperioder || skatteforholdsperioder.length <= 1) {
+      return true;
+    }
+
+    if (harUgyldigeDatoer(skatteforholdsperioder)) {
+      return true;
+    }
+
+    const gyldigePerioder = skatteforholdsperioder.filter((periode) => periode.fomDato && periode.tomDato);
+    if (gyldigePerioder.length <= 1) {
+      return true;
+    }
+
+    const sortertePerioder = [...gyldigePerioder].sort(Utils.dato.sorterEtterNorskFomDato);
+
+    // eslint-disable-next-line no-plusplus
+    for (let i = 0; i < sortertePerioder.length; i++) {
+      // eslint-disable-next-line no-plusplus
+      for (let j = i + 1; j < sortertePerioder.length; j++) {
+        if (
+          Utils.dato.perioderOverlapper(
+            sortertePerioder[i].fomDato,
+            sortertePerioder[i].tomDato,
+            sortertePerioder[j].fomDato,
+            sortertePerioder[j].tomDato,
+          )
+        ) {
+          return false;
+        }
+      }
+    }
+
+    return true;
+  },
+};
+
+const skatteforholdsDekkerMedlemskapTest = {
+  name: "skatteforholdsDekkerMedlemskap",
+  message: "Skatteforholdsperioden(e) du har lagt inn dekker ikke hele medlemskapsperioden(e)",
+  test: (skatteforholdsperioder, schema) => {
+    const { medlemskapsperioder } = schema.parent || {};
+
+    const gyldigeMedlemskapsPerioder = medlemskapsperioder.filter((p) => p.fomDato && p.tomDato);
+    if (gyldigeMedlemskapsPerioder.length === 0) return true;
+
+    const sorterteMedlemskapsperioder = [...gyldigeMedlemskapsPerioder].sort(Utils.dato.sorterEtterNorskFomDato);
+    const medlemskapStart = Utils.dato.norskStringTilDate(sorterteMedlemskapsperioder[0].fomDato);
+    const medlemskapSlutt = Utils.dato.norskStringTilDate(
+      sorterteMedlemskapsperioder[sorterteMedlemskapsperioder.length - 1].tomDato,
+    );
+
+    if (!medlemskapStart || !medlemskapSlutt) return false;
+
+    const gyldigeSkatteperioder = skatteforholdsperioder.filter((p) => p.fomDato && p.tomDato);
+    if (gyldigeSkatteperioder.length === 0) return false;
+
+    const sorterteSkatteperioder = [...gyldigeSkatteperioder].sort(Utils.dato.sorterEtterNorskFomDato);
+    const skatteStart = Utils.dato.norskStringTilDate(sorterteSkatteperioder[0].fomDato);
+    const skatteSlutt = Utils.dato.norskStringTilDate(
+      sorterteSkatteperioder[sorterteSkatteperioder.length - 1].tomDato,
+    );
+
+    if (!skatteStart || !skatteSlutt) return false;
+
+    if (skatteStart.getDate() !== medlemskapStart.getDate() || skatteSlutt.getDate() !== medlemskapSlutt.getDate()) {
+      return false;
+    }
+
+    for (let i = 1; i < sorterteSkatteperioder.length; i++) {
+      const forrigePeriodeSlutt = Utils.dato.norskStringTilDate(sorterteSkatteperioder[i - 1].tomDato);
+      const dennePeriodeStart = Utils.dato.norskStringTilDate(sorterteSkatteperioder[i].fomDato);
+
+      if (!forrigePeriodeSlutt || !dennePeriodeStart) return false;
+
+      const nesteDag = new Date(forrigePeriodeSlutt);
+      nesteDag.setDate(nesteDag.getDate() + 1);
+
+      if (dennePeriodeStart.getDate() !== nesteDag.getDate()) {
+        return false;
+      }
+    }
+
+    return true;
+  },
+};
+
+const inntektsperioderDekkerMedlemskapTest = {
+  name: "inntektskildeDekkerMedlemskap",
+  message: "Inntektsperioden(e) du har lagt inn dekker ikke hele medlemskapsperioden(e)",
+  test: (inntektskilder, schema) => {
+    const { medlemskapsperioder } = schema.parent || {};
+
+    const gyldigeMedlemskapsPerioder = medlemskapsperioder.filter((p) => p.fomDato && p.tomDato);
+    if (gyldigeMedlemskapsPerioder.length === 0) return true;
+
+    const sorterteMedlemskapsperioder = [...gyldigeMedlemskapsPerioder].sort(Utils.dato.sorterEtterNorskFomDato);
+    const medlemskapStart = Utils.dato.norskStringTilDate(sorterteMedlemskapsperioder[0].fomDato);
+    const medlemskapSlutt = Utils.dato.norskStringTilDate(
+      sorterteMedlemskapsperioder[sorterteMedlemskapsperioder.length - 1].tomDato,
+    );
+
+    if (!medlemskapStart || !medlemskapSlutt) return false;
+
+    const gyldigeSkatteperioder = inntektskilder.filter((p) => p.fomDato && p.tomDato);
+    if (gyldigeSkatteperioder.length === 0) return false;
+
+    const sorterteInntektskilder = [...gyldigeSkatteperioder].sort(Utils.dato.sorterEtterNorskFomDato);
+    const skatteStart = Utils.dato.norskStringTilDate(sorterteInntektskilder[0].fomDato);
+    const skatteSlutt = Utils.dato.norskStringTilDate(
+      sorterteInntektskilder[sorterteInntektskilder.length - 1].tomDato,
+    );
+
+    if (!skatteStart || !skatteSlutt) return false;
+
+    if (skatteStart.getDate() !== medlemskapStart.getDate() || skatteSlutt.getDate() !== medlemskapSlutt.getDate()) {
+      return false;
+    }
+
+    for (let i = 1; i < sorterteInntektskilder.length; i++) {
+      const forrigePeriodeSlutt = Utils.dato.norskStringTilDate(sorterteInntektskilder[i - 1].tomDato);
+      const dennePeriodeStart = Utils.dato.norskStringTilDate(sorterteInntektskilder[i].fomDato);
+
+      if (!forrigePeriodeSlutt || !dennePeriodeStart) return false;
+
+      const nesteDag = new Date(forrigePeriodeSlutt);
+      nesteDag.setDate(nesteDag.getDate() + 1);
+
+      if (dennePeriodeStart.getDate() !== nesteDag.getDate()) {
+        return false;
+      }
+    }
+
+    return true;
+  },
+};
+
 const aarsavregningUtenEllerDeltGrunnlagSchema = object().shape({
   medlemskapsperioder: array()
     .min(1, "Minst en medlemskapsperiode")
@@ -252,21 +385,19 @@ const aarsavregningUtenEllerDeltGrunnlagSchema = object().shape({
     .min(1, "Minst en skatteforholdsperiode")
     .of(
       object().shape({
-        fomDato: string()
-          .required(MAA_FYLLES_UT)
-          .erGyldigDato()
-          .test(erInnenforValgtAarTest)
-          .test(erInnenforMedlemskapsperiodeTest),
+        fomDato: string().required(MAA_FYLLES_UT).erGyldigDato().test(erInnenforValgtAarTest),
         tomDato: string()
           .required(MAA_FYLLES_UT)
           .erGyldigDato()
           .test(åpenTomTest)
           .test(erInnenforValgtAarTest)
-          .test(erInnenforMedlemskapsperiodeTest)
           .erEtterDatofelt("fomDato"),
         skatteplikttype: string().required(MAA_FYLLES_UT),
       }),
-    ),
+    )
+    .test(skatteforholdsperioderOverlappTest)
+    .test(skatteforholdsDekkerMedlemskapTest)
+    .test(skatteforholdsperioderHarUlikSkattepliktTest),
   inntektskilder: array().when(["medlemskapsperioder", "skatteforholdsperioder"], {
     is: (medlemskapsperioder, skatteforholdsperioder) => {
       const medlemskapsTypeErPliktig = erMedlemskapsTypePliktig(medlemskapsperioder);
@@ -280,14 +411,15 @@ const aarsavregningUtenEllerDeltGrunnlagSchema = object().shape({
           kildetype: string().required(MAA_FYLLES_UT),
           arbAvgBetales: string().test(arbAvgBetalesFyltUtNårDetKrevesTest).nullable(),
           bruttoInntekt: string().test(bruttoInntektFyltUtNårDetKrevesTest),
-          fomDato: string().required(MAA_FYLLES_UT).erGyldigDato().test(erInnenforMedlemskapsperiodeTest),
+          fomDato: string().required(MAA_FYLLES_UT).erGyldigDato().test(erInnenforValgtAarTest),
           tomDato: string()
             .required(MAA_FYLLES_UT)
             .erGyldigDato()
-            .test(erInnenforMedlemskapsperiodeTest)
+            .test(erInnenforValgtAarTest)
             .erEtterDatofelt("fomDato"),
         }),
-      ),
+      )
+      .test(inntektsperioderDekkerMedlemskapTest),
     otherwise: array(),
   }),
 });

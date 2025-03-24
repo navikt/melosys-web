@@ -60,7 +60,7 @@ export function AarsavregningForm({
   harDeltGrunnlag: boolean;
 }) {
   const [feilmelding, setFeilmelding] = useState<undefined | string>(undefined);
-  const [medlemskapsperiodeFeilmelding, setMedlemskapsperiodeFeilmelding] = useState<undefined | string>(undefined);
+  const [kompleksSkjemaFeilmelding, setKompleksSkjemaFeilmelding] = useState<undefined | string>(undefined);
   const [beregningPaagar, setBeregningPaagar] = useState(false);
   const [aarsavregningResponse, setAarsavregningResponse] = useState<AarsavregningResponse | undefined>(
     initiellData.aarsavregningResponse,
@@ -146,19 +146,36 @@ export function AarsavregningForm({
   }, [formIsValid]);
 
   useEffect(() => {
+    setKompleksSkjemaFeilmelding(undefined);
     // Kun vis komplekse feil hvis det ikke finnes andre feil i medlemskapsperioder
+    if (formErrors.inntektskilder) {
+      const harFeltFeil = Object.keys(formErrors.inntektskilder).some((key) => !Number.isNaN(parseInt(key, 10)));
+
+      if (!harFeltFeil && formErrors.inntektskilder.message) {
+        setKompleksSkjemaFeilmelding(formErrors.inntektskilder.message as string);
+      }
+    }
+
+    if (formErrors.skatteforholdsperioder) {
+      const harFeltFeil = Object.keys(formErrors.skatteforholdsperioder).some(
+        (key) => !Number.isNaN(parseInt(key, 10)),
+      );
+      console.log(formErrors.skatteforholdsperioder, harFeltFeil);
+
+      if (!harFeltFeil && formErrors.skatteforholdsperioder.message) {
+        setKompleksSkjemaFeilmelding(formErrors.skatteforholdsperioder.message as string);
+      }
+    }
+
     if (formErrors.medlemskapsperioder) {
       const harFeltFeil = Object.keys(formErrors.medlemskapsperioder).some((key) => !Number.isNaN(parseInt(key, 10)));
 
-      if (!harFeltFeil && formErrors.medlemskapsperioder.type) {
-        setMedlemskapsperiodeFeilmelding(formErrors.medlemskapsperioder.message as string);
-      } else {
-        setMedlemskapsperiodeFeilmelding(undefined);
+      console.log(formErrors.medlemskapsperioder, harFeltFeil);
+      if (!harFeltFeil && formErrors.medlemskapsperioder.message) {
+        setKompleksSkjemaFeilmelding(formErrors.medlemskapsperioder.message as string);
       }
-    } else {
-      setMedlemskapsperiodeFeilmelding(undefined);
     }
-  }, [formErrors.medlemskapsperioder]);
+  }, [formErrors.medlemskapsperioder, formErrors.skatteforholdsperioder, formErrors.inntektskilder]);
 
   useEffect(() => {
     if (redigerbart && aarsavregningResponse?.nyttGrunnlag) {
@@ -207,7 +224,7 @@ export function AarsavregningForm({
 
         return response;
       } catch (error) {
-        setMedlemskapsperiodeFeilmelding("Feil ved lagring av medlemskapsperiode");
+        setKompleksSkjemaFeilmelding("Feil ved lagring av medlemskapsperiode");
         console.error("Feil ved lagring av medlemskapsperiode:", error);
         return undefined;
       }
@@ -325,7 +342,7 @@ export function AarsavregningForm({
   useEffect(() => {
     const lagreMedlemskapsperioder = async () => {
       if (redigerbart) {
-        setMedlemskapsperiodeFeilmelding(undefined);
+        setKompleksSkjemaFeilmelding(undefined);
         if (medlemskapsperioder.length !== medlemskapsperioderForrigeAntall.current) {
           medlemskapsperioderForrigeAntall.current = medlemskapsperioder.length;
           return;
@@ -571,9 +588,9 @@ export function AarsavregningForm({
         />
       )}
 
-      {medlemskapsperiodeFeilmelding && (
+      {kompleksSkjemaFeilmelding && (
         <Nav.Alert variant="error" className="alertstripe_feilmelding">
-          {medlemskapsperiodeFeilmelding}
+          {kompleksSkjemaFeilmelding}
         </Nav.Alert>
       )}
 
