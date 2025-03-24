@@ -44,7 +44,8 @@ interface Props {
 
 /* TODO: Komponenten burde refaktoreres på samme måte som ble gjort for aarsavregningUtenEllerDeltGrunnlag i 7209
  * Dele opp komponenten i initialFetch og en skjemakomponent. Fjern all unødvendig setting av skjemaverdier og endre
- * react hook form mode til onBlur
+ * react hook form mode til onBlur. Se ellers hvordan det er gjort med watch i /aarsavregningUtenEllerDeltGrunnlag/aarsavregningForm.tsx.
+ * Det bør også vurderes å ikke sende "formValues" nedover i komponentene, men heller sende de isolerte verdiene som trengs.
  */
 export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
   const [erAvvik, setErAvvik] = useState<boolean | undefined>(undefined);
