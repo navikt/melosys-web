@@ -26,7 +26,6 @@ export function Fødsel({ fødsel, personopplysninger, erLitenSkjerm }: FødselP
 
   if (fødsel) {
     fødselsdato = foedselsdato ? <EnkeltDato dato={foedselsdato} /> : foedselsaar;
-    console.log("LOLOLOLOLOLOL", alleLandkoder);
     fødeland = foedeland ? alleLandkoder.find((land) => land.kode === foedeland)?.term : null;
   }
 
