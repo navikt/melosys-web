@@ -42,8 +42,8 @@ export function TidligereFakturertIAvgiftssystemetInput({
         className="tidligere_fakturert_input"
         autoComplete="off"
         type="text"
-        inputMode="numeric"
-        pattern="^-?[0-9]+$"
+        numeric
+        tillattNegativeTall
       />
     </>
   );

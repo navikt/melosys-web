@@ -238,8 +238,7 @@ export function Inntektskilder({
                   control={control}
                   readOnly={!redigerbart}
                   type="text"
-                  inputMode="numeric"
-                  pattern="[0-9]*"
+                  numeric
                   autoComplete="off"
                 />
               ) : (
