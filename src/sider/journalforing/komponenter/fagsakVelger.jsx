@@ -24,6 +24,7 @@ const OPPRETT = "Opprett ny sak";
 const { JournalforingValues: FormValuesJournalforing, OpprettNySakValues: FormValuesOpprettNySak } = KV.Form;
 
 function FagsakVelger(props) {
+  console.log("fagsakvelger:: ", props);
   const { fagsakListe, settJournalforingHensikt, landkoder, formValues, erJournalføring, nullstillFormVerdier } = props;
   const [valgtVisning, setValgtVisning] = useState(EKSISTERENDE);
   const feltNavn = erJournalføring ? FormValuesJournalforing : FormValuesOpprettNySak;

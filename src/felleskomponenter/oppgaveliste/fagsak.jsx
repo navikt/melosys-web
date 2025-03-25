@@ -25,7 +25,6 @@ import { MELOSYS_PENSJONIST } from "../../featuretoggle/toggleNavn";
 function Fagsak({ sak, landkoder }) {
   const { opprettetDato, sakstype, saksstatus, saksnummer, sakstema, behandlingOversikter } = sak;
   const erPensjonistToggleEnabled = useFeatureToggle(MELOSYS_PENSJONIST);
-  // const { land } = behandlingOversikter.find((behandlingOversikt) => behandlingOversikt.soknadsperiode != null) ?? {}; TODO toberemoved
   const { lovvalgsperiode } =
     behandlingOversikter.find((behandlingOversikt) => behandlingOversikt.lovvalgsperiode != null) ?? {};
   const { medlemskapsperiode } =
