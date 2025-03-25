@@ -1,9 +1,9 @@
 import * as Types from '../../../../../../graphql/generated/types';
-
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 
-const defaultOptions =  {}
+const defaultOptions = {} as const;
+
 export type HentAdresserQueryVariables = Types.Exact<{
   behandlingID: Types.Scalars['Long'];
 }>;

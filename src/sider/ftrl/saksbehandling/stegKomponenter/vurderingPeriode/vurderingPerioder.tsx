@@ -108,6 +108,7 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     append,
     remove,
     update,
+    fields,
     replace: resetMedlemskapsperioder,
   } = useFieldArray<FieldArrayProps, "medlemskapsperioder", "id">({
     control,
@@ -318,7 +319,7 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
         trygdedekninger={lovligeDekninger}
         innvilgelsesResultater={lovligeInnvilgelsesresultat}
         control={control}
-        fields={watch("medlemskapsperioder")}
+        fields={fields}
         watch={watch}
         handleSlett={handleSlett}
         redigerbart={redigerbart}

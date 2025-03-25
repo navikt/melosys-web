@@ -1,9 +1,9 @@
 import * as Types from '../../../../../graphql/generated/types';
-
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 
-const defaultOptions =  {}
+const defaultOptions = {} as const;
+
 export type HentPersoninfoQueryVariables = Types.Exact<{
   behandlingID: Types.Scalars['Long'];
 }>;
@@ -20,7 +20,7 @@ export type HentPersoninfoQuery = (
         & Pick<Types.Folkeregisterpersonstatus, 'kode' | 'tekst' | 'master' | 'kilde' | 'fregGyldighetstidspunkt' | 'erHistorisk'>
       )>, foedsel: (
         { __typename?: 'Foedsel' }
-        & Pick<Types.Foedsel, 'foedselsaar' | 'foedselsdato'>
+        & Pick<Types.Foedsel, 'foedeland' | 'foedested' | 'foedselsaar' | 'foedselsdato'>
       ), sivilstand: Array<(
         { __typename?: 'Sivilstand' }
         & Pick<Types.Sivilstand, 'type' | 'relatertVedSivilstand' | 'gyldigFraOgMed' | 'bekreftelsesdato' | 'master' | 'kilde' | 'erHistorisk'>
@@ -43,6 +43,8 @@ export const HentPersoninfoDocument = gql`
         erHistorisk
       }
       foedsel {
+        foedeland
+        foedested
         foedselsaar
         foedselsdato
       }

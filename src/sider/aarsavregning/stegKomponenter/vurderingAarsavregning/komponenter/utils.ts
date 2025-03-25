@@ -10,6 +10,7 @@ import { AarsavregningResponse } from "../../../../../services/modules/aarsavreg
 import { Medlemskapsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import MKV from "../../../../../melosyskodeverk";
 import { sorterEtterISOFomDato } from "../../../../../utils/dato";
+import { ULAGRET_MEDLEMSKAPSPERIODE_ID } from "../aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlag";
 
 const { IKKE_SKATTEPLIKTIG } = MKV.Koder.skatteplikttype;
 
@@ -92,6 +93,20 @@ export function beregnTrygdeavgiftsperioder(
     })
     .catch((error) => setFeilmelding(mapFeilmelding(error)));
 }
+
+export const hentMedlemskapsperiodeBestemmelse = (
+  harDeltGrunnlag: boolean,
+  medlemskapsperioder?: Medlemskapsperiode[],
+) => {
+  if (medlemskapsperioder && !Utils._isEmpty(medlemskapsperioder)) {
+    const sortertePerioder = [...medlemskapsperioder]
+      .filter((periode) => (harDeltGrunnlag ? !periode.redigerbar : true))
+      .filter((periode) => periode.id !== ULAGRET_MEDLEMSKAPSPERIODE_ID)
+      .sort(sorterEtterISOFomDato);
+    return sortertePerioder?.[0]?.bestemmelse;
+  }
+  return undefined;
+};
 
 export const lagInnvilgetMedlemskapsPeriode = (medlemskapsperioder?: Medlemskapsperiode[]) => {
   if (medlemskapsperioder && !Utils._isEmpty(medlemskapsperioder)) {

@@ -10,7 +10,6 @@ import Adresser from "./adresser";
 import AnnenAdresse from "./annenadresse";
 import UtenlandskIdent from "./utenlandskident";
 import StatsborgerskapTableContainer from "./statsborgerskapTable";
-import FoedestedOgLand from "./foedestedogland";
 
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 
@@ -76,9 +75,6 @@ export function Person({
             </Nav.Column>
           </Nav.Row>
           <Nav.Row>
-            <Nav.Column xs="6">
-              <FoedestedOgLand redigerbart={redigerbart} />
-            </Nav.Column>
             <Nav.Column xs="6">
               <UtenlandskIdent redigerbart={redigerbart} />
             </Nav.Column>

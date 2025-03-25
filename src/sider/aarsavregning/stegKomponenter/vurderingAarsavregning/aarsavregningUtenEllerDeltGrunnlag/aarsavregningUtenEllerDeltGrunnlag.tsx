@@ -1,6 +1,6 @@
 import * as Api from "../../../../../services/api";
 import "../vurderingAarsavregningInngang.css";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { AarsavregningResponse } from "../../../../../services/modules/aarsavregning/aarsavregning";
 import { useDispatch, useSelector } from "react-redux";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
@@ -222,6 +222,10 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
     lastInitiellData();
   }, [behandlingID, harDeltGrunnlag]);
 
+  const memoizedOppdaterStatus = useCallback((erGyldig: boolean) => {
+    oppdaterStatus(erGyldig);
+  }, []);
+
   if (isLoading) {
     return <div />;
   }
@@ -230,7 +234,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
     <AarsavregningForm
       initiellData={initiellData}
       bekreft={bekreft}
-      oppdaterStatus={oppdaterStatus}
+      oppdaterStatus={memoizedOppdaterStatus}
       harDeltGrunnlag={harDeltGrunnlag}
     />
   );

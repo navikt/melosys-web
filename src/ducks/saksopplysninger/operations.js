@@ -17,3 +17,7 @@ import * as Api from "../../services/api";
 export function oppfrisk(behandlingID, inkluderSiste5Aar) {
   return Api.Saksopplysninger.oppfrisk(behandlingID, { inkluderSiste5Aar });
 }
+
+export function oppfriskSaksopplysningerForAarsavregning(behandlingID) {
+  return Api.Saksopplysninger.oppfriskSaksopplysningerForAarsavregning(behandlingID);
+}

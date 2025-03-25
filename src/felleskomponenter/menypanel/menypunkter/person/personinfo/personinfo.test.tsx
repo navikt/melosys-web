@@ -7,6 +7,7 @@ import userEvent from "@testing-library/user-event";
 import { HentPersoninfoDocument } from "./hentPersoninfo.generated";
 import Personinfo from "./personinfo";
 import { HentPersonopplysningerDocument } from "../../../../informasjonlinje/hentpersonopplysninger.generated";
+import { renderWithProviders } from "../../../../../ducks/test-utils/renderWithProviders";
 
 describe("Personinfo", () => {
   window.matchMedia =
@@ -20,6 +21,8 @@ describe("Personinfo", () => {
     };
 
   const mockedProps = mock<ComponentProps<typeof Personinfo>>();
+  const initialState = { landkoder: { status: "OK", data: [{ kode: "NO", term: "Norge" }] } };
+
   let props = instance(mockedProps);
 
   beforeEach(() => {
@@ -93,7 +96,8 @@ describe("Personinfo", () => {
             hentSaksopplysninger: {
               persondata: {
                 folkeregisterpersonstatuser: personstatus,
-                foedsel: [{ foedselsaar: 1995, foedselsdato: "1995-23-09" }],
+                foedested: [{ foedested: "Aker sykehus", foedeland: "NO" }],
+                foedselsdato: [{ foedselsaar: 1995, foedselsdato: "1995-23-09" }],
                 sivilstand,
               },
             },
@@ -130,17 +134,18 @@ describe("Personinfo", () => {
   };
 
   it("viser melding ved henting av personinfo", () => {
-    render(
+    renderWithProviders(
       <MockedProvider {...requestResultMock}>
         <Personinfo {...props} />
       </MockedProvider>,
+      { preloadedState: { initialState } },
     );
 
     expect(screen.getByText("Henter personinfo...")).toBeInTheDocument();
   });
 
   it("viser melding ved nettverkserror under henting av personinfo", async () => {
-    render(
+    renderWithProviders(
       <MockedProvider
         mocks={[
           {
@@ -165,6 +170,7 @@ describe("Personinfo", () => {
       >
         <Personinfo {...props} />
       </MockedProvider>,
+      { preloadedState: { initialState } },
     );
 
     await waitFor(() => {
@@ -173,10 +179,11 @@ describe("Personinfo", () => {
   });
 
   it("sender sivilstand-data til sivilstandModal etter dataen er hentet", async () => {
-    render(
+    renderWithProviders(
       <MockedProvider {...requestResultMock}>
         <Personinfo {...props} />
       </MockedProvider>,
+      { preloadedState: { initialState } },
     );
 
     const user = userEvent.setup();
@@ -194,10 +201,11 @@ describe("Personinfo", () => {
   });
 
   it("sender personstatus-data til personstatusModal etter dataen er hentet", async () => {
-    render(
+    renderWithProviders(
       <MockedProvider {...requestResultMock}>
         <Personinfo {...props} />
       </MockedProvider>,
+      { preloadedState: { initialState } },
     );
 
     const user = userEvent.setup();

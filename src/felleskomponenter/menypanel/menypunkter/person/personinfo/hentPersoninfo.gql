@@ -10,6 +10,8 @@ query hentPersoninfo($behandlingID: Long!) {
         erHistorisk
       }
       foedsel {
+        foedeland
+        foedested
         foedselsaar
         foedselsdato
       }

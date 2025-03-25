@@ -112,11 +112,14 @@ export function Menypanel({
     setEndreFokus(true);
   };
 
+  const { ÅRSAVREGNING } = MKV.Koder.behandlinger.behandlingstyper;
+  const erÅrsavregning = behandlingstype === ÅRSAVREGNING;
+
   if (!visMenypanel && !skalViseFullmektigFørPeriodeOgLand(behandlingstema)) return null;
 
   return (
     <>
-      {visOppdaterRegisteropplysninger && redigerbart && (
+      {visOppdaterRegisteropplysninger && redigerbart && !erÅrsavregning && (
         <OppdaterRegisteropplysninger
           sistOppdatert={Utils.dato.formatterDatoTilNorsk(sisteOpplysningerHentetDato)}
           oppdaterRegisteropplysninger={lagreSoknadOgOppfriskSaksopplysninger}

@@ -12,6 +12,7 @@ import { mottatteOpplysningerOperations } from "../ducks/mottatteOpplysninger";
 import { saksopplysningerOperations } from "../ducks/saksopplysninger";
 import { modalerOperations, modalerSelectors } from "../ducks/modaler";
 import { navigeringOperations } from "../ducks/navigering";
+import { behandlingerOperations } from "../ducks/behandlinger";
 
 const FellesHandlersContext = createContext({});
 export default FellesHandlersContext;
@@ -22,6 +23,8 @@ function FellesHandlersProviderUnconnected({
   history,
   lastInnSaksopplysninger,
   oppfriskSaksopplysninger,
+  oppfriskSaksopplysningerForAarsavregning,
+  hentBehandling,
   lagreMottatteOpplysninger,
   saksnummer,
   sakstype,
@@ -57,6 +60,11 @@ function FellesHandlersProviderUnconnected({
     await fjernBehandlingOppfriskes();
   };
 
+  const oppfriskOgLastInnSaksopplysningerForAarsavregning = async () => {
+    await oppfriskSaksopplysningerForAarsavregning(behandlingID);
+    await hentBehandling(behandlingID);
+  };
+
   const startOgVisOppfriskModal = async (inkluderSiste5aar) => {
     await leggTilBehandlingOppfriskes(behandlingID);
     visOppfriskDialogHandle(inkluderSiste5aar);
@@ -85,6 +93,7 @@ function FellesHandlersProviderUnconnected({
       tilOpprettNySak,
       lagreMottatteOpplysningerOgOppfriskSaksopplysninger,
       oppfriskOgLastInnSaksopplysninger,
+      oppfriskOgLastInnSaksopplysningerForAarsavregning,
       behandlingOppfriskes,
       annenBehandlingOppfriskes,
       startOgVisOppfriskModal,
@@ -98,6 +107,7 @@ function FellesHandlersProviderUnconnected({
       tilOpprettNySak,
       lagreMottatteOpplysningerOgOppfriskSaksopplysninger,
       oppfriskOgLastInnSaksopplysninger,
+      oppfriskOgLastInnSaksopplysningerForAarsavregning,
       behandlingOppfriskes,
       annenBehandlingOppfriskes,
       startOgVisOppfriskModal,
@@ -145,8 +155,11 @@ const mapDispatchToProps = (dispatch) => ({
   lagreMottatteOpplysninger: () => dispatch(mottatteOpplysningerOperations.lagre()),
   lastInnSaksopplysninger: (sakstype, saksnummer, behandlingID) =>
     dispatch(datalastingOperations.lastInnSaksopplysninger(sakstype, saksnummer, behandlingID)),
+  hentBehandling: (behandlingID) => dispatch(behandlingerOperations.hentBehandling(behandlingID)),
   oppfriskSaksopplysninger: (behandlingID, inkluderSiste5Aar) =>
     saksopplysningerOperations.oppfrisk(behandlingID, inkluderSiste5Aar),
+  oppfriskSaksopplysningerForAarsavregning: (behandlingID) =>
+    saksopplysningerOperations.oppfriskSaksopplysningerForAarsavregning(behandlingID),
   leggTilBehandlingOppfriskes: (behandlingID) => dispatch(modalerOperations.leggTilBehandlingOppfriskes(behandlingID)),
   fjernBehandlingOppfriskes: () => dispatch(modalerOperations.fjernBehandlingOppfriskes()),
   skjulOppfriskDialogHandle: () => dispatch(modalerOperations.skjulOppfrisk()),

@@ -144,16 +144,6 @@ function HtmlEditor({ value, onChange, disabled, label, feil, className, placeho
     [],
   );
 
-  // Håndterer scrolling etter lim inn
-  const handlePaste = () => {
-    setTimeout(() => {
-      window.scrollTo({
-        top: document.body.scrollHeight,
-        behavior: "auto",
-      });
-    }, 100);
-  };
-
   // Håndterer innholdsendringer
   const handleChange = (content: string) => {
     // Oppdaterer intern state med utpakket innhold
@@ -170,11 +160,6 @@ function HtmlEditor({ value, onChange, disabled, label, feil, className, placeho
   useEffect(() => {
     const quill = quillRef.current?.editor;
     if (!quill) return undefined;
-
-    // Legger til lytter for lim inn-hendelser
-    if (quill.root) {
-      quill.root.addEventListener("paste", handlePaste);
-    }
 
     // Konfigurerer clipboard-matcher for overskrifter
     if (quill.clipboard) {
@@ -236,9 +221,6 @@ function HtmlEditor({ value, onChange, disabled, label, feil, className, placeho
 
     // Rydder opp ved avmontering
     return () => {
-      if (quill.root) {
-        quill.root.removeEventListener("paste", handlePaste);
-      }
       quill.off("text-change", textChangeHandler);
     };
   }, []);
