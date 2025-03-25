@@ -523,6 +523,7 @@ export function AarsavregningForm({
             }
             minVerdi={initiellData.valgtÅr !== undefined ? new Date(initiellData.valgtÅr, 0, 1) : undefined}
             trygdedekninger={trygdedekninger}
+            setValue={setValue}
           />
         ))}
       </div>

@@ -48,9 +48,6 @@ function BestemmelseSelect({
           }
         }
 
-        const trygdedekningerResponse = await Api.LovligeKombinasjoner.hentTrygdedekninger(nyBestemmelse);
-        setTrygdedekninger(trygdedekningerResponse);
-
         setValue(
           "medlemskapsperioder",
           medlemskapsperioder.map((periode: Medlemskapsperiode) => ({
@@ -71,6 +68,9 @@ function BestemmelseSelect({
             erMaanedsbelop: Utils.streng.boolTilUppercaseStreng(true),
           })),
         );
+
+        const trygdedekningerResponse = await Api.LovligeKombinasjoner.hentTrygdedekninger(nyBestemmelse);
+        setTrygdedekninger([...trygdedekningerResponse]);
       } catch (error) {
         setFeilmelding("Feil ved endring av bestemmelse");
       }

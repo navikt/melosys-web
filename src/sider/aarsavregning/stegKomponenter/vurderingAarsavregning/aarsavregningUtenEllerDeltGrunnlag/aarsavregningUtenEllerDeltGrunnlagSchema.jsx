@@ -221,7 +221,7 @@ const aarsavregningUtenEllerDeltGrunnlagSchema = object().shape({
           .erEtterDatofelt("fomDato")
           .test(åpenTomTest)
           .test(erInnenforValgtAarTest),
-        trygdedekning: string().required(),
+        trygdedekning: string().notOneOf(["", null], MAA_FYLLES_UT),
       }),
     )
     .test(medlemskapsperioderOverlappTest)

@@ -11,6 +11,7 @@ import * as Utils from "../../../../../utils";
 
 import { FieldArrayProps, FormValuesProps } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
 import "./medlemskapsperiodeSkjema.css";
+import { useEffect } from "react";
 
 export interface PeriodeElementerProps {
   redigerbart: boolean;
@@ -25,6 +26,7 @@ export interface PeriodeElementerProps {
   maksVerdi?: Date;
   minVerdi?: Date;
   trygdedekninger?: string[];
+  setValue?: (name: string, value: any) => void;
 }
 
 export function MedlemskapsperiodeSkjema({
@@ -40,6 +42,7 @@ export function MedlemskapsperiodeSkjema({
   maksVerdi,
   minVerdi,
   trygdedekninger = [],
+  setValue,
 }: PeriodeElementerProps) {
   const erPeriodeFraGrunnlag = !formValues.medlemskapsperioder[index]?.redigerbar;
   const kanSlettePeriode = redigerbart && formValues.medlemskapsperioder.length !== 1;
@@ -50,6 +53,23 @@ export function MedlemskapsperiodeSkjema({
   if (tilOgMedDatoForrigePeriode !== undefined) {
     tilOgMedDatoForrigePeriode.setDate(tilOgMedDatoForrigePeriode.getDate() + 1);
   }
+
+  const kunEnTrygdedekning = trygdedekninger?.length === 1;
+
+  // Set the trygdedekning value whenever trygdedekninger is a list with exactly one item
+  useEffect(() => {
+    if (setValue && trygdedekninger?.length === 1) {
+      const formPath = `medlemskapsperioder[${index}].trygdedekning`;
+      const currentValue = formValues.medlemskapsperioder[index]?.trygdedekning;
+      const newValue = trygdedekninger[0];
+
+      // Only set if the value is different or empty
+      if (!currentValue || currentValue !== newValue) {
+        setValue(formPath, newValue);
+      }
+    }
+  // Include formValues in the dependency array to detect changes in the current value
+  }, [trygdedekninger, index, setValue, formValues.medlemskapsperioder]);
 
   return (
     <div className="medlemskapsperiodeSkjema">
@@ -86,7 +106,7 @@ export function MedlemskapsperiodeSkjema({
               hideLabel={index !== 0}
               aria-label={`Trygdedekning periode ${index + 1}`}
               control={control}
-              readOnly={!redigerbart || erPeriodeFraGrunnlag}
+              readOnly={!redigerbart || erPeriodeFraGrunnlag || kunEnTrygdedekning}
             >
               {trygdedekninger?.map((dekning: any) => (
                 <option key={dekning} value={dekning}>
