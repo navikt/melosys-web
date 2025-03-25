@@ -66,6 +66,7 @@ export default function reducer(state = initialState, action: Types.Action): Sta
         INFORMERT_MYNDIGHET,
         VURDERING_LOVVALG_BARN,
         UKJENT_SLUTTDATO_MEDLEMSKAPSPERIODE,
+        BETALINGSVALG,
       } = MKV.Koder.avklartefaktatyper;
 
       const {

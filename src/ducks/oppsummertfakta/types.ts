@@ -12,6 +12,7 @@ export interface Data {
   ikkeYrkesaktivOppholdstype?: string;
   arbeidssituasjonType?: string;
   ukjentSluttdatoMedlemskapsperiode?: boolean;
+  betalingstype?: string;
 }
 
 export interface FeiletAction {

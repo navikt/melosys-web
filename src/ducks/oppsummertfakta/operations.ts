@@ -71,6 +71,14 @@ export function lagreUkjentSluttdatoMedlemskapsperiode(behandlingID: number, ukj
   });
 }
 
+export function lagreBetalingsvalgForPensjonister(behandlingID: number, betalingstype: string) {
+  return doThenDispatch(() => Api.Avklartefakta.lagreBetalingsvalgForPensjonister(behandlingID, betalingstype), {
+    OK: Types.OK,
+    FEILET: Types.FEILET,
+    PENDING: Types.PENDING,
+  });
+}
+
 export function slettAvklartefakta(behandlingID: number, avklartefaktaType: string) {
   return doThenDispatch(() => Api.Avklartefakta.slettAvklartefakta(behandlingID, avklartefaktaType), {
     OK: Types.OK,

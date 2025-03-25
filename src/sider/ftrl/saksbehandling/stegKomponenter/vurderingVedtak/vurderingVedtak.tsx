@@ -35,6 +35,7 @@ import { FRITEKST_VALG } from "../../../../../kodeverk/koder";
 import { menypanelOperations, menypanelSelectors } from "../../../../../ducks/menypanel";
 import { fagsakSelectors } from "../../../../../ducks/fagsaker";
 import FullmaktForTrygdeavgiftConfirmationPanel from "../../../../../felleskomponenter/fullmaktForTrygdeavgiftConfirmationPanel/fullmaktForTrygdeavgiftConfirmationPanel";
+import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../../ducks/oppsummertfakta";
 
 const { FØRSTEGANG, NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT, SATSENDRING } =
   MKV.Koder.behandlinger.behandlingstyper;
@@ -102,6 +103,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   const feilmeldinger = useSelector(feiletResponsSelectors.FeilmeldingerSelector);
   const kontrollfeil = useSelector(kontrollSelectors.KontrollFeilSelector);
   const saksnummer = useSelector(fagsakSelectors.SaksnummerSelector);
+  const skalMottaFaktura = useSelector(oppsummertfaktaSelectors.BetalingsvalgSelector);
   const { kontrollerFerdigbehandling, fattVedtak } = komponentDispatch(dispatch);
 
   const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
@@ -110,7 +112,6 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   const [vedtakPending, setVedtakPending] = useState(false);
   const [harFullmaktForTrygdeavgift, setHarFullmaktForTrygdeavgift] = useState(false);
   const [harBekreftetFullmaktForTrygdeavgift, setHarBekreftetFullmaktForTrygdeavgift] = useState(false);
-  const [skalMottaFaktura, setSkalMottaFaktura] = useState(false);
 
   const erFørstegang = behandlingstype === FØRSTEGANG;
   const erNyVurdering = behandlingstype === NY_VURDERING;
@@ -120,7 +121,6 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   const erIkkeYrkesaktiv = behandlingstema === IKKE_YRKESAKTIV;
   const erPensjonist = behandlingstema === PENSJONIST;
   const medlemskapsTypeErPliktig = medlemskapsperioder.some((periode) => periode.medlemskapstype === PLIKTIG);
-
   const bestemmelserkodeverk: string[] = [
     ...Object.values(MKV.KTObjects.folketrygdloven_kap2_bestemmelser),
     ...Object.values(MKV.KTObjects.vertslandsavtale_bestemmelser),
@@ -373,6 +373,23 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
     Utils._isEmpty(kontrollfeil) &&
     (!harFullmaktForTrygdeavgift || harBekreftetFullmaktForTrygdeavgift);
 
+  const visFakturaMottaker = skalMottaFaktura || (fakturamottaker && !erIkkeYrkesaktiv && !erPensjonist);
+
+  const lagreBetalingsValgForPensjonist = async () => {
+    let valg = skalMottaFaktura;
+    console.log("THE CHOICE", valg);
+
+    if (valg === null || valg === MKV.Koder.betalingstype.FAKTURA) {
+      valg = MKV.Koder.betalingstype.TREKK;
+    } else {
+      valg = MKV.Koder.betalingstype.FAKTURA;
+    }
+
+    console.log("THE CHOICE 2", valg);
+
+    dispatch(oppsummertfaktaOperations.lagreBetalingsvalgForPensjonister(behandlingID, valg));
+  };
+
   return (
     <div className="vurderingVedtak">
       <Nav.Heading level="1" className="stegvelgertittel">
@@ -380,7 +397,6 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
           ? "Pliktig medlemskap etter folketrygdloven"
           : "Frivillig medlemskap etter folketrygdloven"}
       </Nav.Heading>
-
       <Nav.Table size="small" className="melosys__table">
         <Nav.Table.Header>
           <Nav.Table.Row>
@@ -403,7 +419,6 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
           })}
         </Nav.Table.Body>
       </Nav.Table>
-
       <Nav.Row className="arbeidsland">
         <Nav.Column xs="5">
           <Nav.BodyLong weight="semibold" size="small" className="info">
@@ -414,7 +429,6 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
           </Nav.BodyLong>
         </Nav.Column>
       </Nav.Row>
-
       {trygdeavgiftMottaker ? (
         <Nav.Row className="trygdeavgift">
           <Nav.Column xs="12">
@@ -424,11 +438,13 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
           </Nav.Column>
         </Nav.Row>
       ) : null}
-
       {erFørstegang && erPensjonist && (
         <Nav.Row>
           <Nav.Column xs="12" className="fakturamottaker">
-            <Nav.Checkbox checked={skalMottaFaktura} onChange={(e) => setSkalMottaFaktura(e.target.checked)}>
+            <Nav.Checkbox
+              checked={skalMottaFaktura === MKV.Koder.betalingstype.FAKTURA}
+              onChange={() => lagreBetalingsValgForPensjonist()}
+            >
               <Nav.BodyLong size="small" className="info">
                 Bruker skal motta faktura i stedet for trekk i pensjon/uføretrygd
               </Nav.BodyLong>
@@ -436,8 +452,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
           </Nav.Column>
         </Nav.Row>
       )}
-
-      {skalMottaFaktura || (fakturamottaker && !erIkkeYrkesaktiv && !erPensjonist) ? (
+      {visFakturaMottaker && (
         <Nav.Row>
           <Nav.Column xs="12">
             <Nav.BodyLong size="small" className="info">
@@ -449,8 +464,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
             </Nav.BodyLong>
           </Nav.Column>
         </Nav.Row>
-      ) : null}
-
+      )}
       {harFullmaktForTrygdeavgift && redigerbart ? (
         <FullmaktForTrygdeavgiftConfirmationPanel
           erPensjonist={erPensjonist}
@@ -458,7 +472,6 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
           onChange={setHarBekreftetFullmaktForTrygdeavgift}
         />
       ) : null}
-
       {(erNyVurdering || (erManglendeInnbetalingTrygdeavgift && !erDelvisOpphør)) && (
         <div className="nyVurderingBakgrunn">
           <Nav.Row>
@@ -497,7 +510,6 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
           )}
         </div>
       )}
-
       {!erSatsendring && (
         <>
           {!erDelvisOpphør && (
@@ -542,11 +554,9 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
           )}
         </>
       )}
-
       {stegErGyldig && muligeMottakere && (
         <Dokumentliste behandlingID={behandlingID} dokumenter={mapMottakerRader(muligeMottakere)} />
       )}
-
       <Mui.StegKnapper
         bekreftKnappProps={{
           onClick: onSubmit,
