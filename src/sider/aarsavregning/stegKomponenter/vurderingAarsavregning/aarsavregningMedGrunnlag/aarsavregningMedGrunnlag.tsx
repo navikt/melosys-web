@@ -45,7 +45,6 @@ interface Props {
 export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
   const [erAvvik, setErAvvik] = useState<boolean | undefined>(undefined);
   const [feilmelding, setFeilmelding] = useState<undefined | string>(undefined);
-  const [brukerHarBekreftet, setBrukerHarBekreftet] = useState(false);
   const [aarsavregningResponse, setAarsavregningResponse] = useState<AarsavregningResponse | undefined>(undefined);
   const [beregningPaagar, setBeregningPaagar] = useState(false);
   const [harValidertSkjema, setHarValidertSkjema] = useState(false);
@@ -176,7 +175,6 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
   );
 
   useEffect(() => {
-    setBrukerHarBekreftet(false);
     if (
       redigerbart &&
       aarsavregningID &&
@@ -238,7 +236,6 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
       trigger();
       setHarValidertSkjema(true);
     }
-    setBrukerHarBekreftet(true);
     if (stegErGyldig && !beregningPaagar) {
       bekreft();
     }
@@ -337,7 +334,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
         </>
       )}
 
-      {brukerHarBekreftet && feilmelding && (
+      {feilmelding && (
         <Nav.Alert variant="error" className="alertstripe_feilmelding">
           {feilmelding}
         </Nav.Alert>
