@@ -4,7 +4,6 @@ import { useDispatch } from "react-redux";
 import * as Forms from "../../../../../felleskomponenter/forms";
 import * as KV from "../../../../../kodeverk";
 import MKV from "../../../../../melosyskodeverk";
-import { medlemskapsperioderOperations } from "../../../../../ducks/medlemskapsperioder";
 import * as Api from "../../../../../services/api";
 import { Inntektskilde } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
 import * as Utils from "../../../../../utils";
@@ -43,9 +42,6 @@ function BestemmelseSelect({
         if (!harDeltGrunnlag && behandlingID) {
           try {
             await Api.MedlemAvFolketrygden.Medlemskapsperioder.slettMedlemskapsperioder(behandlingID);
-
-            // Refresh medlemskapsperioder in Redux store
-            dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(behandlingID));
           } catch (error) {
             setFeilmelding("Feil ved sletting av medlemskapsperioder");
             return;
@@ -70,7 +66,7 @@ function BestemmelseSelect({
             fomDato: kilde.fomDato,
             tomDato: kilde.tomDato,
             kildetype: "",
-            arbAvgBetales: "",
+            arbAvgBetales: Utils.streng.boolTilUppercaseStreng(false),
             bruttoInntekt: "",
             erMaanedsbelop: Utils.streng.boolTilUppercaseStreng(true),
           })),
