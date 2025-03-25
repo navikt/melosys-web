@@ -30,6 +30,7 @@ export interface FagsakOppsummering {
   sakstype: KTObject;
   sakstema: KTObject;
   saksstatus: KTObject;
+  land: Soeknadsland;
   opprettetDato: string;
   behandlingOversikter: {
     behandlingID: string;
