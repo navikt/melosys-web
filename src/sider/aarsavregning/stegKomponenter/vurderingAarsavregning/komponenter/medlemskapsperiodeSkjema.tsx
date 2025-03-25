@@ -12,6 +12,7 @@ import * as Utils from "../../../../../utils";
 
 import { useEffect, useState } from "react";
 import { FieldArrayProps, FormValuesProps } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
+import { Medlemskapsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import "./medlemskapsperiodeSkjema.css";
 
 export interface PeriodeElementerProps {
@@ -57,11 +58,11 @@ export function MedlemskapsperiodeSkjema({
     }
   }, [field.bestemmelse]);
 
-  const erPeriodeFraGrunnlag = !formValues.medlemskapsperioder[index]?.redigerbar;
+  const erPeriodeFraGrunnlag = !formValues.medlemskapsperioder[index].redigerbar;
   const kanSlettePeriode = redigerbart && formValues.medlemskapsperioder.length !== 1;
   const tilOgMedDatoForrigePeriode =
     formValues.medlemskapsperioder[index - 1] !== undefined
-      ? Utils.dato.norskStringTilDate(formValues.medlemskapsperioder[index - 1]?.tomDato)
+      ? Utils.dato.norskStringTilDate(formValues.medlemskapsperioder[index - 1].tomDato)
       : undefined;
   if (tilOgMedDatoForrigePeriode !== undefined) {
     tilOgMedDatoForrigePeriode.setDate(tilOgMedDatoForrigePeriode.getDate() + 1);
@@ -90,7 +91,7 @@ export function MedlemskapsperiodeSkjema({
               control={control}
               name={`medlemskapsperioder[${index}].tomDato`}
               aria-label={`Til og med periode ${index + 1}`}
-              minDate={Utils.dato.norskStringTilDate(formValues.medlemskapsperioder[index]?.fomDato)}
+              minDate={Utils.dato.norskStringTilDate(formValues.medlemskapsperioder[index].fomDato)}
               maxDate={maksVerdi}
               readOnly={!redigerbart || erPeriodeFraGrunnlag}
             />
@@ -103,12 +104,8 @@ export function MedlemskapsperiodeSkjema({
               aria-label={`Bestemmelse periode ${index + 1}`}
               control={control}
               readOnly={!redigerbart || erPeriodeFraGrunnlag}
-              onChange={(value) => {
-                handleUpdate(index, {
-                  ...formValues.medlemskapsperioder[index],
-                  bestemmelse: value,
-                  trygdedekning: "",
-                });
+              onChange={() => {
+                handleUpdate(index, { ...formValues.medlemskapsperioder[index], trygdedekning: "" });
               }}
             >
               {bestemmelser.map((bestemmelse: any) => (

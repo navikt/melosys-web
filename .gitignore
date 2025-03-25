@@ -28,7 +28,6 @@
 .env.test.local
 .env.production.local
 .prettierrc
-CLAUDE.md
 
 *.css
 npm-debug.log*
