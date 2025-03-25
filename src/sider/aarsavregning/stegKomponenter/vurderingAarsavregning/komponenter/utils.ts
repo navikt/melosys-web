@@ -1,9 +1,4 @@
-import { FieldValue } from "react-hook-form";
-import {
-  FormValuesProps,
-  Inntektskilde,
-  Skatteforhold,
-} from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
+import { Inntektskilde, Skatteforhold } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
 import * as Api from "../../../../../services/api";
 import * as Utils from "../../../../../utils";
 import { AarsavregningResponse } from "../../../../../services/modules/aarsavregning/aarsavregning";
@@ -54,33 +49,39 @@ export function harInntektsKildeType(
   return inntektskildePerioder.every((inntektskilde) => inntektskilde?.kildetype !== undefined);
 }
 
-export function beregnTrygdeavgiftsperioder(
-  formVerdier: FieldValue<FormValuesProps>,
-  options: {
-    behandlingID: number;
-    medlemskapstypeErPliktig?: boolean;
-    setFeilmelding: (error: any) => void;
-    setAarsavregningResponse: (response: AarsavregningResponse) => void;
-  },
-) {
-  const { behandlingID, medlemskapstypeErPliktig, setFeilmelding, setAarsavregningResponse } = options;
+export function beregnTrygdeavgiftsperioder(props: {
+  skatteforholdsperioder: Skatteforhold[];
+  inntektskilder: Inntektskilde[];
+  behandlingID: number;
+  medlemskapstypeErPliktig?: boolean;
+  setFeilmelding: (error: any) => void;
+  setAarsavregningResponse: (response: AarsavregningResponse) => void;
+}) {
+  const {
+    skatteforholdsperioder,
+    inntektskilder,
+    behandlingID,
+    medlemskapstypeErPliktig,
+    setFeilmelding,
+    setAarsavregningResponse,
+  } = props;
 
   setFeilmelding(undefined);
   const erBrukerPliktigMedlemOgSkattepliktig =
-    medlemskapstypeErPliktig && erBrukerSkattepliktigIHelePerioden(formVerdier.skatteforholdsperioder);
+    medlemskapstypeErPliktig && erBrukerSkattepliktigIHelePerioden(skatteforholdsperioder);
   return Api.Trygdeavgift.beregnTrygdeavgiftsperioder(behandlingID, {
-    skatteforholdsperioder: formVerdier.skatteforholdsperioder.map((skatteforhold: Skatteforhold) => ({
-      fomDato: Utils.dato.formatterDatoTilISO(skatteforhold.fomDato),
-      tomDato: Utils.dato.formatterDatoTilISO(skatteforhold.tomDato, null),
-      skatteplikttype: skatteforhold.skatteplikttype,
+    skatteforholdsperioder: skatteforholdsperioder.map((skatteforhold: Skatteforhold) => ({
+      fomDato: Utils.dato.formatterDatoTilISO(skatteforhold.fomDato)!,
+      tomDato: Utils.dato.formatterDatoTilISO(skatteforhold.tomDato, null)!,
+      skatteplikttype: skatteforhold.skatteplikttype!,
     })),
     inntektskilder: !erBrukerPliktigMedlemOgSkattepliktig
-      ? formVerdier.inntektskilder.map((inntektskilde: Inntektskilde) => ({
-          type: inntektskilde.kildetype,
+      ? inntektskilder.map((inntektskilde: Inntektskilde) => ({
+          type: inntektskilde.kildetype!,
           arbeidsgiversavgiftBetales: Utils.streng.uppercaseStrengTilBool(inntektskilde.arbAvgBetales) || false,
           avgiftspliktigInntekt: inntektskilde.bruttoInntekt,
-          fomDato: Utils.dato.formatterDatoTilISO(inntektskilde.fomDato),
-          tomDato: Utils.dato.formatterDatoTilISO(inntektskilde.tomDato, null),
+          fomDato: Utils.dato.formatterDatoTilISO(inntektskilde.fomDato)!,
+          tomDato: Utils.dato.formatterDatoTilISO(inntektskilde.tomDato)!,
           erMaanedsbelop: Utils.streng.uppercaseStrengTilBool(inntektskilde.erMaanedsbelop) || false,
         }))
       : [],
