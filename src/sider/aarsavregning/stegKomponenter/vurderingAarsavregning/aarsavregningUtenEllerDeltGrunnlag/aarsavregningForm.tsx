@@ -85,7 +85,7 @@ export function AarsavregningForm({
     context: {
       aar: initiellData.valgtÅr,
     },
-    mode: "onBlur",
+    mode: "onChange",
     defaultValues: initiellData.formDefaultValues,
   });
 
