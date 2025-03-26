@@ -12,13 +12,13 @@ interface SoknadslandProps {
 }
 
 const Soknadsland = ({ land, visFulltNavn = false, landkoderKodeverk = MKV.KTObjects.landkoder }: SoknadslandProps) => {
-  if (!land) return "(ukjent)";
+  if (!land) return "";
 
   const { landkoder, flereLandUkjentHvilke } = land;
 
   if (flereLandUkjentHvilke) return "Flere land. Ikke kjent hvilke.";
 
-  if (!landkoder || landkoder.length === 0) return "(ukjent)";
+  if (!landkoder || landkoder.length === 0) return "";
   const mapOmTilFulltNavn = (landkode: string) => kodeTilTerm(landkode, landkoderKodeverk) || landkode;
 
   return visFulltNavn ? landkoder.map(mapOmTilFulltNavn).join(", ") : landkoder.join(", ");
