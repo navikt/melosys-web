@@ -209,7 +209,7 @@ const medlemskapsperioderKontinuerligTest = {
 };
 
 const aarsavregningUtenEllerDeltGrunnlagSchema = object().shape({
-  bestemmelse: string().required("Bestemmelse må fylles ut"),
+  bestemmelse: string().required(MAA_FYLLES_UT),
   medlemskapsperioder: array()
     .min(1, "Minst en medlemskapsperiode")
     .of(
@@ -221,7 +221,7 @@ const aarsavregningUtenEllerDeltGrunnlagSchema = object().shape({
           .erEtterDatofelt("fomDato")
           .test(åpenTomTest)
           .test(erInnenforValgtAarTest),
-        trygdedekning: string().notOneOf(["", null], MAA_FYLLES_UT),
+        trygdedekning: string().required(MAA_FYLLES_UT),
       }),
     )
     .test(medlemskapsperioderOverlappTest)
