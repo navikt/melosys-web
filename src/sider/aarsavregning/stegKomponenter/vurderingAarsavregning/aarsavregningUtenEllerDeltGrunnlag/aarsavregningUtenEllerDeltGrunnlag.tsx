@@ -86,6 +86,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
   }>({
     bestemmelser: [],
     formDefaultValues: {
+      bestemmelse: "",
       medlemskapsperioder: [DEFAULT_MEDLEMSKAPSPERIODE],
       skatteforholdsperioder: [{}],
       inntektskilder: [{}],
@@ -185,21 +186,25 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
 
         const erInitiellMappingForDeltGrunnlag = harDeltGrunnlag && aarsavregningRes && !aarsavregningRes.nyttGrunnlag;
 
-        // Get the common bestemmelse value if they're all the same
-        let commonBestemmelse = "";
+        let bestemmelse = "";
         if (mappedMedlemskapsperioder.length > 0) {
-          const firstBestemmelse = mappedMedlemskapsperioder[0].bestemmelse;
-          const allSame = mappedMedlemskapsperioder.every((period) => period.bestemmelse === firstBestemmelse);
-          if (allSame) {
-            commonBestemmelse = firstBestemmelse;
+          const førsteBestemmelse = mappedMedlemskapsperioder[0].bestemmelse;
+          const medlemskapsperioderHarSammeBestemmelse = mappedMedlemskapsperioder.every(
+            (period) => period.bestemmelse === førsteBestemmelse,
+          );
+          if (medlemskapsperioderHarSammeBestemmelse) {
+            bestemmelse = førsteBestemmelse;
+          } else {
+            throw new Error(
+              "Kan ikke laste inn årsavregning fordi grunnlag eller behandlingsresultat har innvilgede medlemskapsperioder med ulik bestemmelse",
+            );
           }
         }
 
-        // Fetch trygdedekninger if we have a bestemmelse
         let trygdedekninger: string[] = [];
-        if (commonBestemmelse) {
+        if (bestemmelse) {
           try {
-            trygdedekninger = await Api.LovligeKombinasjoner.hentTrygdedekninger(commonBestemmelse);
+            trygdedekninger = await Api.LovligeKombinasjoner.hentTrygdedekninger(bestemmelse);
           } catch (err) {
             console.error("Feil ved henting av trygdedekninger:", err);
           }
@@ -209,7 +214,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
           medlemskapsperioder: mappedMedlemskapsperioder.length
             ? mappedMedlemskapsperioder
             : [DEFAULT_MEDLEMSKAPSPERIODE],
-          bestemmelse: commonBestemmelse, // Set the common bestemmelse if all are the same
+          bestemmelse,
           totaltForskuddsvisFakturert: aarsavregningRes?.avregning?.tidligereFakturertBeloepAvgiftssystem || "",
           skatteforholdsperioder: mapTilSkatteforholdProps(
             erInitiellMappingForDeltGrunnlag
