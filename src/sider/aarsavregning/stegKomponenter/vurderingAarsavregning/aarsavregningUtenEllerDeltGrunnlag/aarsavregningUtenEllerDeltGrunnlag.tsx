@@ -195,7 +195,6 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
   };
 
   useEffect(() => {
-    console.log("test");
     const lastInitiellData = async () => {
       if (!behandlingID) {
         setIsLoading(false);
