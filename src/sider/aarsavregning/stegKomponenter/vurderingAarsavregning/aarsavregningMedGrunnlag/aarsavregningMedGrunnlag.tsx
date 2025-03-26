@@ -248,7 +248,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
     medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder);
   const forskuddsvisFakturertTrygdeavgift =
     (aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift?.totalAvgift ?? 0) > 0;
-  const nyttGrunnlagHarTrygdeavgiftsperioder = (aarsavregningResponse?.nyttGrunnlag?.avgift?.totalAvgift ?? 0) > 0;
+  const nyttGrunnlagHarTrygdeavgiftsgrunnlag = aarsavregningResponse?.nyttGrunnlag?.trygdeavgiftsgrunnlag != null;
 
   return (
     <>
@@ -320,7 +320,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
 
           {trygdeAvgiftSkalIkkeBetalesTilNav && <Aarsavregningsmeldinger.TrygdeavgiftSkalIkkeBetalesTilNav />}
 
-          {nyttGrunnlagHarTrygdeavgiftsperioder && formIsValid && !feilmelding && (
+          {nyttGrunnlagHarTrygdeavgiftsgrunnlag && formIsValid && !feilmelding && (
             <SumArsavregningTabell
               nyTrygdeavgift={aarsavregningResponse?.avregning?.nyttTotalbeloep}
               tidligereTrygdeavgift={aarsavregningResponse?.avregning?.tidligereFakturertBeloep}
