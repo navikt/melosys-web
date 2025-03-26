@@ -1,4 +1,3 @@
-import { Fragment } from "react";
 import PT from "prop-types";
 
 import MKV, { MKVUtils } from "../../../melosyskodeverk";
@@ -22,11 +21,11 @@ import { MELOSYS_PENSJONIST } from "../../../featuretoggle/toggleNavn";
  */
 function EnkeltSak(props) {
   const { landkoder } = props;
-  const { behandlingOversikter, sakstype, saksnummer, sakstema } = props.sak;
+  const { land, behandlingOversikter, sakstype, saksnummer, sakstema } = props.sak;
   const erPensjonistToggleEnabled = useFeatureToggle(MELOSYS_PENSJONIST);
 
   const { behandlingstype, behandlingsstatus, behandlingstema, svarFrist, behandlingID } = behandlingOversikter[0];
-  const { soknadsperiode, land } =
+  const { soknadsperiode } =
     behandlingOversikter.find((behandlingOversikt) => behandlingOversikt.soknadsperiode != null) ?? {};
   const { lovvalgsperiode } =
     behandlingOversikter.find((behandlingOversikt) => behandlingOversikt.lovvalgsperiode != null) ?? {};

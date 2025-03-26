@@ -25,7 +25,6 @@ import { MELOSYS_PENSJONIST } from "../../featuretoggle/toggleNavn";
 function Fagsak({ sak, landkoder }) {
   const { opprettetDato, sakstype, saksstatus, saksnummer, sakstema, behandlingOversikter } = sak;
   const erPensjonistToggleEnabled = useFeatureToggle(MELOSYS_PENSJONIST);
-  const { land } = behandlingOversikter.find((behandlingOversikt) => behandlingOversikt.soknadsperiode != null) ?? {};
   const { lovvalgsperiode } =
     behandlingOversikter.find((behandlingOversikt) => behandlingOversikt.lovvalgsperiode != null) ?? {};
   const { medlemskapsperiode } =
@@ -71,7 +70,7 @@ function Fagsak({ sak, landkoder }) {
               )}
               <dt>Land:</dt>
               <dd>
-                <Soknadsland land={land} visFulltNavn landkoderKodeverk={landkoder} />
+                <Soknadsland land={sak.land} visFulltNavn landkoderKodeverk={landkoder} />
               </dd>
             </dl>
           </Nav.Column>
