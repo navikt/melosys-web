@@ -206,6 +206,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
           try {
             trygdedekninger = await Api.LovligeKombinasjoner.hentTrygdedekninger(bestemmelse);
           } catch (err) {
+            // eslint-disable-next-line no-console
             console.error("Feil ved henting av trygdedekninger:", err);
           }
         }
@@ -235,7 +236,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
           aarsavregningResponse: aarsavregningRes,
           bestemmelser: bestemmelsesRes.bestemmelser,
           formDefaultValues,
-          trygdedekninger, // Pass trygdedekninger to AarsavregningForm
+          trygdedekninger,
         });
 
         setIsLoading(false);
