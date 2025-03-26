@@ -1,6 +1,5 @@
 import { useCallback } from "react";
 import { Control, useWatch } from "react-hook-form";
-import { useDispatch } from "react-redux";
 import * as Forms from "../../../../../felleskomponenter/forms";
 import * as KV from "../../../../../kodeverk";
 import MKV from "../../../../../melosyskodeverk";
@@ -19,6 +18,8 @@ interface BestemmelseSelectProps {
   redigerbart: boolean;
   setTrygdedekninger: (trygdedekninger: string[]) => void;
   setFeilmelding: (feilmelding: string | undefined) => void;
+  setEndrerBestemmelse: (isChanging: boolean) => void;
+  lagreMedlemskapsperioder: (oppdaterteMedlemskapsperioder: Medlemskapsperiode[]) => void;
 }
 
 function BestemmelseSelect({
@@ -30,32 +31,42 @@ function BestemmelseSelect({
   redigerbart,
   setTrygdedekninger,
   setFeilmelding,
+  setEndrerBestemmelse,
+  lagreMedlemskapsperioder,
 }: BestemmelseSelectProps) {
-  const dispatch = useDispatch();
   const bestemmelse = useWatch({ control, name: "bestemmelse" });
   const medlemskapsperioder = useWatch({ control, name: "medlemskapsperioder" });
   const inntektskilder = useWatch({ control, name: "inntektskilder" });
 
   const handleBestemmelseChange = useCallback(
     async (nyBestemmelse: string) => {
+      setEndrerBestemmelse(true);
+
       try {
-        if (!harDeltGrunnlag && behandlingID) {
-          try {
-            await Api.MedlemAvFolketrygden.Medlemskapsperioder.slettMedlemskapsperioder(behandlingID);
-          } catch (error) {
-            setFeilmelding("Feil ved sletting av medlemskapsperioder");
-            return;
-          }
+        const trygdedekningerResponse = await Api.LovligeKombinasjoner.hentTrygdedekninger(nyBestemmelse);
+        setTrygdedekninger(trygdedekningerResponse);
+
+        if (medlemskapsperioder.every((periode: Medlemskapsperiode) => periode.id === ULAGRET_MEDLEMSKAPSPERIODE_ID)) {
+          setEndrerBestemmelse(false);
+          return;
         }
 
-        setValue(
-          "medlemskapsperioder",
-          medlemskapsperioder.map((periode: Medlemskapsperiode) => ({
-            ...periode,
-            trygdedekning: "",
-            id: ULAGRET_MEDLEMSKAPSPERIODE_ID,
-          })),
-        );
+        try {
+          await Api.MedlemAvFolketrygden.Medlemskapsperioder.slettMedlemskapsperioder(behandlingID!);
+        } catch (error) {
+          setFeilmelding("Feil ved sletting av medlemskapsperioder");
+          setEndrerBestemmelse(false);
+          return;
+        }
+
+        const defaultTrygdedekning = trygdedekningerResponse.length === 1 ? trygdedekningerResponse[0] : "";
+
+        const oppdaterteMedlemskapsperioder = medlemskapsperioder.map((periode: Medlemskapsperiode) => ({
+          ...periode,
+          trygdedekning: defaultTrygdedekning,
+          id: ULAGRET_MEDLEMSKAPSPERIODE_ID,
+        }));
+        setValue("medlemskapsperioder", oppdaterteMedlemskapsperioder);
 
         setValue(
           "inntektskilder",
@@ -69,21 +80,19 @@ function BestemmelseSelect({
           })),
         );
 
-        const trygdedekningerResponse = await Api.LovligeKombinasjoner.hentTrygdedekninger(nyBestemmelse);
-        setTrygdedekninger([...trygdedekningerResponse]);
+        lagreMedlemskapsperioder(oppdaterteMedlemskapsperioder);
       } catch (error) {
         setFeilmelding("Feil ved endring av bestemmelse");
       }
     },
     [
       harDeltGrunnlag,
-      behandlingID,
-      dispatch,
       medlemskapsperioder,
       inntektskilder,
       setValue,
       setTrygdedekninger,
       setFeilmelding,
+      setEndrerBestemmelse,
     ],
   );
 

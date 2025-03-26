@@ -63,7 +63,7 @@ export function AarsavregningForm({
     initiellData.aarsavregningResponse,
   );
   const [trygdedekninger, setTrygdedekninger] = useState<string[]>(initiellData.trygdedekninger || []);
-
+  const [endrerBestemmelse, setEndrerBestemmelse] = useState(false);
   const [initiellBeregningUtført, setInitiellBeregningUtført] = useState(false);
   const [harValidertSkjema, setHarValidertSkjema] = useState(false);
 
@@ -77,13 +77,14 @@ export function AarsavregningForm({
     control,
     setValue,
     trigger,
+    getValues,
     formState: { isValid: formIsValid, errors: formErrors },
   } = useForm({
     resolver: yupResolver(aarsavregningUtenEllerDeltGrunnlagSchema),
     context: {
       aar: initiellData.valgtÅr,
     },
-    mode: "onBlur",
+    mode: "onChange",
     defaultValues: initiellData.formDefaultValues,
   });
 
@@ -181,7 +182,7 @@ export function AarsavregningForm({
       fomDato: Utils.dato.formatterDatoTilISO(medlemskapsperiode.fomDato, "") as string,
       tomDato: Utils.dato.formatterDatoTilISO(medlemskapsperiode.tomDato, "") as string,
       trygdedekning: medlemskapsperiode.trygdedekning,
-      bestemmelse,
+      bestemmelse: getValues("bestemmelse"),
       innvilgelsesResultat: MKV.Koder.innvilgelsesResultat.INNVILGET,
     } as OppdaterMedlemskapsperiode;
 
@@ -229,8 +230,11 @@ export function AarsavregningForm({
     [medlemskapstypeErPliktig, setFeilmelding, setAarsavregningResponse],
   );
 
-  const debouncedLagreMedlemskapsperioder = useCallback(
-    Utils._debounce(async (medlemskapsperioderFormValues, tidligereMedlemskapsperiodeListe) => {
+  const lagreMedlemskapsperioder = useCallback(
+    async (
+      medlemskapsperioderFormValues: Medlemskapsperiode[],
+      tidligereMedlemskapsperiodeListe: Medlemskapsperiode[],
+    ) => {
       const erMedlemskapsperioderGyldig = await trigger("medlemskapsperioder");
       if (erMedlemskapsperioderGyldig) {
         interface LagredeMedlemskapsperioder extends Medlemskapsperiode {
@@ -278,8 +282,25 @@ export function AarsavregningForm({
           );
         }
       }
-    }, 1000),
-    [trigger, handleBeregnTrygdeavgiftsperioder, setValue, skatteforholdsperioder, inntektskilder],
+    },
+    [
+      trigger,
+      handleBeregnTrygdeavgiftsperioder,
+      setValue,
+      skatteforholdsperioder,
+      inntektskilder,
+      lagreMedlemskapsperiodeHvisEndret,
+    ],
+  );
+
+  // The debounced wrapper function
+  const debouncedLagreMedlemskapsperioder = useCallback(
+    Utils._debounce(
+      (medlemskapsperioderFormValues, tidligereMedlemskapsperiodeListe) =>
+        lagreMedlemskapsperioder(medlemskapsperioderFormValues, tidligereMedlemskapsperiodeListe),
+      1000,
+    ),
+    [lagreMedlemskapsperioder],
   );
 
   const medlemskapsperioderHarBrukerendringer = (
@@ -314,8 +335,8 @@ export function AarsavregningForm({
   };
 
   useEffect(() => {
-    const lagreMedlemskapsperioder = async () => {
-      if (redigerbart) {
+    const lagreMedlemskapsperioderEffect = async () => {
+      if (redigerbart && !endrerBestemmelse) {
         setMedlemskapsperiodeFeilmelding(undefined);
         if (medlemskapsperioder.length !== medlemskapsperioderForrigeAntall.current) {
           medlemskapsperioderForrigeAntall.current = medlemskapsperioder.length;
@@ -338,8 +359,23 @@ export function AarsavregningForm({
       }
     };
 
-    lagreMedlemskapsperioder();
+    lagreMedlemskapsperioderEffect();
   }, [medlemskapsperioder]);
+
+  const lagreMedlemskapsperioderEtterBestemmelseEndring = useCallback(
+    (oppdaterteMedlemskapsperioder: Medlemskapsperiode[]) => {
+      forrigeMedlemskapsperioder.current = oppdaterteMedlemskapsperioder;
+
+      trigger("medlemskapsperioder")
+        .then(async (isValid) => {
+          if (isValid) {
+            await lagreMedlemskapsperioder(oppdaterteMedlemskapsperioder, oppdaterteMedlemskapsperioder);
+          }
+        })
+        .finally(() => setEndrerBestemmelse(false));
+    },
+    [trigger, lagreMedlemskapsperioder],
+  );
 
   const leggTilDefaultMedlemskapsperiode = () => {
     medlemskapsperioderAppend(DEFAULT_MEDLEMSKAPSPERIODE);
@@ -415,7 +451,7 @@ export function AarsavregningForm({
   );
 
   useEffect(() => {
-    if (redigerbart && aarsavregningID && initiellBeregningUtført) {
+    if (redigerbart && aarsavregningID && initiellBeregningUtført && !endrerBestemmelse) {
       const beregnHvisSkjemaErGyldig = async () => {
         const erSkjemaGyldig = await trigger();
         if (erSkjemaGyldig) {
@@ -504,6 +540,8 @@ export function AarsavregningForm({
         redigerbart={redigerbart}
         setTrygdedekninger={setTrygdedekninger}
         setFeilmelding={setFeilmelding}
+        setEndrerBestemmelse={setEndrerBestemmelse}
+        lagreMedlemskapsperioder={lagreMedlemskapsperioderEtterBestemmelseEndring}
       />
 
       <div className="medlemskapsperioder">

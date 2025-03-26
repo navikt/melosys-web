@@ -26,7 +26,7 @@ export interface PeriodeElementerProps {
   maksVerdi?: Date;
   minVerdi?: Date;
   trygdedekninger?: string[];
-  setValue?: (name: string, value: any) => void;
+  setValue: (name: string, value: any, options?: any) => void;
 }
 
 export function MedlemskapsperiodeSkjema({
@@ -56,20 +56,12 @@ export function MedlemskapsperiodeSkjema({
 
   const kunEnTrygdedekning = trygdedekninger?.length === 1;
 
-  // Set the trygdedekning value whenever trygdedekninger is a list with exactly one item
+  // Setter trygdedekning dersom vi kun har en gyldig dekning
   useEffect(() => {
-    if (setValue && trygdedekninger?.length === 1) {
-      const formPath = `medlemskapsperioder[${index}].trygdedekning`;
-      const currentValue = formValues.medlemskapsperioder[index]?.trygdedekning;
-      const newValue = trygdedekninger[0];
-
-      // Only set if the value is different or empty
-      if (!currentValue || currentValue !== newValue) {
-        setValue(formPath, newValue);
-      }
+    if (trygdedekninger?.length === 1) {
+      setValue(`medlemskapsperioder[${index}].trygdedekning`, trygdedekninger[0], { shouldValidate: true });
     }
-  // Include formValues in the dependency array to detect changes in the current value
-  }, [trygdedekninger, index, setValue, formValues.medlemskapsperioder]);
+  }, [trygdedekninger]);
 
   return (
     <div className="medlemskapsperiodeSkjema">

@@ -18,7 +18,6 @@ import { AarsavregningUtenEllerDeltGrunnlag } from "./aarsavregningUtenEllerDelt
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
 import { lagInnvilgetMedlemskapsPeriode } from "./komponenter/utils";
 import { FellesHandlersContext } from "../../../../contexts";
-import { datalastingOperations } from "../../../../ducks/datalasting";
 
 interface Props {
   bekreft: () => void;
