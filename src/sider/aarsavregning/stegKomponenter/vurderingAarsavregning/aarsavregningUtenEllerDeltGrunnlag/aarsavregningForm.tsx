@@ -291,7 +291,6 @@ export function AarsavregningForm({
     ],
   );
 
-  // The debounced wrapper function
   const debouncedLagreMedlemskapsperioder = useCallback(
     Utils._debounce(
       (medlemskapsperioderFormValues, tidligereMedlemskapsperiodeListe) =>
