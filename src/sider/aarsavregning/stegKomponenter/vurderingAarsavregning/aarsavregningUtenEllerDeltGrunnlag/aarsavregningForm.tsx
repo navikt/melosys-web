@@ -160,20 +160,6 @@ export function AarsavregningForm({
     }
   }, [formErrors.medlemskapsperioder]);
 
-  useEffect(() => {
-    if (redigerbart && aarsavregningResponse?.nyttGrunnlag) {
-      if (aarsavregningResponse.nyttGrunnlag?.avgift.totalAvgift !== aarsavregningResponse.avregning?.nyttTotalbeloep) {
-        Api.Aarsavregning.oppdaterTotalAvgift(
-          behandlingID,
-          aarsavregningID,
-          aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift,
-        ).then((response: AarsavregningResponse) => {
-          setAarsavregningResponse(response);
-        });
-      }
-    }
-  }, [aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift]);
-
   const lagreMedlemskapsperiodeHvisEndret = async (
     medlemskapsperiode: Medlemskapsperiode,
     index: number,
@@ -450,6 +436,15 @@ export function AarsavregningForm({
       setHarValidertSkjema(true);
     }
     if (stegErGyldig && !beregningPaagar) {
+      Api.Aarsavregning.oppdaterTotalAvgift(
+        behandlingID,
+        aarsavregningID,
+        aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift,
+      ).then((response: AarsavregningResponse) => {
+        console.log(response);
+        setAarsavregningResponse(response);
+      });
+
       bekreft();
     }
   };
@@ -549,7 +544,7 @@ export function AarsavregningForm({
 
       {formIsValid && !beregningPaagar && !feilmelding && (
         <SumArsavregningTabell
-          nyTrygdeavgift={aarsavregningResponse?.avregning?.nyttTotalbeloep}
+          nyTrygdeavgift={aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift}
           tidligereTrygdeavgift={aarsavregningResponse?.avregning?.tidligereFakturertBeloep}
           tidligereTrygdeavgiftAvgiftssystem={aarsavregningResponse?.avregning?.tidligereFakturertBeloepAvgiftssystem}
         />
