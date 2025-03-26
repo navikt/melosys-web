@@ -63,7 +63,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             {...rest}
             inputMode={numeric ? "numeric" : rest.inputMode}
             pattern={numeric ? "^-?[0-9]+$" : rest.pattern}
-            onChange={(event) => onChangeHandler(event, numeric, tillattNegativeTall, field, rest)}
+            onChange={(event: any) => onChangeHandler(event, numeric, tillattNegativeTall, field, rest)}
             error={error ?? getErrorMessage(field, formState)}
           />
         )}
