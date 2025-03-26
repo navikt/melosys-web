@@ -25,6 +25,25 @@ const filterIkkeNumeriskeTegn = (verdi: string, tillattNegativeTall: boolean) =>
   return verdi.replace(/[^0-9]/g, "");
 };
 
+const onChangeHandler = (
+  event: any,
+  numeric: boolean | undefined,
+  tillattNegativeTall: boolean | undefined,
+  field: any,
+  rest: any,
+) => {
+  if (numeric && event?.target?.value) {
+    const klonetEvent = { ...event, target: { ...event.target, value: event.target.value } };
+    klonetEvent.target.value = filterIkkeNumeriskeTegn(event.target.value, tillattNegativeTall ?? false);
+
+    field.onChange(klonetEvent);
+    if (rest.onChange) rest.onChange(klonetEvent.target.value);
+  } else {
+    field.onChange(event);
+    if (rest.onChange) rest.onChange(event?.target?.value);
+  }
+};
+
 type InputProps = Omit<ComponentProps<typeof Nav.TextField>, "onChange"> &
   UseControllerProps & {
     onChange?: (value: string) => void;
@@ -44,18 +63,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             {...rest}
             inputMode={numeric ? "numeric" : rest.inputMode}
             pattern={numeric ? "^-?[0-9]+$" : rest.pattern}
-            onChange={(event: any) => {
-              if (numeric && event?.target?.value) {
-                const klonetEvent = { ...event, target: { ...event.target, value: event.target.value } };
-                klonetEvent.target.value = filterIkkeNumeriskeTegn(event.target.value, tillattNegativeTall ?? false);
-
-                field.onChange(klonetEvent);
-                if (rest.onChange) rest.onChange(klonetEvent.target.value);
-              } else {
-                field.onChange(event);
-                if (rest.onChange) rest.onChange(event?.target?.value);
-              }
-            }}
+            onChange={(event) => onChangeHandler(event, numeric, tillattNegativeTall, field, rest)}
             error={error ?? getErrorMessage(field, formState)}
           />
         )}
