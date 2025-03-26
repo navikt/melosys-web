@@ -12,7 +12,7 @@ interface SoknadslandProps {
 }
 
 const Soknadsland = ({ land, visFulltNavn = false, landkoderKodeverk = MKV.KTObjects.landkoder }: SoknadslandProps) => {
-  if (!land) return "(ukjent)";
+  if (!land) return "";
 
   const { landkoder, flereLandUkjentHvilke } = land;
 
