@@ -1,7 +1,8 @@
-import { Foedsel } from "../../../../../../graphql";
+import { useSelector } from "react-redux";
 import * as Nav from "../../../../../../navFrontend";
 import EnkeltDato from "../../../../../enkeltDato";
-import "../personinfo.css";
+import "./fødsel.css";
+import { landkoderSelectors } from "../../../../../../ducks/landkoder";
 
 interface FødselProps {
   fødsel?: {
@@ -17,9 +18,14 @@ interface FødselProps {
 export function Fødsel({ fødsel, personopplysninger, erLitenSkjerm }: FødselProps) {
   const { foedeland, foedested, foedselsaar, foedselsdato } = fødsel || {};
 
+  const alleLandkoder = useSelector(landkoderSelectors.LandkoderSelector);
+
   let fødselsdato = null;
+  let fødeland = null;
+
   if (fødsel) {
     fødselsdato = foedselsdato ? <EnkeltDato dato={foedselsdato} /> : foedselsaar;
+    fødeland = foedeland ? alleLandkoder.find((land) => land.kode === foedeland)?.term : null;
   }
 
   return (
@@ -50,7 +56,7 @@ export function Fødsel({ fødsel, personopplysninger, erLitenSkjerm }: FødselP
           Fødeland:
         </Nav.BodyLong>
       </Nav.Column>
-      <Nav.Column xs={erLitenSkjerm ? "8" : "6"}>{foedeland || "-"}</Nav.Column>
+      <Nav.Column xs={erLitenSkjerm ? "8" : "6"}>{fødeland || "-"}</Nav.Column>
     </div>
   );
 }

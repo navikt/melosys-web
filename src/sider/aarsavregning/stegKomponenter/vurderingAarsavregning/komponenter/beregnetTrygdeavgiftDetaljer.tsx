@@ -29,7 +29,7 @@ export function BeregnetTrygdeavgiftDetaljer({
   medlemskapsTypeErPliktig: boolean;
   tittel: string;
 }) {
-  if (!grunnlag || !grunnlag.avgift || grunnlag.avgift.totalAvgift === 0) return null;
+  if (!grunnlag || !grunnlag.avgift) return null;
 
   const hentDetaljer = (data: Grunnlagsopplysninger): DetaljerInterface[] => {
     return data.avgift.trygdeavgiftsperioder

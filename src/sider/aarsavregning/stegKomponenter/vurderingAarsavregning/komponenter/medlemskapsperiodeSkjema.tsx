@@ -86,7 +86,7 @@ export function MedlemskapsperiodeSkjema({
               control={control}
               name={`medlemskapsperioder[${index}].tomDato`}
               aria-label={`Til og med periode ${index + 1}`}
-              minDate={Utils.dato.norskStringTilDate(formValues.medlemskapsperioder[index]?.fomDato)}
+              minDate={Utils.dato.norskStringTilDate(formValues.medlemskapsperioder[index].fomDato)}
               maxDate={maksVerdi}
               readOnly={!redigerbart || erPeriodeFraGrunnlag}
             />

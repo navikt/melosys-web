@@ -1,6 +1,5 @@
 import * as Utils from "../../../../utils";
 import { sorterEtterISOFomDato } from "../../../../utils/dato";
-import * as Api from "../../../../services/api";
 import MKV from "../../../../melosyskodeverk";
 
 const { IKKE_SKATTEPLIKTIG } = MKV.Koder.skatteplikttype;

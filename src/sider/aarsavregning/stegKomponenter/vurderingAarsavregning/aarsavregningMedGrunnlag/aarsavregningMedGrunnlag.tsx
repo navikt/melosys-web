@@ -42,11 +42,6 @@ interface Props {
   oppdaterStatus: (isValid: boolean) => void;
 }
 
-/* TODO: Komponenten burde refaktoreres på samme måte som ble gjort for aarsavregningUtenEllerDeltGrunnlag i 7209
- * Dele opp komponenten i initialFetch og en skjemakomponent. Fjern all unødvendig setting av skjemaverdier og endre
- * react hook form mode til onBlur. Se ellers hvordan det er gjort med watch i /aarsavregningUtenEllerDeltGrunnlag/aarsavregningForm.tsx.
- * Det bør også vurderes å ikke sende "formValues" nedover i komponentene, men heller sende de isolerte verdiene som trengs.
- */
 export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
   const [erAvvik, setErAvvik] = useState<boolean | undefined>(undefined);
   const [feilmelding, setFeilmelding] = useState<undefined | string>(undefined);
@@ -164,13 +159,11 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
   // TODO: Når ryddingen skjer her husk å rename bort fra medlemskapsTypeErPliktig
   const handleBeregnTrygdeavgiftsperioder = useCallback(
     async (formVerdier: FieldValue<FormValuesProps>) => {
-      await beregnTrygdeavgiftsperioder({
+      await beregnTrygdeavgiftsperioder(formVerdier, {
         behandlingID,
         medlemskapstypeErPliktig: medlemskapsTypeErPliktig,
         setFeilmelding,
         setAarsavregningResponse,
-        skatteforholdsperioder: formVerdier.skatteforholdsperioder,
-        inntektskilder: formVerdier.inntektskilder,
       });
       setBeregningPaagar(false);
     },
@@ -255,7 +248,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
     medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder);
   const forskuddsvisFakturertTrygdeavgift =
     (aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift?.totalAvgift ?? 0) > 0;
-  const nyttGrunnlagHarTrygdeavgiftsperioder = (aarsavregningResponse?.nyttGrunnlag?.avgift?.totalAvgift ?? 0) > 0;
+  const nyttGrunnlagHarTrygdeavgiftsgrunnlag = aarsavregningResponse?.nyttGrunnlag?.trygdeavgiftsgrunnlag != null;
 
   return (
     <>
@@ -327,7 +320,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
 
           {trygdeAvgiftSkalIkkeBetalesTilNav && <Aarsavregningsmeldinger.TrygdeavgiftSkalIkkeBetalesTilNav />}
 
-          {nyttGrunnlagHarTrygdeavgiftsperioder && formIsValid && !feilmelding && (
+          {nyttGrunnlagHarTrygdeavgiftsgrunnlag && formIsValid && !feilmelding && (
             <SumArsavregningTabell
               nyTrygdeavgift={aarsavregningResponse?.avregning?.nyttTotalbeloep}
               tidligereTrygdeavgift={aarsavregningResponse?.avregning?.tidligereFakturertBeloep}

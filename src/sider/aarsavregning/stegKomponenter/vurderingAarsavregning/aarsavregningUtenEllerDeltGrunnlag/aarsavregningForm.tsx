@@ -7,11 +7,7 @@ import { behandlingsresultatSelectors } from "../../../../../ducks/behandlingsre
 import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 import { Inntektskilder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/inntektskilder";
 import { Skatteforholdsperioder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/skatteforholdsperioder";
-import {
-  FieldArrayProps,
-  Inntektskilde,
-  Skatteforhold,
-} from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
+import { FieldArrayProps, FormValuesProps } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
 import MKV from "../../../../../melosyskodeverk";
 import * as Nav from "../../../../../navFrontend";
 import * as Api from "../../../../../services/api";
@@ -75,6 +71,7 @@ export function AarsavregningForm({
 
   const {
     control,
+    watch,
     setValue,
     trigger,
     getValues,
@@ -107,6 +104,7 @@ export function AarsavregningForm({
     update: inntektUpdate,
   } = useFieldArray<FieldArrayProps, "inntektskilder", "id">({ control, name: "inntektskilder" });
 
+  const formValues = watch();
   const bestemmelse = useWatch({ control, name: "bestemmelse" });
   const medlemskapsperioder = useWatch({ control, name: "medlemskapsperioder" });
   const medlemskapsperioderForrigeAntall = useRef(medlemskapsperioder.length);
@@ -138,7 +136,8 @@ export function AarsavregningForm({
   // Kjør initiell beregning
   useEffect(() => {
     if (formIsValid && !initiellBeregningUtført) {
-      handleBeregnTrygdeavgiftsperioder(skatteforholdsperioder, inntektskilder).then(() => {
+      const oppdaterteFormValues = watch();
+      handleBeregnTrygdeavgiftsperioder(oppdaterteFormValues).then(() => {
         setInitiellBeregningUtført(true);
       });
     }
@@ -215,15 +214,13 @@ export function AarsavregningForm({
   };
 
   const handleBeregnTrygdeavgiftsperioder = useCallback(
-    async (currentSkatteforholdsperioder: Skatteforhold[], currentInntektskilder: Inntektskilde[]) => {
+    async (formVerdier: FieldValue<FormValuesProps>) => {
       setBeregningPaagar(true);
-      await beregnTrygdeavgiftsperioder({
+      await beregnTrygdeavgiftsperioder(formVerdier, {
         behandlingID,
         medlemskapstypeErPliktig,
         setFeilmelding,
         setAarsavregningResponse,
-        skatteforholdsperioder: currentSkatteforholdsperioder,
-        inntektskilder: currentInntektskilder,
       });
       setBeregningPaagar(false);
     },
@@ -258,10 +255,11 @@ export function AarsavregningForm({
 
         if (nyeLagredeMedlemskapsperioder.length > 0) {
           setFeilmelding(undefined);
+          const oppdaterteFormValues = watch();
           // Revalider så feilmeldinger forsvinner før beregning
           const erGyldigSkjema = await trigger();
           if (erGyldigSkjema) {
-            await handleBeregnTrygdeavgiftsperioder(skatteforholdsperioder, inntektskilder);
+            await handleBeregnTrygdeavgiftsperioder(oppdaterteFormValues);
           }
 
           setValue(
@@ -395,7 +393,8 @@ export function AarsavregningForm({
 
       if (await trigger()) {
         setFeilmelding(undefined);
-        await handleBeregnTrygdeavgiftsperioder(skatteforholdsperioder, inntektskilder);
+        const oppdaterteFormValues = watch();
+        await handleBeregnTrygdeavgiftsperioder(oppdaterteFormValues);
       }
     } catch (error) {
       console.error("Feil ved sletting av medlemskapsperiode:", error);
@@ -411,7 +410,8 @@ export function AarsavregningForm({
     await Api.Aarsavregning.oppdaterAarsavregning(behandlingid, request, aarsavregningid);
     if (await trigger()) {
       setFeilmelding(undefined);
-      await handleBeregnTrygdeavgiftsperioder(skatteforholdsperioder, inntektskilder);
+      const oppdaterteFormValues = watch();
+      await handleBeregnTrygdeavgiftsperioder(oppdaterteFormValues);
     }
   };
 
@@ -442,11 +442,7 @@ export function AarsavregningForm({
   }, [totaltForskuddsvisFakturert]);
 
   const debounceBeregnTrygdeavgiftsperioder = useCallback(
-    Utils._debounce(
-      (oppdaterteSkatteforhold, oppdaterteInntektskilder) =>
-        handleBeregnTrygdeavgiftsperioder(oppdaterteSkatteforhold, oppdaterteInntektskilder),
-      1000,
-    ),
+    Utils._debounce((formVerdier) => handleBeregnTrygdeavgiftsperioder(formVerdier), 1000),
     [handleBeregnTrygdeavgiftsperioder],
   );
 
@@ -457,7 +453,7 @@ export function AarsavregningForm({
         if (erSkjemaGyldig) {
           setBeregningPaagar(true);
           setFeilmelding(undefined);
-          debounceBeregnTrygdeavgiftsperioder(skatteforholdsperioder, inntektskilder);
+          debounceBeregnTrygdeavgiftsperioder(formValues);
         }
       };
 
@@ -484,13 +480,8 @@ export function AarsavregningForm({
     }
   };
 
-  const konstruerteFormValuesForUnderliggendeKomponenter = {
-    medlemskapsperioder,
-    skatteforholdsperioder,
-    inntektskilder,
-  };
   const trygdeAvgiftSkalIkkeBetalesTilNav =
-    medlemskapstypeErPliktig && erBrukerSkattepliktigIHelePerioden(skatteforholdsperioder);
+    medlemskapstypeErPliktig && erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder);
   const forskuddsvisFakturertTrygdeavgift =
     (aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift?.totalAvgift ?? 0) > 0;
 
@@ -553,7 +544,7 @@ export function AarsavregningForm({
             field={field}
             index={index}
             remove={slettMedlemskapsperiode}
-            formValues={konstruerteFormValuesForUnderliggendeKomponenter}
+            formValues={formValues}
             handleLeggTil={leggTilDefaultMedlemskapsperiode}
             visLeggTil
             maksVerdi={
@@ -568,7 +559,7 @@ export function AarsavregningForm({
 
       <Skatteforholdsperioder
         defaultPeriode={defaultPeriode}
-        formValues={konstruerteFormValuesForUnderliggendeKomponenter}
+        formValues={formValues}
         redigerbart={redigerbart}
         remove={skattRemove}
         append={skattAppend}
@@ -578,7 +569,7 @@ export function AarsavregningForm({
       {!trygdeAvgiftSkalIkkeBetalesTilNav && (
         <Inntektskilder
           defaultPeriode={defaultPeriode}
-          formValues={konstruerteFormValuesForUnderliggendeKomponenter}
+          formValues={formValues}
           redigerbart={redigerbart}
           update={inntektUpdate}
           remove={inntektRemove}
