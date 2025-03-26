@@ -86,9 +86,7 @@ export function beregnTrygdeavgiftsperioder(
       : [],
   })
     .then(() => {
-      console.log("test3 beregn trygdeavgift");
       Api.Aarsavregning.hentAarsavregning(behandlingID).then((response: AarsavregningResponse) => {
-        console.log(response);
         setAarsavregningResponse(response);
       });
       setFeilmelding(undefined);

@@ -441,7 +441,6 @@ export function AarsavregningForm({
         aarsavregningID,
         aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift,
       ).then((response: AarsavregningResponse) => {
-        console.log(response);
         setAarsavregningResponse(response);
       });
 
