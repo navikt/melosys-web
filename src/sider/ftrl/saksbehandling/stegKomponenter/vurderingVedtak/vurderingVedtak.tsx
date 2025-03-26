@@ -36,6 +36,7 @@ import { menypanelOperations, menypanelSelectors } from "../../../../../ducks/me
 import { fagsakSelectors } from "../../../../../ducks/fagsaker";
 import FullmaktForTrygdeavgiftConfirmationPanel from "../../../../../felleskomponenter/fullmaktForTrygdeavgiftConfirmationPanel/fullmaktForTrygdeavgiftConfirmationPanel";
 import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../../ducks/oppsummertfakta";
+import { be } from "date-fns/locale";
 
 const { FØRSTEGANG, NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT, SATSENDRING } =
   MKV.Koder.behandlinger.behandlingstyper;
@@ -103,7 +104,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   const feilmeldinger = useSelector(feiletResponsSelectors.FeilmeldingerSelector);
   const kontrollfeil = useSelector(kontrollSelectors.KontrollFeilSelector);
   const saksnummer = useSelector(fagsakSelectors.SaksnummerSelector);
-  const skalMottaFaktura = useSelector(oppsummertfaktaSelectors.BetalingsvalgSelector);
+  const betalingsvalg = useSelector(oppsummertfaktaSelectors.BetalingsvalgSelector);
   const { kontrollerFerdigbehandling, fattVedtak } = komponentDispatch(dispatch);
 
   const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
@@ -121,6 +122,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   const erIkkeYrkesaktiv = behandlingstema === IKKE_YRKESAKTIV;
   const erPensjonist = behandlingstema === PENSJONIST;
   const medlemskapsTypeErPliktig = medlemskapsperioder.some((periode) => periode.medlemskapstype === PLIKTIG);
+  const betalingsvalgErFaktura = betalingsvalg === MKV.Koder.betalingstype.FAKTURA;
   const bestemmelserkodeverk: string[] = [
     ...Object.values(MKV.KTObjects.folketrygdloven_kap2_bestemmelser),
     ...Object.values(MKV.KTObjects.vertslandsavtale_bestemmelser),
@@ -191,6 +193,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   };
 
   useEffect(() => {
+    Api.Avklartefakta.hentOppsummering(behandlingID);
     return () => debouncedOppdaterFritekster.cancel();
   }, []);
 
@@ -373,11 +376,10 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
     Utils._isEmpty(kontrollfeil) &&
     (!harFullmaktForTrygdeavgift || harBekreftetFullmaktForTrygdeavgift);
 
-  const visFakturaMottaker = skalMottaFaktura || (fakturamottaker && !erIkkeYrkesaktiv && !erPensjonist);
+  const visFakturaMottaker = betalingsvalgErFaktura || (fakturamottaker && !erIkkeYrkesaktiv && !erPensjonist);
 
   const lagreBetalingsValgForPensjonist = async () => {
-    let valg = skalMottaFaktura;
-    console.log("THE CHOICE", valg);
+    let valg = betalingsvalg;
 
     if (valg === null || valg === MKV.Koder.betalingstype.FAKTURA) {
       valg = MKV.Koder.betalingstype.TREKK;
@@ -385,9 +387,8 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
       valg = MKV.Koder.betalingstype.FAKTURA;
     }
 
-    console.log("THE CHOICE 2", valg);
-
-    dispatch(oppsummertfaktaOperations.lagreBetalingsvalgForPensjonister(behandlingID, valg));
+    await dispatch(oppsummertfaktaOperations.lagreBetalingsvalgForPensjonister(behandlingID, valg));
+    console.log("valg", betalingsvalg);
   };
 
   return (
@@ -441,10 +442,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
       {erFørstegang && erPensjonist && (
         <Nav.Row>
           <Nav.Column xs="12" className="fakturamottaker">
-            <Nav.Checkbox
-              checked={skalMottaFaktura === MKV.Koder.betalingstype.FAKTURA}
-              onChange={() => lagreBetalingsValgForPensjonist()}
-            >
+            <Nav.Checkbox checked={betalingsvalgErFaktura} onChange={() => lagreBetalingsValgForPensjonist()}>
               <Nav.BodyLong size="small" className="info">
                 Bruker skal motta faktura i stedet for trekk i pensjon/uføretrygd
               </Nav.BodyLong>
