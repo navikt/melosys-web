@@ -101,20 +101,6 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
     }
   }, []);
 
-  useEffect(() => {
-    if (redigerbart && aarsavregningResponse?.nyttGrunnlag) {
-      if (aarsavregningResponse.nyttGrunnlag?.avgift.totalAvgift !== aarsavregningResponse.avregning?.nyttTotalbeloep) {
-        Api.Aarsavregning.oppdaterTotalAvgift(
-          behandlingID,
-          aarsavregningID,
-          aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift,
-        ).then((res: AarsavregningResponse) => {
-          setAarsavregningResponse(res);
-        });
-      }
-    }
-  }, [aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift]);
-
   const medlemskapsTypeErPliktig = medlemskapsperioder?.every(
     (periode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG,
   );
@@ -240,6 +226,13 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
     }
     setBrukerHarBekreftet(true);
     if (stegErGyldig && !beregningPaagar) {
+      Api.Aarsavregning.oppdaterTotalAvgift(
+        behandlingID,
+        aarsavregningID,
+        aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift,
+      ).then((res: AarsavregningResponse) => {
+        setAarsavregningResponse(res);
+      });
       bekreft();
     }
   };
@@ -322,7 +315,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
 
           {nyttGrunnlagHarTrygdeavgiftsgrunnlag && formIsValid && !feilmelding && (
             <SumArsavregningTabell
-              nyTrygdeavgift={aarsavregningResponse?.avregning?.nyttTotalbeloep}
+              nyTrygdeavgift={aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift}
               tidligereTrygdeavgift={aarsavregningResponse?.avregning?.tidligereFakturertBeloep}
             />
           )}
