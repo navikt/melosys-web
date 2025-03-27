@@ -62,6 +62,7 @@ export function AarsavregningForm({
   const [endrerBestemmelse, setEndrerBestemmelse] = useState(false);
   const [initiellBeregningUtført, setInitiellBeregningUtført] = useState(false);
   const [harValidertSkjema, setHarValidertSkjema] = useState(false);
+  const [lagrerMedlemskapsperioder, setLagrerMedlemskapsperioder] = useState(false);
 
   // Redux selectors
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
@@ -292,11 +293,11 @@ export function AarsavregningForm({
   );
 
   const debouncedLagreMedlemskapsperioder = useCallback(
-    Utils._debounce(
-      (medlemskapsperioderFormValues, tidligereMedlemskapsperiodeListe) =>
-        lagreMedlemskapsperioder(medlemskapsperioderFormValues, tidligereMedlemskapsperiodeListe),
-      1000,
-    ),
+    Utils._debounce((medlemskapsperioderFormValues, tidligereMedlemskapsperiodeListe, callbackEtterLagring) => {
+      lagreMedlemskapsperioder(medlemskapsperioderFormValues, tidligereMedlemskapsperiodeListe).finally(() => {
+        if (callbackEtterLagring) callbackEtterLagring();
+      });
+    }, 1000),
     [lagreMedlemskapsperioder],
   );
 
@@ -333,8 +334,9 @@ export function AarsavregningForm({
 
   useEffect(() => {
     const lagreMedlemskapsperioderEffect = async () => {
-      if (redigerbart && !endrerBestemmelse) {
+      if (redigerbart && !endrerBestemmelse && !lagrerMedlemskapsperioder) {
         setMedlemskapsperiodeFeilmelding(undefined);
+
         if (medlemskapsperioder.length !== medlemskapsperioderForrigeAntall.current) {
           medlemskapsperioderForrigeAntall.current = medlemskapsperioder.length;
           return;
@@ -351,13 +353,21 @@ export function AarsavregningForm({
           return;
         }
 
-        debouncedLagreMedlemskapsperioder(medlemskapsperioder, forrigeMedlemskapsperioder.current);
-        forrigeMedlemskapsperioder.current = medlemskapsperioder;
+        setLagrerMedlemskapsperioder(true);
+
+        const medlemskapsperioderTilLagring = [...medlemskapsperioder];
+        const forrigeMedlemskapsperioderTilLagring = [...forrigeMedlemskapsperioder.current];
+
+        forrigeMedlemskapsperioder.current = medlemskapsperioderTilLagring;
+
+        debouncedLagreMedlemskapsperioder(medlemskapsperioderTilLagring, forrigeMedlemskapsperioderTilLagring, () => {
+          setLagrerMedlemskapsperioder(false);
+        });
       }
     };
 
     lagreMedlemskapsperioderEffect();
-  }, [medlemskapsperioder]);
+  }, [medlemskapsperioder, redigerbart, endrerBestemmelse, bestemmelse, lagrerMedlemskapsperioder]);
 
   const lagreMedlemskapsperioderEtterBestemmelseEndring = useCallback(
     (oppdaterteMedlemskapsperioder: Medlemskapsperiode[]) => {
@@ -392,8 +402,10 @@ export function AarsavregningForm({
 
       if (await trigger()) {
         setFeilmelding(undefined);
-        const oppdaterteFormValues = watch();
-        await handleBeregnTrygdeavgiftsperioder(oppdaterteFormValues);
+        await handleBeregnTrygdeavgiftsperioder({
+          skatteforholdsperioder: getValues("skatteforholdsperioder"),
+          inntektskilder: getValues("inntektskilder"),
+        });
       }
     } catch (error) {
       console.error("Feil ved sletting av medlemskapsperiode:", error);
@@ -409,8 +421,10 @@ export function AarsavregningForm({
     await Api.Aarsavregning.oppdaterAarsavregning(behandlingid, request, aarsavregningid);
     if (await trigger()) {
       setFeilmelding(undefined);
-      const oppdaterteFormValues = watch();
-      await handleBeregnTrygdeavgiftsperioder(oppdaterteFormValues);
+      await handleBeregnTrygdeavgiftsperioder({
+        skatteforholdsperioder: getValues("skatteforholdsperioder"),
+        inntektskilder: getValues("inntektskilder"),
+      });
     }
   };
 
@@ -427,7 +441,6 @@ export function AarsavregningForm({
     if (
       redigerbart &&
       forrigeTotaltForskuddsvisFakturert.current !== totaltForskuddsvisFakturert &&
-      (totaltForskuddsvisFakturert || totaltForskuddsvisFakturert === "") &&
       totaltForskuddsvisFakturert !== aarsavregningResponse?.avregning?.tidligereFakturertBeloepAvgiftssystem
     ) {
       debouncedOppdaterTotaltForskuddsvisFakturert({

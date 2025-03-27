@@ -214,7 +214,8 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
           }
         }
 
-        const erInitiellMappingForDeltGrunnlag = harDeltGrunnlag && aarsavregningRes && !aarsavregningRes.nyttGrunnlag;
+        const deltGrunnlagAarsavregningHarIkkeNyttGrunnlag =
+          harDeltGrunnlag && aarsavregningRes && !aarsavregningRes.nyttGrunnlag;
 
         const mappedMedlemskapsperioder = await getMappedMedlemskapsperioder(aarsavregningRes!);
         const bestemmelse = getBestemmelse(mappedMedlemskapsperioder);
@@ -227,13 +228,13 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
           bestemmelse,
           totaltForskuddsvisFakturert: aarsavregningRes?.avregning?.tidligereFakturertBeloepAvgiftssystem || "",
           skatteforholdsperioder: mapTilSkatteforholdProps(
-            erInitiellMappingForDeltGrunnlag
+            deltGrunnlagAarsavregningHarIkkeNyttGrunnlag
               ? aarsavregningRes?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.skatteforholdsperioder
               : aarsavregningRes?.nyttGrunnlag?.trygdeavgiftsgrunnlag.skatteforholdsperioder,
             mappedMedlemskapsperioder,
           ),
           inntektskilder: mapTilInntektskilderProps(
-            erInitiellMappingForDeltGrunnlag
+            deltGrunnlagAarsavregningHarIkkeNyttGrunnlag
               ? aarsavregningRes?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.inntektskperioder
               : aarsavregningRes?.nyttGrunnlag?.trygdeavgiftsgrunnlag.inntektskperioder,
             mappedMedlemskapsperioder,
