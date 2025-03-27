@@ -48,5 +48,5 @@ export const IkkeYrkesaktivOppholdSelector = createSelector(
 
 export const BetalingsvalgSelector = createSelector(
   OppsummertFaktaDataSelector,
-  (oppsummertfakta) => oppsummertfakta.betalingstype,
+  (oppsummertfakta) => oppsummertfakta.betalingsvalg,
 );

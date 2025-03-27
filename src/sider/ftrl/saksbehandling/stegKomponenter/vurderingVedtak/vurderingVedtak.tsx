@@ -36,7 +36,8 @@ import { menypanelOperations, menypanelSelectors } from "../../../../../ducks/me
 import { fagsakSelectors } from "../../../../../ducks/fagsaker";
 import FullmaktForTrygdeavgiftConfirmationPanel from "../../../../../felleskomponenter/fullmaktForTrygdeavgiftConfirmationPanel/fullmaktForTrygdeavgiftConfirmationPanel";
 import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../../ducks/oppsummertfakta";
-import { be } from "date-fns/locale";
+import { TrygdeavgiftMottaker } from "./trygdeavgiftMottaker/trygdeavgiftMottaker";
+import { Betalingsvalg } from "./betalingsvalg/Betalingsvalg";
 
 const { FØRSTEGANG, NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT, SATSENDRING } =
   MKV.Koder.behandlinger.behandlingstyper;
@@ -193,7 +194,6 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   };
 
   useEffect(() => {
-    Api.Avklartefakta.hentOppsummering(behandlingID);
     return () => debouncedOppdaterFritekster.cancel();
   }, []);
 
@@ -377,6 +377,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
     (!harFullmaktForTrygdeavgift || harBekreftetFullmaktForTrygdeavgift);
 
   const visFakturaMottaker = betalingsvalgErFaktura || (fakturamottaker && !erIkkeYrkesaktiv && !erPensjonist);
+  const visBetalingsvalg = erFørstegang && erPensjonist;
 
   const lagreBetalingsValgForPensjonist = async () => {
     let valg = betalingsvalg;
@@ -387,8 +388,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
       valg = MKV.Koder.betalingstype.FAKTURA;
     }
 
-    await dispatch(oppsummertfaktaOperations.lagreBetalingsvalgForPensjonister(behandlingID, valg));
-    console.log("valg", betalingsvalg);
+    dispatch(oppsummertfaktaOperations.lagreBetalingsvalgForPensjonister(behandlingID, valg));
   };
 
   return (
@@ -420,49 +420,41 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
           })}
         </Nav.Table.Body>
       </Nav.Table>
-      <Nav.Row className="arbeidsland">
-        <Nav.Column xs="5">
+      <Nav.Row>
+        <Nav.Column xs="5" className="arbeidsland">
           <Nav.BodyLong weight="semibold" size="small" className="info">
-            {erIkkeYrkesaktiv || erPensjonist ? "Land" : "Arbeidsland"}
+            {erIkkeYrkesaktiv || erPensjonist ? "Land: " : "Arbeidsland: "}
           </Nav.BodyLong>
           <Nav.BodyLong size="small" className="info">
             {landEllerArbeidslandTekst()}
           </Nav.BodyLong>
         </Nav.Column>
       </Nav.Row>
-      {trygdeavgiftMottaker ? (
-        <Nav.Row className="trygdeavgift">
-          <Nav.Column xs="12">
+
+      <Nav.Row className="trygdeavgift">
+        {trygdeavgiftMottaker ? (
+          <TrygdeavgiftMottaker mottaker={trygdeavgiftMottaker.term} betalingsvalg={betalingsvalg} />
+        ) : null}
+        {visBetalingsvalg && (
+          <Betalingsvalg
+            skalSendeFaktura={betalingsvalgErFaktura}
+            onBetalingsvalgChange={lagreBetalingsValgForPensjonist}
+            redigerbart={redigerbart}
+          />
+        )}
+        {visFakturaMottaker && (
+          <Nav.Column xs="12" className={visBetalingsvalg ? "fakturamottaker--indent" : "fakturamottaker"}>
             <Nav.BodyLong size="small" className="info">
-              {trygdeavgiftMottaker.term}
+              Faktura sendes til: &nbsp;
             </Nav.BodyLong>
-          </Nav.Column>
-        </Nav.Row>
-      ) : null}
-      {erFørstegang && erPensjonist && (
-        <Nav.Row>
-          <Nav.Column xs="12" className="fakturamottaker">
-            <Nav.Checkbox checked={betalingsvalgErFaktura} onChange={() => lagreBetalingsValgForPensjonist()}>
-              <Nav.BodyLong size="small" className="info">
-                Bruker skal motta faktura i stedet for trekk i pensjon/uføretrygd
-              </Nav.BodyLong>
-            </Nav.Checkbox>
-          </Nav.Column>
-        </Nav.Row>
-      )}
-      {visFakturaMottaker && (
-        <Nav.Row>
-          <Nav.Column xs="12">
-            <Nav.BodyLong size="small" className="info">
-              Faktura sendes til:
-            </Nav.BodyLong>
-            &nbsp;
+
             <Nav.BodyLong size="small" className="bold">
               {fakturamottaker}
             </Nav.BodyLong>
           </Nav.Column>
-        </Nav.Row>
-      )}
+        )}
+      </Nav.Row>
+
       {harFullmaktForTrygdeavgift && redigerbart ? (
         <FullmaktForTrygdeavgiftConfirmationPanel
           erPensjonist={erPensjonist}
