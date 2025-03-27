@@ -160,7 +160,6 @@ export function AarsavregningForm({
       const harFeltFeil = Object.keys(formErrors.skatteforholdsperioder).some(
         (key) => !Number.isNaN(parseInt(key, 10)),
       );
-      console.log(formErrors.skatteforholdsperioder, harFeltFeil);
 
       if (!harFeltFeil && formErrors.skatteforholdsperioder.message) {
         setKompleksSkjemaFeilmelding(formErrors.skatteforholdsperioder.message as string);
@@ -170,12 +169,11 @@ export function AarsavregningForm({
     if (formErrors.medlemskapsperioder) {
       const harFeltFeil = Object.keys(formErrors.medlemskapsperioder).some((key) => !Number.isNaN(parseInt(key, 10)));
 
-      console.log(formErrors.medlemskapsperioder, harFeltFeil);
       if (!harFeltFeil && formErrors.medlemskapsperioder.message) {
         setKompleksSkjemaFeilmelding(formErrors.medlemskapsperioder.message as string);
       }
     }
-  }, [formErrors.medlemskapsperioder, formErrors.skatteforholdsperioder, formErrors.inntektskilder]);
+  }, [formErrors]);
 
   useEffect(() => {
     if (redigerbart && aarsavregningResponse?.nyttGrunnlag) {
