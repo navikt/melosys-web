@@ -314,6 +314,7 @@ const skatteforholdsDekkerMedlemskapTest = {
       return false;
     }
 
+    // eslint-disable-next-line no-plusplus
     for (let i = 1; i < sorterteSkatteperioder.length; i++) {
       const forrigePeriodeSlutt = Utils.dato.norskStringTilDate(sorterteSkatteperioder[i - 1].tomDato);
       const dennePeriodeStart = Utils.dato.norskStringTilDate(sorterteSkatteperioder[i].fomDato);
