@@ -60,9 +60,11 @@ export function AarsavregningForm({
   );
   const [trygdedekninger, setTrygdedekninger] = useState<string[]>(initiellData.trygdedekninger || []);
   const [endrerBestemmelse, setEndrerBestemmelse] = useState(false);
-  const [initiellBeregningUtført, setInitiellBeregningUtført] = useState(false);
   const [harValidertSkjema, setHarValidertSkjema] = useState(false);
   const [lagrerMedlemskapsperioder, setLagrerMedlemskapsperioder] = useState(false);
+  const [lagredeMedlemskapsperioder, setLagredeMedlemskapsperioder] = useState<Medlemskapsperiode[]>(
+    initiellData.formDefaultValues.medlemskapsperioder || [],
+  );
 
   // Redux selectors
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
@@ -113,7 +115,6 @@ export function AarsavregningForm({
   const skatteforholdsperioder = useWatch({ control, name: "skatteforholdsperioder" });
   const inntektskilder = useWatch({ control, name: "inntektskilder" });
 
-  const forrigeMedlemskapsperioder = useRef(medlemskapsperioder);
   const forrigeTotaltForskuddsvisFakturert = useRef(totaltForskuddsvisFakturert);
 
   const medlemskapstypeErPliktig = useMemo(() => {
@@ -133,16 +134,6 @@ export function AarsavregningForm({
       tomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsperiodeFomTom?.tom),
     };
   }, [medlemskapsperioder]);
-
-  // Kjør initiell beregning
-  useEffect(() => {
-    if (formIsValid && !initiellBeregningUtført) {
-      const oppdaterteFormValues = watch();
-      handleBeregnTrygdeavgiftsperioder(oppdaterteFormValues).then(() => {
-        setInitiellBeregningUtført(true);
-      });
-    }
-  }, [formIsValid]);
 
   useEffect(() => {
     // Kun vis komplekse feil hvis det ikke finnes andre feil i medlemskapsperioder
@@ -173,11 +164,7 @@ export function AarsavregningForm({
     }
   }, [aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift]);
 
-  const lagreMedlemskapsperiodeHvisEndret = async (
-    medlemskapsperiode: Medlemskapsperiode,
-    index: number,
-    tidligereMedlemskapsperioder: Medlemskapsperiode[],
-  ) => {
+  const lagreMedlemskapsperiodeHvisEndret = async (medlemskapsperiode: Medlemskapsperiode, index: number) => {
     const periodeRequest = {
       fomDato: Utils.dato.formatterDatoTilISO(medlemskapsperiode.fomDato, "") as string,
       tomDato: Utils.dato.formatterDatoTilISO(medlemskapsperiode.tomDato, "") as string,
@@ -186,14 +173,15 @@ export function AarsavregningForm({
       innvilgelsesResultat: MKV.Koder.innvilgelsesResultat.INNVILGET,
     } as OppdaterMedlemskapsperiode;
 
-    const tidligerePerioderIndex = tidligereMedlemskapsperioder[index];
+    const lagretMedlemskapsperiode = lagredeMedlemskapsperioder[index];
+    const harEndringer =
+      !lagretMedlemskapsperiode ||
+      medlemskapsperiode.id === ULAGRET_MEDLEMSKAPSPERIODE_ID ||
+      medlemskapsperiode.fomDato !== lagretMedlemskapsperiode.fomDato ||
+      medlemskapsperiode.tomDato !== lagretMedlemskapsperiode.tomDato ||
+      medlemskapsperiode.trygdedekning !== lagretMedlemskapsperiode.trygdedekning;
 
-    if (
-      tidligerePerioderIndex.id === ULAGRET_MEDLEMSKAPSPERIODE_ID ||
-      tidligerePerioderIndex.fomDato !== medlemskapsperiode.fomDato ||
-      tidligerePerioderIndex.tomDato !== medlemskapsperiode.tomDato ||
-      tidligerePerioderIndex.trygdedekning !== medlemskapsperiode.trygdedekning
-    ) {
+    if (harEndringer) {
       try {
         const response: any = await (medlemskapsperiode.id === ULAGRET_MEDLEMSKAPSPERIODE_ID
           ? Api.MedlemAvFolketrygden.Medlemskapsperioder.opprettMedlemskapsperioder(behandlingID, periodeRequest)
@@ -229,72 +217,63 @@ export function AarsavregningForm({
   );
 
   const lagreMedlemskapsperioder = useCallback(
-    async (
-      medlemskapsperioderFormValues: Medlemskapsperiode[],
-      tidligereMedlemskapsperiodeListe: Medlemskapsperiode[],
-    ) => {
-      const erMedlemskapsperioderGyldig = await trigger("medlemskapsperioder");
-      if (erMedlemskapsperioderGyldig) {
-        interface LagredeMedlemskapsperioder extends Medlemskapsperiode {
-          formValuesIndex: number;
+    async (medlemskapsperioderFormValues: Medlemskapsperiode[]) => {
+      interface LagredeMedlemskapsperioder extends Medlemskapsperiode {
+        formValuesIndex: number;
+      }
+
+      const nyeLagredeMedlemskapsperioder: LagredeMedlemskapsperioder[] = [];
+      // eslint-disable-next-line no-restricted-syntax
+      for (const [index, periode] of medlemskapsperioderFormValues.entries()) {
+        const lagretPeriode = await lagreMedlemskapsperiodeHvisEndret(periode, index);
+        if (lagretPeriode)
+          nyeLagredeMedlemskapsperioder.push({
+            ...(lagretPeriode as Medlemskapsperiode),
+            formValuesIndex: index,
+          });
+      }
+
+      if (nyeLagredeMedlemskapsperioder.length > 0) {
+        setFeilmelding(undefined);
+        // Revalider så feilmeldinger forsvinner før beregning
+        const erGyldigSkjema = await trigger();
+        if (erGyldigSkjema) {
+          await handleBeregnTrygdeavgiftsperioder({
+            skatteforholdsperioder: getValues("skatteforholdsperioder"),
+            inntektskilder: getValues("inntektskilder"),
+          });
         }
 
-        const nyeLagredeMedlemskapsperioder: LagredeMedlemskapsperioder[] = [];
-        // eslint-disable-next-line no-restricted-syntax
-        for (const [index, periode] of medlemskapsperioderFormValues.entries()) {
-          const lagretPeriode = await lagreMedlemskapsperiodeHvisEndret(
-            periode,
-            index,
-            tidligereMedlemskapsperiodeListe,
+        const oppdaterteMedlemskapsperioder = medlemskapsperioderFormValues.map((periode: any, index: number) => {
+          const lagretPeriodeMedID = nyeLagredeMedlemskapsperioder.find(
+            (backendPeriode: any) => backendPeriode.formValuesIndex === index,
           );
-          if (lagretPeriode)
-            nyeLagredeMedlemskapsperioder.push({
-              ...(lagretPeriode as Medlemskapsperiode),
-              formValuesIndex: index,
-            });
-        }
-
-        if (nyeLagredeMedlemskapsperioder.length > 0) {
-          setFeilmelding(undefined);
-          const oppdaterteFormValues = watch();
-          // Revalider så feilmeldinger forsvinner før beregning
-          const erGyldigSkjema = await trigger();
-          if (erGyldigSkjema) {
-            await handleBeregnTrygdeavgiftsperioder(oppdaterteFormValues);
+          if (lagretPeriodeMedID) {
+            return {
+              ...periode,
+              medlemskapstype: lagretPeriodeMedID.medlemskapstype,
+              id: lagretPeriodeMedID.id,
+            };
           }
+          return periode;
+        });
 
-          setValue(
-            "medlemskapsperioder",
-            medlemskapsperioderFormValues.map((periode: any, index: number) => {
-              const lagretPeriodeMedID = nyeLagredeMedlemskapsperioder.find(
-                (backendPeriode: any) => backendPeriode.formValuesIndex === index,
-              );
-              if (lagretPeriodeMedID) {
-                return {
-                  ...periode,
-                  medlemskapstype: lagretPeriodeMedID.medlemskapstype,
-                  id: lagretPeriodeMedID.id,
-                };
-              }
-              return periode;
-            }),
-          );
-        }
+        setLagredeMedlemskapsperioder(oppdaterteMedlemskapsperioder);
+        setValue("medlemskapsperioder", oppdaterteMedlemskapsperioder);
       }
     },
     [
       trigger,
       handleBeregnTrygdeavgiftsperioder,
       setValue,
-      skatteforholdsperioder,
-      inntektskilder,
+      setLagredeMedlemskapsperioder,
       lagreMedlemskapsperiodeHvisEndret,
     ],
   );
 
   const debouncedLagreMedlemskapsperioder = useCallback(
-    Utils._debounce((medlemskapsperioderFormValues, tidligereMedlemskapsperiodeListe, callbackEtterLagring) => {
-      lagreMedlemskapsperioder(medlemskapsperioderFormValues, tidligereMedlemskapsperiodeListe).finally(() => {
+    Utils._debounce((medlemskapsperioderFormValues, callbackEtterLagring) => {
+      lagreMedlemskapsperioder(medlemskapsperioderFormValues).finally(() => {
         if (callbackEtterLagring) callbackEtterLagring();
       });
     }, 1000),
@@ -305,10 +284,6 @@ export function AarsavregningForm({
     medlemskapsperioderNå: Medlemskapsperiode[],
     medlemskapsperioderTidlgere: Medlemskapsperiode[],
   ) => {
-    if (medlemskapsperioderNå.length !== medlemskapsperioderTidlgere.length) {
-      return false;
-    }
-
     const nåværendeListeMedRelevanteFelter = medlemskapsperioderNå.map(({ fomDato, tomDato, trygdedekning }) => ({
       fomDato,
       tomDato,
@@ -341,26 +316,19 @@ export function AarsavregningForm({
           medlemskapsperioderForrigeAntall.current = medlemskapsperioder.length;
           return;
         }
-
-        if (!medlemskapsperioderHarBrukerendringer(medlemskapsperioder, forrigeMedlemskapsperioder.current)) {
-          forrigeMedlemskapsperioder.current = medlemskapsperioder;
+        if (!medlemskapsperioderHarBrukerendringer(medlemskapsperioder, lagredeMedlemskapsperioder)) {
           return;
         }
 
         const erGyldigSkjema = await trigger("medlemskapsperioder");
-
         if (!erGyldigSkjema || !bestemmelse) {
           return;
         }
 
         setLagrerMedlemskapsperioder(true);
-
         const medlemskapsperioderTilLagring = [...medlemskapsperioder];
-        const forrigeMedlemskapsperioderTilLagring = [...forrigeMedlemskapsperioder.current];
 
-        forrigeMedlemskapsperioder.current = medlemskapsperioderTilLagring;
-
-        debouncedLagreMedlemskapsperioder(medlemskapsperioderTilLagring, forrigeMedlemskapsperioderTilLagring, () => {
+        debouncedLagreMedlemskapsperioder(medlemskapsperioderTilLagring, () => {
           setLagrerMedlemskapsperioder(false);
         });
       }
@@ -371,17 +339,17 @@ export function AarsavregningForm({
 
   const lagreMedlemskapsperioderEtterBestemmelseEndringHvisGyldig = useCallback(
     (oppdaterteMedlemskapsperioder: Medlemskapsperiode[]) => {
-      forrigeMedlemskapsperioder.current = oppdaterteMedlemskapsperioder;
+      setLagredeMedlemskapsperioder(oppdaterteMedlemskapsperioder);
 
       trigger("medlemskapsperioder")
         .then(async (isValid) => {
           if (isValid) {
-            await lagreMedlemskapsperioder(oppdaterteMedlemskapsperioder, oppdaterteMedlemskapsperioder);
+            await lagreMedlemskapsperioder(oppdaterteMedlemskapsperioder);
           }
         })
         .finally(() => setEndrerBestemmelse(false));
     },
-    [trigger, lagreMedlemskapsperioder],
+    [trigger, lagreMedlemskapsperioder, setLagredeMedlemskapsperioder],
   );
 
   const leggTilDefaultMedlemskapsperiode = () => {
@@ -459,7 +427,7 @@ export function AarsavregningForm({
   );
 
   useEffect(() => {
-    if (redigerbart && aarsavregningID && initiellBeregningUtført && !endrerBestemmelse) {
+    if (redigerbart && aarsavregningID && !endrerBestemmelse) {
       const beregnHvisSkjemaErGyldig = async () => {
         const erSkjemaGyldig = await trigger();
         if (erSkjemaGyldig) {
