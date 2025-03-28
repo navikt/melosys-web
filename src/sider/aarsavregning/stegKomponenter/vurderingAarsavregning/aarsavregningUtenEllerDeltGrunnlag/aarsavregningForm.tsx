@@ -369,7 +369,7 @@ export function AarsavregningForm({
     lagreMedlemskapsperioderEffect();
   }, [medlemskapsperioder, redigerbart, endrerBestemmelse, bestemmelse, lagrerMedlemskapsperioder]);
 
-  const lagreMedlemskapsperioderEtterBestemmelseEndring = useCallback(
+  const lagreMedlemskapsperioderEtterBestemmelseEndringHvisGyldig = useCallback(
     (oppdaterteMedlemskapsperioder: Medlemskapsperiode[]) => {
       forrigeMedlemskapsperioder.current = oppdaterteMedlemskapsperioder;
 
@@ -544,7 +544,7 @@ export function AarsavregningForm({
         setTrygdedekninger={setTrygdedekninger}
         setFeilmelding={setFeilmelding}
         setEndrerBestemmelse={setEndrerBestemmelse}
-        lagreMedlemskapsperioder={lagreMedlemskapsperioderEtterBestemmelseEndring}
+        lagreMedlemskapsperioderHvisGyldig={lagreMedlemskapsperioderEtterBestemmelseEndringHvisGyldig}
       />
 
       <div className="medlemskapsperioder">

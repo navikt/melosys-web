@@ -19,7 +19,7 @@ interface BestemmelseSelectProps {
   setTrygdedekninger: (trygdedekninger: string[]) => void;
   setFeilmelding: (feilmelding: string | undefined) => void;
   setEndrerBestemmelse: (isChanging: boolean) => void;
-  lagreMedlemskapsperioder: (oppdaterteMedlemskapsperioder: Medlemskapsperiode[]) => void;
+  lagreMedlemskapsperioderHvisGyldig: (oppdaterteMedlemskapsperioder: Medlemskapsperiode[]) => void;
 }
 
 function BestemmelseSelect({
@@ -32,9 +32,8 @@ function BestemmelseSelect({
   setTrygdedekninger,
   setFeilmelding,
   setEndrerBestemmelse,
-  lagreMedlemskapsperioder,
+  lagreMedlemskapsperioderHvisGyldig,
 }: BestemmelseSelectProps) {
-  const bestemmelse = useWatch({ control, name: "bestemmelse" });
   const medlemskapsperioder = useWatch({ control, name: "medlemskapsperioder" });
   const inntektskilder = useWatch({ control, name: "inntektskilder" });
 
@@ -46,13 +45,10 @@ function BestemmelseSelect({
         const trygdedekningerResponse = await Api.LovligeKombinasjoner.hentTrygdedekninger(nyBestemmelse);
         setTrygdedekninger(trygdedekningerResponse);
 
-        if (medlemskapsperioder.every((periode: Medlemskapsperiode) => periode.id === ULAGRET_MEDLEMSKAPSPERIODE_ID)) {
-          setEndrerBestemmelse(false);
-          return;
-        }
-
         try {
-          await Api.MedlemAvFolketrygden.Medlemskapsperioder.slettMedlemskapsperioder(behandlingID!);
+          if (medlemskapsperioder.some((periode: Medlemskapsperiode) => periode.id !== ULAGRET_MEDLEMSKAPSPERIODE_ID)) {
+            await Api.MedlemAvFolketrygden.Medlemskapsperioder.slettMedlemskapsperioder(behandlingID!);
+          }
         } catch (error) {
           setFeilmelding("Feil ved sletting av medlemskapsperioder");
           setEndrerBestemmelse(false);
@@ -80,7 +76,7 @@ function BestemmelseSelect({
           })),
         );
 
-        lagreMedlemskapsperioder(oppdaterteMedlemskapsperioder);
+        lagreMedlemskapsperioderHvisGyldig(oppdaterteMedlemskapsperioder);
       } catch (error) {
         setFeilmelding("Feil ved endring av bestemmelse");
       }
@@ -104,9 +100,7 @@ function BestemmelseSelect({
       control={control}
       readOnly={!redigerbart || harDeltGrunnlag}
       onChange={(valgtBestemmelse) => {
-        if (valgtBestemmelse && valgtBestemmelse !== bestemmelse) {
-          handleBestemmelseChange(valgtBestemmelse);
-        }
+        handleBestemmelseChange(valgtBestemmelse);
       }}
     >
       {bestemmelser.map((bestemmelseKode: string) => (
