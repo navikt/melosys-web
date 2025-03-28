@@ -196,6 +196,13 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
     }
     setBrukerHarBekreftet(true);
     if (stegErGyldig && !beregningPaagar) {
+      Api.Aarsavregning.oppdaterTotalAvgift(
+        behandlingID,
+        aarsavregningID,
+        aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift,
+      ).then((res: AarsavregningResponse) => {
+        setAarsavregningResponse(res);
+      });
       bekreft();
     }
   };
@@ -278,7 +285,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
 
           {nyttGrunnlagHarTrygdeavgiftsgrunnlag && formIsValid && !feilmelding && (
             <SumArsavregningTabell
-              nyTrygdeavgift={aarsavregningResponse?.avregning?.nyttTotalbeloep}
+              nyTrygdeavgift={aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift}
               tidligereTrygdeavgift={aarsavregningResponse?.avregning?.tidligereFakturertBeloep}
             />
           )}
