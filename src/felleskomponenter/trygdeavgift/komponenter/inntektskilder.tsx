@@ -234,7 +234,8 @@ export function Inntektskilder({
                   name={`inntektskilder[${index}].bruttoInntekt`}
                   control={control}
                   readOnly={!redigerbart}
-                  type="number"
+                  type="text"
+                  numeric
                   autoComplete="off"
                 />
               ) : (
