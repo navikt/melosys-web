@@ -25,10 +25,7 @@ import { MELOSYS_PENSJONIST } from "../../featuretoggle/toggleNavn";
 function Fagsak({ sak, landkoder }) {
   const { opprettetDato, sakstype, saksstatus, saksnummer, sakstema, behandlingOversikter } = sak;
   const erPensjonistToggleEnabled = useFeatureToggle(MELOSYS_PENSJONIST);
-  const { lovvalgsperiode } =
-    behandlingOversikter.find((behandlingOversikt) => behandlingOversikt.lovvalgsperiode != null) ?? {};
-  const { medlemskapsperiode } =
-    behandlingOversikter.find((behandlingOversikt) => behandlingOversikt.medlemskapsperiode != null) ?? {};
+
   const link = (behandling) =>
     Routing.lagUrl(
       saksnummer,
@@ -64,9 +61,9 @@ function Fagsak({ sak, landkoder }) {
           <Nav.Column xs="12" md="4">
             <dl className="fagsak__meta">
               {sakstype?.kode === MKV.Koder.sakstyper.FTRL ? (
-                <DatoOmradeDescription label="Medlemskapsperiode: " periode={medlemskapsperiode} />
+                <DatoOmradeDescription label="Medlemskapsperiode: " periode={sak.periode} />
               ) : (
-                <DatoOmradeDescription label="Lovvalgsperiode: " periode={lovvalgsperiode} />
+                <DatoOmradeDescription label="Lovvalgsperiode: " periode={sak.periode} />
               )}
               <dt>Land:</dt>
               <dd>
