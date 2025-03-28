@@ -57,19 +57,18 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
     if (behandlingID) {
       Api.Aarsavregning.hentAarsavregning(behandlingID)
         .then((res) => {
+          if (!res.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag) {
+            throw new Error("Årsavregning med grunnlag må ha grunnlag");
+          }
+
           // Benyttes for innhenting av saksopplysninger ifm. årsavregningsbehandlinger
           dispatch({ type: OK, data: res });
 
           let formValues;
-          if (res?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag) {
-            formValues = mapSkjemaverdierFraTrygdeavgiftsgrunnlag(
-              res.nyttGrunnlag?.trygdeavgiftsgrunnlag || res.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag,
-            );
+          if (res?.nyttGrunnlag?.trygdeavgiftsgrunnlag) {
+            formValues = mapSkjemaverdierFraTrygdeavgiftsgrunnlag(res.nyttGrunnlag.trygdeavgiftsgrunnlag);
           } else {
-            formValues = {
-              skatteforholdsperioder: [{}],
-              inntektskilder: [{}],
-            };
+            formValues = mapSkjemaverdierFraTrygdeavgiftsgrunnlag(res.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag);
           }
 
           setInitiellData({
