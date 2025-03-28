@@ -128,12 +128,19 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
   };
 
   const håndterDeltGrunnlag = async (value: boolean) => {
+    console.log(value);
     if (harDeltGrunnlag && !value) {
       await Api.Aarsavregning.oppdaterAarsavregning(
         behandlingID,
         { avregning: { tidligereFakturertBeloepAvgiftssystem: 0 } },
         aarsavregningID,
       );
+    }
+    if (!value) {
+      console.log("Test 1");
+      await Api.MedlemAvFolketrygden.Medlemskapsperioder.slettMedlemskapsperioder(behandlingID);
+    } else {
+      // TODO something?
     }
     Api.Aarsavregning.oppdaterHarDeltGrunnlag(behandlingID, { harDeltGrunnlag: value }, aarsavregningID).then((res) =>
       setHarDeltGrunnlag(res.harDeltGrunnlag),

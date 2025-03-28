@@ -99,24 +99,30 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
   const dispatch = useDispatch();
 
   const opprettMedlemskapsperiode = async (medlemskapsperiode: Medlemskapsperiode) => {
+    console.log(medlemskapsperiode);
     const periodeRequest = {
-      fomDato: Utils.dato.formatterDatoTilISO(medlemskapsperiode.fomDato, "") as string,
-      tomDato: Utils.dato.formatterDatoTilISO(medlemskapsperiode.tomDato, "") as string,
+      fomDato: medlemskapsperiode.fomDato,
+      tomDato: medlemskapsperiode.tomDato,
       trygdedekning: medlemskapsperiode.trygdedekning,
       bestemmelse: medlemskapsperiode.bestemmelse,
       innvilgelsesResultat: MKV.Koder.innvilgelsesResultat.INNVILGET,
     } as OppdaterMedlemskapsperiode;
+
+    console.log(periodeRequest);
 
     const response: any = await Api.MedlemAvFolketrygden.Medlemskapsperioder.opprettMedlemskapsperioder(
       behandlingID,
       periodeRequest,
     );
 
+    console.log(response);
+
     return response.type !== medlemskapsperioderTypes.FEILET;
   };
 
   useEffect(() => {
     const lastInitiellData = async () => {
+      console.log("TEST 2");
       if (!behandlingID) {
         setIsLoading(false);
         return;
@@ -137,6 +143,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
 
         const medlemskapsperioderRes =
           await Api.MedlemAvFolketrygden.Medlemskapsperioder.hentMedlemskapsperioder(behandlingID);
+        console.log(medlemskapsperioderRes);
         const innvilgedeMedlemskapsperioder = medlemskapsperioderRes.filter(
           (periode: Medlemskapsperiode) =>
             periode.innvilgelsesResultat === INNVILGET || periode.innvilgelsesResultat === DELVIS_INNVILGET,
@@ -149,9 +156,11 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
           innvilgedeMedlemskapsperioder.length === 0 &&
           aarsavregningRes?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag
         ) {
+          console.log("TEST 3");
           // Oppretter medlemskapsperioder fra grunnlag på behandlingsresultat
           const medlemskapsperioderFraGrunnlag =
             aarsavregningRes.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag.medlemskapsperioder;
+          console.log(medlemskapsperioderFraGrunnlag);
           const innvilgedeMedlemskapsperioderFraGrunnlag = medlemskapsperioderFraGrunnlag.filter(
             (periode) =>
               periode.innvilgelsesResultat === INNVILGET || periode.innvilgelsesResultat === DELVIS_INNVILGET,
@@ -159,6 +168,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
 
           // eslint-disable-next-line no-restricted-syntax
           for (const periode of innvilgedeMedlemskapsperioderFraGrunnlag) {
+            console.log(periode);
             await opprettMedlemskapsperiode(periode);
           }
 
@@ -202,6 +212,8 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
             mappedMedlemskapsperioder,
           ),
         };
+
+        console.log("TESTESTET");
 
         setInitiellData({
           valgtÅr: aarsavregningRes?.aar,
