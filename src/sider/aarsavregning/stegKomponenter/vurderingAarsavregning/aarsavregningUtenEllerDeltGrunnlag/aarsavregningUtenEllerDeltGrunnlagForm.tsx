@@ -38,7 +38,7 @@ import {
 } from "./aarsavregningUtenEllerDeltGrunnlag";
 import aarsavregningUtenEllerDeltGrunnlagSchema from "./aarsavregningUtenEllerDeltGrunnlagSchema";
 
-export function AarsavregningForm({
+export function AarsavregningUtenEllerDeltGrunnlagForm({
   initiellData,
   bekreft,
   oppdaterStatus,
