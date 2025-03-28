@@ -35,7 +35,7 @@ import {
 import aarsavregningUtenEllerDeltGrunnlagSchema from "./aarsavregningUtenEllerDeltGrunnlagSchema";
 import { medlemskapsperioderOperations } from "../../../../../ducks/medlemskapsperioder";
 
-export function AarsavregningForm({
+export function AarsavregningUtenEllerDeltGrunnlagForm({
   initiellData,
   bekreft,
   oppdaterStatus,
