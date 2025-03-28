@@ -1,7 +1,7 @@
 import * as Api from "../../../../../services/api";
 import MedlemskapsPerioderTabell from "../komponenter/medlemskapsPerioderTabell";
 import "../vurderingAarsavregningInngang.css";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useMemo } from "react";
 import { AarsavregningResponse } from "../../../../../services/modules/aarsavregning/aarsavregning";
 import { useSelector } from "react-redux";
 import * as Nav from "../../../../../navFrontend";
@@ -54,17 +54,29 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as any;
   const aarsavregningID = useSelector(behandlingsresultatSelectors.ÅrsavregningIDSelector);
 
-  const medlemskapsperioder =
-    aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.medlemskapsperioder;
-  const innvilgetMedlemskapsperiode = lagInnvilgetMedlemskapsPeriode(medlemskapsperioder);
-  const innvilgetMedlemskapsperiodeBestemmelse = hentMedlemskapsperiodeBestemmelse(false, medlemskapsperioder);
-  const defaultPeriode = {
-    fomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.fom),
-    tomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.tom),
-  };
+  const medlemskapsperioder = useMemo(
+    () => aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.medlemskapsperioder,
+    [aarsavregningResponse?.tidligereGrunnlagsopplysninger],
+  );
+  const innvilgetMedlemskapsperiode = useMemo(
+    () => lagInnvilgetMedlemskapsPeriode(medlemskapsperioder),
+    [medlemskapsperioder],
+  );
+  const innvilgetMedlemskapsperiodeBestemmelse = useMemo(
+    () => hentMedlemskapsperiodeBestemmelse(false, medlemskapsperioder),
+    [medlemskapsperioder],
+  );
+  const defaultPeriode = useMemo(
+    () => ({
+      fomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.fom),
+      tomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.tom),
+    }),
+    [innvilgetMedlemskapsperiode?.fom, innvilgetMedlemskapsperiode?.tom],
+  );
 
-  const medlemskapstypeErPliktig = medlemskapsperioder?.every(
-    (periode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG,
+  const medlemskapstypeErPliktig = useMemo(
+    () => medlemskapsperioder?.every((periode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG),
+    [medlemskapsperioder],
   );
 
   const {
@@ -99,6 +111,19 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   } = useFieldArray<FieldArrayProps, "inntektskilder", "id">({ control, name: "inntektskilder" });
   const formValues = watch();
 
+  const trygdeAvgiftSkalIkkeBetalesTilNav = useMemo(
+    () => medlemskapstypeErPliktig && erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder),
+    [medlemskapstypeErPliktig, formValues.skatteforholdsperioder],
+  );
+  const forskuddsvisFakturertTrygdeavgift = useMemo(
+    () => (aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift?.totalAvgift ?? 0) > 0,
+    [aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift?.totalAvgift],
+  );
+  const nyttGrunnlagHarTrygdeavgiftsgrunnlag = useMemo(
+    () => aarsavregningResponse?.nyttGrunnlag?.trygdeavgiftsgrunnlag != null,
+    [aarsavregningResponse?.nyttGrunnlag?.trygdeavgiftsgrunnlag],
+  );
+
   const handleBeregnTrygdeavgiftsperioder = useCallback(
     async (formVerdier: FieldValue<FormValuesProps>) => {
       await beregnTrygdeavgiftsperioder(formVerdier, {
@@ -112,84 +137,100 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
     [behandlingID, medlemskapstypeErPliktig, setFeilmelding, setAarsavregningResponse],
   );
 
-  const debounceBeregnTrygdeavgiftsperioderOgOppdaterFormVerdier = useCallback(
+  const debounceBeregnTrygdeavgiftsperioder = useCallback(
     Utils._debounce((formVerdier) => handleBeregnTrygdeavgiftsperioder(formVerdier), 2000),
     [handleBeregnTrygdeavgiftsperioder],
   );
 
   useEffect(() => {
     setBrukerHarBekreftet(false);
+    setHarValidertSkjema(false);
+  }, [erAvvik]);
 
-    if (!erAvvik) {
-      setFeilmelding(undefined);
-    }
-
-    if (
+  useEffect(() => {
+    const skalBeregne =
       redigerbart &&
       aarsavregningID &&
       erAvvik &&
       !isValidating &&
       formIsValid &&
       fomTomErFyltUt(formValues.inntektskilder, formValues.skatteforholdsperioder) &&
-      harInntektsKildeType(formValues.inntektskilder, trygdeAvgiftSkalIkkeBetalesTilNav)
-    ) {
+      harInntektsKildeType(formValues.inntektskilder, trygdeAvgiftSkalIkkeBetalesTilNav);
+
+    if (skalBeregne) {
       setBeregningPaagar(true);
       setFeilmelding(undefined);
-      debounceBeregnTrygdeavgiftsperioderOgOppdaterFormVerdier(formValues);
+      debounceBeregnTrygdeavgiftsperioder(formValues);
     }
-  }, [formIsValid, isValidating, erAvvik, formValues.inntektskilder.length, formValues.skatteforholdsperioder.length]);
+  }, [redigerbart, aarsavregningID, isValidating, formIsValid, debounceBeregnTrygdeavgiftsperioder]);
 
-  const stegErGyldig =
-    erAvvik === false || Boolean(formIsValid && erAvvik && aarsavregningResponse?.nyttGrunnlag && !feilmelding);
+  const stegErGyldig = useMemo(
+    () => erAvvik === false || Boolean(formIsValid && erAvvik && aarsavregningResponse?.nyttGrunnlag && !feilmelding),
+    [erAvvik, formIsValid, aarsavregningResponse?.nyttGrunnlag, feilmelding],
+  );
 
   useEffect(() => {
     oppdaterStatus(stegErGyldig);
   }, [stegErGyldig]);
 
   useEffect(() => {
-    if (redigerbart && aarsavregningResponse?.nyttGrunnlag) {
-      if (aarsavregningResponse.nyttGrunnlag?.avgift.totalAvgift !== aarsavregningResponse.avregning?.nyttTotalbeloep) {
-        Api.Aarsavregning.oppdaterTotalAvgift(
-          behandlingID,
-          aarsavregningID,
-          aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift,
-        ).then((res: AarsavregningResponse) => {
-          setAarsavregningResponse(res);
-        });
+    if (redigerbart && aarsavregningResponse?.nyttGrunnlag && aarsavregningID) {
+      const { totalAvgift } = aarsavregningResponse.nyttGrunnlag.avgift;
+      const nyttTotalbeloep = aarsavregningResponse.avregning?.nyttTotalbeloep;
+
+      if (totalAvgift !== nyttTotalbeloep) {
+        Api.Aarsavregning.oppdaterTotalAvgift(behandlingID, aarsavregningID, totalAvgift).then(
+          (res: AarsavregningResponse) => {
+            setAarsavregningResponse(res);
+          },
+        );
       }
     }
-  }, [aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift]);
+  }, [
+    redigerbart,
+    behandlingID,
+    aarsavregningID,
+    aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift,
+    aarsavregningResponse?.avregning?.nyttTotalbeloep,
+  ]);
 
-  const håndterAvvik = (value: boolean) => {
-    if (!value) {
-      Api.Trygdeavgift.slettTrygdeavgiftsperioder(behandlingID).then(() => {
-        Api.Aarsavregning.oppdaterTotalAvgift(
-          behandlingID,
-          aarsavregningID,
-          aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift.totalAvgift,
-        ).then((res: AarsavregningResponse) => {
-          setAarsavregningResponse(res);
+  const håndterAvvik = useCallback(
+    (value: boolean) => {
+      if (!value) {
+        Api.Trygdeavgift.slettTrygdeavgiftsperioder(behandlingID).then(() => {
+          const totalAvgift = aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift?.totalAvgift;
 
-          if (res.tidligereGrunnlagsopplysninger !== undefined) {
-            setBeregningPaagar(true);
-            Api.Trygdeavgift.beregnTrygdeavgiftsperioder(behandlingID, {
-              skatteforholdsperioder: res.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag.skatteforholdsperioder,
-              inntektskilder: res.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag.inntektskperioder,
-            })
-              .catch((error) => setFeilmelding(mapFeilmelding(error)))
-              .finally(() => {
-                setBeregningPaagar(false);
-              });
+          if (aarsavregningID && totalAvgift !== undefined) {
+            Api.Aarsavregning.oppdaterTotalAvgift(behandlingID, aarsavregningID, totalAvgift).then(
+              (res: AarsavregningResponse) => {
+                setAarsavregningResponse(res);
+
+                if (res.tidligereGrunnlagsopplysninger) {
+                  setBeregningPaagar(true);
+                  Api.Trygdeavgift.beregnTrygdeavgiftsperioder(behandlingID, {
+                    skatteforholdsperioder:
+                      res.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag.skatteforholdsperioder,
+                    inntektskilder: res.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag.inntektskperioder,
+                  })
+                    .catch((error) => setFeilmelding(mapFeilmelding(error)))
+                    .finally(() => {
+                      setBeregningPaagar(false);
+                    });
+                }
+              },
+            );
           }
         });
-      });
-    }
+      }
 
-    Api.Aarsavregning.oppdaterAvvik(behandlingID, value, aarsavregningID);
-    setErAvvik(value);
-  };
+      if (aarsavregningID) {
+        Api.Aarsavregning.oppdaterAvvik(behandlingID, value, aarsavregningID).then(() => setErAvvik(value));
+      }
+    },
+    [behandlingID, aarsavregningID, aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift?.totalAvgift],
+  );
 
-  const bekreftOnClick = () => {
+  const håndterBekreft = useCallback(() => {
     if (!harValidertSkjema) {
       trigger();
       setHarValidertSkjema(true);
@@ -205,17 +246,11 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
       });
       bekreft();
     }
-  };
-
-  const trygdeAvgiftSkalIkkeBetalesTilNav =
-    medlemskapstypeErPliktig && erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder);
-  const forskuddsvisFakturertTrygdeavgift =
-    (aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift?.totalAvgift ?? 0) > 0;
-  const nyttGrunnlagHarTrygdeavgiftsgrunnlag = aarsavregningResponse?.nyttGrunnlag?.trygdeavgiftsgrunnlag != null;
+  }, [harValidertSkjema, trigger, stegErGyldig, beregningPaagar, bekreft]);
 
   return (
     <>
-      {aarsavregningResponse?.tidligereGrunnlagsopplysninger && (
+      {aarsavregningResponse && aarsavregningResponse.tidligereGrunnlagsopplysninger && (
         <>
           <MedlemskapsPerioderTabell
             perioder={aarsavregningResponse.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag.medlemskapsperioder}
@@ -233,7 +268,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
           {!forskuddsvisFakturertTrygdeavgift && <Aarsavregningsmeldinger.TrygdeavgiftErIkkeForskuddsvisFakturert />}
 
           <BeregnetTrygdeavgiftDetaljer
-            grunnlag={aarsavregningResponse?.tidligereGrunnlagsopplysninger}
+            grunnlag={aarsavregningResponse.tidligereGrunnlagsopplysninger}
             medlemskapsTypeErPliktig={medlemskapstypeErPliktig!}
             tittel="Tidligere beregnet trygdeavgift"
           />
@@ -283,16 +318,16 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
 
           {trygdeAvgiftSkalIkkeBetalesTilNav && <Aarsavregningsmeldinger.TrygdeavgiftSkalIkkeBetalesTilNav />}
 
-          {nyttGrunnlagHarTrygdeavgiftsgrunnlag && formIsValid && !feilmelding && (
+          {nyttGrunnlagHarTrygdeavgiftsgrunnlag && formIsValid && !feilmelding && aarsavregningResponse?.avregning && (
             <SumArsavregningTabell
               nyTrygdeavgift={aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift}
               tidligereTrygdeavgift={aarsavregningResponse?.avregning?.tidligereFakturertBeloep}
             />
           )}
 
-          {formIsValid && !feilmelding && (
+          {formIsValid && !feilmelding && aarsavregningResponse?.nyttGrunnlag && (
             <BeregnetTrygdeavgiftDetaljer
-              grunnlag={aarsavregningResponse?.nyttGrunnlag}
+              grunnlag={aarsavregningResponse.nyttGrunnlag}
               medlemskapsTypeErPliktig={medlemskapstypeErPliktig!}
               tittel="Endelig beregnet trygdeavgift"
             />
@@ -306,7 +341,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
         </Nav.Alert>
       )}
 
-      <Nav.Button variant="primary" loading={beregningPaagar} disabled={!redigerbart} onClick={bekreftOnClick}>
+      <Nav.Button variant="primary" loading={beregningPaagar} disabled={!redigerbart} onClick={håndterBekreft}>
         Bekreft og fortsett
       </Nav.Button>
     </>
