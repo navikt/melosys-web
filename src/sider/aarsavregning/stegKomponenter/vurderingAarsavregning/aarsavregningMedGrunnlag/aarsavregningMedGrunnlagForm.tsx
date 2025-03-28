@@ -2,10 +2,8 @@ import * as Api from "../../../../../services/api";
 import MedlemskapsPerioderTabell from "../komponenter/medlemskapsPerioderTabell";
 import "../vurderingAarsavregningInngang.css";
 import { useCallback, useEffect, useState } from "react";
-import {
-  AarsavregningResponse,
-} from "../../../../../services/modules/aarsavregning/aarsavregning";
-import { useDispatch, useSelector } from "react-redux";
+import { AarsavregningResponse } from "../../../../../services/modules/aarsavregning/aarsavregning";
+import { useSelector } from "react-redux";
 import * as Nav from "../../../../../navFrontend";
 import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 import { FieldValue, useFieldArray, useForm } from "react-hook-form";
@@ -31,7 +29,6 @@ import {
 import TidligereGrunnlagsoversikt from "../komponenter/tidligereGrunnlagsoversikt";
 import { Aarsavregningsmeldinger } from "../komponenter/aarsavregningsmeldinger";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
-import { mapTilInntektskilderProps, mapTilSkatteforholdProps } from "../aarsavregningHelpers";
 
 interface Props {
   initiellData: {
@@ -48,7 +45,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   const [feilmelding, setFeilmelding] = useState<undefined | string>(undefined);
   const [brukerHarBekreftet, setBrukerHarBekreftet] = useState(false);
   const [aarsavregningResponse, setAarsavregningResponse] = useState<AarsavregningResponse | undefined>(
-    initiellData.aarsavregningResponse
+    initiellData.aarsavregningResponse,
   );
   const [beregningPaagar, setBeregningPaagar] = useState(false);
   const [harValidertSkjema, setHarValidertSkjema] = useState(false);
@@ -92,7 +89,6 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
     fields: skattFields,
     append: skattAppend,
     remove: skattRemove,
-    replace: resetSkatteforholdsperioder,
   } = useFieldArray<FieldArrayProps, "skatteforholdsperioder", "id">({ control, name: "skatteforholdsperioder" });
 
   const {
@@ -100,7 +96,6 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
     append: inntektAppend,
     remove: inntektRemove,
     update: inntektUpdate,
-    replace: resetInntektskilder,
   } = useFieldArray<FieldArrayProps, "inntektskilder", "id">({ control, name: "inntektskilder" });
   const formValues = watch();
 
@@ -124,6 +119,11 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
 
   useEffect(() => {
     setBrukerHarBekreftet(false);
+
+    if (!erAvvik) {
+      setFeilmelding(undefined);
+    }
+
     if (
       redigerbart &&
       aarsavregningID &&
@@ -163,27 +163,13 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   const håndterAvvik = (value: boolean) => {
     if (!value) {
       Api.Trygdeavgift.slettTrygdeavgiftsperioder(behandlingID).then(() => {
-        resetSkatteforholdsperioder([]);
-        resetInntektskilder([]);
         Api.Aarsavregning.oppdaterTotalAvgift(
           behandlingID,
           aarsavregningID,
           aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift.totalAvgift,
         ).then((res: AarsavregningResponse) => {
           setAarsavregningResponse(res);
-          if (res.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag) {
-            resetSkatteforholdsperioder(
-              !Utils._isEmpty(res.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag.skatteforholdsperioder)
-                ? mapTilSkatteforholdProps(res.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag.skatteforholdsperioder)
-                : []
-            );
 
-            resetInntektskilder(
-              !Utils._isEmpty(res.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag.inntektskperioder)
-                ? mapTilInntektskilderProps(res.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag.inntektskperioder)
-                : []
-            );
-          }
           if (res.tidligereGrunnlagsopplysninger !== undefined) {
             setBeregningPaagar(true);
             Api.Trygdeavgift.beregnTrygdeavgiftsperioder(behandlingID, {
@@ -197,19 +183,8 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
           }
         });
       });
-    } else if (aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag) {
-      resetSkatteforholdsperioder(
-        !Utils._isEmpty(aarsavregningResponse.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag.skatteforholdsperioder)
-          ? mapTilSkatteforholdProps(aarsavregningResponse.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag.skatteforholdsperioder)
-          : []
-      );
-
-      resetInntektskilder(
-        !Utils._isEmpty(aarsavregningResponse.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag.inntektskperioder)
-          ? mapTilInntektskilderProps(aarsavregningResponse.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag.inntektskperioder)
-          : []
-      );
     }
+
     Api.Aarsavregning.oppdaterAvvik(behandlingID, value, aarsavregningID);
     setErAvvik(value);
   };
