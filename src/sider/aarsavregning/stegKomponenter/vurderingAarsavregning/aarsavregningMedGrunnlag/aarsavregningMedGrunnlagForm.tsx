@@ -173,27 +173,6 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
     oppdaterStatus(stegErGyldig);
   }, [stegErGyldig]);
 
-  useEffect(() => {
-    if (redigerbart && aarsavregningResponse?.nyttGrunnlag && aarsavregningID) {
-      const { totalAvgift } = aarsavregningResponse.nyttGrunnlag.avgift;
-      const nyttTotalbeloep = aarsavregningResponse.avregning?.nyttTotalbeloep;
-
-      if (totalAvgift !== nyttTotalbeloep) {
-        Api.Aarsavregning.oppdaterTotalAvgift(behandlingID, aarsavregningID, totalAvgift).then(
-          (res: AarsavregningResponse) => {
-            setAarsavregningResponse(res);
-          },
-        );
-      }
-    }
-  }, [
-    redigerbart,
-    behandlingID,
-    aarsavregningID,
-    aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift,
-    aarsavregningResponse?.avregning?.nyttTotalbeloep,
-  ]);
-
   const håndterAvvik = useCallback(
     (value: boolean) => {
       if (!value) {
@@ -237,6 +216,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
     }
     setBrukerHarBekreftet(true);
     if (stegErGyldig && !beregningPaagar) {
+      console.log("TEST");
       Api.Aarsavregning.oppdaterTotalAvgift(
         behandlingID,
         aarsavregningID,
