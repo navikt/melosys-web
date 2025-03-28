@@ -7,14 +7,13 @@ import {
 } from "../../../../../services/modules/aarsavregning/aarsavregning";
 import { useDispatch, useSelector } from "react-redux";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
-import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 import { FieldValue } from "react-hook-form";
 import { FormValuesProps } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
 import * as Utils from "../../../../../utils";
 import { OK } from "../../../../../ducks/aarsavregning/types";
-import { behandlingsresultatSelectors } from "../../../../../ducks/behandlingsresultat";
 import { mapTilInntektskilderProps, mapTilSkatteforholdProps } from "../aarsavregningHelpers";
 import { AarsavregningMedGrunnlagForm } from "./aarsavregningMedGrunnlagForm";
+import * as Nav from "../../../../../navFrontend";
 
 interface Props {
   bekreft: () => void;
@@ -34,8 +33,8 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
       inntektskilder: [{}],
     },
   });
+  const [innlastingFeilmelding, setInnlastingFeilmelding] = useState("");
 
-  const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as any;
   const dispatch = useDispatch();
 
@@ -49,7 +48,9 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
       skatteforholdsperioder: !Utils._isEmpty(sorterteSkatteforhold)
         ? mapTilSkatteforholdProps(sorterteSkatteforhold)
         : [{}],
-      inntektskilder: !Utils._isEmpty(sorterteInntekstkilder) ? mapTilInntektskilderProps(sorterteInntekstkilder) : [{}],
+      inntektskilder: !Utils._isEmpty(sorterteInntekstkilder)
+        ? mapTilInntektskilderProps(sorterteInntekstkilder)
+        : [{}],
     };
   };
 
@@ -58,18 +59,17 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
       Api.Aarsavregning.hentAarsavregning(behandlingID)
         .then((res) => {
           if (!res.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag) {
-            throw new Error("Årsavregning med grunnlag må ha grunnlag");
+            setInnlastingFeilmelding("Årsavregning med grunnlag må ha grunnlag");
+            setIsLoading(false);
+            return;
           }
 
           // Benyttes for innhenting av saksopplysninger ifm. årsavregningsbehandlinger
           dispatch({ type: OK, data: res });
 
-          let formValues;
-          if (res?.nyttGrunnlag?.trygdeavgiftsgrunnlag) {
-            formValues = mapSkjemaverdierFraTrygdeavgiftsgrunnlag(res.nyttGrunnlag.trygdeavgiftsgrunnlag);
-          } else {
-            formValues = mapSkjemaverdierFraTrygdeavgiftsgrunnlag(res.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag);
-          }
+          const formValues = mapSkjemaverdierFraTrygdeavgiftsgrunnlag(
+            res?.nyttGrunnlag?.trygdeavgiftsgrunnlag || res.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag,
+          );
 
           setInitiellData({
             aarsavregningResponse: res,
@@ -78,16 +78,8 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
           });
           setIsLoading(false);
         })
-        .catch((err) => {
-          if (err.response?.status === 404) {
-            setInitiellData({
-              aarsavregningResponse: undefined,
-              formDefaultValues: {
-                skatteforholdsperioder: [{}],
-                inntektskilder: [{}],
-              },
-            });
-          }
+        .catch(() => {
+          setInnlastingFeilmelding(`Fant ikke årsavregning for behandlingID: ${behandlingID}`);
           setIsLoading(false);
         });
     }
@@ -97,7 +89,13 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
     return <div />;
   }
 
-  return (
-    <AarsavregningMedGrunnlagForm initiellData={initiellData} bekreft={bekreft} oppdaterStatus={oppdaterStatus} />
-  );
+  if (innlastingFeilmelding) {
+    return (
+      <Nav.Alert variant="error" className="alertstripe_feilmelding">
+        {innlastingFeilmelding}
+      </Nav.Alert>
+    );
+  }
+
+  return <AarsavregningMedGrunnlagForm initiellData={initiellData} bekreft={bekreft} oppdaterStatus={oppdaterStatus} />;
 }
