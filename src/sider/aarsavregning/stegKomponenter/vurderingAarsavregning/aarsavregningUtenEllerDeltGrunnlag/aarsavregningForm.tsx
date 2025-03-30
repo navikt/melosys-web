@@ -464,6 +464,7 @@ export function AarsavregningForm({
     medlemskapstypeErPliktig && erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder);
   const forskuddsvisFakturertTrygdeavgift =
     (aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift?.totalAvgift ?? 0) > 0;
+  const skjemaErRedigerbart = redigerbart && !endrerBestemmelse;
 
   return (
     <div className="vurderingAarsavregning">
@@ -494,7 +495,7 @@ export function AarsavregningForm({
 
       <TidligereFakturertIAvgiftssystemetInput
         control={control}
-        redigerbart={redigerbart}
+        redigerbart={skjemaErRedigerbart}
         harDeltGrunnlag={harDeltGrunnlag}
       />
 
@@ -508,7 +509,7 @@ export function AarsavregningForm({
         bestemmelser={initiellData.bestemmelser}
         harDeltGrunnlag={harDeltGrunnlag}
         behandlingID={behandlingID}
-        redigerbart={redigerbart}
+        redigerbart={skjemaErRedigerbart}
         setTrygdedekninger={setTrygdedekninger}
         setFeilmelding={setFeilmelding}
         setEndrerBestemmelse={setEndrerBestemmelse}
@@ -519,7 +520,7 @@ export function AarsavregningForm({
         {medlemskapsperioderFields.map((field, index) => (
           <MedlemskapsperiodeSkjema
             key={field.id}
-            redigerbart={redigerbart}
+            redigerbart={skjemaErRedigerbart}
             control={control}
             field={field}
             index={index}
@@ -540,7 +541,7 @@ export function AarsavregningForm({
       <Skatteforholdsperioder
         defaultPeriode={defaultPeriode}
         formValues={formValues}
-        redigerbart={redigerbart}
+        redigerbart={skjemaErRedigerbart}
         remove={skattRemove}
         append={skattAppend}
         control={control}
@@ -550,7 +551,7 @@ export function AarsavregningForm({
         <Inntektskilder
           defaultPeriode={defaultPeriode}
           formValues={formValues}
-          redigerbart={redigerbart}
+          redigerbart={skjemaErRedigerbart}
           update={inntektUpdate}
           remove={inntektRemove}
           append={inntektAppend}
@@ -593,7 +594,12 @@ export function AarsavregningForm({
         </Nav.Alert>
       )}
 
-      <Nav.Button variant="primary" loading={beregningPaagar} disabled={!redigerbart} onClick={bekreftOnClick}>
+      <Nav.Button
+        variant="primary"
+        loading={beregningPaagar || endrerBestemmelse || lagrerMedlemskapsperioder}
+        disabled={!redigerbart}
+        onClick={bekreftOnClick}
+      >
         Bekreft og fortsett
       </Nav.Button>
     </div>

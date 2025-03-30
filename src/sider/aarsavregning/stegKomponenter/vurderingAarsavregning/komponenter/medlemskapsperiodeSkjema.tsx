@@ -119,9 +119,9 @@ export function MedlemskapsperiodeSkjema({
           )}
         </Nav.Row>
       </div>
-      {redigerbart && formValues.medlemskapsperioder.length === index + 1 && (
+      {formValues.medlemskapsperioder.length === index + 1 && (
         <div className="legg-til__rad">
-          <Mui.Lenkeknapp onClick={handleLeggTil} ikon={Ikoner.Add} disabled={!visLeggTil}>
+          <Mui.Lenkeknapp onClick={handleLeggTil} ikon={Ikoner.Add} disabled={!redigerbart || !visLeggTil}>
             Legg til periode
           </Mui.Lenkeknapp>
         </div>
