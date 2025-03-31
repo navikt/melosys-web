@@ -56,8 +56,10 @@ export function VilkaarOgBegrunnelser({
   );
   const harValgtFtrlArbeidstaker = vilkår === MKV.Koder.vilkaar.FTRL_ARBEIDSTAKER && vilkårErValgt;
   const muligeBegrunnelserHarKunAnnenGrunn =
-    muligeBegrunnelser?.length === 1 && muligeBegrunnelser[0] === "ANNEN_GRUNN";
+    muligeBegrunnelser?.length === 1 &&
+    muligeBegrunnelser[0] === MKV.Koder.begrunnelser.folketrygdloven.ftrl_2_7_begrunnelser.ANNEN_GRUNN;
   const erPensjonist = behandlingstema === MKV.Koder.behandlinger.behandlingstema.PENSJONIST;
+
   return (
     <>
       <Nav.RadioGroup

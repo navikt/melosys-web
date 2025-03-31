@@ -176,13 +176,13 @@ export function VurderingBestemmelse({ bekreft, tilbake, aktivtSteg, oppdaterSta
     const { tidligereValgteBegrunnelser } = mapLagredeVilkårTilValgteVilkårOgBegrunnelser(lagredeVilkår);
     if (!erPensjonist || !erPensjonistToggleEnabled || tidligereValgteBegrunnelser.size > 0) return;
     const muligeBegrunnelserNærTilknyttningNorge =
-      vilkår.find((v) => v.vilkår === "FTRL_2_8_NÆR_TILKNYTNING_NORGE")?.muligeBegrunnelser || [];
+      vilkår.find((v) => v.vilkår === MKV.Koder.vilkaar.FTRL_2_8_NÆR_TILKNYTNING_NORGE)?.muligeBegrunnelser || [];
     const muligeBegrunnelserFørsteLedd =
-      vilkår.find((v) => v.vilkår === "FTRL_2_7_RIMELIGHETSVURDERING")?.muligeBegrunnelser || [];
+      vilkår.find((v) => v.vilkår === MKV.Koder.vilkaar.FTRL_2_7_RIMELIGHETSVURDERING)?.muligeBegrunnelser || [];
     if (muligeBegrunnelserNærTilknyttningNorge.length === 1) {
       setValgteBegrunnelser(
         new Map(
-          valgteBegrunnelser.set("FTRL_2_8_NÆR_TILKNYTNING_NORGE", {
+          valgteBegrunnelser.set(MKV.Koder.vilkaar.FTRL_2_8_NÆR_TILKNYTNING_NORGE, {
             begrunnelseKode: muligeBegrunnelserNærTilknyttningNorge[0],
           }),
         ),
@@ -192,7 +192,7 @@ export function VurderingBestemmelse({ bekreft, tilbake, aktivtSteg, oppdaterSta
     if (muligeBegrunnelserFørsteLedd.length === 1) {
       setValgteBegrunnelser(
         new Map(
-          valgteBegrunnelser.set("FTRL_2_7_RIMELIGHETSVURDERING", {
+          valgteBegrunnelser.set(MKV.Koder.vilkaar.FTRL_2_7_RIMELIGHETSVURDERING, {
             begrunnelseKode: muligeBegrunnelserFørsteLedd[0],
           }),
         ),
