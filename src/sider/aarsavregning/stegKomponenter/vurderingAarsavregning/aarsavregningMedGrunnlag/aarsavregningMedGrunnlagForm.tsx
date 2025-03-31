@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 import * as Nav from "../../../../../navFrontend";
 import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 import { FieldValue, useFieldArray, useForm } from "react-hook-form";
-import { FieldArrayProps, FormValuesProps } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
+import { FieldArrayProps, FormValuesProps, Inntektskilde, Skatteforhold } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Utils from "../../../../../utils";
 import { SumArsavregningTabell } from "../komponenter/sumArsavregningTabell";
@@ -16,13 +16,7 @@ import { behandlingsresultatSelectors } from "../../../../../ducks/behandlingsre
 import aarsavregningMedGrunnlagSchema from "./aarsavregningMedGrunnlagSchema";
 import { Skatteforholdsperioder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/skatteforholdsperioder";
 import { Inntektskilder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/inntektskilder";
-import {
-  beregnTrygdeavgiftsperioder,
-  erBrukerSkattepliktigIHelePerioden,
-  fomTomErFyltUt,
-  harInntektsKildeType,
-  mapFeilmelding,
-} from "../komponenter/utils";
+import { beregnTrygdeavgiftsperioder, erBrukerSkattepliktigIHelePerioden, mapFeilmelding } from "../komponenter/utils";
 import TidligereGrunnlagsoversikt from "../komponenter/tidligereGrunnlagsoversikt";
 import { Aarsavregningsmeldinger } from "../komponenter/aarsavregningsmeldinger";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
@@ -43,29 +37,26 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   );
   const [beregningPaagar, setBeregningPaagar] = useState(false);
   const [harValidertSkjema, setHarValidertSkjema] = useState(false);
+  const [previousFormValues, setPreviousFormValues] = useState<string | null>(null);
 
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as any;
   const aarsavregningID = useSelector(behandlingsresultatSelectors.ÅrsavregningIDSelector);
 
-  const {
-    innvilgetMedlemskapsperiode,
-    innvilgetMedlemskapsperiodeBestemmelse,
-    defaultPeriode,
-    medlemskapstypeErPliktig,
-  } = initiellData;
+  const { innvilgetMedlemskapsperiode, innvilgetMedlemskapsperiodeBestemmelse, medlemskapstypeErPliktig } =
+    initiellData;
 
   const {
     control,
     watch,
     formState: { isValid: formIsValid, isValidating },
     trigger,
+    getValues,
   } = useForm({
     resolver: yupResolver(aarsavregningMedGrunnlagSchema),
     context: {
       medlemskapsperiode: innvilgetMedlemskapsperiode,
       medlemskapsTypeErPliktig: medlemskapstypeErPliktig,
-      erÅpenSluttDato: false,
       erAvvik,
     },
     mode: "onChange",
@@ -86,19 +77,8 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
     update: inntektUpdate,
   } = useFieldArray<FieldArrayProps, "inntektskilder", "id">({ control, name: "inntektskilder" });
   const formValues = watch();
-
-  const trygdeAvgiftSkalIkkeBetalesTilNav = useMemo(
-    () => medlemskapstypeErPliktig && erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder),
-    [medlemskapstypeErPliktig, formValues.skatteforholdsperioder],
-  );
-  const forskuddsvisFakturertTrygdeavgift = useMemo(
-    () => (aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift?.totalAvgift ?? 0) > 0,
-    [aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift?.totalAvgift],
-  );
-  const nyttGrunnlagHarTrygdeavgiftsgrunnlag = useMemo(
-    () => aarsavregningResponse?.nyttGrunnlag?.trygdeavgiftsgrunnlag != null,
-    [aarsavregningResponse?.nyttGrunnlag?.trygdeavgiftsgrunnlag],
-  );
+  const skatteforholdsperioder = watch("skatteforholdsperioder");
+  const inntektskilder = watch("inntektskilder");
 
   const handleBeregnTrygdeavgiftsperioder = useCallback(
     async (formVerdier: FieldValue<FormValuesProps>) => {
@@ -124,21 +104,54 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   }, [erAvvik]);
 
   useEffect(() => {
-    const skalBeregne =
-      redigerbart &&
-      aarsavregningID &&
-      erAvvik &&
-      !isValidating &&
-      formIsValid &&
-      fomTomErFyltUt(formValues.inntektskilder, formValues.skatteforholdsperioder) &&
-      harInntektsKildeType(formValues.inntektskilder, trygdeAvgiftSkalIkkeBetalesTilNav);
-
-    if (skalBeregne) {
-      setBeregningPaagar(true);
-      setFeilmelding(undefined);
-      debounceBeregnTrygdeavgiftsperioder(formValues);
+    if (!erAvvik || !redigerbart || !aarsavregningID || beregningPaagar) {
+      return;
     }
-  }, [redigerbart, aarsavregningID, isValidating, formIsValid, debounceBeregnTrygdeavgiftsperioder]);
+
+    const formState = {
+      skatteforholdsperioder: skatteforholdsperioder?.map((skatteforhold: Skatteforhold) => ({
+        fomDato: skatteforhold.fomDato,
+        tomDato: skatteforhold.tomDato,
+        skatteplikttype: skatteforhold.skatteplikttype
+      })) || [],
+      inntektskilder: inntektskilder?.map((inntektskilde: Inntektskilde) => ({
+        fomDato: inntektskilde.fomDato,
+        tomDato: inntektskilde.tomDato,
+        kildetype: inntektskilde.kildetype,
+        bruttoInntekt: inntektskilde.bruttoInntekt,
+        arbAvgBetales: inntektskilde.arbAvgBetales,
+        erMaanedsbelop: inntektskilde.erMaanedsbelop
+      })) || []
+    };
+
+    // Serialize to compare with previous state
+    const stateStr = JSON.stringify(formState);
+
+    // Only process if form state has changed
+    if (stateStr !== previousFormValues) {
+      setPreviousFormValues(stateStr);
+
+      const validationTimeout = setTimeout(() => {
+        trigger().then(isValid => {
+          if (isValid && formIsValid && !isValidating) {
+            setBeregningPaagar(true);
+            debounceBeregnTrygdeavgiftsperioder(getValues());
+          }
+        });
+      }, 500);
+
+      return () => clearTimeout(validationTimeout);
+    }
+  }, [
+    skatteforholdsperioder,
+    inntektskilder,
+    erAvvik,
+    redigerbart,
+    formIsValid,
+    isValidating,
+    aarsavregningID,
+    beregningPaagar
+  ]);
 
   const stegErGyldig = useMemo(
     () => erAvvik === false || Boolean(formIsValid && erAvvik && aarsavregningResponse?.nyttGrunnlag && !feilmelding),
@@ -217,6 +230,13 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
     }
   }, [harValidertSkjema, trigger, stegErGyldig, beregningPaagar, bekreft]);
 
+  const trygdeAvgiftSkalIkkeBetalesTilNav =
+    medlemskapstypeErPliktig && erBrukerSkattepliktigIHelePerioden(skatteforholdsperioder);
+  const forskuddsvisFakturertTrygdeavgift =
+    (aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift?.totalAvgift ?? 0) > 0;
+  const nyttGrunnlagHarTrygdeavgiftsgrunnlag = aarsavregningResponse?.nyttGrunnlag?.trygdeavgiftsgrunnlag != null;
+
+  console.log(brukerHarBekreftet);
   return (
     <>
       {aarsavregningResponse && aarsavregningResponse.tidligereGrunnlagsopplysninger && (
@@ -271,7 +291,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
           />
           {!trygdeAvgiftSkalIkkeBetalesTilNav && (
             <Inntektskilder
-              defaultPeriode={defaultPeriode}
+              defaultPeriode={innvilgetMedlemskapsperiode}
               formValues={formValues}
               redigerbart={redigerbart}
               update={inntektUpdate}

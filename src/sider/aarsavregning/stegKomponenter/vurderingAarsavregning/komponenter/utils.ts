@@ -30,30 +30,6 @@ export const erBrukerSkattepliktigIHelePerioden = (skatteforholdsperioder: any) 
   return !skatteforholdsperioder.some((skatteforhold: any) => skatteforhold.skatteplikttype === IKKE_SKATTEPLIKTIG);
 };
 
-export function fomTomErFyltUt(
-  inntektskildePerioder: Inntektskilde[],
-  skatteforholdsPerioder: Skatteforhold[],
-  medlemskapsperioder?: Medlemskapsperiode[],
-): boolean {
-  let allPerioder = [...inntektskildePerioder, ...skatteforholdsPerioder];
-  if (medlemskapsperioder?.length) {
-    allPerioder = [...allPerioder, ...medlemskapsperioder];
-  }
-  return allPerioder.every(
-    ({ fomDato, tomDato }) => fomDato !== undefined && fomDato !== "" && tomDato !== undefined && tomDato !== "",
-  );
-}
-
-export function harInntektsKildeType(
-  inntektskildePerioder: Inntektskilde[],
-  trygdeAvgiftSkalIkkeBetalesTilNav?: boolean | undefined,
-) {
-  if (trygdeAvgiftSkalIkkeBetalesTilNav) {
-    return true;
-  }
-  return inntektskildePerioder.every((inntektskilde) => inntektskilde?.kildetype !== undefined);
-}
-
 export function beregnTrygdeavgiftsperioder(
   formVerdier: FieldValue<FormValuesProps>,
   options: {
@@ -106,20 +82,4 @@ export const hentMedlemskapsperiodeBestemmelse = (
     return sortertePerioder?.[0]?.bestemmelse;
   }
   return undefined;
-};
-
-export const lagInnvilgetMedlemskapsPeriode = (medlemskapsperioder?: Medlemskapsperiode[]) => {
-  if (medlemskapsperioder && !Utils._isEmpty(medlemskapsperioder)) {
-    const sorterteInnvilgedePerioder = [...medlemskapsperioder]
-      .filter((periode) => periode.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.INNVILGET)
-      .sort(sorterEtterISOFomDato);
-    return {
-      fom: sorterteInnvilgedePerioder[0].fomDato,
-      tom: sorterteInnvilgedePerioder[sorterteInnvilgedePerioder.length - 1].tomDato,
-    };
-  }
-  return {
-    tom: undefined,
-    fom: undefined,
-  };
 };
