@@ -235,6 +235,7 @@ export function AarsavregningForm({
 
       if (nyeLagredeMedlemskapsperioder.length > 0) {
         setFeilmelding(undefined);
+        // TODO: Beregningen her fjernes i 7235 etter beregning useEffect er skrevet om. Watch deps gotta go
         // Revalider så feilmeldinger forsvinner før beregning
         const erGyldigSkjema = await trigger();
         if (erGyldigSkjema) {
