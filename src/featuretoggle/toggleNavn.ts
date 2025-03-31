@@ -4,6 +4,8 @@ const FEATURE_TOGGLE = "feature-toggle";
 const MELOSYS_NORGE_ER_UTPEKT_11_3_A = "melosys.11_3_a_Norge_er_utpekt";
 const MELOSYS_PENSJONIST = "melosys.pensjonist";
 const STANDARDVEDLEGG_EGET_VEDLEGG_AVTALELAND = "standardvedlegg_eget_vedlegg_avtaleland";
+const ÅRSAVREGNING = "melosys.arsavregning";
+const ÅRSAVREGNING_UTEN_FLYT = "melosys.arsavregning.uten.flyt";
 
 const alleToggleNavn = [
   MELOSYS_FAKTURERINGSKOMPONENTEN_VIS_REFERANSE,
@@ -11,6 +13,8 @@ const alleToggleNavn = [
   MELOSYS_NORGE_ER_UTPEKT_11_3_A,
   MELOSYS_PENSJONIST,
   STANDARDVEDLEGG_EGET_VEDLEGG_AVTALELAND,
+  ÅRSAVREGNING,
+  ÅRSAVREGNING_UTEN_FLYT,
 ];
 
 export {
@@ -19,6 +23,8 @@ export {
   MELOSYS_FTRL_BEGRENSE_PERIODE_VEDTAK,
   MELOSYS_NORGE_ER_UTPEKT_11_3_A,
   MELOSYS_PENSJONIST,
+  ÅRSAVREGNING,
+  ÅRSAVREGNING_UTEN_FLYT,
   STANDARDVEDLEGG_EGET_VEDLEGG_AVTALELAND,
   alleToggleNavn,
 };
