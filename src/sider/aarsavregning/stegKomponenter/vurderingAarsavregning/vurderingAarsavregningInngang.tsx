@@ -128,7 +128,6 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
   };
 
   const håndterDeltGrunnlag = async (value: boolean) => {
-    console.log(value);
     if (harDeltGrunnlag && !value) {
       await Api.Aarsavregning.oppdaterAarsavregning(
         behandlingID,
