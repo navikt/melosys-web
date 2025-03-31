@@ -1,5 +1,4 @@
-import { Control, FieldArrayWithId, UseFieldArrayUpdate } from "react-hook-form";
-import * as Api from "../../../../../services/api";
+import { Control, FieldArrayWithId } from "react-hook-form";
 
 import MKV from "../../../../../melosyskodeverk";
 import * as KV from "../../../../../kodeverk";
@@ -10,10 +9,9 @@ import * as Mui from "../../../../../felleskomponenter/ui";
 import * as Ikoner from "../../../../../resources/images";
 import * as Utils from "../../../../../utils";
 
-import { useEffect, useState } from "react";
 import { FieldArrayProps, FormValuesProps } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
-import { Medlemskapsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import "./medlemskapsperiodeSkjema.css";
+import { useEffect } from "react";
 
 export interface PeriodeElementerProps {
   redigerbart: boolean;
@@ -21,14 +19,14 @@ export interface PeriodeElementerProps {
   field: FieldArrayWithId<FieldArrayProps, "medlemskapsperioder">;
   remove: (index: number) => void;
   formValues: FormValuesProps;
-  bestemmelser: string[];
   tittel?: string;
   handleLeggTil: () => void;
-  handleUpdate: UseFieldArrayUpdate<FieldArrayProps, "medlemskapsperioder">;
   index: number;
   visLeggTil: boolean;
   maksVerdi?: Date;
   minVerdi?: Date;
+  trygdedekninger?: string[];
+  setValue: (name: string, value: any, options?: any) => void;
 }
 
 export function MedlemskapsperiodeSkjema({
@@ -37,36 +35,33 @@ export function MedlemskapsperiodeSkjema({
   control,
   remove,
   formValues,
-  bestemmelser,
   tittel,
   handleLeggTil,
-  handleUpdate,
   index,
   visLeggTil,
   maksVerdi,
   minVerdi,
+  trygdedekninger = [],
+  setValue,
 }: PeriodeElementerProps) {
-  const [trygdedekninger, setTrygdedekninger] = useState<[]>([]);
-  const kodeverkKoderIBestemmelserNedtrekk: string[] = [
-    ...Object.values(MKV.KTObjects.folketrygdloven_kap2_bestemmelser),
-    ...Object.values(MKV.KTObjects.vertslandsavtale_bestemmelser),
-  ] as string[];
-
-  useEffect(() => {
-    if (field.bestemmelse) {
-      Api.LovligeKombinasjoner.hentTrygdedekninger(field.bestemmelse).then(setTrygdedekninger);
-    }
-  }, [field.bestemmelse]);
-
-  const erPeriodeFraGrunnlag = !formValues.medlemskapsperioder[index].redigerbar;
+  const erPeriodeFraGrunnlag = !formValues.medlemskapsperioder[index]?.redigerbar;
   const kanSlettePeriode = redigerbart && formValues.medlemskapsperioder.length !== 1;
   const tilOgMedDatoForrigePeriode =
     formValues.medlemskapsperioder[index - 1] !== undefined
-      ? Utils.dato.norskStringTilDate(formValues.medlemskapsperioder[index - 1].tomDato)
+      ? Utils.dato.norskStringTilDate(formValues.medlemskapsperioder[index - 1]?.tomDato)
       : undefined;
   if (tilOgMedDatoForrigePeriode !== undefined) {
     tilOgMedDatoForrigePeriode.setDate(tilOgMedDatoForrigePeriode.getDate() + 1);
   }
+
+  const kunEnTrygdedekning = trygdedekninger?.length === 1;
+
+  // Setter trygdedekning dersom vi kun har en gyldig dekning
+  useEffect(() => {
+    if (trygdedekninger?.length === 1) {
+      setValue(`medlemskapsperioder[${index}].trygdedekning`, trygdedekninger[0], { shouldValidate: true });
+    }
+  }, [trygdedekninger]);
 
   return (
     <div className="medlemskapsperiodeSkjema">
@@ -96,25 +91,6 @@ export function MedlemskapsperiodeSkjema({
               readOnly={!redigerbart || erPeriodeFraGrunnlag}
             />
           </Nav.Column>
-          <Nav.Column className="bestemmelse">
-            <Forms.Select
-              name={`medlemskapsperioder[${index}].bestemmelse`}
-              label={index === 0 ? "Bestemmelse" : ""}
-              hideLabel={index !== 0}
-              aria-label={`Bestemmelse periode ${index + 1}`}
-              control={control}
-              readOnly={!redigerbart || erPeriodeFraGrunnlag}
-              onChange={() => {
-                handleUpdate(index, { ...formValues.medlemskapsperioder[index], trygdedekning: "" });
-              }}
-            >
-              {bestemmelser.map((bestemmelse: any) => (
-                <option key={bestemmelse} value={bestemmelse}>
-                  {KV.kodeTilTerm(bestemmelse, kodeverkKoderIBestemmelserNedtrekk)}
-                </option>
-              ))}
-            </Forms.Select>
-          </Nav.Column>
           <Nav.Column className="trygdedekning">
             <Forms.Select
               name={`medlemskapsperioder[${index}].trygdedekning`}
@@ -122,9 +98,9 @@ export function MedlemskapsperiodeSkjema({
               hideLabel={index !== 0}
               aria-label={`Trygdedekning periode ${index + 1}`}
               control={control}
-              readOnly={!redigerbart || erPeriodeFraGrunnlag}
+              readOnly={!redigerbart || erPeriodeFraGrunnlag || kunEnTrygdedekning}
             >
-              {trygdedekninger.map((dekning: any) => (
+              {trygdedekninger?.map((dekning: any) => (
                 <option key={dekning} value={dekning}>
                   {KV.kodeTilTerm(dekning, MKV.KTObjects.trygdedekninger)}
                 </option>
@@ -143,9 +119,9 @@ export function MedlemskapsperiodeSkjema({
           )}
         </Nav.Row>
       </div>
-      {redigerbart && formValues.medlemskapsperioder.length === index + 1 && (
+      {formValues.medlemskapsperioder.length === index + 1 && (
         <div className="legg-til__rad">
-          <Mui.Lenkeknapp onClick={handleLeggTil} ikon={Ikoner.Add} disabled={!visLeggTil}>
+          <Mui.Lenkeknapp onClick={handleLeggTil} ikon={Ikoner.Add} disabled={!redigerbart || !visLeggTil}>
             Legg til periode
           </Mui.Lenkeknapp>
         </div>

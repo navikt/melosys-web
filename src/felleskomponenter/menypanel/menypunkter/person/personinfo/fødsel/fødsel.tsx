@@ -1,5 +1,4 @@
 import { useSelector } from "react-redux";
-import { Foedsel } from "../../../../../../graphql";
 import * as Nav from "../../../../../../navFrontend";
 import EnkeltDato from "../../../../../enkeltDato";
 import "./fødsel.css";

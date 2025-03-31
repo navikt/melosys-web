@@ -72,6 +72,7 @@ export interface MedlemskapTomFomDatoer {
 
 export interface AarsavregningFormValuesProps extends FormValuesProps {
   totaltForskuddsvisFakturert?: number | string;
+  bestemmelse?: string;
 }
 
 export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, harDeltGrunnlag }: Props) {
@@ -79,13 +80,13 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
   const [initiellData, setInitiellData] = useState<{
     valgtÅr?: number;
     aarsavregningResponse?: AarsavregningResponse;
-    lagredeMedlemskapsperioder: Medlemskapsperiode[];
     bestemmelser: string[];
     formDefaultValues: FieldValue<AarsavregningFormValuesProps>;
+    trygdedekninger?: string[];
   }>({
-    lagredeMedlemskapsperioder: [],
     bestemmelser: [],
     formDefaultValues: {
+      bestemmelse: "",
       medlemskapsperioder: [DEFAULT_MEDLEMSKAPSPERIODE],
       skatteforholdsperioder: [{}],
       inntektskilder: [{}],
@@ -115,6 +116,84 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
     return response.type !== medlemskapsperioderTypes.FEILET;
   };
 
+  const getMappedMedlemskapsperioder = async (
+    aarsavregningRes: AarsavregningResponse,
+  ): Promise<Medlemskapsperiode[]> => {
+    const medlemskapsperioderRes =
+      await Api.MedlemAvFolketrygden.Medlemskapsperioder.hentMedlemskapsperioder(behandlingID);
+
+    const innvilgedeMedlemskapsperioder = medlemskapsperioderRes.filter(
+      (periode: Medlemskapsperiode) =>
+        periode.innvilgelsesResultat === INNVILGET || periode.innvilgelsesResultat === DELVIS_INNVILGET,
+    );
+
+    if (
+      redigerbart &&
+      harDeltGrunnlag &&
+      innvilgedeMedlemskapsperioder.length === 0 &&
+      aarsavregningRes?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag
+    ) {
+      // Initiell innlasting for delt grunnlag
+      const medlemskapsperioderFraGrunnlag =
+        aarsavregningRes.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag.medlemskapsperioder;
+      const innvilgedeMedlemskapsperioderFraGrunnlag = medlemskapsperioderFraGrunnlag.filter(
+        (periode) => periode.innvilgelsesResultat === INNVILGET || periode.innvilgelsesResultat === DELVIS_INNVILGET,
+      );
+
+      // eslint-disable-next-line no-restricted-syntax
+      for (const periode of innvilgedeMedlemskapsperioderFraGrunnlag) {
+        await opprettMedlemskapsperiode(periode);
+      }
+
+      // Henter medlemskapsperioder fra behandlingsresultat
+      const oppdaterteMedlemskapsperioder =
+        await Api.MedlemAvFolketrygden.Medlemskapsperioder.hentMedlemskapsperioder(behandlingID);
+
+      const oppdaterteInnvilgedeMedlemskapsperioder = oppdaterteMedlemskapsperioder.filter(
+        (periode: Medlemskapsperiode) =>
+          periode.innvilgelsesResultat === INNVILGET || periode.innvilgelsesResultat === DELVIS_INNVILGET,
+      );
+
+      return mapMedlemskapsperioder(
+        oppdaterteInnvilgedeMedlemskapsperioder,
+        aarsavregningRes.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag,
+      );
+    }
+    // Vanlig innlastning. Delt og uten grunnlag
+    return mapMedlemskapsperioder(
+      innvilgedeMedlemskapsperioder,
+      aarsavregningRes?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag,
+    );
+  };
+
+  const getBestemmelse = (mappedMedlemskapsperioder: Medlemskapsperiode[]) => {
+    if (mappedMedlemskapsperioder.length > 0) {
+      const førsteBestemmelse = mappedMedlemskapsperioder[0].bestemmelse;
+      const medlemskapsperioderHarSammeBestemmelse = mappedMedlemskapsperioder.every(
+        (period) => period.bestemmelse === førsteBestemmelse,
+      );
+      if (medlemskapsperioderHarSammeBestemmelse) {
+        return førsteBestemmelse;
+      }
+      throw new Error(
+        "Kan ikke laste inn årsavregning fordi grunnlag eller behandlingsresultat har innvilgede medlemskapsperioder med ulik bestemmelse",
+      );
+    }
+    return "";
+  };
+
+  const getTrygdedekninger = async (bestemmelse: string): Promise<string[]> => {
+    if (bestemmelse) {
+      try {
+        return await Api.LovligeKombinasjoner.hentTrygdedekninger(bestemmelse);
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.error("Feil ved henting av trygdedekninger:", err);
+      }
+    }
+    return [];
+  };
+
   useEffect(() => {
     const lastInitiellData = async () => {
       if (!behandlingID) {
@@ -135,68 +214,27 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
           }
         }
 
-        const medlemskapsperioderRes =
-          await Api.MedlemAvFolketrygden.Medlemskapsperioder.hentMedlemskapsperioder(behandlingID);
-        const innvilgedeMedlemskapsperioder = medlemskapsperioderRes.filter(
-          (periode: Medlemskapsperiode) =>
-            periode.innvilgelsesResultat === INNVILGET || periode.innvilgelsesResultat === DELVIS_INNVILGET,
-        );
+        const deltGrunnlagAarsavregningHarIkkeNyttGrunnlag =
+          harDeltGrunnlag && aarsavregningRes && !aarsavregningRes.nyttGrunnlag;
 
-        let mappedMedlemskapsperioder;
-        if (
-          redigerbart &&
-          harDeltGrunnlag &&
-          innvilgedeMedlemskapsperioder.length === 0 &&
-          aarsavregningRes?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag
-        ) {
-          // Oppretter medlemskapsperioder fra grunnlag på behandlingsresultat
-          const medlemskapsperioderFraGrunnlag =
-            aarsavregningRes.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag.medlemskapsperioder;
-          const innvilgedeMedlemskapsperioderFraGrunnlag = medlemskapsperioderFraGrunnlag.filter(
-            (periode) =>
-              periode.innvilgelsesResultat === INNVILGET || periode.innvilgelsesResultat === DELVIS_INNVILGET,
-          );
-
-          // eslint-disable-next-line no-restricted-syntax
-          for (const periode of innvilgedeMedlemskapsperioderFraGrunnlag) {
-            await opprettMedlemskapsperiode(periode);
-          }
-
-          const oppdaterteMedlemskapsperioder =
-            await Api.MedlemAvFolketrygden.Medlemskapsperioder.hentMedlemskapsperioder(behandlingID);
-
-          const oppdaterteInnvilgedeMedlemskapsperioder = oppdaterteMedlemskapsperioder.filter(
-            (periode: Medlemskapsperiode) =>
-              periode.innvilgelsesResultat === INNVILGET || periode.innvilgelsesResultat === DELVIS_INNVILGET,
-          );
-
-          mappedMedlemskapsperioder = mapMedlemskapsperioder(
-            oppdaterteInnvilgedeMedlemskapsperioder,
-            aarsavregningRes.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag,
-          );
-        } else {
-          // Vanlig innlastning. Når det ikke er delt grunnlag initielt.
-          mappedMedlemskapsperioder = mapMedlemskapsperioder(
-            innvilgedeMedlemskapsperioder,
-            aarsavregningRes?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag,
-          );
-        }
-
-        const erInitiellMappingForDeltGrunnlag = harDeltGrunnlag && aarsavregningRes && !aarsavregningRes.nyttGrunnlag;
+        const mappedMedlemskapsperioder = await getMappedMedlemskapsperioder(aarsavregningRes!);
+        const bestemmelse = getBestemmelse(mappedMedlemskapsperioder);
+        const trygdedekninger = await getTrygdedekninger(bestemmelse);
 
         const formDefaultValues: FieldValue<AarsavregningFormValuesProps> = {
           medlemskapsperioder: mappedMedlemskapsperioder.length
             ? mappedMedlemskapsperioder
             : [DEFAULT_MEDLEMSKAPSPERIODE],
+          bestemmelse,
           totaltForskuddsvisFakturert: aarsavregningRes?.avregning?.tidligereFakturertBeloepAvgiftssystem || "",
           skatteforholdsperioder: mapTilSkatteforholdProps(
-            erInitiellMappingForDeltGrunnlag
+            deltGrunnlagAarsavregningHarIkkeNyttGrunnlag
               ? aarsavregningRes?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.skatteforholdsperioder
               : aarsavregningRes?.nyttGrunnlag?.trygdeavgiftsgrunnlag.skatteforholdsperioder,
             mappedMedlemskapsperioder,
           ),
           inntektskilder: mapTilInntektskilderProps(
-            erInitiellMappingForDeltGrunnlag
+            deltGrunnlagAarsavregningHarIkkeNyttGrunnlag
               ? aarsavregningRes?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.inntektskperioder
               : aarsavregningRes?.nyttGrunnlag?.trygdeavgiftsgrunnlag.inntektskperioder,
             mappedMedlemskapsperioder,
@@ -206,9 +244,9 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
         setInitiellData({
           valgtÅr: aarsavregningRes?.aar,
           aarsavregningResponse: aarsavregningRes,
-          lagredeMedlemskapsperioder: innvilgedeMedlemskapsperioder,
           bestemmelser: bestemmelsesRes.bestemmelser,
           formDefaultValues,
+          trygdedekninger,
         });
 
         setIsLoading(false);

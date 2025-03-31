@@ -270,21 +270,17 @@ export function Inntektskilder({
           </Nav.Row>
         );
       })}
-
-      {redigerbart && (
-        <div className="legg-til__rad">
-          <Mui.Lenkeknapp
-            ikon={Ikoner.Add}
-            onClick={() =>
-              append(
-                { ...defaultPeriode, erMaanedsbelop: BOOLSK_STRING.SANN } || { erMaanedsbelop: BOOLSK_STRING.SANN },
-              )
-            }
-          >
-            Legg til inntekt
-          </Mui.Lenkeknapp>
-        </div>
-      )}
+      <div className="legg-til__rad">
+        <Mui.Lenkeknapp
+          ikon={Ikoner.Add}
+          onClick={() =>
+            append({ ...defaultPeriode, erMaanedsbelop: BOOLSK_STRING.SANN } || { erMaanedsbelop: BOOLSK_STRING.SANN })
+          }
+          disabled={!redigerbart}
+        >
+          Legg til inntekt
+        </Mui.Lenkeknapp>
+      </div>
     </div>
   );
 }
