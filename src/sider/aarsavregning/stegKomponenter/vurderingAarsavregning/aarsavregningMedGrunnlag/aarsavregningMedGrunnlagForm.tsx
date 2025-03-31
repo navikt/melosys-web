@@ -173,6 +173,27 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
     oppdaterStatus(stegErGyldig);
   }, [stegErGyldig]);
 
+  useEffect(() => {
+    if (redigerbart && aarsavregningResponse?.nyttGrunnlag && aarsavregningID) {
+      const { totalAvgift } = aarsavregningResponse.nyttGrunnlag.avgift;
+      const nyttTotalbeloep = aarsavregningResponse.avregning?.nyttTotalbeloep;
+
+      if (totalAvgift !== nyttTotalbeloep) {
+        Api.Aarsavregning.oppdaterTotalAvgift(behandlingID, aarsavregningID, totalAvgift).then(
+          (res: AarsavregningResponse) => {
+            setAarsavregningResponse(res);
+          },
+        );
+      }
+    }
+  }, [
+    redigerbart,
+    behandlingID,
+    aarsavregningID,
+    aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift,
+    aarsavregningResponse?.avregning?.nyttTotalbeloep,
+  ]);
+
   const håndterAvvik = useCallback(
     (value: boolean) => {
       if (!value) {
@@ -216,14 +237,6 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
     }
     setBrukerHarBekreftet(true);
     if (stegErGyldig && !beregningPaagar) {
-      console.log("TEST");
-      Api.Aarsavregning.oppdaterTotalAvgift(
-        behandlingID,
-        aarsavregningID,
-        aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift,
-      ).then((res: AarsavregningResponse) => {
-        setAarsavregningResponse(res);
-      });
       bekreft();
     }
   }, [harValidertSkjema, trigger, stegErGyldig, beregningPaagar, bekreft]);
@@ -300,8 +313,8 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
 
           {nyttGrunnlagHarTrygdeavgiftsgrunnlag && formIsValid && !feilmelding && aarsavregningResponse?.avregning && (
             <SumArsavregningTabell
-              nyTrygdeavgift={aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift}
-              tidligereTrygdeavgift={aarsavregningResponse?.avregning?.tidligereFakturertBeloep}
+              nyTrygdeavgift={aarsavregningResponse.avregning.nyttTotalbeloep}
+              tidligereTrygdeavgift={aarsavregningResponse.avregning.tidligereFakturertBeloep}
             />
           )}
 
