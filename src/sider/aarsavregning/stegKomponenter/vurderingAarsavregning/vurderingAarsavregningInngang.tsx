@@ -18,6 +18,7 @@ import { AarsavregningUtenEllerDeltGrunnlag } from "./aarsavregningUtenEllerDelt
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
 import { lagInnvilgetMedlemskapsPeriode } from "./komponenter/utils";
 import { FellesHandlersContext } from "../../../../contexts";
+import { tilbakestillMedlemskapsperioder } from "../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 
 interface Props {
   bekreft: () => void;
@@ -136,10 +137,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
       );
     }
     if (!value) {
-      console.log("Test 1");
-      await Api.MedlemAvFolketrygden.Medlemskapsperioder.slettMedlemskapsperioder(behandlingID);
-    } else {
-      // TODO something?
+      await Api.MedlemAvFolketrygden.Medlemskapsperioder.tilbakestillMedlemskapsperioder(behandlingID);
     }
     Api.Aarsavregning.oppdaterHarDeltGrunnlag(behandlingID, { harDeltGrunnlag: value }, aarsavregningID).then((res) =>
       setHarDeltGrunnlag(res.harDeltGrunnlag),
