@@ -164,8 +164,12 @@ export const skalViseIngenFlyt = (
     return true;
   }
 
-  if (behandlingstema === MKV.Koder.behandlinger.behandlingstema.PENSJONIST) {
-    return !erPensjonsistToggleEnabled;
+  if (
+    sakstype === FTRL &&
+    behandlingstema === MKV.Koder.behandlinger.behandlingstema.PENSJONIST &&
+    erPensjonsistToggleEnabled
+  ) {
+    return false;
   }
 
   return [
@@ -173,6 +177,7 @@ export const skalViseIngenFlyt = (
     MKV.Koder.behandlinger.behandlingstema.UNNTAK_MEDLEMSKAP,
     MKV.Koder.behandlinger.behandlingstema.FORESPØRSEL_TRYGDEMYNDIGHET,
     MKV.Koder.behandlinger.behandlingstema.TRYGDETID,
+    MKV.Koder.behandlinger.behandlingstema.PENSJONIST,
     MKV.Koder.behandlinger.behandlingstema.A1_ANMODNING_OM_UNNTAK_PAPIR,
   ].includes(behandlingstema);
 };
