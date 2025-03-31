@@ -5,6 +5,7 @@ import * as Utils from "../../../../../utils";
 import { BOOLSK_STRING } from "../../../../../constants";
 
 import { erBrukerSkattepliktigIHelePerioden } from "../komponenter/utils";
+import { isoStringTilDate } from "../../../../../utils/dato";
 
 const { MAA_FYLLES_UT } = KV.Feilmeldinger;
 const {
@@ -65,6 +66,72 @@ const kreverInntektskilder = (medlemskapsTypeErPliktig, options) => {
   return true;
 };
 
+// eslint-disable
+const skatteforholdsDekkerMedlemskapTest = {
+  name: "skatteforholdsDekkerMedlemskap",
+  message: "Skatteforholdsperioden(e) du har lagt inn dekker ikke hele medlemskapsperioden(e)",
+  // eslint-disable-next-line object-shorthand
+  test: function (skatteforholdsperioder) {
+    const { medlemskapsperiode } = this.options.context;
+
+    if (!medlemskapsperiode) return true;
+
+    const gyldigeSkatteperioder = skatteforholdsperioder.filter((p) => p.fomDato && p.tomDato);
+    if (gyldigeSkatteperioder.length === 0) return false;
+
+    const sorterteSkatteperioder = [...gyldigeSkatteperioder].sort(Utils.dato.sorterEtterNorskFomDato);
+    const skatteStart = Utils.dato.norskStringTilDate(sorterteSkatteperioder[0].fomDato);
+    const skatteSlutt = Utils.dato.norskStringTilDate(
+      sorterteSkatteperioder[sorterteSkatteperioder.length - 1].tomDato,
+    );
+
+    if (!skatteStart || !skatteSlutt) return false;
+
+    if (
+      skatteStart.getDate() !== Utils.dato.isoStringTilDate(medlemskapsperiode.fom).getDate() ||
+      skatteSlutt.getDate() !== Utils.dato.isoStringTilDate(medlemskapsperiode.tom).getDate()
+    ) {
+      return false;
+    }
+
+    // for (let i = 1; i < sorterteSkatteperioder.length; i++) {
+    //   const forrigePeriodeSlutt = Utils.dato.norskStringTilDate(sorterteSkatteperioder[i - 1].tomDato);
+    //   const dennePeriodeStart = Utils.dato.norskStringTilDate(sorterteSkatteperioder[i].fomDato);
+    //
+    //   if (!forrigePeriodeSlutt || !dennePeriodeStart) return false;
+    //
+    //   const nesteDag = new Date(forrigePeriodeSlutt);
+    //   nesteDag.setDate(nesteDag.getDate() + 1);
+    //
+    //   if (dennePeriodeStart.getDate() !== nesteDag.getDate()) {
+    //     return false;
+    //   }
+    // }
+
+    return true;
+  },
+};
+
+const skatteforholdsperioderHarUlikSkattepliktTest = {
+  name: "skatteforholdsperioderHarUlikSkatteplikt",
+  message: "Skatteforholdsperioder må ha ulik skatteplikttype",
+  test: (skatteforholdsperioder) => {
+    if (!skatteforholdsperioder || skatteforholdsperioder.length <= 1) {
+      return true;
+    }
+
+    const gyldige = skatteforholdsperioder.filter((periode) => periode.skatteplikttype);
+    if (gyldige.length <= 1) {
+      return true;
+    }
+
+    const skattepliktTypes = gyldige.map((periode) => periode.skatteplikttype);
+
+    const uniqueTypes = new Set(skattepliktTypes);
+    return uniqueTypes.size === skattepliktTypes.length;
+  },
+};
+
 const aarsavregningMedGrunnlagSchema = object().shape({
   skatteforholdsperioder: array().when(["$erÅpenSluttDato", "$erAvvik"], {
     is: (erÅpenSluttDato, erAvvik) => {
@@ -87,7 +154,9 @@ const aarsavregningMedGrunnlagSchema = object().shape({
             .erEtterDatofelt("fomDato"),
           skatteplikttype: string().required(MAA_FYLLES_UT),
         }),
-      ),
+      )
+      .test(skatteforholdsDekkerMedlemskapTest)
+      .test(skatteforholdsperioderHarUlikSkattepliktTest),
   }),
   inntektskilder: lazy((_value, options) => {
     return array().when(["$medlemskapsTypeErPliktig", "$erÅpenSluttDato", "$erAvvik"], {

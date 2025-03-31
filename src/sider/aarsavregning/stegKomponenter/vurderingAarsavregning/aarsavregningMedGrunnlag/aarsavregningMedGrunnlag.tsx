@@ -35,6 +35,7 @@ import {
 } from "../komponenter/utils";
 import { mapTilInntektskilderProps, mapTilSkatteforholdProps } from "../aarsavregningHelpers";
 import { Aarsavregningsmeldinger } from "../komponenter/aarsavregningsmeldinger";
+import { DevTool } from "@hookform/devtools";
 
 interface Props {
   bekreft: () => void;
@@ -48,6 +49,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
   const [aarsavregningResponse, setAarsavregningResponse] = useState<AarsavregningResponse | undefined>(undefined);
   const [beregningPaagar, setBeregningPaagar] = useState(false);
   const [harValidertSkjema, setHarValidertSkjema] = useState(false);
+  const [kompleksSkjemaFeilmelding, setKompleksSkjemaFeilmelding] = useState<string | undefined>(undefined);
 
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as any;
@@ -68,6 +70,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
     const { inntektskperioder, skatteforholdsperioder } = trygdeavgiftsgrunnlag;
     const sorterteInntekstkilder = [...inntektskperioder].sort(Utils.dato.sorterEtterISOFomDato);
     const sorterteSkatteforhold = [...skatteforholdsperioder].sort(Utils.dato.sorterEtterISOFomDato);
+    console.log("resetter skatteforhold");
     resetSkatteforholdsperioder(
       !Utils._isEmpty(sorterteSkatteforhold) ? mapTilSkatteforholdProps(sorterteSkatteforhold) : [],
     );
@@ -121,7 +124,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
   const {
     control,
     watch,
-    formState: { isValid: formIsValid, isValidating },
+    formState: { isValid: formIsValid, isValidating, errors },
     trigger,
   } = useForm({
     resolver: yupResolver(aarsavregningMedGrunnlagSchema),
@@ -132,7 +135,6 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
       erAvvik,
     },
     mode: "onChange",
-    reValidateMode: "onChange",
     defaultValues: {
       skatteforholdsperioder: [{}],
       inntektskilder: [{}],
@@ -154,6 +156,38 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
     replace: resetInntektskilder,
   } = useFieldArray<FieldArrayProps, "inntektskilder", "id">({ control, name: "inntektskilder" });
   const formValues = watch();
+  console.log("formIsValid", formIsValid);
+  console.log("feilhåndtering", errors);
+  console.log("isValidating", isValidating);
+
+  // useEffect(() => {
+  //   if (isValidating) {
+  //     console.log("trigger");
+  //     trigger();
+  //   }
+  // }, [isValidating]);
+
+  useEffect(() => {
+    if (!isValidating) {
+      setKompleksSkjemaFeilmelding(undefined);
+      // Kun vis komplekse feil hvis det ikke finnes andre feil i medlemskapsperioder
+      if (errors.inntektskilder) {
+        const harFeltFeil = Object.keys(errors.inntektskilder).some((key) => !Number.isNaN(parseInt(key, 10)));
+
+        if (!harFeltFeil && errors.inntektskilder.message) {
+          setKompleksSkjemaFeilmelding(errors.inntektskilder.message as string);
+        }
+      }
+
+      if (errors.skatteforholdsperioder) {
+        const harFeltFeil = Object.keys(errors.skatteforholdsperioder).some((key) => !Number.isNaN(parseInt(key, 10)));
+
+        if (!harFeltFeil && errors.skatteforholdsperioder.message) {
+          setKompleksSkjemaFeilmelding(errors.skatteforholdsperioder.message as string);
+        }
+      }
+    }
+  }, [isValidating, errors.skatteforholdsperioder, errors.inntektskilder]);
 
   // TODO: Når ryddingen skjer her husk å rename bort fra medlemskapsTypeErPliktig
   const handleBeregnTrygdeavgiftsperioder = useCallback(
@@ -191,9 +225,10 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
   }, [formIsValid, isValidating, erAvvik, formValues.inntektskilder.length, formValues.skatteforholdsperioder.length]);
 
   const stegErGyldig =
-    erAvvik === false || Boolean(formIsValid && erAvvik && aarsavregningResponse?.nyttGrunnlag && !feilmelding);
+    erAvvik === false || Boolean(formIsValid && erAvvik && !feilmelding && !kompleksSkjemaFeilmelding);
 
   useEffect(() => {
+    console.log("oppdater status", stegErGyldig);
     oppdaterStatus(stegErGyldig);
   }, [stegErGyldig]);
 
@@ -273,7 +308,6 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
           />
         </>
       )}
-
       <Nav.RadioGroup
         onChange={håndterAvvik}
         value={erAvvik}
@@ -285,7 +319,6 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
           <Nav.Radio value={false}>Nei</Nav.Radio>
         </Nav.HStack>
       </Nav.RadioGroup>
-
       {erAvvik && (
         <>
           <Nav.Heading className="endelige_opplysninger_heading" level="2">
@@ -333,16 +366,21 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
           )}
         </>
       )}
-
       {feilmelding && (
         <Nav.Alert variant="error" className="alertstripe_feilmelding">
           {feilmelding}
         </Nav.Alert>
       )}
-
+      {kompleksSkjemaFeilmelding && (
+        <Nav.Alert variant="error" className="alertstripe_feilmelding">
+          fdfdf
+          {kompleksSkjemaFeilmelding}
+        </Nav.Alert>
+      )}
       <Nav.Button variant="primary" loading={beregningPaagar} disabled={!redigerbart} onClick={bekreftOnClick}>
         Bekreft og fortsett
       </Nav.Button>
+      <DevTool control={control} /> {/* set up the dev tool */}
     </>
   );
 }
