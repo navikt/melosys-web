@@ -1,7 +1,7 @@
 import * as Api from "../../../../../services/api";
 import MedlemskapsPerioderTabell from "../komponenter/medlemskapsPerioderTabell";
 import "../vurderingAarsavregningInngang.css";
-import { useCallback, useEffect, useState, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { AarsavregningResponse } from "../../../../../services/modules/aarsavregning/aarsavregning";
 import { useSelector } from "react-redux";
 import * as Nav from "../../../../../navFrontend";
@@ -10,7 +10,6 @@ import { FieldValue, useFieldArray, useForm } from "react-hook-form";
 import { FieldArrayProps, FormValuesProps } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Utils from "../../../../../utils";
-import MKV from "../../../../../melosyskodeverk";
 import { SumArsavregningTabell } from "../komponenter/sumArsavregningTabell";
 import { BeregnetTrygdeavgiftDetaljer } from "../komponenter/beregnetTrygdeavgiftDetaljer";
 import { behandlingsresultatSelectors } from "../../../../../ducks/behandlingsresultat";
@@ -22,20 +21,15 @@ import {
   erBrukerSkattepliktigIHelePerioden,
   fomTomErFyltUt,
   harInntektsKildeType,
-  hentMedlemskapsperiodeBestemmelse,
-  lagInnvilgetMedlemskapsPeriode,
   mapFeilmelding,
 } from "../komponenter/utils";
 import TidligereGrunnlagsoversikt from "../komponenter/tidligereGrunnlagsoversikt";
 import { Aarsavregningsmeldinger } from "../komponenter/aarsavregningsmeldinger";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
+import { InitiellData } from "./aarsavregningMedGrunnlag";
 
 interface Props {
-  initiellData: {
-    aarsavregningResponse?: AarsavregningResponse;
-    formDefaultValues: FieldValue<FormValuesProps>;
-    erAvvik?: boolean;
-  };
+  initiellData: InitiellData;
   bekreft: () => void;
   oppdaterStatus: (isValid: boolean) => void;
 }
@@ -54,30 +48,12 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as any;
   const aarsavregningID = useSelector(behandlingsresultatSelectors.ÅrsavregningIDSelector);
 
-  const medlemskapsperioder = useMemo(
-    () => aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.medlemskapsperioder,
-    [aarsavregningResponse?.tidligereGrunnlagsopplysninger],
-  );
-  const innvilgetMedlemskapsperiode = useMemo(
-    () => lagInnvilgetMedlemskapsPeriode(medlemskapsperioder),
-    [medlemskapsperioder],
-  );
-  const innvilgetMedlemskapsperiodeBestemmelse = useMemo(
-    () => hentMedlemskapsperiodeBestemmelse(false, medlemskapsperioder),
-    [medlemskapsperioder],
-  );
-  const defaultPeriode = useMemo(
-    () => ({
-      fomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.fom),
-      tomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.tom),
-    }),
-    [innvilgetMedlemskapsperiode?.fom, innvilgetMedlemskapsperiode?.tom],
-  );
-
-  const medlemskapstypeErPliktig = useMemo(
-    () => medlemskapsperioder?.every((periode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG),
-    [medlemskapsperioder],
-  );
+  const {
+    innvilgetMedlemskapsperiode,
+    innvilgetMedlemskapsperiodeBestemmelse,
+    defaultPeriode,
+    medlemskapstypeErPliktig,
+  } = initiellData;
 
   const {
     control,

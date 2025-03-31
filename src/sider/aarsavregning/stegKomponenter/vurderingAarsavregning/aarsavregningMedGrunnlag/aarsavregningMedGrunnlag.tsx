@@ -14,6 +14,8 @@ import { OK } from "../../../../../ducks/aarsavregning/types";
 import { mapTilInntektskilderProps, mapTilSkatteforholdProps } from "../aarsavregningHelpers";
 import { AarsavregningMedGrunnlagForm } from "./aarsavregningMedGrunnlagForm";
 import * as Nav from "../../../../../navFrontend";
+import MKV from "../../../../../melosyskodeverk";
+import { lagInnvilgetMedlemskapsPeriode, hentMedlemskapsperiodeBestemmelse } from "../komponenter/utils";
 
 interface Props {
   bekreft: () => void;
@@ -21,13 +23,19 @@ interface Props {
   oppdaterStatus: (isValid: boolean) => void;
 }
 
+export interface InitiellData {
+  aarsavregningResponse?: AarsavregningResponse;
+  formDefaultValues: FieldValue<FormValuesProps>;
+  erAvvik?: boolean;
+  innvilgetMedlemskapsperiode?: { fom?: string; tom?: string };
+  innvilgetMedlemskapsperiodeBestemmelse?: string;
+  defaultPeriode?: { fomDato: string; tomDato: string };
+  medlemskapstypeErPliktig?: boolean;
+}
+
 export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
   const [isLoading, setIsLoading] = useState(true);
-  const [initiellData, setInitiellData] = useState<{
-    aarsavregningResponse?: AarsavregningResponse;
-    formDefaultValues: FieldValue<FormValuesProps>;
-    erAvvik?: boolean;
-  }>({
+  const [initiellData, setInitiellData] = useState<InitiellData>({
     formDefaultValues: {
       skatteforholdsperioder: [{}],
       inntektskilder: [{}],
@@ -71,10 +79,25 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
             res?.nyttGrunnlag?.trygdeavgiftsgrunnlag || res.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag,
           );
 
+          const medlemskapsperioder = res.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.medlemskapsperioder;
+          const innvilgetMedlemskapsperiode = lagInnvilgetMedlemskapsPeriode(medlemskapsperioder);
+          const innvilgetMedlemskapsperiodeBestemmelse = hentMedlemskapsperiodeBestemmelse(false, medlemskapsperioder);
+          const defaultPeriode = {
+            fomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.fom)!,
+            tomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.tom)!,
+          };
+          const medlemskapstypeErPliktig = medlemskapsperioder?.every(
+            (periode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG,
+          );
+
           setInitiellData({
             aarsavregningResponse: res,
             erAvvik: res.harAvvik,
             formDefaultValues: formValues,
+            innvilgetMedlemskapsperiode,
+            innvilgetMedlemskapsperiodeBestemmelse,
+            defaultPeriode,
+            medlemskapstypeErPliktig,
           });
           setIsLoading(false);
         })
