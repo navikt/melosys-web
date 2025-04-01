@@ -17,6 +17,7 @@ const {
 } = MKV.Koder.inntektskildetype;
 const UTENFOR_MEDLEMSKAPSPERIODEN = { melding: "Utenfor medl.periode" };
 const DEKKER_IKKE_HELE_MEDLEMSKAPSPERIODEN = { melding: "Dekker ikke hele medlemskapsperioden" };
+const OVERLAPPENDE_PERIODER = { melding: "Skatteforholdsperiodene kan ikke overlappe" };
 
 export const arbAvgBetalesKreves = (kildetype, medlemskapsTypeErPliktig) =>
   !medlemskapsTypeErPliktig && kildetype !== MISJONÆR;
@@ -53,6 +54,15 @@ const bruttoInntektFyltUtNårDetKrevesTest = {
     }
     return !Utils._isEmpty(bruttoInntekt);
   },
+};
+
+// Helper function to sort periods by start date
+const sorterPerioderEtterStartdato = (perioder) => {
+  return [...perioder].sort((a, b) => {
+    const aFom = Utils.dato.formatterDatoTilISO(a.fomDato);
+    const bFom = Utils.dato.formatterDatoTilISO(b.fomDato);
+    return aFom.localeCompare(bFom);
+  });
 };
 
 const erInnenforMedlemskapsperiodeTest = {
@@ -94,11 +104,7 @@ const dekkerHeleMedlemskapsperiodeTest = {
       if (!medlemskapsperiodeFom || !medlemskapsperiodeTom) return true;
 
       // Sort periods by start date
-      const sortedPerioder = [...perioder].sort((a, b) => {
-        const aFom = Utils.dato.formatterDatoTilISO(a.fomDato);
-        const bFom = Utils.dato.formatterDatoTilISO(b.fomDato);
-        return aFom.localeCompare(bFom);
-      });
+      const sortedPerioder = sorterPerioderEtterStartdato(perioder);
 
       // Dekning
       const firstFom = Utils.dato.formatterDatoTilISO(sortedPerioder[0].fomDato);
@@ -124,6 +130,37 @@ const dekkerHeleMedlemskapsperiodeTest = {
           // Check if the next period starts more than one day after this period ends
           // For consecutive dates (like 10-12-2024 and 11-12-2024), tomDateForComparison will equal fomDate
           if (tomDateForComparison.getTime() < nextFomDate.getTime()) return false;
+        }
+      }
+
+      return true;
+    } catch (error) {
+      return true;
+    }
+  },
+};
+
+const ingenOverlappendeSkatteforholdsperioderTest = {
+  name: "ingenOverlappendeSkatteforholdsperioder",
+  message: OVERLAPPENDE_PERIODER,
+  test: (perioder) => {
+    if (!perioder || perioder.length <= 1) return true;
+
+    try {
+      // Sort periods by start date
+      const sortedPerioder = sorterPerioderEtterStartdato(perioder);
+
+      // Check for overlapping periods
+      for (let i = 0; i < sortedPerioder.length - 1; i++) {
+        const currentTom = Utils.dato.formatterDatoTilISO(sortedPerioder[i].tomDato);
+        const nextFom = Utils.dato.formatterDatoTilISO(sortedPerioder[i + 1].fomDato);
+
+        // Convert to Date objects
+        const currentTomDate = Utils.dato.isoStringTilDate(currentTom);
+        const nextFomDate = Utils.dato.isoStringTilDate(nextFom);
+
+        if (currentTomDate && nextFomDate) {
+          if (currentTomDate.getTime() >= nextFomDate.getTime()) return false;
         }
       }
 
@@ -164,7 +201,8 @@ const aarsavregningMedGrunnlagSchema = object().shape({
     then: array()
       .min(1, "Minst en skatteforholdsperiode")
       .of(skatteforholdsperiodeSchema)
-      .test(dekkerHeleMedlemskapsperiodeTest),
+      .test(dekkerHeleMedlemskapsperiodeTest)
+      .test(ingenOverlappendeSkatteforholdsperioderTest),
     otherwise: array(),
   }),
   inntektskilder: array().when(["$medlemskapsTypeErPliktig", "erAvvik", "skatteforholdsperioder"], {
