@@ -18,6 +18,7 @@ const {
 const UTENFOR_MEDLEMSKAPSPERIODEN = { melding: "Utenfor medl.periode" };
 const DEKKER_IKKE_HELE_MEDLEMSKAPSPERIODEN = { melding: "Dekker ikke hele medlemskapsperioden" };
 const OVERLAPPENDE_PERIODER = { melding: "Skatteforholdsperiodene kan ikke overlappe" };
+const LIKE_SKATTEPLIKTTYPER = { melding: "Alle skatteforholdsperiodene har samme svar på spørsmålet om skatteplikt" };
 
 export const arbAvgBetalesKreves = (kildetype, medlemskapsTypeErPliktig) =>
   !medlemskapsTypeErPliktig && kildetype !== MISJONÆR;
@@ -73,7 +74,7 @@ const erInnenforMedlemskapsperiodeTest = {
 
     try {
       const { medlemskapsperiode } = schema.options.context;
-      
+
       const medlemskapsperiodeFom = Utils.dato.formatterDatoTilISO(medlemskapsperiode.fomDato);
       const medlemskapsperiodeTom = Utils.dato.formatterDatoTilISO(medlemskapsperiode.tomDato);
       const isoDatoString = Utils.dato.formatterDatoTilISO(datoString);
@@ -95,7 +96,7 @@ const dekkerHeleMedlemskapsperiodeTest = {
 
     try {
       const { medlemskapsperiode } = schema.options.context;
-      
+
       const medlemskapsperiodeFom = Utils.dato.formatterDatoTilISO(medlemskapsperiode.fomDato);
       const medlemskapsperiodeTom = Utils.dato.formatterDatoTilISO(medlemskapsperiode.tomDato);
 
@@ -167,6 +168,24 @@ const ingenOverlappendeSkatteforholdsperioderTest = {
   },
 };
 
+const ikkeAlleSammeSkatteforholdstyperTest = {
+  name: "ikkeAlleSammeSkatteforholdstyper",
+  message: LIKE_SKATTEPLIKTTYPER,
+  test: (perioder) => {
+    if (!perioder || perioder.length <= 1) return true;
+
+    try {
+      const skatteplikttyper = perioder.map(periode => periode.skatteplikttype);
+
+      const perioderHarSammeType = skatteplikttyper.every(type => type === skatteplikttyper[0]);
+
+      return !perioderHarSammeType;
+    } catch (error) {
+      return true;
+    }
+  },
+};
+
 const skatteforholdsperiodeSchema = object().shape({
   fomDato: string().required(MAA_FYLLES_UT).erGyldigDato().test(erInnenforMedlemskapsperiodeTest),
   tomDato: string()
@@ -198,7 +217,8 @@ const aarsavregningMedGrunnlagSchema = object().shape({
       .min(1, "Minst en skatteforholdsperiode")
       .of(skatteforholdsperiodeSchema)
       .test(dekkerHeleMedlemskapsperiodeTest)
-      .test(ingenOverlappendeSkatteforholdsperioderTest),
+      .test(ingenOverlappendeSkatteforholdsperioderTest)
+      .test(ikkeAlleSammeSkatteforholdstyperTest),
     otherwise: array(),
   }),
   inntektskilder: array().when(["$medlemskapsTypeErPliktig", "erAvvik", "skatteforholdsperioder"], {
