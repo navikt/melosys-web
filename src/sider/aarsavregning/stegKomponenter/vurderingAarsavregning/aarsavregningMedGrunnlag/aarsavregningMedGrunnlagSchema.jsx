@@ -64,14 +64,13 @@ const erInnenforMedlemskapsperiodeTest = {
       const { medlemskapsperiode } = schema.options.context;
       if (!medlemskapsperiode || !medlemskapsperiode.fomDato || !medlemskapsperiode.tomDato) return true;
 
-      const membershipStart = Utils.dato.formatterDatoTilISO(medlemskapsperiode.fomDato);
-      const membershipEnd = Utils.dato.formatterDatoTilISO(medlemskapsperiode.tomDato);
-      const dateToCheck = Utils.dato.formatterDatoTilISO(datoString);
+      const medlemskapsperiodeFom = Utils.dato.formatterDatoTilISO(medlemskapsperiode.fomDato);
+      const medlemskapsperiodeTom = Utils.dato.formatterDatoTilISO(medlemskapsperiode.tomDato);
+      const isoDatoString = Utils.dato.formatterDatoTilISO(datoString);
 
-      if (!membershipStart || !membershipEnd || !dateToCheck) return true;
+      if (!medlemskapsperiodeFom || !medlemskapsperiodeTom || !isoDatoString) return true;
 
-      // Use direct comparison rather than moment.isBetween to avoid potential edge cases
-      return dateToCheck >= membershipStart && dateToCheck <= membershipEnd;
+      return isoDatoString >= medlemskapsperiodeFom && isoDatoString <= medlemskapsperiodeTom;
     } catch (error) {
       return true;
     }
