@@ -384,13 +384,10 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   const visBetalingsvalg = erFørstegang && erPensjonist;
 
   const lagreBetalingsValgForPensjonist = async () => {
-    let valg = betalingsvalg;
-
-    if (valg === null || valg === MKV.Koder.betalingstype.FAKTURA) {
-      valg = MKV.Koder.betalingstype.TREKK;
-    } else {
-      valg = MKV.Koder.betalingstype.FAKTURA;
-    }
+    const valg =
+      betalingsvalg === MKV.Koder.betalingstype.FAKTURA || betalingsvalg == null
+        ? MKV.Koder.betalingstype.TREKK
+        : MKV.Koder.betalingstype.FAKTURA;
 
     dispatch(oppsummertfaktaOperations.lagreBetalingsvalgForPensjonister(behandlingID, valg));
   };
