@@ -25,7 +25,9 @@ const lagInnvilgetMedlemskapsPeriode = (medlemskapsperioder: Medlemskapsperiode[
     .sort(sorterEtterISOFomDato);
   return {
     fomDato: Utils.dato.formatterDatoTilNorsk(sorterteInnvilgedePerioder[0].fomDato),
-    tomDato: Utils.dato.formatterDatoTilNorsk(sorterteInnvilgedePerioder[sorterteInnvilgedePerioder.length - 1].tomDato),
+    tomDato: Utils.dato.formatterDatoTilNorsk(
+      sorterteInnvilgedePerioder[sorterteInnvilgedePerioder.length - 1].tomDato,
+    ),
   };
 };
 
@@ -61,7 +63,10 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as any;
   const dispatch = useDispatch();
 
-  const mapSkjemaverdierFraTrygdeavgiftsgrunnlag = (trygdeavgiftsgrunnlag?: Trygdeavgiftsgrunnlag, harAvvik?: boolean) => {
+  const mapSkjemaverdierFraTrygdeavgiftsgrunnlag = (
+    trygdeavgiftsgrunnlag?: Trygdeavgiftsgrunnlag,
+    harAvvik?: boolean,
+  ) => {
     if (!trygdeavgiftsgrunnlag) return { erAvvik: undefined, skatteforholdsperioder: [{}], inntektskilder: [{}] };
     const { inntektskperioder, skatteforholdsperioder } = trygdeavgiftsgrunnlag;
     const sorterteInntekstkilder = [...inntektskperioder].sort(Utils.dato.sorterEtterISOFomDato);
@@ -93,7 +98,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
 
           const formValues = mapSkjemaverdierFraTrygdeavgiftsgrunnlag(
             res?.nyttGrunnlag?.trygdeavgiftsgrunnlag || res.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag,
-            res.harAvvik
+            res.harAvvik,
           );
 
           const medlemskapsperioder = res.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.medlemskapsperioder;

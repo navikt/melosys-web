@@ -42,7 +42,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   );
   const [beregningPaagar, setBeregningPaagar] = useState(false);
   const [harValidertSkjema, setHarValidertSkjema] = useState(false);
-  const [previousFormValues, setPreviousFormValues] = useState<string | null>(null);
+  const [previousFormValues, setPreviousFormValues] = useState<any | null>(null);
 
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as any;
@@ -99,7 +99,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   );
 
   const debounceBeregnTrygdeavgiftsperioder = useCallback(
-    Utils._debounce((formVerdier) => handleBeregnTrygdeavgiftsperioder(formVerdier), 2000),
+    Utils._debounce((formVerdier) => handleBeregnTrygdeavgiftsperioder(formVerdier), 1500),
     [handleBeregnTrygdeavgiftsperioder],
   );
 
@@ -114,29 +114,22 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
     }
 
     const formState = {
-      skatteforholdsperioder:
-        skatteforholdsperioder?.map((skatteforhold: Skatteforhold) => ({
-          fomDato: skatteforhold.fomDato,
-          tomDato: skatteforhold.tomDato,
-          skatteplikttype: skatteforhold.skatteplikttype,
-        })) || [],
-      inntektskilder:
-        inntektskilder?.map((inntektskilde: Inntektskilde) => ({
-          fomDato: inntektskilde.fomDato,
-          tomDato: inntektskilde.tomDato,
-          kildetype: inntektskilde.kildetype,
-          bruttoInntekt: inntektskilde.bruttoInntekt,
-          arbAvgBetales: inntektskilde.arbAvgBetales,
-          erMaanedsbelop: inntektskilde.erMaanedsbelop,
-        })) || [],
+      skatteforholdsperioder: getValues("skatteforholdsperioder").map((skatteforhold: Skatteforhold) => ({
+        fomDato: skatteforhold.fomDato,
+        tomDato: skatteforhold.tomDato,
+        skatteplikttype: skatteforhold.skatteplikttype,
+      })),
+      inntektskilder: getValues("inntektskilder").map((inntektskilde: Inntektskilde) => ({
+        fomDato: inntektskilde.fomDato,
+        tomDato: inntektskilde.tomDato,
+        kildetype: inntektskilde.kildetype,
+        bruttoInntekt: inntektskilde.bruttoInntekt,
+        arbAvgBetales: inntektskilde.arbAvgBetales,
+        erMaanedsbelop: inntektskilde.erMaanedsbelop,
+      })),
     };
-
-    // Serialize to compare with previous state
-    const stateStr = JSON.stringify(formState);
-
-    // Only process if form state has changed
-    if (stateStr !== previousFormValues) {
-      setPreviousFormValues(stateStr);
+    if (!Utils._isEqual(formState, previousFormValues)) {
+      setPreviousFormValues(formState);
 
       const validationTimeout = setTimeout(() => {
         trigger().then((isValid) => {
@@ -147,7 +140,10 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
         });
       }, 500);
 
-      return () => clearTimeout(validationTimeout);
+      /* eslint-disable-next-line consistent-return */
+      return () => {
+        clearTimeout(validationTimeout);
+      };
     }
   }, [
     skatteforholdsperioder,
