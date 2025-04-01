@@ -190,13 +190,13 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
           setAarsavregningResponse(res);
           if (!value) {
             setBeregningPaagar(true);
+            const skatteforholdFraGrunnlag =
+              res.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.skatteforholdsperioder;
+            const inntektskilderFraGrunnlag =
+              res.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.inntektskperioder;
             handleBeregnTrygdeavgiftsperioder({
-              skatteforholdsperioder: mapTilSkatteforholdProps(
-                res.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.skatteforholdsperioder!,
-              ),
-              inntektskilder: mapTilInntektskilderProps(
-                res.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.inntektskperioder!,
-              ),
+              skatteforholdsperioder: mapTilSkatteforholdProps(skatteforholdFraGrunnlag),
+              inntektskilder: mapTilInntektskilderProps(inntektskilderFraGrunnlag),
             }).finally(() => {
               setPreviousFormValues(null);
               setBeregningPaagar(false);
