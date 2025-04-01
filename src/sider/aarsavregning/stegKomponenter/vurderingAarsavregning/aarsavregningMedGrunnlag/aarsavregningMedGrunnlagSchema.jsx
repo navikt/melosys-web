@@ -73,13 +73,12 @@ const erInnenforMedlemskapsperiodeTest = {
 
     try {
       const { medlemskapsperiode } = schema.options.context;
-      if (!medlemskapsperiode || !medlemskapsperiode.fomDato || !medlemskapsperiode.tomDato) return true;
-
+      
       const medlemskapsperiodeFom = Utils.dato.formatterDatoTilISO(medlemskapsperiode.fomDato);
       const medlemskapsperiodeTom = Utils.dato.formatterDatoTilISO(medlemskapsperiode.tomDato);
       const isoDatoString = Utils.dato.formatterDatoTilISO(datoString);
 
-      if (!medlemskapsperiodeFom || !medlemskapsperiodeTom || !isoDatoString) return true;
+      if (!isoDatoString) return true;
 
       return isoDatoString >= medlemskapsperiodeFom && isoDatoString <= medlemskapsperiodeTom;
     } catch (error) {
@@ -96,12 +95,9 @@ const dekkerHeleMedlemskapsperiodeTest = {
 
     try {
       const { medlemskapsperiode } = schema.options.context;
-      if (!medlemskapsperiode || !medlemskapsperiode.fomDato || !medlemskapsperiode.tomDato) return true;
-
+      
       const medlemskapsperiodeFom = Utils.dato.formatterDatoTilISO(medlemskapsperiode.fomDato);
       const medlemskapsperiodeTom = Utils.dato.formatterDatoTilISO(medlemskapsperiode.tomDato);
-
-      if (!medlemskapsperiodeFom || !medlemskapsperiodeTom) return true;
 
       // Sort periods by start date
       const sortedPerioder = sorterPerioderEtterStartdato(perioder);
