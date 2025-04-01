@@ -39,9 +39,6 @@ export interface FagsakOppsummering {
     behandlingsstatus: KTObject;
     behandlingstype: KTObject;
     behandlingstema: KTObject;
-    lovvalgsperiode?: Periode;
-    medlemskapsperioder?: Periode;
-    land: Soeknadsland;
     opprettetDato: string;
     behandlingsresultattype: KTObject;
     svarFrist: string;
