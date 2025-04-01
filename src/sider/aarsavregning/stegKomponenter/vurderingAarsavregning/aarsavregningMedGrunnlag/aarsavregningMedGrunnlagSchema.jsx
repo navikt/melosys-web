@@ -70,7 +70,7 @@ const erInnenforMedlemskapsperiodeTest = {
   name: "erInnenforMedlemskapsperiode",
   message: UTENFOR_MEDLEMSKAPSPERIODEN,
   test: (datoString, schema) => {
-    if (Utils._isEmpty(datoString) || !Utils.dato.vaskInputDato(datoString)) return true;
+    if (!datoString) return true;
 
     try {
       const { medlemskapsperiode } = schema.options.context;
@@ -79,11 +79,11 @@ const erInnenforMedlemskapsperiodeTest = {
       const medlemskapsperiodeTom = Utils.dato.formatterDatoTilISO(medlemskapsperiode.tomDato);
       const isoDatoString = Utils.dato.formatterDatoTilISO(datoString);
 
-      if (!isoDatoString) return true;
+      if (!isoDatoString) return false;
 
       return isoDatoString >= medlemskapsperiodeFom && isoDatoString <= medlemskapsperiodeTom;
     } catch (error) {
-      return true;
+      return false;
     }
   },
 };
@@ -111,6 +111,7 @@ const dekkerHeleMedlemskapsperiodeTest = {
       if (!lastTom || lastTom !== medlemskapsperiodeTom) return false;
 
       // Opphold
+      // eslint-disable-next-line no-plusplus
       for (let i = 0; i < sortedPerioder.length - 1; i++) {
         const currentTom = Utils.dato.formatterDatoTilISO(sortedPerioder[i].tomDato);
         const nextFom = Utils.dato.formatterDatoTilISO(sortedPerioder[i + 1].fomDato);
@@ -148,6 +149,7 @@ const ingenOverlappendeSkatteforholdsperioderTest = {
       const sortedPerioder = sorterPerioderEtterStartdato(perioder);
 
       // Check for overlapping periods
+      // eslint-disable-next-line no-plusplus
       for (let i = 0; i < sortedPerioder.length - 1; i++) {
         const currentTom = Utils.dato.formatterDatoTilISO(sortedPerioder[i].tomDato);
         const nextFom = Utils.dato.formatterDatoTilISO(sortedPerioder[i + 1].fomDato);
@@ -175,9 +177,9 @@ const ikkeAlleSammeSkatteforholdstyperTest = {
     if (!perioder || perioder.length <= 1) return true;
 
     try {
-      const skatteplikttyper = perioder.map(periode => periode.skatteplikttype);
+      const skatteplikttyper = perioder.map((periode) => periode.skatteplikttype);
 
-      const perioderHarSammeType = skatteplikttyper.every(type => type === skatteplikttyper[0]);
+      const perioderHarSammeType = skatteplikttyper.every((type) => type === skatteplikttyper[0]);
 
       return !perioderHarSammeType;
     } catch (error) {
@@ -227,10 +229,7 @@ const aarsavregningMedGrunnlagSchema = object().shape({
         erAvvik === true && (!medlemskapsTypeErPliktig || !erBrukerSkattepliktigIHelePerioden(skatteforholdsperioder))
       );
     },
-    then: array()
-      .min(1, "Minst en inntektskilde")
-      .of(inntektskildeSchema)
-      .test(dekkerHeleMedlemskapsperiodeTest),
+    then: array().min(1, "Minst en inntektskilde").of(inntektskildeSchema).test(dekkerHeleMedlemskapsperiodeTest),
     otherwise: array(),
   }),
 });

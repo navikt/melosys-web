@@ -56,11 +56,13 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   const {
     control,
     watch,
-    formState: { isValid: formIsValid, isValidating },
+    formState: { isValid: formIsValid, isValidating, errors },
     trigger,
     getValues,
   } = useForm({
-    resolver: yupResolver(aarsavregningMedGrunnlagSchema),
+    resolver: yupResolver(aarsavregningMedGrunnlagSchema, {
+      abortEarly: false, // This collects all errors instead of stopping at first error
+    }),
     context: {
       medlemskapsperiode: innvilgetMedlemskapsperiode,
       medlemskapsTypeErPliktig: medlemskapstypeErPliktig,
