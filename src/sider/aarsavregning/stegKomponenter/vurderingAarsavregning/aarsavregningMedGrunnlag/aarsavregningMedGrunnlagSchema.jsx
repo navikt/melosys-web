@@ -16,6 +16,7 @@ const {
   PENSJON_UFØRETRYGD_KILDESKATT,
 } = MKV.Koder.inntektskildetype;
 const UTENFOR_MEDLEMSKAPSPERIODEN = { melding: "Utenfor medl.periode" };
+const DEKKER_IKKE_HELE_MEDLEMSKAPSPERIODEN = { melding: "Dekker ikke hele medlemskapsperioden" };
 
 export const arbAvgBetalesKreves = (kildetype, medlemskapsTypeErPliktig) =>
   !medlemskapsTypeErPliktig && kildetype !== MISJONÆR;
@@ -77,6 +78,62 @@ const erInnenforMedlemskapsperiodeTest = {
   },
 };
 
+const dekkerHeleMedlemskapsperiodeTest = {
+  name: "dekkerHeleMedlemskapsperiode",
+  message: DEKKER_IKKE_HELE_MEDLEMSKAPSPERIODEN,
+  test: (perioder, schema) => {
+    if (!perioder || perioder.length === 0) return true;
+
+    try {
+      const { medlemskapsperiode } = schema.options.context;
+      if (!medlemskapsperiode || !medlemskapsperiode.fomDato || !medlemskapsperiode.tomDato) return true;
+
+      const medlemskapsperiodeFom = Utils.dato.formatterDatoTilISO(medlemskapsperiode.fomDato);
+      const medlemskapsperiodeTom = Utils.dato.formatterDatoTilISO(medlemskapsperiode.tomDato);
+
+      if (!medlemskapsperiodeFom || !medlemskapsperiodeTom) return true;
+
+      // Sort periods by start date
+      const sortedPerioder = [...perioder].sort((a, b) => {
+        const aFom = Utils.dato.formatterDatoTilISO(a.fomDato);
+        const bFom = Utils.dato.formatterDatoTilISO(b.fomDato);
+        return aFom.localeCompare(bFom);
+      });
+
+      // Dekning
+      const firstFom = Utils.dato.formatterDatoTilISO(sortedPerioder[0].fomDato);
+      if (!firstFom || firstFom !== medlemskapsperiodeFom) return false;
+
+      const lastTom = Utils.dato.formatterDatoTilISO(sortedPerioder[sortedPerioder.length - 1].tomDato);
+      if (!lastTom || lastTom !== medlemskapsperiodeTom) return false;
+
+      // Opphold
+      for (let i = 0; i < sortedPerioder.length - 1; i++) {
+        const currentTom = Utils.dato.formatterDatoTilISO(sortedPerioder[i].tomDato);
+        const nextFom = Utils.dato.formatterDatoTilISO(sortedPerioder[i + 1].fomDato);
+
+        // Convert to Date objects
+        const currentTomDate = Utils.dato.isoStringTilDate(currentTom);
+        const nextFomDate = Utils.dato.isoStringTilDate(nextFom);
+
+        if (currentTomDate && nextFomDate) {
+          // Add 1 day to the end date
+          const tomDateForComparison = new Date(currentTomDate);
+          tomDateForComparison.setDate(tomDateForComparison.getDate() + 1);
+
+          // Check if the next period starts more than one day after this period ends
+          // For consecutive dates (like 10-12-2024 and 11-12-2024), tomDateForComparison will equal fomDate
+          if (tomDateForComparison.getTime() < nextFomDate.getTime()) return false;
+        }
+      }
+
+      return true;
+    } catch (error) {
+      return true;
+    }
+  },
+};
+
 const skatteforholdsperiodeSchema = object().shape({
   fomDato: string().required(MAA_FYLLES_UT).erGyldigDato().test(erInnenforMedlemskapsperiodeTest),
   tomDato: string()
@@ -104,7 +161,10 @@ const aarsavregningMedGrunnlagSchema = object().shape({
   erAvvik: boolean().required(MAA_FYLLES_UT),
   skatteforholdsperioder: array().when(["erAvvik"], {
     is: (erAvvik) => erAvvik === true,
-    then: array().min(1, "Minst en skatteforholdsperiode").of(skatteforholdsperiodeSchema),
+    then: array()
+      .min(1, "Minst en skatteforholdsperiode")
+      .of(skatteforholdsperiodeSchema)
+      .test(dekkerHeleMedlemskapsperiodeTest),
     otherwise: array(),
   }),
   inntektskilder: array().when(["$medlemskapsTypeErPliktig", "erAvvik", "skatteforholdsperioder"], {
@@ -113,7 +173,10 @@ const aarsavregningMedGrunnlagSchema = object().shape({
         erAvvik === true && (!medlemskapsTypeErPliktig || !erBrukerSkattepliktigIHelePerioden(skatteforholdsperioder))
       );
     },
-    then: array().min(1, "Minst en inntektskilde").of(inntektskildeSchema),
+    then: array()
+      .min(1, "Minst en inntektskilde")
+      .of(inntektskildeSchema)
+      .test(dekkerHeleMedlemskapsperiodeTest),
     otherwise: array(),
   }),
 });
