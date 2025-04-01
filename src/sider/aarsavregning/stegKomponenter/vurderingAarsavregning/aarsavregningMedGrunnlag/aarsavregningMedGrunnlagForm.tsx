@@ -1,7 +1,7 @@
 import * as Api from "../../../../../services/api";
 import MedlemskapsPerioderTabell from "../komponenter/medlemskapsPerioderTabell";
 import "../vurderingAarsavregningInngang.css";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AarsavregningResponse } from "../../../../../services/modules/aarsavregning/aarsavregning";
 import { useSelector } from "react-redux";
 import * as Nav from "../../../../../navFrontend";
@@ -84,6 +84,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   const skatteforholdsperioder = watch("skatteforholdsperioder");
   const inntektskilder = watch("inntektskilder");
   const erAvvik = watch("erAvvik");
+  const debouncedBeregningRef = useRef<any>(null);
 
   const handleBeregnTrygdeavgiftsperioder = useCallback(
     async (formVerdier: FieldValue<FormValuesProps>) => {
@@ -98,18 +99,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
     [behandlingID, medlemskapstypeErPliktig, setFeilmelding, setAarsavregningResponse],
   );
 
-  const debounceBeregnTrygdeavgiftsperioder = useCallback(
-    Utils._debounce(
-      (formVerdier, callbackEtterBeregning) =>
-        handleBeregnTrygdeavgiftsperioder(formVerdier).finally(() => {
-          if (callbackEtterBeregning) callbackEtterBeregning();
-        }),
-      1500,
-    ),
-    [handleBeregnTrygdeavgiftsperioder],
-  );
-
-  useEffect(() => {
+  const debouncedBeregning = useCallback(() => {
     if (!redigerbart || !aarsavregningID || erAvvik !== true || beregningPaagar || endrerAvvik) {
       return;
     }
@@ -129,22 +119,51 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
         erMaanedsbelop: inntektskilde.erMaanedsbelop,
       })),
     };
-    if (!Utils._isEqual(formState, previousFormValues)) {
-      const validationTimeout = setTimeout(() => {
-        trigger().then((isValid) => {
-          if (isValid && formIsValid && !isValidating) {
-            setBeregningPaagar(true);
-            debounceBeregnTrygdeavgiftsperioder(getValues(), () => {
-              setPreviousFormValues(formState);
-            });
-          }
-        });
-      }, 300);
 
-      /* eslint-disable-next-line consistent-return */
-      return () => {
-        clearTimeout(validationTimeout);
-      };
+    if (!Utils._isEqual(formState, previousFormValues)) {
+      trigger().then((isValid) => {
+        if (isValid && formIsValid && !isValidating) {
+          setBeregningPaagar(true);
+          handleBeregnTrygdeavgiftsperioder(getValues()).finally(() => {
+            setPreviousFormValues(formState);
+          });
+        }
+      });
+    }
+  }, [
+    redigerbart,
+    aarsavregningID,
+    erAvvik,
+    beregningPaagar,
+    endrerAvvik,
+    getValues,
+    trigger,
+    formIsValid,
+    isValidating,
+    handleBeregnTrygdeavgiftsperioder,
+    previousFormValues,
+  ]);
+
+  // Lager en ny debounce funksjon når beregning callback endres
+  useEffect(() => {
+    debouncedBeregningRef.current = Utils._debounce(debouncedBeregning, 1500);
+
+    // Cancel på unmount
+    return () => {
+      if (debouncedBeregningRef.current?.cancel) {
+        debouncedBeregningRef.current.cancel();
+      }
+    };
+  }, [debouncedBeregning]);
+
+  // Håndterer kjøring av beregninger når skjemaverdier endres
+  useEffect(() => {
+    // Avbryter hvis vi allerede har en beregning som venter
+    if (debouncedBeregningRef.current?.cancel) {
+      debouncedBeregningRef.current.cancel();
+    }
+    if (debouncedBeregningRef.current) {
+      debouncedBeregningRef.current();
     }
   }, [skatteforholdsperioder, erAvvik, inntektskilder, formIsValid, isValidating, endrerAvvik]);
 
