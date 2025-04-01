@@ -1,8 +1,7 @@
-import { array, object, string } from "yup";
+import { array, boolean, object, string } from "yup";
 import MKV from "../../../../../melosyskodeverk";
 import * as KV from "../../../../../kodeverk";
 import * as Utils from "../../../../../utils";
-import { BOOLSK_STRING } from "../../../../../constants";
 
 import { erBrukerSkattepliktigIHelePerioden } from "../komponenter/utils";
 
@@ -102,14 +101,17 @@ const inntektskildeSchema = object().shape({
 });
 
 const aarsavregningMedGrunnlagSchema = object().shape({
-  skatteforholdsperioder: array().when(["$erAvvik"], {
+  erAvvik: boolean().required(MAA_FYLLES_UT),
+  skatteforholdsperioder: array().when(["erAvvik"], {
     is: (erAvvik) => erAvvik === true,
     then: array().min(1, "Minst en skatteforholdsperiode").of(skatteforholdsperiodeSchema),
     otherwise: array(),
   }),
-  inntektskilder: array().when(["$medlemskapsTypeErPliktig", "$erAvvik", "skatteforholdsperioder"], {
+  inntektskilder: array().when(["$medlemskapsTypeErPliktig", "erAvvik", "skatteforholdsperioder"], {
     is: (medlemskapsTypeErPliktig, erAvvik, skatteforholdsperioder) => {
-      return erAvvik === true && (!medlemskapsTypeErPliktig || !erBrukerSkattepliktigIHelePerioden(skatteforholdsperioder));
+      return (
+        erAvvik === true && (!medlemskapsTypeErPliktig || !erBrukerSkattepliktigIHelePerioden(skatteforholdsperioder))
+      );
     },
     then: array().min(1, "Minst en inntektskilde").of(inntektskildeSchema),
     otherwise: array(),

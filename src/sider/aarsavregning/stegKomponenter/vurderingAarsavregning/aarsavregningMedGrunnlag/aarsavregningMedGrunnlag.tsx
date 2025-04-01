@@ -29,25 +29,29 @@ const lagInnvilgetMedlemskapsPeriode = (medlemskapsperioder: Medlemskapsperiode[
   };
 };
 
+export interface AarsavregningMedGrunnlagFormValues extends FormValuesProps {
+  erAvvik?: boolean;
+}
+
+export interface InitiellData {
+  aarsavregningResponse?: AarsavregningResponse;
+  formDefaultValues: FieldValue<AarsavregningMedGrunnlagFormValues>;
+  innvilgetMedlemskapsperiode?: { fomDato: string; tomDato: string };
+  innvilgetMedlemskapsperiodeBestemmelse?: string;
+  medlemskapstypeErPliktig?: boolean;
+}
+
 interface Props {
   bekreft: () => void;
   aktivtSteg: boolean;
   oppdaterStatus: (isValid: boolean) => void;
 }
 
-export interface InitiellData {
-  aarsavregningResponse?: AarsavregningResponse;
-  formDefaultValues: FieldValue<FormValuesProps>;
-  erAvvik?: boolean;
-  innvilgetMedlemskapsperiode?: { fomDato: string; tomDato: string };
-  innvilgetMedlemskapsperiodeBestemmelse?: string;
-  medlemskapstypeErPliktig?: boolean;
-}
-
 export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
   const [isLoading, setIsLoading] = useState(true);
   const [initiellData, setInitiellData] = useState<InitiellData>({
     formDefaultValues: {
+      erAvvik: undefined,
       skatteforholdsperioder: [{}],
       inntektskilder: [{}],
     },
@@ -57,13 +61,14 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as any;
   const dispatch = useDispatch();
 
-  const mapSkjemaverdierFraTrygdeavgiftsgrunnlag = (trygdeavgiftsgrunnlag?: Trygdeavgiftsgrunnlag) => {
-    if (!trygdeavgiftsgrunnlag) return { skatteforholdsperioder: [{}], inntektskilder: [{}] };
+  const mapSkjemaverdierFraTrygdeavgiftsgrunnlag = (trygdeavgiftsgrunnlag?: Trygdeavgiftsgrunnlag, harAvvik?: boolean) => {
+    if (!trygdeavgiftsgrunnlag) return { erAvvik: undefined, skatteforholdsperioder: [{}], inntektskilder: [{}] };
     const { inntektskperioder, skatteforholdsperioder } = trygdeavgiftsgrunnlag;
     const sorterteInntekstkilder = [...inntektskperioder].sort(Utils.dato.sorterEtterISOFomDato);
     const sorterteSkatteforhold = [...skatteforholdsperioder].sort(Utils.dato.sorterEtterISOFomDato);
 
     return {
+      erAvvik: harAvvik,
       skatteforholdsperioder: !Utils._isEmpty(sorterteSkatteforhold)
         ? mapTilSkatteforholdProps(sorterteSkatteforhold)
         : [{}],
@@ -88,6 +93,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
 
           const formValues = mapSkjemaverdierFraTrygdeavgiftsgrunnlag(
             res?.nyttGrunnlag?.trygdeavgiftsgrunnlag || res.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag,
+            res.harAvvik
           );
 
           const medlemskapsperioder = res.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.medlemskapsperioder;
@@ -99,7 +105,6 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
 
           setInitiellData({
             aarsavregningResponse: res,
-            erAvvik: res.harAvvik,
             formDefaultValues: formValues,
             innvilgetMedlemskapsperiode,
             innvilgetMedlemskapsperiodeBestemmelse,
