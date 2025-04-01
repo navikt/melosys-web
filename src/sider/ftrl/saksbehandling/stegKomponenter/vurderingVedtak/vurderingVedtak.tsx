@@ -214,6 +214,10 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
       Api.Trygdeavgift.hentTrygdeavgiftMottaker(behandlingID).then((dto) => {
         setTrygdeavgiftMottaker(dto.trygdeavgiftMottaker);
       });
+
+      if (betalingsvalg === null && erPensjonist) {
+        lagreBetalingsValgForPensjonist();
+      }
     }
   }, [aktivtSteg]);
 
