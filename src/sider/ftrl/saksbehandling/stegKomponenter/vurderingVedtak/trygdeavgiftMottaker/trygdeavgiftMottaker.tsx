@@ -3,7 +3,7 @@ import MKV from "../../../../../../melosyskodeverk";
 
 interface TrygdeavgiftMottakerProps {
   mottaker: string;
-  betalingsvalg: string;
+  betalingsvalg: string | undefined;
   erFørstegang: boolean;
 }
 
