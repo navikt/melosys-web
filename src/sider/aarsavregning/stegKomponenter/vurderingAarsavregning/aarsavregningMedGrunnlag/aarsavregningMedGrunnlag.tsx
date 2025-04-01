@@ -18,6 +18,7 @@ import MKV from "../../../../../melosyskodeverk";
 import { hentMedlemskapsperiodeBestemmelse } from "../komponenter/utils";
 import { Medlemskapsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import { sorterEtterISOFomDato } from "../../../../../utils/dato";
+import { BOOLSK_STRING } from "../../../../../constants";
 
 const lagInnvilgetMedlemskapsPeriode = (medlemskapsperioder: Medlemskapsperiode[]) => {
   const sorterteInnvilgedePerioder = [...medlemskapsperioder]
@@ -48,6 +49,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
   const [isLoading, setIsLoading] = useState(true);
   const [initiellData, setInitiellData] = useState<InitiellData>({
     formDefaultValues: {
+      erAvvik: "",
       skatteforholdsperioder: [{}],
       inntektskilder: [{}],
     },
@@ -57,13 +59,14 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as any;
   const dispatch = useDispatch();
 
-  const mapSkjemaverdierFraTrygdeavgiftsgrunnlag = (trygdeavgiftsgrunnlag?: Trygdeavgiftsgrunnlag) => {
-    if (!trygdeavgiftsgrunnlag) return { skatteforholdsperioder: [{}], inntektskilder: [{}] };
+  const mapSkjemaverdierFraTrygdeavgiftsgrunnlag = (trygdeavgiftsgrunnlag?: Trygdeavgiftsgrunnlag, harAvvik?: boolean) => {
+    if (!trygdeavgiftsgrunnlag) return { erAvvik: "", skatteforholdsperioder: [{}], inntektskilder: [{}] };
     const { inntektskperioder, skatteforholdsperioder } = trygdeavgiftsgrunnlag;
     const sorterteInntekstkilder = [...inntektskperioder].sort(Utils.dato.sorterEtterISOFomDato);
     const sorterteSkatteforhold = [...skatteforholdsperioder].sort(Utils.dato.sorterEtterISOFomDato);
 
     return {
+      erAvvik: harAvvik ? BOOLSK_STRING.SANN : BOOLSK_STRING.USANN,
       skatteforholdsperioder: !Utils._isEmpty(sorterteSkatteforhold)
         ? mapTilSkatteforholdProps(sorterteSkatteforhold)
         : [{}],
@@ -88,6 +91,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
 
           const formValues = mapSkjemaverdierFraTrygdeavgiftsgrunnlag(
             res?.nyttGrunnlag?.trygdeavgiftsgrunnlag || res.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag,
+            res.harAvvik
           );
 
           const medlemskapsperioder = res.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.medlemskapsperioder;

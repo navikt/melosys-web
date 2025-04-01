@@ -102,14 +102,15 @@ const inntektskildeSchema = object().shape({
 });
 
 const aarsavregningMedGrunnlagSchema = object().shape({
-  skatteforholdsperioder: array().when(["$erAvvik"], {
-    is: (erAvvik) => erAvvik === true,
+  erAvvik: string().required(MAA_FYLLES_UT),
+  skatteforholdsperioder: array().when(["erAvvik"], {
+    is: (erAvvik) => erAvvik === BOOLSK_STRING.SANN,
     then: array().min(1, "Minst en skatteforholdsperiode").of(skatteforholdsperiodeSchema),
     otherwise: array(),
   }),
-  inntektskilder: array().when(["$medlemskapsTypeErPliktig", "$erAvvik", "skatteforholdsperioder"], {
+  inntektskilder: array().when(["$medlemskapsTypeErPliktig", "erAvvik", "skatteforholdsperioder"], {
     is: (medlemskapsTypeErPliktig, erAvvik, skatteforholdsperioder) => {
-      return erAvvik === true && (!medlemskapsTypeErPliktig || !erBrukerSkattepliktigIHelePerioden(skatteforholdsperioder));
+      return erAvvik === BOOLSK_STRING.SANN && (!medlemskapsTypeErPliktig || !erBrukerSkattepliktigIHelePerioden(skatteforholdsperioder));
     },
     then: array().min(1, "Minst en inntektskilde").of(inntektskildeSchema),
     otherwise: array(),

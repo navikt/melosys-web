@@ -21,6 +21,8 @@ import TidligereGrunnlagsoversikt from "../komponenter/tidligereGrunnlagsoversik
 import { Aarsavregningsmeldinger } from "../komponenter/aarsavregningsmeldinger";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import { InitiellData } from "./aarsavregningMedGrunnlag";
+import * as Forms from "../../../../../felleskomponenter/forms";
+import { BOOLSK_STRING } from "../../../../../constants";
 
 interface Props {
   initiellData: InitiellData;
@@ -57,7 +59,6 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
     context: {
       medlemskapsperiode: innvilgetMedlemskapsperiode,
       medlemskapsTypeErPliktig: medlemskapstypeErPliktig,
-      erAvvik,
     },
     mode: "onChange",
     reValidateMode: "onChange",
@@ -79,6 +80,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   const formValues = watch();
   const skatteforholdsperioder = watch("skatteforholdsperioder");
   const inntektskilder = watch("inntektskilder");
+  const erAvvikForm = watch("erAvvik");
 
   const handleBeregnTrygdeavgiftsperioder = useCallback(
     async (formVerdier: FieldValue<FormValuesProps>) => {
@@ -101,10 +103,10 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   useEffect(() => {
     setBrukerHarBekreftet(false);
     setHarValidertSkjema(false);
-  }, [erAvvik]);
+  }, [erAvvikForm]);
 
   useEffect(() => {
-    if (!erAvvik || !redigerbart || !aarsavregningID || beregningPaagar) {
+    if (erAvvikForm !== BOOLSK_STRING.SANN || !redigerbart || !aarsavregningID || beregningPaagar) {
       return;
     }
 
@@ -145,7 +147,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   }, [
     skatteforholdsperioder,
     inntektskilder,
-    erAvvik,
+    erAvvikForm,
     redigerbart,
     formIsValid,
     isValidating,
@@ -154,8 +156,8 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   ]);
 
   const stegErGyldig = useMemo(
-    () => erAvvik === false || Boolean(formIsValid && erAvvik && aarsavregningResponse?.nyttGrunnlag && !feilmelding),
-    [erAvvik, formIsValid, aarsavregningResponse?.nyttGrunnlag, feilmelding],
+    () => erAvvikForm === BOOLSK_STRING.USANN || Boolean(formIsValid && erAvvikForm === BOOLSK_STRING.SANN && aarsavregningResponse?.nyttGrunnlag && !feilmelding),
+    [erAvvikForm, formIsValid, aarsavregningResponse?.nyttGrunnlag, feilmelding],
   );
 
   useEffect(() => {
@@ -236,7 +238,6 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
     (aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift?.totalAvgift ?? 0) > 0;
   const nyttGrunnlagHarTrygdeavgiftsgrunnlag = aarsavregningResponse?.nyttGrunnlag?.trygdeavgiftsgrunnlag != null;
 
-  console.log(brukerHarBekreftet);
   return (
     <>
       {aarsavregningResponse && aarsavregningResponse.tidligereGrunnlagsopplysninger && (
@@ -264,19 +265,23 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
         </>
       )}
 
-      <Nav.RadioGroup
-        onChange={håndterAvvik}
-        value={erAvvik}
+      <Forms.RadioGroup
+        name="erAvvik"
+        control={control}
         legend="Er det avvik i opplysningene fra skatt eller bruker?"
         readOnly={!redigerbart}
+        onChange={(value) => {
+          const boolValue = value === BOOLSK_STRING.SANN;
+          håndterAvvik(boolValue);
+        }}
       >
         <Nav.HStack gap="6">
-          <Nav.Radio value>Ja</Nav.Radio>
-          <Nav.Radio value={false}>Nei</Nav.Radio>
+          <Nav.Radio value={BOOLSK_STRING.SANN}>Ja</Nav.Radio>
+          <Nav.Radio value={BOOLSK_STRING.USANN}>Nei</Nav.Radio>
         </Nav.HStack>
-      </Nav.RadioGroup>
+      </Forms.RadioGroup>
 
-      {erAvvik && (
+      {erAvvikForm === BOOLSK_STRING.SANN && (
         <>
           <Nav.Heading className="endelige_opplysninger_heading" level="2">
             Inntekts- og skatteopplysninger for endelig trygdeavgift
