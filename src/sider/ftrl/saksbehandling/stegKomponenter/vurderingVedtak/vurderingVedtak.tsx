@@ -438,7 +438,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
       <Nav.Row className="trygdeavgift">
         {trygdeavgiftMottaker ? (
           <TrygdeavgiftMottaker
-            mottaker={trygdeavgiftMottaker.term!!}
+            mottaker={trygdeavgiftMottaker.term}
             betalingsvalg={betalingsvalg}
             erFørstegang={erFørstegang}
           />

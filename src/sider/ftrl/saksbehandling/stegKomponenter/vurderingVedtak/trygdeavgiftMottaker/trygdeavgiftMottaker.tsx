@@ -2,7 +2,7 @@ import * as Nav from "../../../../../../navFrontend";
 import MKV from "../../../../../../melosyskodeverk";
 
 interface TrygdeavgiftMottakerProps {
-  mottaker: string;
+  mottaker: string | null;
   betalingsvalg: string | undefined;
   erFørstegang: boolean;
 }
