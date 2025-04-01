@@ -28,6 +28,7 @@ import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import { InitiellData } from "./aarsavregningMedGrunnlag";
 import * as Forms from "../../../../../felleskomponenter/forms";
 import { mapTilInntektskilderProps, mapTilSkatteforholdProps } from "../aarsavregningHelpers";
+import { Feilmelding, finnAktivFeilmelding } from "./valideringsfeil";
 
 interface Props {
   initiellData: InitiellData;
@@ -45,6 +46,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   const [previousFormValues, setPreviousFormValues] = useState<any | null>(null);
   const [endrerAvvik, setEndrerAvvik] = useState(false);
   const [debouncedBeregningPagaar, setDebouncedBeregningPagaar] = useState(false);
+  const [arrayValideringsfeil, setArrayValideringsfeil] = useState<string | undefined>(undefined);
 
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as any;
@@ -129,15 +131,24 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
     const formState = mapFormState(getValues("skatteforholdsperioder"), getValues("inntektskilder"));
 
     if (!Utils._isEqual(formState, previousFormValues)) {
-      trigger().then((isValid) => {
-        if (isValid && formIsValid && !isValidating) {
+      if (formIsValid && !isValidating) {
+        const aktivFeilmelding = finnAktivFeilmelding({
+          skatteforholdsperioder: formState.skatteforholdsperioder,
+          inntektskilder: formState.inntektskilder,
+          medlemskapsperiode: innvilgetMedlemskapsperiode,
+          medlemskapstypeErPliktig,
+        });
+        if (!aktivFeilmelding) {
+          setArrayValideringsfeil(undefined);
           setBeregningPaagar(true);
           handleBeregnTrygdeavgiftsperioder(getValues()).finally(() => {
             setBeregningPaagar(false);
             setPreviousFormValues(formState);
           });
+        } else {
+          setArrayValideringsfeil(aktivFeilmelding);
         }
-      });
+      }
     }
   }, [
     aarsavregningID,
@@ -353,17 +364,15 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
               />
             )}
 
-          {formIsValid &&
-            !beregningPaagar &&
-            !debouncedBeregningPagaar &&
-            !feilmelding &&
-            aarsavregningResponse?.nyttGrunnlag && (
-              <BeregnetTrygdeavgiftDetaljer
-                grunnlag={aarsavregningResponse.nyttGrunnlag}
-                medlemskapsTypeErPliktig={medlemskapstypeErPliktig!}
-                tittel="Endelig beregnet trygdeavgift"
-              />
-            )}
+          {formIsValid && !debouncedBeregningPagaar && !beregningPaagar && !feilmelding && aarsavregningResponse?.nyttGrunnlag && (
+            <BeregnetTrygdeavgiftDetaljer
+              grunnlag={aarsavregningResponse.nyttGrunnlag}
+              medlemskapsTypeErPliktig={medlemskapstypeErPliktig!}
+              tittel="Endelig beregnet trygdeavgift"
+            />
+          )}
+
+          {arrayValideringsfeil && <Feilmelding type={arrayValideringsfeil} />}
         </>
       )}
 
