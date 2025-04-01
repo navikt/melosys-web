@@ -15,11 +15,11 @@ import { mapTilInntektskilderProps, mapTilSkatteforholdProps } from "../aarsavre
 import { AarsavregningMedGrunnlagForm } from "./aarsavregningMedGrunnlagForm";
 import * as Nav from "../../../../../navFrontend";
 import MKV from "../../../../../melosyskodeverk";
-import { hentMedlemskapsperiodeBestemmelse } from "../komponenter/utils";
 import { Medlemskapsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import { sorterEtterISOFomDato } from "../../../../../utils/dato";
+import { ULAGRET_MEDLEMSKAPSPERIODE_ID } from "../aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlag";
 
-const lagInnvilgetMedlemskapsPeriode = (medlemskapsperioder: Medlemskapsperiode[]) => {
+const mapInnvilgetMedlemskapsPeriode = (medlemskapsperioder: Medlemskapsperiode[]) => {
   const sorterteInnvilgedePerioder = [...medlemskapsperioder]
     .filter((periode) => periode.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.INNVILGET)
     .sort(sorterEtterISOFomDato);
@@ -29,6 +29,17 @@ const lagInnvilgetMedlemskapsPeriode = (medlemskapsperioder: Medlemskapsperiode[
       sorterteInnvilgedePerioder[sorterteInnvilgedePerioder.length - 1].tomDato,
     ),
   };
+};
+
+const mapMedlemskapsperiodeBestemmelse = (harDeltGrunnlag: boolean, medlemskapsperioder?: Medlemskapsperiode[]) => {
+  if (medlemskapsperioder && !Utils._isEmpty(medlemskapsperioder)) {
+    const sortertePerioder = [...medlemskapsperioder]
+      .filter((periode) => (harDeltGrunnlag ? !periode.redigerbar : true))
+      .filter((periode) => periode.id !== ULAGRET_MEDLEMSKAPSPERIODE_ID)
+      .sort(sorterEtterISOFomDato);
+    return sortertePerioder?.[0]?.bestemmelse;
+  }
+  return undefined;
 };
 
 export interface AarsavregningMedGrunnlagFormValues extends FormValuesProps {
@@ -96,21 +107,21 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
           // Benyttes for innhenting av saksopplysninger ifm. årsavregningsbehandlinger
           dispatch({ type: OK, data: res });
 
-          const formValues = mapSkjemaverdierFraTrygdeavgiftsgrunnlag(
+          const defaultFormValues = mapSkjemaverdierFraTrygdeavgiftsgrunnlag(
             res?.nyttGrunnlag?.trygdeavgiftsgrunnlag || res.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag,
             res.harAvvik,
           );
 
           const medlemskapsperioder = res.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.medlemskapsperioder;
-          const innvilgetMedlemskapsperiode = lagInnvilgetMedlemskapsPeriode(medlemskapsperioder);
-          const innvilgetMedlemskapsperiodeBestemmelse = hentMedlemskapsperiodeBestemmelse(false, medlemskapsperioder);
+          const innvilgetMedlemskapsperiode = mapInnvilgetMedlemskapsPeriode(medlemskapsperioder);
+          const innvilgetMedlemskapsperiodeBestemmelse = mapMedlemskapsperiodeBestemmelse(false, medlemskapsperioder);
           const medlemskapstypeErPliktig = medlemskapsperioder?.every(
             (periode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG,
           );
 
           setInitiellData({
             aarsavregningResponse: res,
-            formDefaultValues: formValues,
+            formDefaultValues: defaultFormValues,
             innvilgetMedlemskapsperiode,
             innvilgetMedlemskapsperiodeBestemmelse,
             medlemskapstypeErPliktig,

@@ -65,7 +65,6 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
       medlemskapsTypeErPliktig: medlemskapstypeErPliktig,
     },
     mode: "onChange",
-    reValidateMode: "onChange",
     defaultValues: initiellData.formDefaultValues,
   });
 
@@ -111,7 +110,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   );
 
   useEffect(() => {
-    if (erAvvik !== true || !redigerbart || !aarsavregningID || beregningPaagar || endrerAvvik) {
+    if (!redigerbart || !aarsavregningID || erAvvik !== true || beregningPaagar || endrerAvvik) {
       return;
     }
 
