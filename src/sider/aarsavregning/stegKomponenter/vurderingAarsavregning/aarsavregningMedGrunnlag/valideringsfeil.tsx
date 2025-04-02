@@ -117,7 +117,6 @@ export function finnAktivFeilmelding({
   medlemskapsperiode,
   medlemskapstypeErPliktig,
 }: AarsavregningValidationParams): string | undefined {
-  console.log(skatteforholdsperioder, inntektskilder, medlemskapsperiode, medlemskapstypeErPliktig)
   if (skatteforholdsperioder && skatteforholdsperioder.length > 0) {
     if (!dekkerHeleMedlemskapsperiode(skatteforholdsperioder, medlemskapsperiode)) {
       return TypeFeilmelding.SKATTEFORHOLD_DEKKER_IKKE_HELE_MEDLEMSKAPSPERIODEN;
@@ -138,10 +137,9 @@ export function finnAktivFeilmelding({
     (!medlemskapstypeErPliktig || !erBrukerSkattepliktigIHelePerioden(skatteforholdsperioder))
   ) {
     if (!dekkerHeleMedlemskapsperiode(inntektskilder, medlemskapsperiode)) {
-      return TypeFeilmelding.SKATTEFORHOLD_DEKKER_IKKE_HELE_MEDLEMSKAPSPERIODEN;
+      return TypeFeilmelding.INNTEKTSKILDER_DEKKER_IKKE_HELE_MEDLEMSKAPSPERIODEN;
     }
   }
-  console.log("failure")
   return undefined;
 }
 

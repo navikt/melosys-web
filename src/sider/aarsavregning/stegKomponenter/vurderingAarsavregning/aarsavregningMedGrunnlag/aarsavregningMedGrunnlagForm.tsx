@@ -58,13 +58,11 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   const {
     control,
     watch,
-    formState: { isValid: formIsValid, isValidating, errors },
+    formState: { isValid: formIsValid, isValidating },
     trigger,
     getValues,
   } = useForm({
-    resolver: yupResolver(aarsavregningMedGrunnlagSchema, {
-      abortEarly: false, // This collects all errors instead of stopping at first error
-    }),
+    resolver: yupResolver(aarsavregningMedGrunnlagSchema),
     context: {
       medlemskapsperiode: innvilgetMedlemskapsperiode,
       medlemskapsTypeErPliktig: medlemskapstypeErPliktig,
@@ -149,6 +147,8 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
           setArrayValideringsfeil(aktivFeilmelding);
         }
       }
+    } else {
+      setArrayValideringsfeil(undefined);
     }
   }, [
     aarsavregningID,
@@ -357,6 +357,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
             !debouncedBeregningPagaar &&
             formIsValid &&
             !feilmelding &&
+            !arrayValideringsfeil &&
             aarsavregningResponse?.avregning && (
               <SumArsavregningTabell
                 nyTrygdeavgift={aarsavregningResponse.avregning.nyttTotalbeloep}
@@ -364,7 +365,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
               />
             )}
 
-          {formIsValid && !debouncedBeregningPagaar && !beregningPaagar && !feilmelding && aarsavregningResponse?.nyttGrunnlag && (
+          {formIsValid &&  !debouncedBeregningPagaar && !beregningPaagar && !feilmelding && !arrayValideringsfeil && aarsavregningResponse?.nyttGrunnlag && (
             <BeregnetTrygdeavgiftDetaljer
               grunnlag={aarsavregningResponse.nyttGrunnlag}
               medlemskapsTypeErPliktig={medlemskapstypeErPliktig!}
