@@ -44,6 +44,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   const [harValidertSkjema, setHarValidertSkjema] = useState(false);
   const [previousFormValues, setPreviousFormValues] = useState<any | null>(null);
   const [endrerAvvik, setEndrerAvvik] = useState(false);
+  const [debouncedBeregningPagaar, setDebouncedBeregningPagaar] = useState(false);
 
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as any;
@@ -86,6 +87,22 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   const erAvvik = watch("erAvvik");
   const debouncedBeregningRef = useRef<any>(null);
 
+  const mapFormState = (skatteforholdsperioder: Skatteforhold[], inntektskilder: Inntektskilde[]) => ({
+    skatteforholdsperioder: skatteforholdsperioder.map((skatteforhold: Skatteforhold) => ({
+      fomDato: skatteforhold.fomDato,
+      tomDato: skatteforhold.tomDato,
+      skatteplikttype: skatteforhold.skatteplikttype,
+    })),
+    inntektskilder: inntektskilder.map((inntektskilde: Inntektskilde) => ({
+      fomDato: inntektskilde.fomDato,
+      tomDato: inntektskilde.tomDato,
+      kildetype: inntektskilde.kildetype,
+      bruttoInntekt: inntektskilde.bruttoInntekt,
+      arbAvgBetales: inntektskilde.arbAvgBetales,
+      erMaanedsbelop: inntektskilde.erMaanedsbelop,
+    })),
+  });
+
   const handleBeregnTrygdeavgiftsperioder = useCallback(
     async (formVerdier: FieldValue<FormValuesProps>) => {
       await beregnTrygdeavgiftsperioder(formVerdier, {
@@ -94,44 +111,30 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
         setFeilmelding,
         setAarsavregningResponse,
       });
-      setBeregningPaagar(false);
     },
-    [behandlingID, medlemskapstypeErPliktig, setFeilmelding, setAarsavregningResponse],
+    [medlemskapstypeErPliktig, setFeilmelding, setAarsavregningResponse],
   );
 
   const debouncedBeregning = useCallback(() => {
+    setDebouncedBeregningPagaar(false);
     if (!redigerbart || !aarsavregningID || erAvvik !== true || beregningPaagar || endrerAvvik) {
       return;
     }
 
-    const formState = {
-      skatteforholdsperioder: getValues("skatteforholdsperioder").map((skatteforhold: Skatteforhold) => ({
-        fomDato: skatteforhold.fomDato,
-        tomDato: skatteforhold.tomDato,
-        skatteplikttype: skatteforhold.skatteplikttype,
-      })),
-      inntektskilder: getValues("inntektskilder").map((inntektskilde: Inntektskilde) => ({
-        fomDato: inntektskilde.fomDato,
-        tomDato: inntektskilde.tomDato,
-        kildetype: inntektskilde.kildetype,
-        bruttoInntekt: inntektskilde.bruttoInntekt,
-        arbAvgBetales: inntektskilde.arbAvgBetales,
-        erMaanedsbelop: inntektskilde.erMaanedsbelop,
-      })),
-    };
+    const formState = mapFormState(getValues("skatteforholdsperioder"), getValues("inntektskilder"));
 
     if (!Utils._isEqual(formState, previousFormValues)) {
       trigger().then((isValid) => {
         if (isValid && formIsValid && !isValidating) {
           setBeregningPaagar(true);
           handleBeregnTrygdeavgiftsperioder(getValues()).finally(() => {
+            setBeregningPaagar(false);
             setPreviousFormValues(formState);
           });
         }
       });
     }
   }, [
-    redigerbart,
     aarsavregningID,
     erAvvik,
     beregningPaagar,
@@ -163,7 +166,14 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
       debouncedBeregningRef.current.cancel();
     }
     if (debouncedBeregningRef.current) {
-      debouncedBeregningRef.current();
+      if (redigerbart && aarsavregningID && erAvvik === true && !endrerAvvik) {
+        const currentFormState = mapFormState(getValues("skatteforholdsperioder"), getValues("inntektskilder"));
+
+        if (!Utils._isEqual(currentFormState, previousFormValues)) {
+          setDebouncedBeregningPagaar(true);
+          debouncedBeregningRef.current();
+        }
+      }
     }
   }, [skatteforholdsperioder, erAvvik, inntektskilder, formIsValid, isValidating, endrerAvvik]);
 
@@ -226,19 +236,19 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
         });
     },
     [
-      behandlingID,
       aarsavregningID,
       handleBeregnTrygdeavgiftsperioder,
       setBeregningPaagar,
-      setFeilmelding,
       setAarsavregningResponse,
       setPreviousFormValues,
       setEndrerAvvik,
+      Api.Aarsavregning,
     ],
   );
 
   const håndterBekreft = useCallback(() => {
     if (!harValidertSkjema) {
+      // noinspection JSIgnoredPromiseFromCall
       trigger();
       setHarValidertSkjema(true);
     }
@@ -328,6 +338,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
 
           {nyttGrunnlagHarTrygdeavgiftsgrunnlag &&
             !beregningPaagar &&
+            !debouncedBeregningPagaar &&
             formIsValid &&
             !feilmelding &&
             aarsavregningResponse?.avregning && (
@@ -337,13 +348,17 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
               />
             )}
 
-          {formIsValid && !beregningPaagar && !feilmelding && aarsavregningResponse?.nyttGrunnlag && (
-            <BeregnetTrygdeavgiftDetaljer
-              grunnlag={aarsavregningResponse.nyttGrunnlag}
-              medlemskapsTypeErPliktig={medlemskapstypeErPliktig!}
-              tittel="Endelig beregnet trygdeavgift"
-            />
-          )}
+          {formIsValid &&
+            !beregningPaagar &&
+            !debouncedBeregningPagaar &&
+            !feilmelding &&
+            aarsavregningResponse?.nyttGrunnlag && (
+              <BeregnetTrygdeavgiftDetaljer
+                grunnlag={aarsavregningResponse.nyttGrunnlag}
+                medlemskapsTypeErPliktig={medlemskapstypeErPliktig!}
+                tittel="Endelig beregnet trygdeavgift"
+              />
+            )}
         </>
       )}
 
@@ -353,7 +368,12 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
         </Nav.Alert>
       )}
 
-      <Nav.Button variant="primary" loading={beregningPaagar} disabled={!redigerbart} onClick={håndterBekreft}>
+      <Nav.Button
+        variant="primary"
+        loading={beregningPaagar || debouncedBeregningPagaar}
+        disabled={!redigerbart}
+        onClick={håndterBekreft}
+      >
         Bekreft og fortsett
       </Nav.Button>
     </>
