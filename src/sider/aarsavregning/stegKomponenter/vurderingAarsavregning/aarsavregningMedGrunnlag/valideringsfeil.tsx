@@ -170,6 +170,6 @@ export function Feilmelding({ type }: { type?: string }) {
         </Nav.Alert>
       );
     default:
-      return <div></div>;
+      return <div />;
   }
 }
