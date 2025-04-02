@@ -207,9 +207,11 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   const hentLagredeBetalingsvalg = async () => {
     const oppsummering = await Api.Avklartefakta.hentOppsummering(behandlingID);
 
-    oppsummering.betalingsvalg === null
-      ? lagreBetalingsvalgForPensjonist()
-      : setBetalingsvalg(oppsummering.betalingsvalg);
+    if (oppsummering.betalingsvalg === null) {
+      lagreBetalingsvalgForPensjonist();
+    } else {
+      setBetalingsvalg(oppsummering.betalingsvalg);
+    }
   };
 
   useEffect(() => {
