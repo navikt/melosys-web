@@ -18,7 +18,7 @@ interface Oppsummering {
   ikkeYrkesaktivOppholdstype?: string;
   arbeidssituasjonType?: string;
   ukjentSluttdatoMedlemskapsperiode?: boolean;
-  betalingstype?: string;
+  betalingsvalg?: string;
 }
 
 export const hent = (behandlingID: number): Promise<Avklartfakta[]> =>

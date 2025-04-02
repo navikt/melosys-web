@@ -35,7 +35,6 @@ import { FRITEKST_VALG } from "../../../../../kodeverk/koder";
 import { menypanelOperations, menypanelSelectors } from "../../../../../ducks/menypanel";
 import { fagsakSelectors } from "../../../../../ducks/fagsaker";
 import FullmaktForTrygdeavgiftConfirmationPanel from "../../../../../felleskomponenter/fullmaktForTrygdeavgiftConfirmationPanel/fullmaktForTrygdeavgiftConfirmationPanel";
-import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../../ducks/oppsummertfakta";
 import { TrygdeavgiftMottaker } from "./trygdeavgiftMottaker/trygdeavgiftMottaker";
 import { Betalingsvalg } from "./betalingsvalg/betalingsvalg";
 
@@ -105,9 +104,9 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   const feilmeldinger = useSelector(feiletResponsSelectors.FeilmeldingerSelector);
   const kontrollfeil = useSelector(kontrollSelectors.KontrollFeilSelector);
   const saksnummer = useSelector(fagsakSelectors.SaksnummerSelector);
-  const betalingsvalg = useSelector(oppsummertfaktaSelectors.BetalingsvalgSelector);
   const { kontrollerFerdigbehandling, fattVedtak } = komponentDispatch(dispatch);
 
+  const [betalingsvalg, setBetalingsvalg] = useState<string | undefined>(undefined);
   const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
   const [trygdeavgiftMottaker, setTrygdeavgiftMottaker] = useState<KTObject | undefined>(undefined);
   const [fakturamottaker, setFakturamottaker] = useState<string | undefined>(undefined);
@@ -205,6 +204,14 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
     setMuligeMottakere(res);
   };
 
+  const hentLagredeBetalingsvalg = async () => {
+    const oppsummering = await Api.Avklartefakta.hentOppsummering(behandlingID);
+
+    oppsummering.betalingsvalg === null
+      ? lagreBetalingsvalgForPensjonist()
+      : setBetalingsvalg(oppsummering.betalingsvalg);
+  };
+
   useEffect(() => {
     hentMuligeMottakere();
   }, [erDelvisOpphør]);
@@ -215,8 +222,8 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
         setTrygdeavgiftMottaker(dto.trygdeavgiftMottaker);
       });
 
-      if (betalingsvalg === null && erPensjonist) {
-        lagreBetalingsValgForPensjonist();
+      if (erPensjonist) {
+        hentLagredeBetalingsvalg();
       }
     }
   }, [aktivtSteg]);
@@ -383,13 +390,14 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   const visFakturaMottaker = betalingsvalgErFaktura || (fakturamottaker && !erIkkeYrkesaktiv && !erPensjonist);
   const visBetalingsvalg = erFørstegang && erPensjonist;
 
-  const lagreBetalingsValgForPensjonist = async () => {
+  const lagreBetalingsvalgForPensjonist = async () => {
     const valg =
       betalingsvalg === MKV.Koder.betalingstype.FAKTURA || betalingsvalg == null
         ? MKV.Koder.betalingstype.TREKK
         : MKV.Koder.betalingstype.FAKTURA;
 
-    dispatch(oppsummertfaktaOperations.lagreBetalingsvalgForPensjonister(behandlingID, valg));
+    await Api.Avklartefakta.lagreBetalingsvalgForPensjonister(behandlingID, valg);
+    setBetalingsvalg(valg);
   };
 
   return (
@@ -443,7 +451,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
         {visBetalingsvalg && (
           <Betalingsvalg
             skalSendeFaktura={betalingsvalgErFaktura}
-            onBetalingsvalgChange={lagreBetalingsValgForPensjonist}
+            onBetalingsvalgChange={lagreBetalingsvalgForPensjonist}
             redigerbart={redigerbart}
           />
         )}
