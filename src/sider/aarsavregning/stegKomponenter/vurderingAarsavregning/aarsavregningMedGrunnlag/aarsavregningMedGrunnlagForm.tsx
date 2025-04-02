@@ -149,7 +149,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
 
   // Lager en ny debounce funksjon når beregning callback endres
   useEffect(() => {
-    debouncedBeregningRef.current = Utils._debounce(debouncedBeregning, 1500);
+    debouncedBeregningRef.current = Utils._debounce(debouncedBeregning, 350);
 
     // Cancel på unmount
     return () => {
