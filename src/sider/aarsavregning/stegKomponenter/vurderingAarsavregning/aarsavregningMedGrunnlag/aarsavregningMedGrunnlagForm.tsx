@@ -87,13 +87,16 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   const erAvvik = watch("erAvvik");
   const debouncedBeregningRef = useRef<any>(null);
 
-  const mapFormState = (skatteforholdsperioder: Skatteforhold[], inntektskilder: Inntektskilde[]) => ({
-    skatteforholdsperioder: skatteforholdsperioder.map((skatteforhold: Skatteforhold) => ({
+  const mapFormState = (
+    skatteforholdsperioderFormState: Skatteforhold[],
+    inntektskilderFormState: Inntektskilde[],
+  ) => ({
+    skatteforholdsperioder: skatteforholdsperioderFormState.map((skatteforhold: Skatteforhold) => ({
       fomDato: skatteforhold.fomDato,
       tomDato: skatteforhold.tomDato,
       skatteplikttype: skatteforhold.skatteplikttype,
     })),
-    inntektskilder: inntektskilder.map((inntektskilde: Inntektskilde) => ({
+    inntektskilder: inntektskilderFormState.map((inntektskilde: Inntektskilde) => ({
       fomDato: inntektskilde.fomDato,
       tomDato: inntektskilde.tomDato,
       kildetype: inntektskilde.kildetype,
