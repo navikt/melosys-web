@@ -103,9 +103,7 @@ const aarsavregningMedGrunnlagSchema = object().shape({
   erAvvik: boolean().required(MAA_FYLLES_UT),
   skatteforholdsperioder: array().when(["erAvvik"], {
     is: (erAvvik) => erAvvik === true,
-    then: array()
-      .min(1, "Minst en skatteforholdsperiode")
-      .of(skatteforholdsperiodeSchema),
+    then: array().min(1, "Minst en skatteforholdsperiode").of(skatteforholdsperiodeSchema),
     otherwise: array(),
   }),
   inntektskilder: array().when(["$medlemskapsTypeErPliktig", "erAvvik", "skatteforholdsperioder"], {

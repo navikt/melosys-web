@@ -365,13 +365,18 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
               />
             )}
 
-          {formIsValid &&  !debouncedBeregningPagaar && !beregningPaagar && !feilmelding && !arrayValideringsfeil && aarsavregningResponse?.nyttGrunnlag && (
-            <BeregnetTrygdeavgiftDetaljer
-              grunnlag={aarsavregningResponse.nyttGrunnlag}
-              medlemskapsTypeErPliktig={medlemskapstypeErPliktig!}
-              tittel="Endelig beregnet trygdeavgift"
-            />
-          )}
+          {formIsValid &&
+            !debouncedBeregningPagaar &&
+            !beregningPaagar &&
+            !feilmelding &&
+            !arrayValideringsfeil &&
+            aarsavregningResponse?.nyttGrunnlag && (
+              <BeregnetTrygdeavgiftDetaljer
+                grunnlag={aarsavregningResponse.nyttGrunnlag}
+                medlemskapsTypeErPliktig={medlemskapstypeErPliktig!}
+                tittel="Endelig beregnet trygdeavgift"
+              />
+            )}
 
           {arrayValideringsfeil && <Feilmelding type={arrayValideringsfeil} />}
         </>

@@ -116,9 +116,9 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
           const medlemskapsperioder = res.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.medlemskapsperioder;
           const innvilgetMedlemskapsperiode = mapInnvilgetMedlemskapsPeriode(medlemskapsperioder);
           const innvilgetMedlemskapsperiodeBestemmelse = mapMedlemskapsperiodeBestemmelse(false, medlemskapsperioder);
-          const medlemskapstypeErPliktig = Boolean(medlemskapsperioder?.every(
-            (periode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG,
-          ));
+          const medlemskapstypeErPliktig = Boolean(
+            medlemskapsperioder?.every((periode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG),
+          );
 
           setInitiellData({
             aarsavregningResponse: res,
