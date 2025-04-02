@@ -63,6 +63,7 @@
     "react/no-unstable-nested-components": "off",
     "no-underscore-dangle": "off",
     "no-await-in-loop": "off",
+    "no-plusplus": "off",
     "import/order": "off",
     "import/no-cycle": "off",
     "import/prefer-default-export": "off",

@@ -28,6 +28,7 @@ import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import { InitiellData } from "./aarsavregningMedGrunnlag";
 import * as Forms from "../../../../../felleskomponenter/forms";
 import { mapTilInntektskilderProps, mapTilSkatteforholdProps } from "../aarsavregningHelpers";
+import { Feilmelding, finnAktivFeilmelding } from "./valideringsfeil";
 
 interface Props {
   initiellData: InitiellData;
@@ -41,10 +42,10 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
     initiellData.aarsavregningResponse,
   );
   const [beregningPaagar, setBeregningPaagar] = useState(false);
-  const [harValidertSkjema, setHarValidertSkjema] = useState(false);
   const [previousFormValues, setPreviousFormValues] = useState<any | null>(null);
   const [endrerAvvik, setEndrerAvvik] = useState(false);
   const [debouncedBeregningPagaar, setDebouncedBeregningPagaar] = useState(false);
+  const [arrayValideringsfeil, setArrayValideringsfeil] = useState<string | undefined>(undefined);
 
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as any;
@@ -127,15 +128,26 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
     const formState = mapFormState(getValues("skatteforholdsperioder"), getValues("inntektskilder"));
 
     if (!Utils._isEqual(formState, previousFormValues)) {
-      trigger().then((isValid) => {
-        if (isValid && formIsValid && !isValidating) {
+      if (formIsValid && !isValidating) {
+        const aktivFeilmelding = finnAktivFeilmelding({
+          skatteforholdsperioder: formState.skatteforholdsperioder,
+          inntektskilder: formState.inntektskilder,
+          medlemskapsperiode: innvilgetMedlemskapsperiode,
+          medlemskapstypeErPliktig,
+        });
+        if (!aktivFeilmelding) {
+          setArrayValideringsfeil(undefined);
           setBeregningPaagar(true);
           handleBeregnTrygdeavgiftsperioder(getValues()).finally(() => {
             setBeregningPaagar(false);
             setPreviousFormValues(formState);
           });
+        } else {
+          setArrayValideringsfeil(aktivFeilmelding);
         }
-      });
+      }
+    } else {
+      setArrayValideringsfeil(undefined);
     }
   }, [
     aarsavregningID,
@@ -143,11 +155,12 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
     beregningPaagar,
     endrerAvvik,
     getValues,
-    trigger,
     formIsValid,
     isValidating,
     handleBeregnTrygdeavgiftsperioder,
     previousFormValues,
+    innvilgetMedlemskapsperiode,
+    medlemskapstypeErPliktig,
   ]);
 
   // Lager en ny debounce funksjon når beregning callback endres
@@ -175,6 +188,9 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
         if (!Utils._isEqual(currentFormState, previousFormValues)) {
           setDebouncedBeregningPagaar(true);
           debouncedBeregningRef.current();
+        } else {
+          setDebouncedBeregningPagaar(false);
+          setArrayValideringsfeil(undefined);
         }
       }
     }
@@ -183,8 +199,10 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   const stegErGyldig = useMemo(
     () =>
       erAvvik === false ||
-      Boolean(formIsValid && erAvvik === true && aarsavregningResponse?.nyttGrunnlag && !feilmelding),
-    [erAvvik, formIsValid, aarsavregningResponse?.nyttGrunnlag, feilmelding],
+      Boolean(
+        formIsValid && erAvvik === true && aarsavregningResponse?.nyttGrunnlag && !feilmelding && !arrayValideringsfeil,
+      ),
+    [erAvvik, formIsValid, aarsavregningResponse?.nyttGrunnlag, feilmelding, arrayValideringsfeil],
   );
 
   useEffect(() => {
@@ -250,15 +268,13 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   );
 
   const håndterBekreft = useCallback(() => {
-    if (!harValidertSkjema) {
-      // noinspection JSIgnoredPromiseFromCall
-      trigger();
-      setHarValidertSkjema(true);
-    }
-    if (stegErGyldig && !beregningPaagar && !endrerAvvik) {
+    // noinspection JSIgnoredPromiseFromCall
+    trigger();
+
+    if (stegErGyldig && !beregningPaagar && !endrerAvvik && !debouncedBeregningPagaar) {
       bekreft();
     }
-  }, [harValidertSkjema, trigger, stegErGyldig, beregningPaagar, bekreft, endrerAvvik]);
+  }, [trigger, stegErGyldig, beregningPaagar, bekreft, endrerAvvik, debouncedBeregningPagaar]);
 
   const trygdeAvgiftSkalIkkeBetalesTilNav =
     medlemskapstypeErPliktig && erBrukerSkattepliktigIHelePerioden(skatteforholdsperioder);
@@ -344,6 +360,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
             !debouncedBeregningPagaar &&
             formIsValid &&
             !feilmelding &&
+            !arrayValideringsfeil &&
             aarsavregningResponse?.avregning && (
               <SumArsavregningTabell
                 nyTrygdeavgift={aarsavregningResponse.avregning.nyttTotalbeloep}
@@ -352,9 +369,10 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
             )}
 
           {formIsValid &&
-            !beregningPaagar &&
             !debouncedBeregningPagaar &&
+            !beregningPaagar &&
             !feilmelding &&
+            !arrayValideringsfeil &&
             aarsavregningResponse?.nyttGrunnlag && (
               <BeregnetTrygdeavgiftDetaljer
                 grunnlag={aarsavregningResponse.nyttGrunnlag}
@@ -362,6 +380,8 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
                 tittel="Endelig beregnet trygdeavgift"
               />
             )}
+
+          {arrayValideringsfeil && <Feilmelding type={arrayValideringsfeil} />}
         </>
       )}
 

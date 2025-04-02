@@ -58,21 +58,20 @@ const erInnenforMedlemskapsperiodeTest = {
   name: "erInnenforMedlemskapsperiode",
   message: UTENFOR_MEDLEMSKAPSPERIODEN,
   test: (datoString, schema) => {
-    if (Utils._isEmpty(datoString) || !Utils.dato.vaskInputDato(datoString)) return true;
+    if (!datoString) return true;
 
     try {
       const { medlemskapsperiode } = schema.options.context;
-      if (!medlemskapsperiode || !medlemskapsperiode.fomDato || !medlemskapsperiode.tomDato) return true;
 
       const medlemskapsperiodeFom = Utils.dato.formatterDatoTilISO(medlemskapsperiode.fomDato);
       const medlemskapsperiodeTom = Utils.dato.formatterDatoTilISO(medlemskapsperiode.tomDato);
       const isoDatoString = Utils.dato.formatterDatoTilISO(datoString);
 
-      if (!medlemskapsperiodeFom || !medlemskapsperiodeTom || !isoDatoString) return true;
+      if (!isoDatoString) return false;
 
       return isoDatoString >= medlemskapsperiodeFom && isoDatoString <= medlemskapsperiodeTom;
     } catch (error) {
-      return true;
+      return false;
     }
   },
 };

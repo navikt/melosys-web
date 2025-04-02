@@ -51,7 +51,7 @@ export interface InitiellData {
   formDefaultValues: FieldValue<AarsavregningMedGrunnlagFormValues>;
   innvilgetMedlemskapsperiode?: { fomDato: string; tomDato: string };
   innvilgetMedlemskapsperiodeBestemmelse?: string;
-  medlemskapstypeErPliktig?: boolean;
+  medlemskapstypeErPliktig: boolean;
 }
 
 interface Props {
@@ -68,6 +68,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
       skatteforholdsperioder: [{}],
       inntektskilder: [{}],
     },
+    medlemskapstypeErPliktig: false,
   });
   const [innlastingFeilmelding, setInnlastingFeilmelding] = useState("");
 
@@ -115,8 +116,8 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
           const medlemskapsperioder = res.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.medlemskapsperioder;
           const innvilgetMedlemskapsperiode = mapInnvilgetMedlemskapsPeriode(medlemskapsperioder);
           const innvilgetMedlemskapsperiodeBestemmelse = mapMedlemskapsperiodeBestemmelse(false, medlemskapsperioder);
-          const medlemskapstypeErPliktig = medlemskapsperioder?.every(
-            (periode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG,
+          const medlemskapstypeErPliktig = Boolean(
+            medlemskapsperioder?.every((periode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG),
           );
 
           setInitiellData({
