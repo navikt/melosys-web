@@ -143,9 +143,7 @@ const medlemskapsperioderOverlappTest = {
 
     const sortertePerioder = [...gyldigePerioder].sort(Utils.dato.sorterEtterNorskFomDato);
 
-    // eslint-disable-next-line no-plusplus
     for (let i = 0; i < sortertePerioder.length; i++) {
-      // eslint-disable-next-line no-plusplus
       for (let j = i + 1; j < sortertePerioder.length; j++) {
         if (
           Utils.dato.perioderOverlapper(
