@@ -48,6 +48,8 @@ const {
   IKKE_YRKESAKTIV_PLIKTIG_FTRL,
   IKKE_YRKESAKTIV_FRIVILLIG_FTRL,
   PLIKTIG_MEDLEM_FTRL,
+  PENSJONIST_FRIVILLIG_FTRL,
+  PENSJONIST_PLIKTIG_FTRL,
 } = MKV.Koder.brev.produserbaredokumenter;
 const { MEDLEM_I_FOLKETRYGDEN, DELVIS_OPPHØRT } = MKV.Koder.behandlinger.behandlingsresultattyper;
 const { PLIKTIG } = MKV.Koder.medlemskapstyper;
@@ -124,6 +126,9 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   ] as string[];
 
   const hentProduserbardokumentType = () => {
+    if (erPensjonist) {
+      return medlemskapsTypeErPliktig ? PENSJONIST_PLIKTIG_FTRL : PENSJONIST_FRIVILLIG_FTRL;
+    }
     if (erDelvisOpphør) {
       return VEDTAK_OPPHOERT_MEDLEMSKAP;
     }
