@@ -130,7 +130,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
       await Api.Aarsavregning.tilbakestillMedlemskapsperioder(behandlingID);
     }
 
-    await Api.Aarsavregning.oppdaterHarDeltGrunnlag(
+    Api.Aarsavregning.oppdaterHarDeltGrunnlag(
       behandlingID,
       { harDeltGrunnlag: nyHarDeltGrunnlag },
       aarsavregningID,
