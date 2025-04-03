@@ -109,6 +109,7 @@ export const hentFiltrertAarsavregningList = (
   }
   return getAsJson(url);
 };
+
 export const oppdaterTotalAvgift = async (behandlingID: number, aarsavregningID: number, totalAvgift?: number) => {
   return oppdaterAarsavregning(
     behandlingID,
@@ -120,6 +121,11 @@ export const oppdaterTotalAvgift = async (behandlingID: number, aarsavregningID:
     aarsavregningID,
   );
 };
+
+export const tilbakestillMedlemskapsperioder = (behandlingID: number): Promise<AarsavregningResponse> => {
+  return putAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${AARSAVREGNING}/medlemskapsperioder/tilbakestill`);
+};
+
 export const oppdaterAarsavregning = (
   behandlingID: number,
   request: AarsavregningRequest,

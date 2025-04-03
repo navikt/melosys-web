@@ -16,7 +16,6 @@ import { AarsavregningMedGrunnlag } from "./aarsavregningMedGrunnlag/aarsavregni
 import { AarsavregningUtenEllerDeltGrunnlag } from "./aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlag";
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
 import { FellesHandlersContext } from "../../../../contexts";
-import { tilbakestillMedlemskapsperioder } from "../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 
 interface Props {
   bekreft: () => void;
@@ -121,20 +120,21 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
     setValgtÅr(år || null);
   };
 
-  const håndterDeltGrunnlag = async (value: boolean) => {
-    if (harDeltGrunnlag && !value) {
+  const håndterDeltGrunnlag = async (nyHarDeltGrunnlag: boolean) => {
+    if (harDeltGrunnlag && !nyHarDeltGrunnlag) {
       await Api.Aarsavregning.oppdaterAarsavregning(
         behandlingID,
         { avregning: { tidligereFakturertBeloepAvgiftssystem: 0 } },
         aarsavregningID,
       );
+      await Api.Aarsavregning.tilbakestillMedlemskapsperioder(behandlingID);
     }
-    if (!value) {
-      await Api.MedlemAvFolketrygden.Medlemskapsperioder.tilbakestillMedlemskapsperioder(behandlingID);
-    }
-    Api.Aarsavregning.oppdaterHarDeltGrunnlag(behandlingID, { harDeltGrunnlag: value }, aarsavregningID).then((res) =>
-      setHarDeltGrunnlag(res.harDeltGrunnlag),
-    );
+
+    await Api.Aarsavregning.oppdaterHarDeltGrunnlag(
+      behandlingID,
+      { harDeltGrunnlag: nyHarDeltGrunnlag },
+      aarsavregningID,
+    ).then((res) => setHarDeltGrunnlag(res.harDeltGrunnlag));
   };
 
   return (

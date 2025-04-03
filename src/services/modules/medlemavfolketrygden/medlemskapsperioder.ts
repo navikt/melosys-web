@@ -38,8 +38,5 @@ export const slettMedlemskapsperiode = (behandlingID: number, medlemskapsID: num
 export const slettMedlemskapsperioder = (behandlingID: number) =>
   deleteAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${MEDLEMSKAPSPERIODER}`);
 
-export const tilbakestillMedlemskapsperioder = (behandlingID: number) =>
-  deleteAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${MEDLEMSKAPSPERIODER}/tilbakestill`);
-
 export const opprettForeslåtteMedlemskapsperioder = (behandlingID: number, bestemmelse: string) =>
   postAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${MEDLEMSKAPSPERIODER}/forslag`, { bestemmelse });
