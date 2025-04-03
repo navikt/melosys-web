@@ -37,6 +37,8 @@ import { fagsakSelectors } from "../../../../../ducks/fagsaker";
 import FullmaktForTrygdeavgiftConfirmationPanel from "../../../../../felleskomponenter/fullmaktForTrygdeavgiftConfirmationPanel/fullmaktForTrygdeavgiftConfirmationPanel";
 import { TrygdeavgiftMottaker } from "./trygdeavgiftMottaker/trygdeavgiftMottaker";
 import { Betalingsvalg } from "./betalingsvalg/betalingsvalg";
+import useFeatureToggle from "../../../../../featuretoggle/useFeatureToggle";
+import { MELOSYS_PENSJONIST } from "../../../../../featuretoggle/toggleNavn";
 
 const { FØRSTEGANG, NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT, SATSENDRING } =
   MKV.Koder.behandlinger.behandlingstyper;
@@ -127,6 +129,8 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
     ...Object.values(MKV.KTObjects.folketrygdloven_kap2_bestemmelser),
     ...Object.values(MKV.KTObjects.vertslandsavtale_bestemmelser),
   ] as string[];
+
+  const erPensjonistToggleEnabled = useFeatureToggle(MELOSYS_PENSJONIST);
 
   const hentProduserbardokumentType = () => {
     if (erDelvisOpphør) {
@@ -224,7 +228,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
         setTrygdeavgiftMottaker(dto.trygdeavgiftMottaker);
       });
 
-      if (erPensjonist) {
+      if (erPensjonist && erPensjonistToggleEnabled) {
         hentLagredeBetalingsvalg();
       }
     }
