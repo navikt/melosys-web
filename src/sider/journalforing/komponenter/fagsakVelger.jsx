@@ -23,8 +23,14 @@ const OPPRETT = "Opprett ny sak";
 
 const { JournalforingValues: FormValuesJournalforing, OpprettNySakValues: FormValuesOpprettNySak } = KV.Form;
 
-function FagsakVelger(props) {
-  const { fagsakListe, settJournalforingHensikt, landkoder, formValues, erJournalføring, nullstillFormVerdier } = props;
+function FagsakVelger({
+  fagsakListe,
+  settJournalforingHensikt = undefined,
+  landkoder,
+  formValues,
+  erJournalføring,
+  nullstillFormVerdier = undefined,
+}) {
   const [valgtVisning, setValgtVisning] = useState(EKSISTERENDE);
   const feltNavn = erJournalføring ? FormValuesJournalforing : FormValuesOpprettNySak;
   const dispatch = useDispatch();
@@ -114,11 +120,6 @@ FagsakVelger.propTypes = {
   formValues: PT.object.isRequired,
   erJournalføring: PT.bool.isRequired,
   nullstillFormVerdier: PT.func,
-};
-
-FagsakVelger.defaultProps = {
-  nullstillFormVerdier: undefined,
-  settJournalforingHensikt: undefined,
 };
 
 export default FagsakVelger;

@@ -40,9 +40,4 @@ CustomRadioPanelElement.propTypes = {
   ).isRequired,
 };
 
-CustomRadioPanelElement.defaultProps = {
-  tittel: undefined,
-  hoyreSideTittel: undefined,
-};
-
 export default CustomRadioPanelElement;

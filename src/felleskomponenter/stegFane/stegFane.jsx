@@ -5,8 +5,7 @@ import classnames from "classnames";
 import "./stegFane.css";
 
 // Stegfanen er komponenten som vises for hvert steg
-function StegFane(props) {
-  const { id, faneData, rest } = props;
+function StegFane({ id, faneData, rest = {} }) {
   const componentProps = {
     ...faneData.data,
     ...faneData.handlers,
@@ -18,6 +17,7 @@ function StegFane(props) {
     [`steg${faneData.stegPosisjon}`]: true,
     "stegFane--aktiv": faneData.aktivtSteg,
   });
+
   return (
     <div className={`panel ${stegFaneKlasse}`}>
       <div id={id}>{createElement(faneData.komponent, componentProps)}</div>
@@ -29,10 +29,6 @@ StegFane.propTypes = {
   faneData: PT.object.isRequired,
   id: PT.string.isRequired,
   rest: PT.object,
-};
-
-StegFane.defaultProps = {
-  rest: {},
 };
 
 export default StegFane;

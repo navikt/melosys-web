@@ -16,8 +16,7 @@ import { featureToggleOperations } from "../../ducks/featuretoggle";
 import ErrorBoundary from "../../felleskomponenter/errorBoundary";
 import * as Ikoner from "../../resources/images";
 
-function Forside(props) {
-  const { tilOpprettNySak } = props;
+function Forside({ children = null, tilOpprettNySak }) {
   const data = useSelector((state) => state.oppgaver.data);
   const dispatch = useDispatch();
 
@@ -72,6 +71,7 @@ function Forside(props) {
           </Nav.Row>
         </Nav.Container>
       </main>
+      {children}
     </div>
   );
 }
@@ -83,7 +83,4 @@ Forside.propTypes = {
   tilOpprettNySak: PT.func.isRequired,
 };
 
-Forside.defaultProps = {
-  children: null,
-};
 export default withRouter(Forside);

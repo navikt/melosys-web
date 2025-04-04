@@ -25,7 +25,7 @@ class CustomRadioPanel extends Component {
   }
 
   render() {
-    const { checked, disabled, innhold, footer, feltNavn, inputProps, value } = this.props;
+    const { checked = false, disabled = false, innhold, footer = null, feltNavn, inputProps = {}, value } = this.props;
 
     return (
       <>
@@ -59,25 +59,17 @@ CustomRadioPanel.propTypes = {
   checked: PT.bool,
 };
 
-CustomRadioPanel.defaultProps = {
-  checked: false,
-  inputProps: {},
-  disabled: false,
-  footer: null,
-};
-
-function CustomRadioPanelGruppe(props) {
-  const {
-    radios,
-    feltNavn,
-    legend,
-    input: { onChange, value: currentCheckedValue },
-    meta,
-    notify,
-    begrensVisteRadios,
-    className,
-  } = props;
-
+function CustomRadioPanelGruppe({
+  radios,
+  feltNavn,
+  legend = "",
+  input,
+  meta,
+  notify = undefined,
+  begrensVisteRadios = false,
+  className = "",
+}) {
+  const { onChange, value: currentCheckedValue } = input;
   const { touched, active } = meta;
   const feil = touched && !active ? SkjemaUtils.mapReduxFormFeilTilNavFeil(meta) : undefined;
 
@@ -134,13 +126,6 @@ CustomRadioPanelGruppe.propTypes = {
   notify: PT.func,
   begrensVisteRadios: PT.bool,
   className: PT.string,
-};
-
-CustomRadioPanelGruppe.defaultProps = {
-  legend: "",
-  notify: undefined,
-  begrensVisteRadios: false,
-  className: "",
 };
 
 function CustomRadioPanelGruppeReduxForm({ feltNavn, ...rest }) {

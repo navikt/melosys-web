@@ -7,17 +7,14 @@ import * as Nav from "../../../navFrontend";
 
 import "./topplinje.css";
 
-function Topplinje(props) {
-  const { saksbehandler } = props;
-
+function Topplinje({ saksbehandler = "", history, msalContext }) {
   const tilForsidenHandler = (event) => {
     event.preventDefault();
-    const { history } = props;
     history.push("/");
   };
 
   const loggUt = () => {
-    props.msalContext.instance.logoutRedirect();
+    msalContext.instance.logoutRedirect();
   };
 
   const erProduksjonsmiljo = `${window.env.CLUSTER}`.startsWith("prod");
@@ -58,7 +55,4 @@ Topplinje.propTypes = {
   msalContext: PT.object.isRequired,
 };
 
-Topplinje.defaultProps = {
-  saksbehandler: "",
-};
 export default withMsal(withRouter(Topplinje));

@@ -25,18 +25,20 @@ import { MELOSYS_PENSJONIST } from "../../featuretoggle/toggleNavn";
 function Fagsak({ sak, landkoder }) {
   const { opprettetDato, sakstype, saksstatus, saksnummer, sakstema, behandlingOversikter } = sak;
   const erPensjonistToggleEnabled = useFeatureToggle(MELOSYS_PENSJONIST);
+
   const { lovvalgsperiode } =
     behandlingOversikter.find((behandlingOversikt) => behandlingOversikt.lovvalgsperiode != null) ?? {};
   const { medlemskapsperiode } =
     behandlingOversikter.find((behandlingOversikt) => behandlingOversikt.medlemskapsperiode != null) ?? {};
+
   const link = (behandling) =>
     Routing.lagUrl(
       saksnummer,
       behandling.behandlingID,
-      sakstype.kode,
-      sakstema.kode,
-      behandling.behandlingstema.kode,
-      behandling.behandlingstype.kode,
+      sakstype?.kode,
+      sakstema?.kode,
+      behandling.behandlingstema?.kode,
+      behandling.behandlingstype?.kode,
       erPensjonistToggleEnabled,
     );
 
@@ -70,7 +72,7 @@ function Fagsak({ sak, landkoder }) {
               )}
               <dt>Land:</dt>
               <dd>
-                <Soknadsland land={sak.land} visFulltNavn landkoderKodeverk={landkoder} />
+                <Soknadsland land={sak?.land} visFulltNavn landkoderKodeverk={landkoder} />
               </dd>
             </dl>
           </Nav.Column>
@@ -96,10 +98,6 @@ function Fagsak({ sak, landkoder }) {
 Fagsak.propTypes = {
   sak: MPT.BehandligOversikt,
   landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
-};
-
-Fagsak.defaultProps = {
-  sak: {},
 };
 
 export default Fagsak;

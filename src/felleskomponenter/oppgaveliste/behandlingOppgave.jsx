@@ -34,25 +34,22 @@ BehandlingOppgavesLinjeWrapper.propTypes = {
   children: PT.node.isRequired,
 };
 
-/**
- * Dette er enkeltlinjen for én sak som inneholder sakstittel og metadata
- * for å gi saksbehandler en hent over sakens innhold før hun klikker
- * seg inn på den.
- */
-function BehandlingOppgave({ sak, landkoder }) {
+function BehandlingOppgave({ sak = {}, landkoder }) {
   const erPensjonistToggleEnabled = useFeatureToggle(MELOSYS_PENSJONIST);
+
   const {
     navn,
     sakstype,
     saksnummer,
     sakstema,
-    behandling,
+    behandling = {},
     aktivTil,
     land,
     hovedpartIdent,
     sisteNotat: notat,
     oppgaveBeskrivelse: beskrivelse,
   } = sak;
+
   const {
     behandlingID,
     erUnderOppdatering,
@@ -63,13 +60,14 @@ function BehandlingOppgave({ sak, landkoder }) {
     endretDato,
     svarFrist,
   } = behandling;
+
   const link = Routing.lagUrl(
     saksnummer,
     behandlingID,
-    sakstype.kode,
-    sakstema.kode,
-    behandlingstema.kode,
-    behandlingstype.kode,
+    sakstype?.kode,
+    sakstema?.kode,
+    behandlingstema?.kode,
+    behandlingstype?.kode,
     erPensjonistToggleEnabled,
   );
   const oppdateringStatus = erUnderOppdatering && "(oppdateres nå)";
@@ -80,9 +78,7 @@ function BehandlingOppgave({ sak, landkoder }) {
   });
 
   const hentForsteGosysTekstblokk = (tekst) => {
-    if (!tekst || !tekst.includes("\n")) {
-      return tekst;
-    }
+    if (!tekst || !tekst.includes("\n")) return tekst;
 
     let forsteBlokk = tekst;
     const start = tekst.indexOf("---");
@@ -101,9 +97,7 @@ function BehandlingOppgave({ sak, landkoder }) {
     return <span>{forsteBlokk}</span>;
   };
 
-  const reduserTekstLinjer = (tekst) => {
-    return tekst?.split("\n").slice(0, 3).join("\n") || null;
-  };
+  const reduserTekstLinjer = (tekst) => tekst?.split("\n").slice(0, 3).join("\n") || null;
 
   return (
     <BehandlingOppgavesLinjeWrapper link={link} stengt={erUnderOppdatering}>
@@ -163,10 +157,6 @@ function BehandlingOppgave({ sak, landkoder }) {
 BehandlingOppgave.propTypes = {
   sak: MPT.SaksbehandlingOppgave,
   landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
-};
-
-BehandlingOppgave.defaultProps = {
-  sak: {},
 };
 
 export default BehandlingOppgave;
