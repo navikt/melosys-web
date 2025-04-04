@@ -7,7 +7,12 @@ import { behandlingsresultatSelectors } from "../../../../../ducks/behandlingsre
 import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 import { Inntektskilder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/inntektskilder";
 import { Skatteforholdsperioder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/skatteforholdsperioder";
-import { FieldArrayProps, FormValuesProps } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
+import {
+  FieldArrayProps,
+  FormValuesProps,
+  Inntektskilde,
+  Skatteforhold,
+} from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
 import MKV from "../../../../../melosyskodeverk";
 import * as Nav from "../../../../../navFrontend";
 import * as Api from "../../../../../services/api";
@@ -34,6 +39,7 @@ import {
 } from "./aarsavregningUtenEllerDeltGrunnlag";
 import aarsavregningUtenEllerDeltGrunnlagSchema from "./aarsavregningUtenEllerDeltGrunnlagSchema";
 import { medlemskapsperioderOperations } from "../../../../../ducks/medlemskapsperioder";
+import { Feilmelding, finnAktivFeilmelding, finnAktivFeilmeldingForMedlemskapsperioder } from "./valideringsfeil";
 
 export function AarsavregningUtenEllerDeltGrunnlagForm({
   initiellData,
@@ -53,14 +59,16 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   harDeltGrunnlag: boolean;
 }) {
   const [feilmelding, setFeilmelding] = useState<undefined | string>(undefined);
-  const [medlemskapsperiodeFeilmelding, setMedlemskapsperiodeFeilmelding] = useState<undefined | string>(undefined);
   const [beregningPaagar, setBeregningPaagar] = useState(false);
   const [aarsavregningResponse, setAarsavregningResponse] = useState<AarsavregningResponse | undefined>(
     initiellData.aarsavregningResponse,
   );
+  const [previousFormState, setPreviousFormState] = useState<any | null>(null);
+  const [debouncedBeregningPagaar, setDebouncedBeregningPagaar] = useState(false);
+  const [arrayValideringsfeil, setArrayValideringsfeil] = useState<string | undefined>(undefined);
+
   const [trygdedekninger, setTrygdedekninger] = useState<string[]>(initiellData.trygdedekninger || []);
   const [endrerBestemmelse, setEndrerBestemmelse] = useState(false);
-  const [harValidertSkjema, setHarValidertSkjema] = useState(false);
   const [lagrerMedlemskapsperioder, setLagrerMedlemskapsperioder] = useState(false);
   const [lagredeMedlemskapsperioder, setLagredeMedlemskapsperioder] = useState<Medlemskapsperiode[]>(
     initiellData.formDefaultValues.medlemskapsperioder || [],
@@ -78,7 +86,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     setValue,
     trigger,
     getValues,
-    formState: { isValid: formIsValid, errors: formErrors },
+    formState: { isValid: formIsValid, isValidating },
   } = useForm({
     resolver: yupResolver(aarsavregningUtenEllerDeltGrunnlagSchema),
     context: {
@@ -115,6 +123,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   const skatteforholdsperioder = useWatch({ control, name: "skatteforholdsperioder" });
   const inntektskilder = useWatch({ control, name: "inntektskilder" });
 
+  const debouncedBeregningRef = useRef<any>(null);
   const forrigeTotaltForskuddsvisFakturert = useRef(totaltForskuddsvisFakturert);
 
   const medlemskapstypeErPliktig = useMemo(() => {
@@ -123,7 +132,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       .every((periode: Medlemskapsperiode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG);
   }, [medlemskapsperioder]);
 
-  const defaultPeriode = useMemo(() => {
+  const medlemskapsperiode = useMemo(() => {
     const sorterteGyldigePerioder = medlemskapsperioder
       .filter((periode: Medlemskapsperiode) => periode.fomDato && periode.tomDato)
       .sort(Utils.dato.sorterEtterNorskFomDato);
@@ -135,20 +144,31 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     };
   }, [medlemskapsperioder]);
 
-  useEffect(() => {
-    // Kun vis komplekse feil hvis det ikke finnes andre feil i medlemskapsperioder
-    if (formErrors.medlemskapsperioder) {
-      const harFeltFeil = Object.keys(formErrors.medlemskapsperioder).some((key) => !Number.isNaN(parseInt(key, 10)));
-
-      if (!harFeltFeil && formErrors.medlemskapsperioder.type) {
-        setMedlemskapsperiodeFeilmelding(formErrors.medlemskapsperioder.message as string);
-      } else {
-        setMedlemskapsperiodeFeilmelding(undefined);
-      }
-    } else {
-      setMedlemskapsperiodeFeilmelding(undefined);
-    }
-  }, [formErrors.medlemskapsperioder]);
+  const mapFormState = (
+    skatteforholdsperioderFormState: Skatteforhold[],
+    inntektskilderFormState: Inntektskilde[],
+    medlemskapsperioderFormState: Medlemskapsperiode[],
+  ) => ({
+    skatteforholdsperioder: skatteforholdsperioderFormState.map((skatteforhold: Skatteforhold) => ({
+      fomDato: skatteforhold.fomDato,
+      tomDato: skatteforhold.tomDato,
+      skatteplikttype: skatteforhold.skatteplikttype,
+    })),
+    inntektskilder: inntektskilderFormState.map((inntektskilde: Inntektskilde) => ({
+      fomDato: inntektskilde.fomDato,
+      tomDato: inntektskilde.tomDato,
+      kildetype: inntektskilde.kildetype,
+      bruttoInntekt: inntektskilde.bruttoInntekt,
+      arbAvgBetales: inntektskilde.arbAvgBetales,
+      erMaanedsbelop: inntektskilde.erMaanedsbelop,
+    })),
+    medlemskapsperioder: medlemskapsperioderFormState.map((medlemskapsperiode: Medlemskapsperiode) => ({
+      fomDato: medlemskapsperiode.fomDato,
+      tomDato: medlemskapsperiode.tomDato,
+      trygdedekning: medlemskapsperiode.trygdedekning,
+      medlemskapstype: medlemskapsperiode.medlemskapstype,
+    })),
+  });
 
   useEffect(() => {
     if (redigerbart && aarsavregningResponse?.nyttGrunnlag) {
@@ -193,7 +213,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
 
         return response;
       } catch (error) {
-        setMedlemskapsperiodeFeilmelding("Feil ved lagring av medlemskapsperiode");
+        setFeilmelding("Feil ved lagring av medlemskapsperiode");
         console.error("Feil ved lagring av medlemskapsperiode:", error);
         return undefined;
       }
@@ -216,6 +236,56 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     [medlemskapstypeErPliktig, setFeilmelding, setAarsavregningResponse],
   );
 
+  const debouncedBeregning = useCallback(() => {
+    setDebouncedBeregningPagaar(false);
+    if (!redigerbart || !aarsavregningID || beregningPaagar || endrerBestemmelse || lagrerMedlemskapsperioder) {
+      return;
+    }
+
+    const formState = mapFormState(
+      getValues("skatteforholdsperioder"),
+      getValues("inntektskilder"),
+      getValues("medlemskapsperioder"),
+    );
+
+    if (!Utils._isEqual(formState, previousFormState) && formIsValid && !isValidating) {
+      const aktivFeilmelding = finnAktivFeilmelding({
+        skatteforholdsperioder: formState.skatteforholdsperioder,
+        inntektskilder: formState.inntektskilder,
+        medlemskapsperiode: medlemskapsperiode,
+        medlemskapsperioder: medlemskapsperioder as Medlemskapsperiode[],
+        medlemskapstypeErPliktig,
+      });
+      if (!aktivFeilmelding) {
+        setArrayValideringsfeil(undefined);
+        setBeregningPaagar(true);
+        handleBeregnTrygdeavgiftsperioder(getValues())
+          .then(() => {
+            setPreviousFormState(formState);
+          })
+          .finally(() => {
+            setBeregningPaagar(false);
+          });
+      } else {
+        setArrayValideringsfeil(aktivFeilmelding);
+      }
+    } else {
+      setArrayValideringsfeil(undefined);
+    }
+  }, [
+    aarsavregningID,
+    beregningPaagar,
+    getValues,
+    formIsValid,
+    isValidating,
+    handleBeregnTrygdeavgiftsperioder,
+    medlemskapstypeErPliktig,
+    endrerBestemmelse,
+    lagrerMedlemskapsperioder,
+    previousFormState,
+    medlemskapsperiode,
+  ]);
+
   const lagreMedlemskapsperioder = useCallback(
     async (medlemskapsperioderFormValues: Medlemskapsperiode[]) => {
       interface LagredeMedlemskapsperioder extends Medlemskapsperiode {
@@ -235,15 +305,6 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
 
       if (nyeLagredeMedlemskapsperioder.length > 0) {
         setFeilmelding(undefined);
-        // TODO: Beregningen her fjernes i 7235 etter beregning useEffect er skrevet om. Watch deps gotta go
-        // Revalider så feilmeldinger forsvinner før beregning
-        const erGyldigSkjema = await trigger();
-        if (erGyldigSkjema) {
-          await handleBeregnTrygdeavgiftsperioder({
-            skatteforholdsperioder: getValues("skatteforholdsperioder"),
-            inntektskilder: getValues("inntektskilder"),
-          });
-        }
 
         const oppdaterteMedlemskapsperioder = medlemskapsperioderFormValues.map((periode: any, index: number) => {
           const lagretPeriodeMedID = nyeLagredeMedlemskapsperioder.find(
@@ -263,13 +324,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         setValue("medlemskapsperioder", oppdaterteMedlemskapsperioder);
       }
     },
-    [
-      trigger,
-      handleBeregnTrygdeavgiftsperioder,
-      setValue,
-      setLagredeMedlemskapsperioder,
-      lagreMedlemskapsperiodeHvisEndret,
-    ],
+    [setValue, setLagredeMedlemskapsperioder],
   );
 
   const debouncedLagreMedlemskapsperioder = useCallback(
@@ -311,10 +366,10 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   useEffect(() => {
     const lagreMedlemskapsperioderEffect = async () => {
       if (redigerbart && !endrerBestemmelse && !lagrerMedlemskapsperioder) {
-        setMedlemskapsperiodeFeilmelding(undefined);
-
         if (medlemskapsperioder.length !== medlemskapsperioderForrigeAntall.current) {
+          // Når vi kommer inn her, betyr det at bruker har trykket på "Legg til"-knappen, som automtisk gjør skjema invalid.
           medlemskapsperioderForrigeAntall.current = medlemskapsperioder.length;
+          setArrayValideringsfeil(undefined);
           return;
         }
         if (!medlemskapsperioderHarBrukerendringer(medlemskapsperioder, lagredeMedlemskapsperioder)) {
@@ -323,6 +378,12 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
 
         const erGyldigSkjema = await trigger("medlemskapsperioder");
         if (!erGyldigSkjema || !bestemmelse) {
+          return;
+        }
+
+        const aktivFeilmeldingForMedlemskapsperioder = finnAktivFeilmeldingForMedlemskapsperioder(medlemskapsperioder);
+        if (aktivFeilmeldingForMedlemskapsperioder) {
+          setArrayValideringsfeil(aktivFeilmeldingForMedlemskapsperioder);
           return;
         }
 
@@ -390,6 +451,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     await Api.Aarsavregning.oppdaterAarsavregning(behandlingid, request, aarsavregningid);
     if (await trigger()) {
       setFeilmelding(undefined);
+      //TODO: Fjern handleBeregning herfra. La diff bli kalkulert i frontend.
       await handleBeregnTrygdeavgiftsperioder({
         skatteforholdsperioder: getValues("skatteforholdsperioder"),
         inntektskilder: getValues("inntektskilder"),
@@ -406,6 +468,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     [aarsavregningID],
   );
 
+  //TODO: Trenger vi useEffect? Kan vi ikke ha onchange handler?
   useEffect(() => {
     if (
       redigerbart &&
@@ -422,25 +485,51 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     forrigeTotaltForskuddsvisFakturert.current = totaltForskuddsvisFakturert;
   }, [totaltForskuddsvisFakturert]);
 
-  const debounceBeregnTrygdeavgiftsperioder = useCallback(
-    Utils._debounce((formVerdier) => handleBeregnTrygdeavgiftsperioder(formVerdier), 1000),
-    [handleBeregnTrygdeavgiftsperioder],
-  );
-
+  // Lager en ny debounce funksjon når beregning callback endres
   useEffect(() => {
-    if (redigerbart && aarsavregningID && !endrerBestemmelse) {
-      const beregnHvisSkjemaErGyldig = async () => {
-        const erSkjemaGyldig = await trigger();
-        if (erSkjemaGyldig) {
-          setBeregningPaagar(true);
-          setFeilmelding(undefined);
-          debounceBeregnTrygdeavgiftsperioder(formValues);
-        }
-      };
+    debouncedBeregningRef.current = Utils._debounce(debouncedBeregning, 350);
 
-      beregnHvisSkjemaErGyldig();
+    // Cancel på unmount
+    return () => {
+      if (debouncedBeregningRef.current?.cancel) {
+        debouncedBeregningRef.current.cancel();
+      }
+    };
+  }, [debouncedBeregning]);
+
+  // Håndterer kjøring av beregninger når skjemaverdier endres
+  useEffect(() => {
+    // Avbryter hvis vi allerede har en beregning som venter
+    if (debouncedBeregningRef.current?.cancel) {
+      debouncedBeregningRef.current.cancel();
     }
-  }, [inntektskilder, skatteforholdsperioder]);
+    if (debouncedBeregningRef.current) {
+      if (redigerbart && aarsavregningID && !lagrerMedlemskapsperioder && !endrerBestemmelse) {
+        const currentFormState = mapFormState(
+          getValues("skatteforholdsperioder"),
+          getValues("inntektskilder"),
+          getValues("medlemskapsperioder"),
+        );
+
+        if (!Utils._isEqual(currentFormState, previousFormState)) {
+          setDebouncedBeregningPagaar(true);
+          debouncedBeregningRef.current();
+        } else {
+          setDebouncedBeregningPagaar(false);
+          setArrayValideringsfeil(undefined);
+        }
+      }
+    }
+  }, [
+    skatteforholdsperioder,
+    inntektskilder,
+    formIsValid,
+    isValidating,
+    lagrerMedlemskapsperioder,
+    endrerBestemmelse,
+    totaltForskuddsvisFakturert,
+    forrigeTotaltForskuddsvisFakturert.current,
+  ]);
 
   const stegErGyldig = useMemo(
     () => Boolean(formIsValid && aarsavregningResponse?.nyttGrunnlag && feilmelding === undefined),
@@ -452,10 +541,8 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   }, [stegErGyldig, oppdaterStatus]);
 
   const bekreftOnClick = () => {
-    if (!harValidertSkjema) {
-      trigger();
-      setHarValidertSkjema(true);
-    }
+    trigger();
+
     if (stegErGyldig && !beregningPaagar) {
       bekreft();
     }
@@ -540,7 +627,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       </div>
 
       <Skatteforholdsperioder
-        defaultPeriode={defaultPeriode}
+        defaultPeriode={medlemskapsperiode}
         formValues={formValues}
         redigerbart={skjemaErRedigerbart}
         remove={skattRemove}
@@ -550,7 +637,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       />
       {!trygdeAvgiftSkalIkkeBetalesTilNav && (
         <Inntektskilder
-          defaultPeriode={defaultPeriode}
+          defaultPeriode={medlemskapsperiode}
           formValues={formValues}
           redigerbart={skjemaErRedigerbart}
           update={inntektUpdate}
@@ -567,7 +654,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         <Aarsavregningsmeldinger.TrygdeavgiftSkalIkkeBetalesTilNav />
       )}
 
-      {formIsValid && !beregningPaagar && !feilmelding && (
+      {formIsValid && !beregningPaagar && !debouncedBeregningPagaar && !feilmelding && (
         <SumArsavregningTabell
           nyTrygdeavgift={aarsavregningResponse?.avregning?.nyttTotalbeloep}
           tidligereTrygdeavgift={aarsavregningResponse?.avregning?.tidligereFakturertBeloep}
@@ -575,19 +662,19 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         />
       )}
 
-      {formIsValid && !beregningPaagar && !feilmelding && aarsavregningResponse?.nyttGrunnlag && (
-        <BeregnetTrygdeavgiftDetaljer
-          grunnlag={aarsavregningResponse.nyttGrunnlag}
-          medlemskapsTypeErPliktig={medlemskapstypeErPliktig}
-          tittel="Endelig beregnet trygdeavgift"
-        />
-      )}
+      {formIsValid &&
+        !beregningPaagar &&
+        !debouncedBeregningPagaar &&
+        !feilmelding &&
+        aarsavregningResponse?.nyttGrunnlag && (
+          <BeregnetTrygdeavgiftDetaljer
+            grunnlag={aarsavregningResponse.nyttGrunnlag}
+            medlemskapsTypeErPliktig={medlemskapstypeErPliktig}
+            tittel="Endelig beregnet trygdeavgift"
+          />
+        )}
 
-      {medlemskapsperiodeFeilmelding && (
-        <Nav.Alert variant="error" className="alertstripe_feilmelding">
-          {medlemskapsperiodeFeilmelding}
-        </Nav.Alert>
-      )}
+      {arrayValideringsfeil && <Feilmelding type={arrayValideringsfeil} />}
 
       {feilmelding && (
         <Nav.Alert variant="error" className="alertstripe_feilmelding">
@@ -597,7 +684,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
 
       <Nav.Button
         variant="primary"
-        loading={beregningPaagar || endrerBestemmelse || lagrerMedlemskapsperioder}
+        loading={beregningPaagar || endrerBestemmelse || lagrerMedlemskapsperioder || debouncedBeregningPagaar}
         disabled={!redigerbart}
         onClick={bekreftOnClick}
       >

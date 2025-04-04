@@ -32,7 +32,7 @@ const erMedlemskapsTypePliktig = (medlemskapsperioder) => {
 
 const arbAvgBetalesFyltUtNårDetKrevesTest = {
   name: "Fyll inn arb.ag. betales når det kreves",
-  message: "Velg om arb.ag. betales til skatt",
+  message: { melding: "Velg om arb.ag. betales til skatt" },
   test: (arbAvgBetales, schema) => {
     const { kildetype } = schema.from[0].value;
 
@@ -65,7 +65,7 @@ export const bruttoInntektKreves = (brukerSkattepliktigIHelePerioden, kildetype,
 
 const bruttoInntektFyltUtNårDetKrevesTest = {
   name: "Fyll inn brutto inntekt når det kreves",
-  message: "Fyll inn brutto inntekt",
+  message: MAA_FYLLES_UT,
   test: (bruttoInntekt, schema) => {
     const { skatteforholdsperioder } = schema.from[1].value;
     const { kildetype, arbAvgBetales } = schema.from[0].value;
@@ -80,7 +80,7 @@ const bruttoInntektFyltUtNårDetKrevesTest = {
 
 const åpenTomTest = {
   name: "Åpen sluttdato",
-  message: "Sluttdato mangler",
+  message: { melding: "Sluttdato mangler" },
   test: (tomDato) => {
     return !Utils._isEmpty(tomDato);
   },
@@ -113,99 +113,6 @@ const erInnenforMedlemskapsperiodeTest = {
   },
 };
 
-const harUgyldigeDatoer = (perioder) => {
-  return perioder.some(
-    (periode) =>
-      !periode.fomDato ||
-      !periode.tomDato ||
-      !Utils.dato.vaskInputDato(periode.fomDato) ||
-      !Utils.dato.vaskInputDato(periode.tomDato),
-  );
-};
-
-// No changes to these tests
-const medlemskapsperioderOverlappTest = {
-  name: "medlemskapsperioderOverlapp",
-  message: "Medlemskapsperiodene kan ikke overlappe hverandre",
-  test: (perioder) => {
-    if (!perioder || perioder.length <= 1) {
-      return true;
-    }
-
-    if (harUgyldigeDatoer(perioder)) {
-      return true;
-    }
-
-    const gyldigePerioder = perioder.filter((periode) => periode.fomDato && periode.tomDato);
-    if (gyldigePerioder.length <= 1) {
-      return true;
-    }
-
-    const sortertePerioder = [...gyldigePerioder].sort(Utils.dato.sorterEtterNorskFomDato);
-
-    for (let i = 0; i < sortertePerioder.length; i++) {
-      for (let j = i + 1; j < sortertePerioder.length; j++) {
-        if (
-          Utils.dato.perioderOverlapper(
-            sortertePerioder[i].fomDato,
-            sortertePerioder[i].tomDato,
-            sortertePerioder[j].fomDato,
-            sortertePerioder[j].tomDato,
-          )
-        ) {
-          return false;
-        }
-      }
-    }
-
-    return true;
-  },
-};
-
-const medlemskapsperioderKontinuerligTest = {
-  name: "medlemskapsperioderKontinuerlig",
-  message: "Medlemskapsperiodene må danne en sammenhengende periode uten opphold",
-  test: (perioder) => {
-    if (!perioder || perioder.length <= 1) {
-      return true;
-    }
-
-    if (harUgyldigeDatoer(perioder)) {
-      return true;
-    }
-
-    const gyldigePerioder = perioder.filter((periode) => periode.fomDato && periode.tomDato);
-    if (gyldigePerioder.length <= 1) {
-      return true;
-    }
-
-    const sortertePerioder = [...gyldigePerioder].sort(Utils.dato.sorterEtterNorskFomDato);
-
-    // eslint-disable-next-line no-plusplus
-    for (let i = 1; i < sortertePerioder.length; i++) {
-      const forrigePeriode = sortertePerioder[i - 1];
-      const currentPeriode = sortertePerioder[i];
-
-      const forrigeTomDate = Utils.dato.norskStringTilDate(forrigePeriode.tomDato);
-      const currentFomDate = Utils.dato.norskStringTilDate(currentPeriode.fomDato);
-
-      if (!forrigeTomDate || !currentFomDate) {
-        return false;
-      }
-
-      // Sjekk for opphold - neste periode må starte dagen etter forrige sluttet
-      const nesteDag = new Date(forrigeTomDate);
-      nesteDag.setDate(nesteDag.getDate() + 1);
-
-      if (currentFomDate.getTime() !== nesteDag.getTime()) {
-        return false;
-      }
-    }
-
-    return true;
-  },
-};
-
 const aarsavregningUtenEllerDeltGrunnlagSchema = object().shape({
   bestemmelse: string().required(MAA_FYLLES_UT),
   medlemskapsperioder: array()
@@ -221,9 +128,7 @@ const aarsavregningUtenEllerDeltGrunnlagSchema = object().shape({
           .test(erInnenforValgtAarTest),
         trygdedekning: string().required(MAA_FYLLES_UT),
       }),
-    )
-    .test(medlemskapsperioderOverlappTest)
-    .test(medlemskapsperioderKontinuerligTest),
+    ),
   totaltForskuddsvisFakturert: string().nullable().required(MAA_FYLLES_UT),
   skatteforholdsperioder: array()
     .min(1, "Minst en skatteforholdsperiode")
