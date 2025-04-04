@@ -78,12 +78,8 @@ export const lagAarsavregning = (
 export const oppdaterHarDeltGrunnlag = (
   behandlingID: number,
   request: OppdaterHarDeltGrunnlagRequest,
-  aarsavregningID?: number,
 ): Promise<AarsavregningResponse> =>
-  putAsJson(
-    `${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${AARSAVREGNING}/${aarsavregningID}/grunnlagstype`,
-    request,
-  );
+  postAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${AARSAVREGNING}/grunnlagstype`, request);
 
 export const oppdaterAvvik = (
   behandlingID: number,
