@@ -41,6 +41,33 @@ import aarsavregningUtenEllerDeltGrunnlagSchema from "./aarsavregningUtenEllerDe
 import { medlemskapsperioderOperations } from "../../../../../ducks/medlemskapsperioder";
 import { Feilmelding, finnAktivFeilmelding, finnAktivFeilmeldingForMedlemskapsperioder } from "./valideringsfeil";
 
+// Helper function to log changed dependencies
+const logChangedDependencies = (currentDeps: Record<string, any>, previousDepsRef: React.MutableRefObject<any>) => {
+  const changedDeps: Record<string, any> = {};
+  if (previousDepsRef.current) {
+    // Compare current dependencies with previous ones
+    Object.keys(currentDeps).forEach((key) => {
+      if (!Utils._isEqual(currentDeps[key as keyof typeof currentDeps], previousDepsRef.current[key])) {
+        changedDeps[key] = {
+          prev: previousDepsRef.current[key],
+          curr: currentDeps[key as keyof typeof currentDeps],
+        };
+      }
+    });
+    // Log only if there are changed dependencies
+    if (Object.keys(changedDeps).length > 0) {
+      console.log("UseEffect Changed Dependencies", changedDeps);
+    }
+  } else {
+    // Log all dependencies on the first run
+    console.log("UseEffect First Run Dependencies", currentDeps);
+  }
+
+  // Update previous deps ref
+  // eslint-disable-next-line no-param-reassign
+  previousDepsRef.current = currentDeps;
+};
+
 export function AarsavregningUtenEllerDeltGrunnlagForm({
   initiellData,
   bekreft,
@@ -73,6 +100,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   const [lagredeMedlemskapsperioder, setLagredeMedlemskapsperioder] = useState<Medlemskapsperiode[]>(
     initiellData.formDefaultValues.medlemskapsperioder || [],
   );
+  const [harSjekketFeilmeldingerFørsteGang, setHarSjekketFeilmeldingerFørsteGang] = useState(false);
 
   // Redux selectors
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
@@ -125,6 +153,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
 
   const debouncedBeregningRef = useRef<any>(null);
   const forrigeTotaltForskuddsvisFakturert = useRef(totaltForskuddsvisFakturert);
+  const previousDepsRef = useRef<any>(null);
 
   const medlemskapstypeErPliktig = useMemo(() => {
     return medlemskapsperioder
@@ -250,8 +279,14 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       getValues("inntektskilder"),
       medlemskapsperioderFormState,
     );
-
-    if (!Utils._isEqual(formState, previousFormState) && formIsValid && !isValidating) {
+    if (!Utils._isEqual(formState, previousFormState)) {
+      console.log("Aktiv feilmelding forsøk: ", {
+        skatteforholdsperioder: formState.skatteforholdsperioder,
+        inntektskilder: formState.inntektskilder,
+        medlemskapsperiode,
+        medlemskapsperioder: medlemskapsperioderFormState as Medlemskapsperiode[],
+        medlemskapstypeErPliktig,
+      });
       const aktivFeilmelding = finnAktivFeilmelding({
         skatteforholdsperioder: formState.skatteforholdsperioder,
         inntektskilder: formState.inntektskilder,
@@ -273,9 +308,6 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       } else {
         setArrayValideringsfeil(aktivFeilmelding);
       }
-    } else {
-      console.log("Sett feilmelding til undefined fra else i debouncedBeregning");
-      setArrayValideringsfeil(undefined);
     }
 
     console.log("setter debouncedBeregningPagaar til false slutten av metoden");
@@ -498,19 +530,34 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
 
   // Lager en ny debounce funksjon når beregning callback endres
   useEffect(() => {
-    debouncedBeregningRef.current = Utils._debounce(debouncedBeregning, 350);
+    debouncedBeregningRef.current = Utils._debounce(debouncedBeregning, 1000);
     console.log("Lager en ny debounce funksjon når beregning callback endres");
 
     // Cancel på unmount
     return () => {
       if (debouncedBeregningRef.current?.cancel) {
-        debouncedBeregningRef.current.cancel();
+        //  debouncedBeregningRef.current.cancel();
       }
     };
-  }, [debouncedBeregning]);
+  }, []);
 
   // Håndterer kjøring av beregninger når skjemaverdier endres
   useEffect(() => {
+    const currentDeps = {
+      skatteforholdsperioder,
+      inntektskilder,
+      formIsValid,
+      isValidating,
+      lagreMedlemskapsperioderPaagar,
+      endrerBestemmelse,
+      totaltForskuddsvisFakturert,
+      forrigeTotaltForskuddsvisFakturert: forrigeTotaltForskuddsvisFakturert.current,
+      medlemskapsperiode,
+    };
+
+    // Log changed dependencies using the helper function
+    logChangedDependencies(currentDeps, previousDepsRef);
+
     // Avbryter hvis vi allerede har en beregning som venter
     if (debouncedBeregningRef.current?.cancel) {
       console.log("Avbryter debouncedBeregningRef");
@@ -518,32 +565,50 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       debouncedBeregningRef.current.cancel();
     }
     if (debouncedBeregningRef.current) {
-      if (redigerbart && aarsavregningID && !lagreMedlemskapsperioderPaagar && !endrerBestemmelse) {
+      if (redigerbart && aarsavregningID && !lagreMedlemskapsperioderPaagar && !endrerBestemmelse && formIsValid) {
         const currentFormState = mapFormState(
           getValues("skatteforholdsperioder"),
           getValues("inntektskilder"),
           getValues("medlemskapsperioder"),
         );
 
-        if (!Utils._isEqual(currentFormState, previousFormState) && !debouncedBeregningPagaar) {
+        if (!Utils._isEqual(currentFormState, previousFormState) && !debouncedBeregningPagaar && formIsValid) {
           setDebouncedBeregningPagaar(true);
           console.log("sette debouncedBeregningPaagar true");
           debouncedBeregningRef.current();
         } else {
+          if (!harSjekketFeilmeldingerFørsteGang) {
+            const aktivFeilmelding = finnAktivFeilmelding(medlemskapsperioder);
+            console.log("aktivFeilmelding", aktivFeilmelding);
+            if (aktivFeilmelding) {
+              setArrayValideringsfeil(aktivFeilmelding);
+            }
+            setHarSjekketFeilmeldingerFørsteGang(true);
+          }
           console.log("sette debouncedBeregningPaagar false, fra else");
           setDebouncedBeregningPagaar(false);
         }
+      } else {
+        console.log("sette debouncedBeregningPaagar false, fra else", {
+          redigerbart,
+          aarsavregningID,
+          lagreMedlemskapsperioderPaagar,
+          endrerBestemmelse,
+          formIsValid,
+        });
+        setDebouncedBeregningPagaar(false);
       }
     }
   }, [
     skatteforholdsperioder,
     inntektskilder,
     formIsValid,
-    isValidating,
+    // isValidating,
     lagreMedlemskapsperioderPaagar,
     endrerBestemmelse,
     totaltForskuddsvisFakturert,
     forrigeTotaltForskuddsvisFakturert.current,
+    medlemskapsperiode,
   ]);
 
   const stegErGyldig = useMemo(
@@ -569,12 +634,12 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     (aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift?.totalAvgift ?? 0) > 0;
   const skjemaErRedigerbart = redigerbart && !endrerBestemmelse;
 
-  console.log({
-    debouncedBeregningPagaar,
-    lagreMedlemskapsperioderPaagar,
-    beregningPaagar,
-    endrerBestemmelse,
-  });
+  // console.log({
+  //   debouncedBeregningPagaar,
+  //   lagreMedlemskapsperioderPaagar,
+  //   beregningPaagar,
+  //   endrerBestemmelse,
+  // });
 
   return (
     <div className="vurderingAarsavregning">
