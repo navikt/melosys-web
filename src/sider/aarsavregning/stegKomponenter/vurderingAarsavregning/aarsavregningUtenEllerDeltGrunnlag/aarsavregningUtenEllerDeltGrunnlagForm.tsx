@@ -589,10 +589,21 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         getValues("medlemskapsperioder"),
       );
 
-      if (!Utils._isEqual(currentFormState, previousFormState) && !debouncedBeregningPagaar && formIsValid) {
-        setDebouncedBeregningPagaar(true);
-        console.log("sette debouncedBeregningPaagar true");
-        debouncedBeregningRef.current();
+      if (!redigerbart || !aarsavregningID || endrerBestemmelse || beregningPaagar || lagreMedlemskapsperioderPaagar) {
+        console.log("return tidlig i debouncedBeregning");
+        return;
+      }
+
+      if (!Utils._isEqual(currentFormState, previousFormState) && !debouncedBeregningPagaar) {
+        trigger().then((isValid) => {
+          if (!isValid) {
+            setArrayValideringsfeil(undefined);
+            return;
+          }
+          setDebouncedBeregningPagaar(true);
+          console.log("sette debouncedBeregningPaagar true");
+          debouncedBeregningRef.current();
+        });
       } else {
         setArrayValideringsfeil(undefined);
       }
