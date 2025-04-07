@@ -482,14 +482,6 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         medlemskapsperioderRemove(index);
         dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(behandlingID));
       }
-
-      if (await trigger()) {
-        setFeilmelding(undefined);
-        await handleBeregnTrygdeavgiftsperioder({
-          skatteforholdsperioder: getValues("skatteforholdsperioder"),
-          inntektskilder: getValues("inntektskilder"),
-        });
-      }
     } catch (error) {
       console.error("Feil ved sletting av medlemskapsperiode:", error);
       setFeilmelding("Feil ved sletting av medlemskapsperiode");
@@ -541,12 +533,14 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
 
   // Lager en ny debounce funksjon når beregning callback endres
   useEffect(() => {
+    setDebouncedBeregningPagaar(false);
     debouncedBeregningRef.current = Utils._debounce(debouncedBeregning, 350);
     console.log("Lager en ny debounce funksjon når beregning callback endres");
 
     // Cancel på unmount
     return () => {
       if (debouncedBeregningRef.current?.cancel) {
+        setDebouncedBeregningPagaar(false);
         console.log("Avbryter eventuelt eksisterende beregning for å sette opp ny debounce funksjon.");
         debouncedBeregningRef.current.cancel();
       }
@@ -570,14 +564,15 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
 
     // Avbryter hvis vi allerede har en beregning som venter
     if (debouncedBeregningRef.current?.cancel && Object.keys(changedDependencies).length > 0) {
+      setDebouncedBeregningPagaar(false);
       console.log("Avbryter eventuelt eksisterende beregning.", {
         beregningPaagar,
         lagreMedlemskapsperioderPaagar,
         debouncedBeregningPagaar,
       });
-      setDebouncedBeregningPagaar(false);
       debouncedBeregningRef.current.cancel();
     }
+
     if (medlemskapsperiodeEndret || Object.keys(changedDependencies).length === 0 || lagreMedlemskapsperioderPaagar) {
       console.log("Avbryter useEffect uten å gjøre noe.", {
         medlemskapsperiodeEndret,
@@ -596,11 +591,21 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       );
 
       if (!redigerbart || !aarsavregningID || endrerBestemmelse || beregningPaagar || lagreMedlemskapsperioderPaagar) {
-        console.log("return tidlig i debouncedBeregning");
+        console.log(
+          "return tidlig i useEffect fordi redigerbart, aarsavregningID, endrerBestemmelse, lagreMedlemskapsperioderPaagar",
+          {
+            redigerbart,
+            aarsavregningID,
+            endrerBestemmelse,
+            lagreMedlemskapsperioderPaagar,
+            beregningPaagar,
+            debouncedBeregningPagaar,
+          },
+        );
         return;
       }
 
-      if (!Utils._isEqual(currentFormState, previousFormState) && !debouncedBeregningPagaar) {
+      if (!Utils._isEqual(currentFormState, previousFormState)) {
         trigger().then((isValid) => {
           if (!isValid) {
             setArrayValideringsfeil(undefined);
@@ -612,6 +617,10 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         });
       } else {
         setArrayValideringsfeil(undefined);
+        console.log("Clear arrayValideringsfeil", {
+          currentFormState,
+          previousFormState,
+        });
       }
     } else {
       console.log("debouncedBeregningRef.current er undefined");
