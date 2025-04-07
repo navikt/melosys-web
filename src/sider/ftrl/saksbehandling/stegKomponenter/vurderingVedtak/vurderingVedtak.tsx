@@ -108,7 +108,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   const saksnummer = useSelector(fagsakSelectors.SaksnummerSelector);
   const { kontrollerFerdigbehandling, fattVedtak } = komponentDispatch(dispatch);
 
-  const [betalingsvalg, setBetalingsvalg] = useState<string | undefined>(undefined);
+  const [betalingsvalg, setBetalingsvalg] = useState(MKV.Koder.betalingstype.TREKK);
   const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
   const [trygdeavgiftMottaker, setTrygdeavgiftMottaker] = useState<KTObject | undefined>(undefined);
   const [fakturamottaker, setFakturamottaker] = useState<string | undefined>(undefined);
@@ -208,12 +208,9 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
     setMuligeMottakere(res);
   };
 
-  const hentLagredeBetalingsvalg = async () => {
+  const hentBetalingsvalg = async () => {
     const oppsummering = await Api.Avklartefakta.hentOppsummering(behandlingID);
-
-    if (oppsummering.betalingsvalg === null) {
-      lagreBetalingsvalgForPensjonist();
-    } else {
+    if (oppsummering.betalingsvalg) {
       setBetalingsvalg(oppsummering.betalingsvalg);
     }
   };
@@ -229,7 +226,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
       });
 
       if (erPensjonist && erPensjonistToggleEnabled) {
-        hentLagredeBetalingsvalg();
+        hentBetalingsvalg();
       }
     }
   }, [aktivtSteg]);
@@ -326,6 +323,10 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   const onSubmit = async () => {
     setVedtakPending(true);
     if (mottatteOpplysningerErGyldig()) {
+      if (erPensjonist && erPensjonistToggleEnabled) {
+        await Api.Avklartefakta.lagreBetalingsvalgForPensjonister(behandlingID, betalingsvalg);
+      }
+
       fattVedtak(behandlingID, lagFattVedtakReqDto()).then((res) => {
         if (res.data?.data?.error) {
           setVedtakPending(false);
@@ -396,13 +397,10 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   const visFakturaMottaker = betalingsvalgErFaktura || (fakturamottaker && !erIkkeYrkesaktiv && !erPensjonist);
   const visBetalingsvalg = erFørstegang && erPensjonist;
 
-  const lagreBetalingsvalgForPensjonist = async () => {
+  const oppdaterBetalingsvalg = async () => {
     const valg =
-      betalingsvalg === MKV.Koder.betalingstype.FAKTURA || betalingsvalg == null
-        ? MKV.Koder.betalingstype.TREKK
-        : MKV.Koder.betalingstype.FAKTURA;
+      betalingsvalg === MKV.Koder.betalingstype.TREKK ? MKV.Koder.betalingstype.FAKTURA : MKV.Koder.betalingstype.TREKK;
 
-    await Api.Avklartefakta.lagreBetalingsvalgForPensjonister(behandlingID, valg);
     setBetalingsvalg(valg);
   };
 
@@ -457,7 +455,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
         {visBetalingsvalg && (
           <Betalingsvalg
             skalSendeFaktura={betalingsvalgErFaktura}
-            onBetalingsvalgChange={lagreBetalingsvalgForPensjonist}
+            onBetalingsvalgChange={oppdaterBetalingsvalg}
             redigerbart={redigerbart}
           />
         )}
