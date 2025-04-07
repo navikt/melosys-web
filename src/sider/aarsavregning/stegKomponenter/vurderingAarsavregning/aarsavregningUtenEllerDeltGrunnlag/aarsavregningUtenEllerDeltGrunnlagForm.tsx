@@ -219,7 +219,11 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     }
   }, [aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift]);
 
-  const lagreMedlemskapsperiodeHvisEndret = async (periode: Medlemskapsperiode, index: number) => {
+  const lagreMedlemskapsperiodeHvisEndret = async (
+    periode: Medlemskapsperiode,
+    lagredePerioder: Medlemskapsperiode[],
+    index: number,
+  ) => {
     const periodeRequest = {
       fomDato: Utils.dato.formatterDatoTilISO(periode.fomDato, "") as string,
       tomDato: Utils.dato.formatterDatoTilISO(periode.tomDato, "") as string,
@@ -228,7 +232,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       innvilgelsesResultat: MKV.Koder.innvilgelsesResultat.INNVILGET,
     } as OppdaterMedlemskapsperiode;
 
-    const lagretMedlemskapsperiode = lagredeMedlemskapsperioder[index];
+    const lagretMedlemskapsperiode = lagredePerioder[index];
     const harEndringer =
       !lagretMedlemskapsperiode ||
       periode.id === ULAGRET_MEDLEMSKAPSPERIODE_ID ||
@@ -339,7 +343,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       const endredeMedlemskapsperioder: LagredeMedlemskapsperioder[] = [];
       // eslint-disable-next-line no-restricted-syntax
       for (const [index, periode] of medlemskapsperioderFormValues.entries()) {
-        const lagretPeriode = await lagreMedlemskapsperiodeHvisEndret(periode, index);
+        const lagretPeriode = await lagreMedlemskapsperiodeHvisEndret(periode, lagredeMedlemskapsperioder, index);
         if (lagretPeriode)
           endredeMedlemskapsperioder.push({
             ...(lagretPeriode as Medlemskapsperiode),
@@ -365,11 +369,13 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
           return periode;
         });
 
+        console.log("oppdaterteMedlemskapsperioder", oppdaterteMedlemskapsperioder);
+
         setLagredeMedlemskapsperioder(oppdaterteMedlemskapsperioder);
         setValue("medlemskapsperioder", oppdaterteMedlemskapsperioder);
       }
     },
-    [setValue, setLagredeMedlemskapsperioder],
+    [setValue, setLagredeMedlemskapsperioder, lagredeMedlemskapsperioder],
   );
 
   const debouncedLagreMedlemskapsperioder = useCallback(
@@ -435,7 +441,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         console.log("setter lagrerMedlemskapsperioder til true");
         setLagreMedlemskapsperioderPaagar(true);
         const medlemskapsperioderTilLagring = [...medlemskapsperioder];
-
+        console.log("medlemskapsperioderTilLagring", medlemskapsperioderTilLagring);
         debouncedLagreMedlemskapsperioder(medlemskapsperioderTilLagring, () => {
           console.log("Setter lagrerMedlemskapsperioder til false");
           setLagreMedlemskapsperioderPaagar(false);
