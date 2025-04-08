@@ -478,6 +478,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     const periode = medlemskapsperioder[index];
 
     try {
+      setLagreMedlemskapsperioderPaagar(true);
       if (periode.id === ULAGRET_MEDLEMSKAPSPERIODE_ID) {
         medlemskapsperioderRemove(index);
       } else {
@@ -485,6 +486,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         medlemskapsperioderRemove(index);
         dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(behandlingID));
       }
+      setLagreMedlemskapsperioderPaagar(false);
     } catch (error) {
       console.error("Feil ved sletting av medlemskapsperiode:", error);
       setFeilmelding("Feil ved sletting av medlemskapsperiode");

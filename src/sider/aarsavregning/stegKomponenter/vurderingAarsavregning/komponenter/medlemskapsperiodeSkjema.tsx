@@ -56,6 +56,22 @@ export function MedlemskapsperiodeSkjema({
 
   const kunEnTrygdedekning = trygdedekninger?.length === 1;
 
+  let maxTomDatoIndex = -1;
+  let maxTomDato: Date | null = null;
+  formValues.medlemskapsperioder.forEach((periode, idx) => {
+    const currentTomDato = Utils.dato.norskStringTilDate(periode.tomDato);
+    if (currentTomDato && !Number.isNaN(currentTomDato.getTime())) {
+      if (maxTomDato === null || currentTomDato >= maxTomDato) {
+        maxTomDato = currentTomDato;
+        maxTomDatoIndex = idx;
+      }
+    } else if (maxTomDato === null && periode.tomDato === undefined) {
+      maxTomDatoIndex = idx;
+    }
+  });
+
+  const erPeriodeMedSisteTomDato = index === maxTomDatoIndex;
+
   // Setter trygdedekning dersom vi kun har en gyldig dekning
   useEffect(() => {
     if (trygdedekninger?.length === 1) {
@@ -113,7 +129,7 @@ export function MedlemskapsperiodeSkjema({
                 ikon={Ikoner.Bin}
                 onClick={() => remove(index)}
                 ariaLabel="Slett periode"
-                disabled={erPeriodeFraGrunnlag}
+                disabled={!redigerbart || erPeriodeFraGrunnlag || !erPeriodeMedSisteTomDato}
               />
             </Nav.Column>
           )}

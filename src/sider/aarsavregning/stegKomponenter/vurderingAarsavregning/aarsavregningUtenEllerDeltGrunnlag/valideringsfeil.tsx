@@ -82,6 +82,8 @@ const ingenOverlappendePerioder = (perioder: any[]): boolean => {
     // Sort periods by start date
     const sortedPerioder = sorterPerioderEtterStartdato(perioder);
 
+    console.log("sortedPerioder", sortedPerioder);
+
     // Check for overlapping periods
     for (let i = 0; i < sortedPerioder.length - 1; i++) {
       const currentTom = Utils.dato.formatterDatoTilISO(sortedPerioder[i].tomDato);
