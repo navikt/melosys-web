@@ -144,7 +144,7 @@ graph TD
 
 ### Spesifikk Interaksjon: Endring av Bestemmelse
 
-Endring av `bestemmelse` (lovhjemmel) er en viktig hendelse:
+Endring av `bestemmelse` er en viktig hendelse:
 1.  Bruker endrer `bestemmelse`-feltet i `FormUI`. RHF state oppdateres.
 2.  `useAarsavregningForm` har en `useEffect` som lytter spesifikt på `bestemmelse`.
 3.  Denne effekten setter `endrerBestemmelse`-state til `true` midlertidig. Dette flagget brukes til å *pause* de automatiske triggerne (`useMedlemskapLagringTrigger` og `useBeregningTrigger`) for å unngå unødvendige operasjoner mens bestemmelsen endres.
