@@ -35,7 +35,6 @@ export const useMedlemskapsperioder = (behandlingID: number) => {
   const lagreMedlemskapsperiodeHvisEndret = async (
     periode: Medlemskapsperiode,
     faktiskLagredePerioder: Medlemskapsperiode[],
-    index: number,
     bestemmelse: string,
   ) => {
     const periodeRequest = {
@@ -46,39 +45,40 @@ export const useMedlemskapsperioder = (behandlingID: number) => {
       innvilgelsesResultat: MKV.Koder.innvilgelsesResultat.INNVILGET,
     } as OppdaterMedlemskapsperiode;
 
-    const sistLagretPeriode = faktiskLagredePerioder[index];
-    console.log(`*** Sammenligner for index ${index}:`, { current: periode, lastSaved: sistLagretPeriode });
+    const sistLagretPeriode =
+      periode.id !== ULAGRET_MEDLEMSKAPSPERIODE_ID
+        ? faktiskLagredePerioder.find((p) => p.id === periode.id)
+        : undefined;
+
+    console.log(`*** Sammenligner periode ID ${periode.id}:`, { current: periode, lastSaved: sistLagretPeriode });
 
     const harEndringer =
       !sistLagretPeriode ||
-      periode.id === ULAGRET_MEDLEMSKAPSPERIODE_ID ||
       periode.fomDato !== sistLagretPeriode.fomDato ||
       periode.tomDato !== sistLagretPeriode.tomDato ||
       periode.trygdedekning !== sistLagretPeriode.trygdedekning;
 
-    console.log(`*** Har endringer for index ${index}?`, harEndringer);
+    console.log(`*** Har endringer for periode ID ${periode.id}?`, harEndringer);
 
     if (harEndringer) {
-      console.log(
-        `*** Sender ${periode.id === ULAGRET_MEDLEMSKAPSPERIODE_ID ? "opprett" : "oppdater"} request for index ${index} ***`,
-      );
+      console.log(`*** Sender ${!sistLagretPeriode ? "opprett" : "oppdater"} request for periode ID ${periode.id} ***`);
       try {
-        const response: any = await (periode.id === ULAGRET_MEDLEMSKAPSPERIODE_ID
+        const response: any = await (!sistLagretPeriode
           ? Api.MedlemAvFolketrygden.Medlemskapsperioder.opprettMedlemskapsperioder(behandlingID, periodeRequest)
           : Api.MedlemAvFolketrygden.Medlemskapsperioder.oppdaterMedlemskapsperioder(
               behandlingID,
               periode.id,
               periodeRequest,
             ));
-        console.log(`*** Respons for index ${index}:`, response);
+        console.log(`*** Respons for periode ID ${periode.id}:`, response);
         return response;
       } catch (error) {
         setFeilmelding("Feil ved lagring av medlemskapsperiode");
-        console.error(`*** Feil ved lagring av medlemskapsperiode index ${index}:`, error);
+        console.error(`*** Feil ved lagring av medlemskapsperiode ID ${periode.id}:`, error);
         throw error;
       }
     }
-    console.log(`*** Ingen endringer for index ${index}, skipper API kall ***`);
+    console.log(`*** Ingen endringer for periode ID ${periode.id}, skipper API kall ***`);
     return undefined;
   };
 
@@ -96,7 +96,7 @@ export const useMedlemskapsperioder = (behandlingID: number) => {
       let errorOccurred = false;
 
       const savePromises = medlemskapsperioderFormValues.map((periode, index) =>
-        lagreMedlemskapsperiodeHvisEndret(periode, lagredeMedlemskapsperioderFraState, index, bestemmelse)
+        lagreMedlemskapsperiodeHvisEndret(periode, lagredeMedlemskapsperioderFraState, bestemmelse)
           .then((lagretPeriode) => {
             if (lagretPeriode) {
               endredeMedlemskapsperioder.push({
@@ -116,8 +116,10 @@ export const useMedlemskapsperioder = (behandlingID: number) => {
       console.log("*** Resultater fra Promise.allSettled (lagring):", results);
 
       if (errorOccurred) {
-        console.error("En eller flere medlemskapsperioder feilet under lagring.");
-        return medlemskapsperioderFormValues;
+        console.error(
+          "En eller flere medlemskapsperioder feilet under lagring. Returnerer forrige lagrede state for å unngå korrupsjon.",
+        );
+        return lagredeMedlemskapsperioderFraState;
       }
 
       if (endredeMedlemskapsperioder.length > 0) {
@@ -162,7 +164,6 @@ export const useMedlemskapsperioder = (behandlingID: number) => {
       } else {
         await Api.MedlemAvFolketrygden.Medlemskapsperioder.slettMedlemskapsperiode(behandlingID, periode.id);
         medlemskapsperioderRemove(index);
-        dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(behandlingID));
       }
       setLagreMedlemskapsperioderPaagar(false);
     } catch (error) {

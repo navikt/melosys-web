@@ -26,6 +26,7 @@ interface UseMedlemskapLagringTriggerProps {
   setArrayValideringsfeil: (error?: string) => void;
 }
 
+// Bruker omdøpt interface
 export function useMedlemskapLagringTrigger({
   medlemskapsperioder,
   lagredeMedlemskapsperioder,
@@ -39,7 +40,7 @@ export function useMedlemskapLagringTrigger({
   bestemmelse,
   lagreMedlemskapsperioder,
   setArrayValideringsfeil,
-}: UseMedlemskapLagringTriggerProps) { // Bruker omdøpt interface
+}: UseMedlemskapLagringTriggerProps) {
   const medlemskapsperioderForrigeAntall = useRef(medlemskapsperioder.length);
   const debouncedLagreMedlemskapsperioderRef = useRef<any>(null);
 
@@ -73,6 +74,12 @@ export function useMedlemskapLagringTrigger({
       debouncedLagreMedlemskapsperioderRef.current?.cancel?.();
     };
   }, [debouncedLagreMedlemskapsperioder]);
+
+  // Funksjon for å eksplisitt kansellere en pågående debounce
+  const cancelDebouncedLagring = useCallback(() => {
+    console.log("*** Cancelling debounced medlemskap save ***");
+    debouncedLagreMedlemskapsperioderRef.current?.cancel?.();
+  }, []);
 
   // Effekt for å trigge lagring av medlemskapsperioder
   useEffect(() => {
@@ -145,4 +152,7 @@ export function useMedlemskapLagringTrigger({
     // Stabile refs/funksjoner avledet i hooken
     debouncedLagreMedlemskapsperioderRef, // Avhenger av debounce funksjonen
   ]);
+
+  // Returner funksjonen for å kansellere
+  return { cancelDebouncedLagring };
 }
