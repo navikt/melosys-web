@@ -144,7 +144,147 @@ graph TD
 
 ### Spesifikk Interaksjon: Endring av Bestemmelse
 
-*(Uendret fra forrige versjon - pauser triggere, lagrer medlemskap umiddelbart, trigger ny beregning etterpå)*
+Endring av `bestemmelse` (lovhjemmel) er en viktig hendelse:
+1.  Bruker endrer `bestemmelse`-feltet i `FormUI`. RHF state oppdateres.
+2.  `useAarsavregningForm` har en `useEffect` som lytter spesifikt på `bestemmelse`.
+3.  Denne effekten setter `endrerBestemmelse`-state til `true` midlertidig. Dette flagget brukes til å *pause* de automatiske triggerne (`useMedlemskapLagringTrigger` og `useBeregningTrigger`) for å unngå unødvendige operasjoner mens bestemmelsen endres.
+4.  `useAarsavregningForm` kaller en funksjon (f.eks. `lagreMedlemskapsperioderEtterBestemmelseEndringHvisGyldig`) som:
+    *   Trigger RHF-validering for `medlemskapsperioder`.
+    *   Hvis periodene er gyldige, kalles `MedlemskapApi.lagreMedlemskapsperioder` *umiddelbart* (ikke debounced) for å sikre at periodene lagres med den *nye* bestemmelsen.
+    *   Etter lagring (eller hvis ugyldig), settes `endrerBestemmelse` tilbake til `false`, slik at de vanlige triggerne kan gjenoppta arbeidet.
+5.  `useBeregningTrigger` lytter også på `bestemmelse`, så etter at `endrerBestemmelse` er `false` igjen, vil den trigge en ny beregning (debounced) basert på den nye bestemmelsen og de (nå lagrede) periodene.
+
+### Detaljerte Effekt-drevne Flyter (useEffect)
+
+Disse diagrammene illustrerer den reaktive flyten som starter når en `useEffect`-hook detekterer endringer i spesifikke deler av RHF-state.
+
+#### Effekt: Endring i `medlemskapsperioder`
+
+Denne endringen trigger *både* lagringslogikken for medlemskap *og* beregningslogikken.
+
+```mermaid
+sequenceDiagram
+    participant Bruker
+    participant RHF_State as RHF Form State
+    participant LagringTrigger_Effect as useMedlemskapLagringTrigger useEffect
+    participant BeregningTrigger_Effect as useBeregningTrigger useEffect
+    participant FormHook as useAarsavregningForm
+    participant ValideringUtils
+    participant MedlemskapApi
+    participant DebouncedBeregning
+    participant Backend
+
+    Bruker->>RHF_State: Endrer medlemskapsperiode
+    RHF_State->>LagringTrigger_Effect: Dependency `medlemskapsperioder` endret, effekt trigges
+    LagringTrigger_Effect->>FormHook: Henter lagredeMedlemskap
+    LagringTrigger_Effect->>LagringTrigger_Effect: Sjekker brukerendringer (formUtils), validerer (RHF + ValideringUtils)
+    opt Gyldig medlemskap-endring
+        LagringTrigger_Effect->>LagringTrigger_Effect: Kaller debounced Lagre Medlemskap
+        Note over LagringTrigger_Effect, MedlemskapApi: Debounce venter... API-kall for lagring...
+        MedlemskapApi-->>LagringTrigger_Effect: Promise resolves(oppdatertePerioder)
+        LagringTrigger_Effect->>FormHook: setLagredeMedlemskap(oppdatertePerioder)
+        LagringTrigger_Effect->>RHF_State: setValue('medlemskapsperioder', oppdatertePerioder)
+    end
+
+    RHF_State->>BeregningTrigger_Effect: Dependency `medlemskapsperioder` endret, effekt trigges (kan skje parallelt/etter LagringTrigger)
+    BeregningTrigger_Effect->>BeregningTrigger_Effect: Sjekker betingelser (redigerbart, lagringPågår etc.)
+    BeregningTrigger_Effect->>RHF_State: trigger(validering HELE skjema)
+    opt Gyldig skjema
+        BeregningTrigger_Effect->>DebouncedBeregning: Kaller debounced Beregn
+        Note over DebouncedBeregning, Backend: Debounce venter... API-kall for beregning...
+        DebouncedBeregning-->>BeregningTrigger_Effect: Promise resolves(beregnetAvgift)
+        BeregningTrigger_Effect->>RHF_State: setValue('totalAvgift', beregnetAvgift)
+    end
+```
+
+#### Effekt: Endring i `skatteforholdsperioder` / `inntektsperioder` / `forskuddsvisFakturert` etc.
+
+Endringer i disse feltene trigger *kun* beregningslogikken (forutsatt at de er dependencies i `useBeregningTrigger`).
+
+```mermaid
+sequenceDiagram
+    participant Bruker
+    participant RHF_State as RHF Form State
+    participant BeregningTrigger_Effect as useBeregningTrigger useEffect
+    participant DebouncedBeregning
+    participant Backend
+
+    Bruker->>RHF_State: Endrer skatteforhold, inntekt eller forskudd
+    RHF_State->>BeregningTrigger_Effect: Relevant dependency endret, effekt trigges
+    BeregningTrigger_Effect->>BeregningTrigger_Effect: Sjekker betingelser (redigerbart, lagringPågår etc.)
+    BeregningTrigger_Effect->>RHF_State: trigger(validering HELE skjema)
+    opt Gyldig skjema
+        BeregningTrigger_Effect->>DebouncedBeregning: Kaller debounced Beregn
+        Note over DebouncedBeregning, Backend: Debounce venter... API-kall for beregning...
+        DebouncedBeregning-->>BeregningTrigger_Effect: Promise resolves(beregnetAvgift)
+        BeregningTrigger_Effect->>RHF_State: setValue('totalAvgift', beregnetAvgift)
+    end
+
+```
+
+### Effekt-drevne Flyter som Flowcharts
+
+Disse diagrammene viser den samme logikken som sekvensdiagrammene over, men som prosess-flowcharts.
+
+#### Flowchart: Effekt av Endring i `medlemskapsperioder`
+
+```mermaid
+graph TD
+    subgraph TriggerLagring [" "]
+        direction LR
+        A1[Bruker endrer medlemskapsperiode] --> A2{LagringTrigger useEffect};
+        A2 --> A3[Hent lagredeMedlemskap];
+        A3 --> A4{Har brukerendringer?};
+        A4 -- Ja --> A5{"Valider perioder\nRHF+Custom"};
+        A4 -- Nei --> A_EndLagring(Ingen reell endring);
+        A5 -- Gyldig --> A6[Debounced Lagre Medlemskap];
+        A5 -- Ugyldig --> A_EndLagring;
+        A6 --> A7["API: Lagre Medlemskap\n(etter debounce)"];
+        A7 --> A8[Motta oppdaterte perioder];
+        A8 --> A9[Oppdater lagredeMedlemskap state];
+        A9 --> A10[Oppdater RHF state setValue];
+        A10 --> A_EndLagring;
+    end
+
+    subgraph TriggerBeregning [" "]
+        direction LR
+        B1(RHF medlemskapsperioder endret) --> B2{BeregningTrigger useEffect};
+        B2 --> B3{"Sjekk betingelser? (redigerbart, !lagringPågår,\n!endrerBestemmelse)"};
+        B3 -- OK --> B4{Valider HELE skjema?};
+        B3 -- Ikke OK --> B_EndBeregning(Hopper over beregning);
+        B4 -- Gyldig --> B5[Debounced Beregn];
+        B4 -- Ugyldig --> B_EndBeregning;
+        B5 --> B6["API: Beregn Avgift\n(etter debounce)"];
+        B6 --> B7[Motta beregnet avgift];
+        B7 --> B8[Oppdater RHF state setValue];
+        B8 --> B_EndBeregning;
+    end
+
+    A10 --> B1;
+    %% Lagring kan trigge beregning
+    A2 --> B2;
+    %% Direkte endring trigger også beregning
+
+    style TriggerLagring fill:#f9f,stroke:#333,stroke-width:2px;
+    style TriggerBeregning fill:#ccf,stroke:#333,stroke-width:2px;
+
+```
+
+#### Flowchart: Effekt av Endring i Skatteforhold/Inntekt
+
+```mermaid
+graph TD
+    C1[Bruker endrer Skatt/Inntekt/Forskudd] --> C2{BeregningTrigger useEffect};
+    C2 --> C3{"Sjekk betingelser? (redigerbart, !lagringPågår,\n!endrerBestemmelse)"};
+    C3 -- OK --> C4{Valider HELE skjema?};
+    C3 -- Ikke OK --> C_End(Hopper over beregning);
+    C4 -- Gyldig --> C5[Debounced Beregn];
+    C4 -- Ugyldig --> C_End;
+    C5 --> C6["API: Beregn Avgift\n(etter debounce)"];
+    C6 --> C7[Motta beregnet avgift];
+    C7 --> C8[Oppdater RHF state setValue];
+    C8 --> C_End;
+```
 
 ## Dataflyt (Fokus på Perioder -> Beregning)
 
@@ -209,4 +349,13 @@ sequenceDiagram
 
 ## Konsekvenser
 
-*(Uendret fra forrige versjon)* 
+*   **Positivt:**
+    *   Logikk er modulært organisert i spesialiserte, gjenbrukbare hooks med klare ansvarsområder.
+    *   Automatisk lagring og beregning forbedrer brukeropplevelsen og reduserer manuelle steg.
+    *   Debouncing optimaliserer ytelse og reduserer API-kall.
+    *   Klarere skille mellom RHF-state, "lagret" state (fasit), og beregningslogikk.
+    *   Robust håndtering av CRUD for perioder og samspillet med beregning og validering.
+*   **Negativt:**
+    *   Høyere kompleksitet på grunn av interaksjon mellom flere hooks, states, og asynkrone operasjoner. Flere "lag" med logikk.
+    *   Debugging kan være mer krevende; feil kan oppstå i flere ledd (RHF, state sync, debounce, API-hooks, validering, beregning). God logging er viktig.
+    *   Krever nøye håndtering av dependencies i `useEffect` i flere hooks for å unngå unødvendige re-renders eller infinite loops. Korrekt bruk av `useCallback` er også viktig. 
