@@ -50,7 +50,6 @@ export interface OpprettNySakFormData {
   sakstema: string;
   brukerID: string;
   skalTilordnes: boolean;
-  oppgaveID: string;
   hovedpart: string;
   brukerNavn: string;
   virksomhetOrgnr: string;
@@ -126,7 +125,6 @@ function OpprettNySak({
     soknadslandFlereLandUkjentHvilke,
     soknadsland,
     skalTilordnes,
-    oppgaveID,
     mottaksdato,
     behandlingsaarsakType,
     behandlingsaarsakFritekst,
@@ -182,7 +180,6 @@ function OpprettNySak({
       nullstillFelt("brukerID");
       nullstillFelt("brukerNavn");
     }
-    nullstillFelt("oppgaveID");
     nullstillFelt("journalpostID");
   }, [hovedpart]);
 
@@ -208,7 +205,6 @@ function OpprettNySak({
       sakstype,
       sakstema,
       soknadDto,
-      oppgaveID,
     };
   };
 
