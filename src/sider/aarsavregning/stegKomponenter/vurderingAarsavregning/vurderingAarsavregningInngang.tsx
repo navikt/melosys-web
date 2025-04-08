@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import * as Nav from "../../../../navFrontend";
 import { redigerbartSelectors } from "../../../../ducks/redigerbart";
-import * as Utils from "../../../../utils";
 import MKV from "../../../../melosyskodeverk";
 import { OK } from "../../../../ducks/aarsavregning/types";
 import { fagsakSelectors } from "../../../../ducks/fagsaker";
@@ -16,9 +15,7 @@ import { behandlingsresultatOperations } from "../../../../ducks/behandlingsresu
 import { AarsavregningMedGrunnlag } from "./aarsavregningMedGrunnlag/aarsavregningMedGrunnlag";
 import { AarsavregningUtenEllerDeltGrunnlag } from "./aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlag";
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
-import { lagInnvilgetMedlemskapsPeriode } from "./komponenter/utils";
 import { FellesHandlersContext } from "../../../../contexts";
-import { datalastingOperations } from "../../../../ducks/datalasting";
 
 interface Props {
   bekreft: () => void;
@@ -61,11 +58,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
   const { oppfriskOgLastInnSaksopplysningerForAarsavregning } = useContext(FellesHandlersContext) as any;
 
   const utledGrunnlagstypeForAarsavregning = (res: AarsavregningResponse) => {
-    const innvilgetPeriode = lagInnvilgetMedlemskapsPeriode(
-      res.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.medlemskapsperioder,
-    );
-
-    if (res.tidligereGrunnlagsopplysninger === null && Utils._isEmpty(innvilgetPeriode.fom)) {
+    if (res.tidligereGrunnlagsopplysninger === null) {
       setHarGrunnlag(false);
     } else {
       setHarGrunnlag(true);

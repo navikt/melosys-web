@@ -24,6 +24,8 @@ import { mottatteOpplysningerOperations } from "../../ducks/mottatteOpplysninger
 import Oppsummering from "../../felleskomponenter/oppsummering";
 import { aarsavregningOperations } from "../../ducks/aarsavregning";
 import { medlemskapsperioderSelectors } from "../../ducks/medlemskapsperioder";
+import { useFeatureToggle } from "../../featuretoggle";
+import { ÅRSAVREGNING, ÅRSAVREGNING_UTEN_FLYT } from "../../featuretoggle/toggleNavn";
 
 interface Props extends RouteComponentProps<MatchParams> {
   behandlingOppfriskes: boolean;
@@ -45,6 +47,9 @@ function Saksbehandling({ match, location }: Props) {
   const registeropplysningerHentet = useSelector(behandlingerSelectors.RegisteropplysningerHentetSelector);
 
   const { startOgVisOppfriskModal, visOppfriskModal, behandlingOppfriskes } = useContext(FellesHandlersContext) as any;
+
+  const erÅrsavregningToggleEnabled = useFeatureToggle(ÅRSAVREGNING);
+  const erÅrsavregningUtenFlytToggleEnabled = useFeatureToggle(ÅRSAVREGNING_UTEN_FLYT);
 
   const oppdaterBehandlingIDState = () => {
     const behandlingIDFraParam = Utils.queryString.getParam(location, "behandlingID");
@@ -116,7 +121,16 @@ function Saksbehandling({ match, location }: Props) {
           <Nav.Row>
             <Nav.Column xs="7">
               <main id="main-container">
-                <EnkelStegvelger alleSteg={alleSteg} />
+                {erÅrsavregningUtenFlytToggleEnabled && (
+                  <Nav.Alert variant="warning" className="ingenFlytMelding">
+                    <b>Du kan ikke gå videre</b>
+                    <p>
+                      Du kan ikke årsavregne i Meloys enda, men du kan sende et fritekstbrev for å hente inn
+                      inntektsopplysninger.
+                    </p>
+                  </Nav.Alert>
+                )}
+                {erÅrsavregningToggleEnabled && <EnkelStegvelger alleSteg={alleSteg} />}
               </main>
               <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
             </Nav.Column>

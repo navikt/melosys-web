@@ -143,9 +143,7 @@ const medlemskapsperioderOverlappTest = {
 
     const sortertePerioder = [...gyldigePerioder].sort(Utils.dato.sorterEtterNorskFomDato);
 
-    // eslint-disable-next-line no-plusplus
     for (let i = 0; i < sortertePerioder.length; i++) {
-      // eslint-disable-next-line no-plusplus
       for (let j = i + 1; j < sortertePerioder.length; j++) {
         if (
           Utils.dato.perioderOverlapper(
@@ -208,27 +206,8 @@ const medlemskapsperioderKontinuerligTest = {
   },
 };
 
-const medlemskapsperioderSammeBestemmelseTest = {
-  name: "medlemskapsperioderSammeBestemmelse",
-  message: "Alle medlemskapsperioder må ha samme bestemmelse",
-  test: (perioder) => {
-    if (!perioder || perioder.length <= 1) {
-      return true;
-    }
-
-    if (harUgyldigeDatoer(perioder)) {
-      return true;
-    }
-
-    const bestemmelseSet = new Set(
-      perioder.filter((periode) => periode.bestemmelse).map((periode) => periode.bestemmelse),
-    );
-
-    return bestemmelseSet.size <= 1;
-  },
-};
-
 const aarsavregningUtenEllerDeltGrunnlagSchema = object().shape({
+  bestemmelse: string().required(MAA_FYLLES_UT),
   medlemskapsperioder: array()
     .min(1, "Minst en medlemskapsperiode")
     .of(
@@ -240,13 +219,11 @@ const aarsavregningUtenEllerDeltGrunnlagSchema = object().shape({
           .erEtterDatofelt("fomDato")
           .test(åpenTomTest)
           .test(erInnenforValgtAarTest),
-        trygdedekning: string().required(),
-        bestemmelse: string().required(),
+        trygdedekning: string().required(MAA_FYLLES_UT),
       }),
     )
     .test(medlemskapsperioderOverlappTest)
-    .test(medlemskapsperioderKontinuerligTest)
-    .test(medlemskapsperioderSammeBestemmelseTest),
+    .test(medlemskapsperioderKontinuerligTest),
   totaltForskuddsvisFakturert: string().nullable().required(MAA_FYLLES_UT),
   skatteforholdsperioder: array()
     .min(1, "Minst en skatteforholdsperiode")

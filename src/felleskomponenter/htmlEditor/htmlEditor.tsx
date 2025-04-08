@@ -47,6 +47,9 @@ const wrapWithHtmlEditorDiv = (content: string): string => {
   if (content.trim().startsWith('<div class="ql-fritekst">') && content.trim().endsWith("</div>")) {
     return content;
   }
+
+  if (content.trim() === "" || content.trim() === "<p><br></p>") return "";
+
   return `<div class="ql-fritekst">${content}</div>`;
 };
 

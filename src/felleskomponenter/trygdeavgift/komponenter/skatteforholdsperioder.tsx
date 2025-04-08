@@ -79,13 +79,11 @@ export function Skatteforholdsperioder({
         );
       })}
 
-      {redigerbart && (
-        <Nav.Row className="legg-til__rad">
-          <Mui.Lenkeknapp ikon={Ikoner.Add} onClick={() => append(defaultPeriode || {})}>
-            Legg til skatteforhold
-          </Mui.Lenkeknapp>
-        </Nav.Row>
-      )}
+      <Nav.Row className="legg-til__rad">
+        <Mui.Lenkeknapp disabled={!redigerbart} ikon={Ikoner.Add} onClick={() => append(defaultPeriode || {})}>
+          Legg til skatteforhold
+        </Mui.Lenkeknapp>
+      </Nav.Row>
     </div>
   );
 }
