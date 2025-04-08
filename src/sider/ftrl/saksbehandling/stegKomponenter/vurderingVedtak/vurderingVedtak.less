@@ -31,16 +31,33 @@
     margin-bottom: 1rem;
   }
 
-  .fakturamottaker {
+  .trygdeavgift {
     display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .fakturamottaker,
+  .fakturamottaker--indent {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .fakturamottaker--indent {
+    padding-left: calc(0.5em + 16px + 0.5rem + 4px);
   }
 
   .trygdeavgift,
   .vedtak_valg {
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
   }
 
-  .arbeidsland,
+  .arbeidsland {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 1.5rem;
+  }
+
   .fakturaEllerTrekk,
   .nyVurderingBakgrunn {
     margin-bottom: 2rem;
