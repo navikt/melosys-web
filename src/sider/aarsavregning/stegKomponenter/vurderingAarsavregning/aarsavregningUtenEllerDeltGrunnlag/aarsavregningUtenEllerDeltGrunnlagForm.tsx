@@ -183,7 +183,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     skatteforholdsperioderFormState: Skatteforhold[],
     inntektskilderFormState: Inntektskilde[],
     medlemskapsperioderFormState: Medlemskapsperiode[],
-    totaltForskuddsvisFakturert: number | undefined,
+    totaltForskuddsvisFakturertParam: number | undefined,
   ) => ({
     skatteforholdsperioder: skatteforholdsperioderFormState.map((skatteforhold: Skatteforhold) => ({
       fomDato: skatteforhold.fomDato,
@@ -204,7 +204,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       trygdedekning: periode.trygdedekning,
       medlemskapstype: periode.medlemskapstype,
     })),
-    totaltForskuddsvisFakturert,
+    totaltForskuddsvisFakturert: totaltForskuddsvisFakturertParam,
   });
 
   useEffect(() => {
@@ -628,7 +628,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
           previousFormState,
         });
         if (errors) {
-          //Nødvendig fordi errors er lazy som ikke blir oppdatert.
+          // Nødvendig fordi errors er lazy som ikke blir oppdatert.
           // Her vet vi at vi har en state som er som siste beregningen, dvs ok.
           // Derfor trigger på nytt i tilfelle "errors" ikke har riktig verdi
           trigger();
@@ -737,6 +737,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
             minVerdi={initiellData.valgtÅr !== undefined ? new Date(initiellData.valgtÅr, 0, 1) : undefined}
             trygdedekninger={trygdedekninger}
             setValue={setValue}
+            errors={errors}
           />
         ))}
       </div>

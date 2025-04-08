@@ -1,4 +1,4 @@
-import { Control, FieldArrayWithId } from "react-hook-form";
+import { Control, FieldArrayWithId, FieldErrors } from "react-hook-form";
 
 import MKV from "../../../../../melosyskodeverk";
 import * as KV from "../../../../../kodeverk";
@@ -27,6 +27,7 @@ export interface PeriodeElementerProps {
   minVerdi?: Date;
   trygdedekninger?: string[];
   setValue: (name: string, value: any, options?: any) => void;
+  errors: FieldErrors<FormValuesProps>;
 }
 
 export function MedlemskapsperiodeSkjema({
@@ -43,9 +44,10 @@ export function MedlemskapsperiodeSkjema({
   minVerdi,
   trygdedekninger = [],
   setValue,
+  errors,
 }: PeriodeElementerProps) {
   const erPeriodeFraGrunnlag = !formValues.medlemskapsperioder[index]?.redigerbar;
-  const kanSlettePeriode = redigerbart && formValues.medlemskapsperioder.length !== 1;
+  const kanViseSletteKolonne = redigerbart && formValues.medlemskapsperioder.length > 1;
   const tilOgMedDatoForrigePeriode =
     formValues.medlemskapsperioder[index - 1] !== undefined
       ? Utils.dato.norskStringTilDate(formValues.medlemskapsperioder[index - 1]?.tomDato)
@@ -56,23 +58,32 @@ export function MedlemskapsperiodeSkjema({
 
   const kunEnTrygdedekning = trygdedekninger?.length === 1;
 
-  let maxTomDatoIndex = -1;
-  let maxTomDato: Date | null = null;
-  formValues.medlemskapsperioder.forEach((periode, idx) => {
-    const currentTomDato = Utils.dato.norskStringTilDate(periode.tomDato);
-    if (currentTomDato && !Number.isNaN(currentTomDato.getTime())) {
-      if (maxTomDato === null || currentTomDato >= maxTomDato) {
-        maxTomDato = currentTomDato;
-        maxTomDatoIndex = idx;
-      }
-    } else if (maxTomDato === null && periode.tomDato === undefined) {
-      maxTomDatoIndex = idx;
+  const lastIndex = formValues.medlemskapsperioder.length - 1;
+  let deletableIndex = -1;
+
+  if (lastIndex >= 0) {
+    const lastPeriodHasError = !!errors?.medlemskapsperioder?.[lastIndex]?.tomDato;
+
+    if (lastPeriodHasError) {
+      deletableIndex = lastIndex;
+    } else {
+      let maxValidTomDatoIndex = -1;
+      let maxValidTomDato: Date | null = null;
+      formValues.medlemskapsperioder.forEach((periode, idx) => {
+        const currentTomDato = Utils.dato.norskStringTilDate(periode.tomDato);
+        if (currentTomDato && !Number.isNaN(currentTomDato.getTime())) {
+          if (maxValidTomDato === null || currentTomDato >= maxValidTomDato) {
+            maxValidTomDato = currentTomDato;
+            maxValidTomDatoIndex = idx;
+          }
+        }
+      });
+      deletableIndex = maxValidTomDatoIndex !== -1 ? maxValidTomDatoIndex : lastIndex;
     }
-  });
+  }
 
-  const erPeriodeMedSisteTomDato = index === maxTomDatoIndex;
+  const erDennePeriodenSlettbar = index === deletableIndex;
 
-  // Setter trygdedekning dersom vi kun har en gyldig dekning
   useEffect(() => {
     if (trygdedekninger?.length === 1) {
       setValue(`medlemskapsperioder[${index}].trygdedekning`, trygdedekninger[0], { shouldValidate: true });
@@ -123,13 +134,13 @@ export function MedlemskapsperiodeSkjema({
               ))}
             </Forms.Select>
           </Nav.Column>
-          {kanSlettePeriode && (
+          {kanViseSletteKolonne && (
             <Nav.Column className={index === 0 ? "slett__knapp slett__first" : "slett__knapp"}>
               <Mui.IkonKnapp
                 ikon={Ikoner.Bin}
                 onClick={() => remove(index)}
                 ariaLabel="Slett periode"
-                disabled={!redigerbart || erPeriodeFraGrunnlag || !erPeriodeMedSisteTomDato}
+                disabled={!redigerbart || erPeriodeFraGrunnlag || !erDennePeriodenSlettbar}
               />
             </Nav.Column>
           )}
