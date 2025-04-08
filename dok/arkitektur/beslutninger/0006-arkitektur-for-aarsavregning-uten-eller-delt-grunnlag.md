@@ -42,23 +42,23 @@ graph LR
     end;
 
     subgraph "Kjerne Logikk + State"
-        FormHook(useAarsavregningForm\n- RHF Instans alle felt inkl periodelister\n- lagredeMedlemskapsperioder\n- lagreMedlemskapPaagar\n- endrerBestemmelse\n- arrayValideringsfeil);
+        FormHook(useAarsavregningForm<br/>- RHF Instans alle felt inkl periodelister<br/>- lagredeMedlemskapsperioder<br/>- lagreMedlemskapPaagar<br/>- endrerBestemmelse<br/>- arrayValideringsfeil);
     end;
 
     subgraph "Spesialiserte Hooks - Logikk og API"
-        LagringTrigger(useMedlemskapLagringTrigger\n- Debounced Lagring Kun Medlemskap\n- Endringsdeteksjon Medlemskap\n- Periode Validering Medlemskap);
-        BeregningTrigger(useBeregningTrigger\n- Reagerer på RHF-endringer alle perioder etc\n- Skjema Validering);
-        MedlemskapApi(useMedlemskapsperioder\n- CRUD API Medlemskap\n- ID-basert diffing før PUT);
-        DebouncedBeregning(useDebouncedBeregning\n- Debounced Beregning API);
+        LagringTrigger(useMedlemskapLagringTrigger<br/>- Debounced Lagring Kun Medlemskap<br/>- Endringsdeteksjon Medlemskap<br/>- Periode Validering Medlemskap);
+        BeregningTrigger(useBeregningTrigger<br/>- Reagerer på RHF-endringer alle perioder etc<br/>- Skjema Validering);
+        MedlemskapApi(useMedlemskapsperioder<br/>- CRUD API Medlemskap<br/>- ID-basert diffing før PUT);
+        DebouncedBeregning(useDebouncedBeregning<br/>- Debounced Beregning API);
     end;
 
     subgraph Verktøy/Lib
         RHFLib[React Hook Form Bibliotek];
-        FormUtils(formUtils.ts\n- HarBrukerendringer);
-        ValideringUtils(valideringsfeil.tsx\n- Gap/Overlapp sjekk);
+        FormUtils(formUtils.ts<br/>- HarBrukerendringer);
+        ValideringUtils(valideringsfeil.tsx<br/>- Gap/Overlapp sjekk);
         BackendApi[Backend API];
         DebounceLib[lodash.debounce];
-        Schema(Schema.jsx\n- RHF Zod Schema alle felt);
+        Schema(Schema.jsx<br/>- RHF Zod Schema alle felt);
     end;
 
     UI --> FormHook("Initialiserer");
@@ -93,11 +93,11 @@ State håndteres primært av RHF (for alle skjemafelt inkl. periodelistene) og s
 ```mermaid
 graph TD
     subgraph "useAarsavregningForm - Sentral State"
-        RHFState["RHF Form State - via useForm\n(Inneholder medlemskaps-, skatteforholds-, og inntektsperioder + andre felt)"];
-        LagredeMedlemskap["lagredeMedlemskapsperioder - Sist lagret fasit\n(Kun for medlemskapsperioder, brukes for diffing)"];
-        LagringMedlemskapPaagar["lagreMedlemskapPaagar - boolean\n(Styrer medlemskap-lagring)"];
-        EndrerBestemmelse["endrerBestemmelse - boolean\n(Styrer triggere ved endring)"];
-        ArrayValideringsfeil["arrayValideringsfeil - string eller undefined\n(For medlemskap gap/overlapp)"];
+        RHFState["RHF Form State - via useForm<br/>(Inneholder medlemskaps-, skatteforholds-, og inntektsperioder + andre felt)"];
+        LagredeMedlemskap["lagredeMedlemskapsperioder - Sist lagret fasit<br/>(Kun for medlemskapsperioder, brukes for diffing)"];
+        LagringMedlemskapPaagar["lagreMedlemskapPaagar - boolean<br/>(Styrer medlemskap-lagring)"];
+        EndrerBestemmelse["endrerBestemmelse - boolean<br/>(Styrer triggere ved endring)"];
+        ArrayValideringsfeil["arrayValideringsfeil - string eller undefined<br/>(For medlemskap gap/overlapp)"];
     end;
 
     subgraph "RHF Library [React Hook Form Bibliotek]"
@@ -235,11 +235,11 @@ graph TD
         A1[Bruker endrer medlemskapsperiode] --> A2{LagringTrigger useEffect};
         A2 --> A3[Hent lagredeMedlemskap];
         A3 --> A4{Har brukerendringer?};
-        A4 -- Ja --> A5{"Valider perioder\nRHF+Custom"};
+        A4 -- Ja --> A5{"Valider perioder<br/>RHF+Custom"};
         A4 -- Nei --> A_EndLagring(Ingen reell endring);
         A5 -- Gyldig --> A6[Debounced Lagre Medlemskap];
         A5 -- Ugyldig --> A_EndLagring;
-        A6 --> A7["API: Lagre Medlemskap\n(etter debounce)"];
+        A6 --> A7["API: Lagre Medlemskap<br/>(etter debounce)"];
         A7 --> A8[Motta oppdaterte perioder];
         A8 --> A9[Oppdater lagredeMedlemskap state];
         A9 --> A10[Oppdater RHF state setValue];
@@ -249,12 +249,12 @@ graph TD
     subgraph TriggerBeregning [" "]
         direction LR
         B1(RHF medlemskapsperioder endret) --> B2{BeregningTrigger useEffect};
-        B2 --> B3{"Sjekk betingelser? (redigerbart, !lagringPågår,\n!endrerBestemmelse)"};
+        B2 --> B3{"Sjekk betingelser? (redigerbart, !lagringPågår,<br/>!endrerBestemmelse)"};
         B3 -- OK --> B4{Valider HELE skjema?};
         B3 -- Ikke OK --> B_EndBeregning(Hopper over beregning);
         B4 -- Gyldig --> B5[Debounced Beregn];
         B4 -- Ugyldig --> B_EndBeregning;
-        B5 --> B6["API: Beregn Avgift\n(etter debounce)"];
+        B5 --> B6["API: Beregn Avgift<br/>(etter debounce)"];
         B6 --> B7[Motta beregnet avgift];
         B7 --> B8[Oppdater RHF state setValue];
         B8 --> B_EndBeregning;
@@ -275,12 +275,12 @@ graph TD
 ```mermaid
 graph TD
     C1[Bruker endrer Skatt/Inntekt/Forskudd] --> C2{BeregningTrigger useEffect};
-    C2 --> C3{"Sjekk betingelser? (redigerbart, !lagringPågår,\n!endrerBestemmelse)"};
+    C2 --> C3{"Sjekk betingelser? (redigerbart, !lagringPågår,<br/>!endrerBestemmelse)"};
     C3 -- OK --> C4{Valider HELE skjema?};
     C3 -- Ikke OK --> C_End(Hopper over beregning);
     C4 -- Gyldig --> C5[Debounced Beregn];
     C4 -- Ugyldig --> C_End;
-    C5 --> C6["API: Beregn Avgift\n(etter debounce)"];
+    C5 --> C6["API: Beregn Avgift<br/>(etter debounce)"];
     C6 --> C7[Motta beregnet avgift];
     C7 --> C8[Oppdater RHF state setValue];
     C8 --> C_End;
