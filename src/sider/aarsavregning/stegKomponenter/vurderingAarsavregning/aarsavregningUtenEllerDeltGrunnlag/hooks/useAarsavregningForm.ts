@@ -38,7 +38,7 @@ export function useAarsavregningForm({
   bekreft: () => void;
   oppdaterStatus: (isValid: boolean) => void;
 }) {
-  // State managed by this hook
+  // State håndtert av denne hooken
   const [aarsavregningResponse, setAarsavregningResponse] = useState<AarsavregningResponse | undefined>(
     initiellData.aarsavregningResponse,
   );
@@ -48,7 +48,7 @@ export function useAarsavregningForm({
     initiellData.formDefaultValues.medlemskapsperioder || [],
   );
   const [hovedFeilmelding, setHovedFeilmelding] = useState<string | undefined>(undefined);
-  // State managed by useDebouncedCalculation: beregningPaagar, debouncedBeregningPagaar, previousFormState
+  // State håndtert av useDebouncedBeregning: beregningPaagar, debouncedBeregningPagaar, forrigeSkjemadataTilBeregning
 
   // Redux selectors
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
@@ -71,7 +71,7 @@ export function useAarsavregningForm({
     aarsavregningID != null ? Number(aarsavregningID) : undefined,
   );
 
-  // Set up form
+  // Sett opp skjema
   const {
     control,
     watch,
@@ -88,7 +88,7 @@ export function useAarsavregningForm({
     defaultValues: initiellData.formDefaultValues,
   });
 
-  // Field arrays
+  // Felt-arrayer
   const {
     fields: medlemskapsperioderFields,
     append: medlemskapsperioderAppend,
@@ -114,7 +114,7 @@ export function useAarsavregningForm({
     update: inntektUpdate,
   } = useFieldArray<AarsavregningFormValuesProps, "inntektskilder", "id">({ control, name: "inntektskilder" });
 
-  // Form field watches
+  // Skjemafelt-watches
   const formValues = watch();
   const bestemmelse = useWatch({ control, name: "bestemmelse" });
   const medlemskapsperioder = useWatch({ control, name: "medlemskapsperioder" });
@@ -125,7 +125,7 @@ export function useAarsavregningForm({
   // Refs
   const forrigeTotaltForskuddsvisFakturert = useRef(totaltForskuddsvisFakturert);
 
-  // Derived state
+  // Avledet state
   const medlemskapstypeErPliktig = useMemo(() => {
     return medlemskapsperioder
       .filter((periode: Medlemskapsperiode) => periode.id !== DEFAULT_MEDLEMSKAPSPERIODE.id)
@@ -136,13 +136,13 @@ export function useAarsavregningForm({
     return finnMedlemskapsperiode(medlemskapsperioder);
   }, [medlemskapsperioder, finnMedlemskapsperiode]);
 
-  // Recalculate combined feilmelding
+  // Rekalkuler kombinert feilmelding
   const aktivFeilmeldingForStatus = useMemo(
     () => hovedFeilmelding || medlemskapFeilmelding || arrayValideringsfeil,
     [hovedFeilmelding, medlemskapFeilmelding, arrayValideringsfeil],
   );
 
-  // --- Integrate Debounced Calculation Hook (Renamed) ---
+  // Integrer Debounced Beregning Hook (Omdøpt)
   const {
     beregningPaagar,
     debouncedBeregningPagaar,
@@ -162,7 +162,7 @@ export function useAarsavregningForm({
     setAarsavregningResponse,
   });
 
-  // --- Handlers ---
+  // Handlere
   const lagreMedlemskapsperioderEtterBestemmelseEndringHvisGyldig = useCallback(
     (oppdaterteMedlemskapsperioder: Medlemskapsperiode[]) => {
       setLagredeMedlemskapsperioder(oppdaterteMedlemskapsperioder);
@@ -227,7 +227,7 @@ export function useAarsavregningForm({
     [aarsavregningID, behandlingID, handleOppdaterTotaltForskuddsvisFakturert, setHovedFeilmelding],
   );
 
-  // --- Call extracted calculation trigger hook (Renamed) ---
+  // Kall uthentet beregningstrigger-hook (Omdøpt)
   useBeregningTrigger({
     skatteforholdsperioder,
     inntektskilder,
@@ -248,23 +248,25 @@ export function useAarsavregningForm({
     previousFormState: forrigeSkjemadataTilBeregning,
   });
 
-  // Ref to store the previous validity status communicated to the parent
+  // Ref for å lagre forrige gyldighetsstatus kommunisert til forelder
   const previousIsStegGyldigRef = useRef<boolean | undefined>(undefined);
 
-  // --- Effect to update status based on combined error state ---
+  // Effekt for å oppdatere status basert på kombinert feil-state
   useEffect(() => {
     const isStegGyldig = stegErGyldig(formIsValid, aarsavregningResponse, aktivFeilmeldingForStatus);
+    // Kall kun oppdaterStatus hvis verdien faktisk har endret seg
     if (isStegGyldig !== previousIsStegGyldigRef.current) {
       console.log("Calling oppdaterStatus (Value Changed):", { isStegGyldig });
       oppdaterStatus(isStegGyldig);
-      previousIsStegGyldigRef.current = isStegGyldig; // Update the ref after calling
+      // Oppdater ref etter kall
+      previousIsStegGyldigRef.current = isStegGyldig;
     } else {
-      // Optional log for when the effect runs but status doesn't change
+      // Valgfri logg for når effekt kjører men status ikke endres
       console.log("Skipping oppdaterStatus (Value Unchanged):", { isStegGyldig });
     }
   }, [formIsValid, aarsavregningResponse, aktivFeilmeldingForStatus, oppdaterStatus, stegErGyldig]);
 
-  // --- Effect to update totalavgift ---
+  // Effekt for å oppdatere totalavgift
   useEffect(() => {
     if (redigerbart && aarsavregningResponse?.nyttGrunnlag) {
       if (aarsavregningResponse.nyttGrunnlag?.avgift.totalAvgift !== aarsavregningResponse.avregning?.nyttTotalbeloep) {
@@ -289,7 +291,7 @@ export function useAarsavregningForm({
     aarsavregningID,
   ]);
 
-  // --- Call extracted medlemskap saving trigger hook (Renamed) ---
+  // Kall uthentet medlemskapslagringstrigger-hook (Omdøpt)
   useMedlemskapLagringTrigger({
     medlemskapsperioder,
     lagredeMedlemskapsperioder,
@@ -305,7 +307,7 @@ export function useAarsavregningForm({
     setArrayValideringsfeil,
   });
 
-  // --- Effect to handle forskuddsvis fakturert change ---
+  // Effekt for å håndtere endring i forskuddsvis fakturert
   useEffect(() => {
     if (
       redigerbart &&
@@ -326,33 +328,33 @@ export function useAarsavregningForm({
     setHovedFeilmelding,
   ]);
 
-  // --- Handle confirm click (Simplified version closer to original) ---
+  // Håndter bekreft-klikk (Forenklet versjon nærmere original)
   const bekreftOnClick = () => {
-    // Clear errors optimistically
+    // Fjern feil optimistisk
     setHovedFeilmelding(undefined);
     setArrayValideringsfeil(undefined);
     setMedlemskapFeilmelding(undefined);
 
-    // Trigger validation but don't wait for the promise here
-    // RHF state (formIsValid) and custom validation states should update via watches/effects
+    // Trigger validering men ikke vent på promise her
+    // RHF state (formIsValid) og custom validerings-states bør oppdateres via watches/effekter
     trigger();
 
-    // Log current state relevant to the check
+    // Logg nåværende state relevant for sjekken
     console.log("Bekreft Pre-Check:", {
-      formIsValid, // From RHF state
+      formIsValid, // Fra RHF state
       hasNyttGrunnlag: !!aarsavregningResponse?.nyttGrunnlag,
-      aktivFeilmeldingForStatus, // Combined error state
+      aktivFeilmeldingForStatus, // Kombinert feil-state
       beregningPaagar,
       lagreMedlemskapsperioderPaagar,
     });
 
-    // Check validity based on current state, closer to original logic
-    // Note: We use the combined error state `aktivFeilmeldingForStatus` instead of the single original `feilmelding`
-    // And we add the lagreMedlemskapsperioderPaagar check
+    // Sjekk gyldighet basert på nåværende state, nærmere original logikk
+    // Merk: Vi bruker den kombinerte feil-staten `aktivFeilmeldingForStatus` istedenfor den originale enkle `feilmelding`
+    // Og vi legger til sjekken for lagreMedlemskapsperioderPaagar
     if (
       formIsValid &&
       aarsavregningResponse?.nyttGrunnlag &&
-      !aktivFeilmeldingForStatus && // Check if any relevant error exists
+      !aktivFeilmeldingForStatus && // Sjekk om noen relevante feil eksisterer
       !beregningPaagar &&
       !lagreMedlemskapsperioderPaagar
     ) {
@@ -370,7 +372,7 @@ export function useAarsavregningForm({
     }
   };
 
-  // Computed values for rendering
+  // Beregnet verdier for rendering
   const trygdeAvgiftSkalIkkeBetalesTilNav =
     medlemskapstypeErPliktig && erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder);
   const forskuddsvisFakturertTrygdeavgift =

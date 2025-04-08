@@ -2,6 +2,10 @@ import { Inntektskilde, Skatteforhold } from "../../../../../../felleskomponente
 import { Medlemskapsperiode } from "../../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import * as Utils from "../../../../../../utils";
 
+/**
+ * Mapper skjemadata til et enklere format for sammenligning og potensielt API-kall.
+ * Fjerner unødvendige felter som React Hook Form's `id`.
+ */
 export const mapFormState = (
   skatteforholdsperioderFormState: Skatteforhold[],
   inntektskilderFormState: Inntektskilde[],
@@ -30,36 +34,42 @@ export const mapFormState = (
   totaltForskuddsvisFakturert: totaltForskuddsvisFakturertParam,
 });
 
+/**
+ * Sjekker om det er reelle brukerendringer i medlemskapsperiodene.
+ * Sammenligner listene dypt, men ignorerer `id`-feltet som kun er for React keys.
+ */
 export const medlemskapsperioderHarBrukerendringer = (
   medlemskapsperioderNå: Medlemskapsperiode[],
   medlemskapsperioderTidlgere: Medlemskapsperiode[],
 ) => {
-  // Ensure we have arrays to compare
+  // Sikrer at vi har arrays å sammenligne
   if (!medlemskapsperioderNå || !medlemskapsperioderTidlgere) {
-    console.warn("Comparing undefined medlemskapsperioder arrays?");
-    return medlemskapsperioderNå !== medlemskapsperioderTidlgere; // Basic check if one is missing
+    console.warn("Sammenligner udefinerte medlemskapsperioder arrays?");
+    // Enkel sjekk hvis en mangler
+    return medlemskapsperioderNå !== medlemskapsperioderTidlgere;
   }
 
-  // If lengths differ, they have changed
+  // Hvis lengden er ulik, har de endret seg
   if (medlemskapsperioderNå.length !== medlemskapsperioderTidlgere.length) {
-    console.log("*** Comparing medlemskapsperioder: Lengths differ ***");
+    console.log("*** Sammenligner medlemskapsperioder: Lengde ulik ***");
     return true;
   }
 
-  // Prepare for deep comparison - create copies without the 'id' field
+  // Forbered for dyp sammenligning - lag kopier uten 'id'-feltet
   const mapForComparison = (p: Medlemskapsperiode) => {
-    const { id, ...rest } = p; // Destructure to omit 'id'
+    const { id, ...rest } = p; // Destrukturering for å utelate 'id'
     return rest;
   };
   const nåUtenId = medlemskapsperioderNå.map(mapForComparison);
   const tidligereUtenId = medlemskapsperioderTidlgere.map(mapForComparison);
 
-  // Perform deep comparison on the arrays of objects (without id)
-  // Utils._isEqual should handle order differences implicitly
-  console.log("*** Comparing medlemskapsperioder (deep, no id) ***", { nå: nåUtenId, tidligere: tidligereUtenId });
+  // Utfør dyp sammenligning på arrayene av objekter (uten id)
+  // Utils._isEqual bør håndtere rekkefølge implisitt hvis den gjør en dyp set-lignende sjekk
+  // Hvis den er rekkefølge-sensitiv, må vi sortere begge arrayene først.
+  console.log("*** Sammenligner medlemskapsperioder (dyp, uten id) ***", { nå: nåUtenId, tidligere: tidligereUtenId });
   const isEqual = Utils._isEqual(nåUtenId, tidligereUtenId);
-  console.log("*** Comparison result (isEqual):", isEqual, " -> Har brukerendringer:", !isEqual);
+  console.log("*** Sammenligningsresultat (isEqual):", isEqual, " -> Har brukerendringer:", !isEqual);
 
-  // Return true if they are NOT equal
+  // Returnerer true hvis de IKKE er like
   return !isEqual;
 };

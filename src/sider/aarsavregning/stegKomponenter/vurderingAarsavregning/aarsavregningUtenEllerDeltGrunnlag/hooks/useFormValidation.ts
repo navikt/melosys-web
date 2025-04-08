@@ -50,9 +50,12 @@ export const useFormValidation = () => {
     return aktivFeilmelding === undefined;
   }, []);
 
-  const stegErGyldig = (formIsValid: boolean, aarsavregningResponse?: AarsavregningResponse, feilmelding?: string) => {
-    return Boolean(formIsValid && aarsavregningResponse?.nyttGrunnlag && feilmelding === undefined);
-  };
+  const stegErGyldig = useCallback(
+    (formIsValid: boolean, aarsavregningResponse?: AarsavregningResponse, feilmelding?: string) => {
+      return Boolean(formIsValid && aarsavregningResponse?.nyttGrunnlag && feilmelding === undefined);
+    },
+    [],
+  );
 
   return {
     arrayValideringsfeil,

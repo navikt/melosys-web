@@ -6,7 +6,8 @@ import { AarsavregningFormValuesProps } from "../aarsavregningUtenEllerDeltGrunn
 import { medlemskapsperioderHarBrukerendringer } from "../utils/formUtils";
 import { finnAktivFeilmeldingForMedlemskapsperioder } from "../valideringsfeil";
 
-interface UseMedlemskapSavingTriggerProps {
+// Omdøpt interface for klarhet
+interface UseMedlemskapLagringTriggerProps {
   medlemskapsperioder: Medlemskapsperiode[];
   lagredeMedlemskapsperioder: Medlemskapsperiode[];
   setLagredeMedlemskapsperioder: (perioder: Medlemskapsperiode[]) => void;
@@ -38,24 +39,24 @@ export function useMedlemskapLagringTrigger({
   bestemmelse,
   lagreMedlemskapsperioder,
   setArrayValideringsfeil,
-}: UseMedlemskapSavingTriggerProps) {
+}: UseMedlemskapLagringTriggerProps) { // Bruker omdøpt interface
   const medlemskapsperioderForrigeAntall = useRef(medlemskapsperioder.length);
   const debouncedLagreMedlemskapsperioderRef = useRef<any>(null);
 
-  // --- Debounced Saving Function ---
+  // Debounced lagringsfunksjon
   const debouncedLagreMedlemskapsperioder = useCallback(
     (medlemskapsperioderFormValues: Medlemskapsperiode[], callbackEtterLagring?: () => void) => {
       console.log("*** Kaller lagreMedlemskapsperioder via debounce ***", medlemskapsperioderFormValues);
       lagreMedlemskapsperioder(medlemskapsperioderFormValues, bestemmelse || "", lagredeMedlemskapsperioder)
         .then((oppdaterteMedlemskapsperioder) => {
           console.log("*** lagreMedlemskapsperioder ferdig, oppdaterte: ***", oppdaterteMedlemskapsperioder);
-          // Update both local state and RHF state
+          // Oppdater både lokal state og RHF state
           setLagredeMedlemskapsperioder(oppdaterteMedlemskapsperioder);
           setValue("medlemskapsperioder", oppdaterteMedlemskapsperioder, { shouldValidate: false, shouldDirty: false });
         })
         .catch((error) => {
           console.error("*** Feil under lagring av medlemskapsperioder (debounce): ***", error);
-          // Potentially set an error message here if needed
+          // Kan potensielt sette en feilmelding her hvis nødvendig
         })
         .finally(() => {
           if (callbackEtterLagring) callbackEtterLagring();
@@ -64,42 +65,48 @@ export function useMedlemskapLagringTrigger({
     [lagreMedlemskapsperioder, bestemmelse, setValue, lagredeMedlemskapsperioder, setLagredeMedlemskapsperioder],
   );
 
-  // Setup the debounced function ref
+  // Sett opp ref til den debounced funksjonen
   useEffect(() => {
     debouncedLagreMedlemskapsperioderRef.current = Utils._debounce(debouncedLagreMedlemskapsperioder, 350);
+    // Rydd opp debounce ved unmount/endring
     return () => {
       debouncedLagreMedlemskapsperioderRef.current?.cancel?.();
     };
   }, [debouncedLagreMedlemskapsperioder]);
 
-  // --- Effect to trigger medlemskap saving ---
+  // Effekt for å trigge lagring av medlemskapsperioder
   useEffect(() => {
     const lagreMedlemskapsperioderEffect = async () => {
+      // Hopp over hvis ikke redigerbart, bestemmelse endres, eller lagring allerede pågår
       if (redigerbart && !endrerBestemmelse && !lagreMedlemskapsperioderPaagar) {
+        // Sjekk om antall perioder har endret seg (legg til/fjern)
         if (medlemskapsperioder.length !== medlemskapsperioderForrigeAntall.current) {
-          console.log("*** Antall perioder endret (add/remove), skipper lagring denne runden ***");
+          console.log("*** Antall perioder endret (legg til/fjern), skipper lagring denne runden ***");
           medlemskapsperioderForrigeAntall.current = medlemskapsperioder.length;
-          setArrayValideringsfeil(undefined); // Clear potential gap/overlap errors from add/remove
+          // Nullstill potensielle gap/overlapp-feil fra legg til/fjern
+          setArrayValideringsfeil(undefined);
           return;
         }
 
+        // Sjekk om bruker har gjort endringer i selve periodene
         if (!medlemskapsperioderHarBrukerendringer(medlemskapsperioder, lagredeMedlemskapsperioder)) {
           console.log("*** Medlemskap: Ingen brukerendringer detektert, skipper lagring ***");
           return;
         }
 
         console.log("*** Medlemskap brukerendringer oppdaget, validerer... ***");
+        // Trigger RHF-validering for medlemskapsperioder
         const erGyldigSkjema = await trigger("medlemskapsperioder");
         if (!erGyldigSkjema || !bestemmelse) {
           console.log("*** Medlemskap skjema ikke gyldig eller bestemmelse mangler, skipper lagring ***", {
             erGyldigSkjema,
             bestemmelse,
           });
-          // Do not clear arrayValideringsfeil here, as RHF handles field-level errors
+          // Ikke nullstill arrayValideringsfeil her, RHF håndterer felt-nivå feil
           return;
         }
 
-        // Check for gap/overlap errors specifically
+        // Sjekk spesifikt for gap/overlapp feil
         const medlemskapPeriodeFeil = finnAktivFeilmeldingForMedlemskapsperioder(medlemskapsperioder);
         if (medlemskapPeriodeFeil) {
           console.log(
@@ -109,13 +116,14 @@ export function useMedlemskapLagringTrigger({
           setArrayValideringsfeil(medlemskapPeriodeFeil);
           return;
         }
-        // Clear gap/overlap errors if validation passes now
+        // Nullstill gap/overlapp feil hvis validering passerer nå
         setArrayValideringsfeil(undefined);
 
         console.log("*** Medlemskap skjema gyldig, setter lagring pågår og kaller debounce ***");
         setLagreMedlemskapsperioderPaagar(true);
-        // Clone using standard JSON methods for deep clone
+        // Klon med standard JSON metoder for dyp kloning
         const medlemskapsperioderTilLagring = JSON.parse(JSON.stringify(medlemskapsperioder));
+        // Kall den debounced lagringsfunksjonen via ref
         debouncedLagreMedlemskapsperioderRef.current?.(medlemskapsperioderTilLagring, () => {
           console.log("*** Medlemskap debounce callback: Setter lagring pågår til false ***");
           setLagreMedlemskapsperioderPaagar(false);
@@ -124,17 +132,17 @@ export function useMedlemskapLagringTrigger({
     };
     lagreMedlemskapsperioderEffect();
   }, [
-    // Direct dependencies from props
+    // Direkte dependencies fra props
     medlemskapsperioder,
     redigerbart,
     endrerBestemmelse,
     bestemmelse,
     lagredeMedlemskapsperioder,
     lagreMedlemskapsperioderPaagar,
-    trigger,
-    setArrayValideringsfeil,
-    setLagreMedlemskapsperioderPaagar,
-    // Stable refs/functions derived within the hook
-    debouncedLagreMedlemskapsperioderRef, // Depends on the debounce function
+    trigger, // Stabil RHF funksjon
+    setArrayValideringsfeil, // Stabil state setter
+    setLagreMedlemskapsperioderPaagar, // Stabil state setter
+    // Stabile refs/funksjoner avledet i hooken
+    debouncedLagreMedlemskapsperioderRef, // Avhenger av debounce funksjonen
   ]);
 }

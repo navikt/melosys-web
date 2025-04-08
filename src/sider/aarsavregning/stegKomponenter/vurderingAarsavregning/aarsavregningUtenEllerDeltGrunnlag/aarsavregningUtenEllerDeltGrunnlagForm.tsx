@@ -16,11 +16,15 @@ import { AarsavregningFormValuesProps } from "./aarsavregningUtenEllerDeltGrunnl
 import { useAarsavregningForm } from "./hooks/useAarsavregningForm";
 import { Feilmelding } from "./valideringsfeil";
 
+/**
+ * Hovedkomponenten for årsavregningsskjemaet (både med og uten delt grunnlag).
+ * Bruker `useAarsavregningForm` for all state og logikk.
+ */
 export function AarsavregningUtenEllerDeltGrunnlagForm({
   initiellData,
-  bekreft,
-  oppdaterStatus,
-  harDeltGrunnlag,
+  bekreft, // Funksjon som kalles når bruker bekrefter steget
+  oppdaterStatus, // Funksjon for å rapportere gyldighetsstatus til forelder
+  harDeltGrunnlag, // Boolean for å vise/skjule deler relatert til delt grunnlag
 }: {
   initiellData: {
     valgtÅr?: number;
@@ -33,6 +37,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   oppdaterStatus: (isValid: boolean) => void;
   harDeltGrunnlag: boolean;
 }) {
+  // Henter all state og funksjoner fra den sentraliserte hooken
   const {
     hovedFeilmelding,
     medlemskapFeilmelding,
@@ -78,11 +83,14 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
 
   return (
     <div className="vurderingAarsavregning">
+      {/* Viser tidligere grunnlag kun hvis det er delt grunnlag */}
       {harDeltGrunnlag && (
         <>
+          {/* Tabell for tidligere medlemskapsperioder */}
           <MedlemskapsPerioderTabell
             perioder={aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.medlemskapsperioder}
           />
+          {/* Oversikt over tidligere skatt, inntekt og avgift */}
           <TidligereGrunnlagsoversikt
             skatteforholdsperioder={
               aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.skatteforholdsperioder
@@ -93,8 +101,10 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
             avgift={aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift}
           />
 
+          {/* Melding hvis trygdeavgift ikke var forskuddsvis fakturert */}
           {!forskuddsvisFakturertTrygdeavgift && <Aarsavregningsmeldinger.TrygdeavgiftErIkkeForskuddsvisFakturert />}
 
+          {/* Detaljer for tidligere beregnet avgift */}
           <BeregnetTrygdeavgiftDetaljer
             grunnlag={aarsavregningResponse?.tidligereGrunnlagsopplysninger}
             medlemskapsTypeErPliktig={medlemskapstypeErPliktig}
@@ -103,6 +113,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         </>
       )}
 
+      {/* Input for manuelt tidligere fakturert beløp */}
       <TidligereFakturertIAvgiftssystemetInput
         control={control as any}
         redigerbart={skjemaErRedigerbart}
@@ -113,6 +124,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         Inntekts- og skatteopplysninger for endelig trygdeavgift
       </Nav.Heading>
 
+      {/* Velger for bestemmelse (EOS/Art.16 etc.) */}
       <BestemmelseSelect
         control={control as any}
         setValue={setValue}
@@ -126,31 +138,34 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         lagreMedlemskapsperioderHvisGyldig={lagreMedlemskapsperioderEtterBestemmelseEndringHvisGyldig}
       />
 
+      {/* Dynamisk liste over medlemskapsperioder */}
       <div className="medlemskapsperioder">
         {medlemskapsperioderFields.map((field, index) => (
           <MedlemskapsperiodeSkjema
-            key={field.id}
+            key={field.id} // Viktig for Reacts liste-rendering
             redigerbart={skjemaErRedigerbart}
             control={control as any}
-            field={field}
-            index={index}
-            remove={slettMedlemskapsperiode}
-            formValues={formValues}
-            handleLeggTil={leggTilDefaultMedlemskapsperiode}
-            visLeggTil
+            field={field} // Data for dette feltet i arrayen
+            index={index} // Index i arrayen
+            remove={slettMedlemskapsperiode} // Funksjon for å slette denne perioden
+            formValues={formValues} // Hele skjemaets verdier (kan brukes internt i skjemaet)
+            handleLeggTil={leggTilDefaultMedlemskapsperiode} // Funksjon for å legge til ny periode
+            visLeggTil // Skal "Legg til" knapp vises?
+            // Begrensninger for datovelgere
             maksVerdi={
               initiellData.valgtÅr !== undefined ? new Date(initiellData.valgtÅr, 11, 31, 23, 59, 59, 999) : undefined
             }
             minVerdi={initiellData.valgtÅr !== undefined ? new Date(initiellData.valgtÅr, 0, 1) : undefined}
-            trygdedekninger={trygdedekninger}
-            setValue={setValue}
-            errors={errors}
+            trygdedekninger={trygdedekninger} // Liste over tilgjengelige trygdedekninger
+            setValue={setValue} // RHF setValue for interne endringer
+            errors={errors} // RHF errors objekt
           />
         ))}
       </div>
 
+      {/* Komponent for skatteforholdsperioder */}
       <Skatteforholdsperioder
-        defaultPeriode={medlemskapsperiode}
+        defaultPeriode={medlemskapsperiode} // Brukes for default datoer ved ny periode
         formValues={formValues}
         redigerbart={skjemaErRedigerbart}
         remove={skattRemove}
@@ -158,6 +173,8 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         control={control as any}
         fields={skattFields}
       />
+
+      {/* Komponent for inntektskilder (vises kun hvis relevant) */}
       {!trygdeAvgiftSkalIkkeBetalesTilNav && (
         <Inntektskilder
           defaultPeriode={medlemskapsperiode}
@@ -169,14 +186,17 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
           control={control as any}
           fields={inntektFields}
           medlemskapsTypeErPliktig={medlemskapstypeErPliktig}
-          skalViseErMaanedsBelopRadioGroup
+          skalViseErMaanedsBelopRadioGroup // Prop for å vise spesifikk radiogruppe
           bestemmelse={formValues.bestemmelse}
         />
       )}
+
+      {/* Melding hvis trygdeavgift ikke skal betales til NAV */}
       {formIsValid && trygdeAvgiftSkalIkkeBetalesTilNav && (
         <Aarsavregningsmeldinger.TrygdeavgiftSkalIkkeBetalesTilNav />
       )}
 
+      {/* Summert tabell for avregning (vises når alt er gyldig og ingen beregning pågår) */}
       {formIsValid &&
         !beregningPaagar &&
         !debouncedBeregningPagaar &&
@@ -190,6 +210,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
           />
         )}
 
+      {/* Detaljer for endelig beregnet avgift (vises når alt er gyldig og nytt grunnlag finnes) */}
       {formIsValid &&
         !beregningPaagar &&
         !debouncedBeregningPagaar &&
@@ -204,19 +225,22 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
           />
         )}
 
+      {/* Viser array-valideringsfeil (f.eks. gap/overlapp) */}
       {arrayValideringsfeil && <Feilmelding type={arrayValideringsfeil} />}
 
+      {/* Viser hovedfeilmelding eller medlemskapsfeilmelding */}
       {(hovedFeilmelding || medlemskapFeilmelding) && (
         <Nav.Alert variant="error" className="alertstripe_feilmelding">
           {hovedFeilmelding || medlemskapFeilmelding}
         </Nav.Alert>
       )}
 
+      {/* Hovedknapp for å bekrefte og gå videre */}
       <Nav.Button
         variant="primary"
         loading={beregningPaagar || endrerBestemmelse || lagreMedlemskapsperioderPaagar || debouncedBeregningPagaar}
-        disabled={!redigerbart}
-        onClick={bekreftOnClick}
+        disabled={!redigerbart} // Deaktiveres hvis ikke redigerbart
+        onClick={bekreftOnClick} // Kaller handler fra useAarsavregningForm
       >
         Bekreft og fortsett
       </Nav.Button>

@@ -7,21 +7,21 @@ import { getChangedDependencies } from "../utils/debugUtils";
 import { mapFormState } from "../utils/formUtils";
 import { Skatteforhold, Inntektskilde } from "../../../../../../felleskomponenter/trygdeavgift/komponenter/types";
 
-interface UseCalculationTriggerProps {
-  // Form values / state triggers
+interface UseBeregningTriggerProps {
+  // Skjemaverdier / state-triggere
   skatteforholdsperioder: Skatteforhold[];
   inntektskilder: Inntektskilde[];
   lagreMedlemskapsperioderPaagar: boolean;
   endrerBestemmelse: boolean;
   totaltForskuddsvisFakturert: number | undefined;
-  // Other state/props needed for conditions
+  // Annen state/props nødvendig for betingelser
   redigerbart: boolean;
   aarsavregningID: number | undefined;
   beregningPaagar: boolean;
-  // Form methods
+  // Skjemametoder
   trigger: UseFormTrigger<AarsavregningFormValuesProps>;
   getValues: UseFormGetValues<AarsavregningFormValuesProps>;
-  // Validation and calculation functions/refs
+  // Validerings- og beregningsfunksjoner/refs
   validerForm: (
     skatteforholdsperioder: Skatteforhold[],
     inntektskilder: Inntektskilde[],
@@ -32,10 +32,10 @@ interface UseCalculationTriggerProps {
   setArrayValideringsfeil: (error?: string) => void;
   finnMedlemskapsperiode: (perioder: Medlemskapsperiode[]) => { fomDato?: string; tomDato?: string };
   medlemskapstypeErPliktig: boolean;
-  debouncedBeregningRef: React.MutableRefObject<any>; // Ref to the debounced function
+  debouncedBeregningRef: React.MutableRefObject<any>; // Ref til den debounced funksjonen
   setDebouncedBeregningPagaar: (pagaar: boolean) => void;
-  // State reflecting last calculation
-  previousFormState: any;
+  // State som reflekterer siste beregning
+  previousFormState: any; // Bør kanskje hete forrigeSkjemadataTilBeregning her også for konsistens?
 }
 
 export function useBeregningTrigger({
@@ -56,7 +56,7 @@ export function useBeregningTrigger({
   debouncedBeregningRef,
   setDebouncedBeregningPagaar,
   previousFormState,
-}: UseCalculationTriggerProps) {
+}: UseBeregningTriggerProps) {
   const previousDepsRef = useRef<any>(null);
 
   useEffect(() => {
@@ -72,26 +72,26 @@ export function useBeregningTrigger({
 
     if (Object.keys(changedDependencies).length === 0 || lagreMedlemskapsperioderPaagar) {
       if (lagreMedlemskapsperioderPaagar) {
-        console.log("*** Calculation Check: Skipping (save in progress) ***");
+        console.log("*** Beregningssjekk: Hopper over (lagring pågår) ***");
       }
       return;
     }
 
     if (debouncedBeregningRef.current?.cancel) {
-      console.log("*** Calculation Check: Cancelling pending debounce ***");
+      console.log("*** Beregningssjekk: Avbryter ventende debounce ***");
       setDebouncedBeregningPagaar(false);
       debouncedBeregningRef.current.cancel();
     }
 
-    console.log("*** Calculation Check: Relevant changes detected, starting validation ***", { changedDependencies });
+    console.log("*** Beregningssjekk: Relevante endringer oppdaget, starter validering ***", { changedDependencies });
     trigger().then((isRHFValid) => {
       if (!isRHFValid) {
-        console.log("*** Calculation Check: RHF validation FAILED, skipping calculation ***");
+        console.log("*** Beregningssjekk: RHF validering FEILET, hopper over beregning ***");
         setArrayValideringsfeil(undefined);
         return;
       }
 
-      console.log("*** Calculation Check: RHF validation OK, running custom validation... ***");
+      console.log("*** Beregningssjekk: RHF validering OK, kjører custom validering... ***");
       const currentMedlemskapsperioder = getValues("medlemskapsperioder") as Medlemskapsperiode[];
       const medlemskapsperiodeFomTom = finnMedlemskapsperiode(currentMedlemskapsperioder);
 
@@ -104,15 +104,15 @@ export function useBeregningTrigger({
       );
 
       if (!isCustomValid) {
-        console.log("*** Calculation Check: Custom validation FAILED, skipping calculation ***");
+        console.log("*** Beregningssjekk: Custom validering FEILET, hopper over beregning ***");
         return;
       }
 
-      console.log("*** Calculation Check: All validations OK ***");
+      console.log("*** Beregningssjekk: Alle valideringer OK ***");
       setArrayValideringsfeil(undefined);
 
       if (!redigerbart || !aarsavregningID || endrerBestemmelse || beregningPaagar) {
-        console.log("*** Calculation Check: Skipping debounce (not editable, missing ID, etc.) ***", {
+        console.log("*** Beregningssjekk: Hopper over debounce (ikke redigerbart, mangler ID, etc.) ***", {
           redigerbart,
           aarsavregningID,
           endrerBestemmelse,
@@ -129,19 +129,18 @@ export function useBeregningTrigger({
       );
 
       if (!Utils._isEqual(currentFormState, previousFormState)) {
-        console.log("*** Calculation Check: State changed, queueing debounced calculation ***");
+        console.log("*** Beregningssjekk: State endret, køer debounced beregning ***");
         if (debouncedBeregningRef.current) {
           setDebouncedBeregningPagaar(true);
           debouncedBeregningRef.current();
         } else {
-          console.error("*** Calculation Check: debouncedBeregningRef is undefined! ***");
+          console.error("*** Beregningssjekk: debouncedBeregningRef er undefined! ***");
         }
       } else {
-        console.log("*** Calculation Check: State unchanged since last calculation, skipping debounce ***");
+        console.log("*** Beregningssjekk: State uendret siden siste beregning, hopper over debounce ***");
       }
     });
   }, [
-    // Dependencies from props
     skatteforholdsperioder,
     inntektskilder,
     lagreMedlemskapsperioderPaagar,
@@ -157,7 +156,7 @@ export function useBeregningTrigger({
     finnMedlemskapsperiode,
     medlemskapstypeErPliktig,
     previousFormState,
-    debouncedBeregningRef, // Ref itself is stable
-    setDebouncedBeregningPagaar, // Setter is stable
+    debouncedBeregningRef,
+    setDebouncedBeregningPagaar,
   ]);
 }
