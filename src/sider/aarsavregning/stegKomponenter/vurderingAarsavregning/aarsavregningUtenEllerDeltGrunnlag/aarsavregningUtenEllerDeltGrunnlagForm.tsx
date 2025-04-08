@@ -116,7 +116,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     setValue,
     trigger,
     getValues,
-    formState: { isValid: formIsValid },
+    formState: { isValid: formIsValid, errors },
   } = useForm({
     resolver: yupResolver(aarsavregningUtenEllerDeltGrunnlagSchema),
     context: {
@@ -183,6 +183,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     skatteforholdsperioderFormState: Skatteforhold[],
     inntektskilderFormState: Inntektskilde[],
     medlemskapsperioderFormState: Medlemskapsperiode[],
+    totaltForskuddsvisFakturert: number | undefined,
   ) => ({
     skatteforholdsperioder: skatteforholdsperioderFormState.map((skatteforhold: Skatteforhold) => ({
       fomDato: skatteforhold.fomDato,
@@ -203,6 +204,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       trygdedekning: periode.trygdedekning,
       medlemskapstype: periode.medlemskapstype,
     })),
+    totaltForskuddsvisFakturert,
   });
 
   useEffect(() => {
@@ -288,6 +290,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       getValues("skatteforholdsperioder"),
       getValues("inntektskilder"),
       medlemskapsperioderFormState,
+      getValues("totaltForskuddsvisFakturert"),
     );
     const medlemskapsperiodeFomTom = finnMedlemskapsperiode(medlemskapsperioderFormState);
 
@@ -494,15 +497,15 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     aarsavregningid?: number,
   ) => {
     await Api.Aarsavregning.oppdaterAarsavregning(behandlingid, request, aarsavregningid);
-    if (await trigger()) {
-      setFeilmelding(undefined);
-      // TODO: Fjern handleBeregning herfra. La diff bli kalkulert i frontend.
-      // TODO: Dette vil også fikse problemet med at alle felter blir røde i det vi skriver noe her
-      await handleBeregnTrygdeavgiftsperioder({
-        skatteforholdsperioder: getValues("skatteforholdsperioder"),
-        inntektskilder: getValues("inntektskilder"),
-      });
-    }
+    // if (await trigger()) {
+    //   setFeilmelding(undefined);
+    //   // TODO: Fjern handleBeregning herfra. La diff bli kalkulert i frontend.
+    //   // TODO: Dette vil også fikse problemet med at alle felter blir røde i det vi skriver noe her
+    //   // await handleBeregnTrygdeavgiftsperioder({
+    //   //   skatteforholdsperioder: getValues("skatteforholdsperioder"),
+    //   //   inntektskilder: getValues("inntektskilder"),
+    //   // });
+    // }
   };
 
   const debouncedOppdaterTotaltForskuddsvisFakturert = useCallback(
@@ -588,11 +591,12 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         getValues("skatteforholdsperioder"),
         getValues("inntektskilder"),
         getValues("medlemskapsperioder"),
+        getValues("totaltForskuddsvisFakturert"),
       );
 
       if (!redigerbart || !aarsavregningID || endrerBestemmelse || beregningPaagar || lagreMedlemskapsperioderPaagar) {
         console.log(
-          "return tidlig i useEffect fordi redigerbart, aarsavregningID, endrerBestemmelse, lagreMedlemskapsperioderPaagar",
+          "return tidlig i fordi redigerbart, aarsavregningID, endrerBestemmelse, lagreMedlemskapsperioderPaagar",
           {
             redigerbart,
             aarsavregningID,
@@ -621,6 +625,12 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
           currentFormState,
           previousFormState,
         });
+        if (errors) {
+          //Nødvendig fordi errors er lazy som ikke blir oppdatert.
+          // Her vet vi at vi har en state som er som siste beregningen, dvs ok.
+          // Derfor trigger på nytt i tilfelle "errors" ikke har riktig verdi
+          trigger();
+        }
       }
     } else {
       console.log("debouncedBeregningRef.current er undefined");
@@ -656,13 +666,6 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   const forskuddsvisFakturertTrygdeavgift =
     (aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift?.totalAvgift ?? 0) > 0;
   const skjemaErRedigerbart = redigerbart && !endrerBestemmelse;
-
-  // console.log({
-  //   debouncedBeregningPagaar,
-  //   lagreMedlemskapsperioderPaagar,
-  //   beregningPaagar,
-  //   endrerBestemmelse,
-  // });
 
   return (
     <div className="vurderingAarsavregning">
