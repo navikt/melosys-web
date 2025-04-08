@@ -1,13 +1,16 @@
 import * as Utils from "../../../../utils";
-import { sorterEtterISOFomDato } from "../../../../utils/dato";
 import MKV from "../../../../melosyskodeverk";
 
 const { IKKE_SKATTEPLIKTIG } = MKV.Koder.skatteplikttype;
 
 export const hentMedlemskapsFomTomDato = (medlemskapsperioder?: any[]) => {
   if (medlemskapsperioder && !Utils._isEmpty(medlemskapsperioder)) {
-    const sorted = [...medlemskapsperioder].sort(sorterEtterISOFomDato);
-    return { fom: sorted[0].fomDato, tom: sorted[sorted.length - 1].tomDato };
+    const sorted = [...medlemskapsperioder].sort(Utils.dato.sorterEtterNorskFomDato);
+    console.log("[hentMedlemskapsFomTomDato] sorted with Utils.dato.sorterEtterNorskFomDato", sorted);
+
+    const fomISO = Utils.dato.formatterDatoTilISO(sorted[0].fomDato);
+    const tomISO = Utils.dato.formatterDatoTilISO(sorted[sorted.length - 1].tomDato);
+    return { fom: fomISO, tom: tomISO };
   }
   return {};
 };

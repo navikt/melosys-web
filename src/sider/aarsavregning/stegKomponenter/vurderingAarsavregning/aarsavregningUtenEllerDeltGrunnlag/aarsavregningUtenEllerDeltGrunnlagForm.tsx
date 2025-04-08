@@ -166,8 +166,12 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   const finnMedlemskapsperiode = useCallback((perioder: Medlemskapsperiode[]) => {
     const sorterteGyldigePerioder = perioder
       .filter((periode: Medlemskapsperiode) => periode.fomDato && periode.tomDato)
-      .sort(Utils.dato.sorterEtterNorskFomDato);
+      .sort(Utils.dato.sorterEtterNorskFomDato); 
     const medlemskapsperiodeFomTom = hentMedlemskapsFomTomDato(sorterteGyldigePerioder);
+
+    console.log("medlemskapsperiodeFomTom", medlemskapsperiodeFomTom);
+    console.log("sorterteGyldigePerioder", sorterteGyldigePerioder);
+    console.log("perioder", perioder);
 
     return {
       fomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsperiodeFomTom?.fom),

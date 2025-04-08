@@ -135,6 +135,7 @@ export function finnAktivFeilmeldingForMedlemskapsperioder(medlemskapsperioder: 
   if (harOppholdsperioder(medlemskapsperioder)) {
     return TypeFeilmelding.HAR_OPPHOLDSPERIODER_MEDLEMSKAPSPERIODER;
   }
+  return undefined;
 }
 
 /**
@@ -154,6 +155,7 @@ export function finnAktivFeilmelding({
 
   if (skatteforholdsperioder && skatteforholdsperioder.length > 0) {
     if (!dekkerHeleMedlemskapsperiode(skatteforholdsperioder, medlemskapsperiode)) {
+      console.log("dekkerHeleMedlemskapsperiode", skatteforholdsperioder, medlemskapsperiode);
       return TypeFeilmelding.SKATTEFORHOLD_DEKKER_IKKE_HELE_MEDLEMSKAPSPERIODEN;
     }
 
