@@ -1,7 +1,10 @@
-import React from 'react';
+import React from "react";
 
 // Helper function to log and return changed dependencies
-export const getChangedDependencies = (currentDeps: Record<string, any>, previousDepsRef: React.MutableRefObject<any>) => {
+export const getChangedDependencies = (
+  currentDeps: Record<string, any>,
+  previousDepsRef: React.MutableRefObject<any>,
+) => {
   const changedDeps: Record<string, any> = {};
   if (previousDepsRef.current) {
     // Compare current dependencies with previous ones
@@ -28,4 +31,4 @@ export const getChangedDependencies = (currentDeps: Record<string, any>, previou
   // eslint-disable-next-line no-param-reassign
   previousDepsRef.current = currentDeps;
   return changedDeps; // Return the changed dependencies object
-}; 
+};

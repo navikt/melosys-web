@@ -34,9 +34,9 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   harDeltGrunnlag: boolean;
 }) {
   const {
-    // State
-    feilmelding,
-    setFeilmelding,
+    hovedFeilmelding,
+    medlemskapFeilmelding,
+    arrayValideringsfeil,
     beregningPaagar,
     aarsavregningResponse,
     trygdedekninger,
@@ -44,36 +44,24 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     endrerBestemmelse,
     setEndrerBestemmelse,
     debouncedBeregningPagaar,
-    arrayValideringsfeil,
-
-    // Form control
+    lagreMedlemskapsperioderPaagar,
     control,
     formValues,
     formIsValid,
     errors,
     setValue,
-
-    // Field arrays
     medlemskapsperioderFields,
     skattFields,
     inntektFields,
-
-    // Field array actions
-    medlemskapsperioderAppend,
-    medlemskapsperioderRemove,
     skattAppend,
     skattRemove,
     inntektAppend,
     inntektRemove,
     inntektUpdate,
-
-    // Actions
-    handleLeggTilMedlemskapsperiode,
-    handleSlettMedlemskapsperiode,
+    leggTilDefaultMedlemskapsperiode,
+    slettMedlemskapsperiode,
     bekreftOnClick,
     lagreMedlemskapsperioderEtterBestemmelseEndringHvisGyldig,
-
-    // Other computed/derived values
     medlemskapsperiode,
     medlemskapstypeErPliktig,
     trygdeAvgiftSkalIkkeBetalesTilNav,
@@ -81,6 +69,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     skjemaErRedigerbart,
     redigerbart,
     behandlingID,
+    setHovedFeilmelding,
   } = useAarsavregningForm({
     initiellData,
     bekreft,
@@ -115,7 +104,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       )}
 
       <TidligereFakturertIAvgiftssystemetInput
-        control={control}
+        control={control as any}
         redigerbart={skjemaErRedigerbart}
         harDeltGrunnlag={harDeltGrunnlag}
       />
@@ -125,14 +114,14 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       </Nav.Heading>
 
       <BestemmelseSelect
-        control={control}
+        control={control as any}
         setValue={setValue}
         bestemmelser={initiellData.bestemmelser}
         harDeltGrunnlag={harDeltGrunnlag}
         behandlingID={behandlingID}
         redigerbart={skjemaErRedigerbart}
         setTrygdedekninger={setTrygdedekninger}
-        setFeilmelding={setFeilmelding}
+        setFeilmelding={setHovedFeilmelding}
         setEndrerBestemmelse={setEndrerBestemmelse}
         lagreMedlemskapsperioderHvisGyldig={lagreMedlemskapsperioderEtterBestemmelseEndringHvisGyldig}
       />
@@ -142,12 +131,12 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
           <MedlemskapsperiodeSkjema
             key={field.id}
             redigerbart={skjemaErRedigerbart}
-            control={control}
+            control={control as any}
             field={field}
             index={index}
-            remove={(id) => handleSlettMedlemskapsperiode(id.toString())}
+            remove={slettMedlemskapsperiode}
             formValues={formValues}
-            handleLeggTil={handleLeggTilMedlemskapsperiode}
+            handleLeggTil={leggTilDefaultMedlemskapsperiode}
             visLeggTil
             maksVerdi={
               initiellData.valgtÅr !== undefined ? new Date(initiellData.valgtÅr, 11, 31, 23, 59, 59, 999) : undefined
@@ -166,7 +155,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         redigerbart={skjemaErRedigerbart}
         remove={skattRemove}
         append={skattAppend}
-        control={control}
+        control={control as any}
         fields={skattFields}
       />
       {!trygdeAvgiftSkalIkkeBetalesTilNav && (
@@ -177,7 +166,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
           update={inntektUpdate}
           remove={inntektRemove}
           append={inntektAppend}
-          control={control}
+          control={control as any}
           fields={inntektFields}
           medlemskapsTypeErPliktig={medlemskapstypeErPliktig}
           skalViseErMaanedsBelopRadioGroup
@@ -188,18 +177,24 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         <Aarsavregningsmeldinger.TrygdeavgiftSkalIkkeBetalesTilNav />
       )}
 
-      {formIsValid && !beregningPaagar && !debouncedBeregningPagaar && !arrayValideringsfeil && !feilmelding && (
-        <SumArsavregningTabell
-          nyTrygdeavgift={aarsavregningResponse?.avregning?.nyttTotalbeloep}
-          tidligereTrygdeavgift={aarsavregningResponse?.avregning?.tidligereFakturertBeloep}
-          tidligereTrygdeavgiftAvgiftssystem={aarsavregningResponse?.avregning?.tidligereFakturertBeloepAvgiftssystem}
-        />
-      )}
+      {formIsValid &&
+        !beregningPaagar &&
+        !debouncedBeregningPagaar &&
+        !arrayValideringsfeil &&
+        !hovedFeilmelding &&
+        !medlemskapFeilmelding && (
+          <SumArsavregningTabell
+            nyTrygdeavgift={aarsavregningResponse?.avregning?.nyttTotalbeloep}
+            tidligereTrygdeavgift={aarsavregningResponse?.avregning?.tidligereFakturertBeloep}
+            tidligereTrygdeavgiftAvgiftssystem={aarsavregningResponse?.avregning?.tidligereFakturertBeloepAvgiftssystem}
+          />
+        )}
 
       {formIsValid &&
         !beregningPaagar &&
         !debouncedBeregningPagaar &&
-        !feilmelding &&
+        !hovedFeilmelding &&
+        !medlemskapFeilmelding &&
         !arrayValideringsfeil &&
         aarsavregningResponse?.nyttGrunnlag && (
           <BeregnetTrygdeavgiftDetaljer
@@ -211,15 +206,15 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
 
       {arrayValideringsfeil && <Feilmelding type={arrayValideringsfeil} />}
 
-      {feilmelding && (
+      {(hovedFeilmelding || medlemskapFeilmelding) && (
         <Nav.Alert variant="error" className="alertstripe_feilmelding">
-          {feilmelding}
+          {hovedFeilmelding || medlemskapFeilmelding}
         </Nav.Alert>
       )}
 
       <Nav.Button
         variant="primary"
-        loading={beregningPaagar || endrerBestemmelse || debouncedBeregningPagaar}
+        loading={beregningPaagar || endrerBestemmelse || lagreMedlemskapsperioderPaagar || debouncedBeregningPagaar}
         disabled={!redigerbart}
         onClick={bekreftOnClick}
       >

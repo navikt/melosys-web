@@ -34,7 +34,7 @@ export const useMedlemskapsperioder = (behandlingID: number) => {
 
   const lagreMedlemskapsperiodeHvisEndret = async (
     periode: Medlemskapsperiode,
-    lagredePerioder: Medlemskapsperiode[],
+    faktiskLagredePerioder: Medlemskapsperiode[],
     index: number,
     bestemmelse: string,
   ) => {
@@ -42,19 +42,26 @@ export const useMedlemskapsperioder = (behandlingID: number) => {
       fomDato: Utils.dato.formatterDatoTilISO(periode.fomDato, "") as string,
       tomDato: Utils.dato.formatterDatoTilISO(periode.tomDato, "") as string,
       trygdedekning: periode.trygdedekning,
-      bestemmelse: bestemmelse,
+      bestemmelse,
       innvilgelsesResultat: MKV.Koder.innvilgelsesResultat.INNVILGET,
     } as OppdaterMedlemskapsperiode;
 
-    const lagretMedlemskapsperiode = lagredePerioder[index];
+    const sistLagretPeriode = faktiskLagredePerioder[index];
+    console.log(`*** Sammenligner for index ${index}:`, { current: periode, lastSaved: sistLagretPeriode });
+
     const harEndringer =
-      !lagretMedlemskapsperiode ||
+      !sistLagretPeriode ||
       periode.id === ULAGRET_MEDLEMSKAPSPERIODE_ID ||
-      periode.fomDato !== lagretMedlemskapsperiode.fomDato ||
-      periode.tomDato !== lagretMedlemskapsperiode.tomDato ||
-      periode.trygdedekning !== lagretMedlemskapsperiode.trygdedekning;
+      periode.fomDato !== sistLagretPeriode.fomDato ||
+      periode.tomDato !== sistLagretPeriode.tomDato ||
+      periode.trygdedekning !== sistLagretPeriode.trygdedekning;
+
+    console.log(`*** Har endringer for index ${index}?`, harEndringer);
 
     if (harEndringer) {
+      console.log(
+        `*** Sender ${periode.id === ULAGRET_MEDLEMSKAPSPERIODE_ID ? "opprett" : "oppdater"} request for index ${index} ***`,
+      );
       try {
         const response: any = await (periode.id === ULAGRET_MEDLEMSKAPSPERIODE_ID
           ? Api.MedlemAvFolketrygden.Medlemskapsperioder.opprettMedlemskapsperioder(behandlingID, periodeRequest)
@@ -63,41 +70,58 @@ export const useMedlemskapsperioder = (behandlingID: number) => {
               periode.id,
               periodeRequest,
             ));
-
+        console.log(`*** Respons for index ${index}:`, response);
         return response;
       } catch (error) {
         setFeilmelding("Feil ved lagring av medlemskapsperiode");
-        console.error("Feil ved lagring av medlemskapsperiode:", error);
-        return undefined;
+        console.error(`*** Feil ved lagring av medlemskapsperiode index ${index}:`, error);
+        throw error;
       }
     }
-
+    console.log(`*** Ingen endringer for index ${index}, skipper API kall ***`);
     return undefined;
   };
 
   const lagreMedlemskapsperioder = useCallback(
-    async (medlemskapsperioderFormValues: Medlemskapsperiode[], bestemmelse: string) => {
+    async (
+      medlemskapsperioderFormValues: Medlemskapsperiode[],
+      bestemmelse: string,
+      lagredeMedlemskapsperioderFraState: Medlemskapsperiode[],
+    ) => {
       interface LagredeMedlemskapsperioder extends Medlemskapsperiode {
         formValuesIndex: number;
       }
 
       const endredeMedlemskapsperioder: LagredeMedlemskapsperioder[] = [];
-      // eslint-disable-next-line no-restricted-syntax
-      for (const [index, periode] of medlemskapsperioderFormValues.entries()) {
-        const lagretPeriode = await lagreMedlemskapsperiodeHvisEndret(
-          periode, 
-          medlemskapsperioderFormValues, 
-          index, 
-          bestemmelse
-        );
-        if (lagretPeriode)
-          endredeMedlemskapsperioder.push({
-            ...(lagretPeriode as Medlemskapsperiode),
-            formValuesIndex: index,
-          });
+      let errorOccurred = false;
+
+      const savePromises = medlemskapsperioderFormValues.map((periode, index) =>
+        lagreMedlemskapsperiodeHvisEndret(periode, lagredeMedlemskapsperioderFraState, index, bestemmelse)
+          .then((lagretPeriode) => {
+            if (lagretPeriode) {
+              endredeMedlemskapsperioder.push({
+                ...(lagretPeriode as Medlemskapsperiode),
+                formValuesIndex: index,
+              });
+            }
+            return { status: "fulfilled", value: lagretPeriode, index };
+          })
+          .catch((error) => {
+            errorOccurred = true;
+            return { status: "rejected", reason: error, index };
+          }),
+      );
+
+      const results = await Promise.allSettled(savePromises);
+      console.log("*** Resultater fra Promise.allSettled (lagring):", results);
+
+      if (errorOccurred) {
+        console.error("En eller flere medlemskapsperioder feilet under lagring.");
+        return medlemskapsperioderFormValues;
       }
 
       if (endredeMedlemskapsperioder.length > 0) {
+        console.log("*** Minst én periode ble lagret/oppdatert, merger resultater... ***");
         setFeilmelding(undefined);
 
         const oppdaterteMedlemskapsperioder = medlemskapsperioderFormValues.map((periode: any, index: number) => {
@@ -114,20 +138,20 @@ export const useMedlemskapsperioder = (behandlingID: number) => {
           return periode;
         });
 
-        console.log("oppdaterteMedlemskapsperioder", oppdaterteMedlemskapsperioder);
-        
+        console.log("*** Ferdig oppdaterte medlemskapsperioder: ***", oppdaterteMedlemskapsperioder);
         return oppdaterteMedlemskapsperioder;
       }
-      
+
+      console.log("*** Ingen perioder trengte API-kall for lagring/oppdatering. ***");
       return medlemskapsperioderFormValues;
     },
-    [],
+    [setFeilmelding],
   );
 
   const slettMedlemskapsperiode = async (
-    index: number, 
-    medlemskapsperioder: Medlemskapsperiode[], 
-    medlemskapsperioderRemove: (index: number) => void
+    index: number,
+    medlemskapsperioder: Medlemskapsperiode[],
+    medlemskapsperioderRemove: (index: number) => void,
   ) => {
     const periode = medlemskapsperioder[index];
 
@@ -144,6 +168,7 @@ export const useMedlemskapsperioder = (behandlingID: number) => {
     } catch (error) {
       console.error("Feil ved sletting av medlemskapsperiode:", error);
       setFeilmelding("Feil ved sletting av medlemskapsperiode");
+      throw error;
     }
   };
 
@@ -156,4 +181,4 @@ export const useMedlemskapsperioder = (behandlingID: number) => {
     lagreMedlemskapsperioder,
     slettMedlemskapsperiode,
   };
-}; 
+};

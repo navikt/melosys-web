@@ -1,5 +1,6 @@
 import { Inntektskilde, Skatteforhold } from "../../../../../../felleskomponenter/trygdeavgift/komponenter/types";
 import { Medlemskapsperiode } from "../../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import * as Utils from "../../../../../../utils";
 
 export const mapFormState = (
   skatteforholdsperioderFormState: Skatteforhold[],
@@ -33,25 +34,32 @@ export const medlemskapsperioderHarBrukerendringer = (
   medlemskapsperioderNå: Medlemskapsperiode[],
   medlemskapsperioderTidlgere: Medlemskapsperiode[],
 ) => {
-  const nåværendeListeMedRelevanteFelter = medlemskapsperioderNå.map(({ fomDato, tomDato, trygdedekning }) => ({
-    fomDato,
-    tomDato,
-    trygdedekning,
-  }));
+  // Ensure we have arrays to compare
+  if (!medlemskapsperioderNå || !medlemskapsperioderTidlgere) {
+    console.warn("Comparing undefined medlemskapsperioder arrays?");
+    return medlemskapsperioderNå !== medlemskapsperioderTidlgere; // Basic check if one is missing
+  }
 
-  const forrigeListeMedRelevanteFelter = medlemskapsperioderTidlgere.map(({ fomDato, tomDato, trygdedekning }) => ({
-    fomDato,
-    tomDato,
-    trygdedekning,
-  }));
+  // If lengths differ, they have changed
+  if (medlemskapsperioderNå.length !== medlemskapsperioderTidlgere.length) {
+    console.log("*** Comparing medlemskapsperioder: Lengths differ ***");
+    return true;
+  }
 
-  const sorterEtterFomDato = (a: any, b: any) => {
-    if (!a.fomDato || !b.fomDato) return 0;
-    return a.fomDato.localeCompare(b.fomDato);
+  // Prepare for deep comparison - create copies without the 'id' field
+  const mapForComparison = (p: Medlemskapsperiode) => {
+    const { id, ...rest } = p; // Destructure to omit 'id'
+    return rest;
   };
+  const nåUtenId = medlemskapsperioderNå.map(mapForComparison);
+  const tidligereUtenId = medlemskapsperioderTidlgere.map(mapForComparison);
 
-  return !Object.is(
-    nåværendeListeMedRelevanteFelter.sort(sorterEtterFomDato),
-    forrigeListeMedRelevanteFelter.sort(sorterEtterFomDato),
-  );
-}; 
+  // Perform deep comparison on the arrays of objects (without id)
+  // Utils._isEqual should handle order differences implicitly
+  console.log("*** Comparing medlemskapsperioder (deep, no id) ***", { nå: nåUtenId, tidligere: tidligereUtenId });
+  const isEqual = Utils._isEqual(nåUtenId, tidligereUtenId);
+  console.log("*** Comparison result (isEqual):", isEqual, " -> Har brukerendringer:", !isEqual);
+
+  // Return true if they are NOT equal
+  return !isEqual;
+};
