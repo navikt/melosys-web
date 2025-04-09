@@ -477,13 +477,14 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
         )}
       </Nav.Row>
 
-      {harFullmaktForTrygdeavgift && redigerbart ? (
+      {harFullmaktForTrygdeavgift && (!erPensjonist || betalingsvalgErFaktura) ? (
         <FullmaktForTrygdeavgiftConfirmationPanel
           erPensjonist={erPensjonist}
           harBekreftet={harBekreftetFullmaktForTrygdeavgift}
           onChange={setHarBekreftetFullmaktForTrygdeavgift}
         />
       ) : null}
+
       {(erNyVurdering || (erManglendeInnbetalingTrygdeavgift && !erDelvisOpphør)) && (
         <div className="nyVurderingBakgrunn">
           <Nav.Row>
