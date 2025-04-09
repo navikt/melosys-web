@@ -407,6 +407,9 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
       betalingsvalg === MKV.Koder.betalingstype.TREKK ? MKV.Koder.betalingstype.FAKTURA : MKV.Koder.betalingstype.TREKK;
 
     setBetalingsvalg(valg);
+    if (erPensjonist && erPensjonistToggleEnabled) {
+      await Api.Avklartefakta.lagreBetalingsvalgForPensjonister(behandlingID, valg);
+    }
   };
 
   return (
