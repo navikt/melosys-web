@@ -32,6 +32,7 @@ import { lagYupToReduxformErrorMapper } from "../../yup";
 import opprettNySakSchema from "./opprettnysakSchema";
 import "./opprettnysak.css";
 import { Spinner } from "../../felleskomponenter/spinner";
+import { oppgaverOperations } from "../../ducks/oppgaver";
 import { HStack } from "@navikt/ds-react";
 import { EnkelNavBox } from "../../felleskomponenter/enkelNavBox";
 
@@ -50,6 +51,7 @@ export interface OpprettNySakFormData {
   sakstema: string;
   brukerID: string;
   skalTilordnes: boolean;
+  oppgaveID: string;
   hovedpart: string;
   brukerNavn: string;
   virksomhetOrgnr: string;
@@ -105,8 +107,10 @@ function OpprettNySak({
   hentLandkoder,
   landkoderListe,
 }: InjectedFormProps<OpprettNySakFormData, OpprettNySakProps> & OpprettNySakProps) {
+  const [oppgaver, setOppgaver] = useState<Api.Oppgaver.SokOppgaveResDto[]>([]);
   const [bekreftPending, setBekreftPending] = useState(false);
   const [visFeilmeldinger, setVisFeilmeldinger] = useState(false);
+  const [oppgaverForsoktHentet, setOppgaverForsoktHentet] = useState(false);
   const [fagsakerOgOppgaverHentes, setFagsakerOgOppgaverHentes] = useState(false);
   const dispatch = useDispatch();
   const {
@@ -125,6 +129,7 @@ function OpprettNySak({
     soknadslandFlereLandUkjentHvilke,
     soknadsland,
     skalTilordnes,
+    oppgaveID,
     mottaksdato,
     behandlingsaarsakType,
     behandlingsaarsakFritekst,
@@ -138,12 +143,31 @@ function OpprettNySak({
     };
   }, []);
 
+  const hentOppgaver = async (value: string) => {
+    if (Utils.person.erGyldigFnrEllerDnr(value) || Utils.organisasjon.erOrgnrGyldig(value)) {
+      try {
+        const oppgaverResponse = await Api.Oppgaver.sok({
+          personIdent: Utils.person.erGyldigFnrEllerDnr(value) ? value : null,
+          orgnr: Utils.organisasjon.erOrgnrGyldig(value) ? value : null,
+        });
+        setOppgaver(oppgaverResponse);
+        setOppgaverForsoktHentet(true);
+      } catch (e) {
+        setOppgaver([]);
+      }
+    } else {
+      setOppgaver([]);
+      setOppgaverForsoktHentet(false);
+    }
+  };
+
   const hentBruker = async (personIdent: string) => {
     if (Utils.person.erGyldigFnrEllerDnr(personIdent)) {
       const navn = await hentSammensattNavn(personIdent);
       change("brukerNavn", navn);
       setFagsakerOgOppgaverHentes(true);
       await hentFagsakListe(personIdent);
+      await hentOppgaver(personIdent);
       setFagsakerOgOppgaverHentes(false);
     } else {
       nullstillFelt("brukerNavn");
@@ -157,6 +181,7 @@ function OpprettNySak({
       change("virksomhetNavn", navn);
       setFagsakerOgOppgaverHentes(true);
       await hentFagsakListe(virksomhetOrgnr);
+      await hentOppgaver(virksomhetOrgnr);
       setFagsakerOgOppgaverHentes(false);
     } else {
       nullstillFelt("virksomhetNavn");
@@ -180,7 +205,10 @@ function OpprettNySak({
       nullstillFelt("brukerID");
       nullstillFelt("brukerNavn");
     }
+    nullstillFelt("oppgaveID");
     nullstillFelt("journalpostID");
+    setOppgaver([]);
+    setOppgaverForsoktHentet(false);
   }, [hovedpart]);
 
   const dataForOpprettSak = (fellesData: Api.Fagsaker.fagsak.OpprettReqDto) => {
@@ -205,6 +233,7 @@ function OpprettNySak({
       sakstype,
       sakstema,
       soknadDto,
+      oppgaveID,
     };
   };
 
@@ -237,6 +266,10 @@ function OpprettNySak({
       await lagNySak(dataForOpprettSak(fellesData));
     }
     setBekreftPending(false);
+    // Hent oppgave-oversikten som vises på forsiden når opprettnysak-prosessen forhåpentligvis er ferdigstilt
+    const refreshOversiktDelayMillis = 2500;
+    setTimeout(() => dispatch(oppgaverOperations.oversikt()), refreshOversiktDelayMillis);
+    setTimeout(() => dispatch(oppgaverOperations.oversikt()), refreshOversiktDelayMillis * 2);
   };
 
   const nullstillFormVerdier = () => {
@@ -338,7 +371,12 @@ function OpprettNySak({
                     <Spinner />
                   ) : (
                     <div className="innrykk">
-                      <OppgaveVelger formValues={formValues} />
+                      <OppgaveVelger
+                        oppgaverForsoktHentet={oppgaverForsoktHentet}
+                        formValues={formValues}
+                        change={change}
+                        oppgaver={oppgaver}
+                      />
                     </div>
                   )}
                 </div>
@@ -356,7 +394,7 @@ function OpprettNySak({
               <Knapperad
                 bekreft={handleSubmit}
                 bekreftTekst="Opprett ny behandling"
-                bekreftRedigerbart={!fagsakerOgOppgaverHentes}
+                bekreftRedigerbart={!fagsakerOgOppgaverHentes && oppgaverForsoktHentet}
                 avbryt={tilForsiden}
                 avbrytTekst="Avbryt"
                 redigerbart
