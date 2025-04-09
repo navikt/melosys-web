@@ -34,6 +34,7 @@ import "./opprettnysak.css";
 import { Spinner } from "../../felleskomponenter/spinner";
 import { HStack } from "@navikt/ds-react";
 import { EnkelNavBox } from "../../felleskomponenter/enkelNavBox";
+import { oppgaverOperations } from "../../ducks/oppgaver";
 
 const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
 
@@ -237,6 +238,8 @@ function OpprettNySak({
       await lagNySak(dataForOpprettSak(fellesData));
     }
     setBekreftPending(false);
+    const refreshOversiktDelayMillis = 2500;
+    setTimeout(() => dispatch(oppgaverOperations.oversikt()), refreshOversiktDelayMillis * 3);
   };
 
   const nullstillFormVerdier = () => {
