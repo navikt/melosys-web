@@ -223,15 +223,6 @@ export const testReduxState = {
                 kode: "ARBEID_TJENESTEPERSON_ELLER_FLY",
                 term: "Offentlig tjenesteperson/flyvende personell",
               },
-              lovvalgsperiode: {
-                fom: "2023-12-23",
-                tom: "2024-04-06",
-              },
-              medlemskapsperiode: null,
-              land: {
-                landkoder: ["DK"],
-                flereLandUkjentHvilke: false,
-              },
               soknadsperiode: {
                 fom: "2023-12-23",
                 tom: "2024-04-06",
@@ -277,9 +268,6 @@ export const testReduxState = {
                 kode: "PENSJONIST",
                 term: "Pensjonist/uføretrygdet",
               },
-              lovvalgsperiode: null,
-              medlemskapsperiode: null,
-              land: null,
               soknadsperiode: null,
               opprettetDato: "2023-12-11T13:09:26.064138Z",
               behandlingsresultattype: {
@@ -322,9 +310,6 @@ export const testReduxState = {
                 kode: "PENSJONIST",
                 term: "Pensjonist/uføretrygdet",
               },
-              lovvalgsperiode: null,
-              medlemskapsperiode: null,
-              land: null,
               soknadsperiode: null,
               opprettetDato: "2023-12-11T13:09:26.064138Z",
               behandlingsresultattype: {
@@ -367,9 +352,6 @@ export const testReduxState = {
                 kode: "PENSJONIST",
                 term: "Pensjonist/uføretrygdet",
               },
-              lovvalgsperiode: null,
-              medlemskapsperiode: null,
-              land: null,
               soknadsperiode: null,
               opprettetDato: "2023-12-11T13:09:26.064138Z",
               behandlingsresultattype: {

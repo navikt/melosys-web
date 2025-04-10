@@ -1,6 +1,6 @@
 import PT from "prop-types";
 
-import MKV, { MKVUtils } from "../../../melosyskodeverk";
+import { MKVUtils } from "../../../melosyskodeverk";
 import * as KV from "../../../kodeverk";
 import * as MPT from "../../../proptypes";
 import * as Skjema from "../../../felleskomponenter/skjema";
@@ -21,16 +21,13 @@ import { MELOSYS_PENSJONIST } from "../../../featuretoggle/toggleNavn";
  */
 function EnkeltSak(props) {
   const { landkoder } = props;
-  const { land, behandlingOversikter, sakstype, saksnummer, sakstema } = props.sak;
+  const { periode, land, behandlingOversikter, sakstype, saksnummer, sakstema } = props.sak;
   const erPensjonistToggleEnabled = useFeatureToggle(MELOSYS_PENSJONIST);
 
-  const { behandlingstype, behandlingsstatus, behandlingstema, svarFrist, behandlingID } = behandlingOversikter[0];
+  const { tittel, behandlingstype, behandlingsstatus, behandlingstema, svarFrist, behandlingID } =
+    behandlingOversikter[0];
   const { soknadsperiode } =
     behandlingOversikter.find((behandlingOversikt) => behandlingOversikt.soknadsperiode != null) ?? {};
-  const { lovvalgsperiode } =
-    behandlingOversikter.find((behandlingOversikt) => behandlingOversikt.lovvalgsperiode != null) ?? {};
-  const { medlemskapsperiode } =
-    behandlingOversikter.find((behandlingOversikt) => behandlingOversikt.medlemskapsperiode != null) ?? {};
 
   const link = lagUrl(
     saksnummer,
@@ -42,10 +39,10 @@ function EnkeltSak(props) {
     erPensjonistToggleEnabled,
   );
 
-  const avsluttendePeriode = sakstype.kode === MKV.Koder.sakstyper.FTRL ? medlemskapsperiode : lovvalgsperiode;
-  const periode = MKVUtils.erAvsluttetEllerMidlertidigBeslutning(behandlingsstatus?.kode)
-    ? avsluttendePeriode
+  const periodeTittel = MKVUtils.erAvsluttetEllerMidlertidigBeslutning(behandlingsstatus?.kode)
+    ? periode
     : soknadsperiode;
+
   return (
     <div className="enkeltSak">
       <Skjema.CustomRadioPanelElement
@@ -63,13 +60,15 @@ function EnkeltSak(props) {
           </Nav.Link>
         }
         data={[
-          { description: KV.objektTilTerm(behandlingstema) },
-          { description: <div className="behandlingstype">{KV.objektTilTerm(behandlingstype)}</div> },
+          {
+            description: <div className="behandlingstype">{tittel}</div>,
+          },
           {
             term: "Periode:",
-            description: periode ? (
+            description: periodeTittel ? (
               <>
-                <EnkeltDato dato={periode.fom} defaultValue="" /> - <EnkeltDato dato={periode.tom} defaultValue="" />
+                <EnkeltDato dato={periodeTittel.fom} defaultValue="" /> -{" "}
+                <EnkeltDato dato={periodeTittel.tom} defaultValue="" />
               </>
             ) : null,
           },

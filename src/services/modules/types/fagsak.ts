@@ -31,15 +31,14 @@ export interface FagsakOppsummering {
   sakstema: KTObject;
   saksstatus: KTObject;
   land: Soeknadsland;
+  periode?: Periode;
   opprettetDato: string;
   behandlingOversikter: {
     behandlingID: string;
+    tittel?: string;
     behandlingsstatus: KTObject;
     behandlingstype: KTObject;
     behandlingstema: KTObject;
-    lovvalgsperiode?: Periode;
-    medlemskapsperioder?: Periode;
-    land: Soeknadsland;
     opprettetDato: string;
     behandlingsresultattype: KTObject;
     svarFrist: string;
