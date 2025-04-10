@@ -47,7 +47,6 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
   const [visDeltGrunnlagRadioGroup, setVisDeltGrunnlagRadioGroup] = useState(false);
   const [nyVurderingÅrsavregning, setNyVurderingÅrsavregning] = useState<boolean>(false);
   const [flereAktiveAarsavregninger, setFlereAktiveAarsavregninger] = useState<boolean>(false);
-  const [aarsavregningID, setAarsavregningID] = useState<number | undefined>(undefined);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as any;
   const saksnummer = useSelector(fagsakSelectors.SaksnummerSelector) as any;
@@ -76,7 +75,6 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
     Api.Aarsavregning.hentFiltrertAarsavregningList(saksnummer).then((res) => {
       if (res?.find((aarsavregning) => aarsavregning.behandlingID === behandlingID)) {
         Api.Aarsavregning.hentAarsavregning(behandlingID).then((aarsavregning) => {
-          setAarsavregningID(aarsavregning.aarsavregningID);
           setInitieltÅr(aarsavregning.aar);
           dispatch({ type: OK, data: aarsavregning });
           utledGrunnlagstypeForAarsavregning(aarsavregning);
@@ -97,7 +95,6 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
 
       Api.Aarsavregning.lagAarsavregning(behandlingID, { aar: valgtÅr })
         .then(async (res) => {
-          setAarsavregningID(res.aarsavregningID);
           utledGrunnlagstypeForAarsavregning(res);
           // Benyttes for innhenting av saksopplysninger ifm. årsavregningsbehandlinger
           dispatch({ type: OK, data: res });
@@ -121,14 +118,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
   };
 
   const håndterDeltGrunnlag = async (value: boolean) => {
-    if (harDeltGrunnlag && !value) {
-      await Api.Aarsavregning.oppdaterAarsavregning(
-        behandlingID,
-        { avregning: { tidligereFakturertBeloepAvgiftssystem: 0 } },
-        aarsavregningID,
-      );
-    }
-    Api.Aarsavregning.oppdaterHarDeltGrunnlag(behandlingID, { harDeltGrunnlag: value }, aarsavregningID).then((res) =>
+    Api.Aarsavregning.oppdaterHarDeltGrunnlag(behandlingID, { harDeltGrunnlag: value }).then((res) =>
       setHarDeltGrunnlag(res.harDeltGrunnlag),
     );
   };
