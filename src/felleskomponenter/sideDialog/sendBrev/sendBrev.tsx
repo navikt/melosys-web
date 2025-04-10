@@ -382,8 +382,16 @@ function SendBrev({
   const sendBrev = () => {
     setvisFeil(true);
 
-    if (!formValues?.valgtMottaker) return;
-    if (!formIsValid || (formErrors && Object.keys(formErrors).length)) return;
+    if (!formValues?.valgtMottaker) {
+      setSendBrevSpinner(false);
+      setFeil("Mottaker er ikke valgt.");
+      return;
+    }
+    if (!formIsValid || (formErrors && Object.keys(formErrors).length)) {
+      setSendBrevSpinner(false);
+      setFeil("Skjemaet er ikke gyldig.");
+      return;
+    }
 
     setSendBrevSpinner(true);
     setFeil(undefined);
