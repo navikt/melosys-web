@@ -24,6 +24,19 @@ const renderLabel = (beskrivelse: string, hjelpetekst: string | null) => {
   );
 };
 
+const hentValgFeil = (feltKode: string, formErrors: Record<string, any>) => {
+  switch (feltKode) {
+    case "type":
+      return formErrors.type;
+    case "DISTRIBUSJONSTYPE":
+      return (
+        formErrors.distribusjonstype || formErrors.felt?.DISTRIBUSJONSTYPE || formErrors["felt.DISTRIBUSJONSTYPE.valg"]
+      );
+    default:
+      return undefined;
+  }
+};
+
 function ValgAlternativer({
   valg,
   feltKode,
@@ -63,11 +76,7 @@ function ValgAlternativer({
         legend={label}
         name={`felt.${feltKode}.valg`}
         readOnly={!redigerbart}
-        error={
-          visFeil && (formErrors.type || (feltKode === "DISTRIBUSJONSTYPE" && formErrors.felt?.DISTRIBUSJONSTYPE))
-            ? Utils.feilmelding.hentEnkeltFeilmelding(formErrors.type || formErrors.felt?.DISTRIBUSJONSTYPE)
-            : undefined
-        }
+        error={visFeil ? Utils.feilmelding.hentEnkeltFeilmelding(hentValgFeil(feltKode, formErrors)) : undefined}
       >
         <Nav.HStack gap="3">
           {valg.valgAlternativer.map((alternativ) => (

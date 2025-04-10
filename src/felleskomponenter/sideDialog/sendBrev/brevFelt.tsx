@@ -17,6 +17,20 @@ interface BrevFeltProps {
   visFeil?: boolean;
 }
 
+const hentFritekstFeil = (feltKode: string, formErrors: Record<string, any>): string | undefined => {
+  const feltError = formErrors?.[`felt.${feltKode}.feltVerdi`];
+  switch (feltKode) {
+    case "FRITEKST":
+      return Utils.feilmelding.hentEnkeltFeilmelding(feltError || formErrors?.fritekst);
+    case "INNLEDNING_FRITEKST":
+      return Utils.feilmelding.hentEnkeltFeilmelding(feltError || formErrors?.innledningFritekst);
+    case "MANGLER_FRITEKST":
+      return Utils.feilmelding.hentEnkeltFeilmelding(feltError || formErrors?.manglerFritekst);
+    default:
+      return Utils.feilmelding.hentEnkeltFeilmelding(feltError);
+  }
+};
+
 function BrevFelt({ felt, visFeltBeskrivelse, width, redigerbart, formErrors, formValues, visFeil }: BrevFeltProps) {
   switch (felt?.feltType) {
     case DokumenterV2.FeltType.FRITEKST:
@@ -29,13 +43,7 @@ function BrevFelt({ felt, visFeltBeskrivelse, width, redigerbart, formErrors, fo
             feltNavn={`felt.${felt.kode}.feltVerdi`}
             className="brevfelt__fritekst"
             disabled={!redigerbart}
-            feil={
-              visFeil
-                ? Utils.feilmelding.hentEnkeltFeilmelding(
-                    formErrors?.[`felt.${felt.kode}.feltVerdi`] || formErrors?.fritekst,
-                  )
-                : undefined
-            }
+            feil={visFeil ? hentFritekstFeil(felt.kode, formErrors) : undefined}
           />
         </>
       );

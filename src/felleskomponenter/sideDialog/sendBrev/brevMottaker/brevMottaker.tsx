@@ -234,6 +234,11 @@ function BrevMottaker({
               feltNavn="organisasjonsnummer"
               label="Org.nr."
               disabled={!redigerbart}
+              error={
+                visFeil && formErrors?.organisasjonsnummer
+                  ? Utils.feilmelding.hentEnkeltFeilmelding(formErrors.organisasjonsnummer)
+                  : undefined
+              }
             />
           </Nav.Column>
 

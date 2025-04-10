@@ -520,11 +520,7 @@ function SendBrev({
               }
               emptyFieldDisabled={!!formValues.type}
               onBlur={overstyrBlurEvent}
-              error={
-                visFeil && (formErrors.type || formErrors.valgtBrev)
-                  ? Utils.feilmelding.hentEnkeltFeilmelding(formErrors.type || formErrors.valgtBrev)
-                  : undefined
-              }
+              error={visFeil && formErrors.type ? Utils.feilmelding.hentEnkeltFeilmelding(formErrors.type) : undefined}
             >
               {tilgjengeligeBrevtyper.map((brevType) => (
                 <option key={brevType.type.kode} value={brevType.type.kode}>
