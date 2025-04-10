@@ -132,6 +132,11 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
     ...Object.values(MKV.KTObjects.vertslandsavtale_bestemmelser),
   ] as string[];
 
+  const erPensjonistMedTrekk = erPensjonist && !betalingsvalgErFaktura;
+
+  const visFakturaMottaker = betalingsvalgErFaktura || (fakturamottaker && !erIkkeYrkesaktiv && !erPensjonist);
+  const visBetalingsvalg = erFørstegang && erPensjonist;
+
   const erPensjonistToggleEnabled = useFeatureToggle(MELOSYS_PENSJONIST);
 
   const hentProduserbardokumentType = () => {
@@ -397,10 +402,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
     formIsValid &&
     Utils._isEmpty(feilmeldinger) &&
     Utils._isEmpty(kontrollfeil) &&
-    (!harFullmaktForTrygdeavgift || harBekreftetFullmaktForTrygdeavgift);
-
-  const visFakturaMottaker = betalingsvalgErFaktura || (fakturamottaker && !erIkkeYrkesaktiv && !erPensjonist);
-  const visBetalingsvalg = erFørstegang && erPensjonist;
+    (!harFullmaktForTrygdeavgift || erPensjonistMedTrekk || harBekreftetFullmaktForTrygdeavgift);
 
   const oppdaterBetalingsvalg = async () => {
     const valg =
