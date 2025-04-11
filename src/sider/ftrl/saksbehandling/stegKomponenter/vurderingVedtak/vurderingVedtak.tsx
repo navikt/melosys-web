@@ -402,12 +402,12 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   const visFakturaMottaker = betalingsvalgErFaktura || (fakturamottaker && !erIkkeYrkesaktiv && !erPensjonist);
   const visBetalingsvalg = erFørstegang && erPensjonist;
 
-  const oppdaterBetalingsvalg = async () => {
+  const oppdaterBetalingsvalg = () => {
     const valg =
       betalingsvalg === MKV.Koder.betalingstype.TREKK ? MKV.Koder.betalingstype.FAKTURA : MKV.Koder.betalingstype.TREKK;
 
     setBetalingsvalg(valg);
-    await Api.Avklartefakta.lagreBetalingsvalgForPensjonister(behandlingID, valg);
+    Api.Avklartefakta.lagreBetalingsvalgForPensjonister(behandlingID, valg);
   };
 
   return (
