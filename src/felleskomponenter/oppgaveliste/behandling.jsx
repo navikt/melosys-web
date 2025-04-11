@@ -11,7 +11,7 @@ import EnkeltDato from "../enkeltDato";
 import "./behandling.css";
 
 function BehandlingPanel({ behandling, kanVises }) {
-  const { behandlingstema, behandlingstype, behandlingsstatus, behandlingsresultattype, opprettetDato } = behandling;
+  const { tittel, behandlingsstatus, behandlingsresultattype, opprettetDato } = behandling;
 
   return (
     <div className="panel behandling">
@@ -19,8 +19,7 @@ function BehandlingPanel({ behandling, kanVises }) {
         <Nav.Column>
           <Nav.Column xs="12" md="5">
             <dl className="behandling__meta">
-              <dt>{KV.objektTilTerm(behandlingstema, "(ukjent)")}</dt>
-              <dt>{KV.objektTilTerm(behandlingstype, "(ukjent)")}</dt>
+              <dt>{tittel}</dt>
               <dt>Opprettet:</dt>
               <dd>
                 <EnkeltDato dato={opprettetDato} defaultValue="(ukjent)" />
