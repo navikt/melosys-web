@@ -92,4 +92,18 @@
   .valideringsfeil {
     margin-top: 0.5rem;
   }
+
+  // Overstyring av Aksel: Feilmeldinger i ErrorSummary skal ikke oppføre seg som lenker
+  .navds-error-summary {
+    .navds-error-summary__item,
+    .navds-error-summary__list > * {
+      color: var(--a-text-default);
+    }
+
+    .navds-error-summary__item {
+      text-decoration: none;
+      cursor: default;
+      pointer-events: none;
+    }
+  }
 }

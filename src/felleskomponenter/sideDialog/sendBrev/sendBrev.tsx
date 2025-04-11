@@ -633,11 +633,7 @@ function SendBrev({
             erAnnenOrganisasjon: erAnnenOrganisasjon(formValues?.valgtMottaker?.rolle),
           }).map(([field]) => {
             const errorMessage = Utils.feilmelding.hentEnkeltFeilmelding(formErrors[field]);
-            return errorMessage ? (
-              <Nav.ErrorSummary.Item key={field} href={`#${field}`}>
-                {errorMessage}
-              </Nav.ErrorSummary.Item>
-            ) : null;
+            return errorMessage ? <Nav.ErrorSummary.Item key={field}>{errorMessage}</Nav.ErrorSummary.Item> : null;
           })}
         </Nav.ErrorSummary>
       )}
