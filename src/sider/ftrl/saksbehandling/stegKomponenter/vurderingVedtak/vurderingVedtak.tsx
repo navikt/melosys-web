@@ -404,11 +404,12 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
     Utils._isEmpty(kontrollfeil) &&
     (!harFullmaktForTrygdeavgift || erPensjonistMedTrekk || harBekreftetFullmaktForTrygdeavgift);
 
-  const oppdaterBetalingsvalg = async () => {
+  const oppdaterBetalingsvalg = () => {
     const valg =
       betalingsvalg === MKV.Koder.betalingstype.TREKK ? MKV.Koder.betalingstype.FAKTURA : MKV.Koder.betalingstype.TREKK;
 
     setBetalingsvalg(valg);
+    Api.Avklartefakta.lagreBetalingsvalgForPensjonister(behandlingID, valg);
   };
 
   return (
