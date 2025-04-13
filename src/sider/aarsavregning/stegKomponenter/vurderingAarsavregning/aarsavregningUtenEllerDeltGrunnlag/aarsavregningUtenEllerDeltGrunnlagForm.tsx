@@ -662,7 +662,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   const bekreftOnClick = () => {
     trigger();
 
-    if (stegErGyldig && !beregningPaagar) {
+    if (stegErGyldig && arrayValideringsfeil === undefined && !beregningPaagar) {
       bekreft();
     }
   };
