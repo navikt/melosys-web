@@ -5,6 +5,7 @@ import { FieldValue, useFieldArray, useForm, useWatch } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import { behandlingsresultatSelectors } from "../../../../../ducks/behandlingsresultat";
+import { medlemskapsperioderOperations } from "../../../../../ducks/medlemskapsperioder";
 import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 import { Inntektskilder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/inntektskilder";
 import { Skatteforholdsperioder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/skatteforholdsperioder";
@@ -25,20 +26,19 @@ import * as Utils from "../../../../../utils";
 import { hentMedlemskapsFomTomDato } from "../aarsavregningHelpers";
 import { Aarsavregningsmeldinger } from "../komponenter/aarsavregningsmeldinger";
 import { BeregnetTrygdeavgiftDetaljer } from "../komponenter/beregnetTrygdeavgiftDetaljer";
+import BestemmelseSelect from "../komponenter/bestemmelseSelect";
 import MedlemskapsPerioderTabell from "../komponenter/medlemskapsPerioderTabell";
 import { MedlemskapsperiodeSkjema } from "../komponenter/medlemskapsperiodeSkjema";
 import { SumArsavregningTabell } from "../komponenter/sumArsavregningTabell";
 import { TidligereFakturertIAvgiftssystemetInput } from "../komponenter/tidligereFakturertIAvgiftssystemetInput";
 import TidligereGrunnlagsoversikt from "../komponenter/tidligereGrunnlagsoversikt";
 import { beregnTrygdeavgiftsperioder, erBrukerSkattepliktigIHelePerioden } from "../komponenter/utils";
-import BestemmelseSelect from "../komponenter/bestemmelseSelect";
 import {
   AarsavregningFormValuesProps,
   DEFAULT_MEDLEMSKAPSPERIODE,
   ULAGRET_MEDLEMSKAPSPERIODE_ID,
 } from "./aarsavregningUtenEllerDeltGrunnlag";
 import aarsavregningUtenEllerDeltGrunnlagSchema from "./aarsavregningUtenEllerDeltGrunnlagSchema";
-import { medlemskapsperioderOperations } from "../../../../../ducks/medlemskapsperioder";
 import { Feilmelding, finnAktivFeilmelding, finnAktivFeilmeldingForMedlemskapsperioder } from "./valideringsfeil";
 
 // Helper function to log and return changed dependencies
@@ -166,7 +166,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   const finnMedlemskapsperiode = useCallback((perioder: Medlemskapsperiode[]) => {
     const sorterteGyldigePerioder = perioder
       .filter((periode: Medlemskapsperiode) => periode.fomDato && periode.tomDato)
-      .sort(Utils.dato.sorterEtterNorskFomDato); 
+      .sort(Utils.dato.sorterEtterNorskFomDato);
     const medlemskapsperiodeFomTom = hentMedlemskapsFomTomDato(sorterteGyldigePerioder);
 
     console.log("medlemskapsperiodeFomTom", medlemskapsperiodeFomTom);
