@@ -332,7 +332,7 @@ function OpprettNySak({
                 </div>
                 <div className="seksjon">
                   <Mui.Undertittel
-                    tekst="Knytt til eksisterende Gosys oppgave eller opprett ny"
+                    tekst="Oppgi mottaksdato og behandlingsårsak"
                     ikon={Ikoner.CheckList}
                     className="undertittel"
                     understrek
