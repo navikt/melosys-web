@@ -543,7 +543,9 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     return () => {
       if (debouncedBeregningRef.current?.cancel) {
         setDebouncedBeregningPagaar(false);
-        console.log("[useEffect debouncedBeregning] Avbryter eventuelt eksisterende beregning for å sette opp ny debounce funksjon.");
+        console.log(
+          "[useEffect debouncedBeregning] Avbryter eventuelt eksisterende beregning for å sette opp ny debounce funksjon.",
+        );
         debouncedBeregningRef.current.cancel();
       }
     };
