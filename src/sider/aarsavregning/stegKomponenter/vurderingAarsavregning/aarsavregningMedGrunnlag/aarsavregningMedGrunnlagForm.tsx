@@ -82,6 +82,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
     remove: inntektRemove,
     update: inntektUpdate,
   } = useFieldArray<FieldArrayProps, "inntektskilder", "id">({ control, name: "inntektskilder" });
+
   const formValues = watch();
   const skatteforholdsperioder = watch("skatteforholdsperioder");
   const inntektskilder = watch("inntektskilder");
@@ -127,24 +128,25 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
 
     const formState = mapFormState(getValues("skatteforholdsperioder"), getValues("inntektskilder"));
 
-    if (!Utils._isEqual(formState, previousFormValues)) {
-      if (formIsValid && !isValidating) {
-        const aktivFeilmelding = finnAktivFeilmelding({
-          skatteforholdsperioder: formState.skatteforholdsperioder,
-          inntektskilder: formState.inntektskilder,
-          medlemskapsperiode: innvilgetMedlemskapsperiode,
-          medlemskapstypeErPliktig,
-        });
-        if (!aktivFeilmelding) {
-          setArrayValideringsfeil(undefined);
-          setBeregningPaagar(true);
-          handleBeregnTrygdeavgiftsperioder(getValues()).finally(() => {
-            setBeregningPaagar(false);
+    if (!Utils._isEqual(formState, previousFormValues) && formIsValid && !isValidating) {
+      const aktivFeilmelding = finnAktivFeilmelding({
+        skatteforholdsperioder: formState.skatteforholdsperioder,
+        inntektskilder: formState.inntektskilder,
+        medlemskapsperiode: innvilgetMedlemskapsperiode,
+        medlemskapstypeErPliktig,
+      });
+      if (!aktivFeilmelding) {
+        setArrayValideringsfeil(undefined);
+        setBeregningPaagar(true);
+        handleBeregnTrygdeavgiftsperioder(getValues())
+          .then(() => {
             setPreviousFormValues(formState);
+          })
+          .finally(() => {
+            setBeregningPaagar(false);
           });
-        } else {
-          setArrayValideringsfeil(aktivFeilmelding);
-        }
+      } else {
+        setArrayValideringsfeil(aktivFeilmelding);
       }
     } else {
       setArrayValideringsfeil(undefined);
