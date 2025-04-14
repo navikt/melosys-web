@@ -112,9 +112,9 @@ const opprettnysak = object().shape({
       }),
     },
   ),
-  oppgaveID: string().nullable(),
-  mottaksdato: string().nullable(),
-  behandlingsaarsakType: string().nullable(),
+  oppgaveID: string().required(VELG_OPPGAVE).nullable(),
+  mottaksdato: string().erGyldigDato().required(FYLL_UT_MOTTAKSDATO).nullable(),
+  behandlingsaarsakType: string().required(VELG_BEHANDLINGSAARSAK).nullable(),
   behandlingsaarsakFritekst: string()
     .nullable()
     .when(["behandlingsaarsakType"], {
