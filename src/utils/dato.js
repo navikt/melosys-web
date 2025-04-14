@@ -81,6 +81,15 @@ function formatterDatoTilNorsk(dato, visTidspunkt = false, defaultValue = "") {
   return momentDato.isValid() ? momentTZ(momentDato).tz("Europe/Oslo").format(momentFormat) : defaultValue;
 }
 
+function vaskOgFormatterDatoTilNorsk(dato, defaultValue = "") {
+  if (dato?.length === 6 || dato?.length === 8) {
+    const vasketDato = vaskInputDato(dato);
+    if (!vasketDato) return defaultValue;
+    return formatterDatoTilNorsk(vasketDato, defaultValue);
+  }
+  return formatterDatoTilNorsk(dato, defaultValue);
+}
+
 /** Forutsatt at datoen er validert korrekt norsk (DD.MM.YYYY HH:mm), formatter den til det maskinlesbare
  * formatet "YYYY-MM-DD
  *
@@ -92,6 +101,23 @@ function formatterDatoTilISO(dato, defaultValue = "Invalid date") {
   const inputFormat = ["DD.MM.YYYY HH:mm", "DD.MM.YYYY"];
   const isoDato = moment(dato, inputFormat).format("YYYY-MM-DD");
   return isoDato === "Invalid date" ? defaultValue : isoDato;
+}
+
+/**
+ * Kombinerer vasking av datoinput og konvertering til ISO format.
+ * Håndterer ulike input-formater som "030323", "03032023" og konverterer til "2023-03-03"
+ *
+ * @param {string} dato Datoen som skal vaskes og konverteres
+ * @param {string} [defaultValue=null] Verdien som returneres hvis datoen er ugyldig
+ * @returns {string|null} ISO-formatert dato eller defaultValue hvis ugyldig
+ */
+function vaskOgFormatterTilISO(dato, defaultValue = null) {
+  if (dato?.length === 6 || dato?.length === 8) {
+    const vasketDato = vaskInputDato(dato);
+    if (!vasketDato) return defaultValue;
+    return formatterDatoTilISO(vasketDato, defaultValue);
+  }
+  return formatterDatoTilISO(dato, defaultValue);
 }
 
 /** Enkelte data kommer fra backend i form av en "kortdato", feks 2017-01. Denne funksjonen
@@ -231,29 +257,31 @@ function sorterEtterISOFomDato(periode1, periode2) {
 }
 
 export {
-  vaskInputDato,
-  normaliserInputDato,
-  formatterDatoTilNorsk,
-  formatterDatoTilISO,
-  formatterKortDatoTilNorsk,
+  beregnAlder,
+  dateTilIsoString,
+  dateTilNorskString,
   datoDiff,
+  datoDiffMenneskelig,
   datoDiffNorskFormat,
   datoDiffPure,
-  datoDiffMenneskelig,
-  beregnAlder,
+  erEtter,
+  erFør,
   erGyldigPeriode,
   erIPeriode,
   erLike,
   erLikeDatoer,
-  plussEnDag,
-  norskStringTilDate,
+  formatterDatoTilISO,
+  formatterDatoTilNorsk,
+  formatterKortDatoTilNorsk,
   isoStringTilDate,
-  dateTilNorskString,
-  dateTilIsoString,
-  perioderOverlapper,
   MAX_AR_FREM_I_TID,
-  erFør,
-  erEtter,
-  sorterEtterNorskFomDato,
+  normaliserInputDato,
+  norskStringTilDate,
+  perioderOverlapper,
+  plussEnDag,
   sorterEtterISOFomDato,
+  sorterEtterNorskFomDato,
+  vaskInputDato,
+  vaskOgFormatterDatoTilNorsk,
+  vaskOgFormatterTilISO,
 };

@@ -56,13 +56,13 @@ const getChangedDependencies = (currentDeps: Record<string, any>, previousDepsRe
     });
     // Log only if there are changed dependencies
     if (Object.keys(changedDeps).length > 0) {
-      console.log("UseEffect Changed Dependencies", changedDeps);
+      console.log("[getChangedDependencies] Changed Dependencies", changedDeps);
     } else {
-      console.log("UseEffect No Changed Dependencies?!");
+      console.log("[getChangedDependencies] No Changed Dependencies?!");
     }
   } else {
     // Log all dependencies on the first run
-    console.log("UseEffect First Run Dependencies", currentDeps);
+    console.log("[getChangedDependencies] First Run Dependencies", currentDeps);
   }
 
   // Update previous deps ref
@@ -169,13 +169,13 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       .sort(Utils.dato.sorterEtterNorskFomDato);
     const medlemskapsperiodeFomTom = hentMedlemskapsFomTomDato(sorterteGyldigePerioder);
 
-    console.log("medlemskapsperiodeFomTom", medlemskapsperiodeFomTom);
-    console.log("sorterteGyldigePerioder", sorterteGyldigePerioder);
-    console.log("perioder", perioder);
+    console.log("[finnMedlemskapsperiode] medlemskapsperiodeFomTom", medlemskapsperiodeFomTom);
+    console.log("[finnMedlemskapsperiode] sorterteGyldigePerioder", sorterteGyldigePerioder);
+    console.log("[finnMedlemskapsperiode] perioder", perioder);
 
     return {
-      fomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsperiodeFomTom?.fom),
-      tomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsperiodeFomTom?.tom),
+      fomDato: Utils.dato.vaskOgFormatterDatoTilNorsk(medlemskapsperiodeFomTom?.fom),
+      tomDato: Utils.dato.vaskOgFormatterDatoTilNorsk(medlemskapsperiodeFomTom?.tom),
     };
   }, []);
 
@@ -231,8 +231,8 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     index: number,
   ) => {
     const periodeRequest = {
-      fomDato: Utils.dato.formatterDatoTilISO(periode.fomDato, "") as string,
-      tomDato: Utils.dato.formatterDatoTilISO(periode.tomDato, "") as string,
+      fomDato: Utils.dato.vaskOgFormatterTilISO(periode.fomDato, "") as string,
+      tomDato: Utils.dato.vaskOgFormatterTilISO(periode.tomDato, "") as string,
       trygdedekning: periode.trygdedekning,
       bestemmelse: getValues("bestemmelse"),
       innvilgelsesResultat: MKV.Koder.innvilgelsesResultat.INNVILGET,
@@ -282,10 +282,10 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   );
 
   const debouncedBeregning = useCallback(() => {
-    console.log("setter debouncedBeregningPagaar til false (debouncedBeregning)");
+    console.log("[debouncedBeregning] setter debouncedBeregningPagaar til false");
     setDebouncedBeregningPagaar(false);
     if (!redigerbart || !aarsavregningID || endrerBestemmelse || beregningPaagar || lagreMedlemskapsperioderPaagar) {
-      console.log("return tidlig i debouncedBeregning");
+      console.log("[debouncedBeregning] return tidlig i debouncedBeregning");
       return;
     }
 
@@ -298,6 +298,8 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     );
     const medlemskapsperiodeFomTom = finnMedlemskapsperiode(medlemskapsperioderFormState);
 
+    console.log("[debouncedBeregning] medlemskapsperiodeFomTom", medlemskapsperiodeFomTom);
+
     if (!Utils._isEqual(formState, previousFormState)) {
       const aktivFeilmelding = finnAktivFeilmelding({
         skatteforholdsperioder: formState.skatteforholdsperioder,
@@ -306,7 +308,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         medlemskapsperioder: medlemskapsperioderFormState as Medlemskapsperiode[],
         medlemskapstypeErPliktig,
       });
-      console.log("Aktive feilmeldinger", aktivFeilmelding, {
+      console.log("[debouncedBeregning] Aktive feilmeldinger", aktivFeilmelding, {
         skatteforholdsperioder: formState.skatteforholdsperioder,
         inntektskilder: formState.inntektskilder,
         medlemskapsperiode: medlemskapsperiodeFomTom,
@@ -328,7 +330,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       }
     }
 
-    console.log("debouncedBeregning ferdig");
+    console.log("[debouncedBeregning] ferdig");
   }, [
     aarsavregningID,
     beregningPaagar,
@@ -376,7 +378,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
           return periode;
         });
 
-        console.log("oppdaterteMedlemskapsperioder", oppdaterteMedlemskapsperioder);
+        console.log("[lagreMedlemskapsperioder] oppdaterteMedlemskapsperioder", oppdaterteMedlemskapsperioder);
 
         setLagredeMedlemskapsperioder(oppdaterteMedlemskapsperioder);
         setValue("medlemskapsperioder", oppdaterteMedlemskapsperioder);
@@ -445,12 +447,12 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
           return;
         }
 
-        console.log("setter lagrerMedlemskapsperioder til true");
+        console.log("[lagreMedlemskapsperioderEffect] setter lagrerMedlemskapsperioder til true");
         setLagreMedlemskapsperioderPaagar(true);
         const medlemskapsperioderTilLagring = [...medlemskapsperioder];
-        console.log("medlemskapsperioderTilLagring", medlemskapsperioderTilLagring);
+        console.log("[lagreMedlemskapsperioderEffect] medlemskapsperioderTilLagring", medlemskapsperioderTilLagring);
         debouncedLagreMedlemskapsperioder(medlemskapsperioderTilLagring, () => {
-          console.log("Setter lagrerMedlemskapsperioder til false");
+          console.log("[lagreMedlemskapsperioderEffect] Setter lagrerMedlemskapsperioder til false");
           setLagreMedlemskapsperioderPaagar(false);
         });
       }
@@ -503,15 +505,6 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     aarsavregningid?: number,
   ) => {
     await Api.Aarsavregning.oppdaterAarsavregning(behandlingid, request, aarsavregningid);
-    // if (await trigger()) {
-    //   setFeilmelding(undefined);
-    //   // TODO: Fjern handleBeregning herfra. La diff bli kalkulert i frontend.
-    //   // TODO: Dette vil også fikse problemet med at alle felter blir røde i det vi skriver noe her
-    //   // await handleBeregnTrygdeavgiftsperioder({
-    //   //   skatteforholdsperioder: getValues("skatteforholdsperioder"),
-    //   //   inntektskilder: getValues("inntektskilder"),
-    //   // });
-    // }
   };
 
   const debouncedOppdaterTotaltForskuddsvisFakturert = useCallback(
@@ -544,13 +537,13 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   useEffect(() => {
     setDebouncedBeregningPagaar(false);
     debouncedBeregningRef.current = Utils._debounce(debouncedBeregning, 350);
-    console.log("Lager en ny debounce funksjon når beregning callback endres");
+    console.log("[useEffect debouncedBeregning] Lager en ny debounce funksjon når beregning callback endres");
 
     // Cancel på unmount
     return () => {
       if (debouncedBeregningRef.current?.cancel) {
         setDebouncedBeregningPagaar(false);
-        console.log("Avbryter eventuelt eksisterende beregning for å sette opp ny debounce funksjon.");
+        console.log("[useEffect debouncedBeregning] Avbryter eventuelt eksisterende beregning for å sette opp ny debounce funksjon.");
         debouncedBeregningRef.current.cancel();
       }
     };
@@ -574,7 +567,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     // Avbryter hvis vi allerede har en beregning som venter
     if (debouncedBeregningRef.current?.cancel && Object.keys(changedDependencies).length > 0) {
       setDebouncedBeregningPagaar(false);
-      console.log("Avbryter eventuelt eksisterende beregning.", {
+      console.log("[useEffect hovedberegning] Avbryter eventuelt eksisterende beregning.", {
         beregningPaagar,
         lagreMedlemskapsperioderPaagar,
         debouncedBeregningPagaar,
@@ -583,7 +576,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     }
 
     if (medlemskapsperiodeEndret || Object.keys(changedDependencies).length === 0 || lagreMedlemskapsperioderPaagar) {
-      console.log("Avbryter useEffect uten å gjøre noe.", {
+      console.log("[useEffect hovedberegning] Avbryter useEffect uten å gjøre noe.", {
         medlemskapsperiodeEndret,
         changedDependencies,
         lagreMedlemskapsperioderPaagar,
@@ -602,7 +595,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
 
       if (!redigerbart || !aarsavregningID || endrerBestemmelse || beregningPaagar || lagreMedlemskapsperioderPaagar) {
         console.log(
-          "return tidlig i fordi redigerbart, aarsavregningID, endrerBestemmelse, lagreMedlemskapsperioderPaagar",
+          "[useEffect hovedberegning] return tidlig i fordi redigerbart, aarsavregningID, endrerBestemmelse, lagreMedlemskapsperioderPaagar",
           {
             redigerbart,
             aarsavregningID,
@@ -622,12 +615,12 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
             return;
           }
           setDebouncedBeregningPagaar(true);
-          console.log("sette debouncedBeregningPaagar true");
+          console.log("[useEffect hovedberegning] sette debouncedBeregningPaagar true");
           debouncedBeregningRef.current();
         });
       } else {
         setArrayValideringsfeil(undefined);
-        console.log("Clear arrayValideringsfeil", {
+        console.log("[useEffect hovedberegning] Clear arrayValideringsfeil", {
           currentFormState,
           previousFormState,
         });
@@ -639,7 +632,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         }
       }
     } else {
-      console.log("debouncedBeregningRef.current er undefined");
+      console.log("[useEffect hovedberegning] debouncedBeregningRef.current er undefined");
     }
   }, [
     skatteforholdsperioder,

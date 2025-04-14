@@ -51,7 +51,7 @@ const erInnenforValgtAarTest = {
   test: (datoString, schema) => {
     const aar = schema?.options?.context?.aar;
     if (!datoString) return false;
-    const dato = new Date(Datoutils.formatterDatoTilISO(datoString));
+    const dato = new Date(Datoutils.vaskOgFormatterTilISO(datoString));
     const startAar = new Date(aar, 0, 1);
     const sluttAar = new Date(aar, 11, 31, 23, 59, 59, 999);
     return dato >= startAar && dato <= sluttAar;
@@ -105,9 +105,9 @@ const erInnenforMedlemskapsperiodeTest = {
     const tom = sortertePerioder[sortertePerioder.length - 1].tomDato;
 
     return Utils.dato.erIPeriode(
-      Utils.dato.formatterDatoTilISO(fom),
-      Utils.dato.formatterDatoTilISO(tom),
-      Utils.dato.formatterDatoTilISO(datoString),
+      Utils.dato.vaskOgFormatterTilISO(fom),
+      Utils.dato.vaskOgFormatterTilISO(tom),
+      Utils.dato.vaskOgFormatterTilISO(datoString),
       "[]",
     );
   },

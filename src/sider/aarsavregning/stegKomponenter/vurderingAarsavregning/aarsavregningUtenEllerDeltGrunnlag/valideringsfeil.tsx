@@ -13,26 +13,18 @@ export enum TypeFeilmelding {
   HAR_OPPHOLDSPERIODER_MEDLEMSKAPSPERIODER = "HAR_OPPHOLDSPERIODER_MEDLEMSKAPSPERIODER",
 }
 
-// Helper function to sort periods by start date
-const sorterPerioderEtterStartdato = (perioder: any[]) => {
-  return [...perioder].sort((a, b) => {
-    const aFom = Utils.dato.formatterDatoTilISO(a.fomDato)!;
-    const bFom = Utils.dato.formatterDatoTilISO(b.fomDato)!;
-    return aFom.localeCompare(bFom);
-  });
-};
-
 const harOppholdsperioder = (perioder: any) => {
   if (!perioder || perioder.length <= 1) {
     return false;
   }
 
   const sortedPerioder = perioder.sort(Utils.dato.sorterEtterNorskFomDato);
+  console.log("[harOppholdsperioder] sortedPerioder", sortedPerioder);
 
   // eslint-disable-next-line no-plusplus
   for (let i = 0; i < sortedPerioder.length - 1; i++) {
-    const currentTom = Utils.dato.formatterDatoTilISO(sortedPerioder[i].tomDato);
-    const nextFom = Utils.dato.formatterDatoTilISO(sortedPerioder[i + 1].fomDato);
+    const currentTom = Utils.dato.vaskOgFormatterTilISO(sortedPerioder[i].tomDato);
+    const nextFom = Utils.dato.vaskOgFormatterTilISO(sortedPerioder[i + 1].fomDato);
 
     // Convert to Date objects
     const currentTomDate = Utils.dato.isoStringTilDate(currentTom);
@@ -55,17 +47,22 @@ const dekkerHeleMedlemskapsperiode = (perioder: any[], medlemskapsperiode: any):
   if (!perioder || perioder.length === 0) return true;
 
   try {
-    const medlemskapsperiodeFom = Utils.dato.formatterDatoTilISO(medlemskapsperiode.fomDato);
-    const medlemskapsperiodeTom = Utils.dato.formatterDatoTilISO(medlemskapsperiode.tomDato);
+    const medlemskapsperiodeFom = Utils.dato.vaskOgFormatterTilISO(medlemskapsperiode.fomDato);
+    const medlemskapsperiodeTom = Utils.dato.vaskOgFormatterTilISO(medlemskapsperiode.tomDato);
 
     // Sort periods by start date
-    const sortedPerioder = sorterPerioderEtterStartdato(perioder);
+    const sortedPerioder = perioder.sort(Utils.dato.sorterEtterNorskFomDato);
+    console.log("[dekkerHeleMedlemskapsperiode] sortedPerioder", sortedPerioder);
 
+    console.log("[dekkerHeleMedlemskapsperiode] medlemskapsperiodeFom", medlemskapsperiodeFom);
+    console.log("[dekkerHeleMedlemskapsperiode] medlemskapsperiodeTom", medlemskapsperiodeTom);
     // Dekning
-    const firstFom = Utils.dato.formatterDatoTilISO(sortedPerioder[0].fomDato);
+    const firstFom = Utils.dato.vaskOgFormatterTilISO(sortedPerioder[0].fomDato);
+    console.log("[dekkerHeleMedlemskapsperiode] firstFom", firstFom);
     if (!firstFom || firstFom !== medlemskapsperiodeFom) return false;
 
-    const lastTom = Utils.dato.formatterDatoTilISO(sortedPerioder[sortedPerioder.length - 1].tomDato);
+    const lastTom = Utils.dato.vaskOgFormatterTilISO(sortedPerioder[sortedPerioder.length - 1].tomDato);
+    console.log("[dekkerHeleMedlemskapsperiode] lastTom", lastTom);
     if (!lastTom || lastTom !== medlemskapsperiodeTom) return false;
 
     // Opphold
@@ -80,14 +77,13 @@ const ingenOverlappendePerioder = (perioder: any[]): boolean => {
 
   try {
     // Sort periods by start date
-    const sortedPerioder = sorterPerioderEtterStartdato(perioder);
-
-    console.log("sortedPerioder", sortedPerioder);
+    const sortedPerioder = perioder.sort(Utils.dato.sorterEtterNorskFomDato);
+    console.log("[ingenOverlappendePerioder] sortedPerioder", sortedPerioder);
 
     // Check for overlapping periods
     for (let i = 0; i < sortedPerioder.length - 1; i++) {
-      const currentTom = Utils.dato.formatterDatoTilISO(sortedPerioder[i].tomDato);
-      const nextFom = Utils.dato.formatterDatoTilISO(sortedPerioder[i + 1].fomDato);
+      const currentTom = Utils.dato.vaskOgFormatterTilISO(sortedPerioder[i].tomDato);
+      const nextFom = Utils.dato.vaskOgFormatterTilISO(sortedPerioder[i + 1].fomDato);
 
       // Convert to Date objects
       const currentTomDate = Utils.dato.isoStringTilDate(currentTom);
@@ -155,15 +151,17 @@ export function finnAktivFeilmelding({
 
   if (skatteforholdsperioder && skatteforholdsperioder.length > 0) {
     if (!dekkerHeleMedlemskapsperiode(skatteforholdsperioder, medlemskapsperiode)) {
-      console.log("dekkerHeleMedlemskapsperiode", skatteforholdsperioder, medlemskapsperiode);
+      console.log("[finnAktivFeilmelding] dekkerHeleMedlemskapsperiode", skatteforholdsperioder, medlemskapsperiode);
       return TypeFeilmelding.SKATTEFORHOLD_DEKKER_IKKE_HELE_MEDLEMSKAPSPERIODEN;
     }
 
     if (!ingenOverlappendePerioder(skatteforholdsperioder)) {
+      console.log("[finnAktivFeilmelding] ingenOverlappendePerioder", skatteforholdsperioder);
       return TypeFeilmelding.OVERLAPPENDE_SKATTEFORHOLDSPERIODER;
     }
 
     if (!ikkeAlleSammeSkatteforholdstyper(skatteforholdsperioder)) {
+      console.log("[finnAktivFeilmelding] ikkeAlleSammeSkatteforholdstyper", skatteforholdsperioder);
       return TypeFeilmelding.LIKE_SKATTEPLIKTTYPER;
     }
   }
