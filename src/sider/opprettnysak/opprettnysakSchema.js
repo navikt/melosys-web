@@ -112,29 +112,13 @@ const opprettnysak = object().shape({
       }),
     },
   ),
-  oppgaveID: string()
-    .nullable()
-    .when("oppretterOppgave", {
-      is: false,
-      then: string().required(VELG_OPPGAVE).nullable(),
-    }),
-  mottaksdato: string()
-    .nullable()
-    .when("oppretterOppgave", {
-      is: true,
-      then: string().erGyldigDato().required(FYLL_UT_MOTTAKSDATO).nullable(),
-    }),
-  behandlingsaarsakType: string()
-    .nullable()
-    .when("oppretterOppgave", {
-      is: true,
-      then: string().required(VELG_BEHANDLINGSAARSAK).nullable(),
-    }),
+  oppgaveID: string().nullable(),
+  mottaksdato: string().nullable(),
+  behandlingsaarsakType: string().nullable(),
   behandlingsaarsakFritekst: string()
     .nullable()
-    .when(["behandlingsaarsakType", "oppretterOppgave"], {
-      is: (behandlingsaarsakType, oppretterOppgave) =>
-        Boolean(oppretterOppgave) && behandlingsaarsakType === MKV.Koder.behandlinger.behandlingsaarsaktyper.FRITEKST,
+    .when(["behandlingsaarsakType"], {
+      is: (behandlingsaarsakType) => behandlingsaarsakType === MKV.Koder.behandlinger.behandlingsaarsaktyper.FRITEKST,
       then: string().max(25, MAX_25_TEGN).required(VELG_BEHANDLINGSAARSAK).nullable(),
     }),
   opprettBehandling: boolean()
@@ -143,7 +127,6 @@ const opprettnysak = object().shape({
       is: (saksnummer) => !skalOppretteNySak(saksnummer) && !Utils._isEmpty(saksnummer),
       then: boolean().nullable().oneOf([true], DU_KAN_IKKE_OPPRETTE),
     }),
-  oppretterOppgave: boolean(),
 });
 
 export default opprettnysak;

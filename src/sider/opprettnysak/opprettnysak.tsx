@@ -56,7 +56,6 @@ export interface OpprettNySakFormData {
   virksomhetOrgnr: string;
   virksomhetNavn: string;
   mottaksdato: string;
-  oppretterOppgave: boolean;
   behandlingsaarsakType: string;
   behandlingsaarsakFritekst?: string;
 }
@@ -70,7 +69,6 @@ const mapStateToProps = (state: RootState) => ({
     hovedpart: BRUKER,
     opprettBehandling: true,
     mottaksdato: Utils.dato.dateTilNorskString(new Date()),
-    oppretterOppgave: true,
   },
   landkoderListe: landkoderSelectors.LandkoderSelector(state),
 });
@@ -341,7 +339,7 @@ function OpprettNySak({
                     <Spinner />
                   ) : (
                     <div className="innrykk">
-                      <OppgaveVelger formValues={formValues} />
+                      <OppgaveVelger />
                     </div>
                   )}
                 </div>
