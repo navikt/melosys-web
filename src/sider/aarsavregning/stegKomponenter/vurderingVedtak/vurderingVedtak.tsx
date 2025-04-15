@@ -24,6 +24,8 @@ import { SumArsavregningTabell } from "../vurderingAarsavregning/komponenter/sum
 import { menypanelOperations, menypanelSelectors } from "../../../../ducks/menypanel";
 import { fagsakSelectors } from "../../../../ducks/fagsaker";
 import FullmaktForTrygdeavgiftConfirmationPanel from "../../../../felleskomponenter/fullmaktForTrygdeavgiftConfirmationPanel/fullmaktForTrygdeavgiftConfirmationPanel";
+import { BrevVedleggVisningstabellInterface } from "../../../../services/modules/dokumenter-v2";
+import VedleggTable from "../../../../felleskomponenter/vedleggTable";
 
 const { FASTSATT_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingsresultattyper;
 const { FØRSTEGANGSVEDTAK } = MKV.Koder.vedtakstyper;
@@ -58,7 +60,10 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   const [fakturaMottaker, setFakturaMottaker] = useState<string | undefined>(undefined);
   const [harFullmaktForTrygdeavgift, setHarFullmaktForTrygdeavgift] = useState(false);
   const [harBekreftetFullmaktForTrygdeavgift, setHarBekreftetFullmaktForTrygdeavgift] = useState(false);
-
+  const [brevVedlegg, setBrevVedlegg] = useState<BrevVedleggVisningstabellInterface>({
+    saksvedlegg: [],
+    standardvedlegg: [],
+  });
   const aarsavregningID = useSelector(behandlingsresultatSelectors.ÅrsavregningIDSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
@@ -92,6 +97,16 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
       orgnr: null,
     });
     setMuligeMottakere(res);
+    await hentStandardvedleggForBrev();
+  };
+
+  const hentStandardvedleggForBrev = async () => {
+    Api.DokumenterV2.hentStandardvedleggForBrev(AARSAVREGNING_VEDTAKSBREV).then((res) => {
+      setBrevVedlegg({
+        saksvedlegg: [],
+        standardvedlegg: res,
+      });
+    });
   };
 
   const hentOgSetHarFullmaktForTrygdeavgift = async () => {
@@ -266,6 +281,14 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
       {stegErGyldig && redigerbart && muligeMottakere && (
         <Dokumentliste behandlingID={behandlingID} dokumenter={mapMottakerRader(muligeMottakere)} />
       )}
+      <VedleggTable
+        valgteVedlegg={brevVedlegg}
+        setValgteVedlegg={() => {
+          /* Readonly */
+        }}
+        label="Vedlegg"
+        redigerbart={false /* Readonly. Ikke vis slett-knapp. */}
+      />
 
       <Mui.StegKnapper
         bekreftKnappProps={{
