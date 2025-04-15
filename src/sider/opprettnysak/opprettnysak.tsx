@@ -25,7 +25,6 @@ import { hentSammensattNavn } from "../../graphql/navn";
 import FagsakVelger from "../journalforing/komponenter/fagsakVelger";
 import { skalViseSoknadsperiodeOgLand } from "../journalforing/komponenter/opprettSak";
 
-import { OppgaveVelger } from "./komponenter/oppgaveVelger";
 import IdentOgNavn from "./komponenter/identOgNavn";
 
 import { lagYupToReduxformErrorMapper } from "../../yup";
@@ -35,6 +34,7 @@ import { Spinner } from "../../felleskomponenter/spinner";
 import { HStack } from "@navikt/ds-react";
 import { EnkelNavBox } from "../../felleskomponenter/enkelNavBox";
 import { oppgaverOperations } from "../../ducks/oppgaver";
+import { OpprettNyOppgave } from "./komponenter/opprettNyOppgave";
 
 const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
 
@@ -339,7 +339,7 @@ function OpprettNySak({
                     <Spinner />
                   ) : (
                     <div className="innrykk">
-                      <OppgaveVelger />
+                      <OpprettNyOppgave />
                     </div>
                   )}
                 </div>
