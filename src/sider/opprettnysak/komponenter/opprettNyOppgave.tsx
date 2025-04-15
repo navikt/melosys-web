@@ -6,6 +6,7 @@ import * as Nav from "../../../navFrontend";
 import { formSelectors } from "../../../ducks/form";
 import { useEffect, useState } from "react";
 import * as Api from "../../../services/api";
+import "./opprettNyOppgave.less";
 
 const { FRITEKST } = MKV.Koder.behandlinger.behandlingsaarsaktyper;
 
