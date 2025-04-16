@@ -125,6 +125,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   );
 
   const debouncedBeregning = useCallback(() => {
+    console.log("[debouncedBeregning] debouncedBeregningPagaar set false", debouncedBeregningPagaar);
     setDebouncedBeregningPagaar(false);
     if (!redigerbart || !aarsavregningID || erAvvik !== true || beregningPaagar || endrerAvvik) {
       return;
@@ -177,6 +178,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
     return () => {
       if (debouncedBeregningRef.current?.cancel) {
         debouncedBeregningRef.current.cancel();
+        setDebouncedBeregningPagaar(false);
       }
     };
   }, [debouncedBeregning]);
