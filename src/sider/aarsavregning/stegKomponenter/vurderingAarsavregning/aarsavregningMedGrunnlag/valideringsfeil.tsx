@@ -17,7 +17,6 @@ const dekkerHeleMedlemskapsperiode = (perioder: any[], medlemskapsperiode: any):
   const medlemskapsperiodeFom = Utils.dato.vaskOgFormatterTilISO(medlemskapsperiode.fomDato);
   const medlemskapsperiodeTom = Utils.dato.vaskOgFormatterTilISO(medlemskapsperiode.tomDato);
 
-  // Find min fom dato, and max tom dato (dates), from perioder (not sortedPerioder)
   const minFomDato = perioder
     .map((periode) => {
       const date = Utils.dato.isoStringTilDate(Utils.dato.vaskOgFormatterTilISO(periode.fomDato));
