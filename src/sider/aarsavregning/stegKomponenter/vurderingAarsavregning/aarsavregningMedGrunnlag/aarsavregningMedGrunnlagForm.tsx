@@ -93,19 +93,23 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
     skatteforholdsperioderFormState: Skatteforhold[],
     inntektskilderFormState: Inntektskilde[],
   ) => ({
-    skatteforholdsperioder: skatteforholdsperioderFormState.map((skatteforhold: Skatteforhold) => ({
-      fomDato: skatteforhold.fomDato,
-      tomDato: skatteforhold.tomDato,
-      skatteplikttype: skatteforhold.skatteplikttype,
-    })),
-    inntektskilder: inntektskilderFormState.map((inntektskilde: Inntektskilde) => ({
-      fomDato: inntektskilde.fomDato,
-      tomDato: inntektskilde.tomDato,
-      kildetype: inntektskilde.kildetype,
-      bruttoInntekt: inntektskilde.bruttoInntekt,
-      arbAvgBetales: inntektskilde.arbAvgBetales,
-      erMaanedsbelop: inntektskilde.erMaanedsbelop,
-    })),
+    skatteforholdsperioder: skatteforholdsperioderFormState
+      .map((skatteforhold: Skatteforhold) => ({
+        fomDato: skatteforhold.fomDato,
+        tomDato: skatteforhold.tomDato,
+        skatteplikttype: skatteforhold.skatteplikttype,
+      }))
+      .sort(Utils.dato.sorterEtterNorskFomDato),
+    inntektskilder: inntektskilderFormState
+      .map((inntektskilde: Inntektskilde) => ({
+        fomDato: inntektskilde.fomDato,
+        tomDato: inntektskilde.tomDato,
+        kildetype: inntektskilde.kildetype,
+        bruttoInntekt: inntektskilde.bruttoInntekt,
+        arbAvgBetales: inntektskilde.arbAvgBetales,
+        erMaanedsbelop: inntektskilde.erMaanedsbelop,
+      }))
+      .sort(Utils.dato.sorterEtterNorskFomDato),
   });
 
   const handleBeregnTrygdeavgiftsperioder = useCallback(
@@ -188,6 +192,8 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
         const currentFormState = mapFormState(getValues("skatteforholdsperioder"), getValues("inntektskilder"));
 
         if (!Utils._isEqual(currentFormState, previousFormValues)) {
+          console.log("[useEffect] currentFormState", currentFormState);
+          console.log("[useEffect] previousFormValues", previousFormValues);
           setDebouncedBeregningPagaar(true);
           debouncedBeregningRef.current();
         } else {
