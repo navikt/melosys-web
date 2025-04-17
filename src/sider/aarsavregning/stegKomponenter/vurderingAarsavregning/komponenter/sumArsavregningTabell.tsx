@@ -7,12 +7,12 @@ export function SumArsavregningTabell({
   nyTrygdeavgift,
   tidligereTrygdeavgift,
   tidligereTrygdeavgiftAvgiftssystem,
-  harDeltGrunnlag,
+  harGrunnlagIMelosys,
 }: {
   nyTrygdeavgift?: number;
   tidligereTrygdeavgift?: number;
   tidligereTrygdeavgiftAvgiftssystem?: number;
-  harDeltGrunnlag: boolean | undefined;
+  harGrunnlagIMelosys: boolean;
 }) {
   const sumTilFakturaEllerRefusjon =
     (nyTrygdeavgift ?? 0) - (tidligereTrygdeavgift ?? 0) - (tidligereTrygdeavgiftAvgiftssystem ?? 0);
@@ -30,7 +30,7 @@ export function SumArsavregningTabell({
               {formaterTilNorskBelop(nyTrygdeavgift || 0)} kr
             </Nav.Table.DataCell>
           </Nav.Table.Row>
-          {harDeltGrunnlag && (
+          {harGrunnlagIMelosys && (
             <Nav.Table.Row>
               <Nav.Table.DataCell scope="col">-</Nav.Table.DataCell>
               <Nav.Table.DataCell scope="col">Tidligere beregnet trygdeavgift fra Melosys</Nav.Table.DataCell>
