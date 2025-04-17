@@ -35,7 +35,7 @@ export function SumArsavregningTabell({
               <Nav.Table.DataCell scope="col">-</Nav.Table.DataCell>
               <Nav.Table.DataCell scope="col">Tidligere beregnet trygdeavgift fra Melosys</Nav.Table.DataCell>
               <Nav.Table.DataCell align="right" key={Utils._uuid()}>
-              {formaterTilNorskBelop(tidligereTrygdeavgift || 0)} kr
+                {formaterTilNorskBelop(tidligereTrygdeavgift || 0)} kr
               </Nav.Table.DataCell>
             </Nav.Table.Row>
           )}
