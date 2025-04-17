@@ -214,7 +214,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
         nyTrygdeavgift={nyTrygdeavgift}
         tidligereTrygdeavgift={tidligereTrygdeavgift}
         tidligereTrygdeavgiftAvgiftssystem={tidligereTrygdeavgiftAvgiftssystem}
-        harGrunnlagIMelosys={tidligereTrygdeavgift !== undefined || lagretAarsavregning?.harDeltGrunnlag === true}
+        harGrunnlagIMelosys={tidligereTrygdeavgift !== null || lagretAarsavregning?.harDeltGrunnlag === true}
       />
 
       {fakturaMottaker ? (
