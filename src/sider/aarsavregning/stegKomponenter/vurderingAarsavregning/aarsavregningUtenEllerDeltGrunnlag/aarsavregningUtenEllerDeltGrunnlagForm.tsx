@@ -771,6 +771,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
 
       {formIsValid && !beregningPaagar && !debouncedBeregningPagaar && !arrayValideringsfeil && !feilmelding && (
         <SumArsavregningTabell
+          harDeltGrunnlag={harDeltGrunnlag}
           nyTrygdeavgift={aarsavregningResponse?.avregning?.nyttTotalbeloep}
           tidligereTrygdeavgift={aarsavregningResponse?.avregning?.tidligereFakturertBeloep}
           tidligereTrygdeavgiftAvgiftssystem={aarsavregningResponse?.avregning?.tidligereFakturertBeloepAvgiftssystem}
