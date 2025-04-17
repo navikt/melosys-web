@@ -12,11 +12,17 @@
     }
 
     .inntektskildetype {
-      min-width: 10rem;
+      select {
+        width: auto;
+      }
     }
 
+    .arbavgbetales {
+      min-width: 8rem;
+    }
+    
     .brutto_inntekt {
-      min-width: 9rem;
+      min-width: 7rem;
 
       input {
         max-height: 2rem;
@@ -25,7 +31,7 @@
 
     &:first-child {
       .hoy_inntekt_advarsel {
-        margin-top: 1.5rem;
+        margin-top: 0.5rem;
       }
     }
 
@@ -39,6 +45,10 @@
       }
 
       min-width: 8rem;
+    }
+
+    .hoy_inntekt_advarsel--hidden {
+      display: none;
     }
 
     .ikkeRelevant {
