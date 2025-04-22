@@ -170,7 +170,7 @@ export function Inntektskilder({
               </Forms.Select>
             </Nav.Column>
 
-            <Nav.Column>
+            <Nav.Column className="arbavgbetales">
               {skalFylleInnArbAvgBetales ? (
                 <Forms.RadioGroup
                   legend={index === 0 ? "Betales aga.?" : ""}
@@ -228,16 +228,29 @@ export function Inntektskilder({
 
             <Nav.Column className="brutto_inntekt">
               {skalFylleInnBruttoInntekt ? (
-                <Forms.Input
-                  label={index === 0 ? "Brutto inntekt" : ""}
-                  hideLabel={index !== 0}
-                  name={`inntektskilder[${index}].bruttoInntekt`}
-                  control={control}
-                  readOnly={!redigerbart}
-                  type="text"
-                  numeric
-                  autoComplete="off"
-                />
+                <div>
+                  <Forms.Input
+                    label={index === 0 ? "Brutto inntekt" : ""}
+                    hideLabel={index !== 0}
+                    name={`inntektskilder[${index}].bruttoInntekt`}
+                    control={control}
+                    readOnly={!redigerbart}
+                    type="text"
+                    numeric
+                    autoComplete="off"
+                  />
+                  <div
+                    className={`column ${
+                      erHoyInntekt(formValues.inntektskilder[index])
+                        ? "hoy_inntekt_advarsel"
+                        : "hoy_inntekt_advarsel--hidden"
+                    }`}
+                  >
+                    <Alert variant="warning" size="small">
+                      Høy inntekt!
+                    </Alert>
+                  </div>
+                </div>
               ) : (
                 <div className="ikkeRelevant">
                   {index === 0 && (
@@ -248,18 +261,6 @@ export function Inntektskilder({
                   <p className={`undertekst ${index === 0 ? "med-overskrift" : "uten-overskrift"}`}>Ikke relevant</p>
                 </div>
               )}
-            </Nav.Column>
-
-            <Nav.Column
-              className={`column ${
-                erHoyInntekt(formValues.inntektskilder[index])
-                  ? "hoy_inntekt_advarsel"
-                  : "hoy_inntekt_advarsel invisible"
-              }`}
-            >
-              <Alert variant="warning" size="small">
-                Høy inntekt!
-              </Alert>
             </Nav.Column>
 
             <Nav.Column className="slett__knapp">

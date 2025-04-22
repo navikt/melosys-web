@@ -375,6 +375,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
               <SumArsavregningTabell
                 nyTrygdeavgift={aarsavregningResponse.avregning.nyttTotalbeloep}
                 tidligereTrygdeavgift={aarsavregningResponse.avregning.tidligereFakturertBeloep}
+                harGrunnlagIMelosys
               />
             )}
 
