@@ -121,7 +121,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
           const defaultFormValues = mapSkjemaverdierFraTrygdeavgiftsgrunnlag(
             res?.nyttGrunnlag?.trygdeavgiftsgrunnlag || res.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag,
             res.behandlingsvalg,
-            res?.avregning?.avgift25Prosent,<
+            res?.avregning?.avgift25Prosent,
           );
 
           const medlemskapsperioder = res.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.medlemskapsperioder;
