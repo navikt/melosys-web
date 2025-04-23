@@ -11,7 +11,10 @@ export interface AarsavregningResponse {
   nyttGrunnlag?: Grunnlagsopplysninger;
   avregning?: Avregning;
   harDeltGrunnlag?: boolean;
+  behandlingsvalg?: string;
+  avgift25Prosent?: string;
 }
+// TODO: Fix typing for behandlingsvalg
 
 export interface AarsavregningRequest {
   avregning: Avregning;
@@ -53,6 +56,7 @@ export interface Avregning {
   tidligereFakturertBeloep?: number;
   tilFaktureringBeloep?: number;
   tidligereFakturertBeloepAvgiftssystem?: number;
+  avgift25Prosent?: number;
 }
 
 export interface AarsavregningListResponse {
@@ -88,6 +92,15 @@ export const oppdaterAvvik = (
 ): Promise<AarsavregningResponse> =>
   putAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${AARSAVREGNING}/${aarsavregningID}/harAvvik/${harAvvik}`);
 
+export const oppdaterBehandlingsvalg = (
+  behandlingID: number,
+  behandlingsvalg: string,
+  aarsavregningID?: number,
+): Promise<AarsavregningResponse> =>
+  putAsJson(
+    `${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${AARSAVREGNING}/${aarsavregningID}/behandlingsvalg/${behandlingsvalg}`,
+  );
+
 export const hentFiltrertAarsavregningList = (
   saksnummer: string,
   resultattype?: string,
@@ -111,6 +124,21 @@ export const oppdaterTotalAvgift = async (behandlingID: number, aarsavregningID:
     {
       avregning: {
         nyttTotalbeloep: totalAvgift,
+      },
+    },
+    aarsavregningID,
+  );
+};
+export const oppdaterAvgift25Prosent = async (
+  behandlingID: number,
+  aarsavregningID: number,
+  avgift25Prosent?: number,
+) => {
+  return oppdaterAarsavregning(
+    behandlingID,
+    {
+      avregning: {
+        avgift25Prosent,
       },
     },
     aarsavregningID,

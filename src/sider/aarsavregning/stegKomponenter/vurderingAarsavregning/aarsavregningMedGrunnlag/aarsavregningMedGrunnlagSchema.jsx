@@ -15,6 +15,7 @@ const {
   PENSJON_UFØRETRYGD,
   PENSJON_UFØRETRYGD_KILDESKATT,
 } = MKV.Koder.inntektskildetype;
+const { OPPLYSNINGER_ENDRET, OPPLYSNINGER_UENDRET, MANUELL_ENDELIG_AVGIFT } = MKV.Koder.aarsavregningBehandlingsvalg;
 const UTENFOR_MEDLEMSKAPSPERIODEN = { melding: "Utenfor medl.periode" };
 
 export const arbAvgBetalesKreves = (kildetype, medlemskapsTypeErPliktig) =>
@@ -100,20 +101,25 @@ const inntektskildeSchema = object().shape({
 });
 
 const aarsavregningMedGrunnlagSchema = object().shape({
-  erAvvik: boolean().required(MAA_FYLLES_UT),
-  skatteforholdsperioder: array().when(["erAvvik"], {
-    is: (erAvvik) => erAvvik === true,
+  behandlingsvalg: string().required(MAA_FYLLES_UT),
+  skatteforholdsperioder: array().when(["behandlingsvalg"], {
+    is: (behandlingsvalg) => behandlingsvalg === OPPLYSNINGER_ENDRET,
     then: array().min(1, "Minst en skatteforholdsperiode").of(skatteforholdsperiodeSchema),
     otherwise: array(),
   }),
-  inntektskilder: array().when(["$medlemskapsTypeErPliktig", "erAvvik", "skatteforholdsperioder"], {
-    is: (medlemskapsTypeErPliktig, erAvvik, skatteforholdsperioder) => {
+  inntektskilder: array().when(["$medlemskapsTypeErPliktig", "behandlingsvalg", "skatteforholdsperioder"], {
+    is: (medlemskapsTypeErPliktig, behandlingsvalg, skatteforholdsperioder) => {
       return (
-        erAvvik === true && (!medlemskapsTypeErPliktig || !erBrukerSkattepliktigIHelePerioden(skatteforholdsperioder))
+        behandlingsvalg === OPPLYSNINGER_ENDRET &&
+        (!medlemskapsTypeErPliktig || !erBrukerSkattepliktigIHelePerioden(skatteforholdsperioder))
       );
     },
     then: array().min(1, "Minst en inntektskilde").of(inntektskildeSchema),
     otherwise: array(),
+  }),
+  avgift25Prosent: string().when(["behandlingsvalg"], {
+    is: (behandlingsvalg) => behandlingsvalg === MANUELL_ENDELIG_AVGIFT,
+    then: string().required(MAA_FYLLES_UT),
   }),
 });
 

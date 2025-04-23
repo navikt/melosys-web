@@ -43,7 +43,8 @@ const mapMedlemskapsperiodeBestemmelse = (harDeltGrunnlag: boolean, medlemskapsp
 };
 
 export interface AarsavregningMedGrunnlagFormValues extends FormValuesProps {
-  erAvvik?: boolean;
+  behandlingsvalg?: string;
+  avgift25Prosent?: string;
 }
 
 export interface InitiellData {
@@ -64,9 +65,10 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
   const [isLoading, setIsLoading] = useState(true);
   const [initiellData, setInitiellData] = useState<InitiellData>({
     formDefaultValues: {
-      erAvvik: undefined,
       skatteforholdsperioder: [{}],
       inntektskilder: [{}],
+      behandlingsvalg: undefined,
+      avgift25Prosent: undefined,
     },
     medlemskapstypeErPliktig: false,
   });
@@ -77,15 +79,23 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
 
   const mapSkjemaverdierFraTrygdeavgiftsgrunnlag = (
     trygdeavgiftsgrunnlag?: Trygdeavgiftsgrunnlag,
-    harAvvik?: boolean,
+    behandlingsvalg?: string,
+    avgift25Prosent?: string,
   ) => {
-    if (!trygdeavgiftsgrunnlag) return { erAvvik: undefined, skatteforholdsperioder: [{}], inntektskilder: [{}] };
+    if (!trygdeavgiftsgrunnlag)
+      return {
+        skatteforholdsperioder: [{}],
+        inntektskilder: [{}],
+        behandlingsvalg: undefined,
+        avgift25Prosent: undefined,
+      };
     const { inntektskperioder, skatteforholdsperioder } = trygdeavgiftsgrunnlag;
     const sorterteInntekstkilder = [...inntektskperioder].sort(Utils.dato.sorterEtterISOFomDato);
     const sorterteSkatteforhold = [...skatteforholdsperioder].sort(Utils.dato.sorterEtterISOFomDato);
 
     return {
-      erAvvik: harAvvik,
+      behandlingsvalg,
+      avgift25Prosent,
       skatteforholdsperioder: !Utils._isEmpty(sorterteSkatteforhold)
         ? mapTilSkatteforholdProps(sorterteSkatteforhold)
         : [{}],
@@ -110,7 +120,8 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
 
           const defaultFormValues = mapSkjemaverdierFraTrygdeavgiftsgrunnlag(
             res?.nyttGrunnlag?.trygdeavgiftsgrunnlag || res.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag,
-            res.harAvvik,
+            res.behandlingsvalg,
+            res?.avregning?.avgift25Prosent,<
           );
 
           const medlemskapsperioder = res.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.medlemskapsperioder;

@@ -29,6 +29,10 @@ import { InitiellData } from "./aarsavregningMedGrunnlag";
 import * as Forms from "../../../../../felleskomponenter/forms";
 import { mapTilInntektskilderProps, mapTilSkatteforholdProps } from "../aarsavregningHelpers";
 import { Feilmelding, finnAktivFeilmelding } from "./valideringsfeil";
+import MKV from "../../../../../melosyskodeverk";
+import * as KV from "../../../../../kodeverk";
+
+const { OPPLYSNINGER_ENDRET, OPPLYSNINGER_UENDRET, MANUELL_ENDELIG_AVGIFT } = MKV.Koder.aarsavregningBehandlingsvalg;
 
 interface Props {
   initiellData: InitiellData;
@@ -86,7 +90,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   const formValues = watch();
   const skatteforholdsperioder = watch("skatteforholdsperioder");
   const inntektskilder = watch("inntektskilder");
-  const erAvvik = watch("erAvvik");
+  const behandlingsvalg = watch("behandlingsvalg");
   const debouncedBeregningRef = useRef<any>(null);
 
   const mapFormState = (
@@ -127,7 +131,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   const debouncedBeregning = useCallback(() => {
     console.log("[debouncedBeregning] debouncedBeregningPagaar set false", debouncedBeregningPagaar);
     setDebouncedBeregningPagaar(false);
-    if (!redigerbart || !aarsavregningID || erAvvik !== true || beregningPaagar || endrerAvvik) {
+    if (!redigerbart || !aarsavregningID || behandlingsvalg !== OPPLYSNINGER_ENDRET || beregningPaagar || endrerAvvik) {
       return;
     }
 
@@ -158,7 +162,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
     }
   }, [
     aarsavregningID,
-    erAvvik,
+    behandlingsvalg,
     beregningPaagar,
     endrerAvvik,
     getValues,
@@ -190,7 +194,8 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
       debouncedBeregningRef.current.cancel();
     }
     if (debouncedBeregningRef.current) {
-      if (redigerbart && aarsavregningID && erAvvik === true && !endrerAvvik) {
+      console.log(behandlingsvalg === OPPLYSNINGER_ENDRET);
+      if (redigerbart && aarsavregningID && behandlingsvalg === OPPLYSNINGER_ENDRET && !endrerAvvik) {
         const currentFormState = mapFormState(getValues("skatteforholdsperioder"), getValues("inntektskilder"));
 
         if (!Utils._isEqual(currentFormState, previousFormValues)) {
@@ -204,15 +209,19 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
         }
       }
     }
-  }, [skatteforholdsperioder, erAvvik, inntektskilder, formIsValid, isValidating, endrerAvvik]);
+  }, [skatteforholdsperioder, behandlingsvalg, inntektskilder, formIsValid, isValidating, endrerAvvik]);
 
   const stegErGyldig = useMemo(
     () =>
-      erAvvik === false ||
+      behandlingsvalg === OPPLYSNINGER_UENDRET ||
       Boolean(
-        formIsValid && erAvvik === true && aarsavregningResponse?.nyttGrunnlag && !feilmelding && !arrayValideringsfeil,
+        formIsValid &&
+          behandlingsvalg === OPPLYSNINGER_ENDRET &&
+          aarsavregningResponse?.nyttGrunnlag &&
+          !feilmelding &&
+          !arrayValideringsfeil,
       ),
-    [erAvvik, formIsValid, aarsavregningResponse?.nyttGrunnlag, feilmelding, arrayValideringsfeil],
+    [behandlingsvalg, formIsValid, aarsavregningResponse?.nyttGrunnlag, feilmelding, arrayValideringsfeil],
   );
 
   useEffect(() => {
@@ -241,13 +250,14 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   ]);
 
   const håndterAvvik = useCallback(
-    (value: boolean) => {
+    (value: string) => {
       setEndrerAvvik(true);
 
-      Api.Aarsavregning.oppdaterAvvik(behandlingID, value, aarsavregningID)
+      Api.Aarsavregning.oppdaterBehandlingsvalg(behandlingID, value, aarsavregningID)
         .then((res) => {
           setAarsavregningResponse(res);
-          if (!value) {
+          if (value === OPPLYSNINGER_UENDRET || value === MANUELL_ENDELIG_AVGIFT) {
+            // TODO: Skal beregning kjøres for MANUELL_ENDELIG_AVGIFT?
             setBeregningPaagar(true);
             const skatteforholdFraGrunnlag =
               res.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.skatteforholdsperioder;
@@ -286,6 +296,14 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
     }
   }, [trigger, stegErGyldig, beregningPaagar, bekreft, endrerAvvik, debouncedBeregningPagaar]);
 
+  const debouncedOppdaterAvgift25Prosent = useCallback(
+    Utils._debounce(
+      async (value: string) => Api.Aarsavregning.oppdaterAvgift25Prosent(behandlingID, aarsavregningID, value),
+      350,
+    ),
+    [aarsavregningID],
+  );
+
   const trygdeAvgiftSkalIkkeBetalesTilNav =
     medlemskapstypeErPliktig && erBrukerSkattepliktigIHelePerioden(skatteforholdsperioder);
   const forskuddsvisFakturertTrygdeavgift =
@@ -320,21 +338,42 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
       )}
 
       <Forms.RadioGroup
-        name="erAvvik"
+        name="behandlingsvalg"
         control={control}
-        legend="Er det avvik i opplysningene fra skatt eller bruker?"
+        legend="Hva ønsker du å gjøre?"
         readOnly={!redigerbart}
         onChange={(value) => {
           håndterAvvik(value);
         }}
       >
-        <Nav.HStack gap="6">
-          <Nav.Radio value={true}>Ja</Nav.Radio>
-          <Nav.Radio value={false}>Nei</Nav.Radio>
-        </Nav.HStack>
+        <Nav.Radio value={OPPLYSNINGER_ENDRET}>
+          {KV.kodeTilTerm(OPPLYSNINGER_ENDRET, MKV.KTObjects.aarsavregningBehandlingsvalg)}
+        </Nav.Radio>
+        <Nav.Radio value={OPPLYSNINGER_UENDRET}>
+          {KV.kodeTilTerm(OPPLYSNINGER_UENDRET, MKV.KTObjects.aarsavregningBehandlingsvalg)}
+        </Nav.Radio>
+        <Nav.Radio value={MANUELL_ENDELIG_AVGIFT}>
+          {KV.kodeTilTerm(MANUELL_ENDELIG_AVGIFT, MKV.KTObjects.aarsavregningBehandlingsvalg)}
+        </Nav.Radio>
       </Forms.RadioGroup>
 
-      {erAvvik === true && !endrerAvvik && (
+      {behandlingsvalg === MANUELL_ENDELIG_AVGIFT && (
+        <Forms.Input
+          label="Endelig beregnet trygdeavgift"
+          name="avgift25Prosent"
+          control={control}
+          readOnly={!redigerbart}
+          // TODO: Rename
+          className="tidligere_fakturert_input"
+          autoComplete="off"
+          type="text"
+          numeric
+          tillattNegativeTall
+          onChange={debouncedOppdaterAvgift25Prosent}
+        />
+      )}
+
+      {behandlingsvalg === OPPLYSNINGER_ENDRET && !endrerAvvik && (
         <>
           <Nav.Heading className="endelige_opplysninger_heading" level="2">
             Inntekts- og skatteopplysninger for endelig trygdeavgift
@@ -382,6 +421,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
           {formIsValid &&
             !debouncedBeregningPagaar &&
             !beregningPaagar &&
+            behandlingsvalg !== MANUELL_ENDELIG_AVGIFT &&
             !feilmelding &&
             !arrayValideringsfeil &&
             aarsavregningResponse?.nyttGrunnlag && (
