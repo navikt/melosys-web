@@ -1,7 +1,7 @@
 import * as Api from "../../../../../services/api";
 import MedlemskapsPerioderTabell from "../komponenter/medlemskapsPerioderTabell";
 import "../vurderingAarsavregningInngang.css";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { AarsavregningResponse } from "../../../../../services/modules/aarsavregning/aarsavregning";
 import { useSelector } from "react-redux";
 import * as Nav from "../../../../../navFrontend";
@@ -64,6 +64,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
     formState: { isValid: formIsValid, isValidating },
     trigger,
     getValues,
+    setValue,
   } = useForm({
     resolver: yupResolver(aarsavregningMedGrunnlagSchema),
     context: {
@@ -91,6 +92,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   const skatteforholdsperioder = watch("skatteforholdsperioder");
   const inntektskilder = watch("inntektskilder");
   const behandlingsvalg = watch("behandlingsvalg");
+  const manueltAvgiftBeloep = watch("manueltAvgiftBeloep");
   const debouncedBeregningRef = useRef<any>(null);
 
   const mapFormState = (
@@ -266,6 +268,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
       Api.Aarsavregning.oppdaterBehandlingsvalg(behandlingID, value, aarsavregningID)
         .then((res) => {
           setAarsavregningResponse(res);
+          setValue("manueltAvgiftBeloep", undefined, { shouldValidate: false, shouldDirty: false });
           if (value === OPPLYSNINGER_UENDRET || value === MANUELL_ENDELIG_AVGIFT) {
             // TODO: Skal beregning kjøres for MANUELL_ENDELIG_AVGIFT?
             setBeregningPaagar(true);
@@ -309,7 +312,9 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   const debouncedOppdaterManueltAvgiftBeloep = useCallback(
     Utils._debounce(
       async (value: string) =>
-        Api.Aarsavregning.oppdaterManueltAvgiftBeloep(behandlingID, aarsavregningID, Number(value)),
+        Api.Aarsavregning.oppdaterManueltAvgiftBeloep(behandlingID, aarsavregningID, Number(value)).then((res) => {
+          setAarsavregningResponse(res);
+        }),
       350,
     ),
     [aarsavregningID],
@@ -321,6 +326,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
     (aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift?.totalAvgift ?? 0) > 0;
   const nyttGrunnlagHarTrygdeavgiftsgrunnlag = aarsavregningResponse?.nyttGrunnlag?.trygdeavgiftsgrunnlag != null;
 
+  const manueltAvgiftBeloepId = useId();
   return (
     <>
       {aarsavregningResponse && aarsavregningResponse.tidligereGrunnlagsopplysninger && (
@@ -356,12 +362,17 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
         onChange={(value) => {
           handleBehandlingsvalgChange(value);
         }}
+        className="behandlingsvalg_radio_group"
       >
-        {[OPPLYSNINGER_ENDRET, OPPLYSNINGER_UENDRET, MANUELL_ENDELIG_AVGIFT].map((kode) => (
-          <Nav.Radio value={kode} key={kode}>
-            {KV.kodeTilTerm(kode, MKV.KTObjects.aarsavregningBehandlingsvalg)}
-          </Nav.Radio>
-        ))}
+        <Nav.Radio value={OPPLYSNINGER_ENDRET}>
+          <b>Jeg skal gjøre endringer.</b> Inntekts- og/eller skatteopplysningene er endret siden tidligere beregning
+        </Nav.Radio>
+        <Nav.Radio value={OPPLYSNINGER_UENDRET}>
+          <b>Det er ingen endringer.</b> Inntekts- og skatteopplysningene er like som ved tidligere beregning
+        </Nav.Radio>
+        <Nav.Radio value={MANUELL_ENDELIG_AVGIFT}>
+          <b>Jeg skal oppgi endelig avgift selv.</b> Endelig trygdeavgift er manuelt beregnet utenfor Melosys
+        </Nav.Radio>
       </Forms.RadioGroup>
 
       {behandlingsvalg === MANUELL_ENDELIG_AVGIFT && (
@@ -376,6 +387,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
           numeric
           tillattNegativeTall
           onChange={debouncedOppdaterManueltAvgiftBeloep}
+          key={manueltAvgiftBeloepId}
         />
       )}
 
@@ -440,6 +452,14 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
 
           {arrayValideringsfeil && <Feilmelding type={arrayValideringsfeil} />}
         </>
+      )}
+
+      {behandlingsvalg === MANUELL_ENDELIG_AVGIFT && manueltAvgiftBeloep && (
+        <SumArsavregningTabell
+          nyTrygdeavgift={Number(manueltAvgiftBeloep)}
+          tidligereTrygdeavgift={aarsavregningResponse?.avregning?.tidligereFakturertBeloep}
+          harGrunnlagIMelosys
+        />
       )}
 
       {feilmelding && !beregningPaagar && (
