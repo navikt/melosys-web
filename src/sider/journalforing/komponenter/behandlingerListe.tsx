@@ -25,10 +25,10 @@ function BehandlingerListe({ behandlingOversikter }: BehandlingerListeProps) {
   const alleBehandlingerErAvsluttet = pågåendeBehandlinger.length === 0;
 
   const initialBehandlinger = alleBehandlingerErAvsluttet
-    ? [behandlingOversikter[behandlingOversikter.length - 1]] // Last one if all are AVSLUTTET
+    ? [behandlingOversikter[behandlingOversikter.length - 1]]
     : pågåendeBehandlinger;
 
-  const hasMoreBehandlinger = behandlingOversikter.length > initialBehandlinger.length;
+  const harFlereBehandlinger = behandlingOversikter.length > initialBehandlinger.length;
 
   return (
     <div className="behandlingsstatusSvarfrist-wrapper">
@@ -36,8 +36,10 @@ function BehandlingerListe({ behandlingOversikter }: BehandlingerListeProps) {
         <div className="behandlinger-liste">
           {initialBehandlinger.map((behandling) => (
             <Nav.Row key={behandling.behandlingID} className="behandling-rad">
-              <Nav.Column className="behandling-tittel">{behandling.tittel}</Nav.Column>
-              <Nav.Column>
+              <Nav.Column lg="6" className="behandling-tittel">
+                {behandling.tittel}
+              </Nav.Column>
+              <Nav.Column lg="6">
                 <BehandlingsstatusMedSvarfrist
                   behandlingsstatus={behandling.behandlingsstatus}
                   svarFrist={behandling.svarFrist || null}
@@ -45,7 +47,7 @@ function BehandlingerListe({ behandlingOversikter }: BehandlingerListeProps) {
               </Nav.Column>
             </Nav.Row>
           ))}
-          {hasMoreBehandlinger && (
+          {harFlereBehandlinger && (
             <Nav.Button onClick={() => setShowAllBehandlinger(true)} variant="tertiary" icon={<Ikon.ChevronDown />}>
               Vis mer
             </Nav.Button>
@@ -57,8 +59,10 @@ function BehandlingerListe({ behandlingOversikter }: BehandlingerListeProps) {
         <div className="behandlinger-liste">
           {behandlingOversikter.map((behandling) => (
             <Nav.Row key={behandling.behandlingID} className="behandling-rad">
-              <Nav.Column className="behandling-tittel">{behandling.tittel}</Nav.Column>
-              <Nav.Column>
+              <Nav.Column lg="6" className="behandling-tittel">
+                {behandling.tittel}
+              </Nav.Column>
+              <Nav.Column lg="6">
                 <BehandlingsstatusMedSvarfrist
                   behandlingsstatus={behandling.behandlingsstatus}
                   svarFrist={behandling.svarFrist || null}
