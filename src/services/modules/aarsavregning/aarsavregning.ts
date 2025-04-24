@@ -12,7 +12,7 @@ export interface AarsavregningResponse {
   avregning?: Avregning;
   harDeltGrunnlag?: boolean;
   behandlingsvalg?: string;
-  avgift25Prosent?: string;
+  manueltAvgiftBeloep?: string;
 }
 // TODO: Fix typing for behandlingsvalg
 
@@ -56,7 +56,7 @@ export interface Avregning {
   tidligereFakturertBeloep?: number;
   tilFaktureringBeloep?: number;
   tidligereFakturertBeloepAvgiftssystem?: number;
-  avgift25Prosent?: number;
+  manueltAvgiftBeloep?: number;
 }
 
 export interface AarsavregningListResponse {
@@ -122,16 +122,16 @@ export const oppdaterTotalAvgift = async (behandlingID: number, aarsavregningID:
     aarsavregningID,
   );
 };
-export const oppdaterAvgift25Prosent = async (
+export const oppdaterManueltAvgiftBeloep = async (
   behandlingID: number,
   aarsavregningID: number,
-  avgift25Prosent?: number,
+  manueltAvgiftBeloep?: number,
 ) => {
   return oppdaterAarsavregning(
     behandlingID,
     {
       avregning: {
-        avgift25Prosent,
+        manueltAvgiftBeloep,
       },
     },
     aarsavregningID,

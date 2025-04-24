@@ -131,7 +131,13 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   const debouncedBeregning = useCallback(() => {
     console.log("[debouncedBeregning] debouncedBeregningPagaar set false", debouncedBeregningPagaar);
     setDebouncedBeregningPagaar(false);
-    if (!redigerbart || !aarsavregningID || behandlingsvalg !== OPPLYSNINGER_ENDRET || beregningPaagar || endrerBehandlingsvalg) {
+    if (
+      !redigerbart ||
+      !aarsavregningID ||
+      behandlingsvalg !== OPPLYSNINGER_ENDRET ||
+      beregningPaagar ||
+      endrerBehandlingsvalg
+    ) {
       return;
     }
 
@@ -219,6 +225,11 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
           aarsavregningResponse?.nyttGrunnlag &&
           !feilmelding &&
           !arrayValideringsfeil,
+      ) ||
+      Boolean(
+        behandlingsvalg === MANUELL_ENDELIG_AVGIFT &&
+          aarsavregningResponse?.avregning?.manueltAvgiftBeloep &&
+          !feilmelding,
       ),
     [behandlingsvalg, formIsValid, aarsavregningResponse?.nyttGrunnlag, feilmelding, arrayValideringsfeil],
   );
@@ -248,7 +259,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
     aarsavregningResponse?.avregning?.nyttTotalbeloep,
   ]);
 
-  const håndterAvvik = useCallback(
+  const handleBehandlingsvalgChange = useCallback(
     (value: string) => {
       setEndrerBehandlingsvalg(true);
 
@@ -295,9 +306,10 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
     }
   }, [trigger, stegErGyldig, beregningPaagar, bekreft, endrerBehandlingsvalg, debouncedBeregningPagaar]);
 
-  const debouncedOppdaterAvgift25Prosent = useCallback(
+  const debouncedOppdaterManueltAvgiftBeloep = useCallback(
     Utils._debounce(
-      async (value: string) => Api.Aarsavregning.oppdaterAvgift25Prosent(behandlingID, aarsavregningID, Number(value)),
+      async (value: string) =>
+        Api.Aarsavregning.oppdaterManueltAvgiftBeloep(behandlingID, aarsavregningID, Number(value)),
       350,
     ),
     [aarsavregningID],
@@ -342,7 +354,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
         legend="Hva ønsker du å gjøre?"
         readOnly={!redigerbart}
         onChange={(value) => {
-          håndterAvvik(value);
+          handleBehandlingsvalgChange(value);
         }}
       >
         {[OPPLYSNINGER_ENDRET, OPPLYSNINGER_UENDRET, MANUELL_ENDELIG_AVGIFT].map((kode) => (
@@ -355,7 +367,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
       {behandlingsvalg === MANUELL_ENDELIG_AVGIFT && (
         <Forms.Input
           label="Endelig beregnet trygdeavgift"
-          name="avgift25Prosent"
+          name="manueltAvgiftBeloep"
           control={control}
           readOnly={!redigerbart}
           className="avgift_input"
@@ -363,7 +375,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
           type="text"
           numeric
           tillattNegativeTall
-          onChange={debouncedOppdaterAvgift25Prosent}
+          onChange={debouncedOppdaterManueltAvgiftBeloep}
         />
       )}
 

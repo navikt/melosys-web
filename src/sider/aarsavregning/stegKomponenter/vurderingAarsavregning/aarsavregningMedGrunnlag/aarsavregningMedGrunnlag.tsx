@@ -44,7 +44,7 @@ const mapMedlemskapsperiodeBestemmelse = (harDeltGrunnlag: boolean, medlemskapsp
 
 export interface AarsavregningMedGrunnlagFormValues extends FormValuesProps {
   behandlingsvalg?: string;
-  avgift25Prosent?: string;
+  manueltAvgiftBeloep?: number;
 }
 
 export interface InitiellData {
@@ -68,7 +68,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
       skatteforholdsperioder: [{}],
       inntektskilder: [{}],
       behandlingsvalg: undefined,
-      avgift25Prosent: undefined,
+      manueltAvgiftBeloep: undefined,
     },
     medlemskapstypeErPliktig: false,
   });
@@ -80,14 +80,14 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
   const mapSkjemaverdierFraTrygdeavgiftsgrunnlag = (
     trygdeavgiftsgrunnlag?: Trygdeavgiftsgrunnlag,
     behandlingsvalg?: string,
-    avgift25Prosent?: string,
+    manueltAvgiftBeloep?: number,
   ) => {
     if (!trygdeavgiftsgrunnlag)
       return {
         skatteforholdsperioder: [{}],
         inntektskilder: [{}],
         behandlingsvalg: undefined,
-        avgift25Prosent: undefined,
+        manueltAvgiftBeloep: undefined,
       };
     const { inntektskperioder, skatteforholdsperioder } = trygdeavgiftsgrunnlag;
     const sorterteInntekstkilder = [...inntektskperioder].sort(Utils.dato.sorterEtterISOFomDato);
@@ -95,7 +95,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
 
     return {
       behandlingsvalg,
-      avgift25Prosent,
+      manueltAvgiftBeloep,
       skatteforholdsperioder: !Utils._isEmpty(sorterteSkatteforhold)
         ? mapTilSkatteforholdProps(sorterteSkatteforhold)
         : [{}],
@@ -118,11 +118,12 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
           // Benyttes for innhenting av saksopplysninger ifm. årsavregningsbehandlinger
           dispatch({ type: OK, data: res });
 
-          const defaultFormValues = mapSkjemaverdierFraTrygdeavgiftsgrunnlag(
-            res?.nyttGrunnlag?.trygdeavgiftsgrunnlag || res.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag,
-            res.behandlingsvalg,
-            res?.avregning?.avgift25Prosent,
-          );
+          const defaultFormValues: FieldValue<AarsavregningMedGrunnlagFormValues> =
+            mapSkjemaverdierFraTrygdeavgiftsgrunnlag(
+              res?.nyttGrunnlag?.trygdeavgiftsgrunnlag || res.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag,
+              res.behandlingsvalg,
+              res?.avregning?.manueltAvgiftBeloep,
+            );
 
           const medlemskapsperioder = res.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.medlemskapsperioder;
           const innvilgetMedlemskapsperiode = mapInnvilgetMedlemskapsPeriode(medlemskapsperioder);

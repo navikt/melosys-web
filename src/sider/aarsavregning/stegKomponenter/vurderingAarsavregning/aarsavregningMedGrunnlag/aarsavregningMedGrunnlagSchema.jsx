@@ -117,7 +117,7 @@ const aarsavregningMedGrunnlagSchema = object().shape({
     then: array().min(1, "Minst en inntektskilde").of(inntektskildeSchema),
     otherwise: array(),
   }),
-  avgift25Prosent: string().when(["behandlingsvalg"], {
+  manueltAvgiftBeloep: string().when(["behandlingsvalg"], {
     is: (behandlingsvalg) => behandlingsvalg === MANUELL_ENDELIG_AVGIFT,
     then: string().required(MAA_FYLLES_UT),
   }),
