@@ -85,13 +85,6 @@ export const oppdaterHarDeltGrunnlag = (
 ): Promise<AarsavregningResponse> =>
   postAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${AARSAVREGNING}/grunnlagstype`, request);
 
-export const oppdaterAvvik = (
-  behandlingID: number,
-  harAvvik: boolean,
-  aarsavregningID?: number,
-): Promise<AarsavregningResponse> =>
-  putAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${AARSAVREGNING}/${aarsavregningID}/harAvvik/${harAvvik}`);
-
 export const oppdaterBehandlingsvalg = (
   behandlingID: number,
   behandlingsvalg: string,
