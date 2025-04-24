@@ -174,21 +174,25 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
 
   const lagreUkjentSluttdatoMedlemskapsperiode = async (ukjentSluttdato: boolean) => {
     if (ukjentSluttdato) {
-      const lagretPerioder = formValues.medlemskapsperioder.map((periode: MedlemskapsperiodeProp) => {
-        if (periode.fomDato) {
-          const fomISODate = Utils.dato.formatterDatoTilISO(periode.fomDato, "");
-          if (fomISODate) {
-            const fomDate = new Date(fomISODate);
-            const tomDate = new Date(fomDate);
-            tomDate.setFullYear(tomDate.getFullYear() + 10);
-            return {
-              ...periode,
-              tomDato: Utils.dato.formatterDatoTilNorsk(tomDate.toISOString()),
-            };
+      const lagretPerioder = formValues.medlemskapsperioder.map(
+        (periode: MedlemskapsperiodeProp, index: number, medlemskapsperioderArray: any) => {
+          if (periode.fomDato) {
+            const fomISODate = Utils.dato.formatterDatoTilISO(periode.fomDato, "");
+            if (fomISODate) {
+              if (index === medlemskapsperioderArray.length - 1) {
+                const fomDate = new Date(fomISODate);
+                const tomDate = new Date(fomDate);
+                tomDate.setFullYear(tomDate.getFullYear() + 10);
+                return {
+                  ...periode,
+                  tomDato: Utils.dato.formatterDatoTilNorsk(tomDate.toISOString()),
+                };
+              }
+            }
           }
-        }
-        return periode;
-      });
+          return periode;
+        },
+      );
 
       resetMedlemskapsperioder(lagretPerioder);
 
@@ -291,9 +295,9 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
       Utils._isEmpty(periode.trygdedekning) ||
       Utils._isEmpty(periode.innvilgelsesResultat),
   );
-
+  const erPensjonist = behandlingstema === PENSJONIST;
   const ukjentSluttdatoMedlemskapsperiodeSkalVises =
-    (behandlingstema === YRKESAKTIV || behandlingstema === PENSJONIST) && lagretBestemmelse !== FTRL_KAP2_2_1;
+    (behandlingstema === YRKESAKTIV || erPensjonist) && lagretBestemmelse !== FTRL_KAP2_2_1;
 
   const visLeggTilNyPeriode = redigerbart && feltErFyltInn;
   const visFeilmeldinger = feilMeldingBlokkerer(aktivFeilmeldingType) ? feltErFyltInn : feltErFyltInn && formIsValid;
@@ -312,6 +316,7 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
         <UkjentSluttdatoMedlemskapsperiode
           ukjentSluttdatoMedlemskapsperiode={ukjentSluttdatoMedlemskapsperiode || false}
           onUkjentSluttdatoChange={lagreUkjentSluttdatoMedlemskapsperiode}
+          erPensjonist={erPensjonist}
         />
       )}
 

@@ -3,11 +3,13 @@ import * as Nav from "../../../../../../navFrontend";
 interface UkjentSluttdatoProps {
   ukjentSluttdatoMedlemskapsperiode: boolean;
   onUkjentSluttdatoChange: (checked: boolean) => void;
+  erPensjonist?: boolean;
 }
 
 export function UkjentSluttdatoMedlemskapsperiode({
   ukjentSluttdatoMedlemskapsperiode,
   onUkjentSluttdatoChange,
+  erPensjonist,
 }: UkjentSluttdatoProps) {
   return (
     <div className="ukjentSluttdato">
@@ -15,7 +17,9 @@ export function UkjentSluttdatoMedlemskapsperiode({
         checked={ukjentSluttdatoMedlemskapsperiode}
         onChange={(e) => onUkjentSluttdatoChange(e.target.checked)}
       >
-        Saken er flyttet fra avgiftssystemet og har ikke sluttdato
+        {erPensjonist
+          ? "Vedtaksbrevet skal ikke ha sluttdato"
+          : "Saken er flyttet fra avgiftssystemet og har ikke sluttdato"}
       </Nav.Checkbox>
       {ukjentSluttdatoMedlemskapsperiode && (
         <Nav.Alert variant="info" size="small" className="mt-2">
