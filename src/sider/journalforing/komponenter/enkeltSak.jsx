@@ -11,11 +11,11 @@ import { URL_BASENAME } from "../../../constants";
 import EnkeltDato from "../../../felleskomponenter/enkeltDato";
 import Soknadsland from "../../../felleskomponenter/soknadsland";
 import { lagUrl } from "../../../url";
-import { BehandlingsstatusMedSvarfrist } from "../../../felleskomponenter/behandlingsstatus";
 
 import "./enkeltSak.css";
 import { useFeatureToggle } from "../../../featuretoggle";
 import { MELOSYS_PENSJONIST } from "../../../featuretoggle/toggleNavn";
+import BehandlingerListe from "./behandlingerListe";
 
 /** Den enkelte sak-elementet som brukes i iterasjon i listen
  */
@@ -24,8 +24,7 @@ function EnkeltSak(props) {
   const { periode, land, behandlingOversikter, sakstype, saksnummer, sakstema } = props.sak;
   const erPensjonistToggleEnabled = useFeatureToggle(MELOSYS_PENSJONIST);
 
-  const { tittel, behandlingstype, behandlingsstatus, behandlingstema, svarFrist, behandlingID } =
-    behandlingOversikter[0];
+  const { tittel, behandlingstype, behandlingsstatus, behandlingstema, behandlingID } = behandlingOversikter[0];
   const { soknadsperiode } =
     behandlingOversikter.find((behandlingOversikt) => behandlingOversikt.soknadsperiode != null) ?? {};
 
@@ -77,11 +76,7 @@ function EnkeltSak(props) {
             description: <Soknadsland land={land} visFulltNavn landkoderKodeverk={landkoder} />,
           },
           {
-            description: (
-              <div className="behandlingsstatusSvarfrist-wrapper">
-                <BehandlingsstatusMedSvarfrist behandlingsstatus={behandlingsstatus} svarFrist={svarFrist} />
-              </div>
-            ),
+            description: <BehandlingerListe behandlingOversikter={behandlingOversikter} />,
           },
         ]}
       />
