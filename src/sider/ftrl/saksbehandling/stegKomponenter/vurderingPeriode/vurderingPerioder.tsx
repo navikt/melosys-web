@@ -132,26 +132,10 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   useEffect(() => {
     if (aktivtSteg) {
       let initialPerioder = mapInitialMedlemskapsperioder(lagredeMedlemskapsperioder);
-
       // Hvis ukjentSluttdatoMedlemskapsperiode er true, sett sluttdatoer til 10 år etter startdato
       if (ukjentSluttdatoMedlemskapsperiode) {
-        initialPerioder = initialPerioder.map((periode) => {
-          if (periode.fomDato) {
-            const fomISODate = Utils.dato.formatterDatoTilISO(periode.fomDato, "");
-            if (fomISODate) {
-              const fomDate = new Date(fomISODate);
-              const tomDate = new Date(fomDate);
-              tomDate.setFullYear(tomDate.getFullYear() + 10);
-              return {
-                ...periode,
-                tomDato: Utils.dato.formatterDatoTilNorsk(tomDate.toISOString()),
-              };
-            }
-          }
-          return periode;
-        });
+        initialPerioder = mapUkjentSluttdatoMedlemskapsperiode(initialPerioder);
       }
-
       resetMedlemskapsperioder(initialPerioder);
 
       if (!formIsValid) {
@@ -172,28 +156,28 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     Api.Ftrl.hentGyldigeInnvilgelsesresultat(behandlingstype).then(setLovligeInnvilgelsesresultat);
   }, [lagretBestemmelse]);
 
+  const mapUkjentSluttdatoMedlemskapsperiode = (perioder: any) => {
+    return perioder.map((periode: any) => {
+      if (periode.fomDato) {
+        const fomISODate = Utils.dato.formatterDatoTilISO(periode.fomDato, "");
+        const tomISODate = Utils.dato.formatterDatoTilISO(periode.tomDato, "");
+        if (fomISODate && !tomISODate) {
+          const fomDate = new Date(fomISODate);
+          const tomDate = new Date(fomDate);
+          tomDate.setFullYear(tomDate.getFullYear() + 10);
+          return {
+            ...periode,
+            tomDato: Utils.dato.formatterDatoTilNorsk(tomDate.toISOString()),
+          };
+        }
+      }
+      return periode;
+    });
+  };
+
   const lagreUkjentSluttdatoMedlemskapsperiode = async (ukjentSluttdato: boolean) => {
     if (ukjentSluttdato) {
-      const lagretPerioder = formValues.medlemskapsperioder.map(
-        (periode: MedlemskapsperiodeProp, index: number, medlemskapsperioderArray: any) => {
-          if (periode.fomDato) {
-            const fomISODate = Utils.dato.formatterDatoTilISO(periode.fomDato, "");
-            if (fomISODate) {
-              if (index === medlemskapsperioderArray.length - 1) {
-                const fomDate = new Date(fomISODate);
-                const tomDate = new Date(fomDate);
-                tomDate.setFullYear(tomDate.getFullYear() + 10);
-                return {
-                  ...periode,
-                  tomDato: Utils.dato.formatterDatoTilNorsk(tomDate.toISOString()),
-                };
-              }
-            }
-          }
-          return periode;
-        },
-      );
-
+      const lagretPerioder = mapUkjentSluttdatoMedlemskapsperiode(formValues.medlemskapsperioder);
       resetMedlemskapsperioder(lagretPerioder);
 
       await trigger("medlemskapsperioder");
