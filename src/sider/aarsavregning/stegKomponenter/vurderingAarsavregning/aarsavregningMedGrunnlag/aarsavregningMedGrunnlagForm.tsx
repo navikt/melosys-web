@@ -1,7 +1,7 @@
 import * as Api from "../../../../../services/api";
 import MedlemskapsPerioderTabell from "../komponenter/medlemskapsPerioderTabell";
 import "../vurderingAarsavregningInngang.css";
-import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AarsavregningResponse } from "../../../../../services/modules/aarsavregning/aarsavregning";
 import { useSelector } from "react-redux";
 import * as Nav from "../../../../../navFrontend";
@@ -26,11 +26,10 @@ import TidligereGrunnlagsoversikt from "../komponenter/tidligereGrunnlagsoversik
 import { Aarsavregningsmeldinger } from "../komponenter/aarsavregningsmeldinger";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import { InitiellData } from "./aarsavregningMedGrunnlag";
-import * as Forms from "../../../../../felleskomponenter/forms";
 import { mapTilInntektskilderProps, mapTilSkatteforholdProps } from "../aarsavregningHelpers";
 import { Feilmelding, finnAktivFeilmelding } from "./valideringsfeil";
 import MKV from "../../../../../melosyskodeverk";
-import * as KV from "../../../../../kodeverk";
+import { BehandlingsvalgRadioGroup } from "../komponenter/behandlingsvalgRadioGroup";
 
 const { OPPLYSNINGER_ENDRET, OPPLYSNINGER_UENDRET, MANUELL_ENDELIG_AVGIFT } = MKV.Koder.aarsavregningBehandlingsvalg;
 
@@ -325,8 +324,6 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   const forskuddsvisFakturertTrygdeavgift =
     (aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift?.totalAvgift ?? 0) > 0;
   const nyttGrunnlagHarTrygdeavgiftsgrunnlag = aarsavregningResponse?.nyttGrunnlag?.trygdeavgiftsgrunnlag != null;
-
-  const manueltAvgiftBeloepId = useId();
   return (
     <>
       {aarsavregningResponse && aarsavregningResponse.tidligereGrunnlagsopplysninger && (
@@ -354,42 +351,13 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
         </>
       )}
 
-      <Forms.RadioGroup
-        name="behandlingsvalg"
+      <BehandlingsvalgRadioGroup
         control={control}
-        legend="Hva ønsker du å gjøre?"
-        readOnly={!redigerbart}
-        onChange={(value) => {
-          handleBehandlingsvalgChange(value);
-        }}
-        className="behandlingsvalg_radio_group"
-      >
-        <Nav.Radio value={OPPLYSNINGER_ENDRET}>
-          <b>Jeg skal gjøre endringer.</b> Inntekts- og/eller skatteopplysningene er endret siden tidligere beregning
-        </Nav.Radio>
-        <Nav.Radio value={OPPLYSNINGER_UENDRET}>
-          <b>Det er ingen endringer.</b> Inntekts- og skatteopplysningene er like som ved tidligere beregning
-        </Nav.Radio>
-        <Nav.Radio value={MANUELL_ENDELIG_AVGIFT}>
-          <b>Jeg skal oppgi endelig avgift selv.</b> Endelig trygdeavgift er manuelt beregnet utenfor Melosys
-        </Nav.Radio>
-      </Forms.RadioGroup>
-
-      {behandlingsvalg === MANUELL_ENDELIG_AVGIFT && (
-        <Forms.Input
-          label="Endelig beregnet trygdeavgift"
-          name="manueltAvgiftBeloep"
-          control={control}
-          readOnly={!redigerbart}
-          className="avgift_input"
-          autoComplete="off"
-          type="text"
-          numeric
-          tillattNegativeTall
-          onChange={debouncedOppdaterManueltAvgiftBeloep}
-          key={manueltAvgiftBeloepId}
-        />
-      )}
+        redigerbart={redigerbart}
+        behandlingsvalg={behandlingsvalg}
+        handleBehandlingsvalgChange={handleBehandlingsvalgChange}
+        debouncedOppdaterManueltAvgiftBeloep={debouncedOppdaterManueltAvgiftBeloep}
+      />
 
       {behandlingsvalg === OPPLYSNINGER_ENDRET && !endrerBehandlingsvalg && (
         <>
