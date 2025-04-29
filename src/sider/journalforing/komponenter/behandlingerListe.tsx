@@ -46,6 +46,7 @@ function ToggleButton({ onClick, showAll, disabled }: ToggleButtonProps) {
   return (
     <div className="toggle-button-container">
       <Nav.Button
+        type="button"
         onClick={onClick}
         variant="tertiary"
         icon={showAll ? <Ikon.ChevronUp /> : <Ikon.ChevronDown />}
