@@ -18,7 +18,7 @@ export interface OppdaterUtfallRegistreringUnntak {
 export const hentResultat = (behandlingID: string) =>
   getAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/resultat`);
 
-export const oppdaterFritekster = (behandlingID: string, data: OppdaterFritekster) =>
+export const oppdaterFritekster = (behandlingID: string | number, data: OppdaterFritekster) =>
   postAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/resultat/fritekst`, data);
 
 export const oppdaterNyVurderingBakgrunn = (behandlingID: string, nyVurderingBakgrunn?: string) =>

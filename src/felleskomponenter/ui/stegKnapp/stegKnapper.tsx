@@ -11,6 +11,7 @@ interface ButtonProps {
   loading?: boolean;
   disabled?: boolean;
   className?: string;
+  type?: "button" | "submit" | "reset";
 }
 
 interface StegKnapperProps {
@@ -32,7 +33,7 @@ function StegKnapper({
 
   return (
     <div className={cls}>
-      <Nav.Button variant="primary" {...bekreftKnappProps} className={bekreftKnappCls}>
+      <Nav.Button variant="primary" {...bekreftKnappProps} className={bekreftKnappCls} type={bekreftKnappProps.type}>
         {bekreftTekst}
       </Nav.Button>
       {tilbakeKnappProps && (

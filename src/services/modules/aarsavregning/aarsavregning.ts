@@ -12,7 +12,6 @@ export interface AarsavregningResponse {
   avregning?: Avregning;
   harDeltGrunnlag?: boolean;
   behandlingsvalg?: string;
-  manueltAvgiftBeloep?: string;
 }
 // TODO: Fix typing for behandlingsvalg
 
