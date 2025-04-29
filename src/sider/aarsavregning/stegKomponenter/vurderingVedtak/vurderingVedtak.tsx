@@ -66,6 +66,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
     standardvedlegg: [],
   });
   const [isFormInitialized, setIsFormInitialized] = useState(false);
+  const [fritekstPending, setFritekstPending] = useState(false);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as number;
   const erFullmektigEndret = useSelector(menypanelSelectors.MenypanelErFullmektigEndretSelector) as boolean;
@@ -73,16 +74,19 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
 
   const { fattVedtak } = komponentDispatch(dispatch);
 
-  const defaultBegrunnelse = useSelector(behandlingsresultatSelectors.BegrunnelseFritekstSelector) as
-    | string
-    | undefined;
-  const defaultInnledning = useSelector(behandlingsresultatSelectors.InnledningFritekstSelector) as string | undefined;
+  const [lagretInnledning, setLagretInnledning] = useState<string>(
+    useSelector(behandlingsresultatSelectors.InnledningFritekstSelector) ?? "",
+  );
+  const [lagretBegrunnelse, setLagretBegrunnelse] = useState<string>(
+    useSelector(behandlingsresultatSelectors.BegrunnelseFritekstSelector) ?? "",
+  );
 
   const {
     watch,
     control,
     handleSubmit,
     reset,
+    getValues,
     formState: { isValid: formIsValid },
   } = useForm<FormValuesProps>({
     resolver: yupResolver(vurdering_vedtak),
@@ -178,13 +182,24 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
 
   useEffect(() => {
     if (aktivtSteg && lagretAarsavregning) {
-      reset({
-        innledningFritekst: defaultInnledning ?? "",
-        begrunnelseFritekst: defaultBegrunnelse ?? "",
-      });
-      setIsFormInitialized(true);
+      const currentValues = getValues();
+      const newInnledning = currentValues.innledningFritekst ?? lagretInnledning ?? "";
+      const newBegrunnelse = currentValues.begrunnelseFritekst ?? lagretBegrunnelse ?? "";
+
+      if (!isFormInitialized) {
+        reset(
+          {
+            innledningFritekst: newInnledning,
+            begrunnelseFritekst: newBegrunnelse,
+          },
+          { keepDirty: false },
+        );
+        setLagretInnledning(newInnledning);
+        setLagretBegrunnelse(newBegrunnelse);
+        setIsFormInitialized(true);
+      }
     }
-  }, [aktivtSteg, lagretAarsavregning, reset, defaultInnledning, defaultBegrunnelse]);
+  }, [aktivtSteg, lagretAarsavregning, reset, lagretInnledning, lagretBegrunnelse, getValues, isFormInitialized]);
 
   useEffect(() => {
     if (aktivtSteg && erFullmektigEndret && behandlingID !== null) {
@@ -204,10 +219,22 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   const oppdaterFritekster = useCallback(
     (values: FormValuesProps) => {
       if (values && redigerbart && !vedtakPending && behandlingID !== null) {
-        Api.Behandlinger.resultat.oppdaterFritekster(behandlingID, {
+        const payload = {
           innledningFritekst: values.innledningFritekst,
           begrunnelseFritekst: values.begrunnelseFritekst,
-        });
+        };
+        Api.Behandlinger.resultat
+          .oppdaterFritekster(behandlingID, payload)
+          .then(() => {
+            setLagretInnledning(values.innledningFritekst ?? "");
+            setLagretBegrunnelse(values.begrunnelseFritekst ?? "");
+          })
+          .catch((error) => {
+            console.error("Feil ved oppdatering av fritekster:", error);
+          })
+          .finally(() => {
+            setFritekstPending(false);
+          });
       }
     },
     [behandlingID, redigerbart, vedtakPending],
@@ -217,9 +244,26 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
 
   useEffect(() => {
     if (aktivtSteg && behandlingID !== null && lagretAarsavregning && isFormInitialized) {
-      debouncedOppdaterFritekster(formValues);
+      const currentValues = getValues();
+      const hasInnledningChanged = (currentValues.innledningFritekst ?? "") !== lagretInnledning;
+      const hasBegrunnelseChanged = (currentValues.begrunnelseFritekst ?? "") !== lagretBegrunnelse;
+
+      if (hasInnledningChanged || hasBegrunnelseChanged) {
+        setFritekstPending(true);
+        debouncedOppdaterFritekster(currentValues);
+      }
     }
-  }, [aktivtSteg, formValues, debouncedOppdaterFritekster, behandlingID, lagretAarsavregning, isFormInitialized]);
+  }, [
+    aktivtSteg,
+    formValues,
+    debouncedOppdaterFritekster,
+    behandlingID,
+    lagretAarsavregning,
+    isFormInitialized,
+    getValues,
+    lagretInnledning,
+    lagretBegrunnelse,
+  ]);
 
   if (!aktivtSteg || !lagretAarsavregning || !isFormInitialized) {
     return null;
@@ -300,7 +344,6 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   const kanSubmitte =
     redigerbart &&
     !vedtakPending &&
-    formIsValid &&
     (!harFullmaktForTrygdeavgift || erDifferanseUnderMinstebeløp || harBekreftetFullmaktForTrygdeavgift);
 
   return (
@@ -374,24 +417,18 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
         redigerbart &&
         muligeMottakere &&
         behandlingID !== null &&
-        (!harFullmaktForTrygdeavgift || erDifferanseUnderMinstebeløp || harBekreftetFullmaktForTrygdeavgift) && (
+        (!harFullmaktForTrygdeavgift || erDifferanseUnderMinstebeløp || harBekreftetFullmaktForTrygdeavgift) &&
+        !fritekstPending && (
           <>
             <Dokumentliste behandlingID={behandlingID} dokumenter={mapMottakerRader(muligeMottakere)} />
-            <VedleggTable
-              valgteVedlegg={brevVedlegg}
-              setValgteVedlegg={() => {
-                /* Readonly */
-              }}
-              label="Vedlegg"
-              redigerbart={false /* Readonly. Ikke vis slett-knapp. */}
-            />
+            <VedleggTable valgteVedlegg={brevVedlegg} setValgteVedlegg={() => {}} label="Vedlegg" redigerbart={false} />
           </>
         )}
 
       <Mui.StegKnapper
         bekreftKnappProps={{
           disabled: !kanSubmitte,
-          loading: vedtakPending,
+          loading: vedtakPending || fritekstPending,
           type: "submit",
         }}
         bekreftTekst="Fatt vedtak"
