@@ -1,8 +1,7 @@
-import { useId } from "react";
 import { Control } from "react-hook-form";
 import * as Forms from "../../../../../felleskomponenter/forms";
-import * as Nav from "../../../../../navFrontend";
 import MKV from "../../../../../melosyskodeverk";
+import * as Nav from "../../../../../navFrontend";
 
 const { OPPLYSNINGER_ENDRET, OPPLYSNINGER_UENDRET, MANUELL_ENDELIG_AVGIFT } = MKV.Koder.aarsavregningBehandlingsvalg;
 
@@ -21,8 +20,6 @@ export function BehandlingsvalgRadioGroup({
   handleBehandlingsvalgChange,
   debouncedOppdaterManueltAvgiftBeloep,
 }: BehandlingsvalgRadioGroupProps) {
-  const manueltAvgiftBeloepId = useId();
-
   return (
     <>
       <Forms.RadioGroup
@@ -58,7 +55,6 @@ export function BehandlingsvalgRadioGroup({
           numeric
           tillattNegativeTall
           onChange={debouncedOppdaterManueltAvgiftBeloep}
-          key={manueltAvgiftBeloepId}
         />
       )}
     </>

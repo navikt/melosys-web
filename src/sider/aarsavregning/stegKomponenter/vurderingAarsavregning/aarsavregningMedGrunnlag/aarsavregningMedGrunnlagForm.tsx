@@ -267,7 +267,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
       Api.Aarsavregning.oppdaterBehandlingsvalg(behandlingID, value, aarsavregningID)
         .then((res) => {
           setAarsavregningResponse(res);
-          setValue("manueltAvgiftBeloep", undefined, { shouldValidate: false, shouldDirty: false });
+          setValue("manueltAvgiftBeloep", "", { shouldValidate: false, shouldDirty: false });
           if (value === OPPLYSNINGER_UENDRET || value === MANUELL_ENDELIG_AVGIFT) {
             // TODO: Skal beregning kjøres for MANUELL_ENDELIG_AVGIFT?
             setBeregningPaagar(true);

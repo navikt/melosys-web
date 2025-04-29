@@ -228,7 +228,6 @@ function HtmlEditor({ value, onChange, disabled, label, feil, className, placeho
     };
   }, []);
 
-
   return (
     <div className={classNames("htmlEditor", className)}>
       {label && <div className="editor_label">{label}</div>}
