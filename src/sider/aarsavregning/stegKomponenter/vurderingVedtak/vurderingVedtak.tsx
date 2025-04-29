@@ -243,7 +243,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   const debouncedOppdaterFritekster = useCallback(Utils._debounce(oppdaterFritekster, 1000), [oppdaterFritekster]);
 
   useEffect(() => {
-    if (aktivtSteg && behandlingID !== null && lagretAarsavregning && isFormInitialized) {
+    if (redigerbart && aktivtSteg && behandlingID !== null && lagretAarsavregning && isFormInitialized) {
       const currentValues = getValues();
       const hasInnledningChanged = (currentValues.innledningFritekst ?? "") !== lagretInnledning;
       const hasBegrunnelseChanged = (currentValues.begrunnelseFritekst ?? "") !== lagretBegrunnelse;
