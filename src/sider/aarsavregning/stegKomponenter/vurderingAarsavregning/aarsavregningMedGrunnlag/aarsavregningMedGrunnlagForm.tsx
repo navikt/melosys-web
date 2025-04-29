@@ -30,6 +30,7 @@ import { mapTilInntektskilderProps, mapTilSkatteforholdProps } from "../aarsavre
 import { Feilmelding, finnAktivFeilmelding } from "./valideringsfeil";
 import MKV from "../../../../../melosyskodeverk";
 import { BehandlingsvalgRadioGroup } from "../komponenter/behandlingsvalgRadioGroup";
+import { ManuellAvgiftFormPart } from "../komponenter/manuellAvgiftFormPart";
 
 const { OPPLYSNINGER_ENDRET, OPPLYSNINGER_UENDRET, MANUELL_ENDELIG_AVGIFT } = MKV.Koder.aarsavregningBehandlingsvalg;
 
@@ -354,9 +355,8 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
       <BehandlingsvalgRadioGroup
         control={control}
         redigerbart={redigerbart}
-        behandlingsvalg={behandlingsvalg}
         handleBehandlingsvalgChange={handleBehandlingsvalgChange}
-        debouncedOppdaterManueltAvgiftBeloep={debouncedOppdaterManueltAvgiftBeloep}
+        erMedGrunnlagFlyt={true}
       />
 
       {behandlingsvalg === OPPLYSNINGER_ENDRET && !endrerBehandlingsvalg && (
@@ -422,13 +422,16 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
         </>
       )}
 
-      {behandlingsvalg === MANUELL_ENDELIG_AVGIFT && manueltAvgiftBeloep && (
-        <SumArsavregningTabell
-          nyTrygdeavgift={Number(manueltAvgiftBeloep)}
-          tidligereTrygdeavgift={aarsavregningResponse?.avregning?.tidligereFakturertBeloep}
-          harGrunnlagIMelosys
-        />
-      )}
+      <ManuellAvgiftFormPart
+        control={control}
+        redigerbart={redigerbart}
+        behandlingsvalg={behandlingsvalg}
+        manueltAvgiftBeloep={manueltAvgiftBeloep}
+        debouncedOppdaterManueltAvgiftBeloep={debouncedOppdaterManueltAvgiftBeloep}
+        aarsavregningResponse={aarsavregningResponse}
+        erMedGrunnlagFlyt={true}
+        harDeltGrunnlag={false}
+      />
 
       {feilmelding && !beregningPaagar && (
         <Nav.Alert variant="error" className="alertstripe_feilmelding">

@@ -8,55 +8,55 @@ const { OPPLYSNINGER_ENDRET, OPPLYSNINGER_UENDRET, MANUELL_ENDELIG_AVGIFT } = MK
 interface BehandlingsvalgRadioGroupProps {
   control: Control<any>;
   redigerbart: boolean;
-  behandlingsvalg: string;
   handleBehandlingsvalgChange: (value: string) => void;
-  debouncedOppdaterManueltAvgiftBeloep: (value: string) => void;
+  erMedGrunnlagFlyt: boolean;
 }
 
 export function BehandlingsvalgRadioGroup({
   control,
   redigerbart,
-  behandlingsvalg,
   handleBehandlingsvalgChange,
-  debouncedOppdaterManueltAvgiftBeloep,
+  erMedGrunnlagFlyt,
 }: BehandlingsvalgRadioGroupProps) {
-  return (
-    <>
-      <Forms.RadioGroup
-        name="behandlingsvalg"
-        control={control}
-        legend="Hva ønsker du å gjøre?"
-        readOnly={!redigerbart}
-        onChange={(value) => {
-          handleBehandlingsvalgChange(value);
-        }}
-        className="behandlingsvalg_radio_group"
-      >
-        <Nav.Radio value={OPPLYSNINGER_ENDRET}>
-          <b>Jeg skal gjøre endringer.</b> Inntekts- og/eller skatteopplysningene er endret siden tidligere beregning
-        </Nav.Radio>
-        <Nav.Radio value={OPPLYSNINGER_UENDRET}>
-          <b>Det er ingen endringer.</b> Inntekts- og skatteopplysningene er like som ved tidligere beregning
-        </Nav.Radio>
-        <Nav.Radio value={MANUELL_ENDELIG_AVGIFT}>
-          <b>Jeg skal oppgi endelig avgift selv.</b> Endelig trygdeavgift er manuelt beregnet utenfor Melosys
-        </Nav.Radio>
-      </Forms.RadioGroup>
+  const radioOptions = [
+    {
+      value: OPPLYSNINGER_ENDRET,
+      label: <b>Jeg skal gjøre endringer.</b>,
+      description: " Inntekts- og/eller skatteopplysningene er endret siden tidligere beregning",
+    },
+    {
+      value: OPPLYSNINGER_UENDRET,
+      label: <b>Det er ingen endringer.</b>,
+      description: " Inntekts- og skatteopplysningene er like som ved tidligere beregning",
+    },
+    {
+      value: MANUELL_ENDELIG_AVGIFT,
+      label: <b>Jeg skal oppgi endelig avgift selv.</b>,
+      description: " Endelig trygdeavgift er manuelt beregnet utenfor Melosys",
+    },
+  ];
 
-      {behandlingsvalg === MANUELL_ENDELIG_AVGIFT && (
-        <Forms.Input
-          label="Endelig beregnet trygdeavgift"
-          name="manueltAvgiftBeloep"
-          control={control}
-          readOnly={!redigerbart}
-          className="avgift_input"
-          autoComplete="off"
-          type="text"
-          numeric
-          tillattNegativeTall
-          onChange={debouncedOppdaterManueltAvgiftBeloep}
-        />
-      )}
-    </>
+  const filteredOptions = erMedGrunnlagFlyt
+    ? radioOptions
+    : radioOptions.filter((option) => option.value !== OPPLYSNINGER_UENDRET);
+
+  return (
+    <Forms.RadioGroup
+      name="behandlingsvalg"
+      control={control}
+      legend="Hva ønsker du å gjøre?"
+      readOnly={!redigerbart}
+      onChange={(value) => {
+        handleBehandlingsvalgChange(value);
+      }}
+      className="behandlingsvalg_radio_group"
+    >
+      {filteredOptions.map((option) => (
+        <Nav.Radio key={option.value} value={option.value}>
+          {option.label}
+          {option.description}
+        </Nav.Radio>
+      ))}
+    </Forms.RadioGroup>
   );
 }

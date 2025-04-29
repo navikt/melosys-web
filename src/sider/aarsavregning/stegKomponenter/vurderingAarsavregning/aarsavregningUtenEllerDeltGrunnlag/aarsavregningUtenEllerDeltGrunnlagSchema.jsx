@@ -18,6 +18,7 @@ const {
   PENSJON_UFØRETRYGD_KILDESKATT,
 } = MKV.Koder.inntektskildetype;
 const UTENFOR_MEDLEMSKAPSPERIODEN = { melding: "Utenfor medlemskapsperiode" };
+const { OPPLYSNINGER_ENDRET, MANUELL_ENDELIG_AVGIFT } = MKV.Koder.aarsavregningBehandlingsvalg;
 
 export const arbAvgBetalesKreves = (kildetype, medlemskapsTypeErPliktig) =>
   !medlemskapsTypeErPliktig && kildetype !== MISJONÆR;
@@ -115,42 +116,52 @@ const erInnenforMedlemskapsperiodeTest = {
 
 const aarsavregningUtenEllerDeltGrunnlagSchema = object().shape({
   bestemmelse: string().required(MAA_FYLLES_UT),
-  medlemskapsperioder: array()
-    .min(1, "Minst en medlemskapsperiode")
-    .of(
-      object().shape({
-        fomDato: string().required(MAA_FYLLES_UT).erGyldigDato().test(erInnenforValgtAarTest),
-        tomDato: string()
-          .required(MAA_FYLLES_UT)
-          .erGyldigDato()
-          .erEtterDatofelt("fomDato")
-          .test(åpenTomTest)
-          .test(erInnenforValgtAarTest),
-        trygdedekning: string().required(MAA_FYLLES_UT),
-      }),
-    ),
+  behandlingsvalg: string().required(MAA_FYLLES_UT),
+  medlemskapsperioder: array().when(["behandlingsvalg"], {
+    is: (behandlingsvalg) => behandlingsvalg === OPPLYSNINGER_ENDRET,
+    then: array()
+      .min(1, "Minst en medlemskapsperiode")
+      .of(
+        object().shape({
+          fomDato: string().required(MAA_FYLLES_UT).erGyldigDato().test(erInnenforValgtAarTest),
+          tomDato: string()
+            .required(MAA_FYLLES_UT)
+            .erGyldigDato()
+            .erEtterDatofelt("fomDato")
+            .test(åpenTomTest)
+            .test(erInnenforValgtAarTest),
+          trygdedekning: string().required(MAA_FYLLES_UT),
+        }),
+      ),
+    otherwise: array(),
+  }),
   totaltForskuddsvisFakturert: string().nullable().required(MAA_FYLLES_UT),
-  skatteforholdsperioder: array()
-    .min(1, "Minst en skatteforholdsperiode")
-    .of(
-      object().shape({
-        fomDato: string()
-          .required(MAA_FYLLES_UT)
-          .erGyldigDato()
-          .test(erInnenforValgtAarTest)
-          .test(erInnenforMedlemskapsperiodeTest),
-        tomDato: string()
-          .required(MAA_FYLLES_UT)
-          .erGyldigDato()
-          .test(åpenTomTest)
-          .test(erInnenforValgtAarTest)
-          .test(erInnenforMedlemskapsperiodeTest)
-          .erEtterDatofelt("fomDato"),
-        skatteplikttype: string().required(MAA_FYLLES_UT),
-      }),
-    ),
-  inntektskilder: array().when(["medlemskapsperioder", "skatteforholdsperioder"], {
-    is: (medlemskapsperioder, skatteforholdsperioder) => {
+  skatteforholdsperioder: array().when(["behandlingsvalg"], {
+    is: (behandlingsvalg) => behandlingsvalg === OPPLYSNINGER_ENDRET,
+    then: array()
+      .min(1, "Minst en skatteforholdsperiode")
+      .of(
+        object().shape({
+          fomDato: string()
+            .required(MAA_FYLLES_UT)
+            .erGyldigDato()
+            .test(erInnenforValgtAarTest)
+            .test(erInnenforMedlemskapsperiodeTest),
+          tomDato: string()
+            .required(MAA_FYLLES_UT)
+            .erGyldigDato()
+            .test(åpenTomTest)
+            .test(erInnenforValgtAarTest)
+            .test(erInnenforMedlemskapsperiodeTest)
+            .erEtterDatofelt("fomDato"),
+          skatteplikttype: string().required(MAA_FYLLES_UT),
+        }),
+      ),
+    otherwise: array(),
+  }),
+  inntektskilder: array().when(["medlemskapsperioder", "skatteforholdsperioder", "behandlingsvalg"], {
+    is: (medlemskapsperioder, skatteforholdsperioder, behandlingsvalg) => {
+      if (behandlingsvalg !== OPPLYSNINGER_ENDRET) return false;
       const medlemskapsTypeErPliktig = erMedlemskapsTypePliktig(medlemskapsperioder);
 
       return !(medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(skatteforholdsperioder));
@@ -171,6 +182,11 @@ const aarsavregningUtenEllerDeltGrunnlagSchema = object().shape({
         }),
       ),
     otherwise: array(),
+  }),
+  manueltAvgiftBeloep: string().when(["behandlingsvalg"], {
+    is: (behandlingsvalg) => behandlingsvalg === MANUELL_ENDELIG_AVGIFT,
+    then: string().required(MAA_FYLLES_UT),
+    otherwise: string().nullable(),
   }),
 });
 
