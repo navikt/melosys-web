@@ -407,7 +407,6 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
           {formIsValid &&
             !debouncedBeregningPagaar &&
             !beregningPaagar &&
-            behandlingsvalg !== MANUELL_ENDELIG_AVGIFT &&
             !feilmelding &&
             !arrayValideringsfeil &&
             aarsavregningResponse?.nyttGrunnlag && (
