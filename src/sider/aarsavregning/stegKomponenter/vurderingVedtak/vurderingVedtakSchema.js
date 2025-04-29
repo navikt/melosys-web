@@ -10,12 +10,11 @@ export const DU_MAA_OPPGI_BEGRUNNELSE_FOR_ENDELIG_TRYGDEAVGIFT = {
 };
 
 const vurdering_vedtak = object().shape({
-  // behandlingsvalg is no longer part of form values, accessed via context
   begrunnelseFritekst: string()
     .nullable()
     .max(4000, DU_KAN_IKKE_SKRIVE_MER_ENN_4000_TEGN)
     .when([], {
-      is: () => true, // Always run the check
+      is: () => true,
       then: (schema) =>
         schema.test({
           name: "begrunnelse-required-manuell",
@@ -25,7 +24,7 @@ const vurdering_vedtak = object().shape({
             if (behandlingsvalg === MKV.Koder.aarsavregningBehandlingsvalg.MANUELL_ENDELIG_AVGIFT) {
               return !!value; // Required if MANUELL_ENDELIG_AVGIFT
             }
-            return true; // Optional otherwise
+            return true;
           },
         }),
       otherwise: (schema) => schema.nullable(),
