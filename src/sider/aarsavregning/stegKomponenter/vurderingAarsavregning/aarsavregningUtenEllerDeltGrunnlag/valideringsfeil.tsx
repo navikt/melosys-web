@@ -43,30 +43,50 @@ const harOppholdsperioder = (perioder: any) => {
   return false;
 };
 
-const dekkerHeleMedlemskapsperiode = (perioder: any[], medlemskapsperiode: any): boolean => {
+const dekkerHeleMedlemskapsperiode = (
+  perioder: any[],
+  medlemskapsperiode: any,
+  type: "skatteforhold" | "inntektskilde",
+): boolean => {
   if (!perioder || perioder.length === 0) return true;
 
   try {
     const medlemskapsperiodeFom = Utils.dato.vaskOgFormatterTilISO(medlemskapsperiode.fomDato);
     const medlemskapsperiodeTom = Utils.dato.vaskOgFormatterTilISO(medlemskapsperiode.tomDato);
 
-    // Sort periods by start date
-    const sortedPerioder = perioder.sort(Utils.dato.sorterEtterNorskFomDato);
-    console.log("[dekkerHeleMedlemskapsperiode] sortedPerioder", sortedPerioder);
+    const vasketPerioder = perioder.map((periode) => {
+      return {
+        fomDato: Utils.dato.vaskOgFormatterTilISO(periode.fomDato),
+        tomDato: Utils.dato.vaskOgFormatterTilISO(periode.tomDato),
+      };
+    });
+    const minFomDato = vasketPerioder.reduce(
+      (min, periode) => {
+        if (periode.fomDato != null && (min === null || periode.fomDato < min)) {
+          return periode.fomDato;
+        }
+        return min;
+      },
+      null as string | null,
+    );
 
-    console.log("[dekkerHeleMedlemskapsperiode] medlemskapsperiodeFom", medlemskapsperiodeFom);
-    console.log("[dekkerHeleMedlemskapsperiode] medlemskapsperiodeTom", medlemskapsperiodeTom);
-    // Dekning
-    const firstFom = Utils.dato.vaskOgFormatterTilISO(sortedPerioder[0].fomDato);
-    console.log("[dekkerHeleMedlemskapsperiode] firstFom", firstFom);
-    if (!firstFom || firstFom !== medlemskapsperiodeFom) return false;
+    const maxTomDato = vasketPerioder.reduce(
+      (max, periode) => {
+        if (periode.tomDato != null && (max === null || periode.tomDato > max)) {
+          return periode.tomDato;
+        }
+        return max;
+      },
+      null as string | null,
+    );
 
-    const lastTom = Utils.dato.vaskOgFormatterTilISO(sortedPerioder[sortedPerioder.length - 1].tomDato);
-    console.log("[dekkerHeleMedlemskapsperiode] lastTom", lastTom);
-    if (!lastTom || lastTom !== medlemskapsperiodeTom) return false;
+    if (!minFomDato || minFomDato !== medlemskapsperiodeFom || !maxTomDato || maxTomDato !== medlemskapsperiodeTom) {
+      console.log(`[dekkerHeleMedlemskapsperiode, ${type}] minFomDato`, minFomDato);
+      console.log(`[dekkerHeleMedlemskapsperiode, ${type}] maxTomDato`, maxTomDato);
+      return false;
+    }
 
-    // Opphold
-    return !harOppholdsperioder(sortedPerioder);
+    return !harOppholdsperioder(vasketPerioder);
   } catch (error) {
     return true;
   }
@@ -150,7 +170,7 @@ export function finnAktivFeilmelding({
   }
 
   if (skatteforholdsperioder && skatteforholdsperioder.length > 0) {
-    if (!dekkerHeleMedlemskapsperiode(skatteforholdsperioder, medlemskapsperiode)) {
+    if (!dekkerHeleMedlemskapsperiode(skatteforholdsperioder, medlemskapsperiode, "skatteforhold")) {
       console.log("[finnAktivFeilmelding] dekkerHeleMedlemskapsperiode", skatteforholdsperioder, medlemskapsperiode);
       return TypeFeilmelding.SKATTEFORHOLD_DEKKER_IKKE_HELE_MEDLEMSKAPSPERIODEN;
     }
@@ -171,7 +191,7 @@ export function finnAktivFeilmelding({
     inntektskilder.length > 0 &&
     (!medlemskapstypeErPliktig || !erBrukerSkattepliktigIHelePerioden(skatteforholdsperioder))
   ) {
-    if (!dekkerHeleMedlemskapsperiode(inntektskilder, medlemskapsperiode)) {
+    if (!dekkerHeleMedlemskapsperiode(inntektskilder, medlemskapsperiode, "inntektskilde")) {
       return TypeFeilmelding.INNTEKTSKILDER_DEKKER_IKKE_HELE_MEDLEMSKAPSPERIODEN;
     }
   }
