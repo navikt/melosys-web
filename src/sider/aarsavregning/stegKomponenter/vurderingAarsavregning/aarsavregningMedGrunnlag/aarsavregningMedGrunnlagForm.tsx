@@ -186,7 +186,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   // Håndterer kjøring av beregninger når skjemaverdier endres
   useEffect(() => {
     // Avbryter hvis vi allerede har en beregning som venter
-    if (debouncedBeregningRef.current?.cancel) {
+    if (debouncedBeregningRef.current?.cancel)  {
       debouncedBeregningRef.current.cancel();
     }
     if (debouncedBeregningRef.current) {
