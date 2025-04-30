@@ -428,7 +428,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
         behandlingsvalg={behandlingsvalg}
         manueltAvgiftBeloep={manueltAvgiftBeloep}
         debouncedOppdaterManueltAvgiftBeloep={debouncedOppdaterManueltAvgiftBeloep}
-        aarsavregningResponse={aarsavregningResponse}
+        tidligereTrygdeavgift={aarsavregningResponse?.avregning?.tidligereFakturertBeloep}
         erMedGrunnlagFlyt={true}
         harDeltGrunnlag={false}
       />

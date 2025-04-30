@@ -258,10 +258,10 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         const response: any = await (periode.id === ULAGRET_MEDLEMSKAPSPERIODE_ID
           ? Api.MedlemAvFolketrygden.Medlemskapsperioder.opprettMedlemskapsperioder(behandlingID, periodeRequest)
           : Api.MedlemAvFolketrygden.Medlemskapsperioder.oppdaterMedlemskapsperioder(
-            behandlingID,
-            periode.id,
-            periodeRequest,
-          ));
+              behandlingID,
+              periode.id,
+              periodeRequest,
+            ));
 
         return response;
       } catch (error) {
@@ -692,17 +692,17 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     if (behandlingsvalg === OPPLYSNINGER_ENDRET) {
       return Boolean(
         formIsValid &&
-        aarsavregningResponse?.nyttGrunnlag &&
-        feilmelding === undefined &&
-        arrayValideringsfeil === undefined,
+          aarsavregningResponse?.nyttGrunnlag &&
+          feilmelding === undefined &&
+          arrayValideringsfeil === undefined,
       );
     }
     if (behandlingsvalg === MANUELL_ENDELIG_AVGIFT) {
       return Boolean(
         formIsValid &&
-        aarsavregningResponse?.avregning?.tidligereFakturertBeloepAvgiftssystem &&
-        aarsavregningResponse?.avregning?.manueltAvgiftBeloep &&
-        feilmelding === undefined,
+          aarsavregningResponse?.avregning?.tidligereFakturertBeloepAvgiftssystem &&
+          aarsavregningResponse?.avregning?.manueltAvgiftBeloep &&
+          feilmelding === undefined,
       );
     }
     return false;
@@ -915,7 +915,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         behandlingsvalg={behandlingsvalg}
         manueltAvgiftBeloep={manueltAvgiftBeloep}
         debouncedOppdaterManueltAvgiftBeloep={debouncedOppdaterManueltAvgiftBeloep}
-        aarsavregningResponse={aarsavregningResponse}
+        tidligereTrygdeavgift={aarsavregningResponse?.avregning?.tidligereFakturertBeloep}
         erMedGrunnlagFlyt={false}
         harDeltGrunnlag={harDeltGrunnlag}
         totaltForskuddsvisFakturert={totaltForskuddsvisFakturert}

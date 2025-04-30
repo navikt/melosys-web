@@ -1,11 +1,10 @@
 import { Control } from "react-hook-form";
 import * as Forms from "../../../../../felleskomponenter/forms";
 import MKV from "../../../../../melosyskodeverk";
-import { AarsavregningResponse } from "../../../../../services/modules/aarsavregning/aarsavregning";
-import { SumArsavregningTabell } from "./sumArsavregningTabell"; // Adjusted import path
-import { TidligereFakturertIAvgiftssystemetInput } from "./tidligereFakturertIAvgiftssystemetInput"; // Added import
+import { SumArsavregningTabell } from "./sumArsavregningTabell";
+import { TidligereFakturertIAvgiftssystemetInput } from "./tidligereFakturertIAvgiftssystemetInput";
 
-const { MANUELL_ENDELIG_AVGIFT } = MKV.Koder.aarsavregningBehandlingsvalg;
+const { MANUELL_ENDELIG_AVGIFT } = MKV.Koder.aarsavregningsBehandlingsvalg;
 
 interface ManuellAvgiftFormPartProps {
   control: Control<any>;
@@ -13,10 +12,10 @@ interface ManuellAvgiftFormPartProps {
   behandlingsvalg: string;
   manueltAvgiftBeloep?: number | string;
   debouncedOppdaterManueltAvgiftBeloep: (value: string) => void;
-  aarsavregningResponse?: AarsavregningResponse;
+  tidligereTrygdeavgift?: number;
   erMedGrunnlagFlyt: boolean;
   harDeltGrunnlag: boolean;
-  totaltForskuddsvisFakturert?: string;
+  totaltForskuddsvisFakturert?: number | string;
 }
 
 export function ManuellAvgiftFormPart({
@@ -25,7 +24,7 @@ export function ManuellAvgiftFormPart({
   behandlingsvalg,
   manueltAvgiftBeloep,
   debouncedOppdaterManueltAvgiftBeloep,
-  aarsavregningResponse,
+  tidligereTrygdeavgift,
   erMedGrunnlagFlyt,
   harDeltGrunnlag,
   totaltForskuddsvisFakturert,
@@ -61,17 +60,14 @@ export function ManuellAvgiftFormPart({
         onChange={debouncedOppdaterManueltAvgiftBeloep}
       />
 
-      {manueltAvgiftBeloep !== undefined &&
-        manueltAvgiftBeloep !== null &&
-        manueltAvgiftBeloep !== "" &&
-        tidligereTrygdeavgiftAvgiftssystem && (
-          <SumArsavregningTabell
-            harGrunnlagIMelosys={harDeltGrunnlag}
-            nyTrygdeavgift={Number(manueltAvgiftBeloep)}
-            tidligereTrygdeavgift={aarsavregningResponse?.avregning?.tidligereFakturertBeloep}
-            tidligereTrygdeavgiftAvgiftssystem={tidligereTrygdeavgiftAvgiftssystem}
-          />
-        )}
+      {manueltAvgiftBeloep !== undefined && manueltAvgiftBeloep !== null && manueltAvgiftBeloep !== "" && (
+        <SumArsavregningTabell
+          harGrunnlagIMelosys={harDeltGrunnlag}
+          nyTrygdeavgift={Number(manueltAvgiftBeloep)}
+          tidligereTrygdeavgift={tidligereTrygdeavgift}
+          tidligereTrygdeavgiftAvgiftssystem={tidligereTrygdeavgiftAvgiftssystem}
+        />
+      )}
     </>
   );
 }
