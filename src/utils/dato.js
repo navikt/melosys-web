@@ -90,6 +90,24 @@ function vaskOgFormatterDatoTilNorsk(dato, defaultValue = "") {
   return formatterDatoTilNorsk(dato, defaultValue);
 }
 
+/**
+ * Vasker og formaterer dato-array til ISO format. Må være en array av objekter med fomDato og tomDato.
+ *
+ * @param {Array} perioder - Array av objekter med fomDato og tomDato.
+ * @param {string} [defaultValue] - Standardverdi hvis dato er ugyldig.
+ * @returns {Array}
+ */
+const vaskOgFormaterDatoerTilIso = (perioder, defaultValue = undefined) => {
+  if (!Array.isArray(perioder)) {
+    return [];
+  }
+  return perioder.map((periode) => ({
+    ...periode,
+    fomDato: periode.fomDato ? vaskOgFormatterTilISO(periode.fomDato, defaultValue) : defaultValue,
+    tomDato: periode.tomDato ? vaskOgFormatterTilISO(periode.tomDato, defaultValue) : defaultValue,
+  }));
+};
+
 /** Forutsatt at datoen er validert korrekt norsk (DD.MM.YYYY HH:mm), formatter den til det maskinlesbare
  * formatet "YYYY-MM-DD
  *
@@ -284,4 +302,5 @@ export {
   vaskInputDato,
   vaskOgFormatterDatoTilNorsk,
   vaskOgFormatterTilISO,
+  vaskOgFormaterDatoerTilIso,
 };
