@@ -186,10 +186,10 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   // Håndterer kjøring av beregninger når skjemaverdier endres
   useEffect(() => {
     // Avbryter hvis vi allerede har en beregning som venter
-    if (debouncedBeregningRef.current?.cancel)  {
-      console.log('Testing pre-commit hook');
+    if (debouncedBeregningRef.current?.cancel) {
+      console.log("Testing pre-commit hook 2");
       debouncedBeregningRef.current.cancel();
-    }              
+    }
     if (debouncedBeregningRef.current) {
       if (redigerbart && aarsavregningID && erAvvik === true && !endrerAvvik) {
         const currentFormState = mapFormState(getValues("skatteforholdsperioder"), getValues("inntektskilder"));
