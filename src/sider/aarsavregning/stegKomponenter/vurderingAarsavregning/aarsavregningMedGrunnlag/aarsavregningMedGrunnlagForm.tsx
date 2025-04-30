@@ -223,15 +223,15 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
       behandlingsvalg === OPPLYSNINGER_UENDRET ||
       Boolean(
         formIsValid &&
-          behandlingsvalg === OPPLYSNINGER_ENDRET &&
-          aarsavregningResponse?.nyttGrunnlag &&
-          !feilmelding &&
-          !arrayValideringsfeil,
+        behandlingsvalg === OPPLYSNINGER_ENDRET &&
+        aarsavregningResponse?.nyttGrunnlag &&
+        !feilmelding &&
+        !arrayValideringsfeil,
       ) ||
       Boolean(
         behandlingsvalg === MANUELL_ENDELIG_AVGIFT &&
-          aarsavregningResponse?.avregning?.manueltAvgiftBeloep &&
-          !feilmelding,
+        aarsavregningResponse?.avregning?.manueltAvgiftBeloep &&
+        !feilmelding,
       ),
     [behandlingsvalg, formIsValid, aarsavregningResponse?.nyttGrunnlag, feilmelding, arrayValideringsfeil],
   );
@@ -422,6 +422,12 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
         </>
       )}
 
+      {feilmelding && !beregningPaagar && (
+        <Nav.Alert variant="error" className="alertstripe_feilmelding">
+          {feilmelding}
+        </Nav.Alert>
+      )}
+
       <ManuellAvgiftFormPart
         control={control}
         redigerbart={redigerbart}
@@ -432,12 +438,6 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
         erMedGrunnlagFlyt={true}
         harDeltGrunnlag={false}
       />
-
-      {feilmelding && !beregningPaagar && (
-        <Nav.Alert variant="error" className="alertstripe_feilmelding">
-          {feilmelding}
-        </Nav.Alert>
-      )}
 
       <Nav.Button
         variant="primary"
