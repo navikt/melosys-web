@@ -99,6 +99,7 @@ function BestemmelseSelect({
       aria-label="Bestemmelse"
       control={control}
       readOnly={!redigerbart || harDeltGrunnlag}
+      emptyFieldDisabled
       onChange={(valgtBestemmelse) => {
         handleBestemmelseChange(valgtBestemmelse);
       }}
