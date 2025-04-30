@@ -4,7 +4,7 @@ import MKV from "../../../../../melosyskodeverk";
 import { SumArsavregningTabell } from "./sumArsavregningTabell";
 import { TidligereFakturertIAvgiftssystemetInput } from "./tidligereFakturertIAvgiftssystemetInput";
 
-const { MANUELL_ENDELIG_AVGIFT } = MKV.Koder.aarsavregningsBehandlingsvalg;
+const { MANUELL_ENDELIG_AVGIFT } = MKV.Koder.aarsavregningBehandlingsvalg;
 
 interface ManuellAvgiftFormPartProps {
   control: Control<any>;

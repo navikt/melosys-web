@@ -107,7 +107,6 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   const [lagredeMedlemskapsperioder, setLagredeMedlemskapsperioder] = useState<Medlemskapsperiode[]>(
     initiellData.formDefaultValues.medlemskapsperioder || [],
   );
-  const [endrerBehandlingsvalg, setEndrerBehandlingsvalg] = useState(false);
 
   // Redux selectors
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
@@ -741,22 +740,17 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
 
   const handleBehandlingsvalgChange = useCallback(
     (value: string) => {
-      setEndrerBehandlingsvalg(true);
-
-      Api.Aarsavregning.oppdaterBehandlingsvalg(behandlingID, value, aarsavregningID)
-        .then((res) => {
-          setAarsavregningResponse(res);
-          if (value !== MANUELL_ENDELIG_AVGIFT) {
-            setValue("manueltAvgiftBeloep", "", { shouldValidate: false, shouldDirty: false });
-          }
-          setPreviousFormState(null);
-        })
-        .finally(() => {
-          setEndrerBehandlingsvalg(false);
-        });
+      Api.Aarsavregning.oppdaterBehandlingsvalg(behandlingID, value, aarsavregningID).then((res) => {
+        setAarsavregningResponse(res);
+        if (value !== MANUELL_ENDELIG_AVGIFT) {
+          setValue("manueltAvgiftBeloep", "", { shouldValidate: false, shouldDirty: false });
+        }
+        setPreviousFormState(null);
+      });
     },
     [aarsavregningID, behandlingID, setValue],
   );
+  console.log("feilmelding", feilmelding);
 
   const debouncedOppdaterManueltAvgiftBeloep = useCallback(
     Utils._debounce(
@@ -907,6 +901,12 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
 
           {arrayValideringsfeil && <Feilmelding type={arrayValideringsfeil} />}
         </>
+      )}
+
+      {feilmelding && (
+        <Nav.Alert variant="error" className="alertstripe_feilmelding">
+          {feilmelding}
+        </Nav.Alert>
       )}
 
       <ManuellAvgiftFormPart
