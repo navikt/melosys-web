@@ -187,7 +187,6 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   useEffect(() => {
     // Avbryter hvis vi allerede har en beregning som venter
     if (debouncedBeregningRef.current?.cancel) {
-      console.log("Testing pre-commit hook 2");
       debouncedBeregningRef.current.cancel();
     }
     if (debouncedBeregningRef.current) {
