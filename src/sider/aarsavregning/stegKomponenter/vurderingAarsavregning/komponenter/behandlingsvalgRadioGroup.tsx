@@ -21,8 +21,10 @@ export function BehandlingsvalgRadioGroup({
   const radioOptions = [
     {
       value: OPPLYSNINGER_ENDRET,
-      label: <b>Jeg skal gjøre endringer.</b>,
-      description: " Inntekts- og/eller skatteopplysningene er endret siden tidligere beregning",
+      label: <b>{erMedGrunnlagFlyt ? "Jeg skal gjøre endringer." : "Jeg skal registrere opplysninger."}</b>,
+      description: erMedGrunnlagFlyt
+        ? " Inntekts- og/eller skatteopplysningene er endret siden tidligere beregning"
+        : " Endelig trygdeavgift beregnes i Melosys",
     },
     {
       value: OPPLYSNINGER_UENDRET,
@@ -31,7 +33,7 @@ export function BehandlingsvalgRadioGroup({
     },
     {
       value: MANUELL_ENDELIG_AVGIFT,
-      label: <b>Jeg skal oppgi endelig avgift selv.</b>,
+      label: <b>{erMedGrunnlagFlyt ? "Jeg skal gjøre endringer." : "Jeg skal oppgi endelig avgift."}</b>,
       description: " Endelig trygdeavgift er manuelt beregnet utenfor Melosys",
     },
   ];
