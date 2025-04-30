@@ -160,8 +160,7 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     return perioder.map((periode: any) => {
       if (periode.fomDato) {
         const fomISODate = Utils.dato.formatterDatoTilISO(periode.fomDato, "");
-        const tomISODate = Utils.dato.formatterDatoTilISO(periode.tomDato, "");
-        if (fomISODate && !tomISODate) {
+        if (fomISODate && !periode.TomDato) {
           const fomDate = new Date(fomISODate);
           const tomDate = new Date(fomDate);
           tomDate.setFullYear(tomDate.getFullYear() + 10);
