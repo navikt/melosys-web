@@ -80,7 +80,7 @@
     "start:q2": "node generate-local-config.js .q2.env && npm-run-all -p start:css start:js",
     "build": "npm-run-all -p build:css build:js",
     "eslint": "npm-run-all -p eslint:*",
-    "eslint:src": "eslint src --ext .js,.jsx,.ts,.tsx",
+    "eslint:staged": "echo '{\"*.{js,jsx,ts,tsx}\": \"eslint\"}' | lint-staged --config -",
     "prettier:write": "prettier --write .",
     "prettier:check": "prettier --check .",
     "prepare": "husky install",
@@ -90,7 +90,8 @@
     "printWidth": 120
   },
   "lint-staged": {
-    "*": "prettier --write --ignore-unknown"
+    "*": "prettier --write --ignore-unknown",
+    "*.{js,jsx,ts,tsx}": "eslint --fix"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^3.3.1",

@@ -189,6 +189,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
     if (debouncedBeregningRef.current?.cancel) {
       debouncedBeregningRef.current.cancel();
     }
+
     if (debouncedBeregningRef.current) {
       if (redigerbart && aarsavregningID && erAvvik === true && !endrerAvvik) {
         const currentFormState = mapFormState(getValues("skatteforholdsperioder"), getValues("inntektskilder"));
