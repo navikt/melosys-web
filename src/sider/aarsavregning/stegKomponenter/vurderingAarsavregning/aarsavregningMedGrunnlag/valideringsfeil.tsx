@@ -121,7 +121,10 @@ const ikkeAlleSammeSkatteforholdstyper = (perioder: any[]): boolean => {
 interface AarsavregningValidationParams {
   skatteforholdsperioder: Skatteforhold[];
   inntektskilder: Inntektskilde[];
-  medlemskapsperiode: any;
+  medlemskapsperiodeFomTom: {
+    fomDato: string;
+    tomDato: string;
+  };
   medlemskapstypeErPliktig: boolean;
 }
 
@@ -131,18 +134,18 @@ interface AarsavregningValidationParams {
 export function finnAktivFeilmelding({
   skatteforholdsperioder,
   inntektskilder,
-  medlemskapsperiode,
+  medlemskapsperiodeFomTom,
   medlemskapstypeErPliktig,
 }: AarsavregningValidationParams): string | undefined {
   const vaskedeSkatteforholdsperioder = Utils.dato.vaskOgFormaterDatoerTilIso(skatteforholdsperioder);
   const vaskedeInntektskilder = Utils.dato.vaskOgFormaterDatoerTilIso(inntektskilder);
-  const medlemskapsperiodeIsoFormat = {
-    fomDato: Utils.dato.vaskOgFormatterTilISO(medlemskapsperiode.fomDato),
-    tomDato: Utils.dato.vaskOgFormatterTilISO(medlemskapsperiode.tomDato),
+  const medlemskapsperiodeFomTomIsoFormat = {
+    fomDato: Utils.dato.vaskOgFormatterTilISO(medlemskapsperiodeFomTom.fomDato)!,
+    tomDato: Utils.dato.vaskOgFormatterTilISO(medlemskapsperiodeFomTom.tomDato)!,
   };
 
   if (vaskedeSkatteforholdsperioder && vaskedeSkatteforholdsperioder.length > 0) {
-    if (!dekkerHeleMedlemskapsperiode(vaskedeSkatteforholdsperioder, medlemskapsperiodeIsoFormat)) {
+    if (!dekkerHeleMedlemskapsperiode(vaskedeSkatteforholdsperioder, medlemskapsperiodeFomTomIsoFormat)) {
       return TypeFeilmelding.SKATTEFORHOLD_DEKKER_IKKE_HELE_MEDLEMSKAPSPERIODEN;
     }
 
@@ -164,7 +167,7 @@ export function finnAktivFeilmelding({
     vaskedeInntektskilder.length > 0 &&
     (!medlemskapstypeErPliktig || !erBrukerSkattepliktigIHelePerioden(vaskedeSkatteforholdsperioder))
   ) {
-    if (!dekkerHeleMedlemskapsperiode(vaskedeInntektskilder, medlemskapsperiodeIsoFormat)) {
+    if (!dekkerHeleMedlemskapsperiode(vaskedeInntektskilder, medlemskapsperiodeFomTomIsoFormat)) {
       return TypeFeilmelding.INNTEKTSKILDER_DEKKER_IKKE_HELE_MEDLEMSKAPSPERIODEN;
     }
   }

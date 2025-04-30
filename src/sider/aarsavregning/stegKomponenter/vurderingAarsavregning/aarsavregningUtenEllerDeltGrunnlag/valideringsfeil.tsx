@@ -43,14 +43,17 @@ const harOppholdsperioder = (perioder: any[]) => {
 
 const dekkerHeleMedlemskapsperiode = (
   perioder: any[],
-  medlemskapsperiode: any,
+  medlemskapsperiodeFomTom: {
+    fomDato: string;
+    tomDato: string;
+  },
   type: "skatteforhold" | "inntektskilde",
 ): boolean => {
   if (!perioder || perioder.length === 0) return true;
 
   try {
-    const medlemskapsperiodeFom = medlemskapsperiode.fomDato;
-    const medlemskapsperiodeTom = medlemskapsperiode.tomDato;
+    const medlemskapsperiodeFom = medlemskapsperiodeFomTom.fomDato;
+    const medlemskapsperiodeTom = medlemskapsperiodeFomTom.tomDato;
 
     const minFomDato = perioder.reduce(
       (min, periode) => {
@@ -128,7 +131,7 @@ const ikkeAlleSammeSkatteforholdstyper = (perioder: any[]): boolean => {
 interface AarsavregningValidationParams {
   skatteforholdsperioder: Skatteforhold[];
   inntektskilder: Inntektskilde[];
-  medlemskapsperiode: {
+  medlemskapsperiodeFomTom: {
     fomDato: string;
     tomDato: string;
   };
@@ -154,7 +157,7 @@ export function finnAktivFeilmeldingForMedlemskapsperioder(medlemskapsperioder: 
 export function finnAktivFeilmelding({
   skatteforholdsperioder,
   inntektskilder,
-  medlemskapsperiode,
+  medlemskapsperiodeFomTom,
   medlemskapstypeErPliktig,
   medlemskapsperioder,
 }: AarsavregningValidationParams): string | undefined {
@@ -167,12 +170,14 @@ export function finnAktivFeilmelding({
   const vaskedeSkatteforholdsperioder = Utils.dato.vaskOgFormaterDatoerTilIso(skatteforholdsperioder);
   const vaskedeInntektskilder = Utils.dato.vaskOgFormaterDatoerTilIso(inntektskilder);
 
-  const medlemskapsperiodeIsoFormat = {
-    fomDato: Utils.dato.vaskOgFormatterTilISO(medlemskapsperiode.fomDato),
-    tomDato: Utils.dato.vaskOgFormatterTilISO(medlemskapsperiode.tomDato),
+  const medlemskapsperiodeFomTomIsoFormat = {
+    fomDato: Utils.dato.vaskOgFormatterTilISO(medlemskapsperiodeFomTom.fomDato)!,
+    tomDato: Utils.dato.vaskOgFormatterTilISO(medlemskapsperiodeFomTom.tomDato)!,
   };
 
-  if (!dekkerHeleMedlemskapsperiode(vaskedeSkatteforholdsperioder, medlemskapsperiodeIsoFormat, "skatteforhold")) {
+  if (
+    !dekkerHeleMedlemskapsperiode(vaskedeSkatteforholdsperioder, medlemskapsperiodeFomTomIsoFormat, "skatteforhold")
+  ) {
     console.log(
       "[finnAktivFeilmelding] dekkerHeleMedlemskapsperiode",
       vaskedeSkatteforholdsperioder,
@@ -196,7 +201,7 @@ export function finnAktivFeilmelding({
     vaskedeInntektskilder.length > 0 &&
     (!medlemskapstypeErPliktig || !erBrukerSkattepliktigIHelePerioden(vaskedeSkatteforholdsperioder))
   ) {
-    if (!dekkerHeleMedlemskapsperiode(vaskedeInntektskilder, medlemskapsperiodeIsoFormat, "inntektskilde")) {
+    if (!dekkerHeleMedlemskapsperiode(vaskedeInntektskilder, medlemskapsperiodeFomTomIsoFormat, "inntektskilde")) {
       return TypeFeilmelding.INNTEKTSKILDER_DEKKER_IKKE_HELE_MEDLEMSKAPSPERIODEN;
     }
   }
