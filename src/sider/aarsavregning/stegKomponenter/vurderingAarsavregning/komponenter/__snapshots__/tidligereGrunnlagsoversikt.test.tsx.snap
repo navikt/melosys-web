@@ -1,0 +1,115 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`TidligereGrunnlagsoversikt > does not render InntektsperioderTabell if avgift is 0 or undefined 1`] = `
+
+<div class="tidligereGrunnlagsoversikt">
+  <h1 class="navds-heading navds-heading--small">
+    Inntekts- og skatteopplysninger for tidligere beregnet trygdeavgift
+  </h1>
+  <div
+    data-test
+    id="333"
+  >
+    SkatteforholdsPerioderTabell Mock
+  </div>
+</div>
+
+`;
+
+exports[`TidligereGrunnlagsoversikt > does not render InntektsperioderTabell if avgift is 0 or undefined 2`] = `
+
+<div class="tidligereGrunnlagsoversikt">
+  <h1 class="navds-heading navds-heading--small">
+    Inntekts- og skatteopplysninger for tidligere beregnet trygdeavgift
+  </h1>
+  <div
+    data-test
+    id="333"
+  >
+    SkatteforholdsPerioderTabell Mock
+  </div>
+</div>
+
+`;
+
+exports[`TidligereGrunnlagsoversikt > renders correctly with only inntektsperioder and avgift > 0 1`] = `
+
+<div class="tidligereGrunnlagsoversikt">
+  <h1 class="navds-heading navds-heading--small">
+    Inntekts- og skatteopplysninger for tidligere beregnet trygdeavgift
+  </h1>
+  <div
+    data-test
+    id="333"
+  >
+    SkatteforholdsPerioderTabell Mock
+  </div>
+  <div
+    data-test
+    id="333"
+  >
+    InntektsperioderTabell Mock
+  </div>
+</div>
+
+`;
+
+exports[`TidligereGrunnlagsoversikt > renders correctly with only skatteforholdsperioder 1`] = `
+
+<div class="tidligereGrunnlagsoversikt">
+  <h1 class="navds-heading navds-heading--small">
+    Inntekts- og skatteopplysninger for tidligere beregnet trygdeavgift
+  </h1>
+  <div
+    data-test
+    id="333"
+  >
+    SkatteforholdsPerioderTabell Mock
+  </div>
+</div>
+
+`;
+
+exports[`TidligereGrunnlagsoversikt > renders correctly with skatteforholdsperioder and avgift > 0 (but no inntektsperioder) 1`] = `
+
+<div class="tidligereGrunnlagsoversikt">
+  <h1 class="navds-heading navds-heading--small">
+    Inntekts- og skatteopplysninger for tidligere beregnet trygdeavgift
+  </h1>
+  <div
+    data-test
+    id="333"
+  >
+    SkatteforholdsPerioderTabell Mock
+  </div>
+  <div
+    data-test
+    id="333"
+  >
+    InntektsperioderTabell Mock
+  </div>
+</div>
+
+`;
+
+exports[`TidligereGrunnlagsoversikt > renders correctly with skatteforholdsperioder, inntektsperioder and avgift > 0 1`] = `
+
+<div class="tidligereGrunnlagsoversikt">
+  <h1 class="navds-heading navds-heading--small">
+    Inntekts- og skatteopplysninger for tidligere beregnet trygdeavgift
+  </h1>
+  <div
+    data-test
+    id="333"
+  >
+    SkatteforholdsPerioderTabell Mock
+  </div>
+  <div
+    data-test
+    id="333"
+  >
+    InntektsperioderTabell Mock
+  </div>
+</div>
+
+`;

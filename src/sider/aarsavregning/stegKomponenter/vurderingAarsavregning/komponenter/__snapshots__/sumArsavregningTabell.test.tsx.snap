@@ -1,0 +1,487 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`SumArsavregningTabell > renders correctly with all values positive 1`] = `
+
+<div class="sumArsavregningTabell">
+  <table
+    width="500"
+    class="navds-table navds-table--small periode_tabell"
+  >
+    <tbody class="navds-table__body">
+      <tr class="navds-table__row navds-table__row--shade-on-hover">
+        <td
+          scope="col"
+          class="navds-table__data-cell navds-body-short navds-body-short--small"
+        >
+        </td>
+        <td
+          width="400"
+          scope="col"
+          class="navds-table__data-cell navds-body-short navds-body-short--small"
+        >
+          Endelig beregnet trygdeavgift
+        </td>
+        <td class="navds-table__data-cell navds-table__data-cell--align-right navds-body-short navds-body-short--small">
+          10&nbsp;000,00 kr
+        </td>
+      </tr>
+      <tr class="navds-table__row navds-table__row--shade-on-hover">
+        <td
+          scope="col"
+          class="navds-table__data-cell navds-body-short navds-body-short--small"
+        >
+          -
+        </td>
+        <td
+          scope="col"
+          class="navds-table__data-cell navds-body-short navds-body-short--small"
+        >
+          Tidligere beregnet trygdeavgift fra Melosys
+        </td>
+        <td class="navds-table__data-cell navds-table__data-cell--align-right navds-body-short navds-body-short--small">
+          2&nbsp;000,00 kr
+        </td>
+      </tr>
+      <tr class="navds-table__row navds-table__row--shade-on-hover">
+        <td
+          scope="col"
+          class="navds-table__data-cell navds-body-short navds-body-short--small"
+        >
+          -
+        </td>
+        <td
+          scope="col"
+          class="navds-table__data-cell navds-body-short navds-body-short--small"
+        >
+          Tidligere beregnet trygdeavgift fra Avgiftssystemet
+        </td>
+        <td class="navds-table__data-cell navds-table__data-cell--align-right navds-body-short navds-body-short--small">
+          3&nbsp;000,00 kr
+        </td>
+      </tr>
+      <tr class="navds-table__row navds-table__row--shade-on-hover">
+        <td
+          scope="col"
+          class="navds-table__data-cell navds-body-short navds-body-short--small"
+        >
+          =
+        </td>
+        <td
+          scope="col"
+          class="navds-table__data-cell navds-body-short navds-body-short--small"
+        >
+          Differanse
+        </td>
+        <td class="navds-table__data-cell navds-table__data-cell--align-right navds-body-short navds-body-short--small">
+          <b>
+            5&nbsp;000,00&nbsp;kr&nbsp;
+          </b>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+`;
+
+exports[`SumArsavregningTabell > renders correctly with nyTrygdeavgift and harGrunnlagIMelosys=true (no tidligere values) 1`] = `
+
+<div class="sumArsavregningTabell">
+  <table
+    width="500"
+    class="navds-table navds-table--small periode_tabell"
+  >
+    <tbody class="navds-table__body">
+      <tr class="navds-table__row navds-table__row--shade-on-hover">
+        <td
+          scope="col"
+          class="navds-table__data-cell navds-body-short navds-body-short--small"
+        >
+        </td>
+        <td
+          width="400"
+          scope="col"
+          class="navds-table__data-cell navds-body-short navds-body-short--small"
+        >
+          Endelig beregnet trygdeavgift
+        </td>
+        <td class="navds-table__data-cell navds-table__data-cell--align-right navds-body-short navds-body-short--small">
+          10&nbsp;000,00 kr
+        </td>
+      </tr>
+      <tr class="navds-table__row navds-table__row--shade-on-hover">
+        <td
+          scope="col"
+          class="navds-table__data-cell navds-body-short navds-body-short--small"
+        >
+          -
+        </td>
+        <td
+          scope="col"
+          class="navds-table__data-cell navds-body-short navds-body-short--small"
+        >
+          Tidligere beregnet trygdeavgift fra Melosys
+        </td>
+        <td class="navds-table__data-cell navds-table__data-cell--align-right navds-body-short navds-body-short--small">
+          0,00 kr
+        </td>
+      </tr>
+      <tr class="navds-table__row navds-table__row--shade-on-hover">
+        <td
+          scope="col"
+          class="navds-table__data-cell navds-body-short navds-body-short--small"
+        >
+          =
+        </td>
+        <td
+          scope="col"
+          class="navds-table__data-cell navds-body-short navds-body-short--small"
+        >
+          Differanse
+        </td>
+        <td class="navds-table__data-cell navds-table__data-cell--align-right navds-body-short navds-body-short--small">
+          <b>
+            10&nbsp;000,00&nbsp;kr&nbsp;
+          </b>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+`;
+
+exports[`SumArsavregningTabell > renders correctly with nyTrygdeavgift and tidligereTrygdeavgiftAvgiftssystem 1`] = `
+
+<div class="sumArsavregningTabell">
+  <table
+    width="500"
+    class="navds-table navds-table--small periode_tabell"
+  >
+    <tbody class="navds-table__body">
+      <tr class="navds-table__row navds-table__row--shade-on-hover">
+        <td
+          scope="col"
+          class="navds-table__data-cell navds-body-short navds-body-short--small"
+        >
+        </td>
+        <td
+          width="400"
+          scope="col"
+          class="navds-table__data-cell navds-body-short navds-body-short--small"
+        >
+          Endelig beregnet trygdeavgift
+        </td>
+        <td class="navds-table__data-cell navds-table__data-cell--align-right navds-body-short navds-body-short--small">
+          10&nbsp;000,00 kr
+        </td>
+      </tr>
+      <tr class="navds-table__row navds-table__row--shade-on-hover">
+        <td
+          scope="col"
+          class="navds-table__data-cell navds-body-short navds-body-short--small"
+        >
+          -
+        </td>
+        <td
+          scope="col"
+          class="navds-table__data-cell navds-body-short navds-body-short--small"
+        >
+          Tidligere beregnet trygdeavgift fra Avgiftssystemet
+        </td>
+        <td class="navds-table__data-cell navds-table__data-cell--align-right navds-body-short navds-body-short--small">
+          3&nbsp;000,00 kr
+        </td>
+      </tr>
+      <tr class="navds-table__row navds-table__row--shade-on-hover">
+        <td
+          scope="col"
+          class="navds-table__data-cell navds-body-short navds-body-short--small"
+        >
+          =
+        </td>
+        <td
+          scope="col"
+          class="navds-table__data-cell navds-body-short navds-body-short--small"
+        >
+          Differanse
+        </td>
+        <td class="navds-table__data-cell navds-table__data-cell--align-right navds-body-short navds-body-short--small">
+          <b>
+            7&nbsp;000,00&nbsp;kr&nbsp;
+          </b>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+`;
+
+exports[`SumArsavregningTabell > renders correctly with nyTrygdeavgift, tidligereTrygdeavgift and harGrunnlagIMelosys=true 1`] = `
+
+<div class="sumArsavregningTabell">
+  <table
+    width="500"
+    class="navds-table navds-table--small periode_tabell"
+  >
+    <tbody class="navds-table__body">
+      <tr class="navds-table__row navds-table__row--shade-on-hover">
+        <td
+          scope="col"
+          class="navds-table__data-cell navds-body-short navds-body-short--small"
+        >
+        </td>
+        <td
+          width="400"
+          scope="col"
+          class="navds-table__data-cell navds-body-short navds-body-short--small"
+        >
+          Endelig beregnet trygdeavgift
+        </td>
+        <td class="navds-table__data-cell navds-table__data-cell--align-right navds-body-short navds-body-short--small">
+          10&nbsp;000,00 kr
+        </td>
+      </tr>
+      <tr class="navds-table__row navds-table__row--shade-on-hover">
+        <td
+          scope="col"
+          class="navds-table__data-cell navds-body-short navds-body-short--small"
+        >
+          -
+        </td>
+        <td
+          scope="col"
+          class="navds-table__data-cell navds-body-short navds-body-short--small"
+        >
+          Tidligere beregnet trygdeavgift fra Melosys
+        </td>
+        <td class="navds-table__data-cell navds-table__data-cell--align-right navds-body-short navds-body-short--small">
+          2&nbsp;000,00 kr
+        </td>
+      </tr>
+      <tr class="navds-table__row navds-table__row--shade-on-hover">
+        <td
+          scope="col"
+          class="navds-table__data-cell navds-body-short navds-body-short--small"
+        >
+          =
+        </td>
+        <td
+          scope="col"
+          class="navds-table__data-cell navds-body-short navds-body-short--small"
+        >
+          Differanse
+        </td>
+        <td class="navds-table__data-cell navds-table__data-cell--align-right navds-body-short navds-body-short--small">
+          <b>
+            8&nbsp;000,00&nbsp;kr&nbsp;
+          </b>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+`;
+
+exports[`SumArsavregningTabell > renders correctly with only nyTrygdeavgift and harGrunnlagIMelosys=false 1`] = `
+
+<div class="sumArsavregningTabell">
+  <table
+    width="500"
+    class="navds-table navds-table--small periode_tabell"
+  >
+    <tbody class="navds-table__body">
+      <tr class="navds-table__row navds-table__row--shade-on-hover">
+        <td
+          scope="col"
+          class="navds-table__data-cell navds-body-short navds-body-short--small"
+        >
+        </td>
+        <td
+          width="400"
+          scope="col"
+          class="navds-table__data-cell navds-body-short navds-body-short--small"
+        >
+          Endelig beregnet trygdeavgift
+        </td>
+        <td class="navds-table__data-cell navds-table__data-cell--align-right navds-body-short navds-body-short--small">
+          10&nbsp;000,00 kr
+        </td>
+      </tr>
+      <tr class="navds-table__row navds-table__row--shade-on-hover">
+        <td
+          scope="col"
+          class="navds-table__data-cell navds-body-short navds-body-short--small"
+        >
+          =
+        </td>
+        <td
+          scope="col"
+          class="navds-table__data-cell navds-body-short navds-body-short--small"
+        >
+          Differanse
+        </td>
+        <td class="navds-table__data-cell navds-table__data-cell--align-right navds-body-short navds-body-short--small">
+          <b>
+            10&nbsp;000,00&nbsp;kr&nbsp;
+          </b>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+`;
+
+exports[`SumArsavregningTabell > renders correctly with undefined values (treated as 0) 1`] = `
+
+<div class="sumArsavregningTabell">
+  <table
+    width="500"
+    class="navds-table navds-table--small periode_tabell"
+  >
+    <tbody class="navds-table__body">
+      <tr class="navds-table__row navds-table__row--shade-on-hover">
+        <td
+          scope="col"
+          class="navds-table__data-cell navds-body-short navds-body-short--small"
+        >
+        </td>
+        <td
+          width="400"
+          scope="col"
+          class="navds-table__data-cell navds-body-short navds-body-short--small"
+        >
+          Endelig beregnet trygdeavgift
+        </td>
+        <td class="navds-table__data-cell navds-table__data-cell--align-right navds-body-short navds-body-short--small">
+          0,00 kr
+        </td>
+      </tr>
+      <tr class="navds-table__row navds-table__row--shade-on-hover">
+        <td
+          scope="col"
+          class="navds-table__data-cell navds-body-short navds-body-short--small"
+        >
+          -
+        </td>
+        <td
+          scope="col"
+          class="navds-table__data-cell navds-body-short navds-body-short--small"
+        >
+          Tidligere beregnet trygdeavgift fra Melosys
+        </td>
+        <td class="navds-table__data-cell navds-table__data-cell--align-right navds-body-short navds-body-short--small">
+          0,00 kr
+        </td>
+      </tr>
+      <tr class="navds-table__row navds-table__row--shade-on-hover">
+        <td
+          scope="col"
+          class="navds-table__data-cell navds-body-short navds-body-short--small"
+        >
+          =
+        </td>
+        <td
+          scope="col"
+          class="navds-table__data-cell navds-body-short navds-body-short--small"
+        >
+          Differanse
+        </td>
+        <td class="navds-table__data-cell navds-table__data-cell--align-right navds-body-short navds-body-short--small">
+          <b>
+            0,00&nbsp;kr&nbsp;
+          </b>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+`;
+
+exports[`SumArsavregningTabell > renders correctly with zero values 1`] = `
+
+<div class="sumArsavregningTabell">
+  <table
+    width="500"
+    class="navds-table navds-table--small periode_tabell"
+  >
+    <tbody class="navds-table__body">
+      <tr class="navds-table__row navds-table__row--shade-on-hover">
+        <td
+          scope="col"
+          class="navds-table__data-cell navds-body-short navds-body-short--small"
+        >
+        </td>
+        <td
+          width="400"
+          scope="col"
+          class="navds-table__data-cell navds-body-short navds-body-short--small"
+        >
+          Endelig beregnet trygdeavgift
+        </td>
+        <td class="navds-table__data-cell navds-table__data-cell--align-right navds-body-short navds-body-short--small">
+          0,00 kr
+        </td>
+      </tr>
+      <tr class="navds-table__row navds-table__row--shade-on-hover">
+        <td
+          scope="col"
+          class="navds-table__data-cell navds-body-short navds-body-short--small"
+        >
+          -
+        </td>
+        <td
+          scope="col"
+          class="navds-table__data-cell navds-body-short navds-body-short--small"
+        >
+          Tidligere beregnet trygdeavgift fra Melosys
+        </td>
+        <td class="navds-table__data-cell navds-table__data-cell--align-right navds-body-short navds-body-short--small">
+          0,00 kr
+        </td>
+      </tr>
+      <tr class="navds-table__row navds-table__row--shade-on-hover">
+        <td
+          scope="col"
+          class="navds-table__data-cell navds-body-short navds-body-short--small"
+        >
+          -
+        </td>
+        <td
+          scope="col"
+          class="navds-table__data-cell navds-body-short navds-body-short--small"
+        >
+          Tidligere beregnet trygdeavgift fra Avgiftssystemet
+        </td>
+        <td class="navds-table__data-cell navds-table__data-cell--align-right navds-body-short navds-body-short--small">
+          0,00 kr
+        </td>
+      </tr>
+      <tr class="navds-table__row navds-table__row--shade-on-hover">
+        <td
+          scope="col"
+          class="navds-table__data-cell navds-body-short navds-body-short--small"
+        >
+          =
+        </td>
+        <td
+          scope="col"
+          class="navds-table__data-cell navds-body-short navds-body-short--small"
+        >
+          Differanse
+        </td>
+        <td class="navds-table__data-cell navds-table__data-cell--align-right navds-body-short navds-body-short--small">
+          <b>
+            0,00&nbsp;kr&nbsp;
+          </b>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+`;
