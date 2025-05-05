@@ -269,16 +269,6 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
     return null;
   }
 
-  const lagFattVedtakReqDto = (): Api.Saksflyt.Vedtak.FattVedtakÅrsavregningReqDto => {
-    return {
-      behandlingsresultatTypeKode: FASTSATT_TRYGDEAVGIFT,
-      innledningFritekst: formValues?.innledningFritekst || null,
-      begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
-      vedtakstype: FØRSTEGANGSVEDTAK,
-      kopiMottakere: muligeMottakere.kopiMottakere.map(Api.DokumenterV2.konverterMuligMottakerTilKopiMottaker),
-    };
-  };
-
   const onSubmit = async () => {
     if (behandlingID === null || !lagretAarsavregning) {
       return;
@@ -291,7 +281,13 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
     }
 
     setVedtakPending(true);
-    fattVedtak(behandlingID, lagFattVedtakReqDto())
+    fattVedtak(behandlingID, {
+      behandlingsresultatTypeKode: FASTSATT_TRYGDEAVGIFT,
+      innledningFritekst: formValues?.innledningFritekst || null,
+      begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
+      vedtakstype: FØRSTEGANGSVEDTAK,
+      kopiMottakere: muligeMottakere.kopiMottakere.map(Api.DokumenterV2.konverterMuligMottakerTilKopiMottaker),
+    })
       .then((res) => {
         if (res.data?.data?.error) {
           console.error("Error during fattVedtak: ", res.data.data.error);
