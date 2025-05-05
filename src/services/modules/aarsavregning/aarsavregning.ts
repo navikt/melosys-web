@@ -50,7 +50,7 @@ export interface Trygdeavgiftsperiode {
 
 export interface Avregning {
   nyttTotalbeloep?: number;
-  // tidligereFakturertBeloep?: number;
+  tidligereFakturertBeloep?: number;
   tilFaktureringBeloep?: number;
   tidligereFakturertBeloepAvgiftssystem?: number;
 }
