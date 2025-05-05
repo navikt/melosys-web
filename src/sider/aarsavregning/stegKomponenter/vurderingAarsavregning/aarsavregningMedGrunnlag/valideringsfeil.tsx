@@ -14,19 +14,19 @@ export enum TypeFeilmelding {
 const dekkerHeleMedlemskapsperiode = (perioder: any[], medlemskapsperiode: any): boolean => {
   if (!perioder || perioder.length === 0) return true;
 
-  const medlemskapsperiodeFom = Utils.dato.vaskOgFormatterTilISO(medlemskapsperiode.fomDato);
-  const medlemskapsperiodeTom = Utils.dato.vaskOgFormatterTilISO(medlemskapsperiode.tomDato);
+  const medlemskapsperiodeFom = medlemskapsperiode.fomDato;
+  const medlemskapsperiodeTom = medlemskapsperiode.tomDato;
 
   const minFomDato = perioder
     .map((periode) => {
-      const date = Utils.dato.isoStringTilDate(Utils.dato.vaskOgFormatterTilISO(periode.fomDato));
+      const date = Utils.dato.isoStringTilDate(periode.fomDato);
       return date ? date.getTime() : Infinity;
     })
     .reduce((min, current) => Math.min(min, current), Infinity);
 
   const maxTomDato = perioder
     .map((periode) => {
-      const date = Utils.dato.isoStringTilDate(Utils.dato.vaskOgFormatterTilISO(periode.tomDato));
+      const date = Utils.dato.isoStringTilDate(periode.tomDato);
       return date ? date.getTime() : -Infinity;
     })
     .reduce((max, current) => Math.max(max, current), -Infinity);
@@ -57,13 +57,12 @@ const harOppholdsperioder = (perioder: any) => {
     return false;
   }
 
-  const sortedPerioder = perioder.sort(Utils.dato.sorterEtterNorskFomDato);
-  console.log("[harOppholdsperioder] sortedPerioder", sortedPerioder);
+  const sortedPerioder = perioder.sort(Utils.dato.sorterEtterISOFomDato);
 
   // eslint-disable-next-line no-plusplus
   for (let i = 0; i < sortedPerioder.length - 1; i++) {
-    const currentTom = Utils.dato.vaskOgFormatterTilISO(sortedPerioder[i].tomDato);
-    const nextFom = Utils.dato.vaskOgFormatterTilISO(sortedPerioder[i + 1].fomDato);
+    const currentTom = sortedPerioder[i].tomDato;
+    const nextFom = sortedPerioder[i + 1].fomDato;
 
     // Convert to Date objects
     const currentTomDate = Utils.dato.isoStringTilDate(currentTom);
@@ -86,16 +85,12 @@ const ingenOverlappendePerioder = (perioder: any[]): boolean => {
   if (!perioder || perioder.length <= 1) return true;
 
   try {
-    // Sort periods by start date
-    const sortedPerioder = perioder.sort(Utils.dato.sorterEtterNorskFomDato);
-    console.log("[ingenOverlappendePerioder] sortedPerioder", sortedPerioder);
+    const sortedPerioder = perioder.sort(Utils.dato.sorterEtterISOFomDato);
 
-    // Check for overlapping periods
     for (let i = 0; i < sortedPerioder.length - 1; i++) {
-      const currentTom = Utils.dato.vaskOgFormatterTilISO(sortedPerioder[i].tomDato);
-      const nextFom = Utils.dato.vaskOgFormatterTilISO(sortedPerioder[i + 1].fomDato);
+      const currentTom = sortedPerioder[i].tomDato;
+      const nextFom = sortedPerioder[i + 1].fomDato;
 
-      // Convert to Date objects
       const currentTomDate = Utils.dato.isoStringTilDate(currentTom);
       const nextFomDate = Utils.dato.isoStringTilDate(nextFom);
 
@@ -126,7 +121,10 @@ const ikkeAlleSammeSkatteforholdstyper = (perioder: any[]): boolean => {
 interface AarsavregningValidationParams {
   skatteforholdsperioder: Skatteforhold[];
   inntektskilder: Inntektskilde[];
-  medlemskapsperiode: any;
+  medlemskapsperiodeFomTom: {
+    fomDato: string;
+    tomDato: string;
+  };
   medlemskapstypeErPliktig: boolean;
 }
 
@@ -136,33 +134,40 @@ interface AarsavregningValidationParams {
 export function finnAktivFeilmelding({
   skatteforholdsperioder,
   inntektskilder,
-  medlemskapsperiode,
+  medlemskapsperiodeFomTom,
   medlemskapstypeErPliktig,
 }: AarsavregningValidationParams): string | undefined {
-  if (skatteforholdsperioder && skatteforholdsperioder.length > 0) {
-    if (!dekkerHeleMedlemskapsperiode(skatteforholdsperioder, medlemskapsperiode)) {
+  const vaskedeSkatteforholdsperioder = Utils.dato.vaskOgFormaterDatoerTilIso(skatteforholdsperioder);
+  const vaskedeInntektskilder = Utils.dato.vaskOgFormaterDatoerTilIso(inntektskilder);
+  const medlemskapsperiodeFomTomIsoFormat = {
+    fomDato: Utils.dato.vaskOgFormatterTilISO(medlemskapsperiodeFomTom.fomDato)!,
+    tomDato: Utils.dato.vaskOgFormatterTilISO(medlemskapsperiodeFomTom.tomDato)!,
+  };
+
+  if (vaskedeSkatteforholdsperioder && vaskedeSkatteforholdsperioder.length > 0) {
+    if (!dekkerHeleMedlemskapsperiode(vaskedeSkatteforholdsperioder, medlemskapsperiodeFomTomIsoFormat)) {
       return TypeFeilmelding.SKATTEFORHOLD_DEKKER_IKKE_HELE_MEDLEMSKAPSPERIODEN;
     }
 
-    if (!ingenOverlappendePerioder(skatteforholdsperioder)) {
+    if (!ingenOverlappendePerioder(vaskedeSkatteforholdsperioder)) {
       return TypeFeilmelding.OVERLAPPENDE_SKATTEFORHOLDSPERIODER;
     }
 
-    if (harOppholdsperioder(skatteforholdsperioder)) {
+    if (harOppholdsperioder(vaskedeSkatteforholdsperioder)) {
       return TypeFeilmelding.HAR_OPPHOLDSPERIODER_SKATTEFORHOLD;
     }
 
-    if (!ikkeAlleSammeSkatteforholdstyper(skatteforholdsperioder)) {
+    if (!ikkeAlleSammeSkatteforholdstyper(vaskedeSkatteforholdsperioder)) {
       return TypeFeilmelding.LIKE_SKATTEPLIKTTYPER;
     }
   }
 
   if (
-    inntektskilder &&
-    inntektskilder.length > 0 &&
-    (!medlemskapstypeErPliktig || !erBrukerSkattepliktigIHelePerioden(skatteforholdsperioder))
+    vaskedeInntektskilder &&
+    vaskedeInntektskilder.length > 0 &&
+    (!medlemskapstypeErPliktig || !erBrukerSkattepliktigIHelePerioden(vaskedeSkatteforholdsperioder))
   ) {
-    if (!dekkerHeleMedlemskapsperiode(inntektskilder, medlemskapsperiode)) {
+    if (!dekkerHeleMedlemskapsperiode(vaskedeInntektskilder, medlemskapsperiodeFomTomIsoFormat)) {
       return TypeFeilmelding.INNTEKTSKILDER_DEKKER_IKKE_HELE_MEDLEMSKAPSPERIODEN;
     }
   }

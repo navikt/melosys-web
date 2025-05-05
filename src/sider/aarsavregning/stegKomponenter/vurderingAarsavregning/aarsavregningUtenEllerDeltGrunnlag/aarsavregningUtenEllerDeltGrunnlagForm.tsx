@@ -304,14 +304,14 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       const aktivFeilmelding = finnAktivFeilmelding({
         skatteforholdsperioder: formState.skatteforholdsperioder,
         inntektskilder: formState.inntektskilder,
-        medlemskapsperiode: medlemskapsperiodeFomTom,
+        medlemskapsperiodeFomTom,
         medlemskapsperioder: medlemskapsperioderFormState as Medlemskapsperiode[],
         medlemskapstypeErPliktig,
       });
       console.log("[debouncedBeregning] Aktive feilmeldinger", aktivFeilmelding, {
         skatteforholdsperioder: formState.skatteforholdsperioder,
         inntektskilder: formState.inntektskilder,
-        medlemskapsperiode: medlemskapsperiodeFomTom,
+        medlemskapsperiodeFomTom,
         medlemskapsperioder: medlemskapsperioderFormState as Medlemskapsperiode[],
         medlemskapstypeErPliktig,
       });

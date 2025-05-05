@@ -137,7 +137,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
       const aktivFeilmelding = finnAktivFeilmelding({
         skatteforholdsperioder: formState.skatteforholdsperioder,
         inntektskilder: formState.inntektskilder,
-        medlemskapsperiode: innvilgetMedlemskapsperiode,
+        medlemskapsperiodeFomTom: innvilgetMedlemskapsperiode!,
         medlemskapstypeErPliktig,
       });
       if (!aktivFeilmelding) {
