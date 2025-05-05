@@ -53,14 +53,15 @@ function EnkeltSak(props) {
           </div>
         }
         hoyreSideTittel={
-          <Nav.Link target="_blank" href={`${URL_BASENAME}${link}`}>
+          /* <Nav.Link target="_blank" href={`${URL_BASENAME}${link}`}>
             {saksnummer}
             <Ikon.ExternalLink className="ikon" />
-          </Nav.Link>
+          </Nav.Link> */
+          saksnummer
         }
         data={[
           {
-            description: <div className="behandlingstype">{tittel}</div>,
+            description: <div className="behandlingstype">{behandlingstema.term}</div>,
           },
           {
             term: "Periode:",

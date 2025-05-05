@@ -7,9 +7,9 @@ import "./behandlingerListe.less";
 
 interface BehandlingOversikt {
   behandlingID: string;
-  tittel: string;
   behandlingsstatus: KTObject;
   svarFrist: string | null;
+  behandlingstype: KTObject;
 }
 
 interface BehandlingerListeProps {
@@ -24,7 +24,7 @@ function BehandlingRad({ behandling }: BehandlingRadProps) {
   return (
     <Nav.Row key={behandling.behandlingID} className="behandling-rad">
       <Nav.Column lg="6" className="behandling-tittel">
-        {behandling.tittel}
+        {behandling.behandlingstype.term}
       </Nav.Column>
       <Nav.Column lg="6">
         <BehandlingsstatusMedSvarfrist
