@@ -65,7 +65,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
     saksvedlegg: [],
     standardvedlegg: [],
   });
-  const [isFormInitialized, setIsFormInitialized] = useState(false);
+  const [harSkjemaverdier, setHarSkjemaverdier] = useState(false);
   const [fritekstPending, setFritekstPending] = useState(false);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as number;
@@ -162,7 +162,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
 
   useEffect(() => {
     if (aktivtSteg && behandlingID !== null) {
-      setIsFormInitialized(false);
+      setHarSkjemaverdier(false);
       window.scrollTo(0, 0);
       Promise.all([
         fetchAarsavregning(),
@@ -183,23 +183,23 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   useEffect(() => {
     if (aktivtSteg && lagretAarsavregning) {
       const currentValues = getValues();
-      const newInnledning = currentValues.innledningFritekst ?? lagretInnledning ?? "";
-      const newBegrunnelse = currentValues.begrunnelseFritekst ?? lagretBegrunnelse ?? "";
+      const nyInnledningFritekst = currentValues.innledningFritekst ?? lagretInnledning ?? "";
+      const nyBegrunnelseFritekst = currentValues.begrunnelseFritekst ?? lagretBegrunnelse ?? "";
 
-      if (!isFormInitialized) {
+      if (!harSkjemaverdier) {
         reset(
           {
-            innledningFritekst: newInnledning,
-            begrunnelseFritekst: newBegrunnelse,
+            innledningFritekst: nyInnledningFritekst,
+            begrunnelseFritekst: nyBegrunnelseFritekst,
           },
           { keepDirty: false },
         );
-        setLagretInnledning(newInnledning);
-        setLagretBegrunnelse(newBegrunnelse);
-        setIsFormInitialized(true);
+        setLagretInnledning(nyInnledningFritekst);
+        setLagretBegrunnelse(nyBegrunnelseFritekst);
+        setHarSkjemaverdier(true);
       }
     }
-  }, [aktivtSteg, lagretAarsavregning, reset, lagretInnledning, lagretBegrunnelse, getValues, isFormInitialized]);
+  }, [aktivtSteg, lagretAarsavregning, reset, lagretInnledning, lagretBegrunnelse, getValues, harSkjemaverdier]);
 
   useEffect(() => {
     if (aktivtSteg && erFullmektigEndret && behandlingID !== null) {
@@ -243,7 +243,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   const debouncedOppdaterFritekster = useCallback(Utils._debounce(oppdaterFritekster, 1000), [oppdaterFritekster]);
 
   useEffect(() => {
-    if (redigerbart && aktivtSteg && behandlingID !== null && lagretAarsavregning && isFormInitialized) {
+    if (redigerbart && aktivtSteg && behandlingID !== null && lagretAarsavregning && harSkjemaverdier) {
       const currentValues = getValues();
       const hasInnledningChanged = (currentValues.innledningFritekst ?? "") !== lagretInnledning;
       const hasBegrunnelseChanged = (currentValues.begrunnelseFritekst ?? "") !== lagretBegrunnelse;
@@ -259,13 +259,13 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
     debouncedOppdaterFritekster,
     behandlingID,
     lagretAarsavregning,
-    isFormInitialized,
+    harSkjemaverdier,
     getValues,
     lagretInnledning,
     lagretBegrunnelse,
   ]);
 
-  if (!aktivtSteg || !lagretAarsavregning || !isFormInitialized) {
+  if (!aktivtSteg || !lagretAarsavregning || !harSkjemaverdier) {
     return null;
   }
 
