@@ -569,10 +569,9 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
 
   // Håndterer kjøring av beregninger når skjemaverdier endres
   useEffect(() => {
-    // Only run calculation logic if behandlingsvalg is OPPLYSNINGER_ENDRET
     if (behandlingsvalg !== OPPLYSNINGER_ENDRET) {
       setDebouncedBeregningPagaar(false);
-      setArrayValideringsfeil(undefined); // Clear potential errors if switching away
+      setArrayValideringsfeil(undefined);
       if (debouncedBeregningRef.current?.cancel) {
         debouncedBeregningRef.current.cancel();
       }
@@ -621,7 +620,6 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     }
 
     if (debouncedBeregningRef.current) {
-      // You might adjust this condition based on the changes detected
       const currentFormState = mapFormState(
         getValues("skatteforholdsperioder"),
         getValues("inntektskilder"),
