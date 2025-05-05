@@ -14,7 +14,7 @@ export interface AarsavregningResponse {
 }
 
 export interface AarsavregningRequest {
-  avregning: Avregning;
+  avregning: Omit<Avregning, "tilFaktureringBeloep">;
 }
 
 export interface OppdaterHarDeltGrunnlagRequest {
@@ -50,7 +50,7 @@ export interface Trygdeavgiftsperiode {
 
 export interface Avregning {
   nyttTotalbeloep?: number;
-  tidligereFakturertBeloep?: number;
+  // tidligereFakturertBeloep?: number;
   tilFaktureringBeloep?: number;
   tidligereFakturertBeloepAvgiftssystem?: number;
 }
