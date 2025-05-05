@@ -3,8 +3,6 @@ import PT from "prop-types";
 import { MKVUtils } from "../../../melosyskodeverk";
 import * as KV from "../../../kodeverk";
 import * as MPT from "../../../proptypes";
-import * as Skjema from "../../../felleskomponenter/skjema";
-import * as Ikon from "../../../resources/images";
 import * as Nav from "../../../navFrontend";
 import { URL_BASENAME } from "../../../constants";
 
@@ -44,43 +42,48 @@ function EnkeltSak(props) {
 
   return (
     <div className="enkeltSak">
-      <Skjema.CustomRadioPanelElement
-        tittel={
-          <div className="tittel">
-            <span>
-              {KV.objektTilTerm(sakstype)} - {KV.objektTilTerm(sakstema)}
+      <div className="customRadioPanelElement">
+        <div className="customRadioPanelTittel">
+          <Nav.Heading size="xsmall">
+            <div className="tittel">
+              <span>
+                {KV.objektTilTerm(sakstype)} - {KV.objektTilTerm(sakstema)}
+              </span>
+            </div>
+          </Nav.Heading>
+          {saksnummer}
+        </div>
+        <div className="customRadioPanelContent">
+          <div className="customRadioPanelRow">
+            <span className="customRadioPanelDescription">
+              <div className="behandlingstype">{behandlingstema.term}</div>
             </span>
           </div>
-        }
-        hoyreSideTittel={
-          /* <Nav.Link target="_blank" href={`${URL_BASENAME}${link}`}>
-            {saksnummer}
-            <Ikon.ExternalLink className="ikon" />
-          </Nav.Link> */
-          saksnummer
-        }
-        data={[
-          {
-            description: <div className="behandlingstype">{behandlingstema.term}</div>,
-          },
-          {
-            term: "Periode:",
-            description: periodeTittel ? (
-              <>
+
+          {periodeTittel && (
+            <div className="customRadioPanelRow">
+              <span className="customRadioPanelTerm">Periode:</span>
+              <span className="customRadioPanelDescription">
                 <EnkeltDato dato={periodeTittel.fom} defaultValue="" /> -{" "}
                 <EnkeltDato dato={periodeTittel.tom} defaultValue="" />
-              </>
-            ) : null,
-          },
-          {
-            term: "Land:",
-            description: <Soknadsland land={land} visFulltNavn landkoderKodeverk={landkoder} />,
-          },
-          {
-            description: <BehandlingerListe behandlingOversikter={behandlingOversikter} />,
-          },
-        ]}
-      />
+              </span>
+            </div>
+          )}
+
+          <div className="customRadioPanelRow">
+            <span className="customRadioPanelTerm">Land:</span>
+            <span className="customRadioPanelDescription">
+              <Soknadsland land={land} visFulltNavn landkoderKodeverk={landkoder} />
+            </span>
+          </div>
+
+          <div className="customRadioPanelRow">
+            <span className="customRadioPanelDescription">
+              <BehandlingerListe behandlingOversikter={behandlingOversikter} />
+            </span>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
