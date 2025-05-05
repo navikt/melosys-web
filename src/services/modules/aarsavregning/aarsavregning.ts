@@ -13,7 +13,6 @@ export interface AarsavregningResponse {
   harDeltGrunnlag?: boolean;
   behandlingsvalg?: string;
 }
-// TODO: Fix typing for behandlingsvalg
 
 export interface AarsavregningRequest {
   avregning: Avregning;
