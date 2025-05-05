@@ -103,7 +103,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
       setLagretAarsavregning(response);
       return response;
     } catch (error) {
-      console.error("Error fetching aarsavregning data: ", error);
+      console.error("Henting av aarsavregning feilet: ", error);
       return undefined;
     }
   }, [behandlingID]);
@@ -118,7 +118,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
       setMuligeMottakere(res);
       await fetchStandardvedleggForBrev();
     } catch (error) {
-      console.error("Error fetching mulige mottakere: ", error);
+      console.error("Henting av muligeMottakere feilet: ", error);
     }
   }, [behandlingID]);
 
@@ -130,7 +130,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
         standardvedlegg: res,
       });
     } catch (error) {
-      console.error("Error fetching standardvedlegg: ", error);
+      console.error("Henting av vedlegg feilet: ", error);
     }
   }, []);
 
@@ -140,7 +140,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
       const dto = await Api.Trygdeavgift.hentFakturamottaker(behandlingID);
       setFakturaMottaker(dto.navn);
     } catch (error) {
-      console.error("Error fetching fakturamottaker: ", error);
+      console.error("Henting av fakturamottaker feilet: ", error);
     }
   }, [behandlingID]);
 
@@ -156,7 +156,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
         res.some((aktoer) => aktoer.fullmakter?.some((fullmakt) => fullmakt === FULLMEKTIG_TRYGDEAVGIFT)),
       );
     } catch (error) {
-      console.error("Error fetching fullmakt info: ", error);
+      console.error("Henting av fullmakt feilet: ", error);
     }
   }, [saksnummer]);
 
@@ -230,7 +230,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
             setLagretBegrunnelse(values.begrunnelseFritekst ?? "");
           })
           .catch((error) => {
-            console.error("Feil ved oppdatering av fritekster:", error);
+            console.error("Oppdatering av fritekster feilet: ", error);
           })
           .finally(() => {
             setFritekstPending(false);

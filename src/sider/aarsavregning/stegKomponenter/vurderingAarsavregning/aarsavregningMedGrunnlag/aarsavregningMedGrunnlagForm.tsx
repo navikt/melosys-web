@@ -269,8 +269,8 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
         .then((res) => {
           setAarsavregningResponse(res);
           setValue("manueltAvgiftBeloep", "", { shouldValidate: false, shouldDirty: false });
+          // TODO: Beregning skal ikke være nødvendig. API må gjøre opprydning ved endring av behandlingsvalg
           if (value === OPPLYSNINGER_UENDRET || value === MANUELL_ENDELIG_AVGIFT) {
-            // TODO: Skal beregning kjøres for MANUELL_ENDELIG_AVGIFT?
             setBeregningPaagar(true);
             const skatteforholdFraGrunnlag =
               res.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.skatteforholdsperioder;
@@ -300,15 +300,6 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
     ],
   );
 
-  const håndterBekreft = useCallback(() => {
-    // noinspection JSIgnoredPromiseFromCall
-    trigger();
-
-    if (stegErGyldig && !beregningPaagar && !endrerBehandlingsvalg && !debouncedBeregningPagaar) {
-      bekreft();
-    }
-  }, [trigger, stegErGyldig, beregningPaagar, bekreft, endrerBehandlingsvalg, debouncedBeregningPagaar]);
-
   const debouncedOppdaterManueltAvgiftBeloep = useCallback(
     Utils._debounce(
       async (value: string) =>
@@ -319,6 +310,15 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
     ),
     [aarsavregningID],
   );
+
+  const håndterBekreft = useCallback(() => {
+    // noinspection JSIgnoredPromiseFromCall
+    trigger();
+
+    if (stegErGyldig && !beregningPaagar && !endrerBehandlingsvalg && !debouncedBeregningPagaar) {
+      bekreft();
+    }
+  }, [trigger, stegErGyldig, beregningPaagar, bekreft, endrerBehandlingsvalg, debouncedBeregningPagaar]);
 
   const trygdeAvgiftSkalIkkeBetalesTilNav =
     medlemskapstypeErPliktig && erBrukerSkattepliktigIHelePerioden(skatteforholdsperioder);

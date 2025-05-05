@@ -718,6 +718,30 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     oppdaterStatus(stegErGyldig);
   }, [stegErGyldig, oppdaterStatus]);
 
+  const handleBehandlingsvalgChange = useCallback(
+    (value: string) => {
+      Api.Aarsavregning.oppdaterBehandlingsvalg(behandlingID, value, aarsavregningID).then((res) => {
+        setAarsavregningResponse(res);
+        if (value !== MANUELL_ENDELIG_AVGIFT) {
+          setValue("manueltAvgiftBeloep", "", { shouldValidate: false, shouldDirty: false });
+        }
+        setPreviousFormState(null);
+      });
+    },
+    [aarsavregningID, behandlingID, setValue],
+  );
+
+  const debouncedOppdaterManueltAvgiftBeloep = useCallback(
+    Utils._debounce(
+      async (value: string) =>
+        Api.Aarsavregning.oppdaterManueltAvgiftBeloep(behandlingID, aarsavregningID, Number(value)).then((res) => {
+          setAarsavregningResponse(res);
+        }),
+      350,
+    ),
+    [aarsavregningID, behandlingID],
+  );
+
   const håndterBekreft = () => {
     trigger();
 
@@ -737,31 +761,6 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   const forskuddsvisFakturertTrygdeavgift =
     (aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift?.totalAvgift ?? 0) > 0;
   const skjemaErRedigerbart = redigerbart && !endrerBestemmelse;
-
-  const handleBehandlingsvalgChange = useCallback(
-    (value: string) => {
-      Api.Aarsavregning.oppdaterBehandlingsvalg(behandlingID, value, aarsavregningID).then((res) => {
-        setAarsavregningResponse(res);
-        if (value !== MANUELL_ENDELIG_AVGIFT) {
-          setValue("manueltAvgiftBeloep", "", { shouldValidate: false, shouldDirty: false });
-        }
-        setPreviousFormState(null);
-      });
-    },
-    [aarsavregningID, behandlingID, setValue],
-  );
-  console.log("feilmelding", feilmelding);
-
-  const debouncedOppdaterManueltAvgiftBeloep = useCallback(
-    Utils._debounce(
-      async (value: string) =>
-        Api.Aarsavregning.oppdaterManueltAvgiftBeloep(behandlingID, aarsavregningID, Number(value)).then((res) => {
-          setAarsavregningResponse(res);
-        }),
-      350,
-    ),
-    [aarsavregningID, behandlingID],
-  );
 
   return (
     <div className="vurderingAarsavregning">
