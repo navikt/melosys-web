@@ -1,18 +1,16 @@
 import PT from "prop-types";
+import { useHistory } from "react-router-dom";
 
 import { MKVUtils } from "../../../melosyskodeverk";
 import * as KV from "../../../kodeverk";
 import * as MPT from "../../../proptypes";
 import * as Nav from "../../../navFrontend";
-import { URL_BASENAME } from "../../../constants";
+import * as Ikon from "../../../resources/images";
 
 import EnkeltDato from "../../../felleskomponenter/enkeltDato";
 import Soknadsland from "../../../felleskomponenter/soknadsland";
-import { lagUrl } from "../../../url";
 
 import "./enkeltSak.css";
-import { useFeatureToggle } from "../../../featuretoggle";
-import { MELOSYS_PENSJONIST } from "../../../featuretoggle/toggleNavn";
 import BehandlingerListe from "./behandlingerListe";
 
 /** Den enkelte sak-elementet som brukes i iterasjon i listen
@@ -20,25 +18,20 @@ import BehandlingerListe from "./behandlingerListe";
 function EnkeltSak(props) {
   const { landkoder } = props;
   const { periode, land, behandlingOversikter, sakstype, saksnummer, sakstema } = props.sak;
-  const erPensjonistToggleEnabled = useFeatureToggle(MELOSYS_PENSJONIST);
+  const history = useHistory();
 
-  const { tittel, behandlingstype, behandlingsstatus, behandlingstema, behandlingID } = behandlingOversikter[0];
+  const { behandlingsstatus, behandlingstema } = behandlingOversikter[0];
   const { soknadsperiode } =
     behandlingOversikter.find((behandlingOversikt) => behandlingOversikt.soknadsperiode != null) ?? {};
-
-  const link = lagUrl(
-    saksnummer,
-    behandlingID,
-    sakstype.kode,
-    sakstema.kode,
-    behandlingstema.kode,
-    behandlingstype.kode,
-    erPensjonistToggleEnabled,
-  );
 
   const periodeTittel = MKVUtils.erAvsluttetEllerMidlertidigBeslutning(behandlingsstatus?.kode)
     ? periode
     : soknadsperiode;
+
+  const handleSearchClick = () => {
+    sessionStorage.setItem("sokefrase", saksnummer);
+    history.push("/sok");
+  };
 
   return (
     <div className="enkeltSak">
@@ -54,11 +47,9 @@ function EnkeltSak(props) {
           {saksnummer}
         </div>
         <div className="customRadioPanelContent">
-          <div className="customRadioPanelRow">
-            <span className="customRadioPanelDescription">
-              <div className="behandlingstype">{behandlingstema.term}</div>
-            </span>
-          </div>
+          <span className="customRadioPanelDescription">
+            <div className="behandlingstype">{behandlingstema.term}</div>
+          </span>
 
           {periodeTittel && (
             <div className="customRadioPanelRow">
@@ -70,18 +61,17 @@ function EnkeltSak(props) {
             </div>
           )}
 
-          <div className="customRadioPanelRow">
-            <span className="customRadioPanelTerm">Land:</span>
-            <span className="customRadioPanelDescription">
-              <Soknadsland land={land} visFulltNavn landkoderKodeverk={landkoder} />
-            </span>
-          </div>
+          <span className="customRadioPanelTerm">Land:</span>
+          <span className="customRadioPanelDescription">
+            <Soknadsland land={land} visFulltNavn landkoderKodeverk={landkoder} />
+            <Nav.Link onClick={handleSearchClick}>
+              Gå til saksoversikt <Ikon.ExternalLink className="ikon" />
+            </Nav.Link>
+          </span>
 
-          <div className="customRadioPanelRow">
-            <span className="customRadioPanelDescription">
-              <BehandlingerListe behandlingOversikter={behandlingOversikter} />
-            </span>
-          </div>
+          <span className="customRadioPanelDescription">
+            <BehandlingerListe behandlingOversikter={behandlingOversikter} />
+          </span>
         </div>
       </div>
     </div>
