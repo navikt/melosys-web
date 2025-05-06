@@ -423,7 +423,7 @@ class Journalforing extends Component {
         <div className="journalforing">
           <Nav.Container fluid>
             <Nav.Row>
-              <Nav.Column xs="6" lg="4">
+              <Nav.Column xs="6" lg="5">
                 <Sticky>
                   <div className="panel journalforing__skjema">
                     <div className="journalforing__skjema__scroll">
@@ -458,7 +458,7 @@ class Journalforing extends Component {
                   </div>
                 </Sticky>
               </Nav.Column>
-              <Nav.Column xs="6" lg="8" className="journalforing__dokument">
+              <Nav.Column xs="6" lg="7" className="journalforing__dokument">
                 {vedlegg.length > 0 && (
                   <div className="panel">
                     <Nav.Select

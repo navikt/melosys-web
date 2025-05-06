@@ -4,6 +4,7 @@ import * as Ikon from "../../../resources/images";
 import { BehandlingsstatusMedSvarfrist } from "../../../felleskomponenter/behandlingsstatus";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import "./behandlingerListe.less";
+import { HStack, VStack } from "@navikt/ds-react";
 
 interface BehandlingOversikt {
   behandlingID: string;
@@ -22,17 +23,13 @@ interface BehandlingRadProps {
 
 function BehandlingRad({ behandling }: BehandlingRadProps) {
   return (
-    <Nav.Row key={behandling.behandlingID} className="behandling-rad">
-      <Nav.Column lg="6" className="behandling-tittel">
-        {behandling.behandlingstype.term}
-      </Nav.Column>
-      <Nav.Column lg="6">
-        <BehandlingsstatusMedSvarfrist
-          behandlingsstatus={behandling.behandlingsstatus}
-          svarFrist={behandling.svarFrist || null}
-        />
-      </Nav.Column>
-    </Nav.Row>
+    <HStack justify="space-between" paddingInline="3 3" paddingBlock="1 1">
+      <div className="behandling-tittel">{behandling.behandlingstype.term}</div>
+      <BehandlingsstatusMedSvarfrist
+        behandlingsstatus={behandling.behandlingsstatus}
+        svarFrist={behandling.svarFrist || null}
+      />
+    </HStack>
   );
 }
 
@@ -74,8 +71,8 @@ function BehandlingerListe({ behandlingOversikter }: BehandlingerListeProps) {
   const behandlingerToShow = showAllBehandlinger ? behandlingOversikter : initialBehandlinger;
 
   return (
-    <Nav.Column>
-      <Nav.Row className="behandlinger-liste">
+    <VStack>
+      <div className="behandlinger-liste">
         {behandlingerToShow.map((behandling) => (
           <BehandlingRad key={behandling.behandlingID} behandling={behandling} />
         ))}
@@ -84,8 +81,8 @@ function BehandlingerListe({ behandlingOversikter }: BehandlingerListeProps) {
           showAll={showAllBehandlinger}
           disabled={!showAllBehandlinger && !harFlereBehandlinger}
         />
-      </Nav.Row>
-    </Nav.Column>
+      </div>
+    </VStack>
   );
 }
 
