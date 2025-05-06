@@ -33,7 +33,7 @@ export function EndeligAvgiftValgRadioGroup({
     },
     {
       value: MANUELL_ENDELIG_AVGIFT,
-      label: <b>Jeg skal oppgi endelig avgift selv.</b>,
+      label: <b>Jeg skal oppgi endelig avgift.</b>,
       description: " Endelig trygdeavgift er manuelt beregnet utenfor Melosys",
     },
   ];
@@ -61,4 +61,4 @@ export function EndeligAvgiftValgRadioGroup({
       ))}
     </Forms.RadioGroup>
   );
-} 
+}
