@@ -2,7 +2,7 @@ import { withRouter } from "react-router-dom";
 import { withMsal } from "@azure/msal-react";
 import PT from "prop-types";
 
-import { ReactComponent as NavLogo } from "../../../resources/images/nav.svg";
+import NavLogo from "../../../resources/images/nav.svg?react";
 import * as Nav from "../../../navFrontend";
 
 import "./topplinje.css";

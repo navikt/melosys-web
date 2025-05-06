@@ -10,14 +10,15 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
     "noFallthroughCasesInSwitch": true,
-    "downlevelIteration": true
+    "downlevelIteration": true,
+    "useDefineForClassFields": true
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "vite.config.ts", "vitest.config.ts"],
   "exclude": ["node_modules"]
 }
