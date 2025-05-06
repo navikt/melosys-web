@@ -157,10 +157,11 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   }, [lagretBestemmelse]);
 
   const mapUkjentSluttdatoMedlemskapsperiode = (perioder: any) => {
-    return perioder.map((periode: any) => {
+    return perioder.map((periode: any, index: number) => {
       if (periode.fomDato) {
         const fomISODate = Utils.dato.formatterDatoTilISO(periode.fomDato, "");
-        if (fomISODate && !periode.TomDato) {
+        const erSistePeriodeILista = index === perioder.length - 1;
+        if (fomISODate && (erSistePeriodeILista || !periode.tomDato)) {
           const fomDate = new Date(fomISODate);
           const tomDate = new Date(fomDate);
           tomDate.setFullYear(tomDate.getFullYear() + 10);
