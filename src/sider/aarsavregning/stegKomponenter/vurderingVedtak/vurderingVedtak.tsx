@@ -1,37 +1,38 @@
-import { useDispatch, useSelector } from "react-redux";
-import { behandlingerSelectors } from "../../../../ducks/behandlinger";
-import * as Nav from "../../../../navFrontend";
-import { redigerbartSelectors } from "../../../../ducks/redigerbart";
-import Dokumentliste from "../../../../felleskomponenter/dokumentliste";
-import * as Mui from "../../../../felleskomponenter/ui";
-import { useCallback, useEffect, useState } from "react";
-import * as Api from "../../../../services/api";
-import { FieldValues, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
-import vurdering_vedtak from "./vurderingVedtakSchema";
-import * as Utils from "../../../../utils";
-import { AarsavregningResponse } from "../../../../services/modules/aarsavregning/aarsavregning";
-import { vedtakOperations } from "../../../../ducks/vedtak";
-import { ThunkDispatch } from "redux-thunk";
 import { RootState } from "AppTypes";
+import { useCallback, useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
 import { Action } from "redux";
-import { kontrollOperations } from "../../../../ducks/kontroll";
-import MKV from "../../../../melosyskodeverk";
-import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
-import * as Forms from "../../../../felleskomponenter/forms";
-import { SumArsavregningTabell } from "../vurderingAarsavregning/komponenter/sumArsavregningTabell";
-import { menypanelOperations, menypanelSelectors } from "../../../../ducks/menypanel";
+import { ThunkDispatch } from "redux-thunk";
+import { behandlingerSelectors } from "../../../../ducks/behandlinger";
+import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
 import { fagsakSelectors } from "../../../../ducks/fagsaker";
+import { kontrollOperations } from "../../../../ducks/kontroll";
+import { menypanelOperations, menypanelSelectors } from "../../../../ducks/menypanel";
+import { redigerbartSelectors } from "../../../../ducks/redigerbart";
+import { vedtakOperations } from "../../../../ducks/vedtak";
+import Dokumentliste from "../../../../felleskomponenter/dokumentliste";
+import * as Forms from "../../../../felleskomponenter/forms";
 import FullmaktForTrygdeavgiftConfirmationPanel from "../../../../felleskomponenter/fullmaktForTrygdeavgiftConfirmationPanel/fullmaktForTrygdeavgiftConfirmationPanel";
-import { BrevVedleggVisningstabellInterface } from "../../../../services/modules/dokumenter-v2";
+import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
+import * as Mui from "../../../../felleskomponenter/ui";
 import VedleggTable from "../../../../felleskomponenter/vedleggTable";
+import MKV from "../../../../melosyskodeverk";
+import * as Nav from "../../../../navFrontend";
+import * as Api from "../../../../services/api";
+import { AarsavregningResponse } from "../../../../services/modules/aarsavregning/aarsavregning";
+import { BrevVedleggVisningstabellInterface } from "../../../../services/modules/dokumenter-v2";
+import * as Utils from "../../../../utils";
+import { SumArsavregningTabell } from "../vurderingAarsavregning/komponenter/sumArsavregningTabell";
+import vurdering_vedtak from "./vurderingVedtakSchema";
 
 const { FASTSATT_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingsresultattyper;
 const { FØRSTEGANGSVEDTAK } = MKV.Koder.vedtakstyper;
 const { AARSAVREGNING_VEDTAKSBREV } = MKV.Koder.brev.produserbaredokumenter;
 const { FULLMEKTIG_TRYGDEAVGIFT } = MKV.Koder.fullmaktstype;
 const { FULLMEKTIG } = MKV.Koder.aktoersroller;
+const { MANUELL_ENDELIG_AVGIFT } = MKV.Koder.endeligAvgiftValg;
 
 interface FormValuesProps {
   innledningFritekst?: string;
@@ -64,126 +65,240 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
     saksvedlegg: [],
     standardvedlegg: [],
   });
-  const aarsavregningID = useSelector(behandlingsresultatSelectors.ÅrsavregningIDSelector);
-  const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
-  const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
-  const erFullmektigEndret = useSelector(menypanelSelectors.MenypanelErFullmektigEndretSelector);
-  const saksnummer = useSelector(fagsakSelectors.SaksnummerSelector);
+  const [harSkjemaverdier, setHarSkjemaverdier] = useState(false);
+  const [fritekstPending, setFritekstPending] = useState(false);
+  const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
+  const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as number;
+  const erFullmektigEndret = useSelector(menypanelSelectors.MenypanelErFullmektigEndretSelector) as boolean;
+  const saksnummer = useSelector(fagsakSelectors.SaksnummerSelector) as string | number | null;
 
   const { fattVedtak } = komponentDispatch(dispatch);
+
+  const [lagretInnledning, setLagretInnledning] = useState<string>(
+    useSelector(behandlingsresultatSelectors.InnledningFritekstSelector) ?? "",
+  );
+  const [lagretBegrunnelse, setLagretBegrunnelse] = useState<string>(
+    useSelector(behandlingsresultatSelectors.BegrunnelseFritekstSelector) ?? "",
+  );
 
   const {
     watch,
     control,
+    handleSubmit,
+    reset,
+    getValues,
     formState: { isValid: formIsValid },
-  } = useForm({
+  } = useForm<FormValuesProps>({
     resolver: yupResolver(vurdering_vedtak),
-    defaultValues: {
-      begrunnelseFritekst: useSelector(behandlingsresultatSelectors.BegrunnelseFritekstSelector) || "",
-      innledningFritekst: useSelector(behandlingsresultatSelectors.InnledningFritekstSelector) || "",
-    } as FieldValues,
+    context: { endeligAvgiftValg: lagretAarsavregning?.endeligAvgiftValg },
+    mode: "onSubmit",
+    reValidateMode: "onChange",
   });
   const formValues = watch();
 
-  const fetchAvregningsData = () => {
-    return Api.Aarsavregning.hentAarsavregning(behandlingID).then((response: AarsavregningResponse) => {
+  const fetchAarsavregning = useCallback(async (): Promise<AarsavregningResponse | undefined> => {
+    if (behandlingID === null) return undefined;
+    try {
+      const response = await Api.Aarsavregning.hentAarsavregning(behandlingID);
       setLagretAarsavregning(response);
-    });
-  };
+      return response;
+    } catch (error) {
+      console.error("Henting av aarsavregning feilet: ", error);
+      return undefined;
+    }
+  }, [behandlingID]);
 
-  const hentMuligeMottakere = async () => {
-    const res = await Api.DokumenterV2.hentMuligeMottakere(behandlingID, {
-      produserbartdokument: AARSAVREGNING_VEDTAKSBREV,
-      orgnr: null,
-    });
-    setMuligeMottakere(res);
-    await hentStandardvedleggForBrev();
-  };
+  const fetchMuligeMottakere = useCallback(async () => {
+    if (behandlingID === null) return;
+    try {
+      const res = await Api.DokumenterV2.hentMuligeMottakere(behandlingID, {
+        produserbartdokument: AARSAVREGNING_VEDTAKSBREV,
+        orgnr: null,
+      });
+      setMuligeMottakere(res);
+      await fetchStandardvedleggForBrev();
+    } catch (error) {
+      console.error("Henting av muligeMottakere feilet: ", error);
+    }
+  }, [behandlingID]);
 
-  const hentStandardvedleggForBrev = async () => {
-    Api.DokumenterV2.hentStandardvedleggForBrev(AARSAVREGNING_VEDTAKSBREV).then((res) => {
+  const fetchStandardvedleggForBrev = useCallback(async () => {
+    try {
+      const res = await Api.DokumenterV2.hentStandardvedleggForBrev(AARSAVREGNING_VEDTAKSBREV);
       setBrevVedlegg({
         saksvedlegg: [],
         standardvedlegg: res,
       });
-    });
-  };
+    } catch (error) {
+      console.error("Henting av vedlegg feilet: ", error);
+    }
+  }, []);
 
-  const hentOgSetHarFullmaktForTrygdeavgift = async () => {
-    await Api.Fagsaker.aktoer.hent(saksnummer, FULLMEKTIG).then((res) => {
+  const fetchFakturaMottaker = useCallback(async () => {
+    if (behandlingID === null) return;
+    try {
+      const dto = await Api.Trygdeavgift.hentFakturamottaker(behandlingID);
+      setFakturaMottaker(dto.navn);
+    } catch (error) {
+      console.error("Henting av fakturamottaker feilet: ", error);
+    }
+  }, [behandlingID]);
+
+  const fetchAndSetHarFullmaktForTrygdeavgift = useCallback(async () => {
+    if (saksnummer === null || saksnummer === undefined) return;
+    const saksnummerString = typeof saksnummer === "number" ? saksnummer.toString() : saksnummer;
+    if (typeof saksnummerString !== "string") return;
+
+    try {
+      const res = await Api.Fagsaker.aktoer.hent(saksnummerString, FULLMEKTIG);
       setHarBekreftetFullmaktForTrygdeavgift(false);
       setHarFullmaktForTrygdeavgift(
         res.some((aktoer) => aktoer.fullmakter?.some((fullmakt) => fullmakt === FULLMEKTIG_TRYGDEAVGIFT)),
       );
-    });
-  };
-
-  useEffect(() => {
-    if (aktivtSteg) {
-      hentOgSetHarFullmaktForTrygdeavgift();
+    } catch (error) {
+      console.error("Henting av fullmakt feilet: ", error);
     }
-  }, []);
+  }, [saksnummer]);
 
   useEffect(() => {
-    if (aktivtSteg) {
-      if (erFullmektigEndret) {
-        hentOgSetHarFullmaktForTrygdeavgift();
+    if (aktivtSteg && behandlingID !== null) {
+      setHarSkjemaverdier(false);
+      window.scrollTo(0, 0);
+      Promise.all([
+        fetchAarsavregning(),
+        fetchMuligeMottakere(),
+        fetchFakturaMottaker(),
+        fetchAndSetHarFullmaktForTrygdeavgift(),
+      ]);
+    }
+  }, [
+    aktivtSteg,
+    behandlingID,
+    fetchAarsavregning,
+    fetchMuligeMottakere,
+    fetchFakturaMottaker,
+    fetchAndSetHarFullmaktForTrygdeavgift,
+  ]);
 
-        Api.Trygdeavgift.hentFakturamottaker(behandlingID).then((dto) => {
-          setFakturaMottaker(dto.navn);
-        });
+  useEffect(() => {
+    if (aktivtSteg && lagretAarsavregning) {
+      const currentValues = getValues();
+      const nyInnledningFritekst = currentValues.innledningFritekst ?? lagretInnledning ?? "";
+      const nyBegrunnelseFritekst = currentValues.begrunnelseFritekst ?? lagretBegrunnelse ?? "";
 
-        dispatch(menypanelOperations.setErFullmektigEndret(false));
+      if (!harSkjemaverdier) {
+        reset(
+          {
+            innledningFritekst: nyInnledningFritekst,
+            begrunnelseFritekst: nyBegrunnelseFritekst,
+          },
+          { keepDirty: false },
+        );
+        setLagretInnledning(nyInnledningFritekst);
+        setLagretBegrunnelse(nyBegrunnelseFritekst);
+        setHarSkjemaverdier(true);
       }
     }
-  }, [erFullmektigEndret]);
+  }, [aktivtSteg, lagretAarsavregning, reset, lagretInnledning, lagretBegrunnelse, getValues, harSkjemaverdier]);
 
   useEffect(() => {
-    if (aktivtSteg) {
-      window.scrollTo(0, 0);
-      fetchAvregningsData();
-      hentMuligeMottakere();
-
-      Api.Trygdeavgift.hentFakturamottaker(behandlingID).then((dto) => {
-        setFakturaMottaker(dto.navn);
-      });
+    if (aktivtSteg && erFullmektigEndret && behandlingID !== null) {
+      fetchAndSetHarFullmaktForTrygdeavgift();
+      fetchFakturaMottaker();
+      dispatch(menypanelOperations.setErFullmektigEndret(false));
     }
-  }, [aktivtSteg]);
+  }, [
+    aktivtSteg,
+    erFullmektigEndret,
+    behandlingID,
+    dispatch,
+    fetchAndSetHarFullmaktForTrygdeavgift,
+    fetchFakturaMottaker,
+  ]);
 
-  const lagFattVedtakReqDto = (): Api.Saksflyt.Vedtak.FattVedtakÅrsavregningReqDto => {
-    return {
+  const oppdaterFritekster = useCallback(
+    (values: FormValuesProps) => {
+      if (values && redigerbart && !vedtakPending && behandlingID !== null) {
+        const payload = {
+          innledningFritekst: values.innledningFritekst,
+          begrunnelseFritekst: values.begrunnelseFritekst,
+        };
+        Api.Behandlinger.resultat
+          .oppdaterFritekster(behandlingID, payload)
+          .then(() => {
+            setLagretInnledning(values.innledningFritekst ?? "");
+            setLagretBegrunnelse(values.begrunnelseFritekst ?? "");
+          })
+          .catch((error) => {
+            console.error("Oppdatering av fritekster feilet: ", error);
+          })
+          .finally(() => {
+            setFritekstPending(false);
+          });
+      }
+    },
+    [behandlingID, redigerbart, vedtakPending],
+  );
+
+  const debouncedOppdaterFritekster = useCallback(Utils._debounce(oppdaterFritekster, 1000), [oppdaterFritekster]);
+
+  useEffect(() => {
+    if (redigerbart && aktivtSteg && behandlingID !== null && lagretAarsavregning && harSkjemaverdier) {
+      const currentValues = getValues();
+      const hasInnledningChanged = (currentValues.innledningFritekst ?? "") !== lagretInnledning;
+      const hasBegrunnelseChanged = (currentValues.begrunnelseFritekst ?? "") !== lagretBegrunnelse;
+
+      if (hasInnledningChanged || hasBegrunnelseChanged) {
+        setFritekstPending(true);
+        debouncedOppdaterFritekster(currentValues);
+      }
+    }
+  }, [
+    aktivtSteg,
+    formValues,
+    debouncedOppdaterFritekster,
+    behandlingID,
+    lagretAarsavregning,
+    harSkjemaverdier,
+    getValues,
+    lagretInnledning,
+    lagretBegrunnelse,
+  ]);
+
+  if (!aktivtSteg || !lagretAarsavregning || !harSkjemaverdier) {
+    return null;
+  }
+
+  const onSubmit = async () => {
+    if (behandlingID === null || !lagretAarsavregning) {
+      return;
+    }
+
+    const stegErGyldig =
+      !harFullmaktForTrygdeavgift || erDifferanseUnderMinstebeløp || harBekreftetFullmaktForTrygdeavgift;
+    if (!stegErGyldig) {
+      return;
+    }
+
+    setVedtakPending(true);
+    fattVedtak(behandlingID, {
       behandlingsresultatTypeKode: FASTSATT_TRYGDEAVGIFT,
       innledningFritekst: formValues?.innledningFritekst || null,
       begrunnelseFritekst: formValues?.begrunnelseFritekst || null,
       vedtakstype: FØRSTEGANGSVEDTAK,
       kopiMottakere: muligeMottakere.kopiMottakere.map(Api.DokumenterV2.konverterMuligMottakerTilKopiMottaker),
-    };
-  };
-
-  const fattVedtakOnClick = async () => {
-    setVedtakPending(true);
-    fattVedtak(behandlingID, lagFattVedtakReqDto()).then((res) => {
-      if (res.data?.data?.error) {
+    })
+      .then((res) => {
+        if (res.data?.data?.error) {
+          console.error("Error during fattVedtak: ", res.data.data.error);
+          setVedtakPending(false);
+        }
+      })
+      .catch((error) => {
+        console.error("Error submitting vedtak: ", error);
         setVedtakPending(false);
-      }
-    });
-  };
-
-  const oppdaterFritekster = (values: FormValuesProps) => {
-    if (values && redigerbart && !vedtakPending) {
-      Api.Behandlinger.resultat.oppdaterFritekster(behandlingID, {
-        innledningFritekst: values.innledningFritekst,
-        begrunnelseFritekst: values.begrunnelseFritekst,
       });
-    }
   };
-  const debouncedOppdaterFritekster = useCallback(Utils._debounce(oppdaterFritekster, 1000), []);
-
-  useEffect(() => {
-    if (aktivtSteg) {
-      debouncedOppdaterFritekster(formValues);
-    }
-  }, [formValues?.innledningFritekst, formValues?.begrunnelseFritekst, formValues?.trygdeavgiftFritekst]);
 
   const mapMottakerRad = (muligMottaker: Api.DokumenterV2.MuligMottaker) => {
     return {
@@ -200,30 +315,45 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   };
 
   const mapMottakerRader = (mottakere: Api.DokumenterV2.HentMuligeMottakereResDto) => {
-    return [
-      mapMottakerRad(mottakere.hovedMottaker),
-      ...mottakere.kopiMottakere.map((muligMottaker) => mapMottakerRad(muligMottaker)),
-      ...mottakere.fasteMottakere.map((muligMottaker) => mapMottakerRad(muligMottaker)),
-    ];
+    const rader = [];
+    if (mottakere.hovedMottaker) {
+      rader.push(mapMottakerRad(mottakere.hovedMottaker));
+    }
+    rader.push(...mottakere.kopiMottakere.map((muligMottaker) => mapMottakerRad(muligMottaker)));
+    rader.push(...mottakere.fasteMottakere.map((muligMottaker) => mapMottakerRad(muligMottaker)));
+    return rader;
   };
 
   const tidligereTrygdeavgift = lagretAarsavregning?.avregning?.tidligereFakturertBeloep;
   const tidligereTrygdeavgiftAvgiftssystem = lagretAarsavregning?.avregning?.tidligereFakturertBeloepAvgiftssystem;
-  const nyTrygdeavgift = lagretAarsavregning?.avregning?.nyttTotalbeloep;
+  const nyTrygdeavgift =
+    lagretAarsavregning?.endeligAvgiftValg === MANUELL_ENDELIG_AVGIFT
+      ? lagretAarsavregning?.avregning?.manueltAvgiftBeloep
+      : lagretAarsavregning?.avregning?.nyttTotalbeloep;
+
   const trygdeavgiftDiff =
     (nyTrygdeavgift ?? 0) - (tidligereTrygdeavgift ?? 0) - (tidligereTrygdeavgiftAvgiftssystem ?? 0);
   const erDifferanseUnderMinstebeløp = Math.abs(trygdeavgiftDiff) < MINSTEBELOP_FAKTURERING_ELLER_REFUSJON;
   const erNullKroner = trygdeavgiftDiff === 0;
   const skalFaktureres = trygdeavgiftDiff > 0;
 
-  const stegErGyldig =
-    formIsValid && (!harFullmaktForTrygdeavgift || erDifferanseUnderMinstebeløp || harBekreftetFullmaktForTrygdeavgift);
+  const kanSubmitte =
+    redigerbart &&
+    !vedtakPending &&
+    (!harFullmaktForTrygdeavgift || erDifferanseUnderMinstebeløp || harBekreftetFullmaktForTrygdeavgift);
 
   return (
-    <div className="vurderingVedtak">
+    <form onSubmit={handleSubmit(onSubmit)} className="vurderingVedtak">
       <Nav.Heading level="1" className="stegvelgertittel">
         Vedtak årsavregning {lagretAarsavregning ? lagretAarsavregning.aar : ""}
       </Nav.Heading>
+
+      {lagretAarsavregning?.endeligAvgiftValg === MANUELL_ENDELIG_AVGIFT && (
+        <Nav.Alert variant="warning" className="blokk-s">
+          Du har lagt inn &quot;Endelig beregnet trygdeavgift&quot; manuelt og må derfor oppgi en begrunnelse i
+          fritekstfeltet.
+        </Nav.Alert>
+      )}
 
       <SumArsavregningTabell
         nyTrygdeavgift={nyTrygdeavgift}
@@ -279,27 +409,27 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
         disabled={!redigerbart}
       />
 
-      {stegErGyldig && redigerbart && muligeMottakere && (
-        <Dokumentliste behandlingID={behandlingID} dokumenter={mapMottakerRader(muligeMottakere)} />
-      )}
-      <VedleggTable
-        valgteVedlegg={brevVedlegg}
-        setValgteVedlegg={() => {
-          /* Readonly */
-        }}
-        label="Vedlegg"
-        redigerbart={false /* Readonly. Ikke vis slett-knapp. */}
-      />
+      {formIsValid &&
+        redigerbart &&
+        muligeMottakere &&
+        behandlingID !== null &&
+        (!harFullmaktForTrygdeavgift || erDifferanseUnderMinstebeløp || harBekreftetFullmaktForTrygdeavgift) &&
+        !fritekstPending && (
+          <>
+            <Dokumentliste behandlingID={behandlingID} dokumenter={mapMottakerRader(muligeMottakere)} />
+            <VedleggTable valgteVedlegg={brevVedlegg} setValgteVedlegg={() => {}} label="Vedlegg" redigerbart={false} />
+          </>
+        )}
 
       <Mui.StegKnapper
         bekreftKnappProps={{
-          onClick: fattVedtakOnClick,
-          disabled: !stegErGyldig || !formIsValid || !redigerbart,
-          loading: vedtakPending,
+          disabled: !kanSubmitte,
+          loading: vedtakPending || fritekstPending,
+          type: "submit",
         }}
         bekreftTekst="Fatt vedtak"
-        tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
+        tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart || vedtakPending, type: "button" }}
       />
-    </div>
+    </form>
   );
 }

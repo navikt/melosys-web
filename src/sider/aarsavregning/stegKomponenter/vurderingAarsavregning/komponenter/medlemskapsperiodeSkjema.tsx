@@ -46,11 +46,12 @@ export function MedlemskapsperiodeSkjema({
   setValue,
   errors,
 }: PeriodeElementerProps) {
-  const erPeriodeFraGrunnlag = !formValues.medlemskapsperioder[index]?.redigerbar;
-  const kanViseSletteKolonne = redigerbart && formValues.medlemskapsperioder.length > 1;
+  const medlemskapsperioder = formValues.medlemskapsperioder!;
+  const erPeriodeFraGrunnlag = !medlemskapsperioder[index]?.redigerbar;
+  const kanViseSletteKolonne = redigerbart && medlemskapsperioder.length > 1;
   const tilOgMedDatoForrigePeriode =
-    formValues.medlemskapsperioder[index - 1] !== undefined
-      ? Utils.dato.norskStringTilDate(formValues.medlemskapsperioder[index - 1]?.tomDato)
+    medlemskapsperioder[index - 1] !== undefined
+      ? Utils.dato.norskStringTilDate(medlemskapsperioder[index - 1]?.tomDato)
       : undefined;
   if (tilOgMedDatoForrigePeriode !== undefined) {
     tilOgMedDatoForrigePeriode.setDate(tilOgMedDatoForrigePeriode.getDate() + 1);
@@ -58,7 +59,7 @@ export function MedlemskapsperiodeSkjema({
 
   const kunEnTrygdedekning = trygdedekninger?.length === 1;
 
-  const lastIndex = formValues.medlemskapsperioder.length - 1;
+  const lastIndex = medlemskapsperioder.length - 1;
   let deletableIndex = -1;
 
   if (lastIndex >= 0) {
@@ -69,7 +70,7 @@ export function MedlemskapsperiodeSkjema({
     } else {
       let maxValidTomDatoIndex = -1;
       let maxValidTomDato: Date | null = null;
-      formValues.medlemskapsperioder.forEach((periode, idx) => {
+      medlemskapsperioder.forEach((periode, idx) => {
         const currentTomDato = Utils.dato.norskStringTilDate(periode.tomDato);
         if (currentTomDato && !Number.isNaN(currentTomDato.getTime())) {
           if (maxValidTomDato === null || currentTomDato >= maxValidTomDato) {
@@ -113,7 +114,7 @@ export function MedlemskapsperiodeSkjema({
               control={control}
               name={`medlemskapsperioder[${index}].tomDato`}
               aria-label={`Til og med periode ${index + 1}`}
-              minDate={Utils.dato.norskStringTilDate(formValues.medlemskapsperioder[index].fomDato)}
+              minDate={Utils.dato.norskStringTilDate(medlemskapsperioder[index].fomDato)}
               maxDate={maksVerdi}
               readOnly={!redigerbart || erPeriodeFraGrunnlag}
             />
@@ -146,7 +147,7 @@ export function MedlemskapsperiodeSkjema({
           )}
         </Nav.Row>
       </div>
-      {formValues.medlemskapsperioder.length === index + 1 && (
+      {medlemskapsperioder.length === index + 1 && (
         <div className="legg-til__rad">
           <Mui.Lenkeknapp onClick={handleLeggTil} ikon={Ikoner.Add} disabled={!redigerbart || !visLeggTil}>
             Legg til periode

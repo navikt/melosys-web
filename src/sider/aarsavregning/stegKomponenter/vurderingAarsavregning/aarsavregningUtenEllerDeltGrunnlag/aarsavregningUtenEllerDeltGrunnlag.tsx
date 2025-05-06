@@ -20,6 +20,7 @@ import {
 import { AarsavregningUtenEllerDeltGrunnlagForm } from "./aarsavregningUtenEllerDeltGrunnlagForm";
 
 const { DELVIS_INNVILGET, INNVILGET } = MKV.Koder.innvilgelsesResultat;
+const { OPPLYSNINGER_ENDRET } = MKV.Koder.endeligAvgiftValg;
 
 export const ULAGRET_MEDLEMSKAPSPERIODE_ID = -1;
 
@@ -73,6 +74,8 @@ export interface MedlemskapTomFomDatoer {
 export interface AarsavregningFormValuesProps extends FormValuesProps {
   totaltForskuddsvisFakturert?: number | string;
   bestemmelse?: string;
+  endeligAvgiftValg?: string;
+  manueltAvgiftBeloep?: number;
 }
 
 export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, harDeltGrunnlag }: Props) {
@@ -91,6 +94,8 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
       skatteforholdsperioder: [{}],
       inntektskilder: [{}],
       totaltForskuddsvisFakturert: "",
+      endeligAvgiftValg: undefined,
+      manueltAvgiftBeloep: undefined,
     },
   });
 
@@ -227,6 +232,8 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
             : [DEFAULT_MEDLEMSKAPSPERIODE],
           bestemmelse,
           totaltForskuddsvisFakturert: aarsavregningRes?.avregning?.tidligereFakturertBeloepAvgiftssystem || "",
+          endeligAvgiftValg: aarsavregningRes?.endeligAvgiftValg,
+          manueltAvgiftBeloep: aarsavregningRes?.avregning?.manueltAvgiftBeloep,
           skatteforholdsperioder: mapTilSkatteforholdProps(
             deltGrunnlagAarsavregningHarIkkeNyttGrunnlag
               ? aarsavregningRes?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.skatteforholdsperioder

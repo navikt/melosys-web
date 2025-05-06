@@ -17,7 +17,7 @@ export interface Skatteforhold {
 }
 
 export interface FieldArrayProps {
-  medlemskapsperioder: Medlemskapsperiode[];
+  medlemskapsperioder?: Medlemskapsperiode[];
   inntektskilder: Inntektskilde[];
   skatteforholdsperioder: Skatteforhold[];
 }

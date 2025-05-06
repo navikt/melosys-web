@@ -11,6 +11,7 @@ export interface AarsavregningResponse {
   nyttGrunnlag?: Grunnlagsopplysninger;
   avregning?: Avregning;
   harDeltGrunnlag?: boolean;
+  endeligAvgiftValg?: string;
 }
 
 export interface AarsavregningRequest {
@@ -53,6 +54,7 @@ export interface Avregning {
   tidligereFakturertBeloep?: number;
   tilFaktureringBeloep?: number;
   tidligereFakturertBeloepAvgiftssystem?: number;
+  manueltAvgiftBeloep?: number;
 }
 
 export interface AarsavregningListResponse {
@@ -81,12 +83,14 @@ export const oppdaterHarDeltGrunnlag = (
 ): Promise<AarsavregningResponse> =>
   postAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${AARSAVREGNING}/grunnlagstype`, request);
 
-export const oppdaterAvvik = (
+export const oppdaterEndeligAvgiftValg = (
   behandlingID: number,
-  harAvvik: boolean,
+  endeligAvgiftValg: string,
   aarsavregningID?: number,
 ): Promise<AarsavregningResponse> =>
-  putAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${AARSAVREGNING}/${aarsavregningID}/harAvvik/${harAvvik}`);
+  putAsJson(
+    `${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${AARSAVREGNING}/${aarsavregningID}/endeligAvgift/${endeligAvgiftValg}`,
+  );
 
 export const hentFiltrertAarsavregningList = (
   saksnummer: string,
@@ -111,6 +115,21 @@ export const oppdaterTotalAvgift = async (behandlingID: number, aarsavregningID:
     {
       avregning: {
         nyttTotalbeloep: totalAvgift,
+      },
+    },
+    aarsavregningID,
+  );
+};
+export const oppdaterManueltAvgiftBeloep = async (
+  behandlingID: number,
+  aarsavregningID: number,
+  manueltAvgiftBeloep?: number,
+) => {
+  return oppdaterAarsavregning(
+    behandlingID,
+    {
+      avregning: {
+        manueltAvgiftBeloep,
       },
     },
     aarsavregningID,
