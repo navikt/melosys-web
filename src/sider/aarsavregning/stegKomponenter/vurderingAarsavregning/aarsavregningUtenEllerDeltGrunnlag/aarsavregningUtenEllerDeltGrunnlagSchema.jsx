@@ -18,7 +18,7 @@ const {
   PENSJON_UFØRETRYGD_KILDESKATT,
 } = MKV.Koder.inntektskildetype;
 const UTENFOR_MEDLEMSKAPSPERIODEN = { melding: "Utenfor medlemskapsperiode" };
-const { OPPLYSNINGER_ENDRET, MANUELL_ENDELIG_AVGIFT } = MKV.Koder.aarsavregningBehandlingsvalg;
+const { OPPLYSNINGER_ENDRET, MANUELL_ENDELIG_AVGIFT } = MKV.Koder.endeligAvgiftValg;
 
 export const arbAvgBetalesKreves = (kildetype, medlemskapsTypeErPliktig) =>
   !medlemskapsTypeErPliktig && kildetype !== MISJONÆR;
@@ -116,9 +116,9 @@ const erInnenforMedlemskapsperiodeTest = {
 
 const aarsavregningUtenEllerDeltGrunnlagSchema = object().shape({
   bestemmelse: string().required(MAA_FYLLES_UT),
-  behandlingsvalg: string().required(MAA_FYLLES_UT),
-  medlemskapsperioder: array().when(["behandlingsvalg"], {
-    is: (behandlingsvalg) => behandlingsvalg === OPPLYSNINGER_ENDRET,
+  endeligAvgiftValg: string().required(MAA_FYLLES_UT),
+  medlemskapsperioder: array().when(["endeligAvgiftValg"], {
+    is: (endeligAvgiftValg) => endeligAvgiftValg === OPPLYSNINGER_ENDRET,
     then: array()
       .min(1, "Minst en medlemskapsperiode")
       .of(
@@ -136,8 +136,8 @@ const aarsavregningUtenEllerDeltGrunnlagSchema = object().shape({
     otherwise: array(),
   }),
   totaltForskuddsvisFakturert: string().nullable().required(MAA_FYLLES_UT),
-  skatteforholdsperioder: array().when(["behandlingsvalg"], {
-    is: (behandlingsvalg) => behandlingsvalg === OPPLYSNINGER_ENDRET,
+  skatteforholdsperioder: array().when(["endeligAvgiftValg"], {
+    is: (endeligAvgiftValg) => endeligAvgiftValg === OPPLYSNINGER_ENDRET,
     then: array()
       .min(1, "Minst en skatteforholdsperiode")
       .of(
@@ -159,9 +159,9 @@ const aarsavregningUtenEllerDeltGrunnlagSchema = object().shape({
       ),
     otherwise: array(),
   }),
-  inntektskilder: array().when(["medlemskapsperioder", "skatteforholdsperioder", "behandlingsvalg"], {
-    is: (medlemskapsperioder, skatteforholdsperioder, behandlingsvalg) => {
-      if (behandlingsvalg !== OPPLYSNINGER_ENDRET) return false;
+  inntektskilder: array().when(["medlemskapsperioder", "skatteforholdsperioder", "endeligAvgiftValg"], {
+    is: (medlemskapsperioder, skatteforholdsperioder, endeligAvgiftValg) => {
+      if (endeligAvgiftValg !== OPPLYSNINGER_ENDRET) return false;
       const medlemskapsTypeErPliktig = erMedlemskapsTypePliktig(medlemskapsperioder);
 
       return !(medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(skatteforholdsperioder));
@@ -183,8 +183,8 @@ const aarsavregningUtenEllerDeltGrunnlagSchema = object().shape({
       ),
     otherwise: array(),
   }),
-  manueltAvgiftBeloep: string().when(["behandlingsvalg"], {
-    is: (behandlingsvalg) => behandlingsvalg === MANUELL_ENDELIG_AVGIFT,
+  manueltAvgiftBeloep: string().when(["endeligAvgiftValg"], {
+    is: (endeligAvgiftValg) => endeligAvgiftValg === MANUELL_ENDELIG_AVGIFT,
     then: string().required(MAA_FYLLES_UT),
     otherwise: string().nullable(),
   }),

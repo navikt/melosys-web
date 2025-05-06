@@ -43,7 +43,7 @@ const mapMedlemskapsperiodeBestemmelse = (harDeltGrunnlag: boolean, medlemskapsp
 };
 
 export interface AarsavregningMedGrunnlagFormValues extends FormValuesProps {
-  behandlingsvalg?: string;
+  endeligAvgiftValg?: string;
   manueltAvgiftBeloep?: number;
 }
 
@@ -67,7 +67,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
     formDefaultValues: {
       skatteforholdsperioder: [{}],
       inntektskilder: [{}],
-      behandlingsvalg: undefined,
+      endeligAvgiftValg: undefined,
       manueltAvgiftBeloep: undefined,
     },
     medlemskapstypeErPliktig: false,
@@ -79,14 +79,14 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
 
   const mapSkjemaverdierFraTrygdeavgiftsgrunnlag = (
     trygdeavgiftsgrunnlag?: Trygdeavgiftsgrunnlag,
-    behandlingsvalg?: string,
+    endeligAvgiftValg?: string,
     manueltAvgiftBeloep?: number,
   ) => {
     if (!trygdeavgiftsgrunnlag)
       return {
         skatteforholdsperioder: [{}],
         inntektskilder: [{}],
-        behandlingsvalg: undefined,
+        endeligAvgiftValg: undefined,
         manueltAvgiftBeloep: undefined,
       };
     const { inntektskperioder, skatteforholdsperioder } = trygdeavgiftsgrunnlag;
@@ -94,7 +94,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
     const sorterteSkatteforhold = [...skatteforholdsperioder].sort(Utils.dato.sorterEtterISOFomDato);
 
     return {
-      behandlingsvalg,
+      endeligAvgiftValg,
       manueltAvgiftBeloep,
       skatteforholdsperioder: !Utils._isEmpty(sorterteSkatteforhold)
         ? mapTilSkatteforholdProps(sorterteSkatteforhold)
@@ -121,7 +121,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
           const defaultFormValues: FieldValue<AarsavregningMedGrunnlagFormValues> =
             mapSkjemaverdierFraTrygdeavgiftsgrunnlag(
               res?.nyttGrunnlag?.trygdeavgiftsgrunnlag || res.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag,
-              res.behandlingsvalg,
+              res.endeligAvgiftValg,
               res?.avregning?.manueltAvgiftBeloep,
             );
 

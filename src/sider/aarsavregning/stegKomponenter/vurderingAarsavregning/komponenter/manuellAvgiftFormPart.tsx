@@ -4,12 +4,12 @@ import MKV from "../../../../../melosyskodeverk";
 import { SumArsavregningTabell } from "./sumArsavregningTabell";
 import { TidligereFakturertIAvgiftssystemetInput } from "./tidligereFakturertIAvgiftssystemetInput";
 
-const { MANUELL_ENDELIG_AVGIFT } = MKV.Koder.aarsavregningBehandlingsvalg;
+const { MANUELL_ENDELIG_AVGIFT } = MKV.Koder.endeligAvgiftValg;
 
 interface ManuellAvgiftFormPartProps {
   control: Control<any>;
   redigerbart: boolean;
-  behandlingsvalg: string;
+  endeligAvgiftValg: string;
   manueltAvgiftBeloep?: number | string;
   debouncedOppdaterManueltAvgiftBeloep: (value: string) => void;
   tidligereTrygdeavgift?: number;
@@ -21,7 +21,7 @@ interface ManuellAvgiftFormPartProps {
 export function ManuellAvgiftFormPart({
   control,
   redigerbart,
-  behandlingsvalg,
+  endeligAvgiftValg,
   manueltAvgiftBeloep,
   debouncedOppdaterManueltAvgiftBeloep,
   tidligereTrygdeavgift,
@@ -29,7 +29,7 @@ export function ManuellAvgiftFormPart({
   harDeltGrunnlag,
   totaltForskuddsvisFakturert,
 }: ManuellAvgiftFormPartProps) {
-  if (behandlingsvalg !== MANUELL_ENDELIG_AVGIFT) {
+  if (endeligAvgiftValg !== MANUELL_ENDELIG_AVGIFT) {
     return null;
   }
 
@@ -62,7 +62,7 @@ export function ManuellAvgiftFormPart({
 
       {manueltAvgiftBeloep !== undefined && manueltAvgiftBeloep !== null && manueltAvgiftBeloep !== "" && (
         <SumArsavregningTabell
-          harGrunnlagIMelosys={harDeltGrunnlag}
+          harGrunnlagIMelosys={erMedGrunnlagFlyt}
           nyTrygdeavgift={Number(manueltAvgiftBeloep)}
           tidligereTrygdeavgift={tidligereTrygdeavgift}
           tidligereTrygdeavgiftAvgiftssystem={tidligereTrygdeavgiftAvgiftssystem}

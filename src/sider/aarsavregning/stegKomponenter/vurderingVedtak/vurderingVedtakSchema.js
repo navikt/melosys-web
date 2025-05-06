@@ -20,8 +20,8 @@ const vurdering_vedtak = object().shape({
           name: "begrunnelse-required-manuell",
           message: DU_MAA_OPPGI_BEGRUNNELSE_FOR_ENDELIG_TRYGDEAVGIFT,
           test(value) {
-            const { behandlingsvalg } = this.options.context || {};
-            if (behandlingsvalg === MKV.Koder.aarsavregningBehandlingsvalg.MANUELL_ENDELIG_AVGIFT) {
+            const { endeligAvgiftValg } = this.options.context || {};
+            if (endeligAvgiftValg === MKV.Koder.endeligAvgiftValg.MANUELL_ENDELIG_AVGIFT) {
               return !!value; // Required if MANUELL_ENDELIG_AVGIFT
             }
             return true;

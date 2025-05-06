@@ -15,7 +15,7 @@ const {
   PENSJON_UFØRETRYGD,
   PENSJON_UFØRETRYGD_KILDESKATT,
 } = MKV.Koder.inntektskildetype;
-const { OPPLYSNINGER_ENDRET, OPPLYSNINGER_UENDRET, MANUELL_ENDELIG_AVGIFT } = MKV.Koder.aarsavregningBehandlingsvalg;
+const { OPPLYSNINGER_ENDRET, MANUELL_ENDELIG_AVGIFT } = MKV.Koder.endeligAvgiftValg;
 const UTENFOR_MEDLEMSKAPSPERIODEN = { melding: "Utenfor medl.periode" };
 
 export const arbAvgBetalesKreves = (kildetype, medlemskapsTypeErPliktig) =>
@@ -101,24 +101,24 @@ const inntektskildeSchema = object().shape({
 });
 
 const aarsavregningMedGrunnlagSchema = object().shape({
-  behandlingsvalg: string().required(MAA_FYLLES_UT),
-  skatteforholdsperioder: array().when(["behandlingsvalg"], {
-    is: (behandlingsvalg) => behandlingsvalg === OPPLYSNINGER_ENDRET,
+  endeligAvgiftValg: string().required(MAA_FYLLES_UT),
+  skatteforholdsperioder: array().when(["endeligAvgiftValg"], {
+    is: (endeligAvgiftValg) => endeligAvgiftValg === OPPLYSNINGER_ENDRET,
     then: array().min(1, "Minst en skatteforholdsperiode").of(skatteforholdsperiodeSchema),
     otherwise: array(),
   }),
-  inntektskilder: array().when(["$medlemskapsTypeErPliktig", "behandlingsvalg", "skatteforholdsperioder"], {
-    is: (medlemskapsTypeErPliktig, behandlingsvalg, skatteforholdsperioder) => {
+  inntektskilder: array().when(["$medlemskapsTypeErPliktig", "endeligAvgiftValg", "skatteforholdsperioder"], {
+    is: (medlemskapsTypeErPliktig, endeligAvgiftValg, skatteforholdsperioder) => {
       return (
-        behandlingsvalg === OPPLYSNINGER_ENDRET &&
+        endeligAvgiftValg === OPPLYSNINGER_ENDRET &&
         (!medlemskapsTypeErPliktig || !erBrukerSkattepliktigIHelePerioden(skatteforholdsperioder))
       );
     },
     then: array().min(1, "Minst en inntektskilde").of(inntektskildeSchema),
     otherwise: array(),
   }),
-  manueltAvgiftBeloep: string().when(["behandlingsvalg"], {
-    is: (behandlingsvalg) => behandlingsvalg === MANUELL_ENDELIG_AVGIFT,
+  manueltAvgiftBeloep: string().when(["endeligAvgiftValg"], {
+    is: (endeligAvgiftValg) => endeligAvgiftValg === MANUELL_ENDELIG_AVGIFT,
     then: string().required(MAA_FYLLES_UT),
   }),
 });

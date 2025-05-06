@@ -32,7 +32,7 @@ const { FØRSTEGANGSVEDTAK } = MKV.Koder.vedtakstyper;
 const { AARSAVREGNING_VEDTAKSBREV } = MKV.Koder.brev.produserbaredokumenter;
 const { FULLMEKTIG_TRYGDEAVGIFT } = MKV.Koder.fullmaktstype;
 const { FULLMEKTIG } = MKV.Koder.aktoersroller;
-const { MANUELL_ENDELIG_AVGIFT } = MKV.Koder.aarsavregningBehandlingsvalg;
+const { MANUELL_ENDELIG_AVGIFT } = MKV.Koder.endeligAvgiftValg;
 
 interface FormValuesProps {
   innledningFritekst?: string;
@@ -90,7 +90,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
     formState: { isValid: formIsValid },
   } = useForm<FormValuesProps>({
     resolver: yupResolver(vurdering_vedtak),
-    context: { behandlingsvalg: lagretAarsavregning?.behandlingsvalg },
+    context: { endeligAvgiftValg: lagretAarsavregning?.endeligAvgiftValg },
     mode: "onSubmit",
     reValidateMode: "onChange",
   });
@@ -327,7 +327,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   const tidligereTrygdeavgift = lagretAarsavregning?.avregning?.tidligereFakturertBeloep;
   const tidligereTrygdeavgiftAvgiftssystem = lagretAarsavregning?.avregning?.tidligereFakturertBeloepAvgiftssystem;
   const nyTrygdeavgift =
-    lagretAarsavregning?.behandlingsvalg === MANUELL_ENDELIG_AVGIFT
+    lagretAarsavregning?.endeligAvgiftValg === MANUELL_ENDELIG_AVGIFT
       ? lagretAarsavregning?.avregning?.manueltAvgiftBeloep
       : lagretAarsavregning?.avregning?.nyttTotalbeloep;
 
@@ -348,7 +348,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
         Vedtak årsavregning {lagretAarsavregning ? lagretAarsavregning.aar : ""}
       </Nav.Heading>
 
-      {lagretAarsavregning?.behandlingsvalg === MANUELL_ENDELIG_AVGIFT && (
+      {lagretAarsavregning?.endeligAvgiftValg === MANUELL_ENDELIG_AVGIFT && (
         <Nav.Alert variant="warning" className="blokk-s">
           Du har lagt inn &quot;Endelig beregnet trygdeavgift&quot; manuelt og må derfor oppgi en begrunnelse i
           fritekstfeltet.

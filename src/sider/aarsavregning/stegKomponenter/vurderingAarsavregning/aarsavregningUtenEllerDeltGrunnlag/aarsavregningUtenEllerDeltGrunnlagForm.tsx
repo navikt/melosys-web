@@ -40,10 +40,10 @@ import {
 } from "./aarsavregningUtenEllerDeltGrunnlag";
 import aarsavregningUtenEllerDeltGrunnlagSchema from "./aarsavregningUtenEllerDeltGrunnlagSchema";
 import { Feilmelding, finnAktivFeilmelding, finnAktivFeilmeldingForMedlemskapsperioder } from "./valideringsfeil";
-import { BehandlingsvalgRadioGroup } from "../komponenter/behandlingsvalgRadioGroup";
 import { ManuellAvgiftFormPart } from "../komponenter/manuellAvgiftFormPart";
+import { EndeligAvgiftValgRadioGroup } from "../komponenter/endeligAvgiftValgRadioGroup";
 
-const { OPPLYSNINGER_ENDRET, MANUELL_ENDELIG_AVGIFT } = MKV.Koder.aarsavregningBehandlingsvalg;
+const { OPPLYSNINGER_ENDRET, MANUELL_ENDELIG_AVGIFT } = MKV.Koder.endeligAvgiftValg;
 
 // Helper function to log and return changed dependencies
 const getChangedDependencies = (currentDeps: Record<string, any>, previousDepsRef: React.MutableRefObject<any>) => {
@@ -156,7 +156,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   const totaltForskuddsvisFakturert = useWatch({ control, name: "totaltForskuddsvisFakturert" });
   const skatteforholdsperioder = useWatch({ control, name: "skatteforholdsperioder" });
   const inntektskilder = useWatch({ control, name: "inntektskilder" });
-  const behandlingsvalg = useWatch({ control, name: "behandlingsvalg" });
+  const endeligAvgiftValg = useWatch({ control, name: "endeligAvgiftValg" });
   const manueltAvgiftBeloep = useWatch({ control, name: "manueltAvgiftBeloep" });
 
   const debouncedBeregningRef = useRef<any>(null);
@@ -296,7 +296,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       endrerBestemmelse ||
       beregningPaagar ||
       lagreMedlemskapsperioderPaagar ||
-      behandlingsvalg !== OPPLYSNINGER_ENDRET
+      endeligAvgiftValg !== OPPLYSNINGER_ENDRET
     ) {
       console.log("[debouncedBeregning] return tidlig i debouncedBeregning");
       return;
@@ -354,7 +354,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     previousFormState,
     lagreMedlemskapsperioderPaagar,
     finnMedlemskapsperiode,
-    behandlingsvalg,
+    endeligAvgiftValg,
   ]);
 
   const lagreMedlemskapsperioder = useCallback(
@@ -569,7 +569,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
 
   // Håndterer kjøring av beregninger når skjemaverdier endres
   useEffect(() => {
-    if (behandlingsvalg !== OPPLYSNINGER_ENDRET) {
+    if (endeligAvgiftValg !== OPPLYSNINGER_ENDRET) {
       setDebouncedBeregningPagaar(false);
       setArrayValideringsfeil(undefined);
       if (debouncedBeregningRef.current?.cancel) {
@@ -585,7 +585,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       lagreMedlemskapsperioderPaagar,
       endrerBestemmelse,
       totaltForskuddsvisFakturert,
-      behandlingsvalg,
+      endeligAvgiftValg,
       aarsavregningID,
       redigerbart,
       beregningPaagar,
@@ -675,7 +675,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     lagreMedlemskapsperioderPaagar,
     endrerBestemmelse,
     totaltForskuddsvisFakturert,
-    behandlingsvalg,
+    endeligAvgiftValg,
     aarsavregningID,
     redigerbart,
     beregningPaagar,
@@ -686,7 +686,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   ]);
 
   const stegErGyldig = useMemo(() => {
-    if (behandlingsvalg === OPPLYSNINGER_ENDRET) {
+    if (endeligAvgiftValg === OPPLYSNINGER_ENDRET) {
       return Boolean(
         formIsValid &&
           aarsavregningResponse?.nyttGrunnlag &&
@@ -694,7 +694,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
           arrayValideringsfeil === undefined,
       );
     }
-    if (behandlingsvalg === MANUELL_ENDELIG_AVGIFT) {
+    if (endeligAvgiftValg === MANUELL_ENDELIG_AVGIFT) {
       return Boolean(
         formIsValid &&
           aarsavregningResponse?.avregning?.tidligereFakturertBeloepAvgiftssystem &&
@@ -708,7 +708,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     aarsavregningResponse?.nyttGrunnlag,
     aarsavregningResponse?.avregning?.manueltAvgiftBeloep,
     feilmelding,
-    behandlingsvalg,
+    endeligAvgiftValg,
     arrayValideringsfeil,
   ]);
 
@@ -716,14 +716,16 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     oppdaterStatus(stegErGyldig);
   }, [stegErGyldig, oppdaterStatus]);
 
-  const handleBehandlingsvalgChange = useCallback(
+  const handleEndeligAvgiftValgChange = useCallback(
     (value: string) => {
-      Api.Aarsavregning.oppdaterBehandlingsvalg(behandlingID, value, aarsavregningID).then((res) => {
-        setAarsavregningResponse(res);
-        if (value !== MANUELL_ENDELIG_AVGIFT) {
-          setValue("manueltAvgiftBeloep", "", { shouldValidate: false, shouldDirty: false });
+      Api.Aarsavregning.oppdaterEndeligAvgiftValg(behandlingID, value, aarsavregningID).then((res) => {
+        if (res) {
+          setAarsavregningResponse(res);
+          if (value !== MANUELL_ENDELIG_AVGIFT) {
+            setValue("manueltAvgiftBeloep", "", { shouldValidate: false, shouldDirty: false });
+          }
+          setPreviousFormState(null);
         }
-        setPreviousFormState(null);
       });
     },
     [aarsavregningID, behandlingID, setValue],
@@ -787,14 +789,14 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         </>
       )}
 
-      <BehandlingsvalgRadioGroup
+      <EndeligAvgiftValgRadioGroup
         control={control}
         redigerbart={skjemaErRedigerbart}
-        handleBehandlingsvalgChange={handleBehandlingsvalgChange}
+        handleEndeligAvgiftValgChange={handleEndeligAvgiftValgChange}
         erMedGrunnlagFlyt={false}
       />
 
-      {behandlingsvalg === OPPLYSNINGER_ENDRET && (
+      {endeligAvgiftValg === OPPLYSNINGER_ENDRET && (
         <>
           <TidligereFakturertIAvgiftssystemetInput
             control={control}
@@ -909,7 +911,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       <ManuellAvgiftFormPart
         control={control}
         redigerbart={redigerbart}
-        behandlingsvalg={behandlingsvalg}
+        endeligAvgiftValg={endeligAvgiftValg}
         manueltAvgiftBeloep={manueltAvgiftBeloep}
         debouncedOppdaterManueltAvgiftBeloep={debouncedOppdaterManueltAvgiftBeloep}
         tidligereTrygdeavgift={aarsavregningResponse?.avregning?.tidligereFakturertBeloep}

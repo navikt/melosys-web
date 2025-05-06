@@ -3,21 +3,21 @@ import * as Forms from "../../../../../felleskomponenter/forms";
 import MKV from "../../../../../melosyskodeverk";
 import * as Nav from "../../../../../navFrontend";
 
-const { OPPLYSNINGER_ENDRET, OPPLYSNINGER_UENDRET, MANUELL_ENDELIG_AVGIFT } = MKV.Koder.aarsavregningBehandlingsvalg;
+const { OPPLYSNINGER_ENDRET, OPPLYSNINGER_UENDRET, MANUELL_ENDELIG_AVGIFT } = MKV.Koder.endeligAvgiftValg;
 
-interface BehandlingsvalgRadioGroupProps {
+interface EndeligAvgiftValgRadioGroupProps {
   control: Control<any>;
   redigerbart: boolean;
-  handleBehandlingsvalgChange: (value: string) => void;
+  handleEndeligAvgiftValgChange: (value: string) => void;
   erMedGrunnlagFlyt: boolean;
 }
 
-export function BehandlingsvalgRadioGroup({
+export function EndeligAvgiftValgRadioGroup({
   control,
   redigerbart,
-  handleBehandlingsvalgChange,
+  handleEndeligAvgiftValgChange,
   erMedGrunnlagFlyt,
-}: BehandlingsvalgRadioGroupProps) {
+}: EndeligAvgiftValgRadioGroupProps) {
   const radioOptions = [
     {
       value: OPPLYSNINGER_ENDRET,
@@ -33,7 +33,7 @@ export function BehandlingsvalgRadioGroup({
     },
     {
       value: MANUELL_ENDELIG_AVGIFT,
-      label: <b>{erMedGrunnlagFlyt ? "Jeg skal gjøre endringer." : "Jeg skal oppgi endelig avgift."}</b>,
+      label: <b>Jeg skal oppgi endelig avgift selv.</b>,
       description: " Endelig trygdeavgift er manuelt beregnet utenfor Melosys",
     },
   ];
@@ -44,14 +44,14 @@ export function BehandlingsvalgRadioGroup({
 
   return (
     <Forms.RadioGroup
-      name="behandlingsvalg"
+      name="endeligAvgiftValg"
       control={control}
       legend="Hva ønsker du å gjøre?"
       readOnly={!redigerbart}
       onChange={(value) => {
-        handleBehandlingsvalgChange(value);
+        handleEndeligAvgiftValgChange(value);
       }}
-      className="behandlingsvalg_radio_group"
+      className="endeligAvgiftValg_radio_group"
     >
       {filteredOptions.map((option) => (
         <Nav.Radio key={option.value} value={option.value}>
@@ -61,4 +61,4 @@ export function BehandlingsvalgRadioGroup({
       ))}
     </Forms.RadioGroup>
   );
-}
+} 
