@@ -12,7 +12,7 @@ import Vedtakstype from "./vedtakstype";
 import FellesInputFnrDnrOrgnrSaksnr from "./input/fellesInputFnrDnrOrgnrSaksnr";
 import RadioGroup from "./input/radioGroup";
 
-import { CustomRadioPanelGruppe, CustomRadioPanelElement } from "./customRadioPanelGruppe";
+import { CustomRadioPanelGruppe } from "./customRadioPanelGruppe";
 import { Fieldset } from "../../navFrontend";
 
 import * as Validering from "./validering";
@@ -31,7 +31,6 @@ export {
   FellesInputFnrDnrOrgnrSaksnr,
   Vedtakstype,
   CustomRadioPanelGruppe,
-  CustomRadioPanelElement,
   Fieldset,
   Validering,
   RadioGroup,

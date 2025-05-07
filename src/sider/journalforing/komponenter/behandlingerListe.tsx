@@ -1,0 +1,58 @@
+import { useState } from "react";
+import { BehandlingsstatusMedSvarfrist } from "../../../felleskomponenter/behandlingsstatus";
+import { KTObject } from "@navikt/melosys-kodeverk";
+import "./behandlingerListe.less";
+import { HStack, VStack } from "@navikt/ds-react";
+import ChevronKnapp from "../../../felleskomponenter/chevronKnapp/chevronKnapp";
+
+interface BehandlingForFagsak {
+  behandlingID: string;
+  behandlingsstatus: KTObject;
+  svarFrist: string | null;
+  behandlingstype: KTObject;
+}
+
+interface BehandlingerListeProps {
+  behandlingerForFagsak: BehandlingForFagsak[];
+}
+
+function BehandlingerListe({ behandlingerForFagsak }: BehandlingerListeProps) {
+  const [showAllBehandlinger, setShowAllBehandlinger] = useState<boolean>(false);
+
+  const pågåendeBehandlinger = behandlingerForFagsak.filter(
+    (behandling) => behandling.behandlingsstatus?.kode !== "AVSLUTTET",
+  );
+
+  const alleBehandlingerErAvsluttet = pågåendeBehandlinger.length === 0;
+  const initialBehandlinger = alleBehandlingerErAvsluttet
+    ? [behandlingerForFagsak[behandlingerForFagsak.length - 1]]
+    : pågåendeBehandlinger;
+
+  const behandlingerToShow = showAllBehandlinger ? behandlingerForFagsak : initialBehandlinger;
+
+  return (
+    <VStack>
+      <div className="behandlinger-liste">
+        {behandlingerToShow.map((behandling) => (
+          <HStack justify="space-between" paddingInline="3 3" paddingBlock="2 1">
+            <div className="behandling-tittel">{behandling.behandlingstype.term}</div>
+            <BehandlingsstatusMedSvarfrist
+              behandlingsstatus={behandling.behandlingsstatus}
+              svarFrist={behandling.svarFrist || null}
+            />
+          </HStack>
+        ))}
+
+        <div className="toggle-button-container">
+          <ChevronKnapp
+            expanded={showAllBehandlinger}
+            onChange={() => setShowAllBehandlinger(!showAllBehandlinger)}
+            label={showAllBehandlinger ? "Skjul avsluttede behandlinger" : "Vis avsluttede behandlinger"}
+          />
+        </div>
+      </div>
+    </VStack>
+  );
+}
+
+export default BehandlingerListe;
