@@ -16,22 +16,6 @@ interface BehandlingerListeProps {
   behandlingerForFagsak: BehandlingForFagsak[];
 }
 
-interface BehandlingRadProps {
-  behandling: BehandlingForFagsak;
-}
-
-function BehandlingRad({ behandling }: BehandlingRadProps) {
-  return (
-    <HStack justify="space-between" paddingInline="3 3" paddingBlock="1 1">
-      <div className="behandling-tittel">{behandling.behandlingstype.term}</div>
-      <BehandlingsstatusMedSvarfrist
-        behandlingsstatus={behandling.behandlingsstatus}
-        svarFrist={behandling.svarFrist || null}
-      />
-    </HStack>
-  );
-}
-
 function BehandlingerListe({ behandlingerForFagsak }: BehandlingerListeProps) {
   const [showAllBehandlinger, setShowAllBehandlinger] = useState<boolean>(false);
 
@@ -50,7 +34,13 @@ function BehandlingerListe({ behandlingerForFagsak }: BehandlingerListeProps) {
     <VStack>
       <div className="behandlinger-liste">
         {behandlingerToShow.map((behandling) => (
-          <BehandlingRad key={behandling.behandlingID} behandling={behandling} />
+          <HStack justify="space-between" paddingInline="3 3" paddingBlock="1 1">
+            <div className="behandling-tittel">{behandling.behandlingstype.term}</div>
+            <BehandlingsstatusMedSvarfrist
+              behandlingsstatus={behandling.behandlingsstatus}
+              svarFrist={behandling.svarFrist || null}
+            />
+          </HStack>
         ))}
 
         <div className="toggle-button-container">
