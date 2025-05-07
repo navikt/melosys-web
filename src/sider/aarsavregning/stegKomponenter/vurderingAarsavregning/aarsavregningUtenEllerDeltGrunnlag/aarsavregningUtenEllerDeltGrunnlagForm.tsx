@@ -695,22 +695,10 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       );
     }
     if (endeligAvgiftValg === MANUELL_ENDELIG_AVGIFT) {
-      return Boolean(
-        formIsValid &&
-          aarsavregningResponse?.avregning?.tidligereFakturertBeloepAvgiftssystem &&
-          aarsavregningResponse?.avregning?.manueltAvgiftBeloep &&
-          feilmelding === undefined,
-      );
+      return Boolean(formIsValid && feilmelding === undefined);
     }
     return false;
-  }, [
-    formIsValid,
-    aarsavregningResponse?.nyttGrunnlag,
-    aarsavregningResponse?.avregning?.manueltAvgiftBeloep,
-    feilmelding,
-    endeligAvgiftValg,
-    arrayValideringsfeil,
-  ]);
+  }, [formIsValid, aarsavregningResponse?.nyttGrunnlag, feilmelding, endeligAvgiftValg, arrayValideringsfeil]);
 
   useEffect(() => {
     oppdaterStatus(stegErGyldig);
