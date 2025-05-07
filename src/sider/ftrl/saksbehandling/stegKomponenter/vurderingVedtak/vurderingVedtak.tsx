@@ -135,10 +135,8 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
     ...Object.values(MKV.KTObjects.vertslandsavtale_bestemmelser),
   ] as string[];
 
-
   const visFakturaMottaker = betalingsvalgErFaktura || (fakturamottaker && !erIkkeYrkesaktiv && !erPensjonist);
   const visBetalingsvalg = erFørstegang && erPensjonist && !mottakerErSkatt;
-
 
   const erPensjonistToggleEnabled = useFeatureToggle(MELOSYS_PENSJONIST);
 
