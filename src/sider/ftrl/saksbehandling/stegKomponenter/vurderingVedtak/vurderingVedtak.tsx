@@ -39,6 +39,7 @@ import { TrygdeavgiftMottaker } from "./trygdeavgiftMottaker/trygdeavgiftMottake
 import { Betalingsvalg } from "./betalingsvalg/betalingsvalg";
 import useFeatureToggle from "../../../../../featuretoggle/useFeatureToggle";
 import { MELOSYS_PENSJONIST } from "../../../../../featuretoggle/toggleNavn";
+import { tr } from "date-fns/locale";
 
 const { FØRSTEGANG, NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT, SATSENDRING } =
   MKV.Koder.behandlinger.behandlingstyper;
@@ -47,6 +48,7 @@ const { OPPHØRT } = MKV.Koder.innvilgelsesResultat;
 const { OPPHØRSVEDTAK, FØRSTEGANGSVEDTAK, ENDRINGSVEDTAK } = MKV.Koder.vedtakstyper;
 const { FULLMEKTIG_TRYGDEAVGIFT } = MKV.Koder.fullmaktstype;
 const { FULLMEKTIG } = MKV.Koder.aktoersroller;
+const { TRYGDEAVGIFT_BETALES_TIL_SKATT } = MKV.Koder.trygdeavgiftmottaker;
 const {
   INNVILGELSE_FOLKETRYGDLOVEN,
   VEDTAK_OPPHOERT_MEDLEMSKAP,
@@ -127,6 +129,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   const erPensjonist = behandlingstema === PENSJONIST;
   const medlemskapsTypeErPliktig = medlemskapsperioder.some((periode) => periode.medlemskapstype === PLIKTIG);
   const betalingsvalgErFaktura = betalingsvalg === MKV.Koder.betalingstype.FAKTURA;
+  const mottakerErSkatt = trygdeavgiftMottaker?.kode === TRYGDEAVGIFT_BETALES_TIL_SKATT;
   const bestemmelserkodeverk: string[] = [
     ...Object.values(MKV.KTObjects.folketrygdloven_kap2_bestemmelser),
     ...Object.values(MKV.KTObjects.vertslandsavtale_bestemmelser),
@@ -135,7 +138,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   const erPensjonistMedTrekk = erPensjonist && !betalingsvalgErFaktura;
 
   const visFakturaMottaker = betalingsvalgErFaktura || (fakturamottaker && !erIkkeYrkesaktiv && !erPensjonist);
-  const visBetalingsvalg = erFørstegang && erPensjonist;
+  const visBetalingsvalg = erFørstegang && erPensjonist && !mottakerErSkatt;
 
   const erPensjonistToggleEnabled = useFeatureToggle(MELOSYS_PENSJONIST);
 
@@ -333,7 +336,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   const onSubmit = async () => {
     setVedtakPending(true);
     if (mottatteOpplysningerErGyldig()) {
-      if (erPensjonist && erPensjonistToggleEnabled) {
+      if (visBetalingsvalg && erPensjonistToggleEnabled) {
         await Api.Avklartefakta.lagreBetalingsvalgForPensjonister(behandlingID, betalingsvalg);
       }
 
@@ -402,7 +405,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
     formIsValid &&
     Utils._isEmpty(feilmeldinger) &&
     Utils._isEmpty(kontrollfeil) &&
-    (!harFullmaktForTrygdeavgift || erPensjonistMedTrekk || harBekreftetFullmaktForTrygdeavgift);
+    (!harFullmaktForTrygdeavgift || harBekreftetFullmaktForTrygdeavgift);
 
   const oppdaterBetalingsvalg = () => {
     const valg =
