@@ -58,7 +58,7 @@ function EnkeltSak(props) {
         </Nav.Link>
       </HStack>
       <div>
-        <BehandlingerListe behandlingOversikter={behandlingOversikter} />
+        <BehandlingerListe behandlingerForFagsak={behandlingOversikter} />
       </div>
     </VStack>
   );
