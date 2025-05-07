@@ -39,6 +39,7 @@ import { alleStegManglendeInnbetalingFlyt } from "./stegLister/stegListeManglend
 import { fakturaserierOperations } from "../../../ducks/fakturaserier";
 import { alleStegIkkeYrkesaktivFlyt } from "./stegLister/stegListeIkkeYrkesaktivFlyt";
 import { alleStegPensjonistFlyt } from "./stegLister/stegListePensjonistFlyt";
+import { alleStegPensjonistManglendeInnbetalingFlyt } from "./stegLister/stegListePensjonistManglendeInnbetalingFlyt";
 
 const mapStateToProps = (state: RootState) => ({
   arbeidsland: mottatteOpplysningerSelectors.SoknadslandkoderSelector(state),
@@ -222,9 +223,18 @@ function Saksbehandling({
     if (behandlingstema === MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV) {
       return alleStegIkkeYrkesaktivFlyt;
     }
+
+    if (
+      behandlingstema === MKV.Koder.behandlinger.behandlingstema.PENSJONIST &&
+      behandlingstype === MKV.Koder.behandlinger.behandlingstyper.MANGLENDE_INNBETALING_TRYGDEAVGIFT
+    ) {
+      return alleStegPensjonistManglendeInnbetalingFlyt;
+    }
+
     if (behandlingstype === MKV.Koder.behandlinger.behandlingstyper.MANGLENDE_INNBETALING_TRYGDEAVGIFT) {
       return alleStegManglendeInnbetalingFlyt;
     }
+
     if (behandlingstema === MKV.Koder.behandlinger.behandlingstema.PENSJONIST) {
       return alleStegPensjonistFlyt;
     }

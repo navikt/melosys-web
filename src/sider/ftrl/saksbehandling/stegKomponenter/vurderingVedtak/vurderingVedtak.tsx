@@ -134,7 +134,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
 
   const erPensjonistMedTrekk = erPensjonist && !betalingsvalgErFaktura;
 
-  const visFakturaMottaker = betalingsvalgErFaktura || (fakturamottaker && !erIkkeYrkesaktiv && !erPensjonist);
+  const visFakturaMottaker = betalingsvalgErFaktura || (fakturamottaker && !erIkkeYrkesaktiv && erPensjonist);
   const visBetalingsvalg = erFørstegang && erPensjonist;
 
   const erPensjonistToggleEnabled = useFeatureToggle(MELOSYS_PENSJONIST);
