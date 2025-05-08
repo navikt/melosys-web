@@ -52,10 +52,18 @@ export function NyVurderingMelding() {
 export function NyBehandlingForTidligereAarsavregningMelding() {
   return (
     <Nav.Alert variant="warning" className="nyVurderingMelding">
-      <Nav.Heading size="small">Ny behandling for en tidligere årsavregning</Nav.Heading>
+      <Nav.Heading size="xsmall">Ny behandling for en tidligere årsavregning</Nav.Heading>
       <Nav.BodyLong size="small">
         Du har startet en ny årsavregningbehandling for et tidligere årsavregnet år
       </Nav.BodyLong>
+    </Nav.Alert>
+  );
+}
+
+export function AktivAarsavregningPaaValgtAarMelding(aar: number) {
+  return (
+    <Nav.Alert variant="error">
+      <Nav.BodyLong size="small">Året {aar} har allerede en aktiv årsavregning.</Nav.BodyLong>
     </Nav.Alert>
   );
 }
