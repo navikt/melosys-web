@@ -518,9 +518,12 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     request: Api.Aarsavregning.AarsavregningRequest,
     aarsavregningid?: number,
   ) => {
-    await Api.Aarsavregning.oppdaterAarsavregning(behandlingid, request, aarsavregningid).then(
-      setAarsavregningResponse,
-    );
+    setFeilmelding(undefined);
+    await Api.Aarsavregning.oppdaterAarsavregning(behandlingid, request, aarsavregningid)
+      .then(setAarsavregningResponse)
+      .catch(() => {
+        setFeilmelding("Feil ved oppdatering av tidligere fakturert trygdeavgift i avgiftssystemet");
+      });
   };
 
   const debouncedOppdaterTotaltForskuddsvisFakturert = useCallback(
@@ -695,22 +698,10 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       );
     }
     if (endeligAvgiftValg === MANUELL_ENDELIG_AVGIFT) {
-      return Boolean(
-        formIsValid &&
-          aarsavregningResponse?.avregning?.tidligereFakturertBeloepAvgiftssystem &&
-          aarsavregningResponse?.avregning?.manueltAvgiftBeloep &&
-          feilmelding === undefined,
-      );
+      return Boolean(formIsValid && feilmelding === undefined);
     }
     return false;
-  }, [
-    formIsValid,
-    aarsavregningResponse?.nyttGrunnlag,
-    aarsavregningResponse?.avregning?.manueltAvgiftBeloep,
-    feilmelding,
-    endeligAvgiftValg,
-    arrayValideringsfeil,
-  ]);
+  }, [formIsValid, aarsavregningResponse?.nyttGrunnlag, feilmelding, endeligAvgiftValg, arrayValideringsfeil]);
 
   useEffect(() => {
     oppdaterStatus(stegErGyldig);
@@ -718,6 +709,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
 
   const handleEndeligAvgiftValgChange = useCallback(
     (value: string) => {
+      setFeilmelding(undefined);
       Api.Aarsavregning.oppdaterEndeligAvgiftValg(behandlingID, value, aarsavregningID).then((res) => {
         if (res) {
           setAarsavregningResponse(res);
@@ -732,13 +724,16 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   );
 
   const debouncedOppdaterManueltAvgiftBeloep = useCallback(
-    Utils._debounce(
-      async (value: string) =>
-        Api.Aarsavregning.oppdaterManueltAvgiftBeloep(behandlingID, aarsavregningID, Number(value)).then((res) => {
+    Utils._debounce(async (value: string) => {
+      setFeilmelding(undefined);
+      Api.Aarsavregning.oppdaterManueltAvgiftBeloep(behandlingID, aarsavregningID, Number(value))
+        .then((res) => {
           setAarsavregningResponse(res);
-        }),
-      350,
-    ),
+        })
+        .catch(() => {
+          setFeilmelding("Feil ved oppdatering av manuelt avgift beløp");
+        });
+    }, 350),
     [aarsavregningID, behandlingID],
   );
 
