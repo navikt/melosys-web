@@ -73,12 +73,12 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
 
   useEffect(() => {
     Api.Aarsavregning.hentFiltrertAarsavregningList(saksnummer).then((res) => {
-      if (res?.find((resEl) => resEl.behandlingID === behandlingID)) {
+      if (res.find((resEl) => resEl.behandlingID === behandlingID)) {
         Api.Aarsavregning.hentAarsavregning(behandlingID).then((aarsavregning) => {
           setInitieltÅr(aarsavregning.aar);
           dispatch({ type: OK, data: aarsavregning });
           if (
-            res?.find((resEl) => resEl.aar === aarsavregning.aar && resEl.resultattype.kode === FASTSATT_TRYGDEAVGIFT)
+            res.find((resEl) => resEl.aar === aarsavregning.aar && resEl.resultattype.kode === FASTSATT_TRYGDEAVGIFT)
           ) {
             setNyVurderingÅrsavregning(true);
           }
