@@ -60,14 +60,6 @@ export function NyBehandlingForTidligereAarsavregningMelding() {
   );
 }
 
-export function AktivAarsavregningPaaValgtAarMelding(aar: number) {
-  return (
-    <Nav.Alert variant="error">
-      <Nav.BodyLong size="small">Året {aar} har allerede en aktiv årsavregning.</Nav.BodyLong>
-    </Nav.Alert>
-  );
-}
-
 interface StandardMeldingOverstProps {
   variant: "error" | "warning" | "info" | "success";
   actionEtterSynlighet: () => void;

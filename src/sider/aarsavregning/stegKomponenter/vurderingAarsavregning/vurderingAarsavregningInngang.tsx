@@ -1,21 +1,21 @@
-import * as Api from "../../../../services/api";
-import "./vurderingAarsavregningInngang.css";
 import { ChangeEvent, useContext, useEffect, useState } from "react";
-import { AarsavregningResponse } from "../../../../services/modules/aarsavregning/aarsavregning";
 import { useDispatch, useSelector } from "react-redux";
-import { behandlingerSelectors } from "../../../../ducks/behandlinger";
-import * as Nav from "../../../../navFrontend";
-import { redigerbartSelectors } from "../../../../ducks/redigerbart";
-import MKV from "../../../../melosyskodeverk";
 import { OK } from "../../../../ducks/aarsavregning/types";
+import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { fagsakSelectors } from "../../../../ducks/fagsaker";
+import { redigerbartSelectors } from "../../../../ducks/redigerbart";
 import { NyBehandlingForTidligereAarsavregningMelding } from "../../../../felleskomponenter/alertmeldinger/alertmeldinger";
+import MKV from "../../../../melosyskodeverk";
+import * as Nav from "../../../../navFrontend";
+import * as Api from "../../../../services/api";
+import { AarsavregningResponse } from "../../../../services/modules/aarsavregning/aarsavregning";
+import "./vurderingAarsavregningInngang.css";
 
+import { FellesHandlersContext } from "../../../../contexts";
 import { behandlingsresultatOperations } from "../../../../ducks/behandlingsresultat";
+import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
 import { AarsavregningMedGrunnlag } from "./aarsavregningMedGrunnlag/aarsavregningMedGrunnlag";
 import { AarsavregningUtenEllerDeltGrunnlag } from "./aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlag";
-import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
-import { FellesHandlersContext } from "../../../../contexts";
 
 interface Props {
   bekreft: () => void;
@@ -46,7 +46,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
   const [harDeltGrunnlag, setHarDeltGrunnlag] = useState<boolean | undefined>(undefined);
   const [visDeltGrunnlagRadioGroup, setVisDeltGrunnlagRadioGroup] = useState(false);
   const [nyVurderingÅrsavregning, setNyVurderingÅrsavregning] = useState<boolean>(false);
-  const [flereAktiveAarsavregninger, setFlereAktiveAarsavregninger] = useState<boolean>(false);
+  const [flereAktiveÅrsavregninger, setFlereAktiveÅrsavregninger] = useState<boolean>(false);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as any;
   const saksnummer = useSelector(fagsakSelectors.SaksnummerSelector) as any;
@@ -90,7 +90,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
 
   const håndterEndringAvÅr = (event: ChangeEvent<HTMLSelectElement>) => {
     setLagÅrsavregningFeil(undefined);
-    setFlereAktiveAarsavregninger(false);
+    setFlereAktiveÅrsavregninger(false);
     setVisDeltGrunnlagRadioGroup(false);
     setHarGrunnlag(undefined);
     setHarDeltGrunnlag(undefined);
@@ -98,29 +98,27 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
     const år = Number(event.target.value);
     setValgtÅr(år);
 
-    if (år) {
-      Api.Aarsavregning.hentFiltrertAarsavregningList(saksnummer, FASTSATT_TRYGDEAVGIFT, år).then((res) => {
-        setNyVurderingÅrsavregning(res.length > 0);
-      });
+    Api.Aarsavregning.hentFiltrertAarsavregningList(saksnummer, FASTSATT_TRYGDEAVGIFT, år).then((res) => {
+      setNyVurderingÅrsavregning(res.length > 0);
+    });
 
-      Api.Aarsavregning.hentFiltrertAarsavregningList(saksnummer, IKKE_FASTSATT, år).then((res) => {
-        if (res.length === 0) {
-          Api.Aarsavregning.lagAarsavregning(behandlingID, { aar: år })
-            .then((aarsavregning) => {
-              utledGrunnlagstypeForAarsavregning(aarsavregning);
-              dispatch({ type: OK, data: aarsavregning });
-              oppfriskOgLastInnSaksopplysningerForAarsavregning().then(() => {
-                dispatch(behandlingsresultatOperations.hent(behandlingID));
-              });
-            })
-            .catch((error: any) => {
-              setLagÅrsavregningFeil(error.body.message);
+    Api.Aarsavregning.hentFiltrertAarsavregningList(saksnummer, IKKE_FASTSATT, år).then((res) => {
+      if (res.length === 0) {
+        Api.Aarsavregning.lagAarsavregning(behandlingID, { aar: år })
+          .then((aarsavregning) => {
+            utledGrunnlagstypeForAarsavregning(aarsavregning);
+            dispatch({ type: OK, data: aarsavregning });
+            oppfriskOgLastInnSaksopplysningerForAarsavregning().then(() => {
+              dispatch(behandlingsresultatOperations.hent(behandlingID));
             });
-        } else {
-          setFlereAktiveAarsavregninger(true);
-        }
-      });
-    }
+          })
+          .catch((error: any) => {
+            setLagÅrsavregningFeil(error.body.message);
+          });
+      } else {
+        setFlereAktiveÅrsavregninger(true);
+      }
+    });
   };
 
   const håndterDeltGrunnlag = async (value: boolean) => {
@@ -155,7 +153,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
         </Nav.Column>
       </Nav.Row>
 
-      {flereAktiveAarsavregninger && (
+      {flereAktiveÅrsavregninger && (
         <Nav.Alert variant="error">
           <Nav.BodyLong size="small">Året {valgtÅr} har allerede en aktiv årsavregning.</Nav.BodyLong>
         </Nav.Alert>
@@ -167,7 +165,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
         </Nav.Alert>
       )}
 
-      {!lagÅrsavregningFeil && !flereAktiveAarsavregninger && (
+      {!lagÅrsavregningFeil && !flereAktiveÅrsavregninger && (
         <>
           {nyVurderingÅrsavregning && <NyBehandlingForTidligereAarsavregningMelding />}
 
@@ -183,7 +181,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
                     />
                   }
                   value={harDeltGrunnlag}
-                  readOnly={!redigerbart || flereAktiveAarsavregninger}
+                  readOnly={!redigerbart || flereAktiveÅrsavregninger}
                 >
                   <Nav.HStack gap="6">
                     <Nav.Radio value>Ja</Nav.Radio>
