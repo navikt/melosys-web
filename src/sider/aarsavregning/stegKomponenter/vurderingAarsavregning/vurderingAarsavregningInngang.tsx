@@ -8,7 +8,10 @@ import { NyBehandlingForTidligereAarsavregningMelding } from "../../../../felles
 import MKV from "../../../../melosyskodeverk";
 import * as Nav from "../../../../navFrontend";
 import * as Api from "../../../../services/api";
-import { AarsavregningResponse } from "../../../../services/modules/aarsavregning/aarsavregning";
+import {
+  AarsavregningListResponse,
+  AarsavregningResponse,
+} from "../../../../services/modules/aarsavregning/aarsavregning";
 import "./vurderingAarsavregningInngang.css";
 
 import { FellesHandlersContext } from "../../../../contexts";
@@ -37,6 +40,16 @@ const DELT_GRUNNLAG_HJELPETEKST = (
   </>
 );
 
+const behandlingHarÅrsavregning = (årsavregningList: AarsavregningListResponse[], behandlingID: number) => {
+  return årsavregningList.find((aarsavregning) => aarsavregning.behandlingID === behandlingID);
+};
+
+const årsavregningErNyVurdering = (årsavregningList: AarsavregningListResponse[], aar: number) => {
+  return årsavregningList.find(
+    (aarsavregning) => aarsavregning.aar === aar && aarsavregning.resultattype.kode === FASTSATT_TRYGDEAVGIFT,
+  );
+};
+
 export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtSteg }: Props) {
   const [valgtÅr, setValgtÅr] = useState<number | undefined>(undefined);
   const [initieltÅr, setInitieltÅr] = useState<number | undefined>(undefined);
@@ -56,7 +69,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
   const dispatch = useDispatch();
   const { oppfriskOgLastInnSaksopplysningerForAarsavregning } = useContext(FellesHandlersContext) as any;
 
-  const utledGrunnlagstypeForAarsavregning = (res: AarsavregningResponse) => {
+  const utledGrunnlagstypeForÅrsavregning = (res: AarsavregningResponse) => {
     if (res.tidligereGrunnlagsopplysninger === null) {
       setHarGrunnlag(false);
     } else {
@@ -72,17 +85,15 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
   };
 
   useEffect(() => {
-    Api.Aarsavregning.hentFiltrertAarsavregningList(saksnummer).then((res) => {
-      if (res.find((resEl) => resEl.behandlingID === behandlingID)) {
-        Api.Aarsavregning.hentAarsavregning(behandlingID).then((aarsavregning) => {
-          setInitieltÅr(aarsavregning.aar);
-          dispatch({ type: OK, data: aarsavregning });
-          if (
-            res.find((resEl) => resEl.aar === aarsavregning.aar && resEl.resultattype.kode === FASTSATT_TRYGDEAVGIFT)
-          ) {
+    Api.Aarsavregning.hentFiltrertAarsavregningList(saksnummer).then((årsavregningList) => {
+      if (behandlingHarÅrsavregning(årsavregningList, behandlingID)) {
+        Api.Aarsavregning.hentAarsavregning(behandlingID).then((årsavregning) => {
+          setInitieltÅr(årsavregning.aar);
+          dispatch({ type: OK, data: årsavregning });
+          if (årsavregningErNyVurdering(årsavregningList, årsavregning.aar)) {
             setNyVurderingÅrsavregning(true);
           }
-          utledGrunnlagstypeForAarsavregning(aarsavregning);
+          utledGrunnlagstypeForÅrsavregning(årsavregning);
         });
       }
     });
@@ -90,6 +101,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
 
   const håndterEndringAvÅr = (event: ChangeEvent<HTMLSelectElement>) => {
     setLagÅrsavregningFeil(undefined);
+    setNyVurderingÅrsavregning(false);
     setFlereAktiveÅrsavregninger(false);
     setVisDeltGrunnlagRadioGroup(false);
     setHarGrunnlag(undefined);
@@ -98,16 +110,18 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
     const år = Number(event.target.value);
     setValgtÅr(år);
 
-    Api.Aarsavregning.hentFiltrertAarsavregningList(saksnummer, FASTSATT_TRYGDEAVGIFT, år).then((res) => {
-      setNyVurderingÅrsavregning(res.length > 0);
-    });
+    Api.Aarsavregning.hentFiltrertAarsavregningList(saksnummer, FASTSATT_TRYGDEAVGIFT, år).then(
+      (fastsattÅrsavregningList) => {
+        setNyVurderingÅrsavregning(fastsattÅrsavregningList.length > 0);
+      },
+    );
 
     Api.Aarsavregning.hentFiltrertAarsavregningList(saksnummer, IKKE_FASTSATT, år).then((res) => {
       if (res.length === 0) {
         Api.Aarsavregning.lagAarsavregning(behandlingID, { aar: år })
-          .then((aarsavregning) => {
-            utledGrunnlagstypeForAarsavregning(aarsavregning);
-            dispatch({ type: OK, data: aarsavregning });
+          .then((årsavregning) => {
+            utledGrunnlagstypeForÅrsavregning(årsavregning);
+            dispatch({ type: OK, data: årsavregning });
             oppfriskOgLastInnSaksopplysningerForAarsavregning().then(() => {
               dispatch(behandlingsresultatOperations.hent(behandlingID));
             });
