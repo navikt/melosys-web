@@ -61,7 +61,10 @@ export interface AarsavregningListResponse {
   aarsavregningId: number;
   behandlingID: number;
   aar: number;
-  resultattype: string;
+  resultattype: {
+    kode: string;
+    term: string;
+  };
 }
 
 export const hentAarsavregning = (behandlingID: number): Promise<AarsavregningResponse> =>
