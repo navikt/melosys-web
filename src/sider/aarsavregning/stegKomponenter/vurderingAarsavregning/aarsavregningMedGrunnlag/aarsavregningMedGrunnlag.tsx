@@ -43,7 +43,8 @@ const mapMedlemskapsperiodeBestemmelse = (harDeltGrunnlag: boolean, medlemskapsp
 };
 
 export interface AarsavregningMedGrunnlagFormValues extends FormValuesProps {
-  erAvvik?: boolean;
+  endeligAvgiftValg?: string;
+  manueltAvgiftBeloep?: number;
 }
 
 export interface InitiellData {
@@ -64,9 +65,10 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
   const [isLoading, setIsLoading] = useState(true);
   const [initiellData, setInitiellData] = useState<InitiellData>({
     formDefaultValues: {
-      erAvvik: undefined,
       skatteforholdsperioder: [{}],
       inntektskilder: [{}],
+      endeligAvgiftValg: undefined,
+      manueltAvgiftBeloep: undefined,
     },
     medlemskapstypeErPliktig: false,
   });
@@ -77,15 +79,23 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
 
   const mapSkjemaverdierFraTrygdeavgiftsgrunnlag = (
     trygdeavgiftsgrunnlag?: Trygdeavgiftsgrunnlag,
-    harAvvik?: boolean,
+    endeligAvgiftValg?: string,
+    manueltAvgiftBeloep?: number,
   ) => {
-    if (!trygdeavgiftsgrunnlag) return { erAvvik: undefined, skatteforholdsperioder: [{}], inntektskilder: [{}] };
+    if (!trygdeavgiftsgrunnlag)
+      return {
+        skatteforholdsperioder: [{}],
+        inntektskilder: [{}],
+        endeligAvgiftValg: undefined,
+        manueltAvgiftBeloep: undefined,
+      };
     const { inntektskperioder, skatteforholdsperioder } = trygdeavgiftsgrunnlag;
     const sorterteInntekstkilder = [...inntektskperioder].sort(Utils.dato.sorterEtterISOFomDato);
     const sorterteSkatteforhold = [...skatteforholdsperioder].sort(Utils.dato.sorterEtterISOFomDato);
 
     return {
-      erAvvik: harAvvik,
+      endeligAvgiftValg,
+      manueltAvgiftBeloep,
       skatteforholdsperioder: !Utils._isEmpty(sorterteSkatteforhold)
         ? mapTilSkatteforholdProps(sorterteSkatteforhold)
         : [{}],
@@ -108,10 +118,12 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
           // Benyttes for innhenting av saksopplysninger ifm. årsavregningsbehandlinger
           dispatch({ type: OK, data: res });
 
-          const defaultFormValues = mapSkjemaverdierFraTrygdeavgiftsgrunnlag(
-            res?.nyttGrunnlag?.trygdeavgiftsgrunnlag || res.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag,
-            res.harAvvik,
-          );
+          const defaultFormValues: FieldValue<AarsavregningMedGrunnlagFormValues> =
+            mapSkjemaverdierFraTrygdeavgiftsgrunnlag(
+              res?.nyttGrunnlag?.trygdeavgiftsgrunnlag || res.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag,
+              res.endeligAvgiftValg,
+              res?.avregning?.manueltAvgiftBeloep,
+            );
 
           const medlemskapsperioder = res.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.medlemskapsperioder;
           const innvilgetMedlemskapsperiode = mapInnvilgetMedlemskapsPeriode(medlemskapsperioder);

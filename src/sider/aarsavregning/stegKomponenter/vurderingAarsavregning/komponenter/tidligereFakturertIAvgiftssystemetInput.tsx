@@ -39,7 +39,7 @@ export function TidligereFakturertIAvgiftssystemetInput({
         name="totaltForskuddsvisFakturert"
         control={control}
         readOnly={!redigerbart}
-        className="tidligere_fakturert_input"
+        className="avgift_input"
         autoComplete="off"
         type="text"
         numeric
