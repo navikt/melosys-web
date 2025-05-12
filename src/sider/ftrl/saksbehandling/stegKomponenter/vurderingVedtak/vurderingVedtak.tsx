@@ -39,7 +39,6 @@ import { TrygdeavgiftMottaker } from "./trygdeavgiftMottaker/trygdeavgiftMottake
 import { Betalingsvalg } from "./betalingsvalg/betalingsvalg";
 import useFeatureToggle from "../../../../../featuretoggle/useFeatureToggle";
 import { MELOSYS_PENSJONIST } from "../../../../../featuretoggle/toggleNavn";
-import { tr } from "date-fns/locale";
 
 const { FØRSTEGANG, NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT, SATSENDRING } =
   MKV.Koder.behandlinger.behandlingstyper;
@@ -220,9 +219,10 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   };
 
   const hentBetalingsvalg = async () => {
-    const oppsummering = await Api.Avklartefakta.hentOppsummering(behandlingID);
-    if (oppsummering.betalingsvalg) {
-      setBetalingsvalg(oppsummering.betalingsvalg);
+    const fagsakDto = await Api.Fagsaker.fagsak.hent(saksnummer);
+
+    if (fagsakDto.betalingsvalg) {
+      setBetalingsvalg(fagsakDto.betalingsvalg.kode);
     }
   };
 
@@ -335,7 +335,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
     setVedtakPending(true);
     if (mottatteOpplysningerErGyldig()) {
       if (visBetalingsvalg && erPensjonistToggleEnabled) {
-        await Api.Avklartefakta.lagreBetalingsvalgForPensjonister(behandlingID, betalingsvalg);
+        await Api.Fagsaker.fagsak.lagreBetalingsvalgForPensjonister(saksnummer, betalingsvalg);
       }
 
       fattVedtak(behandlingID, lagFattVedtakReqDto()).then((res) => {
@@ -410,7 +410,8 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
       betalingsvalg === MKV.Koder.betalingstype.TREKK ? MKV.Koder.betalingstype.FAKTURA : MKV.Koder.betalingstype.TREKK;
 
     setBetalingsvalg(valg);
-    Api.Avklartefakta.lagreBetalingsvalgForPensjonister(behandlingID, valg);
+    console.log("Oppdaterer betalingsvalg til", valg);
+    Api.Fagsaker.fagsak.lagreBetalingsvalgForPensjonister(saksnummer, valg);
   };
 
   return (

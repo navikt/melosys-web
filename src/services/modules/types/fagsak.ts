@@ -19,6 +19,7 @@ interface Fagsak {
   sakstype: KTObject;
   sakstema: KTObject;
   saksstatus: KTObject;
+  betalingsvalg: KTObject;
   registrertDato: string;
   endretDato: string;
   hovedpartRolle: string;

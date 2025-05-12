@@ -100,3 +100,6 @@ export const annullerFagsak = (saksnummer: string) =>
 
 export const hentFullmektigHistorikk = (saksnummer: string): Promise<FullmektigHistorikk[]> =>
   getAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/aktoerer/FULLMEKTIG/historikk`);
+
+export const lagreBetalingsvalgForPensjonister = (saksnummer: string, betalingstype: string) =>
+  putAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnummer}/betalingsvalg`, betalingstype);
