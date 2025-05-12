@@ -410,7 +410,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
       betalingsvalg === MKV.Koder.betalingstype.TREKK ? MKV.Koder.betalingstype.FAKTURA : MKV.Koder.betalingstype.TREKK;
 
     setBetalingsvalg(valg);
-    console.log("Oppdaterer betalingsvalg til", valg);
+
     Api.Fagsaker.fagsak.lagreBetalingsvalgForPensjonister(saksnummer, valg);
   };
 
