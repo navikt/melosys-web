@@ -67,7 +67,7 @@ export function ArbeidsgiverOgVirksomhet({
   selvstendigNaeringsvirksomhetUtland = [],
 }: ArbeidsgiverOgVirksomhetProps) {
   const finnOrganisasjon = (orgnr: string) => {
-    const org: Organisasjon = organisasjoner.find((o: Organisasjon) => o.orgnr === orgnr);
+    const org = organisasjoner.find((o: Organisasjon) => o.orgnr === orgnr);
     return org || { orgnr };
   };
 

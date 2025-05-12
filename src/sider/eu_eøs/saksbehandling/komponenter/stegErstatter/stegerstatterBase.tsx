@@ -1,5 +1,3 @@
-import parse from "html-react-parser";
-
 import * as Nav from "../../../../../navFrontend";
 
 import "./stegerstatterBase.css";
@@ -16,7 +14,7 @@ function StegerstatterBase({ tittel, beskrivelse }: StegerstatterBaseProps) {
         <Nav.Row>
           <Nav.Heading size="small">{tittel}</Nav.Heading>
         </Nav.Row>
-        <p>{parse(beskrivelse)}</p>
+        <p>{beskrivelse}</p>
       </div>
     </section>
   );

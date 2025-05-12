@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FieldValues, useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup/dist/yup";
+// @ts-expect-error Workaround for @hookform/resolvers/yup with moduleResolution: bundler
+import { yupResolver } from "@hookform/resolvers/yup";
 
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
 import * as Utils from "../../../../utils";

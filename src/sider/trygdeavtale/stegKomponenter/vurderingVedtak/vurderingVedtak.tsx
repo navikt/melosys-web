@@ -78,7 +78,7 @@ const mapStateToProps = (state: RootState, ownProps: Props) => {
     mottatteOpplysningerStatus: mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector(state),
     soknadsland: mottatteOpplysningerSelectors.SoknadslandKTSelector(state),
     lagretVedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
-    familieFormValues: formSelectors.TrygdeavtaleFamileFormSelector(state).values,
+    familieFormValues: (formSelectors.TrygdeavtaleFamileFormSelector(state) as { values?: any }).values,
     formValues: getFormValues(KV.Form.Trygdeavtale.VEDTAK)(state),
     initialValues: {
       innledningFritekst: ownProps.resultat.innledningFritekst,

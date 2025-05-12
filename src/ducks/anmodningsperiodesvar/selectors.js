@@ -1,5 +1,12 @@
 import { createSelector } from "reselect";
 
+/**
+ * @typedef {import('../../../../services/modules/anmodningsperioder/svar/svar').AnmodningsperiodesvarResDto} AnmodningsperiodesvarResDto
+ */
+
+/**
+ * @returns {AnmodningsperiodesvarResDto | {}}
+ */
 export const AnmodningsperiodesvarSelector = createSelector(
   (state) => state.anmodningsperiodesvar.data || {},
   (anmodningsperiodesvar) => anmodningsperiodesvar,

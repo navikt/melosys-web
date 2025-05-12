@@ -17,27 +17,37 @@ const finnVilkårEllerNull = (alleVilkår, vilkårKode) =>
   alleVilkår?.find((enkelt) => enkelt.vilkaar === vilkårKode) ?? null;
 
 // selector(s)
+/** @type {import('reselect').Selector<import('../../AppTypes').RootState, import('../../services/api').Vilkaar[]>} */
 export const VilkarSelector = createSelector(
+  /** @param {import('../../AppTypes').RootState} state */
   (state) => (state.vilkar.data ? state.vilkar.data : []),
   (vurdering) => vurdering,
 );
 
+/** @type {import('reselect').Selector<import('../../AppTypes').RootState, Partial<import('../../services/api').Vilkaar>>} */
 export const VesentligVirksomhetSelector = createSelector(
+  /** @param {import('../../AppTypes').RootState} state */
   (state) => VilkarSelector(state),
   (alleVilkar) => finnVilkår(alleVilkar, MKV.Koder.vilkaar.VESENTLIG_VIRKSOMHET),
 );
 
+/** @type {import('reselect').Selector<import('../../AppTypes').RootState, Partial<import('../../services/api').Vilkaar>>} */
 export const NormaltDriverVirksomhetSelector = createSelector(
+  /** @param {import('../../AppTypes').RootState} state */
   (state) => VilkarSelector(state),
   (alleVilkar) => finnVilkår(alleVilkar, MKV.Koder.vilkaar.NORMALT_DRIVER_VIRKSOMHET),
 );
 
+/** @type {import('reselect').Selector<import('../../AppTypes').RootState, Partial<import('../../services/api').Vilkaar>>} */
 export const ForutgaendeMedlemskapSelector = createSelector(
+  /** @param {import('../../AppTypes').RootState} state */
   (state) => VilkarSelector(state),
   (alleVilkar) => finnVilkår(alleVilkar, MKV.Koder.vilkaar.FORUTGAAENDE_MEDLEMSKAP),
 );
 
+/** @type {import('reselect').Selector<import('../../AppTypes').RootState, Partial<import('../../services/api').Vilkaar> | null>} */
 export const UtsendingsvilkårArbeidstakerSelector = createSelector(
+  /** @param {import('../../AppTypes').RootState} state */
   (state) => VilkarSelector(state),
   (alleVilkar) => {
     const art12_1 = finnVilkårEllerNull(alleVilkar, MKV.Koder.vilkaar.FO_883_2004_ART12_1);
@@ -69,9 +79,13 @@ export const UtsendingsvilkårNæringsdrivendeBegrunnelserSelector = createSelec
   (vilkar) => vilkar.begrunnelseKoder || [],
 );
 
+/** @type {import('reselect').Selector<import('../../AppTypes').RootState, Partial<import('../../services/api').Vilkaar> | {}>} */
 export const UtsendingsvilkårSelector = createSelector(
+  /** @param {import('../../AppTypes').RootState} state */
   (state) => UtsendingsvilkårArbeidstakerSelector(state),
+  /** @param {import('../../AppTypes').RootState} state */
   (state) => UtsendingsvilkårNæringsdrivendeSelector(state),
+  /** @param {import('../../AppTypes').RootState} state */
   (state) => avklartefaktaSelectors.YrkesaktivitetSelector(state),
   (utsendingsvilkårforArbeidstaker, utsendingsvilkårForNæringsdrivende, yrkesaktivitet) => {
     if (yrkesaktivitet === KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_ARBEIDSTAKER) {
@@ -84,7 +98,9 @@ export const UtsendingsvilkårSelector = createSelector(
   },
 );
 
+/** @type {import('reselect').Selector<import('../../AppTypes').RootState, Partial<import('../../services/api').Vilkaar> | null>} */
 export const UnntaksvilkårSelector = createSelector(
+  /** @param {import('../../AppTypes').RootState} state */
   (state) => VilkarSelector(state),
   (alleVilkar) => {
     const art16_1 = finnVilkårEllerNull(alleVilkar, MKV.Koder.vilkaar.FO_883_2004_ART16_1);
@@ -94,7 +110,9 @@ export const UnntaksvilkårSelector = createSelector(
   },
 );
 
+/** @type {import('reselect').Selector<import('../../AppTypes').RootState, Partial<import('../../services/api').Vilkaar> | null>} */
 export const Artikkel11_3AEller13_3ASelector = createSelector(
+  /** @param {import('../../AppTypes').RootState} state */
   (state) => VilkarSelector(state),
   (alleVilkar) => {
     const art11_3A_eøs = finnVilkårEllerNull(alleVilkar, MKV.Koder.vilkaar.FO_883_2004_ART11_3A);
@@ -103,7 +121,9 @@ export const Artikkel11_3AEller13_3ASelector = createSelector(
   },
 );
 
+/** @type {import('reselect').Selector<import('../../AppTypes').RootState, Partial<import('../../services/api').Vilkaar> | null>} */
 export const Artikkel11_4_1Eller13_4_1Selector = createSelector(
+  /** @param {import('../../AppTypes').RootState} state */
   (state) => VilkarSelector(state),
   (alleVilkar) => {
     const art11_4_1_eøs = finnVilkårEllerNull(alleVilkar, MKV.Koder.vilkaar.FO_883_2004_ART11_4_1);
@@ -112,7 +132,9 @@ export const Artikkel11_4_1Eller13_4_1Selector = createSelector(
   },
 );
 
+/** @type {import('reselect').Selector<import('../../AppTypes').RootState, Partial<import('../../services/api').Vilkaar> | null>} */
 export const Artikkel11_4_2Eller13_4_2Selector = createSelector(
+  /** @param {import('../../AppTypes').RootState} state */
   (state) => VilkarSelector(state),
   (alleVilkar) => {
     const art11_4_2_eøs = finnVilkårEllerNull(alleVilkar, MKV.Koder.vilkaar.FO_883_2004_ART11_4_2);

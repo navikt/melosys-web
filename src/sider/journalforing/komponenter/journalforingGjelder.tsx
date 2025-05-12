@@ -21,7 +21,9 @@ const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
 const { JournalforingValues: FormValues } = KV.Form;
 
 const mapStateToProps = (state: RootState) => ({
-  journalforingGjelder: formSelectors.JournalforingFormSelector(state).values?.journalforingGjelder,
+  journalforingGjelder: (
+    formSelectors.JournalforingFormSelector(state) as { values?: { journalforingGjelder?: string } }
+  ).values?.journalforingGjelder,
   journalpostBrukerID: journalforingSelectors.BrukerIDSelector(state),
   journalpostVirksomhetOrgnr: journalforingSelectors.VirksomhetOrgnrSelector(state),
 });

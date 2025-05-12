@@ -33,7 +33,11 @@ const avklartFaktaTemplate = {
 };
 
 /* Hovedselector for alle avklarte fakta. */
+/**
+ * @type {import('reselect').Selector<import('../../AppTypes').RootState, import('../../services/api').Avklartefakta.Avklartfakta[]>}
+ */
 export const AvklartefaktaSelector = createSelector(
+  /** @param {import('../../AppTypes').RootState} state */
   (state) => (state.avklartefakta.data ? state.avklartefakta.data : []),
   (avklartefakta) => avklartefakta || [],
 );

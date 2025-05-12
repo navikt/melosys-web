@@ -99,7 +99,9 @@ export function VurderingArtikkel16Vedtak({
   let oppdaterFørKontroll = true;
 
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
-  const mottatteOpplysningerStatus = useSelector(mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector);
+  const mottatteOpplysningerStatus = useSelector(
+    mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector,
+  ) as string;
   const harValgtNorskArbeidsgiver = useSelector(flytSelectors.HarValgtNorskArbeidsgiverSelector);
   const formIsValid = useSelector(isValid(KV.Form.ARTIKKEL_16_1_VEDTAK));
   const lovvalgsbestemmelse = useSelector(lovvalgsperioderSelectors.LovvalgBestemmelseSelector);
@@ -316,4 +318,5 @@ const VurderingArtikkel16VedtakForm = reduxForm<FormValuesProps, VurderingArtikk
     })(values),
 })(VurderingArtikkel16Vedtak);
 
+// @ts-expect-error Type mismatch between redux-form and connector
 export default connector(VurderingArtikkel16VedtakForm);

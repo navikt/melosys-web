@@ -1,7 +1,12 @@
 import { createSelector } from "reselect";
 
+/**
+ * @typedef {{ synlig?: boolean, fullmektig?: { erFullmektigEndret?: boolean } }} MenypanelStateData
+ * @type {import('reselect').Selector<import('../../AppTypes').RootState, MenypanelStateData | undefined>}
+ */
 export const MenypanelSelector = createSelector(
-  (state) => state.menypanel.data,
+  /** @param {import('../../AppTypes').RootState} state */
+  (state) => state.menypanel.data, // Ensure this can be undefined if no data
   (menypanel) => menypanel,
 );
 

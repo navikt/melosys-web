@@ -34,7 +34,7 @@ export interface FagsakOppsummering {
   periode?: Periode;
   opprettetDato: string;
   behandlingOversikter: {
-    behandlingID: string;
+    behandlingID: number;
     tittel?: string;
     behandlingsstatus: KTObject;
     behandlingstype: KTObject;

@@ -57,7 +57,7 @@ const mapStateToProps = (state: RootState) => ({
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
   mottatteOpplysninger: mottatteOpplysningerSelectors.MottatteOpplysningerDataSelector(state),
   mottatteOpplysningerFeilmeldinger: formSelectors.SoknadErrorsSelector(state),
-  soknadForm: formSelectors.SoknadFormSelector(state),
+  soknadFormValues: formSelectors.SoknadFormValuesSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   behandlingUnderOppfriskning: modalerSelectors.BehandlingUnderOppfriskningSelector(state),
 });
@@ -101,9 +101,9 @@ class Stegvelger extends Component<PropsFromRedux, State> {
   }
 
   componentDidUpdate(prevProps: Readonly<PropsFromRedux>) {
-    const { behandlingUnderOppfriskning, soknadForm } = this.props;
-    const soknadValues = soknadForm?.values;
-    const prevSoknadValues = prevProps.soknadForm?.values;
+    const { behandlingUnderOppfriskning, soknadFormValues } = this.props;
+    const soknadValues = soknadFormValues;
+    const prevSoknadValues = prevProps.soknadFormValues;
 
     if (
       Stegvelger.harEndringer(soknadValues, prevSoknadValues, "juridiskArbeidsgiverNorge.ekstraArbeidsgivere") ||

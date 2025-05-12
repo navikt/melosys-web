@@ -5,7 +5,7 @@ import { getAsJson } from "../../utils";
 export const hentVilkår = (
   bestemmelseID: string,
   avklarteFakta: Map<string, string>,
-  behandlingID: string,
+  behandlingID: number,
   behandlingstema: string,
 ): Promise<{ vilkår: VilkårOgBegrunnelser[] }> => {
   let queryParamsString = "";

@@ -24,11 +24,18 @@ export const BehandlingerSelector = createSelector(
   (state) => (state.behandlinger.data ? state.behandlinger.data : {}),
   (behandling) => behandling,
 );
+
+/**
+ * @type {import('reselect').Selector<import('../../AppTypes').RootState, number>}
+ */
 export const BehandlingIDSelector = createSelector(
-  (state) => BehandlingerSelector(state).behandlingID || -1,
-  (behandlingID) => behandlingID,
+  (state) => BehandlingerSelector(state),
+  (behandling) => (behandling && behandling.behandlingID ? behandling.behandlingID : -1),
 );
+
+/** @type {import('reselect').Selector<import('../../AppTypes').RootState, import('../../services/api').Oppsummering>} */
 export const OppsummeringSelector = createSelector(
+  /** @param {import('../../AppTypes').RootState} state */
   (state) => BehandlingerSelector(state).oppsummering || {},
   (oppsummering) => oppsummering,
 );

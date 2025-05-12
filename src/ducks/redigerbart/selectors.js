@@ -3,19 +3,36 @@ import { createSelector } from "reselect";
 import { anmodningsperioderSelectors } from "../anmodningsperioder";
 import { behandlingerSelectors } from "../behandlinger";
 
+/**
+ * @type {import('reselect').Selector<import('../../AppTypes').RootState, boolean>}
+ */
 export const RedigerbartSelector = createSelector(
-  (state) => behandlingerSelectors.BehandlingerSelector(state).redigerbart || false,
+  /** @param {import('../../AppTypes').RootState} state */
+  (state) =>
+    state.behandlinger.data && state.behandlinger.data.redigerbart !== undefined
+      ? state.behandlinger.data.redigerbart
+      : false,
   (redigerbart) => redigerbart,
 );
+
+/**
+ * @type {import('reselect').Selector<import('../../AppTypes').RootState, boolean>}
+ */
 export const EndreLovvalgsPeriodeRedigerbartSelector = createSelector(
-  (state) => behandlingerSelectors.BehandlingerSelector(state).redigerbart || false,
+  /** @param {import('../../AppTypes').RootState} state */
+  (state) =>
+    state.behandlinger.data && state.behandlinger.data.redigerbart !== undefined
+      ? state.behandlinger.data.redigerbart
+      : false,
   (redigerbart) => redigerbart,
 );
+
 export const GeneriskStegRedigerbartSelector = createSelector(
   RedigerbartSelector,
   anmodningsperioderSelectors.AlleAnmodningsperioderSendtUtlandSelector,
   (redigerbart, erArtikkel16AnmodningSendt) => redigerbart && !erArtikkel16AnmodningSendt,
 );
+
 export const PanelerRedigerbartSelector = createSelector(
   RedigerbartSelector,
   anmodningsperioderSelectors.AlleAnmodningsperioderSendtUtlandSelector,

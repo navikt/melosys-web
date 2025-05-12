@@ -7,7 +7,11 @@
 
 import { createSelector } from "reselect";
 
+/**
+ * @type {import('reselect').Selector<import('../../AppTypes').RootState, import('../../services/api').Organisasjon[]>}
+ */
 export const organisasjonerSelector = createSelector(
+  /** @param {import('../../AppTypes').RootState} state */
   (state) => state.organisasjoner.data || [],
-  (organisasjoner) => organisasjoner || [],
+  (organisasjoner) => organisasjoner || [], // Ensure it's always an array
 );

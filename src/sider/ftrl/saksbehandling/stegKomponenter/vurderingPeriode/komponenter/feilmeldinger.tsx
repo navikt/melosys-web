@@ -222,7 +222,8 @@ const periodeOver12MånederIkkeTillatt = (
   arbeidssituasjonType?: string,
 ) => {
   const periode = medlemskapsperioder[0];
-  const periodeOverstiger12Mnd = Utils.dato.datoDiffNorskFormat(periode.fomDato, periode.tomDato, "years") > 1;
+  const diff = Utils.dato.datoDiffNorskFormat(periode.fomDato, periode.tomDato, "years");
+  const periodeOverstiger12Mnd = (typeof diff === "number" ? diff : 0) > 1;
   const periodeOver12MndIkkeTillatt =
     (periode.bestemmelse === FTRL_KAP2_2_1 && ikkeyrkesaktivOppholdstype === MIDLERTIDIG_2_1_FJERDE_LEDD) ||
     arbeidssituasjonType === MIDLERTIDIG_ARBEID_2_1_FJERDE_LEDD;

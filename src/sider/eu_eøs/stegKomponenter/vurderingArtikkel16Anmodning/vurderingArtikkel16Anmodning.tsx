@@ -129,7 +129,9 @@ function VurderingArtikkel16Anmodning({
   const medlemskap = useSelector(behandlingerSelectors.MedlemskapSelector);
   const unntakFraBestemmelse = useSelector(anmodningsperioderSelectors.UnntakFraBestemmelseSelector);
   const fysiskeDokumenter = useSelector(dokumenterSelectors.AlleFysiskeDokumentSelector);
-  const mottatteOpplysningerStatus = useSelector(mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector);
+  const mottatteOpplysningerStatus = useSelector(
+    mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector,
+  ) as string;
   const feltNavnFraBestemmelse =
     lovvalgsbestemmelse === KONV_EFTA_STORBRITANNIA_ART18_1 ? "art18_1_anmodning" : "art16_1_anmodning";
 

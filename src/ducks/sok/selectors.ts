@@ -1,4 +1,6 @@
 import { createSelector } from "reselect";
+import { RootState } from "AppTypes";
+import { FagsakOppsummering } from "../../services/modules/types";
 
 /**
  * Selectors
@@ -8,6 +10,6 @@ import { createSelector } from "reselect";
  */
 
 export const FagsakSokSelector = createSelector(
-  (state) => (state.sok.data.fagsakListe ? state.sok.data.fagsakListe : []),
-  (sokResultat) => sokResultat || [],
+  (state: RootState) => (state.sok.data.fagsakListe ? state.sok.data.fagsakListe : []),
+  (sokResultat: FagsakOppsummering[]) => sokResultat || [],
 );
