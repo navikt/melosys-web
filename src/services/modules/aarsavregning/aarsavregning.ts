@@ -15,7 +15,7 @@ export interface AarsavregningResponse {
 }
 
 export interface AarsavregningRequest {
-  avregning: Avregning;
+  avregning: Omit<Avregning, "tidligereFakturertBeloep">;
 }
 
 export interface OppdaterHarDeltGrunnlagRequest {
