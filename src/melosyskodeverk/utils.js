@@ -43,6 +43,18 @@ export const erAvsluttetEllerMidlertidigBeslutning = (behandlingsstatus) =>
     MKV.Koder.behandlinger.behandlingsstatus.MIDLERTIDIG_LOVVALGSBESLUTNING,
   ].includes(behandlingsstatus);
 
+export const harFlerePågåendeBehandlinger = (behandlingsstatuser) => {
+  const pågåendeBehandlingsstatuser = behandlingsstatuser.filter(
+    (behandlingsstatus) =>
+      ![
+        MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET,
+        MKV.Koder.behandlinger.behandlingsstatus.MIDLERTIDIG_LOVVALGSBESLUTNING,
+      ].includes(behandlingsstatus),
+  );
+
+  return pågåendeBehandlingsstatuser.length > 1;
+};
+
 export const erOpphørtEllerHenlagtEllerBortfaltEllerAnnullert = (saksstatus) =>
   [
     MKV.Koder.saksstatuser.OPPHØRT,

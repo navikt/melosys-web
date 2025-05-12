@@ -12,6 +12,7 @@ import * as Utils from "../../../utils";
 
 import "./knyttTilSak.css";
 import { useAsyncCallbackState } from "../../../hooks";
+import { harFlerePågåendeBehandlinger } from "../../../melosyskodeverk/utils";
 
 export function KnyttTilSak(props) {
   const { sak, erJournalføring, changeField, feltNavn, formValues } = props;
@@ -205,15 +206,21 @@ export function KnyttTilSak(props) {
   }
 
   return (
-    <div className="knyttTilSak__behandlingspanel">
-      {erJournalføring ? (
-        <VurderDokumentCheckbox />
-      ) : (
-        <Nav.Alert variant="warning" className="feilmelding_innrykk">
-          Du kan ikke opprette en ny behandling på eksisterende sak med en aktiv/pågående behandling
-        </Nav.Alert>
+    <>
+      {erJournalføring && !harFlerePågåendeBehandlinger(behandlingOversikter.map((b) => b.behandlingsstatus.kode)) && (
+        <div className="knyttTilSak__behandlingspanel">
+          <VurderDokumentCheckbox />
+        </div>
       )}
-    </div>
+
+      {!erJournalføring && (
+        <div className="knyttTilSak__behandlingspanel">
+          <Nav.Alert variant="warning" className="feilmelding_innrykk">
+            Du kan ikke opprette en ny behandling på eksisterende sak med en aktiv/pågående behandling
+          </Nav.Alert>
+        </div>
+      )}
+    </>
   );
 }
 
