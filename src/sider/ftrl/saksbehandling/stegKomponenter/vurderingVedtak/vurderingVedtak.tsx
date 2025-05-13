@@ -4,8 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 import { FieldValues, useForm } from "react-hook-form";
+// @ts-expect-error Workaround for @hookform/resolvers/yup with moduleResolution: bundler
 import { yupResolver } from "@hookform/resolvers/yup";
-
 import MKV from "../../../../../melosyskodeverk";
 import * as Api from "../../../../../services/api";
 import * as Forms from "../../../../../felleskomponenter/forms";

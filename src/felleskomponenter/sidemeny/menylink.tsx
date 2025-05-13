@@ -1,6 +1,5 @@
 import classnames from "classnames";
 
-import parse from "html-react-parser";
 import bem from "../../bemUtils";
 
 import "./menylink.css";
@@ -15,9 +14,6 @@ interface MenyLinkProps {
 }
 
 const menyLinkCls = bem("meny-link");
-
-// Logikk for å legge inn whitespace etter slash
-const brukWbrTagVedSlash = (label: string) => parse(label.replace("/", "/<wbr>"));
 
 function MenyLink({ label, active, onClick, iconSrc, iconAltText }: MenyLinkProps) {
   const handleOnClick = (event: FormEvent<HTMLButtonElement>): void => {
@@ -34,7 +30,7 @@ function MenyLink({ label, active, onClick, iconSrc, iconAltText }: MenyLinkProp
         onClick={handleOnClick}
         type="button"
       >
-        {brukWbrTagVedSlash(label)}
+        {label}
         {iconSrc && <img src={iconSrc} alt={iconAltText || ""} className={menyLinkCls.element("icon")} />}
       </button>
     </li>

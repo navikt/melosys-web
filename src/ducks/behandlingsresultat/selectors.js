@@ -9,7 +9,25 @@ import { createSelector } from "reselect";
 
 import * as Utils from "../../services/utils";
 
+/**
+ * @typedef {{
+ *   aarsavregningID?: string,
+ *   behandlingsresultatTypeKode?: string,
+ *   vedtakstype?: string,
+ *   begrunnelseKoder?: string[],
+ *   begrunnelseFritekst?: string,
+ *   innledningFritekst?: string,
+ *   trygdeavgiftFritekst?: string,
+ *   nyVurderingBakgrunn?: string,
+ *   kontrollresultatBegrunnelseKoder?: string[],
+ *   utfallRegistreringUnntak?: string,
+ *   utfallUtpeking?: string,
+ *   fakturaserieReferanse?: string
+ * }} BehandlingsresultatData
+ * @type {import('reselect').Selector<import('../../AppTypes').RootState, BehandlingsresultatData>}
+ */
 export const BehandlingsresultatSelector = createSelector(
+  /** @param {import('../../AppTypes').RootState} state */
   (state) => state.behandlingsresultat.data || {},
   (behandlingsresultat) => behandlingsresultat,
 );

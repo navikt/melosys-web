@@ -6,7 +6,7 @@ import { HStack, VStack } from "@navikt/ds-react";
 import ChevronKnapp from "../../../felleskomponenter/chevronKnapp/chevronKnapp";
 
 interface BehandlingForFagsak {
-  behandlingID: string;
+  behandlingID: number;
   behandlingsstatus: KTObject;
   svarFrist: string | null;
   behandlingstype: KTObject;

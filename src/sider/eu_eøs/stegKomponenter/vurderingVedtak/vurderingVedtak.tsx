@@ -167,7 +167,9 @@ function VurderingVedtak({
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const formIsValid = useSelector(isValid(KV.Form.ARTIKKEL_12_VEDTAK));
   const erArtikkel114Eller134 = useSelector(flytSelectors.ErIArtikkel114Eller134FlytSelector);
-  const mottatteOpplysningerStatus = useSelector(mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector);
+  const mottatteOpplysningerStatus = useSelector(
+    mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector,
+  ) as string;
   const erPensjonistToggleEnabled = useFeatureToggle(MELOSYS_PENSJONIST);
   const visMottakerinstitusjoner = skalViseMottakerinstitusjoner(
     sakstype,

@@ -11,7 +11,11 @@ import { ValgteLovvalgsVilkar } from "../vilkar/selectors";
 // import * as Koder from '../../kodeverk';
 
 // selector(s)
+/**
+ * @type {import('reselect').Selector<import('../../AppTypes').RootState, import('../types').Lovvalgsperiode[]>}
+ */
 export const LovvalgsperioderSelector = createSelector(
+  /** @param {import('../../AppTypes').RootState} state */
   (state) => (state.lovvalgsperioder.data ? state.lovvalgsperioder.data : []),
   (lovvalgsperioder) => lovvalgsperioder,
 );

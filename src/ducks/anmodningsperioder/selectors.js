@@ -25,6 +25,9 @@ export const TilleggsbestemmelseSelector = createSelector(
   (anmodningsperiode) => anmodningsperiode.tilleggBestemmelse,
 );
 
+/**
+ * @returns {string | undefined}
+ */
 export const UnntakFraBestemmelseSelector = createSelector(
   AnmodningsperiodeSelector,
   (anmodningsperiode) => anmodningsperiode.unntakFraBestemmelse,
@@ -49,4 +52,9 @@ export const AlleAnmodningsperioderSendtUtlandSelector = createSelector(
 export const AnmodningsperioderErSendtUtlandetSelector = createSelector(
   (state) => AnmodningsperioderSelector(state),
   (anmodningsperioder) => anmodningsperioder.some((anmodningsperiode) => anmodningsperiode.sendtUtland),
+);
+
+export const UnntakFraLovvalgslandSelector = createSelector(
+  AnmodningsperiodeSelector,
+  (anmodningsperiode) => anmodningsperiode.unntakFraLovvalgsland,
 );

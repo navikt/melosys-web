@@ -15,19 +15,19 @@ export interface OppdaterUtfallRegistreringUnntak {
   utfallRegistreringUnntak: string;
 }
 
-export const hentResultat = (behandlingID: string) =>
+export const hentResultat = (behandlingID: number) =>
   getAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/resultat`);
 
-export const oppdaterFritekster = (behandlingID: string | number, data: OppdaterFritekster) =>
+export const oppdaterFritekster = (behandlingID: number, data: OppdaterFritekster) =>
   postAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/resultat/fritekst`, data);
 
-export const oppdaterNyVurderingBakgrunn = (behandlingID: string, nyVurderingBakgrunn?: string) =>
+export const oppdaterNyVurderingBakgrunn = (behandlingID: number, nyVurderingBakgrunn?: string) =>
   postAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/resultat/nyvurderingbakgrunn`, {
     nyVurderingBakgrunn,
   });
 
-export const oppdaterUtfallRegistreringUnntak = (behandlingID: string, data: OppdaterUtfallRegistreringUnntak) =>
+export const oppdaterUtfallRegistreringUnntak = (behandlingID: number, data: OppdaterUtfallRegistreringUnntak) =>
   putAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/resultat/utfallregistreringunntak`, data);
 
-export const angiBehandlingsresultattype = (behandlingID: string, data: AngiBehandlingsresultattype) =>
+export const angiBehandlingsresultattype = (behandlingID: number, data: AngiBehandlingsresultattype) =>
   postAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/resultat/type`, data);

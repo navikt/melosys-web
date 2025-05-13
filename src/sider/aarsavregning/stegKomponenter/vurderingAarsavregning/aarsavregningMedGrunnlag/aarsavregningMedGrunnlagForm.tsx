@@ -12,6 +12,7 @@ import {
   Inntektskilde,
   Skatteforhold,
 } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
+// @ts-expect-error Workaround for @hookform/resolvers/yup with moduleResolution: bundler
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Utils from "../../../../../utils";
 import { SumArsavregningTabell } from "../komponenter/sumArsavregningTabell";

@@ -9,12 +9,21 @@ import { featureToggleSelectors } from "../ducks/featuretoggle";
  */
 export const erFeatureToggleEnabled = (toggleName: string, state: RootState) => {
   const featureToggleReduxState = featureToggleSelectors.FeatureToggleSelector(state);
+  if (!featureToggleReduxState) {
+    return undefined;
+  }
   return featureToggleReduxState.status === STATUS.OK ? featureToggleReduxState.data[toggleName] : undefined;
 };
 
 const useFeatureToggle = (toggleName: string): boolean | undefined => {
-  const featureToggleReduxState: any = useSelector((state: any) => featureToggleSelectors.FeatureToggleSelector(state));
-  return featureToggleReduxState.status === STATUS.OK ? featureToggleReduxState.data[toggleName] : undefined;
+  const featureToggleReduxState = useSelector((state: RootState) =>
+    featureToggleSelectors.FeatureToggleSelector(state),
+  );
+
+  if (!featureToggleReduxState || featureToggleReduxState.status !== STATUS.OK) {
+    return undefined;
+  }
+  return featureToggleReduxState.data[toggleName];
 };
 
 export default useFeatureToggle;

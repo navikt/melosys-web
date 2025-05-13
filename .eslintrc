@@ -30,7 +30,7 @@
     },
     "ecmaVersion": "latest",
     "sourceType": "module",
-    "project": "./tsconfig.json"
+    "project": "./tsconfig.eslint.json"
   },
   "settings": {
     "react": {
@@ -38,7 +38,7 @@
     },
     "import/resolver": {
       "typescript": {
-        "project": "./tsconfig.json"
+        "project": "./tsconfig.eslint.json"
       },
       "node": {
         "extensions": [

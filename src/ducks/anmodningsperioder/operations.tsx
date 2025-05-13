@@ -42,7 +42,9 @@ export function lagre() {
     const anmodningsperioderErSendtUtlandet = Selectors.AnmodningsperioderErSendtUtlandetSelector(getState());
     if (anmodningsperioderErSendtUtlandet) return null;
 
-    const anmodningsperioder = Selectors.AnmodningsperioderSelector(getState());
+    const anmodningsperioder = Selectors.AnmodningsperioderSelector(
+      getState(),
+    ) as Api.Anmodningsperioder.Anmodningsperiode[];
     const behandlingID = behandlingerSelectors.BehandlingIDSelector(getState());
 
     return dispatch(

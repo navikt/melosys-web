@@ -35,7 +35,7 @@ export const OpprettNySakFormValuesSelector = createSelector(
 
 export const SoknadFormSelector = createSelector(
   (state) => getFormState(state, KV.Form.SOKNAD, {}),
-  (soknadForm) => soknadForm,
+  (soknadForm) => soknadForm || {},
 );
 
 export const SoknadFormValuesSelector = createSelector(SoknadFormSelector, (soknadForm) => soknadForm.values);

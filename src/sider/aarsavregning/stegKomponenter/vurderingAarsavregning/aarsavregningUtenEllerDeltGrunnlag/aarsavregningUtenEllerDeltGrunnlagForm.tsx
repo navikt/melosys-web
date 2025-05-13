@@ -1,4 +1,5 @@
 /* eslint-disable max-lines */
+// @ts-expect-error Workaround for @hookform/resolvers/yup with moduleResolution: bundler
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { FieldValue, useFieldArray, useForm, useWatch } from "react-hook-form";

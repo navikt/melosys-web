@@ -1,5 +1,6 @@
 import { useContext, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+// @ts-expect-error Workaround for @hookform/resolvers/yup with moduleResolution: bundler
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FieldValues, useForm } from "react-hook-form";
 import * as Forms from "../../../../../felleskomponenter/forms";

@@ -56,6 +56,10 @@ export default defineConfig({
         rewrite: (urlpath) => urlpath.replace(/^\/faktureringskomponenten/, ""),
       },
     },
+    // Ignore node_modules and dist directories during watch (moved from vitest.config watchExclude)
+    watch: {
+      ignored: ["**/node_modules/**", "**/dist/**"],
+    },
   },
   optimizeDeps: {
     esbuildOptions: {

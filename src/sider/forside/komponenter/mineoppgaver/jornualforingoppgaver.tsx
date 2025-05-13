@@ -21,7 +21,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
  * Lister ut journalføringsoppgaver som saksbehandleren har opprettet
  */
 export function JournalforingsOppgaver({ mineSaker }: PropsFromRedux) {
-  const { journalforing } = mineSaker;
+  const { journalforing } = mineSaker as { journalforing: any[] };
 
   const ingenSakerMelding = (
     <Nav.Alert variant="info" className="mineOppgaver__alarm">

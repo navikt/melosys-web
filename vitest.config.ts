@@ -19,18 +19,15 @@ export default defineConfig({
     globals: true,
     environment: "jsdom",
     setupFiles: "./src/setupTests.js",
-    include: [
-      "src/**/*.{test,spec}.{js,jsx,ts,tsx}",
-      // Also include __tests__ directories
-      "src/**/__tests__/**/*.{js,jsx,ts,tsx}",
-    ],
-    // Adding these for better debugging
+    include: ["src/**/*.{test,spec}.{js,jsx,ts,tsx}", "src/**/__tests__/**/*.{js,jsx,ts,tsx}"],
     reporters: ["verbose"],
     testTimeout: 10000,
-    watchExclude: ["**/node_modules/**", "**/dist/**"],
-    // Add this to see more details about test discovery
     sequence: {
       shuffle: false,
+    },
+    // Explicitly define timers to mock to avoid issues with fetch/async ops in Vitest v3+
+    fakeTimers: {
+      toFake: ["setTimeout", "clearTimeout", "setInterval", "clearInterval", "setImmediate", "clearImmediate", "Date"],
     },
   },
   resolve: {
