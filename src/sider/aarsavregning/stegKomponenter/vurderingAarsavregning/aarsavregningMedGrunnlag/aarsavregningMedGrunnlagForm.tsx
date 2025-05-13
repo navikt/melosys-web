@@ -327,12 +327,6 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   const forskuddsvisFakturertTrygdeavgift =
     (aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift?.totalAvgift ?? 0) > 0;
 
-  console.log("beregningPaagar", beregningPaagar);
-  console.log("debouncedBeregningPagaar", debouncedBeregningPagaar);
-  console.log("formIsValid", formIsValid);
-  console.log("feilmelding", feilmelding);
-  console.log("arrayValideringsfeil", arrayValideringsfeil);
-  console.log("formErrors", formErrors);
   return (
     <>
       {aarsavregningResponse && aarsavregningResponse.tidligereGrunnlagsopplysninger && (
@@ -398,9 +392,9 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
 
           {trygdeAvgiftSkalIkkeBetalesTilNav && <Aarsavregningsmeldinger.TrygdeavgiftSkalIkkeBetalesTilNav />}
 
-          {!beregningPaagar &&
+          {formIsValid &&
             !debouncedBeregningPagaar &&
-            formIsValid &&
+            !beregningPaagar &&
             !feilmelding &&
             !arrayValideringsfeil &&
             aarsavregningResponse?.avregning && (
