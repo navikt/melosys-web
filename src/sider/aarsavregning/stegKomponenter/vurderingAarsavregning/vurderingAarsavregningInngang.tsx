@@ -90,7 +90,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
         Api.Aarsavregning.hentAarsavregning(behandlingID).then((årsavregning) => {
           setInitieltÅr(årsavregning.aar);
           dispatch({ type: OK, data: årsavregning });
-          if (årsavregningErNyVurdering(årsavregningList, årsavregning.aar)) {
+          if (redigerbart && årsavregningErNyVurdering(årsavregningList, årsavregning.aar)) {
             setNyVurderingÅrsavregning(true);
           }
           utledGrunnlagstypeForÅrsavregning(årsavregning);

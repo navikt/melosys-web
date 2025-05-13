@@ -62,7 +62,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   const {
     control,
     watch,
-    formState: { isValid: formIsValid, isValidating },
+    formState: { isValid: formIsValid, isValidating, errors: formErrors },
     trigger,
     getValues,
     setValue,
@@ -326,7 +326,13 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
     medlemskapstypeErPliktig && erBrukerSkattepliktigIHelePerioden(skatteforholdsperioder);
   const forskuddsvisFakturertTrygdeavgift =
     (aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift?.totalAvgift ?? 0) > 0;
-  const nyttGrunnlagHarTrygdeavgiftsgrunnlag = aarsavregningResponse?.nyttGrunnlag?.trygdeavgiftsgrunnlag != null;
+
+  console.log("beregningPaagar", beregningPaagar);
+  console.log("debouncedBeregningPagaar", debouncedBeregningPagaar);
+  console.log("formIsValid", formIsValid);
+  console.log("feilmelding", feilmelding);
+  console.log("arrayValideringsfeil", arrayValideringsfeil);
+  console.log("formErrors", formErrors);
   return (
     <>
       {aarsavregningResponse && aarsavregningResponse.tidligereGrunnlagsopplysninger && (
@@ -392,8 +398,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
 
           {trygdeAvgiftSkalIkkeBetalesTilNav && <Aarsavregningsmeldinger.TrygdeavgiftSkalIkkeBetalesTilNav />}
 
-          {nyttGrunnlagHarTrygdeavgiftsgrunnlag &&
-            !beregningPaagar &&
+          {!beregningPaagar &&
             !debouncedBeregningPagaar &&
             formIsValid &&
             !feilmelding &&
@@ -409,7 +414,6 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
           {formIsValid &&
             !debouncedBeregningPagaar &&
             !beregningPaagar &&
-            endeligAvgiftValg !== MANUELL_ENDELIG_AVGIFT &&
             !feilmelding &&
             !arrayValideringsfeil &&
             aarsavregningResponse?.nyttGrunnlag && (
