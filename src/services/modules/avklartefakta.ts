@@ -18,7 +18,6 @@ interface Oppsummering {
   ikkeYrkesaktivOppholdstype?: string;
   arbeidssituasjonType?: string;
   ukjentSluttdatoMedlemskapsperiode?: boolean;
-  betalingsvalg?: string;
 }
 
 export const hent = (behandlingID: number): Promise<Avklartfakta[]> =>
@@ -74,6 +73,3 @@ export const lagreInnbetalingsstatus = (
   fullstendigManglendeInnbetaling?: boolean,
 ): Promise<Oppsummering> =>
   postAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/innbetalingsstatus`, fullstendigManglendeInnbetaling);
-
-export const lagreBetalingsvalgForPensjonister = (behandlingID: number, betalingstype: string): Promise<Oppsummering> =>
-  postAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/betalingsvalg`, betalingstype);
