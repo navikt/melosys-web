@@ -27,6 +27,7 @@ import { medlemskapsperioderSelectors } from "../../ducks/medlemskapsperioder";
 import { useFeatureToggle } from "../../featuretoggle";
 import { ÅRSAVREGNING, ÅRSAVREGNING_UTEN_FLYT } from "../../featuretoggle/toggleNavn";
 import "./saksbehandling.css";
+import { fakturaserierOperations } from "../../ducks/fakturaserier";
 
 interface Props extends RouteComponentProps<MatchParams> {
   behandlingOppfriskes: boolean;
@@ -99,6 +100,7 @@ function Saksbehandling({ match, location }: Props) {
       dispatch(mottatteOpplysningerOperations.resetState());
       dispatch(dokumenterOperations.resetDokument());
       dispatch(aarsavregningOperations.resetAarsavregning());
+      dispatch(fakturaserierOperations.resetFakturaserier());
     };
   }, []);
 
