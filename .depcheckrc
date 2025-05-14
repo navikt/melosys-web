@@ -1,0 +1,17 @@
+ignores:
+  - AppTypes
+  - Domene
+  - melosys-api
+  - nav-frontend-grid
+  - nav-frontend-core
+  - "@graphql-codegen/cli"
+  - "@graphql-codegen/near-operation-file-preset"
+  - "@graphql-codegen/typescript"
+  - "@graphql-codegen/typescript-generic-sdk"
+  - "@graphql-codegen/typescript-operations"
+  - "@graphql-codegen/typescript-react-apollo"
+
+devIgnores:
+  - "@graphql-codegen/cli"
+  - depcheck
+  - less-plugin-npm-import 
