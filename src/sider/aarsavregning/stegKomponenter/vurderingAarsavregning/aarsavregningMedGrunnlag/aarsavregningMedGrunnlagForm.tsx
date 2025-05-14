@@ -62,7 +62,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   const {
     control,
     watch,
-    formState: { isValid: formIsValid, isValidating, errors: formErrors },
+    formState: { isValid: formIsValid, isValidating },
     trigger,
     getValues,
     setValue,
