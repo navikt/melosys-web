@@ -297,7 +297,6 @@ describe("mottatteOpplysninger reducer", () => {
             fortsetterEtterArbeidIUtlandet: true,
           },
         ],
-        utenlandskIdent: "12345",
         medfolgendeBarn: [
           {
             uuid: "2c5ea4c0-4067-11e9-8bad-9b1deb4d3b7d",
@@ -505,7 +504,6 @@ describe("mottatteOpplysninger reducer", () => {
             ],
           },
           personOpplysninger: {
-            utenlandskIdent: "12345",
             medfolgendeFamilie: [
               {
                 uuid: "2c5ea4c0-4067-11e9-8bad-9b1deb4d3b7d",

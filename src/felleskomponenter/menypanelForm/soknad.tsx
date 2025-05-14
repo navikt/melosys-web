@@ -33,7 +33,6 @@ const mapStateToProps = (state: RootState) => ({
   formValues: getFormValues(KV.Form.SOKNAD)(state),
   initialValues: {
     ikkeYrkesaktivSituasjontype: mottatteOpplysningerSelectors.IkkeYrkesaktivSituasjontypeSelector(state),
-    utenlandskIdent: mottatteOpplysningerSelectors.PersonOpplysningerSelector(state).utenlandskIdent,
     medfolgendeBarn: mottatteOpplysningerSelectors.MedfolgendeBarnSelector(state),
     foedestedOgLand: mottatteOpplysningerSelectors.PersonOpplysningerSelector(state).foedestedOgLand,
     medfolgendeEktefelleSamboer: mottatteOpplysningerSelectors.MedfolgendeEktefelleSamboerSelector(state),

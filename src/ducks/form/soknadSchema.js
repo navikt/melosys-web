@@ -68,23 +68,6 @@ const soknadsperiodeTomSchema = string().when("$mottatteOpplysningerType", (mott
     .nullable();
 });
 
-const utenlandskIdent = object().shape({
-  ident: string()
-    .nullable()
-    .required(
-      lagMelding(KV.Menypunkter.Person.tittel, KV.Menypunkter.Person.undertitler.utenlandskID, "Utenlandsk ID kreves"),
-    ),
-  landkode: string()
-    .nullable()
-    .required(
-      lagMelding(
-        KV.Menypunkter.Person.tittel,
-        KV.Menypunkter.Person.undertitler.utenlandskID,
-        "Land for utenlandsk ID kreves",
-      ),
-    ),
-});
-
 const erFoerTomTest = {
   name: "erFoerTom",
   message: lagMelding(
@@ -312,7 +295,6 @@ const soknad = object().when(["$behandlingstema"], {
       }),
     soknadsperiodeFom: soknadsperiodeFomSchema,
     soknadsperiodeTom: soknadsperiodeTomSchema,
-    utenlandskIdent: array().of(utenlandskIdent),
     medfolgendeBarn: array().of(medfolgendeFamilie),
     medfolgendeEktefelleSamboer: array().of(medfolgendeFamilie),
     foedestedOgLand: foedestedOgLandSchema,

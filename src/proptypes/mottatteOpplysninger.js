@@ -59,12 +59,6 @@ const OppholdUtlandPropType = PT.shape({
 });
 const PersonOpplysningerPropType = PT.shape({
   medfolgendeFamilie: PT.arrayOf(PT.string),
-  utenlandskIdent: PT.arrayOf(
-    PT.shape({
-      ident: PT.string,
-      landkode: PT.string,
-    }),
-  ),
   foedestedOgLand: PT.shape({
     foedested: PT.string,
     foedeland: PT.string,
