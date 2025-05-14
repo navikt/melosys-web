@@ -244,10 +244,10 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   useEffect(() => {
     if (redigerbart && aarsavregningResponse?.nyttGrunnlag && aarsavregningID) {
       const { totalAvgift } = aarsavregningResponse.nyttGrunnlag.avgift;
-      const nyttTotalbeloep = aarsavregningResponse.avregning?.nyttTotalbeloep;
+      const beregnetAvgiftBelop = aarsavregningResponse.avregning?.beregnetAvgiftBelop;
 
-      if (totalAvgift !== nyttTotalbeloep) {
-        Api.Aarsavregning.oppdaterTotalAvgift(behandlingID, aarsavregningID, totalAvgift).then(
+      if (totalAvgift !== beregnetAvgiftBelop) {
+        Api.Aarsavregning.oppdaterBeregnetAvgiftBeloep(behandlingID, aarsavregningID, totalAvgift).then(
           (res: AarsavregningResponse) => {
             setAarsavregningResponse(res);
           },
@@ -259,7 +259,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
     behandlingID,
     aarsavregningID,
     aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift,
-    aarsavregningResponse?.avregning?.nyttTotalbeloep,
+    aarsavregningResponse?.avregning?.beregnetAvgiftBelop,
   ]);
 
   const handleEndeligAvgiftValgChange = useCallback(
@@ -399,7 +399,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
             !arrayValideringsfeil &&
             aarsavregningResponse?.avregning && (
               <SumArsavregningTabell
-                nyTrygdeavgift={aarsavregningResponse.avregning.nyttTotalbeloep}
+                nyTrygdeavgift={aarsavregningResponse.avregning.beregnetAvgiftBelop}
                 tidligereTrygdeavgift={aarsavregningResponse.avregning.tidligereFakturertBeloep}
                 harGrunnlagIMelosys
               />

@@ -62,7 +62,7 @@ export function ManuellAvgiftFormPart({
 
       {manueltAvgiftBeloep !== undefined && manueltAvgiftBeloep !== null && manueltAvgiftBeloep !== "" && (
         <SumArsavregningTabell
-          harGrunnlagIMelosys={erMedGrunnlagFlyt}
+          harGrunnlagIMelosys={erMedGrunnlagFlyt || harDeltGrunnlag}
           nyTrygdeavgift={Number(manueltAvgiftBeloep)}
           tidligereTrygdeavgift={tidligereTrygdeavgift}
           tidligereTrygdeavgiftAvgiftssystem={tidligereTrygdeavgiftAvgiftssystem}

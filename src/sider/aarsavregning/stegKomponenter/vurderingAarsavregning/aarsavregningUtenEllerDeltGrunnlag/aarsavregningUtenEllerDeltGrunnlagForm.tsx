@@ -220,8 +220,10 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
 
   useEffect(() => {
     if (redigerbart && aarsavregningResponse?.nyttGrunnlag) {
-      if (aarsavregningResponse.nyttGrunnlag?.avgift.totalAvgift !== aarsavregningResponse.avregning?.nyttTotalbeloep) {
-        Api.Aarsavregning.oppdaterTotalAvgift(
+      if (
+        aarsavregningResponse.nyttGrunnlag?.avgift.totalAvgift !== aarsavregningResponse.avregning?.beregnetAvgiftBelop
+      ) {
+        Api.Aarsavregning.oppdaterBeregnetAvgiftBeloep(
           behandlingID,
           aarsavregningID,
           aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift,
@@ -873,7 +875,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
           {formIsValid && !beregningPaagar && !debouncedBeregningPagaar && !arrayValideringsfeil && !feilmelding && (
             <SumArsavregningTabell
               harGrunnlagIMelosys={harDeltGrunnlag}
-              nyTrygdeavgift={aarsavregningResponse?.avregning?.nyttTotalbeloep}
+              nyTrygdeavgift={aarsavregningResponse?.avregning?.beregnetAvgiftBelop}
               tidligereTrygdeavgift={aarsavregningResponse?.avregning?.tidligereFakturertBeloep}
               tidligereTrygdeavgiftAvgiftssystem={
                 aarsavregningResponse?.avregning?.tidligereFakturertBeloepAvgiftssystem

@@ -330,7 +330,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   const nyTrygdeavgift =
     lagretAarsavregning?.endeligAvgiftValg === MANUELL_ENDELIG_AVGIFT
       ? lagretAarsavregning?.avregning?.manueltAvgiftBeloep
-      : lagretAarsavregning?.avregning?.nyttTotalbeloep;
+      : lagretAarsavregning?.avregning?.beregnetAvgiftBelop;
 
   const trygdeavgiftDiff =
     (nyTrygdeavgift ?? 0) - (tidligereTrygdeavgift ?? 0) - (tidligereTrygdeavgiftAvgiftssystem ?? 0);
