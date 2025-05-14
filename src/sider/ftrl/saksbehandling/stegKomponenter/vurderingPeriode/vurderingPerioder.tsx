@@ -120,7 +120,7 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   const aktivFeilmeldingType = finnAktivFeilmelding(
     formValues?.medlemskapsperioder,
     behandlingstype,
-    soknadsland,
+    behandlingstema,
     begrensePeriodeVedtakToggleEnabled,
     soknadsperiode.fom,
     soknadsperiode.tom,

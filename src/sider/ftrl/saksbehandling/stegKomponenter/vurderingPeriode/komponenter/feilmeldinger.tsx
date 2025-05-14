@@ -9,6 +9,7 @@ const { FTRL_KAP2_2_1, FTRL_KAP2_2_7_FJERDE_LEDD, FTRL_KAP2_2_8_FJERDE_LEDD } =
 const { MIDLERTIDIG_2_1_FJERDE_LEDD } = MKV.Koder.ikkeyrkesaktivoppholdtype;
 const { MIDLERTIDIG_ARBEID_2_1_FJERDE_LEDD } = MKV.Koder.arbeidssituasjontype;
 const { AVSLAATT, INNVILGET, OPPHØRT } = MKV.Koder.innvilgelsesResultat;
+const { PENSJONIST } = MKV.Koder.behandlinger.behandlingstema;
 
 const IngenMedlemskapsperioder = (
   <Nav.Alert variant="error" className="alertstripe_feilmelding">
@@ -249,7 +250,7 @@ enum TypeFeilmelding {
 export function finnAktivFeilmelding(
   medlemskapsperioder: MedlemskapsperiodeProp[],
   behandlingstype: string,
-  land: string[],
+  behandlingstema: string,
   begrensePeriodeVedtakToggleEnabled: boolean | undefined,
   søknadsperiodeFomDato: string,
   søknadsperiodeTomDato?: string,
@@ -304,7 +305,10 @@ export function finnAktivFeilmelding(
   }
 
   const { bestemmelse } = medlemskapsperioder[0];
-  if (bestemmelse === FTRL_KAP2_2_7_FJERDE_LEDD || bestemmelse === FTRL_KAP2_2_8_FJERDE_LEDD) {
+  if (
+    (bestemmelse === FTRL_KAP2_2_7_FJERDE_LEDD || bestemmelse === FTRL_KAP2_2_8_FJERDE_LEDD) &&
+    behandlingstema !== PENSJONIST
+  ) {
     return TypeFeilmelding.BESTEMMELSE_FOR_FAMILIEMEDLEMMER;
   }
 
