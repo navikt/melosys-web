@@ -10,7 +10,6 @@ import "./personcontainer.css";
 type PersonContainerProps = ComponentProps<typeof Person>;
 
 function PersonContainer({
-  redigerbart,
   visArbeidsforholdRolleEtiketter,
   visMottatteOpplysningerData,
   endreFokus,
@@ -25,7 +24,6 @@ function PersonContainer({
       <Nav.Row>
         <Nav.Column xs="12">
           <Person
-            redigerbart={redigerbart}
             visArbeidsforholdRolleEtiketter={visArbeidsforholdRolleEtiketter}
             visMottatteOpplysningerData={visMottatteOpplysningerData}
             endreFokus={endreFokus}

@@ -8,28 +8,28 @@ import * as Ikoner from "../../../../resources/images";
 import PersonInfo from "./personinfo";
 import Adresser from "./adresser";
 import AnnenAdresse from "./annenadresse";
-import UtenlandskIdent from "./utenlandskident";
 import StatsborgerskapTableContainer from "./statsborgerskapTable";
 
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
+import { formSelectors } from "../../../../ducks/form";
 
 import "./person.css";
 
 const mapStateToProps = (state: RootState) => ({
+  oppgittAdresseHarVerdier: formSelectors.SoknadOppgittAdresseHarVerdierSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
 });
 const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type PersonProps = PropsFromRedux & {
-  redigerbart: boolean;
   visArbeidsforholdRolleEtiketter: boolean;
   visMottatteOpplysningerData: boolean;
   endreFokus: boolean;
 };
 
 export function Person({
-  redigerbart,
+  oppgittAdresseHarVerdier,
   visArbeidsforholdRolleEtiketter,
   visMottatteOpplysningerData,
   behandlingID,
@@ -61,6 +61,21 @@ export function Person({
           <Adresser behandlingID={behandlingID} />
         </Nav.Column>
       </Nav.Row>
+      {visMottatteOpplysningerData && (
+        <>
+          <Nav.Row>
+            <Nav.Column className="etikett__container">
+              {oppgittAdresseHarVerdier && <Tags.FraBruker />}
+              {visArbeidsforholdRolleEtiketter && <Tags.BrukersDel style={{ marginLeft: "0.3em" }} />}
+            </Nav.Column>
+          </Nav.Row>
+          <Nav.Row>
+            <Nav.Column xs="9">
+              <AnnenAdresse className="oppgittAdresse" />
+            </Nav.Column>
+          </Nav.Row>
+        </>
+      )}
     </div>
   );
 }
