@@ -26,12 +26,7 @@ type SamletVerdiNaturalytelser = number | null;
 type ErArbeidsgiveravgiftHelePerioden = boolean | null;
 type ErTrukketTrygdeavgift = boolean | null;
 type UtlArbTilhoererSammeKonsern = boolean | null;
-type Id = string | null;
 type Landkode = string;
-interface UtenlandskIdent {
-  ident: Id;
-  landkode: Landkode;
-}
 type MedfolgendeBarn = {
   uuid: string;
   fnr: string | null;
@@ -251,7 +246,6 @@ export interface MottatteOpplysningerResDto {
   type: string;
 }
 interface Personopplysninger {
-  utenlandskIdent: UtenlandskIdent[];
   medfolgendeFamilie: MedfolgendeBarn;
   foedestedOgLand: FoedestedOgLand;
 }
