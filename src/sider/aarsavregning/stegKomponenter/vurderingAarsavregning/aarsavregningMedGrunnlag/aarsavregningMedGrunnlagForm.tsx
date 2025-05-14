@@ -326,7 +326,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
     medlemskapstypeErPliktig && erBrukerSkattepliktigIHelePerioden(skatteforholdsperioder);
   const forskuddsvisFakturertTrygdeavgift =
     (aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift?.totalAvgift ?? 0) > 0;
-  const nyttGrunnlagHarTrygdeavgiftsgrunnlag = aarsavregningResponse?.nyttGrunnlag?.trygdeavgiftsgrunnlag != null;
+
   return (
     <>
       {aarsavregningResponse && aarsavregningResponse.tidligereGrunnlagsopplysninger && (
@@ -392,10 +392,9 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
 
           {trygdeAvgiftSkalIkkeBetalesTilNav && <Aarsavregningsmeldinger.TrygdeavgiftSkalIkkeBetalesTilNav />}
 
-          {nyttGrunnlagHarTrygdeavgiftsgrunnlag &&
-            !beregningPaagar &&
+          {formIsValid &&
             !debouncedBeregningPagaar &&
-            formIsValid &&
+            !beregningPaagar &&
             !feilmelding &&
             !arrayValideringsfeil &&
             aarsavregningResponse?.avregning && (
@@ -409,7 +408,6 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
           {formIsValid &&
             !debouncedBeregningPagaar &&
             !beregningPaagar &&
-            endeligAvgiftValg !== MANUELL_ENDELIG_AVGIFT &&
             !feilmelding &&
             !arrayValideringsfeil &&
             aarsavregningResponse?.nyttGrunnlag && (

@@ -349,7 +349,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
         Vedtak årsavregning {lagretAarsavregning ? lagretAarsavregning.aar : ""}
       </Nav.Heading>
 
-      {lagretAarsavregning?.endeligAvgiftValg === MANUELL_ENDELIG_AVGIFT && (
+      {redigerbart && lagretAarsavregning?.endeligAvgiftValg === MANUELL_ENDELIG_AVGIFT && (
         <Nav.Alert variant="warning" className="blokk-s">
           Du har lagt inn &quot;Endelig beregnet trygdeavgift&quot; manuelt og må derfor oppgi en begrunnelse i
           fritekstfeltet.

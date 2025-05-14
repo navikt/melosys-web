@@ -120,6 +120,7 @@ const aarsavregningMedGrunnlagSchema = object().shape({
   manueltAvgiftBeloep: string().when(["endeligAvgiftValg"], {
     is: (endeligAvgiftValg) => endeligAvgiftValg === MANUELL_ENDELIG_AVGIFT,
     then: string().required(MAA_FYLLES_UT),
+    otherwise: string().nullable(),
   }),
 });
 
