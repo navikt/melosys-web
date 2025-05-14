@@ -61,26 +61,6 @@ export function Person({
           <Adresser behandlingID={behandlingID} />
         </Nav.Column>
       </Nav.Row>
-      {visMottatteOpplysningerData && (
-        <>
-          <Nav.Row>
-            <Nav.Column className="etikett__container">
-              <Tags.FraBruker />
-              {visArbeidsforholdRolleEtiketter && <Tags.BrukersDel style={{ marginLeft: "0.3em" }} />}
-            </Nav.Column>
-          </Nav.Row>
-          <Nav.Row>
-            <Nav.Column xs="9">
-              <AnnenAdresse className="oppgittAdresse" />
-            </Nav.Column>
-          </Nav.Row>
-          <Nav.Row>
-            <Nav.Column xs="6">
-              <UtenlandskIdent redigerbart={redigerbart} />
-            </Nav.Column>
-          </Nav.Row>
-        </>
-      )}
     </div>
   );
 }
