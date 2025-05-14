@@ -20,12 +20,6 @@ import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetek
 import { AarsavregningMedGrunnlag } from "./aarsavregningMedGrunnlag/aarsavregningMedGrunnlag";
 import { AarsavregningUtenEllerDeltGrunnlag } from "./aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlag";
 
-interface Props {
-  bekreft: () => void;
-  aktivtSteg: boolean;
-  oppdaterStatus: (isValid: boolean) => void;
-}
-
 const { FASTSATT_TRYGDEAVGIFT, IKKE_FASTSATT } = MKV.Koder.behandlinger.behandlingsresultattyper;
 
 const DELT_GRUNNLAG_HJELPETEKST = (
@@ -40,34 +34,44 @@ const DELT_GRUNNLAG_HJELPETEKST = (
   </>
 );
 
-const behandlingHarÅrsavregning = (årsavregningList: AarsavregningListResponse[], behandlingID: number) => {
+const behandlingHarÅrsavregning = (behandlingID: number, årsavregningList: AarsavregningListResponse[]) => {
   return årsavregningList.find((aarsavregning) => aarsavregning.behandlingID === behandlingID);
 };
 
-const årsavregningErNyVurdering = (årsavregningList: AarsavregningListResponse[], aar: number) => {
+const årsavregningErNyVurdering = (
+  behandlingID: number,
+  årsavregningList: AarsavregningListResponse[],
+  aar: number,
+) => {
   return årsavregningList.find(
-    (aarsavregning) => aarsavregning.aar === aar && aarsavregning.resultattype.kode === FASTSATT_TRYGDEAVGIFT,
+    (aarsavregning) =>
+      aarsavregning.behandlingID !== behandlingID &&
+      aarsavregning.aar === aar &&
+      aarsavregning.resultattype.kode === FASTSATT_TRYGDEAVGIFT,
   );
 };
+
+interface Props {
+  bekreft: () => void;
+  aktivtSteg: boolean;
+  oppdaterStatus: (isValid: boolean) => void;
+}
 
 export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtSteg }: Props) {
   const [valgtÅr, setValgtÅr] = useState<number | undefined>(undefined);
   const [initieltÅr, setInitieltÅr] = useState<number | undefined>(undefined);
   const [lagÅrsavregningFeil, setLagÅrsavregningFeil] = useState<string | undefined>(undefined);
-
   const [harGrunnlag, setHarGrunnlag] = useState<boolean | undefined>(undefined);
   const [harDeltGrunnlag, setHarDeltGrunnlag] = useState<boolean | undefined>(undefined);
   const [visDeltGrunnlagRadioGroup, setVisDeltGrunnlagRadioGroup] = useState(false);
-  const [nyVurderingÅrsavregning, setNyVurderingÅrsavregning] = useState<boolean>(false);
-  const [flereAktiveÅrsavregninger, setFlereAktiveÅrsavregninger] = useState<boolean>(false);
+  const [erNyVurdering, setErNyVurdering] = useState<boolean>(false);
+  const [harAktivÅrsavregning, setHarAktivÅrsavregning] = useState<boolean>(false);
+
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as any;
   const saksnummer = useSelector(fagsakSelectors.SaksnummerSelector) as any;
-  const sisteMuligeÅr = new Date().getFullYear() - 1;
-  const antallÅrTilbakeITid = 6;
-  const muligeAar = Array.from({ length: antallÅrTilbakeITid }, (_, i) => sisteMuligeÅr - i);
-  const dispatch = useDispatch();
   const { oppfriskOgLastInnSaksopplysningerForAarsavregning } = useContext(FellesHandlersContext) as any;
+  const dispatch = useDispatch();
 
   const utledGrunnlagstypeForÅrsavregning = (res: AarsavregningResponse) => {
     if (res.tidligereGrunnlagsopplysninger === null) {
@@ -86,12 +90,12 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
 
   useEffect(() => {
     Api.Aarsavregning.hentFiltrertAarsavregningList(saksnummer).then((årsavregningList) => {
-      if (behandlingHarÅrsavregning(årsavregningList, behandlingID)) {
+      if (behandlingHarÅrsavregning(behandlingID, årsavregningList)) {
         Api.Aarsavregning.hentAarsavregning(behandlingID).then((årsavregning) => {
           setInitieltÅr(årsavregning.aar);
           dispatch({ type: OK, data: årsavregning });
-          if (redigerbart && årsavregningErNyVurdering(årsavregningList, årsavregning.aar)) {
-            setNyVurderingÅrsavregning(true);
+          if (årsavregningErNyVurdering(behandlingID, årsavregningList, årsavregning.aar)) {
+            setErNyVurdering(true);
           }
           utledGrunnlagstypeForÅrsavregning(årsavregning);
         });
@@ -101,8 +105,8 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
 
   const håndterEndringAvÅr = (event: ChangeEvent<HTMLSelectElement>) => {
     setLagÅrsavregningFeil(undefined);
-    setNyVurderingÅrsavregning(false);
-    setFlereAktiveÅrsavregninger(false);
+    setErNyVurdering(false);
+    setHarAktivÅrsavregning(false);
     setVisDeltGrunnlagRadioGroup(false);
     setHarGrunnlag(undefined);
     setHarDeltGrunnlag(undefined);
@@ -112,7 +116,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
 
     Api.Aarsavregning.hentFiltrertAarsavregningList(saksnummer, FASTSATT_TRYGDEAVGIFT, år).then(
       (fastsattÅrsavregningList) => {
-        setNyVurderingÅrsavregning(fastsattÅrsavregningList.length > 0);
+        setErNyVurdering(fastsattÅrsavregningList.length > 0);
       },
     );
 
@@ -130,7 +134,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
             setLagÅrsavregningFeil(error.body.message);
           });
       } else {
-        setFlereAktiveÅrsavregninger(true);
+        setHarAktivÅrsavregning(true);
       }
     });
   };
@@ -140,6 +144,10 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
       setHarDeltGrunnlag(res.harDeltGrunnlag),
     );
   };
+
+  const sisteMuligeÅr = new Date().getFullYear() - 1;
+  const antallÅrTilbakeITid = 6;
+  const muligeAar = Array.from({ length: antallÅrTilbakeITid }, (_, i) => sisteMuligeÅr - i);
 
   return (
     <div className="vurderingAarsavregning">
@@ -167,7 +175,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
         </Nav.Column>
       </Nav.Row>
 
-      {flereAktiveÅrsavregninger && (
+      {redigerbart && harAktivÅrsavregning && (
         <Nav.Alert variant="error">
           <Nav.BodyLong size="small">Året {valgtÅr} har allerede en aktiv årsavregning.</Nav.BodyLong>
         </Nav.Alert>
@@ -179,9 +187,9 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
         </Nav.Alert>
       )}
 
-      {!lagÅrsavregningFeil && !flereAktiveÅrsavregninger && (
+      {!lagÅrsavregningFeil && !harAktivÅrsavregning && (
         <>
-          {nyVurderingÅrsavregning && <NyBehandlingForTidligereAarsavregningMelding />}
+          {redigerbart && erNyVurdering && <NyBehandlingForTidligereAarsavregningMelding />}
 
           {visDeltGrunnlagRadioGroup && (
             <Nav.Row>
@@ -195,7 +203,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
                     />
                   }
                   value={harDeltGrunnlag}
-                  readOnly={!redigerbart || flereAktiveÅrsavregninger}
+                  readOnly={!redigerbart || harAktivÅrsavregning}
                 >
                   <Nav.HStack gap="6">
                     <Nav.Radio value>Ja</Nav.Radio>
