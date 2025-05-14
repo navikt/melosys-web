@@ -12,6 +12,7 @@ import Soknadsland from "../../../felleskomponenter/soknadsland";
 
 import BehandlingerListe from "./behandlingerListe";
 import { HStack, VStack } from "@navikt/ds-react";
+import { sorterElementerEtterDato } from "../../../felleskomponenter/sorterbarListe";
 
 /** Den enkelte sak-elementet som brukes i iterasjon i listen
  */
@@ -19,10 +20,13 @@ function EnkeltSak(props) {
   const { landkoder } = props;
   const { periode, land, behandlingOversikter, sakstype, saksnummer, sakstema } = props.sak;
   const history = useHistory();
+  const sorterteBehandlinger = behandlingOversikter
+    .slice()
+    .sort(sorterElementerEtterDato("descending", "opprettetDato"));
 
-  const { behandlingsstatus, behandlingstema } = behandlingOversikter[0];
+  const { behandlingsstatus, behandlingstema } = sorterteBehandlinger[0];
   const { soknadsperiode } =
-    behandlingOversikter.find((behandlingOversikt) => behandlingOversikt.soknadsperiode != null) ?? {};
+    sorterteBehandlinger.find((behandlingOversikt) => behandlingOversikt.soknadsperiode != null) ?? {};
 
   const periodeTittel = MKVUtils.erAvsluttetEllerMidlertidigBeslutning(behandlingsstatus?.kode)
     ? periode
@@ -58,7 +62,7 @@ function EnkeltSak(props) {
         </Nav.Link>
       </HStack>
       <div>
-        <BehandlingerListe behandlingerForFagsak={behandlingOversikter} />
+        <BehandlingerListe behandlingerForFagsak={sorterteBehandlinger} />
       </div>
     </VStack>
   );
