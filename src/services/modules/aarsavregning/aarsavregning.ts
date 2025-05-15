@@ -50,7 +50,7 @@ export interface Trygdeavgiftsperiode {
 }
 
 export interface Avregning {
-  nyttTotalbeloep?: number;
+  beregnetAvgiftBelop?: number;
   tidligereFakturertBeloep?: number;
   tilFaktureringBeloep?: number;
   tidligereFakturertBeloepAvgiftssystem?: number;
@@ -112,12 +112,16 @@ export const hentFiltrertAarsavregningList = (
   }
   return getAsJson(url);
 };
-export const oppdaterTotalAvgift = async (behandlingID: number, aarsavregningID: number, totalAvgift?: number) => {
+export const oppdaterBeregnetAvgiftBeloep = async (
+  behandlingID: number,
+  aarsavregningID: number,
+  beregnetAvgiftBelop?: number,
+) => {
   return oppdaterAarsavregning(
     behandlingID,
     {
       avregning: {
-        nyttTotalbeloep: totalAvgift,
+        beregnetAvgiftBelop,
       },
     },
     aarsavregningID,
