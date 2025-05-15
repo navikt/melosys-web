@@ -24,13 +24,7 @@ function EnkeltSak(props) {
     .slice()
     .sort(sorterElementerEtterDato("descending", "opprettetDato"));
 
-  const { behandlingsstatus, behandlingstema } = sorterteBehandlinger[0];
-  const { soknadsperiode } =
-    sorterteBehandlinger.find((behandlingOversikt) => behandlingOversikt.soknadsperiode != null) ?? {};
-
-  const periodeTittel = MKVUtils.erAvsluttetEllerMidlertidigBeslutning(behandlingsstatus?.kode)
-    ? periode
-    : soknadsperiode;
+  const { behandlingstema } = sorterteBehandlinger[0];
 
   const handleSearchClick = () => {
     sessionStorage.setItem("sokefrase", saksnummer);
@@ -46,13 +40,9 @@ function EnkeltSak(props) {
         {saksnummer}
       </div>
       <div>{behandlingstema.term}</div>
-      {periodeTittel && (
-        <div>
-          Periode:
-          <EnkeltDato dato={periodeTittel.fom} defaultValue="" /> -{" "}
-          <EnkeltDato dato={periodeTittel.tom} defaultValue="" />
-        </div>
-      )}
+      <div>
+        Periode: <EnkeltDato dato={periode.fom} defaultValue="" /> - <EnkeltDato dato={periode.tom} defaultValue="" />
+      </div>
       <HStack justify="space-between">
         <div>
           Land: <Soknadsland land={land} visFulltNavn landkoderKodeverk={landkoder} />
