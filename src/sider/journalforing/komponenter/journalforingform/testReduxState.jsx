@@ -235,6 +235,10 @@ export const testReduxState = {
               svarFrist: null,
             },
           ],
+          periode: {
+            fom: "2024-05-01",
+            tom: "2024-05-15",
+          },
           hovedpartRolle: "BRUKER",
         },
         {
@@ -277,6 +281,10 @@ export const testReduxState = {
               svarFrist: null,
             },
           ],
+          periode: {
+            fom: "2024-05-01",
+            tom: "2024-05-15",
+          },
           hovedpartRolle: "BRUKER",
         },
         {
@@ -319,6 +327,10 @@ export const testReduxState = {
               svarFrist: null,
             },
           ],
+          periode: {
+            fom: "2024-05-01",
+            tom: "2024-05-15",
+          },
           hovedpartRolle: "BRUKER",
         },
         {
@@ -361,6 +373,10 @@ export const testReduxState = {
               svarFrist: null,
             },
           ],
+          periode: {
+            fom: "2024-05-01",
+            tom: "2024-05-15",
+          },
           hovedpartRolle: "BRUKER",
         },
       ],
