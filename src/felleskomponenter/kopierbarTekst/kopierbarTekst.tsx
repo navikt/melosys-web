@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import CopyToClipboard from "react-copy-to-clipboard";
 import classNames from "classnames";
 
 import * as Ikoner from "../../resources/images";
@@ -17,14 +16,29 @@ function KopierbarTekst({ className, hovertekst, children }: KopierbarTekstProps
   const [erKopiert, setErKopiert] = useState(false);
 
   useEffect(() => {
-    setTimeout(() => {
-      setErKopiert(false);
-      setVisHoverTekst(false);
-    }, 1000);
+    let timer: NodeJS.Timeout;
+    if (erKopiert) {
+      timer = setTimeout(() => {
+        setErKopiert(false);
+        setVisHoverTekst(false);
+      }, 1000);
+    }
+    return () => clearTimeout(timer);
   }, [erKopiert]);
 
   const containerCls = classNames("kopierbar-tekst__container", { "kopierbar-tekst__container__hover": visHoverTekst });
   const kopierIkonCls = classNames("kopierbar-tekst__kopier-ikon");
+
+  const handleCopy = async () => {
+    if (typeof children === "string") {
+      try {
+        await navigator.clipboard.writeText(children);
+        setErKopiert(true);
+      } catch (err) {
+        console.error("Failed to copy text: ", err);
+      }
+    }
+  };
 
   return (
     <span
@@ -38,16 +52,14 @@ function KopierbarTekst({ className, hovertekst, children }: KopierbarTekstProps
         <div className="kopierbar-tekst__hovertekst">{erKopiert ? "Kopiert" : hovertekst}</div>
       )}
       <span className={containerCls}>
-        <CopyToClipboard text={children} onCopy={() => setErKopiert(true)}>
-          <button type="button">
-            {children}
-            {erKopiert ? (
-              <Ikoner.GreenCheckmark className={kopierIkonCls} />
-            ) : (
-              <Ikoner.Kopier className={kopierIkonCls} />
-            )}
-          </button>
-        </CopyToClipboard>
+        <button type="button" onClick={handleCopy}>
+          {children}
+          {erKopiert ? (
+            <Ikoner.GreenCheckmark className={kopierIkonCls} />
+          ) : (
+            <Ikoner.Kopier className={kopierIkonCls} />
+          )}
+        </button>
       </span>
     </span>
   );

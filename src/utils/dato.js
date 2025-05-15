@@ -1,6 +1,6 @@
 import moment from "moment";
 import momentTZ from "moment-timezone";
-import { areIntervalsOverlapping } from "date-fns";
+// import { areIntervalsOverlapping } from "date-fns"; Removed
 
 /**
  * Saksbehandlere har forskjellig måte å taste inn datoer på. Denne funksjonen forsøker å
@@ -248,10 +248,8 @@ function perioderOverlapper(periode1Fom, periode1Tom, periode2Fom, periode2Tom) 
 
   if (!periode1FomDate || !periode1TomDate || !periode2FomDate || !periode2TomDate) return false;
 
-  const intervalLeft = { start: periode1FomDate, end: periode1TomDate };
-  const intervalRight = { start: periode2FomDate, end: periode2TomDate };
-
-  return areIntervalsOverlapping(intervalLeft, intervalRight, { inclusive: true });
+  // Replace with local implementation: (StartA <= EndB) and (EndA >= StartB)
+  return periode1FomDate <= periode2TomDate && periode1TomDate >= periode2FomDate;
 }
 
 function erFør(dato1, dato2) {
