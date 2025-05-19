@@ -74,7 +74,7 @@ export interface AarsavregningFormValuesProps extends FormValuesProps {
   totaltForskuddsvisFakturert?: number | string;
   bestemmelse?: string;
   endeligAvgiftValg: string;
-  manueltAvgiftBeloep?: number;
+  manueltAvgiftBeloep?: number | string;
 }
 
 export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, harDeltGrunnlag }: Props) {
@@ -94,7 +94,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
       inntektskilder: [{}],
       totaltForskuddsvisFakturert: "",
       endeligAvgiftValg: "",
-      manueltAvgiftBeloep: undefined,
+      manueltAvgiftBeloep: "",
     },
   });
 
@@ -232,7 +232,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
           bestemmelse,
           totaltForskuddsvisFakturert: aarsavregningRes?.avregning?.tidligereFakturertBeloepAvgiftssystem || "",
           endeligAvgiftValg: aarsavregningRes?.endeligAvgiftValg || "",
-          manueltAvgiftBeloep: aarsavregningRes?.avregning?.manueltAvgiftBeloep,
+          manueltAvgiftBeloep: aarsavregningRes?.avregning?.manueltAvgiftBeloep || "",
           skatteforholdsperioder: mapTilSkatteforholdProps(
             deltGrunnlagAarsavregningHarIkkeNyttGrunnlag
               ? aarsavregningRes?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.skatteforholdsperioder
