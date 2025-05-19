@@ -40,11 +40,10 @@ const kanPeriodeSlettes = (gjeldendePeriode: Medlemskapsperiode, allePerioderILi
     return false; // Uventet tilstand, default til ikke-slettbar
   }
 
-  const erHeltForstBlantLagrede = alleLagredePerioderSortert[0].id === gjeldendePeriode.id;
-  const erHeltSistBlantLagrede =
-    alleLagredePerioderSortert[alleLagredePerioderSortert.length - 1].id === gjeldendePeriode.id;
+  const erFørstePeriode = alleLagredePerioderSortert[0].id === gjeldendePeriode.id;
+  const erSistePeriode = alleLagredePerioderSortert[alleLagredePerioderSortert.length - 1].id === gjeldendePeriode.id;
 
-  if (erHeltForstBlantLagrede || erHeltSistBlantLagrede) {
+  if (erFørstePeriode || erSistePeriode) {
     return true;
   }
   return false; // "Midt-i" periode
