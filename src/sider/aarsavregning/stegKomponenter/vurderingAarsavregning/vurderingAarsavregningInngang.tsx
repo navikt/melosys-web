@@ -21,6 +21,7 @@ import { AarsavregningMedGrunnlag } from "./aarsavregningMedGrunnlag/aarsavregni
 import { AarsavregningUtenEllerDeltGrunnlag } from "./aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlag";
 
 const { FASTSATT_TRYGDEAVGIFT, IKKE_FASTSATT } = MKV.Koder.behandlinger.behandlingsresultattyper;
+const { MANGLENDE_INNBETALING_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingstyper;
 
 const DELT_GRUNNLAG_HJELPETEKST = (
   <>
@@ -51,6 +52,16 @@ const årsavregningErNyVurdering = (
   );
 };
 
+const fagsakHarManglendeInnbetaling = async (saksnummer: string) => {
+  const fagsaker = await Api.Fagsaker.sok.send({ saksnummer, ident: null, orgnr: null });
+  const fagsak = fagsaker[0];
+  return fagsak.behandlingOversikter.some(
+    (behandling) =>
+      behandling.behandlingstype.kode === MANGLENDE_INNBETALING_TRYGDEAVGIFT &&
+      behandling.behandlingsresultattype.kode === IKKE_FASTSATT,
+  );
+};
+
 interface Props {
   bekreft: () => void;
   aktivtSteg: boolean;
@@ -66,6 +77,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
   const [visDeltGrunnlagRadioGroup, setVisDeltGrunnlagRadioGroup] = useState(false);
   const [erNyVurdering, setErNyVurdering] = useState<boolean>(false);
   const [harAktivÅrsavregning, setHarAktivÅrsavregning] = useState<boolean>(false);
+  const [harManglendeInnbetalingBehandling, setHarManglendeInnbetalingBehandling] = useState<boolean>(false);
 
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as any;
@@ -89,18 +101,21 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
   };
 
   useEffect(() => {
-    Api.Aarsavregning.hentFiltrertAarsavregningList(saksnummer).then((årsavregningList) => {
+    const hentÅrsavregning = async () => {
+      const årsavregningList = await Api.Aarsavregning.hentFiltrertAarsavregningList(saksnummer);
       if (behandlingHarÅrsavregning(behandlingID, årsavregningList)) {
-        Api.Aarsavregning.hentAarsavregning(behandlingID).then((årsavregning) => {
-          setInitieltÅr(årsavregning.aar);
-          dispatch({ type: OK, data: årsavregning });
-          if (årsavregningErNyVurdering(behandlingID, årsavregningList, årsavregning.aar)) {
-            setErNyVurdering(true);
-          }
-          utledGrunnlagstypeForÅrsavregning(årsavregning);
-        });
+        const årsavregning = await Api.Aarsavregning.hentAarsavregning(behandlingID);
+        setInitieltÅr(årsavregning.aar);
+        dispatch({ type: OK, data: årsavregning });
+        if (årsavregningErNyVurdering(behandlingID, årsavregningList, årsavregning.aar)) {
+          setErNyVurdering(true);
+        }
+        utledGrunnlagstypeForÅrsavregning(årsavregning);
       }
-    });
+
+      setHarManglendeInnbetalingBehandling(await fagsakHarManglendeInnbetaling(saksnummer));
+    };
+    hentÅrsavregning();
   }, []);
 
   const håndterEndringAvÅr = (event: ChangeEvent<HTMLSelectElement>) => {
@@ -176,8 +191,17 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
       </Nav.Row>
 
       {redigerbart && harAktivÅrsavregning && (
-        <Nav.Alert variant="error">
+        <Nav.Alert variant="error" className="alertstripe_feilmelding">
           <Nav.BodyLong size="small">Året {valgtÅr} har allerede en aktiv årsavregning.</Nav.BodyLong>
+        </Nav.Alert>
+      )}
+
+      {redigerbart && !harAktivÅrsavregning && harManglendeInnbetalingBehandling && (
+        <Nav.Alert variant="warning" className="alertstripe_feilmelding">
+          <Nav.BodyLong size="small">
+            Det finnes en åpen behandling om manglende innbetaling av trygdeavgift. Vurder om denne skal behandles først
+            og om årsavregning skal foretas.
+          </Nav.BodyLong>
         </Nav.Alert>
       )}
 
