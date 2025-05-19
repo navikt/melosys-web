@@ -43,22 +43,23 @@ export function EndeligAvgiftValgRadioGroup({
     : radioOptions.filter((option) => option.value !== OPPLYSNINGER_UENDRET);
 
   return (
-    <Forms.RadioGroup
-      name="endeligAvgiftValg"
-      control={control}
-      legend="Hva ønsker du å gjøre?"
-      readOnly={!redigerbart}
-      onChange={(value) => {
-        handleEndeligAvgiftValgChange(value);
-      }}
-      className="endeligAvgiftValg_radio_group"
-    >
-      {filteredOptions.map((option) => (
-        <Nav.Radio key={option.value} value={option.value}>
-          {option.label}
-          {option.description}
-        </Nav.Radio>
-      ))}
-    </Forms.RadioGroup>
+    <div className="endeligAvgiftValg_radio_group">
+      <Forms.RadioGroup
+        name="endeligAvgiftValg"
+        control={control}
+        legend="Hva ønsker du å gjøre?"
+        readOnly={!redigerbart}
+        onChange={(value) => {
+          handleEndeligAvgiftValgChange(value);
+        }}
+      >
+        {filteredOptions.map((option) => (
+          <Nav.Radio key={option.value} value={option.value}>
+            {option.label}
+            {option.description}
+          </Nav.Radio>
+        ))}
+      </Forms.RadioGroup>
+    </div>
   );
 }

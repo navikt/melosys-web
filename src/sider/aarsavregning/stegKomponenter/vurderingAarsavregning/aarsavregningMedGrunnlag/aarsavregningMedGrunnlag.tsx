@@ -43,7 +43,7 @@ const mapMedlemskapsperiodeBestemmelse = (harDeltGrunnlag: boolean, medlemskapsp
 };
 
 export interface AarsavregningMedGrunnlagFormValues extends FormValuesProps {
-  endeligAvgiftValg?: string;
+  endeligAvgiftValg: string;
   manueltAvgiftBeloep?: number;
 }
 
@@ -67,7 +67,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
     formDefaultValues: {
       skatteforholdsperioder: [{}],
       inntektskilder: [{}],
-      endeligAvgiftValg: undefined,
+      endeligAvgiftValg: "",
       manueltAvgiftBeloep: undefined,
     },
     medlemskapstypeErPliktig: false,
@@ -86,7 +86,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
       return {
         skatteforholdsperioder: [{}],
         inntektskilder: [{}],
-        endeligAvgiftValg: undefined,
+        endeligAvgiftValg: "",
         manueltAvgiftBeloep: undefined,
       };
     const { inntektskperioder, skatteforholdsperioder } = trygdeavgiftsgrunnlag;
@@ -94,7 +94,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
     const sorterteSkatteforhold = [...skatteforholdsperioder].sort(Utils.dato.sorterEtterISOFomDato);
 
     return {
-      endeligAvgiftValg,
+      endeligAvgiftValg: endeligAvgiftValg || "",
       manueltAvgiftBeloep,
       skatteforholdsperioder: !Utils._isEmpty(sorterteSkatteforhold)
         ? mapTilSkatteforholdProps(sorterteSkatteforhold)
