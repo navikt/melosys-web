@@ -5,7 +5,6 @@ import { connect, ConnectedProps } from "react-redux";
 import { isPristine } from "redux-form";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
-import { useBeforeunload } from "react-beforeunload";
 
 import * as Nav from "../../navFrontend";
 import * as Utils from "../../utils";
@@ -64,15 +63,19 @@ function Sendbrev({
     hentDokumentOversikt(saksnummer);
   }, []);
 
-  useBeforeunload((event) => {
-    const visBekreftelseForLukkingAvFane = () => {
-      event.preventDefault();
+  useEffect(() => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      if (!sendBrevFormIsPristine) {
+        event.preventDefault();
+      }
     };
 
-    if (!sendBrevFormIsPristine) {
-      visBekreftelseForLukkingAvFane();
-    }
-  });
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [sendBrevFormIsPristine]);
 
   return (
     <>
