@@ -15,8 +15,8 @@ import { Medlemskapsperiode } from "../../../../../services/modules/medlemavfolk
 import "./medlemskapsperiodeSkjema.css";
 import { useEffect } from "react";
 
-// Funksjon for å kalkulere slettbar-status, nå kalt erPeriodeSlettbar
-const erPeriodeSlettbar = (gjeldendePeriode: Medlemskapsperiode, allePerioderIListe: Medlemskapsperiode[]): boolean => {
+// Funksjon for å kalkulere slettbar-status, nå kalt kanPeriodeSlettes
+const kanPeriodeSlettes = (gjeldendePeriode: Medlemskapsperiode, allePerioderIListe: Medlemskapsperiode[]): boolean => {
   const erPeriodeUlagret = !gjeldendePeriode.id || gjeldendePeriode.id === ULAGRET_MEDLEMSKAPSPERIODE_ID;
   if (erPeriodeUlagret) {
     return true; // Ulagret er alltid slettbar
@@ -97,7 +97,7 @@ export function MedlemskapsperiodeSkjema({
   const kunEnTrygdedekning = trygdedekninger?.length === 1;
 
   const gjeldendePeriodeForRad = medlemskapsperioder[index];
-  const erDennePeriodenSlettbar = erPeriodeSlettbar(gjeldendePeriodeForRad, medlemskapsperioder);
+  const erDennePeriodenSlettbar = kanPeriodeSlettes(gjeldendePeriodeForRad, medlemskapsperioder);
 
   useEffect(() => {
     if (trygdedekninger?.length === 1) {
