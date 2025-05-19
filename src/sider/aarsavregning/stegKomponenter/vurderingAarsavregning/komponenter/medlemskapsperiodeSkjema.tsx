@@ -8,10 +8,46 @@ import * as Nav from "../../../../../navFrontend";
 import * as Mui from "../../../../../felleskomponenter/ui";
 import * as Ikoner from "../../../../../resources/images";
 import * as Utils from "../../../../../utils";
+import { ULAGRET_MEDLEMSKAPSPERIODE_ID } from "../aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlag";
 
 import { FieldArrayProps, FormValuesProps } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
+import { Medlemskapsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import "./medlemskapsperiodeSkjema.css";
 import { useEffect } from "react";
+
+// Funksjon for å kalkulere slettbar-status, nå kalt kanPeriodeSlettes
+const kanPeriodeSlettes = (gjeldendePeriode: Medlemskapsperiode, allePerioderIListe: Medlemskapsperiode[]): boolean => {
+  const erPeriodeUlagret = !gjeldendePeriode.id || gjeldendePeriode.id === ULAGRET_MEDLEMSKAPSPERIODE_ID;
+  if (erPeriodeUlagret) {
+    return true; // Ulagret er alltid slettbar
+  }
+
+  if (!gjeldendePeriode.redigerbar) {
+    return false; // Fra grunnlag, ikke slettbar
+  }
+
+  const alleLagredePerioderSortert = [...allePerioderIListe]
+    .filter((p) => p.id && p.id !== ULAGRET_MEDLEMSKAPSPERIODE_ID)
+    .sort((a, b) => {
+      const aDate = Utils.dato.norskStringTilDate(a.fomDato);
+      const bDate = Utils.dato.norskStringTilDate(b.fomDato);
+      const aTime = aDate instanceof Date && !Number.isNaN(aDate.getTime()) ? aDate.getTime() : 0;
+      const bTime = bDate instanceof Date && !Number.isNaN(bDate.getTime()) ? bDate.getTime() : 0;
+      return aTime - bTime;
+    });
+
+  if (alleLagredePerioderSortert.length === 0) {
+    return false; // Uventet tilstand, default til ikke-slettbar
+  }
+
+  const erFørstePeriode = alleLagredePerioderSortert[0].id === gjeldendePeriode.id;
+  const erSistePeriode = alleLagredePerioderSortert[alleLagredePerioderSortert.length - 1].id === gjeldendePeriode.id;
+
+  if (erFørstePeriode || erSistePeriode) {
+    return true;
+  }
+  return false; // "Midt-i" periode
+};
 
 export interface PeriodeElementerProps {
   redigerbart: boolean;
@@ -59,37 +95,14 @@ export function MedlemskapsperiodeSkjema({
 
   const kunEnTrygdedekning = trygdedekninger?.length === 1;
 
-  const lastIndex = medlemskapsperioder.length - 1;
-  let deletableIndex = -1;
-
-  if (lastIndex >= 0) {
-    const lastPeriodHasError = !!errors?.medlemskapsperioder?.[lastIndex]?.tomDato;
-
-    if (lastPeriodHasError) {
-      deletableIndex = lastIndex;
-    } else {
-      let maxValidTomDatoIndex = -1;
-      let maxValidTomDato: Date | null = null;
-      medlemskapsperioder.forEach((periode, idx) => {
-        const currentTomDato = Utils.dato.norskStringTilDate(periode.tomDato);
-        if (currentTomDato && !Number.isNaN(currentTomDato.getTime())) {
-          if (maxValidTomDato === null || currentTomDato >= maxValidTomDato) {
-            maxValidTomDato = currentTomDato;
-            maxValidTomDatoIndex = idx;
-          }
-        }
-      });
-      deletableIndex = maxValidTomDatoIndex !== -1 ? maxValidTomDatoIndex : lastIndex;
-    }
-  }
-
-  const erDennePeriodenSlettbar = index === deletableIndex;
+  const gjeldendePeriodeForRad = medlemskapsperioder[index];
+  const erDennePeriodenSlettbar = kanPeriodeSlettes(gjeldendePeriodeForRad, medlemskapsperioder);
 
   useEffect(() => {
     if (trygdedekninger?.length === 1) {
       setValue(`medlemskapsperioder[${index}].trygdedekning`, trygdedekninger[0], { shouldValidate: true });
     }
-  }, [trygdedekninger]);
+  }, [trygdedekninger, index, setValue]);
 
   return (
     <div className="medlemskapsperiodeSkjema">
@@ -102,7 +115,7 @@ export function MedlemskapsperiodeSkjema({
               label={index === 0 ? "Medlemskapsperiode" : ""}
               control={control}
               minDate={tilOgMedDatoForrigePeriode !== undefined ? tilOgMedDatoForrigePeriode : minVerdi}
-              maxDate={tilOgMedDatoForrigePeriode !== undefined ? tilOgMedDatoForrigePeriode : maksVerdi}
+              maxDate={maksVerdi}
               name={`medlemskapsperioder[${index}].fomDato`}
               aria-label={`Fra og med periode ${index + 1}`}
               readOnly={!redigerbart || erPeriodeFraGrunnlag}
