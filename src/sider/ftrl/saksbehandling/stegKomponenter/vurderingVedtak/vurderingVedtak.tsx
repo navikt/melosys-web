@@ -140,11 +140,11 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   const erPensjonistToggleEnabled = useFeatureToggle(MELOSYS_PENSJONIST);
 
   const hentProduserbardokumentType = () => {
-    if (erPensjonist) {
-      return medlemskapsTypeErPliktig ? PENSJONIST_PLIKTIG_FTRL : PENSJONIST_FRIVILLIG_FTRL;
-    }
     if (erDelvisOpphør) {
       return VEDTAK_OPPHOERT_MEDLEMSKAP;
+    }
+    if (erPensjonist) {
+      return medlemskapsTypeErPliktig ? PENSJONIST_PLIKTIG_FTRL : PENSJONIST_FRIVILLIG_FTRL;
     }
     if (erIkkeYrkesaktiv) {
       return medlemskapsTypeErPliktig ? IKKE_YRKESAKTIV_PLIKTIG_FTRL : IKKE_YRKESAKTIV_FRIVILLIG_FTRL;
