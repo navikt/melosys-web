@@ -47,7 +47,7 @@ const send_brev = object().shape({
   organisasjonsnummer: string()
     .when("valgtMottaker", {
       is: (valgtMottaker) => erAnnenOrganisasjon(valgtMottaker?.rolle),
-      then: string().erOrgnr(ORGNUMMER_UGYLDIG).required(ORGNUMMER_FELT_MANGLER).nullable(),
+      then: (schema) => schema.erOrgnr(ORGNUMMER_UGYLDIG).required(ORGNUMMER_FELT_MANGLER).nullable(),
     })
     .nullable(),
   norskeMyndigheter: array().of(string().erOrgnr(ORGNUMMER_UGYLDIG)),
@@ -55,17 +55,17 @@ const send_brev = object().shape({
   arbeidsgiver: string()
     .when("valgtMottaker", {
       is: (valgtMottaker) => erVirksomhet(valgtMottaker?.rolle) || erArbeidsgiver(valgtMottaker?.rolle),
-      then: string().required(ARBEIDSGIVER_MANGLER).nullable(),
+      then: (schema) => schema.required(ARBEIDSGIVER_MANGLER).nullable(),
     })
     .nullable(),
   felt: object(),
   fritekstTittel: string().when(["felt", "valgtBrev"], {
-    is: manglerFeltMedValg("BREV_TITTEL"),
-    then: string().required(TITTEL_MANGLER),
+    is: ([felt, valgtBrev]) => manglerFeltMedValg("BREV_TITTEL")(felt, valgtBrev),
+    then: (schema) => schema.required(TITTEL_MANGLER),
   }),
   erFeltGyldig: string().when(["felt", "valgtBrev"], {
-    is: manglerNoenFeltValgt,
-    then: string().required(FELT_MANGLER),
+    is: ([felt, valgtBrev]) => manglerNoenFeltValgt(felt, valgtBrev),
+    then: (schema) => schema.required(FELT_MANGLER),
   }),
 });
 

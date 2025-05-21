@@ -10,11 +10,12 @@ const artikkel13_utpek = object().shape({
   forkortUtpekingsperiode: bool().required(),
   fomDato: string().when("forkortUtpekingsperiode", {
     is: true,
-    then: string().erInnenforSoknadsperioden().erGyldigDato().required(MAA_FYLLES_UT),
+    then: (schema) => schema.erInnenforSoknadsperioden().erGyldigDato().required(MAA_FYLLES_UT),
   }),
   tomDato: string().when("forkortUtpekingsperiode", {
     is: true,
-    then: string().erInnenforSoknadsperioden().erEtterDatofelt("fomDato").erGyldigDato().required(MAA_FYLLES_UT),
+    then: (schema) =>
+      schema.erInnenforSoknadsperioden().erEtterDatofelt("fomDato").erGyldigDato().required(MAA_FYLLES_UT),
   }),
   kreverMottakerinstitusjon: bool().required(),
   mottakerinstitusjoner: array().of(
@@ -22,13 +23,13 @@ const artikkel13_utpek = object().shape({
       kreverMottakerinstitusjon: bool(),
       id: string().when("kreverMottakerinstitusjon", {
         is: true,
-        then: string().required(MOTTAKERINSTITUSJON_KREVES),
+        then: (schema) => schema.required(MOTTAKERINSTITUSJON_KREVES),
       }),
     }),
   ),
   lovvalgsland: string().when("$validerLovvalgsland", {
-    is: true,
-    then: string().erLandKode(OPPGI_ET_LAND).required(LOVVALGSLAND_KREVES),
+    is: (validerLovvalgslandVal) => validerLovvalgslandVal === true,
+    then: (schema) => schema.erLandKode(OPPGI_ET_LAND).required(LOVVALGSLAND_KREVES),
   }),
 });
 

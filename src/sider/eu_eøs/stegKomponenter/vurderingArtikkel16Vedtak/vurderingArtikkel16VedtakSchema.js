@@ -53,33 +53,35 @@ const artikkel16_vedtak = object().shape({
   vedtakstype: string()
     .nullable()
     .when("$behandlingstype", {
-      is: MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING,
-      then: string().nullable().required(VELG_EN_VEDTAKSTYPE),
+      is: (behandlingstype) => behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING,
+      then: (schema) => schema.required(VELG_EN_VEDTAKSTYPE),
     }),
   vedtakstypebegrunnelse: string()
     .nullable()
     .when("$behandlingstype", {
-      is: MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING,
-      then: string().nullable().required(OPPGI_BEGRUNNELSE),
+      is: (behandlingstype) => behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING,
+      then: (schema) => schema.required(OPPGI_BEGRUNNELSE),
     }),
   forkortLovvalgsperiode: bool().required(),
   fomDato: string().when("forkortLovvalgsperiode", {
     is: true,
-    then: string()
-      .test(erEtterOpprinneligFomTest)
-      .test(erFoerOpprinneligTomTest)
-      .test(erFoerTomTest)
-      .erGyldigDato()
-      .required(MAA_FYLLES_UT),
+    then: (schema) =>
+      schema
+        .test(erEtterOpprinneligFomTest)
+        .test(erFoerOpprinneligTomTest)
+        .test(erFoerTomTest)
+        .erGyldigDato()
+        .required(MAA_FYLLES_UT),
   }),
   tomDato: string().when("forkortLovvalgsperiode", {
     is: true,
-    then: string()
-      .test(erEtterOpprinneligFomTest)
-      .test(erFoerOpprinneligTomTest)
-      .test(erEtterFomTest)
-      .erGyldigDato()
-      .required(MAA_FYLLES_UT),
+    then: (schema) =>
+      schema
+        .test(erEtterOpprinneligFomTest)
+        .test(erFoerOpprinneligTomTest)
+        .test(erEtterFomTest)
+        .erGyldigDato()
+        .required(MAA_FYLLES_UT),
   }),
 });
 

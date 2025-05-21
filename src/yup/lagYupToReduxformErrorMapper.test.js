@@ -16,7 +16,7 @@ describe("lagYupToReduxformErrorMapper", () => {
       });
       const mapYupToReduxformError = lagYupToReduxformErrorMapper(schema);
 
-      expect(mapYupToReduxformError({})).toEqual({ verdi: { melding: "Verdi er påkrevd" } });
+      expect(mapYupToReduxformError({})).toEqual({ verdi: "Verdi er påkrevd" });
       expect(
         mapYupToReduxformError({
           verdi: ["ikkeEtNummer", 3],

@@ -20,19 +20,19 @@ export const endrePeriodeSkjema = Yup.object().shape({
   fom: Yup.string().test(gyldigPeriodeTest).test(gyldigDatoTest("startdato")).required("Startdato er påkrevd"),
   tom: Yup.string().test(gyldigPeriodeTest).test(gyldigDatoTest("sluttdato")).required("Sluttdato er påkrevd"),
   fritekst: Yup.string().when("$fritekstPakrevd", {
-    is: true,
-    then: Yup.string().required("Begrunnelse for endring av periode er påkrevd"),
+    is: (fritekstPakrevdVal) => fritekstPakrevdVal === true,
+    then: (schema) => schema.required("Begrunnelse for endring av periode er påkrevd"),
   }),
   begrunnelse: Yup.string().when("$begrunnelsePakrevd", {
-    is: true,
-    then: Yup.string().required("Begrunnelse for endret periode er påkrevd"),
+    is: (begrunnelsePakrevdVal) => begrunnelsePakrevdVal === true,
+    then: (schema) => schema.required("Begrunnelse for endret periode er påkrevd"),
   }),
 });
 
 export const ikkeGodkjentBegrunnelseSkjema = Yup.object().shape({
   begrunnelseKoder: Yup.array().of(Yup.string()).min(1, "Begrunnelse for avslag er påkrevd"),
   begrunnelseFritekst: Yup.string().when("$fritekstPakrevd", {
-    is: true,
-    then: Yup.string().required("Fritekstfelt er påkrevd"),
+    is: (fritekstPakrevdVal) => fritekstPakrevdVal === true,
+    then: (schema) => schema.required("Fritekstfelt er påkrevd"),
   }),
 });
