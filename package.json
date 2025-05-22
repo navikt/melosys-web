@@ -101,6 +101,7 @@
     "@testing-library/user-event": "^14.4.3",
     "@types/classnames": "^2.2.10",
     "@types/history": "^4.7.7",
+    "@types/lodash": "^4.17.17",
     "@types/node": "^20.15.12",
     "@types/qs": "^6.9.5",
     "@types/quill": "^2.0.10",

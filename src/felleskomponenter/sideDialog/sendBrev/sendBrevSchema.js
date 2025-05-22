@@ -33,6 +33,7 @@ const manglerFeltMedValg = (feltNavn) => (felt, valgtBrev) => {
   if (!feltFravalgtBrev) {
     return false;
   }
+
   const valgtAlternativ = feltFravalgtBrev?.valg?.valgAlternativer.find(
     (alternativ) => alternativ.kode === felt?.[feltNavn]?.valg,
   );
@@ -60,11 +61,11 @@ const send_brev = object().shape({
     .nullable(),
   felt: object(),
   fritekstTittel: string().when(["felt", "valgtBrev"], {
-    is: ([felt, valgtBrev]) => manglerFeltMedValg("BREV_TITTEL")(felt, valgtBrev),
+    is: (felt, valgtBrev) => manglerFeltMedValg("BREV_TITTEL")(felt, valgtBrev),
     then: (schema) => schema.required(TITTEL_MANGLER),
   }),
   erFeltGyldig: string().when(["felt", "valgtBrev"], {
-    is: ([felt, valgtBrev]) => manglerNoenFeltValgt(felt, valgtBrev),
+    is: (felt, valgtBrev) => manglerNoenFeltValgt(felt, valgtBrev),
     then: (schema) => schema.required(FELT_MANGLER),
   }),
 });

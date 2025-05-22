@@ -1,4 +1,4 @@
-import { object, array, number, mixed, string } from "yup";
+import { mixed, object, string } from "yup";
 
 import { lagYupToReduxformErrorMapper } from "./lagYupToReduxformErrorMapper";
 

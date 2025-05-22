@@ -11,7 +11,6 @@ export const DU_MAA_OPPGI_BEGRUNNELSE_FOR_ENDELIG_TRYGDEAVGIFT = {
 
 const vurdering_vedtak = object().shape({
   begrunnelseFritekst: string()
-    .nullable()
     .max(4000, DU_KAN_IKKE_SKRIVE_MER_ENN_4000_TEGN)
     .when([], {
       is: () => true,
@@ -27,9 +26,9 @@ const vurdering_vedtak = object().shape({
             return true;
           },
         }),
-      otherwise: (schema) => schema.nullable(),
+      otherwise: (schema) => schema,
     }),
-  innledningFritekst: string().nullable().max(4000, DU_KAN_IKKE_SKRIVE_MER_ENN_4000_TEGN),
+  innledningFritekst: string().max(4000, DU_KAN_IKKE_SKRIVE_MER_ENN_4000_TEGN),
 });
 
 export default vurdering_vedtak;

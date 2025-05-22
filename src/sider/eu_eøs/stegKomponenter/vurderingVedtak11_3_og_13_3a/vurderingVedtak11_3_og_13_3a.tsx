@@ -13,7 +13,6 @@ import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { useEffect, useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
-// @ts-expect-error Workaround for @hookform/resolvers/yup with moduleResolution: bundler
 import { yupResolver } from "@hookform/resolvers/yup";
 import vurderingVedtak_11_3_og_13_3aSchema from "./vurderingVedtak11_3_og_13_3aSchema";
 import { vedtakOperations } from "../../../../ducks/vedtak";
@@ -72,7 +71,7 @@ export function VurderingVedtak11_3_og_13_3a({
     context: {
       soknadsperiode,
     },
-    resolver: yupResolver(vurderingVedtak_11_3_og_13_3aSchema),
+    resolver: yupResolver<FieldValues>(vurderingVedtak_11_3_og_13_3aSchema),
     mode: "onChange",
     defaultValues: {
       kopiTilArbeidsgiver: false,
