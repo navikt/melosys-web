@@ -54,12 +54,13 @@ describe("Custom Yup Methods from setupYup.jsx (with Yup v1.x expectations)", ()
       // erEtterDatofelt should not fail if fomDato is unparseable by vaskInputDato, it should return true.
       // However, the .erGyldigDato() on fomDato itself will (and should) throw.
       const dataWithInvalidFom = { fomDato: "invalid-date", tomDato: "01.01.2023" };
-      await expect(schema.validate(dataWithInvalidFom)).rejects.toThrow(gyldigDatoMessageText);
+      // With reverted erEtterDatofelt logic, it will now throw its own error if fomDato is unparseable causing erGyldigPeriode to fail.
+      await expect(schema.validate(dataWithInvalidFom)).rejects.toThrow(errorMessageText);
       try {
         await schema.validate(dataWithInvalidFom);
       } catch (e) {
-        expect(e.path).toBe("fomDato"); // Error should be on fomDato due to erGyldigDato
-        expect(e.message).toBe(gyldigDatoMessageText);
+        expect(e.path).toBe("tomDato"); // Error is now on tomDato from erEtterDatofelt
+        expect(e.message).toBe(errorMessageText);
       }
     });
 

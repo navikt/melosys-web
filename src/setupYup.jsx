@@ -37,12 +37,7 @@ addMethod(object, "uniqueProperty", function (propertyName, message) {
 addMethod(string, "erGyldigDato", function (message = SKRIV_INN_GYLDIG_DATO) {
   return this.test("er gyldig dato", message, function (value) {
     if (Utils._isEmpty(value)) return true;
-    const actualMessage = typeof message === "string" || message instanceof String ? message : message?.melding;
-    const isValid = Boolean(Utils.dato.vaskInputDato(value));
-    if (!isValid) {
-      throw this.createError({ path: this.path, message: actualMessage });
-    }
-    return true;
+    return Boolean(Utils.dato.vaskInputDato(value));
   });
 });
 
@@ -123,12 +118,19 @@ addMethod(string, "erEtterDatofelt", function (felt = "fomDato", messageParam = 
   const actualMessage =
     typeof messageParam === "string" || messageParam instanceof String ? messageParam : messageParam?.melding;
   return this.test("er etter dato", actualMessage, function (value) {
-    const { [felt]: fomDato } = this.parent;
-    const tomDato = value;
-    if (!Utils.dato.vaskInputDato(tomDato)) return true;
-    if (!Utils.dato.vaskInputDato(fomDato)) return true;
+    const { [felt]: fomDatoOriginal } = this.parent;
 
-    return Utils.dato.erGyldigPeriode(fomDato, tomDato);
+    const tomDatoVasket = Utils.dato.vaskInputDato(value);
+    const fomDatoVasket = Utils.dato.vaskInputDato(fomDatoOriginal);
+
+    if (Utils._isEmpty(value) || Utils._isEmpty(fomDatoOriginal)) {
+      return true;
+    }
+
+    if (!Utils.dato.erGyldigPeriode(fomDatoVasket, tomDatoVasket)) {
+      return false;
+    }
+    return true;
   });
 });
 
