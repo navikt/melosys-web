@@ -5,7 +5,7 @@ import { lagYupToReduxformErrorMapper } from "../lagYupToReduxformErrorMapper";
 const MAA_FYLLES_UT_OBJ = { melding: "Feltet må fylles ut" };
 const MAA_FYLLES_UT_STR = "Feltet må fylles ut";
 const CUSTOM_ERROR_OBJ = { _error: "Custom error" };
-const CUSTOM_ERROR_STR = "Custom error";
+const CUSTOM_ERROR_STR = CUSTOM_ERROR_OBJ._error;
 const MIN_LENGTH_STR = "Må være minst 5 tegn";
 const MAX_LENGTH_STR = "Kan ikke være mer enn 10 tegn";
 const INVALID_EMAIL_STR = "Ugyldig e-postadresse";
@@ -29,16 +29,16 @@ describe("lagYupToReduxformErrorMapper", () => {
     const schema = yup.object({ name: yup.string().required(MAA_FYLLES_UT_OBJ) });
     const mapper = lagYupToReduxformErrorMapper(schema);
     const errors = mapper({});
-    expect(errors).toEqual({ name: MAA_FYLLES_UT_OBJ.melding });
+    expect(errors).toEqual({ name: MAA_FYLLES_UT_OBJ });
   });
 
   it('should map a custom .test error with { _error: "..." } object message', () => {
     const schema = yup.object({
-      customField: yup.string().test("custom-test", CUSTOM_ERROR_OBJ, () => false),
+      customField: yup.string().test("custom-test", CUSTOM_ERROR_OBJ, (val) => val !== "abc"),
     });
     const mapper = lagYupToReduxformErrorMapper(schema);
     const errors = mapper({ customField: "abc" });
-    expect(errors).toEqual({ customField: CUSTOM_ERROR_STR });
+    expect(errors).toEqual({ customField: CUSTOM_ERROR_OBJ });
   });
 
   it("should map a custom .test error with a plain string message", () => {

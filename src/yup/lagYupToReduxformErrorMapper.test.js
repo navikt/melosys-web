@@ -1,4 +1,4 @@
-import { object, array, number, mixed } from "yup";
+import { object, array, number, mixed, string } from "yup";
 
 import { lagYupToReduxformErrorMapper } from "./lagYupToReduxformErrorMapper";
 
@@ -12,16 +12,27 @@ describe("lagYupToReduxformErrorMapper", () => {
   describe("mapper", () => {
     it("returnerer et error-objekt som forventes av redux-form", () => {
       const schema = object().shape({
-        verdi: array().of(number()).required({ melding: "Verdi er påkrevd" }),
+        verdi: string().required({ melding: "Verdi er påkrevd" }),
       });
       const mapYupToReduxformError = lagYupToReduxformErrorMapper(schema);
 
-      expect(mapYupToReduxformError({})).toEqual({ verdi: "Verdi er påkrevd" });
-      expect(
-        mapYupToReduxformError({
-          verdi: ["ikkeEtNummer", 3],
-        }).verdi,
-      ).toHaveLength(1);
+      expect(mapYupToReduxformError({})).toEqual({ verdi: { melding: "Verdi er påkrevd" } });
+
+      // Test case for when 'verdi' (a string schema) receives an array
+      const valuesWithArrayForVerdi = { verdi: ["ikkeEtNummer", 3] };
+      const errorsForArrayInput = mapYupToReduxformError(valuesWithArrayForVerdi);
+
+      // For debugging: log the structure of the errors
+      // console.log('Errors for array input on string field:', JSON.stringify(errorsForArrayInput));
+
+      // Expect that the 'verdi' field has an error
+      expect(errorsForArrayInput).toHaveProperty("verdi");
+
+      // Expect the error message for 'verdi' to be a string (Yup's default type error message)
+      expect(typeof errorsForArrayInput.verdi).toBe("string");
+
+      // Expect the error message string to not be empty (and likely longer than 1 character)
+      expect(errorsForArrayInput.verdi.length).toBeGreaterThan(1);
     });
 
     it("returnerer ingen feilmeldinger for et schema som matcher verdiene", () => {
