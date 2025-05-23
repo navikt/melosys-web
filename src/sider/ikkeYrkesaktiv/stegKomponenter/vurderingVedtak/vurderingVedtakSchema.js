@@ -10,14 +10,9 @@ const vurderingVedtakSchema = object().shape({
     then: (schema) => schema.required(MAA_FYLLES_UT),
     otherwise: (schema) => schema.nullable(),
   }),
-  nyVurderingBakgrunnFritekst: string().when("$erNyVurdering", {
-    is: true,
-    then: (schema) =>
-      schema.when("nyVurderingBakgrunnValg", {
-        is: FRITEKST_VALG,
-        then: (schema2) => schema2.erIkkeBlankHtml().required(MAA_FYLLES_UT),
-        otherwise: (schema2) => schema2.nullable(),
-      }),
+  nyVurderingBakgrunnFritekst: string().when("nyVurderingBakgrunnValg", {
+    is: FRITEKST_VALG,
+    then: (schema) => schema.erIkkeBlankHtml().required(MAA_FYLLES_UT),
     otherwise: (schema) => schema.nullable(),
   }),
 });

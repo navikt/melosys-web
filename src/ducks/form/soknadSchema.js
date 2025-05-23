@@ -63,8 +63,8 @@ const soknadsperiodeTomSchema = string().when("$mottatteOpplysningerType", (mott
     .erEtterDatofelt("soknadsperiodeFom", lagMelding(menypunkt, periodeUndertittel, TIDLIGERE_ENN_FOM.melding))
     .when("$behandlingstema", {
       is: MKVUtils.erUtsendt,
-      then: (s) => s.required(lagMelding(menypunkt, periodeUndertittel, MAA_FYLLES_UT.melding)),
-      otherwise: (s) => s.nullable(),
+      then: (schemaInner) => schemaInner.required(lagMelding(menypunkt, periodeUndertittel, MAA_FYLLES_UT.melding)),
+      otherwise: (schemaInner) => schemaInner.nullable(),
     })
     .nullable();
 });
@@ -236,8 +236,8 @@ const soknad = object().when(["$behandlingstema"], {
       representantIUtlandet: object()
         .when(["$harUnntaksregistreringFlyt", "$sakstype"], {
           is: skalValidereRepresentantIUtlandet,
-          then: () =>
-            object()
+          then: (schema) =>
+            schema
               .shape({
                 representantNavn: string()
                   .required(
@@ -370,15 +370,15 @@ const soknad = object().when(["$behandlingstema"], {
       }),
       soknadsland: object().when("$harUnntaksregistreringFlyt", {
         is: (harUnntaksregistreringFlyt) => !harUnntaksregistreringFlyt,
-        then: () =>
-          object().shape({
+        then: (schema) =>
+          schema.shape({
             landkoder: array().when("flereLandUkjentHvilke", {
               is: (flereLandUkjentHvilke) => !flereLandUkjentHvilke,
-              then: (schema) =>
-                schema.when("$behandlingstema", {
+              then: (schemaInner) =>
+                schemaInner.when("$behandlingstema", {
                   is: MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND,
-                  then: (s) =>
-                    s.min(
+                  then: (schemaInner2) =>
+                    schemaInner2.min(
                       2,
                       lagMelding(
                         KV.Menypunkter.Utenlandsoppdraget.tittel,
@@ -386,8 +386,8 @@ const soknad = object().when(["$behandlingstema"], {
                         "Det er påkrevd med to eller flere land for dette behandlingstemaet",
                       ),
                     ),
-                  otherwise: (s) =>
-                    s.min(
+                  otherwise: (schemaInner2) =>
+                    schemaInner2.min(
                       1,
                       lagMelding(
                         KV.Menypunkter.Utenlandsoppdraget.tittel,
@@ -396,11 +396,11 @@ const soknad = object().when(["$behandlingstema"], {
                       ),
                     ),
                 }),
-              otherwise: (schema) => schema.nullable(),
+              otherwise: (schemaInner) => schemaInner.nullable(),
             }),
             flereLandUkjentHvilke: boolean(),
           }),
-        otherwise: () => object().nullable(),
+        otherwise: (schema) => schema.nullable(),
       }),
     }),
   otherwise: () => object().nullable(),

@@ -19,15 +19,12 @@ const vurdering_vedtak = object().shape({
     otherwise: (schema) => schema.nullable(),
   }),
   nyVurderingBakgrunnFritekst: string().when(
-    ["$erNyVurdering", "$erManglendeInnbetalingTrygdeavgift", "$erDelvisOpphør"],
+    ["$erNyVurdering", "$erManglendeInnbetalingTrygdeavgift", "$erDelvisOpphør", "nyVurderingBakgrunnValg"],
     {
-      is: (values) => skalHaNyVurderingBakgrunn(...values),
-      then: (schema) =>
-        schema.when("nyVurderingBakgrunnValg", {
-          is: (val) => val === FRITEKST_VALG,
-          then: (s) => s.erIkkeBlankHtml().required(MAA_FYLLES_UT),
-          otherwise: (s) => s.nullable(),
-        }),
+      is: (erNyVurdering, erManglendeInnbetalingTrygdeavgift, erDelvisOpphør, nyVurderingBakgrunnValg) =>
+        skalHaNyVurderingBakgrunn(erNyVurdering, erManglendeInnbetalingTrygdeavgift, erDelvisOpphør) &&
+        nyVurderingBakgrunnValg === FRITEKST_VALG,
+      then: (schema) => schema.erIkkeBlankHtml().required(MAA_FYLLES_UT),
       otherwise: (schema) => schema.nullable(),
     },
   ),
