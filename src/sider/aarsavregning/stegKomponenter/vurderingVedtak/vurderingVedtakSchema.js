@@ -15,9 +15,8 @@ const vurdering_vedtak = object().shape({
     .when(["$endeligAvgiftValg"], {
       is: (endeligAvgiftValg) => endeligAvgiftValg === MKV.Koder.endeligAvgiftValg.MANUELL_ENDELIG_AVGIFT,
       then: (schema) => schema.required(DU_MAA_OPPGI_BEGRUNNELSE_FOR_ENDELIG_TRYGDEAVGIFT),
-      otherwise: (schema) => schema.nullable(),
     }),
-  innledningFritekst: string().max(4000, DU_KAN_IKKE_SKRIVE_MER_ENN_4000_TEGN).nullable(),
+  innledningFritekst: string().max(4000, DU_KAN_IKKE_SKRIVE_MER_ENN_4000_TEGN),
 });
 
 export default vurdering_vedtak;
