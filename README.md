@@ -61,6 +61,39 @@ Dette sørger for at du logger inn gjennom Azure AD i dev og sender ekte autoris
 
 Se dokumentasjon [her](./src/graphql/README.md).
 
+## Testing
+
+### Enhetstesting
+Prosjektet bruker Vitest for enhetstesting. Kjør enhetstester med:
+```
+npm test
+```
+
+### End-to-End Testing
+Prosjektet er konfigurert med Playwright for end-to-end testing, inkludert:
+- Grunnleggende funksjonalitetstester
+- Tilgjengelighetstesting med Axe
+- Ytelsestesting med Lighthouse
+
+#### Installasjon
+Playwright-nettlesere og CLI installeres automatisk når du kjører `npm install` via postinstall-skriptet. Dette sikrer at alle nødvendige komponenter er tilgjengelige for å kjøre e2e-tester.
+
+Hvis du får feilmeldingen `playwright: command not found`, kan du manuelt installere Playwright-nettlesere og CLI ved å kjøre:
+```
+npx playwright install
+```
+
+#### Kjøring av tester
+Kjør e2e-tester med:
+```
+npm run test:e2e          # Kjør alle e2e-tester
+npm run test:e2e:ui       # Kjør tester med UI-modus for debugging
+npm run test:e2e:accessibility  # Kjør kun tilgjengelighetstester
+npm run test:e2e:performance    # Kjør kun ytelsestester
+```
+
+For mer detaljert informasjon om e2e-testing, se [e2e-testdokumentasjonen](./tests/e2e/README.md).
+
 ## Dokumentasjon
 
 For å dokumentere arkitekturbeslutninger i prosjektet bruker vi Architecture Decision Records, som [beskrevet av Michael Nygard](http://thinkrelevance.com/blog/2011/11/15/documenting-architecture-decisions).

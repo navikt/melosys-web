@@ -131,6 +131,17 @@
         "react/sort-comp": "off",
         "class-methods-use-this": "off"
       }
+    },
+    {
+      "files": [
+        "tests/**/*.ts",
+        "tests/**/*.tsx",
+        "tests/**/*.js",
+        "tests/**/*.jsx"
+      ],
+      "rules": {
+        "no-console": "off"
+      }
     }
   ]
 }
