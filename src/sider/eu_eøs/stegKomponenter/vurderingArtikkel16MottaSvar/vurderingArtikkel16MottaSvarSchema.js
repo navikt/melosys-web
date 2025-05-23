@@ -9,8 +9,8 @@ const { MAA_FYLLES_UT } = KV.Feilmeldinger;
 const artikkel16_motta_svar = object().shape({
   endretPeriode: object().when("$anmodningsperiodeSvarType", {
     is: (anmodningsperiodeSvarType) => anmodningsperiodeSvarType === DELVIS_INNVILGELSE,
-    then: () =>
-      object().shape({
+    then: (schema) =>
+      schema.shape({
         fom: string().erGyldigDato().erInnenforSoknadsperioden().required(MAA_FYLLES_UT),
         tom: string().erGyldigDato().erInnenforSoknadsperioden().erEtterDatofelt("fom").required(MAA_FYLLES_UT),
       }),

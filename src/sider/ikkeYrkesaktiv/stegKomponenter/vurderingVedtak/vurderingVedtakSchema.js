@@ -7,17 +7,18 @@ const { MAA_FYLLES_UT } = KV.Feilmeldinger;
 const vurderingVedtakSchema = object().shape({
   nyVurderingBakgrunnValg: string().when("$erNyVurdering", {
     is: true,
-    then: string().required(MAA_FYLLES_UT),
-    otherwise: string().nullable(),
+    then: (schema) => schema.required(MAA_FYLLES_UT),
+    otherwise: (schema) => schema.nullable(),
   }),
   nyVurderingBakgrunnFritekst: string().when("$erNyVurdering", {
     is: true,
-    then: string().when("nyVurderingBakgrunnValg", {
-      is: FRITEKST_VALG,
-      then: string().erIkkeBlankHtml().required(MAA_FYLLES_UT),
-      otherwise: string().nullable(),
-    }),
-    otherwise: string().nullable(),
+    then: (schema) =>
+      schema.when("nyVurderingBakgrunnValg", {
+        is: FRITEKST_VALG,
+        then: (schema2) => schema2.erIkkeBlankHtml().required(MAA_FYLLES_UT),
+        otherwise: (schema2) => schema2.nullable(),
+      }),
+    otherwise: (schema) => schema.nullable(),
   }),
 });
 

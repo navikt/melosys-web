@@ -20,7 +20,7 @@ const vurdering_familie = object().shape({
                     begrunnelse: string()
                       .when("innvilget", {
                         is: BOOLSK_STRING.USANN,
-                        then: string().required(BEGRUNNELSE_KREVES),
+                        then: (schema) => schema.required(BEGRUNNELSE_KREVES),
                       })
                       .nullable(),
                   })
@@ -41,7 +41,7 @@ const vurdering_familie = object().shape({
       begrunnelse: string()
         .when("innvilget", {
           is: BOOLSK_STRING.USANN,
-          then: string().required(BEGRUNNELSE_KREVES),
+          then: (schema) => schema.required(BEGRUNNELSE_KREVES),
         })
         .nullable(),
     })

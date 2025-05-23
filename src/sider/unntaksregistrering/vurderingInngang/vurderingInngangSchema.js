@@ -12,7 +12,7 @@ const vurdering_inngang = object().shape({
   avsenderland: string().required(ARBEIDSLAND_FELT_KREVES),
   lovvalgsland: string().when("$sakstype", {
     is: MKV.Koder.sakstyper.EU_EOS,
-    then: string().required(LOVVALGSLAND_FELT_KREVES),
+    then: (schema) => schema.required(LOVVALGSLAND_FELT_KREVES),
   }),
 });
 
