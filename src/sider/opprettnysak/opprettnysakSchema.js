@@ -65,7 +65,7 @@ const opprettnysak = object().shape({
   virksomhetOrgnr: string()
     .when("hovedpart", {
       is: (hovedpart) => hovedpart === VIRKSOMHET,
-      then: (schema) => schema.erOrgnr(SKRIV_INN_GYLDIG_ORGNR).required(SKRIV_INN_GYLDIG_ORGNR).nullable(),
+      then: (schema) => schema.erOrgnr(SKRIV_INN_GYLDIG_ORGNR).required(SKRIV_INN_GYLDIG_ORGNR),
     })
     .when(["hovedpart", "virksomhetNavn"], {
       is: (hovedpart, virksomhetNavn) =>
@@ -94,7 +94,7 @@ const opprettnysak = object().shape({
       then: (schema) => schema.required(VELG_SAKSTEMA).nullable(),
     })
     .nullable(),
-  behandlingstema: string().required(VELG_BEHANDLINGSTEMA).nullable(),
+  behandlingstema: string().required(VELG_BEHANDLINGSTEMA),
   behandlingstype: string().required(VELG_BEHANDLINGSTYPE).nullable(),
   periodeFraOgMed: string()
     .nullable()

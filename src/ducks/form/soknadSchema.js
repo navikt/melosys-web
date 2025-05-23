@@ -141,8 +141,8 @@ const foedestedOgLandSchema = object()
 
 const soknad = object().when(["$behandlingstema"], {
   is: skalValidereSoknad,
-  then: () =>
-    object().shape({
+  then: (schemaOuter) =>
+    schemaOuter.shape({
       arbeidsforholdUtland: array().of(
         object().shape({
           navn: string()

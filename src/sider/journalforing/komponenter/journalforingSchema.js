@@ -229,8 +229,8 @@ const journalforing = object().shape({
         then: (schema) =>
           schema.when("opprettnysak_behandlingstema", {
             is: MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND,
-            then: () => array().min(2, { _error: VELG_MINST_TO_LAND }),
-            otherwise: () => array().min(1, { _error: VELG_MINST_ETT_LAND }),
+            then: (schemaInner) => schemaInner.min(2, { _error: VELG_MINST_TO_LAND }),
+            otherwise: (schemaInner) => schemaInner.min(1, { _error: VELG_MINST_ETT_LAND }),
           }),
       },
     ),

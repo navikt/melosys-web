@@ -1,4 +1,4 @@
-import * as Yup from "yup";
+import { object, string, array } from "yup";
 import * as Utils from "../../../../../utils";
 
 const gyldigPeriodeTest = {
@@ -16,22 +16,22 @@ const gyldigDatoTest = (navn) => ({
   test: (dato) => Utils.dato.vaskInputDato(dato),
 });
 
-export const endrePeriodeSkjema = Yup.object().shape({
-  fom: Yup.string().test(gyldigPeriodeTest).test(gyldigDatoTest("startdato")).required("Startdato er påkrevd"),
-  tom: Yup.string().test(gyldigPeriodeTest).test(gyldigDatoTest("sluttdato")).required("Sluttdato er påkrevd"),
-  fritekst: Yup.string().when("$fritekstPakrevd", {
+export const endrePeriodeSkjema = object().shape({
+  fom: string().test(gyldigPeriodeTest).test(gyldigDatoTest("startdato")).required("Startdato er påkrevd"),
+  tom: string().test(gyldigPeriodeTest).test(gyldigDatoTest("sluttdato")).required("Sluttdato er påkrevd"),
+  fritekst: string().when("$fritekstPakrevd", {
     is: (fritekstPakrevdVal) => fritekstPakrevdVal === true,
     then: (schema) => schema.required("Begrunnelse for endring av periode er påkrevd"),
   }),
-  begrunnelse: Yup.string().when("$begrunnelsePakrevd", {
+  begrunnelse: string().when("$begrunnelsePakrevd", {
     is: (begrunnelsePakrevdVal) => begrunnelsePakrevdVal === true,
     then: (schema) => schema.required("Begrunnelse for endret periode er påkrevd"),
   }),
 });
 
-export const ikkeGodkjentBegrunnelseSkjema = Yup.object().shape({
-  begrunnelseKoder: Yup.array().of(Yup.string()).min(1, "Begrunnelse for avslag er påkrevd"),
-  begrunnelseFritekst: Yup.string().when("$fritekstPakrevd", {
+export const ikkeGodkjentBegrunnelseSkjema = object().shape({
+  begrunnelseKoder: array().of(string()).min(1, "Begrunnelse for avslag er påkrevd"),
+  begrunnelseFritekst: string().when("$fritekstPakrevd", {
     is: (fritekstPakrevdVal) => fritekstPakrevdVal === true,
     then: (schema) => schema.required("Fritekstfelt er påkrevd"),
   }),
