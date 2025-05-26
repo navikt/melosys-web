@@ -24,9 +24,7 @@ function BehandlingerListe({ behandlingerForFagsak }: BehandlingerListeProps) {
   );
 
   const alleBehandlingerErAvsluttet = pågåendeBehandlinger.length === 0;
-  const initialBehandlinger = alleBehandlingerErAvsluttet
-    ? [behandlingerForFagsak[behandlingerForFagsak.length - 1]]
-    : pågåendeBehandlinger;
+  const initialBehandlinger = alleBehandlingerErAvsluttet ? [behandlingerForFagsak[0]] : pågåendeBehandlinger;
 
   const behandlingerToShow = showAllBehandlinger ? behandlingerForFagsak : initialBehandlinger;
 
