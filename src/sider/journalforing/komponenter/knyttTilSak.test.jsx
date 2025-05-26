@@ -15,6 +15,7 @@ vi.mock("../../../services/modules/anmodningsperioder", () => ({
 }));
 vi.mock("../../../services/modules/lovligekombinasjoner", () => ({
   hentBehandlingstemaer: () => Promise.resolve([]),
+  hentBehandlingstyperForKnyttTilSak: () => Promise.resolve([]),
 }));
 describe("KnyttTilSak", () => {
   let props = null;
@@ -49,7 +50,7 @@ describe("KnyttTilSak", () => {
       journalforingGjelder: MKV.Koder.aktoersroller.BRUKER,
       behandlingstyper: [],
       opprettBehandling: false,
-      behandlingstema: "",
+      behandlingstema: undefined,
       behandlingstype: "",
       changeField: vi.fn(),
       erJournalføring: true,
