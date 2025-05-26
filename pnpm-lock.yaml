@@ -20,7 +20,7 @@ importers:
         specifier: ^2.9.11
         version: 2.9.11(react-hook-form@7.56.4(react@18.3.1))
       "@navikt/aksel-icons":
-        specifier: ^7.6.0
+        specifier: ^7.5.3
         version: 7.22.0
       "@navikt/ds-css":
         specifier: ^7.5.3
@@ -1282,6 +1282,9 @@ packages:
     peerDependencies:
       "@types/react": ">=17.0.30"
       react: ">=17.0.0 || >19.0.0-rc"
+    peerDependenciesMeta:
+      "@types/react":
+        optional: true
 
   "@navikt/ds-tokens@7.22.0":
     resolution:
@@ -7250,11 +7253,12 @@ snapshots:
       "@floating-ui/react-dom": 2.1.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       "@navikt/aksel-icons": 7.22.0
       "@navikt/ds-tokens": 7.22.0
-      "@types/react": 18.3.22
       clsx: 2.1.1
       date-fns: 4.1.0
       react: 18.3.1
       react-day-picker: 9.6.1(react@18.3.1)
+    optionalDependencies:
+      "@types/react": 18.3.22
     transitivePeerDependencies:
       - react-dom
 
