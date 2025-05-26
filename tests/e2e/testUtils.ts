@@ -1,4 +1,46 @@
 import fs from "fs";
+import path from "path";
+import { Page, expect } from "@playwright/test";
+import { playAudit } from "playwright-lighthouse";
+
+/**
+ * Helper function to search for an ID
+ * @param page - The Playwright page object
+ * @param id - The ID to search for
+ */
+export async function searchFor(page: Page, id: string): Promise<void> {
+  // Navigate to the homepage
+  await page.goto("/");
+
+  // Wait for the page to load
+  await page.waitForLoadState("networkidle");
+
+  // Check that the search form is visible
+  await expect(page.locator("form.sokeskjema")).toBeVisible();
+
+  // Find the search input field and enter the search term
+  const searchInput = page.locator("form.sokeskjema input[type='text']");
+
+  // If the search input is not found, it's an error
+  const searchInputCount = await searchInput.count();
+  expect(searchInputCount > 0, "Search input field 'Søk sak:' not found").toBeTruthy();
+
+  // Fill the search input with the provided ID
+  await searchInput.fill(id);
+
+  // Find the search button and click it
+  const searchButton = page.locator("form.sokeskjema .sokeskjema__knapp button");
+
+  // If the search button is not found, it's an error
+  const searchButtonCount = await searchButton.count();
+  expect(searchButtonCount > 0, "Search button not found").toBeTruthy();
+
+  // Click the search button
+  await searchButton.click();
+
+  // Wait for the search results to load
+  await page.waitForLoadState("networkidle");
+}
 
 // Define interfaces for Lighthouse report structure
 export interface LighthouseAuditItem {
@@ -295,5 +337,75 @@ export function parseLighthouseReport(
     if (throwOnFailedThresholds) {
       throw new Error(`Lighthouse audit failed: ${errorMessage}`);
     }
+  }
+}
+
+/**
+ * Generates report paths for Lighthouse audits
+ * @param reportName - The base name for the report (without extension)
+ * @returns Object containing the report paths
+ */
+export function generateReportPaths(reportName: string): {
+  reportPath: string;
+  reportDir: string;
+  reportName: string;
+  jsonReportPath: string;
+} {
+  const reportDir = path.join(__dirname, "..", "e2e/reports/lighthouse-report");
+  const reportPath = path.join(reportDir, `${reportName}.html`);
+  const jsonReportPath = path.join(reportDir, `${reportName}.json`);
+
+  return {
+    reportPath,
+    reportDir,
+    reportName,
+    jsonReportPath,
+  };
+}
+
+/**
+ * Runs a Lighthouse audit on a page and handles the results
+ * @param page - The Playwright page object
+ * @param reportInfo - The report path information from generateReportPaths
+ * @param auditThresholds - Thresholds for Lighthouse audits
+ * @param contextDescription - Optional description for log messages
+ */
+export async function runLighthouseAudit(
+  page: Page,
+  reportInfo: ReturnType<typeof generateReportPaths>,
+  auditThresholds: Record<string, number>,
+  contextDescription: string = "",
+): Promise<void> {
+  const { reportPath, reportDir, reportName, jsonReportPath } = reportInfo;
+  const contextMsg = contextDescription ? ` for ${contextDescription}` : "";
+
+  try {
+    await playAudit({
+      page,
+      thresholds: auditThresholds,
+      reports: {
+        formats: {
+          html: true,
+          json: true,
+        },
+        directory: reportDir,
+        name: reportName,
+      },
+      port: 9222,
+    });
+
+    console.log(`\n⏳ Lighthouse audit execution completed${contextMsg}`);
+    console.log(`📊 Report saved to: ${reportPath}`);
+
+    parseLighthouseReport(jsonReportPath, auditThresholds, true);
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error(`\n❌ Lighthouse audit failed${contextMsg}: ${errorMessage}`);
+    console.log(`\n⚠️ Attempting to parse any existing report...`);
+
+    parseLighthouseReport(jsonReportPath, auditThresholds, true);
+
+    // If parseLighthouseReport() didn't throw, rethrow the original error
+    throw error;
   }
 }
