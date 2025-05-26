@@ -142,4 +142,14 @@ describe("KnyttTilSak", () => {
     expect(screen.queryByText(/Hvis du har mottatt svar på anmodning om unntak skal du/i)).toBeNull();
     expect(screen.getByText("Tidligere behandling er avsluttet.")).toBeInTheDocument();
   });
+
+  it("viser behandlingstypevalg når behandlingstema er undefined", async () => {
+    props.behandlingstema = undefined;
+    renderWithProviders(<WrappedKnyttTilSak {...props} />);
+
+    const radiogruppe = screen.getByRole("group");
+    expect(radiogruppe).toBeInTheDocument();
+    expect(within(radiogruppe).queryAllByRole("radio")).toHaveLength(2);
+    expect(within(radiogruppe).getByLabelText("Opprett ny behandling")).toBeInTheDocument();
+  });
 });
