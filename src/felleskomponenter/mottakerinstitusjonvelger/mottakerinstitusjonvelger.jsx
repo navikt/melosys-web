@@ -122,8 +122,7 @@ const mapDispatchToPropsFlervalg = (dispatch) => ({
   oppdaterKreverMottakerinstitusjon: (form, feltnavn) => (kreverMottakerinstitusjon) =>
     dispatch(change(form, feltnavn, kreverMottakerinstitusjon)),
 });
-
-const MottakerinstitusjonvelgerFlervalgInner = ({
+function MottakerinstitusjonvelgerFlervalgInner({
   oppdaterKreverMottakerinstitusjon,
   redigerbart,
   hentFelt,
@@ -131,8 +130,8 @@ const MottakerinstitusjonvelgerFlervalgInner = ({
   fields,
   bucType,
   data_cy,
-}) =>
-  fields
+}) {
+  return fields
     .map((mottakerinstitusjon) => mottakerinstitusjon)
     .filter((mottakerinstitusjon) => hentFelt(`${mottakerinstitusjon}.kode`) !== MKV.Koder.landkoder.NO)
     .map((mottakerinstitusjon) => (
@@ -154,6 +153,7 @@ const MottakerinstitusjonvelgerFlervalgInner = ({
         }}
       />
     ));
+}
 
 MottakerinstitusjonvelgerFlervalgInner.propTypes = {
   oppdaterKreverMottakerinstitusjon: PT.func.isRequired,
