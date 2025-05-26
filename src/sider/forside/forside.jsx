@@ -17,7 +17,7 @@ import ErrorBoundary from "../../felleskomponenter/errorBoundary";
 import * as Ikoner from "../../resources/images";
 
 function Forside(props) {
-  const { tilOpprettNySak } = props;
+  const { tilOpprettNySak, children = null } = props;
   const data = useSelector((state) => state.oppgaver.data);
   const dispatch = useDispatch();
 
@@ -83,7 +83,4 @@ Forside.propTypes = {
   tilOpprettNySak: PT.func.isRequired,
 };
 
-Forside.defaultProps = {
-  children: null,
-};
 export default withRouter(Forside);
