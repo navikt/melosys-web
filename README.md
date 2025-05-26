@@ -24,6 +24,7 @@ sider. Komponenter kan også nøste hverandre.
 ### Bygging
 Applikasjonen benytter avhengigheter fra GitHub package registry som krever autentisering for å hentes. Det er derfor nødvendig å opprette et personal access token (PAT)
 fra [GitHub developer settings](https://github.com/settings/tokens), og sette dette i `~/.npmrc` på denne måten, gitt at tokenet er satt i en miljøvariabel `NPM_TOKEN`:
+(Denne filen brukes av både npm og pnpm.)
 
 ```shell script
 //npm.pkg.github.com/:_authToken=${NPM_TOKEN}
@@ -33,27 +34,32 @@ Merk at PAT må iallefall ha tilgangene repo og read:packages.
 
 (Det er også mulig å sette innholdet av tokenet rett i `~/.npmrc`.)
 
-I tilfeller hvor npm ikke plukker opp dette tokenet, kan en løsning være å kjøre `npm login`:
+I tilfeller hvor package manageren ikke plukker opp dette tokenet, kan en løsning være å kjøre `pnpm login` (eller `npm login` hvis du fortsatt bruker npm):
 
 ```
-npm login --scope=@OWNER --registry=https://npm.pkg.github.com
+pnpm login --scope=@OWNER --registry=https://npm.pkg.github.com
 ```
 
 Bruk github-brukernavnet ditt, og PAT som passord.
 
 ### Kjøring
+Først, installer pnpm globalt hvis du ikke har det: `npm install -g pnpm`
+Deretter, for å installere avhengigheter og starte applikasjonen:
 ```
-npm install
-npm start
+pnpm install
+pnpm start
 ```
 Dette starter applikasjonen med proxyinnstillinger rettet mot [melosys-api](https://github.com/navikt/melosys-api) kjørende lokalt på port 8080.
 
 ### Kjøring mot API koblet mot testmiljø
 
-Dersom du heller ønsker å koble mot [melosys-api](https://github.com/navikt/melosys-api#lokal-utvikling) kjørende lokalt, men som er koblet på database/tjenester i et miljø, kan du kjøre følgende script:
+Dersom du heller ønsker å koble mot [melosys-api](https://github.com/navikt/melosys-api#lokal-utvikling) kjørende lokalt, men som er koblet på database/tjenester i et miljø, kan du kjøre følgende script (etter `pnpm install`):
 ```
-npm install
-npm run start:q2
+pnpm start:q2
+```
+Eller for q1:
+```
+pnpm start:q1
 ```
 Dette sørger for at du logger inn gjennom Azure AD i dev og sender ekte autoriseringstokens til backend. Tilgjengelige miljøer for dette er q1 og q2.
 
