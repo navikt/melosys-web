@@ -15,6 +15,7 @@ vi.mock("../../../services/modules/anmodningsperioder", () => ({
 }));
 vi.mock("../../../services/modules/lovligekombinasjoner", () => ({
   hentBehandlingstemaer: () => Promise.resolve([]),
+  hentBehandlingstyperForKnyttTilSak: () => Promise.resolve([]),
 }));
 describe("KnyttTilSak", () => {
   let props = null;
@@ -49,7 +50,7 @@ describe("KnyttTilSak", () => {
       journalforingGjelder: MKV.Koder.aktoersroller.BRUKER,
       behandlingstyper: [],
       opprettBehandling: false,
-      behandlingstema: "",
+      behandlingstema: undefined,
       behandlingstype: "",
       changeField: vi.fn(),
       erJournalføring: true,
@@ -140,5 +141,15 @@ describe("KnyttTilSak", () => {
     await waitFor(() => expect(mocks.hent).toHaveBeenCalledOnce());
     expect(screen.queryByText(/Hvis du har mottatt svar på anmodning om unntak skal du/i)).toBeNull();
     expect(screen.getByText("Tidligere behandling er avsluttet.")).toBeInTheDocument();
+  });
+
+  it("viser behandlingstypevalg når behandlingstema er undefined", async () => {
+    props.behandlingstema = undefined;
+    renderWithProviders(<WrappedKnyttTilSak {...props} />);
+
+    const radiogruppe = screen.getByRole("group");
+    expect(radiogruppe).toBeInTheDocument();
+    expect(within(radiogruppe).queryAllByRole("radio")).toHaveLength(2);
+    expect(within(radiogruppe).getByLabelText("Opprett ny behandling")).toBeInTheDocument();
   });
 });

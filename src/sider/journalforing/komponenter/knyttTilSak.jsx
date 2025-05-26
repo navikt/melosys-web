@@ -96,7 +96,7 @@ export function KnyttTilSak(props) {
   }, [journalforingGjelder, sakstype.kode, sakstema.kode, sisteBehandling?.behandlingstema?.kode]);
 
   useEffect(() => {
-    if (sakstype.kode && sakstema.kode && behandlingstema) {
+    if (sakstype.kode && sakstema.kode) {
       Api.LovligeKombinasjoner.hentBehandlingstyperForKnyttTilSak(
         journalforingGjelder,
         sak.saksnummer,
