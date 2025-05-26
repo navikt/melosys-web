@@ -1,5 +1,6 @@
 import * as Utils from "../utils";
 
+// Skrevet om av AI for migrering fra yup 0.32.9 til 1.6.1
 const lagYupToReduxformErrorMapper = (schema, settings) => {
   if (!schema) throw new Error("Schema kan ikke være falsy");
 
