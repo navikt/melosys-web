@@ -1,23 +1,26 @@
-import { test, expect } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 import { searchFor } from "./testUtils";
 
 test("basic test - homepage loads correctly", async ({ page }) => {
-  // Navigate to the homepage
   await page.goto("/");
 
   // Wait for the page to load
   await page.waitForLoadState("networkidle");
 
-  // Check that the page has loaded by verifying some content is visible
+  // Verify that we are on the main page
+  await expect(page).toHaveURL("/melosys");
   await expect(page).toHaveTitle(/Melosys/);
 });
 
 test("homepage displays Mine oppgaver section", async ({ page }) => {
-  // Navigate to the homepage
   await page.goto("/");
 
   // Wait for the page to load
   await page.waitForLoadState("networkidle");
+
+  // Verify that we are on the main page
+  await expect(page).toHaveURL("/melosys");
+  await expect(page).toHaveTitle(/Melosys/);
 
   // Check that the "Mine oppgaver" heading is visible
   await expect(page.locator("h1:has-text('Mine oppgaver')")).toBeVisible();
@@ -27,7 +30,6 @@ test("homepage displays Mine oppgaver section", async ({ page }) => {
 });
 
 test("clicking on a task navigates to the details page", async ({ page }) => {
-  // Navigate to the homepage
   await page.goto("/");
 
   // Wait for the page to load
@@ -62,6 +64,8 @@ test("search form is displayed and can be used", async ({ page }) => {
 });
 
 test("search for ID 30056928150 and verify results", async ({ page }) => {
+  await page.goto("/");
+
   // Use the helper function to search for the specific ID
   await searchFor(page, "30056928150");
 
@@ -85,18 +89,17 @@ test("search for ID 30056928150 and verify results", async ({ page }) => {
 });
 
 test("search for invalid ID and verify error message", async ({ page }) => {
-  // Use a clearly invalid ID that doesn't match any valid pattern
-  const invalidID = "INVALID123";
+  await page.goto("/");
 
-  // Use the helper function to search for the invalid ID
-  await searchFor(page, invalidID);
+  // Use a clearly invalid ID that doesn't match any valid pattern
+  await searchFor(page, "INVALID123");
 
   // Verify that we're on the search results page
   await expect(page.locator("h1:has-text('Saksoversikt')")).toBeVisible();
 
   // Verify that the search results show the correct ID
-  await expect(page.locator(`h2:has-text('Resultater for saksnummer ${invalidID}')`)).toBeVisible();
+  await expect(page.locator(`h2:has-text('Resultater for saksnummer INVALID123')`)).toBeVisible();
 
   // Verify that the "no results" message is displayed
-  await expect(page.locator(`text=Fant ingen saker knyttet til saksnummer ${invalidID}`)).toBeVisible();
+  await expect(page.locator(`text=Fant ingen saker knyttet til saksnummer INVALID123`)).toBeVisible();
 });

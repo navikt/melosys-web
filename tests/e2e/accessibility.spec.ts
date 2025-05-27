@@ -15,6 +15,7 @@ test("search result with valid ID should have no accessibility violations (Axe)"
   await searchFor(page, "30056928150");
 
   // Verify that we're on the search results page
+  await expect(page).toHaveURL("/melosys/sok");
   await expect(page.locator("h1:has-text('Saksoversikt')")).toBeVisible();
 
   const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).analyze();
@@ -30,6 +31,7 @@ test("search result with invalid ID  should have no accessibility violations (Ax
   await searchFor(page, invalidID);
 
   // Verify that we're on the search results page
+  await expect(page).toHaveURL("/melosys/sok");
   await expect(page.locator("h1:has-text('Saksoversikt')")).toBeVisible();
 
   const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).analyze();

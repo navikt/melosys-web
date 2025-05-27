@@ -12,6 +12,9 @@ test("main page should pass Lighthouse audits", async ({ browser }) => {
 
   await page.goto("/");
 
+  // Verify that we are on the main page
+  await expect(page).toHaveURL("/melosys");
+
   const reportInfo = generateReportPaths("lighthouse-main-page-report");
 
   await runLighthouseAudit(page, reportInfo, auditThresholds);
@@ -27,6 +30,7 @@ test("search results with valid ID should pass Lighthouse audits", async ({ brow
   await searchFor(page, "30056928150");
 
   // Verify that we're on the search results page
+  await expect(page).toHaveURL("/melosys/sok");
   await expect(page.locator("h1:has-text('Saksoversikt')")).toBeVisible();
 
   const reportInfo = generateReportPaths("lighthouse-valid-search-report");
@@ -47,6 +51,7 @@ test("search results with invalid ID should pass Lighthouse audits", async ({ br
   await searchFor(page, invalidID);
 
   // Verify that we're on the search results page
+  await expect(page).toHaveURL("/melosys/sok");
   await expect(page.locator("h1:has-text('Saksoversikt')")).toBeVisible();
 
   const reportInfo = generateReportPaths("lighthouse-invalid-search-report");
