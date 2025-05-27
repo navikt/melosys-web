@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { searchFor } from "./testUtils";
+import { mainPageSearch } from "./testUtils";
 
 test("main page loads correctly and displays expected sections", async ({ page }) => {
   await page.goto("/");
@@ -49,16 +49,17 @@ test("clicking on a task navigates to the details page", async ({ page }) => {
 
 test("search form is displayed and can be used", async ({ page }) => {
   // Use the helper function to search for "test"
-  await searchFor(page, "test");
+  await mainPageSearch(page, "test");
 });
 
 test("search for ID 30056928150 and verify results", async ({ page }) => {
   await page.goto("/");
 
   // Use the helper function to search for the specific ID
-  await searchFor(page, "30056928150");
+  await mainPageSearch(page, "30056928150");
 
   // Verify that we're on the search results page
+  await expect(page).toHaveURL("/melosys/sok");
   await expect(page.locator("h1:has-text('Saksoversikt')")).toBeVisible();
 
   // Verify that the search results show the correct ID
@@ -68,22 +69,24 @@ test("search for ID 30056928150 and verify results", async ({ page }) => {
   const noResultsMessage = page.locator("text=Fant ingen saker knyttet til f.nr./d-nr. 30056928150");
   const noResultsCount = await noResultsMessage.count();
 
-  if (noResultsCount > 0) {
-    // If there are no results, skip the test but log a message
-    console.log("No search results found for ID 30056928150. This might be expected in some environments.");
-  } else {
-    // Verify that at least one search result is displayed
-    await expect(page.locator(".fagsak")).toBeVisible();
-  }
+  // Expect no "no results" message to be present
+  expect(
+    noResultsCount,
+    "No search results found for ID 30056928150. The test requires at least one search result to be present.",
+  ).toBe(0);
+
+  // Verify that at least one search result is displayed
+  await expect(page.locator(".fagsak")).toBeVisible();
 });
 
 test("search for invalid ID and verify error message", async ({ page }) => {
   await page.goto("/");
 
   // Use a clearly invalid ID that doesn't match any valid pattern
-  await searchFor(page, "INVALID123");
+  await mainPageSearch(page, "INVALID123");
 
   // Verify that we're on the search results page
+  await expect(page).toHaveURL("/melosys/sok");
   await expect(page.locator("h1:has-text('Saksoversikt')")).toBeVisible();
 
   // Verify that the search results show the correct ID

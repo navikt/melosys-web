@@ -1,5 +1,6 @@
-import { test, expect } from "@playwright/test";
-import { runLighthouseAudit, searchFor } from "./testUtils";
+import { expect, test } from "@playwright/test";
+import { mainPageSearch } from "./testUtils";
+import { runLighthouseAudit } from "./lighthouseUtils";
 
 const auditThresholds = {
   "best-practices": 100,
@@ -14,6 +15,7 @@ test("main page should pass Lighthouse audits", async ({ browser }) => {
 
   // Verify that we are on the main page
   await expect(page).toHaveURL("/melosys");
+  await expect(page).toHaveTitle(/Melosys/);
 
   await runLighthouseAudit(page, "lighthouse-main-page-report", auditThresholds);
 
@@ -25,7 +27,7 @@ test("search results with valid ID should pass Lighthouse audits", async ({ brow
   const page = await context.newPage();
 
   // Use the helper function to search for a valid ID
-  await searchFor(page, "30056928150");
+  await mainPageSearch(page, "30056928150");
 
   // Verify that we're on the search results page
   await expect(page).toHaveURL("/melosys/sok");
@@ -41,10 +43,8 @@ test("search results with invalid ID should pass Lighthouse audits", async ({ br
   const page = await context.newPage();
 
   // Use a clearly invalid ID that doesn't match any valid pattern
-  const invalidID = "INVALID123";
-
   // Use the helper function to search for the invalid ID
-  await searchFor(page, invalidID);
+  await mainPageSearch(page, "INVALID123");
 
   // Verify that we're on the search results page
   await expect(page).toHaveURL("/melosys/sok");
