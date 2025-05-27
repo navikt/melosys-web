@@ -24,7 +24,7 @@ import {
   OppdaterMedlemskapsperiode,
 } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import * as Utils from "../../../../../utils";
-import { hentMedlemskapsFomTomDato } from "../aarsavregningHelpers";
+import { beregnTrygdeavgiftsperioder, erBrukerSkattepliktigIHelePerioden, hentMedlemskapsFomTomDato } from "../utils";
 import { Aarsavregningsmeldinger } from "../komponenter/aarsavregningsmeldinger";
 import { BeregnetTrygdeavgiftDetaljer } from "../komponenter/beregnetTrygdeavgiftDetaljer";
 import BestemmelseSelect from "../komponenter/bestemmelseSelect";
@@ -33,7 +33,6 @@ import { MedlemskapsperiodeSkjema } from "../komponenter/medlemskapsperiodeSkjem
 import { SumArsavregningTabell } from "../komponenter/sumArsavregningTabell";
 import { TidligereFakturertIAvgiftssystemetInput } from "../komponenter/tidligereFakturertIAvgiftssystemetInput";
 import TidligereGrunnlagsoversikt from "../komponenter/tidligereGrunnlagsoversikt";
-import { beregnTrygdeavgiftsperioder, erBrukerSkattepliktigIHelePerioden } from "../komponenter/utils";
 import {
   AarsavregningFormValuesProps,
   DEFAULT_MEDLEMSKAPSPERIODE,

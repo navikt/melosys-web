@@ -35,7 +35,7 @@ import { BeregnetTrygdeavgift, TrygdeavgiftsgrunnlagDto } from "../../../../../s
 import { BOOLSK_STRING } from "../../../../../constants";
 import LabelMedHjelpetekst from "../../../../../felleskomponenter/labelMedHjelpetekst";
 
-import { erBrukerSkattepliktigIHelePerioden } from "../../../../aarsavregning/stegKomponenter/vurderingAarsavregning/komponenter/utils";
+import { erBrukerSkattepliktigIHelePerioden } from "../../../../aarsavregning/stegKomponenter/vurderingAarsavregning/utils";
 
 interface Props {
   bekreft: () => void;

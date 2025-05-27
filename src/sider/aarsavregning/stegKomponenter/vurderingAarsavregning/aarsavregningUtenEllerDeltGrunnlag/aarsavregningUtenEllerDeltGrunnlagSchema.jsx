@@ -6,7 +6,7 @@ import { BOOLSK_STRING } from "../../../../../constants";
 import * as Datoutils from "../../../../../utils/dato";
 import { ULAGRET_MEDLEMSKAPSPERIODE_ID } from "./aarsavregningUtenEllerDeltGrunnlag";
 
-import { erBrukerSkattepliktigIHelePerioden } from "../komponenter/utils";
+import { erBrukerSkattepliktigIHelePerioden } from "../utils";
 
 const { MAA_FYLLES_UT } = KV.Feilmeldinger;
 const {
