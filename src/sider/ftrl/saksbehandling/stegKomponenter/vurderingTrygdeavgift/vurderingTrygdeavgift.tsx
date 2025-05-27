@@ -272,10 +272,10 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
           trigger(`inntektskilder[${index}].fomDato`);
           trigger(`inntektskilder[${index}].tomDato`);
         });
-      }
-      if (!erÅpenSluttDato && (feil || harEndretInnvilgetMedlemskapsperiode)) {
-        debounceBeregnTrygdeavgiftsperioder(formValues, formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType));
-        setHarEndretInnvilgetMedlemskapsperiode(false);
+        if (!erÅpenSluttDato && (feil || harEndretInnvilgetMedlemskapsperiode)) {
+          debounceBeregnTrygdeavgiftsperioder(formValues, formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType));
+          setHarEndretInnvilgetMedlemskapsperiode(false);
+        }
       }
     }
   }, [aktivtSteg, harEndretInnvilgetMedlemskapsperiode]);
