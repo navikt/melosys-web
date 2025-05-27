@@ -1,18 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { searchFor } from "./testUtils";
 
-test("basic test - homepage loads correctly", async ({ page }) => {
-  await page.goto("/");
-
-  // Wait for the page to load
-  await page.waitForLoadState("networkidle");
-
-  // Verify that we are on the main page
-  await expect(page).toHaveURL("/melosys");
-  await expect(page).toHaveTitle(/Melosys/);
-});
-
-test("homepage displays Mine oppgaver section", async ({ page }) => {
+test("main page loads correctly and displays expected sections", async ({ page }) => {
   await page.goto("/");
 
   // Wait for the page to load

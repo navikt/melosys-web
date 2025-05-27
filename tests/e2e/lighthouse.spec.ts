@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { generateReportPaths, runLighthouseAudit, searchFor } from "./testUtils";
+import { runLighthouseAudit, searchFor } from "./testUtils";
 
 const auditThresholds = {
   "best-practices": 100,
@@ -15,9 +15,7 @@ test("main page should pass Lighthouse audits", async ({ browser }) => {
   // Verify that we are on the main page
   await expect(page).toHaveURL("/melosys");
 
-  const reportInfo = generateReportPaths("lighthouse-main-page-report");
-
-  await runLighthouseAudit(page, reportInfo, auditThresholds);
+  await runLighthouseAudit(page, "lighthouse-main-page-report", auditThresholds);
 
   await context.close();
 });
@@ -33,9 +31,7 @@ test("search results with valid ID should pass Lighthouse audits", async ({ brow
   await expect(page).toHaveURL("/melosys/sok");
   await expect(page.locator("h1:has-text('Saksoversikt')")).toBeVisible();
 
-  const reportInfo = generateReportPaths("lighthouse-valid-search-report");
-
-  await runLighthouseAudit(page, reportInfo, auditThresholds, "valid search results");
+  await runLighthouseAudit(page, "lighthouse-valid-search-report", auditThresholds, "valid search results");
 
   await context.close();
 });
@@ -54,9 +50,7 @@ test("search results with invalid ID should pass Lighthouse audits", async ({ br
   await expect(page).toHaveURL("/melosys/sok");
   await expect(page.locator("h1:has-text('Saksoversikt')")).toBeVisible();
 
-  const reportInfo = generateReportPaths("lighthouse-invalid-search-report");
-
-  await runLighthouseAudit(page, reportInfo, auditThresholds, "invalid search results");
+  await runLighthouseAudit(page, "lighthouse-invalid-search-report", auditThresholds, "invalid search results");
 
   await context.close();
 });
