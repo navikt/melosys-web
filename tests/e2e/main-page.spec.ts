@@ -10,9 +10,6 @@ test("basic test - homepage loads correctly", async ({ page }) => {
 
   // Check that the page has loaded by verifying some content is visible
   await expect(page).toHaveTitle(/Melosys/);
-
-  // Take a screenshot for reference
-  await page.screenshot({ path: "tests/e2e/artifacts/screenshots/homepage.png", fullPage: true });
 });
 
 test("homepage displays Mine oppgaver section", async ({ page }) => {
@@ -57,17 +54,11 @@ test("clicking on a task navigates to the details page", async ({ page }) => {
 
   // Verify that we've navigated to a different URL
   expect(page.url()).not.toEqual(currentUrl);
-
-  // Take a screenshot of the details page
-  await page.screenshot({ path: "tests/e2e/artifacts/screenshots/task-details.png", fullPage: true });
 });
 
 test("search form is displayed and can be used", async ({ page }) => {
   // Use the helper function to search for "test"
   await searchFor(page, "test");
-
-  // Take a screenshot of the search results
-  await page.screenshot({ path: "tests/e2e/artifacts/screenshots/search-results.png", fullPage: true });
 });
 
 test("search for ID 30056928150 and verify results", async ({ page }) => {
@@ -90,9 +81,6 @@ test("search for ID 30056928150 and verify results", async ({ page }) => {
   } else {
     // Verify that at least one search result is displayed
     await expect(page.locator(".fagsak")).toBeVisible();
-
-    // Take a screenshot of the search results
-    await page.screenshot({ path: "tests/e2e/artifacts/screenshots/id-search-results.png", fullPage: true });
   }
 });
 
@@ -111,7 +99,4 @@ test("search for invalid ID and verify error message", async ({ page }) => {
 
   // Verify that the "no results" message is displayed
   await expect(page.locator(`text=Fant ingen saker knyttet til saksnummer ${invalidID}`)).toBeVisible();
-
-  // Take a screenshot of the search results
-  await page.screenshot({ path: "tests/e2e/artifacts/screenshots/invalid-id-search-results.png", fullPage: true });
 });
