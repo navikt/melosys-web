@@ -34,8 +34,8 @@ test("clicking on a task navigates to the details page", async ({ page }) => {
     return;
   }
 
-  // Get the URL before clicking
-  const currentUrl = page.url();
+  // Get the taskLink's href attribute
+  const taskLinkHref = await taskLink.getAttribute("href");
 
   // Click on the task
   await taskLink.click();
@@ -43,16 +43,11 @@ test("clicking on a task navigates to the details page", async ({ page }) => {
   // Wait for navigation to complete
   await page.waitForLoadState("networkidle");
 
-  // Verify that we've navigated to a different URL
-  expect(page.url()).not.toEqual(currentUrl);
+  // Verify that we've navigated to a URL that contains the taskLink
+  expect(page.url(), "Expected URL to contain the taskLink's href after clicking").toContain(taskLinkHref);
 });
 
-test("search form is displayed and can be used", async ({ page }) => {
-  // Use the helper function to search for "test"
-  await mainPageSearch(page, "test");
-});
-
-test("search for ID 30056928150 and verify results", async ({ page }) => {
+test("search for a valid ID and verify results", async ({ page }) => {
   await page.goto("/");
 
   // Use the helper function to search for the specific ID
@@ -65,15 +60,8 @@ test("search for ID 30056928150 and verify results", async ({ page }) => {
   // Verify that the search results show the correct ID
   await expect(page.locator("h2:has-text('Resultater for f.nr./d-nr. 30056928150')")).toBeVisible();
 
-  // Verify that there are search results (not "Fant ingen saker...")
-  const noResultsMessage = page.locator("text=Fant ingen saker knyttet til f.nr./d-nr. 30056928150");
-  const noResultsCount = await noResultsMessage.count();
-
-  // Expect no "no results" message to be present
-  expect(
-    noResultsCount,
-    "No search results found for ID 30056928150. The test requires at least one search result to be present.",
-  ).toBe(0);
+  // Verify that the "no results" message does NOT appear
+  await expect(page.locator(`text=Fant ingen saker knyttet til f.nr./d-nr. 30056928150`)).not.toBeVisible();
 
   // Verify that at least one search result is displayed
   await expect(page.locator(".fagsak")).toBeVisible();
