@@ -1,4 +1,4 @@
-import { Page } from "@playwright/test";
+import { expect, Page } from "@playwright/test";
 import type { AxeResults, NodeResult, Result } from "axe-core";
 import AxeBuilder from "@axe-core/playwright";
 
@@ -6,21 +6,17 @@ import AxeBuilder from "@axe-core/playwright";
  * Runs an accessibility analysis using Axe and formats the results
  * @param page - The Playwright page object
  * @param contextDescription - Optional description for log messages
- * @returns A string with detailed violation information, or an empty string if no violations are found
  */
-export async function runAxeAnalyze(page: Page, contextDescription: string = "(not specified)"): Promise<string> {
+export async function runAxeAnalyze(page: Page, contextDescription: string = "(not specified)"): Promise<void> {
   const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).analyze();
 
-  const { violations } = results;
-
-  if (violations.length > 0) {
+  if (results.violations.length > 0) {
     const detailedViolations = formatAxeViolationsToString(results, contextDescription);
-    console.log(detailedViolations);
-    return detailedViolations;
+    expect(detailedViolations, `Accessibility violations found for ${contextDescription}`).toBe("");
+    return;
   }
 
   console.log(`\n✅ No accessibility violations found${contextDescription ? ` for ${contextDescription}` : ""}`);
-  return "";
 }
 
 /**

@@ -1,15 +1,16 @@
-import { test, expect } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 import { mainPageSearch } from "./testUtils";
 import { runAxeAnalyze } from "./axeUtils";
 
-test("main page should have no accessibility violations (Axe)", async ({ page }, testInfo) => {
+test("@accessibility main page should have no accessibility violations (Axe)", async ({ page }, testInfo) => {
   await page.goto("/");
 
-  const accessibilityViolations = await runAxeAnalyze(page, testInfo.title);
-  expect(accessibilityViolations).toBe("");
+  await runAxeAnalyze(page, testInfo.title);
 });
 
-test("search result with valid ID should have no accessibility violations (Axe)", async ({ page }, testInfo) => {
+test("@accessibility search result with valid ID should have no accessibility violations (Axe)", async ({
+  page,
+}, testInfo) => {
   // Use the helper function to search for a valid ID
   await mainPageSearch(page, "30056928150");
 
@@ -17,11 +18,12 @@ test("search result with valid ID should have no accessibility violations (Axe)"
   await expect(page).toHaveURL("/melosys/sok");
   await expect(page.locator("h1:has-text('Saksoversikt')")).toBeVisible();
 
-  const accessibilityViolations = await runAxeAnalyze(page, testInfo.title);
-  expect(accessibilityViolations).toBe("");
+  await runAxeAnalyze(page, testInfo.title);
 });
 
-test("search result with invalid ID should have no accessibility violations (Axe)", async ({ page }, testInfo) => {
+test("@accessibility search result with invalid ID should have no accessibility violations (Axe)", async ({
+  page,
+}, testInfo) => {
   // Use a clearly invalid ID that doesn't match any valid pattern
   const invalidID = "INVALID123";
 
@@ -32,6 +34,5 @@ test("search result with invalid ID should have no accessibility violations (Axe
   await expect(page).toHaveURL("/melosys/sok");
   await expect(page.locator("h1:has-text('Saksoversikt')")).toBeVisible();
 
-  const accessibilityViolations = await runAxeAnalyze(page, testInfo.title);
-  expect(accessibilityViolations).toBe("");
+  await runAxeAnalyze(page, testInfo.title);
 });

@@ -91,13 +91,13 @@ export async function runLighthouseAudit(
     console.log(`\n⏳ Lighthouse audit execution completed${contextMsg}`);
     console.log(`📊 Report saved to: ${reportPath}`);
 
-    parseLighthouseReport(jsonReportPath, auditThresholds, true);
+    parseLighthouseReport(jsonReportPath, auditThresholds);
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     console.error(`\n❌ Lighthouse audit failed${contextMsg}: ${errorMessage}`);
     console.log(`\n⚠️ Attempting to parse any existing report...`);
 
-    parseLighthouseReport(jsonReportPath, auditThresholds, true);
+    parseLighthouseReport(jsonReportPath, auditThresholds);
 
     // If parseLighthouseReport() didn't throw, rethrow the original error
     throw error;
@@ -269,11 +269,7 @@ function getEmoji(threshold: number, id: string, score: number) {
 /**
  * Function to display Lighthouse results
  */
-function displayLighthouseResults(
-  reportJson: LighthouseReport,
-  thresholds: Record<string, number>,
-  shouldThrowOnFailedThresholds: boolean = false,
-): void {
+function displayLighthouseResults(reportJson: LighthouseReport, thresholds: Record<string, number>): void {
   if (reportJson.categories) {
     console.log("\n-------- Lighthouse Category Scores --------");
     Object.entries(reportJson.categories).forEach(([id, category]: [string, LighthouseCategory]) => {
@@ -296,7 +292,7 @@ function displayLighthouseResults(
   // Check if any thresholds have failed and throw an error if requested
   const failedThresholds = getFailedThresholds(reportJson, thresholds);
 
-  if (shouldThrowOnFailedThresholds && failedThresholds.length > 0) {
+  if (failedThresholds.length > 0) {
     const failureMessage = failedThresholds
       .map(({ category, score, threshold }) => `${category} score is ${score} and is under the ${threshold} threshold`)
       .join("\n");
@@ -315,30 +311,20 @@ function displayLighthouseResults(
  * Parses a Lighthouse JSON report and displays the results
  * @param jsonReportPath - Path to the Lighthouse JSON report
  * @param thresholds - Thresholds for Lighthouse audits (same as used in playAudit)
- * @param throwOnFailedThresholds - Whether to throw an error if thresholds aren't met
  */
-function parseLighthouseReport(
-  jsonReportPath: string,
-  thresholds: Record<string, number>,
-  throwOnFailedThresholds: boolean = false,
-): void {
+function parseLighthouseReport(jsonReportPath: string, thresholds: Record<string, number>): void {
   if (!fs.existsSync(jsonReportPath)) {
     console.log(`\n⚠️ JSON report not found at ${jsonReportPath}`);
-    if (throwOnFailedThresholds) {
-      throw new Error(`Lighthouse audit failed: JSON report not found at ${jsonReportPath}`);
-    }
-    return;
+    throw new Error(`Lighthouse audit failed: JSON report not found at ${jsonReportPath}`);
   }
 
   try {
     const reportJson = JSON.parse(fs.readFileSync(jsonReportPath, "utf8")) as LighthouseReport;
-    displayLighthouseResults(reportJson, thresholds, throwOnFailedThresholds);
+    displayLighthouseResults(reportJson, thresholds);
   } catch (error: unknown) {
     const errorMessage = `Error parsing Lighthouse JSON report: ${error instanceof Error ? error.message : "Unknown error"}`;
     console.error(`\n❌ ${errorMessage}`);
-    if (throwOnFailedThresholds) {
-      throw new Error(`Lighthouse audit failed: ${errorMessage}`);
-    }
+    throw new Error(`Lighthouse audit failed: ${errorMessage}`);
   }
 }
 

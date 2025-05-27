@@ -1,7 +1,8 @@
 import { expect, test } from "@playwright/test";
 import { mainPageSearch } from "./testUtils";
+import { runAxeAnalyze } from "./axeUtils";
 
-test("main page loads correctly and displays expected sections", async ({ page }) => {
+test("@accessibility main page loads correctly and displays expected sections", async ({ page }, testInfo) => {
   await page.goto("/");
 
   // Wait for the page to load
@@ -16,9 +17,11 @@ test("main page loads correctly and displays expected sections", async ({ page }
 
   // Check that the oppgaver count is displayed
   await expect(page.locator("text=/\\d+ oppgaver/")).toBeVisible();
+
+  await runAxeAnalyze(page, testInfo.title);
 });
 
-test("clicking on a task navigates to the details page", async ({ page }) => {
+test("@accessibility clicking on a task navigates to the details page", async ({ page }, testInfo) => {
   await page.goto("/");
 
   // Wait for the page to load
@@ -45,9 +48,11 @@ test("clicking on a task navigates to the details page", async ({ page }) => {
 
   // Verify that we've navigated to a URL that contains the taskLink
   expect(page.url(), "Expected URL to contain the taskLink's href after clicking").toContain(taskLinkHref);
+
+  await runAxeAnalyze(page, testInfo.title);
 });
 
-test("search for a valid ID and verify results", async ({ page }) => {
+test("@accessibility search for a valid ID and verify results", async ({ page }, testInfo) => {
   await page.goto("/");
 
   // Use the helper function to search for the specific ID
@@ -65,9 +70,11 @@ test("search for a valid ID and verify results", async ({ page }) => {
 
   // Verify that at least one search result is displayed
   await expect(page.locator(".fagsak")).toBeVisible();
+
+  await runAxeAnalyze(page, testInfo.title);
 });
 
-test("search for invalid ID and verify error message", async ({ page }) => {
+test("@accessibility search for invalid ID and verify error message", async ({ page }, testInfo) => {
   await page.goto("/");
 
   // Use a clearly invalid ID that doesn't match any valid pattern
@@ -82,4 +89,6 @@ test("search for invalid ID and verify error message", async ({ page }) => {
 
   // Verify that the "no results" message is displayed
   await expect(page.locator(`text=Fant ingen saker knyttet til saksnummer INVALID123`)).toBeVisible();
+
+  await runAxeAnalyze(page, testInfo.title);
 });
