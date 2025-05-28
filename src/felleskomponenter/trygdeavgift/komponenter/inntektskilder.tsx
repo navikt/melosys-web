@@ -17,7 +17,7 @@ import {
 import "./inntektskilder.css";
 import { Stack } from "@navikt/ds-react";
 
-import { erBrukerSkattepliktigIHelePerioden } from "../../../sider/aarsavregning/stegKomponenter/vurderingAarsavregning/komponenter/utils";
+import { erBrukerSkattepliktigIHelePerioden } from "../../../sider/aarsavregning/stegKomponenter/vurderingAarsavregning/utils";
 import { useSelector } from "react-redux";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 

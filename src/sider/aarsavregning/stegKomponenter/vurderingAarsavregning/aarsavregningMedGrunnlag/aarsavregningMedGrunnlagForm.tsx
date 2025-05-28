@@ -21,12 +21,16 @@ import { behandlingsresultatSelectors } from "../../../../../ducks/behandlingsre
 import aarsavregningMedGrunnlagSchema from "./aarsavregningMedGrunnlagSchema";
 import { Skatteforholdsperioder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/skatteforholdsperioder";
 import { Inntektskilder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/inntektskilder";
-import { beregnTrygdeavgiftsperioder, erBrukerSkattepliktigIHelePerioden } from "../komponenter/utils";
+import {
+  beregnTrygdeavgiftsperioder,
+  erBrukerSkattepliktigIHelePerioden,
+  mapTilInntektskilderProps,
+  mapTilSkatteforholdProps,
+} from "../utils";
 import TidligereGrunnlagsoversikt from "../komponenter/tidligereGrunnlagsoversikt";
 import { Aarsavregningsmeldinger } from "../komponenter/aarsavregningsmeldinger";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import { InitiellData } from "./aarsavregningMedGrunnlag";
-import { mapTilInntektskilderProps, mapTilSkatteforholdProps } from "../aarsavregningHelpers";
 import { Feilmelding, finnAktivFeilmelding } from "./valideringsfeil";
 import MKV from "../../../../../melosyskodeverk";
 import { EndeligAvgiftValgRadioGroup } from "../komponenter/endeligAvgiftValgRadioGroup";

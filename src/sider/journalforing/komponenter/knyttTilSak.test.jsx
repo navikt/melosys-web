@@ -8,6 +8,7 @@ import { reduxForm } from "redux-form";
 const mocks = vi.hoisted(() => {
   return {
     hent: vi.fn(),
+    hentBehandlingstyperForKnyttTilSak: vi.fn(() => Promise.resolve([{ kode: "AARSAVREGNING", term: "Årsavregning" }])),
   };
 });
 vi.mock("../../../services/modules/anmodningsperioder", () => ({
@@ -15,7 +16,7 @@ vi.mock("../../../services/modules/anmodningsperioder", () => ({
 }));
 vi.mock("../../../services/modules/lovligekombinasjoner", () => ({
   hentBehandlingstemaer: () => Promise.resolve([]),
-  hentBehandlingstyperForKnyttTilSak: () => Promise.resolve([]),
+  hentBehandlingstyperForKnyttTilSak: () => mocks.hentBehandlingstyperForKnyttTilSak(),
 }));
 describe("KnyttTilSak", () => {
   let props = null;
@@ -145,11 +146,17 @@ describe("KnyttTilSak", () => {
 
   it("viser behandlingstypevalg når behandlingstema er undefined", async () => {
     props.behandlingstema = undefined;
+    props.formValues.behandlingstema = undefined;
+    props.formValues.opprettBehandling = true;
+
     renderWithProviders(<WrappedKnyttTilSak {...props} />);
 
-    const radiogruppe = screen.getByRole("group");
-    expect(radiogruppe).toBeInTheDocument();
-    expect(within(radiogruppe).queryAllByRole("radio")).toHaveLength(2);
-    expect(within(radiogruppe).getByLabelText("Opprett ny behandling")).toBeInTheDocument();
+    await waitFor(() => expect(mocks.hentBehandlingstyperForKnyttTilSak).toHaveBeenCalled());
+    expect(screen.getByText("Behandlingstype")).toBeInTheDocument();
+
+    const behandlingstypeGroup = screen.getByRole("group", { name: "Behandlingstype" });
+    const radioButtons = within(behandlingstypeGroup).getAllByRole("radio");
+    expect(radioButtons).toHaveLength(1);
+    expect(within(behandlingstypeGroup).getByLabelText("Årsavregning")).toBeInTheDocument();
   });
 });
