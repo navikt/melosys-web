@@ -3,7 +3,6 @@ import * as Nav from "../../../../../navFrontend";
 import { Avgift } from "../../../../../services/modules/aarsavregning/aarsavregning";
 import SkatteforholdsPerioderTabell from "./skatteforholdsPerioderTabell";
 import InntektsperioderTabell from "./inntektsperioderTabell";
-import "./tidligereGrunnlagsoversikt.css";
 
 interface Props {
   skatteforholdsperioder?: SkatteforholdDto[];
