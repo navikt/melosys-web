@@ -753,8 +753,6 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
 
   const trygdeAvgiftSkalIkkeBetalesTilNav =
     medlemskapstypeErPliktig && erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder);
-  const forskuddsvisFakturertTrygdeavgift =
-    (aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift?.totalAvgift ?? 0) > 0;
   const skjemaErRedigerbart = redigerbart && !endrerBestemmelse;
 
   return (
