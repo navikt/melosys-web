@@ -16,7 +16,7 @@ function TidligereGrunnlagsoversikt({ skatteforholdsperioder, inntektsperioder, 
   const harGrunnlagAvgift = avgift && avgift.totalAvgift > 0;
 
   return (
-    <div className="tidligereGrunnlagsoversikt">
+    <div className="tidligereGrunnlagPanel">
       <Nav.Heading size="small">Inntekts- og skatteopplysninger for tidligere beregnet trygdeavgift</Nav.Heading>
       <SkatteforholdsPerioderTabell perioder={skatteforholdsperioder} />
       {harGrunnlagAvgift && <InntektsperioderTabell perioder={inntektsperioder} avgift={avgift} />}

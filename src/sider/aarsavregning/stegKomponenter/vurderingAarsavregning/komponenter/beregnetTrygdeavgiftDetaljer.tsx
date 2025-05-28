@@ -63,7 +63,8 @@ export function BeregnetTrygdeavgiftDetaljer({
   const arbAvgBetalesKreves = (kildetype: string) => !medlemskapsTypeErPliktig && kildetype !== MISJONÆR;
 
   return (
-    <div className="skjema__panel">
+    <div className="tidligereGrunnlagPanel">
+      {tittel && <Nav.Heading size="small">{tittel}</Nav.Heading>}
       <Nav.Table size="small" className="periode_tabell">
         <Nav.Table.Header className="header_row">
           <Nav.Table.Row>

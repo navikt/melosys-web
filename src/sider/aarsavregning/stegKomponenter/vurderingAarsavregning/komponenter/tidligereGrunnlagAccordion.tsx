@@ -26,7 +26,7 @@ export function TidligereGrunnlagAccordion({ aarsavregningResponse }: TidligereG
       <Nav.ExpansionCard.Header className="beregnetTrygdeavgiftDetaljer_header">
         <Nav.ExpansionCard.Title size="small">{accordionTittel}</Nav.ExpansionCard.Title>
       </Nav.ExpansionCard.Header>
-      <Nav.ExpansionCard.Content className="beregnetTrygdeavgiftDetaljer_content">
+      <Nav.ExpansionCard.Content className="tidligereGrunnlagAccordion_content">
         {harTidligereGrunnlag ? (
           <>
             <MedlemskapsPerioderTabell

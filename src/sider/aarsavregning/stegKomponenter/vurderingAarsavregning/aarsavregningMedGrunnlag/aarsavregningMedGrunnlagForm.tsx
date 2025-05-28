@@ -388,11 +388,22 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
             !feilmelding &&
             !arrayValideringsfeil &&
             aarsavregningResponse?.nyttGrunnlag && (
-              <BeregnetTrygdeavgiftDetaljer
-                grunnlag={aarsavregningResponse.nyttGrunnlag}
-                medlemskapsTypeErPliktig={medlemskapstypeErPliktig!}
-                tittel="Endelig beregnet trygdeavgift"
-              />
+              <Nav.ExpansionCard
+                className="beregnetTrygdeavgiftDetaljer"
+                aria-label="trygdeavgiftdetaljer"
+                size="small"
+              >
+                <Nav.ExpansionCard.Header>
+                  <Nav.ExpansionCard.Title size="small">Endelig beregnet trygdeavgift</Nav.ExpansionCard.Title>
+                </Nav.ExpansionCard.Header>
+                <Nav.ExpansionCard.Content>
+                  <BeregnetTrygdeavgiftDetaljer
+                    grunnlag={aarsavregningResponse.nyttGrunnlag}
+                    medlemskapsTypeErPliktig={medlemskapstypeErPliktig!}
+                    tittel=""
+                  />
+                </Nav.ExpansionCard.Content>
+              </Nav.ExpansionCard>
             )}
 
           {arrayValideringsfeil && <Feilmelding type={arrayValideringsfeil} />}
