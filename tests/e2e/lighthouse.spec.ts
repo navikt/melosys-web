@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { mainPageSearch } from "./testUtils";
+import { mainPageSearch, USER_ID_VALID } from "./testUtils";
 import { runLighthouseAudit } from "./lighthouseUtils";
 
 const auditThresholds = {
@@ -27,7 +27,7 @@ test("search results with valid ID should pass Lighthouse audits", async ({ brow
   const page = await context.newPage();
 
   // Use the helper function to search for a valid ID
-  await mainPageSearch(page, "30056928150");
+  await mainPageSearch(page, USER_ID_VALID);
 
   // Verify that we're on the search results page
   await expect(page).toHaveURL("/melosys/sok");

@@ -1,5 +1,7 @@
 import { expect, Page } from "@playwright/test";
 
+export const USER_ID_VALID = "30056928150";
+export const USER_ID_INVALID = "INVALID123";
 /**
  * Helper function to search for an ID
  * @param page - The Playwright page object

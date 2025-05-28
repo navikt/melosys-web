@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { mainPageSearch } from "./testUtils";
+import { mainPageSearch, USER_ID_INVALID, USER_ID_VALID } from "./testUtils";
 import { runAxeAnalyze } from "./axeUtils";
 
 test("@accessibility main page loads correctly and displays expected sections", async ({ page }, testInfo) => {
@@ -56,17 +56,17 @@ test("@accessibility search for a valid ID and verify results", async ({ page },
   await page.goto("/");
 
   // Use the helper function to search for the specific ID
-  await mainPageSearch(page, "30056928150");
+  await mainPageSearch(page, USER_ID_VALID);
 
   // Verify that we're on the search results page
   await expect(page).toHaveURL("/melosys/sok");
   await expect(page.locator("h1:has-text('Saksoversikt')")).toBeVisible();
 
   // Verify that the search results show the correct ID
-  await expect(page.locator("h2:has-text('Resultater for f.nr./d-nr. 30056928150')")).toBeVisible();
+  await expect(page.locator(`h2:has-text('Resultater for f.nr./d-nr. ${USER_ID_VALID}')`)).toBeVisible();
 
   // Verify that the "no results" message does NOT appear
-  await expect(page.locator(`text=Fant ingen saker knyttet til f.nr./d-nr. 30056928150`)).not.toBeVisible();
+  await expect(page.locator(`text=Fant ingen saker knyttet til f.nr./d-nr. ${USER_ID_VALID}`)).not.toBeVisible();
 
   // Verify that at least one search result is displayed
   await expect(page.locator(".fagsak")).toBeVisible();
@@ -78,17 +78,17 @@ test("@accessibility search for invalid ID and verify error message", async ({ p
   await page.goto("/");
 
   // Use a clearly invalid ID that doesn't match any valid pattern
-  await mainPageSearch(page, "INVALID123");
+  await mainPageSearch(page, USER_ID_INVALID);
 
   // Verify that we're on the search results page
   await expect(page).toHaveURL("/melosys/sok");
   await expect(page.locator("h1:has-text('Saksoversikt')")).toBeVisible();
 
   // Verify that the search results show the correct ID
-  await expect(page.locator(`h2:has-text('Resultater for saksnummer INVALID123')`)).toBeVisible();
+  await expect(page.locator(`h2:has-text('Resultater for saksnummer ${USER_ID_INVALID}')`)).toBeVisible();
 
   // Verify that the "no results" message is displayed
-  await expect(page.locator(`text=Fant ingen saker knyttet til saksnummer INVALID123`)).toBeVisible();
+  await expect(page.locator(`text=Fant ingen saker knyttet til saksnummer ${USER_ID_INVALID}`)).toBeVisible();
 
   await runAxeAnalyze(page, testInfo.title);
 });

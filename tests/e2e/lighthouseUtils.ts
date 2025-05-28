@@ -95,11 +95,6 @@ export async function runLighthouseAudit(
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     console.error(`\n❌ Lighthouse audit failed${contextMsg}: ${errorMessage}`);
-    console.log(`\n⚠️ Attempting to parse any existing report...`);
-
-    parseLighthouseReport(jsonReportPath, auditThresholds);
-
-    // If parseLighthouseReport() didn't throw, rethrow the original error
     throw error;
   }
 }
