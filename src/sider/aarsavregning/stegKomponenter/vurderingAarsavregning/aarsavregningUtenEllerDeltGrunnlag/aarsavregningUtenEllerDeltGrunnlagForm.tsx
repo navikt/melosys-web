@@ -757,6 +757,8 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
 
   return (
     <div className="vurderingAarsavregning">
+      <TidligereFakturertIAvgiftssystemetInput control={control} redigerbart={skjemaErRedigerbart} />
+
       <EndeligAvgiftValgRadioGroup
         control={control}
         redigerbart={skjemaErRedigerbart}
@@ -766,8 +768,6 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
 
       {endeligAvgiftValg === OPPLYSNINGER_ENDRET && (
         <>
-          <TidligereFakturertIAvgiftssystemetInput control={control} redigerbart={skjemaErRedigerbart} />
-
           <Nav.Heading className="endelige_opplysninger_heading" level="2">
             Inntekts- og skatteopplysninger for endelig trygdeavgift
           </Nav.Heading>
