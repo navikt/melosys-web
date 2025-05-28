@@ -28,14 +28,11 @@ test("@accessibility clicking on a task navigates to the details page", async ({
   await page.waitForLoadState("networkidle");
 
   // Find the first task link and click it
-  // Note: This test assumes there is at least one task available
-  // If no tasks are available, the test will be skipped
+  // Note: This test assumes there is at least one task available. If no tasks are available, the test will fail
   const taskLink = page.locator(".behandlingOppgave__link").first();
 
-  if ((await taskLink.count()) === 0) {
-    test.skip(true, "No tasks available to test");
-    return;
-  }
+  // Ensure there is at least one task available
+  await expect(taskLink, "No tasks available to test").toHaveCount(1);
 
   // Get the taskLink's href attribute
   const taskLinkHref = await taskLink.getAttribute("href");
