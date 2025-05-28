@@ -1,14 +1,28 @@
 import { expect, Page } from "@playwright/test";
 import type { AxeResults, NodeResult, Result } from "axe-core";
 import AxeBuilder from "@axe-core/playwright";
+import { createHtmlReport } from "axe-html-reporter";
 
 /**
  * Runs an accessibility analysis using Axe and formats the results
  * @param page - The Playwright page object
+ * @param testName - The name of the test
  * @param contextDescription - Optional description for log messages
  */
-export async function runAxeAnalyze(page: Page, contextDescription: string = "(not specified)"): Promise<void> {
+export async function runAxeAnalyze(
+  page: Page,
+  testName: string,
+  contextDescription: string = "(not specified)",
+): Promise<void> {
   const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).analyze();
+
+  createHtmlReport({
+    results,
+    options: {
+      outputDir: "tests/e2e/reports/accessibility",
+      reportFileName: `${testName.replace(/\s+/g, "-")}.html`,
+    },
+  });
 
   if (results.violations.length > 0) {
     const detailedViolations = formatAxeViolationsToString(results, contextDescription);
