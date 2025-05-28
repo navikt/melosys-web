@@ -220,7 +220,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
         <>
           {redigerbart && erNyVurdering && <NyBehandlingForTidligereAarsavregningMelding />}
 
-          {/* Tidligere grunnlag accordion - vises når årsavregning er valgt */}
+          {/* Tidligere grunnlag accordion - vises når år/aarsavregningResponse er satt  */}
           {aarsavregningResponse && <TidligereGrunnlagAccordion aarsavregningResponse={aarsavregningResponse} />}
 
           {visDeltGrunnlagRadioGroup && (
