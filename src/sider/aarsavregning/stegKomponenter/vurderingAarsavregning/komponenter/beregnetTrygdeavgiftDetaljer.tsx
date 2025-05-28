@@ -63,58 +63,51 @@ export function BeregnetTrygdeavgiftDetaljer({
   const arbAvgBetalesKreves = (kildetype: string) => !medlemskapsTypeErPliktig && kildetype !== MISJONÆR;
 
   return (
-    <Nav.ExpansionCard className="beregnetTrygdeavgiftDetaljer" aria-label="trygdeavgiftdetaljer" size="small">
-      <Nav.ExpansionCard.Header>
-        <Nav.ExpansionCard.Title size="small">{tittel}</Nav.ExpansionCard.Title>
-      </Nav.ExpansionCard.Header>
-      <Nav.ExpansionCard.Content>
-        <div className="skjema__panel">
-          <Nav.Table size="small" className="periode_tabell">
-            <Nav.Table.Header className="header_row">
-              <Nav.Table.Row>
-                <Nav.Table.HeaderCell scope="col">Trygdeperiode</Nav.Table.HeaderCell>
-                <Nav.Table.HeaderCell scope="col">Sats</Nav.Table.HeaderCell>
-                <Nav.Table.HeaderCell scope="col">Avgift md.</Nav.Table.HeaderCell>
-                <Nav.Table.HeaderCell scope="col">Inntektskilde</Nav.Table.HeaderCell>
-                <Nav.Table.HeaderCell scope="col">Bruttoinntekt md.</Nav.Table.HeaderCell>
-                <Nav.Table.HeaderCell scope="col">Betalt aga.?</Nav.Table.HeaderCell>
-                <Nav.Table.HeaderCell scope="col">Skattepliktig</Nav.Table.HeaderCell>
-                <Nav.Table.HeaderCell scope="col">Dekning</Nav.Table.HeaderCell>
-              </Nav.Table.Row>
-            </Nav.Table.Header>
-            <Nav.Table.Body>
-              {hentDetaljer(grunnlag).map((detaljer) => (
-                <Nav.Table.Row className="border_top" key={Utils._uuid()}>
-                  <Nav.Table.DataCell key={Utils._uuid()}>
-                    {`${Utils.dato.formatterDatoTilNorsk(detaljer.fom)} - ${Utils.dato.formatterDatoTilNorsk(
-                      detaljer.tom,
-                    )}`}
-                  </Nav.Table.DataCell>
-                  <Nav.Table.DataCell key={Utils._uuid()}>{detaljer.avgiftssats}</Nav.Table.DataCell>
-                  <Nav.Table.DataCell key={Utils._uuid()}>
-                    {formaterTilNorskBelopUtenDesimaler(detaljer.avgiftPerMd)} kr
-                  </Nav.Table.DataCell>
-                  <Nav.Table.DataCell key={Utils._uuid()}>
-                    {KV.finnTermFraListe(MKV.KTObjects.inntektskildetype, detaljer.inntektskildetype)}
-                  </Nav.Table.DataCell>
-                  <Nav.Table.DataCell key={Utils._uuid()}>
-                    {formaterTilNorskBelopUtenDesimaler(detaljer.inntektPerMd)} kr
-                  </Nav.Table.DataCell>
-                  <Nav.Table.DataCell key={Utils._uuid()}>
-                    {arbAvgBetalesKreves(detaljer.inntektskildetype)
-                      ? detaljer.arbeidsgiversavgiftBetales
-                      : "Ikke relevant"}
-                  </Nav.Table.DataCell>
-                  <Nav.Table.DataCell key={Utils._uuid()}>{detaljer.skattepliktig}</Nav.Table.DataCell>
-                  <Nav.Table.DataCell key={Utils._uuid()}>
-                    {KV.finnTermFraListe(MKV.KTObjects.trygdedekninger, detaljer.dekning)}
-                  </Nav.Table.DataCell>
-                </Nav.Table.Row>
-              ))}
-            </Nav.Table.Body>
-          </Nav.Table>
-        </div>
-      </Nav.ExpansionCard.Content>
-    </Nav.ExpansionCard>
+    <div className="skjema__panel">
+      <Nav.Table size="small" className="periode_tabell">
+        <Nav.Table.Header className="header_row">
+          <Nav.Table.Row>
+            <Nav.Table.HeaderCell scope="col">Trygdeperiode</Nav.Table.HeaderCell>
+            <Nav.Table.HeaderCell scope="col">Sats</Nav.Table.HeaderCell>
+            <Nav.Table.HeaderCell scope="col">Avgift md.</Nav.Table.HeaderCell>
+            <Nav.Table.HeaderCell scope="col">Inntektskilde</Nav.Table.HeaderCell>
+            <Nav.Table.HeaderCell scope="col">Bruttoinntekt md.</Nav.Table.HeaderCell>
+            <Nav.Table.HeaderCell scope="col">Betalt aga.?</Nav.Table.HeaderCell>
+            <Nav.Table.HeaderCell scope="col">Skattepliktig</Nav.Table.HeaderCell>
+            <Nav.Table.HeaderCell scope="col">Dekning</Nav.Table.HeaderCell>
+          </Nav.Table.Row>
+        </Nav.Table.Header>
+        <Nav.Table.Body>
+          {hentDetaljer(grunnlag).map((detaljer) => (
+            <Nav.Table.Row className="border_top" key={Utils._uuid()}>
+              <Nav.Table.DataCell key={Utils._uuid()}>
+                {`${Utils.dato.formatterDatoTilNorsk(detaljer.fom)} - ${Utils.dato.formatterDatoTilNorsk(
+                  detaljer.tom,
+                )}`}
+              </Nav.Table.DataCell>
+              <Nav.Table.DataCell key={Utils._uuid()}>{detaljer.avgiftssats}</Nav.Table.DataCell>
+              <Nav.Table.DataCell key={Utils._uuid()}>
+                {formaterTilNorskBelopUtenDesimaler(detaljer.avgiftPerMd)} kr
+              </Nav.Table.DataCell>
+              <Nav.Table.DataCell key={Utils._uuid()}>
+                {KV.finnTermFraListe(MKV.KTObjects.inntektskildetype, detaljer.inntektskildetype)}
+              </Nav.Table.DataCell>
+              <Nav.Table.DataCell key={Utils._uuid()}>
+                {formaterTilNorskBelopUtenDesimaler(detaljer.inntektPerMd)} kr
+              </Nav.Table.DataCell>
+              <Nav.Table.DataCell key={Utils._uuid()}>
+                {arbAvgBetalesKreves(detaljer.inntektskildetype)
+                  ? detaljer.arbeidsgiversavgiftBetales
+                  : "Ikke relevant"}
+              </Nav.Table.DataCell>
+              <Nav.Table.DataCell key={Utils._uuid()}>{detaljer.skattepliktig}</Nav.Table.DataCell>
+              <Nav.Table.DataCell key={Utils._uuid()}>
+                {KV.finnTermFraListe(MKV.KTObjects.trygdedekninger, detaljer.dekning)}
+              </Nav.Table.DataCell>
+            </Nav.Table.Row>
+          ))}
+        </Nav.Table.Body>
+      </Nav.Table>
+    </div>
   );
 }

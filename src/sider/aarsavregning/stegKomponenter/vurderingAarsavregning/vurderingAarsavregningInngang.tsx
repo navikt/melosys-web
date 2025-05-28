@@ -19,6 +19,7 @@ import { behandlingsresultatOperations } from "../../../../ducks/behandlingsresu
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
 import { AarsavregningMedGrunnlag } from "./aarsavregningMedGrunnlag/aarsavregningMedGrunnlag";
 import { AarsavregningUtenEllerDeltGrunnlag } from "./aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlag";
+import { TidligereGrunnlagAccordion } from "./komponenter/tidligereGrunnlagAccordion";
 
 const { FASTSATT_TRYGDEAVGIFT, IKKE_FASTSATT } = MKV.Koder.behandlinger.behandlingsresultattyper;
 const { MANGLENDE_INNBETALING_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingstyper;
@@ -78,6 +79,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
   const [erNyVurdering, setErNyVurdering] = useState<boolean>(false);
   const [harAktivÅrsavregning, setHarAktivÅrsavregning] = useState<boolean>(false);
   const [harManglendeInnbetalingBehandling, setHarManglendeInnbetalingBehandling] = useState<boolean>(false);
+  const [aarsavregningResponse, setAarsavregningResponse] = useState<AarsavregningResponse | undefined>(undefined);
 
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as any;
@@ -106,6 +108,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
       if (behandlingHarÅrsavregning(behandlingID, årsavregningList)) {
         const årsavregning = await Api.Aarsavregning.hentAarsavregning(behandlingID);
         setInitieltÅr(årsavregning.aar);
+        setAarsavregningResponse(årsavregning);
         dispatch({ type: OK, data: årsavregning });
         if (årsavregningErNyVurdering(behandlingID, årsavregningList, årsavregning.aar)) {
           setErNyVurdering(true);
@@ -125,6 +128,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
     setVisDeltGrunnlagRadioGroup(false);
     setHarGrunnlag(undefined);
     setHarDeltGrunnlag(undefined);
+    setAarsavregningResponse(undefined);
 
     const år = Number(event.target.value);
     setValgtÅr(år);
@@ -139,6 +143,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
       if (res.length === 0) {
         Api.Aarsavregning.lagAarsavregning(behandlingID, { aar: år })
           .then((årsavregning) => {
+            setAarsavregningResponse(årsavregning);
             utledGrunnlagstypeForÅrsavregning(årsavregning);
             dispatch({ type: OK, data: årsavregning });
             oppfriskOgLastInnSaksopplysningerForAarsavregning().then(() => {
@@ -214,6 +219,9 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
       {!lagÅrsavregningFeil && !harAktivÅrsavregning && (
         <>
           {redigerbart && erNyVurdering && <NyBehandlingForTidligereAarsavregningMelding />}
+
+          {/* Tidligere grunnlag accordion - vises når årsavregning er valgt */}
+          {aarsavregningResponse && <TidligereGrunnlagAccordion aarsavregningResponse={aarsavregningResponse} />}
 
           {visDeltGrunnlagRadioGroup && (
             <Nav.Row>

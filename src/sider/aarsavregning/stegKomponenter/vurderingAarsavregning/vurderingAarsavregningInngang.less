@@ -80,4 +80,24 @@
     }
     margin-bottom: 1.5rem;
   }
+
+  // accordion har for stort border-radius som ikke passer med f.eks. alert.
+  .beregnetTrygdeavgiftDetaljer_header[data-open="true"] {
+    border-top-left-radius: 4px !important;
+    border-top-right-radius: 4px !important;
+    border-bottom-left-radius: 0px !important;
+    border-bottom-right-radius: 0px !important;
+  }
+
+  .beregnetTrygdeavgiftDetaljer_header[data-open="false"] {
+    border-top-left-radius: 4px !important;
+    border-top-right-radius: 4px !important;
+    border-bottom-left-radius: 4px !important;
+    border-bottom-right-radius: 4px !important;
+  }
+
+  .beregnetTrygdeavgiftDetaljer_content {
+    border-bottom-left-radius: 4px !important;
+    border-bottom-right-radius: 4px !important;
+  }
 }

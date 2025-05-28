@@ -39,13 +39,7 @@ export function ManuellAvgiftFormPart({
 
   return (
     <>
-      {!erMedGrunnlagFlyt && (
-        <TidligereFakturertIAvgiftssystemetInput
-          control={control}
-          redigerbart={redigerbart}
-          harDeltGrunnlag={harDeltGrunnlag}
-        />
-      )}
+      {!erMedGrunnlagFlyt && <TidligereFakturertIAvgiftssystemetInput control={control} redigerbart={redigerbart} />}
 
       <Forms.Input
         label="Endelig beregnet trygdeavgift"

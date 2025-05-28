@@ -28,11 +28,9 @@ import { beregnTrygdeavgiftsperioder, erBrukerSkattepliktigIHelePerioden, hentMe
 import { Aarsavregningsmeldinger } from "../komponenter/aarsavregningsmeldinger";
 import { BeregnetTrygdeavgiftDetaljer } from "../komponenter/beregnetTrygdeavgiftDetaljer";
 import BestemmelseSelect from "../komponenter/bestemmelseSelect";
-import MedlemskapsPerioderTabell from "../komponenter/medlemskapsPerioderTabell";
 import { MedlemskapsperiodeSkjema } from "../komponenter/medlemskapsperiodeSkjema";
 import { SumArsavregningTabell } from "../komponenter/sumArsavregningTabell";
 import { TidligereFakturertIAvgiftssystemetInput } from "../komponenter/tidligereFakturertIAvgiftssystemetInput";
-import TidligereGrunnlagsoversikt from "../komponenter/tidligereGrunnlagsoversikt";
 import {
   AarsavregningFormValuesProps,
   DEFAULT_MEDLEMSKAPSPERIODE,
@@ -761,31 +759,6 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
 
   return (
     <div className="vurderingAarsavregning">
-      {harDeltGrunnlag && (
-        <>
-          <MedlemskapsPerioderTabell
-            perioder={aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.medlemskapsperioder}
-          />
-          <TidligereGrunnlagsoversikt
-            skatteforholdsperioder={
-              aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.skatteforholdsperioder
-            }
-            inntektsperioder={
-              aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.inntektskperioder
-            }
-            avgift={aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift}
-          />
-
-          {!forskuddsvisFakturertTrygdeavgift && <Aarsavregningsmeldinger.TrygdeavgiftErIkkeForskuddsvisFakturert />}
-
-          <BeregnetTrygdeavgiftDetaljer
-            grunnlag={aarsavregningResponse?.tidligereGrunnlagsopplysninger}
-            medlemskapsTypeErPliktig={medlemskapstypeErPliktig}
-            tittel="Tidligere beregnet trygdeavgift"
-          />
-        </>
-      )}
-
       <EndeligAvgiftValgRadioGroup
         control={control}
         redigerbart={skjemaErRedigerbart}
@@ -795,11 +768,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
 
       {endeligAvgiftValg === OPPLYSNINGER_ENDRET && (
         <>
-          <TidligereFakturertIAvgiftssystemetInput
-            control={control}
-            redigerbart={skjemaErRedigerbart}
-            harDeltGrunnlag={harDeltGrunnlag}
-          />
+          <TidligereFakturertIAvgiftssystemetInput control={control} redigerbart={skjemaErRedigerbart} />
 
           <Nav.Heading className="endelige_opplysninger_heading" level="2">
             Inntekts- og skatteopplysninger for endelig trygdeavgift
