@@ -67,8 +67,6 @@
     "test": "vitest",
     "test:e2e": "npx playwright test",
     "test:e2e:ui": "npx playwright test --ui",
-    "test:e2e:accessibility": "npx playwright test --grep @accessibility",
-    "test:e2e:performance": "npx playwright test --grep @performance",
     "serve": "node generate-local-config.js .local.env && npm-run-all -p start:css serve:js",
     "start:q1": "node generate-local-config.js .q1.env && npm-run-all -p start:css start:js",
     "start:q2": "node generate-local-config.js .q2.env && npm-run-all -p start:css start:js",
