@@ -1,5 +1,4 @@
 import { Route, Switch } from "react-router-dom";
-import * as Sentry from "@sentry/react";
 import * as MKV from "@navikt/melosys-kodeverk";
 import Forside from "./sider/forside";
 import Unntaksperioder from "./sider/eu_eøs/registrering/unntaksperioder";
@@ -21,8 +20,6 @@ import UkjentSide from "./sider/ukjentSide";
 import { FellesHandlersContext } from "./contexts";
 import ErrorBoundary from "./felleskomponenter/errorBoundary";
 
-const SentryRoute = Sentry.withSentryRouting(Route);
-
 const { EU_EOS, FTRL, TRYGDEAVTALE } = MKV.Koder.sakstyper;
 
 function Routing() {
@@ -30,7 +27,7 @@ function Routing() {
     <FellesHandlersContext.Consumer>
       {(fellesHandlers) => (
         <Switch>
-          <SentryRoute
+          <Route
             exact
             path="/"
             render={(props) => (
@@ -46,7 +43,7 @@ function Routing() {
               </ErrorBoundary>
             )}
           />
-          <SentryRoute
+          <Route
             exact
             path="/sok"
             render={(props) => (
@@ -60,58 +57,55 @@ function Routing() {
               </ErrorBoundary>
             )}
           />
-          <SentryRoute
+          <Route
             exact
             path={`/${EU_EOS}/registrering/:saksnr/unntaksperioder`}
             render={(props) => <Unntaksperioder {...props} {...fellesHandlers} />}
           />
-          <SentryRoute
+          <Route
             exact
             path={`/${EU_EOS}/registrering/:saksnr/anmodningunntak`}
             render={(props) => <Anmodningsunntak {...props} {...fellesHandlers} />}
           />
-          <SentryRoute
+          <Route
             path={`/${EU_EOS}/saksbehandling/:saksnr`}
             render={(props) => <EuEøsSaksbehandling {...props} {...fellesHandlers} />}
           />
-          <SentryRoute
+          <Route
             path={`/${FTRL}/saksbehandling/:saksnr`}
             render={(props) => <FtrlSaksbehandling {...props} {...fellesHandlers} />}
           />
-          <SentryRoute
+          <Route
             path="/:sakstype/ikkeYrkesaktiv/:saksnr"
             render={(props) => <IkkeYrkesaktiv {...props} {...fellesHandlers} />}
           />
-          <SentryRoute
+          <Route
             path={`/${TRYGDEAVTALE}/saksbehandling/:saksnr`}
             render={(props) => <TrygdeavtaleSaksbehandling {...props} {...fellesHandlers} />}
           />
-          <SentryRoute
+          <Route
             path="/:sakstype/aarsavregning/:saksnr"
             render={(props) => <Årsavregning {...props} {...fellesHandlers} />}
           />
-          <SentryRoute
+          <Route
             path="/:sakstype/behandling/:saksnr"
             render={(props) => <IngenFlytBehandling {...props} {...fellesHandlers} />}
           />
-          <SentryRoute
+          <Route
             path="/journalforing/:journalpostID/:oppgaveID"
             render={(props) => <Journalforing {...props} {...fellesHandlers} />}
           />
-          <SentryRoute path="/opprettnysak" render={(props) => <OpprettNySak {...props} {...fellesHandlers} />} />;
-          <SentryRoute
+          <Route path="/opprettnysak" render={(props) => <OpprettNySak {...props} {...fellesHandlers} />} />;
+          <Route
             path={`/${EU_EOS}/vurderutpeking/:saksnr`}
             render={(props) => <VurderUtpeking {...props} {...fellesHandlers} />}
           />
-          <SentryRoute
-            path="/sendbrev/:behandlingID/:snr"
-            render={(props) => <Sendbrev {...props} {...fellesHandlers} />}
-          />
-          <SentryRoute
+          <Route path="/sendbrev/:behandlingID/:snr" render={(props) => <Sendbrev {...props} {...fellesHandlers} />} />
+          <Route
             path="/:sakstype/unntaksregistrering/:saksnr"
             render={(props) => <Unntaksregistrering {...props} {...fellesHandlers} />}
           />
-          <SentryRoute component={UkjentSide} />
+          <Route component={UkjentSide} />
         </Switch>
       )}
     </FellesHandlersContext.Consumer>
