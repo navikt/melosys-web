@@ -2,140 +2,92 @@
 
 exports[`BeregnetTrygdeavgiftDetaljer > snapshot test 1`] = `
 
-<section
-  aria-label="trygdeavgiftdetaljer"
-  class="navds-expansioncard beregnetTrygdeavgiftDetaljer navds-expansioncard--small"
->
-  <div
-    class="navds-expansioncard__header"
-    data-open="false"
-  >
-    <div class="navds-expansioncard__header-content">
-      <h3 class="navds-expansioncard__title navds-expansioncard__title--small navds-heading navds-heading--small">
-        Complete Data Test
-      </h3>
-    </div>
-    <button
-      class="navds-expansioncard__header-button"
-      type="button"
-      aria-expanded="false"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="1em"
-        height="1em"
-        fill="none"
-        viewbox="0 0 24 24"
-        focusable="false"
-        role="img"
-        aria-labelledby="333"
-        class="navds-expansioncard__header-chevron"
-      >
-        <title id="333">
-          Vis mer
-        </title>
-        <path
-          fill="currentColor"
-          fill-rule="evenodd"
-          d="M5.97 9.47a.75.75 0 0 1 1.06 0L12 14.44l4.97-4.97a.75.75 0 1 1 1.06 1.06l-5.5 5.5a.75.75 0 0 1-1.06 0l-5.5-5.5a.75.75 0 0 1 0-1.06"
-          clip-rule="evenodd"
+<div class="tidligereGrunnlagPanel">
+  <h1 class="navds-heading navds-heading--small">
+    Complete Data Test
+  </h1>
+  <table class="navds-table navds-table--small periode_tabell">
+    <thead class="navds-table__header header_row">
+      <tr class="navds-table__row navds-table__row--shade-on-hover">
+        <th
+          class="navds-table__header-cell navds-label navds-label--small"
+          scope="col"
         >
-        </path>
-      </svg>
-    </button>
-  </div>
-  <div
-    aria-hidden="true"
-    data-open="false"
-    class="navds-expansioncard__content navds-expansioncard__content--closed navds-body-long navds-body-long--small"
-  >
-    <div class="navds-expansioncard__content-inner">
-      <div class="skjema__panel">
-        <table class="navds-table navds-table--small periode_tabell">
-          <thead class="navds-table__header header_row">
-            <tr class="navds-table__row navds-table__row--shade-on-hover">
-              <th
-                class="navds-table__header-cell navds-label navds-label--small"
-                scope="col"
-              >
-                Trygdeperiode
-              </th>
-              <th
-                class="navds-table__header-cell navds-label navds-label--small"
-                scope="col"
-              >
-                Sats
-              </th>
-              <th
-                class="navds-table__header-cell navds-label navds-label--small"
-                scope="col"
-              >
-                Avgift md.
-              </th>
-              <th
-                class="navds-table__header-cell navds-label navds-label--small"
-                scope="col"
-              >
-                Inntektskilde
-              </th>
-              <th
-                class="navds-table__header-cell navds-label navds-label--small"
-                scope="col"
-              >
-                Bruttoinntekt md.
-              </th>
-              <th
-                class="navds-table__header-cell navds-label navds-label--small"
-                scope="col"
-              >
-                Betalt aga.?
-              </th>
-              <th
-                class="navds-table__header-cell navds-label navds-label--small"
-                scope="col"
-              >
-                Skattepliktig
-              </th>
-              <th
-                class="navds-table__header-cell navds-label navds-label--small"
-                scope="col"
-              >
-                Dekning
-              </th>
-            </tr>
-          </thead>
-          <tbody class="navds-table__body">
-            <tr class="navds-table__row border_top navds-table__row--shade-on-hover">
-              <td class="navds-table__data-cell navds-body-short navds-body-short--small">
-                01.01.2023 - 31.12.2023
-              </td>
-              <td class="navds-table__data-cell navds-body-short navds-body-short--small">
-                8.2
-              </td>
-              <td class="navds-table__data-cell navds-body-short navds-body-short--small">
-                3&nbsp;417 kr
-              </td>
-              <td class="navds-table__data-cell navds-body-short navds-body-short--small">
-                ARBEID
-              </td>
-              <td class="navds-table__data-cell navds-body-short navds-body-short--small">
-                41&nbsp;667 kr
-              </td>
-              <td class="navds-table__data-cell navds-body-short navds-body-short--small">
-                Ikke relevant
-              </td>
-              <td class="navds-table__data-cell navds-body-short navds-body-short--small">
-                Ja
-              </td>
-              <td class="navds-table__data-cell navds-body-short navds-body-short--small">
-                FULL
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-</section>
+          Trygdeperiode
+        </th>
+        <th
+          class="navds-table__header-cell navds-label navds-label--small"
+          scope="col"
+        >
+          Sats
+        </th>
+        <th
+          class="navds-table__header-cell navds-label navds-label--small"
+          scope="col"
+        >
+          Avgift md.
+        </th>
+        <th
+          class="navds-table__header-cell navds-label navds-label--small"
+          scope="col"
+        >
+          Inntektskilde
+        </th>
+        <th
+          class="navds-table__header-cell navds-label navds-label--small"
+          scope="col"
+        >
+          Bruttoinntekt md.
+        </th>
+        <th
+          class="navds-table__header-cell navds-label navds-label--small"
+          scope="col"
+        >
+          Betalt aga.?
+        </th>
+        <th
+          class="navds-table__header-cell navds-label navds-label--small"
+          scope="col"
+        >
+          Skattepliktig
+        </th>
+        <th
+          class="navds-table__header-cell navds-label navds-label--small"
+          scope="col"
+        >
+          Dekning
+        </th>
+      </tr>
+    </thead>
+    <tbody class="navds-table__body">
+      <tr class="navds-table__row border_top navds-table__row--shade-on-hover">
+        <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+          01.01.2023 - 31.12.2023
+        </td>
+        <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+          8.2
+        </td>
+        <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+          3&nbsp;417 kr
+        </td>
+        <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+          ARBEID
+        </td>
+        <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+          41&nbsp;667 kr
+        </td>
+        <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+          Ikke relevant
+        </td>
+        <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+          Ja
+        </td>
+        <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+          FULL
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
 `;
