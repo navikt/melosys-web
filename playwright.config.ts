@@ -41,6 +41,21 @@ export default defineConfig({
     {
       name: "chromium",
       use: { ...devices["Desktop Chrome"] },
+      testMatch: "**/*.spec.ts", // Match all spec files
+      testIgnore: [
+        "**/lighthouse.spec.ts", // Exclude lighthouse tests
+      ],
+    },
+    {
+      name: "chromium-lighthouse",
+      use: {
+        ...devices["Desktop Chrome"],
+        launchOptions: {
+          args: ["--remote-debugging-port=9222"],
+        },
+      },
+      testMatch: "**/lighthouse.spec.ts", // Only lighthouse tests
+      fullyParallel: false,
     },
   ],
 
