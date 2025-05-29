@@ -1,0 +1,123 @@
+@import "../../constants";
+
+.collapsible-panel {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden; // Prevent horizontal overflow
+
+  &__toggle {
+    position: absolute;
+    top: 0.5rem;
+    z-index: 10;
+
+    .chevron-toggle-button {
+      background: @white;
+      border: 1px solid @gray-light;
+      border-radius: 4px;
+      padding: 0.25rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      svg {
+        width: 16px;
+        height: 16px;
+        color: @blue-nav;
+      }
+
+      &:hover {
+        background-color: @white-off;
+      }
+
+      &:focus {
+        outline: 2px solid @blue;
+        outline-offset: 2px;
+      }
+
+      .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+    }
+  }
+
+  &__content {
+    width: 100%;
+    transition:
+      transform 0.3s ease,
+      opacity 0.3s ease;
+    transform-origin: right center;
+  }
+
+  // Expanded state (default) - button at left
+  &.expanded {
+    .collapsible-panel__toggle {
+      left: 0.5rem;
+    }
+
+    .collapsible-panel__content {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  // Collapsed state - button at far right edge
+  &.collapsed {
+    .collapsible-panel__toggle {
+      right: 0;
+      left: auto;
+    }
+
+    .collapsible-panel__content {
+      transform: translateX(100%); // Slide to the RIGHT
+      opacity: 0;
+      pointer-events: none;
+    }
+  }
+
+  // Responsive behavior
+  @media (max-width: 768px) {
+    &.expanded .collapsible-panel__toggle {
+      top: 0.25rem;
+      left: 0.25rem;
+    }
+
+    &.collapsed .collapsible-panel__toggle {
+      top: 0.25rem;
+      right: 0;
+    }
+
+    &__toggle .chevron-toggle-button {
+      padding: 0.2rem;
+
+      svg {
+        width: 14px;
+        height: 14px;
+      }
+    }
+  }
+
+  // High contrast mode support
+  @media (prefers-contrast: high) {
+    &__toggle .chevron-toggle-button {
+      border: 2px solid @gray-dark;
+    }
+  }
+
+  // Reduced motion support
+  @media (prefers-reduced-motion: reduce) {
+    &__content {
+      transition: none !important;
+    }
+  }
+}

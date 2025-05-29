@@ -8,6 +8,7 @@ import Informasjonlinje from "../../felleskomponenter/informasjonlinje";
 import { SoknadMenypanelForm } from "../../felleskomponenter/menypanelForm";
 import SideDialog, { defaultTabs } from "../../felleskomponenter/sideDialog";
 import SaksoversiktLenke from "../../felleskomponenter/saksoversiktLenke";
+import CollapsiblePanel from "../../felleskomponenter/collapsiblePanel";
 
 import { EnkelStegvelger } from "../../felleskomponenter/enkelStegvelger";
 import { behandlingsresultatOperations } from "../../ducks/behandlingsresultat";
@@ -38,6 +39,7 @@ interface Props extends RouteComponentProps<MatchParams> {
 function Saksbehandling({ match, location }: Props) {
   const [behandlingID, setBehandlingID] = useState(-1);
   const [saksopplysningerLastet, setSaksopplysningerLastet] = useState(false);
+  const [panelExpanded, setPanelExpanded] = useState(true);
 
   const dispatch = useDispatch();
 
@@ -123,7 +125,7 @@ function Saksbehandling({ match, location }: Props) {
         <div className="aarsavregning_saksbehandling">
           <Nav.Container fluid>
             <Nav.Row>
-              <Nav.Column xs="7">
+              <Nav.Column xs={panelExpanded ? "7" : "11"}>
                 <main id="main-container">
                   {erÅrsavregningUtenFlytToggleEnabled && (
                     <Nav.Alert variant="warning" className="ingenFlytMelding">
@@ -138,13 +140,15 @@ function Saksbehandling({ match, location }: Props) {
                 </main>
                 <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
               </Nav.Column>
-              <Nav.Column xs="5">
-                <Oppsummering
-                  medlemskapsperiodeFom={Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.fom)}
-                  medlemskapsperiodeTom={Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.tom)}
-                />
-                <SaksoversiktLenke />
-                <SideDialog tabs={defaultTabs} />
+              <Nav.Column xs={panelExpanded ? "5" : "1"} className={!panelExpanded ? "no-padding" : ""}>
+                <CollapsiblePanel defaultExpanded={panelExpanded} onToggle={setPanelExpanded}>
+                  <Oppsummering
+                    medlemskapsperiodeFom={Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.fom)}
+                    medlemskapsperiodeTom={Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.tom)}
+                  />
+                  <SaksoversiktLenke />
+                  <SideDialog tabs={defaultTabs} />
+                </CollapsiblePanel>
               </Nav.Column>
             </Nav.Row>
           </Nav.Container>
