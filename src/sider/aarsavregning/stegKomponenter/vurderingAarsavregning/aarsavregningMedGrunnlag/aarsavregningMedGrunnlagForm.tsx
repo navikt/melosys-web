@@ -236,7 +236,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
           aarsavregningResponse?.avregning?.manueltAvgiftBeloep &&
           !feilmelding,
       ),
-    [endeligAvgiftValg, formIsValid, aarsavregningResponse?.nyttGrunnlag, feilmelding, arrayValideringsfeil],
+    [endeligAvgiftValg, formIsValid, aarsavregningResponse, feilmelding, arrayValideringsfeil],
   );
 
   useEffect(() => {

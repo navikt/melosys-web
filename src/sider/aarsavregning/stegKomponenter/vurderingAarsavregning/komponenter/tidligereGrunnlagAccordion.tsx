@@ -25,87 +25,6 @@ function getAccordionTittel(
   return `Tidligere grunnlag - Ingen informasjon om perioder med medlemskap i ${aarsavregningResponse.aar}`;
 }
 
-function renderAccordionContent(
-  harTidligereGrunnlag: boolean,
-  erManueltBeregnet: boolean,
-  aarsavregningResponse: AarsavregningResponse,
-  forskuddsvisFakturertTrygdeavgift: boolean,
-): JSX.Element {
-  if (!harTidligereGrunnlag) {
-    return (
-      <Nav.Alert variant="info" size="small">
-        <Nav.BodyLong size="small">
-          Det er ingen informasjon om perioder med medlemskap og forskuddsvis fakturert trygdeavgift i Melosys.
-        </Nav.BodyLong>
-        <ul>
-          <li>
-            Hvis trygdeavgiften er forskuddsvis fakturert fra avgiftssystemet, oppgi totalbeløpet som er fakturert.
-          </li>
-          <li>
-            Hvis trygdeavgiften tidligere har vært årsavregnet i avgiftssystemet, oppgi totalbeløpet for endelig
-            beregnet trygdeavgift.
-          </li>
-          <li>Hvis trygdeavgiften ikke er forskuddsvis fakturert, la det være tomt.</li>
-        </ul>
-      </Nav.Alert>
-    );
-  }
-
-  if (erManueltBeregnet) {
-    return (
-      <>
-        <MedlemskapsPerioderTabell
-          perioder={aarsavregningResponse.tidligereGrunnlagsopplysninger!.trygdeavgiftsgrunnlag.medlemskapsperioder}
-        />
-
-        <div className="tidligereGrunnlagPanel">
-          <Nav.Heading size="small" level="3">
-            Tidligere beregnet trygdeavgift
-          </Nav.Heading>
-          <Nav.BodyLong size="small">
-            Manuelt beregnet trygdeavgift:{" "}
-            <strong>
-              {formaterTilNorskBelopUtenDesimaler(
-                aarsavregningResponse.tidligereGrunnlagsopplysninger!.tidligereÅrsavregningManueltAvgiftBeloep!,
-              )}{" "}
-              kr
-            </strong>
-          </Nav.BodyLong>
-        </div>
-      </>
-    );
-  }
-
-  return (
-    <>
-      <MedlemskapsPerioderTabell
-        perioder={aarsavregningResponse.tidligereGrunnlagsopplysninger!.trygdeavgiftsgrunnlag.medlemskapsperioder}
-      />
-      <TidligereGrunnlagsoversikt
-        skatteforholdsperioder={
-          aarsavregningResponse.tidligereGrunnlagsopplysninger!.trygdeavgiftsgrunnlag.skatteforholdsperioder
-        }
-        inntektsperioder={aarsavregningResponse.tidligereGrunnlagsopplysninger!.trygdeavgiftsgrunnlag.inntektskperioder}
-        avgift={aarsavregningResponse.tidligereGrunnlagsopplysninger!.avgift}
-      />
-
-      {!forskuddsvisFakturertTrygdeavgift && <Aarsavregningsmeldinger.TrygdeavgiftErIkkeForskuddsvisFakturert />}
-
-      <Nav.Heading size="small" level="3">
-        Tidligere beregnet trygdeavgift
-      </Nav.Heading>
-      <BeregnetTrygdeavgiftDetaljer
-        grunnlag={aarsavregningResponse.tidligereGrunnlagsopplysninger!}
-        medlemskapsTypeErPliktig={
-          aarsavregningResponse.tidligereGrunnlagsopplysninger!.trygdeavgiftsgrunnlag.medlemskapsperioder?.every(
-            (periode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG,
-          ) ?? true
-        }
-      />
-    </>
-  );
-}
-
 interface TidligereGrunnlagAccordionProps {
   aarsavregningResponse: AarsavregningResponse;
 }
@@ -129,11 +48,76 @@ export function TidligereGrunnlagAccordion({ aarsavregningResponse }: TidligereG
         <Nav.ExpansionCard.Title size="small">{accordionTittel}</Nav.ExpansionCard.Title>
       </Nav.ExpansionCard.Header>
       <Nav.ExpansionCard.Content className="tidligereGrunnlagAccordion_content">
-        {renderAccordionContent(
-          harTidligereGrunnlag,
-          erManueltBeregnet,
-          aarsavregningResponse,
-          forskuddsvisFakturertTrygdeavgift,
+        {harTidligereGrunnlag && !erManueltBeregnet && (
+          <>
+            <MedlemskapsPerioderTabell
+              perioder={aarsavregningResponse.tidligereGrunnlagsopplysninger!.trygdeavgiftsgrunnlag.medlemskapsperioder}
+            />
+            <TidligereGrunnlagsoversikt
+              skatteforholdsperioder={
+                aarsavregningResponse.tidligereGrunnlagsopplysninger!.trygdeavgiftsgrunnlag.skatteforholdsperioder
+              }
+              inntektsperioder={
+                aarsavregningResponse.tidligereGrunnlagsopplysninger!.trygdeavgiftsgrunnlag.inntektskperioder
+              }
+              avgift={aarsavregningResponse.tidligereGrunnlagsopplysninger!.avgift}
+            />
+
+            {!forskuddsvisFakturertTrygdeavgift && <Aarsavregningsmeldinger.TrygdeavgiftErIkkeForskuddsvisFakturert />}
+
+            <Nav.Heading size="small" level="3">
+              Tidligere beregnet trygdeavgift
+            </Nav.Heading>
+            <BeregnetTrygdeavgiftDetaljer
+              grunnlag={aarsavregningResponse.tidligereGrunnlagsopplysninger!}
+              medlemskapsTypeErPliktig={
+                aarsavregningResponse.tidligereGrunnlagsopplysninger!.trygdeavgiftsgrunnlag.medlemskapsperioder?.every(
+                  (periode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG,
+                ) ?? true
+              }
+            />
+          </>
+        )}
+
+        {erManueltBeregnet && (
+          <>
+            <MedlemskapsPerioderTabell
+              perioder={aarsavregningResponse.tidligereGrunnlagsopplysninger!.trygdeavgiftsgrunnlag.medlemskapsperioder}
+            />
+
+            <div className="tidligereGrunnlagPanel">
+              <Nav.Heading size="small" level="3">
+                Tidligere beregnet trygdeavgift
+              </Nav.Heading>
+              <Nav.BodyLong size="small">
+                Manuelt beregnet trygdeavgift:{" "}
+                <strong>
+                  {formaterTilNorskBelopUtenDesimaler(
+                    aarsavregningResponse.tidligereGrunnlagsopplysninger!.tidligereÅrsavregningManueltAvgiftBeloep!,
+                  )}{" "}
+                  kr
+                </strong>
+              </Nav.BodyLong>
+            </div>
+          </>
+        )}
+
+        {!harTidligereGrunnlag && (
+          <Nav.Alert variant="info" size="small">
+            <Nav.BodyLong size="small">
+              Det er ingen informasjon om perioder med medlemskap og forskuddsvis fakturert trygdeavgift i Melosys.
+            </Nav.BodyLong>
+            <ul>
+              <li>
+                Hvis trygdeavgiften er forskuddsvis fakturert fra avgiftssystemet, oppgi totalbeløpet som er fakturert.
+              </li>
+              <li>
+                Hvis trygdeavgiften tidligere har vært årsavregnet i avgiftssystemet, oppgi totalbeløpet for endelig
+                beregnet trygdeavgift.
+              </li>
+              <li>Hvis trygdeavgiften ikke er forskuddsvis fakturert, la det være tomt.</li>
+            </ul>
+          </Nav.Alert>
         )}
       </Nav.ExpansionCard.Content>
     </Nav.ExpansionCard>
