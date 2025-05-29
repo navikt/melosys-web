@@ -114,7 +114,8 @@ export function TidligereGrunnlagAccordion({ aarsavregningResponse }: TidligereG
   const harTidligereGrunnlag = Boolean(aarsavregningResponse.tidligereGrunnlagsopplysninger);
 
   const erManueltBeregnet = Boolean(
-    aarsavregningResponse.tidligereGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep !== null,
+    aarsavregningResponse.tidligereGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep !== null &&
+      aarsavregningResponse.tidligereGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep !== undefined,
   );
 
   const forskuddsvisFakturertTrygdeavgift =

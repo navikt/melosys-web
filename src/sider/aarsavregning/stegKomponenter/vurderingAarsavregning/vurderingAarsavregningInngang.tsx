@@ -165,7 +165,8 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
   };
 
   const forrigeÅrsavregningErManueltBeregnet = Boolean(
-    aarsavregningResponse?.tidligereGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep !== null,
+    aarsavregningResponse?.tidligereGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep !== null &&
+      aarsavregningResponse?.tidligereGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep !== undefined,
   );
 
   const sisteMuligeÅr = new Date().getFullYear() - 1;

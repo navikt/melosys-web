@@ -135,7 +135,8 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
           );
 
           const forrigeÅrsavregningErManueltBeregnet = Boolean(
-            res.tidligereGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep !== null,
+            res.tidligereGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep !== null &&
+              res.tidligereGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep !== undefined,
           );
 
           setInitiellData({
