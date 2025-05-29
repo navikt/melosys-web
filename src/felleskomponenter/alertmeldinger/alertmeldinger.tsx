@@ -49,17 +49,6 @@ export function NyVurderingMelding() {
   );
 }
 
-export function NyBehandlingForTidligereAarsavregningMelding() {
-  return (
-    <Nav.Alert variant="warning" className="nyVurderingMelding">
-      <Nav.Heading size="xsmall">Ny behandling for en tidligere årsavregning</Nav.Heading>
-      <Nav.BodyLong size="small">
-        Du har startet en ny årsavregningbehandling for et tidligere årsavregnet år
-      </Nav.BodyLong>
-    </Nav.Alert>
-  );
-}
-
 interface StandardMeldingOverstProps {
   variant: "error" | "warning" | "info" | "success";
   actionEtterSynlighet: () => void;

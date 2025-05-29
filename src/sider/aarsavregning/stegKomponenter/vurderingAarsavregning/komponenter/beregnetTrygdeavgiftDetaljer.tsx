@@ -23,11 +23,9 @@ interface DetaljerInterface {
 export function BeregnetTrygdeavgiftDetaljer({
   grunnlag,
   medlemskapsTypeErPliktig,
-  tittel,
 }: {
   grunnlag: Grunnlagsopplysninger | undefined;
   medlemskapsTypeErPliktig: boolean;
-  tittel: string;
 }) {
   if (!grunnlag || !grunnlag.avgift) return null;
 
@@ -64,7 +62,6 @@ export function BeregnetTrygdeavgiftDetaljer({
 
   return (
     <div className="tidligereGrunnlagPanel">
-      {tittel && <Nav.Heading size="small">{tittel}</Nav.Heading>}
       <Nav.Table size="small" className="periode_tabell">
         <Nav.Table.Header className="header_row">
           <Nav.Table.Row>
