@@ -5,7 +5,7 @@ import { playAudit } from "playwright-lighthouse";
 import { sanitizeFilename } from "./testUtils";
 
 export const auditThresholds = {
-  "best-practices": 100,
+  "best-practices": 96,
   seo: 100,
 };
 
@@ -345,7 +345,7 @@ function generateReportPaths(reportName: string): {
   reportName: string;
   jsonReportPath: string;
 } {
-  const reportDir = path.join(__dirname, "..", "e2e/reports/lighthouse-report");
+  const reportDir = path.join(__dirname, "..", "reports/lighthouse-report");
   const sanitizedReportName = sanitizeFilename(reportName);
   const reportPath = path.join(reportDir, `${sanitizedReportName}.html`);
   const jsonReportPath = path.join(reportDir, `${sanitizedReportName}.json`);

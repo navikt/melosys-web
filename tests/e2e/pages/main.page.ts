@@ -108,39 +108,4 @@ export class MainPage {
     // Wait for the search results to load
     await this.page.waitForLoadState("networkidle");
   }
-
-  /**
-   * Verify search results for a valid ID
-   * @param id - The valid ID that was searched for
-   */
-  async verifyValidSearchResults(id: string): Promise<void> {
-    // Verify that we're on the search results page
-    await expect(this.page).toHaveURL("/melosys/sok");
-    await expect(this.page.locator("h1:has-text('Saksoversikt')")).toBeVisible();
-
-    // Verify that the search results show the correct ID
-    await expect(this.page.locator(`h2:has-text('Resultater for f.nr./d-nr. ${id}')`)).toBeVisible();
-
-    // Verify that the "no results" message does NOT appear
-    await expect(this.page.locator(`text=Fant ingen saker knyttet til f.nr./d-nr. ${id}`)).not.toBeVisible();
-
-    // Verify that at least one search result is displayed
-    await expect(this.page.locator(".fagsak")).toBeVisible();
-  }
-
-  /**
-   * Verify search results for an invalid ID
-   * @param id - The invalid ID that was searched for
-   */
-  async verifyInvalidSearchResults(id: string): Promise<void> {
-    // Verify that we're on the search results page
-    await expect(this.page).toHaveURL("/melosys/sok");
-    await expect(this.page.locator("h1:has-text('Saksoversikt')")).toBeVisible();
-
-    // Verify that the search results show the correct ID
-    await expect(this.page.locator(`h2:has-text('Resultater for saksnummer ${id}')`)).toBeVisible();
-
-    // Verify that the "no results" message is displayed
-    await expect(this.page.locator(`text=Fant ingen saker knyttet til saksnummer ${id}`)).toBeVisible();
-  }
 }
