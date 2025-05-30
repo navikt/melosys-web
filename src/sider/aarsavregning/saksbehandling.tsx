@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import * as Nav from "../../navFrontend";
+import { HGrid } from "@navikt/ds-react";
 
 import * as Utils from "../../utils";
 import Informasjonlinje from "../../felleskomponenter/informasjonlinje";
@@ -123,35 +124,35 @@ function Saksbehandling({ match, location }: Props) {
       <Informasjonlinje />
       <div className="main-container">
         <div className="aarsavregning_saksbehandling">
-          <Nav.Container fluid>
-            <Nav.Row>
-              <Nav.Column xs={panelExpanded ? "7" : "11"}>
-                <main id="main-container">
-                  {erÅrsavregningUtenFlytToggleEnabled && (
-                    <Nav.Alert variant="warning" className="ingenFlytMelding">
-                      <b>Du kan ikke gå videre</b>
-                      <p>
-                        Du kan ikke årsavregne i Meloys enda, men du kan sende et fritekstbrev for å hente inn
-                        inntektsopplysninger.
-                      </p>
-                    </Nav.Alert>
-                  )}
-                  {erÅrsavregningToggleEnabled && <EnkelStegvelger alleSteg={alleSteg} />}
-                </main>
-                <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
-              </Nav.Column>
-              <Nav.Column xs={panelExpanded ? "5" : "1"}>
-                <CollapsiblePanel defaultExpanded={panelExpanded} onToggle={setPanelExpanded}>
-                  <Oppsummering
-                    medlemskapsperiodeFom={Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.fom)}
-                    medlemskapsperiodeTom={Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.tom)}
-                  />
-                  <SaksoversiktLenke />
-                  <SideDialog tabs={defaultTabs} />
-                </CollapsiblePanel>
-              </Nav.Column>
-            </Nav.Row>
-          </Nav.Container>
+          <HGrid
+            columns={panelExpanded ? "minmax(0, 7fr) minmax(0, 5fr)" : "minmax(0, 1fr) 2rem"}
+            gap="4"
+            className="hgrid"
+          >
+            <div>
+              <main id="main-container">
+                {erÅrsavregningUtenFlytToggleEnabled && (
+                  <Nav.Alert variant="warning" className="ingenFlytMelding">
+                    <b>Du kan ikke gå videre</b>
+                    <p>
+                      Du kan ikke årsavregne i Meloys enda, men du kan sende et fritekstbrev for å hente inn
+                      inntektsopplysninger.
+                    </p>
+                  </Nav.Alert>
+                )}
+                {erÅrsavregningToggleEnabled && <EnkelStegvelger alleSteg={alleSteg} />}
+              </main>
+              <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
+            </div>
+            <CollapsiblePanel defaultExpanded={panelExpanded} onToggle={setPanelExpanded}>
+              <Oppsummering
+                medlemskapsperiodeFom={Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.fom)}
+                medlemskapsperiodeTom={Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.tom)}
+              />
+              <SaksoversiktLenke />
+              <SideDialog tabs={defaultTabs} />
+            </CollapsiblePanel>
+          </HGrid>
         </div>
       </div>
     </>
