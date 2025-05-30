@@ -2,7 +2,7 @@
 
 exports[`TidligereGrunnlagsoversikt > renders correctly with complete data 1`] = `
 
-<div class="tidligereGrunnlagsoversikt">
+<div class="tidligereGrunnlagPanel">
   <h1 class="navds-heading navds-heading--small">
     Inntekts- og skatteopplysninger for tidligere beregnet trygdeavgift
   </h1>

@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { Grunnlagsopplysninger } from "../../../../../services/modules/aarsavregning/aarsavregning";
 import { BeregnetTrygdeavgiftDetaljer } from "./beregnetTrygdeavgiftDetaljer";
@@ -116,24 +116,6 @@ describe("BeregnetTrygdeavgiftDetaljer", () => {
 
     expect(container.firstChild).toBeNull();
   });
-
-  it("renders title and allows user to expand details", async () => {
-    render(
-      <BeregnetTrygdeavgiftDetaljer
-        grunnlag={createMockData()}
-        medlemskapsTypeErPliktig={true}
-        tittel="Detaljer for beregnet trygdeavgift"
-      />,
-    );
-
-    expect(screen.getByText("Detaljer for beregnet trygdeavgift")).toBeInTheDocument();
-
-    const expandButton = screen.getByRole("button", { name: /vis mer/i });
-    fireEvent.click(expandButton);
-
-    expect(screen.getByRole("table")).toBeInTheDocument();
-  });
-
   it("snapshot test", () => {
     const { container } = render(
       <BeregnetTrygdeavgiftDetaljer

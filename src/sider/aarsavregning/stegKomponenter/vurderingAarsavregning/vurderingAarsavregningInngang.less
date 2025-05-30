@@ -80,4 +80,44 @@
     }
     margin-bottom: 1.5rem;
   }
+
+  // accordion har for stort border-radius som ikke passer med f.eks. alert.
+  .beregnetTrygdeavgiftDetaljer_header[data-open="true"] {
+    border-top-left-radius: 4px !important;
+    border-top-right-radius: 4px !important;
+    border-bottom-left-radius: 0px !important;
+    border-bottom-right-radius: 0px !important;
+  }
+
+  .beregnetTrygdeavgiftDetaljer_header[data-open="false"] {
+    border-top-left-radius: 4px !important;
+    border-top-right-radius: 4px !important;
+    border-bottom-left-radius: 4px !important;
+    border-bottom-right-radius: 4px !important;
+  }
+
+  .beregnetTrygdeavgiftDetaljer_content {
+    border-bottom-left-radius: 4px !important;
+    border-bottom-right-radius: 4px !important;
+  }
+
+  .navds-expansioncard__content {
+    background-color: #f8f8f8;
+
+    .navds-heading {
+      margin-bottom: 1.5rem;
+    }
+
+    .totaltForPerioden {
+      padding-right: 0.5rem;
+    }
+
+    .tidligereGrunnlagPanel,
+    .periode_tabell {
+      margin-bottom: 1.5rem;
+      overflow: auto;
+    }
+
+    margin-bottom: 1.5rem;
+  }
 }
