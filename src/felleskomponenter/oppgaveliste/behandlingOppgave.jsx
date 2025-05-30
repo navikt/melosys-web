@@ -39,7 +39,7 @@ BehandlingOppgavesLinjeWrapper.propTypes = {
  * for å gi saksbehandler en hent over sakens innhold før hun klikker
  * seg inn på den.
  */
-function BehandlingOppgave({ sak = {}, landkoder }) {
+function BehandlingOppgave({ sak, landkoder }) {
   const erPensjonistToggleEnabled = useFeatureToggle(MELOSYS_PENSJONIST);
   const {
     navn,
@@ -163,6 +163,10 @@ function BehandlingOppgave({ sak = {}, landkoder }) {
 BehandlingOppgave.propTypes = {
   sak: MPT.SaksbehandlingOppgave,
   landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
+};
+
+BehandlingOppgave.defaultProps = {
+  sak: {},
 };
 
 export default BehandlingOppgave;

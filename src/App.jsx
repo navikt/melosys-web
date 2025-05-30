@@ -6,7 +6,7 @@ import { msalConfig } from "./auth/authConfig";
 
 import "./nav-style/grid.css";
 
-export function App({ children = undefined, isDevelopmentProfile = false }) {
+export function App({ children, isDevelopmentProfile }) {
   const pca = isDevelopmentProfile ? null : new PublicClientApplication(msalConfig);
 
   return (
@@ -25,6 +25,11 @@ export function App({ children = undefined, isDevelopmentProfile = false }) {
 App.propTypes = {
   children: PT.node,
   isDevelopmentProfile: PT.bool,
+};
+
+App.defaultProps = {
+  children: undefined,
+  isDevelopmentProfile: false,
 };
 
 export default App;

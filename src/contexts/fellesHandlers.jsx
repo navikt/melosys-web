@@ -26,17 +26,17 @@ function FellesHandlersProviderUnconnected({
   oppfriskSaksopplysningerForAarsavregning,
   hentBehandling,
   lagreMottatteOpplysninger,
-  saksnummer = undefined,
-  sakstype = undefined,
+  saksnummer,
+  sakstype,
   skjulOppfriskDialogHandle,
   visOppfriskDialogHandle,
   visHenleggDialogHandle,
   visAvslagSoknadDialogHandle,
   leggTilBehandlingOppfriskes,
   fjernBehandlingOppfriskes,
-  behandlingUnderOppfriskning = null,
+  behandlingUnderOppfriskning,
   tilForsiden,
-  inkluderSiste5Aar = false,
+  inkluderSiste5Aar,
 }) {
   const behandlingID = Utils._toInteger(Utils.queryString.getParam(location, "behandlingID"));
 
@@ -135,6 +135,13 @@ FellesHandlersProviderUnconnected.propTypes = {
   behandlingUnderOppfriskning: PT.number,
   tilForsiden: PT.func.isRequired,
   inkluderSiste5Aar: PT.bool,
+};
+
+FellesHandlersProviderUnconnected.defaultProps = {
+  behandlingUnderOppfriskning: null,
+  saksnummer: undefined,
+  sakstype: undefined,
+  inkluderSiste5Aar: false,
 };
 
 const mapStateToProps = (state) => ({

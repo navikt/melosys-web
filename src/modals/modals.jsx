@@ -12,16 +12,16 @@ import {
 } from "../felleskomponenter/dialogboks";
 
 function ModalsInner({
-  skjulOppfriskModalOgNavigerTilForside = () => {},
-  visOppfriskDialog = false,
-  lagreMottatteOpplysningerOgOppfriskSaksopplysninger = () => {},
-  skjulOppfriskModal = () => {},
-  lukkOppfriskModal = () => {},
-  visHenleggDialog = false,
-  skjulHenleggDialogHandle = () => {},
-  visAvslagSoknadDialog = false,
-  skjulAvslagSoknadDialogHandle = () => {},
-  visBekreftValgDialog = false,
+  skjulOppfriskModalOgNavigerTilForside,
+  visOppfriskDialog,
+  lagreMottatteOpplysningerOgOppfriskSaksopplysninger,
+  skjulOppfriskModal,
+  lukkOppfriskModal,
+  visHenleggDialog,
+  skjulHenleggDialogHandle,
+  visAvslagSoknadDialog,
+  skjulAvslagSoknadDialogHandle,
+  visBekreftValgDialog,
 }) {
   return (
     <>
@@ -40,7 +40,7 @@ function ModalsInner({
   );
 }
 
-ModalsInner.propTypes = {
+Modals.propTypes = {
   skjulOppfriskModalOgNavigerTilForside: PT.func.isRequired,
   visOppfriskDialog: PT.bool.isRequired,
   lagreMottatteOpplysningerOgOppfriskSaksopplysninger: PT.func.isRequired,
