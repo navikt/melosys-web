@@ -26,13 +26,10 @@ export class SearchResultsPage {
     // Verify that we're on the search results page
     await this.verifySearchResultsPage();
 
-    // Verify that the search results show the correct ID
     await expect(this.page.locator(`h2:has-text('Resultater for f.nr./d-nr. ${id}')`)).toBeVisible();
 
-    // Verify that the "no results" message does NOT appear
     await expect(this.page.locator(`text=Fant ingen saker knyttet til f.nr./d-nr. ${id}`)).not.toBeVisible();
 
-    // Verify that at least one search result is displayed
     await expect(this.page.locator(".fagsak")).toBeVisible();
   }
 
@@ -44,10 +41,8 @@ export class SearchResultsPage {
     // Verify that we're on the search results page
     await this.verifySearchResultsPage();
 
-    // Verify that the search results show the correct ID
     await expect(this.page.locator(`h2:has-text('Resultater for saksnummer ${id}')`)).toBeVisible();
 
-    // Verify that the "no results" message is displayed
     await expect(this.page.locator(`text=Fant ingen saker knyttet til saksnummer ${id}`)).toBeVisible();
   }
 }

@@ -4,7 +4,7 @@ import { defineConfig, devices } from "@playwright/test";
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
-  testDir: "./tests/e2e",
+  testDir: "./tests/e2e/specs",
   outputDir: "tests/e2e/artifacts",
   reporter: [["html", { outputFolder: "tests/e2e/reports/playwright-report" }], ["list"]],
   /* Maximum time one test can run for. */

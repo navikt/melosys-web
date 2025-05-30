@@ -65,13 +65,8 @@ export class MainPage {
     // Ensure there is at least one task available
     await expect(taskLink, "No tasks available to test").toHaveCount(1);
 
-    // Get the taskLink's href attribute
     const taskLinkHref = await taskLink.getAttribute("href");
-
-    // Click on the task
     await taskLink.click();
-
-    // Wait for navigation to complete
     await this.page.waitForLoadState("networkidle");
 
     return taskLinkHref;
@@ -82,30 +77,22 @@ export class MainPage {
    * @param id - The ID to search for
    */
   async search(id: string): Promise<void> {
-    // Check that the search form is visible
     await expect(this.page.locator("form.sokeskjema")).toBeVisible();
 
-    // Find the search input field and enter the search term
     const searchInput = this.page.locator("form.sokeskjema input[type='text']");
 
-    // If the search input is not found, it's an error
     const searchInputCount = await searchInput.count();
     expect(searchInputCount > 0, "Search input field 'Søk sak:' not found").toBeTruthy();
 
-    // Fill the search input with the provided ID
     await searchInput.fill(id);
 
-    // Find the search button and click it
     const searchButton = this.page.locator("form.sokeskjema .sokeskjema__knapp button");
 
-    // If the search button is not found, it's an error
     const searchButtonCount = await searchButton.count();
     expect(searchButtonCount > 0, "Search button not found").toBeTruthy();
 
-    // Click the search button
     await searchButton.click();
 
-    // Wait for the search results to load
     await this.page.waitForLoadState("networkidle");
   }
 }

@@ -1,43 +1,39 @@
 import { expect, test } from "@playwright/test";
-import { runAxeAnalyze } from "./utils/axeUtils";
-import { MainPage, USER_ID_INVALID, USER_ID_VALID } from "./pages/main.page";
-import { SearchResultsPage } from "./pages/search-results.page";
-import { NewCasePage } from "./pages/new-case.page";
-import { auditThresholds, runLighthouseAudit } from "./utils/lighthouseUtils";
+import { runAxeAnalyze } from "../utils/axeUtils";
+import { MainPage, USER_ID_INVALID, USER_ID_VALID } from "../pages/main.page";
+import { SearchResultsPage } from "../pages/search-results.page";
+import { NewCasePage } from "../pages/new-case.page";
+import { auditThresholds, runLighthouseAudit } from "../utils/lighthouseUtils";
 
-test("@accessibility main page loads correctly and displays expected sections", async ({ page }, testInfo) => {
+test("main page loads correctly and displays expected sections", async ({ page }, testInfo) => {
   const mainPage = new MainPage(page);
 
   await mainPage.goto();
 
-  // Verify that we are on the main page with all expected elements
   await mainPage.verifyMainPage();
 
-  // Check that the "Opprett ny sak/behandling" button is present in the header
   await expect(mainPage.getCreateNewCaseButton()).toBeVisible();
 
   await runAxeAnalyze(page, testInfo.title);
   await runLighthouseAudit(page, "lighthouse-invalid-search-report", auditThresholds, "invalid search results");
 });
 
-test("@accessibility clicking on a task navigates to the details page", async ({ page }, testInfo) => {
+test("clicking on a task navigates to the details page", async ({ page }, testInfo) => {
   const mainPage = new MainPage(page);
 
   await mainPage.goto();
 
   await mainPage.verifyMainPage();
 
-  // Click on the first task link and get its href
   const taskLinkHref = await mainPage.clickFirstTaskLink();
 
-  // Verify that we've navigated to a URL that contains the taskLink
   expect(page.url(), "Expected URL to contain the taskLink's href after clicking").toContain(taskLinkHref);
 
   await runAxeAnalyze(mainPage.page, testInfo.title);
   await runLighthouseAudit(mainPage.page, testInfo.title, auditThresholds, "invalid search results");
 });
 
-test("@accessibility search for a valid ID and verify results", async ({ page }, testInfo) => {
+test("search for a valid ID and verify results", async ({ page }, testInfo) => {
   const mainPage = new MainPage(page);
   const searchResultsPage = new SearchResultsPage(page);
 
@@ -51,7 +47,7 @@ test("@accessibility search for a valid ID and verify results", async ({ page },
   await runLighthouseAudit(page, testInfo.title, auditThresholds, "invalid search results");
 });
 
-test("@accessibility search for invalid ID and verify error message", async ({ page }, testInfo) => {
+test("search for invalid ID and verify error message", async ({ page }, testInfo) => {
   const mainPage = new MainPage(page);
   const searchResultsPage = new SearchResultsPage(page);
 
@@ -65,7 +61,7 @@ test("@accessibility search for invalid ID and verify error message", async ({ p
   await runLighthouseAudit(page, testInfo.title, auditThresholds, "invalid search results");
 });
 
-test("@accessibility clicking the 'Opprett ny sak/behandling' button navigates to the create new case page", async ({
+test("clicking the 'Opprett ny sak/behandling' button navigates to the create new case page", async ({
   page,
 }, testInfo) => {
   const mainPage = new MainPage(page);
@@ -75,7 +71,6 @@ test("@accessibility clicking the 'Opprett ny sak/behandling' button navigates t
 
   await mainPage.clickCreateNewCaseButton();
 
-  // Verify all elements on the new case page
   await newCasePage.verifyAllElements();
 
   await runAxeAnalyze(page, testInfo.title);

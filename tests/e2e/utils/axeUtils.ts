@@ -20,7 +20,7 @@ export async function runAxeAnalyze(
   createHtmlReport({
     results,
     options: {
-      outputDir: "tests/e2e/reports/accessibility",
+      outputDir: "tests/e2e/reports/axe-report",
       reportFileName: `${sanitizeFilename(testName)}.html`,
     },
   });

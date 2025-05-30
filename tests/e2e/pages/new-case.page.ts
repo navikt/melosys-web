@@ -22,7 +22,6 @@ export class NewCasePage {
    * Verify that the "Hvem skal saken opprettes på?" section is displayed correctly
    */
   async verifyUserTypeSection(): Promise<void> {
-    // Check for the radio button group "Hvem skal saken opprettes på?"
     await expect(
       this.page.locator(".opprettnysak .undertittel:has-text('Hvem skal saken opprettes på?')"),
     ).toBeVisible();
@@ -35,7 +34,6 @@ export class NewCasePage {
    * Verify that the "Informasjon om bruker" section is displayed correctly
    */
   async verifyUserInfoSection(): Promise<void> {
-    // Check for the input field "Informasjon om bruker"
     await expect(this.page.locator(".opprettnysak .undertittel:has-text('Informasjon om bruker')")).toBeVisible();
     await expect(this.page.locator(".opprettnysak label:has-text('Brukers f.nr. eller d-nr.:')")).toBeVisible();
     await expect(this.page.locator(".opprettnysak input[name='brukerID']")).toBeVisible();
@@ -45,7 +43,6 @@ export class NewCasePage {
    * Verify that the "Legg behandlingen i mine oppgaver" checkbox is displayed correctly
    */
   async verifyAssignmentCheckbox(): Promise<void> {
-    // Check for the checkbox "Legg behandlingen i mine oppgaver" which should be unchecked
     await expect(this.page.locator(".navds-checkbox:has-text('Legg behandlingen i mine oppgaver')")).toBeVisible();
     await expect(this.page.locator("input[name='skalTilordnes']")).not.toBeChecked();
   }
@@ -54,7 +51,6 @@ export class NewCasePage {
    * Verify that the action buttons are displayed correctly
    */
   async verifyActionButtons(): Promise<void> {
-    // Check for the primary button "Opprett ny behandling" and the tertiary button "Avbryt"
     await expect(this.page.locator("button:has-text('Opprett ny behandling')")).toBeVisible();
     await expect(this.page.locator("button:has-text('Avbryt')")).toBeVisible();
   }
@@ -68,36 +64,5 @@ export class NewCasePage {
     await this.verifyUserInfoSection();
     await this.verifyAssignmentCheckbox();
     await this.verifyActionButtons();
-  }
-
-  /**
-   * Fill in the user ID field
-   * @param userId - The user ID to fill in
-   */
-  async fillUserID(userId: string): Promise<void> {
-    await this.page.locator(".opprettnysak input[name='brukerID']").fill(userId);
-  }
-
-  /**
-   * Toggle the "Legg behandlingen i mine oppgaver" checkbox
-   */
-  async toggleAssignmentCheckbox(): Promise<void> {
-    await this.page.locator("input[name='skalTilordnes']").click();
-  }
-
-  /**
-   * Click the "Opprett ny behandling" button
-   */
-  async clickCreateButton(): Promise<void> {
-    await this.page.locator("button:has-text('Opprett ny behandling')").click();
-    await this.page.waitForLoadState("networkidle");
-  }
-
-  /**
-   * Click the "Avbryt" button
-   */
-  async clickCancelButton(): Promise<void> {
-    await this.page.locator("button:has-text('Avbryt')").click();
-    await this.page.waitForLoadState("networkidle");
   }
 }
