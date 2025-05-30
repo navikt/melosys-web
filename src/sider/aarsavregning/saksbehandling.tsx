@@ -140,7 +140,7 @@ function Saksbehandling({ match, location }: Props) {
                 </main>
                 <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
               </Nav.Column>
-              <Nav.Column xs={panelExpanded ? "5" : "1"} className={!panelExpanded ? "no-padding" : ""}>
+              <Nav.Column xs={panelExpanded ? "5" : "1"}>
                 <CollapsiblePanel defaultExpanded={panelExpanded} onToggle={setPanelExpanded}>
                   <Oppsummering
                     medlemskapsperiodeFom={Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.fom)}
