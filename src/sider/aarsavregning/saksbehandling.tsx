@@ -8,7 +8,7 @@ import Informasjonlinje from "../../felleskomponenter/informasjonlinje";
 import { SoknadMenypanelForm } from "../../felleskomponenter/menypanelForm";
 import SideDialog, { defaultTabs } from "../../felleskomponenter/sideDialog";
 import SaksoversiktLenke from "../../felleskomponenter/saksoversiktLenke";
-import CollapsiblePanel from "../../felleskomponenter/collapsiblePanel";
+import { CollapsiblePanel } from "../../felleskomponenter/collapsiblePanel";
 
 import { EnkelStegvelger } from "../../felleskomponenter/enkelStegvelger";
 import { behandlingsresultatOperations } from "../../ducks/behandlingsresultat";
