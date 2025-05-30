@@ -1,5 +1,4 @@
 import PT from "prop-types";
-import * as Sentry from "@sentry/react";
 import { MsalProvider } from "@azure/msal-react";
 import { PublicClientApplication } from "@azure/msal-browser";
 import Rammeverk from "./sider/rammeverk";
@@ -28,4 +27,4 @@ App.propTypes = {
   isDevelopmentProfile: PT.bool,
 };
 
-export default Sentry.withProfiler(App);
+export default App;
