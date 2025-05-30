@@ -1,54 +1,48 @@
-import { expect, test } from "@playwright/test";
-import { mainPageSearch, USER_ID_VALID } from "./testUtils";
-import { runLighthouseAudit } from "./lighthouseUtils";
+import { test } from "@playwright/test";
+import { auditThresholds, runLighthouseAudit } from "./lighthouseUtils";
+import { MainPage, USER_ID_INVALID, USER_ID_VALID } from "./pages/main.page";
 
-const auditThresholds = {
-  "best-practices": 100,
-  seo: 100,
-};
-
-test("main page should pass Lighthouse audits", async ({ browser }) => {
+test("main page should pass Lighthouse audits", async ({ page, browser }) => {
   const context = await browser.newContext();
-  const page = await context.newPage();
+  const mainPage = new MainPage(page);
 
-  await page.goto("/");
+  await mainPage.goto();
 
-  // Verify that we are on the main page
-  await expect(page).toHaveURL("/melosys");
-  await expect(page).toHaveTitle(/Melosys/);
+  await mainPage.verifyMainPage();
 
-  await runLighthouseAudit(page, "lighthouse-main-page-report", auditThresholds);
+  await runLighthouseAudit(mainPage.page, "lighthouse-main-page-report", auditThresholds);
 
   await context.close();
 });
 
-test("search results with valid ID should pass Lighthouse audits", async ({ browser }) => {
+test("search results with valid ID should pass Lighthouse audits", async ({ page, browser }) => {
   const context = await browser.newContext();
-  const page = await context.newPage();
+  const mainPage = new MainPage(page);
 
-  // Use the helper function to search for a valid ID
-  await mainPageSearch(page, USER_ID_VALID);
+  await mainPage.goto();
 
-  // Verify that we're on the search results page
-  await expect(page).toHaveURL("/melosys/sok");
-  await expect(page.locator("h1:has-text('Saksoversikt')")).toBeVisible();
+  await mainPage.verifyMainPage();
+
+  await mainPage.search(USER_ID_VALID);
+
+  await mainPage.verifyValidSearchResults(USER_ID_VALID);
 
   await runLighthouseAudit(page, "lighthouse-valid-search-report", auditThresholds, "valid search results");
 
   await context.close();
 });
 
-test("search results with invalid ID should pass Lighthouse audits", async ({ browser }) => {
+test("search results with invalid ID should pass Lighthouse audits", async ({ page, browser }) => {
   const context = await browser.newContext();
-  const page = await context.newPage();
+  const mainPage = new MainPage(page);
 
-  // Use a clearly invalid ID that doesn't match any valid pattern
-  // Use the helper function to search for the invalid ID
-  await mainPageSearch(page, "INVALID123");
+  await mainPage.goto();
 
-  // Verify that we're on the search results page
-  await expect(page).toHaveURL("/melosys/sok");
-  await expect(page.locator("h1:has-text('Saksoversikt')")).toBeVisible();
+  await mainPage.verifyMainPage();
+
+  await mainPage.search(USER_ID_INVALID);
+
+  await mainPage.verifyInvalidSearchResults(USER_ID_INVALID);
 
   await runLighthouseAudit(page, "lighthouse-invalid-search-report", auditThresholds, "invalid search results");
 

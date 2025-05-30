@@ -2,6 +2,12 @@ import fs from "fs";
 import path from "path";
 import { Page } from "@playwright/test";
 import { playAudit } from "playwright-lighthouse";
+import { sanitizeFilename } from "./testUtils";
+
+export const auditThresholds = {
+  "best-practices": 100,
+  seo: 100,
+};
 
 // Define interfaces for Lighthouse report structure
 export interface LighthouseAuditItem {
@@ -60,30 +66,30 @@ export interface LighthouseReport {
  * Runs a Lighthouse audit on a page and handles the results
  * @param page - The Playwright page object
  * @param reportName - The base name for the report (without extension)
- * @param auditThresholds - Thresholds for Lighthouse audits
+ * @param thresholds - Thresholds for Lighthouse audits
  * @param contextDescription - Optional description for log messages
  */
 export async function runLighthouseAudit(
   page: Page,
   reportName: string,
-  auditThresholds: Record<string, number>,
+  thresholds: Record<string, number>,
   contextDescription: string = "",
 ): Promise<void> {
   const reportInfo = generateReportPaths(reportName);
-  const { reportPath, reportDir, jsonReportPath } = reportInfo;
+  const { reportPath, reportDir, jsonReportPath, reportName: sanitizedReportName } = reportInfo;
   const contextMsg = contextDescription ? ` for ${contextDescription}` : "";
 
   try {
     await playAudit({
       page,
-      thresholds: auditThresholds,
+      thresholds,
       reports: {
         formats: {
           html: true,
           json: true,
         },
         directory: reportDir,
-        name: reportName,
+        name: sanitizedReportName,
       },
       port: 9222,
     });
@@ -91,10 +97,14 @@ export async function runLighthouseAudit(
     console.log(`\n⏳ Lighthouse audit execution completed${contextMsg}`);
     console.log(`📊 Report saved to: ${reportPath}`);
 
-    parseLighthouseReport(jsonReportPath, auditThresholds);
+    parseLighthouseReport(jsonReportPath, thresholds);
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     console.error(`\n❌ Lighthouse audit failed${contextMsg}: ${errorMessage}`);
+
+    parseLighthouseReport(jsonReportPath, thresholds);
+
+    // If parseLighthouseReport didn' throw and error, re-throw the original
     throw error;
   }
 }
@@ -336,13 +346,14 @@ function generateReportPaths(reportName: string): {
   jsonReportPath: string;
 } {
   const reportDir = path.join(__dirname, "..", "e2e/reports/lighthouse-report");
-  const reportPath = path.join(reportDir, `${reportName}.html`);
-  const jsonReportPath = path.join(reportDir, `${reportName}.json`);
+  const sanitizedReportName = sanitizeFilename(reportName);
+  const reportPath = path.join(reportDir, `${sanitizedReportName}.html`);
+  const jsonReportPath = path.join(reportDir, `${sanitizedReportName}.json`);
 
   return {
     reportPath,
     reportDir,
-    reportName,
+    reportName: sanitizedReportName,
     jsonReportPath,
   };
 }

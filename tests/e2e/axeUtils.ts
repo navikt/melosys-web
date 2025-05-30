@@ -2,6 +2,7 @@ import { expect, Page } from "@playwright/test";
 import type { AxeResults, NodeResult, Result } from "axe-core";
 import AxeBuilder from "@axe-core/playwright";
 import { createHtmlReport } from "axe-html-reporter";
+import { sanitizeFilename } from "./testUtils";
 
 /**
  * Runs an accessibility analysis using Axe and formats the results
@@ -20,7 +21,7 @@ export async function runAxeAnalyze(
     results,
     options: {
       outputDir: "tests/e2e/reports/accessibility",
-      reportFileName: `${testName.replace(/\s+/g, "-")}.html`,
+      reportFileName: `${sanitizeFilename(testName)}.html`,
     },
   });
 

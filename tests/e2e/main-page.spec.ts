@@ -1,118 +1,76 @@
 import { expect, test } from "@playwright/test";
-import { mainPageSearch, USER_ID_INVALID, USER_ID_VALID } from "./testUtils";
 import { runAxeAnalyze } from "./axeUtils";
+import { MainPage, USER_ID_INVALID, USER_ID_VALID } from "./pages/main.page";
+import { auditThresholds, runLighthouseAudit } from "./lighthouseUtils";
 
 test("@accessibility main page loads correctly and displays expected sections", async ({ page }, testInfo) => {
-  await page.goto("/");
+  const mainPage = new MainPage(page);
 
-  // Wait for the page to load
-  await page.waitForLoadState("networkidle");
+  await mainPage.goto();
 
-  // Verify that we are on the main page
-  await expect(page).toHaveURL("/melosys");
-  await expect(page).toHaveTitle(/Melosys/);
-
-  // Check that the "Mine oppgaver" heading is visible
-  await expect(page.locator("h1:has-text('Mine oppgaver')")).toBeVisible();
-
-  // Check that the oppgaver count is displayed
-  await expect(page.locator("text=/\\d+ oppgaver/")).toBeVisible();
+  // Verify that we are on the main page with all expected elements
+  await mainPage.verifyMainPage();
 
   // Check that the "Opprett ny sak/behandling" button is present in the header
-  await expect(page.locator("button:has-text('Opprett ny sak/behandling')")).toBeVisible();
+  await expect(mainPage.getCreateNewCaseButton()).toBeVisible();
 
   await runAxeAnalyze(page, testInfo.title);
+  await runLighthouseAudit(page, "lighthouse-invalid-search-report", auditThresholds, "invalid search results");
 });
 
 test("@accessibility clicking on a task navigates to the details page", async ({ page }, testInfo) => {
-  await page.goto("/");
+  const mainPage = new MainPage(page);
 
-  // Wait for the page to load
-  await page.waitForLoadState("networkidle");
+  await mainPage.goto();
 
-  // Find the first task link and click it
-  // Note: This test assumes there is at least one task available. If no tasks are available, the test will fail
-  const taskLink = page.locator(".behandlingOppgave__link").first();
+  await mainPage.verifyMainPage();
 
-  // Ensure there is at least one task available
-  await expect(taskLink, "No tasks available to test").toHaveCount(1);
-
-  // Get the taskLink's href attribute
-  const taskLinkHref = await taskLink.getAttribute("href");
-
-  // Click on the task
-  await taskLink.click();
-
-  // Wait for navigation to complete
-  await page.waitForLoadState("networkidle");
+  // Click on the first task link and get its href
+  const taskLinkHref = await mainPage.clickFirstTaskLink();
 
   // Verify that we've navigated to a URL that contains the taskLink
   expect(page.url(), "Expected URL to contain the taskLink's href after clicking").toContain(taskLinkHref);
 
-  await runAxeAnalyze(page, testInfo.title);
+  await runAxeAnalyze(mainPage.page, testInfo.title);
+  await runLighthouseAudit(mainPage.page, testInfo.title, auditThresholds, "invalid search results");
 });
 
 test("@accessibility search for a valid ID and verify results", async ({ page }, testInfo) => {
-  await page.goto("/");
+  const mainPage = new MainPage(page);
 
-  // Use the helper function to search for the specific ID
-  await mainPageSearch(page, USER_ID_VALID);
+  await mainPage.goto();
 
-  // Verify that we're on the search results page
-  await expect(page).toHaveURL("/melosys/sok");
-  await expect(page.locator("h1:has-text('Saksoversikt')")).toBeVisible();
+  await mainPage.search(USER_ID_VALID);
 
-  // Verify that the search results show the correct ID
-  await expect(page.locator(`h2:has-text('Resultater for f.nr./d-nr. ${USER_ID_VALID}')`)).toBeVisible();
+  await mainPage.verifyValidSearchResults(USER_ID_VALID);
 
-  // Verify that the "no results" message does NOT appear
-  await expect(page.locator(`text=Fant ingen saker knyttet til f.nr./d-nr. ${USER_ID_VALID}`)).not.toBeVisible();
-
-  // Verify that at least one search result is displayed
-  await expect(page.locator(".fagsak")).toBeVisible();
-
-  await runAxeAnalyze(page, testInfo.title);
+  await runAxeAnalyze(mainPage.page, testInfo.title);
+  await runLighthouseAudit(mainPage.page, testInfo.title, auditThresholds, "invalid search results");
 });
 
 test("@accessibility search for invalid ID and verify error message", async ({ page }, testInfo) => {
-  await page.goto("/");
+  const mainPage = new MainPage(page);
 
-  // Use a clearly invalid ID that doesn't match any valid pattern
-  await mainPageSearch(page, USER_ID_INVALID);
+  await mainPage.goto();
 
-  // Verify that we're on the search results page
-  await expect(page).toHaveURL("/melosys/sok");
-  await expect(page.locator("h1:has-text('Saksoversikt')")).toBeVisible();
+  await mainPage.search(USER_ID_INVALID);
 
-  // Verify that the search results show the correct ID
-  await expect(page.locator(`h2:has-text('Resultater for saksnummer ${USER_ID_INVALID}')`)).toBeVisible();
+  await mainPage.verifyInvalidSearchResults(USER_ID_INVALID);
 
-  // Verify that the "no results" message is displayed
-  await expect(page.locator(`text=Fant ingen saker knyttet til saksnummer ${USER_ID_INVALID}`)).toBeVisible();
-
-  await runAxeAnalyze(page, testInfo.title);
+  await runAxeAnalyze(mainPage.page, testInfo.title);
+  await runLighthouseAudit(mainPage.page, testInfo.title, auditThresholds, "invalid search results");
 });
 
 test("@accessibility clicking the 'Opprett ny sak/behandling' button navigates to the create new case page", async ({
   page,
 }, testInfo) => {
-  await page.goto("/");
+  const mainPage = new MainPage(page);
 
-  // Wait for the page to load
-  await page.waitForLoadState("networkidle");
+  await mainPage.goto();
 
-  // Find and click the "Opprett ny sak/behandling" button
-  const createButton = page.locator("button:has-text('Opprett ny sak/behandling')");
-  await expect(createButton).toBeVisible();
-  await createButton.click();
+  await mainPage.clickCreateNewCaseButton();
 
-  // Wait for navigation to complete
-  await page.waitForLoadState("networkidle");
-
-  // Verify that we've navigated to the create new case page
   await expect(page).toHaveURL("/melosys/opprettnysak");
-
-  // Verify that the main elements are present on the create new case page
 
   // Check for the radion button group "Hvem skal saken opprettes på?"
   await expect(page.locator(".opprettnysak .undertittel:has-text('Hvem skal saken opprettes på?')")).toBeVisible();
@@ -133,5 +91,6 @@ test("@accessibility clicking the 'Opprett ny sak/behandling' button navigates t
   await expect(page.locator("button:has-text('Opprett ny behandling')")).toBeVisible();
   await expect(page.locator("button:has-text('Avbryt')")).toBeVisible();
 
-  await runAxeAnalyze(page, testInfo.title);
+  await runAxeAnalyze(mainPage.page, testInfo.title);
+  await runLighthouseAudit(mainPage.page, testInfo.title, auditThresholds, "invalid search results");
 });

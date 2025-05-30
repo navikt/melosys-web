@@ -1,42 +1,19 @@
-import { expect, Page } from "@playwright/test";
-
-export const USER_ID_VALID = "30056928150";
-export const USER_ID_INVALID = "INVALID123";
 /**
- * Helper function to search for an ID
- * @param page - The Playwright page object
- * @param id - The ID to search for
+ * Common utility functions for e2e tests
  */
-export async function mainPageSearch(page: Page, id: string): Promise<void> {
-  // Navigate to the homepage
-  await page.goto("/");
 
-  // Wait for the page to load
-  await page.waitForLoadState("networkidle");
-
-  // Check that the search form is visible
-  await expect(page.locator("form.sokeskjema")).toBeVisible();
-
-  // Find the search input field and enter the search term
-  const searchInput = page.locator("form.sokeskjema input[type='text']");
-
-  // If the search input is not found, it's an error
-  const searchInputCount = await searchInput.count();
-  expect(searchInputCount > 0, "Search input field 'Søk sak:' not found").toBeTruthy();
-
-  // Fill the search input with the provided ID
-  await searchInput.fill(id);
-
-  // Find the search button and click it
-  const searchButton = page.locator("form.sokeskjema .sokeskjema__knapp button");
-
-  // If the search button is not found, it's an error
-  const searchButtonCount = await searchButton.count();
-  expect(searchButtonCount > 0, "Search button not found").toBeTruthy();
-
-  // Click the search button
-  await searchButton.click();
-
-  // Wait for the search results to load
-  await page.waitForLoadState("networkidle");
+/**
+ * Sanitizes a filename by replacing characters that are invalid in file paths
+ * with safe alternatives.
+ *
+ * @param filename - The filename to sanitize
+ * @returns A sanitized filename that can be safely used in file paths
+ */
+export function sanitizeFilename(filename: string): string {
+  return filename
+    .replace(/[/\\?%*:|"<>]/g, "-") // Replace common invalid filename chars with hyphens
+    .replace(/[']/g, "") // Remove apostrophes
+    .replace(/\s+/g, "-") // Replace spaces with hyphens
+    .replace(/-+/g, "-") // Replace multiple hyphens with a single hyphen
+    .trim(); // Trim leading/trailing whitespace
 }
