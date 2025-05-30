@@ -73,7 +73,6 @@ npm test
 Prosjektet er konfigurert med Playwright for end-to-end testing, inkludert:
 - Grunnleggende funksjonalitetstester
 - Tilgjengelighetstesting med Axe
-- Ytelsestesting med Lighthouse
 
 #### Installasjon
 Playwright-nettlesere og CLI installeres automatisk når du kjører `npm install` via postinstall-skriptet. Dette sikrer at alle nødvendige komponenter er tilgjengelige for å kjøre e2e-tester.
@@ -88,8 +87,6 @@ Kjør e2e-tester med:
 ```
 npm run test:e2e          # Kjør alle e2e-tester
 npm run test:e2e:ui       # Kjør tester med UI-modus for debugging
-npm run test:e2e:accessibility  # Kjør kun tilgjengelighetstester
-npm run test:e2e:performance    # Kjør kun ytelsestester
 ```
 
 For mer detaljert informasjon om e2e-testing, se [e2e-testdokumentasjonen](./tests/e2e/README.md).
