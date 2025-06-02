@@ -125,7 +125,7 @@ function Saksbehandling({ match, location }: Props) {
       <div className="main-container">
         <div className="aarsavregning_saksbehandling">
           <HGrid
-            columns={panelExpanded ? "minmax(0, 7fr) minmax(0, 5fr)" : "minmax(0, 1fr) 2rem"}
+            columns={panelExpanded ? "minmax(0, 7fr) minmax(0, 5fr)" : "minmax(0, 1fr) 3rem"}
             gap="4"
             className="hgrid"
           >
@@ -144,7 +144,7 @@ function Saksbehandling({ match, location }: Props) {
               </main>
               <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
             </div>
-            <CollapsiblePanel defaultExpanded={panelExpanded} onToggle={setPanelExpanded}>
+            <CollapsiblePanel defaultExpanded={panelExpanded} onToggle={setPanelExpanded} direction="RIGHT">
               <Oppsummering
                 medlemskapsperiodeFom={Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.fom)}
                 medlemskapsperiodeTom={Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.tom)}

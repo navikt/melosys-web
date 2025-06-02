@@ -7,9 +7,16 @@ interface CollapsiblePanelProps {
   children: ReactNode;
   onToggle?: (expanded: boolean) => void;
   className?: string;
+  direction: "LEFT" | "RIGHT";
 }
 
-function CollapsiblePanel({ defaultExpanded = true, children, onToggle, className = "" }: CollapsiblePanelProps) {
+function CollapsiblePanel({
+  defaultExpanded = true,
+  children,
+  onToggle,
+  className = "",
+  direction,
+}: CollapsiblePanelProps) {
   const [expanded, setExpanded] = useState(defaultExpanded);
 
   const handleToggle = () => {
@@ -18,8 +25,19 @@ function CollapsiblePanel({ defaultExpanded = true, children, onToggle, classNam
     onToggle?.(newExpanded);
   };
 
+  const getIcon = () => {
+    if (direction === "RIGHT") {
+      return expanded ? <Ikoner.ChevronRight /> : <Ikoner.ChevronLeft />;
+    }
+    // direction === "LEFT"
+    return expanded ? <Ikoner.ChevronLeft /> : <Ikoner.ChevronRight />;
+  };
+
+  const directionClass =
+    direction === "LEFT" ? "collapsible-panel--direction-left" : "collapsible-panel--direction-right";
+
   return (
-    <div className={`collapsible-panel ${expanded ? "expanded" : "collapsed"} ${className}`}>
+    <div className={`collapsible-panel ${expanded ? "expanded" : "collapsed"} ${className} ${directionClass}`}>
       <div className="collapsible-panel__toggle">
         <button
           type="button"
@@ -27,7 +45,7 @@ function CollapsiblePanel({ defaultExpanded = true, children, onToggle, classNam
           className="chevron-toggle-button"
           title={expanded ? "Skjul panel" : "Vis panel"}
         >
-          {expanded ? <Ikoner.ChevronRight /> : <Ikoner.ChevronLeft />}
+          {getIcon()}
         </button>
       </div>
       <div className="collapsible-panel__content">{children}</div>
