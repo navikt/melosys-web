@@ -12,7 +12,7 @@ import MKV from "../../../../../melosyskodeverk";
 import { OK } from "../../../../../ducks/aarsavregning/types";
 
 import { medlemskapsperioderTypes } from "../../../../../ducks/medlemskapsperioder";
-import { mapTilInntektskilderProps, mapTilSkatteforholdProps } from "../aarsavregningHelpers";
+import { mapTilInntektskilderProps, mapTilSkatteforholdProps } from "../utils";
 import {
   Medlemskapsperiode,
   OppdaterMedlemskapsperiode,

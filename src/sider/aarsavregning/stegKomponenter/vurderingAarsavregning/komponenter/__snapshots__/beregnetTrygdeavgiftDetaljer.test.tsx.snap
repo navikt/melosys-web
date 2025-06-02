@@ -1,0 +1,93 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`BeregnetTrygdeavgiftDetaljer > snapshot test 1`] = `
+
+<div class="tidligereGrunnlagPanel">
+  <h1 class="navds-heading navds-heading--small">
+    Complete Data Test
+  </h1>
+  <table class="navds-table navds-table--small periode_tabell">
+    <thead class="navds-table__header header_row">
+      <tr class="navds-table__row navds-table__row--shade-on-hover">
+        <th
+          class="navds-table__header-cell navds-label navds-label--small"
+          scope="col"
+        >
+          Trygdeperiode
+        </th>
+        <th
+          class="navds-table__header-cell navds-label navds-label--small"
+          scope="col"
+        >
+          Sats
+        </th>
+        <th
+          class="navds-table__header-cell navds-label navds-label--small"
+          scope="col"
+        >
+          Avgift md.
+        </th>
+        <th
+          class="navds-table__header-cell navds-label navds-label--small"
+          scope="col"
+        >
+          Inntektskilde
+        </th>
+        <th
+          class="navds-table__header-cell navds-label navds-label--small"
+          scope="col"
+        >
+          Bruttoinntekt md.
+        </th>
+        <th
+          class="navds-table__header-cell navds-label navds-label--small"
+          scope="col"
+        >
+          Betalt aga.?
+        </th>
+        <th
+          class="navds-table__header-cell navds-label navds-label--small"
+          scope="col"
+        >
+          Skattepliktig
+        </th>
+        <th
+          class="navds-table__header-cell navds-label navds-label--small"
+          scope="col"
+        >
+          Dekning
+        </th>
+      </tr>
+    </thead>
+    <tbody class="navds-table__body">
+      <tr class="navds-table__row border_top navds-table__row--shade-on-hover">
+        <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+          01.01.2023 - 31.12.2023
+        </td>
+        <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+          8.2
+        </td>
+        <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+          3&nbsp;417 kr
+        </td>
+        <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+          ARBEID
+        </td>
+        <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+          41&nbsp;667 kr
+        </td>
+        <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+          Ikke relevant
+        </td>
+        <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+          Ja
+        </td>
+        <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+          FULL
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+`;

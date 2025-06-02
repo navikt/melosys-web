@@ -2,7 +2,6 @@ import { Control } from "react-hook-form";
 import * as Forms from "../../../../../felleskomponenter/forms";
 import MKV from "../../../../../melosyskodeverk";
 import { SumArsavregningTabell } from "./sumArsavregningTabell";
-import { TidligereFakturertIAvgiftssystemetInput } from "./tidligereFakturertIAvgiftssystemetInput";
 
 const { MANUELL_ENDELIG_AVGIFT } = MKV.Koder.endeligAvgiftValg;
 
@@ -39,14 +38,6 @@ export function ManuellAvgiftFormPart({
 
   return (
     <>
-      {!erMedGrunnlagFlyt && (
-        <TidligereFakturertIAvgiftssystemetInput
-          control={control}
-          redigerbart={redigerbart}
-          harDeltGrunnlag={harDeltGrunnlag}
-        />
-      )}
-
       <Forms.Input
         label="Endelig beregnet trygdeavgift"
         name="manueltAvgiftBeloep"

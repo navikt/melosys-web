@@ -239,14 +239,16 @@ function Oppsummering({
 
   return (
     <section aria-label="oppsummeringer" className="oppsummering panelSeksjon">
-      <EndreBehandlingModal
-        fagsak={fagsak}
-        oppsummering={oppsummering}
-        erÅrsavregning={erÅrsavregning}
-        mottattDato={mottaksdato}
-        skalViseModal={skalViseEndreModal}
-        lukkModal={() => setSkalViseEndreModal(false)}
-      />
+      {redigerbart && (
+        <EndreBehandlingModal
+          fagsak={fagsak}
+          oppsummering={oppsummering}
+          erÅrsavregning={erÅrsavregning}
+          mottattDato={mottaksdato}
+          skalViseModal={skalViseEndreModal}
+          lukkModal={() => setSkalViseEndreModal(false)}
+        />
+      )}
       <div className="panel">
         <Nav.Row>
           <Nav.Column xs="12">

@@ -226,7 +226,9 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   };
 
   useEffect(() => {
-    hentMuligeMottakere();
+    if (redigerbart) {
+      hentMuligeMottakere();
+    }
   }, [erDelvisOpphør]);
 
   useEffect(() => {

@@ -3,7 +3,7 @@ import MKV from "../../../../../melosyskodeverk";
 import * as KV from "../../../../../kodeverk";
 import * as Utils from "../../../../../utils";
 
-import { erBrukerSkattepliktigIHelePerioden } from "../komponenter/utils";
+import { erBrukerSkattepliktigIHelePerioden } from "../utils";
 import { BOOLSK_STRING } from "../../../../../constants";
 
 const { MAA_FYLLES_UT } = KV.Feilmeldinger;

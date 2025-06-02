@@ -23,16 +23,13 @@ import {
   OppdaterMedlemskapsperiode,
 } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import * as Utils from "../../../../../utils";
-import { hentMedlemskapsFomTomDato } from "../aarsavregningHelpers";
+import { beregnTrygdeavgiftsperioder, erBrukerSkattepliktigIHelePerioden, hentMedlemskapsFomTomDato } from "../utils";
 import { Aarsavregningsmeldinger } from "../komponenter/aarsavregningsmeldinger";
 import { BeregnetTrygdeavgiftDetaljer } from "../komponenter/beregnetTrygdeavgiftDetaljer";
 import BestemmelseSelect from "../komponenter/bestemmelseSelect";
-import MedlemskapsPerioderTabell from "../komponenter/medlemskapsPerioderTabell";
 import { MedlemskapsperiodeSkjema } from "../komponenter/medlemskapsperiodeSkjema";
 import { SumArsavregningTabell } from "../komponenter/sumArsavregningTabell";
 import { TidligereFakturertIAvgiftssystemetInput } from "../komponenter/tidligereFakturertIAvgiftssystemetInput";
-import TidligereGrunnlagsoversikt from "../komponenter/tidligereGrunnlagsoversikt";
-import { beregnTrygdeavgiftsperioder, erBrukerSkattepliktigIHelePerioden } from "../komponenter/utils";
 import {
   AarsavregningFormValuesProps,
   DEFAULT_MEDLEMSKAPSPERIODE,
@@ -755,36 +752,11 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
 
   const trygdeAvgiftSkalIkkeBetalesTilNav =
     medlemskapstypeErPliktig && erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder);
-  const forskuddsvisFakturertTrygdeavgift =
-    (aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift?.totalAvgift ?? 0) > 0;
   const skjemaErRedigerbart = redigerbart && !endrerBestemmelse;
 
   return (
     <div className="vurderingAarsavregning">
-      {harDeltGrunnlag && (
-        <>
-          <MedlemskapsPerioderTabell
-            perioder={aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.medlemskapsperioder}
-          />
-          <TidligereGrunnlagsoversikt
-            skatteforholdsperioder={
-              aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.skatteforholdsperioder
-            }
-            inntektsperioder={
-              aarsavregningResponse?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.inntektskperioder
-            }
-            avgift={aarsavregningResponse?.tidligereGrunnlagsopplysninger?.avgift}
-          />
-
-          {!forskuddsvisFakturertTrygdeavgift && <Aarsavregningsmeldinger.TrygdeavgiftErIkkeForskuddsvisFakturert />}
-
-          <BeregnetTrygdeavgiftDetaljer
-            grunnlag={aarsavregningResponse?.tidligereGrunnlagsopplysninger}
-            medlemskapsTypeErPliktig={medlemskapstypeErPliktig}
-            tittel="Tidligere beregnet trygdeavgift"
-          />
-        </>
-      )}
+      <TidligereFakturertIAvgiftssystemetInput control={control} redigerbart={skjemaErRedigerbart} />
 
       <EndeligAvgiftValgRadioGroup
         control={control}
@@ -795,12 +767,6 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
 
       {endeligAvgiftValg === OPPLYSNINGER_ENDRET && (
         <>
-          <TidligereFakturertIAvgiftssystemetInput
-            control={control}
-            redigerbart={skjemaErRedigerbart}
-            harDeltGrunnlag={harDeltGrunnlag}
-          />
-
           <Nav.Heading className="endelige_opplysninger_heading" level="2">
             Inntekts- og skatteopplysninger for endelig trygdeavgift
           </Nav.Heading>
@@ -888,11 +854,22 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
             !feilmelding &&
             !arrayValideringsfeil &&
             aarsavregningResponse?.nyttGrunnlag && (
-              <BeregnetTrygdeavgiftDetaljer
-                grunnlag={aarsavregningResponse.nyttGrunnlag}
-                medlemskapsTypeErPliktig={medlemskapstypeErPliktig}
-                tittel="Endelig beregnet trygdeavgift"
-              />
+              <Nav.ExpansionCard
+                className="beregnetTrygdeavgiftDetaljer"
+                aria-label="trygdeavgiftdetaljer"
+                size="small"
+              >
+                <Nav.ExpansionCard.Header>
+                  <Nav.ExpansionCard.Title size="small">Endelig beregnet trygdeavgift</Nav.ExpansionCard.Title>
+                </Nav.ExpansionCard.Header>
+                <Nav.ExpansionCard.Content>
+                  <BeregnetTrygdeavgiftDetaljer
+                    grunnlag={aarsavregningResponse.nyttGrunnlag}
+                    medlemskapsTypeErPliktig={medlemskapstypeErPliktig}
+                    tittel=""
+                  />
+                </Nav.ExpansionCard.Content>
+              </Nav.ExpansionCard>
             )}
 
           {arrayValideringsfeil && <Feilmelding type={arrayValideringsfeil} />}

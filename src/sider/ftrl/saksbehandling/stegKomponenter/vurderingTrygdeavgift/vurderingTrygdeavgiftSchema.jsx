@@ -4,7 +4,7 @@ import * as KV from "../../../../../kodeverk";
 import * as Utils from "../../../../../utils";
 import { BOOLSK_STRING } from "../../../../../constants";
 
-import { erBrukerSkattepliktigIHelePerioden } from "../../../../aarsavregning/stegKomponenter/vurderingAarsavregning/komponenter/utils";
+import { erBrukerSkattepliktigIHelePerioden } from "../../../../aarsavregning/stegKomponenter/vurderingAarsavregning/utils";
 
 const { MAA_FYLLES_UT } = KV.Feilmeldinger;
 const {
