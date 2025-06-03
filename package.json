@@ -32,7 +32,6 @@
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
     "moment-timezone": "^0.5.43",
-    "nav-frontend-core": "^6.0.1",
     "prop-types": "^15.8.1",
     "qs": "^6.10.3",
     "react": "^18.3.1",
