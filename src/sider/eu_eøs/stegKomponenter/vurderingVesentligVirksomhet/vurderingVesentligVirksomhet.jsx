@@ -12,12 +12,12 @@ import EnkeltVilkaar from "../felles/enkeltVilkaar";
 function VurderingVesentligVirksomhet(props) {
   const {
     bekreftOgFortsett,
-    begrunnelser,
-    tilstand,
+    begrunnelser = [],
+    tilstand = {},
     redigerbart,
     oppdaterData,
     slettData,
-    valgteVirksomheter,
+    valgteVirksomheter = [],
     tilbake,
   } = props;
   const { vesentligVirksomhetVilkaar, harAvklaring } = tilstand;
@@ -76,12 +76,6 @@ VurderingVesentligVirksomhet.propTypes = {
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
-};
-
-VurderingVesentligVirksomhet.defaultProps = {
-  tilstand: {},
-  valgteVirksomheter: [],
-  begrunnelser: [],
 };
 
 export default VurderingVesentligVirksomhet;

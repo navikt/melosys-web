@@ -22,7 +22,7 @@ import { MELOSYS_PENSJONIST } from "../../featuretoggle/toggleNavn";
  * for å gi saksbehandler oversikt over sakens innhold før hun klikker
  * seg inn på den.
  */
-function Fagsak({ sak, landkoder }) {
+function Fagsak({ sak = {}, landkoder }) {
   const { opprettetDato, sakstype, saksstatus, saksnummer, sakstema, behandlingOversikter } = sak;
   const erPensjonistToggleEnabled = useFeatureToggle(MELOSYS_PENSJONIST);
 
@@ -93,10 +93,6 @@ function Fagsak({ sak, landkoder }) {
 Fagsak.propTypes = {
   sak: MPT.BehandligOversikt,
   landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
-};
-
-Fagsak.defaultProps = {
-  sak: {},
 };
 
 export default Fagsak;

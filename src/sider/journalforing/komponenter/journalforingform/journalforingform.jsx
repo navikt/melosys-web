@@ -69,11 +69,11 @@ const kontrollerAdresse = (identifikator) => {
 
 function JournalforingForm({
   journalpostID,
-  hoveddokumentID,
+  hoveddokumentID = "",
   vedlegg,
-  fagsakListe,
-  formValues,
-  formErrors,
+  fagsakListe = [],
+  formValues = {},
+  formErrors = {},
   submitFailed,
   settFeltInnhold,
   settJournalforingHensikt,
@@ -81,8 +81,8 @@ function JournalforingForm({
   submitSpinner,
   handleSubmit,
   landkoder,
-  avsenderIDFraJournalpost,
-  avsenderNavnFraJournalpost,
+  avsenderIDFraJournalpost = "",
+  avsenderNavnFraJournalpost = "",
   mottaksKanalErElektronisk,
 }) {
   const visForvaltningsmelding = skalViseForvaltningsmelding(formValues, fagsakListe);
@@ -222,15 +222,6 @@ JournalforingForm.propTypes = {
   avsenderNavnFraJournalpost: PT.string,
   mottaksKanalErEessi: PT.bool.isRequired,
   mottaksKanalErElektronisk: PT.bool.isRequired,
-};
-
-JournalforingForm.defaultProps = {
-  formValues: {},
-  formErrors: {},
-  hoveddokumentID: "",
-  fagsakListe: [],
-  avsenderIDFraJournalpost: "",
-  avsenderNavnFraJournalpost: "",
 };
 
 const toVedleggMedProps = (vedlegg) =>

@@ -32,10 +32,10 @@ export function VurderingArtikkel13_x_vedtak({
   redigerbart,
   tilbake,
   behandlingID,
-  lovvalgsperiode,
+  lovvalgsperiode = {},
   harLandSomKreverSED,
   formIsValid,
-  formValues,
+  formValues = {},
   form,
   handleSubmit,
   touchAll,
@@ -46,7 +46,7 @@ export function VurderingArtikkel13_x_vedtak({
   soknadsperiode,
   kontrollerFerdigbehandling,
   harFeilmeldinger,
-  aktivtSteg,
+  aktivtSteg = false,
   validerMottatteOpplysninger,
   fattVedtak,
   mottatteOpplysningerStatus,
@@ -278,12 +278,6 @@ VurderingArtikkel13_x_vedtak.propTypes = {
   validerMottatteOpplysninger: PT.func.isRequired,
   fattVedtak: PT.func.isRequired,
   mottatteOpplysningerStatus: PT.string.isRequired,
-};
-
-VurderingArtikkel13_x_vedtak.defaultProps = {
-  lovvalgsperiode: {},
-  formValues: {},
-  aktivtSteg: false,
 };
 
 const mapStateToProps = (state) => {

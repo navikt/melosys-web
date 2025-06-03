@@ -22,10 +22,10 @@ function VurderingAvslaaUtpeking({
   redigerbart,
   behandlingID,
   handleSubmit,
-  fritekst,
-  nyttLovvalgsland,
-  begrunnelseUtenlandskMyndighet,
-  vilSendeAnmodningOmMerInformasjon,
+  fritekst = "",
+  nyttLovvalgsland = "",
+  begrunnelseUtenlandskMyndighet = "",
+  vilSendeAnmodningOmMerInformasjon = false,
   touchAll,
   formIsValid,
   tilbake,
@@ -136,13 +136,6 @@ VurderingAvslaaUtpeking.propTypes = {
   vilSendeAnmodningOmMerInformasjon: PT.bool,
   touchAll: PT.func.isRequired,
   formIsValid: PT.bool.isRequired,
-};
-
-VurderingAvslaaUtpeking.defaultProps = {
-  fritekst: "",
-  nyttLovvalgsland: "",
-  begrunnelseUtenlandskMyndighet: "",
-  vilSendeAnmodningOmMerInformasjon: false,
 };
 
 const avslaaUtpekingFormValueSelector = formValueSelector(KV.Form.AVSLAA_UTPEKING);

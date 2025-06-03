@@ -2,7 +2,17 @@ import PT from "prop-types";
 import * as Nav from "../../../navFrontend";
 import * as Utils from "../../../utils";
 
-const kodeTermSelect = ({ koder, value, onChange, label, feil, disableForsteValg, redigerbart, onBlur, className }) => {
+const kodeTermSelect = ({
+  koder,
+  value,
+  onChange,
+  label,
+  feil,
+  disableForsteValg = false,
+  redigerbart = true,
+  onBlur = () => null,
+  className,
+}) => {
   const visValueIkkeOppgittIKoder = !redigerbart && !koder.includes(value);
 
   return (
@@ -39,14 +49,6 @@ kodeTermSelect.propTypes = {
   redigerbart: PT.bool,
   onBlur: PT.func,
   className: PT.string,
-};
-
-kodeTermSelect.defaultProps = {
-  disableForsteValg: false,
-  feil: undefined,
-  redigerbart: true,
-  onBlur: () => null,
-  className: undefined,
 };
 
 export default kodeTermSelect;

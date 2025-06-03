@@ -6,8 +6,8 @@ import * as Nav from "../../navFrontend";
 import sorterElementerEtterDato from "./sorterElementerEtterDato";
 
 function SorterbarListe({
-  elementer,
-  defaultChecked,
+  elementer = [],
+  defaultChecked = "ascending",
   component,
   sortingLegend,
   sortingPath,
@@ -46,13 +46,6 @@ SorterbarListe.propTypes = {
   sortingPath: PT.string.isRequired,
   radioGroupName: PT.string,
   className: PT.string,
-};
-
-SorterbarListe.defaultProps = {
-  elementer: [],
-  defaultChecked: "ascending",
-  radioGroupName: undefined,
-  className: undefined,
 };
 
 export default SorterbarListe;

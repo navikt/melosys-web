@@ -37,16 +37,16 @@ import { useFeatureToggle } from "../../../../featuretoggle";
 import { MELOSYS_NORGE_ER_UTPEKT_11_3_A } from "../../../../featuretoggle/toggleNavn";
 
 export function VurderingUtpekt({
-  vurderingBegrunnelser,
+  vurderingBegrunnelser = [],
   slettData,
   tilbake,
   oppdaterData,
   redigerbart,
   tilstand: { harAvklaring, lovvalgsbestemmelse, lovvalgsland },
   handleSubmit,
-  formValues,
+  formValues = {},
   lovvalgsperiode,
-  ytterligereInformasjon,
+  ytterligereInformasjon = null,
   behandlingstema,
   behandlingID,
 }) {
@@ -269,12 +269,6 @@ VurderingUtpekt.propTypes = {
   ytterligereInformasjon: PT.string,
   behandlingstema: PT.string.isRequired,
   behandlingID: PT.number.isRequired,
-};
-
-VurderingUtpekt.defaultProps = {
-  formValues: {},
-  vurderingBegrunnelser: [],
-  ytterligereInformasjon: null,
 };
 
 const mapStateToProps = (state, ownProps) => {

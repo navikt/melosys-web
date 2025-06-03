@@ -10,7 +10,7 @@ import * as MPT from "../../../../../proptypes/index";
 import * as Nav from "../../../../../navFrontend/index";
 
 function MarginaltArbeidCheckbox(props) {
-  const { arbeidsland, avklartMarginaltArbeidILand, oppdaterData } = props;
+  const { arbeidsland, avklartMarginaltArbeidILand = undefined, oppdaterData } = props;
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -51,10 +51,6 @@ MarginaltArbeidCheckbox.propTypes = {
   oppdaterData: PT.func.isRequired,
   arbeidsland: MPT.Kodeverk.isRequired,
   avklartMarginaltArbeidILand: PT.object,
-};
-
-MarginaltArbeidCheckbox.defaultProps = {
-  avklartMarginaltArbeidILand: undefined,
 };
 
 export default MarginaltArbeidCheckbox;

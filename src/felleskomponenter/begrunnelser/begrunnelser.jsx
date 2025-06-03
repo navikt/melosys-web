@@ -5,7 +5,7 @@ import * as KV from "../../kodeverk";
 
 import "./begrunnelser.css";
 
-function Begrunnelser({ label, valgteBegrunnelser, muligeBegrunnelser, fritekst }) {
+function Begrunnelser({ label, valgteBegrunnelser = [], muligeBegrunnelser = [], fritekst = "" }) {
   return (
     <div className="begrunnelser">
       <Nav.BodyLong weight="semibold" size="small" className="begrunnelseTittel">
@@ -26,12 +26,6 @@ Begrunnelser.propTypes = {
   valgteBegrunnelser: PT.array,
   muligeBegrunnelser: PT.array,
   fritekst: PT.string,
-};
-
-Begrunnelser.defaultProps = {
-  valgteBegrunnelser: [],
-  muligeBegrunnelser: [],
-  fritekst: "",
 };
 
 export default Begrunnelser;

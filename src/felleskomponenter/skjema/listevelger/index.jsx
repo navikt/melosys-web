@@ -16,7 +16,16 @@ import "./listevelger.css";
  * Komponenten forventer en array av strings for å vise listevalg. Det betyr at
  * kodeverk-baserte objekter må reduces.
  */
-function Listevelger({ feltNavn, className, gruppe, ...rest }) {
+function Listevelger({
+  feltNavn,
+  className = "",
+  gruppe = false,
+  muligeValg = [],
+  tillatFritekst = false,
+  disabled = false,
+  onChange,
+  ...rest
+}) {
   return (
     <div className={classNames("listevelger", className)}>
       {gruppe ? (
@@ -36,15 +45,6 @@ Listevelger.propTypes = {
   muligeValg: PT.arrayOf(MPT.Kodeverk),
   tillatFritekst: PT.bool,
   disabled: PT.bool,
-};
-
-Listevelger.defaultProps = {
-  className: "",
-  gruppe: false,
-  muligeValg: [],
-  tillatFritekst: false,
-  disabled: false,
-  onChange: undefined,
 };
 
 export default Listevelger;

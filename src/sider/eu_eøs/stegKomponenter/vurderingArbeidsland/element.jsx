@@ -6,7 +6,7 @@ import * as Ikoner from "../../../../resources/images";
 
 import "./element.css";
 
-function Element({ kode, term, onFjern, onAngreFjern, fjernbar, redigerbar, defaultFjernet }) {
+function Element({ kode, term, onFjern, onAngreFjern, fjernbar = true, redigerbar, defaultFjernet = false }) {
   const [fjernet, setFjernet] = useState(defaultFjernet);
 
   const fjern = () => {
@@ -48,11 +48,6 @@ Element.propTypes = {
   fjernbar: PT.bool,
   redigerbar: PT.bool.isRequired,
   defaultFjernet: PT.bool,
-};
-
-Element.defaultProps = {
-  fjernbar: true,
-  defaultFjernet: false,
 };
 
 export default Element;

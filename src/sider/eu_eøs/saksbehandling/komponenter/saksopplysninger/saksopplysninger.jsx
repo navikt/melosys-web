@@ -37,11 +37,11 @@ const hentForsteSteg = (behandlingstype) => {
 
 function Saksopplysninger({
   behandlingstype,
-  behandlingOppfriskes,
-  redigerbart,
+  behandlingOppfriskes = false,
+  redigerbart = null,
   behandlingID,
   soknadForm,
-  mottatteOpplysninger,
+  mottatteOpplysninger = {},
   behandlingsresultatType,
   fagsakStatusKode,
   tilForsiden,
@@ -111,9 +111,6 @@ Saksopplysninger.propTypes = {
   sendMottatteOpplysninger: PT.func.isRequired,
   mottatteOpplysninger: MPT.MottatteOpplysninger,
   soknadForm: PT.object.isRequired,
-  inngangForm: PT.object,
-  vurdering: PT.object,
-  syncErrors: PT.object,
   lagreVilkarHandler: PT.func.isRequired,
   lagreAvklartefaktaHandler: PT.func.isRequired,
   lagreLovvalgsperioderHandler: PT.func.isRequired,
@@ -122,15 +119,6 @@ Saksopplysninger.propTypes = {
   startOgVisOppfriskModal: PT.func.isRequired,
   anmodningsperioderErSendtUtlandet: PT.bool.isRequired,
   behandlingOppfriskes: PT.bool,
-};
-
-Saksopplysninger.defaultProps = {
-  redigerbart: null,
-  mottatteOpplysninger: {},
-  vurdering: {},
-  syncErrors: {},
-  inngangForm: {},
-  behandlingOppfriskes: false,
 };
 
 const mapStateToProps = (state) => ({

@@ -18,7 +18,7 @@ interface BehandlingsstatusMedSvarfristProps {
 export function BehandlingsstatusMedSvarfrist({
   behandlingsstatus,
   svarFrist,
-  className,
+  className = "",
 }: BehandlingsstatusMedSvarfristProps) {
   const visSvarFrist =
     svarFrist &&

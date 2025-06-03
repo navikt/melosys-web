@@ -6,7 +6,7 @@ import "./stegFane.css";
 
 // Stegfanen er komponenten som vises for hvert steg
 function StegFane(props) {
-  const { id, faneData, rest } = props;
+  const { id, faneData, rest = {} } = props;
   const componentProps = {
     ...faneData.data,
     ...faneData.handlers,
@@ -29,10 +29,6 @@ StegFane.propTypes = {
   faneData: PT.object.isRequired,
   id: PT.string.isRequired,
   rest: PT.object,
-};
-
-StegFane.defaultProps = {
-  rest: {},
 };
 
 export default StegFane;
