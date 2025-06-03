@@ -206,7 +206,6 @@ const journalforing = object().shape({
   journalforingPeriodeTilOgMed: string().nullable().erEtterDatofelt("journalforingPeriodeFraOgMed").erGyldigDato(),
   journalforingSoknadsland: array()
     .of(string())
-    .ensure()
     .when(
       [
         "journalforingHensikt",
@@ -221,9 +220,10 @@ const journalforing = object().shape({
         then: (schema) =>
           schema.when("opprettnysak_behandlingstema", {
             is: MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND,
-            then: (schemaInner) => schemaInner.min(2, { _error: VELG_MINST_TO_LAND }),
-            otherwise: (schemaInner) => schemaInner.min(1, { _error: VELG_MINST_ETT_LAND }),
+            then: (schemaInner) => schemaInner.min(2, VELG_MINST_TO_LAND),
+            otherwise: (schemaInner) => schemaInner.min(1, VELG_MINST_ETT_LAND),
           }),
+        otherwise: (schema) => schema.nullable(),
       },
     ),
 
@@ -232,51 +232,6 @@ const journalforing = object().shape({
   journalforingHensikt: string(),
   journalforingSoknadslandFlereLandUkjentHvilke: boolean(),
   opprettBehandling: boolean().nullable(),
-  flereLandUkjentHvilke: boolean().nullable(),
-  land: array()
-    .nullable()
-    .when(
-      [
-        "journalforingHensikt",
-        "sakstype",
-        "sakstema",
-        "opprettnysak_behandlingstema",
-        "opprettnysak_behandlingstype",
-        "flereLandUkjentHvilke",
-      ],
-      {
-        is: kreverLand,
-        then: (schema) =>
-          schema.min(1, VELG_MINST_ETT_LAND).when("$erSoknadOmFlereLand", {
-            is: true,
-            then: (schemaInner) => schemaInner.min(2, VELG_MINST_TO_LAND),
-            otherwise: (schemaInner) => schemaInner.min(1, VELG_MINST_ETT_LAND),
-          }),
-        otherwise: (schema) => schema.nullable(),
-      },
-    ),
-  soknadsperiodeFOM: string().when(
-    ["journalforingHensikt", "sakstype", "sakstema", "opprettnysak_behandlingstema", "opprettnysak_behandlingstype"],
-    {
-      is: kreverPeriode,
-      then: (schema) => schema.erGyldigDato(KV.Feilmeldinger.ugyldigDato("F.o.m.")).required(MAA_FYLLES_UT),
-      otherwise: (schema) => schema.nullable(),
-    },
-  ),
-  soknadsperiodeTOM: string().when(
-    ["journalforingHensikt", "sakstype", "sakstema", "opprettnysak_behandlingstema", "opprettnysak_behandlingstype"],
-    {
-      is: kreverPeriode,
-      then: (schema) =>
-        schema
-          .erGyldigDato(KV.Feilmeldinger.ugyldigDato("T.o.m."))
-          .required(MAA_FYLLES_UT)
-          .erEtterDatofelt(KV.Feilmeldinger.tomDatoForFomDato, "soknadsperiodeFOM"),
-      otherwise: (schema) => schema.nullable(),
-    },
-  ),
-
-  vedlegg: array(hoveddokument).nullable(),
 });
 
 export default journalforing;
