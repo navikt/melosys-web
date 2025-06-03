@@ -1,10 +1,29 @@
 import * as Nav from "../../../../../navFrontend";
 import { AarsavregningResponse } from "../../../../../services/modules/aarsavregning/aarsavregning";
 import MKV from "../../../../../melosyskodeverk";
+import { formaterTilNorskBelopUtenDesimaler } from "../../../../../utils";
 import { BeregnetTrygdeavgiftDetaljer } from "./beregnetTrygdeavgiftDetaljer";
 import { Aarsavregningsmeldinger } from "./aarsavregningsmeldinger";
 import TidligereGrunnlagsoversikt from "./tidligereGrunnlagsoversikt";
 import MedlemskapsPerioderTabell from "./medlemskapsPerioderTabell";
+
+function getAccordionTittel(
+  erManueltBeregnet: boolean,
+  harTidligereGrunnlag: boolean,
+  aarsavregningResponse: AarsavregningResponse,
+): string {
+  if (erManueltBeregnet) {
+    return `Tidligere grunnlag - ${aarsavregningResponse.aar}`;
+  }
+
+  if (harTidligereGrunnlag) {
+    const totalInntekt = aarsavregningResponse.tidligereGrunnlagsopplysninger?.avgift?.totalInntekt;
+    const formattedInntekt = totalInntekt?.toLocaleString("no-NO") || "Ukjent";
+    return `Tidligere grunnlag - Total bruttoinntekt i ${aarsavregningResponse.aar}: ${formattedInntekt} kr`;
+  }
+
+  return `Tidligere grunnlag - Ingen informasjon om perioder med medlemskap i ${aarsavregningResponse.aar}`;
+}
 
 interface TidligereGrunnlagAccordionProps {
   aarsavregningResponse: AarsavregningResponse;
@@ -12,14 +31,16 @@ interface TidligereGrunnlagAccordionProps {
 
 export function TidligereGrunnlagAccordion({ aarsavregningResponse }: TidligereGrunnlagAccordionProps) {
   const harTidligereGrunnlag = Boolean(aarsavregningResponse.tidligereGrunnlagsopplysninger);
+
+  const erManueltBeregnet = Boolean(
+    aarsavregningResponse.tidligereGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep !== null &&
+      aarsavregningResponse.tidligereGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep !== undefined,
+  );
+
   const forskuddsvisFakturertTrygdeavgift =
     (aarsavregningResponse.tidligereGrunnlagsopplysninger?.avgift?.totalAvgift ?? 0) > 0;
 
-  const accordionTittel = harTidligereGrunnlag
-    ? `Tidligere grunnlag - Total bruttoinntekt i ${aarsavregningResponse.aar}: ${
-        aarsavregningResponse.tidligereGrunnlagsopplysninger?.avgift?.totalInntekt?.toLocaleString("no-NO") || "Ukjent"
-      } kr`
-    : `Tidligere grunnlag - Ingen informasjon om perioder med medlemskap i ${aarsavregningResponse.aar}`;
+  const accordionTittel = getAccordionTittel(erManueltBeregnet, harTidligereGrunnlag, aarsavregningResponse);
 
   return (
     <Nav.ExpansionCard className="beregnetTrygdeavgiftDetaljer" aria-label="trygdeavgiftdetaljer" size="small">
@@ -27,7 +48,7 @@ export function TidligereGrunnlagAccordion({ aarsavregningResponse }: TidligereG
         <Nav.ExpansionCard.Title size="small">{accordionTittel}</Nav.ExpansionCard.Title>
       </Nav.ExpansionCard.Header>
       <Nav.ExpansionCard.Content className="tidligereGrunnlagAccordion_content">
-        {harTidligereGrunnlag ? (
+        {harTidligereGrunnlag && !erManueltBeregnet && (
           <>
             <MedlemskapsPerioderTabell
               perioder={aarsavregningResponse.tidligereGrunnlagsopplysninger!.trygdeavgiftsgrunnlag.medlemskapsperioder}
@@ -44,6 +65,9 @@ export function TidligereGrunnlagAccordion({ aarsavregningResponse }: TidligereG
 
             {!forskuddsvisFakturertTrygdeavgift && <Aarsavregningsmeldinger.TrygdeavgiftErIkkeForskuddsvisFakturert />}
 
+            <Nav.Heading size="small" level="3">
+              Tidligere beregnet trygdeavgift
+            </Nav.Heading>
             <BeregnetTrygdeavgiftDetaljer
               grunnlag={aarsavregningResponse.tidligereGrunnlagsopplysninger!}
               medlemskapsTypeErPliktig={
@@ -51,10 +75,34 @@ export function TidligereGrunnlagAccordion({ aarsavregningResponse }: TidligereG
                   (periode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG,
                 ) ?? true
               }
-              tittel="Tidligere beregnet trygdeavgift"
             />
           </>
-        ) : (
+        )}
+
+        {erManueltBeregnet && (
+          <>
+            <MedlemskapsPerioderTabell
+              perioder={aarsavregningResponse.tidligereGrunnlagsopplysninger!.trygdeavgiftsgrunnlag.medlemskapsperioder}
+            />
+
+            <div className="tidligereGrunnlagPanel">
+              <Nav.Heading size="small" level="3">
+                Tidligere beregnet trygdeavgift
+              </Nav.Heading>
+              <Nav.BodyLong size="small">
+                Manuelt beregnet trygdeavgift:{" "}
+                <strong>
+                  {formaterTilNorskBelopUtenDesimaler(
+                    aarsavregningResponse.tidligereGrunnlagsopplysninger!.tidligereÅrsavregningManueltAvgiftBeloep!,
+                  )}{" "}
+                  kr
+                </strong>
+              </Nav.BodyLong>
+            </div>
+          </>
+        )}
+
+        {!harTidligereGrunnlag && (
           <Nav.Alert variant="info" size="small">
             <Nav.BodyLong size="small">
               Det er ingen informasjon om perioder med medlemskap og forskuddsvis fakturert trygdeavgift i Melosys.

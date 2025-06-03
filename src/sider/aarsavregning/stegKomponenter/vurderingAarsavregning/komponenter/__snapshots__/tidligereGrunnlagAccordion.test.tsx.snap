@@ -1,0 +1,498 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`TidligereGrunnlagAccordion > beregning med grunnlag snapshot test 1`] = `
+
+<div>
+  <section
+    aria-label="trygdeavgiftdetaljer"
+    class="navds-expansioncard beregnetTrygdeavgiftDetaljer navds-expansioncard--small navds-expansioncard--open"
+  >
+    <div
+      class="navds-expansioncard__header beregnetTrygdeavgiftDetaljer_header"
+      data-open="true"
+    >
+      <div class="navds-expansioncard__header-content">
+        <h3 class="navds-expansioncard__title navds-expansioncard__title--small navds-heading navds-heading--small">
+          Tidligere grunnlag - Total bruttoinntekt i 2023: 500&nbsp;000 kr
+        </h3>
+      </div>
+      <button
+        class="navds-expansioncard__header-button"
+        type="button"
+        aria-expanded="true"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="1em"
+          height="1em"
+          fill="none"
+          viewbox="0 0 24 24"
+          focusable="false"
+          role="img"
+          aria-labelledby="333"
+          class="navds-expansioncard__header-chevron"
+        >
+          <title id="333">
+            Vis mer
+          </title>
+          <path
+            fill="currentColor"
+            fill-rule="evenodd"
+            d="M5.97 9.47a.75.75 0 0 1 1.06 0L12 14.44l4.97-4.97a.75.75 0 1 1 1.06 1.06l-5.5 5.5a.75.75 0 0 1-1.06 0l-5.5-5.5a.75.75 0 0 1 0-1.06"
+            clip-rule="evenodd"
+          >
+          </path>
+        </svg>
+      </button>
+    </div>
+    <div
+      aria-hidden="false"
+      data-open="true"
+      class="navds-expansioncard__content tidligereGrunnlagAccordion_content navds-body-long navds-body-long--small"
+    >
+      <div class="navds-expansioncard__content-inner">
+        <table class="navds-table navds-table--small periode_tabell">
+          <thead class="navds-table__header header_row">
+            <tr class="navds-table__row navds-table__row--shade-on-hover">
+              <th
+                class="navds-table__header-cell navds-label navds-label--small"
+                scope="col"
+              >
+                Medlemskap
+              </th>
+              <th
+                class="navds-table__header-cell navds-label navds-label--small"
+                scope="col"
+              >
+                Type
+              </th>
+              <th
+                class="navds-table__header-cell navds-label navds-label--small"
+                scope="col"
+              >
+                Bestemmelse
+              </th>
+              <th
+                class="navds-table__header-cell navds-label navds-label--small"
+                scope="col"
+              >
+                Dekning
+              </th>
+            </tr>
+          </thead>
+          <tbody class="navds-table__body">
+            <tr class="navds-table__row border_top navds-table__row--shade-on-hover">
+              <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+                01.01.2023 - 31.12.2023
+              </td>
+              <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+                Pliktig
+              </td>
+              <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+              </td>
+              <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+                Full dekning
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="tidligereGrunnlagPanel">
+          <h1 class="navds-heading navds-heading--small">
+            Inntekts- og skatteopplysninger for tidligere beregnet trygdeavgift
+          </h1>
+          <table class="navds-table navds-table--small periode_tabell">
+            <thead class="navds-table__header header_row">
+              <tr class="navds-table__row navds-table__row--shade-on-hover">
+                <th
+                  class="navds-table__header-cell navds-label navds-label--small"
+                  scope="col"
+                >
+                  Skatteforhold
+                </th>
+                <th
+                  class="navds-table__header-cell navds-label navds-label--small"
+                  scope="col"
+                >
+                  Skattepliktig
+                </th>
+              </tr>
+            </thead>
+            <tbody class="navds-table__body">
+              <tr class="navds-table__row border_top navds-table__row--shade-on-hover">
+                <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+                  01.01.2023 - 31.12.2023
+                </td>
+                <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+                  Ja
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div
+            style="--__ac-stack-direction-xs: column;"
+            class="navds-stack navds-vstack navds-stack-direction"
+          >
+            <table class="navds-table navds-table--small periode_tabell">
+              <thead class="navds-table__header header_row">
+                <tr class="navds-table__row navds-table__row--shade-on-hover">
+                  <th
+                    class="navds-table__header-cell navds-label navds-label--small"
+                    scope="col"
+                  >
+                    Inntektsperiode
+                  </th>
+                  <th
+                    class="navds-table__header-cell navds-label navds-label--small"
+                    scope="col"
+                  >
+                    Inntektskilde
+                  </th>
+                  <th
+                    class="navds-table__header-cell navds-label navds-label--small"
+                    scope="col"
+                  >
+                    Betales aga.?
+                  </th>
+                  <th
+                    class="navds-table__header-cell navds-label navds-label--small"
+                    scope="col"
+                  >
+                    Bruttoinntekt md.
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="navds-table__body">
+                <tr class="navds-table__row border_top navds-table__row--shade-on-hover">
+                  <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+                    01.01.2023 - 31.12.2023
+                  </td>
+                  <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+                    Arbeidsinntekt
+                  </td>
+                  <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+                    Ja
+                  </td>
+                  <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+                    500&nbsp;000 kr
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div
+              style="--__ac-stack-gap-xs: var(--a-spacing-8); --__ac-stack-direction-xs: row; --__ac-stack-align-xs: center; --__ac-stack-justify-xs: end;"
+              class="navds-stack totaltForPerioden navds-hstack navds-stack-gap navds-stack-align navds-stack-justify navds-stack-direction navds-stack-wrap"
+            >
+              <p class="navds-body-long navds-body-long--small">
+                <b>
+                  Årstotal: 500&nbsp;000
+                </b>
+                kr
+              </p>
+            </div>
+          </div>
+        </div>
+        <h3 class="navds-heading navds-heading--small">
+          Tidligere beregnet trygdeavgift
+        </h3>
+        <div class="tidligereGrunnlagPanel">
+          <table class="navds-table navds-table--small periode_tabell">
+            <thead class="navds-table__header header_row">
+              <tr class="navds-table__row navds-table__row--shade-on-hover">
+                <th
+                  class="navds-table__header-cell navds-label navds-label--small"
+                  scope="col"
+                >
+                  Trygdeperiode
+                </th>
+                <th
+                  class="navds-table__header-cell navds-label navds-label--small"
+                  scope="col"
+                >
+                  Sats
+                </th>
+                <th
+                  class="navds-table__header-cell navds-label navds-label--small"
+                  scope="col"
+                >
+                  Avgift md.
+                </th>
+                <th
+                  class="navds-table__header-cell navds-label navds-label--small"
+                  scope="col"
+                >
+                  Inntektskilde
+                </th>
+                <th
+                  class="navds-table__header-cell navds-label navds-label--small"
+                  scope="col"
+                >
+                  Bruttoinntekt md.
+                </th>
+                <th
+                  class="navds-table__header-cell navds-label navds-label--small"
+                  scope="col"
+                >
+                  Betalt aga.?
+                </th>
+                <th
+                  class="navds-table__header-cell navds-label navds-label--small"
+                  scope="col"
+                >
+                  Skattepliktig
+                </th>
+                <th
+                  class="navds-table__header-cell navds-label navds-label--small"
+                  scope="col"
+                >
+                  Dekning
+                </th>
+              </tr>
+            </thead>
+            <tbody class="navds-table__body">
+              <tr class="navds-table__row border_top navds-table__row--shade-on-hover">
+                <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+                  01.01.2023 - 31.12.2023
+                </td>
+                <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+                  5.1
+                </td>
+                <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+                  2&nbsp;125 kr
+                </td>
+                <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+                  Arbeidsinntekt
+                </td>
+                <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+                  41&nbsp;667 kr
+                </td>
+                <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+                  Ikke relevant
+                </td>
+                <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+                  Ja
+                </td>
+                <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+                  Full dekning
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+`;
+
+exports[`TidligereGrunnlagAccordion > manuell beregning snapshot test 1`] = `
+
+<div>
+  <section
+    aria-label="trygdeavgiftdetaljer"
+    class="navds-expansioncard beregnetTrygdeavgiftDetaljer navds-expansioncard--small navds-expansioncard--open"
+  >
+    <div
+      class="navds-expansioncard__header beregnetTrygdeavgiftDetaljer_header"
+      data-open="true"
+    >
+      <div class="navds-expansioncard__header-content">
+        <h3 class="navds-expansioncard__title navds-expansioncard__title--small navds-heading navds-heading--small">
+          Tidligere grunnlag - 2023
+        </h3>
+      </div>
+      <button
+        class="navds-expansioncard__header-button"
+        type="button"
+        aria-expanded="true"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="1em"
+          height="1em"
+          fill="none"
+          viewbox="0 0 24 24"
+          focusable="false"
+          role="img"
+          aria-labelledby="333"
+          class="navds-expansioncard__header-chevron"
+        >
+          <title id="333">
+            Vis mer
+          </title>
+          <path
+            fill="currentColor"
+            fill-rule="evenodd"
+            d="M5.97 9.47a.75.75 0 0 1 1.06 0L12 14.44l4.97-4.97a.75.75 0 1 1 1.06 1.06l-5.5 5.5a.75.75 0 0 1-1.06 0l-5.5-5.5a.75.75 0 0 1 0-1.06"
+            clip-rule="evenodd"
+          >
+          </path>
+        </svg>
+      </button>
+    </div>
+    <div
+      aria-hidden="false"
+      data-open="true"
+      class="navds-expansioncard__content tidligereGrunnlagAccordion_content navds-body-long navds-body-long--small"
+    >
+      <div class="navds-expansioncard__content-inner">
+        <table class="navds-table navds-table--small periode_tabell">
+          <thead class="navds-table__header header_row">
+            <tr class="navds-table__row navds-table__row--shade-on-hover">
+              <th
+                class="navds-table__header-cell navds-label navds-label--small"
+                scope="col"
+              >
+                Medlemskap
+              </th>
+              <th
+                class="navds-table__header-cell navds-label navds-label--small"
+                scope="col"
+              >
+                Type
+              </th>
+              <th
+                class="navds-table__header-cell navds-label navds-label--small"
+                scope="col"
+              >
+                Bestemmelse
+              </th>
+              <th
+                class="navds-table__header-cell navds-label navds-label--small"
+                scope="col"
+              >
+                Dekning
+              </th>
+            </tr>
+          </thead>
+          <tbody class="navds-table__body">
+            <tr class="navds-table__row border_top navds-table__row--shade-on-hover">
+              <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+                01.01.2023 - 31.12.2023
+              </td>
+              <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+                Pliktig
+              </td>
+              <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+              </td>
+              <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+                Full dekning
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="tidligereGrunnlagPanel">
+          <h3 class="navds-heading navds-heading--small">
+            Tidligere beregnet trygdeavgift
+          </h3>
+          <p class="navds-body-long navds-body-long--small">
+            Manuelt beregnet trygdeavgift:
+            <strong>
+              15&nbsp;000 kr
+            </strong>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+`;
+
+exports[`TidligereGrunnlagAccordion > uten grunnlag snapshot test 1`] = `
+
+<div>
+  <section
+    aria-label="trygdeavgiftdetaljer"
+    class="navds-expansioncard beregnetTrygdeavgiftDetaljer navds-expansioncard--small navds-expansioncard--open"
+  >
+    <div
+      class="navds-expansioncard__header beregnetTrygdeavgiftDetaljer_header"
+      data-open="true"
+    >
+      <div class="navds-expansioncard__header-content">
+        <h3 class="navds-expansioncard__title navds-expansioncard__title--small navds-heading navds-heading--small">
+          Tidligere grunnlag - Ingen informasjon om perioder med medlemskap i 2023
+        </h3>
+      </div>
+      <button
+        class="navds-expansioncard__header-button"
+        type="button"
+        aria-expanded="true"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="1em"
+          height="1em"
+          fill="none"
+          viewbox="0 0 24 24"
+          focusable="false"
+          role="img"
+          aria-labelledby="333"
+          class="navds-expansioncard__header-chevron"
+        >
+          <title id="333">
+            Vis mer
+          </title>
+          <path
+            fill="currentColor"
+            fill-rule="evenodd"
+            d="M5.97 9.47a.75.75 0 0 1 1.06 0L12 14.44l4.97-4.97a.75.75 0 1 1 1.06 1.06l-5.5 5.5a.75.75 0 0 1-1.06 0l-5.5-5.5a.75.75 0 0 1 0-1.06"
+            clip-rule="evenodd"
+          >
+          </path>
+        </svg>
+      </button>
+    </div>
+    <div
+      aria-hidden="false"
+      data-open="true"
+      class="navds-expansioncard__content tidligereGrunnlagAccordion_content navds-body-long navds-body-long--small"
+    >
+      <div class="navds-expansioncard__content-inner">
+        <div class="navds-alert navds-alert--info navds-alert--small">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="1em"
+            height="1em"
+            fill="none"
+            viewbox="0 0 24 24"
+            focusable="false"
+            role="img"
+            aria-labelledby="333"
+            class="navds-alert__icon"
+          >
+            <title id="333">
+              Informasjon
+            </title>
+            <path
+              fill="currentColor"
+              fill-rule="evenodd"
+              d="M3.25 4A.75.75 0 0 1 4 3.25h16a.75.75 0 0 1 .75.75v16a.75.75 0 0 1-.75.75H4a.75.75 0 0 1-.75-.75zM11 7.75a1 1 0 1 1 2 0 1 1 0 0 1-2 0m-1.25 3a.75.75 0 0 1 .75-.75H12a.75.75 0 0 1 .75.75v4.75h.75a.75.75 0 0 1 0 1.5h-3a.75.75 0 0 1 0-1.5h.75v-4h-.75a.75.75 0 0 1-.75-.75"
+              clip-rule="evenodd"
+            >
+            </path>
+          </svg>
+          <div class="navds-alert__wrapper navds-alert__wrapper--maxwidth navds-body-long navds-body-long--small">
+            <p class="navds-body-long navds-body-long--small">
+              Det er ingen informasjon om perioder med medlemskap og forskuddsvis fakturert trygdeavgift i Melosys.
+            </p>
+            <ul>
+              <li>
+                Hvis trygdeavgiften er forskuddsvis fakturert fra avgiftssystemet, oppgi totalbeløpet som er fakturert.
+              </li>
+              <li>
+                Hvis trygdeavgiften tidligere har vært årsavregnet i avgiftssystemet, oppgi totalbeløpet for endelig beregnet trygdeavgift.
+              </li>
+              <li>
+                Hvis trygdeavgiften ikke er forskuddsvis fakturert, la det være tomt.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+`;

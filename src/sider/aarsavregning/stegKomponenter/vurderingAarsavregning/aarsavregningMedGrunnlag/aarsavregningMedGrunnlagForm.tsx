@@ -236,7 +236,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
           aarsavregningResponse?.avregning?.manueltAvgiftBeloep &&
           !feilmelding,
       ),
-    [endeligAvgiftValg, formIsValid, aarsavregningResponse?.nyttGrunnlag, feilmelding, arrayValideringsfeil],
+    [endeligAvgiftValg, formIsValid, aarsavregningResponse, feilmelding, arrayValideringsfeil],
   );
 
   useEffect(() => {
@@ -271,8 +271,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
         .then((res) => {
           setAarsavregningResponse(res);
           setValue("manueltAvgiftBeloep", "", { shouldValidate: false, shouldDirty: false });
-          // TODO: Beregning skal ikke være nødvendig. API må gjøre opprydning ved endring av behandlingsvalg
-          if (value === OPPLYSNINGER_UENDRET || value === MANUELL_ENDELIG_AVGIFT) {
+          if (value === OPPLYSNINGER_UENDRET) {
             setBeregningPaagar(true);
             const skatteforholdFraGrunnlag =
               res.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.skatteforholdsperioder;
@@ -333,7 +332,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
         control={control}
         redigerbart={redigerbart}
         handleEndeligAvgiftValgChange={handleEndeligAvgiftValgChange}
-        erMedGrunnlagFlyt={true}
+        erMedGrunnlagFlyt={!initiellData.forrigeÅrsavregningErManueltBeregnet}
       />
 
       {endeligAvgiftValg === OPPLYSNINGER_ENDRET && !endrerEndeligAvgiftValg && (
@@ -398,7 +397,6 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
                   <BeregnetTrygdeavgiftDetaljer
                     grunnlag={aarsavregningResponse.nyttGrunnlag}
                     medlemskapsTypeErPliktig={medlemskapstypeErPliktig!}
-                    tittel=""
                   />
                 </Nav.ExpansionCard.Content>
               </Nav.ExpansionCard>

@@ -3,6 +3,7 @@ import * as Nav from "../../../../../navFrontend";
 import { Avgift } from "../../../../../services/modules/aarsavregning/aarsavregning";
 import SkatteforholdsPerioderTabell from "./skatteforholdsPerioderTabell";
 import InntektsperioderTabell from "./inntektsperioderTabell";
+import * as Utils from "../../../../../utils";
 
 interface Props {
   skatteforholdsperioder?: SkatteforholdDto[];
@@ -11,7 +12,7 @@ interface Props {
 }
 
 function TidligereGrunnlagsoversikt({ skatteforholdsperioder, inntektsperioder, avgift }: Props) {
-  if (!skatteforholdsperioder && !inntektsperioder) return null;
+  if (Utils._isEmpty(skatteforholdsperioder) && Utils._isEmpty(inntektsperioder)) return null;
   const harGrunnlagAvgift = avgift && avgift.totalAvgift > 0;
 
   return (

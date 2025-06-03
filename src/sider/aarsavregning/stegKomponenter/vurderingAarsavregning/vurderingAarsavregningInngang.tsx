@@ -4,7 +4,6 @@ import { OK } from "../../../../ducks/aarsavregning/types";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { fagsakSelectors } from "../../../../ducks/fagsaker";
 import { redigerbartSelectors } from "../../../../ducks/redigerbart";
-import { NyBehandlingForTidligereAarsavregningMelding } from "../../../../felleskomponenter/alertmeldinger/alertmeldinger";
 import MKV from "../../../../melosyskodeverk";
 import * as Nav from "../../../../navFrontend";
 import * as Api from "../../../../services/api";
@@ -165,6 +164,11 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
     );
   };
 
+  const forrigeÅrsavregningErManueltBeregnet = Boolean(
+    aarsavregningResponse?.tidligereGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep !== null &&
+      aarsavregningResponse?.tidligereGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep !== undefined,
+  );
+
   const sisteMuligeÅr = new Date().getFullYear() - 1;
   const antallÅrTilbakeITid = 6;
   const muligeAar = Array.from({ length: antallÅrTilbakeITid }, (_, i) => sisteMuligeÅr - i);
@@ -218,7 +222,20 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
 
       {!lagÅrsavregningFeil && !harAktivÅrsavregning && (
         <>
-          {redigerbart && erNyVurdering && <NyBehandlingForTidligereAarsavregningMelding />}
+          {redigerbart && erNyVurdering && (
+            <Nav.Alert variant="warning" className="nyVurderingMelding">
+              <Nav.Heading size="xsmall">Ny behandling for en tidligere årsavregning</Nav.Heading>
+              <Nav.BodyLong size="small">
+                Du har startet en ny årsavregningbehandling for et tidligere årsavregnet år
+                {forrigeÅrsavregningErManueltBeregnet && (
+                  <>
+                    <br />
+                    Trygdeavgiften ble manuelt beregnet og inntekts- og skatteopplysninger er derfor ikke oppgitt.
+                  </>
+                )}
+              </Nav.BodyLong>
+            </Nav.Alert>
+          )}
 
           {/* Tidligere grunnlag accordion - vises når år/aarsavregningResponse er satt  */}
           {aarsavregningResponse && <TidligereGrunnlagAccordion aarsavregningResponse={aarsavregningResponse} />}
