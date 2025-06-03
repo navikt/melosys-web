@@ -90,15 +90,14 @@ jobs:
           IMAGE: ${{ needs.build.outputs.image }}
           VARS: nais/vars-q2.json
           TELEMETRY: ${{ needs.build.outputs.telemetry }}
-      # TODO: Skru på etter MELOSYS-7349 regresjonstest er gjennomført
-      #- name: Deploy q1
-      #  uses: nais/deploy/actions/deploy@v2
-      #  env:
-      #    CLUSTER: dev-fss
-      #  RESOURCE: nais/nais.yaml
-      #  IMAGE: ${{ needs.build.outputs.image }}
-      #  VARS: nais/vars-q1.json
-      #  TELEMETRY: ${{ needs.build.outputs.telemetry }}
+      - name: Deploy q1
+        uses: nais/deploy/actions/deploy@v2
+        env:
+          CLUSTER: dev-fss
+          RESOURCE: nais/nais.yaml
+          IMAGE: ${{ needs.build.outputs.image }}
+          VARS: nais/vars-q1.json
+          TELEMETRY: ${{ needs.build.outputs.telemetry }}
       - name: Get commit message
         run: echo "COMMIT_MSG=$(git log --format=%s -n 1)" >> $GITHUB_ENV
       - name: Slack Notification
