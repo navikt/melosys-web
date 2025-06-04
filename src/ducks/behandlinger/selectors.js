@@ -6,7 +6,8 @@
  */
 
 import { createSelector } from "reselect";
-import moment from "moment/moment";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
 
 import MKV from "../../melosyskodeverk";
 import { datoDiff, sorterEtterISOFomDato } from "../../utils/dato";
@@ -19,6 +20,8 @@ import {
   AarsavregningAarSelector,
   AarsavregningTidligereGrunnlagMedlemskapsperioderSelector,
 } from "../aarsavregning/selectors";
+
+dayjs.extend(customParseFormat);
 
 export const BehandlingerSelector = createSelector(
   (state) => (state.behandlinger.data ? state.behandlinger.data : {}),
@@ -199,7 +202,7 @@ const filtrerOgSpreInntekt = (relevantPeriode, orgnr, inntekter) => {
   return Array(antallMaaneder)
     .fill({})
     .map((verdi, index) => {
-      const aarMaaned = moment(startDato).add(index, "months").format("YYYY-MM");
+      const aarMaaned = dayjs(startDato).add(index, "month").format("YYYY-MM");
 
       const eksisterendeInntektFunnetVedIndeks = filtrerteInntekterFraOpplysningspliktig.findIndex(
         (enkeltInntekt) => enkeltInntekt.aarMaaned === aarMaaned,
@@ -383,11 +386,12 @@ export const ArbeidsgivereNorgeSelector = createSelector(
       soknadPeriodeSlutt = sedLovvalgsperiodeTom;
     }
 
-    const relevantPeriodeStart = moment(soknadPeriodeStart, "YYYY-MM-DD").subtract(6, "months").format("YYYY-MM-DD");
+    const relevantPeriodeStart = dayjs(soknadPeriodeStart, "YYYY-MM-DD").subtract(6, "month").format("YYYY-MM-DD");
 
-    let relevantPeriodeSlutt =
-      moment(soknadPeriodeSlutt, "YYYY-MM-DD") < moment() ? soknadPeriodeSlutt : moment().format("YYYY-MM-DD");
-    if (moment(relevantPeriodeSlutt, "YYYY-MM-DD").isBefore(moment(soknadPeriodeStart, "YYYY-MM-DD")))
+    let relevantPeriodeSlutt = dayjs(soknadPeriodeSlutt, "YYYY-MM-DD").isBefore(dayjs())
+      ? soknadPeriodeSlutt
+      : dayjs().format("YYYY-MM-DD");
+    if (dayjs(relevantPeriodeSlutt, "YYYY-MM-DD").isBefore(dayjs(soknadPeriodeStart, "YYYY-MM-DD")))
       relevantPeriodeSlutt = soknadPeriodeStart;
 
     const relevantPeriode = {

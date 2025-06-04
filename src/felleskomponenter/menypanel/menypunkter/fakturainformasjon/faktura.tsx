@@ -2,7 +2,7 @@
 import { useState } from "react";
 import * as Utils from "../../../../utils";
 import * as Nav from "../../../../navFrontend";
-import moment from "moment";
+import dayjs from "dayjs";
 import { FakturaLinjeContainer } from "./fakturalinjecontainer";
 import { formatterDatoTilNorsk } from "../../../../utils/dato";
 import { fakturaserierTypes } from "../../../../ducks/fakturaserier";
@@ -37,7 +37,7 @@ const mapPeriodeTilKvartalString = (periodeFra: string, periodeTil: string) => {
 
 export const Faktura = ({ faktura }: FakturaProps) => {
   const [nyesteFakturaStatus] = useState<fakturaserierTypes.FakturaTilbakemelding | undefined>(
-    faktura.eksternFakturaStatus?.slice().sort((a, b) => moment(b.dato).diff(moment(a.dato)))[0],
+    faktura.eksternFakturaStatus?.slice().sort((a, b) => dayjs(b.dato).diff(dayjs(a.dato)))[0],
   );
 
   const fakturastatus = fakturastatusMap.get(faktura.status);

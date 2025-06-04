@@ -1,4 +1,5 @@
-/* eslint-disable */
+import MockDate from "mockdate";
+import dayjs from "dayjs";
 
 import {
   vaskInputDato,
@@ -18,14 +19,8 @@ import {
   erEtter,
   sorterEtterNorskFomDato,
   sorterEtterISOFomDato,
+  norskeMaaneder,
 } from "./dato";
-
-import MockDate from "mockdate";
-import moment from "moment/moment";
-
-moment.updateLocale("nb", {
-  monthsShort: ["jan", "feb", "mar", "apr", "mai", "jun", "jul", "aug", "sep", "okt", "nov", "des"],
-});
 
 describe("dato.js:", () => {
   describe("vaskInputDato", () => {
@@ -267,9 +262,9 @@ describe("dato.js:", () => {
       expect(datoDiff(dato1, dato2, "days")).toBe(2);
     });
 
-    test("dato i moment-format fungerer", () => {
+    test("dato i dayjs-format fungerer", () => {
       const dato1 = "2018-08-01";
-      const dato2 = moment("2018-08-04", "YYYY-MM-DD");
+      const dato2 = dayjs("2018-08-04", "YYYY-MM-DD");
       expect(datoDiff(dato1, dato2, "days")).toBe(4);
     });
 

@@ -1,5 +1,40 @@
-import moment from "moment";
-import momentTZ from "moment-timezone";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+import isBetween from "dayjs/plugin/isBetween";
+import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+import updateLocale from "dayjs/plugin/updateLocale";
+
+// Configure dayjs plugins
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.extend(isBetween);
+dayjs.extend(isSameOrBefore);
+dayjs.extend(customParseFormat);
+dayjs.extend(updateLocale);
+
+// dayjs use uppercase month abbreviation (Jan, Feb) so can't be used directly
+// Map month numbers to Norwegian abbreviations,
+export const norskeMaaneder = {
+  1: "jan",
+  2: "feb",
+  3: "mar",
+  4: "apr",
+  5: "mai",
+  6: "jun",
+  7: "jul",
+  8: "aug",
+  9: "sep",
+  10: "okt",
+  11: "nov",
+  12: "des",
+};
+
+// Configure Norwegian locale
+dayjs.updateLocale("nb", {
+  monthsShort: norskeMaaneder,
+});
 
 /**
  * Saksbehandlere har forskjellig måte å taste inn datoer på. Denne funksjonen forsøker å
@@ -21,7 +56,16 @@ const vaskInputDato = (dato) => {
   if (dato === null || dato === undefined) return false;
 
   // Godta type number, men gjør den om til string først.
-  const stringDato = Number.isInteger(dato) ? String.toString(dato) : dato;
+  const stringDato = Number.isInteger(dato) ? String(dato) : dato;
+
+  // Check if the input is a string
+  if (typeof stringDato !== "string") return false;
+
+  // Reject ISO format dates (YYYY-MM-DD)
+  if (/^\d{4}-\d{2}-\d{2}/.test(stringDato)) return false;
+
+  // Reject non-numeric characters except separators
+  if (/[^\d\-./]/.test(stringDato)) return false;
 
   // Fjern alle skille-tegn med mål om en ren tallrekke i datoen.
   const newDate = stringDato.replace(/[-./]/g, "");
@@ -32,27 +76,34 @@ const vaskInputDato = (dato) => {
     return false;
   }
 
-  // const dateArray = newDate.match(/(..?)/g);
-  const dateArray = [newDate.substr(0, 2), parseInt(newDate.substr(2, 2), 10), parseInt(newDate.substr(4), 10)];
+  // Extract day, month, and year
+  const dag = newDate.slice(0, 2);
+  const maned = newDate.slice(2, 4);
+  let ar = newDate.slice(4);
+
+  // Validate day and month ranges
+  if (parseInt(dag, 10) < 1 || parseInt(dag, 10) > 31) return false;
+  if (parseInt(maned, 10) < 1 || parseInt(maned, 10) > 12) return false;
 
   // Hvis kun de to siste årstallene er tastet inn, må vi gjøre en gjetning på hvilket århundre det
   // dreier seg om. Det er ikke sannsynlig at datoen gjelder for mer enn 10 år frem tid, så gjett da
   // på at det dreier se om århundre 19.
-  if (dateArray[2] < 100) {
+  if (ar.length === 2) {
     const dagensAr = new Date().getFullYear();
-    const testAr = parseInt(`${dagensAr.toString().substr(0, 2)}${dateArray[2]}`, 10);
-    const gjettAarhundre = (testAr - dagensAr > MAX_AR_FREM_I_TID ? dagensAr - 100 : dagensAr).toString().substr(0, 2);
-    const toTallsAar = dateArray[2] < 10 ? `0${dateArray[2]}` : dateArray[2];
-    dateArray[2] = parseInt(`${gjettAarhundre}${toTallsAar}`, 10);
+    const testAr = parseInt(`${dagensAr.toString().slice(0, 2)}${ar}`, 10);
+    const gjettAarhundre = (testAr - dagensAr > MAX_AR_FREM_I_TID ? dagensAr - 100 : dagensAr).toString().slice(0, 2);
+    ar = `${gjettAarhundre}${ar}`;
   }
 
-  const returnDate = moment(dateArray.join(), "DDMMYYYY").format("DD.MM.YYYY");
+  // Format the date string in a way that dayjs can parse reliably
+  const dateString = `${dag}-${maned}-${ar}`;
+  const parsedDate = dayjs(dateString, "DD-MM-YYYY", true); // Strict parsing
 
-  if (!moment(dateArray.join(), "DDMMYYYY").isValid()) {
+  if (!parsedDate.isValid()) {
     return false;
   }
 
-  return returnDate;
+  return parsedDate.format("DD.MM.YYYY");
 };
 
 /** Normalisering gjennom Redux prop (normaize) sender 2 argumenter. Dersom disse er forskjellige,
@@ -69,15 +120,49 @@ const normaliserInputDato = (verdi, forrigeVerdi) => {
 };
 
 /** Gjør en vurdering av innkomne datoformat og formatter til korrekt DD.MM.YYY, med eller uten tidspunkt.
- * Moment kunne ha vært benyttet direkte i hver komponent, men denne funksjonen tillater begge datoformater i tillegg
+ * Dayjs kunne ha vært benyttet direkte i hver komponent, men denne funksjonen tillater begge datoformater i tillegg
  * til å enklere åpne opp for dato med eller uten tidspunkt.
  *
  */
 function formatterDatoTilNorsk(dato, visTidspunkt = false, defaultValue = "") {
-  const inputFormat = ["YYYY-MM-DD", "YYYY-MM-DDTHH:mm:ss", "DD-MM-YYYY", "DD-MM-YYYY HH:mm"];
-  const momentFormat = visTidspunkt ? "DD.MM.YYYY HH:mm" : "DD.MM.YYYY";
-  const momentDato = moment.utc(dato, inputFormat);
-  return momentDato.isValid() ? momentTZ(momentDato).tz("Europe/Oslo").format(momentFormat) : defaultValue;
+  const outputFormat = visTidspunkt ? "DD.MM.YYYY HH:mm" : "DD.MM.YYYY";
+
+  // Handle specific malformed Norwegian date format: "DD.MM.YYYY HH:mm:sZ"
+  if (typeof dato === "string" && /^\d{2}\.\d{2}\.\d{4}\s+\d{2}:\d{2}:\d+Z$/.test(dato)) {
+    const match = dato.match(/^(\d{2})\.(\d{2})\.(\d{4})\s+(\d{2}):(\d{2}):\d+Z$/);
+    if (match) {
+      const [, day, month, year, hour, minute] = match;
+      const isoString = `${year}-${month}-${day}T${hour}:${minute}:00Z`;
+      const parsedDate = dayjs.utc(isoString);
+      if (parsedDate.isValid()) {
+        return parsedDate.tz("Europe/Oslo").format(outputFormat);
+      }
+    }
+  }
+
+  // For other dates with time components (ISO format or with Z timezone indicator)
+  if (typeof dato === "string" && (dato.includes("T") || dato.includes("Z"))) {
+    const parsedDate = dayjs.utc(dato);
+    if (parsedDate.isValid()) {
+      return parsedDate.tz("Europe/Oslo").format(outputFormat);
+    }
+  }
+
+  // For dates without time components, use specified input formats
+  const inputFormat = ["YYYY-MM-DD", "YYYY-MM-DDTHH:mm:ss", "YYYY-MM-DDTHH:mm:ssZ", "DD-MM-YYYY", "DD-MM-YYYY HH:mm"];
+
+  // Parse as UTC first for date-only formats, then convert to Europe/Oslo
+  if (typeof dato === "string" && /^\d{4}-\d{2}-\d{2}$/.test(dato)) {
+    // For ISO date format without time, parse as UTC then convert to timezone
+    const parsedDate = dayjs.utc(dato);
+    if (parsedDate.isValid()) {
+      return parsedDate.tz("Europe/Oslo").format(outputFormat);
+    }
+  }
+
+  // For other formats, use local parsing
+  const parsedDate = dayjs(dato, inputFormat);
+  return parsedDate.isValid() ? parsedDate.format(outputFormat) : defaultValue;
 }
 
 function vaskOgFormatterDatoTilNorsk(dato, defaultValue = "") {
@@ -116,8 +201,8 @@ const vaskOgFormaterDatoerTilIso = (perioder, defaultValue = undefined) => {
  */
 function formatterDatoTilISO(dato, defaultValue = "Invalid date") {
   const inputFormat = ["DD.MM.YYYY HH:mm", "DD.MM.YYYY"];
-  const isoDato = moment(dato, inputFormat).format("YYYY-MM-DD");
-  return isoDato === "Invalid date" ? defaultValue : isoDato;
+  const parsedDate = dayjs(dato, inputFormat);
+  return parsedDate.isValid() ? parsedDate.format("YYYY-MM-DD") : defaultValue;
 }
 
 /**
@@ -141,45 +226,71 @@ function vaskOgFormatterTilISO(dato, defaultValue = null) {
  * formatterer om datoen til "jan - 2017" for bedre lesbarhet.
  */
 function formatterKortDatoTilNorsk(kortDato) {
-  const dato = moment(kortDato, "YYYY-MM");
-  return `${dato.format("MMM")} - ${dato.format("YYYY")}`;
+  const dato = dayjs(kortDato, "YYYY-MM");
+
+  // Get month number (1-12)
+  const maanedNummer = dato.month() + 1;
+
+  // Use the Norwegian month abbreviation
+  return `${norskeMaaneder[maanedNummer]} - ${dato.format("YYYY")}`;
 }
 
 function erGyldigPeriode(fom, tom) {
   const inputFormats = ["DD.MM.YYYY", "YYYY-MM-DD"];
-  return moment(fom, inputFormats).isSameOrBefore(moment(tom, inputFormats));
+  const fomDate = dayjs(fom, inputFormats);
+  const tomDate = dayjs(tom, inputFormats);
+  return fomDate.isValid() && tomDate.isValid() && (fomDate.isSame(tomDate) || fomDate.isBefore(tomDate));
 }
 
 function erIPeriode(fom, tom, dato, inclusivity) {
-  return moment(dato).isBetween(fom, tom, undefined, inclusivity);
+  return dayjs(dato).isBetween(fom, tom, undefined, inclusivity);
 }
 
 function datoDiff(fom, tom, enhet = "months", presis = true) {
-  if (!moment(fom, "YYYY-MM-DD").isValid() || !moment(tom, "YYYY-MM-DD").isValid()) return false;
-  const momentTom = moment(tom).add(1, "day");
-  return moment(momentTom).diff(fom, enhet, presis);
+  const fomDate = dayjs(fom, "YYYY-MM-DD");
+  const tomDate = dayjs(tom, "YYYY-MM-DD");
+
+  if (!fomDate.isValid() || !tomDate.isValid()) return false;
+
+  // Add 1 day to tom to match moment's behavior
+  const adjustedTomDate = tomDate.add(1, "day");
+  return presis ? adjustedTomDate.diff(fomDate, enhet, true) : adjustedTomDate.diff(fomDate, enhet);
 }
 
 function datoDiffNorskFormat(fom, tom, enhet = "months", presis = true) {
-  if (!moment(fom, "DD.MM.YYYY").isValid() || !moment(tom, "DD.MM.YYYY").isValid()) return false;
-  const momentFom = moment(fom, "DD.MM.YYYY");
-  const momentTom = moment(tom, "DD.MM.YYYY").add(1, "day");
-  return moment(momentTom).diff(momentFom, enhet, presis);
+  const fomDate = dayjs(fom, "DD.MM.YYYY");
+  const tomDate = dayjs(tom, "DD.MM.YYYY");
+
+  if (!fomDate.isValid() || !tomDate.isValid()) return false;
+
+  // Add 1 day to tom to match moment's behavior
+  const adjustedTomDate = tomDate.add(1, "day");
+  return presis ? adjustedTomDate.diff(fomDate, enhet, true) : adjustedTomDate.diff(fomDate, enhet);
 }
 
 function datoDiffPure(fom, tom, enhet = "months", presis = true) {
-  if (!moment(fom, "YYYY-MM-DD").isValid() || !moment(tom, "YYYY-MM-DD").isValid()) return false;
-  return moment(fom).diff(tom, enhet, presis);
+  // For ISO format dates with time components, don't specify a format
+  // This allows dayjs to use its default ISO parser
+  const fomDate =
+    typeof fom === "string" && (fom.includes("T") || fom.includes("Z")) ? dayjs(fom) : dayjs(fom, "YYYY-MM-DD");
+
+  const tomDate =
+    typeof tom === "string" && (tom.includes("T") || tom.includes("Z")) ? dayjs(tom) : dayjs(tom, "YYYY-MM-DD");
+
+  if (!fomDate.isValid() || !tomDate.isValid()) return false;
+
+  return presis ? tomDate.diff(fomDate, enhet, true) : tomDate.diff(fomDate, enhet);
 }
 
 function datoDiffMenneskelig(fom, tom) {
-  if (!moment(fom, "YYYY-MM-DD").isValid() || !moment(tom, "YYYY-MM-DD").isValid()) return false;
+  const fomDate = dayjs(fom, "YYYY-MM-DD");
+  const tomDate = dayjs(tom, "YYYY-MM-DD");
+
+  if (!fomDate.isValid() || !tomDate.isValid()) return false;
 
   const forskjellManeder = Math.floor(datoDiff(fom, tom, "months"));
-
-  const resterendeFOM = moment(fom).add(forskjellManeder, "months");
-
-  const forskjellDager = datoDiff(resterendeFOM, tom, "days");
+  const resterendeFOM = fomDate.add(forskjellManeder, "months");
+  const forskjellDager = datoDiff(resterendeFOM.format("YYYY-MM-DD"), tom, "days");
 
   const manedBenevnelse = forskjellManeder === 1 ? "måned" : "måneder";
   const dagBenevnelse = forskjellDager === 1 ? "dag" : "dager";
@@ -190,20 +301,36 @@ function datoDiffMenneskelig(fom, tom) {
 }
 
 function beregnAlder(foedselsdato) {
-  return moment().diff(foedselsdato, "years");
+  return dayjs().diff(foedselsdato, "years");
 }
 
 function erLike(datoEn, datoTo) {
-  return moment(datoEn).isSame(datoTo);
+  return dayjs(datoEn).isSame(datoTo);
 }
 
 function erLikeDatoer(datoEn, datoTo) {
   if (datoEn === datoTo) return true;
-  return erLike(formatterDatoTilISO(datoEn, datoEn), formatterDatoTilISO(datoTo, datoTo));
+
+  // Try to wash numeric formats first before converting to ISO
+  let normalizedEn = datoEn;
+  let normalizedTo = datoTo;
+
+  // If input looks like numeric format (like "23012022"), wash it first
+  if (typeof datoEn === "string" && /^\d{6,8}$/.test(datoEn)) {
+    const washedEn = vaskInputDato(datoEn);
+    if (washedEn) normalizedEn = washedEn;
+  }
+
+  if (typeof datoTo === "string" && /^\d{6,8}$/.test(datoTo)) {
+    const washedTo = vaskInputDato(datoTo);
+    if (washedTo) normalizedTo = washedTo;
+  }
+
+  return erLike(formatterDatoTilISO(normalizedEn, normalizedEn), formatterDatoTilISO(normalizedTo, normalizedTo));
 }
 
 function plussEnDag(dato) {
-  return moment(dato, "DD.MM.YYYY").add(1, "days").format("DD.MM.YYYY");
+  return dayjs(dato, "DD.MM.YYYY").add(1, "days").format("DD.MM.YYYY");
 }
 
 // Oversetter en string på norsk datoformat til et date-objekt
@@ -252,15 +379,28 @@ function perioderOverlapper(periode1Fom, periode1Tom, periode2Fom, periode2Tom) 
 
 function erFør(dato1, dato2) {
   const inputFormat = ["YYYY-MM-DD"];
-  return moment(dato1, inputFormat).isBefore(moment(dato2, inputFormat));
+  return dayjs(dato1, inputFormat).isBefore(dayjs(dato2, inputFormat));
 }
 
 function erEtter(dato1, dato2) {
   const inputFormat = ["YYYY-MM-DD"];
-  return moment(dato1, inputFormat).isAfter(moment(dato2, inputFormat));
+  return dayjs(dato1, inputFormat).isAfter(dayjs(dato2, inputFormat));
 }
 
 function sorterEtterNorskFomDato(periode1, periode2) {
+  // Parse dates using dayjs directly for more reliable comparison
+  const date1 = dayjs(periode1.fomDato, ["DD.MM.YYYY"]);
+  const date2 = dayjs(periode2.fomDato, ["DD.MM.YYYY"]);
+
+  // If both dates are valid, compare them
+  if (date1.isValid() && date2.isValid()) {
+    if (date1.isBefore(date2)) {
+      return -1;
+    }
+    return date1.isAfter(date2) ? 1 : 0;
+  }
+
+  // Fall back to the original implementation if parsing fails
   return (
     (norskStringTilDate(periode1.fomDato)?.getTime() ?? 0) - (norskStringTilDate(periode2.fomDato)?.getTime() ?? 0)
   );

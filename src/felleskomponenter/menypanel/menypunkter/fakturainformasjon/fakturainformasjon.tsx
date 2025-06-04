@@ -11,7 +11,7 @@ import { STATUS } from "../../../../services";
 import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
 import { useFeatureToggle } from "../../../../featuretoggle";
 import { MELOSYS_FAKTURERINGSKOMPONENTEN_VIS_REFERANSE } from "../../../../featuretoggle/toggleNavn";
-import moment from "moment";
+import dayjs from "dayjs";
 import LabelMedHjelpetekst from "../../../labelMedHjelpetekst";
 
 const gyldigeFakturaStatuser = [
@@ -47,7 +47,7 @@ function Fakturainformasjon() {
       return fakturaer;
     }, [])
     .filter((faktura) => gyldigeFakturaStatuser.includes(faktura.status))
-    .sort((a, b) => moment(b.sistOppdatert).diff(moment(a.sistOppdatert)));
+    .sort((a, b) => dayjs(b.sistOppdatert).diff(dayjs(a.sistOppdatert)));
 
   return (
     <Nav.Container fluid className="fakturainformasjon">
