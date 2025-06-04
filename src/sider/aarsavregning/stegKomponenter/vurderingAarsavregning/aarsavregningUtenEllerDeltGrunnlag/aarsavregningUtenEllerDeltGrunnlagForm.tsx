@@ -29,7 +29,7 @@ import { Aarsavregningsmeldinger } from "../komponenter/aarsavregningsmeldinger"
 import { BeregnetTrygdeavgiftDetaljer } from "../komponenter/beregnetTrygdeavgiftDetaljer";
 import BestemmelseSelect from "../komponenter/bestemmelseSelect";
 import { MedlemskapsperiodeSkjema } from "../komponenter/medlemskapsperiodeSkjema";
-import { SumArsavregningTabell } from "../komponenter/sumArsavregningTabell";
+import { Aarsavregningssammendrag } from "../komponenter/aarsavregningssammendrag";
 import { TidligereFakturertIAvgiftssystemetInput } from "../komponenter/tidligereFakturertIAvgiftssystemetInput";
 import {
   AarsavregningFormValuesProps,
@@ -839,13 +839,9 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
           )}
 
           {formIsValid && !beregningPaagar && !debouncedBeregningPagaar && !arrayValideringsfeil && !feilmelding && (
-            <SumArsavregningTabell
+            <Aarsavregningssammendrag
+              aarsavregningResponse={aarsavregningResponse!}
               harGrunnlagIMelosys={harDeltGrunnlag}
-              nyTrygdeavgift={aarsavregningResponse?.avregning?.beregnetAvgiftBelop}
-              tidligereTrygdeavgift={aarsavregningResponse?.avregning?.tidligereFakturertBeloep}
-              tidligereTrygdeavgiftAvgiftssystem={
-                aarsavregningResponse?.avregning?.tidligereFakturertBeloepAvgiftssystem
-              }
             />
           )}
 

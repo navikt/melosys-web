@@ -25,6 +25,7 @@ export interface OppdaterHarDeltGrunnlagRequest {
 export interface Grunnlagsopplysninger {
   trygdeavgiftsgrunnlag: Trygdeavgiftsgrunnlag;
   avgift: Avgift;
+  tilFaktureringBeloep?: number;
   tidligereÅrsavregningFakturertBeloepAvgiftssystem?: number;
   tidligereÅrsavregningManueltAvgiftBeloep?: number;
 }
