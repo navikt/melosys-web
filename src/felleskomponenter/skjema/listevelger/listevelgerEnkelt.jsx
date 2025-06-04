@@ -9,21 +9,7 @@ import "./listevelger.css";
 /** Enkeltlisten representerer ETT listevalg hvor brukeren kan velge fra listen eller skrive
  * inn sin egen verdi.
  */
-function ListevelgerEnkelt({
-  input,
-  label,
-  meta,
-  muligeValg = [],
-  placeholder = "",
-  disabled,
-  children = (
-    <option disabled value="0">
-      ingen valg tilgjengelig
-    </option>
-  ),
-  errorMessage,
-  ...rest
-}) {
+function ListevelgerEnkelt({ input, label, meta, muligeValg = [], placeholder = "", disabled, errorMessage, ...rest }) {
   const feil = meta.invalid && meta.touched ? meta.error.melding : null;
   const inputProps = {
     ...input,
@@ -56,7 +42,6 @@ function ListevelgerEnkelt({
 ListevelgerEnkelt.propTypes = {
   label: PT.string.isRequired,
   disabled: PT.bool.isRequired,
-  children: PT.node,
   input: PT.object,
   errorMessage: PT.object,
   muligeValg: PT.array,
