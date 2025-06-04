@@ -337,6 +337,9 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   const erNullKroner = trygdeavgiftDiff === 0;
   const skalFaktureres = trygdeavgiftDiff > 0;
 
+  const tidligereAarsavregningFakturertAvgiftssystem =
+    lagretAarsavregning?.tidligereGrunnlagsopplysninger?.tidligereÅrsavregningFakturertBeloepAvgiftssystem;
+
   const kanSubmitte =
     redigerbart &&
     !vedtakPending &&
@@ -360,6 +363,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
         tidligereTrygdeavgift={tidligereTrygdeavgift}
         tidligereTrygdeavgiftAvgiftssystem={tidligereTrygdeavgiftAvgiftssystem}
         harGrunnlagIMelosys={tidligereTrygdeavgift !== null || lagretAarsavregning?.harDeltGrunnlag === true}
+        tidligereAarsavregningFakturertAvgiftssystem={tidligereAarsavregningFakturertAvgiftssystem}
       />
 
       {fakturaMottaker ? (

@@ -15,6 +15,7 @@ interface ManuellAvgiftFormPartProps {
   erMedGrunnlagFlyt: boolean;
   harDeltGrunnlag: boolean;
   totaltForskuddsvisFakturert?: number | string;
+  tidligereAarsavregningFakturertAvgiftssystem?: number;
 }
 
 export function ManuellAvgiftFormPart({
@@ -27,12 +28,13 @@ export function ManuellAvgiftFormPart({
   erMedGrunnlagFlyt,
   harDeltGrunnlag,
   totaltForskuddsvisFakturert,
+  tidligereAarsavregningFakturertAvgiftssystem,
 }: ManuellAvgiftFormPartProps) {
   if (endeligAvgiftValg !== MANUELL_ENDELIG_AVGIFT) {
     return null;
   }
 
-  const tidligereTrygdeavgiftAvgiftssystem = totaltForskuddsvisFakturert
+  const tidligereTrygdeavgiftAvgiftssystemCurrentYear = totaltForskuddsvisFakturert
     ? Number(totaltForskuddsvisFakturert)
     : undefined;
 
@@ -56,7 +58,8 @@ export function ManuellAvgiftFormPart({
           harGrunnlagIMelosys={erMedGrunnlagFlyt || harDeltGrunnlag}
           nyTrygdeavgift={Number(manueltAvgiftBeloep)}
           tidligereTrygdeavgift={tidligereTrygdeavgift}
-          tidligereTrygdeavgiftAvgiftssystem={tidligereTrygdeavgiftAvgiftssystem}
+          tidligereTrygdeavgiftAvgiftssystem={tidligereTrygdeavgiftAvgiftssystemCurrentYear}
+          tidligereAarsavregningFakturertAvgiftssystem={tidligereAarsavregningFakturertAvgiftssystem}
         />
       )}
     </>

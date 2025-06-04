@@ -754,6 +754,10 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     medlemskapstypeErPliktig && erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder);
   const skjemaErRedigerbart = redigerbart && !endrerBestemmelse;
 
+  const tidligereAarsavregningFakturertAvgiftssystem =
+    initiellData.aarsavregningResponse?.tidligereGrunnlagsopplysninger
+      ?.tidligereÅrsavregningFakturertBeloepAvgiftssystem;
+
   return (
     <div className="vurderingAarsavregning">
       <InnbetaltFraAvgiftssystemetInput control={control} redigerbart={skjemaErRedigerbart} />
@@ -845,6 +849,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
               tidligereTrygdeavgiftAvgiftssystem={
                 aarsavregningResponse?.avregning?.tidligereFakturertBeloepAvgiftssystem
               }
+              tidligereAarsavregningFakturertAvgiftssystem={tidligereAarsavregningFakturertAvgiftssystem}
             />
           )}
 
@@ -891,6 +896,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         erMedGrunnlagFlyt={false}
         harDeltGrunnlag={harDeltGrunnlag}
         totaltForskuddsvisFakturert={totaltForskuddsvisFakturert}
+        tidligereAarsavregningFakturertAvgiftssystem={tidligereAarsavregningFakturertAvgiftssystem}
       />
 
       <Nav.Button
