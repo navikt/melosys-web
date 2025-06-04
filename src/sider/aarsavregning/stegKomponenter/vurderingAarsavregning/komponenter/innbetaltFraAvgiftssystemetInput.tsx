@@ -7,7 +7,7 @@ interface TidligereGrunnlagProps {
   redigerbart: boolean;
 }
 
-export function TidligereFakturertIAvgiftssystemetInput({ control, redigerbart }: TidligereGrunnlagProps) {
+export function InnbetaltFraAvgiftssystemetInput({ control, redigerbart }: TidligereGrunnlagProps) {
   return (
     <Forms.Input
       label="Innbetalt fra Avgiftssystemet"
