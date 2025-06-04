@@ -42,7 +42,7 @@ export function SumArsavregningTabell({
           {tidligereTrygdeavgiftAvgiftssystem !== undefined && (
             <Nav.Table.Row>
               <Nav.Table.DataCell scope="col">-</Nav.Table.DataCell>
-              <Nav.Table.DataCell scope="col">Tidligere beregnet trygdeavgift fra Avgiftssystemet</Nav.Table.DataCell>
+              <Nav.Table.DataCell scope="col">Innbetalt fra Avgiftssystemet</Nav.Table.DataCell>
               <Nav.Table.DataCell align="right" key={Utils._uuid()}>
                 {formaterTilNorskBelop(tidligereTrygdeavgiftAvgiftssystem || 0)} kr
               </Nav.Table.DataCell>

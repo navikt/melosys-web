@@ -10,7 +10,7 @@ interface TidligereGrunnlagProps {
 export function TidligereFakturertIAvgiftssystemetInput({ control, redigerbart }: TidligereGrunnlagProps) {
   return (
     <Forms.Input
-      label="Totalt tidligere fakturert trygdeavgift fra Avgiftssystemet"
+      label="Innbetalt fra Avgiftssystemet"
       name="totaltForskuddsvisFakturert"
       control={control}
       readOnly={!redigerbart}

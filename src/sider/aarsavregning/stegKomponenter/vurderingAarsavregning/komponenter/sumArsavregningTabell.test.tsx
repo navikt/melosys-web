@@ -30,17 +30,17 @@ describe("SumArsavregningTabell", () => {
     expect(screen.queryByText("Tidligere beregnet trygdeavgift fra Melosys")).not.toBeInTheDocument();
   });
 
-  it("shows Avgiftssystem row only when value is provided", () => {
+  it("shows Avgiftssystem row with correct label when value is provided", () => {
     const { rerender } = render(
       <SumArsavregningTabell harGrunnlagIMelosys={false} tidligereTrygdeavgiftAvgiftssystem={8000} />,
     );
 
-    expect(screen.getByText("Tidligere beregnet trygdeavgift fra Avgiftssystemet")).toBeInTheDocument();
+    expect(screen.getByText("Innbetalt fra Avgiftssystemet")).toBeInTheDocument();
     expect(screen.getByText("8 000 kr")).toBeInTheDocument();
 
     rerender(<SumArsavregningTabell harGrunnlagIMelosys={false} />);
 
-    expect(screen.queryByText("Tidligere beregnet trygdeavgift fra Avgiftssystemet")).not.toBeInTheDocument();
+    expect(screen.queryByText("Innbetalt fra Avgiftssystemet")).not.toBeInTheDocument();
   });
 
   it("calculates and displays difference correctly", () => {
