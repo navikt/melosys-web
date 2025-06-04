@@ -6,6 +6,17 @@ import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import updateLocale from "dayjs/plugin/updateLocale";
 
+// Date format constants
+export const ISO_DATE_FORMAT = "YYYY-MM-DD";
+export const ISO_DATETIME_FORMAT = "YYYY-MM-DDTHH:mm:ss";
+export const ISO_DATETIME_TZ_FORMAT = "YYYY-MM-DDTHH:mm:ssZ";
+export const NORSK_DATE_FORMAT = "DD.MM.YYYY";
+export const NORSK_DATETIME_FORMAT = "DD.MM.YYYY HH:mm";
+export const DASH_DATE_FORMAT = "DD-MM-YYYY";
+export const DASH_DATETIME_FORMAT = "DD-MM-YYYY HH:mm";
+export const YEAR_FORMAT = "YYYY";
+export const YEAR_MONTH_FORMAT = "YYYY-MM";
+
 // Configure dayjs plugins
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -97,13 +108,13 @@ const vaskInputDato = (dato) => {
 
   // Format the date string in a way that dayjs can parse reliably
   const dateString = `${dag}-${maned}-${ar}`;
-  const parsedDate = dayjs(dateString, "DD-MM-YYYY", true); // Strict parsing
+  const parsedDate = dayjs(dateString, DASH_DATE_FORMAT, true); // Strict parsing
 
   if (!parsedDate.isValid()) {
     return false;
   }
 
-  return parsedDate.format("DD.MM.YYYY");
+  return parsedDate.format(NORSK_DATE_FORMAT);
 };
 
 /** Normalisering gjennom Redux prop (normaize) sender 2 argumenter. Dersom disse er forskjellige,
@@ -125,7 +136,7 @@ const normaliserInputDato = (verdi, forrigeVerdi) => {
  *
  */
 function formatterDatoTilNorsk(dato, visTidspunkt = false, defaultValue = "") {
-  const outputFormat = visTidspunkt ? "DD.MM.YYYY HH:mm" : "DD.MM.YYYY";
+  const outputFormat = visTidspunkt ? NORSK_DATETIME_FORMAT : NORSK_DATE_FORMAT;
 
   // Handle specific malformed Norwegian date format: "DD.MM.YYYY HH:mm:sZ"
   if (typeof dato === "string" && /^\d{2}\.\d{2}\.\d{4}\s+\d{2}:\d{2}:\d+Z$/.test(dato)) {
@@ -149,7 +160,13 @@ function formatterDatoTilNorsk(dato, visTidspunkt = false, defaultValue = "") {
   }
 
   // For dates without time components, use specified input formats
-  const inputFormat = ["YYYY-MM-DD", "YYYY-MM-DDTHH:mm:ss", "YYYY-MM-DDTHH:mm:ssZ", "DD-MM-YYYY", "DD-MM-YYYY HH:mm"];
+  const inputFormat = [
+    ISO_DATE_FORMAT,
+    ISO_DATETIME_FORMAT,
+    ISO_DATETIME_TZ_FORMAT,
+    DASH_DATE_FORMAT,
+    DASH_DATETIME_FORMAT,
+  ];
 
   // Parse as UTC first for date-only formats, then convert to Europe/Oslo
   if (typeof dato === "string" && /^\d{4}-\d{2}-\d{2}$/.test(dato)) {
@@ -200,9 +217,9 @@ const vaskOgFormaterDatoerTilIso = (perioder, defaultValue = undefined) => {
  * @returns {string|null}
  */
 function formatterDatoTilISO(dato, defaultValue = "Invalid date") {
-  const inputFormat = ["DD.MM.YYYY HH:mm", "DD.MM.YYYY"];
+  const inputFormat = [NORSK_DATETIME_FORMAT, NORSK_DATE_FORMAT];
   const parsedDate = dayjs(dato, inputFormat);
-  return parsedDate.isValid() ? parsedDate.format("YYYY-MM-DD") : defaultValue;
+  return parsedDate.isValid() ? parsedDate.format(ISO_DATE_FORMAT) : defaultValue;
 }
 
 /**
@@ -226,17 +243,17 @@ function vaskOgFormatterTilISO(dato, defaultValue = null) {
  * formatterer om datoen til "jan - 2017" for bedre lesbarhet.
  */
 function formatterKortDatoTilNorsk(kortDato) {
-  const dato = dayjs(kortDato, "YYYY-MM");
+  const dato = dayjs(kortDato, YEAR_MONTH_FORMAT);
 
   // Get month number (1-12)
   const maanedNummer = dato.month() + 1;
 
   // Use the Norwegian month abbreviation
-  return `${norskeMaaneder[maanedNummer]} - ${dato.format("YYYY")}`;
+  return `${norskeMaaneder[maanedNummer]} - ${dato.format(YEAR_FORMAT)}`;
 }
 
 function erGyldigPeriode(fom, tom) {
-  const inputFormats = ["DD.MM.YYYY", "YYYY-MM-DD"];
+  const inputFormats = [NORSK_DATE_FORMAT, ISO_DATE_FORMAT];
   const fomDate = dayjs(fom, inputFormats);
   const tomDate = dayjs(tom, inputFormats);
   return fomDate.isValid() && tomDate.isValid() && (fomDate.isSame(tomDate) || fomDate.isBefore(tomDate));
@@ -247,8 +264,8 @@ function erIPeriode(fom, tom, dato, inclusivity) {
 }
 
 function datoDiff(fom, tom, enhet = "months", presis = true) {
-  const fomDate = dayjs(fom, "YYYY-MM-DD");
-  const tomDate = dayjs(tom, "YYYY-MM-DD");
+  const fomDate = dayjs(fom, ISO_DATE_FORMAT);
+  const tomDate = dayjs(tom, ISO_DATE_FORMAT);
 
   if (!fomDate.isValid() || !tomDate.isValid()) return false;
 
@@ -258,8 +275,8 @@ function datoDiff(fom, tom, enhet = "months", presis = true) {
 }
 
 function datoDiffNorskFormat(fom, tom, enhet = "months", presis = true) {
-  const fomDate = dayjs(fom, "DD.MM.YYYY");
-  const tomDate = dayjs(tom, "DD.MM.YYYY");
+  const fomDate = dayjs(fom, NORSK_DATE_FORMAT);
+  const tomDate = dayjs(tom, NORSK_DATE_FORMAT);
 
   if (!fomDate.isValid() || !tomDate.isValid()) return false;
 
@@ -272,10 +289,10 @@ function datoDiffPure(fom, tom, enhet = "months", presis = true) {
   // For ISO format dates with time components, don't specify a format
   // This allows dayjs to use its default ISO parser
   const fomDate =
-    typeof fom === "string" && (fom.includes("T") || fom.includes("Z")) ? dayjs(fom) : dayjs(fom, "YYYY-MM-DD");
+    typeof fom === "string" && (fom.includes("T") || fom.includes("Z")) ? dayjs(fom) : dayjs(fom, ISO_DATE_FORMAT);
 
   const tomDate =
-    typeof tom === "string" && (tom.includes("T") || tom.includes("Z")) ? dayjs(tom) : dayjs(tom, "YYYY-MM-DD");
+    typeof tom === "string" && (tom.includes("T") || tom.includes("Z")) ? dayjs(tom) : dayjs(tom, ISO_DATE_FORMAT);
 
   if (!fomDate.isValid() || !tomDate.isValid()) return false;
 
@@ -283,14 +300,14 @@ function datoDiffPure(fom, tom, enhet = "months", presis = true) {
 }
 
 function datoDiffMenneskelig(fom, tom) {
-  const fomDate = dayjs(fom, "YYYY-MM-DD");
-  const tomDate = dayjs(tom, "YYYY-MM-DD");
+  const fomDate = dayjs(fom, ISO_DATE_FORMAT);
+  const tomDate = dayjs(tom, ISO_DATE_FORMAT);
 
   if (!fomDate.isValid() || !tomDate.isValid()) return false;
 
   const forskjellManeder = Math.floor(datoDiff(fom, tom, "months"));
   const resterendeFOM = fomDate.add(forskjellManeder, "months");
-  const forskjellDager = datoDiff(resterendeFOM.format("YYYY-MM-DD"), tom, "days");
+  const forskjellDager = datoDiff(resterendeFOM.format(ISO_DATE_FORMAT), tom, "days");
 
   const manedBenevnelse = forskjellManeder === 1 ? "måned" : "måneder";
   const dagBenevnelse = forskjellDager === 1 ? "dag" : "dager";
@@ -330,7 +347,7 @@ function erLikeDatoer(datoEn, datoTo) {
 }
 
 function plussEnDag(dato) {
-  return dayjs(dato, "DD.MM.YYYY").add(1, "days").format("DD.MM.YYYY");
+  return dayjs(dato, NORSK_DATE_FORMAT).add(1, "days").format(NORSK_DATE_FORMAT);
 }
 
 // Oversetter en string på norsk datoformat til et date-objekt
@@ -378,19 +395,19 @@ function perioderOverlapper(periode1Fom, periode1Tom, periode2Fom, periode2Tom) 
 }
 
 function erFør(dato1, dato2) {
-  const inputFormat = ["YYYY-MM-DD"];
+  const inputFormat = [ISO_DATE_FORMAT];
   return dayjs(dato1, inputFormat).isBefore(dayjs(dato2, inputFormat));
 }
 
 function erEtter(dato1, dato2) {
-  const inputFormat = ["YYYY-MM-DD"];
+  const inputFormat = [ISO_DATE_FORMAT];
   return dayjs(dato1, inputFormat).isAfter(dayjs(dato2, inputFormat));
 }
 
 function sorterEtterNorskFomDato(periode1, periode2) {
   // Parse dates using dayjs directly for more reliable comparison
-  const date1 = dayjs(periode1.fomDato, ["DD.MM.YYYY"]);
-  const date2 = dayjs(periode2.fomDato, ["DD.MM.YYYY"]);
+  const date1 = dayjs(periode1.fomDato, [NORSK_DATE_FORMAT]);
+  const date2 = dayjs(periode2.fomDato, [NORSK_DATE_FORMAT]);
 
   // If both dates are valid, compare them
   if (date1.isValid() && date2.isValid()) {
@@ -428,7 +445,6 @@ export {
   formatterDatoTilNorsk,
   formatterKortDatoTilNorsk,
   isoStringTilDate,
-  MAX_AR_FREM_I_TID,
   normaliserInputDato,
   norskStringTilDate,
   perioderOverlapper,

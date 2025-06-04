@@ -20,6 +20,7 @@ import {
   sorterEtterNorskFomDato,
   sorterEtterISOFomDato,
   norskeMaaneder,
+  ISO_DATE_FORMAT,
 } from "./dato";
 
 describe("dato.js:", () => {
@@ -264,7 +265,7 @@ describe("dato.js:", () => {
 
     test("dato i dayjs-format fungerer", () => {
       const dato1 = "2018-08-01";
-      const dato2 = dayjs("2018-08-04", "YYYY-MM-DD");
+      const dato2 = dayjs("2018-08-04", ISO_DATE_FORMAT);
       expect(datoDiff(dato1, dato2, "days")).toBe(4);
     });
 

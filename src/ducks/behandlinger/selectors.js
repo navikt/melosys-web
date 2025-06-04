@@ -10,7 +10,7 @@ import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 
 import MKV from "../../melosyskodeverk";
-import { datoDiff, sorterEtterISOFomDato } from "../../utils/dato";
+import { datoDiff, sorterEtterISOFomDato, ISO_DATE_FORMAT, YEAR_MONTH_FORMAT } from "../../utils/dato";
 import * as KV from "../../kodeverk";
 import * as mottatteOpplysningerSelectors from "../mottatteOpplysninger/selectors";
 import * as Utils from "../../utils";
@@ -202,7 +202,7 @@ const filtrerOgSpreInntekt = (relevantPeriode, orgnr, inntekter) => {
   return Array(antallMaaneder)
     .fill({})
     .map((verdi, index) => {
-      const aarMaaned = dayjs(startDato).add(index, "month").format("YYYY-MM");
+      const aarMaaned = dayjs(startDato).add(index, "month").format(YEAR_MONTH_FORMAT);
 
       const eksisterendeInntektFunnetVedIndeks = filtrerteInntekterFraOpplysningspliktig.findIndex(
         (enkeltInntekt) => enkeltInntekt.aarMaaned === aarMaaned,
@@ -386,12 +386,14 @@ export const ArbeidsgivereNorgeSelector = createSelector(
       soknadPeriodeSlutt = sedLovvalgsperiodeTom;
     }
 
-    const relevantPeriodeStart = dayjs(soknadPeriodeStart, "YYYY-MM-DD").subtract(6, "month").format("YYYY-MM-DD");
+    const relevantPeriodeStart = dayjs(soknadPeriodeStart, ISO_DATE_FORMAT)
+      .subtract(6, "month")
+      .format(ISO_DATE_FORMAT);
 
-    let relevantPeriodeSlutt = dayjs(soknadPeriodeSlutt, "YYYY-MM-DD").isBefore(dayjs())
+    let relevantPeriodeSlutt = dayjs(soknadPeriodeSlutt, ISO_DATE_FORMAT).isBefore(dayjs())
       ? soknadPeriodeSlutt
-      : dayjs().format("YYYY-MM-DD");
-    if (dayjs(relevantPeriodeSlutt, "YYYY-MM-DD").isBefore(dayjs(soknadPeriodeStart, "YYYY-MM-DD")))
+      : dayjs().format(ISO_DATE_FORMAT);
+    if (dayjs(relevantPeriodeSlutt, ISO_DATE_FORMAT).isBefore(dayjs(soknadPeriodeStart, ISO_DATE_FORMAT)))
       relevantPeriodeSlutt = soknadPeriodeStart;
 
     const relevantPeriode = {
