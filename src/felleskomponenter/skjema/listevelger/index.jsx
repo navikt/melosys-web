@@ -29,9 +29,26 @@ function Listevelger({
   return (
     <div className={classNames("listevelger", className)}>
       {gruppe ? (
-        <FieldArray name={feltNavn} multiListe={gruppe} component={ListevelgerFlervalg} {...rest} />
+        <FieldArray
+          name={feltNavn}
+          multiListe={gruppe}
+          component={ListevelgerFlervalg}
+          muligeValg={muligeValg}
+          tillatFritekst={tillatFritekst}
+          disabled={disabled}
+          onChange={onChange}
+          {...rest}
+        />
       ) : (
-        <Field name={feltNavn} component={ListevelgerEnkelt} {...rest} />
+        <Field
+          name={feltNavn}
+          component={ListevelgerEnkelt}
+          muligeValg={muligeValg}
+          tillatFritekst={tillatFritekst}
+          disabled={disabled}
+          onChange={onChange}
+          {...rest}
+        />
       )}
     </div>
   );

@@ -1,8 +1,27 @@
-import PT from "prop-types";
-
 import Element from "./element";
 
-function Redigerbarliste({ elementer, onFjern = () => {}, onAngreFjern = () => {}, className, redigerbar = true }) {
+interface ElementItemProps {
+  kode: string;
+  term: string;
+  fjernbar?: boolean;
+  defaultFjernet?: boolean;
+}
+
+interface RedigerbarlisteProps {
+  elementer: ElementItemProps[];
+  onFjern?: (kode: string) => void;
+  onAngreFjern?: (kode: string) => void;
+  className?: string;
+  redigerbar?: boolean;
+}
+
+function Redigerbarliste({
+  elementer,
+  onFjern = () => {},
+  onAngreFjern = () => {},
+  className,
+  redigerbar = true,
+}: RedigerbarlisteProps) {
   return (
     <div className={className}>
       {elementer.map(({ kode, term, fjernbar, defaultFjernet }) => (
@@ -20,20 +39,5 @@ function Redigerbarliste({ elementer, onFjern = () => {}, onAngreFjern = () => {
     </div>
   );
 }
-
-Redigerbarliste.propTypes = {
-  elementer: PT.arrayOf(
-    PT.shape({
-      kode: PT.string.isRequired,
-      term: PT.string.isRequired,
-      fjernbar: PT.bool,
-      defaultFjernet: PT.bool,
-    }),
-  ).isRequired,
-  onFjern: PT.func,
-  onAngreFjern: PT.func,
-  className: PT.string,
-  redigerbar: PT.bool,
-};
 
 export default Redigerbarliste;
