@@ -5,25 +5,17 @@ import isBetween from "dayjs/plugin/isBetween";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import updateLocale from "dayjs/plugin/updateLocale";
+import * as Utils from ".";
 
-// Date format constants
-export const ISO_DATE_FORMAT = "YYYY-MM-DD";
-export const ISO_DATETIME_FORMAT = "YYYY-MM-DDTHH:mm:ss";
-export const ISO_DATETIME_TZ_FORMAT = "YYYY-MM-DDTHH:mm:ssZ";
-export const NORSK_DATE_FORMAT = "DD.MM.YYYY";
-export const NORSK_DATETIME_FORMAT = "DD.MM.YYYY HH:mm";
-export const DASH_DATE_FORMAT = "DD-MM-YYYY";
-export const DASH_DATETIME_FORMAT = "DD-MM-YYYY HH:mm";
-export const YEAR_FORMAT = "YYYY";
-export const YEAR_MONTH_FORMAT = "YYYY-MM";
-
-// Configure dayjs plugins
-dayjs.extend(utc);
-dayjs.extend(timezone);
-dayjs.extend(isBetween);
-dayjs.extend(isSameOrBefore);
-dayjs.extend(customParseFormat);
-dayjs.extend(updateLocale);
+const NORSK_DATE_FORMAT = "DD.MM.YYYY";
+const YEAR_MONTH_FORMAT = "YYYY-MM";
+const ISO_DATE_FORMAT = "YYYY-MM-DD";
+const ISO_DATETIME_FORMAT = "YYYY-MM-DDTHH:mm:ss";
+const ISO_DATETIME_TZ_FORMAT = "YYYY-MM-DDTHH:mm:ssZ";
+const NORSK_DATETIME_FORMAT = "DD.MM.YYYY HH:mm";
+const DASH_DATE_FORMAT = "DD-MM-YYYY";
+const DASH_DATETIME_FORMAT = "DD-MM-YYYY HH:mm";
+const YEAR_FORMAT = "YYYY";
 
 // dayjs use uppercase month abbreviation (Jan, Feb) so can't be used directly
 // Map month numbers to Norwegian abbreviations,
@@ -42,7 +34,12 @@ export const norskeMaaneder = {
   12: "des",
 };
 
-// Configure Norwegian locale
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.extend(isBetween);
+dayjs.extend(isSameOrBefore);
+dayjs.extend(customParseFormat);
+dayjs.extend(updateLocale);
 dayjs.updateLocale("nb", {
   monthsShort: norskeMaaneder,
 });
@@ -69,13 +66,12 @@ const vaskInputDato = (dato) => {
   // Godta type number, men gjør den om til string først.
   const stringDato = Number.isInteger(dato) ? String(dato) : dato;
 
-  // Check if the input is a string
   if (typeof stringDato !== "string") return false;
 
-  // Reject ISO format dates (YYYY-MM-DD)
+  // Ikke godta ISO format datoer (YYYY-MM-DD)
   if (/^\d{4}-\d{2}-\d{2}/.test(stringDato)) return false;
 
-  // Reject non-numeric characters except separators
+  // Ikke godta non-numeric characters, bortsett fra skille-tegn.
   if (/[^\d\-./]/.test(stringDato)) return false;
 
   // Fjern alle skille-tegn med mål om en ren tallrekke i datoen.
@@ -87,12 +83,11 @@ const vaskInputDato = (dato) => {
     return false;
   }
 
-  // Extract day, month, and year
   const dag = newDate.slice(0, 2);
   const maned = newDate.slice(2, 4);
   let ar = newDate.slice(4);
 
-  // Validate day and month ranges
+  // Validater dag og måned
   if (parseInt(dag, 10) < 1 || parseInt(dag, 10) > 31) return false;
   if (parseInt(maned, 10) < 1 || parseInt(maned, 10) > 12) return false;
 
@@ -244,16 +239,12 @@ function vaskOgFormatterTilISO(dato, defaultValue = null) {
  */
 function formatterKortDatoTilNorsk(kortDato) {
   const dato = dayjs(kortDato, YEAR_MONTH_FORMAT);
-
-  // Get month number (1-12)
   const maanedNummer = dato.month() + 1;
-
-  // Use the Norwegian month abbreviation
   return `${norskeMaaneder[maanedNummer]} - ${dato.format(YEAR_FORMAT)}`;
 }
 
 function erGyldigPeriode(fom, tom) {
-  const inputFormats = [NORSK_DATE_FORMAT, ISO_DATE_FORMAT];
+  const inputFormats = [NORSK_DATE_FORMAT];
   const fomDate = dayjs(fom, inputFormats);
   const tomDate = dayjs(tom, inputFormats);
   return fomDate.isValid() && tomDate.isValid() && (fomDate.isSame(tomDate) || fomDate.isBefore(tomDate));
@@ -264,8 +255,8 @@ function erIPeriode(fom, tom, dato, inclusivity) {
 }
 
 function datoDiff(fom, tom, enhet = "months", presis = true) {
-  const fomDate = dayjs(fom, ISO_DATE_FORMAT);
-  const tomDate = dayjs(tom, ISO_DATE_FORMAT);
+  const fomDate = dayjs(fom);
+  const tomDate = dayjs(tom);
 
   if (!fomDate.isValid() || !tomDate.isValid()) return false;
 
@@ -288,11 +279,9 @@ function datoDiffNorskFormat(fom, tom, enhet = "months", presis = true) {
 function datoDiffPure(fom, tom, enhet = "months", presis = true) {
   // For ISO format dates with time components, don't specify a format
   // This allows dayjs to use its default ISO parser
-  const fomDate =
-    typeof fom === "string" && (fom.includes("T") || fom.includes("Z")) ? dayjs(fom) : dayjs(fom, ISO_DATE_FORMAT);
+  const fomDate = typeof fom === "string" && (fom.includes("T") || fom.includes("Z")) ? dayjs(fom) : dayjs(fom);
 
-  const tomDate =
-    typeof tom === "string" && (tom.includes("T") || tom.includes("Z")) ? dayjs(tom) : dayjs(tom, ISO_DATE_FORMAT);
+  const tomDate = typeof tom === "string" && (tom.includes("T") || tom.includes("Z")) ? dayjs(tom) : dayjs(tom);
 
   if (!fomDate.isValid() || !tomDate.isValid()) return false;
 
@@ -300,8 +289,8 @@ function datoDiffPure(fom, tom, enhet = "months", presis = true) {
 }
 
 function datoDiffMenneskelig(fom, tom) {
-  const fomDate = dayjs(fom, ISO_DATE_FORMAT);
-  const tomDate = dayjs(tom, ISO_DATE_FORMAT);
+  const fomDate = dayjs(fom);
+  const tomDate = dayjs(tom);
 
   if (!fomDate.isValid() || !tomDate.isValid()) return false;
 
@@ -395,13 +384,11 @@ function perioderOverlapper(periode1Fom, periode1Tom, periode2Fom, periode2Tom) 
 }
 
 function erFør(dato1, dato2) {
-  const inputFormat = [ISO_DATE_FORMAT];
-  return dayjs(dato1, inputFormat).isBefore(dayjs(dato2, inputFormat));
+  return dayjs(dato1).isBefore(dayjs(dato2));
 }
 
 function erEtter(dato1, dato2) {
-  const inputFormat = [ISO_DATE_FORMAT];
-  return dayjs(dato1, inputFormat).isAfter(dayjs(dato2, inputFormat));
+  return dayjs(dato1).isAfter(dayjs(dato2));
 }
 
 function sorterEtterNorskFomDato(periode1, periode2) {
@@ -425,6 +412,131 @@ function sorterEtterNorskFomDato(periode1, periode2) {
 
 function sorterEtterISOFomDato(periode1, periode2) {
   return (new Date(periode1.fomDato)?.getTime() ?? 0) - (new Date(periode2.fomDato)?.getTime() ?? 0);
+}
+
+/**
+ * Validerer om en streng er en gyldig dato i det angitte formatet
+ *
+ * @param {string} value - Datostrengen som skal valideres
+ * @param {string} format - Formatet som datoen skal valideres mot
+ * @param {boolean} strict - Om valideringen skal være streng (true) eller ikke (false)
+ * @returns {boolean} - true hvis datoen er gyldig, false hvis ikke
+ */
+function erGyldigDatoFormat(value, format = NORSK_DATE_FORMAT, strict = true) {
+  return dayjs(value, format, strict).isValid();
+}
+
+/**
+ * Returnerer en dato som er et gitt antall år før dagens dato
+ *
+ * @param {number} years - Antall år å trekke fra dagens dato
+ * @returns {Date} - Dateobjekt for datoen som er years år før dagens dato
+ */
+function datoForAarSiden(years) {
+  return dayjs().subtract(years, "year").toDate();
+}
+
+/**
+ * Returnerer en dato som er et gitt antall år etter dagens dato
+ *
+ * @param {number} years - Antall år å legge til dagens dato
+ * @returns {Date} - Dateobjekt for datoen som er years år etter dagens dato
+ */
+function datoOmAar(years) {
+  return dayjs().add(years, "year").toDate();
+}
+
+/**
+ * Sammenligner to datoer og returnerer differansen
+ *
+ * @param {string|Date} dato1 - Første dato
+ * @param {string|Date} dato2 - Andre dato
+ * @returns {number} - Negativt tall hvis dato1 er før dato2, positivt tall hvis dato1 er etter dato2,
+ *                     0 hvis datoene er like
+ */
+function sammenlignDatoer(dato1, dato2) {
+  return dayjs(dato1).diff(dayjs(dato2));
+}
+
+/**
+ * Sorterer en array av objekter etter en datoegenskap
+ *
+ * @param {string} order - Sorteringsrekkefølge, "ascending" eller "descending"
+ * @param {string} dateFieldPath - Sti til datoegenskapen i objektet
+ * @returns {Function} - Sammenligningsfunksjon for sortering
+ */
+function sorterElementerEtterDato(order, dateFieldPath) {
+  return (forsteElement, andreElement) => {
+    const forsteDato = dayjs(Utils._get(forsteElement, dateFieldPath));
+    const andreDato = dayjs(Utils._get(andreElement, dateFieldPath));
+
+    const diff = forsteDato.diff(andreDato);
+    return order === "descending" ? -diff : diff;
+  };
+}
+
+/**
+ * Sorterer en array etter dato og returnerer det første elementet
+ *
+ * @param {Array} array - Array som skal sorteres
+ * @param {string} dateField - Navn på datofeltet som skal brukes for sortering
+ * @param {string} order - Sorteringsrekkefølge, "ascending" eller "descending"
+ * @returns {*} - Det første elementet i den sorterte arrayen, eller undefined hvis arrayen er tom
+ */
+function sorterOgHentForsteEtterDato(array, dateField, order = "descending") {
+  if (!array || array.length === 0) {
+    return undefined;
+  }
+
+  return [...array].sort((a, b) => {
+    const diff = dayjs(a[dateField]).diff(dayjs(b[dateField]));
+    return order === "descending" ? -diff : diff;
+  })[0];
+}
+
+/**
+ * Legger til et antall måneder til en dato og returnerer resultatet formatert
+ *
+ * @param {string|Date} dato - Datoen som skal endres
+ * @param {number} antallMaaneder - Antall måneder som skal legges til
+ * @param {string} format - Formatet som resultatet skal returneres i
+ * @returns {string} - Den nye datoen formatert i henhold til format
+ */
+function leggTilMaaneder(dato, antallMaaneder, format = YEAR_MONTH_FORMAT) {
+  return dayjs(dato).add(antallMaaneder, "month").format(format);
+}
+
+/**
+ * Trekker fra et antall måneder fra en dato og returnerer resultatet formatert
+ *
+ * @param {string|Date} dato - Datoen som skal endres
+ * @param {number} antallMaaneder - Antall måneder som skal trekkes fra
+ * @returns {string} - Den nye datoen formatert i henhold til format
+ */
+function trekkFraMaaneder(dato, antallMaaneder) {
+  return dayjs(dato).subtract(antallMaaneder, "month").format(ISO_DATE_FORMAT);
+}
+
+/**
+ * Returnerer dagens dato formatert
+ *
+ * @param {string} format - Formatet som datoen skal returneres i
+ * @returns {string} - Dagens dato formatert i henhold til format
+ */
+function iDag() {
+  return dayjs().format(ISO_DATE_FORMAT);
+}
+
+/**
+ * Sjekker om en dato er før en annen dato
+ *
+ * @param {string|Date} dato1 - Første dato
+ * @param {string|Date} dato2 - Andre dato
+ * @param {string} format - Formatet som datoene er i
+ * @returns {boolean} - true hvis dato1 er før dato2, false ellers
+ */
+function erDatoForDato(dato1, dato2, format = ISO_DATE_FORMAT) {
+  return dayjs(dato1, format).isBefore(dayjs(dato2, format));
 }
 
 export {
@@ -451,8 +563,18 @@ export {
   plussEnDag,
   sorterEtterISOFomDato,
   sorterEtterNorskFomDato,
+  sorterElementerEtterDato,
+  sorterOgHentForsteEtterDato,
   vaskInputDato,
   vaskOgFormatterDatoTilNorsk,
   vaskOgFormatterTilISO,
   vaskOgFormaterDatoerTilIso,
+  erGyldigDatoFormat,
+  datoForAarSiden,
+  datoOmAar,
+  sammenlignDatoer,
+  leggTilMaaneder,
+  trekkFraMaaneder,
+  iDag,
+  erDatoForDato,
 };

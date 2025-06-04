@@ -19,8 +19,7 @@ import {
   erEtter,
   sorterEtterNorskFomDato,
   sorterEtterISOFomDato,
-  norskeMaaneder,
-  ISO_DATE_FORMAT,
+  sorterElementerEtterDato,
 } from "./dato";
 
 describe("dato.js:", () => {
@@ -265,7 +264,7 @@ describe("dato.js:", () => {
 
     test("dato i dayjs-format fungerer", () => {
       const dato1 = "2018-08-01";
-      const dato2 = dayjs("2018-08-04", ISO_DATE_FORMAT);
+      const dato2 = dayjs("2018-08-04");
       expect(datoDiff(dato1, dato2, "days")).toBe(4);
     });
 
@@ -402,6 +401,21 @@ describe("dato.js:", () => {
       const dato = "28.02.2019";
       const forventetDato = "01.03.2019";
       expect(plussEnDag(dato)).toBe(forventetDato);
+    });
+  });
+
+  describe("sortElementerEtterDato", () => {
+    it("sorterer korrekt", () => {
+      const forsteOppgave = { behandling: { registrertDato: "2019-12-11T16:30:00.622Z" } };
+      const andreOppgave = { behandling: { registrertDato: "2019-12-11T16:30:01.622Z" } };
+
+      const sortBehandlingerDescending = sorterElementerEtterDato("descending", "behandling.registrertDato");
+      const sortBehandlingerAscending = sorterElementerEtterDato("ascending", "behandling.registrertDato");
+
+      expect(sortBehandlingerDescending(forsteOppgave, andreOppgave)).toBeGreaterThan(0);
+      expect(sortBehandlingerDescending(andreOppgave, forsteOppgave)).toBeLessThan(0);
+      expect(sortBehandlingerAscending(forsteOppgave, andreOppgave)).toBeLessThan(0);
+      expect(sortBehandlingerAscending(andreOppgave, forsteOppgave)).toBeGreaterThan(0);
     });
   });
 });

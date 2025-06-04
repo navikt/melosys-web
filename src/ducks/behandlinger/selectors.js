@@ -6,11 +6,16 @@
  */
 
 import { createSelector } from "reselect";
-import dayjs from "dayjs";
-import customParseFormat from "dayjs/plugin/customParseFormat";
 
 import MKV from "../../melosyskodeverk";
-import { datoDiff, sorterEtterISOFomDato, ISO_DATE_FORMAT, YEAR_MONTH_FORMAT } from "../../utils/dato";
+import {
+  datoDiff,
+  sorterEtterISOFomDato,
+  leggTilMaaneder,
+  trekkFraMaaneder,
+  iDag,
+  erDatoForDato,
+} from "../../utils/dato";
 import * as KV from "../../kodeverk";
 import * as mottatteOpplysningerSelectors from "../mottatteOpplysninger/selectors";
 import * as Utils from "../../utils";
@@ -20,8 +25,6 @@ import {
   AarsavregningAarSelector,
   AarsavregningTidligereGrunnlagMedlemskapsperioderSelector,
 } from "../aarsavregning/selectors";
-
-dayjs.extend(customParseFormat);
 
 export const BehandlingerSelector = createSelector(
   (state) => (state.behandlinger.data ? state.behandlinger.data : {}),
@@ -202,7 +205,7 @@ const filtrerOgSpreInntekt = (relevantPeriode, orgnr, inntekter) => {
   return Array(antallMaaneder)
     .fill({})
     .map((verdi, index) => {
-      const aarMaaned = dayjs(startDato).add(index, "month").format(YEAR_MONTH_FORMAT);
+      const aarMaaned = leggTilMaaneder(startDato, index);
 
       const eksisterendeInntektFunnetVedIndeks = filtrerteInntekterFraOpplysningspliktig.findIndex(
         (enkeltInntekt) => enkeltInntekt.aarMaaned === aarMaaned,
@@ -386,15 +389,10 @@ export const ArbeidsgivereNorgeSelector = createSelector(
       soknadPeriodeSlutt = sedLovvalgsperiodeTom;
     }
 
-    const relevantPeriodeStart = dayjs(soknadPeriodeStart, ISO_DATE_FORMAT)
-      .subtract(6, "month")
-      .format(ISO_DATE_FORMAT);
+    const relevantPeriodeStart = trekkFraMaaneder(soknadPeriodeStart, 6);
 
-    let relevantPeriodeSlutt = dayjs(soknadPeriodeSlutt, ISO_DATE_FORMAT).isBefore(dayjs())
-      ? soknadPeriodeSlutt
-      : dayjs().format(ISO_DATE_FORMAT);
-    if (dayjs(relevantPeriodeSlutt, ISO_DATE_FORMAT).isBefore(dayjs(soknadPeriodeStart, ISO_DATE_FORMAT)))
-      relevantPeriodeSlutt = soknadPeriodeStart;
+    let relevantPeriodeSlutt = erDatoForDato(soknadPeriodeSlutt, iDag()) ? soknadPeriodeSlutt : iDag();
+    if (erDatoForDato(relevantPeriodeSlutt, soknadPeriodeStart)) relevantPeriodeSlutt = soknadPeriodeStart;
 
     const relevantPeriode = {
       fom: relevantPeriodeStart,

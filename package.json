@@ -60,7 +60,7 @@
     "start:css": "less-watch-compiler --config less.json",
     "build:css": "less-watch-compiler --run-once --config less.json",
     "start": "node generate-local-config.js .local.env && npm-run-all -p start:css start:js",
-    "test": "vitest",
+    "test": "npx vitest run",
     "serve": "node generate-local-config.js .local.env && npm-run-all -p start:css serve:js",
     "start:q1": "node generate-local-config.js .q1.env && npm-run-all -p start:css start:js",
     "start:q2": "node generate-local-config.js .q2.env && npm-run-all -p start:css start:js",
