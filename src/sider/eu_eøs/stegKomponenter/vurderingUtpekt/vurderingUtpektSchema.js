@@ -20,7 +20,8 @@ const vurder_utpeking = object().shape({
   tom: string().erGyldigDato().erEtterDatofelt("fom").required(MAA_FYLLES_UT),
   overgangsregelbestemmelser: array().when("lovvalgsbestemmelse", {
     is: (lovvalgsbestemmelse) => harOvergangsregler(lovvalgsbestemmelse),
-    then: array().min(1, { _error: VELG_OVERGANGSREGEL_MINST_1 }).max(1, { _error: VELG_OVERGANGSREGEL_MAKS_1 }),
+    then: (schema) =>
+      schema.min(1, { _error: VELG_OVERGANGSREGEL_MINST_1 }).max(1, { _error: VELG_OVERGANGSREGEL_MAKS_1 }),
   }),
 });
 

@@ -13,7 +13,6 @@ import { fagsakSelectors } from "../../../../ducks/fagsaker";
 import "./fullmektige.css";
 import { useEffect, useState } from "react";
 import { FieldValue, FieldValues, useFieldArray, useForm } from "react-hook-form";
-// @ts-expect-error Workaround for @hookform/resolvers/yup with moduleResolution: bundler
 import { yupResolver } from "@hookform/resolvers/yup";
 import fullmektig_schema from "./fullmektigeSchema";
 import RedigererFullmektig from "./redigererFullmektig";

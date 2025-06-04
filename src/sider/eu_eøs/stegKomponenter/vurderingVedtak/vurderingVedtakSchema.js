@@ -15,24 +15,24 @@ const vedtak = object().shape({
   vedtakstype: string()
     .nullable()
     .when("$behandlingstype", {
-      is: MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING,
-      then: string().nullable().required(VELG_EN_VEDTAKSTYPE),
+      is: (behandlingstype) => behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING,
+      then: (schema) => schema.required(VELG_EN_VEDTAKSTYPE),
     }),
   vedtakstypebegrunnelse: string()
     .nullable()
     .when("$behandlingstype", {
-      is: MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING,
-      then: string().nullable().required(OPPGI_BEGRUNNELSE),
+      is: (behandlingstype) => behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING,
+      then: (schema) => schema.required(OPPGI_BEGRUNNELSE),
     }),
   kreverMottakerinstitusjon: bool().required(),
   mottakerinstitusjon: string().when("kreverMottakerinstitusjon", {
     is: true,
-    then: string().required(MOTTAKERINSTITUSJON_KREVES),
+    then: (schema) => schema.required(MOTTAKERINSTITUSJON_KREVES),
   }),
   fritekstSed: string().when("$bestemmelse", {
-    is: MKVUtils.erStorbritanniaKonvBestemmelse,
-    then: string().nullable().max(462, DU_KAN_IKKE_SKRIVE_MER_ENN_462_TEGN),
-    otherwise: string().nullable().max(500, DU_KAN_IKKE_SKRIVE_MER_ENN_500_TEGN),
+    is: (bestemmelseVal) => MKVUtils.erStorbritanniaKonvBestemmelse(bestemmelseVal),
+    then: (schema) => schema.nullable().max(462, DU_KAN_IKKE_SKRIVE_MER_ENN_462_TEGN),
+    otherwise: (schema) => schema.nullable().max(500, DU_KAN_IKKE_SKRIVE_MER_ENN_500_TEGN),
   }),
 });
 

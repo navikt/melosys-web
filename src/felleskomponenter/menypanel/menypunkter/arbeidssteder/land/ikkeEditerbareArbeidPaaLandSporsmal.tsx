@@ -26,10 +26,10 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 function IkkeEditerbareArbeidPaaLandSporsmal({ erFastArbeidssted, erHjemmekontor }: PropsFromRedux) {
   const erFastArbeidsstedString = Utils._isNil(erFastArbeidssted)
     ? ""
-    : Utils._capitalize(Utils.streng.boolTilNorsk(erFastArbeidssted));
+    : Utils._capitalize(Utils.streng.boolTilNorsk(Boolean(erFastArbeidssted)));
   const erHjemmekontorString = Utils._isNil(erHjemmekontor)
     ? ""
-    : Utils._capitalize(Utils.streng.boolTilNorsk(erHjemmekontor));
+    : Utils._capitalize(Utils.streng.boolTilNorsk(Boolean(erHjemmekontor)));
 
   const cls = classNames("ikke-editerbare-arbeidpaaland-sporsmal");
 
