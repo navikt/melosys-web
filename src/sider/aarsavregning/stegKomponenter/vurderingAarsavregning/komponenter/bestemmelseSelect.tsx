@@ -103,6 +103,7 @@ function BestemmelseSelect({
       onChange={(valgtBestemmelse) => {
         handleBestemmelseChange(valgtBestemmelse);
       }}
+      className="bestemmelseSelect"
     >
       {bestemmelser.map((bestemmelseKode: string) => (
         <option key={bestemmelseKode} value={bestemmelseKode}>

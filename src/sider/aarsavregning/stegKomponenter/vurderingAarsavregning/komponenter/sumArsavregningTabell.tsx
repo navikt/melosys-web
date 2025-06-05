@@ -7,20 +7,20 @@ export function SumArsavregningTabell({
   nyTrygdeavgift,
   tidligereTrygdeavgift,
   tidligereTrygdeavgiftAvgiftssystem,
-  tidligereAarsavregningFakturertAvgiftssystem,
+  tidligereAarsavregningInnbetaltFraAvgiftssystem,
   harGrunnlagIMelosys,
 }: {
   nyTrygdeavgift?: number;
   tidligereTrygdeavgift?: number;
   tidligereTrygdeavgiftAvgiftssystem?: number;
-  tidligereAarsavregningFakturertAvgiftssystem?: number;
+  tidligereAarsavregningInnbetaltFraAvgiftssystem?: number;
   harGrunnlagIMelosys: boolean;
 }) {
   const sumTilFakturaEllerRefusjon =
     (nyTrygdeavgift ?? 0) -
     (tidligereTrygdeavgift ?? 0) -
     (tidligereTrygdeavgiftAvgiftssystem ?? 0) +
-    (tidligereAarsavregningFakturertAvgiftssystem ?? 0);
+    (tidligereAarsavregningInnbetaltFraAvgiftssystem ?? 0);
 
   return (
     <div className="sumArsavregningTabell">
@@ -38,7 +38,7 @@ export function SumArsavregningTabell({
           {harGrunnlagIMelosys && (
             <Nav.Table.Row>
               <Nav.Table.DataCell scope="col">-</Nav.Table.DataCell>
-              <Nav.Table.DataCell scope="col">Tidligere beregnet trygdeavgift fra Melosys</Nav.Table.DataCell>
+              <Nav.Table.DataCell scope="col">Tidligere beregnet trygdeavgift</Nav.Table.DataCell>
               <Nav.Table.DataCell align="right" key={Utils._uuid()}>
                 {formaterTilNorskBelop(tidligereTrygdeavgift || 0)} kr
               </Nav.Table.DataCell>
@@ -53,12 +53,15 @@ export function SumArsavregningTabell({
               </Nav.Table.DataCell>
             </Nav.Table.Row>
           )}
-          {tidligereAarsavregningFakturertAvgiftssystem !== undefined && (
+          {tidligereAarsavregningInnbetaltFraAvgiftssystem !== undefined && (
             <Nav.Table.Row>
               <Nav.Table.DataCell scope="col">+</Nav.Table.DataCell>
-              <Nav.Table.DataCell scope="col">Tidligere innbetalt fra Avgiftssystemet</Nav.Table.DataCell>
+              <Nav.Table.DataCell scope="col">
+                Innbetalt fra Avgiftssystemet&nbsp;
+                <strong>(Forrige årsavregning)</strong>
+              </Nav.Table.DataCell>
               <Nav.Table.DataCell align="right" key={Utils._uuid()}>
-                {formaterTilNorskBelop(tidligereAarsavregningFakturertAvgiftssystem || 0)} kr
+                {formaterTilNorskBelop(tidligereAarsavregningInnbetaltFraAvgiftssystem || 0)} kr
               </Nav.Table.DataCell>
             </Nav.Table.Row>
           )}

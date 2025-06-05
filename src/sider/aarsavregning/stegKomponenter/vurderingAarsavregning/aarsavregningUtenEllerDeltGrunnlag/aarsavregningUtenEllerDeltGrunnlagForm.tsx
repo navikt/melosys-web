@@ -755,13 +755,17 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     medlemskapstypeErPliktig && erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder);
   const skjemaErRedigerbart = redigerbart && !endrerBestemmelse;
 
-  const tidligereAarsavregningFakturertAvgiftssystem =
+  const tidligereAarsavregningInnbetaltFraAvgiftssystem =
     initiellData.aarsavregningResponse?.tidligereGrunnlagsopplysninger
       ?.tidligereÅrsavregningFakturertBeloepAvgiftssystem;
 
   return (
     <div className="vurderingAarsavregning">
-      <InnbetaltFraAvgiftssystemetInput control={control} redigerbart={skjemaErRedigerbart} />
+      <InnbetaltFraAvgiftssystemetInput
+        control={control}
+        redigerbart={skjemaErRedigerbart}
+        erNyAarsavregning={Boolean(tidligereAarsavregningInnbetaltFraAvgiftssystem)}
+      />
 
       <EndeligAvgiftValgRadioGroup
         control={control}
@@ -854,7 +858,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
                 size="small"
               >
                 <Nav.ExpansionCard.Header>
-                  <Nav.ExpansionCard.Title size="small">Endelig beregnet trygdeavgift</Nav.ExpansionCard.Title>
+                  <Nav.ExpansionCard.Title size="small">Vis detaljert beregning</Nav.ExpansionCard.Title>
                 </Nav.ExpansionCard.Header>
                 <Nav.ExpansionCard.Content>
                   <BeregnetTrygdeavgiftDetaljer
@@ -881,6 +885,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
             nyTrygdeavgift={aarsavregningResponse?.avregning?.beregnetAvgiftBelop}
             tidligereTrygdeavgift={aarsavregningResponse?.avregning?.tidligereFakturertBeloep}
             tidligereTrygdeavgiftAvgiftssystem={aarsavregningResponse?.avregning?.tidligereFakturertBeloepAvgiftssystem}
+            tidligereAarsavregningInnbetaltFraAvgiftssystem={tidligereAarsavregningInnbetaltFraAvgiftssystem}
           />
         )}
 
@@ -912,7 +917,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
             tidligereTrygdeavgiftAvgiftssystem={
               totaltForskuddsvisFakturert ? Number(totaltForskuddsvisFakturert) : undefined
             }
-            tidligereAarsavregningFakturertAvgiftssystem={tidligereAarsavregningFakturertAvgiftssystem}
+            tidligereAarsavregningInnbetaltFraAvgiftssystem={tidligereAarsavregningInnbetaltFraAvgiftssystem}
           />
         )}
 
