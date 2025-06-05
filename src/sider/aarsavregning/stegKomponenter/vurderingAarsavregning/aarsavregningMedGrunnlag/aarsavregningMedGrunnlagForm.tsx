@@ -1,39 +1,34 @@
-import * as Api from "../../../../../services/api";
-import "../vurderingAarsavregningInngang.css";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { AarsavregningResponse } from "../../../../../services/modules/aarsavregning/aarsavregning";
-import { useSelector } from "react-redux";
-import * as Nav from "../../../../../navFrontend";
-import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 import { FieldValue, useFieldArray, useForm } from "react-hook-form";
+import { useSelector } from "react-redux";
+import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
+import { behandlingsresultatSelectors } from "../../../../../ducks/behandlingsresultat";
+import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
+import { Inntektskilder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/inntektskilder";
+import { Skatteforholdsperioder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/skatteforholdsperioder";
 import {
   FieldArrayProps,
   FormValuesProps,
   Inntektskilde,
   Skatteforhold,
 } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as Utils from "../../../../../utils";
-import { SumArsavregningTabell } from "../komponenter/sumArsavregningTabell";
-import { BeregnetTrygdeavgiftDetaljer } from "../komponenter/beregnetTrygdeavgiftDetaljer";
-import { behandlingsresultatSelectors } from "../../../../../ducks/behandlingsresultat";
-import aarsavregningMedGrunnlagSchema from "./aarsavregningMedGrunnlagSchema";
-import { Skatteforholdsperioder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/skatteforholdsperioder";
-import { Inntektskilder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/inntektskilder";
-import {
-  beregnTrygdeavgiftsperioder,
-  erBrukerSkattepliktigIHelePerioden,
-  mapTilInntektskilderProps,
-  mapTilSkatteforholdProps,
-} from "../utils";
-import { Aarsavregningsmeldinger } from "../komponenter/aarsavregningsmeldinger";
-import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
-import { InitiellData } from "./aarsavregningMedGrunnlag";
-import { Feilmelding, finnAktivFeilmelding } from "./valideringsfeil";
 import MKV from "../../../../../melosyskodeverk";
+import * as Nav from "../../../../../navFrontend";
+import * as Api from "../../../../../services/api";
+import { AarsavregningResponse } from "../../../../../services/modules/aarsavregning/aarsavregning";
+import * as Utils from "../../../../../utils";
+import { Aarsavregningsmeldinger } from "../komponenter/aarsavregningsmeldinger";
+import { BeregnetTrygdeavgiftDetaljer } from "../komponenter/beregnetTrygdeavgiftDetaljer";
+import { BorderedFormContainer } from "../komponenter/borderedFormContainer";
 import { EndeligAvgiftValgRadioGroup } from "../komponenter/endeligAvgiftValgRadioGroup";
 import { ManuellAvgiftFormPart } from "../komponenter/manuellAvgiftFormPart";
-import { BorderedFormContainer } from "../komponenter/borderedFormContainer";
+import { SumArsavregningTabell } from "../komponenter/sumArsavregningTabell";
+import { beregnTrygdeavgiftsperioder, erBrukerSkattepliktigIHelePerioden } from "../utils";
+import "../vurderingAarsavregningInngang.css";
+import { InitiellData } from "./aarsavregningMedGrunnlag";
+import aarsavregningMedGrunnlagSchema from "./aarsavregningMedGrunnlagSchema";
+import { Feilmelding, finnAktivFeilmelding } from "./valideringsfeil";
 
 const { OPPLYSNINGER_ENDRET, MANUELL_ENDELIG_AVGIFT } = MKV.Koder.endeligAvgiftValg;
 

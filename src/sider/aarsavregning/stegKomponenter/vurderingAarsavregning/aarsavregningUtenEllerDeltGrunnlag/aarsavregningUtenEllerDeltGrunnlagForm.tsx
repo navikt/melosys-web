@@ -29,7 +29,7 @@ import { BeregnetTrygdeavgiftDetaljer } from "../komponenter/beregnetTrygdeavgif
 import BestemmelseSelect from "../komponenter/bestemmelseSelect";
 import { MedlemskapsperiodeSkjema } from "../komponenter/medlemskapsperiodeSkjema";
 import { SumArsavregningTabell } from "../komponenter/sumArsavregningTabell";
-import { InnbetaltFraAvgiftssystemetInput } from "../komponenter/tidligereFakturertIAvgiftssystemetInput";
+import { TidligereFakturertIAvgiftssystemetInput } from "../komponenter/tidligereFakturertIAvgiftssystemetInput";
 import {
   AarsavregningFormValuesProps,
   DEFAULT_MEDLEMSKAPSPERIODE,
@@ -757,7 +757,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
 
   return (
     <div className="vurderingAarsavregning">
-      <InnbetaltFraAvgiftssystemetInput control={control} redigerbart={skjemaErRedigerbart} />
+      <TidligereFakturertIAvgiftssystemetInput control={control} redigerbart={skjemaErRedigerbart} />
 
       <EndeligAvgiftValgRadioGroup
         control={control}
