@@ -20,7 +20,7 @@ const ikonVelger = (status, vedtakSteg, aktivtSteg) => {
 };
 
 function StegIkon(props) {
-  const { aktivtSteg, status, tittel, onClick, tilgjengelig, vedtakSteg } = props;
+  const { aktivtSteg = false, status, tittel, onClick, tilgjengelig = false, vedtakSteg = false } = props;
 
   const Ikon = ikonVelger(status, vedtakSteg, aktivtSteg);
 
@@ -48,12 +48,6 @@ StegIkon.propTypes = {
   onClick: PT.func.isRequired,
   aktivtSteg: PT.bool,
   vedtakSteg: PT.bool,
-};
-
-StegIkon.defaultProps = {
-  tilgjengelig: false,
-  aktivtSteg: false,
-  vedtakSteg: false,
 };
 
 export default StegIkon;

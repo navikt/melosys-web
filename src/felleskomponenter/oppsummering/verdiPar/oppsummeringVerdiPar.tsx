@@ -5,14 +5,14 @@ import classNames from "classnames";
 import "./oppsummeringVerdiPar.css";
 
 interface OppsummeringVerdiParProps {
-  className: string;
+  className?: string;
   nokkel: string;
   verdi: ReactNode;
-  ekstrafelt: ReactNode;
+  ekstrafelt?: ReactNode;
 }
 
 function OppsummeringVerdiPar(props: OppsummeringVerdiParProps) {
-  const { className, nokkel, verdi, ekstrafelt } = props;
+  const { className = "", nokkel, verdi, ekstrafelt } = props;
 
   return (
     <dl className={classNames("oppsummering_verdi_par", className)}>
@@ -22,11 +22,6 @@ function OppsummeringVerdiPar(props: OppsummeringVerdiParProps) {
     </dl>
   );
 }
-
-OppsummeringVerdiPar.defaultProps = {
-  className: "",
-  ekstrafelt: undefined,
-};
 
 OppsummeringVerdiPar.propTypes = {
   className: PT.string,

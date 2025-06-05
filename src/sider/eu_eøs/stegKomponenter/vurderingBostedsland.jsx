@@ -22,7 +22,7 @@ import { hentFaktaVerdi } from "../../../domeneUtils";
 
 import "./vurderingBostedsland.css";
 
-function Avklaringer({ avklaringer }) {
+function Avklaringer({ avklaringer = [] }) {
   return (
     <div>
       <ul className="betingelser__liste">
@@ -47,12 +47,8 @@ Avklaringer.propTypes = {
   avklaringer: PT.array,
 };
 
-Avklaringer.defaultProps = {
-  avklaringer: [],
-};
-
 function VurderingBostedsland(props) {
-  const { bekreftOgFortsett, tilstand, begrunnelser, redigerbart, oppdaterData, slettData, tilbake } = props;
+  const { bekreftOgFortsett, tilstand = {}, begrunnelser = [], redigerbart, oppdaterData, slettData, tilbake } = props;
 
   useEffect(() => {
     const { bostedslandFakta } = tilstand;
@@ -160,17 +156,10 @@ VurderingBostedsland.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
   tilbake: PT.func.isRequired,
   tilstand: PT.object,
-  vurdering: PT.object,
   begrunnelser: PT.arrayOf(MPT.Kodeverk),
   redigerbart: PT.bool.isRequired,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
-};
-
-VurderingBostedsland.defaultProps = {
-  tilstand: {},
-  vurdering: {},
-  begrunnelser: [],
 };
 
 export default VurderingBostedsland;

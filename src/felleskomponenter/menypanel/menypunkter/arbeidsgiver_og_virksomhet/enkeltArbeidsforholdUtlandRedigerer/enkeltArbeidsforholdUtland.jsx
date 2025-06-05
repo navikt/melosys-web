@@ -79,8 +79,4 @@ EnkeltArbeidsforholdUtland.propTypes = {
   className: PT.string,
 };
 
-EnkeltArbeidsforholdUtland.defaultProps = {
-  className: undefined,
-};
-
 export default EnkeltArbeidsforholdUtland;

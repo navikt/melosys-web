@@ -17,9 +17,8 @@ export function MottakerinstitusjonvelgerSchema({
   bucType,
   form,
   landkode,
-  label,
+  label = "Velg utenlandsk institusjon som skal motta SED",
   oppdaterKreverMottakerinstitusjon,
-  data_cy,
   ...rest
 }) {
   const formValues = useSelector((state) => getFormValues(form)(state));
@@ -44,7 +43,7 @@ export function MottakerinstitusjonvelgerSchema({
   }
 
   return (
-    <SelectWrappedComponent label={label} emptyFieldDisabled={false} data-cy={data_cy} {...rest}>
+    <SelectWrappedComponent label={label} emptyFieldDisabled={false} {...rest}>
       {mottakerinstitusjoner.map((institusjon) => (
         <option key={institusjon.id} value={institusjon.id}>
           {institusjon.navn}
@@ -61,21 +60,9 @@ MottakerinstitusjonvelgerSchema.propTypes = {
   landkode: PT.string.isRequired,
   label: PT.string,
   oppdaterKreverMottakerinstitusjon: PT.func.isRequired,
-  data_cy: PT.string.isRequired,
 };
 
-MottakerinstitusjonvelgerSchema.defaultProps = {
-  label: "Velg utenlandsk institusjon som skal motta SED",
-};
-
-function Mottakerinstitusjonvelger({
-  form,
-  redigerbart,
-  landkode,
-  bucType,
-  oppdaterKreverMottakerinstitusjon,
-  data_cy,
-}) {
+function Mottakerinstitusjonvelger({ form, redigerbart, landkode, bucType, oppdaterKreverMottakerinstitusjon }) {
   return landkode !== MKV.Koder.landkoder.NO ? (
     <Field
       name={MOTTAKERINSTITUSJON}
@@ -86,7 +73,6 @@ function Mottakerinstitusjonvelger({
         landkode,
         bucType,
         oppdaterKreverMottakerinstitusjon,
-        data_cy,
       }}
     />
   ) : null;
@@ -98,11 +84,6 @@ Mottakerinstitusjonvelger.propTypes = {
   landkode: PT.string.isRequired,
   bucType: PT.string.isRequired,
   oppdaterKreverMottakerinstitusjon: PT.func.isRequired,
-  data_cy: PT.string,
-};
-
-Mottakerinstitusjonvelger.defaultProps = {
-  data_cy: "mottakerinstitusjoner",
 };
 
 const mapStateToProps = () => ({});
@@ -130,7 +111,6 @@ const MottakerinstitusjonvelgerFlervalgInner = ({
   form,
   fields,
   bucType,
-  data_cy,
 }) =>
   fields
     .map((mottakerinstitusjon) => mottakerinstitusjon)
@@ -150,7 +130,6 @@ const MottakerinstitusjonvelgerFlervalgInner = ({
             form,
             `${mottakerinstitusjon}.kreverMottakerinstitusjon`,
           ),
-          data_cy,
         }}
       />
     ));
@@ -162,11 +141,6 @@ MottakerinstitusjonvelgerFlervalgInner.propTypes = {
   form: PT.string.isRequired,
   fields: PT.object.isRequired,
   bucType: PT.string.isRequired,
-  data_cy: PT.string,
-};
-
-MottakerinstitusjonvelgerFlervalgInner.defaultProps = {
-  data_cy: "mottakerinstitusjoner",
 };
 
 function MottakerinstitusjonvelgerFlervalgWrapper({ feltnavn, ...rest }) {

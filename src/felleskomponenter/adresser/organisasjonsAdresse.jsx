@@ -9,7 +9,7 @@ import RegisterAdresse from "./registerAdresse";
 import "./organisasjonsAdresse.css";
 import * as Nav from "../../navFrontend";
 
-function OrganisasjonsAdresse({ organisasjon, className, visNavn, visTittel }) {
+function OrganisasjonsAdresse({ organisasjon, className = "", visNavn = true, visTittel = true, boldNavn = false }) {
   const { postadresse, forretningsadresse, navn } = organisasjon;
 
   if (!postadresse && !forretningsadresse) return <div>(Ingen adresse tilgjengelig)</div>;
@@ -39,13 +39,6 @@ OrganisasjonsAdresse.propTypes = {
   visNavn: PT.bool,
   visTittel: PT.bool,
   boldNavn: PT.bool,
-};
-
-OrganisasjonsAdresse.defaultProps = {
-  className: "",
-  visNavn: true,
-  visTittel: true,
-  boldNavn: false,
 };
 
 export default OrganisasjonsAdresse;

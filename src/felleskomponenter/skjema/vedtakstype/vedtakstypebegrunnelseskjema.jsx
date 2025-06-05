@@ -22,8 +22,4 @@ VedtakstypebegrunnelseSkjema.propTypes = {
   label: PT.string.isRequired,
 };
 
-VedtakstypebegrunnelseSkjema.defaultProps = {
-  className: undefined,
-};
-
 export default VedtakstypebegrunnelseSkjema;
