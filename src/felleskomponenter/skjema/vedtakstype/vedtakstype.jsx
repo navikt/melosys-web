@@ -5,7 +5,21 @@ import * as Nav from "../../../navFrontend";
 import VedtakstypeBegrunnelseSkjema from "./vedtakstypebegrunnelseskjema";
 import LabelMedHjelpetekst from "../../labelMedHjelpetekst/labelMedHjelpetekst";
 
-function Vedtakstype({ className, redigerbart, vedtakstypebegrunnelseFeltNavn, vedtakstypebegrunnelseLabel }) {
+function Vedtakstype({
+  className,
+  redigerbart,
+  vedtakstypebegrunnelseFeltNavn = "vedtakstypebegrunnelse",
+  vedtakstypebegrunnelseLabel = (
+    <LabelMedHjelpetekst
+      label="Oppgi grunn for nytt vedtak (Obligatorisk)"
+      hjelpetekst={
+        "Velg en innledningstekst til vedtaket. " +
+        "Teksten kommer først i vedtaket og skal forklare " +
+        "hvorfor vi har gjort nytt vedtak."
+      }
+    />
+  ),
+}) {
   return (
     <Nav.Row className={className}>
       <Nav.Column xs="7">
@@ -24,21 +38,6 @@ Vedtakstype.propTypes = {
   redigerbart: PT.bool.isRequired,
   vedtakstypebegrunnelseFeltNavn: PT.string,
   vedtakstypebegrunnelseLabel: PT.string,
-};
-
-Vedtakstype.defaultProps = {
-  className: undefined,
-  vedtakstypebegrunnelseFeltNavn: "vedtakstypebegrunnelse",
-  vedtakstypebegrunnelseLabel: (
-    <LabelMedHjelpetekst
-      label="Oppgi grunn for nytt vedtak (Obligatorisk)"
-      hjelpetekst={
-        "Velg en innledningstekst til vedtaket. " +
-        "Teksten kommer først i vedtaket og skal forklare " +
-        "hvorfor vi har gjort nytt vedtak."
-      }
-    />
-  ),
 };
 
 export default Vedtakstype;

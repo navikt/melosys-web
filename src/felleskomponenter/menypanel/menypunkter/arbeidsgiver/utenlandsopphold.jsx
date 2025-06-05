@@ -4,7 +4,7 @@ import * as Nav from "../../../../navFrontend";
 import EnkeltDato from "../../../enkeltDato";
 import TabellArbeidsgiver from "./tabellArbeidsgiver";
 
-function Utenlandsopphold({ utenlandsopphold }) {
+function Utenlandsopphold({ utenlandsopphold = [] }) {
   if (!utenlandsopphold) return null;
 
   const utenlandsoppholdArrayed = utenlandsopphold.map((linje) => [
@@ -28,10 +28,6 @@ function Utenlandsopphold({ utenlandsopphold }) {
 
 Utenlandsopphold.propTypes = {
   utenlandsopphold: MPT.Utenlandsopphold,
-};
-
-Utenlandsopphold.defaultProps = {
-  utenlandsopphold: [],
 };
 
 export default Utenlandsopphold;

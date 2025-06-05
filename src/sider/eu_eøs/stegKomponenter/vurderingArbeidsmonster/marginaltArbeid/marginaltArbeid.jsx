@@ -7,7 +7,7 @@ import * as Nav from "../../../../../navFrontend";
 import * as MPT from "../../../../../proptypes";
 import MarginaltArbeidCheckbox from "./marginaltArbeidCheckbox";
 
-function MarginaltArbeid({ arbeidsland, redigerbart, marginaltArbeid, oppdaterData }) {
+function MarginaltArbeid({ arbeidsland = [], redigerbart, marginaltArbeid = [], oppdaterData }) {
   const { flereLandUkjentHvilke } = useSelector((state) => formValueSelector(KV.Form.SOKNAD)(state, "soknadsland"));
 
   return (
@@ -54,11 +54,6 @@ MarginaltArbeid.propTypes = {
   marginaltArbeid: PT.array,
   redigerbart: PT.bool.isRequired,
   oppdaterData: PT.func.isRequired,
-};
-
-MarginaltArbeid.defaultProps = {
-  arbeidsland: [],
-  marginaltArbeid: [],
 };
 
 export default MarginaltArbeid;

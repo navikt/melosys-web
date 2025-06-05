@@ -70,12 +70,12 @@ function CustomRadioPanelGruppe(props) {
   const {
     radios,
     feltNavn,
-    legend,
+    legend = "",
     input: { onChange, value: currentCheckedValue },
     meta,
     notify,
-    begrensVisteRadios,
-    className,
+    begrensVisteRadios = false,
+    className = "",
   } = props;
 
   const { touched, active } = meta;
@@ -134,13 +134,6 @@ CustomRadioPanelGruppe.propTypes = {
   notify: PT.func,
   begrensVisteRadios: PT.bool,
   className: PT.string,
-};
-
-CustomRadioPanelGruppe.defaultProps = {
-  legend: "",
-  notify: undefined,
-  begrensVisteRadios: false,
-  className: "",
 };
 
 function CustomRadioPanelGruppeReduxForm({ feltNavn, ...rest }) {

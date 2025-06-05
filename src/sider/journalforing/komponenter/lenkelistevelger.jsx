@@ -13,14 +13,14 @@ import { formSelectors } from "../../../ducks/form";
 function LenkeListeVelger(props) {
   const {
     feltNavn,
-    muligeValg,
+    muligeValg = [],
     dokumentTittel,
-    undoTittel,
+    undoTittel = "",
     updateTittel,
     settFeltInnhold,
     currentTittel,
-    visSlett,
-    slettTittel,
+    visSlett = false,
+    slettTittel = undefined,
   } = props;
   const [visListevelger, setVisListevelger] = useState(false);
 
@@ -74,18 +74,11 @@ LenkeListeVelger.propTypes = {
   updateTittel: PT.func.isRequired,
   visSlett: PT.bool,
   slettTittel: PT.func,
-  label: PT.string,
   muligeValg: PT.arrayOf(PT.shape({ term: PT.string })),
   settFeltInnhold: PT.func.isRequired,
   currentTittel: PT.func.isRequired,
 };
-LenkeListeVelger.defaultProps = {
-  label: "",
-  undoTittel: "",
-  muligeValg: [],
-  visSlett: false,
-  slettTittel: undefined,
-};
+
 const selector = formValueSelector(KV.Form.JOURNALFORING);
 const mapStateToProps = (state) => ({
   currentTittel: (feltNavn) => selector(state, feltNavn),

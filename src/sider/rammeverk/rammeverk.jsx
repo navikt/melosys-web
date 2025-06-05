@@ -9,7 +9,7 @@ import { getAccessToken, setTokenInterceptor, setTokenInterceptorForLocalDevelop
 import { featureToggleOperations, featureToggleSelectors } from "../../ducks/featuretoggle";
 import { STATUS } from "../../services";
 
-function Hovedside({ isDevelopmentProfile, children }) {
+function Hovedside({ isDevelopmentProfile = false, children = undefined }) {
   const { instance, inProgress, accounts } = useMsal();
   const [harToken, setHarToken] = useState(false);
   const isAuthenticated = useIsAuthenticated();
@@ -56,19 +56,9 @@ function Hovedside({ isDevelopmentProfile, children }) {
   );
 }
 
-Hovedside.defaultProps = {
-  children: null,
-  isDevelopmentProfile: false,
-};
-
 Hovedside.propTypes = {
   children: PT.node,
   isDevelopmentProfile: PT.bool,
-};
-
-Hovedside.defaultProps = {
-  children: undefined,
-  isDevelopmentProfile: false,
 };
 
 export default Hovedside;

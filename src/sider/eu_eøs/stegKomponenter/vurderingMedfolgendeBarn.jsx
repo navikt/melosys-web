@@ -23,14 +23,14 @@ import {
 import "./vurderingMedfolgendeBarn.css";
 
 function MedfolgendeBarn({
-  navn,
-  idNummer,
-  omfattet,
+  navn = "",
+  idNummer = "",
+  omfattet = null,
   redigerbart,
   onCheck,
   onMount,
   onUnmount,
-  begrunnelse,
+  begrunnelse = "",
   onBegrunnelseChange,
 }) {
   const radioName = Utils._uuid();
@@ -106,21 +106,14 @@ MedfolgendeBarn.propTypes = {
   onBegrunnelseChange: PT.func.isRequired,
 };
 
-MedfolgendeBarn.defaultProps = {
-  navn: "",
-  idNummer: "",
-  omfattet: null,
-  begrunnelse: "",
-};
-
 function VurderingMedfolgendeBarn({
-  vurderingLovvalgBarnFakta,
+  vurderingLovvalgBarnFakta = [],
   medfolgendeBarn,
   bekreftOgFortsett,
   redigerbart,
   oppdaterData,
   slettData,
-  tilstand: { harAvklaring },
+  tilstand = {},
   tilbake,
 }) {
   const medfolgendeBarnMedFritekst = vurderingLovvalgBarnFakta.find((af) => af.begrunnelseFritekst);
@@ -225,7 +218,7 @@ function VurderingMedfolgendeBarn({
       {medfolgendeBarn.length === 0 && <Nav.Alert variant="info">Ingen barn oppgitt i søknaden</Nav.Alert>}
       <Mui.StegKnapper
         bekreftKnappProps={{
-          disabled: !(redigerbart && harAvklaring),
+          disabled: !(redigerbart && tilstand.harAvklaring),
           onClick: bekreftOgFortsett,
         }}
         tilbakeKnappProps={{
@@ -246,11 +239,6 @@ VurderingMedfolgendeBarn.propTypes = {
   medfolgendeBarn: PT.arrayOf(PT.object).isRequired,
   tilstand: PT.object,
   tilbake: PT.func.isRequired,
-};
-
-VurderingMedfolgendeBarn.defaultProps = {
-  vurderingLovvalgBarnFakta: [],
-  tilstand: {},
 };
 
 const mapStateToProps = (state) => ({

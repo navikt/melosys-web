@@ -7,8 +7,16 @@ import * as Mui from "../../../../felleskomponenter/ui";
 import { konverterVilkarTilStegData, lagVilkarbegrunnelse, lagVilkaar } from "../../../../felleskomponenter/stegvelger";
 
 function EnkeltVilkaar(props) {
-  const { redigerbart, begrunnelser, tittel, labelOppfylt, labelIkkeOppfylt, vilkaar, vilkaarKode, oppdaterData } =
-    props;
+  const {
+    redigerbart,
+    begrunnelser = [],
+    tittel = "",
+    labelOppfylt,
+    labelIkkeOppfylt,
+    vilkaar,
+    vilkaarKode,
+    oppdaterData,
+  } = props;
 
   useEffect(() => {
     oppdaterData(konverterVilkarTilStegData(vilkaarKode, vilkaar));
@@ -67,11 +75,6 @@ EnkeltVilkaar.propTypes = {
   labelIkkeOppfylt: PT.string.isRequired,
   begrunnelser: PT.arrayOf(MPT.Kodeverk),
   oppdaterData: PT.func.isRequired,
-};
-
-EnkeltVilkaar.defaultProps = {
-  begrunnelser: [],
-  tittel: "",
 };
 
 export default EnkeltVilkaar;

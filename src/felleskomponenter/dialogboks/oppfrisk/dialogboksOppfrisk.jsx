@@ -138,7 +138,7 @@ AnnenBehandlingOppfriskes.propTypes = {
   avbryt: PT.func.isRequired,
 };
 
-function DialogboksOppfriskBehandling({ avbryt, lukk, tilForsiden, oppfrisk, bekreftetFraStart }) {
+function DialogboksOppfriskBehandling({ avbryt, lukk, tilForsiden, oppfrisk, bekreftetFraStart = false }) {
   const { behandlingOppfriskes, annenBehandlingOppfriskes } = useContext(FellesHandlersContext);
   const [bekreftet, setBekreftet] = useState(bekreftetFraStart || behandlingOppfriskes);
 
@@ -173,10 +173,6 @@ DialogboksOppfriskBehandling.propTypes = {
   lukk: PT.func.isRequired,
   tilForsiden: PT.func.isRequired,
   bekreftetFraStart: PT.bool,
-};
-
-DialogboksOppfriskBehandling.defaultProps = {
-  bekreftetFraStart: false,
 };
 
 export default DialogboksOppfriskBehandling;
