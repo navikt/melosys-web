@@ -1,4 +1,3 @@
-// @ts-expect-error Workaround for @hookform/resolvers/yup with moduleResolution: bundler
 import { yupResolver } from "@hookform/resolvers/yup";
 import { RootState } from "AppTypes";
 import { useCallback, useEffect, useState } from "react";

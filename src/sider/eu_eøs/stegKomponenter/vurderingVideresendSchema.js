@@ -6,7 +6,7 @@ export const vurdering_videresend = object().shape({
   kreverMottakerinstitusjon: bool().required(),
   mottakerinstitusjon: string().when("kreverMottakerinstitusjon", {
     is: true,
-    then: string().required(VELG_MOTTAKERINSTITUSJON),
+    then: (schema) => schema.required(VELG_MOTTAKERINSTITUSJON),
   }),
 });
 

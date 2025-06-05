@@ -52,7 +52,7 @@ function Redigerer({
   }, []);
 
   const debounceNormalizeDate = useCallback(
-    Utils._debounce((fnr) => settVerdi("fnr", normalizeDate(fnr)), 800),
+    Utils._debounce((fnr: any) => settVerdi("fnr", normalizeDate(fnr)), 800),
     [],
   );
 

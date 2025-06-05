@@ -104,8 +104,8 @@ const aarsavregningMedGrunnlagSchema = object().shape({
   endeligAvgiftValg: string().required(MAA_FYLLES_UT),
   skatteforholdsperioder: array().when(["endeligAvgiftValg"], {
     is: (endeligAvgiftValg) => endeligAvgiftValg === OPPLYSNINGER_ENDRET,
-    then: array().min(1, "Minst en skatteforholdsperiode").of(skatteforholdsperiodeSchema),
-    otherwise: array(),
+    then: (schema) => schema.min(1, "Minst en skatteforholdsperiode").of(skatteforholdsperiodeSchema),
+    otherwise: (schema) => schema,
   }),
   inntektskilder: array().when(["$medlemskapsTypeErPliktig", "endeligAvgiftValg", "skatteforholdsperioder"], {
     is: (medlemskapsTypeErPliktig, endeligAvgiftValg, skatteforholdsperioder) => {
@@ -114,13 +114,13 @@ const aarsavregningMedGrunnlagSchema = object().shape({
         (!medlemskapsTypeErPliktig || !erBrukerSkattepliktigIHelePerioden(skatteforholdsperioder))
       );
     },
-    then: array().min(1, "Minst en inntektskilde").of(inntektskildeSchema),
-    otherwise: array(),
+    then: (schema) => schema.min(1, "Minst en inntektskilde").of(inntektskildeSchema),
+    otherwise: (schema) => schema,
   }),
   manueltAvgiftBeloep: string().when(["endeligAvgiftValg"], {
     is: (endeligAvgiftValg) => endeligAvgiftValg === MANUELL_ENDELIG_AVGIFT,
-    then: string().required(MAA_FYLLES_UT),
-    otherwise: string().nullable(),
+    then: (schema) => schema.required(MAA_FYLLES_UT),
+    otherwise: (schema) => schema.nullable(),
   }),
 });
 

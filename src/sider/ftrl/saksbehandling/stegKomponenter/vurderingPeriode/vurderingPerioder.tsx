@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-// @ts-expect-error Workaround for @hookform/resolvers/yup with moduleResolution: bundler
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FieldValue, useFieldArray, useForm } from "react-hook-form";
 
@@ -218,15 +217,18 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   };
 
   const debouncedLagreMedlemskapsperioder = useCallback(
-    Utils._debounce(async (medlemskapsperioder, isValid, overskrevetIndex) => {
-      if (isValid) {
-        // eslint-disable-next-line no-restricted-syntax
-        for (const periode of medlemskapsperioder) {
-          const index = overskrevetIndex !== undefined ? overskrevetIndex : medlemskapsperioder.indexOf(periode);
-          await lagreMedlemskapsperiode(periode, index);
+    Utils._debounce(
+      async (medlemskapsperioder: MedlemskapsperiodeProp[], isValid: boolean, overskrevetIndex: number | undefined) => {
+        if (isValid) {
+          // eslint-disable-next-line no-restricted-syntax
+          for (const periode of medlemskapsperioder) {
+            const index = overskrevetIndex !== undefined ? overskrevetIndex : medlemskapsperioder.indexOf(periode);
+            await lagreMedlemskapsperiode(periode, index);
+          }
         }
-      }
-    }, 500),
+      },
+      500,
+    ),
     [],
   );
 

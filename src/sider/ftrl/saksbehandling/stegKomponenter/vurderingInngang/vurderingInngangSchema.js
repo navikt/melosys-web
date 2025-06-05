@@ -9,9 +9,9 @@ const vurdering_inngang = object().shape({
   fom: string().erGyldigDato().required(MAA_FYLLES_UT),
   tom: string().erGyldigDato().erEtterDatofelt("fom").nullable(),
   land: array().when("flereLandUkjentHvilke", {
-    is: false,
-    then: array().of(string()).min(1, LAND_FELT_KREVES).required(LAND_FELT_KREVES),
-    otherwise: array().nullable(),
+    is: (flereLandUkjentHvilkeVal) => flereLandUkjentHvilkeVal === false,
+    then: (schema) => schema.of(string()).min(1, LAND_FELT_KREVES).required(LAND_FELT_KREVES),
+    otherwise: (schema) => schema.nullable(),
   }),
   flereLandUkjentHvilke: boolean().required(LAND_FELT_KREVES),
   trygdedekning: string().required(TRYGDEDEKNING_FELT_KREVES).nullable(),

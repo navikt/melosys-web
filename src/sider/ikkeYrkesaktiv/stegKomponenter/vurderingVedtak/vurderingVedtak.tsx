@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FieldValues, useForm } from "react-hook-form";
-// @ts-expect-error Workaround for @hookform/resolvers/yup with moduleResolution: bundler
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import { KTObject } from "@navikt/melosys-kodeverk";
