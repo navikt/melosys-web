@@ -21,8 +21,5 @@ Elementskrift.propTypes = {
   tekst: PT.string.isRequired,
   className: PT.string,
 };
-Elementskrift.defaultProps = {
-  className: undefined,
-};
 
 export default Elementskrift;

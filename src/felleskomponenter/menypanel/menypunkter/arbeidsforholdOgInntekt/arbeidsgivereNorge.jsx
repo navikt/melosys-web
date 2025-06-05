@@ -18,7 +18,7 @@ import "./arbeidsgivereNorge.css";
 import { Accordion } from "@navikt/ds-react";
 
 function ArbeidsgivereEnkeltNorge(props) {
-  const { kilde, organisasjon, arbeidsforholdene, inntektListe, wrapIPanel } = props;
+  const { kilde, organisasjon, arbeidsforholdene, inntektListe, wrapIPanel = false } = props;
 
   const seksjoner = (
     <>
@@ -62,11 +62,6 @@ ArbeidsgivereEnkeltNorge.propTypes = {
   arbeidsforholdene: MPT.Arbeidsforholdene.isRequired,
   inntektListe: MPT.InntektListe.isRequired,
   wrapIPanel: PT.bool,
-};
-
-ArbeidsgivereEnkeltNorge.defaultProps = {
-  kilde: undefined,
-  wrapIPanel: false,
 };
 
 export function ArbeidsgivereNorge(props) {

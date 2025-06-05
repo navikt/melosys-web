@@ -14,6 +14,7 @@ interface ManuellAvgiftFormPartProps {
   erMedGrunnlagFlyt: boolean;
   harDeltGrunnlag: boolean;
   totaltForskuddsvisFakturert?: number | string;
+  tidligereAarsavregningFakturertAvgiftssystem?: number;
 }
 
 export function ManuellAvgiftFormPart({

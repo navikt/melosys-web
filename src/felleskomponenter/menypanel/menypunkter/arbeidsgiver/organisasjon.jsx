@@ -6,7 +6,14 @@ import * as MPT from "../../../../proptypes";
 
 import OrganisasjonsAdresse from "../../../adresser/organisasjonsAdresse";
 
-function Organisasjon({ organisasjon, className, visNavn, visOrgnr, visAdresseTittel, boldAdresseNavn }) {
+function Organisasjon({
+  organisasjon,
+  className,
+  visNavn = false,
+  visOrgnr = false,
+  visAdresseTittel = true,
+  boldAdresseNavn = false,
+}) {
   if (!organisasjon) {
     return null;
   }
@@ -45,14 +52,6 @@ Organisasjon.propTypes = {
   visOrgnr: PT.bool,
   visAdresseTittel: PT.bool,
   boldAdresseNavn: PT.bool,
-};
-
-Organisasjon.defaultProps = {
-  className: undefined,
-  visNavn: false,
-  visOrgnr: false,
-  visAdresseTittel: true,
-  boldAdresseNavn: false,
 };
 
 export default Organisasjon;

@@ -28,11 +28,11 @@ import "./vurderingVideresend.css";
 export function VurderingVideresend({
   redigerbart,
   behandlingID,
-  bostedsland,
+  bostedsland = { kode: "", term: "" },
   fysiskeDokument,
   handleSubmit,
   form,
-  formValues,
+  formValues = {},
   tilbake,
 }) {
   const pdfDokumenter = [
@@ -153,14 +153,6 @@ VurderingVideresend.propTypes = {
   form: PT.string.isRequired,
   formValues: PT.object,
   fysiskeDokument: PT.arrayOf(PT.object).isRequired,
-};
-
-VurderingVideresend.defaultProps = {
-  bostedsland: {
-    kode: "",
-    term: "",
-  },
-  formValues: {},
 };
 
 const VurderingVideresendForm = reduxForm({

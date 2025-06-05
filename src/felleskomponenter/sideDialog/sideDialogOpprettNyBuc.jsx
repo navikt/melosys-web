@@ -17,16 +17,12 @@ import "./sideDialogOpprettNyBuc.css";
 import VedleggTable from "../vedleggTable";
 import Knapperad from "../knapperad";
 
-function TomtFelt({ tekst }) {
+function TomtFelt({ tekst = "Velg..." }) {
   return <option value="">{tekst}</option>;
 }
 
 TomtFelt.propTypes = {
   tekst: PT.string,
-};
-
-TomtFelt.defaultProps = {
-  tekst: "Velg...",
 };
 
 function SideDialogOpprettNyBuc({ behandlingID, behandlingstema, sakstype, dokumenter, redigerbart }) {

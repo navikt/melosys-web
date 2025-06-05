@@ -212,7 +212,7 @@ export function OpprettSak(props) {
                 label="I hvilke land skal arbeidet/næringen utføres i?"
                 hjelpetekst={
                   visArbeidFlereLandEllerUkjent
-                    ? '"Flere land. Ikke kjent hvilke” skal kun benyttes hvis land er ukjent'
+                    ? '"Flere land. Ikke kjent hvilke" skal kun benyttes hvis land er ukjent'
                     : undefined
                 }
               />
@@ -244,15 +244,11 @@ export function OpprettSak(props) {
   );
 }
 OpprettSak.propTypes = {
-  errors: PT.object,
   formValues: PT.object.isRequired,
   feltNavn: PT.object.isRequired,
   settFeltInnhold: PT.func.isRequired,
 };
 
-OpprettSak.defaultProps = {
-  errors: {},
-};
 const mapStateToProps = (state) => ({
   errors: getFormSyncErrors(KV.Form.JOURNALFORING)(state),
 });

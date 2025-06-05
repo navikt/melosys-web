@@ -30,7 +30,7 @@ const VIRKSOMHET_HELPTEXT = (
 );
 
 function VirksomhetCheckbox(props) {
-  const { virksomheten, avklartVirksomhet, oppdaterData, slettData } = props;
+  const { virksomheten, avklartVirksomhet = null, oppdaterData, slettData } = props;
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -65,12 +65,8 @@ VirksomhetCheckbox.propTypes = {
   slettData: PT.func.isRequired,
 };
 
-VirksomhetCheckbox.defaultProps = {
-  avklartVirksomhet: null,
-};
-
 function VirksomheterCheckboxGroup(props) {
-  const { virksomheterIPerioden, redigerbart, avklarteVirksomheter, oppdaterData, slettData } = props;
+  const { virksomheterIPerioden = [], redigerbart, avklarteVirksomheter = [], oppdaterData, slettData } = props;
 
   const ingenVirksomheterVarsel = virksomheterIPerioden.length === 0 && (
     <Nav.Alert variant="warning">
@@ -115,11 +111,6 @@ VirksomheterCheckboxGroup.propTypes = {
   redigerbart: PT.bool.isRequired,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
-};
-
-VirksomheterCheckboxGroup.defaultProps = {
-  virksomheterIPerioden: [],
-  avklarteVirksomheter: [],
 };
 
 /**
