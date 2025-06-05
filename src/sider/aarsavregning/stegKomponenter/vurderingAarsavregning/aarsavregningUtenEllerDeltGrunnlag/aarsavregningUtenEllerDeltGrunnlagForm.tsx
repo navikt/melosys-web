@@ -29,7 +29,7 @@ import { BeregnetTrygdeavgiftDetaljer } from "../komponenter/beregnetTrygdeavgif
 import BestemmelseSelect from "../komponenter/bestemmelseSelect";
 import { MedlemskapsperiodeSkjema } from "../komponenter/medlemskapsperiodeSkjema";
 import { SumArsavregningTabell } from "../komponenter/sumArsavregningTabell";
-import { TidligereFakturertIAvgiftssystemetInput } from "../komponenter/tidligereFakturertIAvgiftssystemetInput";
+import { InnbetaltFraAvgiftssystemetInput } from "../komponenter/tidligereFakturertIAvgiftssystemetInput";
 import {
   AarsavregningFormValuesProps,
   DEFAULT_MEDLEMSKAPSPERIODE,
@@ -39,6 +39,7 @@ import aarsavregningUtenEllerDeltGrunnlagSchema from "./aarsavregningUtenEllerDe
 import { Feilmelding, finnAktivFeilmelding, finnAktivFeilmeldingForMedlemskapsperioder } from "./valideringsfeil";
 import { ManuellAvgiftFormPart } from "../komponenter/manuellAvgiftFormPart";
 import { EndeligAvgiftValgRadioGroup } from "../komponenter/endeligAvgiftValgRadioGroup";
+import { BorderedFormContainer } from "../komponenter/borderedFormContainer";
 
 const { OPPLYSNINGER_ENDRET, MANUELL_ENDELIG_AVGIFT } = MKV.Koder.endeligAvgiftValg;
 
@@ -756,17 +757,17 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
 
   return (
     <div className="vurderingAarsavregning">
-      <TidligereFakturertIAvgiftssystemetInput control={control} redigerbart={skjemaErRedigerbart} />
+      <InnbetaltFraAvgiftssystemetInput control={control} redigerbart={skjemaErRedigerbart} />
 
       <EndeligAvgiftValgRadioGroup
         control={control}
         redigerbart={skjemaErRedigerbart}
         handleEndeligAvgiftValgChange={handleEndeligAvgiftValgChange}
-        erMedGrunnlagFlyt={false}
+        endeligAvgiftValg={endeligAvgiftValg}
       />
 
       {endeligAvgiftValg === OPPLYSNINGER_ENDRET && (
-        <>
+        <BorderedFormContainer>
           <Nav.Heading className="endelige_opplysninger_heading" level="2">
             Inntekts- og skatteopplysninger for endelig trygdeavgift
           </Nav.Heading>
@@ -837,17 +838,6 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
             <Aarsavregningsmeldinger.TrygdeavgiftSkalIkkeBetalesTilNav />
           )}
 
-          {formIsValid && !beregningPaagar && !debouncedBeregningPagaar && !arrayValideringsfeil && !feilmelding && (
-            <SumArsavregningTabell
-              harGrunnlagIMelosys={harDeltGrunnlag}
-              nyTrygdeavgift={aarsavregningResponse?.avregning?.beregnetAvgiftBelop}
-              tidligereTrygdeavgift={aarsavregningResponse?.avregning?.tidligereFakturertBeloep}
-              tidligereTrygdeavgiftAvgiftssystem={
-                aarsavregningResponse?.avregning?.tidligereFakturertBeloepAvgiftssystem
-              }
-            />
-          )}
-
           {formIsValid &&
             !beregningPaagar &&
             !debouncedBeregningPagaar &&
@@ -872,26 +862,60 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
             )}
 
           {arrayValideringsfeil && <Feilmelding type={arrayValideringsfeil} />}
-        </>
+        </BorderedFormContainer>
       )}
+
+      {/* Show SumAarsavregningTabell below bordered container when data is available */}
+      {formIsValid &&
+        !beregningPaagar &&
+        !debouncedBeregningPagaar &&
+        !arrayValideringsfeil &&
+        !feilmelding &&
+        endeligAvgiftValg === OPPLYSNINGER_ENDRET && (
+          <SumArsavregningTabell
+            harGrunnlagIMelosys={harDeltGrunnlag}
+            nyTrygdeavgift={aarsavregningResponse?.avregning?.beregnetAvgiftBelop}
+            tidligereTrygdeavgift={aarsavregningResponse?.avregning?.tidligereFakturertBeloep}
+            tidligereTrygdeavgiftAvgiftssystem={aarsavregningResponse?.avregning?.tidligereFakturertBeloepAvgiftssystem}
+          />
+        )}
+
+      {endeligAvgiftValg === MANUELL_ENDELIG_AVGIFT && (
+        <BorderedFormContainer>
+          <ManuellAvgiftFormPart
+            control={control}
+            redigerbart={redigerbart}
+            endeligAvgiftValg={endeligAvgiftValg}
+            manueltAvgiftBeloep={manueltAvgiftBeloep}
+            debouncedOppdaterManueltAvgiftBeloep={debouncedOppdaterManueltAvgiftBeloep}
+            tidligereTrygdeavgift={aarsavregningResponse?.avregning?.tidligereFakturertBeloep}
+            erMedGrunnlagFlyt={false}
+            harDeltGrunnlag={harDeltGrunnlag}
+            totaltForskuddsvisFakturert={totaltForskuddsvisFakturert}
+          />
+        </BorderedFormContainer>
+      )}
+
+      {/* Show SumAarsavregningTabell for manual amount below bordered container when entered */}
+      {endeligAvgiftValg === MANUELL_ENDELIG_AVGIFT &&
+        manueltAvgiftBeloep !== undefined &&
+        manueltAvgiftBeloep !== null &&
+        manueltAvgiftBeloep !== "" && (
+          <SumArsavregningTabell
+            harGrunnlagIMelosys={harDeltGrunnlag}
+            nyTrygdeavgift={Number(manueltAvgiftBeloep)}
+            tidligereTrygdeavgift={aarsavregningResponse?.avregning?.tidligereFakturertBeloep}
+            tidligereTrygdeavgiftAvgiftssystem={
+              totaltForskuddsvisFakturert ? Number(totaltForskuddsvisFakturert) : undefined
+            }
+          />
+        )}
 
       {feilmelding && (
         <Nav.Alert variant="error" className="alertstripe_feilmelding">
           {feilmelding}
         </Nav.Alert>
       )}
-
-      <ManuellAvgiftFormPart
-        control={control}
-        redigerbart={redigerbart}
-        endeligAvgiftValg={endeligAvgiftValg}
-        manueltAvgiftBeloep={manueltAvgiftBeloep}
-        debouncedOppdaterManueltAvgiftBeloep={debouncedOppdaterManueltAvgiftBeloep}
-        tidligereTrygdeavgift={aarsavregningResponse?.avregning?.tidligereFakturertBeloep}
-        erMedGrunnlagFlyt={false}
-        harDeltGrunnlag={harDeltGrunnlag}
-        totaltForskuddsvisFakturert={totaltForskuddsvisFakturert}
-      />
 
       <Nav.Button
         variant="primary"
