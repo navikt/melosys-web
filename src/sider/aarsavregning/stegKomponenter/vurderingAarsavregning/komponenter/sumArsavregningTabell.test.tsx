@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { SumArsavregningTabell } from "./sumArsavregningTabell";
 
 // Mock dependencies
@@ -30,39 +30,77 @@ describe("SumArsavregningTabell", () => {
     expect(screen.queryByText("Tidligere beregnet trygdeavgift fra Melosys")).not.toBeInTheDocument();
   });
 
-  it("shows Avgiftssystem row only when value is provided", () => {
+  it("shows current year Avgiftssystem row with correct label when value is provided", () => {
     const { rerender } = render(
       <SumArsavregningTabell harGrunnlagIMelosys={false} tidligereTrygdeavgiftAvgiftssystem={8000} />,
     );
-
-    expect(screen.getByText("Tidligere beregnet trygdeavgift fra Avgiftssystemet")).toBeInTheDocument();
-    expect(screen.getByText("8 000 kr")).toBeInTheDocument();
+    // Label for current year's input
+    const currentRow = screen.getByText("Innbetalt fra Avgiftssystemet").closest("tr");
+    expect(within(currentRow!).getByText("8 000 kr")).toBeInTheDocument();
 
     rerender(<SumArsavregningTabell harGrunnlagIMelosys={false} />);
 
-    expect(screen.queryByText("Tidligere beregnet trygdeavgift fra Avgiftssystemet")).not.toBeInTheDocument();
+    expect(screen.queryByText("Innbetalt fra Avgiftssystemet")).not.toBeInTheDocument();
   });
 
-  it("calculates and displays difference correctly", () => {
+  it("shows previous year Avgiftssystem row with correct label when value is provided", () => {
+    const { rerender } = render(
+      <SumArsavregningTabell harGrunnlagIMelosys={false} tidligereAarsavregningFakturertAvgiftssystem={5000} />,
+    );
+    // Label for previous year's value in a correction scenario
+    const previousRow = screen.getByText("Tidligere innbetalt fra Avgiftssystemet").closest("tr");
+    expect(within(previousRow!).getByText("5 000 kr")).toBeInTheDocument();
+
+    rerender(<SumArsavregningTabell harGrunnlagIMelosys={false} />);
+
+    expect(screen.queryByText("Tidligere innbetalt fra Avgiftssystemet")).not.toBeInTheDocument();
+  });
+
+  it("calculates and displays difference correctly without previous year avgiftssystem", () => {
     render(
       <SumArsavregningTabell
         nyTrygdeavgift={50000}
         tidligereTrygdeavgift={20000}
-        tidligereTrygdeavgiftAvgiftssystem={10000}
+        tidligereTrygdeavgiftAvgiftssystem={10000} // Current year input
         harGrunnlagIMelosys={true}
       />,
     );
-
+    // 50000 - 20000 - 10000 = 20000
     expect(screen.getByText("50 000 kr")).toBeInTheDocument();
-    expect(screen.getAllByText("20 000 kr")).toHaveLength(2);
-    expect(screen.getByText("10 000 kr")).toBeInTheDocument();
+
+    // Check value in "Tidligere beregnet trygdeavgift fra Melosys" row
+    const melosysRow = screen.getByText("Tidligere beregnet trygdeavgift fra Melosys").closest("tr");
+    expect(within(melosysRow!).getByText("20 000 kr")).toBeInTheDocument();
+
+    // Check value in "Innbetalt fra Avgiftssystemet" row
+    const avgiftssystemRow = screen.getByText("Innbetalt fra Avgiftssystemet").closest("tr");
+    expect(within(avgiftssystemRow!).getByText("10 000 kr")).toBeInTheDocument();
+
+    // Check value in "Differanse" row
+    const differanseRow = screen.getByText("Differanse").closest("tr");
+    expect(within(differanseRow!).getByText("20 000 kr")).toBeInTheDocument();
+  });
+
+  it("calculates and displays difference correctly WITH previous year avgiftssystem", () => {
+    render(
+      <SumArsavregningTabell
+        nyTrygdeavgift={50000}
+        tidligereTrygdeavgift={20000}
+        tidligereTrygdeavgiftAvgiftssystem={10000} // Current year input
+        tidligereAarsavregningFakturertAvgiftssystem={5000} // Previous year value
+        harGrunnlagIMelosys={true}
+      />,
+    );
+    // Sum = 50000 - 20000 - 10000 + 5000 = 25000
+    const differanseRow = screen.getByText("Differanse").closest("tr");
+    expect(within(differanseRow!).getByText("25 000 kr")).toBeInTheDocument();
   });
 
   it("handles negative difference with unicode minus", () => {
     render(<SumArsavregningTabell nyTrygdeavgift={10000} tidligereTrygdeavgift={15000} harGrunnlagIMelosys={true} />);
-
-    // 10000 - 15000 = -5000
-    expect(screen.getByText("−5 000 kr")).toBeInTheDocument();
+    // 10000 - 15000 - 0 + 0 = -5000
+    const differanseRow = screen.getByText("Differanse").closest("tr");
+    expect(within(differanseRow!).getByText("−5 000 kr")).toBeInTheDocument();
   });
 
   it("renders correctly with all possible data", () => {
@@ -71,6 +109,7 @@ describe("SumArsavregningTabell", () => {
         nyTrygdeavgift={50000}
         tidligereTrygdeavgift={20000}
         tidligereTrygdeavgiftAvgiftssystem={10000}
+        tidligereAarsavregningFakturertAvgiftssystem={5000}
         harGrunnlagIMelosys={true}
       />,
     );

@@ -29,7 +29,7 @@ import { BeregnetTrygdeavgiftDetaljer } from "../komponenter/beregnetTrygdeavgif
 import BestemmelseSelect from "../komponenter/bestemmelseSelect";
 import { MedlemskapsperiodeSkjema } from "../komponenter/medlemskapsperiodeSkjema";
 import { SumArsavregningTabell } from "../komponenter/sumArsavregningTabell";
-import { TidligereFakturertIAvgiftssystemetInput } from "../komponenter/tidligereFakturertIAvgiftssystemetInput";
+import { InnbetaltFraAvgiftssystemetInput } from "../komponenter/innbetaltFraAvgiftssystemetInput";
 import {
   AarsavregningFormValuesProps,
   DEFAULT_MEDLEMSKAPSPERIODE,
@@ -754,9 +754,13 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     medlemskapstypeErPliktig && erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder);
   const skjemaErRedigerbart = redigerbart && !endrerBestemmelse;
 
+  const tidligereAarsavregningFakturertAvgiftssystem =
+    initiellData.aarsavregningResponse?.tidligereGrunnlagsopplysninger
+      ?.tidligereÅrsavregningFakturertBeloepAvgiftssystem;
+
   return (
     <div className="vurderingAarsavregning">
-      <TidligereFakturertIAvgiftssystemetInput control={control} redigerbart={skjemaErRedigerbart} />
+      <InnbetaltFraAvgiftssystemetInput control={control} redigerbart={skjemaErRedigerbart} />
 
       <EndeligAvgiftValgRadioGroup
         control={control}
@@ -845,6 +849,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
               tidligereTrygdeavgiftAvgiftssystem={
                 aarsavregningResponse?.avregning?.tidligereFakturertBeloepAvgiftssystem
               }
+              tidligereAarsavregningFakturertAvgiftssystem={tidligereAarsavregningFakturertAvgiftssystem}
             />
           )}
 
@@ -891,6 +896,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         erMedGrunnlagFlyt={false}
         harDeltGrunnlag={harDeltGrunnlag}
         totaltForskuddsvisFakturert={totaltForskuddsvisFakturert}
+        tidligereAarsavregningFakturertAvgiftssystem={tidligereAarsavregningFakturertAvgiftssystem}
       />
 
       <Nav.Button

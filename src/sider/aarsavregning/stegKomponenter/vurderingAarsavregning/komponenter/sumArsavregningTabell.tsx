@@ -7,15 +7,20 @@ export function SumArsavregningTabell({
   nyTrygdeavgift,
   tidligereTrygdeavgift,
   tidligereTrygdeavgiftAvgiftssystem,
+  tidligereAarsavregningFakturertAvgiftssystem,
   harGrunnlagIMelosys,
 }: {
   nyTrygdeavgift?: number;
   tidligereTrygdeavgift?: number;
   tidligereTrygdeavgiftAvgiftssystem?: number;
+  tidligereAarsavregningFakturertAvgiftssystem?: number;
   harGrunnlagIMelosys: boolean;
 }) {
   const sumTilFakturaEllerRefusjon =
-    (nyTrygdeavgift ?? 0) - (tidligereTrygdeavgift ?? 0) - (tidligereTrygdeavgiftAvgiftssystem ?? 0);
+    (nyTrygdeavgift ?? 0) -
+    (tidligereTrygdeavgift ?? 0) -
+    (tidligereTrygdeavgiftAvgiftssystem ?? 0) +
+    (tidligereAarsavregningFakturertAvgiftssystem ?? 0);
 
   return (
     <div className="sumArsavregningTabell">
@@ -42,9 +47,18 @@ export function SumArsavregningTabell({
           {tidligereTrygdeavgiftAvgiftssystem !== undefined && (
             <Nav.Table.Row>
               <Nav.Table.DataCell scope="col">-</Nav.Table.DataCell>
-              <Nav.Table.DataCell scope="col">Tidligere beregnet trygdeavgift fra Avgiftssystemet</Nav.Table.DataCell>
+              <Nav.Table.DataCell scope="col">Innbetalt fra Avgiftssystemet</Nav.Table.DataCell>
               <Nav.Table.DataCell align="right" key={Utils._uuid()}>
                 {formaterTilNorskBelop(tidligereTrygdeavgiftAvgiftssystem || 0)} kr
+              </Nav.Table.DataCell>
+            </Nav.Table.Row>
+          )}
+          {tidligereAarsavregningFakturertAvgiftssystem !== undefined && (
+            <Nav.Table.Row>
+              <Nav.Table.DataCell scope="col">+</Nav.Table.DataCell>
+              <Nav.Table.DataCell scope="col">Tidligere innbetalt fra Avgiftssystemet</Nav.Table.DataCell>
+              <Nav.Table.DataCell align="right" key={Utils._uuid()}>
+                {formaterTilNorskBelop(tidligereAarsavregningFakturertAvgiftssystem || 0)} kr
               </Nav.Table.DataCell>
             </Nav.Table.Row>
           )}

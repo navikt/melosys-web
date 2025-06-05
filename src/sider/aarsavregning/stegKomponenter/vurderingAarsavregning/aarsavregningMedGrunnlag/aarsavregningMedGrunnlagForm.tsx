@@ -325,6 +325,10 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   const trygdeAvgiftSkalIkkeBetalesTilNav =
     medlemskapstypeErPliktig && erBrukerSkattepliktigIHelePerioden(skatteforholdsperioder);
 
+  const tidligereAarsavregningFakturertAvgiftssystem =
+    initiellData.aarsavregningResponse?.tidligereGrunnlagsopplysninger
+      ?.tidligereÅrsavregningFakturertBeloepAvgiftssystem;
+
   return (
     <>
       <EndeligAvgiftValgRadioGroup
@@ -375,6 +379,8 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
                 nyTrygdeavgift={aarsavregningResponse.avregning.beregnetAvgiftBelop}
                 tidligereTrygdeavgift={aarsavregningResponse.avregning.tidligereFakturertBeloep}
                 harGrunnlagIMelosys
+                tidligereTrygdeavgiftAvgiftssystem={0}
+                tidligereAarsavregningFakturertAvgiftssystem={tidligereAarsavregningFakturertAvgiftssystem}
               />
             )}
 
@@ -420,6 +426,8 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
         tidligereTrygdeavgift={aarsavregningResponse?.avregning?.tidligereFakturertBeloep}
         erMedGrunnlagFlyt={true}
         harDeltGrunnlag={false}
+        totaltForskuddsvisFakturert={aarsavregningResponse?.avregning?.tidligereFakturertBeloepAvgiftssystem}
+        tidligereAarsavregningFakturertAvgiftssystem={tidligereAarsavregningFakturertAvgiftssystem}
       />
 
       <Nav.Button
