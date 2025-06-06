@@ -28,7 +28,7 @@ describe("VedleggVelgerModal", () => {
       standardvedlegg: null,
     },
     alleSaksvedlegg: [],
-  } as ComponentProps<typeof VedleggVelgerModal>;
+  } as unknown as ComponentProps<typeof VedleggVelgerModal>;
 
   it("viser en Nav Modal", () => {
     render(<VedleggVelgerModal {...props} />);
