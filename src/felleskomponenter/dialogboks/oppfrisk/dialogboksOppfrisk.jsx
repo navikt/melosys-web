@@ -2,9 +2,9 @@ import { Suspense, useContext, useState } from "react";
 import usePromise from "react-promise-suspense";
 import PT from "prop-types";
 import classNames from "classnames";
-import * as Sentry from "@sentry/react";
 import * as Nav from "../../../navFrontend";
 import Knapperad from "../../knapperad";
+import AppErrorBoundary from "../../appErrorBoundary/appErrorBoundary";
 
 import "./dialogboksOppfrisk.css";
 import { StandardMeldingOverst } from "../../alertmeldinger";
@@ -83,13 +83,13 @@ OppfriskFeilmelding.propTypes = {
 // Returnerer OppfriskVenter mens behandlingen oppfriskes og OppfriskFeilmelding dersom oppfrisk() returnerer != 2xx
 function OppfriskBehandling({ oppfrisk, lukk, tilForsiden, avbryt }) {
   return (
-    <Sentry.ErrorBoundary
+    <AppErrorBoundary
       fallback={({ resetError }) => <OppfriskFeilmelding resetErrorBoundary={resetError} avbryt={avbryt} />}
     >
       <Suspense fallback={<OppfriskVenter tilForsiden={tilForsiden} />}>
         <Oppfrisk oppfrisk={oppfrisk} lukk={lukk} />
       </Suspense>
-    </Sentry.ErrorBoundary>
+    </AppErrorBoundary>
   );
 }
 
@@ -138,7 +138,7 @@ AnnenBehandlingOppfriskes.propTypes = {
   avbryt: PT.func.isRequired,
 };
 
-function DialogboksOppfriskBehandling({ avbryt, lukk, tilForsiden, oppfrisk, bekreftetFraStart }) {
+function DialogboksOppfriskBehandling({ avbryt, lukk, tilForsiden, oppfrisk, bekreftetFraStart = false }) {
   const { behandlingOppfriskes, annenBehandlingOppfriskes } = useContext(FellesHandlersContext);
   const [bekreftet, setBekreftet] = useState(bekreftetFraStart || behandlingOppfriskes);
 
@@ -173,10 +173,6 @@ DialogboksOppfriskBehandling.propTypes = {
   lukk: PT.func.isRequired,
   tilForsiden: PT.func.isRequired,
   bekreftetFraStart: PT.bool,
-};
-
-DialogboksOppfriskBehandling.defaultProps = {
-  bekreftetFraStart: false,
 };
 
 export default DialogboksOppfriskBehandling;

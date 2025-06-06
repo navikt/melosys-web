@@ -1,5 +1,4 @@
 import { ComponentProps } from "react";
-import { instance, mock } from "ts-mockito";
 import { MockedProvider } from "@apollo/client/testing";
 import { screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -20,13 +19,12 @@ describe("Personinfo", () => {
       };
     };
 
-  const mockedProps = mock<ComponentProps<typeof Personinfo>>();
   const initialState = { landkoder: { status: "OK", data: [{ kode: "NO", term: "Norge" }] } };
 
-  let props = instance(mockedProps);
+  let props: ComponentProps<typeof Personinfo>;
 
   beforeEach(() => {
-    props = instance(mockedProps);
+    props = {} as ComponentProps<typeof Personinfo>;
     props.behandlingID = 1;
   });
 

@@ -64,8 +64,8 @@ function Vurderutpeking({
   tilForsiden,
   startOgVisOppfriskModal,
   soknadForm,
-  mottatteOpplysninger,
-  vurderUtpekingFormValues,
+  mottatteOpplysninger = {},
+  vurderUtpekingFormValues = {},
   hentLandkoder,
 }) {
   const behandlingID = Utils._toInteger(Utils.queryString.getParam(location, "behandlingID"));
@@ -175,11 +175,6 @@ Vurderutpeking.propTypes = {
   behandlingOppfriskes: PT.bool.isRequired,
   vurderUtpekingFormValues: PT.object,
   hentLandkoder: PT.func.isRequired,
-};
-
-Vurderutpeking.defaultProps = {
-  mottatteOpplysninger: {},
-  vurderUtpekingFormValues: {},
 };
 
 const mapStateToProps = (state) => ({

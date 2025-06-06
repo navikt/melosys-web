@@ -1,4 +1,3 @@
-// @ts-expect-error Workaround for @hookform/resolvers/yup with moduleResolution: bundler
 import { yupResolver } from "@hookform/resolvers/yup";
 import { RootState } from "AppTypes";
 import { useCallback, useEffect, useState } from "react";
@@ -27,6 +26,7 @@ import { BrevVedleggVisningstabellInterface } from "../../../../services/modules
 import * as Utils from "../../../../utils";
 import { SumArsavregningTabell } from "../vurderingAarsavregning/komponenter/sumArsavregningTabell";
 import vurdering_vedtak from "./vurderingVedtakSchema";
+import "./vurderingVedtak.css";
 
 const { FASTSATT_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingsresultattyper;
 const { FØRSTEGANGSVEDTAK } = MKV.Koder.vedtakstyper;
@@ -338,6 +338,9 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   const erNullKroner = trygdeavgiftDiff === 0;
   const skalFaktureres = trygdeavgiftDiff > 0;
 
+  const tidligereAarsavregningTrygdeavgiftFraAvgiftssystem =
+    lagretAarsavregning?.tidligereGrunnlagsopplysninger?.tidligereÅrsavregningFakturertBeloepAvgiftssystem;
+
   const kanSubmitte =
     redigerbart &&
     !vedtakPending &&
@@ -350,7 +353,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
       </Nav.Heading>
 
       {redigerbart && lagretAarsavregning?.endeligAvgiftValg === MANUELL_ENDELIG_AVGIFT && (
-        <Nav.Alert variant="warning" className="blokk-s">
+        <Nav.Alert variant="warning">
           Du har lagt inn &quot;Endelig beregnet trygdeavgift&quot; manuelt og må derfor oppgi en begrunnelse i
           fritekstfeltet.
         </Nav.Alert>
@@ -361,6 +364,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
         tidligereTrygdeavgift={tidligereTrygdeavgift}
         tidligereTrygdeavgiftAvgiftssystem={tidligereTrygdeavgiftAvgiftssystem}
         harGrunnlagIMelosys={tidligereTrygdeavgift !== null || lagretAarsavregning?.harDeltGrunnlag === true}
+        tidligereAarsavregningTrygdeavgiftFraAvgiftssystem={tidligereAarsavregningTrygdeavgiftFraAvgiftssystem}
       />
 
       {fakturaMottaker ? (

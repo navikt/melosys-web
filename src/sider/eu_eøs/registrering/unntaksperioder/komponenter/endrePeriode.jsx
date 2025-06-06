@@ -12,7 +12,7 @@ import { useEffect } from "react";
 function EndrePeriode({
   endrePeriode,
   lovvalgsperiode,
-  sedLovvalgsperiode,
+  sedLovvalgsperiode = {},
   oppdaterFom,
   oppdaterTom,
   oppdaterBegrunnelse,
@@ -117,10 +117,6 @@ EndrePeriode.propTypes = {
   oppdaterFritekst: PT.func.isRequired,
   feilmeldinger: PT.object.isRequired,
   redigerbart: PT.bool.isRequired,
-};
-
-EndrePeriode.defaultProps = {
-  sedLovvalgsperiode: {},
 };
 
 export default EndrePeriode;

@@ -118,6 +118,4 @@ VurderingArtikkel13_2b.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
 };
 
-VurderingArtikkel13_2b.defaultProps = {};
-
 export default VurderingArtikkel13_2b;

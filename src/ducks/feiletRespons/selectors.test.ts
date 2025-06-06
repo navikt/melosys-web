@@ -1,4 +1,3 @@
-import { mock, instance } from "ts-mockito";
 import { RootState } from "AppTypes";
 
 import * as selectors from "./selectors";
@@ -10,19 +9,19 @@ import { STATUS } from "../../services";
 describe("FeiletresponsSelectors", () => {
   describe("FeilkoderSelector", () => {
     it("returnerer feilkoder ved status ERROR", () => {
-      const mockedState = mock<RootState>();
-      const state = instance(mockedState);
-      state.feiletRespons = {
-        data: {
+      const state = {
+        feiletRespons: {
           data: {
-            feilkoder: [],
-            error: "Valideringsfeil",
-            status: 404,
-            message: "Valideringsfeil",
+            data: {
+              feilkoder: [],
+              error: "Valideringsfeil",
+              status: 404,
+              message: "Valideringsfeil",
+            },
           },
+          status: STATUS.ERROR,
         },
-        status: STATUS.ERROR,
-      };
+      } as RootState;
 
       const forventetResultat = state.feiletRespons.data.data && state.feiletRespons.data.data.feilkoder;
 
@@ -30,57 +29,57 @@ describe("FeiletresponsSelectors", () => {
     });
 
     it("returnerer tom array ved status OK", () => {
-      const mockedState = mock<RootState>();
-      const state = instance(mockedState);
-      state.feiletRespons = {
-        data: {
+      const state = {
+        feiletRespons: {
           data: {
-            feilkoder: [
-              {
-                kode: MKV.Koder.begrunnelser.kontroll_begrunnelser.OVERLAPPENDE_MEDL_PERIODER,
-                felter: [],
-              },
-              {
-                kode: MKV.Koder.begrunnelser.kontroll_begrunnelser.MANGLENDE_BOSTEDSADRESSE,
-                felter: [],
-              },
-            ],
-            error: "Valideringsfeil",
-            status: 404,
-            message: "Valideringsfeil",
+            data: {
+              feilkoder: [
+                {
+                  kode: MKV.Koder.begrunnelser.kontroll_begrunnelser.OVERLAPPENDE_MEDL_PERIODER,
+                  felter: [],
+                },
+                {
+                  kode: MKV.Koder.begrunnelser.kontroll_begrunnelser.MANGLENDE_BOSTEDSADRESSE,
+                  felter: [],
+                },
+              ],
+              error: "Valideringsfeil",
+              status: 404,
+              message: "Valideringsfeil",
+            },
           },
+          status: STATUS.OK,
         },
-        status: STATUS.OK,
-      };
+      } as RootState;
 
       expect(selectors.FeilmeldingerSelector(state)).toEqual([]);
     });
 
     it("returnerer string med error message ved feilkoder undefined", () => {
-      const mockedState = mock<RootState>();
-      const state = instance(mockedState);
       const MESSAGE = "Kan ikke fatte vedtak";
-      state.feiletRespons = {
-        data: {
+      const state = {
+        feiletRespons: {
           data: {
-            error: "Valideringsfeil",
-            status: 404,
-            message: MESSAGE,
+            data: {
+              error: "Valideringsfeil",
+              status: 404,
+              message: MESSAGE,
+            },
           },
+          status: STATUS.ERROR,
         },
-        status: STATUS.ERROR,
-      };
+      } as RootState;
 
       expect(selectors.FeilmeldingerSelector(state)).toEqual(MESSAGE);
     });
 
     it("returnerer tom array ved data undefined", () => {
-      const mockedState = mock<RootState>();
-      const state = instance(mockedState);
-      state.feiletRespons = {
-        data: {},
-        status: STATUS.ERROR,
-      };
+      const state = {
+        feiletRespons: {
+          data: {},
+          status: STATUS.ERROR,
+        },
+      } as RootState;
 
       expect(selectors.FeilmeldingerSelector(state)).toEqual([]);
     });

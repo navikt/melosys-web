@@ -1,16 +1,14 @@
 import { ComponentProps } from "react";
-import { instance, mock } from "ts-mockito";
 
 import { render, screen } from "@testing-library/react";
 
 import SivilstandModal from "./sivilstandModal";
 
 describe("SivilstandModal", () => {
-  const mockedProps = mock<ComponentProps<typeof SivilstandModal>>();
-  let props = instance(mockedProps);
+  let props: ComponentProps<typeof SivilstandModal>;
 
   beforeEach(() => {
-    props = instance(mockedProps);
+    props = {} as ComponentProps<typeof SivilstandModal>;
     props.lukkModal = vi.fn();
     props.skalViseModal = true;
     props.aktiveSivilstander = [

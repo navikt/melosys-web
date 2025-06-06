@@ -12,30 +12,31 @@ const artikkel13_x_vedtak = object().shape({
   forkortLovvalgsperiode: bool().required(),
   fomDato: string().when("forkortLovvalgsperiode", {
     is: true,
-    then: string().erInnenforSoknadsperioden().erGyldigDato().required(MAA_FYLLES_UT),
+    then: (schema) => schema.erInnenforSoknadsperioden().erGyldigDato().required(MAA_FYLLES_UT),
   }),
   tomDato: string().when("forkortLovvalgsperiode", {
     is: true,
-    then: string().erInnenforSoknadsperioden().erEtterDatofelt("fomDato").erGyldigDato().required(MAA_FYLLES_UT),
+    then: (schema) =>
+      schema.erInnenforSoknadsperioden().erEtterDatofelt("fomDato").erGyldigDato().required(MAA_FYLLES_UT),
   }),
   vedtakstype: string()
     .nullable()
     .when("$behandlingstype", {
-      is: MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING,
-      then: string().nullable().required(VELG_EN_VEDTAKSTYPE),
+      is: (behandlingstype) => behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING,
+      then: (schema) => schema.required(VELG_EN_VEDTAKSTYPE),
     }),
   vedtakstypebegrunnelse: string()
     .nullable()
     .when("$behandlingstype", {
-      is: MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING,
-      then: string().nullable().required(OPPGI_BEGRUNNELSE),
+      is: (behandlingstype) => behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING,
+      then: (schema) => schema.required(OPPGI_BEGRUNNELSE),
     }),
   mottakerinstitusjoner: array().of(
     object().shape({
       kreverMottakerinstitusjon: bool(),
       id: string().when("kreverMottakerinstitusjon", {
         is: true,
-        then: string().required(MOTTAKERINSTITUSJON_KREVES),
+        then: (schema) => schema.required(MOTTAKERINSTITUSJON_KREVES),
       }),
     }),
   ),

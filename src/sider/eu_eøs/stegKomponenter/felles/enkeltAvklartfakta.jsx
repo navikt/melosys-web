@@ -16,13 +16,14 @@ import {
 function EnkeltAvklartfakta(props) {
   const {
     redigerbart,
-    begrunnelser,
+    begrunnelser = [],
     tittel,
     avklartefaktaTyper,
     avklartfakta,
     avklartfaktaKode,
     oppdaterData,
-    onChange,
+    onChange = null,
+    slettData = null,
   } = props;
 
   const fakta = hentFaktaVerdi(avklartfakta);
@@ -30,8 +31,8 @@ function EnkeltAvklartfakta(props) {
   useEffect(() => {
     oppdaterData(konverterAvklartfaktaTilStegData(avklartfaktaKode, avklartfakta));
     const cleanup = () => {
-      if (props.slettData) {
-        props.slettData(slettAvklartfakta(avklartfaktaKode));
+      if (slettData) {
+        slettData(slettAvklartfakta(avklartfaktaKode));
       }
     };
     return cleanup;
@@ -101,12 +102,6 @@ EnkeltAvklartfakta.propTypes = {
   oppdaterData: PT.func.isRequired,
   onChange: PT.func,
   slettData: PT.func,
-};
-
-EnkeltAvklartfakta.defaultProps = {
-  begrunnelser: [],
-  onChange: null,
-  slettData: null,
 };
 
 export default EnkeltAvklartfakta;

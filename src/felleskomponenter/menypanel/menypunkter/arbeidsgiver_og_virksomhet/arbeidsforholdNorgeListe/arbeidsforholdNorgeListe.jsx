@@ -19,7 +19,7 @@ import Orgnrinput from "./orgnrinput";
 function EnkeltArbeidsforholdNorgeRedigerer({
   erstatt,
   valideringer,
-  hentVedMount,
+  hentVedMount = false,
   redigerbart,
   hentOrganisasjon,
   organisasjon,
@@ -93,12 +93,6 @@ EnkeltArbeidsforholdNorgeRedigerer.propTypes = {
   onKontaktopplysningerSlettClick: PT.func.isRequired,
 };
 
-EnkeltArbeidsforholdNorgeRedigerer.defaultProps = {
-  hentVedMount: false,
-  orgIkkeFunnetTekst: undefined,
-  orgFeilVedHentingTekst: undefined,
-};
-
 function EnkeltArbeidsforholdNorge({
   fields,
   redigerbart,
@@ -110,7 +104,7 @@ function EnkeltArbeidsforholdNorge({
   tittelTekst,
   tittelIkon,
   indeks,
-  element,
+  element = {},
   elementer,
 }) {
   const organisasjon = findOrganisasjon(element) || {};
@@ -182,17 +176,13 @@ EnkeltArbeidsforholdNorge.propTypes = {
   elementer: PT.arrayOf(PT.any).isRequired,
 };
 
-EnkeltArbeidsforholdNorge.defaultProps = {
-  element: {},
-};
-
 function InnerArbeidsforholdNorgeListe({
   leggTilTekst,
   fields,
   redigerbart,
   hentOrganisasjon,
   findOrganisasjon,
-  transformerOrgTilElement,
+  transformerOrgTilElement = (verdi) => verdi,
   defaultElement,
   elementerInneholderOrg,
   saksnummer,
@@ -252,12 +242,6 @@ InnerArbeidsforholdNorgeListe.propTypes = {
   tittelTekst: PT.string.isRequired,
   tittelIkon: PT.elementType.isRequired,
   className: PT.string,
-};
-
-InnerArbeidsforholdNorgeListe.defaultProps = {
-  transformerOrgTilElement: (verdi) => verdi,
-  defaultElement: undefined,
-  className: undefined,
 };
 
 function ArbeidsforholdNorgeListe({ feltNavn, ...rest }) {

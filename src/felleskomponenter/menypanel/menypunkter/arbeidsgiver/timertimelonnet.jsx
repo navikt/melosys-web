@@ -4,7 +4,7 @@ import * as Nav from "../../../../navFrontend";
 import EnkeltDato from "../../../enkeltDato";
 import TabellArbeidsgiver from "./tabellArbeidsgiver";
 
-function TimerTimelonnet({ timerTimelonnet }) {
+function TimerTimelonnet({ timerTimelonnet = [] }) {
   if (!timerTimelonnet) return null;
 
   const timelonnetArrayed = timerTimelonnet.map((linje) => [
@@ -28,10 +28,6 @@ function TimerTimelonnet({ timerTimelonnet }) {
 
 TimerTimelonnet.propTypes = {
   timerTimelonnet: MPT.TimerTimelonnet,
-};
-
-TimerTimelonnet.defaultProps = {
-  timerTimelonnet: [],
 };
 
 export default TimerTimelonnet;

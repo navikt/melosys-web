@@ -10,12 +10,12 @@ import { arrayTilKonjunksjon } from "../../../../utils/streng";
 function NormaltDriverVirksomhet(props) {
   const {
     bekreftOgFortsett,
-    begrunnelser,
-    tilstand,
+    begrunnelser = [],
+    tilstand = {},
     redigerbart,
     oppdaterData,
     slettData,
-    valgteVirksomheter,
+    valgteVirksomheter = [],
     tilbake,
   } = props;
 
@@ -75,12 +75,6 @@ NormaltDriverVirksomhet.propTypes = {
   slettData: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
   tilbake: PT.func.isRequired,
-};
-
-NormaltDriverVirksomhet.defaultProps = {
-  tilstand: {},
-  valgteVirksomheter: [],
-  begrunnelser: [],
 };
 
 export default NormaltDriverVirksomhet;

@@ -33,6 +33,7 @@ const manglerFeltMedValg = (feltNavn) => (felt, valgtBrev) => {
   if (!feltFravalgtBrev) {
     return false;
   }
+
   const valgtAlternativ = feltFravalgtBrev?.valg?.valgAlternativer.find(
     (alternativ) => alternativ.kode === felt?.[feltNavn]?.valg,
   );
@@ -44,28 +45,30 @@ const send_brev = object().shape({
   type: string().required(TYPE_MANGLER),
   valgtMottaker: object().required(MOTTAKER_MANGLER),
   valgtBrev: object().required(VALGT_MAL_MANGLER),
-  organisasjonsnummer: string()
-    .when("valgtMottaker", {
-      is: (valgtMottaker) => erAnnenOrganisasjon(valgtMottaker?.rolle),
-      then: string().erOrgnr(ORGNUMMER_UGYLDIG).required(ORGNUMMER_FELT_MANGLER).nullable(),
-    })
-    .nullable(),
+  organisasjonsnummer: string().when("valgtMottaker", {
+    is: (valgtMottaker) => erAnnenOrganisasjon(valgtMottaker?.rolle),
+    then: (schema) => schema.erOrgnr(ORGNUMMER_UGYLDIG).required(ORGNUMMER_FELT_MANGLER),
+    otherwise: (schema) => schema.nullable(),
+  }),
   norskeMyndigheter: array().of(string().erOrgnr(ORGNUMMER_UGYLDIG)),
   kontaktperson: string().nullable(),
   arbeidsgiver: string()
     .when("valgtMottaker", {
       is: (valgtMottaker) => erVirksomhet(valgtMottaker?.rolle) || erArbeidsgiver(valgtMottaker?.rolle),
-      then: string().required(ARBEIDSGIVER_MANGLER).nullable(),
+      then: (schema) => schema.required(ARBEIDSGIVER_MANGLER),
+      otherwise: (schema) => schema.nullable(),
     })
     .nullable(),
   felt: object(),
   fritekstTittel: string().when(["felt", "valgtBrev"], {
-    is: manglerFeltMedValg("BREV_TITTEL"),
-    then: string().required(TITTEL_MANGLER),
+    is: (felt, valgtBrev) => manglerFeltMedValg("BREV_TITTEL")(felt, valgtBrev),
+    then: (schema) => schema.required(TITTEL_MANGLER),
+    otherwise: (schema) => schema.nullable(),
   }),
   erFeltGyldig: string().when(["felt", "valgtBrev"], {
-    is: manglerNoenFeltValgt,
-    then: string().required(FELT_MANGLER),
+    is: (felt, valgtBrev) => manglerNoenFeltValgt(felt, valgtBrev),
+    then: (schema) => schema.required(FELT_MANGLER),
+    otherwise: (schema) => schema.nullable(),
   }),
 });
 

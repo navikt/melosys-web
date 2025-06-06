@@ -8,7 +8,7 @@ import * as Nav from "../../../navFrontend";
 import "./topplinje.css";
 
 function Topplinje(props) {
-  const { saksbehandler } = props;
+  const { saksbehandler = "" } = props;
 
   const tilForsidenHandler = (event) => {
     event.preventDefault();
@@ -58,7 +58,4 @@ Topplinje.propTypes = {
   msalContext: PT.object.isRequired,
 };
 
-Topplinje.defaultProps = {
-  saksbehandler: "",
-};
 export default withMsal(withRouter(Topplinje));

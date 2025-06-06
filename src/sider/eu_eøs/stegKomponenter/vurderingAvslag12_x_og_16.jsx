@@ -37,21 +37,21 @@ function VurderingAvslag12_x_og_16({
   valgte_utsendt_arbeidstaker_begrunnelser,
   valgte_utsendt_naeringsdrivende_begrunnelser,
   valgte_art_16_1_begrunnelser,
-  art16_1_fritekst,
+  art16_1_fritekst = "",
   vilkarBegrunnelser,
   behandlingID,
-  redigerbart,
+  redigerbart = true,
   harFeilmeldinger,
   behandlingstype,
   behandlingstema,
   touch,
   sakstype,
   formIsValid,
-  formValues,
+  formValues = {},
   tilbake,
   validerMottatteOpplysninger,
   mottatteOpplysningerStatus,
-  aktivtSteg,
+  aktivtSteg = false,
 }) {
   const [vedtakPending, setVedtakPending] = useState(false);
   const erSelvstendigNaeringsdrivende =
@@ -236,13 +236,6 @@ VurderingAvslag12_x_og_16.propTypes = {
   validerMottatteOpplysninger: PT.func.isRequired,
   mottatteOpplysningerStatus: PT.string.isRequired,
   aktivtSteg: PT.bool,
-};
-
-VurderingAvslag12_x_og_16.defaultProps = {
-  art16_1_fritekst: "",
-  redigerbart: true,
-  formValues: {},
-  aktivtSteg: false,
 };
 
 const VurderingAvslagArtikkel12Og16Form = reduxForm({

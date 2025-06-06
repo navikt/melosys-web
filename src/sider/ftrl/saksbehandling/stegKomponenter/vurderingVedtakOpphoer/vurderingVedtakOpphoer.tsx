@@ -1,7 +1,6 @@
 import * as Nav from "../../../../../navFrontend";
 import "./vurderingVedtakOpphoer.css";
 import { FieldValues, useForm } from "react-hook-form";
-// @ts-expect-error Workaround for @hookform/resolvers/yup with moduleResolution: bundler
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useDispatch, useSelector } from "react-redux";
 import { behandlingsresultatSelectors } from "../../../../../ducks/behandlingsresultat";

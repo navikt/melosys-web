@@ -3,9 +3,6 @@
 exports[`BeregnetTrygdeavgiftDetaljer > snapshot test 1`] = `
 
 <div class="tidligereGrunnlagPanel">
-  <h1 class="navds-heading navds-heading--small">
-    Complete Data Test
-  </h1>
   <table class="navds-table navds-table--small periode_tabell">
     <thead class="navds-table__header header_row">
       <tr class="navds-table__row navds-table__row--shade-on-hover">

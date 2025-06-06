@@ -13,7 +13,7 @@ const journalforingSED = object().shape({
     .erFnrEllerDnr(SKRIV_INN_GYLDIG_FNR_ELLER_DNR)
     .when("brukerNavn", {
       is: undefined,
-      then: string().harIkkeFnrEllerDnrLengde(FANT_INGEN_NAVN_PA_FNR_ELLER_DNR),
+      then: (schema) => schema.harIkkeFnrEllerDnrLengde(FANT_INGEN_NAVN_PA_FNR_ELLER_DNR),
     }),
   brukerNavn: mixed(),
 });
