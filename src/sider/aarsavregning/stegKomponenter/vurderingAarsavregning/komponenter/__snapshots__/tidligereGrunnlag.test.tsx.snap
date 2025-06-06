@@ -3,7 +3,10 @@
 exports[`TidligereGrunnlagAccordion > beregning med grunnlag snapshot test 1`] = `
 
 <div>
-  <div class="tidligereGrunnlagGreyContainer">
+  <div
+    style="--__ac-box-background: var(--a-surface-subtle);"
+    class="navds-box tidligereGrunnlag navds-box-bg"
+  >
     <h3 class="navds-heading navds-heading--small">
       Tidligere grunnlag
     </h3>
@@ -280,7 +283,10 @@ exports[`TidligereGrunnlagAccordion > beregning med grunnlag snapshot test 1`] =
 exports[`TidligereGrunnlagAccordion > manuell beregning snapshot test 1`] = `
 
 <div>
-  <div class="tidligereGrunnlagGreyContainer">
+  <div
+    style="--__ac-box-background: var(--a-surface-subtle);"
+    class="navds-box tidligereGrunnlag navds-box-bg"
+  >
     <h3 class="navds-heading navds-heading--small">
       Tidligere grunnlag
     </h3>
@@ -298,7 +304,10 @@ exports[`TidligereGrunnlagAccordion > manuell beregning snapshot test 1`] = `
 exports[`TidligereGrunnlagAccordion > uten grunnlag snapshot test 1`] = `
 
 <div>
-  <div class="tidligereGrunnlagGreyContainer">
+  <div
+    style="--__ac-box-background: var(--a-surface-subtle);"
+    class="navds-box tidligereGrunnlag navds-box-bg"
+  >
     <h3 class="navds-heading navds-heading--small">
       Tidligere grunnlag
     </h3>
