@@ -1,10 +1,10 @@
-import { HStack, VStack } from "@navikt/ds-react";
-import { Avgift } from "../../../../../services/modules/aarsavregning/aarsavregning";
-import MKV from "../../../../../melosyskodeverk";
+import { VStack } from "@navikt/ds-react";
 import * as KV from "../../../../../kodeverk";
-import * as Utils from "../../../../../utils";
+import MKV from "../../../../../melosyskodeverk";
 import * as Nav from "../../../../../navFrontend";
+import { Avgift } from "../../../../../services/modules/aarsavregning/aarsavregning";
 import { InntektskildeDto } from "../../../../../services/modules/trygdeavgift";
+import * as Utils from "../../../../../utils";
 
 function InntektsperioderTabell({ perioder, avgift }: { perioder?: InntektskildeDto[]; avgift?: Avgift }) {
   const renderTomRad = (length: number) => {
@@ -51,11 +51,6 @@ function InntektsperioderTabell({ perioder, avgift }: { perioder?: Inntektskilde
             : renderTomRad(4)}
         </Nav.Table.Body>
       </Nav.Table>
-      <HStack className="totaltForPerioden" gap="8" align="center" justify="end">
-        <Nav.BodyLong size="small">
-          <b>Årstotal: {Utils.formaterTilNorskBelopUtenDesimaler(avgift?.totalInntekt)}</b> kr
-        </Nav.BodyLong>
-      </HStack>
     </VStack>
   );
 }

@@ -1,4 +1,3 @@
-import MockDate from "mockdate";
 import dayjs from "dayjs";
 
 import {
@@ -23,6 +22,10 @@ import {
 } from "./dato";
 
 describe("dato.js:", () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   describe("vaskInputDato", () => {
     test("godtar alle tillatte kortdatoformater", () => {
       const tillatteDatoer = [
@@ -69,7 +72,8 @@ describe("dato.js:", () => {
     });
 
     test("tolker årstall med 2 siffer til riktig århundre", () => {
-      MockDate.set("1/1/2010");
+      vi.useFakeTimers();
+      vi.setSystemTime(new Date("2010-01-01"));
 
       const testDatoer = [
         { test: "26-04-20", forvent: "26.04.2020" },
@@ -334,14 +338,18 @@ describe("dato.js:", () => {
 
   describe("beregnAlder", () => {
     test("alder er 39 31. desember", () => {
-      MockDate.set("12/31/2017");
+      vi.useFakeTimers();
+      vi.setSystemTime(new Date("2017-12-31"));
+
       const foedselsdato = "1978-01-01";
       const forventetAlder = 39;
       expect(beregnAlder(foedselsdato)).toBe(forventetAlder);
     });
 
     test("alder er 40 1. januar", () => {
-      MockDate.set("1/1/2018");
+      vi.useFakeTimers();
+      vi.setSystemTime(new Date("2018-01-01"));
+
       const foedselsdato = "1978-01-01";
       const forventetAlder = 40;
       expect(beregnAlder(foedselsdato)).toBe(forventetAlder);

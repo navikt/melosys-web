@@ -186,7 +186,7 @@ describe("utils", () => {
     describe("mapTilSkatteforholdProps", () => {
       it("maps skatteforholdsperioder data correctly", () => {
         const taxPeriods = [{ fomDato: "2023-01-01", tomDato: "2023-12-31", skatteplikttype: "SKATTEPLIKTIG" }];
-
+        vi.mocked(Utils._isEmpty).mockReturnValue(false);
         const result = mapTilSkatteforholdProps(taxPeriods, []);
 
         expect(result).toEqual([{ fomDato: "01.01.2023", tomDato: "31.12.2023", skatteplikttype: "SKATTEPLIKTIG" }]);
@@ -198,9 +198,7 @@ describe("utils", () => {
 
         const result = mapTilSkatteforholdProps(undefined, membership);
 
-        expect(result).toEqual([
-          { fomDato: "01.01.2023", tomDato: "31.12.2023", skatteplikttype: "IKKE_SKATTEPLIKTIG" },
-        ]);
+        expect(result).toEqual([{ fomDato: "01.01.2023", tomDato: "31.12.2023", skatteplikttype: undefined }]);
       });
     });
 
@@ -216,7 +214,7 @@ describe("utils", () => {
             erMaanedsbelop: false,
           },
         ];
-        vi.mocked(Utils._isEmpty).mockReturnValue(true);
+        vi.mocked(Utils._isEmpty).mockReturnValue(false);
 
         const result = mapTilInntektskilderProps(income, []);
 
@@ -236,7 +234,7 @@ describe("utils", () => {
         const membership = [{ fomDato: "01.01.2023", tomDato: "31.12.2023" }];
         vi.mocked(Utils._isEmpty).mockReturnValue(false);
 
-        const result = mapTilInntektskilderProps([], membership);
+        const result = mapTilInntektskilderProps(undefined, membership);
 
         expect(result).toEqual([
           {

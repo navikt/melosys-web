@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { TidligereGrunnlagAccordion } from "./tidligereGrunnlagAccordion";
+import { TidligereGrunnlagAccordion } from "./tidligereGrunnlag";
 import { AarsavregningResponse } from "../../../../../services/modules/aarsavregning/aarsavregning";
 import MKV from "../../../../../melosyskodeverk";
 
@@ -109,23 +109,17 @@ describe("TidligereGrunnlagAccordion", () => {
   });
 
   it("manuell beregning snapshot test", async () => {
-    const user = userEvent.setup();
     const manuellResponse = createManuellBeregningResponse();
 
     const { container } = render(<TidligereGrunnlagAccordion aarsavregningResponse={manuellResponse} />);
-
-    await user.click(screen.getByRole("button"));
 
     expect(container).toMatchSnapshot();
   });
 
   it("uten grunnlag snapshot test", async () => {
-    const user = userEvent.setup();
     const noDataResponse = createNoDataResponse();
 
     const { container } = render(<TidligereGrunnlagAccordion aarsavregningResponse={noDataResponse} />);
-
-    await user.click(screen.getByRole("button"));
 
     expect(container).toMatchSnapshot();
   });

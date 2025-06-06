@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
-import TidligereGrunnlagsoversikt from "./tidligereGrunnlagsoversikt";
+import GrunnlagTabeller from "./grunnlagTabeller";
 import { InntektskildeDto, SkatteforholdDto } from "../../../../../services/modules/trygdeavgift";
 import { Avgift } from "../../../../../services/modules/aarsavregning/aarsavregning";
 
@@ -40,20 +40,19 @@ describe("TidligereGrunnlagsoversikt", () => {
   };
 
   it("does not render when no data is provided", () => {
-    const { container } = render(<TidligereGrunnlagsoversikt />);
+    const { container } = render(<GrunnlagTabeller />);
     expect(container.firstChild).toBeNull();
   });
 
-  it("renders with title and skatteforholdsperioder table when data is provided", () => {
-    render(<TidligereGrunnlagsoversikt skatteforholdsperioder={mockSkatteforholdsperioder} />);
+  it("renders with skatteforholdsperioder table when data is provided", () => {
+    render(<GrunnlagTabeller skatteforholdsperioder={mockSkatteforholdsperioder} />);
 
-    expect(screen.getByText("Inntekts- og skatteopplysninger for tidligere beregnet trygdeavgift")).toBeInTheDocument();
     expect(screen.getByTestId("skatteforholdsperioder-tabell")).toBeInTheDocument();
   });
 
   it("shows inntektsperioder table only when avgift has value", () => {
     const { rerender } = render(
-      <TidligereGrunnlagsoversikt
+      <GrunnlagTabeller
         skatteforholdsperioder={mockSkatteforholdsperioder}
         inntektsperioder={mockInntektsperioder}
         avgift={mockAvgiftMedGrunnlag}
@@ -64,7 +63,7 @@ describe("TidligereGrunnlagsoversikt", () => {
     expect(screen.getByTestId("inntektsperioder-tabell")).toBeInTheDocument();
 
     rerender(
-      <TidligereGrunnlagsoversikt
+      <GrunnlagTabeller
         skatteforholdsperioder={mockSkatteforholdsperioder}
         inntektsperioder={mockInntektsperioder}
         avgift={{ totalAvgift: 0, totalInntekt: 0, trygdeavgiftsperioder: [] }}
@@ -76,7 +75,7 @@ describe("TidligereGrunnlagsoversikt", () => {
 
   it("renders correctly with complete data", () => {
     const { container } = render(
-      <TidligereGrunnlagsoversikt
+      <GrunnlagTabeller
         skatteforholdsperioder={mockSkatteforholdsperioder}
         inntektsperioder={mockInntektsperioder}
         avgift={mockAvgiftMedGrunnlag}

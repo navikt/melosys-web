@@ -36,10 +36,27 @@ exports[`SumArsavregningTabell > renders correctly with all possible data 1`] = 
           scope="col"
           class="navds-table__data-cell navds-body-short navds-body-short--small"
         >
-          Tidligere beregnet trygdeavgift fra Melosys
+          Tidligere beregnet trygdeavgift
         </td>
         <td class="navds-table__data-cell navds-table__data-cell--align-right navds-body-short navds-body-short--small">
           20&nbsp;000 kr
+        </td>
+      </tr>
+      <tr class="navds-table__row navds-table__row--shade-on-hover">
+        <td
+          scope="col"
+          class="navds-table__data-cell navds-body-short navds-body-short--small"
+        >
+          +
+        </td>
+        <td
+          scope="col"
+          class="navds-table__data-cell navds-body-short navds-body-short--small"
+        >
+          Tidligere trygdeavgift fra Avgiftssystemet
+        </td>
+        <td class="navds-table__data-cell navds-table__data-cell--align-right navds-body-short navds-body-short--small">
+          5&nbsp;000 kr
         </td>
       </tr>
       <tr class="navds-table__row navds-table__row--shade-on-hover">
@@ -53,7 +70,7 @@ exports[`SumArsavregningTabell > renders correctly with all possible data 1`] = 
           scope="col"
           class="navds-table__data-cell navds-body-short navds-body-short--small"
         >
-          Tidligere beregnet trygdeavgift fra Avgiftssystemet
+          Trygdeavgift fra Avgiftssystemet
         </td>
         <td class="navds-table__data-cell navds-table__data-cell--align-right navds-body-short navds-body-short--small">
           10&nbsp;000 kr
@@ -74,7 +91,7 @@ exports[`SumArsavregningTabell > renders correctly with all possible data 1`] = 
         </td>
         <td class="navds-table__data-cell navds-table__data-cell--align-right navds-body-short navds-body-short--small">
           <b>
-            20&nbsp;000&nbsp;kr&nbsp;
+            25&nbsp;000&nbsp;kr&nbsp;
           </b>
         </td>
       </tr>

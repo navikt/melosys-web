@@ -1,5 +1,4 @@
 import { ComponentProps } from "react";
-import { instance, mock } from "ts-mockito";
 
 import MKV from "../../melosyskodeverk";
 
@@ -7,11 +6,10 @@ import SemistrukturertAdresse, { PostnrStedLandLinje } from "./semistrukturertAd
 import { render, screen } from "@testing-library/react";
 
 describe("SemistrukturertAdresse", () => {
-  const mockedProps = mock<ComponentProps<typeof SemistrukturertAdresse>>();
-  let props = instance(mockedProps);
+  let props: ComponentProps<typeof SemistrukturertAdresse>;
 
   beforeEach(() => {
-    props = instance(mockedProps);
+    props = {} as ComponentProps<typeof SemistrukturertAdresse>;
   });
 
   it("viser noen felter for semistrukturert adresse", () => {
