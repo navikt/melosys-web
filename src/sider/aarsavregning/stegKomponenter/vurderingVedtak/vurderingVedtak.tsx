@@ -26,6 +26,7 @@ import { BrevVedleggVisningstabellInterface } from "../../../../services/modules
 import * as Utils from "../../../../utils";
 import { SumArsavregningTabell } from "../vurderingAarsavregning/komponenter/sumArsavregningTabell";
 import vurdering_vedtak from "./vurderingVedtakSchema";
+import "./vurderingVedtak.css";
 
 const { FASTSATT_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingsresultattyper;
 const { FØRSTEGANGSVEDTAK } = MKV.Koder.vedtakstyper;
@@ -352,7 +353,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
       </Nav.Heading>
 
       {redigerbart && lagretAarsavregning?.endeligAvgiftValg === MANUELL_ENDELIG_AVGIFT && (
-        <Nav.Alert variant="warning" className="blokk-s">
+        <Nav.Alert variant="warning">
           Du har lagt inn &quot;Endelig beregnet trygdeavgift&quot; manuelt og må derfor oppgi en begrunnelse i
           fritekstfeltet.
         </Nav.Alert>

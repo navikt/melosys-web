@@ -296,9 +296,9 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   const trygdeAvgiftSkalIkkeBetalesTilNav =
     medlemskapstypeErPliktig && erBrukerSkattepliktigIHelePerioden(skatteforholdsperioder);
 
-  const tidligereAarsavregningFakturertAvgiftssystem =
-    initiellData.aarsavregningResponse?.tidligereGrunnlagsopplysninger
-      ?.tidligereÅrsavregningFakturertBeloepAvgiftssystem;
+  const tidligereAarsavregningErManueltBeregnet = Boolean(
+    aarsavregningResponse?.tidligereGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep,
+  );
 
   return (
     <>
@@ -352,7 +352,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
                 size="small"
               >
                 <Nav.ExpansionCard.Header>
-                  <Nav.ExpansionCard.Title size="small">Endelig beregnet trygdeavgift</Nav.ExpansionCard.Title>
+                  <Nav.ExpansionCard.Title size="small">Vis detaljert beregning</Nav.ExpansionCard.Title>
                 </Nav.ExpansionCard.Header>
                 <Nav.ExpansionCard.Content>
                   <BeregnetTrygdeavgiftDetaljer
@@ -367,7 +367,6 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
         </BorderedFormContainer>
       )}
 
-      {/* Show SumAarsavregningTabell below bordered container when data is available */}
       {formIsValid &&
         !debouncedBeregningPagaar &&
         !beregningPaagar &&
@@ -379,8 +378,6 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
             nyTrygdeavgift={aarsavregningResponse.avregning.beregnetAvgiftBelop}
             tidligereTrygdeavgift={aarsavregningResponse.avregning.tidligereFakturertBeloep}
             harGrunnlagIMelosys
-            tidligereTrygdeavgiftAvgiftssystem={0}
-            tidligereAarsavregningFakturertAvgiftssystem={tidligereAarsavregningFakturertAvgiftssystem}
           />
         )}
 
@@ -389,17 +386,12 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
           <ManuellAvgiftFormPart
             control={control}
             redigerbart={redigerbart}
-            endeligAvgiftValg={endeligAvgiftValg}
-            manueltAvgiftBeloep={manueltAvgiftBeloep}
             debouncedOppdaterManueltAvgiftBeloep={debouncedOppdaterManueltAvgiftBeloep}
-            tidligereTrygdeavgift={aarsavregningResponse?.avregning?.tidligereFakturertBeloep}
-            erMedGrunnlagFlyt={true}
-            harDeltGrunnlag={false}
+            tidligereAarsavregningErManueltBeregnet={tidligereAarsavregningErManueltBeregnet}
           />
         </BorderedFormContainer>
       )}
 
-      {/* Show SumAarsavregningTabell for manual amount below bordered container when entered */}
       {endeligAvgiftValg === MANUELL_ENDELIG_AVGIFT &&
         manueltAvgiftBeloep !== undefined &&
         manueltAvgiftBeloep !== null &&
@@ -408,8 +400,6 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
             harGrunnlagIMelosys={true}
             nyTrygdeavgift={Number(manueltAvgiftBeloep)}
             tidligereTrygdeavgift={aarsavregningResponse?.avregning?.tidligereFakturertBeloep}
-            tidligereTrygdeavgiftAvgiftssystem={0}
-            tidligereAarsavregningFakturertAvgiftssystem={tidligereAarsavregningFakturertAvgiftssystem}
           />
         )}
 

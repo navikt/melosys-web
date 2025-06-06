@@ -23,11 +23,11 @@ describe("SumArsavregningTabell", () => {
   it("shows Melosys row only when harGrunnlagIMelosys is true", () => {
     const { rerender } = render(<SumArsavregningTabell harGrunnlagIMelosys={true} />);
 
-    expect(screen.getByText("Tidligere beregnet trygdeavgift fra Melosys")).toBeInTheDocument();
+    expect(screen.getByText("Tidligere beregnet trygdeavgift")).toBeInTheDocument();
 
     rerender(<SumArsavregningTabell harGrunnlagIMelosys={false} />);
 
-    expect(screen.queryByText("Tidligere beregnet trygdeavgift fra Melosys")).not.toBeInTheDocument();
+    expect(screen.queryByText("Tidligere beregnet trygdeavgift")).not.toBeInTheDocument();
   });
 
   it("shows current year Avgiftssystem row with correct label when value is provided", () => {
@@ -35,25 +35,25 @@ describe("SumArsavregningTabell", () => {
       <SumArsavregningTabell harGrunnlagIMelosys={false} tidligereTrygdeavgiftAvgiftssystem={8000} />,
     );
     // Label for current year's input
-    const currentRow = screen.getByText("Innbetalt fra Avgiftssystemet").closest("tr");
+    const currentRow = screen.getByText("Trygdeavgift fra Avgiftssystemet").closest("tr");
     expect(within(currentRow!).getByText("8 000 kr")).toBeInTheDocument();
 
     rerender(<SumArsavregningTabell harGrunnlagIMelosys={false} />);
 
-    expect(screen.queryByText("Innbetalt fra Avgiftssystemet")).not.toBeInTheDocument();
+    expect(screen.queryByText("Trygdeavgift fra Avgiftssystemet")).not.toBeInTheDocument();
   });
 
   it("shows previous year Avgiftssystem row with correct label when value is provided", () => {
     const { rerender } = render(
-      <SumArsavregningTabell harGrunnlagIMelosys={false} tidligereAarsavregningFakturertAvgiftssystem={5000} />,
+      <SumArsavregningTabell harGrunnlagIMelosys={false} tidligereAarsavregningInnbetaltFraAvgiftssystem={5000} />,
     );
     // Label for previous year's value in a correction scenario
-    const previousRow = screen.getByText("Tidligere innbetalt fra Avgiftssystemet").closest("tr");
+    const previousRow = screen.getByText("Trygdeavgift fra Avgiftssystemet").closest("tr");
     expect(within(previousRow!).getByText("5 000 kr")).toBeInTheDocument();
 
     rerender(<SumArsavregningTabell harGrunnlagIMelosys={false} />);
 
-    expect(screen.queryByText("Tidligere innbetalt fra Avgiftssystemet")).not.toBeInTheDocument();
+    expect(screen.queryByText("Trygdeavgift fra Avgiftssystemet")).not.toBeInTheDocument();
   });
 
   it("calculates and displays difference correctly without previous year avgiftssystem", () => {
@@ -69,11 +69,11 @@ describe("SumArsavregningTabell", () => {
     expect(screen.getByText("50 000 kr")).toBeInTheDocument();
 
     // Check value in "Tidligere beregnet trygdeavgift fra Melosys" row
-    const melosysRow = screen.getByText("Tidligere beregnet trygdeavgift fra Melosys").closest("tr");
+    const melosysRow = screen.getByText("Tidligere beregnet trygdeavgift").closest("tr");
     expect(within(melosysRow!).getByText("20 000 kr")).toBeInTheDocument();
 
     // Check value in "Innbetalt fra Avgiftssystemet" row
-    const avgiftssystemRow = screen.getByText("Innbetalt fra Avgiftssystemet").closest("tr");
+    const avgiftssystemRow = screen.getByText("Trygdeavgift fra Avgiftssystemet").closest("tr");
     expect(within(avgiftssystemRow!).getByText("10 000 kr")).toBeInTheDocument();
 
     // Check value in "Differanse" row
@@ -87,7 +87,7 @@ describe("SumArsavregningTabell", () => {
         nyTrygdeavgift={50000}
         tidligereTrygdeavgift={20000}
         tidligereTrygdeavgiftAvgiftssystem={10000} // Current year input
-        tidligereAarsavregningFakturertAvgiftssystem={5000} // Previous year value
+        tidligereAarsavregningInnbetaltFraAvgiftssystem={5000} // Previous year value
         harGrunnlagIMelosys={true}
       />,
     );
@@ -109,7 +109,7 @@ describe("SumArsavregningTabell", () => {
         nyTrygdeavgift={50000}
         tidligereTrygdeavgift={20000}
         tidligereTrygdeavgiftAvgiftssystem={10000}
-        tidligereAarsavregningFakturertAvgiftssystem={5000}
+        tidligereAarsavregningInnbetaltFraAvgiftssystem={5000}
         harGrunnlagIMelosys={true}
       />,
     );

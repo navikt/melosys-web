@@ -82,20 +82,20 @@ export const hentMedlemskapsFomTomDato = (medlemskapsperioder?: any[]) => {
 };
 
 export const mapTilSkatteforholdProps = (skatteforholdsperioder?: any[], medlemskapsperioder?: any[]) => {
-  const { fom, tom } = hentMedlemskapsFomTomDato(medlemskapsperioder);
-  if (skatteforholdsperioder) {
+  if (skatteforholdsperioder && !Utils._isEmpty(skatteforholdsperioder)) {
     return skatteforholdsperioder.map((skatteForhold) => ({
       fomDato: Utils.dato.formatterDatoTilNorsk(skatteForhold.fomDato),
       tomDato: Utils.dato.formatterDatoTilNorsk(skatteForhold.tomDato),
       skatteplikttype: skatteForhold.skatteplikttype,
     }));
   }
+  const { fom, tom } = hentMedlemskapsFomTomDato(medlemskapsperioder);
   if (fom && tom) {
     return [
       {
         fomDato: Utils.dato.formatterDatoTilNorsk(fom),
         tomDato: Utils.dato.formatterDatoTilNorsk(tom),
-        skatteplikttype: IKKE_SKATTEPLIKTIG,
+        skatteplikttype: undefined,
       },
     ];
   }
@@ -103,8 +103,7 @@ export const mapTilSkatteforholdProps = (skatteforholdsperioder?: any[], medlems
 };
 
 export const mapTilInntektskilderProps = (inntektskilder?: any[], medlemskapsperioder?: any[]) => {
-  const { fom, tom } = hentMedlemskapsFomTomDato(medlemskapsperioder);
-  if (inntektskilder && inntektskilder.length > 0) {
+  if (inntektskilder && !Utils._isEmpty(inntektskilder)) {
     return inntektskilder.map((inntektskilde) => ({
       fomDato: Utils.dato.formatterDatoTilNorsk(inntektskilde.fomDato),
       tomDato: Utils.dato.formatterDatoTilNorsk(inntektskilde.tomDato),
@@ -114,6 +113,7 @@ export const mapTilInntektskilderProps = (inntektskilder?: any[], medlemskapsper
       erMaanedsbelop: Utils.streng.boolTilUppercaseStreng(inntektskilde.erMaanedsbelop),
     }));
   }
+  const { fom, tom } = hentMedlemskapsFomTomDato(medlemskapsperioder);
   if (fom && tom) {
     return [
       {

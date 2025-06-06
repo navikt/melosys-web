@@ -759,6 +759,10 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     initiellData.aarsavregningResponse?.tidligereGrunnlagsopplysninger
       ?.tidligereÅrsavregningFakturertBeloepAvgiftssystem;
 
+  const tidligereAarsavregningErManueltBeregnet = Boolean(
+    initiellData.aarsavregningResponse?.tidligereGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep,
+  );
+
   return (
     <div className="vurderingAarsavregning">
       <InnbetaltFraAvgiftssystemetInput
@@ -894,13 +898,8 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
           <ManuellAvgiftFormPart
             control={control}
             redigerbart={redigerbart}
-            endeligAvgiftValg={endeligAvgiftValg}
-            manueltAvgiftBeloep={manueltAvgiftBeloep}
             debouncedOppdaterManueltAvgiftBeloep={debouncedOppdaterManueltAvgiftBeloep}
-            tidligereTrygdeavgift={aarsavregningResponse?.avregning?.tidligereFakturertBeloep}
-            erMedGrunnlagFlyt={false}
-            harDeltGrunnlag={harDeltGrunnlag}
-            totaltForskuddsvisFakturert={totaltForskuddsvisFakturert}
+            tidligereAarsavregningErManueltBeregnet={tidligereAarsavregningErManueltBeregnet}
           />
         </BorderedFormContainer>
       )}

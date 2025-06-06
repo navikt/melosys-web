@@ -11,7 +11,7 @@ interface TidligereGrunnlagProps {
 export function InnbetaltFraAvgiftssystemetInput({ control, redigerbart, erNyAarsavregning }: TidligereGrunnlagProps) {
   return (
     <Forms.Input
-      label="Innbetalt fra Avgiftssystemet"
+      label="Trygdeavgift fra Avgiftssystemet"
       description={erNyAarsavregning ? "Du skal kun endre hvis tidligere oppgitte beløp er feil" : ""}
       name="totaltForskuddsvisFakturert"
       control={control}
