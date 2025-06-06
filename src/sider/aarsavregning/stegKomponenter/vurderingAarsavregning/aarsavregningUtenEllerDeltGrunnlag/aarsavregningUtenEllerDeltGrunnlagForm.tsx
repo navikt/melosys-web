@@ -755,7 +755,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     medlemskapstypeErPliktig && erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder);
   const skjemaErRedigerbart = redigerbart && !endrerBestemmelse;
 
-  const tidligereAarsavregningInnbetaltFraAvgiftssystem =
+  const tidligereAarsavregningTrygdeavgiftFraAvgiftssystem =
     initiellData.aarsavregningResponse?.tidligereGrunnlagsopplysninger
       ?.tidligereÅrsavregningFakturertBeloepAvgiftssystem;
 
@@ -768,7 +768,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       <InnbetaltFraAvgiftssystemetInput
         control={control}
         redigerbart={skjemaErRedigerbart}
-        erNyAarsavregning={Boolean(tidligereAarsavregningInnbetaltFraAvgiftssystem)}
+        erNyAarsavregning={Boolean(tidligereAarsavregningTrygdeavgiftFraAvgiftssystem)}
       />
 
       <EndeligAvgiftValgRadioGroup
@@ -889,7 +889,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
             nyTrygdeavgift={aarsavregningResponse?.avregning?.beregnetAvgiftBelop}
             tidligereTrygdeavgift={aarsavregningResponse?.avregning?.tidligereFakturertBeloep}
             tidligereTrygdeavgiftAvgiftssystem={aarsavregningResponse?.avregning?.tidligereFakturertBeloepAvgiftssystem}
-            tidligereAarsavregningInnbetaltFraAvgiftssystem={tidligereAarsavregningInnbetaltFraAvgiftssystem}
+            tidligereAarsavregningTrygdeavgiftFraAvgiftssystem={tidligereAarsavregningTrygdeavgiftFraAvgiftssystem}
           />
         )}
 
@@ -916,7 +916,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
             tidligereTrygdeavgiftAvgiftssystem={
               totaltForskuddsvisFakturert ? Number(totaltForskuddsvisFakturert) : undefined
             }
-            tidligereAarsavregningInnbetaltFraAvgiftssystem={tidligereAarsavregningInnbetaltFraAvgiftssystem}
+            tidligereAarsavregningTrygdeavgiftFraAvgiftssystem={tidligereAarsavregningTrygdeavgiftFraAvgiftssystem}
           />
         )}
 

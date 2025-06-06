@@ -45,15 +45,15 @@ describe("SumArsavregningTabell", () => {
 
   it("shows previous year Avgiftssystem row with correct label when value is provided", () => {
     const { rerender } = render(
-      <SumArsavregningTabell harGrunnlagIMelosys={false} tidligereAarsavregningInnbetaltFraAvgiftssystem={5000} />,
+      <SumArsavregningTabell harGrunnlagIMelosys={false} tidligereAarsavregningTrygdeavgiftFraAvgiftssystem={5000} />,
     );
     // Label for previous year's value in a correction scenario
-    const previousRow = screen.getByText("Trygdeavgift fra Avgiftssystemet").closest("tr");
+    const previousRow = screen.getByText("Tidligere trygdeavgift fra Avgiftssystemet").closest("tr");
     expect(within(previousRow!).getByText("5 000 kr")).toBeInTheDocument();
 
     rerender(<SumArsavregningTabell harGrunnlagIMelosys={false} />);
 
-    expect(screen.queryByText("Trygdeavgift fra Avgiftssystemet")).not.toBeInTheDocument();
+    expect(screen.queryByText("Tidligere trygdeavgift fra Avgiftssystemet")).not.toBeInTheDocument();
   });
 
   it("calculates and displays difference correctly without previous year avgiftssystem", () => {
@@ -87,7 +87,7 @@ describe("SumArsavregningTabell", () => {
         nyTrygdeavgift={50000}
         tidligereTrygdeavgift={20000}
         tidligereTrygdeavgiftAvgiftssystem={10000} // Current year input
-        tidligereAarsavregningInnbetaltFraAvgiftssystem={5000} // Previous year value
+        tidligereAarsavregningTrygdeavgiftFraAvgiftssystem={5000} // Previous year value
         harGrunnlagIMelosys={true}
       />,
     );
@@ -109,7 +109,7 @@ describe("SumArsavregningTabell", () => {
         nyTrygdeavgift={50000}
         tidligereTrygdeavgift={20000}
         tidligereTrygdeavgiftAvgiftssystem={10000}
-        tidligereAarsavregningInnbetaltFraAvgiftssystem={5000}
+        tidligereAarsavregningTrygdeavgiftFraAvgiftssystem={5000}
         harGrunnlagIMelosys={true}
       />,
     );
