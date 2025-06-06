@@ -1,15 +1,13 @@
 import { ComponentProps } from "react";
-import { instance, mock } from "ts-mockito";
 
 import EditerbartElement from "./editerbartElement";
 import { Status } from "./types";
 import { render, screen } from "@testing-library/react";
 
 describe("EditerbartElement", () => {
-  const mockedProps = mock<ComponentProps<typeof EditerbartElement>>();
-  const props = instance(mockedProps);
-
-  props.redigerbart = true;
+  const props: ComponentProps<typeof EditerbartElement> = {
+    redigerbart: true,
+  } as ComponentProps<typeof EditerbartElement>;
 
   it("viser innhold etter redigering er utført", () => {
     props.harData = true;

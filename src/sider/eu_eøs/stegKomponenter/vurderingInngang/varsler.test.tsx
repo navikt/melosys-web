@@ -1,4 +1,3 @@
-import { instance, mock } from "ts-mockito";
 import { ComponentProps } from "react";
 import Varsler from "./varsler";
 import MKV from "../../../../melosyskodeverk";
@@ -24,13 +23,12 @@ vi.mock(
 );
 
 describe("Varsler", () => {
-  const mockedProps = mock<ComponentProps<typeof Varsler>>();
-  let props = instance(mockedProps);
+  let props: ComponentProps<typeof Varsler>;
   const konvensjonmelding =
     "Husk at du må vurdere om inngangsvilkårene i konvensjonen med Storbritannia av 30. juni 2023, eller separasjonsavtalen av 28. januar 2020, er oppfylt.";
 
   beforeEach(() => {
-    props = instance(mockedProps);
+    props = {} as ComponentProps<typeof Varsler>;
     props.landkoder = ["DK"];
     props.behandlingID = 4;
   });

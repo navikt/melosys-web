@@ -1,29 +1,81 @@
 import { ComponentProps } from "react";
-import { instance, mock } from "ts-mockito";
 import { render, screen } from "@testing-library/react";
 
 import { Bostedsadresse, Kontaktadresse, Oppholdsadresse } from "../../../../../graphql";
 import { Adresser } from "./adresser";
 
 describe("Adresser", () => {
-  const mockedProps = mock<ComponentProps<typeof Adresser>>();
-  let props = instance(mockedProps);
+  let props: ComponentProps<typeof Adresser>;
 
-  const mockedBostedsadresse = mock<Bostedsadresse>();
-  const bostedsadresser = [instance(mockedBostedsadresse)];
+  const bostedsadresser: Bostedsadresse[] = [
+    {
+      coAdressenavn: "Co Adresse",
+      adresse: {
+        tilleggsnavn: null,
+        gatenavn: "Testgata",
+        husnummerEtasjeLeilighet: "1",
+        postboks: null,
+        postnummer: "0001",
+        poststed: "Oslo",
+        region: null,
+        land: "NO",
+      },
+      gyldigFraOgMed: "2020-01-01",
+      gyldigTilOgMed: null,
+      kilde: "Folkeregisteret",
+      master: "Freg",
+      erHistorisk: false,
+    },
+  ] as Bostedsadresse[];
 
-  const mockedOppholdsadresse = mock<Oppholdsadresse>();
-  const oppholdsadresser = [instance(mockedOppholdsadresse)];
+  const oppholdsadresser: Oppholdsadresse[] = [
+    {
+      coAdressenavn: "Co Opphold",
+      adresse: {
+        tilleggsnavn: null,
+        gatenavn: "Oppholdsgata",
+        husnummerEtasjeLeilighet: "2",
+        postboks: null,
+        postnummer: "0002",
+        poststed: "Oslo",
+        region: null,
+        land: "NO",
+      },
+      gyldigFraOgMed: "2020-01-01",
+      gyldigTilOgMed: null,
+      kilde: "Folkeregisteret",
+      master: "Freg",
+      erHistorisk: false,
+    },
+  ] as Oppholdsadresse[];
 
-  const mockedKontaktadresse = mock<Kontaktadresse>();
-  const kontaktadresser = [instance(mockedKontaktadresse)];
+  const kontaktadresser: Kontaktadresse[] = [
+    {
+      coAdressenavn: "Co Kontakt",
+      strukturertAdresse: {
+        tilleggsnavn: null,
+        gatenavn: "Kontaktgata",
+        husnummerEtasjeLeilighet: "3",
+        postboks: null,
+        postnummer: "0003",
+        poststed: "Oslo",
+        region: null,
+        land: "NO",
+      },
+      semistrukturertAdresse: null,
+      gyldigFraOgMed: "2020-01-01",
+      gyldigTilOgMed: null,
+      kilde: "Folkeregisteret",
+      master: "Freg",
+      erHistorisk: false,
+    },
+  ] as Kontaktadresse[];
 
   beforeEach(() => {
-    props = instance(mockedProps);
+    props = {} as ComponentProps<typeof Adresser>;
     props.data = {
       hentSaksopplysninger: {
         persondata: {
-          ...(props.data.hentSaksopplysninger?.persondata || []),
           bostedsadresser,
           oppholdsadresser,
           kontaktadresser,
