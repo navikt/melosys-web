@@ -23,7 +23,7 @@ export function SumArsavregningTabell({
     (tidligereAarsavregningTrygdeavgiftFraAvgiftssystem ?? 0);
 
   return (
-    <div className="sumArsavregningTabell">
+    <Nav.Box className="sumArsavregningTabell" background="surface-subtle">
       <Nav.Table size="small" width={500} className="periode_tabell">
         <Nav.Table.Body>
           <Nav.Table.Row>
@@ -75,6 +75,6 @@ export function SumArsavregningTabell({
           </Nav.Table.Row>
         </Nav.Table.Body>
       </Nav.Table>
-    </div>
+    </Nav.Box>
   );
 }
