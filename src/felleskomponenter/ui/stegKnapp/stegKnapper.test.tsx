@@ -1,15 +1,13 @@
 import { ComponentProps } from "react";
-import { instance, mock } from "ts-mockito";
 import StegKnapper from "./stegKnapper";
 import { renderWithProviders } from "../../../ducks/test-utils/renderWithProviders";
 import { screen, within } from "@testing-library/react";
 
 describe("stegKnapper", () => {
-  const mockedProps = mock<ComponentProps<typeof StegKnapper>>();
-  let props = instance(mockedProps);
+  let props: ComponentProps<typeof StegKnapper>;
 
   beforeEach(() => {
-    props = instance(mockedProps);
+    props = {} as ComponentProps<typeof StegKnapper>;
     props.bekreftKnappProps = {};
   });
 

@@ -1,5 +1,4 @@
 import { ComponentProps } from "react";
-import { instance, mock } from "ts-mockito";
 
 import { screen } from "@testing-library/react";
 
@@ -53,8 +52,7 @@ describe("VurderingInngang", () => {
     },
   });
 
-  const mockedProps = mock<ComponentProps<typeof VurderingInngang>>();
-  let props = instance(mockedProps);
+  let props: ComponentProps<typeof VurderingInngang>;
 
   beforeEach(() => {
     props = {
