@@ -271,18 +271,6 @@ function Oppsummering({
                       {KV.objektTilTerm(sakstype)} - {KV.objektTilTerm(sakstema)}
                     </Nav.Heading>
                   </Nav.Column>
-                  <Nav.Column xs="4">
-                    <div className="knapp__container">
-                      <Nav.Button
-                        variant="secondary"
-                        disabled={disableEndreKnapp}
-                        onClick={() => setSkalViseEndreModal(true)}
-                        icon={<Ikoner.BlyantActive />}
-                      >
-                        Endre
-                      </Nav.Button>
-                    </div>
-                  </Nav.Column>
                 </Nav.Row>
                 <Nav.Row>
                   <Nav.Column xs="12">
@@ -314,6 +302,20 @@ function Oppsummering({
                         {behandlingsresultattype.term}
                       </Nav.Tag>
                     )}
+                  </Nav.Column>
+                </Nav.Row>
+                <Nav.Row>
+                  <Nav.Column xs="4">
+                    <div className="knapp__container">
+                      <Nav.Button
+                        variant="secondary"
+                        disabled={disableEndreKnapp}
+                        onClick={() => setSkalViseEndreModal(true)}
+                        icon={<Ikoner.BlyantActive />}
+                      >
+                        Endre
+                      </Nav.Button>
+                    </div>
                   </Nav.Column>
                 </Nav.Row>
               </div>
