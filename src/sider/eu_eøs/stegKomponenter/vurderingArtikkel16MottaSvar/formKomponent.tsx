@@ -13,6 +13,7 @@ import {
   anmodningsperiodesvarSelectors,
 } from "../../../../ducks/anmodningsperiodesvar";
 import { connect, ConnectedProps, useDispatch, useSelector } from "react-redux";
+import { useAppDispatch } from "../../../../hooks/redux";
 import { RootState } from "AppTypes";
 import { anmodningsperioderSelectors } from "../../../../ducks/anmodningsperioder";
 import { AnmodningsperiodesvarResDto } from "../../../../services/modules/anmodningsperioder/svar/svar";
@@ -55,7 +56,7 @@ type FormKomponentProps = PropsFromRedux & {
 };
 
 function FormKomponent({ redigerbart, formValues, oppdaterData, formIsValid }: FormKomponentProps) {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const anmodningsperiodeID = useSelector(anmodningsperioderSelectors.AnmodningsperiodeIDSelector);
 
   const lagreSvar = async (data: FormValuesProps & { formIsValid: boolean }) => {

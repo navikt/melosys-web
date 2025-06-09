@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+import { useAppDispatch } from "../../../../../hooks/redux";
 
 import MKV from "../../../../../melosyskodeverk";
 import * as Symboler from "../../symboler";
@@ -22,7 +23,7 @@ interface SoknadslandvelgerProps {
 }
 
 function Soknadslandvelger({ redigerbart, lagreSoknadOgOppfriskSaksopplysninger }: SoknadslandvelgerProps) {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [status, setStatus] = useState<Status>(Status.RedigeringUtfort);
 
   const behandlingHarPeriode = useSelector(mottatteOpplysningerSelectors.HarPeriodeSelector);

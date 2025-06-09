@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+import { useAppDispatch } from "../../../../hooks/redux";
 import { FieldValues, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { KTObject } from "@navikt/melosys-kodeverk";
@@ -33,7 +34,7 @@ interface Props {
 }
 
 export function VurderingBestemmelse({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: Props) {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const lovvalgsperiode = useSelector(lovvalgsperioderSelectors.LovvalgsperiodeSelector);

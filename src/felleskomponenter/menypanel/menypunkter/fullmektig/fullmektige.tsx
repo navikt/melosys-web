@@ -1,4 +1,5 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+import { useAppDispatch } from "../../../../hooks/redux";
 
 import MKV from "../../../../melosyskodeverk";
 
@@ -34,7 +35,7 @@ interface FullmektigeProps {
 }
 
 function Fullmektige({ redigerbart, finnOrganisasjonAdresse, finnPersonAdresse }: FullmektigeProps) {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const saksnummer = useSelector(fagsakSelectors.SaksnummerSelector);
   const behandlingstype = useSelector(behandlingerSelectors.BehandlingstypeKodeSelector);
   const [{ harBehandlingMedTrygdeavgift }] = useAsyncCallbackState(

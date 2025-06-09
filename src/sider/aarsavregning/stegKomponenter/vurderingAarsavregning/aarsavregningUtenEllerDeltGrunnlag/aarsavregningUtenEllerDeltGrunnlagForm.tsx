@@ -2,7 +2,8 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { FieldValue, useFieldArray, useForm, useWatch } from "react-hook-form";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+import { useAppDispatch } from "../../../../../hooks/redux";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import { behandlingsresultatSelectors } from "../../../../../ducks/behandlingsresultat";
 import { medlemskapsperioderOperations } from "../../../../../ducks/medlemskapsperioder";
@@ -110,7 +111,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as any;
   const aarsavregningID = useSelector(behandlingsresultatSelectors.ÅrsavregningIDSelector);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const {
     control,

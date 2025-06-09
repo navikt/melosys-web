@@ -2,6 +2,7 @@ import { KTObject } from "@navikt/melosys-kodeverk";
 import { RootState } from "AppTypes";
 import { useCallback, useEffect, useState } from "react";
 import { connect, ConnectedProps, useDispatch } from "react-redux";
+import { useAppDispatch } from "../../../../hooks/redux";
 import { Action } from "redux";
 import { getFormValues, reduxForm } from "redux-form";
 import { ThunkDispatch } from "redux-thunk";
@@ -159,7 +160,7 @@ function VurderingVedtak({
     standardvedlegg: [],
   });
   const isMounted = Hooks.useIsMounted();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   let oppdaterFørKontroll = true;
 
   const skalViseKopiTilArbeidsgiverCheckbox = ![CAN_ART6_2, USA_ART5_4].includes(resultat.bestemmelse);

@@ -1,4 +1,5 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+import { useAppDispatch } from "../../../hooks/redux";
 
 import MKV from "../../../melosyskodeverk";
 import * as Api from "../../../services/api";
@@ -29,7 +30,7 @@ const {
 } = MKV.Koder.behandlinger.behandlingsresultattyper;
 
 export function DialogboksBekreftValg() {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [feil, setFeil] = useState(undefined);
 
   const saksnummer = useSelector(fagsakSelectors.SaksnummerSelector);

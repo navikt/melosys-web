@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { connect, ConnectedProps, useDispatch, useSelector } from "react-redux";
+import { useAppDispatch } from "../../../../hooks/redux";
 import { getFormValues, InjectedFormProps, isValid, reduxForm } from "redux-form";
 import MKV from "../../../../melosyskodeverk";
 import * as Nav from "../../../../navFrontend";
@@ -94,7 +95,7 @@ export function VurderingArtikkel16Vedtak({
   aktivtSteg = false,
   validerMottatteOpplysninger,
 }: VurderingArtikkel16VedtakProps & InjectedFormProps<FormValuesProps, VurderingArtikkel16VedtakProps>) {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [vedtakPending, setVedtakPending] = useState(false);
   let oppdaterFørKontroll = true;
 
@@ -188,7 +189,6 @@ export function VurderingArtikkel16Vedtak({
           vedtakstype: formValues.vedtakstype || FØRSTEGANGSVEDTAK,
           nyVurderingBakgrunn: formValues.vedtakstypebegrunnelse,
         };
-        // @ts-expect-error generisk beskrivelse
         dispatch(vedtakOperations.fatt(behandlingID, request)).then((res) => {
           if (res.data?.data?.error) {
             setVedtakPending(false);

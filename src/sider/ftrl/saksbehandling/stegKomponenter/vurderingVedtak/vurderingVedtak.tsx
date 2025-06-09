@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { RootState } from "AppTypes";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+import { useAppDispatch } from "../../../../../hooks/redux";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 import { FieldValues, useForm } from "react-hook-form";
@@ -91,7 +92,7 @@ interface Props {
 }
 
 export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const medlemskapsperioder = useSelector(medlemskapsperioderSelectors.AlleMedlemskapsperioderSelector);
   const soknadsland = useSelector(mottatteOpplysningerSelectors.SoknadslandkoderSelector);

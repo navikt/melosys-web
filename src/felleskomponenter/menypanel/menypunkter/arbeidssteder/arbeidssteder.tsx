@@ -1,5 +1,6 @@
 import { change } from "redux-form";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+import { useAppDispatch } from "../../../../hooks/redux";
 
 import * as KV from "../../../../kodeverk";
 import * as Utils from "../../../../utils";
@@ -57,7 +58,7 @@ interface ArbeidsstederProps {
 }
 
 function Arbeidssteder({ redigerbart, visArbeidsforholdRolleEtiketter, behandlingstema }: ArbeidsstederProps) {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const slettFastArbeidsstedOgHjemmekontorAvklaring = () => {
     dispatch(change(KV.Form.SOKNAD, "arbeidPaaLand.erFastArbeidssted", null));
     dispatch(change(KV.Form.SOKNAD, "arbeidPaaLand.erHjemmekontor", null));

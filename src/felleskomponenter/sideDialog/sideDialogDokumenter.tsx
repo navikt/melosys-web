@@ -1,4 +1,5 @@
-import { useDispatch } from "react-redux";
+// Removed useDispatch import from "react-redux";
+import { useAppDispatch } from "../../hooks/redux";
 import { DokumentOversikt, Mottaksretning } from "Domene";
 import { change } from "redux-form";
 import { v4 as uuid } from "uuid";
@@ -99,7 +100,7 @@ interface SideDialogDokumenterProps {
 
 function SideDialogDokumenter({ behandlingID, dokumentOversikt, setAktivTab }: SideDialogDokumenterProps) {
   const [utkast] = useAsyncCallbackState(() => Api.Brevutkast.hentBrevutkast(behandlingID), [], []);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const handleValgtUtkast = (valgtUtkast: Api.Brevutkast.BrevutkastResDto | null) => {
     dispatch(change(KV.Form.SEND_BREV, "aktivtUtkast", valgtUtkast));

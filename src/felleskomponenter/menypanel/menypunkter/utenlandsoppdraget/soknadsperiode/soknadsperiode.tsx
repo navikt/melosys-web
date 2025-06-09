@@ -1,6 +1,7 @@
 import { FieldValues, useForm } from "react-hook-form";
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+import { useAppDispatch } from "../../../../../hooks/redux";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import MKV from "../../../../../melosyskodeverk";
@@ -24,7 +25,7 @@ interface SoknadsperiodeProps {
 }
 
 export function Soknadsperiode({ redigerbart, tittel, lagreSoknadOgOppfriskSaksopplysninger }: SoknadsperiodeProps) {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [erEndrePeriodeSynlig, setErEndrePeriodeSynlig] = useState(false);
   const behandlingHarLand = useSelector(mottatteOpplysningerSelectors.HarLandSelector);
   const soknadsperiode = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);

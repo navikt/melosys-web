@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { FieldValues, useForm } from "react-hook-form";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+import { useAppDispatch } from "../../../hooks/redux";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Feilmeldinger } from "../../../felleskomponenter/feilmeldinger";
 
@@ -40,7 +41,7 @@ function VurderingUnntakMedlemskap({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
   const [bestemmelser, setBestemmelser] = useState<KTObject[] | undefined>(undefined);
   const [skalOppdatereRegisteropplysninger, setSkalOppdatereRegisteropplysninger] = useState(true);
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const sakstype = useSelector(fagsakSelectors.SakstypeKodeSelector);

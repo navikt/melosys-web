@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { RouteComponentProps } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+import { useAppDispatch } from "../../hooks/redux";
 
 import { KTObject } from "@navikt/melosys-kodeverk";
 import MKV from "../../melosyskodeverk";
@@ -43,7 +44,7 @@ function Saksbehandling({ behandlingOppfriskes, startOgVisOppfriskModal, visOppf
   const [behandlingID, setBehandlingID] = useState(-1);
   const [saksopplysningerLastet, setSaksopplysningerLastet] = useState(false);
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const land = useSelector(mottatteOpplysningerSelectors.SoknadslandkoderSelector);
   const mottatteOpplysninger = useSelector(mottatteOpplysningerSelectors.MottatteOpplysningerDataSelector);
@@ -78,7 +79,6 @@ function Saksbehandling({ behandlingOppfriskes, startOgVisOppfriskModal, visOppf
       setBehandlingID(behandlingId);
       await dispatch(fagsakOperations.hent(saksnr));
       const response = await dispatch(behandlingerOperations.hentBehandling(behandlingId));
-      // @ts-expect-error generisk beskrivelse
       const behandling = response.data;
       if (!behandling) return false;
 

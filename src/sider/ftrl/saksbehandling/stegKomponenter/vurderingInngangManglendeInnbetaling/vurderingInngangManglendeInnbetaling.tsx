@@ -1,5 +1,6 @@
 import { useContext, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+import { useAppDispatch } from "../../../../../hooks/redux";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FieldValues, useForm } from "react-hook-form";
 import * as Forms from "../../../../../felleskomponenter/forms";
@@ -22,7 +23,7 @@ interface Props {
 }
 
 export function VurderingInngangManglendeInnbetaling({ bekreft, aktivtSteg, oppdaterStatus }: Props) {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const { behandlingOppfriskes } = useContext(FellesHandlersContext) as any;

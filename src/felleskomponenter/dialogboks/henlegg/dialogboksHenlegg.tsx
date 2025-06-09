@@ -1,5 +1,6 @@
 import { ChangeEventHandler, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+import { useAppDispatch } from "../../../hooks/redux";
 
 import MKV from "../../../melosyskodeverk";
 import * as Api from "../../../services/api";
@@ -27,7 +28,7 @@ interface DialogboksHenleggSakProps {
 }
 
 export function DialogboksHenleggSak({ avbryt }: DialogboksHenleggSakProps) {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [feil, setFeil] = useState<undefined | string>(undefined);
 
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);

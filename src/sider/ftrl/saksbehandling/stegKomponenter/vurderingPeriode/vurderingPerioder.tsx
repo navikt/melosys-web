@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+import { useAppDispatch } from "../../../../../hooks/redux";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FieldValue, useFieldArray, useForm } from "react-hook-form";
 
@@ -70,7 +71,7 @@ const mapInitialMedlemskapsperioder = (
     .map(mapTilMedlemskapsperiodeProps);
 
 export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: VurderingPerioderProps) {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [lovligeDekninger, setLovligeDekninger] = useState<string[]>([]);
   const [lovligeInnvilgelsesresultat, setLovligeInnvilgelsesresultat] = useState<string[]>([]);
 

@@ -1,4 +1,5 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+import { useAppDispatch } from "../../../../hooks/redux";
 import * as Nav from "../../../../navFrontend";
 import * as Api from "../../../../services/api";
 import * as Mui from "../../../../felleskomponenter/ui";
@@ -23,7 +24,7 @@ export function VurderingInngang({
   oppfyllerInngangsvilkar,
   inngangsvilkaar,
 }: VurderingInngangProps) {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [feil, setFeil] = useState<ReactElement | undefined>(undefined);
   const behandlingID: number = useSelector(behandlingerSelectors.BehandlingIDSelector) as number;
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);

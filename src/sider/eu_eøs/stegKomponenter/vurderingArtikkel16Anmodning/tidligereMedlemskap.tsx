@@ -4,12 +4,13 @@ import { v4 as uuid } from "uuid";
 import { FieldArray, WrappedFieldArrayProps } from "redux-form";
 import { Medlemsperiode } from "../../../../services/modules/behandlinger/behandling";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+// Removed useDispatch import from "react-redux";
+import { useAppDispatch } from "../../../../hooks/redux";
 import { behandlingsperioderOperations } from "../../../../ducks/behandlingsperioder";
 
 type TidligereMedlemskapsperioderProps = TidligereMedlemskapProps & WrappedFieldArrayProps<number>;
 function TidligereMedlemskapsperioder({ medlemskap, redigerbart, fields, land }: TidligereMedlemskapsperioderProps) {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const alleValgtePeriodeID = fields.getAll() ?? [];
 
   const onChange = (periodeID: number) => {

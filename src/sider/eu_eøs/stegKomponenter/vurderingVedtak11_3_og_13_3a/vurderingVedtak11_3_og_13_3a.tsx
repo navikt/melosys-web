@@ -6,7 +6,8 @@ import Dokumentliste, {
 } from "../../../../felleskomponenter/dokumentliste";
 import MKV from "../../../../melosyskodeverk";
 import * as KV from "../../../../kodeverk";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+import { useAppDispatch } from "../../../../hooks/redux";
 import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
 import * as Utils from "../../../../utils";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
@@ -49,7 +50,7 @@ export function VurderingVedtak11_3_og_13_3a({
     );
   };
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const lovvalgsperiode = useSelector(lovvalgsperioderSelectors.LovvalgsperiodeSelector);
   const soknadsperiode = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
   const behandling = useSelector(behandlingerSelectors.BehandlingerSelector) as any;
@@ -124,13 +125,11 @@ export function VurderingVedtak11_3_og_13_3a({
 
     validerMottatteOpplysninger()
       .then(() => {
-        dispatch(vedtakOperations.fatt(behandlingID, lagFattVedtakEOSReqDto()))
-          // @ts-expect-error generisk beskrivelse
-          .then((res: any) => {
-            if (res.data?.data?.error) {
-              setVedtakPending(false);
-            }
-          });
+        dispatch(vedtakOperations.fatt(behandlingID, lagFattVedtakEOSReqDto())).then((res: any) => {
+          if (res.data?.data?.error) {
+            setVedtakPending(false);
+          }
+        });
       })
       .catch(() => setVedtakPending(false));
   };

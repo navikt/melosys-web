@@ -2,7 +2,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { RootState } from "AppTypes";
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+import { useAppDispatch } from "../../../../hooks/redux";
 import { Action } from "redux";
 import { ThunkDispatch } from "redux-thunk";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
@@ -55,7 +56,7 @@ const komponentDispatch = (dispatch: ThunkDispatch<RootState, unknown, Action>) 
 });
 
 export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [vedtakPending, setVedtakPending] = useState<boolean>(false);
   const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
   const [lagretAarsavregning, setLagretAarsavregning] = useState<AarsavregningResponse | undefined>(undefined);
