@@ -52,12 +52,12 @@ exports[`VurderingArtikkel16MottaSvar > snapshot test 1`] = `
               <div class="navds-radio navds-radio--small">
                 <input
                   id="333"
-                  name="333"
-                  type="radio"
                   aria-labelledby="333"
                   class="navds-radio__input"
+                  type="radio"
                   value="INNVILGELSE"
                   checked
+                  name="333"
                 >
                 <label
                   for="333"
@@ -77,11 +77,11 @@ exports[`VurderingArtikkel16MottaSvar > snapshot test 1`] = `
               <div class="navds-radio navds-radio--small">
                 <input
                   id="333"
-                  name="333"
-                  type="radio"
                   aria-labelledby="333"
                   class="navds-radio__input"
+                  type="radio"
                   value="DELVIS_INNVILGELSE"
+                  name="333"
                 >
                 <label
                   for="333"
@@ -101,11 +101,11 @@ exports[`VurderingArtikkel16MottaSvar > snapshot test 1`] = `
               <div class="navds-radio navds-radio--small">
                 <input
                   id="333"
-                  name="333"
-                  type="radio"
                   aria-labelledby="333"
                   class="navds-radio__input"
+                  type="radio"
                   value="AVSLAG"
+                  name="333"
                 >
                 <label
                   for="333"

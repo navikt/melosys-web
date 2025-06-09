@@ -193,7 +193,7 @@ export function VurderingVedtak11_3_og_13_3a({
         Omfattet av norsk trygdelovgivning
       </Nav.Heading>
       <Mui.KodeTermSelect
-        onChange={(e) => {
+        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
           setValue("lovvalgsbestemmelse", e.target.value, { shouldValidate: true });
         }}
         label="Velg en lovvalgsbestemmelse"
@@ -211,6 +211,7 @@ export function VurderingVedtak11_3_og_13_3a({
         redigerbart={redigerbart}
         disableForsteValg
         className="ktselect__slim"
+        feil={null}
       />
 
       <Nav.BodyLong weight="semibold" size="small" className="undertittel">

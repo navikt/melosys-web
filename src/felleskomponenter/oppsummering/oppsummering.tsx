@@ -121,7 +121,7 @@ function Oppsummering({
       : "Ukjent";
 
   const tabellEnKolonne = (data: string[][]) => {
-    const rows: JSX.Element[] = [];
+    const rows: React.JSX.Element[] = [];
     data.forEach((row) =>
       rows.push(
         <Nav.Row className="datarad" key={`datarad-${row[0]}`}>

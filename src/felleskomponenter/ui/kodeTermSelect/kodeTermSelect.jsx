@@ -11,7 +11,7 @@ const kodeTermSelect = ({
   disableForsteValg = false,
   redigerbart = true,
   onBlur = () => null,
-  className,
+  className = "",
 }) => {
   const visValueIkkeOppgittIKoder = !redigerbart && !koder.includes(value);
 
