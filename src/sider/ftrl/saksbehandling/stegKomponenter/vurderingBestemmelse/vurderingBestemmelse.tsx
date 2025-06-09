@@ -7,7 +7,7 @@ import * as KV from "../../../../../kodeverk";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import { medlemskapsperioderOperations, medlemskapsperioderSelectors } from "../../../../../ducks/medlemskapsperioder";
 import { useSelector } from "react-redux";
-import { useAppDispatch } from "../../../../../hooks/redux";
+import { useDispatch } from "../../../../../hooks";
 import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 import { ListeVelger } from "./komponenter/listeVelger";
 import { mottatteOpplysningerSelectors } from "../../../../../ducks/mottatteOpplysninger";
@@ -43,7 +43,7 @@ const {
 
 export function VurderingBestemmelse({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: VurderingBestemmelseProps) {
   const erPensjonistToggleEnabled = useFeatureToggle(MELOSYS_PENSJONIST);
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
   const behandlingstatus = useSelector(behandlingerSelectors.BehandlingsstatusKodeSelector);
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as any;
   const lagretBestemmelse = useSelector(medlemskapsperioderSelectors.BestemmelseSelector);

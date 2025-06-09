@@ -1,6 +1,6 @@
 import { ReactElement, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useAppDispatch } from "../../hooks/redux";
+import { useDispatch } from "../../hooks";
 
 import * as Nav from "../../navFrontend";
 import * as Utils from "../../utils";
@@ -19,7 +19,7 @@ export interface SokProps {
 }
 
 export function Sok({ children }: SokProps) {
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
   const sokResultat = useSelector(sokSelectors.FagsakSokSelector);
   const landkoder = useSelector(landkoderSelectors.LandkoderSelector);
   const [sokPending, setSokPending] = useState(false);

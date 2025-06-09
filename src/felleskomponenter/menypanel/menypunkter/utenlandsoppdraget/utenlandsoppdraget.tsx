@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { useAppDispatch } from "../../../../hooks/redux";
+import { useDispatch } from "../../../../hooks";
 
 import MKV from "../../../../melosyskodeverk";
 import * as Nav from "../../../../navFrontend";
@@ -27,7 +27,7 @@ export function Utenlandsoppdraget({
   redigerbart,
   lagreSoknadOgOppfriskSaksopplysninger,
 }: UtenlandsoppdragetProps) {
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
   const sakstype = useSelector(fagsakSelectors.SakstypeKodeSelector);
 
   const lagreHandler = () => {

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { connect, ConnectedProps, useDispatch, useSelector } from "react-redux";
-import { useAppDispatch } from "../../../../hooks/redux";
+import { connect, ConnectedProps, useSelector } from "react-redux";
+import { useDispatch } from "../../../../hooks";
 import { getFormValues, InjectedFormProps, isValid, reduxForm } from "redux-form";
 import MKV from "../../../../melosyskodeverk";
 import * as Nav from "../../../../navFrontend";
@@ -95,7 +95,7 @@ export function VurderingArtikkel16Vedtak({
   aktivtSteg = false,
   validerMottatteOpplysninger,
 }: VurderingArtikkel16VedtakProps & InjectedFormProps<FormValuesProps, VurderingArtikkel16VedtakProps>) {
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
   const [vedtakPending, setVedtakPending] = useState(false);
   let oppdaterFørKontroll = true;
 

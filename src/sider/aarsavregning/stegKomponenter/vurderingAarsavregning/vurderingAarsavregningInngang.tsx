@@ -1,6 +1,6 @@
 import { ChangeEvent, useContext, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useAppDispatch } from "../../../../hooks/redux";
+import { useDispatch } from "../../../../hooks";
 import { OK } from "../../../../ducks/aarsavregning/types";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { fagsakSelectors } from "../../../../ducks/fagsaker";
@@ -85,7 +85,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as any;
   const saksnummer = useSelector(fagsakSelectors.SaksnummerSelector) as any;
   const { oppfriskOgLastInnSaksopplysningerForAarsavregning } = useContext(FellesHandlersContext) as any;
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
 
   const utledGrunnlagstypeForÅrsavregning = (res: AarsavregningResponse) => {
     if (res.tidligereGrunnlagsopplysninger === null) {

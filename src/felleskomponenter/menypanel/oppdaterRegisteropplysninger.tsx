@@ -5,7 +5,7 @@ import { Refresh } from "../../resources/images";
 import * as Forms from "../forms";
 import { FieldValues, useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
-import { useAppDispatch } from "../../hooks/redux";
+import { useDispatch } from "../../hooks";
 import { modalerOperations, modalerSelectors } from "../../ducks/modaler";
 import MKV from "../../melosyskodeverk";
 
@@ -32,7 +32,7 @@ export function OppdaterRegisteropplysninger({
   });
   const formValues = watch();
   const { inkluderSiste5Aar } = formValues;
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(modalerOperations.leggTilInkluderSiste5Aar(formValues.inkluderSiste5Aar));

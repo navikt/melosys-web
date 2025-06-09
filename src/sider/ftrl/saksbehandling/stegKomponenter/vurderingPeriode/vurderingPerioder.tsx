@@ -2,7 +2,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useCallback, useEffect, useState } from "react";
 import { FieldValue, useFieldArray, useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
-import { useAppDispatch } from "../../../../../hooks/redux";
+import { useDispatch } from "../../../../../hooks";
 
 import * as Mui from "../../../../../felleskomponenter/ui";
 import MKV from "../../../../../melosyskodeverk";
@@ -71,7 +71,7 @@ const mapInitialMedlemskapsperioder = (
     .map(mapTilMedlemskapsperiodeProps);
 
 export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: VurderingPerioderProps) {
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
   const [lovligeDekninger, setLovligeDekninger] = useState<string[]>([]);
   const [lovligeInnvilgelsesresultat, setLovligeInnvilgelsesresultat] = useState<string[]>([]);
 

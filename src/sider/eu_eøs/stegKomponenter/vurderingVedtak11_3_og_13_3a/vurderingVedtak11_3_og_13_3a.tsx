@@ -7,7 +7,7 @@ import Dokumentliste, {
 import MKV from "../../../../melosyskodeverk";
 import * as KV from "../../../../kodeverk";
 import { useSelector } from "react-redux";
-import { useAppDispatch } from "../../../../hooks/redux";
+import { useDispatch } from "../../../../hooks";
 import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
 import * as Utils from "../../../../utils";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
@@ -50,7 +50,7 @@ export function VurderingVedtak11_3_og_13_3a({
     );
   };
 
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
   const lovvalgsperiode = useSelector(lovvalgsperioderSelectors.LovvalgsperiodeSelector);
   const soknadsperiode = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
   const behandling = useSelector(behandlingerSelectors.BehandlingerSelector) as any;

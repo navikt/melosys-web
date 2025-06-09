@@ -1,6 +1,6 @@
 import { useContext, useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
-import { useAppDispatch } from "../../../../../hooks/redux";
+import { useDispatch } from "../../../../../hooks";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FieldValues, useForm } from "react-hook-form";
 import MKV from "../../../../../melosyskodeverk";
@@ -40,7 +40,7 @@ interface Props {
 export function VurderingInngang({ bekreft, aktivtSteg, oppdaterStatus }: Props) {
   const [visOppfrisk, setVisOppfrisk] = useState(false);
   const [gyldigeTrygdedekninger, setGyldigeTrygdedekninger] = useState<string[]>([]);
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
 
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { change, getFormValues } from "redux-form";
-import { useAppDispatch } from "../../../../hooks/redux";
+import { useDispatch } from "../../../../hooks";
 
 import * as KV from "../../../../kodeverk";
 import * as Nav from "../../../../navFrontend";
@@ -14,7 +14,7 @@ function BrevMottakerNorskMyndighet() {
     useState<Api.DokumenterV2.TilgjengeligeNorskeMyndigheterResDto>();
   const [valgteNorskeMyndigheter, setValgteNorskeMyndigheter] = useState<string[]>(formValues?.norskeMyndigheter || []);
 
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     Api.DokumenterV2.hentTilgjengeligeNorskeMyndigheter().then((response) =>

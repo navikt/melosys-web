@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { useAppDispatch } from "../../../hooks/redux";
+import { useDispatch } from "../../../hooks";
 import * as Api from "../../../services/api";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { redigerbartSelectors } from "../../../ducks/redigerbart";
@@ -7,7 +7,7 @@ import { navigeringOperations } from "../../../ducks/navigering";
 import Handling from "./handling";
 
 function LeggBehandlingTilbake() {
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const tilForsiden = () => dispatch(navigeringOperations.tilForsiden());

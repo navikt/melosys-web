@@ -1,6 +1,5 @@
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
-import { connect, ConnectedProps, useDispatch, useSelector } from "react-redux";
-import { useAppDispatch } from "../../../../hooks/redux";
+import { connect, ConnectedProps, useSelector } from "react-redux";
 import { getFormValues, InjectedFormProps, isValid, reduxForm } from "redux-form";
 // @ts-expect-error generisk beskrivelse
 import * as EKV from "eessi-kodeverk";
@@ -28,7 +27,7 @@ import {
 import * as Mui from "../../../../felleskomponenter/ui";
 import VedleggTable from "../../../../felleskomponenter/vedleggTable";
 import VedleggVelger from "../../../../felleskomponenter/vedleggvelger";
-import { useIsMounted } from "../../../../hooks";
+import { useIsMounted, useDispatch } from "../../../../hooks";
 import * as KV from "../../../../kodeverk";
 import MKV, { MKVUtils } from "../../../../melosyskodeverk";
 import * as Nav from "../../../../navFrontend";
@@ -109,7 +108,7 @@ function VurderingArtikkel16Anmodning({
   aktivtSteg,
   lovvalgsbestemmelse,
 }: Props & PropsFromRedux & InjectedFormProps<FormValuesProps, Props & PropsFromRedux>) {
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
   const isMounted = useIsMounted();
   const [lovvalgFeilmelding, setLovvalgFeilmelding] = useState<string | undefined>(undefined);
   const [begrunnelseFeilmelding, setBegrunnelseFeilmelding] = useState<string | undefined>(undefined);

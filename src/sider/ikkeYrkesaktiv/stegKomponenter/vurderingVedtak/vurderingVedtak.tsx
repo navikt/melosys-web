@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useAppDispatch } from "../../../../hooks/redux";
+import { useDispatch } from "../../../../hooks";
 import { FieldValues, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
@@ -47,7 +47,7 @@ interface FormValuesProps {
 export function VurderingVedtak({ aktivtSteg, tilbake }: Props) {
   const sakstype = useSelector(fagsakSelectors.SakstypeKodeSelector);
 
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
 
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);

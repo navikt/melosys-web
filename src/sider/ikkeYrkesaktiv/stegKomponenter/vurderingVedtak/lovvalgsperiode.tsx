@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useAppDispatch } from "../../../../hooks/redux";
+import { useDispatch } from "../../../../hooks";
 import { FieldValues, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
@@ -24,7 +24,7 @@ interface LovvalgsperiodeProps {
 }
 
 export function Lovvalgsperiode({ kontrollerFerdigbehandling, onRedigeringErAktiv }: LovvalgsperiodeProps) {
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
 
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const lovvalgsperiode = useSelector(lovvalgsperioderSelectors.LovvalgsperiodeSelector);

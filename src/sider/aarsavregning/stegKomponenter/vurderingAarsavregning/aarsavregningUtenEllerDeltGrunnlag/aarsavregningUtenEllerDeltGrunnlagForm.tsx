@@ -10,7 +10,7 @@ import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 import { Inntektskilder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/inntektskilder";
 import { Skatteforholdsperioder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/skatteforholdsperioder";
 import { Inntektskilde, Skatteforhold } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
-import { useAppDispatch } from "../../../../../hooks/redux";
+import { useDispatch } from "../../../../../hooks";
 import MKV from "../../../../../melosyskodeverk";
 import * as Nav from "../../../../../navFrontend";
 import * as Api from "../../../../../services/api";
@@ -107,7 +107,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as any;
   const aarsavregningID = useSelector(behandlingsresultatSelectors.ÅrsavregningIDSelector);
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
 
   const {
     control,

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { useAppDispatch } from "../../hooks/redux";
+import { useDispatch } from "../../hooks";
 
 import { KTObject } from "@navikt/melosys-kodeverk";
 import MKV from "../../melosyskodeverk";
@@ -44,7 +44,7 @@ function Saksbehandling({ behandlingOppfriskes, startOgVisOppfriskModal, visOppf
   const [behandlingID, setBehandlingID] = useState(-1);
   const [saksopplysningerLastet, setSaksopplysningerLastet] = useState(false);
 
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
 
   const land = useSelector(mottatteOpplysningerSelectors.SoknadslandkoderSelector);
   const mottatteOpplysninger = useSelector(mottatteOpplysningerSelectors.MottatteOpplysningerDataSelector);

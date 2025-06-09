@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { useAppDispatch } from "../../hooks/redux";
+import { useDispatch } from "../../hooks";
 import * as Nav from "../../navFrontend";
 import { HGrid } from "@navikt/ds-react";
 
@@ -43,7 +43,7 @@ function Saksbehandling({ match, location }: Props) {
   const [saksopplysningerLastet, setSaksopplysningerLastet] = useState(false);
   const [panelExpanded, setPanelExpanded] = useState(true);
 
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
 
   const innvilgetMedlemskapsperiode = useSelector(
     medlemskapsperioderSelectors.SamletInnvilgetMedlemskapsperiodeSelector,

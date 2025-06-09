@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useAppDispatch } from "../../hooks/redux";
+import { useDispatch } from "../../hooks";
 import { RouteComponentProps } from "react-router-dom";
 
 import MKV from "../../melosyskodeverk";
@@ -43,7 +43,7 @@ function Saksbehandling({
   behandlingOppfriskes,
   startOgVisOppfriskModal,
 }: SaksbehandlingProps) {
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
   const [saksopplysningerLastet, setSaksopplysningerLastet] = useState(false);
   const saksnummer = match?.params?.saksnr;
 

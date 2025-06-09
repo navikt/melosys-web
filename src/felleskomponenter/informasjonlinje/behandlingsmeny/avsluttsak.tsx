@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { useAppDispatch } from "../../../hooks/redux";
+import { useDispatch } from "../../../hooks";
 import MKV from "../../../melosyskodeverk";
 import { BekreftValgTypes } from "../../../modals/bekreftValgTypes";
 import { redigerbartSelectors } from "../../../ducks/redigerbart";
@@ -29,7 +29,7 @@ const { EU_EOS, FTRL, TRYGDEAVTALE } = MKV.Koder.sakstyper;
 const { MEDLEMSKAP_LOVVALG, UNNTAK } = MKV.Koder.sakstemaer;
 
 function AvsluttSak() {
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
   const apneBekreftValgModal = (type: BekreftValgTypes) => dispatch(modalerOperations.visBekreftValg(type));
 
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);

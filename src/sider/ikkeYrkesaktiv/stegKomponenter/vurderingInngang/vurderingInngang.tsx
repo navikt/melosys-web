@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useAppDispatch } from "../../../../hooks/redux";
+import { useDispatch } from "../../../../hooks";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FieldValues, useForm } from "react-hook-form";
@@ -35,7 +35,7 @@ interface Props {
 
 export function VurderingInngang({ bekreft, aktivtSteg, oppdaterStatus }: Props) {
   const [visOppfrisk, setVisOppfrisk] = useState(false);
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
 
   const periodeFom = Utils.dato.formatterDatoTilNorsk(useSelector(mottatteOpplysningerSelectors.PeriodeFomSelector));
   const periodeTom = Utils.dato.formatterDatoTilNorsk(useSelector(mottatteOpplysningerSelectors.PeriodeTomSelector));

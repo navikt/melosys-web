@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useAppDispatch } from "../../../hooks/redux";
+import { useDispatch } from "../../../hooks";
 
 import MKV from "../../../melosyskodeverk";
 import * as Nav from "../../../navFrontend";
@@ -28,7 +28,7 @@ interface DialogboksAvslagSoknadProps {
 }
 
 export function DialogboksAvslagSoknad({ avbryt }: DialogboksAvslagSoknadProps) {
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
   const [feil, setFeil] = useState<undefined | string>(undefined);
 
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);

@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { useSelector } from "react-redux";
-import { useAppDispatch } from "../hooks/redux";
+import { useDispatch } from "../hooks";
 
 import { FellesHandlersContext } from "../contexts";
 import { modalerOperations, modalerSelectors } from "../ducks/modaler";
@@ -15,7 +15,7 @@ function Modals() {
   const fellesHandlers = useContext(FellesHandlersContext) as any;
   const { skjulOppfriskModalOgNavigerTilForside, lagreMottatteOpplysningerOgOppfriskSaksopplysninger } = fellesHandlers;
 
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
 
   const visOppfriskDialog = useSelector((state) => modalerSelectors.ErOppfriskSynligSelector(state));
   const visHenleggDialog = useSelector((state) => modalerSelectors.ErHenleggSynligSelector(state));

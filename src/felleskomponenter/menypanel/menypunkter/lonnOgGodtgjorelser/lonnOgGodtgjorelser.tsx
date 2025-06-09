@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { useAppDispatch } from "../../../../hooks/redux";
+import { useDispatch } from "../../../../hooks";
 
 import * as Nav from "../../../../navFrontend";
 import * as Tags from "../../tags";
@@ -306,7 +306,7 @@ interface LonnOgGodtgjorelserProps {
 }
 
 function LonnOgGodtgjorelser({ redigerbart, visArbeidsforholdRolleEtiketter }: LonnOgGodtgjorelserProps) {
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
   const lagreHandler = () => {
     dispatch(mottatteOpplysningerOperations.oppdaterState());
     return true;

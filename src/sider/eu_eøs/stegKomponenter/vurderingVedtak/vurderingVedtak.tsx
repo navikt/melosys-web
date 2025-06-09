@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { connect, ConnectedProps, useDispatch, useSelector } from "react-redux";
-import { useAppDispatch } from "../../../../hooks/redux";
+import { connect, ConnectedProps, useSelector } from "react-redux";
+import { useDispatch } from "../../../../hooks";
 import { getFormValues, InjectedFormProps, isValid, reduxForm } from "redux-form";
 // @ts-expect-error generisk beskrivelse
 import * as EKV from "eessi-kodeverk";
@@ -150,7 +150,7 @@ function VurderingVedtak({
   lovvalgsperiode,
   erArtikkel11_4,
 }: VurderingVedtakProps & InjectedFormProps<FormValuesProps, VurderingVedtakProps>) {
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
   const [vedtakPending, setVedtakPending] = useState(false);
   const [erBucAapen, setErBucAapen] = useState(true);
   let oppdaterFørKontroll = true;

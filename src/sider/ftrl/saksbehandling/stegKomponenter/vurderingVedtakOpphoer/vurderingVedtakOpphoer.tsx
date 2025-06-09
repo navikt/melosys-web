@@ -3,7 +3,7 @@ import "./vurderingVedtakOpphoer.css";
 import { FieldValues, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useSelector } from "react-redux";
-import { useAppDispatch } from "../../../../../hooks/redux";
+import { useDispatch } from "../../../../../hooks";
 import { behandlingsresultatSelectors } from "../../../../../ducks/behandlingsresultat";
 import vurdering_vedtak_opphoer from "./vurderingVedtakOpphoerSchema";
 import * as Api from "../../../../../services/api";
@@ -39,7 +39,7 @@ export function VurderingVedtakOpphoer({ tilbake, aktivtSteg }: Props) {
   const lagretVedtakstype = useSelector(behandlingsresultatSelectors.VedtakstypeSelector);
   const medlemskapsperioder = useSelector(medlemskapsperioderSelectors.AlleMedlemskapsperioderSelector);
   const behandlingErAvsluttet = useSelector(behandlingerSelectors.BehandlingsstatusKodeSelector) === AVSLUTTET;
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
   const [vedtakPending, setVedtakPending] = useState(false);
   const [muligeMottakere, setMuligeMottakere] = useState(Api.DokumenterV2.tomHentMuligeMottakereResDto());
 

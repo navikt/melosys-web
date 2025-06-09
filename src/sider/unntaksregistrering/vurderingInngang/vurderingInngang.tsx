@@ -1,7 +1,7 @@
 import { useCallback, useContext, useEffect, useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
-import { useAppDispatch } from "../../../hooks/redux";
+import { useDispatch } from "../../../hooks";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { KTObject } from "@navikt/melosys-kodeverk";
 
@@ -34,7 +34,7 @@ interface VurderingInngangProps {
 }
 
 function VurderingInngang({ bekreft, oppdaterStatus }: VurderingInngangProps) {
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
   const sakstype = useSelector(fagsakSelectors.SakstypeKodeSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const periode = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);

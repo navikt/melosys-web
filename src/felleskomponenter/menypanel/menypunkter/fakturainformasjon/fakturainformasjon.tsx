@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
-import { useAppDispatch } from "../../../../hooks/redux";
+import { useDispatch } from "../../../../hooks";
 
 import * as Nav from "../../../../navFrontend";
 import * as Utils from "../../../../utils";
@@ -23,7 +23,7 @@ const gyldigeFakturaStatuser = [
 ];
 
 function Fakturainformasjon() {
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
   const visReferanseEnabled = useFeatureToggle(MELOSYS_FAKTURERINGSKOMPONENTEN_VIS_REFERANSE);
   const fakturaserier = useSelector(fakturaserierSelectors.FakturaserierSelector);
   const fakturaserieReferanseFraBehandling = useSelector((state) =>

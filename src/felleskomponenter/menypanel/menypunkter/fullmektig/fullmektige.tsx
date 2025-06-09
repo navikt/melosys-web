@@ -1,5 +1,4 @@
 import { useSelector } from "react-redux";
-import { useAppDispatch } from "../../../../hooks/redux";
 
 import MKV from "../../../../melosyskodeverk";
 
@@ -16,7 +15,7 @@ import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { menypanelOperations } from "../../../../ducks/menypanel";
-import { useAsyncCallbackState } from "../../../../hooks";
+import { useAsyncCallbackState, useDispatch } from "../../../../hooks";
 import Knapperad from "../../../knapperad";
 import "./fullmektige.css";
 import fullmektig_schema from "./fullmektigeSchema";
@@ -35,7 +34,7 @@ interface FullmektigeProps {
 }
 
 function Fullmektige({ redigerbart, finnOrganisasjonAdresse, finnPersonAdresse }: FullmektigeProps) {
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
   const saksnummer = useSelector(fagsakSelectors.SaksnummerSelector);
   const behandlingstype = useSelector(behandlingerSelectors.BehandlingstypeKodeSelector);
   const [{ harBehandlingMedTrygdeavgift }] = useAsyncCallbackState(
