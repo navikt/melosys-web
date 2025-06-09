@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useAppDispatch } from "../../../../hooks/redux";
 import { change, getFormValues } from "redux-form";
+import { useAppDispatch } from "../../../../hooks/redux";
 
 import * as KV from "../../../../kodeverk";
-import * as Api from "../../../../services/api";
 import * as Nav from "../../../../navFrontend";
+import * as Api from "../../../../services/api";
 import { SendBrevFormValues } from "../types";
 
 function BrevMottakerNorskMyndighet() {
-  const formValues = useSelector((state) => getFormValues(KV.Form.SEND_BREV)(state) as SendBrevFormValues);
+  const formValues = useSelector((state: any) => getFormValues(KV.Form.SEND_BREV)(state) as SendBrevFormValues);
   const [tilgjengeligeNorskeMyndigheter, setTilgjengeligeNorskeMyndigheter] =
     useState<Api.DokumenterV2.TilgjengeligeNorskeMyndigheterResDto>();
   const [valgteNorskeMyndigheter, setValgteNorskeMyndigheter] = useState<string[]>(formValues?.norskeMyndigheter || []);
