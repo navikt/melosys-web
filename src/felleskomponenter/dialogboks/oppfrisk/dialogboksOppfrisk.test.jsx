@@ -23,7 +23,6 @@ describe("DialogboksOppfrisk", () => {
   });
 
   it("viser ikke oppfrisk knapp når en annen behandling oppfriskes", () => {
-    // eslint-disable-next-line react/jsx-no-constructed-context-values
     const context = { annenBehandlingOppfriskes: true };
     render(
       <FellesHandlersContext.Provider value={context}>
@@ -46,7 +45,6 @@ describe("DialogboksOppfrisk", () => {
   });
 
   it("starter med oppfriskning med en gang når behandlingOppfriskes er true", () => {
-    // eslint-disable-next-line react/jsx-no-constructed-context-values
     const context = { behandlingOppfriskes: true };
     render(
       <FellesHandlersContext.Provider value={context}>

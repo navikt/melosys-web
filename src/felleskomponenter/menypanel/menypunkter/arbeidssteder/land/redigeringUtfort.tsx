@@ -13,7 +13,6 @@ function RedigeringUtfort({ verdier }: EnRedigeringsknappListeRedigeringUtfort<K
   return (
     <div className="arbeidssted__utland__redigeringutfort">
       {verdier.map((element, index) => (
-        /* eslint-disable-next-line react/no-array-index-key */
         <Fragment key={index}>
           <Nav.Row>
             <Nav.Column xs="12">

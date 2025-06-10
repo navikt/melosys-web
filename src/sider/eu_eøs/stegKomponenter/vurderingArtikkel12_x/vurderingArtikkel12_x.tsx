@@ -20,7 +20,6 @@ interface VurderingArtikkel12xProps {
   redigerbart: boolean;
 }
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
 function VurderingArtikkel12_x({
   bekreftOgFortsett,
   tilstand: { harAvklaring, artikkelNavn },

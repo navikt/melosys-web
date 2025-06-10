@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { FieldValue, useFieldArray, useForm, useWatch } from "react-hook-form";
@@ -68,7 +67,7 @@ const getChangedDependencies = (currentDeps: Record<string, any>, previousDepsRe
   }
 
   // Update previous deps ref
-  // eslint-disable-next-line no-param-reassign
+
   previousDepsRef.current = currentDeps;
   return changedDeps; // Return the changed dependencies object
 };
@@ -364,7 +363,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       }
 
       const endredeMedlemskapsperioder: LagredeMedlemskapsperioder[] = [];
-      // eslint-disable-next-line no-restricted-syntax
+
       for (const [index, periode] of medlemskapsperioderFormValues.entries()) {
         const lagretPeriode = await lagreMedlemskapsperiodeHvisEndret(periode, lagredeMedlemskapsperioder, index);
         if (lagretPeriode)

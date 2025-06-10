@@ -21,9 +21,8 @@ import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysning
 import { anmodningsperioderSelectors } from "../../../ducks/anmodningsperioder";
 import { avklartefaktaSelectors } from "../../../ducks/avklartefakta";
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
 const { lovvalgbestemmelser_konv_efta_storbritannia } = MKV.KTObjects.lovvalgsbestemmelser;
-// eslint-disable-next-line @typescript-eslint/naming-convention
+
 const { lovvalgbestemmelser_883_2004 } = MKV.KTObjects.lovvalgsbestemmelser;
 const { KONV_EFTA_STORBRITANNIA_ART18_1 } = MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia;
 const { FO_883_2004_ART16_1 } = MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004;

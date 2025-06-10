@@ -137,7 +137,6 @@ function EnRedigeringsKnappListe<T>({
             const elementContainerCls = classNames({ element__container__understrek: elementUnderstrek });
 
             return (
-              /* eslint-disable-next-line react/no-array-index-key */
               <div className={elementContainerCls} key={index}>
                 <RedigererKomponent
                   redigerbart={redigerbart}

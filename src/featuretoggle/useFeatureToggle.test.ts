@@ -1,8 +1,7 @@
-/* eslint-disable */
 import { renderHook } from "@testing-library/react";
 
 import { FEATURE_TOGGLE } from "./toggleNavn";
-// eslint-disable-next-line import/no-useless-path-segments
+
 import * as featureToggleModule from "../featuretoggle";
 
 interface SessionStorageMock {

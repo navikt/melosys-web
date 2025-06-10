@@ -144,7 +144,6 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
         (periode) => periode.innvilgelsesResultat === INNVILGET || periode.innvilgelsesResultat === DELVIS_INNVILGET,
       );
 
-      // eslint-disable-next-line no-restricted-syntax
       for (const periode of innvilgedeMedlemskapsperioderFraGrunnlag) {
         await opprettMedlemskapsperiode(periode);
       }

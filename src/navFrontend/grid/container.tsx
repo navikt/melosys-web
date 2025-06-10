@@ -13,7 +13,6 @@ export interface ContainerProps extends HTMLAttributes<HTMLDivElement> {
   fluid?: boolean;
 }
 
-// eslint-disable-next-line react/prefer-stateless-function
 class Container extends Component<ContainerProps> {
   render() {
     const { children, className, fluid, ...props } = this.props;

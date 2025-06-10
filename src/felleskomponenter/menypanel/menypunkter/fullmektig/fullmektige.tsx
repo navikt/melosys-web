@@ -190,7 +190,7 @@ function Fullmektige({ redigerbart, finnOrganisasjonAdresse, finnPersonAdresse }
     }
 
     setPending(true);
-    // eslint-disable-next-line no-restricted-syntax
+
     for (const fullmektig of formValues.fullmektige) {
       if (fullmaktHarEndringer(fullmektig)) {
         await Api.Fagsaker.aktoer.send(saksnummer, {

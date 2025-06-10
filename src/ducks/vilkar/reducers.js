@@ -67,7 +67,7 @@ export default function reducer(state = initialState, action = {}) {
       // Gjennomgå alle vilkår som kan være satt. Dersom de er 'undefined', vil det si at
       // saksbehandler ikke har vært innom denne vurderingen og kanskje aldri kommer tid. Siden
       // det da ikke er et vilkår som er vurdert, skal det heller ikke inn i modellen eller sendes backend.
-      /* eslint-disable max-len */
+
       const vilkarArray = [
         vilkarTilObjekt(
           MKV.Koder.vilkaar.FORUTGAAENDE_MEDLEMSKAP,

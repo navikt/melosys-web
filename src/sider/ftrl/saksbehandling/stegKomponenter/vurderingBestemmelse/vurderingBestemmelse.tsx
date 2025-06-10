@@ -261,7 +261,6 @@ export function VurderingBestemmelse({ bekreft, tilbake, aktivtSteg, oppdaterSta
   };
 
   const validerValuesMap = (map: Map<string, boolean | null | undefined>) => {
-    // eslint-disable-next-line no-restricted-syntax
     for (const [, value] of map.entries()) {
       if (value !== true) {
         return false;
@@ -286,7 +285,6 @@ export function VurderingBestemmelse({ bekreft, tilbake, aktivtSteg, oppdaterSta
     }
 
     vilkårOgBegrunnelser?.forEach((vilkår) => {
-      // eslint-disable-next-line no-restricted-syntax
       for (const [, value] of valgteBegrunnelser.entries()) {
         if (vilkår.muligeBegrunnelser.includes(value.begrunnelseKode)) {
           if (kodeInkludererFritekst(MKV.KTObjects.begrunnelser.folketrygdloven, value.begrunnelseKode)) {
@@ -356,7 +354,6 @@ export function VurderingBestemmelse({ bekreft, tilbake, aktivtSteg, oppdaterSta
   };
 
   const handleBekreft = async () => {
-    // eslint-disable-next-line no-restricted-syntax
     for (const [key, value] of valgtAvklarteFakta.entries()) {
       if (key === IKKE_YRKESAKTIV_FTRL_2_1_OPPHOLD) {
         await dispatch(oppsummertfaktaOperations.lagreIkkeYrkesaktivOppholdtype(behandlingID, value));
@@ -379,7 +376,6 @@ export function VurderingBestemmelse({ bekreft, tilbake, aktivtSteg, oppdaterSta
   };
 
   const handleSlettAvklartefakta = () => {
-    // eslint-disable-next-line no-restricted-syntax
     for (const [key] of valgtAvklarteFakta.entries()) {
       if ([IKKE_YRKESAKTIV_FTRL_2_1_OPPHOLD, IKKE_YRKESAKTIV_RELASJON, ARBEIDSSITUASJON].includes(key)) {
         dispatch(oppsummertfaktaOperations.slettAvklartefakta(behandlingID, key));

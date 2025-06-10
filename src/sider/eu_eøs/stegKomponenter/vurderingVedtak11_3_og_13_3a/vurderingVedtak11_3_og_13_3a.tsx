@@ -32,7 +32,6 @@ interface VurderingVedtakProps {
   validerMottatteOpplysninger: () => Promise<void>;
 }
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export function VurderingVedtak11_3_og_13_3a({
   redigerbart,
   tilbake,
@@ -105,10 +104,9 @@ export function VurderingVedtak11_3_og_13_3a({
 
   const mapDokumenter = (dokumenter: BrevDokumentMetadataType[]) => {
     return dokumenter.map((dokument: BrevDokumentMetadataType) => {
-      /* eslint-disable no-param-reassign */
       dokument.dokumentData.begrunnelseFritekst = formValues?.begrunnelseFritekst;
       dokument.dokumentData.nyVurderingBakgrunn = formValues.vedtakstypebegrunnelse;
-      /* eslint-enable no-param-reassign */
+
       return dokument;
     });
   };

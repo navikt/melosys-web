@@ -59,7 +59,6 @@ const harOppholdsperioder = (perioder: any) => {
 
   const sortedPerioder = perioder.sort(Utils.dato.sorterEtterISOFomDato);
 
-  // eslint-disable-next-line no-plusplus
   for (let i = 0; i < sortedPerioder.length - 1; i++) {
     const currentTom = sortedPerioder[i].tomDato;
     const nextFom = sortedPerioder[i + 1].fomDato;

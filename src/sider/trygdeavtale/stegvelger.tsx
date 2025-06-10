@@ -124,7 +124,7 @@ class Stegvelger extends Component<PropsFromRedux, State> {
     if (endreFokus) {
       const aktueltStegId = aktuelleSteg[aktivtStegIndex].id;
       Utils.navigasjon.flyttFokusTilHtmlElementFraId(aktueltStegId);
-      /* eslint-disable-next-line react/no-did-update-set-state */
+
       this.setState({ endreFokus: false });
       /* eslint-enable-next-line react/no-did-update-set-state */
     }
@@ -154,7 +154,6 @@ class Stegvelger extends Component<PropsFromRedux, State> {
     });
   };
 
-  /* eslint-disable-next-line react/sort-comp */
   debouncedOppdaterFlyt = Utils._debounce(this.oppdaterFlyt, 200);
 
   mapFlytResDtoOmTilAktuelleSteg = (response: Api.Trygdeavtale.FlytResDto): AktueltSteg[] => {

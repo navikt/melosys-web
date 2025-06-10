@@ -24,7 +24,6 @@ export interface ColumnProps extends HTMLAttributes<HTMLDivElement> {
   lg?: "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "10" | "11" | "12";
 }
 
-// eslint-disable-next-line react/prefer-stateless-function
 class Column extends Component<ColumnProps> {
   render() {
     const { children, className, xs, sm, md, lg, ...props } = this.props;

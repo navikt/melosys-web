@@ -28,7 +28,7 @@ function StegIkon(props) {
     stegIkon__enkeltSteg: !vedtakSteg,
     stegIkon__vedtak: vedtakSteg,
   });
-  /* eslint-disable react/no-danger */
+
   return (
     <li className="stegIkon">
       <button onClick={onClick} className="stegIkon__knapp" type="button" aria-label="stegikon">
@@ -37,7 +37,6 @@ function StegIkon(props) {
       </button>
     </li>
   );
-  /* eslint-enable react/no-danger */
 }
 
 StegIkon.propTypes = {

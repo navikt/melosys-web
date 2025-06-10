@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 
 import { MKVUtils } from "../../melosyskodeverk";
 import * as Nav from "../../navFrontend";
-import * as KV from "../../kodeverk";
 
 import Behandlingsstatus from "../behandlingsstatus";
 import EnkeltDato from "../enkeltDato";

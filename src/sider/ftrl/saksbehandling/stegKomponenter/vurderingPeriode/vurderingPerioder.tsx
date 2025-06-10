@@ -220,7 +220,6 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     Utils._debounce(
       async (medlemskapsperioder: MedlemskapsperiodeProp[], isValid: boolean, overskrevetIndex: number | undefined) => {
         if (isValid) {
-          // eslint-disable-next-line no-restricted-syntax
           for (const periode of medlemskapsperioder) {
             const index = overskrevetIndex !== undefined ? overskrevetIndex : medlemskapsperioder.indexOf(periode);
             await lagreMedlemskapsperiode(periode, index);
