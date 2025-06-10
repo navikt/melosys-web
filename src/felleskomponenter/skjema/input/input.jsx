@@ -47,13 +47,6 @@ InnerInputComponent.propTypes = {
   onChange: PT.func,
 };
 
-InnerInputComponent.defaultProps = {
-  meta: undefined,
-  input: undefined,
-  onBlur: undefined,
-  onChange: undefined,
-};
-
 function Input({ feltNavn, className = "", normalize = (value) => value, ...rest }) {
   return (
     <Field
@@ -70,11 +63,6 @@ Input.propTypes = {
   feltNavn: PT.string.isRequired,
   className: PT.string,
   normalize: PT.func,
-};
-
-Input.defaultProps = {
-  className: "",
-  normalize: (value) => value,
 };
 
 export { InnerInputComponent };

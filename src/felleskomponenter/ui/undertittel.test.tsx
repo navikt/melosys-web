@@ -1,5 +1,4 @@
 import { ComponentProps } from "react";
-import { instance, mock } from "ts-mockito";
 import * as Ikoner from "../../resources/images";
 
 import Undertittel from "./undertittel";
@@ -7,11 +6,10 @@ import { render } from "@testing-library/react";
 import { expect } from "vitest";
 
 describe("undertittel", () => {
-  const mockedProps = mock<ComponentProps<typeof Undertittel>>();
-  let props = instance(mockedProps);
+  let props: ComponentProps<typeof Undertittel>;
 
   beforeEach(() => {
-    props = instance(mockedProps);
+    props = {} as ComponentProps<typeof Undertittel>;
   });
 
   it("snapshot test", () => {

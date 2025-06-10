@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { change } from "redux-form";
 import PT from "prop-types";
 
-import { MKVUtils } from "../../../melosyskodeverk";
+import MKV, { MKVUtils } from "../../../melosyskodeverk";
 import * as MPT from "../../../proptypes";
 import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Nav from "../../../navFrontend";
@@ -13,6 +13,8 @@ import * as Utils from "../../../utils";
 import "./knyttTilSak.css";
 import { useAsyncCallbackState } from "../../../hooks";
 import { harFlerePågåendeBehandlinger } from "../../../melosyskodeverk/utils";
+
+const { VIRKSOMHET } = MKV.Koder.aktoersroller;
 
 export function KnyttTilSak(props) {
   const { sak, erJournalføring, changeField, feltNavn, formValues } = props;
@@ -96,7 +98,8 @@ export function KnyttTilSak(props) {
   }, [journalforingGjelder, sakstype.kode, sakstema.kode, sisteBehandling?.behandlingstema?.kode]);
 
   useEffect(() => {
-    if (sakstype.kode && sakstema.kode) {
+    // Behandlingstema er obligatorisk for virksomhet
+    if (sakstype.kode && sakstema.kode && !(journalforingGjelder === VIRKSOMHET && !behandlingstema)) {
       Api.LovligeKombinasjoner.hentBehandlingstyperForKnyttTilSak(
         journalforingGjelder,
         sak.saksnummer,

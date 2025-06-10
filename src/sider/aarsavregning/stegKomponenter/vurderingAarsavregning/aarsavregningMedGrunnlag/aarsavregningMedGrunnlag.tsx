@@ -53,6 +53,7 @@ export interface InitiellData {
   innvilgetMedlemskapsperiode?: { fomDato: string; tomDato: string };
   innvilgetMedlemskapsperiodeBestemmelse?: string;
   medlemskapstypeErPliktig: boolean;
+  forrigeÅrsavregningErManueltBeregnet: boolean;
 }
 
 interface Props {
@@ -71,6 +72,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
       manueltAvgiftBeloep: undefined,
     },
     medlemskapstypeErPliktig: false,
+    forrigeÅrsavregningErManueltBeregnet: false,
   });
   const [innlastingFeilmelding, setInnlastingFeilmelding] = useState("");
 
@@ -132,12 +134,18 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
             medlemskapsperioder?.every((periode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG),
           );
 
+          const forrigeÅrsavregningErManueltBeregnet = Boolean(
+            res.tidligereGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep !== null &&
+              res.tidligereGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep !== undefined,
+          );
+
           setInitiellData({
             aarsavregningResponse: res,
             formDefaultValues: defaultFormValues,
             innvilgetMedlemskapsperiode,
             innvilgetMedlemskapsperiodeBestemmelse,
             medlemskapstypeErPliktig,
+            forrigeÅrsavregningErManueltBeregnet,
           });
           setIsLoading(false);
         })

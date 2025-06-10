@@ -14,20 +14,19 @@ const vurdering_vedtak = object().shape({
   innledningFritekst: string().nullable().max(4000, DU_KAN_IKKE_SKRIVE_MER_ENN_4000_TEGN),
   trygdeavgiftFritekst: string().nullable().max(4000, DU_KAN_IKKE_SKRIVE_MER_ENN_4000_TEGN),
   nyVurderingBakgrunnValg: string().when(["$erNyVurdering", "$erManglendeInnbetalingTrygdeavgift", "$erDelvisOpphør"], {
-    is: skalHaNyVurderingBakgrunn,
-    then: string().required(MAA_FYLLES_UT),
-    otherwise: string().nullable(),
+    is: (erNyVurdering, erManglendeInnbetalingTrygdeavgift, erDelvisOpphør) =>
+      skalHaNyVurderingBakgrunn(erNyVurdering, erManglendeInnbetalingTrygdeavgift, erDelvisOpphør),
+    then: (schema) => schema.required(MAA_FYLLES_UT),
+    otherwise: (schema) => schema.nullable(),
   }),
   nyVurderingBakgrunnFritekst: string().when(
-    ["$erNyVurdering", "$erManglendeInnbetalingTrygdeavgift", "$erDelvisOpphør"],
+    ["$erNyVurdering", "$erManglendeInnbetalingTrygdeavgift", "$erDelvisOpphør", "nyVurderingBakgrunnValg"],
     {
-      is: skalHaNyVurderingBakgrunn,
-      then: string().when("nyVurderingBakgrunnValg", {
-        is: FRITEKST_VALG,
-        then: string().erIkkeBlankHtml().required(MAA_FYLLES_UT),
-        otherwise: string().nullable(),
-      }),
-      otherwise: string().nullable(),
+      is: (erNyVurdering, erManglendeInnbetalingTrygdeavgift, erDelvisOpphør, nyVurderingBakgrunnValg) =>
+        skalHaNyVurderingBakgrunn(erNyVurdering, erManglendeInnbetalingTrygdeavgift, erDelvisOpphør) &&
+        nyVurderingBakgrunnValg === FRITEKST_VALG,
+      then: (schema) => schema.erIkkeBlankHtml().required(MAA_FYLLES_UT),
+      otherwise: (schema) => schema.nullable(),
     },
   ),
 });

@@ -14,7 +14,7 @@ const UnntakPeriodeBegrunnelse = (kode) => {
   return KV.kodeTilTerm(kode, MKV.KTObjects.begrunnelser.kontroll_begrunnelser);
 };
 
-const RegisterkontrollTreff = ({ vurderingBegrunnelser }) =>
+const RegisterkontrollTreff = ({ vurderingBegrunnelser = [] }) =>
   vurderingBegrunnelser.map((begrunnelseKode) => (
     <div key={Utils._uuid()} className="registerkontroll-listeelement">
       <Ikoner.AdvarselSirkelFyll />
@@ -24,10 +24,6 @@ const RegisterkontrollTreff = ({ vurderingBegrunnelser }) =>
 
 RegisterkontrollTreff.propTypes = {
   vurderingBegrunnelser: PT.arrayOf(PT.string),
-};
-
-RegisterkontrollTreff.defaultProps = {
-  vurderingBegrunnelser: [],
 };
 
 export default RegisterkontrollTreff;

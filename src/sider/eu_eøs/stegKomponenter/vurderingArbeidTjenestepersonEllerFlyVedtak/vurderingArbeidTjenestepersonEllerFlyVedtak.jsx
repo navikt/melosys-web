@@ -102,7 +102,7 @@ export function VurderingArbeidTjenestepersonEllerFlyVedtak({
   redigerbart,
   behandlingID,
   formIsValid,
-  formValues,
+  formValues = {},
   form,
   handleSubmit,
   touchAll,
@@ -112,19 +112,19 @@ export function VurderingArbeidTjenestepersonEllerFlyVedtak({
   behandlingstype,
   behandlingstema,
   sakstype,
-  lovvalgsbestemmelseSomSkalVises,
-  lovvalgsbestemmelseSomSkalLagres,
+  lovvalgsbestemmelseSomSkalVises = "",
+  lovvalgsbestemmelseSomSkalLagres = "",
   oppdaterData,
   slettData,
   tilbake,
   mottatteOpplysningerFom,
-  mottatteOpplysningerTom,
+  mottatteOpplysningerTom = null,
   mottatteOpplysningerStatus,
   soknadsperiode,
-  informertMyndighetFakta,
+  informertMyndighetFakta = {},
   kontrollerFerdigbehandling,
   harFeilmeldinger,
-  aktivtSteg,
+  aktivtSteg = false,
   validerMottatteOpplysninger,
   fattVedtak,
   selvstendigArbeid,
@@ -462,7 +462,6 @@ export function VurderingArbeidTjenestepersonEllerFlyVedtak({
 VurderingArbeidTjenestepersonEllerFlyVedtak.propTypes = {
   redigerbart: PT.bool.isRequired,
   behandlingID: PT.number.isRequired,
-  lovvalgsperiode: MPT.Periode,
   formIsValid: PT.bool.isRequired,
   formValues: PT.object,
   touchAll: PT.func.isRequired,
@@ -493,16 +492,6 @@ VurderingArbeidTjenestepersonEllerFlyVedtak.propTypes = {
   fattVedtak: PT.func.isRequired,
   selvstendigArbeid: PT.object.isRequired,
   mottatteOpplysningerStatus: PT.string.isRequired,
-};
-
-VurderingArbeidTjenestepersonEllerFlyVedtak.defaultProps = {
-  lovvalgsperiode: {},
-  formValues: {},
-  lovvalgsbestemmelseSomSkalVises: "",
-  lovvalgsbestemmelseSomSkalLagres: "",
-  mottatteOpplysningerTom: null,
-  informertMyndighetFakta: {},
-  aktivtSteg: false,
 };
 
 const mapStateToProps = (state, ownProps) => {

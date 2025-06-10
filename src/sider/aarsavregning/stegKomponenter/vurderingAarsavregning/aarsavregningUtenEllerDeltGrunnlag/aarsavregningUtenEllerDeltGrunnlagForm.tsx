@@ -1,5 +1,4 @@
 /* eslint-disable max-lines */
-// @ts-expect-error Workaround for @hookform/resolvers/yup with moduleResolution: bundler
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { FieldValue, useFieldArray, useForm, useWatch } from "react-hook-form";
@@ -30,7 +29,7 @@ import { BeregnetTrygdeavgiftDetaljer } from "../komponenter/beregnetTrygdeavgif
 import BestemmelseSelect from "../komponenter/bestemmelseSelect";
 import { MedlemskapsperiodeSkjema } from "../komponenter/medlemskapsperiodeSkjema";
 import { SumArsavregningTabell } from "../komponenter/sumArsavregningTabell";
-import { TidligereFakturertIAvgiftssystemetInput } from "../komponenter/tidligereFakturertIAvgiftssystemetInput";
+import { InnbetaltFraAvgiftssystemetInput } from "../komponenter/innbetaltFraAvgiftssystemetInput";
 import {
   AarsavregningFormValuesProps,
   DEFAULT_MEDLEMSKAPSPERIODE,
@@ -40,6 +39,7 @@ import aarsavregningUtenEllerDeltGrunnlagSchema from "./aarsavregningUtenEllerDe
 import { Feilmelding, finnAktivFeilmelding, finnAktivFeilmeldingForMedlemskapsperioder } from "./valideringsfeil";
 import { ManuellAvgiftFormPart } from "../komponenter/manuellAvgiftFormPart";
 import { EndeligAvgiftValgRadioGroup } from "../komponenter/endeligAvgiftValgRadioGroup";
+import { BorderedFormContainer } from "../komponenter/borderedFormContainer";
 
 const { OPPLYSNINGER_ENDRET, MANUELL_ENDELIG_AVGIFT } = MKV.Koder.endeligAvgiftValg;
 
@@ -402,7 +402,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   );
 
   const debouncedLagreMedlemskapsperioder = useCallback(
-    Utils._debounce((medlemskapsperioderFormValues, callbackEtterLagring) => {
+    Utils._debounce((medlemskapsperioderFormValues: Medlemskapsperiode[], callbackEtterLagring: () => void) => {
       lagreMedlemskapsperioder(medlemskapsperioderFormValues).finally(() => {
         if (callbackEtterLagring) callbackEtterLagring();
       });
@@ -755,19 +755,31 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     medlemskapstypeErPliktig && erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder);
   const skjemaErRedigerbart = redigerbart && !endrerBestemmelse;
 
+  const tidligereAarsavregningTrygdeavgiftFraAvgiftssystem =
+    initiellData.aarsavregningResponse?.tidligereGrunnlagsopplysninger
+      ?.tidligereÅrsavregningFakturertBeloepAvgiftssystem;
+
+  const tidligereAarsavregningErManueltBeregnet = Boolean(
+    initiellData.aarsavregningResponse?.tidligereGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep,
+  );
+
   return (
     <div className="vurderingAarsavregning">
-      <TidligereFakturertIAvgiftssystemetInput control={control} redigerbart={skjemaErRedigerbart} />
+      <InnbetaltFraAvgiftssystemetInput
+        control={control}
+        redigerbart={skjemaErRedigerbart}
+        erNyAarsavregning={Boolean(tidligereAarsavregningTrygdeavgiftFraAvgiftssystem)}
+      />
 
       <EndeligAvgiftValgRadioGroup
         control={control}
         redigerbart={skjemaErRedigerbart}
         handleEndeligAvgiftValgChange={handleEndeligAvgiftValgChange}
-        erMedGrunnlagFlyt={false}
+        endeligAvgiftValg={endeligAvgiftValg}
       />
 
       {endeligAvgiftValg === OPPLYSNINGER_ENDRET && (
-        <>
+        <BorderedFormContainer>
           <Nav.Heading className="endelige_opplysninger_heading" level="2">
             Inntekts- og skatteopplysninger for endelig trygdeavgift
           </Nav.Heading>
@@ -838,17 +850,6 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
             <Aarsavregningsmeldinger.TrygdeavgiftSkalIkkeBetalesTilNav />
           )}
 
-          {formIsValid && !beregningPaagar && !debouncedBeregningPagaar && !arrayValideringsfeil && !feilmelding && (
-            <SumArsavregningTabell
-              harGrunnlagIMelosys={harDeltGrunnlag}
-              nyTrygdeavgift={aarsavregningResponse?.avregning?.beregnetAvgiftBelop}
-              tidligereTrygdeavgift={aarsavregningResponse?.avregning?.tidligereFakturertBeloep}
-              tidligereTrygdeavgiftAvgiftssystem={
-                aarsavregningResponse?.avregning?.tidligereFakturertBeloepAvgiftssystem
-              }
-            />
-          )}
-
           {formIsValid &&
             !beregningPaagar &&
             !debouncedBeregningPagaar &&
@@ -861,39 +862,69 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
                 size="small"
               >
                 <Nav.ExpansionCard.Header>
-                  <Nav.ExpansionCard.Title size="small">Endelig beregnet trygdeavgift</Nav.ExpansionCard.Title>
+                  <Nav.ExpansionCard.Title size="small">Vis detaljert beregning</Nav.ExpansionCard.Title>
                 </Nav.ExpansionCard.Header>
                 <Nav.ExpansionCard.Content>
                   <BeregnetTrygdeavgiftDetaljer
                     grunnlag={aarsavregningResponse.nyttGrunnlag}
                     medlemskapsTypeErPliktig={medlemskapstypeErPliktig}
-                    tittel=""
                   />
                 </Nav.ExpansionCard.Content>
               </Nav.ExpansionCard>
             )}
 
           {arrayValideringsfeil && <Feilmelding type={arrayValideringsfeil} />}
-        </>
+        </BorderedFormContainer>
       )}
+
+      {/* Show SumAarsavregningTabell below bordered container when data is available */}
+      {formIsValid &&
+        !beregningPaagar &&
+        !debouncedBeregningPagaar &&
+        !arrayValideringsfeil &&
+        !feilmelding &&
+        endeligAvgiftValg === OPPLYSNINGER_ENDRET && (
+          <SumArsavregningTabell
+            harGrunnlagIMelosys={harDeltGrunnlag}
+            nyTrygdeavgift={aarsavregningResponse?.avregning?.beregnetAvgiftBelop}
+            tidligereTrygdeavgift={aarsavregningResponse?.avregning?.tidligereFakturertBeloep}
+            tidligereTrygdeavgiftAvgiftssystem={aarsavregningResponse?.avregning?.tidligereFakturertBeloepAvgiftssystem}
+            tidligereAarsavregningTrygdeavgiftFraAvgiftssystem={tidligereAarsavregningTrygdeavgiftFraAvgiftssystem}
+          />
+        )}
+
+      {endeligAvgiftValg === MANUELL_ENDELIG_AVGIFT && (
+        <BorderedFormContainer>
+          <ManuellAvgiftFormPart
+            control={control}
+            redigerbart={redigerbart}
+            debouncedOppdaterManueltAvgiftBeloep={debouncedOppdaterManueltAvgiftBeloep}
+            tidligereAarsavregningErManueltBeregnet={tidligereAarsavregningErManueltBeregnet}
+          />
+        </BorderedFormContainer>
+      )}
+
+      {/* Show SumAarsavregningTabell for manual amount below bordered container when entered */}
+      {endeligAvgiftValg === MANUELL_ENDELIG_AVGIFT &&
+        manueltAvgiftBeloep !== undefined &&
+        manueltAvgiftBeloep !== null &&
+        manueltAvgiftBeloep !== "" && (
+          <SumArsavregningTabell
+            harGrunnlagIMelosys={harDeltGrunnlag}
+            nyTrygdeavgift={Number(manueltAvgiftBeloep)}
+            tidligereTrygdeavgift={aarsavregningResponse?.avregning?.tidligereFakturertBeloep}
+            tidligereTrygdeavgiftAvgiftssystem={
+              totaltForskuddsvisFakturert ? Number(totaltForskuddsvisFakturert) : undefined
+            }
+            tidligereAarsavregningTrygdeavgiftFraAvgiftssystem={tidligereAarsavregningTrygdeavgiftFraAvgiftssystem}
+          />
+        )}
 
       {feilmelding && (
         <Nav.Alert variant="error" className="alertstripe_feilmelding">
           {feilmelding}
         </Nav.Alert>
       )}
-
-      <ManuellAvgiftFormPart
-        control={control}
-        redigerbart={redigerbart}
-        endeligAvgiftValg={endeligAvgiftValg}
-        manueltAvgiftBeloep={manueltAvgiftBeloep}
-        debouncedOppdaterManueltAvgiftBeloep={debouncedOppdaterManueltAvgiftBeloep}
-        tidligereTrygdeavgift={aarsavregningResponse?.avregning?.tidligereFakturertBeloep}
-        erMedGrunnlagFlyt={false}
-        harDeltGrunnlag={harDeltGrunnlag}
-        totaltForskuddsvisFakturert={totaltForskuddsvisFakturert}
-      />
 
       <Nav.Button
         variant="primary"

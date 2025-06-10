@@ -1,16 +1,14 @@
 import { ComponentProps } from "react";
-import { mock, instance } from "ts-mockito";
 import { screen } from "@testing-library/react";
 import { renderWithProviders } from "../../../../ducks/test-utils/renderWithProviders";
 
 import Legend from "./legend";
 
 describe("Legend", () => {
-  const mockedProps = mock<ComponentProps<typeof Legend>>();
-  let props = instance(mockedProps);
+  let props: ComponentProps<typeof Legend>;
 
   beforeEach(() => {
-    props = instance(mockedProps);
+    props = {} as ComponentProps<typeof Legend>;
   });
 
   it("Viser ingen symboler hvis ikke redigerbart", () => {

@@ -1,3 +1,5 @@
+@import "../../../../constants.less";
+
 .vurderingAarsavregning {
   .navds-table {
     margin-bottom: 1.5rem;
@@ -7,6 +9,7 @@
     p {
       margin: unset;
     }
+
     ul {
       margin: 0.5rem 0;
       padding-inline-start: 1.5rem;
@@ -17,8 +20,12 @@
     padding-top: 0;
   }
 
-  .navds-form-field__readonly-icon {
-    display: none;
+  .perioder,
+  .bestemmelseSelect,
+  .medlemskapsperioder {
+    .navds-form-field__readonly-icon {
+      display: none;
+    }
   }
 
   .nyVurderingMelding {
@@ -60,6 +67,10 @@
     align-self: flex-end;
   }
 
+  .bestemmelseSelect {
+    width: fit-content;
+  }
+
   .avgift_input {
     .navds-text-field__input {
       width: 7.5rem;
@@ -70,40 +81,30 @@
     margin-bottom: 1.5rem;
   }
 
-  .beregnetTrygdeavgiftDetaljer {
-    margin-bottom: 1.5rem;
-  }
-
   .endeligAvgiftValg_radio_group {
     .navds-radio-buttons {
-      margin-bottom: 0;
+      margin-bottom: 0.5rem;
+
+      .navds-radio {
+        border-style: solid;
+        border-width: 1px;
+        border-color: @gray-dark;
+        margin: 0;
+        padding: 0.75rem;
+
+        &.checked {
+          border-color: @blue-nav;
+          background-color: @blue-subtle;
+        }
+
+        &:hover {
+          border-color: @blue-nav;
+        }
+      }
     }
-    margin-bottom: 1.5rem;
-  }
-
-  // accordion har for stort border-radius som ikke passer med f.eks. alert.
-  .beregnetTrygdeavgiftDetaljer_header[data-open="true"] {
-    border-top-left-radius: 4px !important;
-    border-top-right-radius: 4px !important;
-    border-bottom-left-radius: 0px !important;
-    border-bottom-right-radius: 0px !important;
-  }
-
-  .beregnetTrygdeavgiftDetaljer_header[data-open="false"] {
-    border-top-left-radius: 4px !important;
-    border-top-right-radius: 4px !important;
-    border-bottom-left-radius: 4px !important;
-    border-bottom-right-radius: 4px !important;
-  }
-
-  .beregnetTrygdeavgiftDetaljer_content {
-    border-bottom-left-radius: 4px !important;
-    border-bottom-right-radius: 4px !important;
   }
 
   .navds-expansioncard__content {
-    background-color: #f8f8f8;
-
     .navds-heading {
       margin-bottom: 1.5rem;
     }
@@ -117,7 +118,16 @@
       margin-bottom: 1.5rem;
       overflow: auto;
     }
+  }
 
+  .tidligereGrunnlag {
+    padding: 1.5rem;
     margin-bottom: 1.5rem;
+
+    .tidligereGrunnlagPanel,
+    .periode_tabell {
+      margin-bottom: 1.5rem;
+      overflow: auto;
+    }
   }
 }

@@ -38,7 +38,7 @@ const kodeverkComparator = ({ kode: k1 }: KTObject, { kode: k2 }: KTObject) => k
 
 export const unntaksbestemmelser: KTObject[] = Utils._uniqBy(
   [...alleEØSLovvalg].filter(({ kode }) => !bestemmelserIkkeRelevanteForUnntak.includes(kode)),
-  ({ kode }) => kode,
+  ({ kode }: { kode: string }) => kode,
 ).sort(kodeverkComparator);
 
 export const unntaksbestemmelserStorbritanniaKonv: KTObject[] = [

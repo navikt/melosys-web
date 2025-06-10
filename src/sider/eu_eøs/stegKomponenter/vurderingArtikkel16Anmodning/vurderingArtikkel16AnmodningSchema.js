@@ -11,12 +11,12 @@ const artikkel16_anmodning = object().shape({
   kreverMottakerinstitusjon: bool().required(),
   mottakerinstitusjon: string().when("kreverMottakerinstitusjon", {
     is: true,
-    then: string().required(VELG_MOTTAKERINSTITUSJON),
+    then: (schema) => schema.required(VELG_MOTTAKERINSTITUSJON),
   }),
   fritekstSed: string().when("$bestemmelse", {
-    is: MKVUtils.erStorbritanniaKonvBestemmelse,
-    then: string().nullable().max(462, DU_KAN_IKKE_SKRIVE_MER_ENN_462_TEGN),
-    otherwise: string().nullable().max(500, DU_KAN_IKKE_SKRIVE_MER_ENN_500_TEGN),
+    is: (bestemmelseVal) => MKVUtils.erStorbritanniaKonvBestemmelse(bestemmelseVal),
+    then: (schema) => schema.nullable().max(462, DU_KAN_IKKE_SKRIVE_MER_ENN_462_TEGN),
+    otherwise: (schema) => schema.nullable().max(500, DU_KAN_IKKE_SKRIVE_MER_ENN_500_TEGN),
   }),
 });
 

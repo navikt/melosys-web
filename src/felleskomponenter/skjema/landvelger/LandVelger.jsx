@@ -22,7 +22,19 @@ const connector = connect(mapStateToProps);
  * @param props
  */
 function LandVelger(props) {
-  const { className = "", landkoder, landkoderFraSakstype, alleLandkoder, visAlleLandkoder, dataTestId } = props;
+  const {
+    className = "",
+    landkoder,
+    landkoderFraSakstype,
+    alleLandkoder,
+    visAlleLandkoder = false,
+    dataTestId,
+    disabled = false,
+    bredde = "XL",
+    label,
+    placeholder,
+    errorConfig,
+  } = props;
   const dataListID = lagDatalistID();
   const landkodeliste = landkoder || (visAlleLandkoder ? alleLandkoder : landkoderFraSakstype);
 
@@ -55,18 +67,6 @@ LandVelger.propTypes = {
   className: PT.string,
   errorConfig: PT.object,
   dataTestId: PT.string,
-};
-
-LandVelger.defaultProps = {
-  disabled: false,
-  label: undefined,
-  bredde: "XL",
-  placeholder: undefined,
-  landkoder: undefined,
-  visAlleLandkoder: false,
-  className: "",
-  errorConfig: undefined,
-  dataTestId: undefined,
 };
 
 export default connector(LandVelger);

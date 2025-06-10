@@ -9,14 +9,14 @@ const avslag_artikkel_12_og_16 = object().shape({
   vedtakstype: string()
     .nullable()
     .when("$behandlingstype", {
-      is: MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING,
-      then: string().nullable().required(VELG_EN_VEDTAKSTYPE),
+      is: (behandlingstype) => behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING,
+      then: (schema) => schema.required(VELG_EN_VEDTAKSTYPE),
     }),
   vedtakstypebegrunnelse: string()
     .nullable()
     .when("$behandlingstype", {
-      is: MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING,
-      then: string().nullable().required(OPPGI_BEGRUNNELSE),
+      is: (behandlingstype) => behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING,
+      then: (schema) => schema.required(OPPGI_BEGRUNNELSE),
     }),
 });
 

@@ -11,7 +11,14 @@ import * as Nav from "../../navFrontend";
 
 import "./brukerNavnSkjema.css";
 
-export function BrukerNavnSkjema({ formValues, settFormBrukerNavn, className, onChange, onHentBruker, resetFelter }) {
+export function BrukerNavnSkjema({
+  formValues = {},
+  settFormBrukerNavn,
+  className,
+  onChange,
+  onHentBruker = () => {},
+  resetFelter,
+}) {
   const [brukerSpinner, setBrukerSpinner] = useState(false);
   const [brukerHentetVedOppstart, setBrukerHentetVedOppstart] = useState(false);
 
@@ -80,13 +87,6 @@ BrukerNavnSkjema.propTypes = {
   onChange: PT.func,
   resetFelter: PT.func.isRequired,
   onHentBruker: PT.func,
-};
-
-BrukerNavnSkjema.defaultProps = {
-  formValues: {},
-  className: undefined,
-  onChange: undefined,
-  onHentBruker: () => {},
 };
 
 const mapStateToProps = (state, ownProps) => ({

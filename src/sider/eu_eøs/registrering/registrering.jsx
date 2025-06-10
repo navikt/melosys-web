@@ -33,13 +33,13 @@ export function Registrering({
   hentBehandling,
   hentFagsaker,
   hentLovvalgsperioder,
-  vurderingBegrunnelser,
+  vurderingBegrunnelser = [],
   hovedpartRolle,
-  sed,
-  redigerbart,
+  sed = {},
+  redigerbart = null,
   Saksopplysninger,
-  lovvalgsperiodeFom,
-  lovvalgsperiodeTom,
+  lovvalgsperiodeFom = undefined,
+  lovvalgsperiodeTom = undefined,
   lovvalgsland,
   visOppfriskModal,
   behandlingOppfriskes,
@@ -127,7 +127,6 @@ Registrering.propTypes = {
   hentFagsaker: PT.func.isRequired,
   hentLovvalgsperioder: PT.func.isRequired,
   redigerbart: PT.bool,
-  avklartefakta: MPT.AvklartefaktaListe,
   vurderingBegrunnelser: PT.arrayOf(PT.string),
   lovvalgsperioder: PT.array.isRequired, // TODO lag proptype
   sed: MPT.Behandlinger.Saksopplysninger.SED,
@@ -141,14 +140,6 @@ Registrering.propTypes = {
   behandlingOppfriskes: PT.bool.isRequired,
   hovedpartRolle: PT.string.isRequired,
   startOgVisOppfriskModal: PT.func.isRequired,
-};
-Registrering.defaultProps = {
-  redigerbart: null,
-  avklartefakta: [],
-  sed: {},
-  lovvalgsperiodeFom: undefined,
-  lovvalgsperiodeTom: undefined,
-  vurderingBegrunnelser: [],
 };
 const mapStateToProps = (state) => ({
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),

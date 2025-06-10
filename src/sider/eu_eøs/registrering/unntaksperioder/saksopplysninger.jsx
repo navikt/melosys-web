@@ -21,7 +21,7 @@ import { datalastingOperations } from "../../../../ducks/datalasting";
 import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { kontrollOperations, kontrollSelectors } from "../../../../ducks/kontroll";
-import { endrePeriodeSkjema, ikkeGodkjentBegrunnelseSkjema } from "./validering/unntaksperiodeSkjema";
+import { endrePeriodeSkjema, ikkeGodkjentBegrunnelseSkjema } from "./validering/unntaksperiodeSchema";
 
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import "../saksopplysninger.css";
@@ -30,12 +30,12 @@ function Saksopplysninger({
   match,
   behandlingID,
   redigerbart,
-  sed,
-  sedLovvalgsperiode,
+  sed = {},
+  sedLovvalgsperiode = {},
   sedLovvalgsbestemmelse,
   vurderingBegrunnelser,
   lovvalgsperiode,
-  behandlingsresultat,
+  behandlingsresultat = {},
   avklartefakta,
   oppdaterAvklartefakta,
   lastInnSaksopplysninger,
@@ -445,7 +445,6 @@ Saksopplysninger.propTypes = {
   behandlingID: PT.number.isRequired,
   sed: MPT.Behandlinger.Saksopplysninger.SED,
   vurderingBegrunnelser: PT.arrayOf(PT.string).isRequired,
-  skjema: PT.any,
   avklartefakta: PT.array.isRequired,
   lovvalgsperiode: PT.object.isRequired,
   sedLovvalgsperiode: MPT.Periode,
@@ -460,13 +459,6 @@ Saksopplysninger.propTypes = {
   behandlingsresultatErHentet: PT.bool.isRequired,
   kontrollerUnntaksperiode: PT.func.isRequired,
   unntaksperiodeKontrollfeil: PT.arrayOf(PT.object).isRequired,
-};
-
-Saksopplysninger.defaultProps = {
-  sed: {},
-  skjema: {},
-  sedLovvalgsperiode: {},
-  behandlingsresultat: {},
 };
 
 const mapStateToProps = (state) => ({

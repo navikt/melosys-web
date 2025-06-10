@@ -1,4 +1,4 @@
-@import (reference) "~nav-frontend-core/less/_variabler";
+@import "../../constants.less";
 
 .oppsummering {
   margin-bottom: 0.5em;
@@ -34,8 +34,12 @@
     }
 
     .knapp__container {
-      float: right;
-      background: white;
+      display: flex;
+      margin-top: 1rem;
+
+      .navds-button {
+        background: white;
+      }
 
       svg {
         height: 1rem;

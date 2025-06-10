@@ -79,11 +79,7 @@ function Forside(props) {
 Forside.propTypes = {
   location: PT.object.isRequired,
   history: PT.object.isRequired,
-  children: PT.node,
   tilOpprettNySak: PT.func.isRequired,
 };
 
-Forside.defaultProps = {
-  children: null,
-};
 export default withRouter(Forside);

@@ -4,7 +4,6 @@ import { OK } from "../../../../ducks/aarsavregning/types";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { fagsakSelectors } from "../../../../ducks/fagsaker";
 import { redigerbartSelectors } from "../../../../ducks/redigerbart";
-import { NyBehandlingForTidligereAarsavregningMelding } from "../../../../felleskomponenter/alertmeldinger/alertmeldinger";
 import MKV from "../../../../melosyskodeverk";
 import * as Nav from "../../../../navFrontend";
 import * as Api from "../../../../services/api";
@@ -19,7 +18,7 @@ import { behandlingsresultatOperations } from "../../../../ducks/behandlingsresu
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
 import { AarsavregningMedGrunnlag } from "./aarsavregningMedGrunnlag/aarsavregningMedGrunnlag";
 import { AarsavregningUtenEllerDeltGrunnlag } from "./aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlag";
-import { TidligereGrunnlagAccordion } from "./komponenter/tidligereGrunnlagAccordion";
+import { TidligereGrunnlagAccordion } from "./komponenter/tidligereGrunnlag";
 
 const { FASTSATT_TRYGDEAVGIFT, IKKE_FASTSATT } = MKV.Koder.behandlinger.behandlingsresultattyper;
 const { MANGLENDE_INNBETALING_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingstyper;
@@ -165,6 +164,16 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
     );
   };
 
+  const forrigeÅrsavregningErManueltBeregnet = Boolean(
+    aarsavregningResponse?.tidligereGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep !== null &&
+      aarsavregningResponse?.tidligereGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep !== undefined,
+  );
+  const forrigeÅrsavregningHarInnbetaltFraAvgiftssystem = Boolean(
+    aarsavregningResponse?.tidligereGrunnlagsopplysninger?.tidligereÅrsavregningFakturertBeloepAvgiftssystem !== null &&
+      aarsavregningResponse?.tidligereGrunnlagsopplysninger?.tidligereÅrsavregningFakturertBeloepAvgiftssystem !==
+        undefined,
+  );
+
   const sisteMuligeÅr = new Date().getFullYear() - 1;
   const antallÅrTilbakeITid = 6;
   const muligeAar = Array.from({ length: antallÅrTilbakeITid }, (_, i) => sisteMuligeÅr - i);
@@ -218,7 +227,20 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
 
       {!lagÅrsavregningFeil && !harAktivÅrsavregning && (
         <>
-          {redigerbart && erNyVurdering && <NyBehandlingForTidligereAarsavregningMelding />}
+          {redigerbart && erNyVurdering && (
+            <Nav.Alert variant="warning" className="nyVurderingMelding">
+              <Nav.Heading size="xsmall">Ny behandling for en tidligere årsavregning</Nav.Heading>
+              <Nav.BodyLong size="small">
+                Du har startet en ny årsavregningbehandling for et tidligere årsavregnet år
+                {forrigeÅrsavregningErManueltBeregnet && (
+                  <>
+                    <br />
+                    Trygdeavgiften ble manuelt beregnet og inntekts- og skatteopplysninger er derfor ikke oppgitt.
+                  </>
+                )}
+              </Nav.BodyLong>
+            </Nav.Alert>
+          )}
 
           {/* Tidligere grunnlag accordion - vises når år/aarsavregningResponse er satt  */}
           {aarsavregningResponse && <TidligereGrunnlagAccordion aarsavregningResponse={aarsavregningResponse} />}
@@ -230,12 +252,12 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
                   onChange={håndterDeltGrunnlag}
                   legend={
                     <LabelMedHjelpetekst
-                      label="Skal du legge til informasjon fra Avgiftssystemet til denne årsavregningen?"
+                      label="Skal du legge til trygdeavgift fra Avgiftssystemet til denne årsavregningen?"
                       hjelpetekst={DELT_GRUNNLAG_HJELPETEKST}
                     />
                   }
                   value={harDeltGrunnlag}
-                  readOnly={!redigerbart || harAktivÅrsavregning}
+                  readOnly={!redigerbart || harAktivÅrsavregning || forrigeÅrsavregningHarInnbetaltFraAvgiftssystem}
                 >
                   <Nav.HStack gap="6">
                     <Nav.Radio value>Ja</Nav.Radio>

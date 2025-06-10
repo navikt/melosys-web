@@ -1,15 +1,13 @@
 import { ComponentProps } from "react";
-import { instance, mock } from "ts-mockito";
 
 import { render, screen } from "@testing-library/react";
 import PersonstatusModal from "./personstatusModal";
 
 describe("PersonstatusModal", () => {
-  const mockedProps = mock<ComponentProps<typeof PersonstatusModal>>();
-  let props = instance(mockedProps);
+  let props: ComponentProps<typeof PersonstatusModal>;
 
   beforeEach(() => {
-    props = instance(mockedProps);
+    props = {} as ComponentProps<typeof PersonstatusModal>;
     props.lukkModal = vi.fn();
     props.skalViseModal = true;
     props.aktivePersonstatuser = [

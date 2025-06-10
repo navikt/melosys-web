@@ -1,41 +1,36 @@
-import * as Api from "../../../../../services/api";
-import "../vurderingAarsavregningInngang.css";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { AarsavregningResponse } from "../../../../../services/modules/aarsavregning/aarsavregning";
-import { useSelector } from "react-redux";
-import * as Nav from "../../../../../navFrontend";
-import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 import { FieldValue, useFieldArray, useForm } from "react-hook-form";
+import { useSelector } from "react-redux";
+import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
+import { behandlingsresultatSelectors } from "../../../../../ducks/behandlingsresultat";
+import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
+import { Inntektskilder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/inntektskilder";
+import { Skatteforholdsperioder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/skatteforholdsperioder";
 import {
   FieldArrayProps,
   FormValuesProps,
   Inntektskilde,
   Skatteforhold,
 } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
-// @ts-expect-error Workaround for @hookform/resolvers/yup with moduleResolution: bundler
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as Utils from "../../../../../utils";
-import { SumArsavregningTabell } from "../komponenter/sumArsavregningTabell";
-import { BeregnetTrygdeavgiftDetaljer } from "../komponenter/beregnetTrygdeavgiftDetaljer";
-import { behandlingsresultatSelectors } from "../../../../../ducks/behandlingsresultat";
-import aarsavregningMedGrunnlagSchema from "./aarsavregningMedGrunnlagSchema";
-import { Skatteforholdsperioder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/skatteforholdsperioder";
-import { Inntektskilder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/inntektskilder";
-import {
-  beregnTrygdeavgiftsperioder,
-  erBrukerSkattepliktigIHelePerioden,
-  mapTilInntektskilderProps,
-  mapTilSkatteforholdProps,
-} from "../utils";
-import { Aarsavregningsmeldinger } from "../komponenter/aarsavregningsmeldinger";
-import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
-import { InitiellData } from "./aarsavregningMedGrunnlag";
-import { Feilmelding, finnAktivFeilmelding } from "./valideringsfeil";
 import MKV from "../../../../../melosyskodeverk";
+import * as Nav from "../../../../../navFrontend";
+import * as Api from "../../../../../services/api";
+import { AarsavregningResponse } from "../../../../../services/modules/aarsavregning/aarsavregning";
+import * as Utils from "../../../../../utils";
+import { Aarsavregningsmeldinger } from "../komponenter/aarsavregningsmeldinger";
+import { BeregnetTrygdeavgiftDetaljer } from "../komponenter/beregnetTrygdeavgiftDetaljer";
+import { BorderedFormContainer } from "../komponenter/borderedFormContainer";
 import { EndeligAvgiftValgRadioGroup } from "../komponenter/endeligAvgiftValgRadioGroup";
 import { ManuellAvgiftFormPart } from "../komponenter/manuellAvgiftFormPart";
+import { SumArsavregningTabell } from "../komponenter/sumArsavregningTabell";
+import { beregnTrygdeavgiftsperioder, erBrukerSkattepliktigIHelePerioden } from "../utils";
+import "../vurderingAarsavregningInngang.css";
+import { InitiellData } from "./aarsavregningMedGrunnlag";
+import aarsavregningMedGrunnlagSchema from "./aarsavregningMedGrunnlagSchema";
+import { Feilmelding, finnAktivFeilmelding } from "./valideringsfeil";
 
-const { OPPLYSNINGER_ENDRET, OPPLYSNINGER_UENDRET, MANUELL_ENDELIG_AVGIFT } = MKV.Koder.endeligAvgiftValg;
+const { OPPLYSNINGER_ENDRET, MANUELL_ENDELIG_AVGIFT } = MKV.Koder.endeligAvgiftValg;
 
 interface Props {
   initiellData: InitiellData;
@@ -223,7 +218,6 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
 
   const stegErGyldig = useMemo(
     () =>
-      endeligAvgiftValg === OPPLYSNINGER_UENDRET ||
       Boolean(
         formIsValid &&
           endeligAvgiftValg === OPPLYSNINGER_ENDRET &&
@@ -236,7 +230,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
           aarsavregningResponse?.avregning?.manueltAvgiftBeloep &&
           !feilmelding,
       ),
-    [endeligAvgiftValg, formIsValid, aarsavregningResponse?.nyttGrunnlag, feilmelding, arrayValideringsfeil],
+    [endeligAvgiftValg, formIsValid, aarsavregningResponse, feilmelding, arrayValideringsfeil],
   );
 
   useEffect(() => {
@@ -271,37 +265,12 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
         .then((res) => {
           setAarsavregningResponse(res);
           setValue("manueltAvgiftBeloep", "", { shouldValidate: false, shouldDirty: false });
-          // TODO: Beregning skal ikke være nødvendig. API må gjøre opprydning ved endring av behandlingsvalg
-          if (value === OPPLYSNINGER_UENDRET || value === MANUELL_ENDELIG_AVGIFT) {
-            setBeregningPaagar(true);
-            const skatteforholdFraGrunnlag =
-              res.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.skatteforholdsperioder;
-            const inntektskilderFraGrunnlag =
-              res.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.inntektskperioder;
-            handleBeregnTrygdeavgiftsperioder({
-              skatteforholdsperioder: mapTilSkatteforholdProps(skatteforholdFraGrunnlag),
-              inntektskilder: mapTilInntektskilderProps(inntektskilderFraGrunnlag),
-            }).finally(() => {
-              setPreviousFormValues(null);
-              setBeregningPaagar(false);
-            });
-          }
         })
         .finally(() => {
           setEndrerEndeligAvgiftValg(false);
         });
     },
-    [
-      aarsavregningID,
-      handleBeregnTrygdeavgiftsperioder,
-      setBeregningPaagar,
-      setAarsavregningResponse,
-      setPreviousFormValues,
-      setEndrerEndeligAvgiftValg,
-      Api.Aarsavregning,
-      behandlingID,
-      setValue,
-    ],
+    [aarsavregningID, setAarsavregningResponse, setEndrerEndeligAvgiftValg, Api.Aarsavregning, behandlingID, setValue],
   );
 
   const debouncedOppdaterManueltAvgiftBeloep = useCallback(
@@ -327,17 +296,21 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   const trygdeAvgiftSkalIkkeBetalesTilNav =
     medlemskapstypeErPliktig && erBrukerSkattepliktigIHelePerioden(skatteforholdsperioder);
 
+  const tidligereAarsavregningErManueltBeregnet = Boolean(
+    aarsavregningResponse?.tidligereGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep,
+  );
+
   return (
     <>
       <EndeligAvgiftValgRadioGroup
         control={control}
         redigerbart={redigerbart}
         handleEndeligAvgiftValgChange={handleEndeligAvgiftValgChange}
-        erMedGrunnlagFlyt={true}
+        endeligAvgiftValg={endeligAvgiftValg}
       />
 
       {endeligAvgiftValg === OPPLYSNINGER_ENDRET && !endrerEndeligAvgiftValg && (
-        <>
+        <BorderedFormContainer>
           <Nav.Heading className="endelige_opplysninger_heading" level="2">
             Inntekts- og skatteopplysninger for endelig trygdeavgift
           </Nav.Heading>
@@ -372,19 +345,6 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
             !beregningPaagar &&
             !feilmelding &&
             !arrayValideringsfeil &&
-            aarsavregningResponse?.avregning && (
-              <SumArsavregningTabell
-                nyTrygdeavgift={aarsavregningResponse.avregning.beregnetAvgiftBelop}
-                tidligereTrygdeavgift={aarsavregningResponse.avregning.tidligereFakturertBeloep}
-                harGrunnlagIMelosys
-              />
-            )}
-
-          {formIsValid &&
-            !debouncedBeregningPagaar &&
-            !beregningPaagar &&
-            !feilmelding &&
-            !arrayValideringsfeil &&
             aarsavregningResponse?.nyttGrunnlag && (
               <Nav.ExpansionCard
                 className="beregnetTrygdeavgiftDetaljer"
@@ -392,38 +352,62 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
                 size="small"
               >
                 <Nav.ExpansionCard.Header>
-                  <Nav.ExpansionCard.Title size="small">Endelig beregnet trygdeavgift</Nav.ExpansionCard.Title>
+                  <Nav.ExpansionCard.Title size="small">Vis detaljert beregning</Nav.ExpansionCard.Title>
                 </Nav.ExpansionCard.Header>
                 <Nav.ExpansionCard.Content>
                   <BeregnetTrygdeavgiftDetaljer
                     grunnlag={aarsavregningResponse.nyttGrunnlag}
                     medlemskapsTypeErPliktig={medlemskapstypeErPliktig!}
-                    tittel=""
                   />
                 </Nav.ExpansionCard.Content>
               </Nav.ExpansionCard>
             )}
 
           {arrayValideringsfeil && <Feilmelding type={arrayValideringsfeil} />}
-        </>
+        </BorderedFormContainer>
       )}
+
+      {formIsValid &&
+        !debouncedBeregningPagaar &&
+        !beregningPaagar &&
+        !feilmelding &&
+        !arrayValideringsfeil &&
+        aarsavregningResponse?.avregning &&
+        endeligAvgiftValg === OPPLYSNINGER_ENDRET && (
+          <SumArsavregningTabell
+            nyTrygdeavgift={aarsavregningResponse.avregning.beregnetAvgiftBelop}
+            tidligereTrygdeavgift={aarsavregningResponse.avregning.tidligereFakturertBeloep}
+            harGrunnlagIMelosys
+          />
+        )}
+
+      {endeligAvgiftValg === MANUELL_ENDELIG_AVGIFT && (
+        <BorderedFormContainer>
+          <ManuellAvgiftFormPart
+            control={control}
+            redigerbart={redigerbart}
+            debouncedOppdaterManueltAvgiftBeloep={debouncedOppdaterManueltAvgiftBeloep}
+            tidligereAarsavregningErManueltBeregnet={tidligereAarsavregningErManueltBeregnet}
+          />
+        </BorderedFormContainer>
+      )}
+
+      {endeligAvgiftValg === MANUELL_ENDELIG_AVGIFT &&
+        manueltAvgiftBeloep !== undefined &&
+        manueltAvgiftBeloep !== null &&
+        manueltAvgiftBeloep !== "" && (
+          <SumArsavregningTabell
+            harGrunnlagIMelosys={true}
+            nyTrygdeavgift={Number(manueltAvgiftBeloep)}
+            tidligereTrygdeavgift={aarsavregningResponse?.avregning?.tidligereFakturertBeloep}
+          />
+        )}
 
       {feilmelding && !beregningPaagar && (
         <Nav.Alert variant="error" className="alertstripe_feilmelding">
           {feilmelding}
         </Nav.Alert>
       )}
-
-      <ManuellAvgiftFormPart
-        control={control}
-        redigerbart={redigerbart}
-        endeligAvgiftValg={endeligAvgiftValg}
-        manueltAvgiftBeloep={manueltAvgiftBeloep}
-        debouncedOppdaterManueltAvgiftBeloep={debouncedOppdaterManueltAvgiftBeloep}
-        tidligereTrygdeavgift={aarsavregningResponse?.avregning?.tidligereFakturertBeloep}
-        erMedGrunnlagFlyt={true}
-        harDeltGrunnlag={false}
-      />
 
       <Nav.Button
         variant="primary"

@@ -93,9 +93,7 @@ describe("BeregnetTrygdeavgiftDetaljer", () => {
   });
 
   it("does not render when grunnlag is undefined", () => {
-    const { container } = render(
-      <BeregnetTrygdeavgiftDetaljer grunnlag={undefined} medlemskapsTypeErPliktig={true} tittel="Test Tittel" />,
-    );
+    const { container } = render(<BeregnetTrygdeavgiftDetaljer grunnlag={undefined} medlemskapsTypeErPliktig={true} />);
 
     expect(container.firstChild).toBeNull();
   });
@@ -107,22 +105,14 @@ describe("BeregnetTrygdeavgiftDetaljer", () => {
     } as any;
 
     const { container } = render(
-      <BeregnetTrygdeavgiftDetaljer
-        grunnlag={grunnlagUtenAvgift}
-        medlemskapsTypeErPliktig={true}
-        tittel="Test Tittel"
-      />,
+      <BeregnetTrygdeavgiftDetaljer grunnlag={grunnlagUtenAvgift} medlemskapsTypeErPliktig={true} />,
     );
 
     expect(container.firstChild).toBeNull();
   });
   it("snapshot test", () => {
     const { container } = render(
-      <BeregnetTrygdeavgiftDetaljer
-        grunnlag={createMockData()}
-        medlemskapsTypeErPliktig={true}
-        tittel="Complete Data Test"
-      />,
+      <BeregnetTrygdeavgiftDetaljer grunnlag={createMockData()} medlemskapsTypeErPliktig={true} />,
     );
 
     expect(container.firstChild).toMatchSnapshot();

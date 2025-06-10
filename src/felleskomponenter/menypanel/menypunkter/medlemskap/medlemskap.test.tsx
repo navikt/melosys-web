@@ -1,5 +1,4 @@
 import { ComponentProps } from "react";
-import { instance, mock } from "ts-mockito";
 import { render, screen } from "@testing-library/react";
 
 import { Medlemskap } from "./medlemskap";
@@ -36,10 +35,10 @@ const periode = {
 };
 
 describe("Medlemskap", () => {
-  const mockedProps = mock<ComponentProps<typeof Medlemskap>>();
-  const props = instance(mockedProps);
+  let props: ComponentProps<typeof Medlemskap>;
 
   beforeEach(() => {
+    props = {} as ComponentProps<typeof Medlemskap>;
     props.medlemskap = {
       perioderMed: [periode],
       perioderUten: [periode],

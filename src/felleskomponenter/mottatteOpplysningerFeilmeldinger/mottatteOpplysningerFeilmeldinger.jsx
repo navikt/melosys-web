@@ -7,7 +7,7 @@ import * as Nav from "../../navFrontend";
 
 import "./mottatteOpplysningerFeilmeldinger.css";
 
-export function MottatteOpplysningerFeilmeldinger({ panelFeil }) {
+export function MottatteOpplysningerFeilmeldinger({ panelFeil = [] }) {
   if (panelFeil.length === 0) return null;
 
   return (
@@ -36,10 +36,6 @@ MottatteOpplysningerFeilmeldinger.propTypes = {
       panel: PT.string.isRequired,
     }),
   ),
-};
-
-MottatteOpplysningerFeilmeldinger.defaultProps = {
-  panelFeil: [],
 };
 
 const mapStateToProps = (state) => ({
