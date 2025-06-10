@@ -130,7 +130,8 @@ export function Inntektskilder({
           inntektskilde.arbAvgBetales,
         );
         if (!skalFylleInnBruttoInntekt && inntektskilde.bruttoInntekt) {
-          update(index, { ...inntektskilde, bruttoInntekt: undefined });
+          // @ts-expect-error - "" er nødvendig for å nullstille feltet
+          update(index, { ...inntektskilde, bruttoInntekt: "" });
         }
 
         return (
