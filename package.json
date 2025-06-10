@@ -86,7 +86,7 @@
     "start:q1": "node generate-local-config.js .q1.env && npm-run-all -p start:css start:js",
     "start:q2": "node generate-local-config.js .q2.env && npm-run-all -p start:css start:js",
     "build": "npm-run-all -p build:css build:js",
-    "eslint": "eslint src --ext .js,.jsx,.ts,.tsx",
+    "eslint": "eslint src",
     "eslint:staged": "echo '{\"*.{js,jsx,ts,tsx}\": \"eslint\"}' | lint-staged --config -",
     "prettier:write": "prettier --write .",
     "prettier:check": "prettier --check .",
