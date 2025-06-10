@@ -2,7 +2,10 @@
 
 exports[`SumArsavregningTabell > renders correctly with all possible data 1`] = `
 
-<div class="sumArsavregningTabell">
+<div
+  style="--__ac-box-background: var(--a-surface-subtle);"
+  class="navds-box sumArsavregningTabell navds-box-bg"
+>
   <table
     width="500"
     class="navds-table navds-table--small periode_tabell"

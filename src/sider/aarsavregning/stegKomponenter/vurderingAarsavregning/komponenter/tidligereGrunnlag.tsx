@@ -23,7 +23,7 @@ export function TidligereGrunnlagAccordion({ aarsavregningResponse }: TidligereG
     (aarsavregningResponse.tidligereGrunnlagsopplysninger?.avgift?.totalAvgift ?? 0) > 0;
 
   return (
-    <div className="tidligereGrunnlagGreyContainer">
+    <Nav.Box className="tidligereGrunnlag" background="surface-subtle">
       <Nav.Heading size="small" level="3">
         Tidligere grunnlag
       </Nav.Heading>
@@ -107,6 +107,6 @@ export function TidligereGrunnlagAccordion({ aarsavregningResponse }: TidligereG
           </ul>
         </Nav.Alert>
       )}
-    </div>
+    </Nav.Box>
   );
 }
