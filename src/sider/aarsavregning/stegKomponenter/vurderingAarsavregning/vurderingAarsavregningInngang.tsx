@@ -91,7 +91,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
       setHarGrunnlag(false);
     } else {
       setHarGrunnlag(true);
-      if (res.aar === 2023 || res.aar === 2024) {
+      if (res.harDeltGrunnlag || res.aar === 2023 || res.aar === 2024) {
         setVisDeltGrunnlagRadioGroup(true);
         setHarDeltGrunnlag(res.harDeltGrunnlag);
       } else {
