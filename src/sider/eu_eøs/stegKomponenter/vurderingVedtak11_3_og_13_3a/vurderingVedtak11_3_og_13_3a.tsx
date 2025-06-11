@@ -6,7 +6,8 @@ import Dokumentliste, {
 } from "../../../../felleskomponenter/dokumentliste";
 import MKV from "../../../../melosyskodeverk";
 import * as KV from "../../../../kodeverk";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+import { useDispatch } from "../../../../hooks";
 import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
 import * as Utils from "../../../../utils";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
@@ -124,13 +125,11 @@ export function VurderingVedtak11_3_og_13_3a({
 
     validerMottatteOpplysninger()
       .then(() => {
-        dispatch(vedtakOperations.fatt(behandlingID, lagFattVedtakEOSReqDto()))
-          // @ts-expect-error generisk beskrivelse
-          .then((res: any) => {
-            if (res.data?.data?.error) {
-              setVedtakPending(false);
-            }
-          });
+        dispatch(vedtakOperations.fatt(behandlingID, lagFattVedtakEOSReqDto())).then((res: any) => {
+          if (res.data?.data?.error) {
+            setVedtakPending(false);
+          }
+        });
       })
       .catch(() => setVedtakPending(false));
   };
@@ -193,7 +192,7 @@ export function VurderingVedtak11_3_og_13_3a({
         Omfattet av norsk trygdelovgivning
       </Nav.Heading>
       <Mui.KodeTermSelect
-        onChange={(e) => {
+        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
           setValue("lovvalgsbestemmelse", e.target.value, { shouldValidate: true });
         }}
         label="Velg en lovvalgsbestemmelse"
@@ -211,6 +210,7 @@ export function VurderingVedtak11_3_og_13_3a({
         redigerbart={redigerbart}
         disableForsteValg
         className="ktselect__slim"
+        feil={null}
       />
 
       <Nav.BodyLong weight="semibold" size="small" className="undertittel">

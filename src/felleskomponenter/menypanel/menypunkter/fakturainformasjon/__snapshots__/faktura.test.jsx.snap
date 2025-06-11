@@ -8,7 +8,7 @@ exports[`Faktura > snapshot test 1`] = `
       <button
         class="navds-table__toggle-expand-button"
         type="button"
-        aria-controls="r0"
+        aria-controls="«r0»"
         aria-expanded="false"
       >
         <svg
@@ -52,6 +52,7 @@ exports[`Faktura > snapshot test 1`] = `
     </td>
   </tr>
   <tr
+    data-state="closed"
     class="navds-table__expanded-row"
     aria-hidden="true"
     id="333"
@@ -66,7 +67,7 @@ exports[`Faktura > snapshot test 1`] = `
       >
         <div
           aria-hidden="true"
-          class="navds-table__expanded-row-content"
+          class="navds-table__expanded-row-content navds-table__expanded-row-content--gutter-left"
           style="display: none;"
         >
           <div class="fakturalinje">
