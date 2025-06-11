@@ -131,20 +131,20 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     fields: medlemskapsperioderFields,
     append: medlemskapsperioderAppend,
     remove: medlemskapsperioderRemove,
-  } = useFieldArray<FieldArrayProps, "medlemskapsperioder", "id">({ control, name: "medlemskapsperioder" });
+  } = useFieldArray({ control: control as any, name: "medlemskapsperioder" });
 
   const {
     fields: skattFields,
     append: skattAppend,
     remove: skattRemove,
-  } = useFieldArray<FieldArrayProps, "skatteforholdsperioder", "id">({ control, name: "skatteforholdsperioder" });
+  } = useFieldArray({ control: control as any, name: "skatteforholdsperioder" });
 
   const {
     fields: inntektFields,
     append: inntektAppend,
     remove: inntektRemove,
     update: inntektUpdate,
-  } = useFieldArray<FieldArrayProps, "inntektskilder", "id">({ control, name: "inntektskilder" });
+  } = useFieldArray({ control: control as any, name: "inntektskilder" });
 
   const formValues = watch();
   const bestemmelse = useWatch({ control, name: "bestemmelse" });
@@ -797,7 +797,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
           />
 
           <div className="medlemskapsperioder">
-            {medlemskapsperioderFields.map((field, index) => (
+            {(medlemskapsperioderFields as any[]).map((field: any, index: number) => (
               <MedlemskapsperiodeSkjema
                 key={field.id}
                 redigerbart={skjemaErRedigerbart}
