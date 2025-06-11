@@ -98,14 +98,14 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     append: skattAppend,
     remove: skattRemove,
     replace: resetSkatteforholdsperioder,
-  } = useFieldArray<FieldArrayProps, "skatteforholdsperioder", "id">({ control, name: "skatteforholdsperioder" });
+  } = useFieldArray({ control: control as any, name: "skatteforholdsperioder" }) as any;
   const {
     fields: inntektFields,
     append: inntektAppend,
     remove: inntektRemove,
     update: inntektUpdate,
     replace: resetInntektskilder,
-  } = useFieldArray<FieldArrayProps, "inntektskilder", "id">({ control, name: "inntektskilder" });
+  } = useFieldArray({ control: control as any, name: "inntektskilder" }) as any;
   const formValues = watch();
 
   const aktivFeilmeldingType = finnAktivFeilmelding(

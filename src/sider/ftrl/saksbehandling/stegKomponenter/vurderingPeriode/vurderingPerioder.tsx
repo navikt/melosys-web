@@ -105,15 +105,15 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     } as FieldValue<FormValuesProps>,
   });
   const {
+    fields,
     append,
     remove,
     update,
-    fields,
     replace: resetMedlemskapsperioder,
-  } = useFieldArray<FieldArrayProps, "medlemskapsperioder", "id">({
-    control,
+  } = useFieldArray({
+    control: control as any,
     name: "medlemskapsperioder",
-  });
+  }) as any;
   const formValues = watch();
 
   const aktivFeilmeldingType = finnAktivFeilmelding(
@@ -266,7 +266,6 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
       trygdedekning: "",
       bestemmelse: lagretBestemmelse,
     };
-    // @ts-expect-error generisk beskrivelse
     append(nyMedlemskapsperiode);
   };
 

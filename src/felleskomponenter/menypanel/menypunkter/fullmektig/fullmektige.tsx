@@ -61,18 +61,18 @@ function Fullmektige({ redigerbart, finnOrganisasjonAdresse, finnPersonAdresse }
     mode: "all",
     defaultValues: {
       fullmektige: [],
-    } as FieldValue<FieldValues & FieldArrayProps>,
-  });
+    },
+  }) as any;
   const {
     fields,
     append,
     update,
     remove,
     replace: resetFullmektige,
-  } = useFieldArray<FieldArrayProps, "fullmektige", "id">({
+  } = useFieldArray({
     control,
     name: "fullmektige",
-  });
+  }) as any;
   const formValues = watch();
   const fullmektige = watch("fullmektige");
 
