@@ -32,11 +32,11 @@ exports[`VurderingArbeidsmonster > snapshot test 1`] = `
                 <div class="navds-radio navds-radio--small">
                   <input
                     id="333"
+                    name="333"
+                    type="radio"
                     aria-labelledby="333"
                     class="navds-radio__input"
-                    type="radio"
                     value="NORGE"
-                    name="333"
                   >
                   <label
                     for="333"
@@ -56,11 +56,11 @@ exports[`VurderingArbeidsmonster > snapshot test 1`] = `
                 <div class="navds-radio navds-radio--small">
                   <input
                     id="333"
+                    name="333"
+                    type="radio"
                     aria-labelledby="333"
                     class="navds-radio__input"
-                    type="radio"
                     value="ETT_ANNET_LAND"
-                    name="333"
                   >
                   <label
                     for="333"
@@ -80,11 +80,11 @@ exports[`VurderingArbeidsmonster > snapshot test 1`] = `
                 <div class="navds-radio navds-radio--small">
                   <input
                     id="333"
+                    name="333"
+                    type="radio"
                     aria-labelledby="333"
                     class="navds-radio__input"
-                    type="radio"
                     value="FLERE_LAND"
-                    name="333"
                   >
                   <label
                     for="333"
@@ -124,11 +124,11 @@ exports[`VurderingArbeidsmonster > snapshot test 1`] = `
                 <div class="navds-radio navds-radio--small">
                   <input
                     id="333"
+                    name="333"
+                    type="radio"
                     aria-labelledby="333"
                     class="navds-radio__input"
-                    type="radio"
                     value="NORGE_OG_ANNEN_VIRKSOMHET"
-                    name="333"
                   >
                   <label
                     for="333"
@@ -148,11 +148,11 @@ exports[`VurderingArbeidsmonster > snapshot test 1`] = `
                 <div class="navds-radio navds-radio--small">
                   <input
                     id="333"
+                    name="333"
+                    type="radio"
                     aria-labelledby="333"
                     class="navds-radio__input"
-                    type="radio"
                     value="ANNET_LAND_OG_ANNEN_VIRKSOMHET"
-                    name="333"
                   >
                   <label
                     for="333"
@@ -172,11 +172,11 @@ exports[`VurderingArbeidsmonster > snapshot test 1`] = `
                 <div class="navds-radio navds-radio--small">
                   <input
                     id="333"
+                    name="333"
+                    type="radio"
                     aria-labelledby="333"
                     class="navds-radio__input"
-                    type="radio"
                     value="FLERE_LAND_OG_ANNEN_VIRKSOMHET"
-                    name="333"
                   >
                   <label
                     for="333"
@@ -216,11 +216,11 @@ exports[`VurderingArbeidsmonster > snapshot test 1`] = `
                 <div class="navds-radio navds-radio--small">
                   <input
                     id="333"
+                    name="333"
+                    type="radio"
                     aria-labelledby="333"
                     class="navds-radio__input"
-                    type="radio"
                     value="OVER_25_PROSENT"
-                    name="333"
                   >
                   <label
                     for="333"
@@ -240,11 +240,11 @@ exports[`VurderingArbeidsmonster > snapshot test 1`] = `
                 <div class="navds-radio navds-radio--small">
                   <input
                     id="333"
+                    name="333"
+                    type="radio"
                     aria-labelledby="333"
                     class="navds-radio__input"
-                    type="radio"
                     value="UNDER_25_PROSENT"
-                    name="333"
                   >
                   <label
                     for="333"

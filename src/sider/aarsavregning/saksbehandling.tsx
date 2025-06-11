@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { RouteComponentProps } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { useDispatch } from "../../hooks";
+import { useDispatch, useSelector } from "react-redux";
 import * as Nav from "../../navFrontend";
 import { HGrid } from "@navikt/ds-react";
 
@@ -74,6 +73,7 @@ function Saksbehandling({ match, location }: Props) {
       setBehandlingID(behandlingId);
       dispatch(fagsakOperations.hent(saksnr));
       const response = await dispatch(behandlingerOperations.hentBehandling(behandlingId));
+      // @ts-expect-error generisk beskrivelse
       const behandling = response.data;
       if (!behandling) return false;
 

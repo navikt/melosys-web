@@ -20,12 +20,12 @@ exports[`VurderingArtikkel13_x_Vedtak > snapshot test 1`] = `
         <div class="col col-xs-8">
           <div class="navds-checkbox navds-checkbox--small">
             <input
+              name="333"
               class="navds-checkbox__input"
               id="333"
-              aria-labelledby="333"
               type="checkbox"
+              aria-labelledby="333"
               value
-              name="333"
             >
             <label
               for="333"
@@ -48,8 +48,6 @@ exports[`VurderingArtikkel13_x_Vedtak > snapshot test 1`] = `
                   >
                   </path>
                 </svg>
-              </span>
-              <span class="navds-checkbox__icon-indeterminate">
               </span>
               <span class="navds-checkbox__content">
                 <span
@@ -76,7 +74,7 @@ exports[`VurderingArtikkel13_x_Vedtak > snapshot test 1`] = `
           </label>
           <textarea
             rows="2"
-            style="--__ac-textarea-height: -4px; --__axc-textarea-height: -4px; overflow: hidden;"
+            style="--__ac-textarea-height: -4px; overflow: hidden;"
             textareaclass="skjemaelement__input input--fullbredde"
             name="333"
             id="333"
@@ -122,7 +120,7 @@ exports[`VurderingArtikkel13_x_Vedtak > snapshot test 1`] = `
           </label>
           <textarea
             rows="2"
-            style="--__ac-textarea-height: -4px; --__axc-textarea-height: -4px; overflow: hidden;"
+            style="--__ac-textarea-height: -4px; overflow: hidden;"
             textareaclass="skjemaelement__input input--fullbredde"
             name="333"
             id="333"

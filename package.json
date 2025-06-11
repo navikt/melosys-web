@@ -13,8 +13,8 @@
   "readme": "README.md",
   "dependencies": {
     "@apollo/client": "^3.7.12",
-    "@azure/msal-browser": "^4.13.0",
-    "@azure/msal-react": "^3.0.12",
+    "@azure/msal-browser": "^2.28.1",
+    "@azure/msal-react": "^1.4.5",
     "@hookform/resolvers": "^3.9.0",
     "@navikt/aksel-icons": "^7.6.0",
     "@navikt/ds-css": "^7.5.3",
@@ -34,18 +34,18 @@
     "moment-timezone": "^0.5.43",
     "prop-types": "^15.8.1",
     "qs": "^6.10.3",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "react-hook-form": "^7.43.1",
     "react-promise-suspense": "0.3.3",
     "react-quill-new": "^3.3.3",
-    "react-redux": "^9.2.0",
+    "react-redux": "^7.2.8",
     "react-router-dom": "^5.3.4",
     "react-select": "^5.8.3",
-    "redux": "^5.0.1",
+    "redux": "^4.0.4",
     "redux-first-history": "^5.2.0",
     "redux-form": "^8.3.10",
-    "redux-thunk": "^3.1.0",
+    "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
     "uuid": "^3.3.3",
     "yup": "^1.6.1"
@@ -90,7 +90,7 @@
     "@graphql-codegen/typescript-generic-sdk": "^3.1.0",
     "@graphql-codegen/typescript-operations": "^3.0.4",
     "@graphql-codegen/typescript-react-apollo": "^3.3.7",
-    "@reduxjs/toolkit": "^2.8.2",
+    "@reduxjs/toolkit": "^1.9.5",
     "@testing-library/dom": "^10.0.4",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^16.0.1",
@@ -101,8 +101,8 @@
     "@types/node": "^20.15.12",
     "@types/qs": "^6.9.5",
     "@types/quill": "^2.0.10",
-    "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0",
+    "@types/react": "^18.2.74",
+    "@types/react-dom": "^18.3.1",
     "@types/react-redux": "^7.1.9",
     "@types/react-router-dom": "^5.3.3",
     "@types/react-select": "^3.1.2",
@@ -130,6 +130,7 @@
     "lint-staged": "^15.5.1",
     "npm-run-all": "^4.1.5",
     "prettier": "^3.4.1",
+    "redux-mock-store": "^1.5.3",
     "source-map-explorer": "^2.1.1",
     "typescript": "^5.0.0",
     "vite": "^5.3.5",
@@ -143,13 +144,5 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ],
-  "overrides": {
-    "redux-form": {
-      "react": "^19.0.0",
-      "react-dom": "^19.0.0",
-      "redux": "^5.0.0",
-      "react-redux": "^9.0.0"
-    }
-  }
+  ]
 }

@@ -1,4 +1,5 @@
-import { createTestStore } from "../test-utils/createTestStore";
+import configureMockStore from "redux-mock-store";
+import thunk from "redux-thunk";
 
 import MKV from "../../melosyskodeverk";
 
@@ -6,6 +7,9 @@ import * as types from "./types";
 import * as operations from "./operations";
 import * as KV from "../../kodeverk";
 import { STATUS } from "../../services";
+
+const middlewares = [thunk];
+const mockStore = configureMockStore(middlewares);
 
 describe("Lovvalgsperioder operations", () => {
   let initialState = null;
@@ -59,44 +63,45 @@ describe("Lovvalgsperioder operations", () => {
   });
 
   describe("lagre", () => {
-    it("updates state correctly on successful save", async () => {
-      const store = createTestStore(initialState);
+    it("lager PENDING og OK ved normal tilstand", async () => {
+      const expectedActions = [{ type: types.PENDING }, { type: types.OK, data: {} }];
+
+      const store = mockStore(initialState);
 
       await store.dispatch(operations.lagre());
 
-      const finalState = store.getState();
-      expect(finalState.lovvalgsperioder).toBeDefined();
-      // Note: Test should verify actual state changes rather than action dispatch
+      expect(store.getActions()).toEqual(expectedActions);
     });
 
-    it("handles API errors correctly", async () => {
+    it("lager FEILET ved feil i api-kall", async () => {
       const error = new Error("feil ved kall til Api");
       fetch.resetMocks();
       fetch.mockReject(error);
 
-      const store = createTestStore(initialState);
+      const expectedActions = [{ type: types.PENDING }, { type: types.FEILET, data: error.toString() }];
+
+      const store = mockStore(initialState);
 
       await store.dispatch(operations.lagre());
 
-      const finalState = store.getState();
-      expect(finalState.lovvalgsperioder).toBeDefined();
-      // Note: Test should verify error state is properly set in reducer
+      expect(store.getActions()).toEqual(expectedActions);
     });
   });
 
   describe("oppdaterLovvalgsperioderState", () => {
-    it("resets state when no selections are made", () => {
-      const store = createTestStore(initialState);
+    it("lager RESET dersom ingen lovvalgsvilkar, lovvalgsbestemmelse eller tilleggbestemmelse er valgt", () => {
+      const expectedActions = [{ type: types.RESET }];
+
+      const store = mockStore(initialState);
+
       const stegState = {};
 
       store.dispatch(operations.oppdaterLovvalgsperioderState(stegState));
 
-      const finalState = store.getState();
-      expect(finalState.lovvalgsperioder).toBeDefined();
-      // Note: Verify that state is properly reset based on reducer logic
+      expect(store.getActions()).toEqual(expectedActions);
     });
 
-    it("updates lovvalgsperioder when correct lovvalgsvilkar are selected", async () => {
+    it("lager OPPDATER_LOVVALGSPERIODER dersom riktige lovvalgsvilkar er valgt", async () => {
       const data = [
         MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_1,
         MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_2,
@@ -113,7 +118,11 @@ describe("Lovvalgsperioder operations", () => {
           },
         ];
 
-        const store = createTestStore({
+        const expectedActions = [
+          { type: types.OPPDATER_LOVVALGSPERIODER, data: [{ lovvalgsbestemmelse: lovvalgsvilkarBestemmelse }] },
+        ];
+
+        const store = mockStore({
           ...initialState,
           vilkar: {
             data: [...lovvalgsvilkar],
@@ -124,16 +133,18 @@ describe("Lovvalgsperioder operations", () => {
 
         store.dispatch(operations.oppdaterLovvalgsperioderState(stegState));
 
-        const finalState = store.getState();
-        expect(finalState.lovvalgsperioder).toBeDefined();
-        // Note: Verify lovvalgsperioder are updated with correct lovvalgsbestemmelse
+        expect(store.getActions()).toMatchObject(expectedActions);
       });
     });
 
-    it("updates lovvalgsperioder when tilleggbestemmelse is selected", () => {
+    it("lager OPPDATER_LOVVALGSPERIODER dersom tilleggbestemmelse er valgt", () => {
       const tilleggbestemmelse = MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART11_5;
 
-      const store = createTestStore({
+      const expectedActions = [
+        { type: types.OPPDATER_LOVVALGSPERIODER, data: [{ tilleggBestemmelse: tilleggbestemmelse }] },
+      ];
+
+      const store = mockStore({
         ...initialState,
       });
 
@@ -141,15 +152,15 @@ describe("Lovvalgsperioder operations", () => {
 
       store.dispatch(operations.oppdaterLovvalgsperioderState(stegState));
 
-      const finalState = store.getState();
-      expect(finalState.lovvalgsperioder).toBeDefined();
-      // Note: Verify tilleggbestemmelse is set in lovvalgsperioder
+      expect(store.getActions()).toMatchObject(expectedActions);
     });
 
-    it("updates lovvalgsperioder when lovvalgsbestemmelse is selected", () => {
+    it("lager OPPDATER_LOVVALGSPERIODER dersom lovvalgsbestemmelse er valgt", () => {
       const lovvalgsbestemmelse = MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_987_2009.FO_987_2009_ART14_11;
 
-      const store = createTestStore({
+      const expectedActions = [{ type: types.OPPDATER_LOVVALGSPERIODER, data: [{ lovvalgsbestemmelse }] }];
+
+      const store = mockStore({
         ...initialState,
       });
 
@@ -157,15 +168,17 @@ describe("Lovvalgsperioder operations", () => {
 
       store.dispatch(operations.oppdaterLovvalgsperioderState(stegState));
 
-      const finalState = store.getState();
-      expect(finalState.lovvalgsperioder).toBeDefined();
-      // Note: Verify lovvalgsbestemmelse is set correctly
+      expect(store.getActions()).toMatchObject(expectedActions);
     });
 
-    it("updates lovvalgsperioder when unntakfrabestemmelse is selected", () => {
+    it("lager OPPDATER_LOVVALGSPERIODER dersom unntakfrabestemmelse er valgt", () => {
       const unntakfrabestemmelse = MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_987_2009.FO_987_2009_ART14_11;
 
-      const store = createTestStore({
+      const expectedActions = [
+        { type: types.OPPDATER_LOVVALGSPERIODER, data: [{ unntakFraBestemmelse: unntakfrabestemmelse }] },
+      ];
+
+      const store = mockStore({
         ...initialState,
       });
 
@@ -173,15 +186,15 @@ describe("Lovvalgsperioder operations", () => {
 
       store.dispatch(operations.oppdaterLovvalgsperioderState(stegState));
 
-      const finalState = store.getState();
-      expect(finalState.lovvalgsperioder).toBeDefined();
-      // Note: Verify unntakfrabestemmelse is set correctly
+      expect(store.getActions()).toMatchObject(expectedActions);
     });
 
-    it("updates lovvalgsperioder when lovvalgsland is selected", () => {
+    it("lager OPPDATER_LOVVALGSPERIODER dersom lovvalgsland er valgt", () => {
       const lovvalgsland = MKV.Koder.landkoder.DE;
 
-      const store = createTestStore({
+      const expectedActions = [{ type: types.OPPDATER_LOVVALGSPERIODER, data: [{ lovvalgsland }] }];
+
+      const store = mockStore({
         ...initialState,
       });
 
@@ -189,12 +202,12 @@ describe("Lovvalgsperioder operations", () => {
 
       store.dispatch(operations.oppdaterLovvalgsperioderState(stegState));
 
-      const finalState = store.getState();
-      expect(finalState.lovvalgsperioder).toBeDefined();
-      // Note: Verify lovvalgsland is set correctly
+      expect(store.getActions()).toMatchObject(expectedActions);
     });
 
-    it("creates empty lovvalgsperiode when avklartfakta OMFATTES_I_LAND is country other than Norway", () => {
+    it("lager OPPDATER_LOVVALGSPERIODER med tom lovvalgsperiode dersom avklartfakta OMFATTES_I_LAND er et annet land enn Norge", () => {
+      const expectedActions = [{ type: types.OPPDATER_LOVVALGSPERIODER, data: [] }];
+
       const avklartfakta = {
         avklartefaktaKode: null,
         referanse: KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND,
@@ -204,7 +217,7 @@ describe("Lovvalgsperioder operations", () => {
         begrunnelseFritekst: null,
       };
 
-      const store = createTestStore({
+      const store = mockStore({
         ...initialState,
         avklartefakta: {
           data: [avklartfakta],
@@ -216,13 +229,13 @@ describe("Lovvalgsperioder operations", () => {
 
       store.dispatch(operations.oppdaterLovvalgsperioderState(stegState));
 
-      const finalState = store.getState();
-      expect(finalState.lovvalgsperioder).toBeDefined();
-      // Note: Verify empty lovvalgsperiode when country is not Norway
+      expect(store.getActions()).toMatchObject(expectedActions);
     });
   });
 
-  it("creates empty lovvalgsperiode when applicant has public service in another country", () => {
+  it("lager OPPDATER_LOVVALGSPERIODER med tom lovvalgsperiode dersom søker har offentlig tjeneste i ett annet land", () => {
+    const expectedActions = [{ type: types.OPPDATER_LOVVALGSPERIODER, data: [] }];
+
     const avklartfakta = {
       avklartefaktaKode: null,
       referanse: KV.Koder.avklartefaktaKoder.OFFENTLIG_ARBEID_ANTALL_LAND,
@@ -232,7 +245,7 @@ describe("Lovvalgsperioder operations", () => {
       begrunnelseFritekst: null,
     };
 
-    const store = createTestStore({
+    const store = mockStore({
       ...initialState,
       avklartefakta: {
         data: [avklartfakta],
@@ -244,12 +257,12 @@ describe("Lovvalgsperioder operations", () => {
 
     store.dispatch(operations.oppdaterLovvalgsperioderState(stegState));
 
-    const finalState = store.getState();
-    expect(finalState.lovvalgsperioder).toBeDefined();
-    // Note: Verify empty lovvalgsperiode for public service in other country
+    expect(store.getActions()).toMatchObject(expectedActions);
   });
 
-  it("creates empty lovvalgsperiode when utpeking is rejected", () => {
+  it("lager OPPDATER_LOVVALGSPERIODER med tom lovvalgsperiode dersom utpeking er avvist", () => {
+    const expectedActions = [{ type: types.OPPDATER_LOVVALGSPERIODER, data: [] }];
+
     const form = {
       [KV.Form.VURDER_UTPEKING]: {
         values: {
@@ -258,7 +271,7 @@ describe("Lovvalgsperioder operations", () => {
       },
     };
 
-    const store = createTestStore({
+    const store = mockStore({
       ...initialState,
       form,
     });
@@ -268,12 +281,13 @@ describe("Lovvalgsperioder operations", () => {
 
     store.dispatch(operations.oppdaterLovvalgsperioderState(stegState));
 
-    const finalState = store.getState();
-    expect(finalState.lovvalgsperioder.data).toEqual([]);
+    expect(store.getActions()).toMatchObject(expectedActions);
   });
 
-  it(`creates empty lovvalgsperiode when lovvalgsbestemmelse is ${MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1}`, () => {
-    const store = createTestStore({
+  it(`lager OPPDATER_LOVVALGSPERIODER med tom lovvalgsperiode dersom lovvalgsbestemmelse er ${MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1}`, () => {
+    const expectedActions = [{ type: types.OPPDATER_LOVVALGSPERIODER, data: [] }];
+
+    const store = mockStore({
       ...initialState,
     });
 
@@ -282,11 +296,21 @@ describe("Lovvalgsperioder operations", () => {
 
     store.dispatch(operations.oppdaterLovvalgsperioderState(stegState));
 
-    const finalState = store.getState();
-    expect(finalState.lovvalgsperioder.data).toEqual([]);
+    expect(store.getActions()).toMatchObject(expectedActions);
   });
 
-  it("sets Norway as lovvalgsland when applicant has public service in Norway", () => {
+  it("lager OPPDATER_LOVVALGSPERIODER med Norge som lovvalgsland dersom søker har offentlig tjeneste i Norge", () => {
+    const expectedActions = [
+      {
+        type: types.OPPDATER_LOVVALGSPERIODER,
+        data: [
+          {
+            lovvalgsland: MKV.Koder.landkoder.NO,
+          },
+        ],
+      },
+    ];
+
     const avklartfakta = {
       avklartefaktaKode: null,
       referanse: KV.Koder.avklartefaktaKoder.OFFENTLIG_ARBEID_ANTALL_LAND,
@@ -296,7 +320,7 @@ describe("Lovvalgsperioder operations", () => {
       begrunnelseFritekst: null,
     };
 
-    const store = createTestStore({
+    const store = mockStore({
       ...initialState,
       avklartefakta: {
         data: [avklartfakta],
@@ -308,15 +332,21 @@ describe("Lovvalgsperioder operations", () => {
 
     store.dispatch(operations.oppdaterLovvalgsperioderState(stegState));
 
-    const finalState = store.getState();
-    expect(finalState.lovvalgsperioder.data[0]).toEqual(
-      expect.objectContaining({
-        lovvalgsland: MKV.Koder.landkoder.NO,
-      }),
-    );
+    expect(store.getActions()).toMatchObject(expectedActions);
   });
 
-  it("sets Norway as lovvalgsland when avklartfakta OMFATTES_I_LAND is Norway", () => {
+  it("lager OPPDATER_LOVVALGSPERIODER med Norge som lovvalgsland dersom avklartfakta OMFATTES_I_LAND er Norge", () => {
+    const expectedActions = [
+      {
+        type: types.OPPDATER_LOVVALGSPERIODER,
+        data: [
+          {
+            lovvalgsland: MKV.Koder.landkoder.NO,
+          },
+        ],
+      },
+    ];
+
     const avklartfakta = {
       avklartefaktaKode: null,
       referanse: KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND,
@@ -326,7 +356,7 @@ describe("Lovvalgsperioder operations", () => {
       begrunnelseFritekst: null,
     };
 
-    const store = createTestStore({
+    const store = mockStore({
       ...initialState,
       avklartefakta: {
         data: [avklartfakta],
@@ -338,15 +368,10 @@ describe("Lovvalgsperioder operations", () => {
 
     store.dispatch(operations.oppdaterLovvalgsperioderState(stegState));
 
-    const finalState = store.getState();
-    expect(finalState.lovvalgsperioder.data[0]).toEqual(
-      expect.objectContaining({
-        lovvalgsland: MKV.Koder.landkoder.NO,
-      }),
-    );
+    expect(store.getActions()).toMatchObject(expectedActions);
   });
 
-  it("sets Norway as lovvalgsland when correct lovvalgsbestemmelse is selected", () => {
+  it("lager OPPDATER_LOVVALGSPERIODER med Norge som lovvalgsland dersom riktig lovvalgsbestemmelse er valgt", async () => {
     const data = [
       MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1A,
       MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_2B,
@@ -354,8 +379,19 @@ describe("Lovvalgsperioder operations", () => {
       MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3A,
       MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3B,
     ];
-    data.forEach((lovvalgsbestemmelse) => {
-      const store = createTestStore({
+    data.forEach(async (lovvalgsbestemmelse) => {
+      const expectedActions = [
+        {
+          type: types.OPPDATER_LOVVALGSPERIODER,
+          data: [
+            {
+              lovvalgsland: MKV.Koder.landkoder.NO,
+            },
+          ],
+        },
+      ];
+
+      const store = mockStore({
         ...initialState,
       });
 
@@ -363,16 +399,13 @@ describe("Lovvalgsperioder operations", () => {
 
       store.dispatch(operations.oppdaterLovvalgsperioderState(stegState));
 
-      const finalState = store.getState();
-      expect(finalState.lovvalgsperioder.data[0]).toEqual(
-        expect.objectContaining({
-          lovvalgsland: MKV.Koder.landkoder.NO,
-        }),
-      );
+      expect(store.getActions()).toMatchObject(expectedActions);
     });
   });
 
-  it("creates empty lovvalgsperiode when applicant has paid work in another country", () => {
+  it("lager OPPDATER_LOVVALGSPERIODER med tom lovvalgsperiode dersom søker har lønnet arbeid i ett annet land", () => {
+    const expectedActions = [{ type: types.OPPDATER_LOVVALGSPERIODER, data: [] }];
+
     const avklartfakta = {
       avklartefaktaKode: null,
       referanse: KV.Koder.avklartefaktaKoder.LOENNET_ARBEID_ANTALL_LAND,
@@ -382,7 +415,7 @@ describe("Lovvalgsperioder operations", () => {
       begrunnelseFritekst: null,
     };
 
-    const store = createTestStore({
+    const store = mockStore({
       ...initialState,
       avklartefakta: {
         data: [avklartfakta],
@@ -394,7 +427,6 @@ describe("Lovvalgsperioder operations", () => {
 
     store.dispatch(operations.oppdaterLovvalgsperioderState(stegState));
 
-    const finalState = store.getState();
-    expect(finalState.lovvalgsperioder.data).toEqual([]);
+    expect(store.getActions()).toMatchObject(expectedActions);
   });
 });

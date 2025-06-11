@@ -1,3 +1,4 @@
+import * as PT from "prop-types";
 import classNames from "classnames";
 import { Component, ComponentClass, HTMLAttributes } from "react";
 
@@ -23,6 +24,11 @@ class Row extends Component<RowProps> {
 (Row as ComponentClass).defaultProps = {
   className: undefined,
   children: undefined,
+};
+
+(Row as ComponentClass).propTypes = {
+  className: PT.string,
+  children: PT.oneOfType([PT.arrayOf(PT.node), PT.node]),
 };
 
 export default Row;

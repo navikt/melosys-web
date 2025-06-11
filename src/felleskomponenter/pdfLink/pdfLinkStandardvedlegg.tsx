@@ -1,3 +1,4 @@
+import PT from "prop-types";
 import * as Nav from "../../navFrontend";
 import { TilgjengeligStandardvedlegg } from "../../services/modules/dokumenter-v2";
 import { apnePdfINyFane } from "../../services/utils";
@@ -24,5 +25,9 @@ function PdfLinkStandardvedlegg({ standardvedlegg, skalViseEgenFrontendTittel }:
     </Nav.Link>
   );
 }
+
+PdfLinkStandardvedlegg.propTypes = {
+  standardvedlegg: PT.object.isRequired,
+};
 
 export default PdfLinkStandardvedlegg;

@@ -1,8 +1,7 @@
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { RootState } from "AppTypes";
 import { useCallback, useEffect, useState } from "react";
-import { connect, ConnectedProps } from "react-redux";
-import { useDispatch } from "../../../../hooks";
+import { connect, ConnectedProps, useDispatch } from "react-redux";
 import { Action } from "redux";
 import { getFormValues, reduxForm } from "redux-form";
 import { ThunkDispatch } from "redux-thunk";

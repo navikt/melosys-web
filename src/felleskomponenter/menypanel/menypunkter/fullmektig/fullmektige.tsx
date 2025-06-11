@@ -1,27 +1,27 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import MKV from "../../../../melosyskodeverk";
 
-import * as Nav from "../../../../navFrontend";
-import * as Ikoner from "../../../../resources/images";
-import * as Api from "../../../../services/api";
-import * as Utils from "../../../../utils";
 import * as Mui from "../../../ui";
+import * as Api from "../../../../services/api";
+import * as Ikoner from "../../../../resources/images";
+import * as Utils from "../../../../utils";
+import * as Nav from "../../../../navFrontend";
 
 import { fagsakSelectors } from "../../../../ducks/fagsaker";
 
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useEffect, useState } from "react";
-import { useFieldArray, useForm } from "react-hook-form";
-import { behandlingerSelectors } from "../../../../ducks/behandlinger";
-import { menypanelOperations } from "../../../../ducks/menypanel";
-import { useAsyncCallbackState, useDispatch } from "../../../../hooks";
-import Knapperad from "../../../knapperad";
 import "./fullmektige.css";
+import { useEffect, useState } from "react";
+import { FieldValue, FieldValues, useFieldArray, useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 import fullmektig_schema from "./fullmektigeSchema";
-import LagretFullmektig from "./lagretFullmektig";
 import RedigererFullmektig from "./redigererFullmektig";
-import { AdresseOgFeil, Fullmektig, Type } from "./types";
+import LagretFullmektig from "./lagretFullmektig";
+import { AdresseOgFeil, FieldArrayProps, Fullmektig, Type } from "./types";
+import { menypanelOperations } from "../../../../ducks/menypanel";
+import Knapperad from "../../../knapperad";
+import { behandlingerSelectors } from "../../../../ducks/behandlinger";
+import { useAsyncCallbackState } from "../../../../hooks";
 
 const { FULLMEKTIG } = MKV.Koder.aktoersroller;
 const { FULLMEKTIG_TRYGDEAVGIFT } = MKV.Koder.fullmaktstype;
@@ -61,18 +61,18 @@ function Fullmektige({ redigerbart, finnOrganisasjonAdresse, finnPersonAdresse }
     mode: "all",
     defaultValues: {
       fullmektige: [],
-    },
-  }) as any;
+    } as FieldValue<FieldValues & FieldArrayProps>,
+  });
   const {
     fields,
     append,
     update,
     remove,
     replace: resetFullmektige,
-  } = useFieldArray({
+  } = useFieldArray<FieldArrayProps, "fullmektige", "id">({
     control,
     name: "fullmektige",
-  }) as any;
+  });
   const formValues = watch();
   const fullmektige = watch("fullmektige");
 

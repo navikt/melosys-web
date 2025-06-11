@@ -9,19 +9,18 @@ import * as Utils from "../../utils";
 
 import "./registerkontrolltreff.css";
 
-function UnntakPeriodeBegrunnelse(kode) {
+const UnntakPeriodeBegrunnelse = (kode) => {
   if (!kode) return "";
   return KV.kodeTilTerm(kode, MKV.KTObjects.begrunnelser.kontroll_begrunnelser);
-}
+};
 
-function RegisterkontrollTreff({ vurderingBegrunnelser = [] }) {
-  return vurderingBegrunnelser.map((begrunnelseKode) => (
+const RegisterkontrollTreff = ({ vurderingBegrunnelser = [] }) =>
+  vurderingBegrunnelser.map((begrunnelseKode) => (
     <div key={Utils._uuid()} className="registerkontroll-listeelement">
       <Ikoner.AdvarselSirkelFyll />
       <Nav.BodyLong size="small">{UnntakPeriodeBegrunnelse(begrunnelseKode)}</Nav.BodyLong>
     </div>
   ));
-}
 
 RegisterkontrollTreff.propTypes = {
   vurderingBegrunnelser: PT.arrayOf(PT.string),

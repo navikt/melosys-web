@@ -5,12 +5,12 @@ exports[`Checkbox > snapshot test 1`] = `
 <div>
   <div class="navds-checkbox navds-checkbox--small">
     <input
+      name="333"
       class="navds-checkbox__input"
       id="333"
-      aria-labelledby="333"
       type="checkbox"
+      aria-labelledby="333"
       value
-      name="333"
     >
     <label
       for="333"
@@ -33,8 +33,6 @@ exports[`Checkbox > snapshot test 1`] = `
           >
           </path>
         </svg>
-      </span>
-      <span class="navds-checkbox__icon-indeterminate">
       </span>
       <span class="navds-checkbox__content">
         <span
