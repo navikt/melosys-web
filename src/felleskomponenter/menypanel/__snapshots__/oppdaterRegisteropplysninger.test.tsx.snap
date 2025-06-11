@@ -90,6 +90,8 @@ exports[`oppdaterRegisteropplysninger > Skal vise alternativ for å se registero
             </path>
           </svg>
         </span>
+        <span class="navds-checkbox__icon-indeterminate">
+        </span>
         <span class="navds-checkbox__content">
           <span
             id="333"
