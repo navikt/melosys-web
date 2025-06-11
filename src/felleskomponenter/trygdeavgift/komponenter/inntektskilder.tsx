@@ -108,7 +108,8 @@ export function Inntektskilder({
   };
 
   const handleEndreArbAvgBetales = (index: number, arbAvgBetales: string) => {
-    update(index, { ...formValues.inntektskilder[index], arbAvgBetales, bruttoInntekt: undefined });
+    // @ts-expect-error - "" er nødvendig for å nullstille feltet
+    update(index, { ...formValues.inntektskilder[index], arbAvgBetales, bruttoInntekt: "" });
   };
 
   const erHoyInntekt = (inntekt: any) => {
@@ -130,7 +131,8 @@ export function Inntektskilder({
           inntektskilde.arbAvgBetales,
         );
         if (!skalFylleInnBruttoInntekt && inntektskilde.bruttoInntekt) {
-          update(index, { ...inntektskilde, bruttoInntekt: undefined });
+          // @ts-expect-error - "" er nødvendig for å nullstille feltet
+          update(index, { ...inntektskilde, bruttoInntekt: "" });
         }
 
         return (

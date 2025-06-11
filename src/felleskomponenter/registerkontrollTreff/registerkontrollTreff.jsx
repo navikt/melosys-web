@@ -9,10 +9,10 @@ import * as Utils from "../../utils";
 
 import "./registerkontrolltreff.css";
 
-const UnntakPeriodeBegrunnelse = (kode) => {
+function UnntakPeriodeBegrunnelse(kode) {
   if (!kode) return "";
   return KV.kodeTilTerm(kode, MKV.KTObjects.begrunnelser.kontroll_begrunnelser);
-};
+}
 
 function RegisterkontrollTreff({ vurderingBegrunnelser = [] }) {
   return vurderingBegrunnelser.map((begrunnelseKode) => (

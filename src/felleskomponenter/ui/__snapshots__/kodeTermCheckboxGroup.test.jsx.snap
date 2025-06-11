@@ -10,12 +10,12 @@ exports[`KodeTermCheckboxGroup > snapshot test 1`] = `
     <div class="navds-checkboxes">
       <div class="navds-checkbox navds-checkbox--small">
         <input
-          name="333"
           id="333"
-          type="checkbox"
           class="navds-checkbox__input"
           aria-labelledby="333"
+          type="checkbox"
           value="SKIP_INNENRIKS"
+          name="333"
         >
         <label
           for="333"
@@ -54,12 +54,12 @@ exports[`KodeTermCheckboxGroup > snapshot test 1`] = `
       </div>
       <div class="navds-checkbox navds-checkbox--small">
         <input
-          name="333"
           id="333"
-          type="checkbox"
           class="navds-checkbox__input"
           aria-labelledby="333"
+          type="checkbox"
           value="SKIPS_FLAGGLAND"
+          name="333"
         >
         <label
           for="333"
@@ -98,13 +98,13 @@ exports[`KodeTermCheckboxGroup > snapshot test 1`] = `
       </div>
       <div class="navds-checkbox navds-checkbox--small">
         <input
-          name="333"
           id="333"
-          type="checkbox"
           class="navds-checkbox__input"
           aria-labelledby="333"
+          type="checkbox"
           value="BASELAND"
           checked
+          name="333"
         >
         <label
           for="333"
