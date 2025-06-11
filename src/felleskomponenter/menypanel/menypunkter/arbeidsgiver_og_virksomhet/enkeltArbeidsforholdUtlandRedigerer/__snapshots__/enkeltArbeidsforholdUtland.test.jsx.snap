@@ -14,12 +14,12 @@ exports[`EnkeltArbeidsforholdUtland > snapshot test 1`] = `
             Navn på virksomheten
           </label>
           <input
-            name="333"
             meta="[object Object]"
             id="333"
-            type="text"
             class="navds-text-field__input navds-body-short navds-body-short--small"
+            type="text"
             value
+            name="333"
           >
           <div
             class="navds-form-field__error"
@@ -39,12 +39,12 @@ exports[`EnkeltArbeidsforholdUtland > snapshot test 1`] = `
             Registreringsnummer
           </label>
           <input
-            name="333"
             meta="[object Object]"
             id="333"
-            type="text"
             class="navds-text-field__input navds-body-short navds-body-short--small"
+            type="text"
             value
+            name="333"
           >
           <div
             class="navds-form-field__error"
@@ -66,12 +66,12 @@ exports[`EnkeltArbeidsforholdUtland > snapshot test 1`] = `
             Adressetilleggsnavn
           </label>
           <input
-            name="333"
             meta="[object Object]"
             id="333"
-            type="text"
             class="navds-text-field__input navds-body-short navds-body-short--small"
+            type="text"
             value
+            name="333"
           >
           <div
             class="navds-form-field__error"
@@ -93,12 +93,12 @@ exports[`EnkeltArbeidsforholdUtland > snapshot test 1`] = `
             Adresse til arbeidsgiver
           </label>
           <input
-            name="333"
             meta="[object Object]"
             id="333"
-            type="text"
             class="navds-text-field__input navds-body-short navds-body-short--small"
+            type="text"
             value
+            name="333"
           >
           <div
             class="navds-form-field__error"
@@ -118,12 +118,12 @@ exports[`EnkeltArbeidsforholdUtland > snapshot test 1`] = `
             Husnummer
           </label>
           <input
-            name="333"
             meta="[object Object]"
             id="333"
-            type="text"
             class="navds-text-field__input navds-body-short navds-body-short--small"
+            type="text"
             value
+            name="333"
           >
           <div
             class="navds-form-field__error"
@@ -145,12 +145,12 @@ exports[`EnkeltArbeidsforholdUtland > snapshot test 1`] = `
             Poststed
           </label>
           <input
-            name="333"
             meta="[object Object]"
             id="333"
-            type="text"
             class="navds-text-field__input navds-body-short navds-body-short--small"
+            type="text"
             value
+            name="333"
           >
           <div
             class="navds-form-field__error"
@@ -170,12 +170,12 @@ exports[`EnkeltArbeidsforholdUtland > snapshot test 1`] = `
             Postnummer
           </label>
           <input
-            name="333"
             meta="[object Object]"
             id="333"
-            type="text"
             class="navds-text-field__input navds-body-short navds-body-short--small"
+            type="text"
             value
+            name="333"
           >
           <div
             class="navds-form-field__error"
@@ -197,12 +197,12 @@ exports[`EnkeltArbeidsforholdUtland > snapshot test 1`] = `
             Postboks
           </label>
           <input
-            name="333"
             meta="[object Object]"
             id="333"
-            type="text"
             class="navds-text-field__input navds-body-short navds-body-short--small"
+            type="text"
             value
+            name="333"
           >
           <div
             class="navds-form-field__error"
@@ -224,12 +224,12 @@ exports[`EnkeltArbeidsforholdUtland > snapshot test 1`] = `
             Region
           </label>
           <input
-            name="333"
             meta="[object Object]"
             id="333"
-            type="text"
             class="navds-text-field__input navds-body-short navds-body-short--small"
+            type="text"
             value
+            name="333"
           >
           <div
             class="navds-form-field__error"
@@ -253,8 +253,8 @@ exports[`EnkeltArbeidsforholdUtland > snapshot test 1`] = `
               <input
                 list="333"
                 id="333"
-                type="text"
                 class="navds-text-field__input navds-body-short navds-body-short--small"
+                type="text"
                 value
               >
               <div

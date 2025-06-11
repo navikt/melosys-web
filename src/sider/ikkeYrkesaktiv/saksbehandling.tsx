@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { RouteComponentProps } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+import { useDispatch } from "../../hooks";
 
 import { KTObject } from "@navikt/melosys-kodeverk";
 import MKV from "../../melosyskodeverk";
@@ -78,7 +79,6 @@ function Saksbehandling({ behandlingOppfriskes, startOgVisOppfriskModal, visOppf
       setBehandlingID(behandlingId);
       await dispatch(fagsakOperations.hent(saksnr));
       const response = await dispatch(behandlingerOperations.hentBehandling(behandlingId));
-      // @ts-expect-error generisk beskrivelse
       const behandling = response.data;
       if (!behandling) return false;
 

@@ -12,7 +12,8 @@ import {
   anmodningsperiodesvarOperations,
   anmodningsperiodesvarSelectors,
 } from "../../../../ducks/anmodningsperiodesvar";
-import { connect, ConnectedProps, useDispatch, useSelector } from "react-redux";
+import { connect, ConnectedProps, useSelector } from "react-redux";
+import { useDispatch } from "../../../../hooks";
 import { RootState } from "AppTypes";
 import { anmodningsperioderSelectors } from "../../../../ducks/anmodningsperioder";
 import { AnmodningsperiodesvarResDto } from "../../../../services/modules/anmodningsperioder/svar/svar";

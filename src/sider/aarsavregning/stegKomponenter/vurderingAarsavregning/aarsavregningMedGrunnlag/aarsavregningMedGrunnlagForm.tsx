@@ -8,7 +8,6 @@ import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 import { Inntektskilder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/inntektskilder";
 import { Skatteforholdsperioder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/skatteforholdsperioder";
 import {
-  FieldArrayProps,
   FormValuesProps,
   Inntektskilde,
   Skatteforhold,
@@ -77,14 +76,14 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
     fields: skattFields,
     append: skattAppend,
     remove: skattRemove,
-  } = useFieldArray<FieldArrayProps, "skatteforholdsperioder", "id">({ control, name: "skatteforholdsperioder" });
+  } = useFieldArray({ control: control as any, name: "skatteforholdsperioder" });
 
   const {
     fields: inntektFields,
     append: inntektAppend,
     remove: inntektRemove,
     update: inntektUpdate,
-  } = useFieldArray<FieldArrayProps, "inntektskilder", "id">({ control, name: "inntektskilder" });
+  } = useFieldArray({ control: control as any, name: "inntektskilder" });
 
   const formValues = watch();
   const skatteforholdsperioder = watch("skatteforholdsperioder");
