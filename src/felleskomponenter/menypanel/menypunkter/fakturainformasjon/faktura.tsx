@@ -34,7 +34,7 @@ const mapPeriodeTilKvartalString = (periodeFra: string, periodeTil: string) => {
   }
 };
 
-export const Faktura = ({ faktura }: FakturaProps) => {
+export function Faktura({ faktura }: FakturaProps) {
   const [nyesteFakturaStatus] = useState<fakturaserierTypes.FakturaTilbakemelding | undefined>(
     faktura.eksternFakturaStatus?.slice().sort((a, b) => moment(b.dato).diff(moment(a.dato)))[0],
   );
@@ -54,4 +54,4 @@ export const Faktura = ({ faktura }: FakturaProps) => {
       <Nav.Table.DataCell>{Utils.formaterTilNorskBelop(nyesteFakturaStatus?.ubetaltBelop) || "-"}</Nav.Table.DataCell>
     </Nav.Table.ExpandableRow>
   );
-};
+}
