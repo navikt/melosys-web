@@ -1,5 +1,6 @@
 import { useContext } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+import { useDispatch } from "../hooks";
 
 import { FellesHandlersContext } from "../contexts";
 import { modalerOperations, modalerSelectors } from "../ducks/modaler";

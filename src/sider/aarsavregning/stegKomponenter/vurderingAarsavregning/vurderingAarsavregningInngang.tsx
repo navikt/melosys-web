@@ -1,5 +1,6 @@
 import { ChangeEvent, useContext, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+import { useDispatch } from "../../../../hooks";
 import { OK } from "../../../../ducks/aarsavregning/types";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { fagsakSelectors } from "../../../../ducks/fagsaker";

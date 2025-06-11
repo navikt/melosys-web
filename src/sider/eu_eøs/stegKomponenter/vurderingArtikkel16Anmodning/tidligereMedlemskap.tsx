@@ -4,7 +4,8 @@ import { v4 as uuid } from "uuid";
 import { FieldArray, WrappedFieldArrayProps } from "redux-form";
 import { Medlemsperiode } from "../../../../services/modules/behandlinger/behandling";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+// Removed useDispatch import from "react-redux";
+import { useDispatch } from "../../../../hooks";
 import { behandlingsperioderOperations } from "../../../../ducks/behandlingsperioder";
 
 type TidligereMedlemskapsperioderProps = TidligereMedlemskapProps & WrappedFieldArrayProps<number>;

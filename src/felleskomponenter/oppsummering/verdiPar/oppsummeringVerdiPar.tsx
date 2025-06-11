@@ -1,5 +1,4 @@
 import { ReactNode } from "react";
-import PT from "prop-types";
 
 import classNames from "classnames";
 import "./oppsummeringVerdiPar.css";
@@ -22,12 +21,5 @@ function OppsummeringVerdiPar(props: OppsummeringVerdiParProps) {
     </dl>
   );
 }
-
-OppsummeringVerdiPar.propTypes = {
-  className: PT.string,
-  nokkel: PT.string.isRequired,
-  verdi: PT.string.isRequired,
-  ekstrafelt: PT.node,
-};
 
 export default OppsummeringVerdiPar;
