@@ -57,7 +57,6 @@ function Routing() {
               </ErrorBoundary>
             )}
           />
-          {console.log("FellesHandlers", fellesHandlers)}
           <Route
             exact
             path={`/${EU_EOS}/registrering/:saksnr/unntaksperioder`}

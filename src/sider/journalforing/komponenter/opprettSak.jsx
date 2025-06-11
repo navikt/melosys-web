@@ -15,7 +15,7 @@ import { skalViseIngenFlyt } from "../../../url";
 
 import "./opprettSak.css";
 import { useFeatureToggle } from "../../../featuretoggle";
-import { MELOSYS_PENSJONIST } from "../../../featuretoggle/toggleNavn";
+import { MELOSYS_PENSJONIST, MELOSYS_PENSJONIST_EØS } from "../../../featuretoggle/toggleNavn";
 
 const nullstillVerdier = (steg, endreFelt, feltNavn) => {
   switch (steg) {
@@ -88,6 +88,7 @@ export function OpprettSak(props) {
   const [behandlingstyper, setBehandlingstyper] = useState([]);
   const { formNavn } = feltNavn;
   const erPensjonistToggleEnabled = useFeatureToggle(MELOSYS_PENSJONIST);
+  const erPensjonistToggleEnabled_EØS = useFeatureToggle(MELOSYS_PENSJONIST_EØS);
 
   useEffect(() => {
     Api.LovligeKombinasjoner.hentSakstyper().then((muligeSakstyper) => {
@@ -198,6 +199,7 @@ export function OpprettSak(props) {
         valgtBehandlingstema,
         valgtBehandlingstype,
         erPensjonistToggleEnabled,
+        erPensjonistToggleEnabled_EØS,
       ) && (
         <>
           <Nav.Fieldset legend="Søknadsperiode:" className="opprettnysak__soknadsperiode">

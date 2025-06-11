@@ -15,7 +15,7 @@ import Soknadsland from "../soknadsland";
 
 import "./fagsak.css";
 import { useFeatureToggle } from "../../featuretoggle";
-import { MELOSYS_PENSJONIST } from "../../featuretoggle/toggleNavn";
+import { MELOSYS_PENSJONIST, MELOSYS_PENSJONIST_EØS } from "../../featuretoggle/toggleNavn";
 
 /**
  * Dette er enkeltlinjen for én sak som inneholder sakstittel og metadata
@@ -25,6 +25,7 @@ import { MELOSYS_PENSJONIST } from "../../featuretoggle/toggleNavn";
 function Fagsak({ sak = {}, landkoder }) {
   const { opprettetDato, sakstype, saksstatus, saksnummer, sakstema, behandlingOversikter } = sak;
   const erPensjonistToggleEnabled = useFeatureToggle(MELOSYS_PENSJONIST);
+  const erPensjonistToggleEnabled_EØS = useFeatureToggle(MELOSYS_PENSJONIST_EØS);
 
   const link = (behandling) =>
     Routing.lagUrl(
@@ -35,6 +36,7 @@ function Fagsak({ sak = {}, landkoder }) {
       behandling.behandlingstema.kode,
       behandling.behandlingstype.kode,
       erPensjonistToggleEnabled,
+      erPensjonistToggleEnabled_EØS,
     );
 
   const customMargin = { marginLeft: "1em" };

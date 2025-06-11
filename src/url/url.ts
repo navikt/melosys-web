@@ -27,8 +27,6 @@ const lagUrlForEuEøsFlyter = (saksnummer: number | string, behandlingID: number
       return `/${EU_EOS}/vurderutpeking/${saksnummer}/?behandlingID=${behandlingID}`;
     case MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV:
       return `/${EU_EOS}/ikkeYrkesaktiv/${saksnummer}/?behandlingID=${behandlingID}`;
-    case MKV.Koder.behandlinger.behandlingstema.PENSJONIST:
-      return `/${EU_EOS}/saksbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
     default:
       return flytFinnesIkkeForBehandlingPath;
   }
@@ -92,9 +90,23 @@ export const lagUrl = (
   behandlingstemaKode: string,
   behandlingstypeKode: string,
   erPensjonistToggleEnabled?: boolean,
+  erPensjonistEØSToggleEnabled?: boolean,
 ) => {
   if (behandlingstypeKode === MKV.Koder.behandlinger.behandlingstyper.ÅRSAVREGNING) {
     return lagÅrsavregningFlytUrl(sakstypeKode, saksnummer, behandlingID);
+  }
+
+  if (
+    skalViseIngenFlyt(
+      sakstypeKode,
+      sakstemaKode,
+      behandlingstemaKode,
+      behandlingstypeKode,
+      erPensjonistToggleEnabled,
+      erPensjonistEØSToggleEnabled,
+    )
+  ) {
+    return lagIngenFlytUrl(sakstypeKode, saksnummer, behandlingID);
   }
 
   return lagUrlFraSakstypeOgBehandlingstema(saksnummer, behandlingID, sakstypeKode, behandlingstemaKode);
