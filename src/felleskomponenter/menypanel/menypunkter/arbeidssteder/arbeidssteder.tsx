@@ -1,5 +1,6 @@
 import { change } from "redux-form";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+import { useDispatch } from "../../../../hooks";
 
 import * as KV from "../../../../kodeverk";
 import * as Utils from "../../../../utils";

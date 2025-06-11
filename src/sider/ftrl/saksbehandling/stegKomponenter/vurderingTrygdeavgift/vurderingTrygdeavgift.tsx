@@ -1,38 +1,37 @@
-import { useCallback, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useCallback, useEffect, useState } from "react";
 import { FieldValue, useFieldArray, useForm } from "react-hook-form";
-import * as Api from "../../../../../services/api";
+import { useSelector } from "react-redux";
 import * as Mui from "../../../../../felleskomponenter/ui";
 import * as Nav from "../../../../../navFrontend";
+import * as Api from "../../../../../services/api";
 import * as Utils from "../../../../../utils";
 
-import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import { medlemskapsperioderSelectors } from "../../../../../ducks/medlemskapsperioder";
+import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 import { useAsyncCallbackState } from "../../../../../hooks";
 import { STATUS } from "../../../../../services";
 
+import { BOOLSK_STRING } from "../../../../../constants";
+import LabelMedHjelpetekst from "../../../../../felleskomponenter/labelMedHjelpetekst";
 import { Inntektskilder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/inntektskilder";
-import TrygdeavgiftsperioderTabell from "../../../../../felleskomponenter/trygdeavgift/komponenter/trygdeavgiftsperioderTabell";
-import {
-  FieldArrayProps,
-  FormValuesProps,
-  Inntektskilde,
-  Skatteforhold,
-} from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
-import vurderingTrygdeavgiftSchema from "./vurderingTrygdeavgiftSchema";
-import "./vurderingTrygdeavgift.css";
 import {
   Feilmelding,
   feilMeldingBlokkerer,
   finnAktivFeilmelding,
 } from "../../../../../felleskomponenter/trygdeavgift/komponenter/meldinger";
 import { Skatteforholdsperioder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/skatteforholdsperioder";
+import TrygdeavgiftsperioderTabell from "../../../../../felleskomponenter/trygdeavgift/komponenter/trygdeavgiftsperioderTabell";
+import {
+  FormValuesProps,
+  Inntektskilde,
+  Skatteforhold,
+} from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
 import MKV from "../../../../../melosyskodeverk";
 import { BeregnetTrygdeavgift, TrygdeavgiftsgrunnlagDto } from "../../../../../services/modules/trygdeavgift";
-import { BOOLSK_STRING } from "../../../../../constants";
-import LabelMedHjelpetekst from "../../../../../felleskomponenter/labelMedHjelpetekst";
+import "./vurderingTrygdeavgift.css";
+import vurderingTrygdeavgiftSchema from "./vurderingTrygdeavgiftSchema";
 
 import { erBrukerSkattepliktigIHelePerioden } from "../../../../aarsavregning/stegKomponenter/vurderingAarsavregning/utils";
 

@@ -1,4 +1,3 @@
-import { useDispatch } from "react-redux";
 import { DokumentOversikt, Mottaksretning } from "Domene";
 import { change } from "redux-form";
 import { v4 as uuid } from "uuid";
@@ -12,7 +11,7 @@ import * as Nav from "../../navFrontend";
 
 import { hentDato } from "../../ducks/dokumenter/selectors";
 import { formatterDatoTilNorsk } from "../../utils/dato";
-import { useAsyncCallbackState } from "../../hooks";
+import { useAsyncCallbackState, useDispatch } from "../../hooks";
 import PdfLink from "../pdfLink";
 import LagredeUtkast from "./sendBrev/brevutkast/lagredeUtkast";
 

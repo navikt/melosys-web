@@ -1,4 +1,3 @@
-import * as PT from "prop-types";
 import classNames from "classnames";
 import { Component, ComponentClass, HTMLAttributes } from "react";
 
@@ -28,12 +27,6 @@ class Container extends Component<ContainerProps> {
   className: undefined,
   children: undefined,
   fluid: false,
-};
-
-(Container as ComponentClass).propTypes = {
-  className: PT.string,
-  fluid: PT.bool,
-  children: PT.oneOfType([PT.arrayOf(PT.node), PT.node]),
 };
 
 export default Container;

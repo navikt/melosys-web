@@ -39,12 +39,12 @@ exports[`VurderingArtikkel16Vedtak > snapshot test 1`] = `
             <div class="col col-xs-8">
               <div class="navds-checkbox navds-checkbox--small">
                 <input
-                  name="333"
                   class="navds-checkbox__input"
                   id="333"
-                  type="checkbox"
                   aria-labelledby="333"
+                  type="checkbox"
                   value
+                  name="333"
                 >
                 <label
                   for="333"
