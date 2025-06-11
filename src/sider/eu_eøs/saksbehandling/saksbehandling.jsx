@@ -170,6 +170,7 @@ class Saksbehandling extends Component {
         <Informasjonlinje />
         <div className="main-container">
           <div className="eueos_saksbehandling">
+            {console.log("Saksbehandling: EU/EØS")}
             <Nav.Container fluid>
               <Nav.Row>
                 <Nav.Column xs="7">
