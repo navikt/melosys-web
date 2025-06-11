@@ -1,10 +1,14 @@
-import { createTestStore } from "../test-utils/createTestStore";
+import configureMockStore from "redux-mock-store";
+import thunk from "redux-thunk";
 
 import * as types from "./types";
 import * as operations from "./operations";
 import * as KV from "../../kodeverk";
 
 import MKV from "../../melosyskodeverk";
+
+const middlewares = [thunk];
+const mockStore = configureMockStore(middlewares);
 
 describe("utpekingsperioder operations", () => {
   let initialState = null;
@@ -41,28 +45,28 @@ describe("utpekingsperioder operations", () => {
   });
 
   describe("lagre", () => {
-    it("updates state correctly on successful save", async () => {
-      const store = createTestStore(initialState);
+    it("lager PENDING og OK ved normal tilstand", async () => {
+      const expectedActions = [{ type: types.PENDING }, { type: types.OK, data: {} }];
+
+      const store = mockStore(initialState);
 
       await store.dispatch(operations.lagre());
 
-      const finalState = store.getState();
-      expect(finalState.utpekingsperioder).toBeDefined();
-      // Note: Verify successful state update
+      expect(store.getActions()).toEqual(expectedActions);
     });
 
-    it("handles API errors correctly", async () => {
+    it("lager FEILET ved feil i api-kall", async () => {
       const error = new Error("feil ved kall til Api");
       fetch.resetMocks();
       fetch.mockReject(error);
 
-      const store = createTestStore(initialState);
+      const expectedActions = [{ type: types.PENDING }, { type: types.FEILET, data: error.toString() }];
+
+      const store = mockStore(initialState);
 
       await store.dispatch(operations.lagre());
 
-      const finalState = store.getState();
-      expect(finalState.utpekingsperioder).toBeDefined();
-      // Note: Verify error state is properly handled
+      expect(store.getActions()).toEqual(expectedActions);
     });
   });
 
@@ -95,20 +99,26 @@ describe("utpekingsperioder operations", () => {
           tilleggbestemmelse: MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART11_4_1,
         };
 
-        const store = createTestStore(initialState);
+        const expectedActions = [
+          {
+            type: types.OPPDATER_UTPEKINGSPERIODER,
+            utpekingsperioder: [
+              {
+                fomDato: initialState.mottatteOpplysninger.data.data.periode.fom,
+                tomDato: initialState.mottatteOpplysninger.data.data.periode.tom,
+                lovvalgsbestemmelse: stegState.lovvalgsbestemmelse,
+                tilleggsbestemmelse: stegState.tilleggbestemmelse,
+                lovvalgsland: avklartfakta.fakta[0],
+              },
+            ],
+          },
+        ];
+
+        const store = mockStore(initialState);
 
         store.dispatch(operations.oppdaterUtpekingsperioderState(stegState));
 
-        const finalState = store.getState();
-        expect(finalState.utpekingsperioder.data).toEqual([
-          expect.objectContaining({
-            fomDato: initialState.mottatteOpplysninger.data.data.periode.fom,
-            tomDato: initialState.mottatteOpplysninger.data.data.periode.tom,
-            lovvalgsbestemmelse: stegState.lovvalgsbestemmelse,
-            tilleggsbestemmelse: stegState.tilleggbestemmelse,
-            lovvalgsland: avklartfakta.fakta[0],
-          }),
-        ]);
+        expect(store.getActions()).toEqual(expectedActions);
       });
     });
 
@@ -129,12 +139,18 @@ describe("utpekingsperioder operations", () => {
         tilleggbestemmelse: MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART11_4_1,
       };
 
-      const store = createTestStore(initialState);
+      const expectedActions = [
+        {
+          type: types.OPPDATER_UTPEKINGSPERIODER,
+          utpekingsperioder: [],
+        },
+      ];
+
+      const store = mockStore(initialState);
 
       store.dispatch(operations.oppdaterUtpekingsperioderState(stegState));
 
-      const finalState = store.getState();
-      expect(finalState.utpekingsperioder.data).toEqual([]);
+      expect(store.getActions()).toEqual(expectedActions);
     });
 
     it("bygger utpekingsperiode dersom søker har offentlig tjeneste i annet land", () => {
@@ -154,20 +170,26 @@ describe("utpekingsperioder operations", () => {
         lovvalgsland: MKV.Koder.landkoder.BE,
       };
 
-      const store = createTestStore(initialState);
+      const expectedActions = [
+        {
+          type: types.OPPDATER_UTPEKINGSPERIODER,
+          utpekingsperioder: [
+            {
+              fomDato: initialState.mottatteOpplysninger.data.data.periode.fom,
+              tomDato: initialState.mottatteOpplysninger.data.data.periode.tom,
+              lovvalgsbestemmelse: stegState.lovvalgsbestemmelse,
+              tilleggsbestemmelse: undefined,
+              lovvalgsland: stegState.lovvalgsland,
+            },
+          ],
+        },
+      ];
+
+      const store = mockStore(initialState);
 
       store.dispatch(operations.oppdaterUtpekingsperioderState(stegState));
 
-      const finalState = store.getState();
-      expect(finalState.utpekingsperioder.data).toEqual([
-        expect.objectContaining({
-          fomDato: initialState.mottatteOpplysninger.data.data.periode.fom,
-          tomDato: initialState.mottatteOpplysninger.data.data.periode.tom,
-          lovvalgsbestemmelse: stegState.lovvalgsbestemmelse,
-          tilleggsbestemmelse: undefined,
-          lovvalgsland: stegState.lovvalgsland,
-        }),
-      ]);
+      expect(store.getActions()).toEqual(expectedActions);
     });
 
     it("bygger tom utpekingsperiode dersom søker har offentlig tjeneste i Norge", () => {
@@ -186,12 +208,18 @@ describe("utpekingsperioder operations", () => {
         lovvalgsbestemmelse: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_4,
       };
 
-      const store = createTestStore(initialState);
+      const expectedActions = [
+        {
+          type: types.OPPDATER_UTPEKINGSPERIODER,
+          utpekingsperioder: [],
+        },
+      ];
+
+      const store = mockStore(initialState);
 
       store.dispatch(operations.oppdaterUtpekingsperioderState(stegState));
 
-      const finalState = store.getState();
-      expect(finalState.utpekingsperioder.data).toEqual([]);
+      expect(store.getActions()).toEqual(expectedActions);
     });
 
     it("bygger utpekingsperiode dersom søker har lønnet arbeid i annet land", () => {
@@ -211,20 +239,26 @@ describe("utpekingsperioder operations", () => {
         lovvalgsland: MKV.Koder.landkoder.BE,
       };
 
-      const store = createTestStore(initialState);
+      const expectedActions = [
+        {
+          type: types.OPPDATER_UTPEKINGSPERIODER,
+          utpekingsperioder: [
+            {
+              fomDato: initialState.mottatteOpplysninger.data.data.periode.fom,
+              tomDato: initialState.mottatteOpplysninger.data.data.periode.tom,
+              lovvalgsbestemmelse: stegState.lovvalgsbestemmelse,
+              tilleggsbestemmelse: undefined,
+              lovvalgsland: stegState.lovvalgsland,
+            },
+          ],
+        },
+      ];
+
+      const store = mockStore(initialState);
 
       store.dispatch(operations.oppdaterUtpekingsperioderState(stegState));
 
-      const finalState = store.getState();
-      expect(finalState.utpekingsperioder.data).toEqual([
-        expect.objectContaining({
-          fomDato: initialState.mottatteOpplysninger.data.data.periode.fom,
-          tomDato: initialState.mottatteOpplysninger.data.data.periode.tom,
-          lovvalgsbestemmelse: stegState.lovvalgsbestemmelse,
-          tilleggsbestemmelse: undefined,
-          lovvalgsland: stegState.lovvalgsland,
-        }),
-      ]);
+      expect(store.getActions()).toEqual(expectedActions);
     });
 
     it("bygger tom utpekingsperiode dersom søker har lønnet arbeid i Norge", () => {
@@ -243,12 +277,18 @@ describe("utpekingsperioder operations", () => {
         lovvalgsbestemmelse: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_3,
       };
 
-      const store = createTestStore(initialState);
+      const expectedActions = [
+        {
+          type: types.OPPDATER_UTPEKINGSPERIODER,
+          utpekingsperioder: [],
+        },
+      ];
+
+      const store = mockStore(initialState);
 
       store.dispatch(operations.oppdaterUtpekingsperioderState(stegState));
 
-      const finalState = store.getState();
-      expect(finalState.utpekingsperioder.data).toEqual([]);
+      expect(store.getActions()).toEqual(expectedActions);
     });
 
     it("bygger tom utpekingsperiode dersom stegstate.lovvalgsland ikke er satt", () => {
@@ -268,35 +308,54 @@ describe("utpekingsperioder operations", () => {
         lovvalgsland: undefined,
       };
 
-      const store = createTestStore(initialState);
+      const expectedActions = [
+        {
+          type: types.OPPDATER_UTPEKINGSPERIODER,
+          utpekingsperioder: [],
+        },
+      ];
+
+      const store = mockStore(initialState);
 
       store.dispatch(operations.oppdaterUtpekingsperioderState(stegState));
 
-      const finalState = store.getState();
-      expect(finalState.utpekingsperioder.data).toEqual([]);
+      expect(store.getActions()).toEqual(expectedActions);
     });
   });
 
   describe("resetUtpekingsperioderState", () => {
-    it("resets utpekingsperioder state", () => {
-      const store = createTestStore(initialState);
+    it("lager RESET", () => {
+      const expectedActions = [
+        {
+          type: types.RESET,
+        },
+      ];
+
+      const store = mockStore(initialState);
 
       store.dispatch(operations.resetUtpekingsperioderState());
 
-      const finalState = store.getState();
-      expect(finalState.utpekingsperioder.data).toEqual([]);
+      expect(store.getActions()).toEqual(expectedActions);
     });
   });
 
   describe("endrePeriode", () => {
-    it("updates period dates", () => {
-      const store = createTestStore(initialState);
+    it("lager ENDRE_PERIODE", () => {
+      const expectedActions = [
+        {
+          type: types.ENDRE_PERIODE,
+          data: {
+            fomdato: "12.12.2000",
+            tomdato: "12.12.2001",
+          },
+        },
+      ];
+
+      const store = mockStore(initialState);
 
       store.dispatch(operations.endrePeriode("12.12.2000", "12.12.2001"));
 
-      const finalState = store.getState();
-      // Verify the period was updated - structure depends on the reducer implementation
-      expect(finalState.utpekingsperioder).toBeDefined();
+      expect(store.getActions()).toEqual(expectedActions);
     });
   });
 });

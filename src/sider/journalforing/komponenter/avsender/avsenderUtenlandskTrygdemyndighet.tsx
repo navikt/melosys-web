@@ -23,6 +23,7 @@ function AvsenderUtenlandskTrygdemyndighet({
       <Skjema.LandVelger
         feltNavn="utenlandskTrygdemyndighetLandkode"
         label="Land"
+        // @ts-expect-error generisk beskrivelse
         onChange={fullmektigLandEndret}
         className="avsender__input"
         bredde="XL"

@@ -1,20 +1,21 @@
+import * as redux from "react-redux";
 import { renderWithProviders } from "../../../ducks/test-utils/renderWithProviders";
 import { DialogboksHenleggSak } from "./dialogboksHenlegg";
-
-// Mock react-redux useDispatch hook
-vi.mock("react-redux", async () => {
-  const actual = await vi.importActual("react-redux");
-  return {
-    ...actual,
-    useDispatch: () => vi.fn(),
-  };
-});
 
 describe("Dialogbokshenlegg", () => {
   const props = {
     ariaHideApp: false,
     avbryt: vi.fn(),
   };
+  const doNothing = vi.fn(() => null);
+
+  beforeAll(() => {
+    vi.spyOn(redux, "useDispatch").mockImplementation(() => doNothing as never);
+  });
+
+  afterAll(() => {
+    vi.clearAllMocks();
+  });
 
   it("viser en Nav Modal", () => {
     const { getByRole } = renderWithProviders(<DialogboksHenleggSak {...props} />);

@@ -1,5 +1,4 @@
-import { useSelector } from "react-redux";
-import { useDispatch } from "../../../../hooks";
+import { useDispatch, useSelector } from "react-redux";
 
 import * as Nav from "../../../../navFrontend";
 import * as Tags from "../../tags";

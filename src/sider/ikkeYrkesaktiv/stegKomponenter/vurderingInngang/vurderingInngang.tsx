@@ -1,6 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { useDispatch } from "../../../../hooks";
+import { useDispatch, useSelector } from "react-redux";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FieldValues, useForm } from "react-hook-form";

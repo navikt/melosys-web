@@ -1,8 +1,12 @@
-import { createTestStore } from "../test-utils/createTestStore";
+import configureMockStore from "redux-mock-store";
+import thunk from "redux-thunk";
 
 import * as Utils from "../../utils";
 
 import { sokOperations as operations, sokTypes as types } from "./index";
+
+const middlewares = [thunk];
+const mockStore = configureMockStore(middlewares);
 
 describe("sok operations", () => {
   let initialState = null;
@@ -11,18 +15,14 @@ describe("sok operations", () => {
     fetch.resetMocks();
     fetch.mockResponse(JSON.stringify([]));
 
-    initialState = {
-      sok: {
-        data: [],
-        loading: false,
-        error: null,
-      },
-    };
+    initialState = {};
   });
 
   describe("sok", () => {
     it("søker etter fagsaker med fnr", async () => {
-      const store = createTestStore(initialState);
+      const expectedActions = [{ type: types.PENDING }, { type: types.OK, data: [] }];
+
+      const store = mockStore(initialState);
 
       const generator = new Utils.testhelpers.Generator();
       const fnr = generator.generateBirthNumber();
@@ -39,13 +39,13 @@ describe("sok operations", () => {
           }),
         }),
       );
-
-      const finalState = store.getState();
-      expect(finalState.sok.data).toEqual({ fagsakListe: [] });
+      expect(store.getActions()).toEqual(expect.arrayContaining(expectedActions));
     });
 
     it("søker etter fagsaker med saksnummer", async () => {
-      const store = createTestStore(initialState);
+      const expectedActions = [{ type: types.PENDING }, { type: types.OK, data: [] }];
+
+      const store = mockStore(initialState);
 
       const saksnummer = "MEL-1234";
 
@@ -62,13 +62,13 @@ describe("sok operations", () => {
           }),
         }),
       );
-
-      const finalState = store.getState();
-      expect(finalState.sok.data).toEqual({ fagsakListe: [] });
+      expect(store.getActions()).toEqual(expect.arrayContaining(expectedActions));
     });
 
     it("søker etter fagsaker med orgnr", async () => {
-      const store = createTestStore(initialState);
+      const expectedActions = [{ type: types.PENDING }, { type: types.OK, data: [] }];
+
+      const store = mockStore(initialState);
 
       const orgnr = "111111111";
 
@@ -85,9 +85,7 @@ describe("sok operations", () => {
           }),
         }),
       );
-
-      const finalState = store.getState();
-      expect(finalState.sok.data).toEqual({ fagsakListe: [] });
+      expect(store.getActions()).toEqual(expect.arrayContaining(expectedActions));
     });
   });
 });

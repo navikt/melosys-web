@@ -276,7 +276,7 @@ function EndreBehandlingModal({
           </Nav.Alert>
         )}
         <Mui.KodeTermSelect
-          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+          onChange={(e) => {
             setSakstype(e.target.value);
             nullstillSak(FeltVerdier.sakstype);
           }}
@@ -288,7 +288,7 @@ function EndreBehandlingModal({
           disableForsteValg
         />
         <Mui.KodeTermSelect
-          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+          onChange={(e) => {
             setSakstema(e.target.value);
             nullstillSak(FeltVerdier.sakstema);
           }}
@@ -300,7 +300,7 @@ function EndreBehandlingModal({
           disableForsteValg
         />
         <Mui.KodeTermSelect
-          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+          onChange={(e) => {
             setBehandlingstema(e.target.value);
             nullstillSak(FeltVerdier.behandlingstema);
           }}
@@ -310,7 +310,7 @@ function EndreBehandlingModal({
           redigerbart={!erBehandlingAvSed && typeTemaKanEndres && !harBehandlingMedTrygdeavgift && !erÅrsavregning}
           feil={skalViseFeilmeldinger ? behandlingstemaFeilmelding : null}
           disableForsteValg
-          className={harBehandlingMedTrygdeavgift ? "ktselect__slim" : ""}
+          className={harBehandlingMedTrygdeavgift ? "ktselect__slim" : undefined}
         />
         {harBehandlingMedTrygdeavgift && (
           <Nav.Detail className="behandlingstema__label">
@@ -319,7 +319,7 @@ function EndreBehandlingModal({
         )}
 
         <Mui.KodeTermSelect
-          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setBehandlingstype(e.target.value)}
+          onChange={(e) => setBehandlingstype(e.target.value)}
           label="Behandlingstype"
           value={behandlingstype}
           koder={muligeBehandlingstyper}
@@ -338,7 +338,7 @@ function EndreBehandlingModal({
           brukInternValidering
         />
         <Mui.KodeTermSelect
-          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setBehandlingsstatus(e.target.value)}
+          onChange={(e) => setBehandlingsstatus(e.target.value)}
           label="Behandlingsstatus"
           value={behandlingsstatus}
           koder={muligeVerdierPlussGjeldende(oppsummering.behandlingsstatus, muligeBehandlingsstatuser)}

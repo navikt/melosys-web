@@ -1,37 +1,38 @@
-import { yupResolver } from "@hookform/resolvers/yup";
 import { useCallback, useEffect, useState } from "react";
-import { FieldValue, useFieldArray, useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { FieldValue, useFieldArray, useForm } from "react-hook-form";
+import * as Api from "../../../../../services/api";
 import * as Mui from "../../../../../felleskomponenter/ui";
 import * as Nav from "../../../../../navFrontend";
-import * as Api from "../../../../../services/api";
 import * as Utils from "../../../../../utils";
 
+import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import { medlemskapsperioderSelectors } from "../../../../../ducks/medlemskapsperioder";
-import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 import { useAsyncCallbackState } from "../../../../../hooks";
 import { STATUS } from "../../../../../services";
 
-import { BOOLSK_STRING } from "../../../../../constants";
-import LabelMedHjelpetekst from "../../../../../felleskomponenter/labelMedHjelpetekst";
 import { Inntektskilder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/inntektskilder";
+import TrygdeavgiftsperioderTabell from "../../../../../felleskomponenter/trygdeavgift/komponenter/trygdeavgiftsperioderTabell";
+import {
+  FieldArrayProps,
+  FormValuesProps,
+  Inntektskilde,
+  Skatteforhold,
+} from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
+import vurderingTrygdeavgiftSchema from "./vurderingTrygdeavgiftSchema";
+import "./vurderingTrygdeavgift.css";
 import {
   Feilmelding,
   feilMeldingBlokkerer,
   finnAktivFeilmelding,
 } from "../../../../../felleskomponenter/trygdeavgift/komponenter/meldinger";
 import { Skatteforholdsperioder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/skatteforholdsperioder";
-import TrygdeavgiftsperioderTabell from "../../../../../felleskomponenter/trygdeavgift/komponenter/trygdeavgiftsperioderTabell";
-import {
-  FormValuesProps,
-  Inntektskilde,
-  Skatteforhold,
-} from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
 import MKV from "../../../../../melosyskodeverk";
 import { BeregnetTrygdeavgift, TrygdeavgiftsgrunnlagDto } from "../../../../../services/modules/trygdeavgift";
-import "./vurderingTrygdeavgift.css";
-import vurderingTrygdeavgiftSchema from "./vurderingTrygdeavgiftSchema";
+import { BOOLSK_STRING } from "../../../../../constants";
+import LabelMedHjelpetekst from "../../../../../felleskomponenter/labelMedHjelpetekst";
 
 import { erBrukerSkattepliktigIHelePerioden } from "../../../../aarsavregning/stegKomponenter/vurderingAarsavregning/utils";
 
@@ -97,14 +98,14 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     append: skattAppend,
     remove: skattRemove,
     replace: resetSkatteforholdsperioder,
-  } = useFieldArray({ control: control as any, name: "skatteforholdsperioder" }) as any;
+  } = useFieldArray<FieldArrayProps, "skatteforholdsperioder", "id">({ control, name: "skatteforholdsperioder" });
   const {
     fields: inntektFields,
     append: inntektAppend,
     remove: inntektRemove,
     update: inntektUpdate,
     replace: resetInntektskilder,
-  } = useFieldArray({ control: control as any, name: "inntektskilder" }) as any;
+  } = useFieldArray<FieldArrayProps, "inntektskilder", "id">({ control, name: "inntektskilder" });
   const formValues = watch();
 
   const aktivFeilmeldingType = finnAktivFeilmelding(

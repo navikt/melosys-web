@@ -1,6 +1,5 @@
 import { useContext, useEffect } from "react";
-import { useSelector } from "react-redux";
-import { useDispatch } from "../../../../../hooks";
+import { useDispatch, useSelector } from "react-redux";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FieldValues, useForm } from "react-hook-form";
 import * as Forms from "../../../../../felleskomponenter/forms";

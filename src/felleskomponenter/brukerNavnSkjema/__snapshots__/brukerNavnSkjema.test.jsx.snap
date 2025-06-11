@@ -12,12 +12,12 @@ exports[`brukernavnskjema > snapshot test 1`] = `
         Brukers f.nr. eller d-nr.
       </label>
       <input
+        name="333"
         meta="[object Object]"
         id="333"
-        class="navds-text-field__input navds-body-short navds-body-short--small"
         type="text"
+        class="navds-text-field__input navds-body-short navds-body-short--small"
         value
-        name="333"
       >
       <div
         class="navds-form-field__error"

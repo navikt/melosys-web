@@ -63,8 +63,8 @@ exports[`ArbeidsforholdNorgeListe > snapshot test 1`] = `
                 <input
                   id="333"
                   placeholder="Skriv inn..."
-                  class="navds-text-field__input navds-body-short navds-body-short--small"
                   type="text"
+                  class="navds-text-field__input navds-body-short navds-body-short--small"
                   value
                 >
                 <div

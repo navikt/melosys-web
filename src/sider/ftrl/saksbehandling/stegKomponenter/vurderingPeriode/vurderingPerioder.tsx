@@ -1,33 +1,32 @@
-import { yupResolver } from "@hookform/resolvers/yup";
 import { useCallback, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { FieldValue, useFieldArray, useForm } from "react-hook-form";
-import { useSelector } from "react-redux";
-import { useDispatch } from "../../../../../hooks";
 
-import * as Mui from "../../../../../felleskomponenter/ui";
 import MKV from "../../../../../melosyskodeverk";
-import * as Nav from "../../../../../navFrontend";
 import * as Api from "../../../../../services/api";
+import * as Mui from "../../../../../felleskomponenter/ui";
+import * as Nav from "../../../../../navFrontend";
 import * as Utils from "../../../../../utils";
 
-import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
+import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
+import { mottatteOpplysningerSelectors } from "../../../../../ducks/mottatteOpplysninger";
 import {
   medlemskapsperioderOperations,
   medlemskapsperioderSelectors,
   medlemskapsperioderTypes,
 } from "../../../../../ducks/medlemskapsperioder";
-import { mottatteOpplysningerSelectors } from "../../../../../ducks/mottatteOpplysninger";
-import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
+import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 
-import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../../ducks/oppsummertfakta";
+import { Medlemskapsperioder } from "./komponenter/medlemskapsperioder";
+import { UkjentSluttdatoMedlemskapsperiode } from "./komponenter/ukjentSluttdatoMedlemskapsperiode";
+import { Feilmelding, feilMeldingBlokkerer, finnAktivFeilmelding } from "./komponenter/feilmeldinger";
+import { FieldArrayProps, FormValuesProps, MedlemskapsperiodeProp, VurderingPerioderProps } from "./komponenter/types";
+import vurderingPerioderSchema from "./vurderingPerioderSchema";
+import "./vurderingPerioder.css";
 import { useFeatureToggle } from "../../../../../featuretoggle";
 import { MELOSYS_FTRL_BEGRENSE_PERIODE_VEDTAK } from "../../../../../featuretoggle/toggleNavn";
-import { Feilmelding, feilMeldingBlokkerer, finnAktivFeilmelding } from "./komponenter/feilmeldinger";
-import { Medlemskapsperioder } from "./komponenter/medlemskapsperioder";
-import { FormValuesProps, MedlemskapsperiodeProp, VurderingPerioderProps } from "./komponenter/types";
-import { UkjentSluttdatoMedlemskapsperiode } from "./komponenter/ukjentSluttdatoMedlemskapsperiode";
-import "./vurderingPerioder.css";
-import vurderingPerioderSchema from "./vurderingPerioderSchema";
+import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../../ducks/oppsummertfakta";
 
 const { AVSLAATT, OPPHØRT } = MKV.Koder.innvilgelsesResultat;
 const { NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingstyper;
@@ -106,15 +105,15 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     } as FieldValue<FormValuesProps>,
   });
   const {
-    fields,
     append,
     remove,
     update,
+    fields,
     replace: resetMedlemskapsperioder,
-  } = useFieldArray({
-    control: control as any,
+  } = useFieldArray<FieldArrayProps, "medlemskapsperioder", "id">({
+    control,
     name: "medlemskapsperioder",
-  }) as any;
+  });
   const formValues = watch();
 
   const aktivFeilmeldingType = finnAktivFeilmelding(
@@ -268,7 +267,8 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
       trygdedekning: "",
       bestemmelse: lagretBestemmelse,
     };
-    append(nyMedlemskapsperiode as any);
+    // @ts-expect-error generisk beskrivelse
+    append(nyMedlemskapsperiode);
   };
 
   const handleBekreft = () => {

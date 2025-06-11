@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { connect, ConnectedProps, useSelector } from "react-redux";
-import { useDispatch } from "../../../../hooks";
+import { connect, ConnectedProps, useDispatch, useSelector } from "react-redux";
 import { getFormValues, InjectedFormProps, isValid, reduxForm } from "redux-form";
 import MKV from "../../../../melosyskodeverk";
 import * as Nav from "../../../../navFrontend";
@@ -189,6 +188,7 @@ export function VurderingArtikkel16Vedtak({
           vedtakstype: formValues.vedtakstype || FØRSTEGANGSVEDTAK,
           nyVurderingBakgrunn: formValues.vedtakstypebegrunnelse,
         };
+        // @ts-expect-error generisk beskrivelse
         dispatch(vedtakOperations.fatt(behandlingID, request)).then((res) => {
           if (res.data?.data?.error) {
             setVedtakPending(false);

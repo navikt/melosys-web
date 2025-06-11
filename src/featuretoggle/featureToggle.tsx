@@ -2,7 +2,7 @@ import useFeatureToggle from "./useFeatureToggle";
 
 interface FeatureToggleProps {
   togglename: string;
-  children: (toggle: boolean | undefined) => React.JSX.Element | null;
+  children: (toggle: boolean | undefined) => JSX.Element | null;
 }
 
 const FeatureToggle = ({ children, togglename }: FeatureToggleProps) => {

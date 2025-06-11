@@ -2,7 +2,7 @@ import PT from "prop-types";
 import * as Nav from "../../../navFrontend";
 import * as Utils from "../../../utils";
 
-function KodeTermSelect({
+const kodeTermSelect = ({
   koder,
   value,
   onChange,
@@ -11,8 +11,8 @@ function KodeTermSelect({
   disableForsteValg = false,
   redigerbart = true,
   onBlur = () => null,
-  className = "",
-}) {
+  className,
+}) => {
   const visValueIkkeOppgittIKoder = !redigerbart && !koder.includes(value);
 
   return (
@@ -37,9 +37,9 @@ function KodeTermSelect({
       {visValueIkkeOppgittIKoder && <option>{value}</option>}
     </Nav.Select>
   );
-}
+};
 
-KodeTermSelect.propTypes = {
+kodeTermSelect.propTypes = {
   koder: PT.array.isRequired,
   value: PT.any.isRequired,
   onChange: PT.func.isRequired,
@@ -51,4 +51,4 @@ KodeTermSelect.propTypes = {
   className: PT.string,
 };
 
-export default KodeTermSelect;
+export default kodeTermSelect;

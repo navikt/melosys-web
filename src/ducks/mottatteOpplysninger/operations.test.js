@@ -1,11 +1,16 @@
-import { createTestStore } from "../test-utils/createTestStore";
+import configureMockStore from "redux-mock-store";
+import thunk from "redux-thunk";
 
 import MKV from "../../melosyskodeverk";
 
-import * as KV from "../../kodeverk";
+import * as types from "./types";
 import * as operations from "./operations";
+import * as KV from "../../kodeverk";
 
 const { NO, DK } = MKV.Koder.landkoder;
+
+const middlewares = [thunk];
+const mockStore = configureMockStore(middlewares);
 
 describe("MottatteOpplysninger operations", () => {
   let initialState = null;
@@ -92,9 +97,11 @@ describe("MottatteOpplysninger operations", () => {
       initialState.mottatteOpplysninger.data.type =
         MKV.Koder.mottatteopplysningertyper.SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS;
 
-      const store = createTestStore(initialState);
+      const store = mockStore(initialState);
       await store.dispatch(operations.lagre());
 
+      const expectedActions = [{ type: types.PENDING }, { type: types.OK, data: {} }];
+      expect(store.getActions()).toEqual(expectedActions);
       expect(fetch).toHaveBeenLastCalledWith(
         "/api/mottatteopplysninger/4",
         expect.objectContaining({
@@ -109,18 +116,16 @@ describe("MottatteOpplysninger operations", () => {
           }),
         }),
       );
-
-      const finalState = store.getState();
-      expect(finalState.mottatteOpplysninger.data).toEqual({});
-      expect(finalState.mottatteOpplysninger.status).toBe("OK");
     });
 
     it("lagrer soeknad eøs felt for mottatteopplysninger SØKNAD_A1_YRKESAKTIVE_EØS", async () => {
       initialState.mottatteOpplysninger.data.type = MKV.Koder.mottatteopplysningertyper.SØKNAD_A1_YRKESAKTIVE_EØS;
 
-      const store = createTestStore(initialState);
+      const store = mockStore(initialState);
       await store.dispatch(operations.lagre());
 
+      const expectedActions = [{ type: types.PENDING }, { type: types.OK, data: {} }];
+      expect(store.getActions()).toEqual(expectedActions);
       expect(fetch).toHaveBeenLastCalledWith(
         "/api/mottatteopplysninger/4",
         expect.objectContaining({
@@ -135,19 +140,44 @@ describe("MottatteOpplysninger operations", () => {
           }),
         }),
       );
+    });
 
-      const finalState = store.getState();
-      expect(finalState.mottatteOpplysninger.data).toEqual({});
-      expect(finalState.mottatteOpplysninger.status).toBe("OK");
+    it("lagrer SedGrunnlagData ved mottatteopplysningertype SED", async () => {
+      initialState.mottatteOpplysninger.data.type = MKV.Koder.mottatteopplysningertyper.SED;
+      initialState.form[KV.Form.VURDER_UTPEKING].values = { overgangsregelbestemmelser: [] };
+
+      const store = mockStore(initialState);
+      await store.dispatch(operations.lagre());
+
+      const expectedActions = [
+        { type: types.OPPDATER_MOTTATTE_OPPLYSNINGER, dokument: { overgangsregelbestemmelser: [] } },
+        { type: types.PENDING },
+        { type: types.OK, data: {} },
+      ];
+      expect(store.getActions()).toEqual(expectedActions);
+      expect(fetch).toHaveBeenLastCalledWith(
+        "/api/mottatteopplysninger/4",
+        expect.objectContaining({
+          body: JSON.stringify({
+            data: {
+              ...fellesFelt,
+              overgangsregelbestemmelser: [],
+              ytterligereInformasjon: {},
+            },
+          }),
+        }),
+      );
     });
 
     it("lagrer SøknadYrkesaktiveNorgeEllerUtenforEØS ved mottatteopplysnignertype SØKNAD_YRKESAKTIVE_NORGE_ELLER_UTENFOR_EØS", async () => {
       initialState.mottatteOpplysninger.data.type =
         MKV.Koder.mottatteopplysningertyper.SØKNAD_YRKESAKTIVE_NORGE_ELLER_UTENFOR_EØS;
 
-      const store = createTestStore(initialState);
+      const store = mockStore(initialState);
       await store.dispatch(operations.lagre());
 
+      const expectedActions = [{ type: types.PENDING }, { type: types.OK, data: {} }];
+      expect(store.getActions()).toEqual(expectedActions);
       expect(fetch).toHaveBeenLastCalledWith(
         "/api/mottatteopplysninger/4",
         expect.objectContaining({
@@ -160,18 +190,16 @@ describe("MottatteOpplysninger operations", () => {
           }),
         }),
       );
-
-      const finalState = store.getState();
-      expect(finalState.mottatteOpplysninger.data).toEqual({});
-      expect(finalState.mottatteOpplysninger.status).toBe("OK");
     });
 
     it("lagrer SøknadIkkeYrkesaktive ved mottatteopplysnignertype SØKNAD_IKKE_YRKESAKTIV", async () => {
       initialState.mottatteOpplysninger.data.type = MKV.Koder.mottatteopplysningertyper.SØKNAD_IKKE_YRKESAKTIV;
 
-      const store = createTestStore(initialState);
+      const store = mockStore(initialState);
       await store.dispatch(operations.lagre());
 
+      const expectedActions = [{ type: types.PENDING }, { type: types.OK, data: {} }];
+      expect(store.getActions()).toEqual(expectedActions);
       expect(fetch).toHaveBeenLastCalledWith(
         "/api/mottatteopplysninger/4",
         expect.objectContaining({
@@ -183,18 +211,16 @@ describe("MottatteOpplysninger operations", () => {
           }),
         }),
       );
-
-      const finalState = store.getState();
-      expect(finalState.mottatteOpplysninger.data).toEqual({});
-      expect(finalState.mottatteOpplysninger.status).toBe("OK");
     });
 
     it("lagrer AnmodningEllerAttest ved mottatteopplysnignertype ANMODNING_ELLER_ATTEST", async () => {
       initialState.mottatteOpplysninger.data.type = MKV.Koder.mottatteopplysningertyper.ANMODNING_ELLER_ATTEST;
 
-      const store = createTestStore(initialState);
+      const store = mockStore(initialState);
       await store.dispatch(operations.lagre());
 
+      const expectedActions = [{ type: types.PENDING }, { type: types.OK, data: {} }];
+      expect(store.getActions()).toEqual(expectedActions);
       expect(fetch).toHaveBeenLastCalledWith(
         "/api/mottatteopplysninger/4",
         expect.objectContaining({
@@ -207,10 +233,6 @@ describe("MottatteOpplysninger operations", () => {
           }),
         }),
       );
-
-      const finalState = store.getState();
-      expect(finalState.mottatteOpplysninger.data).toEqual({});
-      expect(finalState.mottatteOpplysninger.status).toBe("OK");
     });
 
     it("lager FEILET ved feil i api-kall", async () => {
@@ -218,90 +240,111 @@ describe("MottatteOpplysninger operations", () => {
       fetch.resetMocks();
       fetch.mockReject(error);
 
-      const store = createTestStore(initialState);
+      const expectedActions = [{ type: types.PENDING }, { type: types.FEILET, data: error.toString() }];
+
+      const store = mockStore(initialState);
 
       await store.dispatch(operations.lagre());
 
-      const finalState = store.getState();
-      expect(finalState.mottatteOpplysninger.data).toBe(error.toString());
-      expect(finalState.mottatteOpplysninger.status).toBe("ERROR");
+      expect(store.getActions()).toEqual(expectedActions);
     });
   });
 
   describe("hent", () => {
     it("henter mottatteOpplysninger og lager OK action", async () => {
-      const store = createTestStore(initialState);
+      const expectedActions = [{ type: types.PENDING }, { type: types.OK, data: {} }];
+
+      const store = mockStore(initialState);
 
       await store.dispatch(operations.hent(4));
 
       expect(fetch).toHaveBeenCalledTimes(1);
       expect(fetch).toHaveBeenLastCalledWith("/api/mottatteopplysninger/4", expect.anything());
-
-      const finalState = store.getState();
-      expect(finalState.mottatteOpplysninger.data).toEqual({});
-      expect(finalState.mottatteOpplysninger.status).toBe("OK");
+      expect(store.getActions()).toEqual(expectedActions);
     });
   });
 
   describe("oppdaterPeriode", () => {
-    it("oppdaterer periode", () => {
-      const store = createTestStore(initialState);
+    it("lager OPPDATER_PERIODE action", () => {
+      const expectedActions = [
+        {
+          type: types.OPPDATER_PERIODE,
+          data: {
+            periode: {
+              fom: "fom",
+              tom: "tom",
+            },
+          },
+        },
+      ];
+
+      const store = mockStore(initialState);
 
       store.dispatch(operations.oppdaterPeriode({ tom: "tom", fom: "fom" }));
 
-      const finalState = store.getState();
-      expect(finalState.mottatteOpplysninger.data.data.periode).toEqual({
-        fom: "fom",
-        tom: "tom",
-      });
+      expect(store.getActions()).toEqual(expectedActions);
     });
   });
 
   describe("resetState", () => {
-    it("reseterer state", () => {
-      // Set up some initial data
-      const stateWithData = {
-        ...initialState,
-        mottatteOpplysninger: {
-          data: { some: "data" },
-          status: "ERROR",
+    it("lager RESET action", () => {
+      const expectedActions = [
+        {
+          type: types.RESET,
         },
-      };
+      ];
 
-      const store = createTestStore(stateWithData);
+      const store = mockStore(initialState);
 
       store.dispatch(operations.resetState());
 
-      const finalState = store.getState();
-      expect(finalState.mottatteOpplysninger.data).toEqual({});
-      expect(finalState.mottatteOpplysninger.status).toBe("NOT_STARTED");
+      expect(store.getActions()).toEqual(expectedActions);
     });
   });
 
   describe("oppdaterState", () => {
-    it("oppdaterer state fra form values", () => {
-      // Simplified test - just test the operation can be called without error
-      const store = createTestStore(initialState);
+    it("lager OPPDATER_MOTTATTE_OPPLYSNINGER action", () => {
+      initialState.form[KV.Form.SOKNAD].values = {
+        arbeidsforholdUtland: {},
+        soknadsland: [DK],
+      };
+      const expectedActions = [
+        {
+          type: types.OPPDATER_MOTTATTE_OPPLYSNINGER,
+          dokument: {
+            arbeidsforholdUtland: {},
+            soknadsland: [DK],
+          },
+        },
+      ];
+
+      const store = mockStore(initialState);
 
       store.dispatch(operations.oppdaterState());
 
-      const finalState = store.getState();
-      // Just verify the operation ran and state was updated
-      expect(finalState.mottatteOpplysninger.data).toBeDefined();
+      expect(store.getActions()).toEqual(expectedActions);
     });
   });
 
   describe("oppdaterSoeknadsland", () => {
-    it("oppdaterer soeknadsland", () => {
-      const store = createTestStore(initialState);
+    it("lager OPPDATER_SOEKNADSLAND action", () => {
+      const expectedActions = [
+        {
+          type: types.OPPDATER_SOEKNADSLAND,
+          data: {
+            soeknadsland: {
+              landkoder: [DK, NO],
+              flereLandUkjentHvilke: true,
+            },
+          },
+        },
+      ];
+
+      const store = mockStore(initialState);
 
       store.dispatch(operations.oppdaterSoeknadsland([DK, NO], true));
 
-      const finalState = store.getState();
-      expect(finalState.mottatteOpplysninger.data.data.soeknadsland).toEqual({
-        landkoder: [DK, NO],
-        flereLandUkjentHvilke: true,
-      });
+      expect(store.getActions()).toEqual(expectedActions);
     });
   });
 });

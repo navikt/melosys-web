@@ -1,8 +1,12 @@
-import { createTestStore } from "../test-utils/createTestStore";
+import configureMockStore from "redux-mock-store";
+import thunk from "redux-thunk";
 
 import MKV from "../../melosyskodeverk";
 
 import { vilkarOperations as operations, vilkarTypes as types } from "./index";
+
+const middlewares = [thunk];
+const mockStore = configureMockStore(middlewares);
 
 describe("vilkar operations", () => {
   let initialState = null;
@@ -14,7 +18,6 @@ describe("vilkar operations", () => {
     initialState = {
       vilkar: {
         data: [],
-        status: "NOT_STARTED",
       },
       behandlinger: {
         data: {
@@ -26,34 +29,32 @@ describe("vilkar operations", () => {
 
   describe("hent", () => {
     it("henter vilkar og lager OK action", async () => {
-      const store = createTestStore(initialState);
+      const expectedActions = [{ type: types.PENDING }, { type: types.OK, data: {} }];
+
+      const store = mockStore(initialState);
       const behandlingID = 5;
 
       await store.dispatch(operations.hent(behandlingID));
 
       expect(fetch).toHaveBeenCalledTimes(1);
       expect(fetch).toHaveBeenLastCalledWith(`/api/vilkaar/${behandlingID}`, expect.anything());
-
-      const finalState = store.getState();
-      expect(finalState.vilkar.data).toEqual({});
-      expect(finalState.vilkar.status).toBe("OK");
+      expect(store.getActions()).toEqual(expectedActions);
     });
 
     it("lager FEILET ved feil i api-kall", async () => {
       const error = new Error("feil ved kall til Api");
       fetch.mockReject(error);
 
-      const store = createTestStore(initialState);
+      const expectedActions = [{ type: types.PENDING }, { type: types.FEILET, data: error.toString() }];
+
+      const store = mockStore(initialState);
       const behandlingID = 5;
 
       await store.dispatch(operations.hent(behandlingID));
 
       expect(fetch).toHaveBeenCalledTimes(1);
       expect(fetch).toHaveBeenLastCalledWith(`/api/vilkaar/${behandlingID}`, expect.anything());
-
-      const finalState = store.getState();
-      expect(finalState.vilkar.data).toBe(error.toString());
-      expect(finalState.vilkar.status).toBe("ERROR");
+      expect(store.getActions()).toEqual(expectedActions);
     });
   });
 
@@ -68,9 +69,13 @@ describe("vilkar operations", () => {
         },
       ];
 
-      const store = createTestStore(initialState);
+      const expectedActions = [{ type: types.PENDING }, { type: types.OK, data: {} }];
+
+      const store = mockStore(initialState);
 
       await store.dispatch(operations.lagre());
+
+      expect(store.getActions()).toEqual(expectedActions);
 
       expect(fetch).toHaveBeenLastCalledWith(
         "/api/vilkaar/4",
@@ -82,67 +87,58 @@ describe("vilkar operations", () => {
           ]),
         }),
       );
-
-      const finalState = store.getState();
-      expect(finalState.vilkar.data).toEqual({});
-      expect(finalState.vilkar.status).toBe("OK");
     });
 
     it("lager FEILET ved feil i api-kall", async () => {
       const error = new Error("feil ved kall til Api");
       fetch.mockReject(error);
 
-      const store = createTestStore(initialState);
+      const expectedActions = [{ type: types.PENDING }, { type: types.FEILET, data: error.toString() }];
+
+      const store = mockStore(initialState);
 
       await store.dispatch(operations.lagre());
 
       expect(fetch).toHaveBeenCalledTimes(1);
       expect(fetch).toHaveBeenLastCalledWith("/api/vilkaar/4", expect.anything());
-
-      const finalState = store.getState();
-      expect(finalState.vilkar.data).toBe(error.toString());
-      expect(finalState.vilkar.status).toBe("ERROR");
+      expect(store.getActions()).toEqual(expectedActions);
     });
   });
 
   describe("oppdaterState", () => {
-    it("oppdaterer vilkar state", () => {
-      const vilkarData = {
-        forutgaendeMedlemskap: "true",
-        forutgaendeMedlemskap_begrunnelser: [],
-        vesentligVirksomhet: "false",
-        vesentligVirksomhet_begrunnelser: [],
-      };
+    it("lager OPPDATER_MOTTATTE_OPPLYSNINGER action", () => {
+      const vilkar = [{ vilkaar: "test" }, { vilkaar: "test2" }];
 
-      const store = createTestStore(initialState);
+      const expectedActions = [
+        {
+          type: types.OPPDATER_VILKAR,
+          data: {
+            vilkar,
+          },
+        },
+      ];
 
-      store.dispatch(operations.oppdaterState(vilkarData));
+      const store = mockStore(initialState);
 
-      const finalState = store.getState();
-      // The reducer processes the vilkar data and creates an array of vilkar objects
-      expect(finalState.vilkar.data).toBeInstanceOf(Array);
-      expect(finalState.vilkar.data.length).toBeGreaterThan(0);
+      store.dispatch(operations.oppdaterState(vilkar));
+
+      expect(store.getActions()).toEqual(expectedActions);
     });
   });
 
   describe("resetState", () => {
-    it("reseterer vilkar state", () => {
-      // Set up some initial data
-      const stateWithData = {
-        ...initialState,
-        vilkar: {
-          data: [{ vilkaar: "test" }],
-          status: "ERROR",
+    it("lager RESET action", () => {
+      const expectedActions = [
+        {
+          type: types.RESET,
         },
-      };
+      ];
 
-      const store = createTestStore(stateWithData);
+      const store = mockStore(initialState);
 
       store.dispatch(operations.resetState());
 
-      const finalState = store.getState();
-      expect(finalState.vilkar.data).toEqual([]);
-      expect(finalState.vilkar.status).toBe("NOT_STARTED");
+      expect(store.getActions()).toEqual(expectedActions);
     });
   });
 });

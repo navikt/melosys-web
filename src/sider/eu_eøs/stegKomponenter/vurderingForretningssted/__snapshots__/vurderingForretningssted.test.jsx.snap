@@ -28,8 +28,8 @@ exports[`VurderingForretningssted > snapshot test 1`] = `
                 list="333"
                 bredde="fullbredde"
                 id="333"
-                class="navds-text-field__input navds-body-short navds-body-short--small"
                 type="text"
+                class="navds-text-field__input navds-body-short navds-body-short--small"
                 value
               >
               <div
@@ -299,11 +299,11 @@ exports[`VurderingForretningssted > snapshot test 1`] = `
               <div class="navds-radio navds-radio--small">
                 <input
                   id="333"
+                  name="333"
+                  type="radio"
                   aria-labelledby="333"
                   class="navds-radio__input"
-                  type="radio"
                   value="TRUE"
-                  name="333"
                 >
                 <label
                   for="333"
@@ -323,11 +323,11 @@ exports[`VurderingForretningssted > snapshot test 1`] = `
               <div class="navds-radio navds-radio--small">
                 <input
                   id="333"
+                  name="333"
+                  type="radio"
                   aria-labelledby="333"
                   class="navds-radio__input"
-                  type="radio"
                   value="FALSE"
-                  name="333"
                 >
                 <label
                   for="333"

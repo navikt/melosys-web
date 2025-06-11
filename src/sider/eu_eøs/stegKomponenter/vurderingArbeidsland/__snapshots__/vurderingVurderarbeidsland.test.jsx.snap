@@ -23,11 +23,11 @@ exports[`VurderingVurderarbeidsland > snapshot test 1`] = `
               <div class="navds-radio navds-radio--small">
                 <input
                   id="333"
+                  name="333"
+                  type="radio"
                   aria-labelledby="333"
                   class="navds-radio__input"
-                  type="radio"
                   value="SOKKEL"
-                  name="333"
                 >
                 <label
                   for="333"
@@ -47,11 +47,11 @@ exports[`VurderingVurderarbeidsland > snapshot test 1`] = `
               <div class="navds-radio navds-radio--small">
                 <input
                   id="333"
+                  name="333"
+                  type="radio"
                   aria-labelledby="333"
                   class="navds-radio__input"
-                  type="radio"
                   value="SKIP"
-                  name="333"
                 >
                 <label
                   for="333"
@@ -89,11 +89,11 @@ exports[`VurderingVurderarbeidsland > snapshot test 1`] = `
               <div class="navds-radio navds-radio--small">
                 <input
                   id="333"
+                  name="333"
+                  type="radio"
                   aria-labelledby="333"
                   class="navds-radio__input"
-                  type="radio"
                   value="Flaggland"
-                  name="333"
                 >
                 <label
                   for="333"
@@ -113,11 +113,11 @@ exports[`VurderingVurderarbeidsland > snapshot test 1`] = `
               <div class="navds-radio navds-radio--small">
                 <input
                   id="333"
+                  name="333"
+                  type="radio"
                   aria-labelledby="333"
                   class="navds-radio__input"
-                  type="radio"
                   value="Sokkelland"
-                  name="333"
                 >
                 <label
                   for="333"
@@ -137,11 +137,11 @@ exports[`VurderingVurderarbeidsland > snapshot test 1`] = `
               <div class="navds-radio navds-radio--small">
                 <input
                   id="333"
+                  name="333"
+                  type="radio"
                   aria-labelledby="333"
                   class="navds-radio__input"
-                  type="radio"
                   value="Territorialfarvannsland"
-                  name="333"
                 >
                 <label
                   for="333"
