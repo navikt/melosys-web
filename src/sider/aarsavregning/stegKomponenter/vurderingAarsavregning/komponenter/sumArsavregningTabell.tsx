@@ -2,6 +2,7 @@ import * as Nav from "../../../../../navFrontend";
 import * as Utils from "../../../../../utils";
 import "./sumArsavregningTabell.css";
 import { formaterTilNorskBelop } from "../../../../../utils";
+import { beregnSumTilFakturaEllerRefusjon } from "../utils";
 
 export function SumArsavregningTabell({
   nyTrygdeavgift,
@@ -16,11 +17,12 @@ export function SumArsavregningTabell({
   tidligereAarsavregningTrygdeavgiftFraAvgiftssystem?: number;
   harGrunnlagIMelosys: boolean;
 }) {
-  const sumTilFakturaEllerRefusjon =
-    (nyTrygdeavgift ?? 0) -
-    (tidligereTrygdeavgift ?? 0) -
-    (tidligereTrygdeavgiftAvgiftssystem ?? 0) +
-    (tidligereAarsavregningTrygdeavgiftFraAvgiftssystem ?? 0);
+  const sumTilFakturaEllerRefusjon = beregnSumTilFakturaEllerRefusjon(
+    nyTrygdeavgift,
+    tidligereTrygdeavgift,
+    tidligereTrygdeavgiftAvgiftssystem,
+    tidligereAarsavregningTrygdeavgiftFraAvgiftssystem,
+  );
 
   return (
     <Nav.Box className="sumArsavregningTabell" background="surface-subtle">
