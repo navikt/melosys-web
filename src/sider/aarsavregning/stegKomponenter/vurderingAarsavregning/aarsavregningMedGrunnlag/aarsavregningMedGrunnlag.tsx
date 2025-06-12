@@ -42,6 +42,14 @@ const mapMedlemskapsperiodeBestemmelse = (harDeltGrunnlag: boolean, medlemskapsp
   return undefined;
 };
 
+const mapTrygdedekning = (medlemskapsperioder?: Medlemskapsperiode[]) => {
+  if (!medlemskapsperioder || medlemskapsperioder.length === 0) return undefined;
+  const innvilgedePerioder = medlemskapsperioder.filter(
+    (periode) => periode.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.INNVILGET,
+  );
+  return innvilgedePerioder[0]?.trygdedekning;
+};
+
 export interface AarsavregningMedGrunnlagFormValues extends FormValuesProps {
   endeligAvgiftValg: string;
   manueltAvgiftBeloep?: number;
@@ -52,6 +60,7 @@ export interface InitiellData {
   formDefaultValues: FieldValue<AarsavregningMedGrunnlagFormValues>;
   innvilgetMedlemskapsperiode?: { fomDato: string; tomDato: string };
   innvilgetMedlemskapsperiodeBestemmelse?: string;
+  innvilgetMedlemskapsperiodeTrygdedekning?: string;
   medlemskapstypeErPliktig: boolean;
   forrigeÅrsavregningErManueltBeregnet: boolean;
 }
@@ -130,6 +139,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
           const medlemskapsperioder = res.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.medlemskapsperioder;
           const innvilgetMedlemskapsperiode = mapInnvilgetMedlemskapsPeriode(medlemskapsperioder);
           const innvilgetMedlemskapsperiodeBestemmelse = mapMedlemskapsperiodeBestemmelse(false, medlemskapsperioder);
+          const innvilgetMedlemskapsperiodeTrygdedekning = mapTrygdedekning(medlemskapsperioder);
           const medlemskapstypeErPliktig = Boolean(
             medlemskapsperioder?.every((periode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG),
           );
@@ -144,6 +154,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
             formDefaultValues: defaultFormValues,
             innvilgetMedlemskapsperiode,
             innvilgetMedlemskapsperiodeBestemmelse,
+            innvilgetMedlemskapsperiodeTrygdedekning,
             medlemskapstypeErPliktig,
             forrigeÅrsavregningErManueltBeregnet,
           });
