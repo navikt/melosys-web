@@ -120,6 +120,7 @@ export function Saksplukker({
           erPensjonistToggleEnabled,
           erPensjonistEØSToggleEnabled,
         );
+
         history.push(redirectURL);
       }
     }
