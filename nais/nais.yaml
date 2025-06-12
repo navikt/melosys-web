@@ -1,7 +1,7 @@
 apiVersion: nais.io/v1alpha1
 kind: Application
 metadata:
-  name: {{APP_NAME}}
+  name: {{VITE_APP_NAME}}
   namespace: teammelosys
   labels:
     team: teammelosys

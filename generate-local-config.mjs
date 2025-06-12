@@ -1,0 +1,12 @@
+// Bygg opp en env-config.mjs-fil basert på miljøvariabler fra .env-filen
+import fs from "fs";
+import path from "path";
+import dotenv from "dotenv";
+
+const envFileName = process.argv[2] || ".local.env";
+const envPath = path.resolve(process.cwd(), envFileName);
+
+const envConfig = dotenv.parse(fs.readFileSync(envPath));
+
+const configContent = `window.env = ${JSON.stringify(envConfig)};`;
+fs.writeFileSync(path.resolve(process.cwd(), "env-config.mjs"), configContent);

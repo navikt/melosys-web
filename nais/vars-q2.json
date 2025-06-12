@@ -1,5 +1,5 @@
 {
-  "APP_NAME": "melosys-web",
+  "VITE_APP_NAME": "melosys-web",
   "APP_URL_TRYGDEAVTALE": "http://melosys-trygdeavtale.teammelosys",
   "APP_URL_FAKTURERINGSKOMPONENTEN": "https://faktureringskomponenten-q2.intern.dev.nav.no",
   "APP_URL_MELOSYS": "http://melosys.teammelosys",
