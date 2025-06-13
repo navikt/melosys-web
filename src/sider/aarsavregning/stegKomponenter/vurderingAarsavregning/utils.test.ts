@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import * as Api from "../../../../services/api";
 import * as Utils from "../../../../utils";
 import {
+  beregnSumTilFakturaEllerRefusjon,
   beregnTrygdeavgiftsperioder,
   erBrukerSkattepliktigIHelePerioden,
   hentMedlemskapsFomTomDato,
@@ -247,6 +248,35 @@ describe("utils", () => {
           },
         ]);
       });
+    });
+  });
+
+  describe("beregnSumTilFakturaEllerRefusjon", () => {
+    it("calculates correct sum with all values provided", () => {
+      const result = beregnSumTilFakturaEllerRefusjon(10000, 3000, 2000, 1000);
+
+      // 10000 - 3000 - 2000 + 1000 = 6000
+      expect(result).toBe(6000);
+    });
+
+    it("handles undefined values correctly", () => {
+      const result = beregnSumTilFakturaEllerRefusjon(5000, undefined, 1000, undefined);
+
+      // 5000 - 0 - 1000 + 0 = 4000
+      expect(result).toBe(4000);
+    });
+
+    it("returns 0 when all values are undefined", () => {
+      const result = beregnSumTilFakturaEllerRefusjon(undefined, undefined, undefined, undefined);
+
+      expect(result).toBe(0);
+    });
+
+    it("handles negative results correctly", () => {
+      const result = beregnSumTilFakturaEllerRefusjon(1000, 5000, 2000, 500);
+
+      // 1000 - 5000 - 2000 + 500 = -5500
+      expect(result).toBe(-5500);
     });
   });
 });

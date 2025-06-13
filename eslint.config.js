@@ -29,7 +29,7 @@ export default tseslint.config(
         ecmaFeatures: {
           jsx: true,
         },
-        project: "./tsconfig.json",
+        project: "./tsconfig.eslint.json",
         tsconfigRootDir: __dirname,
       },
     },
@@ -53,16 +53,6 @@ export default tseslint.config(
       // React Hooks
       "react-hooks/rules-of-hooks": "error",
       "react-hooks/exhaustive-deps": "off",
-
-      // FILE SIZE RULES - Restore from ESLint 8
-      "max-lines": [
-        "warn",
-        {
-          max: 400,
-          skipBlankLines: true,
-          skipComments: true,
-        },
-      ],
 
       // FILE SIZE RULES - Restore from ESLint 8
       "max-lines": [
@@ -110,7 +100,7 @@ export default tseslint.config(
       },
       "import/resolver": {
         typescript: {
-          project: "./tsconfig.json",
+          project: "./tsconfig.eslint.json",
         },
       },
     },

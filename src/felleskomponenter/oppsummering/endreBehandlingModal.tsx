@@ -23,7 +23,7 @@ import Knapperad from "../knapperad";
 import "./endreBehandlingModal.css";
 import { useAsyncCallbackState } from "../../hooks";
 import { useFeatureToggle } from "../../featuretoggle";
-import { MELOSYS_PENSJONIST } from "../../featuretoggle/toggleNavn";
+import { MELOSYS_PENSJONIST, MELOSYS_PENSJONIST_EØS } from "../../featuretoggle/toggleNavn";
 
 enum FeltVerdier {
   sakstype = "sakstype",
@@ -86,6 +86,7 @@ function EndreBehandlingModal({
   const [muligeBehandlingstemaer, setMuligeBehandlingstemaer] = useState([]);
   const [muligeBehandlingstyper, setMuligeBehandlingstyper] = useState<KTObject[]>([]);
   const erPensjonistToggleEnabled = useFeatureToggle(MELOSYS_PENSJONIST);
+  const erPensjonistEØSToggleEnabled = useFeatureToggle(MELOSYS_PENSJONIST_EØS);
 
   const typeTemaKanEndres = !anmodningsperioderSendtTilUtlandet;
   const fagsakKanEndres = muligeSakstyper.length !== 0 || muligeSakstemaer.length !== 0;
@@ -160,7 +161,14 @@ function EndreBehandlingModal({
 
     if (
       sakstype !== MKV.Koder.sakstyper.TRYGDEAVTALE ||
-      Routing.skalViseIngenFlyt(sakstype, sakstema, behandlingstema, behandlingstype, erPensjonistToggleEnabled)
+      Routing.skalViseIngenFlyt(
+        sakstype,
+        sakstema,
+        behandlingstema,
+        behandlingstype,
+        erPensjonistToggleEnabled,
+        erPensjonistEØSToggleEnabled,
+      )
     ) {
       await Api.Trygdeavtale.slettFlyt(behandlingID);
     } else {
@@ -228,6 +236,7 @@ function EndreBehandlingModal({
           behandlingstema,
           behandlingstype,
           erPensjonistToggleEnabled,
+          erPensjonistEØSToggleEnabled,
         );
 
         if (nyGenerertLink && nyGenerertLink !== location.pathname + location.search) {

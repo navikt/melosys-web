@@ -224,14 +224,25 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
         const bestemmelse = getBestemmelse(mappedMedlemskapsperioder);
         const trygdedekninger = await getTrygdedekninger(bestemmelse);
 
+        const totaltForskuddsvisFakturert =
+          aarsavregningRes?.avregning?.tidligereFakturertBeloepAvgiftssystem !== undefined &&
+          aarsavregningRes?.avregning?.tidligereFakturertBeloepAvgiftssystem !== null
+            ? aarsavregningRes?.avregning?.tidligereFakturertBeloepAvgiftssystem
+            : "";
+        const manueltAvgiftBeloep =
+          aarsavregningRes?.avregning?.manueltAvgiftBeloep !== undefined &&
+          aarsavregningRes?.avregning?.manueltAvgiftBeloep !== null
+            ? aarsavregningRes?.avregning?.manueltAvgiftBeloep
+            : "";
+
         const formDefaultValues: FieldValue<AarsavregningFormValuesProps> = {
           medlemskapsperioder: mappedMedlemskapsperioder.length
             ? mappedMedlemskapsperioder
             : [DEFAULT_MEDLEMSKAPSPERIODE],
           bestemmelse,
-          totaltForskuddsvisFakturert: aarsavregningRes?.avregning?.tidligereFakturertBeloepAvgiftssystem || "",
+          totaltForskuddsvisFakturert,
           endeligAvgiftValg: aarsavregningRes?.endeligAvgiftValg || "",
-          manueltAvgiftBeloep: aarsavregningRes?.avregning?.manueltAvgiftBeloep || "",
+          manueltAvgiftBeloep,
           skatteforholdsperioder: mapTilSkatteforholdProps(
             deltGrunnlagAarsavregningHarIkkeNyttGrunnlag
               ? aarsavregningRes?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.skatteforholdsperioder
