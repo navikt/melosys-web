@@ -24,6 +24,7 @@ export function hent(behandlingID) {
     const dispatchedMottatteOpplysningerAction = await doThenDispatchResult(dispatch, getState);
 
     if (dispatchedMottatteOpplysningerAction.type === Types.FEILET) {
+      console.log("Ja da, da dytter vi til ingen flyt");
       await dispatch(navigeringOperations.tilIngenFlyt());
       return dispatchedMottatteOpplysningerAction;
     }

@@ -14,7 +14,6 @@ class Inngang extends Steg {
     this.komponent = VurderingInngang;
     this.samleRelevanteData = (_propsLight) => {
       const inngangsvilkaar = this.hentInngangsvilkaar(_propsLight);
-
       return {
         redigerbart: _propsLight.generiskStegRedigerbart,
         oppfyllerInngangsvilkar: this.oppfyllerInngangsvilkaar(inngangsvilkaar),

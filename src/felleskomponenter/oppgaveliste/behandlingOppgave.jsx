@@ -23,6 +23,7 @@ function BehandlingOppgavesLinjeWrapper({ link, stengt, children }) {
     <div>{children}</div>
   ) : (
     <Link to={link} className="behandlingOppgave__link">
+      {console.log("Children of link", children)}
       {children}
     </Link>
   );

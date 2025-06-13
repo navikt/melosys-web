@@ -49,19 +49,14 @@ export function VurderingOpplysninger({
   };
 
   return (
-    <div className="vurderinginngang_eu_eos">
+    <>
       <Nav.Heading level="1" className="stegvelgertittel">
         Oppgi opplysninger fra attesten
       </Nav.Heading>
 
       <PeriodeOgLandVelger control={control} redigerbart={redigerbart} formValues={formValues} />
-
-      <Mui.StegKnapper
-        bekreftKnappProps={{
-          disabled: !redigerbart || !formIsValid,
-          onClick: bekreft,
-        }}
-      />
-    </div>
+    </>
   );
 }
+
+export default VurderingOpplysninger;

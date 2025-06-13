@@ -9,6 +9,7 @@ import { vilkarOperations } from "../../../../ducks/vilkar";
 import "./vurderingInngang.css";
 import { ReactElement, useEffect, useState } from "react";
 import Varsler from "./varsler";
+import VurderingOpplysninger from "../vurderingOpplysninger/vurderingOpplysninger";
 
 interface VurderingInngangProps {
   bekreftOgFortsett: () => void;
@@ -30,6 +31,7 @@ export function VurderingInngang({
   const behandlingHarPeriodeOgLand = useSelector(mottatteOpplysningerSelectors.HarPeriodeOgLandSelector);
   const landkoder = useSelector(mottatteOpplysningerSelectors.SoknadslandkoderSelector);
   const flereLandUkjentHvilke = useSelector(mottatteOpplysningerSelectors.SoknadslandFlereLandUkjentHvilkeSelector);
+  const erPensjonist = behandlingstema === MKV.Koder.behandlinger.behandlingstema.PENSJONIST;
 
   useEffect(() => {
     const flereEnnEttLand = landkoder.length > 1 || flereLandUkjentHvilke;
@@ -83,16 +85,27 @@ export function VurderingInngang({
 
   return (
     <div className="vurderinginngang_eu_eos">
-      <Nav.Heading level="1" className="stegvelgertittel">
-        Kontroller inngangsvilkår
-      </Nav.Heading>
-      <Varsler
-        oppfyllerInngangsvilkar={oppfyllerInngangsvilkar}
-        inngangsvilkaar={inngangsvilkaar}
-        landkoder={landkoder}
-        behandlingstema={behandlingstema}
-        behandlingID={behandlingID}
-      />
+      {erPensjonist ? (
+        <VurderingOpplysninger
+          bekreftOgFortsett={bekreftOgFortsett}
+          redigerbart={redigerbart}
+          oppfyllerInngangsvilkar={oppfyllerInngangsvilkar}
+          inngangsvilkaar={inngangsvilkaar}
+        />
+      ) : (
+        <>
+          <Nav.Heading level="1" className="stegvelgertittel">
+            Kontroller inngangsvilkår
+          </Nav.Heading>
+          <Varsler
+            oppfyllerInngangsvilkar={oppfyllerInngangsvilkar}
+            inngangsvilkaar={inngangsvilkaar}
+            landkoder={landkoder}
+            behandlingstema={behandlingstema}
+            behandlingID={behandlingID}
+          />
+        </>
+      )}
       {feil && (
         <Nav.Alert variant="error" className="periode_land_feil">
           {feil}
