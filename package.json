@@ -62,6 +62,8 @@
     "build:css": "less-watch-compiler --run-once --config less.json",
     "start": "node generate-local-config.mjs .local.env && npm-run-all -p start:css start:js",
     "test": "vitest",
+    "test:e2e": "npx playwright test",
+    "test:e2e:ui": "npx playwright test --ui",
     "serve": "node generate-local-config.mjs .local.env && npm-run-all -p start:css serve:js",
     "start:q1": "node generate-local-config.mjs .q1.env && npm-run-all -p start:css start:js",
     "start:q2": "node generate-local-config.mjs .q2.env && npm-run-all -p start:css start:js",
@@ -71,6 +73,7 @@
     "prettier:write": "prettier --write .",
     "prettier:check": "prettier --check .",
     "prepare": "husky install",
+    "postinstall": "npx playwright install",
     "generate-graphql": "graphql-codegen --config ./src/graphql/codegen.yml"
   },
   "prettier": {
@@ -85,6 +88,7 @@
     ]
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.8.5",
     "@graphql-codegen/cli": "^3.3.1",
     "@graphql-codegen/near-operation-file-preset": "^2.5.0",
     "@graphql-codegen/typescript": "^3.0.4",
@@ -92,6 +96,7 @@
     "@graphql-codegen/typescript-operations": "^3.0.4",
     "@graphql-codegen/typescript-react-apollo": "^3.3.7",
     "@reduxjs/toolkit": "^2.8.2",
+    "@playwright/test": "^1.44.0",
     "@testing-library/dom": "^10.0.4",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^16.0.1",
@@ -111,6 +116,7 @@
     "@typescript-eslint/eslint-plugin": "^7.0.0",
     "@typescript-eslint/parser": "^7.0.0",
     "@vitejs/plugin-react": "^4.0.0",
+    "axe-html-reporter": "^2.2.11",
     "eslint": "^8.57.1",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-typescript": "^18.0.0",
