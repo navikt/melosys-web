@@ -1,7 +1,7 @@
 // Bygg opp en env-config.js-fil basert på miljøvariabler fra .env-filen
-const fs = require("fs");
-const path = require("path");
-const dotenv = require("dotenv");
+import fs from "fs";
+import path from "path";
+import dotenv from "dotenv";
 
 const envFileName = process.argv[2] || ".local.env";
 const envPath = path.resolve(process.cwd(), envFileName);
