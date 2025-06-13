@@ -90,13 +90,21 @@ export const lagUrl = (
   behandlingstemaKode: string,
   behandlingstypeKode: string,
   erPensjonistToggleEnabled?: boolean,
+  erPensjonistEØSToggleEnabled?: boolean,
 ) => {
   if (behandlingstypeKode === MKV.Koder.behandlinger.behandlingstyper.ÅRSAVREGNING) {
     return lagÅrsavregningFlytUrl(sakstypeKode, saksnummer, behandlingID);
   }
 
   if (
-    skalViseIngenFlyt(sakstypeKode, sakstemaKode, behandlingstemaKode, behandlingstypeKode, erPensjonistToggleEnabled)
+    skalViseIngenFlyt(
+      sakstypeKode,
+      sakstemaKode,
+      behandlingstemaKode,
+      behandlingstypeKode,
+      erPensjonistToggleEnabled,
+      erPensjonistEØSToggleEnabled,
+    )
   ) {
     return lagIngenFlytUrl(sakstypeKode, saksnummer, behandlingID);
   }
@@ -144,7 +152,16 @@ export const skalViseIngenFlyt = (
   behandlingstema: string,
   behandlingstype: string,
   erPensjonsistToggleEnabled?: boolean,
+  erPensjonistToggleEnabled_EØS?: boolean,
 ) => {
+  if (
+    sakstype === EU_EOS &&
+    behandlingstema === MKV.Koder.behandlinger.behandlingstema.PENSJONIST &&
+    erPensjonistToggleEnabled_EØS
+  ) {
+    return false;
+  }
+
   if (sakstema === MKV.Koder.sakstemaer.TRYGDEAVGIFT) {
     return true;
   }

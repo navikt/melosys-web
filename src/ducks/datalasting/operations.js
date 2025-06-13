@@ -17,7 +17,7 @@ import { medlemskapsperioderOperations } from "../medlemskapsperioder";
 // noinspection ES6PreferShortImport
 import { harIkkeYrkesaktivFlyt, harUnntaksregistreringFlyt, skalViseIngenFlyt } from "../../url/url";
 import { erFeatureToggleEnabled } from "../../featuretoggle";
-import { MELOSYS_PENSJONIST } from "../../featuretoggle/toggleNavn";
+import { MELOSYS_PENSJONIST, MELOSYS_PENSJONIST_EØS } from "../../featuretoggle/toggleNavn";
 
 const harIngenFlyt = async (sakstype, state) => {
   const sakstema = fagsakSelectors.SakstemaKodeSelector(state);
@@ -25,7 +25,16 @@ const harIngenFlyt = async (sakstype, state) => {
   const behandlingstype = behandlingerSelectors.BehandlingstypeKodeSelector(state);
 
   const erPensjonistToggleEnabled = erFeatureToggleEnabled(MELOSYS_PENSJONIST, state);
-  return skalViseIngenFlyt(sakstype, sakstema, behandlingstema, behandlingstype, erPensjonistToggleEnabled);
+  const erPensjonistToggleEnabled_EØS = erFeatureToggleEnabled(MELOSYS_PENSJONIST_EØS, state);
+
+  return skalViseIngenFlyt(
+    sakstype,
+    sakstema,
+    behandlingstema,
+    behandlingstype,
+    erPensjonistToggleEnabled,
+    erPensjonistToggleEnabled_EØS,
+  );
 };
 const harUnntaksregistreringEllerIkkeYrkesaktivFlyt = (sakstype, state) => {
   const sakstema = fagsakSelectors.SakstemaKodeSelector(state);
