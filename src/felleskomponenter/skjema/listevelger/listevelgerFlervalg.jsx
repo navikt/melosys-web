@@ -1,12 +1,12 @@
 /* eslint react/no-array-index-key:off */
 import { Component } from "react";
-import { v4 as uuid } from "uuid";
 import PT from "prop-types";
 
 import * as KV from "../../../kodeverk";
 import * as Nav from "../../../navFrontend";
 
 import "./listevelger.css";
+import * as Utils from "../../../utils/index";
 
 /** Dette er komponent for ett enkeltvalg. Dersom tillatFritekst === true, vil Nav.Input brukes
  * slik at brukeren kan redigere innholdet i feltet også ETTER at det er lagt til.
@@ -208,7 +208,7 @@ class ListevelgerFlervalg extends Component {
         </div>
         <datalist id={`dataliste-${fields.name}`}>
           {muligeValg.map((valg) => (
-            <option key={uuid()} value={KV.objektTilTerm(valg)} label={KV.objektTilTerm(valg)} />
+            <option key={Utils._uuid()} value={KV.objektTilTerm(valg)} label={KV.objektTilTerm(valg)} />
           ))}
         </datalist>
       </div>

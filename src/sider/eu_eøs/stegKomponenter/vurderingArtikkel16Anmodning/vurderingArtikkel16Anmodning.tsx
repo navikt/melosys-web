@@ -5,7 +5,6 @@ import { getFormValues, InjectedFormProps, isValid, reduxForm } from "redux-form
 import * as EKV from "eessi-kodeverk";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { RootState } from "AppTypes";
-import { v4 as uuid } from "uuid";
 import { anmodningsperioderSelectors } from "../../../../ducks/anmodningsperioder";
 import { avklartefaktaSelectors } from "../../../../ducks/avklartefakta";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
@@ -331,9 +330,9 @@ function VurderingArtikkel16Anmodning({
                 </Nav.BodyLong>
               }
             >
-              <option key={uuid()} value="" label="Velg..." disabled={!!unntakFraBestemmelse} />
+              <option key={Utils._uuid()} value="" label="Velg..." disabled={!!unntakFraBestemmelse} />
               {hentUnntaksbestemmelser().map((kodeObjekt) => (
-                <option key={uuid()} value={kodeObjekt.kode} label={kodeObjekt.term ?? ""} />
+                <option key={Utils._uuid()} value={kodeObjekt.kode} label={kodeObjekt.term ?? ""} />
               ))}
             </Nav.Select>
           </Nav.Column>
@@ -353,13 +352,13 @@ function VurderingArtikkel16Anmodning({
               }
             >
               <option
-                key={uuid()}
+                key={Utils._uuid()}
                 value=""
                 label="Velg..."
                 disabled={!Utils._isEmpty(unntaksvilkår.begrunnelseKoder)}
               />
               {muligeBegrunnelseValg.map((kodeObjekt) => (
-                <option key={uuid()} value={kodeObjekt.kode} label={kodeObjekt.term ?? ""} />
+                <option key={Utils._uuid()} value={kodeObjekt.kode} label={kodeObjekt.term ?? ""} />
               ))}
             </Nav.Select>
           </Nav.Column>

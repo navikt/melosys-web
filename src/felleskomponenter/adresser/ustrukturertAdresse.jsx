@@ -1,12 +1,12 @@
 import PT from "prop-types";
-import uuid from "uuid";
+import * as Utils from "../../utils/index";
 
 function UstrukturertAdresse({ adresse: { adresselinjer, landkode } }) {
   return (
     <address>
       {adresselinjer.map((adresse) => {
         if (!adresse) return null;
-        return <div key={uuid()}>{adresse}</div>;
+        return <div key={Utils._uuid()}>{adresse}</div>;
       })}
       {landkode}
     </address>
