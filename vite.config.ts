@@ -71,9 +71,9 @@ export default defineConfig({
   resolve: {
     extensions: [".js", ".json", ".jsx", ".mjs", ".ts", ".tsx"],
     alias: {
-      AppTypes: path.resolve(__dirname, "./src/globalmodules/AppTypes.ts"),
-      Domene: path.resolve(__dirname, "./src/globalmodules/Domene.ts"),
-      "melosys-api": path.resolve(__dirname, "./src/globalmodules/melosys-api.ts"),
+      AppTypes: path.resolve(import.meta.url, "./src/globalmodules/AppTypes.ts"),
+      Domene: path.resolve(import.meta.url, "./src/globalmodules/Domene.ts"),
+      "melosys-api": path.resolve(import.meta.url, "./src/globalmodules/melosys-api.ts"),
     },
   },
 });
