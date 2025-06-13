@@ -62,11 +62,11 @@ exports[`oppdaterRegisteropplysninger > Skal vise alternativ for å se registero
     <div class="oppdater-registeropplysninger__checkbox navds-checkbox navds-checkbox--small">
       <input
         class="navds-checkbox__input"
-        name="333"
         id="333"
-        type="checkbox"
         aria-labelledby="333"
+        type="checkbox"
         value="Inkl. siste 5 år"
+        name="333"
       >
       <label
         for="333"
@@ -89,6 +89,8 @@ exports[`oppdaterRegisteropplysninger > Skal vise alternativ for å se registero
             >
             </path>
           </svg>
+        </span>
+        <span class="navds-checkbox__icon-indeterminate">
         </span>
         <span class="navds-checkbox__content">
           <span

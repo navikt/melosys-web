@@ -1,5 +1,4 @@
 import { ElementType } from "react";
-import PT from "prop-types";
 import { connect, ConnectedProps } from "react-redux";
 import { FieldArray, change, WrappedFieldArrayProps } from "redux-form";
 import classNames from "classnames";
@@ -143,9 +142,5 @@ type EditerbartElementListeProps = BaseProps & {
 function EditerbartElementListe({ feltNavn, ...rest }: EditerbartElementListeProps) {
   return <FieldArray component={ConnectedInnerElementListe} name={feltNavn} props={rest} rerenderOnEveryChange />;
 }
-
-EditerbartElementListe.propTypes = {
-  feltNavn: PT.string.isRequired,
-};
 
 export default EditerbartElementListe;
