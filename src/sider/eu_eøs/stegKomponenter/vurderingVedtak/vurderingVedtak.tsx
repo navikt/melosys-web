@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { connect, ConnectedProps, useDispatch, useSelector } from "react-redux";
+import { connect, ConnectedProps, useSelector } from "react-redux";
+import { useDispatch } from "../../../../hooks";
 import { getFormValues, InjectedFormProps, isValid, reduxForm } from "redux-form";
 // @ts-expect-error generisk beskrivelse
 import * as EKV from "eessi-kodeverk";
@@ -33,7 +34,7 @@ import { lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
 import EnkeltDato from "../../../../felleskomponenter/enkeltDato";
 import { VurderingYrkesaktivitetTyper, VurderingYrkesgruppeTyper } from "../../../../kodeverk/koder";
 import { useFeatureToggle } from "../../../../featuretoggle";
-import { MELOSYS_PENSJONIST } from "../../../../featuretoggle/toggleNavn";
+import { MELOSYS_PENSJONIST, MELOSYS_PENSJONIST_EØS } from "../../../../featuretoggle/toggleNavn";
 
 const { FO_883_2004_ART11_3A } = MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004;
 const { FO_883_2004_ART11_4_1 } = MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004;
@@ -87,13 +88,21 @@ const skalViseMottakerinstitusjoner = (
   behandlingstema: string,
   behandlingstype: string,
   erPensjonistToggleEnabled?: boolean,
+  erPensjonistToggleEnabled_EØS?: boolean,
 ) => {
   return (
     sakstype === EU_EOS &&
     [UTSENDT_ARBEIDSTAKER, UTSENDT_SELVSTENDIG, ARBEID_FLERE_LAND, ARBEID_TJENESTEPERSON_ELLER_FLY].includes(
       behandlingstema,
     ) &&
-    !skalViseIngenFlyt(sakstype, sakstema, behandlingstema, behandlingstype, erPensjonistToggleEnabled)
+    !skalViseIngenFlyt(
+      sakstype,
+      sakstema,
+      behandlingstema,
+      behandlingstype,
+      erPensjonistToggleEnabled,
+      erPensjonistToggleEnabled_EØS,
+    )
   );
 };
 
@@ -171,12 +180,14 @@ function VurderingVedtak({
     mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector,
   ) as string;
   const erPensjonistToggleEnabled = useFeatureToggle(MELOSYS_PENSJONIST);
+  const erPensjonistEØSToggleEnabled = useFeatureToggle(MELOSYS_PENSJONIST_EØS);
   const visMottakerinstitusjoner = skalViseMottakerinstitusjoner(
     sakstype,
     sakstema,
     behandlingstema,
     behandlingstype,
     erPensjonistToggleEnabled,
+    erPensjonistEØSToggleEnabled,
   );
 
   useEffect(() => {
@@ -241,7 +252,6 @@ function VurderingVedtak({
           mottakerinstitusjoner: visMottakerinstitusjoner ? [formValues.mottakerinstitusjon] : [],
           nyVurderingBakgrunn: formValues.vedtakstypebegrunnelse,
         };
-        // @ts-expect-error generisk beskrivelse
         dispatch(vedtakOperations.fatt(behandlingID, vedtakRequest)).then((res) => {
           if (res.data?.data?.error) {
             setVedtakPending(false);

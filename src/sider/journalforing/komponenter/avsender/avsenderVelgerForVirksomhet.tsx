@@ -17,7 +17,7 @@ export function AvsenderVelgerForVirksomhet({
   kopierVirksomhetTilAvsender,
   mottaksKanalErElektronisk,
 }: AvsenderVelgerForVirksomhetProps) {
-  const formValues = useSelector((state) => getFormValues(KV.Form.JOURNALFORING)(state)) as any;
+  const formValues = useSelector((state: any) => getFormValues(KV.Form.JOURNALFORING)(state)) as any;
 
   useEffect(() => {
     if (formValues.avsenderType === MKV.Koder.avsendertyper.ORGANISASJON) {

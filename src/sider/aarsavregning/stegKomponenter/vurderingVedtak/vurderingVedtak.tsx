@@ -2,7 +2,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { RootState } from "AppTypes";
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+import { useDispatch } from "../../../../hooks";
 import { Action } from "redux";
 import { ThunkDispatch } from "redux-thunk";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
@@ -25,6 +26,7 @@ import { AarsavregningResponse } from "../../../../services/modules/aarsavregnin
 import { BrevVedleggVisningstabellInterface } from "../../../../services/modules/dokumenter-v2";
 import * as Utils from "../../../../utils";
 import { SumArsavregningTabell } from "../vurderingAarsavregning/komponenter/sumArsavregningTabell";
+import { beregnSumTilFakturaEllerRefusjon } from "../vurderingAarsavregning/utils";
 import vurdering_vedtak from "./vurderingVedtakSchema";
 import "./vurderingVedtak.css";
 
@@ -332,14 +334,18 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
       ? lagretAarsavregning?.avregning?.manueltAvgiftBeloep
       : lagretAarsavregning?.avregning?.beregnetAvgiftBelop;
 
-  const trygdeavgiftDiff =
-    (nyTrygdeavgift ?? 0) - (tidligereTrygdeavgift ?? 0) - (tidligereTrygdeavgiftAvgiftssystem ?? 0);
-  const erDifferanseUnderMinstebeløp = Math.abs(trygdeavgiftDiff) < MINSTEBELOP_FAKTURERING_ELLER_REFUSJON;
-  const erNullKroner = trygdeavgiftDiff === 0;
-  const skalFaktureres = trygdeavgiftDiff > 0;
-
   const tidligereAarsavregningTrygdeavgiftFraAvgiftssystem =
     lagretAarsavregning?.tidligereGrunnlagsopplysninger?.tidligereÅrsavregningFakturertBeloepAvgiftssystem;
+
+  const sumTilFakturaEllerRefusjon = beregnSumTilFakturaEllerRefusjon(
+    nyTrygdeavgift,
+    tidligereTrygdeavgift,
+    tidligereTrygdeavgiftAvgiftssystem,
+    tidligereAarsavregningTrygdeavgiftFraAvgiftssystem,
+  );
+  const erDifferanseUnderMinstebeløp = Math.abs(sumTilFakturaEllerRefusjon) < MINSTEBELOP_FAKTURERING_ELLER_REFUSJON;
+  const erNullKroner = sumTilFakturaEllerRefusjon === 0;
+  const skalFaktureres = sumTilFakturaEllerRefusjon > 0;
 
   const kanSubmitte =
     redigerbart &&
@@ -377,7 +383,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
                 <>
                   <br />
                   {`${skalFaktureres ? "Faktura" : "Kreditnota"} på ${
-                    Utils.formaterTilNorskBelop(Math.abs(trygdeavgiftDiff)) || "0"
+                    Utils.formaterTilNorskBelop(Math.abs(sumTilFakturaEllerRefusjon)) || "0"
                   } kr sendes til: `}{" "}
                   <b>{fakturaMottaker}</b>
                 </>

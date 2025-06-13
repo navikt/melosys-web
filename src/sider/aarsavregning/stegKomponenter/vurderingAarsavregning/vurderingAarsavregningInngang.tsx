@@ -1,5 +1,6 @@
 import { ChangeEvent, useContext, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+import { useDispatch } from "../../../../hooks";
 import { OK } from "../../../../ducks/aarsavregning/types";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { fagsakSelectors } from "../../../../ducks/fagsaker";
@@ -91,7 +92,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
       setHarGrunnlag(false);
     } else {
       setHarGrunnlag(true);
-      if (res.aar === 2023 || res.aar === 2024) {
+      if (res.harDeltGrunnlag || res.aar === 2023 || res.aar === 2024) {
         setVisDeltGrunnlagRadioGroup(true);
         setHarDeltGrunnlag(res.harDeltGrunnlag);
       } else {

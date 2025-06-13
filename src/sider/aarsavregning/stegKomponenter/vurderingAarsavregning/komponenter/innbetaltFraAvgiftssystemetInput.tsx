@@ -20,7 +20,6 @@ export function InnbetaltFraAvgiftssystemetInput({ control, redigerbart, erNyAar
       autoComplete="off"
       type="text"
       numeric
-      tillattNegativeTall
     />
   );
 }
