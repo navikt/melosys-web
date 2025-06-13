@@ -3,7 +3,8 @@ import * as Nav from "../../../../navFrontend";
 import { FieldArray, WrappedFieldArrayProps } from "redux-form";
 import { Medlemsperiode } from "../../../../services/modules/behandlinger/behandling";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+// Removed useDispatch import from "react-redux";
+import { useDispatch } from "../../../../hooks";
 import { behandlingsperioderOperations } from "../../../../ducks/behandlingsperioder";
 import * as Utils from "../../../../utils";
 
