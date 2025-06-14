@@ -19,9 +19,6 @@ export function TabellArbeidsgiver({ kolonneNavn, tabellData, linjerPerSide }: T
 
   return (
     <div>
-      <Nav.Heading size="xsmall" className="arbeidsavtaler__historisk__overskrift">
-        Inntekt
-      </Nav.Heading>
       <Nav.Table className="melosys__table">
         <Nav.Table.Header>
           <Nav.Table.Row>
