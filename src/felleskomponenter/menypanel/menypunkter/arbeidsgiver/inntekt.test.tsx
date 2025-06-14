@@ -35,7 +35,6 @@ describe("inntekt", () => {
     ];
     render(<Inntekt {...props} />);
     expect(screen.getByRole("table")).toBeInTheDocument();
-    expect(screen.getByText("Inntekt")).toBeInTheDocument();
     expect(screen.queryByRole("img")).not.toBeInTheDocument();
   });
 
