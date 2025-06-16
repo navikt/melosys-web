@@ -20,6 +20,7 @@ export function VurderingOpplysninger() {
   const {
     control,
     watch,
+    setValue,
     formState: { isValid: formIsValid },
   } = useForm({
     resolver: yupResolver(vurdering_opplysninger),
@@ -36,7 +37,12 @@ export function VurderingOpplysninger() {
         Oppgi opplysninger fra attesten
       </Nav.Heading>
 
-      <PeriodeOgLandVelger control={control} redigerbart={redigerbart} formValues={formValues} />
+      <PeriodeOgLandVelger
+        control={control}
+        redigerbart={redigerbart}
+        formValues={formValues}
+        onUkjentDato={setValue}
+      />
 
       <Mui.StegKnapper
         bekreftKnappProps={{

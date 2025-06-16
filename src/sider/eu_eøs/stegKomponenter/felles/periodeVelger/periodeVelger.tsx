@@ -7,14 +7,16 @@ import * as Utils from "../../../../../utils";
 import { UkjentSluttdatoMedlemskapsperiode } from "../../../../ftrl/saksbehandling/stegKomponenter/vurderingPeriode/komponenter/ukjentSluttdatoMedlemskapsperiode";
 import { useSelector } from "react-redux";
 import { oppsummertfaktaSelectors } from "../../../../../ducks/oppsummertfakta";
+import moment from "moment";
 
 export interface PeriodeVelgerProps {
   redigerbart: boolean;
   control: Control;
   formValues: any;
+  onUkjentDato: (a: any, b: any) => void;
 }
 
-export function PeriodeOgLandVelger({ redigerbart, control, formValues }: PeriodeVelgerProps) {
+export function PeriodeOgLandVelger({ redigerbart, control, formValues, onUkjentDato }: PeriodeVelgerProps) {
   const ukjentSluttdatoMedlemskapsperiode = useSelector(
     oppsummertfaktaSelectors.UkjentSluttdatoMedlemskapsperiodeSelector,
   );
@@ -24,7 +26,9 @@ export function PeriodeOgLandVelger({ redigerbart, control, formValues }: Period
       <Nav.Heading size="xsmall">Periode</Nav.Heading>
       <UkjentSluttdatoMedlemskapsperiode
         ukjentSluttdatoMedlemskapsperiode={ukjentSluttdatoMedlemskapsperiode || false}
-        onUkjentSluttdatoChange={() => {}}
+        onUkjentSluttdatoChange={() =>
+          onUkjentDato("tomDato", new Date(moment(formValues.fomDato).add(10, "years").toDate()))
+        }
         erPensjonist={true}
       />
       <div className="skjema__panel">
