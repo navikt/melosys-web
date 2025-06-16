@@ -1,5 +1,5 @@
 import DialogboksOppfriskBehandling from "./dialogboksOppfrisk";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { FellesHandlersContext } from "../../../contexts";
 
 describe("DialogboksOppfrisk", () => {
@@ -7,7 +7,7 @@ describe("DialogboksOppfrisk", () => {
 
   beforeEach(() => {
     props = {
-      oppfrisk: vi.fn(),
+      oppfrisk: vi.fn().mockResolvedValue(),
       avbryt: vi.fn(),
       lukk: vi.fn(),
       tilForsiden: vi.fn(),
@@ -35,16 +35,20 @@ describe("DialogboksOppfrisk", () => {
     expect(screen.queryByText("Fortsett oppdatering")).not.toBeInTheDocument();
   });
 
-  it("starter med oppfriskning med en gang når bekreftetFraStart er true", () => {
+  it("starter med oppfriskning med en gang når bekreftetFraStart er true", async () => {
     props.bekreftetFraStart = true;
 
     render(<DialogboksOppfriskBehandling {...props} />);
 
     expect(screen.getByRole("dialog")).toBeInTheDocument();
-    expect(screen.queryAllByRole("button")).toHaveLength(0);
+
+    await waitFor(() => {
+      expect(screen.getByText("Registeropplysningene er oppdatert")).toBeInTheDocument();
+    });
   });
 
-  it("starter med oppfriskning med en gang når behandlingOppfriskes er true", () => {
+  it("starter med oppfriskning med en gang når behandlingOppfriskes er true", async () => {
+    // eslint-disable-next-line react/jsx-no-constructed-context-values
     const context = { behandlingOppfriskes: true };
     render(
       <FellesHandlersContext.Provider value={context}>
@@ -53,7 +57,10 @@ describe("DialogboksOppfrisk", () => {
     );
 
     expect(screen.getByRole("dialog")).toBeInTheDocument();
-    expect(screen.queryAllByRole("button")).toHaveLength(0);
+
+    await waitFor(() => {
+      expect(screen.getByText("Registeropplysningene er oppdatert")).toBeInTheDocument();
+    });
   });
 
   it("viser forventet heading, oppfrisk og avbryt oppfriskning knapper", () => {

@@ -1,15 +1,14 @@
-import { Suspense, useContext, useState } from "react";
-import usePromise from "react-promise-suspense";
-import PT from "prop-types";
 import classNames from "classnames";
+import PT from "prop-types";
+import { Suspense, useContext, useState, useEffect } from "react";
 import * as Nav from "../../../navFrontend";
-import Knapperad from "../../knapperad";
 import AppErrorBoundary from "../../appErrorBoundary/appErrorBoundary";
+import Knapperad from "../../knapperad";
 
-import "./dialogboksOppfrisk.css";
+import { FellesHandlersContext } from "../../../contexts";
 import { StandardMeldingOverst } from "../../alertmeldinger";
 import { Spinner } from "../../spinner";
-import { FellesHandlersContext } from "../../../contexts";
+import "./dialogboksOppfrisk.css";
 
 function OppfriskBekreft({ bekreft, avbryt }) {
   return (
@@ -42,15 +41,17 @@ function OppfriskVenter() {
 }
 
 function Oppfrisk({ oppfrisk, lukk }) {
-  const CACHE_LIFESPAN_MS = 1000;
-  // Blokkerer visning av denne komponenten frem til oppfrisk() svarer. Resultatet blir cachet.
-  usePromise(
-    async () => {
-      await oppfrisk();
-    },
-    [],
-    CACHE_LIFESPAN_MS,
-  );
+  const [oppfriskPending, setOppfriskPending] = useState(true);
+
+  useEffect(() => {
+    oppfrisk().then(() => {
+      setOppfriskPending(false);
+    });
+  }, []);
+
+  if (oppfriskPending) {
+    return <Spinner />;
+  }
 
   return (
     <StandardMeldingOverst variant="success" actionEtterSynlighet={lukk} melding="Registeropplysningene er oppdatert" />

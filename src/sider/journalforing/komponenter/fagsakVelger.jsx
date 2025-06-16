@@ -17,6 +17,7 @@ import KnyttTilSak from "./knyttTilSak";
 import "./fagsakVelger.css";
 import { HStack } from "@navikt/ds-react";
 import { EnkelNavBox } from "../../../felleskomponenter/enkelNavBox";
+import { Spinner } from "../../../felleskomponenter/spinner";
 
 const EKSISTERENDE = "Eksisterende sak";
 const OPPRETT = "Opprett ny sak";
@@ -31,11 +32,12 @@ function FagsakVelger(props) {
     formValues,
     erJournalføring,
     nullstillFormVerdier = undefined,
+    fagsakerHentes = false,
   } = props;
   const [valgtVisning, setValgtVisning] = useState(EKSISTERENDE);
   const feltNavn = erJournalføring ? FormValuesJournalforing : FormValuesOpprettNySak;
   const dispatch = useDispatch();
-  const ingenSakerFinnes = fagsakListe.length === 0;
+  const ingenSakerFinnes = fagsakListe.length === 0 && !fagsakerHentes;
 
   useEffect(() => {
     if (nullstillFormVerdier) {
@@ -72,6 +74,7 @@ function FagsakVelger(props) {
 
   return (
     <div className="fagsakVelger">
+      {fagsakerHentes && <Spinner />}
       {ingenSakerFinnes ? (
         <>
           <Nav.Alert variant="info">Ingen eksisterende saker funnet. Du må opprette en ny sak.</Nav.Alert>
@@ -99,7 +102,7 @@ function FagsakVelger(props) {
         </Nav.RadioGroup>
       )}
 
-      {valgtVisning === EKSISTERENDE && (
+      {!fagsakerHentes && valgtVisning === EKSISTERENDE && (
         <Skjema.CustomRadioPanelGruppe
           feltNavn="saksnummer"
           radios={radioValg}
@@ -109,7 +112,7 @@ function FagsakVelger(props) {
           className="marginMellomCustomRadioPaneler"
         />
       )}
-      {valgtVisning === OPPRETT && <OpprettSak formValues={formValues} feltNavn={feltNavn} />}
+      {!fagsakerHentes && valgtVisning === OPPRETT && <OpprettSak formValues={formValues} feltNavn={feltNavn} />}
     </div>
   );
 }
@@ -121,6 +124,7 @@ FagsakVelger.propTypes = {
   formValues: PT.object.isRequired,
   erJournalføring: PT.bool.isRequired,
   nullstillFormVerdier: PT.func,
+  fagsakerHentes: PT.bool,
 };
 
 export default FagsakVelger;
