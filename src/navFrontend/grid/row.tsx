@@ -1,3 +1,4 @@
+/* eslint-disable react/prefer-stateless-function */
 import classNames from "classnames";
 import { Component, ComponentClass, HTMLAttributes } from "react";
 
@@ -7,7 +8,9 @@ export interface RowProps extends HTMLAttributes<HTMLDivElement> {
   className?: string;
 }
 
-// eslint-disable-next-line react/prefer-stateless-function
+/**
+ * @deprecated Bruk aksel primitives (HGrid, HStack, VStack, Box) i stedet.
+ */
 class Row extends Component<RowProps> {
   render() {
     const { children, className, ...props } = this.props;
