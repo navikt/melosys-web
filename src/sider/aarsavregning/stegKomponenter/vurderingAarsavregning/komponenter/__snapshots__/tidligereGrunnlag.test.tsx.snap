@@ -17,6 +17,7 @@ exports[`TidligereGrunnlagAccordion > beregning med grunnlag snapshot test 1`] =
       </strong>
     </p>
     <section
+      data-color="neutral"
       aria-label="trygdeavgiftdetaljer"
       class="navds-expansioncard beregnetTrygdeavgiftDetaljer navds-expansioncard--small navds-expansioncard--open"
     >
@@ -311,7 +312,11 @@ exports[`TidligereGrunnlagAccordion > uten grunnlag snapshot test 1`] = `
     <h3 class="navds-heading navds-heading--small">
       Tidligere grunnlag
     </h3>
-    <div class="navds-alert navds-alert--info navds-alert--small">
+    <div
+      data-color="info"
+      data-variant="info"
+      class="navds-alert navds-alert--info navds-alert--small"
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="1em"
