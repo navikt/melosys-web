@@ -33,11 +33,13 @@ describe("KnyttTilSak", () => {
         saksstatus: {
           kode: MKV.Koder.saksstatuser.UNDER_BEHANDLING,
         },
+        saksnummer: "123",
         behandlingOversikter: [
           {
             behandlingsstatus: { kode: MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET },
             behandlingstype: { kode: MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG },
             behandlingstema: { kode: MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV },
+            behandlingID: 1,
           },
         ],
       },
@@ -45,14 +47,9 @@ describe("KnyttTilSak", () => {
         opprettBehandling: null,
         behandlingstema: null,
         behandlingstype: null,
-        journalforingGjelder: null,
+        journalforingGjelder: MKV.Koder.aktoersroller.BRUKER,
       },
       feltNavn: JournalforingValues,
-      journalforingGjelder: MKV.Koder.aktoersroller.BRUKER,
-      behandlingstyper: [],
-      opprettBehandling: false,
-      behandlingstema: undefined,
-      behandlingstype: "",
       changeField: vi.fn(),
       erJournalføring: true,
     };
@@ -144,9 +141,8 @@ describe("KnyttTilSak", () => {
     expect(screen.getByText("Tidligere behandling er avsluttet.")).toBeInTheDocument();
   });
 
-  it("viser behandlingstypevalg når behandlingstema er undefined", async () => {
-    props.behandlingstema = undefined;
-    props.formValues.behandlingstema = undefined;
+  it("viser behandlingstypevalg når behandlingstema er valgt", async () => {
+    props.formValues.behandlingstema = "YRKESAKTIV";
     props.formValues.opprettBehandling = true;
 
     renderWithProviders(<WrappedKnyttTilSak {...props} />);
@@ -158,5 +154,21 @@ describe("KnyttTilSak", () => {
     const radioButtons = within(behandlingstypeGroup).getAllByRole("radio");
     expect(radioButtons).toHaveLength(1);
     expect(within(behandlingstypeGroup).getByLabelText("Årsavregning")).toBeInTheDocument();
+  });
+
+  it("håndterer feil ved henting av behandlingstyper", async () => {
+    mocks.hentBehandlingstyperForKnyttTilSak.mockRejectedValueOnce(new Error("API Error"));
+    props.formValues.behandlingstema = "YRKESAKTIV";
+    props.formValues.opprettBehandling = true;
+
+    renderWithProviders(<WrappedKnyttTilSak {...props} />);
+
+    await waitFor(() => {
+      expect(mocks.hentBehandlingstyperForKnyttTilSak).toHaveBeenCalled();
+      const behandlingstypeGroup = screen.queryByRole("group", { name: "Behandlingstype" });
+      if (behandlingstypeGroup) {
+        expect(within(behandlingstypeGroup).queryAllByRole("radio")).toHaveLength(0);
+      }
+    });
   });
 });
