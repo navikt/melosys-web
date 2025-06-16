@@ -19,6 +19,8 @@ exports[`vedleggTable > snapshot test 1`] = `
       <tr class="navds-table__row navds-table__row--shade-on-hover">
         <td class="navds-table__data-cell navds-body-short navds-body-short--small">
           <a
+            data-color="accent"
+            data-variant="action"
             href="#"
             class="navds-link navds-link--action"
           >
@@ -29,6 +31,7 @@ exports[`vedleggTable > snapshot test 1`] = `
         </td>
         <td class="navds-table__data-cell icon__cell navds-body-short navds-body-short--small">
           <button
+            data-variant="tertiary"
             type="button"
             aria-label="Rediger vedlegg"
             title="Rediger vedlegg"
@@ -54,6 +57,7 @@ exports[`vedleggTable > snapshot test 1`] = `
             </span>
           </button>
           <button
+            data-variant="tertiary"
             type="button"
             aria-label="Slett vedlegg"
             title="Slett vedlegg"
@@ -101,12 +105,18 @@ exports[`vedleggTable > snapshot test 1`] = `
           </div>
           <div class="navds-modal__footer">
             <div class="container__knapperad">
-              <button class="navds-button navds-button--primary navds-button--small">
+              <button
+                data-variant="primary"
+                class="navds-button navds-button--primary navds-button--small"
+              >
                 <span class="navds-label navds-label--small">
                   Ja, slett
                 </span>
               </button>
-              <button class="navds-button navds-button--tertiary navds-button--small">
+              <button
+                data-variant="tertiary"
+                class="navds-button navds-button--tertiary navds-button--small"
+              >
                 <span class="navds-label navds-label--small">
                   Avbryt
                 </span>
@@ -118,6 +128,8 @@ exports[`vedleggTable > snapshot test 1`] = `
       <tr class="navds-table__row vedlegg navds-table__row--shade-on-hover">
         <td class="navds-table__data-cell navds-body-short navds-body-short--small">
           <a
+            data-color="accent"
+            data-variant="action"
             href="#"
             class="navds-link navds-link--action"
           >
@@ -130,6 +142,7 @@ exports[`vedleggTable > snapshot test 1`] = `
         </td>
         <td class="navds-table__data-cell icon__cell navds-body-short navds-body-short--small">
           <button
+            data-variant="tertiary"
             type="button"
             aria-label="Fjern vedlegg"
             title="Fjern vedlegg"

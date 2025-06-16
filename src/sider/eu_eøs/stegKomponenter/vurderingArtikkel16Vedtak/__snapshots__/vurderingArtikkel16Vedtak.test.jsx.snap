@@ -154,6 +154,8 @@ exports[`VurderingArtikkel16Vedtak > snapshot test 1`] = `
               <tr class="navds-table__row navds-table__row--shade-on-hover">
                 <td class="navds-table__data-cell navds-body-short navds-body-short--small">
                   <a
+                    data-color="accent"
+                    data-variant="action"
                     href="#"
                     class="navds-link navds-link--action"
                   >
@@ -172,12 +174,18 @@ exports[`VurderingArtikkel16Vedtak > snapshot test 1`] = `
     <div class="row">
       <div class="col col-xs-7">
         <div class="stegKnapper">
-          <button class="stegKnapper__bekreft navds-button navds-button--primary navds-button--small">
+          <button
+            data-variant="primary"
+            class="stegKnapper__bekreft navds-button navds-button--primary navds-button--small"
+          >
             <span class="navds-label navds-label--small">
               Fatt vedtak
             </span>
           </button>
-          <button class="stegKnapper__tilbake navds-button navds-button--tertiary navds-button--small">
+          <button
+            data-variant="tertiary"
+            class="stegKnapper__tilbake navds-button navds-button--tertiary navds-button--small"
+          >
             <span class="navds-button__icon">
               <svg
                 width="16"
