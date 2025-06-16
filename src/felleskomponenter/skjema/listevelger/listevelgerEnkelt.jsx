@@ -1,10 +1,10 @@
 import PT from "prop-types";
+import { v4 as uuid } from "uuid";
 
 import * as Nav from "../../../navFrontend";
 import * as KV from "../../../kodeverk";
 
 import "./listevelger.css";
-import * as Utils from "../../../utils/index";
 
 /** Enkeltlisten representerer ETT listevalg hvor brukeren kan velge fra listen eller skrive
  * inn sin egen verdi.
@@ -32,7 +32,7 @@ function ListevelgerEnkelt({ input, label, meta, muligeValg = [], placeholder = 
       />
       <datalist id={`dataliste-${inputProps.name}`}>
         {muligeValg.map((valg) => (
-          <option key={Utils._uuid()} value={KV.objektTilTerm(valg)} label={KV.objektTilTerm(valg)} />
+          <option key={uuid()} value={KV.objektTilTerm(valg)} label={KV.objektTilTerm(valg)} />
         ))}
       </datalist>
     </div>

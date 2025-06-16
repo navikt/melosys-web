@@ -3,6 +3,7 @@ import { withRouter } from "react-router-dom";
 import PT from "prop-types";
 import { connect } from "react-redux";
 import * as EKV from "eessi-kodeverk";
+import { v4 as uuid } from "uuid";
 
 import MKV from "../../../../melosyskodeverk";
 
@@ -337,7 +338,7 @@ function Saksopplysninger({
     }
   };
 
-  const unikRadioButtonGruppeID = Utils._uuid();
+  const unikRadioButtonGruppeID = uuid();
 
   return (
     <div>

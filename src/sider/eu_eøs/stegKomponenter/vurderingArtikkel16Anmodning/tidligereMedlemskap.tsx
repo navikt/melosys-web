@@ -1,12 +1,12 @@
 import { formatterDatoTilNorsk } from "../../../../utils/dato";
 import * as Nav from "../../../../navFrontend";
+import { v4 as uuid } from "uuid";
 import { FieldArray, WrappedFieldArrayProps } from "redux-form";
 import { Medlemsperiode } from "../../../../services/modules/behandlinger/behandling";
 import { useEffect } from "react";
 // Removed useDispatch import from "react-redux";
 import { useDispatch } from "../../../../hooks";
 import { behandlingsperioderOperations } from "../../../../ducks/behandlingsperioder";
-import * as Utils from "../../../../utils";
 
 type TidligereMedlemskapsperioderProps = TidligereMedlemskapProps & WrappedFieldArrayProps<number>;
 function TidligereMedlemskapsperioder({ medlemskap, redigerbart, fields, land }: TidligereMedlemskapsperioderProps) {
@@ -44,7 +44,7 @@ function TidligereMedlemskapsperioder({ medlemskap, redigerbart, fields, land }:
       {medlemskap?.perioderMed?.map((periodeMed) => {
         const { periodeID, periode } = periodeMed;
         return (
-          <Nav.Checkbox key={Utils._uuid()} value={periodeID} onChange={() => onChange(periodeID)}>
+          <Nav.Checkbox key={uuid()} value={periodeID} onChange={() => onChange(periodeID)}>
             {`Periode: ${formatterDatoTilNorsk(periode.fom)} - ${formatterDatoTilNorsk(periode.tom)}`}
           </Nav.Checkbox>
         );

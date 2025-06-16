@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import PT from "prop-types";
 import classnames from "classnames";
+import { v4 as uuid } from "uuid";
 
 import MKV from "../../../melosyskodeverk";
 import * as KV from "../../../kodeverk";
@@ -32,7 +33,7 @@ function Avklaringer({ avklaringer = [] }) {
           }
           const cl = classnames({ liste__element: true, [iconClassName]: true });
           return (
-            <li key={Utils._uuid()} className={cl}>
+            <li key={uuid()} className={cl}>
               {tekst}
             </li>
           );

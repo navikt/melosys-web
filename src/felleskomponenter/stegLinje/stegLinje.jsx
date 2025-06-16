@@ -1,9 +1,9 @@
 import PT from "prop-types";
+import { v4 as uuid } from "uuid";
 import { connect } from "react-redux";
 
 import StegIkon from "./stegIkon";
 import "./stegLinje.css";
-import * as Utils from "../../utils/index";
 
 // TODO: Skrives om i MELOSYS-6023, hvorfor er Steglinje en <ul> ???
 function StegLinje(props) {
@@ -11,7 +11,7 @@ function StegLinje(props) {
 
   const stegKnapper = steg.map((item, index) => (
     <StegIkon
-      key={Utils._uuid()}
+      key={uuid()}
       onClick={() => props.stegKlikk(index)}
       id={item.id}
       tittel={item.tittel}

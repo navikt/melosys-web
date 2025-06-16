@@ -1,3 +1,4 @@
+import { v4 as uuid } from "uuid";
 import * as Utils from "../../../../utils";
 import * as Nav from "../../../../navFrontend";
 import * as MPT from "../../../../proptypes";
@@ -93,7 +94,7 @@ function Arbeidsforholdene(props) {
   return (
     <div>
       {arbeidsforholdene.map((arbeidsforholdet) => (
-        <Arbeidsforholdet key={Utils._uuid()} arbeidsforholdet={arbeidsforholdet} />
+        <Arbeidsforholdet key={uuid()} arbeidsforholdet={arbeidsforholdet} />
       ))}
     </div>
   );
