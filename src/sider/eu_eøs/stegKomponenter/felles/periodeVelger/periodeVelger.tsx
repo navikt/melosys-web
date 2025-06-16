@@ -7,13 +7,12 @@ import * as Utils from "../../../../../utils";
 import { UkjentSluttdatoMedlemskapsperiode } from "../../../../ftrl/saksbehandling/stegKomponenter/vurderingPeriode/komponenter/ukjentSluttdatoMedlemskapsperiode";
 import { useSelector } from "react-redux";
 import { oppsummertfaktaSelectors } from "../../../../../ducks/oppsummertfakta";
-import moment from "moment";
 
 export interface PeriodeVelgerProps {
   redigerbart: boolean;
   control: Control;
   formValues: any;
-  onUkjentDato: (a: any, b: any) => void;
+  onUkjentDato: (name: string, value: string) => void;
 }
 
 export function PeriodeOgLandVelger({ redigerbart, control, formValues, onUkjentDato }: PeriodeVelgerProps) {
@@ -21,16 +20,26 @@ export function PeriodeOgLandVelger({ redigerbart, control, formValues, onUkjent
     oppsummertfaktaSelectors.UkjentSluttdatoMedlemskapsperiodeSelector,
   );
 
+  console.log("PeriodeOgLandVelger formValues", formValues);
+
   return (
     <div className="perioder">
       <Nav.Heading size="xsmall">Periode</Nav.Heading>
+
       <UkjentSluttdatoMedlemskapsperiode
         ukjentSluttdatoMedlemskapsperiode={ukjentSluttdatoMedlemskapsperiode || false}
-        onUkjentSluttdatoChange={() =>
-          onUkjentDato("tomDato", new Date(moment(formValues.fomDato).add(10, "years").toDate()))
-        }
+        onUkjentSluttdatoChange={() => {
+          const fomISODate = Utils.dato.formatterDatoTilISO(formValues.fomDato, "");
+          if (fomISODate) {
+            const fomDate = new Date(fomISODate);
+            const tomDate = new Date(fomDate);
+            tomDate.setFullYear(tomDate.getFullYear() + 10);
+            onUkjentDato("tomDato", Utils.dato.formatterDatoTilNorsk(tomDate.toISOString()));
+          }
+        }}
         erPensjonist={true}
       />
+
       <div className="skjema__panel">
         <Nav.Row className="skjema__panel__rad">
           <Nav.Column className="dato">
