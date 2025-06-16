@@ -1,5 +1,5 @@
 #!/bin/sh
-# Bygg opp en env-config.js-fil basert på miljøvariabler fra .env-filen
+# Bygg opp en env-config.mjs-fil basert på miljøvariabler fra .env-filen
 
 ENV_FILE="/app/.${ENVIRONMENT_NAME:-prod}.env"
 
@@ -10,16 +10,16 @@ fi
 
 echo "Leser filen $ENV_FILE"
 
-echo "window.env = {" > /usr/share/nginx/html/env-config.js
+echo "window.env = {" > /usr/share/nginx/html/env-config.mjs
 
 # Les hver linje i .env-filen
 while IFS='=' read -r key value
 do
   # Hopp over tomme linjer og linjer som starter med #
   if [ ! -z "$key" ] && [ "${key#\#}" = "$key" ]; then
-    # Legg til miljøvariabelen til env-config.js
-    echo "  $key: '$value'," >> /usr/share/nginx/html/env-config.js
+    # Legg til miljøvariabelen til env-config.mjs
+    echo "  $key: '$value'," >> /usr/share/nginx/html/env-config.mjs
   fi
 done < "$ENV_FILE"
 
-echo "};" >> /usr/share/nginx/html/env-config.js
+echo "};" >> /usr/share/nginx/html/env-config.mjs
