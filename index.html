@@ -9,14 +9,13 @@
     <script>
       const global = globalThis;
     </script>
-    <script
-      src="/env-config.mjs"
-      type="module"
-      onload="document.title = window.env.VITE_APP_NAME || 'Melosys';"
-    ></script>
+    <script type="module">
+      import "/env-config.mjs";
+      document.title = window.env.VITE_APP_NAME || "Melosys";
+    </script>
   </head>
   <body>
-    <noscript> You need to enable JavaScript to run this app. </noscript>
+    <noscript> You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
     <script type="module" src="./src/index.jsx"></script>
   </body>
