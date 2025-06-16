@@ -136,6 +136,7 @@ exports[`VurderingArtikkel16MottaSvar > snapshot test 1`] = `
     </form>
     <div class="stegKnapper">
       <button
+        data-variant="primary"
         class="stegKnapper__bekreft navds-button navds-button--primary navds-button--small navds-button--disabled"
         disabled
       >
@@ -143,7 +144,10 @@ exports[`VurderingArtikkel16MottaSvar > snapshot test 1`] = `
           Bekreft og fortsett
         </span>
       </button>
-      <button class="stegKnapper__tilbake navds-button navds-button--tertiary navds-button--small">
+      <button
+        data-variant="tertiary"
+        class="stegKnapper__tilbake navds-button navds-button--tertiary navds-button--small"
+      >
         <span class="navds-button__icon">
           <svg
             width="16"

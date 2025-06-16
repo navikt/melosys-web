@@ -9,7 +9,10 @@ exports[`Redigerbarliste > snapshot test 1`] = `
         term
       </div>
       <div class="col col-xs-6">
-        <button class="navds-button navds-button--secondary navds-button--small">
+        <button
+          data-variant="secondary"
+          class="navds-button navds-button--secondary navds-button--small"
+        >
           <span class="navds-button__icon">
             <svg
               contentscripttype="text/ecmascript"
