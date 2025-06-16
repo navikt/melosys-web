@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import * as Nav from "../../../../navFrontend";
 import * as Api from "../../../../services/api";
 import * as Mui from "../../../../felleskomponenter/ui";
+
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { vilkarOperations } from "../../../../ducks/vilkar";
 import { PeriodeOgLandVelger } from "../felles/periodeVelger/periodeVelger";
@@ -9,22 +10,13 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import vurdering_opplysninger from "./vurderingOpplysningerSchema";
 import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
+import { redigerbartSelectors } from "../../../../ducks/redigerbart";
 
-interface VurderingOpplysningerProps {
-  bekreftOgFortsett: () => void;
-  redigerbart: boolean;
-  oppfyllerInngangsvilkar: boolean;
-  inngangsvilkaar: Api.Vilkar.Vilkaar | undefined;
-}
-
-export function VurderingOpplysninger({
-  bekreftOgFortsett,
-  redigerbart,
-  oppfyllerInngangsvilkar,
-}: VurderingOpplysningerProps) {
+export function VurderingOpplysninger() {
   const dispatch = useDispatch();
   const behandlingID: number = useSelector(behandlingerSelectors.BehandlingIDSelector) as number;
   const soknadsperiode = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
+  const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const {
     control,
     watch,
@@ -36,17 +28,7 @@ export function VurderingOpplysninger({
   });
 
   const formValues = watch();
-
-  const bekreft = async () => {
-    if (!oppfyllerInngangsvilkar) {
-      await Api.Vilkar.overstyrInngangvilkaar(behandlingID);
-      await dispatch(vilkarOperations.hent(behandlingID));
-    }
-
-    // Kall til api så bekreft
-
-    bekreftOgFortsett();
-  };
+  const bekreft = async () => {};
 
   return (
     <>
@@ -55,6 +37,13 @@ export function VurderingOpplysninger({
       </Nav.Heading>
 
       <PeriodeOgLandVelger control={control} redigerbart={redigerbart} formValues={formValues} />
+
+      <Mui.StegKnapper
+        bekreftKnappProps={{
+          disabled: !redigerbart || !formIsValid,
+          onClick: bekreft,
+        }}
+      />
     </>
   );
 }

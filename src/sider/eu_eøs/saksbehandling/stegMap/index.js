@@ -38,7 +38,7 @@ import { STEG } from "../../../../felleskomponenter/stegvelger";
 
 export const stegMap = new Map([
   [STEG.INNGANG, Inngang],
-  [(STEG.AVSLAG_12_X_OG_16, Avslag_12_x_og_16)],
+  [STEG.AVSLAG_12_X_OG_16, Avslag_12_x_og_16],
   [STEG.ARTIKKEL_16_ANMODNING, Artikkel16Anmodning],
   [STEG.ARTIKKEL_16_MOTTA_SVAR, Artikkel16MottaSvar],
   [STEG.ARTIKKEL_16_VEDTAK, Artikkel16Vedtak],

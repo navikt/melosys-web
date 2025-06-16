@@ -51,6 +51,7 @@ export const skalViseSoknadsperiodeOgLand = (
   behandlingstype &&
   behandlingstema !== MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV &&
   behandlingstema !== MKV.Koder.behandlinger.behandlingstema.A1_ANMODNING_OM_UNNTAK_PAPIR &&
+  behandlingstema !== MKV.Koder.behandlinger.behandlingstema.PENSJONIST &&
   !skalViseIngenFlyt(
     sakstype,
     sakstema,

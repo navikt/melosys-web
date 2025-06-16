@@ -21,13 +21,14 @@ const lagUrlForEuEøsFlyter = (saksnummer: number | string, behandlingID: number
     case MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND:
     case MKV.Koder.behandlinger.behandlingstema.ARBEID_KUN_NORGE:
     case MKV.Koder.behandlinger.behandlingstema.ARBEID_NORGE_BOSATT_ANNET_LAND:
-    case MKV.Koder.behandlinger.behandlingstema.PENSJONIST:
       return `/${EU_EOS}/saksbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
     case MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_NORGE:
     case MKV.Koder.behandlinger.behandlingstema.BESLUTNING_LOVVALG_ANNET_LAND:
       return `/${EU_EOS}/vurderutpeking/${saksnummer}/?behandlingID=${behandlingID}`;
     case MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV:
       return `/${EU_EOS}/ikkeYrkesaktiv/${saksnummer}/?behandlingID=${behandlingID}`;
+    case MKV.Koder.behandlinger.behandlingstema.PENSJONIST:
+      return `/${EU_EOS}/pensjonist/${saksnummer}/?behandlingID=${behandlingID}`;
     default:
       return flytFinnesIkkeForBehandlingPath;
   }

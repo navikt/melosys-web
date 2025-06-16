@@ -4,6 +4,9 @@ import * as Forms from "../../../../../felleskomponenter/forms";
 import "./periodeVelger.css";
 import MKV from "../../../../../melosyskodeverk";
 import * as Utils from "../../../../../utils";
+import { UkjentSluttdatoMedlemskapsperiode } from "../../../../ftrl/saksbehandling/stegKomponenter/vurderingPeriode/komponenter/ukjentSluttdatoMedlemskapsperiode";
+import { useSelector } from "react-redux";
+import { oppsummertfaktaSelectors } from "../../../../../ducks/oppsummertfakta";
 
 export interface PeriodeVelgerProps {
   redigerbart: boolean;
@@ -12,9 +15,18 @@ export interface PeriodeVelgerProps {
 }
 
 export function PeriodeOgLandVelger({ redigerbart, control, formValues }: PeriodeVelgerProps) {
+  const ukjentSluttdatoMedlemskapsperiode = useSelector(
+    oppsummertfaktaSelectors.UkjentSluttdatoMedlemskapsperiodeSelector,
+  );
+
   return (
     <div className="perioder">
       <Nav.Heading size="xsmall">Periode</Nav.Heading>
+      <UkjentSluttdatoMedlemskapsperiode
+        ukjentSluttdatoMedlemskapsperiode={ukjentSluttdatoMedlemskapsperiode || false}
+        onUkjentSluttdatoChange={() => {}}
+        erPensjonist={true}
+      />
       <div className="skjema__panel">
         <Nav.Row className="skjema__panel__rad">
           <Nav.Column className="dato">
