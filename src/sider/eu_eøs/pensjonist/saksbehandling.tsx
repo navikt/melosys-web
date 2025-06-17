@@ -60,14 +60,11 @@ function Saksbehandling({ match, location }: Props) {
     const { saksnr } = match.params;
 
     try {
-      console.log("Saksnummer:", saksnr);
       dispatch(fagsakOperations.hent(saksnr));
 
       const response = await dispatch(behandlingerOperations.hentBehandling(behandlingID));
       // @ts-expect-error generisk beskrivelse
       const behandling = response.data;
-
-      console.log("Saksnummer:", saksnr);
 
       if (!behandling) return false;
 

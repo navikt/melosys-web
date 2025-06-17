@@ -32,8 +32,6 @@ export function VurderingOpplysninger() {
   const formValues = watch();
   const bekreft = async () => {};
 
-  console.log("VurderingOpplysninger formValues:", formValues);
-
   return (
     <>
       <Nav.Heading level="1" className="stegvelgertittel">

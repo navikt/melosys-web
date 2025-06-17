@@ -230,9 +230,6 @@ function OpprettNySak({
           : undefined,
     };
 
-    console.log("Lager ny sak da", fellesData);
-    console.log("Saksnummer", saksnummer);
-
     if (saksnummer !== "-1") {
       await lagNyBehandlingForSak(saksnummer, fellesData);
     } else {
