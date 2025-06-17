@@ -6,10 +6,16 @@
  */
 
 import { createSelector } from "reselect";
-import moment from "moment/moment";
 
 import MKV from "../../melosyskodeverk";
-import { datoDiff, sorterEtterISOFomDato } from "../../utils/dato";
+import {
+  datoDiff,
+  sorterEtterISOFomDato,
+  leggTilMaaneder,
+  trekkFraMaaneder,
+  iDag,
+  erDatoForDato,
+} from "../../utils/dato";
 import * as KV from "../../kodeverk";
 import * as mottatteOpplysningerSelectors from "../mottatteOpplysninger/selectors";
 import * as Utils from "../../utils";
@@ -199,7 +205,7 @@ const filtrerOgSpreInntekt = (relevantPeriode, orgnr, inntekter) => {
   return Array(antallMaaneder)
     .fill({})
     .map((verdi, index) => {
-      const aarMaaned = moment(startDato).add(index, "months").format("YYYY-MM");
+      const aarMaaned = leggTilMaaneder(startDato, index);
 
       const eksisterendeInntektFunnetVedIndeks = filtrerteInntekterFraOpplysningspliktig.findIndex(
         (enkeltInntekt) => enkeltInntekt.aarMaaned === aarMaaned,
@@ -383,12 +389,10 @@ export const ArbeidsgivereNorgeSelector = createSelector(
       soknadPeriodeSlutt = sedLovvalgsperiodeTom;
     }
 
-    const relevantPeriodeStart = moment(soknadPeriodeStart, "YYYY-MM-DD").subtract(6, "months").format("YYYY-MM-DD");
+    const relevantPeriodeStart = trekkFraMaaneder(soknadPeriodeStart, 6);
 
-    let relevantPeriodeSlutt =
-      moment(soknadPeriodeSlutt, "YYYY-MM-DD") < moment() ? soknadPeriodeSlutt : moment().format("YYYY-MM-DD");
-    if (moment(relevantPeriodeSlutt, "YYYY-MM-DD").isBefore(moment(soknadPeriodeStart, "YYYY-MM-DD")))
-      relevantPeriodeSlutt = soknadPeriodeStart;
+    let relevantPeriodeSlutt = erDatoForDato(soknadPeriodeSlutt, iDag()) ? soknadPeriodeSlutt : iDag();
+    if (erDatoForDato(relevantPeriodeSlutt, soknadPeriodeStart)) relevantPeriodeSlutt = soknadPeriodeStart;
 
     const relevantPeriode = {
       fom: relevantPeriodeStart,

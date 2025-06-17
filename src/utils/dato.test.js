@@ -1,4 +1,4 @@
-/* eslint-disable */
+import dayjs from "dayjs";
 
 import {
   vaskInputDato,
@@ -18,20 +18,10 @@ import {
   erEtter,
   sorterEtterNorskFomDato,
   sorterEtterISOFomDato,
+  sorterElementerEtterDato,
 } from "./dato";
 
-import { vi } from "vitest";
-import moment from "moment/moment";
-
-moment.updateLocale("nb", {
-  monthsShort: ["jan", "feb", "mar", "apr", "mai", "jun", "jul", "aug", "sep", "okt", "nov", "des"],
-});
-
 describe("dato.js:", () => {
-  afterEach(() => {
-    vi.useRealTimers();
-  });
-
   describe("vaskInputDato", () => {
     test("godtar alle tillatte kortdatoformater", () => {
       const tillatteDatoer = [
@@ -272,9 +262,9 @@ describe("dato.js:", () => {
       expect(datoDiff(dato1, dato2, "days")).toBe(2);
     });
 
-    test("dato i moment-format fungerer", () => {
+    test("dato i dayjs-format fungerer", () => {
       const dato1 = "2018-08-01";
-      const dato2 = moment("2018-08-04", "YYYY-MM-DD");
+      const dato2 = dayjs("2018-08-04");
       expect(datoDiff(dato1, dato2, "days")).toBe(4);
     });
 
@@ -415,6 +405,21 @@ describe("dato.js:", () => {
       const dato = "28.02.2019";
       const forventetDato = "01.03.2019";
       expect(plussEnDag(dato)).toBe(forventetDato);
+    });
+  });
+
+  describe("sortElementerEtterDato", () => {
+    it("sorterer korrekt", () => {
+      const forsteOppgave = { behandling: { registrertDato: "2019-12-11T16:30:00.622Z" } };
+      const andreOppgave = { behandling: { registrertDato: "2019-12-11T16:30:01.622Z" } };
+
+      const sortBehandlingerDescending = sorterElementerEtterDato("descending", "behandling.registrertDato");
+      const sortBehandlingerAscending = sorterElementerEtterDato("ascending", "behandling.registrertDato");
+
+      expect(sortBehandlingerDescending(forsteOppgave, andreOppgave)).toBeGreaterThan(0);
+      expect(sortBehandlingerDescending(andreOppgave, forsteOppgave)).toBeLessThan(0);
+      expect(sortBehandlingerAscending(forsteOppgave, andreOppgave)).toBeLessThan(0);
+      expect(sortBehandlingerAscending(andreOppgave, forsteOppgave)).toBeGreaterThan(0);
     });
   });
 });

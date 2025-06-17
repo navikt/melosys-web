@@ -200,9 +200,9 @@ describe("mottatteOpplysninger reducer", () => {
         arbeidstakerTidligereUtsendt24Mnd: true,
         arbeidsgiverBetalerArbeidsgiveravgift: true,
         trygdeavgiftTrukketGjennomSkatt: true,
-        trygdeavgiftTrukketGjennomSkattDato: "11.11.11",
-        oppholdUtlandFom: "11.11.11",
-        oppholdUtlandTom: "11.11.11",
+        trygdeavgiftTrukketGjennomSkattDato: "01.11.2023",
+        oppholdUtlandFom: "01.01.2023",
+        oppholdUtlandTom: "31.12.2023",
         oppholdsland: [],
         ektefelleEllerBarnINorge: "test",
         studentSemester: "test",
@@ -288,8 +288,8 @@ describe("mottatteOpplysninger reducer", () => {
           landkoder: [DK],
           flereLandUkjentHvilke: true,
         },
-        soknadsperiodeFom: "11.11.11",
-        soknadsperiodeTom: "11.11.11",
+        soknadsperiodeFom: "01.01.2023",
+        soknadsperiodeTom: "31.12.2023",
         erSelvstendig: true,
         selvstendigForetak: [
           {
@@ -396,12 +396,12 @@ describe("mottatteOpplysninger reducer", () => {
             arbeidstakerTidligereUtsendt24Mnd: true,
             arbeidsgiverBetalerArbeidsgiveravgift: true,
             trygdeavgiftTrukketGjennomSkatt: true,
-            trygdeavgiftTrukketGjennomSkattDato: "2011-11-11",
+            trygdeavgiftTrukketGjennomSkattDato: "2023-11-01",
           },
           oppholdUtland: {
             oppholdsPeriode: {
-              fom: "2011-11-11",
-              tom: "2011-11-11",
+              fom: "2023-01-01",
+              tom: "2023-12-31",
             },
             oppholdslandkoder: [],
             ektefelleEllerBarnINorge: null,
@@ -486,8 +486,8 @@ describe("mottatteOpplysninger reducer", () => {
             flereLandUkjentHvilke: true,
           },
           periode: {
-            fom: "2011-11-11",
-            tom: "2011-11-11",
+            fom: "2023-01-01",
+            tom: "2023-12-31",
           },
           representantIUtlandet: {
             representantNavn: "Representant I Danmark",

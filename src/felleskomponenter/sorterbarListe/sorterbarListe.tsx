@@ -2,7 +2,7 @@ import { ElementType, useState } from "react";
 
 import * as Nav from "../../navFrontend";
 import * as Utils from "../../utils";
-import sorterElementerEtterDato from "./sorterElementerEtterDato";
+import { sorterElementerEtterDato } from "../../utils/dato";
 
 interface SorterbarListeProps {
   elementer?: object[];

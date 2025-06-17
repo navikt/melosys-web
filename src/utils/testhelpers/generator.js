@@ -48,7 +48,7 @@ class Generator {
   getMonthDayYear = (date) =>
     `${String(date.getDate()).padStart(2, "0")}${String(date.getMonth()).padStart(2, "0")}${String(
       date.getFullYear(),
-    ).substr(2, 2)}`;
+    ).slice(2, 4)}`;
 
   generatePartialBirthNumber = () => {
     const birthDate = this.generateRandomBirthDate();

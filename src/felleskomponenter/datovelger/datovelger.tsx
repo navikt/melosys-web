@@ -3,7 +3,6 @@ import classNames from "classnames";
 import { DatePicker, useDatepicker } from "@navikt/ds-react";
 import * as Utils from "../../utils";
 import "./datovelger.css";
-import moment from "moment";
 import { SKRIV_INN_GYLDIG_DATO } from "../../kodeverk/feilmeldinger";
 
 interface DatovelgerProps {
@@ -36,8 +35,8 @@ function Datovelger({
 }: DatovelgerProps) {
   const [erUgyldigDato, setErUgyldigDato] = useState<boolean>(false);
   const { datepickerProps, inputProps } = useDatepicker({
-    fromDate: minDate ?? new Date(moment(moment.now()).subtract(50, "years").toDate()),
-    toDate: maxDate ?? new Date(moment(moment.now()).add(50, "years").toDate()),
+    fromDate: minDate ?? Utils.dato.datoForAarSiden(50),
+    toDate: maxDate ?? Utils.dato.datoOmAar(50),
     locale: "nb",
     defaultSelected: value,
     defaultMonth: minDate ?? value,
