@@ -14,7 +14,7 @@ export interface PeriodeVelgerProps {
   control: Control;
   formValues: any;
   setValue: (name: string, value: any) => void;
-  trigger: (name: string) => Promise<void>;
+  trigger: (name: string) => void;
 }
 
 export function PeriodeOgLandVelger({ redigerbart, control, formValues, setValue, trigger }: PeriodeVelgerProps) {
@@ -35,7 +35,7 @@ export function PeriodeOgLandVelger({ redigerbart, control, formValues, setValue
         setValue("tomDato", Utils.dato.formatterDatoTilNorsk(tomDate.toISOString()));
       }
 
-      await trigger("tomDato");
+      trigger("tomDato");
     }
 
     dispatch(oppsummertfaktaOperations.lagreUkjentSluttdatoMedlemskapsperiode(behandlingID, ukjentSluttdato));
