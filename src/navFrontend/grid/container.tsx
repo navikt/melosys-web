@@ -1,3 +1,4 @@
+/* eslint-disable react/prefer-stateless-function */
 import classNames from "classnames";
 import { Component, ComponentClass, HTMLAttributes } from "react";
 
@@ -12,7 +13,9 @@ export interface ContainerProps extends HTMLAttributes<HTMLDivElement> {
   fluid?: boolean;
 }
 
-// eslint-disable-next-line react/prefer-stateless-function
+/**
+ * @deprecated Bruk aksel primitives (HGrid, HStack, VStack, Box) i stedet.
+ */
 class Container extends Component<ContainerProps> {
   render() {
     const { children, className, fluid, ...props } = this.props;
