@@ -1,6 +1,5 @@
 import { DokumentOversikt, Mottaksretning } from "Domene";
 import { change } from "redux-form";
-import { v4 as uuid } from "uuid";
 import { BodyShort } from "@navikt/ds-react";
 
 import MKV from "../../melosyskodeverk";
@@ -16,6 +15,7 @@ import PdfLink from "../pdfLink";
 import LagredeUtkast from "./sendBrev/brevutkast/lagredeUtkast";
 
 import "./sideDialogDokumenter.css";
+import * as Utils from "../../utils";
 
 interface MottaksretningIkonProps {
   mottaksretning: Mottaksretning;
@@ -76,10 +76,10 @@ function OversiktRad({
         <span>
           <PdfLink journalpostID={journalpostID} dokumentID={hoveddokument.dokumentID} tittel={hoveddokument.tittel} />
           {hoveddokument.logiskeVedlegg.map((logiskVedlegg) => (
-            <VedleggLink key={uuid()} journalpostID={journalpostID} dokument={{ tittel: logiskVedlegg }} />
+            <VedleggLink key={Utils._uuid()} journalpostID={journalpostID} dokument={{ tittel: logiskVedlegg }} />
           ))}
           {vedlegg.map((vedleggDokument) => (
-            <VedleggLink key={uuid()} journalpostID={journalpostID} dokument={vedleggDokument} />
+            <VedleggLink key={Utils._uuid()} journalpostID={journalpostID} dokument={vedleggDokument} />
           ))}
         </span>
       </Nav.Table.DataCell>
@@ -123,7 +123,7 @@ function SideDialogDokumenter({ behandlingID, dokumentOversikt, setAktivTab }: S
             </Nav.Table.Header>
             <Nav.Table.Body>
               {dokumentOversikt.map((oversikt) => (
-                <OversiktRad key={uuid()} dokumentOversikt={oversikt} />
+                <OversiktRad key={Utils._uuid()} dokumentOversikt={oversikt} />
               ))}
             </Nav.Table.Body>
           </Nav.Table>
