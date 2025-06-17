@@ -4,22 +4,26 @@ interface UkjentSluttdatoProps {
   ukjentSluttdatoMedlemskapsperiode: boolean;
   onUkjentSluttdatoChange: (checked: boolean) => void;
   erPensjonist?: boolean;
+  erEøsPensjonist?: boolean;
 }
 
 export function UkjentSluttdatoMedlemskapsperiode({
   ukjentSluttdatoMedlemskapsperiode,
   onUkjentSluttdatoChange,
   erPensjonist,
+  erEøsPensjonist,
 }: UkjentSluttdatoProps) {
+  const textForIkkeEøsPensjonist = erPensjonist
+    ? "Vedtaksbrevet skal ikke ha sluttdato"
+    : "Saken er flyttet fra avgiftssystemet og har ikke sluttdato";
+
   return (
     <div className="ukjentSluttdato">
       <Nav.Checkbox
         checked={ukjentSluttdatoMedlemskapsperiode}
         onChange={(e) => onUkjentSluttdatoChange(e.target.checked)}
       >
-        {erPensjonist
-          ? "Vedtaksbrevet skal ikke ha sluttdato"
-          : "Saken er flyttet fra avgiftssystemet og har ikke sluttdato"}
+        {erEøsPensjonist ? "Perioden har ikke sluttdato" : textForIkkeEøsPensjonist}
       </Nav.Checkbox>
       {ukjentSluttdatoMedlemskapsperiode && (
         <Nav.Alert variant="info" size="small" className="mt-2">

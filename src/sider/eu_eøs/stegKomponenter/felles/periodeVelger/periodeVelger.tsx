@@ -5,22 +5,41 @@ import "./periodeVelger.css";
 import MKV from "../../../../../melosyskodeverk";
 import * as Utils from "../../../../../utils";
 import { UkjentSluttdatoMedlemskapsperiode } from "../../../../ftrl/saksbehandling/stegKomponenter/vurderingPeriode/komponenter/ukjentSluttdatoMedlemskapsperiode";
-import { useSelector } from "react-redux";
-import { oppsummertfaktaSelectors } from "../../../../../ducks/oppsummertfakta";
+import { useDispatch, useSelector } from "react-redux";
+import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../../ducks/oppsummertfakta";
+import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 
 export interface PeriodeVelgerProps {
   redigerbart: boolean;
   control: Control;
   formValues: any;
-  onUkjentDato: (name: string, value: string) => void;
+  setValue: (name: string, value: any) => void;
+  trigger: (name: string) => Promise<void>;
 }
 
-export function PeriodeOgLandVelger({ redigerbart, control, formValues, onUkjentDato }: PeriodeVelgerProps) {
+export function PeriodeOgLandVelger({ redigerbart, control, formValues, setValue, trigger }: PeriodeVelgerProps) {
+  const dispatch = useDispatch();
+  const behandlingID: number = useSelector(behandlingerSelectors.BehandlingIDSelector);
+
   const ukjentSluttdatoMedlemskapsperiode = useSelector(
     oppsummertfaktaSelectors.UkjentSluttdatoMedlemskapsperiodeSelector,
   );
 
-  console.log("PeriodeOgLandVelger formValues", formValues);
+  const oppdaterSluttdato = async (ukjentSluttdato: boolean) => {
+    if (ukjentSluttdato) {
+      const fomISODate = Utils.dato.formatterDatoTilISO(formValues.fomDato, "");
+      if (fomISODate) {
+        const fomDate = new Date(fomISODate);
+        const tomDate = new Date(fomDate);
+        tomDate.setFullYear(tomDate.getFullYear() + 10);
+        setValue("tomDato", Utils.dato.formatterDatoTilNorsk(tomDate.toISOString()));
+      }
+
+      await trigger("tomDato");
+    }
+
+    dispatch(oppsummertfaktaOperations.lagreUkjentSluttdatoMedlemskapsperiode(behandlingID, ukjentSluttdato));
+  };
 
   return (
     <div className="perioder">
@@ -28,16 +47,8 @@ export function PeriodeOgLandVelger({ redigerbart, control, formValues, onUkjent
 
       <UkjentSluttdatoMedlemskapsperiode
         ukjentSluttdatoMedlemskapsperiode={ukjentSluttdatoMedlemskapsperiode || false}
-        onUkjentSluttdatoChange={() => {
-          const fomISODate = Utils.dato.formatterDatoTilISO(formValues.fomDato, "");
-          if (fomISODate) {
-            const fomDate = new Date(fomISODate);
-            const tomDate = new Date(fomDate);
-            tomDate.setFullYear(tomDate.getFullYear() + 10);
-            onUkjentDato("tomDato", Utils.dato.formatterDatoTilNorsk(tomDate.toISOString()));
-          }
-        }}
-        erPensjonist={true}
+        onUkjentSluttdatoChange={oppdaterSluttdato}
+        erEøsPensjonist={true}
       />
 
       <div className="skjema__panel">

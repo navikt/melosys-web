@@ -1,10 +1,7 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import * as Nav from "../../../../navFrontend";
-import * as Api from "../../../../services/api";
 import * as Mui from "../../../../felleskomponenter/ui";
 
-import { behandlingerSelectors } from "../../../../ducks/behandlinger";
-import { vilkarOperations } from "../../../../ducks/vilkar";
 import { PeriodeOgLandVelger } from "../felles/periodeVelger/periodeVelger";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
@@ -13,23 +10,29 @@ import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysn
 import { redigerbartSelectors } from "../../../../ducks/redigerbart";
 
 export function VurderingOpplysninger() {
-  const dispatch = useDispatch();
-  const behandlingID: number = useSelector(behandlingerSelectors.BehandlingIDSelector) as number;
   const soknadsperiode = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const {
     control,
     watch,
     setValue,
+    trigger,
     formState: { isValid: formIsValid },
   } = useForm({
     resolver: yupResolver(vurdering_opplysninger),
-    mode: "onChange",
+    mode: "all",
+    defaultValues: {
+      fomDato: "",
+      tomDato: "",
+      bostedsland: "",
+    },
     context: { soknadsperiode },
   });
 
   const formValues = watch();
   const bekreft = async () => {};
+
+  console.log("VurderingOpplysninger formValues:", formValues);
 
   return (
     <>
@@ -41,7 +44,8 @@ export function VurderingOpplysninger() {
         control={control}
         redigerbart={redigerbart}
         formValues={formValues}
-        onUkjentDato={setValue}
+        setValue={setValue}
+        trigger={trigger}
       />
 
       <Mui.StegKnapper
