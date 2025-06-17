@@ -69,7 +69,7 @@ export function PeriodeOgLandVelger({ redigerbart, control, formValues, setValue
               control={control}
               name="tomDato"
               aria-label="Til og med"
-              readOnly={!redigerbart}
+              readOnly={!redigerbart || ukjentSluttdatoMedlemskapsperiode}
             />
           </Nav.Column>
           <Nav.Column className="brederefelt">

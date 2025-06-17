@@ -23,7 +23,7 @@ export function UkjentSluttdatoMedlemskapsperiode({
         checked={ukjentSluttdatoMedlemskapsperiode}
         onChange={(e) => onUkjentSluttdatoChange(e.target.checked)}
       >
-        {erEøsPensjonist ? "Perioden har ikke sluttdato" : textForIkkeEøsPensjonist}
+        {erEøsPensjonist ? "Det er ikke oppgitt en sluttdato. Perioden er åpen." : textForIkkeEøsPensjonist}
       </Nav.Checkbox>
       {ukjentSluttdatoMedlemskapsperiode && (
         <Nav.Alert variant="info" size="small" className="mt-2">
