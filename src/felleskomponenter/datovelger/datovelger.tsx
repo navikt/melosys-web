@@ -1,4 +1,4 @@
-import { ChangeEvent, FocusEventHandler, ReactNode, useId, useState } from "react";
+import { ChangeEvent, FocusEvent, FocusEventHandler, ReactNode, useId, useState } from "react";
 import classNames from "classnames";
 import { DatePicker, useDatepicker } from "@navikt/ds-react";
 import * as Utils from "../../utils";
@@ -62,6 +62,27 @@ function Datovelger({
     onChange(event.target.value);
   };
 
+  const handleOnBlur = (event: FocusEvent<HTMLInputElement>) => {
+    const currentValue = event.target.value.trim();
+
+    if (currentValue && !readOnly) {
+      const formattedValue = Utils.dato.vaskOgFormatterDatoTilNorsk(currentValue, "");
+      if (formattedValue && formattedValue !== currentValue) {
+        if (inputProps?.onChange) {
+          const syntheticEvent = {
+            ...event,
+            target: { ...event.target, value: formattedValue },
+          } as ChangeEvent<HTMLInputElement>;
+          inputProps.onChange(syntheticEvent);
+        }
+      }
+    }
+
+    if (onBlur) {
+      onBlur(event);
+    }
+  };
+
   const datovelgerID = useId();
   return (
     <div className="datovelger">
@@ -76,7 +97,7 @@ function Datovelger({
             datovelger__input_feil: feil || erUgyldigDato,
           })}
           size="small"
-          onBlur={onBlur}
+          onBlur={handleOnBlur}
           readOnly={readOnly}
           onChange={handleOnChange}
         />

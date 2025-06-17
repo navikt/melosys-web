@@ -1,6 +1,7 @@
 import { createSelector } from "reselect";
 import { RootState } from "AppTypes";
 import { FagsakOppsummering } from "../../services/modules/types";
+import { STATUS } from "../../services/utils";
 
 /**
  * Selectors
@@ -12,4 +13,9 @@ import { FagsakOppsummering } from "../../services/modules/types";
 export const FagsakSokSelector = createSelector(
   (state: RootState) => (state.sok.data.fagsakListe ? state.sok.data.fagsakListe : []),
   (sokResultat: FagsakOppsummering[]) => sokResultat || [],
+);
+
+export const SokPendingSelector = createSelector(
+  (state: RootState) => state.sok.status,
+  (status) => status === STATUS.PENDING,
 );

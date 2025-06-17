@@ -84,6 +84,7 @@ function JournalforingForm({
   avsenderIDFraJournalpost = "",
   avsenderNavnFraJournalpost = "",
   mottaksKanalErElektronisk,
+  fagsakerHentes,
 }) {
   const visForvaltningsmelding = skalViseForvaltningsmelding(formValues, fagsakListe);
   const visFagsakVelger = formValues?.brukerNavn || formValues?.virksomhetNavn;
@@ -167,6 +168,7 @@ function JournalforingForm({
               settJournalforingHensikt={settJournalforingHensikt}
               landkoder={landkoder}
               formValues={formValues}
+              fagsakerHentes={fagsakerHentes}
             />
           }
         />
@@ -222,6 +224,7 @@ JournalforingForm.propTypes = {
   avsenderNavnFraJournalpost: PT.string,
   mottaksKanalErEessi: PT.bool.isRequired,
   mottaksKanalErElektronisk: PT.bool.isRequired,
+  fagsakerHentes: PT.bool,
 };
 
 const toVedleggMedProps = (vedlegg) =>
@@ -261,6 +264,7 @@ const mapStateToProps = (state) => ({
     forvaltningsmeldingMottaker: null,
   },
   fagsakListe: sokSelectors.FagsakSokSelector(state),
+  fagsakerHentes: sokSelectors.SokPendingSelector(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
