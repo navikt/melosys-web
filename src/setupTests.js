@@ -25,7 +25,7 @@ const fetchMocker = createFetchMock(vi);
 fetchMocker.enableMocks();
 
 global.window.env = {
-  VITE_APP_NAME: "IKKE_VIKTIG",
+  APP_NAME: "IKKE_VIKTIG",
   API_BASE_URL: "/api/",
   TRYGDEAVTALE_FLYT_BASE_URL: "/trygdeavtale-flyt/",
   FAKTURERINGSKOMPONENTEN_FLYT_BASE_URL: "/faktureringskomponenten/",
