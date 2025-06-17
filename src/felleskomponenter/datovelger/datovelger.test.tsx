@@ -33,7 +33,7 @@ describe("Datovelger", () => {
     const datePicker = screen.getByRole("textbox") as HTMLInputElement;
     fireEvent.change(datePicker, { target: { value: "21.03.2024 " } });
 
-    expect(datePicker.value).toBe("21.03.2024");
+    expect(dato).toEqual(Utils.dato.norskStringTilDate("21.03.2024"));
   });
 
   it("viser riktige verdier dersom datovelger er disabled", () => {

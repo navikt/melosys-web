@@ -80,7 +80,7 @@ function Datovelger({
           onBlur={onBlur}
           readOnly={readOnly}
           onChange={handleOnChange}
-          value={value ? Utils.dato.formatterDatoTilNorsk(value, false) : " "}
+          value={value ? Utils.dato.formatterDatoTilNorsk(value, false) : ""}
         />
       </DatePicker>
       {visFeil && (feil || erUgyldigDato) && (
