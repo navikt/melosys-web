@@ -37,7 +37,7 @@ export function VurderingOpplysninger() {
   return (
     <>
       <Nav.Heading level="1" className="stegvelgertittel">
-        Oppgi opplysninger fra attesten
+        Oppgi opplysninger fra attest/S1
       </Nav.Heading>
 
       <PeriodeOgLandVelger
