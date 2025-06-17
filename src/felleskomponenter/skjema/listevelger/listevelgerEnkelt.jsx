@@ -4,7 +4,7 @@ import * as Nav from "../../../navFrontend";
 import * as KV from "../../../kodeverk";
 
 import "./listevelger.css";
-import * as Utils from "../../../utils/index";
+import * as Utils from "../../../utils";
 
 /** Enkeltlisten representerer ETT listevalg hvor brukeren kan velge fra listen eller skrive
  * inn sin egen verdi.
