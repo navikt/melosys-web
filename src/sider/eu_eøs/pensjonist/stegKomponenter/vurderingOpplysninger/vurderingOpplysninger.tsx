@@ -1,13 +1,13 @@
 import { useSelector } from "react-redux";
-import * as Nav from "../../../../navFrontend";
-import * as Mui from "../../../../felleskomponenter/ui";
+import * as Nav from "../../../../../navFrontend";
+import * as Mui from "../../../../../felleskomponenter/ui";
 
-import { PeriodeOgLandVelger } from "../felles/periodeVelger/periodeVelger";
+import { PeriodeOgLandVelger } from "./komponenter/periodeVelger/periodeVelger";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import vurdering_opplysninger from "./vurderingOpplysningerSchema";
-import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
-import { redigerbartSelectors } from "../../../../ducks/redigerbart";
+import { mottatteOpplysningerSelectors } from "../../../../../ducks/mottatteOpplysninger";
+import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 
 export function VurderingOpplysninger() {
   const soknadsperiode = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);

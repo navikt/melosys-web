@@ -1,14 +1,14 @@
 import { Control } from "react-hook-form";
-import * as Nav from "../../../../../navFrontend";
-import * as Forms from "../../../../../felleskomponenter/forms";
+import * as Nav from "../../../../../../../navFrontend";
+import * as Forms from "../../../../../../../felleskomponenter/forms";
 import "./periodeVelger.css";
-import MKV from "../../../../../melosyskodeverk";
-import * as Utils from "../../../../../utils";
-import { UkjentSluttdatoMedlemskapsperiode } from "../../../../ftrl/saksbehandling/stegKomponenter/vurderingPeriode/komponenter/ukjentSluttdatoMedlemskapsperiode";
+import MKV from "../../../../../../../melosyskodeverk";
+import * as Utils from "../../../../../../../utils";
+import { UkjentSluttdatoMedlemskapsperiode } from "../../../../../../ftrl/saksbehandling/stegKomponenter/vurderingPeriode/komponenter/ukjentSluttdatoMedlemskapsperiode";
 import { useSelector } from "react-redux";
-import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../../ducks/oppsummertfakta";
-import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
-import { useDispatch } from "../../../../../hooks/useDispatch";
+import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../../../../ducks/oppsummertfakta";
+import { behandlingerSelectors } from "../../../../../../../ducks/behandlinger";
+import { useDispatch } from "../../../../../../../hooks/useDispatch";
 
 export interface PeriodeVelgerProps {
   redigerbart: boolean;
