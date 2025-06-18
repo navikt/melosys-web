@@ -34,6 +34,6 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 /yarn.lock
-/env-config.mjs
+/env-config.js
 /tests/e2e/reports/
 /tests/e2e/artifacts/

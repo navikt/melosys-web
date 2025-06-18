@@ -1,4 +1,4 @@
-// Bygg opp en env-config.mjs-fil basert på miljøvariabler fra .env-filen
+// Bygg opp en env-config.js-fil basert på miljøvariabler fra .env-filen
 import fs from "fs";
 import path from "path";
 import dotenv from "dotenv";
@@ -18,4 +18,4 @@ window.env = envConfig;
 export default envConfig;
 `;
 
-fs.writeFileSync(path.resolve(process.cwd(), "env-config.mjs"), configContent);
+fs.writeFileSync(path.resolve(process.cwd(), "env-config.js"), configContent);

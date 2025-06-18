@@ -1,5 +1,5 @@
 #!/bin/sh
-# Bygg opp en env-config.mjs-fil basert på miljøvariabler fra .env-filen
+# Bygg opp en env-config.js-fil basert på miljøvariabler fra .env-filen
 
 ENV_FILE="/app/.${ENVIRONMENT_NAME:-prod}.env"
 
@@ -11,7 +11,7 @@ fi
 echo "Leser filen $ENV_FILE"
 
 # Start med ESM-kompatibel struktur
-cat > /usr/share/nginx/html/env-config.mjs << 'EOF'
+cat > /usr/share/nginx/html/env-config.js << 'EOF'
 const envConfig = {
 EOF
 
@@ -20,13 +20,13 @@ while IFS='=' read -r key value
 do
   # Hopp over tomme linjer og linjer som starter med #
   if [ ! -z "$key" ] && [ "${key#\#}" = "$key" ]; then
-    # Legg til miljøvariabelen til env-config.mjs
-    echo "  $key: '$value'," >> /usr/share/nginx/html/env-config.mjs
+    # Legg til miljøvariabelen til env-config.js
+    echo "  $key: '$value'," >> /usr/share/nginx/html/env-config.js
   fi
 done < "$ENV_FILE"
 
 # Fullfør ESM-strukturen
-cat >> /usr/share/nginx/html/env-config.mjs << 'EOF'
+cat >> /usr/share/nginx/html/env-config.js << 'EOF'
 };
 
 // Setter window.env for bakoverkompatibilitet

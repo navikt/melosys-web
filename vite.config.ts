@@ -18,7 +18,7 @@ export default defineConfig({
     outDir: "./build",
     emptyOutDir: true,
     rollupOptions: {
-      external: ["/env-config.mjs"],
+      external: ["/env-config.js"],
     },
   },
   plugins: [
