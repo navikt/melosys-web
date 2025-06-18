@@ -62,7 +62,7 @@ function Saksbehandling({ match, location }: Props) {
     try {
       dispatch(fagsakOperations.hent(saksnr));
 
-      const response = dispatch(behandlingerOperations.hentBehandling(behandlingID));
+      const response = await dispatch(behandlingerOperations.hentBehandling(behandlingID));
       // @ts-expect-error generisk beskrivelse
       const behandling = response.data;
 
