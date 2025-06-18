@@ -15,11 +15,11 @@ exports[`vurderingArtikkel13_2b > snapshot test dersom Norge er valgt 1`] = `
         <div class="navds-radio navds-radio--small">
           <input
             id="333"
-            name="333"
-            type="radio"
             aria-labelledby="333"
             class="navds-radio__input"
+            type="radio"
             value="NORGE"
+            name="333"
           >
           <label
             for="333"
@@ -39,11 +39,11 @@ exports[`vurderingArtikkel13_2b > snapshot test dersom Norge er valgt 1`] = `
         <div class="navds-radio navds-radio--small">
           <input
             id="333"
-            name="333"
-            type="radio"
             aria-labelledby="333"
             class="navds-radio__input"
+            type="radio"
             value="ANNET"
+            name="333"
           >
           <label
             for="333"
@@ -70,12 +70,18 @@ exports[`vurderingArtikkel13_2b > snapshot test dersom Norge er valgt 1`] = `
       </div>
     </fieldset>
     <div class="stegKnapper">
-      <button class="stegKnapper__bekreft navds-button navds-button--primary navds-button--small">
+      <button
+        data-variant="primary"
+        class="stegKnapper__bekreft navds-button navds-button--primary navds-button--small"
+      >
         <span class="navds-label navds-label--small">
           Bekreft og fortsett
         </span>
       </button>
-      <button class="stegKnapper__tilbake navds-button navds-button--tertiary navds-button--small">
+      <button
+        data-variant="tertiary"
+        class="stegKnapper__tilbake navds-button navds-button--tertiary navds-button--small"
+      >
         <span class="navds-button__icon">
           <svg
             width="16"
@@ -118,11 +124,11 @@ exports[`vurderingArtikkel13_2b > snapshot test dersom Norge ikke er valgt 1`] =
         <div class="navds-radio navds-radio--small">
           <input
             id="333"
-            name="333"
-            type="radio"
             aria-labelledby="333"
             class="navds-radio__input"
+            type="radio"
             value="NORGE"
+            name="333"
           >
           <label
             for="333"
@@ -142,11 +148,11 @@ exports[`vurderingArtikkel13_2b > snapshot test dersom Norge ikke er valgt 1`] =
         <div class="navds-radio navds-radio--small">
           <input
             id="333"
-            name="333"
-            type="radio"
             aria-labelledby="333"
             class="navds-radio__input"
+            type="radio"
             value="ANNET"
+            name="333"
           >
           <label
             for="333"
@@ -186,8 +192,8 @@ exports[`vurderingArtikkel13_2b > snapshot test dersom Norge ikke er valgt 1`] =
               list="333"
               bredde="fullbredde"
               id="333"
-              type="text"
               class="navds-text-field__input navds-body-short navds-body-short--small"
+              type="text"
               value="Kypros (CY)"
             >
             <div
@@ -386,12 +392,18 @@ exports[`vurderingArtikkel13_2b > snapshot test dersom Norge ikke er valgt 1`] =
       </div>
     </div>
     <div class="stegKnapper">
-      <button class="stegKnapper__bekreft navds-button navds-button--primary navds-button--small">
+      <button
+        data-variant="primary"
+        class="stegKnapper__bekreft navds-button navds-button--primary navds-button--small"
+      >
         <span class="navds-label navds-label--small">
           Bekreft og fortsett
         </span>
       </button>
-      <button class="stegKnapper__tilbake navds-button navds-button--tertiary navds-button--small">
+      <button
+        data-variant="tertiary"
+        class="stegKnapper__tilbake navds-button navds-button--tertiary navds-button--small"
+      >
         <span class="navds-button__icon">
           <svg
             width="16"

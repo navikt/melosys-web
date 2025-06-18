@@ -20,12 +20,12 @@ exports[`VurderingArtikkel13_x_Vedtak > snapshot test 1`] = `
         <div class="col col-xs-8">
           <div class="navds-checkbox navds-checkbox--small">
             <input
-              name="333"
               class="navds-checkbox__input"
               id="333"
-              type="checkbox"
               aria-labelledby="333"
+              type="checkbox"
               value
+              name="333"
             >
             <label
               for="333"
@@ -48,6 +48,8 @@ exports[`VurderingArtikkel13_x_Vedtak > snapshot test 1`] = `
                   >
                   </path>
                 </svg>
+              </span>
+              <span class="navds-checkbox__icon-indeterminate">
               </span>
               <span class="navds-checkbox__content">
                 <span
@@ -74,7 +76,7 @@ exports[`VurderingArtikkel13_x_Vedtak > snapshot test 1`] = `
           </label>
           <textarea
             rows="2"
-            style="--__ac-textarea-height: -4px; overflow: hidden;"
+            style="--__ac-textarea-height: -4px; --__axc-textarea-height: -4px; overflow: hidden;"
             textareaclass="skjemaelement__input input--fullbredde"
             name="333"
             id="333"
@@ -120,7 +122,7 @@ exports[`VurderingArtikkel13_x_Vedtak > snapshot test 1`] = `
           </label>
           <textarea
             rows="2"
-            style="--__ac-textarea-height: -4px; overflow: hidden;"
+            style="--__ac-textarea-height: -4px; --__axc-textarea-height: -4px; overflow: hidden;"
             textareaclass="skjemaelement__input input--fullbredde"
             name="333"
             id="333"
@@ -177,6 +179,8 @@ exports[`VurderingArtikkel13_x_Vedtak > snapshot test 1`] = `
               <tr class="navds-table__row navds-table__row--shade-on-hover">
                 <td class="navds-table__data-cell navds-body-short navds-body-short--small">
                   <a
+                    data-color="accent"
+                    data-variant="action"
                     href="#"
                     class="navds-link navds-link--action"
                   >
@@ -190,6 +194,8 @@ exports[`VurderingArtikkel13_x_Vedtak > snapshot test 1`] = `
               <tr class="navds-table__row navds-table__row--shade-on-hover">
                 <td class="navds-table__data-cell navds-body-short navds-body-short--small">
                   <a
+                    data-color="accent"
+                    data-variant="action"
                     href="#"
                     class="navds-link navds-link--action"
                   >
@@ -205,12 +211,18 @@ exports[`VurderingArtikkel13_x_Vedtak > snapshot test 1`] = `
       </div>
     </div>
     <div class="stegKnapper">
-      <button class="stegKnapper__bekreft navds-button navds-button--primary navds-button--small">
+      <button
+        data-variant="primary"
+        class="stegKnapper__bekreft navds-button navds-button--primary navds-button--small"
+      >
         <span class="navds-label navds-label--small">
           Fatt vedtak
         </span>
       </button>
-      <button class="stegKnapper__tilbake navds-button navds-button--tertiary navds-button--small">
+      <button
+        data-variant="tertiary"
+        class="stegKnapper__tilbake navds-button navds-button--tertiary navds-button--small"
+      >
         <span class="navds-button__icon">
           <svg
             width="16"

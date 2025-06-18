@@ -19,6 +19,7 @@ exports[`ArbeidsforholdNorgeListe > snapshot test 1`] = `
             </span>
             <span class="editerbart-element__legend__symboler">
               <button
+                data-variant="tertiary"
                 type="button"
                 aria-label="Slett"
                 title="Slett"
@@ -63,8 +64,8 @@ exports[`ArbeidsforholdNorgeListe > snapshot test 1`] = `
                 <input
                   id="333"
                   placeholder="Skriv inn..."
-                  type="text"
                   class="navds-text-field__input navds-body-short navds-body-short--small"
+                  type="text"
                   value
                 >
                 <div
@@ -83,7 +84,10 @@ exports[`ArbeidsforholdNorgeListe > snapshot test 1`] = `
       </div>
     </div>
     <div class="leggTilKnapp">
-      <button class="navds-button navds-button--tertiary navds-button--small">
+      <button
+        data-variant="tertiary"
+        class="navds-button navds-button--tertiary navds-button--small"
+      >
         <span class="navds-button__icon">
           <svg
             width="20"
