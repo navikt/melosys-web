@@ -1,3 +1,4 @@
+/* eslint-disable react/prefer-stateless-function */
 import classNames from "classnames";
 import { Component, ComponentClass, HTMLAttributes } from "react";
 
@@ -23,6 +24,9 @@ export interface ColumnProps extends HTMLAttributes<HTMLDivElement> {
   lg?: "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "10" | "11" | "12";
 }
 
+/**
+ * @deprecated Bruk aksel primitives (HGrid, HStack, VStack, Box) i stedet.
+ */
 class Column extends Component<ColumnProps> {
   render() {
     const { children, className, xs, sm, md, lg, ...props } = this.props;

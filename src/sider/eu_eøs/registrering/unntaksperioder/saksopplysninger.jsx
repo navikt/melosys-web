@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { withRouter } from "react-router-dom";
 import PT from "prop-types";
 import { connect } from "react-redux";
-import { v4 as uuid } from "uuid";
 import MKV from "../../../../melosyskodeverk";
 
 import * as KV from "../../../../kodeverk";
@@ -325,7 +324,7 @@ function Saksopplysninger({
     validerAvslag(ikkeGodkjentBegrunnelse);
   };
 
-  const unikRadioButtonGruppeID = uuid();
+  const unikRadioButtonGruppeID = Utils._uuid();
   return (
     <div>
       <form name="registrering" id="registrering" onSubmit={overstyrSubmit}>
