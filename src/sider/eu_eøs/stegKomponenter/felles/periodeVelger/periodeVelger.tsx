@@ -5,9 +5,10 @@ import "./periodeVelger.css";
 import MKV from "../../../../../melosyskodeverk";
 import * as Utils from "../../../../../utils";
 import { UkjentSluttdatoMedlemskapsperiode } from "../../../../ftrl/saksbehandling/stegKomponenter/vurderingPeriode/komponenter/ukjentSluttdatoMedlemskapsperiode";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../../ducks/oppsummertfakta";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
+import { useDispatch } from "../../../../../hooks/useDispatch";
 
 export interface PeriodeVelgerProps {
   redigerbart: boolean;
