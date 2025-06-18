@@ -10,7 +10,10 @@ fi
 
 echo "Leser filen $ENV_FILE"
 
-echo "window.env = {" > /usr/share/nginx/html/env-config.mjs
+# Start med ESM-kompatibel struktur
+cat > /usr/share/nginx/html/env-config.mjs << 'EOF'
+const envConfig = {
+EOF
 
 # Les hver linje i .env-filen
 while IFS='=' read -r key value
@@ -22,4 +25,13 @@ do
   fi
 done < "$ENV_FILE"
 
-echo "};" >> /usr/share/nginx/html/env-config.mjs
+# Fullfør ESM-strukturen
+cat >> /usr/share/nginx/html/env-config.mjs << 'EOF'
+};
+
+// Setter window.env for bakoverkompatibilitet
+window.env = envConfig;
+
+// Eksporterer som ES-modul
+export default envConfig;
+EOF
