@@ -3,7 +3,6 @@ import { RootState } from "AppTypes";
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
-import { useDispatch } from "../../../../hooks";
 import { Action } from "redux";
 import { ThunkDispatch } from "redux-thunk";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
@@ -16,9 +15,9 @@ import { vedtakOperations } from "../../../../ducks/vedtak";
 import Dokumentliste from "../../../../felleskomponenter/dokumentliste";
 import * as Forms from "../../../../felleskomponenter/forms";
 import FullmaktForTrygdeavgiftConfirmationPanel from "../../../../felleskomponenter/fullmaktForTrygdeavgiftConfirmationPanel/fullmaktForTrygdeavgiftConfirmationPanel";
-import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
 import * as Mui from "../../../../felleskomponenter/ui";
 import VedleggTable from "../../../../felleskomponenter/vedleggTable";
+import { useDispatch } from "../../../../hooks";
 import MKV from "../../../../melosyskodeverk";
 import * as Nav from "../../../../navFrontend";
 import * as Api from "../../../../services/api";
@@ -27,8 +26,8 @@ import { BrevVedleggVisningstabellInterface } from "../../../../services/modules
 import * as Utils from "../../../../utils";
 import { SumArsavregningTabell } from "../vurderingAarsavregning/komponenter/sumArsavregningTabell";
 import { beregnSumTilFakturaEllerRefusjon } from "../vurderingAarsavregning/utils";
-import vurdering_vedtak from "./vurderingVedtakSchema";
 import "./vurderingVedtak.css";
+import vurdering_vedtak from "./vurderingVedtakSchema";
 
 const { FASTSATT_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingsresultattyper;
 const { FØRSTEGANGSVEDTAK } = MKV.Koder.vedtakstyper;
@@ -328,20 +327,20 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   };
 
   const tidligereTrygdeavgift = lagretAarsavregning?.avregning?.tidligereFakturertBeloep;
-  const tidligereTrygdeavgiftAvgiftssystem = lagretAarsavregning?.avregning?.tidligereFakturertBeloepAvgiftssystem;
+  const trygdeavgiftFraAvgiftssystemet = lagretAarsavregning?.avregning?.trygdeavgiftFraAvgiftssystemet;
   const nyTrygdeavgift =
     lagretAarsavregning?.endeligAvgiftValg === MANUELL_ENDELIG_AVGIFT
       ? lagretAarsavregning?.avregning?.manueltAvgiftBeloep
       : lagretAarsavregning?.avregning?.beregnetAvgiftBelop;
 
-  const tidligereAarsavregningTrygdeavgiftFraAvgiftssystem =
-    lagretAarsavregning?.tidligereGrunnlagsopplysninger?.tidligereÅrsavregningFakturertBeloepAvgiftssystem;
+  const tidligereTrygdeavgiftFraAvgiftssystemet =
+    lagretAarsavregning?.tidligereGrunnlagsopplysninger?.tidligereTrygdeavgiftFraAvgiftssystemet;
 
   const sumTilFakturaEllerRefusjon = beregnSumTilFakturaEllerRefusjon(
     nyTrygdeavgift,
     tidligereTrygdeavgift,
-    tidligereTrygdeavgiftAvgiftssystem,
-    tidligereAarsavregningTrygdeavgiftFraAvgiftssystem,
+    trygdeavgiftFraAvgiftssystemet,
+    tidligereTrygdeavgiftFraAvgiftssystemet,
   );
   const erDifferanseUnderMinstebeløp = Math.abs(sumTilFakturaEllerRefusjon) < MINSTEBELOP_FAKTURERING_ELLER_REFUSJON;
   const erNullKroner = sumTilFakturaEllerRefusjon === 0;
@@ -368,9 +367,11 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
       <SumArsavregningTabell
         nyTrygdeavgift={nyTrygdeavgift}
         tidligereTrygdeavgift={tidligereTrygdeavgift}
-        tidligereTrygdeavgiftAvgiftssystem={tidligereTrygdeavgiftAvgiftssystem}
-        harGrunnlagIMelosys={tidligereTrygdeavgift !== null || lagretAarsavregning?.harDeltGrunnlag === true}
-        tidligereAarsavregningTrygdeavgiftFraAvgiftssystem={tidligereAarsavregningTrygdeavgiftFraAvgiftssystem}
+        tidligereTrygdeavgiftAvgiftssystem={trygdeavgiftFraAvgiftssystemet}
+        harGrunnlagIMelosys={
+          tidligereTrygdeavgift !== null || lagretAarsavregning?.harTrygdeavgiftFraAvgiftssystemet === true
+        }
+        tidligereAarsavregningTrygdeavgiftFraAvgiftssystem={tidligereTrygdeavgiftFraAvgiftssystemet}
       />
 
       {fakturaMottaker ? (
@@ -400,24 +401,20 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
         />
       ) : null}
 
-      <Nav.BodyLong weight="semibold" size="small" className="fritekst_overskrift">
-        <LabelMedHjelpetekst label="Fritekst til innledning" hjelpetekst="" />
-      </Nav.BodyLong>
       <Forms.HtmlEditor
         name="innledningFritekst"
         control={control}
         className="fritekst_editor"
         disabled={!redigerbart}
+        label="Fritekst til innledning"
       />
 
-      <Nav.BodyLong weight="semibold" size="small" className="fritekst_overskrift">
-        <LabelMedHjelpetekst label="Fritekst til begrunnelse" hjelpetekst="" />
-      </Nav.BodyLong>
       <Forms.HtmlEditor
         name="begrunnelseFritekst"
         control={control}
         className="fritekst_editor"
         disabled={!redigerbart}
+        label="Fritekst til begrunnelse"
       />
 
       {formIsValid &&

@@ -1,9 +1,9 @@
-import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { TidligereGrunnlagAccordion } from "./tidligereGrunnlag";
-import { AarsavregningResponse } from "../../../../../services/modules/aarsavregning/aarsavregning";
+import { describe, expect, it } from "vitest";
 import MKV from "../../../../../melosyskodeverk";
+import { AarsavregningResponse } from "../../../../../services/modules/aarsavregning/aarsavregning";
+import { TidligereGrunnlagAccordion } from "./tidligereGrunnlag";
 
 describe("TidligereGrunnlagAccordion", () => {
   const createMockResponse = (overrides: Partial<AarsavregningResponse> = {}): AarsavregningResponse => ({
@@ -56,7 +56,7 @@ describe("TidligereGrunnlagAccordion", () => {
         totalInntekt: 500000,
         totalAvgift: 25500,
       },
-      tidligereÅrsavregningFakturertBeloepAvgiftssystem: undefined,
+      tidligereTrygdeavgiftFraAvgiftssystemet: undefined,
       tidligereÅrsavregningManueltAvgiftBeloep: undefined,
     },
     ...overrides,
@@ -92,7 +92,7 @@ describe("TidligereGrunnlagAccordion", () => {
           totalInntekt: 0,
           totalAvgift: 0,
         },
-        tidligereÅrsavregningFakturertBeloepAvgiftssystem: undefined,
+        tidligereTrygdeavgiftFraAvgiftssystemet: undefined,
         tidligereÅrsavregningManueltAvgiftBeloep: 15000,
       },
     });

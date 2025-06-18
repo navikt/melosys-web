@@ -62,7 +62,7 @@ interface Props {
   bekreft: () => void;
   aktivtSteg: boolean;
   oppdaterStatus: (isValid: boolean) => void;
-  harDeltGrunnlag: boolean;
+  harTrygdeavgiftFraAvgiftssystemet: boolean;
 }
 
 export interface MedlemskapTomFomDatoer {
@@ -77,7 +77,11 @@ export interface AarsavregningFormValuesProps extends FormValuesProps {
   manueltAvgiftBeloep?: number | string;
 }
 
-export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, harDeltGrunnlag }: Props) {
+export function AarsavregningUtenEllerDeltGrunnlag({
+  bekreft,
+  oppdaterStatus,
+  harTrygdeavgiftFraAvgiftssystemet,
+}: Props) {
   const [isLoading, setIsLoading] = useState(true);
   const [initiellData, setInitiellData] = useState<{
     valgtÅr?: number;
@@ -133,7 +137,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
 
     if (
       redigerbart &&
-      harDeltGrunnlag &&
+      harTrygdeavgiftFraAvgiftssystemet &&
       innvilgedeMedlemskapsperioder.length === 0 &&
       aarsavregningRes?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag
     ) {
@@ -219,16 +223,16 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
         }
 
         const deltGrunnlagAarsavregningHarIkkeNyttGrunnlag =
-          harDeltGrunnlag && aarsavregningRes && !aarsavregningRes.nyttGrunnlag;
+          harTrygdeavgiftFraAvgiftssystemet && aarsavregningRes && !aarsavregningRes.nyttGrunnlag;
 
         const mappedMedlemskapsperioder = await getMappedMedlemskapsperioder(aarsavregningRes!);
         const bestemmelse = getBestemmelse(mappedMedlemskapsperioder);
         const trygdedekninger = await getTrygdedekninger(bestemmelse);
 
         const totaltForskuddsvisFakturert =
-          aarsavregningRes?.avregning?.tidligereFakturertBeloepAvgiftssystem !== undefined &&
-          aarsavregningRes?.avregning?.tidligereFakturertBeloepAvgiftssystem !== null
-            ? aarsavregningRes?.avregning?.tidligereFakturertBeloepAvgiftssystem
+          aarsavregningRes?.avregning?.trygdeavgiftFraAvgiftssystemet !== undefined &&
+          aarsavregningRes?.avregning?.trygdeavgiftFraAvgiftssystemet !== null
+            ? aarsavregningRes?.avregning?.trygdeavgiftFraAvgiftssystemet
             : "";
         const manueltAvgiftBeloep =
           aarsavregningRes?.avregning?.manueltAvgiftBeloep !== undefined &&
@@ -275,7 +279,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
     };
 
     lastInitiellData();
-  }, [behandlingID, harDeltGrunnlag]);
+  }, [behandlingID, harTrygdeavgiftFraAvgiftssystemet]);
 
   const memoizedOppdaterStatus = useCallback((erGyldig: boolean) => {
     oppdaterStatus(erGyldig);
@@ -290,7 +294,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({ bekreft, oppdaterStatus, ha
       initiellData={initiellData}
       bekreft={bekreft}
       oppdaterStatus={memoizedOppdaterStatus}
-      harDeltGrunnlag={harDeltGrunnlag}
+      harTrygdeavgiftFraAvgiftssystemet={harTrygdeavgiftFraAvgiftssystemet}
     />
   );
 }
