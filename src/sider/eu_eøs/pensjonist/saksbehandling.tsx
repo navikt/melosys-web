@@ -7,7 +7,7 @@ import * as Utils from "../../../utils";
 import Informasjonlinje from "../../../felleskomponenter/informasjonlinje";
 
 import { EnkelStegvelger } from "../../../felleskomponenter/enkelStegvelger";
-import { behandlingsresultatOperations, behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
+import { behandlingsresultatOperations } from "../../../ducks/behandlingsresultat";
 import { behandlingerOperations, behandlingerSelectors } from "../../../ducks/behandlinger";
 
 import { fagsakOperations } from "../../../ducks/fagsaker";
