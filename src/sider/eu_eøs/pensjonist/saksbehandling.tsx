@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { RouteComponentProps } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { HGrid } from "@navikt/ds-react";
 
 import * as Utils from "../../../utils";
@@ -26,6 +26,7 @@ import { CollapsiblePanel } from "../../../felleskomponenter/collapsiblePanel";
 import Oppsummering from "../../../felleskomponenter/oppsummering";
 import SaksoversiktLenke from "../../../felleskomponenter/saksoversiktLenke";
 import SideDialog, { defaultTabs } from "../../../felleskomponenter/sideDialog";
+import { useDispatch } from "../../../hooks/useDispatch";
 
 interface Props extends RouteComponentProps<MatchParams> {
   behandlingOppfriskes: boolean;
@@ -63,7 +64,7 @@ function Saksbehandling({ match, location }: Props) {
       dispatch(fagsakOperations.hent(saksnr));
 
       const response = await dispatch(behandlingerOperations.hentBehandling(behandlingID));
-      // @ts-expect-error generisk beskrivelse
+
       const behandling = response.data;
 
       if (!behandling) return false;
