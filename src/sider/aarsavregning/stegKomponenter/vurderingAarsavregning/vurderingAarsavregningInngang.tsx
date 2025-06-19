@@ -78,7 +78,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
   const [harTrygdeavgiftFraAvgiftssystemet, setHarTrygdeavgiftFraAvgiftssystemet] = useState<boolean | undefined>(
     undefined,
   );
-  const [endrerHarTrygdeavgiftFraAvgiftssystemet, setEndrerHarTrygdeavgiftFraAvgiftssystemet] =
+  const [harTrygdeavgiftFraAvgiftssystemetIsPending, setHarTrygdeavgiftFraAvgiftssystemetIsPending] =
     useState<boolean>(false);
   const [erNyVurdering, setErNyVurdering] = useState<boolean>(false);
   const [harAktivÅrsavregning, setHarAktivÅrsavregning] = useState<boolean>(false);
@@ -159,12 +159,12 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
   };
 
   const håndterHarTrygdeavgiftFraAvgiftssystemet = async (value: boolean) => {
-    setEndrerHarTrygdeavgiftFraAvgiftssystemet(true);
+    setHarTrygdeavgiftFraAvgiftssystemetIsPending(true);
     Api.Aarsavregning.oppdaterHarTrygdeavgiftFraAvgiftssystemet(behandlingID, {
       harTrygdeavgiftFraAvgiftssystemet: value,
     }).then((res) => {
       setHarTrygdeavgiftFraAvgiftssystemet(res.harTrygdeavgiftFraAvgiftssystemet);
-      setEndrerHarTrygdeavgiftFraAvgiftssystemet(false);
+      setHarTrygdeavgiftFraAvgiftssystemetIsPending(false);
     });
   };
 
@@ -278,12 +278,12 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
             </Nav.Row>
           )}
 
-          {!endrerHarTrygdeavgiftFraAvgiftssystemet &&
+          {!harTrygdeavgiftFraAvgiftssystemetIsPending &&
             harGrunnlag === true &&
             harTrygdeavgiftFraAvgiftssystemet === false && (
               <AarsavregningMedGrunnlag bekreft={bekreft} aktivtSteg={aktivtSteg} oppdaterStatus={oppdaterStatus} />
             )}
-          {!endrerHarTrygdeavgiftFraAvgiftssystemet &&
+          {!harTrygdeavgiftFraAvgiftssystemetIsPending &&
             (harGrunnlag === false || harTrygdeavgiftFraAvgiftssystemet) &&
             harTrygdeavgiftFraAvgiftssystemet !== null && (
               <AarsavregningUtenEllerDeltGrunnlag
