@@ -7,13 +7,11 @@ import { Aarsavregningsmeldinger } from "./aarsavregningsmeldinger";
 import GrunnlagTabeller from "./grunnlagTabeller";
 import MedlemskapsPerioderTabell from "./medlemskapsPerioderTabell";
 
-interface TidligereGrunnlagAccordionProps {
+interface TidligereGrunnlagProps {
   aarsavregningResponse: AarsavregningResponse;
 }
 
-export function TidligereGrunnlagAccordion({ aarsavregningResponse }: TidligereGrunnlagAccordionProps) {
-  const harTidligereGrunnlag = Boolean(aarsavregningResponse.tidligereGrunnlagsopplysninger);
-
+export function TidligereGrunnlag({ aarsavregningResponse }: TidligereGrunnlagProps) {
   const erManueltBeregnet = Boolean(
     aarsavregningResponse.tidligereGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep !== null &&
       aarsavregningResponse.tidligereGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep !== undefined,
@@ -28,7 +26,7 @@ export function TidligereGrunnlagAccordion({ aarsavregningResponse }: TidligereG
         Tidligere grunnlag
       </Nav.Heading>
 
-      {harTidligereGrunnlag && !erManueltBeregnet && (
+      {!erManueltBeregnet && (
         <>
           <Nav.BodyLong size="small">
             Brutto årsinntekt:{" "}
@@ -88,24 +86,6 @@ export function TidligereGrunnlagAccordion({ aarsavregningResponse }: TidligereG
             kr
           </strong>
         </Nav.BodyLong>
-      )}
-
-      {!harTidligereGrunnlag && (
-        <Nav.Alert variant="info" size="small">
-          <Nav.BodyLong size="small">
-            Det er ingen informasjon om perioder med medlemskap og forskuddsvis fakturert trygdeavgift i Melosys.
-          </Nav.BodyLong>
-          <ul>
-            <li>
-              Hvis trygdeavgiften er forskuddsvis fakturert fra avgiftssystemet, oppgi totalbeløpet som er fakturert.
-            </li>
-            <li>
-              Hvis trygdeavgiften tidligere har vært årsavregnet i avgiftssystemet, oppgi totalbeløpet for endelig
-              beregnet trygdeavgift.
-            </li>
-            <li>Hvis trygdeavgiften ikke er forskuddsvis fakturert, la det være tomt.</li>
-          </ul>
-        </Nav.Alert>
       )}
     </Nav.Box>
   );
