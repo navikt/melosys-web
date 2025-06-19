@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import vurdering_opplysninger from "./vurderingOpplysningerSchema";
 import { mottatteOpplysningerSelectors } from "../../../../../ducks/mottatteOpplysninger";
 import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
+import "./vurderingOpplysninger.css";
 
 export function VurderingOpplysninger() {
   const soknadsperiode = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
@@ -35,7 +36,7 @@ export function VurderingOpplysninger() {
   return (
     <>
       <Nav.Heading level="1" className="stegvelgertittel">
-        Oppgi opplysninger fra attest/S1
+        Oppgi opplysninger fra attest / S1
       </Nav.Heading>
 
       <PeriodeOgLandVelger

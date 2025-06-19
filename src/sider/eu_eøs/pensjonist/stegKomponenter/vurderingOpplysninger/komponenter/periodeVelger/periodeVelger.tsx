@@ -44,13 +44,9 @@ export function PeriodeOgLandVelger({ redigerbart, control, formValues, setValue
 
   return (
     <div className="perioder">
-      <Nav.Heading size="xsmall">Periode</Nav.Heading>
-
-      <UkjentSluttdatoMedlemskapsperiode
-        ukjentSluttdatoMedlemskapsperiode={ukjentSluttdatoMedlemskapsperiode || false}
-        onUkjentSluttdatoChange={oppdaterSluttdato}
-        erEøsPensjonist={true}
-      />
+      <Nav.Heading className="skjema_tittel" size="xsmall">
+        Periode
+      </Nav.Heading>
 
       <div className="skjema__panel">
         <Nav.Row className="skjema__panel__rad">
@@ -82,6 +78,12 @@ export function PeriodeOgLandVelger({ redigerbart, control, formValues, setValue
           </Nav.Column>
         </Nav.Row>
       </div>
+
+      <UkjentSluttdatoMedlemskapsperiode
+        ukjentSluttdatoMedlemskapsperiode={ukjentSluttdatoMedlemskapsperiode || false}
+        onUkjentSluttdatoChange={oppdaterSluttdato}
+        erEøsPensjonist={true}
+      />
     </div>
   );
 }
