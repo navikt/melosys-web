@@ -12,14 +12,4 @@ const inngangSteg = {
   komponent: VurderingOpplysninger,
 };
 
-const trygdeavgiftSteg = {
-  id: "Trygdeavgift",
-  tittel: "Trygdeavgift",
-  stegPosisjon: 3,
-  status: FANE_STATUS.UBEHANDLET,
-  aktivtSteg: false,
-  vedtakSteg: false,
-  komponent: VurderingTrygdeavgift,
-};
-
-export const alleSteg = [inngangSteg, trygdeavgiftSteg];
+export const alleSteg = [inngangSteg];
