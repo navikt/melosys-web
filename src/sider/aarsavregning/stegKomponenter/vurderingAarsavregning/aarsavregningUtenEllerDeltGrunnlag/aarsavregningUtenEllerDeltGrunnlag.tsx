@@ -63,6 +63,7 @@ interface Props {
   aktivtSteg: boolean;
   oppdaterStatus: (isValid: boolean) => void;
   harTrygdeavgiftFraAvgiftssystemet: boolean;
+  harGrunnlag: boolean;
 }
 
 export interface MedlemskapTomFomDatoer {
@@ -71,7 +72,7 @@ export interface MedlemskapTomFomDatoer {
 }
 
 export interface AarsavregningFormValuesProps extends FormValuesProps {
-  totaltForskuddsvisFakturert?: number | string;
+  trygdeavgiftFraAvgiftssystemet?: number | string;
   bestemmelse?: string;
   endeligAvgiftValg: string;
   manueltAvgiftBeloep?: number | string;
@@ -81,6 +82,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({
   bekreft,
   oppdaterStatus,
   harTrygdeavgiftFraAvgiftssystemet,
+  harGrunnlag,
 }: Props) {
   const [isLoading, setIsLoading] = useState(true);
   const [initiellData, setInitiellData] = useState<{
@@ -96,7 +98,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({
       medlemskapsperioder: [DEFAULT_MEDLEMSKAPSPERIODE],
       skatteforholdsperioder: [{}],
       inntektskilder: [{}],
-      totaltForskuddsvisFakturert: "",
+      trygdeavgiftFraAvgiftssystemet: "",
       endeligAvgiftValg: "",
       manueltAvgiftBeloep: "",
     },
@@ -229,7 +231,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({
         const bestemmelse = getBestemmelse(mappedMedlemskapsperioder);
         const trygdedekninger = await getTrygdedekninger(bestemmelse);
 
-        const totaltForskuddsvisFakturert =
+        const trygdeavgiftFraAvgiftssystemet =
           aarsavregningRes?.avregning?.trygdeavgiftFraAvgiftssystemet !== undefined &&
           aarsavregningRes?.avregning?.trygdeavgiftFraAvgiftssystemet !== null
             ? aarsavregningRes?.avregning?.trygdeavgiftFraAvgiftssystemet
@@ -245,7 +247,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({
             ? mappedMedlemskapsperioder
             : [DEFAULT_MEDLEMSKAPSPERIODE],
           bestemmelse,
-          totaltForskuddsvisFakturert,
+          trygdeavgiftFraAvgiftssystemet,
           endeligAvgiftValg: aarsavregningRes?.endeligAvgiftValg || "",
           manueltAvgiftBeloep,
           skatteforholdsperioder: mapTilSkatteforholdProps(
@@ -295,6 +297,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({
       bekreft={bekreft}
       oppdaterStatus={memoizedOppdaterStatus}
       harTrygdeavgiftFraAvgiftssystemet={harTrygdeavgiftFraAvgiftssystemet}
+      harGrunnlag={harGrunnlag}
     />
   );
 }

@@ -13,7 +13,7 @@ interface BestemmelseSelectProps {
   control: Control<any>;
   setValue: (name: string, value: any) => void;
   bestemmelser: string[];
-  harTrygdeavgiftFraAvgiftssystemet: boolean;
+  harGrunnlag: boolean;
   behandlingID?: number;
   redigerbart: boolean;
   setTrygdedekninger: (trygdedekninger: string[]) => void;
@@ -27,7 +27,7 @@ function BestemmelseSelect({
   setValue,
   bestemmelser,
   behandlingID,
-  harTrygdeavgiftFraAvgiftssystemet,
+  harGrunnlag,
   redigerbart,
   setTrygdedekninger,
   setFeilmelding,
@@ -98,7 +98,7 @@ function BestemmelseSelect({
       label="Bestemmelse"
       aria-label="Bestemmelse"
       control={control}
-      readOnly={!redigerbart || harTrygdeavgiftFraAvgiftssystemet}
+      readOnly={!redigerbart || harGrunnlag}
       emptyFieldDisabled
       onChange={(valgtBestemmelse) => {
         handleBestemmelseChange(valgtBestemmelse);

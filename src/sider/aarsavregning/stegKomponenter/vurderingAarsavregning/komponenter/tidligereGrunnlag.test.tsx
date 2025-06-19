@@ -3,9 +3,9 @@ import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 import MKV from "../../../../../melosyskodeverk";
 import { AarsavregningResponse } from "../../../../../services/modules/aarsavregning/aarsavregning";
-import { TidligereGrunnlagAccordion } from "./tidligereGrunnlag";
+import { TidligereGrunnlag } from "./tidligereGrunnlag";
 
-describe("TidligereGrunnlagAccordion", () => {
+describe("TidligereGrunnlag", () => {
   const createMockResponse = (overrides: Partial<AarsavregningResponse> = {}): AarsavregningResponse => ({
     aarsavregningID: 1,
     aar: 2023,
@@ -62,12 +62,6 @@ describe("TidligereGrunnlagAccordion", () => {
     ...overrides,
   });
 
-  const createNoDataResponse = (): AarsavregningResponse => ({
-    aarsavregningID: 1,
-    aar: 2023,
-    tidligereGrunnlagsopplysninger: undefined,
-  });
-
   const createManuellBeregningResponse = (): AarsavregningResponse =>
     createMockResponse({
       tidligereGrunnlagsopplysninger: {
@@ -101,7 +95,7 @@ describe("TidligereGrunnlagAccordion", () => {
     const user = userEvent.setup();
     const mockResponse = createMockResponse();
 
-    const { container } = render(<TidligereGrunnlagAccordion aarsavregningResponse={mockResponse} />);
+    const { container } = render(<TidligereGrunnlag aarsavregningResponse={mockResponse} />);
 
     await user.click(screen.getByRole("button"));
 
@@ -111,15 +105,7 @@ describe("TidligereGrunnlagAccordion", () => {
   it("manuell beregning snapshot test", async () => {
     const manuellResponse = createManuellBeregningResponse();
 
-    const { container } = render(<TidligereGrunnlagAccordion aarsavregningResponse={manuellResponse} />);
-
-    expect(container).toMatchSnapshot();
-  });
-
-  it("uten grunnlag snapshot test", async () => {
-    const noDataResponse = createNoDataResponse();
-
-    const { container } = render(<TidligereGrunnlagAccordion aarsavregningResponse={noDataResponse} />);
+    const { container } = render(<TidligereGrunnlag aarsavregningResponse={manuellResponse} />);
 
     expect(container).toMatchSnapshot();
   });

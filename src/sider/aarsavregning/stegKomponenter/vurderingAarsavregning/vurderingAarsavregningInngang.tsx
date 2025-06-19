@@ -19,7 +19,7 @@ import { behandlingsresultatOperations } from "../../../../ducks/behandlingsresu
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
 import { AarsavregningMedGrunnlag } from "./aarsavregningMedGrunnlag/aarsavregningMedGrunnlag";
 import { AarsavregningUtenEllerDeltGrunnlag } from "./aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlag";
-import { TidligereGrunnlagAccordion } from "./komponenter/tidligereGrunnlag";
+import { TidligereGrunnlag } from "./komponenter/tidligereGrunnlag";
 import * as Utils from "../../../../utils";
 
 const { FASTSATT_TRYGDEAVGIFT, IKKE_FASTSATT } = MKV.Koder.behandlinger.behandlingsresultattyper;
@@ -78,7 +78,8 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
   const [harTrygdeavgiftFraAvgiftssystemet, setHarTrygdeavgiftFraAvgiftssystemet] = useState<boolean | undefined>(
     undefined,
   );
-  const [visDeltGrunnlagRadioGroup, setVisDeltGrunnlagRadioGroup] = useState(false);
+  const [endrerHarTrygdeavgiftFraAvgiftssystemet, setEndrerHarTrygdeavgiftFraAvgiftssystemet] =
+    useState<boolean>(false);
   const [erNyVurdering, setErNyVurdering] = useState<boolean>(false);
   const [harAktivÅrsavregning, setHarAktivÅrsavregning] = useState<boolean>(false);
   const [harManglendeInnbetalingBehandling, setHarManglendeInnbetalingBehandling] = useState<boolean>(false);
@@ -91,22 +92,14 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
   const dispatch = useDispatch();
 
   const utledGrunnlagstypeForÅrsavregning = (res: AarsavregningResponse) => {
-    if (res.harTrygdeavgiftFraAvgiftssystemet || res.aar === 2023 || res.aar === 2024) {
-      setVisDeltGrunnlagRadioGroup(true);
-      setHarTrygdeavgiftFraAvgiftssystemet(res.harTrygdeavgiftFraAvgiftssystemet);
-    } else {
-      setVisDeltGrunnlagRadioGroup(false);
-      setHarTrygdeavgiftFraAvgiftssystemet(false);
-    }
+    setHarTrygdeavgiftFraAvgiftssystemet(res.harTrygdeavgiftFraAvgiftssystemet);
 
-    if (
-      res.tidligereGrunnlagsopplysninger === null ||
-      Utils._isEmpty(res.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.medlemskapsperioder)
-    ) {
-      setHarGrunnlag(false);
-    } else {
-      setHarGrunnlag(true);
-    }
+    setHarGrunnlag(
+      !(
+        res.tidligereGrunnlagsopplysninger === null ||
+        Utils._isEmpty(res.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.medlemskapsperioder)
+      ),
+    );
   };
 
   useEffect(() => {
@@ -132,7 +125,6 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
     setLagÅrsavregningFeil(undefined);
     setErNyVurdering(false);
     setHarAktivÅrsavregning(false);
-    setVisDeltGrunnlagRadioGroup(false);
     setHarGrunnlag(undefined);
     setHarTrygdeavgiftFraAvgiftssystemet(undefined);
     setAarsavregningResponse(undefined);
@@ -167,9 +159,13 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
   };
 
   const håndterHarTrygdeavgiftFraAvgiftssystemet = async (value: boolean) => {
+    setEndrerHarTrygdeavgiftFraAvgiftssystemet(true);
     Api.Aarsavregning.oppdaterHarTrygdeavgiftFraAvgiftssystemet(behandlingID, {
       harTrygdeavgiftFraAvgiftssystemet: value,
-    }).then((res) => setHarTrygdeavgiftFraAvgiftssystemet(res.harTrygdeavgiftFraAvgiftssystemet));
+    }).then((res) => {
+      setHarTrygdeavgiftFraAvgiftssystemet(res.harTrygdeavgiftFraAvgiftssystemet);
+      setEndrerHarTrygdeavgiftFraAvgiftssystemet(false);
+    });
   };
 
   const forrigeÅrsavregningErManueltBeregnet = Boolean(
@@ -249,10 +245,17 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
             </Nav.Alert>
           )}
 
-          {/* Tidligere grunnlag accordion - vises når år/aarsavregningResponse er satt  */}
-          {aarsavregningResponse && <TidligereGrunnlagAccordion aarsavregningResponse={aarsavregningResponse} />}
+          {aarsavregningResponse && harGrunnlag && <TidligereGrunnlag aarsavregningResponse={aarsavregningResponse} />}
 
-          {visDeltGrunnlagRadioGroup && (
+          {aarsavregningResponse && harGrunnlag === false && (
+            <Nav.Alert variant="info" className="alertstripe_feilmelding">
+              <Nav.BodyLong size="small">
+                Det er ingen informasjon om perioder med medlemskap og forskuddsvis fakturert trygdeavgift i Melosys.
+              </Nav.BodyLong>
+            </Nav.Alert>
+          )}
+
+          {(valgtÅr || initieltÅr) && (
             <Nav.Row>
               <Nav.Column xs="12">
                 <Nav.RadioGroup
@@ -260,7 +263,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
                   legend={
                     <LabelMedHjelpetekst
                       label="Skal du legge til trygdeavgift fra Avgiftssystemet til denne årsavregningen?"
-                      hjelpetekst={DELT_GRUNNLAG_HJELPETEKST}
+                      hjelpetekst={harGrunnlag ? DELT_GRUNNLAG_HJELPETEKST : ""}
                     />
                   }
                   value={harTrygdeavgiftFraAvgiftssystemet}
@@ -275,17 +278,22 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
             </Nav.Row>
           )}
 
-          {harGrunnlag === true && harTrygdeavgiftFraAvgiftssystemet === false && (
-            <AarsavregningMedGrunnlag bekreft={bekreft} aktivtSteg={aktivtSteg} oppdaterStatus={oppdaterStatus} />
-          )}
-          {(harGrunnlag === false || harTrygdeavgiftFraAvgiftssystemet) && (
-            <AarsavregningUtenEllerDeltGrunnlag
-              bekreft={bekreft}
-              aktivtSteg={aktivtSteg}
-              oppdaterStatus={oppdaterStatus}
-              harTrygdeavgiftFraAvgiftssystemet={Boolean(harTrygdeavgiftFraAvgiftssystemet)}
-            />
-          )}
+          {!endrerHarTrygdeavgiftFraAvgiftssystemet &&
+            harGrunnlag === true &&
+            harTrygdeavgiftFraAvgiftssystemet === false && (
+              <AarsavregningMedGrunnlag bekreft={bekreft} aktivtSteg={aktivtSteg} oppdaterStatus={oppdaterStatus} />
+            )}
+          {!endrerHarTrygdeavgiftFraAvgiftssystemet &&
+            (harGrunnlag === false || harTrygdeavgiftFraAvgiftssystemet) &&
+            harTrygdeavgiftFraAvgiftssystemet !== null && (
+              <AarsavregningUtenEllerDeltGrunnlag
+                bekreft={bekreft}
+                aktivtSteg={aktivtSteg}
+                oppdaterStatus={oppdaterStatus}
+                harTrygdeavgiftFraAvgiftssystemet={Boolean(harTrygdeavgiftFraAvgiftssystemet)}
+                harGrunnlag={Boolean(harGrunnlag)}
+              />
+            )}
         </>
       )}
     </div>
