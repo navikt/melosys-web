@@ -1,5 +1,4 @@
 import { FANE_STATUS } from "../../../felleskomponenter/stegvelger";
-import { VurderingTrygdeavgift } from "../../ftrl/saksbehandling/stegKomponenter/vurderingTrygdeavgift/vurderingTrygdeavgift";
 import VurderingOpplysninger from "./stegKomponenter/vurderingOpplysninger/vurderingOpplysninger";
 
 const inngangSteg = {
