@@ -2,11 +2,7 @@
 
 exports[`Aarsavregningsmeldinger > TrygdeavgiftErIkkeForskuddsvisFakturert > matcher snapshot 1`] = `
 
-<div
-  data-color="info"
-  data-variant="info"
-  class="alertstripe_feilmelding navds-alert navds-alert--info navds-alert--small"
->
+<div class="alertstripe_feilmelding navds-alert navds-alert--info navds-alert--small">
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="1em"
@@ -38,11 +34,7 @@ exports[`Aarsavregningsmeldinger > TrygdeavgiftErIkkeForskuddsvisFakturert > mat
 
 exports[`Aarsavregningsmeldinger > TrygdeavgiftSkalIkkeBetalesTilNav > matcher snapshot 1`] = `
 
-<div
-  data-color="info"
-  data-variant="info"
-  class="alertstripe_feilmelding navds-alert navds-alert--info navds-alert--small"
->
+<div class="alertstripe_feilmelding navds-alert navds-alert--info navds-alert--small">
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="1em"

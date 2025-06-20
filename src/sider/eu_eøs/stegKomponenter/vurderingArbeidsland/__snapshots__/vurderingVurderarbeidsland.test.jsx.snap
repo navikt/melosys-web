@@ -180,18 +180,12 @@ exports[`VurderingVurderarbeidsland > snapshot test 1`] = `
       </div>
     </div>
     <div class="stegKnapper">
-      <button
-        data-variant="primary"
-        class="stegKnapper__bekreft navds-button navds-button--primary navds-button--small"
-      >
+      <button class="stegKnapper__bekreft navds-button navds-button--primary navds-button--small">
         <span class="navds-label navds-label--small">
           Bekreft og fortsett
         </span>
       </button>
-      <button
-        data-variant="tertiary"
-        class="stegKnapper__tilbake navds-button navds-button--tertiary navds-button--small"
-      >
+      <button class="stegKnapper__tilbake navds-button navds-button--tertiary navds-button--small">
         <span class="navds-button__icon">
           <svg
             width="16"

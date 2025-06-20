@@ -42,10 +42,7 @@ exports[`Notat > snapshot test 1`] = `
       </div>
       <div class="row">
         <div class="knapperad">
-          <button
-            data-variant="secondary"
-            class="navds-button navds-button--secondary navds-button--small"
-          >
+          <button class="navds-button navds-button--secondary navds-button--small">
             <span class="navds-button__icon">
               <svg
                 width="24"
