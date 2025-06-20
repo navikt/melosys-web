@@ -31,10 +31,13 @@ const mapInnvilgetMedlemskapsPeriode = (medlemskapsperioder: Medlemskapsperiode[
   };
 };
 
-const mapMedlemskapsperiodeBestemmelse = (harDeltGrunnlag: boolean, medlemskapsperioder?: Medlemskapsperiode[]) => {
+const mapMedlemskapsperiodeBestemmelse = (
+  harTrygdeavgiftFraAvgiftssystemet: boolean,
+  medlemskapsperioder?: Medlemskapsperiode[],
+) => {
   if (medlemskapsperioder && !Utils._isEmpty(medlemskapsperioder)) {
     const sortertePerioder = [...medlemskapsperioder]
-      .filter((periode) => (harDeltGrunnlag ? !periode.redigerbar : true))
+      .filter((periode) => (harTrygdeavgiftFraAvgiftssystemet ? !periode.redigerbar : true))
       .filter((periode) => periode.id !== ULAGRET_MEDLEMSKAPSPERIODE_ID)
       .sort(sorterEtterISOFomDato);
     return sortertePerioder?.[0]?.bestemmelse;

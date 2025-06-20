@@ -3,11 +3,7 @@
 exports[`MottatteOpplysningerFeilmeldinger > snapshot test 1`] = `
 
 <div>
-  <div
-    data-color="warning"
-    data-variant="warning"
-    class="mottatteopplysninger_feilmeldinger navds-alert navds-alert--warning navds-alert--small"
-  >
+  <div class="mottatteopplysninger_feilmeldinger navds-alert navds-alert--warning navds-alert--small">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="1em"

@@ -6,8 +6,6 @@ exports[`vedleggRow > snapshot test 1`] = `
   <tr class="navds-table__row vedlegg navds-table__row--shade-on-hover">
     <td class="navds-table__data-cell navds-body-short navds-body-short--small">
       <a
-        data-color="accent"
-        data-variant="action"
         href="#"
         class="navds-link navds-link--action"
       >
@@ -20,7 +18,6 @@ exports[`vedleggRow > snapshot test 1`] = `
     </td>
     <td class="navds-table__data-cell icon__cell navds-body-short navds-body-short--small">
       <button
-        data-variant="tertiary"
         type="button"
         aria-label="Fjern vedlegg"
         title="Fjern vedlegg"

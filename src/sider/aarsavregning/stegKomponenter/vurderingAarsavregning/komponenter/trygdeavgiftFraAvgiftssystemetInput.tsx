@@ -2,18 +2,22 @@ import "../vurderingAarsavregningInngang.css";
 import { Control } from "react-hook-form";
 import * as Forms from "../../../../../felleskomponenter/forms";
 
-interface TidligereGrunnlagProps {
+interface TrygdeavgiftFraAvgiftssystemetInputProps {
   control: Control;
   redigerbart: boolean;
   erNyAarsavregning: boolean;
 }
 
-export function InnbetaltFraAvgiftssystemetInput({ control, redigerbart, erNyAarsavregning }: TidligereGrunnlagProps) {
+export function TrygdeavgiftFraAvgiftssystemetInput({
+  control,
+  redigerbart,
+  erNyAarsavregning,
+}: TrygdeavgiftFraAvgiftssystemetInputProps) {
   return (
     <Forms.Input
       label="Trygdeavgift fra Avgiftssystemet"
       description={erNyAarsavregning ? "Du skal kun endre hvis tidligere oppgitte beløp er feil" : ""}
-      name="totaltForskuddsvisFakturert"
+      name="trygdeavgiftFraAvgiftssystemet"
       control={control}
       readOnly={!redigerbart}
       className="avgift_input"
