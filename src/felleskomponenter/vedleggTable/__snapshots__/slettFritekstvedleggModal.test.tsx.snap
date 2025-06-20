@@ -27,18 +27,12 @@ exports[`slettFritekstvedleggModal > snapshot test 1`] = `
     </div>
     <div class="navds-modal__footer">
       <div class="container__knapperad">
-        <button
-          data-variant="primary"
-          class="navds-button navds-button--primary navds-button--small"
-        >
+        <button class="navds-button navds-button--primary navds-button--small">
           <span class="navds-label navds-label--small">
             Ja, slett
           </span>
         </button>
-        <button
-          data-variant="tertiary"
-          class="navds-button navds-button--tertiary navds-button--small"
-        >
+        <button class="navds-button navds-button--tertiary navds-button--small">
           <span class="navds-label navds-label--small">
             Avbryt
           </span>

@@ -21,7 +21,6 @@ exports[`EditerbartElementListe > snapshot test 1`] = `
                 </span>
                 <span class="editerbart-element__legend__symboler">
                   <button
-                    data-variant="tertiary"
                     type="button"
                     aria-label="Rediger"
                     title="Rediger"
@@ -47,7 +46,6 @@ exports[`EditerbartElementListe > snapshot test 1`] = `
                     </span>
                   </button>
                   <button
-                    data-variant="tertiary"
                     type="button"
                     aria-label="Slett"
                     title="Slett"
@@ -99,7 +97,6 @@ exports[`EditerbartElementListe > snapshot test 1`] = `
                 </span>
                 <span class="editerbart-element__legend__symboler">
                   <button
-                    data-variant="tertiary"
                     type="button"
                     aria-label="Rediger"
                     title="Rediger"
@@ -125,7 +122,6 @@ exports[`EditerbartElementListe > snapshot test 1`] = `
                     </span>
                   </button>
                   <button
-                    data-variant="tertiary"
                     type="button"
                     aria-label="Slett"
                     title="Slett"
@@ -162,10 +158,7 @@ exports[`EditerbartElementListe > snapshot test 1`] = `
         </div>
       </div>
       <div class="legg__til__knapp">
-        <button
-          data-variant="tertiary"
-          class="navds-button navds-button--tertiary navds-button--small"
-        >
+        <button class="navds-button navds-button--tertiary navds-button--small">
           <span class="navds-button__icon">
             <svg
               width="20"

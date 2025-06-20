@@ -17,7 +17,6 @@ exports[`TidligereGrunnlag > beregning med grunnlag snapshot test 1`] = `
       </strong>
     </p>
     <section
-      data-color="neutral"
       aria-label="trygdeavgiftdetaljer"
       class="navds-expansioncard beregnetTrygdeavgiftDetaljer navds-expansioncard--small navds-expansioncard--open"
     >
