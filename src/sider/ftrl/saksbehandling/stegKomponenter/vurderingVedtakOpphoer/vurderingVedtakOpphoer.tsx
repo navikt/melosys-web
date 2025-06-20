@@ -1,9 +1,9 @@
 import * as Nav from "../../../../../navFrontend";
 import "./vurderingVedtakOpphoer.css";
 import { FieldValues, useForm } from "react-hook-form";
-// @ts-expect-error Workaround for @hookform/resolvers/yup with moduleResolution: bundler
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+import { useDispatch } from "../../../../../hooks";
 import { behandlingsresultatSelectors } from "../../../../../ducks/behandlingsresultat";
 import vurdering_vedtak_opphoer from "./vurderingVedtakOpphoerSchema";
 import * as Api from "../../../../../services/api";

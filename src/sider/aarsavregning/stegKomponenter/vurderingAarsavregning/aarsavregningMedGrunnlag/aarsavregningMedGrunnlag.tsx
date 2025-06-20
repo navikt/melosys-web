@@ -11,7 +11,7 @@ import { FieldValue } from "react-hook-form";
 import { FormValuesProps } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
 import * as Utils from "../../../../../utils";
 import { OK } from "../../../../../ducks/aarsavregning/types";
-import { mapTilInntektskilderProps, mapTilSkatteforholdProps } from "../aarsavregningHelpers";
+import { mapTilInntektskilderProps, mapTilSkatteforholdProps } from "../utils";
 import { AarsavregningMedGrunnlagForm } from "./aarsavregningMedGrunnlagForm";
 import * as Nav from "../../../../../navFrontend";
 import MKV from "../../../../../melosyskodeverk";
@@ -31,15 +31,26 @@ const mapInnvilgetMedlemskapsPeriode = (medlemskapsperioder: Medlemskapsperiode[
   };
 };
 
-const mapMedlemskapsperiodeBestemmelse = (harDeltGrunnlag: boolean, medlemskapsperioder?: Medlemskapsperiode[]) => {
+const mapMedlemskapsperiodeBestemmelse = (
+  harTrygdeavgiftFraAvgiftssystemet: boolean,
+  medlemskapsperioder?: Medlemskapsperiode[],
+) => {
   if (medlemskapsperioder && !Utils._isEmpty(medlemskapsperioder)) {
     const sortertePerioder = [...medlemskapsperioder]
-      .filter((periode) => (harDeltGrunnlag ? !periode.redigerbar : true))
+      .filter((periode) => (harTrygdeavgiftFraAvgiftssystemet ? !periode.redigerbar : true))
       .filter((periode) => periode.id !== ULAGRET_MEDLEMSKAPSPERIODE_ID)
       .sort(sorterEtterISOFomDato);
     return sortertePerioder?.[0]?.bestemmelse;
   }
   return undefined;
+};
+
+const mapTrygdedekning = (medlemskapsperioder?: Medlemskapsperiode[]) => {
+  if (!medlemskapsperioder || medlemskapsperioder.length === 0) return undefined;
+  const innvilgedePerioder = medlemskapsperioder.filter(
+    (periode) => periode.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.INNVILGET,
+  );
+  return innvilgedePerioder[0]?.trygdedekning;
 };
 
 export interface AarsavregningMedGrunnlagFormValues extends FormValuesProps {
@@ -52,7 +63,9 @@ export interface InitiellData {
   formDefaultValues: FieldValue<AarsavregningMedGrunnlagFormValues>;
   innvilgetMedlemskapsperiode?: { fomDato: string; tomDato: string };
   innvilgetMedlemskapsperiodeBestemmelse?: string;
+  innvilgetMedlemskapsperiodeTrygdedekning?: string;
   medlemskapstypeErPliktig: boolean;
+  forrigeÅrsavregningErManueltBeregnet: boolean;
 }
 
 interface Props {
@@ -71,6 +84,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
       manueltAvgiftBeloep: undefined,
     },
     medlemskapstypeErPliktig: false,
+    forrigeÅrsavregningErManueltBeregnet: false,
   });
   const [innlastingFeilmelding, setInnlastingFeilmelding] = useState("");
 
@@ -128,8 +142,14 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
           const medlemskapsperioder = res.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.medlemskapsperioder;
           const innvilgetMedlemskapsperiode = mapInnvilgetMedlemskapsPeriode(medlemskapsperioder);
           const innvilgetMedlemskapsperiodeBestemmelse = mapMedlemskapsperiodeBestemmelse(false, medlemskapsperioder);
+          const innvilgetMedlemskapsperiodeTrygdedekning = mapTrygdedekning(medlemskapsperioder);
           const medlemskapstypeErPliktig = Boolean(
             medlemskapsperioder?.every((periode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG),
+          );
+
+          const forrigeÅrsavregningErManueltBeregnet = Boolean(
+            res.tidligereGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep !== null &&
+              res.tidligereGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep !== undefined,
           );
 
           setInitiellData({
@@ -137,7 +157,9 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
             formDefaultValues: defaultFormValues,
             innvilgetMedlemskapsperiode,
             innvilgetMedlemskapsperiodeBestemmelse,
+            innvilgetMedlemskapsperiodeTrygdedekning,
             medlemskapstypeErPliktig,
+            forrigeÅrsavregningErManueltBeregnet,
           });
           setIsLoading(false);
         })

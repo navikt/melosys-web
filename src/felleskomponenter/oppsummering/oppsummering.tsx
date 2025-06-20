@@ -24,7 +24,7 @@ import EndreBehandlingModal from "./endreBehandlingModal";
 import "./oppsummering.css";
 import { useAsyncCallbackState } from "../../hooks";
 import { useFeatureToggle } from "../../featuretoggle";
-import { MELOSYS_PENSJONIST } from "../../featuretoggle/toggleNavn";
+import { MELOSYS_PENSJONIST, MELOSYS_PENSJONIST_EØS } from "../../featuretoggle/toggleNavn";
 
 const { AVSLUTTET, IVERKSETTER_VEDTAK, MIDLERTIDIG_LOVVALGSBESLUTNING } = MKV.Koder.behandlinger.behandlingsstatus;
 const { ÅRSAVREGNING } = MKV.Koder.behandlinger.behandlingstyper;
@@ -76,6 +76,7 @@ function Oppsummering({
   ]);
   const [skalViseEndreModal, setSkalViseEndreModal] = useState(false);
   const erPensjonistToggleEnabled = useFeatureToggle(MELOSYS_PENSJONIST);
+  const erPensjonistEØSToggleEnabled = useFeatureToggle(MELOSYS_PENSJONIST_EØS);
   if (Utils._isEmpty(fagsak) || Utils._isEmpty(oppsummering)) return <div />;
 
   const { saksnummer, sakstype, sakstema, hovedpartRolle, registrertDato: sakRegistrertDato } = fagsak as any;
@@ -107,6 +108,7 @@ function Oppsummering({
     behandlingstema.kode,
     behandlingstype.kode,
     erPensjonistToggleEnabled,
+    erPensjonistEØSToggleEnabled,
   );
   const hovedpartErVirksomhet = hovedpartRolle === MKV.Koder.aktoersroller.VIRKSOMHET;
 
@@ -121,7 +123,7 @@ function Oppsummering({
       : "Ukjent";
 
   const tabellEnKolonne = (data: string[][]) => {
-    const rows: JSX.Element[] = [];
+    const rows: React.JSX.Element[] = [];
     data.forEach((row) =>
       rows.push(
         <Nav.Row className="datarad" key={`datarad-${row[0]}`}>
@@ -239,14 +241,16 @@ function Oppsummering({
 
   return (
     <section aria-label="oppsummeringer" className="oppsummering panelSeksjon">
-      <EndreBehandlingModal
-        fagsak={fagsak}
-        oppsummering={oppsummering}
-        erÅrsavregning={erÅrsavregning}
-        mottattDato={mottaksdato}
-        skalViseModal={skalViseEndreModal}
-        lukkModal={() => setSkalViseEndreModal(false)}
-      />
+      {redigerbart && (
+        <EndreBehandlingModal
+          fagsak={fagsak}
+          oppsummering={oppsummering}
+          erÅrsavregning={erÅrsavregning}
+          mottattDato={mottaksdato}
+          skalViseModal={skalViseEndreModal}
+          lukkModal={() => setSkalViseEndreModal(false)}
+        />
+      )}
       <div className="panel">
         <Nav.Row>
           <Nav.Column xs="12">
@@ -268,18 +272,6 @@ function Oppsummering({
                     <Nav.Heading level="2">
                       {KV.objektTilTerm(sakstype)} - {KV.objektTilTerm(sakstema)}
                     </Nav.Heading>
-                  </Nav.Column>
-                  <Nav.Column xs="4">
-                    <div className="knapp__container">
-                      <Nav.Button
-                        variant="secondary"
-                        disabled={disableEndreKnapp}
-                        onClick={() => setSkalViseEndreModal(true)}
-                        icon={<Ikoner.BlyantActive />}
-                      >
-                        Endre
-                      </Nav.Button>
-                    </div>
                   </Nav.Column>
                 </Nav.Row>
                 <Nav.Row>
@@ -312,6 +304,20 @@ function Oppsummering({
                         {behandlingsresultattype.term}
                       </Nav.Tag>
                     )}
+                  </Nav.Column>
+                </Nav.Row>
+                <Nav.Row>
+                  <Nav.Column xs="4">
+                    <div className="knapp__container">
+                      <Nav.Button
+                        variant="secondary"
+                        disabled={disableEndreKnapp}
+                        onClick={() => setSkalViseEndreModal(true)}
+                        icon={<Ikoner.BlyantActive />}
+                      >
+                        Endre
+                      </Nav.Button>
+                    </div>
                   </Nav.Column>
                 </Nav.Row>
               </div>

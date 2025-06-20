@@ -1,9 +1,8 @@
-// @ts-expect-error Workaround for @hookform/resolvers/yup with moduleResolution: bundler
 import { yupResolver } from "@hookform/resolvers/yup";
 import { RootState } from "AppTypes";
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Action } from "redux";
 import { ThunkDispatch } from "redux-thunk";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
@@ -16,9 +15,9 @@ import { vedtakOperations } from "../../../../ducks/vedtak";
 import Dokumentliste from "../../../../felleskomponenter/dokumentliste";
 import * as Forms from "../../../../felleskomponenter/forms";
 import FullmaktForTrygdeavgiftConfirmationPanel from "../../../../felleskomponenter/fullmaktForTrygdeavgiftConfirmationPanel/fullmaktForTrygdeavgiftConfirmationPanel";
-import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
 import * as Mui from "../../../../felleskomponenter/ui";
 import VedleggTable from "../../../../felleskomponenter/vedleggTable";
+import { useDispatch } from "../../../../hooks";
 import MKV from "../../../../melosyskodeverk";
 import * as Nav from "../../../../navFrontend";
 import * as Api from "../../../../services/api";
@@ -26,6 +25,8 @@ import { AarsavregningResponse } from "../../../../services/modules/aarsavregnin
 import { BrevVedleggVisningstabellInterface } from "../../../../services/modules/dokumenter-v2";
 import * as Utils from "../../../../utils";
 import { SumArsavregningTabell } from "../vurderingAarsavregning/komponenter/sumArsavregningTabell";
+import { beregnSumTilFakturaEllerRefusjon } from "../vurderingAarsavregning/utils";
+import "./vurderingVedtak.css";
 import vurdering_vedtak from "./vurderingVedtakSchema";
 
 const { FASTSATT_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingsresultattyper;
@@ -326,17 +327,24 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   };
 
   const tidligereTrygdeavgift = lagretAarsavregning?.avregning?.tidligereFakturertBeloep;
-  const tidligereTrygdeavgiftAvgiftssystem = lagretAarsavregning?.avregning?.tidligereFakturertBeloepAvgiftssystem;
+  const trygdeavgiftFraAvgiftssystemet = lagretAarsavregning?.avregning?.trygdeavgiftFraAvgiftssystemet;
   const nyTrygdeavgift =
     lagretAarsavregning?.endeligAvgiftValg === MANUELL_ENDELIG_AVGIFT
       ? lagretAarsavregning?.avregning?.manueltAvgiftBeloep
       : lagretAarsavregning?.avregning?.beregnetAvgiftBelop;
 
-  const trygdeavgiftDiff =
-    (nyTrygdeavgift ?? 0) - (tidligereTrygdeavgift ?? 0) - (tidligereTrygdeavgiftAvgiftssystem ?? 0);
-  const erDifferanseUnderMinstebeløp = Math.abs(trygdeavgiftDiff) < MINSTEBELOP_FAKTURERING_ELLER_REFUSJON;
-  const erNullKroner = trygdeavgiftDiff === 0;
-  const skalFaktureres = trygdeavgiftDiff > 0;
+  const tidligereTrygdeavgiftFraAvgiftssystemet =
+    lagretAarsavregning?.tidligereGrunnlagsopplysninger?.tidligereTrygdeavgiftFraAvgiftssystemet;
+
+  const sumTilFakturaEllerRefusjon = beregnSumTilFakturaEllerRefusjon(
+    nyTrygdeavgift,
+    tidligereTrygdeavgift,
+    trygdeavgiftFraAvgiftssystemet,
+    tidligereTrygdeavgiftFraAvgiftssystemet,
+  );
+  const erDifferanseUnderMinstebeløp = Math.abs(sumTilFakturaEllerRefusjon) < MINSTEBELOP_FAKTURERING_ELLER_REFUSJON;
+  const erNullKroner = sumTilFakturaEllerRefusjon === 0;
+  const skalFaktureres = sumTilFakturaEllerRefusjon > 0;
 
   const kanSubmitte =
     redigerbart &&
@@ -350,7 +358,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
       </Nav.Heading>
 
       {redigerbart && lagretAarsavregning?.endeligAvgiftValg === MANUELL_ENDELIG_AVGIFT && (
-        <Nav.Alert variant="warning" className="blokk-s">
+        <Nav.Alert variant="warning">
           Du har lagt inn &quot;Endelig beregnet trygdeavgift&quot; manuelt og må derfor oppgi en begrunnelse i
           fritekstfeltet.
         </Nav.Alert>
@@ -359,8 +367,11 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
       <SumArsavregningTabell
         nyTrygdeavgift={nyTrygdeavgift}
         tidligereTrygdeavgift={tidligereTrygdeavgift}
-        tidligereTrygdeavgiftAvgiftssystem={tidligereTrygdeavgiftAvgiftssystem}
-        harGrunnlagIMelosys={tidligereTrygdeavgift !== null || lagretAarsavregning?.harDeltGrunnlag === true}
+        tidligereTrygdeavgiftAvgiftssystem={trygdeavgiftFraAvgiftssystemet}
+        harGrunnlagIMelosys={
+          tidligereTrygdeavgift !== null || lagretAarsavregning?.harTrygdeavgiftFraAvgiftssystemet === true
+        }
+        tidligereAarsavregningTrygdeavgiftFraAvgiftssystem={tidligereTrygdeavgiftFraAvgiftssystemet}
       />
 
       {fakturaMottaker ? (
@@ -373,7 +384,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
                 <>
                   <br />
                   {`${skalFaktureres ? "Faktura" : "Kreditnota"} på ${
-                    Utils.formaterTilNorskBelop(Math.abs(trygdeavgiftDiff)) || "0"
+                    Utils.formaterTilNorskBelop(Math.abs(sumTilFakturaEllerRefusjon)) || "0"
                   } kr sendes til: `}{" "}
                   <b>{fakturaMottaker}</b>
                 </>
@@ -390,24 +401,20 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
         />
       ) : null}
 
-      <Nav.BodyLong weight="semibold" size="small" className="fritekst_overskrift">
-        <LabelMedHjelpetekst label="Fritekst til innledning" hjelpetekst="" />
-      </Nav.BodyLong>
       <Forms.HtmlEditor
         name="innledningFritekst"
         control={control}
         className="fritekst_editor"
         disabled={!redigerbart}
+        label="Fritekst til innledning"
       />
 
-      <Nav.BodyLong weight="semibold" size="small" className="fritekst_overskrift">
-        <LabelMedHjelpetekst label="Fritekst til begrunnelse" hjelpetekst="" />
-      </Nav.BodyLong>
       <Forms.HtmlEditor
         name="begrunnelseFritekst"
         control={control}
         className="fritekst_editor"
         disabled={!redigerbart}
+        label="Fritekst til begrunnelse"
       />
 
       {formIsValid &&

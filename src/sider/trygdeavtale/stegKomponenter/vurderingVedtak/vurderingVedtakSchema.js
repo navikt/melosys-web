@@ -9,22 +9,17 @@ const vurdering_vedtak = object().shape({
   lovvalgsperiodeTom: string().erGyldigDato().erEtterDatofelt("lovvalgsperiodeFom").required(MAA_FYLLES_UT),
   begrunnelseFritekst: string().nullable().max(4000, DU_KAN_IKKE_SKRIVE_MER_ENN_4000_TEGN),
   innledningFritekst: string().nullable().max(4000, DU_KAN_IKKE_SKRIVE_MER_ENN_4000_TEGN),
-  nyVurderingBakgrunn: string()
-    .when("$erNyVurdering", {
-      is: true,
-      then: string().required(MAA_FYLLES_UT).nullable(),
-    })
-    .nullable(),
-  nyVurderingBakgrunnFritekst: string()
-    .when(["$erNyVurdering", "nyVurderingBakgrunn"], {
-      is: (erNyVurdering, nyVurderingBakgrunn) => erNyVurdering && nyVurderingBakgrunn === FRITEKST,
-      then: string()
-        .erIkkeBlankHtml(MAA_FYLLES_UT)
-        .required(MAA_FYLLES_UT)
-        .nullable()
-        .max(4000, DU_KAN_IKKE_SKRIVE_MER_ENN_4000_TEGN),
-    })
-    .nullable(),
+  nyVurderingBakgrunn: string().when("$erNyVurdering", {
+    is: true,
+    then: (schema) => schema.required(MAA_FYLLES_UT),
+    otherwise: (schema) => schema.nullable(),
+  }),
+  nyVurderingBakgrunnFritekst: string().when(["$erNyVurdering", "nyVurderingBakgrunn"], {
+    is: (erNyVurdering, nyVurderingBakgrunn) => erNyVurdering && nyVurderingBakgrunn === FRITEKST,
+    then: (schema) =>
+      schema.erIkkeBlankHtml(MAA_FYLLES_UT).required(MAA_FYLLES_UT).max(4000, DU_KAN_IKKE_SKRIVE_MER_ENN_4000_TEGN),
+    otherwise: (schema) => schema.nullable(),
+  }),
 });
 
 export default vurdering_vedtak;

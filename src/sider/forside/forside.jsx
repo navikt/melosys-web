@@ -1,20 +1,19 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { withRouter } from "react-router-dom";
 import PT from "prop-types";
+import { withRouter } from "react-router-dom";
 import * as Nav from "../../navFrontend";
 
 import { oversikt } from "../../ducks/oppgaver/operations";
+import BehandlingOppgaver from "./komponenter/mineoppgaver/behandlingOppgaver";
+import JournalforingOppgaver from "./komponenter/mineoppgaver/jornualforingoppgaver";
 import Saksplukker from "./komponenter/saksplukker";
 import SokSkjema from "./komponenter/sokskjema";
-import JournalforingOppgaver from "./komponenter/mineoppgaver/jornualforingoppgaver";
-import BehandlingOppgaver from "./komponenter/mineoppgaver/behandlingOppgaver";
 
-import "./forside.css";
-import { featureToggleOperations } from "../../ducks/featuretoggle";
 import ErrorBoundary from "../../felleskomponenter/errorBoundary";
 import * as Ikoner from "../../resources/images";
+import "./forside.css";
 
 function Forside(props) {
   const { tilOpprettNySak } = props;
@@ -22,7 +21,6 @@ function Forside(props) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(featureToggleOperations.hent());
     dispatch(oversikt());
   }, []);
 
@@ -79,11 +77,7 @@ function Forside(props) {
 Forside.propTypes = {
   location: PT.object.isRequired,
   history: PT.object.isRequired,
-  children: PT.node,
   tilOpprettNySak: PT.func.isRequired,
 };
 
-Forside.defaultProps = {
-  children: null,
-};
 export default withRouter(Forside);

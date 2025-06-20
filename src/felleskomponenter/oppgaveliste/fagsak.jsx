@@ -15,16 +15,17 @@ import Soknadsland from "../soknadsland";
 
 import "./fagsak.css";
 import { useFeatureToggle } from "../../featuretoggle";
-import { MELOSYS_PENSJONIST } from "../../featuretoggle/toggleNavn";
+import { MELOSYS_PENSJONIST, MELOSYS_PENSJONIST_EØS } from "../../featuretoggle/toggleNavn";
 
 /**
  * Dette er enkeltlinjen for én sak som inneholder sakstittel og metadata
  * for å gi saksbehandler oversikt over sakens innhold før hun klikker
  * seg inn på den.
  */
-function Fagsak({ sak, landkoder }) {
+function Fagsak({ sak = {}, landkoder }) {
   const { opprettetDato, sakstype, saksstatus, saksnummer, sakstema, behandlingOversikter } = sak;
   const erPensjonistToggleEnabled = useFeatureToggle(MELOSYS_PENSJONIST);
+  const erPensjonistToggleEnabled_EØS = useFeatureToggle(MELOSYS_PENSJONIST_EØS);
 
   const link = (behandling) =>
     Routing.lagUrl(
@@ -35,6 +36,7 @@ function Fagsak({ sak, landkoder }) {
       behandling.behandlingstema.kode,
       behandling.behandlingstype.kode,
       erPensjonistToggleEnabled,
+      erPensjonistToggleEnabled_EØS,
     );
 
   const customMargin = { marginLeft: "1em" };
@@ -93,10 +95,6 @@ function Fagsak({ sak, landkoder }) {
 Fagsak.propTypes = {
   sak: MPT.BehandligOversikt,
   landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
-};
-
-Fagsak.defaultProps = {
-  sak: {},
 };
 
 export default Fagsak;

@@ -15,7 +15,7 @@ interface RadioknappSvarProps {
 }
 
 function RadioknappSvar({ svar }: RadioknappSvarProps) {
-  const svarString = Utils._isNil(svar) ? "-" : Utils._capitalize(Utils.streng.boolTilNorsk(svar));
+  const svarString = Utils._isNil(svar) ? "-" : Utils._capitalize(Utils.streng.boolTilNorsk(Boolean(svar)));
 
   return (
     <Nav.BodyLong weight="semibold" size="small">

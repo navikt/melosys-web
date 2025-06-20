@@ -1,5 +1,5 @@
 import * as Utils from "../../../../../utils";
-import { erBrukerSkattepliktigIHelePerioden } from "../komponenter/utils";
+import { erBrukerSkattepliktigIHelePerioden } from "../utils";
 import { Inntektskilde, Skatteforhold } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
 import * as Nav from "../../../../../navFrontend";
 

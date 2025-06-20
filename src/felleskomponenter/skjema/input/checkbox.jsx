@@ -4,7 +4,15 @@ import "../skjema.css";
 import * as Utils from "../../../utils";
 import * as Nav from "../../../navFrontend";
 
-function InnerCheckboxComponent({ input, meta, label, submitOnChange, onClick, disabled, className }) {
+function InnerCheckboxComponent({
+  input = {},
+  meta = {},
+  label,
+  submitOnChange = false,
+  onClick = () => {},
+  disabled = false,
+  className,
+}) {
   const feil = meta.error && meta.touched && !meta.active ? meta.error : undefined;
 
   const onChange = (...args) => {
@@ -33,24 +41,12 @@ function InnerCheckboxComponent({ input, meta, label, submitOnChange, onClick, d
 
 InnerCheckboxComponent.propTypes = {
   label: PT.node.isRequired,
-  errorMessage: PT.arrayOf(PT.string),
   submitOnChange: PT.bool,
   input: PT.object, // eslint-disable-line react/forbid-prop-types
   meta: PT.object, // eslint-disable-line react/forbid-prop-types
   onClick: PT.func,
   disabled: PT.bool,
   className: PT.string,
-};
-
-InnerCheckboxComponent.defaultProps = {
-  errorMessage: undefined,
-  submitOnChange: false,
-  onClick: () => {},
-  // Vil alltid bli overskrevet av CustomField
-  input: {},
-  meta: {},
-  disabled: false,
-  className: undefined,
 };
 
 function Checkbox({ feltNavn, className = "", ...rest }) {
@@ -68,10 +64,6 @@ function Checkbox({ feltNavn, className = "", ...rest }) {
 Checkbox.propTypes = {
   feltNavn: PT.string.isRequired,
   className: PT.string,
-};
-
-Checkbox.defaultProps = {
-  className: undefined,
 };
 
 export default Checkbox;

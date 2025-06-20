@@ -1,6 +1,14 @@
-import * as redux from "react-redux";
 import { renderWithProviders } from "../../../ducks/test-utils/renderWithProviders";
 import { DialogboksAvslagSoknad } from "./dialogboksAvslagSoknad";
+
+// Mock react-redux useDispatch hook
+vi.mock("react-redux", async () => {
+  const actual = await vi.importActual("react-redux");
+  return {
+    ...actual,
+    useDispatch: () => vi.fn(),
+  };
+});
 
 describe("DialogboksAvslagSoknad", () => {
   const props = {
@@ -14,15 +22,6 @@ describe("DialogboksAvslagSoknad", () => {
     feilmeldinger: [],
     kontrollfeil: [],
   };
-  const doNothing = vi.fn(() => null);
-
-  beforeAll(() => {
-    vi.spyOn(redux, "useDispatch").mockImplementation(() => doNothing as never);
-  });
-
-  afterAll(() => {
-    vi.clearAllMocks();
-  });
 
   it("viser en Nav Modal", () => {
     const { getByRole } = renderWithProviders(<DialogboksAvslagSoknad {...props} />);

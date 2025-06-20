@@ -4,7 +4,7 @@ import * as KV from "../../../../../kodeverk";
 import * as Utils from "../../../../../utils";
 import { BOOLSK_STRING } from "../../../../../constants";
 
-import { erBrukerSkattepliktigIHelePerioden } from "../../../../aarsavregning/stegKomponenter/vurderingAarsavregning/komponenter/utils";
+import { erBrukerSkattepliktigIHelePerioden } from "../../../../aarsavregning/stegKomponenter/vurderingAarsavregning/utils";
 
 const { MAA_FYLLES_UT } = KV.Feilmeldinger;
 const {
@@ -63,9 +63,8 @@ const kreverInntektskilder = (medlemskapsTypeErPliktig, options) => {
 const vurdering_trygdeavgift = object().shape({
   skatteforholdsperioder: array().when(["$erÅpenSluttDato"], {
     is: (erÅpenSluttDato) => !erÅpenSluttDato,
-    then: array()
-      .min(1)
-      .of(
+    then: (schema) =>
+      schema.min(1).of(
         object().shape({
           fomDato: string()
             .erGyldigDato()
@@ -84,9 +83,8 @@ const vurdering_trygdeavgift = object().shape({
     return array().when(["$medlemskapsTypeErPliktig", "$erÅpenSluttDato"], {
       is: (medlemskapsTypeErPliktig, erÅpenSluttDato) =>
         !erÅpenSluttDato && kreverInntektskilder(medlemskapsTypeErPliktig, options),
-      then: array()
-        .min(1)
-        .of(
+      then: (schema) =>
+        schema.min(1).of(
           object().shape({
             kildetype: string().required(MAA_FYLLES_UT),
             arbAvgBetales: string().test(arbAvgBetalesFyltUtNårDetKrevesTest).nullable(),

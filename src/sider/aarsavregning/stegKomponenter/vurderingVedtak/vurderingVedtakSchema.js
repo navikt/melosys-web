@@ -11,25 +11,12 @@ export const DU_MAA_OPPGI_BEGRUNNELSE_FOR_ENDELIG_TRYGDEAVGIFT = {
 
 const vurdering_vedtak = object().shape({
   begrunnelseFritekst: string()
-    .nullable()
     .max(4000, DU_KAN_IKKE_SKRIVE_MER_ENN_4000_TEGN)
-    .when([], {
-      is: () => true,
-      then: (schema) =>
-        schema.test({
-          name: "begrunnelse-required-manuell",
-          message: DU_MAA_OPPGI_BEGRUNNELSE_FOR_ENDELIG_TRYGDEAVGIFT,
-          test(value) {
-            const { endeligAvgiftValg } = this.options.context || {};
-            if (endeligAvgiftValg === MKV.Koder.endeligAvgiftValg.MANUELL_ENDELIG_AVGIFT) {
-              return !!value; // Required if MANUELL_ENDELIG_AVGIFT
-            }
-            return true;
-          },
-        }),
-      otherwise: (schema) => schema.nullable(),
+    .when(["$endeligAvgiftValg"], {
+      is: (endeligAvgiftValg) => endeligAvgiftValg === MKV.Koder.endeligAvgiftValg.MANUELL_ENDELIG_AVGIFT,
+      then: (schema) => schema.required(DU_MAA_OPPGI_BEGRUNNELSE_FOR_ENDELIG_TRYGDEAVGIFT),
     }),
-  innledningFritekst: string().nullable().max(4000, DU_KAN_IKKE_SKRIVE_MER_ENN_4000_TEGN),
+  innledningFritekst: string().max(4000, DU_KAN_IKKE_SKRIVE_MER_ENN_4000_TEGN),
 });
 
 export default vurdering_vedtak;

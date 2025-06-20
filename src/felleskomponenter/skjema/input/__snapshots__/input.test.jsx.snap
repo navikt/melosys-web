@@ -11,15 +11,15 @@ exports[`Input > snapshot test 1`] = `
       test
     </label>
     <input
-      name="333"
       meta="[object Object]"
       array="[object Object]"
       form="test"
       navn="Test"
       id="333"
-      type="text"
       class="navds-text-field__input navds-body-short navds-body-short--small"
+      type="text"
       value
+      name="333"
     >
     <div
       class="navds-form-field__error"

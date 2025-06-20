@@ -1,13 +1,16 @@
 import { useContext, useEffect, useState } from "react";
 import { RouteComponentProps } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+import { useDispatch } from "../../hooks";
 import * as Nav from "../../navFrontend";
+import { HGrid } from "@navikt/ds-react";
 
 import * as Utils from "../../utils";
 import Informasjonlinje from "../../felleskomponenter/informasjonlinje";
 import { SoknadMenypanelForm } from "../../felleskomponenter/menypanelForm";
 import SideDialog, { defaultTabs } from "../../felleskomponenter/sideDialog";
 import SaksoversiktLenke from "../../felleskomponenter/saksoversiktLenke";
+import { CollapsiblePanel } from "../../felleskomponenter/collapsiblePanel";
 
 import { EnkelStegvelger } from "../../felleskomponenter/enkelStegvelger";
 import { behandlingsresultatOperations } from "../../ducks/behandlingsresultat";
@@ -38,6 +41,7 @@ interface Props extends RouteComponentProps<MatchParams> {
 function Saksbehandling({ match, location }: Props) {
   const [behandlingID, setBehandlingID] = useState(-1);
   const [saksopplysningerLastet, setSaksopplysningerLastet] = useState(false);
+  const [panelExpanded, setPanelExpanded] = useState(true);
 
   const dispatch = useDispatch();
 
@@ -70,7 +74,6 @@ function Saksbehandling({ match, location }: Props) {
       setBehandlingID(behandlingId);
       dispatch(fagsakOperations.hent(saksnr));
       const response = await dispatch(behandlingerOperations.hentBehandling(behandlingId));
-      // @ts-expect-error generisk beskrivelse
       const behandling = response.data;
       if (!behandling) return false;
 
@@ -121,33 +124,35 @@ function Saksbehandling({ match, location }: Props) {
       <Informasjonlinje />
       <div className="main-container">
         <div className="aarsavregning_saksbehandling">
-          <Nav.Container fluid>
-            <Nav.Row>
-              <Nav.Column xs="7">
-                <main id="main-container">
-                  {erÅrsavregningUtenFlytToggleEnabled && (
-                    <Nav.Alert variant="warning" className="ingenFlytMelding">
-                      <b>Du kan ikke gå videre</b>
-                      <p>
-                        Du kan ikke årsavregne i Meloys enda, men du kan sende et fritekstbrev for å hente inn
-                        inntektsopplysninger.
-                      </p>
-                    </Nav.Alert>
-                  )}
-                  {erÅrsavregningToggleEnabled && <EnkelStegvelger alleSteg={alleSteg} />}
-                </main>
-                <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
-              </Nav.Column>
-              <Nav.Column xs="5">
-                <Oppsummering
-                  medlemskapsperiodeFom={Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.fom)}
-                  medlemskapsperiodeTom={Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.tom)}
-                />
-                <SaksoversiktLenke />
-                <SideDialog tabs={defaultTabs} />
-              </Nav.Column>
-            </Nav.Row>
-          </Nav.Container>
+          <HGrid
+            columns={panelExpanded ? "minmax(0, 7fr) minmax(0, 5fr)" : "minmax(0, 1fr) 3rem"}
+            gap="4"
+            className="hgrid"
+          >
+            <div>
+              <main id="main-container">
+                {erÅrsavregningUtenFlytToggleEnabled && (
+                  <Nav.Alert variant="warning" className="ingenFlytMelding">
+                    <b>Du kan ikke gå videre</b>
+                    <p>
+                      Du kan ikke årsavregne i Meloys enda, men du kan sende et fritekstbrev for å hente inn
+                      inntektsopplysninger.
+                    </p>
+                  </Nav.Alert>
+                )}
+                {erÅrsavregningToggleEnabled && <EnkelStegvelger alleSteg={alleSteg} />}
+              </main>
+              <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
+            </div>
+            <CollapsiblePanel defaultExpanded={panelExpanded} onToggle={setPanelExpanded} direction="RIGHT">
+              <Oppsummering
+                medlemskapsperiodeFom={Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.fom)}
+                medlemskapsperiodeTom={Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.tom)}
+              />
+              <SaksoversiktLenke />
+              <SideDialog tabs={defaultTabs} />
+            </CollapsiblePanel>
+          </HGrid>
         </div>
       </div>
     </>

@@ -8,7 +8,7 @@ import * as Mui from "../../../../felleskomponenter/ui";
 import EnkeltVilkaar from "../felles/enkeltVilkaar";
 
 function VurderingForutgaendeMedlemskap(props) {
-  const { bekreftOgFortsett, begrunnelser, tilstand, redigerbart, oppdaterData, slettData, tilbake } = props;
+  const { bekreftOgFortsett, begrunnelser = [], tilstand = {}, redigerbart, oppdaterData, slettData, tilbake } = props;
   const { harAvklaring, forutgaendeMedlemskap } = tilstand;
 
   useEffect(
@@ -59,11 +59,6 @@ VurderingForutgaendeMedlemskap.propTypes = {
   slettData: PT.func.isRequired,
   tilbake: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
-};
-
-VurderingForutgaendeMedlemskap.defaultProps = {
-  tilstand: {},
-  begrunnelser: [],
 };
 
 export default VurderingForutgaendeMedlemskap;

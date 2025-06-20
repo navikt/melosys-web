@@ -34,25 +34,12 @@ InnerTextAreaComponent.propTypes = {
   onChange: PT.func,
 };
 
-InnerTextAreaComponent.defaultProps = {
-  meta: undefined,
-  input: undefined,
-  maxLength: undefined,
-  label: undefined,
-  placeholder: undefined,
-  onChange: undefined,
-};
-
 function Textarea({ feltNavn, ...rest }) {
   return <Field name={feltNavn} component={InnerTextAreaComponent} props={rest} />;
 }
 
 Textarea.propTypes = {
   feltNavn: PT.string,
-};
-
-Textarea.defaultProps = {
-  feltNavn: undefined,
 };
 
 export default Textarea;

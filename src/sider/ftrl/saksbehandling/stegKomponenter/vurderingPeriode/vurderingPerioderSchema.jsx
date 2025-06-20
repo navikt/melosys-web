@@ -68,7 +68,7 @@ const vurdering_perioder = object().shape({
     .min(1),
   feilPaaPerioder: string().when("medlemskapsperioder", {
     is: erFeilPaaPerioder,
-    then: string().required(),
+    then: (schema) => schema.required(),
   }),
 });
 

@@ -21,7 +21,6 @@ const VELG_SAKSTYPE = { melding: "Velg sakstype" };
 const VELG_SAKSTEMA = { melding: "Velg sakstema" };
 const VELG_BEHANDLINGSTYPE = { melding: "Velg behandlingstype" };
 const VELG_BEHANDLINGSTEMA = { melding: "Velg behandlingstema" };
-const VELG_OPPGAVE = { melding: "Velg hvilken oppgave du skal opprette sak på" };
 const VELG_BEHANDLINGSAARSAK = { melding: "Velg behandlingsårsak" };
 const MAX_25_TEGN = { melding: "Årsak kan være maks 25 tegn" };
 const FYLL_UT_MOTTAKSDATO = { melding: "Fyll ut mottaksdato" };
@@ -52,22 +51,25 @@ const opprettnysak = object().shape({
   brukerID: string()
     .when("hovedpart", {
       is: (hovedpart) => hovedpart === BRUKER,
-      then: string().erFnrEllerDnr(SKRIV_INN_GYLDIG_FNR_ELLER_DNR).required(SKRIV_INN_GYLDIG_FNR_ELLER_DNR).nullable(),
+      then: (schema) =>
+        schema.erFnrEllerDnr(SKRIV_INN_GYLDIG_FNR_ELLER_DNR).required(SKRIV_INN_GYLDIG_FNR_ELLER_DNR).nullable(),
     })
     .when(["hovedpart", "brukerNavn"], {
-      is: (hovedpart, brukerNavn) => hovedpart === BRUKER && Utils._isEmpty(brukerNavn),
-      then: string().harIkkeFnrEllerDnrLengde(FANT_INGEN_NAVN_PA_FNR_ELLER_DNR).nullable(),
+      is: (hovedpart, brukerNavn) =>
+        hovedpart === BRUKER && (brukerNavn === null || brukerNavn === undefined || brukerNavn === ""),
+      then: (schema) => schema.harIkkeFnrEllerDnrLengde(FANT_INGEN_NAVN_PA_FNR_ELLER_DNR).nullable(),
     })
     .nullable(),
   brukerNavn: string().nullable(),
   virksomhetOrgnr: string()
     .when("hovedpart", {
       is: (hovedpart) => hovedpart === VIRKSOMHET,
-      then: string().erOrgnr(SKRIV_INN_GYLDIG_ORGNR).required(SKRIV_INN_GYLDIG_ORGNR).nullable(),
+      then: (schema) => schema.erOrgnr(SKRIV_INN_GYLDIG_ORGNR).required(SKRIV_INN_GYLDIG_ORGNR).nullable(),
     })
     .when(["hovedpart", "virksomhetNavn"], {
-      is: (hovedpart, virksomhetNavn) => hovedpart === VIRKSOMHET && Utils._isEmpty(virksomhetNavn),
-      then: string().harIkkeOrgnrLengde(FANT_INGEN_NAVN_PA_ORGNR).nullable(),
+      is: (hovedpart, virksomhetNavn) =>
+        hovedpart === VIRKSOMHET && (virksomhetNavn === null || virksomhetNavn === undefined || virksomhetNavn === ""),
+      then: (schema) => schema.harIkkeOrgnrLengde(FANT_INGEN_NAVN_PA_ORGNR).nullable(),
     })
     .nullable(),
   virksomhetNavn: string().nullable(),
@@ -78,26 +80,31 @@ const opprettnysak = object().shape({
       VELG_HVILKEN_SAK_DU_ONSKER_A_KNYTTE_BEHANDLINGEN_TIL,
       (saksnummer) => skalOppretteNySak(saksnummer) || !Utils._isEmpty(saksnummer),
     ),
-  sakstype: string()
-    .when("saksnummer", {
-      is: skalOppretteNySak,
-      then: string().required(VELG_SAKSTYPE).nullable(),
-    })
-    .nullable(),
-  sakstema: string()
-    .nullable()
-    .when("saksnummer", {
-      is: skalOppretteNySak,
-      then: string().required(VELG_SAKSTEMA).nullable(),
-    })
-    .nullable(),
-  behandlingstema: string().required(VELG_BEHANDLINGSTEMA).nullable(),
-  behandlingstype: string().required(VELG_BEHANDLINGSTYPE).nullable(),
+  sakstype: string().when("saksnummer", {
+    is: skalOppretteNySak,
+    then: (schema) => schema.required(VELG_SAKSTYPE),
+    otherwise: (schema) => schema.nullable(),
+  }),
+  sakstema: string().when("saksnummer", {
+    is: skalOppretteNySak,
+    then: (schema) => schema.required(VELG_SAKSTEMA),
+    otherwise: (schema) => schema.nullable(),
+  }),
+  behandlingstema: string().when("saksnummer", {
+    is: skalOppretteNySak,
+    then: (schema) => schema.required(VELG_BEHANDLINGSTEMA),
+    otherwise: (schema) => schema.nullable(),
+  }),
+  behandlingstype: string().when("saksnummer", {
+    is: skalOppretteNySak,
+    then: (schema) => schema.required(VELG_BEHANDLINGSTYPE),
+    otherwise: (schema) => schema.nullable(),
+  }),
   periodeFraOgMed: string()
     .nullable()
     .when(["saksnummer", "sakstype", "sakstema", "behandlingstema", "behandlingstype"], {
       is: kreverPeriode,
-      then: string().required(MAA_FYLLES_UT).erGyldigDato().nullable(),
+      then: (schema) => schema.required(MAA_FYLLES_UT).erGyldigDato().nullable(),
     }),
   periodeTilOgMed: string().nullable().erEtterDatofelt("periodeFraOgMed").erGyldigDato(),
   soknadslandFlereLandUkjentHvilke: boolean().nullable(),
@@ -105,27 +112,27 @@ const opprettnysak = object().shape({
     ["saksnummer", "sakstype", "sakstema", "behandlingstema", "behandlingstype", "soknadslandFlereLandUkjentHvilke"],
     {
       is: kreverLand,
-      then: array().when("behandlingstema", {
-        is: MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND,
-        then: array().min(2, { _error: VELG_MINST_TO_LAND }),
-        otherwise: array().min(1, { _error: VELG_MINST_ETT_LAND }),
-      }),
+      then: (schema) =>
+        schema.when("behandlingstema", {
+          is: MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND,
+          then: (schemaInner) => schemaInner.min(2, { _error: VELG_MINST_TO_LAND }),
+          otherwise: (schemaInner) => schemaInner.min(1, { _error: VELG_MINST_ETT_LAND }),
+        }),
     },
   ),
-  mottaksdato: string().erGyldigDato().required(FYLL_UT_MOTTAKSDATO).nullable(),
-  behandlingsaarsakType: string().required(VELG_BEHANDLINGSAARSAK).nullable(),
-  behandlingsaarsakFritekst: string()
-    .nullable()
-    .when(["behandlingsaarsakType"], {
-      is: (behandlingsaarsakType) => behandlingsaarsakType === MKV.Koder.behandlinger.behandlingsaarsaktyper.FRITEKST,
-      then: string().max(25, MAX_25_TEGN).required(VELG_BEHANDLINGSAARSAK).nullable(),
-    }),
-  opprettBehandling: boolean()
-    .nullable()
-    .when("saksnummer", {
-      is: (saksnummer) => !skalOppretteNySak(saksnummer) && !Utils._isEmpty(saksnummer),
-      then: boolean().nullable().oneOf([true], DU_KAN_IKKE_OPPRETTE),
-    }),
+  mottaksdato: string().erGyldigDato().required(FYLL_UT_MOTTAKSDATO),
+  behandlingsaarsakType: string().required(VELG_BEHANDLINGSAARSAK),
+  behandlingsaarsakFritekst: string().when(["behandlingsaarsakType"], {
+    is: (behandlingsaarsakType) => behandlingsaarsakType === MKV.Koder.behandlinger.behandlingsaarsaktyper.FRITEKST,
+    then: (schema) => schema.max(25, MAX_25_TEGN).required(VELG_BEHANDLINGSAARSAK),
+    otherwise: (schema) => schema.nullable(),
+  }),
+  opprettBehandling: boolean().when("saksnummer", {
+    is: (saksnummer) =>
+      !skalOppretteNySak(saksnummer) && saksnummer !== null && saksnummer !== undefined && saksnummer !== "",
+    then: (schema) => schema.oneOf([true], DU_KAN_IKKE_OPPRETTE),
+    otherwise: (schema) => schema.nullable(),
+  }),
 });
 
 export default opprettnysak;

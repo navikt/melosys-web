@@ -1,5 +1,4 @@
 import PT from "prop-types";
-import { v4 as uuid } from "uuid";
 
 import MKV from "../../../../../melosyskodeverk";
 import * as Utils from "../../../../../utils";
@@ -12,7 +11,7 @@ import { useEffect } from "react";
 function EndrePeriode({
   endrePeriode,
   lovvalgsperiode,
-  sedLovvalgsperiode,
+  sedLovvalgsperiode = {},
   oppdaterFom,
   oppdaterTom,
   oppdaterBegrunnelse,
@@ -73,7 +72,7 @@ function EndrePeriode({
           error={feilmeldinger.begrunnelse}
           value={begrunnelse || "0"}
         >
-          <option key={uuid()} value="0" disabled>
+          <option key={Utils._uuid()} value="0" disabled>
             Velg i listen
           </option>
           {MKV.KTObjects.begrunnelser.folketrygdloven.endret_unntaksperiode.map((kodeobjekt) => (
@@ -117,10 +116,6 @@ EndrePeriode.propTypes = {
   oppdaterFritekst: PT.func.isRequired,
   feilmeldinger: PT.object.isRequired,
   redigerbart: PT.bool.isRequired,
-};
-
-EndrePeriode.defaultProps = {
-  sedLovvalgsperiode: {},
 };
 
 export default EndrePeriode;

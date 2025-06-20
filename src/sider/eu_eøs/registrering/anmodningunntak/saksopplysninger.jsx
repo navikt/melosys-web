@@ -3,7 +3,6 @@ import { withRouter } from "react-router-dom";
 import PT from "prop-types";
 import { connect } from "react-redux";
 import * as EKV from "eessi-kodeverk";
-import { v4 as uuid } from "uuid";
 
 import MKV from "../../../../melosyskodeverk";
 
@@ -33,7 +32,7 @@ import "../saksopplysninger.css";
 import { StatsborgerskapFeil } from "../../../../felleskomponenter/alertmeldinger";
 import Datovelger from "../../../../felleskomponenter/datovelger";
 
-function LinkForhandsvisningSed({ redigerbart, behandlingID, anmodningsperiodeSvarType, vedKlikk, fritekst }) {
+function LinkForhandsvisningSed({ redigerbart, behandlingID, anmodningsperiodeSvarType, vedKlikk, fritekst = null }) {
   let pdfDokument = [];
   if (anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE) {
     pdfDokument = [{ sedType: EKV.Koder.sedtyper.A011, sedData: { fritekst } }];
@@ -57,16 +56,12 @@ LinkForhandsvisningSed.propTypes = {
   fritekst: PT.string,
 };
 
-LinkForhandsvisningSed.defaultProps = {
-  fritekst: null,
-};
-
 function Saksopplysninger({
   redigerbart,
   behandlingID,
-  anmodningsperiodeID,
+  anmodningsperiodeID = undefined,
   anmodningsperiodeSvar,
-  sed,
+  sed = {},
   vurderingBegrunnelser,
   lastInnSaksopplysninger,
   lovvalgsperiode,
@@ -342,7 +337,7 @@ function Saksopplysninger({
     }
   };
 
-  const unikRadioButtonGruppeID = uuid();
+  const unikRadioButtonGruppeID = Utils._uuid();
 
   return (
     <div>
@@ -451,7 +446,6 @@ Saksopplysninger.propTypes = {
   behandlingID: PT.number.isRequired,
   sed: MPT.Behandlinger.Saksopplysninger.SED,
   vurderingBegrunnelser: PT.arrayOf(PT.string).isRequired,
-  skjema: PT.any,
   avklartefakta: PT.array.isRequired,
   match: PT.object.isRequired,
   location: PT.object.isRequired,
@@ -464,12 +458,6 @@ Saksopplysninger.propTypes = {
   startOgVisOppfriskModal: PT.func.isRequired,
   saksnummer: PT.string.isRequired,
   sendAnmodningUnntakSvar: PT.func.isRequired,
-};
-
-Saksopplysninger.defaultProps = {
-  sed: {},
-  skjema: {},
-  anmodningsperiodeID: undefined,
 };
 
 const mapStateToProps = (state) => ({

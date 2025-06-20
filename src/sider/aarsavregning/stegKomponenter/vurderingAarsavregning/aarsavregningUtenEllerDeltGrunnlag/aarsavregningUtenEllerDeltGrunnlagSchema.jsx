@@ -6,7 +6,7 @@ import { BOOLSK_STRING } from "../../../../../constants";
 import * as Datoutils from "../../../../../utils/dato";
 import { ULAGRET_MEDLEMSKAPSPERIODE_ID } from "./aarsavregningUtenEllerDeltGrunnlag";
 
-import { erBrukerSkattepliktigIHelePerioden } from "../komponenter/utils";
+import { erBrukerSkattepliktigIHelePerioden } from "../utils";
 
 const { MAA_FYLLES_UT } = KV.Feilmeldinger;
 const {
@@ -156,20 +156,24 @@ const inntektskildeSchema = object().shape({
 const aarsavregningUtenEllerDeltGrunnlagSchema = object().shape({
   bestemmelse: string().when(["endeligAvgiftValg"], {
     is: (endeligAvgiftValg) => endeligAvgiftValg === OPPLYSNINGER_ENDRET,
-    then: string().required(MAA_FYLLES_UT),
-    otherwise: string().nullable(),
+    then: (schema) => schema.required(MAA_FYLLES_UT),
+    otherwise: (schema) => schema.nullable(),
   }),
   endeligAvgiftValg: string().required(MAA_FYLLES_UT),
   medlemskapsperioder: array().when(["endeligAvgiftValg"], {
     is: (endeligAvgiftValg) => endeligAvgiftValg === OPPLYSNINGER_ENDRET,
-    then: array().min(1, "Minst en medlemskapsperiode").of(medlemskapsperiodeSchema),
-    otherwise: array(),
+    then: (schema) => schema.min(1, "Minst en medlemskapsperiode").of(medlemskapsperiodeSchema),
+    otherwise: (schema) => schema,
   }),
-  totaltForskuddsvisFakturert: string().nullable().required(MAA_FYLLES_UT),
+  trygdeavgiftFraAvgiftssystemet: string().when(["$harTrygdeavgiftFraAvgiftssystemet"], {
+    is: true,
+    then: (schema) => schema.required(MAA_FYLLES_UT),
+    otherwise: (schema) => schema.nullable(),
+  }),
   skatteforholdsperioder: array().when(["endeligAvgiftValg"], {
     is: (endeligAvgiftValg) => endeligAvgiftValg === OPPLYSNINGER_ENDRET,
-    then: array().min(1, "Minst en skatteforholdsperiode").of(skatteforholdsperiodeSchema),
-    otherwise: array(),
+    then: (schema) => schema.min(1, "Minst en skatteforholdsperiode").of(skatteforholdsperiodeSchema),
+    otherwise: (schema) => schema,
   }),
   inntektskilder: array().when(["medlemskapsperioder", "skatteforholdsperioder", "endeligAvgiftValg"], {
     is: (medlemskapsperioder, skatteforholdsperioder, endeligAvgiftValg) => {
@@ -178,13 +182,13 @@ const aarsavregningUtenEllerDeltGrunnlagSchema = object().shape({
 
       return !(medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(skatteforholdsperioder));
     },
-    then: array().min(1, "Minst en inntektskilde").of(inntektskildeSchema),
-    otherwise: array(),
+    then: (schema) => schema.min(1, "Minst en inntektskilde").of(inntektskildeSchema),
+    otherwise: (schema) => schema,
   }),
   manueltAvgiftBeloep: string().when(["endeligAvgiftValg"], {
     is: (endeligAvgiftValg) => endeligAvgiftValg === MANUELL_ENDELIG_AVGIFT,
-    then: string().required(MAA_FYLLES_UT),
-    otherwise: string().nullable(),
+    then: (schema) => schema.required(MAA_FYLLES_UT),
+    otherwise: (schema) => schema.nullable(),
   }),
 });
 

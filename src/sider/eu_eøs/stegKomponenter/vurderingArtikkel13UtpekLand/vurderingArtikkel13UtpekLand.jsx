@@ -42,14 +42,14 @@ const nyUtpekingsperiodeErInnenforSoknadsperioden = (soknadsperiode, isoFomDato,
 export function VurderingArtikkel13UtpekLand({
   redigerbart,
   behandlingID,
-  lovvalgsland,
+  lovvalgsland = "",
   soknadsperiode,
-  utpekingsperiode,
+  utpekingsperiode = {},
   tilstand: { overskrift },
   form,
   formIsValid,
   lagreOgUtpek,
-  formValues,
+  formValues = {},
   touchAll,
   erOffentligArbeidUtland,
   harLonnetArbeidAnnetLand,
@@ -305,12 +305,6 @@ VurderingArtikkel13UtpekLand.propTypes = {
   soknadsperiode: MPT.Periode.isRequired,
   landMedVesentligEllerRegistrertArbeid: PT.array.isRequired,
   oppdaterForm: PT.func.isRequired,
-};
-
-VurderingArtikkel13UtpekLand.defaultProps = {
-  utpekingsperiode: {},
-  formValues: {},
-  lovvalgsland: "",
 };
 
 const mapStateToProps = (state) => {

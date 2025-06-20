@@ -1,6 +1,6 @@
 import { useContext, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-// @ts-expect-error Workaround for @hookform/resolvers/yup with moduleResolution: bundler
+import { useSelector } from "react-redux";
+import { useDispatch } from "../../../../../hooks";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FieldValues, useForm } from "react-hook-form";
 import * as Forms from "../../../../../felleskomponenter/forms";
@@ -33,7 +33,7 @@ export function VurderingInngangManglendeInnbetaling({ bekreft, aktivtSteg, oppd
     watch,
     formState: { isValid: formIsValid },
   } = useForm({
-    resolver: yupResolver(vurdering_inngang_manglende_innbetaling),
+    resolver: yupResolver<FieldValues>(vurdering_inngang_manglende_innbetaling),
     mode: "all",
     defaultValues: {
       fullstendigManglendeInnbetaling: Utils.streng.boolTilUppercaseStreng(

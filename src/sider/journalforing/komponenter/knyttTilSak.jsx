@@ -97,27 +97,63 @@ export function KnyttTilSak(props) {
 
   useEffect(() => {
     if (sakstype.kode && sakstema.kode && behandlingstema) {
-      Api.LovligeKombinasjoner.hentBehandlingstyperForKnyttTilSak(
-        journalforingGjelder,
-        sak.saksnummer,
-        behandlingstema,
-      ).then((alleMuligeBehandlingstyper) => {
-        setMuligeBehandlingstyper(alleMuligeBehandlingstyper);
-      });
+      Api.LovligeKombinasjoner.hentBehandlingstyperForKnyttTilSak(journalforingGjelder, sak.saksnummer, behandlingstema)
+        .then((alleMuligeBehandlingstyper) => {
+          setMuligeBehandlingstyper(alleMuligeBehandlingstyper);
+        })
+        .catch((error) => {
+          console.error("Kunne ikke hente behandlingstyper:", error);
+          setMuligeBehandlingstyper([]);
+        });
+    } else {
+      setMuligeBehandlingstyper([]);
     }
   }, [journalforingGjelder, sakstype.kode, sakstema.kode, behandlingstema, sisteBehandling?.behandlingID]);
 
+  // Håndterer setting av behandlingstema basert på opprettBehandling tilstand
   useEffect(() => {
     if (opprettBehandling && Utils._isEmpty(behandlingstema)) {
       changeField(feltNavn.formNavn, feltNavn.behandlingstema, sisteBehandling.behandlingstema.kode);
     }
-    if (!opprettBehandling && !Utils._isEmpty(behandlingstema)) {
+    // Setter behandlingstema når opprettBehandling er undefined (visse journalføringsscenarier)
+    else if (
+      opprettBehandling === undefined &&
+      Utils._isEmpty(behandlingstema) &&
+      sisteBehandlingKanOpprettesAndregangsbehandlingPå &&
+      !sakKanIkkeViderebehandles
+    ) {
+      changeField(feltNavn.formNavn, feltNavn.behandlingstema, sisteBehandling.behandlingstema.kode);
+    }
+    // Setter behandlingstema i journalføring selv når opprettBehandling er false
+    else if (
+      erJournalføring &&
+      Utils._isEmpty(behandlingstema) &&
+      sisteBehandling?.behandlingstema?.kode &&
+      !sakKanIkkeViderebehandles
+    ) {
+      changeField(feltNavn.formNavn, feltNavn.behandlingstema, sisteBehandling.behandlingstema.kode);
+    }
+    // Nullstiller behandlingstema kun når det ikke trengs for journalføring
+    else if (
+      !opprettBehandling &&
+      !Utils._isEmpty(behandlingstema) &&
+      opprettBehandling !== undefined &&
+      !(erJournalføring && !sakKanIkkeViderebehandles)
+    ) {
       changeField(feltNavn.formNavn, feltNavn.behandlingstema, "");
     }
     if (!opprettBehandling && !Utils._isEmpty(behandlingstype)) {
       changeField(feltNavn.formNavn, feltNavn.behandlingstype, "");
     }
-  }, [opprettBehandling, behandlingstema, behandlingstype, sisteBehandling?.behandlingstema?.kode]);
+  }, [
+    opprettBehandling,
+    behandlingstema,
+    behandlingstype,
+    sisteBehandling?.behandlingstema?.kode,
+    sisteBehandlingKanOpprettesAndregangsbehandlingPå,
+    sakKanIkkeViderebehandles,
+    erJournalføring,
+  ]);
 
   function VurderDokumentCheckbox() {
     return <Skjema.Checkbox feltNavn="vurderDokument" label={`Oppdater behandlingsstatus til "Vurder dokument"`} />;

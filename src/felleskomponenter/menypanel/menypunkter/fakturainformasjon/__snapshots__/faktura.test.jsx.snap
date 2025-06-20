@@ -8,7 +8,7 @@ exports[`Faktura > snapshot test 1`] = `
       <button
         class="navds-table__toggle-expand-button"
         type="button"
-        aria-controls="r0"
+        aria-controls="«r0»"
         aria-expanded="false"
       >
         <svg
@@ -109,7 +109,11 @@ exports[`Faktura > snapshot test 1`] = `
               </span>
             </div>
             <div class="fakturalinje">
-              <div class="navds-alert navds-alert--info navds-alert--small">
+              <div
+                data-color="info"
+                data-variant="info"
+                class="navds-alert navds-alert--info navds-alert--small"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="1em"

@@ -13,7 +13,7 @@ interface BestemmelseSelectProps {
   control: Control<any>;
   setValue: (name: string, value: any) => void;
   bestemmelser: string[];
-  harDeltGrunnlag: boolean;
+  harGrunnlag: boolean;
   behandlingID?: number;
   redigerbart: boolean;
   setTrygdedekninger: (trygdedekninger: string[]) => void;
@@ -26,8 +26,8 @@ function BestemmelseSelect({
   control,
   setValue,
   bestemmelser,
-  harDeltGrunnlag,
   behandlingID,
+  harGrunnlag,
   redigerbart,
   setTrygdedekninger,
   setFeilmelding,
@@ -82,13 +82,13 @@ function BestemmelseSelect({
       }
     },
     [
-      harDeltGrunnlag,
       medlemskapsperioder,
       inntektskilder,
       setValue,
       setTrygdedekninger,
       setFeilmelding,
       setEndrerBestemmelse,
+      lagreMedlemskapsperioderHvisGyldig,
     ],
   );
 
@@ -98,11 +98,12 @@ function BestemmelseSelect({
       label="Bestemmelse"
       aria-label="Bestemmelse"
       control={control}
-      readOnly={!redigerbart || harDeltGrunnlag}
+      readOnly={!redigerbart || harGrunnlag}
       emptyFieldDisabled
       onChange={(valgtBestemmelse) => {
         handleBestemmelseChange(valgtBestemmelse);
       }}
+      className="bestemmelseSelect"
     >
       {bestemmelser.map((bestemmelseKode: string) => (
         <option key={bestemmelseKode} value={bestemmelseKode}>
@@ -115,5 +116,4 @@ function BestemmelseSelect({
     </Forms.Select>
   );
 }
-
 export default BestemmelseSelect;

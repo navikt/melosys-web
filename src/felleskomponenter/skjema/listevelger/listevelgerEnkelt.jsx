@@ -1,15 +1,15 @@
 import PT from "prop-types";
-import { v4 as uuid } from "uuid";
 
 import * as Nav from "../../../navFrontend";
 import * as KV from "../../../kodeverk";
 
 import "./listevelger.css";
+import * as Utils from "../../../utils";
 
 /** Enkeltlisten representerer ETT listevalg hvor brukeren kan velge fra listen eller skrive
  * inn sin egen verdi.
  */
-function ListevelgerEnkelt({ input, label, meta, muligeValg, placeholder, disabled, ...rest }) {
+function ListevelgerEnkelt({ input, label, meta, muligeValg = [], placeholder = "", disabled, errorMessage, ...rest }) {
   const feil = meta.invalid && meta.touched ? meta.error.melding : null;
   const inputProps = {
     ...input,
@@ -32,7 +32,7 @@ function ListevelgerEnkelt({ input, label, meta, muligeValg, placeholder, disabl
       />
       <datalist id={`dataliste-${inputProps.name}`}>
         {muligeValg.map((valg) => (
-          <option key={uuid()} value={KV.objektTilTerm(valg)} label={KV.objektTilTerm(valg)} />
+          <option key={Utils._uuid()} value={KV.objektTilTerm(valg)} label={KV.objektTilTerm(valg)} />
         ))}
       </datalist>
     </div>
@@ -42,26 +42,12 @@ function ListevelgerEnkelt({ input, label, meta, muligeValg, placeholder, disabl
 ListevelgerEnkelt.propTypes = {
   label: PT.string.isRequired,
   disabled: PT.bool.isRequired,
-  children: PT.node,
   input: PT.object,
   errorMessage: PT.object,
   muligeValg: PT.array,
   placeholder: PT.string,
   tillatFritekst: PT.bool.isRequired,
   meta: PT.object,
-};
-
-ListevelgerEnkelt.defaultProps = {
-  children: (
-    <option disabled value="0">
-      ingen valg tilgjengelig
-    </option>
-  ),
-  input: undefined,
-  errorMessage: undefined,
-  muligeValg: [],
-  placeholder: "",
-  meta: undefined,
 };
 
 export default ListevelgerEnkelt;

@@ -24,7 +24,7 @@ import { BOOLSK_STRING } from "../../../../constants";
 import "./vurderingForretningssted.css";
 
 function Forretningsstedet(props) {
-  const { forretningsstedet, avklartForretningsland, oppdaterData, slettData, redigerbart } = props;
+  const { forretningsstedet, avklartForretningsland = null, oppdaterData, slettData, redigerbart } = props;
 
   useEffect(() => {
     if (avklartForretningsland) {
@@ -71,10 +71,6 @@ Forretningsstedet.propTypes = {
   redigerbart: PT.bool.isRequired,
 };
 
-Forretningsstedet.defaultProps = {
-  avklartForretningsland: null,
-};
-
 function Forretningssteder(props) {
   const { valgteVirksomheter, avklarteForretningsland, redigerbart } = props;
 
@@ -117,7 +113,7 @@ Forretningssteder.propTypes = {
 };
 
 function VurderingForretningssted(props) {
-  const { bekreftOgFortsett, tilstand, redigerbart, oppdaterData, slettData, tilbake } = props;
+  const { bekreftOgFortsett, tilstand, redigerbart, oppdaterData, slettData, tilbake, valgteVirksomheter = [] } = props;
 
   const { omfattetINorge, omfattetILand, lovvalgsbestemmelse, harAvklaring } = tilstand;
 
@@ -260,10 +256,6 @@ VurderingForretningssted.propTypes = {
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
   tilbake: PT.func.isRequired,
-};
-
-VurderingForretningssted.defaultProps = {
-  valgteVirksomheter: [],
 };
 
 export default VurderingForretningssted;

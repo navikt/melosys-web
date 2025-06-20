@@ -33,7 +33,7 @@ function Saksbehandling({
   arbeidsland,
   hovedpartRolle,
   behandlingOppfriskes,
-  mottatteOpplysninger,
+  mottatteOpplysninger = {},
   mottatteOpplysningerPeriodeFom,
   mottatteOpplysningerPeriodeTom,
   behandlingsresultatType,
@@ -47,7 +47,7 @@ function Saksbehandling({
   hentFagsaker,
   location,
   match,
-  redigerbart,
+  redigerbart = null,
   resetBehandlingerState,
   resetMottatteOpplysningerState,
   resetFagsakState,
@@ -213,11 +213,6 @@ Saksbehandling.propTypes = {
   lovvalgsperiodeTom: PT.string.isRequired,
   registeropplysningerHentet: PT.bool.isRequired,
   menypanelSynlig: PT.bool.isRequired,
-};
-
-Saksbehandling.defaultProps = {
-  mottatteOpplysninger: {},
-  redigerbart: null,
 };
 
 const mapStateToProps = (state) => ({

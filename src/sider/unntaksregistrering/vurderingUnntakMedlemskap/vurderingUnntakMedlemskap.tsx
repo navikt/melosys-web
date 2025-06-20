@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { FieldValues, useForm } from "react-hook-form";
-import { useDispatch, useSelector } from "react-redux";
-// @ts-expect-error Workaround for @hookform/resolvers/yup with moduleResolution: bundler
+import { useSelector } from "react-redux";
+import { useDispatch } from "../../../hooks";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Feilmeldinger } from "../../../felleskomponenter/feilmeldinger";
 
@@ -56,7 +56,7 @@ function VurderingUnntakMedlemskap({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
   const kontrollFeil = useSelector(kontrollSelectors.KontrollFeilSelector);
 
   const { control, watch, formState, setValue } = useForm({
-    resolver: yupResolver(vurdering_unntak_medlemskap),
+    resolver: yupResolver<FieldValues>(vurdering_unntak_medlemskap),
     context: { sluttDato: mottatteOpplysningerPeriode.tom },
     mode: "all",
     defaultValues: {

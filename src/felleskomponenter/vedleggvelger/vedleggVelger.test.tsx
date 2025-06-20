@@ -1,16 +1,14 @@
 import { ComponentProps } from "react";
-import { instance, mock } from "ts-mockito";
 
 import VedleggVelger from "./vedleggVelger";
 import VedleggVelgerModal from "./vedleggVelgerModal";
 import { render, screen } from "@testing-library/react";
 
 describe("VedleggVelger", () => {
-  const mockedProps = mock<ComponentProps<typeof VedleggVelger>>();
-  let props = instance(mockedProps);
+  let props: ComponentProps<typeof VedleggVelger>;
 
   beforeEach(() => {
-    props = instance(mockedProps);
+    props = {} as ComponentProps<typeof VedleggVelger>;
   });
 
   it("rendrer en knapp med tekst 'Legg til vedlegg'", () => {
@@ -24,13 +22,13 @@ describe("VedleggVelger", () => {
 });
 
 describe("VedleggVelgerModal", () => {
-  const mockedProps = mock<ComponentProps<typeof VedleggVelgerModal>>();
-  const props = instance(mockedProps);
-  props.valgteVedlegg = {
-    saksvedlegg: [],
-    standardvedlegg: null,
-  };
-  props.alleSaksvedlegg = [];
+  const props: ComponentProps<typeof VedleggVelgerModal> = {
+    valgteVedlegg: {
+      saksvedlegg: [],
+      standardvedlegg: null,
+    },
+    alleSaksvedlegg: [],
+  } as unknown as ComponentProps<typeof VedleggVelgerModal>;
 
   it("viser en Nav Modal", () => {
     render(<VedleggVelgerModal {...props} />);
