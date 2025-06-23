@@ -39,6 +39,7 @@ const { MANUELL_ENDELIG_AVGIFT } = MKV.Koder.endeligAvgiftValg;
 interface FormValuesProps {
   innledningFritekst?: string;
   begrunnelseFritekst?: string;
+  skjoennsfastsattInntekt?: boolean;
 }
 
 interface Props {
@@ -91,6 +92,9 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
     getValues,
     formState: { isValid: formIsValid },
   } = useForm<FormValuesProps>({
+    defaultValues: {
+      skjoennsfastsattInntekt: false,
+    },
     resolver: yupResolver(vurdering_vedtak),
     context: { endeligAvgiftValg: lagretAarsavregning?.endeligAvgiftValg },
     mode: "onSubmit",
@@ -352,7 +356,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
     (!harFullmaktForTrygdeavgift || erDifferanseUnderMinstebeløp || harBekreftetFullmaktForTrygdeavgift);
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="vurderingVedtak">
+    <form onSubmit={handleSubmit(onSubmit)} className="vurderingVedtakAarsavregning">
       <Nav.Heading level="1" className="stegvelgertittel">
         Vedtak årsavregning {lagretAarsavregning ? lagretAarsavregning.aar : ""}
       </Nav.Heading>
@@ -372,6 +376,22 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
           tidligereTrygdeavgift !== null || lagretAarsavregning?.harTrygdeavgiftFraAvgiftssystemet === true
         }
         tidligereAarsavregningTrygdeavgiftFraAvgiftssystem={tidligereTrygdeavgiftFraAvgiftssystemet}
+      />
+
+      <Forms.Checkbox
+        name="skjoennsfastsattInntekt"
+        size="small"
+        control={control}
+        label={
+          <>
+            <strong>Inntektsgrunnlaget er skjønnsmessig fastsatt.</strong>
+            &nbsp;Dette utløser en standardtekst i brevet
+          </>
+        }
+        disabled={!redigerbart}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+          Api.Aarsavregning.oppdaterHarSkjoennsfastsattInntektsgrunnlag(behandlingID, e.target.checked);
+        }}
       />
 
       {fakturaMottaker ? (

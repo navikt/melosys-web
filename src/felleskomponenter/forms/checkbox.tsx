@@ -1,5 +1,5 @@
 import { Controller, UseControllerProps } from "react-hook-form";
-import { forwardRef } from "react";
+import { forwardRef, ReactNode } from "react";
 
 import * as Nav from "../../navFrontend";
 
@@ -10,7 +10,7 @@ import { _uuid } from "../../utils";
 interface CheckboxComponentProps {
   className?: string;
   value?: string;
-  label?: string;
+  label?: string | ReactNode;
   readOnly?: boolean;
   checked?: boolean;
   onChange?: (value: any) => void;
