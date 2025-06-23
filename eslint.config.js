@@ -49,22 +49,9 @@ export default tseslint.config(
       "react/function-component-definition": "error",
       "react/prop-types": "off",
       "react/jsx-uses-vars": "error",
-
-      // React Hooks
       "react-hooks/rules-of-hooks": "error",
       "react-hooks/exhaustive-deps": "off",
 
-      // FILE SIZE RULES - Restore from ESLint 8
-      "max-lines": [
-        "warn",
-        {
-          max: 400,
-          skipBlankLines: true,
-          skipComments: true,
-        },
-      ],
-
-      // FILE SIZE RULES - Restore from ESLint 8
       "max-lines": [
         "warn",
         {
@@ -84,8 +71,7 @@ export default tseslint.config(
       "import/newline-after-import": "off",
 
       // TypeScript rules
-      "@typescript-eslint/no-unused-vars": "off",
-      "no-unused-vars": "warn",
+      "@typescript-eslint/no-unused-vars": "warn",
       "@typescript-eslint/explicit-function-return-type": "off",
       "@typescript-eslint/explicit-module-boundary-types": "off",
       "@typescript-eslint/no-explicit-any": "off",
