@@ -1,9 +1,9 @@
 import { expect, Page } from "@playwright/test";
 
 /**
- * Page Object Model for the new case page
+ * Page Object Model for the ny sak
  */
-export class NewCasePage {
+export class OpprettNySakPage {
   readonly page: Page;
 
   constructor(page: Page) {
@@ -11,7 +11,7 @@ export class NewCasePage {
   }
 
   /**
-   * Verify that we are on the new case page
+   * Verifiser at vi er på 'Opprett ny sak' siden
    */
   async verifyNewCasePage(): Promise<void> {
     await expect(this.page).toHaveURL("/melosys/opprettnysak");
@@ -19,7 +19,7 @@ export class NewCasePage {
   }
 
   /**
-   * Verify that the "Hvem skal saken opprettes på?" section is displayed correctly
+   * Verifiser at "Hvem skal saken opprettes på?" seksjonen er vist korrekt
    */
   async verifyUserTypeSection(): Promise<void> {
     await expect(
@@ -31,7 +31,7 @@ export class NewCasePage {
   }
 
   /**
-   * Verify that the "Informasjon om bruker" section is displayed correctly
+   * Verifiser at "Informasjon om bruker" seksjonen er vist korrekt
    */
   async verifyUserInfoSection(): Promise<void> {
     await expect(this.page.locator(".opprettnysak .undertittel:has-text('Informasjon om bruker')")).toBeVisible();
@@ -40,7 +40,7 @@ export class NewCasePage {
   }
 
   /**
-   * Verify that the "Legg behandlingen i mine oppgaver" checkbox is displayed correctly
+   * Verifiser at "Legg behandlingen i mine oppgaver" checkbox er vist korrekt
    */
   async verifyAssignmentCheckbox(): Promise<void> {
     await expect(this.page.locator(".navds-checkbox:has-text('Legg behandlingen i mine oppgaver')")).toBeVisible();
@@ -48,7 +48,7 @@ export class NewCasePage {
   }
 
   /**
-   * Verify that the action buttons are displayed correctly
+   * Verifiser at action buttons er vist korrrekt
    */
   async verifyActionButtons(): Promise<void> {
     await expect(this.page.locator("button:has-text('Opprett ny behandling')")).toBeVisible();
@@ -56,7 +56,7 @@ export class NewCasePage {
   }
 
   /**
-   * Verify all elements on the new case page
+   * Verifiser alle ellementer på "Opprett ny sak" siden
    */
   async verifyAllElements(): Promise<void> {
     await this.verifyNewCasePage();

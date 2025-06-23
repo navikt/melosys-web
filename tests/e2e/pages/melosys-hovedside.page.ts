@@ -4,9 +4,9 @@ export const USER_ID_VALID = "30056928150";
 export const USER_ID_INVALID = "INVALID123";
 
 /**
- * Page Object Model for the main page
+ * Page Object Model for Melosys hovedside
  */
-export class MainPage {
+export class MelosysHovedsidePage {
   readonly page: Page;
 
   constructor(page: Page) {
@@ -14,7 +14,7 @@ export class MainPage {
   }
 
   /**
-   * Navigate to the main page
+   * Navigaer til hovedsiden
    */
   async goto(): Promise<void> {
     await this.page.goto("/");
@@ -22,7 +22,7 @@ export class MainPage {
   }
 
   /**
-   * Verify that we are on the main page
+   * Verifiser at vi er på hovedsiden
    */
   async verifyMainPage(): Promise<void> {
     await expect(this.page).toHaveURL("/melosys");
@@ -32,14 +32,14 @@ export class MainPage {
   }
 
   /**
-   * Get the "Opprett ny sak/behandling" button
+   * Finn "Opprett ny sak/behandling" button
    */
   getCreateNewCaseButton() {
     return this.page.locator("button:has-text('Opprett ny sak/behandling')");
   }
 
   /**
-   * Click the "Opprett ny sak/behandling" button
+   * Klikk på "Opprett ny sak/behandling" button
    */
   async clickCreateNewCaseButton(): Promise<void> {
     const createButton = this.getCreateNewCaseButton();
@@ -49,15 +49,15 @@ export class MainPage {
   }
 
   /**
-   * Get the first task link
+   * Finn den første saken i sakslista
    */
   getFirstTaskLink() {
     return this.page.locator(".behandlingOppgave__link").first();
   }
 
   /**
-   * Click on the first task link
-   * @returns The href attribute of the clicked task link
+   * Klikk på den første saken in sakslista
+   * @returns href attribute til taskens
    */
   async clickFirstTaskLink(): Promise<string | null> {
     const taskLink = this.getFirstTaskLink();
@@ -73,10 +73,10 @@ export class MainPage {
   }
 
   /**
-   * Search for an ID
-   * @param id - The ID to search for
+   * Gi iput til søkefeltet og klikk på søkeknappen
+   * @param input - søkestreng
    */
-  async search(id: string): Promise<void> {
+  async search(input: string): Promise<void> {
     await expect(this.page.locator("form.sokeskjema")).toBeVisible();
 
     const searchInput = this.page.locator("form.sokeskjema input[type='text']");
@@ -84,7 +84,7 @@ export class MainPage {
     const searchInputCount = await searchInput.count();
     expect(searchInputCount > 0, "Search input field 'Søk sak:' not found").toBeTruthy();
 
-    await searchInput.fill(id);
+    await searchInput.fill(input);
 
     const searchButton = this.page.locator("form.sokeskjema .sokeskjema__knapp button");
 
