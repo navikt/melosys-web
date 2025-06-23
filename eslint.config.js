@@ -41,17 +41,6 @@ export default tseslint.config(
       prettier,
     },
     rules: {
-      // React rules - MODERERT FOR OVERGANG
-      "react/jsx-props-no-spreading": "off",
-      "react/react-in-jsx-scope": "off",
-      "react/require-default-props": "off",
-      "react/jsx-filename-extension": "off",
-      "react/function-component-definition": "error",
-      "react/prop-types": "off",
-      "react/jsx-uses-vars": "error",
-      "react-hooks/rules-of-hooks": "error",
-      "react-hooks/exhaustive-deps": "off",
-
       "max-lines": [
         "warn",
         {
@@ -61,20 +50,9 @@ export default tseslint.config(
         },
       ],
 
-      // Import rules - DEAKTIVERT MIDLERTIDIG
-      "import/extensions": "off",
-      "import/prefer-default-export": "off",
-      "import/order": "off",
-      "import/no-unresolved": "off",
-      "import/no-extraneous-dependencies": "off",
-      "import/first": "off",
-      "import/newline-after-import": "off",
-
       // TypeScript rules
       "@typescript-eslint/no-unused-vars": "warn",
-      "@typescript-eslint/explicit-function-return-type": "off",
-      "@typescript-eslint/explicit-module-boundary-types": "off",
-      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-explicit-any": "warn",
       "@typescript-eslint/no-empty-object-type": "warn",
 
       // General rules
@@ -82,7 +60,6 @@ export default tseslint.config(
       "no-var": "error",
       "no-console": "warn",
       eqeqeq: "warn",
-      "prefer-arrow-callback": "off",
       "arrow-spacing": "error",
       "no-unused-vars": "off", // Use TypeScript version instead
       "no-constant-binary-expression": "warn",
