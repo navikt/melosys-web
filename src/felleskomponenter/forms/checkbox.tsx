@@ -52,10 +52,6 @@ const Checkbox = forwardRef<HTMLSelectElement, CheckboxProps>(
             {...field}
             {...rest}
             checked={checked !== undefined ? checked : field.value}
-            onChange={(event: any) => {
-              field.onChange(event);
-              if (rest.onChange) rest.onChange(event?.target?.value);
-            }}
             feil={getErrorMessage(field, formState)}
           />
         )}

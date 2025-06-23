@@ -92,9 +92,6 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
     getValues,
     formState: { isValid: formIsValid },
   } = useForm<FormValuesProps>({
-    defaultValues: {
-      skjoennsfastsattInntekt: false,
-    },
     resolver: yupResolver(vurdering_vedtak),
     context: { endeligAvgiftValg: lagretAarsavregning?.endeligAvgiftValg },
     mode: "onSubmit",
@@ -197,6 +194,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
           {
             innledningFritekst: nyInnledningFritekst,
             begrunnelseFritekst: nyBegrunnelseFritekst,
+            skjoennsfastsattInntekt: lagretAarsavregning?.harSkjoennsfastsattInntekt,
           },
           { keepDirty: false },
         );
@@ -390,7 +388,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
         }
         disabled={!redigerbart}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-          Api.Aarsavregning.oppdaterHarSkjoennsfastsattInntektsgrunnlag(behandlingID, e.target.checked);
+          Api.Aarsavregning.oppdaterHarSkjoennsfastsattInntekt(behandlingID, e.target.checked);
         }}
       />
 
