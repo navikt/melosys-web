@@ -17,6 +17,7 @@ import {
 } from "../../../../../ducks/helseutgiftdekkesperiode";
 import { HelseutgiftDekkesPeriodeDto } from "../../../../../services/modules/helseutgiftDekkesPeriode/helseutgiftDekkesPeriode";
 import { useEffect } from "react";
+import { oppsummertfaktaOperations } from "../../../../../ducks/oppsummertfakta";
 
 interface Props {
   bekreft: () => void;
@@ -63,6 +64,7 @@ export function VurderingOpplysninger({ bekreft, tilbake, aktivtSteg, oppdaterSt
   }, [fomDato, tomDato, bostedLandkode, setValue, trigger]);
 
   useEffect(() => {
+    dispatch(oppsummertfaktaOperations.hentOppsummertFakta(behandlingId));
     dispatch(helseutgiftDekkesPeriodeOperations.hentHelseutgiftDekkesPeriode(behandlingId));
   }, [behandlingId]);
 

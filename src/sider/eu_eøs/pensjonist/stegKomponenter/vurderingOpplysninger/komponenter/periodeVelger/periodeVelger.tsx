@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../../../../ducks/oppsummertfakta";
 import { behandlingerSelectors } from "../../../../../../../ducks/behandlinger";
 import { useDispatch } from "../../../../../../../hooks/useDispatch";
+import { useEffect } from "react";
 
 export interface PeriodeVelgerProps {
   redigerbart: boolean;
