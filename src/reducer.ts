@@ -35,6 +35,7 @@ import customFormReducer from "./ducks/form";
 import fakturaserierReducers from "./ducks/fakturaserier";
 import featureToggleReducers from "./ducks/featuretoggle";
 import aarsavregningReducers from "./ducks/aarsavregning";
+import helseutgiftdekkesperiodeReducers from "./ducks/helseutgiftdekkesperiode";
 
 const rootReducer = {
   form: formReducer.plugin({ forretningsValidering: customFormReducer }),
@@ -71,6 +72,7 @@ const rootReducer = {
   videresending: videresendingReducer,
   vilkar: vilkarReducer,
   aarsavregning: aarsavregningReducers,
+  helseutgiftdekkesperiode: helseutgiftdekkesperiodeReducers,
 };
 
 export default rootReducer;
