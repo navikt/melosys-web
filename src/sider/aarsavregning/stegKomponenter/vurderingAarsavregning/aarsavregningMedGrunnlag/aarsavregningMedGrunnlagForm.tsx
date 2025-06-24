@@ -305,6 +305,10 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
     aarsavregningResponse?.tidligereGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep,
   );
 
+  const minDate = initiellData.valgtÅr !== undefined ? new Date(initiellData.valgtÅr, 0, 1) : undefined;
+  const maxDate =
+    initiellData.valgtÅr !== undefined ? new Date(initiellData.valgtÅr, 11, 31, 23, 59, 59, 999) : undefined;
+
   return (
     <>
       <EndeligAvgiftValgRadioGroup
@@ -340,6 +344,8 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
             append={skattAppend}
             control={control}
             fields={skattFields}
+            minDate={minDate}
+            maxDate={maxDate}
           />
           {!trygdeAvgiftSkalIkkeBetalesTilNav && (
             <Inntektskilder
@@ -354,6 +360,8 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
               medlemskapsTypeErPliktig={medlemskapstypeErPliktig!}
               skalViseErMaanedsBelopRadioGroup
               bestemmelse={innvilgetMedlemskapsperiodeBestemmelse}
+              minDate={minDate}
+              maxDate={maxDate}
             />
           )}
 

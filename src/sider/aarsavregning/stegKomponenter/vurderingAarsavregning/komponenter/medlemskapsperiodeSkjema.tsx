@@ -59,8 +59,8 @@ export interface PeriodeElementerProps {
   handleLeggTil: () => void;
   index: number;
   visLeggTil: boolean;
-  maksVerdi?: Date;
-  minVerdi?: Date;
+  maxDate?: Date;
+  minDate?: Date;
   trygdedekninger?: string[];
   setValue: (name: string, value: any, options?: any) => void;
   errors: FieldErrors<FormValuesProps>;
@@ -76,8 +76,8 @@ export function MedlemskapsperiodeSkjema({
   handleLeggTil,
   index,
   visLeggTil,
-  maksVerdi,
-  minVerdi,
+  maxDate,
+  minDate,
   trygdedekninger = [],
   setValue,
   errors,
@@ -114,8 +114,8 @@ export function MedlemskapsperiodeSkjema({
             <Forms.Datovelger
               label={index === 0 ? "Medlemskapsperiode" : ""}
               control={control}
-              minDate={tilOgMedDatoForrigePeriode !== undefined ? tilOgMedDatoForrigePeriode : minVerdi}
-              maxDate={maksVerdi}
+              minDate={tilOgMedDatoForrigePeriode !== undefined ? tilOgMedDatoForrigePeriode : minDate}
+              maxDate={maxDate}
               name={`medlemskapsperioder[${index}].fomDato`}
               aria-label={`Fra og med periode ${index + 1}`}
               readOnly={!redigerbart || erPeriodeFraGrunnlag}
@@ -127,8 +127,8 @@ export function MedlemskapsperiodeSkjema({
               control={control}
               name={`medlemskapsperioder[${index}].tomDato`}
               aria-label={`Til og med periode ${index + 1}`}
-              minDate={Utils.dato.norskStringTilDate(medlemskapsperioder[index].fomDato)}
-              maxDate={maksVerdi}
+              minDate={Utils.dato.norskStringTilDate(medlemskapsperioder[index].fomDato) || minDate}
+              maxDate={maxDate}
               readOnly={!redigerbart || erPeriodeFraGrunnlag}
             />
           </Nav.Column>
