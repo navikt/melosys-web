@@ -63,14 +63,16 @@ export function TidligereGrunnlag({ aarsavregningResponse }: TidligereGrunnlagPr
                 <Aarsavregningsmeldinger.TrygdeavgiftErIkkeForskuddsvisFakturert />
               )}
 
-              <BeregnetTrygdeavgiftDetaljer
-                grunnlag={aarsavregningResponse.tidligereGrunnlagsopplysninger!}
-                medlemskapsTypeErPliktig={
-                  aarsavregningResponse.tidligereGrunnlagsopplysninger!.trygdeavgiftsgrunnlag.medlemskapsperioder?.every(
-                    (periode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG,
-                  ) ?? true
-                }
-              />
+              {forskuddsvisFakturertTrygdeavgift && (
+                <BeregnetTrygdeavgiftDetaljer
+                  grunnlag={aarsavregningResponse.tidligereGrunnlagsopplysninger!}
+                  medlemskapsTypeErPliktig={
+                    aarsavregningResponse.tidligereGrunnlagsopplysninger!.trygdeavgiftsgrunnlag.medlemskapsperioder?.every(
+                      (periode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG,
+                    ) ?? true
+                  }
+                />
+              )}
             </Nav.ExpansionCard.Content>
           </Nav.ExpansionCard>
         </>
