@@ -1,4 +1,5 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+import { useDispatch } from "../../../hooks";
 import MKV from "../../../melosyskodeverk";
 import { BekreftValgTypes } from "../../../modals/bekreftValgTypes";
 import { redigerbartSelectors } from "../../../ducks/redigerbart";

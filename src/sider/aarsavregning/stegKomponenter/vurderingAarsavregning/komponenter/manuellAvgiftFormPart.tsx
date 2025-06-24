@@ -27,7 +27,6 @@ export function ManuellAvgiftFormPart({
       autoComplete="off"
       type="text"
       numeric
-      tillattNegativeTall
       onChange={debouncedOppdaterManueltAvgiftBeloep}
     />
   );

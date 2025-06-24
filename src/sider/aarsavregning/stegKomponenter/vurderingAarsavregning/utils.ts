@@ -128,3 +128,17 @@ export const mapTilInntektskilderProps = (inntektskilder?: any[], medlemskapsper
   }
   return [{}];
 };
+
+export const beregnSumTilFakturaEllerRefusjon = (
+  nyTrygdeavgift?: number,
+  tidligereTrygdeavgift?: number,
+  tidligereTrygdeavgiftAvgiftssystem?: number,
+  tidligereAarsavregningTrygdeavgiftFraAvgiftssystem?: number,
+): number => {
+  return (
+    (nyTrygdeavgift ?? 0) -
+    (tidligereTrygdeavgift ?? 0) -
+    (tidligereTrygdeavgiftAvgiftssystem ?? 0) +
+    (tidligereAarsavregningTrygdeavgiftFraAvgiftssystem ?? 0)
+  );
+};

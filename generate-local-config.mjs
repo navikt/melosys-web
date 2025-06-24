@@ -1,12 +1,21 @@
 // Bygg opp en env-config.js-fil basert på miljøvariabler fra .env-filen
-const fs = require("fs");
-const path = require("path");
-const dotenv = require("dotenv");
+import fs from "fs";
+import path from "path";
+import dotenv from "dotenv";
 
 const envFileName = process.argv[2] || ".local.env";
 const envPath = path.resolve(process.cwd(), envFileName);
 
 const envConfig = dotenv.parse(fs.readFileSync(envPath));
 
-const configContent = `window.env = ${JSON.stringify(envConfig)};`;
+// Generer ESM-kompatibelt innhold
+const configContent = `const envConfig = ${JSON.stringify(envConfig, null, 2)};
+
+// Setter window.env for bakoverkompatibilitet
+window.env = envConfig;
+
+// Eksporterer som ES-modul
+export default envConfig;
+`;
+
 fs.writeFileSync(path.resolve(process.cwd(), "env-config.js"), configContent);

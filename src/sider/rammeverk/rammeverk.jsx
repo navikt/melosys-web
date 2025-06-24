@@ -21,31 +21,49 @@ function Hovedside({ isDevelopmentProfile = false, children = undefined }) {
     if (harToken && featureToggleReduxState.status === STATUS.NOT_STARTED) {
       dispatch(featureToggleOperations.hent());
     }
-  }, [harToken]);
+  }, [harToken, featureToggleReduxState.status, dispatch]);
 
   useEffect(() => {
     if (!isDevelopmentProfile && inProgress === InteractionStatus.None && !isAuthenticated) {
       instance.loginRedirect(melosysWebLoginRequest);
     }
-  }, [isAuthenticated, instance, inProgress]);
+  }, [isAuthenticated, instance, inProgress, isDevelopmentProfile]);
 
-  if (isDevelopmentProfile) {
-    setTokenInterceptorForLocalDevelopment().then(() => setHarToken(true));
-  } else {
-    setTokenInterceptor((url) => getAccessToken(instance, accounts, url), accounts).then(() => setHarToken(true));
-  }
+  useEffect(() => {
+    if (isDevelopmentProfile) {
+      setTokenInterceptorForLocalDevelopment()
+        .then(() => {
+          setHarToken(true);
+        })
+        .catch((error) => {
+          console.error("Failed to set up development authentication:", error);
+        });
+    }
+  }, [isDevelopmentProfile]);
+
+  useEffect(() => {
+    if (!isDevelopmentProfile && isAuthenticated && accounts.length > 0 && inProgress === InteractionStatus.None) {
+      setTokenInterceptor((url) => getAccessToken(instance, accounts, url), accounts)
+        .then(() => {
+          setHarToken(true);
+        })
+        .catch((error) => {
+          console.error("Failed to set up token interceptor:", error);
+        });
+    }
+  }, [isDevelopmentProfile, isAuthenticated, accounts, inProgress, instance]);
 
   return isDevelopmentProfile ? (
     <div>
       <Topplinje saksbehandler="Lokal Testbruker" />
-      {children}
+      {harToken ? children : <div />}
     </div>
   ) : (
     <>
       <AuthenticatedTemplate>
         <div>
           <Topplinje saksbehandler={accounts && accounts.length > 0 ? accounts[0].name : ""} />
-          {children}
+          {harToken ? children : <div />}
         </div>
       </AuthenticatedTemplate>
       <UnauthenticatedTemplate>

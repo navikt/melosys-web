@@ -1,4 +1,4 @@
-import * as PT from "prop-types";
+/* eslint-disable react/prefer-stateless-function */
 import classNames from "classnames";
 import { Component, ComponentClass, HTMLAttributes } from "react";
 
@@ -24,7 +24,9 @@ export interface ColumnProps extends HTMLAttributes<HTMLDivElement> {
   lg?: "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "10" | "11" | "12";
 }
 
-// eslint-disable-next-line react/prefer-stateless-function
+/**
+ * @deprecated Bruk aksel primitives (HGrid, HStack, VStack, Box) i stedet.
+ */
 class Column extends Component<ColumnProps> {
   render() {
     const { children, className, xs, sm, md, lg, ...props } = this.props;
@@ -44,15 +46,6 @@ class Column extends Component<ColumnProps> {
   sm: undefined,
   md: undefined,
   lg: undefined,
-};
-
-(Column as ComponentClass).propTypes = {
-  className: PT.string,
-  xs: PT.oneOf(["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]),
-  sm: PT.oneOf(["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]),
-  md: PT.oneOf(["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]),
-  lg: PT.oneOf(["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]),
-  children: PT.oneOfType([PT.arrayOf(PT.node), PT.node]),
 };
 
 export default Column;

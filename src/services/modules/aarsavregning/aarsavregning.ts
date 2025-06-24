@@ -7,10 +7,9 @@ export interface AarsavregningResponse {
   aarsavregningID: number;
   aar: number;
   tidligereGrunnlagsopplysninger?: Grunnlagsopplysninger;
-  harAvvik?: boolean;
   nyttGrunnlag?: Grunnlagsopplysninger;
   avregning?: Avregning;
-  harDeltGrunnlag?: boolean;
+  harTrygdeavgiftFraAvgiftssystemet?: boolean;
   endeligAvgiftValg?: string;
 }
 
@@ -18,14 +17,14 @@ export interface AarsavregningRequest {
   avregning: Omit<Avregning, "tidligereFakturertBeloep">;
 }
 
-export interface OppdaterHarDeltGrunnlagRequest {
-  harDeltGrunnlag: boolean;
+export interface OppdaterHarTrygdeavgiftFraAvgiftssystemetRequest {
+  harTrygdeavgiftFraAvgiftssystemet: boolean;
 }
 
 export interface Grunnlagsopplysninger {
   trygdeavgiftsgrunnlag: Trygdeavgiftsgrunnlag;
   avgift: Avgift;
-  tidligereÅrsavregningFakturertBeloepAvgiftssystem?: number;
+  tidligereTrygdeavgiftFraAvgiftssystemet?: number;
   tidligereÅrsavregningManueltAvgiftBeloep?: number;
 }
 
@@ -55,7 +54,7 @@ export interface Avregning {
   beregnetAvgiftBelop?: number;
   tidligereFakturertBeloep?: number;
   tilFaktureringBeloep?: number;
-  tidligereFakturertBeloepAvgiftssystem?: number;
+  trygdeavgiftFraAvgiftssystemet?: number;
   manueltAvgiftBeloep?: number;
 }
 
@@ -82,9 +81,9 @@ export const lagAarsavregning = (
 ): Promise<AarsavregningResponse> =>
   postAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${AARSAVREGNING}`, request);
 
-export const oppdaterHarDeltGrunnlag = (
+export const oppdaterHarTrygdeavgiftFraAvgiftssystemet = (
   behandlingID: number,
-  request: OppdaterHarDeltGrunnlagRequest,
+  request: OppdaterHarTrygdeavgiftFraAvgiftssystemetRequest,
 ): Promise<AarsavregningResponse> =>
   postAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${AARSAVREGNING}/grunnlagstype`, request);
 

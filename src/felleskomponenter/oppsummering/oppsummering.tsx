@@ -102,6 +102,9 @@ function Oppsummering({
   const erFTRL = sakstype.kode === MKV.Koder.sakstyper.FTRL;
   const erUnntaksregistrering = harUnntaksregistreringFlyt(sakstype.kode, sakstema.kode, behandlingstema.kode);
   const erIkkeYrkesaktivFlyt = harIkkeYrkesaktivFlyt(sakstype.kode, behandlingstema.kode);
+  const erEøsPensjonist =
+    sakstype.kode === MKV.Koder.sakstyper.EU_EOS &&
+    behandlingstema.kode === MKV.Koder.behandlinger.behandlingstema.PENSJONIST;
   const erIngenFlyt = skalViseIngenFlyt(
     sakstype.kode,
     sakstema.kode,
@@ -123,7 +126,7 @@ function Oppsummering({
       : "Ukjent";
 
   const tabellEnKolonne = (data: string[][]) => {
-    const rows: JSX.Element[] = [];
+    const rows: React.JSX.Element[] = [];
     data.forEach((row) =>
       rows.push(
         <Nav.Row className="datarad" key={`datarad-${row[0]}`}>
@@ -199,6 +202,13 @@ function Oppsummering({
       return [
         ["Periode fra SED", lovvalgsperiode],
         ["Land", landStorBokstav(lovvalgsland)],
+      ];
+    }
+
+    if (erEøsPensjonist) {
+      return [
+        ["Periode fra attest/S1", mottatteOpplysningerperiode],
+        ["Bostedsland", landStorBokstav(lovvalgsland)],
       ];
     }
 

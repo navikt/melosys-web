@@ -16,6 +16,7 @@ import IkkeYrkesaktiv from "./sider/ikkeYrkesaktiv/saksbehandling";
 import Årsavregning from "./sider/aarsavregning/saksbehandling";
 import Unntaksregistrering from "./sider/unntaksregistrering";
 import UkjentSide from "./sider/ukjentSide";
+import EøsPensjonist from "./sider/eu_eøs/pensjonist/saksbehandling";
 
 import { FellesHandlersContext } from "./contexts";
 import ErrorBoundary from "./felleskomponenter/errorBoundary";
@@ -86,6 +87,10 @@ function Routing() {
           <Route
             path="/:sakstype/aarsavregning/:saksnr"
             render={(props) => <Årsavregning {...props} {...fellesHandlers} />}
+          />
+          <Route
+            path={`/${EU_EOS}/pensjonist/:saksnr`}
+            render={(props) => <EøsPensjonist {...props} {...fellesHandlers} />}
           />
           <Route
             path="/:sakstype/behandling/:saksnr"

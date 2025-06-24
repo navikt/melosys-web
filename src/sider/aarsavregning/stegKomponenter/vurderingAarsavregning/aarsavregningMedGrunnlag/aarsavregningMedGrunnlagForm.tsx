@@ -8,7 +8,6 @@ import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 import { Inntektskilder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/inntektskilder";
 import { Skatteforholdsperioder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/skatteforholdsperioder";
 import {
-  FieldArrayProps,
   FormValuesProps,
   Inntektskilde,
   Skatteforhold,
@@ -23,6 +22,7 @@ import { BeregnetTrygdeavgiftDetaljer } from "../komponenter/beregnetTrygdeavgif
 import { BorderedFormContainer } from "../komponenter/borderedFormContainer";
 import { EndeligAvgiftValgRadioGroup } from "../komponenter/endeligAvgiftValgRadioGroup";
 import { ManuellAvgiftFormPart } from "../komponenter/manuellAvgiftFormPart";
+import { MedlemskapsperiodeDisplay } from "../komponenter/medlemskapsperiodeDisplay";
 import { SumArsavregningTabell } from "../komponenter/sumArsavregningTabell";
 import { beregnTrygdeavgiftsperioder, erBrukerSkattepliktigIHelePerioden } from "../utils";
 import "../vurderingAarsavregningInngang.css";
@@ -53,8 +53,12 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as any;
   const aarsavregningID = useSelector(behandlingsresultatSelectors.ÅrsavregningIDSelector);
 
-  const { innvilgetMedlemskapsperiode, innvilgetMedlemskapsperiodeBestemmelse, medlemskapstypeErPliktig } =
-    initiellData;
+  const {
+    innvilgetMedlemskapsperiode,
+    innvilgetMedlemskapsperiodeBestemmelse,
+    innvilgetMedlemskapsperiodeTrygdedekning,
+    medlemskapstypeErPliktig,
+  } = initiellData;
 
   const {
     control,
@@ -77,14 +81,14 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
     fields: skattFields,
     append: skattAppend,
     remove: skattRemove,
-  } = useFieldArray<FieldArrayProps, "skatteforholdsperioder", "id">({ control, name: "skatteforholdsperioder" });
+  } = useFieldArray({ control: control as any, name: "skatteforholdsperioder" });
 
   const {
     fields: inntektFields,
     append: inntektAppend,
     remove: inntektRemove,
     update: inntektUpdate,
-  } = useFieldArray<FieldArrayProps, "inntektskilder", "id">({ control, name: "inntektskilder" });
+  } = useFieldArray({ control: control as any, name: "inntektskilder" });
 
   const formValues = watch();
   const skatteforholdsperioder = watch("skatteforholdsperioder");
@@ -315,6 +319,20 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
           <Nav.Heading className="endelige_opplysninger_heading" level="2">
             Inntekts- og skatteopplysninger for endelig trygdeavgift
           </Nav.Heading>
+
+          {innvilgetMedlemskapsperiode &&
+            innvilgetMedlemskapsperiodeTrygdedekning &&
+            innvilgetMedlemskapsperiodeBestemmelse && (
+              <div className="medlemskapsperioder">
+                <MedlemskapsperiodeDisplay
+                  fomDato={innvilgetMedlemskapsperiode.fomDato}
+                  tomDato={innvilgetMedlemskapsperiode.tomDato}
+                  trygdedekning={innvilgetMedlemskapsperiodeTrygdedekning}
+                  bestemmelse={innvilgetMedlemskapsperiodeBestemmelse}
+                />
+              </div>
+            )}
+
           <Skatteforholdsperioder
             formValues={formValues}
             redigerbart={redigerbart}

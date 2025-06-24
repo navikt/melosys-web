@@ -13,6 +13,7 @@ export const MOTTATTE_OPPLYSNINGER = "mottatteopplysninger";
 export const BEHANDLINGSPERIODER = "behandlinger";
 export const BESTEMMELSER = "bestemmelser";
 export const BREV = "brev";
+export const HELSEUTGIFTDEKKESPERIODE = "helseutgift-dekkes-perioder";
 export const DOKUMENTER = "dokumenter";
 export const EESSI = "eessi";
 export const FAGSAKER = "fagsaker";

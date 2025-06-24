@@ -31,15 +31,26 @@ const mapInnvilgetMedlemskapsPeriode = (medlemskapsperioder: Medlemskapsperiode[
   };
 };
 
-const mapMedlemskapsperiodeBestemmelse = (harDeltGrunnlag: boolean, medlemskapsperioder?: Medlemskapsperiode[]) => {
+const mapMedlemskapsperiodeBestemmelse = (
+  harTrygdeavgiftFraAvgiftssystemet: boolean,
+  medlemskapsperioder?: Medlemskapsperiode[],
+) => {
   if (medlemskapsperioder && !Utils._isEmpty(medlemskapsperioder)) {
     const sortertePerioder = [...medlemskapsperioder]
-      .filter((periode) => (harDeltGrunnlag ? !periode.redigerbar : true))
+      .filter((periode) => (harTrygdeavgiftFraAvgiftssystemet ? !periode.redigerbar : true))
       .filter((periode) => periode.id !== ULAGRET_MEDLEMSKAPSPERIODE_ID)
       .sort(sorterEtterISOFomDato);
     return sortertePerioder?.[0]?.bestemmelse;
   }
   return undefined;
+};
+
+const mapTrygdedekning = (medlemskapsperioder?: Medlemskapsperiode[]) => {
+  if (!medlemskapsperioder || medlemskapsperioder.length === 0) return undefined;
+  const innvilgedePerioder = medlemskapsperioder.filter(
+    (periode) => periode.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.INNVILGET,
+  );
+  return innvilgedePerioder[0]?.trygdedekning;
 };
 
 export interface AarsavregningMedGrunnlagFormValues extends FormValuesProps {
@@ -52,6 +63,7 @@ export interface InitiellData {
   formDefaultValues: FieldValue<AarsavregningMedGrunnlagFormValues>;
   innvilgetMedlemskapsperiode?: { fomDato: string; tomDato: string };
   innvilgetMedlemskapsperiodeBestemmelse?: string;
+  innvilgetMedlemskapsperiodeTrygdedekning?: string;
   medlemskapstypeErPliktig: boolean;
   forrigeÅrsavregningErManueltBeregnet: boolean;
 }
@@ -130,6 +142,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
           const medlemskapsperioder = res.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.medlemskapsperioder;
           const innvilgetMedlemskapsperiode = mapInnvilgetMedlemskapsPeriode(medlemskapsperioder);
           const innvilgetMedlemskapsperiodeBestemmelse = mapMedlemskapsperiodeBestemmelse(false, medlemskapsperioder);
+          const innvilgetMedlemskapsperiodeTrygdedekning = mapTrygdedekning(medlemskapsperioder);
           const medlemskapstypeErPliktig = Boolean(
             medlemskapsperioder?.every((periode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG),
           );
@@ -144,6 +157,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
             formDefaultValues: defaultFormValues,
             innvilgetMedlemskapsperiode,
             innvilgetMedlemskapsperiodeBestemmelse,
+            innvilgetMedlemskapsperiodeTrygdedekning,
             medlemskapstypeErPliktig,
             forrigeÅrsavregningErManueltBeregnet,
           });

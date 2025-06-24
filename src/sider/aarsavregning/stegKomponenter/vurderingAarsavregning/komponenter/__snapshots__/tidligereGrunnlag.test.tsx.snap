@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`TidligereGrunnlagAccordion > beregning med grunnlag snapshot test 1`] = `
+exports[`TidligereGrunnlag > beregning med grunnlag snapshot test 1`] = `
 
 <div>
   <div
@@ -280,7 +280,7 @@ exports[`TidligereGrunnlagAccordion > beregning med grunnlag snapshot test 1`] =
 
 `;
 
-exports[`TidligereGrunnlagAccordion > manuell beregning snapshot test 1`] = `
+exports[`TidligereGrunnlag > manuell beregning snapshot test 1`] = `
 
 <div>
   <div
@@ -296,61 +296,6 @@ exports[`TidligereGrunnlagAccordion > manuell beregning snapshot test 1`] = `
         15&nbsp;000 kr
       </strong>
     </p>
-  </div>
-</div>
-
-`;
-
-exports[`TidligereGrunnlagAccordion > uten grunnlag snapshot test 1`] = `
-
-<div>
-  <div
-    style="--__ac-box-background: var(--a-surface-subtle);"
-    class="navds-box tidligereGrunnlag navds-box-bg"
-  >
-    <h3 class="navds-heading navds-heading--small">
-      Tidligere grunnlag
-    </h3>
-    <div class="navds-alert navds-alert--info navds-alert--small">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="1em"
-        height="1em"
-        fill="none"
-        viewbox="0 0 24 24"
-        focusable="false"
-        role="img"
-        aria-labelledby="333"
-        class="navds-alert__icon"
-      >
-        <title id="333">
-          Informasjon
-        </title>
-        <path
-          fill="currentColor"
-          fill-rule="evenodd"
-          d="M3.25 4A.75.75 0 0 1 4 3.25h16a.75.75 0 0 1 .75.75v16a.75.75 0 0 1-.75.75H4a.75.75 0 0 1-.75-.75zM11 7.75a1 1 0 1 1 2 0 1 1 0 0 1-2 0m-1.25 3a.75.75 0 0 1 .75-.75H12a.75.75 0 0 1 .75.75v4.75h.75a.75.75 0 0 1 0 1.5h-3a.75.75 0 0 1 0-1.5h.75v-4h-.75a.75.75 0 0 1-.75-.75"
-          clip-rule="evenodd"
-        >
-        </path>
-      </svg>
-      <div class="navds-alert__wrapper navds-alert__wrapper--maxwidth navds-body-long navds-body-long--small">
-        <p class="navds-body-long navds-body-long--small">
-          Det er ingen informasjon om perioder med medlemskap og forskuddsvis fakturert trygdeavgift i Melosys.
-        </p>
-        <ul>
-          <li>
-            Hvis trygdeavgiften er forskuddsvis fakturert fra avgiftssystemet, oppgi totalbeløpet som er fakturert.
-          </li>
-          <li>
-            Hvis trygdeavgiften tidligere har vært årsavregnet i avgiftssystemet, oppgi totalbeløpet for endelig beregnet trygdeavgift.
-          </li>
-          <li>
-            Hvis trygdeavgiften ikke er forskuddsvis fakturert, la det være tomt.
-          </li>
-        </ul>
-      </div>
-    </div>
   </div>
 </div>
 
