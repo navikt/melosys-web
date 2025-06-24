@@ -48,6 +48,8 @@ interface InntektskilderProps {
   medlemskapsTypeErPliktig: boolean;
   skalViseErMaanedsBelopRadioGroup?: boolean;
   bestemmelse?: string;
+  minDate?: Date;
+  maxDate?: Date;
 }
 
 const hentInntektskilde = (
@@ -94,6 +96,8 @@ export function Inntektskilder({
   medlemskapsTypeErPliktig,
   skalViseErMaanedsBelopRadioGroup,
   bestemmelse,
+  minDate,
+  maxDate,
 }: InntektskilderProps) {
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
 
@@ -143,6 +147,8 @@ export function Inntektskilder({
                 name={`inntektskilder[${index}].fomDato`}
                 readOnly={!redigerbart}
                 control={control}
+                minDate={minDate}
+                maxDate={maxDate}
               />
             </Nav.Column>
 
@@ -152,7 +158,8 @@ export function Inntektskilder({
                 name={`inntektskilder[${index}].tomDato`}
                 readOnly={!redigerbart}
                 control={control}
-                minDate={Utils.dato.norskStringTilDate(formValues.inntektskilder[index].fomDato)}
+                minDate={Utils.dato.norskStringTilDate(formValues.inntektskilder[index].fomDato) || minDate}
+                maxDate={maxDate}
               />
             </Nav.Column>
             <Nav.Column className="inntektskildetype">
