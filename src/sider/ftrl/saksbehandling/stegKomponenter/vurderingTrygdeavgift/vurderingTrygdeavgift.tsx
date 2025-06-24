@@ -1,5 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useCallback, useEffect, useState } from "react";
+import { use, useCallback, useEffect, useState } from "react";
 import { FieldValue, useFieldArray, useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import * as Mui from "../../../../../felleskomponenter/ui";
@@ -9,6 +9,8 @@ import * as Utils from "../../../../../utils";
 
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import { medlemskapsperioderSelectors } from "../../../../../ducks/medlemskapsperioder";
+import { helseutgiftDekkesPeriodeSelector } from "../../../../../ducks/helseutgiftdekkesperiode";
+
 import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 import { useAsyncCallbackState } from "../../../../../hooks";
 import { STATUS } from "../../../../../services";
@@ -51,6 +53,8 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const innvilgetMedlemskapsperiode = useSelector(
     medlemskapsperioderSelectors.SamletInnvilgetMedlemskapsperiodeSelector,
   );
+  const helseutgiftDekkesPeriode = useSelector(helseutgiftDekkesPeriodeSelector.HelseutgiftDekkesPeriode).data;
+
   const bestemmelse = useSelector(medlemskapsperioderSelectors.BestemmelseSelector);
   const [lagretTrygdeavgift, setTrygdeavgift] = useAsyncCallbackState(
     () => Api.Trygdeavgift.hentBeregnetTrygdeavgift(behandlingID),
@@ -76,7 +80,8 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
       tomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.tom),
     };
   };
-  const erÅpenSluttDato = !innvilgetMedlemskapsperiode?.tom;
+
+  const erÅpenSluttDato = !innvilgetMedlemskapsperiode?.tom && !helseutgiftDekkesPeriode?.tomDato;
 
   const {
     control,
@@ -284,6 +289,11 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   if (!aktivtSteg) return null;
 
   const visFeilFraLagring = feil && formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType);
+
+  console.log("Ja da, da er vi er her");
+  console.log("Hva er det vi har her?");
+  console.log("Helse periode:", helseutgiftDekkesPeriode);
+
   return (
     <div className="vurderingTrygdeavgift">
       <Nav.Heading level="1" className="stegvelgertittel">

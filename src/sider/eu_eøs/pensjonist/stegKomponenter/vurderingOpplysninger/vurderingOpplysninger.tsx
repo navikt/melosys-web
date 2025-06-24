@@ -79,10 +79,13 @@ export function VurderingOpplysninger({ bekreft, tilbake, aktivtSteg, oppdaterSt
           bostedLandkode: formValues.bostedLandkode,
         } as HelseutgiftDekkesPeriodeDto),
       );
+
+      oppdaterStatus(formIsValid);
       bekreft();
     }
   };
 
+  console.log("Selector i steg1 helse", helseutgiftDekkesPeriode);
   return (
     <>
       <Nav.Heading level="1" className="stegvelgertittel">
