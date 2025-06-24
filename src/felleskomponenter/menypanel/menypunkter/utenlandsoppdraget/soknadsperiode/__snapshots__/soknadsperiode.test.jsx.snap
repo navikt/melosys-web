@@ -13,7 +13,6 @@ exports[`Soknadsperiode > snapshot test 1`] = `
       </p>
       <div>
         <button
-          data-variant="tertiary"
           type="button"
           aria-label="Rediger"
           title="Rediger"

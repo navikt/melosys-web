@@ -109,11 +109,7 @@ exports[`Faktura > snapshot test 1`] = `
               </span>
             </div>
             <div class="fakturalinje">
-              <div
-                data-color="info"
-                data-variant="info"
-                class="navds-alert navds-alert--info navds-alert--small"
-              >
+              <div class="navds-alert navds-alert--info navds-alert--small">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="1em"

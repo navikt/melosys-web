@@ -1,7 +1,7 @@
 /* eslint-disable */
 
 import createFetchMock from "vitest-fetch-mock";
-import matchers from "@testing-library/jest-dom/matchers";
+import * as matchers from "@testing-library/jest-dom";
 import { vi, expect } from "vitest";
 import toDiffableHtml from "diffable-html";
 
