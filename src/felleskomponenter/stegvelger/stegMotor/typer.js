@@ -1,4 +1,3 @@
-/* eslint-disable */
 /** Hver fane kan ha en rekke forskjellige statuser som er ment å indikere
  * feil eller varsler som saksbehandleren må håndtere.
  *

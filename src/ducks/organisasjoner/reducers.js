@@ -12,7 +12,6 @@ const initialState = {
   status: STATUS.NOT_STARTED,
   // Med data: [] får data type never[] når fila konsumeres i ts. Dette gjør den vanskelig å jobbe med.
   // TODO: Fjern denne disable-linjen når dette skrives om til .ts, og sørg for at data har en type.
-  /* eslint-disable no-array-constructor */
   data: [],
 };
 

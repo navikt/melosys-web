@@ -29,8 +29,8 @@ InnerTextAreaComponent.propTypes = {
   label: PT.node,
   placeholder: PT.string,
   maxLength: PT.number,
-  meta: PT.object, // eslint-disable-line react/forbid-prop-types
-  input: PT.object, // eslint-disable-line react/forbid-prop-types
+  meta: PT.object,
+  input: PT.object,
   onChange: PT.func,
 };
 

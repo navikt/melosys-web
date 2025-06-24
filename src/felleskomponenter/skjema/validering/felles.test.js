@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 import Felles from "./felles";
 
 const feilmeldingMock = {

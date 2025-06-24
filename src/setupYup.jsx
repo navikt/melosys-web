@@ -8,9 +8,6 @@ import * as StringUtils from "./utils/streng";
 
 const { TIDLIGERE_ENN_FOM, SKRIV_INN_GYLDIG_DATO, UTENFOR_SOKNADSPERIODEN } = KV.Feilmeldinger;
 
-/* eslint-disable func-names */
-/* eslint-disable prefer-arrow-callback */
-
 addMethod(object, "uniqueProperty", function (propertyName, message) {
   return this.test("unique", message, function (value) {
     if (!value || !value[propertyName]) {

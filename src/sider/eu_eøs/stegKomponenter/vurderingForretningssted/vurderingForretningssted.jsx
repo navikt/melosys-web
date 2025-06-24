@@ -201,7 +201,6 @@ function VurderingForretningssted(props) {
           Velg artikkel
         </option>
         {stegetsLovvalgsbestemmelser.map(({ kode, label }, index) => (
-          // eslint-disable-next-line react/no-array-index-key
           <option key={index} value={kode}>
             {label}
           </option>
