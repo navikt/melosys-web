@@ -1,7 +1,8 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import * as Nav from "../../../../../navFrontend";
 import * as Mui from "../../../../../felleskomponenter/ui";
 import * as Utils from "../../../../../utils";
+import { useDispatch } from "../../../../../hooks";
 
 import { PeriodeOgLandVelger } from "./komponenter/periodeVelger/periodeVelger";
 import { yupResolver } from "@hookform/resolvers/yup";
