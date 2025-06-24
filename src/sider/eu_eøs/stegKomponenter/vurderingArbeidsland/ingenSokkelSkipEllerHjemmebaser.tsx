@@ -1,4 +1,4 @@
-import { ChangeEvent, Fragment, useEffect } from "react";
+import { ChangeEvent, useEffect } from "react";
 import {
   konverterAvklartfaktaTilStegData,
   lagAvklartfakta,

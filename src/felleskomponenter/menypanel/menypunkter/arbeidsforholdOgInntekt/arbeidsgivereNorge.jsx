@@ -1,4 +1,3 @@
-import { Fragment } from "react";
 import { connect } from "react-redux";
 import PT from "prop-types";
 
