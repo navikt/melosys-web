@@ -38,6 +38,27 @@ import {
 import aarsavregningUtenEllerDeltGrunnlagSchema from "./aarsavregningUtenEllerDeltGrunnlagSchema";
 import { Feilmelding, finnAktivFeilmelding, finnAktivFeilmeldingForMedlemskapsperioder } from "./valideringsfeil";
 
+// Manual validation function to avoid triggering react-hook-form errors prematurely
+const validateFormManually = async (values: any, validationOptions: any = {}) => {
+  try {
+    const context = validationOptions.context || {};
+    await aarsavregningUtenEllerDeltGrunnlagSchema.validate(values, {
+      abortEarly: false,
+      context,
+      ...validationOptions,
+    });
+    return { isValid: true, errors: {} };
+  } catch (err: any) {
+    const validationErrors: any = {};
+    if (err.inner) {
+      err.inner.forEach((error: any) => {
+        validationErrors[error.path] = error.message;
+      });
+    }
+    return { isValid: false, errors: validationErrors };
+  }
+};
+
 const { OPPLYSNINGER_ENDRET, MANUELL_ENDELIG_AVGIFT } = MKV.Koder.endeligAvgiftValg;
 
 // Helper function to log and return changed dependencies
@@ -192,6 +213,8 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     inntektskilderFormState: Inntektskilde[],
     medlemskapsperioderFormState: Medlemskapsperiode[],
     trygdeavgiftFraAvgiftssystemetParam: number | undefined,
+    endeligAvgiftValgFormState: string | undefined,
+    bestemmelseFormState: string | undefined,
   ) => ({
     skatteforholdsperioder: skatteforholdsperioderFormState.map((skatteforhold: Skatteforhold) => ({
       fomDato: skatteforhold.fomDato,
@@ -213,6 +236,8 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       medlemskapstype: periode.medlemskapstype,
     })),
     trygdeavgiftFraAvgiftssystemet: trygdeavgiftFraAvgiftssystemetParam,
+    endeligAvgiftValg: endeligAvgiftValgFormState,
+    bestemmelse: bestemmelseFormState,
   });
 
   useEffect(() => {
@@ -308,6 +333,8 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       getValues("inntektskilder"),
       medlemskapsperioderFormState,
       getValues("trygdeavgiftFraAvgiftssystemet"),
+      getValues("endeligAvgiftValg"),
+      getValues("bestemmelse"),
     );
     const medlemskapsperiodeFomTom = finnMedlemskapsperiode(medlemskapsperioderFormState);
 
@@ -628,6 +655,8 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         getValues("inntektskilder"),
         getValues("medlemskapsperioder"),
         getValues("trygdeavgiftFraAvgiftssystemet"),
+        getValues("endeligAvgiftValg"),
+        getValues("bestemmelse"),
       );
 
       if (!redigerbart || !aarsavregningID || endrerBestemmelse || beregningPaagar || lagreMedlemskapsperioderPaagar) {
@@ -646,7 +675,11 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       }
 
       if (!Utils._isEqual(currentFormState, previousFormState)) {
-        trigger().then((isValid) => {
+        const validationContext = {
+          aar: initiellData.valgtÅr,
+          harTrygdeavgiftFraAvgiftssystemet,
+        };
+        validateFormManually(currentFormState, { context: validationContext }).then(({ isValid }) => {
           if (!isValid) {
             setArrayValideringsfeil(undefined);
             return;
@@ -664,7 +697,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         if (errors) {
           // Nødvendig fordi errors er lazy som ikke blir oppdatert.
           // Her vet vi at vi har en state som er som siste beregningen, dvs ok.
-          // Derfor trigger på nytt i tilfelle "errors" ikke har riktig verdi
+          // Derfor validere på nytt i tilfelle "errors" ikke har riktig verdi
           trigger();
         }
       }
