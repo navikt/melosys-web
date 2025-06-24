@@ -25,11 +25,16 @@ import { BeregnetTrygdeavgiftDetaljer } from "../komponenter/beregnetTrygdeavgif
 import BestemmelseSelect from "../komponenter/bestemmelseSelect";
 import { BorderedFormContainer } from "../komponenter/borderedFormContainer";
 import { EndeligAvgiftValgRadioGroup } from "../komponenter/endeligAvgiftValgRadioGroup";
-import { TrygdeavgiftFraAvgiftssystemetInput } from "../komponenter/trygdeavgiftFraAvgiftssystemetInput";
 import { ManuellAvgiftFormPart } from "../komponenter/manuellAvgiftFormPart";
 import { MedlemskapsperiodeSkjema } from "../komponenter/medlemskapsperiodeSkjema";
 import { SumArsavregningTabell } from "../komponenter/sumArsavregningTabell";
-import { beregnTrygdeavgiftsperioder, erBrukerSkattepliktigIHelePerioden, hentMedlemskapsFomTomDato } from "../utils";
+import { TrygdeavgiftFraAvgiftssystemetInput } from "../komponenter/trygdeavgiftFraAvgiftssystemetInput";
+import {
+  beregnTrygdeavgiftsperioder,
+  erBrukerSkattepliktigIHelePerioden,
+  hentMedlemskapsFomTomDato,
+  validateAarsavregningUtenEllerDeltGrunnlag,
+} from "../utils";
 import {
   AarsavregningFormValuesProps,
   DEFAULT_MEDLEMSKAPSPERIODE,
@@ -37,27 +42,6 @@ import {
 } from "./aarsavregningUtenEllerDeltGrunnlag";
 import aarsavregningUtenEllerDeltGrunnlagSchema from "./aarsavregningUtenEllerDeltGrunnlagSchema";
 import { Feilmelding, finnAktivFeilmelding, finnAktivFeilmeldingForMedlemskapsperioder } from "./valideringsfeil";
-
-// Manual validation function to avoid triggering react-hook-form errors prematurely
-const validateFormManually = async (values: any, validationOptions: any = {}) => {
-  try {
-    const context = validationOptions.context || {};
-    await aarsavregningUtenEllerDeltGrunnlagSchema.validate(values, {
-      abortEarly: false,
-      context,
-      ...validationOptions,
-    });
-    return { isValid: true, errors: {} };
-  } catch (err: any) {
-    const validationErrors: any = {};
-    if (err.inner) {
-      err.inner.forEach((error: any) => {
-        validationErrors[error.path] = error.message;
-      });
-    }
-    return { isValid: false, errors: validationErrors };
-  }
-};
 
 const { OPPLYSNINGER_ENDRET, MANUELL_ENDELIG_AVGIFT } = MKV.Koder.endeligAvgiftValg;
 
@@ -477,7 +461,15 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
           return;
         }
 
-        const erGyldigSkjema = await trigger("medlemskapsperioder");
+        const context = {
+          aar: initiellData.valgtÅr,
+          harTrygdeavgiftFraAvgiftssystemet,
+        };
+        const { isValid: erGyldigSkjema } = await validateAarsavregningUtenEllerDeltGrunnlag(
+          getValues(),
+          context,
+          "medlemskapsperioder",
+        );
         if (!erGyldigSkjema || !bestemmelse) {
           return;
         }
@@ -506,15 +498,23 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     (oppdaterteMedlemskapsperioder: Medlemskapsperiode[]) => {
       setLagredeMedlemskapsperioder(oppdaterteMedlemskapsperioder);
 
-      trigger("medlemskapsperioder")
-        .then(async (isValid) => {
+      const completeFormData = {
+        ...getValues(),
+        medlemskapsperioder: oppdaterteMedlemskapsperioder,
+      };
+      const context = {
+        aar: initiellData.valgtÅr,
+        harTrygdeavgiftFraAvgiftssystemet,
+      };
+      validateAarsavregningUtenEllerDeltGrunnlag(completeFormData, context, "medlemskapsperioder")
+        .then(async ({ isValid }) => {
           if (isValid) {
             await lagreMedlemskapsperioder(oppdaterteMedlemskapsperioder);
           }
         })
         .finally(() => setEndrerBestemmelse(false));
     },
-    [trigger, lagreMedlemskapsperioder, setLagredeMedlemskapsperioder],
+    [lagreMedlemskapsperioder, setLagredeMedlemskapsperioder],
   );
 
   const leggTilDefaultMedlemskapsperiode = () => {
@@ -619,7 +619,6 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       aarsavregningID,
       redigerbart,
       beregningPaagar,
-      trigger,
       getValues,
       previousFormState,
       errors,
@@ -675,11 +674,11 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       }
 
       if (!Utils._isEqual(currentFormState, previousFormState)) {
-        const validationContext = {
+        const context = {
           aar: initiellData.valgtÅr,
           harTrygdeavgiftFraAvgiftssystemet,
         };
-        validateFormManually(currentFormState, { context: validationContext }).then(({ isValid }) => {
+        validateAarsavregningUtenEllerDeltGrunnlag(currentFormState, context).then(({ isValid }) => {
           if (!isValid) {
             setArrayValideringsfeil(undefined);
             return;
@@ -694,12 +693,6 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
           currentFormState,
           previousFormState,
         });
-        if (errors) {
-          // Nødvendig fordi errors er lazy som ikke blir oppdatert.
-          // Her vet vi at vi har en state som er som siste beregningen, dvs ok.
-          // Derfor validere på nytt i tilfelle "errors" ikke har riktig verdi
-          trigger();
-        }
       }
     } else {
       console.log("[useEffect hovedberegning] debouncedBeregningRef.current er undefined");
@@ -715,7 +708,6 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     aarsavregningID,
     redigerbart,
     beregningPaagar,
-    trigger,
     getValues,
     previousFormState,
     errors,
