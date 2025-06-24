@@ -21,28 +21,24 @@ vi.mock("../../../../services/api", () => ({
   },
 }));
 
-vi.mock("../../../../utils", () => ({
-  _isEmpty: vi.fn(),
-  dato: {
-    formatterDatoTilISO: vi.fn(),
-    formatterDatoTilNorsk: vi.fn(),
-    sorterEtterNorskFomDato: vi.fn((_a, _b) => 0), // Simplified sort mock
-  },
-  streng: {
-    uppercaseStrengTilBool: vi.fn(),
-    boolTilUppercaseStreng: vi.fn((bool) => (bool ? "JA" : "NEI")),
-  },
-}));
-
-vi.mock("../../../../melosyskodeverk", () => ({
-  default: {
-    Koder: {
-      skatteplikttype: {
-        IKKE_SKATTEPLIKTIG: "IKKE_SKATTEPLIKTIG",
-      },
+vi.mock("../../../../utils", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("../../../../utils")>();
+  return {
+    ...actual,
+    dato: {
+      ...actual.dato,
+      formatterDatoTilISO: vi.fn(),
+      formatterDatoTilNorsk: vi.fn(),
+      sorterEtterNorskFomDato: vi.fn((_a, _b) => 0), // Simplified sort mock
     },
-  },
-}));
+    streng: {
+      ...actual.streng,
+      uppercaseStrengTilBool: vi.fn(),
+      boolTilUppercaseStreng: vi.fn((bool) => (bool ? "JA" : "NEI")),
+    },
+    _isEmpty: vi.fn(),
+  };
+});
 
 describe("utils", () => {
   beforeEach(() => {

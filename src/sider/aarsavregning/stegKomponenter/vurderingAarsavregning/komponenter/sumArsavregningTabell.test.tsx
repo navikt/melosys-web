@@ -3,10 +3,13 @@ import { render, screen, within } from "@testing-library/react";
 import { SumArsavregningTabell } from "./sumArsavregningTabell";
 
 // Mock dependencies
-vi.mock("../../../../../utils", () => ({
-  _uuid: vi.fn(() => "mock-uuid"),
-  formaterTilNorskBelop: vi.fn((amount) => `${amount?.toLocaleString("nb-NO") || "0"}`),
-}));
+vi.mock("../../../../../utils", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("../../../../../utils")>();
+  return {
+    ...actual,
+    formaterTilNorskBelop: vi.fn((amount) => `${amount?.toLocaleString("nb-NO") || "0"}`),
+  };
+});
 
 describe("SumArsavregningTabell", () => {
   beforeEach(() => {
