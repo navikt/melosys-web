@@ -15,7 +15,8 @@ const toJson = async (response) => {
   try {
     return await response.clone().json();
   } catch (res) {
-    console.error(res); // eslint-disable-line no-console
+    /* eslint-disable-next-line no-console */
+    console.error(res);
     return {};
   }
 };
@@ -92,10 +93,12 @@ const cachedFetch = async (url, cacheDurationSec) => {
     const age = (Date.now() - whenCached) / 1000;
     if (age < cacheDurationSec) {
       const response = new Response(new Blob([cachedItem]));
-      console.log("cacheresponse", response); // eslint-disable-line no-console
+      /* eslint-disable-next-line no-console */
+      console.log("cacheresponse", response);
       // --------------------------------------------
       // Return cached content
-      console.log("cache hit for ", url); // eslint-disable-line no-console
+      /* eslint-disable-next-line no-console */
+      console.log("cache hit for ", url);
       return response.clone().json();
     }
     // --------------------------------------------
@@ -143,10 +146,12 @@ const cachedFetch = async (url, cacheDurationSec) => {
       // consumed by the time it's returned. This
       // way we're being un-intrusive.
       if (sessionStorage.getItem(cacheKey)) {
-        console.log("Remove cache item", cacheKey); // eslint-disable-line no-console
+        /* eslint-disable-next-line no-console */
+        console.log("Remove cache item", cacheKey);
         removeCachedItem(cacheKey);
       }
-      console.log("Insert fresh content into cache item", url); // eslint-disable-line no-console
+      /* eslint-disable-next-line no-console */
+      console.log("Insert fresh content into cache item", url);
       const content = await fetchResponse.clone().text();
       setCachedItem(cacheKey, content);
     }

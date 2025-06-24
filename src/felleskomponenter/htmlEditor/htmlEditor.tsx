@@ -188,6 +188,7 @@ function HtmlEditor({ value, onChange, disabled, label, feil, className, placeho
           },
         );
       } catch (error) {
+        /* eslint-disable-next-line no-console */
         console.error("Feil ved oppsett av clipboard-matchers:", error);
       }
     }

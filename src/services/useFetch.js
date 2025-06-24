@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-/* eslint-disable no-console */
 const useFetch = (url, dependencies) => {
   const [isLoading, setLoadState] = useState(false);
   const [fetchedData, setFetchedData] = useState(null);
@@ -19,9 +18,11 @@ const useFetch = (url, dependencies) => {
       })
       .catch((err) => {
         setLoadState(false);
+        /* eslint-disable-next-line no-console */
         console.dir(err);
       });
   }, dependencies);
+  /* eslint-disable-next-line no-console */
   console.dir(fetchedData);
   return [isLoading, fetchedData];
 };

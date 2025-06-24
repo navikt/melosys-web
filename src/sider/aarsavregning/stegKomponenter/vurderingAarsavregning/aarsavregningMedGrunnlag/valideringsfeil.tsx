@@ -31,6 +31,7 @@ const dekkerHeleMedlemskapsperiode = (perioder: any[], medlemskapsperiode: any):
     })
     .reduce((max, current) => Math.max(max, current), -Infinity);
 
+  /* eslint-disable-next-line no-console */
   console.log("[dekkerHeleMedlemskapsperiode] min max", {
     minFomDato,
     maxTomDato,

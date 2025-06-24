@@ -96,7 +96,7 @@ function Saksbehandling({
       setSaksopplysningerLastet(true);
       return true;
     } catch (e) {
-      // eslint-disable-next-line no-console
+      /* eslint-disable-next-line no-console */
       console.error(e);
     }
     return false;

@@ -36,6 +36,7 @@ function Hovedside({ isDevelopmentProfile = false, children = undefined }) {
           setHarToken(true);
         })
         .catch((error) => {
+          /* eslint-disable-next-line no-console */
           console.error("Failed to set up development authentication:", error);
         });
     }
@@ -48,6 +49,7 @@ function Hovedside({ isDevelopmentProfile = false, children = undefined }) {
           setHarToken(true);
         })
         .catch((error) => {
+          /* eslint-disable-next-line no-console */
           console.error("Failed to set up token interceptor:", error);
         });
     }

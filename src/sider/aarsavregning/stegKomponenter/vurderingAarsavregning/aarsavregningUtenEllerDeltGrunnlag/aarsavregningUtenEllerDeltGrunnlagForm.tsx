@@ -54,13 +54,16 @@ const getChangedDependencies = (currentDeps: Record<string, any>, previousDepsRe
       }
     });
     // Log only if there are changed dependencies
+    /* eslint-disable no-console */
     if (Object.keys(changedDeps).length > 0) {
       console.log("[getChangedDependencies] Changed Dependencies", changedDeps);
     } else {
       console.log("[getChangedDependencies] No Changed Dependencies?!");
     }
+    /* eslint-enable no-console */
   } else {
     // Log all dependencies on the first run
+    /* eslint-disable-next-line no-console */
     console.log("[getChangedDependencies] First Run Dependencies", currentDeps);
   }
 
@@ -172,9 +175,11 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       .sort(Utils.dato.sorterEtterNorskFomDato);
     const medlemskapsperiodeFomTom = hentMedlemskapsFomTomDato(sorterteGyldigePerioder);
 
+    /* eslint-disable no-console */
     console.log("[finnMedlemskapsperiode] medlemskapsperiodeFomTom", medlemskapsperiodeFomTom);
     console.log("[finnMedlemskapsperiode] sorterteGyldigePerioder", sorterteGyldigePerioder);
     console.log("[finnMedlemskapsperiode] perioder", perioder);
+    /* eslint-enable no-console */
 
     return {
       fomDato: Utils.dato.vaskOgFormatterDatoTilNorsk(medlemskapsperiodeFomTom?.fom),
@@ -264,6 +269,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         return response;
       } catch (error) {
         setFeilmelding("Feil ved lagring av medlemskapsperiode");
+        /* eslint-disable-next-line no-console */
         console.error("Feil ved lagring av medlemskapsperiode:", error);
         return undefined;
       }
@@ -287,6 +293,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   );
 
   const debouncedBeregning = useCallback(() => {
+    /* eslint-disable-next-line no-console */
     console.log("[debouncedBeregning] setter debouncedBeregningPagaar til false");
     setDebouncedBeregningPagaar(false);
     if (
@@ -297,6 +304,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       lagreMedlemskapsperioderPaagar ||
       endeligAvgiftValg !== OPPLYSNINGER_ENDRET
     ) {
+      /* eslint-disable-next-line no-console */
       console.log("[debouncedBeregning] return tidlig i debouncedBeregning");
       return;
     }
@@ -310,6 +318,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     );
     const medlemskapsperiodeFomTom = finnMedlemskapsperiode(medlemskapsperioderFormState);
 
+    /* eslint-disable-next-line no-console */
     console.log("[debouncedBeregning] medlemskapsperiodeFomTom", medlemskapsperiodeFomTom);
 
     if (!Utils._isEqual(formState, previousFormState)) {
@@ -320,6 +329,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         medlemskapsperioder: medlemskapsperioderFormState as Medlemskapsperiode[],
         medlemskapstypeErPliktig,
       });
+      /* eslint-disable-next-line no-console */
       console.log("[debouncedBeregning] Aktive feilmeldinger", aktivFeilmelding, {
         skatteforholdsperioder: formState.skatteforholdsperioder,
         inntektskilder: formState.inntektskilder,
@@ -342,6 +352,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       }
     }
 
+    /* eslint-disable-next-line no-console */
     console.log("[debouncedBeregning] ferdig");
   }, [
     aarsavregningID,
@@ -390,6 +401,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
           return periode;
         });
 
+        /* eslint-disable-next-line no-console */
         console.log("[lagreMedlemskapsperioder] oppdaterteMedlemskapsperioder", oppdaterteMedlemskapsperioder);
 
         setLagredeMedlemskapsperioder(oppdaterteMedlemskapsperioder);
@@ -459,11 +471,14 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
           return;
         }
 
+        /* eslint-disable-next-line no-console */
         console.log("[lagreMedlemskapsperioderEffect] setter lagrerMedlemskapsperioder til true");
         setLagreMedlemskapsperioderPaagar(true);
         const medlemskapsperioderTilLagring = [...medlemskapsperioder];
+        /* eslint-disable-next-line no-console */
         console.log("[lagreMedlemskapsperioderEffect] medlemskapsperioderTilLagring", medlemskapsperioderTilLagring);
         debouncedLagreMedlemskapsperioder(medlemskapsperioderTilLagring, () => {
+          /* eslint-disable-next-line no-console */
           console.log("[lagreMedlemskapsperioderEffect] Setter lagrerMedlemskapsperioder til false");
           setLagreMedlemskapsperioderPaagar(false);
         });
@@ -506,6 +521,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       }
       setLagreMedlemskapsperioderPaagar(false);
     } catch (error) {
+      /* eslint-disable-next-line no-console */
       console.error("Feil ved sletting av medlemskapsperiode:", error);
       setFeilmelding("Feil ved sletting av medlemskapsperiode");
     }
@@ -554,12 +570,14 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   useEffect(() => {
     setDebouncedBeregningPagaar(false);
     debouncedBeregningRef.current = Utils._debounce(debouncedBeregning, 350);
+    /* eslint-disable-next-line no-console */
     console.log("[useEffect debouncedBeregning] Lager en ny debounce funksjon når beregning callback endres");
 
     // Cancel på unmount
     return () => {
       if (debouncedBeregningRef.current?.cancel) {
         setDebouncedBeregningPagaar(false);
+        /* eslint-disable-next-line no-console */
         console.log(
           "[useEffect debouncedBeregning] Avbryter eventuelt eksisterende beregning for å sette opp ny debounce funksjon.",
         );
@@ -603,6 +621,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     // Avbryter hvis vi allerede har en beregning som venter
     if (debouncedBeregningRef.current?.cancel && Object.keys(changedDependencies).length > 0) {
       setDebouncedBeregningPagaar(false);
+      /* eslint-disable-next-line no-console */
       console.log("[useEffect hovedberegning] Avbryter eventuelt eksisterende beregning.", {
         beregningPaagar,
         lagreMedlemskapsperioderPaagar,
@@ -612,6 +631,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     }
 
     if (medlemskapsperiodeEndret || Object.keys(changedDependencies).length === 0 || lagreMedlemskapsperioderPaagar) {
+      /* eslint-disable-next-line no-console */
       console.log("[useEffect hovedberegning] Avbryter useEffect uten å gjøre noe.", {
         medlemskapsperiodeEndret,
         changedDependencies,
@@ -629,6 +649,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       );
 
       if (!redigerbart || !aarsavregningID || endrerBestemmelse || beregningPaagar || lagreMedlemskapsperioderPaagar) {
+        /* eslint-disable-next-line no-console */
         console.log(
           "[useEffect hovedberegning] return tidlig i fordi redigerbart, aarsavregningID, endrerBestemmelse, lagreMedlemskapsperioderPaagar",
           {
@@ -650,11 +671,13 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
             return;
           }
           setDebouncedBeregningPagaar(true);
+          /* eslint-disable-next-line no-console */
           console.log("[useEffect hovedberegning] sette debouncedBeregningPaagar true");
           debouncedBeregningRef.current();
         });
       } else {
         setArrayValideringsfeil(undefined);
+        /* eslint-disable-next-line no-console */
         console.log("[useEffect hovedberegning] Clear arrayValideringsfeil", {
           currentFormState,
           previousFormState,
@@ -667,6 +690,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         }
       }
     } else {
+      /* eslint-disable-next-line no-console */
       console.log("[useEffect hovedberegning] debouncedBeregningRef.current er undefined");
     }
   }, [

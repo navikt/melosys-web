@@ -58,7 +58,7 @@ export default tseslint.config(
       // General rules
       "prefer-const": "error",
       "no-var": "error",
-      "no-console": "warn",
+      "no-console": "error",
       eqeqeq: "warn",
       "arrow-spacing": "error",
       "no-unused-vars": "off", // Use TypeScript version instead

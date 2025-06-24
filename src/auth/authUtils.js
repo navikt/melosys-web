@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { InteractionRequiredAuthError } from "@azure/msal-browser";
 import { TRYGDEAVTALE_FLYT_BASE_URL, FAKTURERINGSKOMPONENTEN_FLYT_BASE_URL } from "../services/api-constants";
 import { faktureringskomponentenRequest, melosysRequest, trygdeavtaleRequest } from "./authConfig";
@@ -63,6 +62,7 @@ export const getAccessToken = (msalInstance, accounts, url, acquireTokenRedirect
         return getAccessToken(msalInstance, accounts, url, true);
       }
 
+      /* eslint-disable-next-line no-console */
       console.log(error);
       return null;
     });
