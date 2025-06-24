@@ -27,11 +27,10 @@ interface Props {
 
 export function VurderingOpplysninger({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: Props) {
   const dispatch = useDispatch();
-  const soknadsperiode = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
   const behandlingId = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const helseutgiftDekkesPeriode = useSelector(helseutgiftDekkesPeriodeSelector.HelseutgiftDekkesPeriode).data;
-  const { fomDato, tomDato, bostedsland } = helseutgiftDekkesPeriode;
+  const { fomDato, tomDato, bostedLandkode } = helseutgiftDekkesPeriode;
 
   const {
     control,
@@ -45,17 +44,23 @@ export function VurderingOpplysninger({ bekreft, tilbake, aktivtSteg, oppdaterSt
     defaultValues: {
       fomDato: "",
       tomDato: "",
-      bostedsland: "",
+      bostedLandkode: "",
     },
   });
 
   useEffect(() => {
-    if (fomDato) setValue("fomDato", Utils.dato.formatterDatoTilNorsk(fomDato));
-    if (tomDato) setValue("tomDato", Utils.dato.formatterDatoTilNorsk(tomDato));
-    if (bostedsland) setValue("bostedsland", bostedsland);
+    if (fomDato) {
+      setValue("fomDato", Utils.dato.formatterDatoTilNorsk(fomDato), { shouldValidate: true });
+    }
 
-    trigger(["fomDato", "tomDato", "bostedsland"]);
-  }, [fomDato, tomDato, bostedsland, setValue, trigger]);
+    if (tomDato) {
+      setValue("tomDato", Utils.dato.formatterDatoTilNorsk(tomDato), { shouldValidate: true });
+    }
+
+    if (bostedLandkode) {
+      setValue("bostedLandkode", bostedLandkode, { shouldValidate: true });
+    }
+  }, [fomDato, tomDato, bostedLandkode, setValue, trigger]);
 
   useEffect(() => {
     dispatch(helseutgiftDekkesPeriodeOperations.hentHelseutgiftDekkesPeriode(behandlingId));
@@ -68,7 +73,7 @@ export function VurderingOpplysninger({ bekreft, tilbake, aktivtSteg, oppdaterSt
         helseutgiftDekkesPeriodeOperations.opprettHelseutgiftDekkesPeriode(behandlingId, {
           fomDato: Utils.dato.formatterDatoTilISO(formValues.fomDato),
           tomDato: Utils.dato.formatterDatoTilISO(formValues.tomDato),
-          bostedsland: formValues.bostedsland,
+          bostedLandkode: formValues.bostedLandkode,
         } as HelseutgiftDekkesPeriodeDto),
       );
       bekreft();

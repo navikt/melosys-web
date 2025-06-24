@@ -1,8 +1,8 @@
 import * as helseutgiftDekkesPeriodeOperations from "./operations";
 import * as helseutgiftDekkesPeriodeTypes from "./types";
 import * as helseutgiftDekkesPeriodeSelector from "./selectors";
-import helsedekkesperiodeReducers from "./reducers";
+import helseutgiftdekkesperiodeReducers from "./reducers";
 
 export { helseutgiftDekkesPeriodeOperations, helseutgiftDekkesPeriodeTypes, helseutgiftDekkesPeriodeSelector };
 
-export default helsedekkesperiodeReducers;
+export default helseutgiftdekkesperiodeReducers;

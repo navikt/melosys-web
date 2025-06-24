@@ -26,6 +26,8 @@ export function PeriodeOgLandVelger({ redigerbart, control, formValues, setValue
     oppsummertfaktaSelectors.UkjentSluttdatoMedlemskapsperiodeSelector,
   );
 
+  console.log({ ukjentSluttdatoMedlemskapsperiode });
+
   const oppdaterSluttdato = async (ukjentSluttdato: boolean) => {
     if (ukjentSluttdato) {
       const fomISODate = Utils.dato.formatterDatoTilISO(formValues.fomDato, "");
@@ -70,7 +72,7 @@ export function PeriodeOgLandVelger({ redigerbart, control, formValues, setValue
             />
           </Nav.Column>
           <Nav.Column className="brederefelt">
-            <Forms.Select label="Bostedsland" control={control} name="bostedsland" disabled={!redigerbart}>
+            <Forms.Select label="Bostedsland" control={control} name="bostedLandkode" disabled={!redigerbart}>
               {MKV.KTObjects.landkoder.map((item: any) => (
                 <option key={item.kode} value={item.kode} label={Utils.land.landTekstFormat(item)} />
               ))}

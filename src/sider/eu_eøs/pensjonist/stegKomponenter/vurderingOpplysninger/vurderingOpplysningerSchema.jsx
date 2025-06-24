@@ -6,7 +6,7 @@ const { MAA_FYLLES_UT } = KV.Feilmeldinger;
 const vurdering_opplysninger = object().shape({
   fomDato: string().erGyldigDato().required(MAA_FYLLES_UT),
   tomDato: string().erGyldigDato().required(MAA_FYLLES_UT),
-  bostedsland: string().required(),
+  bostedLandkode: string().required(),
 });
 
 export default vurdering_opplysninger;
