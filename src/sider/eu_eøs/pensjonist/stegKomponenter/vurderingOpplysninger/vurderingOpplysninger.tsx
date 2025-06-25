@@ -8,7 +8,6 @@ import { PeriodeOgLandVelger } from "./komponenter/periodeVelger/periodeVelger";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import vurdering_opplysninger from "./vurderingOpplysningerSchema";
-import { mottatteOpplysningerSelectors } from "../../../../../ducks/mottatteOpplysninger";
 import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 import "./vurderingOpplysninger.css";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
