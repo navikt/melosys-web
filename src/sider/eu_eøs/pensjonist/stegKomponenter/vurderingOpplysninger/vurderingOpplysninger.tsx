@@ -38,7 +38,7 @@ export function VurderingOpplysninger({ bekreft, tilbake, aktivtSteg, oppdaterSt
     watch,
     setValue,
     trigger,
-    formState: { isValid: formIsValid },
+    formState: { isValid: formIsValid, isDirty },
   } = useForm({
     resolver: yupResolver(vurdering_opplysninger),
     mode: "all",
@@ -70,14 +70,19 @@ export function VurderingOpplysninger({ bekreft, tilbake, aktivtSteg, oppdaterSt
 
   const formValues = watch();
   const bekreftOgFortsett = async () => {
-    if (formIsValid) {
+    if (formIsValid && isDirty) {
       await dispatch(
-        helseutgiftDekkesPeriodeOperations.opprettHelseutgiftDekkesPeriode(behandlingId, {
-          fomDato: Utils.dato.formatterDatoTilISO(formValues.fomDato),
-          tomDato: Utils.dato.formatterDatoTilISO(formValues.tomDato),
-          bostedLandkode: formValues.bostedLandkode,
-        } as HelseutgiftDekkesPeriodeDto),
+        helseutgiftDekkesPeriodeOperations.oppdaterEllerOpprettHelseutgiftDekkesPeriode(
+          behandlingId,
+          {
+            fomDato: Utils.dato.formatterDatoTilISO(formValues.fomDato),
+            tomDato: Utils.dato.formatterDatoTilISO(formValues.tomDato),
+            bostedLandkode: formValues.bostedLandkode,
+          } as HelseutgiftDekkesPeriodeDto,
+          Utils._isEmpty(helseutgiftDekkesPeriode),
+        ),
       );
+      dispatch(helseutgiftDekkesPeriodeOperations.hentHelseutgiftDekkesPeriode(behandlingId));
 
       oppdaterStatus(formIsValid);
       bekreft();

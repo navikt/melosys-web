@@ -26,8 +26,6 @@ export function PeriodeOgLandVelger({ redigerbart, control, formValues, setValue
     oppsummertfaktaSelectors.UkjentSluttdatoMedlemskapsperiodeSelector,
   );
 
-  console.log({ ukjentSluttdatoMedlemskapsperiode });
-
   const oppdaterSluttdato = async (ukjentSluttdato: boolean) => {
     if (ukjentSluttdato) {
       const fomISODate = Utils.dato.formatterDatoTilISO(formValues.fomDato, "");
