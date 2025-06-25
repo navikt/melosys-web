@@ -762,6 +762,10 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     initiellData.aarsavregningResponse?.tidligereGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep,
   );
 
+  const minDate = initiellData.valgtÅr !== undefined ? new Date(initiellData.valgtÅr, 0, 1) : undefined;
+  const maxDate =
+    initiellData.valgtÅr !== undefined ? new Date(initiellData.valgtÅr, 11, 31, 23, 59, 59, 999) : undefined;
+
   return (
     <div className="vurderingAarsavregning">
       {harTrygdeavgiftFraAvgiftssystemet && (
@@ -810,12 +814,8 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
                 formValues={formValues}
                 handleLeggTil={leggTilDefaultMedlemskapsperiode}
                 visLeggTil
-                maksVerdi={
-                  initiellData.valgtÅr !== undefined
-                    ? new Date(initiellData.valgtÅr, 11, 31, 23, 59, 59, 999)
-                    : undefined
-                }
-                minVerdi={initiellData.valgtÅr !== undefined ? new Date(initiellData.valgtÅr, 0, 1) : undefined}
+                maxDate={maxDate}
+                minDate={minDate}
                 trygdedekninger={trygdedekninger}
                 setValue={setValue}
                 errors={errors}
@@ -831,6 +831,8 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
             append={skattAppend}
             control={control}
             fields={skattFields}
+            minDate={minDate}
+            maxDate={maxDate}
           />
           {!trygdeAvgiftSkalIkkeBetalesTilNav && (
             <Inntektskilder
@@ -845,6 +847,8 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
               medlemskapsTypeErPliktig={medlemskapstypeErPliktig}
               skalViseErMaanedsBelopRadioGroup
               bestemmelse={bestemmelse}
+              minDate={minDate}
+              maxDate={maxDate}
             />
           )}
           {formIsValid && trygdeAvgiftSkalIkkeBetalesTilNav && (
