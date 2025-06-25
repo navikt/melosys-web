@@ -12,9 +12,32 @@ export function hentHelseutgiftDekkesPeriode(behandlingresultatID: number) {
   });
 }
 
-export function opprettHelseutgiftDekkesPeriode(behandlingresultatID: number, data: HelseutgiftDekkesPeriodeDto) {
+export function oppdaterEllerOpprettHelseutgiftDekkesPeriode(
+  behandlingresultatID: number,
+  data: HelseutgiftDekkesPeriodeDto,
+  erNyHelseutgiftPeriode: boolean,
+) {
+  if (erNyHelseutgiftPeriode) {
+    return opprettHelseutgiftDekkesPeriode(behandlingresultatID, data);
+  } else {
+    return oppdaterHelseutgiftDekkesPeriode(behandlingresultatID, data);
+  }
+}
+
+function opprettHelseutgiftDekkesPeriode(behandlingresultatID: number, data: HelseutgiftDekkesPeriodeDto) {
   return doThenDispatch(
     () => Api.HelseutgiftDekningPeriode.opprettHelseutgiftDekkesPeriode(behandlingresultatID, data),
+    {
+      OK: Types.OK,
+      FEILET: Types.FEILET,
+      PENDING: Types.PENDING,
+    },
+  );
+}
+
+function oppdaterHelseutgiftDekkesPeriode(behandlingresultatID: number, data: HelseutgiftDekkesPeriodeDto) {
+  return doThenDispatch(
+    () => Api.HelseutgiftDekningPeriode.oppdaterHelseutgiftDekkesPeriode(behandlingresultatID, data),
     {
       OK: Types.OK,
       FEILET: Types.FEILET,
