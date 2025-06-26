@@ -1,5 +1,6 @@
 import { renderWithProviders } from "../../../ducks/test-utils/renderWithProviders";
 import { DialogboksAvslagSoknad } from "./dialogboksAvslagSoknad";
+import { waitFor } from "@testing-library/react";
 
 // Mock react-redux useDispatch hook
 vi.mock("react-redux", async () => {
@@ -23,9 +24,11 @@ describe("DialogboksAvslagSoknad", () => {
     kontrollfeil: [],
   };
 
-  it("viser en Nav Modal", () => {
+  it("viser en Nav Modal", async () => {
     const { getByRole } = renderWithProviders(<DialogboksAvslagSoknad {...props} />);
-    expect(getByRole("dialog")).toBeInTheDocument();
+    await waitFor(() => {
+      expect(getByRole("dialog")).toBeInTheDocument();
+    });
   });
 
   it("viser forhåndsvisning når ingen feilmeldinger finnes", async () => {
@@ -43,6 +46,9 @@ describe("DialogboksAvslagSoknad", () => {
     const { queryByText } = renderWithProviders(<DialogboksAvslagSoknad {...props} />, {
       preloadedState: initialState,
     });
-    expect(queryByText("Forhåndsvisning av brev")).not.toBeInTheDocument();
+
+    await waitFor(() => {
+      expect(queryByText("Forhåndsvisning av brev")).not.toBeInTheDocument();
+    });
   });
 });

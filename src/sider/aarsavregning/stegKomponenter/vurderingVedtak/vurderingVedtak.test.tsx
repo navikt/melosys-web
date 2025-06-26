@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { VurderingVedtak } from "./vurderingVedtak";
-import { renderWithProviders } from "../../../../ducks/test-utils/renderWithProviders";
+import { renderWithProvidersAsync } from "../../../../ducks/test-utils/renderWithProviders";
 import MKV from "../../../../melosyskodeverk";
 import * as Api from "../../../../services/api";
 
@@ -146,7 +146,7 @@ describe("VurderingVedtak", () => {
       },
     };
 
-    const { container } = renderWithProviders(<VurderingVedtak {...mockProps} />, {
+    const { container } = await renderWithProvidersAsync(<VurderingVedtak {...mockProps} />, {
       preloadedState: initialReduxState,
     });
 

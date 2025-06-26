@@ -6,7 +6,7 @@ import userEvent from "@testing-library/user-event";
 import { HentPersoninfoDocument } from "./hentPersoninfo.generated";
 import Personinfo from "./personinfo";
 import { HentPersonopplysningerDocument } from "../../../../informasjonlinje/hentpersonopplysninger.generated";
-import { renderWithProviders } from "../../../../../ducks/test-utils/renderWithProviders";
+import { renderWithProviders, renderWithProvidersAsync } from "../../../../../ducks/test-utils/renderWithProviders";
 
 describe("Personinfo", () => {
   window.matchMedia =
@@ -143,7 +143,7 @@ describe("Personinfo", () => {
   });
 
   it("viser melding ved nettverkserror under henting av personinfo", async () => {
-    renderWithProviders(
+    await renderWithProvidersAsync(
       <MockedProvider
         mocks={[
           {
@@ -199,7 +199,7 @@ describe("Personinfo", () => {
   });
 
   it("sender personstatus-data til personstatusModal etter dataen er hentet", async () => {
-    renderWithProviders(
+    await renderWithProvidersAsync(
       <MockedProvider {...requestResultMock}>
         <Personinfo {...props} />
       </MockedProvider>,

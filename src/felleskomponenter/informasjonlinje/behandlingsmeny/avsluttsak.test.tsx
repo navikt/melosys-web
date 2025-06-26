@@ -1,6 +1,6 @@
 import { screen } from "@testing-library/react";
 import MKV from "../../../melosyskodeverk";
-import { renderWithProviders } from "../../../ducks/test-utils/renderWithProviders";
+import { renderWithProviders, renderWithProvidersAsync } from "../../../ducks/test-utils/renderWithProviders";
 import AvsluttSak from "./avsluttsak";
 
 const {
@@ -63,7 +63,7 @@ describe("AvsluttSak", () => {
   it("viser riktige valg for sakstype FTRL og behandlingstype FØRSTEGANG ", async () => {
     props.sakstype = FTRL;
     props.behandlingstema = YRKESAKTIV;
-    renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
+    await renderWithProvidersAsync(<AvsluttSak />, { preloadedState: initialState() });
 
     const knapper = await screen.findAllByRole("button");
     expect(knapper).toHaveLength(6);
@@ -79,7 +79,7 @@ describe("AvsluttSak", () => {
     props.sakstype = FTRL;
     props.behandlingstema = YRKESAKTIV;
     props.behandlingstype = NY_VURDERING;
-    renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
+    await renderWithProvidersAsync(<AvsluttSak />, { preloadedState: initialState() });
 
     const knapper = await screen.findAllByRole("button");
     expect(knapper).toHaveLength(8);
@@ -102,7 +102,7 @@ describe("AvsluttSak", () => {
 
   describe("Behandlingen er bortfalt", () => {
     it("viser Behandlingen er bortfalt når behandling er redigerbart", async () => {
-      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
+      await renderWithProvidersAsync(<AvsluttSak />, { preloadedState: initialState() });
 
       expect(await screen.findByText("Behandlingen er bortfalt")).toBeInTheDocument();
     });
@@ -111,49 +111,49 @@ describe("AvsluttSak", () => {
   describe("Ferdigbehandlet", () => {
     it(`viser 'Ferdigbehandlet' dersom behandlingstema er blant de tillatte og behandlingstype er ${NY_VURDERING}`, async () => {
       props.behandlingstype = NY_VURDERING;
-      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
+      await renderWithProvidersAsync(<AvsluttSak />, { preloadedState: initialState() });
 
       expect(await screen.findByText("Ferdigbehandlet")).toBeInTheDocument();
     });
 
     it(`viser 'Ferdigbehandlet' dersom behandlingstema er blant de tillatte og behandlingstype er ${HENVENDELSE}`, async () => {
       props.behandlingstype = HENVENDELSE;
-      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
+      await renderWithProvidersAsync(<AvsluttSak />, { preloadedState: initialState() });
 
       expect(await screen.findByText("Ferdigbehandlet")).toBeInTheDocument();
     });
 
     it(`viser 'Ferdigbehandlet' dersom behandlingstema ikke er blant de tillatte så lenge behandling er redigerbart`, async () => {
       props.behandlingstema = YRKESAKTIV;
-      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
+      await renderWithProvidersAsync(<AvsluttSak />, { preloadedState: initialState() });
 
       expect(await screen.findByText("Ferdigbehandlet")).toBeInTheDocument();
     });
 
     it(`viser 'Ferdigbehandlet' dersom behandlingstema er ARBEID_FLERE_LAND, sakstype er EU_SØS, behandlingstype er FØRSTEGANG og det er redigerbart`, async () => {
       props.behandlingstema = ARBEID_FLERE_LAND;
-      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
+      await renderWithProvidersAsync(<AvsluttSak />, { preloadedState: initialState() });
 
       expect(await screen.findByText("Ferdigbehandlet")).toBeInTheDocument();
     });
 
     it(`viser ikke 'Ferdigbehandlet' dersom behandlingstema er annet enn ARBEID_FLERE_LAND, behandlingstype er FØRSTEGANG og det er redigerbart`, async () => {
-      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
+      await renderWithProvidersAsync(<AvsluttSak />, { preloadedState: initialState() });
 
-      expect(await screen.queryByText("Ferdigbehandlet")).toBeNull();
+      expect(screen.queryByText("Ferdigbehandlet")).toBeNull();
     });
   });
 
   describe("Søknaden er avslått", () => {
     it(`viser 'Søknaden er avslått' dersom behandlingstype og behandlingstema er blant de tillatte`, async () => {
-      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
+      await renderWithProvidersAsync(<AvsluttSak />, { preloadedState: initialState() });
 
       expect(await screen.findByText("Søknaden er avslått")).toBeInTheDocument();
     });
 
     it(`viser ikke 'Søknaden er avslått' dersom behandlingstype er ${HENVENDELSE}`, async () => {
       props.behandlingstype = HENVENDELSE;
-      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
+      await renderWithProvidersAsync(<AvsluttSak />, { preloadedState: initialState() });
 
       const knapper = await screen.findAllByRole("button");
       expect(knapper.some((knapp) => knapp.textContent === "Søknaden er avslått")).toBeFalsy();
@@ -161,7 +161,7 @@ describe("AvsluttSak", () => {
 
     it(`viser ikke 'Søknaden er avslått' dersom sakstema er ${UNNTAK}`, async () => {
       props.sakstema = UNNTAK;
-      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
+      await renderWithProvidersAsync(<AvsluttSak />, { preloadedState: initialState() });
 
       const knapper = await screen.findAllByRole("button");
       expect(knapper.some((knapp) => knapp.textContent === "Søknaden er avslått")).toBeFalsy();
@@ -170,7 +170,7 @@ describe("AvsluttSak", () => {
 
   describe("Søknaden er innvilget", () => {
     it(`viser 'Søknaden er innvilget' dersom sakstype er ${EU_EOS} og behandlingstype er ${FØRSTEGANG} og behandlingstema er ${UTSENDT_ARBEIDSTAKER}`, async () => {
-      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
+      await renderWithProvidersAsync(<AvsluttSak />, { preloadedState: initialState() });
 
       expect(await screen.findByText("Søknaden er innvilget")).toBeInTheDocument();
     });
@@ -179,7 +179,7 @@ describe("AvsluttSak", () => {
       props.sakstype = FTRL;
       props.behandlingstype = FØRSTEGANG;
       props.behandlingstema = YRKESAKTIV;
-      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
+      await renderWithProvidersAsync(<AvsluttSak />, { preloadedState: initialState() });
 
       expect(await screen.findByText("Søknaden er innvilget")).toBeInTheDocument();
     });
@@ -188,7 +188,7 @@ describe("AvsluttSak", () => {
       props.sakstype = TRYGDEAVTALE;
       props.behandlingstype = FØRSTEGANG;
       props.behandlingstema = YRKESAKTIV;
-      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
+      await renderWithProvidersAsync(<AvsluttSak />, { preloadedState: initialState() });
 
       expect(await screen.findByText("Søknaden er innvilget")).toBeInTheDocument();
     });
@@ -197,7 +197,7 @@ describe("AvsluttSak", () => {
       props.sakstype = TRYGDEAVTALE;
       props.behandlingstype = HENVENDELSE;
       props.behandlingstema = YRKESAKTIV;
-      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
+      await renderWithProvidersAsync(<AvsluttSak />, { preloadedState: initialState() });
 
       const knapper = await screen.findAllByRole("button");
       expect(knapper.some((knapp) => knapp.textContent === "Søknaden er innvilget")).toBeFalsy();
@@ -205,7 +205,7 @@ describe("AvsluttSak", () => {
 
     it(`viser ikke 'Søknaden er innvilget' dersom sakstema er ${UNNTAK}`, async () => {
       props.sakstema = UNNTAK;
-      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
+      await renderWithProvidersAsync(<AvsluttSak />, { preloadedState: initialState() });
 
       const knapper = await screen.findAllByRole("button");
       expect(knapper.some((knapp) => knapp.textContent === "Søknaden er innvilget")).toBeFalsy();
@@ -214,7 +214,7 @@ describe("AvsluttSak", () => {
 
   describe("Søknaden/klagen er trukket", () => {
     it(`viser 'Søknaden/klagen er trukket' dersom sakstype er ${EU_EOS} og behandlingstype er ${FØRSTEGANG} og behandlingstema er ${UTSENDT_ARBEIDSTAKER}`, async () => {
-      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
+      await renderWithProvidersAsync(<AvsluttSak />, { preloadedState: initialState() });
 
       expect(await screen.findByText("Søknaden/klagen er trukket")).toBeInTheDocument();
     });
@@ -223,7 +223,7 @@ describe("AvsluttSak", () => {
       props.sakstype = FTRL;
       props.behandlingstype = FØRSTEGANG;
       props.behandlingstema = YRKESAKTIV;
-      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
+      await renderWithProvidersAsync(<AvsluttSak />, { preloadedState: initialState() });
 
       expect(await screen.findByText("Søknaden/klagen er trukket")).toBeInTheDocument();
     });
@@ -232,7 +232,7 @@ describe("AvsluttSak", () => {
       props.sakstype = TRYGDEAVTALE;
       props.behandlingstype = FØRSTEGANG;
       props.behandlingstema = YRKESAKTIV;
-      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
+      await renderWithProvidersAsync(<AvsluttSak />, { preloadedState: initialState() });
 
       expect(await screen.findByText("Søknaden/klagen er trukket")).toBeInTheDocument();
     });
@@ -241,7 +241,7 @@ describe("AvsluttSak", () => {
       props.sakstype = TRYGDEAVTALE;
       props.behandlingstype = HENVENDELSE;
       props.behandlingstema = YRKESAKTIV;
-      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
+      await renderWithProvidersAsync(<AvsluttSak />, { preloadedState: initialState() });
 
       const knapper = await screen.findAllByRole("button");
       expect(knapper.some((knapp) => knapp.textContent === "Søknaden/klagen er trukket")).toBeFalsy();
@@ -249,7 +249,7 @@ describe("AvsluttSak", () => {
 
     it(`viser ikke 'Søknaden/klagen er trukket' dersom sakstema er ${UNNTAK}`, async () => {
       props.sakstema = UNNTAK;
-      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
+      await renderWithProvidersAsync(<AvsluttSak />, { preloadedState: initialState() });
 
       const knapper = await screen.findAllByRole("button");
       expect(knapper.some((knapp) => knapp.textContent === "Søknaden/klagen er trukket")).toBeFalsy();
@@ -258,7 +258,7 @@ describe("AvsluttSak", () => {
 
   describe("Avslå søknad pga. manglende opplysninger", () => {
     it(`viser 'Avslå søknad pga. manglende opplysninger' dersom sakstype er ${EU_EOS} og behandlingstype er ${FØRSTEGANG} og behandlingstema er ${UTSENDT_ARBEIDSTAKER}`, async () => {
-      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
+      await renderWithProvidersAsync(<AvsluttSak />, { preloadedState: initialState() });
 
       expect(await screen.findByText("Avslå søknad pga. manglende opplysninger")).toBeInTheDocument();
     });
@@ -267,7 +267,7 @@ describe("AvsluttSak", () => {
       props.sakstype = FTRL;
       props.behandlingstype = FØRSTEGANG;
       props.behandlingstema = YRKESAKTIV;
-      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
+      await renderWithProvidersAsync(<AvsluttSak />, { preloadedState: initialState() });
 
       expect(await screen.findByText("Avslå søknad pga. manglende opplysninger")).toBeInTheDocument();
     });
@@ -276,7 +276,7 @@ describe("AvsluttSak", () => {
       props.sakstype = TRYGDEAVTALE;
       props.behandlingstype = FØRSTEGANG;
       props.behandlingstema = YRKESAKTIV;
-      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
+      await renderWithProvidersAsync(<AvsluttSak />, { preloadedState: initialState() });
 
       expect(await screen.findByText("Avslå søknad pga. manglende opplysninger")).toBeInTheDocument();
     });
@@ -285,7 +285,7 @@ describe("AvsluttSak", () => {
       props.sakstype = TRYGDEAVTALE;
       props.behandlingstype = HENVENDELSE;
       props.behandlingstema = YRKESAKTIV;
-      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
+      await renderWithProvidersAsync(<AvsluttSak />, { preloadedState: initialState() });
 
       const knapper = await screen.findAllByRole("button");
       expect(knapper.some((knapp) => knapp.textContent === "Avslå søknad pga. manglende opplysninger")).toBeFalsy();
@@ -293,7 +293,7 @@ describe("AvsluttSak", () => {
 
     it(`viser ikke 'Avslå søknad pga. manglende opplysninger' dersom sakstema er ${UNNTAK}`, async () => {
       props.sakstema = UNNTAK;
-      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
+      await renderWithProvidersAsync(<AvsluttSak />, { preloadedState: initialState() });
 
       const knapper = await screen.findAllByRole("button");
       expect(knapper.some((knapp) => knapp.textContent === "Avslå søknad pga. manglende opplysninger")).toBeFalsy();
@@ -303,7 +303,7 @@ describe("AvsluttSak", () => {
   describe("Klage-handlinger", () => {
     it(`viser Klage-handlinger dersom behandlingstype er ${KLAGE}`, async () => {
       props.behandlingstype = KLAGE;
-      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
+      await renderWithProvidersAsync(<AvsluttSak />, { preloadedState: initialState() });
 
       const knapper = await screen.findAllByRole("button");
       expect(knapper.some((knapp) => knapp.textContent === "Medhold på klage")).toBeTruthy();
@@ -315,7 +315,7 @@ describe("AvsluttSak", () => {
 
     it(`viser ikke Klage-handlinger dersom behandlingstype er ${FØRSTEGANG}`, async () => {
       props.behandlingstype = FØRSTEGANG;
-      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
+      await renderWithProvidersAsync(<AvsluttSak />, { preloadedState: initialState() });
 
       const knapper = await screen.findAllByRole("button");
       expect(knapper.some((knapp) => knapp.textContent === "Medhold på klage")).toBeFalsy();
@@ -329,14 +329,14 @@ describe("AvsluttSak", () => {
   describe("Vedtaket er omgjort (fvl § 35)", () => {
     it(`viser 'Vedtaket er omgjort (fvl § 35)' dersom behandlingstype er ${NY_VURDERING}`, async () => {
       props.behandlingstype = NY_VURDERING;
-      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
+      await renderWithProvidersAsync(<AvsluttSak />, { preloadedState: initialState() });
 
       expect(await screen.findByText("Vedtaket er omgjort (fvl § 35)")).toBeInTheDocument();
     });
 
     it(`viser ikke 'Vedtaket er omgjort (fvl § 35)' dersom behandlingstype er ${FØRSTEGANG}`, async () => {
       props.behandlingstype = FØRSTEGANG;
-      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
+      await renderWithProvidersAsync(<AvsluttSak />, { preloadedState: initialState() });
 
       const knapper = await screen.findAllByRole("button");
       expect(knapper.some((knapp) => knapp.textContent === "Vedtaket er omgjort (fvl § 35)")).toBeFalsy();
@@ -348,7 +348,7 @@ describe("AvsluttSak", () => {
       props.behandlingstema = ANMODNING_OM_UNNTAK_HOVEDREGEL;
       props.sakstype = TRYGDEAVTALE;
       props.sakstema = UNNTAK;
-      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
+      await renderWithProvidersAsync(<AvsluttSak />, { preloadedState: initialState() });
 
       const knapper = await screen.findAllByRole("button");
       expect(knapper.some((knapp) => knapp.textContent === "Perioden er godkjent")).toBeTruthy();
@@ -360,7 +360,7 @@ describe("AvsluttSak", () => {
       props.behandlingstema = REGISTRERING_UNNTAK;
       props.sakstype = TRYGDEAVTALE;
       props.sakstema = UNNTAK;
-      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
+      await renderWithProvidersAsync(<AvsluttSak />, { preloadedState: initialState() });
 
       const knapper = await screen.findAllByRole("button");
       expect(knapper.some((knapp) => knapp.textContent === "Perioden er godkjent")).toBeTruthy();
@@ -372,7 +372,7 @@ describe("AvsluttSak", () => {
       props.behandlingstema = A1_ANMODNING_OM_UNNTAK_PAPIR;
       props.sakstype = EU_EOS;
       props.sakstema = UNNTAK;
-      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
+      await renderWithProvidersAsync(<AvsluttSak />, { preloadedState: initialState() });
 
       const knapper = await screen.findAllByRole("button");
       expect(knapper.some((knapp) => knapp.textContent === "Perioden er godkjent")).toBeTruthy();
@@ -381,7 +381,7 @@ describe("AvsluttSak", () => {
     });
 
     it(`viser ikke Unntak-handlinger for andre tilfeller enn de ovenfor`, async () => {
-      renderWithProviders(<AvsluttSak />, { preloadedState: initialState() });
+      await renderWithProvidersAsync(<AvsluttSak />, { preloadedState: initialState() });
 
       const knapper = await screen.findAllByRole("button");
       expect(knapper.some((knapp) => knapp.textContent === "Perioden er godkjent")).toBeFalsy();
