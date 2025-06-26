@@ -290,9 +290,10 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
 
   const visFeilFraLagring = feil && formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType);
 
-  console.log("Ja da, da er vi er her");
-  console.log("Hva er det vi har her?");
   console.log("Helse periode:", helseutgiftDekkesPeriode);
+  console.log("Form gyldig:", formIsValid);
+  console.log("Gyldig steg:", stegErGyldig);
+  console.log("Feilemdling som blokkerer:", aktivFeilmeldingType);
 
   return (
     <div className="vurderingTrygdeavgift">
