@@ -157,6 +157,9 @@ describe("KnyttTilSak", () => {
   });
 
   it("håndterer feil ved henting av behandlingstyper", async () => {
+    // Suppress console.error for denne spesifikke testen, siden det er feilhåndtering som testes
+    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
     mocks.hentBehandlingstyperForKnyttTilSak.mockRejectedValueOnce(new Error("API Error"));
     props.formValues.behandlingstema = "YRKESAKTIV";
     props.formValues.opprettBehandling = true;
@@ -170,5 +173,8 @@ describe("KnyttTilSak", () => {
         expect(within(behandlingstypeGroup).queryAllByRole("radio")).toHaveLength(0);
       }
     });
+
+    // Restore console.error
+    consoleSpy.mockRestore();
   });
 });
