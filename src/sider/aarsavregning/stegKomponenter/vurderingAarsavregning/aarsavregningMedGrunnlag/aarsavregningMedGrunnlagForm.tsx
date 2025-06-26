@@ -375,6 +375,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
             !beregningPaagar &&
             !feilmelding &&
             !arrayValideringsfeil &&
+            !trygdeAvgiftSkalIkkeBetalesTilNav &&
             aarsavregningResponse?.nyttGrunnlag && (
               <Nav.ExpansionCard
                 className="beregnetTrygdeavgiftDetaljer"
