@@ -802,7 +802,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
             lagreMedlemskapsperioderHvisGyldig={lagreMedlemskapsperioderEtterBestemmelseEndringHvisGyldig}
           />
 
-          <div className="medlemskapsperioder">
+          <div className="perioder">
             {(medlemskapsperioderFields as any[]).map((field: any, index: number) => (
               <MedlemskapsperiodeSkjema
                 key={field.id}
@@ -818,7 +818,6 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
                 minDate={minDate}
                 trygdedekninger={trygdedekninger}
                 setValue={setValue}
-                errors={errors}
               />
             ))}
           </div>
