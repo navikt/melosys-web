@@ -1,4 +1,3 @@
-/* eslint-disable */
 import * as Adresse from "./adresse";
 
 describe("tester adresse.js", () => {

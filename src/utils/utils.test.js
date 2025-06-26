@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { fn, isJSON, queryParamsTilObjekt, finnVerdierMedKey } from "./utils";
 
 describe("utils.js:", () => {

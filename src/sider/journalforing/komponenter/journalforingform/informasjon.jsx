@@ -371,7 +371,6 @@ class Informasjon extends Component {
                     ))}
                   {logiskeVedlegg.length > 0 &&
                     logiskeVedlegg.map((dokumentTittel, index) => (
-                      /* eslint-disable-next-line react/no-array-index-key */
                       <Fragment key={`logiskeVedlegg[${index}]`}>
                         <LenkeListeVelger
                           feltNavn={`hoveddokument.logiskeVedlegg[${index}]`}

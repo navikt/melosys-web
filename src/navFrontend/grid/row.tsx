@@ -1,4 +1,3 @@
-/* eslint-disable react/prefer-stateless-function */
 import classNames from "classnames";
 import { Component, ComponentClass, HTMLAttributes } from "react";
 

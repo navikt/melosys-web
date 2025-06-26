@@ -10,7 +10,6 @@ vi.mock("../../../featuretoggle", () => ({
   useFeatureToggle: vi.fn(),
 }));
 
-/* eslint-disable react/jsx-pascal-case */
 describe("VurderingArtikkel13_x_Vedtak", () => {
   const props = {
     tilstand: {

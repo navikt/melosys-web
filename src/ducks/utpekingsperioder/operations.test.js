@@ -1,6 +1,5 @@
 import { createTestStore } from "../test-utils/createTestStore";
 
-import * as types from "./types";
 import * as operations from "./operations";
 import * as KV from "../../kodeverk";
 

@@ -80,7 +80,6 @@ export function MedlemskapsperiodeSkjema({
   minDate,
   trygdedekninger = [],
   setValue,
-  errors,
 }: PeriodeElementerProps) {
   const medlemskapsperioder = formValues.medlemskapsperioder!;
   const erPeriodeFraGrunnlag = !medlemskapsperioder[index]?.redigerbar;

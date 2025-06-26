@@ -1,4 +1,4 @@
-import { Component, Fragment, useState } from "react";
+import { Component, useState } from "react";
 import PT from "prop-types";
 import classNames from "classnames";
 import { Field } from "redux-form";

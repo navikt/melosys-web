@@ -21,7 +21,6 @@ export default class FontSize extends Component {
       let defaultFontSize = editorStyles.getPropertyValue("font-size");
       defaultFontSize = defaultFontSize.substring(0, defaultFontSize.length - 2);
       this.setState({
-        // eslint-disable-line react/no-did-mount-set-state
         defaultFontSize,
       });
     }

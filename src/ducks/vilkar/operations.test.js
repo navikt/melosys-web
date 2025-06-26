@@ -2,7 +2,7 @@ import { createTestStore } from "../test-utils/createTestStore";
 
 import MKV from "../../melosyskodeverk";
 
-import { vilkarOperations as operations, vilkarTypes as types } from "./index";
+import { vilkarOperations as operations } from "./index";
 
 describe("vilkar operations", () => {
   let initialState = null;

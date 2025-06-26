@@ -64,7 +64,6 @@ function FlereRedigeringsKnapperListe<T>({
         const elementContainerCls = classNames("elementer__container", { understrek: elementUnderstrek });
 
         return (
-          /* eslint-disable-next-line react/no-array-index-key */
           <div className={elementContainerCls} key={index}>
             <EditerbartElement
               redigerbart={redigerbart}

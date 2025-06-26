@@ -138,9 +138,7 @@ function SendBrev({
   const hentTilgjengeligeMaler = () =>
     Api.DokumenterV2.hentTilgjengeligeMaler(behandlingID).then((response) => {
       response.forEach((mal) => {
-        /* eslint-disable no-param-reassign */
         mal.mottaker.uuid = Utils._uuid();
-        /* eslint-enable no-param-reassign */
       });
       setTilgjengeligeMaler(response);
     });

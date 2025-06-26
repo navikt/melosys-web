@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 import createFetchMock from "vitest-fetch-mock";
 import * as matchers from "@testing-library/jest-dom";
 import { vi, expect } from "vitest";
