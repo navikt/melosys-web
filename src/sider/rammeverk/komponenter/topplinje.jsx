@@ -28,9 +28,9 @@ function Topplinje(props) {
         <Nav.Heading size="small">Hopp til hovedinnhold</Nav.Heading>
       </a>
       <div className="topplinje__brand">
-        <button onClick={tilForsidenHandler} className="topplinje__brandKnapp" type="button">
-          <NavLogo className="brand__logo" alt="To personer på NAV kontor" />
-        </button>
+        <a onClick={tilForsidenHandler} href="/" className="topplinje__brandKnapp" aria-label="Gå til forsiden">
+          <NavLogo className="brand__logo" alt="NAV logo" />
+        </a>
         <div className="brand__skillelinje" />
         <div className="brand__tittel">
           <span>Melosys</span>
