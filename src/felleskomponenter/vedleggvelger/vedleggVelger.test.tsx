@@ -4,6 +4,11 @@ import VedleggVelger from "./vedleggVelger";
 import VedleggVelgerModal from "./vedleggVelgerModal";
 import { render, screen } from "@testing-library/react";
 
+// Mock the table component to avoid HTML structure issues in tests
+vi.mock("./vedleggVelgerTable", () => ({
+  default: () => <div data-testid="mocked-vedlegg-velger-table">Mocked VedleggVelgerTable</div>,
+}));
+
 describe("VedleggVelger", () => {
   let props: ComponentProps<typeof VedleggVelger>;
 

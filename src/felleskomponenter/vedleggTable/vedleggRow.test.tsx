@@ -13,7 +13,13 @@ const dokument = {
 
 describe("vedleggRow", () => {
   it("snapshot test", () => {
-    const { container } = render(<VedleggRow slettVedlegg={vi.fn()} vedlegg={dokument} redigerbart />);
+    const { container } = render(
+      <table>
+        <tbody>
+          <VedleggRow slettVedlegg={vi.fn()} vedlegg={dokument} redigerbart />
+        </tbody>
+      </table>,
+    );
     expect(container).toMatchSnapshot();
   });
 });

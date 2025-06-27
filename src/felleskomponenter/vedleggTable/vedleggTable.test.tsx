@@ -1,6 +1,12 @@
 import VedleggTable from "./vedleggTable";
 import { render } from "@testing-library/react";
 
+// Mock the modal component to avoid HTML structure issues in tests
+vi.mock("./slettFritekstvedleggModal", () => ({
+  default: ({ open, children }: { open: boolean; children?: React.ReactNode }) =>
+    open ? <div data-testid="mocked-modal">{children}</div> : null,
+}));
+
 const dokument = {
   dokumentID: "1",
   tittel: "test",
