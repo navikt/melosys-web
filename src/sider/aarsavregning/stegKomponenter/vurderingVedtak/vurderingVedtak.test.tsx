@@ -4,6 +4,11 @@ import { renderWithProvidersAsync } from "../../../../ducks/test-utils/renderWit
 import MKV from "../../../../melosyskodeverk";
 import * as Api from "../../../../services/api";
 
+Object.defineProperty(window, "scrollTo", {
+  value: vi.fn(),
+  writable: true,
+});
+
 // Mock only the API calls to prevent network requests
 vi.mock("../../../../services/api", () => ({
   Aarsavregning: {
