@@ -1,6 +1,6 @@
 import { fireEvent, screen } from "@testing-library/react";
 import MultiSelect from "./multiSelect";
-import { renderWithProviders } from "../../ducks/test-utils/renderWithProviders";
+import { renderWithProviders, renderWithProvidersAsync } from "../../ducks/test-utils/renderWithProviders";
 
 const props = {
   label: "Label",
@@ -15,7 +15,7 @@ const props = {
 
 describe("MultiSelect", () => {
   it("Props er satt", async () => {
-    renderWithProviders(<MultiSelect {...props} />);
+    await renderWithProvidersAsync(<MultiSelect {...props} />);
 
     const select = screen.getByRole("combobox");
     fireEvent.mouseDown(select);

@@ -1,8 +1,13 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { VurderingVedtak } from "./vurderingVedtak";
-import { renderWithProviders } from "../../../../ducks/test-utils/renderWithProviders";
+import { renderWithProvidersAsync } from "../../../../ducks/test-utils/renderWithProviders";
 import MKV from "../../../../melosyskodeverk";
 import * as Api from "../../../../services/api";
+
+Object.defineProperty(window, "scrollTo", {
+  value: vi.fn(),
+  writable: true,
+});
 
 // Mock only the API calls to prevent network requests
 vi.mock("../../../../services/api", () => ({
@@ -146,7 +151,7 @@ describe("VurderingVedtak", () => {
       },
     };
 
-    const { container } = renderWithProviders(<VurderingVedtak {...mockProps} />, {
+    const { container } = await renderWithProvidersAsync(<VurderingVedtak {...mockProps} />, {
       preloadedState: initialReduxState,
     });
 

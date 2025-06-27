@@ -1,7 +1,7 @@
 import MKV from "../../../../melosyskodeverk";
 
 import Journalforingform from "./journalforingform";
-import { renderWithProviders } from "../../../../ducks/test-utils/renderWithProviders";
+import { renderWithProviders, renderWithProvidersAsync } from "../../../../ducks/test-utils/renderWithProviders";
 import { testReduxState } from "./testReduxState";
 import userEvent from "@testing-library/user-event";
 import { fireEvent, queryByAttribute } from "@testing-library/react";
@@ -198,7 +198,7 @@ describe("JournalforingForm", () => {
   });
 
   it("skalTilordnes vises før vi velger sak", async () => {
-    const { getByLabelText } = renderWithProviders(<Journalforingform {...props} />, {
+    const { getByLabelText } = await renderWithProvidersAsync(<Journalforingform {...props} />, {
       preloadedState: testReduxState,
     });
 
