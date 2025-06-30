@@ -239,7 +239,7 @@ export function Inntektskilder({
               {skalFylleInnBruttoInntekt ? (
                 <div>
                   <Forms.Input
-                    label={index === 0 ? "Brutto inntekt" : ""}
+                    label={index === 0 ? "Bruttoinntekt" : ""}
                     hideLabel={index !== 0}
                     name={`inntektskilder[${index}].bruttoInntekt`}
                     control={control}

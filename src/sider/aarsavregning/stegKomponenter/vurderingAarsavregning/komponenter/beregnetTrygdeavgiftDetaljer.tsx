@@ -4,6 +4,7 @@ import * as Utils from "../../../../../utils";
 import MKV from "../../../../../melosyskodeverk";
 import * as KV from "../../../../../kodeverk";
 import { formaterTilNorskBelopUtenDesimaler } from "../../../../../utils";
+import "./beregnetTrygdeavgiftDetaljer.css";
 
 const { SKATTEPLIKTIG } = MKV.Koder.skatteplikttype;
 const { MISJONÆR } = MKV.Koder.inntektskildetype;
@@ -84,13 +85,13 @@ export function BeregnetTrygdeavgiftDetaljer({
                 )}`}
               </Nav.Table.DataCell>
               <Nav.Table.DataCell key={Utils._uuid()}>{detaljer.avgiftssats}</Nav.Table.DataCell>
-              <Nav.Table.DataCell key={Utils._uuid()}>
+              <Nav.Table.DataCell key={Utils._uuid()} className="tall_felt">
                 {formaterTilNorskBelopUtenDesimaler(detaljer.avgiftPerMd)} kr
               </Nav.Table.DataCell>
               <Nav.Table.DataCell key={Utils._uuid()}>
                 {KV.finnTermFraListe(MKV.KTObjects.inntektskildetype, detaljer.inntektskildetype)}
               </Nav.Table.DataCell>
-              <Nav.Table.DataCell key={Utils._uuid()}>
+              <Nav.Table.DataCell key={Utils._uuid()} className="tall_felt">
                 {formaterTilNorskBelopUtenDesimaler(detaljer.inntektPerMd)} kr
               </Nav.Table.DataCell>
               <Nav.Table.DataCell key={Utils._uuid()}>
