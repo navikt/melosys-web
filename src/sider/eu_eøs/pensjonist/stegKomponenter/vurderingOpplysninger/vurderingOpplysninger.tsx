@@ -8,7 +8,6 @@ import { PeriodeOgLandVelger } from "./komponenter/periodeVelger/periodeVelger";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import vurdering_opplysninger from "./vurderingOpplysningerSchema";
-import { mottatteOpplysningerSelectors } from "../../../../../ducks/mottatteOpplysninger";
 import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 import "./vurderingOpplysninger.css";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
@@ -17,8 +16,7 @@ import {
   helseutgiftDekkesPeriodeSelector,
 } from "../../../../../ducks/helseutgiftdekkesperiode";
 import { HelseutgiftDekkesPeriodeDto } from "../../../../../services/modules/helseutgiftDekkesPeriode/helseutgiftDekkesPeriode";
-import { useEffect } from "react";
-import { oppsummertfaktaOperations } from "../../../../../ducks/oppsummertfakta";
+import { useMemo } from "react";
 
 interface Props {
   bekreft: () => void;
@@ -34,6 +32,15 @@ export function VurderingOpplysninger({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const helseutgiftDekkesPeriode = useSelector(helseutgiftDekkesPeriodeSelector.HelseutgiftDekkesPeriode).data;
   const { fomDato, tomDato, bostedLandkode } = helseutgiftDekkesPeriode;
 
+  const initialValues = useMemo(
+    () => ({
+      fomDato: fomDato ? Utils.dato.formatterDatoTilNorsk(fomDato) : "",
+      tomDato: tomDato ? Utils.dato.formatterDatoTilNorsk(tomDato) : "",
+      bostedLandkode: bostedLandkode || "",
+    }),
+    [fomDato, tomDato, bostedLandkode],
+  );
+
   const {
     control,
     watch,
@@ -43,33 +50,11 @@ export function VurderingOpplysninger({ bekreft, tilbake, aktivtSteg, oppdaterSt
   } = useForm({
     resolver: yupResolver(vurdering_opplysninger),
     mode: "all",
-    defaultValues: {
-      fomDato: "",
-      tomDato: "",
-      bostedLandkode: "",
-    },
+    values: initialValues, // Use 'values' instead of 'defaultValues'
   });
 
-  useEffect(() => {
-    if (fomDato) {
-      setValue("fomDato", Utils.dato.formatterDatoTilNorsk(fomDato), { shouldValidate: true });
-    }
-
-    if (tomDato) {
-      setValue("tomDato", Utils.dato.formatterDatoTilNorsk(tomDato), { shouldValidate: true });
-    }
-
-    if (bostedLandkode) {
-      setValue("bostedLandkode", bostedLandkode, { shouldValidate: true });
-    }
-  }, [fomDato, tomDato, bostedLandkode, setValue, trigger]);
-
-  useEffect(() => {
-    dispatch(oppsummertfaktaOperations.hentOppsummertFakta(behandlingId));
-    dispatch(helseutgiftDekkesPeriodeOperations.hentHelseutgiftDekkesPeriode(behandlingId));
-  }, [behandlingId]);
-
   const formValues = watch();
+
   const bekreftOgFortsett = async () => {
     if (formIsValid && isDirty) {
       await dispatch(
