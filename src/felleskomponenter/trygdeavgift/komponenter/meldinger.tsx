@@ -29,8 +29,8 @@ const SkatteforholdUtenforMedlemskapsperiode = (
 
 const SkattepliktigOgPensjonUforetrygdMedKildeskatt = (
   <Nav.Alert variant="error" className="alertstripe_feilmelding">
-    Inntektstypen &quot;Pensjon/uføretrygd&quot; skal det betales kildeskatt av og kan derfor ikke velges for perioder
-    bruker er skattepliktig til Norge.
+    Inntekstypen &quot;Pensjon/uføretrygd det betales kildeskatt av&quot; kan ikke velges for perioder bruker er
+    skattepliktig til Norge.
   </Nav.Alert>
 );
 
