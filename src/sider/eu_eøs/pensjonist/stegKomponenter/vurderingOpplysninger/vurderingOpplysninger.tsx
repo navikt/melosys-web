@@ -16,7 +16,9 @@ import {
   helseutgiftDekkesPeriodeSelector,
 } from "../../../../../ducks/helseutgiftdekkesperiode";
 import { HelseutgiftDekkesPeriodeDto } from "../../../../../services/modules/helseutgiftDekkesPeriode/helseutgiftDekkesPeriode";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
+import { UkjentSluttdatoMedlemskapsperiode } from "../../../../ftrl/saksbehandling/stegKomponenter/vurderingPeriode/komponenter/ukjentSluttdatoMedlemskapsperiode";
+import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../../ducks/oppsummertfakta";
 
 interface Props {
   bekreft: () => void;
@@ -27,15 +29,19 @@ interface Props {
 
 export function VurderingOpplysninger({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: Props) {
   const dispatch = useDispatch();
-  const behandlingId = useSelector(behandlingerSelectors.BehandlingIDSelector);
+  const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const helseutgiftDekkesPeriode = useSelector(helseutgiftDekkesPeriodeSelector.HelseutgiftDekkesPeriode).data;
   const { fomDato, tomDato, bostedLandkode } = helseutgiftDekkesPeriode;
 
+  const ukjentSluttdatoMedlemskapsperiode = useSelector(
+    oppsummertfaktaSelectors.UkjentSluttdatoMedlemskapsperiodeSelector,
+  );
+
   const initialValues = useMemo(
     () => ({
-      fomDato: fomDato ? Utils.dato.formatterDatoTilNorsk(fomDato) : "",
-      tomDato: tomDato ? Utils.dato.formatterDatoTilNorsk(tomDato) : "",
+      fomDato: Utils.dato.formatterDatoTilNorsk(fomDato, false, undefined),
+      tomDato: Utils.dato.formatterDatoTilNorsk(tomDato, false, undefined),
       bostedLandkode: bostedLandkode || "",
     }),
     [fomDato, tomDato, bostedLandkode],
@@ -46,33 +52,70 @@ export function VurderingOpplysninger({ bekreft, tilbake, aktivtSteg, oppdaterSt
     watch,
     setValue,
     trigger,
+    reset,
     formState: { isValid: formIsValid, isDirty },
   } = useForm({
     resolver: yupResolver(vurdering_opplysninger),
     mode: "all",
-    values: initialValues, // Use 'values' instead of 'defaultValues'
+    values: initialValues,
   });
 
   const formValues = watch();
 
+  const debouncedLagreHelseutgiftPeriode = useCallback(
+    Utils._debounce(async (formValues: any, isValid: boolean) => {
+      // console.log("From is valid?", isValid);
+      if (isValid) {
+        await oppdaterEllerOpprettHelseutgiftDekkesPeriode(formValues);
+      }
+    }, 500),
+    [],
+  );
+
+  const oppdaterSluttdato = async (ukjentSluttdato: boolean) => {
+    if (ukjentSluttdato) {
+      const fomISODate = Utils.dato.formatterDatoTilISO(formValues.fomDato, "");
+      if (fomISODate) {
+        const fomDate = new Date(fomISODate);
+        const tomDate = new Date(fomDate);
+        tomDate.setFullYear(tomDate.getFullYear() + 10);
+        reset({
+          ...formValues,
+          tomDato: Utils.dato.formatterDatoTilNorsk(tomDate.toISOString()),
+        });
+      }
+
+      trigger("tomDato");
+      await debouncedLagreHelseutgiftPeriode(formValues, formIsValid);
+    }
+
+    await dispatch(oppsummertfaktaOperations.lagreUkjentSluttdatoMedlemskapsperiode(behandlingID, ukjentSluttdato));
+  };
+
   const bekreftOgFortsett = async () => {
     if (formIsValid && isDirty) {
-      await dispatch(
-        helseutgiftDekkesPeriodeOperations.oppdaterEllerOpprettHelseutgiftDekkesPeriode(
-          behandlingId,
-          {
-            fomDato: Utils.dato.formatterDatoTilISO(formValues.fomDato),
-            tomDato: Utils.dato.formatterDatoTilISO(formValues.tomDato),
-            bostedLandkode: formValues.bostedLandkode,
-          } as HelseutgiftDekkesPeriodeDto,
-          Utils._isEmpty(helseutgiftDekkesPeriode),
-        ),
-      );
-      dispatch(helseutgiftDekkesPeriodeOperations.hentHelseutgiftDekkesPeriode(behandlingId));
+      oppdaterEllerOpprettHelseutgiftDekkesPeriode(formValues);
+      dispatch(helseutgiftDekkesPeriodeOperations.hentHelseutgiftDekkesPeriode(behandlingID));
     }
     // bekreft();
   };
 
+  const oppdaterEllerOpprettHelseutgiftDekkesPeriode = async (formValues: any) => {
+    await dispatch(
+      helseutgiftDekkesPeriodeOperations.oppdaterEllerOpprettHelseutgiftDekkesPeriode(
+        behandlingID,
+        {
+          fomDato: Utils.dato.formatterDatoTilISO(formValues.fomDato),
+          tomDato: Utils.dato.formatterDatoTilISO(formValues.tomDato),
+          bostedLandkode: formValues.bostedLandkode,
+        } as HelseutgiftDekkesPeriodeDto,
+        Utils._isEmpty(helseutgiftDekkesPeriode),
+      ),
+    );
+  };
+
+  // console.log("HelseutgiftDekkesPeriode: ", helseutgiftDekkesPeriode);
+  // console.log("Empty er:", Utils._isEmpty(helseutgiftDekkesPeriode));
   return (
     <>
       <Nav.Heading level="1" className="stegvelgertittel">
@@ -83,8 +126,15 @@ export function VurderingOpplysninger({ bekreft, tilbake, aktivtSteg, oppdaterSt
         control={control}
         redigerbart={redigerbart}
         formValues={formValues}
-        setValue={setValue}
-        trigger={trigger}
+        ukjentSluttdato={ukjentSluttdatoMedlemskapsperiode}
+        formIsValid={formIsValid}
+        handleChange={debouncedLagreHelseutgiftPeriode}
+      />
+
+      <UkjentSluttdatoMedlemskapsperiode
+        ukjentSluttdatoMedlemskapsperiode={ukjentSluttdatoMedlemskapsperiode || false}
+        onUkjentSluttdatoChange={oppdaterSluttdato}
+        erEøsPensjonist={true}
       />
 
       <Mui.StegKnapper

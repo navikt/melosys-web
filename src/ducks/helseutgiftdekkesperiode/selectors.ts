@@ -11,5 +11,13 @@ import { HelseutgiftDekkesPeriodeDto } from "../../services/modules/helseutgiftD
 
 export const HelseutgiftDekkesPeriode: Selector<RootState, StateSection<HelseutgiftDekkesPeriodeDto>> = createSelector(
   (state: RootState) => state.helseutgiftdekkesperiode,
-  (helseutgiftdekkesperiode) => helseutgiftdekkesperiode,
+  (helseutgiftdekkesperiode) => {
+    if (helseutgiftdekkesperiode.status === "ERROR") {
+      return {
+        ...helseutgiftdekkesperiode,
+        data: {} as HelseutgiftDekkesPeriodeDto,
+      };
+    }
+    return helseutgiftdekkesperiode;
+  },
 );
