@@ -59,7 +59,15 @@ export function PeriodeOgLandVelger({
             />
           </Nav.Column>
           <Nav.Column className="brederefelt">
-            <Forms.Select label="Bostedsland" control={control} name="bostedLandkode" disabled={!redigerbart}>
+            <Forms.Select
+              label="Bostedsland"
+              control={control}
+              name="bostedLandkode"
+              disabled={!redigerbart}
+              onChange={(bostedLandkode) =>
+                handleChange({ ...formValues, bostedLandkode: bostedLandkode }, formIsValid)
+              }
+            >
               {MKV.KTObjects.landkoder.map((item: any) => (
                 <option key={item.kode} value={item.kode} label={Utils.land.landTekstFormat(item)} />
               ))}
