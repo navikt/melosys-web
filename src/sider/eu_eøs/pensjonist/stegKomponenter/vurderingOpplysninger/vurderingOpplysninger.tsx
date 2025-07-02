@@ -62,13 +62,16 @@ export function VurderingOpplysninger({ bekreft, tilbake, aktivtSteg, oppdaterSt
 
   const formValues = watch();
 
-  const debouncedLagreHelseutgiftPeriode = useCallback(
-    Utils._debounce(async (formValues: any, isValid: boolean) => {
-      if (isValid) {
-        await oppdaterEllerOpprettHelseutgiftDekkesPeriode(formValues);
-      }
-    }, 500),
-    [],
+  const debouncedLagreHelseutgiftPeriode = useMemo(
+    () =>
+      Utils._debounce(async () => {
+        const latestValues = watch();
+        const isValid = await trigger();
+        if (isValid) {
+          await oppdaterEllerOpprettHelseutgiftDekkesPeriode(latestValues);
+        }
+      }, 500),
+    [watch(), trigger],
   );
 
   const oppdaterSluttdato = async (ukjentSluttdato: boolean) => {
@@ -84,8 +87,7 @@ export function VurderingOpplysninger({ bekreft, tilbake, aktivtSteg, oppdaterSt
           tomDato: newTomDato,
         });
 
-        await trigger("tomDato");
-        await debouncedLagreHelseutgiftPeriode({ ...formValues, tomDato: newTomDato }, formIsValid);
+        await debouncedLagreHelseutgiftPeriode();
 
         setUkjentSluttdatoKey(newTomDato);
       }
@@ -115,8 +117,6 @@ export function VurderingOpplysninger({ bekreft, tilbake, aktivtSteg, oppdaterSt
     );
   };
 
-  // console.log("HelseutgiftDekkesPeriode: ", helseutgiftDekkesPeriode);
-  // console.log("Empty er:", Utils._isEmpty(helseutgiftDekkesPeriode));
   return (
     <>
       <Nav.Heading level="1" className="stegvelgertittel">
@@ -128,8 +128,9 @@ export function VurderingOpplysninger({ bekreft, tilbake, aktivtSteg, oppdaterSt
         redigerbart={redigerbart}
         formValues={formValues}
         ukjentSluttdato={ukjentSluttdatoMedlemskapsperiode}
-        formIsValid={formIsValid}
-        handleChange={debouncedLagreHelseutgiftPeriode}
+        handleChange={async () => {
+          await debouncedLagreHelseutgiftPeriode();
+        }}
         ukjentSluttdatoKey={ukjentSluttdatoKey}
       />
 
