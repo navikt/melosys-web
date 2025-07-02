@@ -12,6 +12,7 @@ export interface PeriodeVelgerProps {
   ukjentSluttdato?: boolean;
   formIsValid: boolean;
   handleChange: (formValues: any, isValid: boolean) => void;
+  ukjentSluttdatoKey: string;
 }
 
 export function PeriodeOgLandVelger({
@@ -21,6 +22,7 @@ export function PeriodeOgLandVelger({
   ukjentSluttdato,
   formIsValid,
   handleChange,
+  ukjentSluttdatoKey,
 }: PeriodeVelgerProps) {
   return (
     <div className="perioder">
@@ -44,6 +46,7 @@ export function PeriodeOgLandVelger({
           </Nav.Column>
           <Nav.Column className="dato">
             <Forms.Datovelger
+              key={ukjentSluttdatoKey}
               label="Til og med"
               minDate={Utils.dato.norskStringTilDate(formValues?.fomDato)}
               control={control}

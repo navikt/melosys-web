@@ -16,7 +16,7 @@ import {
   helseutgiftDekkesPeriodeSelector,
 } from "../../../../../ducks/helseutgiftdekkesperiode";
 import { HelseutgiftDekkesPeriodeDto } from "../../../../../services/modules/helseutgiftDekkesPeriode/helseutgiftDekkesPeriode";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { UkjentSluttdatoMedlemskapsperiode } from "../../../../ftrl/saksbehandling/stegKomponenter/vurderingPeriode/komponenter/ukjentSluttdatoMedlemskapsperiode";
 import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../../ducks/oppsummertfakta";
 
@@ -33,6 +33,7 @@ export function VurderingOpplysninger({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const helseutgiftDekkesPeriode = useSelector(helseutgiftDekkesPeriodeSelector.HelseutgiftDekkesPeriode).data;
   const { fomDato, tomDato, bostedLandkode } = helseutgiftDekkesPeriode;
+  const [ukjentSluttdatoKey, setUkjentSluttdatoKey] = useState("");
 
   const ukjentSluttdatoMedlemskapsperiode = useSelector(
     oppsummertfaktaSelectors.UkjentSluttdatoMedlemskapsperiodeSelector,
@@ -50,7 +51,6 @@ export function VurderingOpplysninger({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const {
     control,
     watch,
-    setValue,
     trigger,
     reset,
     formState: { isValid: formIsValid, isDirty },
@@ -64,7 +64,6 @@ export function VurderingOpplysninger({ bekreft, tilbake, aktivtSteg, oppdaterSt
 
   const debouncedLagreHelseutgiftPeriode = useCallback(
     Utils._debounce(async (formValues: any, isValid: boolean) => {
-      // console.log("From is valid?", isValid);
       if (isValid) {
         await oppdaterEllerOpprettHelseutgiftDekkesPeriode(formValues);
       }
@@ -76,19 +75,21 @@ export function VurderingOpplysninger({ bekreft, tilbake, aktivtSteg, oppdaterSt
     if (ukjentSluttdato) {
       const fomISODate = Utils.dato.formatterDatoTilISO(formValues.fomDato, "");
       if (fomISODate) {
-        const fomDate = new Date(fomISODate);
-        const tomDate = new Date(fomDate);
-        tomDate.setFullYear(tomDate.getFullYear() + 10);
+        const fomDato = new Date(fomISODate);
+        const tomDato = new Date(fomDato);
+        tomDato.setFullYear(tomDato.getFullYear() + 10);
+        const newTomDato = Utils.dato.formatterDatoTilNorsk(tomDato.toISOString());
         reset({
           ...formValues,
-          tomDato: Utils.dato.formatterDatoTilNorsk(tomDate.toISOString()),
+          tomDato: newTomDato,
         });
+
+        await trigger("tomDato");
+        await debouncedLagreHelseutgiftPeriode({ ...formValues, tomDato: newTomDato }, formIsValid);
+
+        setUkjentSluttdatoKey(newTomDato);
       }
-
-      trigger("tomDato");
-      await debouncedLagreHelseutgiftPeriode(formValues, formIsValid);
     }
-
     await dispatch(oppsummertfaktaOperations.lagreUkjentSluttdatoMedlemskapsperiode(behandlingID, ukjentSluttdato));
   };
 
@@ -129,6 +130,7 @@ export function VurderingOpplysninger({ bekreft, tilbake, aktivtSteg, oppdaterSt
         ukjentSluttdato={ukjentSluttdatoMedlemskapsperiode}
         formIsValid={formIsValid}
         handleChange={debouncedLagreHelseutgiftPeriode}
+        ukjentSluttdatoKey={ukjentSluttdatoKey}
       />
 
       <UkjentSluttdatoMedlemskapsperiode
