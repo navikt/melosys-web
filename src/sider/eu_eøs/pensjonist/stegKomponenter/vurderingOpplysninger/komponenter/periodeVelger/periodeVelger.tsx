@@ -54,7 +54,7 @@ export function PeriodeOgLandVelger({
               aria-label="Til og med"
               readOnly={!redigerbart || ukjentSluttdato}
               onChange={(tomDato) => {
-                handleChange({ ...formValues, fomDato: tomDato }, formIsValid);
+                handleChange({ ...formValues, tomDato: tomDato }, formIsValid);
               }}
             />
           </Nav.Column>
