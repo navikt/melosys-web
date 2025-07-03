@@ -1,9 +1,9 @@
-/* eslint-disable */
-
 import createFetchMock from "vitest-fetch-mock";
 import * as matchers from "@testing-library/jest-dom";
-import { vi, expect } from "vitest";
+import { expect, vi } from "vitest";
 import toDiffableHtml from "diffable-html";
+// Oppsettfilen for Yup kjøres ikke uten videre av vi. Derfor er det nødvendig å importere den manuelt her.
+import "./setupYup";
 
 expect.extend(matchers);
 
@@ -17,12 +17,23 @@ expect.addSnapshotSerializer({
   },
 });
 
-// Oppsettfilen for Yup kjøres ikke uten videre av vi. Derfor er det nødvendig å importere den manuelt her.
-import "./setupYup";
-
 const fetchMocker = createFetchMock(vi);
 // sets globalThis.fetch and globalThis.fetchMock to our mocked version
 fetchMocker.enableMocks();
+// Standard fallback for alle unmocked requests
+fetchMocker.mockResponse((req) => {
+  // eslint-disable-next-line no-console
+  console.warn(`🔍 Unmocked fetch request:
+    🧪 Test: ${expect.getState().currentTestName || "Unknown test"}
+    🌐 URL: ${req.url}
+    📋 Method: ${req.method}`);
+
+  return Promise.resolve({
+    status: 200,
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({}),
+  });
+});
 
 global.window.env = {
   APP_NAME: "IKKE_VIKTIG",

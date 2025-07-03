@@ -55,7 +55,6 @@ function Datovelger({
   });
 
   const handleOnChange = (event: ChangeEvent<HTMLInputElement>) => {
-    /* eslint-disable-next-line no-param-reassign */
     event.target.value = event.target.value.trim();
     if (inputProps?.onChange) {
       inputProps.onChange(event);
@@ -101,7 +100,6 @@ function Datovelger({
           onBlur={handleOnBlur}
           readOnly={readOnly}
           onChange={handleOnChange}
-          value={value ? Utils.dato.formatterDatoTilNorsk(value, false) : ""}
         />
       </DatePicker>
       {visFeil && (feil || erUgyldigDato) && (

@@ -64,13 +64,13 @@ exports[`BeregnetTrygdeavgiftDetaljer > snapshot test 1`] = `
         <td class="navds-table__data-cell navds-body-short navds-body-short--small">
           8.2
         </td>
-        <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+        <td class="navds-table__data-cell tall_felt navds-body-short navds-body-short--small">
           3&nbsp;417 kr
         </td>
         <td class="navds-table__data-cell navds-body-short navds-body-short--small">
           ARBEID
         </td>
-        <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+        <td class="navds-table__data-cell tall_felt navds-body-short navds-body-short--small">
           41&nbsp;667 kr
         </td>
         <td class="navds-table__data-cell navds-body-short navds-body-short--small">

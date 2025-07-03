@@ -138,7 +138,6 @@ class Saksbehandling extends Component {
 
     if (anmodningsperioderErSendtUtlandet) return;
 
-    /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
     sendAnmodningsperioder(behandlingID, {
       anmodningsperioder: anmodningsperioder.map(({ sendtUtland, ...beholdProperties }) => beholdProperties),
     });

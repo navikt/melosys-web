@@ -102,6 +102,7 @@ export function KnyttTilSak(props) {
           setMuligeBehandlingstyper(alleMuligeBehandlingstyper);
         })
         .catch((error) => {
+          /* eslint-disable-next-line no-console */
           console.error("Kunne ikke hente behandlingstyper:", error);
           setMuligeBehandlingstyper([]);
         });

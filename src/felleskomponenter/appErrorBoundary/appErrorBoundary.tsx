@@ -22,12 +22,11 @@ class AppErrorBoundary extends Component<Props, State> {
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     // Log error details to console for debugging
-    // eslint-disable-next-line no-console
+    /* eslint-disable no-console */
     console.error("React Error Boundary caught error:", error);
-    // eslint-disable-next-line no-console
     console.error("Component stack:", errorInfo.componentStack);
-    // eslint-disable-next-line no-console
     console.error("Error boundary info:", errorInfo);
+    /* eslint-enable no-console */
   }
 
   resetError = () => {

@@ -1,6 +1,6 @@
 import OpprettSak from "./opprettSak";
 import MKV from "../../../melosyskodeverk";
-import { renderWithProviders } from "../../../ducks/test-utils/renderWithProviders";
+import { renderWithProviders, renderWithProvidersAsync } from "../../../ducks/test-utils/renderWithProviders";
 import { reduxForm } from "redux-form";
 import { cleanup } from "@testing-library/react";
 
@@ -121,7 +121,7 @@ describe("OpprettSak - journalføring", () => {
     });
   });
 
-  it("Opprett sak. Skal ha fra/til dato, valg av land, radio knapper", () => {
+  it("Opprett sak. Skal ha fra/til dato, valg av land, radio knapper", async () => {
     props.formValues.opprettnysak_behandlingstema = ARBEID_FLERE_LAND;
     props.formValues.opprettnysak_behandlingstype = MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG;
     props.formValues.journalforingSoknadsland = ARBEID_FLERE_LAND;
@@ -129,7 +129,9 @@ describe("OpprettSak - journalføring", () => {
     props.formValues.sakstype = MKV.Koder.sakstyper.EU_EOS;
     props.formValues.journalforingGjelder = MKV.Koder.aktoersroller.BRUKER;
 
-    const { getByLabelText, getAllByRole, getByRole } = renderWithProviders(<WrappedOpprettSak {...props} />);
+    const { getByLabelText, getAllByRole, getByRole } = await renderWithProvidersAsync(
+      <WrappedOpprettSak {...props} />,
+    );
 
     expect(getByLabelText("Fra")).toBeInTheDocument();
     expect(getByLabelText("Til")).toBeInTheDocument();
@@ -222,7 +224,7 @@ describe("OpprettSak - opprett ny sak", () => {
     });
   });
 
-  it("Opprett sak. Skal ha fra/til dato, valg av land, radio knapper", () => {
+  it("Opprett sak. Skal ha fra/til dato, valg av land, radio knapper", async () => {
     props.formValues.behandlingstema = ARBEID_FLERE_LAND;
     props.formValues.behandlingstype = MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG;
     props.formValues.journalforingSoknadsland = ARBEID_FLERE_LAND;
@@ -230,7 +232,9 @@ describe("OpprettSak - opprett ny sak", () => {
     props.formValues.sakstype = MKV.Koder.sakstyper.EU_EOS;
     props.formValues.journalforingGjelder = MKV.Koder.aktoersroller.BRUKER;
 
-    const { getByLabelText, getAllByRole, getByRole } = renderWithProviders(<WrappedOpprettSak {...props} />);
+    const { getByLabelText, getAllByRole, getByRole } = await renderWithProvidersAsync(
+      <WrappedOpprettSak {...props} />,
+    );
 
     expect(getByLabelText("Fra")).toBeInTheDocument();
     expect(getByLabelText("Til")).toBeInTheDocument();

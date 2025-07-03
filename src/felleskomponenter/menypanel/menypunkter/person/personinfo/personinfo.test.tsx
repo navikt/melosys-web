@@ -6,7 +6,7 @@ import userEvent from "@testing-library/user-event";
 import { HentPersoninfoDocument } from "./hentPersoninfo.generated";
 import Personinfo from "./personinfo";
 import { HentPersonopplysningerDocument } from "../../../../informasjonlinje/hentpersonopplysninger.generated";
-import { renderWithProviders } from "../../../../../ducks/test-utils/renderWithProviders";
+import { renderWithProviders, renderWithProvidersAsync } from "../../../../../ducks/test-utils/renderWithProviders";
 
 describe("Personinfo", () => {
   window.matchMedia =
@@ -19,7 +19,7 @@ describe("Personinfo", () => {
       };
     };
 
-  const initialState = { landkoder: { status: "OK", data: [{ kode: "NO", term: "Norge" }] } };
+  const preloadedState = { landkoder: { status: "OK", data: [{ kode: "NO", term: "Norge" }] } };
 
   let props: ComponentProps<typeof Personinfo>;
 
@@ -80,95 +80,120 @@ describe("Personinfo", () => {
     },
   ];
 
-  const requestResultMock = {
-    mocks: [
+  const createMocks = (shouldError = false) => {
+    const personinfoData = {
+      folkeregisterpersonstatuser: personstatus,
+      foedsel: {
+        foedeland: "NO",
+        foedested: "Aker sykehus",
+        foedselsaar: 1995,
+        foedselsdato: "1995-09-23",
+      },
+      sivilstand,
+    };
+
+    const personopplysningerData = {
+      navn: {
+        fornavn: "Kent",
+        mellomnavn: "C",
+        etternavn: "Dodds",
+      },
+      kjoenn: "",
+      folkeregisterpersonstatuser: [],
+      folkeregisteridentifikator: "123",
+      statsborgerskap: [],
+      sivilstand: [],
+    };
+
+    const mocks = [
       {
         request: {
           query: HentPersoninfoDocument,
-          variables: {
-            behandlingID: 1,
-          },
+          variables: { behandlingID: 1 },
         },
-        result: {
-          data: {
-            hentSaksopplysninger: {
-              persondata: {
-                folkeregisterpersonstatuser: personstatus,
-                foedested: [{ foedested: "Aker sykehus", foedeland: "NO" }],
-                foedselsdato: [{ foedselsaar: 1995, foedselsdato: "1995-23-09" }],
-                sivilstand,
+        ...(shouldError
+          ? { error: new Error("feil") }
+          : {
+              result: {
+                data: {
+                  hentSaksopplysninger: {
+                    persondata: personinfoData,
+                  },
+                },
               },
-            },
-          },
-        },
+            }),
       },
       {
         request: {
           query: HentPersonopplysningerDocument,
-          variables: {
-            behandlingID: 1,
-          },
+          variables: { behandlingID: 1 },
         },
-        result: {
-          data: {
-            hentSaksopplysninger: {
-              persondata: {
-                navn: {
-                  fornavn: "Kent",
-                  mellomnavn: "C",
-                  etternavn: "Dodds",
+        ...(shouldError
+          ? { error: new Error("feil") }
+          : {
+              result: {
+                data: {
+                  hentSaksopplysninger: {
+                    persondata: personopplysningerData,
+                  },
                 },
-                kjoenn: "",
-                folkeregisterpersonstatuser: [],
-                folkeregisteridentifikator: "123",
-                statsborgerskap: [],
-                sivilstand: [],
+              },
+            }),
+      },
+    ];
+
+    // Legg til flere kopier for å håndtere multiple kall
+    if (!shouldError) {
+      mocks.push(
+        {
+          request: {
+            query: HentPersonopplysningerDocument,
+            variables: { behandlingID: 1 },
+          },
+          result: {
+            data: {
+              hentSaksopplysninger: {
+                persondata: personopplysningerData,
               },
             },
           },
         },
-      },
-    ],
+        {
+          request: {
+            query: HentPersoninfoDocument,
+            variables: { behandlingID: 1 },
+          },
+          result: {
+            data: {
+              hentSaksopplysninger: {
+                persondata: personinfoData,
+              },
+            },
+          },
+        },
+      );
+    }
+
+    return mocks;
   };
 
   it("viser melding ved henting av personinfo", () => {
     renderWithProviders(
-      <MockedProvider {...requestResultMock}>
+      <MockedProvider mocks={createMocks()} addTypename={false}>
         <Personinfo {...props} />
       </MockedProvider>,
-      { preloadedState: { initialState } },
+      { preloadedState },
     );
 
     expect(screen.getByText("Henter personinfo...")).toBeInTheDocument();
   });
 
   it("viser melding ved nettverkserror under henting av personinfo", async () => {
-    renderWithProviders(
-      <MockedProvider
-        mocks={[
-          {
-            request: {
-              query: HentPersoninfoDocument,
-              variables: {
-                behandlingID: 1,
-              },
-            },
-            error: new Error("feil"),
-          },
-          {
-            request: {
-              query: HentPersonopplysningerDocument,
-              variables: {
-                behandlingID: 1,
-              },
-            },
-            error: new Error("feil"),
-          },
-        ]}
-      >
+    await renderWithProvidersAsync(
+      <MockedProvider mocks={createMocks(true)} addTypename={false}>
         <Personinfo {...props} />
       </MockedProvider>,
-      { preloadedState: { initialState } },
+      { preloadedState },
     );
 
     await waitFor(() => {
@@ -178,10 +203,10 @@ describe("Personinfo", () => {
 
   it("sender sivilstand-data til sivilstandModal etter dataen er hentet", async () => {
     renderWithProviders(
-      <MockedProvider {...requestResultMock}>
+      <MockedProvider mocks={createMocks()} addTypename={false}>
         <Personinfo {...props} />
       </MockedProvider>,
-      { preloadedState: { initialState } },
+      { preloadedState },
     );
 
     const user = userEvent.setup();
@@ -199,11 +224,11 @@ describe("Personinfo", () => {
   });
 
   it("sender personstatus-data til personstatusModal etter dataen er hentet", async () => {
-    renderWithProviders(
-      <MockedProvider {...requestResultMock}>
+    await renderWithProvidersAsync(
+      <MockedProvider mocks={createMocks()} addTypename={false}>
         <Personinfo {...props} />
       </MockedProvider>,
-      { preloadedState: { initialState } },
+      { preloadedState },
     );
 
     const user = userEvent.setup();

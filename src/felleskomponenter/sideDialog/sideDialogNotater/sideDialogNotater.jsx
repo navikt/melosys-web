@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import PT from "prop-types";
 
 import * as Nav from "../../../navFrontend";
@@ -100,7 +100,6 @@ function SideDialogNotater({ saksnummer, redigerbart }) {
     }
   };
 
-  /* eslint-disable-next-line max-len */
   const skrivInnNotatLabel =
     "Her kan du notere særlige vurderinger eller handlinger du gjør, for eksempel at du innhenter opplysninger. Notater brukes for å holde oversikt over hva som er gjort i saken, men lagres ikke som saksdokumenter.";
 

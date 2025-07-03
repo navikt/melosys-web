@@ -1,6 +1,6 @@
 // noinspection ES6PreferShortImport
 
-import { object, string } from "yup";
+import { object, string, boolean } from "yup";
 import * as KV from "../../../../kodeverk";
 import MKV from "../../../../melosyskodeverk";
 
@@ -17,6 +17,7 @@ const vurdering_vedtak = object().shape({
       then: (schema) => schema.required(DU_MAA_OPPGI_BEGRUNNELSE_FOR_ENDELIG_TRYGDEAVGIFT),
     }),
   innledningFritekst: string().max(4000, DU_KAN_IKKE_SKRIVE_MER_ENN_4000_TEGN),
+  skjoennsfastsattInntekt: boolean(),
 });
 
 export default vurdering_vedtak;

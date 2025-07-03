@@ -1,5 +1,4 @@
 import MKV from "../../../../../melosyskodeverk";
-import { Fragment } from "react";
 import Begrunnelser from "../../../../../felleskomponenter/begrunnelser";
 import { useSelector } from "react-redux";
 import { vilkarSelectors } from "../../../../../ducks/vilkar";

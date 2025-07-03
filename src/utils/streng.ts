@@ -53,7 +53,6 @@ export function tekstEllerDash(data?: string): string {
   return data || "-";
 }
 
-/* eslint-disable prefer-rest-params */
 export function storeForbokstaver(originalOrd?: string | null): string | undefined {
   return originalOrd?.replace(
     /(\w|\u00C6|\u00D8|\u00C5)\S*/g,

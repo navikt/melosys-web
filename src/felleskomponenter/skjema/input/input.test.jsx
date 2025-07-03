@@ -1,37 +1,19 @@
 import Input from "./input";
-import { reduxForm } from "redux-form";
+import { reduxForm, Field } from "redux-form";
 import { renderWithProviders } from "../../../ducks/test-utils/renderWithProviders";
 
-const WrappedInput = reduxForm({ form: "test" })(Input);
+const TestForm = reduxForm({ form: "test" })(() => (
+  <Field name="testField" component={Input} label="test" feltNavn="Test" navn="Test" />
+));
 
 describe("Input", () => {
-  let props = null;
-
-  beforeEach(() => {
-    props = {
-      label: "test",
-      meta: {
-        error: "",
-        touched: false,
-        active: true,
-      },
-      feltNavn: "Test",
-      navn: "Test",
-    };
-  });
-
   it("snapshot test", () => {
-    const { container } = renderWithProviders(<WrappedInput {...props} />);
+    const { container } = renderWithProviders(<TestForm />);
     expect(container).toMatchSnapshot();
   });
 
   it("viser ikke feilmelding", () => {
-    props.meta = {
-      error: "",
-      touched: true,
-      active: false,
-    };
-    const { queryByText } = renderWithProviders(<WrappedInput {...props} />);
+    const { queryByText } = renderWithProviders(<TestForm />);
     expect(queryByText("feilmelding")).not.toBeInTheDocument();
   });
 });

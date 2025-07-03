@@ -1,4 +1,3 @@
-/* eslint-disable */
 import * as Types from "./types";
 
 describe("test vilkar/types.js", () => {

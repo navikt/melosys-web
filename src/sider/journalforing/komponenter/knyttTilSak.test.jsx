@@ -1,7 +1,7 @@
 import { JournalforingValues } from "../../../kodeverk/form";
 import MKV from "../../../melosyskodeverk";
 import { KnyttTilSak } from "./knyttTilSak";
-import { renderWithProviders } from "../../../ducks/test-utils/renderWithProviders";
+import { renderWithProvidersAsync } from "../../../ducks/test-utils/renderWithProviders";
 import { screen, waitFor, within } from "@testing-library/react";
 import { reduxForm } from "redux-form";
 
@@ -58,10 +58,10 @@ describe("KnyttTilSak", () => {
 
   const WrappedKnyttTilSak = reduxForm({ form: "test" })(KnyttTilSak);
 
-  it(`Vis komponent for knytte til eksisterende sak komponent og knapper for å opprette ny behandling dersom siste behandling er inaktiv`, () => {
+  it(`Vis komponent for knytte til eksisterende sak komponent og knapper for å opprette ny behandling dersom siste behandling er inaktiv`, async () => {
     props.sak.behandlingOversikter[0].behandlingsstatus = { kode: MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET };
 
-    renderWithProviders(<WrappedKnyttTilSak {...props} />);
+    await renderWithProvidersAsync(<WrappedKnyttTilSak {...props} />);
 
     expect(screen.getByText("Tidligere behandling er avsluttet.")).toBeInTheDocument();
     expect(screen.getByText("Velg hva du vil gjøre med dokumentet")).toBeInTheDocument();
@@ -76,42 +76,42 @@ describe("KnyttTilSak", () => {
       kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
     };
 
-    renderWithProviders(<WrappedKnyttTilSak {...props} />);
+    renderWithProvidersAsync(<WrappedKnyttTilSak {...props} />);
 
     expect(screen.queryByText("Velg hva du vil gjøre med dokumentet")).toBeNull();
     expect(screen.queryByRole("group")).toBeNull();
   });
 
-  it(`Ikke vis knytt til eksisterende sak komponent dersom status er henlagt`, () => {
+  it(`Ikke vis knytt til eksisterende sak komponent dersom status er henlagt`, async () => {
     props.sak.saksstatus.kode = MKV.Koder.saksstatuser.HENLAGT;
     props.erJournalføring = false;
 
-    renderWithProviders(<WrappedKnyttTilSak {...props} />);
+    await renderWithProvidersAsync(<WrappedKnyttTilSak {...props} />);
 
     expect(screen.queryByText("Velg hva du vil gjøre med dokumentet")).toBeNull();
     expect(screen.queryByRole("group")).toBeNull();
     expect(screen.getByText(/Du kan ikke opprette en ny behandling/i)).toBeInTheDocument();
   });
 
-  it(`Vis vurder dokument dersom man er i journalføring-kontekst`, () => {
+  it(`Vis vurder dokument dersom man er i journalføring-kontekst`, async () => {
     props.sak.behandlingOversikter[0].behandlingsstatus = {
       kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
     };
     props.erJournalføring = true;
 
-    renderWithProviders(<WrappedKnyttTilSak {...props} />);
+    await renderWithProvidersAsync(<WrappedKnyttTilSak {...props} />);
 
     expect(screen.getByRole("checkbox")).toBeInTheDocument();
     expect(screen.getByText(`Oppdater behandlingsstatus til "Vurder dokument"`)).toBeInTheDocument();
   });
 
-  it(`Ikke vis vurder dokument dersom man er i opprett ny sak/behandling-kontekst`, () => {
+  it(`Ikke vis vurder dokument dersom man er i opprett ny sak/behandling-kontekst`, async () => {
     props.sak.behandlingOversikter[0].behandlingsstatus = {
       kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
     };
     props.erJournalføring = false;
 
-    renderWithProviders(<WrappedKnyttTilSak {...props} />);
+    await renderWithProvidersAsync(<WrappedKnyttTilSak {...props} />);
 
     expect(screen.queryByRole("checkbox")).toBeNull();
     expect(screen.queryByText(`Oppdater behandlingsstatus til "Vurder dokument"`)).toBeNull();
@@ -124,7 +124,7 @@ describe("KnyttTilSak", () => {
       kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
     };
 
-    renderWithProviders(<WrappedKnyttTilSak {...props} />);
+    await renderWithProvidersAsync(<WrappedKnyttTilSak {...props} />);
 
     await waitFor(() => expect(mocks.hent).toHaveBeenCalledOnce());
     expect(screen.getByText(/Hvis du har mottatt svar på anmodning om unntak skal du/i)).toBeInTheDocument();
@@ -134,7 +134,7 @@ describe("KnyttTilSak", () => {
     mocks.hent.mockReturnValueOnce({ anmodningsperioder: [{ sendtUtland: true }] });
     props.sak.behandlingOversikter[0].behandlingsstatus = { kode: MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET };
 
-    renderWithProviders(<WrappedKnyttTilSak {...props} />);
+    await renderWithProvidersAsync(<WrappedKnyttTilSak {...props} />);
 
     await waitFor(() => expect(mocks.hent).toHaveBeenCalledOnce());
     expect(screen.queryByText(/Hvis du har mottatt svar på anmodning om unntak skal du/i)).toBeNull();
@@ -145,7 +145,7 @@ describe("KnyttTilSak", () => {
     props.formValues.behandlingstema = "YRKESAKTIV";
     props.formValues.opprettBehandling = true;
 
-    renderWithProviders(<WrappedKnyttTilSak {...props} />);
+    await renderWithProvidersAsync(<WrappedKnyttTilSak {...props} />);
 
     await waitFor(() => expect(mocks.hentBehandlingstyperForKnyttTilSak).toHaveBeenCalled());
     expect(screen.getByText("Behandlingstype")).toBeInTheDocument();
@@ -157,11 +157,14 @@ describe("KnyttTilSak", () => {
   });
 
   it("håndterer feil ved henting av behandlingstyper", async () => {
+    // Suppress console.error for denne spesifikke testen, siden det er feilhåndtering som testes
+    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
     mocks.hentBehandlingstyperForKnyttTilSak.mockRejectedValueOnce(new Error("API Error"));
     props.formValues.behandlingstema = "YRKESAKTIV";
     props.formValues.opprettBehandling = true;
 
-    renderWithProviders(<WrappedKnyttTilSak {...props} />);
+    await renderWithProvidersAsync(<WrappedKnyttTilSak {...props} />);
 
     await waitFor(() => {
       expect(mocks.hentBehandlingstyperForKnyttTilSak).toHaveBeenCalled();
@@ -170,5 +173,8 @@ describe("KnyttTilSak", () => {
         expect(within(behandlingstypeGroup).queryAllByRole("radio")).toHaveLength(0);
       }
     });
+
+    // Restore console.error
+    consoleSpy.mockRestore();
   });
 });

@@ -10,7 +10,6 @@ export const hentVilkår = (
 ): Promise<{ vilkår: VilkårOgBegrunnelser[] }> => {
   let queryParamsString = "";
 
-  // eslint-disable-next-line no-restricted-syntax
   for (const [key, value] of avklarteFakta.entries()) {
     queryParamsString += `&${key}=${value}`;
   }

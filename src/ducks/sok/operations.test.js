@@ -2,7 +2,7 @@ import { createTestStore } from "../test-utils/createTestStore";
 
 import * as Utils from "../../utils";
 
-import { sokOperations as operations, sokTypes as types } from "./index";
+import { sokOperations as operations } from "./index";
 
 describe("sok operations", () => {
   let initialState = null;

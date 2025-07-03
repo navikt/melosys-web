@@ -2,7 +2,6 @@ import { createTestStore } from "../test-utils/createTestStore";
 
 import MKV from "../../melosyskodeverk";
 
-import * as types from "./types";
 import * as operations from "./operations";
 import * as KV from "../../kodeverk";
 import { STATUS } from "../../services";

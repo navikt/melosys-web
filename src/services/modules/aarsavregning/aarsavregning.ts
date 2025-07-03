@@ -11,6 +11,7 @@ export interface AarsavregningResponse {
   avregning?: Avregning;
   harTrygdeavgiftFraAvgiftssystemet?: boolean;
   endeligAvgiftValg?: string;
+  harSkjoennsfastsattInntekt?: boolean;
 }
 
 export interface AarsavregningRequest {
@@ -19,6 +20,10 @@ export interface AarsavregningRequest {
 
 export interface OppdaterHarTrygdeavgiftFraAvgiftssystemetRequest {
   harTrygdeavgiftFraAvgiftssystemet: boolean;
+}
+
+export interface OppdaterHarSkjoennsfastsattInntektRequest {
+  harSkjoennsfastsattInntekt: boolean;
 }
 
 export interface Grunnlagsopplysninger {
@@ -86,6 +91,14 @@ export const oppdaterHarTrygdeavgiftFraAvgiftssystemet = (
   request: OppdaterHarTrygdeavgiftFraAvgiftssystemetRequest,
 ): Promise<AarsavregningResponse> =>
   postAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${AARSAVREGNING}/grunnlagstype`, request);
+
+export const oppdaterHarSkjoennsfastsattInntekt = (
+  behandlingID: number,
+  value: boolean,
+): Promise<AarsavregningResponse> =>
+  postAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${AARSAVREGNING}/skjoennsfastsatt`, {
+    harSkjoennsfastsattInntekt: value,
+  });
 
 export const oppdaterEndeligAvgiftValg = (
   behandlingID: number,

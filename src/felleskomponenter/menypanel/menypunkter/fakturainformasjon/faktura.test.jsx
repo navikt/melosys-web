@@ -18,7 +18,13 @@ describe("Faktura", () => {
   });
 
   it("snapshot test", () => {
-    const { container } = renderWithProviders(<Faktura {...props} />);
+    const { container } = renderWithProviders(
+      <table>
+        <tbody>
+          <Faktura {...props} />
+        </tbody>
+      </table>,
+    );
 
     expect(container).toMatchSnapshot();
   });

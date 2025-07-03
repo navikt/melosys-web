@@ -75,7 +75,6 @@ interface VurderingArtikkel114Props {
   tilbake: () => void;
 }
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
 function VurderingArtikkel11_4({
   oppdaterData,
   tilstand: { harAvklaring, nis },

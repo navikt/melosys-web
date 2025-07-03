@@ -26,7 +26,6 @@ function InnerAdresselinjer(props: InnerAdresselinjerProps) {
       <Nav.BodyLong size="small">Fullstendig adresse</Nav.BodyLong>
       {felter &&
         felter.map((felt, index) => (
-          /* eslint-disable-next-line react/no-array-index-key */
           <Nav.Row key={index} className={adresselinjerCls.element("adresselinje")}>
             <Nav.Column xs="9">
               <Skjema.Input

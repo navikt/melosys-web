@@ -27,6 +27,8 @@ import Oppsummering from "../../../felleskomponenter/oppsummering";
 import SaksoversiktLenke from "../../../felleskomponenter/saksoversiktLenke";
 import SideDialog, { defaultTabs } from "../../../felleskomponenter/sideDialog";
 import { useDispatch } from "../../../hooks/useDispatch";
+import { helseutgiftDekkesPeriodeOperations } from "../../../ducks/helseutgiftdekkesperiode";
+import { oppsummertfaktaOperations } from "../../../ducks/oppsummertfakta";
 
 interface Props extends RouteComponentProps<MatchParams> {
   behandlingOppfriskes: boolean;
@@ -48,6 +50,7 @@ function Saksbehandling({ match, location }: Props) {
   const [behandlingID, setBehandlingID] = useState(-1);
   const [saksopplysningerLastet, setSaksopplysningerLastet] = useState(false);
   const [panelExpanded, setPanelExpanded] = useState(true);
+  const saksnummer = match?.params?.saksnr;
 
   const oppdaterBehandlingIDState = () => {
     const behandlingIDFraParam = Utils.queryString.getParam(location, "behandlingID");
@@ -58,26 +61,32 @@ function Saksbehandling({ match, location }: Props) {
   };
 
   const lastInnSaksopplysninger = async () => {
-    const { saksnr } = match.params;
+    const behandlingIDFraParam = Utils.queryString.getParam(location, "behandlingID");
+    setBehandlingID(Utils._toInteger(behandlingIDFraParam));
 
     try {
-      dispatch(fagsakOperations.hent(saksnr));
+      await dispatch(fagsakOperations.hent(saksnummer));
 
-      const response = await dispatch(behandlingerOperations.hentBehandling(behandlingID));
+      const response = await dispatch(behandlingerOperations.hentBehandling(behandlingIDFraParam));
 
       const behandling = response.data;
 
       if (!behandling) return false;
 
-      dispatch(behandlingsresultatOperations.hent(behandlingID));
+      await dispatch(behandlingsresultatOperations.hent(behandlingIDFraParam));
 
       if (behandlingOppfriskes) {
         visOppfriskModal();
         return false;
       }
 
-      dispatch(mottatteOpplysningerOperations.hent(behandlingID));
-      dispatch(dokumenterOperations.hentDokumentOversikt(saksnr));
+      await dispatch(oppsummertfaktaOperations.hentOppsummertFakta(Utils._toInteger(behandlingIDFraParam)));
+      await dispatch(mottatteOpplysningerOperations.hent(behandlingIDFraParam));
+      await dispatch(dokumenterOperations.hentDokumentOversikt(saksnummer));
+      await dispatch(
+        helseutgiftDekkesPeriodeOperations.hentHelseutgiftDekkesPeriode(Utils._toInteger(behandlingIDFraParam)),
+      );
+
       setSaksopplysningerLastet(true);
 
       return true;
@@ -91,10 +100,8 @@ function Saksbehandling({ match, location }: Props) {
   });
 
   useEffect(() => {
-    if (behandlingID !== -1) {
-      lastInnSaksopplysninger();
-    }
-  }, [behandlingID]);
+    lastInnSaksopplysninger();
+  }, []);
 
   useEffect(() => {
     dispatch(menypanelOperations.visMenypanel());
