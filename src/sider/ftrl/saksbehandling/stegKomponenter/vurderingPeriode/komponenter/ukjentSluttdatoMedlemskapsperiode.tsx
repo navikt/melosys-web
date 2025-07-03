@@ -17,6 +17,8 @@ export function UkjentSluttdatoMedlemskapsperiode({
     ? "Vedtaksbrevet skal ikke ha sluttdato"
     : "Saken er flyttet fra avgiftssystemet og har ikke sluttdato";
 
+  const brevType = erEøsPensjonist ? "orienteringsbrevet" : "vedtaksbrevet";
+
   return (
     <div className="ukjentSluttdato">
       <Nav.Checkbox
@@ -27,7 +29,7 @@ export function UkjentSluttdatoMedlemskapsperiode({
       </Nav.Checkbox>
       {ukjentSluttdatoMedlemskapsperiode && (
         <Nav.Alert variant="info" size="small" className="mt-2">
-          Sluttdato er automatisk satt 10 år frem i tid. Sluttdato vil ikke komme med i vedtaksbrevet. Hvis sluttdato
+          Sluttdato er automatisk satt 10 år frem i tid. Sluttdato vil ikke komme med i {brevType}. Hvis sluttdato
           likevel skal komme med i vedtaksbrevet, må du fjerne avhukingen.
         </Nav.Alert>
       )}
