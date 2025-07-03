@@ -100,7 +100,7 @@ export function VurderingOpplysninger({ bekreft, tilbake, aktivtSteg, oppdaterSt
       oppdaterEllerOpprettHelseutgiftDekkesPeriode(formValues);
       dispatch(helseutgiftDekkesPeriodeOperations.hentHelseutgiftDekkesPeriode(behandlingID));
     }
-    // bekreft();
+    bekreft();
   };
 
   const oppdaterEllerOpprettHelseutgiftDekkesPeriode = async (formValues: any) => {
