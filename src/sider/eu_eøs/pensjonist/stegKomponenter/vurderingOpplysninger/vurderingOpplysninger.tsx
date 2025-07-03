@@ -66,8 +66,6 @@ export function VurderingOpplysninger({ bekreft, tilbake, aktivtSteg, oppdaterSt
       Utils._debounce(async () => {
         const latestValues = watch();
         const isValid = await trigger();
-        setUkjentSluttdatoKey(latestValues.tomDato);
-
         if (isValid) {
           await oppdaterEllerOpprettHelseutgiftDekkesPeriode(latestValues);
         }
@@ -91,6 +89,8 @@ export function VurderingOpplysninger({ bekreft, tilbake, aktivtSteg, oppdaterSt
         await debouncedLagreHelseutgiftPeriode();
         setUkjentSluttdatoKey(newTomDato);
       }
+    } else {
+      setUkjentSluttdatoKey("");
     }
     await dispatch(oppsummertfaktaOperations.lagreUkjentSluttdatoMedlemskapsperiode(behandlingID, ukjentSluttdato));
   };
