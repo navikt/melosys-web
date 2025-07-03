@@ -16,7 +16,7 @@ import {
   helseutgiftDekkesPeriodeSelector,
 } from "../../../../../ducks/helseutgiftdekkesperiode";
 import { HelseutgiftDekkesPeriodeDto } from "../../../../../services/modules/helseutgiftDekkesPeriode/helseutgiftDekkesPeriode";
-import { useCallback, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { UkjentSluttdatoMedlemskapsperiode } from "../../../../ftrl/saksbehandling/stegKomponenter/vurderingPeriode/komponenter/ukjentSluttdatoMedlemskapsperiode";
 import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../../ducks/oppsummertfakta";
 
