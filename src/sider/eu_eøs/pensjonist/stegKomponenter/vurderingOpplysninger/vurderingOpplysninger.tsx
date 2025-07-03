@@ -16,7 +16,7 @@ import {
   helseutgiftDekkesPeriodeSelector,
 } from "../../../../../ducks/helseutgiftdekkesperiode";
 import { HelseutgiftDekkesPeriodeDto } from "../../../../../services/modules/helseutgiftDekkesPeriode/helseutgiftDekkesPeriode";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { UkjentSluttdatoMedlemskapsperiode } from "../../../../ftrl/saksbehandling/stegKomponenter/vurderingPeriode/komponenter/ukjentSluttdatoMedlemskapsperiode";
 import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../../ducks/oppsummertfakta";
 
@@ -29,12 +29,12 @@ interface Props {
 
 export function VurderingOpplysninger({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: Props) {
   const dispatch = useDispatch();
+  const [ukjentSluttdatoKey, setUkjentSluttdatoKey] = useState("");
+
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const helseutgiftDekkesPeriode = useSelector(helseutgiftDekkesPeriodeSelector.HelseutgiftDekkesPeriode).data;
   const { fomDato, tomDato, bostedLandkode } = helseutgiftDekkesPeriode;
-  const [ukjentSluttdatoKey, setUkjentSluttdatoKey] = useState("");
-
   const ukjentSluttdatoMedlemskapsperiode = useSelector(
     oppsummertfaktaSelectors.UkjentSluttdatoMedlemskapsperiodeSelector,
   );
@@ -59,8 +59,8 @@ export function VurderingOpplysninger({ bekreft, tilbake, aktivtSteg, oppdaterSt
     mode: "all",
     values: initialValues,
   });
-
   const formValues = watch();
+
   const debouncedLagreHelseutgiftPeriode = useMemo(
     () =>
       Utils._debounce(async () => {
@@ -95,14 +95,6 @@ export function VurderingOpplysninger({ bekreft, tilbake, aktivtSteg, oppdaterSt
     await dispatch(oppsummertfaktaOperations.lagreUkjentSluttdatoMedlemskapsperiode(behandlingID, ukjentSluttdato));
   };
 
-  const bekreftOgFortsett = async () => {
-    if (formIsValid && isDirty) {
-      oppdaterEllerOpprettHelseutgiftDekkesPeriode(formValues);
-      dispatch(helseutgiftDekkesPeriodeOperations.hentHelseutgiftDekkesPeriode(behandlingID));
-    }
-    bekreft();
-  };
-
   const oppdaterEllerOpprettHelseutgiftDekkesPeriode = async (formValues: any) => {
     await dispatch(
       helseutgiftDekkesPeriodeOperations.oppdaterEllerOpprettHelseutgiftDekkesPeriode(
@@ -115,6 +107,20 @@ export function VurderingOpplysninger({ bekreft, tilbake, aktivtSteg, oppdaterSt
         Utils._isEmpty(helseutgiftDekkesPeriode),
       ),
     );
+  };
+
+  const stegErGyldig = formIsValid;
+
+  useEffect(() => {
+    oppdaterStatus(stegErGyldig);
+  }, [stegErGyldig]);
+
+  const bekreftOgFortsett = async () => {
+    if (formIsValid && isDirty) {
+      oppdaterEllerOpprettHelseutgiftDekkesPeriode(formValues);
+      dispatch(helseutgiftDekkesPeriodeOperations.hentHelseutgiftDekkesPeriode(behandlingID));
+    }
+    bekreft();
   };
 
   return (
