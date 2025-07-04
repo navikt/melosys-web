@@ -10,6 +10,7 @@ export interface PeriodeVelgerProps {
   control: Control;
   formValues: any;
   ukjentSluttdato?: boolean;
+  handleChange: () => void;
   ukjentSluttdatoKey: string;
 }
 
@@ -18,6 +19,7 @@ export function PeriodeOgLandVelger({
   control,
   formValues,
   ukjentSluttdato,
+  handleChange,
   ukjentSluttdatoKey,
 }: PeriodeVelgerProps) {
   return (
@@ -35,6 +37,7 @@ export function PeriodeOgLandVelger({
               name="fomDato"
               aria-label="Fra og med"
               readOnly={!redigerbart}
+              onChange={handleChange}
             />
           </Nav.Column>
           <Nav.Column className="dato">
@@ -46,6 +49,7 @@ export function PeriodeOgLandVelger({
               name="tomDato"
               aria-label="Til og med"
               readOnly={!redigerbart || ukjentSluttdato}
+              onChange={handleChange}
             />
           </Nav.Column>
           <Nav.Column className="brederefelt">
@@ -54,7 +58,7 @@ export function PeriodeOgLandVelger({
               control={control}
               name="bostedLandkode"
               disabled={!redigerbart}
-              emptyFieldDisabled={!!formValues?.bostedLandkode}
+              onChange={handleChange}
             >
               {MKV.KTObjects.landkoder.map((item: any) => (
                 <option key={item.kode} value={item.kode} label={Utils.land.landTekstFormat(item)} />
