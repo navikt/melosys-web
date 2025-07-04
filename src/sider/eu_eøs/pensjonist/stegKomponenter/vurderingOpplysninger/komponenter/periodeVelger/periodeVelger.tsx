@@ -59,6 +59,7 @@ export function PeriodeOgLandVelger({
               name="bostedLandkode"
               disabled={!redigerbart}
               onChange={handleChange}
+              emptyFieldDisabled={formValues?.bostedLandkode}
             >
               {MKV.KTObjects.landkoder.map((item: any) => (
                 <option key={item.kode} value={item.kode} label={Utils.land.landTekstFormat(item)} />
