@@ -36,6 +36,7 @@ import "./vurderingTrygdeavgift.css";
 import vurderingTrygdeavgiftSchema from "./vurderingTrygdeavgiftSchema";
 
 import { erBrukerSkattepliktigIHelePerioden } from "../../../../aarsavregning/stegKomponenter/vurderingAarsavregning/utils";
+import { fagsakSelectors } from "../../../../../ducks/fagsaker";
 
 interface Props {
   bekreft: () => void;
@@ -48,6 +49,8 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const behandlingstype = useSelector(behandlingerSelectors.BehandlingstypeKodeSelector);
+  const sakstype = useSelector(fagsakSelectors.SakstypeKodeSelector);
+  const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const medlemskapsperiodeStatus = useSelector(medlemskapsperioderSelectors.MedlemskapsperioderStatusSelector);
   const medlemskapsperioder = useSelector(medlemskapsperioderSelectors.AlleMedlemskapsperioderSelector);
   const innvilgetMedlemskapsperiode = useSelector(
@@ -74,7 +77,18 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const medlemskapsTypeErPliktig = medlemskapsperioder.every(
     (periode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG,
   );
+
+  const erEøsPensjonist =
+    sakstype === MKV.Koder.sakstyper.EU_EOS && behandlingstema === MKV.Koder.behandlinger.behandlingstema.PENSJONIST;
+
   const formattedDefaultPeriode = () => {
+    if (erEøsPensjonist) {
+      return {
+        fomDato: Utils.dato.formatterDatoTilNorsk(helseutgiftDekkesPeriode?.fomDato),
+        tomDato: Utils.dato.formatterDatoTilNorsk(helseutgiftDekkesPeriode?.tomDato),
+      };
+    }
+
     return {
       fomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.fom),
       tomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.tom),
@@ -82,6 +96,10 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   };
 
   const erÅpenSluttDato = !innvilgetMedlemskapsperiode?.tom && !helseutgiftDekkesPeriode?.tomDato;
+  const periodeForSchemaValidering = innvilgetMedlemskapsperiode ?? {
+    fom: helseutgiftDekkesPeriode.fomDato,
+    tom: helseutgiftDekkesPeriode.tomDato,
+  };
 
   const {
     control,
@@ -90,7 +108,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     trigger,
   } = useForm({
     resolver: yupResolver(vurderingTrygdeavgiftSchema),
-    context: { medlemskapsperiode: innvilgetMedlemskapsperiode, medlemskapsTypeErPliktig, erÅpenSluttDato },
+    context: { medlemskapsperiode: periodeForSchemaValidering, medlemskapsTypeErPliktig, erÅpenSluttDato },
     mode: "onChange",
     defaultValues: {
       skatteforholdsperioder: [{}],
@@ -208,6 +226,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const beregnTrygdeavgiftsperioder = (formVerdier: FieldValue<FormValuesProps>) => {
     setFeil(undefined);
     setLagrePending(true);
+
     const erBrukerPliktigMedlemOgSkattepliktig =
       medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(formVerdier.skatteforholdsperioder);
     Api.Trygdeavgift.beregnTrygdeavgiftsperioder(behandlingID, {
@@ -289,11 +308,6 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   if (!aktivtSteg) return null;
 
   const visFeilFraLagring = feil && formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType);
-
-  console.log("Helse periode:", helseutgiftDekkesPeriode);
-  console.log("Form gyldig:", formIsValid);
-  console.log("Gyldig steg:", stegErGyldig);
-  console.log("Feilemdling som blokkerer:", aktivFeilmeldingType);
 
   return (
     <div className="vurderingTrygdeavgift">
