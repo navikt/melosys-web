@@ -52,14 +52,12 @@ class Arbeidsmonster extends Steg {
       (erArbeidstakerOgSelvstendigNaeringsdrivende ? loennetArbeidIFlereLand : true) &&
       (erOffentligTjenestemann ? offentligArbeidIFlereLand : true);
 
-    /* eslint-disable no-bitwise */
     const harAvklaring =
       (aktivitetINorgeNodvendig ^ Utils._isNil(hentFaktaVerdi(aktivitetINorge))) === 1 &&
       (erArbeidstakerOgSelvstendigNaeringsdrivende
         ? loennetArbeidINorge || loennetArbeidIEttAnnetLand || loennetArbeidIFlereLand
         : true) &&
       (erOffentligTjenestemann ? !Utils._isNil(hentFaktaVerdi(offentligArbeidAntallLandFakta)) : true);
-    /* eslint-enable no-bitwise */
 
     this.kriterier = [
       {

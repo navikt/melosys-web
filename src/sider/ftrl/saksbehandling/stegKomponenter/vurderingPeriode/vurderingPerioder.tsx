@@ -185,7 +185,7 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
       await debouncedLagreMedlemskapsperioder(lagretPerioder, true, undefined);
     }
 
-    await dispatch(oppsummertfaktaOperations.lagreUkjentSluttdatoMedlemskapsperiode(behandlingID, ukjentSluttdato));
+    dispatch(oppsummertfaktaOperations.lagreUkjentSluttdatoMedlemskapsperiode(behandlingID, ukjentSluttdato));
   };
 
   const lagreMedlemskapsperiode = async (medlemskapsperiode: MedlemskapsperiodeProp, index: number) => {
@@ -221,7 +221,6 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     Utils._debounce(
       async (medlemskapsperioder: MedlemskapsperiodeProp[], isValid: boolean, overskrevetIndex: number | undefined) => {
         if (isValid) {
-          // eslint-disable-next-line no-restricted-syntax
           for (const periode of medlemskapsperioder) {
             const index = overskrevetIndex !== undefined ? overskrevetIndex : medlemskapsperioder.indexOf(periode);
             await lagreMedlemskapsperiode(periode, index);

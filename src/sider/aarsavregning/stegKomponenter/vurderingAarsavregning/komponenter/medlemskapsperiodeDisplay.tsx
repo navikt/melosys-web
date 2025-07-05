@@ -34,8 +34,8 @@ export function MedlemskapsperiodeDisplay({
           ] as string[])}
         </option>
       </Nav.Select>
-      <div className="medlemskapsperiodeSkjema">
-        <Nav.Row className="skjema__rad">
+      <div className="perioder">
+        <Nav.Row className="periode__rad medlemskapsperiode__rad">
           <Nav.Column className="dato">
             <Datovelger
               label="Medlemskapsperiode"
@@ -46,7 +46,7 @@ export function MedlemskapsperiodeDisplay({
           </Nav.Column>
           <Nav.Column className="dato dato__tom">
             <Datovelger
-              label=""
+              label={<span className="invisible" />}
               onChange={handleDateChange}
               value={Utils.dato.norskStringTilDate(tomDato)}
               readOnly={true}

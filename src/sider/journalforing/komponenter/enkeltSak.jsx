@@ -1,7 +1,6 @@
 import PT from "prop-types";
 import { useHistory } from "react-router-dom";
 
-import { MKVUtils } from "../../../melosyskodeverk";
 import * as KV from "../../../kodeverk";
 import * as MPT from "../../../proptypes";
 import * as Nav from "../../../navFrontend";

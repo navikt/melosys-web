@@ -42,8 +42,8 @@ function InnerCheckboxComponent({
 InnerCheckboxComponent.propTypes = {
   label: PT.node.isRequired,
   submitOnChange: PT.bool,
-  input: PT.object, // eslint-disable-line react/forbid-prop-types
-  meta: PT.object, // eslint-disable-line react/forbid-prop-types
+  input: PT.object,
+  meta: PT.object,
   onClick: PT.func,
   disabled: PT.bool,
   className: PT.string,

@@ -27,12 +27,14 @@ const lagYupToReduxformErrorMapper = (schema, settings) => {
               valueToSet = e.message;
             } else {
               // Fallback for other types or unexpected objects
+              /* eslint-disable-next-line no-console */
               console.warn("Unexpected e.message type in lagYupToReduxformErrorMapper, falling back:", e.message);
               valueToSet = "Valideringsfeil";
             }
             Utils._set(formErrors, e.path, valueToSet);
           } else {
             // Log if an inner error doesn't have the expected structure
+            /* eslint-disable-next-line no-console */
             console.error("Unexpected inner error structure in lagYupToReduxformErrorMapper:", e);
             // Utils._set(formErrors, '_general', 'En uventet valideringsfeil oppstod.');
           }
@@ -51,6 +53,7 @@ const lagYupToReduxformErrorMapper = (schema, settings) => {
         } else if (typeof error.message === "string") {
           valueToSet = error.message;
         } else {
+          /* eslint-disable-next-line no-console */
           console.warn(
             "Unexpected error.message type in lagYupToReduxformErrorMapper (single error), falling back:",
             error.message,
@@ -60,6 +63,7 @@ const lagYupToReduxformErrorMapper = (schema, settings) => {
         Utils._set(formErrors, error.path, valueToSet);
       } else {
         // Log the caught error if it doesn't fit Yup's ValidationError structure
+        /* eslint-disable-next-line no-console */
         console.error(
           "Caught non-Yup error or Yup error without inner details in lagYupToReduxformErrorMapper:",
           error,

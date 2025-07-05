@@ -235,6 +235,7 @@ function OpprettNySak({
     } else {
       await lagNySak(dataForOpprettSak(fellesData));
     }
+
     setBekreftPending(false);
     const refreshOversiktDelayMillis = 2500;
     setTimeout(() => dispatch(oppgaverOperations.oversikt()), refreshOversiktDelayMillis * 3);

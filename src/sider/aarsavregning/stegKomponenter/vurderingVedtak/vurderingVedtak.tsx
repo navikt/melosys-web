@@ -39,6 +39,7 @@ const { MANUELL_ENDELIG_AVGIFT } = MKV.Koder.endeligAvgiftValg;
 interface FormValuesProps {
   innledningFritekst?: string;
   begrunnelseFritekst?: string;
+  skjoennsfastsattInntekt?: boolean;
 }
 
 interface Props {
@@ -105,6 +106,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
       setLagretAarsavregning(response);
       return response;
     } catch (error) {
+      /* eslint-disable-next-line no-console */
       console.error("Henting av aarsavregning feilet: ", error);
       return undefined;
     }
@@ -120,6 +122,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
       setMuligeMottakere(res);
       await fetchStandardvedleggForBrev();
     } catch (error) {
+      /* eslint-disable-next-line no-console */
       console.error("Henting av muligeMottakere feilet: ", error);
     }
   }, [behandlingID]);
@@ -132,6 +135,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
         standardvedlegg: res,
       });
     } catch (error) {
+      /* eslint-disable-next-line no-console */
       console.error("Henting av vedlegg feilet: ", error);
     }
   }, []);
@@ -142,6 +146,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
       const dto = await Api.Trygdeavgift.hentFakturamottaker(behandlingID);
       setFakturaMottaker(dto.navn);
     } catch (error) {
+      /* eslint-disable-next-line no-console */
       console.error("Henting av fakturamottaker feilet: ", error);
     }
   }, [behandlingID]);
@@ -158,6 +163,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
         res.some((aktoer) => aktoer.fullmakter?.some((fullmakt) => fullmakt === FULLMEKTIG_TRYGDEAVGIFT)),
       );
     } catch (error) {
+      /* eslint-disable-next-line no-console */
       console.error("Henting av fullmakt feilet: ", error);
     }
   }, [saksnummer]);
@@ -193,6 +199,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
           {
             innledningFritekst: nyInnledningFritekst,
             begrunnelseFritekst: nyBegrunnelseFritekst,
+            skjoennsfastsattInntekt: lagretAarsavregning?.harSkjoennsfastsattInntekt,
           },
           { keepDirty: false },
         );
@@ -232,6 +239,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
             setLagretBegrunnelse(values.begrunnelseFritekst ?? "");
           })
           .catch((error) => {
+            /* eslint-disable-next-line no-console */
             console.error("Oppdatering av fritekster feilet: ", error);
           })
           .finally(() => {
@@ -292,11 +300,13 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
     })
       .then((res) => {
         if (res.data?.data?.error) {
+          /* eslint-disable-next-line no-console */
           console.error("Error during fattVedtak: ", res.data.data.error);
           setVedtakPending(false);
         }
       })
       .catch((error) => {
+        /* eslint-disable-next-line no-console */
         console.error("Error submitting vedtak: ", error);
         setVedtakPending(false);
       });
@@ -352,7 +362,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
     (!harFullmaktForTrygdeavgift || erDifferanseUnderMinstebeløp || harBekreftetFullmaktForTrygdeavgift);
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="vurderingVedtak">
+    <form onSubmit={handleSubmit(onSubmit)} className="vurderingVedtakAarsavregning">
       <Nav.Heading level="1" className="stegvelgertittel">
         Vedtak årsavregning {lagretAarsavregning ? lagretAarsavregning.aar : ""}
       </Nav.Heading>
@@ -372,6 +382,22 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
           tidligereTrygdeavgift !== null || lagretAarsavregning?.harTrygdeavgiftFraAvgiftssystemet === true
         }
         tidligereAarsavregningTrygdeavgiftFraAvgiftssystem={tidligereTrygdeavgiftFraAvgiftssystemet}
+      />
+
+      <Forms.Checkbox
+        name="skjoennsfastsattInntekt"
+        size="small"
+        control={control}
+        label={
+          <>
+            <strong>Inntektsgrunnlaget er skjønnsmessig fastsatt.</strong>
+            &nbsp;Dette utløser en standardtekst i brevet
+          </>
+        }
+        disabled={!redigerbart}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+          Api.Aarsavregning.oppdaterHarSkjoennsfastsattInntekt(behandlingID, e.target.checked);
+        }}
       />
 
       {fakturaMottaker ? (

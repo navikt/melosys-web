@@ -12,7 +12,7 @@ function UkjentSide({ location }) {
       url: location.pathname,
     },
   };
-  // eslint-disable-next-line no-console
+  /* eslint-disable-next-line no-console */
   console.error(logdata);
   return (
     <Nav.Alert variant="error" className="ukjentSide">

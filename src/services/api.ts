@@ -28,6 +28,7 @@ import * as Utpekingsperioder from "./modules/utpekingsperioder";
 import * as Vilkar from "./modules/vilkar";
 import * as LovligeKombinasjoner from "./modules/lovligekombinasjoner";
 import * as Aarsavregning from "./modules/aarsavregning/aarsavregning";
+import * as HelseutgiftDekningPeriode from "./modules/helseutgiftDekkesPeriode/helseutgiftDekkesPeriode";
 
 import {
   Fagsak,
@@ -70,6 +71,7 @@ export {
   Utpekingsperioder,
   Vilkar,
   Aarsavregning,
+  HelseutgiftDekningPeriode,
 };
 
 export type {

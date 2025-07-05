@@ -202,7 +202,6 @@ function InnerArbeidsforholdNorgeListe({
     <div className={cls}>
       {elementer.map((element, indeks) => (
         <EnkeltArbeidsforholdNorge
-          /* eslint-disable-next-line react/no-array-index-key */
           key={indeks}
           fields={fields}
           redigerbart={redigerbart}

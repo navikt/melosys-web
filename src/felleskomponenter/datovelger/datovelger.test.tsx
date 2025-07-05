@@ -7,7 +7,6 @@ import Datovelger from ".";
 describe("Datovelger", () => {
   let dato: Date | undefined = new Date();
   const props: ComponentProps<typeof Datovelger> = {
-    // eslint-disable-next-line no-return-assign
     onChange: (nyDatoString: string) => (dato = Utils.dato.norskStringTilDate(nyDatoString)),
     value: dato,
     label: "Dato",
@@ -33,7 +32,7 @@ describe("Datovelger", () => {
     const datePicker = screen.getByRole("textbox") as HTMLInputElement;
     fireEvent.change(datePicker, { target: { value: "21.03.2024 " } });
 
-    expect(datePicker.value).toBe("21.03.2024");
+    expect(dato).toEqual(Utils.dato.norskStringTilDate("21.03.2024"));
   });
 
   it("viser riktige verdier dersom datovelger er disabled", () => {

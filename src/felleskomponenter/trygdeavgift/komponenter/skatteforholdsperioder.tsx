@@ -19,6 +19,8 @@ interface SkatteforholdsperioderProps {
   append: (skatteforhold: Skatteforhold) => void;
   redigerbart: boolean;
   defaultPeriode?: { fomDato: string; tomDato: string };
+  minDate?: Date;
+  maxDate?: Date;
 }
 
 export function Skatteforholdsperioder({
@@ -29,6 +31,8 @@ export function Skatteforholdsperioder({
   redigerbart,
   defaultPeriode,
   fields,
+  minDate,
+  maxDate,
 }: SkatteforholdsperioderProps) {
   return (
     <div className="perioder">
@@ -41,6 +45,8 @@ export function Skatteforholdsperioder({
                 name={`skatteforholdsperioder[${index}].fomDato`}
                 readOnly={!redigerbart}
                 control={control}
+                minDate={minDate}
+                maxDate={maxDate}
               />
             </Nav.Column>
 
@@ -50,7 +56,8 @@ export function Skatteforholdsperioder({
                 name={`skatteforholdsperioder[${index}].tomDato`}
                 readOnly={!redigerbart}
                 control={control}
-                minDate={Utils.dato.norskStringTilDate(formValues.skatteforholdsperioder[index].fomDato)}
+                minDate={Utils.dato.norskStringTilDate(formValues.skatteforholdsperioder[index].fomDato) || minDate}
+                maxDate={maxDate}
               />
             </Nav.Column>
 

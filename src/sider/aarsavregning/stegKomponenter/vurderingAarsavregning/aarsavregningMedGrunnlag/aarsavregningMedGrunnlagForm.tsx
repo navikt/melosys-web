@@ -133,6 +133,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   );
 
   const debouncedBeregning = useCallback(() => {
+    /* eslint-disable-next-line no-console */
     console.log("[debouncedBeregning] debouncedBeregningPagaar set false", debouncedBeregningPagaar);
     setDebouncedBeregningPagaar(false);
     if (
@@ -208,7 +209,9 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
         const currentFormState = mapFormState(getValues("skatteforholdsperioder"), getValues("inntektskilder"));
 
         if (!Utils._isEqual(currentFormState, previousFormValues)) {
+          /* eslint-disable-next-line no-console */
           console.log("[useEffect] currentFormState", currentFormState);
+          /* eslint-disable-next-line no-console */
           console.log("[useEffect] previousFormValues", previousFormValues);
           setDebouncedBeregningPagaar(true);
           debouncedBeregningRef.current();
@@ -305,6 +308,10 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
     aarsavregningResponse?.tidligereGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep,
   );
 
+  const minDate = initiellData.valgtÅr !== undefined ? new Date(initiellData.valgtÅr, 0, 1) : undefined;
+  const maxDate =
+    initiellData.valgtÅr !== undefined ? new Date(initiellData.valgtÅr, 11, 31, 23, 59, 59, 999) : undefined;
+
   return (
     <>
       <EndeligAvgiftValgRadioGroup
@@ -340,6 +347,8 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
             append={skattAppend}
             control={control}
             fields={skattFields}
+            minDate={minDate}
+            maxDate={maxDate}
           />
           {!trygdeAvgiftSkalIkkeBetalesTilNav && (
             <Inntektskilder
@@ -354,6 +363,8 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
               medlemskapsTypeErPliktig={medlemskapstypeErPliktig!}
               skalViseErMaanedsBelopRadioGroup
               bestemmelse={innvilgetMedlemskapsperiodeBestemmelse}
+              minDate={minDate}
+              maxDate={maxDate}
             />
           )}
 
@@ -364,6 +375,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
             !beregningPaagar &&
             !feilmelding &&
             !arrayValideringsfeil &&
+            !trygdeAvgiftSkalIkkeBetalesTilNav &&
             aarsavregningResponse?.nyttGrunnlag && (
               <Nav.ExpansionCard
                 className="beregnetTrygdeavgiftDetaljer"

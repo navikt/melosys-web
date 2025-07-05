@@ -1,4 +1,3 @@
-/* eslint-disable */
 import * as Dato from "./dato";
 
 describe("tester dato.js", () => {

@@ -1,4 +1,3 @@
-/* eslint-disable */
 import * as Person from "./person";
 import * as testhelpers from "./testhelpers";
 

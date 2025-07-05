@@ -1,5 +1,5 @@
 import { screen } from "@testing-library/react";
-import { renderWithProviders } from "../../../ducks/test-utils/renderWithProviders";
+import { renderWithProvidersAsync } from "../../../ducks/test-utils/renderWithProviders";
 import LeggBehandlingTilbake from "./leggbehandlingtilbake";
 
 describe("LeggBehandlingTilbake", () => {
@@ -13,7 +13,7 @@ describe("LeggBehandlingTilbake", () => {
   });
 
   it("viser begge valg som knapper om redigerbart", async () => {
-    renderWithProviders(<LeggBehandlingTilbake />, { preloadedState: initialState(true) });
+    await renderWithProvidersAsync(<LeggBehandlingTilbake />, { preloadedState: initialState(true) });
 
     const knapper = await screen.findAllByRole("button");
     expect(knapper).toHaveLength(2);
@@ -22,7 +22,7 @@ describe("LeggBehandlingTilbake", () => {
   });
 
   it("viser bare Til felles oppgaveliste som er en tekst om ikke redigerbart", async () => {
-    renderWithProviders(<LeggBehandlingTilbake />, { preloadedState: initialState(false) });
+    await renderWithProvidersAsync(<LeggBehandlingTilbake />, { preloadedState: initialState(false) });
 
     expect(screen.queryByRole("button")).not.toBeInTheDocument();
     expect(screen.getByText("Til felles oppgaveliste")).toBeInTheDocument();

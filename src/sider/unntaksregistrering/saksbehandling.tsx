@@ -96,7 +96,7 @@ function Saksbehandling({
       await dispatch(lovvalgsperioderOperations.hent(behandlingIDFraParam));
       setSaksopplysningerLastet(true);
     } catch (e) {
-      // eslint-disable-next-line no-console
+      /* eslint-disable-next-line no-console */
       console.error(e);
     }
   };

@@ -1,4 +1,3 @@
-/* eslint-disable */
 import StegMotor from "./StegMotor";
 
 import { STEG } from "./typer";

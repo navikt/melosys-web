@@ -92,9 +92,8 @@ class Journalforing extends Component {
    * @returns {object} Objektet som skal sendes videre som payload.
    */
   vaskDokumentInformasjon = (hensikt) => {
-    /* eslint-disable no-console */
+    /* eslint-disable-next-line no-console */
     console.assert(hensikt, { message: "hensikt må ha verdi" });
-    /* eslint-enable no-console */
 
     const { oppgaveID, journalpostID } = this.props.match.params;
     const {

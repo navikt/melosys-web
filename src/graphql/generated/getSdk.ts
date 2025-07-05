@@ -1,5 +1,4 @@
 import { DocumentNode } from 'graphql';
-import gql from 'graphql-tag';
 type Maybe<T> = T | null;
 type InputMaybe<T> = Maybe<T>;
 type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };

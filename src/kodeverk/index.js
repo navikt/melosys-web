@@ -53,7 +53,6 @@ function finnTermFraListe(kodetermListe, kode) {
 
 function termFraNestedKTObject(nestedKTObject, kode) {
   const kodetermListe = [];
-  // eslint-disable-next-line no-restricted-syntax
   for (const kodeterm in nestedKTObject) {
     if (Object.prototype.hasOwnProperty.call(nestedKTObject, kodeterm)) {
       kodetermListe.push(...nestedKTObject[kodeterm]);

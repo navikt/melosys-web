@@ -66,6 +66,7 @@ export interface InitiellData {
   innvilgetMedlemskapsperiodeTrygdedekning?: string;
   medlemskapstypeErPliktig: boolean;
   forrigeÅrsavregningErManueltBeregnet: boolean;
+  valgtÅr?: number;
 }
 
 interface Props {
@@ -152,6 +153,10 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
               res.tidligereGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep !== undefined,
           );
 
+          const valgtÅr = innvilgetMedlemskapsperiode
+            ? Utils.dato.norskStringTilDate(innvilgetMedlemskapsperiode.fomDato)?.getFullYear()
+            : undefined;
+
           setInitiellData({
             aarsavregningResponse: res,
             formDefaultValues: defaultFormValues,
@@ -160,6 +165,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
             innvilgetMedlemskapsperiodeTrygdedekning,
             medlemskapstypeErPliktig,
             forrigeÅrsavregningErManueltBeregnet,
+            valgtÅr,
           });
           setIsLoading(false);
         })

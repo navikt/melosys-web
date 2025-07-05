@@ -1,5 +1,5 @@
 import MKV from "../../../../../melosyskodeverk";
-import { Fragment, ReactElement } from "react";
+import { ReactElement } from "react";
 import * as Nav from "../../../../../navFrontend";
 import Dokumentliste, {
   BrevDokumentMetadataType,
