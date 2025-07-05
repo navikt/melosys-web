@@ -145,7 +145,9 @@ export const beregnSumTilFakturaEllerRefusjon = (
   );
 };
 
-// Modified manual validation function to avoid triggering react-hook-form errors prematurely
+/**
+ * Modifisert manuell valideringsfunksjon for å unngå å trigge react-hook-form feil for tidlig
+ */
 export const validateAarsavregningUtenEllerDeltGrunnlag = async (
   values: any,
   context: { aar?: number; harTrygdeavgiftFraAvgiftssystemet?: boolean },
@@ -154,43 +156,37 @@ export const validateAarsavregningUtenEllerDeltGrunnlag = async (
   try {
     const schema = aarsavregningUtenEllerDeltGrunnlagSchema;
 
-    if (path) {
-      // For path-based validation, we need to validate the entire schema but only check errors for the specific path
-      // This ensures conditional validation works properly
-      await schema.validate(values, { abortEarly: false, context });
-      return { isValid: true, errors: {} };
-    }
-    // Validate the entire schema if no path is provided
+    // Valider hele skjemaet
     await schema.validate(values, { abortEarly: false, context });
+
+    // Hvis validering lykkes (ingen exception), returner gyldig
     return { isValid: true, errors: {} };
   } catch (err: any) {
     const validationErrors: any = {};
+
     if (err.inner) {
       err.inner.forEach((error: any) => {
         if (path) {
-          // Only include errors for the specified path
-          if (error.path.startsWith(path)) {
+          // Inkluder kun feil for den spesifiserte stien
+          if (error.path && error.path.startsWith(path)) {
             validationErrors[error.path] = error.message;
           }
         } else {
-          // Include all errors if no path specified
+          // Inkluder alle feil hvis ingen sti er spesifisert
           validationErrors[error.path] = error.message;
         }
       });
     } else {
-      // Handle single error (e.g., for array-level validation)
-      validationErrors[path || "form"] = err.message;
+      // Håndter enkeltfeil (f.eks. for array-nivå validering)
+      if (path && err.path && err.path.startsWith(path)) {
+        validationErrors[err.path] = err.message;
+      } else if (!path) {
+        validationErrors[err.path || "form"] = err.message;
+      }
     }
 
-    // If we were validating a specific path and found path-specific errors, return invalid
-    if (path && Object.keys(validationErrors).length > 0) {
-      return { isValid: false, errors: validationErrors };
-    }
-    // If we were validating a specific path but found no path-specific errors, return valid
-    if (path && Object.keys(validationErrors).length === 0) {
-      return { isValid: true, errors: {} };
-    }
-    // For full form validation, return invalid if any errors
-    return { isValid: false, errors: validationErrors };
+    // Returner basert på om vi fant relevante feil
+    const hasErrors = Object.keys(validationErrors).length > 0;
+    return { isValid: !hasErrors, errors: validationErrors };
   }
 };
