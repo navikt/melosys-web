@@ -8,6 +8,7 @@ import * as Api from "../../../../services/api";
 import * as Utils from "../../../../utils";
 import { AarsavregningResponse } from "../../../../services/modules/aarsavregning/aarsavregning";
 import MKV from "../../../../melosyskodeverk";
+import aarsavregningUtenEllerDeltGrunnlagSchema from "./aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlagSchema";
 
 const { IKKE_SKATTEPLIKTIG } = MKV.Koder.skatteplikttype;
 
@@ -142,4 +143,50 @@ export const beregnSumTilFakturaEllerRefusjon = (
     (tidligereTrygdeavgiftAvgiftssystem ?? 0) +
     (tidligereAarsavregningTrygdeavgiftFraAvgiftssystem ?? 0)
   );
+};
+
+/**
+ * Modifisert manuell valideringsfunksjon for å unngå å trigge react-hook-form feil for tidlig
+ */
+export const validateAarsavregningUtenEllerDeltGrunnlag = async (
+  values: any,
+  context: { aar?: number; harTrygdeavgiftFraAvgiftssystemet?: boolean },
+  path: string | null = null,
+) => {
+  try {
+    const schema = aarsavregningUtenEllerDeltGrunnlagSchema;
+
+    // Valider hele skjemaet
+    await schema.validate(values, { abortEarly: false, context });
+
+    // Hvis validering lykkes (ingen exception), returner gyldig
+    return { isValid: true, errors: {} };
+  } catch (err: any) {
+    const validationErrors: any = {};
+
+    if (err.inner) {
+      err.inner.forEach((error: any) => {
+        if (path) {
+          // Inkluder kun feil for den spesifiserte stien
+          if (error.path && error.path.startsWith(path)) {
+            validationErrors[error.path] = error.message;
+          }
+        } else {
+          // Inkluder alle feil hvis ingen sti er spesifisert
+          validationErrors[error.path] = error.message;
+        }
+      });
+    } else {
+      // Håndter enkeltfeil (f.eks. for array-nivå validering)
+      if (path && err.path && err.path.startsWith(path)) {
+        validationErrors[err.path] = err.message;
+      } else if (!path) {
+        validationErrors[err.path || "form"] = err.message;
+      }
+    }
+
+    // Returner basert på om vi fant relevante feil
+    const hasErrors = Object.keys(validationErrors).length > 0;
+    return { isValid: !hasErrors, errors: validationErrors };
+  }
 };
