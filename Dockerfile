@@ -4,7 +4,7 @@ FROM nginxinc/nginx-unprivileged:alpine
 USER root
 RUN apk del --no-cache curl wget ca-certificates && \
     apk upgrade --available && \
-    rm -rf /var/cache/apk/* /usr/bin/wget /usr/bin/curl \
+    rm -rf /var/cache/apk/* /usr/bin/wget /usr/bin/curl
 
 COPY ./build /usr/share/nginx/html
 COPY ./nais/proxy.nginx /etc/nginx/templates/default.conf.template
@@ -17,11 +17,13 @@ COPY .local.env /app/.local.env
 
 ENV ENVIRONMENT_NAME prod
 
-USER root
-RUN chown -R 1069:1069 /etc/nginx/conf.d/
-RUN chown -R 1069:1069 /etc/nginx/templates/
-RUN chown -R 1069:1069 /usr/share/nginx/html/
+# Bruk korrekt user ID for nginx-unprivileged:alpine (101)
+RUN chown -R 101:101 /etc/nginx/conf.d/
+RUN chown -R 101:101 /etc/nginx/templates/
+RUN chown -R 101:101 /usr/share/nginx/html/
 RUN chmod +x /docker-entrypoint.d/generate-config.sh
-USER 1069
+
+# Bytt til nginx user (101 for Alpine)
+USER 101
 
 EXPOSE 3000
