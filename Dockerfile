@@ -1,4 +1,10 @@
-FROM nginxinc/nginx-unprivileged
+FROM nginxinc/nginx-unprivileged:alpine
+
+# Fjern unødvendige pakker som lager CVEs
+USER root
+RUN apk del --no-cache curl wget ca-certificates && \
+    apk upgrade --available && \
+    rm -rf /var/cache/apk/* /usr/bin/wget /usr/bin/curl \
 
 COPY ./build /usr/share/nginx/html
 COPY ./nais/proxy.nginx /etc/nginx/templates/default.conf.template
