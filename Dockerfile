@@ -17,13 +17,13 @@ COPY .local.env /app/.local.env
 
 ENV ENVIRONMENT_NAME prod
 
-# Bruk korrekt user ID for nginx-unprivileged:alpine (101)
-RUN chown -R 101:101 /etc/nginx/conf.d/
-RUN chown -R 101:101 /etc/nginx/templates/
-RUN chown -R 101:101 /usr/share/nginx/html/
-RUN chmod +x /docker-entrypoint.d/generate-config.sh
+RUN chown -R 101:101 /etc/nginx/conf.d/ && \
+    chown -R 101:101 /etc/nginx/templates/ && \
+    chown -R 101:101 /usr/share/nginx/html/ && \
+    chmod +x /docker-entrypoint.d/generate-config.sh && \
+    # Ensure the nginx user can write to html directory
+    chmod 755 /usr/share/nginx/html/
 
-# Bytt til nginx user (101 for Alpine)
 USER 101
 
 EXPOSE 3000
