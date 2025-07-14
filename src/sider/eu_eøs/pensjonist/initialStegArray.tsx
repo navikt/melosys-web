@@ -1,5 +1,6 @@
 import { FANE_STATUS } from "../../../felleskomponenter/stegvelger";
 import VurderingOpplysninger from "./stegKomponenter/vurderingOpplysninger/vurderingOpplysninger";
+import VurderingBekreftelse from "./stegKomponenter/vurderingBekreftelse/vurderingBekreftelse";
 
 const inngangSteg = {
   id: "Inngang",
@@ -11,4 +12,14 @@ const inngangSteg = {
   komponent: VurderingOpplysninger,
 };
 
-export const alleSteg = [inngangSteg];
+const bekreftelseSteg = {
+  id: "Bekreftelse",
+  tittel: "Bekreftelse",
+  stegPosisjon: 1,
+  status: FANE_STATUS.UBEHANDLET,
+  aktivtSteg: false,
+  vedtakSteg: true,
+  komponent: VurderingBekreftelse,
+};
+
+export const alleSteg = [inngangSteg, bekreftelseSteg];
