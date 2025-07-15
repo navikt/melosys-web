@@ -15,7 +15,7 @@ const inngangSteg = {
 const bekreftelseSteg = {
   id: "Bekreftelse",
   tittel: "Bekreftelse",
-  stegPosisjon: 1,
+  stegPosisjon: 2,
   status: FANE_STATUS.UBEHANDLET,
   aktivtSteg: false,
   vedtakSteg: true,
