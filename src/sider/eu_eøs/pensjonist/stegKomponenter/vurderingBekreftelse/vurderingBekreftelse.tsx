@@ -19,6 +19,8 @@ import { useCallback, useEffect, useState } from "react";
 import { fagsakSelectors } from "../../../../../ducks/fagsaker";
 import { useDispatch } from "../../../../../hooks";
 import { vedtakOperations } from "../../../../../ducks/vedtak";
+import { iverksettPensjonist, IverksettReqDto } from "../../../../../services/modules/saksflyt/trygdeavgift";
+import { tilForsiden } from "../../../../../ducks/navigering/operations";
 
 interface FormValuesProps {
   begrunnelseFritekst?: string;
@@ -116,15 +118,12 @@ function VurderingBekreftelse() {
     setVedtakPending(true);
     const { FASTSATT_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingsresultattyper;
 
-    dispatch(
-      vedtakOperations.fatt(behandlingID, {
-        behandlingsresultatTypeKode: FASTSATT_TRYGDEAVGIFT,
-        vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
-      }),
-    ).then((res) => {
-      if (res.data?.data?.error) {
-        setVedtakPending(false);
-      }
+    Api.Saksflyt.Trygdeavgift.iverksettPensjonist(behandlingID, {
+      behandlingsresultatTypeKode: FASTSATT_TRYGDEAVGIFT,
+      vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+    }).then(() => {
+      setVedtakPending(false);
+      tilForsiden();
     });
   };
 
