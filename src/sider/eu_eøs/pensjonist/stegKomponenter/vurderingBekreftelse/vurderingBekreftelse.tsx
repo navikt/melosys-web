@@ -124,7 +124,7 @@ function VurderingBekreftelse() {
     })
       .then(() => {
         setVedtakPending(false);
-        dispatch(tilForsiden());
+        tilForsiden();
       })
       .catch((err) => {
         if (err) setVedtakPending(false);
