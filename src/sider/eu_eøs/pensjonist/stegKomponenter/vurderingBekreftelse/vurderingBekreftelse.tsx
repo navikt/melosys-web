@@ -121,10 +121,14 @@ function VurderingBekreftelse() {
     Api.Saksflyt.Trygdeavgift.iverksettPensjonist(behandlingID, {
       behandlingsresultatTypeKode: FASTSATT_TRYGDEAVGIFT,
       vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
-    }).then(() => {
-      setVedtakPending(false);
-      tilForsiden();
-    });
+    })
+      .then(() => {
+        setVedtakPending(false);
+        dispatch(tilForsiden());
+      })
+      .catch((err) => {
+        if (err) setVedtakPending(false);
+      });
   };
 
   return (
