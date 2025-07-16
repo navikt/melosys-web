@@ -1,5 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { use, useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FieldValue, useFieldArray, useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import * as Mui from "../../../../../felleskomponenter/ui";
@@ -9,7 +9,6 @@ import * as Utils from "../../../../../utils";
 
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import { medlemskapsperioderSelectors } from "../../../../../ducks/medlemskapsperioder";
-import { helseutgiftDekkesPeriodeSelector } from "../../../../../ducks/helseutgiftdekkesperiode";
 
 import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 import { useAsyncCallbackState } from "../../../../../hooks";
@@ -36,7 +35,6 @@ import "./vurderingTrygdeavgift.css";
 import vurderingTrygdeavgiftSchema from "./vurderingTrygdeavgiftSchema";
 
 import { erBrukerSkattepliktigIHelePerioden } from "../../../../aarsavregning/stegKomponenter/vurderingAarsavregning/utils";
-import { fagsakSelectors } from "../../../../../ducks/fagsaker";
 
 interface Props {
   bekreft: () => void;
@@ -49,14 +47,11 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const behandlingstype = useSelector(behandlingerSelectors.BehandlingstypeKodeSelector);
-  const sakstype = useSelector(fagsakSelectors.SakstypeKodeSelector);
-  const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const medlemskapsperiodeStatus = useSelector(medlemskapsperioderSelectors.MedlemskapsperioderStatusSelector);
   const medlemskapsperioder = useSelector(medlemskapsperioderSelectors.AlleMedlemskapsperioderSelector);
   const innvilgetMedlemskapsperiode = useSelector(
     medlemskapsperioderSelectors.SamletInnvilgetMedlemskapsperiodeSelector,
   );
-  const helseutgiftDekkesPeriode = useSelector(helseutgiftDekkesPeriodeSelector.HelseutgiftDekkesPeriode).data;
 
   const bestemmelse = useSelector(medlemskapsperioderSelectors.BestemmelseSelector);
   const [lagretTrygdeavgift, setTrygdeavgift] = useAsyncCallbackState(
@@ -78,28 +73,14 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     (periode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG,
   );
 
-  const erEøsPensjonist =
-    sakstype === MKV.Koder.sakstyper.EU_EOS && behandlingstema === MKV.Koder.behandlinger.behandlingstema.PENSJONIST;
-
   const formattedDefaultPeriode = () => {
-    if (erEøsPensjonist) {
-      return {
-        fomDato: Utils.dato.formatterDatoTilNorsk(helseutgiftDekkesPeriode?.fomDato),
-        tomDato: Utils.dato.formatterDatoTilNorsk(helseutgiftDekkesPeriode?.tomDato),
-      };
-    }
-
     return {
       fomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.fom),
       tomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.tom),
     };
   };
 
-  const erÅpenSluttDato = !innvilgetMedlemskapsperiode?.tom && !helseutgiftDekkesPeriode?.tomDato;
-  const periodeForSchemaValidering = innvilgetMedlemskapsperiode ?? {
-    fom: helseutgiftDekkesPeriode.fomDato,
-    tom: helseutgiftDekkesPeriode.tomDato,
-  };
+  const erÅpenSluttDato = !innvilgetMedlemskapsperiode?.tom;
 
   const {
     control,
@@ -108,7 +89,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     trigger,
   } = useForm({
     resolver: yupResolver(vurderingTrygdeavgiftSchema),
-    context: { medlemskapsperiode: periodeForSchemaValidering, medlemskapsTypeErPliktig, erÅpenSluttDato },
+    context: { medlemskapsperiode: innvilgetMedlemskapsperiode, medlemskapsTypeErPliktig, erÅpenSluttDato },
     mode: "onChange",
     defaultValues: {
       skatteforholdsperioder: [{}],
