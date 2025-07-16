@@ -1,5 +1,14 @@
 FROM nginxinc/nginx-unprivileged
 
+# Fjern avhenigheter som ikke er nødvendige for å kjøre nginx, og som skaper CVEs.
+USER root
+RUN apt-get update && \
+    apt-get remove -y curl && \
+    apt-get upgrade -y && \
+    apt-get autoremove -y && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
 COPY ./build /usr/share/nginx/html
 COPY ./nais/proxy.nginx /etc/nginx/templates/default.conf.template
 COPY generate-config.sh /docker-entrypoint.d/generate-config.sh
@@ -9,7 +18,7 @@ COPY .q1.env /app/.q1.env
 COPY .q2.env /app/.q2.env
 COPY .local.env /app/.local.env
 
-ENV ENVIRONMENT_NAME prod
+ENV ENVIRONMENT_NAME=prod
 
 USER root
 RUN chown -R 1069:1069 /etc/nginx/conf.d/

@@ -105,6 +105,10 @@ export function VurderingOpplysninger({ bekreft, tilbake, aktivtSteg, oppdaterSt
     }
   };
 
+  useEffect(() => {
+    oppdaterStatus(formIsValid);
+  }, [formIsValid]);
+
   const bekreftOgFortsett = async () => {
     if (formIsValid && isDirty) {
       dispatch(helseutgiftDekkesPeriodeOperations.hentHelseutgiftDekkesPeriode(behandlingID));

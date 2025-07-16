@@ -13,6 +13,8 @@ import * as Utils from "../../../utils";
 import "./knyttTilSak.css";
 import { useAsyncCallbackState } from "../../../hooks";
 import { harFlerePågåendeBehandlinger } from "../../../melosyskodeverk/utils";
+import { FTRL } from "../../../services/api-constants.js";
+import MKV from "../../../melosyskodeverk/index.js";
 
 export function KnyttTilSak(props) {
   const { sak, erJournalføring, changeField, feltNavn, formValues } = props;
@@ -250,7 +252,7 @@ export function KnyttTilSak(props) {
         </div>
       )}
 
-      {!erJournalføring && (
+      {!erJournalføring && sakstype.kode !== MKV.Koder.sakstyper.FTRL && (
         <div className="knyttTilSak__behandlingspanel">
           <Nav.Alert variant="warning" className="feilmelding_innrykk">
             Du kan ikke opprette en ny behandling på eksisterende sak med en aktiv/pågående behandling
