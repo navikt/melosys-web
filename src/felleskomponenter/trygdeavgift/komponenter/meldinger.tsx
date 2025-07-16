@@ -3,6 +3,7 @@ import * as Nav from "../../../navFrontend";
 import * as Utils from "../../../utils";
 import MKV from "../../../melosyskodeverk";
 import { Medlemskapsperiode } from "../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import { Type } from "../../menypanel/menypunkter/fullmektig/types";
 
 const { PENSJON_UFØRETRYGD, PENSJON_UFØRETRYGD_KILDESKATT } = MKV.Koder.inntektskildetype;
 const { INNVILGET } = MKV.Koder.innvilgelsesResultat;
@@ -126,7 +127,9 @@ const erPensjonUføretrygdLagtInnForPeriodeMedKunPensjon = (
 
 enum TypeMelding {
   INNTEKTSKILDE_UTENFOR_MEDLEMSKAPSPERIODE = "INNTEKTSKILDE UTENFOR MEDLEMSKAPSPERIODE",
+  INNTEKTSKILDE_UTENFOR_HELSEUTGIFT_DEKKES_PERIODE = "INNTEKTSKILDE UTENFOR HELSEUTGIFT DEKKES PERIODE",
   SKATTEFORHOLD_UTENFOR_MEDLEMSKAPSPERIODE = "SKATTEFORHOLD UTENFOR MEDLEMSKAPSPERIODE",
+  SKATTEFORHOLD_UTENFOR_HELSEUTGIFT_DEKKES_PERIODE = "SKATTEFORHOLD UTENFOR HELSEUTGIFT DEKKES PERIODE",
   BRUTTOINNTEKT_OVER_250K = "BRUTTOINNTEKT_OVER_250K",
   SKATTEPLIKTIG_OG_PENSJON_UFORETRYGD_MED_KILDESKATT = "SKATTEPLIKTIG_OG_PENSJON_UFORETRYGD_MED_KILDESKATT",
   PENSJON_UFORETRYGD_LAGT_TIL_FOR_PENSJON_PERIODE = "PENSJON_UFORETRYGD_LAGT_TIL_FOR_PENSJON_PERIODE",
@@ -162,10 +165,36 @@ export const finnAktivFeilmelding = (
   return undefined;
 };
 
+export const finnAktivFeilmeldingEøsPensjonist = (
+  inntektskilder: Inntektskilde[],
+  skatteforholdsperioder: Skatteforhold[],
+  helseutgiftDekkesPeriode?: { fom: string; tom: string },
+): string | undefined => {
+  if (!helseutgiftDekkesPeriode) return undefined;
+
+  // Feil
+  if (finnesSkatteforholdPeriodeUtenforMedlemskapsperiode(skatteforholdsperioder, helseutgiftDekkesPeriode)) {
+    return TypeMelding.SKATTEFORHOLD_UTENFOR_HELSEUTGIFT_DEKKES_PERIODE;
+  }
+
+  if (finnesInntektskildeperiodeUtenforMedlemskapsperiode(inntektskilder, helseutgiftDekkesPeriode)) {
+    return TypeMelding.INNTEKTSKILDE_UTENFOR_HELSEUTGIFT_DEKKES_PERIODE;
+  }
+
+  // Advarsler
+  if (finnesInntektskildeMedBruttoInntektOver250k(inntektskilder)) {
+    return TypeMelding.BRUTTOINNTEKT_OVER_250K;
+  }
+
+  return undefined;
+};
+
 export function feilMeldingBlokkerer(type?: string): boolean {
   switch (type) {
     case TypeMelding.INNTEKTSKILDE_UTENFOR_MEDLEMSKAPSPERIODE:
+    case TypeMelding.INNTEKTSKILDE_UTENFOR_HELSEUTGIFT_DEKKES_PERIODE:
     case TypeMelding.SKATTEFORHOLD_UTENFOR_MEDLEMSKAPSPERIODE:
+    case TypeMelding.SKATTEFORHOLD_UTENFOR_HELSEUTGIFT_DEKKES_PERIODE:
     case TypeMelding.SKATTEPLIKTIG_OG_PENSJON_UFORETRYGD_MED_KILDESKATT:
     case TypeMelding.PENSJON_UFORETRYGD_LAGT_TIL_FOR_PENSJON_PERIODE:
       return true;
