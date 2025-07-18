@@ -32,7 +32,7 @@ import {
 } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
 import MKV from "../../../../../melosyskodeverk";
 import { BeregnetTrygdeavgift, TrygdeavgiftsgrunnlagDto } from "../../../../../services/modules/trygdeavgift";
-// import "./vurderingTrygdeavgift.css";
+import "./vurderingTrygdeavgift.css";
 import vurderingTrygdeavgiftSchema from "./vurderingTrygdeavgiftSchema";
 
 import { erBrukerSkattepliktigIHelePerioden } from "../../../../aarsavregning/stegKomponenter/vurderingAarsavregning/utils";
