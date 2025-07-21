@@ -37,7 +37,8 @@ import vurderingTrygdeavgiftSchema from "./vurderingTrygdeavgiftSchema";
 
 import { erBrukerSkattepliktigIHelePerioden } from "../../../../aarsavregning/stegKomponenter/vurderingAarsavregning/utils";
 import { fagsakSelectors } from "../../../../../ducks/fagsaker";
-
+const { EU_EOS } = MKV.Koder.sakstyper;
+const { PENSJONIST } = MKV.Koder.behandlinger.behandlingstema;
 interface Props {
   bekreft: () => void;
   tilbake: () => void;
@@ -49,12 +50,16 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const behandlingstype = useSelector(behandlingerSelectors.BehandlingstypeKodeSelector);
+  const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
+  const sakstype = useSelector(fagsakSelectors.SakstypeKodeSelector);
 
   const helseutgiftDekkesPeriodeData = useSelector(helseutgiftDekkesPeriodeSelector.HelseutgiftDekkesPeriode).data;
   const helseutgiftDekkesPeriode = {
     fom: helseutgiftDekkesPeriodeData.fomDato,
     tom: helseutgiftDekkesPeriodeData.tomDato,
   };
+
+  const erEøsPensjonist = sakstype === EU_EOS && behandlingstema === PENSJONIST;
 
   const bestemmelse = useSelector(medlemskapsperioderSelectors.BestemmelseSelector);
   const [lagretTrygdeavgift, setTrygdeavgift] = useAsyncCallbackState(
@@ -185,11 +190,11 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     oppdaterStatus(stegErGyldig && harBeregnetForeløpigTrygdeavgift);
   }, [stegErGyldig, harBeregnetForeløpigTrygdeavgift]);
 
-  const beregnTrygdeavgiftsperioder = (formVerdier: FieldValue<FormValuesProps>) => {
+  const eøsPensjonistBeregnTrygdeavgiftsperioder = (formVerdier: FieldValue<FormValuesProps>) => {
     setFeil(undefined);
     setLagrePending(true);
 
-    Api.Trygdeavgift.beregnTrygdeavgiftsperioder(behandlingID, {
+    Api.Trygdeavgift.eøsPensjonistBeregnTrygdeavgiftsperioder(behandlingID, {
       skatteforholdsperioder: formVerdier.skatteforholdsperioder.map((skatteforhold: Skatteforhold) => ({
         fomDato: Utils.dato.formatterDatoTilISO(skatteforhold.fomDato),
         tomDato: Utils.dato.formatterDatoTilISO(skatteforhold.tomDato, null),
@@ -228,7 +233,8 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
 
   const debounceBeregnTrygdeavgiftsperioder = useCallback(
     Utils._debounce(
-      (formVerdier: FormValuesProps, isValid: boolean) => isValid && beregnTrygdeavgiftsperioder(formVerdier),
+      (formVerdier: FormValuesProps, isValid: boolean) =>
+        isValid && eøsPensjonistBeregnTrygdeavgiftsperioder(formVerdier),
       500,
     ),
     [],
@@ -308,7 +314,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
             control={control}
             defaultPeriode={formattedDefaultPeriode()}
             fields={inntektFields}
-            medlemskapsTypeErPliktig={true}
+            medlemskapsTypeErPliktig={erEøsPensjonist}
             bestemmelse={bestemmelse}
           />
         </>
@@ -322,6 +328,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
           <TrygdeavgiftsperioderTabell
             lagrePending={lagrePending}
             perioder={lagretTrygdeavgift?.trygdeavgiftsperioder}
+            erEøsPensjonist={erEøsPensjonist}
           />
         </>
       )}
