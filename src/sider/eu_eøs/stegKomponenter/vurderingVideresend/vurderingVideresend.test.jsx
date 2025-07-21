@@ -50,7 +50,7 @@ describe("Vurderingvideresend", () => {
     const { getByRole } = renderWithProviders(<WrappedVurderingVideresend {...props} />, {
       preloadedState: initialReduxState,
     });
-    expect(getByRole("link", { name: "SED A008 (åpnes i ny fane)" })).toBeInTheDocument();
+    expect(getByRole("link", { name: "SED A008" })).toBeInTheDocument();
   });
 
   it("viser ikke dokumentliste dersom ikke redigerbart", () => {
@@ -58,6 +58,6 @@ describe("Vurderingvideresend", () => {
     const { queryByRole } = renderWithProviders(<WrappedVurderingVideresend {...props} />, {
       preloadedState: initialReduxState,
     });
-    expect(queryByRole("link", { name: "SED A008 (åpnes i ny fane)" })).not.toBeInTheDocument();
+    expect(queryByRole("link", { name: "SED A008" })).not.toBeInTheDocument();
   });
 });
