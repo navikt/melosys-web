@@ -104,7 +104,7 @@ function SendBrev({
   const [muligeMottakereFeil, setMuligeMottakereFeil] = useState<string | undefined>(undefined);
   const [muligeMottakereNorskMyndighet, setMuligeMottakereNorskMyndighet] =
     useState<Api.DokumenterV2.MuligMottaker[]>();
-  const [brevSendt, setBrevSendt] = useState(false);
+  const [visBrevBestiltAlert, setVisBrevBestiltAlert] = useState(false);
   const [feil, setFeil] = useState<string | undefined>();
   const [valgteVedlegg, setValgteVedlegg] = useState<BrevVedleggInterface>({
     saksvedlegg: [],
@@ -364,7 +364,10 @@ function SendBrev({
 
     Api.DokumenterV2.opprettBrev(behandlingID, hentBrevRequest(formValues.valgtMottaker.rolle))
       .then(() => {
-        setBrevSendt(true);
+        setVisBrevBestiltAlert(true);
+        setTimeout(() => {
+          setVisBrevBestiltAlert(false);
+        }, 3000);
         oppdaterBehandling();
         slettUtkast();
         resetFormOgFritekstvedleggState();
@@ -387,7 +390,7 @@ function SendBrev({
   const forkastBrev = async () => {
     setForkastBrevSpinner(true);
     resetFormOgFritekstvedleggState();
-    setBrevSendt(false);
+    setVisBrevBestiltAlert(false);
     setFeil(undefined);
     setMuligeMottakereFeil(undefined);
     await slettUtkast();
@@ -580,7 +583,7 @@ function SendBrev({
         </Nav.Button>
       </div>
 
-      {brevSendt && (
+      {visBrevBestiltAlert && (
         <Nav.Alert variant="success" className="brev_sendt">
           Brevet er bestilt. Det kan ta noe tid før brevet vises i dokumentlisten.
         </Nav.Alert>
