@@ -6,6 +6,7 @@ import * as Skjema from "../../skjema";
 import { DokumenterV2 } from "../../../services/api";
 import { begrensAntallTegn } from "../../../utils/normalisering";
 import LabelMedHjelpetekst from "../../labelMedHjelpetekst";
+import "./brevFelt.less";
 
 interface BrevFeltProps {
   felt: DokumenterV2.Felt;
@@ -13,6 +14,7 @@ interface BrevFeltProps {
   width: ColumnWidth;
   redigerbart: boolean;
 }
+
 function BrevFelt({ felt, visFeltBeskrivelse, width, redigerbart }: BrevFeltProps) {
   switch (felt?.feltType) {
     case DokumenterV2.FeltType.FRITEKST:
@@ -53,7 +55,7 @@ function BrevFelt({ felt, visFeltBeskrivelse, width, redigerbart }: BrevFeltProp
     }
     case DokumenterV2.FeltType.SJEKKBOKS:
       return (
-        <Nav.Row>
+        <Nav.Row className="brevfelt__sjekkboks">
           <Nav.Column xs={width}>
             <Skjema.Checkbox
               feltNavn={`felt.${felt.kode}.feltVerdi`}
