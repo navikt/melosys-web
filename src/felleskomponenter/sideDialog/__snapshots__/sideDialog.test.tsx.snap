@@ -160,7 +160,7 @@ exports[`SideDialog > snapshot test 1`] = `
                           aria-label="Åpnes i ny fane"
                           class="navds-link navds-link--action"
                         >
-                          tittel
+                          tittel pdfLink-debugger
                           <svg
                             width="24"
                             height="24"
