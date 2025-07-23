@@ -69,7 +69,7 @@ describe("Dokumentliste", () => {
             `${KV.kodeTilTerm(
               props.dokumenter[0].dokumentData?.produserbardokument,
               MKV.KTObjects.brev.produserbaredokumenter,
-            )} (åpnes i ny fane)`,
+            )}`,
           ),
         );
       });
@@ -94,7 +94,7 @@ describe("Dokumentliste", () => {
             `${KV.kodeTilTerm(
               props.dokumenter[0].dokumentData?.produserbardokument,
               MKV.KTObjects.brev.produserbaredokumenter,
-            )} (åpnes i ny fane)`,
+            )}`,
           ),
         );
       });
@@ -116,7 +116,7 @@ describe("Dokumentliste", () => {
       const user = userEvent.setup();
 
       await act(async () => {
-        user.click(screen.getByText(`SED ${props.dokumenter[1].sedType} (åpnes i ny fane)`));
+        user.click(screen.getByText(`SED ${props.dokumenter[1].sedType}`));
       });
 
       expect(await screen.findByText(responseBody.message)).toBeInTheDocument();
@@ -134,7 +134,7 @@ describe("Dokumentliste", () => {
       const user = userEvent.setup();
 
       await act(async () => {
-        user.click(screen.getByText(`SED ${props.dokumenter[1].sedType} (åpnes i ny fane)`));
+        user.click(screen.getByText(`SED ${props.dokumenter[1].sedType}`));
       });
 
       expect(await screen.findByText("Det oppstod en feil da SED skulle forhåndsvises!")).toBeInTheDocument();

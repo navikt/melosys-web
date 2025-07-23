@@ -48,7 +48,7 @@ describe("vurderingEndrePeriode", () => {
       preloadedState: initialReduxState,
     });
 
-    expect(getByRole("link", { name: "SED A009 (åpnes i ny fane)" })).toBeInTheDocument();
+    expect(getByRole("link", { name: "SED A009" })).toBeInTheDocument();
   });
 
   it("viser StegKnapper", () => {

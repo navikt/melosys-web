@@ -16,6 +16,7 @@ import {
   isSed,
   SedDokumentMetadataType,
 } from "./dokumentlisteTyper";
+import * as Ikoner from "../../resources/images";
 
 function Dokumentliste({ behandlingID, dokumenter, validateOnClick }: DokumentlisteType) {
   const [feilmelding, setFeilmelding] = useState<string | null>(null);
@@ -63,16 +64,21 @@ function Dokumentliste({ behandlingID, dokumenter, validateOnClick }: Dokumentli
     }
   };
 
-  const tittel = (dokumentnavn: string) => `${dokumentnavn} (åpnes i ny fane)`;
-
   const mapBrev = (dokument: BrevDokumentMetadataType) => (
     <Nav.Table.Row key={Utils._uuid()}>
       <Nav.Table.DataCell>
-        <Nav.Link href="#" onClick={(e) => e.preventDefault()} onMouseDown={() => klikk(dokument)}>
-          {tittel(
+        <Nav.Link
+          href="#"
+          title="Åpnes i ny fane"
+          aria-label="Åpnes i ny fane"
+          onClick={(e) => e.preventDefault()}
+          onMouseDown={() => klikk(dokument)}
+        >
+          {`${
             dokument.dokumentNavn ??
-              KV.kodeTilTerm(dokument.dokumentData?.produserbardokument, MKV.KTObjects.brev.produserbaredokumenter),
-          )}
+            KV.kodeTilTerm(dokument.dokumentData?.produserbardokument, MKV.KTObjects.brev.produserbaredokumenter)
+          }`}
+          <Ikoner.ExternalLink />
         </Nav.Link>
       </Nav.Table.DataCell>
       <Nav.Table.DataCell>{dokument.mottakerNavn ?? dokument.dokumentData?.mottaker}</Nav.Table.DataCell>
@@ -83,7 +89,7 @@ function Dokumentliste({ behandlingID, dokumenter, validateOnClick }: Dokumentli
     <Nav.Table.Row key={Utils._uuid()}>
       <Nav.Table.DataCell>
         <Nav.Link href="#" onClick={(e) => e.preventDefault()} onMouseDown={() => klikk(dokument)}>
-          {tittel(dokument.dokumentNavn ?? `SED ${dokument.sedType}`)}
+          {dokument.dokumentNavn ?? `SED ${dokument.sedType}`}
         </Nav.Link>
       </Nav.Table.DataCell>
       <Nav.Table.DataCell>{dokument.mottakerNavn}</Nav.Table.DataCell>
