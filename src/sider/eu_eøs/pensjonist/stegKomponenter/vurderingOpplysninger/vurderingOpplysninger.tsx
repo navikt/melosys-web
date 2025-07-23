@@ -29,6 +29,7 @@ interface Props {
 
 export function VurderingOpplysninger({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: Props) {
   const dispatch = useDispatch();
+
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const helseutgiftDekkesPeriode = useSelector(helseutgiftDekkesPeriodeSelector.HelseutgiftDekkesPeriode).data;
@@ -61,8 +62,8 @@ export function VurderingOpplysninger({ bekreft, tilbake, aktivtSteg, oppdaterSt
     mode: "all",
     values: initialValues,
   });
-
   const formValues = watch();
+
   const debouncedLagreHelseutgiftPeriode = useMemo(
     () =>
       Utils._debounce(async (ukjentSluttdato?: boolean) => {
@@ -128,6 +129,12 @@ export function VurderingOpplysninger({ bekreft, tilbake, aktivtSteg, oppdaterSt
       ),
     );
   };
+
+  const stegErGyldig = formIsValid;
+
+  useEffect(() => {
+    oppdaterStatus(stegErGyldig);
+  }, [stegErGyldig]);
 
   return (
     <>
