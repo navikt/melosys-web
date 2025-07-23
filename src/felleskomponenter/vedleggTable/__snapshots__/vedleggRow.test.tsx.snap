@@ -13,7 +13,7 @@ exports[`vedleggRow > snapshot test 1`] = `
             aria-label="Åpnes i ny fane"
             class="navds-link navds-link--action"
           >
-            test pdfLink-debugger
+            test
             <svg
               width="24"
               height="24"
