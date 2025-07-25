@@ -8,12 +8,10 @@ import * as Api from "../../../../../services/api";
 import * as Utils from "../../../../../utils";
 
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
-import { medlemskapsperioderSelectors } from "../../../../../ducks/medlemskapsperioder";
 import { helseutgiftDekkesPeriodeSelector } from "../../../../../ducks/helseutgiftdekkesperiode";
 
 import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 import { useAsyncCallbackState } from "../../../../../hooks";
-import { STATUS } from "../../../../../services";
 
 import { BOOLSK_STRING } from "../../../../../constants";
 import LabelMedHjelpetekst from "../../../../../felleskomponenter/labelMedHjelpetekst";
@@ -61,7 +59,6 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
 
   const erEøsPensjonist = sakstype === EU_EOS && behandlingstema === PENSJONIST;
 
-  const bestemmelse = useSelector(medlemskapsperioderSelectors.BestemmelseSelector);
   const [lagretTrygdeavgift, setTrygdeavgift] = useAsyncCallbackState(
     () => Api.Trygdeavgift.hentBeregnetTrygdeavgift(behandlingID),
     undefined,
@@ -315,7 +312,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
             defaultPeriode={formattedDefaultPeriode()}
             fields={inntektFields}
             medlemskapsTypeErPliktig={erEøsPensjonist}
-            bestemmelse={bestemmelse}
+            bestemmelse={undefined}
           />
         </>
       )}

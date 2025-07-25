@@ -57,43 +57,44 @@ const kreverInntektskilder = (options) => {
 };
 
 const vurdering_trygdeavgift = object().shape({
-  skatteforholdsperioder: array().when(["$erÅpenSluttDato"], {
-    is: (erÅpenSluttDato) => !erÅpenSluttDato,
-    then: (schema) =>
-      schema.min(1).of(
-        object().shape({
-          fomDato: string()
-            .erGyldigDato()
-            .erInnenforPeriode("helseutgiftDekkesPeriode", UTENFOR_HELSEUTGIFT_DEKKES_PERIODE)
-            .required(MAA_FYLLES_UT),
-          tomDato: string()
-            .erGyldigDato()
-            .erInnenforPeriode("helseutgiftDekkesPeriode", UTENFOR_HELSEUTGIFT_DEKKES_PERIODE)
-            .erEtterDatofelt("fomDato")
-            .required(MAA_FYLLES_UT),
-          skatteplikttype: string().required(MAA_FYLLES_UT),
-        }),
-      ),
-  }),
-  inntektskilder: lazy((_value) => {
-    return array()
-      .min(1)
-      .of(
-        object().shape({
-          kildetype: string().required(MAA_FYLLES_UT),
-          arbAvgBetales: string().test(arbAvgBetalesFyltUtNårDetKrevesTest).nullable(),
-          bruttoInntekt: string().erNummer().test(bruttoInntektFyltUtNårDetKrevesTest).nullable(),
-          fomDato: string()
-            .erGyldigDato()
-            .erInnenforPeriode("helseutgiftDekkesPeriode", UTENFOR_HELSEUTGIFT_DEKKES_PERIODE)
-            .required(MAA_FYLLES_UT),
-          tomDato: string()
-            .erGyldigDato()
-            .erInnenforPeriode("helseutgiftDekkesPeriode", UTENFOR_HELSEUTGIFT_DEKKES_PERIODE)
-            .erEtterDatofelt("fomDato")
-            .required(MAA_FYLLES_UT),
-        }),
-      );
+  skatteforholdsperioder: array()
+    .min(1)
+    .of(
+      object().shape({
+        fomDato: string()
+          .erGyldigDato()
+          .erInnenforPeriode("helseutgiftDekkesPeriode", UTENFOR_HELSEUTGIFT_DEKKES_PERIODE)
+          .required(MAA_FYLLES_UT),
+        tomDato: string()
+          .erGyldigDato()
+          .erInnenforPeriode("helseutgiftDekkesPeriode", UTENFOR_HELSEUTGIFT_DEKKES_PERIODE)
+          .erEtterDatofelt("fomDato")
+          .required(MAA_FYLLES_UT),
+        skatteplikttype: string().required(MAA_FYLLES_UT),
+      }),
+    ),
+  inntektskilder: lazy((_value, options) => {
+    if (kreverInntektskilder(options)) {
+      return array()
+        .min(1)
+        .of(
+          object().shape({
+            kildetype: string().required(MAA_FYLLES_UT),
+            arbAvgBetales: string().test(arbAvgBetalesFyltUtNårDetKrevesTest).nullable(),
+            bruttoInntekt: string().erNummer().test(bruttoInntektFyltUtNårDetKrevesTest).nullable(),
+            fomDato: string()
+              .erGyldigDato()
+              .erInnenforPeriode("helseutgiftDekkesPeriode", UTENFOR_HELSEUTGIFT_DEKKES_PERIODE)
+              .required(MAA_FYLLES_UT),
+            tomDato: string()
+              .erGyldigDato()
+              .erInnenforPeriode("helseutgiftDekkesPeriode", UTENFOR_HELSEUTGIFT_DEKKES_PERIODE)
+              .erEtterDatofelt("fomDato")
+              .required(MAA_FYLLES_UT),
+          }),
+        );
+    }
+    return array();
   }),
 });
 
