@@ -2,6 +2,8 @@ import { useContext, useEffect, useState } from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { HGrid } from "@navikt/ds-react";
+import * as KV from "../../../kodeverk";
+import MKV from "../../../melosyskodeverk";
 
 import * as Utils from "../../../utils";
 import Informasjonlinje from "../../../felleskomponenter/informasjonlinje";
@@ -27,7 +29,10 @@ import Oppsummering from "../../../felleskomponenter/oppsummering";
 import SaksoversiktLenke from "../../../felleskomponenter/saksoversiktLenke";
 import SideDialog, { defaultTabs } from "../../../felleskomponenter/sideDialog";
 import { useDispatch } from "../../../hooks/useDispatch";
-import { helseutgiftDekkesPeriodeOperations } from "../../../ducks/helseutgiftdekkesperiode";
+import {
+  helseutgiftDekkesPeriodeOperations,
+  helseutgiftDekkesPeriodeSelector,
+} from "../../../ducks/helseutgiftdekkesperiode";
 import { oppsummertfaktaOperations } from "../../../ducks/oppsummertfakta";
 
 interface Props extends RouteComponentProps<MatchParams> {
@@ -41,9 +46,7 @@ function Saksbehandling({ match, location }: Props) {
 
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const registeropplysningerHentet = useSelector(behandlingerSelectors.RegisteropplysningerHentetSelector);
-  const innvilgetMedlemskapsperiode = useSelector(
-    medlemskapsperioderSelectors.SamletInnvilgetMedlemskapsperiodeSelector,
-  );
+  const helseutgiftDekkesPeriode = useSelector(helseutgiftDekkesPeriodeSelector.HelseutgiftDekkesPeriode);
 
   const { startOgVisOppfriskModal, visOppfriskModal, behandlingOppfriskes } = useContext(FellesHandlersContext) as any;
 
@@ -129,8 +132,9 @@ function Saksbehandling({ match, location }: Props) {
             </div>
             <CollapsiblePanel defaultExpanded={panelExpanded} onToggle={setPanelExpanded} direction="RIGHT">
               <Oppsummering
-                medlemskapsperiodeFom={Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.fom)}
-                medlemskapsperiodeTom={Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.tom)}
+                helseDekkesPeriodeFom={Utils.dato.formatterDatoTilNorsk(helseutgiftDekkesPeriode?.data.fomDato)}
+                helseDekkesPeriodeTom={Utils.dato.formatterDatoTilNorsk(helseutgiftDekkesPeriode?.data.tomDato)}
+                bostedsland={KV.kodeTilObjekt(helseutgiftDekkesPeriode?.data.bostedLandkode, MKV.KTObjects.landkoder)}
               />
               <SaksoversiktLenke />
               <SideDialog tabs={defaultTabs} />
