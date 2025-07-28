@@ -33,11 +33,11 @@ function FritekstvedleggSkjema({
 
   return (
     <Nav.Row className={cls.block}>
-      <Nav.BodyLong weight="semibold" size="small" className={cls.element("heading")}>
-        Fritekstvedlegg
-      </Nav.BodyLong>
-      <Nav.Detail>Dokumentet journalføres og legges til som et vedlegg til brevet</Nav.Detail>
       <div className={`panel ${cls.element("skjema")}`}>
+        <Nav.BodyLong weight="semibold" size="small">
+          Fritekstvedlegg
+        </Nav.BodyLong>
+        <Nav.Detail>Dokumentet journalføres og legges til som et vedlegg til brevet</Nav.Detail>
         <Nav.Row>
           <Nav.Column xs={width}>
             <Skjema.Input
