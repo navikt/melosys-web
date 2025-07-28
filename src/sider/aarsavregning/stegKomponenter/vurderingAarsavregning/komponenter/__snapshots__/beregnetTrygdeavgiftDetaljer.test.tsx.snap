@@ -61,7 +61,7 @@ exports[`BeregnetTrygdeavgiftDetaljer > snapshot test 1`] = `
         <td class="navds-table__data-cell navds-body-short navds-body-short--small">
           01.01.2023 - 31.12.2023
         </td>
-        <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+        <td class="navds-table__data-cell tall_felt navds-body-short navds-body-short--small">
           8.2
         </td>
         <td class="navds-table__data-cell tall_felt navds-body-short navds-body-short--small">
