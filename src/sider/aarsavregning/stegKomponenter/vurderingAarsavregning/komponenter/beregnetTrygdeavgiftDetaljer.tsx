@@ -4,7 +4,6 @@ import * as Utils from "../../../../../utils";
 import MKV from "../../../../../melosyskodeverk";
 import * as KV from "../../../../../kodeverk";
 import { formaterTilNorskBelopUtenDesimaler } from "../../../../../utils";
-import "./beregnetTrygdeavgiftDetaljer.css";
 
 const { SKATTEPLIKTIG } = MKV.Koder.skatteplikttype;
 const { MISJONÆR } = MKV.Koder.inntektskildetype;
@@ -84,7 +83,9 @@ export function BeregnetTrygdeavgiftDetaljer({
                   detaljer.tom,
                 )}`}
               </Nav.Table.DataCell>
-              <Nav.Table.DataCell key={Utils._uuid()}>{detaljer.avgiftssats}</Nav.Table.DataCell>
+              <Nav.Table.DataCell key={Utils._uuid()} className="tall_felt">
+                {detaljer.avgiftssats}
+              </Nav.Table.DataCell>
               <Nav.Table.DataCell key={Utils._uuid()} className="tall_felt">
                 {formaterTilNorskBelopUtenDesimaler(detaljer.avgiftPerMd)} kr
               </Nav.Table.DataCell>

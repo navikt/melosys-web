@@ -51,8 +51,10 @@ function TrygdeavgiftsperioderTabell({
               <Nav.Table.DataCell key={Utils._uuid()}>
                 {KV.finnTermFraListe(MKV.KTObjects.inntektskildetype, trygdeavgiftsperiode.inntektskildetype)}
               </Nav.Table.DataCell>
-              <Nav.Table.DataCell key={Utils._uuid()}>{trygdeavgiftsperiode.avgiftssats}</Nav.Table.DataCell>
-              <Nav.Table.DataCell key={Utils._uuid()} className="avgift_per_md">
+              <Nav.Table.DataCell key={Utils._uuid()} className="tall_felt">
+                {trygdeavgiftsperiode.avgiftssats}
+              </Nav.Table.DataCell>
+              <Nav.Table.DataCell key={Utils._uuid()} className="tall_felt">
                 <b>{trygdeavgiftsperiode.avgiftPerMd}</b> nkr
               </Nav.Table.DataCell>
             </Nav.Table.Row>
