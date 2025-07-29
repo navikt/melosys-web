@@ -88,8 +88,15 @@ function Dokumentliste({ behandlingID, dokumenter, validateOnClick }: Dokumentli
   const mapSED = (dokument: SedDokumentMetadataType) => (
     <Nav.Table.Row key={Utils._uuid()}>
       <Nav.Table.DataCell>
-        <Nav.Link href="#" onClick={(e) => e.preventDefault()} onMouseDown={() => klikk(dokument)}>
+        <Nav.Link
+          href="#"
+          title="Åpnes i ny fane"
+          aria-label="Åpnes i ny fane"
+          onClick={(e) => e.preventDefault()}
+          onMouseDown={() => klikk(dokument)}
+        >
           {dokument.dokumentNavn ?? `SED ${dokument.sedType}`}
+          <Ikoner.ExternalLink />
         </Nav.Link>
       </Nav.Table.DataCell>
       <Nav.Table.DataCell>{dokument.mottakerNavn}</Nav.Table.DataCell>
