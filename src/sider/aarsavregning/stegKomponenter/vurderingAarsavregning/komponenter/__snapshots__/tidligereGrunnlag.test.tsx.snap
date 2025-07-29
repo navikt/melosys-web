@@ -163,7 +163,7 @@ exports[`TidligereGrunnlag > beregning med grunnlag snapshot test 1`] = `
                     Betales aga.?
                   </th>
                   <th
-                    class="navds-table__header-cell navds-label navds-label--small"
+                    class="navds-table__header-cell navds-label tall_felt navds-label--small"
                     scope="col"
                   >
                     Bruttoinntekt md.
@@ -181,7 +181,7 @@ exports[`TidligereGrunnlag > beregning med grunnlag snapshot test 1`] = `
                   <td class="navds-table__data-cell navds-body-short navds-body-short--small">
                     Ja
                   </td>
-                  <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+                  <td class="navds-table__data-cell tall_felt navds-body-short navds-body-short--small">
                     500&nbsp;000 kr
                   </td>
                 </tr>
@@ -247,7 +247,7 @@ exports[`TidligereGrunnlag > beregning med grunnlag snapshot test 1`] = `
                   <td class="navds-table__data-cell navds-body-short navds-body-short--small">
                     01.01.2023 - 31.12.2023
                   </td>
-                  <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+                  <td class="navds-table__data-cell tall_felt navds-body-short navds-body-short--small">
                     5.1
                   </td>
                   <td class="navds-table__data-cell tall_felt navds-body-short navds-body-short--small">
