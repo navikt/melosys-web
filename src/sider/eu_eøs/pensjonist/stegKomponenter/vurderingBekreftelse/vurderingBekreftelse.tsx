@@ -114,7 +114,7 @@ function VurderingBekreftelse() {
   };
   const betalingsvalgErFaktura = betalingsvalg === MKV.Koder.betalingstype.FAKTURA;
 
-  const onSubmit = async () => {
+  const onSubmit = () => {
     setVedtakPending(true);
     const { FASTSATT_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingsresultattyper;
 
@@ -124,7 +124,7 @@ function VurderingBekreftelse() {
     })
       .then(() => {
         setVedtakPending(false);
-        tilForsiden();
+        dispatch(tilForsiden());
       })
       .catch((err) => {
         if (err) setVedtakPending(false);
@@ -156,7 +156,7 @@ function VurderingBekreftelse() {
         bekreftTekst="Bekreft og send orienteringsbrev til bruker"
         bekreftKnappProps={{
           disabled: !redigerbart || !formIsValid,
-          onClick: async () => await onSubmit(),
+          onClick: () => onSubmit(),
         }}
       />
     </div>

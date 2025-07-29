@@ -46,12 +46,15 @@ type OppsummeringProps = PropsFromRedux & {
   arbeidsland?: KTObject[];
   avsenderland?: KTObject;
   lovvalgsland?: KTObject;
+  bostedsland?: KTObject;
   lovvalgsperiodeFom?: string;
   lovvalgsperiodeTom?: string;
   medlemskapsperiodeFom?: string;
   medlemskapsperiodeTom?: string;
   mottatteOpplysningerPeriodeFom?: string;
   mottatteOpplysningerPeriodeTom?: string;
+  helseDekkesPeriodeFom?: string;
+  helseDekkesPeriodeTom?: string;
   className?: string;
 };
 
@@ -61,12 +64,15 @@ function Oppsummering({
   arbeidsland,
   avsenderland,
   lovvalgsland,
+  bostedsland,
   lovvalgsperiodeFom = "",
   lovvalgsperiodeTom = "",
   medlemskapsperiodeFom = "",
   medlemskapsperiodeTom = "",
   mottatteOpplysningerPeriodeFom = "",
   mottatteOpplysningerPeriodeTom = "",
+  helseDekkesPeriodeFom = "",
+  helseDekkesPeriodeTom = "",
   className,
   redigerbart,
   behandlingID,
@@ -185,7 +191,7 @@ function Oppsummering({
   const lagCol1 = () => {
     const lovvalgsperiode = `${lovvalgsperiodeFom} - ${lovvalgsperiodeTom}`;
     const mottatteOpplysningerperiode = `${mottatteOpplysningerPeriodeFom} - ${mottatteOpplysningerPeriodeTom}`;
-
+    const helseDekkesPeriode = `${helseDekkesPeriodeFom} - ${helseDekkesPeriodeTom}`;
     if (erUnntaksregistrering) {
       return erTrygdeavtale
         ? [
@@ -207,8 +213,8 @@ function Oppsummering({
 
     if (erEøsPensjonist) {
       return [
-        ["Periode fra attest/S1", mottatteOpplysningerperiode],
-        ["Bostedsland", landStorBokstav(lovvalgsland)],
+        ["Periode fra attest/S1", helseDekkesPeriode],
+        ["Bostedsland", landStorBokstav(bostedsland)],
       ];
     }
 
