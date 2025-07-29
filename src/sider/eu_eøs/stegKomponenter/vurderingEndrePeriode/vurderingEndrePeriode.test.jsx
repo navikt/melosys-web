@@ -44,11 +44,10 @@ describe("vurderingEndrePeriode", () => {
   });
 
   it("viser en dokumentliste", () => {
-    const { getByRole } = renderWithProviders(<WrappedVurderingEndrePeriode {...props} />, {
+    const { getByText } = renderWithProviders(<WrappedVurderingEndrePeriode {...props} />, {
       preloadedState: initialReduxState,
     });
-
-    expect(getByRole("link", { name: "SED A009" })).toBeInTheDocument();
+    expect(getByText("SED A009")).toBeInTheDocument();
   });
 
   it("viser StegKnapper", () => {

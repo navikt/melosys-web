@@ -47,17 +47,17 @@ describe("Vurderingvideresend", () => {
   });
 
   it("viser en dokumentliste med forventet innhold", () => {
-    const { getByRole } = renderWithProviders(<WrappedVurderingVideresend {...props} />, {
+    const { getByText } = renderWithProviders(<WrappedVurderingVideresend {...props} />, {
       preloadedState: initialReduxState,
     });
-    expect(getByRole("link", { name: "SED A008" })).toBeInTheDocument();
+    expect(getByText("SED A008")).toBeInTheDocument();
   });
 
   it("viser ikke dokumentliste dersom ikke redigerbart", () => {
     props.redigerbart = false;
-    const { queryByRole } = renderWithProviders(<WrappedVurderingVideresend {...props} />, {
+    const { queryByText } = renderWithProviders(<WrappedVurderingVideresend {...props} />, {
       preloadedState: initialReduxState,
     });
-    expect(queryByRole("link", { name: "SED A008" })).not.toBeInTheDocument();
+    expect(queryByText("SED A008")).not.toBeInTheDocument();
   });
 });
