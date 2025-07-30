@@ -1,5 +1,5 @@
 import { deleteAsJson, getAsJson, putAsJson } from "../utils";
-import { API_BASE_URL, TRYGDEAVGIFT } from "../api-constants";
+import { API_BASE_URL, TRYGDEAVGIFT, EØS_PENSJONIST } from "../api-constants";
 import { KTObject } from "@navikt/melosys-kodeverk";
 
 export interface InntektskildeDto {
@@ -53,8 +53,17 @@ export const beregnTrygdeavgiftsperioder = (
 ): Promise<BeregnetTrygdeavgift> =>
   putAsJson(`${API_BASE_URL}/behandlinger/${behandlingID}/${TRYGDEAVGIFT}/beregning`, trygdeavgiftsgrunnlag);
 
+export const eøsPensjonistBeregnTrygdeavgiftsperioder = (
+  behandlingID: number,
+  trygdeavgiftsgrunnlag: TrygdeavgiftsgrunnlagDto,
+): Promise<BeregnetTrygdeavgift> =>
+  putAsJson(
+    `${API_BASE_URL}/behandlinger/${behandlingID}/${TRYGDEAVGIFT}/${EØS_PENSJONIST}/beregning`,
+    trygdeavgiftsgrunnlag,
+  );
+
 export const hentBeregnetTrygdeavgift = (behandlingID: number): Promise<BeregnetTrygdeavgift> =>
-  getAsJson(`${API_BASE_URL}/behandlinger/${behandlingID}/${TRYGDEAVGIFT}/beregning`);
+  getAsJson(`${API_BASE_URL}/behandlinger/${behandlingID}/${TRYGDEAVGIFT}/eos-pensjonist/beregning`);
 
 export const hentOpprinneligTrygdeavgiftsgrunnlag = (behandlingID: number): Promise<TrygdeavgiftsgrunnlagDto> =>
   getAsJson(`${API_BASE_URL}/behandlinger/${behandlingID}/${TRYGDEAVGIFT}/grunnlag/opprinnelig`);

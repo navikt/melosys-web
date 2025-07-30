@@ -28,7 +28,7 @@ function PdfLink({ journalpostID, dokumentID, tittel }: PdfLinkProps) {
         apnePdfINyFane(lagPdfUrl(journalpostID, dokumentID));
       }}
     >
-      {`${tittel} pdfLink-debugger`}
+      {`${tittel} `}
       <Ikoner.ExternalLink />
     </Nav.Link>
   );

@@ -47,3 +47,4 @@ export const VILKAAR = "vilkaar";
 export const INNGANGSVILKAAR = "inngangsvilkaar";
 export const SAKSBEHANDLING = "saksbehandling";
 export const AARSAVREGNING = "aarsavregninger";
+export const EØS_PENSJONIST = "eos-pensjonist";

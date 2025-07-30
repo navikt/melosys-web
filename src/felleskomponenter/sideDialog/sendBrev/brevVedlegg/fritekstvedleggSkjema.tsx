@@ -30,22 +30,20 @@ function FritekstvedleggSkjema({
   width,
 }: FritekstvedleggSkjemaProps) {
   const cls = bem("fritekstvedleggSkjema");
-  const placeholder = `Skriv inn tittel, maks ${TEGNBEGRENSNING} tegn`;
 
   return (
     <Nav.Row className={cls.block}>
-      <Nav.BodyLong weight="semibold" size="small" className={cls.element("heading")}>
-        Fritekstvedlegg
-      </Nav.BodyLong>
-      <Nav.Detail>Dokumentet journalføres og legges til som et vedlegg til brevet</Nav.Detail>
       <div className={`panel ${cls.element("skjema")}`}>
+        <Nav.BodyLong weight="semibold" size="small">
+          Fritekstvedlegg
+        </Nav.BodyLong>
+        <Nav.Detail>Dokumentet journalføres og legges til som et vedlegg til brevet</Nav.Detail>
         <Nav.Row>
           <Nav.Column xs={width}>
             <Skjema.Input
               feltNavn={`felt.${felt.kode}_TITTEL.feltVerdi`}
-              label="Tittel"
+              label="Tittel (maks 60 tegn)"
               normalize={begrensAntallTegn(TEGNBEGRENSNING)}
-              placeholder={placeholder}
             />
           </Nav.Column>
         </Nav.Row>
@@ -55,7 +53,7 @@ function FritekstvedleggSkjema({
             bekreft={leggTilFritekstvedlegg}
             avbryt={resetFritekstvedlegg}
             avbrytTekst="Avbryt"
-            bekreftTekst="Lagre"
+            bekreftTekst="Lagre fritekstvedlegg"
             redigerbart
             size="small"
           />

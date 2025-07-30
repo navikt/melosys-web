@@ -10,9 +10,11 @@ import "./trygdeavgiftsperioderTabell.css";
 function TrygdeavgiftsperioderTabell({
   perioder,
   lagrePending,
+  erEøsPensjonist = false,
 }: {
   perioder?: Trygdeavgiftsperiode[];
   lagrePending: boolean;
+  erEøsPensjonist?: boolean;
 }) {
   if (!perioder) return null;
 
@@ -27,7 +29,7 @@ function TrygdeavgiftsperioderTabell({
         <Nav.Table.Header className="header_row">
           <Nav.Table.Row>
             <Nav.Table.HeaderCell scope="col">Trygdeperiode</Nav.Table.HeaderCell>
-            <Nav.Table.HeaderCell scope="col">Dekning</Nav.Table.HeaderCell>
+            {!erEøsPensjonist && <Nav.Table.HeaderCell scope="col">Dekning</Nav.Table.HeaderCell>}
             <Nav.Table.HeaderCell scope="col">Inntektskilde</Nav.Table.HeaderCell>
             <Nav.Table.HeaderCell scope="col">Sats</Nav.Table.HeaderCell>
             <Nav.Table.HeaderCell scope="col">Avgift per md.</Nav.Table.HeaderCell>
@@ -41,14 +43,18 @@ function TrygdeavgiftsperioderTabell({
                   trygdeavgiftsperiode.tom,
                 )}`}
               </Nav.Table.DataCell>
-              <Nav.Table.DataCell key={Utils._uuid()}>
-                {KV.finnTermFraListe(MKV.KTObjects.trygdedekninger, trygdeavgiftsperiode.trygdedekning)}
-              </Nav.Table.DataCell>
+              {!erEøsPensjonist && (
+                <Nav.Table.DataCell key={Utils._uuid()}>
+                  {KV.finnTermFraListe(MKV.KTObjects.trygdedekninger, trygdeavgiftsperiode.trygdedekning)}
+                </Nav.Table.DataCell>
+              )}
               <Nav.Table.DataCell key={Utils._uuid()}>
                 {KV.finnTermFraListe(MKV.KTObjects.inntektskildetype, trygdeavgiftsperiode.inntektskildetype)}
               </Nav.Table.DataCell>
-              <Nav.Table.DataCell key={Utils._uuid()}>{trygdeavgiftsperiode.avgiftssats}</Nav.Table.DataCell>
-              <Nav.Table.DataCell key={Utils._uuid()} className="avgift_per_md">
+              <Nav.Table.DataCell key={Utils._uuid()} className="tall_felt">
+                {trygdeavgiftsperiode.avgiftssats}
+              </Nav.Table.DataCell>
+              <Nav.Table.DataCell key={Utils._uuid()} className="tall_felt">
                 <b>{trygdeavgiftsperiode.avgiftPerMd}</b> nkr
               </Nav.Table.DataCell>
             </Nav.Table.Row>

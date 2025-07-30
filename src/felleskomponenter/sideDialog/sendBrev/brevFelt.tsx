@@ -31,8 +31,6 @@ function BrevFelt({ felt, visFeltBeskrivelse, width, redigerbart }: BrevFeltProp
         </>
       );
     case DokumenterV2.FeltType.TEKST: {
-      const placeholder = `Skriv inn ${felt.beskrivelse.toLowerCase()}`;
-      const placeholderMaksAntallTegn = felt.tegnBegrensning ? `, maks ${felt.tegnBegrensning} tegn` : "";
       return (
         <Nav.Row>
           <Nav.Column xs={width}>
@@ -46,7 +44,6 @@ function BrevFelt({ felt, visFeltBeskrivelse, width, redigerbart }: BrevFeltProp
                   ""
                 )
               }
-              placeholder={`${placeholder}${placeholderMaksAntallTegn}`}
               disabled={!redigerbart}
             />
           </Nav.Column>
