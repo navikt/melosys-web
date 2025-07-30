@@ -21,7 +21,7 @@ export function syncErrorsTilFeilmelding(
           .map((key) => finnFeilmelding(feil[key]))
       );
     }
-    return <li key="Noe gikk galt">Noe gikk galt</li>;
+    return <li key="Noe gikk galt">Noe gikk galt {feil}</li>;
   };
 
   return (
