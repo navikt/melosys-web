@@ -46,15 +46,17 @@ function ValgAlternativer({ valg, feltKode, redigerbart, changeField, beskrivels
   if (valg.valgType === DokumenterV2.ValgType.RADIO) {
     return (
       <Skjema.RadioGroup legend={label} name={`felt.${feltKode}.valg`} readOnly={!redigerbart}>
-        {valg.valgAlternativer.map((alternativ) => (
-          <Nav.Radio
-            value={alternativ.kode}
-            id={`${feltKode}.${alternativ.kode}`}
-            key={`${feltKode}.${alternativ.kode}`}
-          >
-            {alternativ.beskrivelse}
-          </Nav.Radio>
-        ))}
+        <Nav.HStack gap="4">
+          {valg.valgAlternativer.map((alternativ) => (
+            <Nav.Radio
+              value={alternativ.kode}
+              id={`${feltKode}.${alternativ.kode}`}
+              key={`${feltKode}.${alternativ.kode}`}
+            >
+              {alternativ.beskrivelse}
+            </Nav.Radio>
+          ))}
+        </Nav.HStack>
       </Skjema.RadioGroup>
     );
   }
