@@ -45,7 +45,7 @@ function ValgAlternativer({ valg, feltKode, redigerbart, changeField, beskrivels
   }
   if (valg.valgType === DokumenterV2.ValgType.RADIO) {
     return (
-      <Nav.RadioGroup legend={label} name={`felt.${feltKode}.valg`} readOnly={!redigerbart}>
+      <Skjema.RadioGroup legend={label} name={`felt.${feltKode}.valg`} readOnly={!redigerbart}>
         <Nav.HStack gap="4">
           {valg.valgAlternativer.map((alternativ) => (
             <Nav.Radio
@@ -57,7 +57,7 @@ function ValgAlternativer({ valg, feltKode, redigerbart, changeField, beskrivels
             </Nav.Radio>
           ))}
         </Nav.HStack>
-      </Nav.RadioGroup>
+      </Skjema.RadioGroup>
     );
   }
   if (valg.valgType === DokumenterV2.ValgType.SELECT) {
