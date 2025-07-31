@@ -10,7 +10,7 @@ import { useSelector } from "react-redux";
 import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 import Dokumentliste from "../../../../../felleskomponenter/dokumentliste";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
-import { FieldValues, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { behandlingsresultatSelectors } from "../../../../../ducks/behandlingsresultat";
 import vurdering_bekreftelse from "./vurderingBekreftelseSchema";
@@ -18,10 +18,9 @@ import { Betalingsvalg } from "../../../../ftrl/saksbehandling/stegKomponenter/v
 import { useCallback, useEffect, useState } from "react";
 import { fagsakSelectors } from "../../../../../ducks/fagsaker";
 import { useDispatch } from "../../../../../hooks";
-import { vedtakOperations } from "../../../../../ducks/vedtak";
-import { iverksettPensjonist, IverksettReqDto } from "../../../../../services/modules/saksflyt/trygdeavgift";
 import { tilForsiden } from "../../../../../ducks/navigering/operations";
-
+import { KTObject } from "@navikt/melosys-kodeverk";
+const { TRYGDEAVGIFT_BETALES_TIL_NAV } = MKV.Koder.trygdeavgiftmottaker;
 interface FormValuesProps {
   begrunnelseFritekst?: string;
 }
@@ -33,7 +32,12 @@ type PdfDokumentData = {
   };
 };
 
-function VurderingBekreftelse() {
+interface Props {
+  tilbake: () => void;
+  aktivtSteg: boolean;
+}
+
+function VurderingBekreftelse({ tilbake, aktivtSteg }: Props) {
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const vedtakstype = useSelector(behandlingsresultatSelectors.VedtakstypeSelector);
@@ -42,6 +46,8 @@ function VurderingBekreftelse() {
   const [betalingsvalg, setBetalingsvalg] = useState(MKV.Koder.betalingstype.TREKK);
   const [pdfDokumenter, setPdfDokumenter] = useState<PdfDokumentData[]>([]);
   const [vedtakPending, setVedtakPending] = useState(false);
+  const [trygdeavgiftMottaker, setTrygdeavgiftMottaker] = useState<KTObject | undefined>(undefined);
+  const mottakerErNav = trygdeavgiftMottaker?.kode === TRYGDEAVGIFT_BETALES_TIL_NAV;
 
   const {
     watch,
@@ -64,11 +70,12 @@ function VurderingBekreftelse() {
   };
 
   useEffect(() => {
-    if (saksnummer) {
+    if (aktivtSteg) {
+      hentTrygdeavgiftMottaker();
       hentPdfDokumenter();
       hentBetalingsvalg();
     }
-  }, [saksnummer]);
+  }, [aktivtSteg]);
 
   const oppdaterFritekster = (values: FormValuesProps) => {
     if (values && redigerbart && !vedtakPending) {
@@ -84,6 +91,12 @@ function VurderingBekreftelse() {
   useEffect(() => {
     debouncedOppdaterFritekster(formValues);
   }, [formValues?.begrunnelseFritekst]);
+
+  const hentTrygdeavgiftMottaker = () => {
+    Api.Trygdeavgift.hentTrygdeavgiftMottaker(behandlingID).then((dto) => {
+      setTrygdeavgiftMottaker(dto.trygdeavgiftMottaker);
+    });
+  };
 
   const hentPdfDokumenter = () => {
     Api.Fagsaker.aktoer.hent(saksnummer, MKV.Koder.aktoersroller.FULLMEKTIG).then((fullmektigListe) => {
@@ -136,20 +149,23 @@ function VurderingBekreftelse() {
       <Nav.Heading level="1" className="stegvelgertittel">
         Bekreft opplysninger
       </Nav.Heading>
-      <Nav.BodyLong size="small">Trygdeavgift skal betales til ...</Nav.BodyLong>
-      <Nav.Row>
-        <Betalingsvalg
-          skalSendeFaktura={betalingsvalgErFaktura}
-          onBetalingsvalgChange={oppdaterBetalingsvalg}
-          redigerbart={redigerbart}
-        />
-      </Nav.Row>
+      <Nav.BodyLong size="small">{trygdeavgiftMottaker?.term} </Nav.BodyLong>
+      {mottakerErNav && (
+        <Nav.HStack className="betalingsvalg">
+          <Betalingsvalg
+            skalSendeFaktura={betalingsvalgErFaktura}
+            onBetalingsvalgChange={oppdaterBetalingsvalg}
+            redigerbart={redigerbart}
+          />
+        </Nav.HStack>
+      )}
 
       <Forms.HtmlEditor
         name="begrunnelseFritekst"
         control={control}
         className="fritekst_editor"
         disabled={!redigerbart}
+        label="Fritekst"
       />
       <Dokumentliste behandlingID={behandlingID} dokumenter={pdfDokumenter} />
       <Mui.StegKnapper
@@ -158,6 +174,7 @@ function VurderingBekreftelse() {
           disabled: !redigerbart || !formIsValid,
           onClick: () => onSubmit(),
         }}
+        tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
       />
     </div>
   );
