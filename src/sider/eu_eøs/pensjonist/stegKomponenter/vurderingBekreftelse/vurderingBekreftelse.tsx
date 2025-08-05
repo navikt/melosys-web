@@ -20,7 +20,11 @@ import { fagsakSelectors } from "../../../../../ducks/fagsaker";
 import { useDispatch } from "../../../../../hooks";
 import { tilForsiden } from "../../../../../ducks/navigering/operations";
 import { KTObject } from "@navikt/melosys-kodeverk";
-const { TRYGDEAVGIFT_BETALES_TIL_NAV } = MKV.Koder.trygdeavgiftmottaker;
+import { Aktoer } from "../../../../../services/modules/fagsaker/aktoer";
+import FullmaktForTrygdeavgiftConfirmationPanel from "../../../../../felleskomponenter/fullmaktForTrygdeavgiftConfirmationPanel/fullmaktForTrygdeavgiftConfirmationPanel";
+
+const { FULLMEKTIG } = MKV.Koder.aktoersroller;
+const { TRYGDEAVGIFT_BETALES_TIL_NAV, TRYGDEAVGIFT_BETALES_TIL_NAV_OG_SKATT } = MKV.Koder.trygdeavgiftmottaker;
 interface FormValuesProps {
   begrunnelseFritekst?: string;
 }
@@ -42,12 +46,18 @@ function VurderingBekreftelse({ tilbake, aktivtSteg }: Props) {
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const vedtakstype = useSelector(behandlingsresultatSelectors.VedtakstypeSelector);
   const saksnummer = useSelector(fagsakSelectors.SaksnummerSelector);
+  const [fakturamottaker, setFakturamottaker] = useState<string | undefined>(undefined);
+  const [fullmektigErFakturamottaker, setFullmektigErFakturamottaker] = useState(false);
+  const [harBekreftetFullmaktForTrygdeavgift, setHarBekreftetFullmaktForTrygdeavgift] = useState(false);
+
   const dispatch = useDispatch();
   const [betalingsvalg, setBetalingsvalg] = useState(MKV.Koder.betalingstype.TREKK);
   const [pdfDokumenter, setPdfDokumenter] = useState<PdfDokumentData[]>([]);
   const [vedtakPending, setVedtakPending] = useState(false);
   const [trygdeavgiftMottaker, setTrygdeavgiftMottaker] = useState<KTObject | undefined>(undefined);
-  const mottakerErNav = trygdeavgiftMottaker?.kode === TRYGDEAVGIFT_BETALES_TIL_NAV;
+  const mottakerErNav =
+    trygdeavgiftMottaker?.kode === TRYGDEAVGIFT_BETALES_TIL_NAV ||
+    trygdeavgiftMottaker?.kode === TRYGDEAVGIFT_BETALES_TIL_NAV_OG_SKATT;
 
   const {
     watch,
@@ -74,8 +84,28 @@ function VurderingBekreftelse({ tilbake, aktivtSteg }: Props) {
       hentTrygdeavgiftMottaker();
       hentPdfDokumenter();
       hentBetalingsvalg();
+      hentFakturamottaker();
     }
   }, [aktivtSteg]);
+
+  const hentFakturamottaker = () => {
+    Api.Fagsaker.aktoer
+      .hent(saksnummer, FULLMEKTIG)
+      .then((res) => {
+        if (res.length > 0) {
+          setFullmektigErFakturamottaker(true);
+        } else {
+          setFullmektigErFakturamottaker(false);
+        }
+      })
+      .catch(() => {
+        setFullmektigErFakturamottaker(false);
+      });
+
+    Api.Trygdeavgift.hentFakturamottaker(behandlingID).then((mottaker) => {
+      setFakturamottaker(mottaker.navn);
+    });
+  };
 
   const oppdaterFritekster = (values: FormValuesProps) => {
     if (values && redigerbart && !vedtakPending) {
@@ -107,7 +137,7 @@ function VurderingBekreftelse({ tilbake, aktivtSteg }: Props) {
             mottaker:
               fullmektigListe?.length > 0 &&
               fullmektigListe?.find((fullmektig) =>
-                fullmektig.fullmakter?.includes(MKV.Koder.fullmaktstype.FULLMEKTIG_SØKNAD),
+                fullmektig.fullmakter?.includes(MKV.Koder.fullmaktstype.FULLMEKTIG_TRYGDEAVGIFT),
               )
                 ? MKV.Koder.mottakerroller.FULLMEKTIG
                 : MKV.Koder.mottakerroller.BRUKER,
@@ -126,6 +156,7 @@ function VurderingBekreftelse({ tilbake, aktivtSteg }: Props) {
     Api.Fagsaker.fagsak.lagreBetalingsvalgForPensjonister(saksnummer, valg);
   };
   const betalingsvalgErFaktura = betalingsvalg === MKV.Koder.betalingstype.FAKTURA;
+  const visFakturaMottaker = betalingsvalgErFaktura && fakturamottaker !== undefined;
 
   const onSubmit = () => {
     setVedtakPending(true);
@@ -160,6 +191,25 @@ function VurderingBekreftelse({ tilbake, aktivtSteg }: Props) {
         </Nav.HStack>
       )}
 
+      {visFakturaMottaker && (
+        <Nav.HStack className="fakturamottaker">
+          <Nav.BodyLong size="small" className="info">
+            Faktura sendes til {fullmektigErFakturamottaker ? "fullmektig" : ""}: &nbsp;
+          </Nav.BodyLong>
+
+          <Nav.BodyLong size="small" className="bold">
+            {fakturamottaker}
+          </Nav.BodyLong>
+        </Nav.HStack>
+      )}
+
+      {redigerbart && visFakturaMottaker && fullmektigErFakturamottaker ? (
+        <FullmaktForTrygdeavgiftConfirmationPanel
+          harBekreftet={harBekreftetFullmaktForTrygdeavgift}
+          onChange={setHarBekreftetFullmaktForTrygdeavgift}
+        />
+      ) : null}
+
       <Forms.HtmlEditor
         name="begrunnelseFritekst"
         control={control}
@@ -171,7 +221,7 @@ function VurderingBekreftelse({ tilbake, aktivtSteg }: Props) {
       <Mui.StegKnapper
         bekreftTekst="Bekreft og send orienteringsbrev til bruker"
         bekreftKnappProps={{
-          disabled: !redigerbart || !formIsValid,
+          disabled: !redigerbart || !formIsValid || (visFakturaMottaker && !harBekreftetFullmaktForTrygdeavgift),
           onClick: () => onSubmit(),
         }}
         tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
