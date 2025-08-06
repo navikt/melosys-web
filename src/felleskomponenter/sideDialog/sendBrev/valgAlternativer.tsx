@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { DokumenterV2 } from "../../../services/api";
 import * as Skjema from "../../skjema";
 import * as Nav from "../../../navFrontend";
@@ -7,13 +8,13 @@ interface ValgAlternativProps {
   valg: DokumenterV2.Valg;
   feltKode: string;
   redigerbart: boolean;
-  changeField: (felt: string, data: any) => void;
+  changeField: (felt: string, data: string) => void;
   beskrivelse: string;
   hjelpetekst: string | null;
 }
 
 const renderLabel = (beskrivelse: string, hjelpetekst: string | null) => {
-  return beskrivelse != null ? (
+  return beskrivelse !== null ? (
     <LabelMedHjelpetekst label={beskrivelse} hjelpetekst={hjelpetekst} bold small />
   ) : (
     <span />
@@ -22,6 +23,13 @@ const renderLabel = (beskrivelse: string, hjelpetekst: string | null) => {
 
 function ValgAlternativer({ valg, feltKode, redigerbart, changeField, beskrivelse, hjelpetekst }: ValgAlternativProps) {
   const label = renderLabel(beskrivelse, hjelpetekst);
+
+  useEffect(() => {
+    if (valg.valgType === DokumenterV2.ValgType.SELECT && valg.valgAlternativer.length === 1) {
+      changeField(`felt.${feltKode}.valg`, valg.valgAlternativer[0].kode);
+    }
+  }, [valg.valgType, valg.valgAlternativer.length, feltKode, changeField]);
+
   if (valg.valgType === DokumenterV2.ValgType.CHECKBOX) {
     return (
       <Nav.CheckboxGroup legend={label} name={`felt.${feltKode}.valg`} readOnly={!redigerbart}>
@@ -61,10 +69,6 @@ function ValgAlternativer({ valg, feltKode, redigerbart, changeField, beskrivels
     );
   }
   if (valg.valgType === DokumenterV2.ValgType.SELECT) {
-    if (valg.valgAlternativer.length === 1) {
-      changeField(`felt.${feltKode}.valg`, valg.valgAlternativer[0].kode);
-      return null;
-    }
     return (
       <Skjema.Select feltNavn={`felt.${feltKode}.valg`} label={label} disabled={!redigerbart}>
         {valg.valgAlternativer.map((alternativ) => (
