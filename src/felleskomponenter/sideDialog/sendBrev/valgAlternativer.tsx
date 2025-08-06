@@ -8,13 +8,13 @@ interface ValgAlternativProps {
   valg: DokumenterV2.Valg;
   feltKode: string;
   redigerbart: boolean;
-  changeField: (felt: string, data: any) => void;
+  changeField: (felt: string, data: string) => void;
   beskrivelse: string;
   hjelpetekst: string | null;
 }
 
 const renderLabel = (beskrivelse: string, hjelpetekst: string | null) => {
-  return beskrivelse != null ? (
+  return beskrivelse !== null ? (
     <LabelMedHjelpetekst label={beskrivelse} hjelpetekst={hjelpetekst} bold small />
   ) : (
     <span />
