@@ -9,7 +9,7 @@ import * as Ikoner from "../../../resources/images";
 import { FieldArrayProps, FormValuesProps, Skatteforhold } from "./types";
 import * as Utils from "../../../utils";
 import "./skatteforholdsperioder.css";
-import { Stack } from "@navikt/ds-react";
+import { HGrid, Stack } from "@navikt/ds-react";
 
 interface SkatteforholdsperioderProps {
   formValues: FormValuesProps;
@@ -38,59 +38,58 @@ export function Skatteforholdsperioder({
     <div className="perioder">
       {formValues.skatteforholdsperioder.map((skatteforhold, index) => {
         return (
-          <Nav.Row className="periode__rad" key={fields[index].id}>
-            <Nav.Column className="dato">
-              <Forms.Datovelger
-                label={index === 0 ? "Skatteforhold" : ""}
-                name={`skatteforholdsperioder[${index}].fomDato`}
-                readOnly={!redigerbart}
-                control={control}
-                minDate={minDate}
-                maxDate={maxDate}
-              />
-            </Nav.Column>
+          <HGrid className="periode__rad" key={fields[index].id}>
+            <Forms.Datovelger
+              className="dato"
+              label={index === 0 ? "Skatteforhold" : ""}
+              name={`skatteforholdsperioder[${index}].fomDato`}
+              readOnly={!redigerbart}
+              control={control}
+              minDate={minDate}
+              maxDate={maxDate}
+            />
 
-            <Nav.Column className="dato">
-              <Forms.Datovelger
-                label={index === 0 && <span className="invisible" />}
-                name={`skatteforholdsperioder[${index}].tomDato`}
-                readOnly={!redigerbart}
-                control={control}
-                minDate={Utils.dato.norskStringTilDate(formValues.skatteforholdsperioder[index].fomDato) || minDate}
-                maxDate={maxDate}
-              />
-            </Nav.Column>
+            <Forms.Datovelger
+              className="dato"
+              label={index === 0 && <span className="invisible" />}
+              name={`skatteforholdsperioder[${index}].tomDato`}
+              readOnly={!redigerbart}
+              control={control}
+              minDate={Utils.dato.norskStringTilDate(formValues.skatteforholdsperioder[index].fomDato) || minDate}
+              maxDate={maxDate}
+            />
 
-            <Nav.Column>
-              <Forms.RadioGroup
-                legend={index === 0 ? "Skattepliktig" : ""}
-                hideLegend={index !== 0}
-                name={`skatteforholdsperioder[${index}].skatteplikttype`}
-                readOnly={!redigerbart}
-                control={control}
-                className="skatteforholdsperioder-radio-group"
-              >
-                <Stack gap="6" direction={{ xs: "column", sm: "row" }} wrap={false}>
-                  <Nav.Radio value={MKV.Koder.skatteplikttype.SKATTEPLIKTIG}>Ja</Nav.Radio>
-                  <Nav.Radio value={MKV.Koder.skatteplikttype.IKKE_SKATTEPLIKTIG}>Nei</Nav.Radio>
-                </Stack>
-              </Forms.RadioGroup>
-            </Nav.Column>
+            <Forms.RadioGroup
+              legend={index === 0 ? "Skattepliktig" : ""}
+              hideLegend={index !== 0}
+              name={`skatteforholdsperioder[${index}].skatteplikttype`}
+              readOnly={!redigerbart}
+              control={control}
+              className="skatteforholdsperioder-radio-group"
+            >
+              <Stack gap="6" direction={{ xs: "column", sm: "row" }} wrap={false}>
+                <Nav.Radio value={MKV.Koder.skatteplikttype.SKATTEPLIKTIG}>Ja</Nav.Radio>
+                <Nav.Radio value={MKV.Koder.skatteplikttype.IKKE_SKATTEPLIKTIG}>Nei</Nav.Radio>
+              </Stack>
+            </Forms.RadioGroup>
 
-            <Nav.Column className="slett__knapp">
+            <span className="slett__knapp">
               {redigerbart && formValues.skatteforholdsperioder.length > 1 && (
                 <Mui.IkonKnapp ariaLabel="Slett skatteforhold" ikon={Ikoner.Bin} onClick={() => remove(index)} />
               )}
-            </Nav.Column>
-          </Nav.Row>
+            </span>
+          </HGrid>
         );
       })}
 
-      <Nav.Row className="legg-til__rad">
-        <Mui.Lenkeknapp disabled={!redigerbart} ikon={Ikoner.Add} onClick={() => append(defaultPeriode || {})}>
-          Legg til skatteforhold
-        </Mui.Lenkeknapp>
-      </Nav.Row>
+      <Mui.Lenkeknapp
+        className="legg-til__rad"
+        disabled={!redigerbart}
+        ikon={Ikoner.Add}
+        onClick={() => append(defaultPeriode || {})}
+      >
+        Legg til skatteforhold
+      </Mui.Lenkeknapp>
     </div>
   );
 }
