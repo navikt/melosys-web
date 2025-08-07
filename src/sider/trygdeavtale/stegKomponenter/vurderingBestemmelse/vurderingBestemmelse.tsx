@@ -142,7 +142,7 @@ function VurderingBestemmelse({
               <Skjema.Select
                 label="Velg bestemmelse"
                 feltNavn="bestemmelse"
-                redigerbart={redigerbart && !updatePending}
+                readonly={!redigerbart || updatePending}
                 emptyFieldDisabled={!!formValues.bestemmelse}
                 onChange={() => resetField("tilleggsbestemmelse")}
               >

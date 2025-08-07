@@ -444,7 +444,7 @@ function VurderingVedtak({
                   />
                 }
                 feltNavn="nyVurderingBakgrunn"
-                redigerbart={redigerbart}
+                readonly={!redigerbart}
                 emptyFieldDisabled={!!formValues?.nyVurderingBakgrunn}
               >
                 {MKV.KTObjects.begrunnelser.nyvurderingbakgrunner?.map((bakgrunn: KTObject) => (

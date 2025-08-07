@@ -190,7 +190,7 @@ function VurderingFamilie({
                             feltNavn={`barn.${barn.uuid}.begrunnelse`}
                             emptyFieldDisabled={!redigerbart || !!finnBarn(barn?.uuid, formValues.barn)?.begrunnelse}
                             name={barn.uuid}
-                            redigerbart={redigerbart}
+                            readonly={!redigerbart}
                           >
                             {barnBegrunnelseValg?.map((begrunnelse: KTObject) => (
                               <option key={begrunnelse.kode} value={begrunnelse.kode}>
@@ -240,7 +240,7 @@ function VurderingFamilie({
                       label="Begrunnelse"
                       feltNavn="ektefelle.begrunnelse"
                       emptyFieldDisabled={!redigerbart || !!formValues.ektefelle.begrunnelse}
-                      redigerbart={redigerbart}
+                      readonly={!redigerbart}
                     >
                       {ektefelleBegrunnelseValg?.map((begrunnelse: KTObject) => (
                         <option key={begrunnelse.kode} value={begrunnelse.kode}>
