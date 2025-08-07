@@ -23,9 +23,10 @@ const renderLabel = (beskrivelse: string, hjelpetekst: string | null) => {
 
 function ValgAlternativer({ valg, feltKode, redigerbart, changeField, beskrivelse, hjelpetekst }: ValgAlternativProps) {
   const label = renderLabel(beskrivelse, hjelpetekst);
+  const onlyOneSelectAlternative = valg.valgType === DokumenterV2.ValgType.SELECT && valg.valgAlternativer.length === 1;
 
   useEffect(() => {
-    if (valg.valgType === DokumenterV2.ValgType.SELECT && valg.valgAlternativer.length === 1) {
+    if (onlyOneSelectAlternative) {
       changeField(`felt.${feltKode}.valg`, valg.valgAlternativer[0].kode);
     }
   }, [valg.valgType, valg.valgAlternativer.length, feltKode, changeField]);
@@ -70,7 +71,11 @@ function ValgAlternativer({ valg, feltKode, redigerbart, changeField, beskrivels
   }
   if (valg.valgType === DokumenterV2.ValgType.SELECT) {
     return (
-      <Skjema.Select feltNavn={`felt.${feltKode}.valg`} label={label} disabled={!redigerbart}>
+      <Skjema.Select
+        feltNavn={`felt.${feltKode}.valg`}
+        label={label}
+        readonly={!redigerbart || onlyOneSelectAlternative}
+      >
         {valg.valgAlternativer.map((alternativ) => (
           <option key={alternativ.kode} value={alternativ.kode}>
             {alternativ.beskrivelse}

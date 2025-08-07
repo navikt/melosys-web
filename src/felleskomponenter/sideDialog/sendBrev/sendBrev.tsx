@@ -488,9 +488,7 @@ function SendBrev({
             <Skjema.Select
               feltNavn="type"
               label={<LabelMedHjelpetekst label="Velg brevmal" bold small />}
-              redigerbart={
-                !(!redigerbart || tilgjengeligeBrevtyper.length === 1 || !!formValues.valgtMottaker?.feilmelding)
-              }
+              readonly={!redigerbart || tilgjengeligeBrevtyper.length === 1 || !!formValues.valgtMottaker?.feilmelding}
               emptyFieldDisabled={!!formValues.type}
               onBlur={overstyrBlurEvent}
             >

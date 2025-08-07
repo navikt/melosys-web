@@ -16,7 +16,7 @@ interface SelectWrappedComponentBaseProps
   className?: string;
   hideLabel?: boolean;
   error?: React.ReactNode;
-  redigerbart?: boolean;
+  readonly?: boolean;
   errorId?: string;
   htmlSize?: number;
   id?: string;
@@ -37,7 +37,7 @@ function SelectWrappedComponent({
   onChange,
   size,
   className,
-  redigerbart,
+  readonly,
   errorId,
   htmlSize,
   ...rest
@@ -63,7 +63,7 @@ function SelectWrappedComponent({
       id={inputProps.id ?? Utils._uuid()}
       size={size}
       className={className ?? ""}
-      readOnly={redigerbart !== undefined && !redigerbart}
+      readOnly={readonly !== undefined && readonly}
       errorId={errorId}
       htmlSize={htmlSize}
       {...inputProps}
