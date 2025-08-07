@@ -11,6 +11,7 @@ interface ValgAlternativProps {
   changeField: (felt: string, data: string) => void;
   beskrivelse: string;
   hjelpetekst: string | null;
+  className?: string;
 }
 
 const renderLabel = (beskrivelse: string, hjelpetekst: string | null) => {
@@ -21,7 +22,15 @@ const renderLabel = (beskrivelse: string, hjelpetekst: string | null) => {
   );
 };
 
-function ValgAlternativer({ valg, feltKode, redigerbart, changeField, beskrivelse, hjelpetekst }: ValgAlternativProps) {
+function ValgAlternativer({
+  valg,
+  feltKode,
+  redigerbart,
+  changeField,
+  beskrivelse,
+  hjelpetekst,
+  className,
+}: ValgAlternativProps) {
   const label = renderLabel(beskrivelse, hjelpetekst);
   const onlyOneSelectAlternative = valg.valgType === DokumenterV2.ValgType.SELECT && valg.valgAlternativer.length === 1;
 
@@ -72,6 +81,7 @@ function ValgAlternativer({ valg, feltKode, redigerbart, changeField, beskrivels
   if (valg.valgType === DokumenterV2.ValgType.SELECT) {
     return (
       <Skjema.Select
+        className={className}
         feltNavn={`felt.${feltKode}.valg`}
         label={label}
         readonly={!redigerbart || onlyOneSelectAlternative}
