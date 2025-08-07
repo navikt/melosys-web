@@ -53,7 +53,7 @@ const mapStateToProps = (state: RootState) => ({
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
-  changeField: (field: string, data: any) => dispatch(change(KV.Form.SEND_BREV, field, data)),
+  changeField: (field: string, data: unknown) => dispatch(change(KV.Form.SEND_BREV, field, data)),
   resetForm: () => dispatch(reset(KV.Form.SEND_BREV)),
   oppdaterBehandling: () => dispatch(behandlingerOperations.oppdaterBehandling()),
 });
@@ -292,7 +292,11 @@ function SendBrev({
       : null;
   };
 
-  const hentFormVerdi = (feltNavn: string, hentValgverdi: boolean = false, hentKode: boolean = false): any => {
+  const hentFormVerdi = (
+    feltNavn: string,
+    hentValgverdi: boolean = false,
+    hentKode: boolean = false,
+  ): string | null => {
     const feltFraValgtMal = formValues?.valgtBrev?.felter?.find((felt) => felt.kode === feltNavn);
     if (!feltFraValgtMal) {
       return null;
@@ -306,12 +310,12 @@ function SendBrev({
       }
 
       if (hentKode) {
-        return valgtAlternativ?.kode;
+        return valgtAlternativ?.kode ?? null;
       }
 
-      return valgtAlternativ?.visFelt ? feltVerdi : valgtAlternativ?.beskrivelse;
+      return valgtAlternativ?.visFelt ? feltVerdi : (valgtAlternativ?.beskrivelse ?? null);
     }
-    return feltVerdi;
+    return feltVerdi ?? null;
   };
 
   const hentKopiMottakere = () => {
@@ -342,9 +346,8 @@ function SendBrev({
     manglerFritekst: hentFormVerdi("MANGLER_FRITEKST"),
     fritekstTittel: hentFormVerdi("BREV_TITTEL", true),
     fritekst: hentFormVerdi("FRITEKST"),
-    skalViseStandardTekstOmOpplysninger: hentFormVerdi("STANDARDTEKST_INNTEKTSOPPLYSNINGER"),
     kopiMottakere: hentKopiMottakere() || [],
-    skalViseStandardTekstOmkontaktopplysninger: hentFormVerdi("STANDARDTEKST_KONTAKTINFORMASJON"),
+    skalViseStandardTekstOmkontaktopplysninger: hentFormVerdi("STANDARDTEKST_KONTAKTINFORMASJON") === "true",
     saksvedlegg: valgteVedlegg?.saksvedlegg.map((vedlegg) => ({
       dokumentID: vedlegg.dokumentID,
       journalpostID: vedlegg.journalpostID,
