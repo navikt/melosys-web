@@ -23,11 +23,19 @@ function erFritekstFelt(
   formValues: SendBrevFormValues,
   finnValgAlternativ: (felt: Felt) => ValgAlternativ | undefined,
 ): boolean {
-  if (formValues.type === "GENERELT_FRITEKSTBREV_BRUKER" || formValues.type === "GENERELT_FRITEKSTBREV_VIRKSOMHET") {
+  if (
+    formValues.type === "FRITEKSTBREV" ||
+    formValues.type === "GENERELT_FRITEKSTBREV_BRUKER" ||
+    formValues.type === "GENERELT_FRITEKSTBREV_VIRKSOMHET" ||
+    formValues.type === "GENERELT_FRITEKSTBREV_ARBEIDSGIVER"
+  ) {
     const brevTittelFelt = formValues.valgtBrev?.felter?.find((felt) => felt.kode === "BREV_TITTEL");
     if (brevTittelFelt) {
       const valgtAlternativ = finnValgAlternativ(brevTittelFelt);
-      return valgtAlternativ?.kode !== undefined && valgtAlternativ.kode === "FRITEKST_BRUKER_OG_VIRKSOMHET";
+      return (
+        valgtAlternativ?.kode !== undefined &&
+        (valgtAlternativ.kode === "FRITEKST_BRUKER_OG_VIRKSOMHET" || valgtAlternativ.kode === "FRITEKST")
+      );
     }
   }
   return false;
