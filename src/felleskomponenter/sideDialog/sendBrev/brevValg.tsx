@@ -14,7 +14,7 @@ interface BrevValgProps {
   formValues: SendBrevFormValues;
   width: ColumnWidth;
   redigerbart: boolean;
-  changeField: (felt: string, data: any) => void;
+  changeField: (felt: string, data: string | number | boolean) => void;
   finnValgAlternativ: (felt: Api.DokumenterV2.Felt) => Api.DokumenterV2.ValgAlternativ | undefined;
 }
 
