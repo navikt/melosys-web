@@ -8,7 +8,7 @@ import BrevFelt from "./brevFelt";
 import { SendBrevFormValues } from "./types";
 import { Felt, ValgAlternativ } from "../../../services/modules/dokumenter-v2";
 
-import "./brevValg.css";
+import "./brevValg.less";
 
 interface BrevValgProps {
   formValues: SendBrevFormValues;

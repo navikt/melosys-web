@@ -14,7 +14,7 @@ interface ValgAlternativProps {
   className?: string;
 }
 
-const renderLabel = (beskrivelse: string, hjelpetekst: string | null) => {
+const lagLabel = (beskrivelse: string, hjelpetekst: string | null) => {
   return beskrivelse !== null ? (
     <LabelMedHjelpetekst label={beskrivelse} hjelpetekst={hjelpetekst} bold small />
   ) : (
@@ -31,11 +31,11 @@ function ValgAlternativer({
   hjelpetekst,
   className,
 }: ValgAlternativProps) {
-  const label = renderLabel(beskrivelse, hjelpetekst);
-  const onlyOneSelectAlternative = valg.valgType === DokumenterV2.ValgType.SELECT && valg.valgAlternativer.length === 1;
+  const label = lagLabel(beskrivelse, hjelpetekst);
+  const kunEttValgalternativ = valg.valgType === DokumenterV2.ValgType.SELECT && valg.valgAlternativer.length === 1;
 
   useEffect(() => {
-    if (onlyOneSelectAlternative) {
+    if (kunEttValgalternativ) {
       changeField(`felt.${feltKode}.valg`, valg.valgAlternativer[0].kode);
     }
   }, [valg.valgType, valg.valgAlternativer.length, feltKode, changeField]);
@@ -84,7 +84,7 @@ function ValgAlternativer({
         className={className}
         feltNavn={`felt.${feltKode}.valg`}
         label={label}
-        readonly={!redigerbart || onlyOneSelectAlternative}
+        readonly={!redigerbart || kunEttValgalternativ}
       >
         {valg.valgAlternativer.map((alternativ) => (
           <option key={alternativ.kode} value={alternativ.kode}>
