@@ -32,10 +32,11 @@ function ValgAlternativer({
   className,
 }: ValgAlternativProps) {
   const label = lagLabel(beskrivelse, hjelpetekst);
-  const kunEttValgalternativ = valg.valgType === DokumenterV2.ValgType.SELECT && valg.valgAlternativer.length === 1;
+  const valgalternativErSelectOgKunEtt =
+    valg.valgType === DokumenterV2.ValgType.SELECT && valg.valgAlternativer.length === 1;
 
   useEffect(() => {
-    if (kunEttValgalternativ) {
+    if (valgalternativErSelectOgKunEtt) {
       changeField(`felt.${feltKode}.valg`, valg.valgAlternativer[0].kode);
     }
   }, [valg.valgType, valg.valgAlternativer.length, feltKode, changeField]);
@@ -84,7 +85,7 @@ function ValgAlternativer({
         className={className}
         feltNavn={`felt.${feltKode}.valg`}
         label={label}
-        readonly={!redigerbart || kunEttValgalternativ}
+        readonly={!redigerbart || valgalternativErSelectOgKunEtt}
       >
         {valg.valgAlternativer.map((alternativ) => (
           <option key={alternativ.kode} value={alternativ.kode}>
