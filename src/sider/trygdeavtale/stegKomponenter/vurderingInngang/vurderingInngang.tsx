@@ -201,7 +201,7 @@ function VurderingInngang({
         <Skjema.Select
           emptyFieldDisabled={!!formValues?.arbeidsland}
           feltNavn="arbeidsland"
-          redigerbart={redigerbart}
+          readonly={!redigerbart}
           className="arbeidsland__select"
           label={
             <LabelMedHjelpetekst

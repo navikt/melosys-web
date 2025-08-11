@@ -133,7 +133,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const skalViseInntektskilder = !erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder);
 
   useEffect(() => {
-    Api.Trygdeavgift.hentBeregnetTrygdeavgift(behandlingID).then((beregnetTrygdeavgift) => {
+    Api.Trygdeavgift.hentBeregnetTrygdeavgiftEosPensjonist(behandlingID).then((beregnetTrygdeavgift) => {
       if (
         behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING &&
         beregnetTrygdeavgift.trygdeavgiftsgrunnlag.skatteforholdsperioder.length === 0
