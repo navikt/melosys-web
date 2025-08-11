@@ -63,7 +63,7 @@ function SelectWrappedComponent({
       id={inputProps.id ?? Utils._uuid()}
       size={size}
       className={className ?? ""}
-      readOnly={readonly !== undefined && readonly}
+      readOnly={readonly ?? false}
       errorId={errorId}
       htmlSize={htmlSize}
       {...inputProps}
