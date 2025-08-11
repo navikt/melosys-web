@@ -18,7 +18,7 @@ interface BrevValgProps {
   finnValgAlternativ: (felt: Api.DokumenterV2.Felt) => Api.DokumenterV2.ValgAlternativ | undefined;
 }
 
-// For tittel-feltet for fritekstbrev ønsker vi fjerne margin under for å unngå ekstra avstand til input-feltet (som ikke har noen label)
+// For tittel-feltet for fritekstbrev ønsker vi å fjerne margin under for å unngå ekstra avstand til input-feltet (som ikke har noen label)
 function erFritekstFelt(
   formValues: SendBrevFormValues,
   finnValgAlternativ: (felt: Felt) => ValgAlternativ | undefined,
