@@ -53,7 +53,7 @@ const mapStateToProps = (state: RootState) => ({
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
-  changeField: (field: string, data: any) => dispatch(change(KV.Form.SEND_BREV, field, data)),
+  changeField: (field: string, data: unknown) => dispatch(change(KV.Form.SEND_BREV, field, data)),
   resetForm: () => dispatch(reset(KV.Form.SEND_BREV)),
   oppdaterBehandling: () => dispatch(behandlingerOperations.oppdaterBehandling()),
 });
