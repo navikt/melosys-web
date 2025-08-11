@@ -2,6 +2,7 @@ import MKV from "../melosyskodeverk";
 import * as Constants from "../constants";
 
 const { EU_EOS, FTRL, TRYGDEAVTALE } = MKV.Koder.sakstyper;
+const { TRYGDEAVGIFT } = MKV.Koder.sakstemaer;
 const { HENVENDELSE, KLAGE } = MKV.Koder.behandlinger.behandlingstyper;
 
 const flytFinnesIkkeForBehandlingPath = "/flyt-finnes-ikke-for-behandling";
@@ -158,6 +159,7 @@ export const skalViseIngenFlyt = (
 ) => {
   if (
     sakstype === EU_EOS &&
+    sakstema === TRYGDEAVGIFT &&
     behandlingstema === MKV.Koder.behandlinger.behandlingstema.PENSJONIST &&
     erPensjonistToggleEnabled_EØS
   ) {
