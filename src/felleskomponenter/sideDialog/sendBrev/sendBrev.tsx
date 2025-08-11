@@ -348,7 +348,7 @@ function SendBrev({
     fritekst: hentFormVerdi("FRITEKST"),
     skalViseStandardTekstOmOpplysninger: hentFormVerdi("STANDARDTEKST_INNTEKTSOPPLYSNINGER") === "true",
     kopiMottakere: hentKopiMottakere() || [],
-    skalViseStandardTekstOmkontaktopplysninger: hentFormVerdi("STANDARDTEKST_KONTAKTINFORMASJON") === "true",
+    skalViseStandardTekstOmkontaktopplysninger: (hentFormVerdi("STANDARDTEKST_KONTAKTINFORMASJON") ?? "") === "true",
     saksvedlegg: valgteVedlegg?.saksvedlegg.map((vedlegg) => ({
       dokumentID: vedlegg.dokumentID,
       journalpostID: vedlegg.journalpostID,
