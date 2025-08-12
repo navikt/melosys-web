@@ -221,7 +221,10 @@ function VurderingBekreftelse({ tilbake, aktivtSteg }: Props) {
       <Mui.StegKnapper
         bekreftTekst="Bekreft og send orienteringsbrev til bruker"
         bekreftKnappProps={{
-          disabled: !redigerbart || !formIsValid || (visFakturaMottaker && !harBekreftetFullmaktForTrygdeavgift),
+          disabled:
+            !redigerbart ||
+            !formIsValid ||
+            (visFakturaMottaker && fullmektigErFakturamottaker && !harBekreftetFullmaktForTrygdeavgift),
           onClick: () => onSubmit(),
         }}
         tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}
