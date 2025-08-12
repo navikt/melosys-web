@@ -6,6 +6,7 @@ import * as Mui from "../../../../../felleskomponenter/ui";
 import * as Nav from "../../../../../navFrontend";
 import * as Api from "../../../../../services/api";
 import * as Utils from "../../../../../utils";
+import { STATUS } from "../../../../../services";
 
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import { helseutgiftDekkesPeriodeSelector } from "../../../../../ducks/helseutgiftdekkesperiode";
@@ -51,6 +52,11 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const sakstype = useSelector(fagsakSelectors.SakstypeKodeSelector);
 
+  const [harEndretHelseutgiftDekkesPeriode, setHarEndretHelseutgiftDekkesPeriode] = useState<boolean | undefined>(
+    undefined,
+  );
+
+  const helseutgiftDekkesPeriodeStatus = useSelector(helseutgiftDekkesPeriodeSelector.HelseutgiftDekkesPeriode).status;
   const helseutgiftDekkesPeriodeData = useSelector(helseutgiftDekkesPeriodeSelector.HelseutgiftDekkesPeriode).data;
   const helseutgiftDekkesPeriode = {
     fom: helseutgiftDekkesPeriodeData.fomDato,
@@ -62,7 +68,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const [lagretTrygdeavgift, setTrygdeavgift] = useAsyncCallbackState(
     () => Api.Trygdeavgift.hentBeregnetTrygdeavgift(behandlingID),
     undefined,
-    [behandlingID, true],
+    [behandlingID, helseutgiftDekkesPeriodeStatus === STATUS.OK],
   );
   const [feil, setFeil] = useState<string | undefined>(undefined);
   const [lagrePending, setLagrePending] = useState(false);
@@ -140,7 +146,13 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     if (!redigerbart) {
       return;
     }
-  }, []);
+
+    if (harEndretHelseutgiftDekkesPeriode === undefined) {
+      setHarEndretHelseutgiftDekkesPeriode(false);
+    } else {
+      setHarEndretHelseutgiftDekkesPeriode(true);
+    }
+  }, [helseutgiftDekkesPeriodeData]);
 
   const håndterLagretTrygdeavgiftsgrunnlag = (trygdeavgiftsgrunnlag: TrygdeavgiftsgrunnlagDto) => {
     const { inntektskilder, skatteforholdsperioder } = trygdeavgiftsgrunnlag;
@@ -259,12 +271,13 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
           trigger(`inntektskilder[${index}].fomDato`);
           trigger(`inntektskilder[${index}].tomDato`);
         });
-        if (feil) {
+        if (feil || harEndretHelseutgiftDekkesPeriode) {
           debounceBeregnTrygdeavgiftsperioder(formValues, formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType));
+          setHarEndretHelseutgiftDekkesPeriode(false);
         }
       }
     }
-  }, [aktivtSteg]);
+  }, [aktivtSteg, harEndretHelseutgiftDekkesPeriode]);
 
   if (!aktivtSteg) return null;
 
