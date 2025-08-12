@@ -36,7 +36,6 @@ import vurderingTrygdeavgiftSchema from "./vurderingTrygdeavgiftSchema";
 
 import { erBrukerSkattepliktigIHelePerioden } from "../../../../aarsavregning/stegKomponenter/vurderingAarsavregning/utils";
 import { fagsakSelectors } from "../../../../../ducks/fagsaker";
-import { set } from "lodash";
 const { EU_EOS } = MKV.Koder.sakstyper;
 const { PENSJONIST } = MKV.Koder.behandlinger.behandlingstema;
 interface Props {
