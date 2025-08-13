@@ -39,7 +39,7 @@ function VedleggVelgerTable({
 
   return (
     <>
-      <Nav.Table className="vedleggvelger-table">
+      <Nav.Table>
         <Nav.Table.Header>
           <Nav.Table.Row>
             <Nav.Table.DataCell colSpan={3}>
@@ -72,10 +72,10 @@ function VedleggVelgerTable({
         </Nav.Table.Body>
       </Nav.Table>
 
-      <Nav.Table className="vedleggvelger-table">
+      <Nav.Table className="tilknyttet-behandlingen-table">
         <Nav.Table.Header>
           <Nav.Table.Row>
-            <Nav.Table.DataCell colSpan={3} className="margin-top-1">
+            <Nav.Table.DataCell colSpan={3}>
               <Nav.Heading size="xsmall">Dokumenter tilknyttet behandlingen</Nav.Heading>
             </Nav.Table.DataCell>
           </Nav.Table.Row>
