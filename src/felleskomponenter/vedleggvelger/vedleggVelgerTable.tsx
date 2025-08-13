@@ -38,10 +38,16 @@ function VedleggVelgerTable({
   const harStandardvedlegg = standardvedlegg && !Utils._isEmpty(standardvedlegg);
 
   return (
-    <Nav.Table className="vedleggvelger-table">
-      <Nav.Table.Body>
-        <div>
-          <Nav.Heading size="xsmall">Standardvedlegg</Nav.Heading>
+    <>
+      <Nav.Table className="vedleggvelger-table">
+        <Nav.Table.Header>
+          <Nav.Table.Row>
+            <Nav.Table.DataCell colSpan={3}>
+              <Nav.Heading size="xsmall">Standardvedlegg</Nav.Heading>
+            </Nav.Table.DataCell>
+          </Nav.Table.Row>
+        </Nav.Table.Header>
+        <Nav.Table.Body>
           {harStandardvedlegg &&
             standardvedlegg.map((enkeltStandardvedlegg) => (
               <VedleggVelgerRow
@@ -56,11 +62,25 @@ function VedleggVelgerTable({
                 }
               />
             ))}
-          {!harStandardvedlegg && <span>Fant ingen standardvedlegg</span>}
-        </div>
+          {!harStandardvedlegg && (
+            <Nav.Table.Row>
+              <Nav.Table.DataCell colSpan={3}>
+                <span>Fant ingen standardvedlegg</span>
+              </Nav.Table.DataCell>
+            </Nav.Table.Row>
+          )}
+        </Nav.Table.Body>
+      </Nav.Table>
 
-        <div className="margin-top-1">
-          <Nav.Heading size="xsmall">Dokumenter tilknyttet behandlingen</Nav.Heading>
+      <Nav.Table className="vedleggvelger-table">
+        <Nav.Table.Header>
+          <Nav.Table.Row>
+            <Nav.Table.DataCell colSpan={3} className="margin-top-1">
+              <Nav.Heading size="xsmall">Dokumenter tilknyttet behandlingen</Nav.Heading>
+            </Nav.Table.DataCell>
+          </Nav.Table.Row>
+        </Nav.Table.Header>
+        <Nav.Table.Body>
           {harSaksdokumenter &&
             alleSaksvedlegg.map((enkeltVedlegg) => (
               <VedleggVelgerRow
@@ -71,10 +91,16 @@ function VedleggVelgerTable({
                 vedleggErMarkert={vedleggErMarkert(enkeltVedlegg)}
               />
             ))}
-          {!harSaksdokumenter && <span>Fant ingen dokumenter tilknyttet saken</span>}
-        </div>
-      </Nav.Table.Body>
-    </Nav.Table>
+          {!harSaksdokumenter && (
+            <Nav.Table.Row>
+              <Nav.Table.DataCell colSpan={3}>
+                <span>Fant ingen dokumenter tilknyttet saken</span>
+              </Nav.Table.DataCell>
+            </Nav.Table.Row>
+          )}
+        </Nav.Table.Body>
+      </Nav.Table>
+    </>
   );
 }
 
