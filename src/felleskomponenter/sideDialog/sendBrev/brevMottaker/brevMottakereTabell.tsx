@@ -93,7 +93,7 @@ function BrevMottakereTabell({
       mottakerNavn: muligMottaker.mottakerNavn,
       dokumentNavn: muligMottaker.dokumentNavn,
       dokumentData: {
-        produserbardokument: "true",
+        produserbardokument: "",
         mottaker: muligMottaker.mottakerNavn,
         ...(rolle ? hentBrevRequest(rolle) : {}),
         ...(!erBruker(rolle) && muligMottaker.orgnr ? { orgNr: muligMottaker.orgnr } : {}),
