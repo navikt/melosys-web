@@ -36,7 +36,7 @@ import { SendBrevFormValues } from "./types";
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import sendBrevSchema from "./sendBrevSchema";
 import "./sendBrev.css";
-import BrevVedlegg from "./brevVedlegg/brevVedlegg";
+import { Fritekstvedlegg } from "./brevVedlegg/brevVedlegg";
 import LabelMedHjelpetekst from "../../labelMedHjelpetekst";
 
 const { VIRKSOMHET, ARBEIDSGIVER, ANNEN_ORGANISASJON, NORSK_MYNDIGHET, UTENLANDSK_TRYGDEMYNDIGHET } =
@@ -61,11 +61,6 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>)
 const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
-
-export interface Fritekstvedlegg {
-  tittel: string;
-  fritekst: string;
-}
 
 interface Props {
   redigerbart: boolean;
@@ -336,7 +331,7 @@ function SendBrev({
     }
   };
 
-  const hentBrevRequest = (mottakerRolle: string): Api.DokumenterV2.OpprettBrevReqDto => ({
+  const hentBrevRequest = (mottakerRolle: string): Record<string, unknown> => ({
     produserbardokument: formValues.type || "",
     mottaker: mottakerRolle,
     orgNr: hentOrgnr(mottakerRolle),
@@ -366,7 +361,13 @@ function SendBrev({
     setSendBrevSpinner(true);
     setFeil(undefined);
 
-    Api.DokumenterV2.opprettBrev(behandlingID, hentBrevRequest(formValues.valgtMottaker.rolle))
+    const brevRequest: Api.DokumenterV2.OpprettBrevReqDto = {
+      ...hentBrevRequest(formValues.valgtMottaker.rolle),
+      produserbardokument: formValues.type || "",
+      mottaker: formValues.valgtMottaker.rolle,
+    };
+
+    Api.DokumenterV2.opprettBrev(behandlingID, brevRequest)
       .then(() => {
         setVisBrevBestiltAlert(true);
         setTimeout(() => {
@@ -413,7 +414,11 @@ function SendBrev({
     setLagreUtkastSpinner(true);
     setFeil(undefined);
 
-    const requestData = hentBrevRequest(formValues.valgtMottaker.rolle);
+    const requestData: Api.DokumenterV2.OpprettBrevReqDto = {
+      ...hentBrevRequest(formValues.valgtMottaker.rolle),
+      produserbardokument: formValues.type || "",
+      mottaker: formValues.valgtMottaker.rolle,
+    };
 
     (formValues?.aktivtUtkast?.utkastBrevID
       ? Api.Brevutkast.oppdaterBrevutkast(behandlingID, formValues.aktivtUtkast.utkastBrevID, requestData)
@@ -523,6 +528,21 @@ function SendBrev({
               muligeMottakere={muligeMottakere}
               muligeMottakereNorskMyndighet={muligeMottakereNorskMyndighet}
               hentBrevRequest={hentBrevRequest}
+              fritekstvedlegg={fritekstvedlegg}
+              setFritekstvedlegg={setFritekstvedlegg}
+              valgteVedlegg={valgteVedlegg}
+              setValgteVedlegg={setValgteVedleggIState}
+              changeField={changeField}
+              redigerbart={redigerbart}
+              behandlingID2={behandlingID}
+              dokumenter={dokumenter}
+              mottakerErNorskMyndighet={mottakerErNorskMyndighet}
+              visFritekstvedleggSkjema={visFritekstvedleggSkjema}
+              setVisFritekstvedleggSkjema={setVisFritekstvedleggSkjema}
+              redigerFritekstvedleggIndex={redigerFritekstVedleggIndex}
+              setRedigerFritekstvedleggIndex={setRedigerFritekstvedleggIndex}
+              standardvedlegg={harStandardVedlegg() ? standardvedleggListe : []}
+              valgtMottakerHarFeilmelding={valgtMottakerHarFeilmelding}
             />
           </Nav.Column>
         </Nav.Row>
@@ -532,27 +552,6 @@ function SendBrev({
         <Nav.Alert variant="warning" className="varsel">
           {muligeMottakereFeil}
         </Nav.Alert>
-      )}
-
-      {!valgtMottakerHarFeilmelding && (
-        <BrevVedlegg
-          fritekstvedlegg={fritekstvedlegg}
-          setFritekstvedlegg={setFritekstvedlegg}
-          valgteVedlegg={valgteVedlegg}
-          setValgteVedlegg={setValgteVedleggIState}
-          changeField={changeField}
-          formValues={formValues}
-          redigerbart={redigerbart}
-          behandlingID={behandlingID}
-          dokumenter={dokumenter}
-          mottakerErNorskMyndighet={mottakerErNorskMyndighet}
-          visFritekstvedleggSkjema={visFritekstvedleggSkjema}
-          setVisFritekstvedleggSkjema={setVisFritekstvedleggSkjema}
-          redigerFritekstvedleggIndex={redigerFritekstVedleggIndex}
-          setRedigerFritekstvedleggIndex={setRedigerFritekstvedleggIndex}
-          muligeMottakere={muligeMottakere}
-          standardvedlegg={harStandardVedlegg() ? standardvedleggListe : []}
-        />
       )}
 
       <div className="send_brev__knapperad">

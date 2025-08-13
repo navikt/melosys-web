@@ -138,7 +138,7 @@ exports[`VurderingArtikkel16Vedtak > snapshot test 1`] = `
     </div>
     <div class="row">
       <div class="col col-xs-10">
-        <div class="dokumentliste">
+        <div class="dokumentliste ">
           <table class="navds-table navds-table--small">
             <thead class="navds-table__header">
               <tr class="navds-table__row navds-table__row--shade-on-hover">
