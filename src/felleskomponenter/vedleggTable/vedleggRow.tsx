@@ -47,8 +47,9 @@ function VedleggRow({ vedlegg, slettVedlegg, redigerbart }: VedleggRowProps) {
   }
 
   return (
-    <Nav.Table.Row className="vedlegg">
+    <Nav.Table.Row className="vedlegg vedlegg-row">
       <Nav.Table.DataCell>
+        <Ikoner.Binders className="document-icon" stroke="#0067C5" />
         <PdfLink journalpostID={vedlegg.journalpostID} dokumentID={vedlegg.dokumentID} tittel={vedlegg.tittel} />
       </Nav.Table.DataCell>
       <Nav.Table.DataCell>
