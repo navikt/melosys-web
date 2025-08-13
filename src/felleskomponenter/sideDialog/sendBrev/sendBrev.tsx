@@ -554,7 +554,7 @@ function SendBrev({
         </Nav.Alert>
       )}
 
-      <div className="send_brev__knapperad">
+      <div className="knapperad">
         <Nav.Button
           variant="primary"
           disabled={knappErDisabled}
