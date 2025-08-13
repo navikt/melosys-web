@@ -31,7 +31,7 @@ function FritekstvedleggRow({
     event.preventDefault();
     const url = lagFritekstPdfUrl ? await lagFritekstPdfUrl(index) : null;
     if (url) {
-      await apnePdfINyFane(url);
+      apnePdfINyFane(url);
     }
   };
 
