@@ -12,6 +12,15 @@ import { formSelectors } from "../../../../ducks/form";
 import { SendBrevFormValues } from "../types";
 import { erBruker } from "./brevMottaker";
 import Dokumentliste, { BrevDokumentMetadataType } from "../../../dokumentliste";
+import BrevVedlegg, { Fritekstvedlegg } from "../brevVedlegg/brevVedlegg";
+import {
+  BrevVedleggInterface,
+  BrevVedleggVisningstabellInterface,
+  FeilmeldingProps,
+  FysiskDokument,
+} from "../../../../services/modules/dokumenter-v2";
+
+import "./brevMottakereTabell.less";
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
@@ -26,7 +35,22 @@ interface BrevMottakereTabellProps {
   muligeMottakere?: Api.DokumenterV2.HentMuligeMottakereResDto;
   muligeMottakereNorskMyndighet?: Api.DokumenterV2.MuligMottaker[];
   formIsValid: boolean;
-  hentBrevRequest: any;
+  hentBrevRequest: (rolle: string) => Record<string, unknown>;
+  standardvedlegg: Api.DokumenterV2.TilgjengeligStandardvedlegg[];
+  fritekstvedlegg: Fritekstvedlegg[];
+  setFritekstvedlegg: (fritekstvedlegg: Fritekstvedlegg[]) => void;
+  valgteVedlegg: BrevVedleggInterface;
+  setValgteVedlegg: (valgteVedlegg: BrevVedleggVisningstabellInterface) => void;
+  changeField: (field: string, value: string) => void;
+  redigerbart: boolean;
+  behandlingID2: number;
+  dokumenter: FysiskDokument[];
+  mottakerErNorskMyndighet: boolean;
+  visFritekstvedleggSkjema: boolean;
+  setVisFritekstvedleggSkjema: (value: boolean) => void;
+  redigerFritekstvedleggIndex?: number;
+  setRedigerFritekstvedleggIndex: (value: number | undefined) => void;
+  valgtMottakerHarFeilmelding?: FeilmeldingProps | undefined;
 }
 
 function BrevMottakereTabell({
@@ -36,6 +60,21 @@ function BrevMottakereTabell({
   formValues,
   formIsValid,
   hentBrevRequest,
+  fritekstvedlegg,
+  setFritekstvedlegg,
+  valgteVedlegg,
+  setValgteVedlegg,
+  changeField,
+  redigerbart,
+  behandlingID2,
+  dokumenter,
+  mottakerErNorskMyndighet,
+  visFritekstvedleggSkjema,
+  setVisFritekstvedleggSkjema,
+  redigerFritekstvedleggIndex,
+  setRedigerFritekstvedleggIndex,
+  standardvedlegg,
+  valgtMottakerHarFeilmelding,
 }: BrevMottakereTabellProps & PropsFromRedux) {
   const mapKopiMottakere = (
     muligeBrevMottakere: Api.DokumenterV2.HentMuligeMottakereResDto,
@@ -54,7 +93,9 @@ function BrevMottakereTabell({
       mottakerNavn: muligMottaker.mottakerNavn,
       dokumentNavn: muligMottaker.dokumentNavn,
       dokumentData: {
-        ...hentBrevRequest(rolle),
+        produserbardokument: "true",
+        mottaker: muligMottaker.mottakerNavn,
+        ...(rolle ? hentBrevRequest(rolle) : {}),
         ...(!erBruker(rolle) && muligMottaker.orgnr ? { orgNr: muligMottaker.orgnr } : {}),
       },
     };
@@ -84,13 +125,39 @@ function BrevMottakereTabell({
         <Dokumentliste
           behandlingID={behandlingID}
           dokumenter={mapMottakerRader(muligeMottakere)}
+          label={"Forhåndsvisning av brev og vedlegg"}
+          className="dokumentliste--no-bottom-margin"
           validateOnClick={() => formIsValid}
         />
       )}
+
       {muligeMottakereNorskMyndighet && (
         <Dokumentliste
           behandlingID={behandlingID}
           dokumenter={muligeMottakereNorskMyndighet.map((muligMottaker) => mapDokument(muligMottaker))}
+          label={"Forhåndsvisning av brev og vedlegg"}
+          className="dokumentliste--no-bottom-margin"
+        />
+      )}
+
+      {!valgtMottakerHarFeilmelding && (
+        <BrevVedlegg
+          fritekstvedlegg={fritekstvedlegg}
+          setFritekstvedlegg={setFritekstvedlegg}
+          valgteVedlegg={valgteVedlegg}
+          setValgteVedlegg={setValgteVedlegg}
+          changeField={changeField}
+          formValues={formValues}
+          redigerbart={redigerbart}
+          behandlingID={behandlingID2}
+          dokumenter={dokumenter}
+          mottakerErNorskMyndighet={mottakerErNorskMyndighet}
+          visFritekstvedleggSkjema={visFritekstvedleggSkjema}
+          setVisFritekstvedleggSkjema={setVisFritekstvedleggSkjema}
+          redigerFritekstvedleggIndex={redigerFritekstvedleggIndex}
+          setRedigerFritekstvedleggIndex={setRedigerFritekstvedleggIndex}
+          muligeMottakere={muligeMottakere}
+          standardvedlegg={standardvedlegg}
         />
       )}
     </>

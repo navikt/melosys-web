@@ -5,6 +5,7 @@ import * as Ikoner from "../../resources/images";
 import * as Nav from "../../navFrontend";
 import { FysiskDokument, TilgjengeligStandardvedlegg } from "../../services/modules/dokumenter-v2";
 import PdfLinkStandardvedlegg from "../pdfLink/pdfLinkStandardvedlegg";
+import "./vedleggRow.less";
 
 interface VedleggRowProps {
   vedlegg: FysiskDokument | TilgjengeligStandardvedlegg;
@@ -27,8 +28,9 @@ function skalViseEgenFrontendTittel(redigerbart: boolean) {
 function VedleggRow({ vedlegg, slettVedlegg, redigerbart }: VedleggRowProps) {
   if (erTilgjengeligStandardvedlegg(vedlegg)) {
     return (
-      <Nav.Table.Row className="vedlegg">
+      <Nav.Table.Row className="vedlegg vedlegg-row">
         <Nav.Table.DataCell>
+          <Ikoner.Binders className="document-icon" stroke="#0067C5" />
           <PdfLinkStandardvedlegg
             standardvedlegg={vedlegg}
             skalViseEgenFrontendTittel={skalViseEgenFrontendTittel(redigerbart)}
