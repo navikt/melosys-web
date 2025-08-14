@@ -143,7 +143,10 @@ export const harIkkeYrkesaktivFlyt = (sakstype: string, behandlingstema: string)
 };
 
 export const skalViseFullmektigFørPeriodeOgLand = (behandlingstema: string) => {
-  if (behandlingstema === MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV) {
+  if (
+    behandlingstema === MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV ||
+    behandlingstema === MKV.Koder.behandlinger.behandlingstema.PENSJONIST
+  ) {
     return true;
   }
   return false;

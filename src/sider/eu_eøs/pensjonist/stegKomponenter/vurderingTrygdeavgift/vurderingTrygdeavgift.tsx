@@ -56,8 +56,12 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     undefined,
   );
 
-  const helseutgiftDekkesPeriodeStatus = useSelector(helseutgiftDekkesPeriodeSelector.HelseutgiftDekkesPeriode).status;
-  const helseutgiftDekkesPeriodeData = useSelector(helseutgiftDekkesPeriodeSelector.HelseutgiftDekkesPeriode).data;
+  const helseutgiftDekkesPeriodeStatus = useSelector(
+    helseutgiftDekkesPeriodeSelector.HelseutgiftDekkesPeriodeSelector,
+  ).status;
+  const helseutgiftDekkesPeriodeData = useSelector(
+    helseutgiftDekkesPeriodeSelector.HelseutgiftDekkesPeriodeSelector,
+  ).data;
   const helseutgiftDekkesPeriode = {
     fom: helseutgiftDekkesPeriodeData.fomDato,
     tom: helseutgiftDekkesPeriodeData.tomDato,
