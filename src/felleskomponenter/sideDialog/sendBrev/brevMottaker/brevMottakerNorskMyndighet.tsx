@@ -7,6 +7,7 @@ import * as KV from "../../../../kodeverk";
 import * as Nav from "../../../../navFrontend";
 import * as Api from "../../../../services/api";
 import { SendBrevFormValues } from "../types";
+import "./brevMottaker.less";
 
 function BrevMottakerNorskMyndighet() {
   const formValues = useSelector((state: any) => getFormValues(KV.Form.SEND_BREV)(state) as SendBrevFormValues);
@@ -35,7 +36,11 @@ function BrevMottakerNorskMyndighet() {
   };
 
   return (
-    <Nav.CheckboxGroup legend="Hvilke etater skal brevet sendes til?" defaultValue={valgteNorskeMyndigheter}>
+    <Nav.CheckboxGroup
+      className="norskmyndighet"
+      legend="Hvilke etater skal brevet sendes til?"
+      defaultValue={valgteNorskeMyndigheter}
+    >
       {tilgjengeligeNorskeMyndigheter?.map((norskMyndighet) => (
         <Nav.Checkbox
           key={norskMyndighet.orgnr}
