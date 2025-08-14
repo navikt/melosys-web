@@ -372,7 +372,7 @@ export const ArbeidsgivereNorgeSelector = createSelector(
     let { fom: soknadPeriodeStart, tom: soknadPeriodeSlutt } = oppholdsPeriode;
     const { fom: sedLovvalgsperiodeFom, tom: sedLovvalgsperiodeTom } = sedLovvalgsperiode;
     const { fomDato: helseutgiftDekkesPeriodeFom, tomDato: helseutgiftDekkesPeriodeTom } =
-      helseutgiftDekkesPeriode.data;
+      helseutgiftDekkesPeriode?.data ?? {};
 
     if (helseutgiftDekkesPeriodeFom) {
       soknadPeriodeStart = helseutgiftDekkesPeriodeFom;

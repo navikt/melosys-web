@@ -15,7 +15,7 @@ export const HelseutgiftDekkesPeriodeSelector: Selector<
 > = createSelector(
   (state: RootState) => state.helseutgiftdekkesperiode,
   (helseutgiftdekkesperiode) => {
-    if (helseutgiftdekkesperiode.status === "ERROR") {
+    if (helseutgiftdekkesperiode?.status === "ERROR") {
       return {
         ...helseutgiftdekkesperiode,
         data: {} as HelseutgiftDekkesPeriodeDto,
