@@ -1,3 +1,4 @@
+import { createPortal } from "react-dom";
 import * as Nav from "../../navFrontend";
 import Knapperad from "../knapperad";
 
@@ -8,7 +9,7 @@ interface SlettFritekstvedleggModalProps {
 }
 
 function SlettFritekstvedleggModal({ open, lukkModal, slettVedlegg }: SlettFritekstvedleggModalProps) {
-  return (
+  const modalContent = (
     <Nav.Modal
       onClose={lukkModal}
       open={open}
@@ -35,6 +36,7 @@ function SlettFritekstvedleggModal({ open, lukkModal, slettVedlegg }: SlettFrite
       </Nav.Modal.Footer>
     </Nav.Modal>
   );
+  return createPortal(modalContent, document.body);
 }
 
 export default SlettFritekstvedleggModal;
