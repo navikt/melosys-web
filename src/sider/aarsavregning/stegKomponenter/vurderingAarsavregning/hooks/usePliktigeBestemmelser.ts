@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import * as Api from "../../../../../services/api";
 
-export const hentPliktigeBestemmelserHook = () => {
+export const usePliktigeBestemmelser = () => {
   const [pliktigeBestemmelser, setPliktigeBestemmelser] = useState<string[]>([]);
   const [loaded, setLoaded] = useState(false);
 
