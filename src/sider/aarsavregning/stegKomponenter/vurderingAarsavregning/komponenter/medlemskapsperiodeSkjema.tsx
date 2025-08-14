@@ -14,7 +14,7 @@ import { useEffect } from "react";
 import { FieldArrayProps, FormValuesProps } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
 import { Medlemskapsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import "./medlemskapsperiodeSkjema.css";
-import { hentPliktigeBestemmelserHook } from "../hooks/usePliktigeBestemmelserHook";
+import { hentPliktigeBestemmelserHook } from "../hooks/hentPliktigeBestemmelserHook";
 
 // Funksjon for å kalkulere slettbar-status, nå kalt kanPeriodeSlettes
 const kanPeriodeSlettes = (gjeldendePeriode: Medlemskapsperiode, allePerioderIListe: Medlemskapsperiode[]): boolean => {
