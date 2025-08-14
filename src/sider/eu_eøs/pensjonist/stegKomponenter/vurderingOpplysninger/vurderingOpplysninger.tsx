@@ -132,7 +132,10 @@ export function VurderingOpplysninger({ bekreft, tilbake, aktivtSteg, oppdaterSt
 
   useEffect(() => {
     oppdaterStatus(stegErGyldig);
+    debouncedLagreHelseutgiftPeriode();
   }, [stegErGyldig]);
+
+  if (!aktivtSteg) return null;
 
   return (
     <>
