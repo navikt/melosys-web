@@ -39,6 +39,9 @@ import sendBrevSchema from "./sendBrevSchema";
 import "./sendBrev.css";
 import BrevVedlegg from "./brevVedlegg/brevVedlegg";
 import LabelMedHjelpetekst from "../../labelMedHjelpetekst";
+// Legg til untouch for å fjerne touched-status fra felt ved endringer
+import { untouch } from "redux-form";
+import { buildValidationSummary } from "./validationSummary";
 
 const { VIRKSOMHET, ARBEIDSGIVER, ANNEN_ORGANISASJON, NORSK_MYNDIGHET, UTENLANDSK_TRYGDEMYNDIGHET } =
   MKV.Koder.mottakerroller;
@@ -58,6 +61,8 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>)
   resetForm: () => dispatch(reset(KV.Form.SEND_BREV)),
   oppdaterBehandling: () => dispatch(behandlingerOperations.oppdaterBehandling()),
   touchAllFields: () => dispatch(touchAllFieldsOp(KV.Form.SEND_BREV)),
+  // Fjern touched-status på spesifikke felt
+  untouchFields: (...fields: string[]) => dispatch(untouch(KV.Form.SEND_BREV, ...fields)),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -101,6 +106,7 @@ function SendBrev({
   saksnummer,
   soknadsland,
   sakstype,
+  untouchFields,
 }: Props & PropsFromRedux) {
   const [tilgjengeligeMaler, setTilgjengeligeMaler] = useState<Api.DokumenterV2.TilgjengeligeMalerResDto>();
   const [submitAttempted, setSubmitAttempted] = useState(false);
@@ -130,64 +136,7 @@ function SendBrev({
   const syncErrors = useSelector((state: RootState) => getFormSyncErrors(KV.Form.SEND_BREV)(state));
 
   const valideringsFeilLinjer: string[] = useMemo(() => {
-    const result: string[] = [];
-
-    const pushMsg = (msg: unknown) => {
-      const m =
-        typeof msg === "string"
-          ? msg
-          : typeof msg === "object" && msg && "melding" in (msg as any)
-            ? (msg as any).melding
-            : undefined;
-      if (!m) return;
-      if (m === "Valideringsfeil") return; // behold eksisterende filtrering
-      if (m.startsWith("Fyll ut feltet") || m.startsWith("Fyll ut feltene")) return; // slå av sammendragsmeldinger
-      result.push(m);
-    };
-
-    const traverse = (obj: unknown) => {
-      if (obj == null) return;
-      if (Array.isArray(obj)) {
-        obj.forEach(traverse);
-        return;
-      }
-      if (typeof obj === "object") {
-        // Hvis objektet har en direkte melding, ta den
-        if (typeof (obj as any).melding === "string") {
-          pushMsg(obj);
-        }
-        // redux-form/Yup feilkart kan ha _error på objektnivå – ta den også
-        if (typeof (obj as any)._error === "string") {
-          pushMsg((obj as any)._error);
-        }
-        // traverser videre
-        Object.values(obj).forEach(traverse);
-        return;
-      }
-      // primitive typer (string etc)
-      pushMsg(obj);
-    };
-
-    // start: ta toppnivå først, slik at direkte feilmeldinger også kommer med
-    if (syncErrors && typeof syncErrors === "object") {
-      Object.entries(syncErrors).forEach(([, feilmelding]) => {
-        // Filtrer bort "Valideringsfeil" via pushMsg
-        // Dersom det er et objekt, traverser for å hente ut underliggende meldinger
-        if (typeof feilmelding === "object" && feilmelding !== null) {
-          traverse(feilmelding);
-        } else {
-          pushMsg(feilmelding as any);
-        }
-      });
-    }
-
-    // Fjern duplikater, behold rekkefølge
-    const unike = Array.from(new Set(result));
-    // Unngå dobbel-melding for tittel: hvis Brevtittel-linje finnes, dropp generisk "Fyll inn tittel"
-    const harBrevtittelLinje = unike.some(
-      (m) => m.toLowerCase().includes("brevtittel") || m.toLowerCase().includes("brev tittel"),
-    );
-    return unike.filter((m) => !(harBrevtittelLinje && m.trim() === "Fyll inn tittel"));
+    return buildValidationSummary(syncErrors);
   }, [syncErrors]);
 
   const setValgteVedleggIState = (valgteVedleggFraVisningstabell: BrevVedleggVisningstabellInterface) => {
@@ -304,6 +253,28 @@ function SendBrev({
       tilgjengeligeBrevtyper.find((brevType) => brevType.type.kode === formValues.type),
     );
   }, [formValues?.type]);
+
+  // Nullstill hovedtekst (FRITEKST) når brevmal (type) endres
+  useEffect(() => {
+    if (formValues) {
+      changeField("felt.FRITEKST.feltVerdi", "");
+    }
+  }, [formValues?.type]);
+
+  // Reset all feilhåndtering + fjern touched på relevante felter når mottaker/type endres
+  useEffect(() => {
+    // slå av feltfeil og oppsummering
+    changeField("showFieldErrors", false);
+    if (submitAttempted) setSubmitAttempted(false);
+
+    // rydd lokale feilstater/varsler
+    setFeil(undefined);
+    setVisBrevBestiltAlert(false);
+    setMuligeMottakereFeil(undefined);
+
+    // fjern touched slik at rødmarkering forsvinner umiddelbart
+    untouchFields("type", "organisasjonsnummer", "felt.FRITEKST.feltVerdi");
+  }, [formValues?.mottaker, formValues?.type]);
 
   useEffect(() => {
     setMuligeMottakereFeil(undefined);
@@ -439,6 +410,7 @@ function SendBrev({
 
     if (!formIsValid) {
       setSubmitAttempted(true);
+      changeField("showFieldErrors", true);
       touchAllFields();
       return;
     }
@@ -483,6 +455,7 @@ function SendBrev({
 
   const resetFormOgFritekstvedleggState = () => {
     resetForm();
+    changeField("showFieldErrors", false);
     setFritekstvedlegg([]);
     setVisFritekstvedleggSkjema(false);
     setRedigerFritekstvedleggIndex(undefined);

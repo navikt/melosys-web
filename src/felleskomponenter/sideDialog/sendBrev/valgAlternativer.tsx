@@ -47,11 +47,12 @@ function ValgAlternativer({
     const brevFelt = valgtBrev.felter.find((f: any) => f.kode === feltKode);
     if (!brevFelt?.paakrevd) return false;
 
-    const feltVerdi = formValues.felt?.[feltKode];
+    const feltVerdi = formValues?.felt?.[feltKode];
     return !feltVerdi?.valg;
   };
 
-  const skalViseFeil = syncErrors?.erFeltGyldig && erFeltPåkrevdOgMangler();
+  const visFelterFeil = Boolean(formValues?.showFieldErrors);
+  const skalViseFeil = visFelterFeil && syncErrors?.erFeltGyldig && erFeltPåkrevdOgMangler();
   const feilmelding = skalViseFeil ? `${beskrivelse || feltKode} må fylles ut` : undefined;
 
   const label = lagLabel(beskrivelse, hjelpetekst);

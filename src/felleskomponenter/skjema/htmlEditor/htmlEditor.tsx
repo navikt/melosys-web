@@ -8,6 +8,8 @@ interface SkjemaHtmlEditorProps {
   label?: React.ReactNode;
   placeholder?: string;
   error?: string | undefined;
+  // Når true: skjul meta.error (f.eks. før innsending når vi "gater" feil)
+  suppressMetaError?: boolean;
 }
 
 function SkjemaHtmlEditorComponent({
@@ -16,7 +18,8 @@ function SkjemaHtmlEditorComponent({
   error,
   ...rest
 }: WrappedFieldProps & Omit<SkjemaHtmlEditorProps, "feltNavn">) {
-  const feil = error || (meta.touched ? meta.error : undefined);
+  const shouldShowMetaError = !rest.suppressMetaError && meta.touched;
+  const feil = error || (shouldShowMetaError ? meta.error : undefined);
 
   return (
     <HtmlEditor

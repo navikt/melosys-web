@@ -52,6 +52,9 @@ function BrevFelt({ felt, visFeltBeskrivelse, width, redigerbart }: BrevFeltProp
 
   // Sjekk om hele skjemaet har felt-feil og dette feltet er påkrevd og mangler
   const harRelevantValidationFeil = () => {
+    const visFelterFeil = Boolean(formValues?.showFieldErrors);
+    if (!visFelterFeil) return false;
+
     // Sjekk om det er generell feltfeil og dette feltet er påkrevd og mangler
     const generellFeltFeil = syncErrors?.erFeltGyldig;
     if (generellFeltFeil && erFeltPåkrevdOgMangler()) {
@@ -81,6 +84,8 @@ function BrevFelt({ felt, visFeltBeskrivelse, width, redigerbart }: BrevFeltProp
             className="brevfelt__fritekst"
             disabled={!redigerbart}
             error={feilmelding}
+            // Skjul meta.error før innsending (vis først når showFieldErrors er true)
+            suppressMetaError={!formValues?.showFieldErrors}
           />
         </>
       );
