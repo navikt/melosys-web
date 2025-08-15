@@ -4,6 +4,7 @@ import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 import { connect, ConnectedProps, useSelector } from "react-redux";
 import { change, getFormSyncErrors, getFormValues, reduxForm, reset } from "redux-form";
+import { touchAll as touchAllFieldsOp } from "../../../ducks/form/operations";
 import { ColumnWidth } from "nav-frontend-grid";
 
 import { useMsal } from "@azure/msal-react";
@@ -56,6 +57,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>)
   changeField: (field: string, data: unknown) => dispatch(change(KV.Form.SEND_BREV, field, data)),
   resetForm: () => dispatch(reset(KV.Form.SEND_BREV)),
   oppdaterBehandling: () => dispatch(behandlingerOperations.oppdaterBehandling()),
+  touchAllFields: () => dispatch(touchAllFieldsOp(KV.Form.SEND_BREV)),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -91,6 +93,7 @@ function SendBrev({
   resetForm,
   visApneINyttVindu,
   dokumenter,
+  touchAllFields,
   brevTypeSelectWidth = "12",
   mottakerSelectWidth = "12",
   mottakerTabellWidth = "12",
@@ -100,6 +103,7 @@ function SendBrev({
   sakstype,
 }: Props & PropsFromRedux) {
   const [tilgjengeligeMaler, setTilgjengeligeMaler] = useState<Api.DokumenterV2.TilgjengeligeMalerResDto>();
+  const [submitAttempted, setSubmitAttempted] = useState(false);
   const [standardvedleggListe, setStandardvedleggListe] = useState<Api.DokumenterV2.TilgjengeligStandardvedlegg[]>([]);
   const [muligeMottakere, setMuligeMottakere] = useState<Api.DokumenterV2.HentMuligeMottakereResDto>();
   const [muligeMottakereFeil, setMuligeMottakereFeil] = useState<string | undefined>(undefined);
@@ -274,6 +278,12 @@ function SendBrev({
     }
   }, [visInnhold]);
 
+  useEffect(() => {
+    if (formIsValid && submitAttempted) {
+      setSubmitAttempted(false);
+    }
+  }, [formIsValid]);
+
   const finnValgAlternativ = (felt: Api.DokumenterV2.Felt) => {
     return felt?.valg?.valgAlternativer.find((alternativ) => alternativ.kode === formValues?.felt?.[felt.kode]?.valg);
   };
@@ -365,6 +375,13 @@ function SendBrev({
 
   const sendBrev = () => {
     if (!formValues?.valgtMottaker) return;
+
+    if (!formIsValid) {
+      setSubmitAttempted(true);
+      touchAllFields();
+      return;
+    }
+
     setSendBrevSpinner(true);
     setFeil(undefined);
 
@@ -447,9 +464,11 @@ function SendBrev({
 
   const spinnerAktiv = sendBrevSpinner || lagreUtkastSpinner || forkastBrevSpinner;
 
+  const sendBrevAktiveringskravOppfylt = Boolean(mottakerErValgt && brevtypeErValgt);
+
   const knappErDisabled =
     !redigerbart ||
-    !formIsValid ||
+    !sendBrevAktiveringskravOppfylt ||
     !!formValues.valgtMottaker?.feilmelding ||
     visFritekstvedleggSkjema ||
     Boolean(muligeMottakereFeil) ||
@@ -558,7 +577,7 @@ function SendBrev({
       )}
 
       <div className="send_brev__knapperad">
-        {!formIsValid && (
+        {submitAttempted && !formIsValid && (
           <Nav.Alert variant="error" className="varsel">
             Følgende feil ble funnet:
             {syncErrors && Object.keys(syncErrors).length > 0 && (
