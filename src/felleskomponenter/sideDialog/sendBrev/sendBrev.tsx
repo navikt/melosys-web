@@ -1,4 +1,4 @@
-import { FocusEvent, useEffect, useState } from "react";
+import { FocusEvent, useEffect, useMemo, useState } from "react";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
@@ -128,6 +128,67 @@ function SendBrev({
   const mottakerErNorskMyndighet = erNorskMyndighet(formValues?.valgtMottaker?.rolle);
   const { accounts } = useMsal();
   const syncErrors = useSelector((state: RootState) => getFormSyncErrors(KV.Form.SEND_BREV)(state));
+
+  const valideringsFeilLinjer: string[] = useMemo(() => {
+    const result: string[] = [];
+
+    const pushMsg = (msg: unknown) => {
+      const m =
+        typeof msg === "string"
+          ? msg
+          : typeof msg === "object" && msg && "melding" in (msg as any)
+            ? (msg as any).melding
+            : undefined;
+      if (!m) return;
+      if (m === "Valideringsfeil") return; // behold eksisterende filtrering
+      if (m.startsWith("Fyll ut feltet") || m.startsWith("Fyll ut feltene")) return; // slå av sammendragsmeldinger
+      result.push(m);
+    };
+
+    const traverse = (obj: unknown) => {
+      if (obj == null) return;
+      if (Array.isArray(obj)) {
+        obj.forEach(traverse);
+        return;
+      }
+      if (typeof obj === "object") {
+        // Hvis objektet har en direkte melding, ta den
+        if (typeof (obj as any).melding === "string") {
+          pushMsg(obj);
+        }
+        // redux-form/Yup feilkart kan ha _error på objektnivå – ta den også
+        if (typeof (obj as any)._error === "string") {
+          pushMsg((obj as any)._error);
+        }
+        // traverser videre
+        Object.values(obj).forEach(traverse);
+        return;
+      }
+      // primitive typer (string etc)
+      pushMsg(obj);
+    };
+
+    // start: ta toppnivå først, slik at direkte feilmeldinger også kommer med
+    if (syncErrors && typeof syncErrors === "object") {
+      Object.entries(syncErrors).forEach(([, feilmelding]) => {
+        // Filtrer bort "Valideringsfeil" via pushMsg
+        // Dersom det er et objekt, traverser for å hente ut underliggende meldinger
+        if (typeof feilmelding === "object" && feilmelding !== null) {
+          traverse(feilmelding);
+        } else {
+          pushMsg(feilmelding as any);
+        }
+      });
+    }
+
+    // Fjern duplikater, behold rekkefølge
+    const unike = Array.from(new Set(result));
+    // Unngå dobbel-melding for tittel: hvis Brevtittel-linje finnes, dropp generisk "Fyll inn tittel"
+    const harBrevtittelLinje = unike.some(
+      (m) => m.toLowerCase().includes("brevtittel") || m.toLowerCase().includes("brev tittel"),
+    );
+    return unike.filter((m) => !(harBrevtittelLinje && m.trim() === "Fyll inn tittel"));
+  }, [syncErrors]);
 
   const setValgteVedleggIState = (valgteVedleggFraVisningstabell: BrevVedleggVisningstabellInterface) => {
     setValgteVedlegg({
@@ -580,26 +641,11 @@ function SendBrev({
         {submitAttempted && !formIsValid && (
           <Nav.Alert variant="error" className="varsel">
             Følgende feil ble funnet:
-            {syncErrors && Object.keys(syncErrors).length > 0 && (
+            {valideringsFeilLinjer.length > 0 && (
               <ul>
-                {Object.entries(syncErrors)
-                  .filter(([, feilmelding]) => {
-                    // Filtrer bort "Valideringsfeil", siden vi ikke trenger den
-                    if (typeof feilmelding === "string" && feilmelding === "Valideringsfeil") {
-                      return false;
-                    }
-                    if (typeof feilmelding === "object" && feilmelding?.melding === "Valideringsfeil") {
-                      return false;
-                    }
-                    return true;
-                  })
-                  .map(([felt, feilmelding]) => (
-                    <li key={felt}>
-                      {typeof feilmelding === "object" && feilmelding?.melding
-                        ? feilmelding.melding
-                        : (feilmelding as string)}
-                    </li>
-                  ))}
+                {valideringsFeilLinjer.map((melding, idx) => (
+                  <li key={idx}>{melding}</li>
+                ))}
               </ul>
             )}
           </Nav.Alert>

@@ -26,10 +26,8 @@ const lagYupToReduxformErrorMapper = (schema, settings) => {
               // Already a string message
               valueToSet = e.message;
             } else {
-              // Fallback for other types or unexpected objects
-              /* eslint-disable-next-line no-console */
-              console.warn("Unexpected e.message type in lagYupToReduxformErrorMapper, falling back:", e.message);
-              valueToSet = "Valideringsfeil";
+              // Preserve arbitrary nested error objects (e.g., per-field maps) so UI can traverse them
+              valueToSet = e.message ?? "Valideringsfeil";
             }
             Utils._set(formErrors, e.path, valueToSet);
           } else {
@@ -53,12 +51,8 @@ const lagYupToReduxformErrorMapper = (schema, settings) => {
         } else if (typeof error.message === "string") {
           valueToSet = error.message;
         } else {
-          /* eslint-disable-next-line no-console */
-          console.warn(
-            "Unexpected error.message type in lagYupToReduxformErrorMapper (single error), falling back:",
-            error.message,
-          );
-          valueToSet = "Valideringsfeil";
+          // Preserve arbitrary nested error objects for single-error cases as well
+          valueToSet = error.message ?? "Valideringsfeil";
         }
         Utils._set(formErrors, error.path, valueToSet);
       } else {
