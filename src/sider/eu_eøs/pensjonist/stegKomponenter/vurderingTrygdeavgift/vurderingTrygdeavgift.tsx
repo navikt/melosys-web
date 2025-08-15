@@ -88,7 +88,6 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     watch,
     formState: { isValid: formIsValid, isValidating },
     trigger,
-    reset,
     clearErrors,
   } = useForm({
     resolver: yupResolver(vurderingTrygdeavgiftSchema),
@@ -134,25 +133,25 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const skalViseInntektskilder = !erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder);
 
   useEffect(() => {
+    Api.Trygdeavgift.hentBeregnetTrygdeavgiftEosPensjonist(behandlingID).then((beregnetTrygdeavgift) => {
+      if (
+        behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING &&
+        beregnetTrygdeavgift.trygdeavgiftsgrunnlag.skatteforholdsperioder.length === 0
+      ) {
+        hentOpprinneligTrygdeavgiftsgrunnlag();
+      } else {
+        håndterTrygdeavgiftsberegning(beregnetTrygdeavgift);
+      }
+    });
+
+    if (!redigerbart) {
+      return;
+    }
+
     if (harEndretHelseutgiftDekkesPeriode === undefined) {
       setHarEndretHelseutgiftDekkesPeriode(false);
     } else {
       setHarEndretHelseutgiftDekkesPeriode(true);
-      setTrygdeavgift(undefined);
-      Api.Trygdeavgift.hentBeregnetTrygdeavgiftEosPensjonist(behandlingID).then((beregnetTrygdeavgift) => {
-        if (
-          behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING &&
-          beregnetTrygdeavgift.trygdeavgiftsgrunnlag.skatteforholdsperioder.length === 0
-        ) {
-          hentOpprinneligTrygdeavgiftsgrunnlag();
-        } else {
-          håndterTrygdeavgiftsberegning(beregnetTrygdeavgift);
-        }
-      });
-    }
-
-    if (!redigerbart) {
-      return;
     }
   }, [helseutgiftDekkesPeriodeData]);
 
@@ -188,14 +187,12 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   };
 
   const håndterTrygdeavgiftsberegning = (beregnetTrygdeavgift: BeregnetTrygdeavgift) => {
-    //console.log("Henter opprinnelig?");
     setTrygdeavgift(beregnetTrygdeavgift);
     const lagretTrygdeavgiftsgrunnlag = beregnetTrygdeavgift.trygdeavgiftsgrunnlag;
     håndterLagretTrygdeavgiftsgrunnlag(lagretTrygdeavgiftsgrunnlag);
   };
 
   const hentOpprinneligTrygdeavgiftsgrunnlag = () => {
-    //console.log("Henter opprinnelig?");
     Api.Trygdeavgift.hentOpprinneligTrygdeavgiftsgrunnlag(behandlingID).then(håndterLagretTrygdeavgiftsgrunnlag);
   };
 
