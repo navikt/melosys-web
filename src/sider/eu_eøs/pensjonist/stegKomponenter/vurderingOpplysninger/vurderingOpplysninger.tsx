@@ -134,6 +134,8 @@ export function VurderingOpplysninger({ bekreft, tilbake, aktivtSteg, oppdaterSt
     oppdaterStatus(stegErGyldig);
   }, [stegErGyldig]);
 
+  if (!aktivtSteg) return null;
+
   return (
     <>
       <Nav.Heading level="1" className="stegvelgertittel">

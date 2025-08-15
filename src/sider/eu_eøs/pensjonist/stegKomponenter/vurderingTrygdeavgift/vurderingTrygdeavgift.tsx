@@ -88,6 +88,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     watch,
     formState: { isValid: formIsValid, isValidating },
     trigger,
+    clearErrors,
   } = useForm({
     resolver: yupResolver(vurderingTrygdeavgiftSchema),
     context: { helseutgiftDekkesPeriode: helseutgiftDekkesPeriode },
@@ -182,6 +183,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
           }))
         : [{ ...formattedDefaultPeriode(), erMaanedsbelop: BOOLSK_STRING.SANN }],
     );
+    clearErrors();
   };
 
   const håndterTrygdeavgiftsberegning = (beregnetTrygdeavgift: BeregnetTrygdeavgift) => {
