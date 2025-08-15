@@ -14,6 +14,7 @@ import { useEffect } from "react";
 import { FieldArrayProps, FormValuesProps } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
 import { Medlemskapsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import "./medlemskapsperiodeSkjema.css";
+import { usePliktigeBestemmelser } from "../hooks/usePliktigeBestemmelser";
 
 // Funksjon for å kalkulere slettbar-status, nå kalt kanPeriodeSlettes
 const kanPeriodeSlettes = (gjeldendePeriode: Medlemskapsperiode, allePerioderIListe: Medlemskapsperiode[]): boolean => {
@@ -78,6 +79,9 @@ export function MedlemskapsperiodeSkjema({
   trygdedekninger = [],
   setValue,
 }: PeriodeElementerProps) {
+  const pliktigeBestemmelser = usePliktigeBestemmelser();
+  const erPliktigBestemmelse = formValues.bestemmelse && pliktigeBestemmelser.includes(formValues.bestemmelse);
+
   const medlemskapsperioder = formValues.medlemskapsperioder!;
   const erPeriodeFraGrunnlag = !medlemskapsperioder[index]?.redigerbar;
   const kanViseSletteKolonne = redigerbart && medlemskapsperioder.length > 1;
@@ -152,7 +156,7 @@ export function MedlemskapsperiodeSkjema({
           </Nav.Column>
         )}
       </Nav.Row>
-      {medlemskapsperioder.length === index + 1 && (
+      {medlemskapsperioder.length === index + 1 && !erPliktigBestemmelse && (
         <div className="legg-til__rad">
           <Mui.Lenkeknapp onClick={handleLeggTil} ikon={Ikoner.Add} disabled={!redigerbart || !visLeggTil}>
             Legg til periode
