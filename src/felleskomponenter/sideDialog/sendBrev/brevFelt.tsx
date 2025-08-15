@@ -1,12 +1,17 @@
 import { ColumnWidth } from "nav-frontend-grid";
+import { useSelector } from "react-redux";
+import { getFormSyncErrors, getFormValues } from "redux-form";
+import { RootState } from "AppTypes";
 
 import * as Nav from "../../../navFrontend";
 import * as Skjema from "../../skjema";
-
+import * as KV from "../../../kodeverk";
 import { DokumenterV2 } from "../../../services/api";
 import { begrensAntallTegn } from "../../../utils/normalisering";
 import LabelMedHjelpetekst from "../../labelMedHjelpetekst";
+import * as StringUtils from "../../../utils/streng";
 import "./brevFelt.less";
+import { SendBrevFormValues } from "./types";
 
 interface BrevFeltProps {
   felt: DokumenterV2.Felt;
@@ -16,6 +21,54 @@ interface BrevFeltProps {
 }
 
 function BrevFelt({ felt, visFeltBeskrivelse, width, redigerbart }: BrevFeltProps) {
+  const syncErrors = useSelector((state: RootState) => getFormSyncErrors(KV.Form.SEND_BREV)(state)) as any;
+  const formValues = useSelector((state: RootState) => getFormValues(KV.Form.SEND_BREV)(state)) as SendBrevFormValues;
+
+  // Sjekk om dette feltet mangler verdi
+  const manglerFeltVerdi = (felt: any) => {
+    if (!felt) return true;
+
+    // For felt med valg (dropdown/select)
+    if (felt.valg) {
+      return !felt.valg;
+    }
+
+    // For vanlige tekstfelt
+    return !StringUtils.harStrengInnhold(felt.feltVerdi);
+  };
+
+  // Sjekk om dette spesifikke feltet mangler utfylling og er påkrevd
+  const erFeltPåkrevdOgMangler = () => {
+    const valgtBrev = formValues?.valgtBrev;
+    if (!valgtBrev?.felter) return false;
+
+    const brevFelt = valgtBrev.felter.find((f) => f.kode === felt.kode);
+    if (!brevFelt?.paakrevd) return false;
+
+    const feltVerdi = formValues.felt?.[felt.kode];
+
+    return manglerFeltVerdi(feltVerdi);
+  };
+
+  // Sjekk om hele skjemaet har felt-feil og dette feltet er påkrevd og mangler
+  const harRelevantValidationFeil = () => {
+    // Sjekk om det er generell feltfeil og dette feltet er påkrevd og mangler
+    const generellFeltFeil = syncErrors?.erFeltGyldig;
+    if (generellFeltFeil && erFeltPåkrevdOgMangler()) {
+      return true;
+    }
+
+    // Sjekk for felt-spesifikke feil
+    const feltSpesifikkFeil =
+      syncErrors?.[`felt.${felt.kode}.feltVerdi`] || syncErrors?.[`felt.${felt.kode}.valg`] || syncErrors?.[felt.kode];
+    return !!feltSpesifikkFeil;
+  };
+
+  // Dette feltet skal vise feil hvis det har validation-feil
+  const skalViseFeil = harRelevantValidationFeil();
+
+  const feilmelding = skalViseFeil ? `${felt.beskrivelse || felt.kode} må fylles ut` : undefined;
+
   switch (felt?.feltType) {
     case DokumenterV2.FeltType.FRITEKST:
       return (
@@ -27,6 +80,7 @@ function BrevFelt({ felt, visFeltBeskrivelse, width, redigerbart }: BrevFeltProp
             feltNavn={`felt.${felt.kode}.feltVerdi`}
             className="brevfelt__fritekst"
             disabled={!redigerbart}
+            error={feilmelding}
           />
         </>
       );
@@ -45,6 +99,7 @@ function BrevFelt({ felt, visFeltBeskrivelse, width, redigerbart }: BrevFeltProp
                 )
               }
               disabled={!redigerbart}
+              error={feilmelding}
             />
           </Nav.Column>
         </Nav.Row>
@@ -58,6 +113,7 @@ function BrevFelt({ felt, visFeltBeskrivelse, width, redigerbart }: BrevFeltProp
               feltNavn={`felt.${felt.kode}.feltVerdi`}
               label={felt.beskrivelse}
               disabled={!redigerbart}
+              error={feilmelding}
             />
           </Nav.Column>
         </Nav.Row>
@@ -71,6 +127,33 @@ function BrevFelt({ felt, visFeltBeskrivelse, width, redigerbart }: BrevFeltProp
         </Nav.Row>
       );
     default:
+      // Håndter felt med valg (dropdown/select)
+      if (felt?.valg?.valgAlternativer) {
+        return (
+          <Nav.Row>
+            <Nav.Column xs={width}>
+              <Skjema.Select
+                feltNavn={`felt.${felt.kode}.valg`}
+                label={
+                  visFeltBeskrivelse ? (
+                    <LabelMedHjelpetekst label={felt.beskrivelse} hjelpetekst={felt.hjelpetekst} bold small />
+                  ) : (
+                    ""
+                  )
+                }
+                disabled={!redigerbart}
+                error={feilmelding}
+              >
+                {felt.valg.valgAlternativer.map((alternativ) => (
+                  <option key={alternativ.kode} value={alternativ.kode}>
+                    {alternativ.beskrivelse}
+                  </option>
+                ))}
+              </Skjema.Select>
+            </Nav.Column>
+          </Nav.Row>
+        );
+      }
       return null;
   }
 }

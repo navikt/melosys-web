@@ -2,8 +2,8 @@ import { FocusEvent, useEffect, useState } from "react";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
-import { connect, ConnectedProps } from "react-redux";
-import { change, getFormValues, reduxForm, reset } from "redux-form";
+import { connect, ConnectedProps, useSelector } from "react-redux";
+import { change, getFormSyncErrors, getFormValues, reduxForm, reset } from "redux-form";
 import { ColumnWidth } from "nav-frontend-grid";
 
 import { useMsal } from "@azure/msal-react";
@@ -78,6 +78,7 @@ interface Props {
   formValues: SendBrevFormValues;
   dokumenter: FysiskDokument[];
   saksnummer: string;
+  syncErrors?: { [key: string]: string };
 }
 
 function SendBrev({
@@ -122,6 +123,7 @@ function SendBrev({
     tilgjengeligeMaler?.find((mal) => mal?.mottaker.uuid === formValues?.mottaker)?.brevTyper || [];
   const mottakerErNorskMyndighet = erNorskMyndighet(formValues?.valgtMottaker?.rolle);
   const { accounts } = useMsal();
+  const syncErrors = useSelector((state: RootState) => getFormSyncErrors(KV.Form.SEND_BREV)(state));
 
   const setValgteVedleggIState = (valgteVedleggFraVisningstabell: BrevVedleggVisningstabellInterface) => {
     setValgteVedlegg({
@@ -556,6 +558,33 @@ function SendBrev({
       )}
 
       <div className="send_brev__knapperad">
+        {!formIsValid && (
+          <Nav.Alert variant="error" className="varsel">
+            Følgende feil ble funnet:
+            {syncErrors && Object.keys(syncErrors).length > 0 && (
+              <ul>
+                {Object.entries(syncErrors)
+                  .filter(([, feilmelding]) => {
+                    // Filtrer bort "Valideringsfeil", siden vi ikke trenger den
+                    if (typeof feilmelding === "string" && feilmelding === "Valideringsfeil") {
+                      return false;
+                    }
+                    if (typeof feilmelding === "object" && feilmelding?.melding === "Valideringsfeil") {
+                      return false;
+                    }
+                    return true;
+                  })
+                  .map(([felt, feilmelding]) => (
+                    <li key={felt}>
+                      {typeof feilmelding === "object" && feilmelding?.melding
+                        ? feilmelding.melding
+                        : (feilmelding as string)}
+                    </li>
+                  ))}
+              </ul>
+            )}
+          </Nav.Alert>
+        )}
         <Nav.Button
           variant="primary"
           disabled={knappErDisabled}

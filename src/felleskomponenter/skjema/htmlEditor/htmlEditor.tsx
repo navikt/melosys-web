@@ -7,14 +7,16 @@ interface SkjemaHtmlEditorProps {
   disabled?: boolean;
   label?: React.ReactNode;
   placeholder?: string;
+  error?: string | undefined;
 }
 
 function SkjemaHtmlEditorComponent({
   input,
   meta,
+  error,
   ...rest
 }: WrappedFieldProps & Omit<SkjemaHtmlEditorProps, "feltNavn">) {
-  const feil = meta.touched ? meta.error : undefined;
+  const feil = error || (meta.touched ? meta.error : undefined);
 
   return (
     <HtmlEditor
