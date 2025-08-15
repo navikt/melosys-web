@@ -21,8 +21,15 @@ const normaliserReduxBoolean = (valg: string) => {
 };
 
 type InnerRadioGroupProps = RadioGroupProps & {
-  input: any;
-  meta: any;
+  input: {
+    value: boolean | string;
+    onChange: (value: boolean | string) => void;
+  };
+  meta: {
+    error?: string;
+    touched?: boolean;
+    active?: boolean;
+  };
 };
 
 function InnerRadioGroup({
@@ -38,7 +45,7 @@ function InnerRadioGroup({
   readOnly,
   error,
 }: InnerRadioGroupProps) {
-  const innerChange = (value: unknown) => {
+  const innerChange = (value: string | boolean) => {
     if (onChange) onChange(value);
     input.onChange(value);
   };

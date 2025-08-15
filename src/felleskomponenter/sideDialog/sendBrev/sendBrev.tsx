@@ -350,14 +350,14 @@ function SendBrev({
     if (feltFraValgtMal?.valg) {
       const valgtAlternativ = finnValgAlternativ(feltFraValgtMal);
       if (!hentValgverdi) {
-        return valgtAlternativ?.visFelt ? feltVerdi : null;
+        return valgtAlternativ?.visFelt ? (feltVerdi ?? null) : null;
       }
 
       if (hentKode) {
         return valgtAlternativ?.kode ?? null;
       }
 
-      return valgtAlternativ?.visFelt ? feltVerdi : (valgtAlternativ?.beskrivelse ?? null);
+      return valgtAlternativ?.visFelt ? (feltVerdi ?? null) : (valgtAlternativ?.beskrivelse ?? null);
     }
     return feltVerdi ?? null;
   };

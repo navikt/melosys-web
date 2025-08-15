@@ -2,12 +2,11 @@ export function buildValidationSummary(syncErrors: unknown): string[] {
   const result: string[] = [];
 
   const pushMsg = (msg: unknown) => {
-    const m =
-      typeof msg === "string"
-        ? msg
-        : typeof msg === "object" && msg && "melding" in (msg as any)
-          ? (msg as any).melding
-          : undefined;
+    const isMeldingObject = (value: unknown): value is { melding: string } => {
+      return typeof value === "object" && value !== null && "melding" in value;
+    };
+
+    const m = typeof msg === "string" ? msg : isMeldingObject(msg) ? msg.melding : undefined;
     if (!m) return;
     if (m === "Valideringsfeil") return; // behold eksisterende filtrering
     if (m.startsWith("Fyll ut feltet") || m.startsWith("Fyll ut feltene")) return; // ikke ta sammendragsmeldinger
@@ -15,14 +14,15 @@ export function buildValidationSummary(syncErrors: unknown): string[] {
   };
 
   const traverse = (obj: unknown) => {
-    if (obj == null) return;
+    if (obj === null) return;
     if (Array.isArray(obj)) {
       obj.forEach(traverse);
       return;
     }
     if (typeof obj === "object") {
-      if (typeof (obj as any).melding === "string") pushMsg(obj);
-      if (typeof (obj as any)._error === "string") pushMsg((obj as any)._error);
+      const objWithProperties = obj as { melding?: string; _error?: string };
+      if (typeof objWithProperties.melding === "string") pushMsg(objWithProperties.melding);
+      if (typeof objWithProperties._error === "string") pushMsg(objWithProperties._error);
       Object.values(obj).forEach(traverse);
       return;
     }
@@ -34,7 +34,7 @@ export function buildValidationSummary(syncErrors: unknown): string[] {
       if (typeof feilmelding === "object" && feilmelding !== null) {
         traverse(feilmelding);
       } else {
-        pushMsg(feilmelding as any);
+        pushMsg(feilmelding);
       }
     });
   }

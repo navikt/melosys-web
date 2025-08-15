@@ -11,7 +11,7 @@ import { begrensAntallTegn } from "../../../utils/normalisering";
 import LabelMedHjelpetekst from "../../labelMedHjelpetekst";
 import * as StringUtils from "../../../utils/streng";
 import "./brevFelt.less";
-import { SendBrevFormValues } from "./types";
+import { FeltVerdi, SendBrevFormValues, SyncErrors } from "./types";
 
 interface BrevFeltProps {
   felt: DokumenterV2.Felt;
@@ -21,22 +21,18 @@ interface BrevFeltProps {
 }
 
 function BrevFelt({ felt, visFeltBeskrivelse, width, redigerbart }: BrevFeltProps) {
-  const syncErrors = useSelector((state: RootState) => getFormSyncErrors(KV.Form.SEND_BREV)(state)) as any;
+  const syncErrors = useSelector((state: RootState) => getFormSyncErrors(KV.Form.SEND_BREV)(state)) as SyncErrors;
   const formValues = useSelector((state: RootState) => getFormValues(KV.Form.SEND_BREV)(state)) as SendBrevFormValues;
 
-  // Sjekk om dette feltet mangler verdi
-  const manglerFeltVerdi = (felt: any) => {
+  const manglerFeltVerdi = (felt: FeltVerdi | undefined): boolean => {
     if (!felt) return true;
 
-    // For felt med valg (dropdown/select)
-    if (felt.valg) {
+    if ("valg" in felt && felt.valg !== undefined) {
       return !felt.valg;
     }
 
-    // For vanlige tekstfelt
     return !StringUtils.harStrengInnhold(felt.feltVerdi);
   };
-
   // Sjekk om dette spesifikke feltet mangler utfylling og er påkrevd
   const erFeltPåkrevdOgMangler = () => {
     const valgtBrev = formValues?.valgtBrev;

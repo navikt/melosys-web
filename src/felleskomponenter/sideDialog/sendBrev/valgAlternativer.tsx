@@ -8,6 +8,7 @@ import * as Skjema from "../../skjema";
 import * as Nav from "../../../navFrontend";
 import * as KV from "../../../kodeverk";
 import LabelMedHjelpetekst from "../../labelMedHjelpetekst";
+import { BrevFelt, SendBrevFormValues, SyncErrors } from "./types";
 
 interface ValgAlternativProps {
   valg: DokumenterV2.Valg;
@@ -36,15 +37,15 @@ function ValgAlternativer({
   hjelpetekst,
   className,
 }: ValgAlternativProps) {
-  const syncErrors = useSelector((state: RootState) => getFormSyncErrors(KV.Form.SEND_BREV)(state)) as any;
-  const formValues = useSelector((state: RootState) => getFormValues(KV.Form.SEND_BREV)(state)) as any;
+  const syncErrors = useSelector((state: RootState) => getFormSyncErrors(KV.Form.SEND_BREV)(state)) as SyncErrors;
+  const formValues = useSelector((state: RootState) => getFormValues(KV.Form.SEND_BREV)(state)) as SendBrevFormValues;
 
   // Sjekk om dette feltet er påkrevd og mangler verdi
   const erFeltPåkrevdOgMangler = () => {
     const valgtBrev = formValues?.valgtBrev;
     if (!valgtBrev?.felter) return false;
 
-    const brevFelt = valgtBrev.felter.find((f: any) => f.kode === feltKode);
+    const brevFelt = valgtBrev.felter.find((f: BrevFelt) => f.kode === feltKode);
     if (!brevFelt?.paakrevd) return false;
 
     const feltVerdi = formValues?.felt?.[feltKode];
