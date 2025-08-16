@@ -254,27 +254,30 @@ function SendBrev({
     );
   }, [formValues?.type]);
 
-  // Nullstill hovedtekst (FRITEKST) når brevmal (type) endres
+  // Full reset av underfelter (verdier + touched) når valgt brevmal endres
   useEffect(() => {
-    if (formValues) {
-      changeField("felt.FRITEKST.feltVerdi", "");
-    }
-  }, [formValues?.type]);
+    const felter = formValues?.valgtBrev?.felter;
+    if (!felter) return;
 
-  // Reset all feilhåndtering + fjern touched på relevante felter når mottaker/type endres
+    changeField("showFieldErrors", false);
+    changeField("felt", {});
+
+    const pathsToUntouch: string[] = ["type"];
+    felter.forEach((f) => {
+      pathsToUntouch.push(`felt.${f.kode}.valg`, `felt.${f.kode}.feltVerdi`);
+    });
+    untouchFields(...pathsToUntouch);
+  }, [formValues?.valgtBrev?.type]);
+
+  // Reset kun feilhåndteringsflagg/varsler når mottaker endres (ikke lytte på type her)
   useEffect(() => {
-    // slå av feltfeil og oppsummering
     changeField("showFieldErrors", false);
     if (submitAttempted) setSubmitAttempted(false);
 
-    // rydd lokale feilstater/varsler
     setFeil(undefined);
     setVisBrevBestiltAlert(false);
     setMuligeMottakereFeil(undefined);
-
-    // fjern touched slik at rødmarkering forsvinner umiddelbart
-    untouchFields("type", "organisasjonsnummer", "felt.FRITEKST.feltVerdi");
-  }, [formValues?.mottaker, formValues?.type]);
+  }, [formValues?.mottaker]);
 
   useEffect(() => {
     setMuligeMottakereFeil(undefined);

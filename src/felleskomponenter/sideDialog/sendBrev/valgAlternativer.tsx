@@ -9,6 +9,7 @@ import * as Nav from "../../../navFrontend";
 import * as KV from "../../../kodeverk";
 import LabelMedHjelpetekst from "../../labelMedHjelpetekst";
 import { BrevFelt, SendBrevFormValues, SyncErrors } from "./types";
+import { hentFeltFeilmelding } from "./sendBrevSchema";
 
 interface ValgAlternativProps {
   valg: DokumenterV2.Valg;
@@ -54,7 +55,9 @@ function ValgAlternativer({
 
   const visFelterFeil = Boolean(formValues?.showFieldErrors);
   const skalViseFeil = visFelterFeil && syncErrors?.erFeltGyldig && erFeltPåkrevdOgMangler();
-  const feilmelding = skalViseFeil ? `${beskrivelse || feltKode} må fylles ut` : undefined;
+
+  // Bruk samme kilde for feiltekst som skjemaet (streng for UI)
+  const feilmelding = skalViseFeil ? hentFeltFeilmelding(feltKode, beskrivelse || feltKode) : undefined;
 
   const label = lagLabel(beskrivelse, hjelpetekst);
   const valgalternativErSelectOgKunEtt =
