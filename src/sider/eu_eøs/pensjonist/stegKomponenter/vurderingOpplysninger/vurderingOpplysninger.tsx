@@ -28,7 +28,7 @@ interface Props {
   oppdaterStatus: (isValid: boolean) => void;
 }
 
-export function VurderingOpplysninger({ bekreft, oppdaterStatus }: Props) {
+export function VurderingOpplysninger({ bekreft, oppdaterStatus, aktivtSteg }: Props) {
   const dispatch = useDispatch();
 
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
