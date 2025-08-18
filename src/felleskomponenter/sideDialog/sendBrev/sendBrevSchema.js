@@ -2,17 +2,17 @@ import { array, object, string } from "yup";
 import * as StringUtils from "../../../utils/streng";
 import { erAnnenOrganisasjon, erArbeidsgiver, erVirksomhet } from "./brevMottaker/brevMottaker";
 
-const TYPE_MANGLER = { melding: "Velg brevmal" };
+const BREVMAL_MANGLER = { melding: "Velg brevmal" };
 const MOTTAKER_MANGLER = { melding: "Velg mottaker" };
 const ARBEIDSGIVER_MANGLER = { melding: "Velg arbeidsgiver" };
 const ORGNUMMER_FELT_MANGLER = { melding: "Fyll ut organisasjonsnummer" };
 const ORGNUMMER_UGYLDIG = { melding: "Ugyldig organisasjonsnummer" };
 
-// Spesifikke meldinger per feltkode (streng)
+// Spesifikke meldinger per feltkode (samme format som øvrige: { melding: string })
 const FELT_FEILMELDINGER = {
-  BREV_TITTEL: "Velg overskrift i brev",
-  INNLEDNING_FRITEKST: "Fyll inn innledning",
-  MANGLER_FRITEKST: "Fritekst må fylles ut",
+  BREV_TITTEL: { melding: "Velg overskrift i brev" },
+  INNLEDNING_FRITEKST: { melding: "Fyll inn innledning" },
+  MANGLER_FRITEKST: { melding: "Fritekst må fylles ut" },
 };
 
 // Generisk feilmeding, brukes dersom sspesifikk melding ikke finnes
@@ -20,7 +20,10 @@ const FELT_VERDI_MAA_FYLLES_UT = (feltNavn) => `${feltNavn} må fylles ut`;
 
 // Felles helper: returnerer alltid streng (trygg å rendre i UI)
 export const hentFeltFeilmelding = (feltKode, visningsnavn) =>
-  FELT_FEILMELDINGER[feltKode] || FELT_VERDI_MAA_FYLLES_UT(visningsnavn);
+  FELT_FEILMELDINGER[feltKode]?.melding || FELT_VERDI_MAA_FYLLES_UT(visningsnavn);
+
+// Lokal helper for schema: pakk streng til { melding: string } slik at syncErrorsTilFeilmelding forstår bladene
+const toMelding = (t) => ({ melding: t });
 
 const manglerFeltVerdi = (felt) => {
   if (felt && !felt.valg) {
@@ -31,7 +34,7 @@ const manglerFeltVerdi = (felt) => {
 
 const send_brev = object().shape({
   mottaker: string().nullable(),
-  type: string().required(TYPE_MANGLER),
+  type: string().required(BREVMAL_MANGLER),
   valgtMottaker: object().required(MOTTAKER_MANGLER),
   organisasjonsnummer: string().when("valgtMottaker", {
     is: (valgtMottaker) => erAnnenOrganisasjon(valgtMottaker?.rolle),
@@ -86,18 +89,18 @@ const send_brev = object().shape({
 
         // Feil på valg (samme tekst som i oppsummeringen)
         if (manglerValg) {
-          errors[brevFelt.kode].valg = hentFeltFeilmelding(brevFelt.kode, visningsnavn);
+          errors[brevFelt.kode].valg = toMelding(hentFeltFeilmelding(brevFelt.kode, visningsnavn));
           harFeil = true;
         }
         // Egen tekst for fritekst input under BREV_TITTEL, vises under fritekst-feltet
         if (manglerFritekstBrevTittel) {
-          errors[brevFelt.kode].feltVerdi = "Fritekst for overskrift i brev må fylles ut";
+          errors[brevFelt.kode].feltVerdi = toMelding(FELT_FEILMELDINGER.MANGLER_FRITEKST);
           harFeil = true;
         }
 
         // Standard fritekst-feil for andre felt
         if (manglerFritekstStandard && brevFelt.kode !== "BREV_TITTEL") {
-          errors[brevFelt.kode].feltVerdi = hentFeltFeilmelding(brevFelt.kode, visningsnavn);
+          errors[brevFelt.kode].feltVerdi = toMelding(hentFeltFeilmelding(brevFelt.kode, visningsnavn));
           harFeil = true;
         }
       });
