@@ -42,7 +42,6 @@ import {
 } from "./aarsavregningUtenEllerDeltGrunnlag";
 import aarsavregningUtenEllerDeltGrunnlagSchema from "./aarsavregningUtenEllerDeltGrunnlagSchema";
 import { Feilmelding, finnAktivFeilmelding, finnAktivFeilmeldingForMedlemskapsperioder } from "./valideringsfeil";
-import inntektsperioderTabell from "../komponenter/inntektsperioderTabell";
 
 const { OPPLYSNINGER_ENDRET, MANUELL_ENDELIG_AVGIFT } = MKV.Koder.endeligAvgiftValg;
 
@@ -755,7 +754,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     oppdaterStatus(stegErGyldig);
   }, [stegErGyldig, oppdaterStatus]);
 
-  // Hack for at første/initielle element i skatteforhold og inntektsperiode ferdigutfylles med medlemskapsperiode når medlemskapsperiode er satt
+  // Denne gjør at første/initielle element i skatteforhold og inntektsperiode ferdigutfylles med medlemskapsperiode når medlemskapsperiode er satt
   useEffect(() => {
     if (medlemskapsperiode.fomDato && medlemskapsperiode.tomDato) {
       const initialSkatteforholdElement = skatteforholdsperioder[0];
