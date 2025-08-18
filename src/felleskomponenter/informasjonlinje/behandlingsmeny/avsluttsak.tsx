@@ -7,6 +7,7 @@ import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { fagsakSelectors } from "../../../ducks/fagsaker";
 import { modalerOperations } from "../../../ducks/modaler";
 import Handling from "./handling";
+import { TRYGDEAVGIFT } from "../../../services/api-constants";
 
 const {
   YRKESAKTIV,
@@ -140,7 +141,6 @@ function AvsluttSak() {
           ARBEID_FLERE_LAND,
           IKKE_YRKESAKTIV,
           ARBEID_KUN_NORGE,
-          PENSJONIST,
           YRKESAKTIV,
         ].includes(behandlingstema)
       );
