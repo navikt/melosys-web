@@ -43,14 +43,11 @@ interface BrevMottakereTabellProps {
   setValgteVedlegg: (valgteVedlegg: BrevVedleggVisningstabellInterface) => void;
   changeField: (field: string, value: string) => void;
   redigerbart: boolean;
-  behandlingID2: number;
   dokumenter: FysiskDokument[];
-  mottakerErNorskMyndighet: boolean;
   visFritekstvedleggSkjema: boolean;
   setVisFritekstvedleggSkjema: (value: boolean) => void;
   redigerFritekstvedleggIndex?: number;
   setRedigerFritekstvedleggIndex: (value: number | undefined) => void;
-  valgtMottakerHarFeilmelding?: FeilmeldingProps | undefined;
 }
 
 function BrevMottakereTabell({
@@ -66,16 +63,20 @@ function BrevMottakereTabell({
   setValgteVedlegg,
   changeField,
   redigerbart,
-  behandlingID2,
   dokumenter,
-  mottakerErNorskMyndighet,
   visFritekstvedleggSkjema,
   setVisFritekstvedleggSkjema,
   redigerFritekstvedleggIndex,
   setRedigerFritekstvedleggIndex,
   standardvedlegg,
-  valgtMottakerHarFeilmelding,
 }: BrevMottakereTabellProps & PropsFromRedux) {
+  const valgtMottakerHarFeilmelding: FeilmeldingProps | undefined = formValues?.valgtMottaker?.feilmelding;
+  const mottakerErNorskMyndighet = formValues?.valgtMottaker?.rolle === "NORSK_MYNDIGHET";
+
+  const harStandardVedlegg =
+    formValues?.valgtMottaker?.rolle === "BRUKER" && formValues?.felt?.DISTRIBUSJONSTYPE?.valg === "VEDTAK";
+  const standardvedleggTilVisning = harStandardVedlegg ? standardvedlegg : [];
+
   const mapKopiMottakere = (
     muligeBrevMottakere: Api.DokumenterV2.HentMuligeMottakereResDto,
   ): BrevDokumentMetadataType[] => {
@@ -149,7 +150,7 @@ function BrevMottakereTabell({
           changeField={changeField}
           formValues={formValues}
           redigerbart={redigerbart}
-          behandlingID={behandlingID2}
+          behandlingID={behandlingID}
           dokumenter={dokumenter}
           mottakerErNorskMyndighet={mottakerErNorskMyndighet}
           visFritekstvedleggSkjema={visFritekstvedleggSkjema}
@@ -157,7 +158,7 @@ function BrevMottakereTabell({
           redigerFritekstvedleggIndex={redigerFritekstvedleggIndex}
           setRedigerFritekstvedleggIndex={setRedigerFritekstvedleggIndex}
           muligeMottakere={muligeMottakere}
-          standardvedlegg={standardvedlegg}
+          standardvedlegg={standardvedleggTilVisning}
         />
       )}
     </>

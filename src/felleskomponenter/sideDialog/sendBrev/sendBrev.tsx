@@ -436,10 +436,6 @@ function SendBrev({
     event.preventDefault();
   };
 
-  const harStandardVedlegg = () => {
-    return formValues?.valgtMottaker?.rolle === "BRUKER" && formValues?.felt?.DISTRIBUSJONSTYPE?.valg === "VEDTAK";
-  };
-
   if (!tilgjengeligeMaler || !formValues) return null;
   if (!visInnhold) return null;
 
@@ -534,15 +530,12 @@ function SendBrev({
               setValgteVedlegg={setValgteVedleggIState}
               changeField={changeField}
               redigerbart={redigerbart}
-              behandlingID2={behandlingID}
               dokumenter={dokumenter}
-              mottakerErNorskMyndighet={mottakerErNorskMyndighet}
               visFritekstvedleggSkjema={visFritekstvedleggSkjema}
               setVisFritekstvedleggSkjema={setVisFritekstvedleggSkjema}
               redigerFritekstvedleggIndex={redigerFritekstVedleggIndex}
               setRedigerFritekstvedleggIndex={setRedigerFritekstvedleggIndex}
-              standardvedlegg={harStandardVedlegg() ? standardvedleggListe : []}
-              valgtMottakerHarFeilmelding={valgtMottakerHarFeilmelding}
+              standardvedlegg={standardvedleggListe}
             />
           </Nav.Column>
         </Nav.Row>
