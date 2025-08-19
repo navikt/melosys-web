@@ -524,17 +524,19 @@ function SendBrev({
               muligeMottakere={muligeMottakere}
               muligeMottakereNorskMyndighet={muligeMottakereNorskMyndighet}
               redigerbart={redigerbart}
-              fritekstvedlegg={fritekstvedlegg}
-              setFritekstvedlegg={setFritekstvedlegg}
-              valgteVedlegg={valgteVedlegg}
-              setValgteVedlegg={setValgteVedleggIState}
-              changeField={changeField}
-              dokumenter={dokumenter}
-              visFritekstvedleggSkjema={visFritekstvedleggSkjema}
-              setVisFritekstvedleggSkjema={setVisFritekstvedleggSkjema}
-              redigerFritekstvedleggIndex={redigerFritekstVedleggIndex}
-              setRedigerFritekstvedleggIndex={setRedigerFritekstvedleggIndex}
-              standardvedlegg={standardvedleggListe}
+              vedlegg={{
+                fritekstvedlegg,
+                setFritekstvedlegg,
+                valgteVedlegg,
+                setValgteVedlegg: setValgteVedleggIState,
+                changeField,
+                dokumenter,
+                visFritekstvedleggSkjema,
+                setVisFritekstvedleggSkjema,
+                redigerFritekstvedleggIndex: redigerFritekstVedleggIndex,
+                setRedigerFritekstvedleggIndex: setRedigerFritekstvedleggIndex,
+                standardvedlegg: standardvedleggListe,
+              }}
             />
           </Nav.Column>
         </Nav.Row>

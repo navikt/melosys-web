@@ -1,3 +1,4 @@
+import React from "react";
 import { RootState } from "AppTypes";
 import { getFormValues } from "redux-form";
 import { connect, ConnectedProps } from "react-redux";
@@ -12,14 +13,8 @@ import { formSelectors } from "../../../../ducks/form";
 import { SendBrevFormValues } from "../types";
 import { erBruker } from "./brevMottaker";
 import Dokumentliste, { BrevDokumentMetadataType } from "../../../dokumentliste";
-import BrevVedlegg, { Fritekstvedlegg } from "../brevVedlegg/brevVedlegg";
-import {
-  BrevVedleggInterface,
-  BrevVedleggVisningstabellInterface,
-  FeilmeldingProps,
-  FysiskDokument,
-} from "../../../../services/modules/dokumenter-v2";
-
+import BrevVedlegg from "../brevVedlegg/brevVedlegg";
+import { FeilmeldingProps, TilgjengeligStandardvedlegg } from "../../../../services/modules/dokumenter-v2";
 import "./brevMottakereTabell.less";
 
 const mapStateToProps = (state: RootState) => ({
@@ -31,22 +26,31 @@ const mapStateToProps = (state: RootState) => ({
 const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
+// Les props-typen direkte fra BrevVedlegg-komponenten og lag et subset som passer som “vedlegg”-prop til tabellen.
+// Legg de til standardvedlegg siden vi vil styre filtrert liste i tabellen
+type BrevVedleggPropsFromComponent = React.ComponentProps<typeof BrevVedlegg>;
+type VedleggSubsetProps = Pick<
+  BrevVedleggPropsFromComponent,
+  | "fritekstvedlegg"
+  | "setFritekstvedlegg"
+  | "valgteVedlegg"
+  | "setValgteVedlegg"
+  | "changeField"
+  | "dokumenter"
+  | "visFritekstvedleggSkjema"
+  | "setVisFritekstvedleggSkjema"
+  | "redigerFritekstvedleggIndex"
+  | "setRedigerFritekstvedleggIndex"
+> & {
+  standardvedlegg: TilgjengeligStandardvedlegg[];
+};
+
 interface BrevMottakereTabellProps {
   muligeMottakere?: Api.DokumenterV2.HentMuligeMottakereResDto;
   muligeMottakereNorskMyndighet?: Api.DokumenterV2.MuligMottaker[];
   formIsValid: boolean;
   redigerbart: boolean;
-  standardvedlegg: Api.DokumenterV2.TilgjengeligStandardvedlegg[];
-  fritekstvedlegg: Fritekstvedlegg[];
-  setFritekstvedlegg: (fritekstvedlegg: Fritekstvedlegg[]) => void;
-  valgteVedlegg: BrevVedleggInterface;
-  setValgteVedlegg: (valgteVedlegg: BrevVedleggVisningstabellInterface) => void;
-  changeField: (field: string, value: string) => void;
-  dokumenter: FysiskDokument[];
-  visFritekstvedleggSkjema: boolean;
-  setVisFritekstvedleggSkjema: (value: boolean) => void;
-  redigerFritekstvedleggIndex?: number;
-  setRedigerFritekstvedleggIndex: (value: number | undefined) => void;
+  vedlegg: VedleggSubsetProps;
 }
 
 function BrevMottakereTabell({
@@ -56,24 +60,14 @@ function BrevMottakereTabell({
   formValues,
   formIsValid,
   redigerbart,
-  fritekstvedlegg,
-  setFritekstvedlegg,
-  valgteVedlegg,
-  setValgteVedlegg,
-  changeField,
-  dokumenter,
-  visFritekstvedleggSkjema,
-  setVisFritekstvedleggSkjema,
-  redigerFritekstvedleggIndex,
-  setRedigerFritekstvedleggIndex,
-  standardvedlegg,
+  vedlegg,
 }: BrevMottakereTabellProps & PropsFromRedux) {
   const valgtMottakerHarFeilmelding: FeilmeldingProps | undefined = formValues?.valgtMottaker?.feilmelding;
   const mottakerErNorskMyndighet = formValues?.valgtMottaker?.rolle === "NORSK_MYNDIGHET";
 
   const harStandardVedlegg =
     formValues?.valgtMottaker?.rolle === "BRUKER" && formValues?.felt?.DISTRIBUSJONSTYPE?.valg === "VEDTAK";
-  const standardvedleggTilVisning = harStandardVedlegg ? standardvedlegg : [];
+  const standardvedleggTilVisning = harStandardVedlegg ? vedlegg.standardvedlegg : [];
 
   const finnValgAlternativ = (felt: Api.DokumenterV2.Felt) => {
     return felt?.valg?.valgAlternativer.find((alternativ) => alternativ.kode === formValues?.felt?.[felt.kode]?.valg);
@@ -123,9 +117,12 @@ function BrevMottakereTabell({
     skalViseStandardTekstOmOpplysninger: hentFormVerdi("STANDARDTEKST_INNTEKTSOPPLYSNINGER") === "true",
     kopiMottakere: hentKopiMottakere() || [],
     skalViseStandardTekstOmkontaktopplysninger: hentFormVerdi("STANDARDTEKST_KONTAKTINFORMASJON") === "true",
-    saksvedlegg: valgteVedlegg?.saksvedlegg.map((v) => ({ dokumentID: v.dokumentID, journalpostID: v.journalpostID })),
-    standardvedleggType: valgteVedlegg?.standardvedlegg?.type ?? null,
-    fritekstvedlegg,
+    saksvedlegg: vedlegg.valgteVedlegg?.saksvedlegg.map((v) => ({
+      dokumentID: v.dokumentID,
+      journalpostID: v.journalpostID,
+    })),
+    standardvedleggType: vedlegg.valgteVedlegg?.standardvedlegg?.type ?? null,
+    fritekstvedlegg: vedlegg.fritekstvedlegg,
     distribusjonstype: hentFormVerdi("DISTRIBUSJONSTYPE", true, true),
     dokumentTittel: hentFormVerdi("DOKUMENT_TITTEL", true),
     institusjonID: hentFormVerdi("UTENLANDSK_TRYGDEMYNDIGHET_MOTTAKER", true, true),
@@ -166,6 +163,8 @@ function BrevMottakereTabell({
     ];
   };
 
+  const kanRendreVedlegg = Boolean(!valgtMottakerHarFeilmelding && redigerbart);
+
   return (
     <>
       {!Utils._isEmpty(muligeMottakere?.kopiMottakere) && (
@@ -195,22 +194,24 @@ function BrevMottakereTabell({
         />
       )}
 
-      {!valgtMottakerHarFeilmelding && (
+      {kanRendreVedlegg && (
         <BrevVedlegg
-          fritekstvedlegg={fritekstvedlegg}
-          setFritekstvedlegg={setFritekstvedlegg}
-          valgteVedlegg={valgteVedlegg}
-          setValgteVedlegg={setValgteVedlegg}
-          changeField={changeField}
+          // props som kommer fra subsettet (holdes i sync med BrevVedlegg via ComponentProps)
+          fritekstvedlegg={vedlegg.fritekstvedlegg}
+          setFritekstvedlegg={vedlegg.setFritekstvedlegg}
+          valgteVedlegg={vedlegg.valgteVedlegg}
+          setValgteVedlegg={vedlegg.setValgteVedlegg}
+          changeField={vedlegg.changeField}
+          dokumenter={vedlegg.dokumenter}
+          visFritekstvedleggSkjema={vedlegg.visFritekstvedleggSkjema}
+          setVisFritekstvedleggSkjema={vedlegg.setVisFritekstvedleggSkjema}
+          redigerFritekstvedleggIndex={vedlegg.redigerFritekstvedleggIndex}
+          setRedigerFritekstvedleggIndex={vedlegg.setRedigerFritekstvedleggIndex}
+          // props som tabellen avleder
           formValues={formValues}
           redigerbart={redigerbart}
           behandlingID={behandlingID}
-          dokumenter={dokumenter}
           mottakerErNorskMyndighet={mottakerErNorskMyndighet}
-          visFritekstvedleggSkjema={visFritekstvedleggSkjema}
-          setVisFritekstvedleggSkjema={setVisFritekstvedleggSkjema}
-          redigerFritekstvedleggIndex={redigerFritekstvedleggIndex}
-          setRedigerFritekstvedleggIndex={setRedigerFritekstvedleggIndex}
           muligeMottakere={muligeMottakere}
           standardvedlegg={standardvedleggTilVisning}
         />
