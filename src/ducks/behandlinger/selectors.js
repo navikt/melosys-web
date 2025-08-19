@@ -20,6 +20,8 @@ import {
   AarsavregningTidligereGrunnlagMedlemskapsperioderSelector,
 } from "../aarsavregning/selectors";
 
+import { HelseutgiftDekkesPeriodeSelector } from "../helseutgiftdekkesperiode/selectors";
+
 export const BehandlingerSelector = createSelector(
   (state) => (state.behandlinger.data ? state.behandlinger.data : {}),
   (behandling) => behandling,
@@ -354,6 +356,7 @@ export const ArbeidsgivereNorgeSelector = createSelector(
   LovvalgsperiodeSelector,
   AarsavregningAarSelector,
   AarsavregningTidligereGrunnlagMedlemskapsperioderSelector,
+  HelseutgiftDekkesPeriodeSelector,
   (
     organisasjoner,
     arbeidsforholdene,
@@ -362,11 +365,19 @@ export const ArbeidsgivereNorgeSelector = createSelector(
     sedLovvalgsperiode,
     aarsavregningAar,
     aarsavregningMedlemskapsperioder,
+    helseutgiftDekkesPeriode,
   ) => {
     // Inntekten skal vises 6 måneder forut for startdato. Dersom søknaden gjelder en periode
     // tilbake i tid, skal også inntekt i selve perioden vises.
     let { fom: soknadPeriodeStart, tom: soknadPeriodeSlutt } = oppholdsPeriode;
     const { fom: sedLovvalgsperiodeFom, tom: sedLovvalgsperiodeTom } = sedLovvalgsperiode;
+    const { fomDato: helseutgiftDekkesPeriodeFom, tomDato: helseutgiftDekkesPeriodeTom } =
+      helseutgiftDekkesPeriode?.data ?? {};
+
+    if (helseutgiftDekkesPeriodeFom) {
+      soknadPeriodeStart = helseutgiftDekkesPeriodeFom;
+      soknadPeriodeSlutt = helseutgiftDekkesPeriodeTom;
+    }
 
     if (aarsavregningAar || !Utils._isEmpty(aarsavregningMedlemskapsperioder)) {
       const periode = utledPeriodeForAarsavregning(aarsavregningAar, aarsavregningMedlemskapsperioder);

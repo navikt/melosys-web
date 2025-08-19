@@ -9,10 +9,13 @@ import { createSelector, Selector } from "reselect";
 import { RootState, StateSection } from "AppTypes";
 import { HelseutgiftDekkesPeriodeDto } from "../../services/modules/helseutgiftDekkesPeriode/helseutgiftDekkesPeriode";
 
-export const HelseutgiftDekkesPeriode: Selector<RootState, StateSection<HelseutgiftDekkesPeriodeDto>> = createSelector(
+export const HelseutgiftDekkesPeriodeSelector: Selector<
+  RootState,
+  StateSection<HelseutgiftDekkesPeriodeDto>
+> = createSelector(
   (state: RootState) => state.helseutgiftdekkesperiode,
   (helseutgiftdekkesperiode) => {
-    if (helseutgiftdekkesperiode.status === "ERROR") {
+    if (helseutgiftdekkesperiode?.status === "ERROR") {
       return {
         ...helseutgiftdekkesperiode,
         data: {} as HelseutgiftDekkesPeriodeDto,

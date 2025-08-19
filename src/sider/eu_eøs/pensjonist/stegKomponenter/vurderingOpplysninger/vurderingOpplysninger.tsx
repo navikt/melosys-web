@@ -16,9 +16,10 @@ import {
   helseutgiftDekkesPeriodeSelector,
 } from "../../../../../ducks/helseutgiftdekkesperiode";
 import { HelseutgiftDekkesPeriodeDto } from "../../../../../services/modules/helseutgiftDekkesPeriode/helseutgiftDekkesPeriode";
-import { useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { UkjentSluttdatoMedlemskapsperiode } from "../../../../ftrl/saksbehandling/stegKomponenter/vurderingPeriode/komponenter/ukjentSluttdatoMedlemskapsperiode";
 import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../../ducks/oppsummertfakta";
+import { FellesHandlersContext } from "../../../../../contexts";
 
 interface Props {
   bekreft: () => void;
@@ -27,14 +28,15 @@ interface Props {
   oppdaterStatus: (isValid: boolean) => void;
 }
 
-export function VurderingOpplysninger({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: Props) {
+export function VurderingOpplysninger({ bekreft, oppdaterStatus, aktivtSteg }: Props) {
   const dispatch = useDispatch();
 
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
-  const helseutgiftDekkesPeriode = useSelector(helseutgiftDekkesPeriodeSelector.HelseutgiftDekkesPeriode).data;
+  const helseutgiftDekkesPeriode = useSelector(helseutgiftDekkesPeriodeSelector.HelseutgiftDekkesPeriodeSelector).data;
   const { fomDato, tomDato, bostedLandkode } = helseutgiftDekkesPeriode;
   const [ukjentSluttdatoKey, setUkjentSluttdatoKey] = useState("");
+  const { startOgVisOppfriskModal } = useContext(FellesHandlersContext) as any;
 
   const lagretUkjentSluttdato = useSelector(oppsummertfaktaSelectors.UkjentSluttdatoMedlemskapsperiodeSelector);
 
@@ -111,6 +113,7 @@ export function VurderingOpplysninger({ bekreft, tilbake, aktivtSteg, oppdaterSt
 
   const bekreftOgFortsett = async () => {
     dispatch(helseutgiftDekkesPeriodeOperations.hentHelseutgiftDekkesPeriode(behandlingID));
+    startOgVisOppfriskModal();
     bekreft();
   };
 
@@ -133,6 +136,8 @@ export function VurderingOpplysninger({ bekreft, tilbake, aktivtSteg, oppdaterSt
   useEffect(() => {
     oppdaterStatus(stegErGyldig);
   }, [stegErGyldig]);
+
+  if (!aktivtSteg) return null;
 
   return (
     <>

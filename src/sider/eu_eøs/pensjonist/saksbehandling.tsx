@@ -20,7 +20,6 @@ import { menypanelOperations } from "../../../ducks/menypanel";
 import { MatchParams } from "../../../@types";
 import { alleSteg } from "./initialStegArray";
 import { mottatteOpplysningerOperations } from "../../../ducks/mottatteOpplysninger";
-import { medlemskapsperioderSelectors } from "../../../ducks/medlemskapsperioder";
 import "./saksbehandling.css";
 import { FellesHandlersContext } from "../../../contexts";
 import { SoknadMenypanelForm } from "../../../felleskomponenter/menypanelForm";
@@ -34,6 +33,7 @@ import {
   helseutgiftDekkesPeriodeSelector,
 } from "../../../ducks/helseutgiftdekkesperiode";
 import { oppsummertfaktaOperations } from "../../../ducks/oppsummertfakta";
+import { fakturaserierOperations } from "../../../ducks/fakturaserier";
 
 interface Props extends RouteComponentProps<MatchParams> {
   behandlingOppfriskes: boolean;
@@ -46,15 +46,13 @@ function Saksbehandling({ match, location }: Props) {
 
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const registeropplysningerHentet = useSelector(behandlingerSelectors.RegisteropplysningerHentetSelector);
-  const helseutgiftDekkesPeriode = useSelector(helseutgiftDekkesPeriodeSelector.HelseutgiftDekkesPeriode);
-
+  const helseutgiftDekkesPeriode = useSelector(helseutgiftDekkesPeriodeSelector.HelseutgiftDekkesPeriodeSelector);
   const { startOgVisOppfriskModal, visOppfriskModal, behandlingOppfriskes } = useContext(FellesHandlersContext) as any;
 
   const [behandlingID, setBehandlingID] = useState(-1);
   const [saksopplysningerLastet, setSaksopplysningerLastet] = useState(false);
   const [panelExpanded, setPanelExpanded] = useState(true);
   const saksnummer = match?.params?.saksnr;
-
   const oppdaterBehandlingIDState = () => {
     const behandlingIDFraParam = Utils.queryString.getParam(location, "behandlingID");
 
@@ -104,10 +102,21 @@ function Saksbehandling({ match, location }: Props) {
 
   useEffect(() => {
     lastInnSaksopplysninger();
-  }, []);
 
+    return () => {
+      dispatch(fagsakOperations.resetFagsakState());
+      dispatch(behandlingerOperations.resetBehandlingerState());
+      dispatch(behandlingsresultatOperations.resetBehandlingsresultatState());
+      dispatch(mottatteOpplysningerOperations.resetState());
+      dispatch(dokumenterOperations.resetDokument());
+      dispatch(menypanelOperations.skjulMenypanel());
+      dispatch(fakturaserierOperations.resetFakturaserier());
+    };
+  }, []);
   useEffect(() => {
-    dispatch(menypanelOperations.visMenypanel());
+    if (registeropplysningerHentet) {
+      dispatch(menypanelOperations.visMenypanel());
+    }
   }, [registeropplysningerHentet]);
 
   if (Utils._isNil(redigerbart)) return null;

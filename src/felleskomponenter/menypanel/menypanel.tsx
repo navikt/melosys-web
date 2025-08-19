@@ -71,9 +71,9 @@ export function Menypanel({
     lagreSoknadOgOppfriskSaksopplysninger,
     endreFokus,
   };
-
   const visMenypanel =
     (sakstype === MKV.Koder.sakstyper.EU_EOS &&
+      behandlingstema !== MKV.Koder.behandlinger.behandlingstema.PENSJONIST &&
       behandlingstema !== MKV.Koder.behandlinger.behandlingstema.A1_ANMODNING_OM_UNNTAK_PAPIR &&
       behandlingstema !== MKV.Koder.behandlinger.behandlingstema.IKKE_YRKESAKTIV) ||
     menypanel?.synlig ||
