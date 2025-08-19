@@ -39,9 +39,7 @@ import sendBrevSchema from "./sendBrevSchema";
 import "./sendBrev.css";
 import BrevVedlegg from "./brevVedlegg/brevVedlegg";
 import LabelMedHjelpetekst from "../../labelMedHjelpetekst";
-// Legg til untouch for å fjerne touched-status fra felt ved endringer
 import { untouch } from "redux-form";
-import { buildValidationSummary } from "./validationSummary";
 
 const { VIRKSOMHET, ARBEIDSGIVER, ANNEN_ORGANISASJON, NORSK_MYNDIGHET, UTENLANDSK_TRYGDEMYNDIGHET } =
   MKV.Koder.mottakerroller;
@@ -134,10 +132,6 @@ function SendBrev({
   const mottakerErNorskMyndighet = erNorskMyndighet(formValues?.valgtMottaker?.rolle);
   const { accounts } = useMsal();
   const syncErrors = useSelector((state: RootState) => getFormSyncErrors(KV.Form.SEND_BREV)(state));
-
-  const alleFeilmeldinger: string[] = useMemo(() => {
-    return buildValidationSummary(syncErrors);
-  }, [syncErrors]);
 
   const setValgteVedleggIState = (valgteVedleggFraVisningstabell: BrevVedleggVisningstabellInterface) => {
     setValgteVedlegg({
