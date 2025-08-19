@@ -50,7 +50,7 @@ interface BrevMottakereTabellProps {
   muligeMottakereNorskMyndighet?: Api.DokumenterV2.MuligMottaker[];
   formIsValid: boolean;
   redigerbart: boolean;
-  vedlegg: VedleggSubsetProps;
+  brevVedlegg: VedleggSubsetProps;
 }
 
 function BrevMottakereTabell({
@@ -60,14 +60,14 @@ function BrevMottakereTabell({
   formValues,
   formIsValid,
   redigerbart,
-  vedlegg,
+  brevVedlegg,
 }: BrevMottakereTabellProps & PropsFromRedux) {
   const valgtMottakerHarFeilmelding: FeilmeldingProps | undefined = formValues?.valgtMottaker?.feilmelding;
   const mottakerErNorskMyndighet = formValues?.valgtMottaker?.rolle === "NORSK_MYNDIGHET";
 
   const harStandardVedlegg =
     formValues?.valgtMottaker?.rolle === "BRUKER" && formValues?.felt?.DISTRIBUSJONSTYPE?.valg === "VEDTAK";
-  const standardvedleggTilVisning = harStandardVedlegg ? vedlegg.standardvedlegg : [];
+  const standardvedleggTilVisning = harStandardVedlegg ? brevVedlegg.standardvedlegg : [];
 
   const finnValgAlternativ = (felt: Api.DokumenterV2.Felt) => {
     return felt?.valg?.valgAlternativer.find((alternativ) => alternativ.kode === formValues?.felt?.[felt.kode]?.valg);
@@ -117,12 +117,12 @@ function BrevMottakereTabell({
     skalViseStandardTekstOmOpplysninger: hentFormVerdi("STANDARDTEKST_INNTEKTSOPPLYSNINGER") === "true",
     kopiMottakere: hentKopiMottakere() || [],
     skalViseStandardTekstOmkontaktopplysninger: hentFormVerdi("STANDARDTEKST_KONTAKTINFORMASJON") === "true",
-    saksvedlegg: vedlegg.valgteVedlegg?.saksvedlegg.map((v) => ({
+    saksvedlegg: brevVedlegg.valgteVedlegg?.saksvedlegg.map((v) => ({
       dokumentID: v.dokumentID,
       journalpostID: v.journalpostID,
     })),
-    standardvedleggType: vedlegg.valgteVedlegg?.standardvedlegg?.type ?? null,
-    fritekstvedlegg: vedlegg.fritekstvedlegg,
+    standardvedleggType: brevVedlegg.valgteVedlegg?.standardvedlegg?.type ?? null,
+    fritekstvedlegg: brevVedlegg.fritekstvedlegg,
     distribusjonstype: hentFormVerdi("DISTRIBUSJONSTYPE", true, true),
     dokumentTittel: hentFormVerdi("DOKUMENT_TITTEL", true),
     institusjonID: hentFormVerdi("UTENLANDSK_TRYGDEMYNDIGHET_MOTTAKER", true, true),
@@ -197,16 +197,16 @@ function BrevMottakereTabell({
       {kanRendreVedlegg && (
         <BrevVedlegg
           // props som kommer fra subsettet (holdes i sync med BrevVedlegg via ComponentProps)
-          fritekstvedlegg={vedlegg.fritekstvedlegg}
-          setFritekstvedlegg={vedlegg.setFritekstvedlegg}
-          valgteVedlegg={vedlegg.valgteVedlegg}
-          setValgteVedlegg={vedlegg.setValgteVedlegg}
-          changeField={vedlegg.changeField}
-          dokumenter={vedlegg.dokumenter}
-          visFritekstvedleggSkjema={vedlegg.visFritekstvedleggSkjema}
-          setVisFritekstvedleggSkjema={vedlegg.setVisFritekstvedleggSkjema}
-          redigerFritekstvedleggIndex={vedlegg.redigerFritekstvedleggIndex}
-          setRedigerFritekstvedleggIndex={vedlegg.setRedigerFritekstvedleggIndex}
+          fritekstvedlegg={brevVedlegg.fritekstvedlegg}
+          setFritekstvedlegg={brevVedlegg.setFritekstvedlegg}
+          valgteVedlegg={brevVedlegg.valgteVedlegg}
+          setValgteVedlegg={brevVedlegg.setValgteVedlegg}
+          changeField={brevVedlegg.changeField}
+          dokumenter={brevVedlegg.dokumenter}
+          visFritekstvedleggSkjema={brevVedlegg.visFritekstvedleggSkjema}
+          setVisFritekstvedleggSkjema={brevVedlegg.setVisFritekstvedleggSkjema}
+          redigerFritekstvedleggIndex={brevVedlegg.redigerFritekstvedleggIndex}
+          setRedigerFritekstvedleggIndex={brevVedlegg.setRedigerFritekstvedleggIndex}
           // props som tabellen avleder
           formValues={formValues}
           redigerbart={redigerbart}

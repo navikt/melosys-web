@@ -524,7 +524,7 @@ function SendBrev({
               muligeMottakere={muligeMottakere}
               muligeMottakereNorskMyndighet={muligeMottakereNorskMyndighet}
               redigerbart={redigerbart}
-              vedlegg={{
+              brevVedlegg={{
                 fritekstvedlegg,
                 setFritekstvedlegg,
                 valgteVedlegg,
