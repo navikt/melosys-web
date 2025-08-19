@@ -523,13 +523,12 @@ function SendBrev({
             <BrevMottakereTabell
               muligeMottakere={muligeMottakere}
               muligeMottakereNorskMyndighet={muligeMottakereNorskMyndighet}
-              hentBrevRequest={hentBrevRequest}
+              redigerbart={redigerbart}
               fritekstvedlegg={fritekstvedlegg}
               setFritekstvedlegg={setFritekstvedlegg}
               valgteVedlegg={valgteVedlegg}
               setValgteVedlegg={setValgteVedleggIState}
               changeField={changeField}
-              redigerbart={redigerbart}
               dokumenter={dokumenter}
               visFritekstvedleggSkjema={visFritekstvedleggSkjema}
               setVisFritekstvedleggSkjema={setVisFritekstvedleggSkjema}

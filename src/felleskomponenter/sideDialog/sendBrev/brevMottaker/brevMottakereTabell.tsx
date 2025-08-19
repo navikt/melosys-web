@@ -35,14 +35,13 @@ interface BrevMottakereTabellProps {
   muligeMottakere?: Api.DokumenterV2.HentMuligeMottakereResDto;
   muligeMottakereNorskMyndighet?: Api.DokumenterV2.MuligMottaker[];
   formIsValid: boolean;
-  hentBrevRequest: (rolle: string) => Record<string, unknown>;
+  redigerbart: boolean;
   standardvedlegg: Api.DokumenterV2.TilgjengeligStandardvedlegg[];
   fritekstvedlegg: Fritekstvedlegg[];
   setFritekstvedlegg: (fritekstvedlegg: Fritekstvedlegg[]) => void;
   valgteVedlegg: BrevVedleggInterface;
   setValgteVedlegg: (valgteVedlegg: BrevVedleggVisningstabellInterface) => void;
   changeField: (field: string, value: string) => void;
-  redigerbart: boolean;
   dokumenter: FysiskDokument[];
   visFritekstvedleggSkjema: boolean;
   setVisFritekstvedleggSkjema: (value: boolean) => void;
@@ -56,13 +55,12 @@ function BrevMottakereTabell({
   behandlingID,
   formValues,
   formIsValid,
-  hentBrevRequest,
+  redigerbart,
   fritekstvedlegg,
   setFritekstvedlegg,
   valgteVedlegg,
   setValgteVedlegg,
   changeField,
-  redigerbart,
   dokumenter,
   visFritekstvedleggSkjema,
   setVisFritekstvedleggSkjema,
@@ -76,6 +74,62 @@ function BrevMottakereTabell({
   const harStandardVedlegg =
     formValues?.valgtMottaker?.rolle === "BRUKER" && formValues?.felt?.DISTRIBUSJONSTYPE?.valg === "VEDTAK";
   const standardvedleggTilVisning = harStandardVedlegg ? standardvedlegg : [];
+
+  const finnValgAlternativ = (felt: Api.DokumenterV2.Felt) => {
+    return felt?.valg?.valgAlternativer.find((alternativ) => alternativ.kode === formValues?.felt?.[felt.kode]?.valg);
+  };
+
+  const hentFormVerdi = (feltNavn: string, hentValgverdi = false, hentKode = false): string | null => {
+    const feltFraValgtMal = formValues?.valgtBrev?.felter?.find((felt) => felt.kode === feltNavn);
+    if (!feltFraValgtMal) return null;
+    const feltVerdi = formValues.felt?.[feltNavn]?.feltVerdi;
+    if (feltFraValgtMal?.valg) {
+      const valgtAlternativ = finnValgAlternativ(feltFraValgtMal);
+      if (!hentValgverdi) return valgtAlternativ?.visFelt ? feltVerdi : null;
+      if (hentKode) return valgtAlternativ?.kode ?? null;
+      return valgtAlternativ?.visFelt ? feltVerdi : (valgtAlternativ?.beskrivelse ?? null);
+    }
+    return feltVerdi ?? null;
+  };
+
+  const hentKopiMottakere = () => {
+    return formValues?.kopiTilBruker
+      ? muligeMottakere?.kopiMottakere.map(Api.DokumenterV2.konverterMuligMottakerTilKopiMottaker)
+      : [];
+  };
+
+  const hentOrgnr = (mottakerRolle: string) => {
+    switch (mottakerRolle) {
+      case "VIRKSOMHET":
+      case "ARBEIDSGIVER":
+        return formValues?.arbeidsgiver || null;
+      case "ANNEN_ORGANISASJON":
+        return formValues?.organisasjonsnummer || null;
+      default:
+        return null;
+    }
+  };
+
+  const hentBrevRequest = (mottakerRolle: string): Record<string, unknown> => ({
+    produserbardokument: formValues?.type || "",
+    mottaker: mottakerRolle,
+    orgNr: hentOrgnr(mottakerRolle),
+    kontaktpersonNavn: mottakerRolle === "ANNEN_ORGANISASJON" ? formValues?.kontaktperson : null,
+    orgnrNorskMyndighet: formValues?.norskeMyndigheter,
+    innledningFritekst: hentFormVerdi("INNLEDNING_FRITEKST"),
+    manglerFritekst: hentFormVerdi("MANGLER_FRITEKST"),
+    fritekstTittel: hentFormVerdi("BREV_TITTEL", true),
+    fritekst: hentFormVerdi("FRITEKST"),
+    skalViseStandardTekstOmOpplysninger: hentFormVerdi("STANDARDTEKST_INNTEKTSOPPLYSNINGER") === "true",
+    kopiMottakere: hentKopiMottakere() || [],
+    skalViseStandardTekstOmkontaktopplysninger: hentFormVerdi("STANDARDTEKST_KONTAKTINFORMASJON") === "true",
+    saksvedlegg: valgteVedlegg?.saksvedlegg.map((v) => ({ dokumentID: v.dokumentID, journalpostID: v.journalpostID })),
+    standardvedleggType: valgteVedlegg?.standardvedlegg?.type ?? null,
+    fritekstvedlegg,
+    distribusjonstype: hentFormVerdi("DISTRIBUSJONSTYPE", true, true),
+    dokumentTittel: hentFormVerdi("DOKUMENT_TITTEL", true),
+    institusjonID: hentFormVerdi("UTENLANDSK_TRYGDEMYNDIGHET_MOTTAKER", true, true),
+  });
 
   const mapKopiMottakere = (
     muligeBrevMottakere: Api.DokumenterV2.HentMuligeMottakereResDto,
