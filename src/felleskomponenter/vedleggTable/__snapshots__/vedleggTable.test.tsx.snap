@@ -16,13 +16,47 @@ exports[`vedleggTable > snapshot test 1`] = `
       </tr>
     </thead>
     <tbody class="navds-table__body">
-      <tr class="navds-table__row navds-table__row--shade-on-hover">
+      <tr class="navds-table__row vedlegg-row navds-table__row--shade-on-hover">
         <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewbox="0 0 24 24"
+            class="document-icon"
+          >
+            <path
+              stroke="#0067C5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-miterlimit="10"
+              fill="none"
+              d="M7.717 15.202l8.501-8.5a2 2 0 112.828 2.828L7.563 21.048a4 4 0 01-5.657-5.657l12-12a5.498 5.498 0 017.778 0 5.497 5.497 0 010 7.776l-8.5 8.5"
+            >
+            </path>
+          </svg>
           <a
             href="#"
+            title="Åpnes i ny fane"
+            aria-label="Åpnes i ny fane"
             class="navds-link navds-link--action"
           >
             123
+            <svg
+              width="24"
+              height="24"
+              viewbox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M20.5857 2H14V0H24V10H22V3.41417L10.7071 14.7071L9.29285 13.2929L20.5857 2ZM0 5C0 3.89543 0.895431 3 2 3H10.5V5L2 5V22H19V13.5H21V22C21 23.1046 20.1046 24 19 24H2C0.895429 24 0 23.1046 0 22V5Z"
+                fill="#0067C5"
+              >
+              </path>
+            </svg>
           </a>
         </td>
         <td class="navds-table__data-cell navds-body-short navds-body-short--small">
@@ -80,8 +114,26 @@ exports[`vedleggTable > snapshot test 1`] = `
           </button>
         </td>
       </tr>
-      <tr class="navds-table__row vedlegg navds-table__row--shade-on-hover">
+      <tr class="navds-table__row vedlegg vedlegg-row navds-table__row--shade-on-hover">
         <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewbox="0 0 24 24"
+            class="document-icon"
+            stroke="#0067C5"
+          >
+            <path
+              stroke="#0067C5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-miterlimit="10"
+              fill="none"
+              d="M7.717 15.202l8.501-8.5a2 2 0 112.828 2.828L7.563 21.048a4 4 0 01-5.657-5.657l12-12a5.498 5.498 0 017.778 0 5.497 5.497 0 010 7.776l-8.5 8.5"
+            >
+            </path>
+          </svg>
           <a
             href="#"
             title="Åpnes i ny fane"

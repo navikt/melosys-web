@@ -18,7 +18,7 @@ import {
 } from "./dokumentlisteTyper";
 import * as Ikoner from "../../resources/images";
 
-function Dokumentliste({ behandlingID, dokumenter, validateOnClick }: DokumentlisteType) {
+function Dokumentliste({ behandlingID, dokumenter, validateOnClick, label, className }: DokumentlisteType) {
   const [feilmelding, setFeilmelding] = useState<string | null>(null);
 
   const klikk = async (dokument: BrevDokumentMetadataType | SedDokumentMetadataType) => {
@@ -110,11 +110,11 @@ function Dokumentliste({ behandlingID, dokumenter, validateOnClick }: Dokumentli
   };
 
   return (
-    <div className="dokumentliste">
+    <div className={`dokumentliste ${className || ""}`}>
       <Nav.Table size="small">
         <Nav.Table.Header>
           <Nav.Table.Row>
-            <Nav.Table.HeaderCell>Forhåndsvisning av brev</Nav.Table.HeaderCell>
+            <Nav.Table.HeaderCell>{label ? label : "Forhåndsvisning av brev"}</Nav.Table.HeaderCell>
             <Nav.Table.HeaderCell>Mottaker</Nav.Table.HeaderCell>
           </Nav.Table.Row>
         </Nav.Table.Header>

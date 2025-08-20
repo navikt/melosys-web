@@ -3,9 +3,10 @@ import { MouseEvent, useState } from "react";
 import * as Nav from "../../navFrontend";
 import * as Mui from "../ui";
 import * as Ikoner from "../../resources/images";
-import { Fritekstvedlegg } from "../sideDialog/sendBrev/sendBrev";
 import { apnePdfINyFane } from "../../services/utils";
 import SlettFritekstvedleggModal from "./slettFritekstvedleggModal";
+import { Fritekstvedlegg } from "../sideDialog/sendBrev/brevVedlegg/brevVedlegg";
+import "./vedleggRow.less";
 
 interface FritekstvedleggRowProps {
   fritekstvedlegg: Fritekstvedlegg;
@@ -35,10 +36,12 @@ function FritekstvedleggRow({
   };
 
   return (
-    <Nav.Table.Row>
+    <Nav.Table.Row className="vedlegg-row">
       <Nav.Table.DataCell>
-        <Nav.Link href="#" onClick={aapnePdf}>
+        <Ikoner.Binders className="document-icon" />
+        <Nav.Link href="#" title="Åpnes i ny fane" aria-label="Åpnes i ny fane" onClick={aapnePdf}>
           {fritekstvedlegg.tittel}
+          <Ikoner.ExternalLink />
         </Nav.Link>
       </Nav.Table.DataCell>
       <Nav.Table.DataCell />
