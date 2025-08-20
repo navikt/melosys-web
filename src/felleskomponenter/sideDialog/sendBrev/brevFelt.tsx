@@ -21,8 +21,18 @@ interface BrevFeltProps {
   redigerbart: boolean;
 }
 
+// Liten helper: trekk ut tekst enten det er string eller { melding: string }
+const unwrap = (v: unknown): string | undefined =>
+  typeof v === "string"
+    ? v
+    : typeof v === "object" && v !== null && "melding" in v
+      ? (v as { melding?: string }).melding
+      : undefined;
+
 function BrevFelt({ felt, visFeltBeskrivelse, width, redigerbart }: BrevFeltProps) {
-  const syncErrors = useSelector((state: RootState) => getFormSyncErrors(KV.Form.SEND_BREV)(state)) as SyncErrors;
+  const syncErrors = useSelector((state: RootState) => getFormSyncErrors(KV.Form.SEND_BREV)(state)) as
+    | SyncErrors
+    | undefined;
   const formValues = useSelector((state: RootState) => getFormValues(KV.Form.SEND_BREV)(state)) as SendBrevFormValues;
 
   // Sjekk om dette spesifikke feltet mangler utfylling og er påkrevd
@@ -52,40 +62,24 @@ function BrevFelt({ felt, visFeltBeskrivelse, width, redigerbart }: BrevFeltProp
     return !StringUtils.harStrengInnhold(feltVerdi?.feltVerdi);
   };
 
-  // Sjekk om hele skjemaet har felt-feil og dette feltet er påkrevd og mangler
-  const harRelevantValidationFeil = () => {
-    const visFelterFeil = Boolean(formValues?.showFieldErrors);
-    if (!visFelterFeil) return false;
+  const visFelterFeil = Boolean(formValues?.showFieldErrors);
 
-    // Sjekk om det er generell feltfeil og dette feltet er påkrevd og mangler
-    const generellFeltFeil = syncErrors?.erFeltGyldig;
-    if (generellFeltFeil && erFeltPåkrevdOgMangler()) {
-      return true;
-    }
+  // Foretrukket: nested felt-feil fra schema
+  const nestedNode =
+    syncErrors?.felt && typeof syncErrors.felt === "object"
+      ? (syncErrors.felt as Record<string, { feltVerdi?: unknown; valg?: unknown } | undefined>)[felt.kode]
+      : undefined;
 
-    // Sjekk for felt-spesifikke feil (fra skjemaet)
-    const feltSpesifikkFeil =
-      syncErrors?.[`felt.${felt.kode}.feltVerdi`] || syncErrors?.[`felt.${felt.kode}.valg`] || syncErrors?.[felt.kode];
-    return !!feltSpesifikkFeil;
-  };
+  const nestedFeltVerdiText = unwrap(nestedNode?.feltVerdi);
+  const nestedValgText = unwrap(nestedNode?.valg);
+  const harNestedFeil = Boolean(nestedFeltVerdiText || nestedValgText);
 
-  // Dette feltet skal vise feil hvis det har validation-feil
-  const skalViseFeil = harRelevantValidationFeil();
+  // Når skal vi vise feil under feltet?
+  const skalViseFeil = visFelterFeil && (harNestedFeil || (syncErrors?.erFeltGyldig && erFeltPåkrevdOgMangler()));
 
-  // Hent tekst fra syncErrors: prøv nested struktur først (riktig), deretter ev. flat fallback
-  const nestedErrorObj = (syncErrors as any)?.felt?.[felt.kode] as { feltVerdi?: string; valg?: string } | undefined;
-
-  const raw =
-    nestedErrorObj?.feltVerdi ||
-    nestedErrorObj?.valg ||
-    (syncErrors as any)?.[`felt.${felt.kode}.feltVerdi`] ||
-    (syncErrors as any)?.[`felt.${felt.kode}.valg`] ||
-    (syncErrors as any)?.[felt.kode];
-
+  // Tekst under feltet: bruk nested først, ellers generisk
   const feilmelding = skalViseFeil
-    ? typeof raw === "string"
-      ? raw
-      : hentFeltFeilmelding(felt.kode, felt.beskrivelse || felt.kode)
+    ? nestedFeltVerdiText || nestedValgText || hentFeltFeilmelding(felt.kode, felt.beskrivelse || felt.kode)
     : undefined;
 
   switch (felt?.feltType) {

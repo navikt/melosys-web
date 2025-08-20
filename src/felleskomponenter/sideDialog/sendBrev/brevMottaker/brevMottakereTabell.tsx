@@ -79,9 +79,9 @@ function BrevMottakereTabell({
     const feltVerdi = formValues.felt?.[feltNavn]?.feltVerdi;
     if (feltFraValgtMal?.valg) {
       const valgtAlternativ = finnValgAlternativ(feltFraValgtMal);
-      if (!hentValgverdi) return valgtAlternativ?.visFelt ? feltVerdi : null;
+      if (!hentValgverdi) return valgtAlternativ?.visFelt ? (feltVerdi ?? null) : null;
       if (hentKode) return valgtAlternativ?.kode ?? null;
-      return valgtAlternativ?.visFelt ? feltVerdi : (valgtAlternativ?.beskrivelse ?? null);
+      return valgtAlternativ?.visFelt ? (feltVerdi ?? null) : (valgtAlternativ?.beskrivelse ?? null);
     }
     return feltVerdi ?? null;
   };

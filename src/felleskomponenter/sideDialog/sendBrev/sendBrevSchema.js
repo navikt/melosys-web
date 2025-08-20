@@ -10,9 +10,10 @@ const ORGNUMMER_UGYLDIG = { melding: "Ugyldig organisasjonsnummer" };
 
 // Spesifikke meldinger per feltkode (samme format som øvrige: { melding: string })
 const FELT_FEILMELDINGER = {
-  BREV_TITTEL: { melding: "Velg overskrift i brev" },
-  INNLEDNING_FRITEKST: { melding: "Fyll inn innledning" },
+  BREV_TITTEL: { melding: "Du må velge overskrift til brevet" },
+  INNLEDNING_FRITEKST: { melding: "Du må velge innledningstekst" },
   MANGLER_FRITEKST: { melding: "Fritekst må fylles ut" },
+  DISTRIBUSJONSTYPE: { melding: "Du må velge type brev" },
 };
 
 // Generisk feilmeding, brukes dersom sspesifikk melding ikke finnes
@@ -71,17 +72,17 @@ const send_brev = object().shape({
         const manglerFritekstStandard = !harValgAlternativer && !StringUtils.harStrengInnhold(feltverdi?.feltVerdi);
 
         // Finn ut om valgt alternativ for BREV_TITTEL krever fritekst, og om den mangler
-        let manglerFritekstBrevTittel = false;
+        let manglerFritekstBrevOverskrift = false;
         if (brevFelt.kode === "BREV_TITTEL" && harValgAlternativer) {
           const valgtAlt = brevFelt.valg.valgAlternativer.find((a) => a.kode === feltverdi?.valg);
           const skalViseFritekst = valgtAlt?.visFelt !== false; // default true
           if (skalViseFritekst) {
-            manglerFritekstBrevTittel = !StringUtils.harStrengInnhold(feltverdi?.feltVerdi);
+            manglerFritekstBrevOverskrift = !StringUtils.harStrengInnhold(feltverdi?.feltVerdi);
           }
         }
 
         // Ingen avvik for dette feltet
-        if (!manglerValg && !manglerFritekstStandard && !manglerFritekstBrevTittel) return;
+        if (!manglerValg && !manglerFritekstStandard && !manglerFritekstBrevOverskrift) return;
 
         const visningsnavn = brevFelt.beskrivelse || brevFelt.navn || brevFelt.kode;
 
@@ -93,8 +94,9 @@ const send_brev = object().shape({
           harFeil = true;
         }
         // Egen tekst for fritekst input under BREV_TITTEL, vises under fritekst-feltet
-        if (manglerFritekstBrevTittel) {
-          errors[brevFelt.kode].feltVerdi = toMelding(FELT_FEILMELDINGER.MANGLER_FRITEKST);
+        if (manglerFritekstBrevOverskrift) {
+          // Alltid bruk spesifikk melding når friteksten under BREV_TITTEL mangler
+          errors[brevFelt.kode].feltVerdi = toMelding("Du må skrive inn overskrift til brevet");
           harFeil = true;
         }
 
