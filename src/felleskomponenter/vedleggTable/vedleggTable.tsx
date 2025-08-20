@@ -1,15 +1,15 @@
 import { BrevVedleggVisningstabellInterface, StandardvedleggType } from "../../services/modules/dokumenter-v2";
 
 import * as Nav from "../../navFrontend";
-import { Fritekstvedlegg } from "../sideDialog/sendBrev/sendBrev";
 import FritekstvedleggRow from "./fritekstvedleggRow";
 import VedleggRow from "./vedleggRow";
 import "./vedleggTable.css";
+import { Fritekstvedlegg } from "../sideDialog/sendBrev/brevVedlegg/brevVedlegg";
 
 interface VedleggTableProps {
   valgteVedlegg: BrevVedleggVisningstabellInterface;
   setValgteVedlegg: (valgteVedlegg: BrevVedleggVisningstabellInterface) => void;
-  label: string;
+  label?: string;
   fritekstvedlegg?: Fritekstvedlegg[];
   redigerFritekstvedlegg?: (index: number) => void;
   slettFritekstvedlegg?: (index: number) => void;
@@ -43,13 +43,15 @@ function VedleggTable({
 
   return (
     <Nav.Table className="vedleggtable" size="small">
-      <Nav.Table.Header>
-        <Nav.Table.Row>
-          <Nav.Table.HeaderCell>{label}</Nav.Table.HeaderCell>
-          <Nav.Table.HeaderCell />
-          <Nav.Table.HeaderCell />
-        </Nav.Table.Row>
-      </Nav.Table.Header>
+      {label && (
+        <Nav.Table.Header>
+          <Nav.Table.Row>
+            <Nav.Table.HeaderCell>{label}</Nav.Table.HeaderCell>
+            <Nav.Table.HeaderCell />
+            <Nav.Table.HeaderCell />
+          </Nav.Table.Row>
+        </Nav.Table.Header>
+      )}
       {(valgteVedlegg.saksvedlegg.length > 0 ||
         (fritekstvedlegg && fritekstvedlegg.length > 0) ||
         valgteVedlegg.standardvedlegg) && (

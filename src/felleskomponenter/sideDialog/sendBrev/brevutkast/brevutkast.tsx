@@ -10,9 +10,9 @@ import {
   StandardvedleggType,
   TilgjengeligStandardvedlegg,
 } from "../../../../services/modules/dokumenter-v2";
-import { Fritekstvedlegg } from "../sendBrev";
 import { SendBrevFormValues } from "../types";
 import LagredeUtkast from "./lagredeUtkast";
+import { Fritekstvedlegg } from "../brevVedlegg/brevVedlegg";
 
 const { BRUKER, VIRKSOMHET, ARBEIDSGIVER, ANNEN_ORGANISASJON, NORSK_MYNDIGHET, UTENLANDSK_TRYGDEMYNDIGHET } =
   MKV.Koder.mottakerroller;

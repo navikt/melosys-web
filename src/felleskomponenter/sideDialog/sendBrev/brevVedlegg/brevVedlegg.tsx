@@ -161,7 +161,6 @@ function BrevVedlegg({
           slettFritekstvedlegg={slettFritekstvedlegg}
           lagFritekstPdfUrl={lagFritekstPdfUrl}
           setValgteVedlegg={setValgteVedlegg}
-          label="Vedlegg"
           redigerbart={redigerbart}
         />
       )}
