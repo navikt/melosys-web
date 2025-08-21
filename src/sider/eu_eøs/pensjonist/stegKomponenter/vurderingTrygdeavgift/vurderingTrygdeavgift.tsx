@@ -44,6 +44,7 @@ interface Props {
   aktivtSteg: boolean;
   oppdaterStatus: (isValid: boolean) => void;
 }
+const { NY_VURDERING } = MKV.Koder.behandlinger.behandlingstyper;
 
 export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: Props) {
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
@@ -65,6 +66,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   };
 
   const erEøsPensjonist = sakstype === EU_EOS && behandlingstema === PENSJONIST;
+  const erNyVurdering = behandlingstype === NY_VURDERING;
 
   const [lagretTrygdeavgift, setTrygdeavgift] = useState<BeregnetTrygdeavgift>();
 
@@ -131,6 +133,11 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const skalViseInntektskilder = !erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder);
 
   useEffect(() => {
+    if (harBeregnetForeløpigTrygdeavgift && erNyVurdering) {
+      trigger();
+      return;
+    }
+
     Api.Trygdeavgift.hentBeregnetTrygdeavgiftEosPensjonist(behandlingID).then((beregnetTrygdeavgift) => {
       if (
         behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING &&
