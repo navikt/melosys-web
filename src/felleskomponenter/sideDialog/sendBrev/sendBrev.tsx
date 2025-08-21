@@ -128,6 +128,27 @@ function SendBrev({
   const { accounts } = useMsal();
   const syncErrors = useSelector((state: RootState) => getFormSyncErrors(KV.Form.SEND_BREV)(state));
 
+  // Hent ferske verdier direkte fra store i hooks under
+  const currentValues = useSelector((state: RootState) => getFormValues(KV.Form.SEND_BREV)(state)) as
+    | SendBrevFormValues
+    | undefined;
+
+  // Hvis bruker allerede har forsøkt å sende, sørg for at showFieldErrors ikke blir skrudd av ved mal-endring
+  useEffect(() => {
+    if (submitAttempted && currentValues?.showFieldErrors !== true) {
+      changeField("showFieldErrors", true);
+    }
+  }, [submitAttempted, currentValues?.showFieldErrors, changeField]);
+
+  // Etter mal-bytte: vent til feltene er mountet, deretter touch alle felter slik at inline-feil vises videre
+  useEffect(() => {
+    if (!submitAttempted) return;
+    const timer = window.setTimeout(() => {
+      touchAllFields();
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, [submitAttempted, currentValues?.type, currentValues?.valgtBrev, touchAllFields]);
+
   const setValgteVedleggIState = (valgteVedleggFraVisningstabell: BrevVedleggVisningstabellInterface) => {
     setValgteVedlegg({
       saksvedlegg: valgteVedleggFraVisningstabell.saksvedlegg,

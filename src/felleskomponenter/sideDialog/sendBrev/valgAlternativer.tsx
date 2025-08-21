@@ -8,14 +8,14 @@ import * as Skjema from "../../skjema";
 import * as Nav from "../../../navFrontend";
 import * as KV from "../../../kodeverk";
 import LabelMedHjelpetekst from "../../labelMedHjelpetekst";
-import { BrevFelt, SendBrevFormValues, SyncErrors } from "./types";
+import { BrevFelt, FeltVerdi, Melding, SendBrevFormValues, SyncErrors } from "./types";
 import { hentFeltFeilmelding } from "./sendBrevSchema";
 
 interface ValgAlternativProps {
   valg: DokumenterV2.Valg;
   feltKode: string;
   redigerbart: boolean;
-  changeField: (felt: string, data: string) => void;
+  changeField: (felt: string, data: string | FeltVerdi | undefined) => void;
   beskrivelse: string;
   hjelpetekst: string | null;
   className?: string;
@@ -28,6 +28,14 @@ const lagLabel = (beskrivelse: string, hjelpetekst: string | null) => {
     <span />
   );
 };
+
+// Liten helper: trekk ut tekst enten det er string eller { melding: string }
+const unwrap = (v: unknown): string | undefined =>
+  typeof v === "string"
+    ? v
+    : typeof v === "object" && v !== null && "melding" in v
+      ? (v as Melding).melding
+      : undefined;
 
 function ValgAlternativer({
   valg,
@@ -53,11 +61,25 @@ function ValgAlternativer({
     return !feltVerdi?.valg;
   };
 
-  const visFelterFeil = Boolean(formValues?.showFieldErrors);
-  const skalViseFeil = visFelterFeil && syncErrors?.erFeltGyldig && erFeltPåkrevdOgMangler();
+  // Les nested feil fra schema for å kunne vise dem inline, selv om feltet ikke er paakrevd
+  const nestedNode =
+    syncErrors?.felt && typeof syncErrors.felt === "object"
+      ? (syncErrors.felt as Record<string, { feltVerdi?: unknown; valg?: unknown } | undefined>)[feltKode]
+      : undefined;
+  const nestedFeltVerdiText = unwrap(nestedNode?.feltVerdi);
+  const nestedValgText = unwrap(nestedNode?.valg);
+  const harNestedFeil = Boolean(nestedFeltVerdiText || nestedValgText);
 
-  // Bruk samme kilde for feiltekst som skjemaet (streng for UI)
-  const feilmelding = skalViseFeil ? hentFeltFeilmelding(feltKode, beskrivelse || feltKode) : undefined;
+  const skalViseFeil = Boolean(formValues?.showFieldErrors) && (harNestedFeil || erFeltPåkrevdOgMangler());
+
+  // Tekst under feltet: bruk kun valg-feil for SELECT; for andre felt kan feltVerdi brukes
+  const erSelect = valg.valgType === DokumenterV2.ValgType.SELECT;
+  const feilmelding: string | undefined = skalViseFeil
+    ? erSelect
+      ? nestedValgText ||
+        (erFeltPåkrevdOgMangler() ? hentFeltFeilmelding(feltKode, beskrivelse || feltKode).melding : undefined)
+      : nestedValgText || nestedFeltVerdiText || hentFeltFeilmelding(feltKode, beskrivelse || feltKode).melding
+    : undefined;
 
   const label = lagLabel(beskrivelse, hjelpetekst);
   const valgalternativErSelectOgKunEtt =
@@ -78,9 +100,12 @@ function ValgAlternativer({
             id={`${feltKode}.${alternativ.kode}`}
             key={`${feltKode}.${alternativ.kode}`}
             onChange={(a) => {
-              changeField(`felt.${feltKode}.valg`, alternativ.kode);
-              if (!a.target.checked) {
-                changeField(`felt.${feltKode}.valg`, "");
+              if (a.target.checked) {
+                // Slå på: sett valgt kode (rydder samtidig bort ev. feltVerdi)
+                changeField(`felt.${feltKode}`, { valg: alternativ.kode });
+              } else {
+                // Slå av: fjern hele felt-noden for å unngå hengende verdier som kan ødlegge for validering
+                changeField(`felt.${feltKode}`, undefined);
               }
             }}
           >

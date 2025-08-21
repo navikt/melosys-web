@@ -31,3 +31,5 @@ export interface SendBrevFormValues {
   aktivtUtkast?: Api.Brevutkast.BrevutkastResDto | null;
   showFieldErrors?: boolean;
 }
+
+export type Melding = { melding: string };

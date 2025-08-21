@@ -11,7 +11,7 @@ import { begrensAntallTegn } from "../../../utils/normalisering";
 import LabelMedHjelpetekst from "../../labelMedHjelpetekst";
 import * as StringUtils from "../../../utils/streng";
 import "./brevFelt.less";
-import { SendBrevFormValues, SyncErrors } from "./types";
+import { SendBrevFormValues, SyncErrors, Melding } from "./types";
 import { hentFeltFeilmelding } from "./sendBrevSchema";
 
 interface BrevFeltProps {
@@ -26,7 +26,7 @@ const unwrap = (v: unknown): string | undefined =>
   typeof v === "string"
     ? v
     : typeof v === "object" && v !== null && "melding" in v
-      ? (v as { melding?: string }).melding
+      ? (v as Melding).melding
       : undefined;
 
 function BrevFelt({ felt, visFeltBeskrivelse, width, redigerbart }: BrevFeltProps) {
@@ -79,7 +79,7 @@ function BrevFelt({ felt, visFeltBeskrivelse, width, redigerbart }: BrevFeltProp
 
   // Tekst under feltet: bruk nested først, ellers generisk
   const feilmelding = skalViseFeil
-    ? nestedFeltVerdiText || nestedValgText || hentFeltFeilmelding(felt.kode, felt.beskrivelse || felt.kode)
+    ? nestedFeltVerdiText || nestedValgText || hentFeltFeilmelding(felt.kode, felt.beskrivelse || felt.kode).melding
     : undefined;
 
   switch (felt?.feltType) {

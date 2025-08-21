@@ -2,10 +2,9 @@ import type { TestContext } from "yup";
 import { array, object, string } from "yup";
 import * as StringUtils from "../../../utils/streng";
 import { erAnnenOrganisasjon, erArbeidsgiver, erVirksomhet } from "./brevMottaker/brevMottaker";
-import type { BrevFelt, FeltVerdi, SendBrevFormValues } from "./types";
+import type { BrevFelt, FeltVerdi, SendBrevFormValues, Melding } from "./types";
 import { ValgAlternativ } from "../../../services/modules/dokumenter-v2";
 
-type Melding = { melding: string };
 type FeltbladError = { feltVerdi?: Melding; valg?: Melding };
 type ErrorsMap = Record<string, FeltbladError>;
 
@@ -17,7 +16,7 @@ const ORGNUMMER_UGYLDIG: Melding = { melding: "Ugyldig organisasjonsnummer" };
 
 const FELT_FEILMELDINGER: Record<string, Melding> = {
   BREV_TITTEL: { melding: "Du må velge overskrift til brevet" },
-  INNLEDNING_FRITEKST: { melding: "Fyll inn innledning" },
+  INNLEDNING_FRITEKST: { melding: "Du må velge innledningstekst" },
   MANGLER_FRITEKST: { melding: "Fritekst må fylles ut" },
   FRITEKST: { melding: "Du må skrive inn hovedtekst til brevet" },
   DISTRIBUSJONSTYPE: { melding: "Du må velge type brev" },
@@ -25,25 +24,27 @@ const FELT_FEILMELDINGER: Record<string, Melding> = {
 
 const FELT_VERDI_MAA_FYLLES_UT = (feltNavn: string) => `${feltNavn} må fylles ut`;
 
-export const hentFeltFeilmelding = (feltKode: string, visningsnavn: string): string =>
-  FELT_FEILMELDINGER[feltKode]?.melding || FELT_VERDI_MAA_FYLLES_UT(visningsnavn);
+export const hentFeltFeilmelding = (feltKode: string, visningsnavn: string): Melding => {
+  return FELT_FEILMELDINGER[feltKode] || toMelding(FELT_VERDI_MAA_FYLLES_UT(visningsnavn));
+};
 
 const toMelding = (t: string): Melding => ({ melding: t });
 
-// Bruk FeltVerdi fra types.ts
-type FeltverdiValue = FeltVerdi | undefined;
-const manglerFeltVerdi = (felt: FeltverdiValue): boolean => {
-  if (felt && !felt.valg) {
-    return !StringUtils.harStrengInnhold(felt.feltVerdi);
-  }
-  return !felt;
+// Robust sjekk for om et felt er "satt", uansett type (valg/checkbox/fritekst)
+const feltHarInnhold = (fv?: FeltVerdi): boolean => {
+  if (!fv) return false;
+  if (fv.valg) return true;
+  const raw = (fv as any).feltVerdi;
+  if (typeof raw === "boolean") return raw;
+  if (typeof raw === "string") return StringUtils.harStrengInnhold(raw);
+  return false;
 };
 
-type FeltMedValg = BrevFelt & {
+interface FeltMedValg extends BrevFelt {
   navn?: string;
   beskrivelse?: string;
   valg?: { valgAlternativer?: ValgAlternativ[] } | null;
-};
+}
 
 const send_brev = object({
   mottaker: string().nullable(),
@@ -68,58 +69,111 @@ const send_brev = object({
   felt: object().test({
     name: "felt-validering",
     test: function (value: Record<string, FeltVerdi> | undefined, context: TestContext) {
-      const valgtBrev = (context.parent as SendBrevFormValues | undefined)?.valgtBrev as
-        | { felter?: FeltMedValg[] }
-        | undefined;
+      const parent = context.parent as SendBrevFormValues | undefined;
+      const valgtBrev = parent?.valgtBrev as { felter?: FeltMedValg[] } | undefined;
       if (!valgtBrev?.felter) return true;
 
       let harFeil = false;
       const errors: ErrorsMap = {};
 
-      valgtBrev.felter.forEach((brevFelt: FeltMedValg) => {
-        if (!brevFelt.paakrevd) return;
+      // Handter valideringsregler som omfatter flere felt som ikke er markert som påkrevd
+      if (parent?.type === "INNHENTING_AV_INNTEKTSOPPLYSNINGER") {
+        // Regel: Minst en av checkboksene STANDARDTEKST_INNTEKTSOPPLYSNINGER og FRITEKST
+        // må være valgt.
 
+        const valgtStandardtekst = Boolean((value?.STANDARDTEKST_INNTEKTSOPPLYSNINGER as any)?.feltVerdi === true);
+        const valgtFritekst = value?.FRITEKST?.valg === "FRITEKST";
+
+        if (!valgtStandardtekst && !valgtFritekst) {
+          if (!errors["FRITEKST"]) errors["FRITEKST"] = {};
+          errors["FRITEKST"].valg = toMelding("Du må velge minst én av standardtekst eller fritekst");
+          harFeil = true;
+        }
+      }
+
+      valgtBrev.felter.forEach((brevFelt) => {
         const feltverdi = value?.[brevFelt.kode];
-        const harValgAlternativer = Boolean(brevFelt?.valg?.valgAlternativer);
+        const valgtAlt = (brevFelt.valg?.valgAlternativer || []).find((a) => a.kode === feltverdi?.valg);
 
-        const manglerValg = harValgAlternativer ? !feltverdi?.valg : false;
-        const manglerFritekstStandard = !harValgAlternativer && !StringUtils.harStrengInnhold(feltverdi?.feltVerdi);
+        // Handter valideringsregler for enkelt-felt som ikke er markert som påkrevd
+        if (parent?.type === "INNHENTING_AV_INNTEKTSOPPLYSNINGER") {
+          // Dersom "Fritekst" er valgt, må fritekstfeltet også ha verdi, hvis ikke vises en feimlmelding.
+          let manglerInntektsOpplysningerFriktekst = false;
+          if (brevFelt.kode === "FRITEKST") {
+            const valgtFritekst = Boolean(value?.FRITEKST?.valg);
+            manglerInntektsOpplysningerFriktekst =
+              valgtFritekst && valgtAlt?.visFelt !== false && !StringUtils.harStrengInnhold(feltverdi?.feltVerdi);
+          }
 
-        let manglerFritekstBrevTittel = false;
-        let valgtAltKode: string | undefined = undefined;
-
-        if (brevFelt.kode === "BREV_TITTEL" && harValgAlternativer) {
-          const valgtAlt = (brevFelt.valg?.valgAlternativer || []).find((a) => a.kode === feltverdi?.valg);
-          valgtAltKode = valgtAlt?.kode;
-          const skalViseFritekst = valgtAlt?.visFelt !== false; // default true
-          if (skalViseFritekst) {
-            manglerFritekstBrevTittel = !StringUtils.harStrengInnhold(feltverdi?.feltVerdi);
+          if (manglerInntektsOpplysningerFriktekst) {
+            if (!errors[brevFelt.kode]) errors[brevFelt.kode] = {};
+            errors[brevFelt.kode].feltVerdi = toMelding("Du må skrive inn hva mottaker skal sende inn");
+            harFeil = true;
           }
         }
 
-        if (!manglerValg && !manglerFritekstStandard && !manglerFritekstBrevTittel) return;
+        if (!brevFelt.paakrevd) return;
+        // Handter felt som er markert som påkrevd
+
+        const harValgAlternativer = Boolean(brevFelt?.valg?.valgAlternativer);
+
+        const manglerValg = harValgAlternativer ? !feltverdi?.valg : false;
+        const manglerFritekstStandard = !harValgAlternativer && !feltHarInnhold(feltverdi);
+
+        let manglerFritekstBrevTittel = false;
+        if (brevFelt.kode === "BREV_TITTEL" && harValgAlternativer) {
+          manglerFritekstBrevTittel =
+            valgtAlt?.visFelt !== false &&
+            !StringUtils.harStrengInnhold(feltverdi?.feltVerdi) &&
+            valgtAlt?.kode === "FRITEKST_BRUKER_OG_VIRKSOMHET";
+        }
+
+        let manglerFritekstInnledning = false;
+        if (brevFelt.kode === "INNLEDNING_FRITEKST" && harValgAlternativer) {
+          manglerFritekstInnledning =
+            valgtAlt?.visFelt !== false && !StringUtils.harStrengInnhold(feltverdi?.feltVerdi);
+        }
+
+        let manglerFritekstInnledningsTekst = false;
+        if (brevFelt.kode === "MANGLER_FRITEKST") {
+          manglerFritekstInnledningsTekst =
+            valgtAlt?.visFelt !== false && !StringUtils.harStrengInnhold(feltverdi?.feltVerdi);
+        }
+
+        if (
+          !manglerValg &&
+          !manglerFritekstStandard &&
+          !manglerFritekstBrevTittel &&
+          !manglerFritekstInnledning &&
+          !manglerFritekstInnledningsTekst
+        )
+          return;
 
         const visningsnavn = (brevFelt as any).beskrivelse || (brevFelt as any).navn || brevFelt.kode;
         if (!errors[brevFelt.kode]) errors[brevFelt.kode] = {};
 
         if (manglerValg) {
-          errors[brevFelt.kode].valg = toMelding(hentFeltFeilmelding(brevFelt.kode, visningsnavn));
+          errors[brevFelt.kode].valg = hentFeltFeilmelding(brevFelt.kode, visningsnavn);
           harFeil = true;
         }
 
-        // Spesifikk feilmelding under fritekstfeltet for BREV_TITTEL i fritekstbrev for bruker
-        if (
-          manglerFritekstBrevTittel &&
-          (context.parent as SendBrevFormValues | undefined)?.type === "GENERELT_FRITEKSTBREV_BRUKER" &&
-          valgtAltKode === "FRITEKST_BRUKER_OG_VIRKSOMHET"
-        ) {
-          errors[brevFelt.kode].feltVerdi = toMelding("Du må skrive inn hovedtekst til brevet");
+        if (parent?.type === "GENERELT_FRITEKSTBREV_BRUKER" && manglerFritekstBrevTittel) {
+          errors[brevFelt.kode].feltVerdi = toMelding("Du må skrive inn overskrift til brevet");
           harFeil = true;
         }
 
-        // Standard fritekst-feil for andre felt (og BREV_TITTEL når spesifikk regel ikke traff)
+        if (parent?.type === "MANGELBREV_BRUKER" && manglerFritekstInnledning) {
+          errors[brevFelt.kode].feltVerdi = toMelding("Du må skrive inn innledningstekst i fritekstfeltet");
+          harFeil = true;
+        }
+
+        if (parent?.type === "MANGELBREV_BRUKER" && manglerFritekstInnledningsTekst) {
+          errors[brevFelt.kode].feltVerdi = toMelding("Hva skal mottaker sende inn?");
+          harFeil = true;
+        }
+
         if (manglerFritekstStandard && brevFelt.kode !== "BREV_TITTEL") {
-          errors[brevFelt.kode].feltVerdi = toMelding(hentFeltFeilmelding(brevFelt.kode, visningsnavn));
+          errors[brevFelt.kode].feltVerdi = hentFeltFeilmelding(brevFelt.kode, visningsnavn);
           harFeil = true;
         }
       });
@@ -135,27 +189,6 @@ const send_brev = object({
   }),
 
   fritekstTittel: string().nullable(),
-
-  erFeltGyldig: string().when(["felt", "valgtBrev", "valgtMottaker", "type"], {
-    is: (
-      felt: Record<string, FeltVerdi> | undefined,
-      valgtBrev: { felter?: BrevFelt[] } | undefined,
-      valgtMottaker: unknown,
-      type: string | undefined,
-    ) => {
-      if (!valgtMottaker || !type || !valgtBrev?.felter) return false;
-      return valgtBrev.felter.some((f) => f.paakrevd && (!felt?.[f.kode] || manglerFeltVerdi(felt?.[f.kode])));
-    },
-    then: (schema) =>
-      schema.test({
-        name: "detaljert-felt-validering",
-        test: (_value, context) =>
-          context.createError({
-            message: true as unknown as string,
-          }),
-      }),
-    otherwise: (schema) => schema.nullable(),
-  }),
 });
 
 export default send_brev;
