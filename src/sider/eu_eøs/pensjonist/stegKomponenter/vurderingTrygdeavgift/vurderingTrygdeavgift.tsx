@@ -56,9 +56,6 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     undefined,
   );
 
-  const helseutgiftDekkesPeriodeStatus = useSelector(
-    helseutgiftDekkesPeriodeSelector.HelseutgiftDekkesPeriodeSelector,
-  ).status;
   const helseutgiftDekkesPeriodeData = useSelector(
     helseutgiftDekkesPeriodeSelector.HelseutgiftDekkesPeriodeSelector,
   ).data;
@@ -69,11 +66,8 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
 
   const erEøsPensjonist = sakstype === EU_EOS && behandlingstema === PENSJONIST;
 
-  const [lagretTrygdeavgift, setTrygdeavgift] = useAsyncCallbackState(
-    () => Api.Trygdeavgift.hentBeregnetTrygdeavgift(behandlingID),
-    undefined,
-    [behandlingID, helseutgiftDekkesPeriodeStatus === STATUS.OK],
-  );
+  const [lagretTrygdeavgift, setTrygdeavgift] = useState<BeregnetTrygdeavgift>();
+
   const [feil, setFeil] = useState<string | undefined>(undefined);
   const [lagrePending, setLagrePending] = useState(false);
   const alleTrygdeavgiftsperioderHarNullBeløp = lagretTrygdeavgift?.trygdeavgiftsperioder.every(
