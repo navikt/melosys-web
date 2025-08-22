@@ -6,13 +6,11 @@ import * as Mui from "../../../../../felleskomponenter/ui";
 import * as Nav from "../../../../../navFrontend";
 import * as Api from "../../../../../services/api";
 import * as Utils from "../../../../../utils";
-import { STATUS } from "../../../../../services";
 
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import { helseutgiftDekkesPeriodeSelector } from "../../../../../ducks/helseutgiftdekkesperiode";
 
 import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
-import { useAsyncCallbackState } from "../../../../../hooks";
 
 import { BOOLSK_STRING } from "../../../../../constants";
 import LabelMedHjelpetekst from "../../../../../felleskomponenter/labelMedHjelpetekst";
@@ -36,6 +34,7 @@ import vurderingTrygdeavgiftSchema from "./vurderingTrygdeavgiftSchema";
 
 import { erBrukerSkattepliktigIHelePerioden } from "../../../../aarsavregning/stegKomponenter/vurderingAarsavregning/utils";
 import { fagsakSelectors } from "../../../../../ducks/fagsaker";
+import { nyVurdering } from "../../../../../services/modules/journalforing";
 const { EU_EOS } = MKV.Koder.sakstyper;
 const { PENSJONIST } = MKV.Koder.behandlinger.behandlingstema;
 interface Props {
@@ -52,6 +51,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const behandlingstype = useSelector(behandlingerSelectors.BehandlingstypeKodeSelector);
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const sakstype = useSelector(fagsakSelectors.SakstypeKodeSelector);
+  const [harBeregnetNyTrygdeavgift, setHarBeregnetNyTrygdeavgift] = useState<boolean>(false);
 
   const [harEndretHelseutgiftDekkesPeriode, setHarEndretHelseutgiftDekkesPeriode] = useState<boolean | undefined>(
     undefined,
@@ -129,12 +129,28 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
 
   const trygdeavgiftErIkkeTom = !Utils._isEmpty(lagretTrygdeavgift?.trygdeavgiftsperioder);
 
-  const harBeregnetForeløpigTrygdeavgift = !skalBeregneForelopigTrygdeavgift || trygdeavgiftErIkkeTom;
+  const harBeregnetForeløpigTrygdeavgift = !skalBeregneForelopigTrygdeavgift || trygdeavgiftErIkkeTom || !feil;
   const skalViseInntektskilder = !erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder);
 
   useEffect(() => {
-    if (harBeregnetForeløpigTrygdeavgift && erNyVurdering) {
+    const { inntektskilder, skatteforholdsperioder } = formValues;
+
+    if (!harBeregnetNyTrygdeavgift && erNyVurdering && inntektskilder.length > 0 && skatteforholdsperioder.length > 0) {
+      eøsPensjonistBeregnTrygdeavgiftsperioder(formValues);
+      setHarBeregnetNyTrygdeavgift(true);
+    }
+  }, [harBeregnetNyTrygdeavgift, formValues]);
+
+  useEffect(() => {
+    if (harEndretHelseutgiftDekkesPeriode === undefined) {
+      setHarEndretHelseutgiftDekkesPeriode(false);
+    } else {
+      setHarEndretHelseutgiftDekkesPeriode(true);
+    }
+
+    if (harBeregnetForeløpigTrygdeavgift && erNyVurdering && lagretTrygdeavgift) {
       trigger();
+      setHarBeregnetNyTrygdeavgift(false);
       return;
     }
 
@@ -151,12 +167,6 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
 
     if (!redigerbart) {
       return;
-    }
-
-    if (harEndretHelseutgiftDekkesPeriode === undefined) {
-      setHarEndretHelseutgiftDekkesPeriode(false);
-    } else {
-      setHarEndretHelseutgiftDekkesPeriode(true);
     }
   }, [helseutgiftDekkesPeriodeData]);
 
@@ -287,9 +297,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   }, [aktivtSteg, harEndretHelseutgiftDekkesPeriode]);
 
   if (!aktivtSteg) return null;
-
   const visFeilFraLagring = feil && formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType);
-
   return (
     <div className="vurderingTrygdeavgift">
       <Nav.Heading level="1" className="stegvelgertittel">
