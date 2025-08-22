@@ -7,7 +7,6 @@ import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { fagsakSelectors } from "../../../ducks/fagsaker";
 import { modalerOperations } from "../../../ducks/modaler";
 import Handling from "./handling";
-import { TRYGDEAVGIFT } from "../../../services/api-constants";
 
 const {
   YRKESAKTIV,
@@ -27,7 +26,7 @@ const {
 const { NY_VURDERING, FØRSTEGANG, KLAGE, HENVENDELSE, MANGLENDE_INNBETALING_TRYGDEAVGIFT, ÅRSAVREGNING } =
   MKV.Koder.behandlinger.behandlingstyper;
 const { EU_EOS, FTRL, TRYGDEAVTALE } = MKV.Koder.sakstyper;
-const { MEDLEMSKAP_LOVVALG, UNNTAK } = MKV.Koder.sakstemaer;
+const { MEDLEMSKAP_LOVVALG, UNNTAK, TRYGDEAVGIFT } = MKV.Koder.sakstemaer;
 
 function AvsluttSak() {
   const dispatch = useDispatch();
@@ -210,8 +209,8 @@ function AvsluttSak() {
   const skalViseAnnullerSak = () => {
     return Boolean(
       redigerbart &&
-        sakstype === FTRL &&
-        sakstema === MEDLEMSKAP_LOVVALG &&
+        [FTRL, EU_EOS].includes(sakstype) &&
+        [MEDLEMSKAP_LOVVALG, TRYGDEAVGIFT].includes(sakstema) &&
         [NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT].includes(behandlingstype),
     );
   };
