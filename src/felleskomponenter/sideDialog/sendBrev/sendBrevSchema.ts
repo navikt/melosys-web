@@ -2,14 +2,11 @@ import type { TestContext } from "yup";
 import { array, object, string } from "yup";
 import * as StringUtils from "../../../utils/streng";
 import { erAnnenOrganisasjon, erArbeidsgiver, erVirksomhet } from "./brevMottaker/brevMottaker";
-import type { BrevFelt, FeltVerdi, SendBrevFormValues, Melding } from "./types";
+import type { BrevFelt, FeltVerdi, SendBrevFormValues, Melding, ErrorsMap } from "./types";
 import { ValgAlternativ } from "../../../services/modules/dokumenter-v2";
 
-type FeltbladError = { feltVerdi?: Melding; valg?: Melding };
-type ErrorsMap = Record<string, FeltbladError>;
-
-const BREVMAL_MANGLER: Melding = { melding: "Velg brevmal" };
 const MOTTAKER_MANGLER: Melding = { melding: "Velg mottaker" };
+const BREVMAL_MANGLER: Melding = { melding: "Velg brevmal" };
 const ARBEIDSGIVER_MANGLER: Melding = { melding: "Velg arbeidsgiver" };
 const ORGNUMMER_FELT_MANGLER: Melding = { melding: "Fyll ut organisasjonsnummer" };
 const ORGNUMMER_UGYLDIG: Melding = { melding: "Ugyldig organisasjonsnummer" };

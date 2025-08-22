@@ -33,3 +33,5 @@ export interface SendBrevFormValues {
 }
 
 export type Melding = { melding: string };
+export type FeltbladError = { feltVerdi?: Melding; valg?: Melding };
+export type ErrorsMap = Record<string, FeltbladError>;
