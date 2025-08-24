@@ -203,6 +203,41 @@ function SendBrev({
     hentUtkast();
   }, []);
 
+  // Hjelpere for å resette vedlegg og felter
+  const resetVedleggState = () => {
+    setValgteVedlegg({ saksvedlegg: [], standardvedlegg: null });
+    setFritekstvedlegg([]);
+    setVisFritekstvedleggSkjema(false);
+    setRedigerFritekstvedleggIndex(undefined);
+  };
+
+  const resetSkjemafelter = () => {
+    changeField("felt", {}); // tømmer alle dynamiske felter
+    changeField("fritekstTittel", undefined);
+    changeField("erFeltGyldig", undefined);
+    changeField("organisasjonsnummer", undefined);
+    changeField("kontaktperson", undefined);
+    changeField("norskeMyndigheter", undefined);
+    changeField("kopiTilBruker", undefined);
+  };
+
+  // Reset alle vedlegg OG relevante felt når brevmal (valgtBrev) endres
+  useEffect(() => {
+    if (!formValues?.valgtBrev) return;
+    resetVedleggState();
+    resetSkjemafelter();
+  }, [formValues?.valgtBrev]);
+
+  // Reset alle vedlegg OG relevante felt når mottaker endres
+  useEffect(() => {
+    if (!formValues?.valgtMottaker?.rolle && !formValues?.mottaker) return;
+    resetVedleggState();
+    resetSkjemafelter();
+    // Sørg for at type/valgtBrev velges på nytt for ny mottaker
+    changeField("type", undefined);
+    changeField("valgtBrev", undefined);
+  }, [formValues?.mottaker, formValues?.valgtMottaker?.rolle]);
+
   useEffect(() => {
     if (
       tilgjengeligeBrevtyper?.length === 1 &&
