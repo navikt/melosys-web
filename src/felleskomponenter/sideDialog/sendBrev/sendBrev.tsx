@@ -222,10 +222,20 @@ function SendBrev({
   };
 
   // Reset alle vedlegg OG relevante felt når brevmal (valgtBrev) endres
+  import { useRef } from "react";
+  const prevValgtBrevRef = useRef<string | undefined>(undefined);
   useEffect(() => {
-    if (!formValues?.valgtBrev) return;
-    resetVedleggState();
-    resetSkjemafelter();
+    const prevValgtBrev = prevValgtBrevRef.current;
+    const currValgtBrev = formValues?.valgtBrev;
+    if (
+      prevValgtBrev !== undefined &&
+      currValgtBrev !== undefined &&
+      prevValgtBrev !== currValgtBrev
+    ) {
+      resetVedleggState();
+      resetSkjemafelter();
+    }
+    prevValgtBrevRef.current = currValgtBrev;
   }, [formValues?.valgtBrev]);
 
   // Reset alle vedlegg OG relevante felt når mottaker endres
