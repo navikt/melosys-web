@@ -5,6 +5,7 @@ import reactHooks from "eslint-plugin-react-hooks";
 import jsxA11y from "eslint-plugin-jsx-a11y";
 import importPlugin from "eslint-plugin-import";
 import prettier from "eslint-plugin-prettier";
+import prettierConfig from "eslint-config-prettier";
 import { fileURLToPath } from "url";
 import path from "path";
 import globals from "globals";
@@ -25,9 +26,10 @@ export default tseslint.config(
         ...globals.node,
       },
       parserOptions: {
-        ecmaFeatures: { jsx: true },
-        // Pek til tsconfig som inkluderer tests/e2e/**
-        project: "./tsconfig.eslint.json",
+        ecmaFeatures: {
+          jsx: true,
+        },
+        project: "./tsconfig.json",
         tsconfigRootDir: __dirname,
       },
     },
@@ -39,24 +41,39 @@ export default tseslint.config(
       prettier,
     },
     rules: {
-      "max-lines": ["warn", { max: 400, skipBlankLines: true, skipComments: true }],
+      "max-lines": [
+        "warn",
+        {
+          max: 400,
+          skipBlankLines: true,
+          skipComments: true,
+        },
+      ],
+
+      // TypeScript rules
       "@typescript-eslint/no-unused-vars": "warn",
       "@typescript-eslint/no-explicit-any": "warn",
       "@typescript-eslint/no-empty-object-type": "warn",
+
+      // General rules
       "prefer-const": "error",
       "no-var": "error",
       "no-console": "error",
       eqeqeq: "warn",
       "arrow-spacing": "error",
-      "no-unused-vars": "off",
+      "no-unused-vars": "off", // Use TypeScript version instead
       "no-constant-binary-expression": "warn",
+
+      // Prettier integration
       "prettier/prettier": "error",
     },
     settings: {
-      react: { version: "detect" },
+      react: {
+        version: "detect",
+      },
       "import/resolver": {
         typescript: {
-          project: ["./tsconfig.eslint.json", "./tests/tsconfig.json"],
+          project: "./tsconfig.json",
         },
       },
     },
@@ -83,16 +100,6 @@ export default tseslint.config(
       "no-console": "off",
     },
   },
-  // Type-aware linting for e2e med eget prosjekt
-  {
-    files: ["tests/e2e/**/*.{ts,tsx}"],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tests/tsconfig.json"],
-        tsconfigRootDir: __dirname,
-      },
-    },
-  },
   {
     ignores: [
       "build/**",
@@ -105,4 +112,5 @@ export default tseslint.config(
       "src/graphql/generated/**",
     ],
   },
+  prettierConfig,
 );

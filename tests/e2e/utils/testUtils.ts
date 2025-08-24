@@ -12,7 +12,7 @@
 export function sanitizeFilename(filename: string): string {
   return filename
     .replace(/[/\\?%*:|"<>]/g, "-") // Replace common invalid filename chars with hyphens
-    .replace(/'/g, "") // Remove apostrophes
+    .replace(/[']/g, "") // Remove apostrophes
     .replace(/\s+/g, "-") // Replace spaces with hyphens
     .replace(/-+/g, "-") // Replace multiple hyphens with a single hyphen
     .trim(); // Trim leading/trailing whitespace
