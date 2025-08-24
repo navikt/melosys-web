@@ -239,13 +239,9 @@ function SendBrev({
   }, [formValues?.valgtBrev]);
 
   // Reset alle vedlegg OG relevante felt når mottaker endres
-  useEffect(() => {
-    if (!formValues?.valgtMottaker?.rolle && !formValues?.mottaker) return;
-    resetVedleggState();
-    resetSkjemafelter();
-    // Sørg for at type/valgtBrev velges på nytt for ny mottaker
-    changeField("type", undefined);
-    changeField("valgtBrev", undefined);
+    if (formValues?.valgtBrev !== undefined) {
+      changeField("valgtBrev", undefined);
+    }
   }, [formValues?.mottaker, formValues?.valgtMottaker?.rolle]);
 
   useEffect(() => {
