@@ -1,4 +1,4 @@
-import { FocusEvent, useEffect, useMemo, useRef, useState } from "react";
+import { FocusEvent, useEffect, useRef, useState } from "react";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
@@ -401,7 +401,7 @@ function SendBrev({
     }
   };
 
-  const hentBrevRequest = (mottakerRolle: string): Record<string, unknown> => ({
+  const hentBrevRequest = (mottakerRolle: string): Api.DokumenterV2.OpprettBrevReqDto => ({
     produserbardokument: formValues.type || "",
     mottaker: mottakerRolle,
     orgNr: hentOrgnr(mottakerRolle),

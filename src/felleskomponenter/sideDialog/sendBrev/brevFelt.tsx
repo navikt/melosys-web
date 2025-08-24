@@ -9,10 +9,9 @@ import * as KV from "../../../kodeverk";
 import { DokumenterV2 } from "../../../services/api";
 import { begrensAntallTegn } from "../../../utils/normalisering";
 import LabelMedHjelpetekst from "../../labelMedHjelpetekst";
-import * as StringUtils from "../../../utils/streng";
 import "./brevFelt.less";
-import { SendBrevFormValues, SyncErrors, Melding } from "./types";
-import { hentFeltFeilmelding } from "./sendBrevSchema";
+import { SendBrevFormValues, SyncErrors } from "./types";
+import { hentFeltFeilmelding, unwrap, vurderPåkrevdOgMangler } from "./sendBrevSchema";
 
 interface BrevFeltProps {
   felt: DokumenterV2.Felt;
@@ -20,14 +19,6 @@ interface BrevFeltProps {
   width: ColumnWidth;
   redigerbart: boolean;
 }
-
-// Liten helper: trekk ut tekst enten det er string eller { melding: string }
-const unwrap = (v: unknown): string | undefined =>
-  typeof v === "string"
-    ? v
-    : typeof v === "object" && v !== null && "melding" in v
-      ? (v as Melding).melding
-      : undefined;
 
 function BrevFelt({ felt, visFeltBeskrivelse, width, redigerbart }: BrevFeltProps) {
   const syncErrors = useSelector((state: RootState) => getFormSyncErrors(KV.Form.SEND_BREV)(state)) as
@@ -37,29 +28,8 @@ function BrevFelt({ felt, visFeltBeskrivelse, width, redigerbart }: BrevFeltProp
 
   // Sjekk om dette spesifikke feltet mangler utfylling og er påkrevd
   const erFeltPåkrevdOgMangler = () => {
-    const valgtBrev = formValues?.valgtBrev;
-    if (!valgtBrev?.felter) return false;
-
-    const brevFeltDef = valgtBrev.felter.find((f) => f.kode === felt.kode);
-    if (!brevFeltDef?.paakrevd) return false;
-
-    const feltVerdi = formValues.felt?.[felt.kode];
-
-    // Hvis felt har valg: først kreves et valg
-    if (brevFeltDef?.valg?.valgAlternativer) {
-      if (!feltVerdi?.valg) return true;
-
-      // Hvis valgt alternativ viser fritekst (visFelt !== false), må feltVerdi også ha innhold
-      const valgtAlt = brevFeltDef.valg.valgAlternativer.find((a) => a.kode === feltVerdi?.valg);
-      const skalViseFritekst = valgtAlt?.visFelt !== false; // default true
-      if (skalViseFritekst) {
-        return !StringUtils.harStrengInnhold(feltVerdi?.feltVerdi);
-      }
-      return false;
-    }
-
-    // Uten valg: krever innhold i feltVerdi
-    return !StringUtils.harStrengInnhold(feltVerdi?.feltVerdi);
+    const { erPaakrevd, valgMangler, fritekstMangler } = vurderPåkrevdOgMangler(formValues, felt.kode);
+    return erPaakrevd && (valgMangler || fritekstMangler);
   };
 
   const visFelterFeil = Boolean(formValues?.showFieldErrors);
@@ -79,7 +49,7 @@ function BrevFelt({ felt, visFeltBeskrivelse, width, redigerbart }: BrevFeltProp
 
   // Tekst under feltet: bruk nested først, ellers generisk
   const feilmelding = skalViseFeil
-    ? nestedFeltVerdiText || nestedValgText || hentFeltFeilmelding(felt.kode, felt.beskrivelse || felt.kode).melding
+    ? nestedFeltVerdiText || nestedValgText || hentFeltFeilmelding(felt.kode).melding
     : undefined;
 
   switch (felt?.feltType) {

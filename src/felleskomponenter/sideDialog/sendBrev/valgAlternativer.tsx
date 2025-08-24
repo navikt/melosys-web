@@ -8,14 +8,15 @@ import * as Skjema from "../../skjema";
 import * as Nav from "../../../navFrontend";
 import * as KV from "../../../kodeverk";
 import LabelMedHjelpetekst from "../../labelMedHjelpetekst";
-import { BrevFelt, FeltVerdi, Melding, SendBrevFormValues, SyncErrors } from "./types";
-import { hentFeltFeilmelding } from "./sendBrevSchema";
+import { Felt, SendBrevFormValues, SyncErrors } from "./types";
+import { hentFeltFeilmelding, unwrap } from "./sendBrevSchema";
+import { vurderPåkrevdOgMangler } from "./sendBrevSchema";
 
 interface ValgAlternativProps {
   valg: DokumenterV2.Valg;
   feltKode: string;
   redigerbart: boolean;
-  changeField: (felt: string, data: string | FeltVerdi | undefined) => void;
+  changeField: (felt: string, data: string | Felt | undefined) => void;
   beskrivelse: string;
   hjelpetekst: string | null;
   className?: string;
@@ -28,14 +29,6 @@ const lagLabel = (beskrivelse: string, hjelpetekst: string | null) => {
     <span />
   );
 };
-
-// Liten helper: trekk ut tekst enten det er string eller { melding: string }
-const unwrap = (v: unknown): string | undefined =>
-  typeof v === "string"
-    ? v
-    : typeof v === "object" && v !== null && "melding" in v
-      ? (v as Melding).melding
-      : undefined;
 
 function ValgAlternativer({
   valg,
@@ -51,14 +44,8 @@ function ValgAlternativer({
 
   // Sjekk om dette feltet er påkrevd og mangler verdi
   const erFeltPåkrevdOgMangler = () => {
-    const valgtBrev = formValues?.valgtBrev;
-    if (!valgtBrev?.felter) return false;
-
-    const brevFelt = valgtBrev.felter.find((f: BrevFelt) => f.kode === feltKode);
-    if (!brevFelt?.paakrevd) return false;
-
-    const feltVerdi = formValues?.felt?.[feltKode];
-    return !feltVerdi?.valg;
+    const { erPaakrevd, valgMangler } = vurderPåkrevdOgMangler(formValues, feltKode);
+    return erPaakrevd && valgMangler;
   };
 
   // Les nested feil fra schema for å kunne vise dem inline, selv om feltet ikke er paakrevd
@@ -76,9 +63,8 @@ function ValgAlternativer({
   const erSelect = valg.valgType === DokumenterV2.ValgType.SELECT;
   const feilmelding: string | undefined = skalViseFeil
     ? erSelect
-      ? nestedValgText ||
-        (erFeltPåkrevdOgMangler() ? hentFeltFeilmelding(feltKode, beskrivelse || feltKode).melding : undefined)
-      : nestedValgText || nestedFeltVerdiText || hentFeltFeilmelding(feltKode, beskrivelse || feltKode).melding
+      ? nestedValgText || (erFeltPåkrevdOgMangler() ? hentFeltFeilmelding(feltKode).melding : undefined)
+      : nestedValgText || nestedFeltVerdiText || hentFeltFeilmelding(feltKode).melding
     : undefined;
 
   const label = lagLabel(beskrivelse, hjelpetekst);

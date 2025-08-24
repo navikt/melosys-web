@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import schema from "./sendBrevSchema";
 import type { ErrorsMap, SendBrevFormValues } from "./types";
-import { buildValidationSummary } from "./validationSummary";
 import type { ValidationError } from "yup";
 import * as Api from "../../../services/api";
 
@@ -72,34 +71,21 @@ function expectInntektsopplysningerErrors(err: ValidationError | null) {
   expect(summary.length).toBe(forventedeMeldinger.length);
 }
 
-function expexFritekstbrevbrukerErrors(err: ValidationError | null) {
-  expect(err).toBeTruthy();
-  const feltErrors = extractFeltErrors(err);
-  expect(unwrapMelding(feltErrors?.BREV_TITTEL?.feltVerdi)).toBe("Du må skrive inn overskrift til brevet");
-  expect(unwrapMelding(feltErrors?.DISTRIBUSJONSTYPE?.valg)).toBe("Du må velge type brev");
-  const keys = Object.keys(feltErrors as ErrorsMap);
-  expect(keys.every((k) => new Set(["BREV_TITTEL", "DISTRIBUSJONSTYPE", "FRITEKST"]).has(k))).toBe(true);
-
-  const forventedeMeldinger = ["Du må skrive inn overskrift til brevet", "Du må velge type brev"];
-  const summary = buildValidationSummary(feltErrors);
-  forventedeMeldinger.forEach((m) => expect(summary).toContain(m));
-  expect(summary.length).toBe(forventedeMeldinger.length);
-}
-
 function expectMangelbrevBrukerErrors(err: ValidationError | null) {
   expect(err).toBeTruthy();
   const feltErrors = extractFeltErrors(err);
   expect(unwrapMelding(feltErrors?.INNLEDNING_FRITEKST?.feltVerdi)).toBe(
     "Du må skrive inn innledningstekst i fritekstfeltet",
   );
-  expect(unwrapMelding(feltErrors?.MANGLER_FRITEKST?.feltVerdi)).toBe("Hva skal mottaker sende inn?");
+  expect(unwrapMelding(feltErrors?.MANGLER_FRITEKST?.feltVerdi)).toBe("Du må skrive inn i hva mottaker skal sende inn");
   expect(Object.keys(feltErrors as ErrorsMap).sort()).toEqual(["INNLEDNING_FRITEKST", "MANGLER_FRITEKST"].sort());
 
-  const forventedeMeldinger = ["Du må skrive inn innledningstekst i fritekstfeltet", "Hva skal mottaker sende inn?"];
+  const forventedeMeldinger = [
+    "Du må skrive inn innledningstekst i fritekstfeltet",
+    "Du må skrive inn i hva mottaker skal sende inn",
+  ];
   const summary = buildValidationSummary(feltErrors);
-  // Sjekk at forventede meldinger finnes, uten å kreve eksakt lengde.
   forventedeMeldinger.forEach((m) => expect(summary).toContain(m));
-  // Ikke håndhev exact length her da flere meldinger kan samles av schema/buildValidationSummary
 }
 
 describe("sendBrevSchema - felles krav for alle brevmaler", () => {
@@ -453,18 +439,52 @@ describe("alle kombinasjoner av mottaker og brevmal – korrekte feltfeil og de 
 
   // MANGELBREV_BRUKER
   it("VIRKSOMHET + MANGELBREV_BRUKER -> riktige feltfeil og oppsummering", async () => {
-    const err = await validate({
-      type: "MANGELBREV_BRUKER",
-      valgtMottaker: { rolle: "VIRKSOMHET" } as any,
-      arbeidsgiver: "123456789",
-      valgtBrev: mangelbrevBrev,
-      felt: {
-        INNLEDNING_FRITEKST: { valg: "X", feltVerdi: "" },
-        MANGLER_FRITEKST: { feltVerdi: "" },
-      } as any,
-    } as SendBrevFormValues);
+    // Start med manglende brevfelter, fyll ett og ett felt og bekreft at feil forsvinner
+    const valgtBrev = makeBrev("MANGELBREV_BRUKER", [
+      { kode: "INNLEDNING_FRITEKST", paakrevd: true, valg: null } as any,
+      { kode: "MANGLER_FRITEKST", paakrevd: true, valg: null } as any,
+    ]);
 
+    // Begynn med VIRKSOMHET (krever arbeidsgiver) og ingen brev-felt utfylt
+    let values: Partial<SendBrevFormValues> = {
+      type: "MANGELBREV_BRUKER",
+      valgtMottaker: makeMottaker("VIRKSOMHET"),
+      arbeidsgiver: "999999999",
+      valgtBrev,
+      felt: {} as NonNullable<SendBrevFormValues["felt"]>,
+    };
+
+    // 1) Forvent begge felt-feil
+    let err = await validate(values);
     expectMangelbrevBrukerErrors(err);
+
+    // 2) Fyll inn INNLEDNING_FRITEKST -> kun MANGLER_FRITEKST skal gjenstå
+    values = {
+      ...values,
+      felt: {
+        INNLEDNING_FRITEKST: { feltVerdi: "Innledningstekst" } as any,
+      } as NonNullable<SendBrevFormValues["felt"]>,
+    };
+    err = await validate(values);
+    expect(err).toBeTruthy();
+    const feilEtterFørsteUtfylling = extractFeltErrors(err);
+    expect(unwrapMelding(feilEtterFørsteUtfylling?.INNLEDNING_FRITEKST?.feltVerdi)).toBeUndefined();
+    expect(unwrapMelding(feilEtterFørsteUtfylling?.MANGLER_FRITEKST?.feltVerdi)).toBe(
+      "Du må skrive inn i hva mottaker skal sende inn",
+    );
+    const summary = buildValidationSummary(feilEtterFørsteUtfylling);
+    expect(summary).toContain("Du må skrive inn i hva mottaker skal sende inn");
+
+    // 3) Fyll inn MANGLER_FRITEKST -> ingen feil igjen
+    values = {
+      ...values,
+      felt: {
+        ...(values.felt as Record<string, any>),
+        MANGLER_FRITEKST: { feltVerdi: "Send inn dokumentasjon" } as any,
+      } as NonNullable<SendBrevFormValues["felt"]>,
+    };
+    err = await validate(values);
+    expect(err).toBeNull();
   });
 
   it("ARBEIDSGIVER + MANGELBREV_BRUKER -> riktige feltfeil og oppsummering", async () => {
@@ -540,3 +560,51 @@ describe("alle kombinasjoner av mottaker og brevmal – korrekte feltfeil og de 
     expect(err).toBeNull();
   });
 });
+
+function buildValidationSummary(syncErrors: ErrorsMap | undefined): string[] {
+  const result: string[] = [];
+
+  const pushMsg = (msg: unknown) => {
+    const isMeldingObject = (value: unknown): value is { melding: string } => {
+      return typeof value === "object" && value !== null && "melding" in value;
+    };
+
+    const m = typeof msg === "string" ? msg : isMeldingObject(msg) ? msg.melding : undefined;
+    if (!m) return;
+    if (m === "Valideringsfeil") return; // behold eksisterende filtrering
+    if (m.startsWith("Fyll ut feltet") || m.startsWith("Fyll ut feltene")) return; // ikke ta sammendragsmeldinger
+    result.push(m);
+  };
+
+  const traverse = (obj: unknown) => {
+    if (obj === null) return;
+    if (Array.isArray(obj)) {
+      obj.forEach(traverse);
+      return;
+    }
+    if (typeof obj === "object") {
+      const objWithProperties = obj as { melding?: string; _error?: string };
+      if (typeof objWithProperties.melding === "string") pushMsg(objWithProperties.melding);
+      if (typeof objWithProperties._error === "string") pushMsg(objWithProperties._error);
+      Object.values(obj).forEach(traverse);
+      return;
+    }
+    pushMsg(obj);
+  };
+
+  if (syncErrors && typeof syncErrors === "object") {
+    Object.entries(syncErrors as Record<string, unknown>).forEach(([, feilmelding]) => {
+      if (typeof feilmelding === "object" && feilmelding !== null) {
+        traverse(feilmelding);
+      } else {
+        pushMsg(feilmelding);
+      }
+    });
+  }
+
+  const unike = Array.from(new Set(result));
+  const harBrevtittelLinje = unike.some(
+    (m) => m.toLowerCase().includes("brevtittel") || m.toLowerCase().includes("brev tittel"),
+  );
+  return unike.filter((m) => !(harBrevtittelLinje && m.trim() === "Fyll inn tittel"));
+}
