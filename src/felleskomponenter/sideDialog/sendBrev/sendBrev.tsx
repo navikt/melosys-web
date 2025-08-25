@@ -234,6 +234,46 @@ function SendBrev({
     hentUtkast();
   }, []);
 
+  const resetVedleggState = () => {
+    setValgteVedlegg({ saksvedlegg: [], standardvedlegg: null });
+    setFritekstvedlegg([]);
+    setVisFritekstvedleggSkjema(false);
+    setRedigerFritekstvedleggIndex(undefined);
+  };
+
+  const resetSkjemafelter = () => {
+    changeField("felt", {}); // tømmer alle dynamiske felter
+    changeField("fritekstTittel", undefined);
+    changeField("erFeltGyldig", undefined);
+    changeField("organisasjonsnummer", undefined);
+    changeField("kontaktperson", undefined);
+    changeField("norskeMyndigheter", undefined);
+    changeField("kopiTilBruker", undefined);
+  };
+
+  const prevValgtBrevRef = useRef<Api.DokumenterV2.TilgjengeligBrev | undefined>(undefined);
+  useEffect(() => {
+    const prevValgtBrev = prevValgtBrevRef.current;
+    const currentValgtBrev = formValues?.valgtBrev;
+
+    // Only reset if both previous and current are defined and different
+    if (prevValgtBrev && currentValgtBrev && prevValgtBrev !== currentValgtBrev) {
+      resetVedleggState();
+      resetSkjemafelter();
+    }
+
+    prevValgtBrevRef.current = currentValgtBrev;
+  }, [formValues?.valgtBrev]);
+
+  useEffect(() => {
+    if (!formValues?.valgtMottaker?.rolle && !formValues?.mottaker) return;
+    resetVedleggState();
+    resetSkjemafelter();
+    // Sørg for at type/valgtBrev velges på nytt for ny mottaker
+    changeField("type", undefined);
+    changeField("valgtBrev", undefined);
+  }, [formValues?.mottaker, formValues?.valgtMottaker?.rolle]);
+
   useEffect(() => {
     return () => {
       if (brevBestiltTimerRef.current) {

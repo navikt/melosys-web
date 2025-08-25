@@ -5,7 +5,6 @@ import reactHooks from "eslint-plugin-react-hooks";
 import jsxA11y from "eslint-plugin-jsx-a11y";
 import importPlugin from "eslint-plugin-import";
 import prettier from "eslint-plugin-prettier";
-import prettierConfig from "eslint-config-prettier";
 import { fileURLToPath } from "url";
 import path from "path";
 import globals from "globals";
@@ -26,10 +25,9 @@ export default tseslint.config(
         ...globals.node,
       },
       parserOptions: {
-        ecmaFeatures: {
-          jsx: true,
-        },
-        project: "./tsconfig.json",
+        ecmaFeatures: { jsx: true },
+        // Pek til tsconfig som inkluderer tests/e2e/**
+        project: "./tsconfig.eslint.json",
         tsconfigRootDir: __dirname,
       },
     },
@@ -41,16 +39,7 @@ export default tseslint.config(
       prettier,
     },
     rules: {
-      "max-lines": [
-        "warn",
-        {
-          max: 400,
-          skipBlankLines: true,
-          skipComments: true,
-        },
-      ],
-
-      // TypeScript rules
+      "max-lines": ["warn", { max: 400, skipBlankLines: true, skipComments: true }],
       "@typescript-eslint/no-unused-vars": "warn",
       "@typescript-eslint/no-explicit-any": "warn",
       "@typescript-eslint/no-empty-object-type": "warn",
@@ -68,12 +57,10 @@ export default tseslint.config(
       "prettier/prettier": "error",
     },
     settings: {
-      react: {
-        version: "detect",
-      },
+      react: { version: "detect" },
       "import/resolver": {
         typescript: {
-          project: "./tsconfig.json",
+          project: ["./tsconfig.eslint.json", "./tests/tsconfig.json"],
         },
       },
     },
@@ -100,6 +87,16 @@ export default tseslint.config(
       "no-console": "off",
     },
   },
+  // Type-aware linting for e2e med eget prosjekt
+  {
+    files: ["tests/e2e/**/*.{ts,tsx}"],
+    languageOptions: {
+      parserOptions: {
+        project: ["./tests/tsconfig.json"],
+        tsconfigRootDir: __dirname,
+      },
+    },
+  },
   {
     ignores: [
       "build/**",
@@ -112,5 +109,4 @@ export default tseslint.config(
       "src/graphql/generated/**",
     ],
   },
-  prettierConfig,
 );

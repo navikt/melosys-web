@@ -31,6 +31,7 @@ export async function runAxeAnalyze(
     return;
   }
 
+  /* eslint-disable-next-line no-console */
   console.log(`\n✅ No accessibility violations found${contextDescription ? ` for ${contextDescription}` : ""}`);
 }
 
