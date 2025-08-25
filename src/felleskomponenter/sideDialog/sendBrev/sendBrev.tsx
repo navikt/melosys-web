@@ -1,4 +1,4 @@
-import { FocusEvent, useEffect, useRef, useState } from "react";
+import { FocusEvent, useEffect, useRef, useState, useMemo } from "react";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
@@ -121,9 +121,14 @@ function SendBrev({
   const [lagreUtkastSpinner, setLagreUtkastSpinner] = useState(false);
   const [forkastBrevSpinner, setForkastBrevSpinner] = useState(false);
   const brevBestiltTimerRef = useRef<number | undefined>(undefined);
-  const tilgjengeligeMottakere = tilgjengeligeMaler?.map((mal) => mal.mottaker) || [];
-  const tilgjengeligeBrevtyper =
-    tilgjengeligeMaler?.find((mal) => mal?.mottaker.uuid === formValues?.mottaker)?.brevTyper || [];
+  const tilgjengeligeMottakere = useMemo(
+    () => tilgjengeligeMaler?.map((mal) => mal.mottaker) || [],
+    [tilgjengeligeMaler],
+  );
+  const tilgjengeligeBrevtyper = useMemo(
+    () => tilgjengeligeMaler?.find((mal) => mal?.mottaker.uuid === formValues?.mottaker)?.brevTyper || [],
+    [tilgjengeligeMaler, formValues?.mottaker],
+  );
   const mottakerErNorskMyndighet = erNorskMyndighet(formValues?.valgtMottaker?.rolle);
   const { accounts } = useMsal();
   const syncErrors = useSelector((state: RootState) => getFormSyncErrors(KV.Form.SEND_BREV)(state));
@@ -232,6 +237,11 @@ function SendBrev({
     hentTilgjengeligeMaler();
     hentTilgjengeligeStandardvedlegg();
     hentUtkast();
+    return () => {
+      if (brevBestiltTimerRef.current) {
+        clearTimeout(brevBestiltTimerRef.current);
+      }
+    };
   }, []);
 
   const resetVedleggState = () => {
@@ -267,20 +277,19 @@ function SendBrev({
 
   useEffect(() => {
     if (!formValues?.valgtMottaker?.rolle && !formValues?.mottaker) return;
+    // Reset vedlegg og skjemafelter ved mottaker-endring
     resetVedleggState();
     resetSkjemafelter();
     // Sørg for at type/valgtBrev velges på nytt for ny mottaker
     changeField("type", undefined);
     changeField("valgtBrev", undefined);
+    // Tilbakestill feilhåndtering og varsler
+    changeField("showFieldErrors", false);
+    if (submitAttempted) setSubmitAttempted(false);
+    setFeil(undefined);
+    setVisBrevBestiltAlert(false);
+    setMuligeMottakereFeil(undefined);
   }, [formValues?.mottaker, formValues?.valgtMottaker?.rolle]);
-
-  useEffect(() => {
-    return () => {
-      if (brevBestiltTimerRef.current) {
-        clearTimeout(brevBestiltTimerRef.current);
-      }
-    };
-  }, []);
 
   useEffect(() => {
     if (
@@ -327,16 +336,6 @@ function SendBrev({
     untouchFields(...pathsToUntouch);
   }, [formValues?.valgtBrev?.type]);
 
-  // Reset kun feilhåndteringsflagg/varsler når mottaker endres (ikke lytte på type her)
-  useEffect(() => {
-    changeField("showFieldErrors", false);
-    if (submitAttempted) setSubmitAttempted(false);
-
-    setFeil(undefined);
-    setVisBrevBestiltAlert(false);
-    setMuligeMottakereFeil(undefined);
-  }, [formValues?.mottaker]);
-
   useEffect(() => {
     setMuligeMottakereFeil(undefined);
     if (kanHenteMuligeMottakere(formValues)) {
@@ -375,7 +374,7 @@ function SendBrev({
     if (formIsValid && submitAttempted) {
       setSubmitAttempted(false);
     }
-  }, [formIsValid]);
+  }, [formIsValid, submitAttempted]);
 
   const finnValgAlternativ = (felt: Api.DokumenterV2.Felt) => {
     return felt?.valg?.valgAlternativer.find((alternativ) => alternativ.kode === formValues?.felt?.[felt.kode]?.valg);
