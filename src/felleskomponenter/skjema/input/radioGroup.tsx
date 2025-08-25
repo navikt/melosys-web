@@ -4,6 +4,7 @@ import * as Nav from "../../../navFrontend";
 import * as Utils from "../../../utils";
 import { ReactNode } from "react";
 import "./radioGroup.less";
+import { unwrapMelding } from "../utils";
 
 /** Redux støtter i utgangspunktet ikke boolske valg i
  * radioknapper. Det betyr at alle true/false settes som string
@@ -26,7 +27,7 @@ type InnerRadioGroupProps = RadioGroupProps & {
     onChange: (value: boolean | string) => void;
   };
   meta: {
-    error?: string;
+    error?: unknown; // kan være string eller { melding }
     touched?: boolean;
     active?: boolean;
   };
@@ -50,7 +51,9 @@ function InnerRadioGroup({
     input.onChange(value);
   };
 
-  const errorMessage = error || (meta.error && meta.touched && !meta.active ? meta.error : undefined);
+  const explicitError = unwrapMelding(error);
+  const metaError = unwrapMelding(meta.error);
+  const errorMessage = explicitError ?? (meta.touched && !meta.active ? metaError : undefined);
   const hasError = !!errorMessage;
   const combinedClassName = hasError ? `${className ?? ""} skjema-radiogroup--has-error`.trim() : (className ?? "");
 
@@ -81,7 +84,7 @@ interface RadioGroupProps {
   children: ReactNode;
   hideLegend?: boolean;
   readOnly?: boolean;
-  error?: string | undefined;
+  error?: unknown; // kan være string eller { melding }
 }
 
 function RadioGroup({ ...props }: RadioGroupProps) {

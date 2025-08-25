@@ -11,7 +11,8 @@ import { begrensAntallTegn } from "../../../utils/normalisering";
 import LabelMedHjelpetekst from "../../labelMedHjelpetekst";
 import "./brevFelt.less";
 import { SendBrevFormValues, SyncErrors } from "./types";
-import { hentFeltFeilmelding, unwrap, vurderPåkrevdOgMangler } from "./sendBrevSchema";
+import { hentFeltFeilmelding, vurderPåkrevdOgMangler } from "./sendBrevSchema";
+import { unwrapMelding } from "../../skjema/utils";
 
 interface BrevFeltProps {
   felt: DokumenterV2.Felt;
@@ -26,7 +27,7 @@ function BrevFelt({ felt, visFeltBeskrivelse, width, redigerbart }: BrevFeltProp
     | undefined;
   const formValues = useSelector((state: RootState) => getFormValues(KV.Form.SEND_BREV)(state)) as SendBrevFormValues;
 
-  // Sjekk om dette spesifikke feltet mangler utfylling og er påkrevd
+  // Sjekk om dette feltet er påkrevd og mangler verdi
   const erFeltPåkrevdOgMangler = () => {
     const { erPaakrevd, valgMangler, fritekstMangler } = vurderPåkrevdOgMangler(formValues, felt.kode);
     return erPaakrevd && (valgMangler || fritekstMangler);
@@ -40,8 +41,8 @@ function BrevFelt({ felt, visFeltBeskrivelse, width, redigerbart }: BrevFeltProp
       ? (syncErrors.felt as Record<string, { feltVerdi?: unknown; valg?: unknown } | undefined>)[felt.kode]
       : undefined;
 
-  const nestedFeltVerdiText = unwrap(nestedNode?.feltVerdi);
-  const nestedValgText = unwrap(nestedNode?.valg);
+  const nestedFeltVerdiText = unwrapMelding(nestedNode?.feltVerdi);
+  const nestedValgText = unwrapMelding(nestedNode?.valg);
   const harNestedFeil = Boolean(nestedFeltVerdiText || nestedValgText);
 
   // Når skal vi vise feil under feltet?

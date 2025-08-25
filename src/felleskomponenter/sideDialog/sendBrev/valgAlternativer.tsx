@@ -9,8 +9,9 @@ import * as Nav from "../../../navFrontend";
 import * as KV from "../../../kodeverk";
 import LabelMedHjelpetekst from "../../labelMedHjelpetekst";
 import { Felt, SendBrevFormValues, SyncErrors } from "./types";
-import { hentFeltFeilmelding, unwrap } from "./sendBrevSchema";
+import { hentFeltFeilmelding } from "./sendBrevSchema";
 import { vurderPåkrevdOgMangler } from "./sendBrevSchema";
+import { unwrapMelding } from "../../skjema/utils";
 
 interface ValgAlternativProps {
   valg: DokumenterV2.Valg;
@@ -51,10 +52,10 @@ function ValgAlternativer({
   // Les nested feil fra schema for å kunne vise dem inline, selv om feltet ikke er paakrevd
   const nestedNode =
     syncErrors?.felt && typeof syncErrors.felt === "object"
-      ? (syncErrors.felt as Record<string, { feltVerdi?: unknown; valg?: unknown } | undefined>)[feltKode]
+      ? (syncErrors.felt as Record<string, Felt | undefined>)[feltKode]
       : undefined;
-  const nestedFeltVerdiText = unwrap(nestedNode?.feltVerdi);
-  const nestedValgText = unwrap(nestedNode?.valg);
+  const nestedFeltVerdiText = unwrapMelding(nestedNode?.feltVerdi);
+  const nestedValgText = unwrapMelding(nestedNode?.valg);
   const harNestedFeil = Boolean(nestedFeltVerdiText || nestedValgText);
 
   const skalViseFeil = Boolean(formValues?.showFieldErrors) && (harNestedFeil || erFeltPåkrevdOgMangler());
