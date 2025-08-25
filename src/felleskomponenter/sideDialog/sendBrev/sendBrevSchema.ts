@@ -216,7 +216,8 @@ const send_brev = object({
           harFeil = true;
         }
 
-        if (!harFeil && manglerFritekstStandard && brevFelt.kode !== "BREV_TITTEL") {
+        // Sett generisk fritekst-feil kun dersom feltet ikke allerede har en spesifikk feltVerdi-feil
+        if (manglerFritekstStandard && brevFelt.kode !== "BREV_TITTEL" && !errors[brevFelt.kode]?.feltVerdi) {
           errors[brevFelt.kode].feltVerdi = hentFeltFeilmelding(brevFelt.kode);
           harFeil = true;
         }
