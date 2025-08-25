@@ -194,11 +194,9 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       .sort(Utils.dato.sorterEtterNorskFomDato);
     const medlemskapsperiodeFomTom = hentMedlemskapsFomTomDato(sorterteGyldigePerioder);
 
-    /* eslint-disable no-console */
     consoleLog("[finnMedlemskapsperiode] medlemskapsperiodeFomTom", medlemskapsperiodeFomTom);
     consoleLog("[finnMedlemskapsperiode] sorterteGyldigePerioder", sorterteGyldigePerioder);
     consoleLog("[finnMedlemskapsperiode] perioder", perioder);
-    /* eslint-enable no-console */
 
     return {
       fomDato: Utils.dato.vaskOgFormatterDatoTilNorsk(medlemskapsperiodeFomTom?.fom),
@@ -316,7 +314,6 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   );
 
   const debouncedBeregning = useCallback(() => {
-    /* eslint-disable-next-line no-console */
     consoleLog("[debouncedBeregning] setter debouncedBeregningPagaar til false");
     setDebouncedBeregningPagaar(false);
     if (
@@ -327,7 +324,6 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       lagreMedlemskapsperioderPaagar ||
       endeligAvgiftValg !== OPPLYSNINGER_ENDRET
     ) {
-      /* eslint-disable-next-line no-console */
       consoleLog("[debouncedBeregning] return tidlig i debouncedBeregning");
       return;
     }
@@ -343,7 +339,6 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     );
     const medlemskapsperiodeFomTom = finnMedlemskapsperiode(medlemskapsperioderFormState);
 
-    /* eslint-disable-next-line no-console */
     consoleLog("[debouncedBeregning] medlemskapsperiodeFomTom", medlemskapsperiodeFomTom);
 
     if (!Utils._isEqual(formState, previousFormState)) {
@@ -354,7 +349,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         medlemskapsperioder: medlemskapsperioderFormState as Medlemskapsperiode[],
         medlemskapstypeErPliktig,
       });
-      /* eslint-disable-next-line no-console */
+
       consoleLog("[debouncedBeregning] Aktive feilmeldinger", aktivFeilmelding, {
         skatteforholdsperioder: formState.skatteforholdsperioder,
         inntektskilder: formState.inntektskilder,
@@ -377,7 +372,6 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       }
     }
 
-    /* eslint-disable-next-line no-console */
     consoleLog("[debouncedBeregning] ferdig");
   }, [
     aarsavregningID,
@@ -426,7 +420,6 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
           return periode;
         });
 
-        /* eslint-disable-next-line no-console */
         consoleLog("[lagreMedlemskapsperioder] oppdaterteMedlemskapsperioder", oppdaterteMedlemskapsperioder);
 
         setLagredeMedlemskapsperioder(oppdaterteMedlemskapsperioder);
@@ -608,14 +601,14 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   useEffect(() => {
     setDebouncedBeregningPagaar(false);
     debouncedBeregningRef.current = Utils._debounce(debouncedBeregning, 350);
-    /* eslint-disable-next-line no-console */
+
     consoleLog("[useEffect debouncedBeregning] Lager en ny debounce funksjon når beregning callback endres");
 
     // Cancel på unmount
     return () => {
       if (debouncedBeregningRef.current?.cancel) {
         setDebouncedBeregningPagaar(false);
-        /* eslint-disable-next-line no-console */
+
         consoleLog(
           "[useEffect debouncedBeregning] Avbryter eventuelt eksisterende beregning for å sette opp ny debounce funksjon.",
         );
@@ -658,7 +651,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     // Avbryter hvis vi allerede har en beregning som venter
     if (debouncedBeregningRef.current?.cancel && Object.keys(changedDependencies).length > 0) {
       setDebouncedBeregningPagaar(false);
-      /* eslint-disable-next-line no-console */
+
       consoleLog("[useEffect hovedberegning] Avbryter eventuelt eksisterende beregning.", {
         beregningPaagar,
         lagreMedlemskapsperioderPaagar,
@@ -668,7 +661,6 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     }
 
     if (medlemskapsperiodeEndret || Object.keys(changedDependencies).length === 0 || lagreMedlemskapsperioderPaagar) {
-      /* eslint-disable-next-line no-console */
       consoleLog("[useEffect hovedberegning] Avbryter useEffect uten å gjøre noe.", {
         medlemskapsperiodeEndret,
         changedDependencies,
@@ -688,7 +680,6 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       );
 
       if (!redigerbart || !aarsavregningID || endrerBestemmelse || beregningPaagar || lagreMedlemskapsperioderPaagar) {
-        /* eslint-disable-next-line no-console */
         consoleLog(
           "[useEffect hovedberegning] return tidlig i fordi redigerbart, aarsavregningID, endrerBestemmelse, lagreMedlemskapsperioderPaagar",
           {
@@ -719,14 +710,13 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         });
       } else {
         setArrayValideringsfeil(undefined);
-        /* eslint-disable-next-line no-console */
+
         consoleLog("[useEffect hovedberegning] Clear arrayValideringsfeil", {
           currentFormState,
           previousFormState,
         });
       }
     } else {
-      /* eslint-disable-next-line no-console */
       consoleLog("[useEffect hovedberegning] debouncedBeregningRef.current er undefined");
     }
   }, [
@@ -763,6 +753,24 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   useEffect(() => {
     oppdaterStatus(stegErGyldig);
   }, [stegErGyldig, oppdaterStatus]);
+
+  // Denne gjør at første/initielle element i skatteforhold og inntektsperiode ferdigutfylles med medlemskapsperiode når medlemskapsperiode er satt
+  useEffect(() => {
+    if (medlemskapsperiode.fomDato && medlemskapsperiode.tomDato) {
+      const initialSkatteforholdElement = skatteforholdsperioder[0];
+      const initialInntektsPeriode = inntektskilder[0];
+
+      if (!(initialSkatteforholdElement.fomDato && initialSkatteforholdElement.tomDato)) {
+        skattRemove(0);
+        skattAppend(medlemskapsperiode);
+      }
+
+      if (!(initialInntektsPeriode.fomDato && initialInntektsPeriode.tomDato)) {
+        inntektRemove(0);
+        inntektAppend(medlemskapsperiode);
+      }
+    }
+  }, [medlemskapsperiode]);
 
   const handleEndeligAvgiftValgChange = useCallback(
     (value: string) => {
