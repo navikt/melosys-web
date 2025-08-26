@@ -176,6 +176,86 @@ describe("sendBrevSchema - felles krav for alle brevmaler", () => {
 });
 
 describe("alle kombinasjoner av mottaker og brevmal – korrekte feltfeil og de matcher oppsummering", () => {
+  // Små hjelpere for å redusere duplisering i like testløp
+  async function runGenereltFritekstFlow(
+    initialValues: Partial<SendBrevFormValues>,
+    distribusjonValg: "DIGITAL" | "POST",
+  ) {
+    // 0) Initial feil
+    let err = await validate(initialValues);
+    expect(err).toBeTruthy();
+    let feltErrors = extractFeltErrors(err);
+    expect(feltErrors?.BREV_TITTEL?.feltVerdi?.melding).toBe("Du må skrive inn overskrift til brevet");
+    expect(feltErrors?.DISTRIBUSJONSTYPE?.valg?.melding).toBe("Du må velge type brev");
+
+    // 1) Fyll DISTRIBUSJONSTYPE
+    let values: Partial<SendBrevFormValues> = {
+      ...initialValues,
+      felt: {
+        ...(initialValues.felt as Record<string, any>),
+        DISTRIBUSJONSTYPE: { valg: distribusjonValg },
+      } as NonNullable<SendBrevFormValues["felt"]>,
+    };
+    err = await validate(values);
+    expect(err).toBeTruthy();
+    feltErrors = extractFeltErrors(err);
+    expect(unwrapMelding(feltErrors?.DISTRIBUSJONSTYPE?.valg)).toBeUndefined();
+    expect(feltErrors?.BREV_TITTEL?.feltVerdi?.melding).toBe("Du må skrive inn overskrift til brevet");
+
+    // 2) Fyll BREV_TITTEL
+    values = {
+      ...values,
+      felt: {
+        ...(values.felt as Record<string, any>),
+        BREV_TITTEL: { valg: "FRITEKST_BRUKER_OG_VIRKSOMHET", feltVerdi: "Tittel" },
+      } as NonNullable<SendBrevFormValues["felt"]>,
+    };
+    err = await validate(values);
+    expect(err).toBeTruthy();
+    feltErrors = extractFeltErrors(err);
+    expect(feltErrors?.BREV_TITTEL).toBeUndefined();
+
+    // 3) Fyll FRITEKST -> forvent success
+    values = {
+      ...values,
+      felt: {
+        ...(values.felt as Record<string, any>),
+        FRITEKST: { feltVerdi: "Tekst" },
+      } as NonNullable<SendBrevFormValues["felt"]>,
+    };
+    err = await validate(values);
+    expect(err).toBeNull();
+  }
+
+  async function runInntektsOpplysningerFlow(initialValues: Partial<SendBrevFormValues>) {
+    // 0) Forvent samlet feil: "Du må velge minst én av standardtekst eller fritekst"
+    let err = await validate(initialValues);
+    expectInntektsopplysningerErrors(err);
+
+    // 1) Velg FRITEKST -> må også fylle feltVerdi
+    let values: Partial<SendBrevFormValues> = {
+      ...initialValues,
+      felt: {
+        ...(initialValues.felt as Record<string, any>),
+        FRITEKST: { valg: "FRITEKST" },
+      } as NonNullable<SendBrevFormValues["felt"]>,
+    };
+    err = await validate(values);
+    expect(err).toBeTruthy();
+    const feltErrors = extractFeltErrors(err);
+    expect(unwrapMelding(feltErrors?.FRITEKST?.feltVerdi)).toBe("Du må skrive inn hva mottaker skal sende inn");
+
+    // 2) Fyll fritekst -> success
+    values = {
+      ...values,
+      felt: {
+        ...(values.felt as Record<string, any>),
+        FRITEKST: { valg: "FRITEKST", feltVerdi: "Tekst" },
+      } as NonNullable<SendBrevFormValues["felt"]>,
+    };
+    err = await validate(values);
+    expect(err).toBeNull();
+  }
   // Hver test initialiserer sine egne data for tydelighet
 
   const genereltFritekstbrevBrev = {
@@ -212,15 +292,8 @@ describe("alle kombinasjoner av mottaker og brevmal – korrekte feltfeil og de 
     ],
   } as any;
 
-  const mangelbrevBrev = {
-    felter: [
-      { kode: "INNLEDNING_FRITEKST", paakrevd: true, valg: { valgAlternativer: [{ kode: "X", visFelt: true }] } },
-      { kode: "MANGLER_FRITEKST", paakrevd: true },
-    ],
-  } as any;
-
   it("VIRKSOMHET + GENERELT_FRITEKSTBREV_BRUKER -> riktige feltfeil og oppsummering", async () => {
-    let values: Partial<SendBrevFormValues> = {
+    const values: Partial<SendBrevFormValues> = {
       type: "GENERELT_FRITEKSTBREV_BRUKER",
       valgtMottaker: { rolle: "VIRKSOMHET" } as any,
       arbeidsgiver: "123456789",
@@ -232,44 +305,11 @@ describe("alle kombinasjoner av mottaker og brevmal – korrekte feltfeil og de 
       } as any,
     };
 
-    // 0) Initial feil
-    let err = await validate(values);
-    expect(err).toBeTruthy();
-    let feltErrors = extractFeltErrors(err);
-    expect(feltErrors?.BREV_TITTEL?.feltVerdi?.melding).toBe("Du må skrive inn overskrift til brevet");
-    expect(feltErrors?.DISTRIBUSJONSTYPE?.valg?.melding).toBe("Du må velge type brev");
-    expect(feltErrors).toBeDefined();
-    const keys0 = Object.keys(feltErrors as Record<string, unknown>);
-    expect(keys0.every((k) => new Set(["BREV_TITTEL", "DISTRIBUSJONSTYPE", "FRITEKST"]).has(k))).toBe(true);
-
-    // 1) Fyll DISTRIBUSJONSTYPE
-    values = { ...values, felt: { ...values.felt, DISTRIBUSJONSTYPE: { valg: "DIGITAL" } } };
-    err = await validate(values);
-    expect(err).toBeTruthy();
-    feltErrors = extractFeltErrors(err);
-    expect(unwrapMelding(feltErrors?.DISTRIBUSJONSTYPE?.valg)).toBeUndefined();
-    // BREV_TITTEL-feilen skal fortsatt være der
-    expect(feltErrors?.BREV_TITTEL?.feltVerdi?.melding).toBe("Du må skrive inn overskrift til brevet");
-
-    // 2) Fyll BREV_TITTEL
-    values = {
-      ...values,
-      felt: { ...values.felt, BREV_TITTEL: { valg: "FRITEKST_BRUKER_OG_VIRKSOMHET", feltVerdi: "En tittel" } },
-    };
-    err = await validate(values);
-    expect(err).toBeTruthy();
-    feltErrors = extractFeltErrors(err);
-    expect(feltErrors?.BREV_TITTEL).toBeUndefined();
-    // Ikke krev FRITEKST-feil eksplisitt her, den kan være undertrykt tidligere
-
-    // 3) Fyll FRITEKST -> forvent success
-    values = { ...values, felt: { ...values.felt, FRITEKST: { feltVerdi: "Innhold" } } };
-    err = await validate(values);
-    expect(err).toBeNull();
+    await runGenereltFritekstFlow(values, "DIGITAL");
   });
 
   it("ARBEIDSGIVER + GENERELT_FRITEKSTBREV_BRUKER -> riktige feltfeil og oppsummering", async () => {
-    let values: Partial<SendBrevFormValues> = {
+    const values: Partial<SendBrevFormValues> = {
       type: "GENERELT_FRITEKSTBREV_BRUKER",
       valgtMottaker: { rolle: "ARBEIDSGIVER" } as any,
       arbeidsgiver: "987654321",
@@ -281,39 +321,11 @@ describe("alle kombinasjoner av mottaker og brevmal – korrekte feltfeil og de 
       } as any,
     };
 
-    // 0) Initial feil
-    let err = await validate(values);
-    expect(err).toBeTruthy();
-    let feltErrors = extractFeltErrors(err);
-    expect(feltErrors?.BREV_TITTEL?.feltVerdi?.melding).toBe("Du må skrive inn overskrift til brevet");
-    expect(feltErrors?.DISTRIBUSJONSTYPE?.valg?.melding).toBe("Du må velge type brev");
-
-    // 1) Fyll DISTRIBUSJONSTYPE
-    values = { ...values, felt: { ...values.felt, DISTRIBUSJONSTYPE: { valg: "POST" } } };
-    err = await validate(values);
-    expect(err).toBeTruthy();
-    feltErrors = extractFeltErrors(err);
-    expect(unwrapMelding(feltErrors?.DISTRIBUSJONSTYPE?.valg)).toBeUndefined();
-    expect(feltErrors?.BREV_TITTEL?.feltVerdi?.melding).toBe("Du må skrive inn overskrift til brevet");
-
-    // 2) Fyll BREV_TITTEL
-    values = {
-      ...values,
-      felt: { ...values.felt, BREV_TITTEL: { valg: "FRITEKST_BRUKER_OG_VIRKSOMHET", feltVerdi: "Tittel" } },
-    };
-    err = await validate(values);
-    expect(err).toBeTruthy();
-    feltErrors = extractFeltErrors(err);
-    expect(feltErrors?.BREV_TITTEL).toBeUndefined();
-
-    // 3) Fyll FRITEKST -> forvent success
-    values = { ...values, felt: { ...values.felt, FRITEKST: { feltVerdi: "Tekst" } } };
-    err = await validate(values);
-    expect(err).toBeNull();
+    await runGenereltFritekstFlow(values, "POST");
   });
 
   it("ANNEN_ORGANISASJON + GENERELT_FRITEKSTBREV_BRUKER -> riktige feltfeil og oppsummering", async () => {
-    let values: Partial<SendBrevFormValues> = {
+    const values: Partial<SendBrevFormValues> = {
       type: "GENERELT_FRITEKSTBREV_BRUKER",
       valgtMottaker: { rolle: "ANNEN_ORGANISASJON" } as any,
       organisasjonsnummer: "974760673",
@@ -325,41 +337,12 @@ describe("alle kombinasjoner av mottaker og brevmal – korrekte feltfeil og de 
       } as any,
     };
 
-    // 0) Initial feil
-    let err = await validate(values);
-    expect(err).toBeTruthy();
-    let feltErrors = extractFeltErrors(err);
-    expect(feltErrors?.BREV_TITTEL?.feltVerdi?.melding).toBe("Du må skrive inn overskrift til brevet");
-    expect(feltErrors?.DISTRIBUSJONSTYPE?.valg?.melding).toBe("Du må velge type brev");
-
-    // 1) Fyll DISTRIBUSJONSTYPE
-    values = { ...values, felt: { ...values.felt, DISTRIBUSJONSTYPE: { valg: "DIGITAL" } } };
-    err = await validate(values);
-    expect(err).toBeTruthy();
-    feltErrors = extractFeltErrors(err);
-    expect(unwrapMelding(feltErrors?.DISTRIBUSJONSTYPE?.valg)).toBeUndefined();
-    expect(feltErrors?.BREV_TITTEL?.feltVerdi?.melding).toBe("Du må skrive inn overskrift til brevet");
-
-    // 2) Fyll BREV_TITTEL
-    values = {
-      ...values,
-      felt: { ...values.felt, BREV_TITTEL: { valg: "FRITEKST_BRUKER_OG_VIRKSOMHET", feltVerdi: "Tittel" } },
-    };
-    err = await validate(values);
-    expect(err).toBeTruthy();
-    feltErrors = extractFeltErrors(err);
-    expect(feltErrors?.BREV_TITTEL).toBeUndefined();
-
-    // 3) Fyll FRITEKST -> forvent success
-    values = { ...values, felt: { ...values.felt, FRITEKST: { feltVerdi: "Tekst" } } };
-    err = await validate(values);
-    expect(err).toBeNull();
+    await runGenereltFritekstFlow(values, "DIGITAL");
   });
 
   // INNHENTING_AV_INNTEKTSOPPLYSNINGER
   it("VIRKSOMHET + INNHENTING_AV_INNTEKTSOPPLYSNINGER -> riktige feltfeil og oppsummering", async () => {
-    // Start: ingen av de to (STANDARDTEKST_INNTEKTSOPPLYSNINGER/FRITEKST) er valgt
-    let values: Partial<SendBrevFormValues> = {
+    const values: Partial<SendBrevFormValues> = {
       type: "INNHENTING_AV_INNTEKTSOPPLYSNINGER",
       valgtMottaker: { rolle: "VIRKSOMHET" } as any,
       arbeidsgiver: "123456789",
@@ -367,26 +350,11 @@ describe("alle kombinasjoner av mottaker og brevmal – korrekte feltfeil og de 
       felt: {},
     };
 
-    // 0) Forvent samlet feil: "Du må velge minst én av standardtekst eller fritekst"
-    let err = await validate(values);
-    expectInntektsopplysningerErrors(err);
-
-    // 1) Velg FRITEKST -> nå kreves også fritekstinnhold
-    values = { ...values, felt: { ...values.felt, FRITEKST: { valg: "FRITEKST" } } };
-    err = await validate(values);
-    expect(err).toBeTruthy();
-    const feltErrors = extractFeltErrors(err);
-    // Når fritekst er valgt må feltverdi settes
-    expect(unwrapMelding(feltErrors?.FRITEKST?.feltVerdi)).toBe("Du må skrive inn hva mottaker skal sende inn");
-
-    // 2) Fyll fritekstinnhold -> forvent success
-    values = { ...values, felt: { ...values.felt, FRITEKST: { valg: "FRITEKST", feltVerdi: "Tekst" } } };
-    err = await validate(values);
-    expect(err).toBeNull();
+    await runInntektsOpplysningerFlow(values);
   });
 
   it("ARBEIDSGIVER + INNHENTING_AV_INNTEKTSOPPLYSNINGER -> riktige feltfeil og oppsummering", async () => {
-    let values: Partial<SendBrevFormValues> = {
+    const values: Partial<SendBrevFormValues> = {
       type: "INNHENTING_AV_INNTEKTSOPPLYSNINGER",
       valgtMottaker: makeMottaker("ARBEIDSGIVER"),
       arbeidsgiver: "987654321",
@@ -394,25 +362,11 @@ describe("alle kombinasjoner av mottaker og brevmal – korrekte feltfeil og de 
       felt: {},
     };
 
-    // 0) Initial samlet feil (ingenting valgt)
-    let err = await validate(values);
-    expectInntektsopplysningerErrors(err);
-
-    // 1) Velg FRITEKST -> krever fritekstinnhold
-    values = { ...values, felt: { ...values.felt, FRITEKST: { valg: "FRITEKST" } } };
-    err = await validate(values);
-    expect(err).toBeTruthy();
-    const feltErrors = extractFeltErrors(err);
-    expect(unwrapMelding(feltErrors?.FRITEKST?.feltVerdi)).toBe("Du må skrive inn hva mottaker skal sende inn");
-
-    // 2) Fyll fritekstinnhold -> success
-    values = { ...values, felt: { ...values.felt, FRITEKST: { valg: "FRITEKST", feltVerdi: "Tekst" } } };
-    err = await validate(values);
-    expect(err).toBeNull();
+    await runInntektsOpplysningerFlow(values);
   });
 
   it("ANNEN_ORGANISASJON + INNHENTING_AV_INNTEKTSOPPLYSNINGER -> riktige feltfeil og oppsummering", async () => {
-    let values: Partial<SendBrevFormValues> = {
+    const values: Partial<SendBrevFormValues> = {
       type: "INNHENTING_AV_INNTEKTSOPPLYSNINGER",
       valgtMottaker: makeMottaker("ANNEN_ORGANISASJON"),
       organisasjonsnummer: "974760673",
@@ -420,21 +374,7 @@ describe("alle kombinasjoner av mottaker og brevmal – korrekte feltfeil og de 
       felt: {},
     };
 
-    // 0) Initial samlet feil (ingenting valgt)
-    let err = await validate(values);
-    expectInntektsopplysningerErrors(err);
-
-    // 1) Velg FRITEKST -> krever fritekstinnhold
-    values = { ...values, felt: { ...values.felt, FRITEKST: { valg: "FRITEKST" } } };
-    err = await validate(values);
-    expect(err).toBeTruthy();
-    const feltErrors = extractFeltErrors(err);
-    expect(unwrapMelding(feltErrors?.FRITEKST?.feltVerdi)).toBe("Du må skrive inn hva mottaker skal sende inn");
-
-    // 2) Fyll fritekstinnhold -> success
-    values = { ...values, felt: { ...values.felt, FRITEKST: { valg: "FRITEKST", feltVerdi: "Tekst" } } };
-    err = await validate(values);
-    expect(err).toBeNull();
+    await runInntektsOpplysningerFlow(values);
   });
 
   // MANGELBREV_BRUKER
@@ -488,37 +428,106 @@ describe("alle kombinasjoner av mottaker og brevmal – korrekte feltfeil og de 
   });
 
   it("ARBEIDSGIVER + MANGELBREV_BRUKER -> riktige feltfeil og oppsummering", async () => {
-    const err = await validate({
-      type: "MANGELBREV_BRUKER",
-      valgtMottaker: { rolle: "ARBEIDSGIVER" } as any,
-      arbeidsgiver: "987654321",
-      valgtBrev: mangelbrevBrev,
-      felt: {
-        INNLEDNING_FRITEKST: { valg: "X", feltVerdi: "" },
-        MANGLER_FRITEKST: { feltVerdi: "" },
+    // Start med manglende brevfelter, fyll ett og ett felt og bekreft at feil forsvinner
+    const valgtBrev = makeBrev("MANGELBREV_BRUKER", [
+      {
+        kode: "INNLEDNING_FRITEKST",
+        paakrevd: true,
+        valg: { valgAlternativer: [{ kode: "X", visFelt: true }] },
       } as any,
-    } as SendBrevFormValues);
+      { kode: "MANGLER_FRITEKST", paakrevd: true, valg: null } as any,
+    ]);
 
+    let values: Partial<SendBrevFormValues> = {
+      type: "MANGELBREV_BRUKER",
+      valgtMottaker: makeMottaker("ARBEIDSGIVER"),
+      arbeidsgiver: "987654321",
+      valgtBrev,
+      felt: {} as NonNullable<SendBrevFormValues["felt"]>,
+    };
+
+    // 1) Forvent begge felt-feil
+    let err = await validate(values);
     expectMangelbrevBrukerErrors(err);
+
+    // 2) Fyll inn INNLEDNING_FRITEKST -> kun MANGLER_FRITEKST skal gjenstå
+    values = {
+      ...values,
+      felt: {
+        INNLEDNING_FRITEKST: { valg: "X", feltVerdi: "Innledningstekst" } as any,
+      } as NonNullable<SendBrevFormValues["felt"]>,
+    };
+    err = await validate(values);
+    expect(err).toBeTruthy();
+    const feilEtter = extractFeltErrors(err);
+    expect(unwrapMelding(feilEtter?.INNLEDNING_FRITEKST?.feltVerdi)).toBeUndefined();
+    expect(unwrapMelding(feilEtter?.MANGLER_FRITEKST?.feltVerdi)).toBe(
+      "Du må skrive inn i hva mottaker skal sende inn",
+    );
+    const summary = buildValidationSummary(feilEtter);
+    expect(summary).toContain("Du må skrive inn i hva mottaker skal sende inn");
+
+    // 3) Fyll inn MANGLER_FRITEKST -> ingen feil igjen
+    values = {
+      ...values,
+      felt: {
+        ...(values.felt as Record<string, any>),
+        MANGLER_FRITEKST: { feltVerdi: "Send inn dokumentasjon" } as any,
+      } as NonNullable<SendBrevFormValues["felt"]>,
+    };
+    err = await validate(values);
+    expect(err).toBeNull();
   });
 
   it("ANNEN_ORGANISASJON + MANGELBREV_BRUKER -> riktige feltfeil og oppsummering", async () => {
-    const err = await validate({
-      type: "MANGELBREV_BRUKER",
-      valgtMottaker: { rolle: "ANNEN_ORGANISASJON" } as any,
-      organisasjonsnummer: "974760673",
-      valgtBrev: mangelbrevBrev,
-      felt: {
-        INNLEDNING_FRITEKST: { valg: "X", feltVerdi: "" },
-        MANGLER_FRITEKST: { feltVerdi: "" },
-      } as any,
-    } as SendBrevFormValues);
+    const valgtBrev = makeBrev("MANGELBREV_BRUKER", [
+      { kode: "INNLEDNING_FRITEKST", paakrevd: true, valg: null } as any,
+      { kode: "MANGLER_FRITEKST", paakrevd: true, valg: null } as any,
+    ]);
 
+    let values: Partial<SendBrevFormValues> = {
+      type: "MANGELBREV_BRUKER",
+      valgtMottaker: makeMottaker("ANNEN_ORGANISASJON"),
+      organisasjonsnummer: "974760673",
+      valgtBrev,
+      felt: {} as NonNullable<SendBrevFormValues["felt"]>,
+    };
+
+    // 1) Forvent begge felt-feil
+    let err = await validate(values);
     expectMangelbrevBrukerErrors(err);
+
+    // 2) Fyll inn INNLEDNING_FRITEKST -> kun MANGLER_FRITEKST skal gjenstå
+    values = {
+      ...values,
+      felt: {
+        INNLEDNING_FRITEKST: { feltVerdi: "Innledningstekst" } as any,
+      } as NonNullable<SendBrevFormValues["felt"]>,
+    };
+    err = await validate(values);
+    expect(err).toBeTruthy();
+    const feilEtter = extractFeltErrors(err);
+    expect(unwrapMelding(feilEtter?.INNLEDNING_FRITEKST?.feltVerdi)).toBeUndefined();
+    expect(unwrapMelding(feilEtter?.MANGLER_FRITEKST?.feltVerdi)).toBe(
+      "Du må skrive inn i hva mottaker skal sende inn",
+    );
+    const summary = buildValidationSummary(feilEtter);
+    expect(summary).toContain("Du må skrive inn i hva mottaker skal sende inn");
+
+    // 3) Fyll inn MANGLER_FRITEKST -> ingen feil igjen
+    values = {
+      ...values,
+      felt: {
+        ...(values.felt as Record<string, any>),
+        MANGLER_FRITEKST: { feltVerdi: "Send inn dokumentasjon" } as any,
+      } as NonNullable<SendBrevFormValues["felt"]>,
+    };
+    err = await validate(values);
+    expect(err).toBeNull();
   });
 
   it("INNHENTING_AV_INNTEKTSOPPLYSNINGER -> minst én av standardtekst eller fritekst", async () => {
-    const err = await validate({
+    const values: Partial<SendBrevFormValues> = {
       type: "INNHENTING_AV_INNTEKTSOPPLYSNINGER",
       valgtMottaker: makeMottaker("BRUKER"),
       valgtBrev: makeBrev("INNHENTING_AV_INNTEKTSOPPLYSNINGER", [
@@ -529,35 +538,21 @@ describe("alle kombinasjoner av mottaker og brevmal – korrekte feltfeil og de 
         } as Api.DokumenterV2.Felt,
         { kode: "STANDARDTEKST_INNTEKTSOPPLYSNINGER", paakrevd: false } as Api.DokumenterV2.Felt,
       ]),
-      felt: {} as NonNullable<SendBrevFormValues["felt"]>, // Ingen av de to er valgt
-    });
+      felt: {} as NonNullable<SendBrevFormValues["felt"]>,
+    };
 
-    expectInntektsopplysningerErrors(err);
+    await runInntektsOpplysningerFlow(values);
   });
 
   it("BRUKER + INNHENTING_AV_INNTEKTSOPPLYSNINGER -> riktige feltfeil og oppsummering", async () => {
-    let values: Partial<SendBrevFormValues> = {
+    const values: Partial<SendBrevFormValues> = {
       type: "INNHENTING_AV_INNTEKTSOPPLYSNINGER",
       valgtMottaker: makeMottaker("BRUKER"),
       valgtBrev: innhentingInntektsopplysningerBrev,
       felt: {},
     };
 
-    // 0) Initial samlet feil (ingenting valgt)
-    let err = await validate(values);
-    expectInntektsopplysningerErrors(err);
-
-    // 1) Velg FRITEKST -> krever fritekstinnhold
-    values = { ...values, felt: { ...values.felt, FRITEKST: { valg: "FRITEKST" } } };
-    err = await validate(values);
-    expect(err).toBeTruthy();
-    const feltErrors = extractFeltErrors(err);
-    expect(unwrapMelding(feltErrors?.FRITEKST?.feltVerdi)).toBe("Du må skrive inn hva mottaker skal sende inn");
-
-    // 2) Fyll fritekstinnhold -> success
-    values = { ...values, felt: { ...values.felt, FRITEKST: { valg: "FRITEKST", feltVerdi: "Tekst" } } };
-    err = await validate(values);
-    expect(err).toBeNull();
+    await runInntektsOpplysningerFlow(values);
   });
 });
 
