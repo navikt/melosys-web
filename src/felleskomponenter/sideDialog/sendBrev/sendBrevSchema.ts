@@ -51,6 +51,26 @@ export type PåkrevdMangler = {
   fritekstMangler: boolean;
 };
 
+// Memoized index of valgAlternativer per brevmal (keyed by felter-array reference)
+const felterAltCache = new WeakMap<FeltMedValg[], Map<string, Map<string, ValgAlternativ>>>();
+
+function getValgAlternativIndex(felter: FeltMedValg[]): Map<string, Map<string, ValgAlternativ>> {
+  const cached = felterAltCache.get(felter);
+  if (cached) return cached;
+
+  const byFelt = new Map<string, Map<string, ValgAlternativ>>();
+  for (const f of felter) {
+    const altArr = f.valg?.valgAlternativer || [];
+    const altMap = new Map<string, ValgAlternativ>();
+    for (const a of altArr) {
+      altMap.set(a.kode, a);
+    }
+    byFelt.set(f.kode, altMap);
+  }
+  felterAltCache.set(felter, byFelt);
+  return byFelt;
+}
+
 export function vurderPåkrevdOgMangler(values: SendBrevFormValues | undefined, feltKode: string): PåkrevdMangler {
   const valgtBrev = values?.valgtBrev as { felter?: FeltMedValg[] } | undefined;
   if (!valgtBrev?.felter) {
@@ -71,7 +91,8 @@ export function vurderPåkrevdOgMangler(values: SendBrevFormValues | undefined, 
     let fritekstMangler = false;
 
     if (!valgMangler) {
-      const valgtAlt = brevFeltDef.valg.valgAlternativer.find((a) => a.kode === felt?.valg);
+      const altIndex = getValgAlternativIndex(valgtBrev.felter);
+      const valgtAlt = altIndex.get(brevFeltDef.kode)?.get(felt?.valg as string);
       const skalViseFritekst = valgtAlt?.visFelt !== false; // default true
       if (skalViseFritekst) {
         fritekstMangler = !StringUtils.harStrengInnhold(felt?.feltVerdi);
@@ -122,10 +143,19 @@ const send_brev = object({
       const valgtBrev = parent?.valgtBrev as { felter?: FeltMedValg[] } | undefined;
       if (!valgtBrev?.felter) return true;
 
+      // Hoist brevtype checks and build cached index once per run
+      const brevType = parent?.type;
+      const erInnhentingAvInntektsopplysninger = brevType === "INNHENTING_AV_INNTEKTSOPPLYSNINGER";
+      const erFritekstbrevBruker = brevType === "GENERELT_FRITEKSTBREV_BRUKER";
+      const erMangelbrevBruker = brevType === "MANGELBREV_BRUKER";
+      const erMangelbrevArbeidsgiver = brevType === "MANGELBREV_ARBEIDSGIVER";
+
+      const altIndex = getValgAlternativIndex(valgtBrev.felter);
+
       let harFeil = false;
       const errors: ErrorsMap = {};
 
-      if (parent?.type === "INNHENTING_AV_INNTEKTSOPPLYSNINGER") {
+      if (erInnhentingAvInntektsopplysninger) {
         const standardNode = value?.STANDARDTEKST_INNTEKTSOPPLYSNINGER;
         const valgtStandardtekst = Boolean(standardNode?.valg) || Boolean((standardNode as Felt)?.feltVerdi);
         const valgtFritekst = value?.FRITEKST?.valg === "FRITEKST";
@@ -139,10 +169,10 @@ const send_brev = object({
 
       valgtBrev.felter.forEach((brevFelt) => {
         const felt: Felt | undefined = value?.[brevFelt.kode];
-        const valgtAlt = (brevFelt.valg?.valgAlternativer || []).find((a) => a.kode === felt?.valg);
+        const valgtAlt = altIndex.get(brevFelt.kode)?.get((felt?.valg as string) || "");
 
         // Handter valideringsregler for enkelt-felt som ikke er markert som påkrevd
-        if (parent?.type === "INNHENTING_AV_INNTEKTSOPPLYSNINGER") {
+        if (erInnhentingAvInntektsopplysninger) {
           // Dersom "Fritekst" er valgt, må fritekstfeltet også ha verdi, hvis ikke vises en feilmelding.
           let manglerInntektsOpplysningerFritekst = false;
           if (brevFelt.kode === "FRITEKST") {
@@ -203,17 +233,17 @@ const send_brev = object({
           harFeil = true;
         }
 
-        if (parent?.type === "GENERELT_FRITEKSTBREV_BRUKER" && manglerFritekstBrevTittel) {
+        if (erFritekstbrevBruker && manglerFritekstBrevTittel) {
           errors[brevFelt.kode].feltVerdi = OVERSKRIFT_FRITEKSTBREV_BRUKER_MANGLER;
           harFeil = true;
         }
 
-        if (parent?.type === "MANGELBREV_BRUKER" && manglerInnledningFritekst) {
+        if (erMangelbrevBruker && manglerInnledningFritekst) {
           errors[brevFelt.kode].feltVerdi = INNLEDNINGSTEKST_MANGLERBREV_BRUKER_MANGLER;
           harFeil = true;
         }
 
-        if ((parent?.type === "MANGELBREV_BRUKER" || parent?.type === "MANGELBREV_ARBEIDSGIVER") && manglerFritekst) {
+        if ((erMangelbrevBruker || erMangelbrevArbeidsgiver) && manglerFritekst) {
           errors[brevFelt.kode].feltVerdi = FRITEKST_MANGLERBREV_MANGLER;
           harFeil = true;
         }
