@@ -596,6 +596,160 @@ describe("alle kombinasjoner av mottaker og brevmal – korrekte feltfeil og de 
 
     await runInntektsOpplysningerFlow(values);
   });
+
+  it("UTENLANDSK_TRYGDEMYNDIGHET + UTENLANDSK_TRYGDEMYNDIGHET_FRITEKSTBREV – validerer feil først, fyller felt ett og ett til success", async () => {
+    const felter: Api.DokumenterV2.Felt[] = [
+      {
+        kode: "UTENLANDSK_TRYGDEMYNDIGHET_MOTTAKER",
+        beskrivelse: "Trygdemyndighet",
+        feltType: Api.DokumenterV2.FeltType.TEKST,
+        hjelpetekst: null,
+        paakrevd: true,
+        tegnBegrensning: null,
+        valg: {
+          valgType: Api.DokumenterV2.ValgType.SELECT,
+          valgAlternativer: [
+            { kode: "FO", beskrivelse: "Trygdemyndighetene i Færøyene", visFelt: true },
+            { kode: "GL", beskrivelse: "Trygdemyndighetene i Grønland", visFelt: true },
+          ],
+        },
+      },
+      {
+        kode: "BREV_TITTEL",
+        beskrivelse: "Overskrift i brev",
+        feltType: Api.DokumenterV2.FeltType.TEKST,
+        hjelpetekst: null,
+        paakrevd: true,
+        tegnBegrensning: 60,
+        valg: {
+          valgType: Api.DokumenterV2.ValgType.SELECT,
+          valgAlternativer: [
+            {
+              kode: "HENVENDELSE_OM_TRYGDETILHØRLIGHET",
+              beskrivelse: "Svar på henvendelse om trygdetilhørlighet",
+              visFelt: false,
+            },
+            { kode: "FRITEKST_BRUKER_OG_VIRKSOMHET", beskrivelse: "Fritekst (maks 60 tegn)", visFelt: true },
+          ],
+        },
+      },
+      {
+        kode: "FRITEKST",
+        beskrivelse: "Hovedtekst til brev",
+        feltType: Api.DokumenterV2.FeltType.FRITEKST,
+        hjelpetekst: null,
+        paakrevd: true,
+        tegnBegrensning: null,
+        valg: null,
+      },
+      {
+        kode: "DISTRIBUSJONSTYPE",
+        beskrivelse: "Type brev",
+        feltType: Api.DokumenterV2.FeltType.TEKST,
+        hjelpetekst:
+          "Type brev må angis slik at bruker får riktig varseltekst om brevet som sendes. Gjelder det et vedtak eller en forespørsel, vil bruker få en påminnelse hvis brevet ikke har blitt lest innen 7 dager.",
+        paakrevd: true,
+        tegnBegrensning: null,
+        valg: {
+          valgType: Api.DokumenterV2.ValgType.RADIO,
+          valgAlternativer: [
+            { kode: "VEDTAK", beskrivelse: "Vedtak", visFelt: false },
+            { kode: "VIKTIG", beskrivelse: "Viktig", visFelt: false },
+            { kode: "ANNET", beskrivelse: "Annet", visFelt: false },
+          ],
+        },
+      },
+    ];
+
+    const start: Partial<SendBrevFormValues> = {
+      type: "UTENLANDSK_TRYGDEMYNDIGHET_FRITEKSTBREV",
+      valgtMottaker: makeMottaker("UTENLANDSK_TRYGDEMYNDIGHET"),
+      valgtBrev: makeBrev("UTENLANDSK_TRYGDEMYNDIGHET_FRITEKSTBREV", felter),
+      felt: {} as NonNullable<SendBrevFormValues["felt"]>,
+    };
+
+    // 0) Start: ingen felter fylt -> forvent korrekte feil
+    let err = await validate(start);
+    expect(err).toBeTruthy();
+    let feltErrors = extractFeltErrors(err);
+    expect(unwrapMelding(feltErrors?.UTENLANDSK_TRYGDEMYNDIGHET_MOTTAKER?.valg)).toBe("Du må velge trygdemyndighet");
+    // For BREV_TITTEL uten valg er det valg-feil (ikke feltVerdi)
+    expect(unwrapMelding(feltErrors?.BREV_TITTEL?.valg)).toBe("Du må velge overskrift til brevet");
+    expect(unwrapMelding(feltErrors?.FRITEKST?.feltVerdi)).toBe("Du må skrive inn hovedtekst til brevet");
+    expect(unwrapMelding(feltErrors?.DISTRIBUSJONSTYPE?.valg)).toBe("Du må velge type brev");
+
+    // 1) Fyll UTENLANDSK_TRYGDEMYNDIGHET_MOTTAKER
+    let values: Partial<SendBrevFormValues> = {
+      ...start,
+      felt: {
+        ...(start.felt as Record<string, any>),
+        UTENLANDSK_TRYGDEMYNDIGHET_MOTTAKER: { valg: "FO" },
+      } as NonNullable<SendBrevFormValues["felt"]>,
+    };
+    err = await validate(values);
+    feltErrors = extractFeltErrors(err);
+    expect(unwrapMelding(feltErrors?.UTENLANDSK_TRYGDEMYNDIGHET_MOTTAKER?.valg)).toBeUndefined();
+    // Andre feil består
+    expect(unwrapMelding(feltErrors?.BREV_TITTEL?.valg)).toBe("Du må velge overskrift til brevet");
+    expect(unwrapMelding(feltErrors?.FRITEKST?.feltVerdi)).toBe("Du må skrive inn hovedtekst til brevet");
+    expect(unwrapMelding(feltErrors?.DISTRIBUSJONSTYPE?.valg)).toBe("Du må velge type brev");
+
+    // 2) Fyll DISTRIBUSJONSTYPE
+    values = {
+      ...values,
+      felt: {
+        ...(values.felt as Record<string, any>),
+        DISTRIBUSJONSTYPE: { valg: "VIKTIG" },
+      } as NonNullable<SendBrevFormValues["felt"]>,
+    };
+    err = await validate(values);
+    feltErrors = extractFeltErrors(err);
+    expect(unwrapMelding(feltErrors?.DISTRIBUSJONSTYPE?.valg)).toBeUndefined();
+    expect(unwrapMelding(feltErrors?.BREV_TITTEL?.valg)).toBe("Du må velge overskrift til brevet");
+    expect(unwrapMelding(feltErrors?.FRITEKST?.feltVerdi)).toBe("Du må skrive inn hovedtekst til brevet");
+
+    // 3) Velg BREV_TITTEL = fritekst-variant uten å fylle tekst -> forvent feltVerdi-feil
+    values = {
+      ...values,
+      felt: {
+        ...(values.felt as Record<string, any>),
+        BREV_TITTEL: { valg: "FRITEKST_BRUKER_OG_VIRKSOMHET" },
+      } as NonNullable<SendBrevFormValues["felt"]>,
+    };
+    err = await validate(values);
+    feltErrors = extractFeltErrors(err);
+    const tittelFeilEtterValg =
+      unwrapMelding(feltErrors?.BREV_TITTEL?.feltVerdi) || unwrapMelding(feltErrors?.BREV_TITTEL?.valg);
+    expect(tittelFeilEtterValg).toBe("Du må skrive inn overskrift til brevet");
+    expect(unwrapMelding(feltErrors?.FRITEKST?.feltVerdi)).toBe("Du må skrive inn hovedtekst til brevet");
+
+    // 4) Fyll inn overskrift (feltVerdi)
+    values = {
+      ...values,
+      felt: {
+        ...(values.felt as Record<string, any>),
+        BREV_TITTEL: { valg: "FRITEKST_BRUKER_OG_VIRKSOMHET", feltVerdi: "Tittel" },
+      } as NonNullable<SendBrevFormValues["felt"]>,
+    };
+    err = await validate(values);
+    feltErrors = extractFeltErrors(err);
+    expect(unwrapMelding(feltErrors?.BREV_TITTEL?.valg)).toBeUndefined();
+    expect(unwrapMelding(feltErrors?.BREV_TITTEL?.feltVerdi)).toBeUndefined();
+    expect(unwrapMelding(feltErrors?.FRITEKST?.feltVerdi)).toBe("Du må skrive inn hovedtekst til brevet");
+
+    // 5) Fyll FRITEKST
+    values = {
+      ...values,
+      felt: {
+        ...(values.felt as Record<string, any>),
+        FRITEKST: { feltVerdi: "Dette er en fritekst" },
+      } as NonNullable<SendBrevFormValues["felt"]>,
+    };
+
+    // 6) Nå skal validering være OK
+    err = await validate(values);
+    expect(err).toBeNull();
+  });
 });
 
 function buildValidationSummary(syncErrors: ErrorsMap | undefined): string[] {
