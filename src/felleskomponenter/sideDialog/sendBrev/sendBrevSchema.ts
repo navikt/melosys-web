@@ -191,6 +191,38 @@ const send_brev = object({
           return;
         }
 
+        // Spesialregel: BREV_TITTEL
+        if (brevFelt.kode === "BREV_TITTEL") {
+          const harValgAlternativer = Boolean(brevFelt?.valg?.valgAlternativer);
+
+          if (harValgAlternativer) {
+            // a) Ingen overskriftsvalg gjort -> valg-feil
+            if (!felt?.valg) {
+              if (!errors["BREV_TITTEL"]) errors["BREV_TITTEL"] = {};
+              errors["BREV_TITTEL"].valg = hentFeltFeilmelding("BREV_TITTEL");
+              harFeil = true;
+              return;
+            }
+
+            // b) Fritekst-variant valgt og feltet skal vises -> krever feltVerdi
+            const skalViseFritekst = valgtAlt?.visFelt !== false; // default true
+            if (skalViseFritekst && !StringUtils.harStrengInnhold(felt?.feltVerdi)) {
+              if (!errors["BREV_TITTEL"]) errors["BREV_TITTEL"] = {};
+              errors["BREV_TITTEL"].feltVerdi = OVERSKRIFT_FRITEKSTBREV_BRUKER_MANGLER;
+              harFeil = true;
+            }
+            return;
+          } else if (brevFelt.paakrevd) {
+            // c) Ingen valg-alternativer: påkrevd feltVerdi
+            if (!StringUtils.harStrengInnhold(felt?.feltVerdi)) {
+              if (!errors["BREV_TITTEL"]) errors["BREV_TITTEL"] = {};
+              errors["BREV_TITTEL"].feltVerdi = OVERSKRIFT_FRITEKSTBREV_BRUKER_MANGLER;
+              harFeil = true;
+            }
+            return;
+          }
+        }
+
         if (!brevFelt.paakrevd) return;
 
         // Handter felt som er markert som påkrevd
