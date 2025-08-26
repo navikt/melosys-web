@@ -135,7 +135,13 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   useEffect(() => {
     const { inntektskilder, skatteforholdsperioder } = formValues;
 
-    if (!harBeregnetNyTrygdeavgift && erNyVurdering && inntektskilder.length > 0 && skatteforholdsperioder.length > 0) {
+    if (
+      !harBeregnetNyTrygdeavgift &&
+      erNyVurdering &&
+      inntektskilder.length > 0 &&
+      skatteforholdsperioder.length > 0 &&
+      redigerbart
+    ) {
       eøsPensjonistBeregnTrygdeavgiftsperioder(formValues);
       setHarBeregnetNyTrygdeavgift(true);
     }
