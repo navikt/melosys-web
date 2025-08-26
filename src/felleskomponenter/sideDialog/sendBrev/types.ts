@@ -8,6 +8,7 @@ export interface Felt {
 export type Melding = { melding: string };
 export type FeltbladError = { feltVerdi?: Melding; valg?: Melding };
 export type ErrorsMap = Record<string, FeltbladError>;
+export type ValgtMottakerType = { rolle?: string };
 
 export interface SyncErrors {
   erFeltGyldig?: boolean;

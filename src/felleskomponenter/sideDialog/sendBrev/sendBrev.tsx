@@ -1,4 +1,4 @@
-import { FocusEvent, useEffect, useRef, useState, useMemo } from "react";
+import { FocusEvent, useEffect, useRef, useState, useMemo, useLayoutEffect } from "react";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
@@ -146,12 +146,9 @@ function SendBrev({
   }, [submitAttempted, currentValues?.showFieldErrors, changeField]);
 
   // Etter mal-bytte: vent til feltene er mountet, deretter touch alle felter slik at inline-feil vises videre
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!submitAttempted) return;
-    const timer = window.setTimeout(() => {
-      touchAllFields();
-    }, 0);
-    return () => window.clearTimeout(timer);
+    touchAllFields();
   }, [submitAttempted, currentValues?.type, currentValues?.valgtBrev, touchAllFields]);
 
   const setValgteVedleggIState = (valgteVedleggFraVisningstabell: BrevVedleggVisningstabellInterface) => {

@@ -88,11 +88,13 @@ function ValgAlternativer({
             key={`${feltKode}.${alternativ.kode}`}
             onChange={(a) => {
               if (a.target.checked) {
-                // Slå på: sett valgt kode (rydder samtidig bort ev. feltVerdi)
-                changeField(`felt.${feltKode}`, { valg: alternativ.kode });
+                // Slå på: sett valgt kode og rydd bort ev. fritekst
+                changeField(`felt.${feltKode}.valg`, alternativ.kode);
+                changeField(`felt.${feltKode}.feltVerdi`, undefined);
               } else {
-                // Slå av: fjern hele felt-noden for å unngå hengende verdier som kan ødlegge for validering
-                changeField(`felt.${feltKode}`, undefined);
+                // Slå av: behold noden, men nullstill verdiene for konsistent datastruktur
+                changeField(`felt.${feltKode}.valg`, undefined);
+                changeField(`felt.${feltKode}.feltVerdi`, undefined);
               }
             }}
           >

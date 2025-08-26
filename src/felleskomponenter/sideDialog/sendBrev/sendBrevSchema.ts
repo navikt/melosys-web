@@ -2,7 +2,7 @@ import type { AnyObject, StringSchema, TestContext } from "yup";
 import { array, object, string } from "yup";
 import * as StringUtils from "../../../utils/streng";
 import { erAnnenOrganisasjon, erArbeidsgiver, erVirksomhet } from "./brevMottaker/brevMottaker";
-import type { BrevFelt, Felt, SendBrevFormValues, Melding, ErrorsMap } from "./types";
+import { BrevFelt, Felt, SendBrevFormValues, Melding, ErrorsMap, ValgtMottakerType } from "./types";
 import { ValgAlternativ } from "../../../services/modules/dokumenter-v2";
 
 // Feilmeldinger for toppnivåfelter
@@ -16,8 +16,8 @@ const ORGNUMMER_UGYLDIG: Melding = { melding: "Ugyldig organisasjonsnummer" };
 const STANDARDTEKST_ELLER_FRITEKST_MANGLER = { melding: "Du må velge minst én av standardtekst eller fritekst" };
 const INNTEKTSOPPLYSNINGER_FRITEKST_MANGLER = { melding: "Du må skrive inn hva mottaker skal sende inn" };
 const FRITEKST_MANGLERBREV_MANGLER = { melding: "Du må skrive inn i hva mottaker skal sende inn" };
-const OVERSKRIFT_FRITEKSTRBREV_BRUKER_MANGLER = { melding: "Du må skrive inn overskrift til brevet" };
-const INNLEDNINGSTEKST_MANGELRBREV_BRUKER_MANGLER = { melding: "Du må skrive inn innledningstekst i fritekstfeltet" };
+const OVERSKRIFT_FRITEKSTBREV_BRUKER_MANGLER = { melding: "Du må skrive inn overskrift til brevet" };
+const INNLEDNINGSTEKST_MANGLERBREV_BRUKER_MANGLER = { melding: "Du må skrive inn innledningstekst i fritekstfeltet" };
 
 // Feltspesifikke feilmeldinger som kan knyttes direkte til et felt via feltKode og som opptrer dynamisk avhengig av valgt brevmal
 const FELT_FEILMELDINGER: Record<string, Melding> = {
@@ -95,7 +95,7 @@ const send_brev = object({
   type: string().required(BREVMAL_MANGLER),
   valgtMottaker: object().required(MOTTAKER_MANGLER),
   organisasjonsnummer: string().when("valgtMottaker", {
-    is: (valgtMottaker: { rolle?: string } | null) => erAnnenOrganisasjon(valgtMottaker?.rolle),
+    is: (valgtMottaker: ValgtMottakerType | null) => erAnnenOrganisasjon(valgtMottaker?.rolle),
     then: (schema) => (schema as CustomSchema).erOrgnr(ORGNUMMER_UGYLDIG).required(ORGNUMMER_FELT_MANGLER),
     otherwise: (schema) => schema.nullable(),
   }),
@@ -103,7 +103,7 @@ const send_brev = object({
   kontaktperson: string().nullable(),
   arbeidsgiver: string()
     .when("valgtMottaker", {
-      is: (valgtMottaker: { rolle?: string } | null) =>
+      is: (valgtMottaker: ValgtMottakerType | null) =>
         erVirksomhet(valgtMottaker?.rolle) || erArbeidsgiver(valgtMottaker?.rolle),
       then: (schema) => schema.required(ARBEIDSGIVER_MANGLER),
       otherwise: (schema) => schema.nullable(),
@@ -144,16 +144,16 @@ const send_brev = object({
         // Handter valideringsregler for enkelt-felt som ikke er markert som påkrevd
         if (parent?.type === "INNHENTING_AV_INNTEKTSOPPLYSNINGER") {
           // Dersom "Fritekst" er valgt, må fritekstfeltet også ha verdi, hvis ikke vises en feimlmelding.
-          let manglerInntektsOpplysningerFriktekst = false;
+          let manglerInntektsOpplysningerFritekst = false;
           if (brevFelt.kode === "FRITEKST") {
             const valgtFritekst = Boolean(value?.FRITEKST?.valg);
-            manglerInntektsOpplysningerFriktekst =
+            manglerInntektsOpplysningerFritekst =
               valgtFritekst &&
               valgtAlt?.visFelt !== false &&
               !StringUtils.harStrengInnhold(felt?.feltVerdi as string | undefined);
           }
 
-          if (manglerInntektsOpplysningerFriktekst) {
+          if (manglerInntektsOpplysningerFritekst) {
             if (!errors[brevFelt.kode]) errors[brevFelt.kode] = {};
             errors[brevFelt.kode].feltVerdi = INNTEKTSOPPLYSNINGER_FRITEKST_MANGLER;
             harFeil = true;
@@ -204,12 +204,12 @@ const send_brev = object({
         }
 
         if (parent?.type === "GENERELT_FRITEKSTBREV_BRUKER" && manglerFritekstBrevTittel) {
-          errors[brevFelt.kode].feltVerdi = OVERSKRIFT_FRITEKSTRBREV_BRUKER_MANGLER;
+          errors[brevFelt.kode].feltVerdi = OVERSKRIFT_FRITEKSTBREV_BRUKER_MANGLER;
           harFeil = true;
         }
 
         if (parent?.type === "MANGELBREV_BRUKER" && manglerInnledningFritekst) {
-          errors[brevFelt.kode].feltVerdi = INNLEDNINGSTEKST_MANGELRBREV_BRUKER_MANGLER;
+          errors[brevFelt.kode].feltVerdi = INNLEDNINGSTEKST_MANGLERBREV_BRUKER_MANGLER;
           harFeil = true;
         }
 
