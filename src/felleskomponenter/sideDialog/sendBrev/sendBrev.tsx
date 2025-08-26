@@ -1,9 +1,10 @@
-import { FocusEvent, useEffect, useRef, useState } from "react";
+import { FocusEvent, useEffect, useRef, useState, useMemo, useLayoutEffect } from "react";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
-import { connect, ConnectedProps } from "react-redux";
-import { change, getFormValues, reduxForm, reset } from "redux-form";
+import { connect, ConnectedProps, useSelector } from "react-redux";
+import { change, getFormSyncErrors, getFormValues, reduxForm, reset } from "redux-form";
+import { touchAll as touchAllFieldsOp } from "../../../ducks/form/operations";
 import { ColumnWidth } from "nav-frontend-grid";
 
 import { useMsal } from "@azure/msal-react";
@@ -38,6 +39,7 @@ import sendBrevSchema from "./sendBrevSchema";
 import "./sendBrev.css";
 import { Fritekstvedlegg } from "./brevVedlegg/brevVedlegg";
 import LabelMedHjelpetekst from "../../labelMedHjelpetekst";
+import { untouch } from "redux-form";
 
 const { VIRKSOMHET, ARBEIDSGIVER, ANNEN_ORGANISASJON, NORSK_MYNDIGHET, UTENLANDSK_TRYGDEMYNDIGHET } =
   MKV.Koder.mottakerroller;
@@ -56,6 +58,8 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>)
   changeField: (field: string, data: unknown) => dispatch(change(KV.Form.SEND_BREV, field, data)),
   resetForm: () => dispatch(reset(KV.Form.SEND_BREV)),
   oppdaterBehandling: () => dispatch(behandlingerOperations.oppdaterBehandling()),
+  touchAllFields: () => dispatch(touchAllFieldsOp(KV.Form.SEND_BREV)),
+  untouchFields: (...fields: string[]) => dispatch(untouch(KV.Form.SEND_BREV, ...fields)),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -73,6 +77,7 @@ interface Props {
   formValues: SendBrevFormValues;
   dokumenter: FysiskDokument[];
   saksnummer: string;
+  syncErrors?: { [key: string]: string };
 }
 
 function SendBrev({
@@ -85,6 +90,7 @@ function SendBrev({
   resetForm,
   visApneINyttVindu,
   dokumenter,
+  touchAllFields,
   brevTypeSelectWidth = "12",
   mottakerSelectWidth = "12",
   mottakerTabellWidth = "12",
@@ -92,8 +98,10 @@ function SendBrev({
   saksnummer,
   soknadsland,
   sakstype,
+  untouchFields,
 }: Props & PropsFromRedux) {
   const [tilgjengeligeMaler, setTilgjengeligeMaler] = useState<Api.DokumenterV2.TilgjengeligeMalerResDto>();
+  const [submitAttempted, setSubmitAttempted] = useState(false);
   const [standardvedleggListe, setStandardvedleggListe] = useState<Api.DokumenterV2.TilgjengeligStandardvedlegg[]>([]);
   const [muligeMottakere, setMuligeMottakere] = useState<Api.DokumenterV2.HentMuligeMottakereResDto>();
   const [muligeMottakereFeil, setMuligeMottakereFeil] = useState<string | undefined>(undefined);
@@ -112,11 +120,36 @@ function SendBrev({
   const [sendBrevSpinner, setSendBrevSpinner] = useState(false);
   const [lagreUtkastSpinner, setLagreUtkastSpinner] = useState(false);
   const [forkastBrevSpinner, setForkastBrevSpinner] = useState(false);
-  const tilgjengeligeMottakere = tilgjengeligeMaler?.map((mal) => mal.mottaker) || [];
-  const tilgjengeligeBrevtyper =
-    tilgjengeligeMaler?.find((mal) => mal?.mottaker.uuid === formValues?.mottaker)?.brevTyper || [];
+  const brevBestiltTimerRef = useRef<number | undefined>(undefined);
+  const tilgjengeligeMottakere = useMemo(
+    () => tilgjengeligeMaler?.map((mal) => mal.mottaker) || [],
+    [tilgjengeligeMaler],
+  );
+  const tilgjengeligeBrevtyper = useMemo(
+    () => tilgjengeligeMaler?.find((mal) => mal?.mottaker.uuid === formValues?.mottaker)?.brevTyper || [],
+    [tilgjengeligeMaler, formValues?.mottaker],
+  );
   const mottakerErNorskMyndighet = erNorskMyndighet(formValues?.valgtMottaker?.rolle);
   const { accounts } = useMsal();
+  const syncErrors = useSelector((state: RootState) => getFormSyncErrors(KV.Form.SEND_BREV)(state));
+
+  // Hent ferske verdier direkte fra store i hooks under
+  const currentValues = useSelector((state: RootState) => getFormValues(KV.Form.SEND_BREV)(state)) as
+    | SendBrevFormValues
+    | undefined;
+
+  // Hvis bruker allerede har forsøkt å sende, sørg for at showFieldErrors ikke blir skrudd av ved mal-endring
+  useEffect(() => {
+    if (submitAttempted && currentValues?.showFieldErrors !== true) {
+      changeField("showFieldErrors", true);
+    }
+  }, [submitAttempted, currentValues?.showFieldErrors, changeField]);
+
+  // Etter mal-bytte: vent til feltene er mountet, deretter touch alle felter slik at inline-feil vises videre
+  useLayoutEffect(() => {
+    if (!submitAttempted) return;
+    touchAllFields();
+  }, [submitAttempted, currentValues?.type, currentValues?.valgtBrev, touchAllFields]);
 
   const setValgteVedleggIState = (valgteVedleggFraVisningstabell: BrevVedleggVisningstabellInterface) => {
     setValgteVedlegg({
@@ -201,7 +234,18 @@ function SendBrev({
     hentTilgjengeligeMaler();
     hentTilgjengeligeStandardvedlegg();
     hentUtkast();
+    return () => {
+      if (brevBestiltTimerRef.current) {
+        clearTimeout(brevBestiltTimerRef.current);
+      }
+    };
   }, []);
+
+  useEffect(() => {
+    if (formIsValid && submitAttempted) {
+      setSubmitAttempted(false);
+    }
+  }, [formIsValid, submitAttempted]);
 
   const resetVedleggState = () => {
     setValgteVedlegg({ saksvedlegg: [], standardvedlegg: null });
@@ -236,11 +280,18 @@ function SendBrev({
 
   useEffect(() => {
     if (!formValues?.valgtMottaker?.rolle && !formValues?.mottaker) return;
+    // Reset vedlegg og skjemafelter ved mottaker-endring
     resetVedleggState();
     resetSkjemafelter();
     // Sørg for at type/valgtBrev velges på nytt for ny mottaker
     changeField("type", undefined);
     changeField("valgtBrev", undefined);
+    // Tilbakestill feilhåndtering og varsler
+    changeField("showFieldErrors", false);
+    if (submitAttempted) setSubmitAttempted(false);
+    setFeil(undefined);
+    setVisBrevBestiltAlert(false);
+    setMuligeMottakereFeil(undefined);
   }, [formValues?.mottaker, formValues?.valgtMottaker?.rolle]);
 
   useEffect(() => {
@@ -272,6 +323,21 @@ function SendBrev({
       tilgjengeligeBrevtyper.find((brevType) => brevType.type.kode === formValues.type),
     );
   }, [formValues?.type]);
+
+  // Full reset av underfelter (verdier + touched) når valgt brevmal endres
+  useEffect(() => {
+    const felter = formValues?.valgtBrev?.felter;
+    if (!felter) return;
+
+    changeField("showFieldErrors", false);
+    changeField("felt", {});
+
+    const pathsToUntouch: string[] = ["type"];
+    felter.forEach((f) => {
+      pathsToUntouch.push(`felt.${f.kode}.valg`, `felt.${f.kode}.feltVerdi`);
+    });
+    untouchFields(...pathsToUntouch);
+  }, [formValues?.valgtBrev?.type]);
 
   useEffect(() => {
     setMuligeMottakereFeil(undefined);
@@ -341,14 +407,14 @@ function SendBrev({
     if (feltFraValgtMal?.valg) {
       const valgtAlternativ = finnValgAlternativ(feltFraValgtMal);
       if (!hentValgverdi) {
-        return valgtAlternativ?.visFelt ? feltVerdi : null;
+        return valgtAlternativ?.visFelt ? (feltVerdi ?? null) : null;
       }
 
       if (hentKode) {
         return valgtAlternativ?.kode ?? null;
       }
 
-      return valgtAlternativ?.visFelt ? feltVerdi : (valgtAlternativ?.beskrivelse ?? null);
+      return valgtAlternativ?.visFelt ? (feltVerdi ?? null) : (valgtAlternativ?.beskrivelse ?? null);
     }
     return feltVerdi ?? null;
   };
@@ -371,7 +437,7 @@ function SendBrev({
     }
   };
 
-  const hentBrevRequest = (mottakerRolle: string): Record<string, unknown> => ({
+  const hentBrevRequest = (mottakerRolle: string): Api.DokumenterV2.OpprettBrevReqDto => ({
     produserbardokument: formValues.type || "",
     mottaker: mottakerRolle,
     orgNr: hentOrgnr(mottakerRolle),
@@ -398,6 +464,14 @@ function SendBrev({
 
   const sendBrev = () => {
     if (!formValues?.valgtMottaker) return;
+
+    if (!formIsValid) {
+      setSubmitAttempted(true);
+      changeField("showFieldErrors", true);
+      touchAllFields();
+      return;
+    }
+
     setSendBrevSpinner(true);
     setFeil(undefined);
 
@@ -410,12 +484,13 @@ function SendBrev({
     Api.DokumenterV2.opprettBrev(behandlingID, brevRequest)
       .then(() => {
         setVisBrevBestiltAlert(true);
-        setTimeout(() => {
+        // Utsett sideeffekter som kan trigge remount til etter at varselet er vist
+        brevBestiltTimerRef.current = window.setTimeout(() => {
           setVisBrevBestiltAlert(false);
+          oppdaterBehandling();
+          slettUtkast();
+          resetFormOgFritekstvedleggState();
         }, 3000);
-        oppdaterBehandling();
-        slettUtkast();
-        resetFormOgFritekstvedleggState();
       })
       .catch(() => setFeil("Brevet er ikke sendt. Det skjedde en feil."))
       .finally(() => setSendBrevSpinner(false));
@@ -444,6 +519,7 @@ function SendBrev({
 
   const resetFormOgFritekstvedleggState = () => {
     resetForm();
+    changeField("showFieldErrors", false);
     setFritekstvedlegg([]);
     setVisFritekstvedleggSkjema(false);
     setRedigerFritekstvedleggIndex(undefined);
@@ -476,8 +552,9 @@ function SendBrev({
     event.preventDefault();
   };
 
-  if (!tilgjengeligeMaler || !formValues) return null;
-  if (!visInnhold) return null;
+  if (!tilgjengeligeMaler || !formValues) {
+    return null;
+  }
 
   const mottakerErValgt = formValues.valgtMottaker;
   const brevtypeErValgt = formValues.valgtBrev;
@@ -486,10 +563,12 @@ function SendBrev({
 
   const spinnerAktiv = sendBrevSpinner || lagreUtkastSpinner || forkastBrevSpinner;
 
+  const sendBrevAktiveringskravOppfylt = Boolean(mottakerErValgt && brevtypeErValgt);
+
   const knappErDisabled =
     !redigerbart ||
-    !formIsValid ||
-    !!formValues.valgtMottaker?.feilmelding ||
+    !sendBrevAktiveringskravOppfylt ||
+    !!formValues?.valgtMottaker?.feilmelding ||
     visFritekstvedleggSkjema ||
     Boolean(muligeMottakereFeil) ||
     spinnerAktiv;
@@ -533,8 +612,8 @@ function SendBrev({
             <Skjema.Select
               feltNavn="type"
               label={<LabelMedHjelpetekst label="Velg brevmal" bold small />}
-              readonly={!redigerbart || tilgjengeligeBrevtyper.length === 1 || !!formValues.valgtMottaker?.feilmelding}
-              emptyFieldDisabled={!!formValues.type}
+              readonly={!redigerbart || tilgjengeligeBrevtyper.length === 1 || !!formValues?.valgtMottaker?.feilmelding}
+              emptyFieldDisabled={!!formValues?.type}
               onBlur={overstyrBlurEvent}
             >
               {tilgjengeligeBrevtyper.map((brevType) => (
@@ -588,7 +667,12 @@ function SendBrev({
         </Nav.Alert>
       )}
 
-      <div className="knapperad">
+      <div className="send_brev__knapperad">
+        {submitAttempted && !formIsValid && (
+          <Nav.Alert variant="error" className="varsel">
+            {Utils.feilmelding.syncErrorsTilFeilmelding(syncErrors || {})}
+          </Nav.Alert>
+        )}
         <Nav.Button
           variant="primary"
           disabled={knappErDisabled}

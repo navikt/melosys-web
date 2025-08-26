@@ -42,7 +42,11 @@ function erFritekstFelt(
 }
 
 function BrevValg({ formValues, width, redigerbart, changeField, finnValgAlternativ }: BrevValgProps) {
-  const skalViseBrevFelt = (felt: Api.DokumenterV2.Felt) => felt.valg === null || finnValgAlternativ(felt)?.visFelt;
+  const skalViseBrevFelt = (felt: Api.DokumenterV2.Felt) => {
+    // For utenlandsk trygdemyndighet skal vi kun vise selve valget (ingen ekstra BrevFelt)
+    if (felt.kode === "UTENLANDSK_TRYGDEMYNDIGHET_MOTTAKER") return false;
+    return felt.valg === null || finnValgAlternativ(felt)?.visFelt;
+  };
 
   return (
     <div>

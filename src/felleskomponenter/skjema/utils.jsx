@@ -18,7 +18,15 @@ export const mapReduxFormFeilTilNavFeil = (meta, errorConfig) => {
   if (!skalReturnereFeilmelding(meta, errorConfig)) return undefined;
 
   /* Støtter objekter med key "melding" som feilmeldinger */
-  const feilmelding = Utils._isObject(error) ? error.melding : error;
+  return Utils._isObject(error) ? error.melding : error;
+};
 
-  return feilmelding;
+// Liten helper: trekk ut tekst enten det er string eller { melding: string }
+export const unwrapMelding = (v) => {
+  if (typeof v === "string") return v;
+  if (v && typeof v === "object" && "melding" in v) {
+    const m = v.melding;
+    return typeof m === "string" ? m : undefined;
+  }
+  return undefined;
 };
