@@ -1,4 +1,4 @@
-import type { TestContext } from "yup";
+import type { AnyObject, StringSchema, TestContext } from "yup";
 import { array, object, string } from "yup";
 import * as StringUtils from "../../../utils/streng";
 import { erAnnenOrganisasjon, erArbeidsgiver, erVirksomhet } from "./brevMottaker/brevMottaker";
@@ -86,16 +86,20 @@ export function vurderPåkrevdOgMangler(values: SendBrevFormValues | undefined, 
   return { erPaakrevd: true, valgMangler: false, fritekstMangler };
 }
 
+interface CustomSchema extends StringSchema<string | undefined, AnyObject> {
+  erOrgnr: (message: Melding) => this;
+}
+
 const send_brev = object({
   mottaker: string().nullable(),
   type: string().required(BREVMAL_MANGLER),
   valgtMottaker: object().required(MOTTAKER_MANGLER),
   organisasjonsnummer: string().when("valgtMottaker", {
     is: (valgtMottaker: { rolle?: string } | null) => erAnnenOrganisasjon(valgtMottaker?.rolle),
-    then: (schema) => (schema as any).erOrgnr(ORGNUMMER_UGYLDIG).required(ORGNUMMER_FELT_MANGLER),
+    then: (schema) => (schema as CustomSchema).erOrgnr(ORGNUMMER_UGYLDIG).required(ORGNUMMER_FELT_MANGLER),
     otherwise: (schema) => schema.nullable(),
   }),
-  norskeMyndigheter: array().of((string() as any).erOrgnr(ORGNUMMER_UGYLDIG)),
+  norskeMyndigheter: array().of((string() as unknown as CustomSchema).erOrgnr(ORGNUMMER_UGYLDIG)),
   kontaktperson: string().nullable(),
   arbeidsgiver: string()
     .when("valgtMottaker", {
@@ -121,11 +125,9 @@ const send_brev = object({
       let harFeil = false;
       const errors: ErrorsMap = {};
 
-      // Handter valideringsregler som omfatter flere felt som ikke er markert som påkrevd
       if (parent?.type === "INNHENTING_AV_INNTEKTSOPPLYSNINGER") {
-        // Regel: Minst en av checkboksene STANDARDTEKST_INNTEKTSOPPLYSNINGER og FRITEKST
-        // må være valgt.
-        const valgtStandardtekst = Boolean(value?.STANDARDTEKST_INNTEKTSOPPLYSNINGER?.valg);
+        const standardNode = value?.STANDARDTEKST_INNTEKTSOPPLYSNINGER;
+        const valgtStandardtekst = Boolean(standardNode?.valg) || Boolean((standardNode as Felt)?.feltVerdi);
         const valgtFritekst = value?.FRITEKST?.valg === "FRITEKST";
 
         if (!valgtStandardtekst && !valgtFritekst) {

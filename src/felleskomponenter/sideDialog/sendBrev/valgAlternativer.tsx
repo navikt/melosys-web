@@ -65,7 +65,7 @@ function ValgAlternativer({
   const feilmelding: string | undefined = skalViseFeil
     ? erSelect
       ? nestedValgText || (erFeltPåkrevdOgMangler() ? hentFeltFeilmelding(feltKode).melding : undefined)
-      : nestedValgText || nestedFeltVerdiText || hentFeltFeilmelding(feltKode).melding
+      : nestedValgText
     : undefined;
 
   const label = lagLabel(beskrivelse, hjelpetekst);
