@@ -31,6 +31,28 @@ const lagLabel = (beskrivelse: string, hjelpetekst: string | null) => {
   );
 };
 
+export function applyCheckboxToggle({
+  checked,
+  feltKode,
+  alternativKode,
+  changeField,
+}: {
+  checked: boolean;
+  feltKode: string;
+  alternativKode: string;
+  changeField: (felt: string, data: string | Felt | undefined) => void;
+}) {
+  if (checked) {
+    // Slå på: sett valgt kode og rydd bort ev. fritekst
+    changeField(`felt.${feltKode}.valg`, alternativKode);
+    changeField(`felt.${feltKode}.feltVerdi`, undefined);
+  } else {
+    // Slå av: behold noden, men nullstill verdiene for konsistent datastruktur
+    changeField(`felt.${feltKode}.valg`, undefined);
+    changeField(`felt.${feltKode}.feltVerdi`, undefined);
+  }
+}
+
 function ValgAlternativer({
   valg,
   feltKode,
@@ -86,15 +108,14 @@ function ValgAlternativer({
             value={alternativ.kode}
             id={`${feltKode}.${alternativ.kode}`}
             key={`${feltKode}.${alternativ.kode}`}
-            onChange={(a) => {
-              if (a.target.checked) {
-                // Slå på: sett valgt kode (rydder samtidig bort ev. feltVerdi)
-                changeField(`felt.${feltKode}`, { valg: alternativ.kode });
-              } else {
-                // Slå av: fjern hele felt-noden for å unngå hengende verdier som kan ødlegge for validering
-                changeField(`felt.${feltKode}`, undefined);
-              }
-            }}
+            onChange={(e) =>
+              applyCheckboxToggle({
+                checked: e.target.checked,
+                feltKode,
+                alternativKode: alternativ.kode,
+                changeField,
+              })
+            }
           >
             {alternativ.beskrivelse}
           </Nav.Checkbox>

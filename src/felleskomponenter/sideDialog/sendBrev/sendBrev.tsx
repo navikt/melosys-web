@@ -1,4 +1,4 @@
-import { FocusEvent, useEffect, useRef, useState, useMemo } from "react";
+import { FocusEvent, useEffect, useRef, useState, useMemo, useLayoutEffect } from "react";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
@@ -146,12 +146,9 @@ function SendBrev({
   }, [submitAttempted, currentValues?.showFieldErrors, changeField]);
 
   // Etter mal-bytte: vent til feltene er mountet, deretter touch alle felter slik at inline-feil vises videre
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!submitAttempted) return;
-    const timer = window.setTimeout(() => {
-      touchAllFields();
-    }, 0);
-    return () => window.clearTimeout(timer);
+    touchAllFields();
   }, [submitAttempted, currentValues?.type, currentValues?.valgtBrev, touchAllFields]);
 
   const setValgteVedleggIState = (valgteVedleggFraVisningstabell: BrevVedleggVisningstabellInterface) => {
@@ -243,6 +240,12 @@ function SendBrev({
       }
     };
   }, []);
+
+  useEffect(() => {
+    if (formIsValid && submitAttempted) {
+      setSubmitAttempted(false);
+    }
+  }, [formIsValid, submitAttempted]);
 
   const resetVedleggState = () => {
     setValgteVedlegg({ saksvedlegg: [], standardvedlegg: null });
@@ -369,12 +372,6 @@ function SendBrev({
       Utils.navigasjon.flyttFokusTilHtmlElementFraId("brevbestilling");
     }
   }, [visInnhold]);
-
-  useEffect(() => {
-    if (formIsValid && submitAttempted) {
-      setSubmitAttempted(false);
-    }
-  }, [formIsValid, submitAttempted]);
 
   const finnValgAlternativ = (felt: Api.DokumenterV2.Felt) => {
     return felt?.valg?.valgAlternativer.find((alternativ) => alternativ.kode === formValues?.felt?.[felt.kode]?.valg);
@@ -555,8 +552,9 @@ function SendBrev({
     event.preventDefault();
   };
 
-  if (!tilgjengeligeMaler || !formValues) return null;
-  if (!visInnhold) return null;
+  if (!tilgjengeligeMaler || !formValues) {
+    return null;
+  }
 
   const mottakerErValgt = formValues.valgtMottaker;
   const brevtypeErValgt = formValues.valgtBrev;
@@ -577,138 +575,132 @@ function SendBrev({
 
   return (
     <div className="send_brev">
-      {tilgjengeligeMaler && formValues && (
-        <>
-          <Brevutkast
-            changeField={changeField}
-            dokumenter={dokumenter}
-            standardvedleggListe={standardvedleggListe}
-            formValues={formValues}
-            tilgjengeligeMottakere={tilgjengeligeMottakere}
-            utkastPåBehandlingen={utkastPåBehandlingen}
-            setFritekstvedlegg={setFritekstvedlegg}
-            setValgteVedlegg={setValgteVedlegg}
-          />
+      <Brevutkast
+        changeField={changeField}
+        dokumenter={dokumenter}
+        standardvedleggListe={standardvedleggListe}
+        formValues={formValues}
+        tilgjengeligeMottakere={tilgjengeligeMottakere}
+        utkastPåBehandlingen={utkastPåBehandlingen}
+        setFritekstvedlegg={setFritekstvedlegg}
+        setValgteVedlegg={setValgteVedlegg}
+      />
 
-          {visApneINyttVindu && (
-            <div className="send_brev__apne-nytt-vindu-container">
-              <Nav.Link target="_blank" href={nyttvinduHref}>
-                Åpne i nytt vindu
-                <Ikoner.ExternalLink />
-              </Nav.Link>
-            </div>
-          )}
-
-          <Nav.Row className="brevmottaker__wrapper">
-            <Nav.Column xs={mottakerSelectWidth}>
-              <BrevMottaker
-                redigerbart={redigerbart}
-                tilgjengeligeMottakere={tilgjengeligeMottakere}
-                overstyrBlurEvent={overstyrBlurEvent}
-                changeField={changeField}
-              />
-            </Nav.Column>
-          </Nav.Row>
-
-          {mottakerErValgt && !valgtMottakerHarFeilmelding && (
-            <Nav.Row>
-              <Nav.Column xs={brevTypeSelectWidth}>
-                <Skjema.Select
-                  feltNavn="type"
-                  label={<LabelMedHjelpetekst label="Velg brevmal" bold small />}
-                  readonly={
-                    !redigerbart || tilgjengeligeBrevtyper.length === 1 || !!formValues?.valgtMottaker?.feilmelding
-                  }
-                  emptyFieldDisabled={!!formValues?.type}
-                  onBlur={overstyrBlurEvent}
-                >
-                  {tilgjengeligeBrevtyper.map((brevType) => (
-                    <option key={brevType.type.kode} value={brevType.type.kode}>
-                      {brevType.type.term}
-                    </option>
-                  ))}
-                </Skjema.Select>
-              </Nav.Column>
-            </Nav.Row>
-          )}
-
-          {!valgtMottakerHarFeilmelding && (
-            <BrevValg
-              formValues={formValues}
-              width={felterWidth}
-              redigerbart={redigerbart}
-              changeField={changeField}
-              finnValgAlternativ={finnValgAlternativ}
-            />
-          )}
-
-          {formIsValid && brevtypeErValgt && (muligeMottakere || muligeMottakereNorskMyndighet) && (
-            <Nav.Row>
-              <Nav.Column xs={mottakerTabellWidth}>
-                <BrevMottakereTabell
-                  muligeMottakere={muligeMottakere}
-                  muligeMottakereNorskMyndighet={muligeMottakereNorskMyndighet}
-                  redigerbart={redigerbart}
-                  brevVedlegg={{
-                    fritekstvedlegg,
-                    setFritekstvedlegg,
-                    valgteVedlegg,
-                    setValgteVedlegg: setValgteVedleggIState,
-                    changeField,
-                    dokumenter,
-                    visFritekstvedleggSkjema,
-                    setVisFritekstvedleggSkjema,
-                    redigerFritekstvedleggIndex: redigerFritekstVedleggIndex,
-                    setRedigerFritekstvedleggIndex: setRedigerFritekstvedleggIndex,
-                    standardvedlegg: standardvedleggListe,
-                  }}
-                />
-              </Nav.Column>
-            </Nav.Row>
-          )}
-
-          {muligeMottakereFeil && (
-            <Nav.Alert variant="warning" className="varsel">
-              {muligeMottakereFeil}
-            </Nav.Alert>
-          )}
-
-          <div className="send_brev__knapperad">
-            {submitAttempted && !formIsValid && (
-              <Nav.Alert variant="error" className="varsel">
-                {Utils.feilmelding.syncErrorsTilFeilmelding(syncErrors || {})}
-              </Nav.Alert>
-            )}
-            <Nav.Button
-              variant="primary"
-              disabled={knappErDisabled}
-              className="brevknapp"
-              onClick={sendBrev}
-              loading={sendBrevSpinner}
-            >
-              Send brev
-            </Nav.Button>
-            <Nav.Button
-              variant="secondary"
-              disabled={knappErDisabled}
-              className="brevknapp"
-              onClick={lagreUtkast}
-              loading={lagreUtkastSpinner}
-            >
-              Lagre utkast
-            </Nav.Button>
-            <Nav.Button
-              variant="secondary"
-              disabled={!formValues.mottaker || !redigerbart || spinnerAktiv}
-              className="brevknapp"
-              onClick={forkastBrev}
-              loading={forkastBrevSpinner}
-            >
-              Forkast brev
-            </Nav.Button>
-          </div>
-        </>
+      {visApneINyttVindu && (
+        <div className="send_brev__apne-nytt-vindu-container">
+          <Nav.Link target="_blank" href={nyttvinduHref}>
+            Åpne i nytt vindu
+            <Ikoner.ExternalLink />
+          </Nav.Link>
+        </div>
       )}
+
+      <Nav.Row className="brevmottaker__wrapper">
+        <Nav.Column xs={mottakerSelectWidth}>
+          <BrevMottaker
+            redigerbart={redigerbart}
+            tilgjengeligeMottakere={tilgjengeligeMottakere}
+            overstyrBlurEvent={overstyrBlurEvent}
+            changeField={changeField}
+          />
+        </Nav.Column>
+      </Nav.Row>
+
+      {mottakerErValgt && !valgtMottakerHarFeilmelding && (
+        <Nav.Row>
+          <Nav.Column xs={brevTypeSelectWidth}>
+            <Skjema.Select
+              feltNavn="type"
+              label={<LabelMedHjelpetekst label="Velg brevmal" bold small />}
+              readonly={!redigerbart || tilgjengeligeBrevtyper.length === 1 || !!formValues?.valgtMottaker?.feilmelding}
+              emptyFieldDisabled={!!formValues?.type}
+              onBlur={overstyrBlurEvent}
+            >
+              {tilgjengeligeBrevtyper.map((brevType) => (
+                <option key={brevType.type.kode} value={brevType.type.kode}>
+                  {brevType.type.term}
+                </option>
+              ))}
+            </Skjema.Select>
+          </Nav.Column>
+        </Nav.Row>
+      )}
+
+      {!valgtMottakerHarFeilmelding && (
+        <BrevValg
+          formValues={formValues}
+          width={felterWidth}
+          redigerbart={redigerbart}
+          changeField={changeField}
+          finnValgAlternativ={finnValgAlternativ}
+        />
+      )}
+
+      {formIsValid && brevtypeErValgt && (muligeMottakere || muligeMottakereNorskMyndighet) && (
+        <Nav.Row>
+          <Nav.Column xs={mottakerTabellWidth}>
+            <BrevMottakereTabell
+              muligeMottakere={muligeMottakere}
+              muligeMottakereNorskMyndighet={muligeMottakereNorskMyndighet}
+              redigerbart={redigerbart}
+              brevVedlegg={{
+                fritekstvedlegg,
+                setFritekstvedlegg,
+                valgteVedlegg,
+                setValgteVedlegg: setValgteVedleggIState,
+                changeField,
+                dokumenter,
+                visFritekstvedleggSkjema,
+                setVisFritekstvedleggSkjema,
+                redigerFritekstvedleggIndex: redigerFritekstVedleggIndex,
+                setRedigerFritekstvedleggIndex: setRedigerFritekstvedleggIndex,
+                standardvedlegg: standardvedleggListe,
+              }}
+            />
+          </Nav.Column>
+        </Nav.Row>
+      )}
+
+      {muligeMottakereFeil && (
+        <Nav.Alert variant="warning" className="varsel">
+          {muligeMottakereFeil}
+        </Nav.Alert>
+      )}
+
+      <div className="send_brev__knapperad">
+        {submitAttempted && !formIsValid && (
+          <Nav.Alert variant="error" className="varsel">
+            {Utils.feilmelding.syncErrorsTilFeilmelding(syncErrors || {})}
+          </Nav.Alert>
+        )}
+        <Nav.Button
+          variant="primary"
+          disabled={knappErDisabled}
+          className="brevknapp"
+          onClick={sendBrev}
+          loading={sendBrevSpinner}
+        >
+          Send brev
+        </Nav.Button>
+        <Nav.Button
+          variant="secondary"
+          disabled={knappErDisabled}
+          className="brevknapp"
+          onClick={lagreUtkast}
+          loading={lagreUtkastSpinner}
+        >
+          Lagre utkast
+        </Nav.Button>
+        <Nav.Button
+          variant="secondary"
+          disabled={!formValues.mottaker || !redigerbart || spinnerAktiv}
+          className="brevknapp"
+          onClick={forkastBrev}
+          loading={forkastBrevSpinner}
+        >
+          Forkast brev
+        </Nav.Button>
+      </div>
 
       {visBrevBestiltAlert && (
         <Nav.Alert variant="success" className="brev_sendt">
