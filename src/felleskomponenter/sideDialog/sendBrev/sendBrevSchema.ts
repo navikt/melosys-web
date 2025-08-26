@@ -143,7 +143,7 @@ const send_brev = object({
 
         // Handter valideringsregler for enkelt-felt som ikke er markert som påkrevd
         if (parent?.type === "INNHENTING_AV_INNTEKTSOPPLYSNINGER") {
-          // Dersom "Fritekst" er valgt, må fritekstfeltet også ha verdi, hvis ikke vises en feimlmelding.
+          // Dersom "Fritekst" er valgt, må fritekstfeltet også ha verdi, hvis ikke vises en feilmelding.
           let manglerInntektsOpplysningerFritekst = false;
           if (brevFelt.kode === "FRITEKST") {
             const valgtFritekst = Boolean(value?.FRITEKST?.valg);
