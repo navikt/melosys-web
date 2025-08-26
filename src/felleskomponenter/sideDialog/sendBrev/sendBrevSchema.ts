@@ -2,7 +2,7 @@ import type { AnyObject, StringSchema, TestContext } from "yup";
 import { array, object, string } from "yup";
 import * as StringUtils from "../../../utils/streng";
 import { erAnnenOrganisasjon, erArbeidsgiver, erVirksomhet } from "./brevMottaker/brevMottaker";
-import { BrevFelt, Felt, SendBrevFormValues, Melding, ErrorsMap, ValgtMottakerType } from "./types";
+import { BrevFelt, ErrorsMap, Felt, Melding, SendBrevFormValues, ValgtMottakerType } from "./types";
 import { ValgAlternativ } from "../../../services/modules/dokumenter-v2";
 
 // Feilmeldinger for toppnivåfelter
@@ -171,23 +171,24 @@ const send_brev = object({
         const felt: Felt | undefined = value?.[brevFelt.kode];
         const valgtAlt = altIndex.get(brevFelt.kode)?.get((felt?.valg as string) || "");
 
-        // Handter valideringsregler for enkelt-felt som ikke er markert som påkrevd
-        if (erInnhentingAvInntektsopplysninger) {
-          // Dersom "Fritekst" er valgt, må fritekstfeltet også ha verdi, hvis ikke vises en feilmelding.
-          let manglerInntektsOpplysningerFritekst = false;
-          if (brevFelt.kode === "FRITEKST") {
-            const valgtFritekst = Boolean(value?.FRITEKST?.valg);
-            manglerInntektsOpplysningerFritekst =
-              valgtFritekst &&
-              valgtAlt?.visFelt !== false &&
-              !StringUtils.harStrengInnhold(felt?.feltVerdi as string | undefined);
+        // Spesialregel: INNLEDNING_FRITEKST i mangelbrev skal først og fremst kreve et VALG
+        if ((erMangelbrevBruker || erMangelbrevArbeidsgiver) && brevFelt.kode === "INNLEDNING_FRITEKST") {
+          // 1) Ingen valg gjort -> legg kun valg-feil, og ikke valider fritekst
+          if (!felt?.valg) {
+            if (!errors["INNLEDNING_FRITEKST"]) errors["INNLEDNING_FRITEKST"] = {};
+            errors["INNLEDNING_FRITEKST"].valg = STANDARDTEKST_ELLER_FRITEKST_MANGLER;
+            harFeil = true;
+            return;
           }
 
-          if (manglerInntektsOpplysningerFritekst) {
-            if (!errors[brevFelt.kode]) errors[brevFelt.kode] = {};
-            errors[brevFelt.kode].feltVerdi = INNTEKTSOPPLYSNINGER_FRITEKST_MANGLER;
+          // 2) FRITEKST valgt og feltet skal vises -> krever fritekstinnhold
+          const skalViseFritekst = valgtAlt?.visFelt !== false; // default true
+          if (skalViseFritekst && !StringUtils.harStrengInnhold(felt?.feltVerdi)) {
+            if (!errors["INNLEDNING_FRITEKST"]) errors["INNLEDNING_FRITEKST"] = {};
+            errors["INNLEDNING_FRITEKST"].feltVerdi = INNLEDNINGSTEKST_MANGLERBREV_BRUKER_MANGLER;
             harFeil = true;
           }
+          return;
         }
 
         if (!brevFelt.paakrevd) return;
