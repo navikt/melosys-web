@@ -25,6 +25,7 @@ const FELT_FEILMELDINGER: Record<string, Melding> = {
   MANGLER_FRITEKST: { melding: "Fritekst må fylles ut" },
   FRITEKST: { melding: "Du må skrive inn hovedtekst til brevet" },
   DISTRIBUSJONSTYPE: { melding: "Du må velge type brev" },
+  UTENLANDSK_TRYGDEMYNDIGHET_MOTTAKER: { melding: "Du må velge trygdemyndighet" },
 };
 
 export const hentFeltFeilmelding = (feltKode: string): Melding => {
