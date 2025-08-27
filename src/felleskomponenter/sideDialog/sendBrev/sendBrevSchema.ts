@@ -171,8 +171,12 @@ const send_brev = object({
         const felt: Felt | undefined = value?.[brevFelt.kode];
         const valgtAlt = altIndex.get(brevFelt.kode)?.get((felt?.valg as string) || "");
 
-        // Spesialregel: INNLEDNING_FRITEKST i mangelbrev skal først og fremst kreve et VALG
-        if ((erMangelbrevBruker || erMangelbrevArbeidsgiver) && brevFelt.kode === "INNLEDNING_FRITEKST") {
+        // Spesialregel: INNLEDNING_FRITEKST i mangelbrev skal først og fremst kreve et VALG, dersom det er valgalternativer
+        if (
+          brevFelt.kode === "INNLEDNING_FRITEKST" &&
+          (erMangelbrevBruker || erMangelbrevArbeidsgiver) &&
+          Boolean(brevFelt?.valg?.valgAlternativer)
+        ) {
           // 1) Ingen valg gjort -> legg kun valg-feil, og ikke valider fritekst
           if (!felt?.valg) {
             if (!errors["INNLEDNING_FRITEKST"]) errors["INNLEDNING_FRITEKST"] = {};
