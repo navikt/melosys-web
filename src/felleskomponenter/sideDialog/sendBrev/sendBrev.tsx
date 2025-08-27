@@ -393,11 +393,7 @@ function SendBrev({
       : null;
   };
 
-  const hentFormVerdi = (
-    feltNavn: string,
-    hentValgverdi: boolean = false,
-    hentKode: boolean = false,
-  ): string | null => {
+  const hentFormVerdi = (feltNavn: string, hentValgverdi: boolean = false, hentKode: boolean = false): any => {
     const feltFraValgtMal = formValues?.valgtBrev?.felter?.find((felt) => felt.kode === feltNavn);
     if (!feltFraValgtMal) {
       return null;
@@ -447,9 +443,9 @@ function SendBrev({
     manglerFritekst: hentFormVerdi("MANGLER_FRITEKST"),
     fritekstTittel: hentFormVerdi("BREV_TITTEL", true),
     fritekst: hentFormVerdi("FRITEKST"),
-    skalViseStandardTekstOmOpplysninger: hentFormVerdi("STANDARDTEKST_INNTEKTSOPPLYSNINGER") === "true",
+    skalViseStandardTekstOmOpplysninger: hentFormVerdi("STANDARDTEKST_INNTEKTSOPPLYSNINGER"),
     kopiMottakere: hentKopiMottakere() || [],
-    skalViseStandardTekstOmkontaktopplysninger: hentFormVerdi("STANDARDTEKST_KONTAKTINFORMASJON") === "true",
+    skalViseStandardTekstOmkontaktopplysninger: hentFormVerdi("STANDARDTEKST_KONTAKTINFORMASJON"),
     saksvedlegg: valgteVedlegg?.saksvedlegg.map((vedlegg) => ({
       dokumentID: vedlegg.dokumentID,
       journalpostID: vedlegg.journalpostID,
