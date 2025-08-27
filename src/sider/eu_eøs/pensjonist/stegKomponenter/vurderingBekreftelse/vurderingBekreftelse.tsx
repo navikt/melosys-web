@@ -20,11 +20,28 @@ import { fagsakSelectors } from "../../../../../ducks/fagsaker";
 import { useDispatch } from "../../../../../hooks";
 import { tilForsiden } from "../../../../../ducks/navigering/operations";
 import { KTObject } from "@navikt/melosys-kodeverk";
-import { Aktoer } from "../../../../../services/modules/fagsaker/aktoer";
 import FullmaktForTrygdeavgiftConfirmationPanel from "../../../../../felleskomponenter/fullmaktForTrygdeavgiftConfirmationPanel/fullmaktForTrygdeavgiftConfirmationPanel";
+import { feiletResponsSelectors } from "../../../../../ducks/feiletRespons";
+import { kontrollOperations, kontrollSelectors } from "../../../../../ducks/kontroll";
+import { ThunkDispatch } from "redux-thunk";
+import { RootState } from "AppTypes";
+import { Action } from "redux";
+import { vedtakOperations } from "../../../../../ducks/vedtak";
+import { mottatteOpplysningerSelectors } from "../../../../../ducks/mottatteOpplysninger";
 
 const { FULLMEKTIG } = MKV.Koder.aktoersroller;
 const { TRYGDEAVGIFT_BETALES_TIL_NAV, TRYGDEAVGIFT_BETALES_TIL_NAV_OG_SKATT } = MKV.Koder.trygdeavgiftmottaker;
+const { FASTSATT_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingsresultattyper;
+const { OPPHØRSVEDTAK, FØRSTEGANGSVEDTAK, ENDRINGSVEDTAK } = MKV.Koder.vedtakstyper;
+const { FØRSTEGANG, NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT, SATSENDRING } =
+  MKV.Koder.behandlinger.behandlingstyper;
+
+const komponentDispatch = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
+  kontrollerFerdigbehandling: (data: Api.Kontroll.FerdigbehandlingKontrollData) =>
+    dispatch(kontrollOperations.kontrollerFerdigbehandling(data)),
+  fattVedtak: (behandlingID: number, body: Api.Saksflyt.Vedtak.FattVedtakFTRLReqDto) =>
+    dispatch(vedtakOperations.fatt(behandlingID, body)),
+});
 interface FormValuesProps {
   begrunnelseFritekst?: string;
 }
@@ -46,11 +63,19 @@ function VurderingBekreftelse({ tilbake, aktivtSteg }: Props) {
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const vedtakstype = useSelector(behandlingsresultatSelectors.VedtakstypeSelector);
   const saksnummer = useSelector(fagsakSelectors.SaksnummerSelector);
+  const behandlingstype = useSelector(behandlingerSelectors.BehandlingstypeKodeSelector);
+  const erNyVurdering = behandlingstype === NY_VURDERING;
   const [fakturamottaker, setFakturamottaker] = useState<string | undefined>(undefined);
   const [fullmektigErFakturamottaker, setFullmektigErFakturamottaker] = useState(false);
   const [harBekreftetFullmaktForTrygdeavgift, setHarBekreftetFullmaktForTrygdeavgift] = useState(false);
+  const feilmeldinger = useSelector(feiletResponsSelectors.FeilmeldingerSelector);
+  const mottatteOpplysningerStatus = useSelector(mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector);
+
+  const lagretVedtakstype = useSelector(behandlingsresultatSelectors.VedtakstypeSelector);
+  const kontrollfeil = useSelector(kontrollSelectors.KontrollFeilSelector);
 
   const dispatch = useDispatch();
+  const { kontrollerFerdigbehandling } = komponentDispatch(dispatch);
   const [betalingsvalg, setBetalingsvalg] = useState(MKV.Koder.betalingstype.TREKK);
   const [pdfDokumenter, setPdfDokumenter] = useState<PdfDokumentData[]>([]);
   const [vedtakPending, setVedtakPending] = useState(false);
@@ -58,6 +83,9 @@ function VurderingBekreftelse({ tilbake, aktivtSteg }: Props) {
   const mottakerErNav =
     trygdeavgiftMottaker?.kode === TRYGDEAVGIFT_BETALES_TIL_NAV ||
     trygdeavgiftMottaker?.kode === TRYGDEAVGIFT_BETALES_TIL_NAV_OG_SKATT;
+
+  const stegErGyldig = Utils._isEmpty(feilmeldinger) && Utils._isEmpty(kontrollfeil);
+  let oppdaterFørKontroll = true;
 
   const {
     watch,
@@ -158,6 +186,33 @@ function VurderingBekreftelse({ tilbake, aktivtSteg }: Props) {
   const betalingsvalgErFaktura = betalingsvalg === MKV.Koder.betalingstype.FAKTURA;
   const visFakturaMottaker = betalingsvalgErFaktura && fakturamottaker !== undefined;
 
+  const getVedtakstype = () => {
+    if (lagretVedtakstype) return lagretVedtakstype;
+    if (erNyVurdering) return ENDRINGSVEDTAK;
+    return FØRSTEGANGSVEDTAK;
+  };
+
+  async function kontroller(data: any) {
+    if (data.aktivtSteg && redigerbart && data.mottatteOpplysningerStatus === "OK") {
+      setVedtakPending(true);
+      const request = {
+        behandlingID,
+        vedtakstype: getVedtakstype(),
+        behandlingsresultattype: FASTSATT_TRYGDEAVGIFT,
+        skalRegisteropplysningerOppdateres: oppdaterFørKontroll,
+      };
+      oppdaterFørKontroll = false;
+      await kontrollerFerdigbehandling(request);
+      setVedtakPending(false);
+    }
+  }
+
+  const debouncedKontrollerBehandling = useCallback(Utils._debounce(kontroller, 500), [kontrollerFerdigbehandling]);
+
+  useEffect(() => {
+    debouncedKontrollerBehandling({ aktivtSteg, mottatteOpplysningerStatus, formValues });
+  }, [aktivtSteg, redigerbart, mottatteOpplysningerStatus]);
+
   const onSubmit = () => {
     setVedtakPending(true);
     const { FASTSATT_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingsresultattyper;
@@ -222,6 +277,7 @@ function VurderingBekreftelse({ tilbake, aktivtSteg }: Props) {
         bekreftTekst="Bekreft og send orienteringsbrev til bruker"
         bekreftKnappProps={{
           disabled:
+            !stegErGyldig ||
             !redigerbart ||
             !formIsValid ||
             (visFakturaMottaker && fullmektigErFakturamottaker && !harBekreftetFullmaktForTrygdeavgift),
