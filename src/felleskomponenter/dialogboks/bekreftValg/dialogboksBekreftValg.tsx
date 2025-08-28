@@ -158,11 +158,11 @@ export function DialogboksBekreftValg() {
           tittel: "Saken er annullert",
           tekst: (
             <>
-              Hvis du annullerer saken vil alle perioder knyttet til saken annulleres og fjernes fra MEDL og ev.
-              fakturering vil stoppes.
+              Hvis du annullerer saken vil ev. tilknyttede perioder bli annullert, ev. MEDL-perioder fjernes og ev.
+              fakturering stoppes.
               <br />
-              Hvis periodene i MEDL er registrert manuelt må du også huske å fjerne disse. Vurder også om du må sende
-              brev/vedtak til bruker.
+              Merk at manuelt registrerte MEDL-perioder må fjernes manuelt. Vurder også om du må sende brev/vedtak til
+              bruker.
               <br />
               Er du sikker på at du vil annullere saken?
             </>
