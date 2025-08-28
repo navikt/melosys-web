@@ -279,7 +279,7 @@ function SendBrev({
   }, [formValues?.valgtBrev]);
 
   useEffect(() => {
-    if (!formValues?.valgtMottaker?.rolle && !formValues?.mottaker) return;
+    if ((!formValues?.valgtMottaker?.rolle && !formValues?.mottaker) || formValues?.aktivtUtkast) return;
     // Reset vedlegg og skjemafelter ved mottaker-endring
     resetVedleggState();
     resetSkjemafelter();
@@ -312,6 +312,7 @@ function SendBrev({
   ]);
 
   useEffect(() => {
+    if (formValues?.aktivtUtkast) return;
     if (tilgjengeligeBrevtyper?.length > 1 && formValues?.type) {
       changeField("type", undefined);
     }
@@ -327,7 +328,7 @@ function SendBrev({
   // Full reset av underfelter (verdier + touched) når valgt brevmal endres
   useEffect(() => {
     const felter = formValues?.valgtBrev?.felter;
-    if (!felter) return;
+    if (!felter || formValues?.aktivtUtkast) return;
 
     changeField("showFieldErrors", false);
     changeField("felt", {});
