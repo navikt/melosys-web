@@ -14,7 +14,7 @@ const ORGNUMMER_UGYLDIG: Melding = { melding: "Ugyldig organisasjonsnummer" };
 
 // Ikke-feltbundne feilmeldinger (kontekst-/regel-baserte), avhengig av valgt brevmal
 const STANDARDTEKST_ELLER_FRITEKST_MANGLER = { melding: "Du må velge minst én av standardtekst eller fritekst" };
-const FRITEKST_MANGLERBREV_MANGLER = { melding: "Du må skrive inn i hva mottaker skal sende inn" };
+const FRITEKST_HVA_MOTTAKER_SKAL_SENDE_INN_MANGLER = { melding: "Du må skrive inn hva mottaker skal sende inn" };
 const OVERSKRIFT_FRITEKSTBREV_BRUKER_MANGLER = { melding: "Du må skrive inn overskrift til brevet" };
 const INNLEDNINGSTEKST_MANGLERBREV_BRUKER_MANGLER = { melding: "Du må skrive inn innledningstekst i fritekstfeltet" };
 
@@ -165,6 +165,12 @@ const send_brev = object({
           errors["FRITEKST"].valg = STANDARDTEKST_ELLER_FRITEKST_MANGLER;
           harFeil = true;
         }
+
+        if (valgtFritekst && !StringUtils.harStrengInnhold(value?.FRITEKST?.feltVerdi)) {
+          if (!errors["FRITEKST"]) errors["FRITEKST"] = {};
+          errors["FRITEKST"].feltVerdi = FRITEKST_HVA_MOTTAKER_SKAL_SENDE_INN_MANGLER;
+          harFeil = true;
+        }
       }
 
       valgtBrev.felter.forEach((brevFelt) => {
@@ -281,7 +287,7 @@ const send_brev = object({
         }
 
         if ((erMangelbrevBruker || erMangelbrevArbeidsgiver) && manglerFritekst) {
-          errors[brevFelt.kode].feltVerdi = FRITEKST_MANGLERBREV_MANGLER;
+          errors[brevFelt.kode].feltVerdi = FRITEKST_HVA_MOTTAKER_SKAL_SENDE_INN_MANGLER;
           harFeil = true;
         }
 

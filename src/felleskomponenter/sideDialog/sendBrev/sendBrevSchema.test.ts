@@ -87,14 +87,14 @@ function expectMangelbrevBrukerErrors(err: ValidationError | null) {
     innledningFritekstValg === "Du må velge minst én av standardtekst eller fritekst";
   expect(innledningOK).toBe(true);
 
-  expect(manglerFritekstMsg).toBe("Du må skrive inn i hva mottaker skal sende inn");
+  expect(manglerFritekstMsg).toBe("Du må skrive inn hva mottaker skal sende inn");
 
   // Nøklene skal fortsatt være de samme
   expect(Object.keys(feltErrors as ErrorsMap).sort()).toEqual(["INNLEDNING_FRITEKST", "MANGLER_FRITEKST"].sort());
 
   // Oppsummering: må inneholde melding for MANGLER_FRITEKST og minst én av de to mulige for INNLEDNING_FRITEKST
   const summary = buildValidationSummary(feltErrors);
-  expect(summary).toContain("Du må skrive inn i hva mottaker skal sende inn");
+  expect(summary).toContain("Du må skrive inn hva mottaker skal sende inn");
   expect(
     summary.includes("Du må skrive inn innledningstekst i fritekstfeltet") ||
       summary.includes("Du må velge minst én av standardtekst eller fritekst"),
@@ -428,10 +428,10 @@ describe("alle kombinasjoner av mottaker og brevmal – korrekte feltfeil og de 
     const feilEtterFørsteUtfylling = extractFeltErrors(err);
     expect(unwrapMelding(feilEtterFørsteUtfylling?.INNLEDNING_FRITEKST?.feltVerdi)).toBeUndefined();
     expect(unwrapMelding(feilEtterFørsteUtfylling?.MANGLER_FRITEKST?.feltVerdi)).toBe(
-      "Du må skrive inn i hva mottaker skal sende inn",
+      "Du må skrive inn hva mottaker skal sende inn",
     );
     const summary = buildValidationSummary(feilEtterFørsteUtfylling);
-    expect(summary).toContain("Du må skrive inn i hva mottaker skal sende inn");
+    expect(summary).toContain("Du må skrive inn hva mottaker skal sende inn");
 
     // Hvis schema fortsatt krever valg for INNLEDNING_FRITEKST, sett et lovlig valg før siste validering
     const innledningValgMangler =
@@ -492,11 +492,9 @@ describe("alle kombinasjoner av mottaker og brevmal – korrekte feltfeil og de 
     expect(err).toBeTruthy();
     const feilEtter = extractFeltErrors(err);
     expect(unwrapMelding(feilEtter?.INNLEDNING_FRITEKST?.feltVerdi)).toBeUndefined();
-    expect(unwrapMelding(feilEtter?.MANGLER_FRITEKST?.feltVerdi)).toBe(
-      "Du må skrive inn i hva mottaker skal sende inn",
-    );
+    expect(unwrapMelding(feilEtter?.MANGLER_FRITEKST?.feltVerdi)).toBe("Du må skrive inn hva mottaker skal sende inn");
     const summary = buildValidationSummary(feilEtter);
-    expect(summary).toContain("Du må skrive inn i hva mottaker skal sende inn");
+    expect(summary).toContain("Du må skrive inn hva mottaker skal sende inn");
 
     // 3) Fyll inn MANGLER_FRITEKST -> ingen feil igjen
     values = {
@@ -539,11 +537,9 @@ describe("alle kombinasjoner av mottaker og brevmal – korrekte feltfeil og de 
     expect(err).toBeTruthy();
     const feilEtter = extractFeltErrors(err);
     expect(unwrapMelding(feilEtter?.INNLEDNING_FRITEKST?.feltVerdi)).toBeUndefined();
-    expect(unwrapMelding(feilEtter?.MANGLER_FRITEKST?.feltVerdi)).toBe(
-      "Du må skrive inn i hva mottaker skal sende inn",
-    );
+    expect(unwrapMelding(feilEtter?.MANGLER_FRITEKST?.feltVerdi)).toBe("Du må skrive inn hva mottaker skal sende inn");
     const summary = buildValidationSummary(feilEtter);
-    expect(summary).toContain("Du må skrive inn i hva mottaker skal sende inn");
+    expect(summary).toContain("Du må skrive inn hva mottaker skal sende inn");
 
     const innledningValgMangler =
       unwrapMelding(feilEtter?.INNLEDNING_FRITEKST?.valg) === "Du må velge minst én av standardtekst eller fritekst";
