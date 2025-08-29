@@ -303,6 +303,7 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
           ukjentSluttdatoMedlemskapsperiode={ukjentSluttdatoMedlemskapsperiode || false}
           onUkjentSluttdatoChange={lagreUkjentSluttdatoMedlemskapsperiode}
           erPensjonist={erPensjonist}
+          redigerbart={redigerbart}
         />
       )}
 
