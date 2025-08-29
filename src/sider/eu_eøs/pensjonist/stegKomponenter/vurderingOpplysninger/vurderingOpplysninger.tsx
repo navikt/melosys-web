@@ -163,6 +163,7 @@ export function VurderingOpplysninger({ bekreft, oppdaterStatus, aktivtSteg }: P
         ukjentSluttdatoMedlemskapsperiode={ukjentSluttdatoMedlemskapsperiode}
         onUkjentSluttdatoChange={oppdaterSluttdato}
         erEøsPensjonist={true}
+        redigerbart={redigerbart}
       />
 
       <Mui.StegKnapper

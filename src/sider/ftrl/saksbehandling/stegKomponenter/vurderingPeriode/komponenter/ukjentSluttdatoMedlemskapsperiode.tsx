@@ -5,6 +5,7 @@ interface UkjentSluttdatoProps {
   onUkjentSluttdatoChange: (checked: boolean) => void;
   erPensjonist?: boolean;
   erEøsPensjonist?: boolean;
+  redigerbart: boolean;
 }
 
 export function UkjentSluttdatoMedlemskapsperiode({
@@ -12,6 +13,7 @@ export function UkjentSluttdatoMedlemskapsperiode({
   onUkjentSluttdatoChange,
   erPensjonist,
   erEøsPensjonist,
+  redigerbart,
 }: UkjentSluttdatoProps) {
   const textForIkkeEøsPensjonist = erPensjonist
     ? "Vedtaksbrevet skal ikke ha sluttdato"
@@ -24,6 +26,7 @@ export function UkjentSluttdatoMedlemskapsperiode({
       <Nav.Checkbox
         checked={ukjentSluttdatoMedlemskapsperiode}
         onChange={(e) => onUkjentSluttdatoChange(e.target.checked)}
+        readOnly={!redigerbart}
       >
         {erEøsPensjonist ? "Det er ikke oppgitt en sluttdato. Perioden er åpen." : textForIkkeEøsPensjonist}
       </Nav.Checkbox>
