@@ -14,7 +14,7 @@ const ORGNUMMER_UGYLDIG: Melding = { melding: "Ugyldig organisasjonsnummer" };
 
 // Ikke-feltbundne feilmeldinger (kontekst-/regel-baserte), avhengig av valgt brevmal
 const STANDARDTEKST_ELLER_FRITEKST_MANGLER = { melding: "Du må velge minst én av standardtekst eller fritekst" };
-const FRITEKST_HVA_MOTTAKER_SKAL_SENDE_INN_MANGLER = { melding: "Du må skrive inn i hva mottaker skal sende inn" };
+const FRITEKST_HVA_MOTTAKER_SKAL_SENDE_INN_MANGLER = { melding: "Du må skrive inn hva mottaker skal sende inn" };
 const OVERSKRIFT_FRITEKSTBREV_BRUKER_MANGLER = { melding: "Du må skrive inn overskrift til brevet" };
 const INNLEDNINGSTEKST_MANGLERBREV_BRUKER_MANGLER = { melding: "Du må skrive inn innledningstekst i fritekstfeltet" };
 
