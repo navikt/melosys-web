@@ -41,8 +41,7 @@ export class SendBrevPage {
   private sendBrevPanel?: Locator;
 
   async goto() {
-    await this.page.goto(this.path);
-    await this.page.waitForLoadState("networkidle");
+    await this.page.goto(this.path, { waitUntil: "domcontentloaded", timeout: 30000 });
   }
 
   async clickSendBrevTab(): Promise<void> {
