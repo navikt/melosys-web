@@ -40,12 +40,12 @@ const historiskBostedsadresse = {
 };
 
 describe("AdresseTable ", () => {
-  it("aktiv AdresseTable renders correctly", () => {
+  it("aktiv AdresseTable rendres korrekt", () => {
     const { container } = render(<AdresseTable adressetype="Bostedsadresse" adresser={[aktivBostedsadresse]} />);
     expect(container).toMatchSnapshot();
   });
 
-  it("historisk AdresseTable renders correctly", () => {
+  it("historisk AdresseTable rendres korrekt", () => {
     const { container } = render(
       <AdresseTable adressetype="Bostedsadresse" adresser={[historiskBostedsadresse]} historisk />,
     );

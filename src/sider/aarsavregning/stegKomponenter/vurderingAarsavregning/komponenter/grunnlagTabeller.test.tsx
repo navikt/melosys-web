@@ -50,7 +50,7 @@ describe("TidligereGrunnlagsoversikt", () => {
     expect(screen.getByTestId("skatteforholdsperioder-tabell")).toBeInTheDocument();
   });
 
-  it("shows inntektsperioder table only when avgift has value", () => {
+  it("viser inntektsperioder tabell kun når avgift har verdi", () => {
     const { rerender } = render(
       <GrunnlagTabeller
         skatteforholdsperioder={mockSkatteforholdsperioder}
