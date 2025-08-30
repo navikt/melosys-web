@@ -56,6 +56,70 @@ export class OpprettNySakPage {
   }
 
   /**
+   * Fyll ut bruker f.nr. eller d-nr. felt
+   */
+  async fillUserID(userID: string): Promise<void> {
+    const userIDInput = this.page.locator("input[name='brukerID']");
+    await expect(userIDInput).toBeVisible();
+    await userIDInput.fill(userID);
+  }
+
+  /**
+   * Velg "Opprett ny sak" i "Knytt til eksisterende sak eller opprett ny" seksjonen
+   */
+  async selectOpprettNySak(): Promise<void> {
+    await expect(
+      this.page.locator(".opprettnysak .undertittel:has-text('Knytt til eksisterende sak eller opprett ny')"),
+    ).toBeVisible();
+    const opprettNySakRadio = this.page.locator(".navds-radio__content:has-text('Opprett ny sak')");
+    await expect(opprettNySakRadio).toBeVisible();
+    await opprettNySakRadio.click();
+  }
+
+  /**
+   * Klikk på "Opprett ny behandling" knappen
+   */
+  async clickOpprettNyBehandling(): Promise<void> {
+    const opprettButton = this.page.locator("button:has-text('Opprett ny behandling')");
+    await expect(opprettButton).toBeVisible();
+    await opprettButton.click();
+    await this.page.waitForLoadState("domcontentloaded");
+  }
+
+  async verifyManglendeBrukerIdErrors(): Promise<void> {
+    await expect(this.page.locator("text=Følgende feil ble funnet")).toBeVisible();
+
+    // Verifiser feilmelding på selve feltet (den røde teksten under input-feltet)
+    await expect(
+      this.page.locator(".navds-error-message:has-text('Skriv inn gyldig f.nr. eller d-nr.')"),
+    ).toBeVisible();
+
+    // Verifiser at samme feilmelding er først i oppsummeringen
+    await expect(this.page.locator("ul li").first()).toHaveText("Skriv inn gyldig f.nr. eller d-nr.");
+  }
+
+  async verifyManglendeValgEksisterendaSakEllerOpprettNyErrors(): Promise<void> {
+    // Denne funksjonen brukes for å verifisere feilmeldinger på neste side (behandlingsårsak)
+    await expect(this.page.locator("text=Følgende feil ble funnet")).toBeVisible();
+
+    // Verifiser behandlingsårsak feilmelding
+    await expect(this.page.locator(".navds-error-message:has-text('Velg behandlingsårsak')")).toBeVisible();
+
+    // Verifiser at samme feilmelding er i oppsummeringen
+    await expect(this.page.locator("ul li:has-text('Velg behandlingsårsak')")).toBeVisible();
+  }
+
+  /**
+   * Fyll ut f.nr og opprett ny sak - komplett arbeidsflyt
+   */
+  async fillUserIDAndCreateNewCase(userID: string): Promise<void> {
+    await this.verifyNewCasePage();
+    await this.fillUserID(userID);
+    await this.selectOpprettNySak();
+    await this.clickOpprettNyBehandling();
+  }
+
+  /**
    * Verifiser alle ellementer på "Opprett ny sak" siden
    */
   async verifyAllElements(): Promise<void> {
