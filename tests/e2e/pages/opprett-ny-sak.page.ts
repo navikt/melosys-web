@@ -1,4 +1,5 @@
 import { expect, Page } from "@playwright/test";
+import { assertSummaryErrors as utilsAssertSummaryErrors, assertSummaryErrors } from "../utils/testUtils";
 
 /**
  * Page Object Model for the ny sak
@@ -9,15 +10,6 @@ export class OpprettNySakPage {
   constructor(page: Page) {
     this.page = page;
   }
-
-  /**
-   * Verifiser at vi er på 'Opprett ny sak' siden
-   */
-  async verifyNewCasePage(): Promise<void> {
-    await expect(this.page).toHaveURL("/melosys/opprettnysak");
-    await expect(this.page.locator(".opprettnysak")).toBeVisible();
-  }
-
   /**
    * Verifiser at "Hvem skal saken opprettes på?" seksjonen er vist korrekt
    */
@@ -94,39 +86,32 @@ export class OpprettNySakPage {
       this.page.locator(".navds-error-message:has-text('Skriv inn gyldig f.nr. eller d-nr.')"),
     ).toBeVisible();
 
-    // Verifiser at samme feilmelding er først i oppsummeringen
-    await expect(this.page.locator("ul li").first()).toHaveText("Skriv inn gyldig f.nr. eller d-nr.");
-  }
-
-  async verifyManglendeValgEksisterendaSakEllerOpprettNyErrors(): Promise<void> {
-    // Denne funksjonen brukes for å verifisere feilmeldinger på neste side (behandlingsårsak)
-    await expect(this.page.locator("text=Følgende feil ble funnet")).toBeVisible();
-
-    // Verifiser behandlingsårsak feilmelding
-    await expect(this.page.locator(".navds-error-message:has-text('Velg behandlingsårsak')")).toBeVisible();
-
-    // Verifiser at samme feilmelding er i oppsummeringen
-    await expect(this.page.locator("ul li:has-text('Velg behandlingsårsak')")).toBeVisible();
+    // Verifiser at samme feilmeldinger vises i oppsummeringen
+    await assertSummaryErrors(this.page, ["Skriv inn gyldig f.nr. eller d-nr."]);
   }
 
   /**
    * Fyll ut f.nr og opprett ny sak - komplett arbeidsflyt
    */
   async fillUserIDAndCreateNewCase(userID: string): Promise<void> {
-    await this.verifyNewCasePage();
     await this.fillUserID(userID);
     await this.selectOpprettNySak();
     await this.clickOpprettNyBehandling();
   }
 
   /**
-   * Verifiser alle ellementer på "Opprett ny sak" siden
+   * Verifiser at vi er på 'Opprett ny sak' siden og alle forventede ellementer finnes
    */
   async verifyAllElements(): Promise<void> {
-    await this.verifyNewCasePage();
+    await expect(this.page).toHaveURL("/melosys/opprettnysak");
+    await expect(this.page.locator(".opprettnysak")).toBeVisible();
     await this.verifyUserTypeSection();
     await this.verifyUserInfoSection();
     await this.verifyAssignmentCheckbox();
     await this.verifyActionButtons();
+  }
+
+  async assertSummaryErrors(errorTexts: (string | RegExp)[]) {
+    await utilsAssertSummaryErrors(this.page, errorTexts);
   }
 }

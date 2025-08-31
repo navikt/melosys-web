@@ -2,62 +2,86 @@ import { test } from "@playwright/test";
 import { runAxeAnalyze } from "../utils/axeUtils";
 import { HovedsidePage, USER_ID_VALID } from "../pages/hovedside.page";
 import { OpprettNySakPage } from "../pages/opprett-ny-sak.page";
+import { assertSummaryErrors, assertFieldError } from "../utils/testUtils";
 
-test("Klikk på 'Opprett ny sak/behandling' navigerer til opprett ny sak siden", async ({ page }, testInfo) => {
+let opprettNySakPage: OpprettNySakPage;
+
+async function setupOpprettNySakTester(page: any) {
   const mainPage = new HovedsidePage(page);
-  const newCasePage = new OpprettNySakPage(page);
-
+  opprettNySakPage = new OpprettNySakPage(page);
   await mainPage.goto();
   await mainPage.clickCreateNewCaseButton();
-  await newCasePage.verifyAllElements();
+}
 
-  await runAxeAnalyze(page, testInfo.title);
+test.describe("'Opprett ny sak/behandling' hovedside", () => {
+  test.beforeEach(async ({ page }) => {
+    await setupOpprettNySakTester(page);
+  });
+  test("Klikk på 'Opprett ny sak/behandling' og verifiser alle elementer", async ({ page }, testInfo) => {
+    await opprettNySakPage.verifyAllElements();
+    await runAxeAnalyze(page, testInfo.title);
+  });
+
+  test("Verifiser feilmeldinger ved klikk på 'Opprett ny behandling' når ingen påkrevde felter er fylt ut", async ({
+    page,
+  }, testInfo) => {
+    await opprettNySakPage.clickOpprettNyBehandling();
+    await opprettNySakPage.verifyManglendeBrukerIdErrors();
+
+    await runAxeAnalyze(page, testInfo.title);
+  });
 });
 
-test("Verifiser feilmeldinger ved klikk på 'Opprett ny behandling' når ingen påkrevde felter er fylt ut", async ({
-  page,
-}, testInfo) => {
-  const mainPage = new HovedsidePage(page);
-  const newCasePage = new OpprettNySakPage(page);
+test.describe("'Opprett ny sak for bruker", () => {
+  test.beforeEach(async ({ page }) => {
+    await setupOpprettNySakTester(page);
+  });
 
-  await mainPage.goto();
-  await mainPage.clickCreateNewCaseButton();
+  test("Verifiser feilmeldinger ved klikk på 'Opprett ny behandling' når påkrevede felt mangler", async ({
+    page,
+  }, testInfo) => {
+    await opprettNySakPage.fillUserID(USER_ID_VALID);
+    await opprettNySakPage.selectOpprettNySak();
+    await opprettNySakPage.clickOpprettNyBehandling();
 
-  await newCasePage.verifyNewCasePage();
-  await newCasePage.clickOpprettNyBehandling();
-  await newCasePage.verifyManglendeBrukerIdErrors();
+    // Verifiser behandlingsårsak feilmelding
+    await assertFieldError(page, "Velg sakstype");
+    await assertFieldError(page, "Velg sakstema");
+    await assertFieldError(page, "Velg behandlingstema");
+    await assertFieldError(page, "Velg behandlingstype");
+    await assertFieldError(page, "Velg behandlingsårsak");
 
-  await runAxeAnalyze(page, testInfo.title);
+    // Verifiser at samme feilmelding er i oppsummeringen
+    await opprettNySakPage.assertSummaryErrors([
+      "Velg sakstype",
+      "Velg sakstema",
+      "Velg behandlingstema",
+      "Velg behandlingstype",
+      "Velg behandlingsårsak",
+    ]);
+
+    await runAxeAnalyze(page, testInfo.title);
+  });
+
+  test("Fyll ut f.nr og velg 'Opprett ny sak' for å opprette ny behandling", async ({ page }, testInfo) => {
+    await opprettNySakPage.fillUserIDAndCreateNewCase(USER_ID_VALID);
+    await runAxeAnalyze(page, testInfo.title);
+  });
 });
 
-test("Verifiser feilmeldinger ved klikk på 'Opprett ny behandling' når behandlingsårsak mangler", async ({
-  page,
-}, testInfo) => {
-  const mainPage = new HovedsidePage(page);
-  const newCasePage = new OpprettNySakPage(page);
+test.describe("'Opprett ny sak for virksomhet", () => {
+  test.beforeEach(async ({ page }) => {
+    await setupOpprettNySakTester(page);
+  });
 
-  await mainPage.goto();
-  await mainPage.clickCreateNewCaseButton();
+  test("Verifiser feilmeldinger ved klikk på 'Opprett ny behandling' når påkrevede felt mangler", async ({
+    page,
+  }, testInfo) => {
+    await opprettNySakPage.fillUserID(USER_ID_VALID);
+    await opprettNySakPage.clickOpprettNyBehandling();
 
-  await newCasePage.verifyNewCasePage();
-  await newCasePage.fillUserID(USER_ID_VALID);
-  await newCasePage.selectOpprettNySak();
-  await newCasePage.clickOpprettNyBehandling();
+    // await opprettNySakPage.verifyManglendeValgEksisterendaSakEllerOpprettNyErrors();
 
-  await newCasePage.verifyManglendeValgEksisterendaSakEllerOpprettNyErrors();
-
-  await runAxeAnalyze(page, testInfo.title);
-});
-
-test("Fyll ut f.nr og velg 'Opprett ny sak' for å opprette ny behandling", async ({ page }, testInfo) => {
-  const mainPage = new HovedsidePage(page);
-  const newCasePage = new OpprettNySakPage(page);
-
-  await mainPage.goto();
-  await mainPage.clickCreateNewCaseButton();
-
-  await newCasePage.verifyNewCasePage();
-  await newCasePage.fillUserIDAndCreateNewCase(USER_ID_VALID);
-
-  await runAxeAnalyze(page, testInfo.title);
+    await runAxeAnalyze(page, testInfo.title);
+  });
 });

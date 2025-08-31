@@ -1,5 +1,8 @@
 import { Page, Locator, expect } from "@playwright/test";
-import { assertSummaryErrors as utilsAssertSummaryErrors } from "../utils/testUtils";
+import {
+  assertSummaryErrors as utilsAssertSummaryErrors,
+  assertFieldError as utilsAssertFieldError,
+} from "../utils/testUtils";
 
 export class SendBrevPage {
   constructor(private page: Page) {}
@@ -181,14 +184,7 @@ export class SendBrevPage {
 
   async assertFieldError(fieldLabel: string | RegExp, errorText: string | RegExp) {
     const scope = this.sendBrevPanel ?? this.page;
-    // Finn feilmeldingen som inneholder den spesifikke teksten
-    const fieldError = scope
-      .locator('.feilmelding, [class*="error"]')
-      .filter({
-        hasText: errorText,
-      })
-      .first();
-    await expect(fieldError).toBeVisible();
+    await utilsAssertFieldError(scope, errorText);
   }
 
   async assertSummaryErrors(errorTexts: (string | RegExp)[]) {
