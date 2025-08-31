@@ -1,4 +1,5 @@
 import { Page, Locator, expect } from "@playwright/test";
+import { assertSummaryErrors as utilsAssertSummaryErrors } from "../utils/testUtils";
 
 export class SendBrevPage {
   constructor(private page: Page) {}
@@ -155,5 +156,43 @@ export class SendBrevPage {
 
   async assertSendButtonEnabled() {
     await expect(this.sendButton).toBeEnabled();
+  }
+
+  async selectMottakerByLabel(label: string | RegExp) {
+    const sel = this.mottakerNativeSelect;
+    await expect(sel, 'Fant ikke native select for "Mottaker"').toBeVisible();
+
+    const value = await sel.evaluate((el, l) => {
+      const select = el as HTMLSelectElement;
+      const re = typeof l === "string" ? new RegExp(l, "i") : l;
+      const opt = Array.from(select.options).find((o) => re.test(o.text));
+      return opt?.value ?? "";
+    }, label as any);
+
+    if (!value) throw new Error(`Fant ikke mottaker med label: ${label}`);
+    await sel.selectOption(value);
+
+    await this.waitForBrevmalSelect();
+  }
+
+  async clickSendBrev() {
+    await this.sendButton.click();
+  }
+
+  async assertFieldError(fieldLabel: string | RegExp, errorText: string | RegExp) {
+    const scope = this.sendBrevPanel ?? this.page;
+    // Finn feilmeldingen som inneholder den spesifikke teksten
+    const fieldError = scope
+      .locator('.feilmelding, [class*="error"]')
+      .filter({
+        hasText: errorText,
+      })
+      .first();
+    await expect(fieldError).toBeVisible();
+  }
+
+  async assertSummaryErrors(errorTexts: (string | RegExp)[]) {
+    const scope = this.sendBrevPanel ?? this.page;
+    await utilsAssertSummaryErrors(scope, errorTexts);
   }
 }
