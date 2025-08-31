@@ -1,6 +1,7 @@
 import { test } from "@playwright/test";
 import { HovedsidePage } from "../pages/hovedside.page";
 import { SendBrevPage } from "../pages/send-brev.page";
+import { assertErrors } from "../utils/testUtils";
 
 let sb: SendBrevPage;
 
@@ -13,11 +14,6 @@ async function setupSendBrevTest(page: any) {
   await mainPage.goto();
   await mainPage.verifyMainPage();
   await mainPage.clickFirstTaskLink();
-
-  // 2) (Valgfritt) mock for stabilitet
-  // await sb.mockInitialApis();
-
-  // 3) Åpne "Send brev"-fanen i høyre kolonne
   await sb.clickSendBrevTab();
 }
 
@@ -47,48 +43,34 @@ test.describe("Validering av brevmaler for mottaker 'Bruker eller brukers fullme
     await setupSendBrevTest(page);
   });
 
-  test("Korrekt validering for brevmal 'Melding om manglende opplysninger til bruker'", async () => {
+  test("Korrekt validering for brevmal 'Melding om manglende opplysninger til bruker'", async ({ page }) => {
     await sb.selectMottakerByLabel("Bruker eller brukers fullmektig");
     await sb.selectBrevmalByLabel("Melding om manglende opplysninger til bruker");
     await sb.clickSendBrev();
 
-    // Verifiser feilmeldinger ved feltene
-    await sb.assertFieldError("Innledningstekst", "Du må skrive inn innledningstekst i fritekstfeltet");
-    await sb.assertFieldError("Hva skal mottakeren sende inn?", "Du må skrive inn hva mottaker skal sende inn");
-
-    // Verifiser at samme feilmeldinger vises i oppsummeringen
-    await sb.assertSummaryErrors([
+    await assertErrors(page, [
       "Du må skrive inn innledningstekst i fritekstfeltet",
       "Du må skrive inn hva mottaker skal sende inn",
     ]);
   });
 
-  test("Korrekt validering for brevmal 'Fritekstbrev til bruker'", async () => {
+  test("Korrekt validering for brevmal 'Fritekstbrev til bruker'", async ({ page }) => {
     await sb.selectMottakerByLabel("Bruker eller brukers fullmektig");
     await sb.selectBrevmalByLabel("Fritekstbrev til bruker");
     await sb.clickSendBrev();
 
-    // Verifiser feilmeldinger ved feltene
-    await sb.assertFieldError("Hovedtekst til brev", "Du må skrive inn hovedtekst til brevet");
-    await sb.assertFieldError("Type brev", "Du må velge type brev");
-
-    // Verifiser at samme feilmeldinger vises i oppsummeringen
-    await sb.assertSummaryErrors([
+    await assertErrors(page, [
       "Du må velge overskrift til brevet",
       "Du må skrive inn hovedtekst til brevet",
       "Du må velge type brev",
     ]);
   });
 
-  test("Korrekt validering for brevmal 'Innhenting av inntektsopplysninger for årsavregning'", async () => {
+  test("Korrekt validering for brevmal 'Innhenting av inntektsopplysninger for årsavregning'", async ({ page }) => {
     await sb.selectMottakerByLabel("Bruker eller brukers fullmektig");
     await sb.selectBrevmalByLabel("Innhenting av inntektsopplysninger for årsavregning");
     await sb.clickSendBrev();
 
-    // Verifiser feilmeldinger ved feltene
-    await sb.assertFieldError("standardtekst eller fritekst", "Du må velge minst én av standardtekst eller fritekst");
-
-    // Verifiser at samme feilmeldinger vises i oppsummeringen
-    await sb.assertSummaryErrors(["Du må velge minst én av standardtekst eller fritekst"]);
+    await assertErrors(page, ["Du må velge minst én av standardtekst eller fritekst"]);
   });
 });

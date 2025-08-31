@@ -1,8 +1,4 @@
 import { Page, Locator, expect } from "@playwright/test";
-import {
-  assertSummaryErrors as utilsAssertSummaryErrors,
-  assertFieldError as utilsAssertFieldError,
-} from "../utils/testUtils";
 
 export class SendBrevPage {
   constructor(private page: Page) {}
@@ -180,15 +176,5 @@ export class SendBrevPage {
 
   async clickSendBrev() {
     await this.sendButton.click();
-  }
-
-  async assertFieldError(fieldLabel: string | RegExp, errorText: string | RegExp) {
-    const scope = this.sendBrevPanel ?? this.page;
-    await utilsAssertFieldError(scope, errorText);
-  }
-
-  async assertSummaryErrors(errorTexts: (string | RegExp)[]) {
-    const scope = this.sendBrevPanel ?? this.page;
-    await utilsAssertSummaryErrors(scope, errorTexts);
   }
 }

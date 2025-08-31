@@ -2,7 +2,7 @@ import { test } from "@playwright/test";
 import { runAxeAnalyze } from "../utils/axeUtils";
 import { HovedsidePage, USER_ID_VALID } from "../pages/hovedside.page";
 import { OpprettNySakPage } from "../pages/opprett-ny-sak.page";
-import { assertSummaryErrors, assertFieldError } from "../utils/testUtils";
+import { assertErrors, assertFieldErrorsWithLabels } from "../utils/testUtils";
 
 let opprettNySakPage: OpprettNySakPage;
 
@@ -44,20 +44,12 @@ test.describe("'Opprett ny sak for bruker", () => {
     await opprettNySakPage.selectOpprettNySak();
     await opprettNySakPage.clickOpprettNyBehandling();
 
-    // Verifiser behandlingsårsak feilmelding
-    await assertFieldError(page, "Velg sakstype");
-    await assertFieldError(page, "Velg sakstema");
-    await assertFieldError(page, "Velg behandlingstema");
-    await assertFieldError(page, "Velg behandlingstype");
-    await assertFieldError(page, "Velg behandlingsårsak");
-
-    // Verifiser at samme feilmelding er i oppsummeringen
-    await opprettNySakPage.assertSummaryErrors([
-      "Velg sakstype",
-      "Velg sakstema",
-      "Velg behandlingstema",
-      "Velg behandlingstype",
-      "Velg behandlingsårsak",
+    await assertFieldErrorsWithLabels(page, [
+      { fieldLabel: "Sakstype", errorText: "Velg sakstype" },
+      { fieldLabel: "Sakstema", errorText: "Velg sakstema" },
+      { fieldLabel: "Behandlingstema", errorText: "Velg behandlingstema" },
+      { fieldLabel: "Behandlingstype", errorText: "Velg behandlingstype" },
+      { fieldLabel: "Årsak", errorText: "Velg behandlingsårsak" },
     ]);
 
     await runAxeAnalyze(page, testInfo.title);
@@ -80,7 +72,10 @@ test.describe("'Opprett ny sak for virksomhet", () => {
     await opprettNySakPage.fillUserID(USER_ID_VALID);
     await opprettNySakPage.clickOpprettNyBehandling();
 
-    // await opprettNySakPage.verifyManglendeValgEksisterendaSakEllerOpprettNyErrors();
+    await assertFieldErrorsWithLabels(page, [
+      { fieldLabel: "Eksisterende sak", errorText: "Velg hvilken sak du ønsker å knytte behandlingen til" },
+      { fieldLabel: "Årsak", errorText: "Velg behandlingsårsak" },
+    ]);
 
     await runAxeAnalyze(page, testInfo.title);
   });

@@ -1,5 +1,5 @@
 import { expect, Page } from "@playwright/test";
-import { assertSummaryErrors as utilsAssertSummaryErrors, assertSummaryErrors } from "../utils/testUtils";
+import { assertErrors, assertFieldErrorsWithLabels } from "../utils/testUtils";
 
 /**
  * Page Object Model for the ny sak
@@ -86,8 +86,9 @@ export class OpprettNySakPage {
       this.page.locator(".navds-error-message:has-text('Skriv inn gyldig f.nr. eller d-nr.')"),
     ).toBeVisible();
 
-    // Verifiser at samme feilmeldinger vises i oppsummeringen
-    await assertSummaryErrors(this.page, ["Skriv inn gyldig f.nr. eller d-nr."]);
+    await assertFieldErrorsWithLabels(this.page, [
+      { fieldLabel: "Brukers f.nr. eller d-nr.:", errorText: "Skriv inn gyldig f.nr. eller d-nr." },
+    ]);
   }
 
   /**
@@ -109,9 +110,5 @@ export class OpprettNySakPage {
     await this.verifyUserInfoSection();
     await this.verifyAssignmentCheckbox();
     await this.verifyActionButtons();
-  }
-
-  async assertSummaryErrors(errorTexts: (string | RegExp)[]) {
-    await utilsAssertSummaryErrors(this.page, errorTexts);
   }
 }
