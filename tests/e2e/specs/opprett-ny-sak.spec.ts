@@ -1,10 +1,10 @@
-import { test, expect } from "@playwright/test";
+import { test } from "@playwright/test";
 import { runAxeAnalyze } from "../utils/axeUtils";
-import { MelosysHovedsidePage, USER_ID_VALID } from "../pages/melosys-hovedside.page";
+import { HovedsidePage, USER_ID_VALID } from "../pages/hovedside.page";
 import { OpprettNySakPage } from "../pages/opprett-ny-sak.page";
 
 test("Klikk på 'Opprett ny sak/behandling' navigerer til opprett ny sak siden", async ({ page }, testInfo) => {
-  const mainPage = new MelosysHovedsidePage(page);
+  const mainPage = new HovedsidePage(page);
   const newCasePage = new OpprettNySakPage(page);
 
   await mainPage.goto();
@@ -17,7 +17,7 @@ test("Klikk på 'Opprett ny sak/behandling' navigerer til opprett ny sak siden",
 test("Verifiser feilmeldinger ved klikk på 'Opprett ny behandling' når ingen påkrevde felter er fylt ut", async ({
   page,
 }, testInfo) => {
-  const mainPage = new MelosysHovedsidePage(page);
+  const mainPage = new HovedsidePage(page);
   const newCasePage = new OpprettNySakPage(page);
 
   await mainPage.goto();
@@ -33,7 +33,7 @@ test("Verifiser feilmeldinger ved klikk på 'Opprett ny behandling' når ingen p
 test("Verifiser feilmeldinger ved klikk på 'Opprett ny behandling' når behandlingsårsak mangler", async ({
   page,
 }, testInfo) => {
-  const mainPage = new MelosysHovedsidePage(page);
+  const mainPage = new HovedsidePage(page);
   const newCasePage = new OpprettNySakPage(page);
 
   await mainPage.goto();
@@ -50,7 +50,7 @@ test("Verifiser feilmeldinger ved klikk på 'Opprett ny behandling' når behandl
 });
 
 test("Fyll ut f.nr og velg 'Opprett ny sak' for å opprette ny behandling", async ({ page }, testInfo) => {
-  const mainPage = new MelosysHovedsidePage(page);
+  const mainPage = new HovedsidePage(page);
   const newCasePage = new OpprettNySakPage(page);
 
   await mainPage.goto();

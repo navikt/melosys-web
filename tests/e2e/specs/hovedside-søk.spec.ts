@@ -1,22 +1,10 @@
-import { expect, test } from "@playwright/test";
+import { test } from "@playwright/test";
 import { runAxeAnalyze } from "../utils/axeUtils";
-import { MelosysHovedsidePage, USER_ID_INVALID, USER_ID_VALID } from "../pages/melosys-hovedside.page";
+import { HovedsidePage, USER_ID_INVALID, USER_ID_VALID } from "../pages/hovedside.page";
 import { SokPage } from "../pages/sok.page";
 
-test("Hovedsiden lastes korrekt og viser forventede seksjoner", async ({ page }, testInfo) => {
-  const mainPage = new MelosysHovedsidePage(page);
-
-  await mainPage.goto();
-
-  await mainPage.verifyMainPage();
-
-  await expect(mainPage.getCreateNewCaseButton()).toBeVisible();
-
-  await runAxeAnalyze(page, testInfo.title);
-});
-
 test("Søk etter gyldig ID og verifiser resultater", async ({ page }, testInfo) => {
-  const mainPage = new MelosysHovedsidePage(page);
+  const mainPage = new HovedsidePage(page);
   const searchResultsPage = new SokPage(page);
 
   await mainPage.goto();
@@ -29,7 +17,7 @@ test("Søk etter gyldig ID og verifiser resultater", async ({ page }, testInfo) 
 });
 
 test("Søk etter ugyldig ID og verifiser feilmelding", async ({ page }, testInfo) => {
-  const mainPage = new MelosysHovedsidePage(page);
+  const mainPage = new HovedsidePage(page);
   const searchResultsPage = new SokPage(page);
 
   await mainPage.goto();

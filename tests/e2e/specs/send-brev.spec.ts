@@ -1,12 +1,12 @@
 import { test } from "@playwright/test";
-import { MelosysHovedsidePage } from "../pages/melosys-hovedside.page";
-import { SendBrevPage } from "../pages/sendBrev.page";
+import { HovedsidePage } from "../pages/hovedside.page";
+import { SendBrevPage } from "../pages/send-brev.page";
 
 let sb: SendBrevPage;
 
 test.describe("Send brev - disabled/enabled state", () => {
   test.beforeEach(async ({ page }) => {
-    const mainPage = new MelosysHovedsidePage(page);
+    const mainPage = new HovedsidePage(page);
     sb = new SendBrevPage(page);
 
     // 1) Åpne hovedside og velg første sak
@@ -21,11 +21,11 @@ test.describe("Send brev - disabled/enabled state", () => {
     await sb.clickSendBrevTab();
   });
 
-  test("'Send brev' knappen er disabled når ingenting er valgt (mangler mottaker og brevmal)", async () => {
+  test("'Send brev' knappen er disabled når hverken mottaker og brevmal er valgt ", async () => {
     await sb.assertSendButtonDisabled();
   });
 
-  test("'Send brev' knappen er disabled når mottaker er valgt men brevmal ikke er valgt", async () => {
+  test("'Send brev' knappen er disabled når mottaker er valgt men ikke brevmal", async () => {
     await sb.selectFirstMottaker();
     await sb.assertSendButtonDisabled();
   });

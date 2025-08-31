@@ -6,7 +6,7 @@ export const USER_ID_INVALID = "INVALID123";
 /**
  * Page Object Model for Melosys hovedside
  */
-export class MelosysHovedsidePage {
+export class HovedsidePage {
   readonly page: Page;
 
   constructor(page: Page) {
