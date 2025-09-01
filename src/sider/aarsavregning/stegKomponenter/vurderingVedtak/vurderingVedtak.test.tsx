@@ -115,7 +115,7 @@ describe("VurderingVedtak", () => {
     vi.mocked(Api.Behandlinger.resultat.oppdaterFritekster).mockResolvedValue({});
   });
 
-  it("skal rendre snapshot med realistiske data", async () => {
+  it("should render snapshot with realistic data", async () => {
     const mockProps = {
       tilbake: vi.fn(),
       aktivtSteg: true,
