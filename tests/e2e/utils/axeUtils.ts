@@ -4,17 +4,24 @@ import AxeBuilder from "@axe-core/playwright";
 import { createHtmlReport } from "axe-html-reporter";
 import { sanitizeFilename } from "./testUtils";
 
+// Siden accessibility testing er nedprioritert deaktiverer vi de som default.
+export const disableAxeTests = true;
+
 /**
  * Runs an accessibility analysis using Axe and formats the results
  * @param page - The Playwright page object
  * @param testName - The name of the test
  * @param contextDescription - Optional description for log messages
  */
-export async function runAxeAnalyze(
-  page: Page,
-  testName: string,
-  contextDescription: string = "(not specified)",
-): Promise<void> {
+export async function runAxeAnalyze(page: Page, testName: string, contextDescription: string = ""): Promise<void> {
+  if (disableAxeTests) {
+    /* eslint-disable-next-line no-console */
+    console.log(
+      `\n⏭️ Skipping Axe analyze for: '${testName}' ${contextDescription ? ` - (${contextDescription})` : ""}`,
+    );
+    return;
+  }
+
   const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).analyze();
 
   createHtmlReport({
@@ -56,12 +63,12 @@ function formatAxeViolationsToString(results: AxeResults, contextDescription: st
     output += `\n🔴 ${index + 1}. ${violation.help} (${violation.impact} impact)\n`;
     output += `   Rule: ${violation.id}\n`;
     output += `   Description: ${violation.description}\n`;
-    output += `   WCAG: ${violation.tags.filter((tag) => tag.startsWith("wcag")).join(", ")}\n`;
+    output += `   WCAG: ${violation.tags.filter((tag: string) => tag.startsWith("wcag")).join(", ")}\n`;
 
     if (violation.nodes && violation.nodes.length > 0) {
       output += `   Affected Elements (${violation.nodes.length}):\n`;
 
-      violation.nodes.forEach((node: NodeResult, nodeIndex) => {
+      violation.nodes.forEach((node: NodeResult, nodeIndex: number) => {
         output += `     ${nodeIndex + 1}. ${node.html}\n`;
 
         if (node.target && node.target.length > 0) {

@@ -27,7 +27,7 @@ export class SokPage {
 
     await expect(this.page.locator(`h2:has-text('Resultater for f.nr./d-nr. ${id}')`)).toBeVisible();
     await expect(this.page.locator(`text=Fant ingen saker knyttet til f.nr./d-nr. ${id}`)).not.toBeVisible();
-    await expect(this.page.locator(".fagsak")).toBeVisible();
+    await expect(this.page.locator(".fagsak").first()).toBeVisible();
   }
 
   /**

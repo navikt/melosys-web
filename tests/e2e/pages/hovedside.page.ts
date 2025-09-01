@@ -6,7 +6,7 @@ export const USER_ID_INVALID = "INVALID123";
 /**
  * Page Object Model for Melosys hovedside
  */
-export class MelosysHovedsidePage {
+export class HovedsidePage {
   readonly page: Page;
 
   constructor(page: Page) {
@@ -17,8 +17,8 @@ export class MelosysHovedsidePage {
    * Navigaer til hovedsiden
    */
   async goto(): Promise<void> {
-    await this.page.goto("/");
-    await this.page.waitForLoadState("networkidle");
+    await this.page.goto("/", { waitUntil: "domcontentloaded", timeout: 30000 });
+    await this.page.waitForSelector("h1", { state: "visible", timeout: 30000 });
   }
 
   /**
@@ -45,7 +45,7 @@ export class MelosysHovedsidePage {
     const createButton = this.getCreateNewCaseButton();
     await expect(createButton).toBeVisible();
     await createButton.click();
-    await this.page.waitForLoadState("networkidle");
+    await this.page.waitForLoadState("domcontentloaded");
   }
 
   /**
@@ -67,7 +67,7 @@ export class MelosysHovedsidePage {
 
     const taskLinkHref = await taskLink.getAttribute("href");
     await taskLink.click();
-    await this.page.waitForLoadState("networkidle");
+    await this.page.waitForLoadState("domcontentloaded");
 
     return taskLinkHref;
   }
@@ -93,6 +93,6 @@ export class MelosysHovedsidePage {
 
     await searchButton.click();
 
-    await this.page.waitForLoadState("networkidle");
+    await this.page.waitForLoadState("domcontentloaded");
   }
 }
