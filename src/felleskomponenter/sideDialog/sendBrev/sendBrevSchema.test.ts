@@ -188,7 +188,7 @@ describe("sendBrevSchema - felles krav for alle brevmaler", () => {
   });
 });
 
-describe("alle kombinasjoner av mottaker og brevmal – korrekte feltfeil og de matcher oppsummering", () => {
+describe("kombinasjoner av mottaker og brevmal – korrekte feltfeil og de matcher oppsummering", () => {
   // Små hjelpere for å redusere duplisering i like testløp
   async function runGenereltFritekstFlow(
     initialValues: Partial<SendBrevFormValues>,
@@ -743,6 +743,82 @@ describe("alle kombinasjoner av mottaker og brevmal – korrekte feltfeil og de 
     };
 
     // 6) Nå skal validering være OK
+    err = await validate(values);
+    expect(err).toBeNull();
+  });
+
+  it("NORSK_MYNDIGHET + GENERELT_FRITEKSTBREV_BRUKER -> krever minst én etat valgt", async () => {
+    // Test for Norske myndigheter som mottaker med Fritekstbrev
+    const fritekstbrevBrev = {
+      felter: [
+        {
+          kode: "BREV_TITTEL",
+          paakrevd: true,
+          valg: {
+            valgAlternativer: [{ kode: "FRITEKST_BRUKER_OG_VIRKSOMHET", beskrivelse: "Fritekstittel", visFelt: true }],
+          },
+        },
+        { kode: "FRITEKST", paakrevd: true },
+        {
+          kode: "DISTRIBUSJONSTYPE",
+          paakrevd: true,
+          valg: {
+            valgAlternativer: [
+              { kode: "DIGITAL", beskrivelse: "Digital", visFelt: true },
+              { kode: "POST", beskrivelse: "Post", visFelt: true },
+            ],
+          },
+        },
+      ],
+    } as any;
+
+    // Start: Norsk myndighet valgt men ingen etater valgt, samt tomme påkrevde felter
+    let values: Partial<SendBrevFormValues> = {
+      type: "GENERELT_FRITEKSTBREV_BRUKER",
+      valgtMottaker: makeMottaker("NORSK_MYNDIGHET"),
+      norskeMyndigheter: [], // Tom array - ingen etater valgt
+      valgtBrev: fritekstbrevBrev,
+      felt: {
+        BREV_TITTEL: {},
+        FRITEKST: {},
+        DISTRIBUSJONSTYPE: {},
+      } as any,
+    };
+
+    // Forvent feil på norskeMyndigheter og påkrevde felter
+    let err = await validate(values);
+    expect(err).toBeTruthy();
+    expect(hasPath(err, "norskeMyndigheter")).toBe(true);
+
+    // Sjekk at feilmeldingen er korrekt - feilmeldingen er i første error som objekt
+    const norskeMyndighetError = err?.errors?.[0] as any;
+    expect(norskeMyndighetError?.melding).toBe("Du må velge minst én etat");
+
+    // Sjekk også at brevfeltene har feil
+    const feltErrors = extractFeltErrors(err);
+    expect(feltErrors?.BREV_TITTEL?.valg?.melding).toBe("Du må velge overskrift til brevet");
+    expect(feltErrors?.FRITEKST?.feltVerdi?.melding).toBe("Du må skrive inn hovedtekst til brevet");
+    expect(feltErrors?.DISTRIBUSJONSTYPE?.valg?.melding).toBe("Du må velge type brev");
+
+    // Fyll norskeMyndigheter og alle påkrevde felter -> forvent success
+    values = {
+      ...values,
+      norskeMyndigheter: ["974760673"],
+      felt: {
+        BREV_TITTEL: { valg: "FRITEKST_BRUKER_OG_VIRKSOMHET", feltVerdi: "Test tittel" },
+        FRITEKST: { feltVerdi: "Test innhold" },
+        DISTRIBUSJONSTYPE: { valg: "DIGITAL" },
+      } as any,
+    };
+    err = await validate(values);
+    expect(err).toBeNull();
+
+    // Test også at det fungerer med undefined norskeMyndigheter når mottaker ikke er NORSK_MYNDIGHET
+    values = {
+      ...values,
+      valgtMottaker: makeMottaker("BRUKER"),
+      norskeMyndigheter: undefined,
+    };
     err = await validate(values);
     expect(err).toBeNull();
   });

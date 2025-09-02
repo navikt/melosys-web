@@ -261,7 +261,7 @@ function BrevMottaker({
         </Nav.Row>
       )}
 
-      {mottakerErNorskMyndighet && <BrevMottakerNorskMyndighet />}
+      {mottakerErNorskMyndighet && <BrevMottakerNorskMyndighet changeField={changeField} />}
 
       {mottakerErUtenlandskTrygdemyndighet && feil && (
         <Nav.Row>
