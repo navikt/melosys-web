@@ -10,6 +10,7 @@ interface BehandlingForFagsak {
   behandlingsstatus: KTObject;
   svarFrist: string | null;
   behandlingstype: KTObject;
+  tittel: string;
 }
 
 interface BehandlingerListeProps {
@@ -33,7 +34,7 @@ function BehandlingerListe({ behandlingerForFagsak }: BehandlingerListeProps) {
       <div className="behandlinger-liste">
         {behandlingerToShow.map((behandling) => (
           <HStack key={behandling.behandlingID} justify="space-between" paddingInline="3 3" paddingBlock="2 1">
-            <div className="behandling-tittel">{behandling.behandlingstype.term}</div>
+            <div className="behandling-tittel">{behandling.tittel}</div>
             <BehandlingsstatusMedSvarfrist
               behandlingsstatus={behandling.behandlingsstatus}
               svarFrist={behandling.svarFrist || null}

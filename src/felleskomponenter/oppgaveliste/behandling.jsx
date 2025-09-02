@@ -10,7 +10,7 @@ import EnkeltDato from "../enkeltDato";
 import "./behandling.css";
 
 function BehandlingPanel({ behandling, kanVises }) {
-  const { tittel, behandlingsstatus, behandlingsresultattype, opprettetDato } = behandling;
+  const { tittel, behandlingstema, behandlingsstatus, behandlingsresultattype, opprettetDato } = behandling;
 
   return (
     <div className="panel behandling">
@@ -18,7 +18,9 @@ function BehandlingPanel({ behandling, kanVises }) {
         <Nav.Column>
           <Nav.Column xs="12" md="5">
             <dl className="behandling__meta">
-              <dt>{tittel}</dt>
+              <dt>
+                {behandlingstema.term} - {tittel}
+              </dt>
               <dt>Opprettet:</dt>
               <dd>
                 <EnkeltDato dato={opprettetDato} defaultValue="(ukjent)" />
