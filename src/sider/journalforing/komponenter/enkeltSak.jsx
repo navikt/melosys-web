@@ -1,7 +1,7 @@
 import PT from "prop-types";
-import { useHistory } from "react-router-dom";
 
 import * as KV from "../../../kodeverk";
+import * as Routing from "../../../url";
 import * as MPT from "../../../proptypes";
 import * as Nav from "../../../navFrontend";
 import * as Ikon from "../../../resources/images";
@@ -18,16 +18,16 @@ import { sorterElementerEtterDato } from "../../../felleskomponenter/sorterbarLi
 function EnkeltSak(props) {
   const { landkoder } = props;
   const { periode, land, behandlingOversikter, sakstype, saksnummer, sakstema } = props.sak;
-  const history = useHistory();
   const sorterteBehandlinger = behandlingOversikter
     .slice()
     .sort(sorterElementerEtterDato("descending", "opprettetDato"));
 
   const { behandlingstema } = sorterteBehandlinger[0];
 
-  const handleSearchClick = () => {
+  const handleSearchClick = (e) => {
+    e.preventDefault();
     sessionStorage.setItem("sokefrase", saksnummer);
-    history.push("/sok");
+    Routing.nyFane("sok");
   };
 
   return (
