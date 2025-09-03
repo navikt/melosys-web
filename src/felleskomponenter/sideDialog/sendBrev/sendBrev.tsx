@@ -640,6 +640,7 @@ function SendBrev({
               muligeMottakere={muligeMottakere}
               muligeMottakereNorskMyndighet={muligeMottakereNorskMyndighet}
               redigerbart={redigerbart}
+              saksbehandlerNrToIdent={finnSaksbehandlerIdentForDobbelSignatur()}
               brevVedlegg={{
                 fritekstvedlegg,
                 setFritekstvedlegg,
