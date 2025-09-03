@@ -51,6 +51,7 @@ interface BrevMottakereTabellProps {
   formIsValid: boolean;
   redigerbart: boolean;
   brevVedlegg: VedleggSubsetProps;
+  saksbehandlerNrToIdent?: string | null;
 }
 
 function BrevMottakereTabell({
@@ -61,6 +62,7 @@ function BrevMottakereTabell({
   formIsValid,
   redigerbart,
   brevVedlegg,
+  saksbehandlerNrToIdent,
 }: BrevMottakereTabellProps & PropsFromRedux) {
   const valgtMottakerHarFeilmelding: FeilmeldingProps | undefined = formValues?.valgtMottaker?.feilmelding;
   const mottakerErNorskMyndighet = formValues?.valgtMottaker?.rolle === "NORSK_MYNDIGHET";
@@ -125,6 +127,7 @@ function BrevMottakereTabell({
     fritekstvedlegg: brevVedlegg.fritekstvedlegg,
     distribusjonstype: hentFormVerdi("DISTRIBUSJONSTYPE", true, true),
     dokumentTittel: hentFormVerdi("DOKUMENT_TITTEL", true),
+    saksbehandlerNrToIdent: saksbehandlerNrToIdent,
     institusjonID: hentFormVerdi("UTENLANDSK_TRYGDEMYNDIGHET_MOTTAKER", true, true),
   });
 
