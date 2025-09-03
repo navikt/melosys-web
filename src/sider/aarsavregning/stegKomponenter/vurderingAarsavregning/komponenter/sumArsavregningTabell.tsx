@@ -37,7 +37,7 @@ export function SumArsavregningTabell({
               {formaterTilNorskBelop(nyTrygdeavgift || 0)} kr
             </Nav.Table.DataCell>
           </Nav.Table.Row>
-          {harGrunnlagIMelosys && (
+          {(harGrunnlagIMelosys || tidligereTrygdeavgift !== undefined) && (
             <Nav.Table.Row>
               <Nav.Table.DataCell scope="col">-</Nav.Table.DataCell>
               <Nav.Table.DataCell scope="col">Tidligere beregnet trygdeavgift</Nav.Table.DataCell>

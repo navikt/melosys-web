@@ -955,7 +955,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         !feilmelding &&
         endeligAvgiftValg === OPPLYSNINGER_ENDRET && (
           <SumArsavregningTabell
-            harGrunnlagIMelosys={harTrygdeavgiftFraAvgiftssystemet}
+            harGrunnlagIMelosys={harGrunnlag}
             nyTrygdeavgift={aarsavregningResponse?.avregning?.beregnetAvgiftBelop}
             tidligereTrygdeavgift={aarsavregningResponse?.avregning?.tidligereFakturertBeloep}
             tidligereTrygdeavgiftAvgiftssystem={aarsavregningResponse?.avregning?.trygdeavgiftFraAvgiftssystemet}
@@ -980,7 +980,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         manueltAvgiftBeloep !== null &&
         manueltAvgiftBeloep !== "" && (
           <SumArsavregningTabell
-            harGrunnlagIMelosys={harTrygdeavgiftFraAvgiftssystemet}
+            harGrunnlagIMelosys={harGrunnlag}
             nyTrygdeavgift={Number(manueltAvgiftBeloep)}
             tidligereTrygdeavgift={aarsavregningResponse?.avregning?.tidligereFakturertBeloep}
             tidligereTrygdeavgiftAvgiftssystem={

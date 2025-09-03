@@ -23,14 +23,16 @@ describe("SumArsavregningTabell", () => {
     expect(screen.getByText("Differanse")).toBeInTheDocument();
   });
 
-  it("shows Melosys row only when harGrunnlagIMelosys is true", () => {
+  it("shows Melosys row when harGrunnlagIMelosys is true or tidligereTrygdeavgift is defined", () => {
     const { rerender } = render(<SumArsavregningTabell harGrunnlagIMelosys={true} />);
 
     expect(screen.getByText("Tidligere beregnet trygdeavgift")).toBeInTheDocument();
 
     rerender(<SumArsavregningTabell harGrunnlagIMelosys={false} />);
-
     expect(screen.queryByText("Tidligere beregnet trygdeavgift")).not.toBeInTheDocument();
+
+    rerender(<SumArsavregningTabell harGrunnlagIMelosys={false} tidligereTrygdeavgift={0} />);
+    expect(screen.getByText("Tidligere beregnet trygdeavgift")).toBeInTheDocument();
   });
 
   it("shows current year Avgiftssystem row with correct label when value is provided", () => {
