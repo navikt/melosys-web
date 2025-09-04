@@ -3,6 +3,10 @@
 .behandlingsmeny__handling {
   display: flex;
   margin: 10px 5px 5px 0;
+  padding: 4px 8px;
+  border-radius: 4px;
+  align-items: center;
+  transition: background-color 0.2s ease;
 
   &__ikon {
     height: 20px;
@@ -14,7 +18,14 @@
 
   &__tekst {
     color: @navBla;
+    font-weight: 600;
   }
+
+  &:hover {
+    background-color: @navLysGra;
+    cursor: pointer;
+  }
+
   &:hover &__tekst {
     color: @navBlaLighten20;
   }
