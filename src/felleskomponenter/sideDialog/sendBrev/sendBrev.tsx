@@ -485,7 +485,7 @@ function SendBrev({
         brevBestiltTimerRef.current = window.setTimeout(() => {
           setVisBrevBestiltAlert(false);
           oppdaterBehandling();
-          slettUtkast();
+          slettMatchendeUtkast(brevRequest);
           resetFormOgFritekstvedleggState();
         }, 3000);
       })
@@ -502,6 +502,30 @@ function SendBrev({
         })
         .catch(() => setFeil("Utkastet er ikke slettet. Det skjedde en feil"));
     }
+  };
+
+  const slettMatchendeUtkast = async (brevRequest: Api.DokumenterV2.OpprettBrevReqDto) => {
+    // Finn alle utkast som matcher det sendte brevet
+    const matchendeUtkast = utkastPåBehandlingen.filter(
+      (utkast) =>
+        utkast.brevbestilling.produserbardokument?.kode === brevRequest.produserbardokument &&
+        utkast.brevbestilling.mottaker === brevRequest.mottaker,
+    );
+
+    // Slett alle matchende utkast
+    for (const utkast of matchendeUtkast) {
+      await Api.Brevutkast.slettBrevutkast(behandlingID, utkast.utkastBrevID).catch(() => {
+        // Ignorer feil ved sletting av enkelt utkast
+      });
+    }
+
+    // Hvis det var et aktivt utkast, nullstill det
+    if (formValues?.aktivtUtkast) {
+      changeField("aktivtUtkast", null);
+    }
+
+    // Oppdater listen over utkast
+    await hentUtkast();
   };
 
   const forkastBrev = async () => {
