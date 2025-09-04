@@ -26,8 +26,8 @@ export function syncErrorsTilFeilmelding(
 
   return (
     <>
-      <p>{tittel}</p>
-      <ul>
+      <span>{tittel}</span>
+      <ul style={{ margin: 0, paddingLeft: "1rem" }}>
         {Object.keys(syncErrors).map((key) => {
           const syncError = syncErrors[key];
           return finnFeilmelding(syncError);
