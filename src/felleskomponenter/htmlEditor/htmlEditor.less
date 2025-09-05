@@ -1,13 +1,11 @@
 @import "../../constants.less";
 
-@borderRadiusBase: 4px;
-@redError: #ba3a26;
-
 .htmlEditor {
   .editor_label {
     margin-top: 1rem;
     padding-bottom: 0.5rem;
   }
+
   .editor-wrapper {
     background-color: @white;
     max-width: calc(210mm - 7rem);
@@ -16,15 +14,14 @@
   .editor-wrapper {
     .ql-container {
       border-top: none;
-      border-radius: 0 0 @borderRadiusBase @borderRadiusBase;
+      border-radius: 0 0 4px 4px;
       font-family: Arial, sans-serif;
       max-height: 600px;
       overflow-y: auto;
 
-      // Style for bracketed text (placeholders)
       .bracketed-text {
         font-weight: bold;
-        color: @redError;
+        color: var(--a-text-danger);
       }
 
       table {
@@ -77,12 +74,12 @@
 
     &--error {
       .ql-toolbar {
-        border-color: @redError;
+        border-color: var(--a-border-danger);
         border-width: 2px 2px 2px 2px;
       }
 
       .ql-container {
-        border-color: @redError;
+        border-color: var(--a-border-danger);
         border-width: 0 2px 2px 2px;
       }
     }
@@ -91,6 +88,7 @@
     .ql-undo,
     .ql-redo {
       position: relative;
+
       &:after {
         position: absolute;
         top: 0;
@@ -117,7 +115,7 @@
   }
 
   .feilmelding {
-    color: var(--a-text-danger, @redError);
+    color: var(--a-text-danger);
     font-family: Arial, sans-serif;
     font-size: 0.875rem;
     font-weight: 600;
@@ -140,15 +138,18 @@
     font-size: 14pt;
     font-weight: bold;
   }
+
   .ql-snow .ql-picker.ql-header .ql-picker-item:not([data-value])::before {
     content: "Brødtekst";
     font-family: Arial, sans-serif;
     font-size: 12pt;
     font-weight: normal;
   }
+
   .ql-snow .ql-picker.ql-header .ql-picker-label::before {
     content: "Brødtekst";
   }
+
   .ql-snow .ql-picker.ql-header .ql-picker-label[data-value="2"]::before {
     content: "Undertittel";
   }
