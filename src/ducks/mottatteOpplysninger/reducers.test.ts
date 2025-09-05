@@ -1,6 +1,6 @@
 import * as Types from "./types";
 
-import { STATUS } from "../../services/utils";
+import { STATUS } from "../../services";
 import reducer, { initialState } from "./reducers";
 
 import MKV from "../../melosyskodeverk";

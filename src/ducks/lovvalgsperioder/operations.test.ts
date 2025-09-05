@@ -5,7 +5,7 @@ import MKV from "../../melosyskodeverk";
 import * as operations from "./operations";
 import * as KV from "../../kodeverk";
 import { STATUS } from "../../services";
-import type { PerioderStegState } from "../../felleskomponenter/stegvelger/StegState/tilStegstateMapping";
+import type { PerioderStegState } from "../../felleskomponenter/stegvelger";
 
 // Type for fetch mock
 declare const fetch: {

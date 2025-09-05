@@ -25,7 +25,7 @@ describe("sok operations", () => {
 
   beforeEach(() => {
     fetch.resetMocks();
-    fetch.mockResponse(JSON.stringify([]));
+    fetch.mockResponse(JSON.stringify({ fagsakListe: [] }));
 
     initialState = {
       sok: {

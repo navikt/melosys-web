@@ -1,5 +1,4 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { waitFor } from "@testing-library/react";
 import React from "react";
 
 import VurderingEndrePeriode from "./vurderingEndrePeriode";
@@ -10,12 +9,15 @@ import { renderWithProviders } from "../../../../ducks/test-utils/renderWithProv
 
 describe("vurderingEndrePeriode", () => {
   let props: any;
-  let initialReduxState = null;
+  let initialReduxState: any = null;
   const WrappedVurderingEndrePeriode = reduxForm({ form: "test" })(VurderingEndrePeriode);
 
   beforeEach(() => {
-    fetch.resetMocks();
-    fetch.mockResponse(JSON.stringify({}));
+    vi.clearAllMocks();
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({}),
+    });
 
     props = {
       behandlingID: 1,
@@ -24,7 +26,7 @@ describe("vurderingEndrePeriode", () => {
       tilForsiden: vi.fn(),
       tilbake: vi.fn(),
       tilstand: {
-        aarsakEndringPeriodeAvklartfakta: lagAvklartfakta("a", "b", "c", [], "fritekst"),
+        aarsakEndringPeriodeAvklartfakta: lagAvklartfakta("a", "b", "c", [], null),
       },
       oppdaterData: vi.fn(),
       oppdaterPeriode: vi.fn(),

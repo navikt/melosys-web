@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import { within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
@@ -11,7 +11,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 
 describe("SorterbarListe", () => {
   let props: any;
-  const WrappedSorterbarListe = reduxForm({ form: "test" })(SorterbarListe);
+  const WrappedSorterbarListe = reduxForm({ form: "test" })(SorterbarListe as any);
 
   beforeEach(() => {
     props = {

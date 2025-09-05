@@ -1,5 +1,4 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { waitFor } from "@testing-library/react";
 import React from "react";
 
 import MKV from "../../../../melosyskodeverk";
@@ -13,14 +12,17 @@ import { renderWithProviders } from "../../../../ducks/test-utils/renderWithProv
 
 describe("VurderingArtikkel16MottaSvar", () => {
   let props: any;
-  let initialReduxState = null;
+  let initialReduxState: any = null;
   const ConnectedVurderingArtikkel16MottaSvar = reduxForm({ form: KV.Form.ARTIKKEL_16_MOTTA_SVAR })(
     VurderingArtikkel16MottaSvar,
   );
 
   beforeEach(() => {
-    fetch.resetMocks();
-    fetch.mockResponse(JSON.stringify({}));
+    vi.clearAllMocks();
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({}),
+    } as Response);
 
     props = {
       bekreftOgFortsett: vi.fn(),

@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, expect, beforeEach } from "vitest";
 import { Journalforing } from "../api";
 
 // Type for fetch mock
@@ -23,7 +23,7 @@ describe("Journalforing endepunkt", () => {
         mottattDato: "2018-05-04T15:15:25.622",
       },
     };
-    fetch.mockResponseOnce(JSON.stringify(oppgave));
+    fetch.mockResponse(JSON.stringify(oppgave));
 
     const journalpostID = "DOK_3789";
     // assert on the response
@@ -32,8 +32,8 @@ describe("Journalforing endepunkt", () => {
     });
 
     // assert on the times called and arguments given to fetch
-    expect(fetch.mock.calls.length).toEqual(1);
-    expect(fetch.mock.calls[0][0]).toEqual(`/api/journalforing/${journalpostID}`);
+    expect((fetch as any).mock.calls.length).toEqual(1);
+    expect((fetch as any).mock.calls[0][0]).toEqual(`/api/journalforing/${journalpostID}`);
   });
 
   test("POST /api/journalforing/opprett", () => {
@@ -47,7 +47,7 @@ describe("Journalforing endepunkt", () => {
         mottattDato: "2018-05-04T15:15:25.622",
       },
     };
-    fetch.mockResponseOnce(JSON.stringify(oppgave));
+    fetch.mockResponse(JSON.stringify(oppgave));
 
     // assert on the response
     Journalforing.opprett(oppgave).then((res) => {

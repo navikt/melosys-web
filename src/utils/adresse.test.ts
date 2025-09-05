@@ -1,5 +1,5 @@
 import { erRegisterAdresseObjektTomt, erStrukturertAdresseObjektTomt } from "./adresse";
-import type { RegisterAdresse, StrukturertAdresse } from "../services/modules/types/adresse";
+import type { RegisterAdresse, StrukturertAdresse } from "../services/modules/types";
 
 describe("erRegisterAdresseObjektTomt", () => {
   let adresseObjekt: RegisterAdresse;

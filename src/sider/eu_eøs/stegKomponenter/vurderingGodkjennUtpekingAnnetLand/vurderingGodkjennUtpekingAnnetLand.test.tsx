@@ -34,7 +34,7 @@ describe("vurderingGodkjennUtpekingAnnetLand", () => {
     const input = screen.getByLabelText("Ytterligere informasjon til SED (valgfri)");
     fireEvent.change(input, { target: { value: "Fritekst her" } });
 
-    expect(input.value).toBe("Fritekst her");
+    expect(screen.getByDisplayValue("Fritekst her")).toBeInTheDocument();
   });
 
   it("viser overskrift", async () => {
