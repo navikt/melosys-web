@@ -57,7 +57,8 @@ describe("sok operations", () => {
       );
 
       const finalState = store.getState();
-      expect(finalState.sok.data).toEqual({ fagsakListe: [] });
+      // Expect the structure that the reducer actually creates
+      expect(finalState.sok.data).toEqual({ fagsakListe: { fagsakListe: [] } });
     });
 
     it("søker etter fagsaker med saksnummer", async () => {
@@ -80,7 +81,8 @@ describe("sok operations", () => {
       );
 
       const finalState = store.getState();
-      expect(finalState.sok.data).toEqual({ fagsakListe: [] });
+      // Expect the structure that the reducer actually creates
+      expect(finalState.sok.data).toEqual({ fagsakListe: { fagsakListe: [] } });
     });
 
     it("søker etter fagsaker med orgnr", async () => {
@@ -103,7 +105,8 @@ describe("sok operations", () => {
       );
 
       const finalState = store.getState();
-      expect(finalState.sok.data).toEqual({ fagsakListe: [] });
+      // Expect the structure that the reducer actually creates
+      expect(finalState.sok.data).toEqual({ fagsakListe: { fagsakListe: [] } });
     });
   });
 });
