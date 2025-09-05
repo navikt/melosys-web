@@ -1,12 +1,11 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import React from "react";
 
 import { Faktura } from "./faktura";
 import { renderWithProviders } from "../../../../ducks/test-utils/renderWithProviders";
 
 describe("Faktura", () => {
-  let props = null;
+  let props: any;
 
   beforeEach(() => {
     props = {

@@ -1,9 +1,9 @@
 import { createTestStore } from "../test-utils/createTestStore";
 
 import * as operations from "./operations";
-import * as KV from "../../kodeverk";
+// import * as KV from "../../kodeverk"; // TODO: Remove if not needed
 
-import MKV from "../../melosyskodeverk";
+// import MKV from "../../melosyskodeverk"; // TODO: Remove if not needed
 
 // Type for fetch mock
 declare const fetch: {

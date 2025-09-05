@@ -1,12 +1,11 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import React from "react";
 
 import { VurderingArbeidsmonster } from "./vurderingArbeidsmonster";
 import { renderWithProviders } from "../../../../ducks/test-utils/renderWithProviders";
 
 describe("VurderingArbeidsmonster", () => {
-  let props = null;
+  let props: any;
 
   const initialReduxState = {
     form: {

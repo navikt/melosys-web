@@ -1,5 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import React from "react";
 
 import Vedtakstype from "./index";
@@ -7,8 +6,8 @@ import { reduxForm } from "redux-form";
 import { renderWithProviders } from "../../../ducks/test-utils/renderWithProviders";
 
 describe("Vedtakstype", () => {
-  let props = null;
-  const WrappedVedtakstype = reduxForm({ form: "test" })(Vedtakstype);
+  let props: any;
+  const WrappedVedtakstype = reduxForm({ form: "test" })(Vedtakstype as any);
 
   beforeEach(() => {
     props = {

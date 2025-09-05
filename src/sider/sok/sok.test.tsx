@@ -5,6 +5,13 @@ import { renderWithProviders } from "../../ducks/test-utils/renderWithProviders"
 
 import { Sok } from "./sok";
 
+// Type for fetch mock
+declare const fetch: {
+  resetMocks: () => void;
+  mockResponse: (response: string) => void;
+  mockReject: (error: Error) => void;
+};
+
 const generator = new Utils.testhelpers.Generator();
 describe("Sok", () => {
   let fnr;

@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { waitFor } from "@testing-library/react";
 import React from "react";
 
 import { reduxForm } from "redux-form";
@@ -29,7 +29,7 @@ const initialReduxState = {
 };
 
 describe("Vurderingvideresend", () => {
-  let props = null;
+  let props: any;
   const WrappedVurderingVideresend = reduxForm({ form: KV.Form.VURDERING_VIDERESEND })(VurderingVideresend);
 
   beforeEach(() => {

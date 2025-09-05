@@ -312,7 +312,7 @@ describe("Lovvalgsperioder operations", () => {
     });
   });
 
-  it("creates empty lovvalgsperiode when applicant has public service in another country", () => {
+  it("creates empty lovvalgsperiode when applicant has public service in another country", async () => {
     const avklartfakta: AvklartefaktaData = {
       avklartefaktaKode: null,
       referanse: KV.Koder.avklartefaktaKoder.OFFENTLIG_ARBEID_ANTALL_LAND,
@@ -337,14 +337,14 @@ describe("Lovvalgsperioder operations", () => {
       lovvalgsland: undefined,
     } as PerioderStegState;
 
-    store.dispatch(operations.oppdaterLovvalgsperioderState(stegState));
+    await store.dispatch(operations.oppdaterLovvalgsperioderState(stegState) as any);
 
     const finalState = store.getState();
     expect(finalState.lovvalgsperioder).toBeDefined();
     // Note: Verify empty lovvalgsperiode for public service in other country
   });
 
-  it("creates empty lovvalgsperiode when utpeking is rejected", () => {
+  it("creates empty lovvalgsperiode when utpeking is rejected", async () => {
     const form = {
       [KV.Form.VURDER_UTPEKING]: {
         values: {
@@ -366,13 +366,13 @@ describe("Lovvalgsperioder operations", () => {
       lovvalgsland: undefined,
     } as PerioderStegState;
 
-    store.dispatch(operations.oppdaterLovvalgsperioderState(stegState));
+    await store.dispatch(operations.oppdaterLovvalgsperioderState(stegState) as any);
 
     const finalState = store.getState();
     expect(finalState.lovvalgsperioder.data).toEqual([]);
   });
 
-  it(`creates empty lovvalgsperiode when lovvalgsbestemmelse is ${MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1}`, () => {
+  it(`creates empty lovvalgsperiode when lovvalgsbestemmelse is ${MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1}`, async () => {
     const store = createTestStore({
       ...initialState,
     });
@@ -385,13 +385,13 @@ describe("Lovvalgsperioder operations", () => {
       lovvalgsland: undefined,
     } as PerioderStegState;
 
-    store.dispatch(operations.oppdaterLovvalgsperioderState(stegState));
+    await store.dispatch(operations.oppdaterLovvalgsperioderState(stegState) as any);
 
     const finalState = store.getState();
     expect(finalState.lovvalgsperioder.data).toEqual([]);
   });
 
-  it("sets Norway as lovvalgsland when applicant has public service in Norway", () => {
+  it("sets Norway as lovvalgsland when applicant has public service in Norway", async () => {
     const avklartfakta: AvklartefaktaData = {
       avklartefaktaKode: null,
       referanse: KV.Koder.avklartefaktaKoder.OFFENTLIG_ARBEID_ANTALL_LAND,
@@ -416,7 +416,7 @@ describe("Lovvalgsperioder operations", () => {
       lovvalgsland: undefined,
     } as PerioderStegState;
 
-    store.dispatch(operations.oppdaterLovvalgsperioderState(stegState));
+    await store.dispatch(operations.oppdaterLovvalgsperioderState(stegState) as any);
 
     const finalState = store.getState();
     expect(finalState.lovvalgsperioder.data[0]).toEqual(
@@ -426,7 +426,7 @@ describe("Lovvalgsperioder operations", () => {
     );
   });
 
-  it("sets Norway as lovvalgsland when avklartfakta OMFATTES_I_LAND is Norway", () => {
+  it("sets Norway as lovvalgsland when avklartfakta OMFATTES_I_LAND is Norway", async () => {
     const avklartfakta: AvklartefaktaData = {
       avklartefaktaKode: null,
       referanse: KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND,
@@ -451,7 +451,7 @@ describe("Lovvalgsperioder operations", () => {
       lovvalgsland: undefined,
     } as PerioderStegState;
 
-    store.dispatch(operations.oppdaterLovvalgsperioderState(stegState));
+    await store.dispatch(operations.oppdaterLovvalgsperioderState(stegState) as any);
 
     const finalState = store.getState();
     expect(finalState.lovvalgsperioder.data[0]).toEqual(
@@ -461,7 +461,7 @@ describe("Lovvalgsperioder operations", () => {
     );
   });
 
-  it("sets Norway as lovvalgsland when correct lovvalgsbestemmelse is selected", () => {
+  it("sets Norway as lovvalgsland when correct lovvalgsbestemmelse is selected", async () => {
     const data = [
       MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1A,
       MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_2B,
@@ -492,7 +492,7 @@ describe("Lovvalgsperioder operations", () => {
     });
   });
 
-  it("creates empty lovvalgsperiode when applicant has paid work in another country", () => {
+  it("creates empty lovvalgsperiode when applicant has paid work in another country", async () => {
     const avklartfakta: AvklartefaktaData = {
       avklartefaktaKode: null,
       referanse: KV.Koder.avklartefaktaKoder.LOENNET_ARBEID_ANTALL_LAND,
@@ -517,7 +517,7 @@ describe("Lovvalgsperioder operations", () => {
       lovvalgsland: undefined,
     } as PerioderStegState;
 
-    store.dispatch(operations.oppdaterLovvalgsperioderState(stegState));
+    await store.dispatch(operations.oppdaterLovvalgsperioderState(stegState) as any);
 
     const finalState = store.getState();
     expect(finalState.lovvalgsperioder.data).toEqual([]);

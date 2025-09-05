@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { waitFor } from "@testing-library/react";
 import React from "react";
 
 import VurderingEndrePeriode from "./vurderingEndrePeriode";
@@ -9,7 +9,7 @@ import { reduxForm } from "redux-form";
 import { renderWithProviders } from "../../../../ducks/test-utils/renderWithProviders";
 
 describe("vurderingEndrePeriode", () => {
-  let props = null;
+  let props: any;
   let initialReduxState = null;
   const WrappedVurderingEndrePeriode = reduxForm({ form: "test" })(VurderingEndrePeriode);
 

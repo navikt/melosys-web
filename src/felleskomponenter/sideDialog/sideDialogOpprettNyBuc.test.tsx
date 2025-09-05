@@ -1,5 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { describe, it, expect, beforeEach } from "vitest";
 import React from "react";
 
 import MKV from "../../melosyskodeverk";
@@ -9,10 +8,10 @@ import { reduxForm } from "redux-form";
 import { renderWithProviders } from "../../ducks/test-utils/renderWithProviders";
 
 describe("SideDialogOpprettNyBuc", () => {
-  const WrappedSideDialogOpprettNyBuc = reduxForm({ form: "test" })(SideDialogOpprettNyBuc);
+  const WrappedSideDialogOpprettNyBuc = reduxForm({ form: "test" })(SideDialogOpprettNyBuc as any);
 
   describe("Tilgjengelige BUC", () => {
-    let props;
+    let props: any;
 
     beforeEach(() => {
       props = {

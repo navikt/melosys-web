@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
 
@@ -10,7 +10,7 @@ import { renderWithProviders } from "../../../ducks/test-utils/renderWithProvide
 const WrappedEnkeltLand = reduxForm({ form: "test" })(EnkeltLand);
 
 describe("EnkeltLand", () => {
-  let props = null;
+  let props: any;
 
   beforeEach(() => {
     props = {

@@ -1,11 +1,11 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { render } from "@testing-library/react";
 import React from "react";
 
 import Organisasjon from "./organisasjon";
 
 describe("organisasjon", () => {
-  let props = null;
+  let props: any;
 
   beforeEach(() => {
     props = {

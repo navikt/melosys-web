@@ -35,7 +35,10 @@ describe("utpekingsperioder reducer", () => {
       status: Utils.STATUS.OK,
     };
 
-    const reducedState = reducer(initialState, actions.endrePeriode("01.01.2012", "01.01.2013"));
+    const reducedState = reducer(
+      initialState as any,
+      actions.endrePeriode("01.01.2012", "01.01.2013"),
+    ) as UtpekingsperiodeState;
 
     expect(reducedState).toEqual({
       data: [
@@ -45,6 +48,6 @@ describe("utpekingsperioder reducer", () => {
         },
       ],
       status: Utils.STATUS.OK,
-    });
+    } as UtpekingsperiodeState);
   });
 });

@@ -4,6 +4,13 @@ import { renderWithProviders } from "../../ducks/test-utils/renderWithProviders"
 import { reduxForm } from "redux-form";
 import { STATUS } from "../../services";
 
+// Type for fetch mock
+declare const fetch: {
+  resetMocks: () => void;
+  mockResponse: (response: string) => void;
+  mockReject: (error: Error) => void;
+};
+
 describe("SideDialog", () => {
   const initialReduxState = {
     behandlinger: {

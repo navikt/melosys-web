@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { fireEvent } from "@testing-library/react";
 import { queryByAttribute } from "@testing-library/dom";
 import userEvent from "@testing-library/user-event";
 import React from "react";
@@ -110,7 +110,7 @@ vi.mock("../../../../services/modules/lovligekombinasjoner", async () => {
 });
 
 describe("JournalforingForm", () => {
-  let props = null;
+  let props: any;
   const getById = queryByAttribute.bind(null, "id");
 
   beforeEach(() => {

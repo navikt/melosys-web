@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, fireEvent, waitFor, within } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
 
@@ -10,7 +10,7 @@ import { reduxForm } from "redux-form";
 import { BrowserRouter as Router } from "react-router-dom";
 
 describe("SorterbarListe", () => {
-  let props = null;
+  let props: any;
   const WrappedSorterbarListe = reduxForm({ form: "test" })(SorterbarListe);
 
   beforeEach(() => {

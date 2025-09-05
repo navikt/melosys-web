@@ -1,11 +1,23 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import React from "react";
+import { describe, it, expect, beforeEach } from "vitest";
+import { render } from "@testing-library/react";
+// import React from "react"; // Not needed in React 17+
 
 import Begrunnelser from "./begrunnelser";
 
+interface BegrunnelseKode {
+  kode: string;
+  term: string;
+}
+
+interface Props {
+  label: string;
+  valgteBegrunnelser: string[];
+  muligeBegrunnelser: BegrunnelseKode[];
+  fritekst: string | null;
+}
+
 describe("Begrunnelser", () => {
-  let props = null;
+  let props: Props;
 
   beforeEach(() => {
     props = {
@@ -16,7 +28,7 @@ describe("Begrunnelser", () => {
         { kode: "KODE3", term: "Term3" },
       ],
       fritekst: null,
-    };
+    } as Props;
   });
 
   it("snapshot test", () => {

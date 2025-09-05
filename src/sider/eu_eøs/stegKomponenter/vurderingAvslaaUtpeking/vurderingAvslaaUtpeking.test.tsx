@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { waitFor } from "@testing-library/react";
 import React from "react";
 
 import VurderingAvslaaUtpeking from "./vurderingAvslaaUtpeking";
@@ -8,7 +8,7 @@ import * as KV from "../../../../kodeverk";
 import { renderWithProviders } from "../../../../ducks/test-utils/renderWithProviders";
 
 describe("VurderingAvslaaUtpeking", () => {
-  let props = null;
+  let props: any;
   const WrappedVurderingAvslaaUtpeking = reduxForm({ form: KV.Form.AVSLAA_UTPEKING })(VurderingAvslaaUtpeking);
   const initialReduxState = {
     behandlinger: {

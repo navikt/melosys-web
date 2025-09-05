@@ -1,12 +1,12 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { render, screen, waitFor } from "@testing-library/react";
 import React from "react";
 
 import DialogboksOppfriskBehandling from "./dialogboksOppfrisk";
 import { FellesHandlersContext } from "../../../contexts";
 
 describe("DialogboksOppfrisk", () => {
-  let props = null;
+  let props: any;
 
   beforeEach(() => {
     props = {

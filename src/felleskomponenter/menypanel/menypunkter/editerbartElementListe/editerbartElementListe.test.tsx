@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { waitFor } from "@testing-library/react";
 import React from "react";
 
 import { reduxForm } from "redux-form";
@@ -8,7 +8,7 @@ import EditerbartElementListe from "./editerbartElementListe";
 import { renderWithProviders } from "../../../../ducks/test-utils/renderWithProviders";
 
 describe("EditerbartElementListe", () => {
-  let props = null;
+  let props: any;
   const WrappedEditerbartElementListe = reduxForm({ form: "test" })(EditerbartElementListe);
 
   beforeEach(() => {

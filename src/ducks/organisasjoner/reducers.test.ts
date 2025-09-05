@@ -5,7 +5,7 @@ import * as Utils from "../../services/utils";
 
 interface OrganisasjonState {
   data: Array<{ orgnr: number }>;
-  status?: string;
+  status: string;
   resError?: any;
 }
 
@@ -20,16 +20,18 @@ describe("organisasjoner reducer", () => {
   beforeEach(() => {
     initialState = {
       data: [],
+      status: Utils.STATUS.NOT_STARTED,
     };
   });
 
   it("returnerer ny state med gamle og nye organisasjoner, status OK ved ok action", () => {
     initialState = {
       data: [{ orgnr: 810072512 }],
+      status: Utils.STATUS.NOT_STARTED,
     };
     const data = { orgnr: 873152362 };
 
-    const reducedState = reducer(initialState, actions.OK(data));
+    const reducedState = reducer(initialState as any, actions.OK(data)) as OrganisasjonState;
     expect(reducedState).toEqual({
       data: [{ orgnr: 810072512 }, { orgnr: 873152362 }],
       status: Utils.STATUS.OK,
@@ -39,12 +41,12 @@ describe("organisasjoner reducer", () => {
   it("returnerer ny state ved ok action", () => {
     const data = { orgnr: 873152362 };
 
-    const reducedState = reducer(initialState, actions.OK(data));
+    const reducedState = reducer(initialState as any, actions.OK(data)) as OrganisasjonState;
     expect(reducedState).toEqual({ data: [{ orgnr: 873152362 }], status: Utils.STATUS.OK } as ExpectedState);
   });
 
   it("returnerer ny state med status PENDING ved pending action", () => {
-    const reducedState = reducer(initialState, actions.PENDING());
+    const reducedState = reducer(initialState as any, actions.PENDING()) as OrganisasjonState;
     expect(reducedState).toEqual({ data: [], status: Utils.STATUS.PENDING } as ExpectedState);
   });
 
@@ -54,7 +56,7 @@ describe("organisasjoner reducer", () => {
       status: 404,
     };
 
-    const reducedState = reducer(initialState, actions.FEILET(data));
+    const reducedState = reducer(initialState as any, actions.FEILET(data)) as OrganisasjonState;
 
     expect(reducedState).toEqual({
       data: initialState.data,

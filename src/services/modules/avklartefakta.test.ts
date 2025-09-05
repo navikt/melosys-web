@@ -1,5 +1,12 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import { Avklartefakta } from "../api";
+
+// Type for fetch mock
+declare const fetch: {
+  resetMocks: () => void;
+  mockResponse: (response: string) => void;
+  mockReject: (error: Error) => void;
+};
 
 describe("Avklartefakta endepunkt", () => {
   beforeEach(() => {

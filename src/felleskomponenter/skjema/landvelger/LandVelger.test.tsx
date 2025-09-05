@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { waitFor } from "@testing-library/react";
 import React from "react";
 
 import LandVelger from "./LandVelger";
@@ -10,7 +10,7 @@ import { reduxForm } from "redux-form";
 const WrappedLandVelger = reduxForm({ form: "test" })(LandVelger);
 
 describe("Landvelger", () => {
-  let props = null;
+  let props: any;
   let initialState = null;
 
   beforeEach(() => {

@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { screen } from "@testing-library/react";
 import React from "react";
 
 import { renderWithProviders } from "../../../../../ducks/test-utils/renderWithProviders";
@@ -7,7 +7,7 @@ import MKV from "../../../../../melosyskodeverk";
 import HenlagtSak from "./henlagtSak";
 
 describe("HenlagtSak", () => {
-  let props = null;
+  let props: any;
 
   beforeEach(() => {
     props = {

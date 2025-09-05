@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { describe, test, expect } from "vitest";
 import * as Person from "./person";
 import * as testhelpers from "./testhelpers";
 

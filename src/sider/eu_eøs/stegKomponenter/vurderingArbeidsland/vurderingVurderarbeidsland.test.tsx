@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { waitFor } from "@testing-library/react";
 import React from "react";
 
 import MKV from "../../../../melosyskodeverk";
@@ -9,7 +9,7 @@ import * as KV from "../../../../kodeverk/index";
 import { STATUS } from "../../../../services/index";
 
 describe("VurderingVurderarbeidsland", () => {
-  let props = null;
+  let props: any;
   let initialReduxState = null;
 
   beforeEach(() => {

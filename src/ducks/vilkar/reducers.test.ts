@@ -46,7 +46,7 @@ describe("vilkar reducer", () => {
         },
       ],
       status: Utils.STATUS.NOT_STARTED,
-    });
+    } as VilkarState);
   });
 
   it(`overskriver ikke inngangsvilkaar ved ${types.OPPDATER_VILKAR}`, () => {
@@ -65,6 +65,6 @@ describe("vilkar reducer", () => {
         },
       ],
       status: Utils.STATUS.OK,
-    });
+    } as VilkarState);
   });
 });

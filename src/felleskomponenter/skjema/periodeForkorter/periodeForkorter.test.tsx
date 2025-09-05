@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { waitFor } from "@testing-library/react";
 import React from "react";
 
 import PeriodeForkorter from "./index";
@@ -9,7 +9,7 @@ import { renderWithProviders } from "../../../ducks/test-utils/renderWithProvide
 const WrappedPeriodeForkorter = reduxForm({ form: "test" })(PeriodeForkorter);
 
 describe("PeriodeForkorter", () => {
-  let props = null;
+  let props: any;
 
   beforeEach(() => {
     props = {
