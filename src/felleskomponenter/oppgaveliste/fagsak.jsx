@@ -23,7 +23,7 @@ import { MELOSYS_PENSJONIST, MELOSYS_PENSJONIST_EØS } from "../../featuretoggle
  * seg inn på den.
  */
 function Fagsak({ sak = {}, landkoder }) {
-  const { opprettetDato, sakstype, saksstatus, saksnummer, sakstema, behandlingOversikter } = sak;
+  const { opprettetDato, sakstype, saksstatus, saksnummer, sakstema, behandlingOversikter, behandlingstema } = sak;
   const erPensjonistToggleEnabled = useFeatureToggle(MELOSYS_PENSJONIST);
   const erPensjonistToggleEnabled_EØS = useFeatureToggle(MELOSYS_PENSJONIST_EØS);
 
@@ -44,6 +44,22 @@ function Fagsak({ sak = {}, landkoder }) {
   const sorterteBehandlinger = behandlingOversikter
     .slice()
     .sort(sorterElementerEtterDato("descending", "opprettetDato"));
+  const erEøsPensjonist =
+    sakstype.kode === MKV.Koder.sakstyper.EU_EOS &&
+    sakstema.kode === MKV.Koder.sakstemaer.TRYGDEAVGIFT &&
+    sorterteBehandlinger.some(
+      (behandling) => behandling.behandlingstema.kode === MKV.Koder.behandlinger.behandlingstema.PENSJONIST,
+    );
+
+  const hentDatoOmradeDescriptionLabel = () => {
+    if (sakstype?.kode === MKV.Koder.sakstyper.FTRL) {
+      return "Medlemskapsperiode: ";
+    } else if (erEøsPensjonist) {
+      return "Helseutgifter dekkes: ";
+    } else {
+      return "Lovvalgsperiode: ";
+    }
+  };
 
   return (
     <div className="panel fagsak">
@@ -62,11 +78,7 @@ function Fagsak({ sak = {}, landkoder }) {
           </Nav.Column>
           <Nav.Column xs="12" md="4">
             <dl className="fagsak__meta">
-              {sakstype?.kode === MKV.Koder.sakstyper.FTRL ? (
-                <DatoOmradeDescription label="Medlemskapsperiode: " periode={sak.periode} />
-              ) : (
-                <DatoOmradeDescription label="Lovvalgsperiode: " periode={sak.periode} />
-              )}
+              <DatoOmradeDescription label={hentDatoOmradeDescriptionLabel()} periode={sak.periode} />
               <dt>Land:</dt>
               <dd>
                 <Soknadsland land={sak.land} visFulltNavn landkoderKodeverk={landkoder} />
