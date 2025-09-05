@@ -14,10 +14,14 @@ describe("vurderingEndrePeriode", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    global.fetch = vi.fn().mockResolvedValue({
-      ok: true,
-      json: async () => ({}),
-    });
+
+    // Mock fetch with proper Response object
+    global.fetch = vi.fn().mockResolvedValue(
+      new Response(JSON.stringify({}), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      }),
+    );
 
     props = {
       behandlingID: 1,
