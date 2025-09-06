@@ -7,7 +7,7 @@ import * as Ikoner from "../../../../resources/images";
 
 import EditerbartElement, { visAlltidBinSymbolsynlighet } from "../editerbartElement";
 
-import "./flereRedigeringsknapperListe.css";
+import "./flereRedigeringsknapperListe.less";
 
 interface FlereRedigeringsKnapperListeProps<T> {
   redigerbart: boolean;

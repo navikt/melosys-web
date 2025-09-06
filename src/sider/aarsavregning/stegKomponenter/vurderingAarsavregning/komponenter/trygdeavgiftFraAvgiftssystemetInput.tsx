@@ -1,4 +1,4 @@
-import "../vurderingAarsavregningInngang.css";
+import "../vurderingAarsavregningInngang.less";
 import { Control } from "react-hook-form";
 import * as Forms from "../../../../../felleskomponenter/forms";
 

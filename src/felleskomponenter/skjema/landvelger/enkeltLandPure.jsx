@@ -11,7 +11,7 @@ import { lagDatalistID } from "./utils";
 
 import MKV from "../../../melosyskodeverk";
 
-import "./landvelger.css";
+import "./landvelger.less";
 
 class EnkeltLandPure extends Component {
   state = {

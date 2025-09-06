@@ -5,7 +5,7 @@ import PT from "prop-types";
 import NavLogo from "../../../resources/images/nav.svg?react";
 import * as Nav from "../../../navFrontend";
 
-import "./topplinje.css";
+import "./topplinje.less";
 
 function Topplinje(props) {
   const { saksbehandler = "" } = props;

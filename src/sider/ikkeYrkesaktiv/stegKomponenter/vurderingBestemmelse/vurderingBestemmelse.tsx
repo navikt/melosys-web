@@ -20,7 +20,7 @@ import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../
 import { IngenFlytMelding, UnntakHjelpetekst } from "../../../../felleskomponenter/alertmeldinger";
 
 import vurdering_bestemmelse from "./vurderingBestemmelseSchema";
-import "./vurderingBestemmelse.css";
+import "./vurderingBestemmelse.less";
 
 const { INNVILGET, AVSLAATT } = MKV.Koder.innvilgelsesResultat;
 const { EU_EOS } = MKV.Koder.sakstyper;

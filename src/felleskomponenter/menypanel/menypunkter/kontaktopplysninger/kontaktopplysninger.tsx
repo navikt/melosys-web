@@ -15,7 +15,7 @@ import * as Types from "./types";
 
 import OrganisasjonsAdresse from "../../../adresser/organisasjonsAdresse";
 
-import "./kontaktopplysninger.css";
+import "./kontaktopplysninger.less";
 
 interface KontaktOpplysningerProps {
   onChange: (kontaktopplysning: Types.KontaktOpplysning) => void;

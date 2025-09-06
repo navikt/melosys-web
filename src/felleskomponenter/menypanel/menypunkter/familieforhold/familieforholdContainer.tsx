@@ -12,7 +12,7 @@ import MKV from "../../../../melosyskodeverk";
 import Familiemedlemmer from "./familiemedlemmer";
 import EditerbartElementListe from "../editerbartElementListe";
 
-import "./familieforholdContainer.css";
+import "./familieforholdContainer.less";
 import { visAldriBinSymbolsynlighet } from "../editerbartElement/editerbartElement";
 import VisFamilieMedlemmerFraRegisterKnapp from "./familiemedlemmer/visFamilieMedlemmerFraRegisterKnapp";
 

@@ -36,7 +36,7 @@ import { SendBrevFormValues } from "./types";
 
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import sendBrevSchema from "./sendBrevSchema";
-import "./sendBrev.css";
+import "./sendBrev.less";
 import { Fritekstvedlegg } from "./brevVedlegg/brevVedlegg";
 import LabelMedHjelpetekst from "../../labelMedHjelpetekst";
 import { untouch } from "redux-form";

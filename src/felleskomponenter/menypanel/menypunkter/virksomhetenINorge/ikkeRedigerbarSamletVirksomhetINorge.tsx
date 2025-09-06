@@ -5,7 +5,7 @@ import { connect, ConnectedProps } from "react-redux";
 import * as KV from "../../../../kodeverk";
 import * as Nav from "../../../../navFrontend";
 
-import "./ikkeRedigerbarSamletVirksomhetINorge.css";
+import "./ikkeRedigerbarSamletVirksomhetINorge.less";
 
 interface LabelOgSvarProps {
   label: string;

@@ -23,7 +23,7 @@ import { LandValgSomOptions } from "./vurderingInngangKomponenter";
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import vurdering_inngang from "./vurderingInngangSchema";
 
-import "./vurderingInngang.css";
+import "./vurderingInngang.less";
 import { IngenFlytMelding } from "../../../../felleskomponenter/alertmeldinger";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { DialogboksOppfriskSak } from "../../../../felleskomponenter/dialogboks";

@@ -2,7 +2,7 @@ import { createElement } from "react";
 import PT from "prop-types";
 import classnames from "classnames";
 
-import "./stegFane.css";
+import "./stegFane.less";
 
 // Stegfanen er komponenten som vises for hvert steg
 function StegFane(props) {

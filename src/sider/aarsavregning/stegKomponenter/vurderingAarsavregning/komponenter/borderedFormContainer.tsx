@@ -1,5 +1,5 @@
 import React from "react";
-import "./borderedFormContainer.css";
+import "./borderedFormContainer.less";
 
 interface BorderedFormContainerProps {
   children: React.ReactNode;

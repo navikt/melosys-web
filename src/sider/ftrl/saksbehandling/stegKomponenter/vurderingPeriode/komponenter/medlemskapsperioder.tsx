@@ -5,7 +5,7 @@ import * as Nav from "../../../../../../navFrontend";
 import * as Mui from "../../../../../../felleskomponenter/ui";
 
 import { FieldArrayProps, MedlemskapsperiodeProp } from "./types";
-import "./medlemskapsperioder.css";
+import "./medlemskapsperioder.less";
 import * as KV from "../../../../../../kodeverk";
 import MKV from "../../../../../../melosyskodeverk";
 import { useSelector } from "react-redux";

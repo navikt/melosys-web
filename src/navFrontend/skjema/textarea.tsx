@@ -1,4 +1,4 @@
-import "./textarea.css";
+import "./textarea.less";
 import { Textarea as NavTextarea, TextareaProps } from "@navikt/ds-react";
 
 function Textarea({ size = "small", ...rest }: TextareaProps) {

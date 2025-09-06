@@ -26,7 +26,7 @@ import { Feilmelding, feilMeldingBlokkerer, finnAktivFeilmelding } from "./kompo
 import { Medlemskapsperioder } from "./komponenter/medlemskapsperioder";
 import { FormValuesProps, MedlemskapsperiodeProp, VurderingPerioderProps } from "./komponenter/types";
 import { UkjentSluttdatoMedlemskapsperiode } from "./komponenter/ukjentSluttdatoMedlemskapsperiode";
-import "./vurderingPerioder.css";
+import "./vurderingPerioder.less";
 import vurderingPerioderSchema from "./vurderingPerioderSchema";
 
 const { AVSLAATT, OPPHØRT } = MKV.Koder.innvilgelsesResultat;

@@ -2,7 +2,7 @@ import classnames from "classnames";
 
 import bem from "../../bemUtils";
 
-import "./menylink.css";
+import "./menylink.less";
 import { FormEvent } from "react";
 
 interface MenyLinkProps {

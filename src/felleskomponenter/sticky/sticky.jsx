@@ -1,7 +1,7 @@
 import { Component } from "react";
 import PT from "prop-types";
 
-import "./sticky.css";
+import "./sticky.less";
 
 class Sticky extends Component {
   constructor(props) {

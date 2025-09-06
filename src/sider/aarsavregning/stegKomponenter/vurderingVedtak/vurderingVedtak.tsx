@@ -26,7 +26,7 @@ import { BrevVedleggVisningstabellInterface } from "../../../../services/modules
 import * as Utils from "../../../../utils";
 import { SumArsavregningTabell } from "../vurderingAarsavregning/komponenter/sumArsavregningTabell";
 import { beregnSumTilFakturaEllerRefusjon } from "../vurderingAarsavregning/utils";
-import "./vurderingVedtak.css";
+import "./vurderingVedtak.less";
 import vurdering_vedtak from "./vurderingVedtakSchema";
 
 const { FASTSATT_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingsresultattyper;

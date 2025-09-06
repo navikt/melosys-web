@@ -14,7 +14,7 @@ import Soknadslandvelger from "./soknadslandvelger";
 import { EditerbareUtenlandsoppdragetSporsmal, IkkeEditerbareUtenlandsoppdragetSporsmal } from "./sporsmal";
 import Tittellinje from "./tittellinje";
 
-import "./utenlandsoppdraget.css";
+import "./utenlandsoppdraget.less";
 
 interface UtenlandsoppdragetProps {
   visArbeidsforholdRolleEtiketter: boolean;

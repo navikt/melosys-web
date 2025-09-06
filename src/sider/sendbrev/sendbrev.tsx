@@ -17,7 +17,7 @@ import { behandlingerOperations } from "../../ducks/behandlinger";
 import { redigerbartSelectors } from "../../ducks/redigerbart";
 import { dokumenterOperations, dokumenterSelectors } from "../../ducks/dokumenter";
 
-import "./sendbrev.css";
+import "./sendbrev.less";
 
 const mapStateToProps = (state: RootState) => ({
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),

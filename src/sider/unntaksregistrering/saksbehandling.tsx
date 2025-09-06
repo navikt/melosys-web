@@ -26,7 +26,7 @@ import Oppsummering from "../../felleskomponenter/oppsummering";
 
 import { MatchParams } from "../../@types";
 import { alleSteg } from "./initialStegArray";
-import "./saksbehandling.css";
+import "./saksbehandling.less";
 import { kontrollOperations } from "../../ducks/kontroll";
 import { menypanelOperations, menypanelSelectors } from "../../ducks/menypanel";
 

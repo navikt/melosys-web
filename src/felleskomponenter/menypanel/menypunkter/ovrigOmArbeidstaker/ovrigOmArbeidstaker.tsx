@@ -16,7 +16,7 @@ import RedigeringUtfort from "./redigeringUtfort";
 
 import { mottatteOpplysningerOperations } from "../../../../ducks/mottatteOpplysninger";
 
-import "./ovrigOmArbeidstaker.css";
+import "./ovrigOmArbeidstaker.less";
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   oppdaterMottatteOpplysninger: () => dispatch(mottatteOpplysningerOperations.oppdaterState()),

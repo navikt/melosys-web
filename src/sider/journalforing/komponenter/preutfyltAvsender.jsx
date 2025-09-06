@@ -2,7 +2,7 @@ import PT from "prop-types";
 
 import * as Nav from "../../../navFrontend";
 
-import "./avsender/avsender.css";
+import "./avsender/avsender.less";
 
 function PreutfyltAvsender({ className, avsenderID, avsenderNavn }) {
   return (

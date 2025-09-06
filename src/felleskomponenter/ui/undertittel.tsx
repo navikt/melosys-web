@@ -4,7 +4,7 @@ import classNames from "classnames";
 import * as Nav from "../../navFrontend";
 import * as Utils from "../../utils";
 
-import "./undertittel.css";
+import "./undertittel.less";
 
 interface UndertittelProps {
   ikon?: ElementType;

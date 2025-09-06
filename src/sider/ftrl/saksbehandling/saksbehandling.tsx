@@ -31,7 +31,7 @@ import { vilkarOperations } from "../../../ducks/vilkar";
 import { menypanelOperations, menypanelSelectors } from "../../../ducks/menypanel";
 import { feiletResponsOperations } from "../../../ducks/feiletRespons";
 import { alleStegYrkesaktivFlyt } from "./stegLister/stegListeYrkesaktivFlyt";
-import "./saksbehandling.css";
+import "./saksbehandling.less";
 import { kontrollOperations } from "../../../ducks/kontroll";
 import { resetInkluderSiste5Aar } from "../../../ducks/modaler/operations";
 import { setErFullmektigEndret } from "../../../ducks/menypanel/operations";

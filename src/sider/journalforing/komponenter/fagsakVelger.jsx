@@ -14,7 +14,7 @@ import OpprettSak from "./opprettSak";
 import EnkeltSak from "./enkeltSak";
 import KnyttTilSak from "./knyttTilSak";
 
-import "./fagsakVelger.css";
+import "./fagsakVelger.less";
 import { HStack } from "@navikt/ds-react";
 import { EnkelNavBox } from "../../../felleskomponenter/enkelNavBox";
 import { Spinner } from "../../../felleskomponenter/spinner";

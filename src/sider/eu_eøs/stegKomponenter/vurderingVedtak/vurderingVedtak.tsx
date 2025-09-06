@@ -24,7 +24,7 @@ import Dokumentliste, {
 import Mottakerinstitusjonvelger from "../../../../felleskomponenter/mottakerinstitusjonvelger";
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import VurderingVedtakSchema from "./vurderingVedtakSchema";
-import "./vurderingVedtak.css";
+import "./vurderingVedtak.less";
 import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
 import * as Api from "../../../../services/api";
 import { RootState } from "AppTypes";

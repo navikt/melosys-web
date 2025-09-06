@@ -4,7 +4,7 @@ import * as Mui from "../../../ui";
 import * as Nav from "../../../../navFrontend";
 import * as Utils from "../../../../utils";
 
-import "./lagredeUtkast.css";
+import "./lagredeUtkast.less";
 
 interface LagredeUtkastProps {
   alleUtkast: Api.Brevutkast.BrevutkastResDto[];

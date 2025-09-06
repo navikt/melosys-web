@@ -2,7 +2,7 @@ import * as Nav from "../../../../../navFrontend";
 import * as Skjema from "../../../../skjema";
 import * as Sporsmal from "./sporsmal";
 
-import "./editerbareUtenlandsoppdragetSporsmal.css";
+import "./editerbareUtenlandsoppdragetSporsmal.less";
 
 interface SporsmalOgSvarProps {
   sporsmal: string;

@@ -3,7 +3,7 @@ import * as Utils from "../../utils";
 
 import EnkeltDato from "../enkeltDato";
 
-import "./datoOmrade.css";
+import "./datoOmrade.less";
 
 interface DatoOmradeProps {
   periode: {

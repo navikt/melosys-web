@@ -5,7 +5,7 @@ import * as KV from "../../../../kodeverk";
 
 import Person from "./person";
 
-import "./personcontainer.css";
+import "./personcontainer.less";
 
 type PersonContainerProps = ComponentProps<typeof Person>;
 

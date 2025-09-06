@@ -36,7 +36,7 @@ import MottatteOpplysningerFeilmeldinger from "../mottatteOpplysningerFeilmeldin
 import { Feilmeldinger } from "../feilmeldinger";
 import { Innsynsmelding, NyVurderingMelding, StatsborgerskapFeil } from "../alertmeldinger";
 import { AvklartefaktaStore, EnkelDataStore, StegStoreTyper, VilkaarStore } from "./StegState";
-import "./stegvelger.css";
+import "./stegvelger.less";
 import { erFeatureToggleEnabled } from "../../featuretoggle";
 import { MELOSYS_NORGE_ER_UTPEKT_11_3_A } from "../../featuretoggle/toggleNavn";
 

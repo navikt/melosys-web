@@ -12,7 +12,7 @@ import Dokumentliste from "../../../../felleskomponenter/dokumentliste";
 
 import { formSelectors } from "../../../../ducks/form";
 
-import "./vurderingGodkjennUtpekingAnnetLand.css";
+import "./vurderingGodkjennUtpekingAnnetLand.less";
 import * as Api from "../../../../services/api";
 
 const fritekstMaxLength = 500;

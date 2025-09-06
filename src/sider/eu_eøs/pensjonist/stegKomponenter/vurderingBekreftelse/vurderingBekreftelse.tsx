@@ -2,7 +2,7 @@ import * as Nav from "../../../../../navFrontend";
 import * as Mui from "../../../../../felleskomponenter/ui";
 import MKV from "../../../../../melosyskodeverk";
 import * as Forms from "../../../../../felleskomponenter/forms";
-import "./vurderingBekreftelse.css";
+import "./vurderingBekreftelse.less";
 import * as Api from "../../../../../services/api";
 import * as Utils from "../../../../../utils";
 

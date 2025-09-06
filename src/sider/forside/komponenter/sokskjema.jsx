@@ -7,7 +7,7 @@ import PT from "prop-types";
 import * as KV from "../../../kodeverk";
 import * as Nav from "../../../navFrontend";
 
-import "./sokskjema.css";
+import "./sokskjema.less";
 import { EnkelFellesInputFnrDnrOrgnrSaksnr } from "../../../felleskomponenter/enkelFellesInputFnrDnrOrgnrSaksnr";
 
 class SokSkjema extends Component {

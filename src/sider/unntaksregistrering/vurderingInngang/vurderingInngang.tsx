@@ -19,7 +19,7 @@ import { fagsakSelectors } from "../../../ducks/fagsaker";
 
 import { FellesHandlersContext } from "../../../contexts";
 import vurderingInngangSchema from "./vurderingInngangSchema";
-import "./vurderingInngang.css";
+import "./vurderingInngang.less";
 import { DialogboksOppfriskSak } from "../../../felleskomponenter/dialogboks";
 import { navigeringOperations } from "../../../ducks/navigering";
 import { BehandlingUnderOppfriskningSelector } from "../../../ducks/modaler/selectors";

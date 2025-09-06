@@ -20,7 +20,7 @@ import {
   lagAvklartefaktaBegrunnelse,
 } from "../../../felleskomponenter/stegvelger";
 
-import "./vurderingMedfolgendeBarn.css";
+import "./vurderingMedfolgendeBarn.less";
 
 function MedfolgendeBarn({
   navn = "",

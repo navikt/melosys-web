@@ -16,7 +16,7 @@ import SideDialogDokumenter from "./sideDialogDokumenter";
 import SideDialogBesvarSed from "./sideDialogBesvarSed";
 import SideDialogNotater from "./sideDialogNotater";
 
-import "./sideDialog.css";
+import "./sideDialog.less";
 
 export interface FaneViserProps {
   navn: string;

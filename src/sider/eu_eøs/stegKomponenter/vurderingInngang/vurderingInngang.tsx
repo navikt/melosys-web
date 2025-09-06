@@ -7,7 +7,7 @@ import MKV, { MKVUtils } from "../../../../melosyskodeverk";
 import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { vilkarOperations } from "../../../../ducks/vilkar";
-import "./vurderingInngang.css";
+import "./vurderingInngang.less";
 import { ReactElement, useEffect, useState } from "react";
 import Varsler from "./varsler";
 

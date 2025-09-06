@@ -27,7 +27,7 @@ import { landkoderOperations } from "../../ducks/landkoder";
 import { formSelectors } from "../../ducks/form";
 
 import Stegvelger from "./stegvelger";
-import "./saksbehandling.css";
+import "./saksbehandling.less";
 
 function Saksbehandling({
   arbeidsland,

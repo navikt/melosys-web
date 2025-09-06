@@ -1,6 +1,6 @@
 import * as Nav from "../../../../../navFrontend";
 
-import "./labelOgEditerbartSvar.css";
+import "./labelOgEditerbartSvar.less";
 import * as Skjema from "../../../../skjema";
 
 interface LabelOgEditerbartSvarProps {

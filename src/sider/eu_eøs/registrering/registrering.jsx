@@ -21,7 +21,7 @@ import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../
 import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
 import { redigerbartSelectors } from "../../../ducks/redigerbart";
 
-import "./registrering.css";
+import "./registrering.less";
 
 export function Registrering({
   match: {

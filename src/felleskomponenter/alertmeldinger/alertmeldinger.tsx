@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import * as Ikoner from "../../resources/images";
 import * as Nav from "../../navFrontend";
 
-import "./alertmeldinger.css";
+import "./alertmeldinger.less";
 
 export function Innsynsmelding({ className = "" }) {
   return (

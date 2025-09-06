@@ -18,7 +18,7 @@ import { AnmodningsperiodesvarResDto } from "../../../../services/modules/anmodn
 import EnkeltDato from "../../../../felleskomponenter/enkeltDato";
 import { datoDiffMenneskelig } from "../../../../utils/dato";
 
-import "./vurderingArtikkel16MottaSvar.css";
+import "./vurderingArtikkel16MottaSvar.less";
 
 interface VurderingArtikkel16MottaSvarProps {
   bekreftOgFortsett: () => void;

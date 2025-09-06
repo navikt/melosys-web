@@ -3,7 +3,7 @@ import { forwardRef, ReactNode } from "react";
 
 import * as Nav from "../../navFrontend";
 import { getErrorMessage } from "./misc/mapFeilmelding";
-import "./radiogroup.css";
+import "./radiogroup.less";
 
 interface RadioGroupComponentProps {
   className?: string;

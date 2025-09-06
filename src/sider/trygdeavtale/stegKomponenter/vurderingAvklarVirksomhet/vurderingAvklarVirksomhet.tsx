@@ -15,7 +15,7 @@ import { StegStatus } from "../../stegvelger";
 
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import vurdering_avklar_virksomhet from "./vurderingAvklarVirksomhetSchema";
-import "./vurderingAvklarVirksomhet.css";
+import "./vurderingAvklarVirksomhet.less";
 import { HJELPETEKST, INGEN_VIRKSOMHETER_TEKST } from "./tekster";
 
 interface FormValuesProps {

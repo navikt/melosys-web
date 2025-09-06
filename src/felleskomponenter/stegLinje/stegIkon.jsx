@@ -5,7 +5,7 @@ import { FANE_STATUS } from "../stegvelger";
 
 import * as Ikoner from "../../resources/images";
 
-import "./stegIkon.css";
+import "./stegIkon.less";
 
 const ikonVelger = (status, vedtakSteg, aktivtSteg) => {
   if (vedtakSteg) {

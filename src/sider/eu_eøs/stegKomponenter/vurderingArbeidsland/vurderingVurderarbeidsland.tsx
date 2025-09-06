@@ -15,7 +15,7 @@ import { formSelectors } from "../../../../ducks/form";
 import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
 import { avklartefaktaSelectors } from "../../../../ducks/avklartefakta";
 import MKV from "../../../../melosyskodeverk";
-import "./vurderingVurderarbeidsland.css";
+import "./vurderingVurderarbeidsland.less";
 import Redigerbarliste from "./redigerbarliste";
 import IngenSokkelSkipEllerHjemmebaser from "./ingenSokkelSkipEllerHjemmebaser";
 import { KTObject } from "@navikt/melosys-kodeverk";

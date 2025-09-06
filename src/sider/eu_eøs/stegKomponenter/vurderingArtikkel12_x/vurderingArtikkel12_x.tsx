@@ -6,7 +6,7 @@ import MKV, { MKVUtils } from "../../../../melosyskodeverk";
 import { useSelector } from "react-redux";
 import { avklartefaktaSelectors } from "../../../../ducks/avklartefakta";
 
-import "./vurderingArtikkel12_x.css";
+import "./vurderingArtikkel12_x.less";
 
 interface VurderingArtikkel12xProps {
   bekreftOgFortsett: () => void;

@@ -20,7 +20,7 @@ import { menypanelOperations } from "../../../ducks/menypanel";
 import { MatchParams } from "../../../@types";
 import { alleSteg } from "./initialStegArray";
 import { mottatteOpplysningerOperations } from "../../../ducks/mottatteOpplysninger";
-import "./saksbehandling.css";
+import "./saksbehandling.less";
 import { FellesHandlersContext } from "../../../contexts";
 import { SoknadMenypanelForm } from "../../../felleskomponenter/menypanelForm";
 import { CollapsiblePanel } from "../../../felleskomponenter/collapsiblePanel";

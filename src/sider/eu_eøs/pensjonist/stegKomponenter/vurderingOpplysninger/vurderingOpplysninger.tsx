@@ -10,7 +10,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import vurdering_opplysninger from "./vurderingOpplysningerSchema";
 import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
-import "./vurderingOpplysninger.css";
+import "./vurderingOpplysninger.less";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import {
   helseutgiftDekkesPeriodeOperations,

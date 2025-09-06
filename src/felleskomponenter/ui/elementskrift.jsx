@@ -3,7 +3,7 @@ import classNames from "classnames";
 
 import * as Nav from "../../navFrontend";
 
-import "./elementskrift.css";
+import "./elementskrift.less";
 
 function Elementskrift({ ikon: Ikon, tekst, className }) {
   const cl = classNames("elementskrift", className);

@@ -1,7 +1,7 @@
 import { ElementType, ReactElement } from "react";
 
 import * as Nav from "../../../navFrontend";
-import "./komponent.css";
+import "./komponent.less";
 
 interface KomponentProps {
   ikon: ElementType;

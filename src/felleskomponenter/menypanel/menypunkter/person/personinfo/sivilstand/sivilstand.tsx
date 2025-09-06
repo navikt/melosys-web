@@ -5,7 +5,7 @@ import * as Mui from "../../../../../ui";
 import * as Types from "../../../../../../graphql/generated/types";
 
 import SivilstandModal from "./sivilstandModal";
-import "../personinfo.css";
+import "../personinfo.less";
 
 interface SivilstandProps {
   sivilstand:

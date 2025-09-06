@@ -1,7 +1,7 @@
 import { FysiskDokument } from "Domene";
 import * as Nav from "../../navFrontend";
 import * as DokumenterV2 from "../../services/modules/dokumenter-v2";
-import "./vedleggVelger.css";
+import "./vedleggVelger.less";
 import VedleggVelgerTable from "./vedleggVelgerTable";
 
 interface VedleggVelgerModalProps {

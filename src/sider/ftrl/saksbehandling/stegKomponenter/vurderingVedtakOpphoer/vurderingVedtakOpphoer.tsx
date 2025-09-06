@@ -1,5 +1,5 @@
 import * as Nav from "../../../../../navFrontend";
-import "./vurderingVedtakOpphoer.css";
+import "./vurderingVedtakOpphoer.less";
 import { FieldValues, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useSelector } from "react-redux";

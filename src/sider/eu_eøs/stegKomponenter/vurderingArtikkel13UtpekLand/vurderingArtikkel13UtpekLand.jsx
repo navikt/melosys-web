@@ -30,7 +30,7 @@ import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysn
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import VurderingArtikkel13UtpekLandSchema from "./vurderingArtikkel13UtpekLandSchema";
 
-import "./vurderingArtikkel13UtpekLand.css";
+import "./vurderingArtikkel13UtpekLand.less";
 
 const nyUtpekingsperiodeErInnenforSoknadsperioden = (soknadsperiode, isoFomDato, isoTomDato) => {
   return (

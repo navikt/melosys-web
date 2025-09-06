@@ -9,7 +9,7 @@ import SorterbarListe from "../../felleskomponenter/sorterbarListe";
 import { landkoderOperations, landkoderSelectors } from "../../ducks/landkoder";
 import { sokOperations, sokSelectors } from "../../ducks/sok";
 
-import "./sok.css";
+import "./sok.less";
 import { Spinner } from "../../felleskomponenter/spinner";
 import { feiletResponsOperations } from "../../ducks/feiletRespons";
 import { Feilmeldinger } from "../../felleskomponenter/feilmeldinger";

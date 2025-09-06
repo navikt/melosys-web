@@ -5,7 +5,7 @@ import Sporsmal from "../sporsmal";
 import LabelOgEditerbartSvar from "./labelOgEditerbartSvar";
 import Beskrivelse from "../beskrivelse";
 
-import "./redigerer.css";
+import "./redigerer.less";
 
 function Redigerer() {
   const arbeidssituasjonOgOevrig = useSelector(formSelectors.SoknadFormValuesSelector)?.arbeidssituasjonOgOevrig ?? {};

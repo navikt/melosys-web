@@ -3,7 +3,7 @@ import classNames from "classnames";
 import * as Ikon from "../../../resources/images";
 import LeggBehandlingTilbake from "./leggbehandlingtilbake";
 import AvsluttSak from "./avsluttsak";
-import "./behandlingsmeny.css";
+import "./behandlingsmeny.less";
 import { Accordion } from "@navikt/ds-react";
 
 export default function Behandlingsmeny() {

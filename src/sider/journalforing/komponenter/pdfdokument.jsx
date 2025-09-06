@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import * as Api from "../../../services/api";
 import { fetchAsPDFBlob } from "../../../services/utils";
 
-import "./pdfdokument.css";
+import "./pdfdokument.less";
 
 function PDFDokument({ journalpostID, dokumentID }) {
   const [pdfDokumentBlob, setPdfDokumentBlob] = useState(null);

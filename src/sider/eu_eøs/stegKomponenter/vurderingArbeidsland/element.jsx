@@ -4,7 +4,7 @@ import PT from "prop-types";
 import * as Nav from "../../../../navFrontend";
 import * as Ikoner from "../../../../resources/images";
 
-import "./element.css";
+import "./element.less";
 
 function Element({ kode, term, onFjern, onAngreFjern, fjernbar = true, redigerbar, defaultFjernet = false }) {
   const [fjernet, setFjernet] = useState(defaultFjernet);

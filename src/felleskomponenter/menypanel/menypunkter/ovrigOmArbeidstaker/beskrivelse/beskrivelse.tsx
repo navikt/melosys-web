@@ -1,6 +1,6 @@
 import * as Nav from "../../../../../navFrontend";
 
-import "./beskrivelse.css";
+import "./beskrivelse.less";
 
 interface BeskrivelseProps {
   label: string;

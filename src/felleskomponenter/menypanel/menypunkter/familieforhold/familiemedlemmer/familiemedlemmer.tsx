@@ -9,7 +9,7 @@ import { BarnTable } from "./tables/barnTable";
 import { EktefelleTable } from "./tables/ektefelleTable";
 import * as Nav from "../../../../../navFrontend";
 
-import "./familiemedlemmer.css";
+import "./familiemedlemmer.less";
 
 function Familiemedlemmer() {
   const behandlingID: number = useSelector(behandlingerSelectors.BehandlingIDSelector) as number;

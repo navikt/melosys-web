@@ -17,7 +17,7 @@ import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { menypanelOperations } from "../../../../ducks/menypanel";
 import { useAsyncCallbackState, useDispatch } from "../../../../hooks";
 import Knapperad from "../../../knapperad";
-import "./fullmektige.css";
+import "./fullmektige.less";
 import fullmektig_schema from "./fullmektigeSchema";
 import LagretFullmektig from "./lagretFullmektig";
 import RedigererFullmektig from "./redigererFullmektig";

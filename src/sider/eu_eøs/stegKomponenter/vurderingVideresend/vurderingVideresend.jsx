@@ -23,7 +23,7 @@ import { dokumenterSelectors } from "../../../../ducks/dokumenter";
 
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import vurderingVideresendSchema from "../vurderingVideresendSchema";
-import "./vurderingVideresend.css";
+import "./vurderingVideresend.less";
 
 export function VurderingVideresend({
   redigerbart,

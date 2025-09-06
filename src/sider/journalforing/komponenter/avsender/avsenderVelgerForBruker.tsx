@@ -10,7 +10,7 @@ import * as KV from "../../../../kodeverk";
 
 import { AvsenderUtenlandskTrygdemyndighet, AvsenderAnnenPersonEllerVirksomhet } from "./index";
 
-import "./avsender.css";
+import "./avsender.less";
 
 const mapStateToProps = (state: RootState) => ({
   formValues: getFormValues(KV.Form.JOURNALFORING)(state),

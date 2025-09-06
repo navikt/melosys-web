@@ -20,7 +20,7 @@ import { anmodningsperioderSelectors } from "../../ducks/anmodningsperioder";
 import Datovelger from "../datovelger";
 import Knapperad from "../knapperad";
 
-import "./endreBehandlingModal.css";
+import "./endreBehandlingModal.less";
 import { useAsyncCallbackState } from "../../hooks";
 import { useFeatureToggle } from "../../featuretoggle";
 import { MELOSYS_PENSJONIST, MELOSYS_PENSJONIST_EØS } from "../../featuretoggle/toggleNavn";

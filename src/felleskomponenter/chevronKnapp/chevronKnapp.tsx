@@ -1,5 +1,5 @@
 import * as Ikoner from "../../resources/images";
-import "./chevronKnapp.css";
+import "./chevronKnapp.less";
 
 interface ChevronKnappProps {
   expanded: boolean;

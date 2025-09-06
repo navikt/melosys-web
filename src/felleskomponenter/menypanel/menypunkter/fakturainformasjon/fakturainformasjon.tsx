@@ -6,7 +6,7 @@ import * as Nav from "../../../../navFrontend";
 import * as Utils from "../../../../utils";
 
 import { fakturaserierOperations, fakturaserierSelectors, fakturaserierTypes } from "../../../../ducks/fakturaserier";
-import "./fakturainformasjon.css";
+import "./fakturainformasjon.less";
 import { Faktura } from "./faktura";
 import { STATUS } from "../../../../services";
 import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";

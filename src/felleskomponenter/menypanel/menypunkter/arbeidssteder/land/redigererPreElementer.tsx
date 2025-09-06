@@ -5,7 +5,7 @@ import * as Skjema from "../../../../skjema";
 
 import { EnRedigeringsknappListeRedigererPreElementer } from "../../editerbartElementListe";
 
-import "./redigererPreElementer.css";
+import "./redigererPreElementer.less";
 
 function RedigererPreElementer({ className, redigerbart }: EnRedigeringsknappListeRedigererPreElementer) {
   const cls = classNames(className, "arbeidsstedland__redigerer__preelementer");

@@ -1,7 +1,7 @@
 import classnames from "classnames";
 import * as Nav from "../../navFrontend";
 
-import "./knapperad.css";
+import "./knapperad.less";
 import { MouseEventHandler } from "react";
 
 interface KnapperadProps {

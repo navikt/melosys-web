@@ -22,7 +22,7 @@ import { menypanelOperations } from "../../../../../ducks/menypanel";
 import { landkoderSelectors } from "../../../../../ducks/landkoder";
 import { navigeringOperations } from "../../../../../ducks/navigering";
 import vurderingInngangSchema from "./vurderingInngangSchema";
-import "./vurderingInngang.css";
+import "./vurderingInngang.less";
 import { modalerOperations, modalerSelectors } from "../../../../../ducks/modaler";
 import { oppsummertfaktaOperations } from "../../../../../ducks/oppsummertfakta";
 import { BehandlingUnderOppfriskningSelector } from "../../../../../ducks/modaler/selectors";

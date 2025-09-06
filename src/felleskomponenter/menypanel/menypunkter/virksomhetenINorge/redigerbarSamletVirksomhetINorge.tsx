@@ -1,7 +1,7 @@
 import * as Skjema from "../../../skjema";
 import { normalizeDecimal, normalizeInt } from "../../../../utils/normalisering";
 
-import "./redigerbarSamletVirksomhetINorge.css";
+import "./redigerbarSamletVirksomhetINorge.less";
 
 function RedigerbarSamletVirksomhetINorge() {
   return (

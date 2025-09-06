@@ -5,7 +5,7 @@ import Sporsmal from "../sporsmal";
 import Beskrivelse from "../beskrivelse";
 import { JaNeiSvar, LabelOgSvar } from "./labelOgSvar";
 
-import "./redigeringUtfort.css";
+import "./redigeringUtfort.less";
 
 function RedigeringUtfort() {
   const arbeidssituasjonOgOevrig = useSelector(formSelectors.SoknadFormValuesSelector)?.arbeidssituasjonOgOevrig ?? {};

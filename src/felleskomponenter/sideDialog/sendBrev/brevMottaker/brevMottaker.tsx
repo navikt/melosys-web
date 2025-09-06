@@ -22,7 +22,7 @@ import BrevMottakerNorskMyndighet from "./brevMottakerNorskMyndighet";
 import { FeilmeldingProps, Underpunkt } from "../../../../services/modules/dokumenter-v2";
 import LabelMedHjelpetekst from "../../../labelMedHjelpetekst";
 
-import "./brevMottaker.css";
+import "./brevMottaker.less";
 
 const { BRUKER, ARBEIDSGIVER, VIRKSOMHET, ANNEN_ORGANISASJON, NORSK_MYNDIGHET, UTENLANDSK_TRYGDEMYNDIGHET } =
   MKV.Koder.mottakerroller;

@@ -1,5 +1,5 @@
 import * as Api from "../../../../../services/api";
-import "../vurderingAarsavregningInngang.css";
+import "../vurderingAarsavregningInngang.less";
 import { useEffect, useState } from "react";
 import {
   AarsavregningResponse,

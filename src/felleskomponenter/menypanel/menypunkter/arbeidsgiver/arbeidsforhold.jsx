@@ -12,7 +12,7 @@ import Utenlandsopphold from "./utenlandsopphold";
 
 import Arbeidsavtaler from "./arbeidsavtaler";
 
-import "./arbeidsforhold.css";
+import "./arbeidsforhold.less";
 
 export function Arbeidsforholdet(props) {
   const {

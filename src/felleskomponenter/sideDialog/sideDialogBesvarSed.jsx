@@ -6,7 +6,7 @@ import * as Nav from "../../navFrontend";
 import * as KV from "../../kodeverk";
 import * as Utils from "../../utils";
 import * as Api from "../../services/api";
-import "./sideDialogBesvarSed.css";
+import "./sideDialogBesvarSed.less";
 import { Accordion } from "@navikt/ds-react";
 
 function StatusEtikett({ status }) {

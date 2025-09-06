@@ -12,7 +12,7 @@ import { EnRedigeringsknappListeRedigerer } from "../../editerbartElementListe";
 import { normalizeDate } from "../../../../../utils/normalisering";
 import { hentSammensattNavn } from "../../../../../graphql/navn";
 
-import "./redigerer.css";
+import "./redigerer.less";
 
 function Redigerer({
   redigerbart,

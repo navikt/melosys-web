@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import "./list.css";
+import "./list.less";
 import { List as NavList, ListProps } from "@navikt/ds-react";
 
 interface ItemProps {

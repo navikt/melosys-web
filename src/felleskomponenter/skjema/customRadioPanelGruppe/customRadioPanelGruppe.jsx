@@ -7,7 +7,7 @@ import * as Nav from "../../../navFrontend";
 import * as SkjemaUtils from "../utils";
 import * as Ikoner from "../../../resources/images";
 
-import "./customRadioPanelGruppe.css";
+import "./customRadioPanelGruppe.less";
 
 /**
  * Radiopanelet tar imot en hel react-komponent via "innhold"-prop

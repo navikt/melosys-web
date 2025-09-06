@@ -6,7 +6,7 @@ import KopierbarTekst from "../../../../../kopierbarTekst";
 import { Sivilstand } from "../../../../../../graphql";
 import { GyldighetshistorikkInfo } from "../../historikk/gyldighetshistorikkInfo";
 
-import "./sivilstandModal.css";
+import "./sivilstandModal.less";
 
 interface SivilstandTabellProps {
   sivilstander: Sivilstand[];

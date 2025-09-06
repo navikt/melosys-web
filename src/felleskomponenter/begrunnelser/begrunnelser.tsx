@@ -1,7 +1,7 @@
 import * as KV from "../../kodeverk";
 import * as Nav from "../../navFrontend";
 
-import "./begrunnelser.css";
+import "./begrunnelser.less";
 
 interface BegrunnelserProps {
   label: string;

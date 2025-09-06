@@ -34,7 +34,7 @@ import { landkoderOperations } from "../../../ducks/landkoder";
 import { feiletResponsOperations } from "../../../ducks/feiletRespons";
 import { kontrollOperations } from "../../../ducks/kontroll";
 
-import "./saksbehandling.css";
+import "./saksbehandling.less";
 
 class Saksbehandling extends Component {
   state = {

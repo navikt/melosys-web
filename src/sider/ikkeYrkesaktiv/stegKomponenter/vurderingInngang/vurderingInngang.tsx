@@ -24,7 +24,7 @@ import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { fagsakSelectors } from "../../../../ducks/fagsaker";
 import MKV from "../../../../melosyskodeverk";
 import { DialogboksOppfriskSak } from "../../../../felleskomponenter/dialogboks";
-import "./vurderingInngang.css";
+import "./vurderingInngang.less";
 import { BehandlingUnderOppfriskningSelector } from "../../../../ducks/modaler/selectors";
 
 interface Props {

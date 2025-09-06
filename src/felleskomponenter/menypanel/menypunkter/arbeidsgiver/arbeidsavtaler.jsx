@@ -7,7 +7,7 @@ import * as KV from "../../../../kodeverk";
 import EnkeltDato from "../../../enkeltDato";
 import TabellArbeidsgiver from "./tabellArbeidsgiver";
 
-import "./arbeidsavtaler.css";
+import "./arbeidsavtaler.less";
 
 class Arbeidsavtaler extends Component {
   state = { visHistoriskeArbeidsavtaler: false };

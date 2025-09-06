@@ -1,7 +1,7 @@
 import * as Nav from "../../../../../navFrontend";
 import * as Tags from "../../../tags";
 
-import "./tittellinje.css";
+import "./tittellinje.less";
 
 interface TittellinjeProps {
   tittel: string;

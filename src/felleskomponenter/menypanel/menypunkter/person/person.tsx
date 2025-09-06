@@ -13,7 +13,7 @@ import StatsborgerskapTableContainer from "./statsborgerskapTable";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { formSelectors } from "../../../../ducks/form";
 
-import "./person.css";
+import "./person.less";
 
 const mapStateToProps = (state: RootState) => ({
   oppgittAdresseHarVerdier: formSelectors.SoknadOppgittAdresseHarVerdierSelector(state),

@@ -8,7 +8,7 @@ import Behandlingsmeny from "./behandlingsmeny";
 import Personlinje from "./personlinje";
 import Virksomhetlinje from "./virksomhetlinje";
 
-import "./informasjonlinje.css";
+import "./informasjonlinje.less";
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),

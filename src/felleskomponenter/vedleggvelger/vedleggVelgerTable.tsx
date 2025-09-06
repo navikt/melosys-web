@@ -7,7 +7,7 @@ import {
 } from "../../services/modules/dokumenter-v2";
 import * as Utils from "../../utils";
 
-import "./vedleggVelger.css";
+import "./vedleggVelger.less";
 
 interface VedleggTableProps {
   valgteVedlegg: BrevVedleggInterface;

@@ -19,7 +19,7 @@ import {
 } from "../../../felleskomponenter/stegvelger";
 import { hentFaktaVerdi } from "../../../domeneUtils";
 
-import "./vurderingBostedsland.css";
+import "./vurderingBostedsland.less";
 
 function Avklaringer({ avklaringer = [] }) {
   return (

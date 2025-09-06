@@ -5,7 +5,7 @@ import * as Mui from "../../../../../ui";
 import * as Types from "../../../../../../graphql/generated/types";
 
 import { PersonstatusModal } from "./index";
-import "../personinfo.css";
+import "../personinfo.less";
 
 interface PersonstatusProps {
   status:

@@ -1,6 +1,6 @@
 import PT from "prop-types";
 import { submit, Field } from "redux-form";
-import "../skjema.css";
+import "../skjema.less";
 import * as Utils from "../../../utils";
 import * as Nav from "../../../navFrontend";
 

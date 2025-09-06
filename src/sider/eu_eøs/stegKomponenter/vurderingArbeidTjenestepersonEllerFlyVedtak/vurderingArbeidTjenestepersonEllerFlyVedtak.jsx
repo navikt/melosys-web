@@ -40,7 +40,7 @@ import { BOOLSK_STRING } from "../../../../constants";
 
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import VurderingArbeidTjenestepersonEllerFlyVedtakSchema from "./vurderingArbeidTjenestepersonEllerFlyVedtakSchema";
-import "./vurderingArbeidTjenestepersonEllerFlyVedtak.css";
+import "./vurderingArbeidTjenestepersonEllerFlyVedtak.less";
 
 function InformertMyndighetVelger({ redigerbart, oppdaterData, slettData, informertMyndighetFakta }) {
   useEffect(() => {

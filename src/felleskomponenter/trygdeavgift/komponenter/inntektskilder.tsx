@@ -14,7 +14,7 @@ import {
   arbAvgBetalesKreves,
   bruttoInntektKreves,
 } from "../../../sider/ftrl/saksbehandling/stegKomponenter/vurderingTrygdeavgift/vurderingTrygdeavgiftSchema";
-import "./inntektskilder.css";
+import "./inntektskilder.less";
 import { Stack } from "@navikt/ds-react";
 
 import { erBrukerSkattepliktigIHelePerioden } from "../../../sider/aarsavregning/stegKomponenter/vurderingAarsavregning/utils";

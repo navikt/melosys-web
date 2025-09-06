@@ -15,7 +15,7 @@ import {
   mottatteOpplysningerSelectors,
 } from "../../../../../ducks/mottatteOpplysninger";
 
-import "./soknadslandvelger.css";
+import "./soknadslandvelger.less";
 
 interface SoknadslandvelgerProps {
   redigerbart: boolean;

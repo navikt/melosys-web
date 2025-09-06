@@ -30,7 +30,7 @@ import { formSelectors } from "../../ducks/form";
 
 import { MatchParams } from "../../@types";
 import { alleSteg } from "./initialStegArray";
-import "./saksbehandling.css";
+import "./saksbehandling.less";
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../ducks/lovvalgsperioder";
 import { kontrollOperations } from "../../ducks/kontroll";
 

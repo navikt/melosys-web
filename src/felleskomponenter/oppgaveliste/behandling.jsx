@@ -7,7 +7,7 @@ import * as Nav from "../../navFrontend";
 import Behandlingsstatus from "../behandlingsstatus";
 import EnkeltDato from "../enkeltDato";
 
-import "./behandling.css";
+import "./behandling.less";
 
 function BehandlingPanel({ behandling, kanVises }) {
   const { tittel, behandlingstema, behandlingsstatus, behandlingsresultattype, opprettetDato } = behandling;

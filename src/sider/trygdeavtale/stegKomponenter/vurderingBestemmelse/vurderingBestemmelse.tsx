@@ -19,7 +19,7 @@ import { StegStatus } from "../../stegvelger";
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import vurdering_bestemmelse from "./vurderingBestemmelseSchema";
 
-import "./vurderingBestemmelse.css";
+import "./vurderingBestemmelse.less";
 import BestemmelseHjelpetekst from "./bestemmelseHjelpetekst/bestemmelseHjelpetekst";
 import { IngenFlytMelding, UnntakHjelpetekst } from "../../../../felleskomponenter/alertmeldinger";
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";

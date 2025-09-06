@@ -6,7 +6,7 @@ import * as Symboler from "../symboler";
 
 import { Symbolsynlighet } from "./types";
 
-import "./legend.css";
+import "./legend.less";
 
 interface LegendProps {
   tittelIkon?: ElementType;

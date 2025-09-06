@@ -5,7 +5,7 @@ import * as Utils from "../../../../../utils";
 import * as Nav from "../../../../../navFrontend";
 import * as MPT from "../../../../../proptypes";
 import Datovelger from "../../../../../felleskomponenter/datovelger";
-import "./endrePeriode.css";
+import "./endrePeriode.less";
 import { useEffect } from "react";
 
 function EndrePeriode({

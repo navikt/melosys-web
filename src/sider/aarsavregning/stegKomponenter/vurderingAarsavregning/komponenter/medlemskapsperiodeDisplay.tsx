@@ -5,7 +5,7 @@ import * as Utils from "../../../../../utils";
 import Datovelger from "../../../../../felleskomponenter/datovelger";
 import * as Mui from "../../../../../felleskomponenter/ui";
 import * as Ikoner from "../../../../../resources/images";
-import "./medlemskapsperiodeSkjema.css";
+import "./medlemskapsperiodeSkjema.less";
 
 interface MedlemskapsperiodeDisplayProps {
   fomDato: string;

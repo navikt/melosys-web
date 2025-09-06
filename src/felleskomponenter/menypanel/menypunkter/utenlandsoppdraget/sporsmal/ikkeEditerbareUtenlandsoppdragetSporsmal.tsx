@@ -8,7 +8,7 @@ import * as KV from "../../../../../kodeverk";
 import * as Utils from "../../../../../utils";
 import * as Sporsmal from "./sporsmal";
 
-import "./ikkeEditerbareUtenlandsoppdragetSporsmal.css";
+import "./ikkeEditerbareUtenlandsoppdragetSporsmal.less";
 
 interface RadioknappSvarProps {
   svar: boolean | null | undefined;

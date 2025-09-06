@@ -6,7 +6,7 @@ import App from "./App";
 import AppErrorBoundary from "./felleskomponenter/appErrorBoundary/appErrorBoundary";
 
 import "./setupYup";
-import "./index.css";
+import "./index.less";
 import "@navikt/ds-css";
 
 import { store, history } from "./store";

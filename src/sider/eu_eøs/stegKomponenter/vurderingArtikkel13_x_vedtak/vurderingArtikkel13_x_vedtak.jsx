@@ -26,7 +26,7 @@ import { vedtakOperations } from "../../../../ducks/vedtak";
 
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import VurderingArtikkel13_x_vedtakSchema from "./vurderingArtikkel13_x_vedtakSchema";
-import "./vurderingArtikkel13_x_vedtak.css";
+import "./vurderingArtikkel13_x_vedtak.less";
 
 export function VurderingArtikkel13_x_vedtak({
   redigerbart,

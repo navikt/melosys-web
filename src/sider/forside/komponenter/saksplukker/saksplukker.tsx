@@ -16,7 +16,7 @@ import { oppgaverOperations } from "../../../../ducks/oppgaver";
 
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import saksplukkerSchema from "./saksplukkerSchema";
-import "./saksplukker.css";
+import "./saksplukker.less";
 import { useFeatureToggle } from "../../../../featuretoggle";
 import { MELOSYS_PENSJONIST, MELOSYS_PENSJONIST_EØS } from "../../../../featuretoggle/toggleNavn";
 

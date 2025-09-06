@@ -4,7 +4,7 @@ import bem from "../../bemUtils";
 import MenyLink from "./menylink";
 import { Link } from "./types";
 
-import "./linkgroup.css";
+import "./linkgroup.less";
 
 interface LinkGroupProps {
   label?: string;

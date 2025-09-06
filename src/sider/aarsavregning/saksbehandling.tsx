@@ -29,7 +29,7 @@ import { aarsavregningOperations } from "../../ducks/aarsavregning";
 import { medlemskapsperioderSelectors } from "../../ducks/medlemskapsperioder";
 import { useFeatureToggle } from "../../featuretoggle";
 import { ÅRSAVREGNING, ÅRSAVREGNING_UTEN_FLYT } from "../../featuretoggle/toggleNavn";
-import "./saksbehandling.css";
+import "./saksbehandling.less";
 import { fakturaserierOperations } from "../../ducks/fakturaserier";
 
 interface Props extends RouteComponentProps<MatchParams> {

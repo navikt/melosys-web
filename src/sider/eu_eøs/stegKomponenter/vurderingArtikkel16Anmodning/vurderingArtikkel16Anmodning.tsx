@@ -40,7 +40,7 @@ import * as Utils from "../../../../utils";
 import { datoDiffMenneskelig } from "../../../../utils/dato";
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import TidligereMedlemskap from "./tidligereMedlemskap";
-import "./vurderingArtikkel16Anmodning.css";
+import "./vurderingArtikkel16Anmodning.less";
 import VurderingArtikkel16AnmodningSchema from "./vurderingArtikkel16AnmodningSchema";
 
 const { KONV_EFTA_STORBRITANNIA_ART18_1 } = MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_konv_efta_storbritannia;

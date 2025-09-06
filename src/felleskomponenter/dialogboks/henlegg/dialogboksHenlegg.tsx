@@ -20,7 +20,7 @@ import { datalastingOperations } from "../../../ducks/datalasting";
 import { modalerOperations } from "../../../ducks/modaler";
 import { fagsakSelectors } from "../../../ducks/fagsaker";
 
-import "./dialogboksHenlegg.css";
+import "./dialogboksHenlegg.less";
 import Dokumentliste from "../../dokumentliste";
 
 interface DialogboksHenleggSakProps {

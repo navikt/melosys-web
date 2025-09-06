@@ -5,7 +5,7 @@ import Soknadsperiode from "./soknadsperiode";
 import Soknadslandvelger from "./soknadslandvelger";
 import Tittellinje from "./tittellinje";
 
-import "./periode.css";
+import "./periode.less";
 
 interface PeriodeProps {
   visArbeidsforholdRolleEtiketter: boolean;

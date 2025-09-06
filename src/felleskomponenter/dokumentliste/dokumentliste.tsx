@@ -5,7 +5,7 @@ import { dokumenterOperations } from "../../ducks/dokumenter";
 
 import { apnePdfINyFane } from "../../services/utils";
 
-import "./dokumentliste.css";
+import "./dokumentliste.less";
 import * as KV from "../../kodeverk";
 import * as Utils from "../../utils";
 import MKV from "../../melosyskodeverk";

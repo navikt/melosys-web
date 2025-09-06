@@ -14,7 +14,7 @@ import {
 import * as KV from "../../../kodeverk";
 import { BOOLSK_STRING } from "../../../constants";
 
-import "./vurderingArbeidsgiver.css";
+import "./vurderingArbeidsgiver.less";
 import { feiletResponsOperations } from "../../../ducks/feiletRespons";
 import { kontrollOperations } from "../../../ducks/kontroll";
 import LabelMedHjelpetekst from "../../../felleskomponenter/labelMedHjelpetekst";
