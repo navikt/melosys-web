@@ -1,6 +1,0 @@
-{
-  "watchFolder": "src",
-  "outputFolder": "src",
-  "plugins": "npm-import=\"prefix=~\"",
-  "lessArgs": "rewrite-urls=all"
-}

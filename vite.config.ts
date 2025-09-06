@@ -14,6 +14,15 @@ export default defineConfig({
   esbuild: {
     jsxInject: `import React from 'react'`,
   },
+  css: {
+    preprocessorOptions: {
+      less: {
+        math: "always",
+        relativeUrls: true,
+        javascriptEnabled: true,
+      },
+    },
+  },
   build: {
     outDir: "./build",
     emptyOutDir: true,

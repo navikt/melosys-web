@@ -29,7 +29,6 @@
 .env.production.local
 .prettierrc
 
-*.css
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
