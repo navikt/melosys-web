@@ -32,9 +32,8 @@ import { mottatteOpplysningerSelectors } from "../../../../../ducks/mottatteOppl
 const { FULLMEKTIG } = MKV.Koder.aktoersroller;
 const { TRYGDEAVGIFT_BETALES_TIL_NAV, TRYGDEAVGIFT_BETALES_TIL_NAV_OG_SKATT } = MKV.Koder.trygdeavgiftmottaker;
 const { FASTSATT_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingsresultattyper;
-const { OPPHØRSVEDTAK, FØRSTEGANGSVEDTAK, ENDRINGSVEDTAK } = MKV.Koder.vedtakstyper;
-const { FØRSTEGANG, NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT, SATSENDRING } =
-  MKV.Koder.behandlinger.behandlingstyper;
+const { FØRSTEGANGSVEDTAK, ENDRINGSVEDTAK } = MKV.Koder.vedtakstyper;
+const { NY_VURDERING } = MKV.Koder.behandlinger.behandlingstyper;
 
 const komponentDispatch = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   kontrollerFerdigbehandling: (data: Api.Kontroll.FerdigbehandlingKontrollData) =>
@@ -69,10 +68,10 @@ function VurderingBekreftelse({ tilbake, aktivtSteg }: Props) {
   const [fullmektigErFakturamottaker, setFullmektigErFakturamottaker] = useState(false);
   const [harBekreftetFullmaktForTrygdeavgift, setHarBekreftetFullmaktForTrygdeavgift] = useState(false);
   const feilmeldinger = useSelector(feiletResponsSelectors.FeilmeldingerSelector);
+  const kontrollfeil = useSelector(kontrollSelectors.KontrollFeilSelector);
   const mottatteOpplysningerStatus = useSelector(mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector);
 
   const lagretVedtakstype = useSelector(behandlingsresultatSelectors.VedtakstypeSelector);
-  const kontrollfeil = useSelector(kontrollSelectors.KontrollFeilSelector);
 
   const dispatch = useDispatch();
   const { kontrollerFerdigbehandling } = komponentDispatch(dispatch);
@@ -211,6 +210,10 @@ function VurderingBekreftelse({ tilbake, aktivtSteg }: Props) {
 
   useEffect(() => {
     debouncedKontrollerBehandling({ aktivtSteg, mottatteOpplysningerStatus, formValues });
+
+    return () => {
+      dispatch(kontrollOperations.resetKontrollFeil());
+    };
   }, [aktivtSteg, redigerbart, mottatteOpplysningerStatus]);
 
   const onSubmit = () => {

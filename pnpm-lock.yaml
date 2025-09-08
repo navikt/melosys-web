@@ -29,8 +29,8 @@ importers:
         specifier: ^7.5.3
         version: 7.22.0(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       "@navikt/melosys-kodeverk":
-        specifier: 5.15.316
-        version: 5.15.316
+        specifier: 5.15.319
+        version: 5.15.319
       classnames:
         specifier: ^2.2.6
         version: 2.5.1
@@ -1317,11 +1317,11 @@ packages:
         tarball: https://npm.pkg.github.com/download/@navikt/ds-tokens/7.22.0/793c4e3da6051e5e6f3400dac9fbc27caf02864a,
       }
 
-  "@navikt/melosys-kodeverk@5.15.316":
+  "@navikt/melosys-kodeverk@5.15.319":
     resolution:
       {
-        integrity: sha512-zi+7KeEZtFBoj74t+P5s1sUk5RS3FTfYlblxNGLKFueH3yq12gyYAT4tKKMpTQXvl/YP89MAvQBeH1s4pII7lw==,
-        tarball: https://npm.pkg.github.com/download/@navikt/melosys-kodeverk/5.15.316/4f5f86f5de280603514dc46aa2698f4de09fac27,
+        integrity: sha512-fN5wyjUVhXPf8vVef1xKQes3VrxlwsbDDZUw/ydjhK2agQV/weLbQ+ddBXWnEMBQDQx8E3pE4Vmgh1uh3qquGA==,
+        tarball: https://npm.pkg.github.com/download/@navikt/melosys-kodeverk/5.15.319/0690fb827d07de01c16e845fdd96f8c245d7d06e,
       }
     engines: { node: ">=22.12.0" }
 
@@ -7219,7 +7219,7 @@ snapshots:
 
   "@navikt/ds-tokens@7.22.0": {}
 
-  "@navikt/melosys-kodeverk@5.15.316": {}
+  "@navikt/melosys-kodeverk@5.15.319": {}
 
   "@nodelib/fs.scandir@2.1.5":
     dependencies:
