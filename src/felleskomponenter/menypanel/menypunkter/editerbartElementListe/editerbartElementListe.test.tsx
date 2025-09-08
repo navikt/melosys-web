@@ -1,6 +1,4 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { waitFor } from "@testing-library/react";
-import React from "react";
 
 import { reduxForm } from "redux-form";
 
@@ -9,7 +7,7 @@ import { renderWithProviders } from "../../../../ducks/test-utils/renderWithProv
 
 describe("EditerbartElementListe", () => {
   let props: any;
-  const WrappedEditerbartElementListe = reduxForm({ form: "test" })(EditerbartElementListe);
+  const WrappedEditerbartElementListe = reduxForm({ form: "test" })(EditerbartElementListe as any);
 
   beforeEach(() => {
     props = {

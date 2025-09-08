@@ -7,8 +7,7 @@ import { renderWithProviders } from "../../../ducks/test-utils/renderWithProvide
 
 describe("Select", () => {
   it("snapshot test", () => {
-    // @ts-expect-error generisk beskrivelse
-    const WrappedSelect = reduxForm({ form: "test" })(Select);
+    const WrappedSelect = reduxForm({ form: "test" })(Select as any);
 
     const props = {
       id: "1234",

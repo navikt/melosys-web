@@ -1,5 +1,4 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import React from "react";
 
 import MKV from "../../../../melosyskodeverk";
 
@@ -14,7 +13,7 @@ describe("VurderingArtikkel16MottaSvar", () => {
   let props: any;
   let initialReduxState: any = null;
   const ConnectedVurderingArtikkel16MottaSvar = reduxForm({ form: KV.Form.ARTIKKEL_16_MOTTA_SVAR })(
-    VurderingArtikkel16MottaSvar,
+    VurderingArtikkel16MottaSvar as any,
   );
 
   beforeEach(() => {

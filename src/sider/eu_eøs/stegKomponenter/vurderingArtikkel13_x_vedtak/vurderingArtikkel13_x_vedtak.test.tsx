@@ -1,6 +1,5 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { fireEvent } from "@testing-library/react";
-import React from "react";
 
 import * as MKV from "@navikt/melosys-kodeverk";
 
@@ -31,6 +30,7 @@ describe("VurderingArtikkel13_x_Vedtak", () => {
     byggLovvalgsperioder: vi.fn(),
     lagreLovvalgsperioder: vi.fn(),
     kontrollerFerdigbehandling: vi.fn(),
+    // @ts-expect-error Property 'Koder' does not exist on type
     behandlingstype: MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
     harLandSomKreverSED: true,
     soknadsperiode: { tom: "", fom: "" },
@@ -41,12 +41,12 @@ describe("VurderingArtikkel13_x_Vedtak", () => {
   };
 
   const WrappedVurderingArtikkel13_x_vedtak = reduxForm({ form: KV.Form.ARTIKKEL_13_X_VEDTAK })(
-    VurderingArtikkel13_x_vedtak,
+    VurderingArtikkel13_x_vedtak as any,
   );
 
   it("kaller handleSubmit ved submit-event", () => {
     const { container } = renderWithProviders(<WrappedVurderingArtikkel13_x_vedtak {...props} />);
-    fireEvent.submit(container.querySelector("form"));
+    fireEvent.submit(container.querySelector("form")!);
     expect(props.handleSubmit).toHaveBeenCalledTimes(1);
   });
 

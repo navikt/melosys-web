@@ -21,7 +21,7 @@ describe("VilkaarStore oppdatering av eksisterende data", () => {
   });
 
   it("Lagring av eksisterende vilkaar", () => {
-    const vilkaar = store.hent();
+    const vilkaar: any = store.hent();
     expect(vilkaar.art11_3A).toBeFalsy();
     expect(vilkaar.art11_3A_begrunnelser).toEqual(eksisterendeVilkar.begrunnelseKoder);
     expect(vilkaar.art11_3A_begrunnelser_fritekst).toEqual(eksisterendeVilkar.begrunnelseFritekst);
@@ -32,7 +32,7 @@ describe("VilkaarStore oppdatering av eksisterende data", () => {
     const vilkaarCmd = lagVilkaar("art11_3A", true);
     store.oppdaterStegData("TESTSTEG-1", vilkaarCmd);
 
-    const vilkaar = store.hent();
+    const vilkaar: any = store.hent();
     expect(vilkaar.art11_3A).toBeTruthy();
   });
 
@@ -40,7 +40,7 @@ describe("VilkaarStore oppdatering av eksisterende data", () => {
     const vilkaarCmd = lagVilkarbegrunnelse("art11_3A", ["Mer enn 5 år"], "Fritekst", "Free text");
     store.oppdaterStegData("TESTSTEG-1", vilkaarCmd);
 
-    const vilkaar = store.hent();
+    const vilkaar: any = store.hent();
     expect(vilkaar.art11_3A).toBeFalsy();
     expect(vilkaar.art11_3A_begrunnelser).toEqual(["Mer enn 5 år"]);
     expect(vilkaar.art11_3A_begrunnelser_fritekst).toEqual("Fritekst");
@@ -50,7 +50,7 @@ describe("VilkaarStore oppdatering av eksisterende data", () => {
   it("Legg til vilkaar", () => {
     const vilkaarCmd = lagVilkaar("art12_1", true);
     store.oppdaterStegData("TESTSTEG-1", vilkaarCmd);
-    const vilkaar = store.hent();
+    const vilkaar: any = store.hent();
     expect(vilkaar.art11_3A).toBeFalsy();
     expect(vilkaar.art12_1).toBeTruthy();
   });

@@ -23,14 +23,14 @@ describe("AvklartefaktaStore oppdatering av eksisterende data med subjektID", ()
     store = new AvklartefaktaStore();
 
     const af = konverterAvklartfaktaTilStegData(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND, fakta);
-    store.oppdaterStegData("TESTSTEG-1", af);
+    store.oppdaterStegData("TESTSTEG-1", af!);
   });
 
   it("Legg til annet avklartfakta på samme steg", () => {
     const af = lagAvklartfakta(KV.Koder.avklartefaktaKoder.VIRKSOMHET, "VY Opplevelsesreiser");
     store.oppdaterStegData("TESTSTEG-1", af);
 
-    const avklartefaktaListe = store.hent();
+    const avklartefaktaListe: any = store.hent();
     expect(avklartefaktaListe.INSTALLASJON_ARBEIDSLAND).toHaveLength(1);
     expect(avklartefaktaListe.VIRKSOMHET).toHaveLength(1);
   });
@@ -39,7 +39,7 @@ describe("AvklartefaktaStore oppdatering av eksisterende data med subjektID", ()
     const af = lagAvklartfakta(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND, "Olympic Bibby", "NO");
     store.oppdaterStegData("TESTSTEG-1", af);
 
-    const avklartefaktaListe = store.hent();
+    const avklartefaktaListe: any = store.hent();
     expect(avklartefaktaListe.INSTALLASJON_ARBEIDSLAND).toEqual(
       expect.arrayContaining([
         expect.objectContaining({ subjektID: "Seven Kestrel", fakta: ["GB"] }),
@@ -54,7 +54,7 @@ describe("AvklartefaktaStore oppdatering av eksisterende data med subjektID", ()
     ]);
     store.oppdaterStegData("TESTSTEG-1", af);
 
-    const avklartefaktaListe = store.hent();
+    const avklartefaktaListe: any = store.hent();
     expect(avklartefaktaListe.INSTALLASJON_ARBEIDSLAND).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
@@ -92,7 +92,7 @@ describe("AvklartefaktaStore sletting av avklartefakta", () => {
   it("Sletter kun oppgitt felt-type", () => {
     store.slettStegData("TESTSTEG-1", slettAvklartfakta(KV.Koder.avklartefaktaKoder.VIRKSOMHET));
 
-    const avklartefaktaListe = store.hent();
+    const avklartefaktaListe: any = store.hent();
     expect(avklartefaktaListe.INSTALLASJON_ARBEIDSLAND).toEqual(
       expect.arrayContaining([expect.objectContaining({ fakta: ["GB"] }), expect.objectContaining({ fakta: ["NO"] })]),
     );
@@ -104,7 +104,7 @@ describe("AvklartefaktaStore sletting av avklartefakta", () => {
       slettAvklartfakta(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND, "Olympic Bibby"),
     );
 
-    const avklartefaktaListe = store.hent();
+    const avklartefaktaListe: any = store.hent();
     expect(avklartefaktaListe.INSTALLASJON_ARBEIDSLAND).toEqual(
       expect.arrayContaining([expect.objectContaining({ fakta: ["GB"] })]),
     );
@@ -123,7 +123,7 @@ describe("AvklartefaktaStore sletting av avklartefakta", () => {
     store.oppdaterStegData("TESTSTEG-2", af);
 
     store.slettStegData("TESTSTEG-1");
-    const avklartefaktaListe = store.hent();
+    const avklartefaktaListe: any = store.hent();
     expect(avklartefaktaListe.INSTALLASJON_ARBEIDSLAND).toEqual(
       expect.arrayContaining([expect.objectContaining({ fakta: ["SE"] })]),
     );

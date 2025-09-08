@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { screen, waitFor, within } from "@testing-library/react";
-import React from "react";
 
 import { JournalforingValues } from "../../../kodeverk/form";
 import MKV from "../../../melosyskodeverk";
@@ -83,12 +82,12 @@ describe("KnyttTilSak", () => {
     mocks.hent.mockReset();
   });
 
-  const WrappedKnyttTilSak = reduxForm({ form: "test" })(KnyttTilSak);
+  const WrappedKnyttTilSak = reduxForm({ form: "test" })(KnyttTilSak as any);
 
   it(`Vis komponent for knytte til eksisterende sak komponent og knapper for å opprette ny behandling dersom siste behandling er inaktiv`, async () => {
     props.sak.behandlingOversikter[0].behandlingsstatus = { kode: MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET };
 
-    await renderWithProvidersAsync(<WrappedKnyttTilSak {...props} />);
+    await renderWithProvidersAsync(<WrappedKnyttTilSak {...(props as any)} />);
 
     expect(screen.getByText("Tidligere behandling er avsluttet.")).toBeInTheDocument();
     expect(screen.getByText("Velg hva du vil gjøre med dokumentet")).toBeInTheDocument();
@@ -103,7 +102,7 @@ describe("KnyttTilSak", () => {
       kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
     };
 
-    renderWithProvidersAsync(<WrappedKnyttTilSak {...props} />);
+    renderWithProvidersAsync(<WrappedKnyttTilSak {...(props as any)} />);
 
     expect(screen.queryByText("Velg hva du vil gjøre med dokumentet")).toBeNull();
     expect(screen.queryByRole("group")).toBeNull();
@@ -113,7 +112,7 @@ describe("KnyttTilSak", () => {
     props.sak.saksstatus.kode = MKV.Koder.saksstatuser.HENLAGT;
     props.erJournalføring = false;
 
-    await renderWithProvidersAsync(<WrappedKnyttTilSak {...props} />);
+    await renderWithProvidersAsync(<WrappedKnyttTilSak {...(props as any)} />);
 
     expect(screen.queryByText("Velg hva du vil gjøre med dokumentet")).toBeNull();
     expect(screen.queryByRole("group")).toBeNull();
@@ -126,7 +125,7 @@ describe("KnyttTilSak", () => {
     };
     props.erJournalføring = true;
 
-    await renderWithProvidersAsync(<WrappedKnyttTilSak {...props} />);
+    await renderWithProvidersAsync(<WrappedKnyttTilSak {...(props as any)} />);
 
     expect(screen.getByRole("checkbox")).toBeInTheDocument();
     expect(screen.getByText(`Oppdater behandlingsstatus til "Vurder dokument"`)).toBeInTheDocument();
@@ -138,7 +137,7 @@ describe("KnyttTilSak", () => {
     };
     props.erJournalføring = false;
 
-    await renderWithProvidersAsync(<WrappedKnyttTilSak {...props} />);
+    await renderWithProvidersAsync(<WrappedKnyttTilSak {...(props as any)} />);
 
     expect(screen.queryByRole("checkbox")).toBeNull();
     expect(screen.queryByText(`Oppdater behandlingsstatus til "Vurder dokument"`)).toBeNull();
@@ -151,7 +150,7 @@ describe("KnyttTilSak", () => {
       kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
     };
 
-    await renderWithProvidersAsync(<WrappedKnyttTilSak {...props} />);
+    await renderWithProvidersAsync(<WrappedKnyttTilSak {...(props as any)} />);
 
     await waitFor(() => expect(mocks.hent).toHaveBeenCalledOnce());
     expect(screen.getByText(/Hvis du har mottatt svar på anmodning om unntak skal du/i)).toBeInTheDocument();
@@ -161,7 +160,7 @@ describe("KnyttTilSak", () => {
     mocks.hent.mockReturnValueOnce({ anmodningsperioder: [{ sendtUtland: true }] });
     props.sak.behandlingOversikter[0].behandlingsstatus = { kode: MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET };
 
-    await renderWithProvidersAsync(<WrappedKnyttTilSak {...props} />);
+    await renderWithProvidersAsync(<WrappedKnyttTilSak {...(props as any)} />);
 
     await waitFor(() => expect(mocks.hent).toHaveBeenCalledOnce());
     expect(screen.queryByText(/Hvis du har mottatt svar på anmodning om unntak skal du/i)).toBeNull();
@@ -172,7 +171,7 @@ describe("KnyttTilSak", () => {
     props.formValues.behandlingstema = "YRKESAKTIV";
     props.formValues.opprettBehandling = true;
 
-    await renderWithProvidersAsync(<WrappedKnyttTilSak {...props} />);
+    await renderWithProvidersAsync(<WrappedKnyttTilSak {...(props as any)} />);
 
     await waitFor(() => expect(mocks.hentBehandlingstyperForKnyttTilSak).toHaveBeenCalled());
     expect(screen.getByText("Behandlingstype")).toBeInTheDocument();
@@ -191,7 +190,7 @@ describe("KnyttTilSak", () => {
     props.formValues.behandlingstema = "YRKESAKTIV";
     props.formValues.opprettBehandling = true;
 
-    await renderWithProvidersAsync(<WrappedKnyttTilSak {...props} />);
+    await renderWithProvidersAsync(<WrappedKnyttTilSak {...(props as any)} />);
 
     await waitFor(() => {
       expect(mocks.hentBehandlingstyperForKnyttTilSak).toHaveBeenCalled();

@@ -1,5 +1,4 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import React from "react";
 
 import VurderingEndrePeriode from "./vurderingEndrePeriode";
 import { lagAvklartfakta } from "../../../../felleskomponenter/stegvelger";
@@ -10,7 +9,7 @@ import { renderWithProviders } from "../../../../ducks/test-utils/renderWithProv
 describe("vurderingEndrePeriode", () => {
   let props: any;
   let initialReduxState: any = null;
-  const WrappedVurderingEndrePeriode = reduxForm({ form: "test" })(VurderingEndrePeriode);
+  const WrappedVurderingEndrePeriode = reduxForm({ form: "test" })(VurderingEndrePeriode as any);
 
   beforeEach(() => {
     vi.clearAllMocks();

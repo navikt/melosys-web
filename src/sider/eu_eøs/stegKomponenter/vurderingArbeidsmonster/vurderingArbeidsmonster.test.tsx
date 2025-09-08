@@ -1,5 +1,4 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import React from "react";
 
 import { VurderingArbeidsmonster } from "./vurderingArbeidsmonster";
 import { renderWithProviders } from "../../../../ducks/test-utils/renderWithProviders";

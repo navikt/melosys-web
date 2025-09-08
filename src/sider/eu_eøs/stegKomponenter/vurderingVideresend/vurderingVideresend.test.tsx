@@ -1,6 +1,4 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { waitFor } from "@testing-library/react";
-import React from "react";
 
 import { reduxForm } from "redux-form";
 import * as KV from "../../../../kodeverk";
@@ -30,11 +28,17 @@ const initialReduxState = {
 
 describe("Vurderingvideresend", () => {
   let props: any;
-  const WrappedVurderingVideresend = reduxForm({ form: KV.Form.VURDERING_VIDERESEND })(VurderingVideresend);
+  const WrappedVurderingVideresend = reduxForm({ form: KV.Form.VURDERING_VIDERESEND })(VurderingVideresend as any);
 
   beforeEach(() => {
-    fetch.resetMocks();
-    fetch.mockResponse(JSON.stringify({}));
+    const mockFetch = vi.fn(() =>
+      Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve({}),
+      }),
+    );
+    global.fetch = mockFetch as any;
+
     props = {
       redigerbart: true,
       videresendSoknad: vi.fn(),

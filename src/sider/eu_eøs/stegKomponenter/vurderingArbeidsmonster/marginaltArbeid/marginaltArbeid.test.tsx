@@ -1,7 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import React from "react";
 
 import { renderWithProviders } from "../../../../../ducks/test-utils/renderWithProviders";
 import { testReduxState } from "../../../../journalforing/komponenter/journalforingform/testReduxState";
@@ -10,7 +8,7 @@ import { lagAvklartfakta } from "../../../../../felleskomponenter/stegvelger";
 import MKV from "../../../../../melosyskodeverk";
 import { BOOLSK_STRING } from "../../../../../constants";
 
-const opprettLand = (k, t) => {
+const opprettLand = (k: any, t: any) => {
   return {
     land: {
       kode: k,
@@ -27,7 +25,7 @@ describe("MarginaltArbeid", () => {
 
   let props: any;
 
-  beforeAll(() => {
+  beforeEach(() => {
     props = {
       arbeidsland: [opprettLand("SVE", "SVERIGE"), opprettLand("NOR", "NORGE")],
       oppdaterData: oppdaterDataMock,

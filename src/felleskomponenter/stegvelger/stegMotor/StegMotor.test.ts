@@ -7,35 +7,35 @@ import Steg from "./steg";
 describe("Stegmotor", () => {
   describe("beregnAlleSteg", () => {
     class Inngangssteg extends Steg {
-      constructor(propslight, posisjon) {
+      constructor(propslight: any, posisjon: any) {
         super(propslight, posisjon);
 
-        this.id = STEG.INNGANG;
-        this._samleRelevanteData = vi.fn();
-        this._beregnRelevantUI = vi.fn();
-        this._kriterier = [{ exec: () => true, nesteSteg: STEG.YRKESAKTIVITET }];
+        (this as any).id = STEG.INNGANG;
+        (this as any)._samleRelevanteData = vi.fn();
+        (this as any)._beregnRelevantUI = vi.fn();
+        (this as any)._kriterier = [{ exec: () => true, nesteSteg: STEG.YRKESAKTIVITET }];
       }
     }
 
     class Endretperiodesteg extends Steg {
-      constructor(propslight, posisjon) {
+      constructor(propslight: any, posisjon: any) {
         super(propslight, posisjon);
 
-        this.id = STEG.ENDRET_PERIODE;
-        this._samleRelevanteData = vi.fn();
-        this._beregnRelevantUI = vi.fn();
-        this._kriterier = [];
+        (this as any).id = STEG.ENDRET_PERIODE;
+        (this as any)._samleRelevanteData = vi.fn();
+        (this as any)._beregnRelevantUI = vi.fn();
+        (this as any)._kriterier = [];
       }
     }
 
     class YrkesaktivitetSteg extends Steg {
-      constructor(propslight, posisjon) {
+      constructor(propslight: any, posisjon: any) {
         super(propslight, posisjon);
 
-        this.id = STEG.YRKESAKTIVITET;
-        this._samleRelevanteData = vi.fn();
-        this._beregnRelevantUI = vi.fn();
-        this._kriterier = [{ exec: () => true, nesteSteg: STEG.ENDRET_PERIODE }];
+        (this as any).id = STEG.YRKESAKTIVITET;
+        (this as any)._samleRelevanteData = vi.fn();
+        (this as any)._beregnRelevantUI = vi.fn();
+        (this as any)._kriterier = [{ exec: () => true, nesteSteg: STEG.ENDRET_PERIODE }];
       }
     }
 

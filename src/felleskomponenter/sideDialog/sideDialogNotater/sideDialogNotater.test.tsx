@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render } from "@testing-library/react";
-import React from "react";
 
 import SideDialogNotater from "./sideDialogNotater";
 
@@ -8,8 +7,13 @@ describe("SideDialogNotater", () => {
   let props: any;
 
   beforeEach(() => {
-    fetch.resetMocks();
-    fetch.mockResponse(JSON.stringify({}));
+    // Mock fetch with proper Response object
+    global.fetch = vi.fn().mockResolvedValue(
+      new Response(JSON.stringify({}), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      }),
+    );
 
     props = {
       saksnummer: "1",

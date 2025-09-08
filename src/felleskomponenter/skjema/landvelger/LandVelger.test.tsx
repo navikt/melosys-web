@@ -1,17 +1,15 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { waitFor } from "@testing-library/react";
-import React from "react";
+import { describe, it, expect, beforeEach } from "vitest";
 
 import LandVelger from "./LandVelger";
 import { renderWithProviders } from "../../../ducks/test-utils/renderWithProviders";
 import MKV from "../../../melosyskodeverk";
 import { reduxForm } from "redux-form";
 
-const WrappedLandVelger = reduxForm({ form: "test" })(LandVelger);
+const WrappedLandVelger = reduxForm({ form: "test" })(LandVelger as any);
 
 describe("Landvelger", () => {
   let props: any;
-  let initialState = null;
+  let initialState: any = null;
 
   beforeEach(() => {
     props = {

@@ -1,39 +1,41 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { waitFor } from "@testing-library/react";
-// import React from "react"; // Not needed in React 17+
 
 import { BrukerNavnSkjema } from "./brukerNavnSkjema";
 import { reduxForm } from "redux-form";
 import { renderWithProviders } from "../../ducks/test-utils/renderWithProviders";
 
-// Type for fetch mock
-declare const fetch: {
-  resetMocks: () => void;
-  mockResponse: (response: string) => void;
-  mockReject: (error: Error) => void;
-};
-
 interface Props {
   form: string;
   settFormBrukerNavn: ReturnType<typeof vi.fn>;
   resetFelter: ReturnType<typeof vi.fn>;
+  className?: string;
+  onChange?: () => void;
+  formValues?: any;
 }
 
 describe("brukernavnskjema", () => {
   let props: Props;
 
   beforeEach(() => {
-    fetch.resetMocks();
-    fetch.mockResponse(JSON.stringify({}));
+    const mockFetch = vi.fn(() =>
+      Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve({}),
+      }),
+    );
+    global.fetch = mockFetch as any;
 
     props = {
       form: "Journalforing_SED",
       settFormBrukerNavn: vi.fn(),
       resetFelter: vi.fn(),
+      className: "",
+      onChange: vi.fn(),
+      formValues: {},
     } as Props;
   });
 
-  const WrappedBrukerNavnSkjema = reduxForm({ form: "test" })(BrukerNavnSkjema);
+  const WrappedBrukerNavnSkjema = reduxForm({ form: "test" })(BrukerNavnSkjema as any);
 
   it("snapshot test", () => {
     const { container } = renderWithProviders(<WrappedBrukerNavnSkjema {...props} />);

@@ -1,6 +1,5 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import { screen } from "@testing-library/react";
-import React from "react";
 
 import { renderWithProviders } from "../../../../../ducks/test-utils/renderWithProviders";
 import MKV from "../../../../../melosyskodeverk";

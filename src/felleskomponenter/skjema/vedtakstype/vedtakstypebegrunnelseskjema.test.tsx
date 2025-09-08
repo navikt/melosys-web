@@ -1,6 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { waitFor } from "@testing-library/react";
-import React from "react";
+import { describe, it, expect, beforeEach } from "vitest";
 
 import VedtakstypebegrunnelseSkjema from "./vedtakstypebegrunnelseskjema";
 import { reduxForm } from "redux-form";
@@ -8,7 +6,7 @@ import { renderWithProviders } from "../../../ducks/test-utils/renderWithProvide
 
 describe("VedtakstypebegrunnelseSkjema", () => {
   let props: any;
-  const WrappedVedtakstypebegrunnelseSkjema = reduxForm({ form: "test" })(VedtakstypebegrunnelseSkjema);
+  const WrappedVedtakstypebegrunnelseSkjema = reduxForm({ form: "test" })(VedtakstypebegrunnelseSkjema as any);
 
   beforeEach(() => {
     props = {

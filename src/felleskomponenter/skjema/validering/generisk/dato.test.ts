@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect } from "vitest";
 import * as Dato from "./dato";
 
 describe("tester dato.js", () => {

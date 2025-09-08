@@ -1,6 +1,5 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import userEvent from "@testing-library/user-event";
-import React from "react";
 
 import Checkbox from "./checkbox";
 import { renderWithProviders } from "../../../ducks/test-utils/renderWithProviders";
@@ -8,7 +7,7 @@ import { reduxForm } from "redux-form";
 
 describe("Checkbox", () => {
   let props: any;
-  const WrappedCheckbox = reduxForm({ form: "test" })(Checkbox);
+  const WrappedCheckbox = reduxForm({ form: "test" })(Checkbox as any);
 
   beforeEach(() => {
     props = {

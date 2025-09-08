@@ -1,16 +1,14 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { waitFor } from "@testing-library/react";
-import React from "react";
 
 import MKV from "../../../../melosyskodeverk";
 import { VurderingVurderarbeidsland } from "./vurderingVurderarbeidsland";
 import { renderWithProviders } from "../../../../ducks/test-utils/renderWithProviders";
 import * as KV from "../../../../kodeverk/index";
-import { STATUS } from "../../../../services/index";
+import { STATUS } from "../../../../services";
 
 describe("VurderingVurderarbeidsland", () => {
   let props: any;
-  let initialReduxState = null;
+  let initialReduxState: any = null;
 
   beforeEach(() => {
     props = {

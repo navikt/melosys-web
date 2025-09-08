@@ -37,7 +37,7 @@ describe("vilkar reducer", () => {
       ],
       status: Utils.STATUS.OK,
     };
-    const reducedState = reducer(initialState, actions.resetState());
+    const reducedState = reducer(initialState as any, actions.resetState());
 
     expect(reducedState).toEqual({
       data: [
@@ -56,7 +56,7 @@ describe("vilkar reducer", () => {
       },
     ];
 
-    const reducedState = reducer(initialState, actions.oppdaterState({}));
+    const reducedState = reducer(initialState as any, actions.oppdaterState({}));
 
     expect(reducedState).toEqual({
       data: [

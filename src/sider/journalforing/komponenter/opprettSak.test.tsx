@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { cleanup } from "@testing-library/react";
-import React from "react";
 
 import OpprettSak from "./opprettSak";
 import MKV from "../../../melosyskodeverk";
@@ -38,7 +37,7 @@ const { BRUKER } = MKV.Koder.aktoersroller;
 const { UTSENDT_ARBEIDSTAKER, UTSENDT_SELVSTENDIG, ARBEID_FLERE_LAND, ARBEID_NORGE_BOSATT_ANNET_LAND, YRKESAKTIV } =
   MKV.Koder.behandlinger.behandlingstema;
 
-const WrappedOpprettSak = reduxForm({ form: "journalforing" })(OpprettSak);
+const WrappedOpprettSak = reduxForm({ form: "journalforing" })(OpprettSak as any);
 
 interface OpprettSakProps {
   journalpostID: string;

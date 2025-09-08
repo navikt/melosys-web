@@ -1,6 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { waitFor } from "@testing-library/react";
-import React from "react";
+import { describe, it, expect, vi } from "vitest";
 
 import MKV from "../../../../melosyskodeverk";
 
@@ -9,7 +7,7 @@ import { reduxForm } from "redux-form";
 import { renderWithProviders } from "../../../../ducks/test-utils/renderWithProviders";
 
 describe("VurderingForretningssted", () => {
-  const WrappedVurderingForretningssted = reduxForm({ form: "test" })(VurderingForretningssted);
+  const WrappedVurderingForretningssted = reduxForm({ form: "test" })(VurderingForretningssted as any);
   const props = {
     bekreftOgFortsett: vi.fn(),
     tilbake: vi.fn(),
@@ -32,7 +30,7 @@ describe("VurderingForretningssted", () => {
   };
 
   it("snapshot test", () => {
-    const { container } = renderWithProviders(<WrappedVurderingForretningssted {...props} />);
+    const { container } = renderWithProviders(<WrappedVurderingForretningssted {...(props as any)} />);
     expect(container).toMatchSnapshot();
   });
 });

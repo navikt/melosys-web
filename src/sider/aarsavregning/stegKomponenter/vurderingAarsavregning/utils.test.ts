@@ -29,6 +29,7 @@ vi.mock("../../../../utils", async (importOriginal) => {
       ...actual.dato,
       formatterDatoTilISO: vi.fn(),
       formatterDatoTilNorsk: vi.fn(),
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       sorterEtterNorskFomDato: vi.fn((_a, _b) => 0), // Simplified sort mock
     },
     streng: {

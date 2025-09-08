@@ -1,6 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { waitFor } from "@testing-library/react";
-import React from "react";
+import { describe, it, expect } from "vitest";
 
 import Input from "./input";
 import { reduxForm, Field } from "redux-form";

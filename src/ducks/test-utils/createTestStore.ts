@@ -1,5 +1,5 @@
+import type { ConfigureStoreOptions, Store } from "@reduxjs/toolkit";
 import { configureStore } from "@reduxjs/toolkit";
-import type { Store } from "@reduxjs/toolkit";
 import rootReducer from "../../reducer";
 import type { RootState } from "AppTypes";
 
@@ -11,10 +11,13 @@ import type { RootState } from "AppTypes";
  * @param options - Additional store configuration options
  * @returns Configured Redux store
  */
-export const createTestStore = (preloadedState: Partial<RootState> = {}, options: any = {}): Store<RootState> => {
-  const store = configureStore({
-    reducer: rootReducer,
-    preloadedState: preloadedState as any,
+export const createTestStore = (
+  preloadedState: Partial<RootState> = {},
+  options: Partial<ConfigureStoreOptions<RootState>> = {},
+): Store<RootState> => {
+  return configureStore({
+    reducer: rootReducer as any,
+    preloadedState,
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({
         // Disable checks for better test performance
@@ -25,8 +28,6 @@ export const createTestStore = (preloadedState: Partial<RootState> = {}, options
       }),
     ...options,
   });
-
-  return store;
 };
 
 /**

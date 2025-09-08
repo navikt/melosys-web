@@ -1,6 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { render } from "@testing-library/react";
-// import React from "react"; // Not needed in React 17+
 
 import Begrunnelser from "./begrunnelser";
 
@@ -13,7 +12,7 @@ interface Props {
   label: string;
   valgteBegrunnelser: string[];
   muligeBegrunnelser: BegrunnelseKode[];
-  fritekst: string | null;
+  fritekst: string | undefined;
 }
 
 describe("Begrunnelser", () => {
@@ -27,7 +26,7 @@ describe("Begrunnelser", () => {
         { kode: "KODE1", term: "Term1" },
         { kode: "KODE3", term: "Term3" },
       ],
-      fritekst: null,
+      fritekst: undefined,
     } as Props;
   });
 

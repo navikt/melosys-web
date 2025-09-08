@@ -1,5 +1,4 @@
 import { describe, it, expect, vi } from "vitest";
-import React from "react";
 
 import { Soknadsperiode } from "./soknadsperiode";
 import { renderWithProviders } from "../../../../../ducks/test-utils/renderWithProviders";

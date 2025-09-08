@@ -7,7 +7,7 @@ describe("Steg", () => {
     constructor(propslight: any, posisjon: number) {
       super(propslight, posisjon);
 
-      this._kriterier = [
+      (this as any)._kriterier = [
         {
           exec: () => false,
           nesteSteg: STEG.ARTIKKEL_13_2_B,
@@ -18,16 +18,16 @@ describe("Steg", () => {
         },
       ];
 
-      this.id = STEG.INNGANG;
-      this._samleRelevanteData = vi.fn();
-      this._beregnRelevantUI = vi.fn();
+      (this as any).id = STEG.INNGANG;
+      (this as any)._samleRelevanteData = vi.fn();
+      (this as any)._beregnRelevantUI = vi.fn();
     }
   }
 
   describe("byggSteg", () => {
     it("setter status FEIL dersom beregnRelevantUI returnerer null", () => {
       const inngangssteg = new Inngangssteg({}, 1);
-      inngangssteg.beregnRelevantUI = vi.fn(() => null);
+      (inngangssteg as any).beregnRelevantUI = vi.fn(() => null as any);
       const byggetSteg = inngangssteg.byggSteg();
 
       expect(byggetSteg.status).toBe(FANE_STATUS.FEIL);
@@ -35,7 +35,7 @@ describe("Steg", () => {
 
     it("setter status OK dersom steget har avklaring", () => {
       const inngangssteg = new Inngangssteg({}, 1);
-      inngangssteg.beregnRelevantUI = vi.fn(() => ({ harAvklaring: true }));
+      (inngangssteg as any).beregnRelevantUI = vi.fn(() => ({ harAvklaring: true }));
       const byggetSteg = inngangssteg.byggSteg();
 
       expect(byggetSteg.status).toBe(FANE_STATUS.OK);
@@ -43,7 +43,7 @@ describe("Steg", () => {
 
     it("setter status UBEHANDLET dersom steget ikke har avklaring", () => {
       const inngangssteg = new Inngangssteg({}, 1);
-      inngangssteg.beregnRelevantUI = vi.fn(() => ({ harAvklaring: false }));
+      (inngangssteg as any).beregnRelevantUI = vi.fn(() => ({ harAvklaring: false }));
       const byggetSteg = inngangssteg.byggSteg();
 
       expect(byggetSteg.status).toBe(FANE_STATUS.UBEHANDLET);

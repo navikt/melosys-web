@@ -4,12 +4,7 @@ import { renderWithProviders } from "../../ducks/test-utils/renderWithProviders"
 import { reduxForm } from "redux-form";
 import { STATUS } from "../../services";
 
-// Type for fetch mock
-declare const fetch: {
-  resetMocks: () => void;
-  mockResponse: (response: string) => void;
-  mockReject: (error: Error) => void;
-};
+import { describe, it, expect, vi, beforeEach } from "vitest";
 
 describe("SideDialog", () => {
   const initialReduxState = {
@@ -53,14 +48,16 @@ describe("SideDialog", () => {
       status: STATUS.OK,
     },
   };
-  // @ts-expect-error generisk beskrivelse
-  const WrappedSideDialog = reduxForm({ form: "test" })(SideDialog);
+  const WrappedSideDialog = reduxForm({ form: "test" })(SideDialog as any);
 
   beforeEach(() => {
-    // @ts-expect-error generisk beskrivelse
-    fetch.resetMocks();
-    // @ts-expect-error generisk beskrivelse
-    fetch.mockResponse(JSON.stringify({}));
+    const mockFetch = vi.fn(() =>
+      Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve({}),
+      }),
+    );
+    global.fetch = mockFetch as any;
   });
 
   it("snapshot test", () => {

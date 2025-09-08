@@ -1,13 +1,11 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { waitFor } from "@testing-library/react";
+import { describe, it, expect, beforeEach } from "vitest";
 import userEvent from "@testing-library/user-event";
-import React from "react";
 
 import EnkeltLand from "./enkeltLand";
 import { reduxForm } from "redux-form";
 import { renderWithProviders } from "../../../ducks/test-utils/renderWithProviders";
 
-const WrappedEnkeltLand = reduxForm({ form: "test" })(EnkeltLand);
+const WrappedEnkeltLand = reduxForm({ form: "test" })(EnkeltLand as any);
 
 describe("EnkeltLand", () => {
   let props: any;

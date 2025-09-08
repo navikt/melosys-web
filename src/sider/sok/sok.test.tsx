@@ -1,16 +1,14 @@
 import { screen } from "@testing-library/react";
+import { vi } from "vitest";
 
 import * as Utils from "../../utils";
 import { renderWithProviders } from "../../ducks/test-utils/renderWithProviders";
 
 import { Sok } from "./sok";
 
-// Type for fetch mock
-declare const fetch: {
-  resetMocks: () => void;
-  mockResponse: (response: string) => void;
-  mockReject: (error: Error) => void;
-};
+// Mock fetch globally
+const mockFetch = vi.fn();
+global.fetch = mockFetch as any;
 
 const generator = new Utils.testhelpers.Generator();
 describe("Sok", () => {
@@ -29,17 +27,17 @@ describe("Sok", () => {
   });
 
   beforeAll(() => {
-    // @ts-expect-error generisk beskrivelse
-    fetch.resetMocks();
-    // @ts-expect-error generisk beskrivelse
-    fetch.mockResponse(JSON.stringify({}));
+    mockFetch.mockReset();
+    mockFetch.mockResolvedValue({
+      ok: true,
+      json: async () => ({}),
+    });
     fnr = generator.generateBirthNumber();
     vi.spyOn(window.sessionStorage, "getItem").mockReturnValue(fnr);
   });
 
   afterAll(() => {
-    // @ts-expect-error generisk beskrivelse
-    fetch.resetMocks();
+    mockFetch.mockReset();
     vi.clearAllMocks();
   });
 

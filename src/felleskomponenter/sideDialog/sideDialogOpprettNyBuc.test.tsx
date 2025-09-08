@@ -1,5 +1,4 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import React from "react";
 
 import MKV from "../../melosyskodeverk";
 

@@ -1,6 +1,4 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { waitFor } from "@testing-library/react";
-import React from "react";
 
 import VurderingAvslaaUtpeking from "./vurderingAvslaaUtpeking";
 import { reduxForm } from "redux-form";
@@ -9,7 +7,7 @@ import { renderWithProviders } from "../../../../ducks/test-utils/renderWithProv
 
 describe("VurderingAvslaaUtpeking", () => {
   let props: any;
-  const WrappedVurderingAvslaaUtpeking = reduxForm({ form: KV.Form.AVSLAA_UTPEKING })(VurderingAvslaaUtpeking);
+  const WrappedVurderingAvslaaUtpeking = reduxForm({ form: KV.Form.AVSLAA_UTPEKING })(VurderingAvslaaUtpeking as any);
   const initialReduxState = {
     behandlinger: {
       data: {

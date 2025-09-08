@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { screen } from "@testing-library/react";
-import React from "react";
 
 import MKV from "../../../../melosyskodeverk";
 
@@ -42,7 +41,7 @@ describe("VurderingArtikkel16Vedtak", () => {
     };
   });
 
-  const WrappedArtikkel16Vedtak = reduxForm({ form: KV.Form.ARTIKKEL_16_1_VEDTAK })(VurderingArtikkel16Vedtak);
+  const WrappedArtikkel16Vedtak = reduxForm({ form: KV.Form.ARTIKKEL_16_1_VEDTAK })(VurderingArtikkel16Vedtak as any);
 
   it("viser innvilgelse-komponent ved innvilgelse", () => {
     props.anmodningsperiodesvar.anmodningsperiodeSvarType = MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE;

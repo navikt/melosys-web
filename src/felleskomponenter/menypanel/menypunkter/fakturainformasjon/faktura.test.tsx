@@ -1,5 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import React from "react";
+import { describe, it, expect, beforeEach } from "vitest";
 
 import { Faktura } from "./faktura";
 import { renderWithProviders } from "../../../../ducks/test-utils/renderWithProviders";

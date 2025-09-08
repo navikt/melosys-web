@@ -2,7 +2,6 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { fireEvent } from "@testing-library/react";
 import { queryByAttribute } from "@testing-library/dom";
 import userEvent from "@testing-library/user-event";
-import React from "react";
 
 import MKV from "../../../../melosyskodeverk";
 
@@ -216,7 +215,7 @@ describe("JournalforingForm", () => {
     const user = userEvent.setup();
 
     await user.click(await findByLabelText("Eksisterende sak"));
-    await user.click(await getById(container, "saksnummer-MEL-26"));
+    await user.click(await getById(container, "saksnummer-MEL-26")!);
     expect(queryByLabelText("Legg behandlingen i mine oppgaver")).not.toBeInTheDocument();
   });
 
@@ -227,7 +226,7 @@ describe("JournalforingForm", () => {
     const user = userEvent.setup();
 
     await user.click(await findByLabelText("Eksisterende sak"));
-    await user.click(await getById(container, "saksnummer-MEL-27"));
+    await user.click(await getById(container, "saksnummer-MEL-27")!);
     expect(queryByLabelText("Legg behandlingen i mine oppgaver")).not.toBeInTheDocument();
   });
 
@@ -238,7 +237,7 @@ describe("JournalforingForm", () => {
     const user = userEvent.setup();
 
     await user.click(await findByLabelText("Eksisterende sak"));
-    await user.click(await getById(container, "saksnummer-MEL-23"));
+    await user.click(await getById(container, "saksnummer-MEL-23")!);
     await user.click(await findByLabelText(NY_VURDERING));
     expect(getByText("Melding om saksbehandlingstid")).toBeInTheDocument();
   });
@@ -250,7 +249,7 @@ describe("JournalforingForm", () => {
     const user = userEvent.setup();
 
     await user.click(await findByLabelText("Eksisterende sak"));
-    await user.click(await getById(container, "saksnummer-MEL-23"));
+    await user.click(await getById(container, "saksnummer-MEL-23")!);
     await user.click(await findByLabelText(KLAGE));
     expect(queryByText("Melding om saksbehandlingstid")).not.toBeInTheDocument();
   });

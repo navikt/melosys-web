@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, act } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import React from "react";
 
+// @ts-expect-error - Missing type definitions
 import * as EKV from "eessi-kodeverk";
 import MKV from "../../melosyskodeverk";
 
@@ -13,12 +13,20 @@ vi.mock("../../featuretoggle", () => ({
   useFeatureToggle: vi.fn(),
 }));
 
+vi.mock("../../ducks/dokumenter", () => ({
+  dokumenterOperations: {
+    forhandsvisBrevV2: vi.fn(),
+    forhandsvisSed: vi.fn(),
+  },
+}));
+
+import { dokumenterOperations } from "../../ducks/dokumenter";
+
 describe("Dokumentliste", () => {
   let props: any;
 
   beforeEach(() => {
-    fetch.resetMocks();
-    fetch.mockResponse(JSON.stringify({}));
+    vi.clearAllMocks();
     props = {
       behandlingID: 1,
       dokumenter: [
@@ -55,18 +63,17 @@ describe("Dokumentliste", () => {
 
   describe("forhåndsvisning av brev", () => {
     it("viser feilmelding ved 400-feil fra backend", async () => {
-      const responseBody = {
-        error: null,
+      const errorMessage = "feilmelding";
+      (dokumenterOperations.forhandsvisBrevV2 as any).mockRejectedValue({
         status: 400,
-        message: "feilmelding",
-      };
-      fetch.mockResponse(JSON.stringify(responseBody), { status: responseBody.status });
+        body: { message: errorMessage },
+      });
 
       render(<Dokumentliste {...props} />);
       const user = userEvent.setup();
 
       await act(async () => {
-        user.click(
+        await user.click(
           screen.getByText(
             `${KV.kodeTilTerm(
               props.dokumenter[0].dokumentData?.produserbardokument,
@@ -76,22 +83,19 @@ describe("Dokumentliste", () => {
         );
       });
 
-      expect(await screen.findByText(responseBody.message)).toBeInTheDocument();
+      expect(await screen.findByText(errorMessage)).toBeInTheDocument();
     });
 
     it("viser feilmelding ved 500-feil fra backend", async () => {
-      const responseBody = {
-        error: null,
+      (dokumenterOperations.forhandsvisBrevV2 as any).mockRejectedValue({
         status: 500,
-        message: "feilmelding",
-      };
-      fetch.mockResponse(JSON.stringify(responseBody), { status: responseBody.status });
+      });
 
       render(<Dokumentliste {...props} />);
       const user = userEvent.setup();
 
       await act(async () => {
-        user.click(
+        await user.click(
           screen.getByText(
             `${KV.kodeTilTerm(
               props.dokumenter[0].dokumentData?.produserbardokument,
@@ -107,36 +111,32 @@ describe("Dokumentliste", () => {
 
   describe("forhåndsvisning av sed", () => {
     it("viser feilmelding ved 400-feil fra backend", async () => {
-      const responseBody = {
-        error: null,
+      const errorMessage = "feilmelding";
+      (dokumenterOperations.forhandsvisSed as any).mockRejectedValue({
         status: 400,
-        message: "feilmelding",
-      };
-      fetch.mockResponse(JSON.stringify(responseBody), { status: responseBody.status });
+        body: { message: errorMessage },
+      });
 
       render(<Dokumentliste {...props} />);
       const user = userEvent.setup();
 
       await act(async () => {
-        user.click(screen.getByText(`SED ${props.dokumenter[1].sedType}`));
+        await user.click(screen.getByText(`SED ${props.dokumenter[1].sedType}`));
       });
 
-      expect(await screen.findByText(responseBody.message)).toBeInTheDocument();
+      expect(await screen.findByText(errorMessage)).toBeInTheDocument();
     });
 
     it("viser feilmelding ved 500-feil fra backend", async () => {
-      const responseBody = {
-        error: null,
+      (dokumenterOperations.forhandsvisSed as any).mockRejectedValue({
         status: 500,
-        message: "feilmelding",
-      };
-      fetch.mockResponse(JSON.stringify(responseBody), { status: responseBody.status });
+      });
 
       render(<Dokumentliste {...props} />);
       const user = userEvent.setup();
 
       await act(async () => {
-        user.click(screen.getByText(`SED ${props.dokumenter[1].sedType}`));
+        await user.click(screen.getByText(`SED ${props.dokumenter[1].sedType}`));
       });
 
       expect(await screen.findByText("Det oppstod en feil da SED skulle forhåndsvises!")).toBeInTheDocument();

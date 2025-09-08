@@ -17,6 +17,7 @@ describe("fjernFlereKoder", () => {
     ).toBeUndefined();
     expect(
       rensetKodeverk.KTObjects.begrunnelser.vesentlig_virksomhet_begrunnelser.find(
+        // @ts-expect-error - Missing properties
         ({ kode }) => kode === MKV.Koder.begrunnelser.vesentlig_virksomhet_begrunnelser.KONTRAKTER_IKKE_NORSK_LOV,
       ),
     ).toBeUndefined();
@@ -27,10 +28,14 @@ describe("fjernFlereKoder", () => {
       { path: "begrunnelser.vesentlig_virksomhet_begrunnelser", kode: "KONTRAKTER_IKKE_NORSK_LOV" },
     ]);
 
+    // @ts-expect-error - Missing properties
     expect(MKV.Koder.begrunnelser.vesentlig_virksomhet_begrunnelser.KONTRAKTER_IKKE_NORSK_LOV).toBeDefined();
+    // @ts-expect-error - Missing properties
     expect(MKV.Terms.begrunnelser.vesentlig_virksomhet_begrunnelser.KONTRAKTER_IKKE_NORSK_LOV).toBeDefined();
     expect(
+      // @ts-expect-error - Missing properties
       MKV.KTObjects.begrunnelser.vesentlig_virksomhet_begrunnelser.find(
+        // @ts-expect-error - Missing properties
         ({ kode }) => kode === MKV.Koder.begrunnelser.vesentlig_virksomhet_begrunnelser.KONTRAKTER_IKKE_NORSK_LOV,
       ),
     ).toBeDefined();

@@ -1,6 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { waitFor } from "@testing-library/react";
-import React from "react";
+import { describe, it, expect, beforeEach } from "vitest";
 
 import { EnkeltArbeidsforholdUtland } from "./enkeltArbeidsforholdUtland";
 import { reduxForm } from "redux-form";
@@ -8,7 +6,7 @@ import { renderWithProviders } from "../../../../../ducks/test-utils/renderWithP
 
 describe("EnkeltArbeidsforholdUtland", () => {
   let props: any;
-  const WrappedEnkeltArbeidsforholdUtland = reduxForm({ form: "test" })(EnkeltArbeidsforholdUtland);
+  const WrappedEnkeltArbeidsforholdUtland = reduxForm({ form: "test" })(EnkeltArbeidsforholdUtland as any);
 
   beforeEach(() => {
     props = {
