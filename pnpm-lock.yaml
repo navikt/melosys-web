@@ -138,7 +138,7 @@ importers:
         specifier: ^3.3.7
         version: 3.3.7(graphql-tag@2.12.6(graphql@16.11.0))(graphql@16.11.0)
       "@playwright/test":
-        specifier: ^1.55.0
+        specifier: ^1.44.0
         version: 1.55.0
       "@reduxjs/toolkit":
         specifier: ^2.8.2
