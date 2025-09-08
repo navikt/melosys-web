@@ -9,8 +9,8 @@ Dette dokumentet viser fremgang for migreringen fra JavaScript til TypeScript i 
 | Type | Antall filer | Prosentandel |
 |------|--------------|--------------|
 | **TypeScript** (TS/TSX) | 826 | **63.7%** |
-| **JavaScript** (JS/JSX) | 471 | 36.3% |
-| **Total** | 1,297 | 100% |
+| **JavaScript** (JS/JSX) | 470 | 36.3% |
+| **Total** | 1,296 | 100% |
 
 ### Historisk Progresjon
 
@@ -18,10 +18,9 @@ Dette dokumentet viser fremgang for migreringen fra JavaScript til TypeScript i 
 |-------------------|--------------|--------------|-----------------|--------|
 | 1. Mai 2024       | 597 | 636 | 51.6% | - |
 | 1. Mai 2025       | 568 | 703 | 55.3% | +3.7% |
-| 6. September 2025 | 471 | 826 | **63.7%** | **+8.4%** |
-| 7. September 2025 | 348 | 949 | **73.2%** | **+9.5%** |
+| 8. September 2025 | 470 | 826 | **63.7%** | **+8.4%** |
 
-**Fremgang siste 4 måneder:** +17.9% TypeScript-andel (fra 703→949 TS filer, 568→348 JS filer, netto +26 totale filer)
+**Fremgang siste 4 måneder:** +8.4% TypeScript-andel (fra 703→826 TS filer, 568→470 JS filer, netto -1 totale filer)
 
 ## Nylige Forbedringer
 
@@ -45,15 +44,16 @@ Dette dokumentet viser fremgang for migreringen fra JavaScript til TypeScript i 
 | Kategori | JS/JSX filer | TS/TSX filer | Progresjon | Gjenstår |
 |----------|--------------|--------------|------------|----------|
 | **Komponentfiler** (sider + felleskomponenter) | 240 | 566 | **70.3%** | 29.7% |
-| **Redux moduler** (ducks) | 91 | 140 | **60.6%** | 39.4% |
+| **Redux moduler** (ducks) | 108 | 124 | **53.4%** | 46.6% |
 | **Utility funksjoner** (utils) | 11 | 12 | **52.2%** | 47.8% |
 | **Service moduler** (services) | 29 | 59 | **67.0%** | 33.0% |
-| **TOTALT** | 348 | 949 | **73.2%** | 26.8% |
+| **Annet** | 82 | 65 | **44.2%** | 55.8% |
+| **TOTALT** | 470 | 826 | **63.7%** | 36.3% |
 
 #### Detaljert fordeling:
 - **src/sider/**: 149 JS/JSX filer gjenstår (177 TS/TSX konvertert)
 - **src/felleskomponenter/**: 91 JS/JSX filer gjenstår (389 TS/TSX konvertert)
-- **src/ducks/**: 91 JS filer gjenstår (140 TS konvertert)
+- **src/ducks/**: 108 JS filer gjenstår (124 TS konvertert)
 - **src/utils/**: 11 JS filer gjenstår (12 TS konvertert)
 - **src/services/**: 29 JS filer gjenstår (59 TS/TSX konvertert)
 
