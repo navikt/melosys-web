@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
@@ -136,7 +136,10 @@ function EndreBehandlingModal({
         behandlingstema,
         fagsak.saksnummer,
       ).then((alleMuligeBehandlingstyper) => {
-        setMuligeBehandlingstyper(alleMuligeBehandlingstyper);
+        const alleUnntattÅrsavregning = alleMuligeBehandlingstyper.filter(
+          (type: KTObject) => type.kode !== MKV.Koder.behandlinger.behandlingstyper.ÅRSAVREGNING,
+        );
+        setMuligeBehandlingstyper(alleUnntattÅrsavregning);
       });
     }
   }, [sakstype, sakstema, behandlingstema, erÅrsavregning]);
