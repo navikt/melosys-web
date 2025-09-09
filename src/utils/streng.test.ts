@@ -110,8 +110,8 @@ describe("streng.js", () => {
       expect(tekstEllerDash(undefined)).toEqual("-");
     });
     test("Returnerer gyldig verdi uendret", () => {
-      const data = "test string";
-      expect(tekstEllerDash(data)).toEqual(data);
+      const testString = "test string";
+      expect(tekstEllerDash(testString)).toEqual(testString);
     });
   });
 
