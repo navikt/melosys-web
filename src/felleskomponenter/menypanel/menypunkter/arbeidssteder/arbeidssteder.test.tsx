@@ -50,8 +50,7 @@ describe("Arbeidssteder", () => {
   });
 
   describe("Arbeidssteder på land", () => {
-    // @ts-expect-error generisk beskrivelse
-    const WrappedArbeidssteder = reduxForm({ form: KV.Form.SOKNAD })(Arbeidssteder);
+    const WrappedArbeidssteder = reduxForm({ form: KV.Form.SOKNAD })(Arbeidssteder as any);
 
     it("rendres uten spørsmål fra altinn-søknad dersom mottatteOpplysningerType er annet enn SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS", () => {
       // @ts-expect-error generisk beskrivelse

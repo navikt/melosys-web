@@ -176,7 +176,6 @@ export function DialogboksBekreftValg() {
   };
 
   const bekreftValgTypeData = hentBekreftValgDialogDataFraType();
-
   return (
     <Nav.Modal
       onClose={skjulModal}

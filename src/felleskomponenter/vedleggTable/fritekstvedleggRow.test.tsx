@@ -1,6 +1,5 @@
 import FritekstvedleggRow from "./fritekstvedleggRow";
 import { render } from "@testing-library/react";
-import React from "react";
 
 // Mock the modal component to avoid HTML structure issues in tests
 vi.mock("./slettFritekstvedleggModal", () => ({
