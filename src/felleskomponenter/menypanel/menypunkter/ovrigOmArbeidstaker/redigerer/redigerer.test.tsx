@@ -22,7 +22,7 @@ describe("Redigerer", () => {
       },
     },
   });
-  const WrappedRedigerer = reduxForm({ form: KV.Form.SOKNAD })(Redigerer);
+  const WrappedRedigerer = reduxForm({ form: KV.Form.SOKNAD })(Redigerer as any);
 
   it("beskrivelseArbeidSisteMnd vises hvis harLoennetArbeidMinstEnMndFoerUtsending er false", () => {
     renderWithProviders(<WrappedRedigerer />, { preloadedState: reduxStore(false) });
