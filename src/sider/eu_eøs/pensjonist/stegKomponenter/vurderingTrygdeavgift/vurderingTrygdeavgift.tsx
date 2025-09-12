@@ -34,7 +34,6 @@ import vurderingTrygdeavgiftSchema from "./vurderingTrygdeavgiftSchema";
 
 import { erBrukerSkattepliktigIHelePerioden } from "../../../../aarsavregning/stegKomponenter/vurderingAarsavregning/utils";
 import { fagsakSelectors } from "../../../../../ducks/fagsaker";
-import { nyVurdering } from "../../../../../services/modules/journalforing";
 const { EU_EOS } = MKV.Koder.sakstyper;
 const { PENSJONIST } = MKV.Koder.behandlinger.behandlingstema;
 interface Props {
@@ -142,7 +141,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
       skatteforholdsperioder.length > 0 &&
       redigerbart
     ) {
-      eøsPensjonistBeregnTrygdeavgiftsperioder(formValues);
+      debounceBeregnTrygdeavgiftsperioder(formValues, formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType));
       setHarBeregnetNyTrygdeavgift(true);
     }
   }, [harBeregnetNyTrygdeavgift, formValues]);
