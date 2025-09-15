@@ -62,7 +62,7 @@
     "test:coverage": "vitest --coverage",
     "test:e2e": "npx playwright test",
     "test:e2e:ui": "npx playwright test --ui",
-    "serve": "node generate-local-config.mjs .local.env && pnpm run-sdasdp start:css serve:js",
+    "serve": "node generate-local-config.mjs .local.env && pnpm run-p start:css serve:js",
     "start:q1": "node generate-local-config.mjs .q1.env && pnpm run-p start:css start:js",
     "start:q2": "node generate-local-config.mjs .q2.env && pnpm run-p start:css start:js",
     "build": "pnpm run-p build:css build:js",
