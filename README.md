@@ -72,7 +72,7 @@ Se dokumentasjon [her](./src/graphql/README.md).
 ### Enhetstesting
 Prosjektet bruker Vitest for enhetstesting. Kjør enhetstester med:
 ```
-npm test
+pnpm test
 ```
 
 ### End-to-End Testing
@@ -81,7 +81,7 @@ Prosjektet er konfigurert med Playwright for end-to-end testing, inkludert:
 - Tilgjengelighetstesting med Axe
 
 #### Installasjon
-Playwright-nettlesere og CLI installeres automatisk når du kjører `npm install` via postinstall-skriptet. Dette sikrer at alle nødvendige komponenter er tilgjengelige for å kjøre e2e-tester.
+Playwright-nettlesere og CLI installeres automatisk når du kjører `pnpm install` via postinstall-skriptet. Dette sikrer at alle nødvendige komponenter er tilgjengelige for å kjøre e2e-tester.
 
 Hvis du får feilmeldingen `playwright: command not found`, kan du manuelt installere Playwright-nettlesere og CLI ved å kjøre:
 ```
@@ -91,8 +91,8 @@ npx playwright install
 #### Kjøring av tester
 Kjør e2e-tester med:
 ```
-npm run test:e2e          # Kjør alle e2e-tester
-npm run test:e2e:ui       # Kjør tester med UI-modus for debugging
+pnpm run test:e2e          # Kjør alle e2e-tester
+pnpm run test:e2e:ui       # Kjør tester med UI-modus for debugging
 ```
 
 For mer detaljert informasjon om e2e-testing, se [e2e-testdokumentasjonen](./tests/e2e/README.md).
