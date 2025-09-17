@@ -4,7 +4,7 @@ import * as Nav from "../../../../navFrontend";
 
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 
-import "./medlemskap.css";
+import "./medlemskap.less";
 import MedlemskapTable from "./medlemskapTable";
 
 const mapStateToProps = (state: RootState) => ({

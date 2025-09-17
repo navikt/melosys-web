@@ -1,7 +1,7 @@
 import * as Utils from "../../../../utils";
 import TabellArbeidsgiver from "./tabellArbeidsgiver";
 
-import "./inntekt.css";
+import "./inntekt.less";
 
 interface InntektItem {
   opplysningspliktigID?: string;

@@ -1,6 +1,6 @@
 import * as Nav from "../../../../../navFrontend";
 
-import "./stegerstatterBase.css";
+import "./stegerstatterBase.less";
 
 interface StegerstatterBaseProps {
   tittel: string;

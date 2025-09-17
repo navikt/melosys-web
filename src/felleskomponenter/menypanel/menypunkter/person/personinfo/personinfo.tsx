@@ -10,7 +10,7 @@ import useHentPersonopplysninger from "../../../../informasjonlinje/useHentperso
 
 import { useHentPersoninfoQuery } from "./hentPersoninfo.generated";
 
-import "./personinfo.css";
+import "./personinfo.less";
 
 interface PersonInfoProps {
   behandlingID: number;

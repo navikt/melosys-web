@@ -22,7 +22,7 @@ import { lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
 import { redigerbartSelectors } from "../../../../ducks/redigerbart";
 
 import { mottatteOpplysningerOperations } from "../../../../ducks/mottatteOpplysninger";
-import "./vurderingEndrePeriode.css";
+import "./vurderingEndrePeriode.less";
 
 class VurderingEndrePeriode extends Component {
   state = {

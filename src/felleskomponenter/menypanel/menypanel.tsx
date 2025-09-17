@@ -16,7 +16,7 @@ import { fagsakSelectors } from "../../ducks/fagsaker";
 
 import OppdaterRegisteropplysninger from "./oppdaterRegisteropplysninger";
 import { LinkGroupsFactory } from "./linkgroups";
-import "./menypanel.css";
+import "./menypanel.less";
 import { useFeatureToggle } from "../../featuretoggle";
 import { MELOSYS_PENSJONIST, MELOSYS_PENSJONIST_EØS } from "../../featuretoggle/toggleNavn";
 

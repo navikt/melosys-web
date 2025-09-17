@@ -23,7 +23,7 @@ import { vedtakOperations } from "../../ducks/vedtak";
 import { formSelectors } from "../../ducks/form";
 import { redigerbartSelectors } from "../../ducks/redigerbart";
 
-import "./stegvelger.css";
+import "./stegvelger.less";
 import { modalerSelectors } from "../../ducks/modaler";
 import { get as getValueAtPath } from "lodash";
 

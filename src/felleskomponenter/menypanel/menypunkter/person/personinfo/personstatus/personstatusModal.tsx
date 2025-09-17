@@ -3,7 +3,7 @@ import * as Utils from "../../../../../../utils";
 import { Folkeregisterpersonstatus } from "../../../../../../graphql";
 import { GyldighetshistorikkInfo } from "../../historikk/gyldighetshistorikkInfo";
 import bem from "../../../../../../bemUtils";
-import "./personstatusModal.css";
+import "./personstatusModal.less";
 
 interface PersonstatusTabellProps {
   personstatuser: Folkeregisterpersonstatus[];

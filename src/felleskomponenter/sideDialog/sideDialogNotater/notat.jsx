@@ -5,7 +5,7 @@ import * as Nav from "../../../navFrontend";
 import * as Utils from "../../../utils";
 import * as Ikoner from "../../../resources/images";
 
-import "./notat.css";
+import "./notat.less";
 
 function Notat({ redigerbart, tekst, opprettetDato, endretDato, forfatter, onUpdate, overskrift, maksTekstLengde }) {
   const [endres, setEndres] = useState(false);

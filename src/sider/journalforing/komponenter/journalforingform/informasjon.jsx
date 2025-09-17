@@ -21,7 +21,7 @@ import { sokOperations } from "../../../../ducks/sok";
 import { OrganisasjonOperations } from "../../../../ducks/organisasjoner";
 import { formSelectors } from "../../../../ducks/form";
 
-import "./informasjon.css";
+import "./informasjon.less";
 
 const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
 

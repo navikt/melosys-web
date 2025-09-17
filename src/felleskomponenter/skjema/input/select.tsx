@@ -4,7 +4,7 @@ import * as Nav from "../../../navFrontend";
 import * as SkjemaUtils from "../utils";
 import * as Utils from "../../../utils";
 
-import "../skjema.css";
+import "../skjema.less";
 
 interface SelectWrappedComponentBaseProps
   extends Omit<React.SelectHTMLAttributes<HTMLSelectElement>, "size" | "multiple"> {

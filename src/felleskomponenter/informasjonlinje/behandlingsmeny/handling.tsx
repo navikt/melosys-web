@@ -1,5 +1,5 @@
 import { ReactNode, KeyboardEvent } from "react";
-import "./handling.css";
+import "./handling.less";
 
 interface HandlingProps {
   ikon?: ReactNode;

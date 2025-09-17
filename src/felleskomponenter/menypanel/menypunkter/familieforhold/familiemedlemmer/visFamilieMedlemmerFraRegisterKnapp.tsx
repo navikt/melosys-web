@@ -2,7 +2,7 @@ import * as Nav from "../../../../../navFrontend";
 import * as Tags from "../../../tags";
 import bem from "../../../../../bemUtils";
 
-import "./familiemedlemmer.css";
+import "./familiemedlemmer.less";
 
 interface VisFamilieMedlemmerFraRegisterKnappProps {
   onClick: (visFamilieforholdFraRegister: boolean) => void;

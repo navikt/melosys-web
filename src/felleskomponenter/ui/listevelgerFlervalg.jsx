@@ -7,7 +7,7 @@ import * as KV from "../../kodeverk";
 import * as Nav from "../../navFrontend";
 import * as MPT from "../../proptypes";
 
-import "./listevelgerFlervalg.css";
+import "./listevelgerFlervalg.less";
 
 /** Dette er komponent for ett enkeltvalg. Dersom tillatFritekst === true, vil Nav.Input brukes
  * slik at brukeren kan redigere innholdet i feltet også ETTER at det er lagt til.

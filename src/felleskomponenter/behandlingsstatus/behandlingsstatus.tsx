@@ -7,7 +7,7 @@ import * as KV from "../../kodeverk";
 
 import { formatterDatoTilNorsk } from "../../utils/dato";
 
-import "./behandlingsstatus.css";
+import "./behandlingsstatus.less";
 
 interface BehandlingsstatusMedSvarfristProps {
   behandlingsstatus: KTObject;

@@ -30,7 +30,7 @@ import { lovvalgsperioderOperations } from "../../../ducks/lovvalgsperioder";
 import { landkoderOperations } from "../../../ducks/landkoder";
 
 import stegMap from "./stegMap";
-import "./vurderutpeking.css";
+import "./vurderutpeking.less";
 
 const hentForsteSteg = (behandlingstema) => {
   switch (behandlingstema) {

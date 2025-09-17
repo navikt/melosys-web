@@ -14,7 +14,7 @@ import Soknadsland from "../soknadsland";
 
 import { formatterDatoTilNorsk } from "../../utils/dato";
 
-import "./behandlingOppgave.css";
+import "./behandlingOppgave.less";
 import { useFeatureToggle } from "../../featuretoggle";
 import { MELOSYS_PENSJONIST, MELOSYS_PENSJONIST_EØS } from "../../featuretoggle/toggleNavn";
 

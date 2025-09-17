@@ -8,7 +8,7 @@ import EnkeltLand from "./enkeltLand";
 
 import { lagDatalistID } from "./utils";
 
-import "./landvelger.css";
+import "./landvelger.less";
 
 const mapStateToProps = (state) => ({
   landkoderFraSakstype: landkoderSelectors.LandkoderFraSakstypeSelector(state),

@@ -28,7 +28,7 @@ import { DatoOmradeMedVarighet } from "../../../../felleskomponenter/datoOmrade"
 
 import { delvisInnvilgelseSkjema, avslagSkjema } from "./validering/anmodningunntakSkjema";
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
-import "../saksopplysninger.css";
+import "../saksopplysninger.less";
 import { StatsborgerskapFeil } from "../../../../felleskomponenter/alertmeldinger";
 import Datovelger from "../../../../felleskomponenter/datovelger";
 

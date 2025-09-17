@@ -1,6 +1,6 @@
 import * as Nav from "../../../navFrontend";
 
-import "./fotknapper.css";
+import "./fotknapper.less";
 
 interface FotknapperProps {
   avbrytJournalforing: () => void;

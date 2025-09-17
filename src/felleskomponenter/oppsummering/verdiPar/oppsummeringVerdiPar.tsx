@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 
 import classNames from "classnames";
-import "./oppsummeringVerdiPar.css";
+import "./oppsummeringVerdiPar.less";
 
 interface OppsummeringVerdiParProps {
   className?: string;

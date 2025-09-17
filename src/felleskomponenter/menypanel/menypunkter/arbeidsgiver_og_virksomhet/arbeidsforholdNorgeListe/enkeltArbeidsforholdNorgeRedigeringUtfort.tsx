@@ -6,7 +6,7 @@ import { useAsyncCallbackState } from "../../../../../hooks";
 
 import OrganisasjonsAdresse from "../../../../adresser/organisasjonsAdresse";
 
-import "./enkeltArbeidsforholdNorgeRedigeringUtfort.css";
+import "./enkeltArbeidsforholdNorgeRedigeringUtfort.less";
 
 interface EnkeltArbeidsforholdNorgeRedigeringUtfortProps {
   org: Api.Organisasjon;

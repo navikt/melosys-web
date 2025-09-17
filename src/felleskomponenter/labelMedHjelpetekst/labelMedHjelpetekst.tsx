@@ -1,6 +1,6 @@
 import * as Nav from "../../navFrontend";
 
-import "./labelMedHjelpetekst.css";
+import "./labelMedHjelpetekst.less";
 import { ReactNode } from "react";
 
 interface LabelMedHjelpetekstProps {

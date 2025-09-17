@@ -2,7 +2,7 @@ import PT from "prop-types";
 
 import * as Nav from "../../navFrontend";
 
-import "./ukjentSide.css";
+import "./ukjentSide.less";
 
 /* eslint arrow-body-style:off */
 function UkjentSide({ location }) {

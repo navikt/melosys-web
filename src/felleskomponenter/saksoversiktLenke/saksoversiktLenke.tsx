@@ -12,7 +12,7 @@ import { behandlingerSelectors } from "../../ducks/behandlinger";
 import { fagsakSelectors } from "../../ducks/fagsaker";
 import useHentPersonopplysninger from "../informasjonlinje/useHentpersonopplysninger";
 
-import "./saksoversiktLenke.css";
+import "./saksoversiktLenke.less";
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),

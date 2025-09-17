@@ -6,7 +6,7 @@ import SorterbarListe from "../../../../felleskomponenter/sorterbarListe";
 
 import { oppgaverSelectors } from "../../../../ducks/oppgaver";
 import { landkoderSelectors } from "../../../../ducks/landkoder";
-import "./behandlingsoppgaver.css";
+import "./behandlingsoppgaver.less";
 
 const mapStateToProps = (state: RootState) => ({
   mineSaker: oppgaverSelectors.MineSakerSelector(state),

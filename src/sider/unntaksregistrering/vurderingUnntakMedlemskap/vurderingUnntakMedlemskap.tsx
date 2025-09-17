@@ -24,7 +24,7 @@ import { kontrollOperations, kontrollSelectors } from "../../../ducks/kontroll";
 import { feiletResponsSelectors } from "../../../ducks/feiletRespons";
 
 import vurdering_unntak_medlemskap from "./vurderingUnntakMedlemskapSchema";
-import "./vurderingUnntakMedlemskap.css";
+import "./vurderingUnntakMedlemskap.less";
 import { BestemmelseSelect } from "./bestemmelseSelect";
 import { resetKontrollFeil } from "../../../ducks/kontroll/actions";
 

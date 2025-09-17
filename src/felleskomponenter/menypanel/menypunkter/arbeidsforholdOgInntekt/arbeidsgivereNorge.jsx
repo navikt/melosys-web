@@ -13,7 +13,7 @@ import Organisasjon from "../arbeidsgiver/organisasjon";
 import Arbeidsforholdene from "../arbeidsgiver/arbeidsforhold";
 import Inntekt from "../arbeidsgiver/inntekt";
 
-import "./arbeidsgivereNorge.css";
+import "./arbeidsgivereNorge.less";
 import { Accordion } from "@navikt/ds-react";
 
 function ArbeidsgivereEnkeltNorge(props) {

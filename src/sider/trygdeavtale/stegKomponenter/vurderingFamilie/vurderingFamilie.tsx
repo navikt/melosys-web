@@ -19,7 +19,7 @@ import { StegStatus } from "../../stegvelger";
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import vurdering_familie from "./vurderingFamilieSchema";
 
-import "./vurderingFamilie.css";
+import "./vurderingFamilie.less";
 import { HJELPETEKST, OBS_TEKST } from "./tekster";
 import { Stack } from "@navikt/ds-react";
 

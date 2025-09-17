@@ -13,7 +13,7 @@ import Komponent from "./komponent";
 import { formSelectors } from "../../../ducks/form";
 import { journalforingSelectors } from "../../../ducks/journalforing";
 
-import "./journalforingGjelder.css";
+import "./journalforingGjelder.less";
 import { EnkelNavBox } from "../../../felleskomponenter/enkelNavBox";
 import { HStack } from "@navikt/ds-react";
 

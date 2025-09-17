@@ -7,7 +7,7 @@ import * as Mui from "../../../../../ui";
 import * as Symboler from "../../../symboler";
 
 import bem from "../../../../../../bemUtils";
-import "./adresselinjer.css";
+import "./adresselinjer.less";
 
 const adresselinjerCls = bem("adresselinjer");
 

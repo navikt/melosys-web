@@ -6,7 +6,7 @@ import * as Utils from "../../../utils/dato";
 
 import Datovelger from "../../datovelger";
 
-import "../skjema.css";
+import "../skjema.less";
 
 interface InnerDatovelgerProps {
   label: ReactNode;

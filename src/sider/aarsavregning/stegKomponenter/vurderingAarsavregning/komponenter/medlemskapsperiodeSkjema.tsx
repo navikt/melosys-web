@@ -13,7 +13,7 @@ import { ULAGRET_MEDLEMSKAPSPERIODE_ID } from "../aarsavregningUtenEllerDeltGrun
 import { useEffect } from "react";
 import { FieldArrayProps, FormValuesProps } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
 import { Medlemskapsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
-import "./medlemskapsperiodeSkjema.css";
+import "./medlemskapsperiodeSkjema.less";
 import { usePliktigeBestemmelser } from "../hooks/usePliktigeBestemmelser";
 
 // Funksjon for å kalkulere slettbar-status, nå kalt kanPeriodeSlettes

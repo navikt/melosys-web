@@ -4,7 +4,7 @@ import classNames from "classnames";
 import * as Nav from "../../../navFrontend";
 import * as Ikoner from "../../../resources/images";
 
-import "./stegKnapper.css";
+import "./stegKnapper.less";
 
 interface ButtonProps {
   onClick?: MouseEventHandler<HTMLButtonElement> | undefined;

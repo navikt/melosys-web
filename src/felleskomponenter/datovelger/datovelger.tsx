@@ -2,7 +2,7 @@ import { ChangeEvent, FocusEvent, FocusEventHandler, ReactNode, useId, useState 
 import classNames from "classnames";
 import { DatePicker, useDatepicker } from "@navikt/ds-react";
 import * as Utils from "../../utils";
-import "./datovelger.css";
+import "./datovelger.less";
 import moment from "moment";
 import { SKRIV_INN_GYLDIG_DATO } from "../../kodeverk/feilmeldinger";
 

@@ -10,7 +10,7 @@ import MKV from "../../../melosyskodeverk";
 import Notat from "./notat";
 import Knapperad from "../../knapperad";
 
-import "./sideDialogNotater.css";
+import "./sideDialogNotater.less";
 
 const sortNotaterByOpprettetDato = (forsteNotat, andreNotat) => {
   const { endretDato: forsteEndretDato } = forsteNotat;

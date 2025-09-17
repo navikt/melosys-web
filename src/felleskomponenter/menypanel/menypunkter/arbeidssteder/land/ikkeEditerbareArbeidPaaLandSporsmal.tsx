@@ -7,7 +7,7 @@ import * as Nav from "../../../../../navFrontend";
 import * as KV from "../../../../../kodeverk";
 import * as Utils from "../../../../../utils";
 
-import "./ikkeEditerbareArbeidPaaLandSporsmal.css";
+import "./ikkeEditerbareArbeidPaaLandSporsmal.less";
 
 const soknadFormValueSelector = formValueSelector<KV.Form.SoknadFormData>(KV.Form.SOKNAD);
 

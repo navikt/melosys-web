@@ -5,7 +5,7 @@ import * as Ikoner from "../../resources/images";
 
 import PanelHeader from "../panelHeader";
 
-import "./journalforingOppgave.css";
+import "./journalforingOppgave.less";
 
 function JournalforingOppgave({ sak = {} }) {
   const { journalpostID, oppgaveID, aktivTil, navn } = sak;

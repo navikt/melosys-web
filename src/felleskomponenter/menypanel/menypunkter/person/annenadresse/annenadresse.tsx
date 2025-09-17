@@ -9,7 +9,7 @@ import UtfyltAdresse from "./utfyltadresse";
 
 import { formSelectors } from "../../../../../ducks/form";
 
-import "./annenadresse.css";
+import "./annenadresse.less";
 
 const mapStateToProps = (state: RootState) => ({
   oppgittAdresse: formSelectors.SoknadOppgittAdresseSelector(state),

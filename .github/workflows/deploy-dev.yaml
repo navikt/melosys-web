@@ -43,8 +43,6 @@ jobs:
         run: pnpm install --frozen-lockfile
       - name: check formatting
         run: pnpm prettier:check
-      - name: build css
-        run: pnpm build:css
       - name: lint
         run: pnpm eslint
       - name: test

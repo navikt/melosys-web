@@ -4,7 +4,7 @@ import classnames from "classnames";
 import Legend from "./legend";
 import { Status, SymbolsynlighetConfig } from "./types";
 
-import "./editerbartElement.css";
+import "./editerbartElement.less";
 import * as Nav from "../../../../navFrontend";
 
 interface EditerbartElementProps {

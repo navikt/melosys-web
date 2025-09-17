@@ -3,7 +3,7 @@ import classNames from "classnames";
 
 import * as Ikoner from "../../resources/images";
 
-import "./kopierbarTekst.css";
+import "./kopierbarTekst.less";
 
 interface KopierbarTekstProps {
   className?: string;

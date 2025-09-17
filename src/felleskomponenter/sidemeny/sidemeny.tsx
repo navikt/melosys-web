@@ -6,7 +6,7 @@ import LinkGroup from "./linkgroup";
 import { Link } from "./types";
 import * as Nav from "../../navFrontend";
 
-import "./sidemeny.css";
+import "./sidemeny.less";
 
 const sideMenyCls = bem("side-meny");
 

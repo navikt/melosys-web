@@ -3,7 +3,7 @@ import * as Skjema from "../../../skjema";
 import { DokumenterV2 } from "../../../../services/api";
 import bem from "../../../../bemUtils";
 
-import "./fritekstvedleggSkjema.css";
+import "./fritekstvedleggSkjema.less";
 import { begrensAntallTegn } from "../../../../utils/normalisering";
 import Knapperad from "../../../knapperad";
 import { ColumnWidth } from "nav-frontend-grid";

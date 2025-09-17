@@ -1,5 +1,5 @@
 import * as Nav from "../../../../../navFrontend";
-import "./gyldighetshistorikkInfo.css";
+import "./gyldighetshistorikkInfo.less";
 
 export function GyldighetshistorikkInfo() {
   return (

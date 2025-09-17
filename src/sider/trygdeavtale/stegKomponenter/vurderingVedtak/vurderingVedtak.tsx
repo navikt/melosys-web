@@ -42,7 +42,7 @@ import {
   NY_VURDERING_BAKGRUNN_HJELPETEKST,
   PERIODE_HJELPETEKST,
 } from "./tekster";
-import "./vurderingVedtak.css";
+import "./vurderingVedtak.less";
 import vurdering_vedtak from "./vurderingVedtakSchema";
 
 const { TRYGDEAVTALE_GB, TRYGDEAVTALE_US, TRYGDEAVTALE_CAN, TRYGDEAVTALE_AU } = MKV.Koder.brev.produserbaredokumenter;

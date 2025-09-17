@@ -7,7 +7,7 @@ import * as Forms from "../../../../../felleskomponenter/forms";
 import * as Nav from "../../../../../navFrontend";
 import * as Mui from "../../../../../felleskomponenter/ui";
 import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
-import "./vurderingInngangManglendeInnbetaling.css";
+import "./vurderingInngangManglendeInnbetaling.less";
 import vurdering_inngang_manglende_innbetaling from "./vurderingInngangManglendeInnbetalingSchema";
 import { BOOLSK_STRING } from "../../../../../constants";
 import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../../ducks/oppsummertfakta";

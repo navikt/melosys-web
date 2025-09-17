@@ -9,7 +9,7 @@ import { hentSammensattNavn } from "../../graphql/navn";
 import * as Skjema from "../skjema";
 import * as Nav from "../../navFrontend";
 
-import "./brukerNavnSkjema.css";
+import "./brukerNavnSkjema.less";
 
 export function BrukerNavnSkjema({
   formValues = {},

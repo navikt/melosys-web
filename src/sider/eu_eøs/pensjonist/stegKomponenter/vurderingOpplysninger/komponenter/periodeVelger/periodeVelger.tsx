@@ -1,7 +1,7 @@
 import { Control } from "react-hook-form";
 import * as Nav from "../../../../../../../navFrontend";
 import * as Forms from "../../../../../../../felleskomponenter/forms";
-import "./periodeVelger.css";
+import "./periodeVelger.less";
 import MKV from "../../../../../../../melosyskodeverk";
 import * as Utils from "../../../../../../../utils";
 

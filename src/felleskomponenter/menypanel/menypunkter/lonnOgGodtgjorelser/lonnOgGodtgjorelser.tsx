@@ -13,7 +13,7 @@ import { formSelectors } from "../../../../ducks/form";
 import { BOOLSK_STRING } from "../../../../constants";
 
 import EditerbartElement, { Status } from "../editerbartElement";
-import "./lonnOgGodtgjorelser.css";
+import "./lonnOgGodtgjorelser.less";
 
 interface BooleanFeltRedigererProps {
   tekst: string;

@@ -8,7 +8,7 @@ import * as MPT from "../../../proptypes";
 import * as KV from "../../../kodeverk";
 import * as SkjemaUtils from "../utils";
 
-import "./landvelger.css";
+import "./landvelger.less";
 
 class InnerEnkeltLand extends Component {
   state = {

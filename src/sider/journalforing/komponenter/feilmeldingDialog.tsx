@@ -1,7 +1,7 @@
 import * as Nav from "../../../navFrontend";
 import * as Utils from "../../../utils";
 
-import "./feilmeldingDialog.css";
+import "./feilmeldingDialog.less";
 
 interface Feilmelding {
   tittel: string;

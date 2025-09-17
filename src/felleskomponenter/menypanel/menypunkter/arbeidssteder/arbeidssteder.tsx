@@ -21,7 +21,7 @@ import MKV from "../../../../melosyskodeverk";
 import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
 import { formSelectors } from "../../../../ducks/form";
 
-import "./arbeidssteder.css";
+import "./arbeidssteder.less";
 
 const { SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS } = MKV.Koder.mottatteopplysningertyper;
 const { YRKESAKTIV } = MKV.Koder.behandlinger.behandlingstema;

@@ -21,7 +21,7 @@ import EnkeltLandPure from "../../../../felleskomponenter/skjema/landvelger/enke
 import EnkeltAvklartfakta from "../felles/enkeltAvklartfakta";
 import { BOOLSK_STRING } from "../../../../constants";
 
-import "./vurderingForretningssted.css";
+import "./vurderingForretningssted.less";
 
 function Forretningsstedet(props) {
   const { forretningsstedet, avklartForretningsland = null, oppdaterData, slettData, redigerbart } = props;

@@ -1,4 +1,4 @@
-import "./alertmeldinger.css";
+import "./alertmeldinger.less";
 import { Box } from "@navikt/ds-react";
 import * as Nav from "../../navFrontend";
 

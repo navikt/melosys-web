@@ -7,7 +7,7 @@ import { StrukturertAdresse } from "../../../../adresser";
 
 import { EnRedigeringsknappListeRedigeringUtfort } from "../../editerbartElementListe";
 
-import "./redigeringUtfort.css";
+import "./redigeringUtfort.less";
 
 function RedigeringUtfort({ verdier }: EnRedigeringsknappListeRedigeringUtfort<KV.Form.FysiskArbeidssted>) {
   return (

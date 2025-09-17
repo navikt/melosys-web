@@ -32,7 +32,7 @@ import {
 import { BrevMottakereTabell } from "./mottakertabell/brevMottakereTabell";
 import { Lovvalgsperiode } from "./lovvalgsperiode";
 import vurderingVedtakSchema from "./vurderingVedtakSchema";
-import "./vurderingVedtak.css";
+import "./vurderingVedtak.less";
 
 interface Props {
   tilbake: () => void;

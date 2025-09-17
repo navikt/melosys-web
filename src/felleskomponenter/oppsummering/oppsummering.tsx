@@ -21,7 +21,7 @@ import KopierbarTekst from "../kopierbarTekst";
 
 import OppsummeringVerdiPar from "./verdiPar/oppsummeringVerdiPar";
 import EndreBehandlingModal from "./endreBehandlingModal";
-import "./oppsummering.css";
+import "./oppsummering.less";
 import { useAsyncCallbackState } from "../../hooks";
 import { useFeatureToggle } from "../../featuretoggle";
 import { MELOSYS_PENSJONIST, MELOSYS_PENSJONIST_EØS } from "../../featuretoggle/toggleNavn";

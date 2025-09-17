@@ -3,7 +3,7 @@ import classNames from "classnames";
 
 import bem from "../../bemUtils";
 
-import "./fieldset.css";
+import "./fieldset.less";
 
 interface FieldsetProps extends HTMLAttributes<HTMLFieldSetElement> {
   children: ReactNode | ReactNode[];

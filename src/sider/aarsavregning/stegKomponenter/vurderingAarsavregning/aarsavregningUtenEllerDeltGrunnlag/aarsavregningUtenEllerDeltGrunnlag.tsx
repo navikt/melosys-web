@@ -1,5 +1,5 @@
 import * as Api from "../../../../../services/api";
-import "../vurderingAarsavregningInngang.css";
+import "../vurderingAarsavregningInngang.less";
 import { useCallback, useEffect, useState } from "react";
 import { AarsavregningResponse } from "../../../../../services/modules/aarsavregning/aarsavregning";
 import { useDispatch, useSelector } from "react-redux";

@@ -8,7 +8,7 @@ import Knapperad from "../../knapperad";
 import { FellesHandlersContext } from "../../../contexts";
 import { StandardMeldingOverst } from "../../alertmeldinger";
 import { Spinner } from "../../spinner";
-import "./dialogboksOppfrisk.css";
+import "./dialogboksOppfrisk.less";
 
 function OppfriskBekreft({ bekreft, avbryt }) {
   return (

@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import * as Utils from "../../utils";
 
-import "./errorBoundary.css";
+import "./errorBoundary.less";
 import ErrorMessage from "./errorMessage";
 import { RootState } from "AppTypes";
 import { ReactNode } from "react";

@@ -23,7 +23,7 @@ import { kontrollOperations, kontrollSelectors } from "../../../../ducks/kontrol
 import { endrePeriodeSkjema, ikkeGodkjentBegrunnelseSkjema } from "./validering/unntaksperiodeSchema";
 
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
-import "../saksopplysninger.css";
+import "../saksopplysninger.less";
 
 function Saksopplysninger({
   match,

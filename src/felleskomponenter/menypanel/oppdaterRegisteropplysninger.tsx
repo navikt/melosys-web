@@ -1,6 +1,6 @@
 import { KeyboardEvent, useEffect, useMemo } from "react";
 
-import "./oppdaterRegisteropplysninger.css";
+import "./oppdaterRegisteropplysninger.less";
 import { Refresh } from "../../resources/images";
 import * as Forms from "../forms";
 import { FieldValues, useForm } from "react-hook-form";

@@ -17,7 +17,7 @@ import {
 import { hentFaktaVerdi } from "../../../../domeneUtils";
 
 import { formSelectors } from "../../../../ducks/form";
-import "./vurderingSokkelSkip.css";
+import "./vurderingSokkelSkip.less";
 import { Avklartfakta } from "../../../../services/modules/avklartefakta";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { Feilmelding, finnAktivFeilmelding } from "./feilmeldinger";

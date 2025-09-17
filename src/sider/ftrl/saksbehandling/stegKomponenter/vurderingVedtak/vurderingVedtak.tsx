@@ -27,7 +27,7 @@ import LabelMedHjelpetekst from "../../../../../felleskomponenter/labelMedHjelpe
 import Dokumentliste from "../../../../../felleskomponenter/dokumentliste";
 
 import vurdering_vedtak from "./vurderingVedtakSchema";
-import "./vurderingVedtak.css";
+import "./vurderingVedtak.less";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { feiletResponsSelectors } from "../../../../../ducks/feiletRespons";
 import { NY_VURDERING_BAKGRUNN_HJELPETEKST } from "../../../../ikkeYrkesaktiv/stegKomponenter/vurderingVedtak/tekster";

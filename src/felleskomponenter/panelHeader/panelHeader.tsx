@@ -1,6 +1,6 @@
 import { ElementType, ReactNode } from "react";
 import * as Nav from "../../navFrontend";
-import "./panelHeader.css";
+import "./panelHeader.less";
 
 interface PanelHeaderProps {
   tittel: string;

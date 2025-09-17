@@ -2,7 +2,7 @@ import PT from "prop-types";
 import { connect } from "react-redux";
 
 import StegIkon from "./stegIkon";
-import "./stegLinje.css";
+import "./stegLinje.less";
 import * as Utils from "../../utils";
 
 // TODO: Skrives om i MELOSYS-6023, hvorfor er Steglinje en <ul> ???

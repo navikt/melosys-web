@@ -13,7 +13,7 @@ import MultiSelect from "../multiSelect";
 
 import { lagYupToReduxformErrorMapper } from "../../yup";
 import sideDialogOpprettNyBucSchema from "./sideDialogOpprettNyBucSchema";
-import "./sideDialogOpprettNyBuc.css";
+import "./sideDialogOpprettNyBuc.less";
 import VedleggTable from "../vedleggTable";
 import Knapperad from "../knapperad";
 

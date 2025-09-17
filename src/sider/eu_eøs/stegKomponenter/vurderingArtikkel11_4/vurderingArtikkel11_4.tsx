@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import MKV from "../../../../melosyskodeverk";
 import * as Nav from "../../../../navFrontend";
 import * as Mui from "../../../../felleskomponenter/ui";
-import "./vurderingArtikkel11_4.css";
+import "./vurderingArtikkel11_4.less";
 import {
   konverterLovvalgsbestemmelseTilStegData,
   konverterTilleggBestemmelseTilStegData,

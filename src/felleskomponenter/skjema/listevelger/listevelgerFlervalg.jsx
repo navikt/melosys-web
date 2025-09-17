@@ -5,7 +5,7 @@ import PT from "prop-types";
 import * as KV from "../../../kodeverk";
 import * as Nav from "../../../navFrontend";
 
-import "./listevelger.css";
+import "./listevelger.less";
 import * as Utils from "../../../utils";
 
 /** Dette er komponent for ett enkeltvalg. Dersom tillatFritekst === true, vil Nav.Input brukes

@@ -6,7 +6,7 @@ import * as Nav from "../../navFrontend";
 import * as KV from "../../kodeverk";
 
 import * as Utils from "../../utils";
-import "./feilmelding.css";
+import "./feilmelding.less";
 import { feiletResponsSelectors } from "../../ducks/feiletRespons";
 import { kontrollSelectors } from "../../ducks/kontroll";
 

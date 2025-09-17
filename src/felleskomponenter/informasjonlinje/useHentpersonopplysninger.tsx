@@ -1,4 +1,4 @@
-import "./informasjonlinje.css";
+import "./informasjonlinje.less";
 import MKV from "../../melosyskodeverk";
 import * as StringUtils from "../../utils/streng";
 import * as PersonUtils from "../../utils/person";

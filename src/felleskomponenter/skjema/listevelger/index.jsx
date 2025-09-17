@@ -7,7 +7,7 @@ import * as MPT from "../../../proptypes";
 import ListevelgerEnkelt from "./listevelgerEnkelt";
 import ListevelgerFlervalg from "./listevelgerFlervalg";
 
-import "./listevelger.css";
+import "./listevelger.less";
 
 /** Listevelgeren tillater både én enkeltliste eller en array hvor
  * brukeren kan legge til flere valg. Hvilken av disse som skal benyttes

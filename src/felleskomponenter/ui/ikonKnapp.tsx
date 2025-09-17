@@ -2,7 +2,7 @@ import { ElementType, MouseEventHandler } from "react";
 import classnames from "classnames";
 import * as Nav from "../../navFrontend";
 
-import "./ikonKnapp.css";
+import "./ikonKnapp.less";
 
 interface IkonKnappProps {
   ikon: ElementType;

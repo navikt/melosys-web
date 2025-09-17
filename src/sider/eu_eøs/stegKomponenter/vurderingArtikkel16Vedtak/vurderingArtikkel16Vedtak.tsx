@@ -17,7 +17,7 @@ import { vedtakOperations } from "../../../../ducks/vedtak";
 import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import VurderingArtikkel16VedtakSchema from "./vurderingArtikkel16VedtakSchema";
-import "./vurderingArtikkel16Vedtak.css";
+import "./vurderingArtikkel16Vedtak.less";
 import Innvilgelse from "./komponenter/innvilgelse";
 import DelvisInnvilgelse from "./komponenter/delvisInnvilgelse";
 import { Avslag } from "./komponenter/avslag";

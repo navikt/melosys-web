@@ -1,7 +1,7 @@
 import * as Ikoner from "../../../../../resources/images";
 import * as Mui from "../../../../ui";
 
-import "./sletterad.css";
+import "./sletterad.less";
 
 interface SletteradProps {
   onClick: () => void;

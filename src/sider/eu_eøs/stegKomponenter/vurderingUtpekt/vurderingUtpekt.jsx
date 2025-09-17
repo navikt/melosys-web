@@ -32,7 +32,7 @@ import {
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import vurderingUtpektSchema from "./vurderingUtpektSchema";
 
-import "./vurderingUtpekt.css";
+import "./vurderingUtpekt.less";
 import { useFeatureToggle } from "../../../../featuretoggle";
 import { MELOSYS_NORGE_ER_UTPEKT_11_3_A } from "../../../../featuretoggle/toggleNavn";
 

@@ -25,7 +25,7 @@ import { landkoderOperations } from "../../ducks/landkoder";
 import { journalforingOperations, journalforingSelectors } from "../../ducks/journalforing";
 import { formSelectors } from "../../ducks/form";
 
-import "./journalforing.css";
+import "./journalforing.less";
 
 class Journalforing extends Component {
   state = {

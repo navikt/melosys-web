@@ -12,7 +12,7 @@ import {
   AarsavregningListResponse,
   AarsavregningResponse,
 } from "../../../../services/modules/aarsavregning/aarsavregning";
-import "./vurderingAarsavregningInngang.css";
+import "./vurderingAarsavregningInngang.less";
 
 import { FellesHandlersContext } from "../../../../contexts";
 import { behandlingsresultatOperations } from "../../../../ducks/behandlingsresultat";

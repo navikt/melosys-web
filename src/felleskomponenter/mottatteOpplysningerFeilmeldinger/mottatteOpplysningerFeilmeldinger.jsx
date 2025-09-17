@@ -5,7 +5,7 @@ import { formSelectors } from "../../ducks/form";
 
 import * as Nav from "../../navFrontend";
 
-import "./mottatteOpplysningerFeilmeldinger.css";
+import "./mottatteOpplysningerFeilmeldinger.less";
 
 export function MottatteOpplysningerFeilmeldinger({ panelFeil = [] }) {
   if (panelFeil.length === 0) return null;

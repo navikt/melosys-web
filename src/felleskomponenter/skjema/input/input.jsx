@@ -5,7 +5,7 @@ import * as Nav from "../../../navFrontend";
 import * as SkjemaUtils from "../utils";
 import * as Utils from "../../../utils";
 
-import "../skjema.css";
+import "../skjema.less";
 
 /** Komponenten nedenfor tar imot errorMessage (og alle andre props). ErrorMessage gjøres om til
  * objekt som NAV-Input-komponenten forventer. Før den settes inn i Nav.Input.

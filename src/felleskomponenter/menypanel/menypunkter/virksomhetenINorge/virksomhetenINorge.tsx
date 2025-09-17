@@ -15,7 +15,7 @@ import IkkeRedigerbarSamletVirksomhetINorge from "./ikkeRedigerbarSamletVirksomh
 
 import { mottatteOpplysningerOperations } from "../../../../ducks/mottatteOpplysninger";
 
-import "./virksomhetenINorge.css";
+import "./virksomhetenINorge.less";
 
 const soknadFormValueSelector = formValueSelector<KV.Form.SoknadFormData>(KV.Form.SOKNAD);
 

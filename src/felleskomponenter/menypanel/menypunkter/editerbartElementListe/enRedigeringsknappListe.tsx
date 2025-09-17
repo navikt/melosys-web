@@ -5,7 +5,7 @@ import { PlusCircleIcon } from "@navikt/aksel-icons";
 import EditerbartElement, { SymbolsynlighetConfig } from "../editerbartElement";
 import * as Nav from "../../../../navFrontend";
 
-import "./enRedigeringsknappListe.css";
+import "./enRedigeringsknappListe.less";
 
 export interface Redigerer<T> {
   redigerbart: boolean;

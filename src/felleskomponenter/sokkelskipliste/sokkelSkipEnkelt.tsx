@@ -5,7 +5,7 @@ import * as KV from "../../kodeverk";
 import * as Utils from "../../utils";
 import { konverterAvklartfaktaTilStegData, slettAvklartfakta } from "../stegvelger";
 import { hentFaktaVerdi } from "../../domeneUtils";
-import "./sokkelSkipEnkelt.css";
+import "./sokkelSkipEnkelt.less";
 import ArbeidslandRadioButtons, { ArbeidslandProp } from "./arbeidslandRadioButtons";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { Avklartfakta } from "../../services/modules/avklartefakta";

@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import * as Nav from "../../../../../../navFrontend";
 import EnkeltDato from "../../../../../enkeltDato";
-import "./fødsel.css";
+import "./fødsel.less";
 import { landkoderSelectors } from "../../../../../../ducks/landkoder";
 
 interface FødselProps {

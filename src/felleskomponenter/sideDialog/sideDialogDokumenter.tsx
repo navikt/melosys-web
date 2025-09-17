@@ -14,7 +14,7 @@ import { useAsyncCallbackState, useDispatch } from "../../hooks";
 import PdfLink from "../pdfLink";
 import LagredeUtkast from "./sendBrev/brevutkast/lagredeUtkast";
 
-import "./sideDialogDokumenter.css";
+import "./sideDialogDokumenter.less";
 import * as Utils from "../../utils";
 
 interface MottaksretningIkonProps {

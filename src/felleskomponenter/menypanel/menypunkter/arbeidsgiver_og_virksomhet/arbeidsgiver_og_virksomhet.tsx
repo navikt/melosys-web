@@ -20,7 +20,7 @@ import EnkeltArbeidsforholdUtlandRedigeringUtfort from "./enkeltArbeidsforholdUt
 import { OrganisasjonSelectors, OrganisasjonOperations } from "../../../../ducks/organisasjoner";
 import { fagsakSelectors } from "../../../../ducks/fagsaker";
 
-import "./arbeidsgiver_og_virksomhet.css";
+import "./arbeidsgiver_og_virksomhet.less";
 
 const arbeidsforholdUtlandHarData = (
   elementListe: KV.Form.ArbeidsforholdUtland[],

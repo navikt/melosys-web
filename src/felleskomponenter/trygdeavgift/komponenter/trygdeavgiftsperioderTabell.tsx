@@ -5,7 +5,7 @@ import * as Nav from "../../../navFrontend";
 import { Trygdeavgiftsperiode } from "../../../services/modules/trygdeavgift";
 import { Spinner } from "../../spinner";
 
-import "./trygdeavgiftsperioderTabell.css";
+import "./trygdeavgiftsperioderTabell.less";
 
 function TrygdeavgiftsperioderTabell({
   perioder,

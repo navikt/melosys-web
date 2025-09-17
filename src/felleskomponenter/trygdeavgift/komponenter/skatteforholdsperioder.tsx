@@ -8,7 +8,7 @@ import * as Ikoner from "../../../resources/images";
 
 import { FieldArrayProps, FormValuesProps, Skatteforhold } from "./types";
 import * as Utils from "../../../utils";
-import "./skatteforholdsperioder.css";
+import "./skatteforholdsperioder.less";
 import { HGrid, Stack } from "@navikt/ds-react";
 
 interface SkatteforholdsperioderProps {

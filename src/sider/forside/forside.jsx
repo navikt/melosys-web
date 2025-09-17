@@ -13,7 +13,7 @@ import SokSkjema from "./komponenter/sokskjema";
 
 import ErrorBoundary from "../../felleskomponenter/errorBoundary";
 import * as Ikoner from "../../resources/images";
-import "./forside.css";
+import "./forside.less";
 
 function Forside(props) {
   const { tilOpprettNySak } = props;

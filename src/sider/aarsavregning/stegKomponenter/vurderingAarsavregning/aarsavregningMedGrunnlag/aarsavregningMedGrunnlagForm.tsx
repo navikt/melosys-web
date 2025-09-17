@@ -25,7 +25,7 @@ import { ManuellAvgiftFormPart } from "../komponenter/manuellAvgiftFormPart";
 import { MedlemskapsperiodeDisplay } from "../komponenter/medlemskapsperiodeDisplay";
 import { SumArsavregningTabell } from "../komponenter/sumArsavregningTabell";
 import { beregnTrygdeavgiftsperioder, erBrukerSkattepliktigIHelePerioden } from "../utils";
-import "../vurderingAarsavregningInngang.css";
+import "../vurderingAarsavregningInngang.less";
 import { InitiellData } from "./aarsavregningMedGrunnlag";
 import aarsavregningMedGrunnlagSchema from "./aarsavregningMedGrunnlagSchema";
 import { Feilmelding, finnAktivFeilmelding } from "./valideringsfeil";

@@ -10,7 +10,7 @@ import * as Nav from "../../../navFrontend";
 import * as Api from "../../../services/api";
 import * as Utils from "../../../utils";
 
-import "./knyttTilSak.css";
+import "./knyttTilSak.less";
 import { useAsyncCallbackState } from "../../../hooks";
 import { harFlerePågåendeBehandlinger } from "../../../melosyskodeverk/utils";
 import { FTRL } from "../../../services/api-constants.js";

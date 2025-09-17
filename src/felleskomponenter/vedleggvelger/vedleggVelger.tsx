@@ -3,7 +3,7 @@ import { FysiskDokument } from "Domene";
 import * as Mui from "../ui";
 import * as Ikoner from "../../resources/images";
 
-import "./vedleggVelger.css";
+import "./vedleggVelger.less";
 import VedleggVelgerModal from "./vedleggVelgerModal";
 import * as DokumenterV2 from "../../services/modules/dokumenter-v2";
 import { TilgjengeligStandardvedlegg } from "../../services/modules/dokumenter-v2";

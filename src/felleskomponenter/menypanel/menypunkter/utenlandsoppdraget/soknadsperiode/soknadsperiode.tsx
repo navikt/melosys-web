@@ -16,7 +16,7 @@ import {
 import Knapperad from "../../../../knapperad";
 
 import soknadsperiodeSchema from "./soknadsperiodeSchema";
-import "./soknadsperiode.css";
+import "./soknadsperiode.less";
 
 interface SoknadsperiodeProps {
   redigerbart: boolean;

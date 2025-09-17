@@ -13,7 +13,7 @@ import * as Utils from "../../../utils";
 import LabelMedHjelpetekst from "../../../felleskomponenter/labelMedHjelpetekst";
 import { skalViseIngenFlyt } from "../../../url";
 
-import "./opprettSak.css";
+import "./opprettSak.less";
 import { useFeatureToggle } from "../../../featuretoggle";
 import { MELOSYS_PENSJONIST, MELOSYS_PENSJONIST_EØS } from "../../../featuretoggle/toggleNavn";
 

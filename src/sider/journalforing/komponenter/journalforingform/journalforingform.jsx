@@ -25,7 +25,7 @@ import Komponent, { KomponentUtenOverskrift } from "../komponent";
 import Fotknapper from "../fotknapper";
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import JournalforingSchema from "../journalforingSchema";
-import "./journalforingform.css";
+import "./journalforingform.less";
 
 const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
 const { ANNEN_PERSON_ELLER_VIRKSOMHET } = KV.AvsenderTyper;

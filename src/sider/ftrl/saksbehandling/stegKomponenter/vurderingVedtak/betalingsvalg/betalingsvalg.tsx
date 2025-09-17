@@ -1,5 +1,5 @@
 import * as Nav from "../../../../../../navFrontend";
-import "./betalingsvalg.css";
+import "./betalingsvalg.less";
 
 interface BetalingsvalgProps {
   skalSendeFaktura: boolean;

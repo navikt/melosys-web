@@ -29,7 +29,7 @@ import IdentOgNavn from "./komponenter/identOgNavn";
 
 import { lagYupToReduxformErrorMapper } from "../../yup";
 import opprettNySakSchema from "./opprettnysakSchema";
-import "./opprettnysak.css";
+import "./opprettnysak.less";
 import { Spinner } from "../../felleskomponenter/spinner";
 import { HStack } from "@navikt/ds-react";
 import { EnkelNavBox } from "../../felleskomponenter/enkelNavBox";

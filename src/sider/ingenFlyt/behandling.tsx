@@ -23,7 +23,7 @@ import SaksoversiktLenke from "../../felleskomponenter/saksoversiktLenke";
 import { Innsynsmelding, IngenFlytMelding, VirksomhetMelding } from "../../felleskomponenter/alertmeldinger";
 import SideDialog, { defaultTabs, tabsUtenBucOgSed } from "../../felleskomponenter/sideDialog";
 
-import "./behandling.css";
+import "./behandling.less";
 import { AvslaattPgaManglendeOpplysninger, HenlagtSak } from "../eu_eøs/saksbehandling/komponenter/stegErstatter";
 import { behandlingsresultatSelectors } from "../../ducks/behandlingsresultat";
 

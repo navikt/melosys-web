@@ -6,7 +6,7 @@ import * as Utils from "../../utils";
 
 import RegisterAdresse from "./registerAdresse";
 
-import "./organisasjonsAdresse.css";
+import "./organisasjonsAdresse.less";
 import * as Nav from "../../navFrontend";
 
 function OrganisasjonsAdresse({ organisasjon, className = "", visNavn = true, visTittel = true, boldNavn = false }) {

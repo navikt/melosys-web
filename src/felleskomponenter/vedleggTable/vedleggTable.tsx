@@ -3,7 +3,7 @@ import { BrevVedleggVisningstabellInterface, StandardvedleggType } from "../../s
 import * as Nav from "../../navFrontend";
 import FritekstvedleggRow from "./fritekstvedleggRow";
 import VedleggRow from "./vedleggRow";
-import "./vedleggTable.css";
+import "./vedleggTable.less";
 import { Fritekstvedlegg } from "../sideDialog/sendBrev/brevVedlegg/brevVedlegg";
 
 interface VedleggTableProps {

@@ -1,6 +1,6 @@
 import * as Nav from "../../../../../navFrontend";
 import * as Utils from "../../../../../utils";
-import "./sumArsavregningTabell.css";
+import "./sumArsavregningTabell.less";
 import { formaterTilNorskBelop } from "../../../../../utils";
 import { beregnSumTilFakturaEllerRefusjon } from "../utils";
 

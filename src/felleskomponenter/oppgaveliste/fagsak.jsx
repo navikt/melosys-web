@@ -13,7 +13,7 @@ import { DatoOmradeDescription } from "../datoOmrade";
 import { sorterElementerEtterDato } from "../sorterbarListe";
 import Soknadsland from "../soknadsland";
 
-import "./fagsak.css";
+import "./fagsak.less";
 import { useFeatureToggle } from "../../featuretoggle";
 import { MELOSYS_PENSJONIST, MELOSYS_PENSJONIST_EØS } from "../../featuretoggle/toggleNavn";
 

@@ -13,7 +13,7 @@ import Organisasjon from "../../arbeidsgiver/organisasjon";
 import Kontaktopplysninger, { useKontaktOpplysninger } from "../../kontaktopplysninger";
 import EnkeltArbeidsforholdNorgeRedigeringUtfort from "./enkeltArbeidsforholdNorgeRedigeringUtfort";
 
-import "./arbeidsforholdNorgeListe.css";
+import "./arbeidsforholdNorgeListe.less";
 import Orgnrinput from "./orgnrinput";
 
 function EnkeltArbeidsforholdNorgeRedigerer({

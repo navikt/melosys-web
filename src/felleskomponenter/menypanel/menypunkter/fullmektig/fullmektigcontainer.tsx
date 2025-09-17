@@ -4,7 +4,7 @@ import * as Tags from "../../tags";
 import * as Api from "../../../../services/api";
 
 import Fullmektige from "./fullmektige";
-import "./fullmektigcontainer.css";
+import "./fullmektigcontainer.less";
 import ChevronKnapp from "../../../chevronKnapp/chevronKnapp";
 import { useState } from "react";
 import FullmektigHistorikk from "./fullmektigHistorikk";
