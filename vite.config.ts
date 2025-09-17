@@ -17,9 +17,9 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       less: {
-        math: "always",
+        math: "strict",
         relativeUrls: true,
-        javascriptEnabled: true,
+        javascriptEnabled: false,
       },
     },
   },
