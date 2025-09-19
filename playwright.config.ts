@@ -23,7 +23,7 @@ export default defineConfig({
   /* Retry on CI only */
   retries: process.env.CI ? 2 : 1,
   /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? 1 : 2,
+  workers: 1, // Enkelt worker for å sikre testrekkefølge
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
@@ -48,7 +48,10 @@ export default defineConfig({
         navigationTimeout: 30000,
         actionTimeout: 10000,
       },
-      testMatch: "**/*.spec.ts", // Match all spec files
+      testMatch: [
+        "**/opprett-ny-sak.spec.ts", // Kjør "Opprett sak" testene først så vi er sikre på at det finnes testdata
+        "**/*.spec.ts", // Deretter kjør alle andre tester
+      ],
     },
   ],
 
