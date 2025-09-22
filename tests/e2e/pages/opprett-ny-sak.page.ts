@@ -1,5 +1,7 @@
 import { expect, Page } from "@playwright/test";
 
+const SELECT_TIMEOUT = 100; // Ventetid etter valg i dropdown for at avhengige felter skal oppdatere seg
+
 /**
  * Page Object Model for the ny sak
  */
@@ -134,21 +136,6 @@ export class OpprettNySakPage {
     await this.page.waitForLoadState("domcontentloaded");
   }
 
-  async verifiserManglendeBrukerIdFeil(): Promise<void> {
-    // Sjekk at det er feiloppsummering
-    await expect(this.page.locator("text=Følgende feil ble funnet")).toBeVisible();
-
-    // Verifiser feilmelding på selve feltet (den røde teksten under input-feltet)
-    await expect(
-      this.page.locator(".navds-error-message:has-text('Skriv inn gyldig f.nr. eller d-nr.')"),
-    ).toBeVisible();
-
-    // Siden systemet er inkonsistent med hvor mange feilmeldinger som vises,
-    // sjekker vi bare at hovedfeilmeldingen for bruker-ID er der
-    const brukerIdFieldError = this.page.locator(".navds-error-message:has-text('Skriv inn gyldig f.nr. eller d-nr.')");
-    await expect(brukerIdFieldError).toBeVisible();
-  }
-
   /**
    * Verifiser at vi er på 'Opprett ny sak' siden og alle forventede ellementer finnes
    */
@@ -165,119 +152,79 @@ export class OpprettNySakPage {
    * Velg sakstype i dropdown. Tom string velger første tilgjengelige element.
    */
   async velgSakstype(valueOrEmpty: string = ""): Promise<void> {
-    const sakstypeSelect = this.page.locator("select[name='sakstype']");
-    await expect(sakstypeSelect).toBeVisible();
-
-    if (valueOrEmpty === "") {
-      const options = await this.getSelectOptions("sakstype");
-      if (options.length === 0) {
-        throw new Error("Ingen sakstype opsjoner funnet");
-      }
-      await sakstypeSelect.selectOption({ value: options[0] });
-    } else {
-      // Find option by text content and get its value
-      const options = await sakstypeSelect.locator("option").all();
-      let foundValue = null;
-      for (const option of options) {
-        const text = await option.textContent();
-        if (text && text.trim() === valueOrEmpty) {
-          foundValue = await option.getAttribute("value");
-          break;
-        }
-      }
-
-      if (!foundValue) {
-        throw new Error(`Fant ikke sakstype med tekst "${valueOrEmpty}"`);
-      }
-
-      await sakstypeSelect.selectOption({ value: foundValue });
-    }
+    await this.velgDropdownVerdi("sakstype", valueOrEmpty, "Sakstype");
+    await this.page.waitForTimeout(SELECT_TIMEOUT);
   }
 
   /**
    * Velg sakstema i dropdown. Tom string velger første tilgjengelige element.
    */
   async velgSakstema(valueOrEmpty: string = ""): Promise<void> {
-    const sakstemaSelect = this.page.locator("select[name='sakstema']");
-    await expect(sakstemaSelect).toBeVisible();
-
-    if (valueOrEmpty === "") {
-      const options = await this.getSelectOptions("sakstema");
-      if (options.length === 0) {
-        throw new Error("Ingen sakstema opsjoner funnet");
-      }
-      await sakstemaSelect.selectOption({ value: options[0] });
-    } else {
-      await sakstemaSelect.selectOption({ value: valueOrEmpty });
-    }
+    await this.velgDropdownVerdi("sakstema", valueOrEmpty, "Sakstema");
+    await this.page.waitForTimeout(SELECT_TIMEOUT);
   }
 
   /**
    * Velg behandlingstema i dropdown. Tom string velger første tilgjengelige element.
    */
   async velgBehandlingstema(valueOrEmpty: string = ""): Promise<void> {
-    const behandlingstemaSelect = this.page.locator("select[name='behandlingstema']");
-    await expect(behandlingstemaSelect).toBeVisible();
-
-    if (valueOrEmpty === "") {
-      const options = await this.getSelectOptions("behandlingstema");
-      if (options.length === 0) {
-        throw new Error("Ingen behandlingstema opsjoner funnet");
-      }
-      await behandlingstemaSelect.selectOption({ value: options[0] });
-    } else {
-      await behandlingstemaSelect.selectOption({ value: valueOrEmpty });
-    }
+    await this.velgDropdownVerdi("behandlingstema", valueOrEmpty, "Behandlingstema");
+    await this.page.waitForTimeout(SELECT_TIMEOUT);
   }
 
   /**
    * Velg behandlingstype i dropdown. Tom string velger første tilgjengelige element.
    */
   async velgBehandlingstype(valueOrEmpty: string = ""): Promise<void> {
-    const behandlingstypeSelect = this.page.locator("select[name='behandlingstype']");
-    await expect(behandlingstypeSelect).toBeVisible();
-
-    if (valueOrEmpty === "") {
-      const options = await this.getSelectOptions("behandlingstype");
-      if (options.length === 0) {
-        throw new Error("Ingen behandlingstype opsjoner funnet");
-      }
-      await behandlingstypeSelect.selectOption({ value: options[0] });
-    } else {
-      // Find option by text content and get its value
-      const options = await behandlingstypeSelect.locator("option").all();
-      let foundValue = null;
-      for (const option of options) {
-        const text = await option.textContent();
-        if (text && text.trim() === valueOrEmpty) {
-          foundValue = await option.getAttribute("value");
-          break;
-        }
-      }
-
-      if (!foundValue) {
-        throw new Error(`Fant ikke behandlingstype med tekst "${valueOrEmpty}"`);
-      }
-
-      await behandlingstypeSelect.selectOption({ value: foundValue });
-    }
+    await this.velgDropdownVerdi("behandlingstype", valueOrEmpty, "Behandlingstype");
+    await this.page.waitForTimeout(SELECT_TIMEOUT);
   }
 
   /**
    * Velg behandlingsårsak i dropdown. Tom string velger første tilgjengelige element.
    */
   async velgBehandlingsaarsak(valueOrEmpty: string = ""): Promise<void> {
-    const behandlingsaarsakSelect = this.page.locator("select[name='behandlingsaarsakType']");
-    await expect(behandlingsaarsakSelect).toBeVisible();
+    await this.velgDropdownVerdi("behandlingsaarsakType", valueOrEmpty, "Behandlingsårsak");
+  }
+
+  /**
+   * Generisk metode for å velge verdier i dropdown-felter
+   * @param selectName - Name-attributtet til select-elementet
+   * @param valueOrEmpty - Verdi å velge, eller tom string for første tilgjengelige
+   * @param fieldDisplayName - Lesbart navn på feltet for feilmeldinger
+   */
+  private async velgDropdownVerdi(selectName: string, valueOrEmpty: string, fieldDisplayName: string): Promise<void> {
+    const selectElement = this.page.locator(`select[name='${selectName}']`);
+    await expect(selectElement).toBeVisible();
 
     if (valueOrEmpty === "") {
-      const options = await this.getSelectOptions("behandlingsaarsakType");
+      const options = await this.getSelectOptions(selectName);
       if (options.length === 0) {
-        throw new Error("Ingen behandlingsårsak opsjoner funnet");
+        throw new Error(`Ingen ${fieldDisplayName.toLowerCase()} opsjoner funnet`);
       }
-      await behandlingsaarsakSelect.selectOption({ value: options[0] });
+      await selectElement.selectOption({ value: options[0] });
     } else {
-      await behandlingsaarsakSelect.selectOption({ value: valueOrEmpty });
+      // Sjekk om vi skal finne verdi basert på tekst (for enkelte felter)
+      if (selectName === "sakstype" || selectName === "behandlingstype") {
+        // Find option by text content and get its value
+        const options = await selectElement.locator("option").all();
+        let foundValue = null;
+        for (const option of options) {
+          const text = await option.textContent();
+          if (text && text.trim() === valueOrEmpty) {
+            foundValue = await option.getAttribute("value");
+            break;
+          }
+        }
+
+        if (!foundValue) {
+          throw new Error(`Fant ikke ${fieldDisplayName.toLowerCase()} med tekst "${valueOrEmpty}"`);
+        }
+
+        await selectElement.selectOption({ value: foundValue });
+      } else {
+        await selectElement.selectOption({ value: valueOrEmpty });
+      }
     }
   }
 
@@ -336,70 +283,5 @@ export class OpprettNySakPage {
 
     // Vent på at valget er registrert - sjekk at dropdown har lukket seg
     await expect(this.page.locator('[role="option"]')).toHaveCount(0);
-  }
-
-  /**
-   * Verifiser at sakopprettelse var vellykket og returner saksnummer/URL
-   */
-  async verifiserOpprettelseAvNySak(): Promise<string> {
-    // Shorter timeout to avoid hanging
-    try {
-      await this.page.waitForLoadState("networkidle", { timeout: 5000 });
-    } catch {
-      // Continue even if networkidle times out
-    }
-
-    const url = this.page.url();
-
-    // Quick check: if we're already away from create page, likely success
-    if (!url.includes("/opprettnysak")) {
-      return `Success: Navigated to ${url}`;
-    }
-
-    // Check for errors on the create page
-    await this.sjekkForFeilPaaOpprettSiden();
-
-    // If still on create page but no errors, assume it's still processing
-    // This might be a case where the form submission is slow but not failed
-    return "Form submitted, no errors detected - assuming success";
-  }
-
-  /**
-   * Hent feilmeldinger fra opprett-siden
-   * @returns String med feilmeldinger eller null hvis ingen feil
-   */
-  async hentFeilmeldinger(): Promise<string | null> {
-    const errorMessage = this.page.locator(".navds-alert--error");
-    const feilFunnetMessage = this.page.locator("text=Følgende feil ble funnet");
-    const tekniskFeilMessage = this.page.locator("text=Teknisk feil");
-
-    if (
-      (await errorMessage.count()) > 0 ||
-      (await feilFunnetMessage.count()) > 0 ||
-      (await tekniskFeilMessage.count()) > 0
-    ) {
-      let errorText = "";
-      if ((await errorMessage.count()) > 0) {
-        errorText = (await errorMessage.textContent()) || "";
-      }
-      if ((await feilFunnetMessage.count()) > 0) {
-        errorText += (await feilFunnetMessage.textContent()) || "";
-      }
-      if ((await tekniskFeilMessage.count()) > 0) {
-        errorText += (await tekniskFeilMessage.textContent()) || "";
-      }
-      return errorText;
-    }
-    return null;
-  }
-
-  /**
-   * Sjekk for feil på opprett-siden og kast exception hvis feil finnes
-   */
-  async sjekkForFeilPaaOpprettSiden(): Promise<void> {
-    const feilmeldinger = await this.hentFeilmeldinger();
-    if (feilmeldinger) {
-      throw new Error(`Sakopprettelse feilet med feilmelding: ${feilmeldinger}`);
-    }
   }
 }

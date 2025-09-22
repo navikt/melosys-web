@@ -43,68 +43,6 @@ export async function assertFieldError(scope: Page | Locator, errorText: string 
 }
 
 /**
- * Verifiserer at en feilmelding er knyttet til et spesifikt felt
- * @param scope - Side eller locator-område å søke innenfor
- * @param fieldLabel - Label/navn på feltet
- * @param errorText - Forventet feilmeldingstekst
- */
-export async function assertFieldErrorWithLabel(
-  scope: Page | Locator,
-  fieldLabel: string | RegExp,
-  errorText: string | RegExp,
-) {
-  // Først verifiser at feltet eksisterer - prøv først med exact match for input/select
-  let field = scope.getByLabel(fieldLabel, { exact: true }).locator("input, select, textarea").first();
-
-  // Hvis det ikke fungerer, prøv uten exact og ta første
-  const fieldCount = await field.count();
-  if (fieldCount === 0) {
-    field = scope.getByLabel(fieldLabel).first();
-  }
-
-  await expect(field).toBeVisible({ timeout: 5000 });
-
-  // Så verifiser at feilmeldingen eksisterer på siden
-  const fieldError = scope
-    .locator(
-      ".navds-error-message, .feilmelding, .skjemaelement__feilmelding, [data-testid*='error'], .navds-alert--error",
-    )
-    .filter({
-      hasText: errorText,
-    })
-    .first();
-
-  await expect(fieldError).toBeVisible();
-
-  // Valgfritt: Sjekk om feilmeldingen er nær feltet (innenfor 3 nivåer opp i DOM)
-  // Dette sikrer at feilmeldingen er visuelt knyttet til feltet
-  let container = field;
-  for (let i = 0; i < 3; i++) {
-    container = container.locator("..");
-    const errorInContainer = await container
-      .locator(
-        ".navds-error-message, .feilmelding, .skjemaelement__feilmelding, [data-testid*='error'], .navds-alert--error",
-      )
-      .filter({ hasText: errorText })
-      .count();
-
-    if (errorInContainer > 0) {
-      return; // Feilmeldingen er funnet nær feltet
-    }
-  }
-
-  // Hvis vi kommer hit, eksisterer feilmeldingen men er ikke visuelt knyttet til feltet
-  // Vi lager en soft assertion som informerer testeren
-  expect
-    .soft(
-      false,
-      `Feilmeldingen "${errorText}" ble funnet på siden, men ser ikke ut til å være visuelt knyttet til feltet "${fieldLabel}". ` +
-        `Dette kan indikere at feilmeldingen vises et annet sted enn forventet i brukergrensesnittet.`,
-    )
-    .toBeTruthy();
-}
-
-/**
  * Verifiserer at BARE de spesifiserte field errors er synlige (ingen ekstra)
  * @param scope - Side eller locator-område å søke innenfor
  * @param errorTexts - Array med forventede feilmeldinger
@@ -133,12 +71,7 @@ export async function assertFieldErrors(scope: Page | Locator, errorTexts: (stri
           typeof expected === "string" ? actual.includes(expected) : expected.test(actual),
         ),
     );
-    const missing = expectedStrings.filter(
-      (expected) =>
-        !actualErrors.some((actual) =>
-          typeof expected === "string" ? actual.includes(expected) : new RegExp(expected).test(actual),
-        ),
-    );
+    const missing = expectedStrings.filter((expected) => !actualErrors.some((actual) => actual.includes(expected)));
 
     let errorMsg = `Feil antall feltfeil. Forventet ${errorTexts.length}, fikk ${actualCount}.`;
     errorMsg += `\nFaktiske feltfeil: ${actualErrors.map((e) => `"${e}"`).join(", ")}`;
@@ -158,9 +91,77 @@ export async function assertFieldErrors(scope: Page | Locator, errorTexts: (stri
 /**
  * Verifiserer både individuelle field errors og feiloppsummering
  * @param scope - Side eller locator-område å søke innenfor
- * @param errorTexts - Array med forventede feilmeldinger
+ * @param errorTexts - Array med forventede feilmeldinger. Tom array betyr ingen feil forventes.
  */
 export async function assertErrors(scope: Page | Locator, errorTexts: (string | RegExp)[]) {
+  // Hvis tom array, sjekk at INGEN feilmeldinger vises
+  if (errorTexts.length === 0) {
+    const allFieldErrors = scope
+      .locator(
+        ".navds-alert--error, .feilmelding, .skjemaelement__feilmelding, [data-testid*='error'], .navds-alert--error",
+      )
+      .and(scope.locator(':not(:has-text("Følgende feil ble funnet"))'));
+
+    // Sjekk også for tekniske feilmeldinger
+    const tekniskeFeil = scope.getByText(/Teknisk feil/);
+
+    const actualCount = await allFieldErrors.count();
+    const tekniskFeilCount = await tekniskeFeil.count();
+
+    if (actualCount > 0 || tekniskFeilCount > 0) {
+      const actualErrors: string[] = [];
+      const seenErrors = new Set<string>();
+
+      // Samle vanlige feilmeldinger
+      for (let i = 0; i < actualCount; i++) {
+        const text = await allFieldErrors.nth(i).textContent();
+        if (text) {
+          const cleanText = text.trim().replace(/^Feil/, "").trim();
+          if (cleanText && !seenErrors.has(cleanText)) {
+            actualErrors.push(cleanText);
+            seenErrors.add(cleanText);
+          }
+        }
+      }
+
+      // Samle tekniske feilmeldinger
+      for (let i = 0; i < tekniskFeilCount; i++) {
+        const text = await tekniskeFeil.nth(i).textContent();
+        if (text) {
+          const cleanText = text.trim();
+          if (cleanText && !seenErrors.has(cleanText)) {
+            actualErrors.push(cleanText);
+            seenErrors.add(cleanText);
+          }
+        }
+      }
+
+      throw new Error(`Uventede feilmeldinger funnet:\n${actualErrors.map((e, i) => `  ${i + 1}. ${e}`).join("\n")}`);
+    }
+
+    // Sjekk også at det ikke er feiloppsummering
+    const errorBox = scope.getByText("Følgende feil ble funnet");
+    if (await errorBox.isVisible()) {
+      // Hent innholdet i feiloppsummeringen for å vise hvilke feil som faktisk er der
+      const summaryBox = errorBox.locator("..").first();
+      const errorListItems = summaryBox.locator("li");
+      const summaryErrorCount = await errorListItems.count();
+
+      if (summaryErrorCount > 0) {
+        const summaryErrors: string[] = [];
+        for (let i = 0; i < summaryErrorCount; i++) {
+          const text = await errorListItems.nth(i).textContent();
+          if (text) summaryErrors.push(text.trim());
+        }
+        throw new Error(`Uventet "Følgende feil ble funnet" melding: ${summaryErrors.map((e) => `"${e}"`).join(", ")}`);
+      } else {
+        throw new Error('Uventet "Følgende feil ble funnet" melding: (tom oppsummering)');
+      }
+    }
+
+    return; // Ingen feil funnet, som forventet
+  }
+
   // Verifiser at BARE de forventede field errors er synlige
   await assertFieldErrors(scope, errorTexts);
 
@@ -203,4 +204,28 @@ export async function assertErrors(scope: Page | Locator, errorTexts: (string | 
     const errorItem = summaryBox.getByText(errorText);
     await expect(errorItem).toBeVisible();
   }
+}
+
+/**
+ * Verifiserer at en ny behandling ble opprettet vellykket ved å sjekke:
+ * 1. Ingen feilmeldinger på opprett-siden
+ * 2. Navigasjon til hovedsiden
+ * 3. Ingen feilmeldinger på hovedsiden
+ * @param page - Playwright page objekt
+ */
+export async function assertNyBehandlingOpprettet(page: Page) {
+  // Vent litt for at siden skal prosessere
+  await page.waitForTimeout(2000);
+
+  // Sjekk først om vi fortsatt er på opprett-siden og har feilmeldinger
+  if (page.url().includes("/opprettnysak")) {
+    // Vi er fortsatt på opprett-siden, sjekk for feilmeldinger
+    await assertErrors(page, []);
+  }
+
+  // Vent på at navigasjonen til hovedsiden fullføres
+  await page.waitForURL(/\/melosys\/$/, { timeout: 15000 });
+
+  // Verifiser at det ikke vises feilmeldinger på hovedsiden
+  await assertErrors(page, []);
 }
