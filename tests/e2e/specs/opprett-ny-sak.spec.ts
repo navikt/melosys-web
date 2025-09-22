@@ -3,7 +3,7 @@ import { runAxeAnalyze } from "../utils/axeUtils";
 import { HovedsidePage, USER_ID_VALID, ORG_NUMBER_VALID } from "../pages/hovedside.page";
 import { OpprettNySakPage } from "../pages/opprett-ny-sak.page";
 import { SokPage } from "../pages/sok.page";
-import { assertFieldError, assertFieldErrorsWithLabels } from "../utils/testUtils";
+import { assertErrors, assertFieldError } from "../utils/testUtils";
 
 let opprettNySakPage: OpprettNySakPage;
 const TIMEOUT_BETWEEN_FIELD_SELECT = 100;
@@ -30,7 +30,7 @@ test.describe("'Opprett ny sak/behandling' hovedside", () => {
     page,
   }, testInfo) => {
     await opprettNySakPage.klikkOpprettNyBehandling();
-    await opprettNySakPage.verifiserManglendeBrukerIdFeil();
+    await assertErrors(page, ["Skriv inn gyldig f.nr. eller d-nr."]);
 
     await runAxeAnalyze(page, testInfo.title);
   });
@@ -48,12 +48,12 @@ test.describe("'Opprett ny sak for bruker", () => {
     await opprettNySakPage.velgOpprettNySak();
     await opprettNySakPage.klikkOpprettNyBehandling();
 
-    await assertFieldErrorsWithLabels(page, [
-      { fieldLabel: "Sakstype", errorText: "Velg sakstype" },
-      { fieldLabel: "Sakstema", errorText: "Velg sakstema" },
-      { fieldLabel: "Behandlingstema", errorText: "Velg behandlingstema" },
-      { fieldLabel: "Behandlingstype", errorText: "Velg behandlingstype" },
-      { fieldLabel: "Årsak", errorText: "Velg behandlingsårsak" },
+    await assertErrors(page, [
+      "Velg sakstype",
+      "Velg sakstema",
+      "Velg behandlingstema",
+      "Velg behandlingstype",
+      "Velg behandlingsårsak",
     ]);
 
     await runAxeAnalyze(page, testInfo.title);
