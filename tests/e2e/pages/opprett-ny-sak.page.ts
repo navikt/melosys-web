@@ -102,7 +102,8 @@ export class OpprettNySakPage {
     await fraInput.clear();
     await fraInput.fill(dato);
     await fraInput.blur();
-    await this.page.waitForTimeout(500);
+    // Vent på at verdien er registrert
+    await expect(fraInput).toHaveValue(dato);
   }
 
   /**
@@ -119,7 +120,8 @@ export class OpprettNySakPage {
     await tilInput.clear();
     await tilInput.fill(dato);
     await tilInput.blur();
-    await this.page.waitForTimeout(500);
+    // Vent på at verdien er registrert
+    await expect(tilInput).toHaveValue(dato);
   }
 
   /**
@@ -286,8 +288,15 @@ export class OpprettNySakPage {
     const select = this.page.locator(`select[name='${selectName}']`);
     await expect(select).toBeVisible();
 
-    // Vent litt for å sikre at select-en er helt lastet
-    await this.page.waitForTimeout(500);
+    // Vent på at select har options lastet (mer enn bare default option)
+    await this.page.waitForFunction(
+      (selectName) => {
+        const selectEl = document.querySelector(`select[name='${selectName}']`) as HTMLSelectElement;
+        return selectEl && selectEl.options.length > 1;
+      },
+      selectName,
+      { timeout: 5000 },
+    );
 
     const options = await select.locator("option").all();
     const values = [];
@@ -305,18 +314,12 @@ export class OpprettNySakPage {
    */
   async setLand(landNavn: string): Promise<void> {
     // Vent for at land-feltet skal vises etter behandlingstema er valgt
-    await this.page.waitForTimeout(2000);
-
     const landFieldset = this.page.locator('fieldset:has-text("land")').first();
-    if ((await landFieldset.count()) === 0) {
-      throw new Error("Ingen land-fieldset funnet.");
-    }
+    await expect(landFieldset).toBeVisible({ timeout: 10000 });
 
     // Finn React Select combobox inne i fieldset
     const combobox = landFieldset.locator('[role="combobox"]').first();
-    if ((await combobox.count()) === 0) {
-      throw new Error("Ingen land-dropdown funnet.");
-    }
+    await expect(combobox).toBeVisible();
 
     // Klikk på dropdown-pilen for å åpne React Select
     const dropdownIndicator = landFieldset.locator(".css-1xc3v61-indicatorContainer").first();
@@ -326,17 +329,13 @@ export class OpprettNySakPage {
       await combobox.click();
     }
 
-    // Vent for at dropdown skal åpne og vise opsjoner
-    await this.page.waitForTimeout(1500);
-
-    // Velg spesifisert land fra dropdown
+    // Vent for at dropdown skal åpne og vise opsjoner, deretter velg land
     const landOption = this.page.locator('[role="option"]').filter({ hasText: landNavn }).first();
-    if ((await landOption.count()) === 0) {
-      throw new Error(`Land "${landNavn}" ble ikke funnet i dropdown.`);
-    }
-
+    await expect(landOption).toBeVisible();
     await landOption.click();
-    await this.page.waitForTimeout(1000);
+
+    // Vent på at valget er registrert - sjekk at dropdown har lukket seg
+    await expect(this.page.locator('[role="option"]')).toHaveCount(0);
   }
 
   /**
