@@ -119,6 +119,60 @@ test.describe("'Opprett ny sak for bruker", () => {
     await runAxeAnalyze(page, testInfo.title);
   });
 
+  test('Opprett sak for sakstype "EU/EØS-land", sakstema "Medlemsskap og lovvalg", uten å velge fra- til-dato og verifiser at det ikke oppstår noen feil', async ({
+    page,
+  }, testInfo) => {
+    await setupOpprettNySakTester(page);
+    await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
+    await opprettNySakPage.velgOpprettNySak();
+
+    await expect(opprettNySakPage.page.locator("select[name='sakstype']")).toBeVisible();
+
+    await opprettNySakPage.velgSakstype("EU/EØS-land");
+    await opprettNySakPage.velgSakstema();
+    await opprettNySakPage.velgBehandlingstema();
+    await opprettNySakPage.velgBehandlingstype();
+    await opprettNySakPage.velgBehandlingsaarsak();
+
+    // await opprettNySakPage.setFraDato("01.01.2024");
+    // await opprettNySakPage.setTilDato("31.12.2024");
+    await opprettNySakPage.setLand("Norge");
+
+    await opprettNySakPage.klikkOpprettNyBehandling();
+
+    // TODO: Vi forventer her en feilmelding om at fra-til dato mangler, men det er ikke implementert og kallet
+    // går til backend som returnerer en feil.
+
+    await runAxeAnalyze(page, testInfo.title);
+  });
+
+  test('Opprett sak for sakstype "EU/EØS-land", sakstema "Medlemsskap og lovvalg", uten å velge land og verifiser at det ikke oppstår noen feil', async ({
+    page,
+  }, testInfo) => {
+    await setupOpprettNySakTester(page);
+    await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
+    await opprettNySakPage.velgOpprettNySak();
+
+    await expect(opprettNySakPage.page.locator("select[name='sakstype']")).toBeVisible();
+
+    await opprettNySakPage.velgSakstype("EU/EØS-land");
+    await opprettNySakPage.velgSakstema();
+    await opprettNySakPage.velgBehandlingstema();
+    await opprettNySakPage.velgBehandlingstype();
+    await opprettNySakPage.velgBehandlingsaarsak();
+
+    await opprettNySakPage.setFraDato("01.01.2024");
+    await opprettNySakPage.setTilDato("31.12.2024");
+    // await opprettNySakPage.setLand("Norge");
+
+    await opprettNySakPage.klikkOpprettNyBehandling();
+
+    // TODO: Vi forventer her en feilmelding om at land mangler, men det er ikke implementert
+    await assertErrors(page, ["Velg minst ett land"]);
+
+    await runAxeAnalyze(page, testInfo.title);
+  });
+
   test('Opprett sak for sakstype "Avtaleland" og verifiser at det ikke oppstår noen feil', async ({
     page,
   }, testInfo) => {
