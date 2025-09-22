@@ -151,7 +151,7 @@ test.describe("'Opprett ny sak for bruker", () => {
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test('Opprett sak for sakstype "Utenfor avtalelaned" og verifiser at den finnes i søkeresultater', async ({
+  test('Opprett sak for sakstype "Utenfor avtaleland" og verifiser at den finnes i søkeresultater', async ({
     page,
   }, testInfo) => {
     await setupOpprettNySakTester(page);
