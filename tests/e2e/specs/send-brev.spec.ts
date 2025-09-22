@@ -10,9 +10,9 @@ async function setupSendBrevTest(page: any) {
   const mainPage = new HovedsidePage(page);
   sb = new SendBrevPage(page);
 
-  // 1) Åpne hovedside og velg første sak
+  // 1) Åpne hovedside og velg første "Yrkesaktiv" sak (brukersak)
   await mainPage.goto();
-  await mainPage.verifyMainPage();
+  await mainPage.verifiserHovedside();
   await mainPage.clickFirstTaskLink();
   await sb.clickSendBrevTab();
 }
@@ -65,8 +65,11 @@ test.describe("Validering av brevmaler for mottaker 'Bruker eller brukers fullme
       "Du må velge type brev",
     ]);
   });
+});
 
+test.describe("Validering av årsavregning brevmaler", () => {
   test("Korrekt validering for brevmal 'Innhenting av inntektsopplysninger for årsavregning'", async ({ page }) => {
+    await setupSendBrevTest(page);
     await sb.selectMottakerByLabel("Bruker eller brukers fullmektig");
     await sb.selectBrevmalByLabel("Innhenting av inntektsopplysninger for årsavregning");
     await sb.clickSendBrev();

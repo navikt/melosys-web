@@ -9,7 +9,7 @@ test("Søk etter gyldig ID og verifiser resultater", async ({ page }, testInfo) 
 
   await mainPage.goto();
 
-  await mainPage.search(USER_ID_VALID);
+  await mainPage.søk(USER_ID_VALID);
 
   await searchResultsPage.verifyValidSearchResults(USER_ID_VALID);
 
@@ -22,7 +22,7 @@ test("Søk etter ugyldig ID og verifiser feilmelding", async ({ page }, testInfo
 
   await mainPage.goto();
 
-  await mainPage.search(USER_ID_INVALID);
+  await mainPage.søk(USER_ID_INVALID);
 
   await searchResultsPage.verifyInvalidSearchResults(USER_ID_INVALID);
 

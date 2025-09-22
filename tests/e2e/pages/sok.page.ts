@@ -31,6 +31,18 @@ export class SokPage {
   }
 
   /**
+   * Verifiser at siden viser korrekte søkeresultater for et organisasjonsnummer
+   * @param orgNr - et gyldig organisasjonsnummer
+   */
+  async verifyValidOrgSearchResults(orgNr: string): Promise<void> {
+    await this.verifySearchResultsPage();
+
+    await expect(this.page.locator(`h2:has-text('Resultater for org.nr. ${orgNr}')`)).toBeVisible();
+    await expect(this.page.locator(`text=Fant ingen saker knyttet til org.nr. ${orgNr}`)).not.toBeVisible();
+    await expect(this.page.locator(".fagsak").first()).toBeVisible();
+  }
+
+  /**
    * Verifiser at siden viser korrekt info for en ugyldig id
    * @param id - en ugyldig id
    */

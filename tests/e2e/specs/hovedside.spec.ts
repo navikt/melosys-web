@@ -7,9 +7,9 @@ test("Hovedsiden lastes korrekt og viser forventede seksjoner", async ({ page },
 
   await mainPage.goto();
 
-  await mainPage.verifyMainPage();
+  await mainPage.verifiserHovedside();
 
-  await expect(mainPage.getCreateNewCaseButton()).toBeVisible();
+  await expect(mainPage.page.locator("button:has-text('Opprett ny sak/behandling')")).toBeVisible();
 
   await runAxeAnalyze(page, testInfo.title);
 });
