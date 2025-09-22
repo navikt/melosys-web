@@ -50,7 +50,7 @@ export default defineConfig({
       },
       testMatch: [
         "**/opprett-ny-sak.spec.ts", // Kjør "Opprett sak" testene først så vi er sikre på at det finnes testdata
-        "**/*.spec.ts", // Deretter kjør alle andre tester
+        "**/!(opprett-ny-sak).spec.ts", // Deretter kjør alle andre tester (unntatt opprett-ny-sak)
       ],
     },
   ],
