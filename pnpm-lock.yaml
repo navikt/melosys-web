@@ -34,12 +34,6 @@ importers:
       classnames:
         specifier: ^2.2.6
         version: 2.5.1
-      diffable-html:
-        specifier: ^5.0.0
-        version: 5.0.0
-      dotenv:
-        specifier: ^16.5.0
-        version: 16.5.0
       eessi-kodeverk:
         specifier: 1.4.3
         version: 1.4.3
@@ -203,6 +197,12 @@ importers:
       axe-html-reporter:
         specifier: ^2.2.11
         version: 2.2.11(axe-core@4.10.3)
+      diffable-html:
+        specifier: ^5.0.0
+        version: 5.0.0
+      dotenv:
+        specifier: ^16.5.0
+        version: 16.5.0
       eslint:
         specifier: ^9.35.0
         version: 9.35.0(jiti@1.21.7)
