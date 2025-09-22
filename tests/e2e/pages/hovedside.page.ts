@@ -43,21 +43,34 @@ export class HovedsidePage {
   }
 
   /**
-   * Klikk på den første saken med "Yrkesaktiv" i sakslista (for brukersaker)
+   * Søk etter en sak med gitt bruker-ID og klikk på første saken som inneholder gitt tekst
+   * @param brukerId - Bruker-ID å søke etter
+   * @param sakTekst - Tekst å finne i saken (f.eks. "Yrkesaktiv - Årsavregning")
    * @returns href attribute til taskens
    */
-  async clickFirstTaskLink(): Promise<string | null> {
-    // Finn en sak som inneholder "Yrkesaktiv" (indikerer brukersak)
-    const taskLink = this.page.locator(".behandlingOppgave__link").filter({ hasText: "Yrkesaktiv" }).first();
+  async visSak(brukerId: string, sakTekst: string): Promise<string | null> {
+    // Søk med bruker-ID for å få frem relevante saker
+    await this.søk(brukerId);
 
-    // Ensure there is at least one "Yrkesaktiv" task available
-    await expect(taskLink, "No 'Yrkesaktiv' tasks available to test").toHaveCount(1);
+    // Vent på at søkeresultatene blir lastet ved å sjekke overskriften
+    await this.page.waitForSelector(`text=Resultater for f.nr./d-nr. ${brukerId}`, {
+      state: "visible",
+      timeout: 5000,
+    });
 
-    const taskLinkHref = await taskLink.getAttribute("href");
-    await taskLink.click();
+    // Finn "Vis behandling" knappen for saken som inneholder gitt tekst
+    const sakButton = this.page
+      .locator(`:has-text('${sakTekst}')`)
+      .locator("button:has-text('Vis behandling')")
+      .first();
+
+    // Ensure there is at least one task available
+    await expect(sakButton, `No '${sakTekst}' tasks found for user ${brukerId}`).toHaveCount(1);
+
+    await sakButton.click();
     await this.page.waitForLoadState("domcontentloaded");
 
-    return taskLinkHref;
+    return null; // Siden vi ikke kan få href fra knappen
   }
 
   /**
