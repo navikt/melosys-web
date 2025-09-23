@@ -3,7 +3,7 @@ import { API_BASE_URL } from "../api-constants";
 import { BrevAdresse } from "./dokumenter-v2";
 
 export const hentPersonAdresse = (personIdent: string): Promise<BrevAdresse> =>
-  getAsJson(`${API_BASE_URL}/adresser?personIdent=${personIdent}`);
+  getAsJson(`${API_BASE_URL}adresser?personIdent=${personIdent}`);
 
 export const hentOrganisasjonAdresse = (orgnr: string): Promise<BrevAdresse> =>
-  getAsJson(`${API_BASE_URL}/adresser?orgnr=${orgnr}`);
+  getAsJson(`${API_BASE_URL}adresser?orgnr=${orgnr}`);

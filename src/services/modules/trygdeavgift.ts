@@ -45,34 +45,34 @@ export interface Fakturamottaker {
 }
 
 export const hentTrygdeavgiftMottaker = (behandlingID: number): Promise<TrygdeavgiftMottakerDto> =>
-  getAsJson(`${API_BASE_URL}/behandlinger/${behandlingID}/${TRYGDEAVGIFT}/mottaker`);
+  getAsJson(`${API_BASE_URL}behandlinger/${behandlingID}/${TRYGDEAVGIFT}/mottaker`);
 
 export const beregnTrygdeavgiftsperioder = (
   behandlingID: number,
   trygdeavgiftsgrunnlag: TrygdeavgiftsgrunnlagDto,
 ): Promise<BeregnetTrygdeavgift> =>
-  putAsJson(`${API_BASE_URL}/behandlinger/${behandlingID}/${TRYGDEAVGIFT}/beregning`, trygdeavgiftsgrunnlag);
+  putAsJson(`${API_BASE_URL}behandlinger/${behandlingID}/${TRYGDEAVGIFT}/beregning`, trygdeavgiftsgrunnlag);
 
 export const eøsPensjonistBeregnTrygdeavgiftsperioder = (
   behandlingID: number,
   trygdeavgiftsgrunnlag: TrygdeavgiftsgrunnlagDto,
 ): Promise<BeregnetTrygdeavgift> =>
   putAsJson(
-    `${API_BASE_URL}/behandlinger/${behandlingID}/${TRYGDEAVGIFT}/${EØS_PENSJONIST}/beregning`,
+    `${API_BASE_URL}behandlinger/${behandlingID}/${TRYGDEAVGIFT}/${EØS_PENSJONIST}/beregning`,
     trygdeavgiftsgrunnlag,
   );
 
 export const hentBeregnetTrygdeavgift = (behandlingID: number): Promise<BeregnetTrygdeavgift> =>
-  getAsJson(`${API_BASE_URL}/behandlinger/${behandlingID}/${TRYGDEAVGIFT}/beregning`);
+  getAsJson(`${API_BASE_URL}behandlinger/${behandlingID}/${TRYGDEAVGIFT}/beregning`);
 
 export const hentBeregnetTrygdeavgiftEosPensjonist = (behandlingID: number): Promise<BeregnetTrygdeavgift> =>
-  getAsJson(`${API_BASE_URL}/behandlinger/${behandlingID}/${TRYGDEAVGIFT}/eos-pensjonist/beregning`);
+  getAsJson(`${API_BASE_URL}behandlinger/${behandlingID}/${TRYGDEAVGIFT}/eos-pensjonist/beregning`);
 
 export const hentOpprinneligTrygdeavgiftsgrunnlag = (behandlingID: number): Promise<TrygdeavgiftsgrunnlagDto> =>
-  getAsJson(`${API_BASE_URL}/behandlinger/${behandlingID}/${TRYGDEAVGIFT}/grunnlag/opprinnelig`);
+  getAsJson(`${API_BASE_URL}behandlinger/${behandlingID}/${TRYGDEAVGIFT}/grunnlag/opprinnelig`);
 
 export const hentFakturamottaker = (behandlingID: number): Promise<Fakturamottaker> =>
-  getAsJson(`${API_BASE_URL}/behandlinger/${behandlingID}/${TRYGDEAVGIFT}/fakturamottaker`);
+  getAsJson(`${API_BASE_URL}behandlinger/${behandlingID}/${TRYGDEAVGIFT}/fakturamottaker`);
 
 export const slettTrygdeavgiftsperioder = (behandlingID: number): Promise<null> =>
-  deleteAsJson(`${API_BASE_URL}/behandlinger/${behandlingID}/${TRYGDEAVGIFT}`);
+  deleteAsJson(`${API_BASE_URL}behandlinger/${behandlingID}/${TRYGDEAVGIFT}`);
