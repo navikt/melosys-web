@@ -324,7 +324,11 @@ export function Inntektskilder({
         );
       })}
       <div className="legg-til__rad">
-        <Mui.Lenkeknapp ikon={Ikoner.Add} onClick={() => append({ ...(defaultPeriode || {}) })} disabled={!redigerbart}>
+        <Mui.Lenkeknapp
+          ikon={Ikoner.Add}
+          onClick={() => append({ ...(defaultPeriode || {}), erMaanedsbelop: BOOLSK_STRING.SANN })}
+          disabled={!redigerbart}
+        >
           Legg til inntekt
         </Mui.Lenkeknapp>
       </div>
