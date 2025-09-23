@@ -172,7 +172,9 @@ function BrevMottaker({
                 </Nav.BodyLong>
                 {!Utils._isEmpty(feil.underpunkter) && (
                   <ul>
-                    {feil.underpunkter?.map((item: Underpunkt) => <li key={item.underpunkt}>{item.underpunkt}</li>)}
+                    {feil.underpunkter?.map((item: Underpunkt) => (
+                      <li key={item.underpunkt}>{item.underpunkt}</li>
+                    ))}
                   </ul>
                 )}
               </Nav.Alert>
