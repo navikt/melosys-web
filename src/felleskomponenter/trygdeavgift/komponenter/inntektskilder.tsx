@@ -129,9 +129,8 @@ export function Inntektskilder({
         const brukerSkattepliktigIHelePerioden = erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder);
 
         const skalFylleInnArbAvgBetales =
-          inntektskilde.kildetype && arbAvgBetalesKreves(inntektskilde.kildetype, medlemskapsTypeErPliktig);
+          arbAvgBetalesKreves(inntektskilde.kildetype, medlemskapsTypeErPliktig);
         const skalFylleInnBruttoInntekt =
-          inntektskilde.kildetype &&
           bruttoInntektKreves(brukerSkattepliktigIHelePerioden, inntektskilde.kildetype, inntektskilde.arbAvgBetales);
         if (!skalFylleInnBruttoInntekt && inntektskilde.bruttoInntekt) {
           // @ts-expect-error - "" er nødvendig for å nullstille feltet
