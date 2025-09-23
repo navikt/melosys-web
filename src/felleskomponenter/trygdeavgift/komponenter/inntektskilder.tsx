@@ -238,12 +238,7 @@ export function Inntektskilder({
                     </option>
                     <option value={BOOLSK_STRING.USANN}>Total</option>
                   </Forms.Select>
-                ) : inntektskilde.kildetype &&
-                  !bruttoInntektKreves(
-                    brukerSkattepliktigIHelePerioden,
-                    inntektskilde.kildetype,
-                    inntektskilde.arbAvgBetales,
-                  ) ? (
+                ) : !skalFylleInnBruttoInntekt ? (
                   <div className="ikkeRelevant">
                     {index === 0 && (
                       <Nav.BodyLong weight="semibold" size="small">
