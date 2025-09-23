@@ -284,12 +284,7 @@ export function Inntektskilder({
                     </Alert>
                   </div>
                 </div>
-              ) : inntektskilde.kildetype &&
-                !bruttoInntektKreves(
-                  brukerSkattepliktigIHelePerioden,
-                  inntektskilde.kildetype,
-                  inntektskilde.arbAvgBetales,
-                ) ? (
+              ) : !skalFylleInnBruttoInntekt ? (
                 <div className="ikkeRelevant">
                   {index === 0 && (
                     <Nav.BodyLong weight="semibold" size="small">
