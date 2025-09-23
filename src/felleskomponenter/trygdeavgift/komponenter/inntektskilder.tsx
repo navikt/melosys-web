@@ -128,12 +128,11 @@ export function Inntektskilder({
       {formValues.inntektskilder.map((inntektskilde, index) => {
         const brukerSkattepliktigIHelePerioden = erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder);
 
-        const skalFylleInnArbAvgBetales = arbAvgBetalesKreves(inntektskilde.kildetype, medlemskapsTypeErPliktig);
-        const skalFylleInnBruttoInntekt = bruttoInntektKreves(
-          brukerSkattepliktigIHelePerioden,
-          inntektskilde.kildetype,
-          inntektskilde.arbAvgBetales,
-        );
+        const skalFylleInnArbAvgBetales =
+          inntektskilde.kildetype && arbAvgBetalesKreves(inntektskilde.kildetype, medlemskapsTypeErPliktig);
+        const skalFylleInnBruttoInntekt =
+          inntektskilde.kildetype &&
+          bruttoInntektKreves(brukerSkattepliktigIHelePerioden, inntektskilde.kildetype, inntektskilde.arbAvgBetales);
         if (!skalFylleInnBruttoInntekt && inntektskilde.bruttoInntekt) {
           // @ts-expect-error - "" er nødvendig for å nullstille feltet
           update(index, { ...inntektskilde, bruttoInntekt: "" });
@@ -190,11 +189,21 @@ export function Inntektskilder({
                   onChange={(value) => handleEndreArbAvgBetales(index, value)}
                 >
                   <Stack gap="6" direction={{ xs: "column", sm: "row" }} wrap={false}>
-                    <Nav.Radio value={BOOLSK_STRING.SANN}>Ja</Nav.Radio>
-                    <Nav.Radio value={BOOLSK_STRING.USANN}>Nei</Nav.Radio>
+                    <Nav.Radio
+                      value={BOOLSK_STRING.SANN}
+                      disabled={!redigerbart || settesDefaultArbAvgBetales(inntektskilde.kildetype)}
+                    >
+                      Ja
+                    </Nav.Radio>
+                    <Nav.Radio
+                      value={BOOLSK_STRING.USANN}
+                      disabled={!redigerbart || settesDefaultArbAvgBetales(inntektskilde.kildetype)}
+                    >
+                      Nei
+                    </Nav.Radio>
                   </Stack>
                 </Forms.RadioGroup>
-              ) : (
+              ) : inntektskilde.kildetype && !arbAvgBetalesKreves(inntektskilde.kildetype, medlemskapsTypeErPliktig) ? (
                 <div className="ikkeRelevant">
                   {index === 0 && (
                     <Nav.BodyLong weight="semibold" size="small">
@@ -202,6 +211,14 @@ export function Inntektskilder({
                     </Nav.BodyLong>
                   )}
                   <p className={`undertekst ${index === 0 ? "med-overskrift" : "uten-overskrift"}`}>Ikke relevant</p>
+                </div>
+              ) : (
+                <div>
+                  {index === 0 && (
+                    <Nav.BodyLong weight="semibold" size="small">
+                      Betales aga.?
+                    </Nav.BodyLong>
+                  )}
                 </div>
               )}
             </Nav.Column>
@@ -222,7 +239,12 @@ export function Inntektskilder({
                     </option>
                     <option value={BOOLSK_STRING.USANN}>Total</option>
                   </Forms.Select>
-                ) : (
+                ) : inntektskilde.kildetype &&
+                  !bruttoInntektKreves(
+                    brukerSkattepliktigIHelePerioden,
+                    inntektskilde.kildetype,
+                    inntektskilde.arbAvgBetales,
+                  ) ? (
                   <div className="ikkeRelevant">
                     {index === 0 && (
                       <Nav.BodyLong weight="semibold" size="small">
@@ -230,6 +252,14 @@ export function Inntektskilder({
                       </Nav.BodyLong>
                     )}
                     <p className={`undertekst ${index === 0 ? "med-overskrift" : "uten-overskrift"}`}>Ikke relevant</p>
+                  </div>
+                ) : (
+                  <div>
+                    {index === 0 && (
+                      <Nav.BodyLong weight="semibold" size="small">
+                        Periode
+                      </Nav.BodyLong>
+                    )}
                   </div>
                 )}
               </Nav.Column>
@@ -260,7 +290,12 @@ export function Inntektskilder({
                     </Alert>
                   </div>
                 </div>
-              ) : (
+              ) : inntektskilde.kildetype &&
+                !bruttoInntektKreves(
+                  brukerSkattepliktigIHelePerioden,
+                  inntektskilde.kildetype,
+                  inntektskilde.arbAvgBetales,
+                ) ? (
                 <div className="ikkeRelevant">
                   {index === 0 && (
                     <Nav.BodyLong weight="semibold" size="small">
@@ -268,6 +303,14 @@ export function Inntektskilder({
                     </Nav.BodyLong>
                   )}
                   <p className={`undertekst ${index === 0 ? "med-overskrift" : "uten-overskrift"}`}>Ikke relevant</p>
+                </div>
+              ) : (
+                <div>
+                  {index === 0 && (
+                    <Nav.BodyLong weight="semibold" size="small">
+                      Bruttoinntekt
+                    </Nav.BodyLong>
+                  )}
                 </div>
               )}
             </Nav.Column>
@@ -281,11 +324,7 @@ export function Inntektskilder({
         );
       })}
       <div className="legg-til__rad">
-        <Mui.Lenkeknapp
-          ikon={Ikoner.Add}
-          onClick={() => append({ ...(defaultPeriode || {}), erMaanedsbelop: BOOLSK_STRING.SANN })}
-          disabled={!redigerbart}
-        >
+        <Mui.Lenkeknapp ikon={Ikoner.Add} onClick={() => append({ ...(defaultPeriode || {}) })} disabled={!redigerbart}>
           Legg til inntekt
         </Mui.Lenkeknapp>
       </div>
