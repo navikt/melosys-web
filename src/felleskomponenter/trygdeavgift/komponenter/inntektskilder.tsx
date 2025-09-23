@@ -203,7 +203,7 @@ export function Inntektskilder({
                     </Nav.Radio>
                   </Stack>
                 </Forms.RadioGroup>
-              ) : inntektskilde.kildetype && !arbAvgBetalesKreves(inntektskilde.kildetype, medlemskapsTypeErPliktig) ? (
+              ) : !skalFylleInnArbAvgBetales ? (
                 <div className="ikkeRelevant">
                   {index === 0 && (
                     <Nav.BodyLong weight="semibold" size="small">
