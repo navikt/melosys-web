@@ -394,7 +394,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
             &nbsp;Dette utløser en standardtekst i brevet
           </>
         }
-        disabled={!redigerbart}
+        readOnly={!redigerbart}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
           Api.Aarsavregning.oppdaterHarSkjoennsfastsattInntekt(behandlingID, e.target.checked);
         }}
