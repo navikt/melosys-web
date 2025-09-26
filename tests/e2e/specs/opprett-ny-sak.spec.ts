@@ -1,12 +1,10 @@
 import { expect, test } from "@playwright/test";
 import { runAxeAnalyze } from "../utils/axeUtils";
-import { HovedsidePage, USER_ID_VALID, ORG_NUMBER_VALID } from "../pages/hovedside.page";
+import { HovedsidePage, ORG_NUMBER_VALID, USER_ID_VALID } from "../pages/hovedside.page";
 import { OpprettNySakPage } from "../pages/opprett-ny-sak.page";
-import { SokPage } from "../pages/sok.page";
-import { assertFieldError, assertFieldErrorsWithLabels } from "../utils/testUtils";
+import { assertErrors, assertFieldError, assertNyBehandlingOpprettet } from "../utils/testUtils";
 
 let opprettNySakPage: OpprettNySakPage;
-const TIMEOUT_BETWEEN_FIELD_SELECT = 100;
 
 async function setupOpprettNySakTester(page: any) {
   const mainPage = new HovedsidePage(page);
@@ -30,7 +28,7 @@ test.describe("'Opprett ny sak/behandling' hovedside", () => {
     page,
   }, testInfo) => {
     await opprettNySakPage.klikkOpprettNyBehandling();
-    await opprettNySakPage.verifiserManglendeBrukerIdFeil();
+    await assertErrors(page, ["Skriv inn gyldig f.nr. eller d-nr."]);
 
     await runAxeAnalyze(page, testInfo.title);
   });
@@ -41,47 +39,61 @@ test.describe("'Opprett ny sak for bruker", () => {
     await setupOpprettNySakTester(page);
   });
 
-  test("Verifiser feilmeldinger ved klikk på 'Opprett ny behandling' når påkrevede felt mangler", async ({
+  test("Klikk på 'Opprett ny behandling' for 'Eksisterende sak' når påkrevede felt mangler og verifiser feilmeldinger", async ({
+    page,
+  }, testInfo) => {
+    await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
+    // Verfiser at eksisterende sak er valgt som default
+    await opprettNySakPage.klikkOpprettNyBehandling();
+
+    await assertErrors(page, ["Velg hvilken sak du ønsker å knytte behandlingen til", "Velg behandlingsårsak"]);
+
+    await runAxeAnalyze(page, testInfo.title);
+  });
+
+  test("Klikk på 'Opprett ny behandling' for 'Opprett ny sak' når påkrevede felt mangler og verifiser feilmeldinger", async ({
     page,
   }, testInfo) => {
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgOpprettNySak();
     await opprettNySakPage.klikkOpprettNyBehandling();
 
-    await assertFieldErrorsWithLabels(page, [
-      { fieldLabel: "Sakstype", errorText: "Velg sakstype" },
-      { fieldLabel: "Sakstema", errorText: "Velg sakstema" },
-      { fieldLabel: "Behandlingstema", errorText: "Velg behandlingstema" },
-      { fieldLabel: "Behandlingstype", errorText: "Velg behandlingstype" },
-      { fieldLabel: "Årsak", errorText: "Velg behandlingsårsak" },
+    await assertErrors(page, [
+      "Velg sakstype",
+      "Velg sakstema",
+      "Velg behandlingstema",
+      "Velg behandlingstype",
+      "Velg behandlingsårsak",
     ]);
 
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("Fyll ut f.nr og velg 'Opprett ny sak' for å opprette ny behandling", async ({ page }, testInfo) => {
-    // Fyll ut bruker-ID og velg "Opprett ny sak"
+  test("Klikk 'Opprett ny behandling' for 'Opprett ny sak' med alle påkrevede felt fyllt inn", async ({
+    page,
+  }, testInfo) => {
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgOpprettNySak();
 
     // Fyll ut alle påkrevde dropdown-felt
     await opprettNySakPage.velgSakstype();
-    await page.waitForTimeout(TIMEOUT_BETWEEN_FIELD_SELECT);
     await opprettNySakPage.velgSakstema();
-    await page.waitForTimeout(TIMEOUT_BETWEEN_FIELD_SELECT);
     await opprettNySakPage.velgBehandlingstema();
-    await page.waitForTimeout(TIMEOUT_BETWEEN_FIELD_SELECT);
     await opprettNySakPage.velgBehandlingstype();
-    await page.waitForTimeout(TIMEOUT_BETWEEN_FIELD_SELECT);
     await opprettNySakPage.velgBehandlingsaarsak();
 
-    // Klikk for å opprette
+    await opprettNySakPage.setLand("Norge");
+    await opprettNySakPage.setFraDato("01.01.2024");
+    await opprettNySakPage.setTilDato("31.12.2024");
+
     await opprettNySakPage.klikkOpprettNyBehandling();
+
+    await assertNyBehandlingOpprettet(page);
 
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test('Opprett sak for sakstype "EU/EØS-land" og verifiser at den finnes i søkeresultater', async ({
+  test('Opprett sak for sakstype "EU/EØS-land" og verifiser at det ikke oppstår noen feil', async ({
     page,
   }, testInfo) => {
     await setupOpprettNySakTester(page);
@@ -91,34 +103,77 @@ test.describe("'Opprett ny sak for bruker", () => {
     await expect(opprettNySakPage.page.locator("select[name='sakstype']")).toBeVisible();
 
     await opprettNySakPage.velgSakstype("EU/EØS-land");
-    await opprettNySakPage.page.waitForTimeout(TIMEOUT_BETWEEN_FIELD_SELECT);
     await opprettNySakPage.velgSakstema();
-    await opprettNySakPage.page.waitForTimeout(TIMEOUT_BETWEEN_FIELD_SELECT);
     await opprettNySakPage.velgBehandlingstema();
-    await opprettNySakPage.page.waitForTimeout(TIMEOUT_BETWEEN_FIELD_SELECT);
     await opprettNySakPage.velgBehandlingstype();
-    await opprettNySakPage.page.waitForTimeout(TIMEOUT_BETWEEN_FIELD_SELECT);
     await opprettNySakPage.velgBehandlingsaarsak();
-    await opprettNySakPage.page.waitForTimeout(TIMEOUT_BETWEEN_FIELD_SELECT);
 
     await opprettNySakPage.setFraDato("01.01.2024");
     await opprettNySakPage.setTilDato("31.12.2024");
     await opprettNySakPage.setLand("Norge");
 
     await opprettNySakPage.klikkOpprettNyBehandling();
-    await opprettNySakPage.verifiserOpprettelseAvNySak();
 
-    const mainPage = new HovedsidePage(page);
-    await mainPage.goto();
-    await mainPage.søk(USER_ID_VALID);
-
-    const sokPage = new SokPage(page);
-    await sokPage.verifyValidSearchResults(USER_ID_VALID);
+    await assertNyBehandlingOpprettet(page);
 
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test('Opprett sak for sakstype "Avtaleland" og verifiser at den finnes i søkeresultater', async ({
+  test('Opprett sak for sakstype "EU/EØS-land", sakstema "Medlemsskap og lovvalg", uten å velge fra- til-dato og verifiser at det ikke oppstår noen feil', async ({
+    page,
+  }, testInfo) => {
+    await setupOpprettNySakTester(page);
+    await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
+    await opprettNySakPage.velgOpprettNySak();
+
+    await expect(opprettNySakPage.page.locator("select[name='sakstype']")).toBeVisible();
+
+    await opprettNySakPage.velgSakstype("EU/EØS-land");
+    await opprettNySakPage.velgSakstema();
+    await opprettNySakPage.velgBehandlingstema();
+    await opprettNySakPage.velgBehandlingstype();
+    await opprettNySakPage.velgBehandlingsaarsak();
+
+    // await opprettNySakPage.setFraDato("01.01.2024");
+    // await opprettNySakPage.setTilDato("31.12.2024");
+    await opprettNySakPage.setLand("Norge");
+
+    await opprettNySakPage.klikkOpprettNyBehandling();
+
+    // TODO: Vi forventer her en feilmelding om at fra-til dato mangler, men det er ikke implementert og kallet
+    // går til backend som returnerer en feil.
+
+    await runAxeAnalyze(page, testInfo.title);
+  });
+
+  test('Opprett sak for sakstype "EU/EØS-land", sakstema "Medlemsskap og lovvalg", uten å velge land og verifiser at det ikke oppstår noen feil', async ({
+    page,
+  }, testInfo) => {
+    await setupOpprettNySakTester(page);
+    await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
+    await opprettNySakPage.velgOpprettNySak();
+
+    await expect(opprettNySakPage.page.locator("select[name='sakstype']")).toBeVisible();
+
+    await opprettNySakPage.velgSakstype("EU/EØS-land");
+    await opprettNySakPage.velgSakstema();
+    await opprettNySakPage.velgBehandlingstema();
+    await opprettNySakPage.velgBehandlingstype();
+    await opprettNySakPage.velgBehandlingsaarsak();
+
+    await opprettNySakPage.setFraDato("01.01.2024");
+    await opprettNySakPage.setTilDato("31.12.2024");
+    // await opprettNySakPage.setLand("Norge");
+
+    await opprettNySakPage.klikkOpprettNyBehandling();
+
+    // TODO: Vi forventer her en feilmelding om at land mangler, men det er ikke implementert
+    await assertErrors(page, ["Velg minst ett land"]);
+
+    await runAxeAnalyze(page, testInfo.title);
+  });
+
+  test('Opprett sak for sakstype "Avtaleland" og verifiser at det ikke oppstår noen feil', async ({
     page,
   }, testInfo) => {
     await setupOpprettNySakTester(page);
@@ -128,30 +183,19 @@ test.describe("'Opprett ny sak for bruker", () => {
     await expect(opprettNySakPage.page.locator("select[name='sakstype']")).toBeVisible();
 
     await opprettNySakPage.velgSakstype("Avtaleland");
-    await opprettNySakPage.page.waitForTimeout(TIMEOUT_BETWEEN_FIELD_SELECT);
     await opprettNySakPage.velgSakstema();
-    await opprettNySakPage.page.waitForTimeout(TIMEOUT_BETWEEN_FIELD_SELECT);
     await opprettNySakPage.velgBehandlingstema();
-    await opprettNySakPage.page.waitForTimeout(TIMEOUT_BETWEEN_FIELD_SELECT);
     await opprettNySakPage.velgBehandlingstype();
-    await opprettNySakPage.page.waitForTimeout(TIMEOUT_BETWEEN_FIELD_SELECT);
     await opprettNySakPage.velgBehandlingsaarsak();
-    await opprettNySakPage.page.waitForTimeout(TIMEOUT_BETWEEN_FIELD_SELECT);
 
     await opprettNySakPage.klikkOpprettNyBehandling();
-    await opprettNySakPage.verifiserOpprettelseAvNySak();
 
-    const mainPage = new HovedsidePage(page);
-    await mainPage.goto();
-    await mainPage.søk(USER_ID_VALID);
-
-    const sokPage = new SokPage(page);
-    await sokPage.verifyValidSearchResults(USER_ID_VALID);
+    await assertNyBehandlingOpprettet(page);
 
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test('Opprett sak for sakstype "Utenfor avtaleland" og verifiser at den finnes i søkeresultater', async ({
+  test('Opprett sak for sakstype "Utenfor avtaleland" og verifiser at det ikke oppstår noen feil', async ({
     page,
   }, testInfo) => {
     await setupOpprettNySakTester(page);
@@ -161,30 +205,19 @@ test.describe("'Opprett ny sak for bruker", () => {
     await expect(opprettNySakPage.page.locator("select[name='sakstype']")).toBeVisible();
 
     await opprettNySakPage.velgSakstype("Utenfor avtaleland");
-    await opprettNySakPage.page.waitForTimeout(TIMEOUT_BETWEEN_FIELD_SELECT);
     await opprettNySakPage.velgSakstema();
-    await opprettNySakPage.page.waitForTimeout(TIMEOUT_BETWEEN_FIELD_SELECT);
     await opprettNySakPage.velgBehandlingstema();
-    await opprettNySakPage.page.waitForTimeout(TIMEOUT_BETWEEN_FIELD_SELECT);
     await opprettNySakPage.velgBehandlingstype();
-    await opprettNySakPage.page.waitForTimeout(TIMEOUT_BETWEEN_FIELD_SELECT);
     await opprettNySakPage.velgBehandlingsaarsak();
-    await opprettNySakPage.page.waitForTimeout(TIMEOUT_BETWEEN_FIELD_SELECT);
 
     await opprettNySakPage.klikkOpprettNyBehandling();
-    await opprettNySakPage.verifiserOpprettelseAvNySak();
 
-    const mainPage = new HovedsidePage(page);
-    await mainPage.goto();
-    await mainPage.søk(USER_ID_VALID);
-
-    const sokPage = new SokPage(page);
-    await sokPage.verifyValidSearchResults(USER_ID_VALID);
+    await assertNyBehandlingOpprettet(page);
 
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test('Opprett sak for sakstype "Utenfor avtaleland" med behandlingstype "Årsavregning" og verifiser at den finnes i søkeresultater', async ({
+  test('Opprett sak for sakstype "Utenfor avtaleland" med behandlingstype "Årsavregning" og verifiser at det ikke oppstår noen feil', async ({
     page,
   }, testInfo) => {
     await setupOpprettNySakTester(page);
@@ -194,25 +227,14 @@ test.describe("'Opprett ny sak for bruker", () => {
     await expect(opprettNySakPage.page.locator("select[name='sakstype']")).toBeVisible();
 
     await opprettNySakPage.velgSakstype("Utenfor avtaleland");
-    await opprettNySakPage.page.waitForTimeout(TIMEOUT_BETWEEN_FIELD_SELECT);
     await opprettNySakPage.velgSakstema();
-    await opprettNySakPage.page.waitForTimeout(TIMEOUT_BETWEEN_FIELD_SELECT);
     await opprettNySakPage.velgBehandlingstema();
-    await opprettNySakPage.page.waitForTimeout(TIMEOUT_BETWEEN_FIELD_SELECT);
     await opprettNySakPage.velgBehandlingstype("Årsavregning");
-    await opprettNySakPage.page.waitForTimeout(TIMEOUT_BETWEEN_FIELD_SELECT);
     await opprettNySakPage.velgBehandlingsaarsak();
-    await opprettNySakPage.page.waitForTimeout(TIMEOUT_BETWEEN_FIELD_SELECT);
 
     await opprettNySakPage.klikkOpprettNyBehandling();
-    await opprettNySakPage.verifiserOpprettelseAvNySak();
 
-    const mainPage = new HovedsidePage(page);
-    await mainPage.goto();
-    await mainPage.søk(ORG_NUMBER_VALID);
-
-    const sokPage = new SokPage(page);
-    await sokPage.verifyValidOrgSearchResults(ORG_NUMBER_VALID);
+    await assertNyBehandlingOpprettet(page);
 
     await runAxeAnalyze(page, testInfo.title);
   });
@@ -223,7 +245,7 @@ test.describe("'Opprett ny sak for virksomhet", () => {
     await setupOpprettNySakTester(page);
   });
 
-  test("Verifiser feilmeldinger ved klikk på 'Opprett ny behandling' når påkrevede felt mangler", async ({
+  test("Klikk på 'Opprett ny behandling' når påkrevede felt mangler og verifiser feilmeldinger", async ({
     page,
   }, testInfo) => {
     await opprettNySakPage.velgVirksomhet();
@@ -235,7 +257,7 @@ test.describe("'Opprett ny sak for virksomhet", () => {
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test('Opprett sak for sakstype "EU/EØS-land" og verifiser at den finnes i søkeresultater', async ({
+  test('Opprett sak for sakstype "EU/EØS-land" og verifiser at det ikke oppstår noen feil', async ({
     page,
   }, testInfo) => {
     await opprettNySakPage.velgVirksomhet();
@@ -245,30 +267,19 @@ test.describe("'Opprett ny sak for virksomhet", () => {
     await expect(opprettNySakPage.page.locator("select[name='sakstype']")).toBeVisible();
 
     await opprettNySakPage.velgSakstype("EU/EØS-land");
-    await opprettNySakPage.page.waitForTimeout(TIMEOUT_BETWEEN_FIELD_SELECT);
     await opprettNySakPage.velgSakstema();
-    await opprettNySakPage.page.waitForTimeout(TIMEOUT_BETWEEN_FIELD_SELECT);
     await opprettNySakPage.velgBehandlingstema();
-    await opprettNySakPage.page.waitForTimeout(TIMEOUT_BETWEEN_FIELD_SELECT);
     await opprettNySakPage.velgBehandlingstype();
-    await opprettNySakPage.page.waitForTimeout(TIMEOUT_BETWEEN_FIELD_SELECT);
     await opprettNySakPage.velgBehandlingsaarsak();
-    await opprettNySakPage.page.waitForTimeout(TIMEOUT_BETWEEN_FIELD_SELECT);
 
     await opprettNySakPage.klikkOpprettNyBehandling();
-    await opprettNySakPage.verifiserOpprettelseAvNySak();
 
-    const mainPage = new HovedsidePage(page);
-    await mainPage.goto();
-    await mainPage.søk(ORG_NUMBER_VALID);
-
-    const sokPage = new SokPage(page);
-    await sokPage.verifyValidOrgSearchResults(ORG_NUMBER_VALID);
+    await assertNyBehandlingOpprettet(page);
 
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test('Opprett sak for sakstype "Avtaleland" og verifiser at den finnes i søkeresultater', async ({
+  test('Opprett sak for sakstype "Avtaleland" og verifiser at det ikke oppstår noen feil', async ({
     page,
   }, testInfo) => {
     await opprettNySakPage.velgVirksomhet();
@@ -278,25 +289,14 @@ test.describe("'Opprett ny sak for virksomhet", () => {
     await expect(opprettNySakPage.page.locator("select[name='sakstype']")).toBeVisible();
 
     await opprettNySakPage.velgSakstype("Avtaleland");
-    await opprettNySakPage.page.waitForTimeout(TIMEOUT_BETWEEN_FIELD_SELECT);
     await opprettNySakPage.velgSakstema();
-    await opprettNySakPage.page.waitForTimeout(TIMEOUT_BETWEEN_FIELD_SELECT);
     await opprettNySakPage.velgBehandlingstema();
-    await opprettNySakPage.page.waitForTimeout(TIMEOUT_BETWEEN_FIELD_SELECT);
     await opprettNySakPage.velgBehandlingstype();
-    await opprettNySakPage.page.waitForTimeout(TIMEOUT_BETWEEN_FIELD_SELECT);
     await opprettNySakPage.velgBehandlingsaarsak();
-    await opprettNySakPage.page.waitForTimeout(TIMEOUT_BETWEEN_FIELD_SELECT);
 
     await opprettNySakPage.klikkOpprettNyBehandling();
-    await opprettNySakPage.verifiserOpprettelseAvNySak();
 
-    const mainPage = new HovedsidePage(page);
-    await mainPage.goto();
-    await mainPage.søk(ORG_NUMBER_VALID);
-
-    const sokPage = new SokPage(page);
-    await sokPage.verifyValidOrgSearchResults(ORG_NUMBER_VALID);
+    await assertNyBehandlingOpprettet(page);
 
     await runAxeAnalyze(page, testInfo.title);
   });

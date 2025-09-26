@@ -1,5 +1,5 @@
 import { test } from "@playwright/test";
-import { HovedsidePage } from "../pages/hovedside.page";
+import { HovedsidePage, USER_ID_VALID } from "../pages/hovedside.page";
 import { SendBrevPage } from "../pages/send-brev.page";
 import { assertErrors } from "../utils/testUtils";
 
@@ -13,7 +13,7 @@ async function setupSendBrevTest(page: any) {
   // 1) Åpne hovedside og velg første "Yrkesaktiv" sak (brukersak)
   await mainPage.goto();
   await mainPage.verifiserHovedside();
-  await mainPage.clickFirstTaskLink();
+  await mainPage.visSak(USER_ID_VALID, "Yrkesaktiv - Årsavregning");
   await sb.clickSendBrevTab();
 }
 
