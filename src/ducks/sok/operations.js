@@ -11,7 +11,7 @@ import * as Utils from "../../utils";
 import * as Api from "../../services/api";
 import * as Types from "./types";
 
-export function sok(sokefrase) {
+export function sok(sokefrase, aktiveBehandlinger) {
   const sokefraseErIdnr = Utils.person.erGyldigFnr(sokefrase);
   const sokefraseErOrgnr = Utils.organisasjon.erOrgnrGyldig(sokefrase);
 
@@ -21,7 +21,7 @@ export function sok(sokefrase) {
     orgnr: sokefraseErOrgnr ? sokefrase : null,
   };
 
-  return doThenDispatch(() => Api.Fagsaker.sok.send(body), {
+  return doThenDispatch(() => Api.Fagsaker.sok.send(body, aktiveBehandlinger), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
