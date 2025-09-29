@@ -302,7 +302,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
       </Nav.Heading>
 
       {behandlingstype === NY_VURDERING && !skalIkkeViseTidligerePerioderToggle && (
-        <Nav.BodyLong size="small" className="nyVurderingTekst">
+        <Nav.BodyLong size="small" className="alert--spacing-bottom">
           Ved ny vurdering vises tidligere perioder med skatteforhold og inntekt. Gjør nødvendige endringer eller legg
           til en ny periode.
         </Nav.BodyLong>
@@ -310,7 +310,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
 
       {(behandlingstype === NY_VURDERING || behandlingstype === MANGLENDE_INNBETALING_TRYGDEAVGIFT) &&
         skalIkkeViseTidligerePerioderToggle && (
-          <Alert variant="warning" size="small" className="nyVurderingTekst">
+          <Alert variant="warning" size="small" className="alert--spacing-bottom">
             Ved ny vurdering vises skatteforhold og inntekt fra inneværende år og fremover. Gjør nødvendige endringer
             eller legg til en ny periode. Trygdeavgift for tidligere år skal fastsettes på årsavregning. Du skal derfor
             ikke oppgi skatte- og inntektsperioder for tidligere år i denne behandlingen.
