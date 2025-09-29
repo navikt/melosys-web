@@ -208,7 +208,7 @@ export async function assertErrors(scope: Page | Locator, errorTexts: (string | 
 
 /**
  * Verifiserer at en ny behandling ble opprettet vellykket ved å sjekke:
- * 1. Ingen feilmeldinger på opprett-siden
+ * 1. Ingen feilmeldinger på ny-sak-siden
  * 2. Navigasjon til hovedsiden
  * 3. Ingen feilmeldinger på hovedsiden
  * @param page - Playwright page objekt
@@ -217,9 +217,9 @@ export async function assertNyBehandlingOpprettet(page: Page) {
   // Vent litt for at siden skal prosessere
   await page.waitForTimeout(2000);
 
-  // Sjekk først om vi fortsatt er på opprett-siden og har feilmeldinger
+  // Sjekk først om vi fortsatt er på ny-sak-siden og har feilmeldinger
   if (page.url().includes("/opprettnysak")) {
-    // Vi er fortsatt på opprett-siden, sjekk for feilmeldinger
+    // Vi er fortsatt på ny-sak-siden, sjekk for feilmeldinger
     await assertErrors(page, []);
   }
 

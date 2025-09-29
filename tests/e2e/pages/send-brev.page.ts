@@ -70,7 +70,7 @@ export class SendBrevPage {
     await this.page.keyboard.press("Enter");
   }
 
-  private async waitForBrevmalSelect(timeoutMs: number = 10000): Promise<Locator> {
+  private async waitForBrevmalSelect(timeoutMs: number = 5000): Promise<Locator> {
     // Vent på enten aria-combobox eller native select[name="type"]
     const combo = this.brevmalCombobox;
     if (await combo.count()) {

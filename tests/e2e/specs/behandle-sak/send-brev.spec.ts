@@ -1,7 +1,7 @@
 import { test } from "@playwright/test";
-import { HovedsidePage, USER_ID_VALID } from "../pages/hovedside.page";
-import { SendBrevPage } from "../pages/send-brev.page";
-import { assertErrors } from "../utils/testUtils";
+import { HovedsidePage, USER_ID_VALID } from "../../pages/hovedside.page";
+import { SendBrevPage } from "../../pages/send-brev.page";
+import { assertErrors } from "../../utils/testUtils";
 
 let sb: SendBrevPage;
 

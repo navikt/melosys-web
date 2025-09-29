@@ -65,12 +65,12 @@ export class HovedsidePage {
       .first();
 
     // Ensure there is at least one task available
-    await expect(sakButton, `No '${sakTekst}' tasks found for user ${brukerId}`).toHaveCount(1);
+    await expect(sakButton, `No '${sakTekst}' tasks found for user ${brukerId}`).toHaveCount(1, { timeout: 5000 });
 
     await sakButton.click();
     await this.page.waitForLoadState("domcontentloaded");
 
-    return null; // Siden vi ikke kan få href fra knappen
+    return null;
   }
 
   /**
