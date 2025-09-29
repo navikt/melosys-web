@@ -39,19 +39,64 @@ export default defineConfig({
   /* Configure projects for major browsers */
   projects: [
     {
-      name: "chromium",
+      name: "1-basic-tests",
       use: {
         ...devices["Desktop Chrome"],
         launchOptions: {
           args: [],
         },
-        navigationTimeout: 30000,
-        actionTimeout: 10000,
+        navigationTimeout: 10000,
+        actionTimeout: 5000,
       },
-      testMatch: [
-        "**/opprett-ny-sak.spec.ts", // Kjør "Opprett sak" testene først så vi er sikre på at det finnes testdata
-        "**/!(opprett-ny-sak).spec.ts", // Deretter kjør alle andre tester (unntatt opprett-ny-sak)
-      ],
+      testMatch: "tests/e2e/specs/basic/**/*.spec.ts",
+    },
+    {
+      name: "2-opprett-ny-sak",
+      use: {
+        ...devices["Desktop Chrome"],
+        launchOptions: {
+          args: [],
+        },
+        navigationTimeout: 10000,
+        actionTimeout: 5000,
+      },
+      testMatch: "tests/e2e/specs/opprett-ny-sak/ny-sak/**/*.spec.ts",
+    },
+    {
+      name: "3-knytt-til-eksisterende",
+      use: {
+        ...devices["Desktop Chrome"],
+        launchOptions: {
+          args: [],
+        },
+        navigationTimeout: 10000,
+        actionTimeout: 5000,
+      },
+      testMatch: "tests/e2e/specs/opprett-ny-sak/knytt-til-eksisterende/**/*.spec.ts",
+    },
+    {
+      name: "4-behandle-sak-tests",
+      use: {
+        ...devices["Desktop Chrome"],
+        launchOptions: {
+          args: [],
+        },
+        navigationTimeout: 10000,
+        actionTimeout: 5000,
+      },
+      testMatch: "tests/e2e/specs/behandle-sak/**/*.spec.ts",
+    },
+    {
+      name: "5-basic-tests-regression",
+      use: {
+        ...devices["Desktop Chrome"],
+        launchOptions: {
+          args: [],
+        },
+        navigationTimeout: 10000,
+        actionTimeout: 5000,
+      },
+      testMatch: "tests/e2e/specs/basic/hovedside-søk.spec.ts",
     },
   ],
 

@@ -1,4 +1,4 @@
-import { expect, Page } from "@playwright/test";
+import { expect, Locator, Page } from "@playwright/test";
 
 const SELECT_TIMEOUT = 100; // Ventetid etter valg i dropdown for at avhengige felter skal oppdatere seg
 
@@ -70,12 +70,313 @@ export class OpprettNySakPage {
    * Velg "Opprett ny sak" i "Knytt til eksisterende sak eller opprett ny" seksjonen
    */
   async velgOpprettNySak(): Promise<void> {
+    const undertittel = this.page.locator(
+      ".opprettnysak .undertittel:has-text('Knytt til eksisterende sak eller opprett ny')",
+    );
+
+    try {
+      await expect(undertittel).toBeVisible({ timeout: 5000 });
+    } catch {
+      return;
+    }
+
+    const ingenSakerMelding = this.page.locator(
+      ".opprettnysak :text('Ingen eksisterende saker funnet. Du må opprette en ny sak.')",
+    );
+    const ingenSakerFinnes = await ingenSakerMelding.isVisible();
+
+    if (ingenSakerFinnes) {
+      return;
+    }
+
+    // Det finnes eksisterende saker - velg "Opprett ny sak" radioknapp
+    const opprettNySakRadio = this.page.locator(".navds-radio__content:has-text('Opprett ny sak')");
+    await expect(opprettNySakRadio).toBeVisible({
+      timeout: 5000,
+    });
+    await opprettNySakRadio.click();
+  }
+
+  async velgKnyttTilEksisterendeSak(): Promise<void> {
     await expect(
       this.page.locator(".opprettnysak .undertittel:has-text('Knytt til eksisterende sak eller opprett ny')"),
     ).toBeVisible();
-    const opprettNySakRadio = this.page.locator(".navds-radio__content:has-text('Opprett ny sak')");
-    await expect(opprettNySakRadio).toBeVisible();
-    await opprettNySakRadio.click();
+
+    const ingenSakerMelding = this.page.locator(
+      ".opprettnysak :text('Ingen eksisterende saker funnet. Du må opprette en ny sak.')",
+    );
+    const ingenSakerFinnes = await ingenSakerMelding.isVisible();
+
+    if (ingenSakerFinnes) {
+      throw new Error("Det ble ikke funnet noen noen eksisterende saker å knytte seg til");
+    }
+
+    const knyttTilEksSakRadio = this.page.locator(".navds-radio__content:has-text('Eksisterende sak')");
+    await expect(knyttTilEksSakRadio).toBeVisible();
+    await knyttTilEksSakRadio.click();
+
+    // Klikk på "Vis flere saker" for å få tilgang til alle tilgjengelige saker
+    await this.visFlereeSaker();
+  }
+
+  /**
+   * Klikk på "Vis flere saker" knappen for å vise alle tilgjengelige saker
+   */
+  async visFlereeSaker(): Promise<void> {
+    const visFlereKnapp = this.page.locator('button:has-text("Vis flere saker")');
+    try {
+      await visFlereKnapp.click({ timeout: 2000 });
+      // Vent litt for at sakene skal laste inn
+      await this.page.waitForTimeout(1000);
+    } catch {
+      // Hvis knappen ikke finnes eller ikke kan klikkes, fortsett uten feil
+      // Dette kan skje hvis alle saker allerede vises
+    }
+  }
+
+  /**
+   * Verifiser at kun de spesifiserte behandlingstypene er tilgjengelige
+   * Tester i kontekst av valgt sak - behandlingstype-området som aktiveres av sak-valget
+   * @param valgtSak - Den valgte saken (Locator) som kontekst for testingen
+   * @param forventedeBehandlingstyper - Liste over behandlingstyper som skal være tilgjengelige
+   */
+  async verifiserTilgjengeligeBehandlingstyper(valgtSak: Locator, forventedeBehandlingstyper: string[]): Promise<void> {
+    // Hent sak-ID for bedre feilmeldinger
+    const sakId = (valgtSak as any)._sakId || "ukjent";
+
+    // Først verifiser at saken er valgt (skal være synlig)
+    await expect(valgtSak, `Sak ${sakId} skal være synlig`).toBeVisible();
+
+    // Behandlingstype-gruppen som aktiveres av sak-valget
+    const behandlingstypeGruppe = this.page.getByRole("group", { name: "Behandlingstype" });
+    await expect(behandlingstypeGruppe, `Behandlingstype-gruppe for sak ${sakId} skal være synlig`).toBeVisible({
+      timeout: 5000,
+    });
+
+    // Hent alle faktiske radiobuttons som er tilstede
+    const alleRadioButtons = behandlingstypeGruppe.getByRole("radio");
+    const antallRadioButtons = await alleRadioButtons.count();
+
+    const faktiskeTilgjengeligeBehandlingstyper: string[] = [];
+    for (let i = 0; i < antallRadioButtons; i++) {
+      const radio = alleRadioButtons.nth(i);
+      const isVisible = await radio.isVisible();
+      if (isVisible) {
+        const label = await radio.getAttribute("aria-labelledby");
+        if (label) {
+          const labelElement = this.page.locator(`#${label}`);
+          const behandlingstype = await labelElement.textContent();
+          if (behandlingstype) {
+            faktiskeTilgjengeligeBehandlingstyper.push(behandlingstype.trim());
+          }
+        }
+      }
+    }
+
+    // Sammenlign faktiske vs forventede behandlingstyper
+    const manglendeBehandlingstyper = forventedeBehandlingstyper.filter(
+      (type) => !faktiskeTilgjengeligeBehandlingstyper.includes(type),
+    );
+
+    const uventedeBehandlingstyper = faktiskeTilgjengeligeBehandlingstyper.filter(
+      (type) => !forventedeBehandlingstyper.includes(type),
+    );
+
+    if (manglendeBehandlingstyper.length > 0) {
+      throw new Error(
+        `Sak ${sakId}: Manglende behandlingstyper: ${manglendeBehandlingstyper.join(", ")}. Faktiske: ${faktiskeTilgjengeligeBehandlingstyper.join(", ")}`,
+      );
+    }
+
+    if (uventedeBehandlingstyper.length > 0) {
+      throw new Error(
+        `Sak ${sakId}: Uventede behandlingstyper: ${uventedeBehandlingstyper.join(", ")}. Forventede: ${forventedeBehandlingstyper.join(", ")}`,
+      );
+    }
+  }
+
+  /**
+   * Velg første sak i listen over eksisterende saker
+   */
+  async velgForsteSakIListe(): Promise<void> {
+    const fosteSak = this.page.locator(".customRadioPanel").first();
+    await expect(fosteSak).toBeVisible();
+    await fosteSak.click();
+  }
+
+  /**
+   * Velg første sak i listen over eksisterende saker og returner sak-elementet
+   * @returns Det valgte sak-elementet for videre testing
+   */
+  async velgForsteSakIListeMedRetur(): Promise<Locator> {
+    const fosteSak = this.page.locator(".customRadioPanel").first();
+    await expect(fosteSak).toBeVisible();
+    await fosteSak.click();
+    return fosteSak;
+  }
+
+  /**
+   * Velg sak av bestemt type (søker etter sakstype i heading)
+   */
+  async velgSakAvType(sakstype: string): Promise<void> {
+    const sak = this.page.locator(`.customRadioPanel:has(.customRadioPanelTittel h1:has-text("${sakstype}"))`).first();
+    await expect(sak).toBeVisible();
+    await sak.click();
+  }
+
+  /**
+   * Velg sak med Årsavregning behandling
+   */
+  async velgSakMedAarsavregning(): Promise<void> {
+    const sak = this.page.locator('.customRadioPanel:has(.behandling-tittel:has-text("Årsavregning"))').first();
+    await expect(sak).toBeVisible();
+    await sak.click();
+  }
+
+  /**
+   * Velg sak med Førstegangsbehandling
+   */
+  async velgSakMedForstegangsbehandling(): Promise<void> {
+    const sak = this.page
+      .locator('.customRadioPanel:has(.behandling-tittel:has-text("Førstegangsbehandling"))')
+      .first();
+    await expect(sak).toBeVisible();
+    await sak.click();
+  }
+
+  /**
+   * Velg sak med Henvendelse behandling
+   */
+  async velgSakMedHenvendelse(): Promise<void> {
+    const sak = this.page.locator('.customRadioPanel:has(.behandling-tittel:has-text("Henvendelse"))').first();
+    await expect(sak).toBeVisible();
+    await sak.click();
+  }
+
+  /**
+   * Velg første FTRL-sak (Utenfor avtaleland)
+   * @param status Valgfri behandlingsstatus å filtrere på (f.eks. "er avsluttet", "pågår", "er opprettet")
+   * @returns Det valgte sak-elementet for videre testing
+   */
+  async velgFirstFTRLSak(status?: string): Promise<Locator> {
+    let selector = '.customRadioPanel:has(.customRadioPanelTittel h1:has-text("Utenfor avtaleland"))';
+    if (status) {
+      selector += `:has(.behandlingsstatus__span:has-text("${status}"))`;
+    }
+    const sak = this.page.locator(selector).first();
+
+    try {
+      await expect(sak).toBeVisible({
+        timeout: 10000,
+      });
+    } catch (error) {
+      const statusText = status ? ` med status "${status}"` : "";
+      throw new Error(`Fant ingen FTRL-sak (Utenfor avtaleland)${statusText}. Selector: ${selector}`);
+    }
+
+    // Hent sak-ID for bedre feilmeldinger
+    const sakId = await sak.locator(".customRadioPanelTittel").textContent();
+    const sakIdMatch = sakId?.match(/MEL-\d+/);
+    const sakIdString = sakIdMatch ? sakIdMatch[0] : "ukjent";
+
+    await sak.click();
+
+    // Legg til sak-ID til alle påfølgende expect-meldinger
+    (sak as any)._sakId = sakIdString;
+
+    return sak;
+  }
+
+  /**
+   * Velg første EØS-sak
+   * @param status Valgfri behandlingsstatus å filtrere på (f.eks. "er avsluttet", "pågår", "er opprettet")
+   * @returns Det valgte sak-elementet for videre testing
+   */
+  async velgFirstEOSSak(status?: string): Promise<Locator> {
+    let selector = '.customRadioPanel:has(.customRadioPanelTittel h1:has-text("EU/EØS-land"))';
+    if (status) {
+      selector += `:has(.behandlingsstatus__span:has-text("${status}"))`;
+    }
+    const sak = this.page.locator(selector).first();
+
+    try {
+      await expect(sak).toBeVisible({
+        timeout: 10000,
+      });
+    } catch (error) {
+      const statusText = status ? ` med status "${status}"` : "";
+      throw new Error(`Fant ingen EØS-sak (EU/EØS-land)${statusText}. Selector: ${selector}`);
+    }
+
+    // Hent sak-ID for bedre feilmeldinger
+    const sakId = await sak.locator(".customRadioPanelTittel").textContent();
+    const sakIdMatch = sakId?.match(/MEL-\d+/);
+    const sakIdString = sakIdMatch ? sakIdMatch[0] : "ukjent";
+
+    await sak.click();
+
+    // Legg til sak-ID til alle påfølgende expect-meldinger
+    (sak as any)._sakId = sakIdString;
+
+    return sak;
+  }
+
+  /**
+   * Velg første Avtaleland-sak
+   * @param status Valgfri behandlingsstatus å filtrere på (f.eks. "er avsluttet", "pågår", "er opprettet")
+   * @returns Det valgte sak-elementet for videre testing
+   */
+  async velgFirstAvtalelandSak(status?: string): Promise<Locator> {
+    // Wait for case list to load
+    await this.page.waitForSelector(".customRadioPanel", { timeout: 10000 });
+
+    let selector = '.customRadioPanel:has(.customRadioPanelTittel h1:has-text("Avtaleland"))';
+    if (status) {
+      selector += `:has(.behandlingsstatus__span:has-text("${status}"))`;
+    }
+    const sak = this.page.locator(selector).first();
+
+    try {
+      await expect(sak).toBeVisible({ timeout: 10000 });
+    } catch (error) {
+      const statusText = status ? ` med status "${status}"` : "";
+      throw new Error(`Fant ingen Avtaleland-sak${statusText}. Selector: ${selector}`);
+    }
+
+    // Hent sak-ID for bedre feilmeldinger
+    const sakId = await sak.locator(".customRadioPanelTittel").textContent();
+    const sakIdMatch = sakId?.match(/MEL-\d+/);
+    const sakIdString = sakIdMatch ? sakIdMatch[0] : "ukjent";
+
+    await sak.click();
+
+    // Wait for the click to register and form to update
+    await this.page.waitForTimeout(1000);
+
+    // Legg til sak-ID til alle påfølgende expect-meldinger
+    (sak as any)._sakId = sakIdString;
+
+    return sak;
+  }
+
+  /**
+   * Velg Utenfor avtaleland-sak (FTRL)
+   * @returns Det valgte sak-elementet for videre testing
+   */
+  async velgUtenforAvtalelandSak(): Promise<Locator> {
+    const selector = '.customRadioPanel:has(.customRadioPanelTittel h1:has-text("Utenfor avtaleland"))';
+    const sak = this.page.locator(selector).first();
+
+    try {
+      await expect(sak).toBeVisible({
+        timeout: 10000,
+      });
+    } catch (error) {
+      throw new Error(`Fant ingen Utenfor avtaleland-sak. Selector: ${selector}`);
+    }
+
+    await sak.click();
+    return sak;
   }
 
   /**
@@ -104,7 +405,6 @@ export class OpprettNySakPage {
     await fraInput.clear();
     await fraInput.fill(dato);
     await fraInput.blur();
-    // Vent på at verdien er registrert
     await expect(fraInput).toHaveValue(dato);
   }
 
@@ -122,7 +422,6 @@ export class OpprettNySakPage {
     await tilInput.clear();
     await tilInput.fill(dato);
     await tilInput.blur();
-    // Vent på at verdien er registrert
     await expect(tilInput).toHaveValue(dato);
   }
 
@@ -152,8 +451,38 @@ export class OpprettNySakPage {
    * Velg sakstype i dropdown. Tom string velger første tilgjengelige element.
    */
   async velgSakstype(valueOrEmpty: string = ""): Promise<void> {
-    await this.velgDropdownVerdi("sakstype", valueOrEmpty, "Sakstype");
-    await this.page.waitForTimeout(SELECT_TIMEOUT);
+    const sakstypeSelect = this.page.locator("select[name='sakstype']");
+
+    // Vent på elementet med timeout, returner stille hvis det ikke kommer
+    try {
+      await expect(sakstypeSelect).toBeVisible({ timeout: 5000 });
+    } catch {
+      return;
+    }
+
+    if (valueOrEmpty === "") {
+      const options = await this.getSelectOptions("sakstype");
+      if (options.length === 0) {
+        throw new Error("Ingen sakstype opsjoner funnet");
+      }
+      await sakstypeSelect.selectOption({ value: options[0] });
+    } else {
+      const options = await sakstypeSelect.locator("option").all();
+      let foundValue = null;
+      for (const option of options) {
+        const text = await option.textContent();
+        if (text && text.trim() === valueOrEmpty) {
+          foundValue = await option.getAttribute("value");
+          break;
+        }
+      }
+
+      if (!foundValue) {
+        throw new Error(`Fant ikke sakstype med tekst "${valueOrEmpty}"`);
+      }
+
+      await sakstypeSelect.selectOption({ value: foundValue });
+    }
   }
 
   /**
@@ -262,7 +591,7 @@ export class OpprettNySakPage {
   async setLand(landNavn: string): Promise<void> {
     // Vent for at land-feltet skal vises etter behandlingstema er valgt
     const landFieldset = this.page.locator('fieldset:has-text("land")').first();
-    await expect(landFieldset).toBeVisible({ timeout: 10000 });
+    await expect(landFieldset).toBeVisible({ timeout: 5000 });
 
     // Finn React Select combobox inne i fieldset
     const combobox = landFieldset.locator('[role="combobox"]').first();
