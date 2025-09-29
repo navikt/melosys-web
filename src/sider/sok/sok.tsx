@@ -29,7 +29,7 @@ export function Sok({ children }: SokProps) {
     dispatch(landkoderOperations.hentLandkoder());
     if (sokefrase) {
       setSokPending(true);
-      dispatch(sokOperations.sok(sokefrase));
+      dispatch(sokOperations.sok(sokefrase, false));
       setSokPending(false);
     }
   };

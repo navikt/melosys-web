@@ -8,5 +8,11 @@ export interface SokRequestDto {
   orgnr: string | null;
 }
 
-export const send = (data: SokRequestDto): Promise<FagsakOppsummering[]> =>
-  postAsJson(`${API_BASE_URL}${FAGSAKER}/sok`, data);
+export const send = (data: SokRequestDto, aktiveBehandlinger?: boolean): Promise<FagsakOppsummering[]> => {
+  const url =
+    aktiveBehandlinger !== undefined
+      ? `${API_BASE_URL}${FAGSAKER}/sok?aktiveBehandlinger=${aktiveBehandlinger}`
+      : `${API_BASE_URL}${FAGSAKER}/sok`;
+
+  return postAsJson(url, data);
+};
