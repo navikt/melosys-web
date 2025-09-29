@@ -35,6 +35,9 @@ import "./vurderingTrygdeavgift.css";
 import vurderingTrygdeavgiftSchema from "./vurderingTrygdeavgiftSchema";
 
 import { erBrukerSkattepliktigIHelePerioden } from "../../../../aarsavregning/stegKomponenter/vurderingAarsavregning/utils";
+import { useFeatureToggle } from "../../../../../featuretoggle";
+import { MELOSYS_FAKTURERINGSKOMPONENTEN_IKKE_TIDLIGERE_PERIODER } from "../../../../../featuretoggle/toggleNavn";
+import { Alert } from "../../../../../navFrontend";
 
 interface Props {
   bekreft: () => void;
@@ -42,6 +45,8 @@ interface Props {
   aktivtSteg: boolean;
   oppdaterStatus: (isValid: boolean) => void;
 }
+
+const { NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingstyper;
 
 export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: Props) {
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
@@ -52,6 +57,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const innvilgetMedlemskapsperiode = useSelector(
     medlemskapsperioderSelectors.SamletInnvilgetMedlemskapsperiodeSelector,
   );
+  const skalIkkeViseTidligerePerioderToogle = useFeatureToggle(MELOSYS_FAKTURERINGSKOMPONENTEN_IKKE_TIDLIGERE_PERIODER);
 
   const bestemmelse = useSelector(medlemskapsperioderSelectors.BestemmelseSelector);
   const [lagretTrygdeavgift, setTrygdeavgift] = useAsyncCallbackState(
@@ -295,12 +301,21 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
         Trygdeavgift
       </Nav.Heading>
 
-      {behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING && (
+      {behandlingstype === NY_VURDERING && !skalIkkeViseTidligerePerioderToogle && (
         <Nav.BodyLong size="small" className="nyVurderingTekst">
           Ved ny vurdering vises tidligere perioder med skatteforhold og inntekt. Gjør nødvendige endringer eller legg
           til en ny periode.
         </Nav.BodyLong>
       )}
+
+      {(behandlingstype === NY_VURDERING || behandlingstype === MANGLENDE_INNBETALING_TRYGDEAVGIFT) &&
+        skalIkkeViseTidligerePerioderToogle && (
+          <Alert variant="warning" size="small" className="nyVurderingTekst">
+            Ved ny vurdering vises skatteforhold og inntekt fra inneværende år og fremover. Gjør nødvendige endringer
+            eller legg til en ny periode. Trygdeavgift for tidligere år skal fastsettes på årsavregning. Du skal derfor
+            ikke oppgi skatte- og inntekstperioder for tidligere år i denne behandlingen.
+          </Alert>
+        )}
 
       {!erÅpenSluttDato && (
         <>

@@ -34,15 +34,21 @@ import vurderingTrygdeavgiftSchema from "./vurderingTrygdeavgiftSchema";
 
 import { erBrukerSkattepliktigIHelePerioden } from "../../../../aarsavregning/stegKomponenter/vurderingAarsavregning/utils";
 import { fagsakSelectors } from "../../../../../ducks/fagsaker";
+import { Alert } from "../../../../../navFrontend";
+import { useFeatureToggle } from "../../../../../featuretoggle";
+import { MELOSYS_FAKTURERINGSKOMPONENTEN_IKKE_TIDLIGERE_PERIODER } from "../../../../../featuretoggle/toggleNavn";
+
 const { EU_EOS } = MKV.Koder.sakstyper;
 const { PENSJONIST } = MKV.Koder.behandlinger.behandlingstema;
+
 interface Props {
   bekreft: () => void;
   tilbake: () => void;
   aktivtSteg: boolean;
   oppdaterStatus: (isValid: boolean) => void;
 }
-const { NY_VURDERING } = MKV.Koder.behandlinger.behandlingstyper;
+
+const { NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingstyper;
 
 export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: Props) {
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
@@ -51,6 +57,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const sakstype = useSelector(fagsakSelectors.SakstypeKodeSelector);
   const [harBeregnetNyTrygdeavgift, setHarBeregnetNyTrygdeavgift] = useState<boolean>(false);
+  const skalIkkeViseTidligerePerioderToogle = useFeatureToggle(MELOSYS_FAKTURERINGSKOMPONENTEN_IKKE_TIDLIGERE_PERIODER);
 
   const [harEndretHelseutgiftDekkesPeriode, setHarEndretHelseutgiftDekkesPeriode] = useState<boolean | undefined>(
     undefined,
@@ -309,12 +316,21 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
         Trygdeavgift
       </Nav.Heading>
 
-      {behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING && (
+      {behandlingstype === NY_VURDERING && !skalIkkeViseTidligerePerioderToogle && (
         <Nav.BodyLong size="small" className="nyVurderingTekst">
           Ved ny vurdering vises tidligere perioder med skatteforhold og inntekt. Gjør nødvendige endringer eller legg
           til en ny periode.
         </Nav.BodyLong>
       )}
+
+      {(behandlingstype === NY_VURDERING || behandlingstype === MANGLENDE_INNBETALING_TRYGDEAVGIFT) &&
+        skalIkkeViseTidligerePerioderToogle && (
+          <Alert variant="warning" size="small" className="nyVurderingTekst">
+            Ved ny vurdering vises skatteforhold og inntekt fra inneværende år og fremover. Gjør nødvendige endringer
+            eller legg til en ny periode. Trygdeavgift for tidligere år skal fastsettes på årsavregning. Du skal derfor
+            ikke oppgi skatte- og inntekstperioder for tidligere år i denne behandlingen.
+          </Alert>
+        )}
 
       <Nav.Heading size="xsmall">Oppgi informasjon om brukers skatteforhold</Nav.Heading>
       <Skatteforholdsperioder

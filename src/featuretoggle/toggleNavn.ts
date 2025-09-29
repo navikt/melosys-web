@@ -7,6 +7,8 @@ const MELOSYS_PENSJONIST_EØS = "melosys.pensjonist_eos";
 const STANDARDVEDLEGG_EGET_VEDLEGG_AVTALELAND = "standardvedlegg_eget_vedlegg_avtaleland";
 const ÅRSAVREGNING = "melosys.arsavregning";
 const ÅRSAVREGNING_UTEN_FLYT = "melosys.arsavregning.uten.flyt";
+const MELOSYS_FAKTURERINGSKOMPONENTEN_IKKE_TIDLIGERE_PERIODER =
+  "melosys.faktureringskomponenten.ikke-tidligere-perioder";
 
 const alleToggleNavn = [
   MELOSYS_FAKTURERINGSKOMPONENTEN_VIS_REFERANSE,
@@ -17,6 +19,7 @@ const alleToggleNavn = [
   STANDARDVEDLEGG_EGET_VEDLEGG_AVTALELAND,
   ÅRSAVREGNING,
   ÅRSAVREGNING_UTEN_FLYT,
+  MELOSYS_FAKTURERINGSKOMPONENTEN_IKKE_TIDLIGERE_PERIODER,
 ];
 
 export {
@@ -29,5 +32,6 @@ export {
   ÅRSAVREGNING,
   ÅRSAVREGNING_UTEN_FLYT,
   STANDARDVEDLEGG_EGET_VEDLEGG_AVTALELAND,
+  MELOSYS_FAKTURERINGSKOMPONENTEN_IKKE_TIDLIGERE_PERIODER,
   alleToggleNavn,
 };
