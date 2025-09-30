@@ -90,7 +90,7 @@ function VurderingBekreftelse({ tilbake, aktivtSteg }: Props) {
     trygdeavgiftMottaker?.kode === TRYGDEAVGIFT_BETALES_TIL_NAV ||
     trygdeavgiftMottaker?.kode === TRYGDEAVGIFT_BETALES_TIL_NAV_OG_SKATT;
 
-  const erRedigerbarBetalingsvalg = erFørstegang && erPensjonist && mottakerErNav && redigerbart;
+  const erRedigerbarBetalingsvalg = erFørstegang && erPensjonist && redigerbart;
 
   const stegErGyldig = Utils._isEmpty(feilmeldinger) && Utils._isEmpty(kontrollfeil);
   let oppdaterFørKontroll = true;
@@ -248,13 +248,15 @@ function VurderingBekreftelse({ tilbake, aktivtSteg }: Props) {
         Bekreft opplysninger
       </Nav.Heading>
       <Nav.BodyLong size="small">{trygdeavgiftMottaker?.term} </Nav.BodyLong>
-      <Nav.HStack className="betalingsvalg">
-        <Betalingsvalg
-          skalSendeFaktura={betalingsvalgErFaktura}
-          onBetalingsvalgChange={oppdaterBetalingsvalg}
-          redigerbart={erRedigerbarBetalingsvalg}
-        />
-      </Nav.HStack>
+      {mottakerErNav && (
+        <Nav.HStack className="betalingsvalg">
+          <Betalingsvalg
+            skalSendeFaktura={betalingsvalgErFaktura}
+            onBetalingsvalgChange={oppdaterBetalingsvalg}
+            redigerbart={erRedigerbarBetalingsvalg}
+          />
+        </Nav.HStack>
+      )}
 
       {visFakturaMottaker && (
         <Nav.HStack className="fakturamottaker">
