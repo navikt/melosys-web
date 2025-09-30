@@ -57,6 +57,9 @@ interface Props {
   aktivtSteg: boolean;
 }
 
+const { FØRSTEGANG } = MKV.Koder.behandlinger.behandlingstyper;
+const { PENSJONIST } = MKV.Koder.behandlinger.behandlingstema;
+
 function VurderingBekreftelse({ tilbake, aktivtSteg }: Props) {
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
@@ -70,6 +73,10 @@ function VurderingBekreftelse({ tilbake, aktivtSteg }: Props) {
   const feilmeldinger = useSelector(feiletResponsSelectors.FeilmeldingerSelector);
   const kontrollfeil = useSelector(kontrollSelectors.KontrollFeilSelector);
   const mottatteOpplysningerStatus = useSelector(mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector);
+  const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
+
+  const erFørstegang = behandlingstype === FØRSTEGANG;
+  const erPensjonist = behandlingstema === PENSJONIST;
 
   const lagretVedtakstype = useSelector(behandlingsresultatSelectors.VedtakstypeSelector);
 
@@ -82,6 +89,8 @@ function VurderingBekreftelse({ tilbake, aktivtSteg }: Props) {
   const mottakerErNav =
     trygdeavgiftMottaker?.kode === TRYGDEAVGIFT_BETALES_TIL_NAV ||
     trygdeavgiftMottaker?.kode === TRYGDEAVGIFT_BETALES_TIL_NAV_OG_SKATT;
+
+  const erRedigerbarBetalingsvalg = erFørstegang && erPensjonist && mottakerErNav && redigerbart;
 
   const stegErGyldig = Utils._isEmpty(feilmeldinger) && Utils._isEmpty(kontrollfeil);
   let oppdaterFørKontroll = true;
@@ -239,15 +248,13 @@ function VurderingBekreftelse({ tilbake, aktivtSteg }: Props) {
         Bekreft opplysninger
       </Nav.Heading>
       <Nav.BodyLong size="small">{trygdeavgiftMottaker?.term} </Nav.BodyLong>
-      {mottakerErNav && (
-        <Nav.HStack className="betalingsvalg">
-          <Betalingsvalg
-            skalSendeFaktura={betalingsvalgErFaktura}
-            onBetalingsvalgChange={oppdaterBetalingsvalg}
-            redigerbart={redigerbart}
-          />
-        </Nav.HStack>
-      )}
+      <Nav.HStack className="betalingsvalg">
+        <Betalingsvalg
+          skalSendeFaktura={betalingsvalgErFaktura}
+          onBetalingsvalgChange={oppdaterBetalingsvalg}
+          redigerbart={erRedigerbarBetalingsvalg}
+        />
+      </Nav.HStack>
 
       {visFakturaMottaker && (
         <Nav.HStack className="fakturamottaker">
