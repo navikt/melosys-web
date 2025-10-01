@@ -93,6 +93,17 @@ export function MedlemskapsperiodeSkjema({
     tilOgMedDatoForrigePeriode.setDate(tilOgMedDatoForrigePeriode.getDate() + 1);
   }
 
+  // Sikre at minDate ikke overstiger maxDate (problem når forrige periode slutter utenfor årets ramme)
+  const safeMinDateForFom = (() => {
+    if (tilOgMedDatoForrigePeriode === undefined) {
+      return minDate;
+    }
+    if (maxDate && tilOgMedDatoForrigePeriode > maxDate) {
+      return maxDate;
+    }
+    return tilOgMedDatoForrigePeriode;
+  })();
+
   const kunEnTrygdedekning = trygdedekninger?.length === 1;
 
   const gjeldendePeriodeForRad = medlemskapsperioder[index];
@@ -111,7 +122,7 @@ export function MedlemskapsperiodeSkjema({
           <Forms.Datovelger
             label={index === 0 ? "Medlemskapsperiode" : ""}
             control={control}
-            minDate={tilOgMedDatoForrigePeriode !== undefined ? tilOgMedDatoForrigePeriode : minDate}
+            minDate={safeMinDateForFom}
             maxDate={maxDate}
             name={`medlemskapsperioder[${index}].fomDato`}
             aria-label={`Fra og med periode ${index + 1}`}
