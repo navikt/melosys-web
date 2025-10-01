@@ -821,10 +821,12 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   const skjemaErRedigerbart = redigerbart && !endrerBestemmelse;
 
   const tidligereAarsavregningTrygdeavgiftFraAvgiftssystem =
-    initiellData.aarsavregningResponse?.tidligereGrunnlagsopplysninger?.tidligereTrygdeavgiftFraAvgiftssystemet;
+    initiellData.aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger
+      ?.tidligereTrygdeavgiftFraAvgiftssystemet;
 
   const tidligereAarsavregningErManueltBeregnet = Boolean(
-    initiellData.aarsavregningResponse?.tidligereGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep,
+    initiellData.aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger
+      ?.tidligereÅrsavregningManueltAvgiftBeloep,
   );
 
   const minDate = initiellData.valgtÅr !== undefined ? new Date(initiellData.valgtÅr, 0, 1) : undefined;

@@ -141,11 +141,10 @@ export function AarsavregningUtenEllerDeltGrunnlag({
       redigerbart &&
       harTrygdeavgiftFraAvgiftssystemet &&
       innvilgedeMedlemskapsperioder.length === 0 &&
-      aarsavregningRes?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag
+      aarsavregningRes?.gjeldendeMedlemskapsperioder
     ) {
       // Initiell innlasting for delt grunnlag
-      const medlemskapsperioderFraGrunnlag =
-        aarsavregningRes.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag.medlemskapsperioder;
+      const medlemskapsperioderFraGrunnlag = aarsavregningRes.gjeldendeMedlemskapsperioder;
       const innvilgedeMedlemskapsperioderFraGrunnlag = medlemskapsperioderFraGrunnlag.filter(
         (periode) => periode.innvilgelsesResultat === INNVILGET || periode.innvilgelsesResultat === DELVIS_INNVILGET,
       );
@@ -165,13 +164,13 @@ export function AarsavregningUtenEllerDeltGrunnlag({
 
       return mapMedlemskapsperioder(
         oppdaterteInnvilgedeMedlemskapsperioder,
-        aarsavregningRes.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag,
+        aarsavregningRes.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag,
       );
     }
     // Vanlig innlastning. Delt og uten grunnlag
     return mapMedlemskapsperioder(
       innvilgedeMedlemskapsperioder,
-      aarsavregningRes?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag,
+      aarsavregningRes?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag,
     );
   };
 
@@ -226,6 +225,17 @@ export function AarsavregningUtenEllerDeltGrunnlag({
         const deltGrunnlagAarsavregningHarIkkeNyttGrunnlag =
           harTrygdeavgiftFraAvgiftssystemet && aarsavregningRes && !aarsavregningRes.nyttGrunnlag;
 
+        const tidligereAvgiftsgrunnlagBestemmelse =
+          aarsavregningRes?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag?.medlemskapsperioder[0]
+            ?.bestemmelse;
+        const eventuellNyBestemmelse = aarsavregningRes?.gjeldendeMedlemskapsperioder?.[0]?.bestemmelse;
+
+        const skalHenteGrunnlagFraTidligereTrygdeavgiftsgrunnlag =
+          deltGrunnlagAarsavregningHarIkkeNyttGrunnlag &&
+          tidligereAvgiftsgrunnlagBestemmelse &&
+          eventuellNyBestemmelse &&
+          tidligereAvgiftsgrunnlagBestemmelse === eventuellNyBestemmelse;
+
         const mappedMedlemskapsperioder = await getMappedMedlemskapsperioder(aarsavregningRes!);
         const bestemmelse = getBestemmelse(mappedMedlemskapsperioder);
         const trygdedekninger = await getTrygdedekninger(bestemmelse);
@@ -250,14 +260,15 @@ export function AarsavregningUtenEllerDeltGrunnlag({
           endeligAvgiftValg: aarsavregningRes?.endeligAvgiftValg || "",
           manueltAvgiftBeloep,
           skatteforholdsperioder: mapTilSkatteforholdProps(
-            deltGrunnlagAarsavregningHarIkkeNyttGrunnlag
-              ? aarsavregningRes?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.skatteforholdsperioder
+            skalHenteGrunnlagFraTidligereTrygdeavgiftsgrunnlag
+              ? aarsavregningRes?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag
+                  .skatteforholdsperioder
               : aarsavregningRes?.nyttGrunnlag?.trygdeavgiftsgrunnlag.skatteforholdsperioder,
             mappedMedlemskapsperioder,
           ),
           inntektskilder: mapTilInntektskilderProps(
-            deltGrunnlagAarsavregningHarIkkeNyttGrunnlag
-              ? aarsavregningRes?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.inntektskperioder
+            skalHenteGrunnlagFraTidligereTrygdeavgiftsgrunnlag
+              ? aarsavregningRes?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.inntektskperioder
               : aarsavregningRes?.nyttGrunnlag?.trygdeavgiftsgrunnlag.inntektskperioder,
             mappedMedlemskapsperioder,
           ),

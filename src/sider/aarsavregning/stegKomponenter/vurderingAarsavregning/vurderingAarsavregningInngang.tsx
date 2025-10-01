@@ -96,8 +96,8 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
 
     setHarGrunnlag(
       !(
-        res.tidligereGrunnlagsopplysninger === null ||
-        Utils._isEmpty(res.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.medlemskapsperioder)
+        res.tidligereTrygdeavgiftsGrunnlagsopplysninger === null ||
+        Utils._isEmpty(res.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.medlemskapsperioder)
       ),
     );
   };
@@ -169,12 +169,16 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
   };
 
   const forrigeÅrsavregningErManueltBeregnet = Boolean(
-    aarsavregningResponse?.tidligereGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep !== null &&
-      aarsavregningResponse?.tidligereGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep !== undefined,
+    aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep !==
+      null &&
+      aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep !==
+        undefined,
   );
   const forrigeÅrsavregningHarInnbetaltFraAvgiftssystem = Boolean(
-    aarsavregningResponse?.tidligereGrunnlagsopplysninger?.tidligereTrygdeavgiftFraAvgiftssystemet !== null &&
-      aarsavregningResponse?.tidligereGrunnlagsopplysninger?.tidligereTrygdeavgiftFraAvgiftssystemet !== undefined,
+    aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.tidligereTrygdeavgiftFraAvgiftssystemet !==
+      null &&
+      aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.tidligereTrygdeavgiftFraAvgiftssystemet !==
+        undefined,
   );
 
   const sisteMuligeÅr = new Date().getFullYear() - 1;

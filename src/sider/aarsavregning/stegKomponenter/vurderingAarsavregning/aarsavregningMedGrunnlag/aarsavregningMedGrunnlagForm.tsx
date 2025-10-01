@@ -305,7 +305,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
     medlemskapstypeErPliktig && erBrukerSkattepliktigIHelePerioden(skatteforholdsperioder);
 
   const tidligereAarsavregningErManueltBeregnet = Boolean(
-    aarsavregningResponse?.tidligereGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep,
+    aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep,
   );
 
   const minDate = initiellData.valgtÅr !== undefined ? new Date(initiellData.valgtÅr, 0, 1) : undefined;

@@ -6,7 +6,8 @@ import { Medlemskapsperiode } from "../medlemavfolketrygden/medlemskapsperioder"
 export interface AarsavregningResponse {
   aarsavregningID: number;
   aar: number;
-  tidligereGrunnlagsopplysninger?: Grunnlagsopplysninger;
+  tidligereTrygdeavgiftsGrunnlagsopplysninger?: Grunnlagsopplysninger;
+  gjeldendeMedlemskapsperioder?: Medlemskapsperiode[];
   nyttGrunnlag?: Grunnlagsopplysninger;
   avregning?: Avregning;
   harTrygdeavgiftFraAvgiftssystemet?: boolean;

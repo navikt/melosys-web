@@ -344,7 +344,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
       : lagretAarsavregning?.avregning?.beregnetAvgiftBelop;
 
   const tidligereTrygdeavgiftFraAvgiftssystemet =
-    lagretAarsavregning?.tidligereGrunnlagsopplysninger?.tidligereTrygdeavgiftFraAvgiftssystemet;
+    lagretAarsavregning?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.tidligereTrygdeavgiftFraAvgiftssystemet;
 
   const sumTilFakturaEllerRefusjon = beregnSumTilFakturaEllerRefusjon(
     nyTrygdeavgift,
