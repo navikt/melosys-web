@@ -176,9 +176,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
   );
   const forrigeÅrsavregningHarInnbetaltFraAvgiftssystem = Boolean(
     aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.tidligereTrygdeavgiftFraAvgiftssystemet !==
-      null &&
-      aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.tidligereTrygdeavgiftFraAvgiftssystemet !==
-        undefined,
+      null,
   );
 
   const sisteMuligeÅr = new Date().getFullYear() - 1;

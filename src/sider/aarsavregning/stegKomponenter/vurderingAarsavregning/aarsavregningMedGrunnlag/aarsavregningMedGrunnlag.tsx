@@ -1,7 +1,10 @@
 import * as Api from "../../../../../services/api";
 import "../vurderingAarsavregningInngang.less";
 import { useEffect, useState } from "react";
-import { AarsavregningResponse } from "../../../../../services/modules/aarsavregning/aarsavregning";
+import {
+  AarsavregningResponse,
+  Trygdeavgiftsgrunnlag,
+} from "../../../../../services/modules/aarsavregning/aarsavregning";
 import { useDispatch, useSelector } from "react-redux";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import { FieldValue } from "react-hook-form";
@@ -90,15 +93,19 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
   const dispatch = useDispatch();
 
   const mapSkjemaverdierFraTrygdeavgiftsgrunnlag = (aarsavregningResponse?: AarsavregningResponse) => {
-    let trygdeavgiftsgrunnlag;
+    let trygdeavgiftsgrunnlag: Trygdeavgiftsgrunnlag | undefined = undefined;
     if (aarsavregningResponse?.nyttGrunnlag?.trygdeavgiftsgrunnlag) {
       trygdeavgiftsgrunnlag = aarsavregningResponse.nyttGrunnlag.trygdeavgiftsgrunnlag;
     } else {
-      const gammelBestemmelse =
+      const bestemmelseFraTidligereAvgiftsgrunnlag =
         aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag
-          ?.medlemskapsperioder[0]?.bestemmelse;
+          ?.medlemskapsperioder?.[0]?.bestemmelse;
       const eventuellNyBestemmelse = aarsavregningResponse?.gjeldendeMedlemskapsperioder?.[0]?.bestemmelse;
-      if (gammelBestemmelse && eventuellNyBestemmelse && gammelBestemmelse === eventuellNyBestemmelse) {
+      if (
+        bestemmelseFraTidligereAvgiftsgrunnlag &&
+        eventuellNyBestemmelse &&
+        bestemmelseFraTidligereAvgiftsgrunnlag === eventuellNyBestemmelse
+      ) {
         trygdeavgiftsgrunnlag =
           aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag;
       }

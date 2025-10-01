@@ -225,16 +225,16 @@ export function AarsavregningUtenEllerDeltGrunnlag({
         const deltGrunnlagAarsavregningHarIkkeNyttGrunnlag =
           harTrygdeavgiftFraAvgiftssystemet && aarsavregningRes && !aarsavregningRes.nyttGrunnlag;
 
-        const tidligereAvgiftsgrunnlagBestemmelse =
-          aarsavregningRes?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag?.medlemskapsperioder[0]
+        const bestemmelseFraTidligereAvgiftsgrunnlag =
+          aarsavregningRes?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag?.medlemskapsperioder?.[0]
             ?.bestemmelse;
         const eventuellNyBestemmelse = aarsavregningRes?.gjeldendeMedlemskapsperioder?.[0]?.bestemmelse;
 
         const skalHenteGrunnlagFraTidligereTrygdeavgiftsgrunnlag =
           deltGrunnlagAarsavregningHarIkkeNyttGrunnlag &&
-          tidligereAvgiftsgrunnlagBestemmelse &&
+          bestemmelseFraTidligereAvgiftsgrunnlag &&
           eventuellNyBestemmelse &&
-          tidligereAvgiftsgrunnlagBestemmelse === eventuellNyBestemmelse;
+          bestemmelseFraTidligereAvgiftsgrunnlag === eventuellNyBestemmelse;
 
         const mappedMedlemskapsperioder = await getMappedMedlemskapsperioder(aarsavregningRes!);
         const bestemmelse = getBestemmelse(mappedMedlemskapsperioder);
