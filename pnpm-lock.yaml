@@ -29,8 +29,8 @@ importers:
         specifier: ^7.5.3
         version: 7.22.0(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       "@navikt/melosys-kodeverk":
-        specifier: 5.15.319
-        version: 5.15.319
+        specifier: 5.15.324
+        version: 5.15.324
       classnames:
         specifier: ^2.2.6
         version: 2.5.1
@@ -115,7 +115,7 @@ importers:
         version: 9.29.0
       "@graphql-codegen/cli":
         specifier: ^3.3.1
-        version: 3.3.1(@babel/core@7.28.4)(@types/node@22.18.5)(graphql@16.11.0)
+        version: 3.3.1(@babel/core@7.27.1)(@types/node@22.18.5)(graphql@16.11.0)
       "@graphql-codegen/near-operation-file-preset":
         specifier: ^2.5.0
         version: 2.5.0(graphql@16.11.0)
@@ -1388,11 +1388,11 @@ packages:
         tarball: https://npm.pkg.github.com/download/@navikt/ds-tokens/7.22.0/793c4e3da6051e5e6f3400dac9fbc27caf02864a,
       }
 
-  "@navikt/melosys-kodeverk@5.15.319":
+  "@navikt/melosys-kodeverk@5.15.324":
     resolution:
       {
-        integrity: sha512-fN5wyjUVhXPf8vVef1xKQes3VrxlwsbDDZUw/ydjhK2agQV/weLbQ+ddBXWnEMBQDQx8E3pE4Vmgh1uh3qquGA==,
-        tarball: https://npm.pkg.github.com/download/@navikt/melosys-kodeverk/5.15.319/0690fb827d07de01c16e845fdd96f8c245d7d06e,
+        integrity: sha512-HJPrU7nfaID9zWixJlYWtdY2WLQhWTxXlPCJnU0EQWoJ+ARhcunyh1+vbC7qpRtaXjPwUP1ZNQTsgSBHntn/pQ==,
+        tarball: https://npm.pkg.github.com/download/@navikt/melosys-kodeverk/5.15.324/63185fa043556f73f3a8ef23f8fed0865e453a2d,
       }
     engines: { node: ">=22.12.0" }
 
@@ -6252,9 +6252,9 @@ snapshots:
       "@babel/core": 7.27.1
       "@babel/helper-plugin-utils": 7.27.1
 
-  "@babel/plugin-syntax-import-assertions@7.27.1(@babel/core@7.28.4)":
+  "@babel/plugin-syntax-import-assertions@7.27.1(@babel/core@7.27.1)":
     dependencies:
-      "@babel/core": 7.28.4
+      "@babel/core": 7.27.1
       "@babel/helper-plugin-utils": 7.27.1
 
   "@babel/plugin-syntax-jsx@7.27.1(@babel/core@7.27.1)":
@@ -6689,7 +6689,7 @@ snapshots:
       graphql: 16.11.0
       tslib: 2.4.1
 
-  "@graphql-codegen/cli@3.3.1(@babel/core@7.28.4)(@types/node@22.18.5)(graphql@16.11.0)":
+  "@graphql-codegen/cli@3.3.1(@babel/core@7.27.1)(@types/node@22.18.5)(graphql@16.11.0)":
     dependencies:
       "@babel/generator": 7.27.1
       "@babel/template": 7.27.2
@@ -6697,9 +6697,9 @@ snapshots:
       "@graphql-codegen/core": 3.1.0(graphql@16.11.0)
       "@graphql-codegen/plugin-helpers": 4.2.0(graphql@16.11.0)
       "@graphql-tools/apollo-engine-loader": 7.3.26(graphql@16.11.0)
-      "@graphql-tools/code-file-loader": 7.3.23(@babel/core@7.28.4)(graphql@16.11.0)
-      "@graphql-tools/git-loader": 7.3.0(@babel/core@7.28.4)(graphql@16.11.0)
-      "@graphql-tools/github-loader": 7.3.28(@babel/core@7.28.4)(@types/node@22.18.5)(graphql@16.11.0)
+      "@graphql-tools/code-file-loader": 7.3.23(@babel/core@7.27.1)(graphql@16.11.0)
+      "@graphql-tools/git-loader": 7.3.0(@babel/core@7.27.1)(graphql@16.11.0)
+      "@graphql-tools/github-loader": 7.3.28(@babel/core@7.27.1)(@types/node@22.18.5)(graphql@16.11.0)
       "@graphql-tools/graphql-file-loader": 7.5.17(graphql@16.11.0)
       "@graphql-tools/json-file-loader": 7.4.18(graphql@16.11.0)
       "@graphql-tools/load": 7.8.14(graphql@16.11.0)
@@ -6896,9 +6896,9 @@ snapshots:
       tslib: 2.8.1
       value-or-promise: 1.0.12
 
-  "@graphql-tools/code-file-loader@7.3.23(@babel/core@7.28.4)(graphql@16.11.0)":
+  "@graphql-tools/code-file-loader@7.3.23(@babel/core@7.27.1)(graphql@16.11.0)":
     dependencies:
-      "@graphql-tools/graphql-tag-pluck": 7.5.2(@babel/core@7.28.4)(graphql@16.11.0)
+      "@graphql-tools/graphql-tag-pluck": 7.5.2(@babel/core@7.27.1)(graphql@16.11.0)
       "@graphql-tools/utils": 9.2.1(graphql@16.11.0)
       globby: 11.1.0
       graphql: 16.11.0
@@ -6968,9 +6968,9 @@ snapshots:
       tslib: 2.8.1
       value-or-promise: 1.0.12
 
-  "@graphql-tools/git-loader@7.3.0(@babel/core@7.28.4)(graphql@16.11.0)":
+  "@graphql-tools/git-loader@7.3.0(@babel/core@7.27.1)(graphql@16.11.0)":
     dependencies:
-      "@graphql-tools/graphql-tag-pluck": 7.5.2(@babel/core@7.28.4)(graphql@16.11.0)
+      "@graphql-tools/graphql-tag-pluck": 7.5.2(@babel/core@7.27.1)(graphql@16.11.0)
       "@graphql-tools/utils": 9.2.1(graphql@16.11.0)
       graphql: 16.11.0
       is-glob: 4.0.3
@@ -6981,11 +6981,11 @@ snapshots:
       - "@babel/core"
       - supports-color
 
-  "@graphql-tools/github-loader@7.3.28(@babel/core@7.28.4)(@types/node@22.18.5)(graphql@16.11.0)":
+  "@graphql-tools/github-loader@7.3.28(@babel/core@7.27.1)(@types/node@22.18.5)(graphql@16.11.0)":
     dependencies:
       "@ardatan/sync-fetch": 0.0.1
       "@graphql-tools/executor-http": 0.1.10(@types/node@22.18.5)(graphql@16.11.0)
-      "@graphql-tools/graphql-tag-pluck": 7.5.2(@babel/core@7.28.4)(graphql@16.11.0)
+      "@graphql-tools/graphql-tag-pluck": 7.5.2(@babel/core@7.27.1)(graphql@16.11.0)
       "@graphql-tools/utils": 9.2.1(graphql@16.11.0)
       "@whatwg-node/fetch": 0.8.8
       graphql: 16.11.0
@@ -7006,10 +7006,10 @@ snapshots:
       tslib: 2.8.1
       unixify: 1.0.0
 
-  "@graphql-tools/graphql-tag-pluck@7.5.2(@babel/core@7.28.4)(graphql@16.11.0)":
+  "@graphql-tools/graphql-tag-pluck@7.5.2(@babel/core@7.27.1)(graphql@16.11.0)":
     dependencies:
       "@babel/parser": 7.27.2
-      "@babel/plugin-syntax-import-assertions": 7.27.1(@babel/core@7.28.4)
+      "@babel/plugin-syntax-import-assertions": 7.27.1(@babel/core@7.27.1)
       "@babel/traverse": 7.27.1
       "@babel/types": 7.27.1
       "@graphql-tools/utils": 9.2.1(graphql@16.11.0)
@@ -7235,7 +7235,7 @@ snapshots:
 
   "@navikt/ds-tokens@7.22.0": {}
 
-  "@navikt/melosys-kodeverk@5.15.319": {}
+  "@navikt/melosys-kodeverk@5.15.324": {}
 
   "@nodelib/fs.scandir@2.1.5":
     dependencies:
