@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import { AarsavregningResponse } from "../../../../../services/modules/aarsavregning/aarsavregning";
 
 describe("AarsavregningUtenEllerDeltGrunnlag - Bestemmelse-logikk", () => {
