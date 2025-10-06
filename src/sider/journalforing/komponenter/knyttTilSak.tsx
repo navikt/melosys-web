@@ -14,7 +14,7 @@ import { useAsyncCallbackState } from "../../../hooks";
 import { harFlerePågåendeBehandlinger } from "../../../melosyskodeverk/utils";
 import MKV from "../../../melosyskodeverk/index.js";
 
-interface KnyttTilSakProps {
+export interface KnyttTilSakProps {
   sak: {
     saksnummer: string;
     sakstype: { kode: string };

@@ -4,7 +4,7 @@ import { reduxForm } from "redux-form";
 
 import { JournalforingValues } from "../../../kodeverk/form";
 import MKV from "../../../melosyskodeverk";
-import { KnyttTilSak } from "./knyttTilSak";
+import { KnyttTilSak, KnyttTilSakProps } from "./knyttTilSak";
 import { renderWithProvidersAsync } from "../../../ducks/test-utils/renderWithProviders";
 import React from "react";
 
@@ -21,34 +21,11 @@ vi.mock("../../../services/modules/lovligekombinasjoner", () => ({
   hentBehandlingstemaer: () => Promise.resolve([]),
   hentBehandlingstyperForKnyttTilSak: () => mocks.hentBehandlingstyperForKnyttTilSak(),
 }));
-interface TestKnyttTilSakProps {
-  sak: {
-    sakstype: { kode: string };
-    sakstema: { kode: string };
-    saksstatus: { kode: string };
-    saksnummer: string;
-    behandlingOversikter: Array<{
-      behandlingsstatus: { kode: string };
-      behandlingstype: { kode: string };
-      behandlingstema: { kode: string };
-      behandlingID: number;
-    }>;
-  };
-  formValues: {
-    opprettBehandling: unknown;
-    behandlingstema: unknown;
-    behandlingstype: unknown;
-    journalforingGjelder: string;
-  };
-  feltNavn: unknown;
-  changeField: () => void;
-  erJournalføring: boolean;
-}
 
 const WrappedKnyttTilSak = reduxForm({ form: "test" })(KnyttTilSak as any);
 
 describe("KnyttTilSak", () => {
-  let props: TestKnyttTilSakProps;
+  let props: KnyttTilSakProps;
 
   beforeEach(() => {
     props = {
@@ -85,7 +62,7 @@ describe("KnyttTilSak", () => {
     mocks.hent.mockReset();
   });
 
-  const renderKnyttTilSak = (testProps: TestKnyttTilSakProps) => {
+  const renderKnyttTilSak = (testProps: KnyttTilSakProps) => {
     return renderWithProvidersAsync(<WrappedKnyttTilSak {...(testProps as any)} />);
   };
 
