@@ -13,6 +13,9 @@ export class SendBrevPage {
     sendBrev: /send brev/i,
   };
 
+  private sendBrevPanel?: Locator;
+  private sakId?: string;
+
   get sendButton(): Locator {
     return this.page.getByRole("button", { name: this.labels.sendBrev });
   }
@@ -38,16 +41,16 @@ export class SendBrevPage {
     return scope.locator('select[name="type"]');
   }
 
-  private sendBrevPanel?: Locator;
-
   async goto() {
-    await this.page.goto(this.path, { waitUntil: "domcontentloaded", timeout: 30000 });
+    await this.page.goto(this.path, { waitUntil: "domcontentloaded" });
+    this.sakId = this.getSakIdFromUrl();
   }
 
   async clickSendBrevTab(): Promise<void> {
     const tab = this.sendBrevTab;
+    this.sakId = this.getSakIdFromUrl();
 
-    await expect(tab, 'Fant ikke "Send brev"-fanen').toBeVisible();
+    await expect(tab, 'Fant ikke "Send brev"-fanen for sak ' + this.sakId).toBeVisible();
 
     const panelId = await tab.getAttribute("aria-controls");
     await tab.click();
@@ -85,7 +88,7 @@ export class SendBrevPage {
   async selectFirstMottaker() {
     // Bruk native select[name="mottaker"] direkte
     const sel = this.mottakerNativeSelect;
-    await expect(sel, 'Fant ikke native select for "Mottaker"').toBeVisible();
+    await expect(sel, 'Fant ikke native select for "Mottaker" sak ' + this.sakId).toBeVisible();
 
     // Velg første reelle alternativ (index 1, siden index 0 er "Velg...")
     await sel.selectOption({ index: 1 });
@@ -134,13 +137,16 @@ export class SendBrevPage {
     const tag = await ctl.evaluate((el) => el.tagName.toLowerCase());
     if (tag === "select") {
       // Map label -> value via evaluate og bruk selectOption
-      const value = await ctl.evaluate((el, l) => {
-        const sel = el as HTMLSelectElement;
-        const re = l instanceof RegExp ? l : new RegExp(String(l), "i");
-        const opt = Array.from(sel.options).find((o) => re.test(o.text));
-        return opt?.value ?? "";
-      }, label as any);
-      if (!value) throw new Error("Fant ikke brevmal med gitt label");
+      const value = await ctl.evaluate(
+        (el, l) => {
+          const sel = el as HTMLSelectElement;
+          const re = l instanceof RegExp ? l : new RegExp(String(l), "i");
+          const opt = Array.from(sel.options).find((o) => re.test(o.text));
+          return opt?.value ?? "";
+        },
+        label as string | RegExp,
+      );
+      expect(value, `Fant ikke brevmal med gitt label "${label}" for sak ${this.sakId}`).toBeTruthy();
       await ctl.selectOption(value);
     } else {
       await ctl.click({ force: true });
@@ -150,25 +156,28 @@ export class SendBrevPage {
   }
 
   async assertSendButtonDisabled() {
-    await expect(this.sendButton).toBeDisabled();
+    await expect(this.sendButton, "Send button ikke disablet for sak " + this.sakId).toBeDisabled();
   }
 
   async assertSendButtonEnabled() {
-    await expect(this.sendButton).toBeEnabled();
+    await expect(this.sendButton, "Send button ikke enabled for sak " + this.sakId).toBeEnabled();
   }
 
   async selectMottakerByLabel(label: string | RegExp) {
     const sel = this.mottakerNativeSelect;
-    await expect(sel, 'Fant ikke native select for "Mottaker"').toBeVisible();
+    await expect(sel, 'Fant ikke native select for "Mottaker" for ' + this.sakId).toBeVisible();
 
-    const value = await sel.evaluate((el, l) => {
-      const select = el as HTMLSelectElement;
-      const re = typeof l === "string" ? new RegExp(l, "i") : l;
-      const opt = Array.from(select.options).find((o) => re.test(o.text));
-      return opt?.value ?? "";
-    }, label as any);
+    const value = await sel.evaluate(
+      (el, l) => {
+        const select = el as HTMLSelectElement;
+        const re = typeof l === "string" ? new RegExp(l, "i") : l;
+        const opt = Array.from(select.options).find((o) => re.test(o.text));
+        return opt?.value ?? "";
+      },
+      label as string | RegExp,
+    );
 
-    if (!value) throw new Error(`Fant ikke mottaker med label: ${label}`);
+    expect(value, `Fant ikke mottaker med label: ${label} for sak ${this.sakId}`).toBeTruthy();
     await sel.selectOption(value);
 
     await this.waitForBrevmalSelect();
@@ -176,5 +185,15 @@ export class SendBrevPage {
 
   async clickSendBrev() {
     await this.sendButton.click();
+  }
+
+  /**
+   * Extract case ID from current page URL
+   * Expected URL format: /melosys/sak/MEL-123/...
+   */
+  private getSakIdFromUrl(): string {
+    const url = this.page.url();
+    const match = url.match(/\/sak\/(MEL-\d+)/);
+    return match?.[1] ?? "ukjent";
   }
 }

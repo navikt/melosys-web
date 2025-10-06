@@ -5,6 +5,15 @@
 import { expect, Locator, Page } from "@playwright/test";
 
 /**
+ * Hent sakId fra locator
+ * @param sak - Sak-locator
+ * @returns sakId eller "ukjent"
+ */
+export function getSakId(sak: Locator): string {
+  return sak ? ((sak as unknown as Record<string, unknown>)._sakId as string) || "ukjent" : "ukjent";
+}
+
+/**
  * Sanitizes a filename by replacing characters that are invalid in file paths
  * with safe alternatives.
  *
@@ -21,11 +30,6 @@ export function sanitizeFilename(filename: string): string {
 }
 
 /**
- * Verifiserer at feiloppsummeringen inneholder nøyaktig de forventede feilmeldingene
- * @param scope - Side eller locator-område å søke innenfor
- * @param errorTexts - Array med forventede feilmeldinger
- */
-/**
  * Verifiserer at en spesifikk field error er synlig
  * @param scope - Side eller locator-område å søke innenfor
  * @param errorText - Forventet feilmeldingstekst
@@ -39,7 +43,7 @@ export async function assertFieldError(scope: Page | Locator, errorText: string 
       hasText: errorText,
     })
     .first();
-  await expect(fieldError).toBeVisible();
+  await expect(fieldError, `Fant ikke feilmedingen: ` + errorText).toBeVisible();
 }
 
 /**
@@ -79,7 +83,7 @@ export async function assertFieldErrors(scope: Page | Locator, errorTexts: (stri
     if (unexpected.length > 0) errorMsg += `\nUventede feltfeil: ${unexpected.map((e) => `"${e}"`).join(", ")}`;
     if (missing.length > 0) errorMsg += `\nManglende feltfeil: ${missing.map((e) => `"${e}"`).join(", ")}`;
 
-    throw new Error(errorMsg);
+    expect(actualCount, errorMsg).toBe(errorTexts.length);
   }
 
   // Verifiser hver forventet field error
@@ -136,7 +140,10 @@ export async function assertErrors(scope: Page | Locator, errorTexts: (string | 
         }
       }
 
-      throw new Error(`Uventede feilmeldinger funnet:\n${actualErrors.map((e, i) => `  ${i + 1}. ${e}`).join("\n")}`);
+      expect(
+        actualErrors.length,
+        `Uventede feilmeldinger funnet:\n${actualErrors.map((e, i) => `  ${i + 1}. ${e}`).join("\n")}`,
+      ).toBe(0);
     }
 
     // Sjekk også at det ikke er feiloppsummering
@@ -153,9 +160,12 @@ export async function assertErrors(scope: Page | Locator, errorTexts: (string | 
           const text = await errorListItems.nth(i).textContent();
           if (text) summaryErrors.push(text.trim());
         }
-        throw new Error(`Uventet "Følgende feil ble funnet" melding: ${summaryErrors.map((e) => `"${e}"`).join(", ")}`);
+        expect(
+          summaryErrorCount,
+          `Uventet "Følgende feil ble funnet" melding: ${summaryErrors.map((e) => `"${e}"`).join(", ")}`,
+        ).toBe(0);
       } else {
-        throw new Error('Uventet "Følgende feil ble funnet" melding: (tom oppsummering)');
+        expect(false, 'Uventet "Følgende feil ble funnet" melding: (tom oppsummering)').toBe(true);
       }
     }
 
@@ -196,7 +206,7 @@ export async function assertErrors(scope: Page | Locator, errorTexts: (string | 
     if (unexpected.length > 0) errorMsg += `\nUventede feilmeldinger: ${unexpected.map((e) => `"${e}"`).join(", ")}`;
     if (missing.length > 0) errorMsg += `\nManglende feilmeldinger: ${missing.map((e) => `"${e}"`).join(", ")}`;
 
-    throw new Error(errorMsg);
+    expect(actualCount, errorMsg).toBe(errorTexts.length);
   }
 
   // Verifiser hver forventet feilmelding
@@ -214,9 +224,6 @@ export async function assertErrors(scope: Page | Locator, errorTexts: (string | 
  * @param page - Playwright page objekt
  */
 export async function assertNyBehandlingOpprettet(page: Page) {
-  // Vent litt for at siden skal prosessere
-  await page.waitForTimeout(2000);
-
   // Sjekk først om vi fortsatt er på ny-sak-siden og har feilmeldinger
   if (page.url().includes("/opprettnysak")) {
     // Vi er fortsatt på ny-sak-siden, sjekk for feilmeldinger
@@ -224,7 +231,7 @@ export async function assertNyBehandlingOpprettet(page: Page) {
   }
 
   // Vent på at navigasjonen til hovedsiden fullføres
-  await page.waitForURL(/\/melosys\/$/, { timeout: 15000 });
+  await page.waitForURL(/\/melosys\/$/);
 
   // Verifiser at det ikke vises feilmeldinger på hovedsiden
   await assertErrors(page, []);

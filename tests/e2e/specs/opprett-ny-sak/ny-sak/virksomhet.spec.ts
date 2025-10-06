@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { test, Page } from "@playwright/test";
 import { runAxeAnalyze } from "../../../utils/axeUtils";
 import { HovedsidePage, ORG_NUMBER_VALID } from "../../../pages/hovedside.page";
 import { OpprettNySakPage } from "../../../pages/opprett-ny-sak.page";
@@ -6,10 +6,12 @@ import { assertFieldError, assertNyBehandlingOpprettet } from "../../../utils/te
 
 let opprettNySakPage: OpprettNySakPage;
 
-async function setupOpprettNySakTester(page: any) {
+async function setupOpprettNySakTester(page: Page) {
   const mainPage = new HovedsidePage(page);
   opprettNySakPage = new OpprettNySakPage(page);
+
   await mainPage.goto();
+
   await mainPage.klikkOpprettNySakKnapp();
 }
 
@@ -37,13 +39,13 @@ test.describe("'Opprett ny sak for virksomhet", () => {
     await opprettNySakPage.fyllInnOrganisasjonsnummer(ORG_NUMBER_VALID);
     await opprettNySakPage.velgOpprettNySak();
 
-    await expect(opprettNySakPage.page.locator("select[name='sakstype']")).toBeVisible();
+    await opprettNySakPage.verifiserSakstypeSelect();
 
     await opprettNySakPage.velgSakstype("EU/EØS-land");
-    await opprettNySakPage.velgSakstema();
-    await opprettNySakPage.velgBehandlingstema();
-    await opprettNySakPage.velgBehandlingstype();
-    await opprettNySakPage.velgBehandlingsaarsak();
+    await opprettNySakPage.velgSakstema("Medlemskap og lovvalg");
+    await opprettNySakPage.velgBehandlingstema("Virksomhet");
+    await opprettNySakPage.velgBehandlingstype("Henvendelse");
+    await opprettNySakPage.velgBehandlingsaarsak("Søknad");
 
     await opprettNySakPage.klikkOpprettNyBehandling();
 
@@ -59,13 +61,13 @@ test.describe("'Opprett ny sak for virksomhet", () => {
     await opprettNySakPage.fyllInnOrganisasjonsnummer(ORG_NUMBER_VALID);
     await opprettNySakPage.velgOpprettNySak();
 
-    await expect(opprettNySakPage.page.locator("select[name='sakstype']")).toBeVisible();
+    await opprettNySakPage.verifiserSakstypeSelect();
 
     await opprettNySakPage.velgSakstype("Avtaleland");
-    await opprettNySakPage.velgSakstema();
-    await opprettNySakPage.velgBehandlingstema();
-    await opprettNySakPage.velgBehandlingstype();
-    await opprettNySakPage.velgBehandlingsaarsak();
+    await opprettNySakPage.velgSakstema("Medlemskap og lovvalg");
+    await opprettNySakPage.velgBehandlingstema("Virksomhet");
+    await opprettNySakPage.velgBehandlingstype("Henvendelse");
+    await opprettNySakPage.velgBehandlingsaarsak("Søknad");
 
     await opprettNySakPage.klikkOpprettNyBehandling();
 

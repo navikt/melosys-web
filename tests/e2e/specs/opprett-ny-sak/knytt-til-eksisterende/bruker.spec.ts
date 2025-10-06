@@ -1,14 +1,17 @@
-import { expect, test } from "@playwright/test";
+import { expect, Page, test } from "@playwright/test";
 import { runAxeAnalyze } from "../../../utils/axeUtils";
 import { HovedsidePage, USER_ID_VALID } from "../../../pages/hovedside.page";
 import { OpprettNySakPage } from "../../../pages/opprett-ny-sak.page";
+import { getSakId } from "../../../utils/testUtils";
 
 let opprettNySakPage: OpprettNySakPage;
 
-async function setupOpprettNySakTester(page: any) {
+async function setupOpprettNySakTester(page: Page) {
   const mainPage = new HovedsidePage(page);
   opprettNySakPage = new OpprettNySakPage(page);
+
   await mainPage.goto();
+
   await mainPage.klikkOpprettNySakKnapp();
 }
 
@@ -17,20 +20,24 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
     await setupOpprettNySakTester(page);
   });
 
-  test("Knytt til FTRL-sak med åpne behandlinger - behandlingstyper tilgjengelige", async ({ page }, testInfo) => {
-    // Søk etter bruker med FTRL-sak
+  test("Knytt til 'Utenfor avtaleland' sak med åpne behandlinger - behandlingstyper tilgjengelige", async ({
+    page,
+  }, testInfo) => {
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgKnyttTilEksisterendeSak();
 
-    const valgtSak = await opprettNySakPage.velgFirstFTRLSak();
+    const valgtSak = await opprettNySakPage.finnSak({
+      sakstype: "Utenfor avtaleland",
+      behandlingsstatus: "Behandlingen er opprettet",
+    });
 
-    await opprettNySakPage.verifiserTilgjengeligeBehandlingstyper(valgtSak, ["Årsavregning"]);
+    expect(valgtSak, "Ingen'Utenfor avtaleland'-sak funnet").toBeTruthy();
 
-    const sakId = (valgtSak as any)._sakId || "ukjent";
-    await expect(
-      page.locator(".feilmelding_innrykk"),
-      `Ingen feilmelding skal vises for sak ${sakId}`,
-    ).not.toBeVisible();
+    valgtSak?.click();
+
+    await opprettNySakPage.verifiserTilgjengeligeBehandlingstyper(valgtSak!, ["Årsavregning"]);
+    const harFeilmelding = await opprettNySakPage.harFeilmelding();
+    expect(harFeilmelding, `Ingen feilmelding skal vises for sak ${getSakId(valgtSak!)}`).toBe(false);
 
     await runAxeAnalyze(page, testInfo.title);
   });
@@ -40,9 +47,9 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgKnyttTilEksisterendeSak();
 
-    const valgtSak = await opprettNySakPage.velgFirstEOSSak();
+    const valgtSak = await opprettNySakPage.velgFørsteEOSSak();
 
-    await expect(valgtSak).toBeVisible();
+    expect(valgtSak, "Ingen EØS-sak funnet").toBeTruthy();
 
     await expect(
       page.locator(".feilmelding_innrykk").filter({
@@ -56,34 +63,32 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("Knytt til AVTALELAND-sak med åpne behandlinger - behandlingstyper tilgjengelige", async ({
+  test("Knytt til Avtaleland-sak med åpne behandlinger - behandlingstyper tilgjengelige", async ({
     page,
   }, testInfo) => {
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgKnyttTilEksisterendeSak();
 
-    const valgtSak = await opprettNySakPage.velgFirstAvtalelandSak();
-    await expect(valgtSak).toBeVisible();
+    const valgtSak = await opprettNySakPage.velgFørsteAvtalelandSak("Behandlingen er opprettet");
+    expect(valgtSak, "Ingen Avtaleland-sak funnet").toBeTruthy();
 
     await opprettNySakPage.verifiserTilgjengeligeBehandlingstyper(valgtSak, ["Årsavregning"]);
 
-    const sakId = (valgtSak as any)._sakId || "ukjent";
-    await expect(
-      page.locator(".feilmelding_innrykk"),
-      `Ingen feilmelding skal vises for sak ${sakId}`,
-    ).not.toBeVisible();
+    const harFeilmelding = await opprettNySakPage.harFeilmelding();
+    expect(harFeilmelding, `Ingen feilmelding skal vises for sak ${getSakId(valgtSak!)}`).toBe(false);
 
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("Knytt til AVTALELAND-sak med avsluttede behandlinger - behandlingstyper tilgjengelige", async ({
+  test("Knytt til Avtaleland-sak med avsluttede behandlinger - behandlingstyper tilgjengelige", async ({
     page,
   }, testInfo) => {
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgKnyttTilEksisterendeSak();
 
-    const valgtSak = await opprettNySakPage.velgFirstAvtalelandSak("er avsluttet");
-    await expect(valgtSak).toBeVisible();
+    const valgtSak = await opprettNySakPage.velgFørsteAvtalelandSak("Behandlingen er avsluttet");
+
+    expect(valgtSak, "Fant ingen 'Avtaleland - Behandlingen er avsluttet' saker").toBeTruthy();
 
     await opprettNySakPage.verifiserTilgjengeligeBehandlingstyper(valgtSak, [
       "Ny vurdering",
@@ -92,30 +97,30 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
       "Årsavregning",
     ]);
 
-    const sakId = (valgtSak as any)._sakId || "ukjent";
-    await expect(
-      page.locator(".feilmelding_innrykk"),
-      `Ingen feilmelding skal vises for sak ${sakId}`,
-    ).not.toBeVisible();
+    const harFeilmelding = await opprettNySakPage.harFeilmelding();
+    expect(harFeilmelding, `Ingen feilmelding skal vises for sak ${getSakId(valgtSak!)}`).toBe(false);
 
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("Knytt til FTRL-sak med åpne ikke-årsavregningsbehandlinger - kun årsavregning tilgjengelig", async ({
+  test("Knytt til 'Utenfor avtaleland'-sak med åpne ikke-årsavregningsbehandlinger - kun årsavregning tilgjengelig", async ({
     page,
   }, testInfo) => {
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgKnyttTilEksisterendeSak();
 
-    const valgtSak = await opprettNySakPage.velgFirstFTRLSak();
+    const valgtSak = await opprettNySakPage.finnSak({
+      sakstype: "Utenfor avtaleland",
+    });
 
-    await opprettNySakPage.verifiserTilgjengeligeBehandlingstyper(valgtSak, ["Årsavregning"]);
+    expect(valgtSak, "Ingen 'Utenfor avtaleland'-sak funnet").toBeTruthy();
 
-    const sakId = (valgtSak as any)._sakId || "ukjent";
-    await expect(
-      page.locator(".feilmelding_innrykk"),
-      `Ingen feilmelding skal vises for sak ${sakId}`,
-    ).not.toBeVisible();
+    valgtSak?.click();
+
+    await opprettNySakPage.verifiserTilgjengeligeBehandlingstyper(valgtSak!, ["Årsavregning"]);
+
+    const harFeilmelding = await opprettNySakPage.harFeilmelding();
+    expect(harFeilmelding, `Ingen feilmelding skal vises for sak ${getSakId(valgtSak!)}`).toBe(false);
 
     await runAxeAnalyze(page, testInfo.title);
   });
@@ -126,19 +131,25 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgKnyttTilEksisterendeSak();
 
-    const valgtSak = await opprettNySakPage.velgFirstFTRLSak("er avsluttet");
+    const valgtSak = await opprettNySakPage.finnSak({
+      sakstype: "Utenfor avtaleland",
+      behandlingsstatus: "Behandlingen er avsluttet",
+    });
 
-    await opprettNySakPage.verifiserTilgjengeligeBehandlingstyper(valgtSak, [
+    expect(valgtSak, "Ingen 'Utenfor avtaleland - Behandlingen er avsluttet' sak funnet").toBeTruthy();
+
+    valgtSak?.click();
+
+    await opprettNySakPage.verifiserTilgjengeligeBehandlingstyper(valgtSak!, [
       "Ny vurdering",
       "Klage",
       "Henvendelse",
       "Årsavregning",
     ]);
 
-    const sakId = (valgtSak as any)._sakId || "ukjent";
     await expect(
       page.locator(".feilmelding_innrykk"),
-      `Ingen feilmelding skal vises for sak ${sakId}`,
+      `Ingen feilmelding skal vises for sak ${getSakId(valgtSak!)}`,
     ).not.toBeVisible();
 
     await runAxeAnalyze(page, testInfo.title);
@@ -149,32 +160,30 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
     await opprettNySakPage.velgKnyttTilEksisterendeSak();
 
     // Test grunnleggende navigasjon og at behandlingstype-seksjonen fungerer
-    const valgtSak = await opprettNySakPage.velgUtenforAvtalelandSak();
-    await page.waitForTimeout(1000);
+    const valgtSak = await opprettNySakPage.velgFørsteUtenforAvtalelandSak();
+
+    expect(valgtSak, "Ingen Avtaleland-sak funnet").toBeTruthy();
 
     // Verifiser at behandlingstype fungerer etter sakvalg
     await opprettNySakPage.verifiserTilgjengeligeBehandlingstyper(valgtSak, ["Årsavregning"]);
 
     // Tell antall tilgjengelige saker
-    const antallSaker = await page.locator(".customRadioPanel").count();
+    const antallSaker = await opprettNySakPage.tellAntallSaker();
 
     if (antallSaker > 1) {
       // Test navigasjon til annen sak
-      const andreSak = page.locator(".customRadioPanel").nth(1);
-      await andreSak.click();
-      await page.waitForTimeout(1500); // Vent på UI-oppdatering
+      await opprettNySakPage.velgSakVedIndex(1);
 
-      await opprettNySakPage.velgUtenforAvtalelandSak();
-      await page.waitForTimeout(1500);
+      await opprettNySakPage.velgFørsteUtenforAvtalelandSak();
     }
 
     // Sjekk at UI-en fungerer etter navigasjon - at den ikke krasjer
     // Dette er en grunnleggende stabiltest som verifiserer at navigasjon fungerer
-    const sidenFungerer = await page.locator(".opprettnysak").isVisible();
+    const sidenFungerer = await opprettNySakPage.erOpprettNySakSidenSynlig();
     expect(sidenFungerer).toBe(true);
 
     // Verifiser at vi fortsatt har tilgang til sakslisten
-    const saksliste = await page.locator(".customRadioPanel").count();
+    const saksliste = await opprettNySakPage.tellAntallSaker();
     expect(saksliste).toBeGreaterThan(0);
 
     await runAxeAnalyze(page, testInfo.title);

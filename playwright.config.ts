@@ -8,13 +8,13 @@ export default defineConfig({
   outputDir: "tests/e2e/artifacts",
   reporter: [["html", { outputFolder: "tests/e2e/reports/playwright-report", open: "always" }], ["list"]],
   /* Maximum time one test can run for. */
-  timeout: 60 * 1000,
+  timeout: 15000,
   expect: {
     /**
      * Maximum time expect() should wait for the condition to be met.
      * For example in `await expect(locator).toHaveText();`
      */
-    timeout: 10000,
+    timeout: 8000,
   },
   /* Run tests in files in parallel */
   fullyParallel: false,
@@ -23,7 +23,7 @@ export default defineConfig({
   /* Retry on CI only */
   retries: process.env.CI ? 2 : 1,
   /* Opt out of parallel tests on CI. */
-  workers: 1, // Enkelt worker for å sikre testrekkefølge
+  workers: 2, // Økt til 2 workers for bedre ytelse
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
@@ -45,8 +45,8 @@ export default defineConfig({
         launchOptions: {
           args: [],
         },
-        navigationTimeout: 10000,
-        actionTimeout: 5000,
+        navigationTimeout: 8000,
+        actionTimeout: 4000,
       },
       testMatch: "tests/e2e/specs/basic/**/*.spec.ts",
     },
@@ -57,8 +57,8 @@ export default defineConfig({
         launchOptions: {
           args: [],
         },
-        navigationTimeout: 10000,
-        actionTimeout: 5000,
+        navigationTimeout: 8000,
+        actionTimeout: 4000,
       },
       testMatch: "tests/e2e/specs/opprett-ny-sak/ny-sak/**/*.spec.ts",
     },
@@ -69,32 +69,44 @@ export default defineConfig({
         launchOptions: {
           args: [],
         },
-        navigationTimeout: 10000,
-        actionTimeout: 5000,
+        navigationTimeout: 8000,
+        actionTimeout: 4000,
       },
       testMatch: "tests/e2e/specs/opprett-ny-sak/knytt-til-eksisterende/**/*.spec.ts",
     },
     {
-      name: "4-behandle-sak-tests",
+      name: "4-behandle-sak",
       use: {
         ...devices["Desktop Chrome"],
         launchOptions: {
           args: [],
         },
-        navigationTimeout: 10000,
-        actionTimeout: 5000,
+        navigationTimeout: 8000,
+        actionTimeout: 4000,
       },
       testMatch: "tests/e2e/specs/behandle-sak/**/*.spec.ts",
     },
     {
-      name: "5-basic-tests-regression",
+      name: "5-avslutt-behandling",
       use: {
         ...devices["Desktop Chrome"],
         launchOptions: {
           args: [],
         },
-        navigationTimeout: 10000,
-        actionTimeout: 5000,
+        navigationTimeout: 8000,
+        actionTimeout: 4000,
+      },
+      testMatch: "tests/e2e/specs/avslutt-behandling/**/*.spec.ts",
+    },
+    {
+      name: "6-basic-tests-regression",
+      use: {
+        ...devices["Desktop Chrome"],
+        launchOptions: {
+          args: [],
+        },
+        navigationTimeout: 8000,
+        actionTimeout: 4000,
       },
       testMatch: "tests/e2e/specs/basic/hovedside-søk.spec.ts",
     },

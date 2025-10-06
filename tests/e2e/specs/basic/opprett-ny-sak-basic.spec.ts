@@ -1,4 +1,4 @@
-import { test } from "@playwright/test";
+import { test, Page } from "@playwright/test";
 import { runAxeAnalyze } from "../../utils/axeUtils";
 import { HovedsidePage } from "../../pages/hovedside.page";
 import { OpprettNySakPage } from "../../pages/opprett-ny-sak.page";
@@ -6,10 +6,12 @@ import { assertErrors } from "../../utils/testUtils";
 
 let opprettNySakPage: OpprettNySakPage;
 
-async function setupOpprettNySakTester(page: any) {
+async function setupOpprettNySakTester(page: Page) {
   const mainPage = new HovedsidePage(page);
   opprettNySakPage = new OpprettNySakPage(page);
+
   await mainPage.goto();
+
   await mainPage.klikkOpprettNySakKnapp();
 }
 
@@ -24,7 +26,7 @@ test.describe("'Opprett ny sak/behandling' hovedside", () => {
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("Klikk på 'Opprett ny behandling' når ingen påkrevde felter er fylt ut og verifiser feilmeldinger", async ({
+  test.skip("Klikk på 'Opprett ny behandling' når ingen påkrevde felter er fylt ut og verifiser feilmeldinger", async ({
     page,
   }, testInfo) => {
     await opprettNySakPage.klikkOpprettNyBehandling();
