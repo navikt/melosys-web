@@ -48,6 +48,21 @@ const createMockStore = (behandlingID = 123) => {
 };
 
 describe("AarsavregningMedGrunnlag", () => {
+  const renderWithMockResponse = (mockResponse: AarsavregningResponse) => {
+    vi.mocked(Api.Aarsavregning.hentAarsavregning).mockResolvedValue(mockResponse);
+    const store = createMockStore();
+    const bekreft = vi.fn();
+    const oppdaterStatus = vi.fn();
+
+    const result = render(
+      <Provider store={store}>
+        <AarsavregningMedGrunnlag bekreft={bekreft} oppdaterStatus={oppdaterStatus} aktivtSteg={true} />
+      </Provider>,
+    );
+
+    return { store, bekreft, oppdaterStatus, ...result };
+  };
+
   beforeEach(() => {
     vi.clearAllMocks();
     vi.mocked(Api.Ftrl.hentBestemmelser).mockResolvedValue({
@@ -113,17 +128,7 @@ describe("AarsavregningMedGrunnlag", () => {
         },
       };
 
-      vi.mocked(Api.Aarsavregning.hentAarsavregning).mockResolvedValue(mockResponse);
-
-      const store = createMockStore();
-      const bekreft = vi.fn();
-      const oppdaterStatus = vi.fn();
-
-      render(
-        <Provider store={store}>
-          <AarsavregningMedGrunnlag bekreft={bekreft} oppdaterStatus={oppdaterStatus} aktivtSteg={true} />
-        </Provider>,
-      );
+      const { store } = renderWithMockResponse(mockResponse);
 
       await waitFor(() => {
         expect(Api.Aarsavregning.hentAarsavregning).toHaveBeenCalled();
@@ -193,17 +198,7 @@ describe("AarsavregningMedGrunnlag", () => {
         },
       };
 
-      vi.mocked(Api.Aarsavregning.hentAarsavregning).mockResolvedValue(mockResponse);
-
-      const store = createMockStore();
-      const bekreft = vi.fn();
-      const oppdaterStatus = vi.fn();
-
-      render(
-        <Provider store={store}>
-          <AarsavregningMedGrunnlag bekreft={bekreft} oppdaterStatus={oppdaterStatus} aktivtSteg={true} />
-        </Provider>,
-      );
+      const { store } = renderWithMockResponse(mockResponse);
 
       await waitFor(() => {
         expect(Api.Aarsavregning.hentAarsavregning).toHaveBeenCalled();
@@ -259,17 +254,7 @@ describe("AarsavregningMedGrunnlag", () => {
         },
       };
 
-      vi.mocked(Api.Aarsavregning.hentAarsavregning).mockResolvedValue(mockResponse);
-
-      const store = createMockStore();
-      const bekreft = vi.fn();
-      const oppdaterStatus = vi.fn();
-
-      render(
-        <Provider store={store}>
-          <AarsavregningMedGrunnlag bekreft={bekreft} oppdaterStatus={oppdaterStatus} aktivtSteg={true} />
-        </Provider>,
-      );
+      const { store } = renderWithMockResponse(mockResponse);
 
       await waitFor(() => {
         expect(Api.Aarsavregning.hentAarsavregning).toHaveBeenCalled();
@@ -324,17 +309,7 @@ describe("AarsavregningMedGrunnlag", () => {
         },
       };
 
-      vi.mocked(Api.Aarsavregning.hentAarsavregning).mockResolvedValue(mockResponse);
-
-      const store = createMockStore();
-      const bekreft = vi.fn();
-      const oppdaterStatus = vi.fn();
-
-      render(
-        <Provider store={store}>
-          <AarsavregningMedGrunnlag bekreft={bekreft} oppdaterStatus={oppdaterStatus} aktivtSteg={true} />
-        </Provider>,
-      );
+      const { store } = renderWithMockResponse(mockResponse);
 
       await waitFor(() => {
         expect(Api.Aarsavregning.hentAarsavregning).toHaveBeenCalled();
@@ -364,17 +339,7 @@ describe("AarsavregningMedGrunnlag", () => {
         },
       };
 
-      vi.mocked(Api.Aarsavregning.hentAarsavregning).mockResolvedValue(mockResponse);
-
-      const store = createMockStore();
-      const bekreft = vi.fn();
-      const oppdaterStatus = vi.fn();
-
-      render(
-        <Provider store={store}>
-          <AarsavregningMedGrunnlag bekreft={bekreft} oppdaterStatus={oppdaterStatus} aktivtSteg={true} />
-        </Provider>,
-      );
+      const { store } = renderWithMockResponse(mockResponse);
 
       await waitFor(() => {
         expect(Api.Aarsavregning.hentAarsavregning).toHaveBeenCalled();
@@ -395,17 +360,7 @@ describe("AarsavregningMedGrunnlag", () => {
         tidligereTrygdeavgiftsGrunnlagsopplysninger: undefined, // Ingen tidligere grunnlag
       };
 
-      vi.mocked(Api.Aarsavregning.hentAarsavregning).mockResolvedValue(mockResponse);
-
-      const store = createMockStore();
-      const bekreft = vi.fn();
-      const oppdaterStatus = vi.fn();
-
-      const { container } = render(
-        <Provider store={store}>
-          <AarsavregningMedGrunnlag bekreft={bekreft} oppdaterStatus={oppdaterStatus} aktivtSteg={true} />
-        </Provider>,
-      );
+      const { container } = renderWithMockResponse(mockResponse);
 
       await waitFor(() => {
         expect(Api.Aarsavregning.hentAarsavregning).toHaveBeenCalled();
@@ -490,17 +445,7 @@ describe("AarsavregningMedGrunnlag", () => {
         },
       };
 
-      vi.mocked(Api.Aarsavregning.hentAarsavregning).mockResolvedValue(mockResponse);
-
-      const store = createMockStore();
-      const bekreft = vi.fn();
-      const oppdaterStatus = vi.fn();
-
-      render(
-        <Provider store={store}>
-          <AarsavregningMedGrunnlag bekreft={bekreft} oppdaterStatus={oppdaterStatus} aktivtSteg={true} />
-        </Provider>,
-      );
+      const { store } = renderWithMockResponse(mockResponse);
 
       await waitFor(() => {
         expect(Api.Aarsavregning.hentAarsavregning).toHaveBeenCalled();
