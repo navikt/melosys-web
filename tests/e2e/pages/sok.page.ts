@@ -48,18 +48,6 @@ export class SokPage {
   }
 
   /**
-   * Verifiser at siden viser korrekte søkeresultater for et organisasjonsnummer
-   * @param orgNr - et gyldig organisasjonsnummer
-   */
-  async verifyValidOrgSearchResults(orgNr: string): Promise<void> {
-    await this.verifySearchResultsPage();
-
-    await expect(this.page.locator(`h2:has-text('Resultater for org.nr. ${orgNr}')`)).toBeVisible();
-    await expect(this.page.locator(`text=Fant ingen saker knyttet til org.nr. ${orgNr}`)).not.toBeVisible();
-    await expect(this.page.locator(".fagsak").first()).toBeVisible();
-  }
-
-  /**
    * Verifiser at siden viser korrekt info for en ugyldig id
    * @param id - en ugyldig id
    */
@@ -71,51 +59,6 @@ export class SokPage {
   }
 
   /**
-   * Vent på at søkeresultatene er lastet og stabile
-   * @deprecated Use hovedsidePage.ventPåSøkeresultat() or hovedsidePage.søkOgVentPåResultat() instead
-   * @param userId - bruker-ID som det ble søkt etter
-   */
-  async waitForSearchResults(userId: string): Promise<void> {
-    await this.page.waitForSelector(`text=Resultater for f.nr./d-nr. ${userId}`, {
-      state: "visible",
-    });
-    await this.page.waitForTimeout(500);
-  }
-
-  /**
-   * Finn alle saker avhengig av sakstype og behandlingsstatus
-   * @param sakstype - "Avtaleland", "Utenfor avtaleland", eller "EU/EØS-land"
-   * @param behandlingsstatus - Valgfri status, f.eks. "Behandlingen er avsluttet" eller "Behandlingen pågår"
-   * @returns Locator for alle saker av den typen med sakId lagt på
-   */
-  async finnSak(
-    sakstype: "Utenfor avtaleland" | "Avtaleland" | "EU/EØS-land",
-    behandlingsstatus?:
-      | "Behandlingen er opprettet"
-      | "Behandlingen pågår"
-      | "Behandlingen er avsluttet"
-      | "Søknaden er henlagt",
-  ): Promise<Locator[]> {
-    // Vent på at minst én fagsak er lastet
-    await expect(this.page.locator(".fagsak").first()).toBeVisible();
-
-    const baseSelector = `.fagsak:has-text("${sakstype}")`;
-    const selector = behandlingsstatus ? `${baseSelector}:has-text("${behandlingsstatus}")` : baseSelector;
-
-    const saker = this.page.locator(selector);
-    const antall = await saker.count();
-    const result: Locator[] = [];
-
-    for (let i = 0; i < antall; i++) {
-      const sak = saker.nth(i);
-      (sak as unknown as Record<string, unknown>)._sakId = await this.getSaksnummer(sak);
-      result.push(sak);
-    }
-
-    return result;
-  }
-
-  /**
    * Finn sak med spesifikt saksnummer
    * @param saksnummer - saksnummer (f.eks. "MEL-123")
    * @returns Locator for saken med sakId lagt til
@@ -124,23 +67,6 @@ export class SokPage {
     const sak = this.page.locator(`.fagsak:has-text("${saksnummer}")`).first();
     (sak as unknown as Record<string, unknown>)._sakId = saksnummer;
     return sak;
-  }
-
-  /**
-   * Sjekk om en sak har "Vis behandling" knapp
-   * @param sak - Sak-locator
-   * @returns true hvis knappen finnes
-   */
-  async sakHarVisBehandlingKnapp(sak: Locator): Promise<boolean> {
-    try {
-      return await sak
-        .locator('button:has-text("Vis behandling")')
-        .isVisible()
-        .catch(() => false);
-    } catch (error) {
-      const sakId = getSakId(sak);
-      throw new Error(`Kunne ikke sjekke "Vis behandling" knapp for sak ${sakId}: ${error}`);
-    }
   }
 
   /**
@@ -180,33 +106,6 @@ export class SokPage {
     } catch (error) {
       throw new Error(`Kunne ikke klikke på "Vis behandling" for sak ${sakId}: ${error}`);
     }
-  }
-
-  /**
-   * Sjekk om en sak har en bestemt behandlingsstatus
-   * @param sak - Sak-locator
-   * @param status - Status tekst å lete etter (f.eks. "Behandlingen er avsluttet")
-   * @returns true hvis saken har den statusen
-   */
-  async harStatus(sak: Locator, status: string): Promise<boolean> {
-    const sakId = getSakId(sak);
-    try {
-      return await sak
-        .locator(`:has-text("${status}")`)
-        .isVisible()
-        .catch(() => false);
-    } catch (error) {
-      throw new Error(`Kunne ikke sjekke status "${status}" for sak ${sakId}: ${error}`);
-    }
-  }
-
-  /**
-   * Hent "Vis behandling" knapp fra en sak
-   * @param sak - Sak-locator
-   * @returns Locator for knappen
-   */
-  getVisBehandlingKnapp(sak: Locator): Locator {
-    return sak.locator('button:has-text("Vis behandling")');
   }
 
   /**

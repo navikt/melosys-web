@@ -117,9 +117,8 @@ export class VisBehandlingPage {
 
   /**
    * Finn og klikk på "Avslutt behandling" accordion-header i behandlingsmenyen
-   * @param saksnummer - Valgfritt saksnummer for bedre feilmeldinger
    */
-  async klikkAvsluttBehandling(saksnummer: string): Promise<void> {
+  async klikkAvsluttBehandling(): Promise<void> {
     await this.verifiserBehandlingsside();
 
     const behandlingsmeny = this.page.locator(".behandlingsmeny__meny");
@@ -348,7 +347,7 @@ export class VisBehandlingPage {
       | "Behandlingen er bortfalt",
     saksnummer: string,
   ): Promise<void> {
-    await this.klikkAvsluttBehandling(saksnummer);
+    await this.klikkAvsluttBehandling();
 
     if (type === "Søknaden er innvilget") {
       await this.velgSoknadenErInnvilget(saksnummer);

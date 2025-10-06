@@ -1,11 +1,6 @@
 import { expect, Locator, Page } from "@playwright/test";
 import { getSakId } from "../utils/testUtils";
 
-// UI Constants
-const SELECTORS = {
-  CUSTOM_RADIO_PANEL_TITLE: ".customRadioPanelTittel",
-} as const;
-
 /**
  * Assertions and verification methods for OpprettNySakPage
  * This class contains all methods that verify state, get information, or assert conditions
@@ -59,53 +54,6 @@ export class OpprettNySakAssertions {
    */
   async verifiserSakstypeSelect(): Promise<void> {
     await expect(this.page.locator("select[name='sakstype']")).toBeVisible();
-  }
-
-  /**
-   * Hent sak-titel fra locator
-   */
-  async hentSaksTittel(sakLocator: Locator): Promise<string | null> {
-    const tittelElement = sakLocator.locator(SELECTORS.CUSTOM_RADIO_PANEL_TITLE);
-    return await tittelElement.textContent();
-  }
-
-  /**
-   * Sjekker om det finnes feilmeldinger på siden
-   * @param feilmelding Valgfri spesifikk feilmelding å lete etter
-   * @returns true hvis feilmelding finnes
-   *
-   * Note: Søker på hele siden da feilmeldinger typisk vises som globale varsler,
-   * ikke innenfor individuelle sak-elementer.
-   */
-  async harFeilmelding(feilmelding?: string): Promise<boolean> {
-    if (feilmelding) {
-      // Sjekk etter spesifikk feilmelding
-      return await this.page
-        .locator(".navds-alert--error, .navds-alert--warning")
-        .filter({ hasText: feilmelding })
-        .isVisible()
-        .catch(() => false);
-    }
-
-    // Sjekk etter generelle feilmeldinger
-    return await this.page
-      .locator(".navds-alert--error, .navds-alert--warning")
-      .isVisible()
-      .catch(() => false);
-  }
-
-  /**
-   * Tell antall saker som vises
-   */
-  async tellAntallSaker(): Promise<number> {
-    return await this.page.locator(".customRadioPanel").count();
-  }
-
-  /**
-   * Sjekk om opprett-ny-sak siden er synlig
-   */
-  async erOpprettNySakSidenSynlig(): Promise<boolean> {
-    return await this.page.locator(".opprettnysak").isVisible();
   }
 
   /**
@@ -205,67 +153,6 @@ export class OpprettNySakAssertions {
   }
 
   /**
-   * Generisk funksjon for å finne alle saker basert på sakstype og kriterier
-   */
-  async finnAlleSaker(kriterier: {
-    sakstype: "Utenfor avtaleland" | "Avtaleland" | "EU/EØS-land";
-    behandlingsstatus?:
-      | "Behandlingen er opprettet"
-      | "Behandlingen pågår"
-      | "Behandlingen er avsluttet"
-      | "Søknaden er henlagt/trukket";
-    resultattype?: string;
-  }): Promise<Locator[]> {
-    // Bruk case-sensitiv eksakt matching for sakstype
-    const alleSaker = this.page.locator(".customRadioPanel");
-    const antallAlleSaker = await alleSaker.count();
-
-    const sakListe: Locator[] = [];
-
-    for (let i = 0; i < antallAlleSaker; i++) {
-      const sak = alleSaker.nth(i);
-      const tittel = await sak.locator(".customRadioPanelTittel").textContent();
-
-      // Case-sensitiv eksakt match på starten av tittelen
-      if (!tittel?.startsWith(kriterier.sakstype)) {
-        continue;
-      }
-
-      let oppfyllerKriterier = true;
-
-      if (kriterier.behandlingsstatus) {
-        // Use textContent() to check if the status exists anywhere in the sak element
-        const sakInnhold = await sak.textContent();
-        const harStatus = sakInnhold?.includes(kriterier.behandlingsstatus) ?? false;
-
-        if (!harStatus) {
-          oppfyllerKriterier = false;
-        }
-      }
-
-      if (kriterier.resultattype) {
-        // Use textContent() to check if the resultattype exists anywhere in the sak element
-        const sakInnhold = await sak.textContent();
-        const harResultattype = sakInnhold?.includes(kriterier.resultattype) ?? false;
-        if (!harResultattype) {
-          oppfyllerKriterier = false;
-        }
-      }
-
-      // Hent sak-ID for bedre feilmeldinger
-      const sakId = await sak.locator(".customRadioPanelTittel").textContent();
-      const sakIdMatch = sakId?.match(/MEL-\d+/);
-      (sak as any)._sakId = sakIdMatch ? sakIdMatch[0] : "ukjent";
-
-      if (oppfyllerKriterier) {
-        sakListe.push(sak);
-      }
-    }
-
-    return sakListe;
-  }
-
-  /**
    * Verifiser at alle nødvendige elementer er synlige på siden
    */
   async verifiserAlleElementer(): Promise<void> {
@@ -276,41 +163,5 @@ export class OpprettNySakAssertions {
     await this.verifiserLeggBehandlingenCheckbox();
     await this.verifiserAksjonsKnapper();
     //await this.verifiserSakstypeSelect();
-  }
-
-  /**
-   * Hent alle opsjoner fra en select dropdown
-   */
-  async getSelectOptions(selectName: string): Promise<string[]> {
-    const select = this.page.locator(`select[name='${selectName}']`);
-    await expect(select).toBeVisible();
-
-    // Vent på at select har options lastet (mer enn bare default option)
-    await this.page.waitForFunction(
-      (selectName) => {
-        const selectEl = document.querySelector(`select[name='${selectName}']`) as HTMLSelectElement;
-        return selectEl && selectEl.options.length > 1;
-      },
-      selectName,
-      { timeout: 5000 },
-    );
-
-    const options = await select.locator("option").all();
-    const values = [];
-    for (const option of options) {
-      const value = await option.getAttribute("value");
-      if (value && value !== "" && value !== "DEFAULT") {
-        values.push(value);
-      }
-    }
-    return values;
-  }
-
-  /**
-   * Sjekk om behandlingstype-gruppen er synlig
-   */
-  async erBehandlingstypeGruppeSynlig(): Promise<boolean> {
-    const behandlingstypeGruppe = this.page.getByRole("group", { name: "Behandlingstype" });
-    return await behandlingstypeGruppe.isVisible().catch(() => false);
   }
 }

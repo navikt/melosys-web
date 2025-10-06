@@ -1,15 +1,29 @@
 import { expect, Locator, Page } from "@playwright/test";
 import { OpprettNySakAssertions } from "./opprett-ny-sak-assertions.page";
 
-const SELECT_TIMEOUT = 100; // Ventetid etter valg i dropdown for at avhengige felter skal oppdatere seg
+const DROP_DOWN_SELECT_TIMEOUT = 100; // Ventetid etter valg i dropdown for at avhengige felter skal oppdatere seg
 
-// UI Constants
 const SELECTORS = {
   OPPRETT_NY_BEHANDLING_BUTTON: "button:has-text('Opprett ny behandling')",
   AVBRYT_BUTTON: "button:has-text('Avbryt')",
   VIS_FLERE_SAKER_BUTTON: 'button:has-text("Vis flere saker")',
   CUSTOM_RADIO_PANEL_TITLE: ".customRadioPanelTittel",
 } as const;
+
+interface LocatorWithSakId extends Locator {
+  _sakId?: string;
+}
+
+/**
+ * Sett sakId på locator ved å hente den fra .customRadioPanelTittel
+ * Denne funksjonen er spesifikk for opprett-ny-sak-siden
+ * @param sak - Sak-locator
+ */
+export async function setSakId(sak: Locator): Promise<void> {
+  const sakId = await sak.locator(".customRadioPanelTittel").textContent();
+  const sakIdMatch = sakId?.match(/MEL-\d+/);
+  (sak as LocatorWithSakId)._sakId = sakIdMatch ? sakIdMatch[0] : "ukjent";
+}
 
 /**
  * Page Object Model for opprett ny sak - Actions only
@@ -29,7 +43,7 @@ export class OpprettNySakPage {
    */
   async velgSakVedIndex(index: number): Promise<void> {
     const sak = this.page.locator(".customRadioPanel").nth(index);
-    await expect(sak).toBeVisible();
+    await expect(sak, "Fant ikke sak med index " + index).toBeVisible();
     await sak.click();
   }
 
@@ -38,7 +52,7 @@ export class OpprettNySakPage {
    */
   async fyllInnBrukerId(userID: string): Promise<void> {
     const userIdInput = this.page.locator("input[name='brukerID']");
-    await expect(userIdInput).toBeVisible();
+    await expect(userIdInput, "Fant ikke bruker med id " + userID).toBeVisible();
     await userIdInput.fill(userID);
     await this.page.waitForLoadState("domcontentloaded");
   }
@@ -48,7 +62,7 @@ export class OpprettNySakPage {
    */
   async fyllInnOrganisasjonsnummer(orgNumber: string): Promise<void> {
     const orgNumberInput = this.page.locator("input[name='virksomhetOrgnr']");
-    await expect(orgNumberInput).toBeVisible();
+    await expect(orgNumberInput, "Fant ikke org nr input").toBeVisible();
     await orgNumberInput.fill(orgNumber);
   }
 
@@ -61,7 +75,9 @@ export class OpprettNySakPage {
     );
 
     try {
-      await expect(undertittel).toBeVisible({ timeout: 5000 });
+      await expect(undertittel, "Fant ikke undertittel 'Knytt til eksisterende sak eller opprett ny'").toBeVisible({
+        timeout: 5000,
+      });
     } catch {
       return;
     }
@@ -93,6 +109,7 @@ export class OpprettNySakPage {
   async velgKnyttTilEksisterendeSak(): Promise<void> {
     await expect(
       this.page.locator(".opprettnysak .undertittel:has-text('Knytt til eksisterende sak eller opprett ny')"),
+      "Fant ikke undertittel 'Knytt til eksisterende sak eller opprett ny'",
     ).toBeVisible();
 
     const ingenSakerMelding = this.page.locator(
@@ -105,10 +122,9 @@ export class OpprettNySakPage {
     }
 
     const knyttTilEksSakRadio = this.page.locator(".navds-radio__content:has-text('Eksisterende sak')");
-    await expect(knyttTilEksSakRadio).toBeVisible();
+    await expect(knyttTilEksSakRadio, "Fant ikke radioknapp for 'Eksisterende sak'").toBeVisible();
     await knyttTilEksSakRadio.click();
 
-    // Klikk på "Vis flere saker" for å få tilgang til alle tilgjengelige saker
     await this.klikkVisFlereSaker();
   }
 
@@ -136,7 +152,7 @@ export class OpprettNySakPage {
       | "Søknaden er henlagt/trukket";
     resultattype?: string;
   }): Promise<Locator | null> {
-    const saker = await this.assertions.finnAlleSaker({
+    const saker = await this.finnAlleSaker({
       sakstype: kriterier.sakstype,
       behandlingsstatus: kriterier.behandlingsstatus,
       resultattype: kriterier.resultattype,
@@ -149,25 +165,55 @@ export class OpprettNySakPage {
   }
 
   /**
-   * Finn alle åpne saker for en gitt sakstype
-   * Åpne saker er saker med behandlingsstatus "Behandlingen er opprettet" eller "Behandlingen pågår"
+   * Generisk funksjon for å finne alle saker basert på sakstype og kriterier
    */
-  async finnÅpneSaker(sakstype: "Utenfor avtaleland" | "Avtaleland" | "EU/EØS-land"): Promise<Locator[]> {
-    const åpneSaker: Locator[] = [];
+  async finnAlleSaker(kriterier: {
+    sakstype: "Utenfor avtaleland" | "Avtaleland" | "EU/EØS-land";
+    behandlingsstatus?:
+      | "Behandlingen er opprettet"
+      | "Behandlingen pågår"
+      | "Behandlingen er avsluttet"
+      | "Søknaden er henlagt/trukket";
+    resultattype?: string;
+  }): Promise<Locator[]> {
+    const alleSaker = this.page.locator(".customRadioPanel");
+    const sakListe: Locator[] = [];
 
-    const opprettetSaker = await this.assertions.finnAlleSaker({
-      sakstype,
-      behandlingsstatus: "Behandlingen er opprettet",
-    });
+    for (let i = 0; i < (await alleSaker.count()); i++) {
+      const sak = alleSaker.nth(i);
+      const tittel = await sak.locator(".customRadioPanelTittel").textContent();
 
-    const pågåendeSaker = await this.assertions.finnAlleSaker({
-      sakstype,
-      behandlingsstatus: "Behandlingen pågår",
-    });
+      if (!tittel?.startsWith(kriterier.sakstype)) {
+        continue;
+      }
 
-    åpneSaker.push(...opprettetSaker, ...pågåendeSaker);
+      let oppfyllerKriterier = true;
 
-    return åpneSaker;
+      if (kriterier.behandlingsstatus) {
+        const sakInnhold = await sak.textContent();
+        const harStatus = sakInnhold?.includes(kriterier.behandlingsstatus) ?? false;
+
+        if (!harStatus) {
+          oppfyllerKriterier = false;
+        }
+      }
+
+      if (kriterier.resultattype) {
+        const sakInnhold = await sak.textContent();
+        const harResultattype = sakInnhold?.includes(kriterier.resultattype) ?? false;
+        if (!harResultattype) {
+          oppfyllerKriterier = false;
+        }
+      }
+
+      await setSakId(sak);
+
+      if (oppfyllerKriterier) {
+        sakListe.push(sak);
+      }
+    }
+
+    return sakListe;
   }
 
   /**
@@ -177,116 +223,7 @@ export class OpprettNySakPage {
    */
   finnSakBySaksnummer(saksnummer: string): Locator {
     const sak = this.page.locator(`.customRadioPanel:has-text("${saksnummer}")`).first();
-    (sak as unknown as Record<string, unknown>)._sakId = saksnummer;
-    return sak;
-  }
-
-  /**
-   * Velg første FTRL-sak
-   * @param status Valgfri behandlingsstatus å filtrere på (f.eks. "Behandlingen er avsluttet", "pågår", "Behandlingen er opprettet")
-   * @returns Det valgte sak-elementet for videre testing
-   */
-  async velgFørsteFTRLSak(status?: string): Promise<Locator> {
-    let selector = '.customRadioPanel:has(.customRadioPanelTittel h1:has-text("Utenfor avtaleland"))';
-    if (status) {
-      selector += `:has(.behandlingsstatus__span:has-text("${status}"))`;
-    }
-    const sak = this.page.locator(selector).first();
-
-    try {
-      await expect(sak).toBeVisible({
-        timeout: 10000,
-      });
-    } catch (error) {
-      const statusText = status ? ` med status "${status}"` : "";
-      throw new Error(`Fant ingen FTRL-sak (Utenfor avtaleland)${statusText}. Selector: ${selector}`);
-    }
-
-    // Hent sak-ID for bedre feilmeldinger
-    const sakId = await sak.locator(".customRadioPanelTittel").textContent();
-    const sakIdMatch = sakId?.match(/MEL-\d+/);
-    const sakIdString = sakIdMatch ? sakIdMatch[0] : "ukjent";
-
-    await sak.click();
-
-    // Legg til sak-ID til alle påfølgende expect-meldinger
-    (sak as any)._sakId = sakIdString;
-
-    return sak;
-  }
-
-  /**
-   * Velg første EU/EØS-sak
-   * @param status Valgfri behandlingsstatus å filtrere på (f.eks. "Behandlingen er avsluttet", "pågår", "Behandlingen er opprettet")
-   * @returns Det valgte sak-elementet for videre testing
-   */
-  async velgFørsteEOSSak(status?: string): Promise<Locator> {
-    let selector = '.customRadioPanel:has(.customRadioPanelTittel h1:has-text("EU/EØS-land"))';
-    if (status) {
-      selector += `:has(.behandlingsstatus__span:has-text("${status}"))`;
-    }
-    const sak = this.page.locator(selector).first();
-
-    try {
-      await expect(sak).toBeVisible({
-        timeout: 10000,
-      });
-    } catch (error) {
-      const statusText = status ? ` med status "${status}"` : "";
-      throw new Error(`Fant ingen EØS-sak (EU/EØS-land)${statusText}. Selector: ${selector}`);
-    }
-
-    // Hent sak-ID for bedre feilmeldinger
-    const sakId = await sak.locator(".customRadioPanelTittel").textContent();
-    const sakIdMatch = sakId?.match(/MEL-\d+/);
-    const sakIdString = sakIdMatch ? sakIdMatch[0] : "ukjent";
-
-    await sak.click();
-
-    // Legg til sak-ID til alle påfølgende expect-meldinger
-    (sak as any)._sakId = sakIdString;
-
-    return sak;
-  }
-
-  /**
-   * Velg første "Utenfor avtaleland"-sak (alias for FTRL)
-   */
-  async velgFørsteUtenforAvtalelandSak(): Promise<Locator> {
-    return await this.velgFørsteFTRLSak();
-  }
-
-  /**
-   * Velg første Avtaleland-sak
-   * @param status Valgfri behandlingsstatus å filtrere på (f.eks. "Behandlingen er avsluttet", "Behandlingen pågår", "Behandlingen er opprettet")
-   * @returns Det valgte sak-elementet for videre testing
-   */
-  async velgFørsteAvtalelandSak(
-    status?: "Behandlingen er opprettet" | "Behandlingen pågår" | "Behandlingen er avsluttet" | "Søknaden er henlagt",
-  ): Promise<Locator> {
-    await this.page.waitForSelector(".customRadioPanel", { timeout: 10000 });
-
-    let selector = '.customRadioPanel:has(.customRadioPanelTittel h1:has-text("Avtaleland"))';
-    if (status) {
-      selector += `:has(.behandlingsstatus__span:has-text("${status}"))`;
-    }
-    const sak = this.page.locator(selector).first();
-
-    const statusText = status ? ` med status "${status}"` : "";
-    await expect(sak, `Fant ingen Avtaleland-sak${statusText}.`).toBeVisible({
-      timeout: 10000,
-    });
-
-    // Hent sak-ID for bedre feilmeldinger
-    const sakId = await sak.locator(".customRadioPanelTittel").textContent();
-    const sakIdMatch = sakId?.match(/MEL-\d+/);
-    const sakIdString = sakIdMatch ? sakIdMatch[0] : "ukjent";
-
-    await sak.click();
-
-    // Legg til sak-ID til alle påfølgende expect-meldinger
-    (sak as any)._sakId = sakIdString;
-
+    (sak as LocatorWithSakId)._sakId = saksnummer;
     return sak;
   }
 
@@ -295,7 +232,7 @@ export class OpprettNySakPage {
    */
   async velgVirksomhet(): Promise<void> {
     const virksomhetRadio = this.page.locator(".navds-radio__content:has-text('Virksomhet')");
-    await expect(virksomhetRadio).toBeVisible();
+    await expect(virksomhetRadio, "Fant ikke radioknapp for 'Virksomhet'").toBeVisible();
     await virksomhetRadio.click();
   }
 
@@ -303,28 +240,14 @@ export class OpprettNySakPage {
    * Sett fra-dato i søknadsperiode
    */
   async setFraDato(dato: string): Promise<void> {
-    const fraInput = this.page.getByRole("textbox", { name: "Fra" });
-    const count = await fraInput.count();
-    expect(count, "Fra-dato input skal finnes").toBeGreaterThan(0);
-
-    // Hvis det finnes flere, bruk den første
-    const input = count > 1 ? fraInput.first() : fraInput;
-    await expect(input).toBeVisible();
-    await input.fill(dato);
+    return this.setDatoFelt("Fra", dato);
   }
 
   /**
    * Sett til-dato i søknadsperiode
    */
   async setTilDato(dato: string): Promise<void> {
-    const tilInput = this.page.getByRole("textbox", { name: "Til" });
-    const count = await tilInput.count();
-    expect(count, "Til-dato input skal finnes").toBeGreaterThan(0);
-
-    // Hvis det finnes flere, bruk den første
-    const input = count > 1 ? tilInput.first() : tilInput;
-    await expect(input).toBeVisible();
-    await input.fill(dato);
+    return this.setDatoFelt("Til", dato);
   }
 
   /**
@@ -332,7 +255,7 @@ export class OpprettNySakPage {
    */
   async klikkOpprettNyBehandling(): Promise<void> {
     const opprettKnapp = this.page.locator(SELECTORS.OPPRETT_NY_BEHANDLING_BUTTON);
-    await expect(opprettKnapp).toBeVisible();
+    await expect(opprettKnapp, "Fant ikke 'Opprett ny behandling' knappen").toBeVisible();
     await opprettKnapp.click();
     await this.page.waitForLoadState("domcontentloaded");
   }
@@ -345,7 +268,7 @@ export class OpprettNySakPage {
 
     // Vent på elementet med timeout, returner stille hvis det ikke kommer
     try {
-      await expect(sakstypeSelect).toBeVisible({ timeout: 5000 });
+      await expect(sakstypeSelect, "Fant ikke sakstype dropdown").toBeVisible({ timeout: 5000 });
     } catch {
       return;
     }
@@ -372,7 +295,7 @@ export class OpprettNySakPage {
    */
   async velgSakstema(value: "Medlemskap og lovvalg" | "Unntak" | "Trygdeavgift"): Promise<void> {
     await this.velgDropdownVerdi("sakstema", value, "Sakstema");
-    await this.page.waitForTimeout(SELECT_TIMEOUT);
+    await this.page.waitForTimeout(DROP_DOWN_SELECT_TIMEOUT);
   }
 
   /**
@@ -397,7 +320,7 @@ export class OpprettNySakPage {
       | "Virksomhet",
   ): Promise<void> {
     await this.velgDropdownVerdi("behandlingstema", value, "Behandlingstema");
-    await this.page.waitForTimeout(SELECT_TIMEOUT);
+    await this.page.waitForTimeout(DROP_DOWN_SELECT_TIMEOUT);
   }
 
   /**
@@ -407,7 +330,7 @@ export class OpprettNySakPage {
     value: "Førstegangsbehandling" | "Ny vurdering" | "Klage" | "Henvendelse" | "Årsavregning",
   ): Promise<void> {
     await this.velgDropdownVerdi("behandlingstype", value, "Behandlingstype");
-    await this.page.waitForTimeout(SELECT_TIMEOUT);
+    await this.page.waitForTimeout(DROP_DOWN_SELECT_TIMEOUT);
   }
 
   /**
@@ -415,7 +338,63 @@ export class OpprettNySakPage {
    */
   async velgBehandlingsaarsak(value: "Søknad" | "SED" | "Henvendelse"): Promise<void> {
     await this.velgDropdownVerdi("behandlingsaarsakType", value, "Behandlingsårsak");
-    await this.page.waitForTimeout(SELECT_TIMEOUT);
+    await this.page.waitForTimeout(DROP_DOWN_SELECT_TIMEOUT);
+  }
+
+  /**
+   * Velg land i land-dropdown (React Select multiselect)
+   */
+  async setLand(landNavn: string): Promise<void> {
+    // Vent for at land-feltet skal vises etter behandlingsårsak er valgt
+    // Feltet vises ikke for alle kombinasjoner av sakstype/tema
+    const landFieldset = this.page.locator('fieldset:has-text("land")').first();
+    await expect(landFieldset, "Fant ikke land-feltet").toBeVisible({ timeout: 10000 });
+
+    const combobox = landFieldset.locator('[role="combobox"]').first();
+    await expect(combobox, "Fant ikke land combobox").toBeVisible();
+
+    const dropdownIndicator = landFieldset.locator(".css-1xc3v61-indicatorContainer").first();
+    if ((await dropdownIndicator.count()) > 0) {
+      await dropdownIndicator.click();
+    } else {
+      await combobox.click();
+    }
+
+    // Vent for at dropdown skal åpne og vise opsjoner, deretter velg land
+    const landOption = this.page.locator('[role="option"]').filter({ hasText: landNavn }).first();
+    await expect(landOption, `Fant ikke land "${landNavn}" i dropdown`).toBeVisible();
+    await landOption.click();
+
+    // Vent på at valget er registrert - sjekk at dropdown har lukket seg
+    await expect(this.page.locator('[role="option"]'), "Land dropdown lukket seg ikke etter valg").toHaveCount(0);
+  }
+
+  /**
+   * Velg en spesifikk behandlingstype via radio button
+   * @param behandlingstype - Navn på behandlingstypen (f.eks. "Årsavregning", "Henvendelse")
+   */
+  async velgBehandlingstypeRadio(behandlingstype: string): Promise<void> {
+    const behandlingstypeGruppe = this.page.getByRole("group", { name: "Behandlingstype" });
+    await expect(behandlingstypeGruppe, "Fant ikke behandlingstype-gruppe").toBeVisible();
+
+    const radioButton = behandlingstypeGruppe.getByRole("radio", { name: new RegExp(behandlingstype, "i") });
+    await expect(radioButton, `Fant ikke radioknapp for behandlingstype "${behandlingstype}"`).toBeVisible();
+    await radioButton.click();
+  }
+
+  /**
+   * Generisk funksjon for å sette dato i et datofelt
+   * @private
+   */
+  private async setDatoFelt(feltNavn: string, dato: string): Promise<void> {
+    const datoInput = this.page.getByRole("textbox", { name: feltNavn });
+    const count = await datoInput.count();
+    expect(count, `${feltNavn}-dato input skal finnes`).toBeGreaterThan(0);
+
+    // Hvis det finnes flere, bruk den første
+    const input = count > 1 ? datoInput.first() : datoInput;
+    await expect(input, `${feltNavn}-dato input skal være synlig`).toBeVisible();
+    await input.fill(dato);
   }
 
   /**
@@ -424,7 +403,7 @@ export class OpprettNySakPage {
    */
   private async velgDropdownVerdi(selectName: string, value: string, fieldDisplayName: string): Promise<void> {
     const selectElement = this.page.locator(`select[name='${selectName}']`);
-    await expect(selectElement).toBeVisible();
+    await expect(selectElement, "Fant ikke element i drop down: " + selectName).toBeVisible();
 
     // Vent på at dropdown har lastet inn options (mer enn bare "Velg...")
     // Noen dropdown-er (som behandlingsårsak) er avhengig av at andre felt er valgt først
@@ -454,7 +433,6 @@ export class OpprettNySakPage {
     const availableOptions: string[] = [];
 
     for (const option of options) {
-      // Sjekk både textContent og label attributt
       const text = await option.textContent();
       const label = await option.getAttribute("label");
       const displayText = (label || text || "").trim();
@@ -479,46 +457,77 @@ export class OpprettNySakPage {
   }
 
   /**
-   * Velg land i land-dropdown (React Select multiselect)
+   * Generisk funksjon for å velge første sak av en bestemt sakstype
+   * @private
    */
-  async setLand(landNavn: string): Promise<void> {
-    // Vent for at land-feltet skal vises etter behandlingsårsak er valgt
-    // Feltet vises ikke for alle kombinasjoner av sakstype/tema
-    const landFieldset = this.page.locator('fieldset:has-text("land")').first();
-    await expect(landFieldset).toBeVisible({ timeout: 10000 });
+  async velgFørsteSak(
+    sakstype: "Utenfor avtaleland" | "EU/EØS-land" | "Avtaleland",
+    status?: "Behandlingen er opprettet" | "Behandlingen pågår" | "Behandlingen er avsluttet" | "Søknaden er henlagt",
+  ): Promise<Locator> {
+    await this.page.waitForSelector(".customRadioPanel", { timeout: 10000 });
 
-    // Finn React Select combobox inne i fieldset
-    const combobox = landFieldset.locator('[role="combobox"]').first();
-    await expect(combobox).toBeVisible();
-
-    // Klikk på dropdown-pilen for å åpne React Select
-    const dropdownIndicator = landFieldset.locator(".css-1xc3v61-indicatorContainer").first();
-    if ((await dropdownIndicator.count()) > 0) {
-      await dropdownIndicator.click();
-    } else {
-      await combobox.click();
+    let selector = `.customRadioPanel:has(.customRadioPanelTittel h1:has-text("${sakstype}"))`;
+    if (status) {
+      selector += `:has(.behandlingsstatus__span:has-text("${status}"))`;
     }
+    const sak = this.page.locator(selector).first();
 
-    // Vent for at dropdown skal åpne og vise opsjoner, deretter velg land
-    const landOption = this.page.locator('[role="option"]').filter({ hasText: landNavn }).first();
-    await expect(landOption).toBeVisible();
-    await landOption.click();
+    await expect(
+      sak,
+      `Fant ingen ${sakstype}-sak ${status ? ` med status "${status}"` : ""}. Selector: ${selector}`,
+    ).toBeVisible({ timeout: 10000 });
 
-    // Vent på at valget er registrert - sjekk at dropdown har lukket seg
-    await expect(this.page.locator('[role="option"]')).toHaveCount(0);
+    await setSakId(sak);
+    await sak.click();
+
+    return sak;
   }
 
   /**
-   * Velg en spesifikk behandlingstype via radio button
-   * @param behandlingstype - Navn på behandlingstypen (f.eks. "Årsavregning", "Henvendelse")
+   * Sjekker om det finnes feilmeldinger på siden
+   * @param feilmelding Valgfri spesifikk feilmelding å lete etter
+   * @returns true hvis feilmelding finnes
+   *
+   * Note: Søker på hele siden da feilmeldinger typisk vises som globale varsler,
+   * ikke innenfor individuelle sak-elementer.
    */
-  async velgBehandlingstypeRadio(behandlingstype: string): Promise<void> {
-    const behandlingstypeGruppe = this.page.getByRole("group", { name: "Behandlingstype" });
-    await expect(behandlingstypeGruppe).toBeVisible();
+  async harFeilmelding(feilmelding?: string): Promise<boolean> {
+    if (feilmelding) {
+      // Sjekk etter spesifikk feilmelding
+      return await this.page
+        .locator(".navds-alert--error, .navds-alert--warning")
+        .filter({ hasText: feilmelding })
+        .isVisible()
+        .catch(() => false);
+    }
 
-    const radioButton = behandlingstypeGruppe.getByRole("radio", { name: new RegExp(behandlingstype, "i") });
-    await expect(radioButton).toBeVisible();
-    await radioButton.click();
+    // Sjekk etter generelle feilmeldinger
+    return await this.page
+      .locator(".navds-alert--error, .navds-alert--warning")
+      .isVisible()
+      .catch(() => false);
+  }
+
+  /**
+   * Tell antall saker som vises
+   */
+  async tellAntallSaker(): Promise<number> {
+    return await this.page.locator(".customRadioPanel").count();
+  }
+
+  /**
+   * Sjekk om opprett-ny-sak siden er synlig
+   */
+  async erOpprettNySakSidenSynlig(): Promise<boolean> {
+    return await this.page.locator(".opprettnysak").isVisible();
+  }
+
+  /**
+   * Sjekk om behandlingstype-gruppen er synlig
+   */
+  async erBehandlingstypeGruppeSynlig(): Promise<boolean> {
+    const behandlingstypeGruppe = this.page.getByRole("group", { name: "Behandlingstype" });
+    return await behandlingstypeGruppe.isVisible().catch(() => false);
   }
 
   // ===== DELEGATION TO ASSERTIONS =====
@@ -543,33 +552,5 @@ export class OpprettNySakPage {
    */
   async verifiserTilgjengeligeBehandlingstyper(valgtSak: Locator, forventedeBehandlingstyper: string[]): Promise<void> {
     return this.assertions.verifiserTilgjengeligeBehandlingstyper(valgtSak, forventedeBehandlingstyper);
-  }
-
-  /**
-   * Sjekker om det finnes feilmeldinger på siden
-   */
-  async harFeilmelding(feilmelding?: string): Promise<boolean> {
-    return this.assertions.harFeilmelding(feilmelding);
-  }
-
-  /**
-   * Sjekk om behandlingstype-gruppen er synlig
-   */
-  async erBehandlingstypeGruppeSynlig(): Promise<boolean> {
-    return this.assertions.erBehandlingstypeGruppeSynlig();
-  }
-
-  /**
-   * Tell antall saker som vises
-   */
-  async tellAntallSaker(): Promise<number> {
-    return this.assertions.tellAntallSaker();
-  }
-
-  /**
-   * Sjekk om opprett-ny-sak siden er synlig
-   */
-  async erOpprettNySakSidenSynlig(): Promise<boolean> {
-    return this.assertions.erOpprettNySakSidenSynlig();
   }
 }
