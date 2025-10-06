@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { change } from "redux-form";
-import PT from "prop-types";
+import { change, FormAction } from "redux-form";
+import { Dispatch } from "redux";
 
 import { MKVUtils } from "../../../melosyskodeverk";
-import * as MPT from "../../../proptypes";
 import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Nav from "../../../navFrontend";
 import * as Api from "../../../services/api";
@@ -13,10 +12,36 @@ import * as Utils from "../../../utils";
 import "./knyttTilSak.less";
 import { useAsyncCallbackState } from "../../../hooks";
 import { harFlerePågåendeBehandlinger } from "../../../melosyskodeverk/utils";
-import { FTRL } from "../../../services/api-constants.js";
 import MKV from "../../../melosyskodeverk/index.js";
 
-export function KnyttTilSak(props) {
+interface KnyttTilSakProps {
+  sak: {
+    saksnummer: string;
+    sakstype: { kode: string };
+    sakstema: { kode: string };
+    saksstatus: { kode: string };
+    behandlingOversikter: Array<{
+      behandlingID: number;
+      behandlingsstatus: { kode: string };
+      behandlingstema: { kode: string };
+      behandlingstype: { kode: string };
+    }>;
+  };
+  erJournalføring: boolean;
+  changeField: (formName: string, fieldName: string, value: unknown) => void;
+  feltNavn: {
+    formNavn: string;
+    opprettBehandling: string;
+    behandlingstema: string;
+    behandlingstype: string;
+    hovedpart: string;
+  };
+  formValues: {
+    [key: string]: unknown;
+  };
+}
+
+export function KnyttTilSak(props: KnyttTilSakProps) {
   const { sak, erJournalføring, changeField, feltNavn, formValues } = props;
   const { behandlingstema, behandlingstype, journalforingGjelder, opprettBehandling } = {
     opprettBehandling: formValues[feltNavn.opprettBehandling],
@@ -25,8 +50,12 @@ export function KnyttTilSak(props) {
     journalforingGjelder: formValues[feltNavn.hovedpart],
   };
   const { behandlingOversikter, sakstype, sakstema } = sak;
-  const [muligeBehandlingstemaer, setMuligeBehandlingstemaer] = useState();
-  const [muligeBehandlingstyper, setMuligeBehandlingstyper] = useState();
+  const [muligeBehandlingstemaer, setMuligeBehandlingstemaer] = useState<
+    Array<{ kode: string; term: string }> | undefined
+  >();
+  const [muligeBehandlingstyper, setMuligeBehandlingstyper] = useState<
+    Array<{ kode: string; term: string }> | undefined
+  >();
   const [sisteBehandlingHarSendtAnmodningUnntakTilUtland, setSendtAnmodningUnntakTilUtland] = useState(false);
   const sisteBehandling = behandlingOversikter[0];
   const [{ harBehandlingMedTrygdeavgift }] = useAsyncCallbackState(
@@ -52,8 +81,22 @@ export function KnyttTilSak(props) {
   const sisteBehandlingErPågåendeArtikkel16Sak =
     sisteBehandlingHarSendtAnmodningUnntakTilUtland && !sisteBehandlingErInaktiv;
 
+  // Sjekker om det finnes åpne behandlinger av andre typer enn årsavregning
+  const harÅpneIkkeÅrsavregningsbehandlinger = behandlingOversikter.some(
+    (behandling) =>
+      !MKVUtils.erAvsluttetEllerMidlertidigBeslutning(behandling.behandlingsstatus.kode) &&
+      behandling.behandlingstype.kode !== MKV.Koder.behandlinger.behandlingstyper.ÅRSAVREGNING,
+  );
+
+  const harÅpneBehandlinger = behandlingOversikter.some(
+    (behandling) => !MKVUtils.erAvsluttetEllerMidlertidigBeslutning(behandling.behandlingsstatus.kode),
+  );
+
+  const erEøsEllerAvtaleland =
+    sakstype.kode === MKV.Koder.sakstyper.EU_EOS || sakstype.kode === MKV.Koder.sakstyper.TRYGDEAVTALE;
+
   const sisteBehandlingKanOpprettesAndregangsbehandlingPå =
-    sisteBehandlingErInaktiv || sisteBehandlingErPågåendeArtikkel16Sak || muligeBehandlingstyper?.length > 0;
+    sisteBehandlingErInaktiv || sisteBehandlingErPågåendeArtikkel16Sak || (muligeBehandlingstyper?.length ?? 0) > 0;
 
   useEffect(() => {
     if (sisteBehandlingErPågåendeArtikkel16Sak && erJournalføring) {
@@ -76,11 +119,13 @@ export function KnyttTilSak(props) {
   ]);
 
   useEffect(() => {
-    const erAnmodningsperiodeSendt = (anmodningsperiode) => anmodningsperiode.sendtUtland;
+    const erAnmodningsperiodeSendt = (anmodningsperiode: { sendtUtland: boolean }) => anmodningsperiode.sendtUtland;
 
-    Api.Anmodningsperioder.hent(sisteBehandling.behandlingID).then((response) => {
-      setSendtAnmodningUnntakTilUtland(response?.anmodningsperioder?.some(erAnmodningsperiodeSendt));
-    });
+    Api.Anmodningsperioder.hent(sisteBehandling.behandlingID).then(
+      (response: { anmodningsperioder?: Array<{ sendtUtland: boolean }> }) => {
+        setSendtAnmodningUnntakTilUtland(response?.anmodningsperioder?.some(erAnmodningsperiodeSendt) ?? false);
+      },
+    );
   }, [sisteBehandling]);
 
   useEffect(() => {
@@ -91,7 +136,7 @@ export function KnyttTilSak(props) {
         sakstema.kode,
         null,
         sisteBehandling.behandlingstema.kode,
-      ).then((alleMuligeBehandlingstemaer) => {
+      ).then((alleMuligeBehandlingstemaer: Array<{ kode: string; term: string }>) => {
         setMuligeBehandlingstemaer(alleMuligeBehandlingstemaer);
       });
     }
@@ -100,10 +145,21 @@ export function KnyttTilSak(props) {
   useEffect(() => {
     if (sakstype.kode && sakstema.kode && behandlingstema) {
       Api.LovligeKombinasjoner.hentBehandlingstyperForKnyttTilSak(journalforingGjelder, sak.saksnummer, behandlingstema)
-        .then((alleMuligeBehandlingstyper) => {
-          setMuligeBehandlingstyper(alleMuligeBehandlingstyper);
+        .then((alleMuligeBehandlingstyper: Array<{ kode: string; term: string }>) => {
+          if (erEøsEllerAvtaleland && harÅpneBehandlinger) {
+            // For EØS/AVTALELAND med åpne behandlinger, vis ingen behandlingstyper
+            setMuligeBehandlingstyper([]);
+          } else if (harÅpneIkkeÅrsavregningsbehandlinger && sakstype.kode !== MKV.Koder.sakstyper.FTRL) {
+            // For vanlige saker med åpne ikke-årsavregningsbehandlinger, vis kun årsavregning
+            const årsavregning = alleMuligeBehandlingstyper.filter(
+              (type) => type.kode === MKV.Koder.behandlinger.behandlingstyper.ÅRSAVREGNING,
+            );
+            setMuligeBehandlingstyper(årsavregning);
+          } else {
+            setMuligeBehandlingstyper(alleMuligeBehandlingstyper);
+          }
         })
-        .catch((error) => {
+        .catch((error: Error) => {
           /* eslint-disable-next-line no-console */
           console.error("Kunne ikke hente behandlingstyper:", error);
           setMuligeBehandlingstyper([]);
@@ -111,7 +167,16 @@ export function KnyttTilSak(props) {
     } else {
       setMuligeBehandlingstyper([]);
     }
-  }, [journalforingGjelder, sakstype.kode, sakstema.kode, behandlingstema, sisteBehandling?.behandlingID]);
+  }, [
+    journalforingGjelder,
+    sakstype.kode,
+    sakstema.kode,
+    behandlingstema,
+    sisteBehandling?.behandlingID,
+    harÅpneIkkeÅrsavregningsbehandlinger,
+    harÅpneBehandlinger,
+    behandlingOversikter,
+  ]);
 
   // Håndterer setting av behandlingstema basert på opprettBehandling tilstand
   useEffect(() => {
@@ -157,6 +222,25 @@ export function KnyttTilSak(props) {
     sakKanIkkeViderebehandles,
     erJournalføring,
   ]);
+
+  const skalViseFeilmelding = () => {
+    // Ikke vis feilmelding hvis vi er i journalføring-kontekst eller for FTRL-saker
+    if (erJournalføring || sakstype.kode === MKV.Koder.sakstyper.FTRL) {
+      return false;
+    }
+
+    // For EØS/AVTALELAND-saker: vis feilmelding hvis det finnes noen åpne behandlinger
+    if (erEøsEllerAvtaleland) {
+      return harÅpneBehandlinger;
+    }
+
+    // For vanlige saker: vis kun feilmelding hvis det ikke er åpne ikke-årsavregningsbehandlinger
+    // og det finnes flere pågående behandlinger
+    return (
+      !harÅpneIkkeÅrsavregningsbehandlinger &&
+      harFlerePågåendeBehandlinger(behandlingOversikter.map((b) => b.behandlingsstatus.kode))
+    );
+  };
 
   function VurderDokumentCheckbox() {
     return <Skjema.Checkbox feltNavn="vurderDokument" label={`Oppdater behandlingsstatus til "Vurder dokument"`} />;
@@ -205,7 +289,7 @@ export function KnyttTilSak(props) {
             </Skjema.RadioGroup>
           </div>
         )}
-        {opprettBehandling && (
+        {(opprettBehandling as boolean) && (
           <div className="panelElement">
             <Nav.Heading size="xsmall" className="overskrift">
               Velg tema og type for ny behandling
@@ -213,7 +297,7 @@ export function KnyttTilSak(props) {
             <Skjema.Select
               feltNavn={feltNavn.behandlingstema}
               label="Behandlingstema"
-              emptyFieldDisabled={behandlingstema?.kode}
+              emptyFieldDisabled={!!(behandlingstema as { kode?: string })?.kode}
               disabled={harBehandlingMedTrygdeavgift}
               className={harBehandlingMedTrygdeavgift ? "select__slim" : undefined}
             >
@@ -229,7 +313,7 @@ export function KnyttTilSak(props) {
             <Skjema.RadioGroup legend="Behandlingstype" name={feltNavn.behandlingstype}>
               {muligeBehandlingstyper?.map((elem) => (
                 <Nav.Radio key={elem.kode} value={elem.kode}>
-                  {elem.term}
+                  {elem.term as string}
                 </Nav.Radio>
               ))}
             </Skjema.RadioGroup>
@@ -252,7 +336,7 @@ export function KnyttTilSak(props) {
         </div>
       )}
 
-      {!erJournalføring && sakstype.kode !== MKV.Koder.sakstyper.FTRL && (
+      {skalViseFeilmelding() && (
         <div className="knyttTilSak__behandlingspanel">
           <Nav.Alert variant="warning" className="feilmelding_innrykk">
             Du kan ikke opprette en ny behandling på eksisterende sak med en aktiv/pågående behandling
@@ -263,16 +347,8 @@ export function KnyttTilSak(props) {
   );
 }
 
-KnyttTilSak.propTypes = {
-  sak: MPT.Fagsak.isRequired,
-  erJournalføring: PT.bool.isRequired,
-  changeField: PT.func.isRequired,
-  feltNavn: PT.object.isRequired,
-  formValues: PT.object.isRequired,
-};
-
-const mapDispatchToProps = (dispatch) => ({
-  changeField: (feltNavn, felt, verdi) => dispatch(change(feltNavn, felt, verdi)),
+const mapDispatchToProps = (dispatch: Dispatch<FormAction>) => ({
+  changeField: (feltNavn: string, felt: string, verdi: unknown) => dispatch(change(feltNavn, felt, verdi)),
 });
 
 export default connect(null, mapDispatchToProps)(KnyttTilSak);

@@ -1,11 +1,12 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { screen, waitFor, within } from "@testing-library/react";
+import { reduxForm } from "redux-form";
 
 import { JournalforingValues } from "../../../kodeverk/form";
 import MKV from "../../../melosyskodeverk";
 import { KnyttTilSak } from "./knyttTilSak";
 import { renderWithProvidersAsync } from "../../../ducks/test-utils/renderWithProviders";
-import { reduxForm } from "redux-form";
+import React from "react";
 
 const mocks = vi.hoisted(() => {
   return {
@@ -20,7 +21,7 @@ vi.mock("../../../services/modules/lovligekombinasjoner", () => ({
   hentBehandlingstemaer: () => Promise.resolve([]),
   hentBehandlingstyperForKnyttTilSak: () => mocks.hentBehandlingstyperForKnyttTilSak(),
 }));
-interface KnyttTilSakProps {
+interface TestKnyttTilSakProps {
   sak: {
     sakstype: { kode: string };
     sakstema: { kode: string };
@@ -34,18 +35,20 @@ interface KnyttTilSakProps {
     }>;
   };
   formValues: {
-    opprettBehandling: any;
-    behandlingstema: any;
-    behandlingstype: any;
+    opprettBehandling: unknown;
+    behandlingstema: unknown;
+    behandlingstype: unknown;
     journalforingGjelder: string;
   };
-  feltNavn: any;
+  feltNavn: unknown;
   changeField: () => void;
   erJournalføring: boolean;
 }
 
+const WrappedKnyttTilSak = reduxForm({ form: "test" })(KnyttTilSak as any);
+
 describe("KnyttTilSak", () => {
-  let props: KnyttTilSakProps;
+  let props: TestKnyttTilSakProps;
 
   beforeEach(() => {
     props = {
@@ -82,12 +85,14 @@ describe("KnyttTilSak", () => {
     mocks.hent.mockReset();
   });
 
-  const WrappedKnyttTilSak = reduxForm({ form: "test" })(KnyttTilSak as any);
+  const renderKnyttTilSak = (testProps: TestKnyttTilSakProps) => {
+    return renderWithProvidersAsync(<WrappedKnyttTilSak {...(testProps as any)} />);
+  };
 
   it(`Vis komponent for knytte til eksisterende sak komponent og knapper for å opprette ny behandling dersom siste behandling er inaktiv`, async () => {
     props.sak.behandlingOversikter[0].behandlingsstatus = { kode: MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET };
 
-    await renderWithProvidersAsync(<WrappedKnyttTilSak {...(props as any)} />);
+    await renderKnyttTilSak(props);
 
     expect(screen.getByText("Tidligere behandling er avsluttet.")).toBeInTheDocument();
     expect(screen.getByText("Velg hva du vil gjøre med dokumentet")).toBeInTheDocument();
@@ -102,7 +107,7 @@ describe("KnyttTilSak", () => {
       kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
     };
 
-    renderWithProvidersAsync(<WrappedKnyttTilSak {...(props as any)} />);
+    renderKnyttTilSak(props);
 
     expect(screen.queryByText("Velg hva du vil gjøre med dokumentet")).toBeNull();
     expect(screen.queryByRole("group")).toBeNull();
@@ -112,7 +117,7 @@ describe("KnyttTilSak", () => {
     props.sak.saksstatus.kode = MKV.Koder.saksstatuser.HENLAGT;
     props.erJournalføring = false;
 
-    await renderWithProvidersAsync(<WrappedKnyttTilSak {...(props as any)} />);
+    await renderKnyttTilSak(props);
 
     expect(screen.queryByText("Velg hva du vil gjøre med dokumentet")).toBeNull();
     expect(screen.queryByRole("group")).toBeNull();
@@ -125,7 +130,7 @@ describe("KnyttTilSak", () => {
     };
     props.erJournalføring = true;
 
-    await renderWithProvidersAsync(<WrappedKnyttTilSak {...(props as any)} />);
+    await renderKnyttTilSak(props);
 
     expect(screen.getByRole("checkbox")).toBeInTheDocument();
     expect(screen.getByText(`Oppdater behandlingsstatus til "Vurder dokument"`)).toBeInTheDocument();
@@ -137,7 +142,7 @@ describe("KnyttTilSak", () => {
     };
     props.erJournalføring = false;
 
-    await renderWithProvidersAsync(<WrappedKnyttTilSak {...(props as any)} />);
+    await renderKnyttTilSak(props);
 
     expect(screen.queryByRole("checkbox")).toBeNull();
     expect(screen.queryByText(`Oppdater behandlingsstatus til "Vurder dokument"`)).toBeNull();
@@ -150,7 +155,7 @@ describe("KnyttTilSak", () => {
       kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
     };
 
-    await renderWithProvidersAsync(<WrappedKnyttTilSak {...(props as any)} />);
+    await renderKnyttTilSak(props);
 
     await waitFor(() => expect(mocks.hent).toHaveBeenCalledOnce());
     expect(screen.getByText(/Hvis du har mottatt svar på anmodning om unntak skal du/i)).toBeInTheDocument();
@@ -160,7 +165,7 @@ describe("KnyttTilSak", () => {
     mocks.hent.mockReturnValueOnce({ anmodningsperioder: [{ sendtUtland: true }] });
     props.sak.behandlingOversikter[0].behandlingsstatus = { kode: MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET };
 
-    await renderWithProvidersAsync(<WrappedKnyttTilSak {...(props as any)} />);
+    await renderKnyttTilSak(props);
 
     await waitFor(() => expect(mocks.hent).toHaveBeenCalledOnce());
     expect(screen.queryByText(/Hvis du har mottatt svar på anmodning om unntak skal du/i)).toBeNull();
@@ -171,7 +176,7 @@ describe("KnyttTilSak", () => {
     props.formValues.behandlingstema = "YRKESAKTIV";
     props.formValues.opprettBehandling = true;
 
-    await renderWithProvidersAsync(<WrappedKnyttTilSak {...(props as any)} />);
+    await renderKnyttTilSak(props);
 
     await waitFor(() => expect(mocks.hentBehandlingstyperForKnyttTilSak).toHaveBeenCalled());
     expect(screen.getByText("Behandlingstype")).toBeInTheDocument();
@@ -190,7 +195,7 @@ describe("KnyttTilSak", () => {
     props.formValues.behandlingstema = "YRKESAKTIV";
     props.formValues.opprettBehandling = true;
 
-    await renderWithProvidersAsync(<WrappedKnyttTilSak {...(props as any)} />);
+    await renderKnyttTilSak(props);
 
     await waitFor(() => {
       expect(mocks.hentBehandlingstyperForKnyttTilSak).toHaveBeenCalled();
@@ -202,5 +207,194 @@ describe("KnyttTilSak", () => {
 
     // Restore console.error
     consoleSpy.mockRestore();
+  });
+
+  describe("Filtrering av behandlingstyper basert på åpne behandlinger", () => {
+    it("viser ingen behandlingstyper for EØS-sak med åpne behandlinger", async () => {
+      mocks.hentBehandlingstyperForKnyttTilSak.mockResolvedValueOnce([
+        { kode: "FØRSTEGANG", term: "Førstegangsbehandling" },
+        { kode: "ÅRSAVREGNING", term: "Årsavregning" },
+      ]);
+
+      props.sak.sakstype.kode = MKV.Koder.sakstyper.EU_EOS;
+      props.sak.behandlingOversikter = [
+        {
+          behandlingsstatus: { kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING },
+          behandlingstype: { kode: MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG },
+          behandlingstema: { kode: MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV },
+          behandlingID: 1,
+        },
+      ];
+      props.formValues.behandlingstema = "YRKESAKTIV";
+      props.formValues.opprettBehandling = true;
+
+      await renderKnyttTilSak(props);
+
+      await waitFor(() => {
+        expect(mocks.hentBehandlingstyperForKnyttTilSak).toHaveBeenCalled();
+        const behandlingstypeGroup = screen.queryByRole("group", { name: "Behandlingstype" });
+        if (behandlingstypeGroup) {
+          // Skal være tom pga filtrering
+          expect(within(behandlingstypeGroup).queryAllByRole("radio")).toHaveLength(0);
+        }
+      });
+    });
+
+    it("viser ingen behandlingstyper for AVTALELAND-sak med åpne behandlinger", async () => {
+      mocks.hentBehandlingstyperForKnyttTilSak.mockResolvedValueOnce([
+        { kode: "FØRSTEGANG", term: "Førstegangsbehandling" },
+        { kode: "ÅRSAVREGNING", term: "Årsavregning" },
+      ]);
+
+      props.sak.sakstype.kode = MKV.Koder.sakstyper.TRYGDEAVTALE;
+      props.sak.behandlingOversikter = [
+        {
+          behandlingsstatus: { kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING },
+          behandlingstype: { kode: MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG },
+          behandlingstema: { kode: MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV },
+          behandlingID: 1,
+        },
+      ];
+      props.formValues.behandlingstema = "YRKESAKTIV";
+      props.formValues.opprettBehandling = true;
+
+      await renderKnyttTilSak(props);
+
+      await waitFor(() => {
+        expect(mocks.hentBehandlingstyperForKnyttTilSak).toHaveBeenCalled();
+        const behandlingstypeGroup = screen.queryByRole("group", { name: "Behandlingstype" });
+        if (behandlingstypeGroup) {
+          // Skal være tom pga filtrering
+          expect(within(behandlingstypeGroup).queryAllByRole("radio")).toHaveLength(0);
+        }
+      });
+    });
+
+    it("viser kun årsavregning for vanlig sak med åpne ikke-årsavregningsbehandlinger", async () => {
+      mocks.hentBehandlingstyperForKnyttTilSak.mockResolvedValueOnce([
+        { kode: "FØRSTEGANG", term: "Førstegangsbehandling" },
+        { kode: "NY_VURDERING", term: "Ny vurdering" },
+        { kode: "ÅRSAVREGNING", term: "Årsavregning" },
+      ]);
+
+      props.sak.sakstype.kode = "VANLIG_SAK"; // Ikke EØS, TRYGDEAVTALE eller FTRL
+      props.sak.behandlingOversikter = [
+        {
+          behandlingsstatus: { kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING },
+          behandlingstype: { kode: MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG },
+          behandlingstema: { kode: MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV },
+          behandlingID: 1,
+        },
+      ];
+      props.formValues.behandlingstema = "YRKESAKTIV";
+      props.formValues.opprettBehandling = true;
+
+      await renderKnyttTilSak(props);
+
+      await waitFor(() => {
+        expect(mocks.hentBehandlingstyperForKnyttTilSak).toHaveBeenCalled();
+        const behandlingstypeGroup = screen.getByRole("group", { name: "Behandlingstype" });
+        const radioButtons = within(behandlingstypeGroup).getAllByRole("radio");
+        // Skal kun vise årsavregning
+        expect(radioButtons).toHaveLength(1);
+        expect(within(behandlingstypeGroup).getByLabelText("Årsavregning")).toBeInTheDocument();
+      });
+    });
+
+    it("viser alle behandlingstyper for FTRL-sak uavhengig av åpne behandlinger", async () => {
+      mocks.hentBehandlingstyperForKnyttTilSak.mockResolvedValueOnce([
+        { kode: "FØRSTEGANG", term: "Førstegangsbehandling" },
+        { kode: "NY_VURDERING", term: "Ny vurdering" },
+        { kode: "ÅRSAVREGNING", term: "Årsavregning" },
+      ]);
+
+      props.sak.sakstype.kode = MKV.Koder.sakstyper.FTRL;
+      props.sak.behandlingOversikter = [
+        {
+          behandlingsstatus: { kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING },
+          behandlingstype: { kode: MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG },
+          behandlingstema: { kode: MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV },
+          behandlingID: 1,
+        },
+      ];
+      props.formValues.behandlingstema = "YRKESAKTIV";
+      props.formValues.opprettBehandling = true;
+
+      await renderKnyttTilSak(props);
+
+      await waitFor(() => {
+        expect(mocks.hentBehandlingstyperForKnyttTilSak).toHaveBeenCalled();
+        const behandlingstypeGroup = screen.getByRole("group", { name: "Behandlingstype" });
+        const radioButtons = within(behandlingstypeGroup).getAllByRole("radio");
+        // Skal vise alle behandlingstyper for FTRL
+        expect(radioButtons).toHaveLength(3);
+        expect(within(behandlingstypeGroup).getByLabelText("Førstegangsbehandling")).toBeInTheDocument();
+        expect(within(behandlingstypeGroup).getByLabelText("Ny vurdering")).toBeInTheDocument();
+        expect(within(behandlingstypeGroup).getByLabelText("Årsavregning")).toBeInTheDocument();
+      });
+    });
+
+    it("viser alle behandlingstyper når det kun finnes åpne årsavregningsbehandlinger", async () => {
+      mocks.hentBehandlingstyperForKnyttTilSak.mockResolvedValueOnce([
+        { kode: "FØRSTEGANG", term: "Førstegangsbehandling" },
+        { kode: "NY_VURDERING", term: "Ny vurdering" },
+        { kode: "ÅRSAVREGNING", term: "Årsavregning" },
+      ]);
+
+      props.sak.sakstype.kode = "VANLIG_SAK";
+      props.sak.behandlingOversikter = [
+        {
+          behandlingsstatus: { kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING },
+          behandlingstype: { kode: MKV.Koder.behandlinger.behandlingstyper.ÅRSAVREGNING },
+          behandlingstema: { kode: MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV },
+          behandlingID: 1,
+        },
+      ];
+      props.formValues.behandlingstema = "YRKESAKTIV";
+      props.formValues.opprettBehandling = true;
+
+      await renderKnyttTilSak(props);
+
+      await waitFor(() => {
+        expect(mocks.hentBehandlingstyperForKnyttTilSak).toHaveBeenCalled();
+        const behandlingstypeGroup = screen.getByRole("group", { name: "Behandlingstype" });
+        const radioButtons = within(behandlingstypeGroup).getAllByRole("radio");
+        // Skal vise alle behandlingstyper når det kun er åpne årsavregninger
+        expect(radioButtons).toHaveLength(3);
+        expect(within(behandlingstypeGroup).getByLabelText("Førstegangsbehandling")).toBeInTheDocument();
+        expect(within(behandlingstypeGroup).getByLabelText("Ny vurdering")).toBeInTheDocument();
+        expect(within(behandlingstypeGroup).getByLabelText("Årsavregning")).toBeInTheDocument();
+      });
+    });
+
+    it("viser alle behandlingstyper når alle behandlinger er avsluttet", async () => {
+      mocks.hentBehandlingstyperForKnyttTilSak.mockResolvedValueOnce([
+        { kode: "FØRSTEGANG", term: "Førstegangsbehandling" },
+        { kode: "NY_VURDERING", term: "Ny vurdering" },
+        { kode: "ÅRSAVREGNING", term: "Årsavregning" },
+      ]);
+
+      props.sak.sakstype.kode = MKV.Koder.sakstyper.EU_EOS;
+      props.sak.behandlingOversikter = [
+        {
+          behandlingsstatus: { kode: MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET },
+          behandlingstype: { kode: MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG },
+          behandlingstema: { kode: MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV },
+          behandlingID: 1,
+        },
+      ];
+      props.formValues.behandlingstema = "YRKESAKTIV";
+      props.formValues.opprettBehandling = true;
+
+      await renderKnyttTilSak(props);
+
+      await waitFor(() => {
+        expect(mocks.hentBehandlingstyperForKnyttTilSak).toHaveBeenCalled();
+        const behandlingstypeGroup = screen.getByRole("group", { name: "Behandlingstype" });
+        const radioButtons = within(behandlingstypeGroup).getAllByRole("radio");
+        // Skal vise alle behandlingstyper når behandlingene er avsluttet
+        expect(radioButtons).toHaveLength(3);
+      });
+    });
   });
 });
