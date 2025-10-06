@@ -85,6 +85,7 @@ export function MedlemskapsperiodeSkjema({
   const medlemskapsperioder = formValues.medlemskapsperioder!;
   const erPeriodeFraGrunnlag = !medlemskapsperioder[index]?.redigerbar;
   const kanViseSletteKolonne = redigerbart && medlemskapsperioder.length > 1;
+  const erUlagretPeriode = medlemskapsperioder[index]?.id === ULAGRET_MEDLEMSKAPSPERIODE_ID;
   const tilOgMedDatoForrigePeriode =
     medlemskapsperioder[index - 1] !== undefined
       ? Utils.dato.norskStringTilDate(medlemskapsperioder[index - 1]?.tomDato)
@@ -93,11 +94,14 @@ export function MedlemskapsperiodeSkjema({
     tilOgMedDatoForrigePeriode.setDate(tilOgMedDatoForrigePeriode.getDate() + 1);
   }
 
-  // Sikre at minDate ikke overstiger maxDate (problem når forrige periode slutter utenfor årets ramme)
+  // MELOSYS-7612: Ulagrede perioder skal ikke begrenses av forrige periode
+  // For delt grunnlag må bruker kunne legge til sammenhengende perioder fritt innenfor året
   const safeMinDateForFom = (() => {
-    if (tilOgMedDatoForrigePeriode === undefined) {
+    // Hvis dette er en ulagret (ny) periode, tillat valg innenfor hele året
+    if (erUlagretPeriode || tilOgMedDatoForrigePeriode === undefined) {
       return minDate;
     }
+    // For lagrede perioder, sikre at minDate ikke overstiger maxDate
     if (maxDate && tilOgMedDatoForrigePeriode > maxDate) {
       return maxDate;
     }
