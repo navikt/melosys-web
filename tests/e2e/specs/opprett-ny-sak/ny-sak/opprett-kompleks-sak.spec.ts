@@ -29,7 +29,7 @@ async function setupOpprettNySakTester(page: Page) {
  * blir tilgjengelige for fremtidige behandlinger på saken.
  */
 test.describe("Opprett kompleks sak med flere behandlingstyper", () => {
-  test("Opprett Avtaleland-sak med Førstegang for å skape testdata", async ({ page }, testInfo) => {
+  test("Opprett Avtaleland-sak med Førstegangsbehandling for å skape testdata", async ({ page }, testInfo) => {
     const hovedsidePage = new HovedsidePage(page);
     const sokPage = new SokPage(page);
     const behandlingPage = new VisBehandlingPage(page);
@@ -63,7 +63,9 @@ test.describe("Opprett kompleks sak med flere behandlingstyper", () => {
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("Opprett 'Utenfor avtaleland' sak for å skape testdata", async ({ page }, testInfo) => {
+  test("Opprett 'Utenfor avtaleland' sak med Førstegangsbehandling for å skape testdata", async ({
+    page,
+  }, testInfo) => {
     const hovedsidePage = new HovedsidePage(page);
     const sokPage = new SokPage(page);
     const behandlingPage = new VisBehandlingPage(page);
@@ -100,7 +102,7 @@ test.describe("Opprett kompleks sak med flere behandlingstyper", () => {
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgKnyttTilEksisterendeSak();
 
-    const eksisterendeSaker = await opprettNySakPage.assertions.finnAlleSaker({
+    const eksisterendeSaker = await opprettNySakPage.finnAlleSaker({
       sakstype: "Utenfor avtaleland",
       behandlingsstatus: "Behandlingen er avsluttet",
     });

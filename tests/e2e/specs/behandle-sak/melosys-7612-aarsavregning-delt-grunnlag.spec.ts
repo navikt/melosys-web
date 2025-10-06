@@ -3,9 +3,7 @@ import { HovedsidePage, USER_ID_VALID } from "../../pages/hovedside.page";
 import { SokPage } from "../../pages/sok.page";
 import { VisBehandlingPage } from "../../pages/vis-behandling.page";
 import { AarsavregningPage } from "../../pages/aarsavregning.page";
-import { OpprettNySakPage } from "../../pages/opprett-ny-sak.page";
-import { assertNyBehandlingOpprettet } from "../../utils/testUtils";
-import { opprettUtenforAvtalelandSak } from "../../utils/testdataUtils";
+import { opprettUtenforAvtalelandSakMedAarsavregning } from "../../utils/testdataUtils";
 
 /**
  * MELOSYS-7612: Valideringsfeil ved delt grunnlag i årsavregning
@@ -20,41 +18,13 @@ import { opprettUtenforAvtalelandSak } from "../../utils/testdataUtils";
  */
 
 let aarsavregningPage: AarsavregningPage;
+let valgtTestÅr: string = "2020"; // Default år som sannsynligvis er ledig
 
 /**
- * Opprett testdata: Utenfor avtaleland-sak med Førstegangsbehandling, deretter Årsavregning
+ * Hjelpefunksjon for å lage dato med riktig år
  */
-async function opprettAarsavregningTestdata(page: Page): Promise<void> {
-  const hovedsidePage = new HovedsidePage(page);
-  const sokPage = new SokPage(page);
-  const behandlingPage = new VisBehandlingPage(page);
-  const opprettNySakPage = new OpprettNySakPage(page);
-
-  // 1. Opprett Førstegangsbehandling
-  const sakId = await opprettUtenforAvtalelandSak(page);
-
-  // 2. Avslutt Førstegangsbehandling
-  await hovedsidePage.goto();
-  await hovedsidePage.søkOgVentPåResultat(USER_ID_VALID);
-
-  const sak = sokPage.finnSakBySaksnummer(sakId);
-  await sokPage.klikkVisBehandling(sak);
-  await behandlingPage.verifiserBehandlingsside();
-  await behandlingPage.avsluttBehandling("Søknaden er innvilget", sakId);
-
-  // 3. Opprett Årsavregning på samme sak
-  await hovedsidePage.goto();
-  await hovedsidePage.klikkOpprettNySakKnapp();
-  await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
-  await opprettNySakPage.velgKnyttTilEksisterendeSak();
-
-  const valgtSak = opprettNySakPage.finnSakBySaksnummer(sakId);
-  await valgtSak.click();
-  await opprettNySakPage.velgBehandlingstypeRadio("Årsavregning");
-  await opprettNySakPage.velgBehandlingsaarsak("Søknad");
-  await opprettNySakPage.klikkOpprettNyBehandling();
-
-  await assertNyBehandlingOpprettet(page);
+function lagDato(dagMåned: string): string {
+  return `${dagMåned}.${valgtTestÅr}`;
 }
 
 /**
@@ -87,36 +57,55 @@ async function setupAarsavregningTest(page: Page) {
 
   await aarsavregningPage.verifiserAarsavregningside();
 
-  // Velg år 2024 (nødvendig for at delt grunnlag-spørsmål skal vises)
-  await aarsavregningPage.velgÅr("2024");
+  // Prøv år 2022, 2021, 2020 inntil vi finner ett uten aktiv årsavregning
+  const muligeÅr = ["2022", "2021", "2020"];
+  let årValgt = false;
+
+  for (const år of muligeÅr) {
+    await aarsavregningPage.velgÅr(år);
+    await page.waitForTimeout(500);
+
+    // Sjekk om det er feilmelding om aktiv årsavregning
+    const aktivFeilmelding = page.locator('[class*="error"], [class*="feil"]').filter({
+      hasText: /har allerede en aktiv årsavregning/i,
+    });
+
+    if (!(await aktivFeilmelding.isVisible().catch(() => false))) {
+      // Ingen feilmelding - dette året er tilgjengelig
+      valgtTestÅr = år; // Lagre det valgte året for bruk i testene
+      årValgt = true;
+      break;
+    }
+  }
+
+  expect(årValgt, "Kunne ikke finne et tilgjengelig år for årsavregning").toBe(true);
 }
 
-// Setup: Opprett testdata først
-test.describe("MELOSYS-7612: Setup testdata", () => {
-  test("Opprett Utenfor avtaleland-sak med Årsavregning", async ({ page }) => {
-    test.setTimeout(60000); // Sett timeout til 60 sekunder for setup
-    await opprettAarsavregningTestdata(page);
-  });
-});
-
-test.describe("MELOSYS-7612: AC1 - Medlemskapsperiode validering", () => {
-  test.beforeEach(async ({ page }) => {
-    await setupAarsavregningTest(page);
+// Wrap alt i en serial describe for å sikre at setup kjører først
+test.describe.serial("MELOSYS-7612: Årsavregning delt grunnlag - Alle tester", () => {
+  // Setup: Opprett testdata først
+  test.describe("Setup testdata", () => {
+    test("Opprett Utenfor avtaleland-sak med Årsavregning", async ({ page }) => {
+      test.setTimeout(60000); // Sett timeout til 60 sekunder for setup
+      await opprettUtenforAvtalelandSakMedAarsavregning(page);
+    });
   });
 
-  test("Kan legge til ny medlemskapsperiode etter å ha valgt delt grunnlag", async ({ page }) => {
-    // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet
-    await aarsavregningPage.velgDeltGrunnlagJa();
+  test.describe("AC1 - Medlemskapsperiode validering", () => {
+    test.beforeEach(async ({ page }) => {
+      await setupAarsavregningTest(page);
+    });
 
-    // Klikk på "beregn endelig trygdeavgift" (hvis synlig)
-    const beregnKnapp = page.getByRole("button", { name: /beregn.*endelig.*trygdeavgift/i });
-    if (await beregnKnapp.isVisible({ timeout: 2000 }).catch(() => false)) {
-      await aarsavregningPage.klikkBeregnEndeligTrygdeavgift();
-      await aarsavregningPage.ventPåBeregning();
-    }
+    test("Kan legge til ny medlemskapsperiode etter å ha valgt delt grunnlag", async () => {
+      // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet
+      await aarsavregningPage.velgDeltGrunnlagJa();
 
-    // Tell antall eksisterende medlemskapsperioder
-    const antallFør = await aarsavregningPage.getAntallMedlemskapsperioder();
+      // Velg bestemmelse først - dette er nødvendig for å få trygdedekning-alternativer
+      // Bruk § 2-8 som ikke er en pliktig bestemmelse, slik at vi kan legge til flere perioder
+      await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
+
+      // Tell antall eksisterende medlemskapsperioder (systemet kan ha lagt til en automatisk)
+      const antallFør = await aarsavregningPage.getAntallMedlemskapsperioder();
 
     // Legg til ny medlemskapsperiode
     await aarsavregningPage.leggTilMedlemskapsperiode();
@@ -125,35 +114,33 @@ test.describe("MELOSYS-7612: AC1 - Medlemskapsperiode validering", () => {
     const antallEtter = await aarsavregningPage.getAntallMedlemskapsperioder();
     expect(antallEtter).toBe(antallFør + 1);
 
-    // Fyll ut datoer for den nye perioden (manuelt)
-    const nyPeriodeIndex = antallEtter - 1;
-    await aarsavregningPage.fyllUtMedlemskapsperiodeFomDato(nyPeriodeIndex, "01.01.2024");
-    await aarsavregningPage.fyllUtMedlemskapsperiodeTomDato(nyPeriodeIndex, "31.03.2024");
+      // Fyll ut datoer for den nye perioden (manuelt)
+      const nyPeriodeIndex = antallEtter - 1;
+      await aarsavregningPage.fyllUtMedlemskapsperiodeFomDato(nyPeriodeIndex, lagDato("01.01"));
+      await aarsavregningPage.fyllUtMedlemskapsperiodeTomDato(nyPeriodeIndex, lagDato("31.03"));
 
-    // Velg trygdedekning
-    await aarsavregningPage.velgTrygdedekning(nyPeriodeIndex, "Medlem");
+      // Velg trygdedekning
+      await aarsavregningPage.velgTrygdedekning(nyPeriodeIndex, "Helse- og pensjonsdel (§ 2-9)");
 
     // Verifiser at det ikke er valideringsfeil
     await aarsavregningPage.assertIngenFeilmelding("utenfor");
     await aarsavregningPage.assertIngenFeilmelding("overlapper");
   });
 
-  test("Datepicker skal fungere for fra-dato på ny medlemskapsperiode", async ({ page }) => {
-    // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet
-    await aarsavregningPage.velgDeltGrunnlagJa();
+    test("Datepicker skal fungere for fra-dato på ny medlemskapsperiode", async ({ page }) => {
+      // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet
+      await aarsavregningPage.velgDeltGrunnlagJa();
+      await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
 
-    const beregnKnapp = page.getByRole("button", { name: /beregn.*endelig.*trygdeavgift/i });
-    if (await beregnKnapp.isVisible({ timeout: 2000 }).catch(() => false)) {
-      await aarsavregningPage.klikkBeregnEndeligTrygdeavgift();
-      await aarsavregningPage.ventPåBeregning();
-    }
+      // Vent på at UI oppdaterer seg
+      await page.waitForTimeout(1000);
 
     const antallFør = await aarsavregningPage.getAntallMedlemskapsperioder();
 
     // Legg til ny medlemskapsperiode
     await aarsavregningPage.leggTilMedlemskapsperiode();
 
-    const nyPeriodeIndex = antallFør;
+      const nyPeriodeIndex = antallFør; // Den nye perioden er på index = antall før
 
     // Klikk på fra-dato datepicker
     await aarsavregningPage.klikkMedlemskapsperiodeFomDatepicker(nyPeriodeIndex);
@@ -161,9 +148,9 @@ test.describe("MELOSYS-7612: AC1 - Medlemskapsperiode validering", () => {
     // Verifiser at datepicker åpnes
     await aarsavregningPage.assertDatepickerErAktiv();
 
-    // Prøv å velge en dato i datepickeren (f.eks. 15. i gjeldende måned)
-    const testDato = new Date(2024, 0, 15); // 15. januar 2024
-    await aarsavregningPage.velgDatoIDatepicker(testDato);
+      // Prøv å velge en dato i datepickeren (f.eks. 15. i gjeldende måned)
+      const testDato = new Date(parseInt(valgtTestÅr), 0, 15); // 15. januar
+      await aarsavregningPage.velgDatoIDatepicker(testDato);
 
     // Verifiser at datoen er valgt (datepicker lukker seg)
     await aarsavregningPage.assertDatepickerIkkeErAktiv();
@@ -173,28 +160,26 @@ test.describe("MELOSYS-7612: AC1 - Medlemskapsperiode validering", () => {
     expect(fomVerdi).not.toBe("");
   });
 
-  test("Kan legge til sammenhengende medlemskapsperiode innenfor samme år", async ({ page }) => {
-    // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet
-    await aarsavregningPage.velgDeltGrunnlagJa();
+    test("Kan legge til sammenhengende medlemskapsperiode innenfor samme år", async ({ page }) => {
+      // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet
+      await aarsavregningPage.velgDeltGrunnlagJa();
+      await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
 
-    const beregnKnapp = page.getByRole("button", { name: /beregn.*endelig.*trygdeavgift/i });
-    if (await beregnKnapp.isVisible({ timeout: 2000 }).catch(() => false)) {
-      await aarsavregningPage.klikkBeregnEndeligTrygdeavgift();
-      await aarsavregningPage.ventPåBeregning();
-    }
+      // Vent på at UI oppdaterer seg
+      await page.waitForTimeout(1000);
 
     const antallFør = await aarsavregningPage.getAntallMedlemskapsperioder();
 
     // Legg til ny medlemskapsperiode
     await aarsavregningPage.leggTilMedlemskapsperiode();
 
-    const nyPeriodeIndex = antallFør;
+      const nyPeriodeIndex = antallFør; // Den nye perioden er på index = antall før
 
-    // Fyll ut sammenhengende periode innenfor 2024
-    // Anta at forrige periode slutter 31.03.2024, ny starter 01.04.2024
-    await aarsavregningPage.fyllUtMedlemskapsperiodeFomDato(nyPeriodeIndex, "01.04.2024");
-    await aarsavregningPage.fyllUtMedlemskapsperiodeTomDato(nyPeriodeIndex, "30.06.2024");
-    await aarsavregningPage.velgTrygdedekning(nyPeriodeIndex, "Medlem");
+      // Fyll ut sammenhengende periode innenfor året
+      // Anta at forrige periode slutter 31.03, ny starter 01.04
+      await aarsavregningPage.fyllUtMedlemskapsperiodeFomDato(nyPeriodeIndex, lagDato("01.04"));
+      await aarsavregningPage.fyllUtMedlemskapsperiodeTomDato(nyPeriodeIndex, lagDato("30.06"));
+      await aarsavregningPage.velgTrygdedekning(nyPeriodeIndex, "Helse- og pensjonsdel (§ 2-9)");
 
     // Verifiser at det ikke er valideringsfeil om overlappende eller ugyldige perioder
     await aarsavregningPage.assertIngenFeilmelding("overlapper");
@@ -203,69 +188,65 @@ test.describe("MELOSYS-7612: AC1 - Medlemskapsperiode validering", () => {
   });
 });
 
-test.describe("MELOSYS-7612: AC2 - Skatteforholdsperiode validering", () => {
-  test.beforeEach(async ({ page }) => {
-    await setupAarsavregningTest(page);
-  });
+  test.describe("AC2 - Skatteforholdsperiode validering", () => {
+    test.beforeEach(async ({ page }) => {
+      await setupAarsavregningTest(page);
+    });
 
-  test("Kan legge til ny skatteforholdsperiode etter å ha valgt delt grunnlag", async ({ page }) => {
-    // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet
-    await aarsavregningPage.velgDeltGrunnlagJa();
+    test("Kan legge til ny skatteforholdsperiode etter å ha valgt delt grunnlag", async ({ page }) => {
+      // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet
+      await aarsavregningPage.velgDeltGrunnlagJa();
+      await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
 
-    const beregnKnapp = page.getByRole("button", { name: /beregn.*endelig.*trygdeavgift/i });
-    if (await beregnKnapp.isVisible({ timeout: 2000 }).catch(() => false)) {
-      await aarsavregningPage.klikkBeregnEndeligTrygdeavgift();
-      await aarsavregningPage.ventPåBeregning();
-    }
+      // Vent på at UI oppdaterer seg
+      await page.waitForTimeout(1000);
 
     // Først, legg til medlemskapsperiode som dekker perioden
     const antallMedlemskapFør = await aarsavregningPage.getAntallMedlemskapsperioder();
     await aarsavregningPage.leggTilMedlemskapsperiode();
 
-    const nyMedlemIndex = antallMedlemskapFør;
-    await aarsavregningPage.fyllUtMedlemskapsperiodeFomDato(nyMedlemIndex, "01.01.2024");
-    await aarsavregningPage.fyllUtMedlemskapsperiodeTomDato(nyMedlemIndex, "31.12.2024");
-    await aarsavregningPage.velgTrygdedekning(nyMedlemIndex, "Medlem");
+      const nyMedlemIndex = antallMedlemskapFør;
+      await aarsavregningPage.fyllUtMedlemskapsperiodeFomDato(nyMedlemIndex, lagDato("01.01"));
+      await aarsavregningPage.fyllUtMedlemskapsperiodeTomDato(nyMedlemIndex, lagDato("31.12"));
+      await aarsavregningPage.velgTrygdedekning(nyMedlemIndex, "Helse- og pensjonsdel (§ 2-9)");
 
     // Legg til skatteforholdsperiode
     await aarsavregningPage.leggTilSkatteforholdsperiode();
 
-    // Fyll ut skatteforholdsperiode innenfor medlemskapsperioden
-    await aarsavregningPage.fyllUtSkatteforholdFomDato(0, "01.01.2024");
-    await aarsavregningPage.fyllUtSkatteforholdTomDato(0, "30.06.2024");
-    await aarsavregningPage.velgSkatteplikttype(0, "Allmennpliktig");
+      // Fyll ut skatteforholdsperiode innenfor medlemskapsperioden
+      await aarsavregningPage.fyllUtSkatteforholdFomDato(0, lagDato("01.01"));
+      await aarsavregningPage.fyllUtSkatteforholdTomDato(0, lagDato("30.06"));
+      await aarsavregningPage.velgSkatteplikttype(0, "Allmennpliktig");
 
     // Verifiser at det ikke er valideringsfeil om "utenfor medlemskapsperioden"
     await aarsavregningPage.assertIngenFeilmelding("utenfor medlemskapsperioden");
   });
 
-  test("Kan utvide skatteforholdsperiode innenfor medlemskapsperiode", async ({ page }) => {
-    // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet
-    await aarsavregningPage.velgDeltGrunnlagJa();
+    test("Kan utvide skatteforholdsperiode innenfor medlemskapsperiode", async ({ page }) => {
+      // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet
+      await aarsavregningPage.velgDeltGrunnlagJa();
+      await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
 
-    const beregnKnapp = page.getByRole("button", { name: /beregn.*endelig.*trygdeavgift/i });
-    if (await beregnKnapp.isVisible({ timeout: 2000 }).catch(() => false)) {
-      await aarsavregningPage.klikkBeregnEndeligTrygdeavgift();
-      await aarsavregningPage.ventPåBeregning();
-    }
+      // Vent på at UI oppdaterer seg
+      await page.waitForTimeout(1000);
 
     // Først, legg til medlemskapsperiode
     const antallMedlemskapFør = await aarsavregningPage.getAntallMedlemskapsperioder();
     await aarsavregningPage.leggTilMedlemskapsperiode();
 
-    const nyMedlemIndex = antallMedlemskapFør;
-    await aarsavregningPage.fyllUtMedlemskapsperiodeFomDato(nyMedlemIndex, "01.01.2024");
-    await aarsavregningPage.fyllUtMedlemskapsperiodeTomDato(nyMedlemIndex, "31.12.2024");
-    await aarsavregningPage.velgTrygdedekning(nyMedlemIndex, "Medlem");
+      const nyMedlemIndex = antallMedlemskapFør;
+      await aarsavregningPage.fyllUtMedlemskapsperiodeFomDato(nyMedlemIndex, lagDato("01.01"));
+      await aarsavregningPage.fyllUtMedlemskapsperiodeTomDato(nyMedlemIndex, lagDato("31.12"));
+      await aarsavregningPage.velgTrygdedekning(nyMedlemIndex, "Helse- og pensjonsdel (§ 2-9)");
 
-    // Legg til skatteforholdsperiode
-    await aarsavregningPage.leggTilSkatteforholdsperiode();
-    await aarsavregningPage.fyllUtSkatteforholdFomDato(0, "01.01.2024");
-    await aarsavregningPage.fyllUtSkatteforholdTomDato(0, "30.06.2024");
-    await aarsavregningPage.velgSkatteplikttype(0, "Allmennpliktig");
+      // Legg til skatteforholdsperiode
+      await aarsavregningPage.leggTilSkatteforholdsperiode();
+      await aarsavregningPage.fyllUtSkatteforholdFomDato(0, lagDato("01.01"));
+      await aarsavregningPage.fyllUtSkatteforholdTomDato(0, lagDato("30.06"));
+      await aarsavregningPage.velgSkatteplikttype(0, "Allmennpliktig");
 
-    // Utvid perioden til å dekke hele året
-    await aarsavregningPage.fyllUtSkatteforholdTomDato(0, "31.12.2024");
+      // Utvid perioden til å dekke hele året
+      await aarsavregningPage.fyllUtSkatteforholdTomDato(0, lagDato("31.12"));
 
     // Verifiser at det ikke er valideringsfeil
     await aarsavregningPage.assertIngenFeilmelding("utenfor medlemskapsperioden");
@@ -273,112 +254,123 @@ test.describe("MELOSYS-7612: AC2 - Skatteforholdsperiode validering", () => {
   });
 });
 
-test.describe("MELOSYS-7612: AC3 - Inntektsperiode validering", () => {
-  test.beforeEach(async ({ page }) => {
-    await setupAarsavregningTest(page);
-  });
+  test.describe("AC3 - Inntektsperiode validering", () => {
+    test.beforeEach(async ({ page }) => {
+      await setupAarsavregningTest(page);
+    });
 
-  test("Kan legge til ny inntektsperiode etter å ha valgt delt grunnlag", async ({ page }) => {
-    // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet
-    await aarsavregningPage.velgDeltGrunnlagJa();
+    test("Kan legge til ny inntektsperiode etter å ha valgt delt grunnlag", async ({ page }) => {
+      // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet
+      await aarsavregningPage.velgDeltGrunnlagJa();
+      await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
 
-    const beregnKnapp = page.getByRole("button", { name: /beregn.*endelig.*trygdeavgift/i });
-    if (await beregnKnapp.isVisible({ timeout: 2000 }).catch(() => false)) {
-      await aarsavregningPage.klikkBeregnEndeligTrygdeavgift();
-      await aarsavregningPage.ventPåBeregning();
-    }
+      // Vent på at UI oppdaterer seg
+      await page.waitForTimeout(1000);
 
     // Først, legg til medlemskapsperiode som dekker perioden
     const antallMedlemskapFør = await aarsavregningPage.getAntallMedlemskapsperioder();
     await aarsavregningPage.leggTilMedlemskapsperiode();
 
-    const nyMedlemIndex = antallMedlemskapFør;
-    await aarsavregningPage.fyllUtMedlemskapsperiodeFomDato(nyMedlemIndex, "01.01.2024");
-    await aarsavregningPage.fyllUtMedlemskapsperiodeTomDato(nyMedlemIndex, "31.12.2024");
-    await aarsavregningPage.velgTrygdedekning(nyMedlemIndex, "Medlem");
+      const nyMedlemIndex = antallMedlemskapFør;
+      await aarsavregningPage.fyllUtMedlemskapsperiodeFomDato(nyMedlemIndex, lagDato("01.01"));
+      await aarsavregningPage.fyllUtMedlemskapsperiodeTomDato(nyMedlemIndex, lagDato("31.12"));
+      await aarsavregningPage.velgTrygdedekning(nyMedlemIndex, "Helse- og pensjonsdel (§ 2-9)");
+
+      // Fyll ut skatteforholdsperiode (auto-opprettet) og sett skatteplikttype til "Nei"
+      // Dette er nødvendig for at inntektsperiode-seksjonen skal vises
+      await aarsavregningPage.fyllUtSkatteforholdFomDato(0, lagDato("01.01"));
+      await aarsavregningPage.fyllUtSkatteforholdTomDato(0, lagDato("31.12"));
+      await aarsavregningPage.velgSkatteplikttype(0, "Nei");
 
     // Legg til inntektsperiode
     await aarsavregningPage.leggTilInntektsperiode();
 
-    // Fyll ut inntektsperiode innenfor medlemskapsperioden
-    await aarsavregningPage.fyllUtInntektsperiodeFomDato(0, "01.01.2024");
-    await aarsavregningPage.fyllUtInntektsperiodeTomDato(0, "31.03.2024");
-    await aarsavregningPage.velgKildetype(0, "A-inntekt");
-    await aarsavregningPage.fyllUtBruttoInntekt(0, "500000");
+      // Fyll ut inntektsperiode innenfor medlemskapsperioden
+      await aarsavregningPage.fyllUtInntektsperiodeFomDato(0, lagDato("01.01"));
+      await aarsavregningPage.fyllUtInntektsperiodeTomDato(0, lagDato("31.03"));
+      await aarsavregningPage.velgKildetype(0, "Arbeidsinntekt");
+      await aarsavregningPage.fyllUtBruttoInntekt(0, "500000");
 
     // Verifiser at det ikke er valideringsfeil om "utenfor medlemskapsperioden"
     await aarsavregningPage.assertIngenFeilmelding("utenfor medlemskapsperioden");
   });
 
-  test("Kan utvide inntektsperiode innenfor medlemskapsperiode", async ({ page }) => {
-    // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet
-    await aarsavregningPage.velgDeltGrunnlagJa();
+    test("Kan utvide inntektsperiode innenfor medlemskapsperiode", async ({ page }) => {
+      // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet
+      await aarsavregningPage.velgDeltGrunnlagJa();
+      await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
 
-    const beregnKnapp = page.getByRole("button", { name: /beregn.*endelig.*trygdeavgift/i });
-    if (await beregnKnapp.isVisible({ timeout: 2000 }).catch(() => false)) {
-      await aarsavregningPage.klikkBeregnEndeligTrygdeavgift();
-      await aarsavregningPage.ventPåBeregning();
-    }
+      // Vent på at UI oppdaterer seg
+      await page.waitForTimeout(1000);
 
     // Først, legg til medlemskapsperiode
     const antallMedlemskapFør = await aarsavregningPage.getAntallMedlemskapsperioder();
     await aarsavregningPage.leggTilMedlemskapsperiode();
 
-    const nyMedlemIndex = antallMedlemskapFør;
-    await aarsavregningPage.fyllUtMedlemskapsperiodeFomDato(nyMedlemIndex, "01.01.2024");
-    await aarsavregningPage.fyllUtMedlemskapsperiodeTomDato(nyMedlemIndex, "31.12.2024");
-    await aarsavregningPage.velgTrygdedekning(nyMedlemIndex, "Medlem");
+      const nyMedlemIndex = antallMedlemskapFør;
+      await aarsavregningPage.fyllUtMedlemskapsperiodeFomDato(nyMedlemIndex, lagDato("01.01"));
+      await aarsavregningPage.fyllUtMedlemskapsperiodeTomDato(nyMedlemIndex, lagDato("31.12"));
+      await aarsavregningPage.velgTrygdedekning(nyMedlemIndex, "Helse- og pensjonsdel (§ 2-9)");
 
-    // Legg til inntektsperiode
-    await aarsavregningPage.leggTilInntektsperiode();
-    await aarsavregningPage.fyllUtInntektsperiodeFomDato(0, "01.01.2024");
-    await aarsavregningPage.fyllUtInntektsperiodeTomDato(0, "31.03.2024");
-    await aarsavregningPage.velgKildetype(0, "A-inntekt");
-    await aarsavregningPage.fyllUtBruttoInntekt(0, "500000");
+      // Fyll ut skatteforholdsperiode og sett skatteplikttype til "Nei"
+      await aarsavregningPage.fyllUtSkatteforholdFomDato(0, lagDato("01.01"));
+      await aarsavregningPage.fyllUtSkatteforholdTomDato(0, lagDato("31.12"));
+      await aarsavregningPage.velgSkatteplikttype(0, "Nei");
 
-    // Utvid perioden
-    await aarsavregningPage.fyllUtInntektsperiodeTomDato(0, "30.09.2024");
+      // Legg til inntektsperiode
+      await aarsavregningPage.leggTilInntektsperiode();
+      await aarsavregningPage.fyllUtInntektsperiodeFomDato(0, lagDato("01.01"));
+      await aarsavregningPage.fyllUtInntektsperiodeTomDato(0, lagDato("31.03"));
+      await aarsavregningPage.velgKildetype(0, "Arbeidsinntekt");
+      await aarsavregningPage.fyllUtBruttoInntekt(0, "500000");
+
+      // Utvid perioden
+      await aarsavregningPage.fyllUtInntektsperiodeTomDato(0, lagDato("30.09"));
 
     // Verifiser at det ikke er valideringsfeil
     await aarsavregningPage.assertIngenFeilmelding("utenfor medlemskapsperioden");
     await aarsavregningPage.assertIngenFeilmelding("ugyldig");
   });
 
-  test("Kan legge til flere inntektsperioder innenfor samme år", async ({ page }) => {
-    // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet
-    await aarsavregningPage.velgDeltGrunnlagJa();
+    test("Kan legge til flere inntektsperioder innenfor samme år", async ({ page }) => {
+      // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet
+      await aarsavregningPage.velgDeltGrunnlagJa();
+      await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
 
-    const beregnKnapp = page.getByRole("button", { name: /beregn.*endelig.*trygdeavgift/i });
-    if (await beregnKnapp.isVisible({ timeout: 2000 }).catch(() => false)) {
-      await aarsavregningPage.klikkBeregnEndeligTrygdeavgift();
-      await aarsavregningPage.ventPåBeregning();
-    }
+      // Vent på at UI oppdaterer seg
+      await page.waitForTimeout(1000);
 
     // Legg til medlemskapsperiode som dekker hele året
     const antallMedlemskapFør = await aarsavregningPage.getAntallMedlemskapsperioder();
     await aarsavregningPage.leggTilMedlemskapsperiode();
 
-    const nyMedlemIndex = antallMedlemskapFør;
-    await aarsavregningPage.fyllUtMedlemskapsperiodeFomDato(nyMedlemIndex, "01.01.2024");
-    await aarsavregningPage.fyllUtMedlemskapsperiodeTomDato(nyMedlemIndex, "31.12.2024");
-    await aarsavregningPage.velgTrygdedekning(nyMedlemIndex, "Medlem");
+      const nyMedlemIndex = antallMedlemskapFør;
+      await aarsavregningPage.fyllUtMedlemskapsperiodeFomDato(nyMedlemIndex, lagDato("01.01"));
+      await aarsavregningPage.fyllUtMedlemskapsperiodeTomDato(nyMedlemIndex, lagDato("31.12"));
+      await aarsavregningPage.velgTrygdedekning(nyMedlemIndex, "Helse- og pensjonsdel (§ 2-9)");
 
-    // Legg til første inntektsperiode
-    await aarsavregningPage.leggTilInntektsperiode();
-    await aarsavregningPage.fyllUtInntektsperiodeFomDato(0, "01.01.2024");
-    await aarsavregningPage.fyllUtInntektsperiodeTomDato(0, "30.06.2024");
-    await aarsavregningPage.velgKildetype(0, "A-inntekt");
-    await aarsavregningPage.fyllUtBruttoInntekt(0, "300000");
+      // Fyll ut skatteforholdsperiode og sett skatteplikttype til "Nei"
+      await aarsavregningPage.fyllUtSkatteforholdFomDato(0, lagDato("01.01"));
+      await aarsavregningPage.fyllUtSkatteforholdTomDato(0, lagDato("31.12"));
+      await aarsavregningPage.velgSkatteplikttype(0, "Nei");
 
-    // Legg til andre inntektsperiode
-    await aarsavregningPage.leggTilInntektsperiode();
-    await aarsavregningPage.fyllUtInntektsperiodeFomDato(1, "01.07.2024");
-    await aarsavregningPage.fyllUtInntektsperiodeTomDato(1, "31.12.2024");
-    await aarsavregningPage.velgKildetype(1, "A-inntekt");
-    await aarsavregningPage.fyllUtBruttoInntekt(1, "400000");
+      // Legg til første inntektsperiode
+      await aarsavregningPage.leggTilInntektsperiode();
+      await aarsavregningPage.fyllUtInntektsperiodeFomDato(0, lagDato("01.01"));
+      await aarsavregningPage.fyllUtInntektsperiodeTomDato(0, lagDato("30.06"));
+      await aarsavregningPage.velgKildetype(0, "Arbeidsinntekt");
+      await aarsavregningPage.fyllUtBruttoInntekt(0, "300000");
 
-    // Verifiser at ingen valideringsfeil
-    await aarsavregningPage.assertIngenFeilmelding("utenfor medlemskapsperioden");
-    await aarsavregningPage.assertIngenFeilmelding("overlapper");
+      // Legg til andre inntektsperiode
+      await aarsavregningPage.leggTilInntektsperiode();
+      await aarsavregningPage.fyllUtInntektsperiodeFomDato(1, lagDato("01.07"));
+      await aarsavregningPage.fyllUtInntektsperiodeTomDato(1, lagDato("31.12"));
+      await aarsavregningPage.velgKildetype(1, "Arbeidsinntekt");
+      await aarsavregningPage.fyllUtBruttoInntekt(1, "400000");
+
+      // Verifiser at ingen valideringsfeil
+      await aarsavregningPage.assertIngenFeilmelding("utenfor medlemskapsperioden");
+      await aarsavregningPage.assertIngenFeilmelding("overlapper");
+    });
   });
 });
