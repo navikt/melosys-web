@@ -89,7 +89,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
   });
   const [innlastingFeilmelding, setInnlastingFeilmelding] = useState("");
 
-  const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as any;
+  const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as number;
   const dispatch = useDispatch();
 
   const mapSkjemaverdierFraTrygdeavgiftsgrunnlag = (aarsavregningResponse?: AarsavregningResponse) => {
