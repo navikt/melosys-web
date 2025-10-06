@@ -147,14 +147,12 @@ export function KnyttTilSak(props: KnyttTilSakProps) {
       Api.LovligeKombinasjoner.hentBehandlingstyperForKnyttTilSak(journalforingGjelder, sak.saksnummer, behandlingstema)
         .then((alleMuligeBehandlingstyper: Array<{ kode: string; term: string }>) => {
           if (erEøsEllerAvtaleland && harÅpneBehandlinger) {
-            // For EØS/AVTALELAND med åpne behandlinger, vis ingen behandlingstyper
             setMuligeBehandlingstyper([]);
           } else if (harÅpneIkkeÅrsavregningsbehandlinger && sakstype.kode !== MKV.Koder.sakstyper.FTRL) {
-            // For vanlige saker med åpne ikke-årsavregningsbehandlinger, vis kun årsavregning
-            const årsavregning = alleMuligeBehandlingstyper.filter(
+            const årsavregninger = alleMuligeBehandlingstyper.filter(
               (type) => type.kode === MKV.Koder.behandlinger.behandlingstyper.ÅRSAVREGNING,
             );
-            setMuligeBehandlingstyper(årsavregning);
+            setMuligeBehandlingstyper(årsavregninger);
           } else {
             setMuligeBehandlingstyper(alleMuligeBehandlingstyper);
           }
