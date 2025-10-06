@@ -228,7 +228,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
       Boolean(
         formIsValid &&
           endeligAvgiftValg === OPPLYSNINGER_ENDRET &&
-          aarsavregningResponse?.nyttGrunnlag &&
+          aarsavregningResponse?.nyttTrygdeavgiftsGrunnlag &&
           !feilmelding &&
           !arrayValideringsfeil,
       ) ||
@@ -245,8 +245,8 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   }, [stegErGyldig]);
 
   useEffect(() => {
-    if (redigerbart && aarsavregningResponse?.nyttGrunnlag && aarsavregningID) {
-      const { totalAvgift } = aarsavregningResponse.nyttGrunnlag.avgift;
+    if (redigerbart && aarsavregningResponse?.nyttTrygdeavgiftsGrunnlag && aarsavregningID) {
+      const { totalAvgift } = aarsavregningResponse.nyttTrygdeavgiftsGrunnlag.avgift;
       const beregnetAvgiftBelop = aarsavregningResponse.avregning?.beregnetAvgiftBelop;
 
       if (totalAvgift !== beregnetAvgiftBelop) {
@@ -261,7 +261,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
     redigerbart,
     behandlingID,
     aarsavregningID,
-    aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift,
+    aarsavregningResponse?.nyttTrygdeavgiftsGrunnlag?.avgift.totalAvgift,
     aarsavregningResponse?.avregning?.beregnetAvgiftBelop,
   ]);
 
@@ -376,7 +376,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
             !feilmelding &&
             !arrayValideringsfeil &&
             !trygdeAvgiftSkalIkkeBetalesTilNav &&
-            aarsavregningResponse?.nyttGrunnlag && (
+            aarsavregningResponse?.nyttTrygdeavgiftsGrunnlag && (
               <Nav.ExpansionCard
                 className="beregnetTrygdeavgiftDetaljer"
                 aria-label="trygdeavgiftdetaljer"
@@ -387,7 +387,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
                 </Nav.ExpansionCard.Header>
                 <Nav.ExpansionCard.Content>
                   <BeregnetTrygdeavgiftDetaljer
-                    grunnlag={aarsavregningResponse.nyttGrunnlag}
+                    grunnlag={aarsavregningResponse.nyttTrygdeavgiftsGrunnlag}
                     medlemskapsTypeErPliktig={medlemskapstypeErPliktig!}
                   />
                 </Nav.ExpansionCard.Content>

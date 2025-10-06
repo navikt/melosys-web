@@ -141,10 +141,10 @@ export function AarsavregningUtenEllerDeltGrunnlag({
       redigerbart &&
       harTrygdeavgiftFraAvgiftssystemet &&
       innvilgedeMedlemskapsperioder.length === 0 &&
-      aarsavregningRes?.vedtatteMedlemskapsperioder
+      aarsavregningRes?.sisteGjeldendeMedlemskapsperioder
     ) {
       // Initiell innlasting for delt grunnlag
-      const medlemskapsperioderFraGrunnlag = aarsavregningRes.vedtatteMedlemskapsperioder;
+      const medlemskapsperioderFraGrunnlag = aarsavregningRes.sisteGjeldendeMedlemskapsperioder;
       const innvilgedeMedlemskapsperioderFraGrunnlag = medlemskapsperioderFraGrunnlag.filter(
         (periode) => periode.innvilgelsesResultat === INNVILGET || periode.innvilgelsesResultat === DELVIS_INNVILGET,
       );
@@ -223,12 +223,12 @@ export function AarsavregningUtenEllerDeltGrunnlag({
         }
 
         const deltGrunnlagAarsavregningHarIkkeNyttGrunnlag =
-          harTrygdeavgiftFraAvgiftssystemet && aarsavregningRes && !aarsavregningRes.nyttGrunnlag;
+          harTrygdeavgiftFraAvgiftssystemet && aarsavregningRes && !aarsavregningRes.nyttTrygdeavgiftsGrunnlag;
 
         const bestemmelseFraTidligereAvgiftsgrunnlag =
           aarsavregningRes?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag?.medlemskapsperioder?.[0]
             ?.bestemmelse;
-        const eventuellNyBestemmelse = aarsavregningRes?.vedtatteMedlemskapsperioder?.[0]?.bestemmelse;
+        const eventuellNyBestemmelse = aarsavregningRes?.sisteGjeldendeMedlemskapsperioder?.[0]?.bestemmelse;
 
         const skalHenteGrunnlagFraTidligereTrygdeavgiftsgrunnlag =
           deltGrunnlagAarsavregningHarIkkeNyttGrunnlag &&
@@ -263,13 +263,13 @@ export function AarsavregningUtenEllerDeltGrunnlag({
             skalHenteGrunnlagFraTidligereTrygdeavgiftsgrunnlag
               ? aarsavregningRes?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag
                   .skatteforholdsperioder
-              : aarsavregningRes?.nyttGrunnlag?.trygdeavgiftsgrunnlag.skatteforholdsperioder,
+              : aarsavregningRes?.nyttTrygdeavgiftsGrunnlag?.trygdeavgiftsgrunnlag.skatteforholdsperioder,
             mappedMedlemskapsperioder,
           ),
           inntektskilder: mapTilInntektskilderProps(
             skalHenteGrunnlagFraTidligereTrygdeavgiftsgrunnlag
               ? aarsavregningRes?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.inntektskperioder
-              : aarsavregningRes?.nyttGrunnlag?.trygdeavgiftsgrunnlag.inntektskperioder,
+              : aarsavregningRes?.nyttTrygdeavgiftsGrunnlag?.trygdeavgiftsgrunnlag.inntektskperioder,
             mappedMedlemskapsperioder,
           ),
         };
