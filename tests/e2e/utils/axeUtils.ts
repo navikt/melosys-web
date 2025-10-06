@@ -39,7 +39,7 @@ export async function runAxeAnalyze(page: Page, testName: string, contextDescrip
   }
 
   /* eslint-disable-next-line no-console */
-  console.log(`\n✅ No accessibility violations found${contextDescription ? ` for ${contextDescription}` : ""}`);
+  console.log(`\n✅ Ingen tilgjengelighetsproblemer funnet${contextDescription ? ` for ${contextDescription}` : ""}`);
 }
 
 /**
@@ -53,30 +53,30 @@ function formatAxeViolationsToString(results: AxeResults, contextDescription: st
   const contextMsg = contextDescription ? ` for ${contextDescription}` : "";
 
   if (violations.length === 0) {
-    return `\n✅ No accessibility violations found${contextMsg}`;
+    return `\n✅ Ingen tilgjengelighetsproblemer funnet${contextMsg}`;
   }
 
-  let output = `\n-------- Accessibility Violations${contextMsg} --------\n`;
-  output += `Found ${violations.length} accessibility violation(s)\n`;
+  let output = `\n-------- Tilgjengelighetsproblemer${contextMsg} --------\n`;
+  output += `Funnet ${violations.length} tilgjengelighetsproblem(er)\n`;
 
   violations.forEach((violation: Result, index: number) => {
     output += `\n🔴 ${index + 1}. ${violation.help} (${violation.impact} impact)\n`;
-    output += `   Rule: ${violation.id}\n`;
-    output += `   Description: ${violation.description}\n`;
+    output += `   Regel: ${violation.id}\n`;
+    output += `   Beskrivelse: ${violation.description}\n`;
     output += `   WCAG: ${violation.tags.filter((tag: string) => tag.startsWith("wcag")).join(", ")}\n`;
 
     if (violation.nodes && violation.nodes.length > 0) {
-      output += `   Affected Elements (${violation.nodes.length}):\n`;
+      output += `   Berørte elementer (${violation.nodes.length}):\n`;
 
       violation.nodes.forEach((node: NodeResult, nodeIndex: number) => {
         output += `     ${nodeIndex + 1}. ${node.html}\n`;
 
         if (node.target && node.target.length > 0) {
-          output += `        Target: ${node.target.join(", ")}\n`;
+          output += `        Mål: ${node.target.join(", ")}\n`;
         }
 
         if (node.failureSummary) {
-          output += `        Failure Summary: ${node.failureSummary.replace(/\n/g, "\n        ")}\n`;
+          output += `        Feilsammendrag: ${node.failureSummary.replace(/\n/g, "\n        ")}\n`;
         }
       });
     }

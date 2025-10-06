@@ -15,17 +15,10 @@ export class HovedsidePage {
   }
 
   /**
-   * Navigaer til hovedsiden
+   * Naviger til hovedsiden og vent på at den er ferdig lastet
    */
   async goto(): Promise<void> {
-    await this.page.goto("/", { waitUntil: "domcontentloaded", timeout: 30000 });
-    await this.page.waitForSelector("h1", { state: "visible", timeout: 30000 });
-  }
-
-  /**
-   * Verifiser at vi er på hovedsiden
-   */
-  async verifiserHovedside(): Promise<void> {
+    await this.page.goto("/", { waitUntil: "domcontentloaded" });
     await expect(this.page).toHaveURL("/melosys");
     await expect(this.page).toHaveTitle(/Melosys/);
     await expect(this.page.locator("h1:has-text('Mine oppgaver')")).toBeVisible();
@@ -40,6 +33,13 @@ export class HovedsidePage {
     await expect(createButton).toBeVisible();
     await createButton.click();
     await this.page.waitForLoadState("domcontentloaded");
+  }
+
+  /**
+   * Verifiser at "Opprett ny sak/behandling" knapp er synlig
+   */
+  async verifiserOpprettNySakKnapp(): Promise<void> {
+    await expect(this.page.locator("button:has-text('Opprett ny sak/behandling')")).toBeVisible();
   }
 
   /**
@@ -58,14 +58,34 @@ export class HovedsidePage {
       timeout: 5000,
     });
 
-    // Finn "Vis behandling" knappen for saken som inneholder gitt tekst
-    const sakButton = this.page
-      .locator(`:has-text('${sakTekst}')`)
+    // Finn "Vis behandling" knappen for saken som inneholder gitt tekst og som er aktiv
+    // Vi ser etter saker som har "Behandlingen pågår" status for å sikre at de kan sende brev
+    const aktivSakButton = this.page
+      .locator(".fagsak")
+      .filter({ hasText: sakTekst })
+      .filter({ hasText: "Behandlingen pågår" })
       .locator("button:has-text('Vis behandling')")
       .first();
 
-    // Ensure there is at least one task available
-    await expect(sakButton, `No '${sakTekst}' tasks found for user ${brukerId}`).toHaveCount(1, { timeout: 5000 });
+    // Hvis vi ikke finner aktive saker, prøv å finne opprettede saker
+    const opprettetSakButton = this.page
+      .locator(".fagsak")
+      .filter({ hasText: sakTekst })
+      .filter({ hasText: "Behandlingen er opprettet" })
+      .locator("button:has-text('Vis behandling')")
+      .first();
+
+    // Prøv først aktive saker, deretter opprettede saker
+    let sakButton = aktivSakButton;
+    const aktivSakCount = await aktivSakButton.count();
+
+    if (aktivSakCount === 0) {
+      sakButton = opprettetSakButton;
+      await expect(
+        sakButton,
+        `Fant ingen aktive eller opprettede '${sakTekst}' saker for bruker ${brukerId}`,
+      ).toHaveCount(1);
+    }
 
     await sakButton.click();
     await this.page.waitForLoadState("domcontentloaded");
@@ -83,17 +103,36 @@ export class HovedsidePage {
     const searchInput = this.page.locator("form.sokeskjema input[type='text']");
 
     const searchInputCount = await searchInput.count();
-    expect(searchInputCount > 0, "Search input field 'Søk sak:' not found").toBeTruthy();
+    expect(searchInputCount > 0, "Søkefeltet 'Søk sak:' ble ikke funnet").toBeTruthy();
 
     await searchInput.fill(input);
 
     const searchButton = this.page.locator("form.sokeskjema .sokeskjema__knapp button");
 
     const searchButtonCount = await searchButton.count();
-    expect(searchButtonCount > 0, "Search button not found").toBeTruthy();
+    expect(searchButtonCount > 0, "Søkeknappen ble ikke funnet").toBeTruthy();
 
     await searchButton.click();
 
     await this.page.waitForLoadState("domcontentloaded");
+  }
+
+  /**
+   * Vent på at søkeresultater vises for gitt bruker-ID
+   * @param userID - Bruker f.nr./d-nr. som det søkes på
+   */
+  async ventPåSøkeresultat(userID: string): Promise<void> {
+    await this.page.waitForSelector(`text=Resultater for f.nr./d-nr. ${userID}`, {
+      state: "visible",
+    });
+  }
+
+  /**
+   * Utfør søk og vent på resultater
+   * @param userID - Bruker f.nr./d-nr. som det søkes på
+   */
+  async søkOgVentPåResultat(userID: string): Promise<void> {
+    await this.søk(userID);
+    await this.ventPåSøkeresultat(userID);
   }
 }

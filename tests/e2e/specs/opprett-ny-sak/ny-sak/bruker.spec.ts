@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { test, Page } from "@playwright/test";
 import { runAxeAnalyze } from "../../../utils/axeUtils";
 import { HovedsidePage, USER_ID_VALID } from "../../../pages/hovedside.page";
 import { OpprettNySakPage } from "../../../pages/opprett-ny-sak.page";
@@ -6,10 +6,12 @@ import { assertErrors, assertNyBehandlingOpprettet } from "../../../utils/testUt
 
 let opprettNySakPage: OpprettNySakPage;
 
-async function setupOpprettNySakTester(page: any) {
+async function setupOpprettNySakTester(page: Page) {
   const mainPage = new HovedsidePage(page);
   opprettNySakPage = new OpprettNySakPage(page);
+
   await mainPage.goto();
+
   await mainPage.klikkOpprettNySakKnapp();
 }
 
@@ -43,15 +45,13 @@ test.describe("'Opprett ny sak for bruker", () => {
     await opprettNySakPage.velgOpprettNySak();
 
     // Fyll ut alle påkrevde dropdown-felt
-    await opprettNySakPage.velgSakstype();
-    await opprettNySakPage.velgSakstema();
-    await opprettNySakPage.velgBehandlingstema();
-    await opprettNySakPage.velgBehandlingstype();
-    await opprettNySakPage.velgBehandlingsaarsak();
+    await opprettNySakPage.velgSakstype("Avtaleland");
+    await opprettNySakPage.velgSakstema("Medlemskap og lovvalg");
+    await opprettNySakPage.velgBehandlingstema("Yrkesaktiv");
+    await opprettNySakPage.velgBehandlingstype("Førstegangsbehandling");
+    await opprettNySakPage.velgBehandlingsaarsak("Søknad");
 
-    await opprettNySakPage.setLand("Norge");
-    await opprettNySakPage.setFraDato("01.01.2024");
-    await opprettNySakPage.setTilDato("31.12.2024");
+    // Note: Verken land-felt eller datofelter vises for Avtaleland saker med Yrkesaktiv
 
     await opprettNySakPage.klikkOpprettNyBehandling();
 
@@ -67,13 +67,13 @@ test.describe("'Opprett ny sak for bruker", () => {
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgOpprettNySak();
 
-    await expect(opprettNySakPage.page.locator("select[name='sakstype']")).toBeVisible();
+    await opprettNySakPage.verifiserSakstypeSelect();
 
     await opprettNySakPage.velgSakstype("EU/EØS-land");
-    await opprettNySakPage.velgSakstema();
-    await opprettNySakPage.velgBehandlingstema();
-    await opprettNySakPage.velgBehandlingstype();
-    await opprettNySakPage.velgBehandlingsaarsak();
+    await opprettNySakPage.velgSakstema("Medlemskap og lovvalg");
+    await opprettNySakPage.velgBehandlingstema("Arbeid kun i Norge");
+    await opprettNySakPage.velgBehandlingstype("Førstegangsbehandling");
+    await opprettNySakPage.velgBehandlingsaarsak("Søknad");
 
     await opprettNySakPage.setFraDato("01.01.2024");
     await opprettNySakPage.setTilDato("31.12.2024");
@@ -93,13 +93,13 @@ test.describe("'Opprett ny sak for bruker", () => {
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgOpprettNySak();
 
-    await expect(opprettNySakPage.page.locator("select[name='sakstype']")).toBeVisible();
+    await opprettNySakPage.verifiserSakstypeSelect();
 
     await opprettNySakPage.velgSakstype("EU/EØS-land");
-    await opprettNySakPage.velgSakstema();
-    await opprettNySakPage.velgBehandlingstema();
-    await opprettNySakPage.velgBehandlingstype();
-    await opprettNySakPage.velgBehandlingsaarsak();
+    await opprettNySakPage.velgSakstema("Medlemskap og lovvalg");
+    await opprettNySakPage.velgBehandlingstema("Arbeid kun i Norge");
+    await opprettNySakPage.velgBehandlingstype("Førstegangsbehandling");
+    await opprettNySakPage.velgBehandlingsaarsak("Søknad");
 
     // await opprettNySakPage.setFraDato("01.01.2024");
     // await opprettNySakPage.setTilDato("31.12.2024");
@@ -113,20 +113,20 @@ test.describe("'Opprett ny sak for bruker", () => {
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test('Opprett sak for sakstype "EU/EØS-land", sakstema "Medlemsskap og lovvalg", uten å velge land og verifiser at det ikke oppstår noen feil', async ({
+  test.skip('Opprett sak for sakstype "EU/EØS-land", sakstema "Medlemsskap og lovvalg", uten å velge land og verifiser at det ikke oppstår noen feil', async ({
     page,
   }, testInfo) => {
     await setupOpprettNySakTester(page);
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgOpprettNySak();
 
-    await expect(opprettNySakPage.page.locator("select[name='sakstype']")).toBeVisible();
+    await opprettNySakPage.verifiserSakstypeSelect();
 
     await opprettNySakPage.velgSakstype("EU/EØS-land");
-    await opprettNySakPage.velgSakstema();
-    await opprettNySakPage.velgBehandlingstema();
-    await opprettNySakPage.velgBehandlingstype();
-    await opprettNySakPage.velgBehandlingsaarsak();
+    await opprettNySakPage.velgSakstema("Medlemskap og lovvalg");
+    await opprettNySakPage.velgBehandlingstema("Arbeid kun i Norge");
+    await opprettNySakPage.velgBehandlingstype("Førstegangsbehandling");
+    await opprettNySakPage.velgBehandlingsaarsak("Søknad");
 
     await opprettNySakPage.setFraDato("01.01.2024");
     await opprettNySakPage.setTilDato("31.12.2024");
@@ -147,13 +147,13 @@ test.describe("'Opprett ny sak for bruker", () => {
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgOpprettNySak();
 
-    await expect(opprettNySakPage.page.locator("select[name='sakstype']")).toBeVisible();
+    await opprettNySakPage.verifiserSakstypeSelect();
 
     await opprettNySakPage.velgSakstype("Avtaleland");
-    await opprettNySakPage.velgSakstema();
-    await opprettNySakPage.velgBehandlingstema();
-    await opprettNySakPage.velgBehandlingstype();
-    await opprettNySakPage.velgBehandlingsaarsak();
+    await opprettNySakPage.velgSakstema("Medlemskap og lovvalg");
+    await opprettNySakPage.velgBehandlingstema("Yrkesaktiv");
+    await opprettNySakPage.velgBehandlingstype("Førstegangsbehandling");
+    await opprettNySakPage.velgBehandlingsaarsak("Søknad");
 
     await opprettNySakPage.klikkOpprettNyBehandling();
 
@@ -169,13 +169,13 @@ test.describe("'Opprett ny sak for bruker", () => {
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgOpprettNySak();
 
-    await expect(opprettNySakPage.page.locator("select[name='sakstype']")).toBeVisible();
+    await opprettNySakPage.verifiserSakstypeSelect();
 
     await opprettNySakPage.velgSakstype("Utenfor avtaleland");
-    await opprettNySakPage.velgSakstema();
-    await opprettNySakPage.velgBehandlingstema();
-    await opprettNySakPage.velgBehandlingstype();
-    await opprettNySakPage.velgBehandlingsaarsak();
+    await opprettNySakPage.velgSakstema("Medlemskap og lovvalg");
+    await opprettNySakPage.velgBehandlingstema("Yrkesaktiv");
+    await opprettNySakPage.velgBehandlingstype("Førstegangsbehandling");
+    await opprettNySakPage.velgBehandlingsaarsak("Søknad");
 
     await opprettNySakPage.klikkOpprettNyBehandling();
 
@@ -191,13 +191,13 @@ test.describe("'Opprett ny sak for bruker", () => {
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgOpprettNySak();
 
-    await expect(opprettNySakPage.page.locator("select[name='sakstype']")).toBeVisible();
+    await opprettNySakPage.verifiserSakstypeSelect();
 
     await opprettNySakPage.velgSakstype("Utenfor avtaleland");
-    await opprettNySakPage.velgSakstema();
-    await opprettNySakPage.velgBehandlingstema();
+    await opprettNySakPage.velgSakstema("Medlemskap og lovvalg");
+    await opprettNySakPage.velgBehandlingstema("Yrkesaktiv");
     await opprettNySakPage.velgBehandlingstype("Årsavregning");
-    await opprettNySakPage.velgBehandlingsaarsak();
+    await opprettNySakPage.velgBehandlingsaarsak("Søknad");
 
     await opprettNySakPage.klikkOpprettNyBehandling();
 

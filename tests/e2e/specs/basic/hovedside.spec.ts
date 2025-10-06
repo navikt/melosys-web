@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { test } from "@playwright/test";
 import { runAxeAnalyze } from "../../utils/axeUtils";
 import { HovedsidePage } from "../../pages/hovedside.page";
 
@@ -7,9 +7,7 @@ test("Hovedsiden lastes korrekt og viser forventede seksjoner", async ({ page },
 
   await mainPage.goto();
 
-  await mainPage.verifiserHovedside();
-
-  await expect(mainPage.page.locator("button:has-text('Opprett ny sak/behandling')")).toBeVisible();
+  await mainPage.verifiserOpprettNySakKnapp();
 
   await runAxeAnalyze(page, testInfo.title);
 });
