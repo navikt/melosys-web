@@ -56,7 +56,7 @@ describe("VurderingVedtak", () => {
         manueltAvgiftBeloep: undefined,
       },
       harTrygdeavgiftFraAvgiftssystemet: true,
-      gjeldendeMedlemskapsperioder: [],
+      vedtatteMedlemskapsperioder: [],
       tidligereTrygdeavgiftsGrunnlagsopplysninger: {
         trygdeavgiftsgrunnlag: {
           medlemskapsperioder: [],

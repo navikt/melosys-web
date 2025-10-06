@@ -60,7 +60,7 @@ describe("AarsavregningMedGrunnlag", () => {
       const mockResponse: AarsavregningResponse = {
         aarsavregningID: 1,
         aar: 2023,
-        gjeldendeMedlemskapsperioder: [
+        vedtatteMedlemskapsperioder: [
           {
             id: 1,
             fomDato: "2023-01-01",
@@ -140,7 +140,7 @@ describe("AarsavregningMedGrunnlag", () => {
       const mockResponse: AarsavregningResponse = {
         aarsavregningID: 1,
         aar: 2023,
-        gjeldendeMedlemskapsperioder: [
+        vedtatteMedlemskapsperioder: [
           {
             id: 1,
             fomDato: "2023-01-01",
@@ -221,7 +221,7 @@ describe("AarsavregningMedGrunnlag", () => {
       const mockResponse: AarsavregningResponse = {
         aarsavregningID: 1,
         aar: 2023,
-        gjeldendeMedlemskapsperioder: [
+        vedtatteMedlemskapsperioder: [
           {
             id: 1,
             fomDato: "2023-01-01",
@@ -283,12 +283,12 @@ describe("AarsavregningMedGrunnlag", () => {
     });
   });
 
-  describe("gjeldendeMedlemskapsperioder håndtering", () => {
-    it("skal bruke gjeldendeMedlemskapsperioder når tilgjengelig", async () => {
+  describe("vedtatteMedlemskapsperioder håndtering", () => {
+    it("skal bruke vedtatteMedlemskapsperioder når tilgjengelig", async () => {
       const mockResponse: AarsavregningResponse = {
         aarsavregningID: 1,
         aar: 2023,
-        gjeldendeMedlemskapsperioder: [
+        vedtatteMedlemskapsperioder: [
           {
             id: 1,
             fomDato: "2023-01-01",
@@ -340,16 +340,16 @@ describe("AarsavregningMedGrunnlag", () => {
         expect(Api.Aarsavregning.hentAarsavregning).toHaveBeenCalled();
       });
 
-      // Verifiser at gjeldendeMedlemskapsperioder blir brukt
+      // Verifiser at vedtatteMedlemskapsperioder blir brukt
       const state = store.getState();
-      expect(state.aarsavregning.data?.gjeldendeMedlemskapsperioder).toHaveLength(2);
+      expect(state.aarsavregning.data?.vedtatteMedlemskapsperioder).toHaveLength(2);
     });
 
-    it("skal håndtere tomme gjeldendeMedlemskapsperioder uten feil", async () => {
+    it("skal håndtere tomme vedtatteMedlemskapsperioder uten feil", async () => {
       const mockResponse: AarsavregningResponse = {
         aarsavregningID: 1,
         aar: 2023,
-        gjeldendeMedlemskapsperioder: [], // Tom array
+        vedtatteMedlemskapsperioder: [], // Tom array
         tidligereTrygdeavgiftsGrunnlagsopplysninger: {
           trygdeavgiftsgrunnlag: {
             medlemskapsperioder: [],
@@ -382,7 +382,7 @@ describe("AarsavregningMedGrunnlag", () => {
 
       // Skal håndtere tom array uten feil
       const state = store.getState();
-      expect(state.aarsavregning.data?.gjeldendeMedlemskapsperioder).toEqual([]);
+      expect(state.aarsavregning.data?.vedtatteMedlemskapsperioder).toEqual([]);
     });
   });
 
@@ -391,7 +391,7 @@ describe("AarsavregningMedGrunnlag", () => {
       const mockResponse: AarsavregningResponse = {
         aarsavregningID: 1,
         aar: 2023,
-        gjeldendeMedlemskapsperioder: [],
+        vedtatteMedlemskapsperioder: [],
         tidligereTrygdeavgiftsGrunnlagsopplysninger: undefined, // Ingen tidligere grunnlag
       };
 
@@ -423,7 +423,7 @@ describe("AarsavregningMedGrunnlag", () => {
       const mockResponse: AarsavregningResponse = {
         aarsavregningID: 1,
         aar: 2023,
-        gjeldendeMedlemskapsperioder: [
+        vedtatteMedlemskapsperioder: [
           {
             id: 1,
             fomDato: "2023-01-01",

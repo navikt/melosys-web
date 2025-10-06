@@ -9,7 +9,7 @@ describe("TidligereGrunnlag", () => {
   const createMockResponse = (overrides: Partial<AarsavregningResponse> = {}): AarsavregningResponse => ({
     aarsavregningID: 1,
     aar: 2023,
-    gjeldendeMedlemskapsperioder: [],
+    vedtatteMedlemskapsperioder: [],
     tidligereTrygdeavgiftsGrunnlagsopplysninger: {
       trygdeavgiftsgrunnlag: {
         medlemskapsperioder: [

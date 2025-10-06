@@ -141,10 +141,10 @@ export function AarsavregningUtenEllerDeltGrunnlag({
       redigerbart &&
       harTrygdeavgiftFraAvgiftssystemet &&
       innvilgedeMedlemskapsperioder.length === 0 &&
-      aarsavregningRes?.gjeldendeMedlemskapsperioder
+      aarsavregningRes?.vedtatteMedlemskapsperioder
     ) {
       // Initiell innlasting for delt grunnlag
-      const medlemskapsperioderFraGrunnlag = aarsavregningRes.gjeldendeMedlemskapsperioder;
+      const medlemskapsperioderFraGrunnlag = aarsavregningRes.vedtatteMedlemskapsperioder;
       const innvilgedeMedlemskapsperioderFraGrunnlag = medlemskapsperioderFraGrunnlag.filter(
         (periode) => periode.innvilgelsesResultat === INNVILGET || periode.innvilgelsesResultat === DELVIS_INNVILGET,
       );
@@ -228,7 +228,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({
         const bestemmelseFraTidligereAvgiftsgrunnlag =
           aarsavregningRes?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag?.medlemskapsperioder?.[0]
             ?.bestemmelse;
-        const eventuellNyBestemmelse = aarsavregningRes?.gjeldendeMedlemskapsperioder?.[0]?.bestemmelse;
+        const eventuellNyBestemmelse = aarsavregningRes?.vedtatteMedlemskapsperioder?.[0]?.bestemmelse;
 
         const skalHenteGrunnlagFraTidligereTrygdeavgiftsgrunnlag =
           deltGrunnlagAarsavregningHarIkkeNyttGrunnlag &&

@@ -7,7 +7,7 @@ export interface AarsavregningResponse {
   aarsavregningID: number;
   aar: number;
   tidligereTrygdeavgiftsGrunnlagsopplysninger?: Grunnlagsopplysninger;
-  gjeldendeMedlemskapsperioder?: Medlemskapsperiode[];
+  vedtatteMedlemskapsperioder?: Medlemskapsperiode[];
   nyttGrunnlag?: Grunnlagsopplysninger;
   avregning?: Avregning;
   harTrygdeavgiftFraAvgiftssystemet?: boolean;

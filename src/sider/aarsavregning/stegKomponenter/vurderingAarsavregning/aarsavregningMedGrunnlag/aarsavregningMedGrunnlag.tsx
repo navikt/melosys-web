@@ -100,7 +100,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
       const bestemmelseFraTidligereAvgiftsgrunnlag =
         aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag
           ?.medlemskapsperioder?.[0]?.bestemmelse;
-      const eventuellNyBestemmelse = aarsavregningResponse?.gjeldendeMedlemskapsperioder?.[0]?.bestemmelse;
+      const eventuellNyBestemmelse = aarsavregningResponse?.vedtatteMedlemskapsperioder?.[0]?.bestemmelse;
       if (
         bestemmelseFraTidligereAvgiftsgrunnlag &&
         eventuellNyBestemmelse &&
@@ -155,7 +155,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
           const defaultFormValues: FieldValue<AarsavregningMedGrunnlagFormValues> =
             mapSkjemaverdierFraTrygdeavgiftsgrunnlag(res);
 
-          const medlemskapsperioder = res.gjeldendeMedlemskapsperioder || [];
+          const medlemskapsperioder = res.vedtatteMedlemskapsperioder || [];
           const innvilgetMedlemskapsperiode = mapInnvilgetMedlemskapsPeriode(medlemskapsperioder);
           const innvilgetMedlemskapsperiodeBestemmelse = mapMedlemskapsperiodeBestemmelse(false, medlemskapsperioder);
           const innvilgetMedlemskapsperiodeTrygdedekning = mapTrygdedekning(medlemskapsperioder);
