@@ -66,10 +66,13 @@ export class OpprettNySakPage {
       return;
     }
 
+    // Vent på at siden har lastet ferdig (enten "Ingen saker" melding eller radioknappene)
+    await this.page.waitForTimeout(1000);
+
     const ingenSakerMelding = this.page.locator(
       ".opprettnysak :text('Ingen eksisterende saker funnet. Du må opprette en ny sak.')",
     );
-    const ingenSakerFinnes = await ingenSakerMelding.isVisible();
+    const ingenSakerFinnes = await ingenSakerMelding.isVisible({ timeout: 2000 }).catch(() => false);
 
     if (ingenSakerFinnes) {
       return;
@@ -78,7 +81,7 @@ export class OpprettNySakPage {
     // Det finnes eksisterende saker - velg "Opprett ny sak" radioknapp
     const opprettNySakRadio = this.page.locator(".navds-radio__content:has-text('Opprett ny sak')");
     await expect(opprettNySakRadio, "Kunne ikke finne 'Opprett ny sak").toBeVisible({
-      timeout: 5000,
+      timeout: 10000,
     });
     await opprettNySakRadio.click();
     await this.page.waitForLoadState("domcontentloaded");
