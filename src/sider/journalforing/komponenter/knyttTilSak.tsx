@@ -66,6 +66,21 @@ export function KnyttTilSak(props: KnyttTilSakProps) {
     [],
   );
 
+  // Nullstill lokal state når man bytter sak
+  // Form-verdier oppdateres automatisk av andre effects når API-kall er ferdige
+  useEffect(() => {
+    setMuligeBehandlingstemaer([]);
+    setMuligeBehandlingstyper([]);
+    setSendtAnmodningUnntakTilUtland(false);
+  }, [sak.saksnummer]);
+
+  // Sett behandlingstema tidlig for å bryte circular dependency
+  useEffect(() => {
+    if (sisteBehandling?.behandlingstema?.kode && Utils._isEmpty(behandlingstema)) {
+      changeField(feltNavn.formNavn, feltNavn.behandlingstema, sisteBehandling.behandlingstema.kode);
+    }
+  }, [sak.saksnummer, sisteBehandling?.behandlingstema?.kode]);
+
   useEffect(() => {
     return () => {
       if (erJournalføring) changeField(feltNavn.formNavn, "vurderDokument", undefined);
@@ -112,7 +127,7 @@ export function KnyttTilSak(props: KnyttTilSakProps) {
     Api.Anmodningsperioder.hent(sisteBehandling.behandlingID).then((response) => {
       setSendtAnmodningUnntakTilUtland(response?.anmodningsperioder?.some(erAnmodningsperiodeSendt));
     });
-  }, [sisteBehandling]);
+  }, [sisteBehandling.behandlingID]);
 
   useEffect(() => {
     if (sakstype.kode && sakstema.kode) {
