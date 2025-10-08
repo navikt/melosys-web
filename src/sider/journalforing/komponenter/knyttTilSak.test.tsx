@@ -203,4 +203,159 @@ describe("KnyttTilSak", () => {
     // Restore console.error
     consoleSpy.mockRestore();
   });
+
+  describe("State-håndtering ved saksbytting", () => {
+    it("nullstiller behandlingstyper når man bytter til ny sak", async () => {
+      // Første sak med behandlingstyper
+      props.formValues.behandlingstema = "YRKESAKTIV";
+      props.formValues.opprettBehandling = true;
+
+      const { rerender } = await renderWithProvidersAsync(<WrappedKnyttTilSak {...(props as any)} />);
+
+      await waitFor(() => {
+        expect(screen.getByText("Årsavregning")).toBeInTheDocument();
+      });
+
+      // Bytt til ny sak
+      const newProps = {
+        ...props,
+        sak: {
+          ...props.sak,
+          saksnummer: "456",
+          behandlingOversikter: [
+            {
+              behandlingsstatus: { kode: MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET },
+              behandlingstype: { kode: MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG },
+              behandlingstema: { kode: MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV },
+              behandlingID: 2,
+            },
+          ],
+        },
+        formValues: {
+          ...props.formValues,
+          behandlingstema: null, // Nullstilt
+          opprettBehandling: null,
+        },
+      };
+
+      rerender(<WrappedKnyttTilSak {...(newProps as any)} />);
+
+      // State skal være nullstilt - ingen behandlingstyper vises før nytt API-kall
+      await waitFor(() => {
+        const behandlingstypeGroup = screen.queryByRole("group", { name: "Behandlingstype" });
+        expect(behandlingstypeGroup).toBeNull();
+      });
+    });
+
+    it("setter behandlingstema når man bytter til ny sak med avsluttet behandling", async () => {
+      const changeFieldSpy = vi.fn();
+      props.changeField = changeFieldSpy;
+      props.formValues.behandlingstema = null;
+
+      await renderWithProvidersAsync(<WrappedKnyttTilSak {...(props as any)} />);
+
+      // Verifiser at behandlingstema blir satt basert på siste behandling
+      await waitFor(() => {
+        expect(changeFieldSpy).toHaveBeenCalledWith(
+          JournalforingValues.formNavn,
+          JournalforingValues.behandlingstema,
+          MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV,
+        );
+      });
+    });
+
+    it("rendrer korrekt UI etter saksbytting fra aktiv til avsluttet behandling", async () => {
+      // Start med aktiv behandling
+      props.sak.behandlingOversikter[0].behandlingsstatus = {
+        kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
+      };
+
+      const { rerender } = await renderWithProvidersAsync(<WrappedKnyttTilSak {...(props as any)} />);
+
+      // Skal vise vurder dokument checkbox for aktiv behandling
+      expect(screen.getByRole("checkbox")).toBeInTheDocument();
+
+      // Bytt til sak med avsluttet behandling
+      const newProps = {
+        ...props,
+        sak: {
+          ...props.sak,
+          saksnummer: "789",
+          behandlingOversikter: [
+            {
+              behandlingsstatus: { kode: MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET },
+              behandlingstype: { kode: MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG },
+              behandlingstema: { kode: MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV },
+              behandlingID: 3,
+            },
+          ],
+        },
+      };
+
+      rerender(<WrappedKnyttTilSak {...(newProps as any)} />);
+
+      // Skal vise opprett behandling-panelet for avsluttet behandling
+      await waitFor(() => {
+        expect(screen.getByText("Tidligere behandling er avsluttet.")).toBeInTheDocument();
+        expect(screen.getByText("Velg hva du vil gjøre med dokumentet")).toBeInTheDocument();
+      });
+    });
+
+    it("bytter korrekt mellom panelvisning, feilmelding og tilbake til panelvisning", async () => {
+      props.erJournalføring = false;
+
+      // 1. Start med avsluttet behandling - skal vise panelet
+      props.sak.behandlingOversikter[0].behandlingsstatus = {
+        kode: MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET,
+      };
+
+      const { rerender } = await renderWithProvidersAsync(<WrappedKnyttTilSak {...(props as any)} />);
+
+      await waitFor(() => {
+        expect(screen.getByText("Tidligere behandling er avsluttet.")).toBeInTheDocument();
+      });
+
+      // 2. Bytt til henlagt sak - skal vise feilmelding
+      const henlagtSak = {
+        ...props,
+        sak: {
+          ...props.sak,
+          saksnummer: "MEL-456",
+          saksstatus: { kode: MKV.Koder.saksstatuser.HENLAGT },
+        },
+      };
+
+      rerender(<WrappedKnyttTilSak {...(henlagtSak as any)} />);
+
+      await waitFor(() => {
+        expect(screen.queryByText("Tidligere behandling er avsluttet.")).toBeNull();
+        expect(screen.getByText(/Du kan ikke opprette en ny behandling/i)).toBeInTheDocument();
+      });
+
+      // 3. Bytt tilbake til første sak - skal vise panelet igjen
+      const tilbakeTilFørste = {
+        ...props,
+        sak: {
+          ...props.sak,
+          saksnummer: "123",
+          saksstatus: { kode: MKV.Koder.saksstatuser.UNDER_BEHANDLING },
+          behandlingOversikter: [
+            {
+              behandlingsstatus: { kode: MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET },
+              behandlingstype: { kode: MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG },
+              behandlingstema: { kode: MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV },
+              behandlingID: 1,
+            },
+          ],
+        },
+      };
+
+      rerender(<WrappedKnyttTilSak {...(tilbakeTilFørste as any)} />);
+
+      await waitFor(() => {
+        expect(screen.queryByText(/Du kan ikke opprette en ny behandling/i)).toBeNull();
+        expect(screen.getByText("Tidligere behandling er avsluttet.")).toBeInTheDocument();
+      });
+    });
+  });
 });
