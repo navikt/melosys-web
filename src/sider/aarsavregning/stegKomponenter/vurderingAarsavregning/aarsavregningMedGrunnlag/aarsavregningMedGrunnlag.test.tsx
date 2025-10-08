@@ -71,7 +71,7 @@ describe("AarsavregningMedGrunnlag", () => {
   });
 
   describe("Grunnlag-valglogikk", () => {
-    it("skal bruke nyttGrunnlag når det eksisterer", async () => {
+    it("skal bruke nyttTrygdeavgiftsGrunnlag når det eksisterer", async () => {
       const mockResponse: AarsavregningResponse = {
         aarsavregningID: 1,
         aar: 2023,
@@ -134,14 +134,14 @@ describe("AarsavregningMedGrunnlag", () => {
         expect(Api.Aarsavregning.hentAarsavregning).toHaveBeenCalled();
       });
 
-      // Verifiser at nyttGrunnlag-data blir brukt (600000 i stedet for 500000)
+      // Verifiser at nyttTrygdeavgiftsGrunnlag-data blir brukt (600000 i stedet for 500000)
       await waitFor(() => {
         const state = store.getState();
         expect(state.aarsavregning.data).toBeDefined();
       });
     });
 
-    it("skal bruke tidligere grunnlag når bestemmelse matcher og ingen nyttGrunnlag eksisterer", async () => {
+    it("skal bruke tidligere grunnlag når bestemmelse matcher og ingen nyttTrygdeavgiftsGrunnlag eksisterer", async () => {
       const mockResponse: AarsavregningResponse = {
         aarsavregningID: 1,
         aar: 2023,
@@ -374,7 +374,7 @@ describe("AarsavregningMedGrunnlag", () => {
   });
 
   describe("Prioritering av grunnlagkilder", () => {
-    it("skal prioritere nyttGrunnlag over matchende bestemmelse", async () => {
+    it("skal prioritere nyttTrygdeavgiftsGrunnlag over matchende bestemmelse", async () => {
       const mockResponse: AarsavregningResponse = {
         aarsavregningID: 1,
         aar: 2023,
@@ -451,10 +451,10 @@ describe("AarsavregningMedGrunnlag", () => {
         expect(Api.Aarsavregning.hentAarsavregning).toHaveBeenCalled();
       });
 
-      // Skal bruke nyttGrunnlag selv om bestemmelse matcher
+      // Skal bruke nyttTrygdeavgiftsGrunnlag selv om bestemmelse matcher
       await waitFor(() => {
         const state = store.getState();
-        expect(state.aarsavregning.data?.nyttGrunnlag?.avgift.totalInntekt).toBe(700000);
+        expect(state.aarsavregning.data?.nyttTrygdeavgiftsGrunnlag?.avgift.totalInntekt).toBe(700000);
       });
     });
   });
