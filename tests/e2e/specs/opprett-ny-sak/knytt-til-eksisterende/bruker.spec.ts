@@ -47,7 +47,7 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgKnyttTilEksisterendeSak();
 
-    const valgtSak = await opprettNySakPage.velgFørsteEOSSak();
+    const valgtSak = await opprettNySakPage.velgFørsteSak("EU/EØS-land");
 
     expect(valgtSak, "Ingen EØS-sak funnet").toBeTruthy();
 
@@ -69,7 +69,7 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgKnyttTilEksisterendeSak();
 
-    const valgtSak = await opprettNySakPage.velgFørsteAvtalelandSak("Behandlingen er opprettet");
+    const valgtSak = await opprettNySakPage.velgFørsteSak("Avtaleland", "Behandlingen er opprettet");
     expect(valgtSak, "Ingen Avtaleland-sak funnet").toBeTruthy();
 
     await opprettNySakPage.verifiserTilgjengeligeBehandlingstyper(valgtSak, ["Årsavregning"]);
@@ -86,7 +86,7 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgKnyttTilEksisterendeSak();
 
-    const valgtSak = await opprettNySakPage.velgFørsteAvtalelandSak("Behandlingen er avsluttet");
+    const valgtSak = await opprettNySakPage.velgFørsteSak("EU/EØS-land", "Behandlingen er avsluttet");
 
     expect(valgtSak, "Fant ingen 'Avtaleland - Behandlingen er avsluttet' saker").toBeTruthy();
 
@@ -160,7 +160,7 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
     await opprettNySakPage.velgKnyttTilEksisterendeSak();
 
     // Test grunnleggende navigasjon og at behandlingstype-seksjonen fungerer
-    const valgtSak = await opprettNySakPage.velgFørsteUtenforAvtalelandSak();
+    const valgtSak = await opprettNySakPage.velgFørsteSak("Utenfor avtaleland");
 
     expect(valgtSak, "Ingen Avtaleland-sak funnet").toBeTruthy();
 
@@ -174,7 +174,7 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
       // Test navigasjon til annen sak
       await opprettNySakPage.velgSakVedIndex(1);
 
-      await opprettNySakPage.velgFørsteUtenforAvtalelandSak();
+      await opprettNySakPage.velgFørsteSak("Utenfor avtaleland");
     }
 
     // Sjekk at UI-en fungerer etter navigasjon - at den ikke krasjer
