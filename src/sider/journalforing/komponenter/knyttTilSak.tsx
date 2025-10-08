@@ -1,10 +1,9 @@
-import { useEffect, useState } from "react";
+import { Dispatch, useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { change } from "redux-form";
-import PT from "prop-types";
+import { change, FormAction } from "redux-form";
+import { KTObject } from "@navikt/melosys-kodeverk";
 
 import { MKVUtils } from "../../../melosyskodeverk";
-import * as MPT from "../../../proptypes";
 import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Nav from "../../../navFrontend";
 import * as Api from "../../../services/api";
@@ -13,10 +12,42 @@ import * as Utils from "../../../utils";
 import "./knyttTilSak.less";
 import { useAsyncCallbackState } from "../../../hooks";
 import { harFlerePågåendeBehandlinger } from "../../../melosyskodeverk/utils";
-import { FTRL } from "../../../services/api-constants.js";
 import MKV from "../../../melosyskodeverk/index.js";
 
-export function KnyttTilSak(props) {
+interface BehandlingOversikt {
+  behandlingID: number;
+  behandlingsstatus: KTObject;
+  behandlingstype: KTObject;
+  behandlingstema: KTObject;
+}
+
+interface Sak {
+  saksnummer: string;
+  sakstype: KTObject;
+  sakstema: KTObject;
+  saksstatus: KTObject;
+  behandlingOversikter: BehandlingOversikt[];
+}
+
+interface FeltNavn {
+  formNavn: string;
+  opprettBehandling: string;
+  behandlingstema: string;
+  behandlingstype: string;
+  hovedpart: string;
+}
+
+interface KnyttTilSakProps {
+  sak: Sak;
+  erJournalføring: boolean;
+  changeField: (formNavn: string, feltNavn: string, verdi: unknown) => void;
+  feltNavn: FeltNavn;
+  formValues: {
+    [key: string]: unknown;
+  };
+}
+
+export function KnyttTilSak(props: KnyttTilSakProps) {
   const { sak, erJournalføring, changeField, feltNavn, formValues } = props;
   const { behandlingstema, behandlingstype, journalforingGjelder, opprettBehandling } = {
     opprettBehandling: formValues[feltNavn.opprettBehandling],
@@ -25,8 +56,8 @@ export function KnyttTilSak(props) {
     journalforingGjelder: formValues[feltNavn.hovedpart],
   };
   const { behandlingOversikter, sakstype, sakstema } = sak;
-  const [muligeBehandlingstemaer, setMuligeBehandlingstemaer] = useState();
-  const [muligeBehandlingstyper, setMuligeBehandlingstyper] = useState();
+  const [muligeBehandlingstemaer, setMuligeBehandlingstemaer] = useState<KTObject[]>();
+  const [muligeBehandlingstyper, setMuligeBehandlingstyper] = useState<KTObject[]>();
   const [sisteBehandlingHarSendtAnmodningUnntakTilUtland, setSendtAnmodningUnntakTilUtland] = useState(false);
   const sisteBehandling = behandlingOversikter[0];
   const [{ harBehandlingMedTrygdeavgift }] = useAsyncCallbackState(
@@ -53,7 +84,7 @@ export function KnyttTilSak(props) {
     sisteBehandlingHarSendtAnmodningUnntakTilUtland && !sisteBehandlingErInaktiv;
 
   const sisteBehandlingKanOpprettesAndregangsbehandlingPå =
-    sisteBehandlingErInaktiv || sisteBehandlingErPågåendeArtikkel16Sak || muligeBehandlingstyper?.length > 0;
+    sisteBehandlingErInaktiv || sisteBehandlingErPågåendeArtikkel16Sak || (muligeBehandlingstyper?.length ?? 0) > 0;
 
   useEffect(() => {
     if (sisteBehandlingErPågåendeArtikkel16Sak && erJournalføring) {
@@ -76,7 +107,7 @@ export function KnyttTilSak(props) {
   ]);
 
   useEffect(() => {
-    const erAnmodningsperiodeSendt = (anmodningsperiode) => anmodningsperiode.sendtUtland;
+    const erAnmodningsperiodeSendt = (anmodningsperiode: { sendtUtland: boolean }) => anmodningsperiode.sendtUtland;
 
     Api.Anmodningsperioder.hent(sisteBehandling.behandlingID).then((response) => {
       setSendtAnmodningUnntakTilUtland(response?.anmodningsperioder?.some(erAnmodningsperiodeSendt));
@@ -205,7 +236,7 @@ export function KnyttTilSak(props) {
             </Skjema.RadioGroup>
           </div>
         )}
-        {opprettBehandling && (
+        {(opprettBehandling as boolean) && (
           <div className="panelElement">
             <Nav.Heading size="xsmall" className="overskrift">
               Velg tema og type for ny behandling
@@ -213,12 +244,12 @@ export function KnyttTilSak(props) {
             <Skjema.Select
               feltNavn={feltNavn.behandlingstema}
               label="Behandlingstema"
-              emptyFieldDisabled={behandlingstema?.kode}
+              emptyFieldDisabled={!!(behandlingstema as { kode?: string })?.kode}
               disabled={harBehandlingMedTrygdeavgift}
               className={harBehandlingMedTrygdeavgift ? "select__slim" : undefined}
             >
               {muligeBehandlingstemaer?.map((elem) => (
-                <option key={elem.kode} value={elem.kode} label={elem.term} />
+                <option key={elem.kode} value={elem.kode} label={elem.term ?? undefined} />
               ))}
             </Skjema.Select>
             {harBehandlingMedTrygdeavgift && (
@@ -263,16 +294,8 @@ export function KnyttTilSak(props) {
   );
 }
 
-KnyttTilSak.propTypes = {
-  sak: MPT.Fagsak.isRequired,
-  erJournalføring: PT.bool.isRequired,
-  changeField: PT.func.isRequired,
-  feltNavn: PT.object.isRequired,
-  formValues: PT.object.isRequired,
-};
-
-const mapDispatchToProps = (dispatch) => ({
-  changeField: (feltNavn, felt, verdi) => dispatch(change(feltNavn, felt, verdi)),
+const mapDispatchToProps = (dispatch: Dispatch<FormAction>) => ({
+  changeField: (feltNavn: string, felt: string, verdi: unknown) => dispatch(change(feltNavn, felt, verdi)),
 });
 
 export default connect(null, mapDispatchToProps)(KnyttTilSak);
