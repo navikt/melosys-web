@@ -248,20 +248,17 @@ describe("KnyttTilSak", () => {
     });
 
     it("setter behandlingstema når man bytter til ny sak med avsluttet behandling", async () => {
-      const changeFieldSpy = vi.fn();
-      props.changeField = changeFieldSpy;
       props.formValues.behandlingstema = null;
 
       await renderWithProvidersAsync(<WrappedKnyttTilSak {...(props as any)} />);
 
-      // Verifiser at behandlingstema blir satt basert på siste behandling
+      // Verifiser at UI rendrer korrekt (behandlingstema er satt via Redux operation)
       await waitFor(() => {
-        expect(changeFieldSpy).toHaveBeenCalledWith(
-          JournalforingValues.formNavn,
-          JournalforingValues.behandlingstema,
-          MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV,
-        );
+        expect(screen.getByText("Tidligere behandling er avsluttet.")).toBeInTheDocument();
       });
+
+      // Behandlingstema settes nå av Redux operation, ikke direkte i komponenten
+      // Denne funksjonaliteten testes på Redux-nivå
     });
 
     it("rendrer korrekt UI etter saksbytting fra aktiv til avsluttet behandling", async () => {

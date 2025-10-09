@@ -1,16 +1,14 @@
 import { Dispatch, useEffect, useState } from "react";
-import { connect } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import { change, FormAction } from "redux-form";
 import { KTObject } from "@navikt/melosys-kodeverk";
 
-import { MKVUtils } from "../../../melosyskodeverk";
 import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Nav from "../../../navFrontend";
-import * as Api from "../../../services/api";
+import { journalforingOperations } from "../../../ducks/journalforing";
 import * as Utils from "../../../utils";
 
 import "./knyttTilSak.less";
-import { useAsyncCallbackState } from "../../../hooks";
 import { harFlerePågåendeBehandlinger } from "../../../melosyskodeverk/utils";
 import MKV from "../../../melosyskodeverk/index.js";
 
@@ -47,6 +45,27 @@ interface KnyttTilSakProps {
   };
 }
 
+interface KnyttTilSakState {
+  muligeBehandlingstemaer: KTObject[];
+  muligeBehandlingstyper: KTObject[];
+  harBehandlingMedTrygdeavgift: boolean;
+  sisteBehandlingErInaktiv: boolean;
+  sakKanIkkeViderebehandles: boolean;
+  sisteBehandlingErPågåendeArtikkel16Sak: boolean;
+  sisteBehandlingKanOpprettesAndregangsbehandlingPå: boolean;
+  isLoading: boolean;
+}
+
+interface PrepareKnyttTilSakFormResult {
+  muligeBehandlingstemaer: KTObject[];
+  muligeBehandlingstyper: KTObject[];
+  harBehandlingMedTrygdeavgift: boolean;
+  sisteBehandlingErInaktiv?: boolean;
+  sakKanIkkeViderebehandles?: boolean;
+  sisteBehandlingErPågåendeArtikkel16Sak?: boolean;
+  sisteBehandlingKanOpprettesAndregangsbehandlingPå?: boolean;
+}
+
 export function KnyttTilSak(props: KnyttTilSakProps) {
   const { sak, erJournalføring, changeField, feltNavn, formValues } = props;
   const { behandlingstema, behandlingstype, journalforingGjelder, opprettBehandling } = {
@@ -55,32 +74,64 @@ export function KnyttTilSak(props: KnyttTilSakProps) {
     behandlingstype: formValues[feltNavn.behandlingstype],
     journalforingGjelder: formValues[feltNavn.hovedpart],
   };
-  const { behandlingOversikter, sakstype, sakstema } = sak;
-  const [muligeBehandlingstemaer, setMuligeBehandlingstemaer] = useState<KTObject[]>();
-  const [muligeBehandlingstyper, setMuligeBehandlingstyper] = useState<KTObject[]>();
-  const [sisteBehandlingHarSendtAnmodningUnntakTilUtland, setSendtAnmodningUnntakTilUtland] = useState(false);
+  const { behandlingOversikter, sakstype } = sak;
   const sisteBehandling = behandlingOversikter[0];
-  const [{ harBehandlingMedTrygdeavgift }] = useAsyncCallbackState(
-    () => Api.Fagsaker.fagsak.hentTrygdeavgiftOppsummering(sak.saksnummer),
-    { harBehandlingMedTrygdeavgift: false },
-    [],
-  );
+  const dispatch = useDispatch();
 
-  // Nullstill lokal state når man bytter sak
-  // Form-verdier oppdateres automatisk av andre effects når API-kall er ferdige
-  useEffect(() => {
-    setMuligeBehandlingstemaer([]);
-    setMuligeBehandlingstyper([]);
-    setSendtAnmodningUnntakTilUtland(false);
-  }, [sak.saksnummer]);
+  // State for data fra operasjonen
+  const [state, setState] = useState<KnyttTilSakState>({
+    muligeBehandlingstemaer: [],
+    muligeBehandlingstyper: [],
+    harBehandlingMedTrygdeavgift: false,
+    sisteBehandlingErInaktiv: false,
+    sakKanIkkeViderebehandles: false,
+    sisteBehandlingErPågåendeArtikkel16Sak: false,
+    sisteBehandlingKanOpprettesAndregangsbehandlingPå: false,
+    isLoading: true,
+  });
 
-  // Sett behandlingstema tidlig for å bryte circular dependency
+  // Hovedeffect: Kaller operasjonen når sak eller journalforingGjelder endres
   useEffect(() => {
-    if (sisteBehandling?.behandlingstema?.kode && Utils._isEmpty(behandlingstema)) {
+    setState((prev) => ({ ...prev, isLoading: true }));
+
+    // Thunk operation - dispatch returnerer Promise
+    const thunk = journalforingOperations.prepareKnyttTilSakForm(
+      sak,
+      erJournalføring,
+      journalforingGjelder as string,
+      feltNavn,
+    );
+
+    // Type assertion for thunk dispatch som returnerer Promise
+    const dispatchResult = dispatch(thunk as never) as Promise<PrepareKnyttTilSakFormResult>;
+
+    dispatchResult.then((result: PrepareKnyttTilSakFormResult) => {
+      setState({
+        muligeBehandlingstemaer: result.muligeBehandlingstemaer || [],
+        muligeBehandlingstyper: result.muligeBehandlingstyper || [],
+        harBehandlingMedTrygdeavgift: result.harBehandlingMedTrygdeavgift || false,
+        sisteBehandlingErInaktiv: result.sisteBehandlingErInaktiv || false,
+        sakKanIkkeViderebehandles: result.sakKanIkkeViderebehandles || false,
+        sisteBehandlingErPågåendeArtikkel16Sak: result.sisteBehandlingErPågåendeArtikkel16Sak || false,
+        sisteBehandlingKanOpprettesAndregangsbehandlingPå:
+          result.sisteBehandlingKanOpprettesAndregangsbehandlingPå || false,
+        isLoading: false,
+      });
+    });
+  }, [sak.saksnummer, journalforingGjelder, erJournalføring, feltNavn, dispatch]);
+
+  // Håndterer brukerinteraksjoner: Oppdatering av behandlingstema
+  useEffect(() => {
+    if (opprettBehandling && Utils._isEmpty(behandlingstema)) {
       changeField(feltNavn.formNavn, feltNavn.behandlingstema, sisteBehandling.behandlingstema.kode);
     }
-  }, [sak.saksnummer, sisteBehandling?.behandlingstema?.kode]);
+    // Nullstill behandlingstype når opprettBehandling er false
+    if (!opprettBehandling && !Utils._isEmpty(behandlingstype)) {
+      changeField(feltNavn.formNavn, feltNavn.behandlingstype, "");
+    }
+  }, [opprettBehandling]);
 
+  // Cleanup ved unmount
   useEffect(() => {
     return () => {
       if (erJournalføring) changeField(feltNavn.formNavn, "vurderDokument", undefined);
@@ -90,125 +141,11 @@ export function KnyttTilSak(props: KnyttTilSakProps) {
     };
   }, []);
 
-  const sisteBehandlingErInaktiv = MKVUtils.erAvsluttetEllerMidlertidigBeslutning(
-    sisteBehandling.behandlingsstatus.kode,
-  );
-  const sakKanIkkeViderebehandles = MKVUtils.erOpphørtEllerHenlagtEllerBortfaltEllerAnnullert(sak.saksstatus.kode);
-
-  const sisteBehandlingErPågåendeArtikkel16Sak =
-    sisteBehandlingHarSendtAnmodningUnntakTilUtland && !sisteBehandlingErInaktiv;
-
-  const sisteBehandlingKanOpprettesAndregangsbehandlingPå =
-    sisteBehandlingErInaktiv || sisteBehandlingErPågåendeArtikkel16Sak || (muligeBehandlingstyper?.length ?? 0) > 0;
-
-  useEffect(() => {
-    if (sisteBehandlingErPågåendeArtikkel16Sak && erJournalføring) {
-      changeField(feltNavn.formNavn, feltNavn.opprettBehandling, undefined);
-    } else {
-      const kanOppretteAndregangsbehandling =
-        sisteBehandlingKanOpprettesAndregangsbehandlingPå && !sakKanIkkeViderebehandles;
-      changeField(feltNavn.formNavn, feltNavn.opprettBehandling, kanOppretteAndregangsbehandling);
-    }
-
-    if (erJournalføring) {
-      const skalIkkeVurdereDokument = sisteBehandlingKanOpprettesAndregangsbehandlingPå || sakKanIkkeViderebehandles;
-      const defaultVurderDokument = !skalIkkeVurdereDokument || sisteBehandlingErPågåendeArtikkel16Sak;
-      changeField(feltNavn.formNavn, "vurderDokument", defaultVurderDokument);
-    }
-  }, [
-    sisteBehandlingKanOpprettesAndregangsbehandlingPå,
-    sakKanIkkeViderebehandles,
-    sisteBehandlingErPågåendeArtikkel16Sak,
-  ]);
-
-  useEffect(() => {
-    const erAnmodningsperiodeSendt = (anmodningsperiode: { sendtUtland: boolean }) => anmodningsperiode.sendtUtland;
-
-    Api.Anmodningsperioder.hent(sisteBehandling.behandlingID).then((response) => {
-      setSendtAnmodningUnntakTilUtland(response?.anmodningsperioder?.some(erAnmodningsperiodeSendt));
-    });
-  }, [sisteBehandling.behandlingID]);
-
-  useEffect(() => {
-    if (sakstype.kode && sakstema.kode) {
-      Api.LovligeKombinasjoner.hentBehandlingstemaer(
-        journalforingGjelder,
-        sakstype.kode,
-        sakstema.kode,
-        null,
-        sisteBehandling.behandlingstema.kode,
-      ).then((alleMuligeBehandlingstemaer) => {
-        setMuligeBehandlingstemaer(alleMuligeBehandlingstemaer);
-      });
-    }
-  }, [journalforingGjelder, sakstype.kode, sakstema.kode, sisteBehandling?.behandlingstema?.kode]);
-
-  useEffect(() => {
-    if (sakstype.kode && sakstema.kode && behandlingstema) {
-      Api.LovligeKombinasjoner.hentBehandlingstyperForKnyttTilSak(journalforingGjelder, sak.saksnummer, behandlingstema)
-        .then((alleMuligeBehandlingstyper) => {
-          setMuligeBehandlingstyper(alleMuligeBehandlingstyper);
-        })
-        .catch((error) => {
-          /* eslint-disable-next-line no-console */
-          console.error("Kunne ikke hente behandlingstyper:", error);
-          setMuligeBehandlingstyper([]);
-        });
-    } else {
-      setMuligeBehandlingstyper([]);
-    }
-  }, [journalforingGjelder, sakstype.kode, sakstema.kode, behandlingstema, sisteBehandling?.behandlingID]);
-
-  // Håndterer setting av behandlingstema basert på opprettBehandling tilstand
-  useEffect(() => {
-    if (opprettBehandling && Utils._isEmpty(behandlingstema)) {
-      changeField(feltNavn.formNavn, feltNavn.behandlingstema, sisteBehandling.behandlingstema.kode);
-    }
-    // Setter behandlingstema når opprettBehandling er undefined (visse journalføringsscenarier)
-    else if (
-      opprettBehandling === undefined &&
-      Utils._isEmpty(behandlingstema) &&
-      sisteBehandlingKanOpprettesAndregangsbehandlingPå &&
-      !sakKanIkkeViderebehandles
-    ) {
-      changeField(feltNavn.formNavn, feltNavn.behandlingstema, sisteBehandling.behandlingstema.kode);
-    }
-    // Setter behandlingstema i journalføring selv når opprettBehandling er false
-    else if (
-      erJournalføring &&
-      Utils._isEmpty(behandlingstema) &&
-      sisteBehandling?.behandlingstema?.kode &&
-      !sakKanIkkeViderebehandles
-    ) {
-      changeField(feltNavn.formNavn, feltNavn.behandlingstema, sisteBehandling.behandlingstema.kode);
-    }
-    // Nullstiller behandlingstema kun når det ikke trengs for journalføring
-    else if (
-      !opprettBehandling &&
-      !Utils._isEmpty(behandlingstema) &&
-      opprettBehandling !== undefined &&
-      !(erJournalføring && !sakKanIkkeViderebehandles)
-    ) {
-      changeField(feltNavn.formNavn, feltNavn.behandlingstema, "");
-    }
-    if (!opprettBehandling && !Utils._isEmpty(behandlingstype)) {
-      changeField(feltNavn.formNavn, feltNavn.behandlingstype, "");
-    }
-  }, [
-    opprettBehandling,
-    behandlingstema,
-    behandlingstype,
-    sisteBehandling?.behandlingstema?.kode,
-    sisteBehandlingKanOpprettesAndregangsbehandlingPå,
-    sakKanIkkeViderebehandles,
-    erJournalføring,
-  ]);
-
   function VurderDokumentCheckbox() {
     return <Skjema.Checkbox feltNavn="vurderDokument" label={`Oppdater behandlingsstatus til "Vurder dokument"`} />;
   }
 
-  if (sakKanIkkeViderebehandles) {
+  if (state.sakKanIkkeViderebehandles) {
     return (
       <div className="knyttTilSak__behandlingspanel">
         {erJournalføring ? (
@@ -226,15 +163,15 @@ export function KnyttTilSak(props: KnyttTilSakProps) {
     );
   }
 
-  if (sisteBehandlingKanOpprettesAndregangsbehandlingPå) {
+  if (state.sisteBehandlingKanOpprettesAndregangsbehandlingPå) {
     return (
       <div className="knyttTilSak__panelramme">
-        {sisteBehandlingErPågåendeArtikkel16Sak && (
+        {state.sisteBehandlingErPågåendeArtikkel16Sak && (
           <Nav.Alert variant="warning" className="anmodningSvarSendt">
             Hvis du har mottatt svar på anmodning om unntak skal du <b>ikke</b> opprette en ny behandling.
           </Nav.Alert>
         )}
-        {sisteBehandlingErInaktiv && (
+        {state.sisteBehandlingErInaktiv && (
           <Nav.Alert variant="info" className="tidligereBehandlingAvsluttet">
             Tidligere behandling er avsluttet.
           </Nav.Alert>
@@ -260,20 +197,20 @@ export function KnyttTilSak(props: KnyttTilSakProps) {
               feltNavn={feltNavn.behandlingstema}
               label="Behandlingstema"
               emptyFieldDisabled={!!(behandlingstema as { kode?: string })?.kode}
-              disabled={harBehandlingMedTrygdeavgift}
-              className={harBehandlingMedTrygdeavgift ? "select__slim" : undefined}
+              disabled={state.harBehandlingMedTrygdeavgift}
+              className={state.harBehandlingMedTrygdeavgift ? "select__slim" : undefined}
             >
-              {muligeBehandlingstemaer?.map((elem) => (
+              {state.muligeBehandlingstemaer?.map((elem) => (
                 <option key={elem.kode} value={elem.kode} label={elem.term ?? undefined} />
               ))}
             </Skjema.Select>
-            {harBehandlingMedTrygdeavgift && (
+            {state.harBehandlingMedTrygdeavgift && (
               <Nav.Detail className="behandlingstema__label">
                 Du kan ikke endre behandlingstema når saken har en tilknyttet fakturaserie.
               </Nav.Detail>
             )}
             <Skjema.RadioGroup legend="Behandlingstype" name={feltNavn.behandlingstype}>
-              {muligeBehandlingstyper?.map((elem) => (
+              {state.muligeBehandlingstyper?.map((elem) => (
                 <Nav.Radio key={elem.kode} value={elem.kode}>
                   {elem.term}
                 </Nav.Radio>
@@ -281,7 +218,7 @@ export function KnyttTilSak(props: KnyttTilSakProps) {
             </Skjema.RadioGroup>
           </div>
         )}
-        {opprettBehandling === false && sisteBehandlingErPågåendeArtikkel16Sak && (
+        {opprettBehandling === false && state.sisteBehandlingErPågåendeArtikkel16Sak && (
           <div className="panelElement vurderDokument">
             <VurderDokumentCheckbox />
           </div>
