@@ -11,15 +11,9 @@ import * as Utils from "../../../utils";
 import "./knyttTilSak.less";
 import { harFlerePågåendeBehandlinger } from "../../../melosyskodeverk/utils";
 import MKV from "../../../melosyskodeverk/index.js";
+import { BehandlingOversikt } from "../../../services/modules/types/fagsak";
 
-interface BehandlingOversikt {
-  behandlingID: number;
-  behandlingsstatus: KTObject;
-  behandlingstype: KTObject;
-  behandlingstema: KTObject;
-}
-
-interface Sak {
+export interface Sak {
   saksnummer: string;
   sakstype: KTObject;
   sakstema: KTObject;
@@ -27,7 +21,7 @@ interface Sak {
   behandlingOversikter: BehandlingOversikt[];
 }
 
-interface FeltNavn {
+export interface FeltNavn {
   formNavn: string;
   opprettBehandling: string;
   behandlingstema: string;
@@ -35,7 +29,7 @@ interface FeltNavn {
   hovedpart: string;
 }
 
-interface KnyttTilSakProps {
+export interface KnyttTilSakProps {
   sak: Sak;
   erJournalføring: boolean;
   changeField: (formNavn: string, feltNavn: string, verdi: unknown) => void;

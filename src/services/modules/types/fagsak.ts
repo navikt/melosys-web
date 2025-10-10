@@ -25,6 +25,17 @@ interface Fagsak {
   hovedpartRolle: string;
 }
 
+export interface BehandlingOversikt {
+  behandlingID: number;
+  tittel?: string;
+  behandlingsstatus: KTObject;
+  behandlingstype: KTObject;
+  behandlingstema: KTObject;
+  opprettetDato: string;
+  behandlingsresultattype: KTObject;
+  svarFrist: string;
+}
+
 export interface FagsakOppsummering {
   saksnummer: string;
   navn: string;
@@ -34,16 +45,7 @@ export interface FagsakOppsummering {
   land: Soeknadsland;
   periode?: Periode;
   opprettetDato: string;
-  behandlingOversikter: {
-    behandlingID: number;
-    tittel?: string;
-    behandlingsstatus: KTObject;
-    behandlingstype: KTObject;
-    behandlingstema: KTObject;
-    opprettetDato: string;
-    behandlingsresultattype: KTObject;
-    svarFrist: string;
-  }[];
+  behandlingOversikter: BehandlingOversikt[];
   hovedpartRolle: string;
 }
 
