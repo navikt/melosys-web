@@ -234,7 +234,9 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
       ) ||
       Boolean(
         endeligAvgiftValg === MANUELL_ENDELIG_AVGIFT &&
-          aarsavregningResponse?.avregning?.manueltAvgiftBeloep &&
+          aarsavregningResponse?.avregning?.manueltAvgiftBeloep !== undefined &&
+          aarsavregningResponse?.avregning?.manueltAvgiftBeloep !== null &&
+          formIsValid &&
           !feilmelding,
       ),
     [endeligAvgiftValg, formIsValid, aarsavregningResponse, feilmelding, arrayValideringsfeil],
