@@ -39,7 +39,8 @@ const {
 interface InntektskilderProps {
   formValues: FormValuesProps;
   fields: FieldArrayWithId<FieldArrayProps, "inntektskilder">[];
-  control: Control;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  control: Control<any>;
   update: (index: number, inntektskilde: Inntektskilde) => void;
   remove: (index: number) => void;
   append: (inntektskilde: Inntektskilde) => void;

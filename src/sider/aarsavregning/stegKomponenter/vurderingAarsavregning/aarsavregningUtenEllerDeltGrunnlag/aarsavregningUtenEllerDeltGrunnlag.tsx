@@ -72,10 +72,10 @@ export interface MedlemskapTomFomDatoer {
 }
 
 export interface AarsavregningFormValuesProps extends FormValuesProps {
-  trygdeavgiftFraAvgiftssystemet?: number | string;
+  trygdeavgiftFraAvgiftssystemet?: string;
   bestemmelse?: string;
   endeligAvgiftValg: string;
-  manueltAvgiftBeloep?: number | string;
+  manueltAvgiftBeloep?: string;
 }
 
 export function AarsavregningUtenEllerDeltGrunnlag({
