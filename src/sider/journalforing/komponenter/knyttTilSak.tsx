@@ -1,33 +1,24 @@
 import { Dispatch, useEffect, useState } from "react";
-import { connect, useDispatch } from "react-redux";
+import { connect } from "react-redux";
 import { change, FormAction } from "redux-form";
 import { KTObject } from "@navikt/melosys-kodeverk";
+import { useDispatch } from "../../../hooks";
 
 import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Nav from "../../../navFrontend";
-import { journalforingOperations } from "../../../ducks/journalforing";
+import {
+  journalforingOperations,
+  PrepareKnyttTilSakFormResult,
+  journalforingTypes,
+} from "../../../ducks/journalforing";
 import * as Utils from "../../../utils";
 
 import "./knyttTilSak.less";
 import { harFlerePågåendeBehandlinger } from "../../../melosyskodeverk/utils";
 import MKV from "../../../melosyskodeverk/index.js";
-import { BehandlingOversikt } from "../../../services/modules/types/fagsak";
 
-export interface Sak {
-  saksnummer: string;
-  sakstype: KTObject;
-  sakstema: KTObject;
-  saksstatus: KTObject;
-  behandlingOversikter: BehandlingOversikt[];
-}
-
-export interface FeltNavn {
-  formNavn: string;
-  opprettBehandling: string;
-  behandlingstema: string;
-  behandlingstype: string;
-  hovedpart: string;
-}
+type Sak = journalforingTypes.Sak;
+type FeltNavn = journalforingTypes.FeltNavn;
 
 export interface KnyttTilSakProps {
   sak: Sak;
@@ -48,16 +39,6 @@ interface KnyttTilSakState {
   sisteBehandlingErPågåendeArtikkel16Sak: boolean;
   sisteBehandlingKanOpprettesAndregangsbehandlingPå: boolean;
   isLoading: boolean;
-}
-
-interface PrepareKnyttTilSakFormResult {
-  muligeBehandlingstemaer: KTObject[];
-  muligeBehandlingstyper: KTObject[];
-  harBehandlingMedTrygdeavgift: boolean;
-  sisteBehandlingErInaktiv?: boolean;
-  sakKanIkkeViderebehandles?: boolean;
-  sisteBehandlingErPågåendeArtikkel16Sak?: boolean;
-  sisteBehandlingKanOpprettesAndregangsbehandlingPå?: boolean;
 }
 
 export function KnyttTilSak(props: KnyttTilSakProps) {
@@ -88,30 +69,32 @@ export function KnyttTilSak(props: KnyttTilSakProps) {
   useEffect(() => {
     setState((prev) => ({ ...prev, isLoading: true }));
 
-    // Thunk operation - dispatch returnerer Promise
-    const thunk = journalforingOperations.prepareKnyttTilSakForm(
-      sak,
-      erJournalføring,
-      journalforingGjelder as string,
-      feltNavn,
-    );
-
-    // Type assertion for thunk dispatch som returnerer Promise
-    const dispatchResult = dispatch(thunk as never) as Promise<PrepareKnyttTilSakFormResult>;
-
-    dispatchResult.then((result: PrepareKnyttTilSakFormResult) => {
-      setState({
-        muligeBehandlingstemaer: result.muligeBehandlingstemaer || [],
-        muligeBehandlingstyper: result.muligeBehandlingstyper || [],
-        harBehandlingMedTrygdeavgift: result.harBehandlingMedTrygdeavgift || false,
-        sisteBehandlingErInaktiv: result.sisteBehandlingErInaktiv || false,
-        sakKanIkkeViderebehandles: result.sakKanIkkeViderebehandles || false,
-        sisteBehandlingErPågåendeArtikkel16Sak: result.sisteBehandlingErPågåendeArtikkel16Sak || false,
-        sisteBehandlingKanOpprettesAndregangsbehandlingPå:
-          result.sisteBehandlingKanOpprettesAndregangsbehandlingPå || false,
-        isLoading: false,
+    (
+      dispatch(
+        journalforingOperations.prepareKnyttTilSakForm(sak, erJournalføring, journalforingGjelder as string, feltNavn),
+      ) as Promise<PrepareKnyttTilSakFormResult>
+    )
+      .then((result: PrepareKnyttTilSakFormResult) => {
+        setState({
+          muligeBehandlingstemaer: result.muligeBehandlingstemaer || [],
+          muligeBehandlingstyper: result.muligeBehandlingstyper || [],
+          harBehandlingMedTrygdeavgift: result.harBehandlingMedTrygdeavgift || false,
+          sisteBehandlingErInaktiv: result.sisteBehandlingErInaktiv || false,
+          sakKanIkkeViderebehandles: result.sakKanIkkeViderebehandles || false,
+          sisteBehandlingErPågåendeArtikkel16Sak: result.sisteBehandlingErPågåendeArtikkel16Sak || false,
+          sisteBehandlingKanOpprettesAndregangsbehandlingPå:
+            result.sisteBehandlingKanOpprettesAndregangsbehandlingPå || false,
+          isLoading: false,
+        });
+      })
+      .catch((error) => {
+        // eslint-disable-next-line no-console
+        console.error("Feil ved lasting av saksdata:", error);
+        setState((prev) => ({
+          ...prev,
+          isLoading: false,
+        }));
       });
-    });
   }, [sak.saksnummer, journalforingGjelder, erJournalføring, feltNavn, dispatch]);
 
   // Håndterer brukerinteraksjoner: Oppdatering av behandlingstema
