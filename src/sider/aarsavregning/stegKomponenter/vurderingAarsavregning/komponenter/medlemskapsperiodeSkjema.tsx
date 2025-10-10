@@ -131,6 +131,7 @@ export function MedlemskapsperiodeSkjema({
             name={`medlemskapsperioder[${index}].fomDato`}
             aria-label={`Fra og med periode ${index + 1}`}
             readOnly={!redigerbart || erPeriodeFraGrunnlag}
+            forhindreAutoUtfylling={true}
           />
         </Nav.Column>
         <Nav.Column className="dato">
@@ -142,6 +143,7 @@ export function MedlemskapsperiodeSkjema({
             minDate={Utils.dato.norskStringTilDate(medlemskapsperioder[index].fomDato) || minDate}
             maxDate={maxDate}
             readOnly={!redigerbart || erPeriodeFraGrunnlag}
+            forhindreAutoUtfylling={true}
           />
         </Nav.Column>
         <Nav.Column className="trygdedekning">

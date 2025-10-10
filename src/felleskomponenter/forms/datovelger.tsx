@@ -1,4 +1,4 @@
-import { ReactNode, forwardRef, useEffect } from "react";
+import { ReactNode, forwardRef } from "react";
 import { Controller, UseControllerProps } from "react-hook-form";
 
 import * as Utils from "../../utils/dato";
@@ -17,6 +17,7 @@ interface DatovelgerComponentProps {
   feil?: string;
   onChange?: (dato: string) => void;
   className?: string;
+  forhindreAutoUtfylling?: boolean;
 }
 
 type InnerDatovelgerComponentProps = DatovelgerComponentProps & RegisterHookFormProps;
@@ -29,6 +30,7 @@ function InnerDatovelgerComponent({
   maxDate,
   feil,
   onChange,
+  forhindreAutoUtfylling,
   ...rest
 }: InnerDatovelgerComponentProps) {
   return (
@@ -43,6 +45,7 @@ function InnerDatovelgerComponent({
         readOnly={readOnly}
         minDate={minDate}
         maxDate={maxDate}
+        forhindreAutoUtfylling={forhindreAutoUtfylling}
       />
     </div>
   );
@@ -65,6 +68,7 @@ const Datovelger = forwardRef<HTMLSelectElement, DatovelgerProps>(
             bredde={rest.bredde}
             minDate={rest.minDate}
             maxDate={rest.maxDate}
+            forhindreAutoUtfylling={rest.forhindreAutoUtfylling}
             onChange={(value: any) => {
               field.onChange(value || "");
               if (rest.onChange) rest.onChange(value);

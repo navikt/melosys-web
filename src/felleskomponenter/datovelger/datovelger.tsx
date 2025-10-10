@@ -19,6 +19,7 @@ interface DatovelgerProps {
   onCalendarClose?: () => void;
   brukInternValidering?: boolean;
   visFeil?: boolean;
+  forhindreAutoUtfylling?: boolean;
 }
 
 function Datovelger({
@@ -33,6 +34,7 @@ function Datovelger({
   onBlur,
   brukInternValidering = false,
   visFeil = true,
+  forhindreAutoUtfylling = false,
 }: DatovelgerProps) {
   const [erUgyldigDato, setErUgyldigDato] = useState<boolean>(false);
   const { datepickerProps, inputProps } = useDatepicker({
@@ -66,6 +68,18 @@ function Datovelger({
     const currentValue = event.target.value.trim();
 
     if (currentValue && !readOnly) {
+      // Forhindrer at NAV DatePicker auto-fyller datoer, ofte til helt ugyldige verdier (f.eks, "1" til "01.01.0001"
+      // La verdiene stå, det vises en klar feilmelding
+      if (forhindreAutoUtfylling) {
+        const renDato = currentValue.replace(/[-./]/g, "");
+        if (renDato.length < 6) {
+          if (onBlur) {
+            onBlur(event);
+          }
+          return;
+        }
+      }
+
       const formattedValue = Utils.dato.vaskOgFormatterDatoTilNorsk(currentValue, "");
       if (formattedValue && formattedValue !== currentValue) {
         if (inputProps?.onChange) {

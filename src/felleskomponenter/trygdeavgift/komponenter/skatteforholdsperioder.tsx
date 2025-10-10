@@ -21,6 +21,7 @@ interface SkatteforholdsperioderProps {
   defaultPeriode?: { fomDato: string; tomDato: string };
   minDate?: Date;
   maxDate?: Date;
+  forhindreAutoUtfylling?: boolean;
 }
 
 export function Skatteforholdsperioder({
@@ -33,6 +34,7 @@ export function Skatteforholdsperioder({
   fields,
   minDate,
   maxDate,
+  forhindreAutoUtfylling,
 }: SkatteforholdsperioderProps) {
   return (
     <div className="perioder">
@@ -47,6 +49,7 @@ export function Skatteforholdsperioder({
               control={control}
               minDate={minDate}
               maxDate={maxDate}
+              forhindreAutoUtfylling={forhindreAutoUtfylling}
             />
 
             <Forms.Datovelger
@@ -57,6 +60,7 @@ export function Skatteforholdsperioder({
               control={control}
               minDate={Utils.dato.norskStringTilDate(formValues.skatteforholdsperioder[index].fomDato) || minDate}
               maxDate={maxDate}
+              forhindreAutoUtfylling={forhindreAutoUtfylling}
             />
 
             <Forms.RadioGroup
