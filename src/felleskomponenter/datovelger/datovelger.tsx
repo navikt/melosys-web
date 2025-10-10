@@ -20,6 +20,7 @@ interface DatovelgerProps {
   brukInternValidering?: boolean;
   visFeil?: boolean;
   forhindreAutoUtfylling?: boolean;
+  laasAar?: boolean;
 }
 
 function Datovelger({
@@ -35,6 +36,7 @@ function Datovelger({
   brukInternValidering = false,
   visFeil = true,
   forhindreAutoUtfylling = false,
+  laasAar = false,
 }: DatovelgerProps) {
   const [erUgyldigDato, setErUgyldigDato] = useState<boolean>(false);
   const { datepickerProps, inputProps } = useDatepicker({
@@ -68,10 +70,29 @@ function Datovelger({
     const currentValue = event.target.value.trim();
 
     if (currentValue && !readOnly) {
+      // Automatisk legg til år hvis laasAar er aktivert og bruker kun skrev dag/måned
+      // Dette må skje FØR forhindreAutoUtfylling-sjekken
+      let valueToFormat = currentValue;
+      let harLagtTilAar = false;
+      if (laasAar) {
+        const renDato = currentValue.replace(/[-./]/g, "");
+        // Hvis input er 4 tegn (ddmm) eller har format dd.mm (men mangler år)
+        if (renDato.length === 4) {
+          // Hent året fra minDate eller maxDate
+          const aar = minDate?.getFullYear() || maxDate?.getFullYear() || new Date().getFullYear();
+          // Formater som dd.mm.yyyy
+          const dag = renDato.substring(0, 2);
+          const maaned = renDato.substring(2, 4);
+          valueToFormat = `${dag}.${maaned}.${aar}`;
+          harLagtTilAar = true;
+        }
+      }
+
       // Forhindrer at NAV DatePicker auto-fyller datoer, ofte til helt ugyldige verdier (f.eks, "1" til "01.01.0001"
       // La verdiene stå, det vises en klar feilmelding
-      if (forhindreAutoUtfylling) {
-        const renDato = currentValue.replace(/[-./]/g, "");
+      // Sjekk verdien ETTER at år er lagt til (hvis laasAar er aktivt)
+      if (forhindreAutoUtfylling && !harLagtTilAar) {
+        const renDato = valueToFormat.replace(/[-./]/g, "");
         if (renDato.length < 6) {
           if (onBlur) {
             onBlur(event);
@@ -80,8 +101,13 @@ function Datovelger({
         }
       }
 
-      const formattedValue = Utils.dato.vaskOgFormatterDatoTilNorsk(currentValue, "");
-      if (formattedValue && formattedValue !== currentValue) {
+      const formattedValue = Utils.dato.vaskOgFormatterDatoTilNorsk(valueToFormat, "");
+
+      // Hvis vi la til år eller verdien ble formatert, oppdater feltet
+      if ((harLagtTilAar || (formattedValue && formattedValue !== currentValue)) && formattedValue) {
+        // Oppdater input-feltets verdi direkte
+        event.target.value = formattedValue;
+
         if (inputProps?.onChange) {
           const syntheticEvent = {
             ...event,
@@ -89,6 +115,9 @@ function Datovelger({
           } as ChangeEvent<HTMLInputElement>;
           inputProps.onChange(syntheticEvent);
         }
+
+        // Oppdater react-hook-form
+        onChange(formattedValue);
       }
     }
 

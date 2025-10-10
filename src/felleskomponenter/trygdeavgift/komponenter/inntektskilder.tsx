@@ -51,6 +51,7 @@ interface InntektskilderProps {
   minDate?: Date;
   maxDate?: Date;
   forhindreAutoUtfylling?: boolean;
+  laasAar?: boolean;
 }
 
 const hentInntektskilde = (
@@ -100,6 +101,7 @@ export function Inntektskilder({
   minDate,
   maxDate,
   forhindreAutoUtfylling,
+  laasAar,
 }: InntektskilderProps) {
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
 
@@ -151,6 +153,7 @@ export function Inntektskilder({
                 minDate={minDate}
                 maxDate={maxDate}
                 forhindreAutoUtfylling={forhindreAutoUtfylling}
+                laasAar={laasAar}
               />
             </Nav.Column>
 
@@ -163,6 +166,7 @@ export function Inntektskilder({
                 minDate={Utils.dato.norskStringTilDate(formValues.inntektskilder[index].fomDato) || minDate}
                 maxDate={maxDate}
                 forhindreAutoUtfylling={forhindreAutoUtfylling}
+                laasAar={laasAar}
               />
             </Nav.Column>
             <Nav.Column className="inntektskildetype">

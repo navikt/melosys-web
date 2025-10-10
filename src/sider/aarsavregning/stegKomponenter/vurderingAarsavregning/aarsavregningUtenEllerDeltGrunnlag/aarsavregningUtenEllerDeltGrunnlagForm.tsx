@@ -898,6 +898,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
             minDate={minDate}
             maxDate={maxDate}
             forhindreAutoUtfylling={true}
+            laasAar={true}
           />
           {!trygdeAvgiftSkalIkkeBetalesTilNav && (
             <Inntektskilder
@@ -915,6 +916,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
               minDate={minDate}
               maxDate={maxDate}
               forhindreAutoUtfylling={true}
+              laasAar={true}
             />
           )}
           {formIsValid && trygdeAvgiftSkalIkkeBetalesTilNav && (

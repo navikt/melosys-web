@@ -132,6 +132,7 @@ export function MedlemskapsperiodeSkjema({
             aria-label={`Fra og med periode ${index + 1}`}
             readOnly={!redigerbart || erPeriodeFraGrunnlag}
             forhindreAutoUtfylling={true}
+            laasAar={true}
           />
         </Nav.Column>
         <Nav.Column className="dato">
@@ -144,6 +145,7 @@ export function MedlemskapsperiodeSkjema({
             maxDate={maxDate}
             readOnly={!redigerbart || erPeriodeFraGrunnlag}
             forhindreAutoUtfylling={true}
+            laasAar={true}
           />
         </Nav.Column>
         <Nav.Column className="trygdedekning">
