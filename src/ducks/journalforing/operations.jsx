@@ -64,108 +64,97 @@ export function prepareKnyttTilSakForm(sak, erJournalføring, journalforingGjeld
     );
     const sakKanIkkeViderebehandles = MKVUtils.erOpphørtEllerHenlagtEllerBortfaltEllerAnnullert(saksstatus.kode);
 
-    try {
-      // Hent alle async data parallelt
-      const [anmodningsperioderResponse, trygdeavgiftResponse, muligeBehandlingstemaer] = await Promise.all([
-        Api.Anmodningsperioder.hent(sisteBehandling.behandlingID).catch(() => ({ anmodningsperioder: [] })),
-        Api.Fagsaker.fagsak
-          .hentTrygdeavgiftOppsummering(sak.saksnummer)
-          .catch(() => ({ harBehandlingMedTrygdeavgift: false })),
-        Api.LovligeKombinasjoner.hentBehandlingstemaer(
-          journalforingGjelder,
-          sakstype.kode,
-          sakstema.kode,
-          null,
-          sisteBehandling.behandlingstema.kode,
-        ).catch(() => []),
-      ]);
+    // Hent alle async data parallelt
+    const [anmodningsperioderResponse, trygdeavgiftResponse, muligeBehandlingstemaer] = await Promise.all([
+      Api.Anmodningsperioder.hent(sisteBehandling.behandlingID).catch(() => ({ anmodningsperioder: [] })),
+      Api.Fagsaker.fagsak
+        .hentTrygdeavgiftOppsummering(sak.saksnummer)
+        .catch(() => ({ harBehandlingMedTrygdeavgift: false })),
+      Api.LovligeKombinasjoner.hentBehandlingstemaer(
+        journalforingGjelder,
+        sakstype.kode,
+        sakstema.kode,
+        null,
+        sisteBehandling.behandlingstema.kode,
+      ).catch(() => []),
+    ]);
 
-      // Kalkuler avledede verdier
-      const sisteBehandlingHarSendtAnmodningUnntakTilUtland =
-        anmodningsperioderResponse?.anmodningsperioder?.some((a) => a.sendtUtland) || false;
+    // Kalkuler avledede verdier
+    const sisteBehandlingHarSendtAnmodningUnntakTilUtland =
+      anmodningsperioderResponse?.anmodningsperioder?.some((a) => a.sendtUtland) || false;
 
-      const sisteBehandlingErPågåendeArtikkel16Sak =
-        sisteBehandlingHarSendtAnmodningUnntakTilUtland && !sisteBehandlingErInaktiv;
+    const sisteBehandlingErPågåendeArtikkel16Sak =
+      sisteBehandlingHarSendtAnmodningUnntakTilUtland && !sisteBehandlingErInaktiv;
 
-      // Sett behandlingstema tidlig (brukes av videre logikk)
-      const behandlingstema = sisteBehandling.behandlingstema.kode;
-      dispatch(change(feltNavn.formNavn, feltNavn.behandlingstema, behandlingstema));
+    // Sett behandlingstema tidlig (brukes av videre logikk)
+    const behandlingstema = sisteBehandling.behandlingstema.kode;
+    dispatch(change(feltNavn.formNavn, feltNavn.behandlingstema, behandlingstema));
 
-      // Hent behandlingstyper basert på behandlingstema
-      let muligeBehandlingstyper;
-      try {
-        const alleMuligeBehandlingstyper = await Api.LovligeKombinasjoner.hentBehandlingstyperForKnyttTilSak(
-          journalforingGjelder,
-          sak.saksnummer,
-          behandlingstema,
-        );
+    // Hent behandlingstyper basert på behandlingstema
+    const alleMuligeBehandlingstyper = await Api.LovligeKombinasjoner.hentBehandlingstyperForKnyttTilSak(
+      journalforingGjelder,
+      sak.saksnummer,
+      behandlingstema,
+    ).catch((error) => {
+      // eslint-disable-next-line no-console
+      console.error("Feil ved henting av behandlingstyper:", error);
+      return [];
+    });
 
-        // Filtrer behandlingstyper basert på sakstype og åpne behandlinger
-        const erEøsEllerAvtaleland =
-          sakstype.kode === MKV.Koder.sakstyper.EU_EOS || sakstype.kode === MKV.Koder.sakstyper.TRYGDEAVTALE;
+    // Filtrer behandlingstyper basert på sakstype og åpne behandlinger
+    const erEøsEllerAvtaleland =
+      sakstype.kode === MKV.Koder.sakstyper.EU_EOS || sakstype.kode === MKV.Koder.sakstyper.TRYGDEAVTALE;
 
-        const harÅpneBehandlinger = behandlingOversikter.some(
-          (behandling) => !MKVUtils.erAvsluttetEllerMidlertidigBeslutning(behandling.behandlingsstatus.kode),
-        );
+    const harÅpneBehandlinger = behandlingOversikter.some(
+      (behandling) => !MKVUtils.erAvsluttetEllerMidlertidigBeslutning(behandling.behandlingsstatus.kode),
+    );
 
-        const harÅpneIkkeÅrsavregningsbehandlinger = behandlingOversikter.some(
-          (behandling) =>
-            !MKVUtils.erAvsluttetEllerMidlertidigBeslutning(behandling.behandlingsstatus.kode) &&
-            behandling.behandlingstype.kode !== MKV.Koder.behandlinger.behandlingstyper.ÅRSAVREGNING,
-        );
+    const harÅpneIkkeÅrsavregningsbehandlinger = behandlingOversikter.some(
+      (behandling) =>
+        !MKVUtils.erAvsluttetEllerMidlertidigBeslutning(behandling.behandlingsstatus.kode) &&
+        behandling.behandlingstype.kode !== MKV.Koder.behandlinger.behandlingstyper.ÅRSAVREGNING,
+    );
 
-        if (erEøsEllerAvtaleland && harÅpneBehandlinger) {
-          // For EØS/AVTALELAND med åpne behandlinger: ingen behandlingstyper
-          muligeBehandlingstyper = [];
-        } else if (harÅpneIkkeÅrsavregningsbehandlinger && sakstype.kode !== MKV.Koder.sakstyper.FTRL) {
-          // For vanlige saker med åpne ikke-årsavregninger: kun årsavregning
-          muligeBehandlingstyper = alleMuligeBehandlingstyper.filter(
-            (type) => type.kode === MKV.Koder.behandlinger.behandlingstyper.ÅRSAVREGNING,
-          );
-        } else {
-          muligeBehandlingstyper = alleMuligeBehandlingstyper;
-        }
-      } catch {
-        // Feil ved henting av behandlingstyper - bruk tom liste
-        muligeBehandlingstyper = [];
-      }
-
-      const sisteBehandlingKanOpprettesAndregangsbehandlingPå =
-        sisteBehandlingErInaktiv || sisteBehandlingErPågåendeArtikkel16Sak || muligeBehandlingstyper.length > 0;
-
-      // Sett opprettBehandling basert på kalkulert logikk
-      if (sisteBehandlingErPågåendeArtikkel16Sak && erJournalføring) {
-        dispatch(change(feltNavn.formNavn, feltNavn.opprettBehandling, undefined));
-      } else {
-        const kanOppretteAndregangsbehandling =
-          sisteBehandlingKanOpprettesAndregangsbehandlingPå && !sakKanIkkeViderebehandles;
-        dispatch(change(feltNavn.formNavn, feltNavn.opprettBehandling, kanOppretteAndregangsbehandling));
-      }
-
-      // Sett vurderDokument for journalføring
-      if (erJournalføring) {
-        const skalIkkeVurdereDokument = sisteBehandlingKanOpprettesAndregangsbehandlingPå || sakKanIkkeViderebehandles;
-        const defaultVurderDokument = !skalIkkeVurdereDokument || sisteBehandlingErPågåendeArtikkel16Sak;
-        dispatch(change(feltNavn.formNavn, "vurderDokument", defaultVurderDokument));
-      }
-
-      // Returner metadata for rendering
-      return {
-        muligeBehandlingstemaer,
-        muligeBehandlingstyper,
-        harBehandlingMedTrygdeavgift: trygdeavgiftResponse.harBehandlingMedTrygdeavgift,
-        sisteBehandlingErInaktiv,
-        sakKanIkkeViderebehandles,
-        sisteBehandlingErPågåendeArtikkel16Sak,
-        sisteBehandlingKanOpprettesAndregangsbehandlingPå,
-      };
-    } catch {
-      // Feil ved forberedelse av skjema - returner tomme verdier
-      return {
-        muligeBehandlingstemaer: [],
-        muligeBehandlingstyper: [],
-        harBehandlingMedTrygdeavgift: false,
-      };
+    let muligeBehandlingstyper;
+    if (erEøsEllerAvtaleland && harÅpneBehandlinger) {
+      // For EØS/AVTALELAND med åpne behandlinger: ingen behandlingstyper
+      muligeBehandlingstyper = [];
+    } else if (harÅpneIkkeÅrsavregningsbehandlinger && sakstype.kode !== MKV.Koder.sakstyper.FTRL) {
+      // For vanlige saker med åpne ikke-årsavregninger: kun årsavregning
+      muligeBehandlingstyper = alleMuligeBehandlingstyper.filter(
+        (type) => type.kode === MKV.Koder.behandlinger.behandlingstyper.ÅRSAVREGNING,
+      );
+    } else {
+      muligeBehandlingstyper = alleMuligeBehandlingstyper;
     }
+
+    const sisteBehandlingKanOpprettesAndregangsbehandlingPå =
+      sisteBehandlingErInaktiv || sisteBehandlingErPågåendeArtikkel16Sak || muligeBehandlingstyper.length > 0;
+
+    // Sett opprettBehandling basert på kalkulert logikk
+    if (sisteBehandlingErPågåendeArtikkel16Sak && erJournalføring) {
+      dispatch(change(feltNavn.formNavn, feltNavn.opprettBehandling, undefined));
+    } else {
+      const kanOppretteAndregangsbehandling =
+        sisteBehandlingKanOpprettesAndregangsbehandlingPå && !sakKanIkkeViderebehandles;
+      dispatch(change(feltNavn.formNavn, feltNavn.opprettBehandling, kanOppretteAndregangsbehandling));
+    }
+
+    // Sett vurderDokument for journalføring
+    if (erJournalføring) {
+      const skalIkkeVurdereDokument = sisteBehandlingKanOpprettesAndregangsbehandlingPå || sakKanIkkeViderebehandles;
+      const defaultVurderDokument = !skalIkkeVurdereDokument || sisteBehandlingErPågåendeArtikkel16Sak;
+      dispatch(change(feltNavn.formNavn, "vurderDokument", defaultVurderDokument));
+    }
+
+    return {
+      muligeBehandlingstemaer,
+      muligeBehandlingstyper,
+      harBehandlingMedTrygdeavgift: trygdeavgiftResponse.harBehandlingMedTrygdeavgift,
+      sisteBehandlingErInaktiv,
+      sakKanIkkeViderebehandles,
+      sisteBehandlingErPågåendeArtikkel16Sak,
+      sisteBehandlingKanOpprettesAndregangsbehandlingPå,
+    };
   };
 }

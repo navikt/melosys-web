@@ -88,30 +88,38 @@ export function KnyttTilSak(props: KnyttTilSakProps) {
   useEffect(() => {
     setState((prev) => ({ ...prev, isLoading: true }));
 
-    // Thunk operation - dispatch returnerer Promise
-    const thunk = journalforingOperations.prepareKnyttTilSakForm(
-      sak,
-      erJournalføring,
-      journalforingGjelder as string,
-      feltNavn,
-    );
-
-    // Type assertion for thunk dispatch som returnerer Promise
-    const dispatchResult = dispatch(thunk as never) as Promise<PrepareKnyttTilSakFormResult>;
-
-    dispatchResult.then((result: PrepareKnyttTilSakFormResult) => {
-      setState({
-        muligeBehandlingstemaer: result.muligeBehandlingstemaer || [],
-        muligeBehandlingstyper: result.muligeBehandlingstyper || [],
-        harBehandlingMedTrygdeavgift: result.harBehandlingMedTrygdeavgift || false,
-        sisteBehandlingErInaktiv: result.sisteBehandlingErInaktiv || false,
-        sakKanIkkeViderebehandles: result.sakKanIkkeViderebehandles || false,
-        sisteBehandlingErPågåendeArtikkel16Sak: result.sisteBehandlingErPågåendeArtikkel16Sak || false,
-        sisteBehandlingKanOpprettesAndregangsbehandlingPå:
-          result.sisteBehandlingKanOpprettesAndregangsbehandlingPå || false,
-        isLoading: false,
+    // Dispatch thunk - returnerer Promise
+    (
+      dispatch(
+        journalforingOperations.prepareKnyttTilSakForm(
+          sak,
+          erJournalføring,
+          journalforingGjelder as string,
+          feltNavn,
+        ) as any,
+      ) as unknown as Promise<PrepareKnyttTilSakFormResult>
+    )
+      .then((result: PrepareKnyttTilSakFormResult) => {
+        setState({
+          muligeBehandlingstemaer: result.muligeBehandlingstemaer || [],
+          muligeBehandlingstyper: result.muligeBehandlingstyper || [],
+          harBehandlingMedTrygdeavgift: result.harBehandlingMedTrygdeavgift || false,
+          sisteBehandlingErInaktiv: result.sisteBehandlingErInaktiv || false,
+          sakKanIkkeViderebehandles: result.sakKanIkkeViderebehandles || false,
+          sisteBehandlingErPågåendeArtikkel16Sak: result.sisteBehandlingErPågåendeArtikkel16Sak || false,
+          sisteBehandlingKanOpprettesAndregangsbehandlingPå:
+            result.sisteBehandlingKanOpprettesAndregangsbehandlingPå || false,
+          isLoading: false,
+        });
+      })
+      .catch((error) => {
+        // eslint-disable-next-line no-console
+        console.error("Feil ved lasting av saksdata:", error);
+        setState((prev) => ({
+          ...prev,
+          isLoading: false,
+        }));
       });
-    });
   }, [sak.saksnummer, journalforingGjelder, erJournalføring, feltNavn, dispatch]);
 
   // Håndterer brukerinteraksjoner: Oppdatering av behandlingstema
