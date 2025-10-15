@@ -67,6 +67,7 @@ export function KnyttTilSak(props: KnyttTilSakProps) {
 
   // Hovedeffect: Kaller operasjonen når sak eller journalforingGjelder endres
   useEffect(() => {
+    let isMounted = true;
     setState((prev) => ({ ...prev, isLoading: true }));
 
     (
@@ -75,6 +76,7 @@ export function KnyttTilSak(props: KnyttTilSakProps) {
       ) as Promise<PrepareKnyttTilSakFormResult>
     )
       .then((result: PrepareKnyttTilSakFormResult) => {
+        if (!isMounted) return; // Ignorer resultatet hvis komponenten er unmounted
         setState({
           muligeBehandlingstemaer: result.muligeBehandlingstemaer || [],
           muligeBehandlingstyper: result.muligeBehandlingstyper || [],
@@ -88,6 +90,7 @@ export function KnyttTilSak(props: KnyttTilSakProps) {
         });
       })
       .catch((error) => {
+        if (!isMounted) return; // Ignorer feil hvis komponenten er unmounted
         // eslint-disable-next-line no-console
         console.error("Feil ved lasting av saksdata:", error);
         setState((prev) => ({
@@ -95,6 +98,10 @@ export function KnyttTilSak(props: KnyttTilSakProps) {
           isLoading: false,
         }));
       });
+
+    return () => {
+      isMounted = false; // Marker komponenten som unmounted
+    };
   }, [sak.saksnummer, journalforingGjelder, erJournalføring, feltNavn, dispatch]);
 
   // Håndterer brukerinteraksjoner: Oppdatering av behandlingstema
@@ -120,6 +127,14 @@ export function KnyttTilSak(props: KnyttTilSakProps) {
 
   function VurderDokumentCheckbox() {
     return <Skjema.Checkbox feltNavn="vurderDokument" label={`Oppdater behandlingsstatus til "Vurder dokument"`} />;
+  }
+
+  if (state.isLoading) {
+    return (
+      <div className="knyttTilSak__behandlingspanel">
+        <Nav.Loader size="large" title="Laster saksdata..." />
+      </div>
+    );
   }
 
   if (state.sakKanIkkeViderebehandles) {
