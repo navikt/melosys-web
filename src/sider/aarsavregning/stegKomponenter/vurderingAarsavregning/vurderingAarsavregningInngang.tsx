@@ -97,7 +97,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
     setHarGrunnlag(
       !(
         res.tidligereGrunnlagsopplysninger === null ||
-        Utils._isEmpty(res.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.medlemskapsperioder)
+        Utils._isEmpty(res.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.fastsettingsperioder)
       ),
     );
   };

@@ -1,7 +1,7 @@
 import * as Nav from "../../../../navFrontend";
 import { Inntektskilde, Skatteforhold } from "../../../../felleskomponenter/trygdeavgift/komponenter/types";
 import * as Utils from "../../../../utils";
-import { Medlemskapsperiode } from "../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import { Fastsettingsperiode } from "../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import { BOOLSK_STRING } from "../../../../constants";
 import { MedlemskapTomFomDatoer } from "./aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlag";
 
@@ -74,7 +74,7 @@ const finnesInntektskildeMedBruttoInntektOver250k = (inntektskilder: Inntektskil
 export const finnAktivFeilmelding = (
   inntektskilder: Inntektskilde[],
   skatteforholdsperioder: Skatteforhold[],
-  medlemskapsperioder: Medlemskapsperiode[] | undefined,
+  medlemskapsperioder: Fastsettingsperiode[] | undefined,
   innvilgetMedlemskapsperiode?: MedlemskapTomFomDatoer,
 ): string | undefined => {
   if (!medlemskapsperioder || !innvilgetMedlemskapsperiode || innvilgetMedlemskapsperiode.tom == null) return undefined;

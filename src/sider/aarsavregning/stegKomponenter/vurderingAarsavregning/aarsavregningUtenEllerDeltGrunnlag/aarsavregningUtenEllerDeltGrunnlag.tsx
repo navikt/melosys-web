@@ -14,7 +14,7 @@ import { OK } from "../../../../../ducks/aarsavregning/types";
 import { medlemskapsperioderTypes } from "../../../../../ducks/medlemskapsperioder";
 import { mapTilInntektskilderProps, mapTilSkatteforholdProps } from "../utils";
 import {
-  Medlemskapsperiode,
+  Fastsettingsperiode,
   OppdaterMedlemskapsperiode,
 } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import { AarsavregningUtenEllerDeltGrunnlagForm } from "./aarsavregningUtenEllerDeltGrunnlagForm";
@@ -38,7 +38,7 @@ const mapTilMedlemskapsperiodeFieldProps = (
   medlemskapsperiode: any,
   tidligereGrunnlag?: Api.Aarsavregning.Trygdeavgiftsgrunnlag,
 ) => {
-  const grunnlagsperioder = tidligereGrunnlag?.medlemskapsperioder;
+  const grunnlagsperioder = tidligereGrunnlag?.fastsettingsperioder;
 
   const medlemskapsperiodeErFraGrunnlag = grunnlagsperioder?.some(
     (periode) => periode.fomDato === medlemskapsperiode.fomDato && periode.tomDato === medlemskapsperiode.tomDato,
@@ -109,7 +109,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const dispatch = useDispatch();
 
-  const opprettMedlemskapsperiode = async (medlemskapsperiode: Medlemskapsperiode) => {
+  const opprettMedlemskapsperiode = async (medlemskapsperiode: Fastsettingsperiode) => {
     const periodeRequest = {
       fomDato: Utils.dato.formatterDatoTilISO(medlemskapsperiode.fomDato, "") as string,
       tomDato: Utils.dato.formatterDatoTilISO(medlemskapsperiode.tomDato, "") as string,
@@ -128,12 +128,12 @@ export function AarsavregningUtenEllerDeltGrunnlag({
 
   const getMappedMedlemskapsperioder = async (
     aarsavregningRes: AarsavregningResponse,
-  ): Promise<Medlemskapsperiode[]> => {
+  ): Promise<Fastsettingsperiode[]> => {
     const medlemskapsperioderRes =
       await Api.MedlemAvFolketrygden.Medlemskapsperioder.hentMedlemskapsperioder(behandlingID);
 
     const innvilgedeMedlemskapsperioder = medlemskapsperioderRes.filter(
-      (periode: Medlemskapsperiode) =>
+      (periode: Fastsettingsperiode) =>
         periode.innvilgelsesResultat === INNVILGET || periode.innvilgelsesResultat === DELVIS_INNVILGET,
     );
 
@@ -145,7 +145,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({
     ) {
       // Initiell innlasting for delt grunnlag
       const medlemskapsperioderFraGrunnlag =
-        aarsavregningRes.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag.medlemskapsperioder;
+        aarsavregningRes.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag.fastsettingsperioder;
       const innvilgedeMedlemskapsperioderFraGrunnlag = medlemskapsperioderFraGrunnlag.filter(
         (periode) => periode.innvilgelsesResultat === INNVILGET || periode.innvilgelsesResultat === DELVIS_INNVILGET,
       );
@@ -159,7 +159,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({
         await Api.MedlemAvFolketrygden.Medlemskapsperioder.hentMedlemskapsperioder(behandlingID);
 
       const oppdaterteInnvilgedeMedlemskapsperioder = oppdaterteMedlemskapsperioder.filter(
-        (periode: Medlemskapsperiode) =>
+        (periode: Fastsettingsperiode) =>
           periode.innvilgelsesResultat === INNVILGET || periode.innvilgelsesResultat === DELVIS_INNVILGET,
       );
 
@@ -175,7 +175,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({
     );
   };
 
-  const getBestemmelse = (mappedMedlemskapsperioder: Medlemskapsperiode[]) => {
+  const getBestemmelse = (mappedMedlemskapsperioder: Fastsettingsperiode[]) => {
     if (mappedMedlemskapsperioder.length > 0) {
       const førsteBestemmelse = mappedMedlemskapsperioder[0].bestemmelse;
       const medlemskapsperioderHarSammeBestemmelse = mappedMedlemskapsperioder.every(

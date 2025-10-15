@@ -46,7 +46,7 @@ export function TidligereGrunnlag({ aarsavregningResponse }: TidligereGrunnlagPr
             <Nav.ExpansionCard.Content className="tidligereGrunnlagAccordion_content">
               <MedlemskapsPerioderTabell
                 perioder={
-                  aarsavregningResponse.tidligereGrunnlagsopplysninger!.trygdeavgiftsgrunnlag.medlemskapsperioder
+                  aarsavregningResponse.tidligereGrunnlagsopplysninger!.trygdeavgiftsgrunnlag.fastsettingsperioder
                 }
               />
               <GrunnlagTabeller
@@ -67,7 +67,7 @@ export function TidligereGrunnlag({ aarsavregningResponse }: TidligereGrunnlagPr
                 <BeregnetTrygdeavgiftDetaljer
                   grunnlag={aarsavregningResponse.tidligereGrunnlagsopplysninger!}
                   medlemskapsTypeErPliktig={
-                    aarsavregningResponse.tidligereGrunnlagsopplysninger!.trygdeavgiftsgrunnlag.medlemskapsperioder?.every(
+                    aarsavregningResponse.tidligereGrunnlagsopplysninger!.trygdeavgiftsgrunnlag.fastsettingsperioder?.every(
                       (periode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG,
                     ) ?? true
                   }

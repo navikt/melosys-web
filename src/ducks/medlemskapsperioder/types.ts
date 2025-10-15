@@ -10,7 +10,7 @@ export const PENDING = "medlemskapsperioder/PENDING";
 export const RESET = "medlemskapsperioder/RESET";
 
 export interface Data {
-  medlemskapsperioder?: Api.MedlemAvFolketrygden.Medlemskapsperioder.Medlemskapsperiode[];
+  medlemskapsperioder?: Api.MedlemAvFolketrygden.Medlemskapsperioder.Fastsettingsperiode[];
 }
 
 export interface FeiletAction {
@@ -28,17 +28,17 @@ export interface ResetAction {
 
 export interface OkMedlemskapsperiodeAction {
   type: typeof OK_MEDLEMSKAPSPERIODE;
-  data: Api.MedlemAvFolketrygden.Medlemskapsperioder.Medlemskapsperiode[];
+  data: Api.MedlemAvFolketrygden.Medlemskapsperioder.Fastsettingsperiode[];
 }
 
 export interface OkOpprettMedlemskapsperiodeAction {
   type: typeof OK_OPPRETT_MEDLEMSKAPSPERIODE;
-  data: Api.MedlemAvFolketrygden.Medlemskapsperioder.Medlemskapsperiode;
+  data: Api.MedlemAvFolketrygden.Medlemskapsperioder.Fastsettingsperiode;
 }
 
 export interface OkOppdaterMedlemskapsperiodeAction {
   type: typeof OK_OPPDATER_MEDLEMSKAPSPERIODE;
-  data: Api.MedlemAvFolketrygden.Medlemskapsperioder.Medlemskapsperiode;
+  data: Api.MedlemAvFolketrygden.Medlemskapsperioder.Fastsettingsperiode;
 }
 
 export interface OkSlettMedlemskapsperiodeAction {

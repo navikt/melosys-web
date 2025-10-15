@@ -2,7 +2,7 @@ import { Inntektskilde, Skatteforhold } from "./types";
 import * as Nav from "../../../navFrontend";
 import * as Utils from "../../../utils";
 import MKV from "../../../melosyskodeverk";
-import { Medlemskapsperiode } from "../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import { Fastsettingsperiode } from "../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import { Type } from "../../menypanel/menypunkter/fullmektig/types";
 
 const { PENSJON_UFØRETRYGD, PENSJON_UFØRETRYGD_KILDESKATT } = MKV.Koder.inntektskildetype;
@@ -102,7 +102,7 @@ const erSkattepliktigOgPensjonUføreMedKildeskatt = (
 
 const erPensjonUføretrygdLagtInnForPeriodeMedKunPensjon = (
   inntektskilder: Inntektskilde[],
-  medlemskapsperioder: Medlemskapsperiode[],
+  medlemskapsperioder: Fastsettingsperiode[],
 ) => {
   const pensjonuføretrygdKilder = inntektskilder.filter((inntektskilde) =>
     [PENSJON_UFØRETRYGD, PENSJON_UFØRETRYGD_KILDESKATT].includes(inntektskilde.kildetype),
@@ -138,7 +138,7 @@ enum TypeMelding {
 export const finnAktivFeilmelding = (
   inntektskilder: Inntektskilde[],
   skatteforholdsperioder: Skatteforhold[],
-  medlemskapsperioder: Medlemskapsperiode[],
+  medlemskapsperioder: Fastsettingsperiode[],
   innvilgetMedlemskapsperiode?: { fom: string; tom: string },
 ): string | undefined => {
   if (!innvilgetMedlemskapsperiode || innvilgetMedlemskapsperiode.tom == null) return undefined;
