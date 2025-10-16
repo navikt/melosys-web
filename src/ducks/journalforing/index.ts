@@ -6,5 +6,7 @@ import * as journalforingTypes from "./types";
 import journalforingReducers from "./reducers";
 
 export { journalforingOperations, journalforingSelectors, journalforingTypes, journalforingActions };
+export type { PrepareKnyttTilSakFormResult } from "./operations";
+export type { Sak, FeltNavn } from "./types";
 
 export default journalforingReducers;

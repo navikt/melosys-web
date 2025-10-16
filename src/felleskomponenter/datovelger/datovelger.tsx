@@ -71,28 +71,49 @@ function Datovelger({
 
     if (currentValue && !readOnly) {
       // Automatisk legg til/overstyr år hvis laasAar er aktivert
-      // Dette må skje FØR forhindreAutoUtfylling-sjekken
+      // Filosofi: Hvis de fire første sifrene (ddmm) gir en gyldig dato, ekspander den.
+      // Eventuelle tegn etter det (år) blir akseptert hvis gyldig, ellers erstattet.
       let valueToFormat = currentValue;
       let harLagtTilAar = false;
       if (laasAar) {
         const renDato = currentValue.replace(/[-./]/g, "");
-        // Hent året som skal brukes
-        const aar = minDate?.getFullYear() || maxDate?.getFullYear() || new Date().getFullYear();
 
-        if (renDato.length === 4) {
-          // Hvis input er 4 tegn (ddmm), legg til år
+        // Sjekk om vi har minst 4 tegn (ddmm)
+        if (renDato.length >= 4) {
           const dag = renDato.substring(0, 2);
           const maaned = renDato.substring(2, 4);
-          valueToFormat = `${dag}.${maaned}.${aar}`;
-          harLagtTilAar = true;
-        } else if (renDato.length >= 6) {
-          // Hvis input er 6+ tegn (ddmmåå eller ddmmåååå), overstyr året
-          const dag = renDato.substring(0, 2);
-          const maaned = renDato.substring(2, 4);
-          valueToFormat = `${dag}.${maaned}.${aar}`;
-          harLagtTilAar = true;
+
+          // Hent korrekt år fra minDate/maxDate
+          const korrektAar = minDate?.getFullYear() || maxDate?.getFullYear() || new Date().getFullYear();
+
+          if (renDato.length === 4) {
+            // Kun ddmm → legg til korrekt år
+            valueToFormat = `${dag}.${maaned}.${korrektAar}`;
+            harLagtTilAar = true;
+          } else {
+            // ddmm + noe mer (år)
+            const brukerAar = renDato.substring(4);
+
+            // Prøv å parse året bruker skrev
+            const fullAar =
+              brukerAar.length === 2
+                ? `20${brukerAar}` // åå → 20åå
+                : brukerAar; // Bruk som er
+
+            const aarSomTall = parseInt(fullAar, 10);
+
+            // Sjekk om året er innenfor tillatt range (minDate til maxDate)
+            const minAar = minDate?.getFullYear();
+            const maxAar = maxDate?.getFullYear();
+            const erGyldigAar =
+              !isNaN(aarSomTall) && (!minAar || aarSomTall >= minAar) && (!maxAar || aarSomTall <= maxAar);
+
+            // Bruk brukerens år hvis gyldig, ellers korrekt år
+            const aar = erGyldigAar ? aarSomTall : korrektAar;
+            valueToFormat = `${dag}.${maaned}.${aar}`;
+            harLagtTilAar = true;
+          }
         }
-        // Hvis lengde er 5 tegn, la den stå ugyldig (f.eks "01011")
       }
 
       // Forhindrer at NAV DatePicker auto-fyller datoer, ofte til helt ugyldige verdier (f.eks, "1" til "01.01.0001"

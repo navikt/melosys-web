@@ -279,6 +279,24 @@ test.describe.serial("MELOSYS-7612: Årsavregning delt grunnlag - Alle tester", 
       expect(resultat).toContain(valgtTestÅr);
       expect(resultat).not.toContain("2025");
     });
+
+    test("laasAar: Input '01011' skal ekspanderes til '01.01.ÅÅÅÅ'", async ({ page }) => {
+      // Dette tester at selv 5 tegn ekspanderes hvis de fire første er gyldig ddmm
+      await aarsavregningPage.velgDeltGrunnlagJa();
+      await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
+      await page.waitForTimeout(1000);
+
+      const antallFør = await aarsavregningPage.getAntallMedlemskapsperioder();
+      await aarsavregningPage.leggTilMedlemskapsperiode();
+      const nyPeriodeIndex = antallFør;
+
+      // Skriv ddmmå format (5 tegn) - "1" tolkes som ugyldig år
+      const resultat = await aarsavregningPage.fyllUtOgBlurMedlemskapsperiodeFomDato(nyPeriodeIndex, "01011");
+
+      // Verifiser at det ekspanderes til gyldig dato med korrekt år
+      expect(resultat).toBe(lagDato("01.01"));
+      expect(resultat).toContain(valgtTestÅr);
+    });
   });
 
   test.describe("AC2 - Skatteforholdsperiode validering", () => {
