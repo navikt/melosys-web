@@ -57,7 +57,7 @@ function InnerDatovelgerComponent({
 type DatovelgerProps = DatovelgerComponentProps & UseControllerProps;
 
 const Datovelger = forwardRef<HTMLSelectElement, DatovelgerProps>(
-  ({ name, control, ...rest }: DatovelgerProps, _ref: any) => {
+  ({ name, control, ...rest }: DatovelgerProps, _ref) => {
     return (
       <Controller
         name={name}
@@ -73,7 +73,7 @@ const Datovelger = forwardRef<HTMLSelectElement, DatovelgerProps>(
             maxDate={rest.maxDate}
             forhindreAutoUtfylling={rest.forhindreAutoUtfylling}
             laasAar={rest.laasAar}
-            onChange={(value: any) => {
+            onChange={(value: string) => {
               field.onChange(value || "");
               if (rest.onChange) rest.onChange(value);
             }}
