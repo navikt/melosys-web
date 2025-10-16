@@ -42,53 +42,17 @@ export class AarsavregningPage {
   }
 
   async fyllUtMedlemskapsperiodeFomDato(index: number, dato: string) {
-    // Bruk trygdedekning combobox som anker - dette sikrer at perioden eksisterer
-    const trygdedekningDropdown = this.page.getByRole("combobox", {
-      name: new RegExp(`Trygdedekning periode ${index + 1}`, "i"),
-    });
-    await expect(trygdedekningDropdown).toBeVisible({ timeout: 10000 });
-
-    // Finn alle inputs på siden, og filtrér ved å telle medlemskapsperiode-inputs
-    // Hent alle inputs i perioder-seksjonen som ikke er hidden
-    const allInputs = await this.page
-      .locator('.perioder input[type="text"]:visible, .perioder input:not([type]):visible')
-      .all();
-
-    // Finn de to første inputs som tilhører medlemskapsperiode (før skatteforhold-seksjonen)
-    // Vi tar index * 2 fordi hver periode har 2 inputs (fom, tom)
-    const inputIndex = index * 2;
-
-    if (inputIndex >= allInputs.length) {
-      throw new Error(
-        `Kan ikke finne input ${inputIndex} for periode ${index + 1}. Totalt ${allInputs.length} inputs funnet.`,
-      );
-    }
-
-    await allInputs[inputIndex].fill(dato);
+    // Bruk name-attributt for å finne inputfeltet direkte - mer robust enn index-telling
+    const input = this.page.locator(`input[name="medlemskapsperioder[${index}].fomDato"]`);
+    await expect(input).toBeVisible({ timeout: 10000 });
+    await input.fill(dato);
   }
 
   async fyllUtMedlemskapsperiodeTomDato(index: number, dato: string) {
-    // Bruk trygdedekning combobox som anker - dette sikrer at perioden eksisterer
-    const trygdedekningDropdown = this.page.getByRole("combobox", {
-      name: new RegExp(`Trygdedekning periode ${index + 1}`, "i"),
-    });
-    await expect(trygdedekningDropdown).toBeVisible({ timeout: 10000 });
-
-    // Finn alle inputs på siden
-    const allInputs = await this.page
-      .locator('.perioder input[type="text"]:visible, .perioder input:not([type]):visible')
-      .all();
-
-    // Vi tar index * 2 + 1 fordi hver periode har 2 inputs (fom=0, tom=1)
-    const inputIndex = index * 2 + 1;
-
-    if (inputIndex >= allInputs.length) {
-      throw new Error(
-        `Kan ikke finne input ${inputIndex} for periode ${index + 1}. Totalt ${allInputs.length} inputs funnet.`,
-      );
-    }
-
-    await allInputs[inputIndex].fill(dato);
+    // Bruk name-attributt for å finne inputfeltet direkte - mer robust enn index-telling
+    const input = this.page.locator(`input[name="medlemskapsperioder[${index}].tomDato"]`);
+    await expect(input).toBeVisible({ timeout: 10000 });
+    await input.fill(dato);
   }
 
   async velgTrygdedekning(index: number, dekning: string) {
@@ -100,25 +64,19 @@ export class AarsavregningPage {
   }
 
   async getMedlemskapsperiodeFomDato(index: number): Promise<string> {
-    const allInputs = await this.page
-      .locator('.perioder input[type="text"]:visible, .perioder input:not([type]):visible')
-      .all();
-    const inputIndex = index * 2;
-    if (inputIndex >= allInputs.length) {
+    const input = this.page.locator(`input[name="medlemskapsperioder[${index}].fomDato"]`);
+    if (!(await input.isVisible().catch(() => false))) {
       return "";
     }
-    return (await allInputs[inputIndex].inputValue()) || "";
+    return (await input.inputValue()) || "";
   }
 
   async getMedlemskapsperiodeTomDato(index: number): Promise<string> {
-    const allInputs = await this.page
-      .locator('.perioder input[type="text"]:visible, .perioder input:not([type]):visible')
-      .all();
-    const inputIndex = index * 2 + 1;
-    if (inputIndex >= allInputs.length) {
+    const input = this.page.locator(`input[name="medlemskapsperioder[${index}].tomDato"]`);
+    if (!(await input.isVisible().catch(() => false))) {
       return "";
     }
-    return (await allInputs[inputIndex].inputValue()) || "";
+    return (await input.inputValue()) || "";
   }
 
   async getAntallMedlemskapsperioder(): Promise<number> {
@@ -133,51 +91,21 @@ export class AarsavregningPage {
    * Denne metoden fyller ut, trigger blur, og returnerer den resulterende verdien
    */
   async fyllUtOgBlurMedlemskapsperiodeFomDato(index: number, verdi: string): Promise<string> {
-    const trygdedekningDropdown = this.page.getByRole("combobox", {
-      name: new RegExp(`Trygdedekning periode ${index + 1}`, "i"),
-    });
-    await expect(trygdedekningDropdown).toBeVisible({ timeout: 10000 });
-
-    const allInputs = await this.page
-      .locator('.perioder input[type="text"]:visible, .perioder input:not([type]):visible')
-      .all();
-    const inputIndex = index * 2;
-
-    if (inputIndex >= allInputs.length) {
-      throw new Error(
-        `Kan ikke finne input ${inputIndex} for periode ${index + 1}. Totalt ${allInputs.length} inputs funnet.`,
-      );
-    }
-
-    const inputElement = allInputs[inputIndex];
-    await inputElement.fill(verdi);
-    await inputElement.blur(); // Trigger onBlur-event
+    const input = this.page.locator(`input[name="medlemskapsperioder[${index}].fomDato"]`);
+    await expect(input).toBeVisible({ timeout: 10000 });
+    await input.fill(verdi);
+    await input.blur(); // Trigger onBlur-event
     await this.page.waitForTimeout(200); // Gi tid til at onBlur-logikk kjører
-    return (await inputElement.inputValue()) || "";
+    return (await input.inputValue()) || "";
   }
 
   async fyllUtOgBlurMedlemskapsperiodeTomDato(index: number, verdi: string): Promise<string> {
-    const trygdedekningDropdown = this.page.getByRole("combobox", {
-      name: new RegExp(`Trygdedekning periode ${index + 1}`, "i"),
-    });
-    await expect(trygdedekningDropdown).toBeVisible({ timeout: 10000 });
-
-    const allInputs = await this.page
-      .locator('.perioder input[type="text"]:visible, .perioder input:not([type]):visible')
-      .all();
-    const inputIndex = index * 2 + 1;
-
-    if (inputIndex >= allInputs.length) {
-      throw new Error(
-        `Kan ikke finne input ${inputIndex} for periode ${index + 1}. Totalt ${allInputs.length} inputs funnet.`,
-      );
-    }
-
-    const inputElement = allInputs[inputIndex];
-    await inputElement.fill(verdi);
-    await inputElement.blur(); // Trigger onBlur-event
+    const input = this.page.locator(`input[name="medlemskapsperioder[${index}].tomDato"]`);
+    await expect(input).toBeVisible({ timeout: 10000 });
+    await input.fill(verdi);
+    await input.blur(); // Trigger onBlur-event
     await this.page.waitForTimeout(200); // Gi tid til at onBlur-logikk kjører
-    return (await inputElement.inputValue()) || "";
+    return (await input.inputValue()) || "";
   }
 
   // Skatteforholdsperiode operasjoner
