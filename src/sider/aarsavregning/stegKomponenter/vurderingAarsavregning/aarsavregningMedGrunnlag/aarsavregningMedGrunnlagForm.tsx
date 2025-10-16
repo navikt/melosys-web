@@ -22,7 +22,7 @@ import { BeregnetTrygdeavgiftDetaljer } from "../komponenter/beregnetTrygdeavgif
 import { BorderedFormContainer } from "../komponenter/borderedFormContainer";
 import { EndeligAvgiftValgRadioGroup } from "../komponenter/endeligAvgiftValgRadioGroup";
 import { ManuellAvgiftFormPart } from "../komponenter/manuellAvgiftFormPart";
-import { MedlemskapsperiodeDisplay } from "../komponenter/medlemskapsperiodeDisplay";
+import { MedlemskapsperioderDisplay } from "../komponenter/medlemskapsperiodeDisplay";
 import { SumArsavregningTabell } from "../komponenter/sumArsavregningTabell";
 import { beregnTrygdeavgiftsperioder, erBrukerSkattepliktigIHelePerioden } from "../utils";
 import "../vurderingAarsavregningInngang.less";
@@ -53,12 +53,27 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as any;
   const aarsavregningID = useSelector(behandlingsresultatSelectors.ÅrsavregningIDSelector);
 
-  const {
-    innvilgetMedlemskapsperiode,
-    innvilgetMedlemskapsperiodeBestemmelse,
-    innvilgetMedlemskapsperiodeTrygdedekning,
-    medlemskapstypeErPliktig,
-  } = initiellData;
+  const { innvilgetMedlemskapsperioder, medlemskapstypeErPliktig } = initiellData;
+
+  // Funksjon for å finne sammensatt medlemskapsperiode for validering
+  const finnMedlemskapsperiode = useCallback((perioder: any[]) => {
+    const sorterteGyldigePerioder = perioder
+      .filter((periode: any) => periode.fomDato && periode.tomDato)
+      .sort((a, b) => Utils.dato.sorterEtterNorskFomDato(a, b));
+
+    if (sorterteGyldigePerioder.length === 0) {
+      return undefined;
+    }
+
+    return {
+      fomDato: sorterteGyldigePerioder[0].fomDato,
+      tomDato: sorterteGyldigePerioder[sorterteGyldigePerioder.length - 1].tomDato,
+    };
+  }, []);
+
+  const medlemskapsperiode = useMemo(() => {
+    return finnMedlemskapsperiode(innvilgetMedlemskapsperioder);
+  }, [innvilgetMedlemskapsperioder, finnMedlemskapsperiode]);
 
   const {
     control,
@@ -70,7 +85,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   } = useForm({
     resolver: yupResolver(aarsavregningMedGrunnlagSchema),
     context: {
-      medlemskapsperiode: innvilgetMedlemskapsperiode,
+      medlemskapsperiode,
       medlemskapsTypeErPliktig: medlemskapstypeErPliktig,
     },
     mode: "onChange",
@@ -152,7 +167,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
       const aktivFeilmelding = finnAktivFeilmelding({
         skatteforholdsperioder: formState.skatteforholdsperioder,
         inntektskilder: formState.inntektskilder,
-        medlemskapsperiodeFomTom: innvilgetMedlemskapsperiode!,
+        medlemskapsperiodeFomTom: medlemskapsperiode!,
         medlemskapstypeErPliktig,
       });
       if (!aktivFeilmelding) {
@@ -181,7 +196,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
     isValidating,
     handleBeregnTrygdeavgiftsperioder,
     previousFormValues,
-    innvilgetMedlemskapsperiode,
+    medlemskapsperiode,
     medlemskapstypeErPliktig,
   ]);
 
@@ -329,18 +344,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
             Inntekts- og skatteopplysninger for endelig trygdeavgift
           </Nav.Heading>
 
-          {innvilgetMedlemskapsperiode &&
-            innvilgetMedlemskapsperiodeTrygdedekning &&
-            innvilgetMedlemskapsperiodeBestemmelse && (
-              <div className="medlemskapsperioder">
-                <MedlemskapsperiodeDisplay
-                  fomDato={innvilgetMedlemskapsperiode.fomDato}
-                  tomDato={innvilgetMedlemskapsperiode.tomDato}
-                  trygdedekning={innvilgetMedlemskapsperiodeTrygdedekning}
-                  bestemmelse={innvilgetMedlemskapsperiodeBestemmelse}
-                />
-              </div>
-            )}
+          <MedlemskapsperioderDisplay medlemskapsperioder={innvilgetMedlemskapsperioder} />
 
           <Skatteforholdsperioder
             formValues={formValues}
@@ -354,7 +358,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
           />
           {!trygdeAvgiftSkalIkkeBetalesTilNav && (
             <Inntektskilder
-              defaultPeriode={innvilgetMedlemskapsperiode}
+              defaultPeriode={medlemskapsperiode}
               formValues={formValues}
               redigerbart={redigerbart}
               update={inntektUpdate}
@@ -364,7 +368,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
               fields={inntektFields}
               medlemskapsTypeErPliktig={medlemskapstypeErPliktig!}
               skalViseErMaanedsBelopRadioGroup
-              bestemmelse={innvilgetMedlemskapsperiodeBestemmelse}
+              bestemmelse={innvilgetMedlemskapsperioder[0]?.bestemmelse}
               minDate={minDate}
               maxDate={maxDate}
             />
