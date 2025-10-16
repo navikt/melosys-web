@@ -128,6 +128,58 @@ export class AarsavregningPage {
     return await this.page.locator('select[name^="medlemskapsperioder["][name$="].trygdedekning"]').count();
   }
 
+  /**
+   * Fyll ut dato uten å bruke lagDato() - for å teste laasAar og forhindreAutoUtfylling
+   * Denne metoden fyller ut, trigger blur, og returnerer den resulterende verdien
+   */
+  async fyllUtOgBlurMedlemskapsperiodeFomDato(index: number, verdi: string): Promise<string> {
+    const trygdedekningDropdown = this.page.getByRole("combobox", {
+      name: new RegExp(`Trygdedekning periode ${index + 1}`, "i"),
+    });
+    await expect(trygdedekningDropdown).toBeVisible({ timeout: 10000 });
+
+    const allInputs = await this.page
+      .locator('.perioder input[type="text"]:visible, .perioder input:not([type]):visible')
+      .all();
+    const inputIndex = index * 2;
+
+    if (inputIndex >= allInputs.length) {
+      throw new Error(
+        `Kan ikke finne input ${inputIndex} for periode ${index + 1}. Totalt ${allInputs.length} inputs funnet.`,
+      );
+    }
+
+    const inputElement = allInputs[inputIndex];
+    await inputElement.fill(verdi);
+    await inputElement.blur(); // Trigger onBlur-event
+    await this.page.waitForTimeout(200); // Gi tid til at onBlur-logikk kjører
+    return (await inputElement.inputValue()) || "";
+  }
+
+  async fyllUtOgBlurMedlemskapsperiodeTomDato(index: number, verdi: string): Promise<string> {
+    const trygdedekningDropdown = this.page.getByRole("combobox", {
+      name: new RegExp(`Trygdedekning periode ${index + 1}`, "i"),
+    });
+    await expect(trygdedekningDropdown).toBeVisible({ timeout: 10000 });
+
+    const allInputs = await this.page
+      .locator('.perioder input[type="text"]:visible, .perioder input:not([type]):visible')
+      .all();
+    const inputIndex = index * 2 + 1;
+
+    if (inputIndex >= allInputs.length) {
+      throw new Error(
+        `Kan ikke finne input ${inputIndex} for periode ${index + 1}. Totalt ${allInputs.length} inputs funnet.`,
+      );
+    }
+
+    const inputElement = allInputs[inputIndex];
+    await inputElement.fill(verdi);
+    await inputElement.blur(); // Trigger onBlur-event
+    await this.page.waitForTimeout(200); // Gi tid til at onBlur-logikk kjører
+    return (await inputElement.inputValue()) || "";
+  }
+
   // Skatteforholdsperiode operasjoner
   async leggTilSkatteforholdsperiode() {
     await this.page.getByRole("button", { name: /legg til skatteforhold/i }).click();
