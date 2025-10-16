@@ -14,8 +14,7 @@ import { HGrid, Stack } from "@navikt/ds-react";
 interface SkatteforholdsperioderProps {
   formValues: FormValuesProps;
   fields: FieldArrayWithId<FieldArrayProps, "skatteforholdsperioder">[];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  control: Control<any>;
+  control: Control;
   remove: (index: number) => void;
   append: (skatteforhold: Skatteforhold) => void;
   redigerbart: boolean;
