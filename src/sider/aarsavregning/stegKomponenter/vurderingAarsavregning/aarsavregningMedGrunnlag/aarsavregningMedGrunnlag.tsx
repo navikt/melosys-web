@@ -89,21 +89,40 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
   });
   const [innlastingFeilmelding, setInnlastingFeilmelding] = useState("");
 
-  const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as any;
+  const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as number;
   const dispatch = useDispatch();
 
-  const mapSkjemaverdierFraTrygdeavgiftsgrunnlag = (
-    trygdeavgiftsgrunnlag?: Trygdeavgiftsgrunnlag,
-    endeligAvgiftValg?: string,
-    manueltAvgiftBeloep?: number,
-  ) => {
-    if (!trygdeavgiftsgrunnlag)
+  const mapSkjemaverdierFraTrygdeavgiftsgrunnlag = (aarsavregningResponse?: AarsavregningResponse) => {
+    let trygdeavgiftsgrunnlag: Trygdeavgiftsgrunnlag | undefined = undefined;
+    if (aarsavregningResponse?.nyttTrygdeavgiftsGrunnlag?.trygdeavgiftsgrunnlag) {
+      trygdeavgiftsgrunnlag = aarsavregningResponse.nyttTrygdeavgiftsGrunnlag.trygdeavgiftsgrunnlag;
+    } else {
+      const bestemmelseFraTidligereAvgiftsgrunnlag =
+        aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag
+          ?.medlemskapsperioder?.[0]?.bestemmelse;
+      const eventuellNyBestemmelse = aarsavregningResponse?.sisteGjeldendeMedlemskapsperioder?.[0]?.bestemmelse;
+      if (
+        bestemmelseFraTidligereAvgiftsgrunnlag &&
+        eventuellNyBestemmelse &&
+        bestemmelseFraTidligereAvgiftsgrunnlag === eventuellNyBestemmelse
+      ) {
+        trygdeavgiftsgrunnlag =
+          aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag;
+      }
+    }
+
+    const endeligAvgiftValg = aarsavregningResponse?.endeligAvgiftValg;
+    const manueltAvgiftBeloep = aarsavregningResponse?.avregning?.manueltAvgiftBeloep;
+
+    if (!trygdeavgiftsgrunnlag) {
       return {
         skatteforholdsperioder: [{}],
         inntektskilder: [{}],
         endeligAvgiftValg: "",
         manueltAvgiftBeloep: undefined,
       };
+    }
+
     const { inntektskperioder, skatteforholdsperioder } = trygdeavgiftsgrunnlag;
     const sorterteInntekstkilder = [...inntektskperioder].sort(Utils.dato.sorterEtterISOFomDato);
     const sorterteSkatteforhold = [...skatteforholdsperioder].sort(Utils.dato.sorterEtterISOFomDato);
@@ -124,7 +143,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
     if (behandlingID) {
       Api.Aarsavregning.hentAarsavregning(behandlingID)
         .then((res) => {
-          if (!res.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag) {
+          if (!res.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag) {
             setInnlastingFeilmelding("Årsavregning med grunnlag må ha grunnlag");
             setIsLoading(false);
             return;
@@ -134,13 +153,9 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
           dispatch({ type: OK, data: res });
 
           const defaultFormValues: FieldValue<AarsavregningMedGrunnlagFormValues> =
-            mapSkjemaverdierFraTrygdeavgiftsgrunnlag(
-              res?.nyttGrunnlag?.trygdeavgiftsgrunnlag || res.tidligereGrunnlagsopplysninger.trygdeavgiftsgrunnlag,
-              res.endeligAvgiftValg,
-              res?.avregning?.manueltAvgiftBeloep,
-            );
+            mapSkjemaverdierFraTrygdeavgiftsgrunnlag(res);
 
-          const medlemskapsperioder = res.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.medlemskapsperioder;
+          const medlemskapsperioder = res.sisteGjeldendeMedlemskapsperioder || [];
           const innvilgetMedlemskapsperiode = mapInnvilgetMedlemskapsPeriode(medlemskapsperioder);
           const innvilgetMedlemskapsperiodeBestemmelse = mapMedlemskapsperiodeBestemmelse(false, medlemskapsperioder);
           const innvilgetMedlemskapsperiodeTrygdedekning = mapTrygdedekning(medlemskapsperioder);
@@ -149,8 +164,8 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
           );
 
           const forrigeÅrsavregningErManueltBeregnet = Boolean(
-            res.tidligereGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep !== null &&
-              res.tidligereGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep !== undefined,
+            res.tidligereTrygdeavgiftsGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep !== null &&
+              res.tidligereTrygdeavgiftsGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep !== undefined,
           );
 
           const valgtÅr = innvilgetMedlemskapsperiode
