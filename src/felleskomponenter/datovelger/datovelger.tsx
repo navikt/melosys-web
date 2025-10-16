@@ -70,22 +70,29 @@ function Datovelger({
     const currentValue = event.target.value.trim();
 
     if (currentValue && !readOnly) {
-      // Automatisk legg til år hvis laasAar er aktivert og bruker kun skrev dag/måned
+      // Automatisk legg til/overstyr år hvis laasAar er aktivert
       // Dette må skje FØR forhindreAutoUtfylling-sjekken
       let valueToFormat = currentValue;
       let harLagtTilAar = false;
       if (laasAar) {
         const renDato = currentValue.replace(/[-./]/g, "");
-        // Hvis input er 4 tegn (ddmm) eller har format dd.mm (men mangler år)
+        // Hent året som skal brukes
+        const aar = minDate?.getFullYear() || maxDate?.getFullYear() || new Date().getFullYear();
+
         if (renDato.length === 4) {
-          // Hent året fra minDate eller maxDate
-          const aar = minDate?.getFullYear() || maxDate?.getFullYear() || new Date().getFullYear();
-          // Formater som dd.mm.yyyy
+          // Hvis input er 4 tegn (ddmm), legg til år
+          const dag = renDato.substring(0, 2);
+          const maaned = renDato.substring(2, 4);
+          valueToFormat = `${dag}.${maaned}.${aar}`;
+          harLagtTilAar = true;
+        } else if (renDato.length >= 6) {
+          // Hvis input er 6+ tegn (ddmmåå eller ddmmåååå), overstyr året
           const dag = renDato.substring(0, 2);
           const maaned = renDato.substring(2, 4);
           valueToFormat = `${dag}.${maaned}.${aar}`;
           harLagtTilAar = true;
         }
+        // Hvis lengde er 5 tegn, la den stå ugyldig (f.eks "01011")
       }
 
       // Forhindrer at NAV DatePicker auto-fyller datoer, ofte til helt ugyldige verdier (f.eks, "1" til "01.01.0001"

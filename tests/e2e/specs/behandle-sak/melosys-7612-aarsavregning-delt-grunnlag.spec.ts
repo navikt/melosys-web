@@ -241,6 +241,44 @@ test.describe.serial("MELOSYS-7612: Årsavregning delt grunnlag - Alle tester", 
       // Verifiser at feilmelding vises (fordi "1" ikke er gyldig dato)
       await aarsavregningPage.assertValideringsfeilInneholder("gyldig");
     });
+
+    test("laasAar: Input med delvis år som '020412' skal bli '02.04.ÅÅÅÅ'", async ({ page }) => {
+      // Dette tester at laasAar overstyrer feil år med korrekt årsavregningsår
+      await aarsavregningPage.velgDeltGrunnlagJa();
+      await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
+      await page.waitForTimeout(1000);
+
+      const antallFør = await aarsavregningPage.getAntallMedlemskapsperioder();
+      await aarsavregningPage.leggTilMedlemskapsperiode();
+      const nyPeriodeIndex = antallFør;
+
+      // Skriv ddmmåå format (6 tegn)
+      const resultat = await aarsavregningPage.fyllUtOgBlurMedlemskapsperiodeFomDato(nyPeriodeIndex, "020412");
+
+      // Verifiser at året er overstyrt til korrekt årsavregningsår
+      expect(resultat).toBe(lagDato("02.04"));
+      expect(resultat).toContain(valgtTestÅr);
+      expect(resultat).not.toContain("2012");
+    });
+
+    test("laasAar: Input med fullt år som '02042025' skal overstyres til '02.04.ÅÅÅÅ'", async ({ page }) => {
+      // Dette tester at laasAar overstyrer selv når bruker skriver fullt (men feil) år
+      await aarsavregningPage.velgDeltGrunnlagJa();
+      await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
+      await page.waitForTimeout(1000);
+
+      const antallFør = await aarsavregningPage.getAntallMedlemskapsperioder();
+      await aarsavregningPage.leggTilMedlemskapsperiode();
+      const nyPeriodeIndex = antallFør;
+
+      // Skriv ddmmåååå format (8 tegn) med feil år
+      const resultat = await aarsavregningPage.fyllUtOgBlurMedlemskapsperiodeFomDato(nyPeriodeIndex, "02042025");
+
+      // Verifiser at året er overstyrt til korrekt årsavregningsår
+      expect(resultat).toBe(lagDato("02.04"));
+      expect(resultat).toContain(valgtTestÅr);
+      expect(resultat).not.toContain("2025");
+    });
   });
 
   test.describe("AC2 - Skatteforholdsperiode validering", () => {
