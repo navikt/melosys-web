@@ -11,6 +11,7 @@ const mocks = vi.hoisted(() => {
   return {
     hent: vi.fn(),
     hentBehandlingstyperForKnyttTilSak: vi.fn(() => Promise.resolve([{ kode: "AARSAVREGNING", term: "Årsavregning" }])),
+    hentTrygdeavgiftOppsummering: vi.fn(() => Promise.resolve({ harBehandlingMedTrygdeavgift: false })),
   };
 });
 vi.mock("../../../services/modules/anmodningsperioder", () => ({
@@ -19,6 +20,9 @@ vi.mock("../../../services/modules/anmodningsperioder", () => ({
 vi.mock("../../../services/modules/lovligekombinasjoner", () => ({
   hentBehandlingstemaer: () => Promise.resolve([]),
   hentBehandlingstyperForKnyttTilSak: () => mocks.hentBehandlingstyperForKnyttTilSak(),
+}));
+vi.mock("../../../services/modules/fagsaker/fagsak", () => ({
+  hentTrygdeavgiftOppsummering: () => mocks.hentTrygdeavgiftOppsummering(),
 }));
 
 describe("KnyttTilSak", () => {
@@ -66,6 +70,8 @@ describe("KnyttTilSak", () => {
       erJournalføring: true,
     };
     mocks.hent.mockReset();
+    mocks.hentTrygdeavgiftOppsummering.mockReset();
+    mocks.hentTrygdeavgiftOppsummering.mockReturnValue(Promise.resolve({ harBehandlingMedTrygdeavgift: false }));
   });
 
   const WrappedKnyttTilSak = reduxForm({ form: "test" })(KnyttTilSak as any);
@@ -368,6 +374,66 @@ describe("KnyttTilSak", () => {
       await waitFor(() => {
         expect(screen.queryByText(/Du kan ikke opprette en ny behandling/i)).toBeNull();
         expect(screen.getByText("Tidligere behandling er avsluttet.")).toBeInTheDocument();
+      });
+    });
+  });
+
+  describe("Behandlingstema disabled ved andregangsbehandling", () => {
+    it("behandlingstema-dropdown er disabled når saken har eksisterende behandlinger", async () => {
+      props.formValues.opprettBehandling = true;
+      props.formValues.behandlingstema = "YRKESAKTIV";
+      props.sak.behandlingOversikter[0].behandlingsstatus = {
+        kode: MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET,
+        term: "Avsluttet",
+      };
+
+      await renderWithProvidersAsync(<WrappedKnyttTilSak {...(props as any)} />);
+
+      await waitFor(() => {
+        const behandlingstemaSelect = screen.getByLabelText("Behandlingstema");
+        expect(behandlingstemaSelect).toBeDisabled();
+      });
+    });
+
+    it("viser riktig hjelpetekst når behandlingstema er disabled pga andregangsbehandling", async () => {
+      props.formValues.opprettBehandling = true;
+      props.formValues.behandlingstema = "YRKESAKTIV";
+      props.sak.behandlingOversikter[0].behandlingsstatus = {
+        kode: MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET,
+        term: "Avsluttet",
+      };
+
+      await renderWithProvidersAsync(<WrappedKnyttTilSak {...(props as any)} />);
+
+      await waitFor(() => {
+        expect(
+          screen.getByText(
+            "Du kan ikke endre behandlingstema når saken har en tilknyttet fakturaserie eller en eksisterende behandling.",
+          ),
+        ).toBeInTheDocument();
+      });
+    });
+
+    it("viser samme melding og disabled dropdown når saken har trygdeavgift", async () => {
+      mocks.hentTrygdeavgiftOppsummering.mockReturnValueOnce(Promise.resolve({ harBehandlingMedTrygdeavgift: true }));
+
+      props.formValues.opprettBehandling = true;
+      props.formValues.behandlingstema = "YRKESAKTIV";
+      props.sak.behandlingOversikter[0].behandlingsstatus = {
+        kode: MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET,
+        term: "Avsluttet",
+      };
+
+      await renderWithProvidersAsync(<WrappedKnyttTilSak {...(props as any)} />);
+
+      await waitFor(() => {
+        const behandlingstemaSelect = screen.getByLabelText("Behandlingstema");
+        expect(behandlingstemaSelect).toBeDisabled();
+        expect(
+          screen.getByText(
+            "Du kan ikke endre behandlingstema når saken har en tilknyttet fakturaserie eller en eksisterende behandling.",
+          ),
+        ).toBeInTheDocument();
       });
     });
   });
