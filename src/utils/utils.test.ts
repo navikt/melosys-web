@@ -65,7 +65,7 @@ describe("utils", () => {
     });
 
     it("skal returnere funksjon med parametere", () => {
-      const testFn = (a, b) => a + b;
+      const testFn = (a: number, b: number) => a + b;
       const result = fn(testFn);
 
       expect(result(5, 3)).toBe(8);
@@ -204,13 +204,13 @@ describe("utils", () => {
     it("skal bruke mapper funksjon for å sjekke unike properties", () => {
       const array = [{ id: 1 }, { id: 2 }, { id: 3 }];
 
-      expect(erPropertyUnik(array, (x) => x.id)).toBe(true);
+      expect(erPropertyUnik(array, (x: { id: number }) => x.id)).toBe(true);
     });
 
     it("skal returnere false når mapper gir duplikater", () => {
       const array = [{ id: 1 }, { id: 2 }, { id: 1 }];
 
-      expect(erPropertyUnik(array, (x) => x.id)).toBe(false);
+      expect(erPropertyUnik(array, (x: { id: number }) => x.id)).toBe(false);
     });
 
     it("skal håndtere strenger", () => {
@@ -232,8 +232,8 @@ describe("utils", () => {
         { name: "John", age: 35 },
       ];
 
-      expect(erPropertyUnik(array, (x) => x.name)).toBe(false);
-      expect(erPropertyUnik(array, (x) => x.age)).toBe(true);
+      expect(erPropertyUnik(array, (x: { name: string; age: number }) => x.name)).toBe(false);
+      expect(erPropertyUnik(array, (x: { name: string; age: number }) => x.age)).toBe(true);
     });
   });
 
