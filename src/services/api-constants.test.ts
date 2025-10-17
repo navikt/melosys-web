@@ -215,7 +215,7 @@ describe("api-constants", () => {
           key !== "FAKTURERINGSKOMPONENTEN_FLYT_BASE_URL",
       );
 
-      constantValues.forEach(([key, value]) => {
+      constantValues.forEach(([, value]) => {
         expect(typeof value).toBe("string");
         expect(value.length).toBeGreaterThan(0);
       });

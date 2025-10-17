@@ -6,10 +6,12 @@ import { Type } from "./types";
 import type { BrevAdresse } from "../../../../services/modules/dokumenter-v2";
 
 // Mock dependencies
-vi.mock("../../../../resources/images", () => ({
-  Fullmakt: () => <div data-testid="fullmakt-icon">Fullmakt Icon</div>,
-  GreenCheckmark: () => <div data-testid="checkmark-icon">Checkmark Icon</div>,
-}));
+vi.mock("../../../../resources/images", async () => {
+  const actual = await vi.importActual("../../../../resources/images");
+  return {
+    ...actual,
+  };
+});
 
 vi.mock("../../../../kodeverk", () => ({
   kodeTilTerm: (kode: string) => `Term for ${kode}`,
@@ -21,9 +23,16 @@ vi.mock("../../../adresser/brevAdresse", () => ({
   ),
 }));
 
-vi.mock("./redigererFullmektig", () => ({
-  fullmaktStøtterKontaktperson: (fullmakter: string[]) => fullmakter.includes("TRYGDEAVGIFT"),
-}));
+vi.mock("./redigererFullmektig", () => {
+  const fullmaktStøtterKontaktperson = (fullmakter: string[]) => fullmakter.includes("TRYGDEAVGIFT");
+
+  // Avoid unused warning
+  void fullmaktStøtterKontaktperson;
+
+  return {
+    fullmaktStøtterKontaktperson,
+  };
+});
 
 // Helper function to create complete BrevAdresse
 // All fields are required by the BrevAdresse interface

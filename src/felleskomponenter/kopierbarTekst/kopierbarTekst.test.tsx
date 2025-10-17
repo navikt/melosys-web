@@ -3,18 +3,27 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import KopierbarTekst from "./kopierbarTekst";
 
 // Mock icons
-vi.mock("../../resources/images", () => ({
-  GreenCheckmark: ({ className }: { className?: string }) => (
+vi.mock("../../resources/images", () => {
+  const GreenCheckmark = ({ className }: { className?: string }) => (
     <span data-testid="green-checkmark" className={className}>
       Checkmark
     </span>
-  ),
-  Kopier: ({ className }: { className?: string }) => (
+  );
+  const Kopier = ({ className }: { className?: string }) => (
     <span data-testid="kopier-icon" className={className}>
       Kopier
     </span>
-  ),
-}));
+  );
+
+  // Avoid unused warnings by using void operator
+  void GreenCheckmark;
+  void Kopier;
+
+  return {
+    GreenCheckmark,
+    Kopier,
+  };
+});
 
 describe("KopierbarTekst", () => {
   let clipboardWriteTextSpy: any;

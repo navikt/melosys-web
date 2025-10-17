@@ -64,9 +64,12 @@ vi.mock("./fritekstVedlegg", () => ({
   default: () => <div>FritekstVedlegg Mock</div>,
 }));
 
-vi.mock("../../alertmeldinger", () => ({
-  FeilMelding: ({ tekst }: { tekst: string }) => <div>{tekst}</div>,
-}));
+vi.mock("../../alertmeldinger", async () => {
+  const actual = await vi.importActual("../../alertmeldinger");
+  return {
+    ...actual,
+  };
+});
 
 describe("SendBrev", () => {
   const defaultPreloadedState = {
