@@ -1,7 +1,12 @@
 import { vi } from "vitest";
+import React from "react";
 import { renderWithProviders } from "../../ducks/test-utils/renderWithProviders";
 import Saksbehandling from "./saksbehandling";
 import MKV from "../../melosyskodeverk";
+
+// Type helper for testing Redux-connected components with partial props
+// Redux mapStateToProps/mapDispatchToProps provides most props, so we only need location/match in tests
+const SaksbehandlingTest = Saksbehandling as React.ComponentType<Partial<React.ComponentProps<typeof Saksbehandling>>>;
 
 // Mock dependencies
 vi.mock("../../felleskomponenter/informasjonlinje", () => ({
@@ -84,13 +89,13 @@ describe("Trygdeavtale Saksbehandling", () => {
   };
 
   const renderSaksbehandling = (preloadedState = defaultPreloadedState) => {
-    return renderWithProviders(<Saksbehandling location={mockLocation} match={mockMatch} />, {
+    return renderWithProviders(<SaksbehandlingTest location={mockLocation} match={mockMatch} />, {
       preloadedState,
     });
   };
 
   it("skal returnere null hvis redigerbart er null", () => {
-    const { container } = renderWithProviders(<Saksbehandling location={mockLocation} match={mockMatch} />, {
+    const { container } = renderWithProviders(<SaksbehandlingTest location={mockLocation} match={mockMatch} />, {
       preloadedState: defaultPreloadedState,
     });
 
@@ -105,7 +110,7 @@ describe("Trygdeavtale Saksbehandling", () => {
     };
 
     const { container } = renderWithProviders(
-      <Saksbehandling location={locationUtenBehandlingID} match={mockMatch} />,
+      <SaksbehandlingTest location={locationUtenBehandlingID} match={mockMatch} />,
       {
         preloadedState: defaultPreloadedState,
       },
