@@ -110,7 +110,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   harTrygdeavgiftFraAvgiftssystemet: boolean;
   harGrunnlag: boolean;
 }) {
-  const [feilmelding, setFeilmelding] = useState<undefined | string>(undefined);
+  const [feilmelding, setFeilmelding] = useState<string | string[] | undefined>(undefined);
   const [beregningPaagar, setBeregningPaagar] = useState(false);
   const [aarsavregningResponse, setAarsavregningResponse] = useState<AarsavregningResponse | undefined>(
     initiellData.aarsavregningResponse,

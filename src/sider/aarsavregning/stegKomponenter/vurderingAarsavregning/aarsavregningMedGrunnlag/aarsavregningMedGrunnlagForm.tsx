@@ -16,7 +16,6 @@ import MKV from "../../../../../melosyskodeverk";
 import * as Nav from "../../../../../navFrontend";
 import * as Api from "../../../../../services/api";
 import { AarsavregningResponse } from "../../../../../services/modules/aarsavregning/aarsavregning";
-import { Medlemskapsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import * as Utils from "../../../../../utils";
 import { Aarsavregningsmeldinger } from "../komponenter/aarsavregningsmeldinger";
 import { BeregnetTrygdeavgiftDetaljer } from "../komponenter/beregnetTrygdeavgiftDetaljer";
@@ -25,7 +24,7 @@ import { EndeligAvgiftValgRadioGroup } from "../komponenter/endeligAvgiftValgRad
 import { ManuellAvgiftFormPart } from "../komponenter/manuellAvgiftFormPart";
 import { MedlemskapsperioderDisplay } from "../komponenter/medlemskapsperiodeDisplay";
 import { SumArsavregningTabell } from "../komponenter/sumArsavregningTabell";
-import { beregnTrygdeavgiftsperioder, erBrukerSkattepliktigIHelePerioden } from "../utils";
+import { beregnTrygdeavgiftsperioder, erBrukerSkattepliktigIHelePerioden, finnMedlemskapsperiode } from "../utils";
 import "../vurderingAarsavregningInngang.less";
 import { InitiellData } from "./aarsavregningMedGrunnlag";
 import aarsavregningMedGrunnlagSchema from "./aarsavregningMedGrunnlagSchema";
@@ -56,7 +55,7 @@ interface Props {
 }
 
 export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterStatus }: Props) {
-  const [feilmelding, setFeilmelding] = useState<undefined | string>(undefined);
+  const [feilmelding, setFeilmelding] = useState<string | string[] | undefined>(undefined);
   const [aarsavregningResponse, setAarsavregningResponse] = useState<AarsavregningResponse | undefined>(
     initiellData.aarsavregningResponse,
   );
@@ -72,25 +71,9 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
 
   const { innvilgetMedlemskapsperioder, medlemskapstypeErPliktig } = initiellData;
 
-  // Funksjon for å finne sammensatt medlemskapsperiode for validering
-  const finnMedlemskapsperiode = useCallback((perioder: Medlemskapsperiode[]) => {
-    const sorterteGyldigePerioder = perioder
-      .filter((periode) => periode.fomDato && periode.tomDato)
-      .sort((a, b) => Utils.dato.sorterEtterNorskFomDato(a, b));
-
-    if (sorterteGyldigePerioder.length === 0) {
-      return undefined;
-    }
-
-    return {
-      fomDato: sorterteGyldigePerioder[0].fomDato,
-      tomDato: sorterteGyldigePerioder[sorterteGyldigePerioder.length - 1].tomDato,
-    };
-  }, []);
-
   const medlemskapsperiode = useMemo(() => {
     return finnMedlemskapsperiode(innvilgetMedlemskapsperioder);
-  }, [innvilgetMedlemskapsperioder, finnMedlemskapsperiode]);
+  }, [innvilgetMedlemskapsperioder]);
 
   const {
     control,

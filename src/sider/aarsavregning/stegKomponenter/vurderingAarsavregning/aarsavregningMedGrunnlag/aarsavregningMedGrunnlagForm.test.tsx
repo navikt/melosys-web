@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import aarsavregningMedGrunnlagSchema from "./aarsavregningMedGrunnlagSchema";
 import MKV from "../../../../../melosyskodeverk";
 import { Medlemskapsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
-import * as Utils from "../../../../../utils";
+import { finnMedlemskapsperiode } from "../utils";
 
 const { MANUELL_ENDELIG_AVGIFT } = MKV.Koder.endeligAvgiftValg;
 
@@ -50,22 +50,6 @@ describe("aarsavregningMedGrunnlagForm validering", () => {
 });
 
 describe("finnMedlemskapsperiode logikk", () => {
-  // Replikerer logikken fra aarsavregningMedGrunnlagForm.tsx for testing
-  const finnMedlemskapsperiode = (perioder: Medlemskapsperiode[]) => {
-    const sorterteGyldigePerioder = perioder
-      .filter((periode) => periode.fomDato && periode.tomDato)
-      .sort((a, b) => Utils.dato.sorterEtterNorskFomDato(a, b));
-
-    if (sorterteGyldigePerioder.length === 0) {
-      return undefined;
-    }
-
-    return {
-      fomDato: sorterteGyldigePerioder[0].fomDato,
-      tomDato: sorterteGyldigePerioder[sorterteGyldigePerioder.length - 1].tomDato,
-    };
-  };
-
   it("skal finne sammensatt periode fra flere medlemskapsperioder", () => {
     const perioder: Medlemskapsperiode[] = [
       {

@@ -7,6 +7,7 @@ import {
 import * as Api from "../../../../services/api";
 import * as Utils from "../../../../utils";
 import { AarsavregningResponse } from "../../../../services/modules/aarsavregning/aarsavregning";
+import { Medlemskapsperiode } from "../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import MKV from "../../../../melosyskodeverk";
 import aarsavregningUtenEllerDeltGrunnlagSchema from "./aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlagSchema";
 
@@ -26,6 +27,28 @@ export const mapFeilmelding = (error: any) => {
 
 export const erBrukerSkattepliktigIHelePerioden = (skatteforholdsperioder: any) => {
   return !skatteforholdsperioder.some((skatteforhold: any) => skatteforhold.skatteplikttype === IKKE_SKATTEPLIKTIG);
+};
+
+/**
+ * Finner sammensatt medlemskapsperiode fra en liste av perioder.
+ * Returnerer fomDato fra den tidligste perioden og tomDato fra den seneste.
+ * Filtrerer bort perioder som mangler fomDato eller tomDato.
+ */
+export const finnMedlemskapsperiode = (
+  perioder: Medlemskapsperiode[],
+): { fomDato: string; tomDato: string } | undefined => {
+  const sorterteGyldigePerioder = perioder
+    .filter((periode) => periode.fomDato && periode.tomDato)
+    .sort((a, b) => Utils.dato.sorterEtterNorskFomDato(a, b));
+
+  if (sorterteGyldigePerioder.length === 0) {
+    return undefined;
+  }
+
+  return {
+    fomDato: sorterteGyldigePerioder[0].fomDato,
+    tomDato: sorterteGyldigePerioder[sorterteGyldigePerioder.length - 1].tomDato,
+  };
 };
 
 export function beregnTrygdeavgiftsperioder(
