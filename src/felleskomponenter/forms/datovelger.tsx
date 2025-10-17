@@ -56,7 +56,9 @@ function InnerDatovelgerComponent({
 
 type DatovelgerProps = DatovelgerComponentProps & UseControllerProps;
 
-const Datovelger = forwardRef<HTMLSelectElement, DatovelgerProps>(
+// Bruker forwardRef for å matche UseControllerProps typing pattern,
+// men ref brukes ikke og videresentdes ikke (DatePicker.Input håndterer sin egen ref)
+const Datovelger = forwardRef<HTMLInputElement, DatovelgerProps>(
   ({ name, control, ...rest }: DatovelgerProps, _ref) => {
     return (
       <Controller

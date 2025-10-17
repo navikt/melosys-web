@@ -52,7 +52,8 @@ const kanPeriodeSlettes = (gjeldendePeriode: Medlemskapsperiode, allePerioderILi
 
 export interface PeriodeElementerProps {
   redigerbart: boolean;
-  control: Control;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  control: Control<any>;
   field: { id: string };
   remove: (index: number) => void;
   formValues: FormValuesProps;
