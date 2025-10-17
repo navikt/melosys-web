@@ -16,6 +16,7 @@ import MKV from "../../../../../melosyskodeverk";
 import * as Nav from "../../../../../navFrontend";
 import * as Api from "../../../../../services/api";
 import { AarsavregningResponse } from "../../../../../services/modules/aarsavregning/aarsavregning";
+import { Medlemskapsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import * as Utils from "../../../../../utils";
 import { Aarsavregningsmeldinger } from "../komponenter/aarsavregningsmeldinger";
 import { BeregnetTrygdeavgiftDetaljer } from "../komponenter/beregnetTrygdeavgiftDetaljer";
@@ -32,6 +33,22 @@ import { Feilmelding, finnAktivFeilmelding } from "./valideringsfeil";
 
 const { OPPLYSNINGER_ENDRET, MANUELL_ENDELIG_AVGIFT } = MKV.Koder.endeligAvgiftValg;
 
+interface MappedFormState {
+  skatteforholdsperioder: Array<{
+    fomDato: string | undefined;
+    tomDato: string | undefined;
+    skatteplikttype: string | undefined;
+  }>;
+  inntektskilder: Array<{
+    fomDato: string | undefined;
+    tomDato: string | undefined;
+    kildetype: string | undefined;
+    bruttoInntekt: number | undefined;
+    arbAvgBetales: string | boolean | undefined;
+    erMaanedsbelop: string | boolean | undefined;
+  }>;
+}
+
 interface Props {
   initiellData: InitiellData;
   bekreft: () => void;
@@ -44,21 +61,21 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
     initiellData.aarsavregningResponse,
   );
   const [beregningPaagar, setBeregningPaagar] = useState(false);
-  const [previousFormValues, setPreviousFormValues] = useState<any | null>(null);
+  const [previousFormValues, setPreviousFormValues] = useState<MappedFormState | null>(null);
   const [endrerEndeligAvgiftValg, setEndrerEndeligAvgiftValg] = useState(false);
   const [debouncedBeregningPagaar, setDebouncedBeregningPagaar] = useState(false);
   const [arrayValideringsfeil, setArrayValideringsfeil] = useState<string | undefined>(undefined);
 
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
-  const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as any;
+  const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as number;
   const aarsavregningID = useSelector(behandlingsresultatSelectors.ÅrsavregningIDSelector);
 
   const { innvilgetMedlemskapsperioder, medlemskapstypeErPliktig } = initiellData;
 
   // Funksjon for å finne sammensatt medlemskapsperiode for validering
-  const finnMedlemskapsperiode = useCallback((perioder: any[]) => {
+  const finnMedlemskapsperiode = useCallback((perioder: Medlemskapsperiode[]) => {
     const sorterteGyldigePerioder = perioder
-      .filter((periode: any) => periode.fomDato && periode.tomDato)
+      .filter((periode) => periode.fomDato && periode.tomDato)
       .sort((a, b) => Utils.dato.sorterEtterNorskFomDato(a, b));
 
     if (sorterteGyldigePerioder.length === 0) {
@@ -96,21 +113,21 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
     fields: skattFields,
     append: skattAppend,
     remove: skattRemove,
-  } = useFieldArray({ control: control as any, name: "skatteforholdsperioder" });
+  } = useFieldArray({ control, name: "skatteforholdsperioder" });
 
   const {
     fields: inntektFields,
     append: inntektAppend,
     remove: inntektRemove,
     update: inntektUpdate,
-  } = useFieldArray({ control: control as any, name: "inntektskilder" });
+  } = useFieldArray({ control, name: "inntektskilder" });
 
   const formValues = watch();
   const skatteforholdsperioder = watch("skatteforholdsperioder");
   const inntektskilder = watch("inntektskilder");
   const endeligAvgiftValg = watch("endeligAvgiftValg");
   const manueltAvgiftBeloep = watch("manueltAvgiftBeloep");
-  const debouncedBeregningRef = useRef<any>(null);
+  const debouncedBeregningRef = useRef<ReturnType<typeof Utils._debounce> | null>(null);
 
   const mapFormState = (
     skatteforholdsperioderFormState: Skatteforhold[],
