@@ -54,7 +54,7 @@ export function KnyttTilSak(props: KnyttTilSakProps) {
   const dispatch = useDispatch();
 
   // Sjekk om det er andregangsbehandling (saken har eksisterende behandlinger)
-  const erAndregangsbehandling = behandlingOversikter.length > 0;
+  const erAndregangsbehandling = (behandlingOversikter?.length ?? 0) > 0;
 
   // State for data fra operasjonen
   const [state, setState] = useState<KnyttTilSakState>({
@@ -109,7 +109,7 @@ export function KnyttTilSak(props: KnyttTilSakProps) {
 
   // Håndterer brukerinteraksjoner: Oppdatering av behandlingstema
   useEffect(() => {
-    if (opprettBehandling && Utils._isEmpty(behandlingstema)) {
+    if (opprettBehandling && Utils._isEmpty(behandlingstema) && sisteBehandling?.behandlingstema?.kode) {
       changeField(feltNavn.formNavn, feltNavn.behandlingstema, sisteBehandling.behandlingstema.kode);
     }
     // Nullstill behandlingstype når opprettBehandling er false
