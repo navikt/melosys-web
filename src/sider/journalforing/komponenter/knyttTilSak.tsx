@@ -53,6 +53,9 @@ export function KnyttTilSak(props: KnyttTilSakProps) {
   const sisteBehandling = behandlingOversikter[0];
   const dispatch = useDispatch();
 
+  // Sjekk om det er andregangsbehandling (saken har eksisterende behandlinger)
+  const erAndregangsbehandling = behandlingOversikter.length > 0;
+
   // State for data fra operasjonen
   const [state, setState] = useState<KnyttTilSakState>({
     muligeBehandlingstemaer: [],
@@ -189,16 +192,17 @@ export function KnyttTilSak(props: KnyttTilSakProps) {
               feltNavn={feltNavn.behandlingstema}
               label="Behandlingstema"
               emptyFieldDisabled={!!(behandlingstema as { kode?: string })?.kode}
-              disabled={state.harBehandlingMedTrygdeavgift}
-              className={state.harBehandlingMedTrygdeavgift ? "select__slim" : undefined}
+              disabled={state.harBehandlingMedTrygdeavgift || erAndregangsbehandling}
+              className={state.harBehandlingMedTrygdeavgift || erAndregangsbehandling ? "select__slim" : undefined}
             >
               {state.muligeBehandlingstemaer?.map((elem) => (
                 <option key={elem.kode} value={elem.kode} label={elem.term ?? undefined} />
               ))}
             </Skjema.Select>
-            {state.harBehandlingMedTrygdeavgift && (
+            {(state.harBehandlingMedTrygdeavgift || erAndregangsbehandling) && (
               <Nav.Detail className="behandlingstema__label">
-                Du kan ikke endre behandlingstema når saken har en tilknyttet fakturaserie.
+                Du kan ikke endre behandlingstema når saken har en tilknyttet fakturaserie eller en eksisterende
+                behandling.
               </Nav.Detail>
             )}
             <Skjema.RadioGroup legend="Behandlingstype" name={feltNavn.behandlingstype}>
