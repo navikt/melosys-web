@@ -1,49 +1,128 @@
-import * as Organisasjon from "./organisasjon";
+import { describe, it, expect } from "vitest";
+import { erOrgnrLengde, erOrgnrGyldig } from "./organisasjon";
 
-describe("Tester organisasjon.js:", () => {
+describe("organisasjon utils", () => {
   describe("erOrgnrLengde", () => {
-    test("returnerer false dersom orgnr er kortere enn 9 tall", () => {
-      const mockData = "12345678";
-      const forventetResultat = false;
-      expect(Organisasjon.erOrgnrLengde(mockData)).toEqual(forventetResultat);
+    it("skal returnere true for 9 sifre", () => {
+      expect(erOrgnrLengde("123456789")).toBe(true);
     });
 
-    test("returnerer false dersom orgnr er lengre enn 9 tall", () => {
-      const mockData = "1234567890";
-      const forventetResultat = false;
-      expect(Organisasjon.erOrgnrLengde(mockData)).toEqual(forventetResultat);
+    it("skal returnere false for færre enn 9 sifre", () => {
+      expect(erOrgnrLengde("12345678")).toBe(false);
+      expect(erOrgnrLengde("1234567")).toBe(false);
+      expect(erOrgnrLengde("123")).toBe(false);
+      expect(erOrgnrLengde("1")).toBe(false);
     });
 
-    test("returnerer true dersom orgnr er 9 tall", () => {
-      const mockData = "123456789";
-      const forventetResultat = true;
-      expect(Organisasjon.erOrgnrLengde(mockData)).toEqual(forventetResultat);
+    it("skal returnere false for flere enn 9 sifre", () => {
+      expect(erOrgnrLengde("1234567890")).toBe(false);
+      expect(erOrgnrLengde("12345678901")).toBe(false);
+    });
+
+    it("skal returnere false for tom streng", () => {
+      expect(erOrgnrLengde("")).toBe(false);
+    });
+
+    it("skal returnere false for streng med bokstaver", () => {
+      expect(erOrgnrLengde("12345678A")).toBe(false);
+      expect(erOrgnrLengde("ABC123456")).toBe(false);
+      expect(erOrgnrLengde("ABCDEFGHI")).toBe(false);
+    });
+
+    it("skal returnere false for streng med spesialtegn", () => {
+      expect(erOrgnrLengde("123-456-78")).toBe(false);
+      expect(erOrgnrLengde("123 456 78")).toBe(false);
+      expect(erOrgnrLengde("123.456.78")).toBe(false);
+    });
+
+    it("skal returnere false for streng med mellomrom", () => {
+      expect(erOrgnrLengde(" 12345678")).toBe(false);
+      expect(erOrgnrLengde("12345678 ")).toBe(false);
+      expect(erOrgnrLengde("123 45678")).toBe(false);
     });
   });
 
   describe("erOrgnrGyldig", () => {
-    test("returnerer false dersom orgnr ikke er gyldig", () => {
-      const mockData = "123456789";
-      const forventetResulat = false;
-      expect(Organisasjon.erOrgnrGyldig(mockData)).toEqual(forventetResulat);
+    // Gyldige orgnr (NAV og andre kjente organisasjoner)
+    it("skal returnere true for gyldige organisasjonsnummer", () => {
+      expect(erOrgnrGyldig("889640782")).toBe(true); // NAV
+      expect(erOrgnrGyldig("974760673")).toBe(true); // Skatteetaten
+      expect(erOrgnrGyldig("910075918")).toBe(true); // Politiet
+      // Fra gamle tester:
+      expect(erOrgnrGyldig("810072512")).toBe(true); // Eiken og Torsken
+      expect(erOrgnrGyldig("910099035")).toBe(true); // Skarsvåg og Vanse
+      expect(erOrgnrGyldig("910104004")).toBe(true); // Granvind og Fedje
+      expect(erOrgnrGyldig("910108239")).toBe(true); // Stord og Leknes
     });
 
-    test("returnerer false dersom orgnr ikke er 9 tall", () => {
-      const mockData = "1234567891";
-      const forventetResulat = false;
-      expect(Organisasjon.erOrgnrGyldig(mockData)).toEqual(forventetResulat);
+    it("skal returnere false for ugyldige organisasjonsnummer (feil kontrollsiffer)", () => {
+      expect(erOrgnrGyldig("889640781")).toBe(false); // Siste siffer feil
+      expect(erOrgnrGyldig("974760672")).toBe(false); // Siste siffer feil
+      expect(erOrgnrGyldig("910075917")).toBe(false); // Siste siffer feil
     });
 
-    test("returnerer true dersom orgnr ikke er gyldig", () => {
-      const mockData1 = "810072512"; //Eiken og Torsken
-      const mockData2 = "910099035"; //Skarsvåg og Vanse
-      const mockData3 = "910104004"; //Granvind og Fedje
-      const mockData4 = "910108239"; //Stord og Leknes
-      const forventetResultat = true;
-      expect(Organisasjon.erOrgnrGyldig(mockData1)).toEqual(forventetResultat);
-      expect(Organisasjon.erOrgnrGyldig(mockData2)).toEqual(forventetResultat);
-      expect(Organisasjon.erOrgnrGyldig(mockData3)).toEqual(forventetResultat);
-      expect(Organisasjon.erOrgnrGyldig(mockData4)).toEqual(forventetResultat);
+    it("skal returnere false for orgnr med feil lengde", () => {
+      expect(erOrgnrGyldig("12345678")).toBe(false); // 8 sifre
+      expect(erOrgnrGyldig("1234567890")).toBe(false); // 10 sifre
+    });
+
+    it("skal returnere false for tom streng", () => {
+      expect(erOrgnrGyldig("")).toBe(false);
+    });
+
+    it("skal returnere false for null", () => {
+      expect(erOrgnrGyldig(null)).toBe(false);
+    });
+
+    it("skal returnere false for undefined", () => {
+      expect(erOrgnrGyldig(undefined)).toBe(false);
+    });
+
+    it("skal returnere false for streng med bokstaver", () => {
+      expect(erOrgnrGyldig("88964078A")).toBe(false);
+      expect(erOrgnrGyldig("ABC123456")).toBe(false);
+    });
+
+    it("skal returnere false for streng med spesialtegn", () => {
+      expect(erOrgnrGyldig("889-640-782")).toBe(false);
+      expect(erOrgnrGyldig("889 640 782")).toBe(false);
+    });
+
+    it("skal håndtere kontrollsiffer 0 korrekt", () => {
+      // Når Q1 blir 11, skal den settes til 0
+      // 000000000 og 999999999 er faktisk gyldige matematisk
+      expect(erOrgnrGyldig("999999999")).toBe(true);
+      expect(erOrgnrGyldig("000000000")).toBe(true);
+    });
+
+    it("skal validere orgnr med repeterende sifre", () => {
+      // 111111111 er faktisk gyldig matematisk (kontrollsiffer stemmer)
+      expect(erOrgnrGyldig("111111111")).toBe(true);
+    });
+
+    it("skal validere testorgnr", () => {
+      expect(erOrgnrGyldig("123456785")).toBe(true);
+    });
+  });
+
+  describe("integrasjonstest", () => {
+    it("skal validere lengde før MOD11-beregning", () => {
+      // erOrgnrGyldig skal bruke erOrgnrLengde internt
+      const kortOrgnr = "1234567";
+      expect(erOrgnrGyldig(kortOrgnr)).toBe(false);
+      expect(erOrgnrLengde(kortOrgnr)).toBe(false);
+    });
+
+    it("skal godta gyldige orgnr som også har korrekt lengde", () => {
+      const gyldigOrgnr = "889640782";
+      expect(erOrgnrLengde(gyldigOrgnr)).toBe(true);
+      expect(erOrgnrGyldig(gyldigOrgnr)).toBe(true);
+    });
+
+    it("skal avvise orgnr med korrekt lengde men feil kontrollsiffer", () => {
+      const ugyldigOrgnr = "889640781"; // Korrekt lengde, feil kontrollsiffer
+      expect(erOrgnrLengde(ugyldigOrgnr)).toBe(true);
+      expect(erOrgnrGyldig(ugyldigOrgnr)).toBe(false);
     });
   });
 });
