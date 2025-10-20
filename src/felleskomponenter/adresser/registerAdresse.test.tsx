@@ -14,7 +14,7 @@ describe("RegisterAdresse", () => {
   });
 
   it("skal vise '(ingen tilgjengelig)' for null adresse", () => {
-    const { container } = render(<RegisterAdresse adresse={null} />);
+    const { container } = render(<RegisterAdresse adresse={{}} />);
 
     expect(container.textContent).toContain("(ingen tilgjengelig)");
   });

@@ -11,26 +11,26 @@ const MockIcon = ({ className }: { className?: string }) => (
 
 describe("Elementskrift", () => {
   it("skal rendre tekst", () => {
-    render(<Elementskrift ikon={MockIcon} tekst="Test tekst" />);
+    render(<Elementskrift ikon={MockIcon} tekst="Test tekst" className="" />);
 
     expect(screen.getByText("Test tekst")).toBeInTheDocument();
   });
 
   it("skal rendre ikon", () => {
-    render(<Elementskrift ikon={MockIcon} tekst="Test tekst" />);
+    render(<Elementskrift ikon={MockIcon} tekst="Test tekst" className="" />);
 
     expect(screen.getByTestId("mock-icon")).toBeInTheDocument();
   });
 
   it("skal gi ikon riktig className", () => {
-    render(<Elementskrift ikon={MockIcon} tekst="Test tekst" />);
+    render(<Elementskrift ikon={MockIcon} tekst="Test tekst" className="" />);
 
     const icon = screen.getByTestId("mock-icon");
     expect(icon).toHaveClass("ikon");
   });
 
   it("skal ha elementskrift className på container", () => {
-    const { container } = render(<Elementskrift ikon={MockIcon} tekst="Test tekst" />);
+    const { container } = render(<Elementskrift ikon={MockIcon} tekst="Test tekst" className="" />);
 
     const element = container.querySelector(".elementskrift");
     expect(element).toBeInTheDocument();
@@ -45,7 +45,7 @@ describe("Elementskrift", () => {
   });
 
   it("skal ikke ha custom className når den ikke er oppgitt", () => {
-    const { container } = render(<Elementskrift ikon={MockIcon} tekst="Test tekst" />);
+    const { container } = render(<Elementskrift ikon={MockIcon} tekst="Test tekst" className="" />);
 
     const element = container.querySelector(".elementskrift");
     expect(element).toHaveClass("elementskrift");
@@ -58,32 +58,32 @@ describe("Elementskrift", () => {
       </span>
     );
 
-    render(<Elementskrift ikon={AnotherIcon} tekst="Test" />);
+    render(<Elementskrift ikon={AnotherIcon} tekst="Test" className="" />);
 
     expect(screen.getByTestId("another-icon")).toBeInTheDocument();
     expect(screen.queryByTestId("mock-icon")).not.toBeInTheDocument();
   });
 
   it("skal rendre ulike tekster", () => {
-    const { rerender } = render(<Elementskrift ikon={MockIcon} tekst="Første tekst" />);
+    const { rerender } = render(<Elementskrift ikon={MockIcon} tekst="Første tekst" className="" />);
 
     expect(screen.getByText("Første tekst")).toBeInTheDocument();
 
-    rerender(<Elementskrift ikon={MockIcon} tekst="Andre tekst" />);
+    rerender(<Elementskrift ikon={MockIcon} tekst="Andre tekst" className="" />);
 
     expect(screen.getByText("Andre tekst")).toBeInTheDocument();
     expect(screen.queryByText("Første tekst")).not.toBeInTheDocument();
   });
 
   it("skal ha semibold weight", () => {
-    const { container } = render(<Elementskrift ikon={MockIcon} tekst="Test" />);
+    const { container } = render(<Elementskrift ikon={MockIcon} tekst="Test" className="" />);
 
     const element = container.querySelector(".navds-body-long");
     expect(element).toBeInTheDocument();
   });
 
   it("skal rendre tom tekst", () => {
-    const { container } = render(<Elementskrift ikon={MockIcon} tekst="" />);
+    const { container } = render(<Elementskrift ikon={MockIcon} tekst="" className="" />);
 
     const element = container.querySelector(".elementskrift");
     expect(element).toBeInTheDocument();

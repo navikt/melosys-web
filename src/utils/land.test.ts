@@ -3,10 +3,10 @@ import { landTekstFormat, sorterLandOgGjørOmTilStoreForbokstaver } from "./land
 
 // Mock streng utils
 vi.mock("./streng", () => ({
-  storeForbokstaverForLand: (str) => {
+  storeForbokstaverForLand: (str: string) => {
     // Simulate Title Case transformation
     return str
-      .replace(/(\w)[^\s-]*/g, (word) => word.charAt(0).toUpperCase() + word.substring(1).toLowerCase())
+      .replace(/(\w)[^\s-]*/g, (word: string) => word.charAt(0).toUpperCase() + word.substring(1).toLowerCase())
       .replace("Usa", "USA")
       .replace(" Og ", " og ")
       .replace(" Of ", " of ")

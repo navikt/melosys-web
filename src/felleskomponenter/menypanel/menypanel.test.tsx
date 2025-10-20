@@ -65,6 +65,7 @@ describe("Menypanel", () => {
     redigerbart: true,
     lagreSoknadOgOppfriskSaksopplysninger: mockLagreSoknadOgOppfriskSaksopplysninger,
     visOppdaterRegisteropplysninger: true,
+    dispatch: vi.fn(),
   };
 
   beforeEach(() => {
