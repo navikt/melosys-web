@@ -241,7 +241,6 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     setLagrePending(true);
 
     if (skalIkkeBeregneForelopigTrygdeavgift && skalIkkeViseTidligerePerioderToggle) {
-      setFeil(undefined);
       setTrygdeavgift(undefined);
       setLagrePending(false);
     } else {
