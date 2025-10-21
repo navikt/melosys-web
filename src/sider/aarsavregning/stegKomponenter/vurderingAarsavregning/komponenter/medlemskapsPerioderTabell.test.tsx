@@ -11,9 +11,9 @@ describe("MedlemskapsPerioderTabell", () => {
   it("rendrer tabell med data", () => {
     const perioder = [
       {
-        fomDato: "2022-01-01",
-        tomDato: "2022-12-31",
-        trygdedekning: "Full",
+        periodeFra: "2022-01-01",
+        periodeTil: "2022-12-31",
+        dekning: "Full",
         id: 0,
         bestemmelse: "bestemmelse",
         innvilgelsesResultat: "PLIKTIG",
@@ -28,18 +28,18 @@ describe("MedlemskapsPerioderTabell", () => {
   it("rendrer tabell med flere perioder", () => {
     const perioder = [
       {
-        fomDato: "2022-01-01",
-        tomDato: "2022-12-31",
-        trygdedekning: "Full",
+        periodeFra: "2022-01-01",
+        periodeTil: "2022-12-31",
+        dekning: "Full",
         id: 0,
         bestemmelse: "bestemmelse",
         innvilgelsesResultat: "PLIKTIG",
         medlemskapstype: "type",
       },
       {
-        fomDato: "2023-01-01",
-        tomDato: "2023-12-31",
-        trygdedekning: "Delvis",
+        periodeFra: "2023-01-01",
+        periodeTil: "2023-12-31",
+        dekning: "Delvis",
         id: 0,
         bestemmelse: "bestemmelse",
         innvilgelsesResultat: "PLIKTIG",
@@ -54,9 +54,9 @@ describe("MedlemskapsPerioderTabell", () => {
   it("formaterer og viser riktig fom og tom datoer", () => {
     const perioder = [
       {
-        fomDato: "2022-01-01",
-        tomDato: "2022-12-31",
-        trygdedekning: "Full",
+        periodeFra: "2022-01-01",
+        periodeTil: "2022-12-31",
+        dekning: "Full",
         id: 0,
         bestemmelse: "bestemmelse",
         innvilgelsesResultat: "PLIKTIG",
@@ -70,9 +70,9 @@ describe("MedlemskapsPerioderTabell", () => {
   it("viser riktig trygdedekning verdi", () => {
     const perioder = [
       {
-        fomDato: "2022-01-01",
-        tomDato: "2022-12-31",
-        trygdedekning: "FTRL_2_9_FØRSTE_LEDD_C_ANDRE_LEDD_HELSE_PENSJON_SYKE_FORELDREPENGER",
+        periodeFra: "2022-01-01",
+        periodeTil: "2022-12-31",
+        dekning: "FTRL_2_9_FØRSTE_LEDD_C_ANDRE_LEDD_HELSE_PENSJON_SYKE_FORELDREPENGER",
         id: 0,
         bestemmelse: "bestemmelse",
         innvilgelsesResultat: "PLIKTIG",

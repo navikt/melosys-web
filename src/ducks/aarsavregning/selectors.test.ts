@@ -9,12 +9,12 @@ describe("Aarsavregning Selektorer", () => {
       const mockMedlemskapsperioder = [
         {
           id: 1,
-          fomDato: "2023-01-01",
-          tomDato: "2023-12-31",
+          periodeFra: "2023-01-01",
+          periodeTil: "2023-12-31",
           bestemmelse: "FTRL_2_7",
           medlemskapstype: "PLIKTIG",
           innvilgelsesResultat: "INNVILGET",
-          trygdedekning: "FULL_DEKNING",
+          dekning: "FULL_DEKNING",
           redigerbar: false,
         },
       ];
@@ -26,7 +26,7 @@ describe("Aarsavregning Selektorer", () => {
             aar: 2023,
             tidligereTrygdeavgiftsGrunnlagsopplysninger: {
               trygdeavgiftsgrunnlag: {
-                medlemskapsperioder: mockMedlemskapsperioder,
+                avgiftspliktigPerioder: mockMedlemskapsperioder,
                 skatteforholdsperioder: [],
                 inntektskperioder: [],
               },
