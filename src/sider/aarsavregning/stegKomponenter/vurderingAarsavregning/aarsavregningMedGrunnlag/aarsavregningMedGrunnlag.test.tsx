@@ -573,7 +573,7 @@ describe("AarsavregningMedGrunnlag", () => {
       expect(state.aarsavregning.data?.sisteGjeldendeMedlemskapsperioder).toHaveLength(2);
     });
 
-    it("skal håndtere perioder med manglende trygdedekning", async () => {
+    it("skal håndtere perioder med ulike trygdedekninger", async () => {
       const mockResponse: AarsavregningResponse = {
         aarsavregningID: 1,
         aar: 2023,
@@ -585,7 +585,7 @@ describe("AarsavregningMedGrunnlag", () => {
             bestemmelse: "FTRL_2_7",
             medlemskapstype: "PLIKTIG",
             innvilgelsesResultat: "INNVILGET",
-            trygdedekning: undefined as any, // Mangler trygdedekning
+            trygdedekning: "INGEN_DEKNING",
             redigerbar: false,
           },
         ],
@@ -609,7 +609,7 @@ describe("AarsavregningMedGrunnlag", () => {
         expect(Api.Aarsavregning.hentAarsavregning).toHaveBeenCalled();
       });
 
-      // Skal håndtere manglende trygdedekning uten å krasje
+      // Skal håndtere ulike trygdedekninger uten å krasje
       const state = store.getState();
       expect(state.aarsavregning.data).toBeDefined();
     });

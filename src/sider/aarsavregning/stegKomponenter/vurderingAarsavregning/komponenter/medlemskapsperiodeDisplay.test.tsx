@@ -78,12 +78,12 @@ describe("MedlemskapsperioderDisplay", () => {
   });
 
   it("skal returnere null for undefined liste", () => {
-    const { container } = render(<MedlemskapsperioderDisplay medlemskapsperioder={undefined as any} />);
+    const { container } = render(<MedlemskapsperioderDisplay medlemskapsperioder={undefined} />);
     expect(container.firstChild).toBeNull();
   });
 
   it("skal returnere null for null liste", () => {
-    const { container } = render(<MedlemskapsperioderDisplay medlemskapsperioder={null as any} />);
+    const { container } = render(<MedlemskapsperioderDisplay medlemskapsperioder={null} />);
     expect(container.firstChild).toBeNull();
   });
 

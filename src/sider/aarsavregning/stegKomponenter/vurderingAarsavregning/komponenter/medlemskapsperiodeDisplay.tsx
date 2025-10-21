@@ -7,7 +7,7 @@ import { Medlemskapsperiode } from "../../../../../services/modules/medlemavfolk
 import "./medlemskapsperiodeSkjema.less";
 
 interface MedlemskapsperioderDisplayProps {
-  medlemskapsperioder: Medlemskapsperiode[];
+  medlemskapsperioder: Medlemskapsperiode[] | null | undefined;
 }
 
 export function MedlemskapsperioderDisplay({ medlemskapsperioder }: MedlemskapsperioderDisplayProps) {
