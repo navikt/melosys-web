@@ -15,10 +15,6 @@ export function MedlemskapsperioderDisplay({ medlemskapsperioder }: Medlemskapsp
     return null;
   }
 
-  const handleDateChange = () => {
-    // display component
-  };
-
   return (
     <div className="medlemskapsperiode-display">
       <Nav.Select label="Bestemmelse" value={medlemskapsperioder[0].bestemmelse} readOnly>
@@ -31,11 +27,14 @@ export function MedlemskapsperioderDisplay({ medlemskapsperioder }: Medlemskapsp
       </Nav.Select>
       <div className="perioder">
         {medlemskapsperioder.map((periode, index) => (
-          <Nav.Row key={index} className="periode__rad medlemskapsperiode__rad">
+          <Nav.Row
+            key={periode.id ?? `${periode.fomDato}-${periode.tomDato}`}
+            className="periode__rad medlemskapsperiode__rad"
+          >
             <Nav.Column className="dato">
               <Datovelger
                 label={index === 0 ? "Medlemskapsperiode" : ""}
-                onChange={handleDateChange}
+                onChange={() => {}}
                 value={Utils.dato.norskStringTilDate(periode.fomDato)}
                 readOnly={true}
               />
@@ -43,25 +42,22 @@ export function MedlemskapsperioderDisplay({ medlemskapsperioder }: Medlemskapsp
             <Nav.Column className="dato">
               <Datovelger
                 label={index === 0 ? <span className="invisible" /> : ""}
-                onChange={handleDateChange}
+                onChange={() => {}}
                 value={Utils.dato.norskStringTilDate(periode.tomDato)}
                 readOnly={true}
               />
             </Nav.Column>
             <Nav.Column className="trygdedekning">
-              {index === 0 ? (
-                <Nav.Select label="Dekning" value={periode.trygdedekning} readOnly>
-                  <option value={periode.trygdedekning}>
-                    {KV.kodeTilTerm(periode.trygdedekning, MKV.KTObjects.trygdedekninger)}
-                  </option>
-                </Nav.Select>
-              ) : (
-                <Nav.Select label="" hideLabel value={periode.trygdedekning} readOnly>
-                  <option value={periode.trygdedekning}>
-                    {KV.kodeTilTerm(periode.trygdedekning, MKV.KTObjects.trygdedekninger)}
-                  </option>
-                </Nav.Select>
-              )}
+              <Nav.Select
+                label={index === 0 ? "Dekning" : ""}
+                hideLabel={index !== 0}
+                value={periode.trygdedekning}
+                readOnly
+              >
+                <option value={periode.trygdedekning}>
+                  {KV.kodeTilTerm(periode.trygdedekning, MKV.KTObjects.trygdedekninger)}
+                </option>
+              </Nav.Select>
             </Nav.Column>
           </Nav.Row>
         ))}

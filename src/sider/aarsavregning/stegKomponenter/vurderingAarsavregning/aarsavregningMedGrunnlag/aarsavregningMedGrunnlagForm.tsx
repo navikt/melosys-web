@@ -16,6 +16,7 @@ import MKV from "../../../../../melosyskodeverk";
 import * as Nav from "../../../../../navFrontend";
 import * as Api from "../../../../../services/api";
 import { AarsavregningResponse } from "../../../../../services/modules/aarsavregning/aarsavregning";
+import { Medlemskapsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import * as Utils from "../../../../../utils";
 import { Aarsavregningsmeldinger } from "../komponenter/aarsavregningsmeldinger";
 import { BeregnetTrygdeavgiftDetaljer } from "../komponenter/beregnetTrygdeavgiftDetaljer";
@@ -56,9 +57,9 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   const { innvilgetMedlemskapsperioder, medlemskapstypeErPliktig } = initiellData;
 
   // Funksjon for å finne sammensatt medlemskapsperiode for validering
-  const finnMedlemskapsperiode = useCallback((perioder: any[]) => {
+  const finnMedlemskapsperiode = useCallback((perioder: Medlemskapsperiode[]) => {
     const sorterteGyldigePerioder = perioder
-      .filter((periode: any) => periode.fomDato && periode.tomDato)
+      .filter((periode: Medlemskapsperiode) => periode.fomDato && periode.tomDato)
       .sort((a, b) => Utils.dato.sorterEtterNorskFomDato(a, b));
 
     if (sorterteGyldigePerioder.length === 0) {
