@@ -62,8 +62,8 @@ export const finnMedlemskapsperiode = (
   }
 
   return {
-    fomDato: sorterteGyldigePerioder[0].fomDato!,
-    tomDato: sorterteGyldigePerioder[sorterteGyldigePerioder.length - 1].tomDato!,
+    fomDato: sorterteGyldigePerioder[0].fomDato,
+    tomDato: sorterteGyldigePerioder[sorterteGyldigePerioder.length - 1].tomDato,
   };
 };
 
