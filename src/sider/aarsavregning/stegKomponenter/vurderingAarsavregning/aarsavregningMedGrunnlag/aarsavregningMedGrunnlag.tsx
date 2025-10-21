@@ -23,7 +23,7 @@ const mapMedlemskapsperioder = (medlemskapsperioder: Medlemskapsperiode[]) => {
     (periode) => periode.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.INNVILGET,
   );
 
-  return innvilgedePerioder.sort(sorterEtterISOFomDato).map((periode) => ({
+  return [...innvilgedePerioder].sort(sorterEtterISOFomDato).map((periode) => ({
     ...periode,
     fomDato: Utils.dato.formatterDatoTilNorsk(periode.fomDato),
     tomDato: Utils.dato.formatterDatoTilNorsk(periode.tomDato),
