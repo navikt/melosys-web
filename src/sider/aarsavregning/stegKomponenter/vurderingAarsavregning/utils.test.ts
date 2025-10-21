@@ -10,6 +10,19 @@ import {
   mapTilInntektskilderProps,
   mapTilSkatteforholdProps,
 } from "./utils";
+import { Medlemskapsperiode } from "../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+
+// Helper function to create mock Medlemskapsperiode
+const createMockMedlemskapsperiode = (overrides?: Partial<Medlemskapsperiode>): Medlemskapsperiode => ({
+  id: 1,
+  fomDato: "01.01.2023",
+  tomDato: "31.12.2023",
+  bestemmelse: "FTRL_2_7",
+  innvilgelsesResultat: "INNVILGET",
+  trygdedekning: "FULL_DEKNING",
+  medlemskapstype: "PLIKTIG",
+  ...overrides,
+});
 
 // Mock dependencies
 vi.mock("../../../../services/api", () => ({
@@ -166,7 +179,7 @@ describe("utils", () => {
 
     describe("hentMedlemskapsFomTomDato", () => {
       it("extracts date range from membership periods", () => {
-        const periods = [{ fomDato: "01.01.2023", tomDato: "31.12.2023" }];
+        const periods = [createMockMedlemskapsperiode()];
         vi.mocked(Utils._isEmpty).mockReturnValue(false);
 
         const result = hentMedlemskapsFomTomDato(periods);
@@ -191,7 +204,7 @@ describe("utils", () => {
       });
 
       it("creates default skatteforhold from membership when none provided", () => {
-        const membership = [{ fomDato: "01.01.2023", tomDato: "31.12.2023" }];
+        const membership = [createMockMedlemskapsperiode()];
         vi.mocked(Utils._isEmpty).mockReturnValue(false);
 
         const result = mapTilSkatteforholdProps(undefined, membership);
@@ -208,7 +221,7 @@ describe("utils", () => {
             tomDato: "2023-12-31",
             type: "ARBEID",
             arbeidsgiversavgiftBetales: true,
-            avgiftspliktigInntekt: "500000",
+            avgiftspliktigInntekt: 500000,
             erMaanedsbelop: false,
           },
         ];
@@ -222,14 +235,14 @@ describe("utils", () => {
             tomDato: "31.12.2023",
             kildetype: "ARBEID",
             arbAvgBetales: "JA",
-            bruttoInntekt: "500000",
+            bruttoInntekt: 500000,
             erMaanedsbelop: "NEI",
           },
         ]);
       });
 
       it("creates default inntektskilde from membership when none provided", () => {
-        const membership = [{ fomDato: "01.01.2023", tomDato: "31.12.2023" }];
+        const membership = [createMockMedlemskapsperiode()];
         vi.mocked(Utils._isEmpty).mockReturnValue(false);
 
         const result = mapTilInntektskilderProps(undefined, membership);
@@ -240,7 +253,7 @@ describe("utils", () => {
             tomDato: "31.12.2023",
             kildetype: "",
             arbAvgBetales: "NEI",
-            bruttoInntekt: "",
+            bruttoInntekt: undefined,
             erMaanedsbelop: "JA",
           },
         ]);
