@@ -7,7 +7,7 @@ import * as Api from "../../../../../services/api";
 import { Inntektskilde } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
 import * as Utils from "../../../../../utils";
 import { ULAGRET_MEDLEMSKAPSPERIODE_ID } from "../aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlag";
-import { Fastsettingsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import { AvgiftspliktigPeriode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 
 interface BestemmelseSelectProps {
   control: Control<any>;
@@ -19,7 +19,7 @@ interface BestemmelseSelectProps {
   setTrygdedekninger: (trygdedekninger: string[]) => void;
   setFeilmelding: (feilmelding: string | undefined) => void;
   setEndrerBestemmelse: (isChanging: boolean) => void;
-  lagreMedlemskapsperioderHvisGyldig: (oppdaterteMedlemskapsperioder: Fastsettingsperiode[]) => void;
+  lagreMedlemskapsperioderHvisGyldig: (oppdaterteMedlemskapsperioder: AvgiftspliktigPeriode[]) => void;
 }
 
 function BestemmelseSelect({
@@ -47,7 +47,7 @@ function BestemmelseSelect({
 
         try {
           if (
-            medlemskapsperioder.some((periode: Fastsettingsperiode) => periode.id !== ULAGRET_MEDLEMSKAPSPERIODE_ID)
+            medlemskapsperioder.some((periode: AvgiftspliktigPeriode) => periode.id !== ULAGRET_MEDLEMSKAPSPERIODE_ID)
           ) {
             await Api.MedlemAvFolketrygden.Medlemskapsperioder.slettMedlemskapsperioder(behandlingID!);
           }
@@ -59,7 +59,7 @@ function BestemmelseSelect({
 
         const defaultTrygdedekning = trygdedekningerResponse.length === 1 ? trygdedekningerResponse[0] : "";
 
-        const oppdaterteMedlemskapsperioder = medlemskapsperioder.map((periode: Fastsettingsperiode) => ({
+        const oppdaterteMedlemskapsperioder = medlemskapsperioder.map((periode: AvgiftspliktigPeriode) => ({
           ...periode,
           trygdedekning: defaultTrygdedekning,
           id: ULAGRET_MEDLEMSKAPSPERIODE_ID,

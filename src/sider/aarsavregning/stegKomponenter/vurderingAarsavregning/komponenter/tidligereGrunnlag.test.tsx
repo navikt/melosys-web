@@ -12,7 +12,7 @@ describe("TidligereGrunnlag", () => {
     sisteGjeldendeMedlemskapsperioder: [],
     tidligereTrygdeavgiftsGrunnlagsopplysninger: {
       trygdeavgiftsgrunnlag: {
-        fastsettingsperioder: [
+        avgiftspliktigPerioder: [
           {
             id: 1,
             periodeFra: "2023-01-01",
@@ -67,7 +67,7 @@ describe("TidligereGrunnlag", () => {
     createMockResponse({
       tidligereTrygdeavgiftsGrunnlagsopplysninger: {
         trygdeavgiftsgrunnlag: {
-          fastsettingsperioder: [
+          avgiftspliktigPerioder: [
             {
               id: 1,
               periodeFra: "2023-01-01",

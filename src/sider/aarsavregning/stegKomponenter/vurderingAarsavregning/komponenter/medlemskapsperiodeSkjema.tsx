@@ -12,14 +12,14 @@ import { ULAGRET_MEDLEMSKAPSPERIODE_ID } from "../aarsavregningUtenEllerDeltGrun
 
 import { useEffect } from "react";
 import { FieldArrayProps, FormValuesProps } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
-import { Fastsettingsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import { AvgiftspliktigPeriode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import "./medlemskapsperiodeSkjema.less";
 import { usePliktigeBestemmelser } from "../hooks/usePliktigeBestemmelser";
 
 // Funksjon for å kalkulere slettbar-status, nå kalt kanPeriodeSlettes
 const kanPeriodeSlettes = (
-  gjeldendePeriode: Fastsettingsperiode,
-  allePerioderIListe: Fastsettingsperiode[],
+  gjeldendePeriode: AvgiftspliktigPeriode,
+  allePerioderIListe: AvgiftspliktigPeriode[],
 ): boolean => {
   const erPeriodeUlagret = !gjeldendePeriode.id || gjeldendePeriode.id === ULAGRET_MEDLEMSKAPSPERIODE_ID;
   if (erPeriodeUlagret) {

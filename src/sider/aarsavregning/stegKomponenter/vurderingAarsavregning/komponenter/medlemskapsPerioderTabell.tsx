@@ -1,4 +1,4 @@
-import { Fastsettingsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import { AvgiftspliktigPeriode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import * as Utils from "../../../../../utils";
 import * as KV from "../../../../../kodeverk";
 import * as Nav from "../../../../../navFrontend";
@@ -27,7 +27,7 @@ const mapMedlemskapstypeTekst = (kode: string) => {
   return "";
 };
 
-function MedlemskapsPerioderTabell({ perioder }: { perioder?: Fastsettingsperiode[] }) {
+function MedlemskapsPerioderTabell({ perioder }: { perioder?: AvgiftspliktigPeriode[] }) {
   if (!perioder) return null;
 
   return (

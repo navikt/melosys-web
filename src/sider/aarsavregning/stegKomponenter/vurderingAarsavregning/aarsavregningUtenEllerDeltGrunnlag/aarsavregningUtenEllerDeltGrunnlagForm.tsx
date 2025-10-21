@@ -16,7 +16,7 @@ import * as Nav from "../../../../../navFrontend";
 import * as Api from "../../../../../services/api";
 import { AarsavregningResponse } from "../../../../../services/modules/aarsavregning/aarsavregning";
 import {
-  Fastsettingsperiode,
+  AvgiftspliktigPeriode,
   OppdaterMedlemskapsperiode,
 } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import * as Utils from "../../../../../utils";
@@ -122,7 +122,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   const [trygdedekninger, setTrygdedekninger] = useState<string[]>(initiellData.trygdedekninger || []);
   const [endrerBestemmelse, setEndrerBestemmelse] = useState(false);
   const [lagreMedlemskapsperioderPaagar, setLagreMedlemskapsperioderPaagar] = useState(false);
-  const [lagredeMedlemskapsperioder, setLagredeMedlemskapsperioder] = useState<Fastsettingsperiode[]>(
+  const [lagredeMedlemskapsperioder, setLagredeMedlemskapsperioder] = useState<AvgiftspliktigPeriode[]>(
     initiellData.formDefaultValues.medlemskapsperioder || [],
   );
 
@@ -184,13 +184,13 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
 
   const medlemskapstypeErPliktig = useMemo(() => {
     return medlemskapsperioder
-      .filter((periode: Fastsettingsperiode) => periode.id !== ULAGRET_MEDLEMSKAPSPERIODE_ID)
-      .every((periode: Fastsettingsperiode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG);
+      .filter((periode: AvgiftspliktigPeriode) => periode.id !== ULAGRET_MEDLEMSKAPSPERIODE_ID)
+      .every((periode: AvgiftspliktigPeriode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG);
   }, [medlemskapsperioder]);
 
-  const finnMedlemskapsperiode = useCallback((perioder: Fastsettingsperiode[]) => {
+  const finnMedlemskapsperiode = useCallback((perioder: AvgiftspliktigPeriode[]) => {
     const sorterteGyldigePerioder = perioder
-      .filter((periode: Fastsettingsperiode) => periode.periodeFra && periode.periodeTil)
+      .filter((periode: AvgiftspliktigPeriode) => periode.periodeFra && periode.periodeTil)
       .sort(Utils.dato.sorterEtterNorskFomDato);
     const medlemskapsperiodeFomTom = hentMedlemskapsFomTomDato(sorterteGyldigePerioder);
 
@@ -211,7 +211,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   const mapFormState = (
     skatteforholdsperioderFormState: Skatteforhold[],
     inntektskilderFormState: Inntektskilde[],
-    medlemskapsperioderFormState: Fastsettingsperiode[],
+    medlemskapsperioderFormState: AvgiftspliktigPeriode[],
     trygdeavgiftFraAvgiftssystemetParam: number | undefined,
     endeligAvgiftValgFormState: string | undefined,
     bestemmelseFormState: string | undefined,
@@ -229,7 +229,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       arbAvgBetales: inntektskilde.arbAvgBetales,
       erMaanedsbelop: inntektskilde.erMaanedsbelop,
     })),
-    medlemskapsperioder: medlemskapsperioderFormState.map((periode: Fastsettingsperiode) => ({
+    medlemskapsperioder: medlemskapsperioderFormState.map((periode: AvgiftspliktigPeriode) => ({
       fomDato: periode.periodeFra,
       tomDato: periode.periodeTil,
       trygdedekning: periode.dekning,
@@ -258,8 +258,8 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   }, [aarsavregningResponse?.nyttTrygdeavgiftsGrunnlag?.avgift.totalAvgift]);
 
   const lagreMedlemskapsperiodeHvisEndret = async (
-    periode: Fastsettingsperiode,
-    lagredePerioder: Fastsettingsperiode[],
+    periode: AvgiftspliktigPeriode,
+    lagredePerioder: AvgiftspliktigPeriode[],
     index: number,
   ) => {
     const periodeRequest = {
@@ -347,7 +347,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         skatteforholdsperioder: formState.skatteforholdsperioder,
         inntektskilder: formState.inntektskilder,
         medlemskapsperiodeFomTom,
-        medlemskapsperioder: medlemskapsperioderFormState as Fastsettingsperiode[],
+        medlemskapsperioder: medlemskapsperioderFormState as AvgiftspliktigPeriode[],
         medlemskapstypeErPliktig,
       });
 
@@ -355,7 +355,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         skatteforholdsperioder: formState.skatteforholdsperioder,
         inntektskilder: formState.inntektskilder,
         medlemskapsperiodeFomTom,
-        medlemskapsperioder: medlemskapsperioderFormState as Fastsettingsperiode[],
+        medlemskapsperioder: medlemskapsperioderFormState as AvgiftspliktigPeriode[],
         medlemskapstypeErPliktig,
       });
       if (!aktivFeilmelding) {
@@ -388,8 +388,8 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   ]);
 
   const lagreMedlemskapsperioder = useCallback(
-    async (medlemskapsperioderFormValues: Fastsettingsperiode[]) => {
-      interface LagredeMedlemskapsperioder extends Fastsettingsperiode {
+    async (medlemskapsperioderFormValues: AvgiftspliktigPeriode[]) => {
+      interface LagredeMedlemskapsperioder extends AvgiftspliktigPeriode {
         formValuesIndex: number;
       }
 
@@ -398,7 +398,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         const lagretPeriode = await lagreMedlemskapsperiodeHvisEndret(periode, lagredeMedlemskapsperioder, index);
         if (lagretPeriode)
           endredeMedlemskapsperioder.push({
-            ...(lagretPeriode as Fastsettingsperiode),
+            ...(lagretPeriode as AvgiftspliktigPeriode),
             formValuesIndex: index,
           });
       }
@@ -431,7 +431,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   );
 
   const debouncedLagreMedlemskapsperioder = useCallback(
-    Utils._debounce((medlemskapsperioderFormValues: Fastsettingsperiode[], callbackEtterLagring: () => void) => {
+    Utils._debounce((medlemskapsperioderFormValues: AvgiftspliktigPeriode[], callbackEtterLagring: () => void) => {
       lagreMedlemskapsperioder(medlemskapsperioderFormValues).finally(() => {
         if (callbackEtterLagring) callbackEtterLagring();
       });
@@ -440,8 +440,8 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   );
 
   const medlemskapsperioderHarBrukerendringer = (
-    medlemskapsperioderNå: Fastsettingsperiode[],
-    medlemskapsperioderTidlgere: Fastsettingsperiode[],
+    medlemskapsperioderNå: AvgiftspliktigPeriode[],
+    medlemskapsperioderTidlgere: AvgiftspliktigPeriode[],
   ) => {
     const nåværendeListeMedRelevanteFelter = medlemskapsperioderNå.map(
       ({ periodeFra: fomDato, periodeTil: tomDato, dekning: trygdedekning }) => ({
@@ -517,7 +517,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   }, [medlemskapsperioder, redigerbart, endrerBestemmelse, bestemmelse]);
 
   const lagreMedlemskapsperioderEtterBestemmelseEndringHvisGyldig = useCallback(
-    (oppdaterteMedlemskapsperioder: Fastsettingsperiode[]) => {
+    (oppdaterteMedlemskapsperioder: AvgiftspliktigPeriode[]) => {
       setLagredeMedlemskapsperioder(oppdaterteMedlemskapsperioder);
 
       const completeFormData = {

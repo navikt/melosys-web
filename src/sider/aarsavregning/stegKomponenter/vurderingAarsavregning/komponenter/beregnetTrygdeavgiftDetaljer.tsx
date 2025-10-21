@@ -32,7 +32,7 @@ export function BeregnetTrygdeavgiftDetaljer({
   const hentDetaljer = (data: Grunnlagsopplysninger): DetaljerInterface[] => {
     return data.avgift.trygdeavgiftsperioder
       .map((period) => {
-        const overlappingMedlemskap = data.trygdeavgiftsgrunnlag.fastsettingsperioder.find(
+        const overlappingMedlemskap = data.trygdeavgiftsgrunnlag.avgiftspliktigPerioder.find(
           (m) => new Date(m.periodeFra) <= new Date(period.tom) && new Date(m.periodeTil) >= new Date(period.fom),
         );
 

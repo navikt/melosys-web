@@ -53,7 +53,7 @@ const kallFeilet = (response: any): boolean => response.type === medlemskapsperi
 const mapFeil = (response: any) => response?.data?.message || response.data;
 
 const mapTilMedlemskapsperiodeProps = (
-  medlemskapsperiode: Api.MedlemAvFolketrygden.Medlemskapsperioder.Fastsettingsperiode,
+  medlemskapsperiode: Api.MedlemAvFolketrygden.Medlemskapsperioder.AvgiftspliktigPeriode,
 ): MedlemskapsperiodeProp => ({
   ...medlemskapsperiode,
   fomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.periodeFra),
@@ -64,7 +64,7 @@ const mapTilMedlemskapsperiodeProps = (
 });
 
 const mapInitialMedlemskapsperioder = (
-  medlemskapsperioder: Api.MedlemAvFolketrygden.Medlemskapsperioder.Fastsettingsperiode[],
+  medlemskapsperioder: Api.MedlemAvFolketrygden.Medlemskapsperioder.AvgiftspliktigPeriode[],
 ): MedlemskapsperiodeProp[] =>
   [...medlemskapsperioder]
     .sort((a, b) => Utils.dato.sorterEtterISOFomDato(a, b) || (a.innvilgelsesResultat === AVSLAATT ? -1 : 1))

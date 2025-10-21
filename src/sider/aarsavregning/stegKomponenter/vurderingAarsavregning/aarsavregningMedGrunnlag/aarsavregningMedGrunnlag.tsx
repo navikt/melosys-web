@@ -15,11 +15,11 @@ import { mapTilInntektskilderProps, mapTilSkatteforholdProps } from "../utils";
 import { AarsavregningMedGrunnlagForm } from "./aarsavregningMedGrunnlagForm";
 import * as Nav from "../../../../../navFrontend";
 import MKV from "../../../../../melosyskodeverk";
-import { Fastsettingsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import { AvgiftspliktigPeriode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import { sorterEtterISOFomDato } from "../../../../../utils/dato";
 import { ULAGRET_MEDLEMSKAPSPERIODE_ID } from "../aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlag";
 
-const mapInnvilgetMedlemskapsPeriode = (medlemskapsperioder: Fastsettingsperiode[]) => {
+const mapInnvilgetMedlemskapsPeriode = (medlemskapsperioder: AvgiftspliktigPeriode[]) => {
   const sorterteInnvilgedePerioder = [...medlemskapsperioder]
     .filter((periode) => periode.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.INNVILGET)
     .sort(sorterEtterISOFomDato);
@@ -33,7 +33,7 @@ const mapInnvilgetMedlemskapsPeriode = (medlemskapsperioder: Fastsettingsperiode
 
 const mapMedlemskapsperiodeBestemmelse = (
   harTrygdeavgiftFraAvgiftssystemet: boolean,
-  medlemskapsperioder?: Fastsettingsperiode[],
+  medlemskapsperioder?: AvgiftspliktigPeriode[],
 ) => {
   if (medlemskapsperioder && !Utils._isEmpty(medlemskapsperioder)) {
     const sortertePerioder = [...medlemskapsperioder]
@@ -45,7 +45,7 @@ const mapMedlemskapsperiodeBestemmelse = (
   return undefined;
 };
 
-const mapTrygdedekning = (medlemskapsperioder?: Fastsettingsperiode[]) => {
+const mapTrygdedekning = (medlemskapsperioder?: AvgiftspliktigPeriode[]) => {
   if (!medlemskapsperioder || medlemskapsperioder.length === 0) return undefined;
   const innvilgedePerioder = medlemskapsperioder.filter(
     (periode) => periode.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.INNVILGET,
@@ -99,7 +99,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
     } else {
       const bestemmelseFraTidligereAvgiftsgrunnlag =
         aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag
-          ?.fastsettingsperioder?.[0]?.bestemmelse;
+          ?.avgiftspliktigPerioder?.[0]?.bestemmelse;
       const eventuellNyBestemmelse = aarsavregningResponse?.sisteGjeldendeMedlemskapsperioder?.[0]?.bestemmelse;
       if (
         bestemmelseFraTidligereAvgiftsgrunnlag &&

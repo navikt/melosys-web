@@ -2,7 +2,7 @@ import * as Utils from "../../../../../utils";
 import { erBrukerSkattepliktigIHelePerioden } from "../utils";
 import { Inntektskilde, Skatteforhold } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
 import * as Nav from "../../../../../navFrontend";
-import { Fastsettingsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import { AvgiftspliktigPeriode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 
 export enum TypeFeilmelding {
   SKATTEFORHOLD_DEKKER_IKKE_HELE_MEDLEMSKAPSPERIODEN = "SKATTEFORHOLD_DEKKER_IKKE_HELE_MEDLEMSKAPSPERIODEN",
@@ -138,11 +138,11 @@ interface AarsavregningValidationParams {
     fomDato: string;
     tomDato: string;
   };
-  medlemskapsperioder: Fastsettingsperiode[];
+  medlemskapsperioder: AvgiftspliktigPeriode[];
   medlemskapstypeErPliktig: boolean;
 }
 
-export function finnAktivFeilmeldingForMedlemskapsperioder(medlemskapsperioder: Fastsettingsperiode[]) {
+export function finnAktivFeilmeldingForMedlemskapsperioder(medlemskapsperioder: AvgiftspliktigPeriode[]) {
   const vaskedeMedlemskapsperioder = Utils.dato.vaskOgFormaterDatoerTilIso(medlemskapsperioder);
 
   if (!ingenOverlappendePerioder(vaskedeMedlemskapsperioder)) {
