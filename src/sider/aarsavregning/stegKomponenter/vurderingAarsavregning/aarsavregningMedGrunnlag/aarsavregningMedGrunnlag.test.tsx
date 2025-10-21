@@ -89,7 +89,7 @@ describe("AarsavregningMedGrunnlag", () => {
         ],
         nyttTrygdeavgiftsGrunnlag: {
           trygdeavgiftsgrunnlag: {
-            medlemskapsperioder: [],
+            avgiftspliktigPerioder: [],
             skatteforholdsperioder: [
               {
                 fomDato: "2023-01-01",
@@ -116,7 +116,7 @@ describe("AarsavregningMedGrunnlag", () => {
         },
         tidligereTrygdeavgiftsGrunnlagsopplysninger: {
           trygdeavgiftsgrunnlag: {
-            medlemskapsperioder: [],
+            avgiftspliktigPerioder: [],
             skatteforholdsperioder: [],
             inntektskperioder: [],
           },
@@ -160,15 +160,15 @@ describe("AarsavregningMedGrunnlag", () => {
         nyttTrygdeavgiftsGrunnlag: undefined, // Ingen nytt grunnlag
         tidligereTrygdeavgiftsGrunnlagsopplysninger: {
           trygdeavgiftsgrunnlag: {
-            medlemskapsperioder: [
+            avgiftspliktigPerioder: [
               {
                 id: 2,
-                fomDato: "2023-01-01",
-                tomDato: "2023-12-31",
+                periodeFra: "2023-01-01",
+                periodeTil: "2023-12-31",
                 bestemmelse: "FTRL_2_7", // Samme bestemmelse
                 medlemskapstype: "PLIKTIG",
                 innvilgelsesResultat: "INNVILGET",
-                trygdedekning: "FULL_DEKNING",
+                dekning: "FULL_DEKNING",
                 redigerbar: false,
               },
             ],
@@ -231,15 +231,15 @@ describe("AarsavregningMedGrunnlag", () => {
         nyttTrygdeavgiftsGrunnlag: undefined,
         tidligereTrygdeavgiftsGrunnlagsopplysninger: {
           trygdeavgiftsgrunnlag: {
-            medlemskapsperioder: [
+            avgiftspliktigPerioder: [
               {
                 id: 2,
-                fomDato: "2023-01-01",
-                tomDato: "2023-12-31",
+                periodeFra: "2023-01-01",
+                periodeTil: "2023-12-31",
                 bestemmelse: "FTRL_2_7", // Forskjellig bestemmelse
                 medlemskapstype: "PLIKTIG",
                 innvilgelsesResultat: "INNVILGET",
-                trygdedekning: "FULL_DEKNING",
+                dekning: "FULL_DEKNING",
                 redigerbar: false,
               },
             ],
@@ -297,7 +297,7 @@ describe("AarsavregningMedGrunnlag", () => {
         ],
         tidligereTrygdeavgiftsGrunnlagsopplysninger: {
           trygdeavgiftsgrunnlag: {
-            medlemskapsperioder: [],
+            avgiftspliktigPerioder: [],
             skatteforholdsperioder: [],
             inntektskperioder: [],
           },
@@ -327,7 +327,7 @@ describe("AarsavregningMedGrunnlag", () => {
         sisteGjeldendeMedlemskapsperioder: [], // Tom array
         tidligereTrygdeavgiftsGrunnlagsopplysninger: {
           trygdeavgiftsgrunnlag: {
-            medlemskapsperioder: [],
+            avgiftspliktigPerioder: [],
             skatteforholdsperioder: [],
             inntektskperioder: [],
           },
@@ -392,7 +392,7 @@ describe("AarsavregningMedGrunnlag", () => {
         ],
         nyttTrygdeavgiftsGrunnlag: {
           trygdeavgiftsgrunnlag: {
-            medlemskapsperioder: [],
+            avgiftspliktigPerioder: [],
             skatteforholdsperioder: [],
             inntektskperioder: [
               {
@@ -413,15 +413,15 @@ describe("AarsavregningMedGrunnlag", () => {
         },
         tidligereTrygdeavgiftsGrunnlagsopplysninger: {
           trygdeavgiftsgrunnlag: {
-            medlemskapsperioder: [
+            avgiftspliktigPerioder: [
               {
                 id: 2,
-                fomDato: "2023-01-01",
-                tomDato: "2023-12-31",
+                periodeFra: "2023-01-01",
+                periodeTil: "2023-12-31",
                 bestemmelse: "FTRL_2_7", // Samme bestemmelse
                 medlemskapstype: "PLIKTIG",
                 innvilgelsesResultat: "INNVILGET",
-                trygdedekning: "FULL_DEKNING",
+                dekning: "FULL_DEKNING",
                 redigerbar: false,
               },
             ],
