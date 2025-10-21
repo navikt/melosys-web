@@ -17,7 +17,6 @@ import * as Nav from "../../../../../navFrontend";
 import MKV from "../../../../../melosyskodeverk";
 import { Medlemskapsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import { sorterEtterISOFomDato } from "../../../../../utils/dato";
-import { ULAGRET_MEDLEMSKAPSPERIODE_ID } from "../aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlag";
 
 const mapMedlemskapsperioder = (medlemskapsperioder: Medlemskapsperiode[]) => {
   const innvilgedePerioder = medlemskapsperioder.filter(

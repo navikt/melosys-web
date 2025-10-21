@@ -7,7 +7,7 @@ import { Medlemskapsperiode } from "../../../../../services/modules/medlemavfolk
 import "./medlemskapsperiodeSkjema.less";
 
 interface MedlemskapsperioderDisplayProps {
-  medlemskapsperioder: Medlemskapsperiode[];
+  medlemskapsperioder: Medlemskapsperiode[] | null | undefined;
 }
 
 export function MedlemskapsperioderDisplay({ medlemskapsperioder }: MedlemskapsperioderDisplayProps) {
@@ -17,7 +17,7 @@ export function MedlemskapsperioderDisplay({ medlemskapsperioder }: Medlemskapsp
 
   return (
     <div className="medlemskapsperiode-display">
-      <Nav.Select label="Bestemmelse" value={medlemskapsperioder[0].bestemmelse} readOnly>
+      <Nav.Select label="Bestemmelse" value={medlemskapsperioder[0].bestemmelse} onChange={() => {}} readOnly>
         <option value={medlemskapsperioder[0].bestemmelse}>
           {KV.kodeTilTerm(medlemskapsperioder[0].bestemmelse, [
             ...Object.values(MKV.KTObjects.folketrygdloven_kap2_bestemmelser),
@@ -26,11 +26,9 @@ export function MedlemskapsperioderDisplay({ medlemskapsperioder }: Medlemskapsp
         </option>
       </Nav.Select>
       <div className="perioder">
+        {/* Using index as key since backend returns id=0 for all periods, making IDs unreliable */}
         {medlemskapsperioder.map((periode, index) => (
-          <Nav.Row
-            key={periode.id ?? `${periode.fomDato}-${periode.tomDato}`}
-            className="periode__rad medlemskapsperiode__rad"
-          >
+          <Nav.Row key={index} className="periode__rad medlemskapsperiode__rad">
             <Nav.Column className="dato">
               <Datovelger
                 label={index === 0 ? "Medlemskapsperiode" : ""}
@@ -52,6 +50,7 @@ export function MedlemskapsperioderDisplay({ medlemskapsperioder }: Medlemskapsp
                 label={index === 0 ? "Dekning" : ""}
                 hideLabel={index !== 0}
                 value={periode.trygdedekning}
+                onChange={() => {}}
                 readOnly
               >
                 <option value={periode.trygdedekning}>
