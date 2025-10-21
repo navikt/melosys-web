@@ -114,14 +114,14 @@ const erPensjonUføretrygdLagtInnForPeriodeMedKunPensjon = (
         Utils.dato.perioderOverlapper(
           inntektskilde.fomDato,
           inntektskilde.tomDato,
-          Utils.dato.formatterDatoTilNorsk(periode.fomDato),
-          Utils.dato.formatterDatoTilNorsk(periode.tomDato),
+          Utils.dato.formatterDatoTilNorsk(periode.periodeFra),
+          Utils.dato.formatterDatoTilNorsk(periode.periodeTil),
         ),
       ),
     );
   return (
     !Utils._isEmpty(overlappendeMedlemskapsperioder) &&
-    overlappendeMedlemskapsperioder.every((periode) => periode.trygdedekning === FTRL_2_9_FØRSTE_LEDD_B_PENSJON)
+    overlappendeMedlemskapsperioder.every((periode) => periode.dekning === FTRL_2_9_FØRSTE_LEDD_B_PENSJON)
   );
 };
 

@@ -190,7 +190,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
 
   const finnMedlemskapsperiode = useCallback((perioder: Fastsettingsperiode[]) => {
     const sorterteGyldigePerioder = perioder
-      .filter((periode: Fastsettingsperiode) => periode.fomDato && periode.tomDato)
+      .filter((periode: Fastsettingsperiode) => periode.periodeFra && periode.periodeTil)
       .sort(Utils.dato.sorterEtterNorskFomDato);
     const medlemskapsperiodeFomTom = hentMedlemskapsFomTomDato(sorterteGyldigePerioder);
 
@@ -230,9 +230,9 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       erMaanedsbelop: inntektskilde.erMaanedsbelop,
     })),
     medlemskapsperioder: medlemskapsperioderFormState.map((periode: Fastsettingsperiode) => ({
-      fomDato: periode.fomDato,
-      tomDato: periode.tomDato,
-      trygdedekning: periode.trygdedekning,
+      fomDato: periode.periodeFra,
+      tomDato: periode.periodeTil,
+      trygdedekning: periode.dekning,
       medlemskapstype: periode.medlemskapstype,
     })),
     trygdeavgiftFraAvgiftssystemet: trygdeavgiftFraAvgiftssystemetParam,
@@ -263,9 +263,9 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     index: number,
   ) => {
     const periodeRequest = {
-      fomDato: Utils.dato.vaskOgFormatterTilISO(periode.fomDato, "") as string,
-      tomDato: Utils.dato.vaskOgFormatterTilISO(periode.tomDato, "") as string,
-      trygdedekning: periode.trygdedekning,
+      fomDato: Utils.dato.vaskOgFormatterTilISO(periode.periodeFra, "") as string,
+      tomDato: Utils.dato.vaskOgFormatterTilISO(periode.periodeTil, "") as string,
+      trygdedekning: periode.dekning,
       bestemmelse: getValues("bestemmelse"),
       innvilgelsesResultat: MKV.Koder.innvilgelsesResultat.INNVILGET,
     } as OppdaterMedlemskapsperiode;
@@ -274,9 +274,9 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     const harEndringer =
       !lagretMedlemskapsperiode ||
       periode.id === ULAGRET_MEDLEMSKAPSPERIODE_ID ||
-      periode.fomDato !== lagretMedlemskapsperiode.fomDato ||
-      periode.tomDato !== lagretMedlemskapsperiode.tomDato ||
-      periode.trygdedekning !== lagretMedlemskapsperiode.trygdedekning;
+      periode.periodeFra !== lagretMedlemskapsperiode.periodeFra ||
+      periode.periodeTil !== lagretMedlemskapsperiode.periodeTil ||
+      periode.dekning !== lagretMedlemskapsperiode.dekning;
 
     if (harEndringer) {
       try {
@@ -443,17 +443,21 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     medlemskapsperioderNå: Fastsettingsperiode[],
     medlemskapsperioderTidlgere: Fastsettingsperiode[],
   ) => {
-    const nåværendeListeMedRelevanteFelter = medlemskapsperioderNå.map(({ fomDato, tomDato, trygdedekning }) => ({
-      fomDato,
-      tomDato,
-      trygdedekning,
-    }));
+    const nåværendeListeMedRelevanteFelter = medlemskapsperioderNå.map(
+      ({ periodeFra: fomDato, periodeTil: tomDato, dekning: trygdedekning }) => ({
+        fomDato,
+        tomDato,
+        trygdedekning,
+      }),
+    );
 
-    const forrigeListeMedRelevanteFelter = medlemskapsperioderTidlgere.map(({ fomDato, tomDato, trygdedekning }) => ({
-      fomDato,
-      tomDato,
-      trygdedekning,
-    }));
+    const forrigeListeMedRelevanteFelter = medlemskapsperioderTidlgere.map(
+      ({ periodeFra: fomDato, periodeTil: tomDato, dekning: trygdedekning }) => ({
+        fomDato,
+        tomDato,
+        trygdedekning,
+      }),
+    );
 
     const sorterEtterFomDato = (a: any, b: any) => {
       if (!a.fomDato || !b.fomDato) return 0;

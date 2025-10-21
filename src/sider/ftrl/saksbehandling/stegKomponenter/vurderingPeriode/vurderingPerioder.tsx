@@ -56,8 +56,8 @@ const mapTilMedlemskapsperiodeProps = (
   medlemskapsperiode: Api.MedlemAvFolketrygden.Medlemskapsperioder.Fastsettingsperiode,
 ): MedlemskapsperiodeProp => ({
   ...medlemskapsperiode,
-  fomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.fomDato),
-  tomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.tomDato),
+  fomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.periodeFra),
+  tomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.periodeTil),
   ny: false,
   feil: undefined,
   periodeId: medlemskapsperiode.id,

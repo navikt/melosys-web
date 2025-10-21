@@ -24,9 +24,9 @@ const mapInnvilgetMedlemskapsPeriode = (medlemskapsperioder: Fastsettingsperiode
     .filter((periode) => periode.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.INNVILGET)
     .sort(sorterEtterISOFomDato);
   return {
-    fomDato: Utils.dato.formatterDatoTilNorsk(sorterteInnvilgedePerioder[0].fomDato),
+    fomDato: Utils.dato.formatterDatoTilNorsk(sorterteInnvilgedePerioder[0].periodeFra),
     tomDato: Utils.dato.formatterDatoTilNorsk(
-      sorterteInnvilgedePerioder[sorterteInnvilgedePerioder.length - 1].tomDato,
+      sorterteInnvilgedePerioder[sorterteInnvilgedePerioder.length - 1].periodeTil,
     ),
   };
 };
@@ -50,7 +50,7 @@ const mapTrygdedekning = (medlemskapsperioder?: Fastsettingsperiode[]) => {
   const innvilgedePerioder = medlemskapsperioder.filter(
     (periode) => periode.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.INNVILGET,
   );
-  return innvilgedePerioder[0]?.trygdedekning;
+  return innvilgedePerioder[0]?.dekning;
 };
 
 export interface AarsavregningMedGrunnlagFormValues extends FormValuesProps {

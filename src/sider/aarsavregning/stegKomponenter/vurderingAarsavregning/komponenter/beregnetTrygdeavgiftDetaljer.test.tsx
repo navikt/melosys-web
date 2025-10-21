@@ -48,10 +48,10 @@ describe("BeregnetTrygdeavgiftDetaljer", () => {
     trygdeavgiftsgrunnlag: {
       fastsettingsperioder: [
         {
-          fomDato: "2023-01-01",
-          tomDato: "2023-12-31",
+          periodeFra: "2023-01-01",
+          periodeTil: "2023-12-31",
           medlemskapstype: "PLIKTIG",
-          trygdedekning: "FULL",
+          dekning: "FULL",
           id: 1,
           bestemmelse: "mock-bestemmelse",
           innvilgelsesResultat: "mock-innvilgelsesResultat",

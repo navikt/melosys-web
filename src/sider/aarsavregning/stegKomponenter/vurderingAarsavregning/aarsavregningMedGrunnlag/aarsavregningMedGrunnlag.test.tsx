@@ -78,12 +78,12 @@ describe("AarsavregningMedGrunnlag", () => {
         sisteGjeldendeMedlemskapsperioder: [
           {
             id: 1,
-            fomDato: "2023-01-01",
-            tomDato: "2023-12-31",
+            periodeFra: "2023-01-01",
+            periodeTil: "2023-12-31",
             bestemmelse: "FTRL_2_7",
             medlemskapstype: "PLIKTIG",
             innvilgelsesResultat: "INNVILGET",
-            trygdedekning: "FULL_DEKNING",
+            dekning: "FULL_DEKNING",
             redigerbar: false,
           },
         ],
@@ -148,12 +148,12 @@ describe("AarsavregningMedGrunnlag", () => {
         sisteGjeldendeMedlemskapsperioder: [
           {
             id: 1,
-            fomDato: "2023-01-01",
-            tomDato: "2023-12-31",
+            periodeFra: "2023-01-01",
+            periodeTil: "2023-12-31",
             bestemmelse: "FTRL_2_7", // Samme som tidligere
             medlemskapstype: "PLIKTIG",
             innvilgelsesResultat: "INNVILGET",
-            trygdedekning: "FULL_DEKNING",
+            dekning: "FULL_DEKNING",
             redigerbar: false,
           },
         ],
@@ -219,12 +219,12 @@ describe("AarsavregningMedGrunnlag", () => {
         sisteGjeldendeMedlemskapsperioder: [
           {
             id: 1,
-            fomDato: "2023-01-01",
-            tomDato: "2023-12-31",
+            periodeFra: "2023-01-01",
+            periodeTil: "2023-12-31",
             bestemmelse: "FTRL_2_8", // Forskjellig fra tidligere
             medlemskapstype: "PLIKTIG",
             innvilgelsesResultat: "INNVILGET",
-            trygdedekning: "FULL_DEKNING",
+            dekning: "FULL_DEKNING",
             redigerbar: false,
           },
         ],
@@ -276,22 +276,22 @@ describe("AarsavregningMedGrunnlag", () => {
         sisteGjeldendeMedlemskapsperioder: [
           {
             id: 1,
-            fomDato: "2023-01-01",
-            tomDato: "2023-06-30",
+            periodeFra: "2023-01-01",
+            periodeTil: "2023-06-30",
             bestemmelse: "FTRL_2_7",
             medlemskapstype: "PLIKTIG",
             innvilgelsesResultat: "INNVILGET",
-            trygdedekning: "FULL_DEKNING",
+            dekning: "FULL_DEKNING",
             redigerbar: false,
           },
           {
             id: 2,
-            fomDato: "2023-07-01",
-            tomDato: "2023-12-31",
+            periodeFra: "2023-07-01",
+            periodeTil: "2023-12-31",
             bestemmelse: "FTRL_2_8",
             medlemskapstype: "PLIKTIG",
             innvilgelsesResultat: "INNVILGET",
-            trygdedekning: "DELVIS_DEKNING",
+            dekning: "DELVIS_DEKNING",
             redigerbar: false,
           },
         ],
@@ -381,12 +381,12 @@ describe("AarsavregningMedGrunnlag", () => {
         sisteGjeldendeMedlemskapsperioder: [
           {
             id: 1,
-            fomDato: "2023-01-01",
-            tomDato: "2023-12-31",
+            periodeFra: "2023-01-01",
+            periodeTil: "2023-12-31",
             bestemmelse: "FTRL_2_7",
             medlemskapstype: "PLIKTIG",
             innvilgelsesResultat: "INNVILGET",
-            trygdedekning: "FULL_DEKNING",
+            dekning: "FULL_DEKNING",
             redigerbar: false,
           },
         ],

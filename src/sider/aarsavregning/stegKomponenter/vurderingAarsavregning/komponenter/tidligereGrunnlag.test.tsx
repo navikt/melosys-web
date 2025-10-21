@@ -15,12 +15,12 @@ describe("TidligereGrunnlag", () => {
         fastsettingsperioder: [
           {
             id: 1,
-            fomDato: "2023-01-01",
-            tomDato: "2023-12-31",
+            periodeFra: "2023-01-01",
+            periodeTil: "2023-12-31",
             medlemskapstype: MKV.Koder.medlemskapstyper.PLIKTIG,
             bestemmelse: "FTRL_2_7",
             innvilgelsesResultat: "INNVILGET",
-            trygdedekning: "FULL_DEKNING_FTRL",
+            dekning: "FULL_DEKNING_FTRL",
             redigerbar: false,
           },
         ],
@@ -70,12 +70,12 @@ describe("TidligereGrunnlag", () => {
           fastsettingsperioder: [
             {
               id: 1,
-              fomDato: "2023-01-01",
-              tomDato: "2023-12-31",
+              periodeFra: "2023-01-01",
+              periodeTil: "2023-12-31",
               medlemskapstype: MKV.Koder.medlemskapstyper.PLIKTIG,
               bestemmelse: "FTRL_2_7",
               innvilgelsesResultat: "INNVILGET",
-              trygdedekning: "FULL_DEKNING_FTRL",
+              dekning: "FULL_DEKNING_FTRL",
               redigerbar: false,
             },
           ],

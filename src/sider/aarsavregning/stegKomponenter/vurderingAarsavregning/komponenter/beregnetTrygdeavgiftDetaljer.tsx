@@ -33,7 +33,7 @@ export function BeregnetTrygdeavgiftDetaljer({
     return data.avgift.trygdeavgiftsperioder
       .map((period) => {
         const overlappingMedlemskap = data.trygdeavgiftsgrunnlag.fastsettingsperioder.find(
-          (m) => new Date(m.fomDato) <= new Date(period.tom) && new Date(m.tomDato) >= new Date(period.fom),
+          (m) => new Date(m.periodeFra) <= new Date(period.tom) && new Date(m.periodeTil) >= new Date(period.fom),
         );
 
         const overlappingSkatteforhold = data.trygdeavgiftsgrunnlag.skatteforholdsperioder.find(
@@ -50,7 +50,7 @@ export function BeregnetTrygdeavgiftDetaljer({
           avgiftPerMd: period.avgiftPerMd,
           skattepliktig:
             overlappingSkatteforhold && overlappingSkatteforhold.skatteplikttype === SKATTEPLIKTIG ? "Ja" : "Nei",
-          dekning: overlappingMedlemskap ? overlappingMedlemskap.trygdedekning : "Unknown",
+          dekning: overlappingMedlemskap ? overlappingMedlemskap.dekning : "Unknown",
         };
       })
       .sort(

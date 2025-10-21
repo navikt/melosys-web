@@ -33,8 +33,8 @@ const kanPeriodeSlettes = (
   const alleLagredePerioderSortert = [...allePerioderIListe]
     .filter((p) => p.id && p.id !== ULAGRET_MEDLEMSKAPSPERIODE_ID)
     .sort((a, b) => {
-      const aDate = Utils.dato.norskStringTilDate(a.fomDato);
-      const bDate = Utils.dato.norskStringTilDate(b.fomDato);
+      const aDate = Utils.dato.norskStringTilDate(a.periodeFra);
+      const bDate = Utils.dato.norskStringTilDate(b.periodeFra);
       const aTime = aDate instanceof Date && !Number.isNaN(aDate.getTime()) ? aDate.getTime() : 0;
       const bTime = bDate instanceof Date && !Number.isNaN(bDate.getTime()) ? bDate.getTime() : 0;
       return aTime - bTime;
@@ -90,7 +90,7 @@ export function MedlemskapsperiodeSkjema({
   const kanViseSletteKolonne = redigerbart && medlemskapsperioder.length > 1;
   const tilOgMedDatoForrigePeriode =
     medlemskapsperioder[index - 1] !== undefined
-      ? Utils.dato.norskStringTilDate(medlemskapsperioder[index - 1]?.tomDato)
+      ? Utils.dato.norskStringTilDate(medlemskapsperioder[index - 1]?.periodeTil)
       : undefined;
   if (tilOgMedDatoForrigePeriode !== undefined) {
     tilOgMedDatoForrigePeriode.setDate(tilOgMedDatoForrigePeriode.getDate() + 1);
@@ -138,7 +138,7 @@ export function MedlemskapsperiodeSkjema({
             control={control}
             name={`medlemskapsperioder[${index}].tomDato`}
             aria-label={`Til og med periode ${index + 1}`}
-            minDate={Utils.dato.norskStringTilDate(medlemskapsperioder[index].fomDato) || minDate}
+            minDate={Utils.dato.norskStringTilDate(medlemskapsperioder[index].periodeFra) || minDate}
             maxDate={maxDate}
             readOnly={!redigerbart || erPeriodeFraGrunnlag}
           />

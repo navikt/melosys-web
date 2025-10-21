@@ -94,7 +94,7 @@ export function VurderingVedtakOpphoer({ tilbake, aktivtSteg }: Props) {
   const getOpphørsdato = () =>
     forventetOpphørteMedlemskapsperioder()
       .sort(Utils.dato.sorterEtterISOFomDato)
-      .find((periode) => periode.innvilgelsesResultat === OPPHØRT)?.fomDato;
+      .find((periode) => periode.innvilgelsesResultat === OPPHØRT)?.periodeFra;
 
   const lagFattVedtakFTRLReqDto = (): Api.Saksflyt.Vedtak.FattVedtakFTRLReqDto => {
     return {
@@ -141,7 +141,7 @@ export function VurderingVedtakOpphoer({ tilbake, aktivtSteg }: Props) {
   const mapPeriodeRader = (perioder: Api.MedlemAvFolketrygden.Medlemskapsperioder.Fastsettingsperiode[]) =>
     perioder.sort(Utils.dato.sorterEtterISOFomDato).map((it) => {
       return {
-        periode: `${Utils.dato.formatterDatoTilNorsk(it.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(it.tomDato)}`,
+        periode: `${Utils.dato.formatterDatoTilNorsk(it.periodeFra)} - ${Utils.dato.formatterDatoTilNorsk(it.periodeTil)}`,
         bestemmelse: KV.finnTermFraListe(MKV.KTObjects.folketrygdloven_kap2_bestemmelser, it.bestemmelse),
         resultat: KV.finnTermFraListe(MKV.KTObjects.innvilgelsesResultat, it.innvilgelsesResultat),
       };

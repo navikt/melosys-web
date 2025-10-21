@@ -44,14 +44,14 @@ function MedlemskapsPerioderTabell({ perioder }: { perioder?: Fastsettingsperiod
         {perioder.map((medlemskapsPeriode) => (
           <Nav.Table.Row className="border_top" key={Utils._uuid()}>
             <Nav.Table.DataCell>
-              {`${Utils.dato.formatterDatoTilNorsk(medlemskapsPeriode.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(
-                medlemskapsPeriode.tomDato,
+              {`${Utils.dato.formatterDatoTilNorsk(medlemskapsPeriode.periodeFra)} - ${Utils.dato.formatterDatoTilNorsk(
+                medlemskapsPeriode.periodeTil,
               )}`}
             </Nav.Table.DataCell>
             <Nav.Table.DataCell>{mapMedlemskapstypeTekst(medlemskapsPeriode.medlemskapstype)}</Nav.Table.DataCell>
             <Nav.Table.DataCell>{KV.kodeTilTerm(medlemskapsPeriode.bestemmelse, bestemmelseKoder)}</Nav.Table.DataCell>
             <Nav.Table.DataCell>
-              {KV.kodeTilTerm(medlemskapsPeriode.trygdedekning, MKV.KTObjects.trygdedekninger)}
+              {KV.kodeTilTerm(medlemskapsPeriode.dekning, MKV.KTObjects.trygdedekninger)}
             </Nav.Table.DataCell>
           </Nav.Table.Row>
         ))}

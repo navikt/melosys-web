@@ -41,7 +41,7 @@ const mapTilMedlemskapsperiodeFieldProps = (
   const grunnlagsperioder = tidligereGrunnlag?.fastsettingsperioder;
 
   const medlemskapsperiodeErFraGrunnlag = grunnlagsperioder?.some(
-    (periode) => periode.fomDato === medlemskapsperiode.fomDato && periode.tomDato === medlemskapsperiode.tomDato,
+    (periode) => periode.periodeFra === medlemskapsperiode.fomDato && periode.periodeTil === medlemskapsperiode.tomDato,
   );
 
   return {
@@ -111,9 +111,9 @@ export function AarsavregningUtenEllerDeltGrunnlag({
 
   const opprettMedlemskapsperiode = async (medlemskapsperiode: Fastsettingsperiode) => {
     const periodeRequest = {
-      fomDato: Utils.dato.formatterDatoTilISO(medlemskapsperiode.fomDato, "") as string,
-      tomDato: Utils.dato.formatterDatoTilISO(medlemskapsperiode.tomDato, "") as string,
-      trygdedekning: medlemskapsperiode.trygdedekning,
+      fomDato: Utils.dato.formatterDatoTilISO(medlemskapsperiode.periodeFra, "") as string,
+      tomDato: Utils.dato.formatterDatoTilISO(medlemskapsperiode.periodeTil, "") as string,
+      trygdedekning: medlemskapsperiode.dekning,
       bestemmelse: medlemskapsperiode.bestemmelse,
       innvilgelsesResultat: MKV.Koder.innvilgelsesResultat.INNVILGET,
     } as OppdaterMedlemskapsperiode;

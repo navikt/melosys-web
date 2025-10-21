@@ -287,7 +287,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   const getOpphørsdato = () =>
     [...medlemskapsperioder]
       .sort(Utils.dato.sorterEtterISOFomDato)
-      .find((periode) => periode.innvilgelsesResultat === OPPHØRT)?.fomDato;
+      .find((periode) => periode.innvilgelsesResultat === OPPHØRT)?.periodeFra;
 
   const getVedtakstype = () => {
     if (lagretVedtakstype) return lagretVedtakstype;
@@ -355,9 +355,9 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   const mapPeriodeRader = (perioder: Api.MedlemAvFolketrygden.Medlemskapsperioder.Fastsettingsperiode[]) =>
     [...perioder].sort(Utils.dato.sorterEtterISOFomDato).map((it) => {
       return {
-        periode: `${Utils.dato.formatterDatoTilNorsk(it.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(it.tomDato)}`,
+        periode: `${Utils.dato.formatterDatoTilNorsk(it.periodeFra)} - ${Utils.dato.formatterDatoTilNorsk(it.periodeTil)}`,
         bestemmelse: KV.finnTermFraListe(bestemmelserkodeverk, it.bestemmelse),
-        dekning: KV.finnTermFraListe(MKV.KTObjects.trygdedekninger, it.trygdedekning),
+        dekning: KV.finnTermFraListe(MKV.KTObjects.trygdedekninger, it.dekning),
         resultat: KV.finnTermFraListe(MKV.KTObjects.innvilgelsesResultat, it.innvilgelsesResultat),
       };
     });

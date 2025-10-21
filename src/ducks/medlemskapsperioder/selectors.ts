@@ -44,8 +44,8 @@ export const SamletInnvilgetMedlemskapsperiodeSelector = createSelector(
     if (sorterteInnvilgedePerioder.length === 0) return undefined;
 
     return {
-      fom: sorterteInnvilgedePerioder[0].fomDato,
-      tom: sorterteInnvilgedePerioder[sorterteInnvilgedePerioder.length - 1].tomDato,
+      fom: sorterteInnvilgedePerioder[0].periodeFra,
+      tom: sorterteInnvilgedePerioder[sorterteInnvilgedePerioder.length - 1].periodeTil,
     };
   },
 );

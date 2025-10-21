@@ -3,11 +3,11 @@ import { API_BASE_URL, BEHANDLINGER, MEDLEMSKAPSPERIODER } from "../../api-const
 
 export interface Fastsettingsperiode {
   id: number;
-  fomDato: string;
-  tomDato: string;
+  periodeFra: string;
+  periodeTil: string;
   bestemmelse: string;
   innvilgelsesResultat: string;
-  trygdedekning: string;
+  dekning: string;
   medlemskapstype: string;
   redigerbar?: boolean;
 }
