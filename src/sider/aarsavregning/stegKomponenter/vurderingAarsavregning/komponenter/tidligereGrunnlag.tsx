@@ -13,12 +13,14 @@ interface TidligereGrunnlagProps {
 
 export function TidligereGrunnlag({ aarsavregningResponse }: TidligereGrunnlagProps) {
   const erManueltBeregnet = Boolean(
-    aarsavregningResponse.tidligereGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep !== null &&
-      aarsavregningResponse.tidligereGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep !== undefined,
+    aarsavregningResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep !==
+      null &&
+      aarsavregningResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep !==
+        undefined,
   );
 
   const forskuddsvisFakturertTrygdeavgift =
-    (aarsavregningResponse.tidligereGrunnlagsopplysninger?.avgift?.totalAvgift ?? 0) > 0;
+    (aarsavregningResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger?.avgift?.totalAvgift ?? 0) > 0;
 
   return (
     <Nav.Box className="tidligereGrunnlag" background="surface-subtle">
@@ -32,7 +34,7 @@ export function TidligereGrunnlag({ aarsavregningResponse }: TidligereGrunnlagPr
             Brutto årsinntekt:{" "}
             <strong>
               {formaterTilNorskBelopUtenDesimaler(
-                aarsavregningResponse.tidligereGrunnlagsopplysninger!.avgift.totalInntekt,
+                aarsavregningResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger!.avgift.totalInntekt,
               )}{" "}
               kr
             </strong>
@@ -46,17 +48,20 @@ export function TidligereGrunnlag({ aarsavregningResponse }: TidligereGrunnlagPr
             <Nav.ExpansionCard.Content className="tidligereGrunnlagAccordion_content">
               <MedlemskapsPerioderTabell
                 perioder={
-                  aarsavregningResponse.tidligereGrunnlagsopplysninger!.trygdeavgiftsgrunnlag.fastsettingsperioder
+                  aarsavregningResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger!.trygdeavgiftsgrunnlag
+                    .fastsettingsperioder
                 }
               />
               <GrunnlagTabeller
                 skatteforholdsperioder={
-                  aarsavregningResponse.tidligereGrunnlagsopplysninger!.trygdeavgiftsgrunnlag.skatteforholdsperioder
+                  aarsavregningResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger!.trygdeavgiftsgrunnlag
+                    .skatteforholdsperioder
                 }
                 inntektsperioder={
-                  aarsavregningResponse.tidligereGrunnlagsopplysninger!.trygdeavgiftsgrunnlag.inntektskperioder
+                  aarsavregningResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger!.trygdeavgiftsgrunnlag
+                    .inntektskperioder
                 }
-                avgift={aarsavregningResponse.tidligereGrunnlagsopplysninger!.avgift}
+                avgift={aarsavregningResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger!.avgift}
               />
 
               {!forskuddsvisFakturertTrygdeavgift && (
@@ -65,9 +70,9 @@ export function TidligereGrunnlag({ aarsavregningResponse }: TidligereGrunnlagPr
 
               {forskuddsvisFakturertTrygdeavgift && (
                 <BeregnetTrygdeavgiftDetaljer
-                  grunnlag={aarsavregningResponse.tidligereGrunnlagsopplysninger!}
+                  grunnlag={aarsavregningResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger!}
                   medlemskapsTypeErPliktig={
-                    aarsavregningResponse.tidligereGrunnlagsopplysninger!.trygdeavgiftsgrunnlag.fastsettingsperioder?.every(
+                    aarsavregningResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger!.trygdeavgiftsgrunnlag.fastsettingsperioder?.every(
                       (periode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG,
                     ) ?? true
                   }
@@ -83,7 +88,8 @@ export function TidligereGrunnlag({ aarsavregningResponse }: TidligereGrunnlagPr
           Tidligere beregnet trygdeavgift:{" "}
           <strong>
             {formaterTilNorskBelopUtenDesimaler(
-              aarsavregningResponse.tidligereGrunnlagsopplysninger!.tidligereÅrsavregningManueltAvgiftBeloep!,
+              aarsavregningResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger!
+                .tidligereÅrsavregningManueltAvgiftBeloep!,
             )}{" "}
             kr
           </strong>

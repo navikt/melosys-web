@@ -40,11 +40,28 @@ export class OpprettNySakPage {
 
   /**
    * Velg sak ved index
+   * Venter automatisk på at enten behandlingspanel eller feilmelding vises før den returnerer
    */
   async velgSakVedIndex(index: number): Promise<void> {
     const sak = this.page.locator(".customRadioPanel").nth(index);
     await expect(sak, "Fant ikke sak med index " + index).toBeVisible();
     await sak.click();
+
+    // Vent på at enten panelramme eller behandlingspanel vises (data er lastet)
+    await this.page
+      .locator(".knyttTilSak__panelramme, .knyttTilSak__behandlingspanel")
+      .first()
+      .waitFor({ state: "visible", timeout: 5000 });
+  }
+
+  /**
+   * Hent saks-ID ved index
+   */
+  async hentSakIdVedIndex(index: number): Promise<string> {
+    const sak = this.page.locator(".customRadioPanel").nth(index);
+    const sakIdElement = await sak.locator(".customRadioPanelTittel").textContent();
+    const sakIdMatch = sakIdElement?.match(/MEL-\d+/);
+    return sakIdMatch ? sakIdMatch[0] : `sak-${index}`;
   }
 
   /**
@@ -488,22 +505,44 @@ export class OpprettNySakPage {
    * @param feilmelding Valgfri spesifikk feilmelding å lete etter
    * @returns true hvis feilmelding finnes
    *
-   * Note: Søker på hele siden da feilmeldinger typisk vises som globale varsler,
-   * ikke innenfor individuelle sak-elementer.
+   * Note: Søker etter feilmeldingspanelet i knytt-til-sak konteksten
    */
-  async harFeilmelding(feilmelding?: string): Promise<boolean> {
-    if (feilmelding) {
-      // Sjekk etter spesifikk feilmelding
-      return await this.page
-        .locator(".navds-alert--error, .navds-alert--warning")
-        .filter({ hasText: feilmelding })
-        .isVisible()
-        .catch(() => false);
+  /**
+   * Hent locator for feilmeldingspanel
+   * @param feilmelding - Valgfri tekst å filtrere på
+   * @param sakIndex - Valgfri index for å hente feilmelding rett etter spesifikk sak
+   */
+  hentFeilmeldingspanel(feilmelding?: string, sakIndex?: number): Locator {
+    const selector = ".knyttTilSak__behandlingspanel";
+
+    if (sakIndex !== undefined) {
+      // Bruk XPath for å finne det neste sibling-elementet rett etter den spesifikke saken
+      const nextError = this.page.locator(
+        `xpath=(//label[contains(@class, 'customRadioPanel')])[${sakIndex + 1}]/following-sibling::div[contains(@class, 'knyttTilSak__behandlingspanel')][1]`,
+      );
+
+      if (feilmelding) {
+        return nextError.filter({ hasText: feilmelding });
+      }
+      return nextError;
     }
 
-    // Sjekk etter generelle feilmeldinger
-    return await this.page
-      .locator(".navds-alert--error, .navds-alert--warning")
+    // Fallback til global sjekk (bakoverkompatibilitet)
+    if (feilmelding) {
+      return this.page.locator(selector).filter({ hasText: feilmelding });
+    }
+
+    return this.page.locator(selector);
+  }
+
+  /**
+   * Sjekk om det er feilmelding
+   * @param feilmelding - Valgfri tekst å sjekke etter i feilmeldingen
+   * @param sakIndex - Valgfri index for å sjekke feilmelding rett etter spesifikk sak
+   * @deprecated Bruk hentFeilmeldingspanel() og Playwright's expect().toBeVisible() i stedet
+   */
+  async harFeilmelding(feilmelding?: string, sakIndex?: number): Promise<boolean> {
+    return await this.hentFeilmeldingspanel(feilmelding, sakIndex)
       .isVisible()
       .catch(() => false);
   }
@@ -530,8 +569,65 @@ export class OpprettNySakPage {
     return await behandlingstypeGruppe.isVisible().catch(() => false);
   }
 
+  /**
+   * Hent locator for behandlingspanel-rammen
+   * Dette panelet inneholder "Velg tema og type for ny behandling"
+   * @param sakIndex - Valgfri index for å hente panel rett etter spesifikk sak
+   */
+  hentBehandlingspanelRamme(sakIndex?: number): Locator {
+    if (sakIndex !== undefined) {
+      // Bruk XPath for å finne det neste sibling-elementet rett etter den spesifikke saken
+      // Dette er mer robust enn CSS nth-of-type som kan telle feil hvis det er andre elementer
+      return this.page.locator(
+        `xpath=(//label[contains(@class, 'customRadioPanel')])[${sakIndex + 1}]/following-sibling::div[contains(@class, 'knyttTilSak__panelramme')][1]`,
+      );
+    }
+
+    // Fallback til global sjekk (bakoverkompatibilitet)
+    return this.page.locator(".knyttTilSak__panelramme");
+  }
+
+  /**
+   * Sjekk om behandlingspanel-rammen er synlig
+   * Dette panelet inneholder "Velg tema og type for ny behandling"
+   * @param sakIndex - Valgfri index for å sjekke panel rett etter spesifikk sak
+   * @deprecated Bruk hentBehandlingspanelRamme() og Playwright's expect().toBeVisible() i stedet
+   */
+  async erBehandlingspanelRammeSynlig(sakIndex?: number): Promise<boolean> {
+    return await this.hentBehandlingspanelRamme(sakIndex)
+      .isVisible()
+      .catch(() => false);
+  }
+
+  /**
+   * Tell antall behandlingstyper i behandlingspanel-rammen
+   */
+  async tellBehandlingstyperIPanel(): Promise<number> {
+    const behandlingspanelRamme = this.page.locator(".knyttTilSak__panelramme");
+    const behandlingstypeRadios = behandlingspanelRamme.locator(".navds-radio");
+    return await behandlingstypeRadios.count();
+  }
+
+  /**
+   * Sjekk om det vises error-meldinger på siden
+   */
+  async harErrorMelding(): Promise<boolean> {
+    return await this.page
+      .locator(".navds-alert--error")
+      .isVisible()
+      .catch(() => false);
+  }
+
+  /**
+   * Hent behandlingstema-verdi
+   */
+  async hentBehandlingstemaVerdi(): Promise<string> {
+    const behandlingstemaSelect = this.page.locator("select[name='behandlingstema']");
+    return await behandlingstemaSelect.inputValue();
+  }
+
   // ===== DELEGATION TO ASSERTIONS =====
-  // These methods delegate to the assertions class for backward compatibility
+  // These methods delegate to the assertion class for backward compatibility
 
   /**
    * Verifiser at alle nødvendige elementer er synlige på siden
@@ -552,5 +648,40 @@ export class OpprettNySakPage {
    */
   async verifiserTilgjengeligeBehandlingstyper(valgtSak: Locator, forventedeBehandlingstyper: string[]): Promise<void> {
     return this.assertions.verifiserTilgjengeligeBehandlingstyper(valgtSak, forventedeBehandlingstyper);
+  }
+
+  /**
+   * Verifiser at behandlingstype-gruppen er synlig og har behandlingstyper
+   */
+  async verifiserBehandlingstypeGruppe(): Promise<void> {
+    return this.assertions.verifiserBehandlingstypeGruppe();
+  }
+
+  /**
+   * Verifiser at "Tidligere behandling er avsluttet" melding vises
+   */
+  async verifiserTidligereBehandlingAvsluttet(): Promise<void> {
+    return this.assertions.verifiserTidligereBehandlingAvsluttet();
+  }
+
+  /**
+   * Verifiser feilmelding for EØS-sak med aktiv behandling
+   */
+  async verifiserEosFeilmelding(): Promise<void> {
+    return this.assertions.verifiserEosFeilmelding();
+  }
+
+  /**
+   * Verifiser at behandlingstema-select er synlig
+   */
+  async verifiserBehandlingstemaSelectSynlig(): Promise<void> {
+    return this.assertions.verifiserBehandlingstemaSelectSynlig();
+  }
+
+  /**
+   * Verifiser at behandlingstype-gruppen IKKE er synlig
+   */
+  async verifiserBehandlingstypeGruppeIkkeSynlig(): Promise<void> {
+    return this.assertions.verifiserBehandlingstypeGruppeIkkeSynlig();
   }
 }

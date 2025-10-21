@@ -6,8 +6,9 @@ import { Fastsettingsperiode } from "../medlemavfolketrygden/medlemskapsperioder
 export interface AarsavregningResponse {
   aarsavregningID: number;
   aar: number;
-  tidligereGrunnlagsopplysninger?: Grunnlagsopplysninger;
-  nyttGrunnlag?: Grunnlagsopplysninger;
+  tidligereTrygdeavgiftsGrunnlagsopplysninger?: Grunnlagsopplysninger;
+  sisteGjeldendeMedlemskapsperioder?: Medlemskapsperiode[];
+  nyttTrygdeavgiftsGrunnlag?: Grunnlagsopplysninger;
   avregning?: Avregning;
   harTrygdeavgiftFraAvgiftssystemet?: boolean;
   endeligAvgiftValg?: string;
