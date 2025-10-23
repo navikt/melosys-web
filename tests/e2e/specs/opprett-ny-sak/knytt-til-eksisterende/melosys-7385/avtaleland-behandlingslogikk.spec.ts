@@ -1,11 +1,11 @@
 import { expect, test } from "@playwright/test";
 import { runAxeAnalyze } from "../../../../utils/axeUtils";
 import { HovedsidePage, USER_ID_VALID } from "../../../../pages/hovedside.page";
-import { OpprettNySakPage } from "../../../../pages/opprett-ny-sak.page";
+import { OpprettNySakPage } from "../../../../pages/opprett-ny-sak/opprett-ny-sak.page";
 import { getSakId } from "../../../../utils/testUtils";
 import { opprettAvtalelandSak } from "../../../../utils/testdataUtils";
 import { SokPage } from "../../../../pages/sok.page";
-import { VisBehandlingPage } from "../../../../pages/vis-behandling.page";
+import { BehandlingPage } from "../../../../pages/behandling/behandling.page";
 
 /**
  * MELOSYS-7385: Test regresjonstest for Avtaleland-saker
@@ -67,7 +67,7 @@ test.describe("MELOSYS-7385: Avtaleland behandlingslogikk (regresjon)", () => {
 
     const hovedsidePage = new HovedsidePage(page);
     const sokPage = new SokPage(page);
-    const behandlingPage = new VisBehandlingPage(page);
+    const behandlingPage = new BehandlingPage(page);
 
     await hovedsidePage.goto();
     await hovedsidePage.søkOgVentPåResultat(USER_ID_VALID);
@@ -114,7 +114,7 @@ test.describe("MELOSYS-7385: Avtaleland behandlingslogikk (regresjon)", () => {
 
     const hovedsidePage = new HovedsidePage(page);
     const sokPage = new SokPage(page);
-    const behandlingPage = new VisBehandlingPage(page);
+    const behandlingPage = new BehandlingPage(page);
 
     await hovedsidePage.goto();
     await hovedsidePage.søkOgVentPåResultat(USER_ID_VALID);
