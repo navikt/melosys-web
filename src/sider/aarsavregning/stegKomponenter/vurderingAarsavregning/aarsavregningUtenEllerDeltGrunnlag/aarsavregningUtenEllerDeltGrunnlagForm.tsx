@@ -188,6 +188,10 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       .every((periode: Medlemskapsperiode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG);
   }, [medlemskapsperioder]);
 
+  const erDeltGrunnlag =
+    harTrygdeavgiftFraAvgiftssystemet &&
+    !!initiellData.aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger;
+
   const finnMedlemskapsperiode = useCallback((perioder: Medlemskapsperiode[]) => {
     const sorterteGyldigePerioder = perioder
       .filter((periode: Medlemskapsperiode) => periode.fomDato && periode.tomDato)
@@ -892,6 +896,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
                 minDate={minDate}
                 trygdedekninger={trygdedekninger}
                 setValue={setValue}
+                erDeltGrunnlag={erDeltGrunnlag}
               />
             ))}
           </div>
