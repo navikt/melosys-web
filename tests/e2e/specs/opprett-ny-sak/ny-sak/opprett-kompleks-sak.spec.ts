@@ -1,7 +1,7 @@
 import { test, Page, expect } from "@playwright/test";
 import { HovedsidePage, USER_ID_VALID } from "../../../pages/hovedside.page";
-import { OpprettNySakPage } from "../../../pages/opprett-ny-sak.page";
-import { VisBehandlingPage } from "../../../pages/vis-behandling.page";
+import { OpprettNySakPage } from "../../../pages/opprett-ny-sak/opprett-ny-sak.page";
+import { BehandlingPage } from "../../../pages/behandling/behandling.page";
 import { SokPage } from "../../../pages/sok.page";
 import { runAxeAnalyze } from "../../../utils/axeUtils";
 import { assertNyBehandlingOpprettet, getSakId } from "../../../utils/testUtils";
@@ -32,7 +32,7 @@ test.describe("Opprett kompleks sak med flere behandlingstyper", () => {
   test("Opprett Avtaleland-sak med Førstegangsbehandling for å skape testdata", async ({ page }, testInfo) => {
     const hovedsidePage = new HovedsidePage(page);
     const sokPage = new SokPage(page);
-    const behandlingPage = new VisBehandlingPage(page);
+    const behandlingPage = new BehandlingPage(page);
 
     await setupOpprettNySakTester(page);
 
@@ -68,7 +68,7 @@ test.describe("Opprett kompleks sak med flere behandlingstyper", () => {
   }, testInfo) => {
     const hovedsidePage = new HovedsidePage(page);
     const sokPage = new SokPage(page);
-    const behandlingPage = new VisBehandlingPage(page);
+    const behandlingPage = new BehandlingPage(page);
 
     await setupOpprettNySakTester(page);
 
