@@ -97,7 +97,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
    * Eldre behandlinger kan ha null pga. bug der verdien ikke ble lagret.
    * Vi infererer verdien basert på om brukeren har fylt ut avhengige felter:
    * - Hvis trygdeavgiftFraAvgiftssystemet har verdi → brukeren valgte "Ja" → returnerer true
-   * - Hvis andre felter (endeligAvgiftValg, manueltAvgiftBeloep, nyttTrygdeavgiftsGrunnlag) er fylt ut → brukeren valgte "Nei" → returnerer false
+   * - Hvis andre felter (manueltAvgiftBeloep, nyttTrygdeavgiftsGrunnlag) er fylt ut → brukeren valgte "Nei" → returnerer false
    * - Ellers → ny årsavregning hvor brukeren ikke har svart ennå → returnerer undefined
    */
   const utledHarTrygdeavgiftFraAvgiftssystemetNårNull = (res: AarsavregningResponse): boolean | undefined => {
@@ -112,9 +112,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
 
     // Sjekk om brukeren har fylt ut andre felter som krever at radioknappen er besvart (valgte "Nei")
     const harAnnenDataSomKreverSvar =
-      res.endeligAvgiftValg !== null ||
-      res.avregning?.manueltAvgiftBeloep !== null ||
-      res.nyttTrygdeavgiftsGrunnlag !== null;
+      res.avregning?.manueltAvgiftBeloep !== null || res.nyttTrygdeavgiftsGrunnlag !== null;
 
     if (harAnnenDataSomKreverSvar) {
       return false;
