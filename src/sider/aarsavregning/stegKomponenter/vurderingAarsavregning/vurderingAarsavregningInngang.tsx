@@ -92,7 +92,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
   const dispatch = useDispatch();
 
   const utledGrunnlagstypeForÅrsavregning = (res: AarsavregningResponse) => {
-    setHarTrygdeavgiftFraAvgiftssystemet(res.harTrygdeavgiftFraAvgiftssystemet);
+    setHarTrygdeavgiftFraAvgiftssystemet(res.harTrygdeavgiftFraAvgiftssystemet ?? false);
 
     setHarGrunnlag(
       !(
