@@ -1,7 +1,7 @@
 import { test } from "@playwright/test";
 import { HovedsidePage, USER_ID_VALID } from "../../pages/hovedside.page";
 import { SokPage } from "../../pages/sok.page";
-import { VisBehandlingPage } from "../../pages/vis-behandling.page";
+import { BehandlingPage } from "../../pages/behandling/behandling.page";
 import { runAxeAnalyze } from "../../utils/axeUtils";
 import { opprettAvtalelandSak } from "../../utils/testdataUtils";
 
@@ -10,7 +10,7 @@ test.describe("Avslutt Avtaleland-behandling for testdata", () => {
     test.setTimeout(30000); // Økt timeout siden vi oppretter og avslutter sak
     const hovedsidePage = new HovedsidePage(page);
     const sokPage = new SokPage(page);
-    const behandlingPage = new VisBehandlingPage(page);
+    const behandlingPage = new BehandlingPage(page);
 
     // Opprett egen Avtaleland-sak
     const sakId = await opprettAvtalelandSak(page);

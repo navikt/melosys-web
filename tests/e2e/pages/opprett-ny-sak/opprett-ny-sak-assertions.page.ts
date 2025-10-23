@@ -1,5 +1,5 @@
 import { expect, Locator, Page } from "@playwright/test";
-import { getSakId } from "../utils/testUtils";
+import { getSakId } from "../../utils/testUtils";
 
 /**
  * Assertions and verification methods for OpprettNySakPage

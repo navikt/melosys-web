@@ -1,7 +1,7 @@
 import { expect, Page, test } from "@playwright/test";
 import { runAxeAnalyze } from "../../../utils/axeUtils";
 import { HovedsidePage, USER_ID_VALID } from "../../../pages/hovedside.page";
-import { OpprettNySakPage } from "../../../pages/opprett-ny-sak.page";
+import { OpprettNySakPage } from "../../../pages/opprett-ny-sak/opprett-ny-sak.page";
 import { getSakId } from "../../../utils/testUtils";
 
 let opprettNySakPage: OpprettNySakPage;

@@ -1,6 +1,6 @@
 import { test } from "@playwright/test";
 import { HovedsidePage, USER_ID_VALID } from "../../pages/hovedside.page";
-import { VisBehandlingPage } from "../../pages/vis-behandling.page";
+import { BehandlingPage } from "../../pages/behandling/behandling.page";
 import { SokPage } from "../../pages/sok.page";
 import { opprettAvtalelandSak } from "../../utils/testdataUtils";
 
@@ -18,7 +18,7 @@ test.describe("MELOSYS-7385 Setup: Avtaleland-sak med henlagt behandling", () =>
     test.setTimeout(30000); // Økt timeout siden vi oppretter og henlegger sak
     const hovedsidePage = new HovedsidePage(page);
     const sokPage = new SokPage(page);
-    const behandlingPage = new VisBehandlingPage(page);
+    const behandlingPage = new BehandlingPage(page);
 
     // Opprett egen Avtaleland-sak
     const sakId = await opprettAvtalelandSak(page);
