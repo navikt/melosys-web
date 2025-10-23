@@ -461,8 +461,8 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     }));
 
     const sorterEtterFomDato = (
-      a: { fomDato?: string; tomDato?: string; trygdedekning?: string },
-      b: { fomDato?: string; tomDato?: string; trygdedekning?: string },
+      a: Pick<Medlemskapsperiode, "fomDato" | "tomDato" | "trygdedekning">,
+      b: Pick<Medlemskapsperiode, "fomDato" | "tomDato" | "trygdedekning">,
     ) => {
       if (!a.fomDato || !b.fomDato) return 0;
       return a.fomDato.localeCompare(b.fomDato);
