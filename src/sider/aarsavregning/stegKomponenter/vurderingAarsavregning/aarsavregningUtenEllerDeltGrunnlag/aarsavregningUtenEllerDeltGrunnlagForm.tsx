@@ -1,6 +1,6 @@
 /* eslint-disable max-lines */
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { FieldValue, useFieldArray, useForm, useWatch } from "react-hook-form";
 import { useSelector } from "react-redux";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
@@ -60,15 +60,18 @@ const consoleLog = (message: string, ...args: unknown[]) => {
 
 // Hjelpefunksjon for å logge og returnere endrede avhengigheter
 const getChangedDependencies = (
-  currentDeps: Record<string, any>,
-  previousDepsRef: React.MutableRefObject<any>,
-  consoleLogCallback: any,
+  currentDeps: Record<string, unknown>,
+  previousDepsRef: React.MutableRefObject<Record<string, unknown> | null>,
+  consoleLogCallback: (message: string, ...args: unknown[]) => void,
 ) => {
-  const changedDeps: Record<string, any> = {};
+  const changedDeps: Record<string, { prev: unknown; curr: unknown }> = {};
   if (previousDepsRef.current) {
     // Sammenlign nåværende avhengigheter med tidligere
     Object.keys(currentDeps).forEach((key) => {
-      if (!Utils._isEqual(currentDeps[key as keyof typeof currentDeps], previousDepsRef.current[key])) {
+      if (
+        previousDepsRef.current &&
+        !Utils._isEqual(currentDeps[key as keyof typeof currentDeps], previousDepsRef.current[key])
+      ) {
         changedDeps[key] = {
           prev: previousDepsRef.current[key],
           curr: currentDeps[key as keyof typeof currentDeps],
@@ -115,7 +118,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   const [aarsavregningResponse, setAarsavregningResponse] = useState<AarsavregningResponse | undefined>(
     initiellData.aarsavregningResponse,
   );
-  const [previousFormState, setPreviousFormState] = useState<any | null>(null);
+  const [previousFormState, setPreviousFormState] = useState<ReturnType<typeof mapFormState> | null>(null);
   const [debouncedBeregningPagaar, setDebouncedBeregningPagaar] = useState(false);
   const [arrayValideringsfeil, setArrayValideringsfeil] = useState<string | undefined>(undefined);
 
@@ -128,7 +131,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
 
   // Redux selectors
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
-  const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as any;
+  const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as number;
   const aarsavregningID = useSelector(behandlingsresultatSelectors.ÅrsavregningIDSelector);
   const dispatch = useDispatch();
 
@@ -153,20 +156,20 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     fields: medlemskapsperioderFields,
     append: medlemskapsperioderAppend,
     remove: medlemskapsperioderRemove,
-  } = useFieldArray({ control: control as any, name: "medlemskapsperioder" });
+  } = useFieldArray({ control, name: "medlemskapsperioder" });
 
   const {
     fields: skattFields,
     append: skattAppend,
     remove: skattRemove,
-  } = useFieldArray({ control: control as any, name: "skatteforholdsperioder" });
+  } = useFieldArray({ control, name: "skatteforholdsperioder" });
 
   const {
     fields: inntektFields,
     append: inntektAppend,
     remove: inntektRemove,
     update: inntektUpdate,
-  } = useFieldArray({ control: control as any, name: "inntektskilder" });
+  } = useFieldArray({ control, name: "inntektskilder" });
 
   const formValues = watch();
   const bestemmelse = useWatch({ control, name: "bestemmelse" });
@@ -178,9 +181,9 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   const endeligAvgiftValg = useWatch({ control, name: "endeligAvgiftValg" });
   const manueltAvgiftBeloep = useWatch({ control, name: "manueltAvgiftBeloep" });
 
-  const debouncedBeregningRef = useRef<any>(null);
+  const debouncedBeregningRef = useRef<ReturnType<typeof Utils._debounce> | null>(null);
   const forrigetrygdeavgiftFraAvgiftssystemet = useRef(trygdeavgiftFraAvgiftssystemet);
-  const previousDepsRef = useRef<any>(null);
+  const previousDepsRef = useRef<Record<string, unknown> | null>(null);
 
   const medlemskapstypeErPliktig = useMemo(() => {
     return medlemskapsperioder
@@ -284,15 +287,13 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
 
     if (harEndringer) {
       try {
-        const response: any = await (periode.id === ULAGRET_MEDLEMSKAPSPERIODE_ID
+        return await (periode.id === ULAGRET_MEDLEMSKAPSPERIODE_ID
           ? Api.MedlemAvFolketrygden.Medlemskapsperioder.opprettMedlemskapsperioder(behandlingID, periodeRequest)
           : Api.MedlemAvFolketrygden.Medlemskapsperioder.oppdaterMedlemskapsperioder(
               behandlingID,
               periode.id,
               periodeRequest,
             ));
-
-        return response;
       } catch (error) {
         setFeilmelding("Feil ved lagring av medlemskapsperiode");
         /* eslint-disable-next-line no-console */
@@ -411,9 +412,9 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         setFeilmelding(undefined);
         setArrayValideringsfeil(undefined);
 
-        const oppdaterteMedlemskapsperioder = medlemskapsperioderFormValues.map((periode: any, index: number) => {
+        const oppdaterteMedlemskapsperioder = medlemskapsperioderFormValues.map((periode, index: number) => {
           const lagretPeriodeMedID = endredeMedlemskapsperioder.find(
-            (backendPeriode: any) => backendPeriode.formValuesIndex === index,
+            (backendPeriode) => backendPeriode.formValuesIndex === index,
           );
           if (lagretPeriodeMedID) {
             return {
@@ -459,7 +460,10 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       trygdedekning,
     }));
 
-    const sorterEtterFomDato = (a: any, b: any) => {
+    const sorterEtterFomDato = (
+      a: { fomDato?: string; tomDato?: string; trygdedekning?: string },
+      b: { fomDato?: string; tomDato?: string; trygdedekning?: string },
+    ) => {
       if (!a.fomDato || !b.fomDato) return 0;
       return a.fomDato.localeCompare(b.fomDato);
     };
@@ -711,7 +715,9 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
           }
           setDebouncedBeregningPagaar(true);
           consoleLog("[useEffect hovedberegning] sette debouncedBeregningPaagar true");
-          debouncedBeregningRef.current();
+          if (debouncedBeregningRef.current) {
+            debouncedBeregningRef.current();
+          }
         });
       } else {
         setArrayValideringsfeil(undefined);
@@ -881,7 +887,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
           />
 
           <div className="perioder">
-            {(medlemskapsperioderFields as any[]).map((field: any, index: number) => (
+            {medlemskapsperioderFields.map((field, index: number) => (
               <MedlemskapsperiodeSkjema
                 key={field.id}
                 redigerbart={skjemaErRedigerbart}
