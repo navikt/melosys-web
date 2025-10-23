@@ -254,6 +254,64 @@ test.describe.serial("MELOSYS-7612: Årsavregning delt grunnlag - Alle tester", 
     });
   });
 
+  test.describe("AC2.5 - Legg til periode med pliktig bestemmelse (bugfix)", () => {
+    test.beforeEach(async ({ page }) => {
+      await setupAarsavregningTest(page);
+    });
+
+    test("skal vise 'Legg til periode'-knappen for delt grunnlag selv med pliktig bestemmelse", async ({ page }) => {
+      // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet (delt grunnlag)
+      await aarsavregningPage.velgDeltGrunnlagJa();
+
+      // Velg en PLIKTIG bestemmelse - dette er kjernen av bugfixen
+      // § 2-7 er en pliktig bestemmelse
+      await aarsavregningPage.velgBestemmelse("§ 2-7 første ledd (arbeidstaker)");
+
+      // Vent på at UI oppdaterer seg
+      await page.waitForTimeout(1000);
+
+      // Verifiser at "Legg til periode"-knappen er synlig
+      // Dette var buggen: Knappen ble skjult for pliktige bestemmelser selv med delt grunnlag
+      const leggTilKnapp = page.locator('button:has-text("Legg til periode")');
+      await expect(leggTilKnapp).toBeVisible();
+
+      // Verifiser at knappen er klikkbar (ikke disabled)
+      await expect(leggTilKnapp).toBeEnabled();
+    });
+
+    test("kan legge til ny periode med pliktig bestemmelse og delt grunnlag", async ({ page }) => {
+      // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet (delt grunnlag)
+      await aarsavregningPage.velgDeltGrunnlagJa();
+
+      // Velg en PLIKTIG bestemmelse
+      await aarsavregningPage.velgBestemmelse("§ 2-7 første ledd (arbeidstaker)");
+
+      // Vent på at UI oppdaterer seg
+      await page.waitForTimeout(1000);
+
+      const antallFør = await aarsavregningPage.getAntallMedlemskapsperioder();
+
+      // Klikk på "Legg til periode"-knappen
+      await aarsavregningPage.leggTilMedlemskapsperiode();
+
+      // Verifiser at en ny periode er lagt til
+      const antallEtter = await aarsavregningPage.getAntallMedlemskapsperioder();
+      expect(antallEtter).toBe(antallFør + 1);
+
+      // Fyll ut den nye perioden
+      const nyPeriodeIndex = antallEtter - 1;
+      await aarsavregningPage.fyllUtMedlemskapsperiodeFomDato(nyPeriodeIndex, lagDato("01.01"));
+      await aarsavregningPage.fyllUtMedlemskapsperiodeTomDato(nyPeriodeIndex, lagDato("31.03"));
+
+      // Velg trygdedekning
+      await aarsavregningPage.velgTrygdedekning(nyPeriodeIndex, "Full dekning (§ 2-7)");
+
+      // Verifiser at det ikke er valideringsfeil
+      await aarsavregningPage.assertIngenFeilmelding("utenfor");
+      await aarsavregningPage.assertIngenFeilmelding("overlapper");
+    });
+  });
+
   test.describe("AC3 - Inntektsperiode validering", () => {
     test.beforeEach(async ({ page }) => {
       await setupAarsavregningTest(page);
