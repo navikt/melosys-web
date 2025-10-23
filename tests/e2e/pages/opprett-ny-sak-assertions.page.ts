@@ -153,6 +153,58 @@ export class OpprettNySakAssertions {
   }
 
   /**
+   * Verifiser at behandlingstype-gruppen er synlig og har behandlingstyper
+   */
+  async verifiserBehandlingstypeGruppe(): Promise<void> {
+    const behandlingstypeGruppe = this.page.getByRole("group", { name: "Behandlingstype" });
+    await expect(behandlingstypeGruppe, "Behandlingstype-gruppe skal være synlig").toBeVisible();
+
+    const behandlingstypeRadios = behandlingstypeGruppe.locator(".navds-radio");
+    const antallBehandlingstyper = await behandlingstypeRadios.count();
+    expect(antallBehandlingstyper, "Minst én behandlingstype skal være tilgjengelig").toBeGreaterThan(0);
+  }
+
+  /**
+   * Verifiser at "Tidligere behandling er avsluttet" melding vises
+   */
+  async verifiserTidligereBehandlingAvsluttet(): Promise<void> {
+    await expect(
+      this.page.locator(".tidligereBehandlingAvsluttet", {
+        hasText: "Tidligere behandling er avsluttet",
+      }),
+      "Skal vise melding om avsluttet behandling",
+    ).toBeVisible();
+  }
+
+  /**
+   * Verifiser feilmelding for EØS-sak med aktiv behandling
+   */
+  async verifiserEosFeilmelding(): Promise<void> {
+    await expect(
+      this.page.locator(".feilmelding_innrykk").filter({
+        hasText: "Du kan ikke opprette en ny behandling på eksisterende sak med en aktiv/pågående behandling",
+      }),
+      "Skal vise varselmelding for EØS-sak med aktiv behandling",
+    ).toBeVisible();
+  }
+
+  /**
+   * Verifiser at behandlingstema-select er synlig
+   */
+  async verifiserBehandlingstemaSelectSynlig(): Promise<void> {
+    const behandlingstemaSelect = this.page.locator("select[name='behandlingstema']");
+    await expect(behandlingstemaSelect, "Behandlingstema-select skal være synlig").toBeVisible();
+  }
+
+  /**
+   * Verifiser at behandlingstype-gruppen IKKE er synlig
+   */
+  async verifiserBehandlingstypeGruppeIkkeSynlig(): Promise<void> {
+    const behandlingstypeGruppe = this.page.getByRole("group", { name: "Behandlingstype" });
+    await expect(behandlingstypeGruppe, "Behandlingstype-gruppe skal ikke være synlig").not.toBeVisible();
+  }
+
+  /**
    * Verifiser at alle nødvendige elementer er synlige på siden
    */
   async verifiserAlleElementer(): Promise<void> {

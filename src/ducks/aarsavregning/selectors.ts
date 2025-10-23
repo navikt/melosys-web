@@ -27,7 +27,7 @@ export const AarsavregningAarSelector: Selector<RootState, number | undefined> =
 
 const AarsavregningTidligereGrunnlagSelector: Selector<RootState, Trygdeavgiftsgrunnlag | undefined> = createSelector(
   AarsavregningDataSelector,
-  (aarsavregning) => aarsavregning?.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag,
+  (aarsavregning) => aarsavregning?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag,
 );
 
 export const AarsavregningTidligereGrunnlagMedlemskapsperioderSelector: Selector<RootState, Medlemskapsperiode[]> =
