@@ -1,9 +1,9 @@
 import { test, Page, expect } from "@playwright/test";
 import { HovedsidePage, USER_ID_VALID } from "../../pages/hovedside.page";
-import { SendBrevPage } from "../../pages/send-brev.page";
+import { SendBrevPage } from "../../pages/behandling/send-brev.page";
 import { assertErrors } from "../../utils/testUtils";
 import { SokPage } from "../../pages/sok.page";
-import { VisBehandlingPage } from "../../pages/vis-behandling.page";
+import { BehandlingPage } from "../../pages/behandling/behandling.page";
 
 let sb: SendBrevPage;
 
@@ -11,7 +11,7 @@ let sb: SendBrevPage;
 async function setupSendBrevTest(page: Page) {
   const mainPage = new HovedsidePage(page);
   const sokPage = new SokPage(page);
-  const behandlingPage = new VisBehandlingPage(page);
+  const behandlingPage = new BehandlingPage(page);
   sb = new SendBrevPage(page);
 
   await mainPage.goto();
@@ -82,7 +82,7 @@ test.describe("Validering av årsavregning brevmaler", () => {
   test("Korrekt validering for brevmal 'Innhenting av inntektsopplysninger for årsavregning'", async ({ page }) => {
     const mainPage = new HovedsidePage(page);
     const sokPage = new SokPage(page);
-    const behandlingPage = new VisBehandlingPage(page);
+    const behandlingPage = new BehandlingPage(page);
     sb = new SendBrevPage(page);
 
     await mainPage.goto();

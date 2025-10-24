@@ -1,10 +1,10 @@
-import { expect, Page } from "@playwright/test";
+import { expect, Locator, Page } from "@playwright/test";
 
 /**
  * Page Object Model for visning og håndtering av behandlinger
  * Inkluderer funksjonalitet for avslutning, endring, og generell behandlingshåndtering
  */
-export class VisBehandlingPage {
+export class BehandlingPage {
   readonly page: Page;
 
   constructor(page: Page) {
@@ -168,7 +168,7 @@ export class VisBehandlingPage {
       throw new Error(`Ingen behandlingshandlinger funnet i accordion content på sak ${saksnummer}`);
     }
 
-    const tilgjengeligeAlternativer: Array<{ element: any; tekst: string }> = [];
+    const tilgjengeligeAlternativer: Array<{ element: Locator; tekst: string }> = [];
     for (let i = 0; i < antallHandlinger; i++) {
       try {
         const element = alleHandlinger.nth(i);
@@ -256,7 +256,7 @@ export class VisBehandlingPage {
   /**
    * Bekreft avslutningen (hvis det er en bekreftelsesdialog)
    */
-  async bekreftAvslutning(_saksnummer?: string): Promise<void> {
+  async bekreftAvslutning(): Promise<void> {
     // Først, vent på at modalen åpnes
     const modalSelectors = [".navds-modal[open]", ".modal[open]", '[role="dialog"]', ".dialog", ".confirmation-modal"];
 
@@ -355,7 +355,7 @@ export class VisBehandlingPage {
       await this.velgAvslutningstype(type, saksnummer);
     }
 
-    await this.bekreftAvslutning(saksnummer);
+    await this.bekreftAvslutning();
     await this.verifiserVellykketAvslutning(saksnummer);
   }
 

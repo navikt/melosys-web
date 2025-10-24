@@ -1,8 +1,8 @@
 import { Page, expect } from "@playwright/test";
 import { HovedsidePage, USER_ID_VALID } from "../pages/hovedside.page";
-import { OpprettNySakPage } from "../pages/opprett-ny-sak.page";
+import { OpprettNySakPage } from "../pages/opprett-ny-sak/opprett-ny-sak.page";
 import { SokPage } from "../pages/sok.page";
-import { VisBehandlingPage } from "../pages/vis-behandling.page";
+import { BehandlingPage } from "../pages/behandling/behandling.page";
 import { assertNyBehandlingOpprettet } from "./testUtils";
 
 /**
@@ -80,7 +80,7 @@ export async function opprettUtenforAvtalelandSak(page: Page): Promise<string> {
 export async function opprettUtenforAvtalelandSakMedAarsavregning(page: Page): Promise<string> {
   const hovedsidePage = new HovedsidePage(page);
   const sokPage = new SokPage(page);
-  const behandlingPage = new VisBehandlingPage(page);
+  const behandlingPage = new BehandlingPage(page);
   const opprettNySakPage = new OpprettNySakPage(page);
 
   // 1. Opprett Førstegangsbehandling

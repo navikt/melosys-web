@@ -109,7 +109,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   harTrygdeavgiftFraAvgiftssystemet: boolean;
   harGrunnlag: boolean;
 }) {
-  const [feilmelding, setFeilmelding] = useState<undefined | string>(undefined);
+  const [feilmelding, setFeilmelding] = useState<string | string[] | undefined>(undefined);
   const [beregningPaagar, setBeregningPaagar] = useState(false);
   const [aarsavregningResponse, setAarsavregningResponse] = useState<AarsavregningResponse | undefined>(
     initiellData.aarsavregningResponse,
@@ -187,6 +187,10 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       .every((periode: Medlemskapsperiode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG);
   }, [medlemskapsperioder]);
 
+  const erDeltGrunnlag =
+    harTrygdeavgiftFraAvgiftssystemet &&
+    !!initiellData.aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger;
+
   const finnMedlemskapsperiode = useCallback((perioder: Medlemskapsperiode[]) => {
     const sorterteGyldigePerioder = perioder
       .filter((periode: Medlemskapsperiode) => periode.fomDato && periode.tomDato)
@@ -240,20 +244,21 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   });
 
   useEffect(() => {
-    if (redigerbart && aarsavregningResponse?.nyttGrunnlag) {
+    if (redigerbart && aarsavregningResponse?.nyttTrygdeavgiftsGrunnlag) {
       if (
-        aarsavregningResponse.nyttGrunnlag?.avgift.totalAvgift !== aarsavregningResponse.avregning?.beregnetAvgiftBelop
+        aarsavregningResponse.nyttTrygdeavgiftsGrunnlag?.avgift.totalAvgift !==
+        aarsavregningResponse.avregning?.beregnetAvgiftBelop
       ) {
         Api.Aarsavregning.oppdaterBeregnetAvgiftBeloep(
           behandlingID,
           aarsavregningID,
-          aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift,
+          aarsavregningResponse?.nyttTrygdeavgiftsGrunnlag?.avgift.totalAvgift,
         ).then((response: AarsavregningResponse) => {
           setAarsavregningResponse(response);
         });
       }
     }
-  }, [aarsavregningResponse?.nyttGrunnlag?.avgift.totalAvgift]);
+  }, [aarsavregningResponse?.nyttTrygdeavgiftsGrunnlag?.avgift.totalAvgift]);
 
   const lagreMedlemskapsperiodeHvisEndret = async (
     periode: Medlemskapsperiode,
@@ -741,7 +746,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     if (endeligAvgiftValg === OPPLYSNINGER_ENDRET) {
       return Boolean(
         formIsValid &&
-          aarsavregningResponse?.nyttGrunnlag &&
+          aarsavregningResponse?.nyttTrygdeavgiftsGrunnlag &&
           feilmelding === undefined &&
           arrayValideringsfeil === undefined,
       );
@@ -750,7 +755,13 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       return Boolean(formIsValid && feilmelding === undefined);
     }
     return false;
-  }, [formIsValid, aarsavregningResponse?.nyttGrunnlag, feilmelding, endeligAvgiftValg, arrayValideringsfeil]);
+  }, [
+    formIsValid,
+    aarsavregningResponse?.nyttTrygdeavgiftsGrunnlag,
+    feilmelding,
+    endeligAvgiftValg,
+    arrayValideringsfeil,
+  ]);
 
   useEffect(() => {
     oppdaterStatus(stegErGyldig);
@@ -823,10 +834,12 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   const skjemaErRedigerbart = redigerbart && !endrerBestemmelse;
 
   const tidligereAarsavregningTrygdeavgiftFraAvgiftssystem =
-    initiellData.aarsavregningResponse?.tidligereGrunnlagsopplysninger?.tidligereTrygdeavgiftFraAvgiftssystemet;
+    initiellData.aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger
+      ?.tidligereTrygdeavgiftFraAvgiftssystemet;
 
   const tidligereAarsavregningErManueltBeregnet = Boolean(
-    initiellData.aarsavregningResponse?.tidligereGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep,
+    initiellData.aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger
+      ?.tidligereÅrsavregningManueltAvgiftBeloep,
   );
 
   const minDate = initiellData.valgtÅr !== undefined ? new Date(initiellData.valgtÅr, 0, 1) : undefined;
@@ -885,6 +898,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
                 minDate={minDate}
                 trygdedekninger={trygdedekninger}
                 setValue={setValue}
+                erDeltGrunnlag={erDeltGrunnlag}
               />
             ))}
           </div>
@@ -931,7 +945,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
             !feilmelding &&
             !arrayValideringsfeil &&
             !trygdeAvgiftSkalIkkeBetalesTilNav &&
-            aarsavregningResponse?.nyttGrunnlag && (
+            aarsavregningResponse?.nyttTrygdeavgiftsGrunnlag && (
               <Nav.ExpansionCard
                 className="beregnetTrygdeavgiftDetaljer"
                 aria-label="trygdeavgiftdetaljer"
@@ -942,7 +956,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
                 </Nav.ExpansionCard.Header>
                 <Nav.ExpansionCard.Content>
                   <BeregnetTrygdeavgiftDetaljer
-                    grunnlag={aarsavregningResponse.nyttGrunnlag}
+                    grunnlag={aarsavregningResponse.nyttTrygdeavgiftsGrunnlag}
                     medlemskapsTypeErPliktig={medlemskapstypeErPliktig}
                   />
                 </Nav.ExpansionCard.Content>

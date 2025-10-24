@@ -1,8 +1,8 @@
 import { test, Page, expect } from "@playwright/test";
 import { HovedsidePage, USER_ID_VALID } from "../../pages/hovedside.page";
 import { SokPage } from "../../pages/sok.page";
-import { VisBehandlingPage } from "../../pages/vis-behandling.page";
-import { AarsavregningPage } from "../../pages/aarsavregning.page";
+import { BehandlingPage } from "../../pages/behandling/behandling.page";
+import { AarsavregningPage } from "../../pages/behandling/aarsavregning.page";
 import { opprettUtenforAvtalelandSakMedAarsavregning } from "../../utils/testdataUtils";
 
 /**
@@ -33,7 +33,7 @@ function lagDato(dagMåned: string): string {
 async function setupAarsavregningTest(page: Page) {
   const mainPage = new HovedsidePage(page);
   const sokPage = new SokPage(page);
-  const behandlingPage = new VisBehandlingPage(page);
+  const behandlingPage = new BehandlingPage(page);
   aarsavregningPage = new AarsavregningPage(page);
 
   await mainPage.goto();

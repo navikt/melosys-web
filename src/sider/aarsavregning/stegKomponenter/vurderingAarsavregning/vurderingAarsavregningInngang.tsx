@@ -91,13 +91,50 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
   const { oppfriskOgLastInnSaksopplysningerForAarsavregning } = useContext(FellesHandlersContext) as any;
   const dispatch = useDispatch();
 
+  /**
+   * Utleder harTrygdeavgiftFraAvgiftssystemet når verdien er null (bakoverkompatibilitet).
+   *
+   * Eldre behandlinger kan ha null pga. bug der verdien ikke ble lagret.
+   * Vi infererer verdien basert på om brukeren har fylt ut avhengige felter:
+   * - Hvis trygdeavgiftFraAvgiftssystemet har verdi → brukeren valgte "Ja" → returnerer true
+   * - Hvis andre felter (manueltAvgiftBeloep, nyttTrygdeavgiftsGrunnlag) er fylt ut → brukeren valgte "Nei" → returnerer false
+   * - Ellers → ny årsavregning hvor brukeren ikke har svart ennå → returnerer undefined
+   */
+  const utledHarTrygdeavgiftFraAvgiftssystemetNårNull = (res: AarsavregningResponse): boolean | undefined => {
+    // Sjekk om brukeren har lagt til trygdeavgift fra avgiftssystemet (valgte "Ja")
+    const harTrygdeavgiftFraAvgiftssystemet =
+      res.avregning?.trygdeavgiftFraAvgiftssystemet !== null &&
+      res.avregning?.trygdeavgiftFraAvgiftssystemet !== undefined;
+
+    if (harTrygdeavgiftFraAvgiftssystemet) {
+      return true;
+    }
+
+    // Sjekk om brukeren har fylt ut andre felter som krever at radioknappen er besvart (valgte "Nei")
+    const harAnnenDataSomKreverSvar =
+      res.avregning?.manueltAvgiftBeloep !== null || res.nyttTrygdeavgiftsGrunnlag !== null;
+
+    if (harAnnenDataSomKreverSvar) {
+      return false;
+    }
+
+    // Ingen data fylt ut - ny årsavregning hvor brukeren må svare
+    return undefined;
+  };
+
   const utledGrunnlagstypeForÅrsavregning = (res: AarsavregningResponse) => {
-    setHarTrygdeavgiftFraAvgiftssystemet(res.harTrygdeavgiftFraAvgiftssystemet);
+    if (res.harTrygdeavgiftFraAvgiftssystemet !== null) {
+      setHarTrygdeavgiftFraAvgiftssystemet(res.harTrygdeavgiftFraAvgiftssystemet);
+    } else {
+      // Bakoverkompatibilitet: utled verdi fra eksisterende data
+      const utledetVerdi = utledHarTrygdeavgiftFraAvgiftssystemetNårNull(res);
+      setHarTrygdeavgiftFraAvgiftssystemet(utledetVerdi);
+    }
 
     setHarGrunnlag(
       !(
-        res.tidligereGrunnlagsopplysninger === null ||
-        Utils._isEmpty(res.tidligereGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.medlemskapsperioder)
+        res.tidligereTrygdeavgiftsGrunnlagsopplysninger === null ||
+        Utils._isEmpty(res.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.medlemskapsperioder)
       ),
     );
   };
@@ -162,19 +199,27 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
     setHarTrygdeavgiftFraAvgiftssystemetIsPending(true);
     Api.Aarsavregning.oppdaterHarTrygdeavgiftFraAvgiftssystemet(behandlingID, {
       harTrygdeavgiftFraAvgiftssystemet: value,
-    }).then((res) => {
-      setHarTrygdeavgiftFraAvgiftssystemet(res.harTrygdeavgiftFraAvgiftssystemet);
-      setHarTrygdeavgiftFraAvgiftssystemetIsPending(false);
-    });
+    })
+      .then((res) => {
+        setHarTrygdeavgiftFraAvgiftssystemet(res.harTrygdeavgiftFraAvgiftssystemet);
+        setHarTrygdeavgiftFraAvgiftssystemetIsPending(false);
+      })
+      .catch((error) => {
+        // eslint-disable-next-line no-console
+        console.error("Feil ved oppdatering av harTrygdeavgiftFraAvgiftssystemet:", error);
+        setHarTrygdeavgiftFraAvgiftssystemetIsPending(false);
+      });
   };
 
   const forrigeÅrsavregningErManueltBeregnet = Boolean(
-    aarsavregningResponse?.tidligereGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep !== null &&
-      aarsavregningResponse?.tidligereGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep !== undefined,
+    aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep !==
+      null &&
+      aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep !==
+        undefined,
   );
   const forrigeÅrsavregningHarInnbetaltFraAvgiftssystem = Boolean(
-    aarsavregningResponse?.tidligereGrunnlagsopplysninger?.tidligereTrygdeavgiftFraAvgiftssystemet !== null &&
-      aarsavregningResponse?.tidligereGrunnlagsopplysninger?.tidligereTrygdeavgiftFraAvgiftssystemet !== undefined,
+    aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.tidligereTrygdeavgiftFraAvgiftssystemet !==
+      null,
   );
 
   const sisteMuligeÅr = new Date().getFullYear() - 1;
