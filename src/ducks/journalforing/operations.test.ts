@@ -116,7 +116,7 @@ describe("journalforing operations", () => {
     const mockBehandlingstyper = [
       { kode: "NY_VURDERING", term: "Ny vurdering" },
       { kode: "KLAGE", term: "Klage" },
-      { kode: "AARSAVREGNING", term: "Årsavregning" },
+      { kode: "ÅRSAVREGNING", term: "Årsavregning" },
     ];
 
     beforeEach(() => {
@@ -226,6 +226,60 @@ describe("journalforing operations", () => {
       // For EØS-sak med åpne behandlinger skal det ikke være mulig å opprette nye behandlinger
       expect(result.muligeBehandlingstyper).toEqual([]);
       expect(result.sisteBehandlingKanOpprettesAndregangsbehandlingPå).toBe(false);
+    });
+
+    it("håndterer EØS pensjonist-sak med åpne behandlinger - tillater årsavregning", async () => {
+      // Mock API responses
+      fetch
+        .mockResponseOnce(JSON.stringify({ anmodningsperioder: [] }))
+        .mockResponseOnce(JSON.stringify({ harBehandlingMedTrygdeavgift: false }))
+        .mockResponseOnce(
+          JSON.stringify([{ kode: MKV.Koder.behandlinger.behandlingstema.PENSJONIST, term: "Pensjonist" }]),
+        )
+        .mockResponseOnce(JSON.stringify(mockBehandlingstyper));
+
+      const eøsPensjonistSak: Sak = {
+        ...baseSak,
+        sakstype: { kode: MKV.Koder.sakstyper.EU_EOS, term: "EU/EØS" },
+        sakstema: { kode: MKV.Koder.sakstemaer.TRYGDEAVGIFT, term: "Trygdeavgift" },
+        behandlingOversikter: [
+          {
+            ...baseSak.behandlingOversikter[0],
+            behandlingsstatus: {
+              kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
+              term: "Under behandling",
+            },
+            behandlingstema: { kode: MKV.Koder.behandlinger.behandlingstema.PENSJONIST, term: "Pensjonist" },
+            behandlingstype: {
+              kode: MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
+              term: "Førstegangsbehandling",
+            },
+          },
+        ],
+      };
+
+      const initialState: Partial<RootState> = {
+        form: {
+          testForm: {
+            values: {},
+          },
+        },
+      };
+
+      const store = createTestStore(initialState);
+
+      const result = await store.dispatch(
+        operations.prepareKnyttTilSakForm(eøsPensjonistSak, false, "BRUKER", feltNavn) as any,
+      );
+
+      // For EØS pensjonist-sak med åpne behandlinger skal det være mulig å opprette nye behandlinger
+      // Dette er et unntak fra regelen om at vanlige EØS-saker med åpne behandlinger ikke kan opprette nye behandlinger
+      // Siden behandlingen er en åpen ikke-årsavregning, skal kun årsavregning være tilgjengelig
+      expect(result.muligeBehandlingstyper).toContainEqual(
+        expect.objectContaining({ kode: MKV.Koder.behandlinger.behandlingstyper.ÅRSAVREGNING }),
+      );
+      expect(result.muligeBehandlingstyper.length).toBeGreaterThan(0);
+      expect(result.sisteBehandlingKanOpprettesAndregangsbehandlingPå).toBe(true);
     });
 
     it("håndterer sak med åpne ikke-årsavregningsbehandlinger - kun årsavregning tillatt", async () => {
