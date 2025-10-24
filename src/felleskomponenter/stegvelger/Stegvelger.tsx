@@ -1,10 +1,16 @@
-import { Component } from "react";
+/**
+ * Stegvelger - Hovedkomponent for trinnvis saksbehandling
+ *
+ * Denne komponenten håndterer navigasjon og validering gjennom ulike steg i saksbehandlingsprosessen.
+ * Type-definisjoner finnes i ./types.ts
+ *
+ * @see ./types.ts for StegvelgerProps, StegvelgerState og relaterte typer
+ */
+import React, { Component } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import PT from "prop-types";
 
 import MKV from "../../melosyskodeverk";
-import * as MPT from "../../proptypes";
 import * as Api from "../../services/api";
 import * as Utils from "../../utils";
 import StegLinje from "../stegLinje";
@@ -39,12 +45,31 @@ import { AvklartefaktaStore, EnkelDataStore, StegStoreTyper, VilkaarStore } from
 import "./stegvelger.less";
 import { erFeatureToggleEnabled } from "../../featuretoggle";
 import { MELOSYS_NORGE_ER_UTPEKT_11_3_A } from "../../featuretoggle/toggleNavn";
+import type {
+  StegvelgerProps,
+  StegvelgerState,
+  StegDataType,
+  UtpekDataType,
+  AvvisUtpekingDataType,
+  BestillingType,
+  GodkjennUnntaksperioderDataType,
+  EndreVedtakDataType,
+  StegType,
+} from "./types";
 
-class Stegvelger extends Component {
-  state = {
+class Stegvelger extends Component<StegvelgerProps, StegvelgerState> {
+  state: StegvelgerState = {
     aktivtStegNummer: 0,
-    aktuelleSteg: [],
+    aktuelleSteg: [] as StegType[],
     stegStores: {
+      anmodningsperiodesvar: new EnkelDataStore(),
+      avklartefakta: new AvklartefaktaStore(),
+      vilkaar: new VilkaarStore(),
+      lovvalgsbestemmelse: new EnkelDataStore(),
+      tilleggbestemmelse: new EnkelDataStore(),
+      unntakfrabestemmelse: new EnkelDataStore(),
+      lovvalgsperiode: new EnkelDataStore(),
+      lovvalgsland: new EnkelDataStore(),
       [StegStoreTyper.Anmodningsperiodersvar]: new EnkelDataStore(),
       [StegStoreTyper.Avklartefakta]: new AvklartefaktaStore(),
       [StegStoreTyper.Vilkar]: new VilkaarStore(),
@@ -80,13 +105,14 @@ class Stegvelger extends Component {
     this.oppdaterAktuelleSteg(aktivtStegNummer);
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps: StegvelgerProps, prevState: StegvelgerState): void {
     const { aktivtStegNummer, aktuelleSteg } = this.state;
     const svarAnmodningSteg = aktuelleSteg.find((steg) => steg.id === STEG.ARTIKKEL_16_MOTTA_SVAR);
     const prevSvarAnmodningSteg = prevState.aktuelleSteg.find((steg) => steg.id === STEG.ARTIKKEL_16_MOTTA_SVAR);
 
     const behandlingsstatusErMottattSvarAnmodning =
-      prevProps.oppsummering.behandlingsstatus.kode === MKV.Koder.behandlinger.behandlingsstatus.SVAR_ANMODNING_MOTTATT;
+      prevProps.oppsummering?.behandlingsstatus?.kode ===
+      MKV.Koder.behandlinger.behandlingsstatus.SVAR_ANMODNING_MOTTATT;
 
     if (
       behandlingsstatusErMottattSvarAnmodning &&
@@ -111,79 +137,85 @@ class Stegvelger extends Component {
    * har bekreftet valgene.
    */
 
-  hentFullmektig = () => {
+  hentFullmektig = (): Promise<unknown> => {
     const { saksnummer } = this.props;
 
-    return Api.Fagsaker.aktoer.hent(saksnummer, MKV.Koder.aktoersroller.FULLMEKTIG);
+    return Api.Fagsaker.aktoer.hent(saksnummer || "", MKV.Koder.aktoersroller.FULLMEKTIG);
   };
 
-  bekreftOgFortsett = () => {
+  bekreftOgFortsett = (): void => {
     this.publiserStegdata();
     this.validerSoknadOgGaTilSteg(this.beregnNesteSteg());
   };
 
-  bekreft = () => {
+  bekreft = (): void => {
     this.oppdater();
     this.validerSoknadOgGaTilSteg(this.beregnNesteSteg());
   };
 
-  tilbake = () => {
+  tilbake = (): void => {
     this.oppdater();
     this.validerSoknadOgGaTilSteg(this.beregnForrigeSteg());
   };
 
-  oppdater = () => {
+  oppdater = (): void => {
     const { aktivtStegNummer } = this.state;
     this.props.oppdaterMottatteOpplysninger();
     this.oppdaterAktuelleSteg(aktivtStegNummer);
   };
 
-  harMottatteOpplysningerFeilmeldinger = () => !Utils._isEmpty(this.props.mottatteOpplysningerFeilmeldinger);
+  harMottatteOpplysningerFeilmeldinger = (): boolean => !Utils._isEmpty(this.props.mottatteOpplysningerFeilmeldinger);
 
-  gjemMottatteOpplysningerFeilmeldinger = () => this.setState({ visMottatteOpplysningerFeilmeldinger: false });
+  gjemMottatteOpplysningerFeilmeldinger = (): void => this.setState({ visMottatteOpplysningerFeilmeldinger: false });
 
-  visMottatteOpplysningerFeilmeldinger = () => this.setState({ visMottatteOpplysningerFeilmeldinger: true });
+  visMottatteOpplysningerFeilmeldinger = (): void => this.setState({ visMottatteOpplysningerFeilmeldinger: true });
 
-  oppdaterStegData = (stegID, data) => {
+  oppdaterStegData = (stegID: string, data: StegDataType | undefined): void => {
     if (!data) return;
 
     const { felt, type, innhold, iAlleSteg } = data;
     const { stegStores } = this.state;
-    if (iAlleSteg) {
+    if (type && iAlleSteg) {
       stegStores[type].oppdaterStegDataIAlleSteg(stegID, { felt, innhold });
-    } else {
+    } else if (type) {
       stegStores[type].oppdaterStegData(stegID, { felt, innhold });
     }
-    this.setState(stegStores);
+    this.setState({ stegStores });
 
     if (data.oppdaterRedux) {
       this.publiserStegdata();
     }
   };
 
-  slettStegData = (stegID, data = {}) => {
+  slettStegData = (stegID: string, data: StegDataType = {}): void => {
     const { felt, type, iAlleSteg } = data;
 
     if (Utils._isNil(type) && Utils._isNil(felt)) {
       this.slettSteg(stegID);
-    } else if (iAlleSteg) {
+    } else if (type && iAlleSteg) {
       const { stegStores } = this.state;
       stegStores[type].slettFeltIAlleSteg(data);
-    } else {
+    } else if (type) {
       const { stegStores } = this.state;
       stegStores[type].slettStegData(stegID, data);
-      this.setState(stegStores);
+      this.setState({ stegStores });
     }
     this.publiserStegdata();
   };
 
-  slettSteg = (stegID) => {
+  slettSteg = (stegID: string): void => {
     const { stegStores } = this.state;
     Object.keys(stegStores).forEach((type) => stegStores[type].slettSteg(stegID));
-    this.setState(stegStores);
+    this.setState({ stegStores });
   };
 
-  hentPerioderStegState = () => {
+  hentPerioderStegState = (): {
+    lovvalgsbestemmelse: unknown;
+    tilleggbestemmelse: unknown;
+    unntakfrabestemmelse: unknown;
+    lovvalgsperiode: unknown;
+    lovvalgsland: unknown;
+  } => {
     const { lovvalgsbestemmelse, tilleggbestemmelse, unntakfrabestemmelse, lovvalgsperiode, lovvalgsland } =
       this.state.stegStores;
 
@@ -228,16 +260,15 @@ class Stegvelger extends Component {
    * Generisk metode for validering av mottatteOpplysninger benyttet i stegkomponenter. Denne valideringen kjøres i forkant av kall
    * til melosys-api. Opprettet som første steg i opprydning av redux bruk i Stegvelger. Har som mål å fjerne prop passing av
    * action creators. Se slettingen av lagreOgFatteVedtak for eksempel på denne prosessen
-   * @returns {Promise<*>}
    */
-  validerMottatteOpplysninger = async () => {
+  validerMottatteOpplysninger = async (): Promise<void> => {
     if (this.validerOgVisMottatteOpplysningerFeilmeldinger()) {
       return this.props.lagreAllData();
     }
     return Promise.reject(new Error("Feil i mottatteOpplysninger"));
   };
 
-  utpekHandler = (data) => {
+  utpekHandler = (data: UtpekDataType): Promise<unknown> => {
     const { saksnummer, utpek } = this.props;
 
     const utpekBody = {
@@ -246,10 +277,10 @@ class Stegvelger extends Component {
       fritekstBrev: data.fritekstBrev || null,
     };
 
-    return utpek(saksnummer, utpekBody);
+    return utpek(saksnummer || "", utpekBody);
   };
 
-  lagreOgUtpek = async (data) => {
+  lagreOgUtpek = async (data: UtpekDataType): Promise<unknown> => {
     if (this.validerOgVisMottatteOpplysningerFeilmeldinger()) {
       await this.props.lagreAllData();
       return this.utpekHandler(data);
@@ -257,13 +288,13 @@ class Stegvelger extends Component {
     return Promise.resolve();
   };
 
-  avvisUtpekingHandler = (data) => {
+  avvisUtpekingHandler = (data: AvvisUtpekingDataType): Promise<unknown> => {
     const { behandlingID, avvisUtpeking } = this.props;
 
     return avvisUtpeking(behandlingID, data);
   };
 
-  avvisUtpeking = async (data) => {
+  avvisUtpeking = async (data: AvvisUtpekingDataType): Promise<unknown> => {
     if (this.validerOgVisMottatteOpplysningerFeilmeldinger()) {
       await this.props.lagreAllData();
       return this.avvisUtpekingHandler(data);
@@ -271,7 +302,7 @@ class Stegvelger extends Component {
     return Promise.resolve();
   };
 
-  lagreOgBestillAnmodningsperioder = async (bestilling) => {
+  lagreOgBestillAnmodningsperioder = async (bestilling: BestillingType): Promise<unknown> => {
     const { behandlingID, lagreAllData, bestillAnmodningsperioder } = this.props;
 
     if (this.validerOgVisMottatteOpplysningerFeilmeldinger()) {
@@ -281,19 +312,19 @@ class Stegvelger extends Component {
     return Promise.resolve();
   };
 
-  godkjennUnntaksperioder = async (data) => {
+  godkjennUnntaksperioder = async (data: GodkjennUnntaksperioderDataType): Promise<void> => {
     const { behandlingID, tilForsiden } = this.props;
 
     await Api.Saksflyt.Unntaksperioder.godkjenn(behandlingID, {
       varsleUtland: data.varsleUtland || false,
-      fritekst: data.fritekst || null,
-      endretPeriode: data.endretPeriode,
-      lovvalgsbestemmelse: data.lovvalgsbestemmelse,
+      fritekst: (data.fritekst as string) || null,
+      endretPeriode: data.endretPeriode as never,
+      lovvalgsbestemmelse: data.lovvalgsbestemmelse as string,
     });
     tilForsiden();
   };
 
-  lagreOgGodkjennUnntaksperioder = async (data) => {
+  lagreOgGodkjennUnntaksperioder = async (data: GodkjennUnntaksperioderDataType): Promise<void> => {
     if (this.validerOgVisMottatteOpplysningerFeilmeldinger()) {
       await this.props.lagreAllData();
       return this.godkjennUnntaksperioder(data);
@@ -301,19 +332,19 @@ class Stegvelger extends Component {
     return Promise.resolve();
   };
 
-  videresendSoknad = async (mottakerinstitusjon, fritekst, vedlegg) => {
+  videresendSoknad = async (mottakerinstitusjon: unknown, fritekst: unknown, vedlegg: unknown): Promise<unknown> => {
     const { saksnummer, videresend, lagreAllData } = this.props;
 
     if (this.validerOgVisMottatteOpplysningerFeilmeldinger()) {
       const body = { mottakerinstitusjon, fritekst, vedlegg };
 
       await lagreAllData();
-      return videresend(saksnummer, body);
+      return videresend(saksnummer || "", body);
     }
     return Promise.resolve();
   };
 
-  validerOgVisMottatteOpplysningerFeilmeldinger = () => {
+  validerOgVisMottatteOpplysningerFeilmeldinger = (): boolean => {
     if (this.harMottatteOpplysningerFeilmeldinger()) {
       this.visMottatteOpplysningerFeilmeldinger();
       return false;
@@ -323,29 +354,33 @@ class Stegvelger extends Component {
     return true;
   };
 
-  byggLovvalgsperioderHandler = () => {
+  byggLovvalgsperioderHandler = (): void => {
     const perioderStegState = this.hentPerioderStegState();
-    this.props.oppdaterLovvalgperioder(perioderStegState);
+    void this.props.oppdaterLovvalgperioder(perioderStegState);
   };
 
-  byggUtpekingsperioderHandler = () => {
+  byggUtpekingsperioderHandler = (): void => {
     const perioderStegState = this.hentPerioderStegState();
-    this.props.oppdaterUtpekingsperioder(perioderStegState);
+    void this.props.oppdaterUtpekingsperioder(perioderStegState);
   };
 
-  byggAnmodningsperioderHandler = () => {
+  byggAnmodningsperioderHandler = (): void => {
     const perioderStegState = this.hentPerioderStegState();
-    this.props.oppdaterAnmodningsPerioder(perioderStegState);
+    void this.props.oppdaterAnmodningsPerioder(perioderStegState);
   };
 
-  endreLovvalgsperioderHandler = (fomdato, tomdato) => {
+  endreLovvalgsperioderHandler = (fomdato: unknown, tomdato: unknown): void => {
     const { behandlingID, lovvalgsperioder } = this.props;
 
-    const forkortetPeriode = lovvalgsperioder.map((periode) => ({ ...periode, fomDato: fomdato, tomDato: tomdato }));
-    Api.Lovvalgsperioder.send(behandlingID, forkortetPeriode);
+    const forkortetPeriode = lovvalgsperioder.map((periode: unknown) => ({
+      ...(periode as object),
+      fomDato: fomdato,
+      tomDato: tomdato,
+    }));
+    void Api.Lovvalgsperioder.send(behandlingID, forkortetPeriode as never[]);
   };
 
-  endreVedtak = (data) => {
+  endreVedtak = (data: EndreVedtakDataType): Promise<unknown> => {
     const { behandlingID } = this.props;
 
     const utfyltData = {
@@ -359,12 +394,8 @@ class Stegvelger extends Component {
 
   /** Analyser alle svar som er gjort i tidligere steg og bygg videre
    * steg så langt det er mulig å komme. Alle ubesvarte steg går direkte til vedtak som default.
-   *
-   * @param aktivtStegNummer
-   * @param endreFokus
-   * @returns {Array}
    */
-  oppdaterAktuelleSteg = (aktivtStegNummer, endreFokus = false) => {
+  oppdaterAktuelleSteg = (aktivtStegNummer: number, endreFokus = false): StegType[] => {
     const tilgjengeligeHandlers = {
       bekreftOgFortsett: this.bekreftOgFortsett,
       lagreOgUtpek: this.lagreOgUtpek,
@@ -403,9 +434,9 @@ class Stegvelger extends Component {
       virksomheterIPerioden: props.arbeidsgivereIPerioden,
       avklartefakta: props.avklartefakta,
       begrunnelser: MKV.KTObjects.begrunnelser,
-      behandlingstype: props.oppsummering.behandlingstype,
-      behandlingstema: props.oppsummering.behandlingstema,
-      behandlingsstatus: props.oppsummering.behandlingsstatus,
+      behandlingstype: props.oppsummering?.behandlingstype,
+      behandlingstema: props.oppsummering?.behandlingstema,
+      behandlingsstatus: props.oppsummering?.behandlingsstatus,
       lovvalgsperioder: props.lovvalgsperioder,
       lovvalgsbestemmelse: props.lovvalgsbestemmelse,
       tilleggsbestemmelse: props.tilleggsbestemmelse,
@@ -431,10 +462,10 @@ class Stegvelger extends Component {
       vurderUtpekingTom: props.vurderUtpekingTom,
       vurderUtpekingValid: props.vurderUtpekingValid,
       erSoknadArbeidFlereLand:
-        props.oppsummering.behandlingstema.kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND,
+        props.oppsummering?.behandlingstema?.kode === MKV.Koder.behandlinger.behandlingstema.ARBEID_FLERE_LAND,
       erArbeidTjenestepersonEllerFly:
         MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY ===
-        props.oppsummering.behandlingstema.kode,
+        props.oppsummering?.behandlingstema?.kode,
       erArbeidEttLand: props.erArbeidEttLand,
       maritimtarbeid: props.maritimtarbeid,
       hjemmebaser: props.hjemmebaser,
@@ -466,21 +497,20 @@ class Stegvelger extends Component {
     return aktuelleSteg;
   };
 
-  debouncedOppdaterAktuelleSteg = Utils._debounce(async (aktivtStegNummer) => {
+  debouncedOppdaterAktuelleSteg = Utils._debounce(async (aktivtStegNummer: number) => {
     this.oppdaterAktuelleSteg(aktivtStegNummer);
   }, 300);
 
-  validerSoknadOgGaTilSteg = (nyttStegNummer) => {
+  validerSoknadOgGaTilSteg = (nyttStegNummer: number): void => {
     if (this.validerOgVisMottatteOpplysningerFeilmeldinger()) {
-      this.tilSteg(nyttStegNummer);
+      void this.tilSteg(nyttStegNummer);
     }
   };
 
   /** Gå til et konkret steg i steglisten, angitt av en indeks
    * som begynnner med 0.
-   * @param nyttStegNummer Number Steget som det skal byttes til.
    */
-  tilSteg = async (nyttStegNummer) => {
+  tilSteg = async (nyttStegNummer: number): Promise<void> => {
     const {
       artikkel16_anmodning_skjema,
       soknad_skjema,
@@ -501,12 +531,12 @@ class Stegvelger extends Component {
     if (redigerbart) {
       if (sakstype !== MKV.Koder.sakstyper.FTRL) {
         await oppdaterPerioderState({ ...soknad_skjema, ...artikkel16_anmodning_skjema });
-        await lagreLovvalgsperioderHandler();
+        await lagreLovvalgsperioderHandler?.();
 
         if (!anmodningErSendtUtland) {
           await lagreAvklartefaktaHandler();
-          await lagreVilkarHandler();
-          await lagreAnmodningsperioderHandler();
+          await lagreVilkarHandler?.();
+          await lagreAnmodningsperioderHandler?.();
           await lagreUtpekingsperioderHandler();
         }
       }
@@ -523,29 +553,29 @@ class Stegvelger extends Component {
    * maks antall steg (til og med vedtak). Ved forsøk på å gå ytterligere steg
    * enn hva som er mulig skal funksjonen defaulte til det aktive stegnummeret.
    */
-  beregnNesteSteg = () => {
+  beregnNesteSteg = (): number => {
     const { aktivtStegNummer } = this.state;
     return aktivtStegNummer + 1;
   };
 
-  beregnForrigeSteg = () => {
+  beregnForrigeSteg = (): number => {
     const { aktivtStegNummer } = this.state;
     return aktivtStegNummer - 1;
   };
 
-  erVedtakSteg(stegNummer) {
+  erVedtakSteg(stegNummer: number): boolean | undefined {
     return this.state.aktuelleSteg[stegNummer]?.vedtakSteg;
   }
 
-  erInngangsteg(stegNummer) {
+  erInngangsteg(stegNummer: number): boolean | undefined {
     return this.state.aktuelleSteg[stegNummer]?.stegPosisjon === 0;
   }
 
-  kontrollerFerdigbehandling = (data) => {
+  kontrollerFerdigbehandling = (data: unknown): Promise<unknown> => {
     return this.props.kontrollerFerdigbehandling(data);
   };
 
-  erSisteSteg(stegNummer) {
+  erSisteSteg(stegNummer: number): boolean {
     const maksSteg = this.state.aktuelleSteg.length - 1;
     return stegNummer >= maksSteg;
   }
@@ -556,7 +586,7 @@ class Stegvelger extends Component {
     const visFeilmeldinger =
       this.erVedtakSteg(aktivtStegNummer) || aktuelleSteg[aktivtStegNummer]?.id === STEG.ARTIKKEL_16_ANMODNING;
     const inngangStegErAktivt = this.erInngangsteg(aktivtStegNummer);
-    const erNyVurdering = oppsummering.behandlingstype?.kode === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
+    const erNyVurdering = oppsummering?.behandlingstype?.kode === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
     return (
       <div className="stegvelger panelSeksjon">
         <StegLinje steg={aktuelleSteg} stegKlikk={this.validerSoknadOgGaTilSteg} />
@@ -573,215 +603,97 @@ class Stegvelger extends Component {
   }
 }
 
-Stegvelger.propTypes = {
-  anmodningsperiodesvar: MPT.AnmodningsperioderSvar.isRequired,
-  behandlingID: PT.number.isRequired,
-  bestemmelser: PT.array,
-  arbeidsgivereIPerioden: PT.array,
-  arbeidsland: PT.arrayOf(MPT.Kodeverk).isRequired,
-  arbeidslandMedYrkesaktivitet: PT.arrayOf(MPT.ArbeidslandMedYrkesaktivitet).isRequired,
-  avklartefakta: MPT.AvklartefaktaListe,
-  behandlingsPerioder: PT.object.isRequired,
-  hentVilkar: PT.func.isRequired,
-  hentAvklartefakta: PT.func.isRequired,
-  hentLovvalgsperioder: PT.func.isRequired,
-  history: PT.object.isRequired,
-  endreVedtak: PT.func.isRequired,
-  kontrollerFerdigbehandling: PT.func.isRequired,
-  lagreMottatteOpplysningerHandler: PT.func.isRequired,
-  lovvalgsperioder: PT.array.isRequired,
-  oppdaterPerioderState: PT.func.isRequired,
-  oppdaterMottatteOpplysninger: PT.func.isRequired,
-  oppsummering: MPT.Behandlinger.Oppsummering,
-  saksopplysninger: PT.object.isRequired,
-  soknad_skjema: PT.object,
-  artikkel12_vedtak_skjema: PT.object,
-  artikkel16_anmodning_skjema: PT.object,
-  artikkel16_motta_svar_skjema: PT.object,
-  vurder_utpeking_skjema: PT.object,
-  oppdaterVilkaar: PT.func.isRequired,
-  oppdaterAvklartefakta: PT.func.isRequired,
-  oppdaterLovvalgperioder: PT.func.isRequired,
-  valgteVirksomheter: PT.array,
-  valgteVirksomheterIkkeNaeringsDrivende: PT.array,
-  vilkar: PT.array.isRequired,
-  lagreVilkarHandler: PT.func,
-  lagreAvklartefaktaHandler: PT.func.isRequired,
-  lagreLovvalgsperioderHandler: PT.func,
-  lagreAllData: PT.func.isRequired,
-  hentMedlemsPerioder: PT.func.isRequired,
-  mottatteOpplysningerFeilmeldinger: PT.object.isRequired,
-  hentAnmodningsperioder: PT.func.isRequired,
-  anmodningsperioder: PT.array.isRequired,
-  anmodningErSendtUtland: PT.bool.isRequired,
-  oppdaterAnmodningsPerioder: PT.func.isRequired,
-  lagreAnmodningsperioderHandler: PT.func,
-  lagreUtpekingsperioderHandler: PT.func.isRequired,
-  redigerbart: PT.bool.isRequired,
-  oppdaterAnmodningsperiodesvar: PT.func.isRequired,
-  generiskStegRedigerbart: PT.bool.isRequired,
-  saksnummer: PT.string,
-  erIDirekteTilArtikkel16Flyt: PT.bool.isRequired,
-  tilForsiden: PT.func.isRequired,
-  utpek: PT.func.isRequired,
-  avvisUtpeking: PT.func.isRequired,
-  hentUtpekingsperioder: PT.func.isRequired,
-  oppdaterUtpekingsperioder: PT.func.isRequired,
-  utpekingsperioder: MPT.Utpekingsperioder.isRequired,
-  omfattesIAnnetLand: PT.bool.isRequired,
-  stegMap: PT.objectOf(PT.arrayOf(PT.oneOfType([PT.string, PT.object]))).isRequired,
-  vurderUtpekingFom: PT.string,
-  vurderUtpekingTom: PT.string,
-  vurderUtpekingValid: PT.bool.isRequired,
-  lovvalgsbestemmelse: PT.string,
-  tilleggsbestemmelse: PT.string,
-  valgteLovvalgsVilkarBestemmelse: PT.string,
-  maritimtarbeid: PT.arrayOf(PT.object),
-  hjemmebaser: PT.arrayOf(PT.string),
-  forsteSteg: PT.string.isRequired,
-  erArbeidEttLand: PT.bool.isRequired,
-  videresend: PT.func.isRequired,
-  bestillAnmodningsperioder: PT.func.isRequired,
-  medfolgendeBarn: PT.array.isRequired,
-  lagredeVirksomheter: PT.array.isRequired,
-  sakstype: PT.string,
-  soknadsperiode: MPT.Soknadsperiode.isRequired,
-  lagreMottatteOpplysningerOgOppfriskSaksopplysninger: PT.func,
-  feilmeldinger: PT.oneOfType([
-    PT.arrayOf(
-      PT.shape({
-        kode: PT.string.isRequired,
-        felter: PT.arrayOf(PT.string).isRequired,
-      }),
-    ),
-    PT.string,
-  ]),
-  kontrollfeil: PT.arrayOf(
-    PT.shape({
-      kode: PT.string.isRequired,
-      felter: PT.arrayOf(PT.string).isRequired,
-    }),
-  ),
-  norgeErUtpekt11_3AToggleEnabled: PT.bool.isRequired,
-  utsendingsvilkår: PT.object.isRequired,
-  unntaksvilkår: PT.object.isRequired,
-  art11_3Aeller13_3A: PT.object.isRequired,
-  art11_4_1eller13_4_1: PT.object.isRequired,
-  art11_4_2eller13_4_2: PT.object.isRequired,
-  hentFullmektig: PT.func,
-  behandlingOppfriskes: PT.bool,
-};
-
-Stegvelger.defaultProps = {
-  arbeidsgivereIPerioden: [],
-  avklartefakta: [],
-  behandlingOppfriskes: false,
-  hentFullmektig: () => {},
-  bestemmelser: [],
-  oppsummering: {},
-  valgteVirksomheter: [],
-  valgteVirksomheterIkkeNaeringsDrivende: [],
-  artikkel12_vedtak_skjema: {},
-  artikkel16_anmodning_skjema: {},
-  artikkel16_motta_svar_skjema: {},
-  vurder_utpeking_skjema: {},
-  soknad_skjema: {},
-  saksnummer: "",
-  vurderUtpekingFom: "",
-  vurderUtpekingTom: "",
-  lovvalgsbestemmelse: "",
-  tilleggsbestemmelse: "",
-  valgteLovvalgsVilkarBestemmelse: "",
-  maritimtarbeid: [],
-  hjemmebaser: [],
-  sakstype: "",
-  lagreVilkarHandler: () => {},
-  lagreLovvalgsperioderHandler: () => {},
-  lagreAnmodningsperioderHandler: () => {},
-  lagreMottatteOpplysningerOgOppfriskSaksopplysninger: () => {},
-  feilmeldinger: [],
-  kontrollfeil: [],
-};
-
-const mapStateToProps = (state) => ({
-  anmodningsperioder: anmodningsperioderSelectors.AnmodningsperioderSelector(state),
-  anmodningErSendtUtland: anmodningsperioderSelectors.AlleAnmodningsperioderSendtUtlandSelector(state),
-  anmodningsperiodesvar: anmodningsperiodesvarSelectors.AnmodningsperiodesvarSelector(state),
-  arbeidsgivereIPerioden: avklartefaktaSelectors.VirksomheterIPeriodenSelector(state),
-  avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
-  vilkar: vilkarSelectors.VilkarSelector(state),
-  utsendingsvilkår: vilkarSelectors.UtsendingsvilkårSelector(state),
-  unntaksvilkår: vilkarSelectors.UnntaksvilkårSelector(state),
-  art11_3Aeller13_3A: vilkarSelectors.Artikkel11_3AEller13_3ASelector(state),
-  art11_4_1eller13_4_1: vilkarSelectors.Artikkel11_4_1Eller13_4_1Selector(state),
-  art11_4_2eller13_4_2: vilkarSelectors.Artikkel11_4_2Eller13_4_2Selector(state),
-  lovvalgsperioder: lovvalgsperioderSelectors.LovvalgsperioderSelector(state),
-  behandlingsPerioder: behandlingsperioderSelectors.behandlingsPerioderSelector(state),
-  arbeidsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
-  arbeidslandMedYrkesaktivitet: avklartefaktaSelectors.ArbeidslandMedYrkesAktivitetSelector(state),
-  oppsummering: behandlingerSelectors.OppsummeringSelector(state),
-  soknad_skjema: formSelectors.SoknadFormSelector(state).values,
-  artikkel12_vedtak_skjema: formSelectors.VedtakArtikkel12FormValuesSelector(state),
-  artikkel16_anmodning_skjema: formSelectors.Artikkel16AnmodningFormSelector(state).values,
-  artikkel16_motta_svar_skjema: formSelectors.Artikkel16MottaSvarFormSelector(state).values,
-  vurder_utpeking_skjema: formSelectors.VurderUtpekingFormSelector(state).values,
-  saksopplysninger: behandlingerSelectors.SaksopplysningerSelector(state),
-  valgteVirksomheter: avklartefaktaSelectors.AvklarteVirksomheterSelector(state),
-  valgteVirksomheterIkkeNaeringsDrivende:
-    avklartefaktaSelectors.AvklarteVirksomheterIkkeNaeringsdrivendeSelector(state),
-  redigerbart: redigerbartSelectors.RedigerbartSelector(state),
-  mottatteOpplysningerFeilmeldinger: formSelectors.SoknadErrorsSelector(state),
-  generiskStegRedigerbart: redigerbartSelectors.GeneriskStegRedigerbartSelector(state),
-  saksnummer: fagsakSelectors.SaksnummerSelector(state),
-  erIDirekteTilArtikkel16Flyt: flytSelectors.ErIDirekteTilArtikkel16FlytSelector(state),
-  utpekingsperioder: utpekingsperioderSelectors.UtpekingsperioderSelector(state),
-  omfattesIAnnetLand: avklartefaktaSelectors.OmfattesIAnnetLandSelector(state),
-  vurderUtpekingFom: formSelectors.VurderUtpekingFomSelector(state),
-  vurderUtpekingTom: formSelectors.VurderUtpekingTomSelector(state),
-  vurderUtpekingValid: formSelectors.VurderUtpekingValid(state),
-  lovvalgsbestemmelse: lovvalgsperioderSelectors.LovvalgBestemmelseSelector(state),
-  tilleggsbestemmelse: lovvalgsperioderSelectors.TilleggBestemmelseSelector(state),
-  valgteLovvalgsVilkarBestemmelse: lovvalgsperioderSelectors.ValgteLovvalgsVilkarBestemmelseSelector(state),
-  maritimtarbeid: formSelectors.MaritimtArbeidSelector(state),
-  hjemmebaser: mottatteOpplysningerSelectors.HjemmebaserSelector(state),
-  erArbeidEttLand: behandlingerSelectors.ErArbeidEttLand(state),
-  medfolgendeBarn: mottatteOpplysningerSelectors.MedfolgendeBarnSelector(state),
-  lagredeVirksomheter: oppsummertfaktaSelectors.VirksomhetIDerSelector(state),
-  soknadsperiode: mottatteOpplysningerSelectors.PeriodeSelector(state),
-  feilmeldinger: feiletResponsSelectors.FeilmeldingerSelector(state),
-  kontrollfeil: kontrollSelectors.KontrollFeilSelector(state),
-  norgeErUtpekt11_3AToggleEnabled: erFeatureToggleEnabled(MELOSYS_NORGE_ER_UTPEKT_11_3_A, state),
-});
+const mapStateToProps = (state: unknown): Partial<StegvelgerProps> =>
+  ({
+    anmodningsperioder: anmodningsperioderSelectors.AnmodningsperioderSelector(state),
+    anmodningErSendtUtland: anmodningsperioderSelectors.AlleAnmodningsperioderSendtUtlandSelector(state),
+    anmodningsperiodesvar: anmodningsperiodesvarSelectors.AnmodningsperiodesvarSelector(state),
+    arbeidsgivereIPerioden: avklartefaktaSelectors.VirksomheterIPeriodenSelector(state),
+    avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
+    vilkar: vilkarSelectors.VilkarSelector(state),
+    utsendingsvilkår: vilkarSelectors.UtsendingsvilkårSelector(state),
+    unntaksvilkår: vilkarSelectors.UnntaksvilkårSelector(state),
+    art11_3Aeller13_3A: vilkarSelectors.Artikkel11_3AEller13_3ASelector(state),
+    art11_4_1eller13_4_1: vilkarSelectors.Artikkel11_4_1Eller13_4_1Selector(state),
+    art11_4_2eller13_4_2: vilkarSelectors.Artikkel11_4_2Eller13_4_2Selector(state),
+    lovvalgsperioder: lovvalgsperioderSelectors.LovvalgsperioderSelector(state),
+    behandlingsPerioder: behandlingsperioderSelectors.behandlingsPerioderSelector(state),
+    arbeidsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
+    arbeidslandMedYrkesaktivitet: avklartefaktaSelectors.ArbeidslandMedYrkesAktivitetSelector(state),
+    oppsummering: behandlingerSelectors.OppsummeringSelector(state),
+    soknad_skjema: (formSelectors.SoknadFormSelector(state) as { values?: Record<string, unknown> }).values,
+    artikkel12_vedtak_skjema: formSelectors.VedtakArtikkel12FormValuesSelector(state),
+    artikkel16_anmodning_skjema: (
+      formSelectors.Artikkel16AnmodningFormSelector(state) as { values?: Record<string, unknown> }
+    ).values,
+    artikkel16_motta_svar_skjema: (
+      formSelectors.Artikkel16MottaSvarFormSelector(state) as { values?: Record<string, unknown> }
+    ).values,
+    vurder_utpeking_skjema: (formSelectors.VurderUtpekingFormSelector(state) as { values?: Record<string, unknown> })
+      .values,
+    saksopplysninger: behandlingerSelectors.SaksopplysningerSelector(state),
+    valgteVirksomheter: avklartefaktaSelectors.AvklarteVirksomheterSelector(state),
+    valgteVirksomheterIkkeNaeringsDrivende:
+      avklartefaktaSelectors.AvklarteVirksomheterIkkeNaeringsdrivendeSelector(state),
+    redigerbart: redigerbartSelectors.RedigerbartSelector(state),
+    mottatteOpplysningerFeilmeldinger: formSelectors.SoknadErrorsSelector(state),
+    generiskStegRedigerbart: redigerbartSelectors.GeneriskStegRedigerbartSelector(state),
+    saksnummer: fagsakSelectors.SaksnummerSelector(state),
+    erIDirekteTilArtikkel16Flyt: flytSelectors.ErIDirekteTilArtikkel16FlytSelector(state),
+    utpekingsperioder: utpekingsperioderSelectors.UtpekingsperioderSelector(state),
+    omfattesIAnnetLand: avklartefaktaSelectors.OmfattesIAnnetLandSelector(state),
+    vurderUtpekingFom: formSelectors.VurderUtpekingFomSelector(state),
+    vurderUtpekingTom: formSelectors.VurderUtpekingTomSelector(state),
+    vurderUtpekingValid: formSelectors.VurderUtpekingValid(state),
+    lovvalgsbestemmelse: lovvalgsperioderSelectors.LovvalgBestemmelseSelector(state),
+    tilleggsbestemmelse: lovvalgsperioderSelectors.TilleggBestemmelseSelector(state),
+    valgteLovvalgsVilkarBestemmelse: lovvalgsperioderSelectors.ValgteLovvalgsVilkarBestemmelseSelector(state),
+    maritimtarbeid: formSelectors.MaritimtArbeidSelector(state) as Record<string, unknown>[] | undefined,
+    hjemmebaser: mottatteOpplysningerSelectors.HjemmebaserSelector(state) as string[] | undefined,
+    erArbeidEttLand: behandlingerSelectors.ErArbeidEttLand(state),
+    medfolgendeBarn: mottatteOpplysningerSelectors.MedfolgendeBarnSelector(state),
+    lagredeVirksomheter: oppsummertfaktaSelectors.VirksomhetIDerSelector(state),
+    soknadsperiode: mottatteOpplysningerSelectors.PeriodeSelector(state),
+    feilmeldinger: feiletResponsSelectors.FeilmeldingerSelector(state),
+    kontrollfeil: kontrollSelectors.KontrollFeilSelector(state),
+    norgeErUtpekt11_3AToggleEnabled: erFeatureToggleEnabled(MELOSYS_NORGE_ER_UTPEKT_11_3_A, state),
+  }) as unknown as ReturnType<typeof mapStateToProps> & Partial<StegvelgerProps>;
 
 /* eslint no-alert:off */
-const mapDispatchToProps = (dispatch) => ({
-  hentVilkar: (behandlingID) => dispatch(vilkarOperations.hent(behandlingID)),
-  kontrollerFerdigbehandling: (data) => dispatch(kontrollOperations.kontrollerFerdigbehandling(data)),
-  videresend: (saksnummer, videresending) => dispatch(videresendingOperations.send(saksnummer, videresending)),
-  hentAvklartefakta: (behandlingID) => dispatch(avklartefaktaOperations.hent(behandlingID)),
-  hentLovvalgsperioder: (behandlingID) => dispatch(lovvalgsperioderOperations.hent(behandlingID)),
-  oppdaterPerioderState: (skjema) => dispatch(behandlingsperioderOperations.oppdaterPerioderState(skjema)),
-  oppdaterVilkaar: (vilkaarListe) => dispatch(vilkarOperations.oppdaterState(vilkaarListe)),
-  oppdaterAvklartefakta: (avklartefaktaListe) =>
-    dispatch(avklartefaktaOperations.oppdaterAvklarteFaktaState(avklartefaktaListe)),
-  oppdaterLovvalgperioder: (stegState) => dispatch(lovvalgsperioderOperations.oppdaterLovvalgsperioderState(stegState)),
-  hentMedlemsPerioder: (behandlingID) => dispatch(behandlingsperioderOperations.hentMedlemsPerioder(behandlingID)),
-  hentAnmodningsperioder: (behandlingID) => dispatch(anmodningsperioderOperations.hent(behandlingID)),
-  oppdaterAnmodningsPerioder: (stegState) =>
-    dispatch(anmodningsperioderOperations.oppdaterAnmodningsperioderState(stegState)),
-  hentUtpekingsperioder: (behandlingID) => dispatch(utpekingsperioderOperations.hent(behandlingID)),
-  oppdaterUtpekingsperioder: (stegState) =>
-    dispatch(utpekingsperioderOperations.oppdaterUtpekingsperioderState(stegState)),
-  oppdaterAnmodningsperiodesvar: (anmodningsperiodesvar) =>
-    dispatch(anmodningsperiodesvarOperations.oppdaterAnmodningsperiodesvarState(anmodningsperiodesvar)),
-  lagreMottatteOpplysningerHandler: () => dispatch(mottatteOpplysningerOperations.lagre()),
-  utpek: (saksnummer, body) => dispatch(utpekOperations.utpek(saksnummer, body)),
-  avvisUtpeking: (behandlingID, body) => dispatch(utpekOperations.avvis(behandlingID, body)),
-  lagreUtpekingsperioderHandler: () => dispatch(utpekingsperioderOperations.lagre()),
-  bestillAnmodningsperioder: (behandlingID, bestilling) =>
-    dispatch(anmodningunntakOperations.bestill(behandlingID, bestilling)),
-  oppdaterMottatteOpplysninger: () => dispatch(mottatteOpplysningerOperations.oppdaterState()),
-  lagreAllData: () => dispatch(datalastingOperations.lagreAllData()),
+const mapDispatchToProps = (dispatch: React.Dispatch<never>) => ({
+  hentVilkar: (behandlingID: number) => dispatch(vilkarOperations.hent(behandlingID) as never),
+  kontrollerFerdigbehandling: (data: unknown) =>
+    dispatch(kontrollOperations.kontrollerFerdigbehandling(data as never) as never),
+  videresend: (saksnummer: string, videresending: unknown) =>
+    dispatch(videresendingOperations.send(saksnummer, videresending as never) as never),
+  hentAvklartefakta: (behandlingID: number) => dispatch(avklartefaktaOperations.hent(behandlingID) as never),
+  hentLovvalgsperioder: (behandlingID: number) => dispatch(lovvalgsperioderOperations.hent(behandlingID) as never),
+  oppdaterPerioderState: (skjema: unknown) =>
+    dispatch(behandlingsperioderOperations.oppdaterPerioderState(skjema) as never),
+  oppdaterVilkaar: (vilkaarListe: unknown) => dispatch(vilkarOperations.oppdaterState(vilkaarListe) as never),
+  oppdaterAvklartefakta: (avklartefaktaListe: unknown) =>
+    dispatch(avklartefaktaOperations.oppdaterAvklarteFaktaState(avklartefaktaListe) as never),
+  oppdaterLovvalgperioder: (stegState: unknown) =>
+    dispatch(lovvalgsperioderOperations.oppdaterLovvalgsperioderState(stegState as never) as never),
+  hentMedlemsPerioder: (behandlingID: number) =>
+    dispatch(behandlingsperioderOperations.hentMedlemsPerioder(behandlingID) as never),
+  hentAnmodningsperioder: (behandlingID: number) => dispatch(anmodningsperioderOperations.hent(behandlingID) as never),
+  oppdaterAnmodningsPerioder: (stegState: unknown) =>
+    dispatch(anmodningsperioderOperations.oppdaterAnmodningsperioderState(stegState as never) as never),
+  hentUtpekingsperioder: (behandlingID: number) => dispatch(utpekingsperioderOperations.hent(behandlingID) as never),
+  oppdaterUtpekingsperioder: (stegState: unknown) =>
+    dispatch(utpekingsperioderOperations.oppdaterUtpekingsperioderState(stegState as never) as never),
+  oppdaterAnmodningsperiodesvar: (anmodningsperiodesvar: unknown) =>
+    dispatch(anmodningsperiodesvarOperations.oppdaterAnmodningsperiodesvarState(anmodningsperiodesvar) as never),
+  lagreMottatteOpplysningerHandler: () => dispatch(mottatteOpplysningerOperations.lagre() as never),
+  utpek: (saksnummer: string, body: unknown) => dispatch(utpekOperations.utpek(saksnummer, body) as never),
+  avvisUtpeking: (behandlingID: number, body: unknown) => dispatch(utpekOperations.avvis(behandlingID, body) as never),
+  lagreUtpekingsperioderHandler: () => dispatch(utpekingsperioderOperations.lagre() as never),
+  bestillAnmodningsperioder: (behandlingID: number, bestilling: unknown) =>
+    dispatch(anmodningunntakOperations.bestill(behandlingID, bestilling as never) as never),
+  oppdaterMottatteOpplysninger: () => dispatch(mottatteOpplysningerOperations.oppdaterState() as never),
+  lagreAllData: () => dispatch(datalastingOperations.lagreAllData() as never),
 });
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Stegvelger));
+const ConnectedStegvelger = connect(mapStateToProps, mapDispatchToProps)(Stegvelger as never);
+export default withRouter(ConnectedStegvelger as never);
