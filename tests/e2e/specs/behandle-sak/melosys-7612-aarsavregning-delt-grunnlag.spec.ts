@@ -299,6 +299,153 @@ test.describe.serial("MELOSYS-7612: Årsavregning delt grunnlag - Alle tester", 
     });
   });
 
+  test.describe("AC4 - Datovalidering med ugyldig input", () => {
+    test.beforeEach(async ({ page }) => {
+      await setupAarsavregningTest(page);
+    });
+
+    test("Ugyldig input 'dd11ss' skal vise 'Skriv inn en gyldig dato'", async ({ page }) => {
+      await aarsavregningPage.velgDeltGrunnlagJa();
+      await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
+      await page.waitForTimeout(1000);
+
+      const antallFør = await aarsavregningPage.getAntallMedlemskapsperioder();
+      await aarsavregningPage.leggTilMedlemskapsperiode();
+      const nyPeriodeIndex = antallFør;
+
+      await aarsavregningPage.fyllUtOgBlurMedlemskapsperiodeFomDato(nyPeriodeIndex, "dd11ss");
+
+      await aarsavregningPage.assertValideringsfeilInneholder("gyldig dato");
+      await aarsavregningPage.assertIngenFeilmelding("utenfor valgt år");
+    });
+
+    test("Ugyldig input 'abc123' skal vise 'Skriv inn en gyldig dato'", async ({ page }) => {
+      await aarsavregningPage.velgDeltGrunnlagJa();
+      await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
+      await page.waitForTimeout(1000);
+
+      const antallFør = await aarsavregningPage.getAntallMedlemskapsperioder();
+      await aarsavregningPage.leggTilMedlemskapsperiode();
+      const nyPeriodeIndex = antallFør;
+
+      await aarsavregningPage.fyllUtOgBlurMedlemskapsperiodeFomDato(nyPeriodeIndex, "abc123");
+
+      await aarsavregningPage.assertValideringsfeilInneholder("gyldig dato");
+      await aarsavregningPage.assertIngenFeilmelding("utenfor valgt år");
+    });
+
+    test("Ugyldig input 'test' skal vise 'Skriv inn en gyldig dato'", async ({ page }) => {
+      await aarsavregningPage.velgDeltGrunnlagJa();
+      await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
+      await page.waitForTimeout(1000);
+
+      const antallFør = await aarsavregningPage.getAntallMedlemskapsperioder();
+      await aarsavregningPage.leggTilMedlemskapsperiode();
+      const nyPeriodeIndex = antallFør;
+
+      await aarsavregningPage.fyllUtOgBlurMedlemskapsperiodeFomDato(nyPeriodeIndex, "test");
+
+      await aarsavregningPage.assertValideringsfeilInneholder("gyldig dato");
+      await aarsavregningPage.assertIngenFeilmelding("utenfor valgt år");
+    });
+
+    test("Ugyldig input 'xx.yy.zzzz' skal vise 'Skriv inn en gyldig dato'", async ({ page }) => {
+      await aarsavregningPage.velgDeltGrunnlagJa();
+      await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
+      await page.waitForTimeout(1000);
+
+      const antallFør = await aarsavregningPage.getAntallMedlemskapsperioder();
+      await aarsavregningPage.leggTilMedlemskapsperiode();
+      const nyPeriodeIndex = antallFør;
+
+      await aarsavregningPage.fyllUtOgBlurMedlemskapsperiodeFomDato(nyPeriodeIndex, "xx.yy.zzzz");
+
+      await aarsavregningPage.assertValideringsfeilInneholder("gyldig dato");
+      await aarsavregningPage.assertIngenFeilmelding("utenfor valgt år");
+    });
+
+    test("Ugyldig input '99.99.9999' skal vise 'Skriv inn en gyldig dato'", async ({ page }) => {
+      await aarsavregningPage.velgDeltGrunnlagJa();
+      await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
+      await page.waitForTimeout(1000);
+
+      const antallFør = await aarsavregningPage.getAntallMedlemskapsperioder();
+      await aarsavregningPage.leggTilMedlemskapsperiode();
+      const nyPeriodeIndex = antallFør;
+
+      await aarsavregningPage.fyllUtOgBlurMedlemskapsperiodeFomDato(nyPeriodeIndex, "99.99.9999");
+
+      await aarsavregningPage.assertValideringsfeilInneholder("gyldig dato");
+      await aarsavregningPage.assertIngenFeilmelding("utenfor valgt år");
+    });
+
+    test("Ugyldig input '32.01.2024' skal vise 'Skriv inn en gyldig dato'", async ({ page }) => {
+      await aarsavregningPage.velgDeltGrunnlagJa();
+      await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
+      await page.waitForTimeout(1000);
+
+      const antallFør = await aarsavregningPage.getAntallMedlemskapsperioder();
+      await aarsavregningPage.leggTilMedlemskapsperiode();
+      const nyPeriodeIndex = antallFør;
+
+      await aarsavregningPage.fyllUtOgBlurMedlemskapsperiodeFomDato(nyPeriodeIndex, "32.01.2024");
+
+      await aarsavregningPage.assertValideringsfeilInneholder("gyldig dato");
+      await aarsavregningPage.assertIngenFeilmelding("utenfor valgt år");
+    });
+
+    test("Gyldig dato utenfor år skal vise 'Utenfor valgt år'", async ({ page }) => {
+      await aarsavregningPage.velgDeltGrunnlagJa();
+      await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
+      await page.waitForTimeout(1000);
+
+      const antallFør = await aarsavregningPage.getAntallMedlemskapsperioder();
+      await aarsavregningPage.leggTilMedlemskapsperiode();
+      const nyPeriodeIndex = antallFør;
+
+      const feilÅr = parseInt(valgtTestÅr) + 1;
+      await aarsavregningPage.fyllUtOgBlurMedlemskapsperiodeFomDato(nyPeriodeIndex, `01.01.${feilÅr}`);
+
+      await aarsavregningPage.assertValideringsfeilInneholder("utenfor valgt år");
+      await aarsavregningPage.assertIngenFeilmelding("gyldig dato");
+    });
+
+    test("Tom-dato: Ugyldig input 'dd11ss' skal vise 'Skriv inn en gyldig dato'", async ({ page }) => {
+      await aarsavregningPage.velgDeltGrunnlagJa();
+      await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
+      await page.waitForTimeout(1000);
+
+      const antallFør = await aarsavregningPage.getAntallMedlemskapsperioder();
+      await aarsavregningPage.leggTilMedlemskapsperiode();
+      const nyPeriodeIndex = antallFør;
+
+      await aarsavregningPage.fyllUtMedlemskapsperiodeFomDato(nyPeriodeIndex, lagDato("01.01"));
+      await aarsavregningPage.fyllUtOgBlurMedlemskapsperiodeTomDato(nyPeriodeIndex, "dd11ss");
+
+      await aarsavregningPage.assertValideringsfeilInneholder("gyldig dato");
+      await aarsavregningPage.assertIngenFeilmelding("utenfor valgt år");
+    });
+
+    test("Skatteforholdsperiode: Ugyldig input 'dd11ss' skal vise 'Skriv inn en gyldig dato'", async ({ page }) => {
+      await aarsavregningPage.velgDeltGrunnlagJa();
+      await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
+      await page.waitForTimeout(1000);
+
+      const antallMedlemskapFør = await aarsavregningPage.getAntallMedlemskapsperioder();
+      await aarsavregningPage.leggTilMedlemskapsperiode();
+      const nyMedlemIndex = antallMedlemskapFør;
+      await aarsavregningPage.fyllUtMedlemskapsperiodeFomDato(nyMedlemIndex, lagDato("01.01"));
+      await aarsavregningPage.fyllUtMedlemskapsperiodeTomDato(nyMedlemIndex, lagDato("31.12"));
+      await aarsavregningPage.velgTrygdedekning(nyMedlemIndex, "Helse- og pensjonsdel (§ 2-9)");
+
+      await aarsavregningPage.leggTilSkatteforholdsperiode();
+      await aarsavregningPage.fyllUtOgBlurSkatteforholdFomDato(0, "dd11ss");
+
+      await aarsavregningPage.assertValideringsfeilInneholder("gyldig dato");
+      await aarsavregningPage.assertIngenFeilmelding("utenfor valgt år");
+    });
+  });
+
   test.describe("AC2 - Skatteforholdsperiode validering", () => {
     test.beforeEach(async ({ page }) => {
       await setupAarsavregningTest(page);

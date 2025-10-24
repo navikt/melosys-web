@@ -44,6 +44,14 @@ const arbAvgBetalesFyltUtNårDetKrevesTest = {
   },
 };
 
+const erGyldigOgKunTall = (datoString) => {
+  const datoUtenSkilletegn = datoString.replace(/[-./]/g, "");
+  if (!/^\d+$/.test(datoUtenSkilletegn)) {
+    return false;
+  }
+  return Boolean(Utils.dato.vaskInputDato(datoString));
+};
+
 const erInnenforValgtAarTest = {
   name: "Utenfor valgt år",
   message: {
@@ -52,6 +60,7 @@ const erInnenforValgtAarTest = {
   test: (datoString, schema) => {
     const aar = schema?.options?.context?.aar;
     if (!datoString) return false;
+    if (!erGyldigOgKunTall(datoString)) return true;
     const dato = new Date(Datoutils.vaskOgFormatterTilISO(datoString));
     const startAar = new Date(aar, 0, 1);
     const sluttAar = new Date(aar, 11, 31, 23, 59, 59, 999);

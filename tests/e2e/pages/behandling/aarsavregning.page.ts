@@ -137,6 +137,29 @@ export class AarsavregningPage {
     await allInputs[inputIndex].fill(dato);
   }
 
+  async fyllUtOgBlurSkatteforholdFomDato(index: number, verdi: string): Promise<string> {
+    const firstSkattLabel = this.page.locator('text="Skatteforhold"').first();
+    await expect(firstSkattLabel).toBeVisible({ timeout: 10000 });
+
+    const skatteforholdContainer = this.page.locator(".perioder").filter({ has: firstSkattLabel });
+    const allInputs = await skatteforholdContainer
+      .locator('input[type="text"]:visible, input:not([type]):visible')
+      .all();
+
+    const inputIndex = index * 2;
+
+    if (inputIndex >= allInputs.length) {
+      throw new Error(
+        `Kan ikke finne input ${inputIndex} for skatteforhold ${index}. Totalt ${allInputs.length} inputs funnet.`,
+      );
+    }
+
+    await allInputs[inputIndex].fill(verdi);
+    await allInputs[inputIndex].blur();
+    await this.page.waitForTimeout(200);
+    return (await allInputs[inputIndex].inputValue()) || "";
+  }
+
   async fyllUtSkatteforholdTomDato(index: number, dato: string) {
     const firstSkattLabel = this.page.locator('text="Skatteforhold"').first();
     await expect(firstSkattLabel).toBeVisible({ timeout: 10000 });
