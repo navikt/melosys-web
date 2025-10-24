@@ -31,6 +31,7 @@ import { TrygdeavgiftFraAvgiftssystemetInput } from "../komponenter/trygdeavgift
 import {
   beregnTrygdeavgiftsperioder,
   erBrukerSkattepliktigIHelePerioden,
+  erGyldigeMedlemskapsperiodeDatoerForAutoUtfylling,
   hentMedlemskapsFomTomDato,
   validateAarsavregningUtenEllerDeltGrunnlag,
 } from "../utils";
@@ -769,19 +770,27 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
 
   // Denne gjør at første/initielle element i skatteforhold og inntektsperiode ferdigutfylles med medlemskapsperiode når medlemskapsperiode er satt
   useEffect(() => {
-    if (medlemskapsperiode.fomDato && medlemskapsperiode.tomDato) {
-      const initialSkatteforholdElement = skatteforholdsperioder[0];
-      const initialInntektsPeriode = inntektskilder[0];
+    if (
+      !erGyldigeMedlemskapsperiodeDatoerForAutoUtfylling(
+        medlemskapsperiode.fomDato,
+        medlemskapsperiode.tomDato,
+        initiellData.valgtÅr,
+      )
+    ) {
+      return;
+    }
 
-      if (!(initialSkatteforholdElement.fomDato && initialSkatteforholdElement.tomDato)) {
-        skattRemove(0);
-        skattAppend(medlemskapsperiode);
-      }
+    const initialSkatteforholdElement = skatteforholdsperioder[0];
+    const initialInntektsPeriode = inntektskilder[0];
 
-      if (!(initialInntektsPeriode.fomDato && initialInntektsPeriode.tomDato)) {
-        inntektRemove(0);
-        inntektAppend(medlemskapsperiode);
-      }
+    if (!(initialSkatteforholdElement.fomDato && initialSkatteforholdElement.tomDato)) {
+      skattRemove(0);
+      skattAppend(medlemskapsperiode);
+    }
+
+    if (!(initialInntektsPeriode.fomDato && initialInntektsPeriode.tomDato)) {
+      inntektRemove(0);
+      inntektAppend(medlemskapsperiode);
     }
   }, [medlemskapsperiode]);
 

@@ -631,4 +631,127 @@ test.describe.serial("MELOSYS-7612: Årsavregning delt grunnlag - Alle tester", 
       await aarsavregningPage.assertIngenFeilmelding("overlapper");
     });
   });
+
+  test.describe("AC5 - Skatteforhold skal ikke auto-fylles med ugyldige datoer fra medlemskapsperiode", () => {
+    test.beforeEach(async ({ page }) => {
+      await setupAarsavregningTest(page);
+    });
+
+    test("Skatteforhold forblir tomme når medlemskapsperiode har ugyldig kort input som '0101' og '01'", async ({
+      page,
+    }) => {
+      await aarsavregningPage.velgDeltGrunnlagJa();
+      await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
+
+      await page.waitForTimeout(1000);
+
+      const antallMedlemskapFør = await aarsavregningPage.getAntallMedlemskapsperioder();
+      await aarsavregningPage.leggTilMedlemskapsperiode();
+
+      const nyMedlemIndex = antallMedlemskapFør;
+
+      const medlemFomInput = page
+        .locator(".perioder")
+        .filter({ hasText: "Medlemskapsperiode" })
+        .locator('input[type="text"]')
+        .nth(nyMedlemIndex * 3);
+      await medlemFomInput.fill("0101");
+      await medlemFomInput.blur();
+
+      const medlemTomInput = page
+        .locator(".perioder")
+        .filter({ hasText: "Medlemskapsperiode" })
+        .locator('input[type="text"]')
+        .nth(nyMedlemIndex * 3 + 1);
+      await medlemTomInput.fill("01");
+      await medlemTomInput.blur();
+
+      await page.waitForTimeout(500);
+
+      const skattFomInput = page
+        .locator(".perioder")
+        .filter({ hasText: "Skatteforhold" })
+        .locator('input[type="text"]')
+        .first();
+      const skattTomInput = page
+        .locator(".perioder")
+        .filter({ hasText: "Skatteforhold" })
+        .locator('input[type="text"]')
+        .nth(1);
+
+      const skattFomValue = await skattFomInput.inputValue();
+      const skattTomValue = await skattTomInput.inputValue();
+
+      expect(skattFomValue, "Skatteforhold fomDato skal være tom når medlemskapsperiode har ugyldig input").toBe("");
+      expect(skattTomValue, "Skatteforhold tomDato skal være tom når medlemskapsperiode har ugyldig input").toBe("");
+    });
+
+    test("Skatteforhold forblir tomme når medlemskapsperiode har datoer utenfor valgt år", async ({ page }) => {
+      await aarsavregningPage.velgDeltGrunnlagJa();
+      await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
+
+      await page.waitForTimeout(1000);
+
+      const antallMedlemskapFør = await aarsavregningPage.getAntallMedlemskapsperioder();
+      await aarsavregningPage.leggTilMedlemskapsperiode();
+
+      const nyMedlemIndex = antallMedlemskapFør;
+      await aarsavregningPage.fyllUtMedlemskapsperiodeFomDato(nyMedlemIndex, "01.01.2019");
+      await aarsavregningPage.fyllUtMedlemskapsperiodeTomDato(nyMedlemIndex, "31.12.2019");
+
+      await page.waitForTimeout(500);
+
+      const skattFomInput = page
+        .locator(".perioder")
+        .filter({ hasText: "Skatteforhold" })
+        .locator('input[type="text"]')
+        .first();
+      const skattTomInput = page
+        .locator(".perioder")
+        .filter({ hasText: "Skatteforhold" })
+        .locator('input[type="text"]')
+        .nth(1);
+
+      const skattFomValue = await skattFomInput.inputValue();
+      const skattTomValue = await skattTomInput.inputValue();
+
+      expect(skattFomValue, "Skatteforhold fomDato skal være tom når medlemskapsperiode er utenfor valgt år").toBe("");
+      expect(skattTomValue, "Skatteforhold tomDato skal være tom når medlemskapsperiode er utenfor valgt år").toBe("");
+    });
+
+    test("Skatteforhold fylles korrekt når medlemskapsperiode har gyldige datoer innenfor valgt år", async ({
+      page,
+    }) => {
+      await aarsavregningPage.velgDeltGrunnlagJa();
+      await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
+
+      await page.waitForTimeout(1000);
+
+      const antallMedlemskapFør = await aarsavregningPage.getAntallMedlemskapsperioder();
+      await aarsavregningPage.leggTilMedlemskapsperiode();
+
+      const nyMedlemIndex = antallMedlemskapFør;
+      await aarsavregningPage.fyllUtMedlemskapsperiodeFomDato(nyMedlemIndex, lagDato("01.01"));
+      await aarsavregningPage.fyllUtMedlemskapsperiodeTomDato(nyMedlemIndex, lagDato("31.12"));
+
+      await page.waitForTimeout(500);
+
+      const skattFomInput = page
+        .locator(".perioder")
+        .filter({ hasText: "Skatteforhold" })
+        .locator('input[type="text"]')
+        .first();
+      const skattTomInput = page
+        .locator(".perioder")
+        .filter({ hasText: "Skatteforhold" })
+        .locator('input[type="text"]')
+        .nth(1);
+
+      const skattFomValue = await skattFomInput.inputValue();
+      const skattTomValue = await skattTomInput.inputValue();
+
+      expect(skattFomValue, "Skatteforhold fomDato skal fylles med gyldig dato").toBe(lagDato("01.01"));
+      expect(skattTomValue, "Skatteforhold tomDato skal fylles med gyldig dato").toBe(lagDato("31.12"));
+    });
+  });
 });
