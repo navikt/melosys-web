@@ -111,3 +111,38 @@ export async function opprettUtenforAvtalelandSakMedAarsavregning(page: Page): P
 
   return sakId;
 }
+
+/**
+ * Opprett en ny EØS pensjonist-sak med trygdeavgift og Førstegangsbehandling
+ * Dette er en spesialsak som skal kunne opprette årsavregning selv med åpne behandlinger (MELOSYS-7603)
+ * @returns Saksnummer (f.eks. "MEL-123")
+ */
+export async function opprettEøsPensjonistSakMedTrygdeavgift(page: Page): Promise<string> {
+  const hovedsidePage = new HovedsidePage(page);
+  const opprettNySakPage = new OpprettNySakPage(page);
+  const sokPage = new SokPage(page);
+
+  await hovedsidePage.goto();
+  await hovedsidePage.klikkOpprettNySakKnapp();
+
+  await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
+  await opprettNySakPage.velgOpprettNySak();
+
+  await opprettNySakPage.velgSakstype("EU/EØS-land");
+  await opprettNySakPage.velgSakstema("Trygdeavgift");
+  await opprettNySakPage.velgBehandlingstema("Pensjonist/uføretrygdet");
+  await opprettNySakPage.velgBehandlingstype("Førstegangsbehandling");
+  await opprettNySakPage.velgBehandlingsaarsak("Søknad");
+
+  await opprettNySakPage.klikkOpprettNyBehandling();
+  await assertNyBehandlingOpprettet(page);
+
+  // Finn den nyopprettede saken
+  await hovedsidePage.goto();
+  await hovedsidePage.søkOgVentPåResultat(USER_ID_VALID);
+
+  const saker = await sokPage.finnÅpneSaker("EU/EØS-land");
+  expect(saker.length, "Fant ingen åpne 'EU/EØS-land' saker etter opprettelse").toBeGreaterThan(0);
+
+  return await sokPage.getSaksnummer(saker[0]);
+}
