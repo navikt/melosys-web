@@ -15,7 +15,7 @@ export class BehandlingPage {
    * Verifiser at vi er på behandlingssiden
    */
   async verifiserBehandlingsside(): Promise<void> {
-    await expect(this.page).toHaveURL(/\/melosys\/(FTRL|AVTALELAND|EOS|TRYGDEAVTALE)\/.*\/MEL-\d+/);
+    await expect(this.page).toHaveURL(/\/melosys\/(FTRL|AVTALELAND|EOS|EU_EOS|TRYGDEAVTALE)\/.*\/MEL-\d+/);
 
     // Vent på at siden lastes med behandlingsinnhold
     await this.page.waitForLoadState("domcontentloaded");
