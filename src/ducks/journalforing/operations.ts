@@ -126,6 +126,11 @@ export function prepareKnyttTilSakForm(
     const erEøsEllerAvtaleland =
       sakstype.kode === MKV.Koder.sakstyper.EU_EOS || sakstype.kode === MKV.Koder.sakstyper.TRYGDEAVTALE;
 
+    const erEøsPensjonist =
+      sakstype.kode === MKV.Koder.sakstyper.EU_EOS &&
+      sakstema.kode === MKV.Koder.sakstemaer.TRYGDEAVGIFT &&
+      behandlingstema === MKV.Koder.behandlinger.behandlingstema.PENSJONIST;
+
     const harÅpneBehandlinger = behandlingOversikter.some(
       (behandling) => !MKVUtils.erAvsluttetEllerMidlertidigBeslutning(behandling.behandlingsstatus.kode),
     );
@@ -137,7 +142,7 @@ export function prepareKnyttTilSakForm(
     );
 
     let muligeBehandlingstyper;
-    if (erEøsEllerAvtaleland && harÅpneBehandlinger) {
+    if (erEøsEllerAvtaleland && !erEøsPensjonist && harÅpneBehandlinger) {
       // For EØS/AVTALELAND med åpne behandlinger: ingen behandlingstyper
       muligeBehandlingstyper = [];
     } else if (harÅpneIkkeÅrsavregningsbehandlinger && sakstype.kode !== MKV.Koder.sakstyper.FTRL) {
