@@ -1,27 +1,15 @@
-import { describe, expect, beforeEach, afterEach, afterAll, it } from "vitest";
+import { describe, expect, it } from "vitest";
 import { http, HttpResponse } from "msw";
-import { setupServer } from "msw/node";
 import { createTestStore } from "../test-utils/createTestStore";
 import MKV from "../../melosyskodeverk";
 import * as operations from "./operations";
 import type { Sak, FeltNavn } from "./types";
 import type { RootState } from "AppTypes";
 
-const server = setupServer();
+// Global MSW server from setupTests.js
+declare const mswServer: ReturnType<typeof import("msw/node").setupServer>;
 
 describe("journalforing operations", () => {
-  beforeEach(() => {
-    server.listen({ onUnhandledRequest: "bypass" });
-  });
-
-  afterEach(() => {
-    server.resetHandlers();
-  });
-
-  afterAll(() => {
-    server.close();
-  });
-
   describe("hent", () => {
     it("henter journalføring og lager OK action", async () => {
       const initialState: Partial<RootState> = {
@@ -33,7 +21,7 @@ describe("journalforing operations", () => {
 
       const journalpostID = "12345";
 
-      server.use(http.get(`/api/journalforing/${journalpostID}`, () => HttpResponse.json({})));
+      mswServer.use(http.get(`/api/journalforing/${journalpostID}`, () => HttpResponse.json({})));
 
       const store = createTestStore(initialState);
 
@@ -54,7 +42,7 @@ describe("journalforing operations", () => {
 
       const journalpostID = "12345";
 
-      server.use(http.get(`/api/journalforing/${journalpostID}`, () => new HttpResponse(null, { status: 500 })));
+      mswServer.use(http.get(`/api/journalforing/${journalpostID}`, () => new HttpResponse(null, { status: 500 })));
 
       const store = createTestStore(initialState);
 
@@ -148,7 +136,7 @@ describe("journalforing operations", () => {
 
     it("setter behandlingstema og opprettBehandling for avsluttet behandling", async () => {
       // Mock API responses
-      server.use(
+      mswServer.use(
         http.get("/api/anmodningsperioder/:behandlingId", () => HttpResponse.json({ anmodningsperioder: [] })),
         http.get("/api/fagsaker/:saksnummer/trygdeavgift/oppsummering", () =>
           HttpResponse.json({ harBehandlingMedTrygdeavgift: false }),
@@ -186,7 +174,7 @@ describe("journalforing operations", () => {
 
     it("håndterer EØS-sak med åpne behandlinger - ingen mulige behandlingstyper", async () => {
       // Mock API responses
-      server.use(
+      mswServer.use(
         http.get("/api/anmodningsperioder/:behandlingId", () => HttpResponse.json({ anmodningsperioder: [] })),
         http.get("/api/fagsaker/:saksnummer/trygdeavgift/oppsummering", () =>
           HttpResponse.json({ harBehandlingMedTrygdeavgift: false }),
@@ -232,7 +220,7 @@ describe("journalforing operations", () => {
 
     it("håndterer EØS pensjonist-sak med åpne behandlinger - tillater årsavregning", async () => {
       // Mock API responses
-      server.use(
+      mswServer.use(
         http.get("/api/anmodningsperioder/:behandlingId", () => HttpResponse.json({ anmodningsperioder: [] })),
         http.get("/api/fagsaker/:saksnummer/trygdeavgift/oppsummering", () =>
           HttpResponse.json({ harBehandlingMedTrygdeavgift: false }),
@@ -291,7 +279,7 @@ describe("journalforing operations", () => {
 
     it("håndterer sak med åpne ikke-årsavregningsbehandlinger - kun årsavregning tillatt", async () => {
       // Mock API responses
-      server.use(
+      mswServer.use(
         http.get("/api/anmodningsperioder/:behandlingId", () => HttpResponse.json({ anmodningsperioder: [] })),
         http.get("/api/fagsaker/:saksnummer/trygdeavgift/oppsummering", () =>
           HttpResponse.json({ harBehandlingMedTrygdeavgift: false }),
@@ -346,7 +334,7 @@ describe("journalforing operations", () => {
 
     it("håndterer sak som ikke kan viderebehandles (opphørt/henlagt/bortfalt/annullert)", async () => {
       // Mock API responses
-      server.use(
+      mswServer.use(
         http.get("/api/anmodningsperioder/:behandlingId", () => HttpResponse.json({ anmodningsperioder: [] })),
         http.get("/api/fagsaker/:saksnummer/trygdeavgift/oppsummering", () =>
           HttpResponse.json({ harBehandlingMedTrygdeavgift: false }),
@@ -387,7 +375,7 @@ describe("journalforing operations", () => {
 
     it("setter vurderDokument=true for journalføring på pågående artikkel 16-sak", async () => {
       // Mock anmodningsperiode som er sendt til utland
-      server.use(
+      mswServer.use(
         http.get("/api/anmodningsperioder/:behandlingId", () =>
           HttpResponse.json({ anmodningsperioder: [{ sendtUtland: true }] }),
         ),
@@ -438,7 +426,7 @@ describe("journalforing operations", () => {
     });
 
     it("håndterer API-feil gracefully med .catch() fallbacks", async () => {
-      server.use(
+      mswServer.use(
         http.get("/api/anmodningsperioder/:behandlingId", () => new HttpResponse(null, { status: 500 })),
         http.get("/api/fagsaker/:saksnummer/trygdeavgift/oppsummering", () => new HttpResponse(null, { status: 500 })),
         http.get(
@@ -477,7 +465,7 @@ describe("journalforing operations", () => {
 
     it("gjør parallelle API-kall med Promise.all", async () => {
       // Mock API responses
-      server.use(
+      mswServer.use(
         http.get("/api/anmodningsperioder/:behandlingId", () => HttpResponse.json({ anmodningsperioder: [] })),
         http.get("/api/fagsaker/:saksnummer/trygdeavgift/oppsummering", () =>
           HttpResponse.json({ harBehandlingMedTrygdeavgift: false }),

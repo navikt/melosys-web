@@ -1,12 +1,12 @@
 import { http, HttpResponse } from "msw";
-import { setupServer } from "msw/node";
 import { createTestStore } from "../test-utils/createTestStore";
+
+// Global MSW server from setupTests.js
+declare const mswServer: ReturnType<typeof import("msw/node").setupServer>;
 
 import * as Utils from "../../utils";
 
 import { sokOperations as operations } from "./index";
-
-const server = setupServer();
 
 interface SokState {
   sok: {
@@ -20,8 +20,6 @@ describe("sok operations", () => {
   let initialState: SokState;
 
   beforeEach(() => {
-    server.listen({ onUnhandledRequest: "bypass" });
-
     initialState = {
       sok: {
         data: [],
@@ -31,19 +29,11 @@ describe("sok operations", () => {
     };
   });
 
-  afterEach(() => {
-    server.resetHandlers();
-  });
-
-  afterAll(() => {
-    server.close();
-  });
-
   describe("sok", () => {
     it("søker etter fagsaker med fnr", async () => {
       const store = createTestStore(initialState);
 
-      server.use(
+      mswServer.use(
         http.post("/api/fagsaker/sok", () => {
           return HttpResponse.json({ fagsakListe: [] });
         }),
@@ -61,7 +51,7 @@ describe("sok operations", () => {
     it("søker etter fagsaker med saksnummer", async () => {
       const store = createTestStore(initialState);
 
-      server.use(
+      mswServer.use(
         http.post("/api/fagsaker/sok", () => {
           return HttpResponse.json({ fagsakListe: [] });
         }),
@@ -79,7 +69,7 @@ describe("sok operations", () => {
     it("søker etter fagsaker med orgnr", async () => {
       const store = createTestStore(initialState);
 
-      server.use(
+      mswServer.use(
         http.post("/api/fagsaker/sok", () => {
           return HttpResponse.json({ fagsakListe: [] });
         }),

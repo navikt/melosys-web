@@ -266,9 +266,6 @@ importers:
       vitest:
         specifier: ^3.2.4
         version: 3.2.4(@types/node@22.18.5)(jiti@1.21.7)(jsdom@22.1.0)(less@4.4.1)(msw@2.11.6(@types/node@22.18.5)(typescript@5.9.2))(yaml@2.8.0)
-      vitest-fetch-mock:
-        specifier: ^0.4.5
-        version: 0.4.5(vitest@3.2.4(@types/node@22.18.5)(jiti@1.21.7)(jsdom@22.1.0)(less@4.4.1)(msw@2.11.6(@types/node@22.18.5)(typescript@5.9.2))(yaml@2.8.0))
 
 packages:
   "@adobe/css-tools@4.4.3":
@@ -5869,13 +5866,6 @@ packages:
       yaml:
         optional: true
 
-  vitest-fetch-mock@0.4.5:
-    resolution:
-      { integrity: sha512-nhWdCQIGtaSEUVl96pMm0WggyDGPDv5FUy/Q9Hx3cs2RGmh3Q/uRsLClGbdG3kXBkJ3br5yTUjB2MeW25TwdOA== }
-    engines: { node: ">=18.0.0" }
-    peerDependencies:
-      vitest: ">=2.0.0"
-
   vitest@3.2.4:
     resolution:
       { integrity: sha512-LUCP5ev3GURDysTWiP47wRRUpLKMOfPh+yKTx3kVIEiu5KOMeqzpnYNsKyOoVrULivR8tLcks4+lga33Whn90A== }
@@ -11316,10 +11306,6 @@ snapshots:
       jiti: 1.21.7
       less: 4.4.1
       yaml: 2.8.0
-
-  vitest-fetch-mock@0.4.5(vitest@3.2.4(@types/node@22.18.5)(jiti@1.21.7)(jsdom@22.1.0)(less@4.4.1)(msw@2.11.6(@types/node@22.18.5)(typescript@5.9.2))(yaml@2.8.0)):
-    dependencies:
-      vitest: 3.2.4(@types/node@22.18.5)(jiti@1.21.7)(jsdom@22.1.0)(less@4.4.1)(msw@2.11.6(@types/node@22.18.5)(typescript@5.9.2))(yaml@2.8.0)
 
   vitest@3.2.4(@types/node@22.18.5)(jiti@1.21.7)(jsdom@22.1.0)(less@4.4.1)(msw@2.11.6(@types/node@22.18.5)(typescript@5.9.2))(yaml@2.8.0):
     dependencies:

@@ -1,4 +1,3 @@
-import createFetchMock from "vitest-fetch-mock";
 import * as matchers from "@testing-library/jest-dom";
 import { expect, vi, beforeAll, afterEach, afterAll } from "vitest";
 import toDiffableHtml from "diffable-html";
@@ -19,38 +18,16 @@ expect.addSnapshotSerializer({
   },
 });
 
-// VIKTIG: Sett opp fetch mocking FØR MSW
-const fetchMocker = createFetchMock(vi);
-// sets globalThis.fetch and globalThis.fetchMock to our mocked version
-fetchMocker.enableMocks();
-
-// Sett opp MSW server
+// Sett opp MSW server for API mocking
 const server = setupServer(...handlers);
+
+// Gjør serveren tilgjengelig globalt for testfiler
+global.mswServer = server;
 
 // Start server før tester kjører
 beforeAll(() => {
   server.listen({
-    onUnhandledRequest: "bypass", // MSW lar umockede requests passere til vitest-fetch-mock
-  });
-
-  // Re-eksponér fetchMocker-metodene etter at MSW er startet
-  // MSW's interceptor kan overskrive vitest-fetch-mock's metoder
-  Object.assign(globalThis.fetch, {
-    resetMocks: fetchMocker.resetMocks.bind(fetchMocker),
-    mockResponse: fetchMocker.mockResponse.bind(fetchMocker),
-    mockResponseOnce: fetchMocker.mockResponseOnce.bind(fetchMocker),
-    mockReject: fetchMocker.mockReject.bind(fetchMocker),
-    mockRejectOnce: fetchMocker.mockRejectOnce.bind(fetchMocker),
-  });
-
-  // Global fallback (UTEN logging) for requests ikke håndtert av MSW
-  // Dette sikrer kompatibilitet med operations.test.ts filer som bruker fetch.mockResponse()
-  fetchMocker.mockResponse(() => {
-    return Promise.resolve({
-      status: 200,
-      body: JSON.stringify({}),
-      headers: { "Content-Type": "application/json" },
-    });
+    onUnhandledRequest: "bypass", // Ignorer requests uten handlers
   });
 });
 

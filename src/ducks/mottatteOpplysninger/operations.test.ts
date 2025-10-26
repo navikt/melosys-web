@@ -1,6 +1,5 @@
-import { describe, expect, beforeEach, afterEach, afterAll, it } from "vitest";
+import { describe, expect, beforeEach, it } from "vitest";
 import { http, HttpResponse } from "msw";
-import { setupServer } from "msw/node";
 import { createTestStore } from "../test-utils/createTestStore";
 
 import MKV from "../../melosyskodeverk";
@@ -8,9 +7,10 @@ import MKV from "../../melosyskodeverk";
 import * as KV from "../../kodeverk";
 import * as operations from "./operations";
 
-const { NO, DK } = MKV.Koder.landkoder;
+// Global MSW server from setupTests.js
+declare const mswServer: ReturnType<typeof import("msw/node").setupServer>;
 
-const server = setupServer();
+const { NO, DK } = MKV.Koder.landkoder;
 
 interface TestState {
   form: {
@@ -86,8 +86,6 @@ describe("MottatteOpplysninger operations", () => {
   };
 
   beforeEach(() => {
-    server.listen({ onUnhandledRequest: "bypass" });
-
     initialState = {
       form: {
         [KV.Form.SOKNAD]: {
@@ -147,20 +145,12 @@ describe("MottatteOpplysninger operations", () => {
     };
   });
 
-  afterEach(() => {
-    server.resetHandlers();
-  });
-
-  afterAll(() => {
-    server.close();
-  });
-
   describe("lagre", () => {
     it("lagrer soeknad eøs felt for mottatteopplysninger SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS", async () => {
       initialState.mottatteOpplysninger.data.type =
         MKV.Koder.mottatteopplysningertyper.SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS;
 
-      server.use(
+      mswServer.use(
         http.post("/api/mottatteopplysninger/:behandlingId", async ({ request, params }) => {
           const body = await request.json();
           // Kan verifisere request body her hvis nødvendig
@@ -179,7 +169,7 @@ describe("MottatteOpplysninger operations", () => {
     it("lagrer soeknad eøs felt for mottatteopplysninger SØKNAD_A1_YRKESAKTIVE_EØS", async () => {
       initialState.mottatteOpplysninger.data.type = MKV.Koder.mottatteopplysningertyper.SØKNAD_A1_YRKESAKTIVE_EØS;
 
-      server.use(http.post("/api/mottatteopplysninger/:behandlingId", () => HttpResponse.json({})));
+      mswServer.use(http.post("/api/mottatteopplysninger/:behandlingId", () => HttpResponse.json({})));
 
       const store = createTestStore(initialState);
       await store.dispatch(operations.lagre() as any);
@@ -193,7 +183,7 @@ describe("MottatteOpplysninger operations", () => {
       initialState.mottatteOpplysninger.data.type =
         MKV.Koder.mottatteopplysningertyper.SØKNAD_YRKESAKTIVE_NORGE_ELLER_UTENFOR_EØS;
 
-      server.use(http.post("/api/mottatteopplysninger/:behandlingId", () => HttpResponse.json({})));
+      mswServer.use(http.post("/api/mottatteopplysninger/:behandlingId", () => HttpResponse.json({})));
 
       const store = createTestStore(initialState);
       await store.dispatch(operations.lagre() as any);
@@ -206,7 +196,7 @@ describe("MottatteOpplysninger operations", () => {
     it("lagrer SøknadIkkeYrkesaktive ved mottatteopplysnignertype SØKNAD_IKKE_YRKESAKTIV", async () => {
       initialState.mottatteOpplysninger.data.type = MKV.Koder.mottatteopplysningertyper.SØKNAD_IKKE_YRKESAKTIV;
 
-      server.use(http.post("/api/mottatteopplysninger/:behandlingId", () => HttpResponse.json({})));
+      mswServer.use(http.post("/api/mottatteopplysninger/:behandlingId", () => HttpResponse.json({})));
 
       const store = createTestStore(initialState);
       await store.dispatch(operations.lagre() as any);
@@ -219,7 +209,7 @@ describe("MottatteOpplysninger operations", () => {
     it("lagrer AnmodningEllerAttest ved mottatteopplysnignertype ANMODNING_ELLER_ATTEST", async () => {
       initialState.mottatteOpplysninger.data.type = MKV.Koder.mottatteopplysningertyper.ANMODNING_ELLER_ATTEST;
 
-      server.use(http.post("/api/mottatteopplysninger/:behandlingId", () => HttpResponse.json({})));
+      mswServer.use(http.post("/api/mottatteopplysninger/:behandlingId", () => HttpResponse.json({})));
 
       const store = createTestStore(initialState);
       await store.dispatch(operations.lagre() as any);
@@ -230,7 +220,9 @@ describe("MottatteOpplysninger operations", () => {
     });
 
     it("lager FEILET ved feil i api-kall", async () => {
-      server.use(http.post("/api/mottatteopplysninger/:behandlingId", () => new HttpResponse(null, { status: 500 })));
+      mswServer.use(
+        http.post("/api/mottatteopplysninger/:behandlingId", () => new HttpResponse(null, { status: 500 })),
+      );
 
       const store = createTestStore(initialState);
 
@@ -252,7 +244,7 @@ describe("MottatteOpplysninger operations", () => {
         },
       };
 
-      server.use(http.get("/api/mottatteopplysninger/:behandlingId", () => HttpResponse.json(mockData)));
+      mswServer.use(http.get("/api/mottatteopplysninger/:behandlingId", () => HttpResponse.json(mockData)));
 
       const store = createTestStore(initialState);
 

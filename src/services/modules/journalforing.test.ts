@@ -1,23 +1,11 @@
-import { describe, expect, beforeEach, afterEach, afterAll } from "vitest";
+import { describe, expect } from "vitest";
 import { http, HttpResponse } from "msw";
-import { setupServer } from "msw/node";
 import { Journalforing } from "../api";
 
-const server = setupServer();
+// Global MSW server from setupTests.js
+declare const mswServer: ReturnType<typeof import("msw/node").setupServer>;
 
 describe("Journalforing endepunkt", () => {
-  beforeEach(() => {
-    server.listen({ onUnhandledRequest: "error" });
-  });
-
-  afterEach(() => {
-    server.resetHandlers();
-  });
-
-  afterAll(() => {
-    server.close();
-  });
-
   test("GET /api/journalforing/:journalpostID/:oppgaveID", async () => {
     const oppgave = {
       brukerID: "30098000492",
@@ -31,7 +19,7 @@ describe("Journalforing endepunkt", () => {
     };
     const journalpostID = "DOK_3789";
 
-    server.use(
+    mswServer.use(
       http.get(`/api/journalforing/${journalpostID}`, () => {
         return HttpResponse.json(oppgave);
       }),
@@ -54,7 +42,7 @@ describe("Journalforing endepunkt", () => {
       },
     };
 
-    server.use(
+    mswServer.use(
       http.post("/api/journalforing/opprett", () => {
         return HttpResponse.json(oppgave);
       }),

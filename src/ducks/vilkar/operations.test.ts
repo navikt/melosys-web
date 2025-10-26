@@ -1,12 +1,12 @@
 import { http, HttpResponse } from "msw";
-import { setupServer } from "msw/node";
 import { createTestStore } from "../test-utils/createTestStore";
+
+// Global MSW server from setupTests.js
+declare const mswServer: ReturnType<typeof import("msw/node").setupServer>;
 
 import MKV from "../../melosyskodeverk";
 
 import { vilkarOperations as operations } from "./index";
-
-const server = setupServer();
 
 interface TestState {
   vilkar: {
@@ -24,8 +24,6 @@ describe("vilkar operations", () => {
   let initialState: TestState;
 
   beforeEach(() => {
-    server.listen({ onUnhandledRequest: "bypass" });
-
     initialState = {
       vilkar: {
         data: [],
@@ -39,20 +37,12 @@ describe("vilkar operations", () => {
     };
   });
 
-  afterEach(() => {
-    server.resetHandlers();
-  });
-
-  afterAll(() => {
-    server.close();
-  });
-
   describe("hent", () => {
     it("henter vilkar og lager OK action", async () => {
       const store = createTestStore(initialState);
       const behandlingID = 5;
 
-      server.use(
+      mswServer.use(
         http.get(`/api/vilkaar/${behandlingID}`, () => {
           return HttpResponse.json({});
         }),
@@ -69,7 +59,7 @@ describe("vilkar operations", () => {
       const store = createTestStore(initialState);
       const behandlingID = 5;
 
-      server.use(
+      mswServer.use(
         http.get(`/api/vilkaar/${behandlingID}`, () => {
           return new HttpResponse(null, { status: 500 });
         }),
@@ -95,7 +85,7 @@ describe("vilkar operations", () => {
 
       const store = createTestStore(initialState);
 
-      server.use(
+      mswServer.use(
         http.post("/api/vilkaar/4", () => {
           return HttpResponse.json({});
         }),
@@ -111,7 +101,7 @@ describe("vilkar operations", () => {
     it("lager FEILET ved feil i api-kall", async () => {
       const store = createTestStore(initialState);
 
-      server.use(
+      mswServer.use(
         http.post("/api/vilkaar/4", () => {
           return new HttpResponse(null, { status: 500 });
         }),
