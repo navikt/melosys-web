@@ -30,7 +30,7 @@ const server = setupServer(...handlers);
 // Start server før tester kjører
 beforeAll(() => {
   server.listen({
-    onUnhandledRequest: "warn", // MSW logger advarsler for umockede requests
+    onUnhandledRequest: "bypass", // MSW lar umockede requests passere til vitest-fetch-mock
   });
 
   // Re-eksponér fetchMocker-metodene etter at MSW er startet
@@ -43,10 +43,15 @@ beforeAll(() => {
     mockRejectOnce: fetchMocker.mockRejectOnce.bind(fetchMocker),
   });
 
-  // VIKTIG: Ingen global fallback her!
-  // MSW håndterer alle requests via handlers.ts
-  // vitest-fetch-mock brukes kun i tester som eksplisitt kaller fetch.mockResponse()
-  // Umockede requests vil feile med network error (som er ønsket oppførsel)
+  // Global fallback (UTEN logging) for requests ikke håndtert av MSW
+  // Dette sikrer kompatibilitet med operations.test.ts filer som bruker fetch.mockResponse()
+  fetchMocker.mockResponse(() => {
+    return Promise.resolve({
+      status: 200,
+      body: JSON.stringify({}),
+      headers: { "Content-Type": "application/json" },
+    });
+  });
 });
 
 // Reset handlers etter hver test

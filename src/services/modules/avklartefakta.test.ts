@@ -1,18 +1,24 @@
-import { describe, expect, beforeEach } from "vitest";
+import { describe, expect, beforeEach, afterEach, afterAll } from "vitest";
+import { http, HttpResponse } from "msw";
+import { setupServer } from "msw/node";
 import { Avklartefakta } from "../api";
 
-// Type for fetch mock
-declare const fetch: {
-  resetMocks: () => void;
-  mockResponse: (response: string) => void;
-  mockReject: (error: Error) => void;
-};
+const server = setupServer();
 
 describe("Avklartefakta endepunkt", () => {
   beforeEach(() => {
-    fetch.resetMocks();
+    server.listen({ onUnhandledRequest: "bypass" });
   });
-  test("GET /api/avklartefakta/:behandlingID", () => {
+
+  afterEach(() => {
+    server.resetHandlers();
+  });
+
+  afterAll(() => {
+    server.close();
+  });
+
+  test("GET /api/avklartefakta/:behandlingID", async () => {
     const avklartefakta = {
       referanse: "BOSTEDSLAND",
       avklartefaktaKode: "BOSTEDSLAND",
@@ -21,20 +27,20 @@ describe("Avklartefakta endepunkt", () => {
       begrunnelseKoder: ["OPPHOLD_MER_ENN_12_MND"],
       begrunnelseFritekst: "En egen fritekstbegrunnelse som ikke finnes i kodeverket",
     };
-    fetch.mockResponse(JSON.stringify(avklartefakta));
-
     const behandlingID = 4;
-    // assert on the response
-    Avklartefakta.hent(behandlingID).then((res) => {
-      expect(res).toEqual(avklartefakta);
-    });
 
-    // assert on the times called and arguments given to fetch
-    expect((fetch as any).mock.calls.length).toEqual(1);
-    expect((fetch as any).mock.calls[0][0]).toEqual(`/api/avklartefakta/${behandlingID}`);
+    server.use(
+      http.get(`/api/avklartefakta/${behandlingID}`, () => {
+        return HttpResponse.json(avklartefakta);
+      }),
+    );
+
+    // assert on the response
+    const res = await Avklartefakta.hent(behandlingID);
+    expect(res).toEqual(avklartefakta);
   });
 
-  test("POST /api/avklartefakta/opprett", () => {
+  test("POST /api/avklartefakta/:behandlingID", async () => {
     const avklartefakta = {
       referanse: "BOSTEDSLAND",
       avklartefaktaKode: "BOSTEDSLAND",
@@ -43,12 +49,16 @@ describe("Avklartefakta endepunkt", () => {
       begrunnelseKoder: ["OPPHOLD_MER_ENN_12_MND"],
       begrunnelseFritekst: "En egen fritekstbegrunnelse som ikke finnes i kodeverket",
     };
-    fetch.mockResponse(JSON.stringify(avklartefakta));
-
     const behandlingID = 4;
+
+    server.use(
+      http.post(`/api/avklartefakta/${behandlingID}`, () => {
+        return HttpResponse.json([avklartefakta]);
+      }),
+    );
+
     // assert on the response
-    Avklartefakta.send(behandlingID, [avklartefakta]).then((res) => {
-      expect(res).toEqual(avklartefakta);
-    });
+    const res = await Avklartefakta.send(behandlingID, [avklartefakta]);
+    expect(res).toEqual([avklartefakta]);
   });
 });
