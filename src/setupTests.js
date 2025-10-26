@@ -1,7 +1,9 @@
 import createFetchMock from "vitest-fetch-mock";
 import * as matchers from "@testing-library/jest-dom";
-import { expect, vi } from "vitest";
+import { expect, vi, beforeAll, afterEach, afterAll } from "vitest";
 import toDiffableHtml from "diffable-html";
+import { setupServer } from "msw/node";
+import { handlers } from "./test/mocks/handlers";
 // Oppsettfilen for Yup kjøres ikke uten videre av vi. Derfor er det nødvendig å importere den manuelt her.
 import "./setupYup";
 
@@ -17,22 +19,44 @@ expect.addSnapshotSerializer({
   },
 });
 
+// VIKTIG: Sett opp fetch mocking FØR MSW
 const fetchMocker = createFetchMock(vi);
 // sets globalThis.fetch and globalThis.fetchMock to our mocked version
 fetchMocker.enableMocks();
-// Standard fallback for alle unmocked requests
-fetchMocker.mockResponse((req) => {
-  // eslint-disable-next-line no-console
-  console.warn(`🔍 Unmocked fetch request:
-    🧪 Test: ${expect.getState().currentTestName || "Unknown test"}
-    🌐 URL: ${req.url}
-    📋 Method: ${req.method}`);
 
-  return Promise.resolve({
-    status: 200,
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({}),
+// Sett opp MSW server
+const server = setupServer(...handlers);
+
+// Start server før tester kjører
+beforeAll(() => {
+  server.listen({
+    onUnhandledRequest: "warn", // MSW logger advarsler for umockede requests
   });
+
+  // Re-eksponér fetchMocker-metodene etter at MSW er startet
+  // MSW's interceptor kan overskrive vitest-fetch-mock's metoder
+  Object.assign(globalThis.fetch, {
+    resetMocks: fetchMocker.resetMocks.bind(fetchMocker),
+    mockResponse: fetchMocker.mockResponse.bind(fetchMocker),
+    mockResponseOnce: fetchMocker.mockResponseOnce.bind(fetchMocker),
+    mockReject: fetchMocker.mockReject.bind(fetchMocker),
+    mockRejectOnce: fetchMocker.mockRejectOnce.bind(fetchMocker),
+  });
+
+  // VIKTIG: Ingen global fallback her!
+  // MSW håndterer alle requests via handlers.ts
+  // vitest-fetch-mock brukes kun i tester som eksplisitt kaller fetch.mockResponse()
+  // Umockede requests vil feile med network error (som er ønsket oppførsel)
+});
+
+// Reset handlers etter hver test
+afterEach(() => {
+  server.resetHandlers();
+});
+
+// Steng server etter alle tester
+afterAll(() => {
+  server.close();
 });
 
 global.window.env = {
