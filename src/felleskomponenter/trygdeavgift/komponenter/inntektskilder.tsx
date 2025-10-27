@@ -316,7 +316,7 @@ export function Inntektskilder({
             </Nav.Column>
 
             <Nav.Column className="slett__knapp">
-              {redigerbart && formValues.inntektskilder.length > 0 && (
+              {redigerbart && formValues.inntektskilder.length > 1 && (
                 <Mui.IkonKnapp ariaLabel="Slett inntektskilde" ikon={Ikoner.Bin} onClick={() => remove(index)} />
               )}
             </Nav.Column>

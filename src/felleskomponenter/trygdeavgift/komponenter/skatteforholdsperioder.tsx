@@ -74,7 +74,7 @@ export function Skatteforholdsperioder({
             </Forms.RadioGroup>
 
             <span className="slett__knapp">
-              {redigerbart && formValues.skatteforholdsperioder.length > 0 && (
+              {redigerbart && formValues.skatteforholdsperioder.length > 1 && (
                 <Mui.IkonKnapp ariaLabel="Slett skatteforhold" ikon={Ikoner.Bin} onClick={() => remove(index)} />
               )}
             </span>
