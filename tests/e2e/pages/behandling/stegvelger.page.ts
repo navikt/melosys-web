@@ -215,16 +215,7 @@ export class StegvelgerPage {
     // Først vent på at stegvelgeren lastes
     await this.ventPaStegvelger();
 
-    const startTid = Date.now();
-
-    while (Date.now() - startTid < timeout) {
-      const aktivtSteg = await this.hentAktivtSteg().catch(() => "");
-      if (aktivtSteg.includes(stegnavn) || stegnavn.includes(aktivtSteg)) {
-        return;
-      }
-      await this.page.waitForTimeout(500);
-    }
-
-    throw new Error(`Timeout: Ventet på steg "${stegnavn}" i ${timeout}ms`);
+    const aktivtStegLocator = this.page.locator('.stegvelger .steg.aktiv');
+    await expect(aktivtStegLocator).toContainText(stegnavn, { timeout });
   }
 }
