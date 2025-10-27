@@ -16,8 +16,6 @@ class ArbeidTjenestepersonEllerFlyVedtak extends Steg {
         ? MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART11_5
         : propsLight.lovvalgsbestemmelse;
 
-    const lovvalgsbestemmelseSomSkalLagres = propsLight.lovvalgsbestemmelse;
-
     const informertMyndighetFakta = hentFakta(
       MKV.Koder.avklartefaktatyper.INFORMERT_MYNDIGHET,
       propsLight.avklartefakta,
@@ -30,7 +28,6 @@ class ArbeidTjenestepersonEllerFlyVedtak extends Steg {
     this.samleRelevanteData = (_propsLight) => ({
       redigerbart: _propsLight.generiskStegRedigerbart,
       lovvalgsbestemmelseSomSkalVises,
-      lovvalgsbestemmelseSomSkalLagres,
       informertMyndighetFakta,
       harFeilmeldinger: _propsLight.harFeilmeldinger,
     });
@@ -38,7 +35,6 @@ class ArbeidTjenestepersonEllerFlyVedtak extends Steg {
     this.handlers = {
       tilbake: propsLight.tilgjengeligeHandlers.tilbake,
       lagreLovvalgsperioder: this._propsLight.tilgjengeligeHandlers.lagreLovvalgsperioder,
-      byggLovvalgsperioder: this._propsLight.tilgjengeligeHandlers.byggLovvalgsperioder,
       oppdaterData: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, verdi),
       slettData: (data) => this._propsLight.tilgjengeligeHandlers.slettStegData(this.id, data),
       kontrollerFerdigbehandling: this._propsLight.tilgjengeligeHandlers.kontrollerFerdigbehandling,

@@ -2,9 +2,19 @@ import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
 import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
 import VurderingPeriodeOffentligAnsattKomponent from "../../stegKomponenter/vurderingPeriodeOffentligAnsatt/vurderingPeriodeOffentligAnsatt";
 
+import MKV from "../../../../melosyskodeverk";
+
 class VurderingPeriodeOffentligAnsattSteg extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
+
+    const lovvalgsbestemmelseSomSkalVises =
+      propsLight.lovvalgsbestemmelse ===
+      MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3A
+        ? MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART11_5
+        : propsLight.lovvalgsbestemmelse;
+
+    const lovvalgsbestemmelseSomSkalLagres = propsLight.lovvalgsbestemmelse;
 
     this.kriterier = [
       {
@@ -18,11 +28,16 @@ class VurderingPeriodeOffentligAnsattSteg extends Steg {
     this.komponent = VurderingPeriodeOffentligAnsattKomponent;
     this.samleRelevanteData = (_propsLight) => ({
       redigerbart: _propsLight.generiskStegRedigerbart,
+      lovvalgsbestemmelseSomSkalVises,
+      lovvalgsbestemmelseSomSkalLagres,
     });
     this.beregnRelevantUI = () => ({});
     this.handlers = {
-      bekreft: propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
+      bekreftOgFortsett: propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
       tilbake: propsLight.tilgjengeligeHandlers.tilbake,
+      byggLovvalgsperioder: this._propsLight.tilgjengeligeHandlers.byggLovvalgsperioder,
+      oppdaterData: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, verdi),
+      slettData: (data) => this._propsLight.tilgjengeligeHandlers.slettStegData(this.id, data),
     };
     this.status = FANE_STATUS.OK;
   }
