@@ -57,7 +57,8 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const sakstype = useSelector(fagsakSelectors.SakstypeKodeSelector);
   const [harBeregnetNyTrygdeavgift, setHarBeregnetNyTrygdeavgift] = useState<boolean>(false);
-  const skalIkkeViseTidligerePerioderToggle = useFeatureToggle(MELOSYS_FAKTURERINGSKOMPONENTEN_IKKE_TIDLIGERE_PERIODER);
+  const skalIkkeViseTidligerePerioderToggle =
+    useFeatureToggle(MELOSYS_FAKTURERINGSKOMPONENTEN_IKKE_TIDLIGERE_PERIODER) ?? false;
 
   const [harEndretHelseutgiftDekkesPeriode, setHarEndretHelseutgiftDekkesPeriode] = useState<boolean | undefined>(
     undefined,
@@ -125,7 +126,13 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     helseutgiftDekkesPeriode,
   );
 
-  const stegErGyldig = formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType) && !feil;
+  const skalIkkeBeregneForelopigTrygdeavgift =
+    skalIkkeViseTidligerePerioderToggle &&
+    new Date(helseutgiftDekkesPeriode.tom).getFullYear() < new Date().getFullYear() &&
+    behandlingstype === NY_VURDERING;
+
+  const stegErGyldig =
+    (formIsValid || skalIkkeBeregneForelopigTrygdeavgift) && !feilMeldingBlokkerer(aktivFeilmeldingType) && !feil;
   const skalBeregneForelopigTrygdeavgift =
     stegErGyldig &&
     !erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder) &&
@@ -135,8 +142,10 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
 
   const trygdeavgiftErIkkeTom = !Utils._isEmpty(lagretTrygdeavgift?.trygdeavgiftsperioder);
 
-  const harBeregnetForeløpigTrygdeavgift = !skalBeregneForelopigTrygdeavgift || trygdeavgiftErIkkeTom || !feil;
-  const skalViseInntektskilder = !erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder);
+  const harBeregnetForeløpigTrygdeavgift =
+    !skalBeregneForelopigTrygdeavgift || trygdeavgiftErIkkeTom || !feil || skalIkkeBeregneForelopigTrygdeavgift;
+  const skalViseInntektskilder =
+    !erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder) && !skalIkkeBeregneForelopigTrygdeavgift;
 
   useEffect(() => {
     const { inntektskilder, skatteforholdsperioder } = formValues;
@@ -231,29 +240,34 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     setFeil(undefined);
     setLagrePending(true);
 
-    Api.Trygdeavgift.eøsPensjonistBeregnTrygdeavgiftsperioder(behandlingID, {
-      skatteforholdsperioder: formVerdier.skatteforholdsperioder.map((skatteforhold: Skatteforhold) => ({
-        fomDato: Utils.dato.formatterDatoTilISO(skatteforhold.fomDato),
-        tomDato: Utils.dato.formatterDatoTilISO(skatteforhold.tomDato, null),
-        skatteplikttype: skatteforhold.skatteplikttype,
-      })),
-      inntektskilder: !erBrukerSkattepliktigIHelePerioden(formVerdier.skatteforholdsperioder)
-        ? formVerdier.inntektskilder.map((inntektskilde: Inntektskilde) => ({
-            type: inntektskilde.kildetype,
-            arbeidsgiversavgiftBetales: Utils.streng.uppercaseStrengTilBool(inntektskilde.arbAvgBetales) || false,
-            avgiftspliktigInntekt: inntektskilde.bruttoInntekt,
-            fomDato: Utils.dato.formatterDatoTilISO(inntektskilde.fomDato),
-            tomDato: Utils.dato.formatterDatoTilISO(inntektskilde.tomDato, null),
-            erMaanedsbelop: true,
-          }))
-        : [],
-    })
-      .then((beregnetTrygdeavgift) => {
-        setFeil(undefined);
-        setTrygdeavgift(beregnetTrygdeavgift);
+    if (skalIkkeBeregneForelopigTrygdeavgift && skalIkkeViseTidligerePerioderToggle) {
+      setTrygdeavgift(undefined);
+      setLagrePending(false);
+    } else {
+      Api.Trygdeavgift.eøsPensjonistBeregnTrygdeavgiftsperioder(behandlingID, {
+        skatteforholdsperioder: formVerdier.skatteforholdsperioder.map((skatteforhold: Skatteforhold) => ({
+          fomDato: Utils.dato.formatterDatoTilISO(skatteforhold.fomDato),
+          tomDato: Utils.dato.formatterDatoTilISO(skatteforhold.tomDato, null),
+          skatteplikttype: skatteforhold.skatteplikttype,
+        })),
+        inntektskilder: !erBrukerSkattepliktigIHelePerioden(formVerdier.skatteforholdsperioder)
+          ? formVerdier.inntektskilder.map((inntektskilde: Inntektskilde) => ({
+              type: inntektskilde.kildetype,
+              arbeidsgiversavgiftBetales: Utils.streng.uppercaseStrengTilBool(inntektskilde.arbAvgBetales) || false,
+              avgiftspliktigInntekt: inntektskilde.bruttoInntekt,
+              fomDato: Utils.dato.formatterDatoTilISO(inntektskilde.fomDato),
+              tomDato: Utils.dato.formatterDatoTilISO(inntektskilde.tomDato, null),
+              erMaanedsbelop: true,
+            }))
+          : [],
       })
-      .catch((error) => setFeil(mapFeilmelding(error)))
-      .finally(() => setLagrePending(false));
+        .then((beregnetTrygdeavgift) => {
+          setFeil(undefined);
+          setTrygdeavgift(beregnetTrygdeavgift);
+        })
+        .catch((error) => setFeil(mapFeilmelding(error)))
+        .finally(() => setLagrePending(false));
+    }
   };
 
   const mapFeilmelding = (error: any) => {
@@ -332,16 +346,20 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
           </Alert>
         )}
 
-      <Nav.Heading size="xsmall">Oppgi informasjon om brukers skatteforhold</Nav.Heading>
-      <Skatteforholdsperioder
-        formValues={formValues}
-        redigerbart={redigerbart}
-        remove={skattRemove}
-        append={skattAppend}
-        control={control}
-        defaultPeriode={formattedDefaultPeriode()}
-        fields={skattFields}
-      />
+      {!skalIkkeBeregneForelopigTrygdeavgift && (
+        <>
+          <Nav.Heading size="xsmall">Oppgi informasjon om brukers skatteforhold</Nav.Heading>
+          <Skatteforholdsperioder
+            formValues={formValues}
+            redigerbart={redigerbart}
+            remove={skattRemove}
+            append={skattAppend}
+            control={control}
+            defaultPeriode={formattedDefaultPeriode()}
+            fields={skattFields}
+          />
+        </>
+      )}
 
       {skalViseInntektskilder && (
         <>
@@ -384,7 +402,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
         </Nav.Alert>
       )}
 
-      {!skalBeregneForelopigTrygdeavgift && stegErGyldig && (
+      {!skalIkkeBeregneForelopigTrygdeavgift && !skalBeregneForelopigTrygdeavgift && stegErGyldig && (
         <Nav.Alert variant="info" className="infomelding">
           Trygdeavgift skal ikke betales til NAV
         </Nav.Alert>
