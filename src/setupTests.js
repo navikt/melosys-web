@@ -1,7 +1,8 @@
-import createFetchMock from "vitest-fetch-mock";
 import * as matchers from "@testing-library/jest-dom";
-import { expect, vi } from "vitest";
+import { expect, vi, beforeAll, afterEach, afterAll } from "vitest";
 import toDiffableHtml from "diffable-html";
+import { setupServer } from "msw/node";
+import { handlers } from "./test/mocks/handlers";
 // Oppsettfilen for Yup kjøres ikke uten videre av vi. Derfor er det nødvendig å importere den manuelt her.
 import "./setupYup";
 
@@ -17,22 +18,27 @@ expect.addSnapshotSerializer({
   },
 });
 
-const fetchMocker = createFetchMock(vi);
-// sets globalThis.fetch and globalThis.fetchMock to our mocked version
-fetchMocker.enableMocks();
-// Standard fallback for alle unmocked requests
-fetchMocker.mockResponse((req) => {
-  // eslint-disable-next-line no-console
-  console.warn(`🔍 Unmocked fetch request:
-    🧪 Test: ${expect.getState().currentTestName || "Unknown test"}
-    🌐 URL: ${req.url}
-    📋 Method: ${req.method}`);
+// Sett opp MSW server for API mocking
+const server = setupServer(...handlers);
 
-  return Promise.resolve({
-    status: 200,
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({}),
+// Gjør serveren tilgjengelig globalt for testfiler
+global.mswServer = server;
+
+// Start server før tester kjører
+beforeAll(() => {
+  server.listen({
+    onUnhandledRequest: "bypass", // Ignorer requests uten handlers
   });
+});
+
+// Reset handlers etter hver test
+afterEach(() => {
+  server.resetHandlers();
+});
+
+// Steng server etter alle tester
+afterAll(() => {
+  server.close();
 });
 
 global.window.env = {

@@ -1,4 +1,8 @@
+import { http, HttpResponse } from "msw";
 import { createTestStore } from "../test-utils/createTestStore";
+
+// Global MSW server from setupTests.js
+declare const mswServer: ReturnType<typeof import("msw/node").setupServer>;
 
 import MKV from "../../melosyskodeverk";
 
@@ -6,13 +10,6 @@ import * as operations from "./operations";
 import * as KV from "../../kodeverk";
 import { STATUS } from "../../services";
 import type { PerioderStegState } from "../../felleskomponenter/stegvelger";
-
-// Type for fetch mock
-declare const fetch: {
-  resetMocks: () => void;
-  mockResponse: (response: string) => void;
-  mockReject: (error: Error) => void;
-};
 
 interface AvklartefaktaData {
   avklartefaktaKode: string | null;
@@ -66,9 +63,6 @@ describe("Lovvalgsperioder operations", () => {
   let initialState: TestState;
 
   beforeEach(() => {
-    fetch.resetMocks();
-    fetch.mockResponse(JSON.stringify({}));
-
     initialState = {
       avklartefakta: {
         data: [],
@@ -117,6 +111,12 @@ describe("Lovvalgsperioder operations", () => {
     it("updates state correctly on successful save", async () => {
       const store = createTestStore(initialState);
 
+      mswServer.use(
+        http.post("/api/lovvalgsperioder/4", () => {
+          return HttpResponse.json({});
+        }),
+      );
+
       await store.dispatch(operations.lagre() as any);
 
       const finalState = store.getState();
@@ -125,11 +125,13 @@ describe("Lovvalgsperioder operations", () => {
     });
 
     it("handles API errors correctly", async () => {
-      const error = new Error("feil ved kall til Api");
-      fetch.resetMocks();
-      fetch.mockReject(error);
-
       const store = createTestStore(initialState);
+
+      mswServer.use(
+        http.post("/api/lovvalgsperioder/4", () => {
+          return new HttpResponse(null, { status: 500 });
+        }),
+      );
 
       await store.dispatch(operations.lagre() as any);
 
