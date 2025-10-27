@@ -257,7 +257,6 @@ function VurderingBekreftelse({ tilbake, aktivtSteg }: Props) {
           />
         </Nav.HStack>
       )}
-
       {visFakturaMottaker && (
         <Nav.HStack className="fakturamottaker">
           <Nav.BodyLong size="small" className="info">
@@ -269,14 +268,12 @@ function VurderingBekreftelse({ tilbake, aktivtSteg }: Props) {
           </Nav.BodyLong>
         </Nav.HStack>
       )}
-
       {redigerbart && visFakturaMottaker && fullmektigErFakturamottaker ? (
         <FullmaktForTrygdeavgiftConfirmationPanel
           harBekreftet={harBekreftetFullmaktForTrygdeavgift}
           onChange={setHarBekreftetFullmaktForTrygdeavgift}
         />
       ) : null}
-
       <Forms.HtmlEditor
         name="begrunnelseFritekst"
         control={control}
