@@ -2,7 +2,7 @@ import { useSelector } from "react-redux";
 import * as Nav from "../../../../../navFrontend";
 import * as Mui from "../../../../../felleskomponenter/ui";
 import * as Utils from "../../../../../utils";
-import { useDispatch } from "../../../../../hooks/useDispatch";
+import { useDispatch } from "../../../../../hooks";
 
 import { PeriodeOgLandVelger } from "./komponenter/periodeVelger/periodeVelger";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -20,7 +20,6 @@ import { useContext, useEffect, useMemo, useState } from "react";
 import { UkjentSluttdatoMedlemskapsperiode } from "../../../../ftrl/saksbehandling/stegKomponenter/vurderingPeriode/komponenter/ukjentSluttdatoMedlemskapsperiode";
 import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../../ducks/oppsummertfakta";
 import { FellesHandlersContext } from "../../../../../contexts";
-import * as Api from "../../../../../services/api";
 import { DialogboksOppfriskSak } from "../../../../../felleskomponenter/dialogboks";
 import { menypanelOperations } from "../../../../../ducks/menypanel";
 import { navigeringOperations } from "../../../../../ducks/navigering";
@@ -31,6 +30,10 @@ interface Props {
   tilbake: () => void;
   aktivtSteg: boolean;
   oppdaterStatus: (isValid: boolean) => void;
+}
+
+interface FellesHandlers {
+  oppfriskOgLastInnSaksopplysninger: () => Promise<void>;
 }
 
 export function VurderingOpplysninger({ bekreft, oppdaterStatus, aktivtSteg }: Props) {
@@ -49,7 +52,7 @@ export function VurderingOpplysninger({ bekreft, oppdaterStatus, aktivtSteg }: P
 
   const registeropplysningerHentet = useSelector(behandlingerSelectors.SisteOpplysningerHentetDatoSelector);
   const behandlingUnderOppfriskning = useSelector(BehandlingUnderOppfriskningSelector);
-  const { oppfriskOgLastInnSaksopplysninger } = useContext(FellesHandlersContext) as any;
+  const { oppfriskOgLastInnSaksopplysninger } = useContext(FellesHandlersContext) as FellesHandlers;
 
   const initialValues = useMemo(
     () => ({
@@ -82,7 +85,7 @@ export function VurderingOpplysninger({ bekreft, oppdaterStatus, aktivtSteg }: P
   const debouncedLagreHelseutgiftPeriode = useMemo(
     () =>
       Utils._debounce(async (ukjentSluttdato?: boolean) => {
-        const latestValues = watch();
+        const latestValues = watch() as { fomDato: string; tomDato: string; bostedLandkode: string };
         const isValid = await trigger();
         if (isValid) {
           const currentUkjentSluttdato = ukjentSluttdato ?? ukjentSluttdatoMedlemskapsperiode;
@@ -92,7 +95,7 @@ export function VurderingOpplysninger({ bekreft, oppdaterStatus, aktivtSteg }: P
           );
         }
       }, 500),
-    [watch(), trigger],
+    [watch, trigger, ukjentSluttdatoMedlemskapsperiode, behandlingID, dispatch],
   );
 
   const oppdaterSluttdato = async (ukjentSluttdato: boolean) => {
@@ -120,12 +123,8 @@ export function VurderingOpplysninger({ bekreft, oppdaterStatus, aktivtSteg }: P
     }
   };
 
-  useEffect(() => {
-    oppdaterStatus(formIsValid);
-  }, [formIsValid]);
-
   const bekreftOgFortsett = async () => {
-    dispatch(helseutgiftDekkesPeriodeOperations.hentHelseutgiftDekkesPeriode(behandlingID));
+    await dispatch(helseutgiftDekkesPeriodeOperations.hentHelseutgiftDekkesPeriode(behandlingID));
     if (skalHenteRegisteropplysninger) {
       setVisOppfrisk(true);
     } else {
@@ -133,7 +132,11 @@ export function VurderingOpplysninger({ bekreft, oppdaterStatus, aktivtSteg }: P
     }
   };
 
-  const oppdaterEllerOpprettHelseutgiftDekkesPeriode = async (formValues: any) => {
+  const oppdaterEllerOpprettHelseutgiftDekkesPeriode = async (formValues: {
+    fomDato: string;
+    tomDato: string;
+    bostedLandkode: string;
+  }) => {
     await dispatch(
       helseutgiftDekkesPeriodeOperations.oppdaterEllerOpprettHelseutgiftDekkesPeriode(
         behandlingID,

@@ -1,3 +1,4 @@
+import { http, HttpResponse } from "msw";
 import { createTestStore } from "../test-utils/createTestStore";
 
 import * as operations from "./operations";
@@ -5,12 +6,8 @@ import * as KV from "../../kodeverk";
 
 import MKV from "../../melosyskodeverk";
 
-// Type for fetch mock
-declare const fetch: {
-  resetMocks: () => void;
-  mockResponse: (response: string) => void;
-  mockReject: (error: Error) => void;
-};
+// Global MSW server from setupTests.js
+declare const mswServer: ReturnType<typeof import("msw/node").setupServer>;
 
 interface TestState {
   mottatteOpplysninger: {
@@ -38,9 +35,6 @@ describe("utpekingsperioder operations", () => {
   let initialState: TestState;
 
   beforeEach(() => {
-    fetch.resetMocks();
-    fetch.mockResponse(JSON.stringify({}));
-
     initialState = {
       mottatteOpplysninger: {
         data: {
@@ -72,6 +66,12 @@ describe("utpekingsperioder operations", () => {
     it("updates state correctly on successful save", async () => {
       const store = createTestStore(initialState);
 
+      mswServer.use(
+        http.post("/api/utpekingsperioder/4", () => {
+          return HttpResponse.json({});
+        }),
+      );
+
       await store.dispatch(operations.lagre() as any);
 
       const finalState = store.getState();
@@ -79,11 +79,13 @@ describe("utpekingsperioder operations", () => {
     });
 
     it("handles API errors correctly", async () => {
-      const error = new Error("feil ved kall til Api");
-      fetch.resetMocks();
-      fetch.mockReject(error);
-
       const store = createTestStore(initialState);
+
+      mswServer.use(
+        http.post("/api/utpekingsperioder/4", () => {
+          return new HttpResponse(null, { status: 500 });
+        }),
+      );
 
       await store.dispatch(operations.lagre() as any);
 

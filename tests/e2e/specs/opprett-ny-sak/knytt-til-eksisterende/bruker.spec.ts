@@ -1,7 +1,7 @@
 import { expect, Page, test } from "@playwright/test";
 import { runAxeAnalyze } from "../../../utils/axeUtils";
 import { HovedsidePage, USER_ID_VALID } from "../../../pages/hovedside.page";
-import { OpprettNySakPage } from "../../../pages/opprett-ny-sak.page";
+import { OpprettNySakPage } from "../../../pages/opprett-ny-sak/opprett-ny-sak.page";
 import { getSakId } from "../../../utils/testUtils";
 
 let opprettNySakPage: OpprettNySakPage;
@@ -59,6 +59,33 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
 
     const behandlingstypeGruppe = page.getByRole("group", { name: "Behandlingstype" });
     await expect(behandlingstypeGruppe).not.toBeVisible();
+
+    await runAxeAnalyze(page, testInfo.title);
+  });
+
+  test("Knytt til EØS pensjonist-sak med trygdeavgift og åpne behandlinger - årsavregning tilgjengelig", async ({
+    page,
+  }, testInfo) => {
+    // Test unntaket for EØS pensjonister med trygdeavgift som skal kunne opprette årsavregning
+    // selv om de har aktive behandlinger (MELOSYS-7603)
+    await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
+    await opprettNySakPage.velgKnyttTilEksisterendeSak();
+
+    // Søk etter en EØS-sak med sakstema "Trygdeavgift" og behandlingstema "Pensjonist"
+    const valgtSak = await opprettNySakPage.finnSak({
+      sakstype: "EU/EØS-land",
+    });
+
+    expect(valgtSak, "Ingen EØS pensjonist-sak funnet").toBeTruthy();
+
+    valgtSak?.click();
+
+    // Verifiser at årsavregning er tilgjengelig (unntak fra vanlig EØS-regel)
+    await opprettNySakPage.verifiserTilgjengeligeBehandlingstyper(valgtSak!, ["Årsavregning"]);
+
+    // Verifiser at ingen feilmelding vises
+    const harFeilmelding = await opprettNySakPage.harFeilmelding();
+    expect(harFeilmelding, `Ingen feilmelding skal vises for EØS pensjonist-sak ${getSakId(valgtSak!)}`).toBe(false);
 
     await runAxeAnalyze(page, testInfo.title);
   });
