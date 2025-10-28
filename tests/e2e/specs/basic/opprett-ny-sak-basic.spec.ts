@@ -1,7 +1,7 @@
 import { test, Page } from "@playwright/test";
 import { runAxeAnalyze } from "../../utils/axeUtils";
 import { HovedsidePage } from "../../pages/hovedside.page";
-import { OpprettNySakPage } from "../../pages/opprett-ny-sak.page";
+import { OpprettNySakPage } from "../../pages/opprett-ny-sak/opprett-ny-sak.page";
 import { assertErrors } from "../../utils/testUtils";
 
 let opprettNySakPage: OpprettNySakPage;

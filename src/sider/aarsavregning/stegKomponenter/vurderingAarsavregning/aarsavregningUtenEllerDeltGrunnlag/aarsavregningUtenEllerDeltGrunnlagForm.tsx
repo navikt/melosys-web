@@ -110,7 +110,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   harTrygdeavgiftFraAvgiftssystemet: boolean;
   harGrunnlag: boolean;
 }) {
-  const [feilmelding, setFeilmelding] = useState<undefined | string>(undefined);
+  const [feilmelding, setFeilmelding] = useState<string | string[] | undefined>(undefined);
   const [beregningPaagar, setBeregningPaagar] = useState(false);
   const [aarsavregningResponse, setAarsavregningResponse] = useState<AarsavregningResponse | undefined>(
     initiellData.aarsavregningResponse,
@@ -187,6 +187,10 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       .filter((periode: Medlemskapsperiode) => periode.id !== ULAGRET_MEDLEMSKAPSPERIODE_ID)
       .every((periode: Medlemskapsperiode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG);
   }, [medlemskapsperioder]);
+
+  const erDeltGrunnlag =
+    harTrygdeavgiftFraAvgiftssystemet &&
+    !!initiellData.aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger;
 
   const finnMedlemskapsperiode = useCallback((perioder: Medlemskapsperiode[]) => {
     const sorterteGyldigePerioder = perioder
@@ -892,6 +896,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
                 minDate={minDate}
                 trygdedekninger={trygdedekninger}
                 setValue={setValue}
+                erDeltGrunnlag={erDeltGrunnlag}
               />
             ))}
           </div>

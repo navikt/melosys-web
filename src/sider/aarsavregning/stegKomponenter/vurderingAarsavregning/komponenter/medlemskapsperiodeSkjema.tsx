@@ -63,6 +63,7 @@ export interface PeriodeElementerProps {
   minDate?: Date;
   trygdedekninger?: string[];
   setValue: (name: string, value: any, options?: any) => void;
+  erDeltGrunnlag?: boolean;
 }
 
 export function MedlemskapsperiodeSkjema({
@@ -78,6 +79,7 @@ export function MedlemskapsperiodeSkjema({
   minDate,
   trygdedekninger = [],
   setValue,
+  erDeltGrunnlag = false,
 }: PeriodeElementerProps) {
   const pliktigeBestemmelser = usePliktigeBestemmelser();
   const erPliktigBestemmelse = formValues.bestemmelse && pliktigeBestemmelser.includes(formValues.bestemmelse);
@@ -167,7 +169,7 @@ export function MedlemskapsperiodeSkjema({
           </Nav.Column>
         )}
       </Nav.Row>
-      {medlemskapsperioder.length === index + 1 && !erPliktigBestemmelse && (
+      {medlemskapsperioder.length === index + 1 && (!erPliktigBestemmelse || erDeltGrunnlag) && (
         <div className="legg-til__rad">
           <Mui.Lenkeknapp onClick={handleLeggTil} ikon={Ikoner.Add} disabled={!redigerbart || !visLeggTil}>
             Legg til periode
