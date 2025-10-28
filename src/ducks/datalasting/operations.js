@@ -18,6 +18,7 @@ import { medlemskapsperioderOperations } from "../medlemskapsperioder";
 import { harIkkeYrkesaktivFlyt, harUnntaksregistreringFlyt, skalViseIngenFlyt } from "../../url/url";
 import { erFeatureToggleEnabled } from "../../featuretoggle";
 import { MELOSYS_PENSJONIST, MELOSYS_PENSJONIST_EØS } from "../../featuretoggle/toggleNavn";
+import { helseutgiftDekkesPeriodeOperations } from "../helseutgiftdekkesperiode";
 
 const harIngenFlyt = async (sakstype, state) => {
   const sakstema = fagsakSelectors.SakstemaKodeSelector(state);
@@ -86,9 +87,11 @@ export const lastInnSaksopplysninger = (sakstype, saksnummer, behandlingID) => a
       dispatch(behandlingsresultatOperations.hent(behandlingID)),
       dispatch(mottatteOpplysningerOperations.hent(behandlingID)),
       dispatch(vilkarOperations.hent(behandlingID)),
+      dispatch(oppsummertfaktaOperations.hentOppsummertFakta(behandlingID)),
       dispatch(anmodningsperioderOperations.hent(behandlingID)),
       dispatch(avklartefaktaOperations.hent(behandlingID)),
       dispatch(lovvalgsperioderOperations.hent(behandlingID)),
+      dispatch(helseutgiftDekkesPeriodeOperations.hentHelseutgiftDekkesPeriode(behandlingID)),
       dispatch(utpekingsperioderOperations.hent(behandlingID)),
       dispatch(behandlingsperioderOperations.hentMedlemsPerioder(behandlingID)),
       dispatch(dokumenterOperations.hentDokumentOversikt(saksnummer)),
