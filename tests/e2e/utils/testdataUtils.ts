@@ -149,6 +149,7 @@ export async function opprettEøsPensjonistSakMedTrygdeavgift(page: Page): Promi
 
 /**
  * Opprett en ny EU/EØS-sak med spesifisert behandlingstema
+ * @param page
  * @param behandlingstema - F.eks. "Ikke yrkesaktiv" (default, enklest å opprette)
  * @returns Saksnummer (f.eks. "MEL-123")
  */

@@ -1,4 +1,4 @@
-import { expect, Locator, Page } from "@playwright/test";
+import { expect, Page } from "@playwright/test";
 
 /**
  * Page Object Model for stegvelger-komponenten
@@ -55,7 +55,6 @@ export class StegvelgerPage {
           if (tekst?.trim()) {
             // Fortsett å søke - vi må finne det aktive
             // La oss prøve en annen tilnærming: finn steget som har fokus eller spesiell styling
-            continue;
           }
         }
       }
@@ -206,16 +205,5 @@ export class StegvelgerPage {
   async erForrigeKnappSynlig(): Promise<boolean> {
     const knapp = this.page.locator('button:has-text("Forrige")').first();
     return await knapp.isVisible({ timeout: 1000 }).catch(() => false);
-  }
-
-  /**
-   * Vent på at et spesifikt steg blir aktivt
-   */
-  async ventPaSteg(stegnavn: string, timeout = 5000): Promise<void> {
-    // Først vent på at stegvelgeren lastes
-    await this.ventPaStegvelger();
-
-    const aktivtStegLocator = this.page.locator('.stegvelger .steg.aktiv');
-    await expect(aktivtStegLocator).toContainText(stegnavn, { timeout });
   }
 }

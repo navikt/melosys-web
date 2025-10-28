@@ -39,9 +39,40 @@ describe("Stegvelger - Component Structure", () => {
   });
 });
 
+interface StegvelgerInstance {
+  state: {
+    aktivtStegNummer: number;
+    aktuelleSteg: Array<{
+      id: string;
+      stegPosisjon: number;
+      vedtakSteg: boolean;
+      tittel: string;
+      status: string;
+    }>;
+    stegStores: Record<string, { hent: () => unknown }>;
+    visMottatteOpplysningerFeilmeldinger: boolean;
+  };
+  props: {
+    behandlingID: number;
+    sakstype: string;
+    mottatteOpplysningerFeilmeldinger: Record<string, unknown>;
+    [key: string]: unknown;
+  };
+  beregnNesteSteg: () => number;
+  beregnForrigeSteg: () => number;
+  erInngangsteg: (stegnummer: number) => boolean;
+  erVedtakSteg: (stegnummer: number) => boolean | undefined;
+  erSisteSteg: (stegnummer: number) => boolean;
+  harMottatteOpplysningerFeilmeldinger: () => boolean;
+  hentPerioderStegState: () => Record<string, unknown>;
+  validerOgVisMottatteOpplysningerFeilmeldinger: () => boolean;
+  gjemMottatteOpplysningerFeilmeldinger: () => void;
+  visMottatteOpplysningerFeilmeldinger: () => void;
+}
+
 describe("Stegvelger - Instance Methods", () => {
   // Vi kan teste instansmetoder ved å lage en instans av den ukoblede komponenten
-  let instance: any;
+  let instance: StegvelgerInstance;
 
   beforeEach(() => {
     // Hent den ukoblede komponenten (før Redux connect)
