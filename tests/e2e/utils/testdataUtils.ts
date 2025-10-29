@@ -176,9 +176,14 @@ export async function opprettEuEøsOffentligAnsattSak(page: Page): Promise<strin
   await opprettNySakPage.klikkOpprettNyBehandling();
   await assertNyBehandlingOpprettet(page);
 
+  // Vent litt for å la backend fullføre lagring av saken
+  await page.waitForTimeout(1000);
+
   // Finn den nyopprettede saken
   await hovedsidePage.goto();
+  await page.waitForLoadState("networkidle");
   await hovedsidePage.søkOgVentPåResultat(USER_ID_VALID);
+  await page.waitForLoadState("networkidle");
 
   const saker = await sokPage.finnÅpneSaker("EU/EØS-land");
   expect(saker.length, "Fant ingen åpne 'EU/EØS-land' saker etter opprettelse").toBeGreaterThan(0);

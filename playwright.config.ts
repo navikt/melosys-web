@@ -116,7 +116,8 @@ export default defineConfig({
   webServer: {
     command: "npm run start",
     url: "http://localhost:3000",
-    reuseExistingServer: !process.env.CI,
+    // Alltid start ny server for å unngå state-problemer nå PW tester kjøres på flere brancher
+    reuseExistingServer: false,
     timeout: 120 * 1000, // 2 minutes to allow for slow startup
   },
 });

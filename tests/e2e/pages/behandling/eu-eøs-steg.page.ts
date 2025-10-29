@@ -13,31 +13,44 @@ export class EuEøsStegPage {
 
   /**
    * Klikk "Bekreft og fortsett" for å gå til neste steg
+   * @param saksnummer - Saksnummer for feilmeldinger
+   * @param fraSteg - Navn på steget vi navigerer fra
+   * @param tilSteg - Navn på steget vi navigerer til
    */
-  async klikkBekreftOgFortsett(saksnummer?: string): Promise<void> {
+  async klikkBekreftOgFortsett(saksnummer?: string, fraSteg?: string, tilSteg?: string): Promise<void> {
     const bekreftKnapp = this.page.getByRole("button", { name: "Bekreft og fortsett" });
     const sakId = saksnummer ? `for sak ${saksnummer}` : "";
-    await expect(bekreftKnapp, `"Bekreft og fortsett"-knappen ${sakId} skal være synlig`).toBeVisible({
+    const stegInfo = fraSteg && tilSteg ? ` (${fraSteg} → ${tilSteg})` : "";
+
+    await expect(bekreftKnapp, `"Bekreft og fortsett"-knappen ${sakId}${stegInfo} skal være synlig`).toBeVisible({
       timeout: 5000,
     });
-    await expect(bekreftKnapp, `"Bekreft og fortsett"-knappen ${sakId} skal være aktivert`).toBeEnabled({
+    await expect(bekreftKnapp, `"Bekreft og fortsett"-knappen ${sakId}${stegInfo} skal være aktivert`).toBeEnabled({
       timeout: 2000,
     });
+
+    // Klikk og vent på at siden oppdateres
     await bekreftKnapp.click();
 
-    // Vent på at neste steg lastes
-    await this.page.waitForLoadState("domcontentloaded");
-    await this.page.waitForTimeout(500);
+    // Vent på at neste steg lastes (gi tilstrekkelig tid for navigasjon)
+    await this.page.waitForTimeout(2000);
   }
 
   /**
    * Velg første virksomhet i Virksomhet-steget
    */
   async velgFørsteVirksomhet(saksnummer?: string): Promise<void> {
+    const sakId = saksnummer ? `for sak ${saksnummer}` : "";
+
+    // Vent på at virksomhetslisten lastes (vent på at minst én checkbox dukker opp)
+    await this.page.waitForLoadState("networkidle");
+    await this.page.waitForTimeout(500); // Gi litt ekstra tid for virksomhetsdata å laste
+
     // Finn første checkbox i virksomhetslisten (NAV Frontend skjuler input, så vi må bruke role)
     const førsteCheckbox = this.page.getByRole("checkbox").first();
-    const sakId = saksnummer ? `for sak ${saksnummer}` : "";
-    await expect(førsteCheckbox, `Første virksomhet-checkbox ${sakId} skal være synlig`).toBeVisible({ timeout: 5000 });
+    await expect(førsteCheckbox, `Første virksomhet-checkbox ${sakId} skal være synlig`).toBeVisible({
+      timeout: 10000,
+    });
     await førsteCheckbox.check();
   }
 
@@ -116,6 +129,7 @@ export class EuEøsStegPage {
   /**
    * Velg lovvalgsbestemmelse i periode-steget
    * @param bestemmelse - Kode for lovvalgsbestemmelse
+   * @param saksnummer - saksnummer (f.eks. "MEL-123")
    */
   async velgLovvalgsbestemmelse(
     bestemmelse: "FO_883_2004_ART11_3B" | "FO_883_2004_ART11_5",
@@ -153,35 +167,59 @@ export class EuEøsStegPage {
   /**
    * Fyll inn kun startdato (for testing av validering)
    */
-  async fyllInnKunStartdato(fomDato: string): Promise<void> {
-    await this.page.getByLabel("Startdato").fill(fomDato);
+  async fyllInnKunStartdato(fomDato: string, saksnummer?: string): Promise<void> {
+    const startdatoFelt = this.page.getByLabel("Startdato");
+    const sluttdatoFelt = this.page.getByLabel("Sluttdato");
+    const sakId = saksnummer ? `for sak ${saksnummer}` : "";
+    await expect(startdatoFelt, `Startdato-felt ${sakId} skal være synlig`).toBeVisible();
+    await startdatoFelt.fill(fomDato);
+    // Tøm sluttdato for å teste validering
+    await sluttdatoFelt.clear();
+    // Trigger blur for å aktivere validering
+    await sluttdatoFelt.blur();
+    // Vent litt for at Redux-form skal oppdatere formIsValid
+    await this.page.waitForTimeout(300);
   }
 
   /**
    * Fyll inn kun sluttdato (for testing av validering)
    */
-  async fyllInnKunSluttdato(tomDato: string): Promise<void> {
-    await this.page.getByLabel("Sluttdato").fill(tomDato);
+  async fyllInnKunSluttdato(tomDato: string, saksnummer?: string): Promise<void> {
+    const startdatoFelt = this.page.getByLabel("Startdato");
+    const sluttdatoFelt = this.page.getByLabel("Sluttdato");
+    const sakId = saksnummer ? `for sak ${saksnummer}` : "";
+    await expect(sluttdatoFelt, `Sluttdato-felt ${sakId} skal være synlig`).toBeVisible();
+    // Tøm startdato for å teste validering
+    await startdatoFelt.clear();
+    await startdatoFelt.blur();
+    await sluttdatoFelt.fill(tomDato);
+    await sluttdatoFelt.blur();
+    // Vent litt for at Redux-form skal oppdatere formIsValid
+    await this.page.waitForTimeout(300);
   }
 
   /**
    * Klikk "Bekreft og fortsett" uten å vente på suksess (for testing av validering)
+   * @param saksnummer - Saksnummer for feilmeldinger
+   * @param fraSteg - Navn på steget vi navigerer fra (for valideringsfeil)
    */
-  async klikkBekreftOgFortsettUtenValidering(): Promise<void> {
+  async klikkBekreftOgFortsettUtenValidering(saksnummer?: string, fraSteg?: string): Promise<void> {
     const bekreftKnapp = this.page.getByRole("button", { name: "Bekreft og fortsett" });
+    const sakId = saksnummer ? `for sak ${saksnummer}` : "";
+    const stegInfo = fraSteg ? ` (${fraSteg})` : "";
+    await expect(bekreftKnapp, `"Bekreft og fortsett"-knappen ${sakId}${stegInfo} skal være synlig`).toBeVisible();
     await bekreftKnapp.click();
-    await this.page.waitForTimeout(500);
   }
 
   /**
    * Verifiser at vi har navigert til vedtak-steg
    */
   async verifiserVedtakSteg(saksnummer?: string): Promise<void> {
-    // Bruk heading-rolle for å unngå å matche dokumentlinker og knapper
+    // Vent på at "Fatt vedtak" knappen er synlig
     const sakId = saksnummer ? `for sak ${saksnummer}` : "";
     await expect(
-      this.page.getByRole("heading", { name: /vedtak/i }),
-      `Vedtak-steg heading ${sakId} skal være synlig`,
+      this.page.getByRole("button", { name: "Fatt vedtak" }),
+      `"Fatt vedtak"-knappen ${sakId} skal være synlig`,
     ).toBeVisible({ timeout: 5000 });
   }
 
@@ -189,10 +227,20 @@ export class EuEøsStegPage {
    * Fyll inn periode-datoer
    * @param fomDato - Startdato i format dd.mm.yyyy
    * @param tomDato - Sluttdato i format dd.mm.yyyy
+   * @param saksnummer - saksnummer (f.eks. "MEL-123")
    */
-  async fyllInnPeriodeDatoer(fomDato: string, tomDato: string): Promise<void> {
-    await this.page.getByLabel("Startdato").fill(fomDato);
-    await this.page.getByLabel("Sluttdato").fill(tomDato);
+  async fyllInnPeriodeDatoer(fomDato: string, tomDato: string, saksnummer?: string): Promise<void> {
+    const startdatoFelt = this.page.getByLabel("Startdato");
+    const sluttdatoFelt = this.page.getByLabel("Sluttdato");
+    const sakId = saksnummer ? `for sak ${saksnummer}` : "";
+    await expect(startdatoFelt, `Startdato-felt ${sakId} skal være synlig`).toBeVisible();
+    await expect(sluttdatoFelt, `Sluttdato-felt ${sakId} skal være synlig`).toBeVisible();
+    await startdatoFelt.fill(fomDato);
+    await startdatoFelt.blur();
+    await sluttdatoFelt.fill(tomDato);
+    await sluttdatoFelt.blur();
+    // Vent litt for at Redux-form skal oppdatere formIsValid
+    await this.page.waitForTimeout(300);
   }
 
   /**
@@ -220,6 +268,7 @@ export class EuEøsStegPage {
   /**
    * Verifiser at valideringsfeil vises
    * @param feilmelding - Delvis tekst fra feilmeldingen
+   * @param saksnummer - saksnummer (f.eks. "MEL-123")
    */
   async verifiserValideringsfeil(feilmelding: string, saksnummer?: string): Promise<void> {
     const sakId = saksnummer ? `for sak ${saksnummer}` : "";
