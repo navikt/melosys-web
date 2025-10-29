@@ -146,3 +146,57 @@ export async function opprettEøsPensjonistSakMedTrygdeavgift(page: Page): Promi
 
   return await sokPage.getSaksnummer(saker[0]);
 }
+
+/**
+ * Opprett en ny EU/EØS-sak med spesifisert behandlingstema
+ * @param page
+ * @param behandlingstema - F.eks. "Ikke yrkesaktiv" (default, enklest å opprette)
+ * @returns Saksnummer (f.eks. "MEL-123")
+ */
+export async function opprettEUEOSSak(
+  page: Page,
+  behandlingstema:
+    | "Yrkesaktiv"
+    | "Ikke yrkesaktiv"
+    | "Pensjonist/uføretrygdet"
+    | "Forespørsel fra trygdemyndighet"
+    | "Forespørsel om trygdetid"
+    | "Anmodning om unntak"
+    | "Registrering unntak"
+    | "A1 / Anmodning om unntak på papir"
+    | "Søknad om unntak fra folketrygden"
+    | "Utstedt arbeidstaker / skip / direkte til artikkel 16"
+    | "Utstedt selvstendig næringsdrivende / skip / direkte til artikkel 16"
+    | "Arbeid og/eller selvstendig virksomhet i flere land"
+    | "Offentlig tjenesteperson/flyvende personell"
+    | "Arbeid kun i Norge"
+    | "Virksomhet" = "Ikke yrkesaktiv",
+): Promise<string> {
+  const hovedsidePage = new HovedsidePage(page);
+  const opprettNySakPage = new OpprettNySakPage(page);
+  const sokPage = new SokPage(page);
+
+  await hovedsidePage.goto();
+  await hovedsidePage.klikkOpprettNySakKnapp();
+
+  await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
+  await opprettNySakPage.velgOpprettNySak();
+
+  await opprettNySakPage.velgSakstype("EU/EØS-land");
+  await opprettNySakPage.velgSakstema("Medlemskap og lovvalg");
+  await opprettNySakPage.velgBehandlingstema(behandlingstema);
+  await opprettNySakPage.velgBehandlingstype("Førstegangsbehandling");
+  await opprettNySakPage.velgBehandlingsaarsak("Søknad");
+
+  await opprettNySakPage.klikkOpprettNyBehandling();
+  await assertNyBehandlingOpprettet(page);
+
+  // Finn den nyopprettede saken
+  await hovedsidePage.goto();
+  await hovedsidePage.søkOgVentPåResultat(USER_ID_VALID);
+
+  const saker = await sokPage.finnÅpneSaker("EU/EØS-land");
+  expect(saker.length, "Fant ingen åpne 'EU/EØS-land' saker etter opprettelse").toBeGreaterThan(0);
+
+  return await sokPage.getSaksnummer(saker[0]);
+}

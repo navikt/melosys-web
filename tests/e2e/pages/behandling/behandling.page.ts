@@ -15,7 +15,7 @@ export class BehandlingPage {
    * Verifiser at vi er på behandlingssiden
    */
   async verifiserBehandlingsside(): Promise<void> {
-    await expect(this.page).toHaveURL(/\/melosys\/(FTRL|AVTALELAND|EOS|TRYGDEAVTALE)\/.*\/MEL-\d+/);
+    await expect(this.page).toHaveURL(/\/melosys\/(FTRL|AVTALELAND|EOS|EU_EOS|TRYGDEAVTALE)\/.*\/MEL-\d+/);
 
     // Vent på at siden lastes med behandlingsinnhold
     await this.page.waitForLoadState("domcontentloaded");
@@ -43,26 +43,6 @@ export class BehandlingPage {
     }
 
     expect(infoFunnet, "Kunne ikke verifisere at vi er på en behandlingsside").toBe(true);
-  }
-
-  /**
-   * Hent behandlingsnummer/saksnummer fra siden
-   */
-  async hentBehandlingsInfo(): Promise<{ saksnummer?: string; behandlingId?: string }> {
-    const url = this.page.url();
-    const behandlingIdMatch = url.match(/\/behandling\/(\d+)/);
-    const behandlingId = behandlingIdMatch ? behandlingIdMatch[1] : undefined;
-
-    let saksnummer: string | undefined;
-    try {
-      const saksnummerElement = this.page.locator('.saksnummer, :has-text("MEL-")').first();
-      const tekst = await saksnummerElement.textContent({ timeout: 2000 });
-      saksnummer = tekst?.match(/MEL-\d+/)?.[0];
-    } catch {
-      // Ikke kritisk hvis vi ikke finner saksnummer
-    }
-
-    return { saksnummer, behandlingId };
   }
 
   /**

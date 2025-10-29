@@ -17,6 +17,7 @@
 /test
 
 # misc
+.claude
 .idea
 !.idea/runConfigurations/
 .vscode
