@@ -46,26 +46,6 @@ export class BehandlingPage {
   }
 
   /**
-   * Hent behandlingsnummer/saksnummer fra siden
-   */
-  async hentBehandlingsInfo(): Promise<{ saksnummer?: string; behandlingId?: string }> {
-    const url = this.page.url();
-    const behandlingIdMatch = url.match(/\/behandling\/(\d+)/);
-    const behandlingId = behandlingIdMatch ? behandlingIdMatch[1] : undefined;
-
-    let saksnummer: string | undefined;
-    try {
-      const saksnummerElement = this.page.locator('.saksnummer, :has-text("MEL-")').first();
-      const tekst = await saksnummerElement.textContent({ timeout: 2000 });
-      saksnummer = tekst?.match(/MEL-\d+/)?.[0];
-    } catch {
-      // Ikke kritisk hvis vi ikke finner saksnummer
-    }
-
-    return { saksnummer, behandlingId };
-  }
-
-  /**
    * Sjekk om behandlingen kan avsluttes (har "Avslutt behandling" knapp i hamburgermenyen)
    */
   async kanAvslutteBehandling(): Promise<boolean> {

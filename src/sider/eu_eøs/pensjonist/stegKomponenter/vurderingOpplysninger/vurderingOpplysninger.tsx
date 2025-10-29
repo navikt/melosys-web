@@ -2,8 +2,7 @@ import { useSelector } from "react-redux";
 import * as Nav from "../../../../../navFrontend";
 import * as Mui from "../../../../../felleskomponenter/ui";
 import * as Utils from "../../../../../utils";
-import { useDispatch } from "../../../../../hooks/useDispatch";
-import MKV from "../../../../../melosyskodeverk";
+import { useDispatch } from "../../../../../hooks";
 
 import { PeriodeOgLandVelger } from "./komponenter/periodeVelger/periodeVelger";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -21,7 +20,10 @@ import { useContext, useEffect, useMemo, useState } from "react";
 import { UkjentSluttdatoMedlemskapsperiode } from "../../../../ftrl/saksbehandling/stegKomponenter/vurderingPeriode/komponenter/ukjentSluttdatoMedlemskapsperiode";
 import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../../ducks/oppsummertfakta";
 import { FellesHandlersContext } from "../../../../../contexts";
-import * as Api from "../../../../../services/api";
+import { DialogboksOppfriskSak } from "../../../../../felleskomponenter/dialogboks";
+import { menypanelOperations } from "../../../../../ducks/menypanel";
+import { navigeringOperations } from "../../../../../ducks/navigering";
+import { BehandlingUnderOppfriskningSelector } from "../../../../../ducks/modaler/selectors";
 
 interface Props {
   bekreft: () => void;
@@ -29,23 +31,28 @@ interface Props {
   aktivtSteg: boolean;
   oppdaterStatus: (isValid: boolean) => void;
 }
-const { NY_VURDERING } = MKV.Koder.behandlinger.behandlingstyper;
+
+interface FellesHandlers {
+  oppfriskOgLastInnSaksopplysninger: () => Promise<void>;
+}
 
 export function VurderingOpplysninger({ bekreft, oppdaterStatus, aktivtSteg }: Props) {
   const dispatch = useDispatch();
-  const behandlingstype = useSelector(behandlingerSelectors.BehandlingstypeKodeSelector);
+  const [visOppfrisk, setVisOppfrisk] = useState(false);
 
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const helseutgiftDekkesPeriode = useSelector(helseutgiftDekkesPeriodeSelector.HelseutgiftDekkesPeriodeSelector).data;
   const { fomDato, tomDato, bostedLandkode } = helseutgiftDekkesPeriode;
   const [ukjentSluttdatoKey, setUkjentSluttdatoKey] = useState("");
-  const { startOgVisOppfriskModal } = useContext(FellesHandlersContext) as any;
   const lagretUkjentSluttdato = useSelector(oppsummertfaktaSelectors.UkjentSluttdatoMedlemskapsperiodeSelector);
   const [ukjentSluttdatoMedlemskapsperiode, setUkjentSluttdatoMedlemskapsperiode] = useState(
     lagretUkjentSluttdato || false,
   );
-  const erNyVurdering = behandlingstype === NY_VURDERING;
+
+  const registeropplysningerHentet = useSelector(behandlingerSelectors.SisteOpplysningerHentetDatoSelector);
+  const behandlingUnderOppfriskning = useSelector(BehandlingUnderOppfriskningSelector);
+  const { oppfriskOgLastInnSaksopplysninger } = useContext(FellesHandlersContext) as FellesHandlers;
 
   const initialValues = useMemo(
     () => ({
@@ -69,10 +76,16 @@ export function VurderingOpplysninger({ bekreft, oppdaterStatus, aktivtSteg }: P
   });
   const formValues = watch();
 
+  const skalHenteRegisteropplysninger =
+    !registeropplysningerHentet ||
+    !Utils.dato.erLikeDatoer(formValues.fomDato, initialValues.fomDato) ||
+    !Utils.dato.erLikeDatoer(formValues.tomDato, initialValues.tomDato) ||
+    !Utils._isEqual(formValues.bostedLandkode, initialValues.bostedLandkode);
+
   const debouncedLagreHelseutgiftPeriode = useMemo(
     () =>
       Utils._debounce(async (ukjentSluttdato?: boolean) => {
-        const latestValues = watch();
+        const latestValues = watch() as { fomDato: string; tomDato: string; bostedLandkode: string };
         const isValid = await trigger();
         if (isValid) {
           const currentUkjentSluttdato = ukjentSluttdato ?? ukjentSluttdatoMedlemskapsperiode;
@@ -82,7 +95,7 @@ export function VurderingOpplysninger({ bekreft, oppdaterStatus, aktivtSteg }: P
           );
         }
       }, 500),
-    [watch(), trigger],
+    [watch, trigger, ukjentSluttdatoMedlemskapsperiode, behandlingID, dispatch],
   );
 
   const oppdaterSluttdato = async (ukjentSluttdato: boolean) => {
@@ -110,17 +123,20 @@ export function VurderingOpplysninger({ bekreft, oppdaterStatus, aktivtSteg }: P
     }
   };
 
-  useEffect(() => {
-    oppdaterStatus(formIsValid);
-  }, [formIsValid]);
-
   const bekreftOgFortsett = async () => {
-    dispatch(helseutgiftDekkesPeriodeOperations.hentHelseutgiftDekkesPeriode(behandlingID));
-    startOgVisOppfriskModal();
-    bekreft();
+    await dispatch(helseutgiftDekkesPeriodeOperations.hentHelseutgiftDekkesPeriode(behandlingID));
+    if (skalHenteRegisteropplysninger) {
+      setVisOppfrisk(true);
+    } else {
+      bekreft();
+    }
   };
 
-  const oppdaterEllerOpprettHelseutgiftDekkesPeriode = async (formValues: any) => {
+  const oppdaterEllerOpprettHelseutgiftDekkesPeriode = async (formValues: {
+    fomDato: string;
+    tomDato: string;
+    bostedLandkode: string;
+  }) => {
     await dispatch(
       helseutgiftDekkesPeriodeOperations.oppdaterEllerOpprettHelseutgiftDekkesPeriode(
         behandlingID,
@@ -134,7 +150,7 @@ export function VurderingOpplysninger({ bekreft, oppdaterStatus, aktivtSteg }: P
     );
   };
 
-  const stegErGyldig = formIsValid;
+  const stegErGyldig = formIsValid && !skalHenteRegisteropplysninger && !behandlingUnderOppfriskning;
 
   useEffect(() => {
     oppdaterStatus(stegErGyldig);
@@ -172,6 +188,25 @@ export function VurderingOpplysninger({ bekreft, oppdaterStatus, aktivtSteg }: P
           onClick: bekreftOgFortsett,
         }}
       />
+
+      {visOppfrisk && (
+        <DialogboksOppfriskSak
+          oppfrisk={async () => {
+            await oppfriskOgLastInnSaksopplysninger();
+          }}
+          avbryt={() => setVisOppfrisk(false)}
+          lukk={() => {
+            setVisOppfrisk(false);
+            dispatch(menypanelOperations.visMenypanel());
+            bekreft();
+          }}
+          tilForsiden={() => {
+            setVisOppfrisk(false);
+            dispatch(navigeringOperations.tilForsiden());
+          }}
+          bekreftetFraStart
+        />
+      )}
     </>
   );
 }
