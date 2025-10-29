@@ -254,7 +254,7 @@ describe("utils", () => {
             kildetype: "",
             arbAvgBetales: "NEI",
             bruttoInntekt: undefined,
-            erMaanedsbelop: "JA",
+            // erMaanedsbelop ikke satt - UI setter default
           },
         ]);
       });
