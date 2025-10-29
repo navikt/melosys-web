@@ -132,7 +132,7 @@ function Datovelger({
       const formattedValue = Utils.dato.vaskOgFormatterDatoTilNorsk(valueToFormat, "");
 
       // Hvis vi la til år eller verdien ble formatert, oppdater feltet
-      if ((harLagtTilAar || (formattedValue && formattedValue !== currentValue)) && formattedValue) {
+      if (formattedValue && (harLagtTilAar || formattedValue !== currentValue)) {
         // Oppdater input-feltets verdi direkte
         event.target.value = formattedValue;
 
