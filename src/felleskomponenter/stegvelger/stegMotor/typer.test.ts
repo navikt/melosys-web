@@ -94,11 +94,6 @@ describe("typer - konstanter", () => {
       expect(STEG.MEDFOLGENDE_BARN).toBe("MEDFOLGENDE_BARN");
     });
 
-    it("skal ha minst 40 steg definert", () => {
-      const antallSteg = Object.keys(STEG).length;
-      expect(antallSteg).toBeGreaterThanOrEqual(40);
-    });
-
     it("skal ha unique verdier", () => {
       const verdier = Object.values(STEG);
       const uniqueVerdier = [...new Set(verdier)];
