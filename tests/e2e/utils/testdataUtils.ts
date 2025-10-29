@@ -146,3 +146,42 @@ export async function opprettEøsPensjonistSakMedTrygdeavgift(page: Page): Promi
 
   return await sokPage.getSaksnummer(saker[0]);
 }
+
+/**
+ * Opprett en ny EU/EØS-sak med offentlig ansatt og Førstegangsbehandling
+ * Brukes for testing av periode-steg for offentlig ansatt (MELOSYS-7659)
+ * @returns Saksnummer (f.eks. "MEL-123")
+ */
+export async function opprettEuEøsOffentligAnsattSak(page: Page): Promise<string> {
+  const hovedsidePage = new HovedsidePage(page);
+  const opprettNySakPage = new OpprettNySakPage(page);
+  const sokPage = new SokPage(page);
+
+  await hovedsidePage.goto();
+  await hovedsidePage.klikkOpprettNySakKnapp();
+
+  await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
+  await opprettNySakPage.velgOpprettNySak();
+
+  await opprettNySakPage.velgSakstype("EU/EØS-land");
+  await opprettNySakPage.velgSakstema("Medlemskap og lovvalg");
+  await opprettNySakPage.velgBehandlingstema("Offentlig tjenesteperson/flyvende personell");
+  await opprettNySakPage.velgBehandlingstype("Førstegangsbehandling");
+  await opprettNySakPage.velgBehandlingsaarsak("Søknad");
+
+  await opprettNySakPage.setFraDato("01.01.2024");
+  await opprettNySakPage.setTilDato("31.12.2024");
+  await opprettNySakPage.setLand("Norge");
+
+  await opprettNySakPage.klikkOpprettNyBehandling();
+  await assertNyBehandlingOpprettet(page);
+
+  // Finn den nyopprettede saken
+  await hovedsidePage.goto();
+  await hovedsidePage.søkOgVentPåResultat(USER_ID_VALID);
+
+  const saker = await sokPage.finnÅpneSaker("EU/EØS-land");
+  expect(saker.length, "Fant ingen åpne 'EU/EØS-land' saker etter opprettelse").toBeGreaterThan(0);
+
+  return await sokPage.getSaksnummer(saker[0]);
+}
