@@ -169,7 +169,6 @@ export const mapTilInntektskilderProps = (
         arbAvgBetales: Utils.streng.boolTilUppercaseStreng(false),
         bruttoInntekt: undefined,
         kildetype: "",
-        // erMaanedsbelop fjernet - UI-komponenten setter default ved "Legg til inntekt"
       },
     ];
   }
