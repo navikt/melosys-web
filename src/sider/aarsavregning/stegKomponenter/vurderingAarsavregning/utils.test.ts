@@ -254,9 +254,40 @@ describe("utils", () => {
             kildetype: "",
             arbAvgBetales: "NEI",
             bruttoInntekt: undefined,
-            erMaanedsbelop: "JA",
+            // erMaanedsbelop ikke satt - UI setter default
           },
         ]);
+      });
+
+      // MELOSYS-7639: Test for å bevise at erMaanedsbelop ikke skal være hardkodet
+      it("skal ikke sette hardkodet erMaanedsbelop når ingen inntektskilder finnes", () => {
+        const membership = [createMockMedlemskapsperiode()];
+        vi.mocked(Utils._isEmpty).mockReturnValue(false);
+
+        const result = mapTilInntektskilderProps(undefined, membership);
+
+        // erMaanedsbelop skal IKKE være satt (undefined)
+        // UI-komponenten skal sette denne verdien når bruker klikker "Legg til inntekt"
+        expect(result[0].erMaanedsbelop).toBeUndefined();
+      });
+
+      it("mapper erMaanedsbelop korrekt fra backend når inntektskilder finnes", () => {
+        const income = [
+          {
+            fomDato: "2023-01-01",
+            tomDato: "2023-12-31",
+            type: "ARBEID",
+            arbeidsgiversavgiftBetales: false,
+            avgiftspliktigInntekt: 600000,
+            erMaanedsbelop: false, // Backend sender boolean
+          },
+        ];
+        vi.mocked(Utils._isEmpty).mockReturnValue(false);
+
+        const result = mapTilInntektskilderProps(income, []);
+
+        // Frontend skal få string "NEI"
+        expect(result[0].erMaanedsbelop).toBe("NEI");
       });
     });
   });
