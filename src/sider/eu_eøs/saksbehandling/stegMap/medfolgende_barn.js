@@ -5,6 +5,8 @@ import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
 import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
 import VurderingMedfolgendeBarn from "../../stegKomponenter/vurderingMedfolgendeBarn";
 import { hentFaktaListe } from "../../../../domeneUtils";
+import { useFeatureToggle } from "../../../../../featuretoggle";
+import { MELOSYS_EØS_FAKTURERING_AV_TRYGDEAVGIFT } from "../../../../../featuretoggle/toggleNavn";
 
 class VesentligVirksomhet extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -20,6 +22,11 @@ class VesentligVirksomhet extends Steg {
 
     const harAvklaring = this.harAvklaring(vurderingLovvalgBarnFakta, propsLight.medfolgendeBarn);
 
+    const erEøsFaktureringAvTrygdeavgiftToggleEnabled = useFeatureToggle(MELOSYS_EØS_FAKTURERING_AV_TRYGDEAVGIFT);
+    const arbeidTjenestepersonEllerFlyNesteSteg = erEøsFaktureringAvTrygdeavgiftToggleEnabled
+      ? STEG.VURDERING_PERIODE_OFFENTLIG_ANSATT
+      : STEG.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK;
+
     this.kriterier = [
       {
         exec: () => harAvklaring && utsendingsvilkårOppfylt,
@@ -31,7 +38,7 @@ class VesentligVirksomhet extends Steg {
       },
       {
         exec: () => harAvklaring && propsLight.erArbeidTjenestepersonEllerFly,
-        nesteSteg: STEG.VURDERING_PERIODE_OFFENTLIG_ANSATT,
+        nesteSteg: arbeidTjenestepersonEllerFlyNesteSteg,
       },
     ];
 
