@@ -75,7 +75,7 @@ describe("AarsavregningMedGrunnlag", () => {
       const mockResponse: AarsavregningResponse = {
         aarsavregningID: 1,
         aar: 2023,
-        sisteGjeldendeMedlemskapsperioder: [
+        sisteGjeldendeAvgiftspliktigperioder: [
           {
             id: 1,
             fomDato: "2023-01-01",
@@ -89,7 +89,7 @@ describe("AarsavregningMedGrunnlag", () => {
         ],
         nyttTrygdeavgiftsGrunnlag: {
           trygdeavgiftsgrunnlag: {
-            medlemskapsperioder: [],
+            avgiftspliktigperioder: [],
             skatteforholdsperioder: [
               {
                 fomDato: "2023-01-01",
@@ -116,7 +116,7 @@ describe("AarsavregningMedGrunnlag", () => {
         },
         tidligereTrygdeavgiftsGrunnlagsopplysninger: {
           trygdeavgiftsgrunnlag: {
-            medlemskapsperioder: [],
+            avgiftspliktigperioder: [],
             skatteforholdsperioder: [],
             inntektskperioder: [],
           },
@@ -145,7 +145,7 @@ describe("AarsavregningMedGrunnlag", () => {
       const mockResponse: AarsavregningResponse = {
         aarsavregningID: 1,
         aar: 2023,
-        sisteGjeldendeMedlemskapsperioder: [
+        sisteGjeldendeAvgiftspliktigperioder: [
           {
             id: 1,
             fomDato: "2023-01-01",
@@ -160,7 +160,7 @@ describe("AarsavregningMedGrunnlag", () => {
         nyttTrygdeavgiftsGrunnlag: undefined, // Ingen nytt grunnlag
         tidligereTrygdeavgiftsGrunnlagsopplysninger: {
           trygdeavgiftsgrunnlag: {
-            medlemskapsperioder: [
+            avgiftspliktigperioder: [
               {
                 id: 2,
                 fomDato: "2023-01-01",
@@ -216,7 +216,7 @@ describe("AarsavregningMedGrunnlag", () => {
       const mockResponse: AarsavregningResponse = {
         aarsavregningID: 1,
         aar: 2023,
-        sisteGjeldendeMedlemskapsperioder: [
+        sisteGjeldendeAvgiftspliktigperioder: [
           {
             id: 1,
             fomDato: "2023-01-01",
@@ -231,7 +231,7 @@ describe("AarsavregningMedGrunnlag", () => {
         nyttTrygdeavgiftsGrunnlag: undefined,
         tidligereTrygdeavgiftsGrunnlagsopplysninger: {
           trygdeavgiftsgrunnlag: {
-            medlemskapsperioder: [
+            avgiftspliktigperioder: [
               {
                 id: 2,
                 fomDato: "2023-01-01",
@@ -273,7 +273,7 @@ describe("AarsavregningMedGrunnlag", () => {
       const mockResponse: AarsavregningResponse = {
         aarsavregningID: 1,
         aar: 2023,
-        sisteGjeldendeMedlemskapsperioder: [
+        sisteGjeldendeAvgiftspliktigperioder: [
           {
             id: 1,
             fomDato: "2023-01-01",
@@ -297,7 +297,7 @@ describe("AarsavregningMedGrunnlag", () => {
         ],
         tidligereTrygdeavgiftsGrunnlagsopplysninger: {
           trygdeavgiftsgrunnlag: {
-            medlemskapsperioder: [],
+            avgiftspliktigperioder: [],
             skatteforholdsperioder: [],
             inntektskperioder: [],
           },
@@ -324,10 +324,10 @@ describe("AarsavregningMedGrunnlag", () => {
       const mockResponse: AarsavregningResponse = {
         aarsavregningID: 1,
         aar: 2023,
-        sisteGjeldendeMedlemskapsperioder: [], // Tom array
+        sisteGjeldendeAvgiftspliktigperioder: [], // Tom array
         tidligereTrygdeavgiftsGrunnlagsopplysninger: {
           trygdeavgiftsgrunnlag: {
-            medlemskapsperioder: [],
+            avgiftspliktigperioder: [],
             skatteforholdsperioder: [],
             inntektskperioder: [],
           },
@@ -356,7 +356,7 @@ describe("AarsavregningMedGrunnlag", () => {
       const mockResponse: AarsavregningResponse = {
         aarsavregningID: 1,
         aar: 2023,
-        sisteGjeldendeMedlemskapsperioder: [],
+        sisteGjeldendeAvgiftspliktigperioder: [],
         tidligereTrygdeavgiftsGrunnlagsopplysninger: undefined, // Ingen tidligere grunnlag
       };
 
@@ -378,7 +378,7 @@ describe("AarsavregningMedGrunnlag", () => {
       const mockResponse: AarsavregningResponse = {
         aarsavregningID: 1,
         aar: 2023,
-        sisteGjeldendeMedlemskapsperioder: [
+        sisteGjeldendeAvgiftspliktigperioder: [
           {
             id: 1,
             fomDato: "2023-01-01",
@@ -392,7 +392,7 @@ describe("AarsavregningMedGrunnlag", () => {
         ],
         nyttTrygdeavgiftsGrunnlag: {
           trygdeavgiftsgrunnlag: {
-            medlemskapsperioder: [],
+            avgiftspliktigperioder: [],
             skatteforholdsperioder: [],
             inntektskperioder: [
               {
@@ -413,7 +413,7 @@ describe("AarsavregningMedGrunnlag", () => {
         },
         tidligereTrygdeavgiftsGrunnlagsopplysninger: {
           trygdeavgiftsgrunnlag: {
-            medlemskapsperioder: [
+            avgiftspliktigperioder: [
               {
                 id: 2,
                 fomDato: "2023-01-01",
@@ -464,7 +464,7 @@ describe("AarsavregningMedGrunnlag", () => {
       const mockResponse: AarsavregningResponse = {
         aarsavregningID: 1,
         aar: 2023,
-        sisteGjeldendeMedlemskapsperioder: [
+        sisteGjeldendeAvgiftspliktigperioder: [
           {
             id: 1,
             fomDato: "2023-01-01",
@@ -498,7 +498,7 @@ describe("AarsavregningMedGrunnlag", () => {
         ],
         tidligereTrygdeavgiftsGrunnlagsopplysninger: {
           trygdeavgiftsgrunnlag: {
-            medlemskapsperioder: [],
+            avgiftspliktigperioder: [],
             skatteforholdsperioder: [],
             inntektskperioder: [],
           },
@@ -525,7 +525,7 @@ describe("AarsavregningMedGrunnlag", () => {
       const mockResponse: AarsavregningResponse = {
         aarsavregningID: 1,
         aar: 2023,
-        sisteGjeldendeMedlemskapsperioder: [
+        sisteGjeldendeAvgiftspliktigperioder: [
           {
             id: 1,
             fomDato: "2023-01-01",
@@ -549,7 +549,7 @@ describe("AarsavregningMedGrunnlag", () => {
         ],
         tidligereTrygdeavgiftsGrunnlagsopplysninger: {
           trygdeavgiftsgrunnlag: {
-            medlemskapsperioder: [],
+            avgiftspliktigperioder: [],
             skatteforholdsperioder: [],
             inntektskperioder: [],
           },
@@ -577,7 +577,7 @@ describe("AarsavregningMedGrunnlag", () => {
       const mockResponse: AarsavregningResponse = {
         aarsavregningID: 1,
         aar: 2023,
-        sisteGjeldendeMedlemskapsperioder: [
+        sisteGjeldendeAvgiftspliktigperioder: [
           {
             id: 1,
             fomDato: "2023-01-01",
@@ -591,7 +591,7 @@ describe("AarsavregningMedGrunnlag", () => {
         ],
         tidligereTrygdeavgiftsGrunnlagsopplysninger: {
           trygdeavgiftsgrunnlag: {
-            medlemskapsperioder: [],
+            avgiftspliktigperioder: [],
             skatteforholdsperioder: [],
             inntektskperioder: [],
           },
@@ -618,7 +618,7 @@ describe("AarsavregningMedGrunnlag", () => {
       const mockResponse: AarsavregningResponse = {
         aarsavregningID: 1,
         aar: 2023,
-        sisteGjeldendeMedlemskapsperioder: [
+        sisteGjeldendeAvgiftspliktigperioder: [
           {
             id: 3,
             fomDato: "2023-09-01",
@@ -652,7 +652,7 @@ describe("AarsavregningMedGrunnlag", () => {
         ],
         tidligereTrygdeavgiftsGrunnlagsopplysninger: {
           trygdeavgiftsgrunnlag: {
-            medlemskapsperioder: [],
+            avgiftspliktigperioder: [],
             skatteforholdsperioder: [],
             inntektskperioder: [],
           },
@@ -679,7 +679,7 @@ describe("AarsavregningMedGrunnlag", () => {
       const mockResponse: AarsavregningResponse = {
         aarsavregningID: 1,
         aar: 2023,
-        sisteGjeldendeMedlemskapsperioder: [
+        sisteGjeldendeAvgiftspliktigperioder: [
           {
             id: 1,
             fomDato: "2023-01-01", // ISO-format
@@ -693,7 +693,7 @@ describe("AarsavregningMedGrunnlag", () => {
         ],
         tidligereTrygdeavgiftsGrunnlagsopplysninger: {
           trygdeavgiftsgrunnlag: {
-            medlemskapsperioder: [],
+            avgiftspliktigperioder: [],
             skatteforholdsperioder: [],
             inntektskperioder: [],
           },

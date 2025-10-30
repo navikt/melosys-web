@@ -1,7 +1,7 @@
 import { deleteAsJson, getAsJson, postAsJson, putAsJson } from "../../utils";
 import { API_BASE_URL, BEHANDLINGER, MEDLEMSKAPSPERIODER } from "../../api-constants";
 
-export interface Medlemskapsperiode {
+export interface Avgiftspliktigperiode {
   id: number;
   fomDato: string;
   tomDato: string;

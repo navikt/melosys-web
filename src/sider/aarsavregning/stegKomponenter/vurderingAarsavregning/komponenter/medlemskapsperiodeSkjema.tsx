@@ -12,12 +12,15 @@ import { ULAGRET_MEDLEMSKAPSPERIODE_ID } from "../aarsavregningUtenEllerDeltGrun
 
 import { useEffect } from "react";
 import { FieldArrayProps, FormValuesProps } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
-import { Medlemskapsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import { Avgiftspliktigperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import "./medlemskapsperiodeSkjema.less";
 import { usePliktigeBestemmelser } from "../hooks/usePliktigeBestemmelser";
 
 // Funksjon for å kalkulere slettbar-status, nå kalt kanPeriodeSlettes
-const kanPeriodeSlettes = (gjeldendePeriode: Medlemskapsperiode, allePerioderIListe: Medlemskapsperiode[]): boolean => {
+const kanPeriodeSlettes = (
+  gjeldendePeriode: Avgiftspliktigperiode,
+  allePerioderIListe: Avgiftspliktigperiode[],
+): boolean => {
   const erPeriodeUlagret = !gjeldendePeriode.id || gjeldendePeriode.id === ULAGRET_MEDLEMSKAPSPERIODE_ID;
   if (erPeriodeUlagret) {
     return true; // Ulagret er alltid slettbar

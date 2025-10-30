@@ -134,7 +134,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
     setHarGrunnlag(
       !(
         res.tidligereTrygdeavgiftsGrunnlagsopplysninger === null ||
-        Utils._isEmpty(res.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.medlemskapsperioder)
+        Utils._isEmpty(res.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.avgiftspliktigperioder)
       ),
     );
   };

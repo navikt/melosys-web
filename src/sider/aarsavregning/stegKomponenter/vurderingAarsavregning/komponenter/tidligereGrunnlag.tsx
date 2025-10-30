@@ -49,7 +49,7 @@ export function TidligereGrunnlag({ aarsavregningResponse }: TidligereGrunnlagPr
               <MedlemskapsPerioderTabell
                 perioder={
                   aarsavregningResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger!.trygdeavgiftsgrunnlag
-                    .medlemskapsperioder
+                    .avgiftspliktigperioder
                 }
               />
               <GrunnlagTabeller
@@ -72,7 +72,7 @@ export function TidligereGrunnlag({ aarsavregningResponse }: TidligereGrunnlagPr
                 <BeregnetTrygdeavgiftDetaljer
                   grunnlag={aarsavregningResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger!}
                   medlemskapsTypeErPliktig={
-                    aarsavregningResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger!.trygdeavgiftsgrunnlag.medlemskapsperioder?.every(
+                    aarsavregningResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger!.trygdeavgiftsgrunnlag.avgiftspliktigperioder?.every(
                       (periode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG,
                     ) ?? true
                   }
