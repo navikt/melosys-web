@@ -444,6 +444,7 @@ class Stegvelger extends Component {
       soknadsperiode: props.soknadsperiode,
       harFeilmeldinger: !Utils._isEmpty(props.feilmeldinger) || !Utils._isEmpty(props.kontrollfeil),
       norgeErUtpekt11_3AToggleEnabled: props.norgeErUtpekt11_3AToggleEnabled,
+      eøsFaktureringAvTrygdeavgiftToggleEnabled: props.eøsFaktureringAvTrygdeavgiftToggleEnabled,
       utsendingsvilkår: props.utsendingsvilkår,
       unntaksvilkår: props.unntaksvilkår,
       behandlingOppfriskes: props.behandlingOppfriskes,
@@ -751,6 +752,7 @@ const mapStateToProps = (state) => ({
   feilmeldinger: feiletResponsSelectors.FeilmeldingerSelector(state),
   kontrollfeil: kontrollSelectors.KontrollFeilSelector(state),
   norgeErUtpekt11_3AToggleEnabled: erFeatureToggleEnabled(MELOSYS_NORGE_ER_UTPEKT_11_3_A, state),
+  eøsFaktureringAvTrygdeavgiftToggleEnabled: erFeatureToggleEnabled("melosys.eos_fakturering_av_trygdeavgift", state),
 });
 
 /* eslint no-alert:off */
