@@ -1,13 +1,12 @@
+import { yupResolver } from "@hookform/resolvers/yup";
 import React, { useEffect } from "react";
-import { connect } from "react-redux";
-import { getFormValues, isValid, reduxForm } from "redux-form";
-import { RootState } from "AppTypes";
+import { useForm } from "react-hook-form";
+import { useSelector } from "react-redux";
 
 import MKV from "../../../../melosyskodeverk";
 import * as Nav from "../../../../navFrontend";
 import * as Utils from "../../../../utils";
-import * as Skjema from "../../../../felleskomponenter/skjema";
-import * as KV from "../../../../kodeverk";
+import * as Forms from "../../../../felleskomponenter/forms";
 import * as Mui from "../../../../felleskomponenter/ui";
 
 import { lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
@@ -21,8 +20,8 @@ import {
   slettTilleggBestemmelse,
 } from "../../../../felleskomponenter/stegvelger";
 
-import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import VurderingPeriodeOffentligAnsattSchema from "./vurderingPeriodeOffentligAnsattSchema";
+import "./vurderingPeriodeOffentligAnsatt.less";
 
 interface FormValues {
   lovvalgsbestemmelse?: string;
@@ -33,38 +32,55 @@ interface FormValues {
 
 interface Props {
   redigerbart: boolean;
-  formIsValid: boolean;
-  formValues?: FormValues;
-  handleSubmit: (callback: () => void) => (e: React.FormEvent) => void;
   byggLovvalgsperioder: () => void;
   lovvalgsbestemmelseSomSkalLagres?: string;
+  lovvalgsbestemmelseSomSkalVises?: string;
   oppdaterData: (data: unknown) => void;
   slettData: (data?: unknown) => void;
   tilbake: () => void;
   bekreftOgFortsett: () => void;
-  mottatteOpplysningerFom: string;
-  mottatteOpplysningerTom: string | null;
-  soknadsperiode: {
-    fom: string;
-    tom: string;
-  };
+  aktivtSteg: boolean;
 }
 
 export function VurderingPeriodeOffentligAnsatt({
   redigerbart,
-  formIsValid,
-  formValues = {},
-  handleSubmit,
   byggLovvalgsperioder: gjenopprettOpprinneligLovvalgsperiode,
   lovvalgsbestemmelseSomSkalLagres = "",
+  lovvalgsbestemmelseSomSkalVises = "",
   oppdaterData,
   slettData,
   tilbake,
   bekreftOgFortsett,
-  mottatteOpplysningerFom,
-  mottatteOpplysningerTom = null,
-  soknadsperiode,
+  aktivtSteg,
 }: Props) {
+  const mottatteOpplysningerFom = useSelector(mottatteOpplysningerSelectors.PeriodeFomSelector);
+  const mottatteOpplysningerTom = useSelector(mottatteOpplysningerSelectors.PeriodeTomSelector);
+  const soknadsperiode = useSelector(mottatteOpplysningerSelectors.PeriodeSelector);
+  const lovvalgsFomDato = useSelector(lovvalgsperioderSelectors.FomDatoSelector);
+  const lovvalgsTomDato = useSelector(lovvalgsperioderSelectors.TomDatoSelector);
+
+  const forkortLovvalgsperiode =
+    !redigerbart && Utils.dato.datoDiffPure(mottatteOpplysningerTom, lovvalgsTomDato, "days") !== 0;
+
+  // Note: yupResolver type doesn't match React Hook Form's Resolver<FormValues> type perfectly,
+  // so we use 'as any' here. This is a known limitation with @hookform/resolvers v3.x.
+  // The runtime validation still works correctly.
+  const { control, watch, formState, handleSubmit } = useForm<FormValues>({
+    resolver: yupResolver(VurderingPeriodeOffentligAnsattSchema) as any,
+    mode: "onChange",
+    context: {
+      soknadsperiode,
+    },
+    defaultValues: {
+      forkortLovvalgsperiode,
+      tomDato: Utils.dato.formatterDatoTilNorsk(lovvalgsTomDato),
+      fomDato: Utils.dato.formatterDatoTilNorsk(lovvalgsFomDato),
+      lovvalgsbestemmelse: lovvalgsbestemmelseSomSkalVises,
+    },
+  });
+
+  const formValues = watch();
+
   useEffect(() => {
     if (lovvalgsbestemmelseSomSkalLagres) {
       oppdaterData(konverterLovvalgsbestemmelseTilStegData(lovvalgsbestemmelseSomSkalLagres));
@@ -112,6 +128,12 @@ export function VurderingPeriodeOffentligAnsatt({
     }
   }, [formValues.lovvalgsbestemmelse]);
 
+  const onCheckboxClick = (checked: boolean) => {
+    if (!checked && gjenopprettOpprinneligLovvalgsperiode) {
+      gjenopprettOpprinneligLovvalgsperiode();
+    }
+  };
+
   const onSubmit = () => {
     bekreftOgFortsett();
   };
@@ -123,7 +145,9 @@ export function VurderingPeriodeOffentligAnsatt({
     (formValues.forkortLovvalgsperiode && formValues.tomDato) || soknadsperiode.tom,
   );
 
-  const stegErGyldig = redigerbart && formIsValid && formValues.lovvalgsbestemmelse;
+  const stegErGyldig = redigerbart && formState.isValid && !!formValues.lovvalgsbestemmelse;
+
+  if (!aktivtSteg) return null;
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="vurderingPeriodeOffentligAnsatt">
@@ -132,14 +156,18 @@ export function VurderingPeriodeOffentligAnsatt({
       </Nav.Heading>
       <Nav.Row className="velgLovvalgsbestemmelse">
         <Nav.Column xs="7">
-          <Skjema.Select label="Velg en lovvalgsbestemmelse" feltNavn="lovvalgsbestemmelse" disabled={!redigerbart}>
-            <option value="">Velg...</option>
+          <Forms.Select
+            label="Velg en lovvalgsbestemmelse"
+            name="lovvalgsbestemmelse"
+            control={control}
+            readOnly={!redigerbart}
+          >
             {valgbareLovvalgsbestemmelser.map((bestemmelse) => (
               <option key={bestemmelse.kode} value={bestemmelse.kode}>
                 {bestemmelse.term}
               </option>
             ))}
-          </Skjema.Select>
+          </Forms.Select>
         </Nav.Column>
       </Nav.Row>
       {redigerbart && (
@@ -154,22 +182,36 @@ export function VurderingPeriodeOffentligAnsatt({
           </Nav.Row>
         </>
       )}
-      <Skjema.PeriodeForkorter
-        className="periodeForkorter"
-        redigerbart={redigerbart}
-        fomRedigerbar
-        checkboxClassName="forkortLovvalgsperiode"
-        checkboxLabel="Lovvalget innvilges for en kortere periode"
-        checkboxFeltnavn="forkortLovvalgsperiode"
-        onUncheck={gjenopprettOpprinneligLovvalgsperiode}
-        forkortPeriode={formValues.forkortLovvalgsperiode || false}
-        fomLabel="Startdato"
-        fomFeltNavn="fomDato"
-        tomLabel="Sluttdato"
-        tomFeltNavn="tomDato"
-        minDate={Utils.dato.isoStringTilDate(soknadsperiode.fom) || new Date()}
-        maxDate={Utils.dato.isoStringTilDate(soknadsperiode.tom)}
-      />
+      <div className="periodeForkorter">
+        <Nav.Row className="forkortLovvalgsperiode">
+          <Nav.Column xs="8">
+            <Forms.Checkbox
+              name="forkortLovvalgsperiode"
+              control={control}
+              label="Lovvalget innvilges for en kortere periode"
+              readOnly={!redigerbart}
+              onChange={onCheckboxClick}
+            />
+          </Nav.Column>
+        </Nav.Row>
+        {formValues.forkortLovvalgsperiode && (
+          <Nav.Row>
+            <Nav.Column xs="3">
+              <Forms.Datovelger label="Startdato" name="fomDato" control={control} readOnly={!redigerbart} />
+            </Nav.Column>
+            <Nav.Column xs="3">
+              <Forms.Datovelger
+                label="Sluttdato"
+                name="tomDato"
+                control={control}
+                readOnly={!redigerbart}
+                minDate={Utils.dato.isoStringTilDate(soknadsperiode.fom) || new Date()}
+                maxDate={Utils.dato.isoStringTilDate(soknadsperiode.tom)}
+              />
+            </Nav.Column>
+          </Nav.Row>
+        )}
+      </div>
 
       <Mui.StegKnapper
         bekreftKnappProps={{
@@ -187,47 +229,4 @@ export function VurderingPeriodeOffentligAnsatt({
   );
 }
 
-interface OwnProps {
-  lovvalgsbestemmelseSomSkalVises?: string;
-  redigerbart: boolean;
-}
-
-const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
-  const forkortLovvalgsperiode = ownProps.redigerbart
-    ? false
-    : Utils.dato.datoDiffPure(
-        mottatteOpplysningerSelectors.PeriodeSelector(state).tom,
-        lovvalgsperioderSelectors.TomDatoSelector(state),
-        "days",
-      ) !== 0;
-
-  return {
-    mottatteOpplysningerFom: mottatteOpplysningerSelectors.PeriodeFomSelector(state),
-    mottatteOpplysningerTom: mottatteOpplysningerSelectors.PeriodeTomSelector(state),
-    soknadsperiode: mottatteOpplysningerSelectors.PeriodeSelector(state),
-    formIsValid: isValid(KV.Form.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK)(state),
-    formValues: getFormValues(KV.Form.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK)(state),
-    initialValues: {
-      forkortLovvalgsperiode,
-      tomDato: Utils.dato.formatterDatoTilNorsk(lovvalgsperioderSelectors.TomDatoSelector(state)),
-      fomDato: Utils.dato.formatterDatoTilNorsk(lovvalgsperioderSelectors.FomDatoSelector(state)),
-      lovvalgsbestemmelse: ownProps.lovvalgsbestemmelseSomSkalVises,
-    },
-  };
-};
-
-const VurderingPeriodeOffentligAnsattForm = reduxForm<FormValues, Props>({
-  form: KV.Form.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK,
-  enableReinitialize: true,
-  destroyOnUnmount: false, // VIKTIG: Vi må beholde form state til vedtak-steget
-  keepDirtyOnReinitialize: true,
-  updateUnregisteredFields: true,
-  validate: (values, props) =>
-    lagYupToReduxformErrorMapper(VurderingPeriodeOffentligAnsattSchema, {
-      context: {
-        soknadsperiode: props.soknadsperiode,
-      },
-    })(values),
-})(VurderingPeriodeOffentligAnsatt);
-
-export default connect(mapStateToProps)(VurderingPeriodeOffentligAnsattForm);
+export default VurderingPeriodeOffentligAnsatt;

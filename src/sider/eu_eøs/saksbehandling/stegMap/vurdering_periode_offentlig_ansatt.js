@@ -30,6 +30,7 @@ class VurderingPeriodeOffentligAnsattSteg extends Steg {
       redigerbart: _propsLight.generiskStegRedigerbart,
       lovvalgsbestemmelseSomSkalVises,
       lovvalgsbestemmelseSomSkalLagres,
+      aktivtSteg: _propsLight.aktivtSteg,
     });
     this.beregnRelevantUI = () => ({});
     this.handlers = {

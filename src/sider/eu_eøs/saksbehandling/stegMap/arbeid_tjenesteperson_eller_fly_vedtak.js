@@ -30,6 +30,7 @@ class ArbeidTjenestepersonEllerFlyVedtak extends Steg {
       lovvalgsbestemmelseSomSkalVises,
       informertMyndighetFakta,
       harFeilmeldinger: _propsLight.harFeilmeldinger,
+      aktivtSteg: _propsLight.aktivtSteg,
     });
     this.beregnRelevantUI = () => ({});
     this.handlers = {

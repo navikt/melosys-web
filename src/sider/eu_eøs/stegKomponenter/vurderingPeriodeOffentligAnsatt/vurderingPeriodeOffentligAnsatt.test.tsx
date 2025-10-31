@@ -5,7 +5,7 @@ import { renderWithProviders } from "../../../../ducks/test-utils/renderWithProv
 import VurderingPeriodeOffentligAnsatt from "./vurderingPeriodeOffentligAnsatt";
 
 describe("VurderingPeriodeOffentligAnsatt", () => {
-  // OwnProps that are passed to the connected component
+  // Props that are passed to the component (now uses React Hook Form)
   const defaultOwnProps = {
     redigerbart: true,
     lovvalgsbestemmelseSomSkalVises: "",
@@ -14,14 +14,10 @@ describe("VurderingPeriodeOffentligAnsatt", () => {
     slettData: vi.fn(),
     tilbake: vi.fn(),
     bekreftOgFortsett: vi.fn(),
+    aktivtSteg: true,
   };
 
   const initialStore = {
-    form: {
-      ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK: {
-        values: {},
-      },
-    },
     mottatteOpplysninger: {
       periode: {
         fom: "2024-01-01",
@@ -40,7 +36,6 @@ describe("VurderingPeriodeOffentligAnsatt", () => {
 
   describe("AC2: Stegtittel", () => {
     it('viser tittelen "Lovvalgsbestemmelse og -periode"', () => {
-      // @ts-expect-error - Testing connected component, Redux Form injects handleSubmit
       renderWithProviders(<VurderingPeriodeOffentligAnsatt {...defaultOwnProps} />, {
         preloadedState: initialStore,
       });
@@ -51,7 +46,6 @@ describe("VurderingPeriodeOffentligAnsatt", () => {
 
   describe("AC3-AC4: Nedtrekksmeny for lovvalgsbestemmelse", () => {
     it("viser nedtrekksmeny med label 'Velg en lovvalgsbestemmelse'", () => {
-      // @ts-expect-error - Testing connected component, Redux Form injects handleSubmit
       renderWithProviders(<VurderingPeriodeOffentligAnsatt {...defaultOwnProps} />, {
         preloadedState: initialStore,
       });
@@ -60,7 +54,6 @@ describe("VurderingPeriodeOffentligAnsatt", () => {
     });
 
     it("viser alternativet 'Rfo. 883/2004 art.11(3)(b)'", () => {
-      // @ts-expect-error - Testing connected component, Redux Form injects handleSubmit
       renderWithProviders(<VurderingPeriodeOffentligAnsatt {...defaultOwnProps} />, {
         preloadedState: initialStore,
       });
@@ -74,7 +67,6 @@ describe("VurderingPeriodeOffentligAnsatt", () => {
     });
 
     it("viser alternativet 'Rfo. 883/2004 art.11(5)'", () => {
-      // @ts-expect-error - Testing connected component, Redux Form injects handleSubmit
       renderWithProviders(<VurderingPeriodeOffentligAnsatt {...defaultOwnProps} />, {
         preloadedState: initialStore,
       });
@@ -86,7 +78,6 @@ describe("VurderingPeriodeOffentligAnsatt", () => {
 
   describe("AC5-AC6: Visning av lovvalgsperiode", () => {
     it("viser 'Lovvalgsperiode' som undertittel", () => {
-      // @ts-expect-error - Testing connected component, Redux Form injects handleSubmit
       renderWithProviders(<VurderingPeriodeOffentligAnsatt {...defaultOwnProps} redigerbart={true} />, {
         preloadedState: initialStore,
       });
@@ -95,7 +86,6 @@ describe("VurderingPeriodeOffentligAnsatt", () => {
     });
 
     it("viser lovvalgsperiode basert på søknadsperioden", () => {
-      // @ts-expect-error - Testing connected component, Redux Form injects handleSubmit
       renderWithProviders(<VurderingPeriodeOffentligAnsatt {...defaultOwnProps} redigerbart={true} />, {
         preloadedState: initialStore,
       });
@@ -107,7 +97,6 @@ describe("VurderingPeriodeOffentligAnsatt", () => {
 
   describe("AC7-AC8: Checkboks for kortere periode", () => {
     it("viser checkboks med teksten 'Lovvalget innvilges for en kortere periode'", () => {
-      // @ts-expect-error - Testing connected component, Redux Form injects handleSubmit
       renderWithProviders(<VurderingPeriodeOffentligAnsatt {...defaultOwnProps} redigerbart={true} />, {
         preloadedState: initialStore,
       });
@@ -116,22 +105,20 @@ describe("VurderingPeriodeOffentligAnsatt", () => {
     });
 
     it.skip("viser datofelter når checkboks er huket av", () => {
-      // TODO: Dette krever mer detaljert Redux Form-oppsett for å fungere
-      // PeriodeForkorter er en kompleks Redux Form Field-komponent
-      // Funksjonaliteten er verifisert manuelt og i periodeForkorter.test.tsx
+      // TODO: Dette krever interaksjon med React Hook Form
+      // Funksjonaliteten er verifisert manuelt
     });
   });
 
   describe("AC9: Navigasjon med valgt bestemmelse", () => {
     it.skip("aktiverer 'Bekreft og fortsett'-knappen når lovvalgsbestemmelse er valgt og skjema er gyldig", () => {
-      // TODO: Dette krever mer detaljert Redux Form-oppsett for å fungere
+      // TODO: Dette krever interaksjon med React Hook Form
       // Knapp-logikken er verifisert i komponenten og gjennom manuell testing
     });
   });
 
   describe("AC11: Blokkering uten bestemmelse", () => {
     it("disabler 'Bekreft og fortsett'-knappen når lovvalgsbestemmelse mangler", () => {
-      // @ts-expect-error - Testing connected component, Redux Form injects handleSubmit
       renderWithProviders(<VurderingPeriodeOffentligAnsatt {...defaultOwnProps} />, {
         preloadedState: initialStore,
       });
@@ -143,20 +130,22 @@ describe("VurderingPeriodeOffentligAnsatt", () => {
 
   describe("Redigerbarhet", () => {
     it("disabler alle felter når redigerbart er false", () => {
-      // @ts-expect-error - Testing connected component, Redux Form injects handleSubmit
-      renderWithProviders(<VurderingPeriodeOffentligAnsatt {...defaultOwnProps} redigerbart={false} />, {
-        preloadedState: initialStore,
-      });
+      const { container } = renderWithProviders(
+        <VurderingPeriodeOffentligAnsatt {...defaultOwnProps} redigerbart={false} />,
+        {
+          preloadedState: initialStore,
+        },
+      );
 
-      const select = screen.getByLabelText("Velg en lovvalgsbestemmelse");
-      expect(select).toBeDisabled();
+      // When readOnly={true}, Forms.Select adds a readonly class instead of disabling
+      const selectContainer = container.querySelector(".navds-select--readonly");
+      expect(selectContainer).toBeInTheDocument();
 
       const tilbakeButton = screen.getByRole("button", { name: "Tilbake" });
       expect(tilbakeButton).toBeDisabled();
     });
 
     it("aktiverer felter når redigerbart er true", () => {
-      // @ts-expect-error - Testing connected component, Redux Form injects handleSubmit
       renderWithProviders(<VurderingPeriodeOffentligAnsatt {...defaultOwnProps} />, {
         preloadedState: initialStore,
       });
