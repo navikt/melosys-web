@@ -13,7 +13,7 @@ export class AarsavregningPage {
   // År dropdown
   async velgÅr(år: string) {
     const årSelect = this.page.getByRole("combobox", { name: /år/i });
-    await expect(årSelect).toBeVisible({ timeout: 5000 });
+    await expect(årSelect, "År-select skal være synlig").toBeVisible({ timeout: 5000 });
     await årSelect.selectOption({ label: år });
     await this.page.waitForTimeout(500); // Vent på at siden laster data for året
   }
@@ -35,7 +35,7 @@ export class AarsavregningPage {
   // Medlemskapsperiode operasjoner
   async leggTilMedlemskapsperiode() {
     const knapp = this.page.getByRole("button", { name: /legg til periode/i });
-    await expect(knapp).toBeVisible({ timeout: 5000 });
+    await expect(knapp, "Knapp 'Legg til periode' skal være synlig").toBeVisible({ timeout: 5000 });
     await knapp.click();
     // Vent på at perioden legges til i DOM
     await this.page.waitForTimeout(500);
@@ -46,7 +46,9 @@ export class AarsavregningPage {
     const trygdedekningDropdown = this.page.getByRole("combobox", {
       name: new RegExp(`Trygdedekning periode ${index + 1}`, "i"),
     });
-    await expect(trygdedekningDropdown).toBeVisible({ timeout: 10000 });
+    await expect(trygdedekningDropdown, `Trygdedekning-dropdown for periode ${index + 1} skal være synlig`).toBeVisible(
+      { timeout: 10000 },
+    );
 
     // Finn alle inputs på siden, og filtrér ved å telle medlemskapsperiode-inputs
     // Hent alle inputs i perioder-seksjonen som ikke er hidden
@@ -71,7 +73,9 @@ export class AarsavregningPage {
     const trygdedekningDropdown = this.page.getByRole("combobox", {
       name: new RegExp(`Trygdedekning periode ${index + 1}`, "i"),
     });
-    await expect(trygdedekningDropdown).toBeVisible({ timeout: 10000 });
+    await expect(trygdedekningDropdown, `Trygdedekning-dropdown for periode ${index + 1} skal være synlig`).toBeVisible(
+      { timeout: 10000 },
+    );
 
     // Finn alle inputs på siden
     const allInputs = await this.page
@@ -93,7 +97,9 @@ export class AarsavregningPage {
     const select = this.page.getByRole("combobox", {
       name: new RegExp(`Trygdedekning periode ${index + 1}`, "i"),
     });
-    await expect(select).toBeVisible({ timeout: 10000 });
+    await expect(select, `Trygdedekning-select for periode ${index + 1} skal være synlig`).toBeVisible({
+      timeout: 10000,
+    });
     await select.selectOption({ label: dekning });
   }
 
@@ -122,7 +128,7 @@ export class AarsavregningPage {
   async getAntallMedlemskapsperioder(): Promise<number> {
     // Vent på at minst ett trygdedekning-felt er synlig før telling
     const firstSelect = this.page.locator('select[name^="medlemskapsperioder["][name$="].trygdedekning"]').first();
-    await expect(firstSelect).toBeVisible({ timeout: 10000 });
+    await expect(firstSelect, "Første trygdedekning-select skal være synlig").toBeVisible({ timeout: 10000 });
     return await this.page.locator('select[name^="medlemskapsperioder["][name$="].trygdedekning"]').count();
   }
 
@@ -134,7 +140,7 @@ export class AarsavregningPage {
   async fyllUtSkatteforholdFomDato(index: number, dato: string) {
     // Vent på at skatteforhold-seksjonen er synlig ved å sjekke for første textbox med label "Skatteforhold"
     const firstSkattLabel = this.page.locator('text="Skatteforhold"').first();
-    await expect(firstSkattLabel).toBeVisible({ timeout: 10000 });
+    await expect(firstSkattLabel, "Label 'Skatteforhold' skal være synlig").toBeVisible({ timeout: 10000 });
 
     // Finn synlige inputs i skatteforholdsperioder-seksjonen
     // Vi må finne riktig container først
@@ -156,7 +162,7 @@ export class AarsavregningPage {
 
   async fyllUtSkatteforholdTomDato(index: number, dato: string) {
     const firstSkattLabel = this.page.locator('text="Skatteforhold"').first();
-    await expect(firstSkattLabel).toBeVisible({ timeout: 10000 });
+    await expect(firstSkattLabel, "Label 'Skatteforhold' skal være synlig").toBeVisible({ timeout: 10000 });
 
     const skatteforholdContainer = this.page.locator(".perioder").filter({ has: firstSkattLabel });
     const allInputs = await skatteforholdContainer
@@ -182,7 +188,9 @@ export class AarsavregningPage {
     // Finn radio-knappen ved å bruke group legend som anker
     const radioGroup = this.page.locator(`[name="skatteforholdsperioder[${index}].skatteplikttype"]`).locator("..");
     const radio = radioGroup.getByRole("radio", { name: new RegExp(radioValue, "i") });
-    await expect(radio).toBeVisible({ timeout: 5000 });
+    await expect(radio, `Radio-button "${radioValue}" for skatteplikttype skal være synlig`).toBeVisible({
+      timeout: 5000,
+    });
     await radio.click({ force: true });
   }
 
@@ -194,7 +202,7 @@ export class AarsavregningPage {
   async fyllUtInntektsperiodeFomDato(index: number, dato: string) {
     // Vent på at inntektsperiode-seksjonen er synlig
     const firstInntektLabel = this.page.locator('text="Inntektsperiode"').first();
-    await expect(firstInntektLabel).toBeVisible({ timeout: 10000 });
+    await expect(firstInntektLabel, "Label 'Inntektsperiode' skal være synlig").toBeVisible({ timeout: 10000 });
 
     // Finn synlige inputs i inntektsperioder-seksjonen
     const inntektContainer = this.page.locator(".perioder").filter({ has: firstInntektLabel });
@@ -215,7 +223,7 @@ export class AarsavregningPage {
 
   async fyllUtInntektsperiodeTomDato(index: number, dato: string) {
     const firstInntektLabel = this.page.locator('text="Inntektsperiode"').first();
-    await expect(firstInntektLabel).toBeVisible({ timeout: 10000 });
+    await expect(firstInntektLabel, "Label 'Inntektsperiode' skal være synlig").toBeVisible({ timeout: 10000 });
 
     const inntektContainer = this.page.locator(".perioder").filter({ has: firstInntektLabel });
     const allInputs = await inntektContainer.locator('input[type="text"]:visible, input:not([type]):visible').all();
@@ -233,13 +241,15 @@ export class AarsavregningPage {
   async velgKildetype(index: number, type: string) {
     // Bruk aria-label tilnærming for select, eller fall tilbake til name attribute hvis det fungerer
     const select = this.page.locator(`select[name="inntektskilder[${index}].kildetype"]`);
-    await expect(select).toBeVisible({ timeout: 10000 });
+    await expect(select, `Kildetype-select for inntektsperiode ${index} skal være synlig`).toBeVisible({
+      timeout: 10000,
+    });
     await select.selectOption({ label: type });
   }
 
   async fyllUtBruttoInntekt(index: number, belop: string) {
     const firstInntektLabel = this.page.locator('text="Inntektsperiode"').first();
-    await expect(firstInntektLabel).toBeVisible({ timeout: 10000 });
+    await expect(firstInntektLabel, "Label 'Inntektsperiode' skal være synlig").toBeVisible({ timeout: 10000 });
 
     const inntektContainer = this.page.locator(".perioder").filter({ has: firstInntektLabel });
     const allInputs = await inntektContainer.locator('input[type="text"]:visible, input:not([type]):visible').all();
@@ -258,7 +268,7 @@ export class AarsavregningPage {
   // Trygdeavgift fra Avgiftssystemet (delt grunnlag)
   async velgDeltGrunnlagJa() {
     const jaRadio = this.page.getByRole("radio", { name: /ja/i }).first();
-    await expect(jaRadio).toBeVisible({ timeout: 10000 });
+    await expect(jaRadio, "Radio-button 'Ja' skal være synlig").toBeVisible({ timeout: 10000 });
 
     // Bruk click() i stedet for check() for å håndtere NAV Design System radio-knapper
     // click() fungerer selv om knappen allerede er checked
@@ -286,7 +296,9 @@ export class AarsavregningPage {
     const trygdedekningDropdown = this.page.getByRole("combobox", {
       name: new RegExp(`Trygdedekning periode ${index + 1}`, "i"),
     });
-    await expect(trygdedekningDropdown).toBeVisible({ timeout: 10000 });
+    await expect(trygdedekningDropdown, `Trygdedekning-dropdown for periode ${index + 1} skal være synlig`).toBeVisible(
+      { timeout: 10000 },
+    );
 
     const allInputs = await this.page
       .locator('.perioder input[type="text"]:visible, .perioder input:not([type]):visible')
@@ -308,7 +320,9 @@ export class AarsavregningPage {
     const trygdedekningDropdown = this.page.getByRole("combobox", {
       name: new RegExp(`Trygdedekning periode ${index + 1}`, "i"),
     });
-    await expect(trygdedekningDropdown).toBeVisible({ timeout: 10000 });
+    await expect(trygdedekningDropdown, `Trygdedekning-dropdown for periode ${index + 1} skal være synlig`).toBeVisible(
+      { timeout: 10000 },
+    );
 
     const allInputs = await this.page
       .locator('.perioder input[type="text"]:visible, .perioder input:not([type]):visible')
@@ -329,7 +343,7 @@ export class AarsavregningPage {
   async assertDatepickerErAktiv() {
     // NAV Design System bruker et dialog element for datepicker
     const datepicker = this.page.getByRole("dialog");
-    await expect(datepicker).toBeVisible({ timeout: 2000 });
+    await expect(datepicker, "Datepicker-dialog skal være synlig").toBeVisible({ timeout: 2000 });
   }
 
   async assertDatepickerIkkeErAktiv() {
@@ -359,7 +373,7 @@ export class AarsavregningPage {
 
   async assertValideringsfeilInneholder(tekst: string) {
     const error = this.page.locator('[class*="error"], [class*="feil"]').filter({ hasText: new RegExp(tekst, "i") });
-    await expect(error).toBeVisible();
+    await expect(error, `Feilmelding som inneholder "${tekst}" skal være synlig`).toBeVisible();
   }
 
   async assertIngenFeilmelding(tekst: string) {

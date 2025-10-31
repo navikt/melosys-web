@@ -21,8 +21,11 @@ export class HovedsidePage {
     await this.page.goto("/", { waitUntil: "domcontentloaded" });
     await expect(this.page).toHaveURL("/melosys");
     await expect(this.page).toHaveTitle(/Melosys/);
-    await expect(this.page.locator("h1:has-text('Mine oppgaver')")).toBeVisible();
-    await expect(this.page.locator("text=/\\d+ oppgaver/")).toBeVisible();
+    await expect(
+      this.page.locator("h1:has-text('Mine oppgaver')"),
+      "Heading 'Mine oppgaver' skal være synlig",
+    ).toBeVisible();
+    await expect(this.page.locator("text=/\\d+ oppgaver/"), "Oppgaveteller skal være synlig").toBeVisible();
   }
 
   /**
@@ -30,7 +33,7 @@ export class HovedsidePage {
    */
   async klikkOpprettNySakKnapp(): Promise<void> {
     const createButton = this.page.locator("button:has-text('Opprett ny sak/behandling')");
-    await expect(createButton).toBeVisible();
+    await expect(createButton, "Knapp 'Opprett ny sak/behandling' skal være synlig").toBeVisible();
     await createButton.click();
     await this.page.waitForLoadState("domcontentloaded");
   }
@@ -39,7 +42,10 @@ export class HovedsidePage {
    * Verifiser at "Opprett ny sak/behandling" knapp er synlig
    */
   async verifiserOpprettNySakKnapp(): Promise<void> {
-    await expect(this.page.locator("button:has-text('Opprett ny sak/behandling')")).toBeVisible();
+    await expect(
+      this.page.locator("button:has-text('Opprett ny sak/behandling')"),
+      "Knapp 'Opprett ny sak/behandling' skal være synlig",
+    ).toBeVisible();
   }
 
   /**
@@ -98,7 +104,7 @@ export class HovedsidePage {
    * @param input - søkestreng
    */
   async søk(input: string): Promise<void> {
-    await expect(this.page.locator("form.sokeskjema")).toBeVisible();
+    await expect(this.page.locator("form.sokeskjema"), "Søkeskjema skal være synlig").toBeVisible();
 
     const searchInput = this.page.locator("form.sokeskjema input[type='text']");
 

@@ -18,9 +18,16 @@ export class OpprettNySakAssertions {
   async verifiserBrukertypeValg(): Promise<void> {
     await expect(
       this.page.locator(".opprettnysak .undertittel:has-text('Hvem skal saken opprettes på?')"),
+      "Undertittel 'Hvem skal saken opprettes på?' skal være synlig",
     ).toBeVisible();
-    await expect(this.page.locator(".opprettnysak .navds-radio__content:has-text('Bruker')")).toBeVisible();
-    await expect(this.page.locator(".opprettnysak .navds-radio__content:has-text('Virksomhet')")).toBeVisible();
+    await expect(
+      this.page.locator(".opprettnysak .navds-radio__content:has-text('Bruker')"),
+      "Radio-valg 'Bruker' skal være synlig",
+    ).toBeVisible();
+    await expect(
+      this.page.locator(".opprettnysak .navds-radio__content:has-text('Virksomhet')"),
+      "Radio-valg 'Virksomhet' skal være synlig",
+    ).toBeVisible();
     await expect(this.page.locator(".opprettnysak .navds-radio input[value='BRUKER']")).toBeChecked();
   }
 
@@ -28,16 +35,28 @@ export class OpprettNySakAssertions {
    * Verifiser at "Informasjon om bruker" seksjonen er vist korrekt
    */
   async verifiserBrukerInfoValg(): Promise<void> {
-    await expect(this.page.locator(".opprettnysak .undertittel:has-text('Informasjon om bruker')")).toBeVisible();
-    await expect(this.page.locator(".opprettnysak label:has-text('Brukers f.nr. eller d-nr.:')")).toBeVisible();
-    await expect(this.page.locator(".opprettnysak input[name='brukerID']")).toBeVisible();
+    await expect(
+      this.page.locator(".opprettnysak .undertittel:has-text('Informasjon om bruker')"),
+      "Undertittel 'Informasjon om bruker' skal være synlig",
+    ).toBeVisible();
+    await expect(
+      this.page.locator(".opprettnysak label:has-text('Brukers f.nr. eller d-nr.:')"),
+      "Label 'Brukers f.nr. eller d-nr.' skal være synlig",
+    ).toBeVisible();
+    await expect(
+      this.page.locator(".opprettnysak input[name='brukerID']"),
+      "Input-felt for brukerID skal være synlig",
+    ).toBeVisible();
   }
 
   /**
    * Verifiser at "Legg behandlingen til en eksisterende sak?" checkbox er synlig
    */
   async verifiserLeggBehandlingenCheckbox(): Promise<void> {
-    await expect(this.page.locator(".navds-checkbox:has-text('Legg behandlingen i mine oppgaver')")).toBeVisible();
+    await expect(
+      this.page.locator(".navds-checkbox:has-text('Legg behandlingen i mine oppgaver')"),
+      "Checkbox 'Legg behandlingen i mine oppgaver' skal være synlig",
+    ).toBeVisible();
     await expect(this.page.locator("input[name='skalTilordnes']")).not.toBeChecked();
   }
 
@@ -45,15 +64,21 @@ export class OpprettNySakAssertions {
    * Verifiser at aksjonsknappene er synlige
    */
   async verifiserAksjonsKnapper(): Promise<void> {
-    await expect(this.page.locator("button:has-text('Opprett ny behandling')")).toBeVisible();
-    await expect(this.page.locator("button:has-text('Avbryt')")).toBeVisible();
+    await expect(
+      this.page.locator("button:has-text('Opprett ny behandling')"),
+      "Knapp 'Opprett ny behandling' skal være synlig",
+    ).toBeVisible();
+    await expect(this.page.locator("button:has-text('Avbryt')"), "Knapp 'Avbryt' skal være synlig").toBeVisible();
   }
 
   /**
    * Verifiser at sakstype-select er synlig og har riktig innhold
    */
   async verifiserSakstypeSelect(): Promise<void> {
-    await expect(this.page.locator("select[name='sakstype']")).toBeVisible();
+    await expect(
+      this.page.locator("select[name='sakstype']"),
+      "Select-felt for sakstype skal være synlig",
+    ).toBeVisible();
   }
 
   /**
@@ -170,7 +195,7 @@ export class OpprettNySakAssertions {
       this.page.locator(".tidligereBehandlingAvsluttet", {
         hasText: "Tidligere behandling er avsluttet",
       }),
-      "Skal vise melding om avsluttet behandling",
+      "Melding 'Tidligere behandling er avsluttet' skal være synlig",
     ).toBeVisible();
   }
 
@@ -182,7 +207,7 @@ export class OpprettNySakAssertions {
       this.page.locator(".feilmelding_innrykk").filter({
         hasText: "Du kan ikke opprette en ny behandling på eksisterende sak med en aktiv/pågående behandling",
       }),
-      "Skal vise varselmelding for EØS-sak med aktiv behandling",
+      "Varselmelding om aktiv behandling skal være synlig",
     ).toBeVisible();
   }
 
@@ -191,7 +216,7 @@ export class OpprettNySakAssertions {
    */
   async verifiserBehandlingstemaSelectSynlig(): Promise<void> {
     const behandlingstemaSelect = this.page.locator("select[name='behandlingstema']");
-    await expect(behandlingstemaSelect, "Behandlingstema-select skal være synlig").toBeVisible();
+    await expect(behandlingstemaSelect, "Select-felt for behandlingstema skal være synlig").toBeVisible();
   }
 
   /**
@@ -207,7 +232,7 @@ export class OpprettNySakAssertions {
    */
   async verifiserAlleElementer(): Promise<void> {
     await expect(this.page).toHaveURL("/melosys/opprettnysak");
-    await expect(this.page.locator(".opprettnysak")).toBeVisible();
+    await expect(this.page.locator(".opprettnysak"), "Opprett ny sak-container skal være synlig").toBeVisible();
     await this.verifiserBrukertypeValg();
     await this.verifiserBrukerInfoValg();
     await this.verifiserLeggBehandlingenCheckbox();

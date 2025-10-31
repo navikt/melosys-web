@@ -17,11 +17,11 @@ export class StegvelgerPage {
    */
   async ventPaStegvelger(timeout = 30000): Promise<void> {
     const stegvelgerContainer = this.page.locator(".stegvelger");
-    await expect(stegvelgerContainer).toBeVisible({ timeout });
+    await expect(stegvelgerContainer, "Stegvelger-container skal være synlig").toBeVisible({ timeout });
 
     // Vent også på at steglinjen (progressbar) er synlig
     const stegLinje = this.page.locator(".stegLinje");
-    await expect(stegLinje).toBeVisible({ timeout: 5000 });
+    await expect(stegLinje, "Steglinje (progressbar) skal være synlig").toBeVisible({ timeout: 5000 });
   }
 
   /**
@@ -62,7 +62,7 @@ export class StegvelgerPage {
 
     // Fallback: Finn første steg med synlig tittel (antar første er aktivt)
     const forsteTittel = this.page.locator(".stegLinje .stegIkon .stegIkon__tittel").first();
-    await expect(forsteTittel).toBeVisible({ timeout: 2000 });
+    await expect(forsteTittel, "Første steg-tittel skal være synlig").toBeVisible({ timeout: 2000 });
     const tekst = await forsteTittel.textContent();
     expect(tekst?.trim(), "Kunne ikke finne aktivt steg med tekst").toBeTruthy();
     return tekst!.trim();

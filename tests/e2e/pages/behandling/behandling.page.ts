@@ -12,6 +12,16 @@ export class BehandlingPage {
   }
 
   /**
+   * Hent saksnummer fra URL
+   * @returns Saksnummer (f.eks. "MEL-123") eller "ukjent"
+   */
+  private getSaksnummerFraUrl(): string {
+    const url = this.page.url();
+    const match = url.match(/MEL-\d+/);
+    return match ? match[0] : "ukjent";
+  }
+
+  /**
    * Verifiser at vi er på behandlingssiden
    */
   async verifiserBehandlingsside(): Promise<void> {
@@ -42,7 +52,8 @@ export class BehandlingPage {
       }
     }
 
-    expect(infoFunnet, "Kunne ikke verifisere at vi er på en behandlingsside").toBe(true);
+    const saksnummer = this.getSaksnummerFraUrl();
+    expect(infoFunnet, `${saksnummer}: Kunne ikke verifisere at vi er på en behandlingsside`).toBe(true);
   }
 
   /**
@@ -106,8 +117,9 @@ export class BehandlingPage {
 
     if (!menyErSynlig) {
       const hamburgerMeny = this.page.locator(".behandlingsmeny__knapp");
+      const saksnummer = this.getSaksnummerFraUrl();
 
-      await expect(hamburgerMeny).toBeVisible({ timeout: 5000 });
+      await expect(hamburgerMeny, `${saksnummer}: Hamburger-meny skal være synlig`).toBeVisible({ timeout: 5000 });
       await hamburgerMeny.click();
       await this.page.waitForTimeout(500);
     }
@@ -116,8 +128,11 @@ export class BehandlingPage {
     const accordionHeader = this.page.locator(
       '.behandlingsmeny__meny .navds-accordion__header:has(.navds-accordion__header-content:has-text("Avslutt behandling"))',
     );
+    const saksnummer = this.getSaksnummerFraUrl();
 
-    await expect(accordionHeader).toBeVisible({ timeout: 2000 });
+    await expect(accordionHeader, `${saksnummer}: Accordion-header "Avslutt behandling" skal være synlig`).toBeVisible({
+      timeout: 2000,
+    });
     await accordionHeader.click();
     await this.page.waitForTimeout(500);
 
@@ -125,7 +140,10 @@ export class BehandlingPage {
     const accordionContent = this.page.locator(
       '.behandlingsmeny__meny .navds-accordion__item:has(.navds-accordion__header:has(.navds-accordion__header-content:has-text("Avslutt behandling"))) .navds-accordion__content',
     );
-    await expect(accordionContent).toBeVisible({ timeout: 3000 });
+    await expect(
+      accordionContent,
+      `${saksnummer}: Accordion-innhold "Avslutt behandling" skal være synlig`,
+    ).toBeVisible({ timeout: 3000 });
   }
 
   /**
@@ -138,7 +156,10 @@ export class BehandlingPage {
       '.behandlingsmeny__meny .navds-accordion__item:has(.navds-accordion__header:has(.navds-accordion__header-content:has-text("Avslutt behandling"))) .navds-accordion__content',
     );
 
-    await expect(accordionContent).toBeVisible({ timeout: 2000 });
+    await expect(
+      accordionContent,
+      `${saksnummer}: Accordion content for "Avslutt behandling" skal være synlig`,
+    ).toBeVisible({ timeout: 2000 });
 
     // List alle tilgjengelige alternativer innen accordion content
     const alleHandlinger = accordionContent.locator(".behandlingsmeny__handling");
@@ -189,7 +210,10 @@ export class BehandlingPage {
     const valgtAlternativ = avslutningsalternativer[0];
 
     // Vent på at elementet blir synlig og klikk
-    await expect(valgtAlternativ.element).toBeVisible({ timeout: 3000 });
+    await expect(
+      valgtAlternativ.element,
+      `${saksnummer}: Avslutningsalternativ "${valgtAlternativ.tekst}" skal være synlig`,
+    ).toBeVisible({ timeout: 3000 });
     await valgtAlternativ.element.click();
     await this.page.waitForTimeout(500);
   }
@@ -237,7 +261,7 @@ export class BehandlingPage {
    * Bekreft avslutningen (hvis det er en bekreftelsesdialog)
    */
   async bekreftAvslutning(): Promise<void> {
-    // Først, vent på at modalen åpnes
+    const saksnummer = this.getSaksnummerFraUrl();
     const modalSelectors = [".navds-modal[open]", ".modal[open]", '[role="dialog"]', ".dialog", ".confirmation-modal"];
 
     let modal = null;
@@ -249,7 +273,8 @@ export class BehandlingPage {
       }
     }
 
-    expect(modal, "Fant ingen åpen modal for bekreftelse").not.toBeNull();
+    expect(modal, `${saksnummer}: Fant ingen åpen modal for bekreftelse`).not.toBeNull();
+    if (!modal) return; // Type guard for TypeScript
 
     // Sjekk om det er en "Henlegg saken" modal som krever begrunnelse
     const modalTekst = await modal.textContent();
@@ -297,7 +322,8 @@ export class BehandlingPage {
       }
     }
 
-    expect(bekreftKnapp, "Fant ingen bekreft-knapp i modalen").not.toBeNull();
+    expect(bekreftKnapp, `${saksnummer}: Fant ingen bekreft-knapp i modalen`).not.toBeNull();
+    if (!bekreftKnapp) return; // Type guard for TypeScript
 
     const erEnabled = await bekreftKnapp.isEnabled();
 

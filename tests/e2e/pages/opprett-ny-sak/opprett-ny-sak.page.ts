@@ -287,7 +287,7 @@ export class OpprettNySakPage {
     }
 
     const options = await sakstypeSelect.locator("option").all();
-    let foundValue = null;
+    let foundValue: string | null = null;
     for (const option of options) {
       const text = await option.textContent();
       if (text && text.trim() === value) {
@@ -296,7 +296,8 @@ export class OpprettNySakPage {
       }
     }
 
-    expect(foundValue, `Fant ikke sakstype med tekst "${value}"`).toBe(true);
+    expect(foundValue, `Fant ikke sakstype med tekst "${value}"`).not.toBeNull();
+    if (!foundValue) return; // Type guard for TypeScript
 
     await sakstypeSelect.selectOption({ value: foundValue });
   }
@@ -461,6 +462,7 @@ export class OpprettNySakPage {
       `Fant ikke ${fieldDisplayName.toLowerCase()} med tekst "${value}". ` +
         `Tilgjengelige valg: ${availableOptions.filter((o) => o).join(", ")}`,
     ).not.toBeNull();
+    if (!foundValue) return; // Type guard for TypeScript
 
     await selectElement.selectOption({ value: foundValue });
   }

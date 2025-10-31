@@ -1,4 +1,5 @@
 import { expect, Locator, Page } from "@playwright/test";
+import { getSakId } from "../utils/testUtils";
 
 /**
  * Page Object Model for søkesiden
@@ -14,8 +15,11 @@ export class SokPage {
    * Verifiser at vi er på søkesiden
    */
   async verifySearchResultsPage(): Promise<void> {
-    await expect(this.page).toHaveURL("/melosys/sok");
-    await expect(this.page.locator("h1:has-text('Saksoversikt')")).toBeVisible();
+    await expect(this.page, "Skal være på søkesiden").toHaveURL("/melosys/sok");
+    await expect(
+      this.page.locator("h1:has-text('Saksoversikt')"),
+      "Saksoversikt heading skal være synlig",
+    ).toBeVisible();
   }
 
   /**
@@ -25,7 +29,10 @@ export class SokPage {
   async verifyValidSearchResults(id: string): Promise<void> {
     await this.verifySearchResultsPage();
 
-    await expect(this.page.locator(`h2:has-text('Resultater for f.nr./d-nr. ${id}')`)).toBeVisible();
+    await expect(
+      this.page.locator(`h2:has-text('Resultater for f.nr./d-nr. ${id}')`),
+      `Søkeresultat-heading for ${id} skal være synlig`,
+    ).toBeVisible();
 
     // Sjekk om det finnes saker eller om "ingen saker funnet" meldingen vises
     const noResultsMessage = this.page.locator(`text=Fant ingen saker knyttet til f.nr./d-nr.`);
@@ -42,7 +49,10 @@ export class SokPage {
 
     // Hvis det er resultater, skal ikke "ingen saker funnet" meldingen vises
     if (hasResults) {
-      await expect(noResultsMessage).not.toBeVisible();
+      await expect(
+        noResultsMessage,
+        `"Ingen saker" melding skal ikke vises når det er resultater for ${id}`,
+      ).not.toBeVisible();
     }
   }
 
@@ -53,9 +63,18 @@ export class SokPage {
   async verifyValidOrgSearchResults(orgNr: string): Promise<void> {
     await this.verifySearchResultsPage();
 
-    await expect(this.page.locator(`h2:has-text('Resultater for org.nr. ${orgNr}')`)).toBeVisible();
-    await expect(this.page.locator(`text=Fant ingen saker knyttet til org.nr. ${orgNr}`)).not.toBeVisible();
-    await expect(this.page.locator(".fagsak").first()).toBeVisible();
+    await expect(
+      this.page.locator(`h2:has-text('Resultater for org.nr. ${orgNr}')`),
+      `Søkeresultat-heading for org.nr ${orgNr} skal være synlig`,
+    ).toBeVisible();
+    await expect(
+      this.page.locator(`text=Fant ingen saker knyttet til org.nr. ${orgNr}`),
+      `"Ingen saker" melding skal ikke vises for org.nr ${orgNr}`,
+    ).not.toBeVisible();
+    await expect(
+      this.page.locator(".fagsak").first(),
+      `Minst én sak skal være synlig for org.nr ${orgNr}`,
+    ).toBeVisible();
   }
 
   /**
@@ -65,8 +84,14 @@ export class SokPage {
   async verifyInvalidSearchResults(id: string): Promise<void> {
     await this.verifySearchResultsPage();
 
-    await expect(this.page.locator(`h2:has-text('Resultater for saksnummer ${id}')`)).toBeVisible();
-    await expect(this.page.locator(`text=Fant ingen saker knyttet til saksnummer ${id}`)).toBeVisible();
+    await expect(
+      this.page.locator(`h2:has-text('Resultater for saksnummer ${id}')`),
+      `Søkeresultat-heading for saksnummer ${id} skal være synlig`,
+    ).toBeVisible();
+    await expect(
+      this.page.locator(`text=Fant ingen saker knyttet til saksnummer ${id}`),
+      `"Ingen saker funnet" melding skal være synlig for saksnummer ${id}`,
+    ).toBeVisible();
   }
 
   /**
@@ -96,7 +121,7 @@ export class SokPage {
       | "Søknaden er henlagt",
   ): Promise<Locator[]> {
     // Vent på at minst én fagsak er lastet
-    await expect(this.page.locator(".fagsak").first()).toBeVisible();
+    await expect(this.page.locator(".fagsak").first(), "Minst én fagsak skal være synlig").toBeVisible();
 
     const baseSelector = `.fagsak:has-text("${sakstype}")`;
     const selector = behandlingsstatus ? `${baseSelector}:has-text("${behandlingsstatus}")` : baseSelector;
@@ -166,7 +191,9 @@ export class SokPage {
   async klikkVisBehandling(sak: Locator): Promise<void> {
     const visBehandlingKnapp = sak.locator('button:has-text("Vis behandling")').first();
 
-    await expect(visBehandlingKnapp).toBeVisible({ timeout: 10000 });
+    await expect(visBehandlingKnapp, `${getSakId(sak)}: "Vis behandling" knapp ikke funnet`).toBeVisible({
+      timeout: 10000,
+    });
     await visBehandlingKnapp.click();
     await this.page.waitForLoadState("domcontentloaded");
   }
@@ -204,7 +231,7 @@ export class SokPage {
     behandlingstype?: string,
   ): Promise<Locator[]> {
     // Vent på at minst én fagsak er lastet
-    await expect(this.page.locator(".fagsak").first()).toBeVisible();
+    await expect(this.page.locator(".fagsak").first(), "Minst én fagsak skal være synlig").toBeVisible();
 
     let baseSelector = `.fagsak:has-text("${sakstype}")`;
     if (behandlingstype) {
