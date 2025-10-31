@@ -23,6 +23,8 @@ class VurderingPeriodeOffentligAnsattSteg extends Steg {
       },
     ];
 
+    const harAvklaring = !!lovvalgsbestemmelseSomSkalLagres;
+
     this.id = STEG.VURDERING_PERIODE_OFFENTLIG_ANSATT;
     this.tittel = "Periode";
     this.komponent = VurderingPeriodeOffentligAnsattKomponent;
@@ -32,7 +34,9 @@ class VurderingPeriodeOffentligAnsattSteg extends Steg {
       lovvalgsbestemmelseSomSkalLagres,
       aktivtSteg: _propsLight.aktivtSteg,
     });
-    this.beregnRelevantUI = () => ({});
+    this.beregnRelevantUI = () => ({
+      harAvklaring,
+    });
     this.handlers = {
       bekreftOgFortsett: propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
       tilbake: propsLight.tilgjengeligeHandlers.tilbake,
