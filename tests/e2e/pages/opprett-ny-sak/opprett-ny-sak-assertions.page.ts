@@ -139,17 +139,15 @@ export class OpprettNySakAssertions {
       (type) => !forventedeBehandlingstyper.includes(type),
     );
 
-    if (manglendeBehandlingstyper.length > 0) {
-      throw new Error(
-        `Sak ${getSakId(valgtSak!)}: Manglende behandlingstyper: ${manglendeBehandlingstyper.join(", ")}. Faktiske: ${faktiskeTilgjengeligeBehandlingstyper.join(", ")}`,
-      );
-    }
+    expect(
+      manglendeBehandlingstyper.length,
+      `Sak ${getSakId(valgtSak!)}: Manglende behandlingstyper: ${manglendeBehandlingstyper.join(", ")}. Faktiske: ${faktiskeTilgjengeligeBehandlingstyper.join(", ")}`,
+    ).toBe(0);
 
-    if (uventedeBehandlingstyper.length > 0) {
-      throw new Error(
-        `Sak ${getSakId(valgtSak!)}: Uventede behandlingstyper: ${uventedeBehandlingstyper.join(", ")}. Forventede: ${forventedeBehandlingstyper.join(", ")}`,
-      );
-    }
+    expect(
+      uventedeBehandlingstyper.length,
+      `Sak ${getSakId(valgtSak!)}: Uventede behandlingstyper: ${uventedeBehandlingstyper.join(", ")}. Forventede: ${forventedeBehandlingstyper.join(", ")}`,
+    ).toBe(0);
   }
 
   /**

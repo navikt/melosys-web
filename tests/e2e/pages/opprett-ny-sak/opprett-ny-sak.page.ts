@@ -132,11 +132,7 @@ export class OpprettNySakPage {
     const ingenSakerMelding = this.page.locator(
       ".opprettnysak :text('Ingen eksisterende saker funnet. Du må opprette en ny sak.')",
     );
-    const ingenSakerFinnes = await ingenSakerMelding.isVisible();
-
-    if (ingenSakerFinnes) {
-      throw new Error("Det ble ikke funnet noen noen eksisterende saker å knytte seg til");
-    }
+    await expect(ingenSakerMelding).not.toBeVisible();
 
     const knyttTilEksSakRadio = this.page.locator(".navds-radio__content:has-text('Eksisterende sak')");
     await expect(knyttTilEksSakRadio, "Fant ikke radioknapp for 'Eksisterende sak'").toBeVisible();
@@ -300,9 +296,7 @@ export class OpprettNySakPage {
       }
     }
 
-    if (!foundValue) {
-      throw new Error(`Fant ikke sakstype med tekst "${value}"`);
-    }
+    expect(foundValue, `Fant ikke sakstype med tekst "${value}"`).toBe(true);
 
     await sakstypeSelect.selectOption({ value: foundValue });
   }
@@ -437,12 +431,11 @@ export class OpprettNySakPage {
       retries++;
     }
 
-    if (optionCount <= 1) {
-      throw new Error(
-        `${fieldDisplayName} har ikke lastet inn verdier etter ${maxRetries * 200}ms. ` +
-          `Dette kan bety at dropdown-en er avhengig av andre felt som ikke er valgt korrekt.`,
-      );
-    }
+    expect(
+      optionCount > 1,
+      `${fieldDisplayName} har ikke lastet inn verdier etter ${maxRetries * 200}ms. ` +
+        `Dette kan bety at dropdown-en er avhengig av andre felt som ikke er valgt korrekt.`,
+    ).toBe(true);
 
     // Finn option basert på tekstinnhold eller label attributt og hent verdien
     const options = await selectElement.locator("option").all();
@@ -463,12 +456,11 @@ export class OpprettNySakPage {
       }
     }
 
-    if (!foundValue) {
-      throw new Error(
-        `Fant ikke ${fieldDisplayName.toLowerCase()} med tekst "${value}". ` +
-          `Tilgjengelige valg: ${availableOptions.filter((o) => o).join(", ")}`,
-      );
-    }
+    expect(
+      foundValue,
+      `Fant ikke ${fieldDisplayName.toLowerCase()} med tekst "${value}". ` +
+        `Tilgjengelige valg: ${availableOptions.filter((o) => o).join(", ")}`,
+    ).not.toBeNull();
 
     await selectElement.selectOption({ value: foundValue });
   }

@@ -58,11 +58,10 @@ export class AarsavregningPage {
     // Vi tar index * 2 fordi hver periode har 2 inputs (fom, tom)
     const inputIndex = index * 2;
 
-    if (inputIndex >= allInputs.length) {
-      throw new Error(
-        `Kan ikke finne input ${inputIndex} for periode ${index + 1}. Totalt ${allInputs.length} inputs funnet.`,
-      );
-    }
+    expect(
+      inputIndex < allInputs.length,
+      `Kan ikke finne input ${inputIndex} for periode ${index + 1}. Totalt ${allInputs.length} inputs funnet.`,
+    ).toBe(true);
 
     await allInputs[inputIndex].fill(dato);
   }
@@ -82,11 +81,10 @@ export class AarsavregningPage {
     // Vi tar index * 2 + 1 fordi hver periode har 2 inputs (fom=0, tom=1)
     const inputIndex = index * 2 + 1;
 
-    if (inputIndex >= allInputs.length) {
-      throw new Error(
-        `Kan ikke finne input ${inputIndex} for periode ${index + 1}. Totalt ${allInputs.length} inputs funnet.`,
-      );
-    }
+    expect(
+      inputIndex < allInputs.length,
+      `Kan ikke finne input ${inputIndex} for periode ${index + 1}. Totalt ${allInputs.length} inputs funnet.`,
+    ).toBe(true);
 
     await allInputs[inputIndex].fill(dato);
   }
@@ -148,11 +146,10 @@ export class AarsavregningPage {
     // Hver skatteforholdsperiode har 2 inputs (fom, tom)
     const inputIndex = index * 2;
 
-    if (inputIndex >= allInputs.length) {
-      throw new Error(
-        `Kan ikke finne input ${inputIndex} for skatteforhold ${index}. Totalt ${allInputs.length} inputs funnet.`,
-      );
-    }
+    expect(
+      inputIndex < allInputs.length,
+      `Kan ikke finne input ${inputIndex} for skatteforhold ${index}. Totalt ${allInputs.length} inputs funnet.`,
+    ).toBe(true);
 
     await allInputs[inputIndex].fill(dato);
   }
@@ -169,11 +166,10 @@ export class AarsavregningPage {
     // Hver skatteforholdsperiode har 2 inputs (fom=0, tom=1)
     const inputIndex = index * 2 + 1;
 
-    if (inputIndex >= allInputs.length) {
-      throw new Error(
-        `Kan ikke finne input ${inputIndex} for skatteforhold ${index}. Totalt ${allInputs.length} inputs funnet.`,
-      );
-    }
+    expect(
+      inputIndex < allInputs.length,
+      `Kan ikke finne input ${inputIndex} for skatteforhold ${index}. Totalt ${allInputs.length} inputs funnet.`,
+    ).toBe(true);
 
     await allInputs[inputIndex].fill(dato);
   }
@@ -209,11 +205,10 @@ export class AarsavregningPage {
     // Index 1: fom=3, tom=4, bruttoInntekt=5
     const inputIndex = index * 3;
 
-    if (inputIndex >= allInputs.length) {
-      throw new Error(
-        `Kan ikke finne input ${inputIndex} for inntektsperiode ${index}. Totalt ${allInputs.length} inputs funnet.`,
-      );
-    }
+    expect(
+      inputIndex < allInputs.length,
+      `Kan ikke finne input ${inputIndex} for inntektsperiode ${index}. Totalt ${allInputs.length} inputs funnet.`,
+    ).toBe(true);
 
     await allInputs[inputIndex].fill(dato);
   }
@@ -227,11 +222,10 @@ export class AarsavregningPage {
 
     const inputIndex = index * 3 + 1;
 
-    if (inputIndex >= allInputs.length) {
-      throw new Error(
-        `Kan ikke finne input ${inputIndex} for inntektsperiode ${index}. Totalt ${allInputs.length} inputs funnet.`,
-      );
-    }
+    expect(
+      inputIndex < allInputs.length,
+      `Kan ikke finne input ${inputIndex} for inntektsperiode ${index}. Totalt ${allInputs.length} inputs funnet.`,
+    ).toBe(true);
 
     await allInputs[inputIndex].fill(dato);
   }
@@ -253,11 +247,10 @@ export class AarsavregningPage {
     // BruttoInntekt er den 3. inputen i hver rad (fom=0, tom=1, bruttoInntekt=2)
     const inputIndex = index * 3 + 2;
 
-    if (inputIndex >= allInputs.length) {
-      throw new Error(
-        `Kan ikke finne bruttoInntekt input ${inputIndex} for inntektsperiode ${index}. Totalt ${allInputs.length} inputs funnet.`,
-      );
-    }
+    expect(
+      inputIndex < allInputs.length,
+      `Kan ikke finne bruttoInntekt input ${inputIndex} for inntektsperiode ${index}. Totalt ${allInputs.length} inputs funnet.`,
+    ).toBe(true);
 
     await allInputs[inputIndex].fill(belop);
   }
@@ -300,11 +293,10 @@ export class AarsavregningPage {
       .all();
     const inputIndex = index * 2;
 
-    if (inputIndex >= allInputs.length) {
-      throw new Error(
-        `Kan ikke finne input ${inputIndex} for periode ${index + 1}. Totalt ${allInputs.length} inputs funnet.`,
-      );
-    }
+    expect(
+      inputIndex < allInputs.length,
+      `Kan ikke finne input ${inputIndex} for periode ${index + 1}. Totalt ${allInputs.length} inputs funnet.`,
+    ).toBe(true);
 
     // Finn "Åpne datovelger" knappen som er søsken til input-feltet
     const inputElement = allInputs[inputIndex];
@@ -323,11 +315,10 @@ export class AarsavregningPage {
       .all();
     const inputIndex = index * 2 + 1;
 
-    if (inputIndex >= allInputs.length) {
-      throw new Error(
-        `Kan ikke finne input ${inputIndex} for periode ${index + 1}. Totalt ${allInputs.length} inputs funnet.`,
-      );
-    }
+    expect(
+      inputIndex < allInputs.length,
+      `Kan ikke finne input ${inputIndex} for periode ${index + 1}. Totalt ${allInputs.length} inputs funnet.`,
+    ).toBe(true);
 
     // Finn "Åpne datovelger" knappen som er søsken til input-feltet
     const inputElement = allInputs[inputIndex];

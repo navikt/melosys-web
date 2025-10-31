@@ -1,5 +1,4 @@
 import { expect, Locator, Page } from "@playwright/test";
-import { getSakId } from "../utils/testUtils";
 
 /**
  * Page Object Model for søkesiden
@@ -132,15 +131,10 @@ export class SokPage {
    * @returns true hvis knappen finnes
    */
   async sakHarVisBehandlingKnapp(sak: Locator): Promise<boolean> {
-    try {
-      return await sak
-        .locator('button:has-text("Vis behandling")')
-        .isVisible()
-        .catch(() => false);
-    } catch (error) {
-      const sakId = getSakId(sak);
-      throw new Error(`Kunne ikke sjekke "Vis behandling" knapp for sak ${sakId}: ${error}`);
-    }
+    return await sak
+      .locator('button:has-text("Vis behandling")')
+      .isVisible()
+      .catch(() => false);
   }
 
   /**
@@ -172,13 +166,9 @@ export class SokPage {
   async klikkVisBehandling(sak: Locator): Promise<void> {
     const visBehandlingKnapp = sak.locator('button:has-text("Vis behandling")').first();
 
-    try {
-      await expect(visBehandlingKnapp).toBeVisible();
-      await visBehandlingKnapp.click();
-      await this.page.waitForLoadState("domcontentloaded");
-    } catch (error) {
-      throw new Error(`Kunne ikke klikke på "Vis behandling" for sak ${getSakId(sak)}: ${error}`);
-    }
+    await expect(visBehandlingKnapp).toBeVisible({ timeout: 10000 });
+    await visBehandlingKnapp.click();
+    await this.page.waitForLoadState("domcontentloaded");
   }
 
   /**
@@ -188,14 +178,10 @@ export class SokPage {
    * @returns true hvis saken har den statusen
    */
   async harStatus(sak: Locator, status: string): Promise<boolean> {
-    try {
-      return await sak
-        .locator(`:has-text("${status}")`)
-        .isVisible()
-        .catch(() => false);
-    } catch (error) {
-      throw new Error(`Kunne ikke sjekke status "${status}" for sak ${getSakId(sak)}: ${error}`);
-    }
+    return await sak
+      .locator(`:has-text("${status}")`)
+      .isVisible()
+      .catch(() => false);
   }
 
   /**

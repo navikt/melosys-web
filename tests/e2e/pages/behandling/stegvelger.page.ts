@@ -62,14 +62,10 @@ export class StegvelgerPage {
 
     // Fallback: Finn første steg med synlig tittel (antar første er aktivt)
     const forsteTittel = this.page.locator(".stegLinje .stegIkon .stegIkon__tittel").first();
-    if (await forsteTittel.isVisible({ timeout: 2000 }).catch(() => false)) {
-      const tekst = await forsteTittel.textContent();
-      if (tekst?.trim()) {
-        return tekst.trim();
-      }
-    }
-
-    throw new Error("Kunne ikke finne aktivt steg");
+    await expect(forsteTittel).toBeVisible({ timeout: 2000 });
+    const tekst = await forsteTittel.textContent();
+    expect(tekst?.trim(), "Kunne ikke finne aktivt steg med tekst").toBeTruthy();
+    return tekst!.trim();
   }
 
   /**
@@ -119,9 +115,7 @@ export class StegvelgerPage {
       }
     }
 
-    if (!knappKlikket) {
-      throw new Error("Kunne ikke finne 'Neste' knapp");
-    }
+    expect(knappKlikket, "Kunne ikke finne 'Neste' knapp").toBe(true);
   }
 
   /**
@@ -147,9 +141,7 @@ export class StegvelgerPage {
       }
     }
 
-    if (!knappKlikket) {
-      throw new Error("Kunne ikke finne 'Forrige' knapp");
-    }
+    expect(knappKlikket, "Kunne ikke finne 'Forrige' knapp").toBe(true);
   }
 
   /**
@@ -174,9 +166,7 @@ export class StegvelgerPage {
       }
     }
 
-    if (!stegKlikket) {
-      throw new Error(`Kunne ikke finne og klikke på steg: ${stegnavn}`);
-    }
+    expect(stegKlikket, `Kunne ikke finne og klikke på steg: ${stegnavn}`).toBe(true);
   }
 
   /**

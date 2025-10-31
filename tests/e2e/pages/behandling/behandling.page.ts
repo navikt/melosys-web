@@ -144,9 +144,9 @@ export class BehandlingPage {
     const alleHandlinger = accordionContent.locator(".behandlingsmeny__handling");
     const antallHandlinger = await alleHandlinger.count();
 
-    if (antallHandlinger === 0) {
-      throw new Error(`Ingen behandlingshandlinger funnet i accordion content på sak ${saksnummer}`);
-    }
+    expect(antallHandlinger > 0, `Ingen behandlingshandlinger funnet i accordion content på sak ${saksnummer}`).toBe(
+      true,
+    );
 
     const tilgjengeligeAlternativer: Array<{ element: Locator; tekst: string }> = [];
     for (let i = 0; i < antallHandlinger; i++) {
@@ -162,9 +162,10 @@ export class BehandlingPage {
       }
     }
 
-    if (tilgjengeligeAlternativer.length === 0) {
-      throw new Error(`Ingen lesbare behandlingshandlinger funnet på sak ${saksnummer}`);
-    }
+    expect(
+      tilgjengeligeAlternativer.length > 0,
+      `Ingen lesbare behandlingshandlinger funnet på sak ${saksnummer}`,
+    ).toBe(true);
 
     // Finn ekte avslutningsalternativer (ikke oppgavelisteflytting)
     const avslutningsalternativer = tilgjengeligeAlternativer.filter(
@@ -178,12 +179,11 @@ export class BehandlingPage {
         alt.tekst.includes("Behandlingen er bortfalt"),
     );
 
-    if (avslutningsalternativer.length === 0) {
-      const tilgjengeligeTekster = tilgjengeligeAlternativer.map((alt) => `"${alt.tekst}"`).join(", ");
-      throw new Error(
-        `Ingen ekte avslutningsalternativer funnet på sak ${saksnummer}. Tilgjengelige: ${tilgjengeligeTekster}`,
-      );
-    }
+    const tilgjengeligeTekster = tilgjengeligeAlternativer.map((alt) => `"${alt.tekst}"`).join(", ");
+    expect(
+      avslutningsalternativer.length > 0,
+      `Ingen ekte avslutningsalternativer funnet på sak ${saksnummer}. Tilgjengelige: ${tilgjengeligeTekster}`,
+    ).toBe(true);
 
     // Bruk første ekte avslutningsalternativ
     const valgtAlternativ = avslutningsalternativer[0];
@@ -249,9 +249,7 @@ export class BehandlingPage {
       }
     }
 
-    if (!modal) {
-      throw new Error("Fant ingen åpen modal for bekreftelse");
-    }
+    expect(modal, "Fant ingen åpen modal for bekreftelse").not.toBeNull();
 
     // Sjekk om det er en "Henlegg saken" modal som krever begrunnelse
     const modalTekst = await modal.textContent();
@@ -299,9 +297,7 @@ export class BehandlingPage {
       }
     }
 
-    if (!bekreftKnapp) {
-      throw new Error("Fant ingen bekreft-knapp i modalen");
-    }
+    expect(bekreftKnapp, "Fant ingen bekreft-knapp i modalen").not.toBeNull();
 
     const erEnabled = await bekreftKnapp.isEnabled();
 
@@ -336,13 +332,13 @@ export class BehandlingPage {
     }
 
     await this.bekreftAvslutning();
-    await this.verifiserVellykketAvslutning(saksnummer);
+    await this.verifiserVellykketAvslutning();
   }
 
   /**
    * Verifiser at vi blir redirectet til hovedsiden uten feilmeldinger
    */
-  async verifiserVellykketAvslutning(saksnummer: string): Promise<void> {
+  async verifiserVellykketAvslutning(): Promise<void> {
     await this.page.waitForURL(/\/melosys\/$/);
 
     // Sjekk at det ikke er noen feilmeldinger
@@ -350,10 +346,7 @@ export class BehandlingPage {
 
     for (const selector of feilmeldinger) {
       const feilmelding = this.page.locator(selector);
-      if (await feilmelding.isVisible().catch(() => false)) {
-        const feilTekst = await feilmelding.textContent();
-        throw new Error(`Feilmelding vist etter avslutning på sak ${saksnummer}: ${feilTekst}`);
-      }
+      await expect(feilmelding).not.toBeVisible();
     }
   }
 }
