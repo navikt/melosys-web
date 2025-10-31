@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 import { runAxeAnalyze } from "../../../../utils/axeUtils";
 import { HovedsidePage, USER_ID_VALID } from "../../../../pages/hovedside.page";
 import { OpprettNySakPage } from "../../../../pages/opprett-ny-sak/opprett-ny-sak.page";
-import { getSakId } from "../../../../utils/testUtils";
+import { getSaksnummerFraLocator } from "../../../../utils/testUtils";
 import { opprettAvtalelandSak } from "../../../../utils/testdataUtils";
 import { SokPage } from "../../../../pages/sok.page";
 import { BehandlingPage } from "../../../../pages/behandling/behandling.page";
@@ -51,7 +51,7 @@ test.describe("MELOSYS-7385: Avtaleland behandlingslogikk (regresjon)", () => {
 
     expect(
       await opprettNySakPage.harFeilmelding(feilmelding),
-      `Gul varselmelding skal vises for Avtaleland-sak ${getSakId(valgtSak)} med åpen behandling`,
+      `Gul varselmelding skal vises for Avtaleland-sak ${getSaksnummerFraLocator(valgtSak)} med åpen behandling`,
     ).toBe(true);
 
     // Behandlingstype-gruppen skal IKKE være synlig
@@ -93,7 +93,7 @@ test.describe("MELOSYS-7385: Avtaleland behandlingslogikk (regresjon)", () => {
     // Sjekk først om det er noen feilmelding i det hele tatt
     expect(
       await opprettNySakPage.harFeilmelding(),
-      `En gul varselmelding skal vises for henlagt behandling på sak ${getSakId(valgtSak)}`,
+      `En gul varselmelding skal vises for henlagt behandling på sak ${getSaksnummerFraLocator(valgtSak)}`,
     ).toBe(true);
 
     // Behandlingstype-gruppen skal IKKE være synlig når behandling er henlagt
@@ -137,7 +137,7 @@ test.describe("MELOSYS-7385: Avtaleland behandlingslogikk (regresjon)", () => {
 
     expect(
       await opprettNySakPage.harFeilmelding(),
-      `Ingen feilmelding skal vises for ferdigbehandlet Avtaleland-sak ${getSakId(valgtSak)}`,
+      `Ingen feilmelding skal vises for ferdigbehandlet Avtaleland-sak ${getSaksnummerFraLocator(valgtSak)}`,
     ).toBe(false);
 
     await runAxeAnalyze(page, testInfo.title);

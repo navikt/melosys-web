@@ -2,7 +2,7 @@ import { expect, Page, test } from "@playwright/test";
 import { runAxeAnalyze } from "../../../utils/axeUtils";
 import { HovedsidePage, USER_ID_VALID } from "../../../pages/hovedside.page";
 import { OpprettNySakPage } from "../../../pages/opprett-ny-sak/opprett-ny-sak.page";
-import { getSakId } from "../../../utils/testUtils";
+import { getSaksnummerFraLocator } from "../../../utils/testUtils";
 
 let opprettNySakPage: OpprettNySakPage;
 
@@ -37,7 +37,7 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
 
     await opprettNySakPage.verifiserTilgjengeligeBehandlingstyper(valgtSak!, ["Årsavregning"]);
     const harFeilmelding = await opprettNySakPage.harFeilmelding();
-    expect(harFeilmelding, `Ingen feilmelding skal vises for sak ${getSakId(valgtSak!)}`).toBe(false);
+    expect(harFeilmelding, `Ingen feilmelding skal vises for sak ${getSaksnummerFraLocator(valgtSak!)}`).toBe(false);
 
     await runAxeAnalyze(page, testInfo.title);
   });
@@ -80,7 +80,10 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
 
     // Verifiser at ingen feilmelding vises
     const harFeilmelding = await opprettNySakPage.harFeilmelding();
-    expect(harFeilmelding, `Ingen feilmelding skal vises for EØS pensjonist-sak ${getSakId(valgtSak!)}`).toBe(false);
+    expect(
+      harFeilmelding,
+      `Ingen feilmelding skal vises for EØS pensjonist-sak ${getSaksnummerFraLocator(valgtSak!)}`,
+    ).toBe(false);
 
     await runAxeAnalyze(page, testInfo.title);
   });
@@ -97,7 +100,7 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
     await opprettNySakPage.verifiserTilgjengeligeBehandlingstyper(valgtSak, ["Årsavregning"]);
 
     const harFeilmelding = await opprettNySakPage.harFeilmelding();
-    expect(harFeilmelding, `Ingen feilmelding skal vises for sak ${getSakId(valgtSak!)}`).toBe(false);
+    expect(harFeilmelding, `Ingen feilmelding skal vises for sak ${getSaksnummerFraLocator(valgtSak!)}`).toBe(false);
 
     await runAxeAnalyze(page, testInfo.title);
   });
@@ -120,7 +123,7 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
     ]);
 
     const harFeilmelding = await opprettNySakPage.harFeilmelding();
-    expect(harFeilmelding, `Ingen feilmelding skal vises for sak ${getSakId(valgtSak!)}`).toBe(false);
+    expect(harFeilmelding, `Ingen feilmelding skal vises for sak ${getSaksnummerFraLocator(valgtSak!)}`).toBe(false);
 
     await runAxeAnalyze(page, testInfo.title);
   });
@@ -142,7 +145,7 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
     await opprettNySakPage.verifiserTilgjengeligeBehandlingstyper(valgtSak!, ["Årsavregning"]);
 
     const harFeilmelding = await opprettNySakPage.harFeilmelding();
-    expect(harFeilmelding, `Ingen feilmelding skal vises for sak ${getSakId(valgtSak!)}`).toBe(false);
+    expect(harFeilmelding, `Ingen feilmelding skal vises for sak ${getSaksnummerFraLocator(valgtSak!)}`).toBe(false);
 
     await runAxeAnalyze(page, testInfo.title);
   });
@@ -170,7 +173,7 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
     ]);
 
     const harFeilmelding = await opprettNySakPage.harFeilmelding();
-    expect(harFeilmelding, `Ingen feilmelding skal vises for sak ${getSakId(valgtSak!)}`).toBe(false);
+    expect(harFeilmelding, `Ingen feilmelding skal vises for sak ${getSaksnummerFraLocator(valgtSak!)}`).toBe(false);
 
     await runAxeAnalyze(page, testInfo.title);
   });

@@ -1,4 +1,5 @@
 import { expect, Page } from "@playwright/test";
+import { getSaksnummerFraUrl } from "../../utils/testUtils";
 
 /**
  * Page Object Model for stegvelger-komponenten
@@ -16,12 +17,13 @@ export class StegvelgerPage {
    * Stegvelgeren vises kun når mottatteOpplysninger og soknadForm er lastet
    */
   async ventPaStegvelger(timeout = 30000): Promise<void> {
+    const saksnummer = getSaksnummerFraUrl(this.page);
     const stegvelgerContainer = this.page.locator(".stegvelger");
-    await expect(stegvelgerContainer, "Stegvelger-container skal være synlig").toBeVisible({ timeout });
+    await expect(stegvelgerContainer, `${saksnummer}: Stegvelger-container skal være synlig`).toBeVisible({ timeout });
 
     // Vent også på at steglinjen (progressbar) er synlig
     const stegLinje = this.page.locator(".stegLinje");
-    await expect(stegLinje, "Steglinje (progressbar) skal være synlig").toBeVisible({ timeout: 5000 });
+    await expect(stegLinje, `${saksnummer}: Steglinje (progressbar) skal være synlig`).toBeVisible({ timeout: 5000 });
   }
 
   /**
@@ -61,8 +63,9 @@ export class StegvelgerPage {
     }
 
     // Fallback: Finn første steg med synlig tittel (antar første er aktivt)
+    const saksnummer = getSaksnummerFraUrl(this.page);
     const forsteTittel = this.page.locator(".stegLinje .stegIkon .stegIkon__tittel").first();
-    await expect(forsteTittel, "Første steg-tittel skal være synlig").toBeVisible({ timeout: 2000 });
+    await expect(forsteTittel, `${saksnummer}: Første steg-tittel skal være synlig`).toBeVisible({ timeout: 2000 });
     const tekst = await forsteTittel.textContent();
     expect(tekst?.trim(), "Kunne ikke finne aktivt steg med tekst").toBeTruthy();
     return tekst!.trim();
@@ -115,7 +118,7 @@ export class StegvelgerPage {
       }
     }
 
-    expect(knappKlikket, "Kunne ikke finne 'Neste' knapp").toBe(true);
+    expect(knappKlikket, `${getSaksnummerFraUrl(this.page)}: Kunne ikke finne 'Neste' knapp`).toBe(true);
   }
 
   /**
@@ -141,7 +144,7 @@ export class StegvelgerPage {
       }
     }
 
-    expect(knappKlikket, "Kunne ikke finne 'Forrige' knapp").toBe(true);
+    expect(knappKlikket, `${getSaksnummerFraUrl(this.page)}: Kunne ikke finne 'Forrige' knapp`).toBe(true);
   }
 
   /**
@@ -166,7 +169,9 @@ export class StegvelgerPage {
       }
     }
 
-    expect(stegKlikket, `Kunne ikke finne og klikke på steg: ${stegnavn}`).toBe(true);
+    expect(stegKlikket, `${getSaksnummerFraUrl(this.page)}: Kunne ikke finne og klikke på steg: ${stegnavn}`).toBe(
+      true,
+    );
   }
 
   /**
@@ -178,7 +183,10 @@ export class StegvelgerPage {
       .isVisible({ timeout: 3000 })
       .catch(() => false);
 
-    expect(innholdFunnet, `Forventet innhold "${forventetInnhold}" ikke funnet i steget`).toBe(true);
+    expect(
+      innholdFunnet,
+      `${getSaksnummerFraUrl(this.page)}: Forventet innhold "${forventetInnhold}" ikke funnet i steget`,
+    ).toBe(true);
   }
 
   /**

@@ -1,4 +1,5 @@
 import { expect, Page } from "@playwright/test";
+import { getSaksnummerFraUrl } from "../../utils/testUtils";
 
 /**
  * Page Object Model for trygdeavgift-komponenten
@@ -129,7 +130,7 @@ export class TrygdeavgiftPage {
       }
     }
 
-    expect(funnet, "Beregning av trygdeavgift skal vises").toBe(true);
+    expect(funnet, `${getSaksnummerFraUrl(this.page)}: Beregning av trygdeavgift skal vises`).toBe(true);
   }
 
   /**

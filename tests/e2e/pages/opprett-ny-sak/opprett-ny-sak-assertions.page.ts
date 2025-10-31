@@ -1,5 +1,5 @@
 import { expect, Locator, Page } from "@playwright/test";
-import { getSakId } from "../../utils/testUtils";
+import { getSaksnummerFraLocator } from "../../utils/testUtils";
 
 /**
  * Assertions and verification methods for OpprettNySakPage
@@ -89,7 +89,7 @@ export class OpprettNySakAssertions {
   async verifiserTilgjengeligeBehandlingstyper(valgtSak: Locator, forventedeBehandlingstyper: string[]): Promise<void> {
     await expect(
       this.page.getByRole("group", { name: "Behandlingstype" }),
-      `Behandlingstype-gruppe for sak ${getSakId(valgtSak!)} skal være synlig`,
+      `Behandlingstype-gruppe for sak ${getSaksnummerFraLocator(valgtSak!)} skal være synlig`,
     ).toBeVisible();
 
     // Hent alle faktiske radiobuttons som er tilstede
@@ -166,12 +166,12 @@ export class OpprettNySakAssertions {
 
     expect(
       manglendeBehandlingstyper.length,
-      `Sak ${getSakId(valgtSak!)}: Manglende behandlingstyper: ${manglendeBehandlingstyper.join(", ")}. Faktiske: ${faktiskeTilgjengeligeBehandlingstyper.join(", ")}`,
+      `Sak ${getSaksnummerFraLocator(valgtSak!)}: Manglende behandlingstyper: ${manglendeBehandlingstyper.join(", ")}. Faktiske: ${faktiskeTilgjengeligeBehandlingstyper.join(", ")}`,
     ).toBe(0);
 
     expect(
       uventedeBehandlingstyper.length,
-      `Sak ${getSakId(valgtSak!)}: Uventede behandlingstyper: ${uventedeBehandlingstyper.join(", ")}. Forventede: ${forventedeBehandlingstyper.join(", ")}`,
+      `Sak ${getSaksnummerFraLocator(valgtSak!)}: Uventede behandlingstyper: ${uventedeBehandlingstyper.join(", ")}. Forventede: ${forventedeBehandlingstyper.join(", ")}`,
     ).toBe(0);
   }
 

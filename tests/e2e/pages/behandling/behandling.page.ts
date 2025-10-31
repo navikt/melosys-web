@@ -1,4 +1,5 @@
 import { expect, Locator, Page } from "@playwright/test";
+import { getSaksnummerFraUrl } from "../../utils/testUtils";
 
 /**
  * Page Object Model for visning og håndtering av behandlinger
@@ -9,16 +10,6 @@ export class BehandlingPage {
 
   constructor(page: Page) {
     this.page = page;
-  }
-
-  /**
-   * Hent saksnummer fra URL
-   * @returns Saksnummer (f.eks. "MEL-123") eller "ukjent"
-   */
-  private getSaksnummerFraUrl(): string {
-    const url = this.page.url();
-    const match = url.match(/MEL-\d+/);
-    return match ? match[0] : "ukjent";
   }
 
   /**
@@ -52,7 +43,7 @@ export class BehandlingPage {
       }
     }
 
-    const saksnummer = this.getSaksnummerFraUrl();
+    const saksnummer = getSaksnummerFraUrl(this.page);
     expect(infoFunnet, `${saksnummer}: Kunne ikke verifisere at vi er på en behandlingsside`).toBe(true);
   }
 
@@ -117,7 +108,7 @@ export class BehandlingPage {
 
     if (!menyErSynlig) {
       const hamburgerMeny = this.page.locator(".behandlingsmeny__knapp");
-      const saksnummer = this.getSaksnummerFraUrl();
+      const saksnummer = getSaksnummerFraUrl(this.page);
 
       await expect(hamburgerMeny, `${saksnummer}: Hamburger-meny skal være synlig`).toBeVisible({ timeout: 5000 });
       await hamburgerMeny.click();
@@ -128,7 +119,7 @@ export class BehandlingPage {
     const accordionHeader = this.page.locator(
       '.behandlingsmeny__meny .navds-accordion__header:has(.navds-accordion__header-content:has-text("Avslutt behandling"))',
     );
-    const saksnummer = this.getSaksnummerFraUrl();
+    const saksnummer = getSaksnummerFraUrl(this.page);
 
     await expect(accordionHeader, `${saksnummer}: Accordion-header "Avslutt behandling" skal være synlig`).toBeVisible({
       timeout: 2000,
@@ -261,7 +252,7 @@ export class BehandlingPage {
    * Bekreft avslutningen (hvis det er en bekreftelsesdialog)
    */
   async bekreftAvslutning(): Promise<void> {
-    const saksnummer = this.getSaksnummerFraUrl();
+    const saksnummer = getSaksnummerFraUrl(this.page);
     const modalSelectors = [".navds-modal[open]", ".modal[open]", '[role="dialog"]', ".dialog", ".confirmation-modal"];
 
     let modal = null;

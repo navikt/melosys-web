@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 import { runAxeAnalyze } from "../../../utils/axeUtils";
 import { HovedsidePage, USER_ID_VALID } from "../../../pages/hovedside.page";
 import { OpprettNySakPage } from "../../../pages/opprett-ny-sak/opprett-ny-sak.page";
-import { getSakId } from "../../../utils/testUtils";
+import { getSaksnummerFraLocator } from "../../../utils/testUtils";
 import { opprettEøsPensjonistSakMedTrygdeavgift } from "../../../utils/testdataUtils";
 
 let opprettNySakPage: OpprettNySakPage;
@@ -18,8 +18,8 @@ test.describe("EØS pensjonist med trygdeavgift - årsavregning (MELOSYS-7603)",
     // Denne testen oppretter testdata som brukes av de andre testene
     const sak = await opprettEøsPensjonistSakMedTrygdeavgift(page);
 
-    expect(getSakId(sak), "Sak skal være opprettet").toBeTruthy();
-    expect(getSakId(sak)).toMatch(/^MEL-\d+$/);
+    expect(getSaksnummerFraLocator(sak), "Sak skal være opprettet").toBeTruthy();
+    expect(getSaksnummerFraLocator(sak)).toMatch(/^MEL-\d+$/);
 
     await runAxeAnalyze(page, testInfo.title);
   });
@@ -56,7 +56,10 @@ test.describe("EØS pensjonist med trygdeavgift - årsavregning (MELOSYS-7603)",
 
     // Verifiser at ingen feilmelding vises
     const harFeilmelding = await opprettNySakPage.harFeilmelding();
-    expect(harFeilmelding, `Ingen feilmelding skal vises for EØS pensjonist-sak ${getSakId(valgtSak)}`).toBe(false);
+    expect(
+      harFeilmelding,
+      `Ingen feilmelding skal vises for EØS pensjonist-sak ${getSaksnummerFraLocator(valgtSak)}`,
+    ).toBe(false);
 
     await runAxeAnalyze(page, testInfo.title);
   });

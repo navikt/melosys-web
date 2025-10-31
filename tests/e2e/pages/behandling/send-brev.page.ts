@@ -1,4 +1,5 @@
 import { Page, Locator, expect } from "@playwright/test";
+import { getSaksnummerFraUrl } from "../../utils/testUtils";
 
 export class SendBrevPage {
   constructor(private page: Page) {}
@@ -43,14 +44,14 @@ export class SendBrevPage {
 
   async goto() {
     await this.page.goto(this.path, { waitUntil: "domcontentloaded" });
-    this.sakId = this.getSakIdFromUrl();
+    this.sakId = getSaksnummerFraUrl(this.page);
   }
 
   async clickSendBrevTab(): Promise<void> {
     const tab = this.sendBrevTab;
-    this.sakId = this.getSakIdFromUrl();
+    this.sakId = getSaksnummerFraUrl(this.page);
 
-    await expect(tab, 'Fant ikke "Send brev"-fanen for sak ' + this.sakId).toBeVisible();
+    await expect(tab, this.sakId + ': Fant ikke "Send brev"-fanen for sak ').toBeVisible();
 
     const panelId = await tab.getAttribute("aria-controls");
     await tab.click();
@@ -88,7 +89,7 @@ export class SendBrevPage {
   async selectFirstMottaker() {
     // Bruk native select[name="mottaker"] direkte
     const sel = this.mottakerNativeSelect;
-    await expect(sel, 'Fant ikke native select for "Mottaker" sak ' + this.sakId).toBeVisible();
+    await expect(sel, this.sakId + ': Fant ikke native select for "Mottaker" sak ').toBeVisible();
 
     // Velg første reelle alternativ (index 1, siden index 0 er "Velg...")
     await sel.selectOption({ index: 1 });
@@ -146,7 +147,7 @@ export class SendBrevPage {
         },
         label as string | RegExp,
       );
-      expect(value, `Fant ikke brevmal med gitt label "${label}" for sak ${this.sakId}`).toBeTruthy();
+      expect(value, `${this.sakId}: Fant ikke brevmal med gitt label "${label}" for sak`).toBeTruthy();
       await ctl.selectOption(value);
     } else {
       await ctl.click({ force: true });
@@ -156,16 +157,16 @@ export class SendBrevPage {
   }
 
   async assertSendButtonDisabled() {
-    await expect(this.sendButton, "Send button ikke disablet for sak " + this.sakId).toBeDisabled();
+    await expect(this.sendButton, `${this.sakId}: Send button ikke disablet`).toBeDisabled();
   }
 
   async assertSendButtonEnabled() {
-    await expect(this.sendButton, "Send button ikke enabled for sak " + this.sakId).toBeEnabled();
+    await expect(this.sendButton, `${this.sakId}: Send button ikke enabled`).toBeEnabled();
   }
 
   async selectMottakerByLabel(label: string | RegExp) {
     const sel = this.mottakerNativeSelect;
-    await expect(sel, 'Fant ikke native select for "Mottaker" for ' + this.sakId).toBeVisible();
+    await expect(sel, `${this.sakId}: Fant ikke native select for "Mottaker"`).toBeVisible();
 
     const value = await sel.evaluate(
       (el, l) => {
@@ -177,7 +178,7 @@ export class SendBrevPage {
       label as string | RegExp,
     );
 
-    expect(value, `Fant ikke mottaker med label: ${label} for sak ${this.sakId}`).toBeTruthy();
+    expect(value, `${this.sakId}: Fant ikke mottaker med label: ${label}`).toBeTruthy();
     await sel.selectOption(value);
 
     await this.waitForBrevmalSelect();
@@ -185,15 +186,5 @@ export class SendBrevPage {
 
   async clickSendBrev() {
     await this.sendButton.click();
-  }
-
-  /**
-   * Extract case ID from current page URL
-   * Expected URL format: /melosys/sak/MEL-123/...
-   */
-  private getSakIdFromUrl(): string {
-    const url = this.page.url();
-    const match = url.match(/\/sak\/(MEL-\d+)/);
-    return match?.[1] ?? "ukjent";
   }
 }

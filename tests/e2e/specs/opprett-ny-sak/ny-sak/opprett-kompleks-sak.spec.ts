@@ -4,7 +4,7 @@ import { OpprettNySakPage } from "../../../pages/opprett-ny-sak/opprett-ny-sak.p
 import { BehandlingPage } from "../../../pages/behandling/behandling.page";
 import { SokPage } from "../../../pages/sok.page";
 import { runAxeAnalyze } from "../../../utils/axeUtils";
-import { assertNyBehandlingOpprettet, getSakId } from "../../../utils/testUtils";
+import { assertNyBehandlingOpprettet, getSaksnummerFraLocator } from "../../../utils/testUtils";
 
 let opprettNySakPage: OpprettNySakPage;
 
@@ -58,7 +58,7 @@ test.describe("Opprett kompleks sak med flere behandlingstyper", () => {
     await sokPage.klikkVisBehandling(saker[0]);
     await behandlingPage.verifiserBehandlingsside();
 
-    await behandlingPage.avsluttBehandling("Søknaden er innvilget", getSakId(saker[0]));
+    await behandlingPage.avsluttBehandling("Søknaden er innvilget", getSaksnummerFraLocator(saker[0]));
 
     await runAxeAnalyze(page, testInfo.title);
   });
@@ -93,7 +93,7 @@ test.describe("Opprett kompleks sak med flere behandlingstyper", () => {
     await sokPage.klikkVisBehandling(saker[0]);
     await behandlingPage.verifiserBehandlingsside();
 
-    await behandlingPage.avsluttBehandling("Søknaden er innvilget", getSakId(saker[0]));
+    await behandlingPage.avsluttBehandling("Søknaden er innvilget", getSaksnummerFraLocator(saker[0]));
 
     // Opprett Årsavregning på samme sak
     await hovedsidePage.goto();

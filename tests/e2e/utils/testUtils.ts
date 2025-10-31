@@ -9,8 +9,17 @@ import { expect, Locator, Page } from "@playwright/test";
  * @param sak - Sak-locator
  * @returns sakId eller "ukjent"
  */
-export function getSakId(sak: Locator): string {
+export function getSaksnummerFraLocator(sak: Locator): string {
   return sak ? ((sak as unknown as Record<string, unknown>)._sakId as string) || "ukjent" : "ukjent";
+}
+
+/**
+ * Hent saksnummer fra URL
+ * @returns Saksnummer (f.eks. "MEL-123") eller "ukjent"
+ */
+export function getSaksnummerFraUrl(page: Page): string {
+  const match = page.url().match(/MEL-\d+/);
+  return match ? match[0] : "ukjent";
 }
 
 /**

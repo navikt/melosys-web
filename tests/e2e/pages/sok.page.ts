@@ -1,5 +1,5 @@
 import { expect, Locator, Page } from "@playwright/test";
-import { getSakId } from "../utils/testUtils";
+import { getSaksnummerFraLocator } from "../utils/testUtils";
 
 /**
  * Page Object Model for søkesiden
@@ -191,9 +191,11 @@ export class SokPage {
   async klikkVisBehandling(sak: Locator): Promise<void> {
     const visBehandlingKnapp = sak.locator('button:has-text("Vis behandling")').first();
 
-    await expect(visBehandlingKnapp, `${getSakId(sak)}: "Vis behandling" knapp ikke funnet`).toBeVisible({
-      timeout: 10000,
-    });
+    await expect(visBehandlingKnapp, `${getSaksnummerFraLocator(sak)}: "Vis behandling" knapp ikke funnet`).toBeVisible(
+      {
+        timeout: 10000,
+      },
+    );
     await visBehandlingKnapp.click();
     await this.page.waitForLoadState("domcontentloaded");
   }
