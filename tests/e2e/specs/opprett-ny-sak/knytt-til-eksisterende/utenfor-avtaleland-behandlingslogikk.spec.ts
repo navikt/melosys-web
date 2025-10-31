@@ -1,10 +1,10 @@
 import { expect, test } from "@playwright/test";
-import { runAxeAnalyze } from "../../../../utils/axeUtils";
-import { HovedsidePage, USER_ID_VALID } from "../../../../pages/hovedside.page";
-import { OpprettNySakPage } from "../../../../pages/opprett-ny-sak/opprett-ny-sak.page";
-import { opprettUtenforAvtalelandSak } from "../../../../utils/testdataUtils";
-import { SokPage } from "../../../../pages/sok.page";
-import { BehandlingPage } from "../../../../pages/behandling/behandling.page";
+import { runAxeAnalyze } from "../../../utils/axeUtils";
+import { HovedsidePage, USER_ID_VALID } from "../../../pages/hovedside.page";
+import { OpprettNySakPage } from "../../../pages/opprett-ny-sak/opprett-ny-sak.page";
+import { opprettUtenforAvtalelandSak } from "../../../utils/testdataUtils";
+import { SokPage } from "../../../pages/sok.page";
+import { BehandlingPage } from "../../../pages/behandling/behandling.page";
 
 /**
  * MELOSYS-7385: Test akseptansekriterier for 'Utenfor avtaleland'-saker

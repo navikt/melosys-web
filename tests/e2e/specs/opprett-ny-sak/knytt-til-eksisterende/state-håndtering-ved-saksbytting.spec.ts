@@ -1,8 +1,8 @@
 import { expect, test } from "@playwright/test";
-import { runAxeAnalyze } from "../../../../utils/axeUtils";
-import { HovedsidePage, USER_ID_VALID } from "../../../../pages/hovedside.page";
-import { OpprettNySakPage } from "../../../../pages/opprett-ny-sak/opprett-ny-sak.page";
-import { getSaksnummerFraLocator } from "../../../../utils/testUtils";
+import { runAxeAnalyze } from "../../../utils/axeUtils";
+import { HovedsidePage, USER_ID_VALID } from "../../../pages/hovedside.page";
+import { OpprettNySakPage } from "../../../pages/opprett-ny-sak/opprett-ny-sak.page";
+import { getSaksnummerFraLocator } from "../../../utils/testUtils";
 
 /**
  * MELOSYS-7624: Test state-håndtering ved saksbytting
