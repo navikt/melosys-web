@@ -4,6 +4,7 @@ import { SendBrevPage } from "../../pages/behandling/send-brev.page";
 import { assertErrors } from "../../utils/testUtils";
 import { SokPage } from "../../pages/sok.page";
 import { BehandlingPage } from "../../pages/behandling/behandling.page";
+import { runAxeAnalyze } from "../../utils/axeUtils";
 
 let sb: SendBrevPage;
 
@@ -33,19 +34,22 @@ test.describe("Verifiser disable/enable av 'Send brev' knapp", () => {
     await setupSendBrevTest(page);
   });
 
-  test("'Send brev' knappen er disabled når hverken mottaker eller brevmal er valgt ", async () => {
+  test("'Send brev' knappen er disabled når hverken mottaker eller brevmal er valgt ", async ({ page }, testInfo) => {
     await sb.assertSendButtonDisabled();
+    await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("'Send brev' knappen er disabled når mottaker er valgt men ikke brevmal", async () => {
+  test("'Send brev' knappen er disabled når mottaker er valgt men ikke brevmal", async ({ page }, testInfo) => {
     await sb.selectFirstMottaker();
     await sb.assertSendButtonDisabled();
+    await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("'Send brev' knappen blir enabled når både mottaker og brevmal er valgt", async () => {
+  test("'Send brev' knappen blir enabled når både mottaker og brevmal er valgt", async ({ page }, testInfo) => {
     await sb.selectFirstMottaker();
     await sb.selectFirstBrevmal();
     await sb.assertSendButtonEnabled();
+    await runAxeAnalyze(page, testInfo.title);
   });
 });
 
@@ -54,7 +58,7 @@ test.describe("Validering av brevmaler for mottaker 'Bruker eller brukers fullme
     await setupSendBrevTest(page);
   });
 
-  test("Korrekt validering for brevmal 'Melding om manglende opplysninger til bruker'", async ({ page }) => {
+  test("Korrekt validering for brevmal 'Melding om manglende opplysninger til bruker'", async ({ page }, testInfo) => {
     await sb.selectMottakerByLabel("Bruker eller brukers fullmektig");
     await sb.selectBrevmalByLabel("Melding om manglende opplysninger til bruker");
     await sb.clickSendBrev();
@@ -63,9 +67,11 @@ test.describe("Validering av brevmaler for mottaker 'Bruker eller brukers fullme
       "Du må skrive inn innledningstekst i fritekstfeltet",
       "Du må skrive inn hva mottaker skal sende inn",
     ]);
+
+    await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("Korrekt validering for brevmal 'Fritekstbrev til bruker'", async ({ page }) => {
+  test("Korrekt validering for brevmal 'Fritekstbrev til bruker'", async ({ page }, testInfo) => {
     await sb.selectMottakerByLabel("Bruker eller brukers fullmektig");
     await sb.selectBrevmalByLabel("Fritekstbrev til bruker");
     await sb.clickSendBrev();
@@ -75,11 +81,15 @@ test.describe("Validering av brevmaler for mottaker 'Bruker eller brukers fullme
       "Du må skrive inn hovedtekst til brevet",
       "Du må velge type brev",
     ]);
+
+    await runAxeAnalyze(page, testInfo.title);
   });
 });
 
 test.describe("Validering av årsavregning brevmaler", () => {
-  test("Korrekt validering for brevmal 'Innhenting av inntektsopplysninger for årsavregning'", async ({ page }) => {
+  test("Korrekt validering for brevmal 'Innhenting av inntektsopplysninger for årsavregning'", async ({
+    page,
+  }, testInfo) => {
     const mainPage = new HovedsidePage(page);
     const sokPage = new SokPage(page);
     const behandlingPage = new BehandlingPage(page);
@@ -103,5 +113,7 @@ test.describe("Validering av årsavregning brevmaler", () => {
     await sb.clickSendBrev();
 
     await assertErrors(page, ["Du må velge minst én av standardtekst eller fritekst"]);
+
+    await runAxeAnalyze(page, testInfo.title);
   });
 });

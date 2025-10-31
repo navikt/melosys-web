@@ -4,6 +4,7 @@ import { SokPage } from "../../pages/sok.page";
 import { BehandlingPage } from "../../pages/behandling/behandling.page";
 import { AarsavregningPage } from "../../pages/behandling/aarsavregning.page";
 import { opprettUtenforAvtalelandSakMedAarsavregning } from "../../utils/testdataUtils";
+import { runAxeAnalyze } from "../../utils/axeUtils";
 
 /**
  * MELOSYS-7612: Valideringsfeil ved delt grunnlag i årsavregning
@@ -96,7 +97,7 @@ test.describe.serial("MELOSYS-7612: Årsavregning delt grunnlag - Alle tester", 
       await setupAarsavregningTest(page);
     });
 
-    test("Kan legge til ny medlemskapsperiode etter å ha valgt delt grunnlag", async () => {
+    test("Kan legge til ny medlemskapsperiode etter å ha valgt delt grunnlag", async ({ page }, testInfo) => {
       // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet
       await aarsavregningPage.velgDeltGrunnlagJa();
 
@@ -125,9 +126,11 @@ test.describe.serial("MELOSYS-7612: Årsavregning delt grunnlag - Alle tester", 
       // Verifiser at det ikke er valideringsfeil
       await aarsavregningPage.assertIngenFeilmelding("utenfor");
       await aarsavregningPage.assertIngenFeilmelding("overlapper");
+
+      await runAxeAnalyze(page, testInfo.title);
     });
 
-    test("Datepicker skal fungere for fra-dato på ny medlemskapsperiode", async ({ page }) => {
+    test("Datepicker skal fungere for fra-dato på ny medlemskapsperiode", async ({ page }, testInfo) => {
       // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet
       await aarsavregningPage.velgDeltGrunnlagJa();
       await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
@@ -158,9 +161,11 @@ test.describe.serial("MELOSYS-7612: Årsavregning delt grunnlag - Alle tester", 
       // Verifiser at feltet har en verdi
       const fomVerdi = await aarsavregningPage.getMedlemskapsperiodeFomDato(nyPeriodeIndex);
       expect(fomVerdi).not.toBe("");
+
+      await runAxeAnalyze(page, testInfo.title);
     });
 
-    test("Kan legge til sammenhengende medlemskapsperiode innenfor samme år", async ({ page }) => {
+    test("Kan legge til sammenhengende medlemskapsperiode innenfor samme år", async ({ page }, testInfo) => {
       // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet
       await aarsavregningPage.velgDeltGrunnlagJa();
       await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
@@ -185,6 +190,8 @@ test.describe.serial("MELOSYS-7612: Årsavregning delt grunnlag - Alle tester", 
       await aarsavregningPage.assertIngenFeilmelding("overlapper");
       await aarsavregningPage.assertIngenFeilmelding("ugyldig");
       await aarsavregningPage.assertIngenFeilmelding("må være etter");
+
+      await runAxeAnalyze(page, testInfo.title);
     });
   });
 
@@ -193,7 +200,7 @@ test.describe.serial("MELOSYS-7612: Årsavregning delt grunnlag - Alle tester", 
       await setupAarsavregningTest(page);
     });
 
-    test("Kan legge til ny skatteforholdsperiode etter å ha valgt delt grunnlag", async ({ page }) => {
+    test("Kan legge til ny skatteforholdsperiode etter å ha valgt delt grunnlag", async ({ page }, testInfo) => {
       // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet
       await aarsavregningPage.velgDeltGrunnlagJa();
       await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
@@ -220,9 +227,11 @@ test.describe.serial("MELOSYS-7612: Årsavregning delt grunnlag - Alle tester", 
 
       // Verifiser at det ikke er valideringsfeil om "utenfor medlemskapsperioden"
       await aarsavregningPage.assertIngenFeilmelding("utenfor medlemskapsperioden");
+
+      await runAxeAnalyze(page, testInfo.title);
     });
 
-    test("Kan utvide skatteforholdsperiode innenfor medlemskapsperiode", async ({ page }) => {
+    test("Kan utvide skatteforholdsperiode innenfor medlemskapsperiode", async ({ page }, testInfo) => {
       // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet
       await aarsavregningPage.velgDeltGrunnlagJa();
       await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
@@ -251,6 +260,8 @@ test.describe.serial("MELOSYS-7612: Årsavregning delt grunnlag - Alle tester", 
       // Verifiser at det ikke er valideringsfeil
       await aarsavregningPage.assertIngenFeilmelding("utenfor medlemskapsperioden");
       await aarsavregningPage.assertIngenFeilmelding("ugyldig");
+
+      await runAxeAnalyze(page, testInfo.title);
     });
   });
 
@@ -259,7 +270,9 @@ test.describe.serial("MELOSYS-7612: Årsavregning delt grunnlag - Alle tester", 
       await setupAarsavregningTest(page);
     });
 
-    test("skal vise 'Legg til periode'-knappen for delt grunnlag selv med pliktig bestemmelse", async ({ page }) => {
+    test("skal vise 'Legg til periode'-knappen for delt grunnlag selv med pliktig bestemmelse", async ({
+      page,
+    }, testInfo) => {
       // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet (delt grunnlag)
       await aarsavregningPage.velgDeltGrunnlagJa();
 
@@ -277,9 +290,11 @@ test.describe.serial("MELOSYS-7612: Årsavregning delt grunnlag - Alle tester", 
 
       // Verifiser at knappen er klikkbar (ikke disabled)
       await expect(leggTilKnapp).toBeEnabled();
+
+      await runAxeAnalyze(page, testInfo.title);
     });
 
-    test("kan legge til ny periode med pliktig bestemmelse og delt grunnlag", async ({ page }) => {
+    test("kan legge til ny periode med pliktig bestemmelse og delt grunnlag", async ({ page }, testInfo) => {
       // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet (delt grunnlag)
       await aarsavregningPage.velgDeltGrunnlagJa();
 
@@ -309,6 +324,8 @@ test.describe.serial("MELOSYS-7612: Årsavregning delt grunnlag - Alle tester", 
       // Verifiser at det ikke er valideringsfeil
       await aarsavregningPage.assertIngenFeilmelding("utenfor");
       await aarsavregningPage.assertIngenFeilmelding("overlapper");
+
+      await runAxeAnalyze(page, testInfo.title);
     });
   });
 
@@ -317,7 +334,7 @@ test.describe.serial("MELOSYS-7612: Årsavregning delt grunnlag - Alle tester", 
       await setupAarsavregningTest(page);
     });
 
-    test("Kan legge til ny inntektsperiode etter å ha valgt delt grunnlag", async ({ page }) => {
+    test("Kan legge til ny inntektsperiode etter å ha valgt delt grunnlag", async ({ page }, testInfo) => {
       // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet
       await aarsavregningPage.velgDeltGrunnlagJa();
       await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
@@ -351,9 +368,11 @@ test.describe.serial("MELOSYS-7612: Årsavregning delt grunnlag - Alle tester", 
 
       // Verifiser at det ikke er valideringsfeil om "utenfor medlemskapsperioden"
       await aarsavregningPage.assertIngenFeilmelding("utenfor medlemskapsperioden");
+
+      await runAxeAnalyze(page, testInfo.title);
     });
 
-    test("Kan utvide inntektsperiode innenfor medlemskapsperiode", async ({ page }) => {
+    test("Kan utvide inntektsperiode innenfor medlemskapsperiode", async ({ page }, testInfo) => {
       // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet
       await aarsavregningPage.velgDeltGrunnlagJa();
       await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
@@ -388,9 +407,11 @@ test.describe.serial("MELOSYS-7612: Årsavregning delt grunnlag - Alle tester", 
       // Verifiser at det ikke er valideringsfeil
       await aarsavregningPage.assertIngenFeilmelding("utenfor medlemskapsperioden");
       await aarsavregningPage.assertIngenFeilmelding("ugyldig");
+
+      await runAxeAnalyze(page, testInfo.title);
     });
 
-    test("Kan legge til flere inntektsperioder innenfor samme år", async ({ page }) => {
+    test("Kan legge til flere inntektsperioder innenfor samme år", async ({ page }, testInfo) => {
       // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet
       await aarsavregningPage.velgDeltGrunnlagJa();
       await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
@@ -429,6 +450,8 @@ test.describe.serial("MELOSYS-7612: Årsavregning delt grunnlag - Alle tester", 
       // Verifiser at ingen valideringsfeil
       await aarsavregningPage.assertIngenFeilmelding("utenfor medlemskapsperioden");
       await aarsavregningPage.assertIngenFeilmelding("overlapper");
+
+      await runAxeAnalyze(page, testInfo.title);
     });
   });
 });

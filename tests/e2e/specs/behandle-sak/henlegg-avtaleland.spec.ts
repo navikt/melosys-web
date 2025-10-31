@@ -3,6 +3,7 @@ import { HovedsidePage, USER_ID_VALID } from "../../pages/hovedside.page";
 import { BehandlingPage } from "../../pages/behandling/behandling.page";
 import { SokPage } from "../../pages/sok.page";
 import { opprettAvtalelandSak } from "../../utils/testdataUtils";
+import { runAxeAnalyze } from "../../utils/axeUtils";
 
 /**
  * MELOSYS-7385: Setup testdata - Avtaleland-sak med HENLAGT behandling
@@ -14,7 +15,7 @@ import { opprettAvtalelandSak } from "../../utils/testdataUtils";
  * for å sørge for at regresjonstestene har henlagt testdata tilgjengelig.
  */
 test.describe("MELOSYS-7385 Setup: Avtaleland-sak med henlagt behandling", () => {
-  test("Opprett Avtaleland-sak og henlegg behandlingen", async ({ page }) => {
+  test("Opprett Avtaleland-sak og henlegg behandlingen", async ({ page }, testInfo) => {
     test.setTimeout(30000); // Økt timeout siden vi oppretter og henlegger sak
     const hovedsidePage = new HovedsidePage(page);
     const sokPage = new SokPage(page);
@@ -30,5 +31,7 @@ test.describe("MELOSYS-7385 Setup: Avtaleland-sak med henlagt behandling", () =>
     await sokPage.klikkVisBehandling(sak);
     await behandlingPage.verifiserBehandlingsside();
     await behandlingPage.avsluttBehandling("Søknaden/klagen er trukket", sakId);
+
+    await runAxeAnalyze(page, testInfo.title);
   });
 });

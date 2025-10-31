@@ -51,14 +51,9 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
 
     expect(valgtSak, "Ingen EØS-sak funnet").toBeTruthy();
 
-    await expect(
-      page.locator(".feilmelding_innrykk").filter({
-        hasText: "Du kan ikke opprette en ny behandling på eksisterende sak med en aktiv/pågående behandling",
-      }),
-    ).toBeVisible();
+    await opprettNySakPage.verifiserEosFeilmelding();
 
-    const behandlingstypeGruppe = page.getByRole("group", { name: "Behandlingstype" });
-    await expect(behandlingstypeGruppe).not.toBeVisible();
+    await opprettNySakPage.verifiserBehandlingstypeGruppeIkkeSynlig();
 
     await runAxeAnalyze(page, testInfo.title);
   });
@@ -174,10 +169,8 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
       "Årsavregning",
     ]);
 
-    await expect(
-      page.locator(".feilmelding_innrykk"),
-      `Ingen feilmelding skal vises for sak ${getSakId(valgtSak!)}`,
-    ).not.toBeVisible();
+    const harFeilmelding = await opprettNySakPage.harFeilmelding();
+    expect(harFeilmelding, `Ingen feilmelding skal vises for sak ${getSakId(valgtSak!)}`).toBe(false);
 
     await runAxeAnalyze(page, testInfo.title);
   });
