@@ -1,4 +1,4 @@
-import { Control, FieldArrayWithId } from "react-hook-form";
+import { Control } from "react-hook-form";
 
 import * as KV from "../../../../../kodeverk";
 import MKV from "../../../../../melosyskodeverk";
@@ -11,7 +11,7 @@ import * as Utils from "../../../../../utils";
 import { ULAGRET_MEDLEMSKAPSPERIODE_ID } from "../aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlag";
 
 import { useEffect } from "react";
-import { FieldArrayProps, FormValuesProps } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
+import { FormValuesProps } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
 import { Medlemskapsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import "./medlemskapsperiodeSkjema.less";
 import { usePliktigeBestemmelser } from "../hooks/usePliktigeBestemmelser";
@@ -53,7 +53,7 @@ const kanPeriodeSlettes = (gjeldendePeriode: Medlemskapsperiode, allePerioderILi
 export interface PeriodeElementerProps {
   redigerbart: boolean;
   control: Control;
-  field: FieldArrayWithId<FieldArrayProps, "medlemskapsperioder">;
+  field: { id: string | number; [key: string]: unknown };
   remove: (index: number) => void;
   formValues: FormValuesProps;
   handleLeggTil: () => void;
@@ -62,7 +62,7 @@ export interface PeriodeElementerProps {
   maxDate?: Date;
   minDate?: Date;
   trygdedekninger?: string[];
-  setValue: (name: string, value: any, options?: any) => void;
+  setValue: (name: string, value: unknown, options?: { shouldValidate?: boolean; shouldDirty?: boolean }) => void;
   erDeltGrunnlag?: boolean;
 }
 
@@ -151,7 +151,7 @@ export function MedlemskapsperiodeSkjema({
             control={control}
             readOnly={!redigerbart || erPeriodeFraGrunnlag || kunEnTrygdedekning}
           >
-            {trygdedekninger?.map((dekning: any) => (
+            {trygdedekninger?.map((dekning) => (
               <option key={dekning} value={dekning}>
                 {KV.kodeTilTerm(dekning, MKV.KTObjects.trygdedekninger)}
               </option>
