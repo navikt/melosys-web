@@ -31,7 +31,9 @@ test.describe("MELOSYS-7385: Avtaleland behandlingslogikk (regresjon)", () => {
   test("Regresjon: Avtaleland-sak med åpen behandling - gul varselmelding", async ({ page }, testInfo) => {
     test.setTimeout(30000);
 
-    const sakId = await opprettAvtalelandSak(page);
+    const sokPage = new SokPage(page);
+    const sak = await opprettAvtalelandSak(page);
+    const sakId = await sokPage.getSaksnummer(sak);
 
     const hovedsidePage = new HovedsidePage(page);
     await hovedsidePage.goto();
@@ -63,19 +65,17 @@ test.describe("MELOSYS-7385: Avtaleland behandlingslogikk (regresjon)", () => {
   test("Regresjon: Avtaleland-sak med 'Søknaden er henlagt' - gul varselmelding", async ({ page }, testInfo) => {
     test.setTimeout(30000); // Økt timeout siden vi oppretter og henlegger sak
 
-    const sakId = await opprettAvtalelandSak(page);
-
-    const hovedsidePage = new HovedsidePage(page);
     const sokPage = new SokPage(page);
     const behandlingPage = new BehandlingPage(page);
 
-    await hovedsidePage.goto();
-    await hovedsidePage.søkOgVentPåResultat(USER_ID_VALID);
+    const sak = await opprettAvtalelandSak(page);
+    const sakId = await sokPage.getSaksnummer(sak);
 
-    const sak = sokPage.finnSakBySaksnummer(sakId);
     await sokPage.klikkVisBehandling(sak);
     await behandlingPage.verifiserBehandlingsside();
     await behandlingPage.avsluttBehandling("Søknaden/klagen er trukket", sakId);
+
+    const hovedsidePage = new HovedsidePage(page);
 
     await hovedsidePage.goto();
     await hovedsidePage.klikkOpprettNySakKnapp();
@@ -110,19 +110,17 @@ test.describe("MELOSYS-7385: Avtaleland behandlingslogikk (regresjon)", () => {
   }, testInfo) => {
     test.setTimeout(30000); // Økt timeout siden vi oppretter og avslutter sak
 
-    const sakId = await opprettAvtalelandSak(page);
-
-    const hovedsidePage = new HovedsidePage(page);
     const sokPage = new SokPage(page);
     const behandlingPage = new BehandlingPage(page);
 
-    await hovedsidePage.goto();
-    await hovedsidePage.søkOgVentPåResultat(USER_ID_VALID);
+    const sak = await opprettAvtalelandSak(page);
+    const sakId = await sokPage.getSaksnummer(sak);
 
-    const sak = sokPage.finnSakBySaksnummer(sakId);
     await sokPage.klikkVisBehandling(sak);
     await behandlingPage.verifiserBehandlingsside();
     await behandlingPage.avsluttBehandling("Søknaden er innvilget", sakId);
+
+    const hovedsidePage = new HovedsidePage(page);
 
     await hovedsidePage.goto();
     await hovedsidePage.klikkOpprettNySakKnapp();

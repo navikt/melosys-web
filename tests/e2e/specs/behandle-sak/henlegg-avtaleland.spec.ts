@@ -1,5 +1,4 @@
 import { test } from "@playwright/test";
-import { HovedsidePage, USER_ID_VALID } from "../../pages/hovedside.page";
 import { BehandlingPage } from "../../pages/behandling/behandling.page";
 import { SokPage } from "../../pages/sok.page";
 import { opprettAvtalelandSak } from "../../utils/testdataUtils";
@@ -17,17 +16,13 @@ import { runAxeAnalyze } from "../../utils/axeUtils";
 test.describe("MELOSYS-7385 Setup: Avtaleland-sak med henlagt behandling", () => {
   test("Opprett Avtaleland-sak og henlegg behandlingen", async ({ page }, testInfo) => {
     test.setTimeout(30000); // Økt timeout siden vi oppretter og henlegger sak
-    const hovedsidePage = new HovedsidePage(page);
     const sokPage = new SokPage(page);
     const behandlingPage = new BehandlingPage(page);
 
     // Opprett egen Avtaleland-sak
-    const sakId = await opprettAvtalelandSak(page);
+    const sak = await opprettAvtalelandSak(page);
+    const sakId = await sokPage.getSaksnummer(sak);
 
-    await hovedsidePage.goto();
-    await hovedsidePage.søkOgVentPåResultat(USER_ID_VALID);
-
-    const sak = sokPage.finnSakBySaksnummer(sakId);
     await sokPage.klikkVisBehandling(sak);
     await behandlingPage.verifiserBehandlingsside();
     await behandlingPage.avsluttBehandling("Søknaden/klagen er trukket", sakId);

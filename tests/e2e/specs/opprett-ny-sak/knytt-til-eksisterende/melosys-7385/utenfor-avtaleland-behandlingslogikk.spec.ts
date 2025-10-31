@@ -31,7 +31,9 @@ test.describe("MELOSYS-7385: 'Utenfor avtaleland' behandlingslogikk", () => {
   }, testInfo) => {
     test.setTimeout(30000); // Økt timeout siden vi oppretter sak
 
-    const sakId = await opprettUtenforAvtalelandSak(page);
+    const sokPage = new SokPage(page);
+    const sak = await opprettUtenforAvtalelandSak(page);
+    const sakId = await sokPage.getSaksnummer(sak);
 
     const hovedsidePage = new HovedsidePage(page);
     await hovedsidePage.goto();
@@ -57,7 +59,9 @@ test.describe("MELOSYS-7385: 'Utenfor avtaleland' behandlingslogikk", () => {
   }, testInfo) => {
     test.setTimeout(45000); // Økt timeout siden vi oppretter sak + årsavregning
 
-    const sakId = await opprettUtenforAvtalelandSak(page);
+    const sokPage = new SokPage(page);
+    const sak = await opprettUtenforAvtalelandSak(page);
+    const sakId = await sokPage.getSaksnummer(sak);
 
     const hovedsidePage = new HovedsidePage(page);
 
@@ -96,19 +100,17 @@ test.describe("MELOSYS-7385: 'Utenfor avtaleland' behandlingslogikk", () => {
   test("AC3: 'Utenfor avtaleland - Behandlingen er avsluttet' sak funnet", async ({ page }, testInfo) => {
     test.setTimeout(30000); // Økt timeout siden vi oppretter og avslutter sak
 
-    const sakId = await opprettUtenforAvtalelandSak(page);
-
-    const hovedsidePage = new HovedsidePage(page);
     const sokPage = new SokPage(page);
     const behandlingPage = new BehandlingPage(page);
 
-    await hovedsidePage.goto();
-    await hovedsidePage.søkOgVentPåResultat(USER_ID_VALID);
+    const sak = await opprettUtenforAvtalelandSak(page);
+    const sakId = await sokPage.getSaksnummer(sak);
 
-    const sak = sokPage.finnSakBySaksnummer(sakId);
     await sokPage.klikkVisBehandling(sak);
     await behandlingPage.verifiserBehandlingsside();
     await behandlingPage.avsluttBehandling("Søknaden er innvilget", sakId);
+
+    const hovedsidePage = new HovedsidePage(page);
 
     await hovedsidePage.goto();
     await hovedsidePage.klikkOpprettNySakKnapp();

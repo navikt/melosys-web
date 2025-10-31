@@ -93,7 +93,6 @@ test.describe("Opprett kompleks sak med flere behandlingstyper", () => {
     await sokPage.klikkVisBehandling(saker[0]);
     await behandlingPage.verifiserBehandlingsside();
 
-    console.log("Avslutt behandling for " + getSakId(saker[0]));
     await behandlingPage.avsluttBehandling("Søknaden er innvilget", getSakId(saker[0]));
 
     // Opprett Årsavregning på samme sak

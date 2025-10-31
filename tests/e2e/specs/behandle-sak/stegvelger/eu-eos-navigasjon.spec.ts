@@ -1,5 +1,4 @@
 import { test, expect } from "@playwright/test";
-import { HovedsidePage, USER_ID_VALID } from "../../../pages/hovedside.page";
 import { SokPage } from "../../../pages/sok.page";
 import { BehandlingPage } from "../../../pages/behandling/behandling.page";
 import { StegvelgerPage } from "../../../pages/behandling/stegvelger.page";
@@ -20,21 +19,16 @@ test.describe("EU/EØS Stegvelger - Navigasjon", () => {
   test("skal vise stegvelger når behandling åpnes", async ({ page }, testInfo) => {
     test.setTimeout(60000);
 
-    // Opprett en EU/EØS-sak med behandlingstema som har flere steg
-    // "Arbeid og/eller selvstendig virksomhet i flere land" krever valg av land,
-    // så vi bruker "Ikke yrkesaktiv" som er enklere
-    const saksnummer = await opprettEUEOSSak(page);
-
-    const hovedsidePage = new HovedsidePage(page);
     const sokPage = new SokPage(page);
     const behandlingPage = new BehandlingPage(page);
     const stegvelgerPage = new StegvelgerPage(page);
 
-    // Naviger til behandlingen
-    await hovedsidePage.goto();
-    await hovedsidePage.søkOgVentPåResultat(USER_ID_VALID);
+    // Opprett en EU/EØS-sak med behandlingstema som har flere steg
+    // "Arbeid og/eller selvstendig virksomhet i flere land" krever valg av land,
+    // så vi bruker "Ikke yrkesaktiv" som er enklere
+    const sak = await opprettEUEOSSak(page);
 
-    const sak = sokPage.finnSakBySaksnummer(saksnummer);
+    // Naviger til behandlingen
     await sokPage.klikkVisBehandling(sak);
     await behandlingPage.verifiserBehandlingsside();
 
@@ -56,18 +50,13 @@ test.describe("EU/EØS Stegvelger - Navigasjon", () => {
   test("skal kunne navigere frem og tilbake mellom steg", async ({ page }, testInfo) => {
     test.setTimeout(60000);
 
-    const saksnummer = await opprettEUEOSSak(page);
-
-    const hovedsidePage = new HovedsidePage(page);
     const sokPage = new SokPage(page);
     const behandlingPage = new BehandlingPage(page);
     const stegvelgerPage = new StegvelgerPage(page);
 
-    // Naviger til behandlingen
-    await hovedsidePage.goto();
-    await hovedsidePage.søkOgVentPåResultat(USER_ID_VALID);
+    const sak = await opprettEUEOSSak(page);
 
-    const sak = sokPage.finnSakBySaksnummer(saksnummer);
+    // Naviger til behandlingen
     await sokPage.klikkVisBehandling(sak);
     await behandlingPage.verifiserBehandlingsside();
 
@@ -102,17 +91,12 @@ test.describe("EU/EØS Stegvelger - Navigasjon", () => {
   test("skal vise steg i progressbar for EU/EØS-sak", async ({ page }, testInfo) => {
     test.setTimeout(60000);
 
-    const saksnummer = await opprettEUEOSSak(page);
-
-    const hovedsidePage = new HovedsidePage(page);
     const sokPage = new SokPage(page);
     const behandlingPage = new BehandlingPage(page);
     const stegvelgerPage = new StegvelgerPage(page);
 
-    await hovedsidePage.goto();
-    await hovedsidePage.søkOgVentPåResultat(USER_ID_VALID);
+    const sak = await opprettEUEOSSak(page);
 
-    const sak = sokPage.finnSakBySaksnummer(saksnummer);
     await sokPage.klikkVisBehandling(sak);
     await behandlingPage.verifiserBehandlingsside();
 

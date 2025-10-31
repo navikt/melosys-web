@@ -1,5 +1,4 @@
 import { test, expect } from "@playwright/test";
-import { HovedsidePage, USER_ID_VALID } from "../../../pages/hovedside.page";
 import { SokPage } from "../../../pages/sok.page";
 import { BehandlingPage } from "../../../pages/behandling/behandling.page";
 import { StegvelgerPage } from "../../../pages/behandling/stegvelger.page";
@@ -23,19 +22,14 @@ test.describe("FTRL Stegvelger - Navigasjon", () => {
   test("skal vise stegvelger når FTRL-behandling åpnes", async ({ page }, testInfo) => {
     test.setTimeout(60000);
 
-    // Opprett en FTRL-sak (Utenfor avtaleland)
-    const saksnummer = await opprettUtenforAvtalelandSak(page);
-
-    const hovedsidePage = new HovedsidePage(page);
     const sokPage = new SokPage(page);
     const behandlingPage = new BehandlingPage(page);
     const stegvelgerPage = new StegvelgerPage(page);
 
-    // Naviger til behandlingen
-    await hovedsidePage.goto();
-    await hovedsidePage.søkOgVentPåResultat(USER_ID_VALID);
+    // Opprett en FTRL-sak (Utenfor avtaleland)
+    const sak = await opprettUtenforAvtalelandSak(page);
 
-    const sak = sokPage.finnSakBySaksnummer(saksnummer);
+    // Naviger til behandlingen
     await sokPage.klikkVisBehandling(sak);
     await behandlingPage.verifiserBehandlingsside();
 
@@ -57,18 +51,13 @@ test.describe("FTRL Stegvelger - Navigasjon", () => {
   test("skal kunne navigere frem og tilbake mellom steg i FTRL", async ({ page }, testInfo) => {
     test.setTimeout(60000);
 
-    const saksnummer = await opprettUtenforAvtalelandSak(page);
-
-    const hovedsidePage = new HovedsidePage(page);
     const sokPage = new SokPage(page);
     const behandlingPage = new BehandlingPage(page);
     const stegvelgerPage = new StegvelgerPage(page);
 
-    // Naviger til behandlingen
-    await hovedsidePage.goto();
-    await hovedsidePage.søkOgVentPåResultat(USER_ID_VALID);
+    const sak = await opprettUtenforAvtalelandSak(page);
 
-    const sak = sokPage.finnSakBySaksnummer(saksnummer);
+    // Naviger til behandlingen
     await sokPage.klikkVisBehandling(sak);
     await behandlingPage.verifiserBehandlingsside();
 
@@ -111,17 +100,12 @@ test.describe("FTRL Stegvelger - Navigasjon", () => {
   test("skal vise steg i progressbar for FTRL-sak", async ({ page }, testInfo) => {
     test.setTimeout(60000);
 
-    const saksnummer = await opprettUtenforAvtalelandSak(page);
-
-    const hovedsidePage = new HovedsidePage(page);
     const sokPage = new SokPage(page);
     const behandlingPage = new BehandlingPage(page);
     const stegvelgerPage = new StegvelgerPage(page);
 
-    await hovedsidePage.goto();
-    await hovedsidePage.søkOgVentPåResultat(USER_ID_VALID);
+    const sak = await opprettUtenforAvtalelandSak(page);
 
-    const sak = sokPage.finnSakBySaksnummer(saksnummer);
     await sokPage.klikkVisBehandling(sak);
     await behandlingPage.verifiserBehandlingsside();
 
@@ -146,17 +130,12 @@ test.describe("FTRL Stegvelger - Navigasjon", () => {
   test("skal kunne klikke på steg i progressbar", async ({ page }, testInfo) => {
     test.setTimeout(60000);
 
-    const saksnummer = await opprettUtenforAvtalelandSak(page);
-
-    const hovedsidePage = new HovedsidePage(page);
     const sokPage = new SokPage(page);
     const behandlingPage = new BehandlingPage(page);
     const stegvelgerPage = new StegvelgerPage(page);
 
-    await hovedsidePage.goto();
-    await hovedsidePage.søkOgVentPåResultat(USER_ID_VALID);
+    const sak = await opprettUtenforAvtalelandSak(page);
 
-    const sak = sokPage.finnSakBySaksnummer(saksnummer);
     await sokPage.klikkVisBehandling(sak);
     await behandlingPage.verifiserBehandlingsside();
 

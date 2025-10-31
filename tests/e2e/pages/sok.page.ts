@@ -170,7 +170,6 @@ export class SokPage {
    * @param sak - Sak-locator
    */
   async klikkVisBehandling(sak: Locator): Promise<void> {
-    const sakId = getSakId(sak);
     const visBehandlingKnapp = sak.locator('button:has-text("Vis behandling")').first();
 
     try {
@@ -178,7 +177,7 @@ export class SokPage {
       await visBehandlingKnapp.click();
       await this.page.waitForLoadState("domcontentloaded");
     } catch (error) {
-      throw new Error(`Kunne ikke klikke på "Vis behandling" for sak ${sakId}: ${error}`);
+      throw new Error(`Kunne ikke klikke på "Vis behandling" for sak ${getSakId(sak)}: ${error}`);
     }
   }
 
@@ -189,14 +188,13 @@ export class SokPage {
    * @returns true hvis saken har den statusen
    */
   async harStatus(sak: Locator, status: string): Promise<boolean> {
-    const sakId = getSakId(sak);
     try {
       return await sak
         .locator(`:has-text("${status}")`)
         .isVisible()
         .catch(() => false);
     } catch (error) {
-      throw new Error(`Kunne ikke sjekke status "${status}" for sak ${sakId}: ${error}`);
+      throw new Error(`Kunne ikke sjekke status "${status}" for sak ${getSakId(sak)}: ${error}`);
     }
   }
 

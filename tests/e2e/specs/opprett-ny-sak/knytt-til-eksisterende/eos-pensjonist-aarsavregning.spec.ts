@@ -16,10 +16,10 @@ test.describe("EØS pensjonist med trygdeavgift - årsavregning (MELOSYS-7603)",
 
   test("Opprett EØS pensjonist-sak med trygdeavgift for testdata", async ({ page }, testInfo) => {
     // Denne testen oppretter testdata som brukes av de andre testene
-    const sakId = await opprettEøsPensjonistSakMedTrygdeavgift(page);
+    const sak = await opprettEøsPensjonistSakMedTrygdeavgift(page);
 
-    expect(sakId, "Sak skal være opprettet").toBeTruthy();
-    expect(sakId).toMatch(/^MEL-\d+$/);
+    expect(getSakId(sak), "Sak skal være opprettet").toBeTruthy();
+    expect(getSakId(sak)).toMatch(/^MEL-\d+$/);
 
     await runAxeAnalyze(page, testInfo.title);
   });

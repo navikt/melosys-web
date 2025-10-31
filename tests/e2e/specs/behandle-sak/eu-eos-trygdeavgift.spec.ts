@@ -1,5 +1,4 @@
 import { expect, test } from "@playwright/test";
-import { HovedsidePage, USER_ID_VALID } from "../../pages/hovedside.page";
 import { SokPage } from "../../pages/sok.page";
 import { BehandlingPage } from "../../pages/behandling/behandling.page";
 import { StegvelgerPage } from "../../pages/behandling/stegvelger.page";
@@ -25,18 +24,13 @@ import { runAxeAnalyze } from "../../utils/axeUtils";
 
 test.describe("EU/EØS Trygdeavgift", () => {
   test("skal vise trygdeavgift-steget i flyten", async ({ page }, testInfo) => {
-    const saksnummer = await opprettEøsPensjonistSakMedTrygdeavgift(page);
-
-    const hovedsidePage = new HovedsidePage(page);
     const sokPage = new SokPage(page);
     const behandlingPage = new BehandlingPage(page);
     const stegvelgerPage = new StegvelgerPage(page);
 
-    // Naviger til behandlingen
-    await hovedsidePage.goto();
-    await hovedsidePage.søkOgVentPåResultat(USER_ID_VALID);
+    const sak = await opprettEøsPensjonistSakMedTrygdeavgift(page);
+    const saksnummer = await sokPage.getSaksnummer(sak);
 
-    const sak = sokPage.finnSakBySaksnummer(saksnummer);
     await sokPage.klikkVisBehandling(sak);
     await behandlingPage.verifiserBehandlingsside();
 
@@ -79,18 +73,13 @@ test.describe("EU/EØS Trygdeavgift", () => {
   });
 
   test("skal kunne fylle ut skatteforholdsperioder når bruker er skattepliktig", async ({ page }, testInfo) => {
-    const saksnummer = await opprettEøsPensjonistSakMedTrygdeavgift(page);
-
-    const hovedsidePage = new HovedsidePage(page);
     const sokPage = new SokPage(page);
     const behandlingPage = new BehandlingPage(page);
     const trygdeavgiftPage = new TrygdeavgiftPage(page);
 
-    // Naviger til behandlingen
-    await hovedsidePage.goto();
-    await hovedsidePage.søkOgVentPåResultat(USER_ID_VALID);
+    const sak = await opprettEøsPensjonistSakMedTrygdeavgift(page);
+    const saksnummer = await sokPage.getSaksnummer(sak);
 
-    const sak = sokPage.finnSakBySaksnummer(saksnummer);
     await sokPage.klikkVisBehandling(sak);
     await behandlingPage.verifiserBehandlingsside();
 
@@ -140,18 +129,13 @@ test.describe("EU/EØS Trygdeavgift", () => {
   });
 
   test("skal vise inntektskilder når bruker ikke er skattepliktig", async ({ page }, testInfo) => {
-    const saksnummer = await opprettEøsPensjonistSakMedTrygdeavgift(page);
-
-    const hovedsidePage = new HovedsidePage(page);
     const sokPage = new SokPage(page);
     const behandlingPage = new BehandlingPage(page);
     const trygdeavgiftPage = new TrygdeavgiftPage(page);
 
-    // Naviger til behandlingen
-    await hovedsidePage.goto();
-    await hovedsidePage.søkOgVentPåResultat(USER_ID_VALID);
+    const sak = await opprettEøsPensjonistSakMedTrygdeavgift(page);
+    const saksnummer = await sokPage.getSaksnummer(sak);
 
-    const sak = sokPage.finnSakBySaksnummer(saksnummer);
     await sokPage.klikkVisBehandling(sak);
     await behandlingPage.verifiserBehandlingsside();
 
@@ -196,18 +180,12 @@ test.describe("EU/EØS Trygdeavgift", () => {
   });
 
   test("skal kunne fylle ut inntektskilder og beregne trygdeavgift", async ({ page }, testInfo) => {
-    const saksnummer = await opprettEøsPensjonistSakMedTrygdeavgift(page);
-
-    const hovedsidePage = new HovedsidePage(page);
     const sokPage = new SokPage(page);
     const behandlingPage = new BehandlingPage(page);
     const trygdeavgiftPage = new TrygdeavgiftPage(page);
 
-    // Naviger til behandlingen
-    await hovedsidePage.goto();
-    await hovedsidePage.søkOgVentPåResultat(USER_ID_VALID);
+    const sak = await opprettEøsPensjonistSakMedTrygdeavgift(page);
 
-    const sak = sokPage.finnSakBySaksnummer(saksnummer);
     await sokPage.klikkVisBehandling(sak);
     await behandlingPage.verifiserBehandlingsside();
 
@@ -254,18 +232,13 @@ test.describe("EU/EØS Trygdeavgift", () => {
   });
 
   test("skal disable Neste-knapp når skjema er ugyldig", async ({ page }, testInfo) => {
-    const saksnummer = await opprettEøsPensjonistSakMedTrygdeavgift(page);
-
-    const hovedsidePage = new HovedsidePage(page);
     const sokPage = new SokPage(page);
     const behandlingPage = new BehandlingPage(page);
     const trygdeavgiftPage = new TrygdeavgiftPage(page);
 
-    // Naviger til behandlingen
-    await hovedsidePage.goto();
-    await hovedsidePage.søkOgVentPåResultat(USER_ID_VALID);
+    const sak = await opprettEøsPensjonistSakMedTrygdeavgift(page);
+    const saksnummer = await sokPage.getSaksnummer(sak);
 
-    const sak = sokPage.finnSakBySaksnummer(saksnummer);
     await sokPage.klikkVisBehandling(sak);
     await behandlingPage.verifiserBehandlingsside();
 
@@ -305,19 +278,14 @@ test.describe("EU/EØS Trygdeavgift", () => {
   });
 
   test("skal kunne navigere til vedtak etter å ha fylt ut trygdeavgift", async ({ page }, testInfo) => {
-    const saksnummer = await opprettEøsPensjonistSakMedTrygdeavgift(page);
-
-    const hovedsidePage = new HovedsidePage(page);
     const sokPage = new SokPage(page);
     const behandlingPage = new BehandlingPage(page);
     const stegvelgerPage = new StegvelgerPage(page);
     const trygdeavgiftPage = new TrygdeavgiftPage(page);
 
-    // Naviger til behandlingen
-    await hovedsidePage.goto();
-    await hovedsidePage.søkOgVentPåResultat(USER_ID_VALID);
+    const sak = await opprettEøsPensjonistSakMedTrygdeavgift(page);
+    const saksnummer = await sokPage.getSaksnummer(sak);
 
-    const sak = sokPage.finnSakBySaksnummer(saksnummer);
     await sokPage.klikkVisBehandling(sak);
     await behandlingPage.verifiserBehandlingsside();
 

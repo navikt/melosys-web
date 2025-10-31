@@ -1,28 +1,23 @@
-import { test, Page, expect } from "@playwright/test";
-import { HovedsidePage, USER_ID_VALID } from "../../pages/hovedside.page";
+import { test, Page } from "@playwright/test";
 import { SendBrevPage } from "../../pages/behandling/send-brev.page";
 import { assertErrors } from "../../utils/testUtils";
 import { SokPage } from "../../pages/sok.page";
 import { BehandlingPage } from "../../pages/behandling/behandling.page";
 import { runAxeAnalyze } from "../../utils/axeUtils";
+import { opprettAvtalelandSak, opprettUtenforAvtalelandSakMedAarsavregning } from "../../utils/testdataUtils";
 
 let sb: SendBrevPage;
 
-// Gjenbrukbar setup-funksjon som finner hvilken som helst åpen sak
+// Gjenbrukbar setup-funksjon som oppretter egen testdata
 async function setupSendBrevTest(page: Page) {
-  const mainPage = new HovedsidePage(page);
   const sokPage = new SokPage(page);
   const behandlingPage = new BehandlingPage(page);
   sb = new SendBrevPage(page);
 
-  await mainPage.goto();
+  // Opprett egen Avtaleland-sak for denne testen
+  const sak = await opprettAvtalelandSak(page);
 
-  await mainPage.søkOgVentPåResultat(USER_ID_VALID);
-
-  const saker = await sokPage.finnÅpneSaker("Avtaleland");
-  expect(saker.length, "Ingen åpne 'Avtaleland' saker funnet").toBeGreaterThan(0);
-
-  await sokPage.klikkVisBehandling(saker[0]!);
+  await sokPage.klikkVisBehandling(sak);
   await behandlingPage.verifiserBehandlingsside();
 
   await page.waitForLoadState("domcontentloaded");
@@ -90,19 +85,15 @@ test.describe("Validering av årsavregning brevmaler", () => {
   test("Korrekt validering for brevmal 'Innhenting av inntektsopplysninger for årsavregning'", async ({
     page,
   }, testInfo) => {
-    const mainPage = new HovedsidePage(page);
+    test.setTimeout(60000); // Økt timeout siden vi oppretter sak med årsavregning
     const sokPage = new SokPage(page);
     const behandlingPage = new BehandlingPage(page);
     sb = new SendBrevPage(page);
 
-    await mainPage.goto();
-    await mainPage.søkOgVentPåResultat(USER_ID_VALID);
+    // Opprett egen FTRL-sak med årsavregning for denne testen
+    const sak = await opprettUtenforAvtalelandSakMedAarsavregning(page);
 
-    // Finn åpne FTRL-saker med Årsavregning behandling
-    const saker = await sokPage.finnÅpneSaker("Utenfor avtaleland", "Årsavregning");
-    expect(saker.length, "Ingen åpne 'Utenfor avtaleland - Årsavregning' saker funnet").toBeGreaterThan(0);
-
-    await sokPage.klikkVisBehandling(saker[0]!);
+    await sokPage.klikkVisBehandling(sak);
     await behandlingPage.verifiserBehandlingsside();
 
     await page.waitForLoadState("domcontentloaded");
