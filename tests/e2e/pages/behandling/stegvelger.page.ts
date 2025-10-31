@@ -16,10 +16,10 @@ export class StegvelgerPage {
    * Vent på at stegvelgeren blir synlig (dvs. at data har lastet)
    * Stegvelgeren vises kun når mottatteOpplysninger og soknadForm er lastet
    */
-  async ventPaStegvelger(timeout = 30000): Promise<void> {
+  async ventPaStegvelger(): Promise<void> {
     const saksnummer = getSaksnummerFraUrl(this.page);
     const stegvelgerContainer = this.page.locator(".stegvelger");
-    await expect(stegvelgerContainer, `${saksnummer}: Stegvelger-container skal være synlig`).toBeVisible({ timeout });
+    await expect(stegvelgerContainer, `${saksnummer}: Stegvelger-container skal være synlig`).toBeVisible();
 
     // Vent også på at steglinjen (progressbar) er synlig
     const stegLinje = this.page.locator(".stegLinje");
@@ -113,7 +113,6 @@ export class StegvelgerPage {
       if (await knapp.isVisible({ timeout: 2000 }).catch(() => false)) {
         await knapp.click();
         knappKlikket = true;
-        await this.page.waitForTimeout(500); // Vent på stegovergang
         break;
       }
     }
@@ -139,7 +138,6 @@ export class StegvelgerPage {
       if (await knapp.isVisible({ timeout: 2000 }).catch(() => false)) {
         await knapp.click();
         knappKlikket = true;
-        await this.page.waitForTimeout(500); // Vent på stegovergang
         break;
       }
     }
@@ -164,7 +162,6 @@ export class StegvelgerPage {
       if (await steg.isVisible({ timeout: 2000 }).catch(() => false)) {
         await steg.click();
         stegKlikket = true;
-        await this.page.waitForTimeout(500);
         break;
       }
     }

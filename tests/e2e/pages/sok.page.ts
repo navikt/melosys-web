@@ -103,7 +103,6 @@ export class SokPage {
     await this.page.waitForSelector(`text=Resultater for f.nr./d-nr. ${userId}`, {
       state: "visible",
     });
-    await this.page.waitForTimeout(500);
   }
 
   /**

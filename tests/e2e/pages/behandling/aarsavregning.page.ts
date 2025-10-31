@@ -17,7 +17,11 @@ export class AarsavregningPage {
     const årSelect = this.page.getByRole("combobox", { name: /år/i });
     await expect(årSelect, `${saksnummer}: År-select skal være synlig`).toBeVisible({ timeout: 5000 });
     await årSelect.selectOption({ label: år });
-    await this.page.waitForTimeout(500); // Vent på at siden laster data for året
+    // Vent på at data for året har lastet ved å sjekke at bestemmelse-dropdown er synlig
+    const bestemmelseSelect = this.page.getByRole("combobox", { name: /bestemmelse/i });
+    await expect(bestemmelseSelect, `${saksnummer}: Bestemmelse-select skal være synlig etter årsskifte`).toBeVisible({
+      timeout: 5000,
+    });
   }
 
   // Radio buttons for endelig avgift valg
@@ -39,9 +43,17 @@ export class AarsavregningPage {
     const saksnummer = getSaksnummerFraUrl(this.page);
     const knapp = this.page.getByRole("button", { name: /legg til periode/i });
     await expect(knapp, `${saksnummer}: Knapp 'Legg til periode' skal være synlig`).toBeVisible({ timeout: 5000 });
+
+    // Tell antall perioder før klikk
+    const perioder = this.page.locator('[data-testid="medlemskapsperiode-gruppe"], .medlemskapsperiode');
+    const antallFør = await perioder.count();
+
     await knapp.click();
-    // Vent på at perioden legges til i DOM
-    await this.page.waitForTimeout(500);
+
+    // Vent på at ny periode er lagt til
+    await expect(perioder, `${saksnummer}: Ny medlemskapsperiode skal være lagt til`).toHaveCount(antallFør + 1, {
+      timeout: 5000,
+    });
   }
 
   async fyllUtMedlemskapsperiodeFomDato(index: number, dato: string) {
@@ -305,7 +317,11 @@ export class AarsavregningPage {
 
     // Vent på at API-kallet for oppdaterHarTrygdeavgiftFraAvgiftssystemet fullføres
     // og at skjemaet re-rendres med medlemskapsperiode-feltene
-    await this.page.waitForTimeout(2000);
+    const medlemskapsperiodeFelt = this.page.getByRole("combobox", { name: /trygdedekning periode 1/i });
+    await expect(
+      medlemskapsperiodeFelt,
+      `${saksnummer}: Medlemskapsperiode-felt skal være synlig etter delt grunnlag valgt`,
+    ).toBeVisible({ timeout: 5000 });
   }
 
   async velgDeltGrunnlagNei() {
@@ -440,9 +456,16 @@ export class AarsavregningPage {
 
   // Vent på beregning
   async ventPåBeregning(timeoutMs: number = 5000) {
-    // Vent på at loading-indikatoren forsvinner
-    await this.page.waitForTimeout(1000); // Gi systemet tid til å starte beregning
+    // Vent på at loading-indikatoren dukker opp først (bevis på at beregning har startet),
+    // deretter vent på at den forsvinner (beregning fullført)
     const loadingIndicator = this.page.locator('[class*="loading"], [class*="spinner"]');
+
+    // Prøv først å vent på at loading-indikatoren dukker opp (kan allerede være der)
+    await loadingIndicator.isVisible({ timeout: 1000 }).catch(() => {
+      // Hvis loading-indikatoren ikke dukker opp, betyr det at beregningen var rask
+    });
+
+    // Vent på at loading-indikatoren forsvinner
     await expect(loadingIndicator).not.toBeVisible({ timeout: timeoutMs });
   }
 }

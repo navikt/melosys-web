@@ -21,7 +21,7 @@ import { getSaksnummerFraLocator } from "../../../utils/testUtils";
  * - Én-veis dataflyt: Redux → Component
  * - Parallell data-henting med Promise.all
  */
-test.describe("MELOSYS-7624: State-håndtering ved saksbytting", () => {
+test.describe("State-håndtering ved saksbytting", () => {
   let opprettNySakPage: OpprettNySakPage;
 
   test.beforeEach(async ({ page }) => {

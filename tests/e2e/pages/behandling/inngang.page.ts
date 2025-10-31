@@ -24,6 +24,5 @@ export class InngangPage {
     const bekreftKnapp = this.page.locator(".stegFane--aktiv button.stegKnapper__bekreft");
     await bekreftKnapp.waitFor({ state: "visible", timeout: 5000 });
     await bekreftKnapp.click();
-    await this.page.waitForTimeout(1000); // Vent på stegovergang
   }
 }

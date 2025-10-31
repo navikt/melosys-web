@@ -99,9 +99,7 @@ export class OpprettNySakPage {
       return;
     }
 
-    // Vent på at siden har lastet ferdig (enten "Ingen saker" melding eller radioknappene)
-    await this.page.waitForTimeout(1000);
-
+    // Sjekk om det finnes eksisterende saker eller "Ingen saker" melding
     const ingenSakerMelding = this.page.locator(
       ".opprettnysak :text('Ingen eksisterende saker funnet. Du må opprette en ny sak.')",
     );
@@ -307,7 +305,11 @@ export class OpprettNySakPage {
    */
   async velgSakstema(value: "Medlemskap og lovvalg" | "Unntak" | "Trygdeavgift"): Promise<void> {
     await this.velgDropdownVerdi("sakstema", value, "Sakstema");
-    await this.page.waitForTimeout(DROP_DOWN_SELECT_TIMEOUT);
+    // Vent på at behandlingstema-dropdown er lastet inn
+    const behandlingstemaSelect = this.page.locator("select[name='behandlingstema']");
+    await expect(behandlingstemaSelect, "Behandlingstema-select skal være synlig etter sakstema valgt").toBeVisible({
+      timeout: 5000,
+    });
   }
 
   /**
@@ -332,7 +334,12 @@ export class OpprettNySakPage {
       | "Virksomhet",
   ): Promise<void> {
     await this.velgDropdownVerdi("behandlingstema", value, "Behandlingstema");
-    await this.page.waitForTimeout(DROP_DOWN_SELECT_TIMEOUT);
+    // Vent på at behandlingstype-dropdown er lastet inn
+    const behandlingstypeSelect = this.page.locator("select[name='behandlingstype']");
+    await expect(
+      behandlingstypeSelect,
+      "Behandlingstype-select skal være synlig etter behandlingstema valgt",
+    ).toBeVisible({ timeout: 5000 });
   }
 
   /**
@@ -342,7 +349,12 @@ export class OpprettNySakPage {
     value: "Førstegangsbehandling" | "Ny vurdering" | "Klage" | "Henvendelse" | "Årsavregning",
   ): Promise<void> {
     await this.velgDropdownVerdi("behandlingstype", value, "Behandlingstype");
-    await this.page.waitForTimeout(DROP_DOWN_SELECT_TIMEOUT);
+    // Vent på at behandlingsårsak-dropdown er lastet inn
+    const behandlingsaarsakSelect = this.page.locator("select[name='behandlingsaarsakType']");
+    await expect(
+      behandlingsaarsakSelect,
+      "Behandlingsårsak-select skal være synlig etter behandlingstype valgt",
+    ).toBeVisible({ timeout: 5000 });
   }
 
   /**
@@ -350,7 +362,18 @@ export class OpprettNySakPage {
    */
   async velgBehandlingsaarsak(value: "Søknad" | "SED" | "Henvendelse"): Promise<void> {
     await this.velgDropdownVerdi("behandlingsaarsakType", value, "Behandlingsårsak");
-    await this.page.waitForTimeout(DROP_DOWN_SELECT_TIMEOUT);
+    // Etter behandlingsårsak vises enten land-felt eller "Opprett ny behandling" knapp
+    // Vent på at ett av disse er synlig
+    const landFieldset = this.page.locator("fieldset:has-text('Land')");
+    const opprettKnapp = this.page.locator(SELECTORS.OPPRETT_NY_BEHANDLING_BUTTON);
+    await Promise.race([
+      expect(landFieldset, "Land-fieldset skal være synlig")
+        .toBeVisible({ timeout: 5000 })
+        .catch(() => {}),
+      expect(opprettKnapp, "Opprett-knapp skal være synlig")
+        .toBeVisible({ timeout: 5000 })
+        .catch(() => {}),
+    ]);
   }
 
   /**
@@ -419,31 +442,22 @@ export class OpprettNySakPage {
 
     // Vent på at dropdown har lastet inn options (mer enn bare "Velg...")
     // Noen dropdown-er (som behandlingsårsak) er avhengig av at andre felt er valgt først
-    // Bruk Playwright's locator.count() i stedet for waitForFunction
-    await this.page.waitForTimeout(200); // Kort pause for at dropdown skal begynne å laste
-
-    const maxRetries = 50; // 50 * 200ms = 10 sekunder totalt
-    let retries = 0;
-    let optionCount = await selectElement.locator("option").count();
-
-    while (optionCount <= 1 && retries < maxRetries) {
-      await this.page.waitForTimeout(200);
-      optionCount = await selectElement.locator("option").count();
-      retries++;
-    }
-
-    expect(
-      optionCount > 1,
-      `${fieldDisplayName} har ikke lastet inn verdier etter ${maxRetries * 200}ms. ` +
-        `Dette kan bety at dropdown-en er avhengig av andre felt som ikke er valgt korrekt.`,
-    ).toBe(true);
+    // Bruk Playwright's innebygde waitFor med poll-funksjon
+    await this.page.waitForFunction(
+      (selectName) => {
+        const select = document.querySelector(`select[name='${selectName}']`) as HTMLSelectElement;
+        return select && select.options.length > 1;
+      },
+      selectName,
+      { timeout: 10000 },
+    );
 
     // Finn option basert på tekstinnhold eller label attributt og hent verdien
-    const options = await selectElement.locator("option").all();
+    const allOptions = await selectElement.locator("option").all();
     let foundValue = null;
     const availableOptions: string[] = [];
 
-    for (const option of options) {
+    for (const option of allOptions) {
       const text = await option.textContent();
       const label = await option.getAttribute("label");
       const displayText = (label || text || "").trim();

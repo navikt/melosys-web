@@ -14,7 +14,7 @@ import { BehandlingPage } from "../../../pages/behandling/behandling.page";
  * 2. Sak med åpen årsavregning → kun Årsavregning tilgjengelig
  * 3. Sak med alle avsluttede → alle behandlingstyper tilgjengelig
  */
-test.describe("MELOSYS-7385: 'Utenfor avtaleland' behandlingslogikk", () => {
+test.describe("'Utenfor avtaleland' behandlingslogikk", () => {
   let opprettNySakPage: OpprettNySakPage;
 
   test.beforeEach(async ({ page }) => {

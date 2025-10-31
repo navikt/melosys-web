@@ -53,7 +53,6 @@ async function setupAarsavregningTest(page: Page) {
   const aarsavregningTab = page.locator('button[role="tab"]:has-text("Årsavregning")');
   if (await aarsavregningTab.isVisible({ timeout: 2000 }).catch(() => false)) {
     await aarsavregningTab.click();
-    await page.waitForTimeout(500);
   }
 
   await aarsavregningPage.verifiserAarsavregningside();
@@ -64,7 +63,6 @@ async function setupAarsavregningTest(page: Page) {
 
   for (const år of muligeÅr) {
     await aarsavregningPage.velgÅr(år);
-    await page.waitForTimeout(500);
 
     // Sjekk om det er feilmelding om aktiv årsavregning
     const aktivFeilmelding = page.locator('[class*="error"], [class*="feil"]').filter({
@@ -82,8 +80,8 @@ async function setupAarsavregningTest(page: Page) {
   expect(årValgt, "Kunne ikke finne et tilgjengelig år for årsavregning").toBe(true);
 }
 
-// Wrap alt i en serial describe for å sikre at setup kjører først
-test.describe.serial("MELOSYS-7612: Årsavregning delt grunnlag - Alle tester", () => {
+// Wrap alt i en serial describe for å sikre at setup kjører først MELOSYS-7612
+test.describe.serial("Årsavregning delt grunnlag - Alle tester", () => {
   // Setup: Opprett testdata først
   test.describe("Setup testdata", () => {
     test("Opprett Utenfor avtaleland-sak med Årsavregning", async ({ page }) => {
@@ -135,9 +133,6 @@ test.describe.serial("MELOSYS-7612: Årsavregning delt grunnlag - Alle tester", 
       await aarsavregningPage.velgDeltGrunnlagJa();
       await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
 
-      // Vent på at UI oppdaterer seg
-      await page.waitForTimeout(1000);
-
       const antallFør = await aarsavregningPage.getAntallMedlemskapsperioder();
 
       // Legg til ny medlemskapsperiode
@@ -170,9 +165,6 @@ test.describe.serial("MELOSYS-7612: Årsavregning delt grunnlag - Alle tester", 
       await aarsavregningPage.velgDeltGrunnlagJa();
       await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
 
-      // Vent på at UI oppdaterer seg
-      await page.waitForTimeout(1000);
-
       const antallFør = await aarsavregningPage.getAntallMedlemskapsperioder();
 
       // Legg til ny medlemskapsperiode
@@ -204,9 +196,6 @@ test.describe.serial("MELOSYS-7612: Årsavregning delt grunnlag - Alle tester", 
       // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet
       await aarsavregningPage.velgDeltGrunnlagJa();
       await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
-
-      // Vent på at UI oppdaterer seg
-      await page.waitForTimeout(1000);
 
       // Først, legg til medlemskapsperiode som dekker perioden
       const antallMedlemskapFør = await aarsavregningPage.getAntallMedlemskapsperioder();
@@ -301,9 +290,6 @@ test.describe.serial("MELOSYS-7612: Årsavregning delt grunnlag - Alle tester", 
       // Velg en PLIKTIG bestemmelse
       await aarsavregningPage.velgBestemmelse("§ 2-7 første ledd (arbeidstaker)");
 
-      // Vent på at UI oppdaterer seg
-      await page.waitForTimeout(1000);
-
       const antallFør = await aarsavregningPage.getAntallMedlemskapsperioder();
 
       // Klikk på "Legg til periode"-knappen
@@ -338,9 +324,6 @@ test.describe.serial("MELOSYS-7612: Årsavregning delt grunnlag - Alle tester", 
       // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet
       await aarsavregningPage.velgDeltGrunnlagJa();
       await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
-
-      // Vent på at UI oppdaterer seg
-      await page.waitForTimeout(1000);
 
       // Først, legg til medlemskapsperiode som dekker perioden
       const antallMedlemskapFør = await aarsavregningPage.getAntallMedlemskapsperioder();

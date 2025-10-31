@@ -66,7 +66,6 @@ export class BehandlingPage {
       const hamburgerMeny = this.page.locator(selektor);
       if (await hamburgerMeny.isVisible({ timeout: 1000 }).catch(() => false)) {
         await hamburgerMeny.click();
-        await this.page.waitForTimeout(500);
         menuOpened = true;
         break;
       }
@@ -112,7 +111,6 @@ export class BehandlingPage {
 
       await expect(hamburgerMeny, `${saksnummer}: Hamburger-meny skal være synlig`).toBeVisible({ timeout: 5000 });
       await hamburgerMeny.click();
-      await this.page.waitForTimeout(500);
     }
 
     // Finn accordion-headeren for "Avslutt behandling"
@@ -125,7 +123,6 @@ export class BehandlingPage {
       timeout: 2000,
     });
     await accordionHeader.click();
-    await this.page.waitForTimeout(500);
 
     // Vær mer spesifikk - finn accordion content som tilhører "Avslutt behandling"
     const accordionContent = this.page.locator(
@@ -206,7 +203,6 @@ export class BehandlingPage {
       `${saksnummer}: Avslutningsalternativ "${valgtAlternativ.tekst}" skal være synlig`,
     ).toBeVisible({ timeout: 3000 });
     await valgtAlternativ.element.click();
-    await this.page.waitForTimeout(500);
   }
 
   /**
@@ -222,7 +218,6 @@ export class BehandlingPage {
 
     if (handlingSynlig) {
       await behandlingsHandling.click();
-      await this.page.waitForTimeout(500);
       return;
     }
 
@@ -245,7 +240,6 @@ export class BehandlingPage {
     }
 
     expect(alternativFunnet, `Avslutningsalternativ "${tekst}" ikke funnet på sak ${saksnummer}`).toBe(true);
-    await this.page.waitForTimeout(500);
   }
 
   /**

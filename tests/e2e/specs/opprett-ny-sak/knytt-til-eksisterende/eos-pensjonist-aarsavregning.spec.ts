@@ -8,7 +8,8 @@ import { opprettEøsPensjonistSakMedTrygdeavgift } from "../../../utils/testdata
 let opprettNySakPage: OpprettNySakPage;
 let hovedsidePage: HovedsidePage;
 
-test.describe("EØS pensjonist med trygdeavgift - årsavregning (MELOSYS-7603)", () => {
+// MELOSYS-7603
+test.describe("EØS pensjonist med trygdeavgift - årsavregning", () => {
   test.beforeEach(async ({ page }) => {
     hovedsidePage = new HovedsidePage(page);
     opprettNySakPage = new OpprettNySakPage(page);

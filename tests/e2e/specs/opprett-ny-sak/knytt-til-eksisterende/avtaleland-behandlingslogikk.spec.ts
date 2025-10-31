@@ -16,7 +16,7 @@ import { BehandlingPage } from "../../../pages/behandling/behandling.page";
  * Det forventes da en gul varselmelding om det. Dersom behandlingen ble avsluttet som HENLAGT skal man fortsatt få gul varselmelding om det.
  * Dersom alle behandlingene er avsluttet i saken (ferdigbehandlet med vedtak), skal det være mulig å opprette NY_VURDERING eller HENVENDELSE."
  */
-test.describe("MELOSYS-7385: Avtaleland behandlingslogikk (regresjon)", () => {
+test.describe("Avtaleland behandlingslogikk (regresjon)", () => {
   let opprettNySakPage: OpprettNySakPage;
 
   test.beforeEach(async ({ page }) => {

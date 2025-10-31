@@ -116,7 +116,6 @@ test.describe("EU/EØS Trygdeavgift", () => {
     await trygdeavgiftPage.velgSkattepliktig(0, true);
 
     // Verifiser at inntektskilder IKKE vises når bruker er skattepliktig i hele perioden
-    await page.waitForTimeout(1000);
     const inntektskilderSynlige = await trygdeavgiftPage.verifiserInntektskilderSynlige();
     expect(inntektskilderSynlige, `[${saksnummer}] Inntektskilder skal IKKE vises når bruker er skattepliktig`).toBe(
       false,
@@ -167,9 +166,6 @@ test.describe("EU/EØS Trygdeavgift", () => {
     // Velg at personen IKKE er skattepliktig
     await trygdeavgiftPage.velgSkattepliktig(0, false);
 
-    // Vent litt for at komponenten skal oppdatere
-    await page.waitForTimeout(1000);
-
     // Verifiser at inntektskilder nå vises
     const inntektskilderSynlige = await trygdeavgiftPage.verifiserInntektskilderSynlige();
     expect(inntektskilderSynlige, `[${saksnummer}] Inntektskilder skal vises når bruker IKKE er skattepliktig`).toBe(
@@ -216,14 +212,10 @@ test.describe("EU/EØS Trygdeavgift", () => {
 
     // Velg at personen IKKE er skattepliktig
     await trygdeavgiftPage.velgSkattepliktig(0, false);
-    await page.waitForTimeout(1000);
 
     // Fyll ut inntektskilde
     await trygdeavgiftPage.velgInntektskildetype(0, "Arbeidsinntekt");
     await trygdeavgiftPage.fyllInnInntekt(0, "500000");
-
-    // Vent på beregning
-    await page.waitForTimeout(2000);
 
     // Verifiser at beregning vises
     await trygdeavgiftPage.verifiserBeregningVises();
@@ -267,10 +259,7 @@ test.describe("EU/EØS Trygdeavgift", () => {
     // Verifiser at vi er på trygdeavgift-steget
     await trygdeavgiftPage.ventPaTrygdeavgiftSteg();
 
-    // Ikke fyll ut noe - skjemaet skal være ugyldig
-    await page.waitForTimeout(500);
-
-    // Verifiser at Neste-knapp er disabled
+    // Verifiser at Neste-knapp er disabled (skjemaet skal være ugyldig når ingenting er fylt ut)
     const nesteDisabled = await trygdeavgiftPage.erNesteKnappDisabled();
     expect(nesteDisabled, `[${saksnummer}] Neste-knapp skal være disabled når skjema er ugyldig`).toBe(true);
 
@@ -316,7 +305,6 @@ test.describe("EU/EØS Trygdeavgift", () => {
 
     // Fyll ut minimum for å kunne gå videre
     await trygdeavgiftPage.velgSkattepliktig(0, true);
-    await page.waitForTimeout(2000);
 
     // Verifiser at beregning vises
     await trygdeavgiftPage.verifiserBeregningVises();

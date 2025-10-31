@@ -37,7 +37,6 @@ export class TrygdeavgiftPage {
       : radioGruppe.locator('input[type="radio"][value="false"]');
 
     await radioKnapp.click();
-    await this.page.waitForTimeout(500);
   }
 
   /**
@@ -62,7 +61,6 @@ export class TrygdeavgiftPage {
   async leggTilSkatteforholdsperiode(): Promise<void> {
     const knapp = this.page.locator('button:has-text("Legg til skatteforholdsperiode")');
     await knapp.click();
-    await this.page.waitForTimeout(500);
   }
 
   /**
@@ -72,7 +70,6 @@ export class TrygdeavgiftPage {
     // type kan være: "Arbeidsinntekt", "Næringsinntekt", "Pensjon", "Uføretrygd"
     const selects = this.page.locator('select[name^="inntektskilder"][name$=".inntektskildetype"]');
     await selects.nth(indeks).selectOption({ label: type });
-    await this.page.waitForTimeout(500);
   }
 
   /**
@@ -81,7 +78,6 @@ export class TrygdeavgiftPage {
   async fyllInnInntekt(indeks: number, beløp: string): Promise<void> {
     const inputs = this.page.locator('input[name^="inntektskilder"][name$=".inntekt"]');
     await inputs.nth(indeks).fill(beløp);
-    await this.page.waitForTimeout(300);
   }
 
   /**
@@ -106,7 +102,6 @@ export class TrygdeavgiftPage {
   async leggTilInntektskilde(): Promise<void> {
     const knapp = this.page.locator('button:has-text("Legg til inntektskilde")');
     await knapp.click();
-    await this.page.waitForTimeout(500);
   }
 
   /**
@@ -156,7 +151,6 @@ export class TrygdeavgiftPage {
     const knapp = this.page.locator(".stegFane--aktiv button.stegKnapper__bekreft");
     await knapp.waitFor({ state: "visible", timeout: 5000 });
     await knapp.click();
-    await this.page.waitForTimeout(1000);
   }
 
   /**

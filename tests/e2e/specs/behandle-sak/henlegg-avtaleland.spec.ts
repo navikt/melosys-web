@@ -13,7 +13,7 @@ import { runAxeAnalyze } from "../../utils/axeUtils";
  * Denne setup-testen oppretter en Avtaleland-sak og henlegger den
  * for å sørge for at regresjonstestene har henlagt testdata tilgjengelig.
  */
-test.describe("MELOSYS-7385 Setup: Avtaleland-sak med henlagt behandling", () => {
+test.describe("Setup: Avtaleland-sak med henlagt behandling", () => {
   test("Opprett Avtaleland-sak og henlegg behandlingen", async ({ page }, testInfo) => {
     test.setTimeout(30000); // Økt timeout siden vi oppretter og henlegger sak
     const sokPage = new SokPage(page);

@@ -71,9 +71,6 @@ test.describe("FTRL Stegvelger - Navigasjon", () => {
       // Gå til neste steg
       await stegvelgerPage.klikkNeste();
 
-      // Vent litt på at steget skal skifte
-      await page.waitForTimeout(500);
-
       // Verifiser at vi har gått videre
       const andreSteg = await stegvelgerPage.hentAktivtSteg();
       expect(andreSteg, "Skal ha gått til et annet steg").not.toBe(forsteSteg);
@@ -82,9 +79,6 @@ test.describe("FTRL Stegvelger - Navigasjon", () => {
       const harForrigeKnapp = await stegvelgerPage.erForrigeKnappSynlig();
       if (harForrigeKnapp) {
         await stegvelgerPage.klikkForrige();
-
-        // Vent litt på at steget skal skifte tilbake
-        await page.waitForTimeout(500);
 
         // Verifiser at vi er tilbake på første steg
         const tilbakeTilForste = await stegvelgerPage.hentAktivtSteg();
@@ -148,9 +142,6 @@ test.describe("FTRL Stegvelger - Navigasjon", () => {
 
       // Klikk på andre steg
       await stegvelgerPage.klikkSteg(andreStegnavn);
-
-      // Vent på at steget skal bli aktivt
-      await page.waitForTimeout(500);
 
       // Verifiser at andre steg er aktivt
       const aktivtSteg = await stegvelgerPage.hentAktivtSteg();

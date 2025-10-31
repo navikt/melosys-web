@@ -30,7 +30,6 @@ export class VirksomhetPage {
     const erChecket = await forsteCheckbox.isChecked();
     if (!erChecket) {
       await forsteCheckbox.check();
-      await this.page.waitForTimeout(500);
     }
   }
 
@@ -41,6 +40,5 @@ export class VirksomhetPage {
     const bekreftKnapp = this.page.locator(".stegFane--aktiv button.stegKnapper__bekreft");
     await bekreftKnapp.waitFor({ state: "visible", timeout: 5000 });
     await bekreftKnapp.click();
-    await this.page.waitForTimeout(1000);
   }
 }
