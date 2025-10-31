@@ -38,7 +38,10 @@ import { Innsynsmelding, NyVurderingMelding, StatsborgerskapFeil } from "../aler
 import { AvklartefaktaStore, EnkelDataStore, StegStoreTyper, VilkaarStore } from "./StegState";
 import "./stegvelger.less";
 import { erFeatureToggleEnabled } from "../../featuretoggle";
-import { MELOSYS_NORGE_ER_UTPEKT_11_3_A } from "../../featuretoggle/toggleNavn";
+import {
+  MELOSYS_EØS_FAKTURERING_AV_TRYGDEAVGIFT,
+  MELOSYS_NORGE_ER_UTPEKT_11_3_A,
+} from "../../featuretoggle/toggleNavn";
 
 class Stegvelger extends Component {
   state = {
@@ -752,7 +755,7 @@ const mapStateToProps = (state) => ({
   feilmeldinger: feiletResponsSelectors.FeilmeldingerSelector(state),
   kontrollfeil: kontrollSelectors.KontrollFeilSelector(state),
   norgeErUtpekt11_3AToggleEnabled: erFeatureToggleEnabled(MELOSYS_NORGE_ER_UTPEKT_11_3_A, state),
-  eøsFaktureringAvTrygdeavgiftToggleEnabled: erFeatureToggleEnabled("melosys.eos_fakturering_av_trygdeavgift", state),
+  eøsFaktureringAvTrygdeavgiftToggleEnabled: erFeatureToggleEnabled(MELOSYS_EØS_FAKTURERING_AV_TRYGDEAVGIFT, state),
 });
 
 /* eslint no-alert:off */

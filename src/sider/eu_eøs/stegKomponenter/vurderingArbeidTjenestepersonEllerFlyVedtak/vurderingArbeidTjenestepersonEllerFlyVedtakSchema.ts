@@ -15,13 +15,13 @@ const arbeid_tjenesteperson_eller_fly_vedtak = object().shape({
   vedtakstype: string()
     .nullable()
     .when("$behandlingstype", {
-      is: (behandlingstype) => behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING,
+      is: (behandlingstype: string) => behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING,
       then: (schema) => schema.required(VELG_EN_VEDTAKSTYPE),
     }),
   vedtakstypebegrunnelse: string()
     .nullable()
     .when("$behandlingstype", {
-      is: (behandlingstype) => behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING,
+      is: (behandlingstype: string) => behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING,
       then: (schema) => schema.required(OPPGI_BEGRUNNELSE),
     }),
   mottakerinstitusjoner: array().of(

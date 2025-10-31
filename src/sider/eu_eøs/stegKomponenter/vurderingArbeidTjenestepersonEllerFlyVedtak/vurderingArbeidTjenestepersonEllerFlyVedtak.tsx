@@ -10,7 +10,6 @@ import MKV, { MKVUtils } from "../../../../melosyskodeverk";
 import * as Nav from "../../../../navFrontend";
 import * as Utils from "../../../../utils";
 import * as Forms from "../../../../felleskomponenter/forms";
-import * as Skjema from "../../../../felleskomponenter/skjema";
 import * as KV from "../../../../kodeverk";
 import * as Mui from "../../../../felleskomponenter/ui";
 
@@ -354,7 +353,12 @@ export function VurderingArbeidTjenestepersonEllerFlyVedtak({
       )}
       <Nav.Row className="fritekst">
         <Nav.Column xs="8">
-          <Skjema.Textarea feltNavn="vedtaksbrevFritekst" label="Fritekst til begrunnelse" readOnly={!redigerbart} />
+          <Forms.Textarea
+            name="vedtaksbrevFritekst"
+            control={control}
+            label="Fritekst til begrunnelse"
+            readOnly={!redigerbart}
+          />
         </Nav.Column>
       </Nav.Row>
       {visSendSEDValg && (
@@ -408,9 +412,10 @@ export function VurderingArbeidTjenestepersonEllerFlyVedtak({
       {redigerbart && skalSendeSed(formValues) && (
         <Nav.Row className="fritekstSed">
           <Nav.Column xs="8">
-            <Skjema.Textarea
+            <Forms.Textarea
               label="Ytterligere informasjon til SED (valgfri)"
-              feltNavn="fritekstSed"
+              name="fritekstSed"
+              control={control}
               readOnly={!redigerbart}
             />
           </Nav.Column>
