@@ -547,7 +547,6 @@ export class OpprettNySakPage {
    * Sjekk om det er feilmelding
    * @param feilmelding - Valgfri tekst å sjekke etter i feilmeldingen
    * @param sakIndex - Valgfri index for å sjekke feilmelding rett etter spesifikk sak
-   * @deprecated Bruk hentFeilmeldingspanel() og Playwright's expect().toBeVisible() i stedet
    */
   async harFeilmelding(feilmelding?: string, sakIndex?: number): Promise<boolean> {
     return await this.hentFeilmeldingspanel(feilmelding, sakIndex)
