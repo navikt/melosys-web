@@ -97,6 +97,10 @@ test.describe("Opprett kompleks sak med flere behandlingstyper", () => {
 
     // Opprett Årsavregning på samme sak
     await hovedsidePage.goto();
+
+    // Søk først for å bekrefte at saken eksisterer og er synkronisert
+    await hovedsidePage.søkOgVentPåResultat(USER_ID_VALID);
+
     await hovedsidePage.klikkOpprettNySakKnapp();
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgKnyttTilEksisterendeSak();

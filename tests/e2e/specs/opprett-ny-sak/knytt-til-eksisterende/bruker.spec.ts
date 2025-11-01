@@ -69,6 +69,7 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
     // Søk etter en EØS-sak med sakstema "Trygdeavgift" og behandlingstema "Pensjonist"
     const valgtSak = await opprettNySakPage.finnSak({
       sakstype: "EU/EØS-land",
+      resultattype: "Pensjonist",
     });
 
     expect(valgtSak, "Ingen EØS pensjonist-sak funnet").toBeTruthy();
@@ -111,7 +112,7 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgKnyttTilEksisterendeSak();
 
-    const valgtSak = await opprettNySakPage.velgFørsteSak("EU/EØS-land", "Behandlingen er avsluttet");
+    const valgtSak = await opprettNySakPage.velgFørsteSak("Avtaleland", "Behandlingen er avsluttet");
 
     expect(valgtSak, "Fant ingen 'Avtaleland - Behandlingen er avsluttet' saker").toBeTruthy();
 

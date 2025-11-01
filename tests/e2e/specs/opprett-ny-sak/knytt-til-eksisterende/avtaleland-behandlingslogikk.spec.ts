@@ -49,6 +49,9 @@ test.describe("Avtaleland behandlingslogikk (regresjon)", () => {
     // Gul varselmelding skal vises for Avtaleland-sak med åpen behandling
     const feilmelding = "Du kan ikke opprette en ny behandling på eksisterende sak med en aktiv/pågående behandling";
 
+    // Vent spesifikt på at feilmeldingen vises (ikke bare loading-panelet)
+    await page.locator(".knyttTilSak__behandlingspanel").filter({ hasText: feilmelding }).waitFor({ state: "visible" });
+
     expect(
       await opprettNySakPage.harFeilmelding(feilmelding),
       `Gul varselmelding skal vises for Avtaleland-sak ${getSaksnummerFraLocator(valgtSak)} med åpen behandling`,
@@ -90,6 +93,9 @@ test.describe("Avtaleland behandlingslogikk (regresjon)", () => {
     // === REGRESJONSTEST ===
     // Gul varselmelding skal vises selv om behandling er henlagt
     // Note: Henlagt behandling kan vises som "Behandlingen er avsluttet" i UI
+    // Vent på at feilmeldingspanelet vises (ikke bare loading-panelet)
+    await page.locator(".knyttTilSak__behandlingspanel").waitFor({ state: "visible" });
+
     // Sjekk først om det er noen feilmelding i det hele tatt
     expect(
       await opprettNySakPage.harFeilmelding(),
@@ -133,6 +139,9 @@ test.describe("Avtaleland behandlingslogikk (regresjon)", () => {
 
     // === REGRESJONSTEST ===
     // Nye behandlingstyper skal være tilgjengelig for ferdigbehandlet Avtaleland-sak
+    // Vent på at panelrammen med behandlingstyper vises (ikke bare loading-panelet)
+    await page.locator(".knyttTilSak__panelramme").waitFor({ state: "visible" });
+
     await opprettNySakPage.verifiserTilgjengeligeBehandlingstyper(valgtSak, ["Ny vurdering", "Klage", "Henvendelse"]);
 
     expect(

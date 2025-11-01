@@ -1,5 +1,6 @@
 import { expect, Locator, Page } from "@playwright/test";
 import { OpprettNySakAssertions } from "./opprett-ny-sak-assertions.page";
+import { setDatoFelt } from "../../utils/testUtils";
 
 const DROP_DOWN_SELECT_TIMEOUT = 100; // Ventetid etter valg i dropdown for at avhengige felter skal oppdatere seg
 
@@ -130,7 +131,10 @@ export class OpprettNySakPage {
     const ingenSakerMelding = this.page.locator(
       ".opprettnysak :text('Ingen eksisterende saker funnet. Du må opprette en ny sak.')",
     );
-    await expect(ingenSakerMelding).not.toBeVisible();
+    await expect(
+      ingenSakerMelding,
+      "Fant ikke meldingen `Ingen eksisterende saker funnet. Du må opprette en ny sak.´",
+    ).not.toBeVisible();
 
     const knyttTilEksSakRadio = this.page.locator(".navds-radio__content:has-text('Eksisterende sak')");
     await expect(knyttTilEksSakRadio, "Fant ikke radioknapp for 'Eksisterende sak'").toBeVisible();
@@ -245,20 +249,6 @@ export class OpprettNySakPage {
     const virksomhetRadio = this.page.locator(".navds-radio__content:has-text('Virksomhet')");
     await expect(virksomhetRadio, "Fant ikke radioknapp for 'Virksomhet'").toBeVisible();
     await virksomhetRadio.click();
-  }
-
-  /**
-   * Sett fra-dato i søknadsperiode
-   */
-  async setFraDato(dato: string): Promise<void> {
-    return this.setDatoFelt("Fra", dato);
-  }
-
-  /**
-   * Sett til-dato i søknadsperiode
-   */
-  async setTilDato(dato: string): Promise<void> {
-    return this.setDatoFelt("Til", dato);
   }
 
   /**
@@ -418,18 +408,17 @@ export class OpprettNySakPage {
   }
 
   /**
-   * Generisk funksjon for å sette dato i et datofelt
-   * @private
+   * Sett fra-dato i søknadsperiode
    */
-  private async setDatoFelt(feltNavn: string, dato: string): Promise<void> {
-    const datoInput = this.page.getByRole("textbox", { name: feltNavn });
-    const count = await datoInput.count();
-    expect(count, `${feltNavn}-dato input skal finnes`).toBeGreaterThan(0);
+  async setFraDato(dato: string): Promise<void> {
+    return setDatoFelt("Fra", dato, this.page);
+  }
 
-    // Hvis det finnes flere, bruk den første
-    const input = count > 1 ? datoInput.first() : datoInput;
-    await expect(input, `${feltNavn}-dato input skal være synlig`).toBeVisible();
-    await input.fill(dato);
+  /**
+   * Sett til-dato i søknadsperiode
+   */
+  async setTilDato(dato: string): Promise<void> {
+    return setDatoFelt("Til", dato, this.page);
   }
 
   /**

@@ -5,6 +5,21 @@
 import { expect, Locator, Page } from "@playwright/test";
 
 /**
+ * Generisk funksjon for å sette dato i et datofelt
+ * @private
+ */
+export async function setDatoFelt(feltNavn: string, dato: string, page: Page): Promise<void> {
+  const datoInput = page.getByRole("textbox", { name: feltNavn });
+  const count = await datoInput.count();
+  expect(count, `${feltNavn}-dato input skal finnes`).toBeGreaterThan(0);
+
+  // Hvis det finnes flere, bruk den første
+  const input = count > 1 ? datoInput.first() : datoInput;
+  await expect(input, `${feltNavn}-dato input skal være synlig`).toBeVisible();
+  await input.fill(dato);
+}
+
+/**
  * Hent sakId fra locator
  * @param sak - Sak-locator
  * @returns sakId eller "ukjent"

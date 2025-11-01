@@ -20,10 +20,8 @@ export default defineConfig({
   fullyParallel: false,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
-  /* Retry on CI only */
-  retries: process.env.CI ? 2 : 1,
-  /* Opt out of parallel tests on CI. */
-  workers: 2, // Økt til 2 workers for bedre ytelse
+  retries: 0,
+  workers: 1, // Kjører alle tester i serie
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
@@ -59,7 +57,6 @@ export default defineConfig({
         "tests/e2e/specs/opprett-ny-sak/ny-sak/**/*.spec.ts",
         "tests/e2e/specs/opprett-ny-sak/knytt-til-eksisterende/**/*.spec.ts",
       ],
-      dependencies: ["1-ny-sak"],
     },
     {
       name: "3-knytt-til-eksisterende",
@@ -69,7 +66,6 @@ export default defineConfig({
         actionTimeout: 4000,
       },
       testMatch: ["tests/e2e/specs/opprett-ny-sak/knytt-til-eksisterende/**/*.spec.ts"],
-      dependencies: ["2-andre-opprett-sak-tester"],
     },
     {
       name: "4-behandle-sak",
@@ -79,7 +75,6 @@ export default defineConfig({
         actionTimeout: 4000,
       },
       testMatch: ["tests/e2e/specs/behandle-sak/**/*.spec.ts", "tests/e2e/specs/avslutt-behandling/**/*.spec.ts"],
-      dependencies: ["3-knytt-til-eksisterende"],
     },
   ],
 

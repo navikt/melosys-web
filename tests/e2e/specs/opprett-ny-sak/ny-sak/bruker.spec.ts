@@ -130,6 +130,8 @@ test.describe("'Opprett ny sak for bruker", () => {
 
     await opprettNySakPage.setFraDato("01.01.2024");
     await opprettNySakPage.setTilDato("31.12.2024");
+    await opprettNySakPage.setFraDato("01.01.2024");
+    await opprettNySakPage.setTilDato("31.12.2024");
     // await opprettNySakPage.setLand("Norge");
 
     await opprettNySakPage.klikkOpprettNyBehandling();

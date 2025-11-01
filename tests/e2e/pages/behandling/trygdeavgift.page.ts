@@ -13,10 +13,10 @@ export class TrygdeavgiftPage {
   }
 
   /**
-   * Vent på at trygdeavgift-steget blir synlig
+   * Vent på at et spesifikt steg i trygdeavgift-komponenten er synlig
    */
-  async ventPaTrygdeavgiftSteg(timeout = 10000): Promise<void> {
-    await this.page.waitForSelector("text=Trygdeavgift", { timeout });
+  async verifiserSteg(stegnavn: string, timeout = 10000): Promise<void> {
+    await this.page.waitForSelector(`text=${stegnavn}`, { timeout });
   }
 
   /**
@@ -25,18 +25,45 @@ export class TrygdeavgiftPage {
    * @param erSkattepliktig - true for "Ja", false for "Nei"
    */
   async velgSkattepliktig(indeks: number, erSkattepliktig: boolean): Promise<void> {
-    await this.ventPaTrygdeavgiftSteg();
+    await this.verifiserSteg("Trygdeavgift");
 
-    // Finn radiogruppen for denne perioden
-    // Strukturen er: fieldset med legend "Er personen skattepliktig til Norge i denne perioden?"
-    const radioGrupper = this.page.locator('fieldset:has(legend:text("Er personen skattepliktig"))');
-    const radioGruppe = radioGrupper.nth(indeks);
+    // Radio-knappene har verdier "SKATTEPLIKTIG" (Ja) og "IKKE_SKATTEPLIKTIG" (Nei)
+    const name = `skatteforholdsperioder[${indeks}].skatteplikttype`;
+    const value = erSkattepliktig ? "SKATTEPLIKTIG" : "IKKE_SKATTEPLIKTIG";
 
-    const radioKnapp = erSkattepliktig
-      ? radioGruppe.locator('input[type="radio"][value="true"]')
-      : radioGruppe.locator('input[type="radio"][value="false"]');
+    // Vent på at skatteforholdsperioder-delen er synlig før vi prøver å klikke
+    const skatteforholdsHeading = this.page.locator("text=Oppgi informasjon om brukers skatteforhold");
+    await skatteforholdsHeading.waitFor({ state: "visible", timeout: 10000 });
 
-    await radioKnapp.click();
+    // Finn fieldset-et for denne skatteforholdsperioden
+    const fieldset = this.page.locator("fieldset.skatteforholdsperioder-radio-group").nth(indeks);
+    await fieldset.waitFor({ state: "visible", timeout: 10000 });
+
+    // Finn radio-input med riktig name og value
+    const radioInput = fieldset.locator(`input[name="${name}"][type="radio"][value="${value}"]`);
+    await radioInput.waitFor({ state: "visible", timeout: 10000 });
+
+    // Bruk check() for å velge radio-knappen (Playwright sin anbefalte metode)
+    await radioInput.check({ force: true });
+  }
+
+  /**
+   * Sjekk om "Skattepliktig" (Ja) er valgt for en skatteforholdsperiode
+   */
+  async verifiserSkattepliktigErIkkeValgt(saksnummer: string): Promise<void> {
+    const name = `skatteforholdsperioder[0].skatteplikttype`;
+    const radioInput = this.page.locator(`input[name="${name}"][type="radio"][value="SKATTEPLIKTIG"]`);
+    const isit = await radioInput.isChecked().catch(() => false);
+    expect(isit, `[${saksnummer}] Skattepliktig skal IKKE være valgt`).toBe(false);
+  }
+
+  /**
+   * Sjekk om "Ikke skattepliktig" (Nei) er valgt for en skatteforholdsperiode
+   */
+  async erIkkeSkattepliktigValgt(indeks: number): Promise<boolean> {
+    const name = `skatteforholdsperioder[${indeks}].skatteplikttype`;
+    const radioInput = this.page.locator(`input[name="${name}"][type="radio"][value="IKKE_SKATTEPLIKTIG"]`);
+    return await radioInput.isChecked().catch(() => false);
   }
 
   /**
@@ -108,7 +135,7 @@ export class TrygdeavgiftPage {
    * Verifiser at trygdeavgiftsberegning vises
    */
   async verifiserBeregningVises(): Promise<void> {
-    await this.ventPaTrygdeavgiftSteg();
+    await this.verifiserSteg("Trygdeavgift");
 
     // Se etter tabell med beregning eller tekst som indikerer beregning
     const beregningElementer = [
@@ -131,16 +158,17 @@ export class TrygdeavgiftPage {
   /**
    * Verifiser at inntektskilder er synlige
    */
-  async verifiserInntektskilderSynlige(): Promise<boolean> {
-    const heading = this.page.locator("h3:has-text('Inntektskilder')");
-    return await heading.isVisible({ timeout: 2000 }).catch(() => false);
+  async verifiserInntektskilderSynlige(saksnummer: string, synlig: boolean): Promise<void> {
+    const heading = this.page.locator("h1.undertittel:has-text('Oppgi informasjon om brukers inntekt')");
+    const val = await heading.isVisible({ timeout: 5000 }).catch(() => false);
+    expect(val, `[${saksnummer}] Inntektskilder skal IKKE være synlig`).toBe(synlig);
   }
 
   /**
    * Verifiser at skatteforholdsperioder er synlige
    */
   async verifiserSkatteforholdsperioderSynlige(): Promise<boolean> {
-    const heading = this.page.locator("h3:has-text('Skatteforholdsperioder')");
+    const heading = this.page.locator("text=Oppgi informasjon om brukers skatteforhold");
     return await heading.isVisible({ timeout: 2000 }).catch(() => false);
   }
 

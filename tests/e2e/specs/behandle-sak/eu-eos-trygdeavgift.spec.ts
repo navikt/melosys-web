@@ -4,10 +4,10 @@ import { BehandlingPage } from "../../pages/behandling/behandling.page";
 import { StegvelgerPage } from "../../pages/behandling/stegvelger.page";
 import { TrygdeavgiftPage } from "../../pages/behandling/trygdeavgift.page";
 import { InngangPage } from "../../pages/behandling/inngang.page";
-import { YrkesgruppePage } from "../../pages/behandling/yrkesgruppe.page";
-import { VirksomhetPage } from "../../pages/behandling/virksomhet.page";
 import { opprettEøsPensjonistSakMedTrygdeavgift } from "../../utils/testdataUtils";
 import { runAxeAnalyze } from "../../utils/axeUtils";
+import { YrkesgruppePage } from "../../pages/behandling/yrkesgruppe.page";
+import { VirksomhetPage } from "../../pages/behandling/virksomhet.page";
 
 /**
  * E2E-tester for Trygdeavgift-steget i EU/EØS saksbehandling
@@ -40,8 +40,8 @@ test.describe("EU/EØS Trygdeavgift", () => {
     const virksomhetPage = new VirksomhetPage(page);
 
     // Steg 1: Inngang
-    await inngangPage.ventPaInngangSteg();
-    await inngangPage.klikkNeste();
+    await inngangPage.ventPaInngangStegEØS();
+    await inngangPage.klikkBekreftOgFortsett();
 
     // Steg 2: Yrkesgruppe
     await yrkesgruppePage.ventPaYrkesgruppesteg();
@@ -53,10 +53,8 @@ test.describe("EU/EØS Trygdeavgift", () => {
     await virksomhetPage.velgForsteVirksomhet();
     await virksomhetPage.klikkNeste();
 
-    // Nå skal vi være på Trygdeavgift-steget
     await virksomhetPage.klikkNeste();
 
-    // Verifiser at stegvelger vises
     await stegvelgerPage.ventPaStegvelger();
 
     // Hent alle steg og verifiser at "Trygdeavgift" finnes
@@ -89,8 +87,11 @@ test.describe("EU/EØS Trygdeavgift", () => {
     const virksomhetPage = new VirksomhetPage(page);
 
     // Steg 1: Inngang
-    await inngangPage.ventPaInngangSteg();
-    await inngangPage.klikkNeste();
+    await inngangPage.ventPaInngangStegEØS();
+    await inngangPage.setFraOgMedDato("01.01.2024");
+    await inngangPage.setTilOgMedDato("31.12.2024");
+    await inngangPage.velgLand("SE");
+    await inngangPage.klikkBekreftOgFortsett();
 
     // Steg 2: Yrkesgruppe
     await yrkesgruppePage.ventPaYrkesgruppesteg();
@@ -106,7 +107,7 @@ test.describe("EU/EØS Trygdeavgift", () => {
     await virksomhetPage.klikkNeste();
 
     // Verifiser at vi er på trygdeavgift-steget
-    await trygdeavgiftPage.ventPaTrygdeavgiftSteg();
+    await trygdeavgiftPage.verifiserSteg("Trygdeavgift");
 
     // Verifiser at skatteforholdsperioder er synlige
     const skatteperioderSynlige = await trygdeavgiftPage.verifiserSkatteforholdsperioderSynlige();
@@ -116,7 +117,7 @@ test.describe("EU/EØS Trygdeavgift", () => {
     await trygdeavgiftPage.velgSkattepliktig(0, true);
 
     // Verifiser at inntektskilder IKKE vises når bruker er skattepliktig i hele perioden
-    const inntektskilderSynlige = await trygdeavgiftPage.verifiserInntektskilderSynlige();
+    const inntektskilderSynlige = await trygdeavgiftPage.verifiserInntektskilderSynlige(saksnummer, false);
     expect(inntektskilderSynlige, `[${saksnummer}] Inntektskilder skal IKKE vises når bruker er skattepliktig`).toBe(
       false,
     );
@@ -131,6 +132,7 @@ test.describe("EU/EØS Trygdeavgift", () => {
     const sokPage = new SokPage(page);
     const behandlingPage = new BehandlingPage(page);
     const trygdeavgiftPage = new TrygdeavgiftPage(page);
+    const inngangPage = new InngangPage(page);
 
     const sak = await opprettEøsPensjonistSakMedTrygdeavgift(page);
     const saksnummer = await sokPage.getSaksnummer(sak);
@@ -138,39 +140,33 @@ test.describe("EU/EØS Trygdeavgift", () => {
     await sokPage.klikkVisBehandling(sak);
     await behandlingPage.verifiserBehandlingsside();
 
-    // Naviger gjennom Inngang -> Yrkesgruppe -> Virksomhet
-    const inngangPage = new InngangPage(page);
-    const yrkesgruppePage = new YrkesgruppePage(page);
-    const virksomhetPage = new VirksomhetPage(page);
+    // Steg 1: Inngang (Oppgi opplysninger fra attest / S1)
+    await inngangPage.ventPaInngangStegEØS();
+    await inngangPage.setFraOgMedDato("01.01.2024");
+    await inngangPage.setTilOgMedDato("31.12.2024");
+    await inngangPage.velgLand("SE");
+    await inngangPage.klikkBekreftOgFortsett();
 
-    // Steg 1: Inngang
-    await inngangPage.ventPaInngangSteg();
-    await inngangPage.klikkNeste();
+    // Steg 2: Trygdeavgift
+    await trygdeavgiftPage.verifiserSteg("Trygdeavgift");
 
-    // Steg 2: Yrkesgruppe
-    await yrkesgruppePage.ventPaYrkesgruppesteg();
-    await yrkesgruppePage.velgYrkesaktiv();
-    await yrkesgruppePage.klikkNeste();
-
-    // Steg 3: Virksomhet
-    await virksomhetPage.ventPaVirksomhetSteg();
-    await virksomhetPage.velgForsteVirksomhet();
-    await virksomhetPage.klikkNeste();
-
-    // Nå skal vi være på Trygdeavgift-steget
-    await virksomhetPage.klikkNeste();
-
-    // Verifiser at vi er på trygdeavgift-steget
-    await trygdeavgiftPage.ventPaTrygdeavgiftSteg();
+    await trygdeavgiftPage.verifiserSkattepliktigErIkkeValgt(saksnummer);
+    await trygdeavgiftPage.verifiserInntektskilderSynlige(saksnummer, false);
 
     // Velg at personen IKKE er skattepliktig
     await trygdeavgiftPage.velgSkattepliktig(0, false);
-
     // Verifiser at inntektskilder nå vises
-    const inntektskilderSynlige = await trygdeavgiftPage.verifiserInntektskilderSynlige();
-    expect(inntektskilderSynlige, `[${saksnummer}] Inntektskilder skal vises når bruker IKKE er skattepliktig`).toBe(
-      true,
-    );
+    await trygdeavgiftPage.verifiserInntektskilderSynlige(saksnummer, true);
+
+    // Velg at personen ER skattepliktig
+    await trygdeavgiftPage.velgSkattepliktig(0, true);
+    // Verifiser at inntektskilder nå IKKE vises
+    await trygdeavgiftPage.verifiserInntektskilderSynlige(saksnummer, false);
+
+    await inngangPage.klikkBekreftOgFortsett();
+
+    // Steg 3: Bekreftelse
+    await trygdeavgiftPage.verifiserSteg("Bekreftelse");
 
     await runAxeAnalyze(page, testInfo.title);
   });
@@ -191,8 +187,8 @@ test.describe("EU/EØS Trygdeavgift", () => {
     const virksomhetPage = new VirksomhetPage(page);
 
     // Steg 1: Inngang
-    await inngangPage.ventPaInngangSteg();
-    await inngangPage.klikkNeste();
+    await inngangPage.ventPaInngangStegEØS();
+    await inngangPage.klikkBekreftOgFortsett();
 
     // Steg 2: Yrkesgruppe
     await yrkesgruppePage.ventPaYrkesgruppesteg();
@@ -208,7 +204,7 @@ test.describe("EU/EØS Trygdeavgift", () => {
     await virksomhetPage.klikkNeste();
 
     // Verifiser at vi er på trygdeavgift-steget
-    await trygdeavgiftPage.ventPaTrygdeavgiftSteg();
+    await trygdeavgiftPage.verifiserSteg("Trygdeavgift");
 
     // Velg at personen IKKE er skattepliktig
     await trygdeavgiftPage.velgSkattepliktig(0, false);
@@ -240,8 +236,8 @@ test.describe("EU/EØS Trygdeavgift", () => {
     const virksomhetPage = new VirksomhetPage(page);
 
     // Steg 1: Inngang
-    await inngangPage.ventPaInngangSteg();
-    await inngangPage.klikkNeste();
+    await inngangPage.ventPaInngangStegEØS();
+    await inngangPage.klikkBekreftOgFortsett();
 
     // Steg 2: Yrkesgruppe
     await yrkesgruppePage.ventPaYrkesgruppesteg();
@@ -257,7 +253,7 @@ test.describe("EU/EØS Trygdeavgift", () => {
     await virksomhetPage.klikkNeste();
 
     // Verifiser at vi er på trygdeavgift-steget
-    await trygdeavgiftPage.ventPaTrygdeavgiftSteg();
+    await trygdeavgiftPage.verifiserSteg("Trygdeavgift");
 
     // Verifiser at Neste-knapp er disabled (skjemaet skal være ugyldig når ingenting er fylt ut)
     const nesteDisabled = await trygdeavgiftPage.erNesteKnappDisabled();
@@ -284,8 +280,8 @@ test.describe("EU/EØS Trygdeavgift", () => {
     const virksomhetPage = new VirksomhetPage(page);
 
     // Steg 1: Inngang
-    await inngangPage.ventPaInngangSteg();
-    await inngangPage.klikkNeste();
+    await inngangPage.ventPaInngangStegEØS();
+    await inngangPage.klikkBekreftOgFortsett();
 
     // Steg 2: Yrkesgruppe
     await yrkesgruppePage.ventPaYrkesgruppesteg();
@@ -301,7 +297,7 @@ test.describe("EU/EØS Trygdeavgift", () => {
     await virksomhetPage.klikkNeste();
 
     // Verifiser at vi er på trygdeavgift-steget
-    await trygdeavgiftPage.ventPaTrygdeavgiftSteg();
+    await trygdeavgiftPage.verifiserSteg("Trygdeavgift");
 
     // Fyll ut minimum for å kunne gå videre
     await trygdeavgiftPage.velgSkattepliktig(0, true);
