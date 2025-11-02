@@ -164,11 +164,13 @@ export class OpprettNySakPage {
       | "Behandlingen er avsluttet"
       | "Søknaden er henlagt/trukket";
     resultattype?: string;
+    sakstema?: string;
   }): Promise<Locator | null> {
     const saker = await this.finnAlleSaker({
       sakstype: kriterier.sakstype,
       behandlingsstatus: kriterier.behandlingsstatus,
       resultattype: kriterier.resultattype,
+      sakstema: kriterier.sakstema,
     });
 
     if (saker.length > 0) {
@@ -188,6 +190,7 @@ export class OpprettNySakPage {
       | "Behandlingen er avsluttet"
       | "Søknaden er henlagt/trukket";
     resultattype?: string;
+    sakstema?: string;
   }): Promise<Locator[]> {
     const alleSaker = this.page.locator(".customRadioPanel");
     const sakListe: Locator[] = [];
@@ -201,6 +204,14 @@ export class OpprettNySakPage {
       }
 
       let oppfyllerKriterier = true;
+
+      if (kriterier.sakstema) {
+        // Sakstema vises i tittelen som "{sakstype} - {sakstema}"
+        const harSakstema = tittel?.includes(kriterier.sakstema) ?? false;
+        if (!harSakstema) {
+          oppfyllerKriterier = false;
+        }
+      }
 
       if (kriterier.behandlingsstatus) {
         const sakInnhold = await sak.textContent();

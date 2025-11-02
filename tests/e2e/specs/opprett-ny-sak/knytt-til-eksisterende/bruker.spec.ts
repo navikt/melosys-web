@@ -6,18 +6,13 @@ import { getSaksnummerFraLocator } from "../../../utils/testUtils";
 
 let opprettNySakPage: OpprettNySakPage;
 
-async function setupOpprettNySakTester(page: Page) {
-  const mainPage = new HovedsidePage(page);
-  opprettNySakPage = new OpprettNySakPage(page);
-
-  await mainPage.goto();
-
-  await mainPage.klikkOpprettNySakKnapp();
-}
-
 test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
   test.beforeEach(async ({ page }) => {
-    await setupOpprettNySakTester(page);
+    const mainPage = new HovedsidePage(page);
+    opprettNySakPage = new OpprettNySakPage(page);
+
+    await mainPage.goto();
+    await mainPage.klikkOpprettNySakKnapp();
   });
 
   test("Knytt til 'Utenfor avtaleland' sak med åpne behandlinger - behandlingstyper tilgjengelige", async ({
@@ -75,6 +70,7 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
     // Søk etter en EØS-sak med sakstema "Trygdeavgift" og behandlingstema "Pensjonist"
     const valgtSak = await opprettNySakPage.finnSak({
       sakstype: "EU/EØS-land",
+      sakstema: "Trygdeavgift",
       resultattype: "Pensjonist",
     });
 
