@@ -29,9 +29,12 @@ function lagDato(dagMåned: string): string {
 }
 
 /**
- * Gjenbrukbar setup-funksjon som navigerer til en årsavregning-behandling
+ * Gjenbrukbar setup-funksjon som oppretter testdata og navigerer til en årsavregning-behandling
  */
 async function setupAarsavregningTest(page: Page) {
+  // Opprett ny sak med årsavregning for hver test
+  await opprettUtenforAvtalelandSakMedAarsavregning(page);
+
   const mainPage = new HovedsidePage(page);
   const sokPage = new SokPage(page);
   const behandlingPage = new BehandlingPage(page);
@@ -80,18 +83,11 @@ async function setupAarsavregningTest(page: Page) {
   expect(årValgt, "Kunne ikke finne et tilgjengelig år for årsavregning").toBe(true);
 }
 
-// Wrap alt i en serial describe for å sikre at setup kjører først MELOSYS-7612
-test.describe.serial("Årsavregning delt grunnlag - Alle tester", () => {
-  // Setup: Opprett testdata først
-  test.describe("Setup testdata", () => {
-    test("Opprett Utenfor avtaleland-sak med Årsavregning", async ({ page }) => {
-      test.setTimeout(60000); // Sett timeout til 60 sekunder for setup
-      await opprettUtenforAvtalelandSakMedAarsavregning(page);
-    });
-  });
-
+// Hver test oppretter sine egne testdata via setupAarsavregningTest
+test.describe("Årsavregning delt grunnlag - Alle tester", () => {
   test.describe("AC1 - Medlemskapsperiode validering", () => {
     test.beforeEach(async ({ page }) => {
+      test.setTimeout(60000); // Sett timeout til 60 sekunder for setup
       await setupAarsavregningTest(page);
     });
 
@@ -189,6 +185,7 @@ test.describe.serial("Årsavregning delt grunnlag - Alle tester", () => {
 
   test.describe("AC2 - Skatteforholdsperiode validering", () => {
     test.beforeEach(async ({ page }) => {
+      test.setTimeout(60000);
       await setupAarsavregningTest(page);
     });
 
@@ -256,6 +253,7 @@ test.describe.serial("Årsavregning delt grunnlag - Alle tester", () => {
 
   test.describe("AC2.5 - Legg til periode med pliktig bestemmelse (bugfix)", () => {
     test.beforeEach(async ({ page }) => {
+      test.setTimeout(60000);
       await setupAarsavregningTest(page);
     });
 
@@ -317,6 +315,7 @@ test.describe.serial("Årsavregning delt grunnlag - Alle tester", () => {
 
   test.describe("AC3 - Inntektsperiode validering", () => {
     test.beforeEach(async ({ page }) => {
+      test.setTimeout(60000);
       await setupAarsavregningTest(page);
     });
 

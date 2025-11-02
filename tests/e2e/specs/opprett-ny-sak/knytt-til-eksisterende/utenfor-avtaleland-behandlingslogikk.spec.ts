@@ -18,11 +18,12 @@ test.describe("'Utenfor avtaleland' behandlingslogikk", () => {
   let opprettNySakPage: OpprettNySakPage;
 
   test.beforeEach(async ({ page }) => {
+    const mainPage = new HovedsidePage(page);
     opprettNySakPage = new OpprettNySakPage(page);
 
-    await opprettNySakPage.goto();
+    await mainPage.goto();
 
-    await opprettNySakPage.klikkOpprettNySakKnapp();
+    await mainPage.klikkOpprettNySakKnapp();
   });
 
   test("AC1: 'Utenfor avtaleland - Behandlingen er opprettet' sak med kun Årsavregning tilgjengelig", async ({

@@ -2,8 +2,6 @@ import { expect, Locator, Page } from "@playwright/test";
 import { OpprettNySakAssertions } from "./opprett-ny-sak-assertions.page";
 import { setDatoFelt } from "../../utils/testUtils";
 
-const DROP_DOWN_SELECT_TIMEOUT = 100; // Ventetid etter valg i dropdown for at avhengige felter skal oppdatere seg
-
 const SELECTORS = {
   OPPRETT_NY_BEHANDLING_BUTTON: "button:has-text('Opprett ny behandling')",
   AVBRYT_BUTTON: "button:has-text('Avbryt')",
@@ -477,10 +475,14 @@ export class OpprettNySakPage {
   async velgFørsteSak(
     sakstype: "Utenfor avtaleland" | "EU/EØS-land" | "Avtaleland",
     status?: "Behandlingen er opprettet" | "Behandlingen pågår" | "Behandlingen er avsluttet" | "Søknaden er henlagt",
+    behandlingstema?: string,
   ): Promise<Locator> {
     await this.page.waitForSelector(".customRadioPanel", { timeout: 10000 });
 
-    let selector = `.customRadioPanel:has(.customRadioPanelTittel h1:has-text("${sakstype}"))`;
+    // Bygg tittel-søk basert på sakstype og behandlingstema
+    const tittelSok: string = behandlingstema ? `${sakstype} - ${behandlingstema}` : sakstype;
+
+    let selector = `.customRadioPanel:has(.customRadioPanelTittel h1:has-text("${tittelSok}"))`;
     if (status) {
       selector += `:has(.behandlingsstatus__span:has-text("${status}"))`;
     }
@@ -488,7 +490,7 @@ export class OpprettNySakPage {
 
     await expect(
       sak,
-      `Fant ingen ${sakstype}-sak ${status ? ` med status "${status}"` : ""}. Selector: ${selector}`,
+      `Fant ingen ${sakstype}-sak ${behandlingstema ? `med tema "${behandlingstema}" ` : ""}${status ? ` med status "${status}"` : ""}. Selector: ${selector}`,
     ).toBeVisible({ timeout: 10000 });
 
     await setSakId(sak);

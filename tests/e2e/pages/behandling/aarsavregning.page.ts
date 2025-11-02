@@ -44,7 +44,7 @@ export class AarsavregningPage extends BehandlingPage {
     await expect(knapp, `${saksnummer}: Knapp 'Legg til periode' skal være synlig`).toBeVisible({ timeout: 5000 });
 
     // Tell antall perioder før klikk
-    const perioder = this.page.locator('[data-testid="medlemskapsperiode-gruppe"], .medlemskapsperiode');
+    const perioder = this.page.locator(".medlemskapsperiode__rad");
     const antallFør = await perioder.count();
 
     await knapp.click();
