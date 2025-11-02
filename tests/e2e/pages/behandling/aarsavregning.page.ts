@@ -1,14 +1,13 @@
 import { expect, Page } from "@playwright/test";
 import { getSaksnummerFraUrl } from "../../utils/testUtils";
+import { BehandlingPage } from "./behandling.page";
 
 /**
  * Page Object for Årsavregning-siden
  */
-export class AarsavregningPage {
-  readonly page: Page;
-
+export class AarsavregningPage extends BehandlingPage {
   constructor(page: Page) {
-    this.page = page;
+    super(page);
   }
 
   // År dropdown

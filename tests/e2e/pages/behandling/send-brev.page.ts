@@ -1,8 +1,11 @@
 import { Page, Locator, expect } from "@playwright/test";
 import { getSaksnummerFraUrl } from "../../utils/testUtils";
+import { BehandlingPage } from "./behandling.page";
 
-export class SendBrevPage {
-  constructor(private page: Page) {}
+export class SendBrevPage extends BehandlingPage {
+  constructor(page: Page) {
+    super(page);
+  }
 
   // Dersom SendBrev ligger på en dedikert sti etter at man er inne i en sak, sett path her.
   // Hvis den nås via navigasjon i UI, kan goto() evt. tilpasses for å klikke riktig meny først.

@@ -1,14 +1,13 @@
 import { expect, Page } from "@playwright/test";
 import { setDatoFelt } from "../../utils/testUtils";
+import { BehandlingPage } from "./behandling.page";
 
 /**
  * Page Object Model for Inngang-steget
  */
-export class InngangPage {
-  readonly page: Page;
-
+export class InngangPage extends BehandlingPage {
   constructor(page: Page) {
-    this.page = page;
+    super(page);
   }
 
   /**
@@ -63,14 +62,5 @@ export class InngangPage {
     await landSelect.selectOption({ value: landkode });
     // Vent litt slik at endringen lagres (debounced)
     await this.page.waitForTimeout(500);
-  }
-
-  /**
-   * Klikk på Bekreft-knappen i Inngang-steget (kun i aktivt steg)
-   */
-  async klikkBekreftOgFortsett(): Promise<void> {
-    const bekreftKnapp = this.page.locator(".stegFane--aktiv button.stegKnapper__bekreft");
-    await bekreftKnapp.waitFor({ state: "visible", timeout: 5000 });
-    await bekreftKnapp.click();
   }
 }

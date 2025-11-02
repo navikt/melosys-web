@@ -1,13 +1,12 @@
 import { Page } from "@playwright/test";
+import { BehandlingPage } from "./behandling.page";
 
 /**
  * Page Object Model for Virksomhet-steget
  */
-export class VirksomhetPage {
-  readonly page: Page;
-
+export class VirksomhetPage extends BehandlingPage {
   constructor(page: Page) {
-    this.page = page;
+    super(page);
   }
 
   /**
@@ -31,14 +30,5 @@ export class VirksomhetPage {
     if (!erChecket) {
       await forsteCheckbox.check();
     }
-  }
-
-  /**
-   * Klikk på Bekreft-knappen (kun i aktivt steg)
-   */
-  async klikkNeste(): Promise<void> {
-    const bekreftKnapp = this.page.locator(".stegFane--aktiv button.stegKnapper__bekreft");
-    await bekreftKnapp.waitFor({ state: "visible", timeout: 5000 });
-    await bekreftKnapp.click();
   }
 }

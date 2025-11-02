@@ -13,6 +13,16 @@ export class BehandlingPage {
   }
 
   /**
+   * Klikk på Bekreft-knappen i Inngang-steget (kun i aktivt steg)
+   */
+  async klikkBekreftOgFortsett(): Promise<void> {
+    const bekreftKnapp = this.page.locator(".stegFane--aktiv button.stegKnapper__bekreft");
+    await bekreftKnapp.waitFor({ state: "visible", timeout: 5000 });
+    expect(await bekreftKnapp.isVisible(), "Knappen 'Bekreft og fortsett'").toBe(true);
+    await bekreftKnapp.click();
+  }
+
+  /**
    * Verifiser at vi er på behandlingssiden
    */
   async verifiserBehandlingsside(): Promise<void> {

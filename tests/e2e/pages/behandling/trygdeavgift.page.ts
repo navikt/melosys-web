@@ -1,15 +1,14 @@
 import { expect, Page } from "@playwright/test";
 import { getSaksnummerFraUrl } from "../../utils/testUtils";
+import { BehandlingPage } from "./behandling.page";
 
 /**
  * Page Object Model for trygdeavgift-komponenten
  * Håndterer interaksjon med skatteforholdsperioder og inntektskilder
  */
-export class TrygdeavgiftPage {
-  readonly page: Page;
-
+export class TrygdeavgiftPage extends BehandlingPage {
   constructor(page: Page) {
-    this.page = page;
+    super(page);
   }
 
   /**
@@ -50,10 +49,11 @@ export class TrygdeavgiftPage {
   /**
    * Sjekk om "Skattepliktig" (Ja) er valgt for en skatteforholdsperiode
    */
-  async verifiserSkattepliktigErIkkeValgt(saksnummer: string): Promise<void> {
+  async verifiserSkattepliktigErIkkeValgt(): Promise<void> {
     const name = `skatteforholdsperioder[0].skatteplikttype`;
     const radioInput = this.page.locator(`input[name="${name}"][type="radio"][value="SKATTEPLIKTIG"]`);
     const isit = await radioInput.isChecked().catch(() => false);
+    const saksnummer = getSaksnummerFraUrl(this.page);
     expect(isit, `[${saksnummer}] Skattepliktig skal IKKE være valgt`).toBe(false);
   }
 
@@ -158,9 +158,10 @@ export class TrygdeavgiftPage {
   /**
    * Verifiser at inntektskilder er synlige
    */
-  async verifiserInntektskilderSynlige(saksnummer: string, synlig: boolean): Promise<void> {
+  async verifiserInntektskilderSynlige(synlig: boolean): Promise<void> {
     const heading = this.page.locator("h1.undertittel:has-text('Oppgi informasjon om brukers inntekt')");
     const val = await heading.isVisible({ timeout: 5000 }).catch(() => false);
+    const saksnummer = getSaksnummerFraUrl(this.page);
     expect(val, `[${saksnummer}] Inntektskilder skal IKKE være synlig`).toBe(synlig);
   }
 

@@ -101,6 +101,7 @@ test.describe("Opprett kompleks sak med flere behandlingstyper", () => {
     // Søk først for å bekrefte at saken eksisterer og er synkronisert
     await hovedsidePage.søkOgVentPåResultat(USER_ID_VALID);
 
+    await hovedsidePage.goto();
     await hovedsidePage.klikkOpprettNySakKnapp();
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgKnyttTilEksisterendeSak();

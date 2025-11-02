@@ -78,10 +78,7 @@ export async function opprettUtenforAvtalelandSak(page: Page): Promise<Locator> 
  * @returns Locator for saken med årsavregning-behandlingen
  */
 export async function opprettUtenforAvtalelandSakMedAarsavregning(page: Page): Promise<Locator> {
-  const hovedsidePage = new HovedsidePage(page);
   const sokPage = new SokPage(page);
-  const behandlingPage = new BehandlingPage(page);
-  const opprettNySakPage = new OpprettNySakPage(page);
 
   // 1. Opprett Førstegangsbehandling
   const sak = await opprettUtenforAvtalelandSak(page);
@@ -89,12 +86,15 @@ export async function opprettUtenforAvtalelandSakMedAarsavregning(page: Page): P
 
   // 2. Avslutt Førstegangsbehandling
   await sokPage.klikkVisBehandling(sak);
+  const behandlingPage = new BehandlingPage(page);
   await behandlingPage.verifiserBehandlingsside();
   await behandlingPage.avsluttBehandling("Søknaden er innvilget", sakId);
 
   // 3. Opprett Årsavregning på samme sak
+  const hovedsidePage = new HovedsidePage(page);
   await hovedsidePage.goto();
   await hovedsidePage.klikkOpprettNySakKnapp();
+  const opprettNySakPage = new OpprettNySakPage(page);
   await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
   await opprettNySakPage.velgKnyttTilEksisterendeSak();
 

@@ -1,13 +1,12 @@
 import { Page } from "@playwright/test";
+import { BehandlingPage } from "./behandling.page";
 
 /**
  * Page Object Model for Yrkesgruppe-steget
  */
-export class YrkesgruppePage {
-  readonly page: Page;
-
+export class YrkesgruppePage extends BehandlingPage {
   constructor(page: Page) {
-    this.page = page;
+    super(page);
   }
 
   /**
@@ -24,14 +23,5 @@ export class YrkesgruppePage {
     const yrkesaktivRadio = this.page.locator('input[type="radio"][value="ORDINAER"]');
     await yrkesaktivRadio.waitFor({ state: "visible", timeout: 5000 });
     await yrkesaktivRadio.check();
-  }
-
-  /**
-   * Klikk på Bekreft-knappen (kun i aktivt steg)
-   */
-  async klikkNeste(): Promise<void> {
-    const bekreftKnapp = this.page.locator(".stegFane--aktiv button.stegKnapper__bekreft");
-    await bekreftKnapp.waitFor({ state: "visible", timeout: 5000 });
-    await bekreftKnapp.click();
   }
 }
