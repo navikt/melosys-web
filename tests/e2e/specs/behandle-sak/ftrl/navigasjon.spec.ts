@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test } from "@playwright/test";
 import { SokPage } from "../../../pages/sok.page";
 import { TIMEOUT_FOR_COMPLEX_TESTS } from "../../../utils/testUtils";
 import { BehandlingPage } from "../../../pages/behandling/behandling.page";
