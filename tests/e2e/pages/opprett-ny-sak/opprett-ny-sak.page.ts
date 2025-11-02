@@ -507,13 +507,10 @@ export class OpprettNySakPage {
    * @param sakIndex - Valgfri index for å hente feilmelding rett etter spesifikk sak
    */
   hentFeilmeldingspanel(feilmelding?: string, sakIndex?: number): Locator {
-    const selector = ".knyttTilSak__behandlingspanel";
-
     if (sakIndex !== undefined) {
-      // Bruk XPath for å finne det neste sibling-elementet rett etter den spesifikke saken
-      const nextError = this.page.locator(
-        `xpath=(//label[contains(@class, 'customRadioPanel')])[${sakIndex + 1}]/following-sibling::div[contains(@class, 'knyttTilSak__behandlingspanel')][1]`,
-      );
+      // Finn saken først, deretter neste sibling behandlingspanel
+      const sak = this.page.locator(".customRadioPanel").nth(sakIndex);
+      const nextError = sak.locator("~ .knyttTilSak__behandlingspanel").first();
 
       if (feilmelding) {
         return nextError.filter({ hasText: feilmelding });
@@ -522,6 +519,7 @@ export class OpprettNySakPage {
     }
 
     // Fallback til global sjekk (bakoverkompatibilitet)
+    const selector = ".knyttTilSak__behandlingspanel";
     if (feilmelding) {
       return this.page.locator(selector).filter({ hasText: feilmelding });
     }
@@ -569,11 +567,9 @@ export class OpprettNySakPage {
    */
   hentBehandlingspanelRamme(sakIndex?: number): Locator {
     if (sakIndex !== undefined) {
-      // Bruk XPath for å finne det neste sibling-elementet rett etter den spesifikke saken
-      // Dette er mer robust enn CSS nth-of-type som kan telle feil hvis det er andre elementer
-      return this.page.locator(
-        `xpath=(//label[contains(@class, 'customRadioPanel')])[${sakIndex + 1}]/following-sibling::div[contains(@class, 'knyttTilSak__panelramme')][1]`,
-      );
+      // Finn saken først, deretter neste sibling panelramme
+      const sak = this.page.locator(".customRadioPanel").nth(sakIndex);
+      return sak.locator("~ .knyttTilSak__panelramme").first();
     }
 
     // Fallback til global sjekk (bakoverkompatibilitet)
