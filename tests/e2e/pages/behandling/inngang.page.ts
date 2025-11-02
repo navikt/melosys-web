@@ -1,4 +1,4 @@
-import { expect, Page } from "@playwright/test";
+import { Page } from "@playwright/test";
 import { setDatoFelt } from "../../utils/testUtils";
 import { BehandlingPage } from "./behandling.page";
 
