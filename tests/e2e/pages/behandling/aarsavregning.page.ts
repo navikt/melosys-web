@@ -23,15 +23,6 @@ export class AarsavregningPage extends BehandlingPage {
     });
   }
 
-  // Radio buttons for endelig avgift valg
-  async velgOpplysningerEndret() {
-    await this.page.getByRole("radio", { name: /opplysninger.*endret/i }).check();
-  }
-
-  async velgManuellEndeligAvgift() {
-    await this.page.getByRole("radio", { name: /manuell.*endelig avgift/i }).check();
-  }
-
   // Bestemmelse
   async velgBestemmelse(bestemmelse: string) {
     await this.page.getByRole("combobox", { name: /bestemmelse/i }).selectOption({ label: bestemmelse });
@@ -323,18 +314,6 @@ export class AarsavregningPage extends BehandlingPage {
     ).toBeVisible({ timeout: 5000 });
   }
 
-  async velgDeltGrunnlagNei() {
-    await this.page.getByRole("radio", { name: /nei/i }).first().check();
-  }
-
-  async klikkBeregnEndeligTrygdeavgift() {
-    await this.page.getByRole("button", { name: /beregn.*endelig.*trygdeavgift/i }).click();
-  }
-
-  async fyllUtTrygdeavgiftFraAvgiftssystemet(belop: string) {
-    await this.page.getByRole("textbox", { name: /trygdeavgift.*avgiftssystemet/i }).fill(belop);
-  }
-
   // Datepicker-spesifikke metoder for å teste datovelger
   async klikkMedlemskapsperiodeFomDatepicker(index: number) {
     const trygdedekningDropdown = this.page.getByRole("combobox", {
@@ -415,11 +394,6 @@ export class AarsavregningPage extends BehandlingPage {
   }
 
   // Validering og feilmeldinger
-  async verifiserIngenValideringsfeil() {
-    const errors = this.page.locator('[class*="error"], [class*="feil"]').filter({ hasText: /utenfor|mangler/i });
-    await expect(errors).toHaveCount(0);
-  }
-
   async verifiserValideringsfeilInneholder(tekst: string) {
     const error = this.page.locator('[class*="error"], [class*="feil"]').filter({ hasText: new RegExp(tekst, "i") });
     await expect(
@@ -438,33 +412,8 @@ export class AarsavregningPage extends BehandlingPage {
     await this.page.getByRole("button", { name: /bekreft og fortsett/i }).click();
   }
 
-  async verifiserBekreftKnappAktiv() {
-    const knapp = this.page.getByRole("button", { name: /bekreft og fortsett/i });
-    await expect(knapp).toBeEnabled();
-  }
-
-  async verifiserBekreftKnappInaktiv() {
-    const knapp = this.page.getByRole("button", { name: /bekreft og fortsett/i });
-    await expect(knapp).toBeDisabled();
-  }
-
   // Verifiser at siden er lastet
   async verifiserAarsavregningside() {
     await expect(this.page.getByRole("heading", { name: /årsavregning/i })).toBeVisible();
-  }
-
-  // Vent på beregning
-  async ventPåBeregning(timeoutMs: number = 5000) {
-    // Vent på at loading-indikatoren dukker opp først (bevis på at beregning har startet),
-    // deretter vent på at den forsvinner (beregning fullført)
-    const loadingIndicator = this.page.locator('[class*="loading"], [class*="spinner"]');
-
-    // Prøv først å vent på at loading-indikatoren dukker opp (kan allerede være der)
-    await loadingIndicator.isVisible({ timeout: 1000 }).catch(() => {
-      // Hvis loading-indikatoren ikke dukker opp, betyr det at beregningen var rask
-    });
-
-    // Vent på at loading-indikatoren forsvinner
-    await expect(loadingIndicator).not.toBeVisible({ timeout: timeoutMs });
   }
 }

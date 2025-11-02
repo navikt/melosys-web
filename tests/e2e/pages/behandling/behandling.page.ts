@@ -58,55 +58,6 @@ export class BehandlingPage {
   }
 
   /**
-   * Sjekk om behandlingen kan avsluttes (har "Avslutt behandling" knapp i hamburgermenyen)
-   */
-  async kanAvslutteBehandling(): Promise<boolean> {
-    // Først åpne hamburgermenyen
-    const hamburgerSelektorer = [
-      '.behandlingsmeny__knapp[role="button"][aria-label="Behandlingsmeny"]',
-      '.behandlingsmeny__knapp[aria-label="Behandlingsmeny"]',
-      ".behandlingsmeny__knapp",
-      '[aria-label="Behandlingsmeny"]',
-      '[role="button"][title="Behandlingsmeny"]',
-      '[class*="behandlingsmeny"]',
-    ];
-
-    let menuOpened = false;
-    for (const selektor of hamburgerSelektorer) {
-      const hamburgerMeny = this.page.locator(selektor);
-      if (await hamburgerMeny.isVisible({ timeout: 1000 }).catch(() => false)) {
-        await hamburgerMeny.click();
-        menuOpened = true;
-        break;
-      }
-    }
-
-    if (!menuOpened) {
-      return false;
-    }
-
-    // Sjekk om "Avslutt behandling" finnes i menyen
-    const avsluttKnapper = [
-      'button:has-text("Avslutt behandling")',
-      '[role="button"]:has-text("Avslutt behandling")',
-      'a:has-text("Avslutt behandling")',
-      '.menyknapp:has-text("Avslutt behandling")',
-    ];
-
-    for (const selector of avsluttKnapper) {
-      if (
-        await this.page
-          .locator(selector)
-          .isVisible({ timeout: 1000 })
-          .catch(() => false)
-      ) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  /**
    * Finn og klikk på "Avslutt behandling" accordion-header i behandlingsmenyen
    */
   async klikkAvsluttBehandling(): Promise<void> {

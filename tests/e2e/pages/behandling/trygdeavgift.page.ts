@@ -58,80 +58,6 @@ export class TrygdeavgiftPage extends BehandlingPage {
   }
 
   /**
-   * Sjekk om "Ikke skattepliktig" (Nei) er valgt for en skatteforholdsperiode
-   */
-  async erIkkeSkattepliktigValgt(indeks: number): Promise<boolean> {
-    const name = `skatteforholdsperioder[${indeks}].skatteplikttype`;
-    const radioInput = this.page.locator(`input[name="${name}"][type="radio"][value="IKKE_SKATTEPLIKTIG"]`);
-    return await radioInput.isChecked().catch(() => false);
-  }
-
-  /**
-   * Fyll inn fom-dato for skatteforholdsperiode
-   */
-  async fyllInnSkatteFomDato(indeks: number, dato: string): Promise<void> {
-    const inputs = this.page.locator('input[name^="skatteforholdsperioder"][name$=".fomDato"]');
-    await inputs.nth(indeks).fill(dato);
-  }
-
-  /**
-   * Fyll inn tom-dato for skatteforholdsperiode
-   */
-  async fyllInnSkatteTomDato(indeks: number, dato: string): Promise<void> {
-    const inputs = this.page.locator('input[name^="skatteforholdsperioder"][name$=".tomDato"]');
-    await inputs.nth(indeks).fill(dato);
-  }
-
-  /**
-   * Legg til ny skatteforholdsperiode
-   */
-  async leggTilSkatteforholdsperiode(): Promise<void> {
-    const knapp = this.page.locator('button:has-text("Legg til skatteforholdsperiode")');
-    await knapp.click();
-  }
-
-  /**
-   * Velg inntektskildetype for en inntektskilde
-   */
-  async velgInntektskildetype(indeks: number, type: string): Promise<void> {
-    // type kan være: "Arbeidsinntekt", "Næringsinntekt", "Pensjon", "Uføretrygd"
-    const selects = this.page.locator('select[name^="inntektskilder"][name$=".inntektskildetype"]');
-    await selects.nth(indeks).selectOption({ label: type });
-  }
-
-  /**
-   * Fyll inn inntekt (beløp)
-   */
-  async fyllInnInntekt(indeks: number, beløp: string): Promise<void> {
-    const inputs = this.page.locator('input[name^="inntektskilder"][name$=".inntekt"]');
-    await inputs.nth(indeks).fill(beløp);
-  }
-
-  /**
-   * Fyll inn fom-dato for inntektskilde
-   */
-  async fyllInnInntektFomDato(indeks: number, dato: string): Promise<void> {
-    const inputs = this.page.locator('input[name^="inntektskilder"][name$=".fomDato"]');
-    await inputs.nth(indeks).fill(dato);
-  }
-
-  /**
-   * Fyll inn tom-dato for inntektskilde
-   */
-  async fyllInnInntektTomDato(indeks: number, dato: string): Promise<void> {
-    const inputs = this.page.locator('input[name^="inntektskilder"][name$=".tomDato"]');
-    await inputs.nth(indeks).fill(dato);
-  }
-
-  /**
-   * Legg til ny inntektskilde
-   */
-  async leggTilInntektskilde(): Promise<void> {
-    const knapp = this.page.locator('button:has-text("Legg til inntektskilde")');
-    await knapp.click();
-  }
-
-  /**
    * Verifiser at trygdeavgiftsberegning vises
    */
   async verifiserBeregningVises(): Promise<void> {
@@ -163,30 +89,5 @@ export class TrygdeavgiftPage extends BehandlingPage {
     const val = await heading.isVisible({ timeout: 5000 }).catch(() => false);
     const saksnummer = getSaksnummerFraUrl(this.page);
     expect(val, `[${saksnummer}] Inntektskilder skal IKKE være synlig`).toBe(synlig);
-  }
-
-  /**
-   * Verifiser at skatteforholdsperioder er synlige
-   */
-  async verifiserSkatteforholdsperioderSynlige(): Promise<boolean> {
-    const heading = this.page.locator("text=Oppgi informasjon om brukers skatteforhold");
-    return await heading.isVisible({ timeout: 2000 }).catch(() => false);
-  }
-
-  /**
-   * Klikk "Bekreft og fortsett" for å gå til neste steg (kun i aktivt steg)
-   */
-  async klikkNeste(): Promise<void> {
-    const knapp = this.page.locator(".stegFane--aktiv button.stegKnapper__bekreft");
-    await knapp.waitFor({ state: "visible", timeout: 5000 });
-    await knapp.click();
-  }
-
-  /**
-   * Sjekk om "Bekreft og fortsett"-knappen er disabled (kun i aktivt steg)
-   */
-  async erNesteKnappDisabled(): Promise<boolean> {
-    const knapp = this.page.locator(".stegFane--aktiv button.stegKnapper__bekreft");
-    return await knapp.isDisabled();
   }
 }

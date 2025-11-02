@@ -45,11 +45,6 @@ export class SendBrevPage extends BehandlingPage {
     return scope.locator('select[name="type"]');
   }
 
-  async goto() {
-    await this.page.goto(this.path, { waitUntil: "domcontentloaded" });
-    this.sakId = getSaksnummerFraUrl(this.page);
-  }
-
   async clickSendBrevTab(): Promise<void> {
     const tab = this.sendBrevTab;
     this.sakId = getSaksnummerFraUrl(this.page);
@@ -110,28 +105,6 @@ export class SendBrevPage extends BehandlingPage {
       await ctl.selectOption({ index: 1 });
     } else {
       await this.selectFirstOption(ctl);
-    }
-  }
-
-  // Valgfritt: velg brevmal direkte via value (f.eks. "INNHENTING_AV_INNTEKTSOPPLYSNINGER")
-  async selectBrevmalByValue(value: string) {
-    const ctl = await this.waitForBrevmalSelect();
-    const tag = await ctl.evaluate((el) => el.tagName.toLowerCase());
-    if (tag === "select") {
-      await ctl.selectOption(value);
-    } else {
-      // Combobox fallback: åpne og klikk på option med matchende tekst/value
-      await ctl.click({ force: true });
-      const scope = this.sendBrevPanel ?? this.page;
-      // Prøv først synlig tekst
-      const candidateByText = scope.getByRole("option", { name: new RegExp(value, "i") });
-      if (await candidateByText.count()) {
-        await candidateByText.first().click();
-        return;
-      }
-      // Ellers tastatur fallback
-      await this.page.keyboard.press("ArrowDown");
-      await this.page.keyboard.press("Enter");
     }
   }
 

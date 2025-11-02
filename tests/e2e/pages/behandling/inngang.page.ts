@@ -11,35 +11,6 @@ export class InngangPage extends BehandlingPage {
   }
 
   /**
-   * Vent på at Inngang-steget er synlig
-   */
-  async ventPaInngangSteg(timeout = 10000): Promise<void> {
-    await this.page.waitForSelector("text=Kontroller inngangsvilkår", { timeout });
-  }
-
-  /**
-   * Vent på at Inngang-steget er synlig
-   */
-  async ventPaInngangStegEØS(timeout = 10000): Promise<void> {
-    await this.page.waitForSelector("text=Oppgi opplysninger fra attest / S1", { timeout });
-  }
-
-  /**
-   * Generisk funksjon for å sette dato i et datofelt
-   * @private
-   */
-  async setDatoFelt(feltNavn: string, dato: string): Promise<void> {
-    const datoInput = this.page.getByRole("textbox", { name: feltNavn });
-    const count = await datoInput.count();
-    expect(count, `${feltNavn}-dato input skal finnes`).toBeGreaterThan(0);
-
-    // Hvis det finnes flere, bruk den første
-    const input = count > 1 ? datoInput.first() : datoInput;
-    await expect(input, `${feltNavn}-dato input skal være synlig`).toBeVisible();
-    await input.fill(dato);
-  }
-
-  /**
    * Sett fra-dato i søknadsperiode
    */
   async setFraOgMedDato(dato: string): Promise<void> {
