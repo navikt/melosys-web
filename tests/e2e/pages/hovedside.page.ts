@@ -39,67 +39,6 @@ export class HovedsidePage {
   }
 
   /**
-   * Verifiser at "Opprett ny sak/behandling" knapp er synlig
-   */
-  async verifiserOpprettNySakKnapp(): Promise<void> {
-    await expect(
-      this.page.locator("button:has-text('Opprett ny sak/behandling')"),
-      "Knapp 'Opprett ny sak/behandling' skal være synlig",
-    ).toBeVisible();
-  }
-
-  /**
-   * Søk etter en sak med gitt bruker-ID og klikk på første saken som inneholder gitt tekst
-   * @param brukerId - Bruker-ID å søke etter
-   * @param sakTekst - Tekst å finne i saken (f.eks. "Yrkesaktiv - Årsavregning")
-   * @returns href attribute til taskens
-   */
-  async visSak(brukerId: string, sakTekst: string): Promise<string | null> {
-    // Søk med bruker-ID for å få frem relevante saker
-    await this.søk(brukerId);
-
-    // Vent på at søkeresultatene blir lastet ved å sjekke overskriften
-    await this.page.waitForSelector(`text=Resultater for f.nr./d-nr. ${brukerId}`, {
-      state: "visible",
-      timeout: 5000,
-    });
-
-    // Finn "Vis behandling" knappen for saken som inneholder gitt tekst og som er aktiv
-    // Vi ser etter saker som har "Behandlingen pågår" status for å sikre at de kan sende brev
-    const aktivSakButton = this.page
-      .locator(".fagsak")
-      .filter({ hasText: sakTekst })
-      .filter({ hasText: "Behandlingen pågår" })
-      .locator("button:has-text('Vis behandling')")
-      .first();
-
-    // Hvis vi ikke finner aktive saker, prøv å finne opprettede saker
-    const opprettetSakButton = this.page
-      .locator(".fagsak")
-      .filter({ hasText: sakTekst })
-      .filter({ hasText: "Behandlingen er opprettet" })
-      .locator("button:has-text('Vis behandling')")
-      .first();
-
-    // Prøv først aktive saker, deretter opprettede saker
-    let sakButton = aktivSakButton;
-    const aktivSakCount = await aktivSakButton.count();
-
-    if (aktivSakCount === 0) {
-      sakButton = opprettetSakButton;
-      await expect(
-        sakButton,
-        `Fant ingen aktive eller opprettede '${sakTekst}' saker for bruker ${brukerId}`,
-      ).toHaveCount(1);
-    }
-
-    await sakButton.click();
-    await this.page.waitForLoadState("domcontentloaded");
-
-    return null;
-  }
-
-  /**
    * Gi iput til søkefeltet og klikk på søkeknappen
    * @param input - søkestreng
    */

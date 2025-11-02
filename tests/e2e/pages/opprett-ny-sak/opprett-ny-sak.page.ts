@@ -588,34 +588,12 @@ export class OpprettNySakPage {
   }
 
   /**
-   * Sjekk om behandlingspanel-rammen er synlig
-   * Dette panelet inneholder "Velg tema og type for ny behandling"
-   * @param sakIndex - Valgfri index for å sjekke panel rett etter spesifikk sak
-   * @deprecated Bruk hentBehandlingspanelRamme() og Playwright's expect().toBeVisible() i stedet
-   */
-  async erBehandlingspanelRammeSynlig(sakIndex?: number): Promise<boolean> {
-    return await this.hentBehandlingspanelRamme(sakIndex)
-      .isVisible()
-      .catch(() => false);
-  }
-
-  /**
    * Tell antall behandlingstyper i behandlingspanel-rammen
    */
   async tellBehandlingstyperIPanel(): Promise<number> {
     const behandlingspanelRamme = this.page.locator(".knyttTilSak__panelramme");
     const behandlingstypeRadios = behandlingspanelRamme.locator(".navds-radio");
     return await behandlingstypeRadios.count();
-  }
-
-  /**
-   * Sjekk om det vises error-meldinger på siden
-   */
-  async harErrorMelding(): Promise<boolean> {
-    return await this.page
-      .locator(".navds-alert--error")
-      .isVisible()
-      .catch(() => false);
   }
 
   /**

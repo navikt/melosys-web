@@ -142,7 +142,7 @@ test.describe("State-håndtering ved saksbytting", () => {
     expect(sakslisteEtterBytting, "Saksliste skal være tilgjengelig").toBeGreaterThan(0);
 
     // Verifiser at ingen error-meldinger vises
-    const harError = await opprettNySakPage.harErrorMelding();
+    const harError = await opprettNySakPage.harFeilmelding();
     expect(harError, "Ingen error skal vises etter rask saksbytting").toBe(false);
 
     await runAxeAnalyze(page, testInfo.title);
@@ -203,7 +203,7 @@ test.describe("State-håndtering ved saksbytting", () => {
         expect(sidenFungerer, `Siden skal fungere ved navigasjon til ${sakInfo.sakId}`).toBe(true);
 
         // Verifiser at ingen kritiske feil vises
-        const harKritiskFeil = await opprettNySakPage.harErrorMelding();
+        const harKritiskFeil = await opprettNySakPage.harFeilmelding();
         expect(harKritiskFeil, `Ingen kritisk feil ved navigasjon til ${sakInfo.sakId}`).toBe(false);
       }
     }

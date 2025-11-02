@@ -12,100 +12,6 @@ export class SokPage {
   }
 
   /**
-   * Verifiser at vi er på søkesiden
-   */
-  async verifySearchResultsPage(): Promise<void> {
-    await expect(this.page, "Skal være på søkesiden").toHaveURL("/melosys/sok");
-    await expect(
-      this.page.locator("h1:has-text('Saksoversikt')"),
-      "Saksoversikt heading skal være synlig",
-    ).toBeVisible();
-  }
-
-  /**
-   * Verifiser at siden viser korrekt info for en gyldig id
-   * @param id - en gyldig id
-   */
-  async verifyValidSearchResults(id: string): Promise<void> {
-    await this.verifySearchResultsPage();
-
-    await expect(
-      this.page.locator(`h2:has-text('Resultater for f.nr./d-nr. ${id}')`),
-      `Søkeresultat-heading for ${id} skal være synlig`,
-    ).toBeVisible();
-
-    // Sjekk om det finnes saker eller om "ingen saker funnet" meldingen vises
-    const noResultsMessage = this.page.locator(`text=Fant ingen saker knyttet til f.nr./d-nr.`);
-    const firstCase = this.page.locator(".fagsak").first();
-
-    const hasResults = await firstCase.isVisible();
-    const hasNoResultsMessage = await noResultsMessage.isVisible();
-
-    // For en gyldig ID skal enten saker vises ELLER "ingen saker funnet" meldingen
-    const hasValidState = hasResults || hasNoResultsMessage;
-    expect(hasValidState, `For gyldig ID ${id} skal det enten være saker eller "ingen saker funnet" melding`).toBe(
-      true,
-    );
-
-    // Hvis det er resultater, skal ikke "ingen saker funnet" meldingen vises
-    if (hasResults) {
-      await expect(
-        noResultsMessage,
-        `"Ingen saker" melding skal ikke vises når det er resultater for ${id}`,
-      ).not.toBeVisible();
-    }
-  }
-
-  /**
-   * Verifiser at siden viser korrekte søkeresultater for et organisasjonsnummer
-   * @param orgNr - et gyldig organisasjonsnummer
-   */
-  async verifyValidOrgSearchResults(orgNr: string): Promise<void> {
-    await this.verifySearchResultsPage();
-
-    await expect(
-      this.page.locator(`h2:has-text('Resultater for org.nr. ${orgNr}')`),
-      `Søkeresultat-heading for org.nr ${orgNr} skal være synlig`,
-    ).toBeVisible();
-    await expect(
-      this.page.locator(`text=Fant ingen saker knyttet til org.nr. ${orgNr}`),
-      `"Ingen saker" melding skal ikke vises for org.nr ${orgNr}`,
-    ).not.toBeVisible();
-    await expect(
-      this.page.locator(".fagsak").first(),
-      `Minst én sak skal være synlig for org.nr ${orgNr}`,
-    ).toBeVisible();
-  }
-
-  /**
-   * Verifiser at siden viser korrekt info for en ugyldig id
-   * @param id - en ugyldig id
-   */
-  async verifyInvalidSearchResults(id: string): Promise<void> {
-    await this.verifySearchResultsPage();
-
-    await expect(
-      this.page.locator(`h2:has-text('Resultater for saksnummer ${id}')`),
-      `Søkeresultat-heading for saksnummer ${id} skal være synlig`,
-    ).toBeVisible();
-    await expect(
-      this.page.locator(`text=Fant ingen saker knyttet til saksnummer ${id}`),
-      `"Ingen saker funnet" melding skal være synlig for saksnummer ${id}`,
-    ).toBeVisible();
-  }
-
-  /**
-   * Vent på at søkeresultatene er lastet og stabile
-   * @deprecated Use hovedsidePage.ventPåSøkeresultat() or hovedsidePage.søkOgVentPåResultat() instead
-   * @param userId - bruker-ID som det ble søkt etter
-   */
-  async waitForSearchResults(userId: string): Promise<void> {
-    await this.page.waitForSelector(`text=Resultater for f.nr./d-nr. ${userId}`, {
-      state: "visible",
-    });
-  }
-
-  /**
    * Finn alle saker avhengig av sakstype og behandlingsstatus
    * @param sakstype - "Avtaleland", "Utenfor avtaleland", eller "EU/EØS-land"
    * @param behandlingsstatus - Valgfri status, f.eks. "Behandlingen er avsluttet" eller "Behandlingen pågår"
@@ -150,18 +56,6 @@ export class SokPage {
   }
 
   /**
-   * Sjekk om en sak har "Vis behandling" knapp
-   * @param sak - Sak-locator
-   * @returns true hvis knappen finnes
-   */
-  async sakHarVisBehandlingKnapp(sak: Locator): Promise<boolean> {
-    return await sak
-      .locator('button:has-text("Vis behandling")')
-      .isVisible()
-      .catch(() => false);
-  }
-
-  /**
    * Hent saksnummer fra en sak
    * @param sak - Sak-locator
    * @returns Saksnummer (f.eks. "MEL-123") eller "ukjent"
@@ -197,28 +91,6 @@ export class SokPage {
     );
     await visBehandlingKnapp.click();
     await this.page.waitForLoadState("domcontentloaded");
-  }
-
-  /**
-   * Sjekk om en sak har en bestemt behandlingsstatus
-   * @param sak - Sak-locator
-   * @param status - Status tekst å lete etter (f.eks. "Behandlingen er avsluttet")
-   * @returns true hvis saken har den statusen
-   */
-  async harStatus(sak: Locator, status: string): Promise<boolean> {
-    return await sak
-      .locator(`:has-text("${status}")`)
-      .isVisible()
-      .catch(() => false);
-  }
-
-  /**
-   * Hent "Vis behandling" knapp fra en sak
-   * @param sak - Sak-locator
-   * @returns Locator for knappen
-   */
-  getVisBehandlingKnapp(sak: Locator): Locator {
-    return sak.locator('button:has-text("Vis behandling")');
   }
 
   /**
