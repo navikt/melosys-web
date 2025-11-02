@@ -265,7 +265,7 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
 
       // Velg en PLIKTIG bestemmelse - dette er kjernen av bugfixen
       // § 2-7 er en pliktig bestemmelse
-      await aarsavregningPage.velgBestemmelse("§ 2-7 første ledd (arbeidstaker)");
+      await aarsavregningPage.velgBestemmelse("§ 2-7 første ledd (opphold i Norge)");
 
       // Vent på at UI oppdaterer seg
       await page.waitForTimeout(1000);
@@ -286,7 +286,7 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
       await aarsavregningPage.velgDeltGrunnlagJa();
 
       // Velg en PLIKTIG bestemmelse
-      await aarsavregningPage.velgBestemmelse("§ 2-7 første ledd (arbeidstaker)");
+      await aarsavregningPage.velgBestemmelse("§ 2-7 første ledd (opphold i Norge)");
 
       const antallFør = await aarsavregningPage.getAntallMedlemskapsperioder();
 
@@ -303,7 +303,7 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
       await aarsavregningPage.fyllUtMedlemskapsperiodeTomDato(nyPeriodeIndex, lagDato("31.03"));
 
       // Velg trygdedekning
-      await aarsavregningPage.velgTrygdedekning(nyPeriodeIndex, "Full dekning (§ 2-7)");
+      await aarsavregningPage.velgTrygdedekning(nyPeriodeIndex, "Helsedel med syke- og foreldrepenger (§ 2-7)");
 
       // Verifiser at det ikke er valideringsfeil
       await aarsavregningPage.assertIngenFeilmelding("utenfor");
