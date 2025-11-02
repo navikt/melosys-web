@@ -331,11 +331,11 @@ export class BehandlingPage {
 
   /**
    * Fullfør hele prosessen med å avslutte en behandling med spesifisert type
-   * @param type - type avslutning
+   * @param vedtaksType - type avslutning
    * @param saksnummer - saksnummer for feilmeldinger
    */
   async avsluttBehandling(
-    type:
+    vedtaksType:
       | "Søknaden er innvilget"
       | "Søknaden er avslått"
       | "Avslå søknad pga. manglende opplysninger"
@@ -346,10 +346,10 @@ export class BehandlingPage {
   ): Promise<void> {
     await this.klikkAvsluttBehandling();
 
-    if (type === "Søknaden er innvilget") {
+    if (vedtaksType === "Søknaden er innvilget") {
       await this.velgSoknadenErInnvilget(saksnummer);
     } else {
-      await this.velgAvslutningstype(type, saksnummer);
+      await this.velgAvslutningstype(vedtaksType, saksnummer);
     }
 
     await this.bekreftAvslutning();

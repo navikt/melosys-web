@@ -3,6 +3,7 @@ import { runAxeAnalyze } from "../../../utils/axeUtils";
 import { HovedsidePage, USER_ID_VALID } from "../../../pages/hovedside.page";
 import { OpprettNySakPage } from "../../../pages/opprett-ny-sak/opprett-ny-sak.page";
 import { getSaksnummerFraLocator } from "../../../utils/testUtils";
+import { opprettUtenforAvtalelandSak, opprettEUEOSSak, avsluttBehandling } from "../../../utils/testdataUtils";
 
 /**
  * MELOSYS-7624: Test state-håndtering ved saksbytting
@@ -23,6 +24,30 @@ import { getSaksnummerFraLocator } from "../../../utils/testUtils";
  */
 test.describe("State-håndtering ved saksbytting", () => {
   let opprettNySakPage: OpprettNySakPage;
+
+  // Opprett testsaker én gang før alle tester
+  test.beforeAll(async ({ browser }) => {
+    test.setTimeout(180000); // Økt timeout for å opprette og avslutte flere saker
+    const context = await browser.newContext();
+    const page = await context.newPage();
+
+    // Opprett sak med avsluttet behandling (Utenfor avtaleland)
+    const sakMedAvsluttetBehandling = await opprettUtenforAvtalelandSak(page);
+    await avsluttBehandling(page, sakMedAvsluttetBehandling, "Søknaden er innvilget");
+
+    // Opprett flere saker med avsluttede behandlinger for SYMPTOM-testen
+    const sakMedAvsluttetBehandling2 = await opprettUtenforAvtalelandSak(page);
+    await avsluttBehandling(page, sakMedAvsluttetBehandling2, "Søknaden er innvilget");
+
+    // Opprett sak med aktiv behandling (Utenfor avtaleland)
+    await opprettUtenforAvtalelandSak(page);
+
+    // Opprett flere EØS-saker med aktiv behandling (disse viser feilmelding)
+    await opprettEUEOSSak(page, "Ikke yrkesaktiv");
+    await opprettEUEOSSak(page, "Pensjonist/uføretrygdet");
+
+    await context.close();
+  });
 
   test.beforeEach(async ({ page }) => {
     const mainPage = new HovedsidePage(page);
@@ -209,6 +234,9 @@ test.describe("State-håndtering ved saksbytting", () => {
     // Sjekk gjennom alle saker for å finne både saker med panel og saker med feilmelding
     for (let i = 0; i < antallSaker; i++) {
       await opprettNySakPage.velgSakVedIndex(i);
+
+      // Vent litt for at panelet skal kunne lastes inn
+      await page.waitForTimeout(300);
 
       // Sjekk om "Velg tema og type for ny behandling" panelet vises for denne saken
       const panelLocator = opprettNySakPage.hentBehandlingspanelRamme(i);

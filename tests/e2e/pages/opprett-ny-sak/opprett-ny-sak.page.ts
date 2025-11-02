@@ -305,21 +305,16 @@ export class OpprettNySakPage {
    */
   async velgBehandlingstema(
     value:
+      | "Utsendt arbeidstaker / skip / direkte til artikkel 16"
+      | "Utsendt selvstendig næringsdrivende / skip / direkte til artikkel 16"
+      | "Arbeid og/eller selvstendig virksomhet i flere land"
+      | "Offentlig tjenesteperson/flyvende personell"
+      | "Arbeid kun i Norge"
       | "Yrkesaktiv"
       | "Ikke yrkesaktiv"
       | "Pensjonist/uføretrygdet"
       | "Forespørsel fra trygdemyndighet"
-      | "Forespørsel om trygdetid"
-      | "Anmodning om unntak"
-      | "Registrering unntak"
-      | "A1 / Anmodning om unntak på papir"
-      | "Søknad om unntak fra folketrygden"
-      | "Utstedt arbeidstaker / skip / direkte til artikkel 16"
-      | "Utstedt selvstendig næringsdrivende / skip / direkte til artikkel 16"
-      | "Arbeid og/eller selvstendig virksomhet i flere land"
-      | "Offentlig tjenesteperson/flyvende personell"
-      | "Arbeid kun i Norge"
-      | "Virksomhet",
+      | "Forespørsel om trygdetid",
   ): Promise<void> {
     await this.velgDropdownVerdi("behandlingstema", value, "Behandlingstema");
     // Vent på at behandlingstype-dropdown er lastet inn

@@ -74,6 +74,32 @@ export async function opprettUtenforAvtalelandSak(page: Page): Promise<Locator> 
 }
 
 /**
+ * Avslutt en behandling på en sak
+ * @param page - Playwright Page
+ * @param sak - Locator for saken (fra finnÅpneSaker eller lignende)
+ * @param vedtaksType - Vedtaket som skal registreres (f.eks. "Søknaden er innvilget")
+ */
+export async function avsluttBehandling(
+  page: Page,
+  sak: Locator,
+  vedtaksType:
+    | "Søknaden er innvilget"
+    | "Søknaden er avslått"
+    | "Avslå søknad pga. manglende opplysninger"
+    | "Ferdigbehandlet"
+    | "Søknaden/klagen er trukket"
+    | "Behandlingen er bortfalt",
+): Promise<void> {
+  const sokPage = new SokPage(page);
+  const sakId = await sokPage.getSaksnummer(sak);
+
+  await sokPage.klikkVisBehandling(sak);
+  const behandlingPage = new BehandlingPage(page);
+  await behandlingPage.verifiserBehandlingsside();
+  await behandlingPage.avsluttBehandling(vedtaksType, sakId);
+}
+
+/**
  * Opprett en ny Utenfor avtaleland-sak med Førstegangsbehandling, avslutt den, og opprett Årsavregning
  * @returns Locator for saken med årsavregning-behandlingen
  */
@@ -85,10 +111,7 @@ export async function opprettUtenforAvtalelandSakMedAarsavregning(page: Page): P
   const sakId = await sokPage.getSaksnummer(sak);
 
   // 2. Avslutt Førstegangsbehandling
-  await sokPage.klikkVisBehandling(sak);
-  const behandlingPage = new BehandlingPage(page);
-  await behandlingPage.verifiserBehandlingsside();
-  await behandlingPage.avsluttBehandling("Søknaden er innvilget", sakId);
+  await avsluttBehandling(page, sak, "Søknaden er innvilget");
 
   // 3. Opprett Årsavregning på samme sak
   const hovedsidePage = new HovedsidePage(page);
@@ -160,21 +183,15 @@ export async function opprettEøsPensjonistSakMedTrygdeavgift(page: Page): Promi
 export async function opprettEUEOSSak(
   page: Page,
   behandlingstema:
-    | "Yrkesaktiv"
-    | "Ikke yrkesaktiv"
-    | "Pensjonist/uføretrygdet"
-    | "Forespørsel fra trygdemyndighet"
-    | "Forespørsel om trygdetid"
-    | "Anmodning om unntak"
-    | "Registrering unntak"
-    | "A1 / Anmodning om unntak på papir"
-    | "Søknad om unntak fra folketrygden"
-    | "Utstedt arbeidstaker / skip / direkte til artikkel 16"
-    | "Utstedt selvstendig næringsdrivende / skip / direkte til artikkel 16"
+    | "Utsendt arbeidstaker / skip / direkte til artikkel 16"
+    | "Utsendt selvstendig næringsdrivende / skip / direkte til artikkel 16"
     | "Arbeid og/eller selvstendig virksomhet i flere land"
     | "Offentlig tjenesteperson/flyvende personell"
     | "Arbeid kun i Norge"
-    | "Virksomhet" = "Ikke yrkesaktiv",
+    | "Ikke yrkesaktiv"
+    | "Pensjonist/uføretrygdet"
+    | "Forespørsel fra trygdemyndighet"
+    | "Forespørsel om trygdetid" = "Ikke yrkesaktiv",
 ): Promise<Locator> {
   const hovedsidePage = new HovedsidePage(page);
   const opprettNySakPage = new OpprettNySakPage(page);
