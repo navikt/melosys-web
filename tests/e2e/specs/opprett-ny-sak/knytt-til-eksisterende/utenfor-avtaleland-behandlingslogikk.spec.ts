@@ -27,9 +27,7 @@ test.describe("'Utenfor avtaleland' behandlingslogikk", () => {
     await mainPage.klikkOpprettNySakKnapp();
   });
 
-  test("AC1: 'Utenfor avtaleland - Behandlingen er opprettet' sak med kun Årsavregning tilgjengelig", async ({
-    page,
-  }, testInfo) => {
+  test("AC1: Utenfor avtaleland med åpen behandling - kun årsavregning tilgjengelig", async ({ page }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout siden vi oppretter sak
 
     const sokPage = new SokPage(page);
@@ -55,9 +53,7 @@ test.describe("'Utenfor avtaleland' behandlingslogikk", () => {
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("AC2: 'Utenfor avtaleland - Behandlingen er opprettet' sak med åpen årsavregning funnet", async ({
-    page,
-  }, testInfo) => {
+  test("AC2: Utenfor avtaleland med åpen årsavregning - finner sak", async ({ page }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout siden vi oppretter sak + årsavregning
 
     const sokPage = new SokPage(page);
@@ -98,7 +94,9 @@ test.describe("'Utenfor avtaleland' behandlingslogikk", () => {
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("AC3: 'Utenfor avtaleland - Behandlingen er avsluttet' sak funnet", async ({ page }, testInfo) => {
+  test("AC3: Utenfor avtaleland med avsluttet behandling - alle behandlingstyper tilgjengelige", async ({
+    page,
+  }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout siden vi oppretter og avslutter sak
 
     const sokPage = new SokPage(page);

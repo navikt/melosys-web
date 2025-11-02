@@ -20,9 +20,7 @@ test.describe("'Opprett ny sak for bruker", () => {
     await setupOpprettNySakTester(page);
   });
 
-  test("Klikk på 'Opprett ny behandling' for 'Opprett ny sak' når påkrevede felt mangler og verifiser feilmeldinger", async ({
-    page,
-  }, testInfo) => {
+  test("Manglende påkrevde felt - viser feilmeldinger", async ({ page }, testInfo) => {
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgOpprettNySak();
     await opprettNySakPage.klikkOpprettNyBehandling();
@@ -38,9 +36,7 @@ test.describe("'Opprett ny sak for bruker", () => {
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("Klikk 'Opprett ny behandling' for 'Opprett ny sak' med alle påkrevede felt fyllt inn", async ({
-    page,
-  }, testInfo) => {
+  test("Alle påkrevde felt utfylt - oppretter behandling", async ({ page }, testInfo) => {
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgOpprettNySak();
 

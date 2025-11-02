@@ -59,7 +59,7 @@ test.describe("State-håndtering ved saksbytting", () => {
     await opprettNySakPage.velgKnyttTilEksisterendeSak();
   });
 
-  test("Velg sak med avsluttet behandling - viser 'Tidligere behandling er avsluttet'", async ({ page }, testInfo) => {
+  test("Avsluttet behandling - viser melding om tidligere behandling", async ({ page }, testInfo) => {
     // Finn sak med avsluttet behandling
     const valgtSak = await opprettNySakPage.finnSak({
       sakstype: "Utenfor avtaleland",
@@ -82,7 +82,7 @@ test.describe("State-håndtering ved saksbytting", () => {
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("Velg sak med aktiv behandling - viser advarsel om aktiv behandling", async ({ page }, testInfo) => {
+  test("Utenfor avtaleland med aktiv behandling - årsavregning tilgjengelig", async ({ page }, testInfo) => {
     const valgtSak = await opprettNySakPage.finnSak({
       sakstype: "Utenfor avtaleland",
       behandlingsstatus: "Behandlingen er opprettet",
@@ -101,7 +101,7 @@ test.describe("State-håndtering ved saksbytting", () => {
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("Velg EØS-sak med åpen behandling - viser gul varselmelding", async ({ page }, testInfo) => {
+  test("EØS-sak med åpen behandling - viser varselmelding", async ({ page }, testInfo) => {
     const valgtSak = await opprettNySakPage.velgFørsteSak("EU/EØS-land");
 
     expect(valgtSak, "Ingen EØS-sak funnet").toBeTruthy();
@@ -148,7 +148,7 @@ test.describe("State-håndtering ved saksbytting", () => {
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("Behandlingstema settes automatisk fra Redux operation", async ({ page }, testInfo) => {
+  test("Regresjon: Behandlingstema settes automatisk via Redux", async ({ page }, testInfo) => {
     // Finn sak med avsluttet behandling
     const valgtSak = await opprettNySakPage.finnSak({
       sakstype: "Utenfor avtaleland",
@@ -170,7 +170,7 @@ test.describe("State-håndtering ved saksbytting", () => {
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("Konsistent data-lasting ved navigasjon mellom flere saker", async ({ page }, testInfo) => {
+  test("Regresjon: Konsistent data-lasting ved navigasjon mellom saker", async ({ page }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout for flere saksvalg
 
     // Dette er en stresstest av den nye løsningen
@@ -211,7 +211,7 @@ test.describe("State-håndtering ved saksbytting", () => {
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("SYMPTOM: Velg tema og type-panel forsvinner etter feilmelding - SKAL IKKE SKJE", async ({ page }, testInfo) => {
+  test("Regresjon: Panel synlig etter feilmelding på annen sak", async ({ page }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout for mange saksvalg
 
     // Dette tester det spesifikke symptomet som ble beskrevet:
@@ -283,7 +283,7 @@ test.describe("State-håndtering ved saksbytting", () => {
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("Behandlingstyper lastes korrekt for sak med trygdeavgift", async ({ page }, testInfo) => {
+  test("Regresjon: Sak med trygdeavgift - behandlingstyper lastes korrekt", async ({ page }, testInfo) => {
     // Finn en sak (typisk vil det være saker med trygdeavgift i testdataene)
     const valgtSak = await opprettNySakPage.finnSak({
       sakstype: "Utenfor avtaleland",

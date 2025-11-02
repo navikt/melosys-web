@@ -28,7 +28,7 @@ test.describe("Avtaleland behandlingslogikk (regresjon)", () => {
     await mainPage.klikkOpprettNySakKnapp();
   });
 
-  test("Regresjon: Avtaleland-sak med åpen behandling - gul varselmelding", async ({ page }, testInfo) => {
+  test("Regresjon: Avtaleland med åpen behandling - viser varselmelding", async ({ page }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
 
     const sokPage = new SokPage(page);
@@ -65,7 +65,7 @@ test.describe("Avtaleland behandlingslogikk (regresjon)", () => {
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("Regresjon: Avtaleland-sak med 'Søknaden er henlagt' - gul varselmelding", async ({ page }, testInfo) => {
+  test("Regresjon: Avtaleland med henlagt søknad - viser varselmelding", async ({ page }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout siden vi oppretter og henlegger sak
 
     const sokPage = new SokPage(page);
@@ -111,7 +111,7 @@ test.describe("Avtaleland behandlingslogikk (regresjon)", () => {
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("Regresjon: Avtaleland-sak med alle ferdigbehandlede - Ny vurdering og Henvendelse tilgjengelig", async ({
+  test("Regresjon: Avtaleland med ferdigbehandlede - Ny vurdering og Henvendelse tilgjengelig", async ({
     page,
   }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout siden vi oppretter og avslutter sak

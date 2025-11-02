@@ -16,7 +16,7 @@ import { runAxeAnalyze } from "../../../utils/axeUtils";
  * - EU/EØS vurder utpeking (vurderutpeking.jsx)
  */
 test.describe("EU/EØS Stegvelger - Navigasjon", () => {
-  test("skal vise ftrl når behandling åpnes", async ({ page }, testInfo) => {
+  test("EU/EØS-behandling åpnes - viser stegvelger", async ({ page }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
 
     const sokPage = new SokPage(page);
@@ -34,7 +34,7 @@ test.describe("EU/EØS Stegvelger - Navigasjon", () => {
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("skal kunne navigere frem og tilbake mellom steg", async ({ page }, testInfo) => {
+  test("Navigasjon mellom steg - frem og tilbake fungerer", async ({ page }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
 
     const sokPage = new SokPage(page);
@@ -49,7 +49,7 @@ test.describe("EU/EØS Stegvelger - Navigasjon", () => {
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("skal vise steg i progressbar for EU/EØS-sak", async ({ page }, testInfo) => {
+  test("Progressbar - viser alle steg", async ({ page }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
 
     const sokPage = new SokPage(page);

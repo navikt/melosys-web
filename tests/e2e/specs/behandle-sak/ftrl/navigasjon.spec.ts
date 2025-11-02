@@ -19,7 +19,7 @@ import { runAxeAnalyze } from "../../../utils/axeUtils";
  * - Unntaksregistrering
  */
 test.describe("FTRL Stegvelger - Navigasjon", () => {
-  test("skal vise ftrl når FTRL-behandling åpnes", async ({ page }, testInfo) => {
+  test("FTRL-behandling åpnes - viser stegvelger", async ({ page }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
 
     const sokPage = new SokPage(page);
@@ -35,7 +35,7 @@ test.describe("FTRL Stegvelger - Navigasjon", () => {
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("skal kunne navigere frem og tilbake mellom steg i FTRL", async ({ page }, testInfo) => {
+  test("Navigasjon mellom steg - frem og tilbake fungerer", async ({ page }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
 
     const sokPage = new SokPage(page);
@@ -50,7 +50,7 @@ test.describe("FTRL Stegvelger - Navigasjon", () => {
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("skal vise steg i progressbar for FTRL-sak", async ({ page }, testInfo) => {
+  test("Progressbar - viser alle steg", async ({ page }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
 
     const sokPage = new SokPage(page);
@@ -64,7 +64,7 @@ test.describe("FTRL Stegvelger - Navigasjon", () => {
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("skal kunne klikke på steg i progressbar", async ({ page }, testInfo) => {
+  test("Progressbar - klikk på steg navigerer til steget", async ({ page }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
 
     const sokPage = new SokPage(page);

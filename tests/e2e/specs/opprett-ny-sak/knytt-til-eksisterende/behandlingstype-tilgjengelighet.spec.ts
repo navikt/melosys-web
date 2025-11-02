@@ -15,9 +15,7 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
     await mainPage.klikkOpprettNySakKnapp();
   });
 
-  test("Knytt til 'Utenfor avtaleland' sak med åpne behandlinger - behandlingstyper tilgjengelige", async ({
-    page,
-  }, testInfo) => {
+  test("Utenfor avtaleland med åpne behandlinger - viser behandlingstyper", async ({ page }, testInfo) => {
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgKnyttTilEksisterendeSak();
 
@@ -37,7 +35,7 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("Knytt til EØS-sak med aktive behandlinger - gul varselmelding vises", async ({ page }, testInfo) => {
+  test("EØS-sak med aktive behandlinger - viser varselmelding", async ({ page }, testInfo) => {
     // Søk etter bruker med sak som har aktive behandlinger (EØS eller Avtaleland)
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgKnyttTilEksisterendeSak();
@@ -59,9 +57,7 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("Knytt til EØS pensjonist-sak med trygdeavgift og åpne behandlinger - årsavregning tilgjengelig", async ({
-    page,
-  }, testInfo) => {
+  test("EØS pensjonist med trygdeavgift - årsavregning tilgjengelig", async ({ page }, testInfo) => {
     // Test unntaket for EØS pensjonister med trygdeavgift som skal kunne opprette årsavregning
     // selv om de har aktive behandlinger (MELOSYS-7603)
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
@@ -91,9 +87,7 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("Knytt til Avtaleland-sak med åpne behandlinger - behandlingstyper tilgjengelige", async ({
-    page,
-  }, testInfo) => {
+  test("Avtaleland med åpne behandlinger - viser behandlingstyper", async ({ page }, testInfo) => {
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgKnyttTilEksisterendeSak();
 
@@ -108,9 +102,7 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("Knytt til Avtaleland-sak med avsluttede behandlinger - behandlingstyper tilgjengelige", async ({
-    page,
-  }, testInfo) => {
+  test("Avtaleland med avsluttede behandlinger - alle behandlingstyper tilgjengelige", async ({ page }, testInfo) => {
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgKnyttTilEksisterendeSak();
 
@@ -131,9 +123,7 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("Knytt til 'Utenfor avtaleland'-sak med åpne ikke-årsavregningsbehandlinger - kun årsavregning tilgjengelig", async ({
-    page,
-  }, testInfo) => {
+  test("Utenfor avtaleland med åpne behandlinger - kun årsavregning tilgjengelig", async ({ page }, testInfo) => {
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgKnyttTilEksisterendeSak();
 
@@ -153,9 +143,7 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("Knytt til sak med alle avsluttede behandlinger - alle behandlingstyper tilgjengelige", async ({
-    page,
-  }, testInfo) => {
+  test("Alle behandlinger avsluttet - alle behandlingstyper tilgjengelige", async ({ page }, testInfo) => {
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgKnyttTilEksisterendeSak();
 
