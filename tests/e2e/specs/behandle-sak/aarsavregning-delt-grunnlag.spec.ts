@@ -119,8 +119,8 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
       await aarsavregningPage.velgTrygdedekning(nyPeriodeIndex, "Helse- og pensjonsdel (§ 2-9)");
 
       // Verifiser at det ikke er valideringsfeil
-      await aarsavregningPage.assertIngenFeilmelding("utenfor");
-      await aarsavregningPage.assertIngenFeilmelding("overlapper");
+      await aarsavregningPage.verifiserIngenFeilmelding("utenfor");
+      await aarsavregningPage.verifiserIngenFeilmelding("overlapper");
 
       await runAxeAnalyze(page, testInfo.title);
     });
@@ -141,14 +141,14 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
       await aarsavregningPage.klikkMedlemskapsperiodeFomDatepicker(nyPeriodeIndex);
 
       // Verifiser at datepicker åpnes
-      await aarsavregningPage.assertDatepickerErAktiv();
+      await aarsavregningPage.verifiserDatepickerErAktiv();
 
       // Prøv å velge en dato i datepickeren (f.eks. 15. i gjeldende måned)
       const testDato = new Date(parseInt(valgtTestÅr), 0, 15); // 15. januar
       await aarsavregningPage.velgDatoIDatepicker(testDato);
 
       // Verifiser at datoen er valgt (datepicker lukker seg)
-      await aarsavregningPage.assertDatepickerIkkeErAktiv();
+      await aarsavregningPage.verifiserDatepickerIkkeErAktiv();
 
       // Verifiser at feltet har en verdi
       const fomVerdi = await aarsavregningPage.getMedlemskapsperiodeFomDato(nyPeriodeIndex);
@@ -176,9 +176,9 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
       await aarsavregningPage.velgTrygdedekning(nyPeriodeIndex, "Helse- og pensjonsdel (§ 2-9)");
 
       // Verifiser at det ikke er valideringsfeil om overlappende eller ugyldige perioder
-      await aarsavregningPage.assertIngenFeilmelding("overlapper");
-      await aarsavregningPage.assertIngenFeilmelding("ugyldig");
-      await aarsavregningPage.assertIngenFeilmelding("må være etter");
+      await aarsavregningPage.verifiserIngenFeilmelding("overlapper");
+      await aarsavregningPage.verifiserIngenFeilmelding("ugyldig");
+      await aarsavregningPage.verifiserIngenFeilmelding("må være etter");
 
       await runAxeAnalyze(page, testInfo.title);
     });
@@ -213,7 +213,7 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
       await aarsavregningPage.velgSkatteplikttype(0, "Allmennpliktig");
 
       // Verifiser at det ikke er valideringsfeil om "utenfor medlemskapsperioden"
-      await aarsavregningPage.assertIngenFeilmelding("utenfor medlemskapsperioden");
+      await aarsavregningPage.verifiserIngenFeilmelding("utenfor medlemskapsperioden");
 
       await runAxeAnalyze(page, testInfo.title);
     });
@@ -245,8 +245,8 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
       await aarsavregningPage.fyllUtSkatteforholdTomDato(0, lagDato("31.12"));
 
       // Verifiser at det ikke er valideringsfeil
-      await aarsavregningPage.assertIngenFeilmelding("utenfor medlemskapsperioden");
-      await aarsavregningPage.assertIngenFeilmelding("ugyldig");
+      await aarsavregningPage.verifiserIngenFeilmelding("utenfor medlemskapsperioden");
+      await aarsavregningPage.verifiserIngenFeilmelding("ugyldig");
 
       await runAxeAnalyze(page, testInfo.title);
     });
@@ -307,8 +307,8 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
       await aarsavregningPage.velgTrygdedekning(nyPeriodeIndex, "Helsedel med syke- og foreldrepenger (§ 2-7)");
 
       // Verifiser at det ikke er valideringsfeil
-      await aarsavregningPage.assertIngenFeilmelding("utenfor");
-      await aarsavregningPage.assertIngenFeilmelding("overlapper");
+      await aarsavregningPage.verifiserIngenFeilmelding("utenfor");
+      await aarsavregningPage.verifiserIngenFeilmelding("overlapper");
 
       await runAxeAnalyze(page, testInfo.title);
     });
@@ -350,7 +350,7 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
       await aarsavregningPage.fyllUtBruttoInntekt(0, "500000");
 
       // Verifiser at det ikke er valideringsfeil om "utenfor medlemskapsperioden"
-      await aarsavregningPage.assertIngenFeilmelding("utenfor medlemskapsperioden");
+      await aarsavregningPage.verifiserIngenFeilmelding("utenfor medlemskapsperioden");
 
       await runAxeAnalyze(page, testInfo.title);
     });
@@ -388,8 +388,8 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
       await aarsavregningPage.fyllUtInntektsperiodeTomDato(0, lagDato("30.09"));
 
       // Verifiser at det ikke er valideringsfeil
-      await aarsavregningPage.assertIngenFeilmelding("utenfor medlemskapsperioden");
-      await aarsavregningPage.assertIngenFeilmelding("ugyldig");
+      await aarsavregningPage.verifiserIngenFeilmelding("utenfor medlemskapsperioden");
+      await aarsavregningPage.verifiserIngenFeilmelding("ugyldig");
 
       await runAxeAnalyze(page, testInfo.title);
     });
@@ -431,8 +431,8 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
       await aarsavregningPage.fyllUtBruttoInntekt(1, "400000");
 
       // Verifiser at ingen valideringsfeil
-      await aarsavregningPage.assertIngenFeilmelding("utenfor medlemskapsperioden");
-      await aarsavregningPage.assertIngenFeilmelding("overlapper");
+      await aarsavregningPage.verifiserIngenFeilmelding("utenfor medlemskapsperioden");
+      await aarsavregningPage.verifiserIngenFeilmelding("overlapper");
 
       await runAxeAnalyze(page, testInfo.title);
     });

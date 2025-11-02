@@ -159,12 +159,12 @@ export class SendBrevPage extends BehandlingPage {
     }
   }
 
-  async assertSendButtonDisabled() {
-    await expect(this.sendButton, `${this.sakId}: Send button ikke disablet`).toBeDisabled();
+  async verifiserSendKnappDeaktivert() {
+    await expect(this.sendButton, `${this.sakId}: Send-knapp skal være deaktivert`).toBeDisabled();
   }
 
-  async assertSendButtonEnabled() {
-    await expect(this.sendButton, `${this.sakId}: Send button ikke enabled`).toBeEnabled();
+  async verifiserSendKnappAktivert() {
+    await expect(this.sendButton, `${this.sakId}: Send-knapp skal være aktivert`).toBeEnabled();
   }
 
   async selectMottakerByLabel(label: string | RegExp) {

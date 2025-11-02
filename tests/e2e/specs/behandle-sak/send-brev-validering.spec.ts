@@ -28,20 +28,20 @@ test.describe("Verifiser disable/enable av 'Send brev' knapp", () => {
   });
 
   test("'Send brev' knappen er disabled når hverken mottaker eller brevmal er valgt ", async ({ page }, testInfo) => {
-    await sendBrevPage.assertSendButtonDisabled();
+    await sendBrevPage.verifiserSendKnappDeaktivert();
     await runAxeAnalyze(page, testInfo.title);
   });
 
   test("'Send brev' knappen er disabled når mottaker er valgt men ikke brevmal", async ({ page }, testInfo) => {
     await sendBrevPage.selectFirstMottaker();
-    await sendBrevPage.assertSendButtonDisabled();
+    await sendBrevPage.verifiserSendKnappDeaktivert();
     await runAxeAnalyze(page, testInfo.title);
   });
 
   test("'Send brev' knappen blir enabled når både mottaker og brevmal er valgt", async ({ page }, testInfo) => {
     await sendBrevPage.selectFirstMottaker();
     await sendBrevPage.selectFirstBrevmal();
-    await sendBrevPage.assertSendButtonEnabled();
+    await sendBrevPage.verifiserSendKnappAktivert();
     await runAxeAnalyze(page, testInfo.title);
   });
 });

@@ -388,14 +388,14 @@ export class AarsavregningPage extends BehandlingPage {
     await datepickerButton.click();
   }
 
-  async assertDatepickerErAktiv() {
+  async verifiserDatepickerErAktiv() {
     const saksnummer = getSaksnummerFraUrl(this.page);
     // NAV Design System bruker et dialog element for datepicker
     const datepicker = this.page.getByRole("dialog");
     await expect(datepicker, `${saksnummer}: Datepicker-dialog skal være synlig`).toBeVisible({ timeout: 2000 });
   }
 
-  async assertDatepickerIkkeErAktiv() {
+  async verifiserDatepickerIkkeErAktiv() {
     // NAV Design System bruker et dialog element for datepicker
     const datepicker = this.page.getByRole("dialog");
     await expect(datepicker).not.toBeVisible();
@@ -415,12 +415,12 @@ export class AarsavregningPage extends BehandlingPage {
   }
 
   // Validering og feilmeldinger
-  async assertIngenValideringsfeil() {
+  async verifiserIngenValideringsfeil() {
     const errors = this.page.locator('[class*="error"], [class*="feil"]').filter({ hasText: /utenfor|mangler/i });
     await expect(errors).toHaveCount(0);
   }
 
-  async assertValideringsfeilInneholder(tekst: string) {
+  async verifiserValideringsfeilInneholder(tekst: string) {
     const error = this.page.locator('[class*="error"], [class*="feil"]').filter({ hasText: new RegExp(tekst, "i") });
     await expect(
       error,
@@ -428,7 +428,7 @@ export class AarsavregningPage extends BehandlingPage {
     ).toBeVisible();
   }
 
-  async assertIngenFeilmelding(tekst: string) {
+  async verifiserIngenFeilmelding(tekst: string) {
     const error = this.page.locator('[class*="error"], [class*="feil"]').filter({ hasText: new RegExp(tekst, "i") });
     await expect(error).not.toBeVisible();
   }
@@ -438,12 +438,12 @@ export class AarsavregningPage extends BehandlingPage {
     await this.page.getByRole("button", { name: /bekreft og fortsett/i }).click();
   }
 
-  async assertBekreftKnappAktiv() {
+  async verifiserBekreftKnappAktiv() {
     const knapp = this.page.getByRole("button", { name: /bekreft og fortsett/i });
     await expect(knapp).toBeEnabled();
   }
 
-  async assertBekreftKnappInaktiv() {
+  async verifiserBekreftKnappInaktiv() {
     const knapp = this.page.getByRole("button", { name: /bekreft og fortsett/i });
     await expect(knapp).toBeDisabled();
   }
