@@ -2,6 +2,7 @@ import { expect, test } from "@playwright/test";
 import { runAxeAnalyze } from "../../../utils/axeUtils";
 import { HovedsidePage, USER_ID_VALID } from "../../../pages/hovedside.page";
 import { OpprettNySakPage } from "../../../pages/opprett-ny-sak/opprett-ny-sak.page";
+import { TIMEOUT_FOR_COMPLEX_TESTS } from "../../../utils/testUtils";
 import { opprettUtenforAvtalelandSak } from "../../../utils/testdataUtils";
 import { SokPage } from "../../../pages/sok.page";
 import { BehandlingPage } from "../../../pages/behandling/behandling.page";
@@ -29,7 +30,7 @@ test.describe("'Utenfor avtaleland' behandlingslogikk", () => {
   test("AC1: 'Utenfor avtaleland - Behandlingen er opprettet' sak med kun Årsavregning tilgjengelig", async ({
     page,
   }, testInfo) => {
-    test.setTimeout(30000); // Økt timeout siden vi oppretter sak
+    test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout siden vi oppretter sak
 
     const sokPage = new SokPage(page);
     const sak = await opprettUtenforAvtalelandSak(page);
@@ -57,7 +58,7 @@ test.describe("'Utenfor avtaleland' behandlingslogikk", () => {
   test("AC2: 'Utenfor avtaleland - Behandlingen er opprettet' sak med åpen årsavregning funnet", async ({
     page,
   }, testInfo) => {
-    test.setTimeout(45000); // Økt timeout siden vi oppretter sak + årsavregning
+    test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout siden vi oppretter sak + årsavregning
 
     const sokPage = new SokPage(page);
     const sak = await opprettUtenforAvtalelandSak(page);
@@ -98,7 +99,7 @@ test.describe("'Utenfor avtaleland' behandlingslogikk", () => {
   });
 
   test("AC3: 'Utenfor avtaleland - Behandlingen er avsluttet' sak funnet", async ({ page }, testInfo) => {
-    test.setTimeout(30000); // Økt timeout siden vi oppretter og avslutter sak
+    test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout siden vi oppretter og avslutter sak
 
     const sokPage = new SokPage(page);
     const behandlingPage = new BehandlingPage(page);

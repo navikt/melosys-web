@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 import { runAxeAnalyze } from "../../../utils/axeUtils";
 import { HovedsidePage, USER_ID_VALID } from "../../../pages/hovedside.page";
 import { OpprettNySakPage } from "../../../pages/opprett-ny-sak/opprett-ny-sak.page";
-import { getSaksnummerFraLocator } from "../../../utils/testUtils";
+import { getSaksnummerFraLocator, TIMEOUT_FOR_COMPLEX_TESTS } from "../../../utils/testUtils";
 import { opprettAvtalelandSak } from "../../../utils/testdataUtils";
 import { SokPage } from "../../../pages/sok.page";
 import { BehandlingPage } from "../../../pages/behandling/behandling.page";
@@ -29,7 +29,7 @@ test.describe("Avtaleland behandlingslogikk (regresjon)", () => {
   });
 
   test("Regresjon: Avtaleland-sak med åpen behandling - gul varselmelding", async ({ page }, testInfo) => {
-    test.setTimeout(30000);
+    test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
 
     const sokPage = new SokPage(page);
     const sak = await opprettAvtalelandSak(page);
@@ -66,7 +66,7 @@ test.describe("Avtaleland behandlingslogikk (regresjon)", () => {
   });
 
   test("Regresjon: Avtaleland-sak med 'Søknaden er henlagt' - gul varselmelding", async ({ page }, testInfo) => {
-    test.setTimeout(30000); // Økt timeout siden vi oppretter og henlegger sak
+    test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout siden vi oppretter og henlegger sak
 
     const sokPage = new SokPage(page);
     const behandlingPage = new BehandlingPage(page);
@@ -114,7 +114,7 @@ test.describe("Avtaleland behandlingslogikk (regresjon)", () => {
   test("Regresjon: Avtaleland-sak med alle ferdigbehandlede - Ny vurdering og Henvendelse tilgjengelig", async ({
     page,
   }, testInfo) => {
-    test.setTimeout(30000); // Økt timeout siden vi oppretter og avslutter sak
+    test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout siden vi oppretter og avslutter sak
 
     const sokPage = new SokPage(page);
     const behandlingPage = new BehandlingPage(page);

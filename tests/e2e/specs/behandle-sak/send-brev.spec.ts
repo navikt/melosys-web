@@ -1,6 +1,6 @@
 import { test, Page } from "@playwright/test";
 import { SendBrevPage } from "../../pages/behandling/send-brev.page";
-import { assertErrors } from "../../utils/testUtils";
+import { assertErrors, TIMEOUT_FOR_COMPLEX_TESTS } from "../../utils/testUtils";
 import { SokPage } from "../../pages/sok.page";
 import { runAxeAnalyze } from "../../utils/axeUtils";
 import { opprettAvtalelandSak, opprettUtenforAvtalelandSakMedAarsavregning } from "../../utils/testdataUtils";
@@ -83,7 +83,7 @@ test.describe("Validering av årsavregning brevmaler", () => {
   test("Korrekt validering for brevmal 'Innhenting av inntektsopplysninger for årsavregning'", async ({
     page,
   }, testInfo) => {
-    test.setTimeout(60000); // Økt timeout siden vi oppretter sak med årsavregning
+    test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout siden vi oppretter sak med årsavregning
     const sokPage = new SokPage(page);
     sendBrevPage = new SendBrevPage(page);
 

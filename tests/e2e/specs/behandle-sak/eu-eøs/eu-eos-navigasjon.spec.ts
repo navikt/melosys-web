@@ -1,5 +1,6 @@
 import { test } from "@playwright/test";
 import { SokPage } from "../../../pages/sok.page";
+import { TIMEOUT_FOR_COMPLEX_TESTS } from "../../../utils/testUtils";
 import { BehandlingPage } from "../../../pages/behandling/behandling.page";
 import { opprettEUEOSSak } from "../../../utils/testdataUtils";
 import { runAxeAnalyze } from "../../../utils/axeUtils";
@@ -16,7 +17,7 @@ import { runAxeAnalyze } from "../../../utils/axeUtils";
  */
 test.describe("EU/EØS Stegvelger - Navigasjon", () => {
   test("skal vise ftrl når behandling åpnes", async ({ page }, testInfo) => {
-    test.setTimeout(60000);
+    test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
 
     const sokPage = new SokPage(page);
     const behandlingPage = new BehandlingPage(page);
@@ -34,7 +35,7 @@ test.describe("EU/EØS Stegvelger - Navigasjon", () => {
   });
 
   test("skal kunne navigere frem og tilbake mellom steg", async ({ page }, testInfo) => {
-    test.setTimeout(60000);
+    test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
 
     const sokPage = new SokPage(page);
     const behandlingPage = new BehandlingPage(page);
@@ -49,7 +50,7 @@ test.describe("EU/EØS Stegvelger - Navigasjon", () => {
   });
 
   test("skal vise steg i progressbar for EU/EØS-sak", async ({ page }, testInfo) => {
-    test.setTimeout(60000);
+    test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
 
     const sokPage = new SokPage(page);
     const behandlingPage = new BehandlingPage(page);

@@ -1,5 +1,6 @@
 import { test } from "@playwright/test";
 import { SokPage } from "../../pages/sok.page";
+import { TIMEOUT_FOR_COMPLEX_TESTS } from "../../utils/testUtils";
 import { BehandlingPage } from "../../pages/behandling/behandling.page";
 import { opprettAvtalelandSak, opprettUtenforAvtalelandSak } from "../../utils/testdataUtils";
 
@@ -9,7 +10,7 @@ import { opprettAvtalelandSak, opprettUtenforAvtalelandSak } from "../../utils/t
  */
 test.describe("Setup testdata for knytt-til-eksisterende-sak tester", () => {
   test("Setup: Opprett og avslutt Avtaleland-sak for testdata", async ({ page }) => {
-    test.setTimeout(30000); // Økt timeout siden vi oppretter og avslutter sak
+    test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout siden vi oppretter og avslutter sak
     const sokPage = new SokPage(page);
     const behandlingPage = new BehandlingPage(page);
 
@@ -22,7 +23,7 @@ test.describe("Setup testdata for knytt-til-eksisterende-sak tester", () => {
   });
 
   test("Setup: Opprett og avslutt FTRL-sak for testdata", async ({ page }) => {
-    test.setTimeout(30000); // Økt timeout siden vi oppretter og avslutter sak
+    test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout siden vi oppretter og avslutter sak
     const sokPage = new SokPage(page);
     const behandlingPage = new BehandlingPage(page);
 

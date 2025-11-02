@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 import { runAxeAnalyze } from "../../../utils/axeUtils";
 import { HovedsidePage, USER_ID_VALID } from "../../../pages/hovedside.page";
 import { OpprettNySakPage } from "../../../pages/opprett-ny-sak/opprett-ny-sak.page";
-import { getSaksnummerFraLocator } from "../../../utils/testUtils";
+import { getSaksnummerFraLocator, TIMEOUT_FOR_COMPLEX_TESTS } from "../../../utils/testUtils";
 import { opprettUtenforAvtalelandSak, opprettEUEOSSak, avsluttBehandling } from "../../../utils/testdataUtils";
 
 /**
@@ -27,7 +27,7 @@ test.describe("State-håndtering ved saksbytting", () => {
 
   // Opprett testsaker én gang før alle tester
   test.beforeAll(async ({ browser }) => {
-    test.setTimeout(180000); // Økt timeout for å opprette og avslutte flere saker
+    test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout for å opprette og avslutte flere saker
     const context = await browser.newContext();
     const page = await context.newPage();
 
@@ -114,7 +114,7 @@ test.describe("State-håndtering ved saksbytting", () => {
   });
 
   test("Rask saksbytting - ingen race conditions eller gamle verdier", async ({ page }, testInfo) => {
-    test.setTimeout(20000); // Økt timeout for flere saksvalg
+    test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout for flere saksvalg
 
     const antallSaker = await opprettNySakPage.tellAntallSaker();
     expect(
@@ -171,7 +171,7 @@ test.describe("State-håndtering ved saksbytting", () => {
   });
 
   test("Konsistent data-lasting ved navigasjon mellom flere saker", async ({ page }, testInfo) => {
-    test.setTimeout(25000); // Økt timeout for flere saksvalg
+    test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout for flere saksvalg
 
     // Dette er en stresstest av den nye løsningen
     // Navigerer mellom flere saker og verifiserer at data lastes konsistent
@@ -212,7 +212,7 @@ test.describe("State-håndtering ved saksbytting", () => {
   });
 
   test("SYMPTOM: Velg tema og type-panel forsvinner etter feilmelding - SKAL IKKE SKJE", async ({ page }, testInfo) => {
-    test.setTimeout(30000); // Økt timeout for mange saksvalg
+    test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout for mange saksvalg
 
     // Dette tester det spesifikke symptomet som ble beskrevet:
     // "I enkelte tilfeller så ser man at etter at første feilmelding er vist så vil ikke

@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { SokPage } from "../../../pages/sok.page";
+import { TIMEOUT_FOR_COMPLEX_TESTS } from "../../../utils/testUtils";
 import { BehandlingPage } from "../../../pages/behandling/behandling.page";
 import { opprettUtenforAvtalelandSak } from "../../../utils/testdataUtils";
 import { runAxeAnalyze } from "../../../utils/axeUtils";
@@ -19,7 +20,7 @@ import { runAxeAnalyze } from "../../../utils/axeUtils";
  */
 test.describe("FTRL Stegvelger - Navigasjon", () => {
   test("skal vise ftrl når FTRL-behandling åpnes", async ({ page }, testInfo) => {
-    test.setTimeout(60000);
+    test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
 
     const sokPage = new SokPage(page);
     const behandlingPage = new BehandlingPage(page);
@@ -35,7 +36,7 @@ test.describe("FTRL Stegvelger - Navigasjon", () => {
   });
 
   test("skal kunne navigere frem og tilbake mellom steg i FTRL", async ({ page }, testInfo) => {
-    test.setTimeout(60000);
+    test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
 
     const sokPage = new SokPage(page);
     const behandlingPage = new BehandlingPage(page);
@@ -50,7 +51,7 @@ test.describe("FTRL Stegvelger - Navigasjon", () => {
   });
 
   test("skal vise steg i progressbar for FTRL-sak", async ({ page }, testInfo) => {
-    test.setTimeout(60000);
+    test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
 
     const sokPage = new SokPage(page);
     const behandlingPage = new BehandlingPage(page);
@@ -64,7 +65,7 @@ test.describe("FTRL Stegvelger - Navigasjon", () => {
   });
 
   test("skal kunne klikke på steg i progressbar", async ({ page }, testInfo) => {
-    test.setTimeout(60000);
+    test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
 
     const sokPage = new SokPage(page);
     const behandlingPage = new BehandlingPage(page);

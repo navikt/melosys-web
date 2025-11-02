@@ -1,5 +1,6 @@
 import { test, Page, expect } from "@playwright/test";
 import { HovedsidePage, USER_ID_VALID } from "../../pages/hovedside.page";
+import { TIMEOUT_FOR_COMPLEX_TESTS } from "../../utils/testUtils";
 import { SokPage } from "../../pages/sok.page";
 import { BehandlingPage } from "../../pages/behandling/behandling.page";
 import { AarsavregningPage } from "../../pages/behandling/aarsavregning.page";
@@ -87,7 +88,7 @@ async function setupAarsavregningTest(page: Page) {
 test.describe("Årsavregning delt grunnlag - Alle tester", () => {
   test.describe("AC1 - Medlemskapsperiode validering", () => {
     test.beforeEach(async ({ page }) => {
-      test.setTimeout(60000); // Sett timeout til 60 sekunder for setup
+      test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Sett timeout til 30 sekunder for setup
       await setupAarsavregningTest(page);
     });
 
@@ -185,7 +186,7 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
 
   test.describe("AC2 - Skatteforholdsperiode validering", () => {
     test.beforeEach(async ({ page }) => {
-      test.setTimeout(60000);
+      test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
       await setupAarsavregningTest(page);
     });
 
@@ -253,7 +254,7 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
 
   test.describe("AC2.5 - Legg til periode med pliktig bestemmelse (bugfix)", () => {
     test.beforeEach(async ({ page }) => {
-      test.setTimeout(60000);
+      test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
       await setupAarsavregningTest(page);
     });
 
@@ -315,7 +316,7 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
 
   test.describe("AC3 - Inntektsperiode validering", () => {
     test.beforeEach(async ({ page }) => {
-      test.setTimeout(60000);
+      test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
       await setupAarsavregningTest(page);
     });
 

@@ -5,6 +5,11 @@
 import { expect, Locator, Page } from "@playwright/test";
 
 /**
+ * 30 sekunder for komplekse tester
+ */
+export const TIMEOUT_FOR_COMPLEX_TESTS = 30000;
+
+/**
  * Generisk funksjon for å sette dato i et datofelt
  * @private
  */
