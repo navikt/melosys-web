@@ -235,11 +235,16 @@ test.describe("State-håndtering ved saksbytting", () => {
     for (let i = 0; i < antallSaker; i++) {
       await opprettNySakPage.velgSakVedIndex(i);
 
-      // Vent litt for at panelet skal kunne lastes inn
-      await page.waitForTimeout(300);
+      // Vent på at enten panel eller feilmelding lastes inn
+      const panelLocator = opprettNySakPage.hentBehandlingspanelRamme(i);
+      const feilmeldingLocator = opprettNySakPage.hentFeilmeldingspanel(undefined, i);
+      await Promise.race([
+        panelLocator.waitFor({ state: "visible", timeout: 2000 }).catch(() => {}),
+        feilmeldingLocator.waitFor({ state: "visible", timeout: 2000 }).catch(() => {}),
+        page.waitForLoadState("networkidle", { timeout: 2000 }).catch(() => {}),
+      ]);
 
       // Sjekk om "Velg tema og type for ny behandling" panelet vises for denne saken
-      const panelLocator = opprettNySakPage.hentBehandlingspanelRamme(i);
       const harPanel = await panelLocator.isVisible().catch(() => false);
 
       if (harPanel) {
@@ -247,7 +252,6 @@ test.describe("State-håndtering ved saksbytting", () => {
       }
 
       // Hvis vi finner en sak med feilmelding RETT ETTER denne saken, stopp søket
-      const feilmeldingLocator = opprettNySakPage.hentFeilmeldingspanel(undefined, i);
       const harFeilmelding = await feilmeldingLocator.isVisible().catch(() => false);
       if (harFeilmelding && sakerMedPanel.length > 0) {
         // Perfekt! Vi har funnet både saker med panel OG en sak med feilmelding

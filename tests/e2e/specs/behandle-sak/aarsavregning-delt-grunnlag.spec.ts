@@ -223,8 +223,8 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
       await aarsavregningPage.velgDeltGrunnlagJa();
       await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
 
-      // Vent på at UI oppdaterer seg
-      await page.waitForTimeout(1000);
+      // Vent på at "Legg til periode"-knappen blir synlig
+      await page.locator('button:has-text("Legg til periode")').waitFor({ state: "visible" });
 
       // Først, legg til medlemskapsperiode
       const antallMedlemskapFør = await aarsavregningPage.getAntallMedlemskapsperioder();
@@ -268,8 +268,8 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
       // § 2-7 er en pliktig bestemmelse
       await aarsavregningPage.velgBestemmelse("§ 2-7 første ledd (opphold i Norge)");
 
-      // Vent på at UI oppdaterer seg
-      await page.waitForTimeout(1000);
+      // Vent på at "Legg til periode"-knappen blir synlig
+      await page.locator('button:has-text("Legg til periode")').waitFor({ state: "visible" });
 
       // Verifiser at "Legg til periode"-knappen er synlig
       // Dette var buggen: Knappen ble skjult for pliktige bestemmelser selv med delt grunnlag
@@ -360,8 +360,8 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
       await aarsavregningPage.velgDeltGrunnlagJa();
       await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
 
-      // Vent på at UI oppdaterer seg
-      await page.waitForTimeout(1000);
+      // Vent på at "Legg til periode"-knappen blir synlig
+      await page.locator('button:has-text("Legg til periode")').waitFor({ state: "visible" });
 
       // Først, legg til medlemskapsperiode
       const antallMedlemskapFør = await aarsavregningPage.getAntallMedlemskapsperioder();
@@ -399,8 +399,8 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
       await aarsavregningPage.velgDeltGrunnlagJa();
       await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
 
-      // Vent på at UI oppdaterer seg
-      await page.waitForTimeout(1000);
+      // Vent på at "Legg til periode"-knappen blir synlig
+      await page.locator('button:has-text("Legg til periode")').waitFor({ state: "visible" });
 
       // Legg til medlemskapsperiode som dekker hele året
       const antallMedlemskapFør = await aarsavregningPage.getAntallMedlemskapsperioder();

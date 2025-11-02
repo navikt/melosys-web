@@ -292,7 +292,8 @@ export class BehandlingPage {
             await begrunnelseDropdown.selectOption({ index: 1 });
           }
         }
-        await this.page.waitForTimeout(500); // Vent på at knappen blir enabled
+        // Vent på at bekreft-knappen blir enabled
+        await modal.locator('button[type="submit"]:not([disabled])').waitFor({ state: "visible", timeout: 2000 });
       }
     }
 

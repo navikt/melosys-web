@@ -59,8 +59,11 @@ export class InngangPage extends BehandlingPage {
    */
   async velgLand(landkode: string): Promise<void> {
     const landSelect = this.page.getByLabel("Bostedsland");
+    // Vent på at debounced API-kall fullføres
+    const responsePromise = this.page.waitForResponse((resp) => resp.url().includes("/api/") && resp.status() === 200, {
+      timeout: 5000,
+    });
     await landSelect.selectOption({ value: landkode });
-    // Vent litt slik at endringen lagres (debounced)
-    await this.page.waitForTimeout(500);
+    await responsePromise;
   }
 }
