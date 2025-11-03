@@ -20,9 +20,7 @@ test.describe("'Opprett ny sak for bruker", () => {
     await setupOpprettNySakTester(page);
   });
 
-  test("Klikk på 'Opprett ny behandling' for 'Opprett ny sak' når påkrevede felt mangler og verifiser feilmeldinger", async ({
-    page,
-  }, testInfo) => {
+  test("Manglende påkrevde felt - viser feilmeldinger", async ({ page }, testInfo) => {
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgOpprettNySak();
     await opprettNySakPage.klikkOpprettNyBehandling();
@@ -38,9 +36,7 @@ test.describe("'Opprett ny sak for bruker", () => {
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("Klikk 'Opprett ny behandling' for 'Opprett ny sak' med alle påkrevede felt fyllt inn", async ({
-    page,
-  }, testInfo) => {
+  test("Alle påkrevde felt utfylt - oppretter behandling", async ({ page }, testInfo) => {
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgOpprettNySak();
 
@@ -128,6 +124,8 @@ test.describe("'Opprett ny sak for bruker", () => {
     await opprettNySakPage.velgBehandlingstype("Førstegangsbehandling");
     await opprettNySakPage.velgBehandlingsaarsak("Søknad");
 
+    await opprettNySakPage.setFraDato("01.01.2024");
+    await opprettNySakPage.setTilDato("31.12.2024");
     await opprettNySakPage.setFraDato("01.01.2024");
     await opprettNySakPage.setTilDato("31.12.2024");
     // await opprettNySakPage.setLand("Norge");
