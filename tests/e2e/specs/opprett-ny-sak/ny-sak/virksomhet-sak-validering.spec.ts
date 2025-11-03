@@ -20,9 +20,7 @@ test.describe("'Opprett ny sak for virksomhet", () => {
     await setupOpprettNySakTester(page);
   });
 
-  test("Klikk på 'Opprett ny behandling' når påkrevede felt mangler og verifiser feilmeldinger", async ({
-    page,
-  }, testInfo) => {
+  test("Manglende påkrevde felt - viser feilmeldinger", async ({ page }, testInfo) => {
     await opprettNySakPage.velgVirksomhet();
     await opprettNySakPage.fyllInnOrganisasjonsnummer("123456789");
     await opprettNySakPage.klikkOpprettNyBehandling();

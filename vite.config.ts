@@ -103,5 +103,17 @@ export default defineConfig({
     fakeTimers: {
       toFake: ["setTimeout", "clearTimeout", "setInterval", "clearInterval", "setImmediate", "clearImmediate", "Date"],
     },
+    coverage: {
+      provider: "v8",
+      reporter: ["text", "text-summary", "json-summary", "html"],
+      reportsDirectory: "./coverage",
+      include: ["src/**/*.{js,jsx,ts,tsx}"],
+      exclude: [
+        "src/**/*.test.{js,jsx,ts,tsx}",
+        "src/**/*.spec.{js,jsx,ts,tsx}",
+        "src/**/__tests__/**",
+        "src/setupTests.js",
+      ],
+    },
   },
 });
