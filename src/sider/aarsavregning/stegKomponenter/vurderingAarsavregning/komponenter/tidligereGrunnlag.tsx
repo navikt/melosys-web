@@ -22,6 +22,23 @@ export function TidligereGrunnlag({ aarsavregningResponse }: TidligereGrunnlagPr
   const forskuddsvisFakturertTrygdeavgift =
     (aarsavregningResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger?.avgift?.totalAvgift ?? 0) > 0;
 
+  const hentMedlemskapstypeErPliktig = () => {
+    const erHelseutgiftDekkesPeriode =
+      aarsavregningResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger!.trygdeavgiftsgrunnlag.avgiftspliktigperioder?.every(
+        (a) => a.type === "HELSEUTGIFTDEKKESPERIODE",
+      );
+
+    if (erHelseutgiftDekkesPeriode) {
+      return true;
+    }
+
+    return (
+      aarsavregningResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger!.trygdeavgiftsgrunnlag.avgiftspliktigperioder?.every(
+        (periode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG,
+      ) ?? true
+    );
+  };
+
   return (
     <Nav.Box className="tidligereGrunnlag" background="surface-subtle">
       <Nav.Heading size="small" level="3">
@@ -71,11 +88,7 @@ export function TidligereGrunnlag({ aarsavregningResponse }: TidligereGrunnlagPr
               {forskuddsvisFakturertTrygdeavgift && (
                 <BeregnetTrygdeavgiftDetaljer
                   grunnlag={aarsavregningResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger!}
-                  medlemskapsTypeErPliktig={
-                    aarsavregningResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger!.trygdeavgiftsgrunnlag.avgiftspliktigperioder?.every(
-                      (periode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG,
-                    ) ?? true
-                  }
+                  medlemskapsTypeErPliktig={hentMedlemskapstypeErPliktig()}
                 />
               )}
             </Nav.ExpansionCard.Content>

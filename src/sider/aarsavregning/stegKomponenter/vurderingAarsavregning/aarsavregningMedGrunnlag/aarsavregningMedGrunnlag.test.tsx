@@ -317,7 +317,7 @@ describe("AarsavregningMedGrunnlag", () => {
 
       // Verifiser at sisteGjeldendeMedlemskapsperioder blir brukt
       const state = store.getState();
-      expect(state.aarsavregning.data?.sisteGjeldendeMedlemskapsperioder).toHaveLength(2);
+      expect(state.aarsavregning.data?.sisteGjeldendeAvgiftspliktigperioder).toHaveLength(2);
     });
 
     it("skal håndtere tomme sisteGjeldendeMedlemskapsperioder uten feil", async () => {
@@ -347,7 +347,7 @@ describe("AarsavregningMedGrunnlag", () => {
 
       // Skal håndtere tom array uten feil
       const state = store.getState();
-      expect(state.aarsavregning.data?.sisteGjeldendeMedlemskapsperioder).toEqual([]);
+      expect(state.aarsavregning.data?.sisteGjeldendeAvgiftspliktigperioder).toEqual([]);
     });
   });
 
@@ -518,7 +518,7 @@ describe("AarsavregningMedGrunnlag", () => {
 
       // Skal håndtere alle tre periodene
       const state = store.getState();
-      expect(state.aarsavregning.data?.sisteGjeldendeMedlemskapsperioder).toHaveLength(3);
+      expect(state.aarsavregning.data?.sisteGjeldendeAvgiftspliktigperioder).toHaveLength(3);
     });
 
     it("skal filtrere bort ikke-innvilgede perioder", async () => {
@@ -570,7 +570,7 @@ describe("AarsavregningMedGrunnlag", () => {
       // mapMedlemskapsperioder skal filtrere bort avslåtte perioder
       // Så vi skal kun ha data for én periode i formatet
       const state = store.getState();
-      expect(state.aarsavregning.data?.sisteGjeldendeMedlemskapsperioder).toHaveLength(2);
+      expect(state.aarsavregning.data?.sisteGjeldendeAvgiftspliktigperioder).toHaveLength(2);
     });
 
     it("skal håndtere perioder med ulike trygdedekninger", async () => {
@@ -672,7 +672,7 @@ describe("AarsavregningMedGrunnlag", () => {
 
       // Perioder skal være tilgjengelige og håndtert korrekt
       const state = store.getState();
-      expect(state.aarsavregning.data?.sisteGjeldendeMedlemskapsperioder).toHaveLength(3);
+      expect(state.aarsavregning.data?.sisteGjeldendeAvgiftspliktigperioder).toHaveLength(3);
     });
 
     it("skal håndtere perioder med ISO-datoformat", async () => {

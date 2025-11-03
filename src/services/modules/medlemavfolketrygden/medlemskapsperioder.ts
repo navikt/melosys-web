@@ -9,6 +9,7 @@ export interface Avgiftspliktigperiode {
   innvilgelsesResultat: string;
   trygdedekning: string;
   medlemskapstype: string;
+  type: "MEDLEMSKAPSPERIODE" | "HELSEUTGIFTDEKKESPERIODE" | "LOVVALGSPERIODE";
   redigerbar?: boolean;
 }
 
