@@ -1,6 +1,7 @@
+/* eslint-disable max-lines */
 import { yupResolver } from "@hookform/resolvers/yup";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { FieldValue, Resolver, useFieldArray, useForm, useWatch } from "react-hook-form";
+import { FieldValue, useFieldArray, useForm, useWatch } from "react-hook-form";
 import { useSelector } from "react-redux";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import { behandlingsresultatSelectors } from "../../../../../ducks/behandlingsresultat";
@@ -31,7 +32,6 @@ import { TrygdeavgiftFraAvgiftssystemetInput } from "../komponenter/trygdeavgift
 import {
   beregnTrygdeavgiftsperioder,
   erBrukerSkattepliktigIHelePerioden,
-  erGyldigeMedlemskapsperiodeDatoerForAutoUtfylling,
   hentMedlemskapsFomTomDato,
   validateAarsavregningUtenEllerDeltGrunnlag,
 } from "../utils";
@@ -68,9 +68,12 @@ const getChangedDependencies = (
   if (previousDepsRef.current) {
     // Sammenlign nåværende avhengigheter med tidligere
     Object.keys(currentDeps).forEach((key) => {
-      if (!Utils._isEqual(currentDeps[key as keyof typeof currentDeps], previousDepsRef.current?.[key])) {
+      if (
+        previousDepsRef.current &&
+        !Utils._isEqual(currentDeps[key as keyof typeof currentDeps], previousDepsRef.current[key])
+      ) {
         changedDeps[key] = {
-          prev: previousDepsRef.current?.[key],
+          prev: previousDepsRef.current[key],
           curr: currentDeps[key as keyof typeof currentDeps],
         };
       }
@@ -139,8 +142,8 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     trigger,
     getValues,
     formState: { isValid: formIsValid, errors },
-  } = useForm<AarsavregningFormValuesProps>({
-    resolver: yupResolver(aarsavregningUtenEllerDeltGrunnlagSchema) as Resolver<AarsavregningFormValuesProps>,
+  } = useForm({
+    resolver: yupResolver(aarsavregningUtenEllerDeltGrunnlagSchema),
     context: {
       aar: initiellData.valgtÅr,
       harTrygdeavgiftFraAvgiftssystemet,
@@ -170,11 +173,11 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
 
   const formValues = watch();
   const bestemmelse = useWatch({ control, name: "bestemmelse" });
-  const medlemskapsperioder = useWatch({ control, name: "medlemskapsperioder" }) || [];
+  const medlemskapsperioder = useWatch({ control, name: "medlemskapsperioder" });
   const medlemskapsperioderForrigeAntall = useRef(medlemskapsperioder.length);
   const trygdeavgiftFraAvgiftssystemet = useWatch({ control, name: "trygdeavgiftFraAvgiftssystemet" });
-  const skatteforholdsperioder = useWatch({ control, name: "skatteforholdsperioder" }) || [];
-  const inntektskilder = useWatch({ control, name: "inntektskilder" }) || [];
+  const skatteforholdsperioder = useWatch({ control, name: "skatteforholdsperioder" });
+  const inntektskilder = useWatch({ control, name: "inntektskilder" });
   const endeligAvgiftValg = useWatch({ control, name: "endeligAvgiftValg" });
   const manueltAvgiftBeloep = useWatch({ control, name: "manueltAvgiftBeloep" });
 
@@ -216,7 +219,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     skatteforholdsperioderFormState: Skatteforhold[],
     inntektskilderFormState: Inntektskilde[],
     medlemskapsperioderFormState: Medlemskapsperiode[],
-    trygdeavgiftFraAvgiftssystemetParam: string | undefined,
+    trygdeavgiftFraAvgiftssystemetParam: number | undefined,
     endeligAvgiftValgFormState: string | undefined,
     bestemmelseFormState: string | undefined,
   ) => ({
@@ -331,10 +334,10 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       return;
     }
 
-    const medlemskapsperioderFormState = getValues("medlemskapsperioder") || [];
+    const medlemskapsperioderFormState = getValues("medlemskapsperioder");
     const formState = mapFormState(
-      getValues("skatteforholdsperioder") || [],
-      getValues("inntektskilder") || [],
+      getValues("skatteforholdsperioder"),
+      getValues("inntektskilder"),
       medlemskapsperioderFormState,
       getValues("trygdeavgiftFraAvgiftssystemet"),
       getValues("endeligAvgiftValg"),
@@ -595,9 +598,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     ) {
       debouncedOppdatertrygdeavgiftFraAvgiftssystemet({
         avregning: {
-          trygdeavgiftFraAvgiftssystemet: trygdeavgiftFraAvgiftssystemet
-            ? Number(trygdeavgiftFraAvgiftssystemet)
-            : undefined,
+          trygdeavgiftFraAvgiftssystemet,
         },
       });
     }
@@ -679,9 +680,9 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
 
     if (debouncedBeregningRef.current) {
       const currentFormState = mapFormState(
-        getValues("skatteforholdsperioder") || [],
-        getValues("inntektskilder") || [],
-        getValues("medlemskapsperioder") || [],
+        getValues("skatteforholdsperioder"),
+        getValues("inntektskilder"),
+        getValues("medlemskapsperioder"),
         getValues("trygdeavgiftFraAvgiftssystemet"),
         getValues("endeligAvgiftValg"),
         getValues("bestemmelse"),
@@ -714,7 +715,9 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
           }
           setDebouncedBeregningPagaar(true);
           consoleLog("[useEffect hovedberegning] sette debouncedBeregningPaagar true");
-          debouncedBeregningRef.current?.();
+          if (debouncedBeregningRef.current) {
+            debouncedBeregningRef.current();
+          }
         });
       } else {
         setArrayValideringsfeil(undefined);
@@ -770,27 +773,19 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
 
   // Denne gjør at første/initielle element i skatteforhold og inntektsperiode ferdigutfylles med medlemskapsperiode når medlemskapsperiode er satt
   useEffect(() => {
-    if (
-      !erGyldigeMedlemskapsperiodeDatoerForAutoUtfylling(
-        medlemskapsperiode.fomDato,
-        medlemskapsperiode.tomDato,
-        initiellData.valgtÅr,
-      )
-    ) {
-      return;
-    }
+    if (medlemskapsperiode.fomDato && medlemskapsperiode.tomDato) {
+      const initialSkatteforholdElement = skatteforholdsperioder[0];
+      const initialInntektsPeriode = inntektskilder[0];
 
-    const initialSkatteforholdElement = skatteforholdsperioder[0];
-    const initialInntektsPeriode = inntektskilder[0];
+      if (!(initialSkatteforholdElement.fomDato && initialSkatteforholdElement.tomDato)) {
+        skattRemove(0);
+        skattAppend(medlemskapsperiode);
+      }
 
-    if (!(initialSkatteforholdElement.fomDato && initialSkatteforholdElement.tomDato)) {
-      skattRemove(0);
-      skattAppend(medlemskapsperiode);
-    }
-
-    if (!(initialInntektsPeriode.fomDato && initialInntektsPeriode.tomDato)) {
-      inntektRemove(0);
-      inntektAppend(medlemskapsperiode);
+      if (!(initialInntektsPeriode.fomDato && initialInntektsPeriode.tomDato)) {
+        inntektRemove(0);
+        inntektAppend(medlemskapsperiode);
+      }
     }
   }, [medlemskapsperiode]);
 
@@ -922,8 +917,6 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
             fields={skattFields}
             minDate={minDate}
             maxDate={maxDate}
-            forhindreAutoUtfylling={true}
-            laasAar={true}
           />
           {!trygdeAvgiftSkalIkkeBetalesTilNav && (
             <Inntektskilder
@@ -940,8 +933,6 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
               bestemmelse={bestemmelse}
               minDate={minDate}
               maxDate={maxDate}
-              forhindreAutoUtfylling={true}
-              laasAar={true}
             />
           )}
           {formIsValid && trygdeAvgiftSkalIkkeBetalesTilNav && (

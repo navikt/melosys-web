@@ -52,9 +52,8 @@ const kanPeriodeSlettes = (gjeldendePeriode: Medlemskapsperiode, allePerioderILi
 
 export interface PeriodeElementerProps {
   redigerbart: boolean;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  control: Control<any>;
-  field: { id: string };
+  control: Control;
+  field: { id: string | number; [key: string]: unknown };
   remove: (index: number) => void;
   formValues: FormValuesProps;
   handleLeggTil: () => void;
@@ -63,7 +62,7 @@ export interface PeriodeElementerProps {
   maxDate?: Date;
   minDate?: Date;
   trygdedekninger?: string[];
-  setValue: (name: string, value: string | Medlemskapsperiode[], options?: { shouldValidate?: boolean }) => void;
+  setValue: (name: string, value: unknown, options?: { shouldValidate?: boolean; shouldDirty?: boolean }) => void;
   erDeltGrunnlag?: boolean;
 }
 
@@ -88,7 +87,6 @@ export function MedlemskapsperiodeSkjema({
   const medlemskapsperioder = formValues.medlemskapsperioder!;
   const erPeriodeFraGrunnlag = !medlemskapsperioder[index]?.redigerbar;
   const kanViseSletteKolonne = redigerbart && medlemskapsperioder.length > 1;
-  const erUlagretPeriode = medlemskapsperioder[index]?.id === ULAGRET_MEDLEMSKAPSPERIODE_ID;
   const tilOgMedDatoForrigePeriode =
     medlemskapsperioder[index - 1] !== undefined
       ? Utils.dato.norskStringTilDate(medlemskapsperioder[index - 1]?.tomDato)
@@ -97,14 +95,11 @@ export function MedlemskapsperiodeSkjema({
     tilOgMedDatoForrigePeriode.setDate(tilOgMedDatoForrigePeriode.getDate() + 1);
   }
 
-  // MELOSYS-7612: Ulagrede perioder skal ikke begrenses av forrige periode
-  // For delt grunnlag må bruker kunne legge til sammenhengende perioder fritt innenfor året
+  // Sikre at minDate ikke overstiger maxDate (problem når forrige periode slutter utenfor årets ramme)
   const safeMinDateForFom = (() => {
-    // Hvis dette er en ulagret (ny) periode, tillat valg innenfor hele året
-    if (erUlagretPeriode || tilOgMedDatoForrigePeriode === undefined) {
+    if (tilOgMedDatoForrigePeriode === undefined) {
       return minDate;
     }
-    // For lagrede perioder, sikre at minDate ikke overstiger maxDate
     if (maxDate && tilOgMedDatoForrigePeriode > maxDate) {
       return maxDate;
     }
@@ -134,8 +129,6 @@ export function MedlemskapsperiodeSkjema({
             name={`medlemskapsperioder[${index}].fomDato`}
             aria-label={`Fra og med periode ${index + 1}`}
             readOnly={!redigerbart || erPeriodeFraGrunnlag}
-            forhindreAutoUtfylling={true}
-            laasAar={true}
           />
         </Nav.Column>
         <Nav.Column className="dato">
@@ -147,8 +140,6 @@ export function MedlemskapsperiodeSkjema({
             minDate={Utils.dato.norskStringTilDate(medlemskapsperioder[index].fomDato) || minDate}
             maxDate={maxDate}
             readOnly={!redigerbart || erPeriodeFraGrunnlag}
-            forhindreAutoUtfylling={true}
-            laasAar={true}
           />
         </Nav.Column>
         <Nav.Column className="trygdedekning">
@@ -160,7 +151,7 @@ export function MedlemskapsperiodeSkjema({
             control={control}
             readOnly={!redigerbart || erPeriodeFraGrunnlag || kunEnTrygdedekning}
           >
-            {trygdedekninger?.map((dekning: string) => (
+            {trygdedekninger?.map((dekning) => (
               <option key={dekning} value={dekning}>
                 {KV.kodeTilTerm(dekning, MKV.KTObjects.trygdedekninger)}
               </option>

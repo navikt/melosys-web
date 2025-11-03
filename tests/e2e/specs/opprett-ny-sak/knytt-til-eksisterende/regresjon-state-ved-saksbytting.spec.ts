@@ -1,8 +1,9 @@
 import { expect, test } from "@playwright/test";
-import { runAxeAnalyze } from "../../../../utils/axeUtils";
-import { HovedsidePage, USER_ID_VALID } from "../../../../pages/hovedside.page";
-import { OpprettNySakPage } from "../../../../pages/opprett-ny-sak/opprett-ny-sak.page";
-import { getSakId } from "../../../../utils/testUtils";
+import { runAxeAnalyze } from "../../../utils/axeUtils";
+import { HovedsidePage, USER_ID_VALID } from "../../../pages/hovedside.page";
+import { OpprettNySakPage } from "../../../pages/opprett-ny-sak/opprett-ny-sak.page";
+import { getSaksnummerFraLocator, TIMEOUT_FOR_COMPLEX_TESTS } from "../../../utils/testUtils";
+import { opprettUtenforAvtalelandSak, opprettEUEOSSak, avsluttBehandling } from "../../../utils/testdataUtils";
 
 /**
  * MELOSYS-7624: Test state-håndtering ved saksbytting
@@ -21,8 +22,32 @@ import { getSakId } from "../../../../utils/testUtils";
  * - Én-veis dataflyt: Redux → Component
  * - Parallell data-henting med Promise.all
  */
-test.describe("MELOSYS-7624: State-håndtering ved saksbytting", () => {
+test.describe("State-håndtering ved saksbytting", () => {
   let opprettNySakPage: OpprettNySakPage;
+
+  // Opprett testsaker én gang før alle tester
+  test.beforeAll(async ({ browser }) => {
+    test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout for å opprette og avslutte flere saker
+    const context = await browser.newContext();
+    const page = await context.newPage();
+
+    // Opprett sak med avsluttet behandling (Utenfor avtaleland)
+    const sakMedAvsluttetBehandling = await opprettUtenforAvtalelandSak(page);
+    await avsluttBehandling(page, sakMedAvsluttetBehandling, "Søknaden er innvilget");
+
+    // Opprett flere saker med avsluttede behandlinger for SYMPTOM-testen
+    const sakMedAvsluttetBehandling2 = await opprettUtenforAvtalelandSak(page);
+    await avsluttBehandling(page, sakMedAvsluttetBehandling2, "Søknaden er innvilget");
+
+    // Opprett sak med aktiv behandling (Utenfor avtaleland)
+    await opprettUtenforAvtalelandSak(page);
+
+    // Opprett flere EØS-saker med aktiv behandling (disse viser feilmelding)
+    await opprettEUEOSSak(page, "Ikke yrkesaktiv");
+    await opprettEUEOSSak(page, "Pensjonist/uføretrygdet");
+
+    await context.close();
+  });
 
   test.beforeEach(async ({ page }) => {
     const mainPage = new HovedsidePage(page);
@@ -34,7 +59,7 @@ test.describe("MELOSYS-7624: State-håndtering ved saksbytting", () => {
     await opprettNySakPage.velgKnyttTilEksisterendeSak();
   });
 
-  test("Velg sak med avsluttet behandling - viser 'Tidligere behandling er avsluttet'", async ({ page }, testInfo) => {
+  test("Avsluttet behandling - viser melding om tidligere behandling", async ({ page }, testInfo) => {
     // Finn sak med avsluttet behandling
     const valgtSak = await opprettNySakPage.finnSak({
       sakstype: "Utenfor avtaleland",
@@ -57,7 +82,7 @@ test.describe("MELOSYS-7624: State-håndtering ved saksbytting", () => {
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("Velg sak med aktiv behandling - viser advarsel om aktiv behandling", async ({ page }, testInfo) => {
+  test("Utenfor avtaleland med aktiv behandling - årsavregning tilgjengelig", async ({ page }, testInfo) => {
     const valgtSak = await opprettNySakPage.finnSak({
       sakstype: "Utenfor avtaleland",
       behandlingsstatus: "Behandlingen er opprettet",
@@ -71,12 +96,12 @@ test.describe("MELOSYS-7624: State-håndtering ved saksbytting", () => {
     await opprettNySakPage.verifiserTilgjengeligeBehandlingstyper(valgtSak!, ["Årsavregning"]);
 
     const harFeilmelding = await opprettNySakPage.harFeilmelding();
-    expect(harFeilmelding, `Ingen feilmelding skal vises for sak ${getSakId(valgtSak!)}`).toBe(false);
+    expect(harFeilmelding, `Ingen feilmelding skal vises for sak ${getSaksnummerFraLocator(valgtSak!)}`).toBe(false);
 
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("Velg EØS-sak med åpen behandling - viser gul varselmelding", async ({ page }, testInfo) => {
+  test("EØS-sak med åpen behandling - viser varselmelding", async ({ page }, testInfo) => {
     const valgtSak = await opprettNySakPage.velgFørsteSak("EU/EØS-land");
 
     expect(valgtSak, "Ingen EØS-sak funnet").toBeTruthy();
@@ -89,7 +114,7 @@ test.describe("MELOSYS-7624: State-håndtering ved saksbytting", () => {
   });
 
   test("Rask saksbytting - ingen race conditions eller gamle verdier", async ({ page }, testInfo) => {
-    test.setTimeout(20000); // Økt timeout for flere saksvalg
+    test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout for flere saksvalg
 
     const antallSaker = await opprettNySakPage.tellAntallSaker();
     expect(
@@ -117,13 +142,13 @@ test.describe("MELOSYS-7624: State-håndtering ved saksbytting", () => {
     expect(sakslisteEtterBytting, "Saksliste skal være tilgjengelig").toBeGreaterThan(0);
 
     // Verifiser at ingen error-meldinger vises
-    const harError = await opprettNySakPage.harErrorMelding();
+    const harError = await opprettNySakPage.harFeilmelding();
     expect(harError, "Ingen error skal vises etter rask saksbytting").toBe(false);
 
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("Behandlingstema settes automatisk fra Redux operation", async ({ page }, testInfo) => {
+  test("Regresjon: Behandlingstema settes automatisk via Redux", async ({ page }, testInfo) => {
     // Finn sak med avsluttet behandling
     const valgtSak = await opprettNySakPage.finnSak({
       sakstype: "Utenfor avtaleland",
@@ -145,8 +170,8 @@ test.describe("MELOSYS-7624: State-håndtering ved saksbytting", () => {
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("Konsistent data-lasting ved navigasjon mellom flere saker", async ({ page }, testInfo) => {
-    test.setTimeout(25000); // Økt timeout for flere saksvalg
+  test("Regresjon: Konsistent data-lasting ved navigasjon mellom saker", async ({ page }, testInfo) => {
+    test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout for flere saksvalg
 
     // Dette er en stresstest av den nye løsningen
     // Navigerer mellom flere saker og verifiserer at data lastes konsistent
@@ -178,7 +203,7 @@ test.describe("MELOSYS-7624: State-håndtering ved saksbytting", () => {
         expect(sidenFungerer, `Siden skal fungere ved navigasjon til ${sakInfo.sakId}`).toBe(true);
 
         // Verifiser at ingen kritiske feil vises
-        const harKritiskFeil = await opprettNySakPage.harErrorMelding();
+        const harKritiskFeil = await opprettNySakPage.harFeilmelding();
         expect(harKritiskFeil, `Ingen kritisk feil ved navigasjon til ${sakInfo.sakId}`).toBe(false);
       }
     }
@@ -186,8 +211,8 @@ test.describe("MELOSYS-7624: State-håndtering ved saksbytting", () => {
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("SYMPTOM: Velg tema og type-panel forsvinner etter feilmelding - SKAL IKKE SKJE", async ({ page }, testInfo) => {
-    test.setTimeout(30000); // Økt timeout for mange saksvalg
+  test("Regresjon: Panel synlig etter feilmelding på annen sak", async ({ page }, testInfo) => {
+    test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout for mange saksvalg
 
     // Dette tester det spesifikke symptomet som ble beskrevet:
     // "I enkelte tilfeller så ser man at etter at første feilmelding er vist så vil ikke
@@ -210,8 +235,16 @@ test.describe("MELOSYS-7624: State-håndtering ved saksbytting", () => {
     for (let i = 0; i < antallSaker; i++) {
       await opprettNySakPage.velgSakVedIndex(i);
 
-      // Sjekk om "Velg tema og type for ny behandling" panelet vises for denne saken
+      // Vent på at enten panel eller feilmelding lastes inn
       const panelLocator = opprettNySakPage.hentBehandlingspanelRamme(i);
+      const feilmeldingLocator = opprettNySakPage.hentFeilmeldingspanel(undefined, i);
+      await Promise.race([
+        panelLocator.waitFor({ state: "visible", timeout: 2000 }).catch(() => {}),
+        feilmeldingLocator.waitFor({ state: "visible", timeout: 2000 }).catch(() => {}),
+        page.waitForLoadState("networkidle", { timeout: 2000 }).catch(() => {}),
+      ]);
+
+      // Sjekk om "Velg tema og type for ny behandling" panelet vises for denne saken
       const harPanel = await panelLocator.isVisible().catch(() => false);
 
       if (harPanel) {
@@ -219,7 +252,6 @@ test.describe("MELOSYS-7624: State-håndtering ved saksbytting", () => {
       }
 
       // Hvis vi finner en sak med feilmelding RETT ETTER denne saken, stopp søket
-      const feilmeldingLocator = opprettNySakPage.hentFeilmeldingspanel(undefined, i);
       const harFeilmelding = await feilmeldingLocator.isVisible().catch(() => false);
       if (harFeilmelding && sakerMedPanel.length > 0) {
         // Perfekt! Vi har funnet både saker med panel OG en sak med feilmelding
@@ -255,7 +287,7 @@ test.describe("MELOSYS-7624: State-håndtering ved saksbytting", () => {
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("Behandlingstyper lastes korrekt for sak med trygdeavgift", async ({ page }, testInfo) => {
+  test("Regresjon: Sak med trygdeavgift - behandlingstyper lastes korrekt", async ({ page }, testInfo) => {
     // Finn en sak (typisk vil det være saker med trygdeavgift i testdataene)
     const valgtSak = await opprettNySakPage.finnSak({
       sakstype: "Utenfor avtaleland",

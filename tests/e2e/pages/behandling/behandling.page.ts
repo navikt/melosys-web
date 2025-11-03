@@ -1,4 +1,5 @@
 import { expect, Locator, Page } from "@playwright/test";
+import { getSaksnummerFraUrl } from "../../utils/testUtils";
 
 /**
  * Page Object Model for visning og håndtering av behandlinger
@@ -12,10 +13,20 @@ export class BehandlingPage {
   }
 
   /**
+   * Klikk på Bekreft-knappen i Inngang-steget (kun i aktivt steg)
+   */
+  async klikkBekreftOgFortsett(): Promise<void> {
+    const bekreftKnapp = this.page.locator(".stegFane--aktiv button.stegKnapper__bekreft");
+    await bekreftKnapp.waitFor({ state: "visible", timeout: 5000 });
+    expect(await bekreftKnapp.isVisible(), "Knappen 'Bekreft og fortsett'").toBe(true);
+    await bekreftKnapp.click();
+  }
+
+  /**
    * Verifiser at vi er på behandlingssiden
    */
   async verifiserBehandlingsside(): Promise<void> {
-    await expect(this.page).toHaveURL(/\/melosys\/(FTRL|AVTALELAND|EOS|TRYGDEAVTALE)\/.*\/MEL-\d+/);
+    await expect(this.page).toHaveURL(/\/melosys\/(FTRL|AVTALELAND|EOS|EU_EOS|TRYGDEAVTALE)\/.*\/MEL-\d+/);
 
     // Vent på at siden lastes med behandlingsinnhold
     await this.page.waitForLoadState("domcontentloaded");
@@ -42,77 +53,8 @@ export class BehandlingPage {
       }
     }
 
-    expect(infoFunnet, "Kunne ikke verifisere at vi er på en behandlingsside").toBe(true);
-  }
-
-  /**
-   * Hent behandlingsnummer/saksnummer fra siden
-   */
-  async hentBehandlingsInfo(): Promise<{ saksnummer?: string; behandlingId?: string }> {
-    const url = this.page.url();
-    const behandlingIdMatch = url.match(/\/behandling\/(\d+)/);
-    const behandlingId = behandlingIdMatch ? behandlingIdMatch[1] : undefined;
-
-    let saksnummer: string | undefined;
-    try {
-      const saksnummerElement = this.page.locator('.saksnummer, :has-text("MEL-")').first();
-      const tekst = await saksnummerElement.textContent({ timeout: 2000 });
-      saksnummer = tekst?.match(/MEL-\d+/)?.[0];
-    } catch {
-      // Ikke kritisk hvis vi ikke finner saksnummer
-    }
-
-    return { saksnummer, behandlingId };
-  }
-
-  /**
-   * Sjekk om behandlingen kan avsluttes (har "Avslutt behandling" knapp i hamburgermenyen)
-   */
-  async kanAvslutteBehandling(): Promise<boolean> {
-    // Først åpne hamburgermenyen
-    const hamburgerSelektorer = [
-      '.behandlingsmeny__knapp[role="button"][aria-label="Behandlingsmeny"]',
-      '.behandlingsmeny__knapp[aria-label="Behandlingsmeny"]',
-      ".behandlingsmeny__knapp",
-      '[aria-label="Behandlingsmeny"]',
-      '[role="button"][title="Behandlingsmeny"]',
-      '[class*="behandlingsmeny"]',
-    ];
-
-    let menuOpened = false;
-    for (const selektor of hamburgerSelektorer) {
-      const hamburgerMeny = this.page.locator(selektor);
-      if (await hamburgerMeny.isVisible({ timeout: 1000 }).catch(() => false)) {
-        await hamburgerMeny.click();
-        await this.page.waitForTimeout(500);
-        menuOpened = true;
-        break;
-      }
-    }
-
-    if (!menuOpened) {
-      return false;
-    }
-
-    // Sjekk om "Avslutt behandling" finnes i menyen
-    const avsluttKnapper = [
-      'button:has-text("Avslutt behandling")',
-      '[role="button"]:has-text("Avslutt behandling")',
-      'a:has-text("Avslutt behandling")',
-      '.menyknapp:has-text("Avslutt behandling")',
-    ];
-
-    for (const selector of avsluttKnapper) {
-      if (
-        await this.page
-          .locator(selector)
-          .isVisible({ timeout: 1000 })
-          .catch(() => false)
-      ) {
-        return true;
-      }
-    }
-    return false;
+    const saksnummer = getSaksnummerFraUrl(this.page);
+    expect(infoFunnet, `${saksnummer}: Kunne ikke verifisere at vi er på en behandlingsside`).toBe(true);
   }
 
   /**
@@ -126,26 +68,31 @@ export class BehandlingPage {
 
     if (!menyErSynlig) {
       const hamburgerMeny = this.page.locator(".behandlingsmeny__knapp");
+      const saksnummer = getSaksnummerFraUrl(this.page);
 
-      await expect(hamburgerMeny).toBeVisible({ timeout: 5000 });
+      await expect(hamburgerMeny, `${saksnummer}: Hamburger-meny skal være synlig`).toBeVisible({ timeout: 5000 });
       await hamburgerMeny.click();
-      await this.page.waitForTimeout(500);
     }
 
     // Finn accordion-headeren for "Avslutt behandling"
     const accordionHeader = this.page.locator(
       '.behandlingsmeny__meny .navds-accordion__header:has(.navds-accordion__header-content:has-text("Avslutt behandling"))',
     );
+    const saksnummer = getSaksnummerFraUrl(this.page);
 
-    await expect(accordionHeader).toBeVisible({ timeout: 2000 });
+    await expect(accordionHeader, `${saksnummer}: Accordion-header "Avslutt behandling" skal være synlig`).toBeVisible({
+      timeout: 2000,
+    });
     await accordionHeader.click();
-    await this.page.waitForTimeout(500);
 
     // Vær mer spesifikk - finn accordion content som tilhører "Avslutt behandling"
     const accordionContent = this.page.locator(
       '.behandlingsmeny__meny .navds-accordion__item:has(.navds-accordion__header:has(.navds-accordion__header-content:has-text("Avslutt behandling"))) .navds-accordion__content',
     );
-    await expect(accordionContent).toBeVisible({ timeout: 3000 });
+    await expect(
+      accordionContent,
+      `${saksnummer}: Accordion-innhold "Avslutt behandling" skal være synlig`,
+    ).toBeVisible({ timeout: 3000 });
   }
 
   /**
@@ -158,15 +105,18 @@ export class BehandlingPage {
       '.behandlingsmeny__meny .navds-accordion__item:has(.navds-accordion__header:has(.navds-accordion__header-content:has-text("Avslutt behandling"))) .navds-accordion__content',
     );
 
-    await expect(accordionContent).toBeVisible({ timeout: 2000 });
+    await expect(
+      accordionContent,
+      `${saksnummer}: Accordion content for "Avslutt behandling" skal være synlig`,
+    ).toBeVisible({ timeout: 2000 });
 
     // List alle tilgjengelige alternativer innen accordion content
     const alleHandlinger = accordionContent.locator(".behandlingsmeny__handling");
     const antallHandlinger = await alleHandlinger.count();
 
-    if (antallHandlinger === 0) {
-      throw new Error(`Ingen behandlingshandlinger funnet i accordion content på sak ${saksnummer}`);
-    }
+    expect(antallHandlinger > 0, `Ingen behandlingshandlinger funnet i accordion content på sak ${saksnummer}`).toBe(
+      true,
+    );
 
     const tilgjengeligeAlternativer: Array<{ element: Locator; tekst: string }> = [];
     for (let i = 0; i < antallHandlinger; i++) {
@@ -182,9 +132,10 @@ export class BehandlingPage {
       }
     }
 
-    if (tilgjengeligeAlternativer.length === 0) {
-      throw new Error(`Ingen lesbare behandlingshandlinger funnet på sak ${saksnummer}`);
-    }
+    expect(
+      tilgjengeligeAlternativer.length > 0,
+      `Ingen lesbare behandlingshandlinger funnet på sak ${saksnummer}`,
+    ).toBe(true);
 
     // Finn ekte avslutningsalternativer (ikke oppgavelisteflytting)
     const avslutningsalternativer = tilgjengeligeAlternativer.filter(
@@ -198,20 +149,21 @@ export class BehandlingPage {
         alt.tekst.includes("Behandlingen er bortfalt"),
     );
 
-    if (avslutningsalternativer.length === 0) {
-      const tilgjengeligeTekster = tilgjengeligeAlternativer.map((alt) => `"${alt.tekst}"`).join(", ");
-      throw new Error(
-        `Ingen ekte avslutningsalternativer funnet på sak ${saksnummer}. Tilgjengelige: ${tilgjengeligeTekster}`,
-      );
-    }
+    const tilgjengeligeTekster = tilgjengeligeAlternativer.map((alt) => `"${alt.tekst}"`).join(", ");
+    expect(
+      avslutningsalternativer.length > 0,
+      `Ingen ekte avslutningsalternativer funnet på sak ${saksnummer}. Tilgjengelige: ${tilgjengeligeTekster}`,
+    ).toBe(true);
 
     // Bruk første ekte avslutningsalternativ
     const valgtAlternativ = avslutningsalternativer[0];
 
     // Vent på at elementet blir synlig og klikk
-    await expect(valgtAlternativ.element).toBeVisible({ timeout: 3000 });
+    await expect(
+      valgtAlternativ.element,
+      `${saksnummer}: Avslutningsalternativ "${valgtAlternativ.tekst}" skal være synlig`,
+    ).toBeVisible({ timeout: 3000 });
     await valgtAlternativ.element.click();
-    await this.page.waitForTimeout(500);
   }
 
   /**
@@ -227,7 +179,6 @@ export class BehandlingPage {
 
     if (handlingSynlig) {
       await behandlingsHandling.click();
-      await this.page.waitForTimeout(500);
       return;
     }
 
@@ -250,14 +201,13 @@ export class BehandlingPage {
     }
 
     expect(alternativFunnet, `Avslutningsalternativ "${tekst}" ikke funnet på sak ${saksnummer}`).toBe(true);
-    await this.page.waitForTimeout(500);
   }
 
   /**
    * Bekreft avslutningen (hvis det er en bekreftelsesdialog)
    */
   async bekreftAvslutning(): Promise<void> {
-    // Først, vent på at modalen åpnes
+    const saksnummer = getSaksnummerFraUrl(this.page);
     const modalSelectors = [".navds-modal[open]", ".modal[open]", '[role="dialog"]', ".dialog", ".confirmation-modal"];
 
     let modal = null;
@@ -269,9 +219,8 @@ export class BehandlingPage {
       }
     }
 
-    if (!modal) {
-      throw new Error("Fant ingen åpen modal for bekreftelse");
-    }
+    expect(modal, `${saksnummer}: Fant ingen åpen modal for bekreftelse`).not.toBeNull();
+    if (!modal) return; // Type guard for TypeScript
 
     // Sjekk om det er en "Henlegg saken" modal som krever begrunnelse
     const modalTekst = await modal.textContent();
@@ -294,7 +243,8 @@ export class BehandlingPage {
             await begrunnelseDropdown.selectOption({ index: 1 });
           }
         }
-        await this.page.waitForTimeout(500); // Vent på at knappen blir enabled
+        // Vent på at bekreft-knappen blir enabled
+        await modal.locator('button[type="submit"]:not([disabled])').waitFor({ state: "visible", timeout: 2000 });
       }
     }
 
@@ -319,9 +269,8 @@ export class BehandlingPage {
       }
     }
 
-    if (!bekreftKnapp) {
-      throw new Error("Fant ingen bekreft-knapp i modalen");
-    }
+    expect(bekreftKnapp, `${saksnummer}: Fant ingen bekreft-knapp i modalen`).not.toBeNull();
+    if (!bekreftKnapp) return; // Type guard for TypeScript
 
     const erEnabled = await bekreftKnapp.isEnabled();
 
@@ -334,11 +283,11 @@ export class BehandlingPage {
 
   /**
    * Fullfør hele prosessen med å avslutte en behandling med spesifisert type
-   * @param type - type avslutning
+   * @param vedtaksType - type avslutning
    * @param saksnummer - saksnummer for feilmeldinger
    */
   async avsluttBehandling(
-    type:
+    vedtaksType:
       | "Søknaden er innvilget"
       | "Søknaden er avslått"
       | "Avslå søknad pga. manglende opplysninger"
@@ -349,20 +298,20 @@ export class BehandlingPage {
   ): Promise<void> {
     await this.klikkAvsluttBehandling();
 
-    if (type === "Søknaden er innvilget") {
+    if (vedtaksType === "Søknaden er innvilget") {
       await this.velgSoknadenErInnvilget(saksnummer);
     } else {
-      await this.velgAvslutningstype(type, saksnummer);
+      await this.velgAvslutningstype(vedtaksType, saksnummer);
     }
 
     await this.bekreftAvslutning();
-    await this.verifiserVellykketAvslutning(saksnummer);
+    await this.verifiserVellykketAvslutning();
   }
 
   /**
    * Verifiser at vi blir redirectet til hovedsiden uten feilmeldinger
    */
-  async verifiserVellykketAvslutning(saksnummer: string): Promise<void> {
+  async verifiserVellykketAvslutning(): Promise<void> {
     await this.page.waitForURL(/\/melosys\/$/);
 
     // Sjekk at det ikke er noen feilmeldinger
@@ -370,10 +319,7 @@ export class BehandlingPage {
 
     for (const selector of feilmeldinger) {
       const feilmelding = this.page.locator(selector);
-      if (await feilmelding.isVisible().catch(() => false)) {
-        const feilTekst = await feilmelding.textContent();
-        throw new Error(`Feilmelding vist etter avslutning på sak ${saksnummer}: ${feilTekst}`);
-      }
+      await expect(feilmelding).not.toBeVisible();
     }
   }
 }

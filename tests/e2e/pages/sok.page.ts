@@ -1,5 +1,5 @@
 import { expect, Locator, Page } from "@playwright/test";
-import { getSakId } from "../utils/testUtils";
+import { getSaksnummerFraLocator } from "../utils/testUtils";
 
 /**
  * Page Object Model for søkesiden
@@ -12,50 +12,36 @@ export class SokPage {
   }
 
   /**
-   * Verifiser at vi er på søkesiden
+   * Finn alle saker avhengig av sakstype og behandlingsstatus
+   * @param sakstype - "Avtaleland", "Utenfor avtaleland", eller "EU/EØS-land"
+   * @param behandlingsstatus - Valgfri status, f.eks. "Behandlingen er avsluttet" eller "Behandlingen pågår"
+   * @returns Locator for alle saker av den typen med sakId lagt på
    */
-  async verifySearchResultsPage(): Promise<void> {
-    await expect(this.page).toHaveURL("/melosys/sok");
-    await expect(this.page.locator("h1:has-text('Saksoversikt')")).toBeVisible();
-  }
+  async finnSak(
+    sakstype: "Utenfor avtaleland" | "Avtaleland" | "EU/EØS-land",
+    behandlingsstatus?:
+      | "Behandlingen er opprettet"
+      | "Behandlingen pågår"
+      | "Behandlingen er avsluttet"
+      | "Søknaden er henlagt",
+  ): Promise<Locator[]> {
+    // Vent på at minst én fagsak er lastet
+    await expect(this.page.locator(".fagsak").first(), "Minst én fagsak skal være synlig").toBeVisible();
 
-  /**
-   * Verifiser at siden viser korrekt info for en gyldig id
-   * @param id - en gyldig id
-   */
-  async verifyValidSearchResults(id: string): Promise<void> {
-    await this.verifySearchResultsPage();
+    const baseSelector = `.fagsak:has-text("${sakstype}")`;
+    const selector = behandlingsstatus ? `${baseSelector}:has-text("${behandlingsstatus}")` : baseSelector;
 
-    await expect(this.page.locator(`h2:has-text('Resultater for f.nr./d-nr. ${id}')`)).toBeVisible();
+    const saker = this.page.locator(selector);
+    const antall = await saker.count();
+    const result: Locator[] = [];
 
-    // Sjekk om det finnes saker eller om "ingen saker funnet" meldingen vises
-    const noResultsMessage = this.page.locator(`text=Fant ingen saker knyttet til f.nr./d-nr.`);
-    const firstCase = this.page.locator(".fagsak").first();
-
-    const hasResults = await firstCase.isVisible();
-    const hasNoResultsMessage = await noResultsMessage.isVisible();
-
-    // For en gyldig ID skal enten saker vises ELLER "ingen saker funnet" meldingen
-    const hasValidState = hasResults || hasNoResultsMessage;
-    expect(hasValidState, `For gyldig ID ${id} skal det enten være saker eller "ingen saker funnet" melding`).toBe(
-      true,
-    );
-
-    // Hvis det er resultater, skal ikke "ingen saker funnet" meldingen vises
-    if (hasResults) {
-      await expect(noResultsMessage).not.toBeVisible();
+    for (let i = 0; i < antall; i++) {
+      const sak = saker.nth(i);
+      (sak as unknown as Record<string, unknown>)._sakId = await this.getSaksnummer(sak);
+      result.push(sak);
     }
-  }
 
-  /**
-   * Verifiser at siden viser korrekt info for en ugyldig id
-   * @param id - en ugyldig id
-   */
-  async verifyInvalidSearchResults(id: string): Promise<void> {
-    await this.verifySearchResultsPage();
-
-    await expect(this.page.locator(`h2:has-text('Resultater for saksnummer ${id}')`)).toBeVisible();
-    await expect(this.page.locator(`text=Fant ingen saker knyttet til saksnummer ${id}`)).toBeVisible();
+    return result;
   }
 
   /**
@@ -96,16 +82,15 @@ export class SokPage {
    * @param sak - Sak-locator
    */
   async klikkVisBehandling(sak: Locator): Promise<void> {
-    const sakId = getSakId(sak);
     const visBehandlingKnapp = sak.locator('button:has-text("Vis behandling")').first();
 
-    try {
-      await expect(visBehandlingKnapp).toBeVisible();
-      await visBehandlingKnapp.click();
-      await this.page.waitForLoadState("domcontentloaded");
-    } catch (error) {
-      throw new Error(`Kunne ikke klikke på "Vis behandling" for sak ${sakId}: ${error}`);
-    }
+    await expect(visBehandlingKnapp, `${getSaksnummerFraLocator(sak)}: "Vis behandling" knapp ikke funnet`).toBeVisible(
+      {
+        timeout: 10000,
+      },
+    );
+    await visBehandlingKnapp.click();
+    await this.page.waitForLoadState("domcontentloaded");
   }
 
   /**
@@ -119,7 +104,7 @@ export class SokPage {
     behandlingstype?: string,
   ): Promise<Locator[]> {
     // Vent på at minst én fagsak er lastet
-    await expect(this.page.locator(".fagsak").first()).toBeVisible();
+    await expect(this.page.locator(".fagsak").first(), "Minst én fagsak skal være synlig").toBeVisible();
 
     let baseSelector = `.fagsak:has-text("${sakstype}")`;
     if (behandlingstype) {
