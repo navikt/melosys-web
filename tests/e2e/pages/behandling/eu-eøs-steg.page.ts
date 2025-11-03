@@ -42,11 +42,20 @@ export class EuEøsStegPage {
   async velgFørsteVirksomhet(saksnummer?: string): Promise<void> {
     const sakId = saksnummer ? `for sak ${saksnummer}` : "";
 
-    // Vent på at virksomhetslisten lastes (vent på at minst én checkbox dukker opp)
+    // Vent på at virksomhetslisten lastes
     await this.page.waitForLoadState("networkidle");
-    await this.page.waitForTimeout(500); // Gi litt ekstra tid for virksomhetsdata å laste
 
-    // Finn første checkbox i virksomhetslisten (NAV Frontend skjuler input, så vi må bruke role)
+    // Vent eksplisitt på at minst én checkbox finnes (virksomhetsdata lastes asynkront)
+    // NAV Design System skjuler input-elementet, så vi sjekker kun at det finnes (ikke visibility)
+    await this.page.waitForSelector('input[type="checkbox"]', {
+      state: "attached",
+      timeout: 15000,
+    });
+
+    // Gi litt ekstra tid for at UI-en oppdateres etter data-lasting
+    await this.page.waitForTimeout(500);
+
+    // Finn første checkbox i virksomhetslisten
     const førsteCheckbox = this.page.getByRole("checkbox").first();
     await expect(førsteCheckbox, `Første virksomhet-checkbox ${sakId} skal være synlig`).toBeVisible({
       timeout: 10000,

@@ -29,12 +29,11 @@ test.describe("EU/EØS Trygdeavgift", () => {
     // Steg 1: Inngang (Oppgi opplysninger fra attest / S1)
     const inngangPage = new InngangPage(page);
     await inngangPage.verifiserBehandlingsside();
-    await inngangPage.ventPaInngangStegEØS();
     await inngangPage.setFraOgMedDato("01.01.2024");
     await inngangPage.setTilOgMedDato("31.12.2024");
     await inngangPage.velgLand("SE");
 
-    // Steg 2: Gå til Trygdeavgift og verifiser intiell tilstand
+    // Steg 2: Gå til Trygdeavgift og verifiser initiell tilstand
     await inngangPage.klikkBekreftOgFortsett();
     const trygdeavgiftPage = new TrygdeavgiftPage(page);
     await trygdeavgiftPage.verifiserSteg("Trygdeavgift");
