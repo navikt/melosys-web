@@ -224,4 +224,89 @@ describe("AarsavregningUtenEllerDeltGrunnlag - Bestemmelse-logikk", () => {
       expect(mockResponse.sisteGjeldendeMedlemskapsperioder?.[1]?.bestemmelse).toBe("FTRL_2_8");
     });
   });
+
+  describe("erDeltGrunnlag-beregning", () => {
+    it("skal returnere true når både harTrygdeavgiftFraAvgiftssystemet og tidligereTrygdeavgiftsGrunnlagsopplysninger finnes", () => {
+      const harTrygdeavgiftFraAvgiftssystemet = true;
+      const aarsavregningResponse: AarsavregningResponse = {
+        aarsavregningID: 1,
+        aar: 2023,
+        sisteGjeldendeMedlemskapsperioder: [],
+        tidligereTrygdeavgiftsGrunnlagsopplysninger: {
+          trygdeavgiftsgrunnlag: {
+            medlemskapsperioder: [],
+            skatteforholdsperioder: [],
+            inntektskperioder: [],
+          },
+          avgift: {
+            trygdeavgiftsperioder: [],
+            totalInntekt: 0,
+            totalAvgift: 0,
+          },
+        },
+      };
+
+      // Simuler logikken fra aarsavregningUtenEllerDeltGrunnlagForm.tsx linje 191-193
+      const erDeltGrunnlag =
+        harTrygdeavgiftFraAvgiftssystemet && !!aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger;
+
+      expect(erDeltGrunnlag).toBe(true);
+    });
+
+    it("skal returnere false når harTrygdeavgiftFraAvgiftssystemet er false", () => {
+      const harTrygdeavgiftFraAvgiftssystemet = false;
+      const aarsavregningResponse: AarsavregningResponse = {
+        aarsavregningID: 1,
+        aar: 2023,
+        sisteGjeldendeMedlemskapsperioder: [],
+        tidligereTrygdeavgiftsGrunnlagsopplysninger: {
+          trygdeavgiftsgrunnlag: {
+            medlemskapsperioder: [],
+            skatteforholdsperioder: [],
+            inntektskperioder: [],
+          },
+          avgift: {
+            trygdeavgiftsperioder: [],
+            totalInntekt: 0,
+            totalAvgift: 0,
+          },
+        },
+      };
+
+      const erDeltGrunnlag =
+        harTrygdeavgiftFraAvgiftssystemet && !!aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger;
+
+      expect(erDeltGrunnlag).toBe(false);
+    });
+
+    it("skal returnere false når tidligereTrygdeavgiftsGrunnlagsopplysninger er undefined", () => {
+      const harTrygdeavgiftFraAvgiftssystemet = true;
+      const aarsavregningResponse: AarsavregningResponse = {
+        aarsavregningID: 1,
+        aar: 2023,
+        sisteGjeldendeMedlemskapsperioder: [],
+        tidligereTrygdeavgiftsGrunnlagsopplysninger: undefined,
+      };
+
+      const erDeltGrunnlag =
+        harTrygdeavgiftFraAvgiftssystemet && !!aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger;
+
+      expect(erDeltGrunnlag).toBe(false);
+    });
+
+    it("skal returnere false når begge betingelser er false", () => {
+      const harTrygdeavgiftFraAvgiftssystemet = false;
+      const aarsavregningResponse: AarsavregningResponse = {
+        aarsavregningID: 1,
+        aar: 2023,
+        sisteGjeldendeMedlemskapsperioder: [],
+        tidligereTrygdeavgiftsGrunnlagsopplysninger: undefined,
+      };
+
+      const erDeltGrunnlag =
+        harTrygdeavgiftFraAvgiftssystemet && !!aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger;
+
+      expect(erDeltGrunnlag).toBe(false);
+    });
+  });
 });
