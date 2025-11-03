@@ -190,6 +190,47 @@ export const beregnSumTilFakturaEllerRefusjon = (
 };
 
 /**
+ * Sjekker om datoer fra medlemskapsperiode er gyldige og kan brukes til å auto-fylle skatteforhold/inntektskilder.
+ * Validerer at:
+ * 1. Datoene kan formateres til ISO (er gyldige datoer)
+ * 2. Datoene er innenfor valgt år for årsavregningen
+ *
+ * @param fomDato - Fra og med dato i norsk format (dd.mm.yyyy)
+ * @param tomDato - Til og med dato i norsk format (dd.mm.yyyy)
+ * @param valgtAar - Året som årsavregningen gjelder for
+ * @returns true hvis datoene er gyldige og kan brukes, false ellers
+ */
+export const erGyldigeMedlemskapsperiodeDatoerForAutoUtfylling = (
+  fomDato: string,
+  tomDato: string,
+  valgtAar?: number,
+): boolean => {
+  if (!fomDato || !tomDato) {
+    return false;
+  }
+
+  const fomDatoISO = Utils.dato.vaskOgFormatterTilISO(fomDato);
+  const tomDatoISO = Utils.dato.vaskOgFormatterTilISO(tomDato);
+
+  if (!fomDatoISO || !tomDatoISO) {
+    return false;
+  }
+
+  if (valgtAar) {
+    const fomDate = new Date(fomDatoISO);
+    const tomDate = new Date(tomDatoISO);
+    const startAar = new Date(valgtAar, 0, 1);
+    const sluttAar = new Date(valgtAar, 11, 31, 23, 59, 59, 999);
+
+    if (fomDate < startAar || fomDate > sluttAar || tomDate < startAar || tomDate > sluttAar) {
+      return false;
+    }
+  }
+
+  return true;
+};
+
+/**
  * Modifisert manuell valideringsfunksjon for å unngå å trigge react-hook-form feil for tidlig
  */
 export const validateAarsavregningUtenEllerDeltGrunnlag = async (

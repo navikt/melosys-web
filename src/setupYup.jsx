@@ -8,6 +8,14 @@ import * as StringUtils from "./utils/streng";
 
 const { TIDLIGERE_ENN_FOM, SKRIV_INN_GYLDIG_DATO, UTENFOR_SOKNADSPERIODEN } = KV.Feilmeldinger;
 
+const erGyldigOgKunTall = (datoString) => {
+  const datoUtenSkilletegn = datoString.replace(/[-./]/g, "");
+  if (!/^\d+$/.test(datoUtenSkilletegn)) {
+    return false;
+  }
+  return Boolean(Utils.dato.vaskInputDato(datoString));
+};
+
 addMethod(object, "uniqueProperty", function (propertyName, message) {
   return this.test("unique", message, function (value) {
     if (!value || !value[propertyName]) {
@@ -34,7 +42,7 @@ addMethod(object, "uniqueProperty", function (propertyName, message) {
 addMethod(string, "erGyldigDato", function (message = SKRIV_INN_GYLDIG_DATO) {
   return this.test("er gyldig dato", message, function (value) {
     if (Utils._isEmpty(value)) return true;
-    return Boolean(Utils.dato.vaskInputDato(value));
+    return erGyldigOgKunTall(value);
   });
 });
 
