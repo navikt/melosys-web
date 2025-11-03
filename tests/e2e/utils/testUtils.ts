@@ -5,12 +5,41 @@
 import { expect, Locator, Page } from "@playwright/test";
 
 /**
+ * 30 sekunder for komplekse tester
+ */
+export const TIMEOUT_FOR_COMPLEX_TESTS = 30000;
+
+/**
+ * Generisk funksjon for å sette dato i et datofelt
+ * @private
+ */
+export async function setDatoFelt(feltNavn: string, dato: string, page: Page): Promise<void> {
+  const datoInput = page.getByRole("textbox", { name: feltNavn });
+  const count = await datoInput.count();
+  expect(count, `${feltNavn}-dato input skal finnes`).toBeGreaterThan(0);
+
+  // Hvis det finnes flere, bruk den første
+  const input = count > 1 ? datoInput.first() : datoInput;
+  await expect(input, `${feltNavn}-dato input skal være synlig`).toBeVisible();
+  await input.fill(dato);
+}
+
+/**
  * Hent sakId fra locator
  * @param sak - Sak-locator
  * @returns sakId eller "ukjent"
  */
-export function getSakId(sak: Locator): string {
+export function getSaksnummerFraLocator(sak: Locator): string {
   return sak ? ((sak as unknown as Record<string, unknown>)._sakId as string) || "ukjent" : "ukjent";
+}
+
+/**
+ * Hent saksnummer fra URL
+ * @returns Saksnummer (f.eks. "MEL-123") eller "ukjent"
+ */
+export function getSaksnummerFraUrl(page: Page): string {
+  const match = page.url().match(/MEL-\d+/);
+  return match ? match[0] : "ukjent";
 }
 
 /**
