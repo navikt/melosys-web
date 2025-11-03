@@ -231,10 +231,10 @@ describe("AarsavregningUtenEllerDeltGrunnlag - Bestemmelse-logikk", () => {
       const aarsavregningResponse: AarsavregningResponse = {
         aarsavregningID: 1,
         aar: 2023,
-        sisteGjeldendeMedlemskapsperioder: [],
+        sisteGjeldendeAvgiftspliktigperioder: [],
         tidligereTrygdeavgiftsGrunnlagsopplysninger: {
           trygdeavgiftsgrunnlag: {
-            medlemskapsperioder: [],
+            avgiftspliktigperioder: [],
             skatteforholdsperioder: [],
             inntektskperioder: [],
           },
@@ -258,10 +258,10 @@ describe("AarsavregningUtenEllerDeltGrunnlag - Bestemmelse-logikk", () => {
       const aarsavregningResponse: AarsavregningResponse = {
         aarsavregningID: 1,
         aar: 2023,
-        sisteGjeldendeMedlemskapsperioder: [],
+        sisteGjeldendeAvgiftspliktigperioder: [],
         tidligereTrygdeavgiftsGrunnlagsopplysninger: {
           trygdeavgiftsgrunnlag: {
-            medlemskapsperioder: [],
+            avgiftspliktigperioder: [],
             skatteforholdsperioder: [],
             inntektskperioder: [],
           },
@@ -284,7 +284,7 @@ describe("AarsavregningUtenEllerDeltGrunnlag - Bestemmelse-logikk", () => {
       const aarsavregningResponse: AarsavregningResponse = {
         aarsavregningID: 1,
         aar: 2023,
-        sisteGjeldendeMedlemskapsperioder: [],
+        sisteGjeldendeAvgiftspliktigperioder: [],
         tidligereTrygdeavgiftsGrunnlagsopplysninger: undefined,
       };
 
@@ -299,7 +299,7 @@ describe("AarsavregningUtenEllerDeltGrunnlag - Bestemmelse-logikk", () => {
       const aarsavregningResponse: AarsavregningResponse = {
         aarsavregningID: 1,
         aar: 2023,
-        sisteGjeldendeMedlemskapsperioder: [],
+        sisteGjeldendeAvgiftspliktigperioder: [],
         tidligereTrygdeavgiftsGrunnlagsopplysninger: undefined,
       };
 
