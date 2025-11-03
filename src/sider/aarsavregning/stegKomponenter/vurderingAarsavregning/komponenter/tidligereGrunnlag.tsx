@@ -22,6 +22,23 @@ export function TidligereGrunnlag({ aarsavregningResponse }: TidligereGrunnlagPr
   const forskuddsvisFakturertTrygdeavgift =
     (aarsavregningResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger?.avgift?.totalAvgift ?? 0) > 0;
 
+  const erMedlemskapstypePliktig = () => {
+    const erHelseutgiftDekkesPeriode =
+      aarsavregningResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger!.trygdeavgiftsgrunnlag.avgiftspliktigperioder?.every(
+        (a) => a.type === "HELSEUTGIFTDEKKESPERIODE",
+      );
+
+    if (erHelseutgiftDekkesPeriode) {
+      return true;
+    }
+
+    return (
+      aarsavregningResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger!.trygdeavgiftsgrunnlag.avgiftspliktigperioder?.every(
+        (periode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG,
+      ) ?? true
+    );
+  };
+
   return (
     <Nav.Box className="tidligereGrunnlag" background="surface-subtle">
       <Nav.Heading size="small" level="3">
@@ -49,7 +66,7 @@ export function TidligereGrunnlag({ aarsavregningResponse }: TidligereGrunnlagPr
               <MedlemskapsPerioderTabell
                 perioder={
                   aarsavregningResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger!.trygdeavgiftsgrunnlag
-                    .medlemskapsperioder
+                    .avgiftspliktigperioder
                 }
               />
               <GrunnlagTabeller
@@ -71,11 +88,7 @@ export function TidligereGrunnlag({ aarsavregningResponse }: TidligereGrunnlagPr
               {forskuddsvisFakturertTrygdeavgift && (
                 <BeregnetTrygdeavgiftDetaljer
                   grunnlag={aarsavregningResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger!}
-                  medlemskapsTypeErPliktig={
-                    aarsavregningResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger!.trygdeavgiftsgrunnlag.medlemskapsperioder?.every(
-                      (periode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG,
-                    ) ?? true
-                  }
+                  medlemskapsTypeErPliktig={erMedlemskapstypePliktig()}
                 />
               )}
             </Nav.ExpansionCard.Content>

@@ -7,7 +7,7 @@ import * as Api from "../../../../../services/api";
 import { Inntektskilde } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
 import * as Utils from "../../../../../utils";
 import { ULAGRET_MEDLEMSKAPSPERIODE_ID } from "../aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlag";
-import { Medlemskapsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import { Avgiftspliktigperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 
 interface BestemmelseSelectProps {
   control: Control<any>;
@@ -19,7 +19,7 @@ interface BestemmelseSelectProps {
   setTrygdedekninger: (trygdedekninger: string[]) => void;
   setFeilmelding: (feilmelding: string | undefined) => void;
   setEndrerBestemmelse: (isChanging: boolean) => void;
-  lagreMedlemskapsperioderHvisGyldig: (oppdaterteMedlemskapsperioder: Medlemskapsperiode[]) => void;
+  lagreMedlemskapsperioderHvisGyldig: (oppdaterteMedlemskapsperioder: Avgiftspliktigperiode[]) => void;
 }
 
 function BestemmelseSelect({
@@ -46,7 +46,9 @@ function BestemmelseSelect({
         setTrygdedekninger(trygdedekningerResponse);
 
         try {
-          if (medlemskapsperioder.some((periode: Medlemskapsperiode) => periode.id !== ULAGRET_MEDLEMSKAPSPERIODE_ID)) {
+          if (
+            medlemskapsperioder.some((periode: Avgiftspliktigperiode) => periode.id !== ULAGRET_MEDLEMSKAPSPERIODE_ID)
+          ) {
             await Api.MedlemAvFolketrygden.Medlemskapsperioder.slettMedlemskapsperioder(behandlingID!);
           }
         } catch (error) {
@@ -57,7 +59,7 @@ function BestemmelseSelect({
 
         const defaultTrygdedekning = trygdedekningerResponse.length === 1 ? trygdedekningerResponse[0] : "";
 
-        const oppdaterteMedlemskapsperioder = medlemskapsperioder.map((periode: Medlemskapsperiode) => ({
+        const oppdaterteMedlemskapsperioder = medlemskapsperioder.map((periode: Avgiftspliktigperiode) => ({
           ...periode,
           trygdedekning: defaultTrygdedekning,
           id: ULAGRET_MEDLEMSKAPSPERIODE_ID,
