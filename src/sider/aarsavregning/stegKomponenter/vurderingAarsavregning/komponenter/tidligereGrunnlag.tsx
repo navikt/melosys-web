@@ -22,7 +22,7 @@ export function TidligereGrunnlag({ aarsavregningResponse }: TidligereGrunnlagPr
   const forskuddsvisFakturertTrygdeavgift =
     (aarsavregningResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger?.avgift?.totalAvgift ?? 0) > 0;
 
-  const hentMedlemskapstypeErPliktig = () => {
+  const erMedlemskapstypePliktig = () => {
     const erHelseutgiftDekkesPeriode =
       aarsavregningResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger!.trygdeavgiftsgrunnlag.avgiftspliktigperioder?.every(
         (a) => a.type === "HELSEUTGIFTDEKKESPERIODE",
@@ -88,7 +88,7 @@ export function TidligereGrunnlag({ aarsavregningResponse }: TidligereGrunnlagPr
               {forskuddsvisFakturertTrygdeavgift && (
                 <BeregnetTrygdeavgiftDetaljer
                   grunnlag={aarsavregningResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger!}
-                  medlemskapsTypeErPliktig={hentMedlemskapstypeErPliktig()}
+                  medlemskapsTypeErPliktig={erMedlemskapstypePliktig()}
                 />
               )}
             </Nav.ExpansionCard.Content>
