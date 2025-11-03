@@ -11,7 +11,7 @@ import * as Utils from "../../../../../utils";
 import { ULAGRET_MEDLEMSKAPSPERIODE_ID } from "../aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlag";
 
 import { useEffect } from "react";
-import { FieldArrayProps, FormValuesProps } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
+import { FormValuesProps } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
 import { Avgiftspliktigperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import "./medlemskapsperiodeSkjema.less";
 import { usePliktigeBestemmelser } from "../hooks/usePliktigeBestemmelser";
