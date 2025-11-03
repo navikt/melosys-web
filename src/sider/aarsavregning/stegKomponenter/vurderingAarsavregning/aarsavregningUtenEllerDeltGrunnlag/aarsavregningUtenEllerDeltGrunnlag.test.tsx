@@ -7,7 +7,7 @@ describe("AarsavregningUtenEllerDeltGrunnlag - Bestemmelse-logikk", () => {
       const mockResponse: AarsavregningResponse = {
         aarsavregningID: 1,
         aar: 2023,
-        sisteGjeldendeMedlemskapsperioder: [
+        sisteGjeldendeAvgiftspliktigperioder: [
           {
             id: 1,
             fomDato: "2023-01-01",
@@ -21,7 +21,7 @@ describe("AarsavregningUtenEllerDeltGrunnlag - Bestemmelse-logikk", () => {
         ],
         tidligereTrygdeavgiftsGrunnlagsopplysninger: {
           trygdeavgiftsgrunnlag: {
-            medlemskapsperioder: [
+            avgiftspliktigperioder: [
               {
                 id: 2,
                 fomDato: "2023-01-01",
@@ -46,9 +46,9 @@ describe("AarsavregningUtenEllerDeltGrunnlag - Bestemmelse-logikk", () => {
 
       // Test logikken for sammenligning av bestemmelse
       const gammelBestemmelse =
-        mockResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag?.medlemskapsperioder?.[0]
+        mockResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag?.avgiftspliktigperioder?.[0]
           ?.bestemmelse;
-      const nyBestemmelse = mockResponse.sisteGjeldendeMedlemskapsperioder?.[0]?.bestemmelse;
+      const nyBestemmelse = mockResponse.sisteGjeldendeAvgiftspliktigperioder?.[0]?.bestemmelse;
 
       expect(gammelBestemmelse).toBe("FTRL_2_7");
       expect(nyBestemmelse).toBe("FTRL_2_7");
@@ -59,7 +59,7 @@ describe("AarsavregningUtenEllerDeltGrunnlag - Bestemmelse-logikk", () => {
       const mockResponse: AarsavregningResponse = {
         aarsavregningID: 1,
         aar: 2023,
-        sisteGjeldendeMedlemskapsperioder: [
+        sisteGjeldendeAvgiftspliktigperioder: [
           {
             id: 1,
             fomDato: "2023-01-01",
@@ -73,7 +73,7 @@ describe("AarsavregningUtenEllerDeltGrunnlag - Bestemmelse-logikk", () => {
         ],
         tidligereTrygdeavgiftsGrunnlagsopplysninger: {
           trygdeavgiftsgrunnlag: {
-            medlemskapsperioder: [
+            avgiftspliktigperioder: [
               {
                 id: 2,
                 fomDato: "2023-01-01",
@@ -98,9 +98,9 @@ describe("AarsavregningUtenEllerDeltGrunnlag - Bestemmelse-logikk", () => {
 
       // Test logikken for sammenligning av bestemmelse
       const gammelBestemmelse =
-        mockResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag?.medlemskapsperioder?.[0]
+        mockResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag?.avgiftspliktigperioder?.[0]
           ?.bestemmelse;
-      const nyBestemmelse = mockResponse.sisteGjeldendeMedlemskapsperioder?.[0]?.bestemmelse;
+      const nyBestemmelse = mockResponse.sisteGjeldendeAvgiftspliktigperioder?.[0]?.bestemmelse;
 
       expect(gammelBestemmelse).toBe("FTRL_2_7");
       expect(nyBestemmelse).toBe("FTRL_2_8");
@@ -111,15 +111,15 @@ describe("AarsavregningUtenEllerDeltGrunnlag - Bestemmelse-logikk", () => {
       const mockResponse: AarsavregningResponse = {
         aarsavregningID: 1,
         aar: 2023,
-        sisteGjeldendeMedlemskapsperioder: [],
+        sisteGjeldendeAvgiftspliktigperioder: [],
         tidligereTrygdeavgiftsGrunnlagsopplysninger: undefined,
       };
 
       // Test at logikken håndterer undefined
       const gammelBestemmelse =
-        mockResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag?.medlemskapsperioder?.[0]
+        mockResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag?.avgiftspliktigperioder?.[0]
           ?.bestemmelse;
-      const nyBestemmelse = mockResponse.sisteGjeldendeMedlemskapsperioder?.[0]?.bestemmelse;
+      const nyBestemmelse = mockResponse.sisteGjeldendeAvgiftspliktigperioder?.[0]?.bestemmelse;
 
       expect(gammelBestemmelse).toBeUndefined();
       expect(nyBestemmelse).toBeUndefined();
@@ -131,10 +131,10 @@ describe("AarsavregningUtenEllerDeltGrunnlag - Bestemmelse-logikk", () => {
       const mockResponse: AarsavregningResponse = {
         aarsavregningID: 1,
         aar: 2023,
-        sisteGjeldendeMedlemskapsperioder: [],
+        sisteGjeldendeAvgiftspliktigperioder: [],
         tidligereTrygdeavgiftsGrunnlagsopplysninger: {
           trygdeavgiftsgrunnlag: {
-            medlemskapsperioder: [],
+            avgiftspliktigperioder: [],
             skatteforholdsperioder: [],
             inntektskperioder: [],
           },
@@ -147,15 +147,15 @@ describe("AarsavregningUtenEllerDeltGrunnlag - Bestemmelse-logikk", () => {
       };
 
       const gammelBestemmelse =
-        mockResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag?.medlemskapsperioder?.[0]
+        mockResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag?.avgiftspliktigperioder?.[0]
           ?.bestemmelse;
-      const nyBestemmelse = mockResponse.sisteGjeldendeMedlemskapsperioder?.[0]?.bestemmelse;
+      const nyBestemmelse = mockResponse.sisteGjeldendeAvgiftspliktigperioder?.[0]?.bestemmelse;
 
       expect(gammelBestemmelse).toBeUndefined();
       expect(nyBestemmelse).toBeUndefined();
-      expect(mockResponse.sisteGjeldendeMedlemskapsperioder).toHaveLength(0);
+      expect(mockResponse.sisteGjeldendeAvgiftspliktigperioder).toHaveLength(0);
       expect(
-        mockResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag?.medlemskapsperioder,
+        mockResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag?.avgiftspliktigperioder,
       ).toHaveLength(0);
     });
 
@@ -163,7 +163,7 @@ describe("AarsavregningUtenEllerDeltGrunnlag - Bestemmelse-logikk", () => {
       const mockResponse: AarsavregningResponse = {
         aarsavregningID: 1,
         aar: 2023,
-        sisteGjeldendeMedlemskapsperioder: [
+        sisteGjeldendeAvgiftspliktigperioder: [
           {
             id: 1,
             fomDato: "2023-01-01",
@@ -187,7 +187,7 @@ describe("AarsavregningUtenEllerDeltGrunnlag - Bestemmelse-logikk", () => {
         ],
         tidligereTrygdeavgiftsGrunnlagsopplysninger: {
           trygdeavgiftsgrunnlag: {
-            medlemskapsperioder: [
+            avgiftspliktigperioder: [
               {
                 id: 3,
                 fomDato: "2023-01-01",
@@ -212,16 +212,16 @@ describe("AarsavregningUtenEllerDeltGrunnlag - Bestemmelse-logikk", () => {
 
       // Skal sammenligne første elementer
       const gammelBestemmelse =
-        mockResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag?.medlemskapsperioder?.[0]
+        mockResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag?.avgiftspliktigperioder?.[0]
           ?.bestemmelse;
-      const nyBestemmelse = mockResponse.sisteGjeldendeMedlemskapsperioder?.[0]?.bestemmelse;
+      const nyBestemmelse = mockResponse.sisteGjeldendeAvgiftspliktigperioder?.[0]?.bestemmelse;
 
       expect(gammelBestemmelse).toBe("FTRL_2_7");
       expect(nyBestemmelse).toBe("FTRL_2_7");
       expect(gammelBestemmelse).toBe(nyBestemmelse);
 
       // Andre element har forskjellig bestemmelse
-      expect(mockResponse.sisteGjeldendeMedlemskapsperioder?.[1]?.bestemmelse).toBe("FTRL_2_8");
+      expect(mockResponse.sisteGjeldendeAvgiftspliktigperioder?.[1]?.bestemmelse).toBe("FTRL_2_8");
     });
   });
 
@@ -231,10 +231,10 @@ describe("AarsavregningUtenEllerDeltGrunnlag - Bestemmelse-logikk", () => {
       const aarsavregningResponse: AarsavregningResponse = {
         aarsavregningID: 1,
         aar: 2023,
-        sisteGjeldendeMedlemskapsperioder: [],
+        sisteGjeldendeAvgiftspliktigperioder: [],
         tidligereTrygdeavgiftsGrunnlagsopplysninger: {
           trygdeavgiftsgrunnlag: {
-            medlemskapsperioder: [],
+            avgiftspliktigperioder: [],
             skatteforholdsperioder: [],
             inntektskperioder: [],
           },
@@ -258,10 +258,10 @@ describe("AarsavregningUtenEllerDeltGrunnlag - Bestemmelse-logikk", () => {
       const aarsavregningResponse: AarsavregningResponse = {
         aarsavregningID: 1,
         aar: 2023,
-        sisteGjeldendeMedlemskapsperioder: [],
+        sisteGjeldendeAvgiftspliktigperioder: [],
         tidligereTrygdeavgiftsGrunnlagsopplysninger: {
           trygdeavgiftsgrunnlag: {
-            medlemskapsperioder: [],
+            avgiftspliktigperioder: [],
             skatteforholdsperioder: [],
             inntektskperioder: [],
           },
@@ -284,7 +284,7 @@ describe("AarsavregningUtenEllerDeltGrunnlag - Bestemmelse-logikk", () => {
       const aarsavregningResponse: AarsavregningResponse = {
         aarsavregningID: 1,
         aar: 2023,
-        sisteGjeldendeMedlemskapsperioder: [],
+        sisteGjeldendeAvgiftspliktigperioder: [],
         tidligereTrygdeavgiftsGrunnlagsopplysninger: undefined,
       };
 
@@ -299,7 +299,7 @@ describe("AarsavregningUtenEllerDeltGrunnlag - Bestemmelse-logikk", () => {
       const aarsavregningResponse: AarsavregningResponse = {
         aarsavregningID: 1,
         aar: 2023,
-        sisteGjeldendeMedlemskapsperioder: [],
+        sisteGjeldendeAvgiftspliktigperioder: [],
         tidligereTrygdeavgiftsGrunnlagsopplysninger: undefined,
       };
 

@@ -352,7 +352,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
 
   if (!aktivtSteg) return null;
 
-  const mapPeriodeRader = (perioder: Api.MedlemAvFolketrygden.Medlemskapsperioder.Medlemskapsperiode[]) =>
+  const mapPeriodeRader = (perioder: Api.MedlemAvFolketrygden.Medlemskapsperioder.Avgiftspliktigperiode[]) =>
     [...perioder].sort(Utils.dato.sorterEtterISOFomDato).map((it) => {
       return {
         periode: `${Utils.dato.formatterDatoTilNorsk(it.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(it.tomDato)}`,
