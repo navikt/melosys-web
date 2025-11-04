@@ -36,7 +36,7 @@ export function BeregnetTrygdeavgiftDetaljer({
           (m) => new Date(m.fomDato) <= new Date(period.tom) && new Date(m.tomDato) >= new Date(period.fom),
         );
 
-        const overlappingSkatteforhold = data.trygdeavgiftsgrunnlag.skatteforholdsperioder?.find(
+        const overlappingSkatteforhold = data.trygdeavgiftsgrunnlag.skatteforholdsperioder.find(
           (s) => new Date(s.fomDato) <= new Date(period.tom) && new Date(s.tomDato) >= new Date(period.fom),
         );
 
