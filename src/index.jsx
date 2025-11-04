@@ -10,7 +10,6 @@ import "./index.less";
 import "@navikt/ds-css";
 
 import { store, history } from "./store";
-import { unregister } from "./registerServiceWorker";
 import { FellesHandlersProvider } from "./contexts";
 import Modals from "./modals";
 import { apolloClient } from "./graphql";
@@ -38,5 +37,3 @@ root.render(
     </Router>
   </ReduxProvider>,
 );
-
-unregister();
