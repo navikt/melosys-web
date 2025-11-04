@@ -37,10 +37,10 @@ const dekkerHeleMedlemskapsperiode = (perioder: any[], medlemskapsperiode: any):
   }
 
   const medlemskapsperiodeTomDate = Utils.dato.isoStringTilDate(medlemskapsperiodeTom);
-  return !(
-    !medlemskapsperiodeTomDate ||
-    maxTomDato === -Infinity ||
-    maxTomDato !== medlemskapsperiodeTomDate.getTime()
+  return (
+    medlemskapsperiodeTomDate &&
+    maxTomDato !== -Infinity &&
+    maxTomDato === medlemskapsperiodeTomDate.getTime()
   );
 };
 
