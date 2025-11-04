@@ -3,11 +3,11 @@ import MKV from "../../../../../melosyskodeverk";
 import * as Nav from "../../../../../navFrontend";
 import * as Utils from "../../../../../utils";
 import Datovelger from "../../../../../felleskomponenter/datovelger";
-import { Medlemskapsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import { Avgiftspliktigperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import "./medlemskapsperiodeSkjema.less";
 
 interface MedlemskapsperioderDisplayProps {
-  medlemskapsperioder: Medlemskapsperiode[] | null | undefined;
+  medlemskapsperioder: Avgiftspliktigperiode[] | null | undefined;
 }
 
 export function MedlemskapsperioderDisplay({ medlemskapsperioder }: MedlemskapsperioderDisplayProps) {

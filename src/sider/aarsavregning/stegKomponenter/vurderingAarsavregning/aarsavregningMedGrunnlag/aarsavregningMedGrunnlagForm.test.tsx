@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 import { useForm } from "react-hook-form";
 import aarsavregningMedGrunnlagSchema from "./aarsavregningMedGrunnlagSchema";
 import MKV from "../../../../../melosyskodeverk";
-import { Medlemskapsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import { Avgiftspliktigperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import { finnMedlemskapsperiode } from "../utils";
 
 const { MANUELL_ENDELIG_AVGIFT } = MKV.Koder.endeligAvgiftValg;
@@ -51,7 +51,7 @@ describe("aarsavregningMedGrunnlagForm validering", () => {
 
 describe("finnMedlemskapsperiode logikk", () => {
   it("skal finne sammensatt periode fra flere medlemskapsperioder", () => {
-    const perioder: Medlemskapsperiode[] = [
+    const perioder: Avgiftspliktigperiode[] = [
       {
         id: 1,
         fomDato: "01.01.2023",
@@ -81,7 +81,7 @@ describe("finnMedlemskapsperiode logikk", () => {
   });
 
   it("skal håndtere tom liste og returnere undefined", () => {
-    const perioder: Medlemskapsperiode[] = [];
+    const perioder: Avgiftspliktigperiode[] = [];
 
     const result = finnMedlemskapsperiode(perioder);
 
@@ -89,7 +89,7 @@ describe("finnMedlemskapsperiode logikk", () => {
   });
 
   it("skal filtrere bort perioder uten fomDato", () => {
-    const perioder: Medlemskapsperiode[] = [
+    const perioder: Avgiftspliktigperiode[] = [
       {
         id: 1,
         fomDato: "",
@@ -119,7 +119,7 @@ describe("finnMedlemskapsperiode logikk", () => {
   });
 
   it("skal filtrere bort perioder uten tomDato", () => {
-    const perioder: Medlemskapsperiode[] = [
+    const perioder: Avgiftspliktigperiode[] = [
       {
         id: 1,
         fomDato: "01.01.2023",
@@ -149,7 +149,7 @@ describe("finnMedlemskapsperiode logikk", () => {
   });
 
   it("skal returnere undefined når alle perioder mangler fom eller tom", () => {
-    const perioder: Medlemskapsperiode[] = [
+    const perioder: Avgiftspliktigperiode[] = [
       {
         id: 1,
         fomDato: "",
@@ -176,7 +176,7 @@ describe("finnMedlemskapsperiode logikk", () => {
   });
 
   it("skal håndtere én enkelt periode", () => {
-    const perioder: Medlemskapsperiode[] = [
+    const perioder: Avgiftspliktigperiode[] = [
       {
         id: 1,
         fomDato: "01.01.2023",
@@ -197,7 +197,7 @@ describe("finnMedlemskapsperiode logikk", () => {
   });
 
   it("skal sortere perioder korrekt og ta første fomDato og siste tomDato", () => {
-    const perioder: Medlemskapsperiode[] = [
+    const perioder: Avgiftspliktigperiode[] = [
       {
         id: 2,
         fomDato: "01.07.2023",

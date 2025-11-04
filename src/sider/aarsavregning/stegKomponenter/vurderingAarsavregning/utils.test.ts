@@ -5,15 +5,16 @@ import {
   beregnSumTilFakturaEllerRefusjon,
   beregnTrygdeavgiftsperioder,
   erBrukerSkattepliktigIHelePerioden,
+  erGyldigeMedlemskapsperiodeDatoerForAutoUtfylling,
   hentMedlemskapsFomTomDato,
   mapFeilmelding,
   mapTilInntektskilderProps,
   mapTilSkatteforholdProps,
 } from "./utils";
-import { Medlemskapsperiode } from "../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import { Avgiftspliktigperiode } from "../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 
 // Helper function to create mock Medlemskapsperiode
-const createMockMedlemskapsperiode = (overrides?: Partial<Medlemskapsperiode>): Medlemskapsperiode => ({
+const createMockMedlemskapsperiode = (overrides?: Partial<Avgiftspliktigperiode>): Avgiftspliktigperiode => ({
   id: 1,
   fomDato: "01.01.2023",
   tomDato: "31.12.2023",
@@ -318,6 +319,48 @@ describe("utils", () => {
 
       // 1000 - 5000 - 2000 + 500 = -5500
       expect(result).toBe(-5500);
+    });
+  });
+
+  describe("erGyldigeMedlemskapsperiodeDatoerForAutoUtfylling", () => {
+    it("returnerer false når fomDato er tom", () => {
+      const result = erGyldigeMedlemskapsperiodeDatoerForAutoUtfylling("", "31.12.2020", 2020);
+      expect(result).toBe(false);
+    });
+
+    it("returnerer false når tomDato er tom", () => {
+      const result = erGyldigeMedlemskapsperiodeDatoerForAutoUtfylling("01.01.2020", "", 2020);
+      expect(result).toBe(false);
+    });
+
+    it("returnerer false når input er ugyldig som 'dd11ss'", () => {
+      const result = erGyldigeMedlemskapsperiodeDatoerForAutoUtfylling("dd11ss", "31.12.2020", 2020);
+      expect(result).toBe(false);
+    });
+
+    it("returnerer false når tomDato er ugyldig", () => {
+      const result = erGyldigeMedlemskapsperiodeDatoerForAutoUtfylling("01.01.2020", "abc123", 2020);
+      expect(result).toBe(false);
+    });
+
+    it("returnerer false når fomDato er før valgt år", () => {
+      const result = erGyldigeMedlemskapsperiodeDatoerForAutoUtfylling("31.12.2019", "31.12.2020", 2020);
+      expect(result).toBe(false);
+    });
+
+    it("returnerer false når tomDato er etter valgt år", () => {
+      const result = erGyldigeMedlemskapsperiodeDatoerForAutoUtfylling("01.01.2020", "01.01.2021", 2020);
+      expect(result).toBe(false);
+    });
+
+    it("returnerer true når datoer er gyldige og innenfor valgt år", () => {
+      const result = erGyldigeMedlemskapsperiodeDatoerForAutoUtfylling("01.01.2020", "31.12.2020", 2020);
+      expect(result).toBe(true);
+    });
+
+    it("returnerer true når datoer er gyldige og valgtAar ikke er spesifisert", () => {
+      const result = erGyldigeMedlemskapsperiodeDatoerForAutoUtfylling("01.01.2020", "31.12.2020");
+      expect(result).toBe(true);
     });
   });
 });

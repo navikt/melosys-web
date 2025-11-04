@@ -75,7 +75,7 @@ describe("AarsavregningMedGrunnlag", () => {
       const mockResponse: AarsavregningResponse = {
         aarsavregningID: 1,
         aar: 2023,
-        sisteGjeldendeMedlemskapsperioder: [
+        sisteGjeldendeAvgiftspliktigperioder: [
           {
             id: 1,
             fomDato: "2023-01-01",
@@ -89,7 +89,7 @@ describe("AarsavregningMedGrunnlag", () => {
         ],
         nyttTrygdeavgiftsGrunnlag: {
           trygdeavgiftsgrunnlag: {
-            medlemskapsperioder: [],
+            avgiftspliktigperioder: [],
             skatteforholdsperioder: [
               {
                 fomDato: "2023-01-01",
@@ -116,7 +116,7 @@ describe("AarsavregningMedGrunnlag", () => {
         },
         tidligereTrygdeavgiftsGrunnlagsopplysninger: {
           trygdeavgiftsgrunnlag: {
-            medlemskapsperioder: [],
+            avgiftspliktigperioder: [],
             skatteforholdsperioder: [],
             inntektskperioder: [],
           },
@@ -145,7 +145,7 @@ describe("AarsavregningMedGrunnlag", () => {
       const mockResponse: AarsavregningResponse = {
         aarsavregningID: 1,
         aar: 2023,
-        sisteGjeldendeMedlemskapsperioder: [
+        sisteGjeldendeAvgiftspliktigperioder: [
           {
             id: 1,
             fomDato: "2023-01-01",
@@ -160,7 +160,7 @@ describe("AarsavregningMedGrunnlag", () => {
         nyttTrygdeavgiftsGrunnlag: undefined, // Ingen nytt grunnlag
         tidligereTrygdeavgiftsGrunnlagsopplysninger: {
           trygdeavgiftsgrunnlag: {
-            medlemskapsperioder: [
+            avgiftspliktigperioder: [
               {
                 id: 2,
                 fomDato: "2023-01-01",
@@ -216,7 +216,7 @@ describe("AarsavregningMedGrunnlag", () => {
       const mockResponse: AarsavregningResponse = {
         aarsavregningID: 1,
         aar: 2023,
-        sisteGjeldendeMedlemskapsperioder: [
+        sisteGjeldendeAvgiftspliktigperioder: [
           {
             id: 1,
             fomDato: "2023-01-01",
@@ -231,7 +231,7 @@ describe("AarsavregningMedGrunnlag", () => {
         nyttTrygdeavgiftsGrunnlag: undefined,
         tidligereTrygdeavgiftsGrunnlagsopplysninger: {
           trygdeavgiftsgrunnlag: {
-            medlemskapsperioder: [
+            avgiftspliktigperioder: [
               {
                 id: 2,
                 fomDato: "2023-01-01",
@@ -273,7 +273,7 @@ describe("AarsavregningMedGrunnlag", () => {
       const mockResponse: AarsavregningResponse = {
         aarsavregningID: 1,
         aar: 2023,
-        sisteGjeldendeMedlemskapsperioder: [
+        sisteGjeldendeAvgiftspliktigperioder: [
           {
             id: 1,
             fomDato: "2023-01-01",
@@ -297,7 +297,7 @@ describe("AarsavregningMedGrunnlag", () => {
         ],
         tidligereTrygdeavgiftsGrunnlagsopplysninger: {
           trygdeavgiftsgrunnlag: {
-            medlemskapsperioder: [],
+            avgiftspliktigperioder: [],
             skatteforholdsperioder: [],
             inntektskperioder: [],
           },
@@ -317,17 +317,17 @@ describe("AarsavregningMedGrunnlag", () => {
 
       // Verifiser at sisteGjeldendeMedlemskapsperioder blir brukt
       const state = store.getState();
-      expect(state.aarsavregning.data?.sisteGjeldendeMedlemskapsperioder).toHaveLength(2);
+      expect(state.aarsavregning.data?.sisteGjeldendeAvgiftspliktigperioder).toHaveLength(2);
     });
 
     it("skal håndtere tomme sisteGjeldendeMedlemskapsperioder uten feil", async () => {
       const mockResponse: AarsavregningResponse = {
         aarsavregningID: 1,
         aar: 2023,
-        sisteGjeldendeMedlemskapsperioder: [], // Tom array
+        sisteGjeldendeAvgiftspliktigperioder: [], // Tom array
         tidligereTrygdeavgiftsGrunnlagsopplysninger: {
           trygdeavgiftsgrunnlag: {
-            medlemskapsperioder: [],
+            avgiftspliktigperioder: [],
             skatteforholdsperioder: [],
             inntektskperioder: [],
           },
@@ -347,7 +347,7 @@ describe("AarsavregningMedGrunnlag", () => {
 
       // Skal håndtere tom array uten feil
       const state = store.getState();
-      expect(state.aarsavregning.data?.sisteGjeldendeMedlemskapsperioder).toEqual([]);
+      expect(state.aarsavregning.data?.sisteGjeldendeAvgiftspliktigperioder).toEqual([]);
     });
   });
 
@@ -356,7 +356,7 @@ describe("AarsavregningMedGrunnlag", () => {
       const mockResponse: AarsavregningResponse = {
         aarsavregningID: 1,
         aar: 2023,
-        sisteGjeldendeMedlemskapsperioder: [],
+        sisteGjeldendeAvgiftspliktigperioder: [],
         tidligereTrygdeavgiftsGrunnlagsopplysninger: undefined, // Ingen tidligere grunnlag
       };
 
@@ -378,7 +378,7 @@ describe("AarsavregningMedGrunnlag", () => {
       const mockResponse: AarsavregningResponse = {
         aarsavregningID: 1,
         aar: 2023,
-        sisteGjeldendeMedlemskapsperioder: [
+        sisteGjeldendeAvgiftspliktigperioder: [
           {
             id: 1,
             fomDato: "2023-01-01",
@@ -392,7 +392,7 @@ describe("AarsavregningMedGrunnlag", () => {
         ],
         nyttTrygdeavgiftsGrunnlag: {
           trygdeavgiftsgrunnlag: {
-            medlemskapsperioder: [],
+            avgiftspliktigperioder: [],
             skatteforholdsperioder: [],
             inntektskperioder: [
               {
@@ -413,7 +413,7 @@ describe("AarsavregningMedGrunnlag", () => {
         },
         tidligereTrygdeavgiftsGrunnlagsopplysninger: {
           trygdeavgiftsgrunnlag: {
-            medlemskapsperioder: [
+            avgiftspliktigperioder: [
               {
                 id: 2,
                 fomDato: "2023-01-01",
@@ -464,7 +464,7 @@ describe("AarsavregningMedGrunnlag", () => {
       const mockResponse: AarsavregningResponse = {
         aarsavregningID: 1,
         aar: 2023,
-        sisteGjeldendeMedlemskapsperioder: [
+        sisteGjeldendeAvgiftspliktigperioder: [
           {
             id: 1,
             fomDato: "2023-01-01",
@@ -498,7 +498,7 @@ describe("AarsavregningMedGrunnlag", () => {
         ],
         tidligereTrygdeavgiftsGrunnlagsopplysninger: {
           trygdeavgiftsgrunnlag: {
-            medlemskapsperioder: [],
+            avgiftspliktigperioder: [],
             skatteforholdsperioder: [],
             inntektskperioder: [],
           },
@@ -518,14 +518,14 @@ describe("AarsavregningMedGrunnlag", () => {
 
       // Skal håndtere alle tre periodene
       const state = store.getState();
-      expect(state.aarsavregning.data?.sisteGjeldendeMedlemskapsperioder).toHaveLength(3);
+      expect(state.aarsavregning.data?.sisteGjeldendeAvgiftspliktigperioder).toHaveLength(3);
     });
 
     it("skal filtrere bort ikke-innvilgede perioder", async () => {
       const mockResponse: AarsavregningResponse = {
         aarsavregningID: 1,
         aar: 2023,
-        sisteGjeldendeMedlemskapsperioder: [
+        sisteGjeldendeAvgiftspliktigperioder: [
           {
             id: 1,
             fomDato: "2023-01-01",
@@ -549,7 +549,7 @@ describe("AarsavregningMedGrunnlag", () => {
         ],
         tidligereTrygdeavgiftsGrunnlagsopplysninger: {
           trygdeavgiftsgrunnlag: {
-            medlemskapsperioder: [],
+            avgiftspliktigperioder: [],
             skatteforholdsperioder: [],
             inntektskperioder: [],
           },
@@ -570,14 +570,14 @@ describe("AarsavregningMedGrunnlag", () => {
       // mapMedlemskapsperioder skal filtrere bort avslåtte perioder
       // Så vi skal kun ha data for én periode i formatet
       const state = store.getState();
-      expect(state.aarsavregning.data?.sisteGjeldendeMedlemskapsperioder).toHaveLength(2);
+      expect(state.aarsavregning.data?.sisteGjeldendeAvgiftspliktigperioder).toHaveLength(2);
     });
 
     it("skal håndtere perioder med ulike trygdedekninger", async () => {
       const mockResponse: AarsavregningResponse = {
         aarsavregningID: 1,
         aar: 2023,
-        sisteGjeldendeMedlemskapsperioder: [
+        sisteGjeldendeAvgiftspliktigperioder: [
           {
             id: 1,
             fomDato: "2023-01-01",
@@ -591,7 +591,7 @@ describe("AarsavregningMedGrunnlag", () => {
         ],
         tidligereTrygdeavgiftsGrunnlagsopplysninger: {
           trygdeavgiftsgrunnlag: {
-            medlemskapsperioder: [],
+            avgiftspliktigperioder: [],
             skatteforholdsperioder: [],
             inntektskperioder: [],
           },
@@ -618,7 +618,7 @@ describe("AarsavregningMedGrunnlag", () => {
       const mockResponse: AarsavregningResponse = {
         aarsavregningID: 1,
         aar: 2023,
-        sisteGjeldendeMedlemskapsperioder: [
+        sisteGjeldendeAvgiftspliktigperioder: [
           {
             id: 3,
             fomDato: "2023-09-01",
@@ -652,7 +652,7 @@ describe("AarsavregningMedGrunnlag", () => {
         ],
         tidligereTrygdeavgiftsGrunnlagsopplysninger: {
           trygdeavgiftsgrunnlag: {
-            medlemskapsperioder: [],
+            avgiftspliktigperioder: [],
             skatteforholdsperioder: [],
             inntektskperioder: [],
           },
@@ -672,14 +672,14 @@ describe("AarsavregningMedGrunnlag", () => {
 
       // Perioder skal være tilgjengelige og håndtert korrekt
       const state = store.getState();
-      expect(state.aarsavregning.data?.sisteGjeldendeMedlemskapsperioder).toHaveLength(3);
+      expect(state.aarsavregning.data?.sisteGjeldendeAvgiftspliktigperioder).toHaveLength(3);
     });
 
     it("skal håndtere perioder med ISO-datoformat", async () => {
       const mockResponse: AarsavregningResponse = {
         aarsavregningID: 1,
         aar: 2023,
-        sisteGjeldendeMedlemskapsperioder: [
+        sisteGjeldendeAvgiftspliktigperioder: [
           {
             id: 1,
             fomDato: "2023-01-01", // ISO-format
@@ -693,7 +693,7 @@ describe("AarsavregningMedGrunnlag", () => {
         ],
         tidligereTrygdeavgiftsGrunnlagsopplysninger: {
           trygdeavgiftsgrunnlag: {
-            medlemskapsperioder: [],
+            avgiftspliktigperioder: [],
             skatteforholdsperioder: [],
             inntektskperioder: [],
           },

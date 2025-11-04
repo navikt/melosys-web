@@ -9,7 +9,7 @@ export const initialState: StateSection<Types.Data> = {
 };
 
 const finnIndexTilPeriode = (
-  perioder: Api.MedlemAvFolketrygden.Medlemskapsperioder.Medlemskapsperiode[],
+  perioder: Api.MedlemAvFolketrygden.Medlemskapsperioder.Avgiftspliktigperiode[],
   action: Types.OkSlettMedlemskapsperiodeAction | Types.OkOppdaterMedlemskapsperiodeAction,
 ) => perioder?.findIndex((periode) => periode.id === action.data.id);
 
