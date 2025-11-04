@@ -271,7 +271,29 @@ export class AarsavregningPage extends BehandlingPage {
     await expect(select, `${saksnummer}: Kildetype-select for inntektsperiode ${index} skal være synlig`).toBeVisible({
       timeout: 10000,
     });
+
+    // Vent på at options er lastet inn i select-elementet
+    // Vi venter til select har minst 2 options (tom + minst én faktisk verdi)
+    await this.page.waitForFunction(
+      (selectName) => {
+        const selectEl = document.querySelector(`select[name="${selectName}"]`) as HTMLSelectElement;
+        return selectEl && selectEl.options.length >= 2;
+      },
+      `inntektskilder[${index}].kildetype`,
+      { timeout: 10000 },
+    );
+
     await select.selectOption({ label: type });
+  }
+
+  async assertValideringsfeilInneholder(tekst: string) {
+    const error = this.page.locator('[class*="error"], [class*="feil"]').filter({ hasText: new RegExp(tekst, "i") });
+    await expect(error).toBeVisible();
+  }
+
+  async assertIngenFeilmelding(tekst: string) {
+    const error = this.page.locator('[class*="error"], [class*="feil"]').filter({ hasText: new RegExp(tekst, "i") });
+    await expect(error).not.toBeVisible();
   }
 
   async fyllUtBruttoInntekt(index: number, belop: string) {
@@ -391,6 +413,90 @@ export class AarsavregningPage extends BehandlingPage {
     // Buttonene har format som "mandag 3", "tirsdag 4" osv., så vi må finne button som slutter med dagen
     const datoKnapp = dialog.getByRole("button", { name: new RegExp(`\\b${dag}$`) });
     await datoKnapp.click();
+  }
+
+  // Fyll ut og blur metoder for datovalidering
+  async fyllUtOgBlurMedlemskapsperiodeFomDato(index: number, verdi: string): Promise<string> {
+    const trygdedekningDropdown = this.page.getByRole("combobox", {
+      name: new RegExp(`Trygdedekning periode ${index + 1}`, "i"),
+    });
+    const saksnummer = getSaksnummerFraUrl(this.page);
+    await expect(
+      trygdedekningDropdown,
+      `${saksnummer}: Trygdedekning-dropdown for periode ${index + 1} skal være synlig`,
+    ).toBeVisible({ timeout: 10000 });
+
+    const allInputs = await this.page
+      .locator('.perioder input[type="text"]:visible, .perioder input:not([type]):visible')
+      .all();
+    const inputIndex = index * 2;
+
+    expect(
+      inputIndex < allInputs.length,
+      `${saksnummer}: Kan ikke finne input ${inputIndex} for periode ${index + 1}. Totalt ${allInputs.length} inputs funnet.`,
+    ).toBe(true);
+
+    const inputElement = allInputs[inputIndex];
+    await inputElement.fill(verdi);
+    await inputElement.blur();
+    // Vent litt for at blur-event skal behandles
+    await this.page.waitForTimeout(200);
+    return await inputElement.inputValue();
+  }
+
+  async fyllUtOgBlurMedlemskapsperiodeTomDato(index: number, verdi: string): Promise<string> {
+    const trygdedekningDropdown = this.page.getByRole("combobox", {
+      name: new RegExp(`Trygdedekning periode ${index + 1}`, "i"),
+    });
+    const saksnummer = getSaksnummerFraUrl(this.page);
+    await expect(
+      trygdedekningDropdown,
+      `${saksnummer}: Trygdedekning-dropdown for periode ${index + 1} skal være synlig`,
+    ).toBeVisible({ timeout: 10000 });
+
+    const allInputs = await this.page
+      .locator('.perioder input[type="text"]:visible, .perioder input:not([type]):visible')
+      .all();
+    const inputIndex = index * 2 + 1;
+
+    expect(
+      inputIndex < allInputs.length,
+      `${saksnummer}: Kan ikke finne input ${inputIndex} for periode ${index + 1}. Totalt ${allInputs.length} inputs funnet.`,
+    ).toBe(true);
+
+    const inputElement = allInputs[inputIndex];
+    await inputElement.fill(verdi);
+    await inputElement.blur();
+    // Vent litt for at blur-event skal behandles
+    await this.page.waitForTimeout(200);
+    return await inputElement.inputValue();
+  }
+
+  async fyllUtOgBlurSkatteforholdFomDato(index: number, verdi: string): Promise<string> {
+    const firstSkattLabel = this.page.locator('text="Skatteforhold"').first();
+    const saksnummer = getSaksnummerFraUrl(this.page);
+    await expect(firstSkattLabel, `${saksnummer}: Label 'Skatteforhold' skal være synlig`).toBeVisible({
+      timeout: 10000,
+    });
+
+    const skatteforholdContainer = this.page.locator(".perioder").filter({ has: firstSkattLabel });
+    const allInputs = await skatteforholdContainer
+      .locator('input[type="text"]:visible, input:not([type]):visible')
+      .all();
+
+    const inputIndex = index * 2;
+
+    expect(
+      inputIndex < allInputs.length,
+      `${saksnummer}: Kan ikke finne input ${inputIndex} for skatteforhold ${index}. Totalt ${allInputs.length} inputs funnet.`,
+    ).toBe(true);
+
+    const inputElement = allInputs[inputIndex];
+    await inputElement.fill(verdi);
+    await inputElement.blur();
+    // Vent litt for at blur-event skal behandles
+    await this.page.waitForTimeout(200);
+    return await inputElement.inputValue();
   }
 
   // Validering og feilmeldinger
