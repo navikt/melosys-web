@@ -609,7 +609,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   // Lager en ny debounce funksjon når beregning callback endres
   useEffect(() => {
     setDebouncedBeregningPagaar(false);
-    debouncedBeregningRef.current = Utils._debounce(debouncedBeregning, 350);
+    debouncedBeregningRef.current = Utils._debounce(debouncedBeregning, 600);
 
     consoleLog("[useEffect debouncedBeregning] Lager en ny debounce funksjon når beregning callback endres");
 
@@ -835,7 +835,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
 
   const trygdeAvgiftSkalIkkeBetalesTilNav =
     medlemskapstypeErPliktig && erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder);
-  const skjemaErRedigerbart = redigerbart && !endrerBestemmelse;
+  const skjemaErRedigerbart = redigerbart && !endrerBestemmelse && !beregningPaagar;
 
   const tidligereAarsavregningTrygdeavgiftFraAvgiftssystem =
     initiellData.aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger
