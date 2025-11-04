@@ -93,12 +93,6 @@ const cachedFetch = async (url, cacheDurationSec) => {
     const age = (Date.now() - whenCached) / 1000;
     if (age < cacheDurationSec) {
       const response = new Response(new Blob([cachedItem]));
-      /* eslint-disable-next-line no-console */
-      console.log("cacheresponse", response);
-      // --------------------------------------------
-      // Return cached content
-      /* eslint-disable-next-line no-console */
-      console.log("cache hit for ", url);
       return response.clone().json();
     }
     // --------------------------------------------
@@ -146,12 +140,8 @@ const cachedFetch = async (url, cacheDurationSec) => {
       // consumed by the time it's returned. This
       // way we're being un-intrusive.
       if (sessionStorage.getItem(cacheKey)) {
-        /* eslint-disable-next-line no-console */
-        console.log("Remove cache item", cacheKey);
         removeCachedItem(cacheKey);
       }
-      /* eslint-disable-next-line no-console */
-      console.log("Insert fresh content into cache item", url);
       const content = await fetchResponse.clone().text();
       setCachedItem(cacheKey, content);
     }

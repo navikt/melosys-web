@@ -30,15 +30,6 @@ const dekkerHeleMedlemskapsperiode = (perioder: any[], medlemskapsperiode: any):
       return date ? date.getTime() : -Infinity;
     })
     .reduce((max, current) => Math.max(max, current), -Infinity);
-
-  /* eslint-disable-next-line no-console */
-  console.log("[dekkerHeleMedlemskapsperiode] min max", {
-    minFomDato,
-    maxTomDato,
-    medlemskapsperiodeFom,
-    medlemskapsperiodeTom,
-  });
-
   // Dekning
   const medlemskapsperiodeFomDate = Utils.dato.isoStringTilDate(medlemskapsperiodeFom);
   if (!medlemskapsperiodeFomDate || minFomDato === Infinity || minFomDato !== medlemskapsperiodeFomDate.getTime()) {
@@ -46,11 +37,11 @@ const dekkerHeleMedlemskapsperiode = (perioder: any[], medlemskapsperiode: any):
   }
 
   const medlemskapsperiodeTomDate = Utils.dato.isoStringTilDate(medlemskapsperiodeTom);
-  if (!medlemskapsperiodeTomDate || maxTomDato === -Infinity || maxTomDato !== medlemskapsperiodeTomDate.getTime()) {
-    return false;
-  }
-
-  return true;
+  return !(
+    !medlemskapsperiodeTomDate ||
+    maxTomDato === -Infinity ||
+    maxTomDato !== medlemskapsperiodeTomDate.getTime()
+  );
 };
 
 const harOppholdsperioder = (perioder: any) => {
