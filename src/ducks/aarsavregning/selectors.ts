@@ -8,7 +8,7 @@
 import { createSelector, Selector } from "reselect";
 import { RootState, StateSection } from "AppTypes";
 import { AarsavregningResponse, Trygdeavgiftsgrunnlag } from "../../services/modules/aarsavregning/aarsavregning";
-import { Medlemskapsperiode } from "../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import { Avgiftspliktigperiode } from "../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 
 const AarsavregningSelector: Selector<RootState, StateSection<AarsavregningResponse>> = createSelector(
   (state: RootState) => state.aarsavregning,
@@ -30,7 +30,7 @@ const AarsavregningTidligereGrunnlagSelector: Selector<RootState, Trygdeavgiftsg
   (aarsavregning) => aarsavregning?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag,
 );
 
-export const AarsavregningTidligereGrunnlagMedlemskapsperioderSelector: Selector<RootState, Medlemskapsperiode[]> =
+export const AarsavregningTidligereGrunnlagMedlemskapsperioderSelector: Selector<RootState, Avgiftspliktigperiode[]> =
   createSelector(AarsavregningTidligereGrunnlagSelector, (tidligereGrunnlag) =>
-    tidligereGrunnlag ? tidligereGrunnlag.medlemskapsperioder : [],
+    tidligereGrunnlag ? tidligereGrunnlag.avgiftspliktigperioder : [],
   );

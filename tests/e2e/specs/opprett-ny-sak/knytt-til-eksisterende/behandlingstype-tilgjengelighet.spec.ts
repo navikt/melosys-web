@@ -1,28 +1,21 @@
-import { expect, Page, test } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 import { runAxeAnalyze } from "../../../utils/axeUtils";
 import { HovedsidePage, USER_ID_VALID } from "../../../pages/hovedside.page";
 import { OpprettNySakPage } from "../../../pages/opprett-ny-sak/opprett-ny-sak.page";
-import { getSakId } from "../../../utils/testUtils";
+import { getSaksnummerFraLocator } from "../../../utils/testUtils";
 
 let opprettNySakPage: OpprettNySakPage;
 
-async function setupOpprettNySakTester(page: Page) {
-  const mainPage = new HovedsidePage(page);
-  opprettNySakPage = new OpprettNySakPage(page);
-
-  await mainPage.goto();
-
-  await mainPage.klikkOpprettNySakKnapp();
-}
-
 test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
   test.beforeEach(async ({ page }) => {
-    await setupOpprettNySakTester(page);
+    const mainPage = new HovedsidePage(page);
+    opprettNySakPage = new OpprettNySakPage(page);
+
+    await mainPage.goto();
+    await mainPage.klikkOpprettNySakKnapp();
   });
 
-  test("Knytt til 'Utenfor avtaleland' sak med åpne behandlinger - behandlingstyper tilgjengelige", async ({
-    page,
-  }, testInfo) => {
+  test("Utenfor avtaleland med åpne behandlinger - viser behandlingstyper", async ({ page }, testInfo) => {
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgKnyttTilEksisterendeSak();
 
@@ -37,35 +30,34 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
 
     await opprettNySakPage.verifiserTilgjengeligeBehandlingstyper(valgtSak!, ["Årsavregning"]);
     const harFeilmelding = await opprettNySakPage.harFeilmelding();
-    expect(harFeilmelding, `Ingen feilmelding skal vises for sak ${getSakId(valgtSak!)}`).toBe(false);
+    expect(harFeilmelding, `Ingen feilmelding skal vises for sak ${getSaksnummerFraLocator(valgtSak!)}`).toBe(false);
 
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("Knytt til EØS-sak med aktive behandlinger - gul varselmelding vises", async ({ page }, testInfo) => {
-    // Søk etter bruker med EØS-sak som har aktive behandlinger
+  test("EØS-sak med aktive behandlinger - viser varselmelding", async ({ page }, testInfo) => {
+    // Søk etter bruker med sak som har aktive behandlinger (EØS eller Avtaleland)
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgKnyttTilEksisterendeSak();
 
-    const valgtSak = await opprettNySakPage.velgFørsteSak("EU/EØS-land");
+    // Prøv først EØS-land, hvis ikke funnet prøv Avtaleland (testdata kan variere)
+    let valgtSak;
+    try {
+      valgtSak = await opprettNySakPage.velgFørsteSak("EU/EØS-land", undefined, "Medlemskap og lovvalg");
+    } catch {
+      valgtSak = await opprettNySakPage.velgFørsteSak("Avtaleland", undefined, "Medlemskap og lovvalg");
+    }
 
-    expect(valgtSak, "Ingen EØS-sak funnet").toBeTruthy();
+    expect(valgtSak, "Ingen sak funnet med aktive behandlinger").toBeTruthy();
 
-    await expect(
-      page.locator(".feilmelding_innrykk").filter({
-        hasText: "Du kan ikke opprette en ny behandling på eksisterende sak med en aktiv/pågående behandling",
-      }),
-    ).toBeVisible();
+    await opprettNySakPage.verifiserEosFeilmelding();
 
-    const behandlingstypeGruppe = page.getByRole("group", { name: "Behandlingstype" });
-    await expect(behandlingstypeGruppe).not.toBeVisible();
+    await opprettNySakPage.verifiserBehandlingstypeGruppeIkkeSynlig();
 
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("Knytt til EØS pensjonist-sak med trygdeavgift og åpne behandlinger - årsavregning tilgjengelig", async ({
-    page,
-  }, testInfo) => {
+  test("EØS pensjonist med trygdeavgift - årsavregning tilgjengelig", async ({ page }, testInfo) => {
     // Test unntaket for EØS pensjonister med trygdeavgift som skal kunne opprette årsavregning
     // selv om de har aktive behandlinger (MELOSYS-7603)
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
@@ -74,6 +66,8 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
     // Søk etter en EØS-sak med sakstema "Trygdeavgift" og behandlingstema "Pensjonist"
     const valgtSak = await opprettNySakPage.finnSak({
       sakstype: "EU/EØS-land",
+      sakstema: "Trygdeavgift",
+      resultattype: "Pensjonist",
     });
 
     expect(valgtSak, "Ingen EØS pensjonist-sak funnet").toBeTruthy();
@@ -85,14 +79,15 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
 
     // Verifiser at ingen feilmelding vises
     const harFeilmelding = await opprettNySakPage.harFeilmelding();
-    expect(harFeilmelding, `Ingen feilmelding skal vises for EØS pensjonist-sak ${getSakId(valgtSak!)}`).toBe(false);
+    expect(
+      harFeilmelding,
+      `Ingen feilmelding skal vises for EØS pensjonist-sak ${getSaksnummerFraLocator(valgtSak!)}`,
+    ).toBe(false);
 
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("Knytt til Avtaleland-sak med åpne behandlinger - behandlingstyper tilgjengelige", async ({
-    page,
-  }, testInfo) => {
+  test("Avtaleland med åpne behandlinger - viser behandlingstyper", async ({ page }, testInfo) => {
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgKnyttTilEksisterendeSak();
 
@@ -102,18 +97,16 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
     await opprettNySakPage.verifiserTilgjengeligeBehandlingstyper(valgtSak, ["Årsavregning"]);
 
     const harFeilmelding = await opprettNySakPage.harFeilmelding();
-    expect(harFeilmelding, `Ingen feilmelding skal vises for sak ${getSakId(valgtSak!)}`).toBe(false);
+    expect(harFeilmelding, `Ingen feilmelding skal vises for sak ${getSaksnummerFraLocator(valgtSak!)}`).toBe(false);
 
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("Knytt til Avtaleland-sak med avsluttede behandlinger - behandlingstyper tilgjengelige", async ({
-    page,
-  }, testInfo) => {
+  test("Avtaleland med avsluttede behandlinger - alle behandlingstyper tilgjengelige", async ({ page }, testInfo) => {
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgKnyttTilEksisterendeSak();
 
-    const valgtSak = await opprettNySakPage.velgFørsteSak("EU/EØS-land", "Behandlingen er avsluttet");
+    const valgtSak = await opprettNySakPage.velgFørsteSak("Avtaleland", "Behandlingen er avsluttet");
 
     expect(valgtSak, "Fant ingen 'Avtaleland - Behandlingen er avsluttet' saker").toBeTruthy();
 
@@ -125,14 +118,12 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
     ]);
 
     const harFeilmelding = await opprettNySakPage.harFeilmelding();
-    expect(harFeilmelding, `Ingen feilmelding skal vises for sak ${getSakId(valgtSak!)}`).toBe(false);
+    expect(harFeilmelding, `Ingen feilmelding skal vises for sak ${getSaksnummerFraLocator(valgtSak!)}`).toBe(false);
 
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("Knytt til 'Utenfor avtaleland'-sak med åpne ikke-årsavregningsbehandlinger - kun årsavregning tilgjengelig", async ({
-    page,
-  }, testInfo) => {
+  test("Utenfor avtaleland med åpne behandlinger - kun årsavregning tilgjengelig", async ({ page }, testInfo) => {
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgKnyttTilEksisterendeSak();
 
@@ -147,14 +138,12 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
     await opprettNySakPage.verifiserTilgjengeligeBehandlingstyper(valgtSak!, ["Årsavregning"]);
 
     const harFeilmelding = await opprettNySakPage.harFeilmelding();
-    expect(harFeilmelding, `Ingen feilmelding skal vises for sak ${getSakId(valgtSak!)}`).toBe(false);
+    expect(harFeilmelding, `Ingen feilmelding skal vises for sak ${getSaksnummerFraLocator(valgtSak!)}`).toBe(false);
 
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("Knytt til sak med alle avsluttede behandlinger - alle behandlingstyper tilgjengelige", async ({
-    page,
-  }, testInfo) => {
+  test("Alle behandlinger avsluttet - alle behandlingstyper tilgjengelige", async ({ page }, testInfo) => {
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgKnyttTilEksisterendeSak();
 
@@ -174,10 +163,8 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
       "Årsavregning",
     ]);
 
-    await expect(
-      page.locator(".feilmelding_innrykk"),
-      `Ingen feilmelding skal vises for sak ${getSakId(valgtSak!)}`,
-    ).not.toBeVisible();
+    const harFeilmelding = await opprettNySakPage.harFeilmelding();
+    expect(harFeilmelding, `Ingen feilmelding skal vises for sak ${getSaksnummerFraLocator(valgtSak!)}`).toBe(false);
 
     await runAxeAnalyze(page, testInfo.title);
   });

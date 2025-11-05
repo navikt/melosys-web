@@ -21,8 +21,11 @@ export class HovedsidePage {
     await this.page.goto("/", { waitUntil: "domcontentloaded" });
     await expect(this.page).toHaveURL("/melosys");
     await expect(this.page).toHaveTitle(/Melosys/);
-    await expect(this.page.locator("h1:has-text('Mine oppgaver')")).toBeVisible();
-    await expect(this.page.locator("text=/\\d+ oppgaver/")).toBeVisible();
+    await expect(
+      this.page.locator("h1:has-text('Mine oppgaver')"),
+      "Heading 'Mine oppgaver' skal være synlig",
+    ).toBeVisible();
+    await expect(this.page.locator("text=/\\d+ oppgaver/"), "Oppgaveteller skal være synlig").toBeVisible();
   }
 
   /**
@@ -30,67 +33,9 @@ export class HovedsidePage {
    */
   async klikkOpprettNySakKnapp(): Promise<void> {
     const createButton = this.page.locator("button:has-text('Opprett ny sak/behandling')");
-    await expect(createButton).toBeVisible();
+    await expect(createButton, "Knapp 'Opprett ny sak/behandling' skal være synlig").toBeVisible();
     await createButton.click();
     await this.page.waitForLoadState("domcontentloaded");
-  }
-
-  /**
-   * Verifiser at "Opprett ny sak/behandling" knapp er synlig
-   */
-  async verifiserOpprettNySakKnapp(): Promise<void> {
-    await expect(this.page.locator("button:has-text('Opprett ny sak/behandling')")).toBeVisible();
-  }
-
-  /**
-   * Søk etter en sak med gitt bruker-ID og klikk på første saken som inneholder gitt tekst
-   * @param brukerId - Bruker-ID å søke etter
-   * @param sakTekst - Tekst å finne i saken (f.eks. "Yrkesaktiv - Årsavregning")
-   * @returns href attribute til taskens
-   */
-  async visSak(brukerId: string, sakTekst: string): Promise<string | null> {
-    // Søk med bruker-ID for å få frem relevante saker
-    await this.søk(brukerId);
-
-    // Vent på at søkeresultatene blir lastet ved å sjekke overskriften
-    await this.page.waitForSelector(`text=Resultater for f.nr./d-nr. ${brukerId}`, {
-      state: "visible",
-      timeout: 5000,
-    });
-
-    // Finn "Vis behandling" knappen for saken som inneholder gitt tekst og som er aktiv
-    // Vi ser etter saker som har "Behandlingen pågår" status for å sikre at de kan sende brev
-    const aktivSakButton = this.page
-      .locator(".fagsak")
-      .filter({ hasText: sakTekst })
-      .filter({ hasText: "Behandlingen pågår" })
-      .locator("button:has-text('Vis behandling')")
-      .first();
-
-    // Hvis vi ikke finner aktive saker, prøv å finne opprettede saker
-    const opprettetSakButton = this.page
-      .locator(".fagsak")
-      .filter({ hasText: sakTekst })
-      .filter({ hasText: "Behandlingen er opprettet" })
-      .locator("button:has-text('Vis behandling')")
-      .first();
-
-    // Prøv først aktive saker, deretter opprettede saker
-    let sakButton = aktivSakButton;
-    const aktivSakCount = await aktivSakButton.count();
-
-    if (aktivSakCount === 0) {
-      sakButton = opprettetSakButton;
-      await expect(
-        sakButton,
-        `Fant ingen aktive eller opprettede '${sakTekst}' saker for bruker ${brukerId}`,
-      ).toHaveCount(1);
-    }
-
-    await sakButton.click();
-    await this.page.waitForLoadState("domcontentloaded");
-
-    return null;
   }
 
   /**
@@ -98,7 +43,7 @@ export class HovedsidePage {
    * @param input - søkestreng
    */
   async søk(input: string): Promise<void> {
-    await expect(this.page.locator("form.sokeskjema")).toBeVisible();
+    await expect(this.page.locator("form.sokeskjema"), "Søkeskjema skal være synlig").toBeVisible();
 
     const searchInput = this.page.locator("form.sokeskjema input[type='text']");
 

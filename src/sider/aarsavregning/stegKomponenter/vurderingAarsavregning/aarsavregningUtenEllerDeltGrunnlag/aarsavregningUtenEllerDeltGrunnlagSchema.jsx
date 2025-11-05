@@ -44,6 +44,14 @@ const arbAvgBetalesFyltUtNårDetKrevesTest = {
   },
 };
 
+const erGyldigOgKunTall = (datoString) => {
+  const datoUtenSkilletegn = datoString.replace(/[-./]/g, "");
+  if (!/^\d+$/.test(datoUtenSkilletegn)) {
+    return false;
+  }
+  return Boolean(Utils.dato.vaskInputDato(datoString));
+};
+
 const erInnenforValgtAarTest = {
   name: "Utenfor valgt år",
   message: {
@@ -52,6 +60,7 @@ const erInnenforValgtAarTest = {
   test: (datoString, schema) => {
     const aar = schema?.options?.context?.aar;
     if (!datoString) return false;
+    if (!erGyldigOgKunTall(datoString)) return true;
     const dato = new Date(Datoutils.vaskOgFormatterTilISO(datoString));
     const startAar = new Date(aar, 0, 1);
     const sluttAar = new Date(aar, 11, 31, 23, 59, 59, 999);
@@ -92,7 +101,12 @@ const erInnenforMedlemskapsperiodeTest = {
   name: "erInnenforMedlemskapsperiode",
   message: UTENFOR_MEDLEMSKAPSPERIODEN,
   test: (datoString, schema) => {
-    if (Utils._isEmpty(datoString) || !Utils.dato.vaskInputDato(datoString)) return true;
+    if (Utils._isEmpty(datoString)) return true;
+
+    // MELOSYS-7612: Valider kun komplette datoer for å unngå valideringsfeil under typing
+    // Sjekk at datoen har riktig format (dd.mm.åååå) før vi validerer mot medlemskapsperiode
+    const vasketDato = Utils.dato.vaskInputDato(datoString);
+    if (!vasketDato || vasketDato.length < 10) return true;
 
     // Get medlemskapsperioder directly from form values
     const { medlemskapsperioder } = schema.from[1].value;
