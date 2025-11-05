@@ -37,6 +37,7 @@ import { fagsakSelectors } from "../../../../ducks/fagsaker";
 import { Alert } from "../../../../navFrontend";
 import { useFeatureToggle } from "../../../../featuretoggle";
 import { MELOSYS_FAKTURERINGSKOMPONENTEN_IKKE_TIDLIGERE_PERIODER } from "../../../../featuretoggle/toggleNavn";
+import { lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
 
 const { EU_EOS } = MKV.Koder.sakstyper;
 const { PENSJONIST } = MKV.Koder.behandlinger.behandlingstema;
@@ -56,6 +57,8 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const behandlingstype = useSelector(behandlingerSelectors.BehandlingstypeKodeSelector);
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const sakstype = useSelector(fagsakSelectors.SakstypeKodeSelector);
+  const erEøsPensjonist = sakstype === EU_EOS && behandlingstema === PENSJONIST;
+
   const [harBeregnetNyTrygdeavgift, setHarBeregnetNyTrygdeavgift] = useState<boolean>(false);
   const skalIkkeViseTidligerePerioderToggle =
     useFeatureToggle(MELOSYS_FAKTURERINGSKOMPONENTEN_IKKE_TIDLIGERE_PERIODER) ?? false;
@@ -64,15 +67,21 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     undefined,
   );
 
-  const helseutgiftDekkesPeriodeData = useSelector(
-    helseutgiftDekkesPeriodeSelector.HelseutgiftDekkesPeriodeSelector,
-  ).data;
-  const helseutgiftDekkesPeriode = {
-    fom: helseutgiftDekkesPeriodeData.fomDato,
-    tom: helseutgiftDekkesPeriodeData.tomDato,
+  const hentHelseutgiftDekkesPeriode = () => {
+    const helseutgiftDekkesPeriodeData = useSelector(
+      helseutgiftDekkesPeriodeSelector.HelseutgiftDekkesPeriodeSelector,
+    ).data;
+
+    return {
+      fom: helseutgiftDekkesPeriodeData.fomDato,
+      tom: helseutgiftDekkesPeriodeData.tomDato,
+    };
   };
 
-  const erEøsPensjonist = sakstype === EU_EOS && behandlingstema === PENSJONIST;
+  const avgiftspliktigeperioder = erEøsPensjonist
+    ? hentHelseutgiftDekkesPeriode()
+    : useSelector(lovvalgsperioderSelectors.PeriodeSelector);
+
   const erNyVurdering = behandlingstype === NY_VURDERING;
 
   const [lagretTrygdeavgift, setTrygdeavgift] = useState<BeregnetTrygdeavgift>();
@@ -85,8 +94,8 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
 
   const formattedDefaultPeriode = () => {
     return {
-      fomDato: Utils.dato.formatterDatoTilNorsk(helseutgiftDekkesPeriode?.fom),
-      tomDato: Utils.dato.formatterDatoTilNorsk(helseutgiftDekkesPeriode?.tom),
+      fomDato: Utils.dato.formatterDatoTilNorsk(avgiftspliktigeperioder?.fom),
+      tomDato: Utils.dato.formatterDatoTilNorsk(avgiftspliktigeperioder?.tom),
     };
   };
 
@@ -98,7 +107,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     clearErrors,
   } = useForm({
     resolver: yupResolver(vurderingTrygdeavgiftSchema),
-    context: { helseutgiftDekkesPeriode: helseutgiftDekkesPeriode },
+    context: { helseutgiftDekkesPeriode: avgiftspliktigeperioder },
     mode: "onChange",
     defaultValues: {
       skatteforholdsperioder: [{}],
@@ -123,12 +132,12 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const aktivFeilmeldingType = finnAktivFeilmeldingEøsPensjonist(
     formValues?.inntektskilder,
     formValues?.skatteforholdsperioder,
-    helseutgiftDekkesPeriode,
+    avgiftspliktigeperioder,
   );
 
   const skalIkkeBeregneForelopigTrygdeavgift =
     skalIkkeViseTidligerePerioderToggle &&
-    new Date(helseutgiftDekkesPeriode.tom).getFullYear() < new Date().getFullYear() &&
+    new Date(avgiftspliktigeperioder.tom).getFullYear() < new Date().getFullYear() &&
     behandlingstype === NY_VURDERING;
 
   const stegErGyldig =
@@ -189,7 +198,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     if (!redigerbart) {
       return;
     }
-  }, [helseutgiftDekkesPeriodeData]);
+  }, [avgiftspliktigeperioder]);
 
   const håndterLagretTrygdeavgiftsgrunnlag = (trygdeavgiftsgrunnlag: TrygdeavgiftsgrunnlagDto) => {
     const { inntektskilder, skatteforholdsperioder } = trygdeavgiftsgrunnlag;
