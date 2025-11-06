@@ -49,6 +49,13 @@ interface Props {
   oppdaterStatus: (isValid: boolean) => void;
 }
 
+interface ApiError {
+  body?: {
+    feilkoder?: string[];
+    message?: string;
+  };
+}
+
 const { NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingstyper;
 
 export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: Props) {
@@ -119,14 +126,14 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     append: skattAppend,
     remove: skattRemove,
     replace: resetSkatteforholdsperioder,
-  } = useFieldArray({ control: control as any, name: "skatteforholdsperioder" }) as any;
+  } = useFieldArray({ control, name: "skatteforholdsperioder" });
   const {
     fields: inntektFields,
     append: inntektAppend,
     remove: inntektRemove,
     update: inntektUpdate,
     replace: resetInntektskilder,
-  } = useFieldArray({ control: control as any, name: "inntektskilder" }) as any;
+  } = useFieldArray({ control, name: "inntektskilder" });
   const formValues = watch();
 
   const aktivFeilmeldingType = finnAktivFeilmeldingEøsPensjonist(
@@ -279,8 +286,10 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     }
   };
 
-  const mapFeilmelding = (error: any) => {
+  const mapFeilmelding = (error: ApiError | string): string => {
     const feilmelding = "Finner ikke trygdeavgiftssats. Melosys har ikke satser for årene før 2014.";
+
+    if (typeof error === "string") return error;
 
     const ingenGjeldendeSats = error.body?.feilkoder?.some((feilkode: string) =>
       feilkode.startsWith("Ingen gjeldende sats finnes for perioden"),
@@ -288,7 +297,11 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
 
     if (ingenGjeldendeSats) return feilmelding;
 
-    return error.body?.feilkoder || error.body?.message || error;
+    if (error.body?.feilkoder) {
+      return error.body.feilkoder.join(", ");
+    }
+
+    return error.body?.message || "Ukjent feil";
   };
 
   const debounceBeregnTrygdeavgiftsperioder = useCallback(
@@ -315,11 +328,11 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   useEffect(() => {
     if (redigerbart && aktivtSteg) {
       if (!formIsValid) {
-        formValues?.skatteforholdsperioder?.forEach((_periode: any, index: number) => {
+        formValues?.skatteforholdsperioder?.forEach((_periode: Skatteforhold, index: number) => {
           trigger(`skatteforholdsperioder[${index}].fomDato`);
           trigger(`skatteforholdsperioder[${index}].tomDato`);
         });
-        formValues?.inntektskilder?.forEach((_periode: any, index: number) => {
+        formValues?.inntektskilder?.forEach((_periode: Inntektskilde, index: number) => {
           trigger(`inntektskilder[${index}].fomDato`);
           trigger(`inntektskilder[${index}].tomDato`);
         });

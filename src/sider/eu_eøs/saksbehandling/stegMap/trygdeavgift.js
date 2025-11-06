@@ -1,6 +1,5 @@
 import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
 import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
-import { VurderingTrygdeavgift } from "../../stegKomponenter/vurderingTrygdeavgift/vurderingTrygdeavgift";
 import { VurderingTrygdeavgift as VurderingTrygdeavgiftFTRL } from "../../../ftrl/saksbehandling/stegKomponenter/vurderingTrygdeavgift/vurderingTrygdeavgift";
 
 class Trygdeavgift extends Steg {
