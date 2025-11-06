@@ -31,7 +31,9 @@ class VurderingPeriodeOffentligAnsattSteg extends Steg {
       lovvalgsbestemmelseSomSkalVises,
       lovvalgsbestemmelseSomSkalLagres,
     });
-    this.beregnRelevantUI = () => ({});
+    this.beregnRelevantUI = (_propsLight) => ({
+      harAvklaring: VurderingPeriodeOffentligAnsattSteg.harAvklaring(_propsLight),
+    });
     this.handlers = {
       bekreftOgFortsett: propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
       tilbake: propsLight.tilgjengeligeHandlers.tilbake,
@@ -39,7 +41,12 @@ class VurderingPeriodeOffentligAnsattSteg extends Steg {
       oppdaterData: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, verdi),
       slettData: (data) => this._propsLight.tilgjengeligeHandlers.slettStegData(this.id, data),
     };
-    this.status = FANE_STATUS.OK;
+    this._status = FANE_STATUS.OK;
+  }
+
+  static harAvklaring(propsLight) {
+    // Steget er fullført når lovvalgsbestemmelse er satt
+    return !!propsLight.lovvalgsbestemmelse;
   }
 }
 
