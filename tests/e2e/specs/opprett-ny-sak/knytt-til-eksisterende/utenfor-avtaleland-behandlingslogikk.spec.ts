@@ -1,10 +1,11 @@
 import { expect, test } from "@playwright/test";
-import { runAxeAnalyze } from "../../../../utils/axeUtils";
-import { HovedsidePage, USER_ID_VALID } from "../../../../pages/hovedside.page";
-import { OpprettNySakPage } from "../../../../pages/opprett-ny-sak/opprett-ny-sak.page";
-import { opprettUtenforAvtalelandSak } from "../../../../utils/testdataUtils";
-import { SokPage } from "../../../../pages/sok.page";
-import { BehandlingPage } from "../../../../pages/behandling/behandling.page";
+import { runAxeAnalyze } from "../../../utils/axeUtils";
+import { HovedsidePage, USER_ID_VALID } from "../../../pages/hovedside.page";
+import { OpprettNySakPage } from "../../../pages/opprett-ny-sak/opprett-ny-sak.page";
+import { TIMEOUT_FOR_COMPLEX_TESTS } from "../../../utils/testUtils";
+import { opprettUtenforAvtalelandSak } from "../../../utils/testdataUtils";
+import { SokPage } from "../../../pages/sok.page";
+import { BehandlingPage } from "../../../pages/behandling/behandling.page";
 
 /**
  * MELOSYS-7385: Test akseptansekriterier for 'Utenfor avtaleland'-saker
@@ -14,7 +15,7 @@ import { BehandlingPage } from "../../../../pages/behandling/behandling.page";
  * 2. Sak med åpen årsavregning → kun Årsavregning tilgjengelig
  * 3. Sak med alle avsluttede → alle behandlingstyper tilgjengelig
  */
-test.describe("MELOSYS-7385: 'Utenfor avtaleland' behandlingslogikk", () => {
+test.describe("'Utenfor avtaleland' behandlingslogikk", () => {
   let opprettNySakPage: OpprettNySakPage;
 
   test.beforeEach(async ({ page }) => {
@@ -26,12 +27,12 @@ test.describe("MELOSYS-7385: 'Utenfor avtaleland' behandlingslogikk", () => {
     await mainPage.klikkOpprettNySakKnapp();
   });
 
-  test("AC1: 'Utenfor avtaleland - Behandlingen er opprettet' sak med kun Årsavregning tilgjengelig", async ({
-    page,
-  }, testInfo) => {
-    test.setTimeout(30000); // Økt timeout siden vi oppretter sak
+  test("AC1: Utenfor avtaleland med åpen behandling - kun årsavregning tilgjengelig", async ({ page }, testInfo) => {
+    test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout siden vi oppretter sak
 
-    const sakId = await opprettUtenforAvtalelandSak(page);
+    const sokPage = new SokPage(page);
+    const sak = await opprettUtenforAvtalelandSak(page);
+    const sakId = await sokPage.getSaksnummer(sak);
 
     const hovedsidePage = new HovedsidePage(page);
     await hovedsidePage.goto();
@@ -52,12 +53,12 @@ test.describe("MELOSYS-7385: 'Utenfor avtaleland' behandlingslogikk", () => {
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("AC2: 'Utenfor avtaleland - Behandlingen er opprettet' sak med åpen årsavregning funnet", async ({
-    page,
-  }, testInfo) => {
-    test.setTimeout(45000); // Økt timeout siden vi oppretter sak + årsavregning
+  test("AC2: Utenfor avtaleland med åpen årsavregning - finner sak", async ({ page }, testInfo) => {
+    test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout siden vi oppretter sak + årsavregning
 
-    const sakId = await opprettUtenforAvtalelandSak(page);
+    const sokPage = new SokPage(page);
+    const sak = await opprettUtenforAvtalelandSak(page);
+    const sakId = await sokPage.getSaksnummer(sak);
 
     const hovedsidePage = new HovedsidePage(page);
 
@@ -93,22 +94,22 @@ test.describe("MELOSYS-7385: 'Utenfor avtaleland' behandlingslogikk", () => {
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("AC3: 'Utenfor avtaleland - Behandlingen er avsluttet' sak funnet", async ({ page }, testInfo) => {
-    test.setTimeout(30000); // Økt timeout siden vi oppretter og avslutter sak
+  test("AC3: Utenfor avtaleland med avsluttet behandling - alle behandlingstyper tilgjengelige", async ({
+    page,
+  }, testInfo) => {
+    test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout siden vi oppretter og avslutter sak
 
-    const sakId = await opprettUtenforAvtalelandSak(page);
-
-    const hovedsidePage = new HovedsidePage(page);
     const sokPage = new SokPage(page);
     const behandlingPage = new BehandlingPage(page);
 
-    await hovedsidePage.goto();
-    await hovedsidePage.søkOgVentPåResultat(USER_ID_VALID);
+    const sak = await opprettUtenforAvtalelandSak(page);
+    const sakId = await sokPage.getSaksnummer(sak);
 
-    const sak = sokPage.finnSakBySaksnummer(sakId);
     await sokPage.klikkVisBehandling(sak);
     await behandlingPage.verifiserBehandlingsside();
     await behandlingPage.avsluttBehandling("Søknaden er innvilget", sakId);
+
+    const hovedsidePage = new HovedsidePage(page);
 
     await hovedsidePage.goto();
     await hovedsidePage.klikkOpprettNySakKnapp();

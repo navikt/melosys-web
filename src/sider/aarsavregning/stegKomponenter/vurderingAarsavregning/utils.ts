@@ -7,7 +7,7 @@ import {
 import * as Api from "../../../../services/api";
 import * as Utils from "../../../../utils";
 import { AarsavregningResponse } from "../../../../services/modules/aarsavregning/aarsavregning";
-import { Medlemskapsperiode } from "../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import { Avgiftspliktigperiode } from "../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import { InntektskildeDto, SkatteforholdDto } from "../../../../services/modules/trygdeavgift";
 import MKV from "../../../../melosyskodeverk";
 import aarsavregningUtenEllerDeltGrunnlagSchema from "./aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlagSchema";
@@ -51,7 +51,7 @@ export const erBrukerSkattepliktigIHelePerioden = (skatteforholdsperioder: Skatt
  * Filtrerer bort perioder som mangler fomDato eller tomDato.
  */
 export const finnMedlemskapsperiode = (
-  perioder: Medlemskapsperiode[],
+  perioder: Avgiftspliktigperiode[],
 ): { fomDato: string; tomDato: string } | undefined => {
   const sorterteGyldigePerioder = perioder
     .filter((periode) => periode.fomDato && periode.tomDato)
@@ -109,12 +109,9 @@ export function beregnTrygdeavgiftsperioder(
 
 // Functions moved from aarsavregningHelpers.ts
 
-export const hentMedlemskapsFomTomDato = (medlemskapsperioder?: Medlemskapsperiode[]) => {
+export const hentMedlemskapsFomTomDato = (medlemskapsperioder?: Avgiftspliktigperiode[]) => {
   if (medlemskapsperioder && !Utils._isEmpty(medlemskapsperioder)) {
     const sorted = [...medlemskapsperioder].sort(Utils.dato.sorterEtterNorskFomDato);
-    /* eslint-disable-next-line no-console */
-    console.log("[hentMedlemskapsFomTomDato] sorted with Utils.dato.sorterEtterNorskFomDato", sorted);
-
     const fomISO = Utils.dato.formatterDatoTilISO(sorted[0].fomDato);
     const tomISO = Utils.dato.formatterDatoTilISO(sorted[sorted.length - 1].tomDato);
     return { fom: fomISO, tom: tomISO };
@@ -124,7 +121,7 @@ export const hentMedlemskapsFomTomDato = (medlemskapsperioder?: Medlemskapsperio
 
 export const mapTilSkatteforholdProps = (
   skatteforholdsperioder?: SkatteforholdDto[],
-  medlemskapsperioder?: Medlemskapsperiode[],
+  medlemskapsperioder?: Avgiftspliktigperiode[],
 ): Skatteforhold[] => {
   if (skatteforholdsperioder && !Utils._isEmpty(skatteforholdsperioder)) {
     return skatteforholdsperioder.map((skatteForhold) => ({
@@ -148,7 +145,7 @@ export const mapTilSkatteforholdProps = (
 
 export const mapTilInntektskilderProps = (
   inntektskilder?: InntektskildeDto[],
-  medlemskapsperioder?: Medlemskapsperiode[],
+  medlemskapsperioder?: Avgiftspliktigperiode[],
 ): Inntektskilde[] => {
   if (inntektskilder && !Utils._isEmpty(inntektskilder)) {
     return inntektskilder.map((inntektskilde) => ({
@@ -173,7 +170,7 @@ export const mapTilInntektskilderProps = (
       },
     ];
   }
-  return [{}] as Inntektskilde[];
+  return [{ erMaanedsbelop: Utils.streng.boolTilUppercaseStreng(true) }] as Inntektskilde[];
 };
 
 export const beregnSumTilFakturaEllerRefusjon = (
@@ -188,6 +185,47 @@ export const beregnSumTilFakturaEllerRefusjon = (
     (tidligereTrygdeavgiftAvgiftssystem ?? 0) +
     (tidligereAarsavregningTrygdeavgiftFraAvgiftssystem ?? 0)
   );
+};
+
+/**
+ * Sjekker om datoer fra medlemskapsperiode er gyldige og kan brukes til å auto-fylle skatteforhold/inntektskilder.
+ * Validerer at:
+ * 1. Datoene kan formateres til ISO (er gyldige datoer)
+ * 2. Datoene er innenfor valgt år for årsavregningen
+ *
+ * @param fomDato - Fra og med dato i norsk format (dd.mm.yyyy)
+ * @param tomDato - Til og med dato i norsk format (dd.mm.yyyy)
+ * @param valgtAar - Året som årsavregningen gjelder for
+ * @returns true hvis datoene er gyldige og kan brukes, false ellers
+ */
+export const erGyldigeMedlemskapsperiodeDatoerForAutoUtfylling = (
+  fomDato: string,
+  tomDato: string,
+  valgtAar?: number,
+): boolean => {
+  if (!fomDato || !tomDato) {
+    return false;
+  }
+
+  const fomDatoISO = Utils.dato.vaskOgFormatterTilISO(fomDato);
+  const tomDatoISO = Utils.dato.vaskOgFormatterTilISO(tomDato);
+
+  if (!fomDatoISO || !tomDatoISO) {
+    return false;
+  }
+
+  if (valgtAar) {
+    const fomDate = new Date(fomDatoISO);
+    const tomDate = new Date(tomDatoISO);
+    const startAar = new Date(valgtAar, 0, 1);
+    const sluttAar = new Date(valgtAar, 11, 31, 23, 59, 59, 999);
+
+    if (fomDate < startAar || fomDate > sluttAar || tomDate < startAar || tomDate > sluttAar) {
+      return false;
+    }
+  }
+
+  return true;
 };
 
 /**

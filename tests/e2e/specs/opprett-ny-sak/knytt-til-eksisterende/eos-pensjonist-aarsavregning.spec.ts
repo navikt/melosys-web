@@ -2,13 +2,14 @@ import { expect, test } from "@playwright/test";
 import { runAxeAnalyze } from "../../../utils/axeUtils";
 import { HovedsidePage, USER_ID_VALID } from "../../../pages/hovedside.page";
 import { OpprettNySakPage } from "../../../pages/opprett-ny-sak/opprett-ny-sak.page";
-import { getSakId } from "../../../utils/testUtils";
+import { getSaksnummerFraLocator } from "../../../utils/testUtils";
 import { opprettEøsPensjonistSakMedTrygdeavgift } from "../../../utils/testdataUtils";
 
 let opprettNySakPage: OpprettNySakPage;
 let hovedsidePage: HovedsidePage;
 
-test.describe("EØS pensjonist med trygdeavgift - årsavregning (MELOSYS-7603)", () => {
+// MELOSYS-7603
+test.describe("EØS pensjonist med trygdeavgift - årsavregning", () => {
   test.beforeEach(async ({ page }) => {
     hovedsidePage = new HovedsidePage(page);
     opprettNySakPage = new OpprettNySakPage(page);
@@ -16,10 +17,10 @@ test.describe("EØS pensjonist med trygdeavgift - årsavregning (MELOSYS-7603)",
 
   test("Opprett EØS pensjonist-sak med trygdeavgift for testdata", async ({ page }, testInfo) => {
     // Denne testen oppretter testdata som brukes av de andre testene
-    const sakId = await opprettEøsPensjonistSakMedTrygdeavgift(page);
+    const sak = await opprettEøsPensjonistSakMedTrygdeavgift(page);
 
-    expect(sakId, "Sak skal være opprettet").toBeTruthy();
-    expect(sakId).toMatch(/^MEL-\d+$/);
+    expect(getSaksnummerFraLocator(sak), "Sak skal være opprettet").toBeTruthy();
+    expect(getSaksnummerFraLocator(sak)).toMatch(/^MEL-\d+$/);
 
     await runAxeAnalyze(page, testInfo.title);
   });
@@ -56,7 +57,10 @@ test.describe("EØS pensjonist med trygdeavgift - årsavregning (MELOSYS-7603)",
 
     // Verifiser at ingen feilmelding vises
     const harFeilmelding = await opprettNySakPage.harFeilmelding();
-    expect(harFeilmelding, `Ingen feilmelding skal vises for EØS pensjonist-sak ${getSakId(valgtSak)}`).toBe(false);
+    expect(
+      harFeilmelding,
+      `Ingen feilmelding skal vises for EØS pensjonist-sak ${getSaksnummerFraLocator(valgtSak)}`,
+    ).toBe(false);
 
     await runAxeAnalyze(page, testInfo.title);
   });

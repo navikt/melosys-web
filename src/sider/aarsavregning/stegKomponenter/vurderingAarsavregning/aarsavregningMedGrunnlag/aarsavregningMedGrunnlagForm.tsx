@@ -202,7 +202,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
 
   // Lager en ny debounce funksjon når beregning callback endres
   useEffect(() => {
-    debouncedBeregningRef.current = Utils._debounce(debouncedBeregning, 350);
+    debouncedBeregningRef.current = Utils._debounce(debouncedBeregning, 600);
 
     // Cancel på unmount
     return () => {
@@ -225,9 +225,9 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
 
         if (!Utils._isEqual(currentFormState, previousFormValues)) {
           /* eslint-disable-next-line no-console */
-          console.log("[useEffect] currentFormState", currentFormState);
+          // console.log("[useEffect] currentFormState", currentFormState);
           /* eslint-disable-next-line no-console */
-          console.log("[useEffect] previousFormValues", previousFormValues);
+          // console.log("[useEffect] previousFormValues", previousFormValues);
           setDebouncedBeregningPagaar(true);
           debouncedBeregningRef.current();
         } else {
@@ -348,7 +348,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
 
           <Skatteforholdsperioder
             formValues={formValues}
-            redigerbart={redigerbart}
+            redigerbart={redigerbart && !beregningPaagar}
             remove={skattRemove}
             append={skattAppend}
             control={control}
@@ -360,7 +360,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
             <Inntektskilder
               defaultPeriode={medlemskapsperiode}
               formValues={formValues}
-              redigerbart={redigerbart}
+              redigerbart={redigerbart && !beregningPaagar}
               update={inntektUpdate}
               remove={inntektRemove}
               append={inntektAppend}

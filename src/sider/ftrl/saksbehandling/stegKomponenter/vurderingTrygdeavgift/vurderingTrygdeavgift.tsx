@@ -38,7 +38,6 @@ import { erBrukerSkattepliktigIHelePerioden } from "../../../../aarsavregning/st
 import { useFeatureToggle } from "../../../../../featuretoggle";
 import { MELOSYS_FAKTURERINGSKOMPONENTEN_IKKE_TIDLIGERE_PERIODER } from "../../../../../featuretoggle/toggleNavn";
 import { Alert } from "../../../../../navFrontend";
-import { Medlemskapsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 
 interface Props {
   bekreft: () => void;
@@ -125,11 +124,20 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     medlemskapsperioder,
     innvilgetMedlemskapsperiode,
   );
+
+  const trygdeavgiftErIkkeTom = !Utils._isEmpty(lagretTrygdeavgift?.trygdeavgiftsperioder);
+
   const skalIkkeBeregneForelopigTrygdeavgift =
     skalIkkeViseTidligerePerioderToggle &&
     medlemskapsperioder.length > 0 &&
     medlemskapsperioder.every((periode) => new Date(periode.tomDato).getFullYear() < new Date().getFullYear()) &&
     behandlingstype === NY_VURDERING;
+
+  const skalViseSkatteforholdOgInntektsperioder =
+    !skalIkkeViseTidligerePerioderToggle ||
+    (trygdeavgiftErIkkeTom && !redigerbart) ||
+    !skalIkkeBeregneForelopigTrygdeavgift;
+
   const stegErGyldig =
     (formIsValid || skalIkkeBeregneForelopigTrygdeavgift) && !feilMeldingBlokkerer(aktivFeilmeldingType) && !feil;
   const skalBeregneForelopigTrygdeavgift =
@@ -138,8 +146,6 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     formValues?.inntektskilder.some(
       (inntektskilde: Inntektskilde) => inntektskilde.bruttoInntekt && inntektskilde.bruttoInntekt !== 0,
     );
-
-  const trygdeavgiftErIkkeTom = !Utils._isEmpty(lagretTrygdeavgift?.trygdeavgiftsperioder);
 
   const harBeregnetForeløpigTrygdeavgift =
     !skalBeregneForelopigTrygdeavgift || trygdeavgiftErIkkeTom || skalIkkeBeregneForelopigTrygdeavgift;
@@ -315,7 +321,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
         Trygdeavgift
       </Nav.Heading>
 
-      {behandlingstype === NY_VURDERING && !skalIkkeViseTidligerePerioderToggle && (
+      {behandlingstype === NY_VURDERING && !skalIkkeViseTidligerePerioderToggle && redigerbart && (
         <Nav.BodyLong size="small" className="alert--spacing-bottom">
           Ved ny vurdering vises tidligere perioder med skatteforhold og inntekt. Gjør nødvendige endringer eller legg
           til en ny periode.
@@ -323,7 +329,8 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
       )}
 
       {(behandlingstype === NY_VURDERING || behandlingstype === MANGLENDE_INNBETALING_TRYGDEAVGIFT) &&
-        skalIkkeViseTidligerePerioderToggle && (
+        skalIkkeViseTidligerePerioderToggle &&
+        redigerbart && (
           <Alert variant="warning" size="small" className="alert--spacing-bottom">
             Ved ny vurdering vises skatteforhold og inntekt fra inneværende år og fremover. Gjør nødvendige endringer
             eller legg til en ny periode. Trygdeavgift for tidligere år skal fastsettes på årsavregning. Du skal derfor
@@ -331,7 +338,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
           </Alert>
         )}
 
-      {!erÅpenSluttDato && !skalIkkeBeregneForelopigTrygdeavgift && (
+      {!erÅpenSluttDato && skalViseSkatteforholdOgInntektsperioder && (
         <>
           <Nav.Heading size="xsmall">Oppgi informasjon om brukers skatteforhold</Nav.Heading>
           <Skatteforholdsperioder
@@ -346,7 +353,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
         </>
       )}
 
-      {skalViseInntektskilder && (
+      {skalViseInntektskilder && skalViseSkatteforholdOgInntektsperioder && (
         <>
           <LabelMedHjelpetekst
             label="Oppgi informasjon om brukers inntekt"

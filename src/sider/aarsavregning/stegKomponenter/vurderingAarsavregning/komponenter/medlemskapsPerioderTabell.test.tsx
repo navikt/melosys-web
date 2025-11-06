@@ -1,3 +1,4 @@
+import { Avgiftspliktigperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import MedlemskapsPerioderTabell from "./medlemskapsPerioderTabell";
 import { render, screen } from "@testing-library/react";
 
@@ -19,7 +20,7 @@ describe("MedlemskapsPerioderTabell", () => {
         innvilgelsesResultat: "PLIKTIG",
         medlemskapstype: "type",
       },
-    ];
+    ] as Avgiftspliktigperiode[];
     render(<MedlemskapsPerioderTabell perioder={perioder} />);
     expect(screen.getByText(/Medlemskap/i)).toBeInTheDocument();
     expect(screen.getByText(/Dekning/i)).toBeInTheDocument();
@@ -45,7 +46,7 @@ describe("MedlemskapsPerioderTabell", () => {
         innvilgelsesResultat: "PLIKTIG",
         medlemskapstype: "type",
       },
-    ];
+    ] as Avgiftspliktigperiode[];
     render(<MedlemskapsPerioderTabell perioder={perioder} />);
     const rows = screen.getAllByRole("row");
     expect(rows.length - 1).toBe(perioder.length); // -1 for header
@@ -62,7 +63,7 @@ describe("MedlemskapsPerioderTabell", () => {
         innvilgelsesResultat: "PLIKTIG",
         medlemskapstype: "type",
       },
-    ];
+    ] as Avgiftspliktigperiode[];
     render(<MedlemskapsPerioderTabell perioder={perioder} />);
     expect(screen.getByText("01.01.2022 - 31.12.2022")).toBeInTheDocument();
   });
@@ -78,7 +79,7 @@ describe("MedlemskapsPerioderTabell", () => {
         innvilgelsesResultat: "PLIKTIG",
         medlemskapstype: "type",
       },
-    ];
+    ] as Avgiftspliktigperiode[];
     render(<MedlemskapsPerioderTabell perioder={perioder} />);
     expect(screen.getByText("Helse- og pensjonsdel med syke- og foreldrepenger (§ 2-9)")).toBeInTheDocument();
   });

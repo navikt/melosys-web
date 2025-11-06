@@ -20,14 +20,12 @@ export default defineConfig({
   fullyParallel: false,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
-  /* Retry on CI only */
-  retries: process.env.CI ? 2 : 1,
-  /* Opt out of parallel tests on CI. */
-  workers: 2, // Økt til 2 workers for bedre ytelse
+  retries: 0,
+  workers: 1, // Kjører alle tester i serie
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
-    baseURL: "http://localhost:3000",
+    baseURL: "http://localhost:3333",
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: "on-first-retry",
@@ -39,85 +37,52 @@ export default defineConfig({
   /* Configure projects for major browsers */
   projects: [
     {
-      name: "1-basic-tests",
+      name: "1-ny-sak",
       use: {
         ...devices["Desktop Chrome"],
-        launchOptions: {
-          args: [],
-        },
         navigationTimeout: 8000,
         actionTimeout: 4000,
       },
-      testMatch: "tests/e2e/specs/basic/**/*.spec.ts",
+      testMatch: ["tests/e2e/specs/opprett-ny-sak/ny-sak/**/*.spec.ts"],
     },
     {
-      name: "2-opprett-ny-sak",
+      name: "2-andre-opprett-sak-tester",
       use: {
         ...devices["Desktop Chrome"],
-        launchOptions: {
-          args: [],
-        },
         navigationTimeout: 8000,
         actionTimeout: 4000,
       },
-      testMatch: "tests/e2e/specs/opprett-ny-sak/ny-sak/**/*.spec.ts",
+      testMatch: ["tests/e2e/specs/opprett-ny-sak/**/*.spec.ts"],
+      testIgnore: [
+        "tests/e2e/specs/opprett-ny-sak/ny-sak/**/*.spec.ts",
+        "tests/e2e/specs/opprett-ny-sak/knytt-til-eksisterende/**/*.spec.ts",
+      ],
     },
     {
       name: "3-knytt-til-eksisterende",
       use: {
         ...devices["Desktop Chrome"],
-        launchOptions: {
-          args: [],
-        },
         navigationTimeout: 8000,
         actionTimeout: 4000,
       },
-      testMatch: "tests/e2e/specs/opprett-ny-sak/knytt-til-eksisterende/**/*.spec.ts",
+      testMatch: ["tests/e2e/specs/opprett-ny-sak/knytt-til-eksisterende/**/*.spec.ts"],
     },
     {
       name: "4-behandle-sak",
       use: {
         ...devices["Desktop Chrome"],
-        launchOptions: {
-          args: [],
-        },
         navigationTimeout: 8000,
         actionTimeout: 4000,
       },
-      testMatch: "tests/e2e/specs/behandle-sak/**/*.spec.ts",
-    },
-    {
-      name: "5-avslutt-behandling",
-      use: {
-        ...devices["Desktop Chrome"],
-        launchOptions: {
-          args: [],
-        },
-        navigationTimeout: 8000,
-        actionTimeout: 4000,
-      },
-      testMatch: "tests/e2e/specs/avslutt-behandling/**/*.spec.ts",
-    },
-    {
-      name: "6-basic-tests-regression",
-      use: {
-        ...devices["Desktop Chrome"],
-        launchOptions: {
-          args: [],
-        },
-        navigationTimeout: 8000,
-        actionTimeout: 4000,
-      },
-      testMatch: "tests/e2e/specs/basic/hovedside-søk.spec.ts",
+      testMatch: ["tests/e2e/specs/behandle-sak/**/*.spec.ts", "tests/e2e/specs/avslutt-behandling/**/*.spec.ts"],
     },
   ],
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: "npm run start",
-    url: "http://localhost:3000",
-    // Alltid start ny server for å unngå state-problemer nå PW tester kjøres på flere brancher
-    reuseExistingServer: false,
+    command: "node generate-local-config.mjs .local.env && npx vite --port 3333",
+    url: "http://localhost:3333",
+    reuseExistingServer: false, // Alltid start en ny server for e2e-tester
     timeout: 120 * 1000, // 2 minutes to allow for slow startup
   },
 });
