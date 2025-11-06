@@ -20,10 +20,6 @@ class VesentligVirksomhet extends Steg {
 
     const harAvklaring = this.harAvklaring(vurderingLovvalgBarnFakta, propsLight.medfolgendeBarn);
 
-    const arbeidTjenestepersonEllerFlyNesteSteg = propsLight.eøsFaktureringAvTrygdeavgiftToggleEnabled
-      ? STEG.VURDERING_PERIODE_OFFENTLIG_ANSATT
-      : STEG.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK;
-
     this.kriterier = [
       {
         exec: () => harAvklaring && utsendingsvilkårOppfylt,
@@ -35,7 +31,7 @@ class VesentligVirksomhet extends Steg {
       },
       {
         exec: () => harAvklaring && propsLight.erArbeidTjenestepersonEllerFly,
-        nesteSteg: arbeidTjenestepersonEllerFlyNesteSteg,
+        nesteSteg: STEG.VURDERING_PERIODE_OFFENTLIG_ANSATT,
       },
     ];
 
