@@ -23,7 +23,7 @@ class VurderingPeriodeOffentligAnsattSteg extends Steg {
       },
     ];
 
-    this.id = STEG.VURDERING_PERIODE_OFFENTLIG_ANSATT;
+    this.id = STEG.VURDERING_PERIODE;
     this.tittel = "Periode";
     this.komponent = VurderingPeriodeOffentligAnsattKomponent;
     this.samleRelevanteData = (_propsLight) => ({
