@@ -84,8 +84,12 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   );
 
   const formattedDefaultPeriode = () => {
+    const justertFom = skalIkkeViseTidligerePerioderToggle
+      ? Utils.dato.justerDatoHvisTidligereÅr(helseutgiftDekkesPeriode?.fom)
+      : helseutgiftDekkesPeriode?.fom;
+
     return {
-      fomDato: Utils.dato.formatterDatoTilNorsk(helseutgiftDekkesPeriode?.fom),
+      fomDato: Utils.dato.formatterDatoTilNorsk(justertFom),
       tomDato: Utils.dato.formatterDatoTilNorsk(helseutgiftDekkesPeriode?.tom),
     };
   };

@@ -81,8 +81,12 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   );
 
   const formattedDefaultPeriode = () => {
+    const justertFom = skalIkkeViseTidligerePerioderToggle
+      ? Utils.dato.justerDatoHvisTidligereÅr(innvilgetMedlemskapsperiode?.fom)
+      : innvilgetMedlemskapsperiode?.fom;
+
     return {
-      fomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.fom),
+      fomDato: Utils.dato.formatterDatoTilNorsk(justertFom),
       tomDato: Utils.dato.formatterDatoTilNorsk(innvilgetMedlemskapsperiode?.tom),
     };
   };

@@ -270,6 +270,12 @@ function sorterEtterISOFomDato(periode1, periode2) {
   return (new Date(periode1.fomDato)?.getTime() ?? 0) - (new Date(periode2.fomDato)?.getTime() ?? 0);
 }
 
+function justerDatoHvisTidligereÅr(dato) {
+  if (!dato) return dato;
+
+  return moment(dato).year() < moment().year() ? `${moment().year()}-01-01` : dato;
+}
+
 export {
   beregnAlder,
   dateTilIsoString,
@@ -299,4 +305,5 @@ export {
   vaskOgFormatterDatoTilNorsk,
   vaskOgFormatterTilISO,
   vaskOgFormaterDatoerTilIso,
+  justerDatoHvisTidligereÅr,
 };
