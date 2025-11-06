@@ -73,7 +73,7 @@ describe("MedfolgendeBarn", () => {
         medfolgendeBarn,
       });
 
-      expect(steg.nesteSteg()).toBe(STEG.VURDERING_PERIODE_OFFENTLIG_ANSATT);
+      expect(steg.nesteSteg()).toBe(STEG.VURDERING_PERIODE);
     });
 
     it("skal ikke gå videre når harAvklaring er false", () => {
