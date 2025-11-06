@@ -75,5 +75,5 @@ export const stegMap = new Map([
   [STEG.VURDER_ARBEIDSLAND, VurderArbeidsland],
   [STEG.TRYGDEAVGIFT, Trygdeavgift],
   [STEG.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK, ArbeidTjenestepersonEllerFlyVedtak],
-  [STEG.VURDERING_PERIODE_OFFENTLIG_ANSATT, VurderingPeriode],
+  [STEG.VURDERING_PERIODE, VurderingPeriode],
 ]);

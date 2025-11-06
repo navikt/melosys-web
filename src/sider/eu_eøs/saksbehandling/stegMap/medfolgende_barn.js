@@ -31,7 +31,7 @@ class VesentligVirksomhet extends Steg {
       },
       {
         exec: () => harAvklaring && propsLight.erArbeidTjenestepersonEllerFly,
-        nesteSteg: STEG.VURDER_PERIODE,
+        nesteSteg: STEG.VURDERING_PERIODE,
       },
     ];
 
