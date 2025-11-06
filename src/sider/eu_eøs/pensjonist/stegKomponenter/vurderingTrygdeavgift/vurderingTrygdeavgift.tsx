@@ -129,7 +129,14 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const skalIkkeBeregneForelopigTrygdeavgift =
     skalIkkeViseTidligerePerioderToggle &&
     new Date(helseutgiftDekkesPeriode.tom).getFullYear() < new Date().getFullYear() &&
-    behandlingstype === NY_VURDERING;
+    (behandlingstype === NY_VURDERING || behandlingstype === MANGLENDE_INNBETALING_TRYGDEAVGIFT);
+
+  const trygdeavgiftErIkkeTom = !Utils._isEmpty(lagretTrygdeavgift?.trygdeavgiftsperioder);
+
+  const skalViseSkatteforholdOgInntektsperioder =
+    !skalIkkeViseTidligerePerioderToggle ||
+    (trygdeavgiftErIkkeTom && !redigerbart) ||
+    !skalIkkeBeregneForelopigTrygdeavgift;
 
   const stegErGyldig =
     (formIsValid || skalIkkeBeregneForelopigTrygdeavgift) && !feilMeldingBlokkerer(aktivFeilmeldingType) && !feil;
@@ -139,8 +146,6 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     formValues?.inntektskilder.some(
       (inntektskilde: Inntektskilde) => inntektskilde.bruttoInntekt && inntektskilde.bruttoInntekt !== 0,
     );
-
-  const trygdeavgiftErIkkeTom = !Utils._isEmpty(lagretTrygdeavgift?.trygdeavgiftsperioder);
 
   const harBeregnetForeløpigTrygdeavgift =
     !skalBeregneForelopigTrygdeavgift || trygdeavgiftErIkkeTom || !feil || skalIkkeBeregneForelopigTrygdeavgift;
@@ -347,7 +352,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
           </Alert>
         )}
 
-      {!skalIkkeBeregneForelopigTrygdeavgift && (
+      {skalViseSkatteforholdOgInntektsperioder && (
         <>
           <Nav.Heading size="xsmall">Oppgi informasjon om brukers skatteforhold</Nav.Heading>
           <Skatteforholdsperioder
@@ -362,7 +367,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
         </>
       )}
 
-      {skalViseInntektskilder && (
+      {skalViseInntektskilder && skalViseSkatteforholdOgInntektsperioder && (
         <>
           <LabelMedHjelpetekst
             label="Oppgi informasjon om brukers inntekt"
