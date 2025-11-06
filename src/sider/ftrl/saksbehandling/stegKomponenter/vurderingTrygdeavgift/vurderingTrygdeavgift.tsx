@@ -82,9 +82,8 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     (periode) => periode.avgiftPerMd === 0,
   );
 
-  const medlemskapsTypeErPliktig = medlemskapsperioder.every(
-    (periode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG,
-  );
+  const medlemskapsTypeErPliktig =
+    erEuEøs || medlemskapsperioder.every((periode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG);
 
   const formattedDefaultPeriode = () => {
     return {
