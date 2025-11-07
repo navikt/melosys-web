@@ -14,6 +14,7 @@ const mockPropsLight = {
   },
   avklartefakta: [] as Avklartfakta[],
   medfolgendeBarn: [],
+  eøsFaktureringAvTrygdeavgiftToggleEnabled: true,
 };
 
 // Helper for å lage avklart fakta for barn
@@ -60,7 +61,7 @@ describe("MedfolgendeBarn", () => {
       expect(steg.nesteSteg()).toBe(STEG.ARTIKKEL_16_ANMODNING);
     });
 
-    it("skal gå til VURDERING_PERIODE_OFFENTLIG_ANSATT når harAvklaring er true og erArbeidTjenestepersonEllerFly er true", () => {
+    it("skal gå til VURDERING_PERIODE når harAvklaring er true og erArbeidTjenestepersonEllerFly er true", () => {
       const avklartefakta = [lagAvklartFaktaForBarn(BOOLSK_STRING.SANN)];
       const medfolgendeBarn = [{ id: "1" }];
 
