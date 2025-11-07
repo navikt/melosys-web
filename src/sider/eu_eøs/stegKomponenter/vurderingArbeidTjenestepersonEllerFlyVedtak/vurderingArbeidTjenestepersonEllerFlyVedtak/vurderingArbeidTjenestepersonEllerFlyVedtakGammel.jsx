@@ -15,7 +15,7 @@ import * as Mui from "../../../../../felleskomponenter/ui";
 
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import { behandlingsresultatSelectors } from "../../../../../ducks/behandlingsresultat";
-import { lovvalgsperioderSelectors } from "../../../../../ducks/lovvalgsperioder";
+import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from "../../../../../ducks/lovvalgsperioder";
 import { mottatteOpplysningerSelectors } from "../../../../../ducks/mottatteOpplysninger";
 import { avklartefaktaSelectors } from "../../../../../ducks/avklartefakta";
 import { fagsakSelectors } from "../../../../../ducks/fagsaker";
@@ -28,8 +28,13 @@ import Mottakerinstitusjonvelger, {
 } from "../../../../../felleskomponenter/mottakerinstitusjonvelger";
 import {
   konverterAvklartfaktaTilStegData,
+  konverterLovvalgsbestemmelseTilStegData,
   lagAvklartfakta,
+  lagLovvalgsbestemmelse,
+  lagLovvalgsperiode,
+  lagTilleggBestemmelse,
   slettAvklartfakta,
+  slettTilleggBestemmelse,
 } from "../../../../../felleskomponenter/stegvelger";
 import { BOOLSK_STRING } from "../../../../../constants";
 
@@ -101,15 +106,21 @@ export function VurderingArbeidTjenestepersonEllerFlyVedtakGammel({
   form,
   handleSubmit,
   touchAll,
+  endreLovvalgsPeriode,
   lagreLovvalgsperioder,
+  byggLovvalgsperioder: gjenopprettOpprinneligLovvalgsperiode,
   behandlingstype,
   behandlingstema,
   sakstype,
   lovvalgsbestemmelseSomSkalVises = "",
+  lovvalgsbestemmelseSomSkalLagres = "",
   oppdaterData,
   slettData,
   tilbake,
+  mottatteOpplysningerFom,
+  mottatteOpplysningerTom = null,
   mottatteOpplysningerStatus,
+  soknadsperiode,
   informertMyndighetFakta = {},
   kontrollerFerdigbehandling,
   harFeilmeldinger,
@@ -125,8 +136,18 @@ export function VurderingArbeidTjenestepersonEllerFlyVedtakGammel({
   const harFlereSoknadslandEnnTillatt = arbeidsland.length > 1 && !MKVUtils.kanHaFlereSoknadsland(behandlingstema);
 
   useEffect(() => {
-    // Lovvalgsbestemmelse og periode håndteres nå i periode-steget
-    // Dette steget mottar kun verdiene via delt form state
+    if (lovvalgsbestemmelseSomSkalLagres) {
+      oppdaterData(konverterLovvalgsbestemmelseTilStegData(lovvalgsbestemmelseSomSkalLagres));
+    }
+
+    if (redigerbart) {
+      oppdaterData(
+        lagLovvalgsperiode({
+          fomDato: mottatteOpplysningerFom,
+          tomDato: mottatteOpplysningerTom,
+        }),
+      );
+    }
 
     return () => {
       slettData();
@@ -141,7 +162,13 @@ export function VurderingArbeidTjenestepersonEllerFlyVedtakGammel({
       return false;
     }
 
-    // Periode håndteres allerede i periode-steget
+    if (formValues.forkortLovvalgsperiode) {
+      await endreLovvalgsPeriode(
+        Utils.dato.formatterDatoTilISO(formValues.fomDato),
+        Utils.dato.formatterDatoTilISO(formValues.tomDato),
+      );
+    }
+
     lagreLovvalgsperioder();
     return formIsValid;
   };
@@ -181,7 +208,31 @@ export function VurderingArbeidTjenestepersonEllerFlyVedtakGammel({
   const lovvalgsbestemmelseTerm = KV.kodeTilTerm(lovvalgsbestemmelseSomSkalVises, MKV.Kodekombinasjoner.alleLovvalg);
   const overskrift = `Omfattet av norsk lovgivning etter ${lovvalgsbestemmelseTerm || "..."}`;
 
-  // Lovvalgsbestemmelse og periode håndteres nå i eget periode-steg
+  const valgbareLovvalgsbestemmelser = [
+    ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.filter(
+      ({ kode }) => kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3B,
+    ),
+    ...MKV.KTObjects.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.filter(
+      ({ kode }) => kode === MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART11_5,
+    ),
+  ];
+
+  useEffect(() => {
+    if (
+      formValues.lovvalgsbestemmelse ===
+      MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART11_5
+    ) {
+      oppdaterData(
+        lagLovvalgsbestemmelse(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3A),
+      );
+      oppdaterData(
+        lagTilleggBestemmelse(MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART11_5),
+      );
+    } else if (formValues.lovvalgsbestemmelse) {
+      oppdaterData(lagLovvalgsbestemmelse(formValues.lovvalgsbestemmelse));
+      slettData(slettTilleggBestemmelse());
+    }
+  }, [formValues.lovvalgsbestemmelse]);
 
   const visSendSEDValg = art11_5_ErValgt(formValues);
   const visMottakerinstitusjonvelgerFlervalg = art11_3B_ErValgt(formValues);
@@ -231,10 +282,15 @@ export function VurderingArbeidTjenestepersonEllerFlyVedtakGammel({
     debouncedKontrollerBehandling({ aktivtSteg, mottatteOpplysningerStatus, formValues });
   }, [aktivtSteg, formIsValid, formValues?.kopiTilArbeidsgiver, mottatteOpplysningerStatus]);
 
-  const onSubmit = async (_values, _dispatch, _props) => {
+  const onSubmit = async (values, dispatch, props) => {
     setVedtakPending(true);
 
-    // Periode håndteres allerede i periode-steget
+    if (values.forkortLovvalgsperiode) {
+      await props.endreLovvalgsPeriode(
+        Utils.dato.formatterDatoTilISO(values.fomDato),
+        Utils.dato.formatterDatoTilISO(values.tomDato),
+      );
+    }
 
     validerMottatteOpplysninger()
       .then(() => {
@@ -247,6 +303,13 @@ export function VurderingArbeidTjenestepersonEllerFlyVedtakGammel({
       .catch(() => setVedtakPending(false));
   };
 
+  const fom = Utils.dato.formatterDatoTilNorsk(
+    (formValues.forkortLovvalgsperiode && formValues.fomDato) || soknadsperiode.fom,
+  );
+  const tom = Utils.dato.formatterDatoTilNorsk(
+    (formValues.forkortLovvalgsperiode && formValues.tomDato) || soknadsperiode.tom,
+  );
+
   const stegErGyldig = redigerbart && formIsValid && !harFeilmeldinger && !harFlereSoknadslandEnnTillatt;
 
   return (
@@ -254,7 +317,45 @@ export function VurderingArbeidTjenestepersonEllerFlyVedtakGammel({
       <Nav.Heading level="1" className="stegvelgertittel">
         {overskrift}
       </Nav.Heading>
-      {/* Lovvalgsbestemmelse og periode håndteres nå i eget periode-steg */}
+      <Nav.Row className="velgLovvalgsbestemmelse">
+        <Nav.Column xs="7">
+          <Skjema.Select label="Velg en lovvalgsbestemmelse" feltNavn="lovvalgsbestemmelse" disabled={!redigerbart}>
+            {valgbareLovvalgsbestemmelser.map((bestemmelse) => (
+              <option key={bestemmelse.kode} value={bestemmelse.kode}>
+                {bestemmelse.term}
+              </option>
+            ))}
+          </Skjema.Select>
+        </Nav.Column>
+      </Nav.Row>
+      {redigerbart && (
+        <>
+          <Nav.BodyLong weight="semibold" size="small" className="undertittel">
+            Lovvalgsperiode
+          </Nav.BodyLong>
+          <Nav.Row className="lovvalgsperiode">
+            <Nav.Column xs="6">
+              {fom} - {tom}
+            </Nav.Column>
+          </Nav.Row>
+        </>
+      )}
+      <Skjema.PeriodeForkorter
+        className="periodeForkorter"
+        redigerbart={redigerbart}
+        fomRedigerbar
+        checkboxClassName="forkortLovvalgsperiode"
+        checkboxLabel="Lovvalget innvilges for en kortere periode"
+        checkboxFeltnavn="forkortLovvalgsperiode"
+        onUncheck={gjenopprettOpprinneligLovvalgsperiode}
+        forkortPeriode={formValues.forkortLovvalgsperiode}
+        fomLabel="Startdato"
+        fomFeltNavn="fomDato"
+        tomLabel="Sluttdato"
+        tomFeltNavn="tomDato"
+        minDate={Utils.dato.isoStringTilDate(soknadsperiode.fom)}
+        maxDate={Utils.dato.isoStringTilDate(soknadsperiode.tom)}
+      />
       {erNyVurdering && <Skjema.Vedtakstype redigerbart={redigerbart} />}
       <Nav.Row className="fritekst">
         <Nav.Column xs="8">
@@ -364,6 +465,8 @@ VurderingArbeidTjenestepersonEllerFlyVedtakGammel.propTypes = {
   formIsValid: PT.bool.isRequired,
   formValues: PT.object,
   touchAll: PT.func.isRequired,
+  endreLovvalgsPeriode: PT.func.isRequired,
+  byggLovvalgsperioder: PT.func.isRequired,
   lagreLovvalgsperioder: PT.func.isRequired,
   behandlingstype: PT.string.isRequired,
   behandlingstema: PT.string.isRequired,
@@ -371,9 +474,16 @@ VurderingArbeidTjenestepersonEllerFlyVedtakGammel.propTypes = {
   form: PT.string.isRequired,
   handleSubmit: PT.func.isRequired,
   lovvalgsbestemmelseSomSkalVises: PT.string,
+  lovvalgsbestemmelseSomSkalLagres: PT.string,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
   tilbake: PT.func.isRequired,
+  mottatteOpplysningerFom: PT.string.isRequired,
+  mottatteOpplysningerTom: PT.string,
+  soknadsperiode: PT.shape({
+    fom: PT.string.isRequired,
+    tom: PT.string.isRequired,
+  }).isRequired,
   informertMyndighetFakta: MPT.Avklartefakta,
   kontrollerFerdigbehandling: PT.func.isRequired,
   harFeilmeldinger: PT.bool.isRequired,
@@ -426,11 +536,13 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
+  endreLovvalgsPeriode: (fomdato, tomdato) =>
+    dispatch(lovvalgsperioderOperations.endreLovvalgsPeriode(fomdato, tomdato)),
   touchAll: () => dispatch(formOperations.touchAll(KV.Form.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK)),
   fattVedtak: (behandlingID, body) => dispatch(vedtakOperations.fatt(behandlingID, body)),
 });
 
-const VurderingArbeidTjenestepersonEllerFlyVedtakGammelForm = reduxForm({
+const VurderingArbeidTjenestepersonEllerFlyVedtakForm = reduxForm({
   form: KV.Form.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK,
   enableReinitialize: true,
   destroyOnUnmount: true,
@@ -445,4 +557,4 @@ const VurderingArbeidTjenestepersonEllerFlyVedtakGammelForm = reduxForm({
     })(values),
 })(VurderingArbeidTjenestepersonEllerFlyVedtakGammel);
 
-export default connect(mapStateToProps, mapDispatchToProps)(VurderingArbeidTjenestepersonEllerFlyVedtakGammelForm);
+export default connect(mapStateToProps, mapDispatchToProps)(VurderingArbeidTjenestepersonEllerFlyVedtakForm);
