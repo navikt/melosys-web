@@ -39,7 +39,7 @@ import {
 import { BOOLSK_STRING } from "../../../../../constants";
 
 import { lagYupToReduxformErrorMapper } from "../../../../../yup";
-import VurderingArbeidTjenestepersonEllerFlyVedtakSchema from "../vurderingArbeidTjenestepersonEllerFlyVedtakSchema";
+import VurderingArbeidTjenestepersonEllerFlyVedtakSchema from "./vurderingArbeidTjenestepersonEllerFlyVedtakSchemaGammel";
 import "../vurderingArbeidTjenestepersonEllerFlyVedtak.less";
 
 function InformertMyndighetVelger({ redigerbart, oppdaterData, slettData, informertMyndighetFakta }) {

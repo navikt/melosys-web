@@ -35,7 +35,7 @@ class ArbeidTjenestepersonEllerFlyVedtak extends Steg {
     this.samleRelevanteData = (_propsLight) => ({
       redigerbart: _propsLight.generiskStegRedigerbart,
       lovvalgsbestemmelseSomSkalVises,
-      ...(toggleEnabled && { lovvalgsbestemmelseSomSkalLagres }),
+      ...(!toggleEnabled && { lovvalgsbestemmelseSomSkalLagres }),
       informertMyndighetFakta,
       harFeilmeldinger: _propsLight.harFeilmeldinger,
     });
@@ -43,7 +43,7 @@ class ArbeidTjenestepersonEllerFlyVedtak extends Steg {
     this.handlers = {
       tilbake: propsLight.tilgjengeligeHandlers.tilbake,
       lagreLovvalgsperioder: this._propsLight.tilgjengeligeHandlers.lagreLovvalgsperioder,
-      ...(toggleEnabled && { byggLovvalgsperioder: this._propsLight.tilgjengeligeHandlers.byggLovvalgsperioder }),
+      ...(!toggleEnabled && { byggLovvalgsperioder: this._propsLight.tilgjengeligeHandlers.byggLovvalgsperioder }),
       oppdaterData: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, verdi),
       slettData: (data) => this._propsLight.tilgjengeligeHandlers.slettStegData(this.id, data),
       kontrollerFerdigbehandling: this._propsLight.tilgjengeligeHandlers.kontrollerFerdigbehandling,
