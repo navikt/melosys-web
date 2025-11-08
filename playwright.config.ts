@@ -17,11 +17,11 @@ export default defineConfig({
     timeout: 8000,
   },
   /* Run tests in files in parallel */
-  fullyParallel: false,
+  fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
   retries: 0,
-  workers: 1, // Kjører alle tester i serie
+  workers: 4, // Kjører 4 tester parallelt (hver test har sin egen dedikerte sak)
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
@@ -37,44 +37,12 @@ export default defineConfig({
   /* Configure projects for major browsers */
   projects: [
     {
-      name: "1-ny-sak",
+      name: "chromium",
       use: {
         ...devices["Desktop Chrome"],
         navigationTimeout: 8000,
         actionTimeout: 4000,
       },
-      testMatch: ["tests/e2e/specs/opprett-ny-sak/ny-sak/**/*.spec.ts"],
-    },
-    {
-      name: "2-andre-opprett-sak-tester",
-      use: {
-        ...devices["Desktop Chrome"],
-        navigationTimeout: 8000,
-        actionTimeout: 4000,
-      },
-      testMatch: ["tests/e2e/specs/opprett-ny-sak/**/*.spec.ts"],
-      testIgnore: [
-        "tests/e2e/specs/opprett-ny-sak/ny-sak/**/*.spec.ts",
-        "tests/e2e/specs/opprett-ny-sak/knytt-til-eksisterende/**/*.spec.ts",
-      ],
-    },
-    {
-      name: "3-knytt-til-eksisterende",
-      use: {
-        ...devices["Desktop Chrome"],
-        navigationTimeout: 8000,
-        actionTimeout: 4000,
-      },
-      testMatch: ["tests/e2e/specs/opprett-ny-sak/knytt-til-eksisterende/**/*.spec.ts"],
-    },
-    {
-      name: "4-behandle-sak",
-      use: {
-        ...devices["Desktop Chrome"],
-        navigationTimeout: 8000,
-        actionTimeout: 4000,
-      },
-      testMatch: ["tests/e2e/specs/behandle-sak/**/*.spec.ts", "tests/e2e/specs/avslutt-behandling/**/*.spec.ts"],
     },
   ],
 

@@ -29,6 +29,14 @@ export class HovedsidePage {
   }
 
   /**
+   * Verifiser at "Opprett ny sak/behandling" button er synlig
+   */
+  async verifiserOpprettNySakKnapp(): Promise<void> {
+    const createButton = this.page.locator("button:has-text('Opprett ny sak/behandling')");
+    await expect(createButton, "Knapp 'Opprett ny sak/behandling' skal være synlig").toBeVisible();
+  }
+
+  /**
    * Klikk på "Opprett ny sak/behandling" button
    */
   async klikkOpprettNySakKnapp(): Promise<void> {
