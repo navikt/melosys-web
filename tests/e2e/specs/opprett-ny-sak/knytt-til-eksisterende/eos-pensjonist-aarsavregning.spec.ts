@@ -17,10 +17,10 @@ test.describe("EØS pensjonist med trygdeavgift - årsavregning", () => {
 
   test("Opprett EØS pensjonist-sak med trygdeavgift for testdata", async ({ page }, testInfo) => {
     // Denne testen oppretter testdata som brukes av de andre testene
-    const sak = await opprettEøsPensjonistSakMedTrygdeavgift(page);
+    const url = await opprettEøsPensjonistSakMedTrygdeavgift();
 
-    expect(getSaksnummerFraLocator(sak), "Sak skal være opprettet").toBeTruthy();
-    expect(getSaksnummerFraLocator(sak)).toMatch(/^MEL-\d+$/);
+    expect(url, "URL skal være opprettet").toBeTruthy();
+    expect(url).toContain("/melosys/EU_EOS/");
 
     await runAxeAnalyze(page, testInfo.title);
   });

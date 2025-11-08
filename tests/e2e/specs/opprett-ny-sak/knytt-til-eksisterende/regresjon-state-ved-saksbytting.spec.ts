@@ -2,8 +2,9 @@ import { expect, test } from "@playwright/test";
 import { runAxeAnalyze } from "../../../utils/axeUtils";
 import { HovedsidePage, USER_ID_VALID } from "../../../pages/hovedside.page";
 import { OpprettNySakPage } from "../../../pages/opprett-ny-sak/opprett-ny-sak.page";
-import { getSaksnummerFraLocator, TIMEOUT_FOR_COMPLEX_TESTS } from "../../../utils/testUtils";
-import { opprettUtenforAvtalelandSak, opprettEUEOSSak, avsluttBehandling } from "../../../utils/testdataUtils";
+import { getSaksnummerFraLocator, getSaksnummerFraUrl, TIMEOUT_FOR_COMPLEX_TESTS } from "../../../utils/testUtils";
+import { opprettUtenforAvtalelandSak, opprettEUEOSSak } from "../../../utils/testdataUtils";
+import { BehandlingPage } from "../../../pages/behandling/behandling.page";
 
 /**
  * MELOSYS-7624: Test state-håndtering ved saksbytting
@@ -30,21 +31,21 @@ test.describe("State-håndtering ved saksbytting", () => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout for å opprette og avslutte flere saker
     const context = await browser.newContext();
     const page = await context.newPage();
+    const behandlingPage = new BehandlingPage(page);
 
     // Opprett sak med avsluttet behandling (Utenfor avtaleland)
-    const sakMedAvsluttetBehandling = await opprettUtenforAvtalelandSak(page);
-    await avsluttBehandling(page, sakMedAvsluttetBehandling, "Søknaden er innvilget");
+    const url1 = await opprettUtenforAvtalelandSak();
+    await behandlingPage.goto(url1);
+    const sakId1 = getSaksnummerFraUrl(page);
+    await behandlingPage.avsluttBehandling("Søknaden er innvilget", sakId1);
 
     // Opprett flere saker med avsluttede behandlinger for SYMPTOM-testen
-    const sakMedAvsluttetBehandling2 = await opprettUtenforAvtalelandSak(page);
-    await avsluttBehandling(page, sakMedAvsluttetBehandling2, "Søknaden er innvilget");
+    const url2 = await opprettUtenforAvtalelandSak();
+    await behandlingPage.goto(url2);
+    const sakId2 = getSaksnummerFraUrl(page);
+    await behandlingPage.avsluttBehandling("Søknaden er innvilget", sakId2);
 
-    // Opprett sak med aktiv behandling (Utenfor avtaleland)
-    await opprettUtenforAvtalelandSak(page);
-
-    // Opprett flere EØS-saker med aktiv behandling (disse viser feilmelding)
-    await opprettEUEOSSak(page, "Ikke yrkesaktiv");
-    await opprettEUEOSSak(page, "Pensjonist/uføretrygdet");
+    // Prepopulerte saker brukes for resten av testene (ingen ekstra oppretting nødvendig)
 
     await context.close();
   });

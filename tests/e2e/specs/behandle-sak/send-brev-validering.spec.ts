@@ -1,7 +1,6 @@
 import { test, Page } from "@playwright/test";
 import { SendBrevPage } from "../../pages/behandling/send-brev.page";
 import { assertErrors, TIMEOUT_FOR_COMPLEX_TESTS } from "../../utils/testUtils";
-import { SokPage } from "../../pages/sok.page";
 import { runAxeAnalyze } from "../../utils/axeUtils";
 import { opprettAvtalelandSak, opprettUtenforAvtalelandSakMedAarsavregning } from "../../utils/testdataUtils";
 
@@ -9,14 +8,11 @@ let sendBrevPage: SendBrevPage;
 
 // Gjenbrukbar setup-funksjon som oppretter egen testdata
 async function setupSendBrevTest(page: Page) {
-  const sokPage = new SokPage(page);
   sendBrevPage = new SendBrevPage(page);
 
-  // Opprett egen Avtaleland-sak for denne testen
-  const sak = await opprettAvtalelandSak(page);
-
-  await sokPage.klikkVisBehandling(sak);
-  await sendBrevPage.verifiserBehandlingsside();
+  // Hent URL til prepopulert Avtaleland-sak og naviger direkte dit
+  const url = await opprettAvtalelandSak();
+  await sendBrevPage.goto(url);
 
   await page.waitForLoadState("domcontentloaded");
   await sendBrevPage.clickSendBrevTab();
@@ -84,14 +80,11 @@ test.describe("Validering av årsavregning brevmaler", () => {
     page,
   }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout siden vi oppretter sak med årsavregning
-    const sokPage = new SokPage(page);
     sendBrevPage = new SendBrevPage(page);
 
-    // Opprett egen FTRL-sak med årsavregning for denne testen
-    const sak = await opprettUtenforAvtalelandSakMedAarsavregning(page);
-
-    await sokPage.klikkVisBehandling(sak);
-    await sendBrevPage.verifiserBehandlingsside();
+    // Hent URL til prepopulert FTRL-sak med årsavregning og naviger direkte dit
+    const url = await opprettUtenforAvtalelandSakMedAarsavregning();
+    await sendBrevPage.goto(url);
 
     await page.waitForLoadState("domcontentloaded");
     await sendBrevPage.clickSendBrevTab();

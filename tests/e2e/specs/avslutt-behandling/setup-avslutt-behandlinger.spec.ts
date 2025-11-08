@@ -1,6 +1,5 @@
 import { test } from "@playwright/test";
-import { SokPage } from "../../pages/sok.page";
-import { TIMEOUT_FOR_COMPLEX_TESTS } from "../../utils/testUtils";
+import { TIMEOUT_FOR_COMPLEX_TESTS, getSaksnummerFraUrl } from "../../utils/testUtils";
 import { BehandlingPage } from "../../pages/behandling/behandling.page";
 import { opprettAvtalelandSak, opprettUtenforAvtalelandSak } from "../../utils/testdataUtils";
 
@@ -11,27 +10,25 @@ import { opprettAvtalelandSak, opprettUtenforAvtalelandSak } from "../../utils/t
 test.describe("Setup testdata for knytt-til-eksisterende-sak tester", () => {
   test("Setup: Opprett og avslutt Avtaleland-sak for testdata", async ({ page }) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout siden vi oppretter og avslutter sak
-    const sokPage = new SokPage(page);
     const behandlingPage = new BehandlingPage(page);
 
-    // Opprett egen Avtaleland-sak
-    const sak = await opprettAvtalelandSak(page);
-    const sakId = await sokPage.getSaksnummer(sak);
+    // Hent URL til prepopulert Avtaleland-sak og naviger direkte dit
+    const url = await opprettAvtalelandSak();
+    await behandlingPage.goto(url);
 
-    await sokPage.klikkVisBehandling(sak);
+    const sakId = getSaksnummerFraUrl(page);
     await behandlingPage.avsluttBehandling("Søknaden er innvilget", sakId);
   });
 
   test("Setup: Opprett og avslutt FTRL-sak for testdata", async ({ page }) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout siden vi oppretter og avslutter sak
-    const sokPage = new SokPage(page);
     const behandlingPage = new BehandlingPage(page);
 
-    // Opprett egen FTRL-sak
-    const sak = await opprettUtenforAvtalelandSak(page);
-    const sakId = await sokPage.getSaksnummer(sak);
+    // Hent URL til prepopulert FTRL-sak og naviger direkte dit
+    const url = await opprettUtenforAvtalelandSak();
+    await behandlingPage.goto(url);
 
-    await sokPage.klikkVisBehandling(sak);
+    const sakId = getSaksnummerFraUrl(page);
     await behandlingPage.avsluttBehandling("Søknaden er innvilget", sakId);
   });
 });

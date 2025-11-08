@@ -1,76 +1,103 @@
-import { Page, expect, Locator } from "@playwright/test";
-import { HovedsidePage, USER_ID_VALID } from "../pages/hovedside.page";
-import { OpprettNySakPage } from "../pages/opprett-ny-sak/opprett-ny-sak.page";
+import { Page, Locator } from "@playwright/test";
 import { SokPage } from "../pages/sok.page";
 import { BehandlingPage } from "../pages/behandling/behandling.page";
-import { assertNyBehandlingOpprettet } from "./testUtils";
 
 /**
- * Opprett en ny Avtaleland-sak med Førstegangsbehandling
- * @returns Locator for den opprettede saken (med saksnummer tilgjengelig via getSaksnummer())
+ * Prepopulerte test-saker i melosys-api database
+ * Disse sakene opprettes automatisk ved oppstart av melosys-api (local-mock profil)
+ * og kan brukes direkte uten å måtte opprette via UI.
+ *
+ * Alle saker tilhører testbruker: 30056928150
  */
-export async function opprettAvtalelandSak(page: Page): Promise<Locator> {
-  const hovedsidePage = new HovedsidePage(page);
-  const opprettNySakPage = new OpprettNySakPage(page);
-  const sokPage = new SokPage(page);
+export const PREPOPULATED_SAKER = {
+  /** MEL-1001: Avtaleland - Yrkesaktiv - Førstegangsbehandling */
+  AVTALELAND_YRKESAKTIV: "MEL-1001",
 
-  await hovedsidePage.goto();
-  await hovedsidePage.klikkOpprettNySakKnapp();
+  /** MEL-1002: Utenfor avtaleland (FTRL) - Yrkesaktiv - Førstegangsbehandling */
+  FTRL_YRKESAKTIV: "MEL-1002",
 
-  await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
-  await opprettNySakPage.velgOpprettNySak();
+  /** MEL-1003: EU/EØS - Trygdeavgift - Pensjonist - Førstegangsbehandling */
+  EU_EOS_TRYGDEAVGIFT_PENSJONIST: "MEL-1003",
 
-  await opprettNySakPage.velgSakstype("Avtaleland");
-  await opprettNySakPage.velgSakstema("Medlemskap og lovvalg");
-  await opprettNySakPage.velgBehandlingstema("Yrkesaktiv");
-  await opprettNySakPage.velgBehandlingstype("Førstegangsbehandling");
-  await opprettNySakPage.velgBehandlingsaarsak("Søknad");
+  /** MEL-1004: EU/EØS - Medlemskap og lovvalg - Ikke yrkesaktiv - Førstegangsbehandling */
+  EU_EOS_IKKE_YRKESAKTIV: "MEL-1004",
 
-  await opprettNySakPage.klikkOpprettNyBehandling();
-  await assertNyBehandlingOpprettet(page);
+  /** MEL-1005: EU/EØS - Medlemskap og lovvalg - Pensjonist - Førstegangsbehandling */
+  EU_EOS_PENSJONIST: "MEL-1005",
 
-  // Finn den nyopprettede saken
-  await hovedsidePage.goto();
-  await hovedsidePage.søkOgVentPåResultat(USER_ID_VALID);
+  /** MEL-1006: Utenfor avtaleland (FTRL) - Yrkesaktiv - Årsavregning (2 behandlinger: avsluttet + åpen) */
+  FTRL_AARSAVREGNING: "MEL-1006",
+} as const;
 
-  const saker = await sokPage.finnÅpneSaker("Avtaleland");
-  expect(saker.length, "Fant ingen åpne 'Avtaleland' saker etter opprettelse").toBeGreaterThan(0);
+/**
+ * Metadata for prepopulerte saker - brukes til å konstruere URL-er
+ */
+const PREPOPULATED_SAK_METADATA: Record<
+  string,
+  {
+    sakstype: "TRYGDEAVTALE" | "FTRL" | "EU_EOS";
+    behandlingstema: string;
+    behandlingstype?: "ÅRSAVREGNING";
+    behandlingID: number;
+  }
+> = {
+  "MEL-1001": { sakstype: "TRYGDEAVTALE", behandlingstema: "YRKESAKTIV", behandlingID: 1 },
+  "MEL-1002": { sakstype: "FTRL", behandlingstema: "YRKESAKTIV", behandlingID: 2 },
+  "MEL-1003": { sakstype: "EU_EOS", behandlingstema: "PENSJONIST", behandlingID: 3 },
+  "MEL-1004": { sakstype: "EU_EOS", behandlingstema: "IKKE_YRKESAKTIV", behandlingID: 4 },
+  "MEL-1005": { sakstype: "EU_EOS", behandlingstema: "PENSJONIST", behandlingID: 5 },
+  "MEL-1006": { sakstype: "FTRL", behandlingstema: "YRKESAKTIV", behandlingstype: "ÅRSAVREGNING", behandlingID: 6 },
+};
 
-  return saker[0];
+/**
+ * Hjelpefunksjon for å få URL til en prepopulert sak
+ * @param saksnummer - Saksnummer (f.eks. "MEL-1001")
+ * @returns URL til behandlingssiden for saken
+ */
+export function hentPrepopulertSakUrl(saksnummer: string): string {
+  const metadata = PREPOPULATED_SAK_METADATA[saksnummer];
+  if (!metadata) {
+    throw new Error(
+      `Ukjent prepopulert saksnummer: ${saksnummer}. ` +
+        `Gyldige saksnummer: ${Object.keys(PREPOPULATED_SAK_METADATA).join(", ")}`,
+    );
+  }
+
+  // Konstruer URL basert på sakstype, behandlingstema og behandlingstype
+  // Matcher routing.jsx struktur (med /melosys base path)
+  let url: string;
+
+  if (metadata.behandlingstype === "ÅRSAVREGNING") {
+    // /melosys/:sakstype/aarsavregning/:saksnr?behandlingID=X
+    url = `/melosys/${metadata.sakstype}/aarsavregning/${saksnummer}`;
+  } else if (metadata.behandlingstema === "IKKE_YRKESAKTIV") {
+    // /melosys/:sakstype/ikkeYrkesaktiv/:saksnr?behandlingID=X
+    url = `/melosys/${metadata.sakstype}/ikkeYrkesaktiv/${saksnummer}`;
+  } else if (metadata.sakstype === "EU_EOS" && metadata.behandlingstema === "PENSJONIST") {
+    // /melosys/EU_EOS/pensjonist/:saksnr?behandlingID=X
+    url = `/melosys/EU_EOS/pensjonist/${saksnummer}`;
+  } else {
+    // /melosys/:sakstype/saksbehandling/:saksnr?behandlingID=X (default for TRYGDEAVTALE, FTRL, EU_EOS med andre tema)
+    url = `/melosys/${metadata.sakstype}/saksbehandling/${saksnummer}`;
+  }
+
+  return `${url}?behandlingID=${metadata.behandlingID}`;
 }
 
 /**
- * Opprett en ny FTRL-sak (Utenfor avtaleland) med Førstegangsbehandling
- * @returns Locator for den opprettede saken (med saksnummer tilgjengelig via getSaksnummer())
+ * Hent prepopulert Avtaleland-sak (MEL-1001)
+ * @returns URL til behandlingssiden
  */
-export async function opprettUtenforAvtalelandSak(page: Page): Promise<Locator> {
-  const hovedsidePage = new HovedsidePage(page);
-  const opprettNySakPage = new OpprettNySakPage(page);
-  const sokPage = new SokPage(page);
+export async function opprettAvtalelandSak(): Promise<string> {
+  return hentPrepopulertSakUrl(PREPOPULATED_SAKER.AVTALELAND_YRKESAKTIV);
+}
 
-  await hovedsidePage.goto();
-  await hovedsidePage.klikkOpprettNySakKnapp();
-
-  await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
-  await opprettNySakPage.velgOpprettNySak();
-
-  await opprettNySakPage.velgSakstype("Utenfor avtaleland");
-  await opprettNySakPage.velgSakstema("Medlemskap og lovvalg");
-  await opprettNySakPage.velgBehandlingstema("Yrkesaktiv");
-  await opprettNySakPage.velgBehandlingstype("Førstegangsbehandling");
-  await opprettNySakPage.velgBehandlingsaarsak("Søknad");
-
-  await opprettNySakPage.klikkOpprettNyBehandling();
-  await assertNyBehandlingOpprettet(page);
-
-  // Finn den nyopprettede saken
-  await hovedsidePage.goto();
-  await hovedsidePage.søkOgVentPåResultat(USER_ID_VALID);
-
-  const saker = await sokPage.finnÅpneSaker("Utenfor avtaleland");
-  expect(saker.length, "Fant ingen åpne 'Utenfor avtaleland' saker etter opprettelse").toBeGreaterThan(0);
-
-  return saker[0];
+/**
+ * Hent prepopulert FTRL-sak (MEL-1002)
+ * @returns URL til behandlingssiden
+ */
+export async function opprettUtenforAvtalelandSak(): Promise<string> {
+  return hentPrepopulertSakUrl(PREPOPULATED_SAKER.FTRL_YRKESAKTIV);
 }
 
 /**
@@ -100,88 +127,29 @@ export async function avsluttBehandling(
 }
 
 /**
- * Opprett en ny Utenfor avtaleland-sak med Førstegangsbehandling, avslutt den, og opprett Årsavregning
- * @returns Locator for saken med årsavregning-behandlingen
+ * Hent prepopulert FTRL-sak med Årsavregning (MEL-1006)
+ * Denne saken har 2 behandlinger: én avsluttet førstegangsbehandling og én åpen årsavregning
+ * @returns URL til behandlingssiden
  */
-export async function opprettUtenforAvtalelandSakMedAarsavregning(page: Page): Promise<Locator> {
-  const sokPage = new SokPage(page);
-
-  // 1. Opprett Førstegangsbehandling
-  const sak = await opprettUtenforAvtalelandSak(page);
-  const sakId = await sokPage.getSaksnummer(sak);
-
-  // 2. Avslutt Førstegangsbehandling
-  await avsluttBehandling(page, sak, "Søknaden er innvilget");
-
-  // 3. Opprett Årsavregning på samme sak
-  const hovedsidePage = new HovedsidePage(page);
-  await hovedsidePage.goto();
-  await hovedsidePage.klikkOpprettNySakKnapp();
-  const opprettNySakPage = new OpprettNySakPage(page);
-  await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
-  await opprettNySakPage.velgKnyttTilEksisterendeSak();
-
-  const valgtSak = opprettNySakPage.finnSakBySaksnummer(sakId);
-  await valgtSak.click();
-  await opprettNySakPage.velgBehandlingstypeRadio("Årsavregning");
-  await opprettNySakPage.velgBehandlingsaarsak("Søknad");
-  await opprettNySakPage.klikkOpprettNyBehandling();
-
-  await assertNyBehandlingOpprettet(page);
-
-  // Finn saken med årsavregning
-  await hovedsidePage.goto();
-  await hovedsidePage.søkOgVentPåResultat(USER_ID_VALID);
-
-  const saker = await sokPage.finnÅpneSaker("Utenfor avtaleland", "Årsavregning");
-  expect(saker.length, "Fant ingen åpne 'Utenfor avtaleland - Årsavregning' saker").toBeGreaterThan(0);
-
-  return saker[0];
+export async function opprettUtenforAvtalelandSakMedAarsavregning(): Promise<string> {
+  return hentPrepopulertSakUrl(PREPOPULATED_SAKER.FTRL_AARSAVREGNING);
 }
 
 /**
- * Opprett en ny EØS pensjonist-sak med trygdeavgift og Førstegangsbehandling
+ * Hent prepopulert EU/EØS pensjonist-sak med trygdeavgift (MEL-1003)
  * Dette er en spesialsak som skal kunne opprette årsavregning selv med åpne behandlinger (MELOSYS-7603)
- * @returns Locator for den opprettede saken
+ * @returns URL til behandlingssiden
  */
-export async function opprettEøsPensjonistSakMedTrygdeavgift(page: Page): Promise<Locator> {
-  const hovedsidePage = new HovedsidePage(page);
-  const opprettNySakPage = new OpprettNySakPage(page);
-  const sokPage = new SokPage(page);
-
-  await hovedsidePage.goto();
-  await hovedsidePage.klikkOpprettNySakKnapp();
-
-  await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
-  await opprettNySakPage.velgOpprettNySak();
-
-  await opprettNySakPage.velgSakstype("EU/EØS-land");
-  await opprettNySakPage.velgSakstema("Trygdeavgift");
-  await opprettNySakPage.velgBehandlingstema("Pensjonist/uføretrygdet");
-  await opprettNySakPage.velgBehandlingstype("Førstegangsbehandling");
-  await opprettNySakPage.velgBehandlingsaarsak("Søknad");
-
-  await opprettNySakPage.klikkOpprettNyBehandling();
-  await assertNyBehandlingOpprettet(page);
-
-  // Finn den nyopprettede saken
-  await hovedsidePage.goto();
-  await hovedsidePage.søkOgVentPåResultat(USER_ID_VALID);
-
-  const saker = await sokPage.finnÅpneSaker("EU/EØS-land");
-  expect(saker.length, "Fant ingen åpne 'EU/EØS-land' saker etter opprettelse").toBeGreaterThan(0);
-
-  return saker[0];
+export async function opprettEøsPensjonistSakMedTrygdeavgift(): Promise<string> {
+  return hentPrepopulertSakUrl(PREPOPULATED_SAKER.EU_EOS_TRYGDEAVGIFT_PENSJONIST);
 }
 
 /**
- * Opprett en ny EU/EØS-sak med spesifisert behandlingstema
- * @param page
- * @param behandlingstema - F.eks. "Ikke yrkesaktiv" (default, enklest å opprette)
- * @returns Locator for den opprettede saken
+ * Hent prepopulert EU/EØS-sak med spesifisert behandlingstema
+ * @param behandlingstema - F.eks. "Ikke yrkesaktiv" (default)
+ * @returns URL til behandlingssiden
  */
 export async function opprettEUEOSSak(
-  page: Page,
   behandlingstema:
     | "Utsendt arbeidstaker / skip / direkte til artikkel 16"
     | "Utsendt selvstendig næringsdrivende / skip / direkte til artikkel 16"
@@ -192,32 +160,22 @@ export async function opprettEUEOSSak(
     | "Pensjonist/uføretrygdet"
     | "Forespørsel fra trygdemyndighet"
     | "Forespørsel om trygdetid" = "Ikke yrkesaktiv",
-): Promise<Locator> {
-  const hovedsidePage = new HovedsidePage(page);
-  const opprettNySakPage = new OpprettNySakPage(page);
-  const sokPage = new SokPage(page);
+): Promise<string> {
+  // Map behandlingstema til prepopulert saksnummer
+  let saksnummer: string;
+  switch (behandlingstema) {
+    case "Ikke yrkesaktiv":
+      saksnummer = PREPOPULATED_SAKER.EU_EOS_IKKE_YRKESAKTIV;
+      break;
+    case "Pensjonist/uføretrygdet":
+      saksnummer = PREPOPULATED_SAKER.EU_EOS_PENSJONIST;
+      break;
+    default:
+      throw new Error(
+        `Ingen prepopulert sak for behandlingstema: "${behandlingstema}". ` +
+          `Støttede varianter: "Ikke yrkesaktiv", "Pensjonist/uføretrygdet"`,
+      );
+  }
 
-  await hovedsidePage.goto();
-  await hovedsidePage.klikkOpprettNySakKnapp();
-
-  await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
-  await opprettNySakPage.velgOpprettNySak();
-
-  await opprettNySakPage.velgSakstype("EU/EØS-land");
-  await opprettNySakPage.velgSakstema("Medlemskap og lovvalg");
-  await opprettNySakPage.velgBehandlingstema(behandlingstema);
-  await opprettNySakPage.velgBehandlingstype("Førstegangsbehandling");
-  await opprettNySakPage.velgBehandlingsaarsak("Søknad");
-
-  await opprettNySakPage.klikkOpprettNyBehandling();
-  await assertNyBehandlingOpprettet(page);
-
-  // Finn den nyopprettede saken
-  await hovedsidePage.goto();
-  await hovedsidePage.søkOgVentPåResultat(USER_ID_VALID);
-
-  const saker = await sokPage.finnÅpneSaker("EU/EØS-land");
-  expect(saker.length, "Fant ingen åpne 'EU/EØS-land' saker etter opprettelse").toBeGreaterThan(0);
-
-  return saker[0];
+  return hentPrepopulertSakUrl(saksnummer);
 }

@@ -1,5 +1,4 @@
 import { test } from "@playwright/test";
-import { SokPage } from "../../../pages/sok.page";
 import { TIMEOUT_FOR_COMPLEX_TESTS } from "../../../utils/testUtils";
 import { BehandlingPage } from "../../../pages/behandling/behandling.page";
 import { opprettEUEOSSak } from "../../../utils/testdataUtils";
@@ -19,17 +18,11 @@ test.describe("EU/EØS Stegvelger - Navigasjon", () => {
   test("EU/EØS-behandling åpnes - viser stegvelger", async ({ page }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
 
-    const sokPage = new SokPage(page);
     const behandlingPage = new BehandlingPage(page);
 
-    // Opprett en EU/EØS-sak med behandlingstema som har flere steg
-    // "Arbeid og/eller selvstendig virksomhet i flere land" krever valg av land,
-    // så vi bruker "Ikke yrkesaktiv" som er enklere
-    const sak = await opprettEUEOSSak(page);
-
-    // Naviger til behandlingen
-    await sokPage.klikkVisBehandling(sak);
-    await behandlingPage.verifiserBehandlingsside();
+    // Hent URL til prepopulert EU/EØS-sak (Ikke yrkesaktiv) og naviger direkte dit
+    const url = await opprettEUEOSSak();
+    await behandlingPage.goto(url);
 
     await runAxeAnalyze(page, testInfo.title);
   });
@@ -37,14 +30,11 @@ test.describe("EU/EØS Stegvelger - Navigasjon", () => {
   test("Navigasjon mellom steg - frem og tilbake fungerer", async ({ page }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
 
-    const sokPage = new SokPage(page);
     const behandlingPage = new BehandlingPage(page);
 
-    const sak = await opprettEUEOSSak(page);
-
-    // Naviger til behandlingen
-    await sokPage.klikkVisBehandling(sak);
-    await behandlingPage.verifiserBehandlingsside();
+    // Hent URL til prepopulert EU/EØS-sak (Ikke yrkesaktiv) og naviger direkte dit
+    const url = await opprettEUEOSSak();
+    await behandlingPage.goto(url);
 
     await runAxeAnalyze(page, testInfo.title);
   });
@@ -52,13 +42,11 @@ test.describe("EU/EØS Stegvelger - Navigasjon", () => {
   test("Progressbar - viser alle steg", async ({ page }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
 
-    const sokPage = new SokPage(page);
     const behandlingPage = new BehandlingPage(page);
 
-    const sak = await opprettEUEOSSak(page);
-
-    await sokPage.klikkVisBehandling(sak);
-    await behandlingPage.verifiserBehandlingsside();
+    // Hent URL til prepopulert EU/EØS-sak (Ikke yrkesaktiv) og naviger direkte dit
+    const url = await opprettEUEOSSak();
+    await behandlingPage.goto(url);
 
     await runAxeAnalyze(page, testInfo.title);
   });

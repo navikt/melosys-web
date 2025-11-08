@@ -1,7 +1,5 @@
 import { test, Page, expect } from "@playwright/test";
-import { HovedsidePage, USER_ID_VALID } from "../../pages/hovedside.page";
 import { TIMEOUT_FOR_COMPLEX_TESTS } from "../../utils/testUtils";
-import { SokPage } from "../../pages/sok.page";
 import { BehandlingPage } from "../../pages/behandling/behandling.page";
 import { AarsavregningPage } from "../../pages/behandling/aarsavregning.page";
 import { opprettUtenforAvtalelandSakMedAarsavregning } from "../../utils/testdataUtils";
@@ -33,23 +31,12 @@ function lagDato(dagMåned: string): string {
  * Gjenbrukbar setup-funksjon som oppretter testdata og navigerer til en årsavregning-behandling
  */
 async function setupAarsavregningTest(page: Page) {
-  // Opprett ny sak med årsavregning for hver test
-  await opprettUtenforAvtalelandSakMedAarsavregning(page);
-
-  const mainPage = new HovedsidePage(page);
-  const sokPage = new SokPage(page);
   const behandlingPage = new BehandlingPage(page);
   aarsavregningPage = new AarsavregningPage(page);
 
-  await mainPage.goto();
-  await mainPage.søkOgVentPåResultat(USER_ID_VALID);
-
-  // Finn åpne FTRL-saker med Årsavregning behandling
-  const saker = await sokPage.finnÅpneSaker("Utenfor avtaleland", "Årsavregning");
-  expect(saker.length, "Ingen åpne 'Utenfor avtaleland - Årsavregning' saker funnet").toBeGreaterThan(0);
-
-  await sokPage.klikkVisBehandling(saker[0]!);
-  await behandlingPage.verifiserBehandlingsside();
+  // Hent URL til prepopulert FTRL-sak med årsavregning og naviger direkte dit
+  const url = await opprettUtenforAvtalelandSakMedAarsavregning();
+  await behandlingPage.goto(url);
 
   await page.waitForLoadState("domcontentloaded");
 

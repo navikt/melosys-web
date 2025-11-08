@@ -2,9 +2,8 @@ import { expect, test } from "@playwright/test";
 import { runAxeAnalyze } from "../../../utils/axeUtils";
 import { HovedsidePage, USER_ID_VALID } from "../../../pages/hovedside.page";
 import { OpprettNySakPage } from "../../../pages/opprett-ny-sak/opprett-ny-sak.page";
-import { getSaksnummerFraLocator, TIMEOUT_FOR_COMPLEX_TESTS } from "../../../utils/testUtils";
-import { opprettAvtalelandSak } from "../../../utils/testdataUtils";
-import { SokPage } from "../../../pages/sok.page";
+import { getSaksnummerFraLocator, getSaksnummerFraUrl, TIMEOUT_FOR_COMPLEX_TESTS } from "../../../utils/testUtils";
+import { opprettAvtalelandSak, PREPOPULATED_SAKER } from "../../../utils/testdataUtils";
 import { BehandlingPage } from "../../../pages/behandling/behandling.page";
 
 /**
@@ -31,9 +30,8 @@ test.describe("Avtaleland behandlingslogikk (regresjon)", () => {
   test("Regresjon: Avtaleland med åpen behandling - viser varselmelding", async ({ page }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
 
-    const sokPage = new SokPage(page);
-    const sak = await opprettAvtalelandSak(page);
-    const sakId = await sokPage.getSaksnummer(sak);
+    // Bruk prepopulert Avtaleland-sak
+    const sakId = PREPOPULATED_SAKER.AVTALELAND_YRKESAKTIV;
 
     const hovedsidePage = new HovedsidePage(page);
     await hovedsidePage.goto();
@@ -68,14 +66,13 @@ test.describe("Avtaleland behandlingslogikk (regresjon)", () => {
   test("Regresjon: Avtaleland med henlagt søknad - viser varselmelding", async ({ page }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout siden vi oppretter og henlegger sak
 
-    const sokPage = new SokPage(page);
     const behandlingPage = new BehandlingPage(page);
 
-    const sak = await opprettAvtalelandSak(page);
-    const sakId = await sokPage.getSaksnummer(sak);
+    // Hent URL til prepopulert Avtaleland-sak og naviger direkte dit
+    const url = await opprettAvtalelandSak();
+    await behandlingPage.goto(url);
 
-    await sokPage.klikkVisBehandling(sak);
-    await behandlingPage.verifiserBehandlingsside();
+    const sakId = getSaksnummerFraUrl(page);
     await behandlingPage.avsluttBehandling("Søknaden/klagen er trukket", sakId);
 
     const hovedsidePage = new HovedsidePage(page);
@@ -116,14 +113,13 @@ test.describe("Avtaleland behandlingslogikk (regresjon)", () => {
   }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout siden vi oppretter og avslutter sak
 
-    const sokPage = new SokPage(page);
     const behandlingPage = new BehandlingPage(page);
 
-    const sak = await opprettAvtalelandSak(page);
-    const sakId = await sokPage.getSaksnummer(sak);
+    // Hent URL til prepopulert Avtaleland-sak og naviger direkte dit
+    const url = await opprettAvtalelandSak();
+    await behandlingPage.goto(url);
 
-    await sokPage.klikkVisBehandling(sak);
-    await behandlingPage.verifiserBehandlingsside();
+    const sakId = getSaksnummerFraUrl(page);
     await behandlingPage.avsluttBehandling("Søknaden er innvilget", sakId);
 
     const hovedsidePage = new HovedsidePage(page);

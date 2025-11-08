@@ -13,6 +13,15 @@ export class BehandlingPage {
   }
 
   /**
+   * Naviger til en behandlingsside
+   * @param url - Relativ URL til behandlingssiden (f.eks. "/melosys/FTRL/saksbehandling/MEL-1002?behandlingID=2")
+   */
+  async goto(url: string): Promise<void> {
+    await this.page.goto(url);
+    await this.verifiserBehandlingsside();
+  }
+
+  /**
    * Klikk på Bekreft-knappen i Inngang-steget (kun i aktivt steg)
    */
   async klikkBekreftOgFortsett(): Promise<void> {
