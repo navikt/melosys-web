@@ -24,7 +24,7 @@ test.describe("FTRL Stegvelger - Navigasjon", () => {
     const behandlingPage = new BehandlingPage(page);
 
     // Hent URL til prepopulert FTRL-sak og naviger direkte dit
-    const url = await opprettUtenforAvtalelandSak();
+    const url = await opprettUtenforAvtalelandSak("MEL-1016");
     await behandlingPage.goto(url);
 
     await runAxeAnalyze(page, testInfo.title);
@@ -36,7 +36,7 @@ test.describe("FTRL Stegvelger - Navigasjon", () => {
     const behandlingPage = new BehandlingPage(page);
 
     // Hent URL til prepopulert FTRL-sak og naviger direkte dit
-    const url = await opprettUtenforAvtalelandSak();
+    const url = await opprettUtenforAvtalelandSak("MEL-1017");
     await behandlingPage.goto(url);
 
     await runAxeAnalyze(page, testInfo.title);
@@ -48,7 +48,7 @@ test.describe("FTRL Stegvelger - Navigasjon", () => {
     const behandlingPage = new BehandlingPage(page);
 
     // Hent URL til prepopulert FTRL-sak og naviger direkte dit
-    const url = await opprettUtenforAvtalelandSak();
+    const url = await opprettUtenforAvtalelandSak("MEL-1018");
     await behandlingPage.goto(url);
 
     await runAxeAnalyze(page, testInfo.title);
@@ -60,7 +60,7 @@ test.describe("FTRL Stegvelger - Navigasjon", () => {
     const behandlingPage = new BehandlingPage(page);
 
     // Hent URL til prepopulert FTRL-sak og naviger direkte dit
-    const url = await opprettUtenforAvtalelandSak();
+    const url = await opprettUtenforAvtalelandSak("MEL-1019");
     await behandlingPage.goto(url);
 
     await runAxeAnalyze(page, testInfo.title);

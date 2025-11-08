@@ -10,7 +10,7 @@ test.describe("Avslutt 'Utenfor avtaleland'-behandling for testdata", () => {
     const behandlingPage = new BehandlingPage(page);
 
     // Hent URL til prepopulert FTRL-sak og naviger direkte dit
-    const url = await opprettUtenforAvtalelandSak();
+    const url = await opprettUtenforAvtalelandSak("MEL-1013");
     await behandlingPage.goto(url);
 
     const sakId = getSaksnummerFraUrl(page);
@@ -24,7 +24,7 @@ test.describe("Avslutt 'Utenfor avtaleland'-behandling for testdata", () => {
     const behandlingPage = new BehandlingPage(page);
 
     // Hent URL til prepopulert FTRL-sak og naviger direkte dit
-    const url = await opprettUtenforAvtalelandSak();
+    const url = await opprettUtenforAvtalelandSak("MEL-1014");
     await behandlingPage.goto(url);
 
     const sakId = getSaksnummerFraUrl(page);

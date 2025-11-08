@@ -13,7 +13,7 @@ test.describe("Setup testdata for knytt-til-eksisterende-sak tester", () => {
     const behandlingPage = new BehandlingPage(page);
 
     // Hent URL til prepopulert Avtaleland-sak og naviger direkte dit
-    const url = await opprettAvtalelandSak();
+    const url = await opprettAvtalelandSak("MEL-1002");
     await behandlingPage.goto(url);
 
     const sakId = getSaksnummerFraUrl(page);
@@ -25,7 +25,7 @@ test.describe("Setup testdata for knytt-til-eksisterende-sak tester", () => {
     const behandlingPage = new BehandlingPage(page);
 
     // Hent URL til prepopulert FTRL-sak og naviger direkte dit
-    const url = await opprettUtenforAvtalelandSak();
+    const url = await opprettUtenforAvtalelandSak("MEL-1015");
     await behandlingPage.goto(url);
 
     const sakId = getSaksnummerFraUrl(page);

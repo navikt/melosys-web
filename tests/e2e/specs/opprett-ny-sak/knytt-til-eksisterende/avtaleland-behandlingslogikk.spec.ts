@@ -69,7 +69,7 @@ test.describe("Avtaleland behandlingslogikk (regresjon)", () => {
     const behandlingPage = new BehandlingPage(page);
 
     // Hent URL til prepopulert Avtaleland-sak og naviger direkte dit
-    const url = await opprettAvtalelandSak();
+    const url = await opprettAvtalelandSak("MEL-1010");
     await behandlingPage.goto(url);
 
     const sakId = getSaksnummerFraUrl(page);
@@ -116,7 +116,7 @@ test.describe("Avtaleland behandlingslogikk (regresjon)", () => {
     const behandlingPage = new BehandlingPage(page);
 
     // Hent URL til prepopulert Avtaleland-sak og naviger direkte dit
-    const url = await opprettAvtalelandSak();
+    const url = await opprettAvtalelandSak("MEL-1011");
     await behandlingPage.goto(url);
 
     const sakId = getSaksnummerFraUrl(page);

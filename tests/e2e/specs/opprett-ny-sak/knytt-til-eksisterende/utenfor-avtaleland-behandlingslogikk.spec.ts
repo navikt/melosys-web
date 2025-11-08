@@ -99,7 +99,7 @@ test.describe("'Utenfor avtaleland' behandlingslogikk", () => {
     const behandlingPage = new BehandlingPage(page);
 
     // Hent URL til prepopulert FTRL-sak og naviger direkte dit
-    const url = await opprettUtenforAvtalelandSak();
+    const url = await opprettUtenforAvtalelandSak("MEL-1020");
     await behandlingPage.goto(url);
 
     const sakId = getSaksnummerFraUrl(page);

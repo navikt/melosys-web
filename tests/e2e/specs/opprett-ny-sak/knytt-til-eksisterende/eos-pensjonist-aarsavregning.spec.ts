@@ -17,7 +17,7 @@ test.describe("EØS pensjonist med trygdeavgift - årsavregning", () => {
 
   test("Opprett EØS pensjonist-sak med trygdeavgift for testdata", async ({ page }, testInfo) => {
     // Denne testen oppretter testdata som brukes av de andre testene
-    const url = await opprettEøsPensjonistSakMedTrygdeavgift();
+    const url = await opprettEøsPensjonistSakMedTrygdeavgift("MEL-1055");
 
     expect(url, "URL skal være opprettet").toBeTruthy();
     expect(url).toContain("/melosys/EU_EOS/");
@@ -26,6 +26,8 @@ test.describe("EØS pensjonist med trygdeavgift - årsavregning", () => {
   });
 
   test("Knytt til EØS pensjonist-sak med åpne behandlinger - årsavregning tilgjengelig", async ({ page }, testInfo) => {
+    // Opprett en ekstra sak for denne testen
+    await opprettEøsPensjonistSakMedTrygdeavgift("MEL-1056");
     // Test at EØS pensjonister med trygdeavgift kan opprette årsavregning
     // selv om de har aktive behandlinger (unntak fra vanlig EØS-regel)
     await hovedsidePage.goto();

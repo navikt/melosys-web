@@ -7,11 +7,11 @@ import { opprettAvtalelandSak, opprettUtenforAvtalelandSakMedAarsavregning } fro
 let sendBrevPage: SendBrevPage;
 
 // Gjenbrukbar setup-funksjon som oppretter egen testdata
-async function setupSendBrevTest(page: Page) {
+async function setupSendBrevTest(page: Page, saksnummer: string = "MEL-1003") {
   sendBrevPage = new SendBrevPage(page);
 
   // Hent URL til prepopulert Avtaleland-sak og naviger direkte dit
-  const url = await opprettAvtalelandSak();
+  const url = await opprettAvtalelandSak(saksnummer);
   await sendBrevPage.goto(url);
 
   await page.waitForLoadState("domcontentloaded");
@@ -19,22 +19,21 @@ async function setupSendBrevTest(page: Page) {
 }
 
 test.describe("Verifiser disable/enable av 'Send brev' knapp", () => {
-  test.beforeEach(async ({ page }) => {
-    await setupSendBrevTest(page);
-  });
-
   test("'Send brev' knappen er disabled når hverken mottaker eller brevmal er valgt ", async ({ page }, testInfo) => {
+    await setupSendBrevTest(page, "MEL-1003");
     await sendBrevPage.verifiserSendKnappDeaktivert();
     await runAxeAnalyze(page, testInfo.title);
   });
 
   test("'Send brev' knappen er disabled når mottaker er valgt men ikke brevmal", async ({ page }, testInfo) => {
+    await setupSendBrevTest(page, "MEL-1004");
     await sendBrevPage.selectFirstMottaker();
     await sendBrevPage.verifiserSendKnappDeaktivert();
     await runAxeAnalyze(page, testInfo.title);
   });
 
   test("'Send brev' knappen blir enabled når både mottaker og brevmal er valgt", async ({ page }, testInfo) => {
+    await setupSendBrevTest(page, "MEL-1005");
     await sendBrevPage.selectFirstMottaker();
     await sendBrevPage.selectFirstBrevmal();
     await sendBrevPage.verifiserSendKnappAktivert();
@@ -43,11 +42,8 @@ test.describe("Verifiser disable/enable av 'Send brev' knapp", () => {
 });
 
 test.describe("Validering av brevmaler for mottaker 'Bruker eller brukers fullmektig'", () => {
-  test.beforeEach(async ({ page }) => {
-    await setupSendBrevTest(page);
-  });
-
   test("Korrekt validering for brevmal 'Melding om manglende opplysninger til bruker'", async ({ page }, testInfo) => {
+    await setupSendBrevTest(page, "MEL-1006");
     await sendBrevPage.selectMottakerByLabel("Bruker eller brukers fullmektig");
     await sendBrevPage.selectBrevmalByLabel("Melding om manglende opplysninger til bruker");
     await sendBrevPage.clickSendBrev();
@@ -61,6 +57,7 @@ test.describe("Validering av brevmaler for mottaker 'Bruker eller brukers fullme
   });
 
   test("Korrekt validering for brevmal 'Fritekstbrev til bruker'", async ({ page }, testInfo) => {
+    await setupSendBrevTest(page, "MEL-1007");
     await sendBrevPage.selectMottakerByLabel("Bruker eller brukers fullmektig");
     await sendBrevPage.selectBrevmalByLabel("Fritekstbrev til bruker");
     await sendBrevPage.clickSendBrev();
@@ -83,7 +80,7 @@ test.describe("Validering av årsavregning brevmaler", () => {
     sendBrevPage = new SendBrevPage(page);
 
     // Hent URL til prepopulert FTRL-sak med årsavregning og naviger direkte dit
-    const url = await opprettUtenforAvtalelandSakMedAarsavregning();
+    const url = await opprettUtenforAvtalelandSakMedAarsavregning("MEL-1008");
     await sendBrevPage.goto(url);
 
     await page.waitForLoadState("domcontentloaded");

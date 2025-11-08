@@ -21,7 +21,7 @@ test.describe("EU/EØS Stegvelger - Navigasjon", () => {
     const behandlingPage = new BehandlingPage(page);
 
     // Hent URL til prepopulert EU/EØS-sak (Ikke yrkesaktiv) og naviger direkte dit
-    const url = await opprettEUEOSSak();
+    const url = await opprettEUEOSSak("MEL-1051");
     await behandlingPage.goto(url);
 
     await runAxeAnalyze(page, testInfo.title);
@@ -33,7 +33,7 @@ test.describe("EU/EØS Stegvelger - Navigasjon", () => {
     const behandlingPage = new BehandlingPage(page);
 
     // Hent URL til prepopulert EU/EØS-sak (Ikke yrkesaktiv) og naviger direkte dit
-    const url = await opprettEUEOSSak();
+    const url = await opprettEUEOSSak("MEL-1052");
     await behandlingPage.goto(url);
 
     await runAxeAnalyze(page, testInfo.title);
@@ -45,7 +45,7 @@ test.describe("EU/EØS Stegvelger - Navigasjon", () => {
     const behandlingPage = new BehandlingPage(page);
 
     // Hent URL til prepopulert EU/EØS-sak (Ikke yrkesaktiv) og naviger direkte dit
-    const url = await opprettEUEOSSak();
+    const url = await opprettEUEOSSak("MEL-1053");
     await behandlingPage.goto(url);
 
     await runAxeAnalyze(page, testInfo.title);

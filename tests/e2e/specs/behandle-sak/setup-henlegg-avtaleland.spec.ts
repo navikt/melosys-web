@@ -19,7 +19,7 @@ test.describe("Setup: Avtaleland-sak med henlagt behandling", () => {
     const behandlingPage = new BehandlingPage(page);
 
     // Hent URL til prepopulert Avtaleland-sak og naviger direkte dit
-    const url = await opprettAvtalelandSak();
+    const url = await opprettAvtalelandSak("MEL-1009");
     await behandlingPage.goto(url);
 
     const sakId = getSaksnummerFraUrl(page);
