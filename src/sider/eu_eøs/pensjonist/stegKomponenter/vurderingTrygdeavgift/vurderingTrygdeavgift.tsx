@@ -37,6 +37,7 @@ import { fagsakSelectors } from "../../../../../ducks/fagsaker";
 import { Alert } from "../../../../../navFrontend";
 import { useFeatureToggle } from "../../../../../featuretoggle";
 import { MELOSYS_FAKTURERINGSKOMPONENTEN_IKKE_TIDLIGERE_PERIODER } from "../../../../../featuretoggle/toggleNavn";
+import { harPerioderFraTidligereÅr } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 
 const { EU_EOS } = MKV.Koder.sakstyper;
 const { PENSJONIST } = MKV.Koder.behandlinger.behandlingstema;
@@ -48,7 +49,7 @@ interface Props {
   oppdaterStatus: (isValid: boolean) => void;
 }
 
-const { NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingstyper;
+const { NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT, FØRSTEGANG } = MKV.Koder.behandlinger.behandlingstyper;
 
 export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: Props) {
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
@@ -132,8 +133,10 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
 
   const skalIkkeBeregneForelopigTrygdeavgift =
     skalIkkeViseTidligerePerioderToggle &&
-    new Date(helseutgiftDekkesPeriode.tom).getFullYear() < new Date().getFullYear() &&
-    behandlingstype === NY_VURDERING;
+    new Date(helseutgiftDekkesPeriode.tom).getFullYear() < new Date().getFullYear();
+
+  const harHelseutgiftDekkesPeriodeFraTidligereÅr =
+    new Date(helseutgiftDekkesPeriode.fom).getFullYear() < new Date().getFullYear();
 
   const stegErGyldig =
     (formIsValid || skalIkkeBeregneForelopigTrygdeavgift) && !feilMeldingBlokkerer(aktivFeilmeldingType) && !feil;
@@ -341,12 +344,14 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
         </Nav.BodyLong>
       )}
 
-      {(behandlingstype === NY_VURDERING || behandlingstype === MANGLENDE_INNBETALING_TRYGDEAVGIFT) &&
-        skalIkkeViseTidligerePerioderToggle && (
+      {(behandlingstype === NY_VURDERING ||
+        behandlingstype === MANGLENDE_INNBETALING_TRYGDEAVGIFT ||
+        behandlingstype === FØRSTEGANG) &&
+        skalIkkeViseTidligerePerioderToggle &&
+        harHelseutgiftDekkesPeriodeFraTidligereÅr && (
           <Alert variant="warning" size="small" className="alert--spacing-bottom">
-            Ved ny vurdering vises skatteforhold og inntekt fra inneværende år og fremover. Gjør nødvendige endringer
-            eller legg til en ny periode. Trygdeavgift for tidligere år skal fastsettes på årsavregning. Du skal derfor
-            ikke oppgi skatte- og inntektsperioder for tidligere år i denne behandlingen.
+            Trygdeavgift for tidligere år skal fastsettes på årsavregning. Du skal derfor ikke oppgi skatte- og
+            inntektsperioder for tidligere år i denne behandlingen.
           </Alert>
         )}
 
