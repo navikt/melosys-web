@@ -5,13 +5,13 @@ import { SokPage } from "../../pages/sok.page";
 
 test("Søk etter gyldig ID og verifiser resultater", async ({ page }, testInfo) => {
   const mainPage = new HovedsidePage(page);
-  const searchResultsPage = new SokPage(page);
 
   await mainPage.goto();
+  const searchResultsPage = new SokPage(page);
 
   await mainPage.søk(USER_ID_VALID);
 
-  //await searchResultsPage.verifyValidSearchResults(USER_ID_VALID);
+  await searchResultsPage.verifyValidSearchResults(USER_ID_VALID);
 
   await runAxeAnalyze(page, testInfo.title);
 });
@@ -24,7 +24,7 @@ test("Søk etter ugyldig ID og verifiser feilmelding", async ({ page }, testInfo
 
   await mainPage.søk(USER_ID_INVALID);
 
-  // await searchResultsPage.verifyInvalidSearchResults(USER_ID_INVALID);
+  await searchResultsPage.verifyInvalidSearchResults(USER_ID_INVALID);
 
   await runAxeAnalyze(page, testInfo.title);
 });

@@ -69,23 +69,4 @@ export class HovedsidePage {
 
     await this.page.waitForLoadState("domcontentloaded");
   }
-
-  /**
-   * Vent på at søkeresultater vises for gitt bruker-ID
-   * @param userID - Bruker f.nr./d-nr. som det søkes på
-   */
-  async ventPåSøkeresultat(userID: string): Promise<void> {
-    await this.page.waitForSelector(`text=Resultater for f.nr./d-nr. ${userID}`, {
-      state: "visible",
-    });
-  }
-
-  /**
-   * Utfør søk og vent på resultater
-   * @param userID - Bruker f.nr./d-nr. som det søkes på
-   */
-  async søkOgVentPåResultat(userID: string): Promise<void> {
-    await this.søk(userID);
-    await this.ventPåSøkeresultat(userID);
-  }
 }

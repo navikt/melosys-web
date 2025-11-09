@@ -52,7 +52,7 @@ test.describe("'Opprett ny sak for virksomhet", () => {
   }, testInfo) => {
     await opprettNySakPage.velgVirksomhet();
     await opprettNySakPage.fyllInnOrganisasjonsnummer(ORG_NUMBER_VALID);
-    // Virksomhetssaker har ingen prepopulerte saker, så ingen radioknapp å velge
+    await opprettNySakPage.velgOpprettNySak();
 
     await opprettNySakPage.verifiserSakstypeSelect();
 

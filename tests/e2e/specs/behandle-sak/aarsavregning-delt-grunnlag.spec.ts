@@ -2,7 +2,7 @@ import { test, Page, expect } from "@playwright/test";
 import { TIMEOUT_FOR_COMPLEX_TESTS } from "../../utils/testUtils";
 import { BehandlingPage } from "../../pages/behandling/behandling.page";
 import { AarsavregningPage } from "../../pages/behandling/aarsavregning.page";
-import { hentPrepopulertSakUrl } from "../../utils/testdataUtils";
+import { hentPrepopulertSakUrl, PrepopulertSaksnummer } from "../../utils/testdataUtils";
 import { runAxeAnalyze } from "../../utils/axeUtils";
 
 /**
@@ -30,7 +30,7 @@ function lagDato(dagMåned: string): string {
 /**
  * Gjenbrukbar setup-funksjon som oppretter testdata og navigerer til en årsavregning-behandling
  */
-async function setupAarsavregningTest(page: Page, saksnummer: string) {
+async function setupAarsavregningTest(page: Page, saksnummer: PrepopulertSaksnummer) {
   const behandlingPage = new BehandlingPage(page);
   aarsavregningPage = new AarsavregningPage(page);
 
