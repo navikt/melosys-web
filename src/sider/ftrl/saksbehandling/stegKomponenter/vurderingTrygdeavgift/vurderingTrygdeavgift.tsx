@@ -131,8 +131,8 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const skalIkkeBeregneForelopigTrygdeavgift =
     skalIkkeViseTidligerePerioderToggle &&
     medlemskapsperioder.length > 0 &&
-    medlemskapsperioder.every((periode) => new Date(periode.tomDato).getFullYear() < new Date().getFullYear()) &&
-    behandlingstype === NY_VURDERING;
+    medlemskapsperioder.every((periode) => new Date(periode.tomDato).getFullYear() < new Date().getFullYear());
+
   const stegErGyldig =
     (formIsValid || skalIkkeBeregneForelopigTrygdeavgift) && !feilMeldingBlokkerer(aktivFeilmeldingType) && !feil;
   const skalBeregneForelopigTrygdeavgift =
