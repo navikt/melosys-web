@@ -205,8 +205,10 @@ export class BehandlingPage {
 
   /**
    * Bekreft avslutningen (hvis det er en bekreftelsesdialog)
+   * @param buttonText - tekst på bekreft-knappen
+   * @param selectText - Valgfri spesifikk tekst på bekreft-knappen (hvis den avviker fra menyteksten)
    */
-  async bekreftAvslutning(): Promise<void> {
+  async bekreftAvslutning(buttonText: string, selectText?: string): Promise<void> {
     const saksnummer = getSaksnummerFraUrl(this.page);
     const modalSelectors = [".navds-modal[open]", ".modal[open]", '[role="dialog"]', ".dialog", ".confirmation-modal"];
 
@@ -231,46 +233,18 @@ export class BehandlingPage {
       const begrunnelseDropdown = modal.locator("select, .navds-select__input");
       const dropdownSynlig = await begrunnelseDropdown.isVisible({ timeout: 2000 }).catch(() => false);
 
-      if (dropdownSynlig) {
-        // Prøv å velge "Søknaden er trukket" først, ellers "Utenlandsoppholdet er avlyst"
-        try {
-          await begrunnelseDropdown.selectOption({ label: "Søknaden er trukket" });
-        } catch {
-          try {
-            await begrunnelseDropdown.selectOption({ label: "Utenlandsoppholdet er avlyst" });
-          } catch {
-            // Fallback til første alternativ (index 1, siden 0 er "Velg...")
-            await begrunnelseDropdown.selectOption({ index: 1 });
-          }
-        }
-        // Vent på at bekreft-knappen blir enabled
-        await modal.locator('button[type="submit"]:not([disabled])').waitFor({ state: "visible", timeout: 2000 });
+      if (dropdownSynlig && selectText) {
+        // Bruk den oppgitte teksten til å velge riktig dropdown-verdi
+        await begrunnelseDropdown.selectOption({ label: selectText });
+        // Vent litt på at knappen blir enabled
+        await this.page.waitForTimeout(500);
       }
     }
 
     // Finn "Bekreft" knappen inne i modalen
-    const bekreftSelectors = [
-      'button:has-text("Henlegg saken")',
-      'button:has-text("Bekreft")',
-      'button:has-text("OK")',
-      'button:has-text("Ja")',
-      'button:has-text("Lagre")',
-      'button[type="submit"]',
-      ".primary-button",
-      ".navds-button--primary",
-    ];
+    const bekreftKnapp = modal.locator(`button:has-text("${buttonText}")`);
 
-    let bekreftKnapp = null;
-    for (const selector of bekreftSelectors) {
-      const knapp = modal.locator(selector);
-      if (await knapp.isVisible({ timeout: 1000 }).catch(() => false)) {
-        bekreftKnapp = knapp;
-        break;
-      }
-    }
-
-    expect(bekreftKnapp, `${saksnummer}: Fant ingen bekreft-knapp i modalen`).not.toBeNull();
-    if (!bekreftKnapp) return; // Type guard for TypeScript
+    await expect(bekreftKnapp, `${saksnummer}: Bekreft-knapp skal være synlig`).toBeVisible({ timeout: 2000 });
 
     const erEnabled = await bekreftKnapp.isEnabled();
 
@@ -285,8 +259,11 @@ export class BehandlingPage {
    * Fullfør hele prosessen med å avslutte en behandling med spesifisert type
    * @param vedtaksType - type avslutning
    * @param saksnummer - saksnummer for feilmeldinger
+   * @param bekreftKnappTekst - valgfri spesifikk tekst på bekreft-knappen hvis den avviker fra vedtaksType
+   * @param selectText
    */
   async avsluttBehandling(
+    saksnummer: string,
     vedtaksType:
       | "Søknaden er innvilget"
       | "Søknaden er avslått"
@@ -294,7 +271,8 @@ export class BehandlingPage {
       | "Ferdigbehandlet"
       | "Søknaden/klagen er trukket"
       | "Behandlingen er bortfalt",
-    saksnummer: string,
+    bekreftKnappTekst: string,
+    selectText?: string,
   ): Promise<void> {
     await this.klikkAvsluttBehandling();
 
@@ -304,7 +282,7 @@ export class BehandlingPage {
       await this.velgAvslutningstype(vedtaksType, saksnummer);
     }
 
-    await this.bekreftAvslutning();
+    await this.bekreftAvslutning(bekreftKnappTekst, selectText);
     await this.verifiserVellykketAvslutning();
   }
 

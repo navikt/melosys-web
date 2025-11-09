@@ -103,7 +103,7 @@ test.describe("'Utenfor avtaleland' behandlingslogikk", () => {
     await behandlingPage.goto(url);
 
     const sakId = getSaksnummerFraUrl(page);
-    await behandlingPage.avsluttBehandling("Søknaden er innvilget", sakId);
+    await behandlingPage.avsluttBehandling(sakId, "Søknaden er innvilget", "Bekreft");
 
     const hovedsidePage = new HovedsidePage(page);
 

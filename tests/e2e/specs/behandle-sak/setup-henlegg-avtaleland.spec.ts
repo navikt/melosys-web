@@ -23,7 +23,7 @@ test.describe("Setup: Avtaleland-sak med henlagt behandling", () => {
     await behandlingPage.goto(url);
 
     const sakId = getSaksnummerFraUrl(page);
-    await behandlingPage.avsluttBehandling("Søknaden/klagen er trukket", sakId);
+    await behandlingPage.avsluttBehandling(sakId, "Søknaden/klagen er trukket", "Henlegg saken", "Søknaden er trukket");
 
     await runAxeAnalyze(page, testInfo.title);
   });
