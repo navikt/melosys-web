@@ -64,9 +64,6 @@ test.describe("Avtaleland behandlingslogikk (regresjon)", () => {
   test("Regresjon: Avtaleland med henlagt søknad - viser varselmelding", async ({ page }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
 
-    // Bruk prepopulert AVSLUTTET Avtaleland-sak (MEL-1063)
-    const sakId = "MEL-1063";
-
     const hovedsidePage = new HovedsidePage(page);
     await hovedsidePage.goto();
     await hovedsidePage.klikkOpprettNySakKnapp();
@@ -74,7 +71,7 @@ test.describe("Avtaleland behandlingslogikk (regresjon)", () => {
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgKnyttTilEksisterendeSak();
 
-    const valgtSak = opprettNySakPage.finnSakBySaksnummer(sakId);
+    const valgtSak = opprettNySakPage.finnSakBySaksnummer("MEL-1063");
 
     await valgtSak.click();
 
@@ -82,7 +79,7 @@ test.describe("Avtaleland behandlingslogikk (regresjon)", () => {
     // Gul varselmelding skal vises selv om behandling er henlagt
     // Note: Henlagt behandling kan vises som "Behandlingen er avsluttet" i UI
     // Vent på at feilmeldingspanelet vises (ikke bare loading-panelet)
-    await page.locator(".knyttTilSak__behandlingspanel").waitFor({ state: "visible" });
+    await page.locator(".knyttTilSak__behandlingspanel").waitFor({ state: "visible", timeout: 10000 });
 
     // Sjekk først om det er noen feilmelding i det hele tatt
     expect(

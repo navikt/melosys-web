@@ -15,10 +15,11 @@ export class BehandlingPage {
   /**
    * Naviger til en behandlingsside
    * @param url - Relativ URL til behandlingssiden (f.eks. "/melosys/FTRL/saksbehandling/MEL-1002?behandlingID=2")
+   * @param tittel tittel på behandlingssiden (f.eks. "Oppgi opplysninger fra attest / S1")
    */
-  async goto(url: string): Promise<void> {
+  async goto(url: string, tittel?: string): Promise<void> {
     await this.page.goto(url);
-    await this.verifiserBehandlingsside();
+    await this.verifiserBehandlingsside(tittel);
   }
 
   /**
@@ -33,45 +34,35 @@ export class BehandlingPage {
 
   /**
    * Verifiser at vi er på behandlingssiden
+   * @param forventetTittel - Valgfri tittel som skal vises på siden (f.eks. "Oppgi opplysninger fra attest / S1")
    */
-  async verifiserBehandlingsside(): Promise<void> {
+  async verifiserBehandlingsside(forventetTittel?: string): Promise<void> {
     await expect(this.page).toHaveURL(/\/melosys\/(FTRL|AVTALELAND|EOS|EU_EOS|TRYGDEAVTALE)\/.*\/MEL-\d+/);
 
     // Vent på at siden lastes med behandlingsinnhold
     await this.page.waitForLoadState("domcontentloaded");
 
-    // Sjekk at behandlingsinfo er synlig
-    const behandlingsInfo = [
-      "h1", // Behandlingstittel
-      ".behandlingsstatus",
-      ".saksnummer",
-      ':has-text("Behandling")',
-      ':has-text("MEL-")', // Saksnummer
-    ];
-
-    let infoFunnet = false;
-    for (const selector of behandlingsInfo) {
-      if (
-        await this.page
-          .locator(selector)
-          .isVisible()
-          .catch(() => false)
-      ) {
-        infoFunnet = true;
-        break;
-      }
-    }
-
     const saksnummer = getSaksnummerFraUrl(this.page);
-    expect(infoFunnet, `${saksnummer}: Kunne ikke verifisere at vi er på en behandlingsside`).toBe(true);
+
+    // Vent på informasjonslinjen (finnes alltid på behandlingssider, inneholder personnavn og fnr)
+    await expect(
+      this.page.locator(".informasjonlinje"),
+      `${saksnummer}: Informasjonslinjen skal være synlig`,
+    ).toBeVisible({ timeout: 10000 });
+
+    // Hvis forventet tittel er oppgitt, verifiser at den finnes
+    if (forventetTittel) {
+      await expect(
+        this.page.locator("h1.stegvelgertittel"),
+        `${saksnummer}: Tittelen "${forventetTittel}" skal være synlig`,
+      ).toHaveText(forventetTittel, { timeout: 10000 });
+    }
   }
 
   /**
    * Finn og klikk på "Avslutt behandling" accordion-header i behandlingsmenyen
    */
   async klikkAvsluttBehandling(): Promise<void> {
-    await this.verifiserBehandlingsside();
-
     const behandlingsmeny = this.page.locator(".behandlingsmeny__meny");
     const menyErSynlig = await behandlingsmeny.isVisible().catch(() => false);
 

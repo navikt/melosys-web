@@ -24,12 +24,10 @@ test.describe("EU/EØS Trygdeavgift", () => {
 
     // Hent URL til prepopulert EØS pensjonist-sak med trygdeavgift og naviger direkte dit
     const url = hentPrepopulertSakUrl("MEL-1054");
-    await behandlingPage.goto(url);
+    await behandlingPage.goto(url, "Oppgi opplysninger fra attest / S1");
 
     // Steg 1: Inngang (Oppgi opplysninger fra attest / S1)
     const inngangPage = new InngangPage(page);
-    await inngangPage.verifiserBehandlingsside();
-    // await inngangPage.ventPaInngangStegEØS();
     await inngangPage.setFraOgMedDato("01.01.2024");
     await inngangPage.setTilOgMedDato("31.12.2024");
     await inngangPage.velgLand("SE");

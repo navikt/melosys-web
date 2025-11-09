@@ -24,9 +24,6 @@ import { getSaksnummerFraLocator, TIMEOUT_FOR_COMPLEX_TESTS } from "../../../uti
 test.describe("State-håndtering ved saksbytting", () => {
   let opprettNySakPage: OpprettNySakPage;
 
-  // MERK: Bruker prepopulerte AVSLUTTET-saker (MEL-1063 til MEL-1068) istedenfor å avslutte dem i beforeAll
-  // Dette unngår Playwright fixture@42 feil med test.beforeAll({ browser })
-
   test.beforeEach(async ({ page }) => {
     const mainPage = new HovedsidePage(page);
     opprettNySakPage = new OpprettNySakPage(page);
