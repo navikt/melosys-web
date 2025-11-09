@@ -76,7 +76,7 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
   test.describe("AC1 - Medlemskapsperiode validering", () => {
     test("Kan legge til ny medlemskapsperiode etter å ha valgt delt grunnlag", async ({ page }, testInfo) => {
       test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Sett timeout til 30 sekunder for setup
-      await setupAarsavregningTest(page, "MEL-1023");
+      await setupAarsavregningTest(page, "MEL-1026");
       // Velg "Ja" på spør
       // smålet om å legge til trygdeavgift fra Avgiftssystemet
       await aarsavregningPage.velgDeltGrunnlagJa();

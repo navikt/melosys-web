@@ -81,6 +81,8 @@ export class OpprettNySakPage {
     const orgNumberInput = this.page.locator("input[name='virksomhetOrgnr']");
     await expect(orgNumberInput, "Fant ikke org nr input").toBeVisible();
     await orgNumberInput.fill(orgNumber);
+    // Vent på at backend svarer (enten sakstype-select vises, eller feilmelding kommer)
+    await this.page.waitForTimeout(2000);
   }
 
   /**

@@ -70,8 +70,8 @@ test.describe("State-håndtering ved saksbytting", () => {
   });
 
   test("EØS-sak med åpen behandling - viser varselmelding", async ({ page }, testInfo) => {
-    // Bruk prepopulert UNDER_BEHANDLING EØS-sak MEL-1051 (IKKE_YRKESAKTIV)
-    const sakId = "MEL-1051";
+    // Bruk prepopulert UNDER_BEHANDLING EØS-sak MEL-1071 (IKKE_YRKESAKTIV)
+    const sakId = "MEL-1071";
     const valgtSak = opprettNySakPage.finnSakBySaksnummer(sakId);
 
     await valgtSak.click();
@@ -83,12 +83,9 @@ test.describe("State-håndtering ved saksbytting", () => {
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  // FJERNET: "Rask saksbytting - ingen race conditions eller gamle verdier"
-  // Denne testen er ikke mulig å verifisere pålitelig siden race conditions er ikke-deterministiske
-
   test("Regresjon: Behandlingstema settes automatisk via Redux", async ({ page }, testInfo) => {
-    // Bruk prepopulert AVSLUTTET sak MEL-1065 (FTRL)
-    const sakId = "MEL-1065";
+    // Bruk prepopulert AVSLUTTET sak MEL-1066 (FTRL)
+    const sakId = "MEL-1066";
     const valgtSak = opprettNySakPage.finnSakBySaksnummer(sakId);
 
     await valgtSak.click();

@@ -60,8 +60,8 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgKnyttTilEksisterendeSak();
 
-    // Bruk prepopulert EØS pensjonist-sak MEL-1054 (EU_EOS, PENSJONIST)
-    const sakId = "MEL-1054";
+    // Bruk prepopulert EØS pensjonist-sak MEL-1055 (EU_EOS, PENSJONIST)
+    const sakId = "MEL-1055";
     const valgtSak = opprettNySakPage.finnSakBySaksnummer(sakId);
 
     await valgtSak.click();
@@ -137,8 +137,8 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgKnyttTilEksisterendeSak();
 
-    // Bruk prepopulert AVSLUTTET sak MEL-1065 (FTRL)
-    const sakId = "MEL-1065";
+    // Bruk prepopulert AVSLUTTET sak MEL-1070 (FTRL)
+    const sakId = "MEL-1070";
     const valgtSak = opprettNySakPage.finnSakBySaksnummer(sakId);
 
     await valgtSak.click();
