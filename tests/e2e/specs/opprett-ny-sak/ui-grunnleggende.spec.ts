@@ -1,4 +1,4 @@
-import { Page, test } from "@playwright/test";
+import { test } from "@playwright/test";
 import { runAxeAnalyze } from "../../utils/axeUtils";
 import { HovedsidePage } from "../../pages/hovedside.page";
 import { OpprettNySakPage } from "../../pages/opprett-ny-sak/opprett-ny-sak.page";
