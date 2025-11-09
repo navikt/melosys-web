@@ -397,9 +397,10 @@ export class AarsavregningPage extends BehandlingPage {
   }
 
   async verifiserDatepickerIkkeErAktiv() {
+    const saksnummer = getSaksnummerFraUrl(this.page);
     // NAV Design System bruker et dialog element for datepicker
     const datepicker = this.page.getByRole("dialog");
-    await expect(datepicker).not.toBeVisible();
+    await expect(datepicker, `${saksnummer}: Datepicker-dialog skal ikke være synlig`).not.toBeVisible();
   }
 
   async velgDatoIDatepicker(dato: Date) {
@@ -509,8 +510,9 @@ export class AarsavregningPage extends BehandlingPage {
   }
 
   async verifiserIngenFeilmelding(tekst: string) {
+    const saksnummer = getSaksnummerFraUrl(this.page);
     const error = this.page.locator('[class*="error"], [class*="feil"]').filter({ hasText: new RegExp(tekst, "i") });
-    await expect(error).not.toBeVisible();
+    await expect(error, `${saksnummer}: Feilmelding "${tekst}" skal ikke være synlig`).not.toBeVisible();
   }
 
   // Bekreft og fortsett
@@ -520,6 +522,10 @@ export class AarsavregningPage extends BehandlingPage {
 
   // Verifiser at siden er lastet
   async verifiserAarsavregningside() {
-    await expect(this.page.getByRole("heading", { name: /årsavregning/i })).toBeVisible();
+    const saksnummer = getSaksnummerFraUrl(this.page);
+    await expect(
+      this.page.getByRole("heading", { name: /årsavregning/i }),
+      `${saksnummer}: Årsavregning-overskrift skal være synlig`,
+    ).toBeVisible();
   }
 }

@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 import { runAxeAnalyze } from "../../../utils/axeUtils";
 import { HovedsidePage, USER_ID_VALID } from "../../../pages/hovedside.page";
 import { OpprettNySakPage } from "../../../pages/opprett-ny-sak/opprett-ny-sak.page";
-import { getSaksnummerFraLocator, TIMEOUT_FOR_COMPLEX_TESTS } from "../../../utils/testUtils";
+import { TIMEOUT_FOR_COMPLEX_TESTS } from "../../../utils/testUtils";
 
 /**
  * MELOSYS-7624: Test state-håndtering ved saksbytting
@@ -64,7 +64,7 @@ test.describe("State-håndtering ved saksbytting", () => {
     await opprettNySakPage.verifiserTilgjengeligeBehandlingstyper(valgtSak!, ["Årsavregning"]);
 
     const harFeilmelding = await opprettNySakPage.harFeilmelding();
-    expect(harFeilmelding, `Ingen feilmelding skal vises for sak ${getSaksnummerFraLocator(valgtSak!)}`).toBe(false);
+    expect(harFeilmelding, `Ingen feilmelding skal vises for sak ${sakId}`).toBe(false);
 
     await runAxeAnalyze(page, testInfo.title);
   });

@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 import { runAxeAnalyze } from "../../../utils/axeUtils";
 import { HovedsidePage, USER_ID_VALID } from "../../../pages/hovedside.page";
 import { OpprettNySakPage } from "../../../pages/opprett-ny-sak/opprett-ny-sak.page";
-import { getSaksnummerFraLocator, TIMEOUT_FOR_COMPLEX_TESTS } from "../../../utils/testUtils";
+import { TIMEOUT_FOR_COMPLEX_TESTS } from "../../../utils/testUtils";
 
 /**
  * MELOSYS-7385: Test regresjonstest for Avtaleland-saker
@@ -53,7 +53,7 @@ test.describe("Avtaleland behandlingslogikk (regresjon)", () => {
 
     expect(
       await opprettNySakPage.harFeilmelding(feilmelding),
-      `Gul varselmelding skal vises for Avtaleland-sak ${getSaksnummerFraLocator(valgtSak)} med åpen behandling`,
+      `Gul varselmelding skal vises for Avtaleland-sak ${sakId} med åpen behandling`,
     ).toBe(true);
 
     // Behandlingstype-gruppen skal IKKE være synlig
@@ -74,7 +74,8 @@ test.describe("Avtaleland behandlingslogikk (regresjon)", () => {
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgKnyttTilEksisterendeSak();
 
-    const valgtSak = opprettNySakPage.finnSakBySaksnummer("MEL-1063");
+    const sakId = "MEL-1063";
+    const valgtSak = opprettNySakPage.finnSakBySaksnummer(sakId);
 
     await valgtSak.click();
 
@@ -87,7 +88,7 @@ test.describe("Avtaleland behandlingslogikk (regresjon)", () => {
     // Sjekk først om det er noen feilmelding i det hele tatt
     expect(
       await opprettNySakPage.harFeilmelding(),
-      `En gul varselmelding skal vises for henlagt behandling på sak ${getSaksnummerFraLocator(valgtSak)}`,
+      `En gul varselmelding skal vises for henlagt behandling på sak ${sakId}`,
     ).toBe(true);
 
     // Behandlingstype-gruppen skal IKKE være synlig når behandling er henlagt
@@ -122,11 +123,15 @@ test.describe("Avtaleland behandlingslogikk (regresjon)", () => {
     // Vent på at panelrammen med behandlingstyper vises (ikke bare loading-panelet)
     await page.locator(".knyttTilSak__panelramme").waitFor({ state: "visible" });
 
-    await opprettNySakPage.verifiserTilgjengeligeBehandlingstyper(valgtSak, ["Ny vurdering", "Klage", "Henvendelse"]);
+    await opprettNySakPage.verifiserTilgjengeligeBehandlingstyper(
+      valgtSak,
+      ["Ny vurdering", "Klage", "Henvendelse"],
+      sakId,
+    );
 
     expect(
       await opprettNySakPage.harFeilmelding(),
-      `Ingen feilmelding skal vises for ferdigbehandlet Avtaleland-sak ${getSaksnummerFraLocator(valgtSak)}`,
+      `Ingen feilmelding skal vises for ferdigbehandlet Avtaleland-sak ${sakId}`,
     ).toBe(false);
 
     await runAxeAnalyze(page, testInfo.title);

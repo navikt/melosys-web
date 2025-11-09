@@ -27,7 +27,7 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
 
     await opprettNySakPage.verifiserTilgjengeligeBehandlingstyper(valgtSak!, ["Årsavregning"]);
     const harFeilmelding = await opprettNySakPage.harFeilmelding();
-    expect(harFeilmelding, `Ingen feilmelding skal vises for sak ${getSaksnummerFraLocator(valgtSak!)}`).toBe(false);
+    expect(harFeilmelding, `Ingen feilmelding skal vises for sak ${sakId}`).toBe(false);
 
     await runAxeAnalyze(page, testInfo.title);
   });
@@ -71,10 +71,7 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
 
     // Verifiser at ingen feilmelding vises
     const harFeilmelding = await opprettNySakPage.harFeilmelding();
-    expect(
-      harFeilmelding,
-      `Ingen feilmelding skal vises for EØS pensjonist-sak ${getSaksnummerFraLocator(valgtSak!)}`,
-    ).toBe(false);
+    expect(harFeilmelding, `Ingen feilmelding skal vises for EØS pensjonist-sak ${sakId}`).toBe(false);
 
     await runAxeAnalyze(page, testInfo.title);
   });
@@ -128,7 +125,7 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
     await opprettNySakPage.verifiserTilgjengeligeBehandlingstyper(valgtSak!, ["Årsavregning"]);
 
     const harFeilmelding = await opprettNySakPage.harFeilmelding();
-    expect(harFeilmelding, `Ingen feilmelding skal vises for sak ${getSaksnummerFraLocator(valgtSak!)}`).toBe(false);
+    expect(harFeilmelding, `Ingen feilmelding skal vises for sak ${sakId}`).toBe(false);
 
     await runAxeAnalyze(page, testInfo.title);
   });
@@ -151,7 +148,7 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
     ]);
 
     const harFeilmelding = await opprettNySakPage.harFeilmelding();
-    expect(harFeilmelding, `Ingen feilmelding skal vises for sak ${getSaksnummerFraLocator(valgtSak!)}`).toBe(false);
+    expect(harFeilmelding, `Ingen feilmelding skal vises for sak ${sakId}`).toBe(false);
 
     await runAxeAnalyze(page, testInfo.title);
   });

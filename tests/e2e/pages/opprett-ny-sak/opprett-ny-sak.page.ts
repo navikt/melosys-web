@@ -696,11 +696,17 @@ export class OpprettNySakPage {
    * Verifiser hvilke behandlingstyper som er tilgjengelige for en valgt sak
    * @param valgtSak Den valgte saken
    * @param forventedeBehandlingstyper Array med forventede behandlingstyper
+   * @param saksnummer Optional saksnummer for feilmeldinger (hvis ikke oppgitt, hentes fra locator)
    */
-  async verifiserTilgjengeligeBehandlingstyper(valgtSak: Locator, forventedeBehandlingstyper: string[]): Promise<void> {
+  async verifiserTilgjengeligeBehandlingstyper(
+    valgtSak: Locator,
+    forventedeBehandlingstyper: string[],
+    saksnummer?: string,
+  ): Promise<void> {
+    const sakId = saksnummer || getSaksnummerFraLocator(valgtSak!);
     await expect(
       this.page.getByRole("group", { name: "Behandlingstype" }),
-      `Behandlingstype-gruppe for sak ${getSaksnummerFraLocator(valgtSak!)} skal være synlig`,
+      `Behandlingstype-gruppe for sak ${sakId} skal være synlig`,
     ).toBeVisible();
 
     // Hent alle faktiske radiobuttons som er tilstede
@@ -777,12 +783,12 @@ export class OpprettNySakPage {
 
     expect(
       manglendeBehandlingstyper.length,
-      `Sak ${getSaksnummerFraLocator(valgtSak!)}: Manglende behandlingstyper: ${manglendeBehandlingstyper.join(", ")}. Faktiske: ${faktiskeTilgjengeligeBehandlingstyper.join(", ")}`,
+      `Sak ${sakId}: Manglende behandlingstyper: ${manglendeBehandlingstyper.join(", ")}. Faktiske: ${faktiskeTilgjengeligeBehandlingstyper.join(", ")}`,
     ).toBe(0);
 
     expect(
       uventedeBehandlingstyper.length,
-      `Sak ${getSaksnummerFraLocator(valgtSak!)}: Uventede behandlingstyper: ${uventedeBehandlingstyper.join(", ")}. Forventede: ${forventedeBehandlingstyper.join(", ")}`,
+      `Sak ${sakId}: Uventede behandlingstyper: ${uventedeBehandlingstyper.join(", ")}. Forventede: ${forventedeBehandlingstyper.join(", ")}`,
     ).toBe(0);
   }
 

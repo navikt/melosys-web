@@ -16,15 +16,7 @@
  *
  * Metadata for prepopulerte saker - brukes til å konstruere URL-er
  */
-const PREPOPULATED_SAK_METADATA: Record<
-  string,
-  {
-    sakstype: "TRYGDEAVTALE" | "FTRL" | "EU_EOS";
-    behandlingstema: string;
-    behandlingstype?: "ÅRSAVREGNING";
-    behandlingID: number;
-  }
-> = {
+const PREPOPULATED_SAK_METADATA = {
   // MEL-1001 til MEL-1012: opprettAvtalelandSak (12 saker)
   "MEL-1001": { sakstype: "TRYGDEAVTALE", behandlingstema: "YRKESAKTIV", behandlingID: 1 },
   "MEL-1002": { sakstype: "TRYGDEAVTALE", behandlingstema: "YRKESAKTIV", behandlingID: 2 },
@@ -106,39 +98,40 @@ const PREPOPULATED_SAK_METADATA: Record<
   "MEL-1066": { sakstype: "FTRL", behandlingstema: "YRKESAKTIV", behandlingID: 66 },
   "MEL-1067": { sakstype: "EU_EOS", behandlingstema: "IKKE_YRKESAKTIV", behandlingID: 67 },
   "MEL-1068": { sakstype: "EU_EOS", behandlingstema: "PENSJONIST", behandlingID: 68 },
-};
+} as const;
+
+/**
+ * Union type av alle gyldige prepopulerte saksnummer
+ */
+export type PrepopulertSaksnummer = keyof typeof PREPOPULATED_SAK_METADATA;
 
 /**
  * Hjelpefunksjon for å få URL til en prepopulert sak
  * @param saksnummer - Saksnummer (f.eks. "MEL-1001")
  * @returns URL til behandlingssiden for saken
  */
-export function hentPrepopulertSakUrl(saksnummer: string): string {
+export function hentPrepopulertSakUrl(saksnummer: PrepopulertSaksnummer): string {
   const metadata = PREPOPULATED_SAK_METADATA[saksnummer];
-  if (!metadata) {
-    throw new Error(
-      `Ukjent prepopulert saksnummer: ${saksnummer}. ` +
-        `Gyldige saksnummer: ${Object.keys(PREPOPULATED_SAK_METADATA).join(", ")}`,
-    );
-  }
+  const { sakstype, behandlingstema, behandlingID } = metadata;
+  const behandlingstype = "behandlingstype" in metadata ? metadata.behandlingstype : undefined;
 
   // Konstruer URL basert på sakstype, behandlingstema og behandlingstype
   // Matcher routing.jsx struktur (med /melosys base path)
   let url: string;
 
-  if (metadata.behandlingstype === "ÅRSAVREGNING") {
+  if (behandlingstype === "ÅRSAVREGNING") {
     // /melosys/:sakstype/aarsavregning/:saksnr?behandlingID=X
-    url = `/melosys/${metadata.sakstype}/aarsavregning/${saksnummer}`;
-  } else if (metadata.behandlingstema === "IKKE_YRKESAKTIV") {
+    url = `/melosys/${sakstype}/aarsavregning/${saksnummer}`;
+  } else if (behandlingstema === "IKKE_YRKESAKTIV") {
     // /melosys/:sakstype/ikkeYrkesaktiv/:saksnr?behandlingID=X
-    url = `/melosys/${metadata.sakstype}/ikkeYrkesaktiv/${saksnummer}`;
-  } else if (metadata.sakstype === "EU_EOS" && metadata.behandlingstema === "PENSJONIST") {
+    url = `/melosys/${sakstype}/ikkeYrkesaktiv/${saksnummer}`;
+  } else if (sakstype === "EU_EOS" && behandlingstema === "PENSJONIST") {
     // /melosys/EU_EOS/pensjonist/:saksnr?behandlingID=X
     url = `/melosys/EU_EOS/pensjonist/${saksnummer}`;
   } else {
     // /melosys/:sakstype/saksbehandling/:saksnr?behandlingID=X (default for TRYGDEAVTALE, FTRL, EU_EOS med andre tema)
-    url = `/melosys/${metadata.sakstype}/saksbehandling/${saksnummer}`;
+    url = `/melosys/${sakstype}/saksbehandling/${saksnummer}`;
   }
 
-  return `${url}?behandlingID=${metadata.behandlingID}`;
+  return `${url}?behandlingID=${behandlingID}`;
 }

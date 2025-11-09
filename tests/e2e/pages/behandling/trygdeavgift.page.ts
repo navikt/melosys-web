@@ -15,7 +15,11 @@ export class TrygdeavgiftPage extends BehandlingPage {
    * Vent på at et spesifikt steg i trygdeavgift-komponenten er synlig
    */
   async verifiserSteg(stegnavn: string, timeout = 10000): Promise<void> {
-    await this.page.waitForSelector(`text=${stegnavn}`, { timeout });
+    const saksnummer = getSaksnummerFraUrl(this.page);
+    await expect(
+      this.page.locator(`text=${stegnavn}`),
+      `${saksnummer}: Steg "${stegnavn}" skal være synlig`,
+    ).toBeVisible({ timeout });
   }
 
   /**

@@ -283,13 +283,13 @@ export class BehandlingPage {
     }
 
     await this.bekreftAvslutning(bekreftKnappTekst, selectText);
-    await this.verifiserVellykketAvslutning();
+    await this.verifiserVellykketAvslutning(saksnummer);
   }
 
   /**
    * Verifiser at vi blir redirectet til hovedsiden uten feilmeldinger
    */
-  async verifiserVellykketAvslutning(): Promise<void> {
+  async verifiserVellykketAvslutning(saksnummer: string): Promise<void> {
     await this.page.waitForURL(/\/melosys\/$/);
 
     // Sjekk at det ikke er noen feilmeldinger
@@ -297,7 +297,7 @@ export class BehandlingPage {
 
     for (const selector of feilmeldinger) {
       const feilmelding = this.page.locator(selector);
-      await expect(feilmelding).not.toBeVisible();
+      await expect(feilmelding, `${saksnummer}: Ingen feilmeldinger skal vises etter avslutning`).not.toBeVisible();
     }
   }
 }
