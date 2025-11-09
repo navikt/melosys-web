@@ -10,7 +10,7 @@ test.describe("Avslutt 'Utenfor avtaleland'-behandling for testdata", () => {
     const behandlingPage = new BehandlingPage(page);
 
     // Hent URL til prepopulert FTRL-sak og naviger direkte dit
-    const url = hentPrepopulertSakUrl("MEL-1013");
+    const url = hentPrepopulertSakUrl("MEL-1015");
     await behandlingPage.goto(url);
 
     const sakId = getSaksnummerFraUrl(page);
@@ -24,7 +24,7 @@ test.describe("Avslutt 'Utenfor avtaleland'-behandling for testdata", () => {
     const behandlingPage = new BehandlingPage(page);
 
     // Hent URL til prepopulert FTRL-sak og naviger direkte dit
-    const url = hentPrepopulertSakUrl("MEL-1014");
+    const url = hentPrepopulertSakUrl("MEL-1016");
     await behandlingPage.goto(url);
 
     const sakId = getSaksnummerFraUrl(page);

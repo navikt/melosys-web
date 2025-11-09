@@ -19,14 +19,11 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgKnyttTilEksisterendeSak();
 
-    const valgtSak = await opprettNySakPage.finnSak({
-      sakstype: "Utenfor avtaleland",
-      behandlingsstatus: "Behandlingen er opprettet",
-    });
+    // Bruk prepopulert OPPRETTET sak MEL-1060 (FTRL)
+    const sakId = "MEL-1060";
+    const valgtSak = opprettNySakPage.finnSakBySaksnummer(sakId);
 
-    expect(valgtSak, "Ingen'Utenfor avtaleland'-sak funnet").toBeTruthy();
-
-    valgtSak?.click();
+    await valgtSak.click();
 
     await opprettNySakPage.verifiserTilgjengeligeBehandlingstyper(valgtSak!, ["Årsavregning"]);
     const harFeilmelding = await opprettNySakPage.harFeilmelding();
@@ -63,16 +60,11 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgKnyttTilEksisterendeSak();
 
-    // Søk etter en EØS-sak med sakstema "Trygdeavgift" og behandlingstema "Pensjonist"
-    const valgtSak = await opprettNySakPage.finnSak({
-      sakstype: "EU/EØS-land",
-      sakstema: "Trygdeavgift",
-      resultattype: "Pensjonist",
-    });
+    // Bruk prepopulert EØS pensjonist-sak MEL-1054 (EU_EOS, PENSJONIST)
+    const sakId = "MEL-1054";
+    const valgtSak = opprettNySakPage.finnSakBySaksnummer(sakId);
 
-    expect(valgtSak, "Ingen EØS pensjonist-sak funnet").toBeTruthy();
-
-    valgtSak?.click();
+    await valgtSak.click();
 
     // Verifiser at årsavregning er tilgjengelig (unntak fra vanlig EØS-regel)
     await opprettNySakPage.verifiserTilgjengeligeBehandlingstyper(valgtSak!, ["Årsavregning"]);
@@ -127,13 +119,11 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgKnyttTilEksisterendeSak();
 
-    const valgtSak = await opprettNySakPage.finnSak({
-      sakstype: "Utenfor avtaleland",
-    });
+    // Bruk prepopulert UNDER_BEHANDLING sak MEL-1013 (FTRL)
+    const sakId = "MEL-1013";
+    const valgtSak = opprettNySakPage.finnSakBySaksnummer(sakId);
 
-    expect(valgtSak, "Ingen 'Utenfor avtaleland'-sak funnet").toBeTruthy();
-
-    valgtSak?.click();
+    await valgtSak.click();
 
     await opprettNySakPage.verifiserTilgjengeligeBehandlingstyper(valgtSak!, ["Årsavregning"]);
 
@@ -147,14 +137,11 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgKnyttTilEksisterendeSak();
 
-    const valgtSak = await opprettNySakPage.finnSak({
-      sakstype: "Utenfor avtaleland",
-      behandlingsstatus: "Behandlingen er avsluttet",
-    });
+    // Bruk prepopulert AVSLUTTET sak MEL-1065 (FTRL)
+    const sakId = "MEL-1065";
+    const valgtSak = opprettNySakPage.finnSakBySaksnummer(sakId);
 
-    expect(valgtSak, "Ingen 'Utenfor avtaleland - Behandlingen er avsluttet' sak funnet").toBeTruthy();
-
-    valgtSak?.click();
+    await valgtSak.click();
 
     await opprettNySakPage.verifiserTilgjengeligeBehandlingstyper(valgtSak!, [
       "Ny vurdering",

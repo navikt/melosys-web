@@ -326,7 +326,8 @@ export class OpprettNySakPage {
       | "Ikke yrkesaktiv"
       | "Pensjonist/uføretrygdet"
       | "Forespørsel fra trygdemyndighet"
-      | "Forespørsel om trygdetid",
+      | "Forespørsel om trygdetid"
+      | "Virksomhet", // Gjelder kun for virksomhet-saker
   ): Promise<void> {
     await this.velgDropdownVerdi("behandlingstema", value, "Behandlingstema");
     // Vent på at behandlingstype-dropdown er lastet inn
