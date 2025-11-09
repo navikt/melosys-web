@@ -2,7 +2,7 @@ import { test, Page, expect } from "@playwright/test";
 import { TIMEOUT_FOR_COMPLEX_TESTS } from "../../utils/testUtils";
 import { BehandlingPage } from "../../pages/behandling/behandling.page";
 import { AarsavregningPage } from "../../pages/behandling/aarsavregning.page";
-import { opprettUtenforAvtalelandSakMedAarsavregning } from "../../utils/testdataUtils";
+import { hentPrepopulertSakUrl } from "../../utils/testdataUtils";
 import { runAxeAnalyze } from "../../utils/axeUtils";
 
 /**
@@ -35,7 +35,7 @@ async function setupAarsavregningTest(page: Page, saksnummer: string) {
   aarsavregningPage = new AarsavregningPage(page);
 
   // Hent URL til prepopulert FTRL-sak med årsavregning og naviger direkte dit
-  const url = await opprettUtenforAvtalelandSakMedAarsavregning(saksnummer);
+  const url = hentPrepopulertSakUrl(saksnummer);
   await behandlingPage.goto(url);
 
   await page.waitForLoadState("domcontentloaded");

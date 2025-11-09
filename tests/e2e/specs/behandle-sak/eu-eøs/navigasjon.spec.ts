@@ -1,7 +1,7 @@
 import { test } from "@playwright/test";
 import { TIMEOUT_FOR_COMPLEX_TESTS } from "../../../utils/testUtils";
 import { BehandlingPage } from "../../../pages/behandling/behandling.page";
-import { opprettEUEOSSak } from "../../../utils/testdataUtils";
+import { hentPrepopulertSakUrl } from "../../../utils/testdataUtils";
 import { runAxeAnalyze } from "../../../utils/axeUtils";
 
 /**
@@ -21,7 +21,7 @@ test.describe("EU/EØS Stegvelger - Navigasjon", () => {
     const behandlingPage = new BehandlingPage(page);
 
     // Hent URL til prepopulert EU/EØS-sak (Ikke yrkesaktiv) og naviger direkte dit
-    const url = await opprettEUEOSSak("MEL-1051");
+    const url = hentPrepopulertSakUrl("MEL-1051");
     await behandlingPage.goto(url);
 
     await runAxeAnalyze(page, testInfo.title);
@@ -33,7 +33,7 @@ test.describe("EU/EØS Stegvelger - Navigasjon", () => {
     const behandlingPage = new BehandlingPage(page);
 
     // Hent URL til prepopulert EU/EØS-sak (Ikke yrkesaktiv) og naviger direkte dit
-    const url = await opprettEUEOSSak("MEL-1052");
+    const url = hentPrepopulertSakUrl("MEL-1052");
     await behandlingPage.goto(url);
 
     await runAxeAnalyze(page, testInfo.title);
@@ -45,7 +45,7 @@ test.describe("EU/EØS Stegvelger - Navigasjon", () => {
     const behandlingPage = new BehandlingPage(page);
 
     // Hent URL til prepopulert EU/EØS-sak (Ikke yrkesaktiv) og naviger direkte dit
-    const url = await opprettEUEOSSak("MEL-1053");
+    const url = hentPrepopulertSakUrl("MEL-1053");
     await behandlingPage.goto(url);
 
     await runAxeAnalyze(page, testInfo.title);

@@ -2,9 +2,7 @@ import { expect, test } from "@playwright/test";
 import { runAxeAnalyze } from "../../../utils/axeUtils";
 import { HovedsidePage, USER_ID_VALID } from "../../../pages/hovedside.page";
 import { OpprettNySakPage } from "../../../pages/opprett-ny-sak/opprett-ny-sak.page";
-import { getSaksnummerFraLocator, getSaksnummerFraUrl, TIMEOUT_FOR_COMPLEX_TESTS } from "../../../utils/testUtils";
-import { opprettAvtalelandSak, PREPOPULATED_SAKER } from "../../../utils/testdataUtils";
-import { BehandlingPage } from "../../../pages/behandling/behandling.page";
+import { getSaksnummerFraLocator, TIMEOUT_FOR_COMPLEX_TESTS } from "../../../utils/testUtils";
 
 /**
  * MELOSYS-7385: Test regresjonstest for Avtaleland-saker
@@ -30,8 +28,8 @@ test.describe("Avtaleland behandlingslogikk (regresjon)", () => {
   test("Regresjon: Avtaleland med åpen behandling - viser varselmelding", async ({ page }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
 
-    // Bruk prepopulert Avtaleland-sak
-    const sakId = PREPOPULATED_SAKER.AVTALELAND_YRKESAKTIV;
+    // Bruk prepopulert Avtaleland-sak med UNDER_BEHANDLING status
+    const sakId = "MEL-1001";
 
     const hovedsidePage = new HovedsidePage(page);
     await hovedsidePage.goto();
@@ -64,19 +62,12 @@ test.describe("Avtaleland behandlingslogikk (regresjon)", () => {
   });
 
   test("Regresjon: Avtaleland med henlagt søknad - viser varselmelding", async ({ page }, testInfo) => {
-    test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout siden vi oppretter og henlegger sak
+    test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
 
-    const behandlingPage = new BehandlingPage(page);
-
-    // Hent URL til prepopulert Avtaleland-sak og naviger direkte dit
-    const url = await opprettAvtalelandSak("MEL-1010");
-    await behandlingPage.goto(url);
-
-    const sakId = getSaksnummerFraUrl(page);
-    await behandlingPage.avsluttBehandling("Søknaden/klagen er trukket", sakId);
+    // Bruk prepopulert AVSLUTTET Avtaleland-sak (MEL-1063)
+    const sakId = "MEL-1063";
 
     const hovedsidePage = new HovedsidePage(page);
-
     await hovedsidePage.goto();
     await hovedsidePage.klikkOpprettNySakKnapp();
 
@@ -111,19 +102,12 @@ test.describe("Avtaleland behandlingslogikk (regresjon)", () => {
   test("Regresjon: Avtaleland med ferdigbehandlede - Ny vurdering og Henvendelse tilgjengelig", async ({
     page,
   }, testInfo) => {
-    test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout siden vi oppretter og avslutter sak
+    test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
 
-    const behandlingPage = new BehandlingPage(page);
-
-    // Hent URL til prepopulert Avtaleland-sak og naviger direkte dit
-    const url = await opprettAvtalelandSak("MEL-1011");
-    await behandlingPage.goto(url);
-
-    const sakId = getSaksnummerFraUrl(page);
-    await behandlingPage.avsluttBehandling("Søknaden er innvilget", sakId);
+    // Bruk prepopulert AVSLUTTET Avtaleland-sak (MEL-1064)
+    const sakId = "MEL-1064";
 
     const hovedsidePage = new HovedsidePage(page);
-
     await hovedsidePage.goto();
     await hovedsidePage.klikkOpprettNySakKnapp();
 

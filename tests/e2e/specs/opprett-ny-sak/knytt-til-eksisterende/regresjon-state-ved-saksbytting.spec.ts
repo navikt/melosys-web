@@ -3,7 +3,7 @@ import { runAxeAnalyze } from "../../../utils/axeUtils";
 import { HovedsidePage, USER_ID_VALID } from "../../../pages/hovedside.page";
 import { OpprettNySakPage } from "../../../pages/opprett-ny-sak/opprett-ny-sak.page";
 import { getSaksnummerFraLocator, getSaksnummerFraUrl, TIMEOUT_FOR_COMPLEX_TESTS } from "../../../utils/testUtils";
-import { opprettUtenforAvtalelandSak, opprettEUEOSSak } from "../../../utils/testdataUtils";
+import { hentPrepopulertSakUrl } from "../../../utils/testdataUtils";
 import { BehandlingPage } from "../../../pages/behandling/behandling.page";
 
 /**
@@ -34,13 +34,13 @@ test.describe("State-håndtering ved saksbytting", () => {
     const behandlingPage = new BehandlingPage(page);
 
     // Opprett sak med avsluttet behandling (Utenfor avtaleland)
-    const url1 = await opprettUtenforAvtalelandSak("MEL-1021");
+    const url1 = hentPrepopulertSakUrl("MEL-1021");
     await behandlingPage.goto(url1);
     const sakId1 = getSaksnummerFraUrl(page);
     await behandlingPage.avsluttBehandling("Søknaden er innvilget", sakId1);
 
     // Opprett flere saker med avsluttede behandlinger for SYMPTOM-testen
-    const url2 = await opprettUtenforAvtalelandSak("MEL-1022");
+    const url2 = hentPrepopulertSakUrl("MEL-1022");
     await behandlingPage.goto(url2);
     const sakId2 = getSaksnummerFraUrl(page);
     await behandlingPage.avsluttBehandling("Søknaden er innvilget", sakId2);

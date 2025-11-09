@@ -1,7 +1,3 @@
-import { Page, Locator } from "@playwright/test";
-import { SokPage } from "../pages/sok.page";
-import { BehandlingPage } from "../pages/behandling/behandling.page";
-
 /**
  * Prepopulerte test-saker i melosys-api database
  * Disse sakene opprettes automatisk ved oppstart av melosys-api (local-mock profil)
@@ -9,28 +5,15 @@ import { BehandlingPage } from "../pages/behandling/behandling.page";
  *
  * Alle saker tilhører testbruker: 30056928150
  *
- * HVER TEST FÅR SIN EGEN UNIKE SAK for full isolasjon (56 saker):
- * MEL-1001 til MEL-1012: opprettAvtalelandSak (12 saker)
- * MEL-1013 til MEL-1022: opprettUtenforAvtalelandSak (10 saker)
- * MEL-1023 til MEL-1050: opprettUtenforAvtalelandSakMedAarsavregning (28 årsavregning-saker)
- * MEL-1051 til MEL-1053: opprettEUEOSSak (3 saker)
- * MEL-1054 til MEL-1056: opprettEøsPensjonistSakMedTrygdeavgift (3 saker)
- */
-export const PREPOPULATED_SAKER = {
-  /** MEL-1004: EU/EØS - Medlemskap og lovvalg - Ikke yrkesaktiv - Førstegangsbehandling */
-  EU_EOS_IKKE_YRKESAKTIV: "MEL-1018",
-
-  /** MEL-1005: EU/EØS - Medlemskap og lovvalg - Pensjonist - Førstegangsbehandling */
-  EU_EOS_PENSJONIST: "MEL-1021",
-
-  /** Deprecated - bruk ikke lenger disse, alle tester skal ha sin egen sak */
-  AVTALELAND_YRKESAKTIV: "MEL-1001",
-  FTRL_YRKESAKTIV: "MEL-1008",
-  EU_EOS_TRYGDEAVGIFT_PENSJONIST: "MEL-1022",
-  FTRL_AARSAVREGNING: "MEL-1024",
-} as const;
-
-/**
+ * HVER TEST FÅR SIN EGEN UNIKE SAK for full isolasjon (68 saker):
+ * MEL-1001 til MEL-1012: opprettAvtalelandSak (12 saker - UNDER_BEHANDLING)
+ * MEL-1013 til MEL-1022: opprettUtenforAvtalelandSak (10 saker - UNDER_BEHANDLING)
+ * MEL-1023 til MEL-1050: opprettUtenforAvtalelandSakMedAarsavregning (28 årsavregning-saker - UNDER_BEHANDLING)
+ * MEL-1051 til MEL-1053: opprettEUEOSSak (3 saker - UNDER_BEHANDLING)
+ * MEL-1054 til MEL-1056: opprettEøsPensjonistSakMedTrygdeavgift (3 saker - UNDER_BEHANDLING)
+ * MEL-1057 til MEL-1062: OPPRETTET saker for "knytt til eksisterende" tester (6 saker)
+ * MEL-1063 til MEL-1068: AVSLUTTET saker for "knytt til eksisterende" tester (6 saker)
+ *
  * Metadata for prepopulerte saker - brukes til å konstruere URL-er
  */
 const PREPOPULATED_SAK_METADATA: Record<
@@ -107,6 +90,22 @@ const PREPOPULATED_SAK_METADATA: Record<
   "MEL-1054": { sakstype: "EU_EOS", behandlingstema: "PENSJONIST", behandlingID: 54 },
   "MEL-1055": { sakstype: "EU_EOS", behandlingstema: "PENSJONIST", behandlingID: 55 },
   "MEL-1056": { sakstype: "EU_EOS", behandlingstema: "PENSJONIST", behandlingID: 56 },
+
+  // MEL-1057 til MEL-1062: OPPRETTET saker for "knytt til eksisterende" tester (6 saker)
+  "MEL-1057": { sakstype: "TRYGDEAVTALE", behandlingstema: "YRKESAKTIV", behandlingID: 57 },
+  "MEL-1058": { sakstype: "TRYGDEAVTALE", behandlingstema: "YRKESAKTIV", behandlingID: 58 },
+  "MEL-1059": { sakstype: "FTRL", behandlingstema: "YRKESAKTIV", behandlingID: 59 },
+  "MEL-1060": { sakstype: "FTRL", behandlingstema: "YRKESAKTIV", behandlingID: 60 },
+  "MEL-1061": { sakstype: "EU_EOS", behandlingstema: "IKKE_YRKESAKTIV", behandlingID: 61 },
+  "MEL-1062": { sakstype: "EU_EOS", behandlingstema: "PENSJONIST", behandlingID: 62 },
+
+  // MEL-1063 til MEL-1068: AVSLUTTET saker for "knytt til eksisterende" tester (6 saker)
+  "MEL-1063": { sakstype: "TRYGDEAVTALE", behandlingstema: "YRKESAKTIV", behandlingID: 63 },
+  "MEL-1064": { sakstype: "TRYGDEAVTALE", behandlingstema: "YRKESAKTIV", behandlingID: 64 },
+  "MEL-1065": { sakstype: "FTRL", behandlingstema: "YRKESAKTIV", behandlingID: 65 },
+  "MEL-1066": { sakstype: "FTRL", behandlingstema: "YRKESAKTIV", behandlingID: 66 },
+  "MEL-1067": { sakstype: "EU_EOS", behandlingstema: "IKKE_YRKESAKTIV", behandlingID: 67 },
+  "MEL-1068": { sakstype: "EU_EOS", behandlingstema: "PENSJONIST", behandlingID: 68 },
 };
 
 /**
@@ -142,77 +141,4 @@ export function hentPrepopulertSakUrl(saksnummer: string): string {
   }
 
   return `${url}?behandlingID=${metadata.behandlingID}`;
-}
-
-/**
- * Hent prepopulert Avtaleland-sak
- * @param saksnummer - Saksnummer (f.eks. "MEL-1001")
- * @returns URL til behandlingssiden
- */
-export async function opprettAvtalelandSak(saksnummer: string): Promise<string> {
-  return hentPrepopulertSakUrl(saksnummer);
-}
-
-/**
- * Hent prepopulert FTRL-sak
- * @param saksnummer - Saksnummer (f.eks. "MEL-1008")
- * @returns URL til behandlingssiden
- */
-export async function opprettUtenforAvtalelandSak(saksnummer: string): Promise<string> {
-  return hentPrepopulertSakUrl(saksnummer);
-}
-
-/**
- * Avslutt en behandling på en sak
- * @param page - Playwright Page
- * @param sak - Locator for saken (fra finnÅpneSaker eller lignende)
- * @param vedtaksType - Vedtaket som skal registreres (f.eks. "Søknaden er innvilget")
- */
-export async function avsluttBehandling(
-  page: Page,
-  sak: Locator,
-  vedtaksType:
-    | "Søknaden er innvilget"
-    | "Søknaden er avslått"
-    | "Avslå søknad pga. manglende opplysninger"
-    | "Ferdigbehandlet"
-    | "Søknaden/klagen er trukket"
-    | "Behandlingen er bortfalt",
-): Promise<void> {
-  const sokPage = new SokPage(page);
-  const sakId = await sokPage.getSaksnummer(sak);
-
-  await sokPage.klikkVisBehandling(sak);
-  const behandlingPage = new BehandlingPage(page);
-  await behandlingPage.verifiserBehandlingsside();
-  await behandlingPage.avsluttBehandling(vedtaksType, sakId);
-}
-
-/**
- * Hent prepopulert FTRL-sak med Årsavregning
- * Denne saken har 2 behandlinger: én avsluttet førstegangsbehandling og én åpen årsavregning
- * @param saksnummer - Saksnummer (f.eks. "MEL-1023")
- * @returns URL til behandlingssiden
- */
-export async function opprettUtenforAvtalelandSakMedAarsavregning(saksnummer: string): Promise<string> {
-  return hentPrepopulertSakUrl(saksnummer);
-}
-
-/**
- * Hent prepopulert EU/EØS pensjonist-sak med trygdeavgift
- * Dette er en spesialsak som skal kunne opprette årsavregning selv med åpne behandlinger (MELOSYS-7603)
- * @param saksnummer - Saksnummer (f.eks. "MEL-1021")
- * @returns URL til behandlingssiden
- */
-export async function opprettEøsPensjonistSakMedTrygdeavgift(saksnummer: string): Promise<string> {
-  return hentPrepopulertSakUrl(saksnummer);
-}
-
-/**
- * Hent prepopulert EU/EØS-sak
- * @param saksnummer - Saksnummer (f.eks. "MEL-1018")
- * @returns URL til behandlingssiden
- */
-export async function opprettEUEOSSak(saksnummer: string): Promise<string> {
-  return hentPrepopulertSakUrl(saksnummer);
 }

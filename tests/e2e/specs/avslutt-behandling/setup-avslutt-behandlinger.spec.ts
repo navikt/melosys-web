@@ -1,7 +1,7 @@
 import { test } from "@playwright/test";
-import { TIMEOUT_FOR_COMPLEX_TESTS, getSaksnummerFraUrl } from "../../utils/testUtils";
+import { getSaksnummerFraUrl, TIMEOUT_FOR_COMPLEX_TESTS } from "../../utils/testUtils";
 import { BehandlingPage } from "../../pages/behandling/behandling.page";
-import { opprettAvtalelandSak, opprettUtenforAvtalelandSak } from "../../utils/testdataUtils";
+import { hentPrepopulertSakUrl } from "../../utils/testdataUtils";
 
 /**
  * Denne testen setter opp nødvendige testdata for "knytt til eksisterende sak"-testene
@@ -13,7 +13,7 @@ test.describe("Setup testdata for knytt-til-eksisterende-sak tester", () => {
     const behandlingPage = new BehandlingPage(page);
 
     // Hent URL til prepopulert Avtaleland-sak og naviger direkte dit
-    const url = await opprettAvtalelandSak("MEL-1002");
+    const url = hentPrepopulertSakUrl("MEL-1002");
     await behandlingPage.goto(url);
 
     const sakId = getSaksnummerFraUrl(page);
@@ -25,7 +25,7 @@ test.describe("Setup testdata for knytt-til-eksisterende-sak tester", () => {
     const behandlingPage = new BehandlingPage(page);
 
     // Hent URL til prepopulert FTRL-sak og naviger direkte dit
-    const url = await opprettUtenforAvtalelandSak("MEL-1015");
+    const url = hentPrepopulertSakUrl("MEL-1015");
     await behandlingPage.goto(url);
 
     const sakId = getSaksnummerFraUrl(page);

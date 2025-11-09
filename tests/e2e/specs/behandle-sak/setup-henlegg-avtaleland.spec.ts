@@ -1,7 +1,7 @@
 import { test } from "@playwright/test";
 import { BehandlingPage } from "../../pages/behandling/behandling.page";
-import { TIMEOUT_FOR_COMPLEX_TESTS, getSaksnummerFraUrl } from "../../utils/testUtils";
-import { opprettAvtalelandSak } from "../../utils/testdataUtils";
+import { getSaksnummerFraUrl, TIMEOUT_FOR_COMPLEX_TESTS } from "../../utils/testUtils";
+import { hentPrepopulertSakUrl } from "../../utils/testdataUtils";
 import { runAxeAnalyze } from "../../utils/axeUtils";
 
 /**
@@ -19,7 +19,7 @@ test.describe("Setup: Avtaleland-sak med henlagt behandling", () => {
     const behandlingPage = new BehandlingPage(page);
 
     // Hent URL til prepopulert Avtaleland-sak og naviger direkte dit
-    const url = await opprettAvtalelandSak("MEL-1009");
+    const url = await hentPrepopulertSakUrl("MEL-1009");
     await behandlingPage.goto(url);
 
     const sakId = getSaksnummerFraUrl(page);

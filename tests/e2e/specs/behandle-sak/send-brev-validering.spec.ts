@@ -1,8 +1,8 @@
-import { test, Page } from "@playwright/test";
+import { Page, test } from "@playwright/test";
 import { SendBrevPage } from "../../pages/behandling/send-brev.page";
 import { assertErrors, TIMEOUT_FOR_COMPLEX_TESTS } from "../../utils/testUtils";
 import { runAxeAnalyze } from "../../utils/axeUtils";
-import { opprettAvtalelandSak, opprettUtenforAvtalelandSakMedAarsavregning } from "../../utils/testdataUtils";
+import { hentPrepopulertSakUrl } from "../../utils/testdataUtils";
 
 let sendBrevPage: SendBrevPage;
 
@@ -11,7 +11,7 @@ async function setupSendBrevTest(page: Page, saksnummer: string = "MEL-1003") {
   sendBrevPage = new SendBrevPage(page);
 
   // Hent URL til prepopulert Avtaleland-sak og naviger direkte dit
-  const url = await opprettAvtalelandSak(saksnummer);
+  const url = hentPrepopulertSakUrl(saksnummer);
   await sendBrevPage.goto(url);
 
   await page.waitForLoadState("domcontentloaded");
@@ -80,7 +80,7 @@ test.describe("Validering av årsavregning brevmaler", () => {
     sendBrevPage = new SendBrevPage(page);
 
     // Hent URL til prepopulert FTRL-sak med årsavregning og naviger direkte dit
-    const url = await opprettUtenforAvtalelandSakMedAarsavregning("MEL-1008");
+    const url = hentPrepopulertSakUrl("MEL-1023");
     await sendBrevPage.goto(url);
 
     await page.waitForLoadState("domcontentloaded");

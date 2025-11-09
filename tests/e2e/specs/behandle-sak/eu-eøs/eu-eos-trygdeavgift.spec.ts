@@ -2,7 +2,7 @@ import { test } from "@playwright/test";
 import { TrygdeavgiftPage } from "../../../pages/behandling/trygdeavgift.page";
 import { InngangPage } from "../../../pages/behandling/inngang.page";
 import { BehandlingPage } from "../../../pages/behandling/behandling.page";
-import { opprettEøsPensjonistSakMedTrygdeavgift } from "../../../utils/testdataUtils";
+import { hentPrepopulertSakUrl } from "../../../utils/testdataUtils";
 import { runAxeAnalyze } from "../../../utils/axeUtils";
 
 /**
@@ -23,7 +23,7 @@ test.describe("EU/EØS Trygdeavgift", () => {
     const behandlingPage = new BehandlingPage(page);
 
     // Hent URL til prepopulert EØS pensjonist-sak med trygdeavgift og naviger direkte dit
-    const url = await opprettEøsPensjonistSakMedTrygdeavgift("MEL-1054");
+    const url = hentPrepopulertSakUrl("MEL-1054");
     await behandlingPage.goto(url);
 
     // Steg 1: Inngang (Oppgi opplysninger fra attest / S1)

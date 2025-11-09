@@ -1,7 +1,7 @@
 import { test } from "@playwright/test";
 import { TIMEOUT_FOR_COMPLEX_TESTS } from "../../../utils/testUtils";
 import { BehandlingPage } from "../../../pages/behandling/behandling.page";
-import { opprettUtenforAvtalelandSak } from "../../../utils/testdataUtils";
+import { hentPrepopulertSakUrl } from "../../../utils/testdataUtils";
 import { runAxeAnalyze } from "../../../utils/axeUtils";
 
 /**
@@ -24,7 +24,7 @@ test.describe("FTRL Stegvelger - Navigasjon", () => {
     const behandlingPage = new BehandlingPage(page);
 
     // Hent URL til prepopulert FTRL-sak og naviger direkte dit
-    const url = await opprettUtenforAvtalelandSak("MEL-1016");
+    const url = hentPrepopulertSakUrl("MEL-1016");
     await behandlingPage.goto(url);
 
     await runAxeAnalyze(page, testInfo.title);
@@ -36,7 +36,7 @@ test.describe("FTRL Stegvelger - Navigasjon", () => {
     const behandlingPage = new BehandlingPage(page);
 
     // Hent URL til prepopulert FTRL-sak og naviger direkte dit
-    const url = await opprettUtenforAvtalelandSak("MEL-1017");
+    const url = hentPrepopulertSakUrl("MEL-1017");
     await behandlingPage.goto(url);
 
     await runAxeAnalyze(page, testInfo.title);
@@ -48,7 +48,7 @@ test.describe("FTRL Stegvelger - Navigasjon", () => {
     const behandlingPage = new BehandlingPage(page);
 
     // Hent URL til prepopulert FTRL-sak og naviger direkte dit
-    const url = await opprettUtenforAvtalelandSak("MEL-1018");
+    const url = hentPrepopulertSakUrl("MEL-1018");
     await behandlingPage.goto(url);
 
     await runAxeAnalyze(page, testInfo.title);
@@ -60,7 +60,7 @@ test.describe("FTRL Stegvelger - Navigasjon", () => {
     const behandlingPage = new BehandlingPage(page);
 
     // Hent URL til prepopulert FTRL-sak og naviger direkte dit
-    const url = await opprettUtenforAvtalelandSak("MEL-1019");
+    const url = hentPrepopulertSakUrl("MEL-1019");
     await behandlingPage.goto(url);
 
     await runAxeAnalyze(page, testInfo.title);

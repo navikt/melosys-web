@@ -3,7 +3,7 @@ import { runAxeAnalyze } from "../../../utils/axeUtils";
 import { HovedsidePage, USER_ID_VALID } from "../../../pages/hovedside.page";
 import { OpprettNySakPage } from "../../../pages/opprett-ny-sak/opprett-ny-sak.page";
 import { TIMEOUT_FOR_COMPLEX_TESTS, getSaksnummerFraUrl } from "../../../utils/testUtils";
-import { opprettUtenforAvtalelandSak, PREPOPULATED_SAKER } from "../../../utils/testdataUtils";
+import { hentPrepopulertSakUrl } from "../../../utils/testdataUtils";
 import { BehandlingPage } from "../../../pages/behandling/behandling.page";
 
 /**
@@ -29,8 +29,8 @@ test.describe("'Utenfor avtaleland' behandlingslogikk", () => {
   test("AC1: Utenfor avtaleland med åpen behandling - kun årsavregning tilgjengelig", async ({ page }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout siden vi oppretter sak
 
-    // Bruk prepopulert FTRL-sak
-    const sakId = PREPOPULATED_SAKER.FTRL_YRKESAKTIV;
+    // Bruk prepopulert FTRL-sak med UNDER_BEHANDLING status
+    const sakId = "MEL-1013";
 
     const hovedsidePage = new HovedsidePage(page);
     await hovedsidePage.goto();
@@ -54,8 +54,8 @@ test.describe("'Utenfor avtaleland' behandlingslogikk", () => {
   test("AC2: Utenfor avtaleland med åpen årsavregning - finner sak", async ({ page }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout siden vi oppretter sak + årsavregning
 
-    // Bruk prepopulert FTRL-sak
-    const sakId = PREPOPULATED_SAKER.FTRL_YRKESAKTIV;
+    // Bruk prepopulert FTRL-sak med UNDER_BEHANDLING status
+    const sakId = "MEL-1014";
 
     const hovedsidePage = new HovedsidePage(page);
 
@@ -99,7 +99,7 @@ test.describe("'Utenfor avtaleland' behandlingslogikk", () => {
     const behandlingPage = new BehandlingPage(page);
 
     // Hent URL til prepopulert FTRL-sak og naviger direkte dit
-    const url = await opprettUtenforAvtalelandSak("MEL-1020");
+    const url = hentPrepopulertSakUrl("MEL-1020");
     await behandlingPage.goto(url);
 
     const sakId = getSaksnummerFraUrl(page);
