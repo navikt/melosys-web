@@ -29,7 +29,7 @@ test.describe("Avtaleland behandlingslogikk (regresjon)", () => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
 
     // Bruk prepopulert Avtaleland-sak med UNDER_BEHANDLING status
-    const sakId = "MEL-1001";
+    const sakId = "MEL-1069";
 
     const hovedsidePage = new HovedsidePage(page);
     await hovedsidePage.goto();
@@ -46,7 +46,10 @@ test.describe("Avtaleland behandlingslogikk (regresjon)", () => {
     const feilmelding = "Du kan ikke opprette en ny behandling på eksisterende sak med en aktiv/pågående behandling";
 
     // Vent spesifikt på at feilmeldingen vises (ikke bare loading-panelet)
-    await page.locator(".knyttTilSak__behandlingspanel").filter({ hasText: feilmelding }).waitFor({ state: "visible" });
+    await page
+      .locator(".knyttTilSak__behandlingspanel")
+      .filter({ hasText: feilmelding })
+      .waitFor({ state: "visible", timeout: 10000 });
 
     expect(
       await opprettNySakPage.harFeilmelding(feilmelding),
