@@ -48,7 +48,7 @@ interface Props {
   oppdaterStatus: (isValid: boolean) => void;
 }
 
-const { NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT, FØRSTEGANG } = MKV.Koder.behandlinger.behandlingstyper;
+const { NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingstyper;
 
 export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: Props) {
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
