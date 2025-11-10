@@ -902,7 +902,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
                 minDate={minDate}
                 trygdedekninger={trygdedekninger}
                 setValue={setValue}
-                erDeltGrunnlag={erDeltGrunnlag}
+                erDeltGrunnlag={true}
               />
             ))}
           </div>
