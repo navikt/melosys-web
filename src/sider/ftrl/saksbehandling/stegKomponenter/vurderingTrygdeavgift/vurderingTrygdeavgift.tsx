@@ -93,6 +93,8 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   };
 
   const erÅpenSluttDato = !innvilgetMedlemskapsperiode?.tom;
+  const erNyVurderingEllerManglendeInnbetaling =
+    behandlingstype === NY_VURDERING || behandlingstype === MANGLENDE_INNBETALING_TRYGDEAVGIFT;
 
   const {
     control,
@@ -162,7 +164,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   useEffect(() => {
     Api.Trygdeavgift.hentBeregnetTrygdeavgift(behandlingID).then((beregnetTrygdeavgift) => {
       if (
-        behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING &&
+        erNyVurderingEllerManglendeInnbetaling &&
         beregnetTrygdeavgift.trygdeavgiftsgrunnlag.skatteforholdsperioder.length === 0
       ) {
         hentOpprinneligTrygdeavgiftsgrunnlag();
@@ -327,24 +329,19 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
         Trygdeavgift
       </Nav.Heading>
 
-      {behandlingstype === NY_VURDERING && !skalIkkeViseTidligerePerioderToggle && redigerbart && (
+      {erNyVurderingEllerManglendeInnbetaling && !skalIkkeViseTidligerePerioderToggle && redigerbart && (
         <Nav.BodyLong size="small" className="alert--spacing-bottom">
           Ved ny vurdering vises tidligere perioder med skatteforhold og inntekt. Gjør nødvendige endringer eller legg
           til en ny periode.
         </Nav.BodyLong>
       )}
 
-      {(behandlingstype === NY_VURDERING ||
-        behandlingstype === MANGLENDE_INNBETALING_TRYGDEAVGIFT ||
-        behandlingstype === FØRSTEGANG) &&
-        skalIkkeViseTidligerePerioderToggle &&
-        harMedlemskapsperiodeFraTidligereÅr &&
-        redigerbart && (
-          <Alert variant="warning" size="small" className="alert--spacing-bottom">
-            Trygdeavgift for tidligere år skal fastsettes på årsavregning. Du skal derfor ikke oppgi skatte- og
-            inntektsperioder for tidligere år i denne behandlingen.
-          </Alert>
-        )}
+      {skalIkkeViseTidligerePerioderToggle && harMedlemskapsperiodeFraTidligereÅr && redigerbart && (
+        <Alert variant="warning" size="small" className="alert--spacing-bottom">
+          Trygdeavgift for tidligere år skal fastsettes på årsavregning. Du skal derfor ikke oppgi skatte- og
+          inntektsperioder for tidligere år i denne behandlingen.
+        </Alert>
+      )}
 
       {!erÅpenSluttDato && skalViseSkatteforholdOgInntektsperioder && (
         <>
