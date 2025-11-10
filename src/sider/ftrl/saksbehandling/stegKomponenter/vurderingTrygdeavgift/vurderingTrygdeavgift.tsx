@@ -57,11 +57,13 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const sakstype = useSelector(fagsakSelectors.SakstypeKodeSelector);
   const medlemskapsperiodeStatus = useSelector(medlemskapsperioderSelectors.MedlemskapsperioderStatusSelector);
   const medlemskapsperioder = useSelector(medlemskapsperioderSelectors.AlleMedlemskapsperioderSelector);
+  const innvilgetMedlemskapsperiode = useSelector(
+    medlemskapsperioderSelectors.SamletInnvilgetMedlemskapsperiodeSelector,
+  );
+  const lovvalgsperioder = useSelector(lovvalgsperioderSelectors.PeriodeSelector);
   const erEuEøs = sakstype === MKV.Koder.sakstyper.EU_EOS;
 
-  const avgiftspliktigeperioder = erEuEøs
-    ? useSelector(lovvalgsperioderSelectors.PeriodeSelector)
-    : useSelector(medlemskapsperioderSelectors.SamletInnvilgetMedlemskapsperiodeSelector);
+  const avgiftspliktigeperioder = erEuEøs ? lovvalgsperioder : innvilgetMedlemskapsperiode;
 
   const skalIkkeViseTidligerePerioderToggle =
     useFeatureToggle(MELOSYS_FAKTURERINGSKOMPONENTEN_IKKE_TIDLIGERE_PERIODER) ?? false;
