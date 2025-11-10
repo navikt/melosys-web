@@ -331,7 +331,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
             )}
           {!harTrygdeavgiftFraAvgiftssystemetIsPending &&
             (harGrunnlag === false || harTrygdeavgiftFraAvgiftssystemet) &&
-            harTrygdeavgiftFraAvgiftssystemet === true && (
+            (harTrygdeavgiftFraAvgiftssystemet === true || harTrygdeavgiftFraAvgiftssystemet === false) && (
               <AarsavregningUtenEllerDeltGrunnlag
                 bekreft={bekreft}
                 aktivtSteg={aktivtSteg}
