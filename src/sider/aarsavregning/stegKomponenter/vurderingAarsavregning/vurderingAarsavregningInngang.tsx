@@ -304,6 +304,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
             <Nav.Row>
               <Nav.Column xs="12">
                 <Nav.RadioGroup
+                  key={`trygdeavgiftFraAvgiftssystemetRadioGroup ${valgtÅr || initieltÅr || ""}`}
                   onChange={håndterHarTrygdeavgiftFraAvgiftssystemet}
                   legend={
                     <LabelMedHjelpetekst
@@ -330,7 +331,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
             )}
           {!harTrygdeavgiftFraAvgiftssystemetIsPending &&
             (harGrunnlag === false || harTrygdeavgiftFraAvgiftssystemet) &&
-            harTrygdeavgiftFraAvgiftssystemet !== null && (
+            harTrygdeavgiftFraAvgiftssystemet === true && (
               <AarsavregningUtenEllerDeltGrunnlag
                 bekreft={bekreft}
                 aktivtSteg={aktivtSteg}
