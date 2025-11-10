@@ -112,9 +112,6 @@ export function beregnTrygdeavgiftsperioder(
 export const hentMedlemskapsFomTomDato = (medlemskapsperioder?: Avgiftspliktigperiode[]) => {
   if (medlemskapsperioder && !Utils._isEmpty(medlemskapsperioder)) {
     const sorted = [...medlemskapsperioder].sort(Utils.dato.sorterEtterNorskFomDato);
-    /* eslint-disable-next-line no-console */
-    console.log("[hentMedlemskapsFomTomDato] sorted with Utils.dato.sorterEtterNorskFomDato", sorted);
-
     const fomISO = Utils.dato.formatterDatoTilISO(sorted[0].fomDato);
     const tomISO = Utils.dato.formatterDatoTilISO(sorted[sorted.length - 1].tomDato);
     return { fom: fomISO, tom: tomISO };
@@ -169,10 +166,11 @@ export const mapTilInntektskilderProps = (
         arbAvgBetales: Utils.streng.boolTilUppercaseStreng(false),
         bruttoInntekt: undefined,
         kildetype: "",
+        erMaanedsbelop: Utils.streng.boolTilUppercaseStreng(true),
       },
     ];
   }
-  return [{}] as Inntektskilde[];
+  return [{ erMaanedsbelop: Utils.streng.boolTilUppercaseStreng(true) }] as Inntektskilde[];
 };
 
 export const beregnSumTilFakturaEllerRefusjon = (
