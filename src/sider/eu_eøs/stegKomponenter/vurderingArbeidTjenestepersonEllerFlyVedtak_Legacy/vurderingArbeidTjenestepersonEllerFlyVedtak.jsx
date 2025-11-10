@@ -1,3 +1,7 @@
+/**
+ * @deprecated Denne skal ikke brukes lenger, filene fjernes sammen med Toggle
+ */
+
 import { useCallback, useEffect, useState } from "react";
 import { connect, useSelector } from "react-redux";
 import { getFormValues, isValid, reduxForm } from "redux-form";
