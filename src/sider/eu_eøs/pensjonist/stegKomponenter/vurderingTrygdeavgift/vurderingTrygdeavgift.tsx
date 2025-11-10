@@ -4,6 +4,7 @@ import { FieldValue, useFieldArray, useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import * as Mui from "../../../../../felleskomponenter/ui";
 import * as Nav from "../../../../../navFrontend";
+import { Alert } from "../../../../../navFrontend";
 import * as Api from "../../../../../services/api";
 import * as Utils from "../../../../../utils";
 
@@ -34,10 +35,8 @@ import vurderingTrygdeavgiftSchema from "./vurderingTrygdeavgiftSchema";
 
 import { erBrukerSkattepliktigIHelePerioden } from "../../../../aarsavregning/stegKomponenter/vurderingAarsavregning/utils";
 import { fagsakSelectors } from "../../../../../ducks/fagsaker";
-import { Alert } from "../../../../../navFrontend";
 import { useFeatureToggle } from "../../../../../featuretoggle";
 import { MELOSYS_FAKTURERINGSKOMPONENTEN_IKKE_TIDLIGERE_PERIODER } from "../../../../../featuretoggle/toggleNavn";
-import { harPerioderFraTidligereÅr } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 
 const { EU_EOS } = MKV.Koder.sakstyper;
 const { PENSJONIST } = MKV.Koder.behandlinger.behandlingstema;
@@ -337,7 +336,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
         Trygdeavgift
       </Nav.Heading>
 
-      {behandlingstype === NY_VURDERING && !skalIkkeViseTidligerePerioderToggle && (
+      {behandlingstype === NY_VURDERING && !skalIkkeViseTidligerePerioderToggle && redigerbart && (
         <Nav.BodyLong size="small" className="alert--spacing-bottom">
           Ved ny vurdering vises tidligere perioder med skatteforhold og inntekt. Gjør nødvendige endringer eller legg
           til en ny periode.
@@ -348,7 +347,8 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
         behandlingstype === MANGLENDE_INNBETALING_TRYGDEAVGIFT ||
         behandlingstype === FØRSTEGANG) &&
         skalIkkeViseTidligerePerioderToggle &&
-        harHelseutgiftDekkesPeriodeFraTidligereÅr && (
+        harHelseutgiftDekkesPeriodeFraTidligereÅr &&
+        redigerbart && (
           <Alert variant="warning" size="small" className="alert--spacing-bottom">
             Trygdeavgift for tidligere år skal fastsettes på årsavregning. Du skal derfor ikke oppgi skatte- og
             inntektsperioder for tidligere år i denne behandlingen.

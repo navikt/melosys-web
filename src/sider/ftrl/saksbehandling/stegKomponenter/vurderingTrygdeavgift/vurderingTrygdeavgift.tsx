@@ -4,6 +4,7 @@ import { FieldValue, useFieldArray, useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import * as Mui from "../../../../../felleskomponenter/ui";
 import * as Nav from "../../../../../navFrontend";
+import { Alert } from "../../../../../navFrontend";
 import * as Api from "../../../../../services/api";
 import * as Utils from "../../../../../utils";
 
@@ -37,7 +38,6 @@ import vurderingTrygdeavgiftSchema from "./vurderingTrygdeavgiftSchema";
 import { erBrukerSkattepliktigIHelePerioden } from "../../../../aarsavregning/stegKomponenter/vurderingAarsavregning/utils";
 import { useFeatureToggle } from "../../../../../featuretoggle";
 import { MELOSYS_FAKTURERINGSKOMPONENTEN_IKKE_TIDLIGERE_PERIODER } from "../../../../../featuretoggle/toggleNavn";
-import { Alert } from "../../../../../navFrontend";
 import { harPerioderFraTidligereÅr } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 
 interface Props {
@@ -129,10 +129,18 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     medlemskapsperioder,
     innvilgetMedlemskapsperiode,
   );
+
+  const trygdeavgiftErIkkeTom = !Utils._isEmpty(lagretTrygdeavgift?.trygdeavgiftsperioder);
+
   const skalIkkeBeregneForelopigTrygdeavgift =
     skalIkkeViseTidligerePerioderToggle &&
     medlemskapsperioder.length > 0 &&
     medlemskapsperioder.every((periode) => new Date(periode.tomDato).getFullYear() < new Date().getFullYear());
+
+  const skalViseSkatteforholdOgInntektsperioder =
+    !skalIkkeViseTidligerePerioderToggle ||
+    (trygdeavgiftErIkkeTom && !redigerbart) ||
+    !skalIkkeBeregneForelopigTrygdeavgift;
 
   const harMedlemskapsperiodeFraTidligereÅr = harPerioderFraTidligereÅr(medlemskapsperioder);
 
@@ -144,8 +152,6 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     formValues?.inntektskilder.some(
       (inntektskilde: Inntektskilde) => inntektskilde.bruttoInntekt && inntektskilde.bruttoInntekt !== 0,
     );
-
-  const trygdeavgiftErIkkeTom = !Utils._isEmpty(lagretTrygdeavgift?.trygdeavgiftsperioder);
 
   const harBeregnetForeløpigTrygdeavgift =
     !skalBeregneForelopigTrygdeavgift || trygdeavgiftErIkkeTom || skalIkkeBeregneForelopigTrygdeavgift;
@@ -321,7 +327,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
         Trygdeavgift
       </Nav.Heading>
 
-      {behandlingstype === NY_VURDERING && !skalIkkeViseTidligerePerioderToggle && (
+      {behandlingstype === NY_VURDERING && !skalIkkeViseTidligerePerioderToggle && redigerbart && (
         <Nav.BodyLong size="small" className="alert--spacing-bottom">
           Ved ny vurdering vises tidligere perioder med skatteforhold og inntekt. Gjør nødvendige endringer eller legg
           til en ny periode.
@@ -332,14 +338,15 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
         behandlingstype === MANGLENDE_INNBETALING_TRYGDEAVGIFT ||
         behandlingstype === FØRSTEGANG) &&
         skalIkkeViseTidligerePerioderToggle &&
-        harMedlemskapsperiodeFraTidligereÅr && (
+        harMedlemskapsperiodeFraTidligereÅr &&
+        redigerbart && (
           <Alert variant="warning" size="small" className="alert--spacing-bottom">
             Trygdeavgift for tidligere år skal fastsettes på årsavregning. Du skal derfor ikke oppgi skatte- og
             inntektsperioder for tidligere år i denne behandlingen.
           </Alert>
         )}
 
-      {!erÅpenSluttDato && !skalIkkeBeregneForelopigTrygdeavgift && (
+      {!erÅpenSluttDato && skalViseSkatteforholdOgInntektsperioder && (
         <>
           <Nav.Heading size="xsmall">Oppgi informasjon om brukers skatteforhold</Nav.Heading>
           <Skatteforholdsperioder
@@ -354,7 +361,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
         </>
       )}
 
-      {skalViseInntektskilder && (
+      {skalViseInntektskilder && skalViseSkatteforholdOgInntektsperioder && (
         <>
           <LabelMedHjelpetekst
             label="Oppgi informasjon om brukers inntekt"
