@@ -1,6 +1,7 @@
 import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
 import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
 import VurderingArbeidTjenestepersonEllerFlyVedtak from "../../stegKomponenter/vurderingArbeidTjenestepersonEllerFlyVedtak/vurderingArbeidTjenestepersonEllerFlyVedtak";
+import VurderingArbeidTjenestepersonEllerFlyVedtakLegacy from "../../stegKomponenter/vurderingArbeidTjenestepersonEllerFlyVedtak_Legacy/vurderingArbeidTjenestepersonEllerFlyVedtak";
 
 import { hentFakta } from "../../../../domeneUtils";
 
@@ -9,6 +10,8 @@ import MKV from "../../../../melosyskodeverk";
 class ArbeidTjenestepersonEllerFlyVedtak extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
+
+    const toggleEnabled = propsLight.eøsFaktureringAvTrygdeavgiftToggleEnabled;
 
     const lovvalgsbestemmelseSomSkalVises =
       propsLight.lovvalgsbestemmelse ===
@@ -26,11 +29,13 @@ class ArbeidTjenestepersonEllerFlyVedtak extends Steg {
     this.kriterier = [];
     this.id = STEG.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK;
     this.tittel = "Vedtak";
-    this.komponent = VurderingArbeidTjenestepersonEllerFlyVedtak;
+    this.komponent = toggleEnabled
+      ? VurderingArbeidTjenestepersonEllerFlyVedtak
+      : VurderingArbeidTjenestepersonEllerFlyVedtakLegacy;
     this.samleRelevanteData = (_propsLight) => ({
       redigerbart: _propsLight.generiskStegRedigerbart,
       lovvalgsbestemmelseSomSkalVises,
-      lovvalgsbestemmelseSomSkalLagres,
+      ...(!toggleEnabled && { lovvalgsbestemmelseSomSkalLagres }),
       informertMyndighetFakta,
       harFeilmeldinger: _propsLight.harFeilmeldinger,
     });
@@ -38,7 +43,7 @@ class ArbeidTjenestepersonEllerFlyVedtak extends Steg {
     this.handlers = {
       tilbake: propsLight.tilgjengeligeHandlers.tilbake,
       lagreLovvalgsperioder: this._propsLight.tilgjengeligeHandlers.lagreLovvalgsperioder,
-      byggLovvalgsperioder: this._propsLight.tilgjengeligeHandlers.byggLovvalgsperioder,
+      ...(!toggleEnabled && { byggLovvalgsperioder: this._propsLight.tilgjengeligeHandlers.byggLovvalgsperioder }),
       oppdaterData: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, verdi),
       slettData: (data) => this._propsLight.tilgjengeligeHandlers.slettStegData(this.id, data),
       kontrollerFerdigbehandling: this._propsLight.tilgjengeligeHandlers.kontrollerFerdigbehandling,
