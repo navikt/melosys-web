@@ -33,6 +33,7 @@ import Vedtak from "./vedtak";
 import EndrePeriode from "./endre_periode";
 import Videresend from "./videresend";
 import VurderArbeidsland from "./vurderarbeidsland";
+import VurderingPeriode from "./periode";
 
 import { STEG } from "../../../../felleskomponenter/stegvelger";
 
@@ -72,4 +73,5 @@ export const stegMap = new Map([
   [STEG.VIDERESEND, Videresend],
   [STEG.VURDER_ARBEIDSLAND, VurderArbeidsland],
   [STEG.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK, ArbeidTjenestepersonEllerFlyVedtak],
+  [STEG.VURDERING_PERIODE, VurderingPeriode],
 ]);
