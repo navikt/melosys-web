@@ -13,7 +13,7 @@ class Trygdeavgift extends Steg {
       },
     ];
 
-    this.id = STEG.TRYGDEAVGIFT;
+    this.id = STEG.VURDERING_TRYGDEAVGIFT;
     this.tittel = "Trygdeavgift";
     this.komponent = VurderingTrygdeavgiftFTRL;
 
