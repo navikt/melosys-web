@@ -62,9 +62,6 @@ export function VurderingPeriode({
   const forkortLovvalgsperiode =
     !redigerbart && Utils.dato.datoDiffPure(mottatteOpplysningerTom, lovvalgsTomDato, "days") !== 0;
 
-  // Note: yupResolver type doesn't match React Hook Form's Resolver<FormValues> type perfectly,
-  // so we use 'as any' here. This is a known limitation with @hookform/resolvers v3.x.
-  // The runtime validation still works correctly.
   // Utled checkbox-state: hvis lovvalgsperioden er ulik søknadsperioden, er den forkortet
   const harForkortetPeriode =
     lovvalgsFomDato &&
@@ -72,7 +69,8 @@ export function VurderingPeriode({
     (lovvalgsFomDato !== mottatteOpplysningerFom || lovvalgsTomDato !== mottatteOpplysningerTom);
 
   const { control, watch, formState, handleSubmit, reset } = useForm<FormValues>({
-    resolver: yupResolver(VurderingPeriodeSchema) as any,
+    // @ts-expect-error - yup schema nullable() matcher ikke FormValues optional field perfekt
+    resolver: yupResolver(VurderingPeriodeSchema),
     mode: "onChange",
     context: {
       soknadsperiode,
@@ -121,7 +119,6 @@ export function VurderingPeriode({
         lovvalgsbestemmelse: lovvalgsbestemmelseSomSkalVises || undefined,
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lovvalgsFomDato, lovvalgsTomDato]);
 
   const valgbareLovvalgsbestemmelser = [
