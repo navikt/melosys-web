@@ -75,7 +75,7 @@ export function VurderingPeriode({
       forkortLovvalgsperiode,
       tomDato: Utils.dato.formatterDatoTilNorsk(lovvalgsTomDato),
       fomDato: Utils.dato.formatterDatoTilNorsk(lovvalgsFomDato),
-      lovvalgsbestemmelse: lovvalgsbestemmelseSomSkalVises,
+      lovvalgsbestemmelse: lovvalgsbestemmelseSomSkalVises || undefined,
     },
   });
 
@@ -156,18 +156,18 @@ export function VurderingPeriode({
       </Nav.Heading>
       <Nav.Row className="velgLovvalgsbestemmelse">
         <Nav.Column xs="7">
-          <Forms.Select
-            label="Velg en lovvalgsbestemmelse"
+          <Forms.RadioGroup
+            legend="Velg en lovvalgsbestemmelse"
             name="lovvalgsbestemmelse"
             control={control}
             readOnly={!redigerbart}
           >
             {valgbareLovvalgsbestemmelser.map((bestemmelse) => (
-              <option key={bestemmelse.kode} value={bestemmelse.kode}>
+              <Nav.Radio key={bestemmelse.kode} value={bestemmelse.kode}>
                 {bestemmelse.term}
-              </option>
+              </Nav.Radio>
             ))}
-          </Forms.Select>
+          </Forms.RadioGroup>
         </Nav.Column>
       </Nav.Row>
       {redigerbart && (
