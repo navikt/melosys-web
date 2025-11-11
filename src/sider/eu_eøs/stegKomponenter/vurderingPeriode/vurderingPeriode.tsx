@@ -65,16 +65,22 @@ export function VurderingPeriode({
   // Note: yupResolver type doesn't match React Hook Form's Resolver<FormValues> type perfectly,
   // so we use 'as any' here. This is a known limitation with @hookform/resolvers v3.x.
   // The runtime validation still works correctly.
-  const { control, watch, formState, handleSubmit } = useForm<FormValues>({
+  // Utled checkbox-state: hvis lovvalgsperioden er ulik søknadsperioden, er den forkortet
+  const harForkortetPeriode =
+    lovvalgsFomDato &&
+    lovvalgsTomDato &&
+    (lovvalgsFomDato !== mottatteOpplysningerFom || lovvalgsTomDato !== mottatteOpplysningerTom);
+
+  const { control, watch, formState, handleSubmit, reset } = useForm<FormValues>({
     resolver: yupResolver(VurderingPeriodeSchema) as any,
     mode: "onChange",
     context: {
       soknadsperiode,
     },
     defaultValues: {
-      forkortLovvalgsperiode,
-      tomDato: Utils.dato.formatterDatoTilNorsk(lovvalgsTomDato),
-      fomDato: Utils.dato.formatterDatoTilNorsk(lovvalgsFomDato),
+      forkortLovvalgsperiode: harForkortetPeriode || forkortLovvalgsperiode,
+      tomDato: Utils.dato.formatterDatoTilNorsk(mottatteOpplysningerTom),
+      fomDato: Utils.dato.formatterDatoTilNorsk(mottatteOpplysningerFom),
       lovvalgsbestemmelse: lovvalgsbestemmelseSomSkalVises || undefined,
     },
   });
@@ -99,6 +105,24 @@ export function VurderingPeriode({
       slettData();
     };
   }, []);
+
+  // Oppdater form-verdiene hvis det finnes en eksisterende forkortet lovvalgsperiode
+  useEffect(() => {
+    if (
+      lovvalgsFomDato &&
+      lovvalgsTomDato &&
+      (lovvalgsFomDato !== mottatteOpplysningerFom || lovvalgsTomDato !== mottatteOpplysningerTom)
+    ) {
+      // Det finnes en eksisterende forkortet periode - oppdater form
+      reset({
+        forkortLovvalgsperiode: true,
+        fomDato: Utils.dato.formatterDatoTilNorsk(lovvalgsFomDato),
+        tomDato: Utils.dato.formatterDatoTilNorsk(lovvalgsTomDato),
+        lovvalgsbestemmelse: lovvalgsbestemmelseSomSkalVises || undefined,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lovvalgsFomDato, lovvalgsTomDato]);
 
   const valgbareLovvalgsbestemmelser = [
     ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.filter(
