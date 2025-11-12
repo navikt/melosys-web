@@ -161,6 +161,7 @@ export function VurderingPeriode({
         );
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formValues.forkortLovvalgsperiode, formValues.fomDato, formValues.tomDato, redigerbart]);
 
   const onCheckboxClick = (checked: boolean) => {
@@ -173,8 +174,12 @@ export function VurderingPeriode({
     bekreftOgFortsett();
   };
 
-  const fom = Utils.dato.formatterDatoTilNorsk(soknadsperiode.fom);
-  const tom = Utils.dato.formatterDatoTilNorsk(soknadsperiode.tom);
+  const fom = Utils.dato.formatterDatoTilNorsk(
+    (formValues.forkortLovvalgsperiode && formValues.fomDato) || soknadsperiode.fom,
+  );
+  const tom = Utils.dato.formatterDatoTilNorsk(
+    (formValues.forkortLovvalgsperiode && formValues.tomDato) || soknadsperiode.tom,
+  );
 
   const stegErGyldig = redigerbart && formState.isValid && !!formValues.lovvalgsbestemmelse;
 
