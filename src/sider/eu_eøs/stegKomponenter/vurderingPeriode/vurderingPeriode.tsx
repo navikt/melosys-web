@@ -149,6 +149,31 @@ export function VurderingPeriode({
     }
   }, [formValues.lovvalgsbestemmelse]);
 
+  // Oppdater lovvalgsperioden når brukeren endrer datoer eller checkbox
+  useEffect(() => {
+    if (redigerbart) {
+      const fomDato =
+        formValues.forkortLovvalgsperiode && formValues.fomDato
+          ? Utils.dato.formatterDatoTilISO(formValues.fomDato)
+          : mottatteOpplysningerFom;
+      const tomDato =
+        formValues.forkortLovvalgsperiode && formValues.tomDato
+          ? Utils.dato.formatterDatoTilISO(formValues.tomDato)
+          : mottatteOpplysningerTom;
+
+      // Bare oppdater hvis vi har gyldige datoer
+      if (fomDato && tomDato) {
+        oppdaterData(
+          lagLovvalgsperiode({
+            fomDato,
+            tomDato,
+          }),
+        );
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formValues.forkortLovvalgsperiode, formValues.fomDato, formValues.tomDato, redigerbart]);
+
   const onCheckboxClick = (checked: boolean) => {
     if (!checked && gjenopprettOpprinneligLovvalgsperiode) {
       gjenopprettOpprinneligLovvalgsperiode();
