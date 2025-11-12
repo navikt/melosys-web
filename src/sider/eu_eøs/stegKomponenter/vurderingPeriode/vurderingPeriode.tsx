@@ -89,16 +89,6 @@ export function VurderingPeriode({
     if (lovvalgsbestemmelseSomSkalLagres) {
       oppdaterData(konverterLovvalgsbestemmelseTilStegData(lovvalgsbestemmelseSomSkalLagres));
     }
-
-    if (redigerbart) {
-      oppdaterData(
-        lagLovvalgsperiode({
-          fomDato: mottatteOpplysningerFom,
-          tomDato: mottatteOpplysningerTom,
-        }),
-      );
-    }
-
     return () => {
       slettData();
     };
