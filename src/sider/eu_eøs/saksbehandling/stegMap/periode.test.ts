@@ -40,7 +40,8 @@ describe("Periode steg-klasse", () => {
       });
       const periode = new Periode(propsLight, 5);
 
-      const relevantData = periode.samleRelevanteData(propsLight);
+      const samleRelevanteData = periode.samleRelevanteData as any;
+      const relevantData = samleRelevanteData(propsLight);
 
       expect(relevantData.lovvalgsbestemmelseSomSkalVises).toBe(
         MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART11_5,
@@ -57,7 +58,8 @@ describe("Periode steg-klasse", () => {
       });
       const periode = new Periode(propsLight, 5);
 
-      const relevantData = periode.samleRelevanteData(propsLight);
+      const samleRelevanteData = periode.samleRelevanteData as any;
+      const relevantData = samleRelevanteData(propsLight);
 
       expect(relevantData.lovvalgsbestemmelseSomSkalVises).toBe(testBestemmelse);
       expect(relevantData.lovvalgsbestemmelseSomSkalLagres).toBe(testBestemmelse);
@@ -67,9 +69,10 @@ describe("Periode steg-klasse", () => {
       const propsLight = createMockPropsLight();
       const periode = new Periode(propsLight, 5);
 
-      expect(periode.kriterier).toHaveLength(1);
-      expect(periode.kriterier[0].nesteSteg).toBe(STEG.VURDERING_TRYGDEAVGIFT);
-      expect(periode.kriterier[0].exec()).toBe(true);
+      const kriterier = periode.kriterier as any;
+      expect(kriterier).toHaveLength(1);
+      expect(kriterier[0].nesteSteg).toBe(STEG.VURDERING_TRYGDEAVGIFT);
+      expect(kriterier[0].exec()).toBe(true);
     });
   });
 
@@ -82,7 +85,8 @@ describe("Periode steg-klasse", () => {
       });
       const periode = new Periode(propsLight, 5);
 
-      const relevantData = periode.samleRelevanteData(propsLight);
+      const samleRelevanteData = periode.samleRelevanteData as any;
+      const relevantData = samleRelevanteData(propsLight);
 
       expect(relevantData).toEqual({
         redigerbart: true,
@@ -100,7 +104,8 @@ describe("Periode steg-klasse", () => {
       });
       const periode = new Periode(propsLight, 5);
 
-      const relevantData = periode.samleRelevanteData(propsLight);
+      const samleRelevanteData = periode.samleRelevanteData as any;
+      const relevantData = samleRelevanteData(propsLight);
 
       expect(relevantData).toEqual({
         redigerbart: false,
@@ -118,7 +123,8 @@ describe("Periode steg-klasse", () => {
       });
       const periode = new Periode(propsLight, 5);
 
-      const relevantUI = periode.beregnRelevantUI();
+      const beregnRelevantUI = periode.beregnRelevantUI as any;
+      const relevantUI = beregnRelevantUI();
 
       expect(relevantUI).toEqual({
         harAvklaring: true,
@@ -131,7 +137,8 @@ describe("Periode steg-klasse", () => {
       });
       const periode = new Periode(propsLight, 5);
 
-      const relevantUI = periode.beregnRelevantUI();
+      const beregnRelevantUI = periode.beregnRelevantUI as any;
+      const relevantUI = beregnRelevantUI();
 
       expect(relevantUI).toEqual({
         harAvklaring: false,
@@ -144,7 +151,8 @@ describe("Periode steg-klasse", () => {
       });
       const periode = new Periode(propsLight, 5);
 
-      const relevantUI = periode.beregnRelevantUI();
+      const beregnRelevantUI = periode.beregnRelevantUI as any;
+      const relevantUI = beregnRelevantUI();
 
       expect(relevantUI).toEqual({
         harAvklaring: false,
@@ -178,29 +186,31 @@ describe("Periode steg-klasse", () => {
   describe("handlers", () => {
     let propsLight: any;
     let periode: Periode;
+    let handlers: any;
 
     beforeEach(() => {
       propsLight = createMockPropsLight();
       periode = new Periode(propsLight, 5);
+      handlers = periode.handlers as any;
     });
 
     it("skal ha bekreftOgFortsett handler koblet til propsLight", () => {
-      expect(periode.handlers.bekreftOgFortsett).toBe(propsLight.tilgjengeligeHandlers.bekreftOgFortsett);
+      expect(handlers.bekreftOgFortsett).toBe(propsLight.tilgjengeligeHandlers.bekreftOgFortsett);
     });
 
     it("skal ha tilbake handler koblet til propsLight", () => {
-      expect(periode.handlers.tilbake).toBe(propsLight.tilgjengeligeHandlers.tilbake);
+      expect(handlers.tilbake).toBe(propsLight.tilgjengeligeHandlers.tilbake);
     });
 
     it("skal ha byggLovvalgsperioder handler koblet til propsLight", () => {
-      expect(periode.handlers.byggLovvalgsperioder).toBe(propsLight.tilgjengeligeHandlers.byggLovvalgsperioder);
+      expect(handlers.byggLovvalgsperioder).toBe(propsLight.tilgjengeligeHandlers.byggLovvalgsperioder);
     });
 
     it("skal ha oppdaterData handler som kaller oppdaterStegData med steg-id", () => {
       const felt = "lovvalgsbestemmelse";
       const verdi = "FO_883_2004_ART11_4";
 
-      periode.handlers.oppdaterData(felt, verdi);
+      handlers.oppdaterData(felt, verdi);
 
       expect(propsLight.tilgjengeligeHandlers.oppdaterStegData).toHaveBeenCalledWith(
         STEG.VURDERING_PERIODE,
@@ -212,13 +222,13 @@ describe("Periode steg-klasse", () => {
     it("skal ha slettData handler som kaller slettStegData med steg-id", () => {
       const data = { someData: "someValue" };
 
-      periode.handlers.slettData(data);
+      handlers.slettData(data);
 
       expect(propsLight.tilgjengeligeHandlers.slettStegData).toHaveBeenCalledWith(STEG.VURDERING_PERIODE, data);
     });
 
     it("skal kunne kalle slettData uten data parameter", () => {
-      periode.handlers.slettData();
+      handlers.slettData();
 
       expect(propsLight.tilgjengeligeHandlers.slettStegData).toHaveBeenCalledWith(STEG.VURDERING_PERIODE, undefined);
     });
