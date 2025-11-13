@@ -1,19 +1,22 @@
 import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
 import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
 import { VurderingTrygdeavgift as VurderingTrygdeavgiftFTRL } from "../../../ftrl/saksbehandling/stegKomponenter/vurderingTrygdeavgift/vurderingTrygdeavgift";
-import type { PropsLight, StegKriterie } from "../../../../felleskomponenter/stegvelger/stegMotor/typer";
+import type { PropsLight } from "../../../../felleskomponenter/stegvelger/stegMotor/typer";
 
 // Spesifikke typer for Trygdeavgift-steg
 interface TrygdeavgiftRelevanteData {
+  [key: string]: unknown;
   behandlingID?: string;
   redigerbart: boolean;
 }
 
 interface TrygdeavgiftRelevantUI {
+  [key: string]: unknown;
   harAvklaring: boolean;
 }
 
 interface TrygdeavgiftHandlers {
+  [key: string]: unknown;
   bekreft: () => void;
   tilbake: () => void;
   oppdaterData: (felt: string, verdi: unknown) => void;
@@ -21,55 +24,40 @@ interface TrygdeavgiftHandlers {
   oppdaterStatus: () => void;
 }
 
-// Type helper for accessing Steg properties (base class is JS with getters/setters)
-interface StegWithTypes {
-  _propsLight: PropsLight;
-  id: string;
-  tittel: string;
-  komponent: typeof VurderingTrygdeavgiftFTRL;
-  kriterier: StegKriterie[];
-  samleRelevanteData: (propsLight: PropsLight) => TrygdeavgiftRelevanteData;
-  beregnRelevantUI: () => TrygdeavgiftRelevantUI;
-  handlers: TrygdeavgiftHandlers;
-  status: string;
-}
-
 class Trygdeavgift extends Steg {
   constructor(propsLight: PropsLight, stegPosisjon: number) {
     super(propsLight, stegPosisjon);
 
-    const self = this as unknown as StegWithTypes;
-
-    self.kriterier = [
+    this.kriterier = [
       {
         exec: () => true,
         nesteSteg: STEG.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK,
       },
     ];
 
-    self.id = STEG.VURDERING_TRYGDEAVGIFT;
-    self.tittel = "Trygdeavgift";
-    self.komponent = VurderingTrygdeavgiftFTRL;
+    this.id = STEG.VURDERING_TRYGDEAVGIFT;
+    this.tittel = "Trygdeavgift";
+    this.komponent = VurderingTrygdeavgiftFTRL;
 
-    self.samleRelevanteData = (_propsLight: PropsLight) => ({
+    this.samleRelevanteData = (_propsLight: PropsLight): TrygdeavgiftRelevanteData => ({
       behandlingID: _propsLight.behandlingID,
       redigerbart: _propsLight.generiskStegRedigerbart,
     });
 
-    self.beregnRelevantUI = () => ({
+    this.beregnRelevantUI = (): TrygdeavgiftRelevantUI => ({
       harAvklaring: true,
     });
 
-    self.handlers = {
+    this.handlers = {
       bekreft: propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
       tilbake: propsLight.tilgjengeligeHandlers.tilbake,
       oppdaterData: (felt: string, verdi: unknown) =>
-        self._propsLight.tilgjengeligeHandlers.oppdaterStegData(self.id, felt, verdi),
-      slettData: (data?: unknown) => self._propsLight.tilgjengeligeHandlers.slettStegData(self.id, data),
+        this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id!, felt, verdi),
+      slettData: (data?: unknown) => this._propsLight.tilgjengeligeHandlers.slettStegData(this.id!, data),
       oppdaterStatus: () => {}, // No-op: Step validity is managed internally by the component
-    };
+    } as TrygdeavgiftHandlers;
 
-    self.status = FANE_STATUS.OK;
+    this.status = FANE_STATUS.OK;
   }
 }
 
