@@ -3,6 +3,24 @@ import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
 import { VurderingTrygdeavgift as VurderingTrygdeavgiftFTRL } from "../../../ftrl/saksbehandling/stegKomponenter/vurderingTrygdeavgift/vurderingTrygdeavgift";
 import type { PropsLight, StegKriterie } from "../../../../felleskomponenter/stegvelger/stegMotor/typer";
 
+// Spesifikke typer for Trygdeavgift-steg
+interface TrygdeavgiftRelevanteData {
+  behandlingID?: string;
+  redigerbart: boolean;
+}
+
+interface TrygdeavgiftRelevantUI {
+  harAvklaring: boolean;
+}
+
+interface TrygdeavgiftHandlers {
+  bekreft: () => void;
+  tilbake: () => void;
+  oppdaterData: (felt: string, verdi: unknown) => void;
+  slettData: (data?: unknown) => void;
+  oppdaterStatus: () => void;
+}
+
 // Type helper for accessing Steg properties (base class is JS with getters/setters)
 interface StegWithTypes {
   _propsLight: PropsLight;
@@ -10,9 +28,9 @@ interface StegWithTypes {
   tittel: string;
   komponent: typeof VurderingTrygdeavgiftFTRL;
   kriterier: StegKriterie[];
-  samleRelevanteData: (propsLight: PropsLight) => Record<string, unknown>;
-  beregnRelevantUI: () => Record<string, unknown>;
-  handlers: Record<string, unknown>;
+  samleRelevanteData: (propsLight: PropsLight) => TrygdeavgiftRelevanteData;
+  beregnRelevantUI: () => TrygdeavgiftRelevantUI;
+  handlers: TrygdeavgiftHandlers;
   status: string;
 }
 

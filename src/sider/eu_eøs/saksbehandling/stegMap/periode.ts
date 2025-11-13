@@ -5,6 +5,26 @@ import type { PropsLight, StegKriterie } from "../../../../felleskomponenter/ste
 
 import MKV from "../../../../melosyskodeverk";
 
+// Spesifikke typer for Periode-steg
+interface PeriodeRelevanteData {
+  redigerbart: boolean;
+  lovvalgsbestemmelseSomSkalVises?: string;
+  lovvalgsbestemmelseSomSkalLagres?: string;
+  aktivtSteg: boolean;
+}
+
+interface PeriodeRelevantUI {
+  harAvklaring: boolean;
+}
+
+interface PeriodeHandlers {
+  bekreftOgFortsett: () => void;
+  tilbake: () => void;
+  byggLovvalgsperioder: () => void;
+  oppdaterData: (felt: string, verdi: unknown) => void;
+  slettData: (data?: unknown) => void;
+}
+
 // Type helper for accessing Steg properties (base class is JS with getters/setters)
 interface StegWithTypes {
   _propsLight: PropsLight;
@@ -12,9 +32,9 @@ interface StegWithTypes {
   tittel: string;
   komponent: typeof VurderingPeriode;
   kriterier: StegKriterie[];
-  samleRelevanteData: (propsLight: PropsLight) => Record<string, unknown>;
-  beregnRelevantUI: () => Record<string, unknown>;
-  handlers: Record<string, unknown>;
+  samleRelevanteData: (propsLight: PropsLight) => PeriodeRelevanteData;
+  beregnRelevantUI: () => PeriodeRelevantUI;
+  handlers: PeriodeHandlers;
   status: string;
 }
 
