@@ -13,13 +13,13 @@ interface BestemmelseSelectProps {
   control: Control<any>;
   setValue: (name: string, value: any) => void;
   bestemmelser: string[];
-  harGrunnlag: boolean;
   behandlingID?: number;
   redigerbart: boolean;
   setTrygdedekninger: (trygdedekninger: string[]) => void;
   setFeilmelding: (feilmelding: string | undefined) => void;
   setEndrerBestemmelse: (isChanging: boolean) => void;
   lagreMedlemskapsperioderHvisGyldig: (oppdaterteMedlemskapsperioder: Avgiftspliktigperiode[]) => void;
+  harLaasteMedlemskapsperioder: boolean;
 }
 
 function BestemmelseSelect({
@@ -27,12 +27,12 @@ function BestemmelseSelect({
   setValue,
   bestemmelser,
   behandlingID,
-  harGrunnlag,
   redigerbart,
   setTrygdedekninger,
   setFeilmelding,
   setEndrerBestemmelse,
   lagreMedlemskapsperioderHvisGyldig,
+  harLaasteMedlemskapsperioder,
 }: BestemmelseSelectProps) {
   const medlemskapsperioder = useWatch({ control, name: "medlemskapsperioder" });
   const inntektskilder = useWatch({ control, name: "inntektskilder" });
@@ -100,7 +100,7 @@ function BestemmelseSelect({
       label="Bestemmelse"
       aria-label="Bestemmelse"
       control={control}
-      readOnly={!redigerbart || harGrunnlag}
+      readOnly={!redigerbart || harLaasteMedlemskapsperioder}
       emptyFieldDisabled
       onChange={(valgtBestemmelse) => {
         handleBestemmelseChange(valgtBestemmelse);

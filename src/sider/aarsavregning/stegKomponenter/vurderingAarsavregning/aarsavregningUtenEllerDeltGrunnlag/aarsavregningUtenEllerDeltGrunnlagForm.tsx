@@ -195,6 +195,10 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     harTrygdeavgiftFraAvgiftssystemet &&
     !!initiellData.aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger;
 
+  const harLaasteMedlemskapsperioder =
+    !!initiellData.aarsavregningResponse?.sisteGjeldendeAvgiftspliktigperioder &&
+    initiellData.aarsavregningResponse.sisteGjeldendeAvgiftspliktigperioder.length > 0;
+
   const finnMedlemskapsperiode = useCallback((perioder: Avgiftspliktigperiode[]) => {
     const sorterteGyldigePerioder = perioder
       .filter((periode: Avgiftspliktigperiode) => periode.fomDato && periode.tomDato)
@@ -877,13 +881,13 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
             control={control}
             setValue={setValue}
             bestemmelser={initiellData.bestemmelser}
-            harGrunnlag={harGrunnlag}
             behandlingID={behandlingID}
             redigerbart={skjemaErRedigerbart}
             setTrygdedekninger={setTrygdedekninger}
             setFeilmelding={setFeilmelding}
             setEndrerBestemmelse={setEndrerBestemmelse}
             lagreMedlemskapsperioderHvisGyldig={lagreMedlemskapsperioderEtterBestemmelseEndringHvisGyldig}
+            harLaasteMedlemskapsperioder={harLaasteMedlemskapsperioder}
           />
 
           <div className="perioder">
