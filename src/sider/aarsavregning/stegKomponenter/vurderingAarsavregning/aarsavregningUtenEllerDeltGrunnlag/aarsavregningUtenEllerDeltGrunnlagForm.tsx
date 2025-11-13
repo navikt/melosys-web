@@ -99,7 +99,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   bekreft,
   oppdaterStatus,
   harTrygdeavgiftFraAvgiftssystemet,
-  harGrunnlag,
+  harTidligereTrygdeavgiftsgrunnlag,
 }: {
   initiellData: {
     valgtÅr?: number;
@@ -111,7 +111,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   bekreft: () => void;
   oppdaterStatus: (isValid: boolean) => void;
   harTrygdeavgiftFraAvgiftssystemet: boolean;
-  harGrunnlag: boolean;
+  harTidligereTrygdeavgiftsgrunnlag: boolean;
 }) {
   const [feilmelding, setFeilmelding] = useState<string | string[] | undefined>(undefined);
   const [beregningPaagar, setBeregningPaagar] = useState(false);
@@ -194,6 +194,10 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   const erDeltGrunnlag =
     harTrygdeavgiftFraAvgiftssystemet &&
     !!initiellData.aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger;
+
+  const harLaasteMedlemskapsperioder =
+    !!initiellData.aarsavregningResponse?.sisteGjeldendeAvgiftspliktigperioder &&
+    initiellData.aarsavregningResponse.sisteGjeldendeAvgiftspliktigperioder.length > 0;
 
   const finnMedlemskapsperiode = useCallback((perioder: Avgiftspliktigperiode[]) => {
     const sorterteGyldigePerioder = perioder
@@ -877,13 +881,13 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
             control={control}
             setValue={setValue}
             bestemmelser={initiellData.bestemmelser}
-            harGrunnlag={harGrunnlag}
             behandlingID={behandlingID}
             redigerbart={skjemaErRedigerbart}
             setTrygdedekninger={setTrygdedekninger}
             setFeilmelding={setFeilmelding}
             setEndrerBestemmelse={setEndrerBestemmelse}
             lagreMedlemskapsperioderHvisGyldig={lagreMedlemskapsperioderEtterBestemmelseEndringHvisGyldig}
+            harLaasteMedlemskapsperioder={harLaasteMedlemskapsperioder}
           />
 
           <div className="perioder">
@@ -975,7 +979,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         !feilmelding &&
         endeligAvgiftValg === OPPLYSNINGER_ENDRET && (
           <SumArsavregningTabell
-            harGrunnlagIMelosys={harGrunnlag}
+            harGrunnlagIMelosys={harTidligereTrygdeavgiftsgrunnlag}
             nyTrygdeavgift={aarsavregningResponse?.avregning?.beregnetAvgiftBelop}
             tidligereTrygdeavgift={aarsavregningResponse?.avregning?.tidligereFakturertBeloep}
             tidligereTrygdeavgiftAvgiftssystem={aarsavregningResponse?.avregning?.trygdeavgiftFraAvgiftssystemet}
@@ -1000,7 +1004,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         manueltAvgiftBeloep !== null &&
         manueltAvgiftBeloep !== "" && (
           <SumArsavregningTabell
-            harGrunnlagIMelosys={harGrunnlag}
+            harGrunnlagIMelosys={harTidligereTrygdeavgiftsgrunnlag}
             nyTrygdeavgift={Number(manueltAvgiftBeloep)}
             tidligereTrygdeavgift={aarsavregningResponse?.avregning?.tidligereFakturertBeloep}
             tidligereTrygdeavgiftAvgiftssystem={
