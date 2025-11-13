@@ -14,6 +14,7 @@ describe("Trygdeavgift steg-klasse", () => {
     tilgjengeligeHandlers: {
       bekreftOgFortsett: vi.fn(),
       tilbake: vi.fn(),
+      byggLovvalgsperioder: vi.fn(),
       oppdaterStegData: vi.fn(),
       slettStegData: vi.fn(),
     },
@@ -36,9 +37,10 @@ describe("Trygdeavgift steg-klasse", () => {
       const propsLight = createMockPropsLight();
       const trygdeavgift = new Trygdeavgift(propsLight, 6);
 
-      expect(trygdeavgift.kriterier).toHaveLength(1);
-      expect(trygdeavgift.kriterier[0].nesteSteg).toBe(STEG.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK);
-      expect(trygdeavgift.kriterier[0].exec()).toBe(true);
+      const kriterier = trygdeavgift.kriterier as any;
+      expect(kriterier).toHaveLength(1);
+      expect(kriterier[0].nesteSteg).toBe(STEG.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK);
+      expect(kriterier[0].exec()).toBe(true);
     });
   });
 
@@ -50,7 +52,8 @@ describe("Trygdeavgift steg-klasse", () => {
       });
       const trygdeavgift = new Trygdeavgift(propsLight, 6);
 
-      const relevantData = trygdeavgift.samleRelevanteData(propsLight);
+      const samleRelevanteData = trygdeavgift.samleRelevanteData as any;
+      const relevantData = samleRelevanteData(propsLight);
 
       expect(relevantData).toEqual({
         behandlingID: "behandling-456",
@@ -65,7 +68,8 @@ describe("Trygdeavgift steg-klasse", () => {
       });
       const trygdeavgift = new Trygdeavgift(propsLight, 6);
 
-      const relevantData = trygdeavgift.samleRelevanteData(propsLight);
+      const samleRelevanteData = trygdeavgift.samleRelevanteData as any;
+      const relevantData = samleRelevanteData(propsLight);
 
       expect(relevantData).toEqual({
         behandlingID: "behandling-789",
@@ -79,7 +83,8 @@ describe("Trygdeavgift steg-klasse", () => {
       const propsLight = createMockPropsLight();
       const trygdeavgift = new Trygdeavgift(propsLight, 6);
 
-      const relevantUI = trygdeavgift.beregnRelevantUI(propsLight);
+      const beregnRelevantUI = trygdeavgift.beregnRelevantUI as any;
+      const relevantUI = beregnRelevantUI();
 
       expect(relevantUI).toEqual({
         harAvklaring: true,
@@ -93,7 +98,8 @@ describe("Trygdeavgift steg-klasse", () => {
       });
       const trygdeavgift = new Trygdeavgift(propsLight, 6);
 
-      const relevantUI = trygdeavgift.beregnRelevantUI(propsLight);
+      const beregnRelevantUI = trygdeavgift.beregnRelevantUI as any;
+      const relevantUI = beregnRelevantUI();
 
       expect(relevantUI).toEqual({
         harAvklaring: true,
@@ -127,25 +133,27 @@ describe("Trygdeavgift steg-klasse", () => {
   describe("handlers", () => {
     let propsLight: any;
     let trygdeavgift: Trygdeavgift;
+    let handlers: any;
 
     beforeEach(() => {
       propsLight = createMockPropsLight();
       trygdeavgift = new Trygdeavgift(propsLight, 6);
+      handlers = trygdeavgift.handlers as any;
     });
 
     it("skal ha bekreft handler koblet til bekreftOgFortsett fra propsLight", () => {
-      expect(trygdeavgift.handlers.bekreft).toBe(propsLight.tilgjengeligeHandlers.bekreftOgFortsett);
+      expect(handlers.bekreft).toBe(propsLight.tilgjengeligeHandlers.bekreftOgFortsett);
     });
 
     it("skal ha tilbake handler koblet til propsLight", () => {
-      expect(trygdeavgift.handlers.tilbake).toBe(propsLight.tilgjengeligeHandlers.tilbake);
+      expect(handlers.tilbake).toBe(propsLight.tilgjengeligeHandlers.tilbake);
     });
 
     it("skal ha oppdaterData handler som kaller oppdaterStegData med steg-id", () => {
       const felt = "trygdeavgiftsperioder";
       const verdi = [{ fom: "2024-01-01", tom: "2024-12-31" }];
 
-      trygdeavgift.handlers.oppdaterData(felt, verdi);
+      handlers.oppdaterData(felt, verdi);
 
       expect(propsLight.tilgjengeligeHandlers.oppdaterStegData).toHaveBeenCalledWith(
         STEG.VURDERING_TRYGDEAVGIFT,
@@ -157,13 +165,13 @@ describe("Trygdeavgift steg-klasse", () => {
     it("skal ha slettData handler som kaller slettStegData med steg-id", () => {
       const data = { someData: "someValue" };
 
-      trygdeavgift.handlers.slettData(data);
+      handlers.slettData(data);
 
       expect(propsLight.tilgjengeligeHandlers.slettStegData).toHaveBeenCalledWith(STEG.VURDERING_TRYGDEAVGIFT, data);
     });
 
     it("skal kunne kalle slettData uten data parameter", () => {
-      trygdeavgift.handlers.slettData();
+      handlers.slettData();
 
       expect(propsLight.tilgjengeligeHandlers.slettStegData).toHaveBeenCalledWith(
         STEG.VURDERING_TRYGDEAVGIFT,
@@ -173,10 +181,10 @@ describe("Trygdeavgift steg-klasse", () => {
 
     it("skal ha oppdaterStatus handler som er en no-op funksjon", () => {
       // oppdaterStatus er en no-op i Trygdeavgift
-      expect(trygdeavgift.handlers.oppdaterStatus).toBeInstanceOf(Function);
+      expect(handlers.oppdaterStatus).toBeInstanceOf(Function);
 
       // Skal ikke kaste feil når den kalles
-      expect(() => trygdeavgift.handlers.oppdaterStatus()).not.toThrow();
+      expect(() => handlers.oppdaterStatus()).not.toThrow();
     });
   });
 
