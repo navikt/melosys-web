@@ -1,12 +1,28 @@
 import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
 import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
 import VurderingPeriode from "../../stegKomponenter/vurderingPeriode/vurderingPeriode";
+import type { PropsLight, StegKriterie } from "../../../../felleskomponenter/stegvelger/stegMotor/typer";
 
 import MKV from "../../../../melosyskodeverk";
 
+// Type helper for accessing Steg properties (base class is JS with getters/setters)
+interface StegWithTypes {
+  _propsLight: PropsLight;
+  id: string;
+  tittel: string;
+  komponent: typeof VurderingPeriode;
+  kriterier: StegKriterie[];
+  samleRelevanteData: (propsLight: PropsLight) => Record<string, unknown>;
+  beregnRelevantUI: () => Record<string, unknown>;
+  handlers: Record<string, unknown>;
+  status: string;
+}
+
 class Periode extends Steg {
-  constructor(propsLight, stegPosisjon) {
+  constructor(propsLight: PropsLight, stegPosisjon: number) {
     super(propsLight, stegPosisjon);
+
+    const self = this as unknown as StegWithTypes;
 
     const lovvalgsbestemmelseSomSkalVises =
       propsLight.lovvalgsbestemmelse ===
@@ -16,7 +32,7 @@ class Periode extends Steg {
 
     const lovvalgsbestemmelseSomSkalLagres = propsLight.lovvalgsbestemmelse;
 
-    this.kriterier = [
+    self.kriterier = [
       {
         exec: () => true, // Alltid gå videre til vedtak
         nesteSteg: STEG.VURDERING_TRYGDEAVGIFT,
@@ -25,26 +41,27 @@ class Periode extends Steg {
 
     const harAvklaring = !!lovvalgsbestemmelseSomSkalLagres;
 
-    this.id = STEG.VURDERING_PERIODE;
-    this.tittel = "Periode";
-    this.komponent = VurderingPeriode;
-    this.samleRelevanteData = (_propsLight) => ({
+    self.id = STEG.VURDERING_PERIODE;
+    self.tittel = "Periode";
+    self.komponent = VurderingPeriode;
+    self.samleRelevanteData = (_propsLight: PropsLight) => ({
       redigerbart: _propsLight.generiskStegRedigerbart,
       lovvalgsbestemmelseSomSkalVises,
       lovvalgsbestemmelseSomSkalLagres,
       aktivtSteg: _propsLight.aktivtSteg,
     });
-    this.beregnRelevantUI = () => ({
+    self.beregnRelevantUI = () => ({
       harAvklaring,
     });
-    this.handlers = {
+    self.handlers = {
       bekreftOgFortsett: propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
       tilbake: propsLight.tilgjengeligeHandlers.tilbake,
-      byggLovvalgsperioder: this._propsLight.tilgjengeligeHandlers.byggLovvalgsperioder,
-      oppdaterData: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, verdi),
-      slettData: (data) => this._propsLight.tilgjengeligeHandlers.slettStegData(this.id, data),
+      byggLovvalgsperioder: self._propsLight.tilgjengeligeHandlers.byggLovvalgsperioder,
+      oppdaterData: (felt: string, verdi: unknown) =>
+        self._propsLight.tilgjengeligeHandlers.oppdaterStegData(self.id, felt, verdi),
+      slettData: (data?: unknown) => self._propsLight.tilgjengeligeHandlers.slettStegData(self.id, data),
     };
-    this.status = FANE_STATUS.OK;
+    self.status = FANE_STATUS.OK;
   }
 }
 
