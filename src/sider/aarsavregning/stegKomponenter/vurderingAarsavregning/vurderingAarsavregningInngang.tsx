@@ -74,7 +74,9 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
   const [valgtÅr, setValgtÅr] = useState<number | undefined>(undefined);
   const [initieltÅr, setInitieltÅr] = useState<number | undefined>(undefined);
   const [lagÅrsavregningFeil, setLagÅrsavregningFeil] = useState<string | undefined>(undefined);
-  const [harGrunnlag, setHarGrunnlag] = useState<boolean | undefined>(undefined);
+  const [harTidligereTrygdeavgiftsgrunnlag, setHarTidligereTrygdeavgiftsgrunnlag] = useState<boolean | undefined>(
+    undefined,
+  );
   const [harTrygdeavgiftFraAvgiftssystemet, setHarTrygdeavgiftFraAvgiftssystemet] = useState<boolean | undefined>(
     undefined,
   );
@@ -131,7 +133,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
       setHarTrygdeavgiftFraAvgiftssystemet(utledetVerdi);
     }
 
-    setHarGrunnlag(
+    setHarTidligereTrygdeavgiftsgrunnlag(
       !(
         res.tidligereTrygdeavgiftsGrunnlagsopplysninger === null ||
         Utils._isEmpty(res.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.avgiftspliktigperioder)
@@ -162,7 +164,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
     setLagÅrsavregningFeil(undefined);
     setErNyVurdering(false);
     setHarAktivÅrsavregning(false);
-    setHarGrunnlag(undefined);
+    setHarTidligereTrygdeavgiftsgrunnlag(undefined);
     setHarTrygdeavgiftFraAvgiftssystemet(undefined);
     setAarsavregningResponse(undefined);
 
@@ -290,9 +292,11 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
             </Nav.Alert>
           )}
 
-          {aarsavregningResponse && harGrunnlag && <TidligereGrunnlag aarsavregningResponse={aarsavregningResponse} />}
+          {aarsavregningResponse && harTidligereTrygdeavgiftsgrunnlag && (
+            <TidligereGrunnlag aarsavregningResponse={aarsavregningResponse} />
+          )}
 
-          {aarsavregningResponse && harGrunnlag === false && (
+          {aarsavregningResponse && harTidligereTrygdeavgiftsgrunnlag === false && (
             <Nav.Alert variant="info" className="alertstripe_feilmelding">
               <Nav.BodyLong size="small">
                 Det er ingen informasjon om perioder med medlemskap og forskuddsvis fakturert trygdeavgift i Melosys.
@@ -309,7 +313,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
                   legend={
                     <LabelMedHjelpetekst
                       label="Skal du legge til trygdeavgift fra Avgiftssystemet til denne årsavregningen?"
-                      hjelpetekst={harGrunnlag ? DELT_GRUNNLAG_HJELPETEKST : ""}
+                      hjelpetekst={harTidligereTrygdeavgiftsgrunnlag ? DELT_GRUNNLAG_HJELPETEKST : ""}
                     />
                   }
                   value={harTrygdeavgiftFraAvgiftssystemet}
@@ -325,19 +329,19 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
           )}
 
           {!harTrygdeavgiftFraAvgiftssystemetIsPending &&
-            harGrunnlag === true &&
+            harTidligereTrygdeavgiftsgrunnlag === true &&
             harTrygdeavgiftFraAvgiftssystemet === false && (
               <AarsavregningMedGrunnlag bekreft={bekreft} aktivtSteg={aktivtSteg} oppdaterStatus={oppdaterStatus} />
             )}
           {!harTrygdeavgiftFraAvgiftssystemetIsPending &&
-            (harGrunnlag === false || harTrygdeavgiftFraAvgiftssystemet) &&
+            (harTidligereTrygdeavgiftsgrunnlag === false || harTrygdeavgiftFraAvgiftssystemet) &&
             (harTrygdeavgiftFraAvgiftssystemet === true || harTrygdeavgiftFraAvgiftssystemet === false) && (
               <AarsavregningUtenEllerDeltGrunnlag
                 bekreft={bekreft}
                 aktivtSteg={aktivtSteg}
                 oppdaterStatus={oppdaterStatus}
                 harTrygdeavgiftFraAvgiftssystemet={Boolean(harTrygdeavgiftFraAvgiftssystemet)}
-                harGrunnlag={Boolean(harGrunnlag)}
+                harTidligereTrygdeavgiftsgrunnlag={Boolean(harTidligereTrygdeavgiftsgrunnlag)}
               />
             )}
         </>

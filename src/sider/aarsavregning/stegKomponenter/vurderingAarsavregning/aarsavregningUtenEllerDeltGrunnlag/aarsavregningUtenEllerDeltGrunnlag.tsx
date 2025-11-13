@@ -61,7 +61,7 @@ interface Props {
   aktivtSteg: boolean;
   oppdaterStatus: (isValid: boolean) => void;
   harTrygdeavgiftFraAvgiftssystemet: boolean;
-  harGrunnlag: boolean;
+  harTidligereTrygdeavgiftsgrunnlag: boolean;
 }
 
 export interface MedlemskapTomFomDatoer {
@@ -80,7 +80,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({
   bekreft,
   oppdaterStatus,
   harTrygdeavgiftFraAvgiftssystemet,
-  harGrunnlag,
+  harTidligereTrygdeavgiftsgrunnlag,
 }: Props) {
   const [isLoading, setIsLoading] = useState(true);
   const [initiellData, setInitiellData] = useState<{
@@ -302,7 +302,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({
       bekreft={bekreft}
       oppdaterStatus={memoizedOppdaterStatus}
       harTrygdeavgiftFraAvgiftssystemet={harTrygdeavgiftFraAvgiftssystemet}
-      harGrunnlag={harGrunnlag}
+      harTidligereTrygdeavgiftsgrunnlag={harTidligereTrygdeavgiftsgrunnlag}
     />
   );
 }
