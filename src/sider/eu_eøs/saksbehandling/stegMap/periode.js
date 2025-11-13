@@ -19,7 +19,7 @@ class Periode extends Steg {
     this.kriterier = [
       {
         exec: () => true, // Alltid gå videre til vedtak
-        nesteSteg: STEG.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK,
+        nesteSteg: STEG.VURDERING_TRYGDEAVGIFT,
       },
     ];
 

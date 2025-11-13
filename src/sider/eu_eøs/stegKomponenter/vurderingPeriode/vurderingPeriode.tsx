@@ -62,20 +62,24 @@ export function VurderingPeriode({
   const forkortLovvalgsperiode =
     !redigerbart && Utils.dato.datoDiffPure(mottatteOpplysningerTom, lovvalgsTomDato, "days") !== 0;
 
-  // Note: yupResolver type doesn't match React Hook Form's Resolver<FormValues> type perfectly,
-  // so we use 'as any' here. This is a known limitation with @hookform/resolvers v3.x.
-  // The runtime validation still works correctly.
-  const { control, watch, formState, handleSubmit } = useForm<FormValues>({
-    resolver: yupResolver(VurderingPeriodeSchema) as any,
+  // Utled checkbox-state: hvis lovvalgsperioden er ulik søknadsperioden, er den forkortet
+  const harForkortetPeriode =
+    lovvalgsFomDato &&
+    lovvalgsTomDato &&
+    (lovvalgsFomDato !== mottatteOpplysningerFom || lovvalgsTomDato !== mottatteOpplysningerTom);
+
+  const { control, watch, formState, handleSubmit, reset } = useForm<FormValues>({
+    // @ts-expect-error - yup schema nullable() matcher ikke FormValues optional field perfekt
+    resolver: yupResolver(VurderingPeriodeSchema),
     mode: "onChange",
     context: {
       soknadsperiode,
     },
     defaultValues: {
-      forkortLovvalgsperiode,
-      tomDato: Utils.dato.formatterDatoTilNorsk(lovvalgsTomDato),
-      fomDato: Utils.dato.formatterDatoTilNorsk(lovvalgsFomDato),
-      lovvalgsbestemmelse: lovvalgsbestemmelseSomSkalVises,
+      forkortLovvalgsperiode: harForkortetPeriode || forkortLovvalgsperiode,
+      tomDato: Utils.dato.formatterDatoTilNorsk(mottatteOpplysningerTom),
+      fomDato: Utils.dato.formatterDatoTilNorsk(mottatteOpplysningerFom),
+      lovvalgsbestemmelse: lovvalgsbestemmelseSomSkalVises || undefined,
     },
   });
 
@@ -85,20 +89,27 @@ export function VurderingPeriode({
     if (lovvalgsbestemmelseSomSkalLagres) {
       oppdaterData(konverterLovvalgsbestemmelseTilStegData(lovvalgsbestemmelseSomSkalLagres));
     }
-
-    if (redigerbart) {
-      oppdaterData(
-        lagLovvalgsperiode({
-          fomDato: mottatteOpplysningerFom,
-          tomDato: mottatteOpplysningerTom,
-        }),
-      );
-    }
-
     return () => {
       slettData();
     };
   }, []);
+
+  // Oppdater form-verdiene hvis det finnes en eksisterende forkortet lovvalgsperiode
+  useEffect(() => {
+    if (
+      lovvalgsFomDato &&
+      lovvalgsTomDato &&
+      (lovvalgsFomDato !== mottatteOpplysningerFom || lovvalgsTomDato !== mottatteOpplysningerTom)
+    ) {
+      // Det finnes en eksisterende forkortet periode - oppdater form
+      reset({
+        forkortLovvalgsperiode: true,
+        fomDato: Utils.dato.formatterDatoTilNorsk(lovvalgsFomDato),
+        tomDato: Utils.dato.formatterDatoTilNorsk(lovvalgsTomDato),
+        lovvalgsbestemmelse: lovvalgsbestemmelseSomSkalVises || undefined,
+      });
+    }
+  }, [lovvalgsFomDato, lovvalgsTomDato]);
 
   const valgbareLovvalgsbestemmelser = [
     ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.filter(
@@ -128,6 +139,31 @@ export function VurderingPeriode({
     }
   }, [formValues.lovvalgsbestemmelse]);
 
+  // Oppdater lovvalgsperioden når brukeren endrer datoer eller checkbox
+  useEffect(() => {
+    if (redigerbart) {
+      const fomDato =
+        formValues.forkortLovvalgsperiode && formValues.fomDato
+          ? Utils.dato.formatterDatoTilISO(formValues.fomDato)
+          : mottatteOpplysningerFom;
+      const tomDato =
+        formValues.forkortLovvalgsperiode && formValues.tomDato
+          ? Utils.dato.formatterDatoTilISO(formValues.tomDato)
+          : mottatteOpplysningerTom;
+
+      // Bare oppdater hvis vi har gyldige datoer
+      if (fomDato && tomDato) {
+        oppdaterData(
+          lagLovvalgsperiode({
+            fomDato,
+            tomDato,
+          }),
+        );
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formValues.forkortLovvalgsperiode, formValues.fomDato, formValues.tomDato, redigerbart]);
+
   const onCheckboxClick = (checked: boolean) => {
     if (!checked && gjenopprettOpprinneligLovvalgsperiode) {
       gjenopprettOpprinneligLovvalgsperiode();
@@ -156,18 +192,18 @@ export function VurderingPeriode({
       </Nav.Heading>
       <Nav.Row className="velgLovvalgsbestemmelse">
         <Nav.Column xs="7">
-          <Forms.Select
-            label="Velg en lovvalgsbestemmelse"
+          <Forms.RadioGroup
+            legend="Velg en lovvalgsbestemmelse"
             name="lovvalgsbestemmelse"
             control={control}
             readOnly={!redigerbart}
           >
             {valgbareLovvalgsbestemmelser.map((bestemmelse) => (
-              <option key={bestemmelse.kode} value={bestemmelse.kode}>
+              <Nav.Radio key={bestemmelse.kode} value={bestemmelse.kode}>
                 {bestemmelse.term}
-              </option>
+              </Nav.Radio>
             ))}
-          </Forms.Select>
+          </Forms.RadioGroup>
         </Nav.Column>
       </Nav.Row>
       {redigerbart && (
