@@ -31,6 +31,16 @@ describe("Stegvelger - Component Structure", () => {
     expect(STEG.VEDTAK).toBeDefined();
   });
 
+  it("STEG enum inneholder VURDERING_PERIODE", () => {
+    expect(STEG.VURDERING_PERIODE).toBeDefined();
+    expect(STEG.VURDERING_PERIODE).toBe("VURDERING_PERIODE");
+  });
+
+  it("STEG enum inneholder VURDERING_TRYGDEAVGIFT", () => {
+    expect(STEG.VURDERING_TRYGDEAVGIFT).toBeDefined();
+    expect(STEG.VURDERING_TRYGDEAVGIFT).toBe("VURDERING_TRYGDEAVGIFT");
+  });
+
   it("FANE_STATUS enum eksisterer", () => {
     expect(FANE_STATUS).toBeDefined();
     expect(FANE_STATUS.UBEHANDLET).toBeDefined();
