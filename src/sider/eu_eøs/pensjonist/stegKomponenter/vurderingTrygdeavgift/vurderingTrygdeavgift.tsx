@@ -85,8 +85,12 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   );
 
   const formattedDefaultPeriode = () => {
+    const justertFom = skalIkkeViseTidligerePerioderToggle
+      ? Utils.dato.justerDatoHvisTidligereÅr(helseutgiftDekkesPeriode?.fom)
+      : helseutgiftDekkesPeriode?.fom;
+
     return {
-      fomDato: Utils.dato.formatterDatoTilNorsk(helseutgiftDekkesPeriode?.fom),
+      fomDato: Utils.dato.formatterDatoTilNorsk(justertFom),
       tomDato: Utils.dato.formatterDatoTilNorsk(helseutgiftDekkesPeriode?.tom),
     };
   };
@@ -129,8 +133,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
 
   const skalIkkeBeregneForelopigTrygdeavgift =
     skalIkkeViseTidligerePerioderToggle &&
-    new Date(helseutgiftDekkesPeriode.tom).getFullYear() < new Date().getFullYear() &&
-    erNyVurderingEllerManglendeInnbetaling;
+    new Date(helseutgiftDekkesPeriode.tom).getFullYear() < new Date().getFullYear();
 
   const trygdeavgiftErIkkeTom = !Utils._isEmpty(lagretTrygdeavgift?.trygdeavgiftsperioder);
 
@@ -138,6 +141,9 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     !skalIkkeViseTidligerePerioderToggle ||
     (trygdeavgiftErIkkeTom && !redigerbart) ||
     !skalIkkeBeregneForelopigTrygdeavgift;
+
+  const harHelseutgiftDekkesPeriodeFraTidligereÅr =
+    new Date(helseutgiftDekkesPeriode.fom).getFullYear() < new Date().getFullYear();
 
   const stegErGyldig =
     (formIsValid || skalIkkeBeregneForelopigTrygdeavgift) && !feilMeldingBlokkerer(aktivFeilmeldingType) && !feil;
@@ -343,11 +349,10 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
         </Nav.BodyLong>
       )}
 
-      {erNyVurderingEllerManglendeInnbetaling && skalIkkeViseTidligerePerioderToggle && redigerbart && (
+      {skalIkkeViseTidligerePerioderToggle && harHelseutgiftDekkesPeriodeFraTidligereÅr && redigerbart && (
         <Alert variant="warning" size="small" className="alert--spacing-bottom">
-          Ved ny vurdering vises skatteforhold og inntekt fra inneværende år og fremover. Gjør nødvendige endringer
-          eller legg til en ny periode. Trygdeavgift for tidligere år skal fastsettes på årsavregning. Du skal derfor
-          ikke oppgi skatte- og inntektsperioder for tidligere år i denne behandlingen.
+          Trygdeavgift for tidligere år skal fastsettes på årsavregning. Du skal derfor ikke oppgi skatte- og
+          inntektsperioder for tidligere år i denne behandlingen.
         </Alert>
       )}
 

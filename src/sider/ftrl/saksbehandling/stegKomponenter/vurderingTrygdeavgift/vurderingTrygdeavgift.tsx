@@ -40,6 +40,7 @@ import { MELOSYS_FAKTURERINGSKOMPONENTEN_IKKE_TIDLIGERE_PERIODER } from "../../.
 import { Alert } from "../../../../../navFrontend";
 import { fagsakSelectors } from "../../../../../ducks/fagsaker";
 import { lovvalgsperioderSelectors } from "../../../../../ducks/lovvalgsperioder";
+import { harPerioderFraTidligereÅr } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 
 interface Props {
   bekreft: () => void;
@@ -88,8 +89,12 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     erEuEøs || medlemskapsperioder.every((periode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG);
 
   const formattedDefaultPeriode = () => {
+    const justertFom = skalIkkeViseTidligerePerioderToggle
+      ? Utils.dato.justerDatoHvisTidligereÅr(avgiftspliktigeperioder?.fom)
+      : avgiftspliktigeperioder?.fom;
+
     return {
-      fomDato: Utils.dato.formatterDatoTilNorsk(avgiftspliktigeperioder?.fom),
+      fomDato: Utils.dato.formatterDatoTilNorsk(justertFom),
       tomDato: Utils.dato.formatterDatoTilNorsk(avgiftspliktigeperioder?.tom),
     };
   };
@@ -139,13 +144,14 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const skalIkkeBeregneForelopigTrygdeavgift =
     skalIkkeViseTidligerePerioderToggle &&
     medlemskapsperioder.length > 0 &&
-    medlemskapsperioder.every((periode) => new Date(periode.tomDato).getFullYear() < new Date().getFullYear()) &&
-    (behandlingstype === NY_VURDERING || behandlingstype === MANGLENDE_INNBETALING_TRYGDEAVGIFT);
+    medlemskapsperioder.every((periode) => new Date(periode.tomDato).getFullYear() < new Date().getFullYear());
 
   const skalViseSkatteforholdOgInntektsperioder =
     !skalIkkeViseTidligerePerioderToggle ||
     (trygdeavgiftErIkkeTom && !redigerbart) ||
     !skalIkkeBeregneForelopigTrygdeavgift;
+
+  const harMedlemskapsperiodeFraTidligereÅr = harPerioderFraTidligereÅr(medlemskapsperioder);
 
   const stegErGyldig =
     (formIsValid || skalIkkeBeregneForelopigTrygdeavgift) && !feilMeldingBlokkerer(aktivFeilmeldingType) && !feil;
@@ -337,11 +343,10 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
         </Nav.BodyLong>
       )}
 
-      {erNyVurderingEllerManglendeInnbetaling && skalIkkeViseTidligerePerioderToggle && redigerbart && (
+      {skalIkkeViseTidligerePerioderToggle && harMedlemskapsperiodeFraTidligereÅr && redigerbart && (
         <Alert variant="warning" size="small" className="alert--spacing-bottom">
-          Ved ny vurdering vises skatteforhold og inntekt fra inneværende år og fremover. Gjør nødvendige endringer
-          eller legg til en ny periode. Trygdeavgift for tidligere år skal fastsettes på årsavregning. Du skal derfor
-          ikke oppgi skatte- og inntektsperioder for tidligere år i denne behandlingen.
+          Trygdeavgift for tidligere år skal fastsettes på årsavregning. Du skal derfor ikke oppgi skatte- og
+          inntektsperioder for tidligere år i denne behandlingen.
         </Alert>
       )}
 
