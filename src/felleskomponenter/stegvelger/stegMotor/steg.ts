@@ -107,8 +107,8 @@ class Steg {
     tittel: this._tittel,
     handlers: this._handlers,
     data: {
-      ...this._samleRelevanteData?.(this._propsLight),
-      tilstand: this._beregnRelevantUI?.(this._propsLight),
+      ...this._samleRelevanteData!(this._propsLight),
+      tilstand: this._beregnRelevantUI!(this._propsLight),
     },
     status: this.hentStatus(),
     stegPosisjon: this._stegPosisjon,
@@ -119,20 +119,20 @@ class Steg {
   nesteSteg = (): string | undefined => {
     const { avklartefakta = [], vilkar = [] } = this._propsLight;
 
-    const kriterieMatch = this._kriterier?.find((kriterie) => {
+    const kriterieMatch = this._kriterier!.find((kriterie) => {
       const { exec } = kriterie;
       return this.assertRegel(exec, avklartefakta, vilkar);
     });
 
-    return kriterieMatch?.nesteSteg;
+    return kriterieMatch && kriterieMatch.nesteSteg;
   };
 
   hentStatus = (): FaneStatus => {
-    const relevantUI = this.beregnRelevantUI?.(this._propsLight);
+    const relevantUI = this.beregnRelevantUI!(this._propsLight);
     if (!relevantUI) {
       return FANE_STATUS.FEIL;
     }
-    return "harAvklaring" in relevantUI && relevantUI.harAvklaring ? FANE_STATUS.OK : FANE_STATUS.UBEHANDLET;
+    return relevantUI.harAvklaring ? FANE_STATUS.OK : FANE_STATUS.UBEHANDLET;
   };
 
   erVedtakSteg = (id: string | null): boolean =>
