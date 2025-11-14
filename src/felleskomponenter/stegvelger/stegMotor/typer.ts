@@ -56,6 +56,8 @@ export const STEG = {
   VURDERING_PERIODE: "VURDERING_PERIODE",
 } as const;
 
+export type StegType = (typeof STEG)[keyof typeof STEG];
+
 /**
  * Lightweight props passed to steg constructor.
  * Contains necessary data and handlers for steg initialization.

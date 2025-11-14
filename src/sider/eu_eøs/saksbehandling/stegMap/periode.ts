@@ -1,13 +1,12 @@
 import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
 import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
 import VurderingPeriode from "../../stegKomponenter/vurderingPeriode/vurderingPeriode";
-import type { PropsLight } from "../../../../felleskomponenter/stegvelger/stegMotor/typer";
+import type { PropsLight, StegKriterie } from "../../../../felleskomponenter/stegvelger/stegMotor/typer";
 
 import MKV from "../../../../melosyskodeverk";
 
 // Spesifikke typer for Periode-steg
 interface PeriodeRelevanteData {
-  [key: string]: unknown;
   redigerbart: boolean;
   lovvalgsbestemmelseSomSkalVises?: string;
   lovvalgsbestemmelseSomSkalLagres?: string;
@@ -15,12 +14,10 @@ interface PeriodeRelevanteData {
 }
 
 interface PeriodeRelevantUI {
-  [key: string]: unknown;
   harAvklaring: boolean;
 }
 
 interface PeriodeHandlers {
-  [key: string]: unknown;
   bekreftOgFortsett: () => void;
   tilbake: () => void;
   byggLovvalgsperioder: () => void;
@@ -28,9 +25,24 @@ interface PeriodeHandlers {
   slettData: (data?: unknown) => void;
 }
 
+// Type helper for accessing Steg properties (base class is JS with getters/setters)
+interface StegWithTypes {
+  _propsLight: PropsLight;
+  id: string;
+  tittel: string;
+  komponent: typeof VurderingPeriode;
+  kriterier: StegKriterie[];
+  samleRelevanteData: (propsLight: PropsLight) => PeriodeRelevanteData;
+  beregnRelevantUI: () => PeriodeRelevantUI;
+  handlers: PeriodeHandlers;
+  status: string;
+}
+
 class Periode extends Steg {
   constructor(propsLight: PropsLight, stegPosisjon: number) {
     super(propsLight, stegPosisjon);
+
+    const self = this as unknown as StegWithTypes;
 
     const lovvalgsbestemmelseSomSkalVises =
       propsLight.lovvalgsbestemmelse ===
@@ -40,7 +52,7 @@ class Periode extends Steg {
 
     const lovvalgsbestemmelseSomSkalLagres = propsLight.lovvalgsbestemmelse;
 
-    this.kriterier = [
+    self.kriterier = [
       {
         exec: () => true, // Alltid gå videre til vedtak
         nesteSteg: STEG.VURDERING_TRYGDEAVGIFT,
@@ -49,27 +61,27 @@ class Periode extends Steg {
 
     const harAvklaring = !!lovvalgsbestemmelseSomSkalLagres;
 
-    this.id = STEG.VURDERING_PERIODE;
-    this.tittel = "Periode";
-    this.komponent = VurderingPeriode;
-    this.samleRelevanteData = (_propsLight: PropsLight): PeriodeRelevanteData => ({
+    self.id = STEG.VURDERING_PERIODE;
+    self.tittel = "Periode";
+    self.komponent = VurderingPeriode;
+    self.samleRelevanteData = (_propsLight: PropsLight) => ({
       redigerbart: _propsLight.generiskStegRedigerbart,
       lovvalgsbestemmelseSomSkalVises,
       lovvalgsbestemmelseSomSkalLagres,
       aktivtSteg: _propsLight.aktivtSteg,
     });
-    this.beregnRelevantUI = (): PeriodeRelevantUI => ({
+    self.beregnRelevantUI = () => ({
       harAvklaring,
     });
-    this.handlers = {
+    self.handlers = {
       bekreftOgFortsett: propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
       tilbake: propsLight.tilgjengeligeHandlers.tilbake,
-      byggLovvalgsperioder: this._propsLight.tilgjengeligeHandlers.byggLovvalgsperioder,
+      byggLovvalgsperioder: self._propsLight.tilgjengeligeHandlers.byggLovvalgsperioder,
       oppdaterData: (felt: string, verdi: unknown) =>
-        this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id!, felt, verdi),
-      slettData: (data?: unknown) => this._propsLight.tilgjengeligeHandlers.slettStegData(this.id!, data),
-    } as PeriodeHandlers;
-    this.status = FANE_STATUS.OK;
+        self._propsLight.tilgjengeligeHandlers.oppdaterStegData(self.id, felt, verdi),
+      slettData: (data?: unknown) => self._propsLight.tilgjengeligeHandlers.slettStegData(self.id, data),
+    };
+    self.status = FANE_STATUS.OK;
   }
 }
 
