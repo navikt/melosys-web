@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, beforeAll, afterAll } from "vitest";
 import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
@@ -320,6 +320,15 @@ describe("VurderingPeriode", () => {
   });
 
   describe("Snapshot testing", () => {
+    beforeAll(() => {
+      vi.setSystemTime(new Date("2024-06-15T12:00:00.000Z"));
+    });
+
+    afterAll(() => {
+      // Restore real time after snapshot tests
+      vi.useRealTimers();
+    });
+
     it("snapshot test - default state", () => {
       const { container } = renderWithProviders(<VurderingPeriode {...props} />, {
         preloadedState: initialReduxState,

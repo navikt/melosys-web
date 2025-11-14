@@ -9,8 +9,8 @@ describe("Trygdeavgift steg-klasse", () => {
     behandlingID: "test-behandling-123",
     generiskStegRedigerbart: true,
     aktivtSteg: false,
-    avklartefakta: {},
-    vilkar: {},
+    avklartefakta: [],
+    vilkar: [],
     tilgjengeligeHandlers: {
       bekreftOgFortsett: vi.fn(),
       tilbake: vi.fn(),

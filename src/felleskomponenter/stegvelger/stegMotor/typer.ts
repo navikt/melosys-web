@@ -56,8 +56,6 @@ export const STEG = {
   VURDERING_PERIODE: "VURDERING_PERIODE",
 } as const;
 
-export type StegType = (typeof STEG)[keyof typeof STEG];
-
 /**
  * Lightweight props passed to steg constructor.
  * Contains necessary data and handlers for steg initialization.
@@ -67,8 +65,8 @@ export interface PropsLight {
   lovvalgsbestemmelse?: string;
   generiskStegRedigerbart: boolean;
   aktivtSteg: boolean;
-  avklartefakta?: Record<string, unknown>;
-  vilkar?: Record<string, unknown>;
+  avklartefakta?: unknown[];
+  vilkar?: unknown[];
   tilgjengeligeHandlers: {
     bekreftOgFortsett: () => void;
     tilbake: () => void;
@@ -83,6 +81,6 @@ export interface PropsLight {
  * Used by steg.nesteSteg() to evaluate which step comes next.
  */
 export interface StegKriterie {
-  exec: (avklartefakta?: Record<string, unknown>, vilkar?: Record<string, unknown>) => boolean;
+  exec: (avklartefakta?: unknown[], vilkar?: unknown[]) => boolean;
   nesteSteg: string;
 }

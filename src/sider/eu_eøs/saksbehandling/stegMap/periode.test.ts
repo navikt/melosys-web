@@ -10,8 +10,8 @@ describe("Periode steg-klasse", () => {
     lovvalgsbestemmelse: undefined,
     generiskStegRedigerbart: true,
     aktivtSteg: false,
-    avklartefakta: {},
-    vilkar: {},
+    avklartefakta: [],
+    vilkar: [],
     tilgjengeligeHandlers: {
       bekreftOgFortsett: vi.fn(),
       tilbake: vi.fn(),
