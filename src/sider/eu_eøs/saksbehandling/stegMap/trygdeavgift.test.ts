@@ -70,8 +70,9 @@ describe("Trygdeavgift steg-klasse", () => {
     });
 
     it("skal returnere harAvklaring basert på trygdeavgiftStatus når den er satt", () => {
-      const propsLightMedStatus = createMockPropsLight();
-      (propsLightMedStatus as any).trygdeavgiftStatus = false;
+      const propsLightMedStatus = createMockPropsLight({
+        trygdeavgiftStatus: false,
+      });
       const trygdeavgift = new Trygdeavgift(propsLightMedStatus, 6);
 
       const beregnRelevantUI = trygdeavgift.beregnRelevantUI as any;
@@ -220,8 +221,8 @@ describe("Trygdeavgift steg-klasse", () => {
     it("skal returnere steg med UBEHANDLET status når trygdeavgiftStatus er false", () => {
       const propsLight = createMockPropsLight({
         aktivtSteg: true,
+        trygdeavgiftStatus: false,
       });
-      (propsLight as any).trygdeavgiftStatus = false;
       const stegPosisjon = 6;
       const trygdeavgift = new Trygdeavgift(propsLight, stegPosisjon);
 
@@ -243,8 +244,9 @@ describe("Trygdeavgift steg-klasse", () => {
     });
 
     it("skal returnere UBEHANDLET når trygdeavgiftStatus er false", () => {
-      const propsLight = createMockPropsLight();
-      (propsLight as any).trygdeavgiftStatus = false;
+      const propsLight = createMockPropsLight({
+        trygdeavgiftStatus: false,
+      });
       const trygdeavgift = new Trygdeavgift(propsLight, 6);
 
       const status = trygdeavgift.hentStatus();
@@ -253,8 +255,9 @@ describe("Trygdeavgift steg-klasse", () => {
     });
 
     it("skal returnere OK når trygdeavgiftStatus er true", () => {
-      const propsLight = createMockPropsLight();
-      (propsLight as any).trygdeavgiftStatus = true;
+      const propsLight = createMockPropsLight({
+        trygdeavgiftStatus: true,
+      });
       const trygdeavgift = new Trygdeavgift(propsLight, 6);
 
       const status = trygdeavgift.hentStatus();

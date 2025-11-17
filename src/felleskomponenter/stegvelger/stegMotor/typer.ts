@@ -71,6 +71,7 @@ export interface StegData {
 export interface PropsLight {
   behandlingID?: string;
   lovvalgsbestemmelse?: string;
+  trygdeavgiftStatus?: boolean;
   generiskStegRedigerbart: boolean;
   aktivtSteg: boolean;
   avklartefakta?: unknown[];

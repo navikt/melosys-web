@@ -38,7 +38,7 @@ class Trygdeavgift extends Steg {
 
     this.beregnRelevantUI = (_propsLight: PropsLight): TrygdeavgiftRelevantUI => {
       // Sjekk om trygdeavgift-status er satt via oppdaterStatus
-      const trygdeavgiftStatus = (_propsLight as any).trygdeavgiftStatus;
+      const trygdeavgiftStatus = _propsLight.trygdeavgiftStatus;
       return {
         harAvklaring: trygdeavgiftStatus !== undefined ? trygdeavgiftStatus : true,
       };
