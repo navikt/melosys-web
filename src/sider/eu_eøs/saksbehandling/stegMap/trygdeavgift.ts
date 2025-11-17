@@ -1,5 +1,5 @@
 import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
-import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
+import { STEG } from "../../../../felleskomponenter/stegvelger";
 import { VurderingTrygdeavgift as VurderingTrygdeavgiftFTRL } from "../../../ftrl/saksbehandling/stegKomponenter/vurderingTrygdeavgift/vurderingTrygdeavgift";
 import type { PropsLight } from "../../../../felleskomponenter/stegvelger/stegMotor/typer";
 
@@ -47,8 +47,6 @@ class Trygdeavgift extends Steg {
       slettData: (data?: unknown) => this._propsLight.tilgjengeligeHandlers.slettStegData(this.id!, data),
       oppdaterStatus: () => {}, // No-op: Step validity is managed internally by the component
     };
-
-    this.status = FANE_STATUS.OK;
   }
 }
 

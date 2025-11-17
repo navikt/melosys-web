@@ -30,7 +30,7 @@ describe("Trygdeavgift steg-klasse", () => {
       expect(trygdeavgift.id).toBe(STEG.VURDERING_TRYGDEAVGIFT);
       expect(trygdeavgift.tittel).toBe("Trygdeavgift");
       expect(trygdeavgift.komponent).toBe(VurderingTrygdeavgiftFTRL);
-      expect(trygdeavgift.status).toBe(FANE_STATUS.OK);
+      expect(trygdeavgift.status).toBeNull();
     });
 
     it("skal sette kriterier med kun ett kriterie som alltid matcher", () => {

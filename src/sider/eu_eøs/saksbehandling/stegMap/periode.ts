@@ -1,5 +1,5 @@
 import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
-import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
+import { STEG } from "../../../../felleskomponenter/stegvelger";
 import VurderingPeriode from "../../stegKomponenter/vurderingPeriode/vurderingPeriode";
 import type { PropsLight } from "../../../../felleskomponenter/stegvelger/stegMotor/typer";
 
@@ -31,14 +31,15 @@ class Periode extends Steg {
 
     const lovvalgsbestemmelseSomSkalLagres = propsLight.lovvalgsbestemmelse;
 
+    const harAvklaring = !!lovvalgsbestemmelseSomSkalLagres;
+
     this.kriterier = [
       {
-        exec: () => true, // Alltid gå videre til vedtak
+        // Bare vis neste steg hvis lovvalgsbestemmelse er satt (periode fullført)
+        exec: () => !!this._propsLight.lovvalgsbestemmelse,
         nesteSteg: STEG.VURDERING_TRYGDEAVGIFT,
       },
     ];
-
-    const harAvklaring = !!lovvalgsbestemmelseSomSkalLagres;
 
     this.id = STEG.VURDERING_PERIODE;
     this.tittel = "Periode";
@@ -60,7 +61,6 @@ class Periode extends Steg {
         this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id!, felt, verdi),
       slettData: (data?: unknown) => this._propsLight.tilgjengeligeHandlers.slettStegData(this.id!, data),
     };
-    this.status = FANE_STATUS.OK;
   }
 }
 

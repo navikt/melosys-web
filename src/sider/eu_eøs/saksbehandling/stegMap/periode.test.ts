@@ -31,7 +31,7 @@ describe("Periode steg-klasse", () => {
       expect(periode.id).toBe(STEG.VURDERING_PERIODE);
       expect(periode.tittel).toBe("Periode");
       expect(periode.komponent).toBe(VurderingPeriode);
-      expect(periode.status).toBe(FANE_STATUS.OK);
+      expect(periode.status).toBeNull();
     });
 
     it("skal mappe ART11_3A til ART11_5 for visning", () => {
@@ -65,14 +65,14 @@ describe("Periode steg-klasse", () => {
       expect(relevantData.lovvalgsbestemmelseSomSkalLagres).toBe(testBestemmelse);
     });
 
-    it("skal sette kriterier med kun ett kriterie som alltid matcher", () => {
+    it("skal sette kriterier med nesteSteg VURDERING_TRYGDEAVGIFT", () => {
       const propsLight = createMockPropsLight();
       const periode = new Periode(propsLight, 5);
 
       const kriterier = periode.kriterier as any;
       expect(kriterier).toHaveLength(1);
       expect(kriterier[0].nesteSteg).toBe(STEG.VURDERING_TRYGDEAVGIFT);
-      expect(kriterier[0].exec()).toBe(true);
+      expect(kriterier[0].exec()).toBe(false); // undefined lovvalgsbestemmelse
     });
   });
 
@@ -161,8 +161,19 @@ describe("Periode steg-klasse", () => {
   });
 
   describe("nesteSteg", () => {
-    it("skal alltid returnere VURDERING_TRYGDEAVGIFT", () => {
+    it("skal returnere undefined når lovvalgsbestemmelse mangler", () => {
       const propsLight = createMockPropsLight();
+      const periode = new Periode(propsLight, 5);
+
+      const nesteSteg = periode.nesteSteg();
+
+      expect(nesteSteg).toBeUndefined();
+    });
+
+    it("skal returnere VURDERING_TRYGDEAVGIFT når lovvalgsbestemmelse er satt", () => {
+      const propsLight = createMockPropsLight({
+        lovvalgsbestemmelse: "FO_883_2004_ART11_4",
+      });
       const periode = new Periode(propsLight, 5);
 
       const nesteSteg = periode.nesteSteg();
@@ -170,8 +181,9 @@ describe("Periode steg-klasse", () => {
       expect(nesteSteg).toBe(STEG.VURDERING_TRYGDEAVGIFT);
     });
 
-    it("skal returnere VURDERING_TRYGDEAVGIFT selv med ulike avklartefakta", () => {
+    it("skal returnere VURDERING_TRYGDEAVGIFT uavhengig av avklartefakta når lovvalgsbestemmelse er satt", () => {
       const propsLight = createMockPropsLight({
+        lovvalgsbestemmelse: "FO_883_2004_ART11_4",
         avklartefakta: { someFact: "someValue" },
         vilkar: { someCondition: true },
       });
