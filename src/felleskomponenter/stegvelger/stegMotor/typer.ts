@@ -1,7 +1,5 @@
 /** Hver fane kan ha en rekke forskjellige statuser som er ment å indikere
  * feil eller varsler som saksbehandleren må håndtere.
- *
- * @type {{UBEHANDLET: string, AKTIV: string, OK: string, ADVARSEL: string, FEIL: string}}
  */
 export const FANE_STATUS = {
   UBEHANDLET: "UBEHANDLET",
@@ -9,7 +7,9 @@ export const FANE_STATUS = {
   OK: "OK",
   ADVARSEL: "ADVARSEL",
   FEIL: "FEIL",
-};
+} as const;
+
+export type FaneStatus = (typeof FANE_STATUS)[keyof typeof FANE_STATUS];
 
 export const STEG = {
   AVSLAG_12_X_OG_16: "AVSLAG_12_X_OG_16",
@@ -54,4 +54,33 @@ export const STEG = {
   ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK: "ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK",
   MEDFOLGENDE_BARN: "MEDFOLGENDE_BARN",
   VURDERING_PERIODE: "VURDERING_PERIODE",
-};
+} as const;
+
+/**
+ * Lightweight props passed to steg constructor.
+ * Contains necessary data and handlers for steg initialization.
+ */
+export interface PropsLight {
+  behandlingID?: string;
+  lovvalgsbestemmelse?: string;
+  generiskStegRedigerbart: boolean;
+  aktivtSteg: boolean;
+  avklartefakta?: unknown[];
+  vilkar?: unknown[];
+  tilgjengeligeHandlers: {
+    bekreftOgFortsett: () => void;
+    tilbake: () => void;
+    byggLovvalgsperioder: () => void;
+    oppdaterStegData: (stegId: string, felt: string, verdi: unknown) => void;
+    slettStegData: (stegId: string, data?: unknown) => void;
+  };
+}
+
+/**
+ * Criteria for determining next step.
+ * Used by steg.nesteSteg() to evaluate which step comes next.
+ */
+export interface StegKriterie {
+  exec: (avklartefakta?: unknown[], vilkar?: unknown[]) => boolean;
+  nesteSteg: string;
+}

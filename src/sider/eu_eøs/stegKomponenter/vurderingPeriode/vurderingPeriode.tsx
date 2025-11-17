@@ -161,7 +161,6 @@ export function VurderingPeriode({
         );
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formValues.forkortLovvalgsperiode, formValues.fomDato, formValues.tomDato, redigerbart]);
 
   const onCheckboxClick = (checked: boolean) => {

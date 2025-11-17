@@ -1,11 +1,26 @@
 import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
 import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
 import VurderingPeriode from "../../stegKomponenter/vurderingPeriode/vurderingPeriode";
+import type { PropsLight } from "../../../../felleskomponenter/stegvelger/stegMotor/typer";
 
 import MKV from "../../../../melosyskodeverk";
 
+// Spesifikke typer for Periode-steg
+interface PeriodeRelevanteData {
+  [key: string]: unknown; // Index signature for base class compatibility
+  redigerbart: boolean;
+  lovvalgsbestemmelseSomSkalVises?: string;
+  lovvalgsbestemmelseSomSkalLagres?: string;
+  aktivtSteg: boolean;
+}
+
+interface PeriodeRelevantUI {
+  [key: string]: unknown; // Index signature for base class compatibility
+  harAvklaring: boolean;
+}
+
 class Periode extends Steg {
-  constructor(propsLight, stegPosisjon) {
+  constructor(propsLight: PropsLight, stegPosisjon: number) {
     super(propsLight, stegPosisjon);
 
     const lovvalgsbestemmelseSomSkalVises =
@@ -28,21 +43,22 @@ class Periode extends Steg {
     this.id = STEG.VURDERING_PERIODE;
     this.tittel = "Periode";
     this.komponent = VurderingPeriode;
-    this.samleRelevanteData = (_propsLight) => ({
+    this.samleRelevanteData = (_propsLight: PropsLight): PeriodeRelevanteData => ({
       redigerbart: _propsLight.generiskStegRedigerbart,
       lovvalgsbestemmelseSomSkalVises,
       lovvalgsbestemmelseSomSkalLagres,
       aktivtSteg: _propsLight.aktivtSteg,
     });
-    this.beregnRelevantUI = () => ({
+    this.beregnRelevantUI = (): PeriodeRelevantUI => ({
       harAvklaring,
     });
     this.handlers = {
       bekreftOgFortsett: propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
       tilbake: propsLight.tilgjengeligeHandlers.tilbake,
       byggLovvalgsperioder: this._propsLight.tilgjengeligeHandlers.byggLovvalgsperioder,
-      oppdaterData: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, verdi),
-      slettData: (data) => this._propsLight.tilgjengeligeHandlers.slettStegData(this.id, data),
+      oppdaterData: (felt: string, verdi: unknown) =>
+        this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id!, felt, verdi),
+      slettData: (data?: unknown) => this._propsLight.tilgjengeligeHandlers.slettStegData(this.id!, data),
     };
     this.status = FANE_STATUS.OK;
   }
