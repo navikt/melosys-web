@@ -76,10 +76,15 @@ export interface PropsLight {
   aktivtSteg: boolean;
   avklartefakta?: unknown[];
   vilkar?: unknown[];
+  harFeilmeldinger?: boolean;
+  eøsFaktureringAvTrygdeavgiftToggleEnabled?: boolean;
   tilgjengeligeHandlers: {
     bekreftOgFortsett: () => void;
     tilbake: () => void;
     byggLovvalgsperioder: () => void;
+    lagreLovvalgsperioder?: () => void;
+    kontrollerFerdigbehandling?: (data: unknown) => Promise<unknown>;
+    validerMottatteOpplysninger?: () => Promise<unknown>;
     // Støtter to signaturer: (stegId, felt, verdi) og (stegId, stegData)
     oppdaterStegData: ((stegId: string, felt: string, verdi: unknown) => void) &
       ((stegId: string, data: StegData) => void);

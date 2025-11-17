@@ -22,7 +22,7 @@ class Trygdeavgift extends Steg {
 
     this.kriterier = [
       {
-        exec: () => true,
+        exec: () => !!this._propsLight.trygdeavgiftStatus,
         nesteSteg: STEG.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK,
       },
     ];

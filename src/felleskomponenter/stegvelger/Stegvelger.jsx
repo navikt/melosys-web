@@ -158,11 +158,17 @@ class Stegvelger extends Component {
     } else {
       stegStores[type].oppdaterStegData(stegID, { felt, innhold });
     }
-    this.setState(stegStores);
-
-    if (data.oppdaterRedux) {
-      this.publiserStegdata();
-    }
+    this.setState(stegStores, () => {
+      // Callback kjøres etter setState er ferdig
+      if (data.oppdaterRedux) {
+        this.publiserStegdata();
+      } else if (type === "trygdeavgiftStatus") {
+        // Når trygdeavgiftStatus endres, må steg-kjeden rebuildes for å
+        // re-evaluere Trygdeavgift-stegets kriterier (som styrer om Vedtak-steget vises)
+        // Bruker debounced versjon for å unngå multiple API-kall i rask rekkefølge
+        this.debouncedOppdaterAktuelleSteg(this.state.aktivtStegNummer);
+      }
+    });
   };
 
   slettStegData = (stegID, data = {}) => {

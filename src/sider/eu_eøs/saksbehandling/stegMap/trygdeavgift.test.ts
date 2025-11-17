@@ -33,14 +33,27 @@ describe("Trygdeavgift steg-klasse", () => {
       expect(trygdeavgift.status).toBeNull();
     });
 
-    it("skal sette kriterier med kun ett kriterie som alltid matcher", () => {
-      const propsLight = createMockPropsLight();
+    it("skal sette kriterier med ett kriterie som matcher når trygdeavgiftStatus er true", () => {
+      const propsLight = createMockPropsLight({
+        trygdeavgiftStatus: true,
+      });
       const trygdeavgift = new Trygdeavgift(propsLight, 6);
 
       const kriterier = trygdeavgift.kriterier as any;
       expect(kriterier).toHaveLength(1);
       expect(kriterier[0].nesteSteg).toBe(STEG.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK);
       expect(kriterier[0].exec()).toBe(true);
+    });
+
+    it("skal ha kriterie som IKKE matcher når trygdeavgiftStatus er false", () => {
+      const propsLight = createMockPropsLight({
+        trygdeavgiftStatus: false,
+      });
+      const trygdeavgift = new Trygdeavgift(propsLight, 6);
+
+      const kriterier = trygdeavgift.kriterier as any;
+      expect(kriterier).toHaveLength(1);
+      expect(kriterier[0].exec()).toBe(false);
     });
   });
 
@@ -85,8 +98,10 @@ describe("Trygdeavgift steg-klasse", () => {
   });
 
   describe("nesteSteg", () => {
-    it("skal alltid returnere ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK", () => {
-      const propsLight = createMockPropsLight();
+    it("skal returnere ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK når trygdeavgiftStatus er true", () => {
+      const propsLight = createMockPropsLight({
+        trygdeavgiftStatus: true,
+      });
       const trygdeavgift = new Trygdeavgift(propsLight, 6);
 
       const nesteSteg = trygdeavgift.nesteSteg();
@@ -94,16 +109,24 @@ describe("Trygdeavgift steg-klasse", () => {
       expect(nesteSteg).toBe(STEG.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK);
     });
 
-    it("skal returnere ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK selv med ulike avklartefakta", () => {
+    it("skal returnere undefined når trygdeavgiftStatus er false (Vedtak skal ikke vises)", () => {
       const propsLight = createMockPropsLight({
-        avklartefakta: { someFact: "someValue" },
-        vilkar: { someCondition: true },
+        trygdeavgiftStatus: false,
       });
       const trygdeavgift = new Trygdeavgift(propsLight, 6);
 
       const nesteSteg = trygdeavgift.nesteSteg();
 
-      expect(nesteSteg).toBe(STEG.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK);
+      expect(nesteSteg).toBeUndefined();
+    });
+
+    it("skal returnere undefined når trygdeavgiftStatus er undefined (Vedtak skal ikke vises)", () => {
+      const propsLight = createMockPropsLight();
+      const trygdeavgift = new Trygdeavgift(propsLight, 6);
+
+      const nesteSteg = trygdeavgift.nesteSteg();
+
+      expect(nesteSteg).toBeUndefined();
     });
   });
 
