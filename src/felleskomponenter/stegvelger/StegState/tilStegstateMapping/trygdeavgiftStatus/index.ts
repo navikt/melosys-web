@@ -1,17 +1,12 @@
-import { konverterEnkelDataTilStegData, slettEnkelData } from "../enkelData";
+import type { StegData } from "../../../stegMotor/typer";
 
 export const trygdeavgiftStatusType = "trygdeavgiftStatus";
 
-export const slettTrygdeavgiftStatus = (felt) => slettEnkelData(felt, trygdeavgiftStatusType);
-
 // Lagrer status uten å publisere til Redux (oppdaterRedux: false)
 // Dette forhindrer unødvendige re-renders som ville resette komponentens state
-export const lagTrygdeavgiftStatus = (isValid) => ({
+export const lagTrygdeavgiftStatus = (isValid: boolean): StegData => ({
   felt: trygdeavgiftStatusType,
   oppdaterRedux: false, // KRITISK: false for å unngå re-render som resetter komponenten
   type: trygdeavgiftStatusType,
   innhold: isValid,
 });
-
-export const konverterTrygdeavgiftStatusTilStegData = (status) =>
-  konverterEnkelDataTilStegData(status, trygdeavgiftStatusType);
