@@ -6,6 +6,7 @@ import { unntakfrabestemmelseType } from "./unntakfrabestemmelse";
 import { vilkaarType } from "./vilkar";
 import { lovvalgsperiodeType } from "./lovvalgsperiode";
 import { lovvalgslandType } from "./lovvalgsland";
+import { trygdeavgiftStatusType } from "./trygdeavgiftStatus";
 
 export * from "./anmodningsperiodesvar";
 export * from "./enkelData";
@@ -16,6 +17,7 @@ export * from "./tilleggbestemmelser";
 export * from "./unntakfrabestemmelse";
 export * from "./lovvalgsperiode";
 export * from "./vilkar";
+export * from "./trygdeavgiftStatus";
 
 export const StegStoreTyper = {
   Anmodningsperiodersvar: anmodningsperiodesvartype,
@@ -26,6 +28,7 @@ export const StegStoreTyper = {
   Vilkar: vilkaarType,
   Lovvalgsperiode: lovvalgsperiodeType,
   Lovvalgsland: lovvalgslandType,
+  TrygdeavgiftStatus: trygdeavgiftStatusType,
 };
 
 export interface PerioderStegState {

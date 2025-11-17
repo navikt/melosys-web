@@ -60,6 +60,14 @@ export const STEG = {
  * Lightweight props passed to steg constructor.
  * Contains necessary data and handlers for steg initialization.
  */
+export interface StegData {
+  felt: string;
+  type: string;
+  innhold: unknown;
+  oppdaterRedux?: boolean;
+  iAlleSteg?: boolean;
+}
+
 export interface PropsLight {
   behandlingID?: string;
   lovvalgsbestemmelse?: string;
@@ -71,7 +79,9 @@ export interface PropsLight {
     bekreftOgFortsett: () => void;
     tilbake: () => void;
     byggLovvalgsperioder: () => void;
-    oppdaterStegData: (stegId: string, felt: string, verdi: unknown) => void;
+    // Støtter to signaturer: (stegId, felt, verdi) og (stegId, stegData)
+    oppdaterStegData: ((stegId: string, felt: string, verdi: unknown) => void) &
+      ((stegId: string, data: StegData) => void);
     slettStegData: (stegId: string, data?: unknown) => void;
   };
 }

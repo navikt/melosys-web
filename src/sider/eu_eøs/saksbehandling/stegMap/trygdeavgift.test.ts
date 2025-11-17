@@ -45,64 +45,40 @@ describe("Trygdeavgift steg-klasse", () => {
   });
 
   describe("samleRelevanteData", () => {
-    it("skal returnere korrekt data-struktur med behandlingID og redigerbart", () => {
-      const propsLight = createMockPropsLight({
-        behandlingID: "behandling-456",
-        generiskStegRedigerbart: true,
-      });
+    it("skal returnere tom data-struktur", () => {
+      const propsLight = createMockPropsLight();
       const trygdeavgift = new Trygdeavgift(propsLight, 6);
 
       const samleRelevanteData = trygdeavgift.samleRelevanteData as any;
       const relevantData = samleRelevanteData(propsLight);
 
-      expect(relevantData).toEqual({
-        behandlingID: "behandling-456",
-        redigerbart: true,
-      });
-    });
-
-    it("skal håndtere redigerbart false", () => {
-      const propsLight = createMockPropsLight({
-        behandlingID: "behandling-789",
-        generiskStegRedigerbart: false,
-      });
-      const trygdeavgift = new Trygdeavgift(propsLight, 6);
-
-      const samleRelevanteData = trygdeavgift.samleRelevanteData as any;
-      const relevantData = samleRelevanteData(propsLight);
-
-      expect(relevantData).toEqual({
-        behandlingID: "behandling-789",
-        redigerbart: false,
-      });
+      expect(relevantData).toEqual({});
     });
   });
 
   describe("beregnRelevantUI", () => {
-    it("skal alltid returnere harAvklaring true", () => {
+    it("skal returnere harAvklaring true som default når trygdeavgiftStatus ikke er satt", () => {
       const propsLight = createMockPropsLight();
       const trygdeavgift = new Trygdeavgift(propsLight, 6);
 
       const beregnRelevantUI = trygdeavgift.beregnRelevantUI as any;
-      const relevantUI = beregnRelevantUI();
+      const relevantUI = beregnRelevantUI(propsLight);
 
       expect(relevantUI).toEqual({
         harAvklaring: true,
       });
     });
 
-    it("skal returnere harAvklaring true uavhengig av propsLight", () => {
-      const propsLight = createMockPropsLight({
-        avklartefakta: { noeData: "verdi" },
-        vilkar: { betingelse: false },
-      });
-      const trygdeavgift = new Trygdeavgift(propsLight, 6);
+    it("skal returnere harAvklaring basert på trygdeavgiftStatus når den er satt", () => {
+      const propsLightMedStatus = createMockPropsLight();
+      (propsLightMedStatus as any).trygdeavgiftStatus = false;
+      const trygdeavgift = new Trygdeavgift(propsLightMedStatus, 6);
 
       const beregnRelevantUI = trygdeavgift.beregnRelevantUI as any;
-      const relevantUI = beregnRelevantUI();
+      const relevantUI = beregnRelevantUI(propsLightMedStatus);
 
       expect(relevantUI).toEqual({
-        harAvklaring: true,
+        harAvklaring: false,
       });
     });
   });
@@ -179,20 +155,38 @@ describe("Trygdeavgift steg-klasse", () => {
       );
     });
 
-    it("skal ha oppdaterStatus handler som er en no-op funksjon", () => {
-      // oppdaterStatus er en no-op i Trygdeavgift
-      expect(handlers.oppdaterStatus).toBeInstanceOf(Function);
+    it("skal ha oppdaterStatus handler som kaller oppdaterStegData med trygdeavgift-status", () => {
+      handlers.oppdaterStatus(true);
 
-      // Skal ikke kaste feil når den kalles
-      expect(() => handlers.oppdaterStatus()).not.toThrow();
+      expect(propsLight.tilgjengeligeHandlers.oppdaterStegData).toHaveBeenCalledWith(
+        STEG.VURDERING_TRYGDEAVGIFT,
+        expect.objectContaining({
+          felt: "trygdeavgiftStatus",
+          type: "trygdeavgiftStatus",
+          innhold: true,
+          oppdaterRedux: false, // false for å unngå unødvendig re-render
+        }),
+      );
+    });
+
+    it("skal ha oppdaterStatus handler som kan sette status til false", () => {
+      handlers.oppdaterStatus(false);
+
+      expect(propsLight.tilgjengeligeHandlers.oppdaterStegData).toHaveBeenCalledWith(
+        STEG.VURDERING_TRYGDEAVGIFT,
+        expect.objectContaining({
+          felt: "trygdeavgiftStatus",
+          type: "trygdeavgiftStatus",
+          innhold: false,
+          oppdaterRedux: false, // false for å unngå unødvendig re-render
+        }),
+      );
     });
   });
 
   describe("byggSteg", () => {
-    it("skal returnere komplett steg-objekt", () => {
+    it("skal returnere komplett steg-objekt med status OK som default", () => {
       const propsLight = createMockPropsLight({
-        behandlingID: "test-123",
-        generiskStegRedigerbart: true,
         aktivtSteg: true,
       });
       const stegPosisjon = 6;
@@ -209,14 +203,26 @@ describe("Trygdeavgift steg-klasse", () => {
       });
       expect(byggetSteg.data).toBeDefined();
       expect(byggetSteg.data.tilstand).toEqual({ harAvklaring: true });
-      expect(byggetSteg.data.behandlingID).toBe("test-123");
-      expect(byggetSteg.data.redigerbart).toBe(true);
       expect(byggetSteg.handlers).toBeDefined();
+    });
+
+    it("skal returnere steg med UBEHANDLET status når trygdeavgiftStatus er false", () => {
+      const propsLight = createMockPropsLight({
+        aktivtSteg: true,
+      });
+      (propsLight as any).trygdeavgiftStatus = false;
+      const stegPosisjon = 6;
+      const trygdeavgift = new Trygdeavgift(propsLight, stegPosisjon);
+
+      const byggetSteg = trygdeavgift.byggSteg();
+
+      expect(byggetSteg.status).toBe(FANE_STATUS.UBEHANDLET);
+      expect(byggetSteg.data.tilstand).toEqual({ harAvklaring: false });
     });
   });
 
   describe("hentStatus", () => {
-    it("skal returnere OK siden harAvklaring alltid er true", () => {
+    it("skal returnere OK som default når trygdeavgiftStatus ikke er satt", () => {
       const propsLight = createMockPropsLight();
       const trygdeavgift = new Trygdeavgift(propsLight, 6);
 
@@ -225,11 +231,19 @@ describe("Trygdeavgift steg-klasse", () => {
       expect(status).toBe(FANE_STATUS.OK);
     });
 
-    it("skal returnere OK uavhengig av propsLight-verdier", () => {
-      const propsLight = createMockPropsLight({
-        behandlingID: undefined,
-        generiskStegRedigerbart: false,
-      });
+    it("skal returnere UBEHANDLET når trygdeavgiftStatus er false", () => {
+      const propsLight = createMockPropsLight();
+      (propsLight as any).trygdeavgiftStatus = false;
+      const trygdeavgift = new Trygdeavgift(propsLight, 6);
+
+      const status = trygdeavgift.hentStatus();
+
+      expect(status).toBe(FANE_STATUS.UBEHANDLET);
+    });
+
+    it("skal returnere OK når trygdeavgiftStatus er true", () => {
+      const propsLight = createMockPropsLight();
+      (propsLight as any).trygdeavgiftStatus = true;
       const trygdeavgift = new Trygdeavgift(propsLight, 6);
 
       const status = trygdeavgift.hentStatus();

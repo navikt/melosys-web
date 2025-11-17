@@ -56,6 +56,7 @@ class Stegvelger extends Component {
       [StegStoreTyper.UnntakFraBestemmelse]: new EnkelDataStore(),
       [StegStoreTyper.Lovvalgsperiode]: new EnkelDataStore(),
       [StegStoreTyper.Lovvalgsland]: new EnkelDataStore(),
+      [StegStoreTyper.TrygdeavgiftStatus]: new EnkelDataStore(),
     },
     visMottatteOpplysningerFeilmeldinger: false,
   };
@@ -411,6 +412,7 @@ class Stegvelger extends Component {
       behandlingsstatus: props.oppsummering.behandlingsstatus,
       lovvalgsperioder: props.lovvalgsperioder,
       lovvalgsbestemmelse: props.lovvalgsbestemmelse,
+      trygdeavgiftStatus: this.state.stegStores[StegStoreTyper.TrygdeavgiftStatus]?.hent(),
       tilleggsbestemmelse: props.tilleggsbestemmelse,
       valgteLovvalgsVilkarBestemmelse: props.valgteLovvalgsVilkarBestemmelse,
       utpekingsperioder: props.utpekingsperioder,
