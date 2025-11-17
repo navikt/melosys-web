@@ -80,6 +80,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const [harEndretInnvilgetMedlemskapsperiode, setHarEndretInnvilgetMedlemskapsperiode] = useState<boolean | undefined>(
     undefined,
   );
+  const [dataErLastet, setDataErLastet] = useState(false);
 
   const alleTrygdeavgiftsperioderHarNullBeløp = lagretTrygdeavgift?.trygdeavgiftsperioder.every(
     (periode) => periode.avgiftPerMd === 0,
@@ -169,6 +170,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     !erÅpenSluttDato;
 
   useEffect(() => {
+    setDataErLastet(false);
     Api.Trygdeavgift.hentBeregnetTrygdeavgift(behandlingID).then((beregnetTrygdeavgift) => {
       if (
         erNyVurderingEllerManglendeInnbetaling &&
@@ -223,6 +225,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
           }))
         : [{ ...formattedDefaultPeriode(), erMaanedsbelop: BOOLSK_STRING.SANN }],
     );
+    setDataErLastet(true);
   };
 
   const håndterTrygdeavgiftsberegning = (beregnetTrygdeavgift: BeregnetTrygdeavgift) => {
@@ -308,7 +311,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   ]);
 
   useEffect(() => {
-    if (redigerbart && aktivtSteg) {
+    if (redigerbart && aktivtSteg && dataErLastet) {
       if (!formIsValid) {
         formValues?.skatteforholdsperioder?.forEach((_periode: any, index: number) => {
           trigger(`skatteforholdsperioder[${index}].fomDato`);
@@ -324,7 +327,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
         }
       }
     }
-  }, [aktivtSteg, harEndretInnvilgetMedlemskapsperiode]);
+  }, [aktivtSteg, harEndretInnvilgetMedlemskapsperiode, dataErLastet]);
 
   if (!aktivtSteg) return null;
 
