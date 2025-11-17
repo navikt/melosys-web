@@ -1,7 +1,7 @@
 import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
 import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
 import { VurderingTrygdeavgift as VurderingTrygdeavgiftFTRL } from "../../../ftrl/saksbehandling/stegKomponenter/vurderingTrygdeavgift/vurderingTrygdeavgift";
-import type { PropsLight, StegKriterie } from "../../../../felleskomponenter/stegvelger/stegMotor/typer";
+import type { PropsLight } from "../../../../felleskomponenter/stegvelger/stegMotor/typer";
 
 // Spesifikke typer for Trygdeavgift-steg
 interface TrygdeavgiftRelevanteData {
@@ -13,15 +13,6 @@ interface TrygdeavgiftRelevanteData {
 interface TrygdeavgiftRelevantUI {
   [key: string]: unknown; // Index signature for base class compatibility
   harAvklaring: boolean;
-}
-
-interface TrygdeavgiftHandlers {
-  [key: string]: unknown; // Index signature for base class compatibility
-  bekreft: () => void;
-  tilbake: () => void;
-  oppdaterData: (felt: string, verdi: unknown) => void;
-  slettData: (data?: unknown) => void;
-  oppdaterStatus: () => void;
 }
 
 class Trygdeavgift extends Steg {

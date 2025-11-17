@@ -1,7 +1,7 @@
 import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
 import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
 import VurderingPeriode from "../../stegKomponenter/vurderingPeriode/vurderingPeriode";
-import type { PropsLight, StegKriterie } from "../../../../felleskomponenter/stegvelger/stegMotor/typer";
+import type { PropsLight } from "../../../../felleskomponenter/stegvelger/stegMotor/typer";
 
 import MKV from "../../../../melosyskodeverk";
 
@@ -17,15 +17,6 @@ interface PeriodeRelevanteData {
 interface PeriodeRelevantUI {
   [key: string]: unknown; // Index signature for base class compatibility
   harAvklaring: boolean;
-}
-
-interface PeriodeHandlers {
-  [key: string]: unknown; // Index signature for base class compatibility
-  bekreftOgFortsett: () => void;
-  tilbake: () => void;
-  byggLovvalgsperioder: () => void;
-  oppdaterData: (felt: string, verdi: unknown) => void;
-  slettData: (data?: unknown) => void;
 }
 
 class Periode extends Steg {
