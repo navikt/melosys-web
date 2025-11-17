@@ -15,6 +15,8 @@ interface TrygdeavgiftRelevantUI {
 }
 
 class Trygdeavgift extends Steg {
+  private _sisteStatus: boolean | undefined = undefined;
+
   constructor(propsLight: PropsLight, stegPosisjon: number) {
     super(propsLight, stegPosisjon);
 
@@ -49,8 +51,12 @@ class Trygdeavgift extends Steg {
         this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id!, felt, verdi),
       slettData: (data?: unknown) => this._propsLight.tilgjengeligeHandlers.slettStegData(this.id!, data),
       // Lagre valideringsstatus når komponenten kaller oppdaterStatus
+      // Kun oppdater hvis verdien faktisk har endret seg for å unngå unødvendige re-renders
       oppdaterStatus: (isValid: boolean) => {
-        this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id!, lagTrygdeavgiftStatus(isValid));
+        if (this._sisteStatus !== isValid) {
+          this._sisteStatus = isValid;
+          this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id!, lagTrygdeavgiftStatus(isValid));
+        }
       },
     };
     // Status beregnes dynamisk av hentStatus() basert på harAvklaring

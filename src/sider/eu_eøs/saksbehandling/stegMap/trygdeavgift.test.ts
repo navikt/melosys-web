@@ -182,6 +182,17 @@ describe("Trygdeavgift steg-klasse", () => {
         }),
       );
     });
+
+    it("skal ikke kalle oppdaterStegData hvis status ikke har endret seg", () => {
+      handlers.oppdaterStatus(true);
+      const firstCallCount = propsLight.tilgjengeligeHandlers.oppdaterStegData.mock.calls.length;
+
+      // Kall med samme verdi igjen
+      handlers.oppdaterStatus(true);
+      const secondCallCount = propsLight.tilgjengeligeHandlers.oppdaterStegData.mock.calls.length;
+
+      expect(secondCallCount).toBe(firstCallCount);
+    });
   });
 
   describe("byggSteg", () => {
