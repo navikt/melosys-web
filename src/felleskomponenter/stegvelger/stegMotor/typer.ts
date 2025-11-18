@@ -68,6 +68,15 @@ export interface StegData {
   iAlleSteg?: boolean;
 }
 
+/**
+ * Interface for oppdaterStegData handler with function overloads.
+ * Supports both (stegId, felt, verdi) and (stegId, stegData) signatures.
+ */
+export interface OppdaterStegDataHandler {
+  (stegId: string, felt: string, verdi: unknown): void;
+  (stegId: string, data: StegData): void;
+}
+
 export interface PropsLight {
   behandlingID?: string;
   lovvalgsbestemmelse?: string;
@@ -85,9 +94,7 @@ export interface PropsLight {
     lagreLovvalgsperioder?: () => void;
     kontrollerFerdigbehandling?: (data: unknown) => Promise<unknown>;
     validerMottatteOpplysninger?: () => Promise<unknown>;
-    // Støtter to signaturer: (stegId, felt, verdi) og (stegId, stegData)
-    oppdaterStegData: ((stegId: string, felt: string, verdi: unknown) => void) &
-      ((stegId: string, data: StegData) => void);
+    oppdaterStegData: OppdaterStegDataHandler;
     slettStegData: (stegId: string, data?: unknown) => void;
   };
 }
