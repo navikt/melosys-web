@@ -1,6 +1,6 @@
 import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
 import { STEG } from "../../../../felleskomponenter/stegvelger";
-import { VurderingTrygdeavgift as VurderingTrygdeavgiftFTRL } from "../../../ftrl/saksbehandling/stegKomponenter/vurderingTrygdeavgift/vurderingTrygdeavgift";
+import { VurderingTrygdeavgift as VurderingTrygdeavgiftFTRL } from "../../../../felleskomponenter/trygdeavgift/vurderingTrygdeavgift/vurderingTrygdeavgift";
 import type { PropsLight } from "../../../../felleskomponenter/stegvelger/stegMotor/typer";
 import { lagTrygdeavgiftStatus } from "../../../../felleskomponenter/stegvelger";
 

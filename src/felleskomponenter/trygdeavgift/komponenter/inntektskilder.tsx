@@ -10,10 +10,7 @@ import * as Mui from "../../ui";
 import * as Ikoner from "../../../resources/images";
 import { BOOLSK_STRING } from "../../../constants";
 import { FieldArrayProps, FormValuesProps, Inntektskilde } from "./types";
-import {
-  arbAvgBetalesKreves,
-  bruttoInntektKreves,
-} from "../../../sider/ftrl/saksbehandling/stegKomponenter/vurderingTrygdeavgift/vurderingTrygdeavgiftSchema";
+import { arbAvgBetalesKreves, bruttoInntektKreves } from "../vurderingTrygdeavgift/vurderingTrygdeavgiftSchema";
 import "./inntektskilder.less";
 import { Stack } from "@navikt/ds-react";
 
