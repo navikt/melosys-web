@@ -264,60 +264,8 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
       return;
     }
 
-    // Valider at vi har nødvendige data før vi sender til backend
-    if (!formVerdier.skatteforholdsperioder || formVerdier.skatteforholdsperioder.length === 0) {
-      // Backend krever avgiftspliktige perioder (skatteforholdsperioder)
-      setTrygdeavgift(undefined);
-      setLagrePending(false);
-      return;
-    }
-
-    // Sjekk at alle skatteforhold har påkrevde felt
-    const harUfullstendigeSkatteforhold = formVerdier.skatteforholdsperioder.some(
-      (skatteforhold: Skatteforhold) =>
-        !skatteforhold.fomDato || !skatteforhold.tomDato || !skatteforhold.skatteplikttype,
-    );
-
-    if (harUfullstendigeSkatteforhold) {
-      // Ikke send til backend hvis skatteforhold mangler data
-      setTrygdeavgift(undefined);
-      setLagrePending(false);
-      return;
-    }
-
     const erBrukerPliktigMedlemOgSkattepliktig =
       medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(formVerdier.skatteforholdsperioder);
-
-    // Hvis bruker IKKE er pliktig medlem og skattepliktig, skal vi vise inntektskilder
-    const skalSendeInntektskilder = !erBrukerPliktigMedlemOgSkattepliktig;
-
-    // Hvis vi skal sende inntektskilder, må de være fylt ut
-    if (skalSendeInntektskilder) {
-      // Sjekk at vi har minst én inntektskilde
-      if (!formVerdier.inntektskilder || formVerdier.inntektskilder.length === 0) {
-        // Backend krever kildeperioder (inntektskilder) når bruker ikke er pliktig medlem
-        setTrygdeavgift(undefined);
-        setLagrePending(false);
-        return;
-      }
-
-      // Sjekk at alle inntektskilder har påkrevde felt
-      const harUfullstendigeInntektskilder = formVerdier.inntektskilder.some(
-        (inntektskilde: Inntektskilde) =>
-          !inntektskilde.fomDato ||
-          !inntektskilde.tomDato ||
-          !inntektskilde.kildetype ||
-          inntektskilde.bruttoInntekt === undefined ||
-          inntektskilde.bruttoInntekt === null,
-      );
-
-      if (harUfullstendigeInntektskilder) {
-        // Ikke send til backend hvis inntektskilder mangler data
-        setTrygdeavgift(undefined);
-        setLagrePending(false);
-        return;
-      }
-    }
 
     Api.Trygdeavgift.beregnTrygdeavgiftsperioder(behandlingID, {
       skatteforholdsperioder: formVerdier.skatteforholdsperioder.map((skatteforhold: Skatteforhold) => ({
