@@ -159,13 +159,9 @@ class Stegvelger extends Component {
       stegStores[type].oppdaterStegData(stegID, { felt, innhold });
     }
     this.setState(stegStores, () => {
-      // Callback kjøres etter setState er ferdig
       if (data.oppdaterRedux) {
         this.publiserStegdata();
       } else if (type === "trygdeavgiftStatus") {
-        // Når trygdeavgiftStatus endres, må steg-kjeden rebuildes for å
-        // re-evaluere Trygdeavgift-stegets kriterier (som styrer om Vedtak-steget vises)
-        // Bruker debounced versjon for å unngå multiple API-kall i rask rekkefølge
         this.debouncedOppdaterAktuelleSteg(this.state.aktivtStegNummer);
       }
     });
@@ -466,9 +462,6 @@ class Stegvelger extends Component {
 
     const stegMotor = new StegMotor(propsLight, props.stegMap, props.forsteSteg);
     const aktuelleSteg = stegMotor.beregnAlleSteg();
-    // Dersom ved en re-kalkulering av aktuelle steg viser seg at det ikke er flere mulige steg
-    // må vi normalisere siden aktivtStegNummer vil ligge 1 steg foran det som er mulig. Sjekk derfor
-    // på faktisk antall mulige steg.
     const normalisertAktivtSteg = Math.min(aktivtStegNummer, aktuelleSteg.length - 1);
 
     aktuelleSteg[normalisertAktivtSteg].aktivtSteg = true;

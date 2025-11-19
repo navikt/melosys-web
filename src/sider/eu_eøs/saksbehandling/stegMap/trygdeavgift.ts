@@ -2,7 +2,7 @@ import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
 import { STEG } from "../../../../felleskomponenter/stegvelger";
 import { VurderingTrygdeavgift as VurderingTrygdeavgiftFTRL } from "../../../../felleskomponenter/trygdeavgift/vurderingTrygdeavgift/vurderingTrygdeavgift";
 import type { PropsLight } from "../../../../felleskomponenter/stegvelger/stegMotor/typer";
-import { lagTrygdeavgiftStatus } from "../../../../felleskomponenter/stegvelger";
+import { lagTrygdeavgiftBeregningStatus } from "../../../../felleskomponenter/stegvelger";
 
 // Spesifikke typer for Trygdeavgift-steg
 interface TrygdeavgiftRelevanteData {
@@ -55,7 +55,7 @@ class Trygdeavgift extends Steg {
       oppdaterStatus: (isValid: boolean) => {
         if (this._sisteStatus !== isValid) {
           this._sisteStatus = isValid;
-          this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id!, lagTrygdeavgiftStatus(isValid));
+          this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id!, lagTrygdeavgiftBeregningStatus(isValid));
         }
       },
     };
