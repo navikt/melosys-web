@@ -71,6 +71,7 @@ describe("MedlemskapsPerioderTabell", () => {
   it("viser riktig trygdedekning verdi", () => {
     const perioder = [
       {
+        type: "MEDLEMSKAPSPERIODE",
         fomDato: "2022-01-01",
         tomDato: "2022-12-31",
         trygdedekning: "FTRL_2_9_FØRSTE_LEDD_C_ANDRE_LEDD_HELSE_PENSJON_SYKE_FORELDREPENGER",
@@ -78,6 +79,7 @@ describe("MedlemskapsPerioderTabell", () => {
         bestemmelse: "bestemmelse",
         innvilgelsesResultat: "PLIKTIG",
         medlemskapstype: "type",
+        redigerbar: false,
       },
     ] as Avgiftspliktigperiode[];
     render(<MedlemskapsPerioderTabell perioder={perioder} />);
