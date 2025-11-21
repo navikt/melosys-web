@@ -179,9 +179,9 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
         erNyVurderingEllerManglendeInnbetaling &&
         beregnetTrygdeavgift.trygdeavgiftsgrunnlag.skatteforholdsperioder.length === 0
       ) {
-        hentOpprinneligTrygdeavgiftsgrunnlag(skalResetteFormverdier);
+        hentOpprinneligTrygdeavgiftsgrunnlag();
       } else {
-        håndterTrygdeavgiftsberegning(beregnetTrygdeavgift, skalResetteFormverdier);
+        håndterTrygdeavgiftsberegning(beregnetTrygdeavgift);
       }
     });
 
@@ -232,18 +232,14 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     setDataErLastet(true);
   };
 
-  const håndterTrygdeavgiftsberegning = (beregnetTrygdeavgift: BeregnetTrygdeavgift, skalResetteFormverdier = true) => {
+  const håndterTrygdeavgiftsberegning = (beregnetTrygdeavgift: BeregnetTrygdeavgift) => {
     setTrygdeavgift(beregnetTrygdeavgift);
-    if (skalResetteFormverdier) {
-      const lagretTrygdeavgiftsgrunnlag = beregnetTrygdeavgift.trygdeavgiftsgrunnlag;
-      håndterLagretTrygdeavgiftsgrunnlag(lagretTrygdeavgiftsgrunnlag);
-    }
+    const lagretTrygdeavgiftsgrunnlag = beregnetTrygdeavgift.trygdeavgiftsgrunnlag;
+    håndterLagretTrygdeavgiftsgrunnlag(lagretTrygdeavgiftsgrunnlag);
   };
 
-  const hentOpprinneligTrygdeavgiftsgrunnlag = (skalResetteFormverdier = true) => {
-    if (skalResetteFormverdier) {
-      Api.Trygdeavgift.hentOpprinneligTrygdeavgiftsgrunnlag(behandlingID).then(håndterLagretTrygdeavgiftsgrunnlag);
-    }
+  const hentOpprinneligTrygdeavgiftsgrunnlag = () => {
+    Api.Trygdeavgift.hentOpprinneligTrygdeavgiftsgrunnlag(behandlingID).then(håndterLagretTrygdeavgiftsgrunnlag);
   };
 
   useEffect(() => {
@@ -319,7 +315,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   ]);
 
   useEffect(() => {
-    if (redigerbart && aktivtSteg && dataErLastet) {
+    if (redigerbart && aktivtSteg) {
       if (!formIsValid) {
         formValues?.skatteforholdsperioder?.forEach((_periode: any, index: number) => {
           trigger(`skatteforholdsperioder[${index}].fomDato`);
@@ -335,7 +331,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
         }
       }
     }
-  }, [aktivtSteg, harEndretInnvilgetMedlemskapsperiode, dataErLastet]);
+  }, [aktivtSteg, harEndretInnvilgetMedlemskapsperiode]);
 
   if (!aktivtSteg) return null;
 

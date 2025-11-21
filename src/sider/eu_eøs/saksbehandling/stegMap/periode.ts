@@ -5,9 +5,8 @@ import type { PropsLight } from "../../../../felleskomponenter/stegvelger/stegMo
 
 import MKV from "../../../../melosyskodeverk";
 
-// Spesifikke typer for Periode-steg
 interface PeriodeRelevanteData {
-  [key: string]: unknown; // Index signature for base class compatibility
+  [key: string]: unknown;
   redigerbart: boolean;
   lovvalgsbestemmelseSomSkalVises?: string;
   lovvalgsbestemmelseSomSkalLagres?: string;
@@ -15,8 +14,8 @@ interface PeriodeRelevanteData {
 }
 
 interface PeriodeRelevantUI {
-  [key: string]: unknown; // Index signature for base class compatibility
-  harAvklaring: boolean;
+  [key: string]: unknown;
+  skalLagreLovvalgsbestemmelse: boolean;
 }
 
 class Periode extends Steg {
@@ -31,11 +30,10 @@ class Periode extends Steg {
 
     const lovvalgsbestemmelseSomSkalLagres = propsLight.lovvalgsbestemmelse;
 
-    const harAvklaring = !!lovvalgsbestemmelseSomSkalLagres;
+    const skalLagreLovvalgsbestemmelse = !!lovvalgsbestemmelseSomSkalLagres;
 
     this.kriterier = [
       {
-        // Bare vis neste steg hvis lovvalgsbestemmelse er satt (periode fullført)
         exec: () => !!this._propsLight.lovvalgsbestemmelse,
         nesteSteg: STEG.VURDERING_TRYGDEAVGIFT,
       },
@@ -51,7 +49,7 @@ class Periode extends Steg {
       aktivtSteg: _propsLight.aktivtSteg,
     });
     this.beregnRelevantUI = (): PeriodeRelevantUI => ({
-      harAvklaring,
+      skalLagreLovvalgsbestemmelse,
     });
     this.handlers = {
       bekreftOgFortsett: propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
