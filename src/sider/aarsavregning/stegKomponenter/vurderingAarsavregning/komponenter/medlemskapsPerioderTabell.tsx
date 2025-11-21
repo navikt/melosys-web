@@ -41,20 +41,30 @@ function MedlemskapsPerioderTabell({ perioder }: { perioder?: Avgiftspliktigperi
         </Nav.Table.Row>
       </Nav.Table.Header>
       <Nav.Table.Body>
-        {perioder.map((medlemskapsPeriode) => (
-          <Nav.Table.Row className="border_top" key={Utils._uuid()}>
-            <Nav.Table.DataCell>
-              {`${Utils.dato.formatterDatoTilNorsk(medlemskapsPeriode.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(
-                medlemskapsPeriode.tomDato,
-              )}`}
-            </Nav.Table.DataCell>
-            <Nav.Table.DataCell>{mapMedlemskapstypeTekst(medlemskapsPeriode.medlemskapstype)}</Nav.Table.DataCell>
-            <Nav.Table.DataCell>{KV.kodeTilTerm(medlemskapsPeriode.bestemmelse, bestemmelseKoder)}</Nav.Table.DataCell>
-            <Nav.Table.DataCell>
-              {KV.kodeTilTerm(medlemskapsPeriode.trygdedekning, MKV.KTObjects.trygdedekninger)}
-            </Nav.Table.DataCell>
-          </Nav.Table.Row>
-        ))}
+        {perioder.map((medlemskapsPeriode) => {
+          const hasMedlemskapstype =
+            medlemskapsPeriode.type === "MEDLEMSKAPSPERIODE" || medlemskapsPeriode.type === "LOVVALGSPERIODE";
+          return (
+            <Nav.Table.Row className="border_top" key={Utils._uuid()}>
+              <Nav.Table.DataCell>
+                {`${Utils.dato.formatterDatoTilNorsk(medlemskapsPeriode.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(
+                  medlemskapsPeriode.tomDato,
+                )}`}
+              </Nav.Table.DataCell>
+              <Nav.Table.DataCell>
+                {hasMedlemskapstype ? mapMedlemskapstypeTekst(medlemskapsPeriode.medlemskapstype) : "-"}
+              </Nav.Table.DataCell>
+              <Nav.Table.DataCell>
+                {hasMedlemskapstype ? KV.kodeTilTerm(medlemskapsPeriode.bestemmelse, bestemmelseKoder) : "-"}
+              </Nav.Table.DataCell>
+              <Nav.Table.DataCell>
+                {hasMedlemskapstype
+                  ? KV.kodeTilTerm(medlemskapsPeriode.trygdedekning, MKV.KTObjects.trygdedekninger)
+                  : "-"}
+              </Nav.Table.DataCell>
+            </Nav.Table.Row>
+          );
+        })}
       </Nav.Table.Body>
     </Nav.Table>
   );

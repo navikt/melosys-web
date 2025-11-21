@@ -53,6 +53,7 @@ describe("finnMedlemskapsperiode logikk", () => {
   it("skal finne sammensatt periode fra flere medlemskapsperioder", () => {
     const perioder: Avgiftspliktigperiode[] = [
       {
+        type: "MEDLEMSKAPSPERIODE",
         id: 1,
         fomDato: "01.01.2023",
         tomDato: "30.06.2023",
@@ -62,6 +63,7 @@ describe("finnMedlemskapsperiode logikk", () => {
         medlemskapstype: "PLIKTIG",
       },
       {
+        type: "MEDLEMSKAPSPERIODE",
         id: 2,
         fomDato: "01.07.2023",
         tomDato: "31.12.2023",
@@ -91,6 +93,7 @@ describe("finnMedlemskapsperiode logikk", () => {
   it("skal filtrere bort perioder uten fomDato", () => {
     const perioder: Avgiftspliktigperiode[] = [
       {
+        type: "MEDLEMSKAPSPERIODE",
         id: 1,
         fomDato: "",
         tomDato: "30.06.2023",
@@ -98,8 +101,10 @@ describe("finnMedlemskapsperiode logikk", () => {
         innvilgelsesResultat: "INNVILGET",
         trygdedekning: "FULL_DEKNING",
         medlemskapstype: "PLIKTIG",
+        redigerbar: false,
       },
       {
+        type: "MEDLEMSKAPSPERIODE",
         id: 2,
         fomDato: "01.07.2023",
         tomDato: "31.12.2023",
@@ -121,6 +126,7 @@ describe("finnMedlemskapsperiode logikk", () => {
   it("skal filtrere bort perioder uten tomDato", () => {
     const perioder: Avgiftspliktigperiode[] = [
       {
+        type: "MEDLEMSKAPSPERIODE",
         id: 1,
         fomDato: "01.01.2023",
         tomDato: "30.06.2023",
@@ -128,8 +134,10 @@ describe("finnMedlemskapsperiode logikk", () => {
         innvilgelsesResultat: "INNVILGET",
         trygdedekning: "FULL_DEKNING",
         medlemskapstype: "PLIKTIG",
+        redigerbar: false,
       },
       {
+        type: "MEDLEMSKAPSPERIODE",
         id: 2,
         fomDato: "01.07.2023",
         tomDato: "",
@@ -137,6 +145,7 @@ describe("finnMedlemskapsperiode logikk", () => {
         innvilgelsesResultat: "INNVILGET",
         trygdedekning: "DELVIS_DEKNING",
         medlemskapstype: "PLIKTIG",
+        redigerbar: false,
       },
     ];
 
@@ -151,6 +160,7 @@ describe("finnMedlemskapsperiode logikk", () => {
   it("skal returnere undefined når alle perioder mangler fom eller tom", () => {
     const perioder: Avgiftspliktigperiode[] = [
       {
+        type: "MEDLEMSKAPSPERIODE",
         id: 1,
         fomDato: "",
         tomDato: "30.06.2023",
@@ -158,8 +168,10 @@ describe("finnMedlemskapsperiode logikk", () => {
         innvilgelsesResultat: "INNVILGET",
         trygdedekning: "FULL_DEKNING",
         medlemskapstype: "PLIKTIG",
+        redigerbar: false,
       },
       {
+        type: "MEDLEMSKAPSPERIODE",
         id: 2,
         fomDato: "01.07.2023",
         tomDato: "",
@@ -167,6 +179,7 @@ describe("finnMedlemskapsperiode logikk", () => {
         innvilgelsesResultat: "INNVILGET",
         trygdedekning: "DELVIS_DEKNING",
         medlemskapstype: "PLIKTIG",
+        redigerbar: false,
       },
     ];
 
@@ -178,6 +191,7 @@ describe("finnMedlemskapsperiode logikk", () => {
   it("skal håndtere én enkelt periode", () => {
     const perioder: Avgiftspliktigperiode[] = [
       {
+        type: "MEDLEMSKAPSPERIODE",
         id: 1,
         fomDato: "01.01.2023",
         tomDato: "31.12.2023",
@@ -185,6 +199,7 @@ describe("finnMedlemskapsperiode logikk", () => {
         innvilgelsesResultat: "INNVILGET",
         trygdedekning: "FULL_DEKNING",
         medlemskapstype: "PLIKTIG",
+        redigerbar: false,
       },
     ];
 
@@ -199,6 +214,7 @@ describe("finnMedlemskapsperiode logikk", () => {
   it("skal sortere perioder korrekt og ta første fomDato og siste tomDato", () => {
     const perioder: Avgiftspliktigperiode[] = [
       {
+        type: "MEDLEMSKAPSPERIODE",
         id: 2,
         fomDato: "01.07.2023",
         tomDato: "31.12.2023",
@@ -206,8 +222,10 @@ describe("finnMedlemskapsperiode logikk", () => {
         innvilgelsesResultat: "INNVILGET",
         trygdedekning: "DELVIS_DEKNING",
         medlemskapstype: "PLIKTIG",
+        redigerbar: false,
       },
       {
+        type: "MEDLEMSKAPSPERIODE",
         id: 1,
         fomDato: "01.01.2023",
         tomDato: "30.06.2023",
@@ -215,8 +233,10 @@ describe("finnMedlemskapsperiode logikk", () => {
         innvilgelsesResultat: "INNVILGET",
         trygdedekning: "FULL_DEKNING",
         medlemskapstype: "PLIKTIG",
+        redigerbar: false,
       },
       {
+        type: "MEDLEMSKAPSPERIODE",
         id: 3,
         fomDato: "01.01.2024",
         tomDato: "30.06.2024",
@@ -224,6 +244,7 @@ describe("finnMedlemskapsperiode logikk", () => {
         innvilgelsesResultat: "INNVILGET",
         trygdedekning: "FULL_DEKNING",
         medlemskapstype: "PLIKTIG",
+        redigerbar: false,
       },
     ];
 

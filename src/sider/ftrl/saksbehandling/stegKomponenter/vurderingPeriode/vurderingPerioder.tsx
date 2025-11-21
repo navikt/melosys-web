@@ -54,20 +54,34 @@ const mapFeil = (response: any) => response?.data?.message || response.data;
 
 const mapTilMedlemskapsperiodeProps = (
   medlemskapsperiode: Api.MedlemAvFolketrygden.Medlemskapsperioder.Avgiftspliktigperiode,
-): MedlemskapsperiodeProp => ({
-  ...medlemskapsperiode,
-  fomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.fomDato),
-  tomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.tomDato),
-  ny: false,
-  feil: undefined,
-  periodeId: medlemskapsperiode.id,
-});
+): MedlemskapsperiodeProp => {
+  // Extract only the fields that exist based on the discriminated union type
+  const hasFullFields =
+    medlemskapsperiode.type === "MEDLEMSKAPSPERIODE" || medlemskapsperiode.type === "LOVVALGSPERIODE";
+  return {
+    fomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.fomDato),
+    tomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.tomDato),
+    innvilgelsesResultat: hasFullFields ? medlemskapsperiode.innvilgelsesResultat : "",
+    bestemmelse: hasFullFields ? medlemskapsperiode.bestemmelse : "",
+    trygdedekning: hasFullFields ? medlemskapsperiode.trygdedekning : "",
+    redigerbar: medlemskapsperiode.redigerbar,
+    ny: false,
+    feil: undefined,
+    periodeId: medlemskapsperiode.id,
+  };
+};
 
 const mapInitialMedlemskapsperioder = (
   medlemskapsperioder: Api.MedlemAvFolketrygden.Medlemskapsperioder.Avgiftspliktigperiode[],
 ): MedlemskapsperiodeProp[] =>
   [...medlemskapsperioder]
-    .sort((a, b) => Utils.dato.sorterEtterISOFomDato(a, b) || (a.innvilgelsesResultat === AVSLAATT ? -1 : 1))
+    .sort(
+      (a, b) =>
+        Utils.dato.sorterEtterISOFomDato(a, b) ||
+        ((a.type === "MEDLEMSKAPSPERIODE" || a.type === "LOVVALGSPERIODE") && a.innvilgelsesResultat === AVSLAATT
+          ? -1
+          : 1),
+    )
     .map(mapTilMedlemskapsperiodeProps);
 
 export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus }: VurderingPerioderProps) {
@@ -86,7 +100,11 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   const lagretBestemmelse = useSelector(medlemskapsperioderSelectors.BestemmelseSelector);
   const soknadsland = useSelector(mottatteOpplysningerSelectors.SoknadslandkoderSelector);
   const ikkeyrkesaktivOppholdstype = useSelector(oppsummertfaktaSelectors.IkkeYrkesaktivOppholdSelector);
-  const medlemskapsTypeErPliktig = lagredeMedlemskapsperioder.some((periode) => periode.medlemskapstype === PLIKTIG);
+  const medlemskapsTypeErPliktig = lagredeMedlemskapsperioder.some(
+    (periode) =>
+      (periode.type === "MEDLEMSKAPSPERIODE" || periode.type === "LOVVALGSPERIODE") &&
+      periode.medlemskapstype === PLIKTIG,
+  );
   const arbeidssituasjonType = useSelector(oppsummertfaktaSelectors.ArbeidssituasjonSelector);
   const ukjentSluttdatoMedlemskapsperiode = useSelector(
     oppsummertfaktaSelectors.UkjentSluttdatoMedlemskapsperiodeSelector,

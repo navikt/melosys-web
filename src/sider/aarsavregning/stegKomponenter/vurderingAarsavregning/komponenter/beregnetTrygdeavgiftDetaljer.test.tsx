@@ -48,6 +48,7 @@ describe("BeregnetTrygdeavgiftDetaljer", () => {
     trygdeavgiftsgrunnlag: {
       avgiftspliktigperioder: [
         {
+          type: "MEDLEMSKAPSPERIODE",
           fomDato: "2023-01-01",
           tomDato: "2023-12-31",
           medlemskapstype: "PLIKTIG",
@@ -55,6 +56,7 @@ describe("BeregnetTrygdeavgiftDetaljer", () => {
           id: 1,
           bestemmelse: "mock-bestemmelse",
           innvilgelsesResultat: "mock-innvilgelsesResultat",
+          redigerbar: false,
         },
       ],
       skatteforholdsperioder: [

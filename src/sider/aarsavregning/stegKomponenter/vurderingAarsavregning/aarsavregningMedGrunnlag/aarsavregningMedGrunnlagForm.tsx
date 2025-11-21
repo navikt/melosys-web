@@ -368,7 +368,13 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
               fields={inntektFields}
               medlemskapsTypeErPliktig={medlemskapstypeErPliktig!}
               skalViseErMaanedsBelopRadioGroup
-              bestemmelse={innvilgetMedlemskapsperioder[0]?.bestemmelse}
+              bestemmelse={
+                innvilgetMedlemskapsperioder[0] &&
+                (innvilgetMedlemskapsperioder[0].type === "MEDLEMSKAPSPERIODE" ||
+                  innvilgetMedlemskapsperioder[0].type === "LOVVALGSPERIODE")
+                  ? innvilgetMedlemskapsperioder[0].bestemmelse
+                  : undefined
+              }
               minDate={minDate}
               maxDate={maxDate}
             />

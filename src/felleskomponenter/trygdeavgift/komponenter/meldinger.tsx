@@ -108,7 +108,11 @@ const erPensjonUføretrygdLagtInnForPeriodeMedKunPensjon = (
     [PENSJON_UFØRETRYGD, PENSJON_UFØRETRYGD_KILDESKATT].includes(inntektskilde.kildetype),
   );
   const overlappendeMedlemskapsperioder = medlemskapsperioder
-    .filter((periode) => periode.innvilgelsesResultat === INNVILGET)
+    .filter(
+      (periode) =>
+        (periode.type === "MEDLEMSKAPSPERIODE" || periode.type === "LOVVALGSPERIODE") &&
+        periode.innvilgelsesResultat === INNVILGET,
+    )
     .filter((periode) =>
       pensjonuføretrygdKilder.some((inntektskilde) =>
         Utils.dato.perioderOverlapper(
@@ -119,9 +123,15 @@ const erPensjonUføretrygdLagtInnForPeriodeMedKunPensjon = (
         ),
       ),
     );
+  // overlappendeMedlemskapsperioder is already filtered to MEDLEMSKAPSPERIODE or LOVVALGSPERIODE above,
+  // so all periods have trygdedekning. TypeScript doesn't preserve this narrowing, so we cast.
   return (
     !Utils._isEmpty(overlappendeMedlemskapsperioder) &&
-    overlappendeMedlemskapsperioder.every((periode) => periode.trygdedekning === FTRL_2_9_FØRSTE_LEDD_B_PENSJON)
+    overlappendeMedlemskapsperioder.every(
+      (periode) =>
+        (periode.type === "MEDLEMSKAPSPERIODE" || periode.type === "LOVVALGSPERIODE") &&
+        periode.trygdedekning === FTRL_2_9_FØRSTE_LEDD_B_PENSJON,
+    )
   );
 };
 

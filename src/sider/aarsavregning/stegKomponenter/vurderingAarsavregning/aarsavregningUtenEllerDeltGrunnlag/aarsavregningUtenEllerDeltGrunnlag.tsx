@@ -23,7 +23,8 @@ const { DELVIS_INNVILGET, INNVILGET } = MKV.Koder.innvilgelsesResultat;
 
 export const ULAGRET_MEDLEMSKAPSPERIODE_ID = -1;
 
-export const DEFAULT_MEDLEMSKAPSPERIODE = {
+export const DEFAULT_MEDLEMSKAPSPERIODE: Avgiftspliktigperiode = {
+  type: "MEDLEMSKAPSPERIODE",
   id: ULAGRET_MEDLEMSKAPSPERIODE_ID,
   fomDato: "",
   tomDato: "",
@@ -108,6 +109,11 @@ export function AarsavregningUtenEllerDeltGrunnlag({
   const dispatch = useDispatch();
 
   const opprettMedlemskapsperiode = async (medlemskapsperiode: Avgiftspliktigperiode) => {
+    // Only MEDLEMSKAPSPERIODE and LOVVALGSPERIODE have bestemmelse and trygdedekning
+    if (medlemskapsperiode.type !== "MEDLEMSKAPSPERIODE" && medlemskapsperiode.type !== "LOVVALGSPERIODE") {
+      throw new Error(`Cannot create membership period from type ${medlemskapsperiode.type}`);
+    }
+
     const periodeRequest = {
       fomDato: Utils.dato.formatterDatoTilISO(medlemskapsperiode.fomDato, "") as string,
       tomDato: Utils.dato.formatterDatoTilISO(medlemskapsperiode.tomDato, "") as string,
@@ -132,7 +138,8 @@ export function AarsavregningUtenEllerDeltGrunnlag({
 
     const innvilgedeMedlemskapsperioder = medlemskapsperioderRes.filter(
       (periode: Avgiftspliktigperiode) =>
-        periode.innvilgelsesResultat === INNVILGET || periode.innvilgelsesResultat === DELVIS_INNVILGET,
+        (periode.type === "MEDLEMSKAPSPERIODE" || periode.type === "LOVVALGSPERIODE") &&
+        (periode.innvilgelsesResultat === INNVILGET || periode.innvilgelsesResultat === DELVIS_INNVILGET),
     );
 
     if (
@@ -144,7 +151,9 @@ export function AarsavregningUtenEllerDeltGrunnlag({
       // Initiell innlasting for delt grunnlag
       const medlemskapsperioderFraGrunnlag = aarsavregningRes.sisteGjeldendeAvgiftspliktigperioder;
       const innvilgedeMedlemskapsperioderFraGrunnlag = medlemskapsperioderFraGrunnlag.filter(
-        (periode) => periode.innvilgelsesResultat === INNVILGET || periode.innvilgelsesResultat === DELVIS_INNVILGET,
+        (periode) =>
+          (periode.type === "MEDLEMSKAPSPERIODE" || periode.type === "LOVVALGSPERIODE") &&
+          (periode.innvilgelsesResultat === INNVILGET || periode.innvilgelsesResultat === DELVIS_INNVILGET),
       );
 
       for (const periode of innvilgedeMedlemskapsperioderFraGrunnlag) {
@@ -157,7 +166,8 @@ export function AarsavregningUtenEllerDeltGrunnlag({
 
       const oppdaterteInnvilgedeMedlemskapsperioder = oppdaterteMedlemskapsperioder.filter(
         (periode: Avgiftspliktigperiode) =>
-          periode.innvilgelsesResultat === INNVILGET || periode.innvilgelsesResultat === DELVIS_INNVILGET,
+          (periode.type === "MEDLEMSKAPSPERIODE" || periode.type === "LOVVALGSPERIODE") &&
+          (periode.innvilgelsesResultat === INNVILGET || periode.innvilgelsesResultat === DELVIS_INNVILGET),
       );
 
       return mapMedlemskapsperioder(
@@ -171,9 +181,15 @@ export function AarsavregningUtenEllerDeltGrunnlag({
 
   const getBestemmelse = (mappedMedlemskapsperioder: Avgiftspliktigperiode[]) => {
     if (mappedMedlemskapsperioder.length > 0) {
-      const førsteBestemmelse = mappedMedlemskapsperioder[0].bestemmelse;
+      const førstePeriode = mappedMedlemskapsperioder[0];
+      if (førstePeriode.type !== "MEDLEMSKAPSPERIODE" && førstePeriode.type !== "LOVVALGSPERIODE") {
+        return "";
+      }
+      const førsteBestemmelse = førstePeriode.bestemmelse;
       const medlemskapsperioderHarSammeBestemmelse = mappedMedlemskapsperioder.every(
-        (period) => period.bestemmelse === førsteBestemmelse,
+        (period) =>
+          (period.type === "MEDLEMSKAPSPERIODE" || period.type === "LOVVALGSPERIODE") &&
+          period.bestemmelse === førsteBestemmelse,
       );
       if (medlemskapsperioderHarSammeBestemmelse) {
         return førsteBestemmelse;
@@ -220,10 +236,19 @@ export function AarsavregningUtenEllerDeltGrunnlag({
         const deltGrunnlagAarsavregningHarIkkeNyttGrunnlag =
           harTrygdeavgiftFraAvgiftssystemet && aarsavregningRes && !aarsavregningRes.nyttTrygdeavgiftsGrunnlag;
 
-        const bestemmelseFraTidligereAvgiftsgrunnlag =
+        const tidligerePeriode =
           aarsavregningRes?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag
-            ?.avgiftspliktigperioder?.[0]?.bestemmelse;
-        const eventuellNyBestemmelse = aarsavregningRes?.sisteGjeldendeAvgiftspliktigperioder?.[0]?.bestemmelse;
+            ?.avgiftspliktigperioder?.[0];
+        const bestemmelseFraTidligereAvgiftsgrunnlag =
+          tidligerePeriode &&
+          (tidligerePeriode.type === "MEDLEMSKAPSPERIODE" || tidligerePeriode.type === "LOVVALGSPERIODE")
+            ? tidligerePeriode.bestemmelse
+            : undefined;
+        const nyPeriode = aarsavregningRes?.sisteGjeldendeAvgiftspliktigperioder?.[0];
+        const eventuellNyBestemmelse =
+          nyPeriode && (nyPeriode.type === "MEDLEMSKAPSPERIODE" || nyPeriode.type === "LOVVALGSPERIODE")
+            ? nyPeriode.bestemmelse
+            : undefined;
 
         const skalHenteGrunnlagFraTidligereTrygdeavgiftsgrunnlag =
           deltGrunnlagAarsavregningHarIkkeNyttGrunnlag &&

@@ -48,7 +48,11 @@ export function Medlemskapsperioder({
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const kanSlettePeriode = redigerbart && fields.length !== 1;
   const medlemskapsperioder = useSelector(medlemskapsperioderSelectors.AlleMedlemskapsperioderSelector);
-  const medlemskapsTypeErPliktig = medlemskapsperioder.some((periode) => periode.medlemskapstype === PLIKTIG);
+  const medlemskapsTypeErPliktig = medlemskapsperioder.some(
+    (periode) =>
+      (periode.type === "MEDLEMSKAPSPERIODE" || periode.type === "LOVVALGSPERIODE") &&
+      periode.medlemskapstype === PLIKTIG,
+  );
   const erPensonistToggleEnabled = useFeatureToggle(MELOSYS_PENSJONIST);
 
   const filtrerInnvilgelsesResultater = (index: number) => {

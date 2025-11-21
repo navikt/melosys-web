@@ -5,6 +5,7 @@ import { Avgiftspliktigperiode } from "../../../../../services/modules/medlemavf
 
 describe("MedlemskapsperioderDisplay", () => {
   const mockPeriode: Avgiftspliktigperiode = {
+    type: "MEDLEMSKAPSPERIODE",
     id: 1,
     fomDato: "01.01.2023",
     tomDato: "31.12.2023",
@@ -12,6 +13,7 @@ describe("MedlemskapsperioderDisplay", () => {
     innvilgelsesResultat: "INNVILGET",
     trygdedekning: "FULL_DEKNING",
     medlemskapstype: "PLIKTIG",
+    redigerbar: false,
   };
 
   it("skal vise alle medlemskapsperioder", () => {

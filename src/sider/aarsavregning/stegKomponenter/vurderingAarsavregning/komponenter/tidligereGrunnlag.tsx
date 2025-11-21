@@ -34,7 +34,9 @@ export function TidligereGrunnlag({ aarsavregningResponse }: TidligereGrunnlagPr
 
     return (
       aarsavregningResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger!.trygdeavgiftsgrunnlag.avgiftspliktigperioder?.every(
-        (periode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG,
+        (periode) =>
+          (periode.type === "MEDLEMSKAPSPERIODE" || periode.type === "LOVVALGSPERIODE") &&
+          periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG,
       ) ?? true
     );
   };

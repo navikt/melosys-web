@@ -9,6 +9,7 @@ describe("AarsavregningUtenEllerDeltGrunnlag - Bestemmelse-logikk", () => {
         aar: 2023,
         sisteGjeldendeAvgiftspliktigperioder: [
           {
+            type: "MEDLEMSKAPSPERIODE",
             id: 1,
             fomDato: "2023-01-01",
             tomDato: "2023-12-31",
@@ -23,6 +24,7 @@ describe("AarsavregningUtenEllerDeltGrunnlag - Bestemmelse-logikk", () => {
           trygdeavgiftsgrunnlag: {
             avgiftspliktigperioder: [
               {
+                type: "MEDLEMSKAPSPERIODE",
                 id: 2,
                 fomDato: "2023-01-01",
                 tomDato: "2023-12-31",
@@ -45,10 +47,17 @@ describe("AarsavregningUtenEllerDeltGrunnlag - Bestemmelse-logikk", () => {
       };
 
       // Test logikken for sammenligning av bestemmelse
+      const gammelPeriode =
+        mockResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag?.avgiftspliktigperioder?.[0];
       const gammelBestemmelse =
-        mockResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag?.avgiftspliktigperioder?.[0]
-          ?.bestemmelse;
-      const nyBestemmelse = mockResponse.sisteGjeldendeAvgiftspliktigperioder?.[0]?.bestemmelse;
+        gammelPeriode && (gammelPeriode.type === "MEDLEMSKAPSPERIODE" || gammelPeriode.type === "LOVVALGSPERIODE")
+          ? gammelPeriode.bestemmelse
+          : undefined;
+      const nyPeriode = mockResponse.sisteGjeldendeAvgiftspliktigperioder?.[0];
+      const nyBestemmelse =
+        nyPeriode && (nyPeriode.type === "MEDLEMSKAPSPERIODE" || nyPeriode.type === "LOVVALGSPERIODE")
+          ? nyPeriode.bestemmelse
+          : undefined;
 
       expect(gammelBestemmelse).toBe("FTRL_2_7");
       expect(nyBestemmelse).toBe("FTRL_2_7");
@@ -61,6 +70,7 @@ describe("AarsavregningUtenEllerDeltGrunnlag - Bestemmelse-logikk", () => {
         aar: 2023,
         sisteGjeldendeAvgiftspliktigperioder: [
           {
+            type: "MEDLEMSKAPSPERIODE",
             id: 1,
             fomDato: "2023-01-01",
             tomDato: "2023-12-31",
@@ -75,6 +85,7 @@ describe("AarsavregningUtenEllerDeltGrunnlag - Bestemmelse-logikk", () => {
           trygdeavgiftsgrunnlag: {
             avgiftspliktigperioder: [
               {
+                type: "MEDLEMSKAPSPERIODE",
                 id: 2,
                 fomDato: "2023-01-01",
                 tomDato: "2023-12-31",
@@ -97,10 +108,17 @@ describe("AarsavregningUtenEllerDeltGrunnlag - Bestemmelse-logikk", () => {
       };
 
       // Test logikken for sammenligning av bestemmelse
+      const gammelPeriode =
+        mockResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag?.avgiftspliktigperioder?.[0];
       const gammelBestemmelse =
-        mockResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag?.avgiftspliktigperioder?.[0]
-          ?.bestemmelse;
-      const nyBestemmelse = mockResponse.sisteGjeldendeAvgiftspliktigperioder?.[0]?.bestemmelse;
+        gammelPeriode && (gammelPeriode.type === "MEDLEMSKAPSPERIODE" || gammelPeriode.type === "LOVVALGSPERIODE")
+          ? gammelPeriode.bestemmelse
+          : undefined;
+      const nyPeriode = mockResponse.sisteGjeldendeAvgiftspliktigperioder?.[0];
+      const nyBestemmelse =
+        nyPeriode && (nyPeriode.type === "MEDLEMSKAPSPERIODE" || nyPeriode.type === "LOVVALGSPERIODE")
+          ? nyPeriode.bestemmelse
+          : undefined;
 
       expect(gammelBestemmelse).toBe("FTRL_2_7");
       expect(nyBestemmelse).toBe("FTRL_2_8");
@@ -116,10 +134,17 @@ describe("AarsavregningUtenEllerDeltGrunnlag - Bestemmelse-logikk", () => {
       };
 
       // Test at logikken håndterer undefined
+      const gammelPeriode =
+        mockResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag?.avgiftspliktigperioder?.[0];
       const gammelBestemmelse =
-        mockResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag?.avgiftspliktigperioder?.[0]
-          ?.bestemmelse;
-      const nyBestemmelse = mockResponse.sisteGjeldendeAvgiftspliktigperioder?.[0]?.bestemmelse;
+        gammelPeriode && (gammelPeriode.type === "MEDLEMSKAPSPERIODE" || gammelPeriode.type === "LOVVALGSPERIODE")
+          ? gammelPeriode.bestemmelse
+          : undefined;
+      const nyPeriode = mockResponse.sisteGjeldendeAvgiftspliktigperioder?.[0];
+      const nyBestemmelse =
+        nyPeriode && (nyPeriode.type === "MEDLEMSKAPSPERIODE" || nyPeriode.type === "LOVVALGSPERIODE")
+          ? nyPeriode.bestemmelse
+          : undefined;
 
       expect(gammelBestemmelse).toBeUndefined();
       expect(nyBestemmelse).toBeUndefined();
@@ -146,10 +171,17 @@ describe("AarsavregningUtenEllerDeltGrunnlag - Bestemmelse-logikk", () => {
         },
       };
 
+      const gammelPeriode =
+        mockResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag?.avgiftspliktigperioder?.[0];
       const gammelBestemmelse =
-        mockResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag?.avgiftspliktigperioder?.[0]
-          ?.bestemmelse;
-      const nyBestemmelse = mockResponse.sisteGjeldendeAvgiftspliktigperioder?.[0]?.bestemmelse;
+        gammelPeriode && (gammelPeriode.type === "MEDLEMSKAPSPERIODE" || gammelPeriode.type === "LOVVALGSPERIODE")
+          ? gammelPeriode.bestemmelse
+          : undefined;
+      const nyPeriode = mockResponse.sisteGjeldendeAvgiftspliktigperioder?.[0];
+      const nyBestemmelse =
+        nyPeriode && (nyPeriode.type === "MEDLEMSKAPSPERIODE" || nyPeriode.type === "LOVVALGSPERIODE")
+          ? nyPeriode.bestemmelse
+          : undefined;
 
       expect(gammelBestemmelse).toBeUndefined();
       expect(nyBestemmelse).toBeUndefined();
@@ -165,6 +197,7 @@ describe("AarsavregningUtenEllerDeltGrunnlag - Bestemmelse-logikk", () => {
         aar: 2023,
         sisteGjeldendeAvgiftspliktigperioder: [
           {
+            type: "MEDLEMSKAPSPERIODE",
             id: 1,
             fomDato: "2023-01-01",
             tomDato: "2023-06-30",
@@ -175,6 +208,7 @@ describe("AarsavregningUtenEllerDeltGrunnlag - Bestemmelse-logikk", () => {
             redigerbar: false,
           },
           {
+            type: "MEDLEMSKAPSPERIODE",
             id: 2,
             fomDato: "2023-07-01",
             tomDato: "2023-12-31",
@@ -189,6 +223,7 @@ describe("AarsavregningUtenEllerDeltGrunnlag - Bestemmelse-logikk", () => {
           trygdeavgiftsgrunnlag: {
             avgiftspliktigperioder: [
               {
+                type: "MEDLEMSKAPSPERIODE",
                 id: 3,
                 fomDato: "2023-01-01",
                 tomDato: "2023-12-31",
@@ -211,17 +246,29 @@ describe("AarsavregningUtenEllerDeltGrunnlag - Bestemmelse-logikk", () => {
       };
 
       // Skal sammenligne første elementer
+      const gammelPeriode =
+        mockResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag?.avgiftspliktigperioder?.[0];
       const gammelBestemmelse =
-        mockResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag?.avgiftspliktigperioder?.[0]
-          ?.bestemmelse;
-      const nyBestemmelse = mockResponse.sisteGjeldendeAvgiftspliktigperioder?.[0]?.bestemmelse;
+        gammelPeriode && (gammelPeriode.type === "MEDLEMSKAPSPERIODE" || gammelPeriode.type === "LOVVALGSPERIODE")
+          ? gammelPeriode.bestemmelse
+          : undefined;
+      const nyPeriode = mockResponse.sisteGjeldendeAvgiftspliktigperioder?.[0];
+      const nyBestemmelse =
+        nyPeriode && (nyPeriode.type === "MEDLEMSKAPSPERIODE" || nyPeriode.type === "LOVVALGSPERIODE")
+          ? nyPeriode.bestemmelse
+          : undefined;
 
       expect(gammelBestemmelse).toBe("FTRL_2_7");
       expect(nyBestemmelse).toBe("FTRL_2_7");
       expect(gammelBestemmelse).toBe(nyBestemmelse);
 
       // Andre element har forskjellig bestemmelse
-      expect(mockResponse.sisteGjeldendeAvgiftspliktigperioder?.[1]?.bestemmelse).toBe("FTRL_2_8");
+      const nyPeriode2 = mockResponse.sisteGjeldendeAvgiftspliktigperioder?.[1];
+      const nyBestemmelse2 =
+        nyPeriode2 && (nyPeriode2.type === "MEDLEMSKAPSPERIODE" || nyPeriode2.type === "LOVVALGSPERIODE")
+          ? nyPeriode2.bestemmelse
+          : undefined;
+      expect(nyBestemmelse2).toBe("FTRL_2_8");
     });
   });
 

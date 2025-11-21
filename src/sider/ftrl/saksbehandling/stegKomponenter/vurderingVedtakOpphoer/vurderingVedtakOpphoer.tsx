@@ -73,9 +73,16 @@ export function VurderingVedtakOpphoer({ tilbake, aktivtSteg }: Props) {
     behandlingErAvsluttet
       ? [...medlemskapsperioder]
       : [...medlemskapsperioder]
-          .filter((it) => [INNVILGET, OPPHØRT].includes(it.innvilgelsesResultat))
+          .filter(
+            (it) =>
+              (it.type === "MEDLEMSKAPSPERIODE" || it.type === "LOVVALGSPERIODE") &&
+              [INNVILGET, OPPHØRT].includes(it.innvilgelsesResultat),
+          )
           .map((it) => {
-            return { ...it, innvilgelsesResultat: OPPHØRT, bestemmelse: FTRL_KAP2_2_15_ANDRE_LEDD };
+            if (it.type === "MEDLEMSKAPSPERIODE" || it.type === "LOVVALGSPERIODE") {
+              return { ...it, innvilgelsesResultat: OPPHØRT, bestemmelse: FTRL_KAP2_2_15_ANDRE_LEDD };
+            }
+            return it;
           });
 
   const oppdaterFritekster = (values: FormValuesProps) => {
@@ -94,7 +101,11 @@ export function VurderingVedtakOpphoer({ tilbake, aktivtSteg }: Props) {
   const getOpphørsdato = () =>
     forventetOpphørteMedlemskapsperioder()
       .sort(Utils.dato.sorterEtterISOFomDato)
-      .find((periode) => periode.innvilgelsesResultat === OPPHØRT)?.fomDato;
+      .find(
+        (periode) =>
+          (periode.type === "MEDLEMSKAPSPERIODE" || periode.type === "LOVVALGSPERIODE") &&
+          periode.innvilgelsesResultat === OPPHØRT,
+      )?.fomDato;
 
   const lagFattVedtakFTRLReqDto = (): Api.Saksflyt.Vedtak.FattVedtakFTRLReqDto => {
     return {
@@ -140,10 +151,15 @@ export function VurderingVedtakOpphoer({ tilbake, aktivtSteg }: Props) {
 
   const mapPeriodeRader = (perioder: Api.MedlemAvFolketrygden.Medlemskapsperioder.Avgiftspliktigperiode[]) =>
     perioder.sort(Utils.dato.sorterEtterISOFomDato).map((it) => {
+      const hasFullFields = it.type === "MEDLEMSKAPSPERIODE" || it.type === "LOVVALGSPERIODE";
       return {
         periode: `${Utils.dato.formatterDatoTilNorsk(it.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(it.tomDato)}`,
-        bestemmelse: KV.finnTermFraListe(MKV.KTObjects.folketrygdloven_kap2_bestemmelser, it.bestemmelse),
-        resultat: KV.finnTermFraListe(MKV.KTObjects.innvilgelsesResultat, it.innvilgelsesResultat),
+        bestemmelse: hasFullFields
+          ? KV.finnTermFraListe(MKV.KTObjects.folketrygdloven_kap2_bestemmelser, it.bestemmelse)
+          : "-",
+        resultat: hasFullFields
+          ? KV.finnTermFraListe(MKV.KTObjects.innvilgelsesResultat, it.innvilgelsesResultat)
+          : "-",
       };
     });
 

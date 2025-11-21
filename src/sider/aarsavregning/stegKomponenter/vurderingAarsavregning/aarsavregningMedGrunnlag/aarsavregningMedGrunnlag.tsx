@@ -20,7 +20,9 @@ import { sorterEtterISOFomDato } from "../../../../../utils/dato";
 
 const mapMedlemskapsperioder = (medlemskapsperioder: Avgiftspliktigperiode[]) => {
   const innvilgedePerioder = medlemskapsperioder.filter(
-    (periode) => periode.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.INNVILGET,
+    (periode) =>
+      (periode.type === "MEDLEMSKAPSPERIODE" || periode.type === "LOVVALGSPERIODE") &&
+      periode.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.INNVILGET,
   );
 
   return [...innvilgedePerioder].sort(sorterEtterISOFomDato).map((periode) => ({
@@ -73,10 +75,21 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
     if (aarsavregningResponse?.nyttTrygdeavgiftsGrunnlag?.trygdeavgiftsgrunnlag) {
       trygdeavgiftsgrunnlag = aarsavregningResponse.nyttTrygdeavgiftsGrunnlag.trygdeavgiftsgrunnlag;
     } else {
-      const bestemmelseFraTidligereAvgiftsgrunnlag =
+      const tidligerePerioderØ =
         aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag
-          ?.avgiftspliktigperioder?.[0]?.bestemmelse;
-      const eventuellNyBestemmelse = aarsavregningResponse?.sisteGjeldendeAvgiftspliktigperioder?.[0]?.bestemmelse;
+          ?.avgiftspliktigperioder?.[0];
+      const sisteGjeldendeØ = aarsavregningResponse?.sisteGjeldendeAvgiftspliktigperioder?.[0];
+
+      const bestemmelseFraTidligereAvgiftsgrunnlag =
+        tidligerePerioderØ &&
+        (tidligerePerioderØ.type === "MEDLEMSKAPSPERIODE" || tidligerePerioderØ.type === "LOVVALGSPERIODE")
+          ? tidligerePerioderØ.bestemmelse
+          : undefined;
+      const eventuellNyBestemmelse =
+        sisteGjeldendeØ && (sisteGjeldendeØ.type === "MEDLEMSKAPSPERIODE" || sisteGjeldendeØ.type === "LOVVALGSPERIODE")
+          ? sisteGjeldendeØ.bestemmelse
+          : undefined;
+
       if (
         bestemmelseFraTidligereAvgiftsgrunnlag &&
         eventuellNyBestemmelse &&
@@ -135,7 +148,9 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
           const innvilgetMedlemskapsperioder = mapMedlemskapsperioder(medlemskapsperioder);
           const medlemskapstypeErPliktig = Boolean(
             innvilgetMedlemskapsperioder?.every(
-              (periode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG,
+              (periode) =>
+                (periode.type === "MEDLEMSKAPSPERIODE" || periode.type === "LOVVALGSPERIODE") &&
+                periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG,
             ),
           );
 

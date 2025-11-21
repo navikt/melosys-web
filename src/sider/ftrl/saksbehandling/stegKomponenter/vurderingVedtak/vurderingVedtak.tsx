@@ -123,10 +123,18 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   const erNyVurdering = behandlingstype === NY_VURDERING;
   const erSatsendring = behandlingstype === SATSENDRING;
   const erManglendeInnbetalingTrygdeavgift = behandlingstype === MANGLENDE_INNBETALING_TRYGDEAVGIFT;
-  const erDelvisOpphør = medlemskapsperioder.some((periode) => periode.innvilgelsesResultat === OPPHØRT);
+  const erDelvisOpphør = medlemskapsperioder.some(
+    (periode) =>
+      (periode.type === "MEDLEMSKAPSPERIODE" || periode.type === "LOVVALGSPERIODE") &&
+      periode.innvilgelsesResultat === OPPHØRT,
+  );
   const erIkkeYrkesaktiv = behandlingstema === IKKE_YRKESAKTIV;
   const erPensjonist = behandlingstema === PENSJONIST;
-  const medlemskapsTypeErPliktig = medlemskapsperioder.some((periode) => periode.medlemskapstype === PLIKTIG);
+  const medlemskapsTypeErPliktig = medlemskapsperioder.some(
+    (periode) =>
+      (periode.type === "MEDLEMSKAPSPERIODE" || periode.type === "LOVVALGSPERIODE") &&
+      periode.medlemskapstype === PLIKTIG,
+  );
   const betalingsvalgErFaktura = betalingsvalg === MKV.Koder.betalingstype.FAKTURA;
   const mottakerErSkatt = trygdeavgiftMottaker?.kode === TRYGDEAVGIFT_BETALES_TIL_SKATT;
   const bestemmelserkodeverk: string[] = [
@@ -287,7 +295,11 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   const getOpphørsdato = () =>
     [...medlemskapsperioder]
       .sort(Utils.dato.sorterEtterISOFomDato)
-      .find((periode) => periode.innvilgelsesResultat === OPPHØRT)?.fomDato;
+      .find(
+        (periode) =>
+          (periode.type === "MEDLEMSKAPSPERIODE" || periode.type === "LOVVALGSPERIODE") &&
+          periode.innvilgelsesResultat === OPPHØRT,
+      )?.fomDato;
 
   const getVedtakstype = () => {
     if (lagretVedtakstype) return lagretVedtakstype;
@@ -354,11 +366,14 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
 
   const mapPeriodeRader = (perioder: Api.MedlemAvFolketrygden.Medlemskapsperioder.Avgiftspliktigperiode[]) =>
     [...perioder].sort(Utils.dato.sorterEtterISOFomDato).map((it) => {
+      const hasFullFields = it.type === "MEDLEMSKAPSPERIODE" || it.type === "LOVVALGSPERIODE";
       return {
         periode: `${Utils.dato.formatterDatoTilNorsk(it.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(it.tomDato)}`,
-        bestemmelse: KV.finnTermFraListe(bestemmelserkodeverk, it.bestemmelse),
-        dekning: KV.finnTermFraListe(MKV.KTObjects.trygdedekninger, it.trygdedekning),
-        resultat: KV.finnTermFraListe(MKV.KTObjects.innvilgelsesResultat, it.innvilgelsesResultat),
+        bestemmelse: hasFullFields ? KV.finnTermFraListe(bestemmelserkodeverk, it.bestemmelse) : "-",
+        dekning: hasFullFields ? KV.finnTermFraListe(MKV.KTObjects.trygdedekninger, it.trygdedekning) : "-",
+        resultat: hasFullFields
+          ? KV.finnTermFraListe(MKV.KTObjects.innvilgelsesResultat, it.innvilgelsesResultat)
+          : "-",
       };
     });
 

@@ -15,6 +15,7 @@ import { Avgiftspliktigperiode } from "../../../../services/modules/medlemavfolk
 
 // Helper function to create mock Medlemskapsperiode
 const createMockMedlemskapsperiode = (overrides?: Partial<Avgiftspliktigperiode>): Avgiftspliktigperiode => ({
+  type: "MEDLEMSKAPSPERIODE",
   id: 1,
   fomDato: "01.01.2023",
   tomDato: "31.12.2023",
@@ -22,6 +23,7 @@ const createMockMedlemskapsperiode = (overrides?: Partial<Avgiftspliktigperiode>
   innvilgelsesResultat: "INNVILGET",
   trygdedekning: "FULL_DEKNING",
   medlemskapstype: "PLIKTIG",
+  redigerbar: false,
   ...overrides,
 });
 

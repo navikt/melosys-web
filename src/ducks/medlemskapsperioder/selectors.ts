@@ -3,8 +3,18 @@ import { createSelector, Selector } from "reselect";
 import * as Types from "./types";
 import MKV from "../../melosyskodeverk";
 import { sorterEtterISOFomDato } from "../../utils/dato";
+import {
+  Avgiftspliktigperiode,
+  Medlemskapsperiode,
+  Lovvalgsperiode,
+} from "../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 
 const { DELVIS_INNVILGET, INNVILGET } = MKV.Koder.innvilgelsesResultat;
+
+// Type guard to check if periode has innvilgelsesResultat
+const harInnvilgelsesResultat = (periode: Avgiftspliktigperiode): periode is Medlemskapsperiode | Lovvalgsperiode => {
+  return periode.type === "MEDLEMSKAPSPERIODE" || periode.type === "LOVVALGSPERIODE";
+};
 
 export const MedlemskapsperioderSelector: Selector<RootState, StateSection<Types.Data>> = createSelector(
   (state: RootState) => state.medlemskapsperioder,
@@ -30,7 +40,9 @@ export const InnvilgetEllerDelvisInnvilgetMedlemskapsperioderSelector = createSe
   AlleMedlemskapsperioderSelector,
   (medlemskapsperioder) =>
     medlemskapsperioder.filter(
-      (periode) => periode.innvilgelsesResultat === INNVILGET || periode.innvilgelsesResultat === DELVIS_INNVILGET,
+      (periode) =>
+        harInnvilgelsesResultat(periode) &&
+        (periode.innvilgelsesResultat === INNVILGET || periode.innvilgelsesResultat === DELVIS_INNVILGET),
     ),
 );
 
@@ -38,7 +50,7 @@ export const SamletInnvilgetMedlemskapsperiodeSelector = createSelector(
   AlleMedlemskapsperioderSelector,
   (medlemskapsperioder) => {
     const sorterteInnvilgedePerioder = [...medlemskapsperioder]
-      .filter((periode) => periode.innvilgelsesResultat === INNVILGET)
+      .filter((periode) => harInnvilgelsesResultat(periode) && periode.innvilgelsesResultat === INNVILGET)
       .sort(sorterEtterISOFomDato);
 
     if (sorterteInnvilgedePerioder.length === 0) return undefined;
@@ -50,7 +62,8 @@ export const SamletInnvilgetMedlemskapsperiodeSelector = createSelector(
   },
 );
 
-export const BestemmelseSelector = createSelector(
-  AlleMedlemskapsperioderSelector,
-  (medlemskapsperioder) => [...medlemskapsperioder].sort(sorterEtterISOFomDato)?.[0]?.bestemmelse || "",
-);
+export const BestemmelseSelector = createSelector(AlleMedlemskapsperioderSelector, (medlemskapsperioder) => {
+  const sorterte = [...medlemskapsperioder].sort(sorterEtterISOFomDato);
+  const forstePeriode = sorterte[0];
+  return forstePeriode && harInnvilgelsesResultat(forstePeriode) ? forstePeriode.bestemmelse : "";
+});
