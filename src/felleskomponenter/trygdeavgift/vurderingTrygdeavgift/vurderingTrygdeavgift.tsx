@@ -286,26 +286,16 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     }
   };
 
-  interface ApiErrorBody {
-    feilkoder?: string[];
-    message?: string;
-  }
-
-  interface ApiError {
-    body?: ApiErrorBody;
-  }
-
-  const mapFeilmelding = (error: unknown): string => {
+  const mapFeilmelding = (error: any) => {
     const feilmelding = "Finner ikke trygdeavgiftssats. Melosys har ikke satser for årene før 2014.";
 
-    const apiError = error as ApiError | undefined;
-    const ingenGjeldendeSats = apiError?.body?.feilkoder?.some((feilkode: string) =>
+    const ingenGjeldendeSats = error.body?.feilkoder?.some((feilkode: string) =>
       feilkode.startsWith("Ingen gjeldende sats finnes for perioden"),
     );
 
     if (ingenGjeldendeSats) return feilmelding;
 
-    return apiError?.body?.message || String(error);
+    return error.body?.feilkoder || error.body?.message || error;
   };
 
   const debounceBeregnTrygdeavgiftsperioder = useCallback(
@@ -331,13 +321,13 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   useEffect(() => {
     if (redigerbart && aktivtSteg && dataErLastet) {
       if (!formIsValid) {
-        formValues?.skatteforholdsperioder?.forEach((_periode: Skatteforhold, index: number) => {
-          trigger(`skatteforholdsperioder.${index}.fomDato`);
-          trigger(`skatteforholdsperioder.${index}.tomDato`);
+        formValues?.skatteforholdsperioder?.forEach((_periode: any, index: number) => {
+          trigger(`skatteforholdsperioder[${index}].fomDato`);
+          trigger(`skatteforholdsperioder[${index}].tomDato`);
         });
-        formValues?.inntektskilder?.forEach((_periode: Inntektskilde, index: number) => {
-          trigger(`inntektskilder.${index}.fomDato`);
-          trigger(`inntektskilder.${index}.tomDato`);
+        formValues?.inntektskilder?.forEach((_periode: any, index: number) => {
+          trigger(`inntektskilder[${index}].fomDato`);
+          trigger(`inntektskilder[${index}].tomDato`);
         });
         if (!erÅpenSluttDato && (feil || harEndretInnvilgetMedlemskapsperiode)) {
           debounceBeregnTrygdeavgiftsperioder(formValues, formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType));
