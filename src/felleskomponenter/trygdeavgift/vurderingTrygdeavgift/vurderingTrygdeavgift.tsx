@@ -181,7 +181,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
       ) {
         hentOpprinneligTrygdeavgiftsgrunnlag();
       } else {
-        håndterTrygdeavgiftsberegning(beregnetTrygdeavgift);
+        håndterTrygdeavgiftsberegning(beregnetTrygdeavgift, skalResetteFormverdier);
       }
     });
 
@@ -232,10 +232,12 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     setDataErLastet(true);
   };
 
-  const håndterTrygdeavgiftsberegning = (beregnetTrygdeavgift: BeregnetTrygdeavgift) => {
+  const håndterTrygdeavgiftsberegning = (beregnetTrygdeavgift: BeregnetTrygdeavgift, skalResetteFormverdier = true) => {
     setTrygdeavgift(beregnetTrygdeavgift);
-    const lagretTrygdeavgiftsgrunnlag = beregnetTrygdeavgift.trygdeavgiftsgrunnlag;
-    håndterLagretTrygdeavgiftsgrunnlag(lagretTrygdeavgiftsgrunnlag);
+    if (skalResetteFormverdier) {
+      const lagretTrygdeavgiftsgrunnlag = beregnetTrygdeavgift.trygdeavgiftsgrunnlag;
+      håndterLagretTrygdeavgiftsgrunnlag(lagretTrygdeavgiftsgrunnlag);
+    }
   };
 
   const hentOpprinneligTrygdeavgiftsgrunnlag = () => {
