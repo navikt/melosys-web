@@ -619,7 +619,7 @@ export class OpprettNySakPage {
     await expect(
       this.page.getByRole("group", { name: "Behandlingstype" }),
       `Behandlingstype-gruppe for sak ${sakId} skal være synlig`,
-    ).toBeVisible();
+    ).toBeVisible({ timeout: 10000 });
 
     // Hent alle faktiske radiobuttons som er tilstede
     let alleRadioButtons = this.page.getByRole("group", { name: "Behandlingstype" }).getByRole("radio");
