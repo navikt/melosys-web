@@ -5,11 +5,8 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  brace-expansion@>=1.0.0 <2.0.0: ^1.1.12
-  brace-expansion@>=2.0.0 <3.0.0: ^2.0.2
-  form-data@>=4.0.0 <5.0.0: ^4.0.4
-  tmp@<1.0.0: ^0.2.4
-  ws@>=8.0.0 <9.0.0: ^8.17.1
+  js-yaml: ^4.1.1
+  glob@>=10.2.0 <10.5.0: ^10.5.0
 
 importers:
   .:
@@ -3500,9 +3497,9 @@ packages:
       { integrity: sha512-XxwI8EOhVQgWp6iDL+3b0r86f4d6AX6zSU55HfB4ydCEuXLXc5FcYeOu+nnGftS4TEju/11rt4KJPTMgbfmv4A== }
     engines: { node: ">=10.13.0" }
 
-  glob@10.4.5:
+  glob@10.5.0:
     resolution:
-      { integrity: sha512-7Bv8RF0k6xjo7d4A/PxYLbUCfb6c+Vpd2/mB2yRDlew7Jb5hEXiCD9ibfO7wpk8i4sevK6DFny9h7EYbM3/sHg== }
+      { integrity: sha512-DfXN8DfhJ7NH3Oe7cFmu3NCu1wKbkReJ8TorzSAFbSKrlNaQSKfIzqYqVY8zlbs2NLBbWpRiU52GX2PbaBVNkg== }
     hasBin: true
 
   glob@7.2.3:
@@ -3991,7 +3988,7 @@ packages:
     resolution:
       { integrity: sha512-muId7Zzn9ywDsyXgTIafTry2sV3nySZeUDe6YedVd1Hvuuep5AsIlqK+XefWpYTyJG5e503F2xIuT2lcU6rCSw== }
     peerDependencies:
-      ws: ^8.17.1
+      ws: "*"
 
   istanbul-lib-coverage@3.2.2:
     resolution:
@@ -4044,9 +4041,9 @@ packages:
     resolution:
       { integrity: sha512-mxa9E9ITFOt0ban3j6L5MpjwegGz6lBQmM1IJkWeBZGcMxto50+eWdjC/52xDbS2vy0k7vIMK0Fe2wfL9OQSpQ== }
 
-  js-yaml@4.1.0:
+  js-yaml@4.1.1:
     resolution:
-      { integrity: sha512-wpxZs9NoxZaJESJGIZTyDEaYpl0FKSA+FB9aJiyemKhMwkxQg63h4T1KJgUGHpTqPDNRcmmYLugrRjJlBtWvRA== }
+      { integrity: sha512-qQKT4zQxXl8lLwBtHMWwaTcGfFOZviOJet3Oy/xmGk2gZH677CJM9EvtfdSkgWcATZhj/55JZ0rmy3myCT5lsA== }
     hasBin: true
 
   jsdom@22.1.0:
@@ -4563,6 +4560,11 @@ packages:
     resolution:
       { integrity: sha512-5b6Y85tPxZZ7QytO+BQzysW31HJku27cRIlkbAXaNx+BdcVi+LlRFmVXzeF6a7JCwJpyw5c4b+YSVImQIrBpuQ== }
     engines: { node: ">=10" }
+
+  os-tmpdir@1.0.2:
+    resolution:
+      { integrity: sha512-D2FR03Vir7FIu45XBY20mTb+/ZSWB00sjU9jdQXt83gDrI4Ztz5Fs7/yy74g2N5SVQY4xY1qDr4rNddwYRVX0g== }
+    engines: { node: ">=0.10.0" }
 
   outvariant@1.4.3:
     resolution:
@@ -5574,10 +5576,10 @@ packages:
       { integrity: sha512-Y1KQBgDd/NUc+LfOtKS6mNsC9CCaH+m2P1RoIZy7RAPo3C3/t8X45+zgut31cRZtZ3xKPjfn3TkGTrctC2TQIQ== }
     hasBin: true
 
-  tmp@0.2.5:
+  tmp@0.0.33:
     resolution:
-      { integrity: sha512-voyz6MApa1rQGUxT3E+BK7/ROe8itEx7vD8/HEvt4xwXucvQ5G5oeEiHkmHZJuBO21RpOf+YYm9MOivj709jow== }
-    engines: { node: ">=14.14" }
+      { integrity: sha512-jRCJlojKnZ3addtTOjdIqoRuPEKBvNXcGYqzO6zWZX8KfKEpnGY5jfggJQ3EjKuu8D4bJRr0y+cYJFmYbImXGw== }
+    engines: { node: ">=0.6.0" }
 
   to-regex-range@5.0.1:
     resolution:
@@ -6012,6 +6014,19 @@ packages:
   wrappy@1.0.2:
     resolution:
       { integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ== }
+
+  ws@8.13.0:
+    resolution:
+      { integrity: sha512-x9vcZYTrFPC7aSIbj7sRCYo7L/Xb8Iy+pW0ng0wt2vCJv7M9HOMy0UoN3rr+IFC7hb7vXoqS+P9ktyLLLhO+LA== }
+    engines: { node: ">=10.0.0" }
+    peerDependencies:
+      bufferutil: ^4.0.1
+      utf-8-validate: ">=5.0.2"
+    peerDependenciesMeta:
+      bufferutil:
+        optional: true
+      utf-8-validate:
+        optional: true
 
   ws@8.18.2:
     resolution:
@@ -6767,7 +6782,7 @@ snapshots:
       globals: 14.0.0
       ignore: 5.3.2
       import-fresh: 3.3.1
-      js-yaml: 4.1.0
+      js-yaml: 4.1.1
       minimatch: 3.1.2
       strip-json-comments: 3.1.1
     transitivePeerDependencies:
@@ -7052,9 +7067,9 @@ snapshots:
       "@types/ws": 8.18.1
       graphql: 16.11.0
       graphql-ws: 5.12.1(graphql@16.11.0)
-      isomorphic-ws: 5.0.0(ws@8.18.2)
+      isomorphic-ws: 5.0.0(ws@8.13.0)
       tslib: 2.8.1
-      ws: 8.18.2
+      ws: 8.13.0
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -7078,9 +7093,9 @@ snapshots:
       "@graphql-tools/utils": 9.2.1(graphql@16.11.0)
       "@types/ws": 8.18.1
       graphql: 16.11.0
-      isomorphic-ws: 5.0.0(ws@8.18.2)
+      isomorphic-ws: 5.0.0(ws@8.13.0)
       tslib: 2.8.1
-      ws: 8.18.2
+      ws: 8.13.0
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -7194,7 +7209,7 @@ snapshots:
       http-proxy-agent: 6.1.1
       https-proxy-agent: 6.2.1
       jose: 4.15.9
-      js-yaml: 4.1.0
+      js-yaml: 4.1.1
       json-stable-stringify: 1.3.0
       lodash: 4.17.21
       scuid: 1.1.0
@@ -8530,14 +8545,14 @@ snapshots:
   cosmiconfig@8.0.0:
     dependencies:
       import-fresh: 3.3.1
-      js-yaml: 4.1.0
+      js-yaml: 4.1.1
       parse-json: 5.2.0
       path-type: 4.0.0
 
   cosmiconfig@8.3.6(typescript@5.9.2):
     dependencies:
       import-fresh: 3.3.1
-      js-yaml: 4.1.0
+      js-yaml: 4.1.1
       parse-json: 5.2.0
       path-type: 4.0.0
     optionalDependencies:
@@ -9094,7 +9109,7 @@ snapshots:
     dependencies:
       chardet: 0.7.0
       iconv-lite: 0.4.24
-      tmp: 0.2.5
+      tmp: 0.0.33
 
   extract-files@11.0.0: {}
 
@@ -9267,7 +9282,7 @@ snapshots:
     dependencies:
       is-glob: 4.0.3
 
-  glob@10.4.5:
+  glob@10.5.0:
     dependencies:
       foreground-child: 3.3.1
       jackspeak: 3.4.3
@@ -9675,6 +9690,10 @@ snapshots:
 
   isexe@2.0.0: {}
 
+  isomorphic-ws@5.0.0(ws@8.13.0):
+    dependencies:
+      ws: 8.13.0
+
   isomorphic-ws@5.0.0(ws@8.18.2):
     dependencies:
       ws: 8.18.2
@@ -9725,7 +9744,7 @@ snapshots:
 
   js-tokens@9.0.1: {}
 
-  js-yaml@4.1.0:
+  js-yaml@4.1.1:
     dependencies:
       argparse: 2.0.1
 
@@ -10194,6 +10213,8 @@ snapshots:
       log-symbols: 4.1.0
       strip-ansi: 6.0.1
       wcwidth: 1.0.1
+
+  os-tmpdir@1.0.2: {}
 
   outvariant@1.4.3: {}
 
@@ -10991,7 +11012,7 @@ snapshots:
   test-exclude@7.0.1:
     dependencies:
       "@istanbuljs/schema": 0.1.3
-      glob: 10.4.5
+      glob: 10.5.0
       minimatch: 9.0.5
 
   through@2.3.8: {}
@@ -11032,7 +11053,9 @@ snapshots:
     dependencies:
       tldts-core: 7.0.17
 
-  tmp@0.2.5: {}
+  tmp@0.0.33:
+    dependencies:
+      os-tmpdir: 1.0.2
 
   to-regex-range@5.0.1:
     dependencies:
@@ -11452,6 +11475,8 @@ snapshots:
       strip-ansi: 7.1.0
 
   wrappy@1.0.2: {}
+
+  ws@8.13.0: {}
 
   ws@8.18.2: {}
 

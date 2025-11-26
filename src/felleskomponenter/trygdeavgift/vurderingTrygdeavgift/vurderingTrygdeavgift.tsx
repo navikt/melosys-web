@@ -28,7 +28,10 @@ import vurderingTrygdeavgiftSchema from "./vurderingTrygdeavgiftSchema";
 
 import { erBrukerSkattepliktigIHelePerioden } from "../../../sider/aarsavregning/stegKomponenter/vurderingAarsavregning/utils";
 import { useFeatureToggle } from "../../../featuretoggle";
-import { MELOSYS_FAKTURERINGSKOMPONENTEN_IKKE_TIDLIGERE_PERIODER } from "../../../featuretoggle/toggleNavn";
+import {
+  MELOSYS_FAKTURERINGSKOMPONENTEN_IKKE_TIDLIGERE_PERIODER,
+  MELOSYS_EØS_FAKTURERING_AV_TRYGDEAVGIFT,
+} from "../../../featuretoggle/toggleNavn";
 import { Alert } from "../../../navFrontend";
 import { fagsakSelectors } from "../../../ducks/fagsaker";
 import { lovvalgsperioderSelectors } from "../../../ducks/lovvalgsperioder";
@@ -54,7 +57,10 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     medlemskapsperioderSelectors.SamletInnvilgetMedlemskapsperiodeSelector,
   );
   const lovvalgsperioder = useSelector(lovvalgsperioderSelectors.PeriodeSelector);
-  const erEuEøs = sakstype === MKV.Koder.sakstyper.EU_EOS;
+  const erEøsFaktureringAvTrygdeavgiftToggleEnabled =
+    useFeatureToggle(MELOSYS_EØS_FAKTURERING_AV_TRYGDEAVGIFT) ?? false;
+
+  const erEuEøs = sakstype === MKV.Koder.sakstyper.EU_EOS && erEøsFaktureringAvTrygdeavgiftToggleEnabled;
 
   const avgiftspliktigeperioder = erEuEøs ? lovvalgsperioder : innvilgetMedlemskapsperiode;
 

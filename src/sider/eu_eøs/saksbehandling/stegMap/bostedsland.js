@@ -1,6 +1,6 @@
 import MKV from "../../../../melosyskodeverk";
 import * as KV from "../../../../kodeverk";
-import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
+import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/stegLegacy";
 import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
 import VurderingBostedsland from "../../stegKomponenter/vurderingBostedsland";
 

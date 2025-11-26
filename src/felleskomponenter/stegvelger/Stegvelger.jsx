@@ -499,14 +499,25 @@ class Stegvelger extends Component {
       lagreUtpekingsperioderHandler,
       sakstype,
       anmodningErSendtUtland,
+      oppsummering,
+      eøsFaktureringAvTrygdeavgiftToggleEnabled,
     } = this.props;
+    const { aktivtStegNummer, aktuelleSteg } = this.state;
+    const erVurderingPeriode = aktuelleSteg[aktivtStegNummer]?.id == STEG.VURDERING_PERIODE;
+    const erArbeidTjenestepersonEllerFly =
+      oppsummering.behandlingstema.kode == MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY;
+
+    const flytHarIkkeVurderingPeriode = !(eøsFaktureringAvTrygdeavgiftToggleEnabled && erArbeidTjenestepersonEllerFly);
 
     this.setState({ aktivtStegNummer: nyttStegNummer });
 
     if (redigerbart) {
       if (sakstype !== MKV.Koder.sakstyper.FTRL) {
         await oppdaterPerioderState({ ...soknad_skjema, ...artikkel16_anmodning_skjema });
-        await lagreLovvalgsperioderHandler();
+
+        if (flytHarIkkeVurderingPeriode || erVurderingPeriode) {
+          await lagreLovvalgsperioderHandler();
+        }
 
         if (!anmodningErSendtUtland) {
           await lagreAvklartefaktaHandler();
