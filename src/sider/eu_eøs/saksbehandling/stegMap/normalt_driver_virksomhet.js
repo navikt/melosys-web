@@ -1,5 +1,5 @@
 import MKV from "../../../../melosyskodeverk";
-import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
+import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/stegLegacy";
 import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
 import VurderingNormaltDriverVirksomhet from "../../stegKomponenter/vurderingNormaltDriverVirksomhet/vurderingNormaltDriverVirksomhet";
 import { erVilkarOppfylt, hentVilkar } from "../../../../domeneUtils";

@@ -1,7 +1,7 @@
 import MKV from "../../../../melosyskodeverk";
 import { BOOLSK_STRING } from "../../../../constants";
 
-import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
+import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/stegLegacy";
 import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
 import VurderingMedfolgendeBarn from "../../stegKomponenter/vurderingMedfolgendeBarn";
 import { hentFaktaListe } from "../../../../domeneUtils";
