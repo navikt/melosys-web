@@ -16,7 +16,7 @@ import {
   helseutgiftDekkesPeriodeSelector,
 } from "../../../../../ducks/helseutgiftdekkesperiode";
 import { HelseutgiftDekkesPeriodeDto } from "../../../../../services/modules/helseutgiftDekkesPeriode/helseutgiftDekkesPeriode";
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { UkjentSluttdatoMedlemskapsperiode } from "../../../../ftrl/saksbehandling/stegKomponenter/vurderingPeriode/komponenter/ukjentSluttdatoMedlemskapsperiode";
 import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../../ducks/oppsummertfakta";
 import { FellesHandlersContext } from "../../../../../contexts";
@@ -39,6 +39,7 @@ interface FellesHandlers {
 export function VurderingOpplysninger({ bekreft, oppdaterStatus, aktivtSteg }: Props) {
   const dispatch = useDispatch();
   const [visOppfrisk, setVisOppfrisk] = useState(false);
+  const isSubmittingRef = useRef(false);
 
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
@@ -124,7 +125,10 @@ export function VurderingOpplysninger({ bekreft, oppdaterStatus, aktivtSteg }: P
   };
 
   const bekreftOgFortsett = async () => {
+    if (isSubmittingRef.current) return;
+    isSubmittingRef.current = true;
     await dispatch(helseutgiftDekkesPeriodeOperations.hentHelseutgiftDekkesPeriode(behandlingID));
+    isSubmittingRef.current = false;
     if (skalHenteRegisteropplysninger) {
       setVisOppfrisk(true);
     } else {

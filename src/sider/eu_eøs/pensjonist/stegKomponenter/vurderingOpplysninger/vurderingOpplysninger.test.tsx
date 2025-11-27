@@ -507,6 +507,44 @@ describe("VurderingOpplysninger - MELOSYS-7642", () => {
     });
   });
 
+  describe("MELOSYS-7739: Dobbeltklikk-beskyttelse", () => {
+    it("skal ikke kalle dispatch flere ganger ved dobbeltklikk", async () => {
+      const user = userEvent.setup();
+
+      // Mock en forsinket dispatch
+      let resolveDispatch: () => void;
+      const delayedDispatch = vi.fn(
+        () =>
+          new Promise<void>((resolve) => {
+            resolveDispatch = resolve;
+          }),
+      );
+      vi.mocked(mockDispatch).mockImplementation(delayedDispatch);
+
+      const mockStore = createMockStore(defaultState);
+
+      render(
+        <Provider store={mockStore}>
+          <FellesHandlersContext.Provider value={contextValue}>
+            <VurderingOpplysninger {...defaultProps} />
+          </FellesHandlersContext.Provider>
+        </Provider>,
+      );
+
+      const nesteBtn = screen.getByTestId("neste-btn");
+
+      // Dobbeltklikk raskt
+      await user.click(nesteBtn);
+      await user.click(nesteBtn);
+
+      // dispatch skal kun kalles én gang (første klikk)
+      expect(delayedDispatch).toHaveBeenCalledTimes(1);
+
+      // Cleanup
+      resolveDispatch!();
+    });
+  });
+
   describe("Regression tests - Forbedringer fra code review", () => {
     it("skal kun ha én useEffect for oppdaterStatus (ikke duplikat)", () => {
       // Dette er et regression test for at vi fjernet duplikat useEffect
