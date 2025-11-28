@@ -1,1 +1,0 @@
-Before submitting changes, run `pnpm test` (and any affected Playwright suites if relevant) plus `pnpm eslint`/`pnpm prettier:check` to keep CI happy. Ensure env config scripts have run when testing locally (`generate-local-config.mjs`). Update generated GraphQL artifacts via `pnpm generate-graphql` when changing queries.

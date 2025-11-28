@@ -1,1 +1,0 @@
-Melosys-web is the frontend for NAV's Melosys (membership and law selection) system. It is a React/Redux single-page app served with Vite and written in TypeScript (legacy JS exists). Shared page components live under `src/felles-komponenter`, and full-page views live under `src/sider`. GraphQL is used for data fetching (with generated code via graphql-codegen).
