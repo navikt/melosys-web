@@ -36,6 +36,7 @@ interface Props {
   lovvalgsbestemmelseSomSkalLagres?: string;
   lovvalgsbestemmelseSomSkalVises?: string;
   oppdaterData: (data: unknown) => void;
+  oppdaterStatus: (stegErGyldig: boolean) => void;
   slettData: (data?: unknown) => void;
   tilbake: () => void;
   bekreftOgFortsett: () => void;
@@ -48,6 +49,7 @@ export function VurderingPeriode({
   lovvalgsbestemmelseSomSkalLagres = "",
   lovvalgsbestemmelseSomSkalVises = "",
   oppdaterData,
+  oppdaterStatus,
   slettData,
   tilbake,
   bekreftOgFortsett,
@@ -94,19 +96,16 @@ export function VurderingPeriode({
     };
   }, []);
 
-  // Oppdater form-verdiene hvis det finnes en eksisterende forkortet lovvalgsperiode
   useEffect(() => {
     if (
       lovvalgsFomDato &&
       lovvalgsTomDato &&
       (lovvalgsFomDato !== mottatteOpplysningerFom || lovvalgsTomDato !== mottatteOpplysningerTom)
     ) {
-      // Det finnes en eksisterende forkortet periode - oppdater form
       reset({
         forkortLovvalgsperiode: true,
         fomDato: Utils.dato.formatterDatoTilNorsk(lovvalgsFomDato),
         tomDato: Utils.dato.formatterDatoTilNorsk(lovvalgsTomDato),
-        lovvalgsbestemmelse: lovvalgsbestemmelseSomSkalVises || undefined,
       });
     }
   }, [lovvalgsFomDato, lovvalgsTomDato]);
@@ -139,7 +138,6 @@ export function VurderingPeriode({
     }
   }, [formValues.lovvalgsbestemmelse]);
 
-  // Oppdater lovvalgsperioden når brukeren endrer datoer eller checkbox
   useEffect(() => {
     if (redigerbart) {
       const fomDato =
@@ -151,7 +149,6 @@ export function VurderingPeriode({
           ? Utils.dato.formatterDatoTilISO(formValues.tomDato)
           : mottatteOpplysningerTom;
 
-      // Bare oppdater hvis vi har gyldige datoer
       if (fomDato && tomDato) {
         oppdaterData(
           lagLovvalgsperiode({
@@ -180,7 +177,11 @@ export function VurderingPeriode({
     (formValues.forkortLovvalgsperiode && formValues.tomDato) || soknadsperiode.tom,
   );
 
-  const stegErGyldig = redigerbart && formState.isValid && !!formValues.lovvalgsbestemmelse;
+  const stegErGyldig = redigerbart && formState.isValid;
+
+  useEffect(() => {
+    oppdaterStatus(stegErGyldig);
+  }, [stegErGyldig]);
 
   if (!aktivtSteg) return null;
 

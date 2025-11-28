@@ -56,14 +56,11 @@ export const STEG = {
   VURDERING_PERIODE: "VURDERING_PERIODE",
 } as const;
 
-/**
- * Lightweight props passed to steg constructor.
- * Contains necessary data and handlers for steg initialization.
- */
 export interface PropsLight {
   behandlingID?: string;
   lovvalgsbestemmelse?: string;
   generiskStegRedigerbart: boolean;
+  vurderingPeriodeFormIsValid: boolean;
   aktivtSteg: boolean;
   avklartefakta?: unknown[];
   vilkar?: unknown[];
@@ -73,13 +70,10 @@ export interface PropsLight {
     byggLovvalgsperioder: () => void;
     oppdaterStegData: (stegId: string, felt: string, verdi: unknown) => void;
     slettStegData: (stegId: string, data?: unknown) => void;
+    oppdaterStatus: (stegErGyldig: boolean) => void;
   };
 }
 
-/**
- * Criteria for determining next step.
- * Used by steg.nesteSteg() to evaluate which step comes next.
- */
 export interface StegKriterie {
   exec: (avklartefakta?: unknown[], vilkar?: unknown[]) => boolean;
   nesteSteg: string;

@@ -35,9 +35,7 @@ class Trygdeavgift extends Steg {
       redigerbart: _propsLight.generiskStegRedigerbart,
     });
 
-    this.beregnRelevantUI = (): TrygdeavgiftRelevantUI => ({
-      harAvklaring: true,
-    });
+    this.beregnRelevantUI = () => ({});
 
     this.handlers = {
       bekreft: propsLight.tilgjengeligeHandlers.bekreftOgFortsett,

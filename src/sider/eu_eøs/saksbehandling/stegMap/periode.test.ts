@@ -10,6 +10,7 @@ describe("Periode steg-klasse", () => {
     lovvalgsbestemmelse: undefined,
     generiskStegRedigerbart: true,
     aktivtSteg: false,
+    formIsValid: false,
     avklartefakta: [],
     vilkar: [],
     tilgjengeligeHandlers: {
@@ -72,6 +73,14 @@ describe("Periode steg-klasse", () => {
       const kriterier = periode.kriterier as any;
       expect(kriterier).toHaveLength(1);
       expect(kriterier[0].nesteSteg).toBe(STEG.VURDERING_TRYGDEAVGIFT);
+      expect(kriterier[0].exec()).toBe(false);
+    });
+
+    it("skal ha kriterie som matcher når form er gyldig", () => {
+      const propsLight = createMockPropsLight({ formIsValid: true });
+      const periode = new Periode(propsLight, 5);
+
+      const kriterier = periode.kriterier as any;
       expect(kriterier[0].exec()).toBe(true);
     });
   });
@@ -161,19 +170,20 @@ describe("Periode steg-klasse", () => {
   });
 
   describe("nesteSteg", () => {
-    it("skal alltid returnere VURDERING_TRYGDEAVGIFT", () => {
+    it("skal returnere undefined når form ikke er gyldig", () => {
       const propsLight = createMockPropsLight();
       const periode = new Periode(propsLight, 5);
 
       const nesteSteg = periode.nesteSteg();
 
-      expect(nesteSteg).toBe(STEG.VURDERING_TRYGDEAVGIFT);
+      expect(nesteSteg).toBeUndefined();
     });
 
-    it("skal returnere VURDERING_TRYGDEAVGIFT selv med ulike avklartefakta", () => {
+    it("skal returnere VURDERING_TRYGDEAVGIFT når form er gyldig", () => {
       const propsLight = createMockPropsLight({
         avklartefakta: { someFact: "someValue" },
         vilkar: { someCondition: true },
+        formIsValid: true,
       });
       const periode = new Periode(propsLight, 5);
 

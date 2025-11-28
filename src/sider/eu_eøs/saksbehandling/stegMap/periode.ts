@@ -5,17 +5,16 @@ import type { PropsLight } from "../../../../felleskomponenter/stegvelger/stegMo
 
 import MKV from "../../../../melosyskodeverk";
 
-// Spesifikke typer for Periode-steg
 interface PeriodeRelevanteData {
-  [key: string]: unknown; // Index signature for base class compatibility
+  [key: string]: unknown;
   redigerbart: boolean;
   lovvalgsbestemmelseSomSkalVises?: string;
   lovvalgsbestemmelseSomSkalLagres?: string;
-  aktivtSteg: boolean;
+  aktivtSteg: boolean | undefined;
 }
 
 interface PeriodeRelevantUI {
-  [key: string]: unknown; // Index signature for base class compatibility
+  [key: string]: unknown;
   harAvklaring: boolean;
 }
 
@@ -29,28 +28,24 @@ class Periode extends Steg {
         ? MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART11_5
         : propsLight.lovvalgsbestemmelse;
 
-    const lovvalgsbestemmelseSomSkalLagres = propsLight.lovvalgsbestemmelse;
-
     this.kriterier = [
       {
-        exec: () => true, // Alltid gå videre til vedtak
+        exec: () => this.formIsValid,
         nesteSteg: STEG.VURDERING_TRYGDEAVGIFT,
       },
     ];
 
-    const harAvklaring = !!lovvalgsbestemmelseSomSkalLagres;
-
     this.id = STEG.VURDERING_PERIODE;
     this.tittel = "Periode";
     this.komponent = VurderingPeriode;
-    this.samleRelevanteData = (_propsLight: PropsLight): PeriodeRelevanteData => ({
+    this.samleRelevanteData = (_propsLight: PropsLight = this._propsLight): PeriodeRelevanteData => ({
       redigerbart: _propsLight.generiskStegRedigerbart,
       lovvalgsbestemmelseSomSkalVises,
-      lovvalgsbestemmelseSomSkalLagres,
+      lovvalgsbestemmelseSomSkalLagres: _propsLight.lovvalgsbestemmelse,
       aktivtSteg: _propsLight.aktivtSteg,
     });
-    this.beregnRelevantUI = (): PeriodeRelevantUI => ({
-      harAvklaring,
+    this.beregnRelevantUI = (_propsLight: PropsLight = this._propsLight): PeriodeRelevantUI => ({
+      harAvklaring: !!_propsLight.lovvalgsbestemmelse,
     });
     this.handlers = {
       bekreftOgFortsett: propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
@@ -59,6 +54,7 @@ class Periode extends Steg {
       oppdaterData: (felt: string, verdi: unknown) =>
         this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id!, felt, verdi),
       slettData: (data?: unknown) => this._propsLight.tilgjengeligeHandlers.slettStegData(this.id!, data),
+      oppdaterStatus: (stegErGyldig: boolean) => propsLight.tilgjengeligeHandlers.oppdaterStatus(stegErGyldig),
     };
     this.status = FANE_STATUS.OK;
   }

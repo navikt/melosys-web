@@ -31,7 +31,7 @@ import { oppsummertfaktaSelectors } from "../../ducks/oppsummertfakta";
 import { feiletResponsSelectors } from "../../ducks/feiletRespons";
 import { datalastingOperations } from "../../ducks/datalasting";
 import { kontrollOperations, kontrollSelectors } from "../../ducks/kontroll";
-
+import { FANE_STATUS } from "../stegvelger";
 import MottatteOpplysningerFeilmeldinger from "../mottatteOpplysningerFeilmeldinger";
 import { Feilmeldinger } from "../feilmeldinger";
 import { Innsynsmelding, NyVurderingMelding, StatsborgerskapFeil } from "../alertmeldinger";
@@ -58,6 +58,7 @@ class Stegvelger extends Component {
       [StegStoreTyper.Lovvalgsland]: new EnkelDataStore(),
     },
     visMottatteOpplysningerFeilmeldinger: false,
+    vurderingPeriodeFormIsValid: false,
   };
 
   aktiv = true;
@@ -139,6 +140,26 @@ class Stegvelger extends Component {
     const { aktivtStegNummer } = this.state;
     this.props.oppdaterMottatteOpplysninger();
     this.oppdaterAktuelleSteg(aktivtStegNummer);
+  };
+
+  oppdaterStatus = (stegErGyldig) => {
+    const { aktivtStegNummer, aktuelleSteg } = this.state;
+    const oppdaterteSteg = [...aktuelleSteg];
+    const aktivtSteg = oppdaterteSteg[aktivtStegNummer];
+    if (!aktivtSteg) return;
+
+    aktivtSteg.status = stegErGyldig ? FANE_STATUS.OK : FANE_STATUS.UBEHANDLET;
+    aktivtSteg.formIsValid = !!stegErGyldig;
+
+    this.setState(
+      (prev) => ({
+        ...prev,
+        aktuelleSteg: oppdaterteSteg,
+        vurderingPeriodeFormIsValid:
+          aktivtSteg.id === STEG.VURDERING_PERIODE ? !!stegErGyldig : prev.vurderingPeriodeFormIsValid,
+      }),
+      this.publiserStegdata,
+    );
   };
 
   harMottatteOpplysningerFeilmeldinger = () => !Utils._isEmpty(this.props.mottatteOpplysningerFeilmeldinger);
@@ -370,6 +391,7 @@ class Stegvelger extends Component {
   oppdaterAktuelleSteg = (aktivtStegNummer, endreFokus = false) => {
     const tilgjengeligeHandlers = {
       bekreftOgFortsett: this.bekreftOgFortsett,
+      oppdaterStatus: this.oppdaterStatus,
       lagreOgUtpek: this.lagreOgUtpek,
       oppdaterStegData: this.oppdaterStegData,
       slettStegData: this.slettStegData,
@@ -421,6 +443,7 @@ class Stegvelger extends Component {
       vurder_utpeking_skjema: props.vurder_utpeking_skjema,
       saksnummer: props.saksnummer,
       tilgjengeligeHandlers,
+      vurderingPeriodeFormIsValid: !!props.redigerbart === false || !!this.state.vurderingPeriodeFormIsValid,
       saksopplysninger: props.saksopplysninger,
       arbeidsland: props.arbeidsland,
       arbeidslandMedYrkesaktivitet: props.arbeidslandMedYrkesaktivitet,

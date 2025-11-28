@@ -18,6 +18,7 @@ interface BuiltSteg {
   stegPosisjon: number;
   aktivtSteg: boolean | undefined;
   vedtakSteg: boolean;
+  formIsValid: boolean;
 }
 
 class Steg {
@@ -33,10 +34,13 @@ class Steg {
   protected _propsLight: PropsLight;
   protected _stegPosisjon: number;
   protected _aktiv: boolean | undefined;
+  protected _formIsValid = false;
 
   constructor(propsLight: PropsLight, posisjon: number) {
     this._propsLight = propsLight;
     this._stegPosisjon = posisjon;
+    this._formIsValid = !!propsLight.vurderingPeriodeFormIsValid;
+    this._propsLight.vurderingPeriodeFormIsValid = this._formIsValid;
   }
 
   get id(): string | null {
@@ -83,6 +87,15 @@ class Steg {
     this._status = status;
   }
 
+  get formIsValid(): boolean {
+    return this._formIsValid;
+  }
+
+  set formIsValid(isValid: boolean) {
+    this._formIsValid = !!isValid;
+    this._propsLight.vurderingPeriodeFormIsValid = this._formIsValid;
+  }
+
   set aktivtSteg(aktiv: boolean | undefined) {
     this._aktiv = aktiv;
   }
@@ -114,6 +127,7 @@ class Steg {
     stegPosisjon: this._stegPosisjon,
     aktivtSteg: this._aktiv,
     vedtakSteg: this.erVedtakSteg(this._id),
+    formIsValid: this._formIsValid,
   });
 
   nesteSteg = (): string | undefined => {
