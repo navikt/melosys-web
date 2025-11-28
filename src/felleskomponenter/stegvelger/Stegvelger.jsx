@@ -155,8 +155,7 @@ class Stegvelger extends Component {
       (prev) => ({
         ...prev,
         aktuelleSteg: oppdaterteSteg,
-        vurderingPeriodeFormIsValid:
-          aktivtSteg.id === STEG.VURDERING_PERIODE ? !!stegErGyldig : prev.vurderingPeriodeFormIsValid,
+        vurderingPeriodeFormIsValid: !!stegErGyldig,
       }),
       this.publiserStegdata,
     );
