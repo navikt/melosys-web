@@ -129,9 +129,11 @@ class Steg {
 
   hentStatus = (): FaneStatus => {
     const relevantUI = this.beregnRelevantUI!(this._propsLight);
-    if (!relevantUI) {
-      return FANE_STATUS.FEIL;
-    }
+
+    if (!relevantUI) return FANE_STATUS.FEIL;
+
+    if (relevantUI.stegErGyldig) return FANE_STATUS.OK;
+
     return relevantUI.harAvklaring ? FANE_STATUS.OK : FANE_STATUS.UBEHANDLET;
   };
 

@@ -67,6 +67,7 @@ export interface PropsLight {
   aktivtSteg: boolean;
   avklartefakta?: unknown[];
   vilkar?: unknown[];
+  stegErGyldig?: boolean;
   tilgjengeligeHandlers: {
     bekreftOgFortsett: () => void;
     tilbake: () => void;
