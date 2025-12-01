@@ -12,7 +12,7 @@ interface TrygdeavgiftRelevanteData {
 
 interface TrygdeavgiftRelevantUI {
   [key: string]: unknown; // Index signature for base class compatibility
-  harAvklaring: boolean;
+  stegErGyldig: boolean;
 }
 
 let stegErGyldigState = false;
@@ -38,7 +38,7 @@ class Trygdeavgift extends Steg {
     });
 
     this.beregnRelevantUI = (): TrygdeavgiftRelevantUI => ({
-      harAvklaring: true,
+      stegErGyldig: stegErGyldigState,
     });
 
     this.handlers = {
