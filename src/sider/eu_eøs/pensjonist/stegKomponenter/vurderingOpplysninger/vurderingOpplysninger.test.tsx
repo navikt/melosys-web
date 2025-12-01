@@ -7,7 +7,7 @@ import VurderingOpplysninger from "./vurderingOpplysninger";
 import { FellesHandlersContext } from "../../../../../contexts";
 
 /**
- * UNIT TESTER FOR VURDERINGOPPLYSNINGER - MELOSYS-7642
+ * UNIT TESTER FOR VURDERINGOPPLYSNINGER
  *
  * Disse testene verifiserer kritisk forretningslogikk for oppfriskning av registeropplysninger:
  * - Når skal oppfrisk-dialog vises vs direkte navigasjon
@@ -27,6 +27,7 @@ vi.mock("../../../../../ducks/helseutgiftdekkesperiode", () => ({
   },
   helseutgiftDekkesPeriodeSelector: {
     HelseutgiftDekkesPeriodeSelector: (state: any) => state.helseutgiftdekkesperiode,
+    HelseutgiftDekkesPeriodeErPendingSelector: (state: any) => state.helseutgiftdekkesperiode?.status === "PENDING",
   },
 }));
 
@@ -140,7 +141,7 @@ const mockDispatch = vi.fn((action: any) => {
   return Promise.resolve(action);
 });
 
-describe("VurderingOpplysninger - MELOSYS-7642", () => {
+describe("VurderingOpplysninger", () => {
   const mockBekreft = vi.fn();
   const mockTilbake = vi.fn();
   const mockOppdaterStatus = vi.fn();
@@ -507,21 +508,17 @@ describe("VurderingOpplysninger - MELOSYS-7642", () => {
     });
   });
 
-  describe("MELOSYS-7739: Dobbeltklikk-beskyttelse", () => {
-    it("skal ikke kalle dispatch flere ganger ved dobbeltklikk", async () => {
-      const user = userEvent.setup();
-
-      // Mock en forsinket dispatch
-      let resolveDispatch: () => void;
-      const delayedDispatch = vi.fn(
-        () =>
-          new Promise<void>((resolve) => {
-            resolveDispatch = resolve;
-          }),
-      );
-      vi.mocked(mockDispatch).mockImplementation(delayedDispatch);
-
-      const mockStore = createMockStore(defaultState);
+  describe("Dobbeltklikk-beskyttelse", () => {
+    it("skal disable knappen når status er PENDING", async () => {
+      // Opprett store med PENDING status
+      const pendingState = {
+        ...defaultState,
+        helseutgiftdekkesperiode: {
+          ...defaultState.helseutgiftdekkesperiode,
+          status: "PENDING",
+        },
+      };
+      const mockStore = createMockStore(pendingState);
 
       render(
         <Provider store={mockStore}>
@@ -533,15 +530,38 @@ describe("VurderingOpplysninger - MELOSYS-7642", () => {
 
       const nesteBtn = screen.getByTestId("neste-btn");
 
-      // Dobbeltklikk raskt
-      await user.click(nesteBtn);
+      // Knappen skal være disabled når isPending er true
+      expect(nesteBtn).toBeDisabled();
+    });
+
+    it("skal ikke kalle dispatch når isPending er true", async () => {
+      const user = userEvent.setup();
+
+      // Opprett store med PENDING status
+      const pendingState = {
+        ...defaultState,
+        helseutgiftdekkesperiode: {
+          ...defaultState.helseutgiftdekkesperiode,
+          status: "PENDING",
+        },
+      };
+      const mockStore = createMockStore(pendingState);
+
+      render(
+        <Provider store={mockStore}>
+          <FellesHandlersContext.Provider value={contextValue}>
+            <VurderingOpplysninger {...defaultProps} />
+          </FellesHandlersContext.Provider>
+        </Provider>,
+      );
+
+      const nesteBtn = screen.getByTestId("neste-btn");
+
+      // Forsøk å klikke på disabled knapp (ingenting skal skje)
       await user.click(nesteBtn);
 
-      // dispatch skal kun kalles én gang (første klikk)
-      expect(delayedDispatch).toHaveBeenCalledTimes(1);
-
-      // Cleanup
-      resolveDispatch!();
+      // dispatch skal ikke kalles siden knappen er disabled
+      expect(mockDispatch).not.toHaveBeenCalled();
     });
   });
 
