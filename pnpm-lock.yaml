@@ -155,6 +155,9 @@ importers:
       "@types/node":
         specifier: ^22.18.5
         version: 22.18.5
+      "@types/oracledb":
+        specifier: ^6.10.0
+        version: 6.10.0
       "@types/qs":
         specifier: ^6.9.5
         version: 6.14.0
@@ -245,6 +248,9 @@ importers:
       npm-run-all:
         specifier: ^4.1.5
         version: 4.1.5
+      oracledb:
+        specifier: ^6.7.0
+        version: 6.10.0
       prettier:
         specifier: ^3.6.2
         version: 3.6.2
@@ -1961,6 +1967,10 @@ packages:
   "@types/node@22.18.5":
     resolution:
       { integrity: sha512-g9BpPfJvxYBXUWI9bV37j6d6LTMNQ88hPwdWWUeYZnMhlo66FIg9gCc1/DZb15QylJSKwOZjwrckvOTWpOiChg== }
+
+  "@types/oracledb@6.10.0":
+    resolution:
+      { integrity: sha512-dRaEYKRkJhSSM/uKrscE7zXC5D75JSkBgdye5kSxzTRwrMAUI5V675cD3fqCdMuSOiGo2K9Ng3CjjRI4rzeuAg== }
 
   "@types/parse-json@4.0.2":
     resolution:
@@ -4556,6 +4566,11 @@ packages:
     resolution:
       { integrity: sha512-5b6Y85tPxZZ7QytO+BQzysW31HJku27cRIlkbAXaNx+BdcVi+LlRFmVXzeF6a7JCwJpyw5c4b+YSVImQIrBpuQ== }
     engines: { node: ">=10" }
+
+  oracledb@6.10.0:
+    resolution:
+      { integrity: sha512-kGUumXmrEWbSpBuKJyb9Ip3rXcNgKK6grunI3/cLPzrRvboZ6ZoLi9JQ+z6M/RIG924tY8BLflihL4CKKQAYMA== }
+    engines: { node: ">=14.17" }
 
   os-tmpdir@1.0.2:
     resolution:
@@ -7783,6 +7798,10 @@ snapshots:
     dependencies:
       undici-types: 6.21.0
 
+  "@types/oracledb@6.10.0":
+    dependencies:
+      "@types/node": 22.18.5
+
   "@types/parse-json@4.0.2": {}
 
   "@types/qs@6.14.0": {}
@@ -10208,6 +10227,8 @@ snapshots:
       log-symbols: 4.1.0
       strip-ansi: 6.0.1
       wcwidth: 1.0.1
+
+  oracledb@6.10.0: {}
 
   os-tmpdir@1.0.2: {}
 
