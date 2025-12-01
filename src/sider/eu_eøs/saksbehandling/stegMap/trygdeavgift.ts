@@ -15,13 +15,15 @@ interface TrygdeavgiftRelevantUI {
   harAvklaring: boolean;
 }
 
+let stegErGyldigState = false;
+
 class Trygdeavgift extends Steg {
   constructor(propsLight: PropsLight, stegPosisjon: number) {
     super(propsLight, stegPosisjon);
 
     this.kriterier = [
       {
-        exec: () => true,
+        exec: () => stegErGyldigState,
         nesteSteg: STEG.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK,
       },
     ];
@@ -45,7 +47,10 @@ class Trygdeavgift extends Steg {
       oppdaterData: (felt: string, verdi: unknown) =>
         this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id!, felt, verdi),
       slettData: (data?: unknown) => this._propsLight.tilgjengeligeHandlers.slettStegData(this.id!, data),
-      oppdaterStatus: () => {}, // No-op: Step validity is managed internally by the component
+      oppdaterStatus: (isValid: boolean) => {
+        stegErGyldigState = isValid;
+        this._propsLight.tilgjengeligeHandlers.oppdater();
+      },
     };
 
     this.status = FANE_STATUS.OK;

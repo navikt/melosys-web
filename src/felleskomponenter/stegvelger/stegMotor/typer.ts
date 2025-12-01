@@ -74,6 +74,7 @@ export interface PropsLight {
     byggLovvalgsperioder: () => void;
     oppdaterStegData: (stegId: string, felt: string, verdi: unknown) => void;
     slettStegData: (stegId: string, data?: unknown) => void;
+    oppdater: () => void;
   };
 }
 

@@ -175,6 +175,16 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     !erÅpenSluttDato;
 
   useEffect(() => {
+    if (erEøsFaktureringAvTrygdeavgiftToggleEnabled && erEuEøs) {
+      const harEksisterendeVerdier =
+        formValues.skatteforholdsperioder?.some((s: Skatteforhold) => s.skatteplikttype) ||
+        formValues.inntektskilder?.some((i: Inntektskilde) => i.bruttoInntekt);
+
+      if (harEksisterendeVerdier) {
+        return;
+      }
+    }
+
     Api.Trygdeavgift.hentBeregnetTrygdeavgift(behandlingID).then((beregnetTrygdeavgift) => {
       if (
         erNyVurderingEllerManglendeInnbetaling &&
