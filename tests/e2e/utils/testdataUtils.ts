@@ -1,119 +1,241 @@
 /**
- * Prepopulerte test-saker i melosys-api database
- * Disse sakene opprettes automatisk ved oppstart av melosys-api (local-mock profil)
- * og kan brukes direkte uten å måtte opprette via UI.
+ * Test-saker i melosys-api database for Playwright e2e-tester.
+ * Metadata hentes dynamisk fra backend via /internal/e2e/testdata/reset.
  *
  * Alle saker tilhører testbruker: 30056928150
  *
- * HVER TEST FÅR SIN EGEN UNIKE SAK for full isolasjon (68 saker):
- * MEL-1001 til MEL-1012: opprettAvtalelandSak (12 saker - UNDER_BEHANDLING)
- * MEL-1013 til MEL-1022: opprettUtenforAvtalelandSak (10 saker - UNDER_BEHANDLING)
- * MEL-1023 til MEL-1050: opprettUtenforAvtalelandSakMedAarsavregning (28 årsavregning-saker - UNDER_BEHANDLING)
- * MEL-1051 til MEL-1053: opprettEUEOSSak (3 saker - UNDER_BEHANDLING)
- * MEL-1054 til MEL-1056: opprettEøsPensjonistSakMedTrygdeavgift (3 saker - UNDER_BEHANDLING)
+ * HVER TEST FÅR SIN EGEN UNIKE SAK for full isolasjon (71 saker):
+ * MEL-1001 til MEL-1011: Avtaleland UNDER_BEHANDLING (11 saker)
+ * MEL-1012: Avtaleland OPPRETTET (1 sak)
+ * MEL-1013 til MEL-1022: Utenfor avtaleland UNDER_BEHANDLING (10 saker)
+ * MEL-1023 til MEL-1050: Utenfor avtaleland med årsavregning (28 saker)
+ * MEL-1051 til MEL-1053: EU/EØS IKKE_YRKESAKTIV UNDER_BEHANDLING (3 saker)
+ * MEL-1054 til MEL-1056: EU/EØS Pensjonist med trygdeavgift (3 saker)
  * MEL-1057 til MEL-1062: OPPRETTET saker for "knytt til eksisterende" tester (6 saker)
  * MEL-1063 til MEL-1068: AVSLUTTET saker for "knytt til eksisterende" tester (6 saker)
+ * MEL-1069: Avtaleland for varselmelding-test (1 sak)
+ * MEL-1070: Utenfor avtaleland AVSLUTTET (1 sak)
+ * MEL-1071: EU/EØS IKKE_YRKESAKTIV for regresjon-test (1 sak)
+ */
+
+import { existsSync, readFileSync } from "fs";
+import { dirname, join } from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+const API_BASE_URL = process.env.API_BASE_URL || "http://localhost:8080";
+
+/**
+ * Metadata for en test-sak fra backend
+ */
+interface SakMetadata {
+  behandlingID: number;
+  sakstype: string;
+  sakstema: string;
+  behandlingstema: string;
+  behandlingstype: string;
+  behandlingsstatus: string;
+}
+
+/**
+ * Respons fra /internal/e2e/testdata/reset
+ */
+interface ResetResponse {
+  status: string;
+  cleared: number;
+  created: number;
+  wasReset: boolean;
+  testFnr: string;
+  caseRange: string;
+  metadata: Record<string, SakMetadata>;
+  message: string;
+}
+
+/**
+ * Cache for metadata hentet fra backend
+ */
+let cachedMetadata: Record<string, SakMetadata> | null = null;
+
+/**
+ * Laster metadata fra fil (skrevet av globalSetup)
+ */
+function loadMetadataFromFile(): Record<string, SakMetadata> | null {
+  try {
+    const metadataPath = join(__dirname, "..", ".testdata-metadata.json");
+    if (existsSync(metadataPath)) {
+      const content = readFileSync(metadataPath, "utf-8");
+      return JSON.parse(content);
+    }
+  } catch {
+    // Ignorer feil - metadata må hentes via resetTestData()
+  }
+  return null;
+}
+
+/**
+ * Alle gyldige saksnummer
+ */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- Used only for type inference
+const ALL_SAKSNUMMER = [
+  // MEL-1001 til MEL-1011: Avtaleland UNDER_BEHANDLING
+  "MEL-1001",
+  "MEL-1002",
+  "MEL-1003",
+  "MEL-1004",
+  "MEL-1005",
+  "MEL-1006",
+  "MEL-1007",
+  "MEL-1008",
+  "MEL-1009",
+  "MEL-1010",
+  "MEL-1011",
+  // MEL-1012: Avtaleland OPPRETTET
+  "MEL-1012",
+  // MEL-1013 til MEL-1022: Utenfor avtaleland UNDER_BEHANDLING
+  "MEL-1013",
+  "MEL-1014",
+  "MEL-1015",
+  "MEL-1016",
+  "MEL-1017",
+  "MEL-1018",
+  "MEL-1019",
+  "MEL-1020",
+  "MEL-1021",
+  "MEL-1022",
+  // MEL-1023 til MEL-1050: Utenfor avtaleland med årsavregning
+  "MEL-1023",
+  "MEL-1024",
+  "MEL-1025",
+  "MEL-1026",
+  "MEL-1027",
+  "MEL-1028",
+  "MEL-1029",
+  "MEL-1030",
+  "MEL-1031",
+  "MEL-1032",
+  "MEL-1033",
+  "MEL-1034",
+  "MEL-1035",
+  "MEL-1036",
+  "MEL-1037",
+  "MEL-1038",
+  "MEL-1039",
+  "MEL-1040",
+  "MEL-1041",
+  "MEL-1042",
+  "MEL-1043",
+  "MEL-1044",
+  "MEL-1045",
+  "MEL-1046",
+  "MEL-1047",
+  "MEL-1048",
+  "MEL-1049",
+  "MEL-1050",
+  // MEL-1051 til MEL-1053: EU/EØS IKKE_YRKESAKTIV
+  "MEL-1051",
+  "MEL-1052",
+  "MEL-1053",
+  // MEL-1054 til MEL-1056: EU/EØS Pensjonist med trygdeavgift
+  "MEL-1054",
+  "MEL-1055",
+  "MEL-1056",
+  // MEL-1057 til MEL-1062: OPPRETTET saker
+  "MEL-1057",
+  "MEL-1058",
+  "MEL-1059",
+  "MEL-1060",
+  "MEL-1061",
+  "MEL-1062",
+  // MEL-1063 til MEL-1068: AVSLUTTET saker
+  "MEL-1063",
+  "MEL-1064",
+  "MEL-1065",
+  "MEL-1066",
+  "MEL-1067",
+  "MEL-1068",
+  // MEL-1069 til MEL-1071: Diverse
+  "MEL-1069",
+  "MEL-1070",
+  "MEL-1071",
+] as const;
+
+export type PrepopulertSaksnummer = (typeof ALL_SAKSNUMMER)[number];
+
+/**
+ * Resetter testdata i backend og henter oppdatert metadata.
+ * Kall denne i globalSetup eller før test-suiten starter.
  *
- * Metadata for prepopulerte saker - brukes til å konstruere URL-er
+ * @returns Metadata for alle test-saker inkludert behandlings-ID-er
  */
-const PREPOPULATED_SAK_METADATA = {
-  // MEL-1001 til MEL-1012: opprettAvtalelandSak (12 saker)
-  "MEL-1001": { sakstype: "TRYGDEAVTALE", behandlingstema: "YRKESAKTIV", behandlingID: 1 },
-  "MEL-1002": { sakstype: "TRYGDEAVTALE", behandlingstema: "YRKESAKTIV", behandlingID: 2 },
-  "MEL-1003": { sakstype: "TRYGDEAVTALE", behandlingstema: "YRKESAKTIV", behandlingID: 3 },
-  "MEL-1004": { sakstype: "TRYGDEAVTALE", behandlingstema: "YRKESAKTIV", behandlingID: 4 },
-  "MEL-1005": { sakstype: "TRYGDEAVTALE", behandlingstema: "YRKESAKTIV", behandlingID: 5 },
-  "MEL-1006": { sakstype: "TRYGDEAVTALE", behandlingstema: "YRKESAKTIV", behandlingID: 6 },
-  "MEL-1007": { sakstype: "TRYGDEAVTALE", behandlingstema: "YRKESAKTIV", behandlingID: 7 },
-  "MEL-1008": { sakstype: "TRYGDEAVTALE", behandlingstema: "YRKESAKTIV", behandlingID: 8 },
-  "MEL-1009": { sakstype: "TRYGDEAVTALE", behandlingstema: "YRKESAKTIV", behandlingID: 9 },
-  "MEL-1010": { sakstype: "TRYGDEAVTALE", behandlingstema: "YRKESAKTIV", behandlingID: 10 },
-  "MEL-1011": { sakstype: "TRYGDEAVTALE", behandlingstema: "YRKESAKTIV", behandlingID: 11 },
-  "MEL-1012": { sakstype: "TRYGDEAVTALE", behandlingstema: "YRKESAKTIV", behandlingID: 12 },
+export async function resetTestData(): Promise<Record<string, SakMetadata>> {
+  /* eslint-disable-next-line no-console */
+  console.log("Resetting test data via /internal/e2e/testdata/reset...");
 
-  // MEL-1013 til MEL-1022: opprettUtenforAvtalelandSak (10 saker)
-  "MEL-1013": { sakstype: "FTRL", behandlingstema: "YRKESAKTIV", behandlingID: 13 },
-  "MEL-1014": { sakstype: "FTRL", behandlingstema: "YRKESAKTIV", behandlingID: 14 },
-  "MEL-1015": { sakstype: "FTRL", behandlingstema: "YRKESAKTIV", behandlingID: 15 },
-  "MEL-1016": { sakstype: "FTRL", behandlingstema: "YRKESAKTIV", behandlingID: 16 },
-  "MEL-1017": { sakstype: "FTRL", behandlingstema: "YRKESAKTIV", behandlingID: 17 },
-  "MEL-1018": { sakstype: "FTRL", behandlingstema: "YRKESAKTIV", behandlingID: 18 },
-  "MEL-1019": { sakstype: "FTRL", behandlingstema: "YRKESAKTIV", behandlingID: 19 },
-  "MEL-1020": { sakstype: "FTRL", behandlingstema: "YRKESAKTIV", behandlingID: 20 },
-  "MEL-1021": { sakstype: "FTRL", behandlingstema: "YRKESAKTIV", behandlingID: 21 },
-  "MEL-1022": { sakstype: "FTRL", behandlingstema: "YRKESAKTIV", behandlingID: 22 },
+  const response = await fetch(`${API_BASE_URL}/internal/e2e/testdata/reset`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+  });
 
-  // MEL-1023 til MEL-1050: opprettUtenforAvtalelandSakMedAarsavregning (28 årsavregning-saker)
-  "MEL-1023": { sakstype: "FTRL", behandlingstema: "YRKESAKTIV", behandlingstype: "ÅRSAVREGNING", behandlingID: 23 },
-  "MEL-1024": { sakstype: "FTRL", behandlingstema: "YRKESAKTIV", behandlingstype: "ÅRSAVREGNING", behandlingID: 24 },
-  "MEL-1025": { sakstype: "FTRL", behandlingstema: "YRKESAKTIV", behandlingstype: "ÅRSAVREGNING", behandlingID: 25 },
-  "MEL-1026": { sakstype: "FTRL", behandlingstema: "YRKESAKTIV", behandlingstype: "ÅRSAVREGNING", behandlingID: 26 },
-  "MEL-1027": { sakstype: "FTRL", behandlingstema: "YRKESAKTIV", behandlingstype: "ÅRSAVREGNING", behandlingID: 27 },
-  "MEL-1028": { sakstype: "FTRL", behandlingstema: "YRKESAKTIV", behandlingstype: "ÅRSAVREGNING", behandlingID: 28 },
-  "MEL-1029": { sakstype: "FTRL", behandlingstema: "YRKESAKTIV", behandlingstype: "ÅRSAVREGNING", behandlingID: 29 },
-  "MEL-1030": { sakstype: "FTRL", behandlingstema: "YRKESAKTIV", behandlingstype: "ÅRSAVREGNING", behandlingID: 30 },
-  "MEL-1031": { sakstype: "FTRL", behandlingstema: "YRKESAKTIV", behandlingstype: "ÅRSAVREGNING", behandlingID: 31 },
-  "MEL-1032": { sakstype: "FTRL", behandlingstema: "YRKESAKTIV", behandlingstype: "ÅRSAVREGNING", behandlingID: 32 },
-  "MEL-1033": { sakstype: "FTRL", behandlingstema: "YRKESAKTIV", behandlingstype: "ÅRSAVREGNING", behandlingID: 33 },
-  "MEL-1034": { sakstype: "FTRL", behandlingstema: "YRKESAKTIV", behandlingstype: "ÅRSAVREGNING", behandlingID: 34 },
-  "MEL-1035": { sakstype: "FTRL", behandlingstema: "YRKESAKTIV", behandlingstype: "ÅRSAVREGNING", behandlingID: 35 },
-  "MEL-1036": { sakstype: "FTRL", behandlingstema: "YRKESAKTIV", behandlingstype: "ÅRSAVREGNING", behandlingID: 36 },
-  "MEL-1037": { sakstype: "FTRL", behandlingstema: "YRKESAKTIV", behandlingstype: "ÅRSAVREGNING", behandlingID: 37 },
-  "MEL-1038": { sakstype: "FTRL", behandlingstema: "YRKESAKTIV", behandlingstype: "ÅRSAVREGNING", behandlingID: 38 },
-  "MEL-1039": { sakstype: "FTRL", behandlingstema: "YRKESAKTIV", behandlingstype: "ÅRSAVREGNING", behandlingID: 39 },
-  "MEL-1040": { sakstype: "FTRL", behandlingstema: "YRKESAKTIV", behandlingstype: "ÅRSAVREGNING", behandlingID: 40 },
-  "MEL-1041": { sakstype: "FTRL", behandlingstema: "YRKESAKTIV", behandlingstype: "ÅRSAVREGNING", behandlingID: 41 },
-  "MEL-1042": { sakstype: "FTRL", behandlingstema: "YRKESAKTIV", behandlingstype: "ÅRSAVREGNING", behandlingID: 42 },
-  "MEL-1043": { sakstype: "FTRL", behandlingstema: "YRKESAKTIV", behandlingstype: "ÅRSAVREGNING", behandlingID: 43 },
-  "MEL-1044": { sakstype: "FTRL", behandlingstema: "YRKESAKTIV", behandlingstype: "ÅRSAVREGNING", behandlingID: 44 },
-  "MEL-1045": { sakstype: "FTRL", behandlingstema: "YRKESAKTIV", behandlingstype: "ÅRSAVREGNING", behandlingID: 45 },
-  "MEL-1046": { sakstype: "FTRL", behandlingstema: "YRKESAKTIV", behandlingstype: "ÅRSAVREGNING", behandlingID: 46 },
-  "MEL-1047": { sakstype: "FTRL", behandlingstema: "YRKESAKTIV", behandlingstype: "ÅRSAVREGNING", behandlingID: 47 },
-  "MEL-1048": { sakstype: "FTRL", behandlingstema: "YRKESAKTIV", behandlingstype: "ÅRSAVREGNING", behandlingID: 48 },
-  "MEL-1049": { sakstype: "FTRL", behandlingstema: "YRKESAKTIV", behandlingstype: "ÅRSAVREGNING", behandlingID: 49 },
-  "MEL-1050": { sakstype: "FTRL", behandlingstema: "YRKESAKTIV", behandlingstype: "ÅRSAVREGNING", behandlingID: 50 },
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`Failed to reset test data: ${response.status} ${errorText}`);
+  }
 
-  // MEL-1051 til MEL-1053: opprettEUEOSSak (3 saker)
-  "MEL-1051": { sakstype: "EU_EOS", behandlingstema: "IKKE_YRKESAKTIV", behandlingID: 51 },
-  "MEL-1052": { sakstype: "EU_EOS", behandlingstema: "IKKE_YRKESAKTIV", behandlingID: 52 },
-  "MEL-1053": { sakstype: "EU_EOS", behandlingstema: "IKKE_YRKESAKTIV", behandlingID: 53 },
+  const data: ResetResponse = await response.json();
 
-  // MEL-1054 til MEL-1056: opprettEøsPensjonistSakMedTrygdeavgift (3 saker)
-  "MEL-1054": { sakstype: "EU_EOS", behandlingstema: "PENSJONIST", behandlingID: 54 },
-  "MEL-1055": { sakstype: "EU_EOS", behandlingstema: "PENSJONIST", behandlingID: 55 },
-  "MEL-1056": { sakstype: "EU_EOS", behandlingstema: "PENSJONIST", behandlingID: 56 },
+  if (data.status !== "OK") {
+    throw new Error(`Reset failed: ${data.message}`);
+  }
 
-  // MEL-1057 til MEL-1062: OPPRETTET saker for "knytt til eksisterende" tester (6 saker)
-  "MEL-1057": { sakstype: "TRYGDEAVTALE", behandlingstema: "YRKESAKTIV", behandlingID: 57 },
-  "MEL-1058": { sakstype: "TRYGDEAVTALE", behandlingstema: "YRKESAKTIV", behandlingID: 58 },
-  "MEL-1059": { sakstype: "FTRL", behandlingstema: "YRKESAKTIV", behandlingID: 59 },
-  "MEL-1060": { sakstype: "FTRL", behandlingstema: "YRKESAKTIV", behandlingID: 60 },
-  "MEL-1061": { sakstype: "EU_EOS", behandlingstema: "IKKE_YRKESAKTIV", behandlingID: 61 },
-  "MEL-1062": { sakstype: "EU_EOS", behandlingstema: "PENSJONIST", behandlingID: 62 },
-
-  // MEL-1063 til MEL-1068: AVSLUTTET saker for "knytt til eksisterende" tester (6 saker)
-  "MEL-1063": { sakstype: "TRYGDEAVTALE", behandlingstema: "YRKESAKTIV", behandlingID: 63 },
-  "MEL-1064": { sakstype: "TRYGDEAVTALE", behandlingstema: "YRKESAKTIV", behandlingID: 64 },
-  "MEL-1065": { sakstype: "FTRL", behandlingstema: "YRKESAKTIV", behandlingID: 65 },
-  "MEL-1066": { sakstype: "FTRL", behandlingstema: "YRKESAKTIV", behandlingID: 66 },
-  "MEL-1067": { sakstype: "EU_EOS", behandlingstema: "IKKE_YRKESAKTIV", behandlingID: 67 },
-  "MEL-1068": { sakstype: "EU_EOS", behandlingstema: "PENSJONIST", behandlingID: 68 },
-} as const;
+  /* eslint-disable-next-line no-console */
+  console.log(`Test data reset complete: ${data.message}`);
+  cachedMetadata = data.metadata;
+  return data.metadata;
+}
 
 /**
- * Union type av alle gyldige prepopulerte saksnummer
+ * Henter cached metadata. Prøver først fra cache, deretter fra fil.
  */
-export type PrepopulertSaksnummer = keyof typeof PREPOPULATED_SAK_METADATA;
+function getMetadata(): Record<string, SakMetadata> {
+  if (!cachedMetadata) {
+    // Prøv å laste fra fil (skrevet av globalSetup)
+    cachedMetadata = loadMetadataFromFile();
+  }
+  if (!cachedMetadata) {
+    throw new Error("Test metadata not initialized. Ensure globalSetup has run or call resetTestData() first.");
+  }
+  return cachedMetadata;
+}
 
 /**
- * Hjelpefunksjon for å få URL til en prepopulert sak
+ * Henter metadata for en spesifikk sak
+ */
+export function hentSakMetadata(saksnummer: PrepopulertSaksnummer): SakMetadata {
+  const metadata = getMetadata();
+  const sakMetadata = metadata[saksnummer];
+  if (!sakMetadata) {
+    throw new Error(`No metadata found for ${saksnummer}. Available: ${Object.keys(metadata).join(", ")}`);
+  }
+  return sakMetadata;
+}
+
+/**
+ * Henter behandlings-ID for en sak
+ */
+export function hentBehandlingID(saksnummer: PrepopulertSaksnummer): number {
+  return hentSakMetadata(saksnummer).behandlingID;
+}
+
+/**
+ * Hjelpefunksjon for å få URL til en test-sak
  * @param saksnummer - Saksnummer (f.eks. "MEL-1001")
  * @returns URL til behandlingssiden for saken
  */
 export function hentPrepopulertSakUrl(saksnummer: PrepopulertSaksnummer): string {
-  const metadata = PREPOPULATED_SAK_METADATA[saksnummer];
-  const { sakstype, behandlingstema, behandlingID } = metadata;
-  const behandlingstype = "behandlingstype" in metadata ? metadata.behandlingstype : undefined;
+  const metadata = hentSakMetadata(saksnummer);
+  const { sakstype, behandlingstema, behandlingstype, behandlingID } = metadata;
 
   // Konstruer URL basert på sakstype, behandlingstema og behandlingstype
   // Matcher routing.jsx struktur (med /melosys base path)
@@ -129,9 +251,14 @@ export function hentPrepopulertSakUrl(saksnummer: PrepopulertSaksnummer): string
     // /melosys/EU_EOS/pensjonist/:saksnr?behandlingID=X
     url = `/melosys/EU_EOS/pensjonist/${saksnummer}`;
   } else {
-    // /melosys/:sakstype/saksbehandling/:saksnr?behandlingID=X (default for TRYGDEAVTALE, FTRL, EU_EOS med andre tema)
+    // /melosys/:sakstype/saksbehandling/:saksnr?behandlingID=X
     url = `/melosys/${sakstype}/saksbehandling/${saksnummer}`;
   }
 
   return `${url}?behandlingID=${behandlingID}`;
 }
+
+/**
+ * Test-FNR som brukes for alle test-saker
+ */
+export const TEST_FNR = "30056928150";
