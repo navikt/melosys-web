@@ -31,7 +31,7 @@ class Periode extends Steg {
 
     this.kriterier = [
       {
-        exec: () => !!this._propsLight.lovvalgsbestemmelse,
+        exec: () => this._propsLight.lovvalgsbestemmelse != null,
         nesteSteg: STEG.VURDERING_TRYGDEAVGIFT,
       },
     ];
@@ -45,7 +45,7 @@ class Periode extends Steg {
       aktivtSteg: _propsLight.aktivtSteg,
     });
     this.beregnRelevantUI = (): PeriodeRelevantUI => ({
-      stegErGyldig: !!this._propsLight.lovvalgsbestemmelse,
+      stegErGyldig: this._propsLight.lovvalgsbestemmelse != null,
     });
 
     this.handlers = {
