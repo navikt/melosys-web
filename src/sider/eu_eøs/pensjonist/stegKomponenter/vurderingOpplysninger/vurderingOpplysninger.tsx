@@ -125,7 +125,6 @@ export function VurderingOpplysninger({ bekreft, oppdaterStatus, aktivtSteg }: P
   };
 
   const bekreftOgFortsett = async () => {
-    if (isPending) return;
     await dispatch(helseutgiftDekkesPeriodeOperations.hentHelseutgiftDekkesPeriode(behandlingID));
     if (skalHenteRegisteropplysninger) {
       setVisOppfrisk(true);

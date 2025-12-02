@@ -534,7 +534,7 @@ describe("VurderingOpplysninger", () => {
       expect(nesteBtn).toBeDisabled();
     });
 
-    it("skal ikke kalle dispatch når isPending er true", async () => {
+    it("skal ikke kalle dispatch når knappen er disabled pga PENDING status", async () => {
       const user = userEvent.setup();
 
       // Opprett store med PENDING status
