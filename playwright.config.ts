@@ -33,6 +33,9 @@ export default defineConfig({
 
     /* Capture screenshot on failure */
     screenshot: "only-on-failure",
+
+    /* Record video */
+    video: "on", // Ta opp alle tester
   },
 
   /* Configure projects for major browsers */
