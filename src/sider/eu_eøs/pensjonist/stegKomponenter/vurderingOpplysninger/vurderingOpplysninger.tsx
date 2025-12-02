@@ -41,7 +41,7 @@ export function VurderingOpplysninger({ bekreft, oppdaterStatus, aktivtSteg }: P
   const [visOppfrisk, setVisOppfrisk] = useState(false);
 
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
-  const isPending = useSelector(helseutgiftDekkesPeriodeSelector.HelseutgiftDekkesPeriodeErPendingSelector);
+  const erPending = useSelector(helseutgiftDekkesPeriodeSelector.HelseutgiftDekkesPeriodeErPendingSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const helseutgiftDekkesPeriode = useSelector(helseutgiftDekkesPeriodeSelector.HelseutgiftDekkesPeriodeSelector).data;
   const { fomDato, tomDato, bostedLandkode } = helseutgiftDekkesPeriode;
@@ -185,7 +185,7 @@ export function VurderingOpplysninger({ bekreft, oppdaterStatus, aktivtSteg }: P
 
       <Mui.StegKnapper
         bekreftKnappProps={{
-          disabled: !redigerbart || !formIsValid || isPending,
+          disabled: !redigerbart || !formIsValid || erPending,
           onClick: bekreftOgFortsett,
         }}
       />
