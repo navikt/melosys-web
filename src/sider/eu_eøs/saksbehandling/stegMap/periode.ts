@@ -16,7 +16,7 @@ interface PeriodeRelevanteData {
 
 interface PeriodeRelevantUI {
   [key: string]: unknown; // Index signature for base class compatibility
-  harAvklaring: boolean;
+  stegErGyldig: boolean;
 }
 
 class Periode extends Steg {
@@ -29,16 +29,12 @@ class Periode extends Steg {
         ? MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART11_5
         : propsLight.lovvalgsbestemmelse;
 
-    const lovvalgsbestemmelseSomSkalLagres = propsLight.lovvalgsbestemmelse;
-
     this.kriterier = [
       {
-        exec: () => true, // Alltid gå videre til vedtak
+        exec: () => this._propsLight.lovvalgsbestemmelse != null,
         nesteSteg: STEG.VURDERING_TRYGDEAVGIFT,
       },
     ];
-
-    const harAvklaring = !!lovvalgsbestemmelseSomSkalLagres;
 
     this.id = STEG.VURDERING_PERIODE;
     this.tittel = "Periode";
@@ -46,12 +42,12 @@ class Periode extends Steg {
     this.samleRelevanteData = (_propsLight: PropsLight): PeriodeRelevanteData => ({
       redigerbart: _propsLight.generiskStegRedigerbart,
       lovvalgsbestemmelseSomSkalVises,
-      lovvalgsbestemmelseSomSkalLagres,
       aktivtSteg: _propsLight.aktivtSteg,
     });
     this.beregnRelevantUI = (): PeriodeRelevantUI => ({
-      harAvklaring,
+      stegErGyldig: this._propsLight.lovvalgsbestemmelse != null,
     });
+
     this.handlers = {
       bekreftOgFortsett: propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
       tilbake: propsLight.tilgjengeligeHandlers.tilbake,

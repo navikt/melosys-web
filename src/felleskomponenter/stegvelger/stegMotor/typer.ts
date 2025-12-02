@@ -67,12 +67,14 @@ export interface PropsLight {
   aktivtSteg: boolean;
   avklartefakta?: unknown[];
   vilkar?: unknown[];
+  stegErGyldig?: boolean;
   tilgjengeligeHandlers: {
     bekreftOgFortsett: () => void;
     tilbake: () => void;
     byggLovvalgsperioder: () => void;
     oppdaterStegData: (stegId: string, felt: string, verdi: unknown) => void;
     slettStegData: (stegId: string, data?: unknown) => void;
+    oppdater: () => void;
   };
 }
 
