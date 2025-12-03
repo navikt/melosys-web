@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "../../../recording/fixtures";
 import { runAxeAnalyze } from "../../../utils/axeUtils";
 import { HovedsidePage, USER_ID_VALID } from "../../../pages/hovedside.page";
 import { OpprettNySakPage } from "../../../pages/opprett-ny-sak/opprett-ny-sak.page";
@@ -17,7 +17,7 @@ import { BehandlingPage } from "../../../pages/behandling/behandling.page";
 test.describe("'Utenfor avtaleland' behandlingslogikk", () => {
   let opprettNySakPage: OpprettNySakPage;
 
-  test.beforeEach(async ({ page }) => {
+  test.beforeEach(async ({ page, apiRecorder }) => {
     const mainPage = new HovedsidePage(page);
     opprettNySakPage = new OpprettNySakPage(page);
 
@@ -26,7 +26,10 @@ test.describe("'Utenfor avtaleland' behandlingslogikk", () => {
     await mainPage.klikkOpprettNySakKnapp();
   });
 
-  test("AC1: Utenfor avtaleland med åpen behandling - kun årsavregning tilgjengelig", async ({ page }, testInfo) => {
+  test("AC1: Utenfor avtaleland med åpen behandling - kun årsavregning tilgjengelig", async ({
+    page,
+    apiRecorder,
+  }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout siden vi oppretter sak
 
     // Bruk prepopulert FTRL-sak med UNDER_BEHANDLING status
@@ -51,7 +54,7 @@ test.describe("'Utenfor avtaleland' behandlingslogikk", () => {
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("AC2: Utenfor avtaleland med åpen årsavregning - finner sak", async ({ page }, testInfo) => {
+  test("AC2: Utenfor avtaleland med åpen årsavregning - finner sak", async ({ page, apiRecorder }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout siden vi oppretter sak + årsavregning
 
     // Bruk prepopulert FTRL-sak med UNDER_BEHANDLING status

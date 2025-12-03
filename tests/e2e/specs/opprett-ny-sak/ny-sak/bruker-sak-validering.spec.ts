@@ -1,4 +1,4 @@
-import { Page, test } from "@playwright/test";
+import { Page, test } from "../../../recording/fixtures";
 import { runAxeAnalyze } from "../../../utils/axeUtils";
 import { HovedsidePage, USER_ID_VALID } from "../../../pages/hovedside.page";
 import { OpprettNySakPage } from "../../../pages/opprett-ny-sak/opprett-ny-sak.page";
@@ -16,7 +16,7 @@ async function setupOpprettNySakTester(page: Page) {
 }
 
 test.describe("'Opprett ny sak for bruker", () => {
-  test.beforeEach(async ({ page }) => {
+  test.beforeEach(async ({ page, apiRecorder }) => {
     const mainPage = new HovedsidePage(page);
     opprettNySakPage = new OpprettNySakPage(page);
 
@@ -24,7 +24,7 @@ test.describe("'Opprett ny sak for bruker", () => {
     await mainPage.klikkOpprettNySakKnapp();
   });
 
-  test("Manglende påkrevde felt - viser feilmeldinger", async ({ page }, testInfo) => {
+  test("Manglende påkrevde felt - viser feilmeldinger", async ({ page, apiRecorder }, testInfo) => {
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgOpprettNySak();
     await opprettNySakPage.klikkOpprettNyBehandling();
@@ -40,7 +40,7 @@ test.describe("'Opprett ny sak for bruker", () => {
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("Alle påkrevde felt utfylt - oppretter behandling", async ({ page }, testInfo) => {
+  test("Alle påkrevde felt utfylt - oppretter behandling", async ({ page, apiRecorder }, testInfo) => {
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgOpprettNySak();
 

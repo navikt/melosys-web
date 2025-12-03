@@ -1,4 +1,4 @@
-import { test } from "@playwright/test";
+import { test } from "../../../recording/fixtures";
 import { runAxeAnalyze } from "../../../utils/axeUtils";
 import { HovedsidePage, ORG_NUMBER_VALID } from "../../../pages/hovedside.page";
 import { OpprettNySakPage } from "../../../pages/opprett-ny-sak/opprett-ny-sak.page";
@@ -7,7 +7,7 @@ import { assertFieldError, assertNyBehandlingOpprettet } from "../../../utils/te
 let opprettNySakPage: OpprettNySakPage;
 
 test.describe("'Opprett ny sak for virksomhet", () => {
-  test.beforeEach(async ({ page }) => {
+  test.beforeEach(async ({ page, apiRecorder }) => {
     const mainPage = new HovedsidePage(page);
     opprettNySakPage = new OpprettNySakPage(page);
 
@@ -15,7 +15,7 @@ test.describe("'Opprett ny sak for virksomhet", () => {
     await mainPage.klikkOpprettNySakKnapp();
   });
 
-  test("Manglende påkrevde felt - viser feilmeldinger", async ({ page }, testInfo) => {
+  test("Manglende påkrevde felt - viser feilmeldinger", async ({ page, apiRecorder }, testInfo) => {
     await opprettNySakPage.velgVirksomhet();
     await opprettNySakPage.fyllInnOrganisasjonsnummer("123456789");
     await opprettNySakPage.klikkOpprettNyBehandling();

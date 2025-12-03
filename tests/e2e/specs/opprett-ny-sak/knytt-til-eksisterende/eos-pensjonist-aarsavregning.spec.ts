@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "../../../recording/fixtures";
 import { runAxeAnalyze } from "../../../utils/axeUtils";
 import { HovedsidePage, USER_ID_VALID } from "../../../pages/hovedside.page";
 import { OpprettNySakPage } from "../../../pages/opprett-ny-sak/opprett-ny-sak.page";
@@ -9,12 +9,12 @@ let hovedsidePage: HovedsidePage;
 
 // MELOSYS-7603
 test.describe("EØS pensjonist med trygdeavgift - årsavregning", () => {
-  test.beforeEach(async ({ page }) => {
+  test.beforeEach(async ({ page, apiRecorder }) => {
     hovedsidePage = new HovedsidePage(page);
     opprettNySakPage = new OpprettNySakPage(page);
   });
 
-  test("Opprett EØS pensjonist-sak med trygdeavgift for testdata", async ({ page }, testInfo) => {
+  test("Opprett EØS pensjonist-sak med trygdeavgift for testdata", async ({ page, apiRecorder }, testInfo) => {
     // Denne testen oppretter testdata som brukes av de andre testene
     const url = hentPrepopulertSakUrl("MEL-1055");
 
@@ -24,7 +24,10 @@ test.describe("EØS pensjonist med trygdeavgift - årsavregning", () => {
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("Knytt til EØS pensjonist-sak med åpne behandlinger - årsavregning tilgjengelig", async ({ page }, testInfo) => {
+  test("Knytt til EØS pensjonist-sak med åpne behandlinger - årsavregning tilgjengelig", async ({
+    page,
+    apiRecorder,
+  }, testInfo) => {
     // Bruk prepopulert OPPRETTET EØS pensjonist-sak MEL-1062
     // Test at EØS pensjonister med trygdeavgift kan opprette årsavregning
     // selv om de har aktive behandlinger (unntak fra vanlig EØS-regel)

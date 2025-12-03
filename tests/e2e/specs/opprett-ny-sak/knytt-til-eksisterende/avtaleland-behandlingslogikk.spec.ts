@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "../../../recording/fixtures";
 import { runAxeAnalyze } from "../../../utils/axeUtils";
 import { HovedsidePage, USER_ID_VALID } from "../../../pages/hovedside.page";
 import { OpprettNySakPage } from "../../../pages/opprett-ny-sak/opprett-ny-sak.page";
@@ -16,7 +16,7 @@ import { TIMEOUT_FOR_COMPLEX_TESTS } from "../../../utils/testUtils";
 test.describe("Avtaleland behandlingslogikk (regresjon)", () => {
   let opprettNySakPage: OpprettNySakPage;
 
-  test.beforeEach(async ({ page }) => {
+  test.beforeEach(async ({ page, apiRecorder }) => {
     const mainPage = new HovedsidePage(page);
     opprettNySakPage = new OpprettNySakPage(page);
 
@@ -25,7 +25,7 @@ test.describe("Avtaleland behandlingslogikk (regresjon)", () => {
     await mainPage.klikkOpprettNySakKnapp();
   });
 
-  test("Regresjon: Avtaleland med åpen behandling - viser varselmelding", async ({ page }, testInfo) => {
+  test("Regresjon: Avtaleland med åpen behandling - viser varselmelding", async ({ page, apiRecorder }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
 
     // Bruk prepopulert Avtaleland-sak med UNDER_BEHANDLING status
@@ -64,7 +64,7 @@ test.describe("Avtaleland behandlingslogikk (regresjon)", () => {
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("Regresjon: Avtaleland med henlagt søknad - viser varselmelding", async ({ page }, testInfo) => {
+  test("Regresjon: Avtaleland med henlagt søknad - viser varselmelding", async ({ page, apiRecorder }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
 
     const hovedsidePage = new HovedsidePage(page);

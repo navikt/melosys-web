@@ -1,4 +1,4 @@
-import { test } from "@playwright/test";
+import { test } from "../../../recording/fixtures";
 import { TrygdeavgiftPage } from "../../../pages/behandling/trygdeavgift.page";
 import { InngangPage } from "../../../pages/behandling/inngang.page";
 import { BehandlingPage } from "../../../pages/behandling/behandling.page";
@@ -19,7 +19,7 @@ import { runAxeAnalyze } from "../../../utils/axeUtils";
  */
 
 test.describe("EU/EØS Trygdeavgift", () => {
-  test("skal vise inntektskilder når bruker ikke er skattepliktig", async ({ page }, testInfo) => {
+  test("skal vise inntektskilder når bruker ikke er skattepliktig", async ({ page, apiRecorder }, testInfo) => {
     const behandlingPage = new BehandlingPage(page);
 
     // Hent URL til prepopulert EØS pensjonist-sak med trygdeavgift og naviger direkte dit

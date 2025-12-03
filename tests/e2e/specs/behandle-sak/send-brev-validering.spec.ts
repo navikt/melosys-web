@@ -1,4 +1,4 @@
-import { Page, test } from "@playwright/test";
+import { Page, test } from "../../recording/fixtures";
 import { SendBrevPage } from "../../pages/behandling/send-brev.page";
 import { assertErrors, TIMEOUT_FOR_COMPLEX_TESTS } from "../../utils/testUtils";
 import { runAxeAnalyze } from "../../utils/axeUtils";
@@ -19,20 +19,29 @@ async function setupSendBrevTest(page: Page, saksnummer: string = "MEL-1003") {
 }
 
 test.describe("Verifiser disable/enable av 'Send brev' knapp", () => {
-  test("'Send brev' knappen er disabled når hverken mottaker eller brevmal er valgt ", async ({ page }, testInfo) => {
+  test("'Send brev' knappen er disabled når hverken mottaker eller brevmal er valgt ", async ({
+    page,
+    apiRecorder,
+  }, testInfo) => {
     await setupSendBrevTest(page, "MEL-1003");
     await sendBrevPage.verifiserSendKnappDeaktivert();
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("'Send brev' knappen er disabled når mottaker er valgt men ikke brevmal", async ({ page }, testInfo) => {
+  test("'Send brev' knappen er disabled når mottaker er valgt men ikke brevmal", async ({
+    page,
+    apiRecorder,
+  }, testInfo) => {
     await setupSendBrevTest(page, "MEL-1004");
     await sendBrevPage.selectFirstMottaker();
     await sendBrevPage.verifiserSendKnappDeaktivert();
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("'Send brev' knappen blir enabled når både mottaker og brevmal er valgt", async ({ page }, testInfo) => {
+  test("'Send brev' knappen blir enabled når både mottaker og brevmal er valgt", async ({
+    page,
+    apiRecorder,
+  }, testInfo) => {
     await setupSendBrevTest(page, "MEL-1005");
     await sendBrevPage.selectFirstMottaker();
     await sendBrevPage.selectFirstBrevmal();
@@ -42,7 +51,10 @@ test.describe("Verifiser disable/enable av 'Send brev' knapp", () => {
 });
 
 test.describe("Validering av brevmaler for mottaker 'Bruker eller brukers fullmektig'", () => {
-  test("Korrekt validering for brevmal 'Melding om manglende opplysninger til bruker'", async ({ page }, testInfo) => {
+  test("Korrekt validering for brevmal 'Melding om manglende opplysninger til bruker'", async ({
+    page,
+    apiRecorder,
+  }, testInfo) => {
     await setupSendBrevTest(page, "MEL-1006");
     await sendBrevPage.selectMottakerByLabel("Bruker eller brukers fullmektig");
     await sendBrevPage.selectBrevmalByLabel("Melding om manglende opplysninger til bruker");
@@ -56,7 +68,7 @@ test.describe("Validering av brevmaler for mottaker 'Bruker eller brukers fullme
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("Korrekt validering for brevmal 'Fritekstbrev til bruker'", async ({ page }, testInfo) => {
+  test("Korrekt validering for brevmal 'Fritekstbrev til bruker'", async ({ page, apiRecorder }, testInfo) => {
     await setupSendBrevTest(page, "MEL-1007");
     await sendBrevPage.selectMottakerByLabel("Bruker eller brukers fullmektig");
     await sendBrevPage.selectBrevmalByLabel("Fritekstbrev til bruker");

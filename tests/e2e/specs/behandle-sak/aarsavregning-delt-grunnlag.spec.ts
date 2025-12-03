@@ -1,4 +1,4 @@
-import { test, Page, expect } from "@playwright/test";
+import { test, Page, expect } from "../../recording/fixtures";
 import { TIMEOUT_FOR_COMPLEX_TESTS } from "../../utils/testUtils";
 import { BehandlingPage } from "../../pages/behandling/behandling.page";
 import { AarsavregningPage } from "../../pages/behandling/aarsavregning.page";
@@ -74,7 +74,10 @@ async function setupAarsavregningTest(page: Page, saksnummer: PrepopulertSaksnum
 // Hver test oppretter sine egne testdata via setupAarsavregningTest
 test.describe("Årsavregning delt grunnlag - Alle tester", () => {
   test.describe("AC1 - Medlemskapsperiode validering", () => {
-    test("Kan legge til ny medlemskapsperiode etter å ha valgt delt grunnlag", async ({ page }, testInfo) => {
+    test("Kan legge til ny medlemskapsperiode etter å ha valgt delt grunnlag", async ({
+      page,
+      apiRecorder,
+    }, testInfo) => {
       test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Sett timeout til 30 sekunder for setup
       await setupAarsavregningTest(page, "MEL-1026");
       // Velg "Ja" på spør
@@ -110,7 +113,7 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
       await runAxeAnalyze(page, testInfo.title);
     });
 
-    test("Datepicker skal fungere for fra-dato på ny medlemskapsperiode", async ({ page }, testInfo) => {
+    test("Datepicker skal fungere for fra-dato på ny medlemskapsperiode", async ({ page, apiRecorder }, testInfo) => {
       test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
       await setupAarsavregningTest(page, "MEL-1024");
       // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet
@@ -144,7 +147,10 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
       await runAxeAnalyze(page, testInfo.title);
     });
 
-    test("Kan legge til sammenhengende medlemskapsperiode innenfor samme år", async ({ page }, testInfo) => {
+    test("Kan legge til sammenhengende medlemskapsperiode innenfor samme år", async ({
+      page,
+      apiRecorder,
+    }, testInfo) => {
       test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
       await setupAarsavregningTest(page, "MEL-1025");
       // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet
@@ -174,7 +180,10 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
   });
 
   test.describe("AC2 - Skatteforholdsperiode validering", () => {
-    test("Kan legge til ny skatteforholdsperiode etter å ha valgt delt grunnlag", async ({ page }, testInfo) => {
+    test("Kan legge til ny skatteforholdsperiode etter å ha valgt delt grunnlag", async ({
+      page,
+      apiRecorder,
+    }, testInfo) => {
       test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
       await setupAarsavregningTest(page, "MEL-1041");
       // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet
@@ -204,7 +213,7 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
       await runAxeAnalyze(page, testInfo.title);
     });
 
-    test("Kan utvide skatteforholdsperiode innenfor medlemskapsperiode", async ({ page }, testInfo) => {
+    test("Kan utvide skatteforholdsperiode innenfor medlemskapsperiode", async ({ page, apiRecorder }, testInfo) => {
       test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
       await setupAarsavregningTest(page, "MEL-1042");
       // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet
@@ -267,7 +276,10 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
       await runAxeAnalyze(page, testInfo.title);
     });
 
-    test("kan legge til ny periode med pliktig bestemmelse og delt grunnlag", async ({ page }, testInfo) => {
+    test("kan legge til ny periode med pliktig bestemmelse og delt grunnlag", async ({
+      page,
+      apiRecorder,
+    }, testInfo) => {
       test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
       await setupAarsavregningTest(page, "MEL-1044");
       // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet (delt grunnlag)
@@ -302,7 +314,7 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
   });
 
   test.describe("AC3 - Inntektsperiode validering", () => {
-    test("Kan legge til ny inntektsperiode etter å ha valgt delt grunnlag", async ({ page }, testInfo) => {
+    test("Kan legge til ny inntektsperiode etter å ha valgt delt grunnlag", async ({ page, apiRecorder }, testInfo) => {
       test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
       await setupAarsavregningTest(page, "MEL-1045");
       // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet
@@ -339,7 +351,7 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
       await runAxeAnalyze(page, testInfo.title);
     });
 
-    test("Kan utvide inntektsperiode innenfor medlemskapsperiode", async ({ page }, testInfo) => {
+    test("Kan utvide inntektsperiode innenfor medlemskapsperiode", async ({ page, apiRecorder }, testInfo) => {
       test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
       await setupAarsavregningTest(page, "MEL-1046");
       // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet
@@ -380,7 +392,7 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
       await runAxeAnalyze(page, testInfo.title);
     });
 
-    test("Kan legge til flere inntektsperioder innenfor samme år", async ({ page }, testInfo) => {
+    test("Kan legge til flere inntektsperioder innenfor samme år", async ({ page, apiRecorder }, testInfo) => {
       test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
       await setupAarsavregningTest(page, "MEL-1047");
       // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet

@@ -1,4 +1,4 @@
-import { test } from "@playwright/test";
+import { test } from "../../../recording/fixtures";
 import { TIMEOUT_FOR_COMPLEX_TESTS } from "../../../utils/testUtils";
 import { BehandlingPage } from "../../../pages/behandling/behandling.page";
 import { hentPrepopulertSakUrl } from "../../../utils/testdataUtils";
@@ -15,7 +15,7 @@ import { runAxeAnalyze } from "../../../utils/axeUtils";
  * - EU/EØS vurder utpeking (vurderutpeking.jsx)
  */
 test.describe("EU/EØS Stegvelger - Navigasjon", () => {
-  test("EU/EØS-behandling åpnes - viser stegvelger", async ({ page }, testInfo) => {
+  test("EU/EØS-behandling åpnes - viser stegvelger", async ({ page, apiRecorder }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
 
     const behandlingPage = new BehandlingPage(page);
@@ -27,7 +27,7 @@ test.describe("EU/EØS Stegvelger - Navigasjon", () => {
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("Navigasjon mellom steg - frem og tilbake fungerer", async ({ page }, testInfo) => {
+  test("Navigasjon mellom steg - frem og tilbake fungerer", async ({ page, apiRecorder }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
 
     const behandlingPage = new BehandlingPage(page);
@@ -39,7 +39,7 @@ test.describe("EU/EØS Stegvelger - Navigasjon", () => {
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("Progressbar - viser alle steg", async ({ page }, testInfo) => {
+  test("Progressbar - viser alle steg", async ({ page, apiRecorder }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
 
     const behandlingPage = new BehandlingPage(page);

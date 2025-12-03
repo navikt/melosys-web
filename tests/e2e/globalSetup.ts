@@ -1,12 +1,25 @@
 /**
  * Playwright global setup - kjøres én gang før alle tester.
  * Renser database og mock-data, deretter initialiserer testdata.
+ *
+ * I playback mode (E2E_MODE=playback) hoppes database-operasjoner over
+ * siden mock-serveren ikke trenger ekte testdata.
  */
 import { resetTestData } from "./utils/testdataUtils";
 import { withDatabase } from "./utils/databaseHelper";
-import { writeFileSync } from "fs";
+import { writeFileSync, existsSync, readFileSync, mkdirSync } from "fs";
 import { tmpdir } from "os";
-import { join } from "path";
+import { join, dirname } from "path";
+import { fileURLToPath } from "url";
+import { getTestMode, shouldUseMockServer, shouldRecordResponses } from "./config/mode";
+
+// ES module equivalent of __dirname
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// Path for HAR recording
+const RECORDINGS_DIR = join(__dirname, "recordings");
+const HAR_FILE = join(RECORDINGS_DIR, "api-recordings.har");
 
 const MOCK_BASE_URL = process.env.MOCK_BASE_URL || "http://localhost:8083";
 
@@ -49,7 +62,33 @@ async function clearOracleTestData(): Promise<void> {
 
 async function globalSetup() {
   /* eslint-disable no-console */
-  console.log("\n Global setup: Initializing test data...\n");
+  const mode = getTestMode();
+  console.log(`\n Global setup: Mode = ${mode}\n`);
+
+  // In playback mode, skip all database operations
+  if (shouldUseMockServer()) {
+    console.log(" Playback mode: Skipping database setup (using mock server)");
+
+    // Try to load existing metadata from recordings or use dummy metadata
+    const metadataPath = join(tmpdir(), "melosys-e2e-testdata-metadata.json");
+    const recordingsMetadataPath = join(__dirname, "recordings", "metadata.json");
+
+    if (existsSync(recordingsMetadataPath)) {
+      // Copy metadata from recordings directory
+      const metadata = readFileSync(recordingsMetadataPath, "utf-8");
+      writeFileSync(metadataPath, metadata);
+      console.log(` Loaded metadata from recordings: ${recordingsMetadataPath}\n`);
+    } else {
+      // Create minimal dummy metadata for playback
+      const dummyMetadata = createDummyMetadata();
+      writeFileSync(metadataPath, JSON.stringify(dummyMetadata, null, 2));
+      console.log(` Created dummy metadata for playback\n`);
+    }
+
+    return;
+  }
+
+  console.log(" Initializing test data...\n");
 
   try {
     // 1. Slett mock-data (oppgaver, journalposter, etc.)
@@ -71,11 +110,41 @@ async function globalSetup() {
     const metadataPath = join(tmpdir(), "melosys-e2e-testdata-metadata.json");
     writeFileSync(metadataPath, JSON.stringify(metadata, null, 2));
     console.log(`  Metadata saved to ${metadataPath}\n`);
+
+    // In record mode, also save metadata to recordings directory for playback
+    if (mode === "record") {
+      const recordingsMetadataPath = join(__dirname, "recordings", "metadata.json");
+      writeFileSync(recordingsMetadataPath, JSON.stringify(metadata, null, 2));
+      console.log(`  Metadata also saved to ${recordingsMetadataPath} for playback\n`);
+    }
   } catch (error) {
     console.error(" Failed to initialize test data:", error);
     throw error;
   }
   /* eslint-enable no-console */
+}
+
+/**
+ * Create dummy metadata for playback mode when no recorded metadata exists.
+ * This provides enough structure for tests to run with the mock server.
+ */
+function createDummyMetadata(): Record<string, unknown> {
+  const metadata: Record<string, unknown> = {};
+
+  // Create dummy entries for MEL-1001 to MEL-1071
+  for (let i = 1001; i <= 1071; i++) {
+    metadata[`MEL-${i}`] = {
+      saksnummer: `MEL-${i}`,
+      behandlingID: i,
+      sakstype: "AVTALELAND",
+      sakstema: "MEDLEMSKAP_TRYGDEAVGIFT",
+      behandlingstema: "AVTALELAND_UNDER_BEHANDLING",
+      behandlingstype: "FØRSTEGANGSBEHANDLING",
+      behandlingsstatus: "UNDER_BEHANDLING",
+    };
+  }
+
+  return metadata;
 }
 
 export default globalSetup;
