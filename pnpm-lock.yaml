@@ -7,6 +7,8 @@ settings:
 overrides:
   js-yaml: ^4.1.1
   glob@>=10.2.0 <10.5.0: ^10.5.0
+  ws: ^8.17.1
+  tmp: ^0.2.4
 
 importers:
   .:
@@ -3988,7 +3990,7 @@ packages:
     resolution:
       { integrity: sha512-muId7Zzn9ywDsyXgTIafTry2sV3nySZeUDe6YedVd1Hvuuep5AsIlqK+XefWpYTyJG5e503F2xIuT2lcU6rCSw== }
     peerDependencies:
-      ws: "*"
+      ws: ^8.17.1
 
   istanbul-lib-coverage@3.2.2:
     resolution:
@@ -4560,11 +4562,6 @@ packages:
     resolution:
       { integrity: sha512-5b6Y85tPxZZ7QytO+BQzysW31HJku27cRIlkbAXaNx+BdcVi+LlRFmVXzeF6a7JCwJpyw5c4b+YSVImQIrBpuQ== }
     engines: { node: ">=10" }
-
-  os-tmpdir@1.0.2:
-    resolution:
-      { integrity: sha512-D2FR03Vir7FIu45XBY20mTb+/ZSWB00sjU9jdQXt83gDrI4Ztz5Fs7/yy74g2N5SVQY4xY1qDr4rNddwYRVX0g== }
-    engines: { node: ">=0.10.0" }
 
   outvariant@1.4.3:
     resolution:
@@ -5576,10 +5573,10 @@ packages:
       { integrity: sha512-Y1KQBgDd/NUc+LfOtKS6mNsC9CCaH+m2P1RoIZy7RAPo3C3/t8X45+zgut31cRZtZ3xKPjfn3TkGTrctC2TQIQ== }
     hasBin: true
 
-  tmp@0.0.33:
+  tmp@0.2.5:
     resolution:
-      { integrity: sha512-jRCJlojKnZ3addtTOjdIqoRuPEKBvNXcGYqzO6zWZX8KfKEpnGY5jfggJQ3EjKuu8D4bJRr0y+cYJFmYbImXGw== }
-    engines: { node: ">=0.6.0" }
+      { integrity: sha512-voyz6MApa1rQGUxT3E+BK7/ROe8itEx7vD8/HEvt4xwXucvQ5G5oeEiHkmHZJuBO21RpOf+YYm9MOivj709jow== }
+    engines: { node: ">=14.14" }
 
   to-regex-range@5.0.1:
     resolution:
@@ -6014,19 +6011,6 @@ packages:
   wrappy@1.0.2:
     resolution:
       { integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ== }
-
-  ws@8.13.0:
-    resolution:
-      { integrity: sha512-x9vcZYTrFPC7aSIbj7sRCYo7L/Xb8Iy+pW0ng0wt2vCJv7M9HOMy0UoN3rr+IFC7hb7vXoqS+P9ktyLLLhO+LA== }
-    engines: { node: ">=10.0.0" }
-    peerDependencies:
-      bufferutil: ^4.0.1
-      utf-8-validate: ">=5.0.2"
-    peerDependenciesMeta:
-      bufferutil:
-        optional: true
-      utf-8-validate:
-        optional: true
 
   ws@8.18.2:
     resolution:
@@ -7067,9 +7051,9 @@ snapshots:
       "@types/ws": 8.18.1
       graphql: 16.11.0
       graphql-ws: 5.12.1(graphql@16.11.0)
-      isomorphic-ws: 5.0.0(ws@8.13.0)
+      isomorphic-ws: 5.0.0(ws@8.18.2)
       tslib: 2.8.1
-      ws: 8.13.0
+      ws: 8.18.2
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -7093,9 +7077,9 @@ snapshots:
       "@graphql-tools/utils": 9.2.1(graphql@16.11.0)
       "@types/ws": 8.18.1
       graphql: 16.11.0
-      isomorphic-ws: 5.0.0(ws@8.13.0)
+      isomorphic-ws: 5.0.0(ws@8.18.2)
       tslib: 2.8.1
-      ws: 8.13.0
+      ws: 8.18.2
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -9109,7 +9093,7 @@ snapshots:
     dependencies:
       chardet: 0.7.0
       iconv-lite: 0.4.24
-      tmp: 0.0.33
+      tmp: 0.2.5
 
   extract-files@11.0.0: {}
 
@@ -9690,10 +9674,6 @@ snapshots:
 
   isexe@2.0.0: {}
 
-  isomorphic-ws@5.0.0(ws@8.13.0):
-    dependencies:
-      ws: 8.13.0
-
   isomorphic-ws@5.0.0(ws@8.18.2):
     dependencies:
       ws: 8.18.2
@@ -10213,8 +10193,6 @@ snapshots:
       log-symbols: 4.1.0
       strip-ansi: 6.0.1
       wcwidth: 1.0.1
-
-  os-tmpdir@1.0.2: {}
 
   outvariant@1.4.3: {}
 
@@ -11053,9 +11031,7 @@ snapshots:
     dependencies:
       tldts-core: 7.0.17
 
-  tmp@0.0.33:
-    dependencies:
-      os-tmpdir: 1.0.2
+  tmp@0.2.5: {}
 
   to-regex-range@5.0.1:
     dependencies:
@@ -11475,8 +11451,6 @@ snapshots:
       strip-ansi: 7.1.0
 
   wrappy@1.0.2: {}
-
-  ws@8.13.0: {}
 
   ws@8.18.2: {}
 
