@@ -19,11 +19,8 @@
  */
 
 import { existsSync, readFileSync } from "fs";
-import { dirname, join } from "path";
-import { fileURLToPath } from "url";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+import { tmpdir } from "os";
+import { join } from "path";
 
 const API_BASE_URL = process.env.API_BASE_URL || "http://localhost:8080";
 
@@ -63,7 +60,7 @@ let cachedMetadata: Record<string, SakMetadata> | null = null;
  */
 function loadMetadataFromFile(): Record<string, SakMetadata> | null {
   try {
-    const metadataPath = join(__dirname, "..", ".testdata-metadata.json");
+    const metadataPath = join(tmpdir(), "melosys-e2e-testdata-metadata.json");
     if (existsSync(metadataPath)) {
       const content = readFileSync(metadataPath, "utf-8");
       return JSON.parse(content);

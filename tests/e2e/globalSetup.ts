@@ -5,11 +5,8 @@
 import { resetTestData } from "./utils/testdataUtils";
 import { withDatabase } from "./utils/databaseHelper";
 import { writeFileSync } from "fs";
-import { dirname, join } from "path";
-import { fileURLToPath } from "url";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+import { tmpdir } from "os";
+import { join } from "path";
 
 const MOCK_BASE_URL = process.env.MOCK_BASE_URL || "http://localhost:8083";
 
@@ -69,9 +66,9 @@ async function globalSetup() {
     const sakCount = Object.keys(metadata).length;
     console.log(`  Test data initialized: ${sakCount} saker klar for testing\n`);
 
-    // Lagre metadata til fil slik at test-workers kan lese den
+    // Lagre metadata til temp-fil slik at test-workers kan lese den
     // (Playwright kjører globalSetup i en egen prosess)
-    const metadataPath = join(__dirname, ".testdata-metadata.json");
+    const metadataPath = join(tmpdir(), "melosys-e2e-testdata-metadata.json");
     writeFileSync(metadataPath, JSON.stringify(metadata, null, 2));
     console.log(`  Metadata saved to ${metadataPath}\n`);
   } catch (error) {
