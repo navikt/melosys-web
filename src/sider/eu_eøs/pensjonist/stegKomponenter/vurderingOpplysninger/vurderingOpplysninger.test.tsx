@@ -530,7 +530,7 @@ describe("VurderingOpplysninger", () => {
 
       const nesteBtn = screen.getByTestId("neste-btn");
 
-      // Knappen skal være disabled når isPending er true
+      // Knappen skal være disabled når helseutgiftDekkesPeriodeErPending er true
       expect(nesteBtn).toBeDisabled();
     });
 
