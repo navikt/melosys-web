@@ -7,7 +7,7 @@ import VurderingOpplysninger from "./vurderingOpplysninger";
 import { FellesHandlersContext } from "../../../../../contexts";
 
 /**
- * UNIT TESTER FOR VURDERINGOPPLYSNINGER - MELOSYS-7642
+ * UNIT TESTER FOR VURDERINGOPPLYSNINGER
  *
  * Disse testene verifiserer kritisk forretningslogikk for oppfriskning av registeropplysninger:
  * - Når skal oppfrisk-dialog vises vs direkte navigasjon
@@ -27,6 +27,7 @@ vi.mock("../../../../../ducks/helseutgiftdekkesperiode", () => ({
   },
   helseutgiftDekkesPeriodeSelector: {
     HelseutgiftDekkesPeriodeSelector: (state: any) => state.helseutgiftdekkesperiode,
+    HelseutgiftDekkesPeriodeErPendingSelector: (state: any) => state.helseutgiftdekkesperiode?.status === "PENDING",
   },
 }));
 
@@ -140,7 +141,7 @@ const mockDispatch = vi.fn((action: any) => {
   return Promise.resolve(action);
 });
 
-describe("VurderingOpplysninger - MELOSYS-7642", () => {
+describe("VurderingOpplysninger", () => {
   const mockBekreft = vi.fn();
   const mockTilbake = vi.fn();
   const mockOppdaterStatus = vi.fn();
@@ -504,6 +505,63 @@ describe("VurderingOpplysninger - MELOSYS-7642", () => {
       );
 
       expect(container.firstChild).toBeNull();
+    });
+  });
+
+  describe("Dobbeltklikk-beskyttelse", () => {
+    it("skal disable knappen når status er PENDING", async () => {
+      // Opprett store med PENDING status
+      const pendingState = {
+        ...defaultState,
+        helseutgiftdekkesperiode: {
+          ...defaultState.helseutgiftdekkesperiode,
+          status: "PENDING",
+        },
+      };
+      const mockStore = createMockStore(pendingState);
+
+      render(
+        <Provider store={mockStore}>
+          <FellesHandlersContext.Provider value={contextValue}>
+            <VurderingOpplysninger {...defaultProps} />
+          </FellesHandlersContext.Provider>
+        </Provider>,
+      );
+
+      const nesteBtn = screen.getByTestId("neste-btn");
+
+      // Knappen skal være disabled når helseutgiftDekkesPeriodeErPending er true
+      expect(nesteBtn).toBeDisabled();
+    });
+
+    it("skal ikke kalle dispatch når knappen er disabled pga PENDING status", async () => {
+      const user = userEvent.setup();
+
+      // Opprett store med PENDING status
+      const pendingState = {
+        ...defaultState,
+        helseutgiftdekkesperiode: {
+          ...defaultState.helseutgiftdekkesperiode,
+          status: "PENDING",
+        },
+      };
+      const mockStore = createMockStore(pendingState);
+
+      render(
+        <Provider store={mockStore}>
+          <FellesHandlersContext.Provider value={contextValue}>
+            <VurderingOpplysninger {...defaultProps} />
+          </FellesHandlersContext.Provider>
+        </Provider>,
+      );
+
+      const nesteBtn = screen.getByTestId("neste-btn");
+
+      // Forsøk å klikke på disabled knapp (ingenting skal skje)
+      await user.click(nesteBtn);
+
+      // dispatch skal ikke kalles siden knappen er disabled
+      expect(mockDispatch).not.toHaveBeenCalled();
     });
   });
 

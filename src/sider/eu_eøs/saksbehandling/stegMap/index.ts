@@ -33,10 +33,14 @@ import Vedtak from "./vedtak";
 import EndrePeriode from "./endre_periode";
 import Videresend from "./videresend";
 import VurderArbeidsland from "./vurderarbeidsland";
+import Trygdeavgift from "./trygdeavgift";
+import Periode from "./periode";
 
 import { STEG } from "../../../../felleskomponenter/stegvelger";
 
-export const stegMap = new Map([
+// Map fra steg-ID til deres constructor-klasser
+// Bruker 'any' siden ulike steg-klasser har forskjellige metode-signaturer utover basis Steg-klassen
+export const stegMap: Map<string, any> = new Map([
   [STEG.INNGANG, Inngang],
   [STEG.AVSLAG_12_X_OG_16, Avslag_12_x_og_16],
   [STEG.ARTIKKEL_16_ANMODNING, Artikkel16Anmodning],
@@ -71,5 +75,7 @@ export const stegMap = new Map([
   [STEG.ENDRET_PERIODE, EndrePeriode],
   [STEG.VIDERESEND, Videresend],
   [STEG.VURDER_ARBEIDSLAND, VurderArbeidsland],
+  [STEG.VURDERING_PERIODE, Periode],
+  [STEG.VURDERING_TRYGDEAVGIFT, Trygdeavgift],
   [STEG.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK, ArbeidTjenestepersonEllerFlyVedtak],
-]);
+] as any);

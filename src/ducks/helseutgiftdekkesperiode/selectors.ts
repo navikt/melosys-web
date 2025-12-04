@@ -8,6 +8,7 @@
 import { createSelector, Selector } from "reselect";
 import { RootState, StateSection } from "AppTypes";
 import { HelseutgiftDekkesPeriodeDto } from "../../services/modules/helseutgiftDekkesPeriode/helseutgiftDekkesPeriode";
+import { STATUS } from "../../services";
 
 export const HelseutgiftDekkesPeriodeSelector: Selector<
   RootState,
@@ -15,7 +16,7 @@ export const HelseutgiftDekkesPeriodeSelector: Selector<
 > = createSelector(
   (state: RootState) => state.helseutgiftdekkesperiode,
   (helseutgiftdekkesperiode) => {
-    if (helseutgiftdekkesperiode?.status === "ERROR") {
+    if (helseutgiftdekkesperiode?.status === STATUS.ERROR) {
       return {
         ...helseutgiftdekkesperiode,
         data: {} as HelseutgiftDekkesPeriodeDto,
@@ -23,4 +24,9 @@ export const HelseutgiftDekkesPeriodeSelector: Selector<
     }
     return helseutgiftdekkesperiode;
   },
+);
+
+export const HelseutgiftDekkesPeriodeErPendingSelector: Selector<RootState, boolean> = createSelector(
+  (state: RootState) => state.helseutgiftdekkesperiode,
+  (helseutgiftdekkesperiode) => helseutgiftdekkesperiode?.status === STATUS.PENDING,
 );

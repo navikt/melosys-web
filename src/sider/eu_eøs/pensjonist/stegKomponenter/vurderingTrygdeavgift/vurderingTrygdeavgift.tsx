@@ -73,7 +73,8 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   };
 
   const erEøsPensjonist = sakstype === EU_EOS && behandlingstema === PENSJONIST;
-  const erNyVurdering = behandlingstype === NY_VURDERING;
+  const erNyVurderingEllerManglendeInnbetaling =
+    behandlingstype === NY_VURDERING || behandlingstype === MANGLENDE_INNBETALING_TRYGDEAVGIFT;
 
   const [lagretTrygdeavgift, setTrygdeavgift] = useState<BeregnetTrygdeavgift>();
 
@@ -84,8 +85,12 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   );
 
   const formattedDefaultPeriode = () => {
+    const justertFom = skalIkkeViseTidligerePerioderToggle
+      ? Utils.dato.justerDatoHvisTidligereÅr(helseutgiftDekkesPeriode?.fom)
+      : helseutgiftDekkesPeriode?.fom;
+
     return {
-      fomDato: Utils.dato.formatterDatoTilNorsk(helseutgiftDekkesPeriode?.fom),
+      fomDato: Utils.dato.formatterDatoTilNorsk(justertFom),
       tomDato: Utils.dato.formatterDatoTilNorsk(helseutgiftDekkesPeriode?.tom),
     };
   };
@@ -128,8 +133,17 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
 
   const skalIkkeBeregneForelopigTrygdeavgift =
     skalIkkeViseTidligerePerioderToggle &&
-    new Date(helseutgiftDekkesPeriode.tom).getFullYear() < new Date().getFullYear() &&
-    behandlingstype === NY_VURDERING;
+    new Date(helseutgiftDekkesPeriode.tom).getFullYear() < new Date().getFullYear();
+
+  const trygdeavgiftErIkkeTom = !Utils._isEmpty(lagretTrygdeavgift?.trygdeavgiftsperioder);
+
+  const skalViseSkatteforholdOgInntektsperioder =
+    !skalIkkeViseTidligerePerioderToggle ||
+    (trygdeavgiftErIkkeTom && !redigerbart) ||
+    !skalIkkeBeregneForelopigTrygdeavgift;
+
+  const harHelseutgiftDekkesPeriodeFraTidligereÅr =
+    new Date(helseutgiftDekkesPeriode.fom).getFullYear() < new Date().getFullYear();
 
   const stegErGyldig =
     (formIsValid || skalIkkeBeregneForelopigTrygdeavgift) && !feilMeldingBlokkerer(aktivFeilmeldingType) && !feil;
@@ -139,8 +153,6 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     formValues?.inntektskilder.some(
       (inntektskilde: Inntektskilde) => inntektskilde.bruttoInntekt && inntektskilde.bruttoInntekt !== 0,
     );
-
-  const trygdeavgiftErIkkeTom = !Utils._isEmpty(lagretTrygdeavgift?.trygdeavgiftsperioder);
 
   const harBeregnetForeløpigTrygdeavgift =
     !skalBeregneForelopigTrygdeavgift || trygdeavgiftErIkkeTom || !feil || skalIkkeBeregneForelopigTrygdeavgift;
@@ -152,7 +164,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
 
     if (
       !harBeregnetNyTrygdeavgift &&
-      erNyVurdering &&
+      erNyVurderingEllerManglendeInnbetaling &&
       inntektskilder.length > 0 &&
       skatteforholdsperioder.length > 0 &&
       redigerbart
@@ -169,7 +181,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
       setHarEndretHelseutgiftDekkesPeriode(true);
     }
 
-    if (harBeregnetForeløpigTrygdeavgift && erNyVurdering && lagretTrygdeavgift) {
+    if (harBeregnetForeløpigTrygdeavgift && erNyVurderingEllerManglendeInnbetaling && lagretTrygdeavgift) {
       trigger();
       setHarBeregnetNyTrygdeavgift(false);
       return;
@@ -177,7 +189,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
 
     Api.Trygdeavgift.hentBeregnetTrygdeavgiftEosPensjonist(behandlingID).then((beregnetTrygdeavgift) => {
       if (
-        behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING &&
+        erNyVurderingEllerManglendeInnbetaling &&
         beregnetTrygdeavgift.trygdeavgiftsgrunnlag.skatteforholdsperioder.length === 0
       ) {
         hentOpprinneligTrygdeavgiftsgrunnlag();
@@ -330,24 +342,21 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
         Trygdeavgift
       </Nav.Heading>
 
-      {behandlingstype === NY_VURDERING && !skalIkkeViseTidligerePerioderToggle && redigerbart && (
+      {erNyVurderingEllerManglendeInnbetaling && !skalIkkeViseTidligerePerioderToggle && redigerbart && (
         <Nav.BodyLong size="small" className="alert--spacing-bottom">
           Ved ny vurdering vises tidligere perioder med skatteforhold og inntekt. Gjør nødvendige endringer eller legg
           til en ny periode.
         </Nav.BodyLong>
       )}
 
-      {(behandlingstype === NY_VURDERING || behandlingstype === MANGLENDE_INNBETALING_TRYGDEAVGIFT) &&
-        skalIkkeViseTidligerePerioderToggle &&
-        redigerbart && (
-          <Alert variant="warning" size="small" className="alert--spacing-bottom">
-            Ved ny vurdering vises skatteforhold og inntekt fra inneværende år og fremover. Gjør nødvendige endringer
-            eller legg til en ny periode. Trygdeavgift for tidligere år skal fastsettes på årsavregning. Du skal derfor
-            ikke oppgi skatte- og inntektsperioder for tidligere år i denne behandlingen.
-          </Alert>
-        )}
+      {skalIkkeViseTidligerePerioderToggle && harHelseutgiftDekkesPeriodeFraTidligereÅr && redigerbart && (
+        <Alert variant="warning" size="small" className="alert--spacing-bottom">
+          Trygdeavgift for tidligere år skal fastsettes på årsavregning. Du skal derfor ikke oppgi skatte- og
+          inntektsperioder for tidligere år i denne behandlingen.
+        </Alert>
+      )}
 
-      {!skalIkkeBeregneForelopigTrygdeavgift && (
+      {skalViseSkatteforholdOgInntektsperioder && (
         <>
           <Nav.Heading size="xsmall">Oppgi informasjon om brukers skatteforhold</Nav.Heading>
           <Skatteforholdsperioder
@@ -362,7 +371,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
         </>
       )}
 
-      {skalViseInntektskilder && (
+      {skalViseInntektskilder && skalViseSkatteforholdOgInntektsperioder && (
         <>
           <LabelMedHjelpetekst
             label="Oppgi informasjon om brukers inntekt"

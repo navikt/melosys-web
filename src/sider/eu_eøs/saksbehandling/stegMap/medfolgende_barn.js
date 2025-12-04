@@ -1,7 +1,7 @@
 import MKV from "../../../../melosyskodeverk";
 import { BOOLSK_STRING } from "../../../../constants";
 
-import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
+import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/stegLegacy";
 import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
 import VurderingMedfolgendeBarn from "../../stegKomponenter/vurderingMedfolgendeBarn";
 import { hentFaktaListe } from "../../../../domeneUtils";
@@ -20,6 +20,10 @@ class VesentligVirksomhet extends Steg {
 
     const harAvklaring = this.harAvklaring(vurderingLovvalgBarnFakta, propsLight.medfolgendeBarn);
 
+    const NESTE_STEG = propsLight.eøsFaktureringAvTrygdeavgiftToggleEnabled
+      ? STEG.VURDERING_PERIODE
+      : STEG.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK;
+
     this.kriterier = [
       {
         exec: () => harAvklaring && utsendingsvilkårOppfylt,
@@ -31,7 +35,7 @@ class VesentligVirksomhet extends Steg {
       },
       {
         exec: () => harAvklaring && propsLight.erArbeidTjenestepersonEllerFly,
-        nesteSteg: STEG.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK,
+        nesteSteg: NESTE_STEG,
       },
     ];
 
