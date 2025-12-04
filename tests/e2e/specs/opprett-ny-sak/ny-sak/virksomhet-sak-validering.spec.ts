@@ -7,6 +7,9 @@ import { assertFieldError, assertNyBehandlingOpprettet } from "../../../utils/te
 let opprettNySakPage: OpprettNySakPage;
 
 test.describe("'Opprett ny sak for virksomhet", () => {
+  // Kjør tester serielt fordi de deler module-level state (opprettNySakPage)
+  test.describe.configure({ mode: "serial" });
+
   test.beforeEach(async ({ page, apiRecorder }) => {
     const mainPage = new HovedsidePage(page);
     opprettNySakPage = new OpprettNySakPage(page);

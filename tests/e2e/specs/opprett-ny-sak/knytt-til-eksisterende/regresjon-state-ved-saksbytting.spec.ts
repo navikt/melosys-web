@@ -22,6 +22,9 @@ import { TIMEOUT_FOR_COMPLEX_TESTS } from "../../../utils/testUtils";
  * - Parallell data-henting med Promise.all
  */
 test.describe("State-håndtering ved saksbytting", () => {
+  // Kjør tester serielt for å unngå race conditions med delt testdata
+  test.describe.configure({ mode: "serial" });
+
   let opprettNySakPage: OpprettNySakPage;
 
   test.beforeEach(async ({ page, apiRecorder }) => {

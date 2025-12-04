@@ -1,8 +1,8 @@
 {
   "version": "1.0",
-  "recordedAt": "2025-12-04T09:14:39.733Z",
-  "testFile": "/Users/rune/source/nav/melosys-web/tests/e2e/specs/basic/hovedside-søk.spec.ts",
-  "testName": "Søk etter gyldig ID og verifiser resultater",
+  "recordedAt": "2025-12-04T09:16:55.697Z",
+  "testFile": "/Users/rune/source/nav/melosys-web/tests/e2e/specs/opprett-ny-sak/knytt-til-eksisterende/regresjon-state-ved-saksbytting.spec.ts",
+  "testName": "Regresjon: Behandlingstema settes automatisk via Redux",
   "exchanges": [
     {
       "request": {
@@ -38,7 +38,7 @@
           "melosys.arsavregning.uten.flyt": false
         }
       },
-      "duration": 10,
+      "duration": 4,
       "dynamicFields": []
     },
     {
@@ -76,7 +76,7 @@
           }
         ]
       },
-      "duration": 11,
+      "duration": 6,
       "dynamicFields": []
     },
     {
@@ -1110,7 +1110,7 @@
           }
         ]
       },
-      "duration": 11,
+      "duration": 4,
       "dynamicFields": []
     },
     {
@@ -1488,7 +1488,7 @@
                 },
                 "erUnderOppdatering": false,
                 "registrertDato": "2025-12-04T09:14:25.591438Z",
-                "endretDato": "2025-12-04T09:14:25.641371Z",
+                "endretDato": "2025-12-04T09:14:48.038941Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1041",
@@ -1500,8 +1500,14 @@
                 "kode": "MEDLEMSKAP_LOVVALG",
                 "term": "Medlemskap og lovvalg"
               },
-              "land": null,
-              "periode": null,
+              "land": {
+                "landkoder": [],
+                "flereLandUkjentHvilke": false
+              },
+              "periode": {
+                "fom": null,
+                "tom": null
+              },
               "oppgaveBeskrivelse": "--- 04.12.2025 10:14 (srvmelosys, Melosys) ---\n  - MEL-1041\n",
               "sisteNotat": null
             },
@@ -1529,7 +1535,7 @@
                 },
                 "erUnderOppdatering": false,
                 "registrertDato": "2025-12-04T09:14:25.627510Z",
-                "endretDato": "2025-12-04T09:14:25.678249Z",
+                "endretDato": "2025-12-04T09:14:50.036782Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1042",
@@ -1541,8 +1547,14 @@
                 "kode": "MEDLEMSKAP_LOVVALG",
                 "term": "Medlemskap og lovvalg"
               },
-              "land": null,
-              "periode": null,
+              "land": {
+                "landkoder": [],
+                "flereLandUkjentHvilke": false
+              },
+              "periode": {
+                "fom": null,
+                "tom": null
+              },
               "oppgaveBeskrivelse": "--- 04.12.2025 10:14 (srvmelosys, Melosys) ---\n  - MEL-1042\n",
               "sisteNotat": null
             },
@@ -1570,7 +1582,7 @@
                 },
                 "erUnderOppdatering": false,
                 "registrertDato": "2025-12-04T09:14:25.663438Z",
-                "endretDato": "2025-12-04T09:14:25.715420Z",
+                "endretDato": "2025-12-04T09:14:52.031618Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1043",
@@ -1582,8 +1594,14 @@
                 "kode": "MEDLEMSKAP_LOVVALG",
                 "term": "Medlemskap og lovvalg"
               },
-              "land": null,
-              "periode": null,
+              "land": {
+                "landkoder": [],
+                "flereLandUkjentHvilke": false
+              },
+              "periode": {
+                "fom": null,
+                "tom": null
+              },
               "oppgaveBeskrivelse": "--- 04.12.2025 10:14 (srvmelosys, Melosys) ---\n  - MEL-1043\n",
               "sisteNotat": null
             },
@@ -1611,7 +1629,7 @@
                 },
                 "erUnderOppdatering": false,
                 "registrertDato": "2025-12-04T09:14:25.701085Z",
-                "endretDato": "2025-12-04T09:14:25.755260Z",
+                "endretDato": "2025-12-04T09:14:53.789814Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1044",
@@ -1623,8 +1641,14 @@
                 "kode": "MEDLEMSKAP_LOVVALG",
                 "term": "Medlemskap og lovvalg"
               },
-              "land": null,
-              "periode": null,
+              "land": {
+                "landkoder": [],
+                "flereLandUkjentHvilke": false
+              },
+              "periode": {
+                "fom": null,
+                "tom": null
+              },
               "oppgaveBeskrivelse": "--- 04.12.2025 10:14 (srvmelosys, Melosys) ---\n  - MEL-1044\n",
               "sisteNotat": null
             },
@@ -1652,7 +1676,7 @@
                 },
                 "erUnderOppdatering": false,
                 "registrertDato": "2025-12-04T09:14:25.740310Z",
-                "endretDato": "2025-12-04T09:14:25.792731Z",
+                "endretDato": "2025-12-04T09:14:55.693336Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1045",
@@ -1664,8 +1688,14 @@
                 "kode": "MEDLEMSKAP_LOVVALG",
                 "term": "Medlemskap og lovvalg"
               },
-              "land": null,
-              "periode": null,
+              "land": {
+                "landkoder": [],
+                "flereLandUkjentHvilke": false
+              },
+              "periode": {
+                "fom": null,
+                "tom": null
+              },
               "oppgaveBeskrivelse": "--- 04.12.2025 10:14 (srvmelosys, Melosys) ---\n  - MEL-1045\n",
               "sisteNotat": null
             },
@@ -1693,7 +1723,7 @@
                 },
                 "erUnderOppdatering": false,
                 "registrertDato": "2025-12-04T09:14:25.777081Z",
-                "endretDato": "2025-12-04T09:14:25.831176Z",
+                "endretDato": "2025-12-04T09:14:57.912031Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1046",
@@ -1705,8 +1735,14 @@
                 "kode": "MEDLEMSKAP_LOVVALG",
                 "term": "Medlemskap og lovvalg"
               },
-              "land": null,
-              "periode": null,
+              "land": {
+                "landkoder": [],
+                "flereLandUkjentHvilke": false
+              },
+              "periode": {
+                "fom": null,
+                "tom": null
+              },
               "oppgaveBeskrivelse": "--- 04.12.2025 10:14 (srvmelosys, Melosys) ---\n  - MEL-1046\n",
               "sisteNotat": null
             },
@@ -1734,7 +1770,7 @@
                 },
                 "erUnderOppdatering": false,
                 "registrertDato": "2025-12-04T09:14:25.814945Z",
-                "endretDato": "2025-12-04T09:14:25.865195Z",
+                "endretDato": "2025-12-04T09:15:00.158399Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1047",
@@ -1746,8 +1782,14 @@
                 "kode": "MEDLEMSKAP_LOVVALG",
                 "term": "Medlemskap og lovvalg"
               },
-              "land": null,
-              "periode": null,
+              "land": {
+                "landkoder": [],
+                "flereLandUkjentHvilke": false
+              },
+              "periode": {
+                "fom": null,
+                "tom": null
+              },
               "oppgaveBeskrivelse": "--- 04.12.2025 10:14 (srvmelosys, Melosys) ---\n  - MEL-1047\n",
               "sisteNotat": null
             },
@@ -1910,8 +1952,14 @@
                 "kode": "MEDLEMSKAP_LOVVALG",
                 "term": "Medlemskap og lovvalg"
               },
-              "land": null,
-              "periode": null,
+              "land": {
+                "landkoder": [],
+                "flereLandUkjentHvilke": false
+              },
+              "periode": {
+                "fom": null,
+                "tom": null
+              },
               "oppgaveBeskrivelse": "--- 04.12.2025 10:14 (srvmelosys, Melosys) ---\n  - MEL-1051\n",
               "sisteNotat": null
             },
@@ -1951,50 +1999,15 @@
                 "kode": "MEDLEMSKAP_LOVVALG",
                 "term": "Medlemskap og lovvalg"
               },
-              "land": null,
-              "periode": null,
+              "land": {
+                "landkoder": [],
+                "flereLandUkjentHvilke": false
+              },
+              "periode": {
+                "fom": null,
+                "tom": null
+              },
               "oppgaveBeskrivelse": "--- 04.12.2025 10:14 (srvmelosys, Melosys) ---\n  - MEL-1052\n",
-              "sisteNotat": null
-            },
-            {
-              "aktivTil": "2026-03-04",
-              "ansvarligID": "Z123456",
-              "oppgaveID": "10",
-              "prioritet": "NORM",
-              "navn": "TRIVIELL KARAFFEL",
-              "hovedpartIdent": "30056928150",
-              "versjon": 1,
-              "behandling": {
-                "behandlingID": 1711,
-                "behandlingstype": {
-                  "kode": "FØRSTEGANG",
-                  "term": "Førstegangsbehandling"
-                },
-                "behandlingstema": {
-                  "kode": "YRKESAKTIV",
-                  "term": "Yrkesaktiv"
-                },
-                "behandlingsstatus": {
-                  "kode": "UNDER_BEHANDLING",
-                  "term": "Behandlingen pågår"
-                },
-                "erUnderOppdatering": false,
-                "registrertDato": "2025-12-04T09:14:24.721298Z",
-                "endretDato": "2025-12-04T09:14:24.747449Z",
-                "svarFrist": null
-              },
-              "saksnummer": "MEL-1009",
-              "sakstype": {
-                "kode": "TRYGDEAVTALE",
-                "term": "Avtaleland"
-              },
-              "sakstema": {
-                "kode": "MEDLEMSKAP_LOVVALG",
-                "term": "Medlemskap og lovvalg"
-              },
-              "land": null,
-              "periode": null,
-              "oppgaveBeskrivelse": "--- 04.12.2025 10:14 (srvmelosys, Melosys) ---\n  - MEL-1009\n",
               "sisteNotat": null
             },
             {
@@ -2033,8 +2046,14 @@
                 "kode": "MEDLEMSKAP_LOVVALG",
                 "term": "Medlemskap og lovvalg"
               },
-              "land": null,
-              "periode": null,
+              "land": {
+                "landkoder": [],
+                "flereLandUkjentHvilke": false
+              },
+              "periode": {
+                "fom": null,
+                "tom": null
+              },
               "oppgaveBeskrivelse": "--- 04.12.2025 10:14 (srvmelosys, Melosys) ---\n  - MEL-1053\n",
               "sisteNotat": null
             },
@@ -2103,7 +2122,7 @@
                 },
                 "erUnderOppdatering": false,
                 "registrertDato": "2025-12-04T09:14:26.058701Z",
-                "endretDato": "2025-12-04T09:14:26.106625Z",
+                "endretDato": "2025-12-04T09:15:03.500679Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1054",
@@ -2115,8 +2134,14 @@
                 "kode": "TRYGDEAVGIFT",
                 "term": "Trygdeavgift"
               },
-              "land": null,
-              "periode": null,
+              "land": {
+                "landkoder": ["SE"],
+                "flereLandUkjentHvilke": false
+              },
+              "periode": {
+                "fom": null,
+                "tom": null
+              },
               "oppgaveBeskrivelse": "--- 04.12.2025 10:14 (srvmelosys, Melosys) ---\n  - MEL-1054\n",
               "sisteNotat": null
             },
@@ -2484,8 +2509,14 @@
                 "kode": "MEDLEMSKAP_LOVVALG",
                 "term": "Medlemskap og lovvalg"
               },
-              "land": null,
-              "periode": null,
+              "land": {
+                "landkoder": [],
+                "flereLandUkjentHvilke": false
+              },
+              "periode": {
+                "fom": null,
+                "tom": null
+              },
               "oppgaveBeskrivelse": "--- 04.12.2025 10:14 (srvmelosys, Melosys) ---\n  - MEL-1017\n",
               "sisteNotat": null
             },
@@ -2525,8 +2556,14 @@
                 "kode": "MEDLEMSKAP_LOVVALG",
                 "term": "Medlemskap og lovvalg"
               },
-              "land": null,
-              "periode": null,
+              "land": {
+                "landkoder": [],
+                "flereLandUkjentHvilke": false
+              },
+              "periode": {
+                "fom": null,
+                "tom": null
+              },
               "oppgaveBeskrivelse": "--- 04.12.2025 10:14 (srvmelosys, Melosys) ---\n  - MEL-1018\n",
               "sisteNotat": null
             },
@@ -2607,8 +2644,14 @@
                 "kode": "MEDLEMSKAP_LOVVALG",
                 "term": "Medlemskap og lovvalg"
               },
-              "land": null,
-              "periode": null,
+              "land": {
+                "landkoder": [],
+                "flereLandUkjentHvilke": false
+              },
+              "periode": {
+                "fom": null,
+                "tom": null
+              },
               "oppgaveBeskrivelse": "--- 04.12.2025 10:14 (srvmelosys, Melosys) ---\n  - MEL-1003\n",
               "sisteNotat": null
             },
@@ -2648,8 +2691,14 @@
                 "kode": "MEDLEMSKAP_LOVVALG",
                 "term": "Medlemskap og lovvalg"
               },
-              "land": null,
-              "periode": null,
+              "land": {
+                "landkoder": [],
+                "flereLandUkjentHvilke": false
+              },
+              "periode": {
+                "fom": null,
+                "tom": null
+              },
               "oppgaveBeskrivelse": "--- 04.12.2025 10:14 (srvmelosys, Melosys) ---\n  - MEL-1004\n",
               "sisteNotat": null
             },
@@ -2689,8 +2738,14 @@
                 "kode": "MEDLEMSKAP_LOVVALG",
                 "term": "Medlemskap og lovvalg"
               },
-              "land": null,
-              "periode": null,
+              "land": {
+                "landkoder": [],
+                "flereLandUkjentHvilke": false
+              },
+              "periode": {
+                "fom": null,
+                "tom": null
+              },
               "oppgaveBeskrivelse": "--- 04.12.2025 10:14 (srvmelosys, Melosys) ---\n  - MEL-1005\n",
               "sisteNotat": null
             },
@@ -2730,8 +2785,14 @@
                 "kode": "MEDLEMSKAP_LOVVALG",
                 "term": "Medlemskap og lovvalg"
               },
-              "land": null,
-              "periode": null,
+              "land": {
+                "landkoder": [],
+                "flereLandUkjentHvilke": false
+              },
+              "periode": {
+                "fom": null,
+                "tom": null
+              },
               "oppgaveBeskrivelse": "--- 04.12.2025 10:14 (srvmelosys, Melosys) ---\n  - MEL-1006\n",
               "sisteNotat": null
             },
@@ -2771,8 +2832,14 @@
                 "kode": "MEDLEMSKAP_LOVVALG",
                 "term": "Medlemskap og lovvalg"
               },
-              "land": null,
-              "periode": null,
+              "land": {
+                "landkoder": [],
+                "flereLandUkjentHvilke": false
+              },
+              "periode": {
+                "fom": null,
+                "tom": null
+              },
               "oppgaveBeskrivelse": "--- 04.12.2025 10:14 (srvmelosys, Melosys) ---\n  - MEL-1007\n",
               "sisteNotat": null
             },
@@ -3017,8 +3084,14 @@
                 "kode": "MEDLEMSKAP_LOVVALG",
                 "term": "Medlemskap og lovvalg"
               },
-              "land": null,
-              "periode": null,
+              "land": {
+                "landkoder": [],
+                "flereLandUkjentHvilke": false
+              },
+              "periode": {
+                "fom": null,
+                "tom": null
+              },
               "oppgaveBeskrivelse": "--- 04.12.2025 10:14 (srvmelosys, Melosys) ---\n  - MEL-1019\n",
               "sisteNotat": null
             },
@@ -3263,8 +3336,14 @@
                 "kode": "MEDLEMSKAP_LOVVALG",
                 "term": "Medlemskap og lovvalg"
               },
-              "land": null,
-              "periode": null,
+              "land": {
+                "landkoder": [],
+                "flereLandUkjentHvilke": false
+              },
+              "periode": {
+                "fom": null,
+                "tom": null
+              },
               "oppgaveBeskrivelse": "--- 04.12.2025 10:14 (srvmelosys, Melosys) ---\n  - MEL-1023\n",
               "sisteNotat": null
             },
@@ -3292,7 +3371,7 @@
                 },
                 "erUnderOppdatering": false,
                 "registrertDato": "2025-12-04T09:14:25.069255Z",
-                "endretDato": "2025-12-04T09:14:25.107686Z",
+                "endretDato": "2025-12-04T09:14:44.199749Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1024",
@@ -3304,8 +3383,14 @@
                 "kode": "MEDLEMSKAP_LOVVALG",
                 "term": "Medlemskap og lovvalg"
               },
-              "land": null,
-              "periode": null,
+              "land": {
+                "landkoder": [],
+                "flereLandUkjentHvilke": false
+              },
+              "periode": {
+                "fom": null,
+                "tom": null
+              },
               "oppgaveBeskrivelse": "--- 04.12.2025 10:14 (srvmelosys, Melosys) ---\n  - MEL-1024\n",
               "sisteNotat": null
             },
@@ -3333,7 +3418,7 @@
                 },
                 "erUnderOppdatering": false,
                 "registrertDato": "2025-12-04T09:14:25.097347Z",
-                "endretDato": "2025-12-04T09:14:25.135319Z",
+                "endretDato": "2025-12-04T09:14:46.102435Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1025",
@@ -3345,8 +3430,14 @@
                 "kode": "MEDLEMSKAP_LOVVALG",
                 "term": "Medlemskap og lovvalg"
               },
-              "land": null,
-              "periode": null,
+              "land": {
+                "landkoder": [],
+                "flereLandUkjentHvilke": false
+              },
+              "periode": {
+                "fom": null,
+                "tom": null
+              },
               "oppgaveBeskrivelse": "--- 04.12.2025 10:14 (srvmelosys, Melosys) ---\n  - MEL-1025\n",
               "sisteNotat": null
             },
@@ -3374,7 +3465,7 @@
                 },
                 "erUnderOppdatering": false,
                 "registrertDato": "2025-12-04T09:14:25.124403Z",
-                "endretDato": "2025-12-04T09:14:25.167561Z",
+                "endretDato": "2025-12-04T09:14:42.336771Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1026",
@@ -3386,8 +3477,14 @@
                 "kode": "MEDLEMSKAP_LOVVALG",
                 "term": "Medlemskap og lovvalg"
               },
-              "land": null,
-              "periode": null,
+              "land": {
+                "landkoder": [],
+                "flereLandUkjentHvilke": false
+              },
+              "periode": {
+                "fom": null,
+                "tom": null
+              },
               "oppgaveBeskrivelse": "--- 04.12.2025 10:14 (srvmelosys, Melosys) ---\n  - MEL-1026\n",
               "sisteNotat": null
             },
@@ -3640,7 +3737,7 @@
           ]
         }
       },
-      "duration": 518,
+      "duration": 401,
       "dynamicFields": [
         "saksbehandling[0].behandling.registrertDato",
         "saksbehandling[0].behandling.endretDato",
@@ -3660,18 +3757,32 @@
         "saksbehandling[7].behandling.endretDato",
         "saksbehandling[8].behandling.registrertDato",
         "saksbehandling[8].behandling.endretDato",
+        "saksbehandling[8].periode.fom",
+        "saksbehandling[8].periode.tom",
         "saksbehandling[9].behandling.registrertDato",
         "saksbehandling[9].behandling.endretDato",
+        "saksbehandling[9].periode.fom",
+        "saksbehandling[9].periode.tom",
         "saksbehandling[10].behandling.registrertDato",
         "saksbehandling[10].behandling.endretDato",
+        "saksbehandling[10].periode.fom",
+        "saksbehandling[10].periode.tom",
         "saksbehandling[11].behandling.registrertDato",
         "saksbehandling[11].behandling.endretDato",
+        "saksbehandling[11].periode.fom",
+        "saksbehandling[11].periode.tom",
         "saksbehandling[12].behandling.registrertDato",
         "saksbehandling[12].behandling.endretDato",
+        "saksbehandling[12].periode.fom",
+        "saksbehandling[12].periode.tom",
         "saksbehandling[13].behandling.registrertDato",
         "saksbehandling[13].behandling.endretDato",
+        "saksbehandling[13].periode.fom",
+        "saksbehandling[13].periode.tom",
         "saksbehandling[14].behandling.registrertDato",
         "saksbehandling[14].behandling.endretDato",
+        "saksbehandling[14].periode.fom",
+        "saksbehandling[14].periode.tom",
         "saksbehandling[15].behandling.registrertDato",
         "saksbehandling[15].behandling.endretDato",
         "saksbehandling[16].behandling.registrertDato",
@@ -3680,14 +3791,22 @@
         "saksbehandling[17].behandling.endretDato",
         "saksbehandling[18].behandling.registrertDato",
         "saksbehandling[18].behandling.endretDato",
+        "saksbehandling[18].periode.fom",
+        "saksbehandling[18].periode.tom",
         "saksbehandling[19].behandling.registrertDato",
         "saksbehandling[19].behandling.endretDato",
+        "saksbehandling[19].periode.fom",
+        "saksbehandling[19].periode.tom",
         "saksbehandling[20].behandling.registrertDato",
         "saksbehandling[20].behandling.endretDato",
+        "saksbehandling[20].periode.fom",
+        "saksbehandling[20].periode.tom",
         "saksbehandling[21].behandling.registrertDato",
         "saksbehandling[21].behandling.endretDato",
         "saksbehandling[22].behandling.registrertDato",
         "saksbehandling[22].behandling.endretDato",
+        "saksbehandling[22].periode.fom",
+        "saksbehandling[22].periode.tom",
         "saksbehandling[23].behandling.registrertDato",
         "saksbehandling[23].behandling.endretDato",
         "saksbehandling[24].behandling.registrertDato",
@@ -3706,20 +3825,34 @@
         "saksbehandling[30].behandling.endretDato",
         "saksbehandling[31].behandling.registrertDato",
         "saksbehandling[31].behandling.endretDato",
+        "saksbehandling[31].periode.fom",
+        "saksbehandling[31].periode.tom",
         "saksbehandling[32].behandling.registrertDato",
         "saksbehandling[32].behandling.endretDato",
+        "saksbehandling[32].periode.fom",
+        "saksbehandling[32].periode.tom",
         "saksbehandling[33].behandling.registrertDato",
         "saksbehandling[33].behandling.endretDato",
         "saksbehandling[34].behandling.registrertDato",
         "saksbehandling[34].behandling.endretDato",
+        "saksbehandling[34].periode.fom",
+        "saksbehandling[34].periode.tom",
         "saksbehandling[35].behandling.registrertDato",
         "saksbehandling[35].behandling.endretDato",
+        "saksbehandling[35].periode.fom",
+        "saksbehandling[35].periode.tom",
         "saksbehandling[36].behandling.registrertDato",
         "saksbehandling[36].behandling.endretDato",
+        "saksbehandling[36].periode.fom",
+        "saksbehandling[36].periode.tom",
         "saksbehandling[37].behandling.registrertDato",
         "saksbehandling[37].behandling.endretDato",
+        "saksbehandling[37].periode.fom",
+        "saksbehandling[37].periode.tom",
         "saksbehandling[38].behandling.registrertDato",
         "saksbehandling[38].behandling.endretDato",
+        "saksbehandling[38].periode.fom",
+        "saksbehandling[38].periode.tom",
         "saksbehandling[39].behandling.registrertDato",
         "saksbehandling[39].behandling.endretDato",
         "saksbehandling[40].behandling.registrertDato",
@@ -3732,6 +3865,8 @@
         "saksbehandling[43].behandling.endretDato",
         "saksbehandling[44].behandling.registrertDato",
         "saksbehandling[44].behandling.endretDato",
+        "saksbehandling[44].periode.fom",
+        "saksbehandling[44].periode.tom",
         "saksbehandling[45].behandling.registrertDato",
         "saksbehandling[45].behandling.endretDato",
         "saksbehandling[46].behandling.registrertDato",
@@ -3744,12 +3879,20 @@
         "saksbehandling[49].behandling.endretDato",
         "saksbehandling[50].behandling.registrertDato",
         "saksbehandling[50].behandling.endretDato",
+        "saksbehandling[50].periode.fom",
+        "saksbehandling[50].periode.tom",
         "saksbehandling[51].behandling.registrertDato",
         "saksbehandling[51].behandling.endretDato",
+        "saksbehandling[51].periode.fom",
+        "saksbehandling[51].periode.tom",
         "saksbehandling[52].behandling.registrertDato",
         "saksbehandling[52].behandling.endretDato",
+        "saksbehandling[52].periode.fom",
+        "saksbehandling[52].periode.tom",
         "saksbehandling[53].behandling.registrertDato",
         "saksbehandling[53].behandling.endretDato",
+        "saksbehandling[53].periode.fom",
+        "saksbehandling[53].periode.tom",
         "saksbehandling[54].behandling.registrertDato",
         "saksbehandling[54].behandling.endretDato",
         "saksbehandling[55].behandling.registrertDato",
@@ -3761,21 +3904,17 @@
         "saksbehandling[58].behandling.registrertDato",
         "saksbehandling[58].behandling.endretDato",
         "saksbehandling[59].behandling.registrertDato",
-        "saksbehandling[59].behandling.endretDato",
-        "saksbehandling[60].behandling.registrertDato",
-        "saksbehandling[60].behandling.endretDato"
+        "saksbehandling[59].behandling.endretDato"
       ]
     },
     {
       "request": {
         "id": "9527e20d3152",
         "method": "POST",
-        "url": "http://localhost:3333/api/fagsaker/sok?aktiveBehandlinger=false",
+        "url": "http://localhost:3333/api/fagsaker/sok",
         "pathname": "/api/fagsaker/sok",
         "normalizedPath": "/api/fagsaker/sok",
-        "query": {
-          "aktiveBehandlinger": "false"
-        },
+        "query": {},
         "headers": {
           "content-type": "application/json",
           "accept": "application/json",
@@ -3794,6 +3933,60 @@
           "content-type": "application/json"
         },
         "body": [
+          {
+            "saksnummer": "MEL-1009",
+            "navn": "TRIVIELL KARAFFEL",
+            "sakstema": {
+              "kode": "MEDLEMSKAP_LOVVALG",
+              "term": "Medlemskap og lovvalg"
+            },
+            "sakstype": {
+              "kode": "TRYGDEAVTALE",
+              "term": "Avtaleland"
+            },
+            "saksstatus": {
+              "kode": "HENLAGT",
+              "term": "Saken er henlagt"
+            },
+            "land": {
+              "landkoder": [],
+              "flereLandUkjentHvilke": false
+            },
+            "periode": {
+              "fom": null,
+              "tom": null
+            },
+            "opprettetDato": "2025-12-04T09:14:24.719785Z",
+            "behandlingOversikter": [
+              {
+                "behandlingID": 1711,
+                "tittel": "Førstegangsbehandling",
+                "behandlingsstatus": {
+                  "kode": "AVSLUTTET",
+                  "term": "Behandlingen er avsluttet"
+                },
+                "behandlingstype": {
+                  "kode": "FØRSTEGANG",
+                  "term": "Førstegangsbehandling"
+                },
+                "behandlingstema": {
+                  "kode": "YRKESAKTIV",
+                  "term": "Yrkesaktiv"
+                },
+                "soknadsperiode": {
+                  "fom": null,
+                  "tom": null
+                },
+                "opprettetDato": "2025-12-04T09:14:24.721298Z",
+                "behandlingsresultattype": {
+                  "kode": "HENLEGGELSE",
+                  "term": "Søknaden er henlagt/trukket"
+                },
+                "svarFrist": null
+              }
+            ],
+            "hovedpartRolle": "BRUKER"
+          },
           {
             "saksnummer": "MEL-1016",
             "navn": "TRIVIELL KARAFFEL",
@@ -4890,12 +5083,12 @@
               "term": "Saken er opprettet"
             },
             "land": {
-              "landkoder": [],
+              "landkoder": ["SE"],
               "flereLandUkjentHvilke": false
             },
             "periode": {
-              "fom": null,
-              "tom": null
+              "fom": "2024-01-01",
+              "tom": "2024-12-31"
             },
             "opprettetDato": "2025-12-04T09:14:26.056930Z",
             "behandlingOversikter": [
@@ -5279,7 +5472,7 @@
             "behandlingOversikter": [
               {
                 "behandlingID": 1749,
-                "tittel": "Årsavregning",
+                "tittel": "Årsavregning 2022",
                 "behandlingsstatus": {
                   "kode": "UNDER_BEHANDLING",
                   "term": "Behandlingen pågår"
@@ -5333,7 +5526,7 @@
             "behandlingOversikter": [
               {
                 "behandlingID": 1748,
-                "tittel": "Årsavregning",
+                "tittel": "Årsavregning 2022",
                 "behandlingsstatus": {
                   "kode": "UNDER_BEHANDLING",
                   "term": "Behandlingen pågår"
@@ -5387,7 +5580,7 @@
             "behandlingOversikter": [
               {
                 "behandlingID": 1747,
-                "tittel": "Årsavregning",
+                "tittel": "Årsavregning 2022",
                 "behandlingsstatus": {
                   "kode": "UNDER_BEHANDLING",
                   "term": "Behandlingen pågår"
@@ -5441,7 +5634,7 @@
             "behandlingOversikter": [
               {
                 "behandlingID": 1746,
-                "tittel": "Årsavregning",
+                "tittel": "Årsavregning 2022",
                 "behandlingsstatus": {
                   "kode": "UNDER_BEHANDLING",
                   "term": "Behandlingen pågår"
@@ -5495,7 +5688,7 @@
             "behandlingOversikter": [
               {
                 "behandlingID": 1745,
-                "tittel": "Årsavregning",
+                "tittel": "Årsavregning 2022",
                 "behandlingsstatus": {
                   "kode": "UNDER_BEHANDLING",
                   "term": "Behandlingen pågår"
@@ -5549,7 +5742,7 @@
             "behandlingOversikter": [
               {
                 "behandlingID": 1744,
-                "tittel": "Årsavregning",
+                "tittel": "Årsavregning 2022",
                 "behandlingsstatus": {
                   "kode": "UNDER_BEHANDLING",
                   "term": "Behandlingen pågår"
@@ -5603,7 +5796,7 @@
             "behandlingOversikter": [
               {
                 "behandlingID": 1743,
-                "tittel": "Årsavregning",
+                "tittel": "Årsavregning 2022",
                 "behandlingsstatus": {
                   "kode": "UNDER_BEHANDLING",
                   "term": "Behandlingen pågår"
@@ -6413,7 +6606,7 @@
             "behandlingOversikter": [
               {
                 "behandlingID": 1728,
-                "tittel": "Årsavregning",
+                "tittel": "Årsavregning 2022",
                 "behandlingsstatus": {
                   "kode": "UNDER_BEHANDLING",
                   "term": "Behandlingen pågår"
@@ -6467,7 +6660,7 @@
             "behandlingOversikter": [
               {
                 "behandlingID": 1727,
-                "tittel": "Årsavregning",
+                "tittel": "Årsavregning 2022",
                 "behandlingsstatus": {
                   "kode": "UNDER_BEHANDLING",
                   "term": "Behandlingen pågår"
@@ -6521,7 +6714,7 @@
             "behandlingOversikter": [
               {
                 "behandlingID": 1726,
-                "tittel": "Årsavregning",
+                "tittel": "Årsavregning 2022",
                 "behandlingsstatus": {
                   "kode": "UNDER_BEHANDLING",
                   "term": "Behandlingen pågår"
@@ -7197,60 +7390,6 @@
             "hovedpartRolle": "BRUKER"
           },
           {
-            "saksnummer": "MEL-1009",
-            "navn": "TRIVIELL KARAFFEL",
-            "sakstema": {
-              "kode": "MEDLEMSKAP_LOVVALG",
-              "term": "Medlemskap og lovvalg"
-            },
-            "sakstype": {
-              "kode": "TRYGDEAVTALE",
-              "term": "Avtaleland"
-            },
-            "saksstatus": {
-              "kode": "OPPRETTET",
-              "term": "Saken er opprettet"
-            },
-            "land": {
-              "landkoder": [],
-              "flereLandUkjentHvilke": false
-            },
-            "periode": {
-              "fom": null,
-              "tom": null
-            },
-            "opprettetDato": "2025-12-04T09:14:24.719785Z",
-            "behandlingOversikter": [
-              {
-                "behandlingID": 1711,
-                "tittel": "Førstegangsbehandling",
-                "behandlingsstatus": {
-                  "kode": "UNDER_BEHANDLING",
-                  "term": "Behandlingen pågår"
-                },
-                "behandlingstype": {
-                  "kode": "FØRSTEGANG",
-                  "term": "Førstegangsbehandling"
-                },
-                "behandlingstema": {
-                  "kode": "YRKESAKTIV",
-                  "term": "Yrkesaktiv"
-                },
-                "soknadsperiode": {
-                  "fom": null,
-                  "tom": null
-                },
-                "opprettetDato": "2025-12-04T09:14:24.721298Z",
-                "behandlingsresultattype": {
-                  "kode": "IKKE_FASTSATT",
-                  "term": "Ikke fastsatt"
-                },
-                "svarFrist": null
-              }
-            ],
-            "hovedpartRolle": "BRUKER"
-          },
-          {
             "saksnummer": "MEL-1008",
             "navn": "TRIVIELL KARAFFEL",
             "sakstema": {
@@ -7806,12 +7945,12 @@
               "term": "Saken er opprettet"
             },
             "land": {
-              "landkoder": [],
+              "landkoder": ["NO"],
               "flereLandUkjentHvilke": false
             },
             "periode": {
-              "fom": null,
-              "tom": null
+              "fom": "2024-01-01",
+              "tom": "2024-12-31"
             },
             "opprettetDato": "2025-12-04T09:12:31.394656Z",
             "behandlingOversikter": [
@@ -8076,12 +8215,12 @@
               "term": "Saken er opprettet"
             },
             "land": {
-              "landkoder": [],
+              "landkoder": ["NO"],
               "flereLandUkjentHvilke": false
             },
             "periode": {
-              "fom": null,
-              "tom": null
+              "fom": "2024-01-01",
+              "tom": "2024-12-31"
             },
             "opprettetDato": "2025-12-04T09:08:49.162353Z",
             "behandlingOversikter": [
@@ -8346,12 +8485,12 @@
               "term": "Saken er opprettet"
             },
             "land": {
-              "landkoder": [],
+              "landkoder": ["NO"],
               "flereLandUkjentHvilke": false
             },
             "periode": {
-              "fom": null,
-              "tom": null
+              "fom": "2024-01-01",
+              "tom": "2024-12-31"
             },
             "opprettetDato": "2025-12-04T09:01:00.797289Z",
             "behandlingOversikter": [
@@ -8670,12 +8809,12 @@
               "term": "Saken er opprettet"
             },
             "land": {
-              "landkoder": [],
+              "landkoder": ["NO"],
               "flereLandUkjentHvilke": false
             },
             "periode": {
-              "fom": null,
-              "tom": null
+              "fom": "2024-01-01",
+              "tom": "2024-12-31"
             },
             "opprettetDato": "2025-12-03T21:17:47.042623Z",
             "behandlingOversikter": [
@@ -8940,12 +9079,12 @@
               "term": "Saken er opprettet"
             },
             "land": {
-              "landkoder": [],
+              "landkoder": ["NO"],
               "flereLandUkjentHvilke": false
             },
             "periode": {
-              "fom": null,
-              "tom": null
+              "fom": "2024-01-01",
+              "tom": "2024-12-31"
             },
             "opprettetDato": "2025-12-03T21:13:56.578683Z",
             "behandlingOversikter": [
@@ -9210,12 +9349,12 @@
               "term": "Saken er opprettet"
             },
             "land": {
-              "landkoder": [],
+              "landkoder": ["NO"],
               "flereLandUkjentHvilke": false
             },
             "periode": {
-              "fom": null,
-              "tom": null
+              "fom": "2024-01-01",
+              "tom": "2024-12-31"
             },
             "opprettetDato": "2025-12-03T20:58:25.642930Z",
             "behandlingOversikter": [
@@ -9358,7 +9497,7 @@
           }
         ]
       },
-      "duration": 2893,
+      "duration": 1396,
       "dynamicFields": [
         "[0].periode.fom",
         "[0].periode.tom",
@@ -9979,6 +10118,153 @@
         "[102].behandlingOversikter[0].soknadsperiode.tom",
         "[102].behandlingOversikter[0].opprettetDato"
       ]
+    },
+    {
+      "request": {
+        "id": "33f1ad43b5b6",
+        "method": "GET",
+        "url": "http://localhost:3333/api/saksbehandling/behandlingstemaer/hent-lovlige-kombinasjoner/?hovedpart=BRUKER&sakstype=FTRL&sakstema=MEDLEMSKAP_LOVVALG&aktivBehandlingID=&sistBehandlingstema=YRKESAKTIV",
+        "pathname": "/api/saksbehandling/behandlingstemaer/hent-lovlige-kombinasjoner/",
+        "normalizedPath": "/api/saksbehandling/behandlingstemaer/hent-lovlige-kombinasjoner/",
+        "query": {
+          "hovedpart": "BRUKER",
+          "sakstype": "FTRL",
+          "sakstema": "MEDLEMSKAP_LOVVALG",
+          "aktivBehandlingID": "",
+          "sistBehandlingstema": "YRKESAKTIV"
+        },
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": [
+          {
+            "kode": "YRKESAKTIV",
+            "term": "Yrkesaktiv"
+          },
+          {
+            "kode": "IKKE_YRKESAKTIV",
+            "term": "Ikke yrkesaktiv"
+          },
+          {
+            "kode": "PENSJONIST",
+            "term": "Pensjonist/uføretrygdet"
+          },
+          {
+            "kode": "UNNTAK_MEDLEMSKAP",
+            "term": "Søknad om unntak fra folketrygdloven"
+          }
+        ]
+      },
+      "duration": 5,
+      "dynamicFields": []
+    },
+    {
+      "request": {
+        "id": "d98769cfb1db",
+        "method": "GET",
+        "url": "http://localhost:3333/api/anmodningsperioder/1768",
+        "pathname": "/api/anmodningsperioder/1768",
+        "normalizedPath": "/api/anmodningsperioder/:id",
+        "query": {},
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": {
+          "anmodningsperioder": []
+        }
+      },
+      "duration": 12,
+      "dynamicFields": []
+    },
+    {
+      "request": {
+        "id": "db7742a9b469",
+        "method": "GET",
+        "url": "http://localhost:3333/api/fagsaker/MEL-1066/trygdeavgift/oppsummering",
+        "pathname": "/api/fagsaker/MEL-1066/trygdeavgift/oppsummering",
+        "normalizedPath": "/api/fagsaker/:saksnummer/trygdeavgift/oppsummering",
+        "query": {},
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": {
+          "harBehandlingMedTrygdeavgift": false
+        }
+      },
+      "duration": 30,
+      "dynamicFields": []
+    },
+    {
+      "request": {
+        "id": "84aff2cdd2b5",
+        "method": "GET",
+        "url": "http://localhost:3333/api/saksbehandling/MEL-1066/behandlingstyper/kombinasjoner-for-knytt-sak/?hovedpart=BRUKER&behandlingstema=YRKESAKTIV",
+        "pathname": "/api/saksbehandling/MEL-1066/behandlingstyper/kombinasjoner-for-knytt-sak/",
+        "normalizedPath": "/api/saksbehandling/:saksnummer/behandlingstyper/kombinasjoner-for-knytt-sak/",
+        "query": {
+          "hovedpart": "BRUKER",
+          "behandlingstema": "YRKESAKTIV"
+        },
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": [
+          {
+            "kode": "NY_VURDERING",
+            "term": "Ny vurdering"
+          },
+          {
+            "kode": "KLAGE",
+            "term": "Klage"
+          },
+          {
+            "kode": "HENVENDELSE",
+            "term": "Henvendelse"
+          },
+          {
+            "kode": "ÅRSAVREGNING",
+            "term": "Årsavregning"
+          }
+        ]
+      },
+      "duration": 12,
+      "dynamicFields": []
     }
   ]
 }
