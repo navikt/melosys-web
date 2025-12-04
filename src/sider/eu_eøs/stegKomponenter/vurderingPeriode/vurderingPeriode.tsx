@@ -232,7 +232,14 @@ export function VurderingPeriode({
         {formValues.forkortLovvalgsperiode && (
           <Nav.Row>
             <Nav.Column xs="3">
-              <Forms.Datovelger label="Startdato" name="fomDato" control={control} readOnly={!redigerbart} />
+              <Forms.Datovelger
+                label="Startdato"
+                name="fomDato"
+                control={control}
+                readOnly={!redigerbart}
+                forhindreAutoUtfylling
+                brukInternValidering
+              />
             </Nav.Column>
             <Nav.Column xs="3">
               <Forms.Datovelger
@@ -242,6 +249,8 @@ export function VurderingPeriode({
                 readOnly={!redigerbart}
                 minDate={Utils.dato.isoStringTilDate(soknadsperiode.fom) || new Date()}
                 maxDate={Utils.dato.isoStringTilDate(soknadsperiode.tom)}
+                forhindreAutoUtfylling
+                brukInternValidering
               />
             </Nav.Column>
           </Nav.Row>

@@ -12,14 +12,14 @@ const vurderingPeriodeSchema = object().shape({
     is: true,
     // Custom yup-utvidelser (erInnenforSoknadsperioden, erGyldigDato) finnes ikke i StringSchema-typen
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    then: (schema: any) => schema.erInnenforSoknadsperioden().erGyldigDato().required(MAA_FYLLES_UT),
+    then: (schema: any) => schema.required(MAA_FYLLES_UT).erGyldigDato().erInnenforSoknadsperioden(),
   }),
   tomDato: string().when("forkortLovvalgsperiode", {
     is: true,
     // Custom yup-utvidelser (erInnenforSoknadsperioden, erEtterDatofelt, erGyldigDato) finnes ikke i StringSchema-typen
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     then: (schema: any) =>
-      schema.erInnenforSoknadsperioden().erEtterDatofelt("fomDato").erGyldigDato().required(MAA_FYLLES_UT),
+      schema.required(MAA_FYLLES_UT).erGyldigDato().erEtterDatofelt("fomDato").erInnenforSoknadsperioden(),
   }),
 });
 
