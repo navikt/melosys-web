@@ -15,7 +15,11 @@ export class TrygdeavgiftPage extends BehandlingPage {
    * Vent på at et spesifikt steg i trygdeavgift-komponenten er synlig
    */
   async verifiserSteg(stegnavn: string, timeout = 10000): Promise<void> {
-    await this.page.waitForSelector(`text=${stegnavn}`, { timeout });
+    const saksnummer = getSaksnummerFraUrl(this.page);
+    await expect(
+      this.page.locator(`text=${stegnavn}`).first(),
+      `${saksnummer}: Steg "${stegnavn}" skal være synlig`,
+    ).toBeVisible({ timeout });
   }
 
   /**
@@ -55,30 +59,6 @@ export class TrygdeavgiftPage extends BehandlingPage {
     const isit = await radioInput.isChecked().catch(() => false);
     const saksnummer = getSaksnummerFraUrl(this.page);
     expect(isit, `[${saksnummer}] Skattepliktig skal IKKE være valgt`).toBe(false);
-  }
-
-  /**
-   * Verifiser at trygdeavgiftsberegning vises
-   */
-  async verifiserBeregningVises(): Promise<void> {
-    await this.verifiserSteg("Trygdeavgift");
-
-    // Se etter tabell med beregning eller tekst som indikerer beregning
-    const beregningElementer = [
-      this.page.locator("text=Trygdeavgift skal ikke betales til NAV"),
-      this.page.locator("table").filter({ hasText: "Trygdeavgift" }),
-      this.page.locator("text=Beregnet trygdeavgift"),
-    ];
-
-    let funnet = false;
-    for (const element of beregningElementer) {
-      if (await element.isVisible({ timeout: 3000 }).catch(() => false)) {
-        funnet = true;
-        break;
-      }
-    }
-
-    expect(funnet, `${getSaksnummerFraUrl(this.page)}: Beregning av trygdeavgift skal vises`).toBe(true);
   }
 
   /**

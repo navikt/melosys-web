@@ -1,4 +1,4 @@
-import { test, Page } from "@playwright/test";
+import { test } from "@playwright/test";
 import { runAxeAnalyze } from "../../utils/axeUtils";
 import { HovedsidePage } from "../../pages/hovedside.page";
 import { OpprettNySakPage } from "../../pages/opprett-ny-sak/opprett-ny-sak.page";
@@ -6,18 +6,13 @@ import { assertErrors } from "../../utils/testUtils";
 
 let opprettNySakPage: OpprettNySakPage;
 
-async function setupOpprettNySakTester(page: Page) {
-  const mainPage = new HovedsidePage(page);
-  opprettNySakPage = new OpprettNySakPage(page);
-
-  await mainPage.goto();
-
-  await mainPage.klikkOpprettNySakKnapp();
-}
-
 test.describe("'Opprett ny sak/behandling' hovedside", () => {
   test.beforeEach(async ({ page }) => {
-    await setupOpprettNySakTester(page);
+    const mainPage = new HovedsidePage(page);
+    opprettNySakPage = new OpprettNySakPage(page);
+
+    await mainPage.goto();
+    await mainPage.klikkOpprettNySakKnapp();
   });
   test("Klikk på 'Opprett ny sak/behandling' og verifiser at alle forventede elementer er tilstede", async ({
     page,

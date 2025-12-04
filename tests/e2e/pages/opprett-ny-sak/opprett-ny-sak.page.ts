@@ -81,6 +81,8 @@ export class OpprettNySakPage {
     const orgNumberInput = this.page.locator("input[name='virksomhetOrgnr']");
     await expect(orgNumberInput, "Fant ikke org nr input").toBeVisible();
     await orgNumberInput.fill(orgNumber);
+    // Vent på at backend svarer (enten sakstype-select vises, eller feilmelding kommer)
+    await this.page.waitForTimeout(2000);
   }
 
   /**
@@ -151,94 +153,6 @@ export class OpprettNySakPage {
     if (harVisFlereSakerKnapp) {
       await visFlereSakerKnapp.click();
     }
-  }
-
-  /**
-   * Generisk helper-funksjon for å finne en sak basert på kriterier
-   */
-  async finnSak(kriterier: {
-    sakstype: "Utenfor avtaleland" | "Avtaleland" | "EU/EØS-land";
-    behandlingstype?: "Førstegangsbehandling" | "Ny vurdering" | "Klage" | "Henvendelse" | "Årsavregning";
-    behandlingsstatus?:
-      | "Behandlingen er opprettet"
-      | "Behandlingen pågår"
-      | "Behandlingen er avsluttet"
-      | "Søknaden er henlagt/trukket";
-    resultattype?: string;
-    sakstema?: string;
-  }): Promise<Locator | null> {
-    const saker = await this.finnAlleSaker({
-      sakstype: kriterier.sakstype,
-      behandlingsstatus: kriterier.behandlingsstatus,
-      resultattype: kriterier.resultattype,
-      sakstema: kriterier.sakstema,
-    });
-
-    if (saker.length > 0) {
-      return saker[0];
-    }
-    return null;
-  }
-
-  /**
-   * Generisk funksjon for å finne alle saker basert på sakstype og kriterier
-   */
-  async finnAlleSaker(kriterier: {
-    sakstype: "Utenfor avtaleland" | "Avtaleland" | "EU/EØS-land";
-    behandlingsstatus?:
-      | "Behandlingen er opprettet"
-      | "Behandlingen pågår"
-      | "Behandlingen er avsluttet"
-      | "Søknaden er henlagt/trukket";
-    resultattype?: string;
-    sakstema?: string;
-  }): Promise<Locator[]> {
-    const alleSaker = this.page.locator(".customRadioPanel");
-    const sakListe: Locator[] = [];
-
-    for (let i = 0; i < (await alleSaker.count()); i++) {
-      const sak = alleSaker.nth(i);
-      const tittel = await sak.locator(".customRadioPanelTittel").textContent();
-
-      if (!tittel?.startsWith(kriterier.sakstype)) {
-        continue;
-      }
-
-      let oppfyllerKriterier = true;
-
-      if (kriterier.sakstema) {
-        // Sakstema vises i tittelen som "{sakstype} - {sakstema}"
-        const harSakstema = tittel?.includes(kriterier.sakstema) ?? false;
-        if (!harSakstema) {
-          oppfyllerKriterier = false;
-        }
-      }
-
-      if (kriterier.behandlingsstatus) {
-        const sakInnhold = await sak.textContent();
-        const harStatus = sakInnhold?.includes(kriterier.behandlingsstatus) ?? false;
-
-        if (!harStatus) {
-          oppfyllerKriterier = false;
-        }
-      }
-
-      if (kriterier.resultattype) {
-        const sakInnhold = await sak.textContent();
-        const harResultattype = sakInnhold?.includes(kriterier.resultattype) ?? false;
-        if (!harResultattype) {
-          oppfyllerKriterier = false;
-        }
-      }
-
-      await setSakId(sak);
-
-      if (oppfyllerKriterier) {
-        sakListe.push(sak);
-      }
-    }
-
-    return sakListe;
   }
 
   /**
@@ -326,7 +240,8 @@ export class OpprettNySakPage {
       | "Ikke yrkesaktiv"
       | "Pensjonist/uføretrygdet"
       | "Forespørsel fra trygdemyndighet"
-      | "Forespørsel om trygdetid",
+      | "Forespørsel om trygdetid"
+      | "Virksomhet", // Gjelder kun for virksomhet-saker
   ): Promise<void> {
     await this.velgDropdownVerdi("behandlingstema", value, "Behandlingstema");
     // Vent på at behandlingstype-dropdown er lastet inn
@@ -693,12 +608,18 @@ export class OpprettNySakPage {
    * Verifiser hvilke behandlingstyper som er tilgjengelige for en valgt sak
    * @param valgtSak Den valgte saken
    * @param forventedeBehandlingstyper Array med forventede behandlingstyper
+   * @param saksnummer Optional saksnummer for feilmeldinger (hvis ikke oppgitt, hentes fra locator)
    */
-  async verifiserTilgjengeligeBehandlingstyper(valgtSak: Locator, forventedeBehandlingstyper: string[]): Promise<void> {
+  async verifiserTilgjengeligeBehandlingstyper(
+    valgtSak: Locator,
+    forventedeBehandlingstyper: string[],
+    saksnummer?: string,
+  ): Promise<void> {
+    const sakId = saksnummer || getSaksnummerFraLocator(valgtSak!);
     await expect(
       this.page.getByRole("group", { name: "Behandlingstype" }),
-      `Behandlingstype-gruppe for sak ${getSaksnummerFraLocator(valgtSak!)} skal være synlig`,
-    ).toBeVisible();
+      `Behandlingstype-gruppe for sak ${sakId} skal være synlig`,
+    ).toBeVisible({ timeout: 10000 });
 
     // Hent alle faktiske radiobuttons som er tilstede
     let alleRadioButtons = this.page.getByRole("group", { name: "Behandlingstype" }).getByRole("radio");
@@ -774,12 +695,12 @@ export class OpprettNySakPage {
 
     expect(
       manglendeBehandlingstyper.length,
-      `Sak ${getSaksnummerFraLocator(valgtSak!)}: Manglende behandlingstyper: ${manglendeBehandlingstyper.join(", ")}. Faktiske: ${faktiskeTilgjengeligeBehandlingstyper.join(", ")}`,
+      `Sak ${sakId}: Manglende behandlingstyper: ${manglendeBehandlingstyper.join(", ")}. Faktiske: ${faktiskeTilgjengeligeBehandlingstyper.join(", ")}`,
     ).toBe(0);
 
     expect(
       uventedeBehandlingstyper.length,
-      `Sak ${getSaksnummerFraLocator(valgtSak!)}: Uventede behandlingstyper: ${uventedeBehandlingstyper.join(", ")}. Forventede: ${forventedeBehandlingstyper.join(", ")}`,
+      `Sak ${sakId}: Uventede behandlingstyper: ${uventedeBehandlingstyper.join(", ")}. Forventede: ${forventedeBehandlingstyper.join(", ")}`,
     ).toBe(0);
   }
 

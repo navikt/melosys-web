@@ -124,17 +124,6 @@ export class AarsavregningPage extends BehandlingPage {
     return (await allInputs[inputIndex].inputValue()) || "";
   }
 
-  async getMedlemskapsperiodeTomDato(index: number): Promise<string> {
-    const allInputs = await this.page
-      .locator('.perioder input[type="text"]:visible, .perioder input:not([type]):visible')
-      .all();
-    const inputIndex = index * 2 + 1;
-    if (inputIndex >= allInputs.length) {
-      return "";
-    }
-    return (await allInputs[inputIndex].inputValue()) || "";
-  }
-
   async getAntallMedlemskapsperioder(): Promise<number> {
     const saksnummer = getSaksnummerFraUrl(this.page);
     // Vent på at minst ett trygdedekning-felt er synlig før telling
@@ -286,16 +275,6 @@ export class AarsavregningPage extends BehandlingPage {
     await select.selectOption({ label: type });
   }
 
-  async assertValideringsfeilInneholder(tekst: string) {
-    const error = this.page.locator('[class*="error"], [class*="feil"]').filter({ hasText: new RegExp(tekst, "i") });
-    await expect(error).toBeVisible();
-  }
-
-  async assertIngenFeilmelding(tekst: string) {
-    const error = this.page.locator('[class*="error"], [class*="feil"]').filter({ hasText: new RegExp(tekst, "i") });
-    await expect(error).not.toBeVisible();
-  }
-
   async fyllUtBruttoInntekt(index: number, belop: string) {
     const firstInntektLabel = this.page.locator('text="Inntektsperiode"').first();
     const saksnummer = getSaksnummerFraUrl(this.page);
@@ -363,32 +342,6 @@ export class AarsavregningPage extends BehandlingPage {
     await datepickerButton.click();
   }
 
-  async klikkMedlemskapsperiodeTomDatepicker(index: number) {
-    const trygdedekningDropdown = this.page.getByRole("combobox", {
-      name: new RegExp(`Trygdedekning periode ${index + 1}`, "i"),
-    });
-    const saksnummer = getSaksnummerFraUrl(this.page);
-    await expect(
-      trygdedekningDropdown,
-      `${saksnummer}: Trygdedekning-dropdown for periode ${index + 1} skal være synlig`,
-    ).toBeVisible({ timeout: 10000 });
-
-    const allInputs = await this.page
-      .locator('.perioder input[type="text"]:visible, .perioder input:not([type]):visible')
-      .all();
-    const inputIndex = index * 2 + 1;
-
-    expect(
-      inputIndex < allInputs.length,
-      `${saksnummer}: Kan ikke finne input ${inputIndex} for periode ${index + 1}. Totalt ${allInputs.length} inputs funnet.`,
-    ).toBe(true);
-
-    // Finn "Åpne datovelger" knappen som er søsken til input-feltet
-    const inputElement = allInputs[inputIndex];
-    const datepickerButton = inputElement.locator("..").getByRole("button", { name: /åpne datovelger/i });
-    await datepickerButton.click();
-  }
-
   async verifiserDatepickerErAktiv() {
     const saksnummer = getSaksnummerFraUrl(this.page);
     // NAV Design System bruker et dialog element for datepicker
@@ -397,9 +350,10 @@ export class AarsavregningPage extends BehandlingPage {
   }
 
   async verifiserDatepickerIkkeErAktiv() {
+    const saksnummer = getSaksnummerFraUrl(this.page);
     // NAV Design System bruker et dialog element for datepicker
     const datepicker = this.page.getByRole("dialog");
-    await expect(datepicker).not.toBeVisible();
+    await expect(datepicker, `${saksnummer}: Datepicker-dialog skal ikke være synlig`).not.toBeVisible();
   }
 
   async velgDatoIDatepicker(dato: Date) {
@@ -415,111 +369,17 @@ export class AarsavregningPage extends BehandlingPage {
     await datoKnapp.click();
   }
 
-  // Fyll ut og blur metoder for datovalidering
-  async fyllUtOgBlurMedlemskapsperiodeFomDato(index: number, verdi: string): Promise<string> {
-    const trygdedekningDropdown = this.page.getByRole("combobox", {
-      name: new RegExp(`Trygdedekning periode ${index + 1}`, "i"),
-    });
-    const saksnummer = getSaksnummerFraUrl(this.page);
-    await expect(
-      trygdedekningDropdown,
-      `${saksnummer}: Trygdedekning-dropdown for periode ${index + 1} skal være synlig`,
-    ).toBeVisible({ timeout: 10000 });
-
-    const allInputs = await this.page
-      .locator('.perioder input[type="text"]:visible, .perioder input:not([type]):visible')
-      .all();
-    const inputIndex = index * 2;
-
-    expect(
-      inputIndex < allInputs.length,
-      `${saksnummer}: Kan ikke finne input ${inputIndex} for periode ${index + 1}. Totalt ${allInputs.length} inputs funnet.`,
-    ).toBe(true);
-
-    const inputElement = allInputs[inputIndex];
-    await inputElement.fill(verdi);
-    await inputElement.blur();
-    // Vent litt for at blur-event skal behandles
-    await this.page.waitForTimeout(200);
-    return await inputElement.inputValue();
-  }
-
-  async fyllUtOgBlurMedlemskapsperiodeTomDato(index: number, verdi: string): Promise<string> {
-    const trygdedekningDropdown = this.page.getByRole("combobox", {
-      name: new RegExp(`Trygdedekning periode ${index + 1}`, "i"),
-    });
-    const saksnummer = getSaksnummerFraUrl(this.page);
-    await expect(
-      trygdedekningDropdown,
-      `${saksnummer}: Trygdedekning-dropdown for periode ${index + 1} skal være synlig`,
-    ).toBeVisible({ timeout: 10000 });
-
-    const allInputs = await this.page
-      .locator('.perioder input[type="text"]:visible, .perioder input:not([type]):visible')
-      .all();
-    const inputIndex = index * 2 + 1;
-
-    expect(
-      inputIndex < allInputs.length,
-      `${saksnummer}: Kan ikke finne input ${inputIndex} for periode ${index + 1}. Totalt ${allInputs.length} inputs funnet.`,
-    ).toBe(true);
-
-    const inputElement = allInputs[inputIndex];
-    await inputElement.fill(verdi);
-    await inputElement.blur();
-    // Vent litt for at blur-event skal behandles
-    await this.page.waitForTimeout(200);
-    return await inputElement.inputValue();
-  }
-
-  async fyllUtOgBlurSkatteforholdFomDato(index: number, verdi: string): Promise<string> {
-    const firstSkattLabel = this.page.locator('text="Skatteforhold"').first();
-    const saksnummer = getSaksnummerFraUrl(this.page);
-    await expect(firstSkattLabel, `${saksnummer}: Label 'Skatteforhold' skal være synlig`).toBeVisible({
-      timeout: 10000,
-    });
-
-    const skatteforholdContainer = this.page.locator(".perioder").filter({ has: firstSkattLabel });
-    const allInputs = await skatteforholdContainer
-      .locator('input[type="text"]:visible, input:not([type]):visible')
-      .all();
-
-    const inputIndex = index * 2;
-
-    expect(
-      inputIndex < allInputs.length,
-      `${saksnummer}: Kan ikke finne input ${inputIndex} for skatteforhold ${index}. Totalt ${allInputs.length} inputs funnet.`,
-    ).toBe(true);
-
-    const inputElement = allInputs[inputIndex];
-    await inputElement.fill(verdi);
-    await inputElement.blur();
-    // Vent litt for at blur-event skal behandles
-    await this.page.waitForTimeout(200);
-    return await inputElement.inputValue();
-  }
-
-  // Validering og feilmeldinger
-  async verifiserValideringsfeilInneholder(tekst: string) {
-    const error = this.page.locator('[class*="error"], [class*="feil"]').filter({ hasText: new RegExp(tekst, "i") });
-    await expect(
-      error,
-      `${getSaksnummerFraUrl(this.page)}: Feilmelding som inneholder "${tekst}" skal være synlig`,
-    ).toBeVisible();
-  }
-
   async verifiserIngenFeilmelding(tekst: string) {
+    const saksnummer = getSaksnummerFraUrl(this.page);
     const error = this.page.locator('[class*="error"], [class*="feil"]').filter({ hasText: new RegExp(tekst, "i") });
-    await expect(error).not.toBeVisible();
+    await expect(error, `${saksnummer}: Feilmelding "${tekst}" skal ikke være synlig`).not.toBeVisible();
   }
-
-  // Bekreft og fortsett
-  async bekreftOgFortsett() {
-    await this.page.getByRole("button", { name: /bekreft og fortsett/i }).click();
-  }
-
   // Verifiser at siden er lastet
   async verifiserAarsavregningside() {
-    await expect(this.page.getByRole("heading", { name: /årsavregning/i })).toBeVisible();
+    const saksnummer = getSaksnummerFraUrl(this.page);
+    await expect(
+      this.page.getByRole("heading", { name: /årsavregning/i }),
+      `${saksnummer}: Årsavregning-overskrift skal være synlig`,
+    ).toBeVisible();
   }
 }

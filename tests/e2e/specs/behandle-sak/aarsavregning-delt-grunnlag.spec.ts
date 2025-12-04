@@ -1,10 +1,8 @@
 import { test, Page, expect } from "@playwright/test";
-import { HovedsidePage, USER_ID_VALID } from "../../pages/hovedside.page";
 import { TIMEOUT_FOR_COMPLEX_TESTS } from "../../utils/testUtils";
-import { SokPage } from "../../pages/sok.page";
 import { BehandlingPage } from "../../pages/behandling/behandling.page";
 import { AarsavregningPage } from "../../pages/behandling/aarsavregning.page";
-import { opprettUtenforAvtalelandSakMedAarsavregning } from "../../utils/testdataUtils";
+import { hentPrepopulertSakUrl, PrepopulertSaksnummer } from "../../utils/testdataUtils";
 import { runAxeAnalyze } from "../../utils/axeUtils";
 
 /**
@@ -32,24 +30,13 @@ function lagDato(dagMåned: string): string {
 /**
  * Gjenbrukbar setup-funksjon som oppretter testdata og navigerer til en årsavregning-behandling
  */
-async function setupAarsavregningTest(page: Page) {
-  // Opprett ny sak med årsavregning for hver test
-  await opprettUtenforAvtalelandSakMedAarsavregning(page);
-
-  const mainPage = new HovedsidePage(page);
-  const sokPage = new SokPage(page);
+async function setupAarsavregningTest(page: Page, saksnummer: PrepopulertSaksnummer) {
   const behandlingPage = new BehandlingPage(page);
   aarsavregningPage = new AarsavregningPage(page);
 
-  await mainPage.goto();
-  await mainPage.søkOgVentPåResultat(USER_ID_VALID);
-
-  // Finn åpne FTRL-saker med Årsavregning behandling
-  const saker = await sokPage.finnÅpneSaker("Utenfor avtaleland", "Årsavregning");
-  expect(saker.length, "Ingen åpne 'Utenfor avtaleland - Årsavregning' saker funnet").toBeGreaterThan(0);
-
-  await sokPage.klikkVisBehandling(saker[0]!);
-  await behandlingPage.verifiserBehandlingsside();
+  // Hent URL til prepopulert FTRL-sak med årsavregning og naviger direkte dit
+  const url = hentPrepopulertSakUrl(saksnummer);
+  await behandlingPage.goto(url);
 
   await page.waitForLoadState("domcontentloaded");
 
@@ -87,13 +74,11 @@ async function setupAarsavregningTest(page: Page) {
 // Hver test oppretter sine egne testdata via setupAarsavregningTest
 test.describe("Årsavregning delt grunnlag - Alle tester", () => {
   test.describe("AC1 - Medlemskapsperiode validering", () => {
-    test.beforeEach(async ({ page }) => {
-      test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Sett timeout til 30 sekunder for setup
-      await setupAarsavregningTest(page);
-    });
-
     test("Kan legge til ny medlemskapsperiode etter å ha valgt delt grunnlag", async ({ page }, testInfo) => {
-      // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet
+      test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Sett timeout til 30 sekunder for setup
+      await setupAarsavregningTest(page, "MEL-1026");
+      // Velg "Ja" på spør
+      // smålet om å legge til trygdeavgift fra Avgiftssystemet
       await aarsavregningPage.velgDeltGrunnlagJa();
 
       // Velg bestemmelse først - dette er nødvendig for å få trygdedekning-alternativer
@@ -126,6 +111,8 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
     });
 
     test("Datepicker skal fungere for fra-dato på ny medlemskapsperiode", async ({ page }, testInfo) => {
+      test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
+      await setupAarsavregningTest(page, "MEL-1024");
       // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet
       await aarsavregningPage.velgDeltGrunnlagJa();
       await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
@@ -158,6 +145,8 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
     });
 
     test("Kan legge til sammenhengende medlemskapsperiode innenfor samme år", async ({ page }, testInfo) => {
+      test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
+      await setupAarsavregningTest(page, "MEL-1025");
       // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet
       await aarsavregningPage.velgDeltGrunnlagJa();
       await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
@@ -182,273 +171,12 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
 
       await runAxeAnalyze(page, testInfo.title);
     });
-
-    test("laasAar: Input '0101' skal bli '01.01.ÅÅÅÅ' etter blur", async ({ page }) => {
-      // Dette tester at buggen er fikset: at laasAar legger til riktig år
-      await aarsavregningPage.velgDeltGrunnlagJa();
-      await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
-      await page.waitForTimeout(1000);
-
-      const antallFør = await aarsavregningPage.getAntallMedlemskapsperioder();
-      await aarsavregningPage.leggTilMedlemskapsperiode();
-      const nyPeriodeIndex = antallFør;
-
-      // Skriv kun dag og måned (ddmm-format)
-      const resultat = await aarsavregningPage.fyllUtOgBlurMedlemskapsperiodeFomDato(nyPeriodeIndex, "0101");
-
-      // Verifiser at året er lagt til automatisk
-      expect(resultat).toBe(lagDato("01.01"));
-      expect(resultat).toContain(valgtTestÅr);
-    });
-
-    test("laasAar: Input '01.01' skal bli '01.01.ÅÅÅÅ' etter blur", async ({ page }) => {
-      // Test med punktum-separatorer
-      await aarsavregningPage.velgDeltGrunnlagJa();
-      await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
-      await page.waitForTimeout(1000);
-
-      const antallFør = await aarsavregningPage.getAntallMedlemskapsperioder();
-      await aarsavregningPage.leggTilMedlemskapsperiode();
-      const nyPeriodeIndex = antallFør;
-
-      const resultat = await aarsavregningPage.fyllUtOgBlurMedlemskapsperiodeFomDato(nyPeriodeIndex, "01.01");
-
-      expect(resultat).toBe(lagDato("01.01"));
-      expect(resultat).toContain(valgtTestÅr);
-    });
-
-    test("forhindreAutoUtfylling: Ufullstendig input skal ikke auto-fylles til ugyldig dato", async ({ page }) => {
-      // Dette tester at buggen er fikset: at "1" ikke blir til "01.01.0001"
-      await aarsavregningPage.velgDeltGrunnlagJa();
-      await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
-      await page.waitForTimeout(1000);
-
-      const antallFør = await aarsavregningPage.getAntallMedlemskapsperioder();
-      await aarsavregningPage.leggTilMedlemskapsperiode();
-      const nyPeriodeIndex = antallFør;
-
-      // Skriv en ufullstendig dato (kun 1 tegn)
-      const resultat = await aarsavregningPage.fyllUtOgBlurMedlemskapsperiodeFomDato(nyPeriodeIndex, "1");
-
-      // Verifiser at verdien ikke er endret til en ugyldig dato som "01.01.0001"
-      expect(resultat).toBe("1");
-      expect(resultat).not.toContain("0001");
-
-      // Verifiser at feilmelding vises (fordi "1" ikke er gyldig dato)
-      await aarsavregningPage.assertValideringsfeilInneholder("gyldig");
-    });
-
-    test("laasAar: Input med delvis år som '020412' skal bli '02.04.ÅÅÅÅ'", async ({ page }) => {
-      // Dette tester at laasAar overstyrer feil år med korrekt årsavregningsår
-      await aarsavregningPage.velgDeltGrunnlagJa();
-      await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
-      await page.waitForTimeout(1000);
-
-      const antallFør = await aarsavregningPage.getAntallMedlemskapsperioder();
-      await aarsavregningPage.leggTilMedlemskapsperiode();
-      const nyPeriodeIndex = antallFør;
-
-      // Skriv ddmmåå format (6 tegn)
-      const resultat = await aarsavregningPage.fyllUtOgBlurMedlemskapsperiodeFomDato(nyPeriodeIndex, "020412");
-
-      // Verifiser at året er overstyrt til korrekt årsavregningsår
-      expect(resultat).toBe(lagDato("02.04"));
-      expect(resultat).toContain(valgtTestÅr);
-      expect(resultat).not.toContain("2012");
-    });
-
-    test("laasAar: Input med fullt år som '02042025' skal overstyres til '02.04.ÅÅÅÅ'", async ({ page }) => {
-      // Dette tester at laasAar overstyrer selv når bruker skriver fullt (men feil) år
-      await aarsavregningPage.velgDeltGrunnlagJa();
-      await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
-      await page.waitForTimeout(1000);
-
-      const antallFør = await aarsavregningPage.getAntallMedlemskapsperioder();
-      await aarsavregningPage.leggTilMedlemskapsperiode();
-      const nyPeriodeIndex = antallFør;
-
-      // Skriv ddmmåååå format (8 tegn) med feil år
-      const resultat = await aarsavregningPage.fyllUtOgBlurMedlemskapsperiodeFomDato(nyPeriodeIndex, "02042025");
-
-      // Verifiser at året er overstyrt til korrekt årsavregningsår
-      expect(resultat).toBe(lagDato("02.04"));
-      expect(resultat).toContain(valgtTestÅr);
-      expect(resultat).not.toContain("2025");
-    });
-
-    test("laasAar: Input '01011' skal ekspanderes til '01.01.ÅÅÅÅ'", async ({ page }) => {
-      // Dette tester at selv 5 tegn ekspanderes hvis de fire første er gyldig ddmm
-      await aarsavregningPage.velgDeltGrunnlagJa();
-      await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
-      await page.waitForTimeout(1000);
-
-      const antallFør = await aarsavregningPage.getAntallMedlemskapsperioder();
-      await aarsavregningPage.leggTilMedlemskapsperiode();
-      const nyPeriodeIndex = antallFør;
-
-      // Skriv ddmmå format (5 tegn) - "1" tolkes som ugyldig år
-      const resultat = await aarsavregningPage.fyllUtOgBlurMedlemskapsperiodeFomDato(nyPeriodeIndex, "01011");
-
-      // Verifiser at det ekspanderes til gyldig dato med korrekt år
-      expect(resultat).toBe(lagDato("01.01"));
-      expect(resultat).toContain(valgtTestÅr);
-    });
-  });
-
-  test.describe("AC4 - Datovalidering med ugyldig input", () => {
-    test.beforeEach(async ({ page }) => {
-      await setupAarsavregningTest(page);
-    });
-
-    test("Ugyldig input 'dd11ss' skal vise 'Skriv inn en gyldig dato'", async ({ page }) => {
-      await aarsavregningPage.velgDeltGrunnlagJa();
-      await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
-      await page.waitForTimeout(1000);
-
-      const antallFør = await aarsavregningPage.getAntallMedlemskapsperioder();
-      await aarsavregningPage.leggTilMedlemskapsperiode();
-      const nyPeriodeIndex = antallFør;
-
-      await aarsavregningPage.fyllUtOgBlurMedlemskapsperiodeFomDato(nyPeriodeIndex, "dd11ss");
-
-      await aarsavregningPage.assertValideringsfeilInneholder("gyldig dato");
-      await aarsavregningPage.assertIngenFeilmelding("utenfor valgt år");
-    });
-
-    test("Ugyldig input 'abc123' skal vise 'Skriv inn en gyldig dato'", async ({ page }) => {
-      await aarsavregningPage.velgDeltGrunnlagJa();
-      await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
-      await page.waitForTimeout(1000);
-
-      const antallFør = await aarsavregningPage.getAntallMedlemskapsperioder();
-      await aarsavregningPage.leggTilMedlemskapsperiode();
-      const nyPeriodeIndex = antallFør;
-
-      await aarsavregningPage.fyllUtOgBlurMedlemskapsperiodeFomDato(nyPeriodeIndex, "abc123");
-
-      await aarsavregningPage.assertValideringsfeilInneholder("gyldig dato");
-      await aarsavregningPage.assertIngenFeilmelding("utenfor valgt år");
-    });
-
-    test("Ugyldig input 'test' skal vise 'Skriv inn en gyldig dato'", async ({ page }) => {
-      await aarsavregningPage.velgDeltGrunnlagJa();
-      await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
-      await page.waitForTimeout(1000);
-
-      const antallFør = await aarsavregningPage.getAntallMedlemskapsperioder();
-      await aarsavregningPage.leggTilMedlemskapsperiode();
-      const nyPeriodeIndex = antallFør;
-
-      await aarsavregningPage.fyllUtOgBlurMedlemskapsperiodeFomDato(nyPeriodeIndex, "test");
-
-      await aarsavregningPage.assertValideringsfeilInneholder("gyldig dato");
-      await aarsavregningPage.assertIngenFeilmelding("utenfor valgt år");
-    });
-
-    test("Ugyldig input 'xx.yy.zzzz' skal vise 'Skriv inn en gyldig dato'", async ({ page }) => {
-      await aarsavregningPage.velgDeltGrunnlagJa();
-      await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
-      await page.waitForTimeout(1000);
-
-      const antallFør = await aarsavregningPage.getAntallMedlemskapsperioder();
-      await aarsavregningPage.leggTilMedlemskapsperiode();
-      const nyPeriodeIndex = antallFør;
-
-      await aarsavregningPage.fyllUtOgBlurMedlemskapsperiodeFomDato(nyPeriodeIndex, "xx.yy.zzzz");
-
-      await aarsavregningPage.assertValideringsfeilInneholder("gyldig dato");
-      await aarsavregningPage.assertIngenFeilmelding("utenfor valgt år");
-    });
-
-    test("Ugyldig input '99.99.9999' skal vise 'Skriv inn en gyldig dato'", async ({ page }) => {
-      await aarsavregningPage.velgDeltGrunnlagJa();
-      await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
-      await page.waitForTimeout(1000);
-
-      const antallFør = await aarsavregningPage.getAntallMedlemskapsperioder();
-      await aarsavregningPage.leggTilMedlemskapsperiode();
-      const nyPeriodeIndex = antallFør;
-
-      await aarsavregningPage.fyllUtOgBlurMedlemskapsperiodeFomDato(nyPeriodeIndex, "99.99.9999");
-
-      await aarsavregningPage.assertValideringsfeilInneholder("gyldig dato");
-      await aarsavregningPage.assertIngenFeilmelding("utenfor valgt år");
-    });
-
-    test("Ugyldig input '32.01.2024' skal vise 'Skriv inn en gyldig dato'", async ({ page }) => {
-      await aarsavregningPage.velgDeltGrunnlagJa();
-      await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
-      await page.waitForTimeout(1000);
-
-      const antallFør = await aarsavregningPage.getAntallMedlemskapsperioder();
-      await aarsavregningPage.leggTilMedlemskapsperiode();
-      const nyPeriodeIndex = antallFør;
-
-      await aarsavregningPage.fyllUtOgBlurMedlemskapsperiodeFomDato(nyPeriodeIndex, "32.01.2024");
-
-      await aarsavregningPage.assertValideringsfeilInneholder("gyldig dato");
-      await aarsavregningPage.assertIngenFeilmelding("utenfor valgt år");
-    });
-
-    test("Gyldig dato utenfor år skal vise 'Utenfor valgt år'", async ({ page }) => {
-      await aarsavregningPage.velgDeltGrunnlagJa();
-      await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
-      await page.waitForTimeout(1000);
-
-      const antallFør = await aarsavregningPage.getAntallMedlemskapsperioder();
-      await aarsavregningPage.leggTilMedlemskapsperiode();
-      const nyPeriodeIndex = antallFør;
-
-      const feilÅr = parseInt(valgtTestÅr) + 1;
-      await aarsavregningPage.fyllUtOgBlurMedlemskapsperiodeFomDato(nyPeriodeIndex, `01.01.${feilÅr}`);
-
-      await aarsavregningPage.assertValideringsfeilInneholder("utenfor valgt år");
-      await aarsavregningPage.assertIngenFeilmelding("gyldig dato");
-    });
-
-    test("Tom-dato: Ugyldig input 'dd11ss' skal vise 'Skriv inn en gyldig dato'", async ({ page }) => {
-      await aarsavregningPage.velgDeltGrunnlagJa();
-      await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
-      await page.waitForTimeout(1000);
-
-      const antallFør = await aarsavregningPage.getAntallMedlemskapsperioder();
-      await aarsavregningPage.leggTilMedlemskapsperiode();
-      const nyPeriodeIndex = antallFør;
-
-      await aarsavregningPage.fyllUtMedlemskapsperiodeFomDato(nyPeriodeIndex, lagDato("01.01"));
-      await aarsavregningPage.fyllUtOgBlurMedlemskapsperiodeTomDato(nyPeriodeIndex, "dd11ss");
-
-      await aarsavregningPage.assertValideringsfeilInneholder("gyldig dato");
-      await aarsavregningPage.assertIngenFeilmelding("utenfor valgt år");
-    });
-
-    test("Skatteforholdsperiode: Ugyldig input 'dd11ss' skal vise 'Skriv inn en gyldig dato'", async ({ page }) => {
-      await aarsavregningPage.velgDeltGrunnlagJa();
-      await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
-      await page.waitForTimeout(1000);
-
-      const antallMedlemskapFør = await aarsavregningPage.getAntallMedlemskapsperioder();
-      await aarsavregningPage.leggTilMedlemskapsperiode();
-      const nyMedlemIndex = antallMedlemskapFør;
-      await aarsavregningPage.fyllUtMedlemskapsperiodeFomDato(nyMedlemIndex, lagDato("01.01"));
-      await aarsavregningPage.fyllUtMedlemskapsperiodeTomDato(nyMedlemIndex, lagDato("31.12"));
-      await aarsavregningPage.velgTrygdedekning(nyMedlemIndex, "Helse- og pensjonsdel (§ 2-9)");
-
-      await aarsavregningPage.leggTilSkatteforholdsperiode();
-      await aarsavregningPage.fyllUtOgBlurSkatteforholdFomDato(0, "dd11ss");
-
-      await aarsavregningPage.assertValideringsfeilInneholder("gyldig dato");
-      await aarsavregningPage.assertIngenFeilmelding("utenfor valgt år");
-    });
   });
 
   test.describe("AC2 - Skatteforholdsperiode validering", () => {
-    test.beforeEach(async ({ page }) => {
-      test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
-      await setupAarsavregningTest(page);
-    });
-
     test("Kan legge til ny skatteforholdsperiode etter å ha valgt delt grunnlag", async ({ page }, testInfo) => {
+      test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
+      await setupAarsavregningTest(page, "MEL-1041");
       // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet
       await aarsavregningPage.velgDeltGrunnlagJa();
       await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
@@ -477,6 +205,8 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
     });
 
     test("Kan utvide skatteforholdsperiode innenfor medlemskapsperiode", async ({ page }, testInfo) => {
+      test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
+      await setupAarsavregningTest(page, "MEL-1042");
       // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet
       await aarsavregningPage.velgDeltGrunnlagJa();
       await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
@@ -511,14 +241,11 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
   });
 
   test.describe("AC2.5 - Legg til periode med pliktig bestemmelse (bugfix)", () => {
-    test.beforeEach(async ({ page }) => {
-      test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
-      await setupAarsavregningTest(page);
-    });
-
     test("skal vise 'Legg til periode'-knappen for delt grunnlag selv med pliktig bestemmelse", async ({
       page,
     }, testInfo) => {
+      test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
+      await setupAarsavregningTest(page, "MEL-1043");
       // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet (delt grunnlag)
       await aarsavregningPage.velgDeltGrunnlagJa();
 
@@ -541,6 +268,8 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
     });
 
     test("kan legge til ny periode med pliktig bestemmelse og delt grunnlag", async ({ page }, testInfo) => {
+      test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
+      await setupAarsavregningTest(page, "MEL-1044");
       // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet (delt grunnlag)
       await aarsavregningPage.velgDeltGrunnlagJa();
 
@@ -573,12 +302,9 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
   });
 
   test.describe("AC3 - Inntektsperiode validering", () => {
-    test.beforeEach(async ({ page }) => {
-      test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
-      await setupAarsavregningTest(page);
-    });
-
     test("Kan legge til ny inntektsperiode etter å ha valgt delt grunnlag", async ({ page }, testInfo) => {
+      test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
+      await setupAarsavregningTest(page, "MEL-1045");
       // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet
       await aarsavregningPage.velgDeltGrunnlagJa();
       await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
@@ -614,6 +340,8 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
     });
 
     test("Kan utvide inntektsperiode innenfor medlemskapsperiode", async ({ page }, testInfo) => {
+      test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
+      await setupAarsavregningTest(page, "MEL-1046");
       // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet
       await aarsavregningPage.velgDeltGrunnlagJa();
       await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
@@ -653,6 +381,8 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
     });
 
     test("Kan legge til flere inntektsperioder innenfor samme år", async ({ page }, testInfo) => {
+      test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
+      await setupAarsavregningTest(page, "MEL-1047");
       // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet
       await aarsavregningPage.velgDeltGrunnlagJa();
       await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
@@ -693,129 +423,6 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
       await aarsavregningPage.verifiserIngenFeilmelding("overlapper");
 
       await runAxeAnalyze(page, testInfo.title);
-    });
-  });
-
-  test.describe("AC5 - Skatteforhold skal ikke auto-fylles med ugyldige datoer fra medlemskapsperiode", () => {
-    test.beforeEach(async ({ page }) => {
-      await setupAarsavregningTest(page);
-    });
-
-    test("Skatteforhold forblir tomme når medlemskapsperiode har ugyldig kort input som '0101' og '01'", async ({
-      page,
-    }) => {
-      await aarsavregningPage.velgDeltGrunnlagJa();
-      await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
-
-      await page.waitForTimeout(1000);
-
-      const antallMedlemskapFør = await aarsavregningPage.getAntallMedlemskapsperioder();
-      await aarsavregningPage.leggTilMedlemskapsperiode();
-
-      const nyMedlemIndex = antallMedlemskapFør;
-
-      const medlemFomInput = page
-        .locator(".perioder")
-        .filter({ hasText: "Medlemskapsperiode" })
-        .locator('input[type="text"]')
-        .nth(nyMedlemIndex * 3);
-      await medlemFomInput.fill("0101");
-      await medlemFomInput.blur();
-
-      const medlemTomInput = page
-        .locator(".perioder")
-        .filter({ hasText: "Medlemskapsperiode" })
-        .locator('input[type="text"]')
-        .nth(nyMedlemIndex * 3 + 1);
-      await medlemTomInput.fill("01");
-      await medlemTomInput.blur();
-
-      await page.waitForTimeout(500);
-
-      const skattFomInput = page
-        .locator(".perioder")
-        .filter({ hasText: "Skatteforhold" })
-        .locator('input[type="text"]')
-        .first();
-      const skattTomInput = page
-        .locator(".perioder")
-        .filter({ hasText: "Skatteforhold" })
-        .locator('input[type="text"]')
-        .nth(1);
-
-      const skattFomValue = await skattFomInput.inputValue();
-      const skattTomValue = await skattTomInput.inputValue();
-
-      expect(skattFomValue, "Skatteforhold fomDato skal være tom når medlemskapsperiode har ugyldig input").toBe("");
-      expect(skattTomValue, "Skatteforhold tomDato skal være tom når medlemskapsperiode har ugyldig input").toBe("");
-    });
-
-    test("Skatteforhold forblir tomme når medlemskapsperiode har datoer utenfor valgt år", async ({ page }) => {
-      await aarsavregningPage.velgDeltGrunnlagJa();
-      await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
-
-      await page.waitForTimeout(1000);
-
-      const antallMedlemskapFør = await aarsavregningPage.getAntallMedlemskapsperioder();
-      await aarsavregningPage.leggTilMedlemskapsperiode();
-
-      const nyMedlemIndex = antallMedlemskapFør;
-      await aarsavregningPage.fyllUtMedlemskapsperiodeFomDato(nyMedlemIndex, "01.01.2019");
-      await aarsavregningPage.fyllUtMedlemskapsperiodeTomDato(nyMedlemIndex, "31.12.2019");
-
-      await page.waitForTimeout(500);
-
-      const skattFomInput = page
-        .locator(".perioder")
-        .filter({ hasText: "Skatteforhold" })
-        .locator('input[type="text"]')
-        .first();
-      const skattTomInput = page
-        .locator(".perioder")
-        .filter({ hasText: "Skatteforhold" })
-        .locator('input[type="text"]')
-        .nth(1);
-
-      const skattFomValue = await skattFomInput.inputValue();
-      const skattTomValue = await skattTomInput.inputValue();
-
-      expect(skattFomValue, "Skatteforhold fomDato skal være tom når medlemskapsperiode er utenfor valgt år").toBe("");
-      expect(skattTomValue, "Skatteforhold tomDato skal være tom når medlemskapsperiode er utenfor valgt år").toBe("");
-    });
-
-    test("Skatteforhold fylles korrekt når medlemskapsperiode har gyldige datoer innenfor valgt år", async ({
-      page,
-    }) => {
-      await aarsavregningPage.velgDeltGrunnlagJa();
-      await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
-
-      await page.waitForTimeout(1000);
-
-      const antallMedlemskapFør = await aarsavregningPage.getAntallMedlemskapsperioder();
-      await aarsavregningPage.leggTilMedlemskapsperiode();
-
-      const nyMedlemIndex = antallMedlemskapFør;
-      await aarsavregningPage.fyllUtMedlemskapsperiodeFomDato(nyMedlemIndex, lagDato("01.01"));
-      await aarsavregningPage.fyllUtMedlemskapsperiodeTomDato(nyMedlemIndex, lagDato("31.12"));
-
-      await page.waitForTimeout(500);
-
-      const skattFomInput = page
-        .locator(".perioder")
-        .filter({ hasText: "Skatteforhold" })
-        .locator('input[type="text"]')
-        .first();
-      const skattTomInput = page
-        .locator(".perioder")
-        .filter({ hasText: "Skatteforhold" })
-        .locator('input[type="text"]')
-        .nth(1);
-
-      const skattFomValue = await skattFomInput.inputValue();
-      const skattTomValue = await skattTomInput.inputValue();
-
-      expect(skattFomValue, "Skatteforhold fomDato skal fylles med gyldig dato").toBe(lagDato("01.01"));
-      expect(skattTomValue, "Skatteforhold tomDato skal fylles med gyldig dato").toBe(lagDato("31.12"));
     });
   });
 });

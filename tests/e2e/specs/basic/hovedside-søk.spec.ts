@@ -5,9 +5,9 @@ import { SokPage } from "../../pages/sok.page";
 
 test("Søk etter gyldig ID og verifiser resultater", async ({ page }, testInfo) => {
   const mainPage = new HovedsidePage(page);
-  const searchResultsPage = new SokPage(page);
 
   await mainPage.goto();
+  const searchResultsPage = new SokPage(page);
 
   await mainPage.søk(USER_ID_VALID);
 

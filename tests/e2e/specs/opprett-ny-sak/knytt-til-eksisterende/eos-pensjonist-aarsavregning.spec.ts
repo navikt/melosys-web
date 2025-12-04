@@ -2,8 +2,7 @@ import { expect, test } from "@playwright/test";
 import { runAxeAnalyze } from "../../../utils/axeUtils";
 import { HovedsidePage, USER_ID_VALID } from "../../../pages/hovedside.page";
 import { OpprettNySakPage } from "../../../pages/opprett-ny-sak/opprett-ny-sak.page";
-import { getSaksnummerFraLocator } from "../../../utils/testUtils";
-import { opprettEøsPensjonistSakMedTrygdeavgift } from "../../../utils/testdataUtils";
+import { hentPrepopulertSakUrl } from "../../../utils/testdataUtils";
 
 let opprettNySakPage: OpprettNySakPage;
 let hovedsidePage: HovedsidePage;
@@ -17,15 +16,16 @@ test.describe("EØS pensjonist med trygdeavgift - årsavregning", () => {
 
   test("Opprett EØS pensjonist-sak med trygdeavgift for testdata", async ({ page }, testInfo) => {
     // Denne testen oppretter testdata som brukes av de andre testene
-    const sak = await opprettEøsPensjonistSakMedTrygdeavgift(page);
+    const url = hentPrepopulertSakUrl("MEL-1055");
 
-    expect(getSaksnummerFraLocator(sak), "Sak skal være opprettet").toBeTruthy();
-    expect(getSaksnummerFraLocator(sak)).toMatch(/^MEL-\d+$/);
+    expect(url, "URL skal være opprettet").toBeTruthy();
+    expect(url).toContain("/melosys/EU_EOS/");
 
     await runAxeAnalyze(page, testInfo.title);
   });
 
   test("Knytt til EØS pensjonist-sak med åpne behandlinger - årsavregning tilgjengelig", async ({ page }, testInfo) => {
+    // Bruk prepopulert OPPRETTET EØS pensjonist-sak MEL-1062
     // Test at EØS pensjonister med trygdeavgift kan opprette årsavregning
     // selv om de har aktive behandlinger (unntak fra vanlig EØS-regel)
     await hovedsidePage.goto();
@@ -34,22 +34,10 @@ test.describe("EØS pensjonist med trygdeavgift - årsavregning", () => {
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgKnyttTilEksisterendeSak();
 
-    // Finn en EØS-sak med åpen behandling
-    // Ideelt sett skulle vi filtrert på sakstema="Trygdeavgift", men vi tester
-    // at logikken fungerer for alle EØS-saker som matcher kriteriene
-    const valgtSak = await opprettNySakPage.finnSak({
-      sakstype: "EU/EØS-land",
-      behandlingsstatus: "Behandlingen er opprettet",
-    });
+    const sakId = "MEL-1062";
+    const valgtSak = opprettNySakPage.finnSakBySaksnummer(sakId);
 
-    if (!valgtSak) {
-      test.skip();
-      return;
-    }
-
-    expect(valgtSak, "Ingen EØS pensjonist-sak funnet").toBeTruthy();
-
-    valgtSak.click();
+    await valgtSak.click();
 
     // Verifiser at årsavregning er tilgjengelig (unntak fra vanlig EØS-regel)
     // Dette er hovedpoenget med MELOSYS-7603
@@ -57,10 +45,7 @@ test.describe("EØS pensjonist med trygdeavgift - årsavregning", () => {
 
     // Verifiser at ingen feilmelding vises
     const harFeilmelding = await opprettNySakPage.harFeilmelding();
-    expect(
-      harFeilmelding,
-      `Ingen feilmelding skal vises for EØS pensjonist-sak ${getSaksnummerFraLocator(valgtSak)}`,
-    ).toBe(false);
+    expect(harFeilmelding, `Ingen feilmelding skal vises for EØS pensjonist-sak ${sakId}`).toBe(false);
 
     await runAxeAnalyze(page, testInfo.title);
   });

@@ -1,8 +1,7 @@
 import { test } from "@playwright/test";
 import { BehandlingPage } from "../../pages/behandling/behandling.page";
-import { TIMEOUT_FOR_COMPLEX_TESTS } from "../../utils/testUtils";
-import { SokPage } from "../../pages/sok.page";
-import { opprettAvtalelandSak } from "../../utils/testdataUtils";
+import { getSaksnummerFraUrl, TIMEOUT_FOR_COMPLEX_TESTS } from "../../utils/testUtils";
+import { hentPrepopulertSakUrl } from "../../utils/testdataUtils";
 import { runAxeAnalyze } from "../../utils/axeUtils";
 
 /**
@@ -17,16 +16,14 @@ import { runAxeAnalyze } from "../../utils/axeUtils";
 test.describe("Setup: Avtaleland-sak med henlagt behandling", () => {
   test("Opprett Avtaleland-sak og henlegg behandlingen", async ({ page }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout siden vi oppretter og henlegger sak
-    const sokPage = new SokPage(page);
     const behandlingPage = new BehandlingPage(page);
 
-    // Opprett egen Avtaleland-sak
-    const sak = await opprettAvtalelandSak(page);
-    const sakId = await sokPage.getSaksnummer(sak);
+    // Hent URL til prepopulert Avtaleland-sak og naviger direkte dit
+    const url = hentPrepopulertSakUrl("MEL-1009");
+    await behandlingPage.goto(url);
 
-    await sokPage.klikkVisBehandling(sak);
-    await behandlingPage.verifiserBehandlingsside();
-    await behandlingPage.avsluttBehandling("Søknaden/klagen er trukket", sakId);
+    const sakId = getSaksnummerFraUrl(page);
+    await behandlingPage.avsluttBehandling(sakId, "Søknaden/klagen er trukket", "Henlegg saken", "Søknaden er trukket");
 
     await runAxeAnalyze(page, testInfo.title);
   });

@@ -1,44 +1,39 @@
-import { test, Page } from "@playwright/test";
+import { Page, test } from "@playwright/test";
 import { SendBrevPage } from "../../pages/behandling/send-brev.page";
 import { assertErrors, TIMEOUT_FOR_COMPLEX_TESTS } from "../../utils/testUtils";
-import { SokPage } from "../../pages/sok.page";
 import { runAxeAnalyze } from "../../utils/axeUtils";
-import { opprettAvtalelandSak, opprettUtenforAvtalelandSakMedAarsavregning } from "../../utils/testdataUtils";
+import { hentPrepopulertSakUrl } from "../../utils/testdataUtils";
 
 let sendBrevPage: SendBrevPage;
 
 // Gjenbrukbar setup-funksjon som oppretter egen testdata
-async function setupSendBrevTest(page: Page) {
-  const sokPage = new SokPage(page);
+async function setupSendBrevTest(page: Page, saksnummer: string = "MEL-1003") {
   sendBrevPage = new SendBrevPage(page);
 
-  // Opprett egen Avtaleland-sak for denne testen
-  const sak = await opprettAvtalelandSak(page);
-
-  await sokPage.klikkVisBehandling(sak);
-  await sendBrevPage.verifiserBehandlingsside();
+  // Hent URL til prepopulert Avtaleland-sak og naviger direkte dit
+  const url = hentPrepopulertSakUrl(saksnummer);
+  await sendBrevPage.goto(url);
 
   await page.waitForLoadState("domcontentloaded");
   await sendBrevPage.clickSendBrevTab();
 }
 
 test.describe("Verifiser disable/enable av 'Send brev' knapp", () => {
-  test.beforeEach(async ({ page }) => {
-    await setupSendBrevTest(page);
-  });
-
   test("'Send brev' knappen er disabled når hverken mottaker eller brevmal er valgt ", async ({ page }, testInfo) => {
+    await setupSendBrevTest(page, "MEL-1003");
     await sendBrevPage.verifiserSendKnappDeaktivert();
     await runAxeAnalyze(page, testInfo.title);
   });
 
   test("'Send brev' knappen er disabled når mottaker er valgt men ikke brevmal", async ({ page }, testInfo) => {
+    await setupSendBrevTest(page, "MEL-1004");
     await sendBrevPage.selectFirstMottaker();
     await sendBrevPage.verifiserSendKnappDeaktivert();
     await runAxeAnalyze(page, testInfo.title);
   });
 
   test("'Send brev' knappen blir enabled når både mottaker og brevmal er valgt", async ({ page }, testInfo) => {
+    await setupSendBrevTest(page, "MEL-1005");
     await sendBrevPage.selectFirstMottaker();
     await sendBrevPage.selectFirstBrevmal();
     await sendBrevPage.verifiserSendKnappAktivert();
@@ -47,11 +42,8 @@ test.describe("Verifiser disable/enable av 'Send brev' knapp", () => {
 });
 
 test.describe("Validering av brevmaler for mottaker 'Bruker eller brukers fullmektig'", () => {
-  test.beforeEach(async ({ page }) => {
-    await setupSendBrevTest(page);
-  });
-
   test("Korrekt validering for brevmal 'Melding om manglende opplysninger til bruker'", async ({ page }, testInfo) => {
+    await setupSendBrevTest(page, "MEL-1006");
     await sendBrevPage.selectMottakerByLabel("Bruker eller brukers fullmektig");
     await sendBrevPage.selectBrevmalByLabel("Melding om manglende opplysninger til bruker");
     await sendBrevPage.clickSendBrev();
@@ -65,6 +57,7 @@ test.describe("Validering av brevmaler for mottaker 'Bruker eller brukers fullme
   });
 
   test("Korrekt validering for brevmal 'Fritekstbrev til bruker'", async ({ page }, testInfo) => {
+    await setupSendBrevTest(page, "MEL-1007");
     await sendBrevPage.selectMottakerByLabel("Bruker eller brukers fullmektig");
     await sendBrevPage.selectBrevmalByLabel("Fritekstbrev til bruker");
     await sendBrevPage.clickSendBrev();
@@ -84,14 +77,11 @@ test.describe("Validering av årsavregning brevmaler", () => {
     page,
   }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout siden vi oppretter sak med årsavregning
-    const sokPage = new SokPage(page);
     sendBrevPage = new SendBrevPage(page);
 
-    // Opprett egen FTRL-sak med årsavregning for denne testen
-    const sak = await opprettUtenforAvtalelandSakMedAarsavregning(page);
-
-    await sokPage.klikkVisBehandling(sak);
-    await sendBrevPage.verifiserBehandlingsside();
+    // Hent URL til prepopulert FTRL-sak med årsavregning og naviger direkte dit
+    const url = hentPrepopulertSakUrl("MEL-1023");
+    await sendBrevPage.goto(url);
 
     await page.waitForLoadState("domcontentloaded");
     await sendBrevPage.clickSendBrevTab();

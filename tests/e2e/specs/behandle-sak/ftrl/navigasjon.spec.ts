@@ -1,8 +1,7 @@
 import { test } from "@playwright/test";
-import { SokPage } from "../../../pages/sok.page";
 import { TIMEOUT_FOR_COMPLEX_TESTS } from "../../../utils/testUtils";
 import { BehandlingPage } from "../../../pages/behandling/behandling.page";
-import { opprettUtenforAvtalelandSak } from "../../../utils/testdataUtils";
+import { hentPrepopulertSakUrl } from "../../../utils/testdataUtils";
 import { runAxeAnalyze } from "../../../utils/axeUtils";
 
 /**
@@ -22,15 +21,11 @@ test.describe("FTRL Stegvelger - Navigasjon", () => {
   test("FTRL-behandling åpnes - viser stegvelger", async ({ page }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
 
-    const sokPage = new SokPage(page);
     const behandlingPage = new BehandlingPage(page);
 
-    // Opprett en FTRL-sak (Utenfor avtaleland)
-    const sak = await opprettUtenforAvtalelandSak(page);
-
-    // Naviger til behandlingen
-    await sokPage.klikkVisBehandling(sak);
-    await behandlingPage.verifiserBehandlingsside();
+    // Hent URL til prepopulert FTRL-sak og naviger direkte dit
+    const url = hentPrepopulertSakUrl("MEL-1016");
+    await behandlingPage.goto(url);
 
     await runAxeAnalyze(page, testInfo.title);
   });
@@ -38,14 +33,11 @@ test.describe("FTRL Stegvelger - Navigasjon", () => {
   test("Navigasjon mellom steg - frem og tilbake fungerer", async ({ page }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
 
-    const sokPage = new SokPage(page);
     const behandlingPage = new BehandlingPage(page);
 
-    const sak = await opprettUtenforAvtalelandSak(page);
-
-    // Naviger til behandlingen
-    await sokPage.klikkVisBehandling(sak);
-    await behandlingPage.verifiserBehandlingsside();
+    // Hent URL til prepopulert FTRL-sak og naviger direkte dit
+    const url = hentPrepopulertSakUrl("MEL-1017");
+    await behandlingPage.goto(url);
 
     await runAxeAnalyze(page, testInfo.title);
   });
@@ -53,13 +45,11 @@ test.describe("FTRL Stegvelger - Navigasjon", () => {
   test("Progressbar - viser alle steg", async ({ page }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
 
-    const sokPage = new SokPage(page);
     const behandlingPage = new BehandlingPage(page);
 
-    const sak = await opprettUtenforAvtalelandSak(page);
-
-    await sokPage.klikkVisBehandling(sak);
-    await behandlingPage.verifiserBehandlingsside();
+    // Hent URL til prepopulert FTRL-sak og naviger direkte dit
+    const url = hentPrepopulertSakUrl("MEL-1018");
+    await behandlingPage.goto(url);
 
     await runAxeAnalyze(page, testInfo.title);
   });
@@ -67,13 +57,11 @@ test.describe("FTRL Stegvelger - Navigasjon", () => {
   test("Progressbar - klikk på steg navigerer til steget", async ({ page }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
 
-    const sokPage = new SokPage(page);
     const behandlingPage = new BehandlingPage(page);
 
-    const sak = await opprettUtenforAvtalelandSak(page);
-
-    await sokPage.klikkVisBehandling(sak);
-    await behandlingPage.verifiserBehandlingsside();
+    // Hent URL til prepopulert FTRL-sak og naviger direkte dit
+    const url = hentPrepopulertSakUrl("MEL-1019");
+    await behandlingPage.goto(url);
 
     await runAxeAnalyze(page, testInfo.title);
   });

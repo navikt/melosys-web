@@ -2,7 +2,6 @@ import { expect, test } from "@playwright/test";
 import { runAxeAnalyze } from "../../../utils/axeUtils";
 import { HovedsidePage, USER_ID_VALID } from "../../../pages/hovedside.page";
 import { OpprettNySakPage } from "../../../pages/opprett-ny-sak/opprett-ny-sak.page";
-import { getSaksnummerFraLocator } from "../../../utils/testUtils";
 
 let opprettNySakPage: OpprettNySakPage;
 
@@ -19,36 +18,28 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgKnyttTilEksisterendeSak();
 
-    const valgtSak = await opprettNySakPage.finnSak({
-      sakstype: "Utenfor avtaleland",
-      behandlingsstatus: "Behandlingen er opprettet",
-    });
+    // Bruk prepopulert OPPRETTET sak MEL-1060 (FTRL)
+    const sakId = "MEL-1060";
+    const valgtSak = opprettNySakPage.finnSakBySaksnummer(sakId);
 
-    expect(valgtSak, "Ingen'Utenfor avtaleland'-sak funnet").toBeTruthy();
-
-    valgtSak?.click();
+    await valgtSak.click();
 
     await opprettNySakPage.verifiserTilgjengeligeBehandlingstyper(valgtSak!, ["Årsavregning"]);
     const harFeilmelding = await opprettNySakPage.harFeilmelding();
-    expect(harFeilmelding, `Ingen feilmelding skal vises for sak ${getSaksnummerFraLocator(valgtSak!)}`).toBe(false);
+    expect(harFeilmelding, `Ingen feilmelding skal vises for sak ${sakId}`).toBe(false);
 
     await runAxeAnalyze(page, testInfo.title);
   });
 
   test("EØS-sak med aktive behandlinger - viser varselmelding", async ({ page }, testInfo) => {
-    // Søk etter bruker med sak som har aktive behandlinger (EØS eller Avtaleland)
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgKnyttTilEksisterendeSak();
 
-    // Prøv først EØS-land, hvis ikke funnet prøv Avtaleland (testdata kan variere)
-    let valgtSak;
-    try {
-      valgtSak = await opprettNySakPage.velgFørsteSak("EU/EØS-land", undefined, "Medlemskap og lovvalg");
-    } catch {
-      valgtSak = await opprettNySakPage.velgFørsteSak("Avtaleland", undefined, "Medlemskap og lovvalg");
-    }
+    // Bruk prepopulert EU/EØS-sak MEL-1051 (IKKE_YRKESAKTIV, UNDER_BEHANDLING)
+    const sakId = "MEL-1051";
+    const valgtSak = opprettNySakPage.finnSakBySaksnummer(sakId);
 
-    expect(valgtSak, "Ingen sak funnet med aktive behandlinger").toBeTruthy();
+    await valgtSak.click();
 
     await opprettNySakPage.verifiserEosFeilmelding();
 
@@ -63,41 +54,38 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgKnyttTilEksisterendeSak();
 
-    // Søk etter en EØS-sak med sakstema "Trygdeavgift" og behandlingstema "Pensjonist"
-    const valgtSak = await opprettNySakPage.finnSak({
-      sakstype: "EU/EØS-land",
-      sakstema: "Trygdeavgift",
-      resultattype: "Pensjonist",
-    });
+    // Bruk prepopulert EØS pensjonist-sak MEL-1055 (EU_EOS, PENSJONIST)
+    const sakId = "MEL-1055";
+    const valgtSak = opprettNySakPage.finnSakBySaksnummer(sakId);
 
-    expect(valgtSak, "Ingen EØS pensjonist-sak funnet").toBeTruthy();
-
-    valgtSak?.click();
+    await valgtSak.click();
 
     // Verifiser at årsavregning er tilgjengelig (unntak fra vanlig EØS-regel)
     await opprettNySakPage.verifiserTilgjengeligeBehandlingstyper(valgtSak!, ["Årsavregning"]);
 
     // Verifiser at ingen feilmelding vises
     const harFeilmelding = await opprettNySakPage.harFeilmelding();
-    expect(
-      harFeilmelding,
-      `Ingen feilmelding skal vises for EØS pensjonist-sak ${getSaksnummerFraLocator(valgtSak!)}`,
-    ).toBe(false);
+    expect(harFeilmelding, `Ingen feilmelding skal vises for EØS pensjonist-sak ${sakId}`).toBe(false);
 
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("Avtaleland med åpne behandlinger - viser behandlingstyper", async ({ page }, testInfo) => {
+  test("Avtaleland med åpne behandlinger - viser varselmelding", async ({ page }, testInfo) => {
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgKnyttTilEksisterendeSak();
 
-    const valgtSak = await opprettNySakPage.velgFørsteSak("Avtaleland", "Behandlingen er opprettet");
-    expect(valgtSak, "Ingen Avtaleland-sak funnet").toBeTruthy();
+    // Bruk prepopulert Avtaleland-sak MEL-1012 (OPPRETTET)
+    // Avtaleland-saker med aktive behandlinger viser varselmelding og skjuler behandlingstyper
+    const sakId = "MEL-1012";
+    const valgtSak = opprettNySakPage.finnSakBySaksnummer(sakId);
 
-    await opprettNySakPage.verifiserTilgjengeligeBehandlingstyper(valgtSak, ["Årsavregning"]);
+    await valgtSak.click();
 
-    const harFeilmelding = await opprettNySakPage.harFeilmelding();
-    expect(harFeilmelding, `Ingen feilmelding skal vises for sak ${getSaksnummerFraLocator(valgtSak!)}`).toBe(false);
+    // Avtaleland med aktiv behandling skal vise varselmelding (samme som EØS)
+    await opprettNySakPage.verifiserEosFeilmelding();
+
+    // Behandlingstype-gruppen skal IKKE være synlig
+    await opprettNySakPage.verifiserBehandlingstypeGruppeIkkeSynlig();
 
     await runAxeAnalyze(page, testInfo.title);
   });
@@ -106,19 +94,17 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgKnyttTilEksisterendeSak();
 
-    const valgtSak = await opprettNySakPage.velgFørsteSak("Avtaleland", "Behandlingen er avsluttet");
+    // Bruk prepopulert AVSLUTTET Avtaleland-sak MEL-1064
+    const sakId = "MEL-1064";
+    const valgtSak = opprettNySakPage.finnSakBySaksnummer(sakId);
 
-    expect(valgtSak, "Fant ingen 'Avtaleland - Behandlingen er avsluttet' saker").toBeTruthy();
+    await valgtSak.click();
 
-    await opprettNySakPage.verifiserTilgjengeligeBehandlingstyper(valgtSak, [
-      "Ny vurdering",
-      "Klage",
-      "Henvendelse",
-      "Årsavregning",
-    ]);
+    // Avtaleland-saker har IKKE Årsavregning som behandlingstype
+    await opprettNySakPage.verifiserTilgjengeligeBehandlingstyper(valgtSak, ["Ny vurdering", "Klage", "Henvendelse"]);
 
     const harFeilmelding = await opprettNySakPage.harFeilmelding();
-    expect(harFeilmelding, `Ingen feilmelding skal vises for sak ${getSaksnummerFraLocator(valgtSak!)}`).toBe(false);
+    expect(harFeilmelding, `Ingen feilmelding skal vises for sak ${sakId}`).toBe(false);
 
     await runAxeAnalyze(page, testInfo.title);
   });
@@ -127,18 +113,16 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgKnyttTilEksisterendeSak();
 
-    const valgtSak = await opprettNySakPage.finnSak({
-      sakstype: "Utenfor avtaleland",
-    });
+    // Bruk prepopulert UNDER_BEHANDLING sak MEL-1013 (FTRL)
+    const sakId = "MEL-1013";
+    const valgtSak = opprettNySakPage.finnSakBySaksnummer(sakId);
 
-    expect(valgtSak, "Ingen 'Utenfor avtaleland'-sak funnet").toBeTruthy();
-
-    valgtSak?.click();
+    await valgtSak.click();
 
     await opprettNySakPage.verifiserTilgjengeligeBehandlingstyper(valgtSak!, ["Årsavregning"]);
 
     const harFeilmelding = await opprettNySakPage.harFeilmelding();
-    expect(harFeilmelding, `Ingen feilmelding skal vises for sak ${getSaksnummerFraLocator(valgtSak!)}`).toBe(false);
+    expect(harFeilmelding, `Ingen feilmelding skal vises for sak ${sakId}`).toBe(false);
 
     await runAxeAnalyze(page, testInfo.title);
   });
@@ -147,14 +131,11 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgKnyttTilEksisterendeSak();
 
-    const valgtSak = await opprettNySakPage.finnSak({
-      sakstype: "Utenfor avtaleland",
-      behandlingsstatus: "Behandlingen er avsluttet",
-    });
+    // Bruk prepopulert AVSLUTTET sak MEL-1070 (FTRL)
+    const sakId = "MEL-1070";
+    const valgtSak = opprettNySakPage.finnSakBySaksnummer(sakId);
 
-    expect(valgtSak, "Ingen 'Utenfor avtaleland - Behandlingen er avsluttet' sak funnet").toBeTruthy();
-
-    valgtSak?.click();
+    await valgtSak.click();
 
     await opprettNySakPage.verifiserTilgjengeligeBehandlingstyper(valgtSak!, [
       "Ny vurdering",
@@ -164,7 +145,7 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
     ]);
 
     const harFeilmelding = await opprettNySakPage.harFeilmelding();
-    expect(harFeilmelding, `Ingen feilmelding skal vises for sak ${getSaksnummerFraLocator(valgtSak!)}`).toBe(false);
+    expect(harFeilmelding, `Ingen feilmelding skal vises for sak ${sakId}`).toBe(false);
 
     await runAxeAnalyze(page, testInfo.title);
   });
@@ -174,31 +155,27 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
     await opprettNySakPage.velgKnyttTilEksisterendeSak();
 
     // Test grunnleggende navigasjon og at behandlingstype-seksjonen fungerer
-    const valgtSak = await opprettNySakPage.velgFørsteSak("Utenfor avtaleland");
+    // Bruk prepopulert OPPRETTET Utenfor avtaleland-sak MEL-1059
+    const sakId1 = "MEL-1059";
+    const valgtSak1 = opprettNySakPage.finnSakBySaksnummer(sakId1);
 
-    expect(valgtSak, "Ingen Avtaleland-sak funnet").toBeTruthy();
+    await valgtSak1.click();
 
     // Verifiser at behandlingstype fungerer etter sakvalg
-    await opprettNySakPage.verifiserTilgjengeligeBehandlingstyper(valgtSak, ["Årsavregning"]);
+    await opprettNySakPage.verifiserTilgjengeligeBehandlingstyper(valgtSak1, ["Årsavregning"]);
 
-    // Tell antall tilgjengelige saker
-    const antallSaker = await opprettNySakPage.tellAntallSaker();
+    // Test navigasjon til annen sak (MEL-1060)
+    const sakId2 = "MEL-1060";
+    const valgtSak2 = opprettNySakPage.finnSakBySaksnummer(sakId2);
 
-    if (antallSaker > 1) {
-      // Test navigasjon til annen sak
-      await opprettNySakPage.velgSakVedIndex(1);
+    await valgtSak2.click();
 
-      await opprettNySakPage.velgFørsteSak("Utenfor avtaleland");
-    }
+    // Verifiser at behandlingstype fortsatt fungerer etter navigasjon
+    await opprettNySakPage.verifiserTilgjengeligeBehandlingstyper(valgtSak2, ["Årsavregning"]);
 
     // Sjekk at UI-en fungerer etter navigasjon - at den ikke krasjer
-    // Dette er en grunnleggende stabiltest som verifiserer at navigasjon fungerer
     const sidenFungerer = await opprettNySakPage.erOpprettNySakSidenSynlig();
     expect(sidenFungerer).toBe(true);
-
-    // Verifiser at vi fortsatt har tilgang til sakslisten
-    const saksliste = await opprettNySakPage.tellAntallSaker();
-    expect(saksliste).toBeGreaterThan(0);
 
     await runAxeAnalyze(page, testInfo.title);
   });

@@ -13,6 +13,16 @@ export class BehandlingPage {
   }
 
   /**
+   * Naviger til en behandlingsside
+   * @param url - Relativ URL til behandlingssiden (f.eks. "/melosys/FTRL/saksbehandling/MEL-1002?behandlingID=2")
+   * @param tittel tittel på behandlingssiden (f.eks. "Oppgi opplysninger fra attest / S1")
+   */
+  async goto(url: string, tittel?: string): Promise<void> {
+    await this.page.goto(url);
+    await this.verifiserBehandlingsside(tittel);
+  }
+
+  /**
    * Klikk på Bekreft-knappen i Inngang-steget (kun i aktivt steg)
    */
   async klikkBekreftOgFortsett(): Promise<void> {
@@ -24,45 +34,35 @@ export class BehandlingPage {
 
   /**
    * Verifiser at vi er på behandlingssiden
+   * @param forventetTittel - Valgfri tittel som skal vises på siden (f.eks. "Oppgi opplysninger fra attest / S1")
    */
-  async verifiserBehandlingsside(): Promise<void> {
+  async verifiserBehandlingsside(forventetTittel?: string): Promise<void> {
     await expect(this.page).toHaveURL(/\/melosys\/(FTRL|AVTALELAND|EOS|EU_EOS|TRYGDEAVTALE)\/.*\/MEL-\d+/);
 
     // Vent på at siden lastes med behandlingsinnhold
     await this.page.waitForLoadState("domcontentloaded");
 
-    // Sjekk at behandlingsinfo er synlig
-    const behandlingsInfo = [
-      "h1", // Behandlingstittel
-      ".behandlingsstatus",
-      ".saksnummer",
-      ':has-text("Behandling")',
-      ':has-text("MEL-")', // Saksnummer
-    ];
-
-    let infoFunnet = false;
-    for (const selector of behandlingsInfo) {
-      if (
-        await this.page
-          .locator(selector)
-          .isVisible()
-          .catch(() => false)
-      ) {
-        infoFunnet = true;
-        break;
-      }
-    }
-
     const saksnummer = getSaksnummerFraUrl(this.page);
-    expect(infoFunnet, `${saksnummer}: Kunne ikke verifisere at vi er på en behandlingsside`).toBe(true);
+
+    // Vent på informasjonslinjen (finnes alltid på behandlingssider, inneholder personnavn og fnr)
+    await expect(
+      this.page.locator(".informasjonlinje"),
+      `${saksnummer}: Informasjonslinjen skal være synlig`,
+    ).toBeVisible({ timeout: 10000 });
+
+    // Hvis forventet tittel er oppgitt, verifiser at den finnes
+    if (forventetTittel) {
+      await expect(
+        this.page.locator("h1.stegvelgertittel"),
+        `${saksnummer}: Tittelen "${forventetTittel}" skal være synlig`,
+      ).toHaveText(forventetTittel, { timeout: 10000 });
+    }
   }
 
   /**
    * Finn og klikk på "Avslutt behandling" accordion-header i behandlingsmenyen
    */
   async klikkAvsluttBehandling(): Promise<void> {
-    await this.verifiserBehandlingsside();
-
     const behandlingsmeny = this.page.locator(".behandlingsmeny__meny");
     const menyErSynlig = await behandlingsmeny.isVisible().catch(() => false);
 
@@ -205,8 +205,10 @@ export class BehandlingPage {
 
   /**
    * Bekreft avslutningen (hvis det er en bekreftelsesdialog)
+   * @param buttonText - tekst på bekreft-knappen
+   * @param selectText - Valgfri spesifikk tekst på bekreft-knappen (hvis den avviker fra menyteksten)
    */
-  async bekreftAvslutning(): Promise<void> {
+  async bekreftAvslutning(buttonText: string, selectText?: string): Promise<void> {
     const saksnummer = getSaksnummerFraUrl(this.page);
     const modalSelectors = [".navds-modal[open]", ".modal[open]", '[role="dialog"]', ".dialog", ".confirmation-modal"];
 
@@ -231,46 +233,18 @@ export class BehandlingPage {
       const begrunnelseDropdown = modal.locator("select, .navds-select__input");
       const dropdownSynlig = await begrunnelseDropdown.isVisible({ timeout: 2000 }).catch(() => false);
 
-      if (dropdownSynlig) {
-        // Prøv å velge "Søknaden er trukket" først, ellers "Utenlandsoppholdet er avlyst"
-        try {
-          await begrunnelseDropdown.selectOption({ label: "Søknaden er trukket" });
-        } catch {
-          try {
-            await begrunnelseDropdown.selectOption({ label: "Utenlandsoppholdet er avlyst" });
-          } catch {
-            // Fallback til første alternativ (index 1, siden 0 er "Velg...")
-            await begrunnelseDropdown.selectOption({ index: 1 });
-          }
-        }
-        // Vent på at bekreft-knappen blir enabled
-        await modal.locator('button[type="submit"]:not([disabled])').waitFor({ state: "visible", timeout: 2000 });
+      if (dropdownSynlig && selectText) {
+        // Bruk den oppgitte teksten til å velge riktig dropdown-verdi
+        await begrunnelseDropdown.selectOption({ label: selectText });
+        // Vent litt på at knappen blir enabled
+        await this.page.waitForTimeout(500);
       }
     }
 
     // Finn "Bekreft" knappen inne i modalen
-    const bekreftSelectors = [
-      'button:has-text("Henlegg saken")',
-      'button:has-text("Bekreft")',
-      'button:has-text("OK")',
-      'button:has-text("Ja")',
-      'button:has-text("Lagre")',
-      'button[type="submit"]',
-      ".primary-button",
-      ".navds-button--primary",
-    ];
+    const bekreftKnapp = modal.locator(`button:has-text("${buttonText}")`);
 
-    let bekreftKnapp = null;
-    for (const selector of bekreftSelectors) {
-      const knapp = modal.locator(selector);
-      if (await knapp.isVisible({ timeout: 1000 }).catch(() => false)) {
-        bekreftKnapp = knapp;
-        break;
-      }
-    }
-
-    expect(bekreftKnapp, `${saksnummer}: Fant ingen bekreft-knapp i modalen`).not.toBeNull();
-    if (!bekreftKnapp) return; // Type guard for TypeScript
+    await expect(bekreftKnapp, `${saksnummer}: Bekreft-knapp skal være synlig`).toBeVisible({ timeout: 2000 });
 
     const erEnabled = await bekreftKnapp.isEnabled();
 
@@ -285,8 +259,11 @@ export class BehandlingPage {
    * Fullfør hele prosessen med å avslutte en behandling med spesifisert type
    * @param vedtaksType - type avslutning
    * @param saksnummer - saksnummer for feilmeldinger
+   * @param bekreftKnappTekst - valgfri spesifikk tekst på bekreft-knappen hvis den avviker fra vedtaksType
+   * @param selectText
    */
   async avsluttBehandling(
+    saksnummer: string,
     vedtaksType:
       | "Søknaden er innvilget"
       | "Søknaden er avslått"
@@ -294,7 +271,8 @@ export class BehandlingPage {
       | "Ferdigbehandlet"
       | "Søknaden/klagen er trukket"
       | "Behandlingen er bortfalt",
-    saksnummer: string,
+    bekreftKnappTekst: string,
+    selectText?: string,
   ): Promise<void> {
     await this.klikkAvsluttBehandling();
 
@@ -304,14 +282,14 @@ export class BehandlingPage {
       await this.velgAvslutningstype(vedtaksType, saksnummer);
     }
 
-    await this.bekreftAvslutning();
-    await this.verifiserVellykketAvslutning();
+    await this.bekreftAvslutning(bekreftKnappTekst, selectText);
+    await this.verifiserVellykketAvslutning(saksnummer);
   }
 
   /**
    * Verifiser at vi blir redirectet til hovedsiden uten feilmeldinger
    */
-  async verifiserVellykketAvslutning(): Promise<void> {
+  async verifiserVellykketAvslutning(saksnummer: string): Promise<void> {
     await this.page.waitForURL(/\/melosys\/$/);
 
     // Sjekk at det ikke er noen feilmeldinger
@@ -319,7 +297,7 @@ export class BehandlingPage {
 
     for (const selector of feilmeldinger) {
       const feilmelding = this.page.locator(selector);
-      await expect(feilmelding).not.toBeVisible();
+      await expect(feilmelding, `${saksnummer}: Ingen feilmeldinger skal vises etter avslutning`).not.toBeVisible();
     }
   }
 }

@@ -1,8 +1,8 @@
 import { test } from "@playwright/test";
-import { SokPage } from "../../../pages/sok.page";
 import { TrygdeavgiftPage } from "../../../pages/behandling/trygdeavgift.page";
 import { InngangPage } from "../../../pages/behandling/inngang.page";
-import { opprettEøsPensjonistSakMedTrygdeavgift } from "../../../utils/testdataUtils";
+import { BehandlingPage } from "../../../pages/behandling/behandling.page";
+import { hentPrepopulertSakUrl } from "../../../utils/testdataUtils";
 import { runAxeAnalyze } from "../../../utils/axeUtils";
 
 /**
@@ -20,16 +20,14 @@ import { runAxeAnalyze } from "../../../utils/axeUtils";
 
 test.describe("EU/EØS Trygdeavgift", () => {
   test("skal vise inntektskilder når bruker ikke er skattepliktig", async ({ page }, testInfo) => {
-    const sokPage = new SokPage(page);
+    const behandlingPage = new BehandlingPage(page);
 
-    // Finn en sak som har trygdeavgift og inntektskilder og gå inn på behandlingssiden
-    const sak = await opprettEøsPensjonistSakMedTrygdeavgift(page);
-    await sokPage.klikkVisBehandling(sak);
+    // Hent URL til prepopulert EØS pensjonist-sak med trygdeavgift og naviger direkte dit
+    const url = hentPrepopulertSakUrl("MEL-1054");
+    await behandlingPage.goto(url, "Oppgi opplysninger fra attest / S1");
 
     // Steg 1: Inngang (Oppgi opplysninger fra attest / S1)
     const inngangPage = new InngangPage(page);
-    await inngangPage.verifiserBehandlingsside();
-    await inngangPage.ventPaInngangStegEØS();
     await inngangPage.setFraOgMedDato("01.01.2024");
     await inngangPage.setTilOgMedDato("31.12.2024");
     await inngangPage.velgLand("SE");

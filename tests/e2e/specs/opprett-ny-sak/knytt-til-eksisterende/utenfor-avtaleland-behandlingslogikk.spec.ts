@@ -2,9 +2,8 @@ import { expect, test } from "@playwright/test";
 import { runAxeAnalyze } from "../../../utils/axeUtils";
 import { HovedsidePage, USER_ID_VALID } from "../../../pages/hovedside.page";
 import { OpprettNySakPage } from "../../../pages/opprett-ny-sak/opprett-ny-sak.page";
-import { TIMEOUT_FOR_COMPLEX_TESTS } from "../../../utils/testUtils";
-import { opprettUtenforAvtalelandSak } from "../../../utils/testdataUtils";
-import { SokPage } from "../../../pages/sok.page";
+import { TIMEOUT_FOR_COMPLEX_TESTS, getSaksnummerFraUrl } from "../../../utils/testUtils";
+import { hentPrepopulertSakUrl } from "../../../utils/testdataUtils";
 import { BehandlingPage } from "../../../pages/behandling/behandling.page";
 
 /**
@@ -30,9 +29,8 @@ test.describe("'Utenfor avtaleland' behandlingslogikk", () => {
   test("AC1: Utenfor avtaleland med åpen behandling - kun årsavregning tilgjengelig", async ({ page }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout siden vi oppretter sak
 
-    const sokPage = new SokPage(page);
-    const sak = await opprettUtenforAvtalelandSak(page);
-    const sakId = await sokPage.getSaksnummer(sak);
+    // Bruk prepopulert FTRL-sak med UNDER_BEHANDLING status
+    const sakId = "MEL-1013";
 
     const hovedsidePage = new HovedsidePage(page);
     await hovedsidePage.goto();
@@ -56,9 +54,8 @@ test.describe("'Utenfor avtaleland' behandlingslogikk", () => {
   test("AC2: Utenfor avtaleland med åpen årsavregning - finner sak", async ({ page }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout siden vi oppretter sak + årsavregning
 
-    const sokPage = new SokPage(page);
-    const sak = await opprettUtenforAvtalelandSak(page);
-    const sakId = await sokPage.getSaksnummer(sak);
+    // Bruk prepopulert FTRL-sak med UNDER_BEHANDLING status
+    const sakId = "MEL-1014";
 
     const hovedsidePage = new HovedsidePage(page);
 
@@ -99,15 +96,14 @@ test.describe("'Utenfor avtaleland' behandlingslogikk", () => {
   }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout siden vi oppretter og avslutter sak
 
-    const sokPage = new SokPage(page);
     const behandlingPage = new BehandlingPage(page);
 
-    const sak = await opprettUtenforAvtalelandSak(page);
-    const sakId = await sokPage.getSaksnummer(sak);
+    // Hent URL til prepopulert FTRL-sak og naviger direkte dit
+    const url = hentPrepopulertSakUrl("MEL-1020");
+    await behandlingPage.goto(url);
 
-    await sokPage.klikkVisBehandling(sak);
-    await behandlingPage.verifiserBehandlingsside();
-    await behandlingPage.avsluttBehandling("Søknaden er innvilget", sakId);
+    const sakId = getSaksnummerFraUrl(page);
+    await behandlingPage.avsluttBehandling(sakId, "Søknaden er innvilget", "Bekreft");
 
     const hovedsidePage = new HovedsidePage(page);
 
