@@ -228,7 +228,7 @@ export function VurderingArbeidTjenestepersonEllerFlyVedtak({
 
   useEffect(() => {
     debouncedKontrollerBehandling({ aktivtSteg, mottatteOpplysningerStatus, formValues });
-  }, [aktivtSteg, formIsValid, formValues?.kopiTilArbeidsgiver, mottatteOpplysningerStatus]);
+  }, [aktivtSteg, formValues?.vedtakstype, formValues?.kopiTilArbeidsgiver, mottatteOpplysningerStatus]);
 
   const onSubmit = async (_values, _dispatch, _props) => {
     setVedtakPending(true);
@@ -268,8 +268,10 @@ export function VurderingArbeidTjenestepersonEllerFlyVedtak({
               name="informerUtenlandskTrygdemyndighet"
               readOnly={!redigerbart}
             >
-              <Nav.Radio value>Ja</Nav.Radio>
-              <Nav.Radio value={false}>Nei</Nav.Radio>
+              <Nav.HStack gap="16">
+                <Nav.Radio value>Ja</Nav.Radio>
+                <Nav.Radio value={false}>Nei</Nav.Radio>
+              </Nav.HStack>
             </Skjema.RadioGroup>
           </Nav.Column>
         </Nav.Row>
@@ -392,7 +394,7 @@ const mapStateToProps = (state, ownProps) => {
         "days",
       ) !== 0;
 
-  const informerUtenlandskTrygdemyndighet = !Utils._isEmpty(ownProps.informertMyndighetFakta);
+  const informerUtenlandskTrygdemyndighet = !Utils._isEmpty(ownProps.informertMyndighetFakta) ? true : null;
   const mottakerLand = ownProps.informertMyndighetFakta.subjektID;
 
   return {
