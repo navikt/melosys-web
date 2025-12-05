@@ -26,10 +26,13 @@ test.describe("EU/EØS Trygdeavgift", () => {
     const url = hentPrepopulertSakUrl("MEL-1054");
     await behandlingPage.goto(url, "Oppgi opplysninger fra attest / S1");
 
+    // Bruk inneværende år for å unngå at skatteforhold skjules pga "tidligere år"-logikk
+    const inneværendeÅr = new Date().getFullYear();
+
     // Steg 1: Inngang (Oppgi opplysninger fra attest / S1)
     const inngangPage = new InngangPage(page);
-    await inngangPage.setFraOgMedDato("01.01.2024");
-    await inngangPage.setTilOgMedDato("31.12.2024");
+    await inngangPage.setFraOgMedDato(`01.01.${inneværendeÅr}`);
+    await inngangPage.setTilOgMedDato(`31.12.${inneværendeÅr}`);
     await inngangPage.velgLand("SE");
 
     // Steg 2: Gå til Trygdeavgift og verifiser intiell tilstand
