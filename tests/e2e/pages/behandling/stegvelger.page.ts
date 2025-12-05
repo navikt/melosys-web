@@ -125,43 +125,44 @@ export class StegvelgerPage extends BehandlingPage {
    * - Trygdedekning (Select)
    */
   async fyllUtInngangMinimum(fomDato: string, arbeidsland: string = "Sverige"): Promise<void> {
-    // Fyll ut fra og med dato (NAV DatePicker er readonly, må bruke pressSequentially)
+    // Fyll ut fra og med dato
     const fomInput = this.page.getByLabel(/fra og med/i);
+    await expect(fomInput, `${this.ctx}: Fant ikke "Fra og med"-felt`).toBeVisible({ timeout: 5000 });
     await fomInput.click();
     await fomInput.pressSequentially(fomDato, { delay: 50 });
     await this.page.keyboard.press("Tab"); // Lukk evt. datepicker
 
-    // Velg "Velg land fra liste" radio (hvis ikke allerede valgt)
+    // Velg "Velg land fra liste" radio
     const velgLandRadio = this.page.getByRole("radio", { name: /velg land fra liste/i });
-    if (await velgLandRadio.isVisible({ timeout: 2000 }).catch(() => false)) {
-      const isChecked = await velgLandRadio.isChecked();
-      if (!isChecked) {
-        await velgLandRadio.click({ force: true });
-      }
-      await this.page.waitForTimeout(300);
+    await expect(velgLandRadio, `${this.ctx}: Fant ikke "Velg land fra liste"-radioknapp`).toBeVisible({
+      timeout: 5000,
+    });
 
-      // Velg land fra MultiSelect - klikk for å åpne og velg fra dropdown
-      const landMultiSelect = this.page.locator(".land_multiselect");
-      if (await landMultiSelect.isVisible({ timeout: 2000 }).catch(() => false)) {
-        // Klikk på input for å åpne dropdown
-        const landInput = landMultiSelect.locator("input");
-        await landInput.click();
-        await this.page.waitForTimeout(200);
-
-        // Velg land fra dropdown-listen
-        const landOption = this.page.getByRole("option", { name: new RegExp(arbeidsland, "i") });
-        if (await landOption.isVisible({ timeout: 2000 }).catch(() => false)) {
-          await landOption.click();
-        }
-      }
+    const isChecked = await velgLandRadio.isChecked();
+    if (!isChecked) {
+      await velgLandRadio.click({ force: true });
     }
+
+    // Vent på at MultiSelect-komponenten vises etter radioknapp-klikk
+    const landMultiSelect = this.page.locator(".land_multiselect");
+    await expect(landMultiSelect, `${this.ctx}: Land MultiSelect dukket ikke opp etter radioknapp-klikk`).toBeVisible({
+      timeout: 5000,
+    });
+
+    // Åpne dropdown og velg land
+    const landInput = landMultiSelect.locator("input");
+    await landInput.click();
+
+    const landOption = this.page.getByRole("option", { name: new RegExp(arbeidsland, "i") });
+    await expect(landOption, `${this.ctx}: Land-option "${arbeidsland}" ikke funnet i dropdown`).toBeVisible({
+      timeout: 5000,
+    });
+    await landOption.click();
 
     // Velg trygdedekning fra dropdown
     const trygdedekningSelect = this.page.getByRole("combobox", { name: /trygdedekning/i });
-    if (await trygdedekningSelect.isVisible({ timeout: 2000 }).catch(() => false)) {
-      // Velg første ikke-tomme alternativ
-      await trygdedekningSelect.selectOption({ index: 1 });
-    }
+    await expect(trygdedekningSelect, `${this.ctx}: Fant ikke trygdedekning-dropdown`).toBeVisible({ timeout: 5000 });
+    await trygdedekningSelect.selectOption({ index: 1 });
 
     // Vent på at validering kjører
     await this.page.waitForTimeout(500);

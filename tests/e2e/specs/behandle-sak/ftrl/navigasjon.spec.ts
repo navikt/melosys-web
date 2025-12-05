@@ -21,7 +21,8 @@ import { StegvelgerPage } from "../../../pages/behandling/stegvelger.page";
 test.describe("FTRL Stegvelger - Navigasjon", () => {
   test("Navigasjon gjennom alle steg med minimum input", async ({ page }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
-    const saksnummer = "MEL-1016";
+    // Bruker MEL-1021 for å unngå konflikt med avslutt-ftrl-behandling.spec.ts som bruker MEL-1016
+    const saksnummer = "MEL-1021";
     const stegvelgerPage = new StegvelgerPage(page, saksnummer);
 
     // Hent URL til prepopulert FTRL-sak og naviger direkte dit
