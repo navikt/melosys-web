@@ -15,7 +15,7 @@ test.describe("EØS pensjonist med trygdeavgift - årsavregning", () => {
 
   test("Opprett EØS pensjonist-sak med trygdeavgift for testdata", async ({ page }, testInfo) => {
     // Denne testen oppretter testdata som brukes av de andre testene
-    const url = hentPrepopulertSakUrl("MEL-1055");
+    const url = hentPrepopulertSakUrl("MEL-1056");
 
     expect(url, "URL skal være opprettet").toBeTruthy();
     expect(url).toContain("/melosys/EU_EOS/");

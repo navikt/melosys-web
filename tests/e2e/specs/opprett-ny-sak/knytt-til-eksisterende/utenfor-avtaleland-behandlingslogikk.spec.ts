@@ -30,7 +30,7 @@ test.describe("'Utenfor avtaleland' behandlingslogikk", () => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout siden vi oppretter sak
 
     // Bruk prepopulert FTRL-sak med UNDER_BEHANDLING status
-    const sakId = "MEL-1013";
+    const sakId = "MEL-1014";
 
     const hovedsidePage = new HovedsidePage(page);
     await hovedsidePage.goto();

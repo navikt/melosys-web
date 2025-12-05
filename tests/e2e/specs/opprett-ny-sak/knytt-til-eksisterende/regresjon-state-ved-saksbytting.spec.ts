@@ -54,8 +54,8 @@ test.describe("State-håndtering ved saksbytting", () => {
   });
 
   test("Utenfor avtaleland med aktiv behandling - årsavregning tilgjengelig", async ({ page }, testInfo) => {
-    // Bruk prepopulert OPPRETTET sak MEL-1059 (FTRL)
-    const sakId = "MEL-1059";
+    // Bruk prepopulert UNDER_BEHANDLING sak MEL-1018 (FTRL - Utenfor avtaleland)
+    const sakId = "MEL-1018";
     const valgtSak = opprettNySakPage.finnSakBySaksnummer(sakId);
 
     await valgtSak.click();

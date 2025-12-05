@@ -105,8 +105,8 @@ test.describe("Avtaleland behandlingslogikk (regresjon)", () => {
   }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
 
-    // Bruk prepopulert AVSLUTTET Avtaleland-sak (MEL-1064)
-    const sakId = "MEL-1064";
+    // Bruk prepopulert AVSLUTTET Avtaleland-sak (MEL-1067)
+    const sakId = "MEL-1067";
 
     const hovedsidePage = new HovedsidePage(page);
     await hovedsidePage.goto();

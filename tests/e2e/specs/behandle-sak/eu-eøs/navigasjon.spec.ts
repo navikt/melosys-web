@@ -17,7 +17,7 @@ import { StegvelgerPage } from "../../../pages/behandling/stegvelger.page";
 test.describe("EU/EØS Stegvelger - Navigasjon", () => {
   test("EU/EØS Ikke yrkesaktiv - Navigasjon gjennom steg med minimum input", async ({ page }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
-    const saksnummer = "MEL-1051";
+    const saksnummer = "MEL-1052";
     const stegvelgerPage = new StegvelgerPage(page, saksnummer);
 
     const url = hentPrepopulertSakUrl(saksnummer);
@@ -80,7 +80,7 @@ test.describe("EU/EØS Stegvelger - Navigasjon", () => {
 
   test("EU/EØS Ikke yrkesaktiv - Bekreft-knapp forblir deaktivert ved ugyldig input", async ({ page }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
-    const saksnummer = "MEL-1071"; // Dedikert sak for denne testen
+    const saksnummer = "MEL-1053";
     const stegvelgerPage = new StegvelgerPage(page, saksnummer);
 
     const url = hentPrepopulertSakUrl(saksnummer);
