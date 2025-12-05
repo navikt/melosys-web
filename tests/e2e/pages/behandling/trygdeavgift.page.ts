@@ -1,12 +1,13 @@
 import { expect, Page } from "@playwright/test";
 import { BehandlingPage } from "./behandling.page";
+import { PrepopulertSaksnummer } from "../../utils/testdataUtils";
 
 /**
  * Page Object Model for trygdeavgift-komponenten
  * Håndterer interaksjon med skatteforholdsperioder og inntektskilder
  */
 export class TrygdeavgiftPage extends BehandlingPage {
-  constructor(page: Page, saksnummer: string) {
+  constructor(page: Page, saksnummer: PrepopulertSaksnummer) {
     super(page, saksnummer);
   }
 
@@ -16,7 +17,7 @@ export class TrygdeavgiftPage extends BehandlingPage {
   async verifiserSteg(stegnavn: string, timeout = 10000): Promise<void> {
     await expect(
       this.page.locator(`text=${stegnavn}`).first(),
-      `${this.saksnummer}: Steg "${stegnavn}" skal være synlig`,
+      `${this.ctx}: Fant ikke steget "${stegnavn}"`,
     ).toBeVisible({ timeout });
   }
 
@@ -35,24 +36,24 @@ export class TrygdeavgiftPage extends BehandlingPage {
 
     // Vent på at skatteforholdsperioder-delen er synlig før vi prøver å klikke
     const skatteforholdsHeading = this.page.locator("text=Oppgi informasjon om brukers skatteforhold");
-    await expect(
-      skatteforholdsHeading,
-      `${this.saksnummer}: Overskrift 'Oppgi informasjon om brukers skatteforhold' skal være synlig`,
-    ).toBeVisible({ timeout: 10000 });
+    await expect(skatteforholdsHeading, `${this.ctx}: Fant ikke skatteforhold-seksjonen`).toBeVisible({
+      timeout: 10000,
+    });
 
     // Finn fieldset-et for denne skatteforholdsperioden
     const fieldset = this.page.locator("fieldset.skatteforholdsperioder-radio-group").nth(indeks);
-    await expect(
-      fieldset,
-      `${this.saksnummer}: Fieldset for skatteforholdsperiode ${indeks} skal være synlig`,
-    ).toBeVisible({ timeout: 10000 });
+    await expect(fieldset, `${this.ctx}: Fant ikke skatteforholdsperiode ${indeks}`).toBeVisible({
+      timeout: 10000,
+    });
 
     // Finn radio-input med riktig name og value
     const radioInput = fieldset.locator(`input[name="${name}"][type="radio"][value="${value}"]`);
     await expect(
       radioInput,
-      `${this.saksnummer}: Radio-knapp '${valgtekst}' for skatteforholdsperiode ${indeks} skal være synlig`,
-    ).toBeVisible({ timeout: 10000 });
+      `${this.ctx}: Fant ikke valget "${valgtekst}" for skatteforholdsperiode ${indeks}`,
+    ).toBeVisible({
+      timeout: 10000,
+    });
 
     // Bruk check() for å velge radio-knappen (Playwright sin anbefalte metode)
     await radioInput.check({ force: true });
@@ -65,7 +66,7 @@ export class TrygdeavgiftPage extends BehandlingPage {
     const name = `skatteforholdsperioder[0].skatteplikttype`;
     const radioInput = this.page.locator(`input[name="${name}"][type="radio"][value="SKATTEPLIKTIG"]`);
     const isit = await radioInput.isChecked().catch(() => false);
-    expect(isit, `${this.saksnummer}: Skattepliktig skal IKKE være valgt`).toBe(false);
+    expect(isit, `${this.ctx}: "Skattepliktig" er uventet valgt`).toBe(false);
   }
 
   /**
@@ -74,7 +75,7 @@ export class TrygdeavgiftPage extends BehandlingPage {
   async verifiserInntektskilderSynlige(synlig: boolean): Promise<void> {
     const heading = this.page.locator("h1.undertittel:has-text('Oppgi informasjon om brukers inntekt')");
     const val = await heading.isVisible({ timeout: 5000 }).catch(() => false);
-    const forventetTekst = synlig ? "skal være synlig" : "skal IKKE være synlig";
-    expect(val, `${this.saksnummer}: Inntektskilder ${forventetTekst}`).toBe(synlig);
+    const feilmelding = synlig ? "Inntektskilder vises ikke" : "Inntektskilder vises uventet";
+    expect(val, `${this.ctx}: ${feilmelding}`).toBe(synlig);
   }
 }

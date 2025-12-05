@@ -1,8 +1,9 @@
 import { Page, Locator, expect } from "@playwright/test";
 import { BehandlingPage } from "./behandling.page";
+import { PrepopulertSaksnummer } from "../../utils/testdataUtils";
 
 export class SendBrevPage extends BehandlingPage {
-  constructor(page: Page, saksnummer: string) {
+  constructor(page: Page, saksnummer: PrepopulertSaksnummer) {
     super(page, saksnummer);
   }
 
@@ -46,7 +47,7 @@ export class SendBrevPage extends BehandlingPage {
   async clickSendBrevTab(): Promise<void> {
     const tab = this.sendBrevTab;
 
-    await expect(tab, `${this.saksnummer}: Fant ikke "Send brev"-fanen`).toBeVisible();
+    await expect(tab, `${this.ctx}: Fant ikke "Send brev"-fanen`).toBeVisible();
 
     const panelId = await tab.getAttribute("aria-controls");
     await tab.click();
@@ -84,7 +85,7 @@ export class SendBrevPage extends BehandlingPage {
   async selectFirstMottaker() {
     // Bruk native select[name="mottaker"] direkte
     const sel = this.mottakerNativeSelect;
-    await expect(sel, this.sakId + ': Fant ikke native select for "Mottaker" sak ').toBeVisible();
+    await expect(sel, `${this.ctx}: Fant ikke mottaker-feltet`).toBeVisible();
 
     // Velg første reelle alternativ (index 1, siden index 0 er "Velg...")
     await sel.selectOption({ index: 1 });
@@ -120,7 +121,7 @@ export class SendBrevPage extends BehandlingPage {
         },
         label as string | RegExp,
       );
-      expect(value, `${this.sakId}: Fant ikke brevmal med gitt label "${label}" for sak`).toBeTruthy();
+      expect(value, `${this.ctx}: Fant ikke brevmalen "${label}"`).toBeTruthy();
       await ctl.selectOption(value);
     } else {
       await ctl.click({ force: true });
@@ -130,16 +131,16 @@ export class SendBrevPage extends BehandlingPage {
   }
 
   async verifiserSendKnappDeaktivert() {
-    await expect(this.sendButton, `${this.sakId}: Send-knapp skal være deaktivert`).toBeDisabled();
+    await expect(this.sendButton, `${this.ctx}: Send-knappen er uventet aktiv`).toBeDisabled();
   }
 
   async verifiserSendKnappAktivert() {
-    await expect(this.sendButton, `${this.sakId}: Send-knapp skal være aktivert`).toBeEnabled();
+    await expect(this.sendButton, `${this.ctx}: Send-knappen er uventet deaktivert`).toBeEnabled();
   }
 
   async selectMottakerByLabel(label: string | RegExp) {
     const sel = this.mottakerNativeSelect;
-    await expect(sel, `${this.sakId}: Fant ikke native select for "Mottaker"`).toBeVisible();
+    await expect(sel, `${this.ctx}: Fant ikke mottaker-feltet`).toBeVisible();
 
     const value = await sel.evaluate(
       (el, l) => {
@@ -151,7 +152,7 @@ export class SendBrevPage extends BehandlingPage {
       label as string | RegExp,
     );
 
-    expect(value, `${this.sakId}: Fant ikke mottaker med label: ${label}`).toBeTruthy();
+    expect(value, `${this.ctx}: Fant ikke mottakeren "${label}"`).toBeTruthy();
     await sel.selectOption(value);
 
     await this.waitForBrevmalSelect();

@@ -14,7 +14,7 @@ test.describe("Avslutt Avtaleland-behandling for testdata", () => {
     const url = hentPrepopulertSakUrl(saksnummer);
     await behandlingPage.goto(url);
 
-    await behandlingPage.avsluttBehandling(saksnummer, "Søknaden er innvilget", "Bekreft");
+    await behandlingPage.avsluttBehandling("Søknaden er innvilget", "Bekreft");
 
     await runAxeAnalyze(page, testInfo.title);
   });

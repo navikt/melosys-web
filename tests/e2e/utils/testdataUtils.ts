@@ -72,9 +72,9 @@ function loadMetadataFromFile(): Record<string, SakMetadata> | null {
 }
 
 /**
- * Alle gyldige saksnummer
+ * Alle gyldige saksnummer for prepopulerte test-saker.
+ * Brukes for å utlede typen PrepopulertSaksnummer.
  */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- Used only for type inference
 const ALL_SAKSNUMMER = [
   // MEL-1001 til MEL-1011: Avtaleland UNDER_BEHANDLING
   "MEL-1001",
@@ -219,13 +219,6 @@ export function hentSakMetadata(saksnummer: PrepopulertSaksnummer): SakMetadata 
 }
 
 /**
- * Henter behandlings-ID for en sak
- */
-export function hentBehandlingID(saksnummer: PrepopulertSaksnummer): number {
-  return hentSakMetadata(saksnummer).behandlingID;
-}
-
-/**
  * Hjelpefunksjon for å få URL til en test-sak
  * @param saksnummer - Saksnummer (f.eks. "MEL-1001")
  * @returns URL til behandlingssiden for saken
@@ -254,8 +247,3 @@ export function hentPrepopulertSakUrl(saksnummer: PrepopulertSaksnummer): string
 
   return `${url}?behandlingID=${behandlingID}`;
 }
-
-/**
- * Test-FNR som brukes for alle test-saker
- */
-export const TEST_FNR = "30056928150";
