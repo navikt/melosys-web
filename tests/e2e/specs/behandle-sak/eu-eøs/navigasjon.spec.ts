@@ -25,21 +25,17 @@ test.describe("EU/EØS Stegvelger - Navigasjon", () => {
 
     // === STEG 1: Inngang ===
     await stegvelgerPage.verifiserSteg(/inngang|opplysninger/i);
-
-    // Knapp skal være deaktivert uten input
+    await stegvelgerPage.verifiserAntallSteg(1);
     await stegvelgerPage.verifiserBekreftKnappDeaktivert();
 
     // Fyll ut minimum: fom-dato og land
     await stegvelgerPage.fyllUtEosIkkeYrkesaktivInngang("01.01.2024", "Sverige");
-
-    // Nå skal knappen være aktivert
     await stegvelgerPage.verifiserBekreftKnappAktivert();
     await stegvelgerPage.bekreftOgFortsett();
 
-    // === STEG 2: Neste steg (avhengig av flyt) ===
-    // Verifiser at vi har navigert videre
-    const nyttStegTittel = await stegvelgerPage.hentStegTittel();
-    // Inngang-steget skal ikke lenger være aktivt
+    // === STEG 2: Neste steg ===
+    await stegvelgerPage.verifiserAntallSteg(2);
+    // Verifiser at vi har navigert videre (ikke lenger på Inngang)
     await stegvelgerPage.verifiserSteg(new RegExp(`^(?!.*inngang).*$`, "i"));
 
     await runAxeAnalyze(page, testInfo.title);
@@ -55,6 +51,7 @@ test.describe("EU/EØS Stegvelger - Navigasjon", () => {
 
     // Start på Inngang
     await stegvelgerPage.verifiserSteg(/inngang|opplysninger/i);
+    await stegvelgerPage.verifiserAntallSteg(1);
 
     // Fyll ut og gå videre
     await stegvelgerPage.fyllUtEosIkkeYrkesaktivInngang("01.01.2024", "Sverige");
@@ -62,31 +59,19 @@ test.describe("EU/EØS Stegvelger - Navigasjon", () => {
 
     // Hent tittel på neste steg
     const andreStegTittel = await stegvelgerPage.hentStegTittel();
+    await stegvelgerPage.verifiserAntallSteg(2);
 
-    // Gå tilbake til Inngang
+    // Gå tilbake til Inngang via Tilbake-knapp
     await stegvelgerPage.gåTilbake();
     await stegvelgerPage.verifiserSteg(/inngang|opplysninger/i);
+    await stegvelgerPage.verifiserAntallSteg(2); // Progressbar beholder 2 steg
 
-    // Gå frem igjen
+    // Gå frem igjen via Bekreft-knapp
     await stegvelgerPage.bekreftOgFortsett();
     await stegvelgerPage.verifiserSteg(new RegExp(andreStegTittel.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i"));
+    await stegvelgerPage.verifiserAntallSteg(2);
 
-    await runAxeAnalyze(page, testInfo.title);
-  });
-
-  test("EU/EØS Ikke yrkesaktiv - Progressbar viser steg og navigasjon via klikk", async ({ page }, testInfo) => {
-    test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
-    const saksnummer = "MEL-1053";
-    const stegvelgerPage = new StegvelgerPage(page, saksnummer);
-
-    const url = hentPrepopulertSakUrl(saksnummer);
-    await stegvelgerPage.goto(url);
-
-    // Fyll ut Inngang og gå til neste steg
-    await stegvelgerPage.fyllUtEosIkkeYrkesaktivInngang("01.01.2024", "Sverige");
-    await stegvelgerPage.bekreftOgFortsett();
-
-    // Klikk på steg 1 i progressbar for å gå tilbake
+    // Gå tilbake via klikk på steg 1 i progressbar
     await stegvelgerPage.klikkPåSteg(1);
     await stegvelgerPage.verifiserSteg(/inngang|opplysninger/i);
 

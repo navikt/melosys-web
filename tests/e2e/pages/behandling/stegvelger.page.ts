@@ -125,14 +125,19 @@ export class StegvelgerPage extends BehandlingPage {
    * - Trygdedekning (Select)
    */
   async fyllUtInngangMinimum(fomDato: string, arbeidsland: string = "Sverige"): Promise<void> {
-    // Fyll ut fra og med dato
+    // Fyll ut fra og med dato (NAV DatePicker er readonly, må bruke pressSequentially)
     const fomInput = this.page.getByLabel(/fra og med/i);
-    await fomInput.fill(fomDato);
+    await fomInput.click();
+    await fomInput.pressSequentially(fomDato, { delay: 50 });
+    await this.page.keyboard.press("Tab"); // Lukk evt. datepicker
 
-    // Velg "Velg land fra liste" radio
+    // Velg "Velg land fra liste" radio (hvis ikke allerede valgt)
     const velgLandRadio = this.page.getByRole("radio", { name: /velg land fra liste/i });
     if (await velgLandRadio.isVisible({ timeout: 2000 }).catch(() => false)) {
-      await velgLandRadio.check();
+      const isChecked = await velgLandRadio.isChecked();
+      if (!isChecked) {
+        await velgLandRadio.click({ force: true });
+      }
       await this.page.waitForTimeout(300);
 
       // Velg land fra MultiSelect - klikk for å åpne og velg fra dropdown
