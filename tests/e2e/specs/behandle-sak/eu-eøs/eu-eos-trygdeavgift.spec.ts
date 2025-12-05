@@ -8,7 +8,7 @@ import { runAxeAnalyze } from "../../../utils/axeUtils";
 /**
  * E2E-tester for Trygdeavgift-steget i EU/EØS saksbehandling
  *
- * MELOSYS-7661: Legge til steget "trygdeavgift"
+ * Legge til steget "trygdeavgift"
  *
  * Disse testene verifiserer:
  * - Trygdeavgift-steget vises i stegflyten

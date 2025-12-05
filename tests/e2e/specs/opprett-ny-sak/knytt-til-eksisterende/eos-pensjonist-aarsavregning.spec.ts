@@ -7,7 +7,6 @@ import { hentPrepopulertSakUrl } from "../../../utils/testdataUtils";
 let opprettNySakPage: OpprettNySakPage;
 let hovedsidePage: HovedsidePage;
 
-// MELOSYS-7603
 test.describe("EØS pensjonist med trygdeavgift - årsavregning", () => {
   test.beforeEach(async ({ page }) => {
     hovedsidePage = new HovedsidePage(page);
@@ -40,7 +39,6 @@ test.describe("EØS pensjonist med trygdeavgift - årsavregning", () => {
     await valgtSak.click();
 
     // Verifiser at årsavregning er tilgjengelig (unntak fra vanlig EØS-regel)
-    // Dette er hovedpoenget med MELOSYS-7603
     await opprettNySakPage.verifiserTilgjengeligeBehandlingstyper(valgtSak, ["Årsavregning"]);
 
     // Verifiser at ingen feilmelding vises

@@ -5,7 +5,7 @@ import { hentPrepopulertSakUrl } from "../../utils/testdataUtils";
 import { runAxeAnalyze } from "../../utils/axeUtils";
 
 /**
- * MELOSYS-7385: Setup testdata - Avtaleland-sak med HENLAGT behandling
+ * Setup testdata - Avtaleland-sak med HENLAGT behandling
  *
  * Akseptansekriterium som testes:
  * "Dersom behandlingen ble avsluttet som HENLAGT skal man fortsatt få gul varselmelding om det."

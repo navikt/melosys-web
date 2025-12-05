@@ -7,7 +7,7 @@ import { hentPrepopulertSakUrl } from "../../../utils/testdataUtils";
 import { BehandlingPage } from "../../../pages/behandling/behandling.page";
 
 /**
- * MELOSYS-7385: Test akseptansekriterier for 'Utenfor avtaleland'-saker
+ * Test akseptansekriterier for 'Utenfor avtaleland'-saker
  *
  * Disse testene verifiserer de spesifikke akseptansekriteriene:
  * 1. Sak med åpen ikke-årsavregning → kun Årsavregning tilgjengelig
@@ -26,7 +26,7 @@ test.describe("'Utenfor avtaleland' behandlingslogikk", () => {
     await mainPage.klikkOpprettNySakKnapp();
   });
 
-  test("AC1: Utenfor avtaleland med åpen behandling - kun årsavregning tilgjengelig", async ({ page }, testInfo) => {
+  test("Utenfor avtaleland med åpen behandling - kun årsavregning tilgjengelig", async ({ page }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout siden vi oppretter sak
 
     // Bruk prepopulert FTRL-sak med UNDER_BEHANDLING status
@@ -51,7 +51,7 @@ test.describe("'Utenfor avtaleland' behandlingslogikk", () => {
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("AC2: Utenfor avtaleland med åpen årsavregning - finner sak", async ({ page }, testInfo) => {
+  test("Utenfor avtaleland med åpen årsavregning - finner sak", async ({ page }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout siden vi oppretter sak + årsavregning
 
     // Bruk prepopulert FTRL-sak med UNDER_BEHANDLING status
@@ -91,7 +91,7 @@ test.describe("'Utenfor avtaleland' behandlingslogikk", () => {
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("AC3: Utenfor avtaleland med avsluttet behandling - alle behandlingstyper tilgjengelige", async ({
+  test("Utenfor avtaleland med avsluttet behandling - alle behandlingstyper tilgjengelige", async ({
     page,
   }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout siden vi oppretter og avslutter sak

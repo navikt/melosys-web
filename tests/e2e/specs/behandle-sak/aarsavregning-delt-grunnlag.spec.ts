@@ -6,15 +6,15 @@ import { hentPrepopulertSakUrl, PrepopulertSaksnummer } from "../../utils/testda
 import { runAxeAnalyze } from "../../utils/axeUtils";
 
 /**
- * MELOSYS-7612: Valideringsfeil ved delt grunnlag i årsavregning
+ * Valideringsfeil ved delt grunnlag i årsavregning
  *
  * Bug i validering og datovelger for medlemskapsperioder, skatteforholdsperioder
  * og inntektsperioder når man legger til trygdeavgift fra Avgiftssystemet (delt grunnlag).
  *
  * Testene verifiserer at:
- * - AC1: Medlemskapsperioder kan legges til uten valideringsfeil
- * - AC2: Skatteforholdsperioder kan legges til/utvides uten valideringsfeil
- * - AC3: Inntektsperioder kan legges til/utvides uten valideringsfeil
+ * - Medlemskapsperioder kan legges til uten valideringsfeil
+ * - Skatteforholdsperioder kan legges til/utvides uten valideringsfeil
+ * - Inntektsperioder kan legges til/utvides uten valideringsfeil
  */
 
 let aarsavregningPage: AarsavregningPage;
@@ -55,7 +55,7 @@ async function setupAarsavregningTest(page: Page, saksnummer: PrepopulertSaksnum
 
 // Hver test oppretter sine egne testdata via setupAarsavregningTest
 test.describe("Årsavregning delt grunnlag - Alle tester", () => {
-  test.describe("AC1 - Medlemskapsperiode validering", () => {
+  test.describe("Medlemskapsperiode validering", () => {
     test("Kan legge til ny medlemskapsperiode etter å ha valgt delt grunnlag", async ({ page }, testInfo) => {
       test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Sett timeout til 30 sekunder for setup
       await setupAarsavregningTest(page, "MEL-1026");
@@ -155,7 +155,7 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
     });
   });
 
-  test.describe("AC2 - Skatteforholdsperiode validering", () => {
+  test.describe("Skatteforholdsperiode validering", () => {
     test("Kan legge til ny skatteforholdsperiode etter å ha valgt delt grunnlag", async ({ page }, testInfo) => {
       test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
       await setupAarsavregningTest(page, "MEL-1041");
@@ -222,7 +222,7 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
     });
   });
 
-  test.describe("AC2.5 - Legg til periode med pliktig bestemmelse (bugfix)", () => {
+  test.describe("Legg til periode med pliktig bestemmelse (bugfix)", () => {
     test("skal vise 'Legg til periode'-knappen for delt grunnlag selv med pliktig bestemmelse", async ({
       page,
     }, testInfo) => {
@@ -283,7 +283,7 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
     });
   });
 
-  test.describe("AC3 - Inntektsperiode validering", () => {
+  test.describe("Inntektsperiode validering", () => {
     test("Kan legge til ny inntektsperiode etter å ha valgt delt grunnlag", async ({ page }, testInfo) => {
       test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
       await setupAarsavregningTest(page, "MEL-1045");

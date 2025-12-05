@@ -5,7 +5,7 @@ import { OpprettNySakPage } from "../../../pages/opprett-ny-sak/opprett-ny-sak.p
 import { TIMEOUT_FOR_COMPLEX_TESTS } from "../../../utils/testUtils";
 
 /**
- * MELOSYS-7385: Test regresjonstest for Avtaleland-saker
+ * Test regresjonstest for Avtaleland-saker
  *
  * Regresjonstest akseptansekriterium:
  * "Gitt at jeg skal opprette en behandling på en eksistrende sakstype EØS/AVTALELAND

@@ -5,7 +5,7 @@ import { OpprettNySakPage } from "../../../pages/opprett-ny-sak/opprett-ny-sak.p
 import { TIMEOUT_FOR_COMPLEX_TESTS } from "../../../utils/testUtils";
 
 /**
- * MELOSYS-7624: Test state-håndtering ved saksbytting
+ * Test state-håndtering ved saksbytting
  *
  * Disse testene verifiserer at refaktoreringen fra 8 useEffects til Redux action creator
  * fungerer korrekt, spesielt ved rask saksbytting og komplekse states.

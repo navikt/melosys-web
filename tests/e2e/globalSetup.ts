@@ -77,5 +77,3 @@ async function globalSetup() {
   }
   /* eslint-enable no-console */
 }
-
-export default globalSetup;
