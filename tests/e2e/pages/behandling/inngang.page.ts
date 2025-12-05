@@ -6,8 +6,8 @@ import { BehandlingPage } from "./behandling.page";
  * Page Object Model for Inngang-steget
  */
 export class InngangPage extends BehandlingPage {
-  constructor(page: Page) {
-    super(page);
+  constructor(page: Page, saksnummer: string) {
+    super(page, saksnummer);
   }
 
   /**

@@ -1,10 +1,9 @@
 import { Page, Locator, expect } from "@playwright/test";
-import { getSaksnummerFraUrl } from "../../utils/testUtils";
 import { BehandlingPage } from "./behandling.page";
 
 export class SendBrevPage extends BehandlingPage {
-  constructor(page: Page) {
-    super(page);
+  constructor(page: Page, saksnummer: string) {
+    super(page, saksnummer);
   }
 
   // Dersom SendBrev ligger på en dedikert sti etter at man er inne i en sak, sett path her.
@@ -18,7 +17,6 @@ export class SendBrevPage extends BehandlingPage {
   };
 
   private sendBrevPanel?: Locator;
-  private sakId?: string;
 
   get sendButton(): Locator {
     return this.page.getByRole("button", { name: this.labels.sendBrev });
@@ -47,9 +45,8 @@ export class SendBrevPage extends BehandlingPage {
 
   async clickSendBrevTab(): Promise<void> {
     const tab = this.sendBrevTab;
-    this.sakId = getSaksnummerFraUrl(this.page);
 
-    await expect(tab, this.sakId + ': Fant ikke "Send brev"-fanen for sak ').toBeVisible();
+    await expect(tab, `${this.saksnummer}: Fant ikke "Send brev"-fanen`).toBeVisible();
 
     const panelId = await tab.getAttribute("aria-controls");
     await tab.click();

@@ -31,8 +31,8 @@ function lagDato(dagMåned: string): string {
  * Gjenbrukbar setup-funksjon som oppretter testdata og navigerer til en årsavregning-behandling
  */
 async function setupAarsavregningTest(page: Page, saksnummer: PrepopulertSaksnummer) {
-  const behandlingPage = new BehandlingPage(page);
-  aarsavregningPage = new AarsavregningPage(page);
+  const behandlingPage = new BehandlingPage(page, saksnummer);
+  aarsavregningPage = new AarsavregningPage(page, saksnummer);
 
   // Hent URL til prepopulert FTRL-sak med årsavregning og naviger direkte dit
   const url = hentPrepopulertSakUrl(saksnummer);

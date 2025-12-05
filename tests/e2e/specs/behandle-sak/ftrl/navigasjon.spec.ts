@@ -20,11 +20,11 @@ import { runAxeAnalyze } from "../../../utils/axeUtils";
 test.describe("FTRL Stegvelger - Navigasjon", () => {
   test("FTRL-behandling åpnes - viser stegvelger", async ({ page }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
-
-    const behandlingPage = new BehandlingPage(page);
+    const saksnummer = "MEL-1016";
+    const behandlingPage = new BehandlingPage(page, saksnummer);
 
     // Hent URL til prepopulert FTRL-sak og naviger direkte dit
-    const url = hentPrepopulertSakUrl("MEL-1016");
+    const url = hentPrepopulertSakUrl(saksnummer);
     await behandlingPage.goto(url);
 
     await runAxeAnalyze(page, testInfo.title);
@@ -32,11 +32,11 @@ test.describe("FTRL Stegvelger - Navigasjon", () => {
 
   test("Navigasjon mellom steg - frem og tilbake fungerer", async ({ page }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
-
-    const behandlingPage = new BehandlingPage(page);
+    const saksnummer = "MEL-1017";
+    const behandlingPage = new BehandlingPage(page, saksnummer);
 
     // Hent URL til prepopulert FTRL-sak og naviger direkte dit
-    const url = hentPrepopulertSakUrl("MEL-1017");
+    const url = hentPrepopulertSakUrl(saksnummer);
     await behandlingPage.goto(url);
 
     await runAxeAnalyze(page, testInfo.title);
@@ -44,11 +44,11 @@ test.describe("FTRL Stegvelger - Navigasjon", () => {
 
   test("Progressbar - viser alle steg", async ({ page }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
-
-    const behandlingPage = new BehandlingPage(page);
+    const saksnummer = "MEL-1018";
+    const behandlingPage = new BehandlingPage(page, saksnummer);
 
     // Hent URL til prepopulert FTRL-sak og naviger direkte dit
-    const url = hentPrepopulertSakUrl("MEL-1018");
+    const url = hentPrepopulertSakUrl(saksnummer);
     await behandlingPage.goto(url);
 
     await runAxeAnalyze(page, testInfo.title);
@@ -56,11 +56,11 @@ test.describe("FTRL Stegvelger - Navigasjon", () => {
 
   test("Progressbar - klikk på steg navigerer til steget", async ({ page }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
-
-    const behandlingPage = new BehandlingPage(page);
+    const saksnummer = "MEL-1019";
+    const behandlingPage = new BehandlingPage(page, saksnummer);
 
     // Hent URL til prepopulert FTRL-sak og naviger direkte dit
-    const url = hentPrepopulertSakUrl("MEL-1019");
+    const url = hentPrepopulertSakUrl(saksnummer);
     await behandlingPage.goto(url);
 
     await runAxeAnalyze(page, testInfo.title);

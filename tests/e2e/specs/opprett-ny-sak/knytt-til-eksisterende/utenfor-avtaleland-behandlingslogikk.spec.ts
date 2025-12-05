@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 import { runAxeAnalyze } from "../../../utils/axeUtils";
 import { HovedsidePage, USER_ID_VALID } from "../../../pages/hovedside.page";
 import { OpprettNySakPage } from "../../../pages/opprett-ny-sak/opprett-ny-sak.page";
-import { TIMEOUT_FOR_COMPLEX_TESTS, getSaksnummerFraUrl } from "../../../utils/testUtils";
+import { TIMEOUT_FOR_COMPLEX_TESTS } from "../../../utils/testUtils";
 import { hentPrepopulertSakUrl } from "../../../utils/testdataUtils";
 import { BehandlingPage } from "../../../pages/behandling/behandling.page";
 
@@ -96,14 +96,14 @@ test.describe("'Utenfor avtaleland' behandlingslogikk", () => {
   }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout siden vi oppretter og avslutter sak
 
-    const behandlingPage = new BehandlingPage(page);
+    const saksnummer = "MEL-1020";
+    const behandlingPage = new BehandlingPage(page, saksnummer);
 
     // Hent URL til prepopulert FTRL-sak og naviger direkte dit
-    const url = hentPrepopulertSakUrl("MEL-1020");
+    const url = hentPrepopulertSakUrl(saksnummer);
     await behandlingPage.goto(url);
 
-    const sakId = getSaksnummerFraUrl(page);
-    await behandlingPage.avsluttBehandling(sakId, "Søknaden er innvilget", "Bekreft");
+    await behandlingPage.avsluttBehandling(saksnummer, "Søknaden er innvilget", "Bekreft");
 
     const hovedsidePage = new HovedsidePage(page);
 
@@ -113,7 +113,7 @@ test.describe("'Utenfor avtaleland' behandlingslogikk", () => {
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgKnyttTilEksisterendeSak();
 
-    const valgtSak = opprettNySakPage.finnSakBySaksnummer(sakId);
+    const valgtSak = opprettNySakPage.finnSakBySaksnummer(saksnummer);
     await valgtSak.click();
 
     // === AKSEPTANSEKRITERIUM 3 ===

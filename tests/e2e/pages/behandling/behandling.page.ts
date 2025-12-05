@@ -1,5 +1,4 @@
 import { expect, Locator, Page } from "@playwright/test";
-import { getSaksnummerFraUrl } from "../../utils/testUtils";
 
 /**
  * Page Object Model for visning og håndtering av behandlinger
@@ -7,9 +6,15 @@ import { getSaksnummerFraUrl } from "../../utils/testUtils";
  */
 export class BehandlingPage {
   readonly page: Page;
+  readonly saksnummer: string;
 
-  constructor(page: Page) {
+  /**
+   * @param page - Playwright Page
+   * @param saksnummer - Saksnummer (f.eks. "MEL-1001")
+   */
+  constructor(page: Page, saksnummer: string) {
     this.page = page;
+    this.saksnummer = saksnummer;
   }
 
   /**
@@ -42,19 +47,17 @@ export class BehandlingPage {
     // Vent på at siden lastes med behandlingsinnhold
     await this.page.waitForLoadState("domcontentloaded");
 
-    const saksnummer = getSaksnummerFraUrl(this.page);
-
     // Vent på informasjonslinjen (finnes alltid på behandlingssider, inneholder personnavn og fnr)
     await expect(
       this.page.locator(".informasjonlinje"),
-      `${saksnummer}: Informasjonslinjen skal være synlig`,
+      `${this.saksnummer}: Informasjonslinjen skal være synlig`,
     ).toBeVisible({ timeout: 10000 });
 
     // Hvis forventet tittel er oppgitt, verifiser at den finnes
     if (forventetTittel) {
       await expect(
         this.page.locator("h1.stegvelgertittel"),
-        `${saksnummer}: Tittelen "${forventetTittel}" skal være synlig`,
+        `${this.saksnummer}: Tittelen "${forventetTittel}" skal være synlig`,
       ).toHaveText(forventetTittel, { timeout: 10000 });
     }
   }
@@ -68,9 +71,8 @@ export class BehandlingPage {
 
     if (!menyErSynlig) {
       const hamburgerMeny = this.page.locator(".behandlingsmeny__knapp");
-      const saksnummer = getSaksnummerFraUrl(this.page);
 
-      await expect(hamburgerMeny, `${saksnummer}: Hamburger-meny skal være synlig`).toBeVisible({ timeout: 5000 });
+      await expect(hamburgerMeny, `${this.saksnummer}: Hamburger-meny skal være synlig`).toBeVisible({ timeout: 5000 });
       await hamburgerMeny.click();
     }
 
@@ -78,9 +80,11 @@ export class BehandlingPage {
     const accordionHeader = this.page.locator(
       '.behandlingsmeny__meny .navds-accordion__header:has(.navds-accordion__header-content:has-text("Avslutt behandling"))',
     );
-    const saksnummer = getSaksnummerFraUrl(this.page);
 
-    await expect(accordionHeader, `${saksnummer}: Accordion-header "Avslutt behandling" skal være synlig`).toBeVisible({
+    await expect(
+      accordionHeader,
+      `${this.saksnummer}: Accordion-header "Avslutt behandling" skal være synlig`,
+    ).toBeVisible({
       timeout: 2000,
     });
     await accordionHeader.click();
@@ -91,7 +95,7 @@ export class BehandlingPage {
     );
     await expect(
       accordionContent,
-      `${saksnummer}: Accordion-innhold "Avslutt behandling" skal være synlig`,
+      `${this.saksnummer}: Accordion-innhold "Avslutt behandling" skal være synlig`,
     ).toBeVisible({ timeout: 3000 });
   }
 
@@ -209,7 +213,6 @@ export class BehandlingPage {
    * @param selectText - Valgfri spesifikk tekst på bekreft-knappen (hvis den avviker fra menyteksten)
    */
   async bekreftAvslutning(buttonText: string, selectText?: string): Promise<void> {
-    const saksnummer = getSaksnummerFraUrl(this.page);
     const modalSelectors = [".navds-modal[open]", ".modal[open]", '[role="dialog"]', ".dialog", ".confirmation-modal"];
 
     let modal = null;
@@ -221,7 +224,7 @@ export class BehandlingPage {
       }
     }
 
-    expect(modal, `${saksnummer}: Fant ingen åpen modal for bekreftelse`).not.toBeNull();
+    expect(modal, `${this.saksnummer}: Fant ingen åpen modal for bekreftelse`).not.toBeNull();
     if (!modal) return; // Type guard for TypeScript
 
     // Sjekk om det er en "Henlegg saken" modal som krever begrunnelse
@@ -244,7 +247,7 @@ export class BehandlingPage {
     // Finn "Bekreft" knappen inne i modalen
     const bekreftKnapp = modal.locator(`button:has-text("${buttonText}")`);
 
-    await expect(bekreftKnapp, `${saksnummer}: Bekreft-knapp skal være synlig`).toBeVisible({ timeout: 2000 });
+    await expect(bekreftKnapp, `${this.saksnummer}: Bekreft-knapp skal være synlig`).toBeVisible({ timeout: 2000 });
 
     const erEnabled = await bekreftKnapp.isEnabled();
 
