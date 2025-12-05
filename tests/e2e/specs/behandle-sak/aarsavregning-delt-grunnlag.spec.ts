@@ -18,7 +18,7 @@ import { runAxeAnalyze } from "../../utils/axeUtils";
  */
 
 let aarsavregningPage: AarsavregningPage;
-let valgtTestÅr: string = "2020"; // Default år som sannsynligvis er ledig
+let valgtTestÅr: string;
 
 /**
  * Hjelpefunksjon for å lage dato med riktig år
@@ -48,27 +48,9 @@ async function setupAarsavregningTest(page: Page, saksnummer: PrepopulertSaksnum
 
   await aarsavregningPage.verifiserAarsavregningside();
 
-  // Prøv år 2022, 2021, 2020 inntil vi finner ett uten aktiv årsavregning
-  const muligeÅr = ["2022", "2021", "2020"];
-  let årValgt = false;
-
-  for (const år of muligeÅr) {
-    await aarsavregningPage.velgÅr(år);
-
-    // Sjekk om det er feilmelding om aktiv årsavregning
-    const aktivFeilmelding = page.locator('[class*="error"], [class*="feil"]').filter({
-      hasText: /har allerede en aktiv årsavregning/i,
-    });
-
-    if (!(await aktivFeilmelding.isVisible().catch(() => false))) {
-      // Ingen feilmelding - dette året er tilgjengelig
-      valgtTestÅr = år; // Lagre det valgte året for bruk i testene
-      årValgt = true;
-      break;
-    }
-  }
-
-  expect(årValgt, "Kunne ikke finne et tilgjengelig år for årsavregning").toBe(true);
+  // Hent første tilgjengelige år fra dropdown-en og velg det
+  valgtTestÅr = await aarsavregningPage.hentFørsteTilgjengeligeÅr();
+  await aarsavregningPage.velgÅr(valgtTestÅr);
 }
 
 // Hver test oppretter sine egne testdata via setupAarsavregningTest

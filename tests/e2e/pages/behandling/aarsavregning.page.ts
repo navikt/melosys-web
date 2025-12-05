@@ -10,15 +10,63 @@ export class AarsavregningPage extends BehandlingPage {
     super(page);
   }
 
+  // Hent første tilgjengelige år fra dropdown-en (ikke "Velg...")
+  async hentFørsteTilgjengeligeÅr(): Promise<string> {
+    const årSelect = this.page.getByRole("combobox", { name: /år/i });
+    await expect(årSelect, "År-select skal være synlig").toBeVisible({ timeout: 5000 });
+
+    // Hent alle options og finn første som ikke er disabled
+    const options = årSelect.locator("option:not([disabled])");
+    const førsteÅr = await options.first().textContent();
+
+    if (!førsteÅr) {
+      throw new Error("Kunne ikke finne tilgjengelige år i dropdown");
+    }
+
+    return førsteÅr.trim();
+  }
+
   // År dropdown
   async velgÅr(år: string) {
     const saksnummer = getSaksnummerFraUrl(this.page);
     const årSelect = this.page.getByRole("combobox", { name: /år/i });
     await expect(årSelect, `${saksnummer}: År-select skal være synlig`).toBeVisible({ timeout: 5000 });
+
+    // Sett opp lyttere for API-kall FØR vi velger år
+    // Vi trenger å vente på ENTEN:
+    // 1. POST til /aarsavregninger (oppretter ny årsavregning) - status 200
+    // 2. Feilmelding om aktiv årsavregning vises i UI (året har allerede en aktiv årsavregning)
+    const aarsavregningResponsePromise = this.page.waitForResponse(
+      (response) =>
+        response.url().includes("/aarsavregninger") &&
+        !response.url().includes("/grunnlagstype") &&
+        response.request().method() === "POST",
+      { timeout: 15000 },
+    );
+
     await årSelect.selectOption({ label: år });
-    // Vent på at data for året har lastet ved å sjekke at bestemmelse-dropdown er synlig
-    const bestemmelseSelect = this.page.getByRole("combobox", { name: /bestemmelse/i });
-    await expect(bestemmelseSelect, `${saksnummer}: Bestemmelse-select skal være synlig etter årsskifte`).toBeVisible({
+
+    // Vent på at API-kallet for å opprette årsavregning fullføres (uansett om det lykkes eller feiler)
+    // Dette sikrer at backend er ferdig før vi fortsetter
+    try {
+      const response = await aarsavregningResponsePromise;
+      if (!response.ok()) {
+        // Årsavregning-kallet feilet (f.eks. validering), men det er OK - vi venter på UI-oppdatering
+      }
+    } catch {
+      // Timeout - årsavregningen kan allerede eksistere, eller noe annet gikk galt
+      // Vi fortsetter likevel og lar neste sjekk fange eventuelle feil
+    }
+
+    // Vent på at data for året har lastet ved å sjekke at spørsmålet om trygdeavgift fra Avgiftssystemet vises
+    // Bestemmelse-dropdown vises ikke før etter at brukeren har svart på dette spørsmålet og valgt "endeligAvgiftValg"
+    const trygdeavgiftSpørsmålTekst = this.page.getByText(
+      /skal du legge til trygdeavgift fra avgiftssystemet til denne årsavregningen/i,
+    );
+    await expect(
+      trygdeavgiftSpørsmålTekst,
+      `${saksnummer}: Spørsmål om trygdeavgift fra avgiftssystemet skal være synlig etter årsskifte`,
+    ).toBeVisible({
       timeout: 5000,
     });
   }
@@ -299,20 +347,62 @@ export class AarsavregningPage extends BehandlingPage {
   // Trygdeavgift fra Avgiftssystemet (delt grunnlag)
   async velgDeltGrunnlagJa() {
     const saksnummer = getSaksnummerFraUrl(this.page);
-    const jaRadio = this.page.getByRole("radio", { name: /ja/i }).first();
+    const jaRadio = this.page.getByRole("radio", { name: /^ja$/i }).first();
     await expect(jaRadio, `${saksnummer}: Radio-button 'Ja' skal være synlig`).toBeVisible({ timeout: 10000 });
 
-    // Bruk click() i stedet for check() for å håndtere NAV Design System radio-knapper
-    // click() fungerer selv om knappen allerede er checked
-    await jaRadio.click({ force: true });
+    // Sjekk om radioknappen allerede er checked
+    const isChecked = await jaRadio.isChecked();
 
-    // Vent på at API-kallet for oppdaterHarTrygdeavgiftFraAvgiftssystemet fullføres
-    // og at skjemaet re-rendres med medlemskapsperiode-feltene
+    if (!isChecked) {
+      // Sett opp lytter for API-respons FØR vi klikker på radioknappen
+      // Dette sikrer at vi venter på at backend har oppdatert harTrygdeavgiftFraAvgiftssystemet
+      const grunnlagstypeResponsePromise = this.page.waitForResponse(
+        (response) =>
+          response.url().includes("/grunnlagstype") &&
+          response.request().method() === "POST" &&
+          response.status() === 200,
+        { timeout: 15000 },
+      );
+
+      // Prøv å velge radioknappen - hvis den er readonly vil dette feile
+      // men vi fanger feilen og gir en mer beskrivende feilmelding
+      try {
+        await jaRadio.check({ timeout: 5000 });
+      } catch {
+        // Radioknappen er sannsynligvis readonly - sjekk om dette er forventet
+        throw new Error(
+          `${saksnummer}: Kunne ikke velge 'Ja' radioknapp. ` +
+            `Feltet er sannsynligvis readonly (forrigeÅrsavregningHarInnbetaltFraAvgiftssystem=true). ` +
+            `Denne testdataen støtter ikke delt grunnlag-test.`,
+        );
+      }
+
+      // Vent på at API-kallet for oppdaterHarTrygdeavgiftFraAvgiftssystemet fullføres
+      await grunnlagstypeResponsePromise;
+    }
+
+    // Vent på at "Beregn endelig trygdeavgift" radioknappen vises
+    // Dette kan ta litt tid pga React re-rendering
+    const beregnEndeligRadio = this.page.getByRole("radio", { name: /beregn endelig trygdeavgift/i });
+    await expect(
+      beregnEndeligRadio,
+      `${saksnummer}: 'Beregn endelig trygdeavgift' radio skal være synlig etter Ja valgt`,
+    ).toBeVisible({ timeout: 15000 });
+
+    // Sjekk om "Beregn endelig trygdeavgift" allerede er valgt
+    const beregnIsChecked = await beregnEndeligRadio.isChecked();
+
+    if (!beregnIsChecked) {
+      // Velg "Beregn endelig trygdeavgift" for å vise medlemskapsperiode-skjemaet
+      await beregnEndeligRadio.check();
+    }
+
+    // Vent på at skjemaet re-rendres med medlemskapsperiode-feltene
     const medlemskapsperiodeFelt = this.page.getByRole("combobox", { name: /trygdedekning periode 1/i });
     await expect(
       medlemskapsperiodeFelt,
       `${saksnummer}: Medlemskapsperiode-felt skal være synlig etter delt grunnlag valgt`,
-    ).toBeVisible({ timeout: 5000 });
+    ).toBeVisible({ timeout: 10000 });
   }
 
   // Datepicker-spesifikke metoder for å teste datovelger
