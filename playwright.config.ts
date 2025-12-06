@@ -11,6 +11,10 @@ import path from "path";
  */
 type TestMode = "live" | "record" | "playback";
 const E2E_MODE = (process.env.E2E_MODE?.toLowerCase() || "live") as TestMode;
+const IS_CI = !!process.env.CI;
+
+// CI environments are slower and need more generous timeouts
+const CI_TIMEOUT_MULTIPLIER = IS_CI ? 3 : 1;
 
 /**
  * Get context options based on mode.
@@ -76,21 +80,22 @@ export default defineConfig({
   testDir: "./tests/e2e/specs",
   outputDir: "tests/e2e/artifacts",
   reporter: [["html", { outputFolder: "tests/e2e/reports/playwright-report", open: "always" }], ["list"]],
-  /* Maximum time one test can run for. */
-  timeout: 15000,
+  /* Maximum time one test can run for. CI needs more time. */
+  timeout: 15000 * CI_TIMEOUT_MULTIPLIER,
   expect: {
     /**
      * Maximum time expect() should wait for the condition to be met.
      * For example in `await expect(locator).toHaveText();`
      */
-    timeout: 8000,
+    timeout: 8000 * CI_TIMEOUT_MULTIPLIER,
   },
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
   retries: 0,
-  workers: 4, // Kjører 4 tester parallelt (hver test har sin egen dedikerte sak)
+  /* Reduce workers in CI to avoid resource contention */
+  workers: IS_CI ? 2 : 4,
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
@@ -115,8 +120,9 @@ export default defineConfig({
       name: "chromium",
       use: {
         ...devices["Desktop Chrome"],
-        navigationTimeout: 8000,
-        actionTimeout: 4000,
+        /* CI environments are slower - increase timeouts */
+        navigationTimeout: 8000 * CI_TIMEOUT_MULTIPLIER,
+        actionTimeout: 4000 * CI_TIMEOUT_MULTIPLIER,
       },
     },
   ],
@@ -127,7 +133,13 @@ export default defineConfig({
 
 // Log current mode and config
 // eslint-disable-next-line no-console
-console.log(`[Playwright] E2E_MODE: ${E2E_MODE}`);
+console.log(`[Playwright] E2E_MODE: ${E2E_MODE}, CI: ${IS_CI}, Timeout multiplier: ${CI_TIMEOUT_MULTIPLIER}x`);
+if (IS_CI) {
+  // eslint-disable-next-line no-console
+  console.log(
+    `[Playwright] CI mode: workers=2, navigationTimeout=${8000 * CI_TIMEOUT_MULTIPLIER}ms, testTimeout=${15000 * CI_TIMEOUT_MULTIPLIER}ms`,
+  );
+}
 if (E2E_MODE === "record") {
   // eslint-disable-next-line no-console
   console.log(`[Playwright] HAR recording ENABLED - files will be saved to tests/e2e/recordings/har/`);

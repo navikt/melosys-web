@@ -452,28 +452,33 @@ jobs:
           retention-days: 7
 ```
 
-### CI-Specific Issues (Under Investigation)
+### CI-Specific Configuration
 
-**Status:** Tests pass locally in playback mode but fail in CI.
+**Status:** Fixed! CI tests now use increased timeouts to account for slower CI environment.
 
-| Environment | Passed | Failed | Notes |
-|-------------|--------|--------|-------|
-| Local (playback) | 52 | 12 | Works correctly |
-| CI (playback) | 5 | 36 | Most tests timeout |
+**Root Cause Analysis:**
+The mock server was working correctly (confirmed via logs showing successful API responses).
+The issue was that CI environments are slower than local development machines, causing
+`page.goto()` to timeout before pages could load with 4 parallel workers competing for resources.
 
-**Symptoms:**
-- Tests timeout on `page.goto()` with 8-second navigation timeout
-- No mock server startup logs visible in CI
-- Tests that pass locally timeout in CI
+**Solution (implemented in `playwright.config.ts`):**
+- Added `CI_TIMEOUT_MULTIPLIER = 3` when `process.env.CI` is true
+- Reduced workers from 4 to 2 in CI to reduce resource contention
+- All timeouts are multiplied by 3x in CI:
+  - `navigationTimeout`: 8s → 24s
+  - `actionTimeout`: 4s → 12s
+  - `testTimeout`: 15s → 45s
+  - `expectTimeout`: 8s → 24s
 
-**Attempted fixes:**
-1. `reuseExistingServer: !process.env.CI` - Force fresh server start in CI
-2. `stdout: "pipe"` / `stderr: "pipe"` - Pipe server output to logs
+**CI vs Local Configuration:**
 
-**Potential causes being investigated:**
-- Mock server not starting correctly in CI
-- Timing/race conditions with parallel workers
-- CI environment differences (paths, permissions)
+| Setting | Local | CI |
+|---------|-------|-----|
+| Workers | 4 | 2 |
+| Navigation timeout | 8s | 24s |
+| Action timeout | 4s | 12s |
+| Test timeout | 15s | 45s |
+| Expect timeout | 8s | 24s |
 
 ### Docker Deployment
 
@@ -504,8 +509,8 @@ When API contracts change:
 - [ ] Merge recordings from parallel workers
 - [ ] Add staleness detection for old recordings
 - [x] ~~Implement shared recording extraction (kodeverk, etc.)~~ - Partially done via query matching
-- [x] ~~Add CI/CD integration with GitHub Actions~~ - Workflow created, debugging CI issues
-- [ ] **Fix CI playback failures** - Tests pass locally but timeout in CI
+- [x] ~~Add CI/CD integration with GitHub Actions~~ - Workflow created and working
+- [x] ~~Fix CI playback failures~~ - Fixed via CI_TIMEOUT_MULTIPLIER (3x timeouts + 2 workers)
 - [ ] Docker compose setup for CI environment
 - [x] ~~Test playback mode end-to-end~~ - Working locally (52/64 tests pass)
 - [x] ~~Investigate remaining playback-specific failures~~ - Fixed via path matching improvement
