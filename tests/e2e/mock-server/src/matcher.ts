@@ -128,8 +128,8 @@ export class RecordingMatcher {
       }
       this.normalizedIndex.get(normalizedKey)!.push(exchange);
 
-      // Build GraphQL index (for POST /graphql)
-      if (request.pathname === "/graphql" && request.body) {
+      // Build GraphQL index (for POST /graphql or /graphql/)
+      if ((request.pathname === "/graphql" || request.pathname === "/graphql/") && request.body) {
         const graphqlBody = request.body as GraphQLRequest;
         if (graphqlBody.operationName) {
           const variablesHash = hashObject(graphqlBody.variables);
@@ -160,9 +160,14 @@ export class RecordingMatcher {
     const candidates = this.normalizedIndex.get(normalizedKey);
 
     if (candidates && candidates.length > 0) {
-      // For GET requests without body, return the first match
+      // For GET requests, try to find best query parameter match
       if (request.method === "GET") {
-        console.log(`[Matcher] Normalized match: ${request.method} ${request.pathname}`);
+        const queryMatch = this.findBestQueryMatch(candidates, request.query);
+        if (queryMatch) {
+          console.log(`[Matcher] Query match: ${request.method} ${request.pathname}`);
+          return queryMatch;
+        }
+        console.log(`[Matcher] Normalized match (first): ${request.method} ${request.pathname}`);
         return candidates[0];
       }
 
@@ -180,6 +185,46 @@ export class RecordingMatcher {
 
     console.log(`[Matcher] No match found: ${request.method} ${request.pathname}`);
     return null;
+  }
+
+  /**
+   * Find the best matching exchange based on query parameter similarity.
+   */
+  private findBestQueryMatch(
+    candidates: RecordedExchange[],
+    requestQuery: Record<string, string>,
+  ): RecordedExchange | null {
+    if (!requestQuery || Object.keys(requestQuery).length === 0) {
+      return null;
+    }
+
+    let bestMatch: RecordedExchange | null = null;
+    let bestScore = 0;
+
+    for (const candidate of candidates) {
+      const candidateQuery = candidate.request.query || {};
+      let matchingKeys = 0;
+      let totalKeys = 0;
+
+      // Count matching query parameters
+      for (const [key, value] of Object.entries(requestQuery)) {
+        totalKeys++;
+        if (candidateQuery[key] === value) {
+          matchingKeys++;
+        }
+      }
+
+      // Calculate match score (percentage of matching keys)
+      const score = totalKeys > 0 ? matchingKeys / totalKeys : 0;
+
+      if (score > bestScore) {
+        bestScore = score;
+        bestMatch = candidate;
+      }
+    }
+
+    // Require at least 50% query parameter match
+    return bestScore >= 0.5 ? bestMatch : null;
   }
 
   /**

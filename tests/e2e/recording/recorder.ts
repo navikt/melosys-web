@@ -82,10 +82,14 @@ function normalizePath(pathname: string): string {
 }
 
 /**
- * Generate a unique ID for a request based on method, path, and body.
+ * Generate a unique ID for a request based on method, path, query, and body.
  */
-function generateRequestId(method: string, pathname: string, body: unknown): string {
-  const content = `${method}:${pathname}:${JSON.stringify(body || "")}`;
+function generateRequestId(method: string, pathname: string, query: Record<string, string>, body: unknown): string {
+  const queryString = Object.entries(query)
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([k, v]) => `${k}=${v}`)
+    .join("&");
+  const content = `${method}:${pathname}:${queryString}:${JSON.stringify(body || "")}`;
   return createHash("md5").update(content).digest("hex").substring(0, 12);
 }
 
@@ -187,8 +191,8 @@ export class ApiRecorder {
       await this.handleRoute(route);
     });
 
-    // Intercept GraphQL requests (POST to /graphql endpoint only)
-    await page.route(/^https?:\/\/[^/]+\/graphql$/, async (route: Route) => {
+    // Intercept GraphQL requests (POST to /graphql endpoint, with or without trailing slash)
+    await page.route(/^https?:\/\/[^/]+\/graphql\/?$/, async (route: Route) => {
       await this.handleRoute(route);
     });
   }
@@ -248,14 +252,17 @@ export class ApiRecorder {
     // Find dynamic fields in response
     const dynamicFields = findDynamicFields(responseBody);
 
+    // Parse query parameters for ID generation
+    const query = parseQuery(url);
+
     return {
       request: {
-        id: generateRequestId(method, pathname, requestBody),
+        id: generateRequestId(method, pathname, query, requestBody),
         method,
         url: request.url(),
         pathname,
         normalizedPath: normalizePath(pathname),
-        query: parseQuery(url),
+        query,
         headers: extractHeaders(request.headers()),
         body: requestBody,
       },

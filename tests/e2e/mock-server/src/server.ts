@@ -87,9 +87,9 @@ app.post("/internal/e2e/testdata/reset", (req: Request, res: Response) => {
 });
 
 /**
- * GraphQL endpoint handler
+ * GraphQL endpoint handler (supports both /graphql and /graphql/)
  */
-app.post("/graphql", (req: Request, res: Response) => {
+const graphqlHandler = (req: Request, res: Response) => {
   const body = req.body as GraphQLRequest;
 
   if (!body || !body.query) {
@@ -123,7 +123,11 @@ app.post("/graphql", (req: Request, res: Response) => {
   const transformedResponse = dynamicHandler.transform(match.response, context);
 
   return res.status(transformedResponse.status).json(transformedResponse.body);
-});
+};
+
+// Register GraphQL handler for both paths (with and without trailing slash)
+app.post("/graphql", graphqlHandler);
+app.post("/graphql/", graphqlHandler);
 
 /**
  * Catch-all API endpoint handler
