@@ -209,13 +209,19 @@ git commit -m "chore: update E2E recordings"
 
 ## Known Limitations
 
-1. **Last request timing**: The last API request of a test may fail to record if the browser closes before it completes (harmless warning message)
+1. **Last request timing**: The last API request of a test may fail to record if the browser closes before it completes. This can cause incomplete recordings that work locally but fail in CI. **Fix**: Add explicit waits after form submissions that trigger API calls:
+   ```typescript
+   await page.click('button[type="submit"]');
+   await page.waitForResponse(resp => resp.url().includes('/api/behandlinger'));
+   ```
 
 2. **Parallel workers**: Recording works with parallel workers, but each worker writes to separate files
 
 3. **GraphQL**: GraphQL queries are matched by `operationName` - queries without operation names may not match correctly
 
 4. **Test isolation with shared test data**: Tests that use the same `USER_ID_VALID` or other shared identifiers can interfere with each other when running in parallel. See "Test Isolation" section below.
+
+5. **Write-then-read consistency**: Tests that mutate state (POST/PUT) and then verify the updated state (GET) don't work correctly in playback mode. The mock server returns pre-recorded responses, so the second GET returns stale data from before the mutation. See "Write-Then-Read Pattern" section below.
 
 ## Test Isolation
 
@@ -269,6 +275,82 @@ These files use `USER_ID_VALID` and may need serial mode:
 - `avtaleland-behandlingslogikk.spec.ts`
 - `eos-pensjonist-aarsavregning.spec.ts`
 - `utenfor-avtaleland-behandlingslogikk.spec.ts`
+
+## Write-Then-Read Pattern (Playback Limitation)
+
+### Problem
+
+Some tests follow a "write-then-read" pattern:
+1. Create or modify data (POST/PUT request)
+2. Navigate away or refresh
+3. Verify the updated data is visible (GET request)
+
+In playback mode, this doesn't work because:
+- The POST/PUT is matched and returns a recorded response (but doesn't actually modify state)
+- The subsequent GET returns the **pre-recorded** response from before the mutation
+- The test fails because it expects to see the updated state
+
+### Example: AC2 Test
+
+```typescript
+// This test creates a new behandling, then verifies it appears in the saker list
+test("AC2: Utenfor avtaleland med åpen årsavregning", async ({ page }) => {
+  // 1. Navigate and create new årsavregning behandling
+  await opprettNySakPage.klikkOpprettNyBehandling();  // POST - mutation
+
+  // 2. Navigate back to opprett ny sak
+  await hovedsidePage.goto();
+
+  // 3. Try to verify the sak now shows the new behandling
+  await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
+  // GET /api/fagsaker/sok returns PRE-MUTATION state - test fails!
+});
+```
+
+### Current Workaround
+
+Skip tests with write-then-read patterns in playback mode:
+
+```typescript
+import { getTestMode } from "../../../config/mode";
+
+test("Test that requires mutable state", async ({ page }) => {
+  test.skip(getTestMode() === "playback", "Requires mutable state - incompatible with playback mode");
+  // ... test code
+});
+```
+
+### Tests Skipped in Playback Mode
+
+| Test File | Test Name | Reason |
+|-----------|-----------|--------|
+| `utenfor-avtaleland-behandlingslogikk.spec.ts` | AC2: Utenfor avtaleland med åpen årsavregning | Incomplete recording - missing POST to create behandling (last request timing issue). Re-record with explicit wait after form submission. |
+
+### Future Solutions
+
+Several approaches could enable write-then-read tests in playback mode:
+
+1. **Stateful mock server**: Track mutations and modify subsequent responses accordingly
+   - Pros: Most accurate simulation
+   - Cons: Complex to implement, may diverge from real API behavior
+
+2. **Sequence-aware recordings**: Record request/response pairs with sequence numbers
+   - Pros: Captures exact order of operations
+   - Cons: Fragile if test order changes
+
+3. **Multiple recording variants**: Record pre-mutation and post-mutation states separately
+   - Pros: Simple matching logic
+   - Cons: Requires careful test design and recording management
+
+4. **Hybrid mode**: Use playback for read-only operations, live API for mutations
+   - Pros: Best of both worlds
+   - Cons: Requires backend to be available
+
+5. **Test refactoring**: Split write-then-read tests into separate test cases
+   - Pros: Works with current infrastructure
+   - Cons: May not capture the full user flow
+
+**Recommended approach**: Start with test refactoring (option 5) and consider stateful mock server (option 1) for complex scenarios.
 
 ## Files Modified
 

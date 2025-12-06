@@ -5,6 +5,7 @@ import { OpprettNySakPage } from "../../../pages/opprett-ny-sak/opprett-ny-sak.p
 import { TIMEOUT_FOR_COMPLEX_TESTS, getSaksnummerFraUrl } from "../../../utils/testUtils";
 import { hentPrepopulertSakUrl } from "../../../utils/testdataUtils";
 import { BehandlingPage } from "../../../pages/behandling/behandling.page";
+import { getTestMode } from "../../../config/mode";
 
 /**
  * MELOSYS-7385: Test akseptansekriterier for 'Utenfor avtaleland'-saker
@@ -55,6 +56,10 @@ test.describe("'Utenfor avtaleland' behandlingslogikk", () => {
   });
 
   test("AC2: Utenfor avtaleland med åpen årsavregning - finner sak", async ({ page, apiRecorder }, testInfo) => {
+    // Skip in playback mode - recording is incomplete (missing POST to create behandling)
+    // Needs re-recording with proper wait for behandling creation
+    test.skip(getTestMode() === "playback", "Recording incomplete - missing behandling creation POST");
+
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout siden vi oppretter sak + årsavregning
 
     // Bruk prepopulert FTRL-sak med UNDER_BEHANDLING status
