@@ -404,12 +404,59 @@ These tests fail in **both** record and playback modes - they are test/applicati
 
 ---
 
+## CI/CD Integration (Planned)
+
+### GitHub Actions Workflow
+
+The playback mode enables running E2E tests in CI without requiring a full backend stack:
+
+```yaml
+# .github/workflows/e2e-playback.yml (planned)
+jobs:
+  e2e-playback:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: pnpm install
+      - run: pnpm e2e:mock:install
+      - run: pnpm e2e:mock:build
+      - run: pnpm test:e2e:playback
+```
+
+### Docker Deployment
+
+For CI environments, the mock server can run as a Docker container:
+
+```bash
+# Build and run mock server in Docker
+pnpm e2e:mock:docker:build
+pnpm e2e:mock:docker:up
+
+# Run tests against containerized mock server
+E2E_MODE=playback pnpm playwright test
+```
+
+### Recording Updates Workflow
+
+When API contracts change:
+
+1. Developer runs `pnpm test:e2e:record` locally against live API
+2. Review changes in `tests/e2e/recordings/`
+3. Commit recordings with code changes
+4. CI runs playback tests against committed recordings
+
+---
+
 ## TODO / Future Improvements
 
 - [ ] Merge recordings from parallel workers
 - [ ] Add staleness detection for old recordings
 - [x] ~~Implement shared recording extraction (kodeverk, etc.)~~ - Partially done via query matching
-- [ ] Add CI/CD integration
+- [ ] Add CI/CD integration with GitHub Actions
+- [ ] Docker compose setup for CI environment
 - [x] ~~Test playback mode end-to-end~~ - Working (52/64 tests pass)
 - [x] ~~Investigate remaining playback-specific failures~~ - Fixed via path matching improvement
 - [ ] Refactor tests to use unique test data per file (enable full parallelization)
