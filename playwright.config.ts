@@ -42,8 +42,10 @@ function getWebServerConfig() {
         // Start mock API server
         command: "cd tests/e2e/mock-server && npm start",
         url: "http://localhost:8080/health",
-        reuseExistingServer: true,
+        reuseExistingServer: !process.env.CI, // Always start fresh in CI
         timeout: 30 * 1000,
+        stdout: "pipe",
+        stderr: "pipe",
       },
       {
         // Start frontend (Vite)
@@ -51,6 +53,8 @@ function getWebServerConfig() {
         url: "http://localhost:3333",
         reuseExistingServer: false,
         timeout: 120 * 1000,
+        stdout: "pipe",
+        stderr: "pipe",
       },
     ];
   }
