@@ -215,6 +215,61 @@ git commit -m "chore: update E2E recordings"
 
 3. **GraphQL**: GraphQL queries are matched by `operationName` - queries without operation names may not match correctly
 
+4. **Test isolation with shared test data**: Tests that use the same `USER_ID_VALID` or other shared identifiers can interfere with each other when running in parallel. See "Test Isolation" section below.
+
+## Test Isolation
+
+### Problem: Race Conditions with Shared State
+
+When tests share the same test data (e.g., `USER_ID_VALID = "30056928150"`), running them in parallel can cause race conditions:
+
+- One test modifies a sak (case) while another test expects it in a different state
+- Module-level variables like `let opprettNySakPage` are overwritten by parallel tests
+
+### Solution: Serial Mode for Shared State
+
+Add `test.describe.configure({ mode: "serial" })` to test files that share state:
+
+```typescript
+test.describe("My test suite", () => {
+  // Run tests serially to avoid race conditions
+  test.describe.configure({ mode: "serial" });
+
+  let sharedPageObject: MyPage;
+
+  test.beforeEach(async ({ page }) => {
+    sharedPageObject = new MyPage(page);
+  });
+
+  // Tests will run one at a time
+});
+```
+
+### Best Practices
+
+1. **Avoid module-level state**: Prefer creating page objects inside each test or in `beforeEach`
+
+2. **Don't duplicate navigation**: If `beforeEach` navigates to a page, don't call navigation again in the test
+
+3. **Wait for dynamic content**: When selecting from dropdowns with async-loaded options, wait for options to be attached:
+   ```typescript
+   const option = select.locator(`option:text-is("${value}")`);
+   await expect(option).toBeAttached({ timeout: 5000 });
+   ```
+
+4. **Use unique test data per file**: For full parallel execution, each test file should use different test identifiers (fnr, saksnummer, etc.)
+
+### Files Using Shared Test Data
+
+These files use `USER_ID_VALID` and may need serial mode:
+- `bruker-sak-validering.spec.ts`
+- `virksomhet-sak-validering.spec.ts`
+- `regresjon-state-ved-saksbytting.spec.ts`
+- `behandlingstype-tilgjengelighet.spec.ts`
+- `avtaleland-behandlingslogikk.spec.ts`
+- `eos-pensjonist-aarsavregning.spec.ts`
+- `utenfor-avtaleland-behandlingslogikk.spec.ts`
+
 ## Files Modified
 
 The recording system modifies these files:
@@ -231,3 +286,5 @@ The recording system modifies these files:
 - [ ] Implement shared recording extraction (kodeverk, etc.)
 - [ ] Add CI/CD integration
 - [ ] Test playback mode end-to-end
+- [ ] Refactor tests to use unique test data per file (enable full parallelization)
+- [ ] Consider project-level serial configuration for "knytt-til-eksisterende" tests
