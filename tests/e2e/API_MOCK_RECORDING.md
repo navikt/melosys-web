@@ -404,27 +404,76 @@ These tests fail in **both** record and playback modes - they are test/applicati
 
 ---
 
-## CI/CD Integration (Planned)
+## CI/CD Integration
 
 ### GitHub Actions Workflow
 
-The playback mode enables running E2E tests in CI without requiring a full backend stack:
+The playback mode enables running E2E tests in CI without requiring a full backend stack.
+
+**Workflow file:** `.github/workflows/e2e-playback.yml`
 
 ```yaml
-# .github/workflows/e2e-playback.yml (planned)
+name: E2E Tests (Playback)
+
+on:
+  pull_request:
+  push:
+    branches: [master, main]
+  workflow_dispatch:
+
 jobs:
   e2e-playback:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
-      - run: pnpm install
-      - run: pnpm e2e:mock:install
-      - run: pnpm e2e:mock:build
+          node-version: "22"
+          registry-url: https://npm.pkg.github.com/
+          scope: "@navikt"
+          cache: "pnpm"
+      - run: pnpm install --frozen-lockfile
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: npx playwright install --with-deps chromium
+      - run: |
+          pnpm e2e:mock:install
+          pnpm e2e:mock:build
       - run: pnpm test:e2e:playback
+        env:
+          CI: true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: tests/e2e/reports/playwright-report/
+          retention-days: 7
 ```
+
+### CI-Specific Issues (Under Investigation)
+
+**Status:** Tests pass locally in playback mode but fail in CI.
+
+| Environment | Passed | Failed | Notes |
+|-------------|--------|--------|-------|
+| Local (playback) | 52 | 12 | Works correctly |
+| CI (playback) | 5 | 36 | Most tests timeout |
+
+**Symptoms:**
+- Tests timeout on `page.goto()` with 8-second navigation timeout
+- No mock server startup logs visible in CI
+- Tests that pass locally timeout in CI
+
+**Attempted fixes:**
+1. `reuseExistingServer: !process.env.CI` - Force fresh server start in CI
+2. `stdout: "pipe"` / `stderr: "pipe"` - Pipe server output to logs
+
+**Potential causes being investigated:**
+- Mock server not starting correctly in CI
+- Timing/race conditions with parallel workers
+- CI environment differences (paths, permissions)
 
 ### Docker Deployment
 
@@ -455,9 +504,10 @@ When API contracts change:
 - [ ] Merge recordings from parallel workers
 - [ ] Add staleness detection for old recordings
 - [x] ~~Implement shared recording extraction (kodeverk, etc.)~~ - Partially done via query matching
-- [ ] Add CI/CD integration with GitHub Actions
+- [x] ~~Add CI/CD integration with GitHub Actions~~ - Workflow created, debugging CI issues
+- [ ] **Fix CI playback failures** - Tests pass locally but timeout in CI
 - [ ] Docker compose setup for CI environment
-- [x] ~~Test playback mode end-to-end~~ - Working (52/64 tests pass)
+- [x] ~~Test playback mode end-to-end~~ - Working locally (52/64 tests pass)
 - [x] ~~Investigate remaining playback-specific failures~~ - Fixed via path matching improvement
 - [ ] Refactor tests to use unique test data per file (enable full parallelization)
 - [ ] Fix pre-existing 12 test failures (application/test issues)
