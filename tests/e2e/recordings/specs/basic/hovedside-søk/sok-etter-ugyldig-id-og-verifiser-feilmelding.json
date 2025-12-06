@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "recordedAt": "2025-12-06T14:34:47.990Z",
+  "recordedAt": "2025-12-06T15:04:42.209Z",
   "testFile": "/Users/rune/source/nav/melosys-web/tests/e2e/specs/basic/hovedside-søk.spec.ts",
   "testName": "Søk etter ugyldig ID og verifiser feilmelding",
   "exchanges": [
@@ -39,7 +39,7 @@
           }
         ]
       },
-      "duration": 25,
+      "duration": 5,
       "dynamicFields": []
     },
     {
@@ -77,7 +77,7 @@
           "melosys.arsavregning.uten.flyt": false
         }
       },
-      "duration": 25,
+      "duration": 5,
       "dynamicFields": []
     },
     {
@@ -1111,7 +1111,7 @@
           }
         ]
       },
-      "duration": 9,
+      "duration": 23,
       "dynamicFields": []
     },
     {
@@ -1143,7 +1143,7 @@
         },
         "body": []
       },
-      "duration": 9,
+      "duration": 27,
       "dynamicFields": []
     }
   ]

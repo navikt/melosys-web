@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "recordedAt": "2025-12-06T14:35:06.181Z",
+  "recordedAt": "2025-12-06T15:04:59.991Z",
   "testFile": "/Users/rune/source/nav/melosys-web/tests/e2e/specs/behandle-sak/ftrl/navigasjon.spec.ts",
   "testName": "FTRL-behandling åpnes - viser stegvelger",
   "exchanges": [
@@ -39,7 +39,7 @@
           "melosys.arsavregning.uten.flyt": false
         }
       },
-      "duration": 5,
+      "duration": 3,
       "dynamicFields": []
     },
     {
@@ -1073,7 +1073,7 @@
           }
         ]
       },
-      "duration": 6,
+      "duration": 4,
       "dynamicFields": []
     },
     {
@@ -1112,12 +1112,12 @@
             "term": "Lovvalget er avklart"
           },
           "betalingsvalg": null,
-          "registrertDato": "2025-12-06T14:34:40.500069Z",
-          "endretDato": "2025-12-06T14:34:46.249711Z",
+          "registrertDato": "2025-12-06T15:04:35.043898Z",
+          "endretDato": "2025-12-06T15:04:40.469766Z",
           "hovedpartRolle": "BRUKER"
         }
       },
-      "duration": 15,
+      "duration": 10,
       "dynamicFields": ["registrertDato", "endretDato"]
     },
     {
@@ -1197,15 +1197,15 @@
           }
         }
       },
-      "duration": 5,
+      "duration": 3,
       "dynamicFields": []
     },
     {
       "request": {
-        "id": "ec70eb809f3c",
+        "id": "8da8929f95d0",
         "method": "GET",
-        "url": "http://localhost:3333/api/avklartefakta/94/oppsummering",
-        "pathname": "/api/avklartefakta/94/oppsummering",
+        "url": "http://localhost:3333/api/avklartefakta/328/oppsummering",
+        "pathname": "/api/avklartefakta/328/oppsummering",
         "normalizedPath": "/api/avklartefakta/:id/oppsummering",
         "query": {},
         "headers": {
@@ -1234,15 +1234,15 @@
           "ukjentSluttdatoMedlemskapsperiode": false
         }
       },
-      "duration": 14,
+      "duration": 8,
       "dynamicFields": ["ukjentSluttdatoMedlemskapsperiode"]
     },
     {
       "request": {
-        "id": "7ff76128f923",
+        "id": "5b02f4af7e19",
         "method": "GET",
-        "url": "http://localhost:3333/api/behandlinger/94",
-        "pathname": "/api/behandlinger/94",
+        "url": "http://localhost:3333/api/behandlinger/328",
+        "pathname": "/api/behandlinger/328",
         "normalizedPath": "/api/behandlinger/:behandlingId",
         "query": {},
         "headers": {
@@ -1258,7 +1258,7 @@
           "content-type": "application/json"
         },
         "body": {
-          "behandlingID": 94,
+          "behandlingID": 328,
           "oppsummering": {
             "behandlingsstatus": {
               "kode": "AVSLUTTET",
@@ -1272,8 +1272,8 @@
               "kode": "YRKESAKTIV",
               "term": "Yrkesaktiv"
             },
-            "registrertDato": "2025-12-06T14:34:40.501988Z",
-            "endretDato": "2025-12-06T14:34:46.249877Z",
+            "registrertDato": "2025-12-06T15:04:35.045290Z",
+            "endretDato": "2025-12-06T15:04:40.469786Z",
             "endretAvNavn": "Lokal Testbruker",
             "sisteOpplysningerHentetDato": null,
             "svarFrist": null,
@@ -1308,7 +1308,7 @@
           "redigerbart": false
         }
       },
-      "duration": 48,
+      "duration": 24,
       "dynamicFields": [
         "oppsummering.registrertDato",
         "oppsummering.endretDato",
@@ -1318,10 +1318,10 @@
     },
     {
       "request": {
-        "id": "cb8bd544c596",
+        "id": "46351cfd431c",
         "method": "GET",
-        "url": "http://localhost:3333/api/behandlinger/94/resultat",
-        "pathname": "/api/behandlinger/94/resultat",
+        "url": "http://localhost:3333/api/behandlinger/328/resultat",
+        "pathname": "/api/behandlinger/328/resultat",
         "normalizedPath": "/api/behandlinger/:behandlingId/resultat",
         "query": {},
         "headers": {
@@ -1351,15 +1351,15 @@
           "aarsavregningID": null
         }
       },
-      "duration": 25,
+      "duration": 12,
       "dynamicFields": []
     },
     {
       "request": {
-        "id": "977bad943c7a",
+        "id": "624c71ca5e87",
         "method": "GET",
-        "url": "http://localhost:3333/api/behandlinger/94/medlemskapsperioder",
-        "pathname": "/api/behandlinger/94/medlemskapsperioder",
+        "url": "http://localhost:3333/api/behandlinger/328/medlemskapsperioder",
+        "pathname": "/api/behandlinger/328/medlemskapsperioder",
         "normalizedPath": "/api/behandlinger/:behandlingId/medlemskapsperioder",
         "query": {},
         "headers": {
@@ -1376,15 +1376,15 @@
         },
         "body": []
       },
-      "duration": 21,
+      "duration": 18,
       "dynamicFields": []
     },
     {
       "request": {
-        "id": "d78dd67de83b",
+        "id": "9971cf7a7bbc",
         "method": "GET",
-        "url": "http://localhost:3333/api/vilkaar/94",
-        "pathname": "/api/vilkaar/94",
+        "url": "http://localhost:3333/api/vilkaar/328",
+        "pathname": "/api/vilkaar/328",
         "normalizedPath": "/api/vilkaar/:id",
         "query": {},
         "headers": {
@@ -1401,15 +1401,15 @@
         },
         "body": []
       },
-      "duration": 14,
+      "duration": 15,
       "dynamicFields": []
     },
     {
       "request": {
-        "id": "7c57585f6759",
+        "id": "797411940bc7",
         "method": "GET",
-        "url": "http://localhost:3333/api/mottatteopplysninger/94",
-        "pathname": "/api/mottatteopplysninger/94",
+        "url": "http://localhost:3333/api/mottatteopplysninger/328",
+        "pathname": "/api/mottatteopplysninger/328",
         "normalizedPath": "/api/mottatteopplysninger/:id",
         "query": {},
         "headers": {
@@ -1493,7 +1493,7 @@
           "mottaksdato": "2025-12-06"
         }
       },
-      "duration": 10,
+      "duration": 8,
       "dynamicFields": [
         "data.periode.fom",
         "data.periode.tom",
@@ -1524,7 +1524,7 @@
         },
         "body": []
       },
-      "duration": 7,
+      "duration": 9,
       "dynamicFields": []
     },
     {
@@ -1569,10 +1569,10 @@
     },
     {
       "request": {
-        "id": "4d21c482786a",
+        "id": "c032e057ccba",
         "method": "GET",
-        "url": "http://localhost:3333/api/brev/utkast/94",
-        "pathname": "/api/brev/utkast/94",
+        "url": "http://localhost:3333/api/brev/utkast/328",
+        "pathname": "/api/brev/utkast/328",
         "normalizedPath": "/api/brev/utkast/:id",
         "query": {},
         "headers": {
@@ -1594,10 +1594,10 @@
     },
     {
       "request": {
-        "id": "b640a75c4c55",
+        "id": "ce1057cfb217",
         "method": "GET",
-        "url": "http://localhost:3333/api/behandlinger/94/aarsak/mottaksdato",
-        "pathname": "/api/behandlinger/94/aarsak/mottaksdato",
+        "url": "http://localhost:3333/api/behandlinger/328/aarsak/mottaksdato",
+        "pathname": "/api/behandlinger/328/aarsak/mottaksdato",
         "normalizedPath": "/api/behandlinger/:behandlingId/aarsak/mottaksdato",
         "query": {},
         "headers": {
@@ -1616,7 +1616,7 @@
           "mottaksdato": "2025-12-06"
         }
       },
-      "duration": 16,
+      "duration": 13,
       "dynamicFields": ["mottaksdato"]
     },
     {
@@ -1643,12 +1643,12 @@
         },
         "body": []
       },
-      "duration": 17,
+      "duration": 16,
       "dynamicFields": []
     },
     {
       "request": {
-        "id": "e4ff0c4e52a3",
+        "id": "08b15e6e526f",
         "method": "POST",
         "url": "http://localhost:3333/graphql/",
         "pathname": "/graphql/",
@@ -1662,7 +1662,7 @@
         "body": {
           "operationName": "hentPersonopplysninger",
           "variables": {
-            "behandlingID": 94
+            "behandlingID": 328
           },
           "query": "query hentPersonopplysninger($behandlingID: Long!) {\n  hentSaksopplysninger(behandlingID: $behandlingID) {\n    persondata {\n      navn {\n        fornavn\n        mellomnavn\n        etternavn\n        __typename\n      }\n      kjoenn\n      folkeregisterpersonstatuser {\n        kode\n        erHistorisk\n        __typename\n      }\n      folkeregisteridentifikator\n      statsborgerskap {\n        land\n        erHistorisk\n        __typename\n      }\n      sivilstand {\n        type\n        erHistorisk\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}"
         }
@@ -1686,13 +1686,13 @@
                 "kjoenn": "UKJENT",
                 "folkeregisterpersonstatuser": [
                   {
-                    "kode": "BOSATT",
-                    "erHistorisk": false,
+                    "kode": "MIDLERTIDIG",
+                    "erHistorisk": true,
                     "__typename": "Folkeregisterpersonstatus"
                   },
                   {
-                    "kode": "MIDLERTIDIG",
-                    "erHistorisk": true,
+                    "kode": "BOSATT",
+                    "erHistorisk": false,
                     "__typename": "Folkeregisterpersonstatus"
                   },
                   {
@@ -1738,7 +1738,7 @@
           }
         }
       },
-      "duration": 17,
+      "duration": 14,
       "dynamicFields": []
     },
     {
@@ -1765,7 +1765,7 @@
           "harBehandlingMedTrygdeavgift": false
         }
       },
-      "duration": 24,
+      "duration": 20,
       "dynamicFields": []
     }
   ]

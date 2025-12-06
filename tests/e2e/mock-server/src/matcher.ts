@@ -160,6 +160,13 @@ export class RecordingMatcher {
     const candidates = this.normalizedIndex.get(normalizedKey);
 
     if (candidates && candidates.length > 0) {
+      // 2a. First, try to match by path segments (saksnummer, behandlingId, etc.)
+      const pathMatch = this.findBestPathMatch(candidates, request.pathname);
+      if (pathMatch) {
+        console.log(`[Matcher] Path segment match: ${request.method} ${request.pathname}`);
+        return pathMatch;
+      }
+
       // For GET requests, try to find best query parameter match
       if (request.method === "GET") {
         const queryMatch = this.findBestQueryMatch(candidates, request.query);
@@ -185,6 +192,60 @@ export class RecordingMatcher {
 
     console.log(`[Matcher] No match found: ${request.method} ${request.pathname}`);
     return null;
+  }
+
+  /**
+   * Find the best matching exchange based on path segment similarity.
+   * This matches specific IDs (saksnummer, behandlingId, etc.) in the URL path.
+   */
+  private findBestPathMatch(candidates: RecordedExchange[], requestPath: string): RecordedExchange | null {
+    // Extract all dynamic segments from the request path
+    const requestSegments = requestPath.split("/").filter(Boolean);
+
+    let bestMatch: RecordedExchange | null = null;
+    let bestScore = 0;
+
+    for (const candidate of candidates) {
+      const candidatePath = candidate.request.pathname;
+      const candidateSegments = candidatePath.split("/").filter(Boolean);
+
+      // If segment counts don't match, skip
+      if (requestSegments.length !== candidateSegments.length) {
+        continue;
+      }
+
+      let matchingSegments = 0;
+      let totalDynamicSegments = 0;
+
+      for (let i = 0; i < requestSegments.length; i++) {
+        const reqSeg = requestSegments[i];
+        const candSeg = candidateSegments[i];
+
+        // Check if this is a dynamic segment (ID, saksnummer, etc.)
+        const isDynamic =
+          /^MEL-\d+$/.test(reqSeg) || // saksnummer
+          /^\d+$/.test(reqSeg) || // numeric ID
+          /^[0-9a-f-]{36}$/i.test(reqSeg); // UUID
+
+        if (isDynamic) {
+          totalDynamicSegments++;
+          if (reqSeg === candSeg) {
+            matchingSegments++;
+          }
+        }
+      }
+
+      // Calculate score based on matching dynamic segments
+      const score = totalDynamicSegments > 0 ? matchingSegments / totalDynamicSegments : 0;
+
+      if (score > bestScore) {
+        bestScore = score;
+        bestMatch = candidate;
+      }
+    }
+
+    // Require exact match of dynamic segments
+    return bestScore === 1 ? bestMatch : null;
   }
 
   /**

@@ -351,25 +351,56 @@ private findBestQueryMatch(candidates, requestQuery) {
 
 ---
 
+### Issue 4: Path Parameter Matching Returns Wrong Recordings
+
+**Symptom**: Tests for `MEL-1026` receive data for `MEL-1001`, causing UI to show wrong sakstype.
+
+**Root Cause**: Normalized path matching (`/api/fagsaker/:saksnummer`) returned the first candidate without checking if the actual saksnummer/ID matched.
+
+**Fix** (matcher.ts): Added `findBestPathMatch()` method that:
+1. Extracts dynamic segments (MEL-XXXX, numeric IDs, UUIDs) from request path
+2. Compares with candidate recording paths
+3. Returns exact match based on path segment values
+
+```typescript
+private findBestPathMatch(candidates, requestPath): RecordedExchange | null {
+  // Extract dynamic segments and require exact match
+  // MEL-1026 must match recordings with MEL-1026, not MEL-1001
+}
+```
+
+---
+
+### Issue 5: Non-JSON Bodies Cause Parse Errors
+
+**Symptom**: `POST /api/avklartefakta/313/ukjent-sluttdato-medlemskapsperiode` fails with `SyntaxError: "false" is not valid JSON`
+
+**Root Cause**: Express `json()` middleware with `strict: true` (default) rejects primitive values like `false`, `true`, numbers.
+
+**Fix** (server.ts): Configure JSON parser with `strict: false`:
+```typescript
+app.use(express.json({ limit: "10mb", strict: false }));
+app.use(express.text({ type: "*/*", limit: "10mb" }));
+```
+
+---
+
 ## Current Status (as of 2025-12-06)
 
 | Mode | Passed | Failed | Notes |
 |------|--------|--------|-------|
 | **Record (live API)** | 51 | 12 | 12 are pre-existing test issues |
-| **Playback (mock)** | 37 | 22 | 10 additional failures in playback |
+| **Playback (mock)** | 52 | 12 | ✅ Same 12 failures as record mode |
 
-### Remaining Playback Issues
+**Playback mode is now working correctly!** All playback-specific failures have been fixed.
 
-The 10 additional playback failures are likely due to:
-1. Complex test flows with many API call variations not fully recorded
-2. Tests that timeout (11+ seconds) - indicates missing recordings
-3. Dynamic data differences between record and playback
+### Pre-existing Test Failures (12 tests)
 
-### Next Steps for Improvement
+These tests fail in **both** record and playback modes - they are test/application issues, not mock server issues:
 
-1. **Timeout failures**: Investigate tests with 11+ second timeouts - likely missing API recordings
-2. **"Knytt til eksisterende" tests**: These navigate between multiple saker and make many API calls with different parameters
-3. **Consider shared recordings**: Extract common kodeverk responses to `recordings/shared/`
+1. `aarsavregning-delt-grunnlag.spec.ts` (10 tests) - All "delt grunnlag" årsavregning tests
+2. `eu-eos-trygdeavgift.spec.ts` (1 test) - Trygdeavgift inntektskilder
+3. `send-brev-validering.spec.ts` (1 test) - Årsavregning brevmal validering
 
 ---
 
@@ -379,8 +410,7 @@ The 10 additional playback failures are likely due to:
 - [ ] Add staleness detection for old recordings
 - [x] ~~Implement shared recording extraction (kodeverk, etc.)~~ - Partially done via query matching
 - [ ] Add CI/CD integration
-- [x] ~~Test playback mode end-to-end~~ - Working (37/59 tests pass)
+- [x] ~~Test playback mode end-to-end~~ - Working (52/64 tests pass)
+- [x] ~~Investigate remaining playback-specific failures~~ - Fixed via path matching improvement
 - [ ] Refactor tests to use unique test data per file (enable full parallelization)
-- [ ] Consider project-level serial configuration for "knytt-til-eksisterende" tests
-- [ ] Investigate remaining 10 playback-specific failures
-- [ ] Add logging to identify missing recordings during playback
+- [ ] Fix pre-existing 12 test failures (application/test issues)

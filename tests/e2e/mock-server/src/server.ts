@@ -28,7 +28,17 @@ const app = express();
 
 // Middleware
 app.use(cors());
-app.use(express.json({ limit: "10mb" }));
+
+// Custom body parser that handles both JSON and primitive values (like "false", "true", numbers)
+app.use(
+  express.json({
+    limit: "10mb",
+    strict: false, // Allow primitive values like "false", "true", numbers
+  }),
+);
+
+// Fallback for text/plain bodies or primitive values that JSON parser couldn't handle
+app.use(express.text({ type: "*/*", limit: "10mb" }));
 
 // Request logging middleware
 if (LOG_REQUESTS) {
