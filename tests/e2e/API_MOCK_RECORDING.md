@@ -324,7 +324,8 @@ test("Test that requires mutable state", async ({ page }) => {
 
 | Test File | Test Name | Reason |
 |-----------|-----------|--------|
-| `utenfor-avtaleland-behandlingslogikk.spec.ts` | AC2: Utenfor avtaleland med åpen årsavregning | Incomplete recording - missing POST to create behandling (last request timing issue). Re-record with explicit wait after form submission. |
+| `utenfor-avtaleland-behandlingslogikk.spec.ts` | AC2: Utenfor avtaleland med åpen årsavregning | Incomplete recording - missing POST to create behandling (last request timing issue). |
+| `utenfor-avtaleland-behandlingslogikk.spec.ts` | AC3: Utenfor avtaleland med avsluttet behandling | Write-then-read pattern - closes behandling then verifies updated sak state. |
 
 ### Future Solutions
 
@@ -499,7 +500,7 @@ test.skip(getTestMode() === "playback", "Recording incomplete - missing behandli
 | Mode | Passed | Failed | Skipped | Notes |
 |------|--------|--------|---------|-------|
 | **Record (live API)** | 51 | 12 | 0 | 12 are pre-existing test issues |
-| **Playback (mock)** | 51 | 12 | 1 | ✅ Same 12 failures + 1 skipped (AC2 incomplete recording) |
+| **Playback (mock)** | 50 | 12 | 2 | ✅ Same 12 failures + 2 skipped (AC2, AC3 write-then-read) |
 
 **Playback mode is now working correctly!** All playback-specific failures have been fixed.
 

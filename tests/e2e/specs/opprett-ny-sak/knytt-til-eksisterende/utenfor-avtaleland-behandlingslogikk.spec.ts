@@ -102,6 +102,10 @@ test.describe("'Utenfor avtaleland' behandlingslogikk", () => {
   test("AC3: Utenfor avtaleland med avsluttet behandling - alle behandlingstyper tilgjengelige", async ({
     page,
   }, testInfo) => {
+    // Skip in playback mode - this test closes a behandling then verifies updated state,
+    // which doesn't work with pre-recorded responses (write-then-read consistency issue)
+    test.skip(getTestMode() === "playback", "Requires mutable state - closes behandling then verifies");
+
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout siden vi oppretter og avslutter sak
 
     const behandlingPage = new BehandlingPage(page);
