@@ -140,11 +140,27 @@ Each test generates a JSON file with recorded API exchanges:
 
 ## Request Matching
 
-The mock server matches requests using:
+The mock server matches requests using a priority-based strategy:
 
-1. **Exact match**: method + path + query + body hash
-2. **Normalized path**: `/api/fagsaker/MEL-1001` → `/api/fagsaker/:saksnummer`
-3. **GraphQL**: operationName + variables hash
+1. **Exact match**: method + path + query + body hash (highest priority)
+2. **Query parameter match**: For GET requests, finds best match by query parameters
+3. **Path segment match**: For paths with dynamic IDs (MEL-XXXX, numeric IDs, UUIDs)
+4. **Normalized path**: `/api/fagsaker/MEL-1001` → `/api/fagsaker/:saksnummer`
+5. **GraphQL**: operationName + variables hash
+
+### Dynamic vs Static Path Handling
+
+The matcher distinguishes between two types of paths:
+
+**Dynamic paths** (contain MEL-XXXX, numeric IDs, or UUIDs):
+- Example: `/api/fagsaker/MEL-1015/behandlingstyper/...`
+- Uses path-only matching with sequence tracking
+- Ensures revisiting a sak returns correct data (MEL-1015 → MEL-1071 → MEL-1015)
+
+**Static paths** (no dynamic segments):
+- Example: `/api/behandlingstemaer/hent-lovlige-kombinasjoner/?sakstype=EU_EOS`
+- Uses query parameter matching to find the correct response
+- Different query params return different recordings (e.g., EU_EOS vs AVTALELAND)
 
 ### Path Normalization Patterns
 
@@ -691,18 +707,27 @@ The issue was that CI environments are slower than local development machines, c
 
 **Solution (implemented in `playwright.config.ts`):**
 - Added `CI_TIMEOUT_MULTIPLIER = 3` when `process.env.CI` is true
-- Reduced workers from 4 to 2 in CI to reduce resource contention
+- **Playback mode uses 1 worker** - required because mock server has global sequence tracking
+  that doesn't support parallel workers (they would consume recordings and reset state
+  independently, causing race conditions)
+- Live/record mode uses 4 workers locally, 2 in CI
 - All timeouts are multiplied by 3x in CI:
   - `navigationTimeout`: 8s → 24s
   - `actionTimeout`: 4s → 12s
   - `testTimeout`: 15s → 45s
   - `expectTimeout`: 8s → 24s
 
-**CI vs Local Configuration:**
+**Worker Configuration by Mode:**
+
+| Mode | Local | CI |
+|------|-------|-----|
+| Playback | 1 | 1 |
+| Live/Record | 4 | 2 |
+
+**Timeout Configuration:**
 
 | Setting | Local | CI |
 |---------|-------|-----|
-| Workers | 4 | 2 |
 | Navigation timeout | 8s | 24s |
 | Action timeout | 4s | 12s |
 | Test timeout | 15s | 45s |
