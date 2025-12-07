@@ -99,23 +99,40 @@ async function globalSetup() {
     console.log("\nStep 2: Clearing Oracle test data...");
     await clearOracleTestData();
 
-    // 3. Initialiser testdata på nytt via API
-    console.log("\nStep 3: Initializing test data...");
-    const metadata = await resetTestData();
-    const sakCount = Object.keys(metadata).length;
-    console.log(`  Test data initialized: ${sakCount} saker klar for testing\n`);
+    // 3. Initialiser testdata på nytt via API (kan hoppes over med SKIP_TESTDATA_RESET=true)
+    if (process.env.SKIP_TESTDATA_RESET === "true") {
+      console.log("\nStep 3: Skipping test data initialization (SKIP_TESTDATA_RESET=true)");
+      console.log("  Using existing metadata from recordings directory\n");
 
-    // Lagre metadata til temp-fil slik at test-workers kan lese den
-    // (Playwright kjører globalSetup i en egen prosess)
-    const metadataPath = join(tmpdir(), "melosys-e2e-testdata-metadata.json");
-    writeFileSync(metadataPath, JSON.stringify(metadata, null, 2));
-    console.log(`  Metadata saved to ${metadataPath}\n`);
-
-    // In record mode, also save metadata to recordings directory for playback
-    if (mode === "record") {
+      // Use existing metadata from recordings
       const recordingsMetadataPath = join(__dirname, "recordings", "metadata.json");
-      writeFileSync(recordingsMetadataPath, JSON.stringify(metadata, null, 2));
-      console.log(`  Metadata also saved to ${recordingsMetadataPath} for playback\n`);
+      const metadataPath = join(tmpdir(), "melosys-e2e-testdata-metadata.json");
+
+      if (existsSync(recordingsMetadataPath)) {
+        const metadata = readFileSync(recordingsMetadataPath, "utf-8");
+        writeFileSync(metadataPath, metadata);
+        console.log(`  Loaded metadata from ${recordingsMetadataPath}\n`);
+      } else {
+        console.warn("  Warning: No existing metadata found, tests may fail\n");
+      }
+    } else {
+      console.log("\nStep 3: Initializing test data...");
+      const metadata = await resetTestData();
+      const sakCount = Object.keys(metadata).length;
+      console.log(`  Test data initialized: ${sakCount} saker klar for testing\n`);
+
+      // Lagre metadata til temp-fil slik at test-workers kan lese den
+      // (Playwright kjører globalSetup i en egen prosess)
+      const metadataPath = join(tmpdir(), "melosys-e2e-testdata-metadata.json");
+      writeFileSync(metadataPath, JSON.stringify(metadata, null, 2));
+      console.log(`  Metadata saved to ${metadataPath}\n`);
+
+      // In record mode, also save metadata to recordings directory for playback
+      if (mode === "record") {
+        const recordingsMetadataPath = join(__dirname, "recordings", "metadata.json");
+        writeFileSync(recordingsMetadataPath, JSON.stringify(metadata, null, 2));
+        console.log(`  Metadata also saved to ${recordingsMetadataPath} for playback\n`);
+      }
     }
   } catch (error) {
     console.error(" Failed to initialize test data:", error);

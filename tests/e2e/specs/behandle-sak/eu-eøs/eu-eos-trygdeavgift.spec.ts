@@ -19,10 +19,12 @@ import { runAxeAnalyze } from "../../../utils/axeUtils";
  */
 
 test.describe("EU/EØS Trygdeavgift", () => {
-  // Skip: Stale recording - behandlingID mismatch
-  // Recording has behandlingID=366, but current testdata has behandlingID=738
-  // This causes mock server to return wrong data from other recordings (YRKESAKTIV instead of PENSJONIST)
-  // Fix: Re-record with real API running, or improve mock server ID matching
+  // Skip in playback: Form interactions (dates, land selection) don't sync correctly with mock responses
+  // The test passes in record mode but fails in playback because:
+  // 1. Test fills form fields (dates, land) which triggers debounced API saves
+  // 2. Mock server returns recorded responses, but form state may override or conflict
+  // 3. The UI doesn't reflect the expected state after navigation
+  // TODO: Refactor test to wait for specific API responses or use explicit state verification
   test.skip("skal vise inntektskilder når bruker ikke er skattepliktig", async ({ page, apiRecorder }, testInfo) => {
     const behandlingPage = new BehandlingPage(page);
 
@@ -31,9 +33,11 @@ test.describe("EU/EØS Trygdeavgift", () => {
     await behandlingPage.goto(url, "Oppgi opplysninger fra attest / S1");
 
     // Steg 1: Inngang (Oppgi opplysninger fra attest / S1)
+    // Bruk inneværende år for å unngå "tidligere år"-meldingen som skjuler skatteforholdsperioder
+    const currentYear = new Date().getFullYear();
     const inngangPage = new InngangPage(page);
-    await inngangPage.setFraOgMedDato("01.01.2024");
-    await inngangPage.setTilOgMedDato("31.12.2024");
+    await inngangPage.setFraOgMedDato(`01.01.${currentYear}`);
+    await inngangPage.setTilOgMedDato(`31.12.${currentYear}`);
     await inngangPage.velgLand("SE");
 
     // Steg 2: Gå til Trygdeavgift og verifiser intiell tilstand
