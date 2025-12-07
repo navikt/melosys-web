@@ -1,5 +1,4 @@
 import { defineConfig, devices, ReporterDescription } from "@playwright/test";
-import path from "path";
 import { getTestMode } from "./tests/e2e/config/mode";
 import { PORTS, TIMEOUTS, PATHS, COMMANDS, CI_CONFIG, LOCAL_CONFIG } from "./tests/e2e/config/constants";
 
@@ -22,19 +21,6 @@ const WORKERS = IS_CI ? CI_CONFIG.WORKERS : LOCAL_CONFIG.WORKERS;
 /** Apply CI timeout multiplier to a base timeout value */
 function withTimeout(baseTimeout: number): number {
   return baseTimeout * TIMEOUT_MULTIPLIER;
-}
-
-/** Get context options based on mode (HAR recording in record mode) */
-function getContextOptions() {
-  if (E2E_MODE === "record") {
-    return {
-      recordHar: {
-        path: path.join(process.cwd(), PATHS.HAR_DIR, "api-recording.har"),
-        urlFilter: "**/api/**",
-      },
-    };
-  }
-  return {};
 }
 
 /** Vite dev server configuration (shared between modes) */
@@ -128,7 +114,6 @@ export default defineConfig({
     trace: "on-first-retry",
     screenshot: "only-on-failure",
     video: "on",
-    ...getContextOptions(),
   },
 
   projects: [

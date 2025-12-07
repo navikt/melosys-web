@@ -34,7 +34,6 @@ export const PATHS = {
   TEST_DIR: "./tests/e2e/specs",
   OUTPUT_DIR: "tests/e2e/artifacts",
   REPORT_DIR: "tests/e2e/reports/playwright-report",
-  HAR_DIR: "tests/e2e/recordings/har",
   GLOBAL_SETUP: "./tests/e2e/globalSetup.ts",
   SUMMARY_REPORTER: "./tests/e2e/reporters/test-summary-reporter.ts",
 } as const;

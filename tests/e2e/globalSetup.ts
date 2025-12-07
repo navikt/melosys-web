@@ -17,10 +17,6 @@ import { getTestMode, shouldUseMockServer, shouldRecordResponses } from "./confi
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// Path for HAR recording
-const RECORDINGS_DIR = join(__dirname, "recordings");
-const HAR_FILE = join(RECORDINGS_DIR, "api-recordings.har");
-
 const MOCK_BASE_URL = process.env.MOCK_BASE_URL || "http://localhost:8083";
 
 /**
