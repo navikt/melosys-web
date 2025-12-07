@@ -10,6 +10,7 @@ import { writeFileSync, mkdirSync, existsSync } from "fs";
 import { join, dirname } from "path";
 import { createHash } from "crypto";
 import { getRecordingsPath } from "../config/mode";
+import { normalizePath } from "../shared/path-normalization";
 
 // Types for recorded data
 export interface RecordedRequest {
@@ -57,29 +58,6 @@ const KNOWN_DYNAMIC_FIELDS = [
   "fom",
   "tom",
 ];
-
-// Patterns for normalizing paths (replace IDs with placeholders)
-const PATH_NORMALIZATION_PATTERNS: Array<{ pattern: RegExp; replacement: string }> = [
-  { pattern: /\/MEL-\d+/g, replacement: "/:saksnummer" },
-  { pattern: /\/fagsaker\/\d+/g, replacement: "/fagsaker/:id" },
-  { pattern: /\/behandlinger\/\d+/g, replacement: "/behandlinger/:behandlingId" },
-  { pattern: /\/oppgaver\/\d+/g, replacement: "/oppgaver/:oppgaveId" },
-  { pattern: /\/dokumenter\/\d+/g, replacement: "/dokumenter/:dokumentId" },
-  { pattern: /\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/gi, replacement: "/:uuid" },
-  { pattern: /\/\d{11}(?=\/|$)/g, replacement: "/:fnr" }, // 11-digit FNR
-  { pattern: /\/\d+(?=\/|$)/g, replacement: "/:id" }, // Generic numeric IDs
-];
-
-/**
- * Normalize a URL path by replacing dynamic segments with placeholders.
- */
-function normalizePath(pathname: string): string {
-  let normalized = pathname;
-  for (const { pattern, replacement } of PATH_NORMALIZATION_PATTERNS) {
-    normalized = normalized.replace(pattern, replacement);
-  }
-  return normalized;
-}
 
 /**
  * Generate a unique ID for a request based on method, path, query, and body.

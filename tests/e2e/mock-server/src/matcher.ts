@@ -15,30 +15,8 @@
 
 import { createHash } from "crypto";
 import type { RecordedExchange, MatchRequest, GraphQLRequest } from "./types";
+import { normalizePath } from "./types";
 import { mutationTracker } from "./mutation-tracker";
-
-// Patterns for normalizing paths (replace IDs with placeholders)
-const PATH_NORMALIZATION_PATTERNS: Array<{ pattern: RegExp; replacement: string }> = [
-  { pattern: /\/MEL-\d+/g, replacement: "/:saksnummer" },
-  { pattern: /\/fagsaker\/\d+/g, replacement: "/fagsaker/:id" },
-  { pattern: /\/behandlinger\/\d+/g, replacement: "/behandlinger/:behandlingId" },
-  { pattern: /\/oppgaver\/\d+/g, replacement: "/oppgaver/:oppgaveId" },
-  { pattern: /\/dokumenter\/\d+/g, replacement: "/dokumenter/:dokumentId" },
-  { pattern: /\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/gi, replacement: "/:uuid" },
-  { pattern: /\/\d{11}(?=\/|$)/g, replacement: "/:fnr" },
-  { pattern: /\/\d+(?=\/|$)/g, replacement: "/:id" },
-];
-
-/**
- * Normalize a URL path by replacing dynamic segments with placeholders.
- */
-function normalizePath(pathname: string): string {
-  let normalized = pathname;
-  for (const { pattern, replacement } of PATH_NORMALIZATION_PATTERNS) {
-    normalized = normalized.replace(pattern, replacement);
-  }
-  return normalized;
-}
 
 /**
  * Generate a hash for an object (used for body comparison).
@@ -400,60 +378,6 @@ export class RecordingMatcher {
         /^\d+$/.test(seg) || // numeric ID
         /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(seg), // UUID
     );
-  }
-
-  /**
-   * Find the best matching exchange based on path segment similarity.
-   * This matches specific IDs (saksnummer, behandlingId, etc.) in the URL path.
-   */
-  private findBestPathMatch(candidates: RecordedExchange[], requestPath: string): RecordedExchange | null {
-    // Extract all dynamic segments from the request path
-    const requestSegments = requestPath.split("/").filter(Boolean);
-
-    let bestMatch: RecordedExchange | null = null;
-    let bestScore = 0;
-
-    for (const candidate of candidates) {
-      const candidatePath = candidate.request.pathname;
-      const candidateSegments = candidatePath.split("/").filter(Boolean);
-
-      // If segment counts don't match, skip
-      if (requestSegments.length !== candidateSegments.length) {
-        continue;
-      }
-
-      let matchingSegments = 0;
-      let totalDynamicSegments = 0;
-
-      for (let i = 0; i < requestSegments.length; i++) {
-        const reqSeg = requestSegments[i];
-        const candSeg = candidateSegments[i];
-
-        // Check if this is a dynamic segment (ID, saksnummer, etc.)
-        const isDynamic =
-          /^MEL-\d+$/.test(reqSeg) || // saksnummer
-          /^\d+$/.test(reqSeg) || // numeric ID
-          /^[0-9a-f-]{36}$/i.test(reqSeg); // UUID
-
-        if (isDynamic) {
-          totalDynamicSegments++;
-          if (reqSeg === candSeg) {
-            matchingSegments++;
-          }
-        }
-      }
-
-      // Calculate score based on matching dynamic segments
-      const score = totalDynamicSegments > 0 ? matchingSegments / totalDynamicSegments : 0;
-
-      if (score > bestScore) {
-        bestScore = score;
-        bestMatch = candidate;
-      }
-    }
-
-    // Require exact match of dynamic segments
-    return bestScore === 1 ? bestMatch : null;
   }
 
   /**

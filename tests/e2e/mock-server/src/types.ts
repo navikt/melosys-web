@@ -3,6 +3,17 @@
  * These types mirror the recording format from recorder.ts.
  */
 
+// Re-export path normalization utilities from shared module
+export {
+  normalizePath,
+  PATH_NORMALIZATION_PATTERNS,
+  type PathNormalizationPattern,
+} from "../../shared/path-normalization";
+
+// ============================================================================
+// Request/Response Types
+// ============================================================================
+
 export interface RecordedRequest {
   id: string;
   method: string;

@@ -9,3 +9,7 @@
 *.xml text eol=lf
 *.java text eol=lf
 *.html text eol=lf
+
+# E2E test recordings - generated files, suppress diff noise
+tests/e2e/recordings/**/*.json linguist-generated=true
+tests/e2e/recordings/**/*.json -diff
