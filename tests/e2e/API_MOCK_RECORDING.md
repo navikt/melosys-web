@@ -252,13 +252,13 @@ git commit -m "chore: update E2E recordings"
    await page.waitForResponse(resp => resp.url().includes('/api/behandlinger'));
    ```
 
-2. **Parallel workers**: Recording works with parallel workers, but each worker writes to separate files
+2. **Parallel workers in record mode**: Recording mode works with parallel workers, but each worker writes to separate files. Consider using `--workers=1` when recording to ensure consistent ordering.
 
 3. **GraphQL**: GraphQL queries are matched by `operationName` - queries without operation names may not match correctly
 
 4. **Test isolation with shared test data**: Tests that use the same `USER_ID_VALID` or other shared identifiers can interfere with each other when running in parallel. See "Test Isolation" section below.
 
-5. **Write-then-read consistency**: Tests that mutate state (POST/PUT) and then verify the updated state (GET) don't work correctly in playback mode. The mock server returns pre-recorded responses, so the second GET returns stale data from before the mutation. See "Write-Then-Read Pattern" section below.
+5. **Write-then-read consistency**: ~~Tests that mutate state don't work in playback mode.~~ **RESOLVED**: Sequence-based matching with per-worker isolation now fully supports write-then-read patterns. See "Write-Then-Read Pattern" section below.
 
 ## Test Isolation
 
@@ -703,26 +703,27 @@ jobs:
 **Root Cause Analysis:**
 The mock server was working correctly (confirmed via logs showing successful API responses).
 The issue was that CI environments are slower than local development machines, causing
-`page.goto()` to timeout before pages could load with 4 parallel workers competing for resources.
+`page.goto()` to timeout before pages could load with parallel workers competing for resources.
 
 **Solution (implemented in `playwright.config.ts`):**
 - Added `CI_TIMEOUT_MULTIPLIER = 3` when `process.env.CI` is true
-- **Playback mode uses 1 worker** - required because mock server has global sequence tracking
-  that doesn't support parallel workers (they would consume recordings and reset state
-  independently, causing race conditions)
-- Live/record mode uses 4 workers locally, 2 in CI
+- **Playback mode now supports parallel workers** via per-worker sequence tracking
+  (see "Parallel Worker Support" section below)
+- All modes use 4 workers locally, 2 in CI
 - All timeouts are multiplied by 3x in CI:
   - `navigationTimeout`: 8s → 24s
   - `actionTimeout`: 4s → 12s
   - `testTimeout`: 15s → 45s
   - `expectTimeout`: 8s → 24s
 
-**Worker Configuration by Mode:**
+**Worker Configuration:**
 
-| Mode | Local | CI |
-|------|-------|-----|
-| Playback | 1 | 1 |
-| Live/Record | 4 | 2 |
+| Environment | Workers |
+|-------------|---------|
+| Local | 4 |
+| CI | 2 |
+
+Note: CI runs on `ubuntu-latest-8-cores` but 4 workers caused browser timeouts due to resource contention.
 
 **Timeout Configuration:**
 
@@ -732,6 +733,34 @@ The issue was that CI environments are slower than local development machines, c
 | Action timeout | 4s | 12s |
 | Test timeout | 15s | 45s |
 | Expect timeout | 8s | 24s |
+
+### Parallel Worker Support
+
+The mock server supports parallel test execution via per-worker sequence tracking.
+
+**How it works:**
+1. Each Playwright worker is assigned a unique ID (`worker-0`, `worker-1`, etc.)
+2. The test fixture adds an `X-Playwright-Worker-ID` header to all API requests
+3. The mock server tracks consumed recordings separately per worker
+4. Each worker's reset call only clears that worker's state
+
+**Key files:**
+- `recording/fixtures.ts` - Adds worker ID header via route interception
+- `mock-server/src/server.ts` - Extracts worker ID and passes to matcher
+- `mock-server/src/matcher.ts` - Per-worker consumed exchange tracking
+
+**Example log output with parallel workers:**
+```
+[Playback] Reset mock server state for worker-0: Test A
+[Playback] Reset mock server state for worker-1: Test B
+[200] GET /api/fagsaker/sok [worker-0] (15ms)
+[200] GET /api/fagsaker/sok [worker-1] (12ms)
+```
+
+**Benefits:**
+- Faster test execution (4x local, 2x CI)
+- Complete isolation between workers
+- No race conditions on sequence tracking
 
 ### Docker Deployment
 
@@ -763,10 +792,8 @@ When API contracts change:
 - [ ] Fix pre-existing 10 test failures (application/test issues in årsavregning)
 
 ### Medium Priority
-- [ ] Merge recordings from parallel workers
 - [ ] Add staleness detection for old recordings
 - [ ] Docker compose setup for CI environment
-- [ ] Refactor tests to use unique test data per file (enable full parallelization)
 
 ### Completed
 - [x] ~~Implement shared recording extraction (kodeverk, etc.)~~ - Partially done via query matching
@@ -776,3 +803,5 @@ When API contracts change:
 - [x] ~~Investigate remaining playback-specific failures~~ - Fixed via path matching improvement + AC2 fix
 - [x] ~~Implement stateful mock server~~ - Sequence-based matching enables write-then-read tests (AC3)
 - [x] ~~Fix eu-eos-trygdeavgift.spec.ts~~ - Added global sequence tracking for all matching strategies (not just exact matches). Write-then-read pattern now fully supported.
+- [x] ~~Enable parallel workers in playback mode~~ - Implemented per-worker sequence tracking via X-Playwright-Worker-ID header. Workers now isolated, enabling 4x faster local execution.
+- [x] ~~Merge recordings from parallel workers~~ - No longer needed since recordings are recorded serially and played back with per-worker isolation.

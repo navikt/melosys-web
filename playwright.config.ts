@@ -102,13 +102,12 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: 0,
   /* Worker configuration:
-   * - Playback mode: 1 worker required - mock server has global sequence tracking
-   *   that doesn't support parallel workers (they would consume recordings and
-   *   reset state independently, causing race conditions)
-   * - CI: 2 workers to reduce resource contention
-   * - Local live/record: 4 workers for speed
+   * - Playback mode now supports parallel workers via per-worker sequence tracking
+   *   (X-Playwright-Worker-ID header isolates state per worker)
+   * - CI: 2 workers - 4 workers caused timeouts despite 8-core runner (browser resource contention)
+   * - Local: 4 workers for speed
    */
-  workers: E2E_MODE === "playback" ? 1 : IS_CI ? 2 : 4,
+  workers: IS_CI ? 2 : 4,
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
@@ -146,12 +145,18 @@ export default defineConfig({
 
 // Log current mode and config
 // eslint-disable-next-line no-console
-console.log(`[Playwright] E2E_MODE: ${E2E_MODE}, CI: ${IS_CI}, Timeout multiplier: ${CI_TIMEOUT_MULTIPLIER}x`);
+console.log(
+  `[Playwright] E2E_MODE: ${E2E_MODE}, CI: ${IS_CI}, Workers: ${IS_CI ? 2 : 4}, Timeout multiplier: ${CI_TIMEOUT_MULTIPLIER}x`,
+);
 if (IS_CI) {
   // eslint-disable-next-line no-console
   console.log(
-    `[Playwright] CI mode: workers=2, navigationTimeout=${8000 * CI_TIMEOUT_MULTIPLIER}ms, testTimeout=${15000 * CI_TIMEOUT_MULTIPLIER}ms`,
+    `[Playwright] CI mode: navigationTimeout=${8000 * CI_TIMEOUT_MULTIPLIER}ms, testTimeout=${15000 * CI_TIMEOUT_MULTIPLIER}ms`,
   );
+}
+if (E2E_MODE === "playback") {
+  // eslint-disable-next-line no-console
+  console.log(`[Playwright] Playback mode: per-worker sequence tracking enabled (X-Playwright-Worker-ID header)`);
 }
 if (E2E_MODE === "record") {
   // eslint-disable-next-line no-console

@@ -22,6 +22,9 @@ import type { GraphQLRequest } from "./types";
 // Methods that are considered mutations (tracked for stateful responses)
 const MUTATION_METHODS = ["POST", "PUT", "DELETE", "PATCH"];
 
+// Header used to identify Playwright workers for parallel test execution
+const WORKER_ID_HEADER = "x-playwright-worker-id";
+
 // Configuration from environment
 const PORT = parseInt(process.env.PORT || "8080", 10);
 const RECORDINGS_PATH = process.env.RECORDINGS_PATH || "../recordings";
@@ -50,7 +53,9 @@ if (LOG_REQUESTS) {
     const start = Date.now();
     res.on("finish", () => {
       const duration = Date.now() - start;
-      console.log(`[${res.statusCode}] ${req.method} ${req.path} (${duration}ms)`);
+      const workerId = req.get(WORKER_ID_HEADER);
+      const workerInfo = workerId ? ` [${workerId}]` : "";
+      console.log(`[${res.statusCode}] ${req.method} ${req.path}${workerInfo} (${duration}ms)`);
     });
     next();
   });
@@ -61,6 +66,14 @@ console.log(`[Server] Loading recordings from: ${RECORDINGS_PATH}`);
 const exchanges = loadRecordings(RECORDINGS_PATH);
 const matcher = new RecordingMatcher(exchanges);
 const dynamicHandler = createDynamicHandler();
+
+// Worker ID extraction middleware - sets worker ID on matcher for sequence tracking
+// Must be defined after matcher is created
+app.use((req: Request, res: Response, next: NextFunction) => {
+  const workerId = req.get(WORKER_ID_HEADER) || "default";
+  matcher.setWorkerId(workerId);
+  next();
+});
 
 // Store recording metadata for transformations
 const recordingMetadata: { recordedAt?: string } = {};
@@ -93,10 +106,17 @@ app.get("/health", (req: Request, res: Response) => {
 /**
  * Internal E2E test data reset endpoint
  * Resets sequence tracking and mutation state for test isolation.
+ * Supports per-worker reset via workerId query parameter.
  */
 app.post("/internal/e2e/testdata/reset", (req: Request, res: Response) => {
-  console.log("[Server] Test data reset called - resetting sequence tracking");
-  matcher.reset();
+  const workerId = (req.query.workerId as string) || req.get(WORKER_ID_HEADER);
+  if (workerId) {
+    console.log(`[Server] Test data reset called for worker: ${workerId}`);
+    matcher.reset(workerId);
+  } else {
+    console.log("[Server] Test data reset called - resetting all workers");
+    matcher.reset();
+  }
 
   // Return empty metadata - the frontend should use recorded metadata
   res.json({});
@@ -105,15 +125,23 @@ app.post("/internal/e2e/testdata/reset", (req: Request, res: Response) => {
 /**
  * Mock server state reset endpoint
  * Call this between tests to reset sequence tracking and mutation state.
+ * Supports per-worker reset via workerId query parameter or X-Playwright-Worker-ID header.
  */
 app.post("/__reset", (req: Request, res: Response) => {
-  console.log("[Server] State reset requested");
-  matcher.reset();
+  const workerId = (req.query.workerId as string) || req.get(WORKER_ID_HEADER);
+  if (workerId) {
+    console.log(`[Server] State reset requested for worker: ${workerId}`);
+    matcher.reset(workerId);
+  } else {
+    console.log("[Server] State reset requested for all workers");
+    matcher.reset();
+  }
 
   const stats = matcher.getStats();
   res.json({
     ok: true,
-    message: "Sequence tracking and mutation state reset",
+    message: workerId ? `Sequence tracking reset for worker: ${workerId}` : "Sequence tracking reset for all workers",
+    workerId: workerId || "all",
     stats,
   });
 });

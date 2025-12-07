@@ -91,15 +91,23 @@ function extractPathParams(pathname: string, normalizedPattern: string): Record<
 
 /**
  * Recording Matcher - matches incoming requests to recorded exchanges.
+ *
+ * Supports per-worker sequence tracking for parallel test execution:
+ * - Each worker has its own set of consumed exchanges
+ * - Workers are identified by the X-Playwright-Worker-ID header
+ * - Reset can be called per-worker or globally
  */
 export class RecordingMatcher {
   private exactIndex: Map<string, RecordedExchange[]>; // Changed to array for sequence tracking
   private normalizedIndex: Map<string, RecordedExchange[]>;
   private graphqlIndex: Map<string, RecordedExchange[]>; // Changed to array for sequence tracking
 
-  // Global sequence tracking: tracks which exchanges have been consumed
-  // Key: unique exchange identifier (using array index in original exchanges)
-  private consumedExchanges: Set<RecordedExchange>;
+  // Per-worker sequence tracking: tracks which exchanges have been consumed per worker
+  // Key: worker ID (e.g., "worker-0", "worker-1", or "default")
+  private consumedExchangesByWorker: Map<string, Set<RecordedExchange>>;
+
+  // Current worker ID for the request being processed
+  private currentWorkerId: string = "default";
 
   // Legacy sequence tracking for exact/graphql (kept for backwards compatibility)
   private exactConsumedCount: Map<string, number>;
@@ -109,7 +117,7 @@ export class RecordingMatcher {
     this.exactIndex = new Map();
     this.normalizedIndex = new Map();
     this.graphqlIndex = new Map();
-    this.consumedExchanges = new Set();
+    this.consumedExchangesByWorker = new Map();
     this.exactConsumedCount = new Map();
     this.graphqlConsumedCount = new Map();
 
@@ -117,29 +125,64 @@ export class RecordingMatcher {
   }
 
   /**
-   * Reset sequence tracking between tests.
-   * Call this when starting a new test to reset consumed counts.
+   * Set the current worker ID for the next request(s).
+   * Call this before findMatch() or findGraphQLMatch() to ensure
+   * sequence tracking is isolated per worker.
    */
-  reset(): void {
-    this.consumedExchanges.clear();
-    this.exactConsumedCount.clear();
-    this.graphqlConsumedCount.clear();
-    mutationTracker.reset();
-    console.log("[Matcher] Reset sequence tracking");
+  setWorkerId(workerId: string): void {
+    this.currentWorkerId = workerId || "default";
   }
 
   /**
-   * Mark an exchange as consumed (for global sequence tracking).
+   * Get the current worker ID.
+   */
+  getWorkerId(): string {
+    return this.currentWorkerId;
+  }
+
+  /**
+   * Get the consumed exchanges set for the current worker.
+   * Creates a new set if one doesn't exist for this worker.
+   */
+  private getConsumedExchanges(): Set<RecordedExchange> {
+    if (!this.consumedExchangesByWorker.has(this.currentWorkerId)) {
+      this.consumedExchangesByWorker.set(this.currentWorkerId, new Set());
+    }
+    return this.consumedExchangesByWorker.get(this.currentWorkerId)!;
+  }
+
+  /**
+   * Reset sequence tracking between tests.
+   * @param workerId - Optional worker ID to reset. If not provided, resets all workers.
+   */
+  reset(workerId?: string): void {
+    if (workerId) {
+      // Reset only the specified worker
+      this.consumedExchangesByWorker.delete(workerId);
+      console.log(`[Matcher] Reset sequence tracking for worker: ${workerId}`);
+    } else {
+      // Reset all workers (global reset)
+      this.consumedExchangesByWorker.clear();
+      this.exactConsumedCount.clear();
+      this.graphqlConsumedCount.clear();
+      mutationTracker.reset();
+      console.log("[Matcher] Reset sequence tracking for all workers");
+    }
+  }
+
+  /**
+   * Mark an exchange as consumed (for per-worker sequence tracking).
    */
   private markConsumed(exchange: RecordedExchange): void {
-    this.consumedExchanges.add(exchange);
+    this.getConsumedExchanges().add(exchange);
   }
 
   /**
-   * Filter out already-consumed exchanges from a list.
+   * Filter out already-consumed exchanges from a list (for current worker).
    */
   private filterUnconsumed(exchanges: RecordedExchange[]): RecordedExchange[] {
-    return exchanges.filter((e) => !this.consumedExchanges.has(e));
+    const consumed = this.getConsumedExchanges();
+    return exchanges.filter((e) => !consumed.has(e));
   }
 
   /**
@@ -600,6 +643,8 @@ export class RecordingMatcher {
     graphqlExchanges: number;
     consumedExact: number;
     consumedGraphql: number;
+    activeWorkers: number;
+    consumedByWorker: Record<string, number>;
   } {
     let exactExchanges = 0;
     for (const arr of this.exactIndex.values()) {
@@ -619,6 +664,12 @@ export class RecordingMatcher {
       consumedGraphql += count;
     }
 
+    // Count consumed exchanges per worker
+    const consumedByWorker: Record<string, number> = {};
+    for (const [workerId, consumed] of this.consumedExchangesByWorker) {
+      consumedByWorker[workerId] = consumed.size;
+    }
+
     return {
       exactKeys: this.exactIndex.size,
       exactExchanges,
@@ -627,6 +678,8 @@ export class RecordingMatcher {
       graphqlExchanges,
       consumedExact,
       consumedGraphql,
+      activeWorkers: this.consumedExchangesByWorker.size,
+      consumedByWorker,
     };
   }
 }
