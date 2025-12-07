@@ -97,7 +97,11 @@ export class RecordingMatcher {
   private normalizedIndex: Map<string, RecordedExchange[]>;
   private graphqlIndex: Map<string, RecordedExchange[]>; // Changed to array for sequence tracking
 
-  // Sequence tracking: counts how many times each key has been consumed
+  // Global sequence tracking: tracks which exchanges have been consumed
+  // Key: unique exchange identifier (using array index in original exchanges)
+  private consumedExchanges: Set<RecordedExchange>;
+
+  // Legacy sequence tracking for exact/graphql (kept for backwards compatibility)
   private exactConsumedCount: Map<string, number>;
   private graphqlConsumedCount: Map<string, number>;
 
@@ -105,6 +109,7 @@ export class RecordingMatcher {
     this.exactIndex = new Map();
     this.normalizedIndex = new Map();
     this.graphqlIndex = new Map();
+    this.consumedExchanges = new Set();
     this.exactConsumedCount = new Map();
     this.graphqlConsumedCount = new Map();
 
@@ -116,10 +121,25 @@ export class RecordingMatcher {
    * Call this when starting a new test to reset consumed counts.
    */
   reset(): void {
+    this.consumedExchanges.clear();
     this.exactConsumedCount.clear();
     this.graphqlConsumedCount.clear();
     mutationTracker.reset();
     console.log("[Matcher] Reset sequence tracking");
+  }
+
+  /**
+   * Mark an exchange as consumed (for global sequence tracking).
+   */
+  private markConsumed(exchange: RecordedExchange): void {
+    this.consumedExchanges.add(exchange);
+  }
+
+  /**
+   * Filter out already-consumed exchanges from a list.
+   */
+  private filterUnconsumed(exchanges: RecordedExchange[]): RecordedExchange[] {
+    return exchanges.filter((e) => !this.consumedExchanges.has(e));
   }
 
   /**
@@ -195,20 +215,25 @@ export class RecordingMatcher {
     const exactMatches = this.exactIndex.get(exactKey);
 
     if (exactMatches && exactMatches.length > 0) {
-      const consumedCount = this.exactConsumedCount.get(exactKey) || 0;
-      const index = Math.min(consumedCount, exactMatches.length - 1);
-      const exchange = exactMatches[index];
+      // Filter out consumed exchanges for global sequence tracking
+      const unconsumed = this.filterUnconsumed(exactMatches);
+      if (unconsumed.length > 0) {
+        const exchange = unconsumed[0];
+        this.markConsumed(exchange);
 
-      // Increment consumed count
-      this.exactConsumedCount.set(exactKey, consumedCount + 1);
-
-      if (exactMatches.length > 1) {
-        console.log(
-          `[Matcher] Exact match (sequence ${index + 1}/${exactMatches.length}): ${request.method} ${request.pathname}`,
-        );
-      } else {
-        console.log(`[Matcher] Exact match: ${request.method} ${request.pathname}`);
+        const consumedCount = exactMatches.length - unconsumed.length;
+        if (exactMatches.length > 1) {
+          console.log(
+            `[Matcher] Exact match (sequence ${consumedCount + 1}/${exactMatches.length}): ${request.method} ${request.pathname}`,
+          );
+        } else {
+          console.log(`[Matcher] Exact match: ${request.method} ${request.pathname}`);
+        }
+        return exchange;
       }
+      // All exact matches consumed, fall through to return last one (sticky behavior)
+      const exchange = exactMatches[exactMatches.length - 1];
+      console.log(`[Matcher] Exact match (reusing last): ${request.method} ${request.pathname}`);
       return exchange;
     }
 
@@ -217,34 +242,60 @@ export class RecordingMatcher {
     const candidates = this.normalizedIndex.get(normalizedKey);
 
     if (candidates && candidates.length > 0) {
+      // Filter out consumed exchanges first
+      const unconsumedCandidates = this.filterUnconsumed(candidates);
+      const candidatesToSearch = unconsumedCandidates.length > 0 ? unconsumedCandidates : candidates;
+
       // 2a. First, try to match by path segments (saksnummer, behandlingId, etc.)
-      const pathMatch = this.findBestPathMatch(candidates, request.pathname);
+      const pathMatch = this.findBestPathMatch(candidatesToSearch, request.pathname);
       if (pathMatch) {
-        console.log(`[Matcher] Path segment match: ${request.method} ${request.pathname}`);
+        this.markConsumed(pathMatch);
+        const total = candidates.filter((c) => c.request.pathname === pathMatch.request.pathname).length;
+        const consumed =
+          total -
+          this.filterUnconsumed(candidates.filter((c) => c.request.pathname === pathMatch.request.pathname)).length;
+        if (total > 1) {
+          console.log(
+            `[Matcher] Path segment match (sequence ${consumed}/${total}): ${request.method} ${request.pathname}`,
+          );
+        } else {
+          console.log(`[Matcher] Path segment match: ${request.method} ${request.pathname}`);
+        }
         return pathMatch;
       }
 
       // For GET requests, try to find best query parameter match
       if (request.method === "GET") {
-        const queryMatch = this.findBestQueryMatch(candidates, request.query);
+        const queryMatch = this.findBestQueryMatch(candidatesToSearch, request.query);
         if (queryMatch) {
+          this.markConsumed(queryMatch);
           console.log(`[Matcher] Query match: ${request.method} ${request.pathname}`);
           return queryMatch;
         }
+        // Fallback to first unconsumed or last consumed
+        const fallback = unconsumedCandidates.length > 0 ? unconsumedCandidates[0] : candidates[candidates.length - 1];
+        if (unconsumedCandidates.length > 0) {
+          this.markConsumed(fallback);
+        }
         console.log(`[Matcher] Normalized match (first): ${request.method} ${request.pathname}`);
-        return candidates[0];
+        return fallback;
       }
 
       // For POST/PUT, try to match by body similarity
-      const bodyMatch = this.findBestBodyMatch(candidates, request.body);
+      const bodyMatch = this.findBestBodyMatch(candidatesToSearch, request.body);
       if (bodyMatch) {
+        this.markConsumed(bodyMatch);
         console.log(`[Matcher] Body similarity match: ${request.method} ${request.pathname}`);
         return bodyMatch;
       }
 
-      // Fallback to first candidate
+      // Fallback to first unconsumed or last consumed
+      const fallback = unconsumedCandidates.length > 0 ? unconsumedCandidates[0] : candidates[candidates.length - 1];
+      if (unconsumedCandidates.length > 0) {
+        this.markConsumed(fallback);
+      }
       console.log(`[Matcher] Fallback match: ${request.method} ${request.pathname}`);
-      return candidates[0];
+      return fallback;
     }
 
     console.log(`[Matcher] No match found: ${request.method} ${request.pathname}`);
@@ -360,28 +411,40 @@ export class RecordingMatcher {
 
     const exactMatches = this.graphqlIndex.get(graphqlKey);
     if (exactMatches && exactMatches.length > 0) {
-      const consumedCount = this.graphqlConsumedCount.get(graphqlKey) || 0;
-      const index = Math.min(consumedCount, exactMatches.length - 1);
-      const exchange = exactMatches[index];
+      // Use global sequence tracking
+      const unconsumed = this.filterUnconsumed(exactMatches);
+      if (unconsumed.length > 0) {
+        const exchange = unconsumed[0];
+        this.markConsumed(exchange);
 
-      // Increment consumed count
-      this.graphqlConsumedCount.set(graphqlKey, consumedCount + 1);
-
-      if (exactMatches.length > 1) {
-        console.log(
-          `[Matcher] GraphQL exact match (sequence ${index + 1}/${exactMatches.length}): ${body.operationName}`,
-        );
-      } else {
-        console.log(`[Matcher] GraphQL exact match: ${body.operationName}`);
+        const consumedCount = exactMatches.length - unconsumed.length;
+        if (exactMatches.length > 1) {
+          console.log(
+            `[Matcher] GraphQL exact match (sequence ${consumedCount + 1}/${exactMatches.length}): ${body.operationName}`,
+          );
+        } else {
+          console.log(`[Matcher] GraphQL exact match: ${body.operationName}`);
+        }
+        return exchange;
       }
+      // All consumed, return last one (sticky behavior)
+      const exchange = exactMatches[exactMatches.length - 1];
+      console.log(`[Matcher] GraphQL exact match (reusing last): ${body.operationName}`);
       return exchange;
     }
 
     // Try matching without variables (less strict)
     for (const [key, exchanges] of this.graphqlIndex) {
       if (key.startsWith(`${body.operationName}:`) && exchanges.length > 0) {
-        console.log(`[Matcher] GraphQL fuzzy match: ${body.operationName}`);
-        return exchanges[0];
+        const unconsumed = this.filterUnconsumed(exchanges);
+        if (unconsumed.length > 0) {
+          const exchange = unconsumed[0];
+          this.markConsumed(exchange);
+          console.log(`[Matcher] GraphQL fuzzy match: ${body.operationName}`);
+          return exchange;
+        }
+        console.log(`[Matcher] GraphQL fuzzy match (reusing last): ${body.operationName}`);
+        return exchanges[exchanges.length - 1];
       }
     }
 

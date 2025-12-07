@@ -4,7 +4,6 @@ import { InngangPage } from "../../../pages/behandling/inngang.page";
 import { BehandlingPage } from "../../../pages/behandling/behandling.page";
 import { hentPrepopulertSakUrl } from "../../../utils/testdataUtils";
 import { runAxeAnalyze } from "../../../utils/axeUtils";
-import { getTestMode } from "../../../config/mode";
 
 /**
  * E2E-tester for Trygdeavgift-steget i EU/EØS saksbehandling
@@ -21,10 +20,9 @@ import { getTestMode } from "../../../config/mode";
 
 test.describe("EU/EØS Trygdeavgift", () => {
   test("skal vise inntektskilder når bruker ikke er skattepliktig", async ({ page, apiRecorder }, testInfo) => {
-    // Skip in playback mode: This test requires mutable state (form saves + subsequent reads)
-    // The mock server can't simulate write-then-read patterns where POST updates state
-    // and subsequent GETs should return the updated data
-    test.skip(getTestMode() === "playback", "Requires mutable state - incompatible with playback mode");
+    // Note: This test uses the write-then-read pattern (form saves + subsequent reads).
+    // The mock server supports this via sequence-based matching - it returns responses
+    // in the order they were recorded, so GET after POST returns the updated state.
 
     const behandlingPage = new BehandlingPage(page);
 

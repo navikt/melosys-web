@@ -343,11 +343,7 @@ test("Test that requires mutable state", async ({ page }) => {
 
 ### Tests Skipped in Playback Mode
 
-| Test File | Test Name | Reason |
-|-----------|-----------|--------|
-| `eu-eos-trygdeavgift.spec.ts` | skal vise inntektskilder når bruker ikke er skattepliktig | Requires mutable state (write-then-read pattern). Test POSTs form data, then subsequent GETs should return the updated state. Mock server can't simulate this - the recorded GET responses always return the pre-mutation state. |
-
-Previously, AC3 was skipped due to the write-then-read pattern, but this is now supported via sequence-based matching (see Issue 7 resolution below).
+Currently, all tests work in playback mode thanks to global sequence-based matching.
 
 ### Previously Skipped Tests (Now Fixed)
 
@@ -355,34 +351,46 @@ Previously, AC3 was skipped due to the write-then-read pattern, but this is now 
 |-----------|-----------|-------------|
 | `utenfor-avtaleland-behandlingslogikk.spec.ts` | AC2: Utenfor avtaleland med åpen årsavregning | Added missing `behandlingsårsak` selection and `waitForURL` to ensure POST is captured. |
 | `utenfor-avtaleland-behandlingslogikk.spec.ts` | AC3: Utenfor avtaleland med avsluttet behandling | Implemented sequence-based matching - mock server now returns responses in order when multiple recordings exist for the same request. |
+| `eu-eos-trygdeavgift.spec.ts` | skal vise inntektskilder når bruker ikke er skattepliktig | Fixed with global sequence tracking for all matching strategies (not just exact matches). Now works correctly with write-then-read pattern. |
 
-### Implemented Solution: Sequence-Based Matching
+### Implemented Solution: Global Sequence-Based Matching
 
-We implemented **option 2 (sequence-aware matching)** with automatic test isolation:
+We implemented **sequence-aware matching** with global consumption tracking for all matching strategies:
 
-1. **Sequence-based response selection**: When multiple recordings exist for the same request signature, the mock server returns them in order of recording
+1. **Global sequence tracking**: The mock server tracks consumed exchanges globally across all matching strategies (exact, path segment, query, body similarity). When a recording is returned, it's marked as consumed. Subsequent identical requests return the next unconsumed recording.
    ```typescript
-   // Example: Two POST /api/fagsaker/sok calls in one test
-   // First call  → returns recording #1
-   // Second call → returns recording #2
+   // Example: Three GET /api/behandlinger/1034/helseutgift-dekkes-perioder in one test
+   // First call  → returns 204 (before mutation)
+   // Second call → returns 200 (after mutation - updated data!)
+   // Third call  → returns 304 (cached)
    ```
 
-2. **Mutation tracking**: All POST/PUT/DELETE/PATCH requests are tracked for debugging
-   ```typescript
-   [MutationTracker] Recorded mutation #1: POST /api/behandlinger/:behandlingId/resultat/type
+2. **No deduplication**: The loader preserves ALL recorded exchanges (including duplicates with same request signature). This enables sequence-based playback.
+   ```
+   [Loader] Loaded 1388 exchanges (preserving duplicates for sequence matching)
    ```
 
-3. **Test isolation**: Sequence tracking resets before each test via `/__reset` endpoint
+3. **Mutation tracking**: All POST/PUT/DELETE/PATCH requests are tracked for debugging
+   ```
+   [MutationTracker] Recorded mutation #1: POST /api/behandlinger/:behandlingId/helseutgift-dekkes-perioder
+   ```
+
+4. **Test isolation**: Sequence tracking resets before each test via `/__reset` endpoint
    - Playwright fixtures automatically call reset in playback mode
    - Each test starts with fresh sequence counters
 
-**Why this works for AC3**:
-- The test makes the same `POST /api/fagsaker/sok` request twice (before and after mutation)
-- During recording, both responses are captured
-- During playback, the mock server returns them in order
-- No need to understand API semantics - just replay in sequence
+**How it works**:
+1. During recording, ALL API responses are captured in order (including duplicates)
+2. The loader preserves all recordings without deduplication
+3. The matcher maintains a `consumedExchanges` Set to track which recordings have been returned
+4. When a request matches multiple recordings, the first unconsumed one is returned
+5. When all are consumed, the last recording is reused (sticky behavior for repeated requests)
 
-**Potential future enhancement**: Full stateful mock server that understands mutation semantics and dynamically generates post-mutation responses. This would be more robust but requires significant domain knowledge.
+**Why this works for write-then-read patterns**:
+- GET before POST: Returns recording #1 (204 empty state)
+- POST: Returns recorded response
+- GET after POST: Returns recording #2 (200 with updated data!)
+- No need to understand API semantics - just replay in sequence
 
 ## Files Modified
 
@@ -606,19 +614,19 @@ test.skip("test name", async ({ page }) => {
 
 | Mode | Passed | Failed | Skipped | Notes |
 |------|--------|--------|---------|-------|
-| **Record (live API)** | 51 | 10 | 2 | 10 failing (årsavregning), 2 skipped |
-| **Playback (mock)** | 51 | 10 | 2 | ✅ All mock-compatible tests pass! |
+| **Record (live API)** | 52 | 10 | 1 | 10 failing (årsavregning), 1 skipped |
+| **Playback (mock)** | 52 | 10 | 1 | ✅ All mock-compatible tests pass! |
 
 **Playback mode is fully functional!**
 - AC2 was fixed by adding missing `behandlingsårsak` selection and proper `waitForURL`
 - AC3 now works via sequence-based matching (write-then-read pattern supported)
+- **eu-eos-trygdeavgift** now works via global sequence tracking for all matching strategies
 
-### Pre-existing Test Failures (11 tests)
+### Pre-existing Test Failures (10 tests)
 
 These tests fail in **both** record and playback modes - they are test/application issues, not mock server issues:
 
 1. `aarsavregning-delt-grunnlag.spec.ts` (10 tests) - All "delt grunnlag" årsavregning tests
-2. `eu-eos-trygdeavgift.spec.ts` (1 test) - **Skipped due to stale recording** - Recording has behandlingID=366 but current testdata has behandlingID=738, causing mock server to return wrong data. Needs re-recording with real API.
 
 **Note:** `send-brev-validering.spec.ts` årsavregning brevmal test is also skipped due to pre-existing application issue.
 
@@ -727,7 +735,7 @@ When API contracts change:
 ## TODO / Future Improvements
 
 ### High Priority
-- [ ] Fix pre-existing 12 test failures (application/test issues)
+- [ ] Fix pre-existing 10 test failures (application/test issues in årsavregning)
 
 ### Medium Priority
 - [ ] Merge recordings from parallel workers
@@ -739,6 +747,7 @@ When API contracts change:
 - [x] ~~Implement shared recording extraction (kodeverk, etc.)~~ - Partially done via query matching
 - [x] ~~Add CI/CD integration with GitHub Actions~~ - Workflow created and working
 - [x] ~~Fix CI playback failures~~ - Fixed via CI_TIMEOUT_MULTIPLIER (3x timeouts + 2 workers)
-- [x] ~~Test playback mode end-to-end~~ - Working locally (52/64 tests pass, 0 skipped, 12 pre-existing failures)
+- [x] ~~Test playback mode end-to-end~~ - Working locally (52/64 tests pass, 0 skipped, 10 pre-existing failures)
 - [x] ~~Investigate remaining playback-specific failures~~ - Fixed via path matching improvement + AC2 fix
 - [x] ~~Implement stateful mock server~~ - Sequence-based matching enables write-then-read tests (AC3)
+- [x] ~~Fix eu-eos-trygdeavgift.spec.ts~~ - Added global sequence tracking for all matching strategies (not just exact matches). Write-then-read pattern now fully supported.

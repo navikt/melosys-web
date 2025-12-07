@@ -87,31 +87,17 @@ export function loadRecordings(recordingsPath: string): RecordedExchange[] {
     }
   }
 
-  // Deduplicate exchanges by request ID
-  const deduped = deduplicateExchanges(exchanges);
+  // Note: We do NOT deduplicate here because the matcher supports sequence-based matching.
+  // When the same request is made multiple times in a test (e.g., GET before and after a POST),
+  // we need to preserve all responses so the matcher can return them in order.
 
-  console.log(`[Loader] Loaded ${deduped.length} unique exchanges (${exchanges.length} total before dedup)`);
+  console.log(`[Loader] Loaded ${exchanges.length} exchanges (preserving duplicates for sequence matching)`);
 
-  return deduped;
+  return exchanges;
 }
 
-/**
- * Deduplicate exchanges by request ID.
- * Keeps the first occurrence of each unique request.
- */
-function deduplicateExchanges(exchanges: RecordedExchange[]): RecordedExchange[] {
-  const seen = new Map<string, RecordedExchange>();
-
-  for (const exchange of exchanges) {
-    const key = exchange.request.id;
-
-    if (!seen.has(key)) {
-      seen.set(key, exchange);
-    }
-  }
-
-  return Array.from(seen.values());
-}
+// Note: deduplicateExchanges was removed to support sequence-based matching.
+// The matcher now handles duplicate requests by returning responses in recorded order.
 
 /**
  * Load recording statistics for health endpoint.
