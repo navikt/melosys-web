@@ -1,4 +1,4 @@
-import { defineConfig, devices } from "@playwright/test";
+import { defineConfig, devices, ReporterDescription } from "@playwright/test";
 import path from "path";
 
 /**
@@ -85,7 +85,7 @@ export default defineConfig({
     // Custom summary reporter - creates markdown summary with error details
     ["./tests/e2e/reporters/test-summary-reporter.ts"],
     // GitHub Actions reporter - creates annotations in CI
-    ...(IS_CI ? [["github" as const]] : []),
+    ...(IS_CI ? ([["github"]] as ReporterDescription[]) : []),
   ],
   /* Maximum time one test can run for. CI needs more time. */
   timeout: 15000 * CI_TIMEOUT_MULTIPLIER,
