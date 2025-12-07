@@ -1,33 +1,35 @@
 import { defineConfig, devices, ReporterDescription } from "@playwright/test";
 import path from "path";
+import { getTestMode } from "./tests/e2e/config/mode";
+import { PORTS, TIMEOUTS, PATHS, COMMANDS, CI_CONFIG, LOCAL_CONFIG } from "./tests/e2e/config/constants";
 
 /**
- * E2E Test Mode Configuration
+ * Playwright E2E Test Configuration
  *
- * E2E_MODE environment variable controls test behavior:
+ * Supports three modes via E2E_MODE environment variable:
  * - live (default): Run against real melosys-api
  * - record: Run against real API and record all responses
  * - playback: Run against mock server with recorded responses
+ *
+ * @see https://playwright.dev/docs/test-configuration
  */
-type TestMode = "live" | "record" | "playback";
-const E2E_MODE = (process.env.E2E_MODE?.toLowerCase() || "live") as TestMode;
+
+const E2E_MODE = getTestMode();
 const IS_CI = !!process.env.CI;
+const TIMEOUT_MULTIPLIER = IS_CI ? CI_CONFIG.TIMEOUT_MULTIPLIER : 1;
+const WORKERS = IS_CI ? CI_CONFIG.WORKERS : LOCAL_CONFIG.WORKERS;
 
-// CI environments are slower and need more generous timeouts
-const CI_TIMEOUT_MULTIPLIER = IS_CI ? 3 : 1;
+/** Apply CI timeout multiplier to a base timeout value */
+function withTimeout(baseTimeout: number): number {
+  return baseTimeout * TIMEOUT_MULTIPLIER;
+}
 
-/**
- * Get context options based on mode.
- * In record mode, enable HAR recording for API calls.
- */
+/** Get context options based on mode (HAR recording in record mode) */
 function getContextOptions() {
   if (E2E_MODE === "record") {
-    const harPath = path.join(process.cwd(), "tests/e2e/recordings/har/api-recording.har");
-    // eslint-disable-next-line no-console
-    console.log(`[Playwright] HAR path: ${harPath}`);
     return {
       recordHar: {
-        path: harPath,
+        path: path.join(process.cwd(), PATHS.HAR_DIR, "api-recording.har"),
         urlFilter: "**/api/**",
       },
     };
@@ -35,130 +37,110 @@ function getContextOptions() {
   return {};
 }
 
-/**
- * Get webServer configuration based on mode.
- */
+/** Vite dev server configuration (shared between modes) */
+const VITE_SERVER = {
+  command: COMMANDS.VITE,
+  url: `http://localhost:${PORTS.VITE}`,
+  reuseExistingServer: false,
+  timeout: TIMEOUTS.VITE_STARTUP,
+  stdout: "pipe" as const,
+  stderr: "pipe" as const,
+};
+
+/** Get webServer configuration based on mode */
 function getWebServerConfig() {
   if (E2E_MODE === "playback") {
-    // In playback mode, start both the mock server and the frontend
     return [
       {
-        // Start mock API server
-        command: "cd tests/e2e/mock-server && npm start",
-        url: "http://localhost:8080/health",
-        reuseExistingServer: !process.env.CI, // Always start fresh in CI
-        timeout: 30 * 1000,
+        command: COMMANDS.MOCK_SERVER,
+        url: `http://localhost:${PORTS.API}/health`,
+        reuseExistingServer: !IS_CI,
+        timeout: TIMEOUTS.MOCK_SERVER_STARTUP,
         stdout: "pipe" as const,
         stderr: "pipe" as const,
       },
-      {
-        // Start frontend (Vite)
-        command: "node generate-local-config.mjs .local.env && npx vite --port 3333",
-        url: "http://localhost:3333",
-        reuseExistingServer: false,
-        timeout: 120 * 1000,
-        stdout: "pipe" as const,
-        stderr: "pipe" as const,
-      },
+      VITE_SERVER,
     ];
   }
-
-  // For live and record modes, just start the frontend
-  return {
-    command: "node generate-local-config.mjs .local.env && npx vite --port 3333",
-    url: "http://localhost:3333",
-    reuseExistingServer: false,
-    timeout: 120 * 1000,
-  };
+  return VITE_SERVER;
 }
 
-/**
- * See https://playwright.dev/docs/test-configuration.
- */
-export default defineConfig({
-  globalSetup: "./tests/e2e/globalSetup.ts",
-  testDir: "./tests/e2e/specs",
-  outputDir: "tests/e2e/artifacts",
-  reporter: [
-    ["html", { outputFolder: "tests/e2e/reports/playwright-report", open: IS_CI ? "never" : "always" }],
+/** Build reporter configuration */
+function getReporters(): ReporterDescription[] {
+  const reporters: ReporterDescription[] = [
+    ["html", { outputFolder: PATHS.REPORT_DIR, open: IS_CI ? "never" : "always" }],
     ["list"],
-    // Custom summary reporter - creates markdown summary with error details
-    ["./tests/e2e/reporters/test-summary-reporter.ts"],
-    // GitHub Actions reporter - creates annotations in CI
-    ...(IS_CI ? ([["github"]] as ReporterDescription[]) : []),
-  ],
-  /* Maximum time one test can run for. CI needs more time. */
-  timeout: 15000 * CI_TIMEOUT_MULTIPLIER,
+    [PATHS.SUMMARY_REPORTER],
+  ];
+
+  if (IS_CI) {
+    reporters.push(["github"]);
+  }
+
+  return reporters;
+}
+
+/** Log configuration on startup */
+function logConfiguration(): void {
+  const logs = [
+    `[Playwright] E2E_MODE: ${E2E_MODE}, CI: ${IS_CI}, Workers: ${WORKERS}, Timeout: ${TIMEOUT_MULTIPLIER}x`,
+  ];
+
+  if (IS_CI) {
+    logs.push(
+      `[Playwright] CI timeouts: navigation=${withTimeout(TIMEOUTS.NAVIGATION)}ms, test=${withTimeout(TIMEOUTS.TEST)}ms`,
+    );
+  }
+
+  if (E2E_MODE === "playback") {
+    logs.push("[Playwright] Playback: per-worker sequence tracking via X-Playwright-Worker-ID header");
+  }
+
+  if (E2E_MODE === "record") {
+    logs.push(`[Playwright] Recording: HAR files → ${PATHS.HAR_DIR}/`);
+  }
+
+  // eslint-disable-next-line no-console
+  logs.forEach((log) => console.log(log));
+}
+
+// Log on config load
+logConfiguration();
+
+export default defineConfig({
+  globalSetup: PATHS.GLOBAL_SETUP,
+  testDir: PATHS.TEST_DIR,
+  outputDir: PATHS.OUTPUT_DIR,
+  reporter: getReporters(),
+
+  timeout: withTimeout(TIMEOUTS.TEST),
   expect: {
-    /**
-     * Maximum time expect() should wait for the condition to be met.
-     * For example in `await expect(locator).toHaveText();`
-     */
-    timeout: 8000 * CI_TIMEOUT_MULTIPLIER,
+    timeout: withTimeout(TIMEOUTS.EXPECT),
   },
-  /* Run tests in files in parallel */
+
   fullyParallel: true,
-  /* Fail the build on CI if you accidentally left test.only in the source code. */
-  forbidOnly: !!process.env.CI,
+  forbidOnly: IS_CI,
   retries: 0,
-  /* Worker configuration:
-   * - Playback mode now supports parallel workers via per-worker sequence tracking
-   *   (X-Playwright-Worker-ID header isolates state per worker)
-   * - CI: 2 workers - 4 workers caused timeouts despite 8-core runner (browser resource contention)
-   * - Local: 4 workers for speed
-   */
-  workers: IS_CI ? 2 : 4,
-  /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
+  workers: WORKERS,
+
   use: {
-    /* Base URL to use in actions like `await page.goto('/')`. */
-    baseURL: "http://localhost:3333",
-
-    /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
+    baseURL: `http://localhost:${PORTS.VITE}`,
     trace: "on-first-retry",
-
-    /* Capture screenshot on failure */
     screenshot: "only-on-failure",
-
-    /* Record video */
-    video: "on", // Ta opp alle tester
-
-    /* Context options (includes HAR recording in record mode) */
+    video: "on",
     ...getContextOptions(),
   },
 
-  /* Configure projects for major browsers */
   projects: [
     {
       name: "chromium",
       use: {
         ...devices["Desktop Chrome"],
-        /* CI environments are slower - increase timeouts */
-        navigationTimeout: 8000 * CI_TIMEOUT_MULTIPLIER,
-        actionTimeout: 4000 * CI_TIMEOUT_MULTIPLIER,
+        navigationTimeout: withTimeout(TIMEOUTS.NAVIGATION),
+        actionTimeout: withTimeout(TIMEOUTS.ACTION),
       },
     },
   ],
 
-  /* Run your local dev server before starting the tests */
   webServer: getWebServerConfig(),
 });
-
-// Log current mode and config
-// eslint-disable-next-line no-console
-console.log(
-  `[Playwright] E2E_MODE: ${E2E_MODE}, CI: ${IS_CI}, Workers: ${IS_CI ? 2 : 4}, Timeout multiplier: ${CI_TIMEOUT_MULTIPLIER}x`,
-);
-if (IS_CI) {
-  // eslint-disable-next-line no-console
-  console.log(
-    `[Playwright] CI mode: navigationTimeout=${8000 * CI_TIMEOUT_MULTIPLIER}ms, testTimeout=${15000 * CI_TIMEOUT_MULTIPLIER}ms`,
-  );
-}
-if (E2E_MODE === "playback") {
-  // eslint-disable-next-line no-console
-  console.log(`[Playwright] Playback mode: per-worker sequence tracking enabled (X-Playwright-Worker-ID header)`);
-}
-if (E2E_MODE === "record") {
-  // eslint-disable-next-line no-console
-  console.log(`[Playwright] HAR recording ENABLED - files will be saved to tests/e2e/recordings/har/`);
-}

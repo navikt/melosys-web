@@ -9,6 +9,8 @@
  *   E2E_MODE=playback pnpm test:e2e  # Use recorded responses (no backend needed)
  */
 
+import { PORTS } from "./constants";
+
 export type TestMode = "live" | "record" | "playback";
 
 /**
@@ -51,10 +53,11 @@ export function isLiveMode(): boolean {
  * In playback mode, this returns the mock server URL.
  */
 export function getApiBaseUrl(): string {
+  const defaultUrl = `http://localhost:${PORTS.API}`;
   if (shouldUseMockServer()) {
-    return process.env.MOCK_API_URL || "http://localhost:8080";
+    return process.env.MOCK_API_URL || defaultUrl;
   }
-  return process.env.API_BASE_URL || "http://localhost:8080";
+  return process.env.API_BASE_URL || defaultUrl;
 }
 
 /**
