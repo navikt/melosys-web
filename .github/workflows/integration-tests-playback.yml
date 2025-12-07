@@ -1,4 +1,4 @@
-name: E2E Tests (Playback)
+name: Integration Tests (Playback)
 
 on:
   pull_request:
@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  e2e-playback:
+  integration-tests-playback:
     runs-on: ubuntu-latest-8-cores
     timeout-minutes: 30
 
@@ -55,7 +55,7 @@ jobs:
           pnpm e2e:mock:install
           pnpm e2e:mock:build
 
-      - name: Run E2E tests (playback mode)
+      - name: Run integration tests (playback mode)
         run: pnpm test:e2e:playback
         env:
           CI: true
