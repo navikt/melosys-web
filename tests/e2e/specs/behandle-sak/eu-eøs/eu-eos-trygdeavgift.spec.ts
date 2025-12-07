@@ -19,9 +19,10 @@ import { runAxeAnalyze } from "../../../utils/axeUtils";
  */
 
 test.describe("EU/EØS Trygdeavgift", () => {
-  // Skip: Pre-existing test failure - inntektskilder visibility issue
-  // Fails in both record and playback modes (not mock server related)
-  // TODO: Create JIRA ticket and fix the underlying issue
+  // Skip: Stale recording - behandlingID mismatch
+  // Recording has behandlingID=366, but current testdata has behandlingID=738
+  // This causes mock server to return wrong data from other recordings (YRKESAKTIV instead of PENSJONIST)
+  // Fix: Re-record with real API running, or improve mock server ID matching
   test.skip("skal vise inntektskilder når bruker ikke er skattepliktig", async ({ page, apiRecorder }, testInfo) => {
     const behandlingPage = new BehandlingPage(page);
 
