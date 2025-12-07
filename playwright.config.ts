@@ -101,8 +101,14 @@ export default defineConfig({
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
   retries: 0,
-  /* Reduce workers in CI to avoid resource contention */
-  workers: IS_CI ? 2 : 4,
+  /* Worker configuration:
+   * - Playback mode: 1 worker required - mock server has global sequence tracking
+   *   that doesn't support parallel workers (they would consume recordings and
+   *   reset state independently, causing race conditions)
+   * - CI: 2 workers to reduce resource contention
+   * - Local live/record: 4 workers for speed
+   */
+  workers: E2E_MODE === "playback" ? 1 : IS_CI ? 2 : 4,
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */

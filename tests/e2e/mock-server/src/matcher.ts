@@ -242,27 +242,60 @@ export class RecordingMatcher {
     const candidates = this.normalizedIndex.get(normalizedKey);
 
     if (candidates && candidates.length > 0) {
-      // Filter out consumed exchanges first
+      // Find candidates with exact path match
+      const exactPathCandidates = this.findCandidatesWithExactPath(candidates, request.pathname);
+
+      // Check if this path has dynamic segments (MEL-XXXX, numeric IDs, UUIDs)
+      const hasDynamicSegments = this.pathHasDynamicSegments(request.pathname);
+
+      if (exactPathCandidates.length > 0) {
+        // For GET requests with query params, try query matching FIRST
+        // This handles endpoints like /api/behandlingstemaer where path is same but query differs
+        if (request.method === "GET" && Object.keys(request.query || {}).length > 0) {
+          const unconsumedForPath = this.filterUnconsumed(exactPathCandidates);
+          const candidatesToSearch = unconsumedForPath.length > 0 ? unconsumedForPath : exactPathCandidates;
+
+          const queryMatch = this.findBestQueryMatch(candidatesToSearch, request.query);
+          if (queryMatch) {
+            this.markConsumed(queryMatch);
+            console.log(`[Matcher] Query match (exact path): ${request.method} ${request.pathname}`);
+            return queryMatch;
+          }
+        }
+
+        // For paths WITH dynamic segments (e.g., /api/fagsaker/MEL-1015/...),
+        // use path-only matching with sequence tracking
+        if (hasDynamicSegments) {
+          const unconsumedForPath = this.filterUnconsumed(exactPathCandidates);
+          const total = exactPathCandidates.length;
+
+          if (unconsumedForPath.length > 0) {
+            const exchange = unconsumedForPath[0];
+            this.markConsumed(exchange);
+            const consumed = total - unconsumedForPath.length;
+            if (total > 1) {
+              console.log(
+                `[Matcher] Path segment match (sequence ${consumed + 1}/${total}): ${request.method} ${request.pathname}`,
+              );
+            } else {
+              console.log(`[Matcher] Path segment match: ${request.method} ${request.pathname}`);
+            }
+            return exchange;
+          } else {
+            // All consumed - return last one (sticky behavior)
+            const exchange = exactPathCandidates[exactPathCandidates.length - 1];
+            console.log(`[Matcher] Path segment match (reusing last): ${request.method} ${request.pathname}`);
+            return exchange;
+          }
+        }
+
+        // For paths WITHOUT dynamic segments (e.g., /api/behandlingstemaer/...),
+        // fall through to other matching strategies below
+      }
+
+      // No exact path match OR path has no dynamic segments - use other strategies
       const unconsumedCandidates = this.filterUnconsumed(candidates);
       const candidatesToSearch = unconsumedCandidates.length > 0 ? unconsumedCandidates : candidates;
-
-      // 2a. First, try to match by path segments (saksnummer, behandlingId, etc.)
-      const pathMatch = this.findBestPathMatch(candidatesToSearch, request.pathname);
-      if (pathMatch) {
-        this.markConsumed(pathMatch);
-        const total = candidates.filter((c) => c.request.pathname === pathMatch.request.pathname).length;
-        const consumed =
-          total -
-          this.filterUnconsumed(candidates.filter((c) => c.request.pathname === pathMatch.request.pathname)).length;
-        if (total > 1) {
-          console.log(
-            `[Matcher] Path segment match (sequence ${consumed}/${total}): ${request.method} ${request.pathname}`,
-          );
-        } else {
-          console.log(`[Matcher] Path segment match: ${request.method} ${request.pathname}`);
-        }
-        return pathMatch;
-      }
 
       // For GET requests, try to find best query parameter match
       if (request.method === "GET") {
@@ -300,6 +333,30 @@ export class RecordingMatcher {
 
     console.log(`[Matcher] No match found: ${request.method} ${request.pathname}`);
     return null;
+  }
+
+  /**
+   * Find all candidates that have the exact same path as the request.
+   * This is used to ensure we return the correct sak's data when there are
+   * multiple saks with recordings for the same normalized endpoint.
+   */
+  private findCandidatesWithExactPath(candidates: RecordedExchange[], requestPath: string): RecordedExchange[] {
+    return candidates.filter((candidate) => candidate.request.pathname === requestPath);
+  }
+
+  /**
+   * Check if a path contains dynamic segments (MEL-XXXX, numeric IDs, UUIDs).
+   * Used to determine whether to use path-only matching (for sak-specific paths)
+   * or query matching (for shared endpoints like /api/behandlingstemaer).
+   */
+  private pathHasDynamicSegments(pathname: string): boolean {
+    const segments = pathname.split("/").filter(Boolean);
+    return segments.some(
+      (seg) =>
+        /^MEL-\d+$/.test(seg) || // saksnummer
+        /^\d+$/.test(seg) || // numeric ID
+        /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(seg), // UUID
+    );
   }
 
   /**
