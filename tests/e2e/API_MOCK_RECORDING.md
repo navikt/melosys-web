@@ -44,9 +44,6 @@ tests/e2e/
 │   │   ├── dynamic-values.ts   # Date/ID transformation
 │   │   └── types.ts            # Type definitions
 │   └── README.md
-├── scripts/
-│   ├── enable-recording.sh     # Update all tests to use recording fixture
-│   └── disable-recording.sh    # Revert tests to standard Playwright
 └── docker-compose.mock.yml     # Docker compose for mock server
 ```
 
@@ -179,24 +176,6 @@ These fields are automatically transformed during playback:
 - `opprettetTidspunkt`, `endretTidspunkt`, `sistOppdatert`
 - `fom`, `tom`, `startdato`, `sluttdato`
 - Other date-related fields
-
-## Scripts
-
-### Enable Recording
-
-Updates all test files to use the recording fixture:
-
-```bash
-./tests/e2e/scripts/enable-recording.sh
-```
-
-### Disable Recording
-
-Reverts all test files to standard Playwright:
-
-```bash
-./tests/e2e/scripts/disable-recording.sh
-```
 
 ## Docker
 
