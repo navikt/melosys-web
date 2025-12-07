@@ -31,8 +31,24 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: pnpm install --frozen-lockfile
 
-      - name: Install Playwright browsers
+      - name: Get Playwright version
+        id: playwright-version
+        run: echo "version=$(pnpm list @playwright/test --depth=0 --json | jq -r '.[0].devDependencies["@playwright/test"].version')" >> $GITHUB_OUTPUT
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.playwright-version.outputs.version }}
+
+      - name: Install Playwright browsers (if not cached)
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: npx playwright install --with-deps chromium
+
+      - name: Install only system dependencies (if browsers were cached)
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
 
       - name: Build mock server
         run: |
@@ -47,14 +63,11 @@ jobs:
       - name: Generate test summary
         if: always()
         run: |
-          echo "## 🎭 E2E Playback Test Results" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-
-          # Use custom reporter summary if available
+          # Use custom reporter summary if available (it includes its own header)
           if [ -f "tests/e2e/reports/test-summary.md" ]; then
             cat tests/e2e/reports/test-summary.md >> $GITHUB_STEP_SUMMARY
           else
-            echo "⚠️ No test summary found" >> $GITHUB_STEP_SUMMARY
+            echo "## ⚠️ No test summary found" >> $GITHUB_STEP_SUMMARY
           fi
 
           echo "" >> $GITHUB_STEP_SUMMARY

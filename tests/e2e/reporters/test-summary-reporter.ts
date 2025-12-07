@@ -116,7 +116,7 @@ class TestSummaryReporter implements Reporter {
     const totalTests = tests.length;
     const totalAttempts = tests.reduce((sum, t) => sum + t.totalAttempts, 0);
 
-    let md = "## 🎭 E2E Test Results\n\n";
+    let md = "## 🧪 Integration Test Results (Playback)\n\n";
 
     // Mode badge
     const modeBadge = data.mode === "playback" ? "🔄 Playback" : data.mode === "record" ? "🔴 Record" : "🟢 Live";
