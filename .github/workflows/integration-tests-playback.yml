@@ -5,11 +5,17 @@ on:
   push:
     branches: [master, main]
   workflow_dispatch:
+    inputs:
+      stability_runs:
+        description: "Number of stability test runs (1 = normal single run)"
+        required: false
+        default: "1"
+        type: string
 
 jobs:
   integration-tests-playback:
     runs-on: ubuntu-latest-8-cores
-    timeout-minutes: 30
+    timeout-minutes: 120
 
     steps:
       - name: Checkout
@@ -56,18 +62,101 @@ jobs:
           pnpm e2e:mock:build
 
       - name: Run integration tests (playback mode)
-        run: pnpm test:e2e:playback
+        id: tests
+        run: |
+          RUNS=${{ inputs.stability_runs || '1' }}
+
+          if [ "$RUNS" -eq 1 ]; then
+            # Single run - normal behavior
+            pnpm test:e2e:playback
+          else
+            # Stability test - multiple runs
+            PASSED=0
+            FAILED=0
+            RESULTS=""
+
+            echo "Running E2E playback tests $RUNS times..."
+            mkdir -p tests/e2e/reports/stability-logs
+
+            for i in $(seq 1 $RUNS); do
+              echo "::group::Run $i/$RUNS"
+              LOG_FILE="tests/e2e/reports/stability-logs/run-$i.log"
+
+              if E2E_MODE=playback npx playwright test --reporter=dot 2>&1 | tee "$LOG_FILE"; then
+                ((PASSED++))
+                RESULTS="$RESULTS| $i | ✅ Pass |\n"
+                echo "Run $i: PASSED"
+                rm "$LOG_FILE"
+              else
+                ((FAILED++))
+                RESULTS="$RESULTS| $i | ❌ Fail |\n"
+                echo "Run $i: FAILED"
+              fi
+              echo "::endgroup::"
+            done
+
+            SUCCESS_RATE=$(echo "scale=1; $PASSED * 100 / $RUNS" | bc)
+
+            echo "passed=$PASSED" >> $GITHUB_OUTPUT
+            echo "failed=$FAILED" >> $GITHUB_OUTPUT
+            echo "total=$RUNS" >> $GITHUB_OUTPUT
+            echo "success_rate=$SUCCESS_RATE" >> $GITHUB_OUTPUT
+            echo -e "$RESULTS" > tests/e2e/reports/stability-results.txt
+
+            if [ $FAILED -gt 0 ]; then
+              exit 1
+            fi
+          fi
         env:
           CI: true
 
       - name: Generate test summary
         if: always()
         run: |
-          # Use custom reporter summary if available (it includes its own header)
-          if [ -f "tests/e2e/reports/test-summary.md" ]; then
-            cat tests/e2e/reports/test-summary.md >> $GITHUB_STEP_SUMMARY
+          RUNS=${{ inputs.stability_runs || '1' }}
+
+          if [ "$RUNS" -gt 1 ]; then
+            # Stability test summary
+            PASSED=${{ steps.tests.outputs.passed || '0' }}
+            FAILED=${{ steps.tests.outputs.failed || '0' }}
+            TOTAL=${{ steps.tests.outputs.total || inputs.stability_runs }}
+            SUCCESS_RATE=${{ steps.tests.outputs.success_rate || '0' }}
+
+            if [ "$FAILED" -eq 0 ]; then
+              STATUS="✅ All runs passed"
+            else
+              STATUS="❌ Some runs failed"
+            fi
+
+            cat >> $GITHUB_STEP_SUMMARY << EOF
+          # E2E Stability Test Report
+
+          ## Summary
+
+          | Metric | Value |
+          |--------|-------|
+          | Total Runs | $TOTAL |
+          | Passed | $PASSED |
+          | Failed | $FAILED |
+          | Success Rate | ${SUCCESS_RATE}% |
+          | Status | $STATUS |
+
+          ## Run Results
+
+          | Run | Result |
+          |-----|--------|
+          EOF
+
+            if [ -f "tests/e2e/reports/stability-results.txt" ]; then
+              cat tests/e2e/reports/stability-results.txt >> $GITHUB_STEP_SUMMARY
+            fi
           else
-            echo "## ⚠️ No test summary found" >> $GITHUB_STEP_SUMMARY
+            # Single run summary
+            if [ -f "tests/e2e/reports/test-summary.md" ]; then
+              cat tests/e2e/reports/test-summary.md >> $GITHUB_STEP_SUMMARY
+            else
+              echo "## ⚠️ No test summary found" >> $GITHUB_STEP_SUMMARY
+            fi
           fi
 
           echo "" >> $GITHUB_STEP_SUMMARY
@@ -90,5 +179,7 @@ jobs:
         if: failure()
         with:
           name: test-artifacts
-          path: tests/e2e/artifacts/
+          path: |
+            tests/e2e/artifacts/
+            tests/e2e/reports/stability-logs/
           retention-days: 7
