@@ -63,12 +63,14 @@ jobs:
 
       - name: Run integration tests (playback mode)
         id: tests
+        shell: bash {0}
         run: |
           RUNS=${{ inputs.stability_runs || '1' }}
 
           if [ "$RUNS" -eq 1 ]; then
             # Single run - normal behavior
             pnpm test:e2e:playback
+            exit $?
           else
             # Stability test - multiple runs
             PASSED=0
@@ -82,7 +84,10 @@ jobs:
               echo "::group::Run $i/$RUNS"
               LOG_FILE="tests/e2e/reports/stability-logs/run-$i.log"
 
-              if E2E_MODE=playback npx playwright test --reporter=dot 2>&1 | tee "$LOG_FILE"; then
+              E2E_MODE=playback npx playwright test --reporter=dot 2>&1 | tee "$LOG_FILE"
+              EXIT_CODE=${PIPESTATUS[0]}
+
+              if [ $EXIT_CODE -eq 0 ]; then
                 ((PASSED++))
                 RESULTS="$RESULTS| $i | ✅ Pass |\n"
                 echo "Run $i: PASSED"
@@ -90,7 +95,7 @@ jobs:
               else
                 ((FAILED++))
                 RESULTS="$RESULTS| $i | ❌ Fail |\n"
-                echo "Run $i: FAILED"
+                echo "Run $i: FAILED (exit code: $EXIT_CODE)"
               fi
               echo "::endgroup::"
             done
