@@ -52,6 +52,27 @@ tests/e2e/
 
 ## Usage
 
+### Prerequisites: Starting melosys-api
+
+Recording mode requires the real `melosys-api` backend to be running. Start it from the melosys-api repository:
+
+```bash
+# From melosys-api directory (requires melosys-docker-compose services running)
+cd /path/to/melosys-api
+java -jar -Dspring.profiles.active=local-mock app/target/melosys-sb-execution.jar
+
+# Or run via Maven (slower startup)
+mvn spring-boot:run -pl app -Dspring-boot.run.profiles=local-mock
+```
+
+**Note**: The `local-mock` profile connects to mocked external services (PDL, EESSI, etc.) via `melosys-docker-compose`.
+
+Verify API is running:
+```bash
+curl http://localhost:8080/internal/health
+# Should return: {"status":"UP"}
+```
+
 ### Recording Mode
 
 Record all API responses during test execution:
