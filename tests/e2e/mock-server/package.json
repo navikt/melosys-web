@@ -2,10 +2,10 @@
   "name": "melosys-api-mock",
   "version": "1.0.0",
   "description": "Mock server for melosys-api E2E tests - plays back recorded API responses",
-  "main": "dist/server.js",
+  "main": "dist/mock-server/src/server.js",
   "scripts": {
     "build": "tsc",
-    "start": "node dist/server.js",
+    "start": "node dist/mock-server/src/server.js",
     "dev": "ts-node src/server.ts",
     "clean": "rm -rf dist"
   },
