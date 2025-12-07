@@ -83,7 +83,7 @@ function logConfiguration(): void {
   }
 
   if (E2E_MODE === "record") {
-    logs.push(`[Playwright] Recording: HAR files → ${PATHS.HAR_DIR}/`);
+    logs.push("[Playwright] Recording: API responses → tests/e2e/recordings/");
   }
 
   // eslint-disable-next-line no-console
