@@ -336,9 +336,19 @@ test("Test that requires mutable state", async ({ page }) => {
 
 Several approaches could enable write-then-read tests in playback mode:
 
-1. **Stateful mock server**: Track mutations and modify subsequent responses accordingly
-   - Pros: Most accurate simulation
-   - Cons: Complex to implement, may diverge from real API behavior
+1. **Stateful mock server** ⭐ PLANNED
+   - Track mutations (POST/PUT/DELETE) and modify subsequent GET responses accordingly
+   - Implementation approach:
+     ```typescript
+     // Track state changes from mutations
+     const stateStore = new Map<string, MutationState>();
+
+     // On POST /api/fagsaker/{id}/behandlinger - mark behandling as created
+     // On POST /api/behandlinger/{id}/resultat/type - mark behandling as closed
+     // On GET /api/fagsaker/sok - check state and return appropriate variant
+     ```
+   - Pros: Most accurate simulation, enables full user flow testing
+   - Cons: Requires understanding of API semantics, may diverge from real API behavior
 
 2. **Sequence-aware recordings**: Record request/response pairs with sequence numbers
    - Pros: Captures exact order of operations
@@ -356,7 +366,10 @@ Several approaches could enable write-then-read tests in playback mode:
    - Pros: Works with current infrastructure
    - Cons: May not capture the full user flow
 
-**Recommended approach**: Start with test refactoring (option 5) and consider stateful mock server (option 1) for complex scenarios.
+**Next Steps**: Implement stateful mock server (option 1) to enable AC3 and similar write-then-read tests. Key mutations to track:
+- `POST /api/fagsaker/{saksnummer}/behandlinger` → behandling created
+- `POST /api/behandlinger/{id}/resultat/type` → behandling closed
+- Affected GETs: `/api/fagsaker/sok`, `/api/saksbehandling/{saksnummer}/behandlingstyper/*`
 
 ## Files Modified
 
@@ -473,7 +486,7 @@ app.use(express.text({ type: "*/*", limit: "10mb" }));
 
 ---
 
-### Issue 6: Test Passes Locally But Fails in CI (Incomplete Recording)
+### Issue 6: Test Passes Locally But Fails in CI (Incomplete Recording) - RESOLVED
 
 **Symptom**: AC2 test in `utenfor-avtaleland-behandlingslogikk.spec.ts` passes locally in playback mode but times out in CI with "Venter..." (loading spinner) stuck on the page.
 
@@ -483,20 +496,55 @@ app.use(express.text({ type: "*/*", limit: "10mb" }));
 3. Locally with 1 worker: Test runs faster, passes by accident
 4. CI with 2 workers: Resource contention exposes the missing recording → timeout
 
-**Root Cause**: The "last request timing" issue - when the test clicks "Opprett ny behandling", the browser closes before the POST request completes and gets recorded. The recording is incomplete but the test passes locally due to faster execution and caching.
+**Root Cause**: Two issues combined:
+1. **Missing form field**: The test didn't select a `behandlingsårsak` (required for Årsavregning), so form validation silently failed
+2. **Timing issue**: Even if form was valid, the test didn't wait for the POST to complete before navigating away
 
-**Fix**: Add explicit `waitForResponse` after form submissions to ensure the request completes before proceeding:
+**Fix** (utenfor-avtaleland-behandlingslogikk.spec.ts):
 ```typescript
-await opprettNySakPage.klikkOpprettNyBehandling();
-await page.waitForResponse(resp => resp.url().includes('/api/behandlinger'));
+await opprettNySakPage.velgBehandlingstypeRadio("Årsavregning");
+
+// 1. Select the required behandlingsårsak field
+await opprettNySakPage.velgBehandlingsaarsak("Søknad");
+
+// 2. Wait for navigation (which only happens after successful POST)
+await Promise.all([
+  page.waitForURL(/\/melosys\/$/, { timeout: 15000 }),
+  opprettNySakPage.klikkOpprettNyBehandling(),
+]);
+
+// 3. Ensure all network activity is captured
+await page.waitForLoadState("networkidle");
 ```
 
-Then re-record the test to capture the complete flow.
+**Key Learnings**:
+- Always check screenshot/video artifacts when tests fail - the validation error was visible
+- Use `waitForURL` instead of `waitForResponse` when form success triggers navigation
+- Forms may have required fields that aren't immediately obvious from the test flow
 
-**Workaround**: Skip the test in playback mode until re-recorded:
-```typescript
-test.skip(getTestMode() === "playback", "Recording incomplete - missing behandling creation POST");
+---
+
+### Issue 7: Write-Then-Read Pattern Incompatible with Playback
+
+**Symptom**: AC3 test closes a behandling, navigates away, then verifies the updated state. In playback mode, the GET after mutation returns stale pre-recorded data.
+
+**Test Flow**:
 ```
+1. Navigate to behandling page     → GET (pre-mutation state)
+2. Close behandling                → POST (mutation)
+3. Navigate to hovedside           → Navigation
+4. Search for sak                  → GET (expects post-mutation state!)
+5. Verify behandlingstyper         → FAILS - sees pre-mutation state
+```
+
+**Root Cause**: The mock server uses request signature matching. Both GET requests (#1 and #4) have identical signatures, so they return the same pre-recorded response - the pre-mutation state.
+
+**Current Workaround**: Skip test in playback mode:
+```typescript
+test.skip(getTestMode() === "playback", "Requires mutable state - closes behandling then verifies");
+```
+
+**Planned Solution**: Implement stateful mock server (see Future Solutions below).
 
 ---
 
@@ -621,13 +669,19 @@ When API contracts change:
 
 ## TODO / Future Improvements
 
+### High Priority
+- [ ] **Implement stateful mock server** - Track mutations and modify subsequent responses to enable write-then-read tests (AC3, etc.)
+- [ ] Fix pre-existing 12 test failures (application/test issues)
+
+### Medium Priority
 - [ ] Merge recordings from parallel workers
 - [ ] Add staleness detection for old recordings
+- [ ] Docker compose setup for CI environment
+- [ ] Refactor tests to use unique test data per file (enable full parallelization)
+
+### Completed
 - [x] ~~Implement shared recording extraction (kodeverk, etc.)~~ - Partially done via query matching
 - [x] ~~Add CI/CD integration with GitHub Actions~~ - Workflow created and working
 - [x] ~~Fix CI playback failures~~ - Fixed via CI_TIMEOUT_MULTIPLIER (3x timeouts + 2 workers)
-- [ ] Docker compose setup for CI environment
 - [x] ~~Test playback mode end-to-end~~ - Working locally (51/64 tests pass, 1 skipped, 12 pre-existing failures)
 - [x] ~~Investigate remaining playback-specific failures~~ - Fixed via path matching improvement + AC2 fix
-- [ ] Refactor tests to use unique test data per file (enable full parallelization)
-- [ ] Fix pre-existing 12 test failures (application/test issues)
