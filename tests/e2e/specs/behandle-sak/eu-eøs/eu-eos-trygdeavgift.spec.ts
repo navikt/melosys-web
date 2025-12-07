@@ -4,6 +4,7 @@ import { InngangPage } from "../../../pages/behandling/inngang.page";
 import { BehandlingPage } from "../../../pages/behandling/behandling.page";
 import { hentPrepopulertSakUrl } from "../../../utils/testdataUtils";
 import { runAxeAnalyze } from "../../../utils/axeUtils";
+import { getTestMode } from "../../../config/mode";
 
 /**
  * E2E-tester for Trygdeavgift-steget i EU/EØS saksbehandling
@@ -19,13 +20,13 @@ import { runAxeAnalyze } from "../../../utils/axeUtils";
  */
 
 test.describe("EU/EØS Trygdeavgift", () => {
-  // Skip in playback: Form interactions (dates, land selection) don't sync correctly with mock responses
-  // The test passes in record mode but fails in playback because:
-  // 1. Test fills form fields (dates, land) which triggers debounced API saves
-  // 2. Mock server returns recorded responses, but form state may override or conflict
-  // 3. The UI doesn't reflect the expected state after navigation
-  // TODO: Refactor test to wait for specific API responses or use explicit state verification
-  test.skip("skal vise inntektskilder når bruker ikke er skattepliktig", async ({ page, apiRecorder }, testInfo) => {
+  test("skal vise inntektskilder når bruker ikke er skattepliktig", async ({ page, apiRecorder }, testInfo) => {
+    // Skip in playback mode: Form interactions (dates, land selection) don't sync correctly with mock responses
+    // The test passes in record mode but fails in playback because:
+    // 1. Test fills form fields (dates, land) which triggers debounced API saves
+    // 2. Mock server returns recorded responses, but form state may override or conflict
+    // 3. The UI doesn't reflect the expected state after navigation
+    test.skip(getTestMode() === "playback", "Form interactions incompatible with playback mode");
     const behandlingPage = new BehandlingPage(page);
 
     // Hent URL til prepopulert EØS pensjonist-sak med trygdeavgift og naviger direkte dit
