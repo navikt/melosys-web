@@ -345,7 +345,7 @@ test("Test that requires mutable state", async ({ page }) => {
 
 | Test File | Test Name | Reason |
 |-----------|-----------|--------|
-| `eu-eos-trygdeavgift.spec.ts` | skal vise inntektskilder når bruker ikke er skattepliktig | Form interactions (dates, land selection) don't sync correctly with mock responses. Test fills form fields which triggers debounced API saves, but mock server returns pre-recorded responses that may conflict with form state. |
+| `eu-eos-trygdeavgift.spec.ts` | skal vise inntektskilder når bruker ikke er skattepliktig | Requires mutable state (write-then-read pattern). Test POSTs form data, then subsequent GETs should return the updated state. Mock server can't simulate this - the recorded GET responses always return the pre-mutation state. |
 
 Previously, AC3 was skipped due to the write-then-read pattern, but this is now supported via sequence-based matching (see Issue 7 resolution below).
 

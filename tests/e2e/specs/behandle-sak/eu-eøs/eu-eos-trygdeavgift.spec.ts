@@ -21,12 +21,11 @@ import { getTestMode } from "../../../config/mode";
 
 test.describe("EU/EØS Trygdeavgift", () => {
   test("skal vise inntektskilder når bruker ikke er skattepliktig", async ({ page, apiRecorder }, testInfo) => {
-    // Skip in playback mode: Form interactions (dates, land selection) don't sync correctly with mock responses
-    // The test passes in record mode but fails in playback because:
-    // 1. Test fills form fields (dates, land) which triggers debounced API saves
-    // 2. Mock server returns recorded responses, but form state may override or conflict
-    // 3. The UI doesn't reflect the expected state after navigation
-    test.skip(getTestMode() === "playback", "Form interactions incompatible with playback mode");
+    // Skip in playback mode: This test requires mutable state (form saves + subsequent reads)
+    // The mock server can't simulate write-then-read patterns where POST updates state
+    // and subsequent GETs should return the updated data
+    test.skip(getTestMode() === "playback", "Requires mutable state - incompatible with playback mode");
+
     const behandlingPage = new BehandlingPage(page);
 
     // Hent URL til prepopulert EØS pensjonist-sak med trygdeavgift og naviger direkte dit
@@ -41,7 +40,7 @@ test.describe("EU/EØS Trygdeavgift", () => {
     await inngangPage.setTilOgMedDato(`31.12.${currentYear}`);
     await inngangPage.velgLand("SE");
 
-    // Steg 2: Gå til Trygdeavgift og verifiser intiell tilstand
+    // Steg 2: Gå til Trygdeavgift og verifiser initiell tilstand
     await inngangPage.klikkBekreftOgFortsett();
     const trygdeavgiftPage = new TrygdeavgiftPage(page);
     await trygdeavgiftPage.verifiserSteg("Trygdeavgift");
