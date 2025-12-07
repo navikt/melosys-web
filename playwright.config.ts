@@ -79,7 +79,14 @@ export default defineConfig({
   globalSetup: "./tests/e2e/globalSetup.ts",
   testDir: "./tests/e2e/specs",
   outputDir: "tests/e2e/artifacts",
-  reporter: [["html", { outputFolder: "tests/e2e/reports/playwright-report", open: "always" }], ["list"]],
+  reporter: [
+    ["html", { outputFolder: "tests/e2e/reports/playwright-report", open: IS_CI ? "never" : "always" }],
+    ["list"],
+    // Custom summary reporter - creates markdown summary with error details
+    ["./tests/e2e/reporters/test-summary-reporter.ts"],
+    // GitHub Actions reporter - creates annotations in CI
+    ...(IS_CI ? [["github" as const]] : []),
+  ],
   /* Maximum time one test can run for. CI needs more time. */
   timeout: 15000 * CI_TIMEOUT_MULTIPLIER,
   expect: {
