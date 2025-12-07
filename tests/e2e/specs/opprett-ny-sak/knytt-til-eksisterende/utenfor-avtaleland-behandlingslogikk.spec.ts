@@ -5,7 +5,6 @@ import { OpprettNySakPage } from "../../../pages/opprett-ny-sak/opprett-ny-sak.p
 import { TIMEOUT_FOR_COMPLEX_TESTS, getSaksnummerFraUrl } from "../../../utils/testUtils";
 import { hentPrepopulertSakUrl } from "../../../utils/testdataUtils";
 import { BehandlingPage } from "../../../pages/behandling/behandling.page";
-import { getTestMode } from "../../../config/mode";
 
 /**
  * MELOSYS-7385: Test akseptansekriterier for 'Utenfor avtaleland'-saker
@@ -107,11 +106,8 @@ test.describe("'Utenfor avtaleland' behandlingslogikk", () => {
 
   test("AC3: Utenfor avtaleland med avsluttet behandling - alle behandlingstyper tilgjengelige", async ({
     page,
+    apiRecorder,
   }, testInfo) => {
-    // Skip in playback mode - this test closes a behandling then verifies updated state,
-    // which doesn't work with pre-recorded responses (write-then-read consistency issue)
-    test.skip(getTestMode() === "playback", "Requires mutable state - closes behandling then verifies");
-
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout siden vi oppretter og avslutter sak
 
     const behandlingPage = new BehandlingPage(page);

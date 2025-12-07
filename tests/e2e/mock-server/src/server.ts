@@ -16,7 +16,11 @@ import cors from "cors";
 import { loadRecordings, getRecordingStats } from "./loader";
 import { RecordingMatcher } from "./matcher";
 import { createDynamicHandler, TransformContext } from "./dynamic-values";
+import { mutationTracker } from "./mutation-tracker";
 import type { GraphQLRequest } from "./types";
+
+// Methods that are considered mutations (tracked for stateful responses)
+const MUTATION_METHODS = ["POST", "PUT", "DELETE", "PATCH"];
 
 // Configuration from environment
 const PORT = parseInt(process.env.PORT || "8080", 10);
@@ -87,13 +91,47 @@ app.get("/health", (req: Request, res: Response) => {
 });
 
 /**
- * Internal E2E test data reset endpoint (no-op in playback mode)
+ * Internal E2E test data reset endpoint
+ * Resets sequence tracking and mutation state for test isolation.
  */
 app.post("/internal/e2e/testdata/reset", (req: Request, res: Response) => {
-  console.log("[Server] Test data reset called (no-op in playback mode)");
+  console.log("[Server] Test data reset called - resetting sequence tracking");
+  matcher.reset();
 
   // Return empty metadata - the frontend should use recorded metadata
   res.json({});
+});
+
+/**
+ * Mock server state reset endpoint
+ * Call this between tests to reset sequence tracking and mutation state.
+ */
+app.post("/__reset", (req: Request, res: Response) => {
+  console.log("[Server] State reset requested");
+  matcher.reset();
+
+  const stats = matcher.getStats();
+  res.json({
+    ok: true,
+    message: "Sequence tracking and mutation state reset",
+    stats,
+  });
+});
+
+/**
+ * Mock server state inspection endpoint (for debugging)
+ */
+app.get("/__state", (req: Request, res: Response) => {
+  const stats = matcher.getStats();
+  const mutations = mutationTracker.getMutations();
+
+  res.json({
+    mutations: mutations.map((m) => ({
+      method: m.method,
+      path: m.normalizedPath,
+    })),
+    matcherStats: stats,
+  });
 });
 
 /**
@@ -143,6 +181,11 @@ app.post("/graphql/", graphqlHandler);
  * Catch-all API endpoint handler
  */
 app.all("/api/*", (req: Request, res: Response) => {
+  // Track mutations for stateful response selection
+  if (MUTATION_METHODS.includes(req.method)) {
+    mutationTracker.recordMutation(req.method, req.path, req.body);
+  }
+
   const matchRequest = {
     method: req.method,
     pathname: req.path,

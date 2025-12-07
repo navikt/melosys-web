@@ -6,10 +6,16 @@
  * 1. Exact match: method + path + query + body
  * 2. Normalized path match: Replace IDs with placeholders
  * 3. GraphQL match: operationName + variables
+ *
+ * For stateful tests (write-then-read pattern), uses sequence-based matching:
+ * - When multiple recordings match the same request signature, returns them in order
+ * - Tracks which recordings have been "consumed" during playback
+ * - Resets between tests via reset() method
  */
 
 import { createHash } from "crypto";
 import type { RecordedExchange, MatchRequest, GraphQLRequest } from "./types";
+import { mutationTracker } from "./mutation-tracker";
 
 // Patterns for normalizing paths (replace IDs with placeholders)
 const PATH_NORMALIZATION_PATTERNS: Array<{ pattern: RegExp; replacement: string }> = [
@@ -87,33 +93,54 @@ function extractPathParams(pathname: string, normalizedPattern: string): Record<
  * Recording Matcher - matches incoming requests to recorded exchanges.
  */
 export class RecordingMatcher {
-  private exactIndex: Map<string, RecordedExchange>;
+  private exactIndex: Map<string, RecordedExchange[]>; // Changed to array for sequence tracking
   private normalizedIndex: Map<string, RecordedExchange[]>;
-  private graphqlIndex: Map<string, RecordedExchange>;
+  private graphqlIndex: Map<string, RecordedExchange[]>; // Changed to array for sequence tracking
+
+  // Sequence tracking: counts how many times each key has been consumed
+  private exactConsumedCount: Map<string, number>;
+  private graphqlConsumedCount: Map<string, number>;
 
   constructor(exchanges: RecordedExchange[]) {
     this.exactIndex = new Map();
     this.normalizedIndex = new Map();
     this.graphqlIndex = new Map();
+    this.exactConsumedCount = new Map();
+    this.graphqlConsumedCount = new Map();
 
     this.buildIndexes(exchanges);
   }
 
   /**
+   * Reset sequence tracking between tests.
+   * Call this when starting a new test to reset consumed counts.
+   */
+  reset(): void {
+    this.exactConsumedCount.clear();
+    this.graphqlConsumedCount.clear();
+    mutationTracker.reset();
+    console.log("[Matcher] Reset sequence tracking");
+  }
+
+  /**
    * Build lookup indexes from exchanges.
+   * Stores arrays to support sequence-based matching for duplicate requests.
    */
   private buildIndexes(exchanges: RecordedExchange[]): void {
     for (const exchange of exchanges) {
       const request = exchange.request;
 
-      // Build exact index
+      // Build exact index (array for sequence tracking)
       const exactKey = createExactKey({
         method: request.method,
         pathname: request.pathname,
         query: request.query,
         body: request.body,
       });
-      this.exactIndex.set(exactKey, exchange);
+      if (!this.exactIndex.has(exactKey)) {
+        this.exactIndex.set(exactKey, []);
+      }
+      this.exactIndex.get(exactKey)!.push(exchange);
 
       // Build normalized index
       const normalizedKey = createNormalizedKey({
@@ -128,31 +155,61 @@ export class RecordingMatcher {
       }
       this.normalizedIndex.get(normalizedKey)!.push(exchange);
 
-      // Build GraphQL index (for POST /graphql or /graphql/)
+      // Build GraphQL index (array for sequence tracking)
       if ((request.pathname === "/graphql" || request.pathname === "/graphql/") && request.body) {
         const graphqlBody = request.body as GraphQLRequest;
         if (graphqlBody.operationName) {
           const variablesHash = hashObject(graphqlBody.variables);
           const graphqlKey = `${graphqlBody.operationName}:${variablesHash}`;
-          this.graphqlIndex.set(graphqlKey, exchange);
+          if (!this.graphqlIndex.has(graphqlKey)) {
+            this.graphqlIndex.set(graphqlKey, []);
+          }
+          this.graphqlIndex.get(graphqlKey)!.push(exchange);
         }
       }
     }
 
+    // Count total exchanges across all keys
+    let exactCount = 0;
+    for (const arr of this.exactIndex.values()) {
+      exactCount += arr.length;
+    }
+    let graphqlCount = 0;
+    for (const arr of this.graphqlIndex.values()) {
+      graphqlCount += arr.length;
+    }
+
     console.log(
-      `[Matcher] Built indexes: ${this.exactIndex.size} exact, ${this.normalizedIndex.size} normalized, ${this.graphqlIndex.size} GraphQL`,
+      `[Matcher] Built indexes: ${this.exactIndex.size} exact keys (${exactCount} exchanges), ` +
+        `${this.normalizedIndex.size} normalized, ${this.graphqlIndex.size} GraphQL keys (${graphqlCount} exchanges)`,
     );
   }
 
   /**
    * Find a matching exchange for a request.
+   * Uses sequence-based selection when multiple recordings match.
    */
   findMatch(request: MatchRequest): RecordedExchange | null {
-    // 1. Try exact match first
+    // 1. Try exact match first (with sequence tracking)
     const exactKey = createExactKey(request);
-    if (this.exactIndex.has(exactKey)) {
-      console.log(`[Matcher] Exact match: ${request.method} ${request.pathname}`);
-      return this.exactIndex.get(exactKey)!;
+    const exactMatches = this.exactIndex.get(exactKey);
+
+    if (exactMatches && exactMatches.length > 0) {
+      const consumedCount = this.exactConsumedCount.get(exactKey) || 0;
+      const index = Math.min(consumedCount, exactMatches.length - 1);
+      const exchange = exactMatches[index];
+
+      // Increment consumed count
+      this.exactConsumedCount.set(exactKey, consumedCount + 1);
+
+      if (exactMatches.length > 1) {
+        console.log(
+          `[Matcher] Exact match (sequence ${index + 1}/${exactMatches.length}): ${request.method} ${request.pathname}`,
+        );
+      } else {
+        console.log(`[Matcher] Exact match: ${request.method} ${request.pathname}`);
+      }
+      return exchange;
     }
 
     // 2. Try normalized path match
@@ -290,6 +347,7 @@ export class RecordingMatcher {
 
   /**
    * Find a matching exchange for a GraphQL request.
+   * Uses sequence-based selection when multiple recordings match.
    */
   findGraphQLMatch(body: GraphQLRequest): RecordedExchange | null {
     if (!body.operationName) {
@@ -300,16 +358,30 @@ export class RecordingMatcher {
     const variablesHash = hashObject(body.variables);
     const graphqlKey = `${body.operationName}:${variablesHash}`;
 
-    if (this.graphqlIndex.has(graphqlKey)) {
-      console.log(`[Matcher] GraphQL exact match: ${body.operationName}`);
-      return this.graphqlIndex.get(graphqlKey)!;
+    const exactMatches = this.graphqlIndex.get(graphqlKey);
+    if (exactMatches && exactMatches.length > 0) {
+      const consumedCount = this.graphqlConsumedCount.get(graphqlKey) || 0;
+      const index = Math.min(consumedCount, exactMatches.length - 1);
+      const exchange = exactMatches[index];
+
+      // Increment consumed count
+      this.graphqlConsumedCount.set(graphqlKey, consumedCount + 1);
+
+      if (exactMatches.length > 1) {
+        console.log(
+          `[Matcher] GraphQL exact match (sequence ${index + 1}/${exactMatches.length}): ${body.operationName}`,
+        );
+      } else {
+        console.log(`[Matcher] GraphQL exact match: ${body.operationName}`);
+      }
+      return exchange;
     }
 
     // Try matching without variables (less strict)
-    for (const [key, exchange] of this.graphqlIndex) {
-      if (key.startsWith(`${body.operationName}:`)) {
+    for (const [key, exchanges] of this.graphqlIndex) {
+      if (key.startsWith(`${body.operationName}:`) && exchanges.length > 0) {
         console.log(`[Matcher] GraphQL fuzzy match: ${body.operationName}`);
-        return exchange;
+        return exchanges[0];
       }
     }
 
@@ -400,11 +472,41 @@ export class RecordingMatcher {
   /**
    * Get statistics about the matcher.
    */
-  getStats(): { exactEntries: number; normalizedEntries: number; graphqlEntries: number } {
+  getStats(): {
+    exactKeys: number;
+    exactExchanges: number;
+    normalizedKeys: number;
+    graphqlKeys: number;
+    graphqlExchanges: number;
+    consumedExact: number;
+    consumedGraphql: number;
+  } {
+    let exactExchanges = 0;
+    for (const arr of this.exactIndex.values()) {
+      exactExchanges += arr.length;
+    }
+    let graphqlExchanges = 0;
+    for (const arr of this.graphqlIndex.values()) {
+      graphqlExchanges += arr.length;
+    }
+
+    let consumedExact = 0;
+    for (const count of this.exactConsumedCount.values()) {
+      consumedExact += count;
+    }
+    let consumedGraphql = 0;
+    for (const count of this.graphqlConsumedCount.values()) {
+      consumedGraphql += count;
+    }
+
     return {
-      exactEntries: this.exactIndex.size,
-      normalizedEntries: this.normalizedIndex.size,
-      graphqlEntries: this.graphqlIndex.size,
+      exactKeys: this.exactIndex.size,
+      exactExchanges,
+      normalizedKeys: this.normalizedIndex.size,
+      graphqlKeys: this.graphqlIndex.size,
+      graphqlExchanges,
+      consumedExact,
+      consumedGraphql,
     };
   }
 }

@@ -48,3 +48,26 @@ export interface GraphQLRequest {
   operationName?: string;
   variables?: Record<string, unknown>;
 }
+
+/**
+ * Mutation context for stateful response selection.
+ * Tracks which mutations preceded this exchange during recording.
+ */
+export interface MutationContext {
+  /** Sequence number within the test (0-indexed) */
+  sequenceNumber: number;
+  /** Normalized paths of mutations that occurred before this exchange */
+  precedingMutations: MutationRef[];
+}
+
+export interface MutationRef {
+  method: string;
+  pathPattern: string; // Normalized path
+}
+
+/**
+ * Extended exchange with mutation context for stateful matching.
+ */
+export interface StatefulExchange extends RecordedExchange {
+  mutationContext?: MutationContext;
+}
