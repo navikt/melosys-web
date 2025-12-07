@@ -718,12 +718,10 @@ The issue was that CI environments are slower than local development machines, c
 
 **Worker Configuration:**
 
-| Environment | Workers |
-|-------------|---------|
-| Local | 4 |
-| CI | 2 |
-
-Note: CI runs on `ubuntu-latest-8-cores` but 4 workers caused browser timeouts due to resource contention.
+| Environment | Workers | Runner |
+|-------------|---------|--------|
+| Local | 4 | - |
+| CI | 4 | `ubuntu-latest-8-cores` |
 
 **Timeout Configuration:**
 
@@ -758,7 +756,7 @@ The mock server supports parallel test execution via per-worker sequence trackin
 ```
 
 **Benefits:**
-- Faster test execution (4x local, 2x CI)
+- Faster test execution (4x speedup with 4 parallel workers)
 - Complete isolation between workers
 - No race conditions on sequence tracking
 

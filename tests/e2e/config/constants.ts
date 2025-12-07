@@ -51,8 +51,8 @@ export const COMMANDS = {
 export const CI_CONFIG = {
   /** Timeout multiplier for CI environments (slower than local) */
   TIMEOUT_MULTIPLIER: 3,
-  /** Number of parallel workers in CI (reduced due to browser resource contention) */
-  WORKERS: 2,
+  /** Number of parallel workers in CI (using ubuntu-latest-8-cores runner) */
+  WORKERS: 4,
 } as const;
 
 /** Local development configuration */
