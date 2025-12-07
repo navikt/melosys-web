@@ -324,8 +324,13 @@ test("Test that requires mutable state", async ({ page }) => {
 
 | Test File | Test Name | Reason |
 |-----------|-----------|--------|
-| `utenfor-avtaleland-behandlingslogikk.spec.ts` | AC2: Utenfor avtaleland med åpen årsavregning | Incomplete recording - missing POST to create behandling (last request timing issue). |
 | `utenfor-avtaleland-behandlingslogikk.spec.ts` | AC3: Utenfor avtaleland med avsluttet behandling | Write-then-read pattern - closes behandling then verifies updated sak state. |
+
+### Previously Skipped Tests (Now Fixed)
+
+| Test File | Test Name | Fix Applied |
+|-----------|-----------|-------------|
+| `utenfor-avtaleland-behandlingslogikk.spec.ts` | AC2: Utenfor avtaleland med åpen årsavregning | Added missing `behandlingsårsak` selection and `waitForURL` to ensure POST is captured. |
 
 ### Future Solutions
 
@@ -495,14 +500,14 @@ test.skip(getTestMode() === "playback", "Recording incomplete - missing behandli
 
 ---
 
-## Current Status (as of 2025-12-06)
+## Current Status (as of 2025-12-07)
 
 | Mode | Passed | Failed | Skipped | Notes |
 |------|--------|--------|---------|-------|
 | **Record (live API)** | 51 | 12 | 0 | 12 are pre-existing test issues |
-| **Playback (mock)** | 50 | 12 | 2 | ✅ Same 12 failures + 2 skipped (AC2, AC3 write-then-read) |
+| **Playback (mock)** | 51 | 12 | 1 | ✅ Same 12 failures + 1 skipped (AC3 write-then-read) |
 
-**Playback mode is now working correctly!** All playback-specific failures have been fixed.
+**Playback mode is now working correctly!** AC2 was fixed by adding missing `behandlingsårsak` selection and proper `waitForURL` to ensure the behandling creation POST is captured.
 
 ### Pre-existing Test Failures (12 tests)
 
@@ -622,7 +627,7 @@ When API contracts change:
 - [x] ~~Add CI/CD integration with GitHub Actions~~ - Workflow created and working
 - [x] ~~Fix CI playback failures~~ - Fixed via CI_TIMEOUT_MULTIPLIER (3x timeouts + 2 workers)
 - [ ] Docker compose setup for CI environment
-- [x] ~~Test playback mode end-to-end~~ - Working locally (52/64 tests pass)
-- [x] ~~Investigate remaining playback-specific failures~~ - Fixed via path matching improvement
+- [x] ~~Test playback mode end-to-end~~ - Working locally (51/64 tests pass, 1 skipped, 12 pre-existing failures)
+- [x] ~~Investigate remaining playback-specific failures~~ - Fixed via path matching improvement + AC2 fix
 - [ ] Refactor tests to use unique test data per file (enable full parallelization)
 - [ ] Fix pre-existing 12 test failures (application/test issues)

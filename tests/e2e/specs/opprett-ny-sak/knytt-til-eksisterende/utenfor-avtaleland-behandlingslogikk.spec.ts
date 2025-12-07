@@ -56,10 +56,6 @@ test.describe("'Utenfor avtaleland' behandlingslogikk", () => {
   });
 
   test("AC2: Utenfor avtaleland med åpen årsavregning - finner sak", async ({ page, apiRecorder }, testInfo) => {
-    // Skip in playback mode - recording is incomplete (missing POST to create behandling)
-    // Needs re-recording with proper wait for behandling creation
-    test.skip(getTestMode() === "playback", "Recording incomplete - missing behandling creation POST");
-
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout siden vi oppretter sak + årsavregning
 
     // Bruk prepopulert FTRL-sak med UNDER_BEHANDLING status
@@ -77,9 +73,19 @@ test.describe("'Utenfor avtaleland' behandlingslogikk", () => {
     await eksisterendeSak.click();
 
     await opprettNySakPage.velgBehandlingstypeRadio("Årsavregning");
-    await opprettNySakPage.klikkOpprettNyBehandling();
 
-    await page.waitForLoadState("domcontentloaded");
+    // For Årsavregning må vi velge en behandlingsårsak før vi kan opprette behandlingen
+    await opprettNySakPage.velgBehandlingsaarsak("Søknad");
+
+    // Click and wait for navigation to complete (behandling creation triggers navigation to frontpage)
+    // This ensures the POST is fully completed and captured in recordings
+    await Promise.all([
+      page.waitForURL(/\/melosys\/$/, { timeout: 15000 }),
+      opprettNySakPage.klikkOpprettNyBehandling(),
+    ]);
+
+    // Allow the POST response to be fully captured by the recorder
+    await page.waitForLoadState("networkidle");
 
     await hovedsidePage.goto();
     await hovedsidePage.klikkOpprettNySakKnapp();
