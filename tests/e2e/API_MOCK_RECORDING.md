@@ -605,25 +605,35 @@ test.skip("test name", async ({ page }) => {
 
 ---
 
-## Current Status (as of 2025-12-07)
+## Current Status (as of 2025-12-08)
 
 | Mode | Passed | Failed | Skipped | Notes |
 |------|--------|--------|---------|-------|
-| **Record (live API)** | 52 | 10 | 1 | 10 failing (årsavregning), 1 skipped |
-| **Playback (mock)** | 52 | 10 | 1 | ✅ All mock-compatible tests pass! |
+| **Record (live API)** | 61 | 1 | 2 | 1 testdata issue, 2 skipped |
+| **Playback (mock)** | 61 | 0 | 4 | ✅ All mock-compatible tests pass! |
 
 **Playback mode is fully functional!**
+- All årsavregning tests now pass (fixed in melosys-api)
 - AC2 was fixed by adding missing `behandlingsårsak` selection and proper `waitForURL`
 - AC3 now works via sequence-based matching (write-then-read pattern supported)
 - **eu-eos-trygdeavgift** now works via global sequence tracking for all matching strategies
 
-### Pre-existing Test Failures (10 tests)
+### Tests Skipped in Playback Mode (4 tests)
 
-These tests fail in **both** record and playback modes - they are test/application issues, not mock server issues:
+These tests are skipped in playback mode due to state/sequence issues that are difficult to reproduce with recorded data:
 
-1. `aarsavregning-delt-grunnlag.spec.ts` (10 tests) - All "delt grunnlag" årsavregning tests
+| Test File | Test Name | Reason |
+|-----------|-----------|--------|
+| `eu-eøs/navigasjon.spec.ts` | EU/EØS Ikke yrkesaktiv - Navigasjon gjennom steg med minimum input | Form state mismatch - button enabled state differs from recording. The test expects "Bekreft og fortsett" to be disabled initially, but mock returns pre-filled form data. |
+| `utenfor-avtaleland-behandlingslogikk.spec.ts` | Utenfor avtaleland med avsluttet behandling - alle behandlingstyper tilgjengelige | Write-then-read pattern - test closes behandling then verifies behandlingstyper, but mock returns pre-recorded types that don't reflect the closed state. |
+| `regresjon-state-ved-saksbytting.spec.ts` | Regresjon: Panel synlig etter feilmelding på annen sak | Testdata state issue - requires specific sak configurations that aren't available in the test metadata. |
+| `ui-grunnleggende.spec.ts` | (skipped by default) | Intentionally skipped - placeholder test. |
 
-**Note:** `send-brev-validering.spec.ts` årsavregning brevmal test is also skipped due to pre-existing application issue.
+### Pre-existing Test Failures (1 test in record mode)
+
+| Test File | Test Name | Reason |
+|-----------|-----------|--------|
+| `regresjon-state-ved-saksbytting.spec.ts` | Regresjon: Panel synlig etter feilmelding på annen sak | Testdata issue - can't find saker with the required state for this regression test. |
 
 ---
 

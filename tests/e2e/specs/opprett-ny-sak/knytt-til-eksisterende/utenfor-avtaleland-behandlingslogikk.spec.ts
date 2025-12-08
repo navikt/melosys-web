@@ -1,4 +1,5 @@
 import { expect, test } from "../../../recording/fixtures";
+import { getTestMode } from "../../../config/mode";
 import { runAxeAnalyze } from "../../../utils/axeUtils";
 import { HovedsidePage, USER_ID_VALID } from "../../../pages/hovedside.page";
 import { OpprettNySakPage } from "../../../pages/opprett-ny-sak/opprett-ny-sak.page";
@@ -108,6 +109,14 @@ test.describe("'Utenfor avtaleland' behandlingslogikk", () => {
     page,
     apiRecorder,
   }, testInfo) => {
+    // Skip in playback mode: This test closes a behandling then verifies behandlingstyper.
+    // The mock server returns pre-recorded behandlingstyper that don't reflect the closed state,
+    // because the recordings were captured with a different behandling state.
+    // The API returns only "Årsavregning" instead of all 4 types because it still sees the behandling as open.
+    test.skip(
+      getTestMode() === "playback",
+      "Write-then-read pattern: behandlingstyper don't update after closing behandling in playback",
+    );
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout siden vi oppretter og avslutter sak
 
     const saksnummer = "MEL-1020";
