@@ -91,6 +91,7 @@ test.describe("Validering av årsavregning brevmaler", () => {
   // TODO: Create JIRA ticket and fix the underlying issue
   test("Korrekt validering for brevmal 'Innhenting av inntektsopplysninger for årsavregning'", async ({
     page,
+    apiRecorder,
   }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout siden vi oppretter sak med årsavregning
     const saksnummer = "MEL-1023";
