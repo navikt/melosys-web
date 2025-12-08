@@ -43,16 +43,16 @@ async function clearMockData(): Promise<void> {
 }
 
 /**
- * Sletter testdata fra Oracle-databasen (MEL-1001 til MEL-1071)
+ * Renser hele Oracle-databasen (truncate alle data-tabeller, behold lookup-tabeller)
  */
-async function clearOracleTestData(): Promise<void> {
+async function clearOracleDatabase(): Promise<void> {
   try {
     await withDatabase(async (db) => {
-      await db.cleanTestData();
+      await db.cleanDatabase();
     });
   } catch (error) {
     // eslint-disable-next-line no-console
-    console.warn(`  Could not clear Oracle test data (ignorerer): ${error}`);
+    console.warn(`  Could not clear Oracle database (ignorerer): ${error}`);
   }
 }
 
@@ -91,9 +91,9 @@ async function globalSetup() {
     console.log("Step 1: Clearing mock data...");
     await clearMockData();
 
-    // 2. Slett Oracle testdata (e2e test-saker)
-    console.log("\nStep 2: Clearing Oracle test data...");
-    await clearOracleTestData();
+    // 2. Rens Oracle database (truncate alle data-tabeller)
+    console.log("\nStep 2: Clearing Oracle database...");
+    await clearOracleDatabase();
 
     // 3. Initialiser testdata på nytt via API (kan hoppes over med SKIP_TESTDATA_RESET=true)
     if (process.env.SKIP_TESTDATA_RESET === "true") {
