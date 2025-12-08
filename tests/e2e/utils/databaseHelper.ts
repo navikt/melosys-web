@@ -188,6 +188,7 @@ export class DatabaseHelper {
 
     // eslint-disable-next-line no-console
     console.log(`  Cleaned ${tablesCleared} tables, ${totalRowsDeleted} rows deleted`);
+
     return { tablesCleared, rowsDeleted: totalRowsDeleted };
   }
 
