@@ -4,6 +4,8 @@ import { harUnntaksregistreringFlyt, skalViseIngenFlyt } from "../../../url";
 import { ContentProps, LinkGroup } from "./types";
 import LinkgroupsBuilder from "./linkgroupsBuilder";
 import LinksBuilder from "./linksBuilder";
+import { MELOSYS_EØS_FAKTURERING_AV_TRYGDEAVGIFT } from "../,,/../../../featuretoggle/toggleNavn";
+import { useFeatureToggle } from "../../../featuretoggle";
 
 const {
   UTSENDT_ARBEIDSTAKER,
@@ -112,6 +114,7 @@ class LinkGroupsFactory {
       case ARBEID_TJENESTEPERSON_ELLER_FLY:
       case ARBEID_NORGE_BOSATT_ANNET_LAND: {
         const fraBruker = new LinksBuilder(contentProps).addArbeidsgiverEllerVirksomhet();
+        const fraRegister = new LinksBuilder(contentProps).addMedlemskap().addArbeidsforholdOgInntekt();
         if (mottatteOpplysningerType === SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS) fraBruker.addLonnOgGodtgjorelser();
         fraBruker.addFullmektig();
         if (mottatteOpplysningerType === SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS) fraBruker.addUtenlandsoppdraget();
@@ -121,10 +124,16 @@ class LinkGroupsFactory {
           fraBruker.addOmVirksomhetenINorge();
           fraBruker.addOvrigOmArbeidstaker();
         }
+        if (
+          behandlingstema === ARBEID_TJENESTEPERSON_ELLER_FLY &&
+          useFeatureToggle(MELOSYS_EØS_FAKTURERING_AV_TRYGDEAVGIFT)
+        ) {
+          fraRegister.addFaktureringskomponenten();
+        }
 
         return new LinkgroupsBuilder()
           .addFraRegisterOgBruker(new LinksBuilder(contentProps).addPerson().addFamilieForhold().build())
-          .addFraRegister(new LinksBuilder(contentProps).addMedlemskap().addArbeidsforholdOgInntekt().build())
+          .addFraRegister(fraRegister.build())
           .addFraBruker(fraBruker.build())
           .build();
       }
