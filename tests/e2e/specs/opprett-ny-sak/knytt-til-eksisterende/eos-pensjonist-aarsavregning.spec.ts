@@ -7,7 +7,6 @@ import { hentPrepopulertSakUrl } from "../../../utils/testdataUtils";
 let opprettNySakPage: OpprettNySakPage;
 let hovedsidePage: HovedsidePage;
 
-// MELOSYS-7603
 test.describe("EØS pensjonist med trygdeavgift - årsavregning", () => {
   test.beforeEach(async ({ page, apiRecorder }) => {
     hovedsidePage = new HovedsidePage(page);
@@ -16,7 +15,7 @@ test.describe("EØS pensjonist med trygdeavgift - årsavregning", () => {
 
   test("Opprett EØS pensjonist-sak med trygdeavgift for testdata", async ({ page, apiRecorder }, testInfo) => {
     // Denne testen oppretter testdata som brukes av de andre testene
-    const url = hentPrepopulertSakUrl("MEL-1055");
+    const url = hentPrepopulertSakUrl("MEL-1056");
 
     expect(url, "URL skal være opprettet").toBeTruthy();
     expect(url).toContain("/melosys/EU_EOS/");
@@ -43,7 +42,6 @@ test.describe("EØS pensjonist med trygdeavgift - årsavregning", () => {
     await valgtSak.click();
 
     // Verifiser at årsavregning er tilgjengelig (unntak fra vanlig EØS-regel)
-    // Dette er hovedpoenget med MELOSYS-7603
     await opprettNySakPage.verifiserTilgjengeligeBehandlingstyper(valgtSak, ["Årsavregning"]);
 
     // Verifiser at ingen feilmelding vises

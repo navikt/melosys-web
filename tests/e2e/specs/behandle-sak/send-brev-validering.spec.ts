@@ -1,14 +1,15 @@
-import { Page, test } from "../../recording/fixtures";
+import { test } from "../../recording/fixtures";
 import { SendBrevPage } from "../../pages/behandling/send-brev.page";
 import { assertErrors, TIMEOUT_FOR_COMPLEX_TESTS } from "../../utils/testUtils";
 import { runAxeAnalyze } from "../../utils/axeUtils";
-import { hentPrepopulertSakUrl } from "../../utils/testdataUtils";
+import { hentPrepopulertSakUrl, PrepopulertSaksnummer } from "../../utils/testdataUtils";
+import { Page } from "@playwright/test";
 
 let sendBrevPage: SendBrevPage;
 
 // Gjenbrukbar setup-funksjon som oppretter egen testdata
-async function setupSendBrevTest(page: Page, saksnummer: string = "MEL-1003") {
-  sendBrevPage = new SendBrevPage(page);
+async function setupSendBrevTest(page: Page, saksnummer: PrepopulertSaksnummer) {
+  sendBrevPage = new SendBrevPage(page, saksnummer);
 
   // Hent URL til prepopulert Avtaleland-sak og naviger direkte dit
   const url = hentPrepopulertSakUrl(saksnummer);
@@ -88,14 +89,15 @@ test.describe("Validering av årsavregning brevmaler", () => {
   // Skip: Pre-existing test failure - årsavregning brevmal validation issue
   // Fails in both record and playback modes (not mock server related)
   // TODO: Create JIRA ticket and fix the underlying issue
-  test.skip("Korrekt validering for brevmal 'Innhenting av inntektsopplysninger for årsavregning'", async ({
+  test("Korrekt validering for brevmal 'Innhenting av inntektsopplysninger for årsavregning'", async ({
     page,
   }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout siden vi oppretter sak med årsavregning
-    sendBrevPage = new SendBrevPage(page);
+    const saksnummer = "MEL-1023";
+    sendBrevPage = new SendBrevPage(page, saksnummer);
 
     // Hent URL til prepopulert FTRL-sak med årsavregning og naviger direkte dit
-    const url = hentPrepopulertSakUrl("MEL-1023");
+    const url = hentPrepopulertSakUrl(saksnummer);
     await sendBrevPage.goto(url);
 
     await page.waitForLoadState("domcontentloaded");

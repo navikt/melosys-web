@@ -50,7 +50,7 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
 
   test("EØS pensjonist med trygdeavgift - årsavregning tilgjengelig", async ({ page, apiRecorder }, testInfo) => {
     // Test unntaket for EØS pensjonister med trygdeavgift som skal kunne opprette årsavregning
-    // selv om de har aktive behandlinger (MELOSYS-7603)
+    // selv om de har aktive behandlinger
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgKnyttTilEksisterendeSak();
 

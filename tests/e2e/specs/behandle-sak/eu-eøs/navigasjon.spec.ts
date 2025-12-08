@@ -1,52 +1,109 @@
 import { test } from "../../../recording/fixtures";
 import { TIMEOUT_FOR_COMPLEX_TESTS } from "../../../utils/testUtils";
-import { BehandlingPage } from "../../../pages/behandling/behandling.page";
 import { hentPrepopulertSakUrl } from "../../../utils/testdataUtils";
 import { runAxeAnalyze } from "../../../utils/axeUtils";
+import { StegvelgerPage } from "../../../pages/behandling/stegvelger.page";
 
 /**
- * E2E-tester for Stegvelger (Hovedstegvelger) i EU/EØS saksbehandling
+ * E2E-tester for Stegvelger i EU/EØS IKKE_YRKESAKTIV saksbehandling
  *
- * Disse testene verifiserer stegnavigasjon for EU/EØS-saker som bruker
- * hovedstegvelgeren (src/felleskomponenter/ftrl/Stegvelger.jsx).
+ * For IKKE_YRKESAKTIV vises et skjema i Inngang-steget med:
+ * - Fra og med (fom) - påkrevd
+ * - Til og med (tom) - valgfri
+ * - Land - påkrevd
  *
- * Stegvelgeren brukes kun i:
- * - EU/EØS saksbehandling (saksopplysninger.jsx)
- * - EU/EØS vurder utpeking (vurderutpeking.jsx)
+ * "Bekreft og fortsett" er deaktivert inntil skjemaet er gyldig utfylt.
  */
 test.describe("EU/EØS Stegvelger - Navigasjon", () => {
-  test("EU/EØS-behandling åpnes - viser stegvelger", async ({ page, apiRecorder }, testInfo) => {
+  test("EU/EØS Ikke yrkesaktiv - Navigasjon gjennom steg med minimum input", async ({
+    page,
+    apiRecorder,
+  }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
+    const saksnummer = "MEL-1052";
+    const stegvelgerPage = new StegvelgerPage(page, saksnummer);
 
-    const behandlingPage = new BehandlingPage(page);
+    const url = hentPrepopulertSakUrl(saksnummer);
+    await stegvelgerPage.goto(url);
 
-    // Hent URL til prepopulert EU/EØS-sak (Ikke yrkesaktiv) og naviger direkte dit
-    const url = hentPrepopulertSakUrl("MEL-1051");
-    await behandlingPage.goto(url);
+    // === STEG 1: Inngang ===
+    await stegvelgerPage.verifiserSteg(/inngang|opplysninger/i);
+    await stegvelgerPage.verifiserAntallSteg(1);
+    await stegvelgerPage.verifiserBekreftKnappDeaktivert();
+
+    // Fyll ut minimum: fom-dato og land
+    await stegvelgerPage.fyllUtEosIkkeYrkesaktivInngang("01.01.2024", "Sverige");
+    await stegvelgerPage.verifiserBekreftKnappAktivert();
+    await stegvelgerPage.bekreftOgFortsett();
+
+    // === STEG 2: Neste steg ===
+    await stegvelgerPage.verifiserAntallSteg(2);
+    // Verifiser at vi har navigert videre (ikke lenger på Inngang)
+    await stegvelgerPage.verifiserSteg(new RegExp(`^(?!.*inngang).*$`, "i"));
 
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("Navigasjon mellom steg - frem og tilbake fungerer", async ({ page, apiRecorder }, testInfo) => {
+  test("EU/EØS Ikke yrkesaktiv - Navigasjon frem og tilbake", async ({ page, apiRecorder }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
+    const saksnummer = "MEL-1052";
+    const stegvelgerPage = new StegvelgerPage(page, saksnummer);
 
-    const behandlingPage = new BehandlingPage(page);
+    const url = hentPrepopulertSakUrl(saksnummer);
+    await stegvelgerPage.goto(url);
 
-    // Hent URL til prepopulert EU/EØS-sak (Ikke yrkesaktiv) og naviger direkte dit
-    const url = hentPrepopulertSakUrl("MEL-1052");
-    await behandlingPage.goto(url);
+    // Start på Inngang
+    await stegvelgerPage.verifiserSteg(/inngang|opplysninger/i);
+    await stegvelgerPage.verifiserAntallSteg(1);
+
+    // Fyll ut og gå videre
+    await stegvelgerPage.fyllUtEosIkkeYrkesaktivInngang("01.01.2024", "Sverige");
+    await stegvelgerPage.bekreftOgFortsett();
+
+    // Hent tittel på neste steg
+    const andreStegTittel = await stegvelgerPage.hentStegTittel();
+    await stegvelgerPage.verifiserAntallSteg(2);
+
+    // Gå tilbake til Inngang via Tilbake-knapp
+    await stegvelgerPage.gåTilbake();
+    await stegvelgerPage.verifiserSteg(/inngang|opplysninger/i);
+    await stegvelgerPage.verifiserAntallSteg(2); // Progressbar beholder 2 steg
+
+    // Gå frem igjen via Bekreft-knapp
+    await stegvelgerPage.bekreftOgFortsett();
+    await stegvelgerPage.verifiserSteg(new RegExp(andreStegTittel.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i"));
+    await stegvelgerPage.verifiserAntallSteg(2);
+
+    // Gå tilbake via klikk på steg 1 i progressbar
+    await stegvelgerPage.klikkPåSteg(1);
+    await stegvelgerPage.verifiserSteg(/inngang|opplysninger/i);
 
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("Progressbar - viser alle steg", async ({ page, apiRecorder }, testInfo) => {
+  test("EU/EØS Ikke yrkesaktiv - Bekreft-knapp forblir deaktivert ved ugyldig input", async ({
+    page,
+    apiRecorder,
+  }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
+    const saksnummer = "MEL-1053";
+    const stegvelgerPage = new StegvelgerPage(page, saksnummer);
 
-    const behandlingPage = new BehandlingPage(page);
+    const url = hentPrepopulertSakUrl(saksnummer);
+    await stegvelgerPage.goto(url);
 
-    // Hent URL til prepopulert EU/EØS-sak (Ikke yrkesaktiv) og naviger direkte dit
-    const url = hentPrepopulertSakUrl("MEL-1053");
-    await behandlingPage.goto(url);
+    await stegvelgerPage.verifiserSteg(/inngang|opplysninger/i);
+
+    // Knappen skal være deaktivert ved start
+    await stegvelgerPage.verifiserBekreftKnappDeaktivert();
+
+    // Fyll ut kun dato (uten land) - knappen bør fortsatt være deaktivert
+    const fomInput = page.getByLabel(/fra og med/i);
+    await fomInput.fill("01.01.2024");
+    await page.waitForTimeout(500);
+
+    // Knappen skal fortsatt være deaktivert siden land mangler
+    await stegvelgerPage.verifiserBekreftKnappDeaktivert();
 
     await runAxeAnalyze(page, testInfo.title);
   });

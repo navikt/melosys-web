@@ -8,7 +8,7 @@ import { runAxeAnalyze } from "../../../utils/axeUtils";
 /**
  * E2E-tester for Trygdeavgift-steget i EU/EØS saksbehandling
  *
- * MELOSYS-7661: Legge til steget "trygdeavgift"
+ * Legge til steget "trygdeavgift"
  *
  * Disse testene verifiserer:
  * - Trygdeavgift-steget vises i stegflyten
@@ -24,23 +24,24 @@ test.describe("EU/EØS Trygdeavgift", () => {
     // The mock server supports this via sequence-based matching - it returns responses
     // in the order they were recorded, so GET after POST returns the updated state.
 
-    const behandlingPage = new BehandlingPage(page);
-
+    const saksnummer = "MEL-1054";
+    const behandlingPage = new BehandlingPage(page, saksnummer);
     // Hent URL til prepopulert EØS pensjonist-sak med trygdeavgift og naviger direkte dit
-    const url = hentPrepopulertSakUrl("MEL-1054");
+    const url = hentPrepopulertSakUrl(saksnummer);
     await behandlingPage.goto(url, "Oppgi opplysninger fra attest / S1");
 
+    // Bruk inneværende år for å unngå at skatteforhold skjules pga "tidligere år"-logikk
+    const inneværendeÅr = new Date().getFullYear();
+
     // Steg 1: Inngang (Oppgi opplysninger fra attest / S1)
-    // Bruk inneværende år for å unngå "tidligere år"-meldingen som skjuler skatteforholdsperioder
-    const currentYear = new Date().getFullYear();
-    const inngangPage = new InngangPage(page);
-    await inngangPage.setFraOgMedDato(`01.01.${currentYear}`);
-    await inngangPage.setTilOgMedDato(`31.12.${currentYear}`);
+    const inngangPage = new InngangPage(page, saksnummer);
+    await inngangPage.setFraOgMedDato(`01.01.${inneværendeÅr}`);
+    await inngangPage.setTilOgMedDato(`31.12.${inneværendeÅr}`);
     await inngangPage.velgLand("SE");
 
     // Steg 2: Gå til Trygdeavgift og verifiser initiell tilstand
     await inngangPage.klikkBekreftOgFortsett();
-    const trygdeavgiftPage = new TrygdeavgiftPage(page);
+    const trygdeavgiftPage = new TrygdeavgiftPage(page, saksnummer);
     await trygdeavgiftPage.verifiserSteg("Trygdeavgift");
     await trygdeavgiftPage.verifiserSkattepliktigErIkkeValgt();
     await trygdeavgiftPage.verifiserInntektskilderSynlige(false);

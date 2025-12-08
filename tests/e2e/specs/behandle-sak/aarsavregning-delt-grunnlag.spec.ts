@@ -1,24 +1,25 @@
-import { test, Page, expect } from "../../recording/fixtures";
+import { test, expect } from "../../recording/fixtures";
 import { TIMEOUT_FOR_COMPLEX_TESTS } from "../../utils/testUtils";
 import { BehandlingPage } from "../../pages/behandling/behandling.page";
 import { AarsavregningPage } from "../../pages/behandling/aarsavregning.page";
 import { hentPrepopulertSakUrl, PrepopulertSaksnummer } from "../../utils/testdataUtils";
 import { runAxeAnalyze } from "../../utils/axeUtils";
+import { Page } from "@playwright/test";
 
 /**
- * MELOSYS-7612: Valideringsfeil ved delt grunnlag i årsavregning
+ * Valideringsfeil ved delt grunnlag i årsavregning
  *
  * Bug i validering og datovelger for medlemskapsperioder, skatteforholdsperioder
  * og inntektsperioder når man legger til trygdeavgift fra Avgiftssystemet (delt grunnlag).
  *
  * Testene verifiserer at:
- * - AC1: Medlemskapsperioder kan legges til uten valideringsfeil
- * - AC2: Skatteforholdsperioder kan legges til/utvides uten valideringsfeil
- * - AC3: Inntektsperioder kan legges til/utvides uten valideringsfeil
+ * - Medlemskapsperioder kan legges til uten valideringsfeil
+ * - Skatteforholdsperioder kan legges til/utvides uten valideringsfeil
+ * - Inntektsperioder kan legges til/utvides uten valideringsfeil
  */
 
 let aarsavregningPage: AarsavregningPage;
-let valgtTestÅr: string = "2020"; // Default år som sannsynligvis er ledig
+let valgtTestÅr: string;
 
 /**
  * Hjelpefunksjon for å lage dato med riktig år
@@ -31,8 +32,8 @@ function lagDato(dagMåned: string): string {
  * Gjenbrukbar setup-funksjon som oppretter testdata og navigerer til en årsavregning-behandling
  */
 async function setupAarsavregningTest(page: Page, saksnummer: PrepopulertSaksnummer) {
-  const behandlingPage = new BehandlingPage(page);
-  aarsavregningPage = new AarsavregningPage(page);
+  const behandlingPage = new BehandlingPage(page, saksnummer);
+  aarsavregningPage = new AarsavregningPage(page, saksnummer);
 
   // Hent URL til prepopulert FTRL-sak med årsavregning og naviger direkte dit
   const url = hentPrepopulertSakUrl(saksnummer);
@@ -48,35 +49,14 @@ async function setupAarsavregningTest(page: Page, saksnummer: PrepopulertSaksnum
 
   await aarsavregningPage.verifiserAarsavregningside();
 
-  // Prøv år 2022, 2021, 2020 inntil vi finner ett uten aktiv årsavregning
-  const muligeÅr = ["2022", "2021", "2020"];
-  let årValgt = false;
-
-  for (const år of muligeÅr) {
-    await aarsavregningPage.velgÅr(år);
-
-    // Sjekk om det er feilmelding om aktiv årsavregning
-    const aktivFeilmelding = page.locator('[class*="error"], [class*="feil"]').filter({
-      hasText: /har allerede en aktiv årsavregning/i,
-    });
-
-    if (!(await aktivFeilmelding.isVisible().catch(() => false))) {
-      // Ingen feilmelding - dette året er tilgjengelig
-      valgtTestÅr = år; // Lagre det valgte året for bruk i testene
-      årValgt = true;
-      break;
-    }
-  }
-
-  expect(årValgt, "Kunne ikke finne et tilgjengelig år for årsavregning").toBe(true);
+  // Hent første tilgjengelige år fra dropdown-en og velg det
+  valgtTestÅr = await aarsavregningPage.hentFørsteTilgjengeligeÅr();
+  await aarsavregningPage.velgÅr(valgtTestÅr);
 }
 
 // Hver test oppretter sine egne testdata via setupAarsavregningTest
-// Skip all tests - pre-existing application issues with delt grunnlag functionality
-// These tests fail in both record and playback modes (not mock server related)
-// TODO: Create JIRA ticket and fix the underlying issues
-test.describe.skip("Årsavregning delt grunnlag - Alle tester", () => {
-  test.describe("AC1 - Medlemskapsperiode validering", () => {
+test.describe("Årsavregning delt grunnlag - Alle tester", () => {
+  test.describe("Medlemskapsperiode validering", () => {
     test("Kan legge til ny medlemskapsperiode etter å ha valgt delt grunnlag", async ({
       page,
       apiRecorder,
@@ -182,7 +162,7 @@ test.describe.skip("Årsavregning delt grunnlag - Alle tester", () => {
     });
   });
 
-  test.describe("AC2 - Skatteforholdsperiode validering", () => {
+  test.describe("Skatteforholdsperiode validering", () => {
     test("Kan legge til ny skatteforholdsperiode etter å ha valgt delt grunnlag", async ({
       page,
       apiRecorder,
@@ -252,7 +232,7 @@ test.describe.skip("Årsavregning delt grunnlag - Alle tester", () => {
     });
   });
 
-  test.describe("AC2.5 - Legg til periode med pliktig bestemmelse (bugfix)", () => {
+  test.describe("Legg til periode med pliktig bestemmelse (bugfix)", () => {
     test("skal vise 'Legg til periode'-knappen for delt grunnlag selv med pliktig bestemmelse", async ({
       page,
     }, testInfo) => {
@@ -316,7 +296,7 @@ test.describe.skip("Årsavregning delt grunnlag - Alle tester", () => {
     });
   });
 
-  test.describe("AC3 - Inntektsperiode validering", () => {
+  test.describe("Inntektsperiode validering", () => {
     test("Kan legge til ny inntektsperiode etter å ha valgt delt grunnlag", async ({ page, apiRecorder }, testInfo) => {
       test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
       await setupAarsavregningTest(page, "MEL-1045");

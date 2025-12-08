@@ -43,15 +43,6 @@ export function getSaksnummerFraLocator(sak: Locator): string {
 }
 
 /**
- * Hent saksnummer fra URL
- * @returns Saksnummer (f.eks. "MEL-123") eller "ukjent"
- */
-export function getSaksnummerFraUrl(page: Page): string {
-  const match = page.url().match(/MEL-\d+/);
-  return match ? match[0] : "ukjent";
-}
-
-/**
  * Sanitizes a filename by replacing characters that are invalid in file paths
  * with safe alternatives.
  *
