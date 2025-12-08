@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "recordedAt": "2025-12-08T12:23:10.005Z",
+  "recordedAt": "2025-12-08T13:06:35.073Z",
   "testFile": "/Users/rune/source/nav/melosys-web/tests/e2e/specs/behandle-sak/eu-eøs/navigasjon.spec.ts",
   "testName": "EU/EØS Ikke yrkesaktiv - Bekreft-knapp forblir deaktivert ved ugyldig input",
   "exchanges": [
@@ -39,7 +39,7 @@
           "melosys.arsavregning.uten.flyt": false
         }
       },
-      "duration": 12,
+      "duration": 5,
       "dynamicFields": []
     },
     {
@@ -78,20 +78,20 @@
             "term": "Saken er opprettet"
           },
           "betalingsvalg": null,
-          "registrertDato": "2025-12-08T12:22:17.448304Z",
-          "endretDato": "2025-12-08T12:22:17.458375Z",
+          "registrertDato": "2025-12-08T13:06:25.140789Z",
+          "endretDato": "2025-12-08T13:06:25.148182Z",
           "hovedpartRolle": "BRUKER"
         }
       },
-      "duration": 19,
+      "duration": 11,
       "dynamicFields": ["registrertDato", "endretDato"]
     },
     {
       "request": {
-        "id": "c9821ad26e8d",
+        "id": "b561bd9e2121",
         "method": "GET",
-        "url": "http://localhost:3333/api/behandlinger/53",
-        "pathname": "/api/behandlinger/53",
+        "url": "http://localhost:3333/api/behandlinger/274",
+        "pathname": "/api/behandlinger/274",
         "normalizedPath": "/api/behandlinger/:behandlingId",
         "query": {},
         "headers": {
@@ -107,7 +107,7 @@
           "content-type": "application/json"
         },
         "body": {
-          "behandlingID": 53,
+          "behandlingID": 274,
           "oppsummering": {
             "behandlingsstatus": {
               "kode": "UNDER_BEHANDLING",
@@ -121,8 +121,8 @@
               "kode": "IKKE_YRKESAKTIV",
               "term": "Ikke yrkesaktiv"
             },
-            "registrertDato": "2025-12-08T12:22:17.450671Z",
-            "endretDato": "2025-12-08T12:22:17.477961Z",
+            "registrertDato": "2025-12-08T13:06:25.142422Z",
+            "endretDato": "2025-12-08T13:06:25.163933Z",
             "endretAvNavn": "Lokal Testbruker",
             "sisteOpplysningerHentetDato": null,
             "svarFrist": null,
@@ -157,7 +157,7 @@
           "redigerbart": true
         }
       },
-      "duration": 60,
+      "duration": 66,
       "dynamicFields": [
         "oppsummering.registrertDato",
         "oppsummering.endretDato",
@@ -167,10 +167,10 @@
     },
     {
       "request": {
-        "id": "dc62edff7efd",
+        "id": "22e2df30a291",
         "method": "GET",
-        "url": "http://localhost:3333/api/behandlinger/53/resultat",
-        "pathname": "/api/behandlinger/53/resultat",
+        "url": "http://localhost:3333/api/behandlinger/274/resultat",
+        "pathname": "/api/behandlinger/274/resultat",
         "normalizedPath": "/api/behandlinger/:behandlingId/resultat",
         "query": {},
         "headers": {
@@ -200,15 +200,15 @@
           "aarsavregningID": null
         }
       },
-      "duration": 29,
+      "duration": 22,
       "dynamicFields": []
     },
     {
       "request": {
-        "id": "7b83efba0b39",
+        "id": "af0043b10ea3",
         "method": "GET",
-        "url": "http://localhost:3333/api/mottatteopplysninger/53",
-        "pathname": "/api/mottatteopplysninger/53",
+        "url": "http://localhost:3333/api/mottatteopplysninger/274",
+        "pathname": "/api/mottatteopplysninger/274",
         "normalizedPath": "/api/mottatteopplysninger/:id",
         "query": {},
         "headers": {
@@ -291,7 +291,7 @@
           "mottaksdato": "2025-12-08"
         }
       },
-      "duration": 23,
+      "duration": 20,
       "dynamicFields": [
         "data.periode.fom",
         "data.periode.tom",
@@ -322,15 +322,15 @@
         },
         "body": []
       },
-      "duration": 17,
+      "duration": 10,
       "dynamicFields": []
     },
     {
       "request": {
-        "id": "c36b3540d852",
+        "id": "d93a8b9bbfe4",
         "method": "GET",
-        "url": "http://localhost:3333/api/lovvalgsperioder/53",
-        "pathname": "/api/lovvalgsperioder/53",
+        "url": "http://localhost:3333/api/lovvalgsperioder/274",
+        "pathname": "/api/lovvalgsperioder/274",
         "normalizedPath": "/api/lovvalgsperioder/:id",
         "query": {},
         "headers": {
@@ -347,17 +347,19 @@
         },
         "body": []
       },
-      "duration": 17,
+      "duration": 11,
       "dynamicFields": []
     },
     {
       "request": {
-        "id": "780beeaf3b04",
+        "id": "38852a33c5f8",
         "method": "GET",
-        "url": "http://localhost:3333/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/?saksnummer=MEL-1053",
-        "pathname": "/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/",
-        "normalizedPath": "/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/",
+        "url": "http://localhost:3333/api/saksbehandling/sakstemaer/hent-lovlige-kombinasjoner/?hovedpart=BRUKER&sakstype=EU_EOS&saksnummer=MEL-1053",
+        "pathname": "/api/saksbehandling/sakstemaer/hent-lovlige-kombinasjoner/",
+        "normalizedPath": "/api/saksbehandling/sakstemaer/hent-lovlige-kombinasjoner/",
         "query": {
+          "hovedpart": "BRUKER",
+          "sakstype": "EU_EOS",
           "saksnummer": "MEL-1053"
         },
         "headers": {
@@ -374,20 +376,20 @@
         },
         "body": [
           {
-            "kode": "EU_EOS",
-            "term": "EU/EØS-land"
+            "kode": "MEDLEMSKAP_LOVVALG",
+            "term": "Medlemskap og lovvalg"
           },
           {
-            "kode": "TRYGDEAVTALE",
-            "term": "Avtaleland"
+            "kode": "UNNTAK",
+            "term": "Unntak"
           },
           {
-            "kode": "FTRL",
-            "term": "Utenfor avtaleland"
+            "kode": "TRYGDEAVGIFT",
+            "term": "Trygdeavgift"
           }
         ]
       },
-      "duration": 17,
+      "duration": 14,
       "dynamicFields": []
     },
     {
@@ -434,63 +436,21 @@
           }
         ]
       },
-      "duration": 17,
+      "duration": 13,
       "dynamicFields": []
     },
     {
       "request": {
-        "id": "38852a33c5f8",
+        "id": "c340776ba7c7",
         "method": "GET",
-        "url": "http://localhost:3333/api/saksbehandling/sakstemaer/hent-lovlige-kombinasjoner/?hovedpart=BRUKER&sakstype=EU_EOS&saksnummer=MEL-1053",
-        "pathname": "/api/saksbehandling/sakstemaer/hent-lovlige-kombinasjoner/",
-        "normalizedPath": "/api/saksbehandling/sakstemaer/hent-lovlige-kombinasjoner/",
-        "query": {
-          "hovedpart": "BRUKER",
-          "sakstype": "EU_EOS",
-          "saksnummer": "MEL-1053"
-        },
-        "headers": {
-          "accept": "application/json",
-          "authorization": "[REDACTED]"
-        },
-        "body": null
-      },
-      "response": {
-        "status": 200,
-        "statusText": "OK",
-        "headers": {
-          "content-type": "application/json"
-        },
-        "body": [
-          {
-            "kode": "MEDLEMSKAP_LOVVALG",
-            "term": "Medlemskap og lovvalg"
-          },
-          {
-            "kode": "UNNTAK",
-            "term": "Unntak"
-          },
-          {
-            "kode": "TRYGDEAVGIFT",
-            "term": "Trygdeavgift"
-          }
-        ]
-      },
-      "duration": 19,
-      "dynamicFields": []
-    },
-    {
-      "request": {
-        "id": "50ac918a7f94",
-        "method": "GET",
-        "url": "http://localhost:3333/api/saksbehandling/behandlingstemaer/hent-lovlige-kombinasjoner/?hovedpart=BRUKER&sakstype=EU_EOS&sakstema=MEDLEMSKAP_LOVVALG&aktivBehandlingID=53",
+        "url": "http://localhost:3333/api/saksbehandling/behandlingstemaer/hent-lovlige-kombinasjoner/?hovedpart=BRUKER&sakstype=EU_EOS&sakstema=MEDLEMSKAP_LOVVALG&aktivBehandlingID=274",
         "pathname": "/api/saksbehandling/behandlingstemaer/hent-lovlige-kombinasjoner/",
         "normalizedPath": "/api/saksbehandling/behandlingstemaer/hent-lovlige-kombinasjoner/",
         "query": {
           "hovedpart": "BRUKER",
           "sakstype": "EU_EOS",
           "sakstema": "MEDLEMSKAP_LOVVALG",
-          "aktivBehandlingID": "53"
+          "aktivBehandlingID": "274"
         },
         "headers": {
           "accept": "application/json",
@@ -543,15 +503,55 @@
           }
         ]
       },
-      "duration": 25,
+      "duration": 15,
       "dynamicFields": []
     },
     {
       "request": {
-        "id": "2c6b1e0e101a",
+        "id": "780beeaf3b04",
         "method": "GET",
-        "url": "http://localhost:3333/api/behandlinger/53/aarsak/mottaksdato",
-        "pathname": "/api/behandlinger/53/aarsak/mottaksdato",
+        "url": "http://localhost:3333/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/?saksnummer=MEL-1053",
+        "pathname": "/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/",
+        "normalizedPath": "/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/",
+        "query": {
+          "saksnummer": "MEL-1053"
+        },
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": [
+          {
+            "kode": "EU_EOS",
+            "term": "EU/EØS-land"
+          },
+          {
+            "kode": "TRYGDEAVTALE",
+            "term": "Avtaleland"
+          },
+          {
+            "kode": "FTRL",
+            "term": "Utenfor avtaleland"
+          }
+        ]
+      },
+      "duration": 17,
+      "dynamicFields": []
+    },
+    {
+      "request": {
+        "id": "ca8c3b2a4231",
+        "method": "GET",
+        "url": "http://localhost:3333/api/behandlinger/274/aarsak/mottaksdato",
+        "pathname": "/api/behandlinger/274/aarsak/mottaksdato",
         "normalizedPath": "/api/behandlinger/:behandlingId/aarsak/mottaksdato",
         "query": {},
         "headers": {
@@ -570,15 +570,15 @@
           "mottaksdato": "2025-12-08"
         }
       },
-      "duration": 25,
+      "duration": 16,
       "dynamicFields": ["mottaksdato"]
     },
     {
       "request": {
-        "id": "c94e773738d3",
+        "id": "2c3ca5e58a7a",
         "method": "GET",
-        "url": "http://localhost:3333/api/brev/utkast/53",
-        "pathname": "/api/brev/utkast/53",
+        "url": "http://localhost:3333/api/brev/utkast/274",
+        "pathname": "/api/brev/utkast/274",
         "normalizedPath": "/api/brev/utkast/:id",
         "query": {},
         "headers": {
@@ -595,12 +595,12 @@
         },
         "body": []
       },
-      "duration": 24,
+      "duration": 17,
       "dynamicFields": []
     },
     {
       "request": {
-        "id": "d29ea5a5fdb1",
+        "id": "366f2e3dabe9",
         "method": "POST",
         "url": "http://localhost:3333/graphql/",
         "pathname": "/graphql/",
@@ -614,7 +614,7 @@
         "body": {
           "operationName": "hentPersonopplysninger",
           "variables": {
-            "behandlingID": 53
+            "behandlingID": 274
           },
           "query": "query hentPersonopplysninger($behandlingID: Long!) {\n  hentSaksopplysninger(behandlingID: $behandlingID) {\n    persondata {\n      navn {\n        fornavn\n        mellomnavn\n        etternavn\n        __typename\n      }\n      kjoenn\n      folkeregisterpersonstatuser {\n        kode\n        erHistorisk\n        __typename\n      }\n      folkeregisteridentifikator\n      statsborgerskap {\n        land\n        erHistorisk\n        __typename\n      }\n      sivilstand {\n        type\n        erHistorisk\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}"
         }
@@ -643,13 +643,13 @@
                     "__typename": "Folkeregisterpersonstatus"
                   },
                   {
-                    "kode": "BOSATT",
-                    "erHistorisk": false,
+                    "kode": "UTFLYTTET",
+                    "erHistorisk": true,
                     "__typename": "Folkeregisterpersonstatus"
                   },
                   {
-                    "kode": "UTFLYTTET",
-                    "erHistorisk": true,
+                    "kode": "BOSATT",
+                    "erHistorisk": false,
                     "__typename": "Folkeregisterpersonstatus"
                   }
                 ],
@@ -690,7 +690,7 @@
           }
         }
       },
-      "duration": 26,
+      "duration": 19,
       "dynamicFields": []
     },
     {
@@ -717,7 +717,7 @@
           "harBehandlingMedTrygdeavgift": false
         }
       },
-      "duration": 32,
+      "duration": 28,
       "dynamicFields": []
     }
   ]

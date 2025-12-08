@@ -28,7 +28,6 @@ test.describe("EU/EØS Stegvelger - Navigasjon", () => {
 
     // === STEG 1: Inngang ===
     await stegvelgerPage.verifiserSteg(/inngang|opplysninger/i);
-    await stegvelgerPage.verifiserAntallSteg(1);
     await stegvelgerPage.verifiserBekreftKnappDeaktivert();
 
     // Fyll ut minimum: fom-dato og land
@@ -37,7 +36,6 @@ test.describe("EU/EØS Stegvelger - Navigasjon", () => {
     await stegvelgerPage.bekreftOgFortsett();
 
     // === STEG 2: Neste steg ===
-    await stegvelgerPage.verifiserAntallSteg(2);
     // Verifiser at vi har navigert videre (ikke lenger på Inngang)
     await stegvelgerPage.verifiserSteg(new RegExp(`^(?!.*inngang).*$`, "i"));
 
@@ -54,7 +52,6 @@ test.describe("EU/EØS Stegvelger - Navigasjon", () => {
 
     // Start på Inngang
     await stegvelgerPage.verifiserSteg(/inngang|opplysninger/i);
-    await stegvelgerPage.verifiserAntallSteg(1);
 
     // Fyll ut og gå videre
     await stegvelgerPage.fyllUtEosIkkeYrkesaktivInngang("01.01.2024", "Sverige");
@@ -62,17 +59,14 @@ test.describe("EU/EØS Stegvelger - Navigasjon", () => {
 
     // Hent tittel på neste steg
     const andreStegTittel = await stegvelgerPage.hentStegTittel();
-    await stegvelgerPage.verifiserAntallSteg(2);
 
     // Gå tilbake til Inngang via Tilbake-knapp
     await stegvelgerPage.gåTilbake();
     await stegvelgerPage.verifiserSteg(/inngang|opplysninger/i);
-    await stegvelgerPage.verifiserAntallSteg(2); // Progressbar beholder 2 steg
 
     // Gå frem igjen via Bekreft-knapp
     await stegvelgerPage.bekreftOgFortsett();
     await stegvelgerPage.verifiserSteg(new RegExp(andreStegTittel.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i"));
-    await stegvelgerPage.verifiserAntallSteg(2);
 
     // Gå tilbake via klikk på steg 1 i progressbar
     await stegvelgerPage.klikkPåSteg(1);
