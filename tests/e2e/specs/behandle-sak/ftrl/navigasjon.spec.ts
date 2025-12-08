@@ -1,8 +1,8 @@
 import { test } from "@playwright/test";
 import { TIMEOUT_FOR_COMPLEX_TESTS } from "../../../utils/testUtils";
-import { BehandlingPage } from "../../../pages/behandling/behandling.page";
 import { hentPrepopulertSakUrl } from "../../../utils/testdataUtils";
 import { runAxeAnalyze } from "../../../utils/axeUtils";
+import { StegvelgerPage } from "../../../pages/behandling/stegvelger.page";
 
 /**
  * E2E-tester for EnkelStegvelger i FTRL (Utenfor avtaleland) saksbehandling
@@ -10,58 +10,137 @@ import { runAxeAnalyze } from "../../../utils/axeUtils";
  * Disse testene verifiserer stegnavigasjon for FTRL-saker som bruker
  * enkelStegvelgeren (src/felleskomponenter/enkelStegvelger/enkelStegvelger.tsx).
  *
- * EnkelStegvelger brukes i:
- * - FTRL/Utenfor avtaleland saksbehandling
- * - Ikke yrkesaktiv
- * - EU/EØS pensjonist
- * - Årsavregning
- * - Unntaksregistrering
+ * FTRL-steg (rekkefølge):
+ * 1. Inngang - Fra og med dato, arbeidsland
+ * 2. Virksomhet - Velg virksomhet
+ * 3. Bestemmelse - Velg lovvalgsbestemmelse
+ * 4. Perioder - Trygdedekning og innvilgelsesresultat
+ * 5. Trygdeavgift - Avgiftsberegning
+ * 6. Vedtak - Avslutt behandling
  */
 test.describe("FTRL Stegvelger - Navigasjon", () => {
-  test("FTRL-behandling åpnes - viser stegvelger", async ({ page }, testInfo) => {
+  test("Navigasjon gjennom alle steg med minimum input", async ({ page }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
-
-    const behandlingPage = new BehandlingPage(page);
+    // Bruker MEL-1021 for å unngå konflikt med avslutt-ftrl-behandling.spec.ts som bruker MEL-1016
+    const saksnummer = "MEL-1021";
+    const stegvelgerPage = new StegvelgerPage(page, saksnummer);
 
     // Hent URL til prepopulert FTRL-sak og naviger direkte dit
-    const url = hentPrepopulertSakUrl("MEL-1016");
-    await behandlingPage.goto(url);
+    const url = hentPrepopulertSakUrl(saksnummer);
+    await stegvelgerPage.goto(url);
+
+    // === STEG 1: Inngang ("Oppgi opplysninger fra søknaden") ===
+    await stegvelgerPage.verifiserSteg(/oppgi opplysninger|søknaden/i);
+    await stegvelgerPage.verifiserAntallSteg(1);
+    await stegvelgerPage.verifiserBekreftKnappDeaktivert();
+    await stegvelgerPage.fyllUtInngangMinimum("01.01.2024", "Sverige");
+    await stegvelgerPage.verifiserBekreftKnappAktivert();
+    await stegvelgerPage.bekreftOgFortsett();
+
+    // === STEG 2: Virksomhet ===
+    await stegvelgerPage.verifiserSteg(/virksomhet/i);
+    await stegvelgerPage.verifiserAntallSteg(2);
+    await stegvelgerPage.verifiserBekreftKnappDeaktivert();
+    await stegvelgerPage.velgFørsteVirksomhet();
+    await stegvelgerPage.verifiserBekreftKnappAktivert();
+    await stegvelgerPage.bekreftOgFortsett();
+
+    // === STEG 3: Bestemmelse ===
+    await stegvelgerPage.verifiserSteg(/bestemmelse/i);
+    await stegvelgerPage.verifiserAntallSteg(3);
+    // Bestemmelse kan være forhåndsutfylt, sjekk om knapp allerede er aktivert
+    const bestemmelseAktiv = await page
+      .locator(".stegFane--aktiv button.stegKnapper__bekreft")
+      .isEnabled()
+      .catch(() => false);
+    if (!bestemmelseAktiv) {
+      await stegvelgerPage.velgBestemmelse("§ 2-5");
+    }
+    await stegvelgerPage.verifiserBekreftKnappAktivert();
+    await stegvelgerPage.bekreftOgFortsett();
+
+    // === STEG 4: Perioder ===
+    await stegvelgerPage.verifiserSteg(/periode/i);
+    await stegvelgerPage.verifiserAntallSteg(4);
+    // Perioder kan være forhåndsutfylt
+    const perioderAktiv = await page
+      .locator(".stegFane--aktiv button.stegKnapper__bekreft")
+      .isEnabled()
+      .catch(() => false);
+    if (!perioderAktiv) {
+      await stegvelgerPage.fyllUtPerioderMinimum();
+    }
+    await stegvelgerPage.verifiserBekreftKnappAktivert();
+    await stegvelgerPage.bekreftOgFortsett();
+
+    // === STEG 5: Trygdeavgift ===
+    await stegvelgerPage.verifiserSteg(/trygdeavgift/i);
+    await stegvelgerPage.verifiserAntallSteg(6); // Alle 6 steg vises fra Trygdeavgift
+    await stegvelgerPage.verifiserBekreftKnappAktivert();
+    await stegvelgerPage.bekreftOgFortsett();
+
+    // === STEG 6: Vedtak ("Pliktig medlemskap etter folketrygdloven") ===
+    await stegvelgerPage.verifiserSteg(/pliktig medlemskap|vedtak/i);
+    await stegvelgerPage.verifiserAntallSteg(6);
 
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("Navigasjon mellom steg - frem og tilbake fungerer", async ({ page }, testInfo) => {
+  test("Navigasjon frem og tilbake mellom steg", async ({ page }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
+    const saksnummer = "MEL-1017";
+    const stegvelgerPage = new StegvelgerPage(page, saksnummer);
 
-    const behandlingPage = new BehandlingPage(page);
+    const url = hentPrepopulertSakUrl(saksnummer);
+    await stegvelgerPage.goto(url);
 
-    // Hent URL til prepopulert FTRL-sak og naviger direkte dit
-    const url = hentPrepopulertSakUrl("MEL-1017");
-    await behandlingPage.goto(url);
+    // Start på Inngang
+    await stegvelgerPage.verifiserSteg(/oppgi opplysninger|søknaden/i);
+    await stegvelgerPage.verifiserAntallSteg(1);
+
+    // Fyll ut og gå til Virksomhet
+    await stegvelgerPage.fyllUtInngangMinimum("01.01.2024", "Sverige");
+    await stegvelgerPage.bekreftOgFortsett();
+    await stegvelgerPage.verifiserSteg(/virksomhet/i);
+    await stegvelgerPage.verifiserAntallSteg(2);
+
+    // Gå tilbake til Inngang via Tilbake-knapp
+    await stegvelgerPage.gåTilbake();
+    await stegvelgerPage.verifiserSteg(/oppgi opplysninger|søknaden/i);
+    await stegvelgerPage.verifiserAntallSteg(2); // Progressbar beholder 2 steg
+
+    // Gå frem igjen via Bekreft-knapp
+    await stegvelgerPage.bekreftOgFortsett();
+    await stegvelgerPage.verifiserSteg(/virksomhet/i);
+    await stegvelgerPage.verifiserAntallSteg(2);
+
+    // Gå tilbake via klikk på steg 1 i progressbar
+    await stegvelgerPage.klikkPåSteg(1);
+    await stegvelgerPage.verifiserSteg(/oppgi opplysninger|søknaden/i);
 
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("Progressbar - viser alle steg", async ({ page }, testInfo) => {
+  test("Bekreft-knapp forblir deaktivert ved ugyldig input", async ({ page }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
+    const saksnummer = "MEL-1019";
+    const stegvelgerPage = new StegvelgerPage(page, saksnummer);
 
-    const behandlingPage = new BehandlingPage(page);
+    const url = hentPrepopulertSakUrl(saksnummer);
+    await stegvelgerPage.goto(url);
 
-    // Hent URL til prepopulert FTRL-sak og naviger direkte dit
-    const url = hentPrepopulertSakUrl("MEL-1018");
-    await behandlingPage.goto(url);
+    await stegvelgerPage.verifiserSteg(/oppgi opplysninger|søknaden/i);
 
-    await runAxeAnalyze(page, testInfo.title);
-  });
+    // Knappen skal være deaktivert ved start
+    await stegvelgerPage.verifiserBekreftKnappDeaktivert();
 
-  test("Progressbar - klikk på steg navigerer til steget", async ({ page }, testInfo) => {
-    test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
+    // Fyll ut kun dato (uten arbeidsland) - knappen bør fortsatt være deaktivert
+    const fomInput = page.getByLabel(/fra og med/i);
+    await fomInput.fill("01.01.2024");
+    await page.waitForTimeout(500);
 
-    const behandlingPage = new BehandlingPage(page);
-
-    // Hent URL til prepopulert FTRL-sak og naviger direkte dit
-    const url = hentPrepopulertSakUrl("MEL-1019");
-    await behandlingPage.goto(url);
+    // Knappen skal fortsatt være deaktivert siden arbeidsland mangler
+    await stegvelgerPage.verifiserBekreftKnappDeaktivert();
 
     await runAxeAnalyze(page, testInfo.title);
   });

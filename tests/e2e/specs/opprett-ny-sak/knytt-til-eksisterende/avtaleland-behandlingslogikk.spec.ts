@@ -5,7 +5,7 @@ import { OpprettNySakPage } from "../../../pages/opprett-ny-sak/opprett-ny-sak.p
 import { TIMEOUT_FOR_COMPLEX_TESTS } from "../../../utils/testUtils";
 
 /**
- * MELOSYS-7385: Test regresjonstest for Avtaleland-saker
+ * Test regresjonstest for Avtaleland-saker
  *
  * Regresjonstest akseptansekriterium:
  * "Gitt at jeg skal opprette en behandling på en eksistrende sakstype EØS/AVTALELAND
@@ -105,8 +105,8 @@ test.describe("Avtaleland behandlingslogikk (regresjon)", () => {
   }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
 
-    // Bruk prepopulert AVSLUTTET Avtaleland-sak (MEL-1064)
-    const sakId = "MEL-1064";
+    // Bruk prepopulert AVSLUTTET Avtaleland-sak (MEL-1067)
+    const sakId = "MEL-1067";
 
     const hovedsidePage = new HovedsidePage(page);
     await hovedsidePage.goto();

@@ -7,8 +7,8 @@ import { hentPrepopulertSakUrl } from "../../utils/testdataUtils";
 let sendBrevPage: SendBrevPage;
 
 // Gjenbrukbar setup-funksjon som oppretter egen testdata
-async function setupSendBrevTest(page: Page, saksnummer: string = "MEL-1003") {
-  sendBrevPage = new SendBrevPage(page);
+async function setupSendBrevTest(page: Page, saksnummer: string) {
+  sendBrevPage = new SendBrevPage(page, saksnummer);
 
   // Hent URL til prepopulert Avtaleland-sak og naviger direkte dit
   const url = hentPrepopulertSakUrl(saksnummer);
@@ -77,10 +77,11 @@ test.describe("Validering av årsavregning brevmaler", () => {
     page,
   }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout siden vi oppretter sak med årsavregning
-    sendBrevPage = new SendBrevPage(page);
+    const saksnummer = "MEL-1023";
+    sendBrevPage = new SendBrevPage(page, saksnummer);
 
     // Hent URL til prepopulert FTRL-sak med årsavregning og naviger direkte dit
-    const url = hentPrepopulertSakUrl("MEL-1023");
+    const url = hentPrepopulertSakUrl(saksnummer);
     await sendBrevPage.goto(url);
 
     await page.waitForLoadState("domcontentloaded");

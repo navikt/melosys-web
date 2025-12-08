@@ -46,6 +46,8 @@ export class DatabaseHelper {
 
   /**
    * Execute a query
+   * @param sql
+   * @param binds
    * @param suppressErrors - If true, don't log errors to console
    */
   async query<T = Record<string, unknown>>(
