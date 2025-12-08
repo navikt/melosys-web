@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "recordedAt": "2025-12-08T12:22:31.790Z",
+  "recordedAt": "2025-12-08T13:15:30.312Z",
   "testFile": "/Users/rune/source/nav/melosys-web/tests/e2e/specs/basic/hovedside.spec.ts",
   "testName": "Hovedsiden lastes korrekt og viser forventede seksjoner",
   "exchanges": [
@@ -39,7 +39,7 @@
           }
         ]
       },
-      "duration": 7,
+      "duration": 6,
       "dynamicFields": []
     },
     {

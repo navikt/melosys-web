@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "recordedAt": "2025-12-08T12:22:28.548Z",
+  "recordedAt": "2025-12-08T13:15:27.049Z",
   "testFile": "/Users/rune/source/nav/melosys-web/tests/e2e/specs/avslutt-behandling/avslutt-ftrl-behandling.spec.ts",
   "testName": "Opprett og avslutt 'Utenfor avtaleland'-sak for å sikre full avslutning",
   "exchanges": [
@@ -39,7 +39,7 @@
           "melosys.arsavregning.uten.flyt": false
         }
       },
-      "duration": 6,
+      "duration": 5,
       "dynamicFields": []
     },
     {
@@ -1073,7 +1073,7 @@
           }
         ]
       },
-      "duration": 6,
+      "duration": 7,
       "dynamicFields": []
     },
     {
@@ -1112,12 +1112,12 @@
             "term": "Saken er opprettet"
           },
           "betalingsvalg": null,
-          "registrertDato": "2025-12-08T12:22:16.822629Z",
-          "endretDato": "2025-12-08T12:22:16.831884Z",
+          "registrertDato": "2025-12-08T13:15:16.367008Z",
+          "endretDato": "2025-12-08T13:15:16.376848Z",
           "hovedpartRolle": "BRUKER"
         }
       },
-      "duration": 10,
+      "duration": 9,
       "dynamicFields": ["registrertDato", "endretDato"]
     },
     {
@@ -1197,7 +1197,7 @@
           }
         }
       },
-      "duration": 5,
+      "duration": 6,
       "dynamicFields": []
     },
     {
@@ -1234,7 +1234,7 @@
           "ukjentSluttdatoMedlemskapsperiode": false
         }
       },
-      "duration": 16,
+      "duration": 15,
       "dynamicFields": ["ukjentSluttdatoMedlemskapsperiode"]
     },
     {
@@ -1272,8 +1272,8 @@
               "kode": "YRKESAKTIV",
               "term": "Yrkesaktiv"
             },
-            "registrertDato": "2025-12-08T12:22:16.824608Z",
-            "endretDato": "2025-12-08T12:22:16.848812Z",
+            "registrertDato": "2025-12-08T13:15:16.369312Z",
+            "endretDato": "2025-12-08T13:15:16.395998Z",
             "endretAvNavn": "Lokal Testbruker",
             "sisteOpplysningerHentetDato": null,
             "svarFrist": null,
@@ -1308,7 +1308,7 @@
           "redigerbart": true
         }
       },
-      "duration": 68,
+      "duration": 73,
       "dynamicFields": [
         "oppsummering.registrertDato",
         "oppsummering.endretDato",
@@ -1351,7 +1351,7 @@
           "aarsavregningID": null
         }
       },
-      "duration": 30,
+      "duration": 29,
       "dynamicFields": []
     },
     {
@@ -1376,7 +1376,7 @@
         },
         "body": []
       },
-      "duration": 21,
+      "duration": 20,
       "dynamicFields": []
     },
     {
@@ -1401,7 +1401,7 @@
         },
         "body": []
       },
-      "duration": 20,
+      "duration": 16,
       "dynamicFields": []
     },
     {
@@ -1493,7 +1493,7 @@
           "mottaksdato": "2025-12-08"
         }
       },
-      "duration": 23,
+      "duration": 20,
       "dynamicFields": [
         "data.periode.fom",
         "data.periode.tom",
@@ -1524,7 +1524,7 @@
         },
         "body": []
       },
-      "duration": 13,
+      "duration": 10,
       "dynamicFields": []
     },
     {
@@ -1564,7 +1564,92 @@
           "TILLEGGSAVTALE_NATO_HELSEDEL"
         ]
       },
-      "duration": 9,
+      "duration": 15,
+      "dynamicFields": []
+    },
+    {
+      "request": {
+        "id": "a8de06cb739c",
+        "method": "GET",
+        "url": "http://localhost:3333/api/saksbehandling/sakstemaer/hent-lovlige-kombinasjoner/?hovedpart=BRUKER&sakstype=FTRL&saksnummer=MEL-1016",
+        "pathname": "/api/saksbehandling/sakstemaer/hent-lovlige-kombinasjoner/",
+        "normalizedPath": "/api/saksbehandling/sakstemaer/hent-lovlige-kombinasjoner/",
+        "query": {
+          "hovedpart": "BRUKER",
+          "sakstype": "FTRL",
+          "saksnummer": "MEL-1016"
+        },
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": [
+          {
+            "kode": "MEDLEMSKAP_LOVVALG",
+            "term": "Medlemskap og lovvalg"
+          },
+          {
+            "kode": "TRYGDEAVGIFT",
+            "term": "Trygdeavgift"
+          }
+        ]
+      },
+      "duration": 21,
+      "dynamicFields": []
+    },
+    {
+      "request": {
+        "id": "629349158275",
+        "method": "GET",
+        "url": "http://localhost:3333/api/saksbehandling/behandlingstemaer/hent-lovlige-kombinasjoner/?hovedpart=BRUKER&sakstype=FTRL&sakstema=MEDLEMSKAP_LOVVALG&aktivBehandlingID=16",
+        "pathname": "/api/saksbehandling/behandlingstemaer/hent-lovlige-kombinasjoner/",
+        "normalizedPath": "/api/saksbehandling/behandlingstemaer/hent-lovlige-kombinasjoner/",
+        "query": {
+          "hovedpart": "BRUKER",
+          "sakstype": "FTRL",
+          "sakstema": "MEDLEMSKAP_LOVVALG",
+          "aktivBehandlingID": "16"
+        },
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": [
+          {
+            "kode": "YRKESAKTIV",
+            "term": "Yrkesaktiv"
+          },
+          {
+            "kode": "IKKE_YRKESAKTIV",
+            "term": "Ikke yrkesaktiv"
+          },
+          {
+            "kode": "PENSJONIST",
+            "term": "Pensjonist/uføretrygdet"
+          },
+          {
+            "kode": "UNNTAK_MEDLEMSKAP",
+            "term": "Søknad om unntak fra folketrygdloven"
+          }
+        ]
+      },
+      "duration": 20,
       "dynamicFields": []
     },
     {
@@ -1604,21 +1689,17 @@
           }
         ]
       },
-      "duration": 17,
+      "duration": 24,
       "dynamicFields": []
     },
     {
       "request": {
-        "id": "a8de06cb739c",
+        "id": "29f0b6452da4",
         "method": "GET",
-        "url": "http://localhost:3333/api/saksbehandling/sakstemaer/hent-lovlige-kombinasjoner/?hovedpart=BRUKER&sakstype=FTRL&saksnummer=MEL-1016",
-        "pathname": "/api/saksbehandling/sakstemaer/hent-lovlige-kombinasjoner/",
-        "normalizedPath": "/api/saksbehandling/sakstemaer/hent-lovlige-kombinasjoner/",
-        "query": {
-          "hovedpart": "BRUKER",
-          "sakstype": "FTRL",
-          "saksnummer": "MEL-1016"
-        },
+        "url": "http://localhost:3333/api/brev/utkast/16",
+        "pathname": "/api/brev/utkast/16",
+        "normalizedPath": "/api/brev/utkast/:id",
+        "query": {},
         "headers": {
           "accept": "application/json",
           "authorization": "[REDACTED]"
@@ -1631,18 +1712,9 @@
         "headers": {
           "content-type": "application/json"
         },
-        "body": [
-          {
-            "kode": "MEDLEMSKAP_LOVVALG",
-            "term": "Medlemskap og lovvalg"
-          },
-          {
-            "kode": "TRYGDEAVGIFT",
-            "term": "Trygdeavgift"
-          }
-        ]
+        "body": []
       },
-      "duration": 18,
+      "duration": 21,
       "dynamicFields": []
     },
     {
@@ -1697,79 +1769,7 @@
           }
         ]
       },
-      "duration": 18,
-      "dynamicFields": []
-    },
-    {
-      "request": {
-        "id": "629349158275",
-        "method": "GET",
-        "url": "http://localhost:3333/api/saksbehandling/behandlingstemaer/hent-lovlige-kombinasjoner/?hovedpart=BRUKER&sakstype=FTRL&sakstema=MEDLEMSKAP_LOVVALG&aktivBehandlingID=16",
-        "pathname": "/api/saksbehandling/behandlingstemaer/hent-lovlige-kombinasjoner/",
-        "normalizedPath": "/api/saksbehandling/behandlingstemaer/hent-lovlige-kombinasjoner/",
-        "query": {
-          "hovedpart": "BRUKER",
-          "sakstype": "FTRL",
-          "sakstema": "MEDLEMSKAP_LOVVALG",
-          "aktivBehandlingID": "16"
-        },
-        "headers": {
-          "accept": "application/json",
-          "authorization": "[REDACTED]"
-        },
-        "body": null
-      },
-      "response": {
-        "status": 200,
-        "statusText": "OK",
-        "headers": {
-          "content-type": "application/json"
-        },
-        "body": [
-          {
-            "kode": "YRKESAKTIV",
-            "term": "Yrkesaktiv"
-          },
-          {
-            "kode": "IKKE_YRKESAKTIV",
-            "term": "Ikke yrkesaktiv"
-          },
-          {
-            "kode": "PENSJONIST",
-            "term": "Pensjonist/uføretrygdet"
-          },
-          {
-            "kode": "UNNTAK_MEDLEMSKAP",
-            "term": "Søknad om unntak fra folketrygdloven"
-          }
-        ]
-      },
-      "duration": 21,
-      "dynamicFields": []
-    },
-    {
-      "request": {
-        "id": "29f0b6452da4",
-        "method": "GET",
-        "url": "http://localhost:3333/api/brev/utkast/16",
-        "pathname": "/api/brev/utkast/16",
-        "normalizedPath": "/api/brev/utkast/:id",
-        "query": {},
-        "headers": {
-          "accept": "application/json",
-          "authorization": "[REDACTED]"
-        },
-        "body": null
-      },
-      "response": {
-        "status": 200,
-        "statusText": "OK",
-        "headers": {
-          "content-type": "application/json"
-        },
-        "body": []
-      },
-      "duration": 21,
+      "duration": 23,
       "dynamicFields": []
     },
     {
@@ -1796,7 +1796,7 @@
           "mottaksdato": "2025-12-08"
         }
       },
-      "duration": 21,
+      "duration": 25,
       "dynamicFields": ["mottaksdato"]
     },
     {
@@ -1823,7 +1823,7 @@
         },
         "body": []
       },
-      "duration": 25,
+      "duration": 31,
       "dynamicFields": []
     },
     {
@@ -1918,7 +1918,7 @@
           }
         }
       },
-      "duration": 24,
+      "duration": 28,
       "dynamicFields": []
     },
     {
@@ -1945,7 +1945,7 @@
           "harBehandlingMedTrygdeavgift": false
         }
       },
-      "duration": 32,
+      "duration": 34,
       "dynamicFields": []
     },
     {
@@ -1972,7 +1972,7 @@
           "harBehandlingMedTrygdeavgift": false
         }
       },
-      "duration": 32,
+      "duration": 39,
       "dynamicFields": []
     },
     {
@@ -1998,7 +1998,45 @@
         "headers": {},
         "body": null
       },
-      "duration": 67,
+      "duration": 57,
+      "dynamicFields": []
+    },
+    {
+      "request": {
+        "id": "74592ac6ace6",
+        "method": "GET",
+        "url": "http://localhost:3333/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/?",
+        "pathname": "/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/",
+        "normalizedPath": "/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/",
+        "query": {},
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": [
+          {
+            "kode": "EU_EOS",
+            "term": "EU/EØS-land"
+          },
+          {
+            "kode": "TRYGDEAVTALE",
+            "term": "Avtaleland"
+          },
+          {
+            "kode": "FTRL",
+            "term": "Utenfor avtaleland"
+          }
+        ]
+      },
+      "duration": 6,
       "dynamicFields": []
     }
   ]

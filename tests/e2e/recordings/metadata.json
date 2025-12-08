@@ -1,6 +1,6 @@
 {
   "MEL-1001": {
-    "behandlingID": 293,
+    "behandlingID": 1,
     "sakstype": "TRYGDEAVTALE",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -8,7 +8,7 @@
     "behandlingsstatus": "UNDER_BEHANDLING"
   },
   "MEL-1002": {
-    "behandlingID": 294,
+    "behandlingID": 2,
     "sakstype": "TRYGDEAVTALE",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -16,7 +16,7 @@
     "behandlingsstatus": "UNDER_BEHANDLING"
   },
   "MEL-1003": {
-    "behandlingID": 295,
+    "behandlingID": 3,
     "sakstype": "TRYGDEAVTALE",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -24,7 +24,7 @@
     "behandlingsstatus": "UNDER_BEHANDLING"
   },
   "MEL-1004": {
-    "behandlingID": 296,
+    "behandlingID": 4,
     "sakstype": "TRYGDEAVTALE",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -32,7 +32,7 @@
     "behandlingsstatus": "UNDER_BEHANDLING"
   },
   "MEL-1005": {
-    "behandlingID": 297,
+    "behandlingID": 5,
     "sakstype": "TRYGDEAVTALE",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -40,7 +40,7 @@
     "behandlingsstatus": "UNDER_BEHANDLING"
   },
   "MEL-1006": {
-    "behandlingID": 298,
+    "behandlingID": 6,
     "sakstype": "TRYGDEAVTALE",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -48,7 +48,7 @@
     "behandlingsstatus": "UNDER_BEHANDLING"
   },
   "MEL-1007": {
-    "behandlingID": 299,
+    "behandlingID": 7,
     "sakstype": "TRYGDEAVTALE",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -56,7 +56,7 @@
     "behandlingsstatus": "UNDER_BEHANDLING"
   },
   "MEL-1008": {
-    "behandlingID": 300,
+    "behandlingID": 8,
     "sakstype": "TRYGDEAVTALE",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -64,7 +64,7 @@
     "behandlingsstatus": "UNDER_BEHANDLING"
   },
   "MEL-1009": {
-    "behandlingID": 301,
+    "behandlingID": 9,
     "sakstype": "TRYGDEAVTALE",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -72,7 +72,7 @@
     "behandlingsstatus": "UNDER_BEHANDLING"
   },
   "MEL-1010": {
-    "behandlingID": 302,
+    "behandlingID": 10,
     "sakstype": "TRYGDEAVTALE",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -80,7 +80,7 @@
     "behandlingsstatus": "UNDER_BEHANDLING"
   },
   "MEL-1011": {
-    "behandlingID": 303,
+    "behandlingID": 11,
     "sakstype": "TRYGDEAVTALE",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -88,7 +88,7 @@
     "behandlingsstatus": "UNDER_BEHANDLING"
   },
   "MEL-1012": {
-    "behandlingID": 304,
+    "behandlingID": 12,
     "sakstype": "TRYGDEAVTALE",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -96,7 +96,7 @@
     "behandlingsstatus": "OPPRETTET"
   },
   "MEL-1013": {
-    "behandlingID": 305,
+    "behandlingID": 13,
     "sakstype": "FTRL",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -104,7 +104,7 @@
     "behandlingsstatus": "UNDER_BEHANDLING"
   },
   "MEL-1014": {
-    "behandlingID": 306,
+    "behandlingID": 14,
     "sakstype": "FTRL",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -112,7 +112,7 @@
     "behandlingsstatus": "UNDER_BEHANDLING"
   },
   "MEL-1015": {
-    "behandlingID": 307,
+    "behandlingID": 15,
     "sakstype": "FTRL",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -120,7 +120,7 @@
     "behandlingsstatus": "UNDER_BEHANDLING"
   },
   "MEL-1016": {
-    "behandlingID": 308,
+    "behandlingID": 16,
     "sakstype": "FTRL",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -128,7 +128,7 @@
     "behandlingsstatus": "UNDER_BEHANDLING"
   },
   "MEL-1017": {
-    "behandlingID": 309,
+    "behandlingID": 17,
     "sakstype": "FTRL",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -136,7 +136,7 @@
     "behandlingsstatus": "UNDER_BEHANDLING"
   },
   "MEL-1018": {
-    "behandlingID": 310,
+    "behandlingID": 18,
     "sakstype": "FTRL",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -144,7 +144,7 @@
     "behandlingsstatus": "UNDER_BEHANDLING"
   },
   "MEL-1019": {
-    "behandlingID": 311,
+    "behandlingID": 19,
     "sakstype": "FTRL",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -152,7 +152,7 @@
     "behandlingsstatus": "UNDER_BEHANDLING"
   },
   "MEL-1020": {
-    "behandlingID": 312,
+    "behandlingID": 20,
     "sakstype": "FTRL",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -160,7 +160,7 @@
     "behandlingsstatus": "UNDER_BEHANDLING"
   },
   "MEL-1021": {
-    "behandlingID": 313,
+    "behandlingID": 21,
     "sakstype": "FTRL",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -168,7 +168,7 @@
     "behandlingsstatus": "UNDER_BEHANDLING"
   },
   "MEL-1022": {
-    "behandlingID": 314,
+    "behandlingID": 22,
     "sakstype": "FTRL",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -176,7 +176,7 @@
     "behandlingsstatus": "UNDER_BEHANDLING"
   },
   "MEL-1023": {
-    "behandlingID": 315,
+    "behandlingID": 23,
     "sakstype": "FTRL",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -184,7 +184,7 @@
     "behandlingsstatus": "UNDER_BEHANDLING"
   },
   "MEL-1024": {
-    "behandlingID": 316,
+    "behandlingID": 24,
     "sakstype": "FTRL",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -192,7 +192,7 @@
     "behandlingsstatus": "UNDER_BEHANDLING"
   },
   "MEL-1025": {
-    "behandlingID": 317,
+    "behandlingID": 25,
     "sakstype": "FTRL",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -200,7 +200,7 @@
     "behandlingsstatus": "UNDER_BEHANDLING"
   },
   "MEL-1026": {
-    "behandlingID": 318,
+    "behandlingID": 26,
     "sakstype": "FTRL",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -208,7 +208,7 @@
     "behandlingsstatus": "UNDER_BEHANDLING"
   },
   "MEL-1027": {
-    "behandlingID": 319,
+    "behandlingID": 27,
     "sakstype": "FTRL",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -216,7 +216,7 @@
     "behandlingsstatus": "UNDER_BEHANDLING"
   },
   "MEL-1028": {
-    "behandlingID": 320,
+    "behandlingID": 28,
     "sakstype": "FTRL",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -224,7 +224,7 @@
     "behandlingsstatus": "UNDER_BEHANDLING"
   },
   "MEL-1029": {
-    "behandlingID": 321,
+    "behandlingID": 29,
     "sakstype": "FTRL",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -232,7 +232,7 @@
     "behandlingsstatus": "UNDER_BEHANDLING"
   },
   "MEL-1030": {
-    "behandlingID": 322,
+    "behandlingID": 30,
     "sakstype": "FTRL",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -240,7 +240,7 @@
     "behandlingsstatus": "UNDER_BEHANDLING"
   },
   "MEL-1031": {
-    "behandlingID": 323,
+    "behandlingID": 31,
     "sakstype": "FTRL",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -248,7 +248,7 @@
     "behandlingsstatus": "UNDER_BEHANDLING"
   },
   "MEL-1032": {
-    "behandlingID": 324,
+    "behandlingID": 32,
     "sakstype": "FTRL",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -256,7 +256,7 @@
     "behandlingsstatus": "UNDER_BEHANDLING"
   },
   "MEL-1033": {
-    "behandlingID": 325,
+    "behandlingID": 33,
     "sakstype": "FTRL",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -264,7 +264,7 @@
     "behandlingsstatus": "UNDER_BEHANDLING"
   },
   "MEL-1034": {
-    "behandlingID": 326,
+    "behandlingID": 34,
     "sakstype": "FTRL",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -272,7 +272,7 @@
     "behandlingsstatus": "UNDER_BEHANDLING"
   },
   "MEL-1035": {
-    "behandlingID": 327,
+    "behandlingID": 35,
     "sakstype": "FTRL",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -280,7 +280,7 @@
     "behandlingsstatus": "UNDER_BEHANDLING"
   },
   "MEL-1036": {
-    "behandlingID": 328,
+    "behandlingID": 36,
     "sakstype": "FTRL",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -288,7 +288,7 @@
     "behandlingsstatus": "UNDER_BEHANDLING"
   },
   "MEL-1037": {
-    "behandlingID": 329,
+    "behandlingID": 37,
     "sakstype": "FTRL",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -296,7 +296,7 @@
     "behandlingsstatus": "UNDER_BEHANDLING"
   },
   "MEL-1038": {
-    "behandlingID": 330,
+    "behandlingID": 38,
     "sakstype": "FTRL",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -304,7 +304,7 @@
     "behandlingsstatus": "UNDER_BEHANDLING"
   },
   "MEL-1039": {
-    "behandlingID": 331,
+    "behandlingID": 39,
     "sakstype": "FTRL",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -312,7 +312,7 @@
     "behandlingsstatus": "UNDER_BEHANDLING"
   },
   "MEL-1040": {
-    "behandlingID": 332,
+    "behandlingID": 40,
     "sakstype": "FTRL",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -320,7 +320,7 @@
     "behandlingsstatus": "UNDER_BEHANDLING"
   },
   "MEL-1041": {
-    "behandlingID": 333,
+    "behandlingID": 41,
     "sakstype": "FTRL",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -328,7 +328,7 @@
     "behandlingsstatus": "UNDER_BEHANDLING"
   },
   "MEL-1042": {
-    "behandlingID": 334,
+    "behandlingID": 42,
     "sakstype": "FTRL",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -336,7 +336,7 @@
     "behandlingsstatus": "UNDER_BEHANDLING"
   },
   "MEL-1043": {
-    "behandlingID": 335,
+    "behandlingID": 43,
     "sakstype": "FTRL",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -344,7 +344,7 @@
     "behandlingsstatus": "UNDER_BEHANDLING"
   },
   "MEL-1044": {
-    "behandlingID": 336,
+    "behandlingID": 44,
     "sakstype": "FTRL",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -352,7 +352,7 @@
     "behandlingsstatus": "UNDER_BEHANDLING"
   },
   "MEL-1045": {
-    "behandlingID": 337,
+    "behandlingID": 45,
     "sakstype": "FTRL",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -360,7 +360,7 @@
     "behandlingsstatus": "UNDER_BEHANDLING"
   },
   "MEL-1046": {
-    "behandlingID": 338,
+    "behandlingID": 46,
     "sakstype": "FTRL",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -368,7 +368,7 @@
     "behandlingsstatus": "UNDER_BEHANDLING"
   },
   "MEL-1047": {
-    "behandlingID": 339,
+    "behandlingID": 47,
     "sakstype": "FTRL",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -376,7 +376,7 @@
     "behandlingsstatus": "UNDER_BEHANDLING"
   },
   "MEL-1048": {
-    "behandlingID": 340,
+    "behandlingID": 48,
     "sakstype": "FTRL",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -384,7 +384,7 @@
     "behandlingsstatus": "UNDER_BEHANDLING"
   },
   "MEL-1049": {
-    "behandlingID": 341,
+    "behandlingID": 49,
     "sakstype": "FTRL",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -392,7 +392,7 @@
     "behandlingsstatus": "UNDER_BEHANDLING"
   },
   "MEL-1050": {
-    "behandlingID": 342,
+    "behandlingID": 50,
     "sakstype": "FTRL",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -400,7 +400,7 @@
     "behandlingsstatus": "UNDER_BEHANDLING"
   },
   "MEL-1051": {
-    "behandlingID": 343,
+    "behandlingID": 51,
     "sakstype": "EU_EOS",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "IKKE_YRKESAKTIV",
@@ -408,7 +408,7 @@
     "behandlingsstatus": "UNDER_BEHANDLING"
   },
   "MEL-1052": {
-    "behandlingID": 344,
+    "behandlingID": 52,
     "sakstype": "EU_EOS",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "IKKE_YRKESAKTIV",
@@ -416,7 +416,7 @@
     "behandlingsstatus": "UNDER_BEHANDLING"
   },
   "MEL-1053": {
-    "behandlingID": 345,
+    "behandlingID": 53,
     "sakstype": "EU_EOS",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "IKKE_YRKESAKTIV",
@@ -424,7 +424,7 @@
     "behandlingsstatus": "UNDER_BEHANDLING"
   },
   "MEL-1054": {
-    "behandlingID": 346,
+    "behandlingID": 54,
     "sakstype": "EU_EOS",
     "sakstema": "TRYGDEAVGIFT",
     "behandlingstema": "PENSJONIST",
@@ -432,7 +432,7 @@
     "behandlingsstatus": "UNDER_BEHANDLING"
   },
   "MEL-1055": {
-    "behandlingID": 347,
+    "behandlingID": 55,
     "sakstype": "EU_EOS",
     "sakstema": "TRYGDEAVGIFT",
     "behandlingstema": "PENSJONIST",
@@ -440,7 +440,7 @@
     "behandlingsstatus": "UNDER_BEHANDLING"
   },
   "MEL-1056": {
-    "behandlingID": 348,
+    "behandlingID": 56,
     "sakstype": "EU_EOS",
     "sakstema": "TRYGDEAVGIFT",
     "behandlingstema": "PENSJONIST",
@@ -448,7 +448,7 @@
     "behandlingsstatus": "UNDER_BEHANDLING"
   },
   "MEL-1057": {
-    "behandlingID": 349,
+    "behandlingID": 57,
     "sakstype": "TRYGDEAVTALE",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -456,7 +456,7 @@
     "behandlingsstatus": "OPPRETTET"
   },
   "MEL-1058": {
-    "behandlingID": 350,
+    "behandlingID": 58,
     "sakstype": "TRYGDEAVTALE",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -464,7 +464,7 @@
     "behandlingsstatus": "OPPRETTET"
   },
   "MEL-1059": {
-    "behandlingID": 351,
+    "behandlingID": 59,
     "sakstype": "FTRL",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -472,7 +472,7 @@
     "behandlingsstatus": "OPPRETTET"
   },
   "MEL-1060": {
-    "behandlingID": 352,
+    "behandlingID": 60,
     "sakstype": "FTRL",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -480,7 +480,7 @@
     "behandlingsstatus": "OPPRETTET"
   },
   "MEL-1061": {
-    "behandlingID": 353,
+    "behandlingID": 61,
     "sakstype": "EU_EOS",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "IKKE_YRKESAKTIV",
@@ -488,7 +488,7 @@
     "behandlingsstatus": "OPPRETTET"
   },
   "MEL-1062": {
-    "behandlingID": 354,
+    "behandlingID": 62,
     "sakstype": "EU_EOS",
     "sakstema": "TRYGDEAVGIFT",
     "behandlingstema": "PENSJONIST",
@@ -496,7 +496,7 @@
     "behandlingsstatus": "OPPRETTET"
   },
   "MEL-1063": {
-    "behandlingID": 355,
+    "behandlingID": 63,
     "sakstype": "TRYGDEAVTALE",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -504,7 +504,7 @@
     "behandlingsstatus": "AVSLUTTET"
   },
   "MEL-1064": {
-    "behandlingID": 356,
+    "behandlingID": 64,
     "sakstype": "TRYGDEAVTALE",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -512,7 +512,7 @@
     "behandlingsstatus": "AVSLUTTET"
   },
   "MEL-1065": {
-    "behandlingID": 357,
+    "behandlingID": 65,
     "sakstype": "FTRL",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -520,7 +520,7 @@
     "behandlingsstatus": "AVSLUTTET"
   },
   "MEL-1066": {
-    "behandlingID": 358,
+    "behandlingID": 66,
     "sakstype": "FTRL",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -528,7 +528,7 @@
     "behandlingsstatus": "AVSLUTTET"
   },
   "MEL-1067": {
-    "behandlingID": 359,
+    "behandlingID": 67,
     "sakstype": "EU_EOS",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "IKKE_YRKESAKTIV",
@@ -536,7 +536,7 @@
     "behandlingsstatus": "AVSLUTTET"
   },
   "MEL-1068": {
-    "behandlingID": 360,
+    "behandlingID": 68,
     "sakstype": "EU_EOS",
     "sakstema": "TRYGDEAVGIFT",
     "behandlingstema": "PENSJONIST",
@@ -544,7 +544,7 @@
     "behandlingsstatus": "AVSLUTTET"
   },
   "MEL-1069": {
-    "behandlingID": 361,
+    "behandlingID": 69,
     "sakstype": "TRYGDEAVTALE",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -552,7 +552,7 @@
     "behandlingsstatus": "UNDER_BEHANDLING"
   },
   "MEL-1070": {
-    "behandlingID": 362,
+    "behandlingID": 70,
     "sakstype": "FTRL",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "YRKESAKTIV",
@@ -560,7 +560,7 @@
     "behandlingsstatus": "AVSLUTTET"
   },
   "MEL-1071": {
-    "behandlingID": 363,
+    "behandlingID": 71,
     "sakstype": "EU_EOS",
     "sakstema": "MEDLEMSKAP_LOVVALG",
     "behandlingstema": "IKKE_YRKESAKTIV",

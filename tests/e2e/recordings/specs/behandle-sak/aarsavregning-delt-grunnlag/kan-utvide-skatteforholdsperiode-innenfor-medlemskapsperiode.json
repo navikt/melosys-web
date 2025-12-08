@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "recordedAt": "2025-12-08T12:22:39.526Z",
+  "recordedAt": "2025-12-08T13:15:38.033Z",
   "testFile": "/Users/rune/source/nav/melosys-web/tests/e2e/specs/behandle-sak/aarsavregning-delt-grunnlag.spec.ts",
   "testName": "Kan utvide skatteforholdsperiode innenfor medlemskapsperiode",
   "exchanges": [
@@ -39,7 +39,7 @@
           "melosys.arsavregning.uten.flyt": false
         }
       },
-      "duration": 4,
+      "duration": 7,
       "dynamicFields": []
     },
     {
@@ -78,12 +78,12 @@
             "term": "Saken er opprettet"
           },
           "betalingsvalg": null,
-          "registrertDato": "2025-12-08T12:22:17.245233Z",
-          "endretDato": "2025-12-08T12:22:17.255512Z",
+          "registrertDato": "2025-12-08T13:15:16.802266Z",
+          "endretDato": "2025-12-08T13:15:16.810051Z",
           "hovedpartRolle": "BRUKER"
         }
       },
-      "duration": 10,
+      "duration": 14,
       "dynamicFields": ["registrertDato", "endretDato"]
     },
     {
@@ -121,8 +121,8 @@
               "kode": "YRKESAKTIV",
               "term": "Yrkesaktiv"
             },
-            "registrertDato": "2025-12-08T12:22:17.247471Z",
-            "endretDato": "2025-12-08T12:22:17.275796Z",
+            "registrertDato": "2025-12-08T13:15:16.803715Z",
+            "endretDato": "2025-12-08T13:15:16.828735Z",
             "endretAvNavn": "Lokal Testbruker",
             "sisteOpplysningerHentetDato": null,
             "svarFrist": null,
@@ -157,7 +157,7 @@
           "redigerbart": true
         }
       },
-      "duration": 32,
+      "duration": 35,
       "dynamicFields": [
         "oppsummering.registrertDato",
         "oppsummering.endretDato",
@@ -187,7 +187,7 @@
         },
         "body": []
       },
-      "duration": 12,
+      "duration": 17,
       "dynamicFields": []
     },
     {
@@ -225,7 +225,7 @@
           "aarsavregningID": null
         }
       },
-      "duration": 20,
+      "duration": 26,
       "dynamicFields": []
     },
     {
@@ -317,7 +317,7 @@
           "mottaksdato": "2025-12-08"
         }
       },
-      "duration": 21,
+      "duration": 27,
       "dynamicFields": [
         "data.periode.fom",
         "data.periode.tom",
@@ -325,6 +325,33 @@
         "data.oppholdUtland.oppholdsPeriode.tom",
         "mottaksdato"
       ]
+    },
+    {
+      "request": {
+        "id": "9da05f005c36",
+        "method": "GET",
+        "url": "http://localhost:3333/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/?saksnummer=MEL-1042",
+        "pathname": "/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/",
+        "normalizedPath": "/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/",
+        "query": {
+          "saksnummer": "MEL-1042"
+        },
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": []
+      },
+      "duration": 19,
+      "dynamicFields": []
     },
     {
       "request": {
@@ -370,34 +397,7 @@
           }
         ]
       },
-      "duration": 12,
-      "dynamicFields": []
-    },
-    {
-      "request": {
-        "id": "9da05f005c36",
-        "method": "GET",
-        "url": "http://localhost:3333/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/?saksnummer=MEL-1042",
-        "pathname": "/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/",
-        "normalizedPath": "/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/",
-        "query": {
-          "saksnummer": "MEL-1042"
-        },
-        "headers": {
-          "accept": "application/json",
-          "authorization": "[REDACTED]"
-        },
-        "body": null
-      },
-      "response": {
-        "status": 200,
-        "statusText": "OK",
-        "headers": {
-          "content-type": "application/json"
-        },
-        "body": []
-      },
-      "duration": 12,
+      "duration": 19,
       "dynamicFields": []
     },
     {
@@ -426,16 +426,16 @@
         },
         "body": []
       },
-      "duration": 16,
+      "duration": 19,
       "dynamicFields": []
     },
     {
       "request": {
-        "id": "5c4b6d4372b7",
+        "id": "843e06ade14a",
         "method": "GET",
-        "url": "http://localhost:3333/api/brev/utkast/42",
-        "pathname": "/api/brev/utkast/42",
-        "normalizedPath": "/api/brev/utkast/:id",
+        "url": "http://localhost:3333/api/behandlinger/42/aarsak/mottaksdato",
+        "pathname": "/api/behandlinger/42/aarsak/mottaksdato",
+        "normalizedPath": "/api/behandlinger/:behandlingId/aarsak/mottaksdato",
         "query": {},
         "headers": {
           "accept": "application/json",
@@ -449,10 +449,12 @@
         "headers": {
           "content-type": "application/json"
         },
-        "body": []
+        "body": {
+          "mottaksdato": "2025-12-08"
+        }
       },
-      "duration": 16,
-      "dynamicFields": []
+      "duration": 24,
+      "dynamicFields": ["mottaksdato"]
     },
     {
       "request": {
@@ -546,7 +548,32 @@
           }
         }
       },
-      "duration": 18,
+      "duration": 24,
+      "dynamicFields": []
+    },
+    {
+      "request": {
+        "id": "5c4b6d4372b7",
+        "method": "GET",
+        "url": "http://localhost:3333/api/brev/utkast/42",
+        "pathname": "/api/brev/utkast/42",
+        "normalizedPath": "/api/brev/utkast/:id",
+        "query": {},
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": []
+      },
+      "duration": 24,
       "dynamicFields": []
     },
     {
@@ -665,7 +692,7 @@
           }
         }
       },
-      "duration": 18,
+      "duration": 23,
       "dynamicFields": [
         "data.hentSaksopplysninger.persondata.foedsel.foedselsdato",
         "data.hentSaksopplysninger.persondata.sivilstand[0].bekreftelsesdato",
@@ -673,33 +700,6 @@
         "data.hentSaksopplysninger.persondata.sivilstand[2].bekreftelsesdato",
         "data.hentSaksopplysninger.persondata.sivilstand[3].bekreftelsesdato"
       ]
-    },
-    {
-      "request": {
-        "id": "843e06ade14a",
-        "method": "GET",
-        "url": "http://localhost:3333/api/behandlinger/42/aarsak/mottaksdato",
-        "pathname": "/api/behandlinger/42/aarsak/mottaksdato",
-        "normalizedPath": "/api/behandlinger/:behandlingId/aarsak/mottaksdato",
-        "query": {},
-        "headers": {
-          "accept": "application/json",
-          "authorization": "[REDACTED]"
-        },
-        "body": null
-      },
-      "response": {
-        "status": 200,
-        "statusText": "OK",
-        "headers": {
-          "content-type": "application/json"
-        },
-        "body": {
-          "mottaksdato": "2025-12-08"
-        }
-      },
-      "duration": 19,
-      "dynamicFields": ["mottaksdato"]
     },
     {
       "request": {
@@ -751,7 +751,7 @@
           }
         }
       },
-      "duration": 19,
+      "duration": 25,
       "dynamicFields": ["data.hentSaksopplysninger.persondata.statsborgerskap[0].bekreftelsesdato"]
     },
     {
@@ -787,26 +787,6 @@
               "persondata": {
                 "bostedsadresser": [
                   {
-                    "coAdressenavn": "Co Yo 1",
-                    "adresse": {
-                      "tilleggsnavn": null,
-                      "gatenavn": "bosted gata 3",
-                      "husnummerEtasjeLeilighet": "42",
-                      "postboks": null,
-                      "postnummer": "0001",
-                      "poststed": null,
-                      "region": null,
-                      "land": "STORBRITANNIA",
-                      "__typename": "StrukturertAdresseformat"
-                    },
-                    "gyldigFraOgMed": "1995-06-16",
-                    "gyldigTilOgMed": null,
-                    "kilde": "Folkeregisteret",
-                    "master": "FREG",
-                    "erHistorisk": false,
-                    "__typename": "Bostedsadresse"
-                  },
-                  {
                     "coAdressenavn": null,
                     "adresse": {
                       "tilleggsnavn": "tilleggg navn",
@@ -824,6 +804,26 @@
                     "kilde": "Folkeregisteret",
                     "master": "FREG",
                     "erHistorisk": true,
+                    "__typename": "Bostedsadresse"
+                  },
+                  {
+                    "coAdressenavn": "Co Yo 1",
+                    "adresse": {
+                      "tilleggsnavn": null,
+                      "gatenavn": "bosted gata 3",
+                      "husnummerEtasjeLeilighet": "42",
+                      "postboks": null,
+                      "postnummer": "0001",
+                      "poststed": null,
+                      "region": null,
+                      "land": "STORBRITANNIA",
+                      "__typename": "StrukturertAdresseformat"
+                    },
+                    "gyldigFraOgMed": "1995-06-16",
+                    "gyldigTilOgMed": null,
+                    "kilde": "Folkeregisteret",
+                    "master": "FREG",
+                    "erHistorisk": false,
                     "__typename": "Bostedsadresse"
                   }
                 ],
@@ -899,7 +899,32 @@
           }
         }
       },
-      "duration": 20,
+      "duration": 25,
+      "dynamicFields": []
+    },
+    {
+      "request": {
+        "id": "dd37ddb3033c",
+        "method": "GET",
+        "url": "http://localhost:3333/api/fagsaker/MEL-1042/aarsavregninger",
+        "pathname": "/api/fagsaker/MEL-1042/aarsavregninger",
+        "normalizedPath": "/api/fagsaker/:saksnummer/aarsavregninger",
+        "query": {},
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": []
+      },
+      "duration": 32,
       "dynamicFields": []
     },
     {
@@ -926,22 +951,27 @@
           "harBehandlingMedTrygdeavgift": false
         }
       },
-      "duration": 27,
+      "duration": 34,
       "dynamicFields": []
     },
     {
       "request": {
-        "id": "dd37ddb3033c",
-        "method": "GET",
-        "url": "http://localhost:3333/api/fagsaker/MEL-1042/aarsavregninger",
-        "pathname": "/api/fagsaker/MEL-1042/aarsavregninger",
-        "normalizedPath": "/api/fagsaker/:saksnummer/aarsavregninger",
+        "id": "83e3322288b4",
+        "method": "POST",
+        "url": "http://localhost:3333/api/fagsaker/sok",
+        "pathname": "/api/fagsaker/sok",
+        "normalizedPath": "/api/fagsaker/sok",
         "query": {},
         "headers": {
+          "content-type": "application/json",
           "accept": "application/json",
           "authorization": "[REDACTED]"
         },
-        "body": null
+        "body": {
+          "saksnummer": "MEL-1042",
+          "ident": null,
+          "orgnr": null
+        }
       },
       "response": {
         "status": 200,
@@ -949,9 +979,166 @@
         "headers": {
           "content-type": "application/json"
         },
-        "body": []
+        "body": [
+          {
+            "saksnummer": "MEL-1042",
+            "navn": "TRIVIELL KARAFFEL",
+            "sakstema": {
+              "kode": "MEDLEMSKAP_LOVVALG",
+              "term": "Medlemskap og lovvalg"
+            },
+            "sakstype": {
+              "kode": "FTRL",
+              "term": "Utenfor avtaleland"
+            },
+            "saksstatus": {
+              "kode": "OPPRETTET",
+              "term": "Saken er opprettet"
+            },
+            "land": {
+              "landkoder": [],
+              "flereLandUkjentHvilke": false
+            },
+            "periode": {
+              "fom": null,
+              "tom": null
+            },
+            "opprettetDato": "2025-12-08T13:15:16.802266Z",
+            "behandlingOversikter": [
+              {
+                "behandlingID": 42,
+                "tittel": "Årsavregning",
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "behandlingstype": {
+                  "kode": "ÅRSAVREGNING",
+                  "term": "Årsavregning"
+                },
+                "behandlingstema": {
+                  "kode": "YRKESAKTIV",
+                  "term": "Yrkesaktiv"
+                },
+                "soknadsperiode": {
+                  "fom": null,
+                  "tom": null
+                },
+                "opprettetDato": "2025-12-08T13:15:16.803715Z",
+                "behandlingsresultattype": {
+                  "kode": "IKKE_FASTSATT",
+                  "term": "Ikke fastsatt"
+                },
+                "svarFrist": null
+              }
+            ],
+            "hovedpartRolle": "BRUKER"
+          }
+        ]
       },
       "duration": 27,
+      "dynamicFields": [
+        "[0].periode.fom",
+        "[0].periode.tom",
+        "[0].opprettetDato",
+        "[0].behandlingOversikter[0].soknadsperiode.fom",
+        "[0].behandlingOversikter[0].soknadsperiode.tom",
+        "[0].behandlingOversikter[0].opprettetDato"
+      ]
+    },
+    {
+      "request": {
+        "id": "d1d45a086db5",
+        "method": "POST",
+        "url": "http://localhost:3333/graphql/",
+        "pathname": "/graphql/",
+        "normalizedPath": "/graphql/",
+        "query": {},
+        "headers": {
+          "content-type": "application/json",
+          "accept": "*/*",
+          "authorization": "[REDACTED]"
+        },
+        "body": {
+          "operationName": "hentPersonopplysninger",
+          "variables": {
+            "behandlingID": 42
+          },
+          "query": "query hentPersonopplysninger($behandlingID: Long!) {\n  hentSaksopplysninger(behandlingID: $behandlingID) {\n    persondata {\n      navn {\n        fornavn\n        mellomnavn\n        etternavn\n        __typename\n      }\n      kjoenn\n      folkeregisterpersonstatuser {\n        kode\n        erHistorisk\n        __typename\n      }\n      folkeregisteridentifikator\n      statsborgerskap {\n        land\n        erHistorisk\n        __typename\n      }\n      sivilstand {\n        type\n        erHistorisk\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}"
+        }
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": {
+          "data": {
+            "hentSaksopplysninger": {
+              "persondata": {
+                "navn": {
+                  "fornavn": "KARAFFEL",
+                  "mellomnavn": null,
+                  "etternavn": "TRIVIELL",
+                  "__typename": "Navn"
+                },
+                "kjoenn": "UKJENT",
+                "folkeregisterpersonstatuser": [
+                  {
+                    "kode": "MIDLERTIDIG",
+                    "erHistorisk": true,
+                    "__typename": "Folkeregisterpersonstatus"
+                  },
+                  {
+                    "kode": "BOSATT",
+                    "erHistorisk": false,
+                    "__typename": "Folkeregisterpersonstatus"
+                  },
+                  {
+                    "kode": "UTFLYTTET",
+                    "erHistorisk": true,
+                    "__typename": "Folkeregisterpersonstatus"
+                  }
+                ],
+                "folkeregisteridentifikator": "30056928150",
+                "statsborgerskap": [
+                  {
+                    "land": "NORGE",
+                    "erHistorisk": false,
+                    "__typename": "Statsborgerskap"
+                  }
+                ],
+                "sivilstand": [
+                  {
+                    "type": "Gift",
+                    "erHistorisk": false,
+                    "__typename": "Sivilstand"
+                  },
+                  {
+                    "type": "Skilt",
+                    "erHistorisk": true,
+                    "__typename": "Sivilstand"
+                  },
+                  {
+                    "type": "Separert",
+                    "erHistorisk": true,
+                    "__typename": "Sivilstand"
+                  },
+                  {
+                    "type": "Gift",
+                    "erHistorisk": false,
+                    "__typename": "Sivilstand"
+                  }
+                ],
+                "__typename": "Personopplysninger"
+              },
+              "__typename": "Saksopplysninger"
+            }
+          }
+        }
+      },
+      "duration": 13,
       "dynamicFields": []
     },
     {
@@ -1123,200 +1310,13 @@
           }
         }
       },
-      "duration": 14,
+      "duration": 12,
       "dynamicFields": [
         "data.hentSaksopplysninger.persondata.foedsel.foedselsdato",
         "data.hentSaksopplysninger.persondata.sivilstand[0].bekreftelsesdato",
         "data.hentSaksopplysninger.persondata.sivilstand[1].bekreftelsesdato",
         "data.hentSaksopplysninger.persondata.sivilstand[2].bekreftelsesdato",
         "data.hentSaksopplysninger.persondata.sivilstand[3].bekreftelsesdato"
-      ]
-    },
-    {
-      "request": {
-        "id": "d1d45a086db5",
-        "method": "POST",
-        "url": "http://localhost:3333/graphql/",
-        "pathname": "/graphql/",
-        "normalizedPath": "/graphql/",
-        "query": {},
-        "headers": {
-          "content-type": "application/json",
-          "accept": "*/*",
-          "authorization": "[REDACTED]"
-        },
-        "body": {
-          "operationName": "hentPersonopplysninger",
-          "variables": {
-            "behandlingID": 42
-          },
-          "query": "query hentPersonopplysninger($behandlingID: Long!) {\n  hentSaksopplysninger(behandlingID: $behandlingID) {\n    persondata {\n      navn {\n        fornavn\n        mellomnavn\n        etternavn\n        __typename\n      }\n      kjoenn\n      folkeregisterpersonstatuser {\n        kode\n        erHistorisk\n        __typename\n      }\n      folkeregisteridentifikator\n      statsborgerskap {\n        land\n        erHistorisk\n        __typename\n      }\n      sivilstand {\n        type\n        erHistorisk\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}"
-        }
-      },
-      "response": {
-        "status": 200,
-        "statusText": "OK",
-        "headers": {
-          "content-type": "application/json"
-        },
-        "body": {
-          "data": {
-            "hentSaksopplysninger": {
-              "persondata": {
-                "navn": {
-                  "fornavn": "KARAFFEL",
-                  "mellomnavn": null,
-                  "etternavn": "TRIVIELL",
-                  "__typename": "Navn"
-                },
-                "kjoenn": "UKJENT",
-                "folkeregisterpersonstatuser": [
-                  {
-                    "kode": "MIDLERTIDIG",
-                    "erHistorisk": true,
-                    "__typename": "Folkeregisterpersonstatus"
-                  },
-                  {
-                    "kode": "BOSATT",
-                    "erHistorisk": false,
-                    "__typename": "Folkeregisterpersonstatus"
-                  },
-                  {
-                    "kode": "UTFLYTTET",
-                    "erHistorisk": true,
-                    "__typename": "Folkeregisterpersonstatus"
-                  }
-                ],
-                "folkeregisteridentifikator": "30056928150",
-                "statsborgerskap": [
-                  {
-                    "land": "NORGE",
-                    "erHistorisk": false,
-                    "__typename": "Statsborgerskap"
-                  }
-                ],
-                "sivilstand": [
-                  {
-                    "type": "Gift",
-                    "erHistorisk": false,
-                    "__typename": "Sivilstand"
-                  },
-                  {
-                    "type": "Skilt",
-                    "erHistorisk": true,
-                    "__typename": "Sivilstand"
-                  },
-                  {
-                    "type": "Separert",
-                    "erHistorisk": true,
-                    "__typename": "Sivilstand"
-                  },
-                  {
-                    "type": "Gift",
-                    "erHistorisk": false,
-                    "__typename": "Sivilstand"
-                  }
-                ],
-                "__typename": "Personopplysninger"
-              },
-              "__typename": "Saksopplysninger"
-            }
-          }
-        }
-      },
-      "duration": 15,
-      "dynamicFields": []
-    },
-    {
-      "request": {
-        "id": "83e3322288b4",
-        "method": "POST",
-        "url": "http://localhost:3333/api/fagsaker/sok",
-        "pathname": "/api/fagsaker/sok",
-        "normalizedPath": "/api/fagsaker/sok",
-        "query": {},
-        "headers": {
-          "content-type": "application/json",
-          "accept": "application/json",
-          "authorization": "[REDACTED]"
-        },
-        "body": {
-          "saksnummer": "MEL-1042",
-          "ident": null,
-          "orgnr": null
-        }
-      },
-      "response": {
-        "status": 200,
-        "statusText": "OK",
-        "headers": {
-          "content-type": "application/json"
-        },
-        "body": [
-          {
-            "saksnummer": "MEL-1042",
-            "navn": "TRIVIELL KARAFFEL",
-            "sakstema": {
-              "kode": "MEDLEMSKAP_LOVVALG",
-              "term": "Medlemskap og lovvalg"
-            },
-            "sakstype": {
-              "kode": "FTRL",
-              "term": "Utenfor avtaleland"
-            },
-            "saksstatus": {
-              "kode": "OPPRETTET",
-              "term": "Saken er opprettet"
-            },
-            "land": {
-              "landkoder": [],
-              "flereLandUkjentHvilke": false
-            },
-            "periode": {
-              "fom": null,
-              "tom": null
-            },
-            "opprettetDato": "2025-12-08T12:22:17.245233Z",
-            "behandlingOversikter": [
-              {
-                "behandlingID": 42,
-                "tittel": "Årsavregning",
-                "behandlingsstatus": {
-                  "kode": "UNDER_BEHANDLING",
-                  "term": "Behandlingen pågår"
-                },
-                "behandlingstype": {
-                  "kode": "ÅRSAVREGNING",
-                  "term": "Årsavregning"
-                },
-                "behandlingstema": {
-                  "kode": "YRKESAKTIV",
-                  "term": "Yrkesaktiv"
-                },
-                "soknadsperiode": {
-                  "fom": null,
-                  "tom": null
-                },
-                "opprettetDato": "2025-12-08T12:22:17.247471Z",
-                "behandlingsresultattype": {
-                  "kode": "IKKE_FASTSATT",
-                  "term": "Ikke fastsatt"
-                },
-                "svarFrist": null
-              }
-            ],
-            "hovedpartRolle": "BRUKER"
-          }
-        ]
-      },
-      "duration": 24,
-      "dynamicFields": [
-        "[0].periode.fom",
-        "[0].periode.tom",
-        "[0].opprettetDato",
-        "[0].behandlingOversikter[0].soknadsperiode.fom",
-        "[0].behandlingOversikter[0].soknadsperiode.tom",
-        "[0].behandlingOversikter[0].opprettetDato"
       ]
     },
     {
@@ -1344,7 +1344,7 @@
         },
         "body": []
       },
-      "duration": 16,
+      "duration": 21,
       "dynamicFields": []
     },
     {
@@ -1372,7 +1372,7 @@
         },
         "body": []
       },
-      "duration": 17,
+      "duration": 20,
       "dynamicFields": []
     },
     {
@@ -1430,31 +1430,7 @@
           "harSkjoennsfastsattInntekt": false
         }
       },
-      "duration": 18,
-      "dynamicFields": []
-    },
-    {
-      "request": {
-        "id": "445c1815cf5b",
-        "method": "POST",
-        "url": "http://localhost:3333/api/saksopplysninger/oppfriskning/aarsavregning/42",
-        "pathname": "/api/saksopplysninger/oppfriskning/aarsavregning/42",
-        "normalizedPath": "/api/saksopplysninger/oppfriskning/aarsavregning/:id",
-        "query": {},
-        "headers": {
-          "content-type": "application/json",
-          "accept": "application/json",
-          "authorization": "[REDACTED]"
-        },
-        "body": {}
-      },
-      "response": {
-        "status": 204,
-        "statusText": "No Content",
-        "headers": {},
-        "body": null
-      },
-      "duration": 43,
+      "duration": 17,
       "dynamicFields": []
     },
     {
@@ -1512,7 +1488,31 @@
           "harSkjoennsfastsattInntekt": false
         }
       },
-      "duration": 17,
+      "duration": 16,
+      "dynamicFields": []
+    },
+    {
+      "request": {
+        "id": "445c1815cf5b",
+        "method": "POST",
+        "url": "http://localhost:3333/api/saksopplysninger/oppfriskning/aarsavregning/42",
+        "pathname": "/api/saksopplysninger/oppfriskning/aarsavregning/42",
+        "normalizedPath": "/api/saksopplysninger/oppfriskning/aarsavregning/:id",
+        "query": {},
+        "headers": {
+          "content-type": "application/json",
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": {}
+      },
+      "response": {
+        "status": 204,
+        "statusText": "No Content",
+        "headers": {},
+        "body": null
+      },
+      "duration": 45,
       "dynamicFields": []
     },
     {
@@ -1561,62 +1561,7 @@
           ]
         }
       },
-      "duration": 4,
-      "dynamicFields": []
-    },
-    {
-      "request": {
-        "id": "8c833db30b67",
-        "method": "GET",
-        "url": "http://localhost:3333/api/behandlinger/42/aarsavregninger",
-        "pathname": "/api/behandlinger/42/aarsavregninger",
-        "normalizedPath": "/api/behandlinger/:behandlingId/aarsavregninger",
-        "query": {},
-        "headers": {
-          "accept": "application/json",
-          "authorization": "[REDACTED]"
-        },
-        "body": null
-      },
-      "response": {
-        "status": 200,
-        "statusText": "OK",
-        "headers": {
-          "content-type": "application/json"
-        },
-        "body": {
-          "aarsavregningID": 42,
-          "aar": 2024,
-          "tidligereTrygdeavgiftsGrunnlagsopplysninger": {
-            "trygdeavgiftsgrunnlag": {
-              "avgiftspliktigperioder": [],
-              "skatteforholdsperioder": [],
-              "inntektskperioder": []
-            },
-            "avgift": {
-              "trygdeavgiftsperioder": [],
-              "totalInntekt": 0,
-              "totalAvgift": 0
-            },
-            "tidligereTrygdeavgiftFraAvgiftssystemet": null,
-            "tidligereÅrsavregningManueltAvgiftBeloep": null
-          },
-          "sisteGjeldendeAvgiftspliktigperioder": [],
-          "nyttTrygdeavgiftsGrunnlag": null,
-          "endeligAvgift": null,
-          "avregning": {
-            "beregnetAvgiftBelop": null,
-            "tidligereFakturertBeloep": null,
-            "tilFaktureringBeloep": null,
-            "trygdeavgiftFraAvgiftssystemet": null,
-            "manueltAvgiftBeloep": null
-          },
-          "harTrygdeavgiftFraAvgiftssystemet": true,
-          "endeligAvgiftValg": "OPPLYSNINGER_ENDRET",
-          "harSkjoennsfastsattInntekt": false
-        }
-      },
-      "duration": 14,
+      "duration": 5,
       "dynamicFields": []
     },
     {
@@ -1654,10 +1599,10 @@
               "kode": "YRKESAKTIV",
               "term": "Yrkesaktiv"
             },
-            "registrertDato": "2025-12-08T12:22:17.247471Z",
-            "endretDato": "2025-12-08T12:22:38.901318Z",
+            "registrertDato": "2025-12-08T13:15:16.803715Z",
+            "endretDato": "2025-12-08T13:15:37.401884Z",
             "endretAvNavn": "Lokal Testbruker",
-            "sisteOpplysningerHentetDato": "2025-12-08T12:22:38.897271Z",
+            "sisteOpplysningerHentetDato": "2025-12-08T13:15:37.397986Z",
             "svarFrist": null,
             "behandlingsfrist": "2026-03-08",
             "behandlingsresultattype": {
@@ -1709,8 +1654,8 @@
                 "arbeidstakerID": "30056928150",
                 "opplysningspliktigtype": "ORGANISASJON",
                 "opplysningspliktigID": "999999999",
-                "opprettelsestidspunkt": "2025-12-08T12:22:38.880853Z",
-                "sistBekreftet": "2025-12-08T12:22:38.880856Z",
+                "opprettelsestidspunkt": "2025-12-08T13:15:37.377997Z",
+                "sistBekreftet": "2025-12-08T13:15:37.378Z",
                 "Aordning": null,
                 "timerTimelonnet": []
               }
@@ -2318,7 +2263,7 @@
           "redigerbart": true
         }
       },
-      "duration": 26,
+      "duration": 27,
       "dynamicFields": [
         "oppsummering.registrertDato",
         "oppsummering.endretDato",
@@ -2371,11 +2316,11 @@
     },
     {
       "request": {
-        "id": "ded16d751ba6",
+        "id": "8c833db30b67",
         "method": "GET",
-        "url": "http://localhost:3333/api/behandlinger/42/medlemskapsperioder",
-        "pathname": "/api/behandlinger/42/medlemskapsperioder",
-        "normalizedPath": "/api/behandlinger/:behandlingId/medlemskapsperioder",
+        "url": "http://localhost:3333/api/behandlinger/42/aarsavregninger",
+        "pathname": "/api/behandlinger/42/aarsavregninger",
+        "normalizedPath": "/api/behandlinger/:behandlingId/aarsavregninger",
         "query": {},
         "headers": {
           "accept": "application/json",
@@ -2389,34 +2334,39 @@
         "headers": {
           "content-type": "application/json"
         },
-        "body": []
+        "body": {
+          "aarsavregningID": 42,
+          "aar": 2024,
+          "tidligereTrygdeavgiftsGrunnlagsopplysninger": {
+            "trygdeavgiftsgrunnlag": {
+              "avgiftspliktigperioder": [],
+              "skatteforholdsperioder": [],
+              "inntektskperioder": []
+            },
+            "avgift": {
+              "trygdeavgiftsperioder": [],
+              "totalInntekt": 0,
+              "totalAvgift": 0
+            },
+            "tidligereTrygdeavgiftFraAvgiftssystemet": null,
+            "tidligereÅrsavregningManueltAvgiftBeloep": null
+          },
+          "sisteGjeldendeAvgiftspliktigperioder": [],
+          "nyttTrygdeavgiftsGrunnlag": null,
+          "endeligAvgift": null,
+          "avregning": {
+            "beregnetAvgiftBelop": null,
+            "tidligereFakturertBeloep": null,
+            "tilFaktureringBeloep": null,
+            "trygdeavgiftFraAvgiftssystemet": null,
+            "manueltAvgiftBeloep": null
+          },
+          "harTrygdeavgiftFraAvgiftssystemet": true,
+          "endeligAvgiftValg": "OPPLYSNINGER_ENDRET",
+          "harSkjoennsfastsattInntekt": false
+        }
       },
-      "duration": 12,
-      "dynamicFields": []
-    },
-    {
-      "request": {
-        "id": "ded16d751ba6",
-        "method": "GET",
-        "url": "http://localhost:3333/api/behandlinger/42/medlemskapsperioder",
-        "pathname": "/api/behandlinger/42/medlemskapsperioder",
-        "normalizedPath": "/api/behandlinger/:behandlingId/medlemskapsperioder",
-        "query": {},
-        "headers": {
-          "accept": "application/json",
-          "authorization": "[REDACTED]"
-        },
-        "body": null
-      },
-      "response": {
-        "status": 200,
-        "statusText": "OK",
-        "headers": {
-          "content-type": "application/json"
-        },
-        "body": []
-      },
-      "duration": 13,
+      "duration": 14,
       "dynamicFields": []
     },
     {
@@ -2454,7 +2404,57 @@
           "aarsavregningID": 42
         }
       },
-      "duration": 15,
+      "duration": 16,
+      "dynamicFields": []
+    },
+    {
+      "request": {
+        "id": "ded16d751ba6",
+        "method": "GET",
+        "url": "http://localhost:3333/api/behandlinger/42/medlemskapsperioder",
+        "pathname": "/api/behandlinger/42/medlemskapsperioder",
+        "normalizedPath": "/api/behandlinger/:behandlingId/medlemskapsperioder",
+        "query": {},
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": []
+      },
+      "duration": 14,
+      "dynamicFields": []
+    },
+    {
+      "request": {
+        "id": "ded16d751ba6",
+        "method": "GET",
+        "url": "http://localhost:3333/api/behandlinger/42/medlemskapsperioder",
+        "pathname": "/api/behandlinger/42/medlemskapsperioder",
+        "normalizedPath": "/api/behandlinger/:behandlingId/medlemskapsperioder",
+        "query": {},
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": []
+      },
+      "duration": 13,
       "dynamicFields": []
     },
     {
@@ -2579,7 +2579,7 @@
           ]
         }
       },
-      "duration": 6,
+      "duration": 4,
       "dynamicFields": []
     },
     {
@@ -2623,7 +2623,7 @@
           ]
         }
       },
-      "duration": 5,
+      "duration": 7,
       "dynamicFields": []
     }
   ]
