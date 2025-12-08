@@ -5,7 +5,7 @@ import { OpprettNySakPage } from "../../../pages/opprett-ny-sak/opprett-ny-sak.p
 import { TIMEOUT_FOR_COMPLEX_TESTS } from "../../../utils/testUtils";
 
 /**
- * MELOSYS-7624: Test state-håndtering ved saksbytting
+ * Test state-håndtering ved saksbytting
  *
  * Disse testene verifiserer at refaktoreringen fra 8 useEffects til Redux action creator
  * fungerer korrekt, spesielt ved rask saksbytting og komplekse states.
@@ -54,8 +54,8 @@ test.describe("State-håndtering ved saksbytting", () => {
   });
 
   test("Utenfor avtaleland med aktiv behandling - årsavregning tilgjengelig", async ({ page }, testInfo) => {
-    // Bruk prepopulert OPPRETTET sak MEL-1059 (FTRL)
-    const sakId = "MEL-1059";
+    // Bruk prepopulert UNDER_BEHANDLING sak MEL-1018 (FTRL - Utenfor avtaleland)
+    const sakId = "MEL-1018";
     const valgtSak = opprettNySakPage.finnSakBySaksnummer(sakId);
 
     await valgtSak.click();

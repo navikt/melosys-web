@@ -47,7 +47,7 @@ async function clearOracleTestData(): Promise<void> {
   }
 }
 
-async function globalSetup() {
+export default async function globalSetup() {
   /* eslint-disable no-console */
   console.log("\n Global setup: Initializing test data...\n");
 
@@ -77,5 +77,3 @@ async function globalSetup() {
   }
   /* eslint-enable no-console */
 }
-
-export default globalSetup;

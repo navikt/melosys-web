@@ -1,24 +1,71 @@
 import { expect, Page } from "@playwright/test";
-import { getSaksnummerFraUrl } from "../../utils/testUtils";
 import { BehandlingPage } from "./behandling.page";
+import { PrepopulertSaksnummer } from "../../utils/testdataUtils";
 
 /**
  * Page Object for Årsavregning-siden
  */
 export class AarsavregningPage extends BehandlingPage {
-  constructor(page: Page) {
-    super(page);
+  constructor(page: Page, saksnummer: PrepopulertSaksnummer) {
+    super(page, saksnummer);
+  }
+
+  // Hent første tilgjengelige år fra dropdown-en (ikke "Velg...")
+  async hentFørsteTilgjengeligeÅr(): Promise<string> {
+    const årSelect = this.page.getByRole("combobox", { name: /år/i });
+    await expect(årSelect, "År-select skal være synlig").toBeVisible({ timeout: 5000 });
+
+    // Hent alle options og finn første som ikke er disabled
+    const options = årSelect.locator("option:not([disabled])");
+    const førsteÅr = await options.first().textContent();
+
+    if (!førsteÅr) {
+      throw new Error("Kunne ikke finne tilgjengelige år i dropdown");
+    }
+
+    return førsteÅr.trim();
   }
 
   // År dropdown
   async velgÅr(år: string) {
-    const saksnummer = getSaksnummerFraUrl(this.page);
     const årSelect = this.page.getByRole("combobox", { name: /år/i });
-    await expect(årSelect, `${saksnummer}: År-select skal være synlig`).toBeVisible({ timeout: 5000 });
+    await expect(årSelect, `${this.ctx}: År-select skal være synlig`).toBeVisible({ timeout: 5000 });
+
+    // Sett opp lyttere for API-kall FØR vi velger år
+    // Vi trenger å vente på ENTEN:
+    // 1. POST til /aarsavregninger (oppretter ny årsavregning) - status 200
+    // 2. Feilmelding om aktiv årsavregning vises i UI (året har allerede en aktiv årsavregning)
+    const aarsavregningResponsePromise = this.page.waitForResponse(
+      (response) =>
+        response.url().includes("/aarsavregninger") &&
+        !response.url().includes("/grunnlagstype") &&
+        response.request().method() === "POST",
+      { timeout: 15000 },
+    );
+
     await årSelect.selectOption({ label: år });
-    // Vent på at data for året har lastet ved å sjekke at bestemmelse-dropdown er synlig
-    const bestemmelseSelect = this.page.getByRole("combobox", { name: /bestemmelse/i });
-    await expect(bestemmelseSelect, `${saksnummer}: Bestemmelse-select skal være synlig etter årsskifte`).toBeVisible({
+
+    // Vent på at API-kallet for å opprette årsavregning fullføres (uansett om det lykkes eller feiler)
+    // Dette sikrer at backend er ferdig før vi fortsetter
+    try {
+      const response = await aarsavregningResponsePromise;
+      if (!response.ok()) {
+        // Årsavregning-kallet feilet (f.eks. validering), men det er OK - vi venter på UI-oppdatering
+      }
+    } catch {
+      // Timeout - årsavregningen kan allerede eksistere, eller noe annet gikk galt
+      // Vi fortsetter likevel og lar neste sjekk fange eventuelle feil
+    }
+
+    // Vent på at data for året har lastet ved å sjekke at spørsmålet om trygdeavgift fra Avgiftssystemet vises
+    // Bestemmelse-dropdown vises ikke før etter at brukeren har svart på dette spørsmålet og valgt "endeligAvgiftValg"
+    const trygdeavgiftSpørsmålTekst = this.page.getByText(
+      /skal du legge til trygdeavgift fra avgiftssystemet til denne årsavregningen/i,
+    );
+    await expect(
+      trygdeavgiftSpørsmålTekst,
+      `${this.ctx}: Spørsmål om trygdeavgift fra avgiftssystemet skal være synlig etter årsskifte`,
+    ).toBeVisible({
       timeout: 5000,
     });
   }
@@ -30,9 +77,8 @@ export class AarsavregningPage extends BehandlingPage {
 
   // Medlemskapsperiode operasjoner
   async leggTilMedlemskapsperiode() {
-    const saksnummer = getSaksnummerFraUrl(this.page);
     const knapp = this.page.getByRole("button", { name: /legg til periode/i });
-    await expect(knapp, `${saksnummer}: Knapp 'Legg til periode' skal være synlig`).toBeVisible({ timeout: 5000 });
+    await expect(knapp, `${this.ctx}: Knapp 'Legg til periode' skal være synlig`).toBeVisible({ timeout: 5000 });
 
     // Tell antall perioder før klikk
     const perioder = this.page.locator(".medlemskapsperiode__rad");
@@ -41,20 +87,19 @@ export class AarsavregningPage extends BehandlingPage {
     await knapp.click();
 
     // Vent på at ny periode er lagt til
-    await expect(perioder, `${saksnummer}: Ny medlemskapsperiode skal være lagt til`).toHaveCount(antallFør + 1, {
+    await expect(perioder, `${this.ctx}: Ny medlemskapsperiode skal være lagt til`).toHaveCount(antallFør + 1, {
       timeout: 5000,
     });
   }
 
   async fyllUtMedlemskapsperiodeFomDato(index: number, dato: string) {
-    const saksnummer = getSaksnummerFraUrl(this.page);
     // Bruk trygdedekning combobox som anker - dette sikrer at perioden eksisterer
     const trygdedekningDropdown = this.page.getByRole("combobox", {
       name: new RegExp(`Trygdedekning periode ${index + 1}`, "i"),
     });
     await expect(
       trygdedekningDropdown,
-      `${saksnummer}: Trygdedekning-dropdown for periode ${index + 1} skal være synlig`,
+      `${this.ctx}: Trygdedekning-dropdown for periode ${index + 1} skal være synlig`,
     ).toBeVisible({ timeout: 10000 });
 
     // Finn alle inputs på siden, og filtrér ved å telle medlemskapsperiode-inputs
@@ -69,21 +114,20 @@ export class AarsavregningPage extends BehandlingPage {
 
     expect(
       inputIndex < allInputs.length,
-      `${saksnummer}: Kan ikke finne input ${inputIndex} for periode ${index + 1}. Totalt ${allInputs.length} inputs funnet.`,
+      `${this.ctx}: Kan ikke finne input ${inputIndex} for periode ${index + 1}. Totalt ${allInputs.length} inputs funnet.`,
     ).toBe(true);
 
     await allInputs[inputIndex].fill(dato);
   }
 
   async fyllUtMedlemskapsperiodeTomDato(index: number, dato: string) {
-    const saksnummer = getSaksnummerFraUrl(this.page);
     // Bruk trygdedekning combobox som anker - dette sikrer at perioden eksisterer
     const trygdedekningDropdown = this.page.getByRole("combobox", {
       name: new RegExp(`Trygdedekning periode ${index + 1}`, "i"),
     });
     await expect(
       trygdedekningDropdown,
-      `${saksnummer}: Trygdedekning-dropdown for periode ${index + 1} skal være synlig`,
+      `${this.ctx}: Trygdedekning-dropdown for periode ${index + 1} skal være synlig`,
     ).toBeVisible({ timeout: 10000 });
 
     // Finn alle inputs på siden
@@ -96,18 +140,17 @@ export class AarsavregningPage extends BehandlingPage {
 
     expect(
       inputIndex < allInputs.length,
-      `${saksnummer}: Kan ikke finne input ${inputIndex} for periode ${index + 1}. Totalt ${allInputs.length} inputs funnet.`,
+      `${this.ctx}: Kan ikke finne input ${inputIndex} for periode ${index + 1}. Totalt ${allInputs.length} inputs funnet.`,
     ).toBe(true);
 
     await allInputs[inputIndex].fill(dato);
   }
 
   async velgTrygdedekning(index: number, dekning: string) {
-    const saksnummer = getSaksnummerFraUrl(this.page);
     const select = this.page.getByRole("combobox", {
       name: new RegExp(`Trygdedekning periode ${index + 1}`, "i"),
     });
-    await expect(select, `${saksnummer}: Trygdedekning-select for periode ${index + 1} skal være synlig`).toBeVisible({
+    await expect(select, `${this.ctx}: Trygdedekning-select for periode ${index + 1} skal være synlig`).toBeVisible({
       timeout: 10000,
     });
     await select.selectOption({ label: dekning });
@@ -125,10 +168,9 @@ export class AarsavregningPage extends BehandlingPage {
   }
 
   async getAntallMedlemskapsperioder(): Promise<number> {
-    const saksnummer = getSaksnummerFraUrl(this.page);
     // Vent på at minst ett trygdedekning-felt er synlig før telling
     const firstSelect = this.page.locator('select[name^="medlemskapsperioder["][name$="].trygdedekning"]').first();
-    await expect(firstSelect, `${saksnummer}: Første trygdedekning-select skal være synlig`).toBeVisible({
+    await expect(firstSelect, `${this.ctx}: Første trygdedekning-select skal være synlig`).toBeVisible({
       timeout: 10000,
     });
     return await this.page.locator('select[name^="medlemskapsperioder["][name$="].trygdedekning"]').count();
@@ -142,8 +184,7 @@ export class AarsavregningPage extends BehandlingPage {
   async fyllUtSkatteforholdFomDato(index: number, dato: string) {
     // Vent på at skatteforhold-seksjonen er synlig ved å sjekke for første textbox med label "Skatteforhold"
     const firstSkattLabel = this.page.locator('text="Skatteforhold"').first();
-    const saksnummer = getSaksnummerFraUrl(this.page);
-    await expect(firstSkattLabel, `${saksnummer}: Label 'Skatteforhold' skal være synlig`).toBeVisible({
+    await expect(firstSkattLabel, `${this.ctx}: Label 'Skatteforhold' skal være synlig`).toBeVisible({
       timeout: 10000,
     });
 
@@ -159,7 +200,7 @@ export class AarsavregningPage extends BehandlingPage {
 
     expect(
       inputIndex < allInputs.length,
-      `${saksnummer}: Kan ikke finne input ${inputIndex} for skatteforhold ${index}. Totalt ${allInputs.length} inputs funnet.`,
+      `${this.ctx}: Kan ikke finne input ${inputIndex} for skatteforhold ${index}. Totalt ${allInputs.length} inputs funnet.`,
     ).toBe(true);
 
     await allInputs[inputIndex].fill(dato);
@@ -167,8 +208,7 @@ export class AarsavregningPage extends BehandlingPage {
 
   async fyllUtSkatteforholdTomDato(index: number, dato: string) {
     const firstSkattLabel = this.page.locator('text="Skatteforhold"').first();
-    const saksnummer = getSaksnummerFraUrl(this.page);
-    await expect(firstSkattLabel, `${saksnummer}: Label 'Skatteforhold' skal være synlig`).toBeVisible({
+    await expect(firstSkattLabel, `${this.ctx}: Label 'Skatteforhold' skal være synlig`).toBeVisible({
       timeout: 10000,
     });
 
@@ -182,14 +222,13 @@ export class AarsavregningPage extends BehandlingPage {
 
     expect(
       inputIndex < allInputs.length,
-      `${saksnummer}: Kan ikke finne input ${inputIndex} for skatteforhold ${index}. Totalt ${allInputs.length} inputs funnet.`,
+      `${this.ctx}: Kan ikke finne input ${inputIndex} for skatteforhold ${index}. Totalt ${allInputs.length} inputs funnet.`,
     ).toBe(true);
 
     await allInputs[inputIndex].fill(dato);
   }
 
   async velgSkatteplikttype(index: number, type: string) {
-    const saksnummer = getSaksnummerFraUrl(this.page);
     // Skatteplikttype er en RadioGroup med "Ja"/"Nei", ikke en select
     // type parameter kan være "Ja" eller "Nei" (eller "Skattepliktig"/"Ikke skattepliktig")
     const radioValue = type.toLowerCase().includes("ja") || type.toLowerCase().includes("skattepliktig") ? "Ja" : "Nei";
@@ -197,9 +236,9 @@ export class AarsavregningPage extends BehandlingPage {
     // Finn radio-knappen ved å bruke group legend som anker
     const radioGroup = this.page.locator(`[name="skatteforholdsperioder[${index}].skatteplikttype"]`).locator("..");
     const radio = radioGroup.getByRole("radio", { name: new RegExp(radioValue, "i") });
-    await expect(radio, `${saksnummer}: Radio-button "${radioValue}" for skatteplikttype skal være synlig`).toBeVisible(
-      { timeout: 5000 },
-    );
+    await expect(radio, `${this.ctx}: Radio-button "${radioValue}" for skatteplikttype skal være synlig`).toBeVisible({
+      timeout: 5000,
+    });
     await radio.click({ force: true });
   }
 
@@ -211,8 +250,7 @@ export class AarsavregningPage extends BehandlingPage {
   async fyllUtInntektsperiodeFomDato(index: number, dato: string) {
     // Vent på at inntektsperiode-seksjonen er synlig
     const firstInntektLabel = this.page.locator('text="Inntektsperiode"').first();
-    const saksnummer = getSaksnummerFraUrl(this.page);
-    await expect(firstInntektLabel, `${saksnummer}: Label 'Inntektsperiode' skal være synlig`).toBeVisible({
+    await expect(firstInntektLabel, `${this.ctx}: Label 'Inntektsperiode' skal være synlig`).toBeVisible({
       timeout: 10000,
     });
 
@@ -227,7 +265,7 @@ export class AarsavregningPage extends BehandlingPage {
 
     expect(
       inputIndex < allInputs.length,
-      `${saksnummer}: Kan ikke finne input ${inputIndex} for inntektsperiode ${index}. Totalt ${allInputs.length} inputs funnet.`,
+      `${this.ctx}: Kan ikke finne input ${inputIndex} for inntektsperiode ${index}. Totalt ${allInputs.length} inputs funnet.`,
     ).toBe(true);
 
     await allInputs[inputIndex].fill(dato);
@@ -235,8 +273,7 @@ export class AarsavregningPage extends BehandlingPage {
 
   async fyllUtInntektsperiodeTomDato(index: number, dato: string) {
     const firstInntektLabel = this.page.locator('text="Inntektsperiode"').first();
-    const saksnummer = getSaksnummerFraUrl(this.page);
-    await expect(firstInntektLabel, `${saksnummer}: Label 'Inntektsperiode' skal være synlig`).toBeVisible({
+    await expect(firstInntektLabel, `${this.ctx}: Label 'Inntektsperiode' skal være synlig`).toBeVisible({
       timeout: 10000,
     });
 
@@ -247,17 +284,16 @@ export class AarsavregningPage extends BehandlingPage {
 
     expect(
       inputIndex < allInputs.length,
-      `${saksnummer}: Kan ikke finne input ${inputIndex} for inntektsperiode ${index}. Totalt ${allInputs.length} inputs funnet.`,
+      `${this.ctx}: Kan ikke finne input ${inputIndex} for inntektsperiode ${index}. Totalt ${allInputs.length} inputs funnet.`,
     ).toBe(true);
 
     await allInputs[inputIndex].fill(dato);
   }
 
   async velgKildetype(index: number, type: string) {
-    const saksnummer = getSaksnummerFraUrl(this.page);
     // Bruk aria-label tilnærming for select, eller fall tilbake til name attribute hvis det fungerer
     const select = this.page.locator(`select[name="inntektskilder[${index}].kildetype"]`);
-    await expect(select, `${saksnummer}: Kildetype-select for inntektsperiode ${index} skal være synlig`).toBeVisible({
+    await expect(select, `${this.ctx}: Kildetype-select for inntektsperiode ${index} skal være synlig`).toBeVisible({
       timeout: 10000,
     });
 
@@ -277,8 +313,7 @@ export class AarsavregningPage extends BehandlingPage {
 
   async fyllUtBruttoInntekt(index: number, belop: string) {
     const firstInntektLabel = this.page.locator('text="Inntektsperiode"').first();
-    const saksnummer = getSaksnummerFraUrl(this.page);
-    await expect(firstInntektLabel, `${saksnummer}: Label 'Inntektsperiode' skal være synlig`).toBeVisible({
+    await expect(firstInntektLabel, `${this.ctx}: Label 'Inntektsperiode' skal være synlig`).toBeVisible({
       timeout: 10000,
     });
 
@@ -290,7 +325,7 @@ export class AarsavregningPage extends BehandlingPage {
 
     expect(
       inputIndex < allInputs.length,
-      `${saksnummer}: Kan ikke finne bruttoInntekt input ${inputIndex} for inntektsperiode ${index}. Totalt ${allInputs.length} inputs funnet.`,
+      `${this.ctx}: Kan ikke finne bruttoInntekt input ${inputIndex} for inntektsperiode ${index}. Totalt ${allInputs.length} inputs funnet.`,
     ).toBe(true);
 
     await allInputs[inputIndex].fill(belop);
@@ -298,21 +333,62 @@ export class AarsavregningPage extends BehandlingPage {
 
   // Trygdeavgift fra Avgiftssystemet (delt grunnlag)
   async velgDeltGrunnlagJa() {
-    const saksnummer = getSaksnummerFraUrl(this.page);
-    const jaRadio = this.page.getByRole("radio", { name: /ja/i }).first();
-    await expect(jaRadio, `${saksnummer}: Radio-button 'Ja' skal være synlig`).toBeVisible({ timeout: 10000 });
+    const jaRadio = this.page.getByRole("radio", { name: /^ja$/i }).first();
+    await expect(jaRadio, `${this.ctx}: Radio-button 'Ja' skal være synlig`).toBeVisible({ timeout: 10000 });
 
-    // Bruk click() i stedet for check() for å håndtere NAV Design System radio-knapper
-    // click() fungerer selv om knappen allerede er checked
-    await jaRadio.click({ force: true });
+    // Sjekk om radioknappen allerede er checked
+    const isChecked = await jaRadio.isChecked();
 
-    // Vent på at API-kallet for oppdaterHarTrygdeavgiftFraAvgiftssystemet fullføres
-    // og at skjemaet re-rendres med medlemskapsperiode-feltene
+    if (!isChecked) {
+      // Sett opp lytter for API-respons FØR vi klikker på radioknappen
+      // Dette sikrer at vi venter på at backend har oppdatert harTrygdeavgiftFraAvgiftssystemet
+      const grunnlagstypeResponsePromise = this.page.waitForResponse(
+        (response) =>
+          response.url().includes("/grunnlagstype") &&
+          response.request().method() === "POST" &&
+          response.status() === 200,
+        { timeout: 15000 },
+      );
+
+      // Prøv å velge radioknappen - hvis den er readonly vil dette feile
+      // men vi fanger feilen og gir en mer beskrivende feilmelding
+      try {
+        await jaRadio.check({ timeout: 5000 });
+      } catch {
+        // Radioknappen er sannsynligvis readonly - sjekk om dette er forventet
+        throw new Error(
+          `${this.ctx}: Kunne ikke velge 'Ja' radioknapp. ` +
+            `Feltet er sannsynligvis readonly (forrigeÅrsavregningHarInnbetaltFraAvgiftssystem=true). ` +
+            `Denne testdataen støtter ikke delt grunnlag-test.`,
+        );
+      }
+
+      // Vent på at API-kallet for oppdaterHarTrygdeavgiftFraAvgiftssystemet fullføres
+      await grunnlagstypeResponsePromise;
+    }
+
+    // Vent på at "Beregn endelig trygdeavgift" radioknappen vises
+    // Dette kan ta litt tid pga React re-rendering
+    const beregnEndeligRadio = this.page.getByRole("radio", { name: /beregn endelig trygdeavgift/i });
+    await expect(
+      beregnEndeligRadio,
+      `${this.ctx}: 'Beregn endelig trygdeavgift' radio skal være synlig etter Ja valgt`,
+    ).toBeVisible({ timeout: 15000 });
+
+    // Sjekk om "Beregn endelig trygdeavgift" allerede er valgt
+    const beregnIsChecked = await beregnEndeligRadio.isChecked();
+
+    if (!beregnIsChecked) {
+      // Velg "Beregn endelig trygdeavgift" for å vise medlemskapsperiode-skjemaet
+      await beregnEndeligRadio.check();
+    }
+
+    // Vent på at skjemaet re-rendres med medlemskapsperiode-feltene
     const medlemskapsperiodeFelt = this.page.getByRole("combobox", { name: /trygdedekning periode 1/i });
     await expect(
       medlemskapsperiodeFelt,
-      `${saksnummer}: Medlemskapsperiode-felt skal være synlig etter delt grunnlag valgt`,
-    ).toBeVisible({ timeout: 5000 });
+      `${this.ctx}: Medlemskapsperiode-felt skal være synlig etter delt grunnlag valgt`,
+    ).toBeVisible({ timeout: 10000 });
   }
 
   // Datepicker-spesifikke metoder for å teste datovelger
@@ -320,10 +396,9 @@ export class AarsavregningPage extends BehandlingPage {
     const trygdedekningDropdown = this.page.getByRole("combobox", {
       name: new RegExp(`Trygdedekning periode ${index + 1}`, "i"),
     });
-    const saksnummer = getSaksnummerFraUrl(this.page);
     await expect(
       trygdedekningDropdown,
-      `${saksnummer}: Trygdedekning-dropdown for periode ${index + 1} skal være synlig`,
+      `${this.ctx}: Trygdedekning-dropdown for periode ${index + 1} skal være synlig`,
     ).toBeVisible({ timeout: 10000 });
 
     const allInputs = await this.page
@@ -333,7 +408,7 @@ export class AarsavregningPage extends BehandlingPage {
 
     expect(
       inputIndex < allInputs.length,
-      `${saksnummer}: Kan ikke finne input ${inputIndex} for periode ${index + 1}. Totalt ${allInputs.length} inputs funnet.`,
+      `${this.ctx}: Kan ikke finne input ${inputIndex} for periode ${index + 1}. Totalt ${allInputs.length} inputs funnet.`,
     ).toBe(true);
 
     // Finn "Åpne datovelger" knappen som er søsken til input-feltet
@@ -343,17 +418,15 @@ export class AarsavregningPage extends BehandlingPage {
   }
 
   async verifiserDatepickerErAktiv() {
-    const saksnummer = getSaksnummerFraUrl(this.page);
     // NAV Design System bruker et dialog element for datepicker
     const datepicker = this.page.getByRole("dialog");
-    await expect(datepicker, `${saksnummer}: Datepicker-dialog skal være synlig`).toBeVisible({ timeout: 2000 });
+    await expect(datepicker, `${this.ctx}: Datepicker-dialog skal være synlig`).toBeVisible({ timeout: 2000 });
   }
 
   async verifiserDatepickerIkkeErAktiv() {
-    const saksnummer = getSaksnummerFraUrl(this.page);
     // NAV Design System bruker et dialog element for datepicker
     const datepicker = this.page.getByRole("dialog");
-    await expect(datepicker, `${saksnummer}: Datepicker-dialog skal ikke være synlig`).not.toBeVisible();
+    await expect(datepicker, `${this.ctx}: Datepicker-dialog skal ikke være synlig`).not.toBeVisible();
   }
 
   async velgDatoIDatepicker(dato: Date) {
@@ -370,16 +443,14 @@ export class AarsavregningPage extends BehandlingPage {
   }
 
   async verifiserIngenFeilmelding(tekst: string) {
-    const saksnummer = getSaksnummerFraUrl(this.page);
     const error = this.page.locator('[class*="error"], [class*="feil"]').filter({ hasText: new RegExp(tekst, "i") });
-    await expect(error, `${saksnummer}: Feilmelding "${tekst}" skal ikke være synlig`).not.toBeVisible();
+    await expect(error, `${this.ctx}: Feilmelding "${tekst}" skal ikke være synlig`).not.toBeVisible();
   }
   // Verifiser at siden er lastet
   async verifiserAarsavregningside() {
-    const saksnummer = getSaksnummerFraUrl(this.page);
     await expect(
       this.page.getByRole("heading", { name: /årsavregning/i }),
-      `${saksnummer}: Årsavregning-overskrift skal være synlig`,
+      `${this.ctx}: Årsavregning-overskrift skal være synlig`,
     ).toBeVisible();
   }
 }

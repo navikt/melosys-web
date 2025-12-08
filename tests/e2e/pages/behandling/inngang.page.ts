@@ -1,13 +1,14 @@
 import { Page } from "@playwright/test";
 import { setDatoFelt } from "../../utils/testUtils";
 import { BehandlingPage } from "./behandling.page";
+import { PrepopulertSaksnummer } from "../../utils/testdataUtils";
 
 /**
  * Page Object Model for Inngang-steget
  */
 export class InngangPage extends BehandlingPage {
-  constructor(page: Page) {
-    super(page);
+  constructor(page: Page, saksnummer: PrepopulertSaksnummer) {
+    super(page, saksnummer);
   }
 
   /**
