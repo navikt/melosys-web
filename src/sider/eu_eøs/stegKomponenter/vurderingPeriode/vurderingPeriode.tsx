@@ -96,9 +96,11 @@ export function VurderingPeriode({
 
   // Oppdater form-verdiene hvis det finnes en eksisterende forkortet lovvalgsperiode
   useEffect(() => {
+    const fomErGyldig = lovvalgsFomDato && lovvalgsFomDato !== "Invalid date";
+    const tomErGyldig = lovvalgsTomDato && lovvalgsTomDato !== "Invalid date";
     if (
-      lovvalgsFomDato &&
-      lovvalgsTomDato &&
+      fomErGyldig &&
+      tomErGyldig &&
       (lovvalgsFomDato !== mottatteOpplysningerFom || lovvalgsTomDato !== mottatteOpplysningerTom)
     ) {
       // Det finnes en eksisterende forkortet periode - oppdater form
@@ -142,14 +144,12 @@ export function VurderingPeriode({
   // Oppdater lovvalgsperioden når brukeren endrer datoer eller checkbox
   useEffect(() => {
     if (redigerbart) {
-      const fomDato =
-        formValues.forkortLovvalgsperiode && formValues.fomDato
-          ? Utils.dato.formatterDatoTilISO(formValues.fomDato, null)
-          : mottatteOpplysningerFom;
-      const tomDato =
-        formValues.forkortLovvalgsperiode && formValues.tomDato
-          ? Utils.dato.formatterDatoTilISO(formValues.tomDato, null)
-          : mottatteOpplysningerTom;
+      const fomDato = formValues.forkortLovvalgsperiode
+        ? Utils.dato.formatterDatoTilISO(formValues.fomDato, null)
+        : mottatteOpplysningerFom;
+      const tomDato = formValues.forkortLovvalgsperiode
+        ? Utils.dato.formatterDatoTilISO(formValues.tomDato, null)
+        : mottatteOpplysningerTom;
 
       // Bare oppdater hvis vi har gyldige datoer
       if (fomDato && tomDato) {
