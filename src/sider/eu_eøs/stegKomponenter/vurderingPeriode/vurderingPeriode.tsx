@@ -237,7 +237,6 @@ export function VurderingPeriode({
                 name="fomDato"
                 control={control}
                 readOnly={!redigerbart}
-                forhindreAutoUtfylling
                 brukInternValidering
               />
             </Nav.Column>
@@ -249,7 +248,6 @@ export function VurderingPeriode({
                 readOnly={!redigerbart}
                 minDate={Utils.dato.isoStringTilDate(soknadsperiode.fom) || new Date()}
                 maxDate={Utils.dato.isoStringTilDate(soknadsperiode.tom)}
-                forhindreAutoUtfylling
                 brukInternValidering
               />
             </Nav.Column>
