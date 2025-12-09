@@ -85,35 +85,6 @@ describe("Datovelger", () => {
       expect(datePicker.value).toBe("01");
     });
 
-    it("sender rå verdi til onChange ved onBlur når input er for kort", () => {
-      const onChange = vi.fn();
-      render(<Datovelger {...props} onChange={onChange} forhindreAutoUtfylling={true} />);
-
-      const datePicker = screen.getByRole("textbox") as HTMLInputElement;
-
-      // Skriv ugyldig dato
-      fireEvent.change(datePicker, { target: { value: "abc" } });
-      onChange.mockClear(); // Nullstill for å bare fange onBlur-kallet
-
-      fireEvent.blur(datePicker);
-
-      // onChange skal kalles med den rå verdien ved onBlur (for validering)
-      expect(onChange).toHaveBeenCalledWith("abc");
-    });
-
-    it("sender rå verdi til onChange for datoer med ugyldige tegn", () => {
-      const onChange = vi.fn();
-      render(<Datovelger {...props} onChange={onChange} forhindreAutoUtfylling={true} />);
-
-      const datePicker = screen.getByRole("textbox") as HTMLInputElement;
-
-      // Skriv dato med ugyldig tegn på slutten
-      fireEvent.change(datePicker, { target: { value: "01.01.2025s" } });
-
-      // onChange skal kalles med den rå verdien under change
-      expect(onChange).toHaveBeenCalledWith("01.01.2025s");
-    });
-
     it("tillater formatering av komplette datoer selv når forhindreAutoUtfylling er true", () => {
       const onChange = vi.fn();
       render(<Datovelger {...props} onChange={onChange} forhindreAutoUtfylling={true} />);
@@ -204,43 +175,6 @@ describe("Datovelger", () => {
     });
   });
 
-  describe("onDateChange håndtering", () => {
-    it("kaller ikke onChange når DatePicker returnerer undefined dato", () => {
-      const onChange = vi.fn();
-      render(<Datovelger {...props} onChange={onChange} />);
-
-      const datePicker = screen.getByRole("textbox") as HTMLInputElement;
-
-      // Simuler at brukeren skriver en ugyldig dato
-      // DatePicker vil kalle onDateChange med undefined, men vi skal ikke overskrive verdien
-      fireEvent.change(datePicker, { target: { value: "ugyldig" } });
-
-      // onChange skal ha blitt kalt med den rå verdien fra handleOnChange
-      expect(onChange).toHaveBeenCalledWith("ugyldig");
-
-      // Verdien i input-feltet skal fortsatt være det brukeren skrev
-      expect(datePicker.value).toBe("ugyldig");
-    });
-
-    it("beholder brukerens input selv om den er ugyldig", () => {
-      const onChange = vi.fn();
-      render(<Datovelger {...props} onChange={onChange} />);
-
-      const datePicker = screen.getByRole("textbox") as HTMLInputElement;
-
-      // Skriv en gyldig dato først
-      fireEvent.change(datePicker, { target: { value: "01.01.2025" } });
-      expect(onChange).toHaveBeenCalledWith("01.01.2025");
-
-      // Legg til et ugyldig tegn
-      fireEvent.change(datePicker, { target: { value: "01.01.2025x" } });
-      expect(onChange).toHaveBeenCalledWith("01.01.2025x");
-
-      // Input-verdien skal være det brukeren skrev, ikke overskrevet av DatePicker
-      expect(datePicker.value).toBe("01.01.2025x");
-    });
-  });
-
   describe("kombinasjon av forhindreAutoUtfylling og laasAar", () => {
     it("håndterer begge props samtidig korrekt", () => {
       const onChange = vi.fn();
@@ -272,89 +206,6 @@ describe("Datovelger", () => {
 
       const lastCall = onChange.mock.calls[onChange.mock.calls.length - 1];
       expect(lastCall[0]).toBe("15.03.2024");
-    });
-  });
-
-  describe("brukInternValidering", () => {
-    it("viser ikke feilmelding for gyldig dato", () => {
-      render(<Datovelger {...props} brukInternValidering={true} />);
-
-      const datePicker = screen.getByRole("textbox") as HTMLInputElement;
-
-      fireEvent.change(datePicker, { target: { value: "15.03.2024" } });
-      fireEvent.blur(datePicker);
-
-      // Skal ikke vise feilmelding for gyldig dato
-      expect(screen.queryByRole("alert")).not.toBeInTheDocument();
-    });
-
-    it("viser feilmelding for ugyldig dato når brukInternValidering er true", async () => {
-      render(<Datovelger {...props} brukInternValidering={true} />);
-
-      const datePicker = screen.getByRole("textbox") as HTMLInputElement;
-
-      // Skriv en ugyldig dato (32. dag finnes ikke)
-      fireEvent.change(datePicker, { target: { value: "32.03.2024" } });
-      fireEvent.blur(datePicker);
-
-      // Venter på at intern validering skal kjøre
-      const feilmelding = await screen.findByRole("alert");
-      expect(feilmelding).toBeInTheDocument();
-      expect(feilmelding).toHaveTextContent("Skriv inn en gyldig dato");
-    });
-
-    it("viser ikke intern feilmelding når brukInternValidering er false", () => {
-      render(<Datovelger {...props} brukInternValidering={false} />);
-
-      const datePicker = screen.getByRole("textbox") as HTMLInputElement;
-
-      // Skriv en ugyldig dato
-      fireEvent.change(datePicker, { target: { value: "32.03.2024" } });
-      fireEvent.blur(datePicker);
-
-      // Skal ikke vise intern feilmelding (validering håndteres av parent)
-      expect(screen.queryByRole("alert")).not.toBeInTheDocument();
-    });
-  });
-
-  describe("edge cases for datoformatering", () => {
-    it("håndterer tom streng uten feil", () => {
-      const onChange = vi.fn();
-      render(<Datovelger {...props} onChange={onChange} />);
-
-      const datePicker = screen.getByRole("textbox") as HTMLInputElement;
-
-      fireEvent.change(datePicker, { target: { value: "" } });
-      fireEvent.blur(datePicker);
-
-      // Skal ikke krasje, og onChange skal ha blitt kalt med tom streng
-      expect(onChange).toHaveBeenCalledWith("");
-    });
-
-    it("håndterer kun punktum uten feil", () => {
-      const onChange = vi.fn();
-      render(<Datovelger {...props} onChange={onChange} forhindreAutoUtfylling={true} />);
-
-      const datePicker = screen.getByRole("textbox") as HTMLInputElement;
-
-      fireEvent.change(datePicker, { target: { value: ".." } });
-      fireEvent.blur(datePicker);
-
-      // Skal sende rå verdi siden den er for kort
-      expect(onChange).toHaveBeenCalledWith("..");
-    });
-
-    it("håndterer spesialtegn i input", () => {
-      const onChange = vi.fn();
-      render(<Datovelger {...props} onChange={onChange} forhindreAutoUtfylling={true} />);
-
-      const datePicker = screen.getByRole("textbox") as HTMLInputElement;
-
-      fireEvent.change(datePicker, { target: { value: "abc!@#" } });
-      fireEvent.blur(datePicker);
-
-      // Skal sende rå verdi
-      expect(onChange).toHaveBeenCalledWith("abc!@#");
     });
   });
 });

@@ -19,7 +19,6 @@ interface DatovelgerComponentProps {
   className?: string;
   forhindreAutoUtfylling?: boolean;
   laasAar?: boolean;
-  brukInternValidering?: boolean;
 }
 
 type InnerDatovelgerComponentProps = DatovelgerComponentProps & RegisterHookFormProps;
@@ -34,7 +33,6 @@ function InnerDatovelgerComponent({
   onChange,
   forhindreAutoUtfylling,
   laasAar,
-  brukInternValidering,
   ...rest
 }: InnerDatovelgerComponentProps) {
   return (
@@ -51,7 +49,6 @@ function InnerDatovelgerComponent({
         maxDate={maxDate}
         forhindreAutoUtfylling={forhindreAutoUtfylling}
         laasAar={laasAar}
-        brukInternValidering={brukInternValidering}
       />
     </div>
   );
@@ -78,7 +75,6 @@ const Datovelger = forwardRef<HTMLInputElement, DatovelgerProps>(
             maxDate={rest.maxDate}
             forhindreAutoUtfylling={rest.forhindreAutoUtfylling}
             laasAar={rest.laasAar}
-            brukInternValidering={rest.brukInternValidering}
             onChange={(value: string) => {
               field.onChange(value || "");
               if (rest.onChange) rest.onChange(value);

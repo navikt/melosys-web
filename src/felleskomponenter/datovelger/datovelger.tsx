@@ -45,11 +45,8 @@ function Datovelger({
     locale: "nb",
     defaultSelected: value,
     defaultMonth: minDate ?? value,
-    onDateChange: (nyValgtDatoFraDatePicker?: Date) => {
-      if (nyValgtDatoFraDatePicker && !isNaN(nyValgtDatoFraDatePicker.getTime())) {
-        onChange(Utils.dato.formatterDatoTilNorsk(nyValgtDatoFraDatePicker, false, undefined));
-      }
-    },
+    onDateChange: (nyValgtDatoFraDatePicker?: Date) =>
+      onChange(Utils.dato.formatterDatoTilNorsk(nyValgtDatoFraDatePicker, false, undefined)),
     onValidate: (err) => {
       if (!brukInternValidering) return;
 
@@ -119,12 +116,12 @@ function Datovelger({
         }
       }
 
-      // Når forhindreAutoUtfylling er aktivert og verdien er for kort til å være en gyldig dato,
-      // send den rå verdien til react-hook-form og avslutt uten formatering.
+      // Forhindrer at NAV DatePicker auto-fyller datoer, ofte til helt ugyldige verdier (f.eks, "1" til "01.01.0001"
+      // La verdiene stå, det vises en klar feilmelding
+      // Sjekk verdien ETTER at år er lagt til (hvis laasAar er aktivt)
       if (forhindreAutoUtfylling && !harLagtTilAar) {
         const renDato = valueToFormat.replace(/[-./]/g, "");
         if (renDato.length < 6) {
-          onChange(currentValue);
           if (onBlur) {
             onBlur(event);
           }
