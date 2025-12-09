@@ -144,11 +144,11 @@ export function VurderingPeriode({
     if (redigerbart) {
       const fomDato =
         formValues.forkortLovvalgsperiode && formValues.fomDato
-          ? Utils.dato.formatterDatoTilISO(formValues.fomDato)
+          ? Utils.dato.formatterDatoTilISO(formValues.fomDato, null)
           : mottatteOpplysningerFom;
       const tomDato =
         formValues.forkortLovvalgsperiode && formValues.tomDato
-          ? Utils.dato.formatterDatoTilISO(formValues.tomDato)
+          ? Utils.dato.formatterDatoTilISO(formValues.tomDato, null)
           : mottatteOpplysningerTom;
 
       // Bare oppdater hvis vi har gyldige datoer
@@ -173,11 +173,14 @@ export function VurderingPeriode({
     bekreftOgFortsett();
   };
 
+  const fomDatoErGyldig = formValues.fomDato && Utils.dato.formatterDatoTilISO(formValues.fomDato, null);
+  const tomDatoErGyldig = formValues.tomDato && Utils.dato.formatterDatoTilISO(formValues.tomDato, null);
+
   const fom = Utils.dato.formatterDatoTilNorsk(
-    (formValues.forkortLovvalgsperiode && formValues.fomDato) || soknadsperiode.fom,
+    (formValues.forkortLovvalgsperiode && fomDatoErGyldig && formValues.fomDato) || soknadsperiode.fom,
   );
   const tom = Utils.dato.formatterDatoTilNorsk(
-    (formValues.forkortLovvalgsperiode && formValues.tomDato) || soknadsperiode.tom,
+    (formValues.forkortLovvalgsperiode && tomDatoErGyldig && formValues.tomDato) || soknadsperiode.tom,
   );
 
   const stegErGyldig = redigerbart && formState.isValid && !!formValues.lovvalgsbestemmelse;
@@ -232,13 +235,7 @@ export function VurderingPeriode({
         {formValues.forkortLovvalgsperiode && (
           <Nav.Row>
             <Nav.Column xs="3">
-              <Forms.Datovelger
-                label="Startdato"
-                name="fomDato"
-                control={control}
-                readOnly={!redigerbart}
-                brukInternValidering
-              />
+              <Forms.Datovelger label="Startdato" name="fomDato" control={control} readOnly={!redigerbart} />
             </Nav.Column>
             <Nav.Column xs="3">
               <Forms.Datovelger
@@ -248,7 +245,6 @@ export function VurderingPeriode({
                 readOnly={!redigerbart}
                 minDate={Utils.dato.isoStringTilDate(soknadsperiode.fom) || new Date()}
                 maxDate={Utils.dato.isoStringTilDate(soknadsperiode.tom)}
-                brukInternValidering
               />
             </Nav.Column>
           </Nav.Row>
