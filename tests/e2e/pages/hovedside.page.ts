@@ -65,12 +65,11 @@ export class HovedsidePage {
     const searchButtonCount = await searchButton.count();
     expect(searchButtonCount > 0, "Søkeknappen ble ikke funnet").toBeTruthy();
 
-    // Wait for search API response to ensure recording captures it (prevents race condition)
-    await Promise.all([
-      this.page.waitForResponse((resp) => resp.url().includes("/api/fagsaker/sok")),
-      searchButton.click(),
-    ]);
+    await searchButton.click();
 
-    await this.page.waitForLoadState("domcontentloaded");
+    await expect(
+      this.page.locator("section.sokresultat h1:has-text('Saksoversikt')"),
+      "Forventet at søkeresultatsiden med 'Saksoversikt' vises etter klikk på Søk-knappen",
+    ).toBeVisible({ timeout: 15000 });
   }
 }
