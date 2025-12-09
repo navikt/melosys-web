@@ -7,7 +7,7 @@
 
 import type { Page, Route, Request, APIResponse } from "@playwright/test";
 import { writeFileSync, mkdirSync, existsSync } from "fs";
-import { join, dirname } from "path";
+import { join } from "path";
 import { createHash } from "crypto";
 import { getRecordingsPath } from "../config/mode";
 import { normalizePath } from "../shared/path-normalization";
@@ -302,9 +302,9 @@ export class ApiRecorder {
   private sanitizeFileName(name: string): string {
     return name
       .toLowerCase()
-      .replace(/[æ]/g, "ae")
-      .replace(/[ø]/g, "o")
-      .replace(/[å]/g, "a")
+      .replace(/æ/g, "ae")
+      .replace(/ø/g, "o")
+      .replace(/å/g, "a")
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/^-+|-+$/g, "")
       .substring(0, 100);
