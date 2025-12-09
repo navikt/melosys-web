@@ -68,7 +68,7 @@ export function VurderingPeriode({
     lovvalgsTomDato &&
     (lovvalgsFomDato !== mottatteOpplysningerFom || lovvalgsTomDato !== mottatteOpplysningerTom);
 
-  const { control, watch, formState, handleSubmit, reset } = useForm<FormValues>({
+  const { control, watch, formState, handleSubmit } = useForm<FormValues>({
     // @ts-expect-error - yup schema nullable() matcher ikke FormValues optional field perfekt
     resolver: yupResolver(VurderingPeriodeSchema),
     mode: "onChange",
@@ -77,8 +77,12 @@ export function VurderingPeriode({
     },
     defaultValues: {
       forkortLovvalgsperiode: harForkortetPeriode || forkortLovvalgsperiode,
-      tomDato: Utils.dato.formatterDatoTilNorsk(mottatteOpplysningerTom),
-      fomDato: Utils.dato.formatterDatoTilNorsk(mottatteOpplysningerFom),
+      fomDato: harForkortetPeriode
+        ? Utils.dato.formatterDatoTilNorsk(lovvalgsFomDato)
+        : Utils.dato.formatterDatoTilNorsk(mottatteOpplysningerFom),
+      tomDato: harForkortetPeriode
+        ? Utils.dato.formatterDatoTilNorsk(lovvalgsTomDato)
+        : Utils.dato.formatterDatoTilNorsk(mottatteOpplysningerTom),
       lovvalgsbestemmelse: lovvalgsbestemmelseSomSkalVises || undefined,
     },
   });
@@ -93,25 +97,6 @@ export function VurderingPeriode({
       slettData();
     };
   }, []);
-
-  // Oppdater form-verdiene hvis det finnes en eksisterende forkortet lovvalgsperiode
-  useEffect(() => {
-    const fomErGyldig = lovvalgsFomDato && lovvalgsFomDato !== "Invalid date";
-    const tomErGyldig = lovvalgsTomDato && lovvalgsTomDato !== "Invalid date";
-    if (
-      fomErGyldig &&
-      tomErGyldig &&
-      (lovvalgsFomDato !== mottatteOpplysningerFom || lovvalgsTomDato !== mottatteOpplysningerTom)
-    ) {
-      // Det finnes en eksisterende forkortet periode - oppdater form
-      reset({
-        forkortLovvalgsperiode: true,
-        fomDato: Utils.dato.formatterDatoTilNorsk(lovvalgsFomDato),
-        tomDato: Utils.dato.formatterDatoTilNorsk(lovvalgsTomDato),
-        lovvalgsbestemmelse: lovvalgsbestemmelseSomSkalVises || undefined,
-      });
-    }
-  }, [lovvalgsFomDato, lovvalgsTomDato]);
 
   const valgbareLovvalgsbestemmelser = [
     ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.filter(
