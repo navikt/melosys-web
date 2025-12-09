@@ -5,7 +5,7 @@
  * Recordings are saved as JSON files that can be played back by the mock server.
  */
 
-import type { Page, Route, Request, Response } from "@playwright/test";
+import type { Page, Route, Request, APIResponse } from "@playwright/test";
 import { writeFileSync, mkdirSync, existsSync } from "fs";
 import { join, dirname } from "path";
 import { createHash } from "crypto";
@@ -130,7 +130,7 @@ function findDynamicFields(body: unknown, path: string = ""): string[] {
 /**
  * Safely parse JSON body, returning null if parsing fails.
  */
-async function safeParseBody(response: Response): Promise<unknown> {
+async function safeParseBody(response: APIResponse): Promise<unknown> {
   try {
     const contentType = response.headers()["content-type"] || "";
     if (contentType.includes("application/json")) {
@@ -208,7 +208,7 @@ export class ApiRecorder {
   /**
    * Capture a request/response exchange.
    */
-  private async captureExchange(request: Request, response: Response, duration: number): Promise<RecordedExchange> {
+  private async captureExchange(request: Request, response: APIResponse, duration: number): Promise<RecordedExchange> {
     const url = new URL(request.url());
     const pathname = url.pathname;
     const method = request.method();
