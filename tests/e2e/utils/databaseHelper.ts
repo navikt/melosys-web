@@ -36,18 +36,18 @@ export class DatabaseHelper {
       });
 
       // eslint-disable-next-line no-console
-      console.log("  Connected to Oracle database");
+      console.log("  ✅ Connected to Oracle database");
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error("  Failed to connect to database:", error);
+      console.error("  ❌ Failed to connect to database:", error);
       throw error;
     }
   }
 
   /**
    * Execute a query
-   * @param sql
-   * @param binds
+   * @param sql - SQL query to execute
+   * @param binds - Bind parameters
    * @param suppressErrors - If true, don't log errors to console
    */
   async query<T = Record<string, unknown>>(
@@ -68,127 +68,330 @@ export class DatabaseHelper {
     } catch (error) {
       if (!suppressErrors) {
         // eslint-disable-next-line no-console
-        console.error("  Query failed:", error);
+        console.error("  ❌ Query failed:", error);
       }
       throw error;
     }
   }
 
   /**
-   * Clean test data for e2e tests (MEL-1001 to MEL-1071).
-   * Uses TRUNCATE for speed, but only on tables that contain test data.
-   *
-   * This is a targeted cleanup that removes only e2e test data,
-   * not all data in the database.
+   * Execute a single query and return first row
    */
-  async cleanTestData(): Promise<{ tablesCleared: number; rowsDeleted: number }> {
+  async queryOne<T = Record<string, unknown>>(sql: string, binds: BindParameters = []): Promise<T | null> {
+    const results = await this.query<T>(sql, binds);
+    return results.length > 0 ? results[0] : null;
+  }
+
+  /**
+   * Clean all data tables except lookup tables and reference data.
+   * Uses TRUNCATE for speed, disabling FK constraints temporarily.
+   *
+   * Excludes: tables ending with _TYPE, _TEMA, _STATUS, and specific lookup tables.
+   *
+   * @param silent - If true, suppress console output
+   */
+  async cleanDatabase(silent = false): Promise<{ cleanedCount: number; totalRowsDeleted: number }> {
+    if (!this.connection) {
+      throw new Error("Database not connected. Call connect() first.");
+    }
+
+    if (!silent) {
+      // eslint-disable-next-line no-console
+      console.log("\n  🧹 Starting database cleanup...\n");
+    }
+
+    try {
+      // Get all tables
+      interface TableRow {
+        TABLE_NAME: string;
+      }
+      const tables = await this.query<TableRow>(
+        `
+        SELECT table_name
+        FROM user_tables
+        ORDER BY table_name
+      `,
+        [],
+        true,
+      );
+
+      if (!silent) {
+        // eslint-disable-next-line no-console
+        console.log(`  Found ${tables.length} total tables\n`);
+      }
+
+      const tablesToClean: string[] = [];
+      const skippedTables: string[] = [];
+
+      // Filter tables to clean
+      for (const table of tables) {
+        const tableName = table.TABLE_NAME;
+
+        // Skip lookup/reference tables that should never be cleaned
+        // These tables contain static reference data needed by the application
+        const lookupTables = [
+          "PROSESS_STEG", // Process step definitions
+          "BEHANDLINGSMAATE", // Treatment methods (referenced by FK_BEHANDLINGSMAATE)
+          "PREFERANSE", // Preferences/settings
+          "SAKSOPPLYSNING_KILDESYSTEM", // Source system definitions
+          "UTENLANDSK_MYNDIGHET", // Foreign authority reference data
+          "UTENLANDSK_MYNDIGHET_PREF", // Foreign authority preferences
+          "flyway_schema_history", // Database migration history
+        ];
+
+        if (
+          tableName.endsWith("_TYPE") ||
+          tableName.endsWith("_TEMA") ||
+          tableName.endsWith("_STATUS") ||
+          lookupTables.includes(tableName)
+        ) {
+          skippedTables.push(tableName);
+          continue;
+        }
+
+        tablesToClean.push(tableName);
+      }
+
+      if (!silent) {
+        // eslint-disable-next-line no-console
+        console.log(`  📋 Tables to clean: ${tablesToClean.length}`);
+        // eslint-disable-next-line no-console
+        console.log(`  ⏭️  Tables to skip: ${skippedTables.length} (lookup/reference tables)\n`);
+      }
+
+      // Disable foreign key constraints temporarily
+      await this.connection.execute(
+        "BEGIN\n" +
+          "  FOR c IN (SELECT constraint_name, table_name FROM user_constraints WHERE constraint_type = 'R') LOOP\n" +
+          "    EXECUTE IMMEDIATE 'ALTER TABLE ' || c.table_name || ' DISABLE CONSTRAINT ' || c.constraint_name;\n" +
+          "  END LOOP;\n" +
+          "END;",
+      );
+
+      if (!silent) {
+        // eslint-disable-next-line no-console
+        console.log("  🔓 Disabled foreign key constraints\n");
+      }
+
+      let cleanedCount = 0;
+      let totalRowsDeleted = 0;
+
+      // Truncate data from each table (faster than DELETE and resets sequences)
+      for (const tableName of tablesToClean) {
+        try {
+          // Count rows before truncation
+          interface CountRow {
+            CNT: number;
+          }
+          const countResult = await this.query<CountRow>(`SELECT COUNT(*) as cnt FROM ${tableName}`, [], true);
+          const rowCount = countResult[0]?.CNT || 0;
+
+          if (rowCount > 0) {
+            // TRUNCATE is faster than DELETE and resets auto-increment sequences
+            await this.connection.execute(`TRUNCATE TABLE ${tableName}`);
+            if (!silent) {
+              // eslint-disable-next-line no-console
+              console.log(`  ✅ Cleaned ${tableName.padEnd(40)} (${rowCount} rows truncated)`);
+            }
+            cleanedCount++;
+            totalRowsDeleted += rowCount;
+          }
+        } catch (error: unknown) {
+          if (!silent) {
+            const errorMessage = error instanceof Error ? error.message : String(error);
+            // eslint-disable-next-line no-console
+            console.log(`  ⚠️  Could not clean ${tableName}: ${errorMessage}`);
+          }
+        }
+      }
+
+      // Re-enable foreign key constraints
+      await this.connection.execute(
+        "BEGIN\n" +
+          "  FOR c IN (SELECT constraint_name, table_name FROM user_constraints WHERE constraint_type = 'R') LOOP\n" +
+          "    EXECUTE IMMEDIATE 'ALTER TABLE ' || c.table_name || ' ENABLE CONSTRAINT ' || c.constraint_name;\n" +
+          "  END LOOP;\n" +
+          "END;",
+      );
+
+      if (!silent) {
+        // eslint-disable-next-line no-console
+        console.log("\n  🔒 Re-enabled foreign key constraints");
+      }
+
+      // Reset sequences
+      await this.resetSequences(silent);
+
+      if (!silent) {
+        // eslint-disable-next-line no-console
+        console.log("\n  " + "─".repeat(56));
+        // eslint-disable-next-line no-console
+        console.log(`\n  ✨ Database cleanup complete!`);
+        // eslint-disable-next-line no-console
+        console.log(`     Tables cleaned: ${cleanedCount}`);
+        // eslint-disable-next-line no-console
+        console.log(`     Total rows deleted: ${totalRowsDeleted}\n`);
+      }
+
+      return { cleanedCount, totalRowsDeleted };
+    } catch (error) {
+      if (!silent) {
+        // eslint-disable-next-line no-console
+        console.error("  ❌ Database cleanup failed:", error);
+      }
+      throw error;
+    }
+  }
+
+  /**
+   * Reset sequences for fagsak (saksnummer_seq) and behandling (identity column)
+   * @param silent - If true, suppress console output
+   */
+  private async resetSequences(silent = false): Promise<void> {
+    if (!this.connection) {
+      throw new Error("Database not connected. Call connect() first.");
+    }
+
+    if (!silent) {
+      // eslint-disable-next-line no-console
+      console.log("\n  🔄 Resetting sequences...");
+    }
+
+    // Reset saksnummer_seq (explicit sequence for fagsak)
+    try {
+      // Drop and recreate the sequence to reset it to 1
+      await this.connection.execute("DROP SEQUENCE saksnummer_seq");
+      await this.connection.execute(`
+        CREATE SEQUENCE saksnummer_seq
+        MINVALUE 1
+        NOMAXVALUE
+        INCREMENT BY 1
+        START WITH 1
+      `);
+      if (!silent) {
+        // eslint-disable-next-line no-console
+        console.log("     ✅ Reset saksnummer_seq to 1");
+      }
+    } catch (error: unknown) {
+      if (!silent) {
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        // eslint-disable-next-line no-console
+        console.log(`     ⚠️  Could not reset saksnummer_seq: ${errorMessage}`);
+      }
+    }
+
+    // Reset behandling identity column
+    try {
+      // For identity columns, we need to modify the column to reset the start value
+      await this.connection.execute(`
+        ALTER TABLE behandling MODIFY id GENERATED ALWAYS AS IDENTITY (START WITH 1)
+      `);
+      if (!silent) {
+        // eslint-disable-next-line no-console
+        console.log("     ✅ Reset behandling.id identity to 1");
+      }
+    } catch (error: unknown) {
+      if (!silent) {
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        // eslint-disable-next-line no-console
+        console.log(`     ⚠️  Could not reset behandling.id identity: ${errorMessage}`);
+      }
+    }
+  }
+
+  /**
+   * Show all database tables with their data.
+   * Useful for debugging - shows what data exists in the database.
+   * @param skipLookupTables - If true, skip tables ending with _TYPE, _TEMA, _STATUS (default: true)
+   */
+  async showAllData(skipLookupTables = true): Promise<void> {
     if (!this.connection) {
       throw new Error("Database not connected. Call connect() first.");
     }
 
     // eslint-disable-next-line no-console
-    console.log("  Cleaning e2e test data (MEL-1001 to MEL-1071)...");
+    console.log("\n  🔍 Analyzing database contents...\n");
 
-    const saksnummerListe = Array.from({ length: 71 }, (_, i) => `MEL-${1001 + i}`);
-    const saksnummerIn = saksnummerListe.map((s) => `'${s}'`).join(",");
-
-    // Find behandling IDs for test cases
-    interface BehandlingRow {
-      ID: number;
+    // Get all tables
+    interface TableRow {
+      TABLE_NAME: string;
     }
-    const behandlingResult = await this.query<BehandlingRow>(
-      `SELECT id FROM behandling WHERE saksnummer IN (${saksnummerIn})`,
+    const tables = await this.query<TableRow>(
+      `
+      SELECT table_name
+      FROM user_tables
+      ORDER BY table_name
+    `,
       [],
       true,
     );
 
-    if (behandlingResult.length === 0) {
-      // eslint-disable-next-line no-console
-      console.log("  No test data found - nothing to clean");
-      return { tablesCleared: 0, rowsDeleted: 0 };
-    }
-
-    const behandlingIdIn = behandlingResult.map((r) => r.ID).join(",");
     // eslint-disable-next-line no-console
-    console.log(`  Found ${behandlingResult.length} test cases to clean`);
+    console.log(`  Found ${tables.length} total tables\n`);
 
-    // Delete in correct order (children first, parents last)
-    // Order is critical due to foreign key constraints
-    const deleteStatements = [
-      // Level 1: Deepest children (trygdeavgiftsperiode has FK to multiple tables)
-      `DELETE FROM trygdeavgiftsperiode WHERE medlemskapsperiode_id IN (SELECT id FROM medlemskapsperiode WHERE behandlingsresultat_id IN (${behandlingIdIn}))`,
-      `DELETE FROM trygdeavgiftsperiode WHERE helseutgift_dekkes_periode_id IN (SELECT id FROM helseutgift_dekkes_periode WHERE beh_resultat_id IN (${behandlingIdIn}))`,
-      `DELETE FROM trygdeavgiftsperiode WHERE lovvalg_periode_id IN (SELECT id FROM lovvalg_periode WHERE beh_resultat_id IN (${behandlingIdIn}))`,
+    // Filter out lookup tables and check which have data
+    const tablesWithData: { name: string; count: number }[] = [];
 
-      // Level 2: medlemskapsperiode
-      `DELETE FROM medlemskapsperiode WHERE behandlingsresultat_id IN (${behandlingIdIn})`,
+    for (const table of tables) {
+      const tableName = table.TABLE_NAME;
 
-      // Level 3: Child tables of behandlingsresultat with column "beh_resultat_id"
-      `DELETE FROM utpekingsperiode WHERE beh_resultat_id IN (${behandlingIdIn})`,
-      `DELETE FROM anmodningsperiode WHERE beh_resultat_id IN (${behandlingIdIn})`,
-      `DELETE FROM kontrollresultat WHERE beh_resultat_id IN (${behandlingIdIn})`,
-      `DELETE FROM avklartefakta WHERE beh_resultat_id IN (${behandlingIdIn})`,
-      `DELETE FROM lovvalg_periode WHERE beh_resultat_id IN (${behandlingIdIn})`,
-      `DELETE FROM vilkaarsresultat WHERE beh_resultat_id IN (${behandlingIdIn})`,
-      `DELETE FROM behandlingsres_begrunnelse WHERE beh_resultat_id IN (${behandlingIdIn})`,
-      `DELETE FROM helseutgift_dekkes_periode WHERE beh_resultat_id IN (${behandlingIdIn})`,
+      // Skip lookup tables if requested
+      if (
+        skipLookupTables &&
+        (tableName.endsWith("_TYPE") || tableName.endsWith("_TEMA") || tableName.endsWith("_STATUS"))
+      ) {
+        continue;
+      }
 
-      // Level 3: Child tables with column "behandlingsresultat_id"
-      `DELETE FROM aarsavregning WHERE behandlingsresultat_id IN (${behandlingIdIn})`,
-      `DELETE FROM vedtak_metadata WHERE behandlingsresultat_id IN (${behandlingIdIn})`,
-
-      // Level 4: behandlingsresultat
-      `DELETE FROM behandlingsresultat WHERE behandling_id IN (${behandlingIdIn})`,
-
-      // Level 5: saksopplysning_kilde
-      `DELETE FROM saksopplysning_kilde WHERE saksopplysning_id IN (SELECT id FROM saksopplysning WHERE behandling_id IN (${behandlingIdIn}))`,
-
-      // Level 6: Tables with direct FK to behandling.id
-      `DELETE FROM saksopplysning WHERE behandling_id IN (${behandlingIdIn})`,
-      `DELETE FROM tidligere_medlemsperiode WHERE behandling_id IN (${behandlingIdIn})`,
-      `DELETE FROM mottatteopplysninger WHERE behandling_id IN (${behandlingIdIn})`,
-      `DELETE FROM behandlingsaarsak WHERE behandling_id IN (${behandlingIdIn})`,
-
-      // Level 7: prosessinstans chain
-      `DELETE FROM prosessinstans_hendelser WHERE prosessinstans_id IN (SELECT uuid FROM prosessinstans WHERE behandling_id IN (${behandlingIdIn}))`,
-      `DELETE FROM prosessinstans WHERE behandling_id IN (${behandlingIdIn})`,
-
-      // Level 8: behandling
-      `DELETE FROM behandling WHERE id IN (${behandlingIdIn})`,
-
-      // Level 9: aktoer
-      `DELETE FROM aktoer WHERE saksnummer IN (${saksnummerIn})`,
-
-      // Level 10: fagsak
-      `DELETE FROM fagsak WHERE saksnummer IN (${saksnummerIn})`,
-    ];
-
-    let tablesCleared = 0;
-    let totalRowsDeleted = 0;
-
-    for (const sql of deleteStatements) {
+      // Count rows in table
       try {
-        const result = await this.connection.execute(sql, [], { autoCommit: false });
-        const rowsAffected = result.rowsAffected || 0;
-        if (rowsAffected > 0) {
-          tablesCleared++;
-          totalRowsDeleted += rowsAffected;
+        interface CountRow {
+          CNT: number;
+        }
+        const countResult = await this.query<CountRow>(`SELECT COUNT(*) as cnt FROM ${tableName}`, [], true);
+        const count = countResult[0]?.CNT || 0;
+
+        if (count > 0) {
+          tablesWithData.push({ name: tableName, count: count });
         }
       } catch (error: unknown) {
-        // Ignore "table does not exist" errors (ORA-00942)
         const errorMessage = error instanceof Error ? error.message : String(error);
-        if (!errorMessage.includes("ORA-00942")) {
-          throw error;
-        }
+        // eslint-disable-next-line no-console
+        console.log(`  ⚠️  Could not query ${tableName}: ${errorMessage}`);
       }
     }
 
-    // Commit all deletes
-    await this.connection.commit();
+    // Display results
+    // eslint-disable-next-line no-console
+    console.log(`\n  📊 Tables with data (${tablesWithData.length} tables):\n`);
+    // eslint-disable-next-line no-console
+    console.log("  " + "─".repeat(56));
+
+    for (const table of tablesWithData) {
+      // eslint-disable-next-line no-console
+      console.log(`  📋 ${table.name.padEnd(40)} ${String(table.count).padStart(6)} rows`);
+
+      // Show sample data from the table
+      try {
+        const sample = await this.query(`SELECT * FROM ${table.name} WHERE ROWNUM <= 1`, [], true);
+        if (sample.length > 0) {
+          const columns = Object.keys(sample[0]).slice(0, 5); // First 5 columns
+          // eslint-disable-next-line no-console
+          console.log(
+            `     Columns: ${columns.join(", ")}${columns.length < Object.keys(sample[0]).length ? ", ..." : ""}`,
+          );
+        }
+      } catch {
+        // Ignore errors in sample query
+      }
+      // eslint-disable-next-line no-console
+      console.log("");
+    }
 
     // eslint-disable-next-line no-console
-    console.log(`  Cleaned ${tablesCleared} tables, ${totalRowsDeleted} rows deleted`);
-    return { tablesCleared, rowsDeleted: totalRowsDeleted };
+    console.log("  " + "─".repeat(56));
+    // eslint-disable-next-line no-console
+    console.log(`\n  Total rows across all tables: ${tablesWithData.reduce((sum, t) => sum + t.count, 0)}\n`);
   }
 
   /**
@@ -200,10 +403,10 @@ export class DatabaseHelper {
         await this.connection.close();
         this.connection = null;
         // eslint-disable-next-line no-console
-        console.log("  Database connection closed");
+        console.log("  ✅ Database connection closed");
       } catch (error) {
         // eslint-disable-next-line no-console
-        console.error("  Failed to close database:", error);
+        console.error("  ❌ Failed to close database:", error);
         throw error;
       }
     }

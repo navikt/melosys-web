@@ -1,4 +1,4 @@
-import { test } from "@playwright/test";
+import { test } from "../../recording/fixtures";
 import { BehandlingPage } from "../../pages/behandling/behandling.page";
 import { TIMEOUT_FOR_COMPLEX_TESTS } from "../../utils/testUtils";
 import { hentPrepopulertSakUrl } from "../../utils/testdataUtils";
@@ -14,7 +14,7 @@ import { runAxeAnalyze } from "../../utils/axeUtils";
  * for å sørge for at regresjonstestene har henlagt testdata tilgjengelig.
  */
 test.describe("Setup: Avtaleland-sak med henlagt behandling", () => {
-  test("Opprett Avtaleland-sak og henlegg behandlingen", async ({ page }, testInfo) => {
+  test("Opprett Avtaleland-sak og henlegg behandlingen", async ({ page, apiRecorder }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout siden vi oppretter og henlegger sak
     const saksnummer = "MEL-1009";
     const behandlingPage = new BehandlingPage(page, saksnummer);

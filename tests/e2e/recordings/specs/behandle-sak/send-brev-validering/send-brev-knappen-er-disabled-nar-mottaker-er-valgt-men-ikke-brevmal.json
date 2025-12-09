@@ -1,0 +1,2581 @@
+{
+  "version": "1.0",
+  "recordedAt": "2025-12-08T13:16:21.167Z",
+  "testFile": "/Users/rune/source/nav/melosys-web/tests/e2e/specs/behandle-sak/send-brev-validering.spec.ts",
+  "testName": "'Send brev' knappen er disabled når mottaker er valgt men ikke brevmal",
+  "exchanges": [
+    {
+      "request": {
+        "id": "4ce2a0992867",
+        "method": "GET",
+        "url": "http://localhost:3333/api/featuretoggle?features=melosys.faktureringskomponent.vis_referanse&features=melosys.ftrl.begrense_periode_vedtak&features=melosys.11_3_a_Norge_er_utpekt&features=melosys.pensjonist&features=melosys.pensjonist_eos&features=standardvedlegg_eget_vedlegg_avtaleland&features=melosys.arsavregning&features=melosys.arsavregning.uten.flyt&features=melosys.faktureringskomponenten.ikke-tidligere-perioder&features=melosys.eos_fakturering_av_trygdeavgift",
+        "pathname": "/api/featuretoggle",
+        "normalizedPath": "/api/featuretoggle",
+        "query": {
+          "features": "melosys.eos_fakturering_av_trygdeavgift"
+        },
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": {
+          "melosys.faktureringskomponent.vis_referanse": true,
+          "melosys.pensjonist": true,
+          "melosys.pensjonist_eos": true,
+          "standardvedlegg_eget_vedlegg_avtaleland": true,
+          "melosys.ftrl.begrense_periode_vedtak": true,
+          "melosys.arsavregning": true,
+          "melosys.faktureringskomponenten.ikke-tidligere-perioder": true,
+          "melosys.11_3_a_Norge_er_utpekt": true,
+          "melosys.eos_fakturering_av_trygdeavgift": true,
+          "melosys.arsavregning.uten.flyt": false
+        }
+      },
+      "duration": 7,
+      "dynamicFields": []
+    },
+    {
+      "request": {
+        "id": "deaa444ebfff",
+        "method": "GET",
+        "url": "http://localhost:3333/api/kodeverk/nav-felles/LANDKODER_ISO2",
+        "pathname": "/api/kodeverk/nav-felles/LANDKODER_ISO2",
+        "normalizedPath": "/api/kodeverk/nav-felles/LANDKODER_ISO2",
+        "query": {},
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": [
+          {
+            "kode": "PR",
+            "term": "PUERTO RICO"
+          },
+          {
+            "kode": "PS",
+            "term": "PALESTINA"
+          },
+          {
+            "kode": "PT",
+            "term": "PORTUGAL"
+          },
+          {
+            "kode": "PW",
+            "term": "PALAU"
+          },
+          {
+            "kode": "PY",
+            "term": "PARAGUAY"
+          },
+          {
+            "kode": "QA",
+            "term": "QATAR"
+          },
+          {
+            "kode": "AD",
+            "term": "ANDORRA"
+          },
+          {
+            "kode": "AE",
+            "term": "DE FORENTE ARABISKE EMIRATER"
+          },
+          {
+            "kode": "AF",
+            "term": "AFGHANISTAN"
+          },
+          {
+            "kode": "AG",
+            "term": "ANTIGUA OG BARBUDA"
+          },
+          {
+            "kode": "AI",
+            "term": "ANGUILLA"
+          },
+          {
+            "kode": "AL",
+            "term": "ALBANIA"
+          },
+          {
+            "kode": "AM",
+            "term": "ARMENIA"
+          },
+          {
+            "kode": "AO",
+            "term": "ANGOLA"
+          },
+          {
+            "kode": "AQ",
+            "term": "Antarktis"
+          },
+          {
+            "kode": "AR",
+            "term": "ARGENTINA"
+          },
+          {
+            "kode": "AS",
+            "term": "AM. SAMOA"
+          },
+          {
+            "kode": "AT",
+            "term": "ØSTERRIKE"
+          },
+          {
+            "kode": "RE",
+            "term": "REUNION"
+          },
+          {
+            "kode": "AU",
+            "term": "AUSTRALIA"
+          },
+          {
+            "kode": "AW",
+            "term": "ARUBA"
+          },
+          {
+            "kode": "AX",
+            "term": "ÅLAND"
+          },
+          {
+            "kode": "AZ",
+            "term": "ASERBAJDSJAN"
+          },
+          {
+            "kode": "RO",
+            "term": "ROMANIA"
+          },
+          {
+            "kode": "BA",
+            "term": "BOSNIA-HERCEGOVINA"
+          },
+          {
+            "kode": "BB",
+            "term": "BARBADOS"
+          },
+          {
+            "kode": "RS",
+            "term": "SERBIA"
+          },
+          {
+            "kode": "BD",
+            "term": "BANGLADESH"
+          },
+          {
+            "kode": "RU",
+            "term": "RUSSLAND"
+          },
+          {
+            "kode": "BE",
+            "term": "BELGIA"
+          },
+          {
+            "kode": "BF",
+            "term": "BURKINA FASO"
+          },
+          {
+            "kode": "RW",
+            "term": "RWANDA"
+          },
+          {
+            "kode": "BG",
+            "term": "BULGARIA"
+          },
+          {
+            "kode": "BH",
+            "term": "BAHRAIN"
+          },
+          {
+            "kode": "BI",
+            "term": "BURUNDI"
+          },
+          {
+            "kode": "BJ",
+            "term": "BENIN"
+          },
+          {
+            "kode": "BL",
+            "term": "SAINT BARTHELEMY"
+          },
+          {
+            "kode": "BM",
+            "term": "BERMUDA"
+          },
+          {
+            "kode": "BN",
+            "term": "BRUNEI"
+          },
+          {
+            "kode": "BO",
+            "term": "BOLIVIA"
+          },
+          {
+            "kode": "SA",
+            "term": "SAUDI-ARABIA"
+          },
+          {
+            "kode": "SB",
+            "term": "SALOMONØYENE"
+          },
+          {
+            "kode": "BQ",
+            "term": "BONAIRE, SINT EUSTATIUS OG SABA"
+          },
+          {
+            "kode": "SC",
+            "term": "SEYCHELLENE"
+          },
+          {
+            "kode": "BR",
+            "term": "BRASIL"
+          },
+          {
+            "kode": "BS",
+            "term": "BAHAMAS"
+          },
+          {
+            "kode": "SD",
+            "term": "SUDAN"
+          },
+          {
+            "kode": "BT",
+            "term": "BHUTAN"
+          },
+          {
+            "kode": "SE",
+            "term": "SVERIGE"
+          },
+          {
+            "kode": "SG",
+            "term": "SINGAPORE"
+          },
+          {
+            "kode": "BV",
+            "term": "BOUVETØYA"
+          },
+          {
+            "kode": "BW",
+            "term": "BOTSWANA"
+          },
+          {
+            "kode": "SH",
+            "term": "SANKT HELENA, ASCENSION OG TRISTAN DA CUNHA"
+          },
+          {
+            "kode": "SI",
+            "term": "SLOVENIA"
+          },
+          {
+            "kode": "SJ",
+            "term": "SVALBARD OG JAN MAYEN"
+          },
+          {
+            "kode": "BY",
+            "term": "BELARUS"
+          },
+          {
+            "kode": "BZ",
+            "term": "BELIZE"
+          },
+          {
+            "kode": "SK",
+            "term": "SLOVAKIA"
+          },
+          {
+            "kode": "SL",
+            "term": "SIERRA LEONE"
+          },
+          {
+            "kode": "SM",
+            "term": "SAN MARINO"
+          },
+          {
+            "kode": "SN",
+            "term": "SENEGAL"
+          },
+          {
+            "kode": "SO",
+            "term": "SOMALIA"
+          },
+          {
+            "kode": "CA",
+            "term": "CANADA"
+          },
+          {
+            "kode": "SR",
+            "term": "SURINAM"
+          },
+          {
+            "kode": "???",
+            "term": "UOPPGITT/UKJENT"
+          },
+          {
+            "kode": "SS",
+            "term": "SØR-SUDAN"
+          },
+          {
+            "kode": "CC",
+            "term": "KOKOSØYENE (KEELINGØYENE)"
+          },
+          {
+            "kode": "ST",
+            "term": "SAO TOME OG PRINCIPE"
+          },
+          {
+            "kode": "CD",
+            "term": "KONGO"
+          },
+          {
+            "kode": "SV",
+            "term": "EL SALVADOR"
+          },
+          {
+            "kode": "CF",
+            "term": "DEN SENTRALAFRIKANSKE REPUBLIKK"
+          },
+          {
+            "kode": "CG",
+            "term": "KONGO-BRAZZAVILLE"
+          },
+          {
+            "kode": "CH",
+            "term": "SVEITS"
+          },
+          {
+            "kode": "SX",
+            "term": "SINT MAARTEN"
+          },
+          {
+            "kode": "SY",
+            "term": "SYRIA"
+          },
+          {
+            "kode": "CI",
+            "term": "ELFENBENSKYSTEN"
+          },
+          {
+            "kode": "SZ",
+            "term": "ESWATINI"
+          },
+          {
+            "kode": "CK",
+            "term": "COOKØYENE"
+          },
+          {
+            "kode": "CL",
+            "term": "CHILE"
+          },
+          {
+            "kode": "CM",
+            "term": "KAMERUN"
+          },
+          {
+            "kode": "CN",
+            "term": "KINA"
+          },
+          {
+            "kode": "CO",
+            "term": "COLOMBIA"
+          },
+          {
+            "kode": "CR",
+            "term": "COSTA RICA"
+          },
+          {
+            "kode": "TC",
+            "term": "TURKS- OG CAICOSØYENE"
+          },
+          {
+            "kode": "CS",
+            "term": "SERBIA OG MONTENEGRO"
+          },
+          {
+            "kode": "TD",
+            "term": "TSJAD"
+          },
+          {
+            "kode": "CU",
+            "term": "CUBA"
+          },
+          {
+            "kode": "TG",
+            "term": "TOGO"
+          },
+          {
+            "kode": "CV",
+            "term": "KAPP VERDE"
+          },
+          {
+            "kode": "TH",
+            "term": "THAILAND"
+          },
+          {
+            "kode": "CW",
+            "term": "CURACAO"
+          },
+          {
+            "kode": "CX",
+            "term": "CHRISTMASØYA"
+          },
+          {
+            "kode": "CY",
+            "term": "KYPROS"
+          },
+          {
+            "kode": "TJ",
+            "term": "TADSJIKISTAN"
+          },
+          {
+            "kode": "TK",
+            "term": "TOKELAU"
+          },
+          {
+            "kode": "CZ",
+            "term": "TSJEKKIA"
+          },
+          {
+            "kode": "TL",
+            "term": "ØST-TIMOR"
+          },
+          {
+            "kode": "TM",
+            "term": "TURKMENISTAN"
+          },
+          {
+            "kode": "TN",
+            "term": "TUNISIA"
+          },
+          {
+            "kode": "TO",
+            "term": "TONGA"
+          },
+          {
+            "kode": "TR",
+            "term": "TYRKIA"
+          },
+          {
+            "kode": "TT",
+            "term": "TRINIDAD OG TOBAGO"
+          },
+          {
+            "kode": "DE",
+            "term": "TYSKLAND"
+          },
+          {
+            "kode": "TV",
+            "term": "TUVALU"
+          },
+          {
+            "kode": "TW",
+            "term": "TAIWAN"
+          },
+          {
+            "kode": "DJ",
+            "term": "DJIBOUTI"
+          },
+          {
+            "kode": "TZ",
+            "term": "TANZANIA"
+          },
+          {
+            "kode": "DK",
+            "term": "DANMARK"
+          },
+          {
+            "kode": "DM",
+            "term": "DOMINICA"
+          },
+          {
+            "kode": "DO",
+            "term": "DEN DOMINIKANSKE REPUBLIKK"
+          },
+          {
+            "kode": "UA",
+            "term": "UKRAINA"
+          },
+          {
+            "kode": "UG",
+            "term": "UGANDA"
+          },
+          {
+            "kode": "DZ",
+            "term": "ALGERIE"
+          },
+          {
+            "kode": "UM",
+            "term": "USAS YTRE SMÅØYER"
+          },
+          {
+            "kode": "EC",
+            "term": "ECUADOR"
+          },
+          {
+            "kode": "US",
+            "term": "USA"
+          },
+          {
+            "kode": "EE",
+            "term": "ESTLAND"
+          },
+          {
+            "kode": "EG",
+            "term": "EGYPT"
+          },
+          {
+            "kode": "EH",
+            "term": "VEST-SAHARA"
+          },
+          {
+            "kode": "UY",
+            "term": "URUGUAY"
+          },
+          {
+            "kode": "UZ",
+            "term": "USBEKISTAN"
+          },
+          {
+            "kode": "VA",
+            "term": "VATIKANSTATEN"
+          },
+          {
+            "kode": "ER",
+            "term": "ERITREA"
+          },
+          {
+            "kode": "VC",
+            "term": "SAINT VINCENT OG GRENADINENE"
+          },
+          {
+            "kode": "ES",
+            "term": "SPANIA"
+          },
+          {
+            "kode": "ET",
+            "term": "ETIOPIA"
+          },
+          {
+            "kode": "VE",
+            "term": "VENEZUELA"
+          },
+          {
+            "kode": "VG",
+            "term": "DE BRITISKE JOMFRUØYER"
+          },
+          {
+            "kode": "VI",
+            "term": "DE AMERIKANSKE JOMFRUØYER"
+          },
+          {
+            "kode": "VN",
+            "term": "VIETNAM"
+          },
+          {
+            "kode": "VU",
+            "term": "VANUATU"
+          },
+          {
+            "kode": "FI",
+            "term": "FINLAND"
+          },
+          {
+            "kode": "FJ",
+            "term": "FIJI"
+          },
+          {
+            "kode": "FK",
+            "term": "FALKLANDSØYENE"
+          },
+          {
+            "kode": "FM",
+            "term": "MIKRONESIAFØDERASJONEN"
+          },
+          {
+            "kode": "FO",
+            "term": "FÆRØYENE"
+          },
+          {
+            "kode": "FR",
+            "term": "FRANKRIKE"
+          },
+          {
+            "kode": "WF",
+            "term": "WALLIS OG FUTUNA"
+          },
+          {
+            "kode": "GA",
+            "term": "GABON"
+          },
+          {
+            "kode": "GB",
+            "term": "STORBRITANNIA"
+          },
+          {
+            "kode": "WS",
+            "term": "SAMOA"
+          },
+          {
+            "kode": "GD",
+            "term": "GRENADA"
+          },
+          {
+            "kode": "GE",
+            "term": "GEORGIA"
+          },
+          {
+            "kode": "GF",
+            "term": "FRANSK GUYANA"
+          },
+          {
+            "kode": "GG",
+            "term": "GUERNSEY"
+          },
+          {
+            "kode": "GH",
+            "term": "GHANA"
+          },
+          {
+            "kode": "GI",
+            "term": "GIBRALTAR"
+          },
+          {
+            "kode": "GL",
+            "term": "GRØNLAND"
+          },
+          {
+            "kode": "GM",
+            "term": "GAMBIA"
+          },
+          {
+            "kode": "GN",
+            "term": "GUINEA"
+          },
+          {
+            "kode": "GP",
+            "term": "GUADELOUPE"
+          },
+          {
+            "kode": "GQ",
+            "term": "EKVATORIAL-GUINEA"
+          },
+          {
+            "kode": "XB",
+            "term": "Kanariøyene"
+          },
+          {
+            "kode": "GR",
+            "term": "HELLAS"
+          },
+          {
+            "kode": "GS",
+            "term": "SØR-GEORGIA OG SØR-SANDWICHØYENE"
+          },
+          {
+            "kode": "GT",
+            "term": "GUATEMALA"
+          },
+          {
+            "kode": "GU",
+            "term": "GUAM"
+          },
+          {
+            "kode": "GW",
+            "term": "GUINEA-BISSAU"
+          },
+          {
+            "kode": "GY",
+            "term": "GUYANA"
+          },
+          {
+            "kode": "XK",
+            "term": "KOSOVO"
+          },
+          {
+            "kode": "HK",
+            "term": "HONGKONG"
+          },
+          {
+            "kode": "HM",
+            "term": "HEARD- OG MCDONALD-ØYENE"
+          },
+          {
+            "kode": "HN",
+            "term": "HONDURAS"
+          },
+          {
+            "kode": "HR",
+            "term": "KROATIA"
+          },
+          {
+            "kode": "YE",
+            "term": "JEMEN"
+          },
+          {
+            "kode": "HT",
+            "term": "HAITI"
+          },
+          {
+            "kode": "HU",
+            "term": "UNGARN"
+          },
+          {
+            "kode": "ID",
+            "term": "INDONESIA"
+          },
+          {
+            "kode": "YT",
+            "term": "MAYOTTE"
+          },
+          {
+            "kode": "IE",
+            "term": "IRLAND"
+          },
+          {
+            "kode": "IL",
+            "term": "ISRAEL"
+          },
+          {
+            "kode": "IM",
+            "term": "ISLE OF MAN"
+          },
+          {
+            "kode": "IN",
+            "term": "INDIA"
+          },
+          {
+            "kode": "IO",
+            "term": "DET BRITISKE TERRITORIET I INDIAHAVET"
+          },
+          {
+            "kode": "ZA",
+            "term": "SØR-AFRIKA"
+          },
+          {
+            "kode": "IQ",
+            "term": "IRAK"
+          },
+          {
+            "kode": "IR",
+            "term": "IRAN"
+          },
+          {
+            "kode": "IS",
+            "term": "ISLAND"
+          },
+          {
+            "kode": "IT",
+            "term": "ITALIA"
+          },
+          {
+            "kode": "ZM",
+            "term": "ZAMBIA"
+          },
+          {
+            "kode": "JE",
+            "term": "JERSEY"
+          },
+          {
+            "kode": "ZW",
+            "term": "ZIMBABWE"
+          },
+          {
+            "kode": "JM",
+            "term": "JAMAICA"
+          },
+          {
+            "kode": "JO",
+            "term": "JORDAN"
+          },
+          {
+            "kode": "JP",
+            "term": "JAPAN"
+          },
+          {
+            "kode": "KE",
+            "term": "KENYA"
+          },
+          {
+            "kode": "KG",
+            "term": "KIRGISISTAN"
+          },
+          {
+            "kode": "KH",
+            "term": "KAMBODSJA"
+          },
+          {
+            "kode": "KI",
+            "term": "KIRIBATI"
+          },
+          {
+            "kode": "KM",
+            "term": "KOMORENE"
+          },
+          {
+            "kode": "KN",
+            "term": "SAINT KITTS OG NEVIS"
+          },
+          {
+            "kode": "KP",
+            "term": "NORD-KOREA"
+          },
+          {
+            "kode": "KR",
+            "term": "SØR-KOREA"
+          },
+          {
+            "kode": "KW",
+            "term": "KUWAIT"
+          },
+          {
+            "kode": "KY",
+            "term": "CAYMANØYENE"
+          },
+          {
+            "kode": "KZ",
+            "term": "KASAKHSTAN"
+          },
+          {
+            "kode": "LA",
+            "term": "LAOS"
+          },
+          {
+            "kode": "LB",
+            "term": "LIBANON"
+          },
+          {
+            "kode": "LC",
+            "term": "SAINT LUCIA"
+          },
+          {
+            "kode": "LI",
+            "term": "LIECHTENSTEIN"
+          },
+          {
+            "kode": "LK",
+            "term": "SRI LANKA"
+          },
+          {
+            "kode": "LR",
+            "term": "LIBERIA"
+          },
+          {
+            "kode": "LS",
+            "term": "LESOTHO"
+          },
+          {
+            "kode": "LT",
+            "term": "LITAUEN"
+          },
+          {
+            "kode": "LU",
+            "term": "LUXEMBOURG"
+          },
+          {
+            "kode": "LV",
+            "term": "LATVIA"
+          },
+          {
+            "kode": "LY",
+            "term": "LIBYA"
+          },
+          {
+            "kode": "MA",
+            "term": "MAROKKO"
+          },
+          {
+            "kode": "MC",
+            "term": "MONACO"
+          },
+          {
+            "kode": "MD",
+            "term": "MOLDOVA"
+          },
+          {
+            "kode": "ME",
+            "term": "MONTENEGRO"
+          },
+          {
+            "kode": "MF",
+            "term": "SAINT MARTIN"
+          },
+          {
+            "kode": "MG",
+            "term": "MADAGASKAR"
+          },
+          {
+            "kode": "MH",
+            "term": "MARSHALLØYENE"
+          },
+          {
+            "kode": "MK",
+            "term": "NORD-MAKEDONIA"
+          },
+          {
+            "kode": "ML",
+            "term": "MALI"
+          },
+          {
+            "kode": "MM",
+            "term": "MYANMAR (BURMA)"
+          },
+          {
+            "kode": "MN",
+            "term": "MONGOLIA"
+          },
+          {
+            "kode": "MO",
+            "term": "MACAO"
+          },
+          {
+            "kode": "MP",
+            "term": "NORD-MARIANENE"
+          },
+          {
+            "kode": "MQ",
+            "term": "MARTINIQUE"
+          },
+          {
+            "kode": "MR",
+            "term": "MAURITANIA"
+          },
+          {
+            "kode": "MS",
+            "term": "MONTSERRAT"
+          },
+          {
+            "kode": "MT",
+            "term": "MALTA"
+          },
+          {
+            "kode": "MU",
+            "term": "MAURITIUS"
+          },
+          {
+            "kode": "MV",
+            "term": "MALDIVENE"
+          },
+          {
+            "kode": "MW",
+            "term": "MALAWI"
+          },
+          {
+            "kode": "MX",
+            "term": "MEXICO"
+          },
+          {
+            "kode": "MY",
+            "term": "MALAYSIA"
+          },
+          {
+            "kode": "MZ",
+            "term": "MOSAMBIK"
+          },
+          {
+            "kode": "NA",
+            "term": "NAMIBIA"
+          },
+          {
+            "kode": "NC",
+            "term": "NY-CALEDONIA"
+          },
+          {
+            "kode": "NE",
+            "term": "NIGER"
+          },
+          {
+            "kode": "NF",
+            "term": "NORFOLKØYA"
+          },
+          {
+            "kode": "NG",
+            "term": "NIGERIA"
+          },
+          {
+            "kode": "NI",
+            "term": "NICARAGUA"
+          },
+          {
+            "kode": "NL",
+            "term": "NEDERLAND"
+          },
+          {
+            "kode": "NO",
+            "term": "NORGE"
+          },
+          {
+            "kode": "NP",
+            "term": "NEPAL"
+          },
+          {
+            "kode": "NR",
+            "term": "NAURU"
+          },
+          {
+            "kode": "NU",
+            "term": "NIUE"
+          },
+          {
+            "kode": "NZ",
+            "term": "NEW ZEALAND"
+          },
+          {
+            "kode": "OM",
+            "term": "OMAN"
+          },
+          {
+            "kode": "PA",
+            "term": "PANAMA"
+          },
+          {
+            "kode": "PE",
+            "term": "PERU"
+          },
+          {
+            "kode": "PF",
+            "term": "FRANSK POLYNESIA"
+          },
+          {
+            "kode": "PG",
+            "term": "PAPUA NY-GUINEA"
+          },
+          {
+            "kode": "PH",
+            "term": "FILIPPINENE"
+          },
+          {
+            "kode": "PK",
+            "term": "PAKISTAN"
+          },
+          {
+            "kode": "PL",
+            "term": "POLEN"
+          },
+          {
+            "kode": "PM",
+            "term": "SAINT-PIERRE OG MIQUELON"
+          },
+          {
+            "kode": "PN",
+            "term": "PITCAIRN"
+          }
+        ]
+      },
+      "duration": 9,
+      "dynamicFields": []
+    },
+    {
+      "request": {
+        "id": "6d36afb40134",
+        "method": "GET",
+        "url": "http://localhost:3333/api/fagsaker/MEL-1004",
+        "pathname": "/api/fagsaker/MEL-1004",
+        "normalizedPath": "/api/fagsaker/:saksnummer",
+        "query": {},
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": {
+          "saksnummer": "MEL-1004",
+          "gsakSaksnummer": null,
+          "sakstema": {
+            "kode": "MEDLEMSKAP_LOVVALG",
+            "term": "Medlemskap og lovvalg"
+          },
+          "sakstype": {
+            "kode": "TRYGDEAVTALE",
+            "term": "Avtaleland"
+          },
+          "saksstatus": {
+            "kode": "OPPRETTET",
+            "term": "Saken er opprettet"
+          },
+          "betalingsvalg": null,
+          "registrertDato": "2025-12-08T13:15:16.187169Z",
+          "endretDato": "2025-12-08T13:15:16.195295Z",
+          "hovedpartRolle": "BRUKER"
+        }
+      },
+      "duration": 16,
+      "dynamicFields": ["registrertDato", "endretDato"]
+    },
+    {
+      "request": {
+        "id": "96e393bcfda2",
+        "method": "GET",
+        "url": "http://localhost:3333/api/behandlinger/4",
+        "pathname": "/api/behandlinger/4",
+        "normalizedPath": "/api/behandlinger/:behandlingId",
+        "query": {},
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": {
+          "behandlingID": 4,
+          "oppsummering": {
+            "behandlingsstatus": {
+              "kode": "UNDER_BEHANDLING",
+              "term": "Behandlingen pågår"
+            },
+            "behandlingstype": {
+              "kode": "FØRSTEGANG",
+              "term": "Førstegangsbehandling"
+            },
+            "behandlingstema": {
+              "kode": "YRKESAKTIV",
+              "term": "Yrkesaktiv"
+            },
+            "registrertDato": "2025-12-08T13:15:16.189465Z",
+            "endretDato": "2025-12-08T13:15:16.209201Z",
+            "endretAvNavn": "Lokal Testbruker",
+            "sisteOpplysningerHentetDato": null,
+            "svarFrist": null,
+            "behandlingsfrist": "2026-03-08",
+            "behandlingsresultattype": {
+              "kode": "IKKE_FASTSATT",
+              "term": "Ikke fastsatt"
+            }
+          },
+          "saksopplysninger": {
+            "arbeidsforhold": [],
+            "organisasjoner": [],
+            "medlemskap": {
+              "medlemsperiode": []
+            },
+            "inntekt": {
+              "arbeidsInntektMaanedListe": [],
+              "frilansInntektMaanedListe": []
+            },
+            "sed": {
+              "rinaSaksnummer": null,
+              "rinaDokumentID": null,
+              "fnr": null,
+              "lovvalgsperiode": null,
+              "lovvalgsbestemmelse": null,
+              "lovvalgslandKode": null,
+              "erEndring": false,
+              "sedType": null,
+              "bucType": null
+            }
+          },
+          "redigerbart": true
+        }
+      },
+      "duration": 56,
+      "dynamicFields": [
+        "oppsummering.registrertDato",
+        "oppsummering.endretDato",
+        "oppsummering.endretAvNavn",
+        "oppsummering.sisteOpplysningerHentetDato"
+      ]
+    },
+    {
+      "request": {
+        "id": "5c5a7f13d26c",
+        "method": "GET",
+        "url": "http://localhost:3333/api/behandlinger/4/resultat",
+        "pathname": "/api/behandlinger/4/resultat",
+        "normalizedPath": "/api/behandlinger/:behandlingId/resultat",
+        "query": {},
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": {
+          "behandlingsresultatTypeKode": "IKKE_FASTSATT",
+          "begrunnelseKoder": [],
+          "begrunnelseFritekst": null,
+          "innledningFritekst": null,
+          "trygdeavgiftFritekst": null,
+          "nyVurderingBakgrunn": null,
+          "utfallRegistreringUnntak": null,
+          "utfallUtpeking": null,
+          "vedtakstype": null,
+          "kontrollresultatBegrunnelseKoder": [],
+          "fakturaserieReferanse": null,
+          "aarsavregningID": null
+        }
+      },
+      "duration": 31,
+      "dynamicFields": []
+    },
+    {
+      "request": {
+        "id": "541afbf1a710",
+        "method": "GET",
+        "url": "http://localhost:3333/api/mottatteopplysninger/4",
+        "pathname": "/api/mottatteopplysninger/4",
+        "normalizedPath": "/api/mottatteopplysninger/:id",
+        "query": {},
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": {
+          "data": {
+            "soeknadsland": {
+              "landkoder": [],
+              "flereLandUkjentHvilke": false
+            },
+            "periode": {
+              "fom": null,
+              "tom": null
+            },
+            "personOpplysninger": {
+              "utenlandskIdent": [],
+              "medfolgendeFamilie": [],
+              "foedestedOgLand": null
+            },
+            "arbeidPaaLand": {
+              "fysiskeArbeidssteder": [],
+              "erHjemmekontor": null,
+              "erFastArbeidssted": null
+            },
+            "foretakUtland": [],
+            "oppholdUtland": {
+              "oppholdslandkoder": [],
+              "oppholdsPeriode": {
+                "fom": null,
+                "tom": null
+              },
+              "studentFinansieringKode": null,
+              "studentSemester": null,
+              "ektefelleEllerBarnINorge": null
+            },
+            "selvstendigArbeid": {
+              "erSelvstendig": null,
+              "selvstendigForetak": []
+            },
+            "juridiskArbeidsgiverNorge": {
+              "antallAdmAnsatte": null,
+              "antallAnsatte": null,
+              "antallUtsendte": null,
+              "andelOmsetningINorge": null,
+              "andelOppdragINorge": null,
+              "andelKontrakterINorge": null,
+              "andelRekruttertINorge": null,
+              "ekstraArbeidsgivere": [],
+              "erOffentligVirksomhet": null
+            },
+            "maritimtArbeid": [],
+            "luftfartBaser": [],
+            "bosted": {
+              "intensjonOmRetur": null,
+              "antallMaanederINorge": 0,
+              "oppgittAdresse": {
+                "tilleggsnavn": null,
+                "gatenavn": null,
+                "husnummerEtasjeLeilighet": null,
+                "postboks": null,
+                "postnummer": null,
+                "poststed": null,
+                "region": null,
+                "landkode": null
+              }
+            },
+            "trygdedekning": null,
+            "representantIUtlandet": null
+          },
+          "type": "SØKNAD_YRKESAKTIVE_NORGE_ELLER_UTENFOR_EØS",
+          "mottaksdato": "2025-12-08"
+        }
+      },
+      "duration": 23,
+      "dynamicFields": [
+        "data.periode.fom",
+        "data.periode.tom",
+        "data.oppholdUtland.oppholdsPeriode.fom",
+        "data.oppholdUtland.oppholdsPeriode.tom",
+        "mottaksdato"
+      ]
+    },
+    {
+      "request": {
+        "id": "475de251fa0e",
+        "method": "GET",
+        "url": "http://localhost:3333/api/fagsaker/MEL-1004/dokumenter",
+        "pathname": "/api/fagsaker/MEL-1004/dokumenter",
+        "normalizedPath": "/api/fagsaker/:saksnummer/dokumenter",
+        "query": {},
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": []
+      },
+      "duration": 14,
+      "dynamicFields": []
+    },
+    {
+      "request": {
+        "id": "e8bb47005223",
+        "method": "GET",
+        "url": "http://localhost:3333/api/lovvalgsperioder/4",
+        "pathname": "/api/lovvalgsperioder/4",
+        "normalizedPath": "/api/lovvalgsperioder/:id",
+        "query": {},
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": []
+      },
+      "duration": 11,
+      "dynamicFields": []
+    },
+    {
+      "request": {
+        "id": "54ca6a48e89f",
+        "method": "GET",
+        "url": "http://localhost:3333/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/?saksnummer=MEL-1004",
+        "pathname": "/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/",
+        "normalizedPath": "/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/",
+        "query": {
+          "saksnummer": "MEL-1004"
+        },
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": [
+          {
+            "kode": "EU_EOS",
+            "term": "EU/EØS-land"
+          },
+          {
+            "kode": "TRYGDEAVTALE",
+            "term": "Avtaleland"
+          },
+          {
+            "kode": "FTRL",
+            "term": "Utenfor avtaleland"
+          }
+        ]
+      },
+      "duration": 18,
+      "dynamicFields": []
+    },
+    {
+      "request": {
+        "id": "0e10834a6e95",
+        "method": "GET",
+        "url": "http://localhost:3333/api/saksbehandling/sakstemaer/hent-lovlige-kombinasjoner/?hovedpart=BRUKER&sakstype=TRYGDEAVTALE&saksnummer=MEL-1004",
+        "pathname": "/api/saksbehandling/sakstemaer/hent-lovlige-kombinasjoner/",
+        "normalizedPath": "/api/saksbehandling/sakstemaer/hent-lovlige-kombinasjoner/",
+        "query": {
+          "hovedpart": "BRUKER",
+          "sakstype": "TRYGDEAVTALE",
+          "saksnummer": "MEL-1004"
+        },
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": [
+          {
+            "kode": "MEDLEMSKAP_LOVVALG",
+            "term": "Medlemskap og lovvalg"
+          },
+          {
+            "kode": "UNNTAK",
+            "term": "Unntak"
+          },
+          {
+            "kode": "TRYGDEAVGIFT",
+            "term": "Trygdeavgift"
+          }
+        ]
+      },
+      "duration": 20,
+      "dynamicFields": []
+    },
+    {
+      "request": {
+        "id": "86a85e28f8ae",
+        "method": "GET",
+        "url": "http://localhost:3333/api/brev/utkast/4",
+        "pathname": "/api/brev/utkast/4",
+        "normalizedPath": "/api/brev/utkast/:id",
+        "query": {},
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": []
+      },
+      "duration": 19,
+      "dynamicFields": []
+    },
+    {
+      "request": {
+        "id": "8ee7a8952639",
+        "method": "GET",
+        "url": "http://localhost:3333/api/saksbehandling/MEL-1004/behandlingstyper/kombinasjoner-for-endring/?hovedpart=BRUKER&sakstype=TRYGDEAVTALE&sakstema=MEDLEMSKAP_LOVVALG&behandlingstema=YRKESAKTIV",
+        "pathname": "/api/saksbehandling/MEL-1004/behandlingstyper/kombinasjoner-for-endring/",
+        "normalizedPath": "/api/saksbehandling/:saksnummer/behandlingstyper/kombinasjoner-for-endring/",
+        "query": {
+          "hovedpart": "BRUKER",
+          "sakstype": "TRYGDEAVTALE",
+          "sakstema": "MEDLEMSKAP_LOVVALG",
+          "behandlingstema": "YRKESAKTIV"
+        },
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": [
+          {
+            "kode": "FØRSTEGANG",
+            "term": "Førstegangsbehandling"
+          },
+          {
+            "kode": "NY_VURDERING",
+            "term": "Ny vurdering"
+          },
+          {
+            "kode": "KLAGE",
+            "term": "Klage"
+          },
+          {
+            "kode": "HENVENDELSE",
+            "term": "Henvendelse"
+          }
+        ]
+      },
+      "duration": 20,
+      "dynamicFields": []
+    },
+    {
+      "request": {
+        "id": "98ebe5126be0",
+        "method": "GET",
+        "url": "http://localhost:3333/api/saksbehandling/behandlingstemaer/hent-lovlige-kombinasjoner/?hovedpart=BRUKER&sakstype=TRYGDEAVTALE&sakstema=MEDLEMSKAP_LOVVALG&aktivBehandlingID=4",
+        "pathname": "/api/saksbehandling/behandlingstemaer/hent-lovlige-kombinasjoner/",
+        "normalizedPath": "/api/saksbehandling/behandlingstemaer/hent-lovlige-kombinasjoner/",
+        "query": {
+          "hovedpart": "BRUKER",
+          "sakstype": "TRYGDEAVTALE",
+          "sakstema": "MEDLEMSKAP_LOVVALG",
+          "aktivBehandlingID": "4"
+        },
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": [
+          {
+            "kode": "YRKESAKTIV",
+            "term": "Yrkesaktiv"
+          },
+          {
+            "kode": "IKKE_YRKESAKTIV",
+            "term": "Ikke yrkesaktiv"
+          },
+          {
+            "kode": "PENSJONIST",
+            "term": "Pensjonist/uføretrygdet"
+          },
+          {
+            "kode": "FORESPØRSEL_TRYGDEMYNDIGHET",
+            "term": "Forespørsel fra trygdemyndighet"
+          }
+        ]
+      },
+      "duration": 23,
+      "dynamicFields": []
+    },
+    {
+      "request": {
+        "id": "9b3dfe15358e",
+        "method": "GET",
+        "url": "http://localhost:3333/api/fagsaker/MEL-1004/aktoerer/?rolleKode=FULLMEKTIG",
+        "pathname": "/api/fagsaker/MEL-1004/aktoerer/",
+        "normalizedPath": "/api/fagsaker/:saksnummer/aktoerer/",
+        "query": {
+          "rolleKode": "FULLMEKTIG"
+        },
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": []
+      },
+      "duration": 28,
+      "dynamicFields": []
+    },
+    {
+      "request": {
+        "id": "a395049b993c",
+        "method": "GET",
+        "url": "http://localhost:3333/api/behandlinger/4/aarsak/mottaksdato",
+        "pathname": "/api/behandlinger/4/aarsak/mottaksdato",
+        "normalizedPath": "/api/behandlinger/:behandlingId/aarsak/mottaksdato",
+        "query": {},
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": {
+          "mottaksdato": "2025-12-08"
+        }
+      },
+      "duration": 27,
+      "dynamicFields": ["mottaksdato"]
+    },
+    {
+      "request": {
+        "id": "89c4441b2518",
+        "method": "GET",
+        "url": "http://localhost:3333/api/fagsaker/MEL-1004/trygdeavgift/oppsummering",
+        "pathname": "/api/fagsaker/MEL-1004/trygdeavgift/oppsummering",
+        "normalizedPath": "/api/fagsaker/:saksnummer/trygdeavgift/oppsummering",
+        "query": {},
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": {
+          "harBehandlingMedTrygdeavgift": false
+        }
+      },
+      "duration": 31,
+      "dynamicFields": []
+    },
+    {
+      "request": {
+        "id": "1e27a766e5f2",
+        "method": "POST",
+        "url": "http://localhost:3333/graphql/",
+        "pathname": "/graphql/",
+        "normalizedPath": "/graphql/",
+        "query": {},
+        "headers": {
+          "content-type": "application/json",
+          "accept": "*/*",
+          "authorization": "[REDACTED]"
+        },
+        "body": {
+          "operationName": "hentPersonopplysninger",
+          "variables": {
+            "behandlingID": 4
+          },
+          "query": "query hentPersonopplysninger($behandlingID: Long!) {\n  hentSaksopplysninger(behandlingID: $behandlingID) {\n    persondata {\n      navn {\n        fornavn\n        mellomnavn\n        etternavn\n        __typename\n      }\n      kjoenn\n      folkeregisterpersonstatuser {\n        kode\n        erHistorisk\n        __typename\n      }\n      folkeregisteridentifikator\n      statsborgerskap {\n        land\n        erHistorisk\n        __typename\n      }\n      sivilstand {\n        type\n        erHistorisk\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}"
+        }
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": {
+          "data": {
+            "hentSaksopplysninger": {
+              "persondata": {
+                "navn": {
+                  "fornavn": "KARAFFEL",
+                  "mellomnavn": null,
+                  "etternavn": "TRIVIELL",
+                  "__typename": "Navn"
+                },
+                "kjoenn": "UKJENT",
+                "folkeregisterpersonstatuser": [
+                  {
+                    "kode": "MIDLERTIDIG",
+                    "erHistorisk": true,
+                    "__typename": "Folkeregisterpersonstatus"
+                  },
+                  {
+                    "kode": "BOSATT",
+                    "erHistorisk": false,
+                    "__typename": "Folkeregisterpersonstatus"
+                  },
+                  {
+                    "kode": "UTFLYTTET",
+                    "erHistorisk": true,
+                    "__typename": "Folkeregisterpersonstatus"
+                  }
+                ],
+                "folkeregisteridentifikator": "30056928150",
+                "statsborgerskap": [
+                  {
+                    "land": "NORGE",
+                    "erHistorisk": false,
+                    "__typename": "Statsborgerskap"
+                  }
+                ],
+                "sivilstand": [
+                  {
+                    "type": "Gift",
+                    "erHistorisk": false,
+                    "__typename": "Sivilstand"
+                  },
+                  {
+                    "type": "Skilt",
+                    "erHistorisk": true,
+                    "__typename": "Sivilstand"
+                  },
+                  {
+                    "type": "Separert",
+                    "erHistorisk": true,
+                    "__typename": "Sivilstand"
+                  },
+                  {
+                    "type": "Gift",
+                    "erHistorisk": false,
+                    "__typename": "Sivilstand"
+                  }
+                ],
+                "__typename": "Personopplysninger"
+              },
+              "__typename": "Saksopplysninger"
+            }
+          }
+        }
+      },
+      "duration": 30,
+      "dynamicFields": []
+    },
+    {
+      "request": {
+        "id": "89c4441b2518",
+        "method": "GET",
+        "url": "http://localhost:3333/api/fagsaker/MEL-1004/trygdeavgift/oppsummering",
+        "pathname": "/api/fagsaker/MEL-1004/trygdeavgift/oppsummering",
+        "normalizedPath": "/api/fagsaker/:saksnummer/trygdeavgift/oppsummering",
+        "query": {},
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": {
+          "harBehandlingMedTrygdeavgift": false
+        }
+      },
+      "duration": 33,
+      "dynamicFields": []
+    },
+    {
+      "request": {
+        "id": "127056dfc992",
+        "method": "GET",
+        "url": "http://localhost:3333/api/dokumenter/v2/standardvedlegg",
+        "pathname": "/api/dokumenter/v2/standardvedlegg",
+        "normalizedPath": "/api/dokumenter/v2/standardvedlegg",
+        "query": {},
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": [
+          {
+            "type": "VIKTIG_INFORMASJON_RETTIGHETER_PLIKTER_AVSLAG",
+            "frontendTittel": "Avslag: Viktig informasjon om rettigheter",
+            "dokumentTittel": "Viktig informasjon om rettigheter"
+          },
+          {
+            "type": "VIKTIG_INFORMASJON_RETTIGHETER_PLIKTER_INNVILGELSE",
+            "frontendTittel": "Innvilgelse: Viktig informasjon om rettigheter og plikter",
+            "dokumentTittel": "Viktig informasjon om rettigheter og plikter"
+          }
+        ]
+      },
+      "duration": 9,
+      "dynamicFields": []
+    },
+    {
+      "request": {
+        "id": "86a85e28f8ae",
+        "method": "GET",
+        "url": "http://localhost:3333/api/brev/utkast/4",
+        "pathname": "/api/brev/utkast/4",
+        "normalizedPath": "/api/brev/utkast/:id",
+        "query": {},
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": []
+      },
+      "duration": 16,
+      "dynamicFields": []
+    },
+    {
+      "request": {
+        "id": "48b76aa5bbee",
+        "method": "GET",
+        "url": "http://localhost:3333/api/dokumenter/v2/tilgjengelige-maler/4",
+        "pathname": "/api/dokumenter/v2/tilgjengelige-maler/4",
+        "normalizedPath": "/api/dokumenter/v2/tilgjengelige-maler/:id",
+        "query": {},
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": [
+          {
+            "mottaker": {
+              "type": "Bruker eller brukers fullmektig",
+              "rolle": "BRUKER",
+              "orgnrSettesAvSaksbehandler": false,
+              "adresser": [
+                {
+                  "mottakerNavn": "TRIVIELL KARAFFEL",
+                  "orgnr": null,
+                  "adresselinjer": ["CO 2", "kontakt gata 1 42"],
+                  "postnr": "0001",
+                  "poststed": null,
+                  "region": null,
+                  "land": "SE",
+                  "ugyldig": false
+                }
+              ],
+              "feilmelding": null
+            },
+            "brevTyper": [
+              {
+                "type": {
+                  "kode": "MELDING_FORVENTET_SAKSBEHANDLINGSTID_SOKNAD",
+                  "term": "Melding om forventet saksbehandlingstid"
+                },
+                "felter": null
+              },
+              {
+                "type": {
+                  "kode": "MANGELBREV_BRUKER",
+                  "term": "Melding om manglende opplysninger til bruker"
+                },
+                "felter": [
+                  {
+                    "kode": "INNLEDNING_FRITEKST",
+                    "beskrivelse": "Innledningstekst",
+                    "feltType": "FRITEKST",
+                    "hjelpetekst": null,
+                    "paakrevd": true,
+                    "valg": {
+                      "valgAlternativer": [
+                        {
+                          "kode": "STANDARD",
+                          "beskrivelse": "Standardtekst søknad/klage",
+                          "visFelt": false
+                        },
+                        {
+                          "kode": "FRITEKST",
+                          "beskrivelse": "Fritekst (erstatter standardtekst)",
+                          "visFelt": true
+                        }
+                      ],
+                      "valgType": "RADIO"
+                    },
+                    "tegnBegrensning": null
+                  },
+                  {
+                    "kode": "MANGLER_FRITEKST",
+                    "beskrivelse": "Hva skal mottakeren sende inn?",
+                    "feltType": "FRITEKST",
+                    "hjelpetekst": null,
+                    "paakrevd": true,
+                    "valg": null,
+                    "tegnBegrensning": null
+                  }
+                ]
+              },
+              {
+                "type": {
+                  "kode": "GENERELT_FRITEKSTBREV_BRUKER",
+                  "term": "Fritekstbrev til bruker"
+                },
+                "felter": [
+                  {
+                    "kode": "BREV_TITTEL",
+                    "beskrivelse": "Overskrift i brev",
+                    "feltType": "TEKST",
+                    "hjelpetekst": null,
+                    "paakrevd": true,
+                    "valg": {
+                      "valgAlternativer": [
+                        {
+                          "kode": "ENGELSK_FRITEKSTBREV",
+                          "beskrivelse": "Request to remain subject to Norwegian legislation",
+                          "visFelt": false
+                        },
+                        {
+                          "kode": "FRITEKST_BRUKER_OG_VIRKSOMHET",
+                          "beskrivelse": "Fritekst (maks 60 tegn)",
+                          "visFelt": true
+                        }
+                      ],
+                      "valgType": "SELECT"
+                    },
+                    "tegnBegrensning": 60
+                  },
+                  {
+                    "kode": "FRITEKST",
+                    "beskrivelse": "Hovedtekst til brev",
+                    "feltType": "FRITEKST",
+                    "hjelpetekst": null,
+                    "paakrevd": true,
+                    "valg": null,
+                    "tegnBegrensning": null
+                  },
+                  {
+                    "kode": "STANDARDTEKST_KONTAKTINFORMASJON",
+                    "beskrivelse": "Legg til standardtekst med kontaktinformasjon nederst i brevet",
+                    "feltType": "SJEKKBOKS",
+                    "hjelpetekst": null,
+                    "paakrevd": false,
+                    "valg": null,
+                    "tegnBegrensning": null
+                  },
+                  {
+                    "kode": "DISTRIBUSJONSTYPE",
+                    "beskrivelse": "Type brev",
+                    "feltType": null,
+                    "hjelpetekst": "Type brev må angis slik at bruker får riktig varseltekst om brevet som sendes. Gjelder det et vedtak eller en forespørsel, vil bruker få en påminnelse hvis brevet ikke har blitt lest innen 7 dager.",
+                    "paakrevd": true,
+                    "valg": {
+                      "valgAlternativer": [
+                        {
+                          "kode": "VEDTAK",
+                          "beskrivelse": "Vedtak",
+                          "visFelt": false
+                        },
+                        {
+                          "kode": "VIKTIG",
+                          "beskrivelse": "Viktig",
+                          "visFelt": false
+                        },
+                        {
+                          "kode": "ANNET",
+                          "beskrivelse": "Annet",
+                          "visFelt": false
+                        }
+                      ],
+                      "valgType": "RADIO"
+                    },
+                    "tegnBegrensning": null
+                  },
+                  {
+                    "kode": "DOKUMENT_TITTEL",
+                    "beskrivelse": "Dokumenttittel (valgfri, maks 60 tegn)",
+                    "feltType": "TEKST",
+                    "hjelpetekst": "Dette blir teksten som vises i dokumentoversikten.\nHvis feltet står tomt brukes navnet på brevmalen som dokumenttittel.",
+                    "paakrevd": false,
+                    "valg": null,
+                    "tegnBegrensning": 60
+                  },
+                  {
+                    "kode": "VEDLEGG",
+                    "beskrivelse": "Vedlegg",
+                    "feltType": "VEDLEGG",
+                    "hjelpetekst": null,
+                    "paakrevd": false,
+                    "valg": null,
+                    "tegnBegrensning": null
+                  },
+                  {
+                    "kode": "FRITEKSTVEDLEGG",
+                    "beskrivelse": "Legg til fritekstvedlegg",
+                    "feltType": "FRITEKSTVEDLEGG",
+                    "hjelpetekst": null,
+                    "paakrevd": false,
+                    "valg": null,
+                    "tegnBegrensning": null
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "mottaker": {
+              "type": "Arbeidsgiver eller arbeidsgivers fullmektig",
+              "rolle": "ARBEIDSGIVER",
+              "orgnrSettesAvSaksbehandler": false,
+              "adresser": null,
+              "feilmelding": {
+                "tittel": "Finner ikke gyldig adresse til arbeidsgiver(e). Kontroller at arbeidsgiver(e) er lagt inn korrekt i sidemenyen",
+                "underpunkter": []
+              }
+            },
+            "brevTyper": [
+              {
+                "type": {
+                  "kode": "MANGELBREV_ARBEIDSGIVER",
+                  "term": "Melding om manglende opplysninger til virksomhet"
+                },
+                "felter": [
+                  {
+                    "kode": "INNLEDNING_FRITEKST",
+                    "beskrivelse": "Innledningstekst",
+                    "feltType": "FRITEKST",
+                    "hjelpetekst": null,
+                    "paakrevd": true,
+                    "valg": {
+                      "valgAlternativer": [
+                        {
+                          "kode": "STANDARD",
+                          "beskrivelse": "Standardtekst søknad/klage",
+                          "visFelt": false
+                        },
+                        {
+                          "kode": "FRITEKST",
+                          "beskrivelse": "Fritekst (erstatter standardtekst)",
+                          "visFelt": true
+                        }
+                      ],
+                      "valgType": "RADIO"
+                    },
+                    "tegnBegrensning": null
+                  },
+                  {
+                    "kode": "MANGLER_FRITEKST",
+                    "beskrivelse": "Hva skal mottakeren sende inn?",
+                    "feltType": "FRITEKST",
+                    "hjelpetekst": null,
+                    "paakrevd": true,
+                    "valg": null,
+                    "tegnBegrensning": null
+                  }
+                ]
+              },
+              {
+                "type": {
+                  "kode": "GENERELT_FRITEKSTBREV_ARBEIDSGIVER",
+                  "term": "Fritekstbrev til virksomhet"
+                },
+                "felter": [
+                  {
+                    "kode": "BREV_TITTEL",
+                    "beskrivelse": "Overskrift i brev",
+                    "feltType": "TEKST",
+                    "hjelpetekst": null,
+                    "paakrevd": true,
+                    "valg": {
+                      "valgAlternativer": [
+                        {
+                          "kode": "ENGELSK_FRITEKSTBREV",
+                          "beskrivelse": "Request to remain subject to Norwegian legislation",
+                          "visFelt": false
+                        },
+                        {
+                          "kode": "FRITEKST_BRUKER_OG_VIRKSOMHET",
+                          "beskrivelse": "Fritekst (maks 60 tegn)",
+                          "visFelt": true
+                        }
+                      ],
+                      "valgType": "SELECT"
+                    },
+                    "tegnBegrensning": 60
+                  },
+                  {
+                    "kode": "FRITEKST",
+                    "beskrivelse": "Hovedtekst til brev",
+                    "feltType": "FRITEKST",
+                    "hjelpetekst": null,
+                    "paakrevd": true,
+                    "valg": null,
+                    "tegnBegrensning": null
+                  },
+                  {
+                    "kode": "STANDARDTEKST_KONTAKTINFORMASJON",
+                    "beskrivelse": "Legg til standardtekst med kontaktinformasjon nederst i brevet",
+                    "feltType": "SJEKKBOKS",
+                    "hjelpetekst": null,
+                    "paakrevd": false,
+                    "valg": null,
+                    "tegnBegrensning": null
+                  },
+                  {
+                    "kode": "DISTRIBUSJONSTYPE",
+                    "beskrivelse": "Type brev",
+                    "feltType": null,
+                    "hjelpetekst": "Type brev må angis slik at bruker får riktig varseltekst om brevet som sendes. Gjelder det et vedtak eller en forespørsel, vil bruker få en påminnelse hvis brevet ikke har blitt lest innen 7 dager.",
+                    "paakrevd": true,
+                    "valg": {
+                      "valgAlternativer": [
+                        {
+                          "kode": "VEDTAK",
+                          "beskrivelse": "Vedtak",
+                          "visFelt": false
+                        },
+                        {
+                          "kode": "VIKTIG",
+                          "beskrivelse": "Viktig",
+                          "visFelt": false
+                        },
+                        {
+                          "kode": "ANNET",
+                          "beskrivelse": "Annet",
+                          "visFelt": false
+                        }
+                      ],
+                      "valgType": "RADIO"
+                    },
+                    "tegnBegrensning": null
+                  },
+                  {
+                    "kode": "DOKUMENT_TITTEL",
+                    "beskrivelse": "Dokumenttittel (valgfri, maks 60 tegn)",
+                    "feltType": "TEKST",
+                    "hjelpetekst": "Dette blir teksten som vises i dokumentoversikten.\nHvis feltet står tomt brukes navnet på brevmalen som dokumenttittel.",
+                    "paakrevd": false,
+                    "valg": null,
+                    "tegnBegrensning": 60
+                  },
+                  {
+                    "kode": "VEDLEGG",
+                    "beskrivelse": "Vedlegg",
+                    "feltType": "VEDLEGG",
+                    "hjelpetekst": null,
+                    "paakrevd": false,
+                    "valg": null,
+                    "tegnBegrensning": null
+                  },
+                  {
+                    "kode": "FRITEKSTVEDLEGG",
+                    "beskrivelse": "Legg til fritekstvedlegg",
+                    "feltType": "FRITEKSTVEDLEGG",
+                    "hjelpetekst": null,
+                    "paakrevd": false,
+                    "valg": null,
+                    "tegnBegrensning": null
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "mottaker": {
+              "type": "Utenlandsk trygdemyndighet",
+              "rolle": "UTENLANDSK_TRYGDEMYNDIGHET",
+              "orgnrSettesAvSaksbehandler": false,
+              "adresser": null,
+              "feilmelding": {
+                "tittel": "Du må velge land på inngangssteget for å kunne sende brev til utenlandsk trygdemyndighet.",
+                "underpunkter": []
+              }
+            },
+            "brevTyper": [
+              {
+                "type": {
+                  "kode": "UTENLANDSK_TRYGDEMYNDIGHET_FRITEKSTBREV",
+                  "term": "Fritekstbrev"
+                },
+                "felter": [
+                  {
+                    "kode": "BREV_TITTEL",
+                    "beskrivelse": "Overskrift i brev",
+                    "feltType": "TEKST",
+                    "hjelpetekst": null,
+                    "paakrevd": true,
+                    "valg": {
+                      "valgAlternativer": [
+                        {
+                          "kode": "ENGELSK_FRITEKSTBREV",
+                          "beskrivelse": "Request to remain subject to Norwegian legislation",
+                          "visFelt": false
+                        },
+                        {
+                          "kode": "FRITEKST_BRUKER_OG_VIRKSOMHET",
+                          "beskrivelse": "Fritekst (maks 60 tegn)",
+                          "visFelt": true
+                        }
+                      ],
+                      "valgType": "SELECT"
+                    },
+                    "tegnBegrensning": 60
+                  },
+                  {
+                    "kode": "FRITEKST",
+                    "beskrivelse": "Hovedtekst til brev",
+                    "feltType": "FRITEKST",
+                    "hjelpetekst": null,
+                    "paakrevd": true,
+                    "valg": null,
+                    "tegnBegrensning": null
+                  },
+                  {
+                    "kode": "DISTRIBUSJONSTYPE",
+                    "beskrivelse": "Type brev",
+                    "feltType": null,
+                    "hjelpetekst": "Type brev må angis slik at bruker får riktig varseltekst om brevet som sendes. Gjelder det et vedtak eller en forespørsel, vil bruker få en påminnelse hvis brevet ikke har blitt lest innen 7 dager.",
+                    "paakrevd": true,
+                    "valg": {
+                      "valgAlternativer": [
+                        {
+                          "kode": "VEDTAK",
+                          "beskrivelse": "Vedtak",
+                          "visFelt": false
+                        },
+                        {
+                          "kode": "VIKTIG",
+                          "beskrivelse": "Viktig",
+                          "visFelt": false
+                        },
+                        {
+                          "kode": "ANNET",
+                          "beskrivelse": "Annet",
+                          "visFelt": false
+                        }
+                      ],
+                      "valgType": "RADIO"
+                    },
+                    "tegnBegrensning": null
+                  },
+                  {
+                    "kode": "DOKUMENT_TITTEL",
+                    "beskrivelse": "Dokumenttittel (valgfri, maks 60 tegn)",
+                    "feltType": "TEKST",
+                    "hjelpetekst": "Dette blir teksten som vises i dokumentoversikten.\nHvis feltet står tomt brukes navnet på brevmalen som dokumenttittel.",
+                    "paakrevd": false,
+                    "valg": null,
+                    "tegnBegrensning": 60
+                  },
+                  {
+                    "kode": "VEDLEGG",
+                    "beskrivelse": "Vedlegg",
+                    "feltType": "VEDLEGG",
+                    "hjelpetekst": null,
+                    "paakrevd": false,
+                    "valg": null,
+                    "tegnBegrensning": null
+                  },
+                  {
+                    "kode": "FRITEKSTVEDLEGG",
+                    "beskrivelse": "Legg til fritekstvedlegg",
+                    "feltType": "FRITEKSTVEDLEGG",
+                    "hjelpetekst": null,
+                    "paakrevd": false,
+                    "valg": null,
+                    "tegnBegrensning": null
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "mottaker": {
+              "type": "Annen organisasjon",
+              "rolle": "ANNEN_ORGANISASJON",
+              "orgnrSettesAvSaksbehandler": false,
+              "adresser": null,
+              "feilmelding": null
+            },
+            "brevTyper": [
+              {
+                "type": {
+                  "kode": "MANGELBREV_ARBEIDSGIVER",
+                  "term": "Melding om manglende opplysninger til virksomhet"
+                },
+                "felter": [
+                  {
+                    "kode": "INNLEDNING_FRITEKST",
+                    "beskrivelse": "Innledningstekst",
+                    "feltType": "FRITEKST",
+                    "hjelpetekst": null,
+                    "paakrevd": true,
+                    "valg": {
+                      "valgAlternativer": [
+                        {
+                          "kode": "STANDARD",
+                          "beskrivelse": "Standardtekst søknad/klage",
+                          "visFelt": false
+                        },
+                        {
+                          "kode": "FRITEKST",
+                          "beskrivelse": "Fritekst (erstatter standardtekst)",
+                          "visFelt": true
+                        }
+                      ],
+                      "valgType": "RADIO"
+                    },
+                    "tegnBegrensning": null
+                  },
+                  {
+                    "kode": "MANGLER_FRITEKST",
+                    "beskrivelse": "Hva skal mottakeren sende inn?",
+                    "feltType": "FRITEKST",
+                    "hjelpetekst": null,
+                    "paakrevd": true,
+                    "valg": null,
+                    "tegnBegrensning": null
+                  }
+                ]
+              },
+              {
+                "type": {
+                  "kode": "GENERELT_FRITEKSTBREV_ARBEIDSGIVER",
+                  "term": "Fritekstbrev til virksomhet"
+                },
+                "felter": [
+                  {
+                    "kode": "BREV_TITTEL",
+                    "beskrivelse": "Overskrift i brev",
+                    "feltType": "TEKST",
+                    "hjelpetekst": null,
+                    "paakrevd": true,
+                    "valg": {
+                      "valgAlternativer": [
+                        {
+                          "kode": "ENGELSK_FRITEKSTBREV",
+                          "beskrivelse": "Request to remain subject to Norwegian legislation",
+                          "visFelt": false
+                        },
+                        {
+                          "kode": "FRITEKST_BRUKER_OG_VIRKSOMHET",
+                          "beskrivelse": "Fritekst (maks 60 tegn)",
+                          "visFelt": true
+                        }
+                      ],
+                      "valgType": "SELECT"
+                    },
+                    "tegnBegrensning": 60
+                  },
+                  {
+                    "kode": "FRITEKST",
+                    "beskrivelse": "Hovedtekst til brev",
+                    "feltType": "FRITEKST",
+                    "hjelpetekst": null,
+                    "paakrevd": true,
+                    "valg": null,
+                    "tegnBegrensning": null
+                  },
+                  {
+                    "kode": "STANDARDTEKST_KONTAKTINFORMASJON",
+                    "beskrivelse": "Legg til standardtekst med kontaktinformasjon nederst i brevet",
+                    "feltType": "SJEKKBOKS",
+                    "hjelpetekst": null,
+                    "paakrevd": false,
+                    "valg": null,
+                    "tegnBegrensning": null
+                  },
+                  {
+                    "kode": "DISTRIBUSJONSTYPE",
+                    "beskrivelse": "Type brev",
+                    "feltType": null,
+                    "hjelpetekst": "Type brev må angis slik at bruker får riktig varseltekst om brevet som sendes. Gjelder det et vedtak eller en forespørsel, vil bruker få en påminnelse hvis brevet ikke har blitt lest innen 7 dager.",
+                    "paakrevd": true,
+                    "valg": {
+                      "valgAlternativer": [
+                        {
+                          "kode": "VEDTAK",
+                          "beskrivelse": "Vedtak",
+                          "visFelt": false
+                        },
+                        {
+                          "kode": "VIKTIG",
+                          "beskrivelse": "Viktig",
+                          "visFelt": false
+                        },
+                        {
+                          "kode": "ANNET",
+                          "beskrivelse": "Annet",
+                          "visFelt": false
+                        }
+                      ],
+                      "valgType": "RADIO"
+                    },
+                    "tegnBegrensning": null
+                  },
+                  {
+                    "kode": "DOKUMENT_TITTEL",
+                    "beskrivelse": "Dokumenttittel (valgfri, maks 60 tegn)",
+                    "feltType": "TEKST",
+                    "hjelpetekst": "Dette blir teksten som vises i dokumentoversikten.\nHvis feltet står tomt brukes navnet på brevmalen som dokumenttittel.",
+                    "paakrevd": false,
+                    "valg": null,
+                    "tegnBegrensning": 60
+                  },
+                  {
+                    "kode": "VEDLEGG",
+                    "beskrivelse": "Vedlegg",
+                    "feltType": "VEDLEGG",
+                    "hjelpetekst": null,
+                    "paakrevd": false,
+                    "valg": null,
+                    "tegnBegrensning": null
+                  },
+                  {
+                    "kode": "FRITEKSTVEDLEGG",
+                    "beskrivelse": "Legg til fritekstvedlegg",
+                    "feltType": "FRITEKSTVEDLEGG",
+                    "hjelpetekst": null,
+                    "paakrevd": false,
+                    "valg": null,
+                    "tegnBegrensning": null
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "mottaker": {
+              "type": "Norske myndigheter",
+              "rolle": "NORSK_MYNDIGHET",
+              "orgnrSettesAvSaksbehandler": false,
+              "adresser": null,
+              "feilmelding": null
+            },
+            "brevTyper": [
+              {
+                "type": {
+                  "kode": "FRITEKSTBREV",
+                  "term": "Fritekstbrev"
+                },
+                "felter": [
+                  {
+                    "kode": "BREV_TITTEL",
+                    "beskrivelse": "Overskrift i brev",
+                    "feltType": "TEKST",
+                    "hjelpetekst": null,
+                    "paakrevd": true,
+                    "valg": {
+                      "valgAlternativer": [
+                        {
+                          "kode": "ORIENTERING_BESLUTNING",
+                          "beskrivelse": "Orientering om vår beslutning",
+                          "visFelt": false
+                        },
+                        {
+                          "kode": "FRITEKST",
+                          "beskrivelse": "Fritekst",
+                          "visFelt": true
+                        }
+                      ],
+                      "valgType": "SELECT"
+                    },
+                    "tegnBegrensning": 60
+                  },
+                  {
+                    "kode": "FRITEKST",
+                    "beskrivelse": "Hovedtekst til brev",
+                    "feltType": "FRITEKST",
+                    "hjelpetekst": null,
+                    "paakrevd": true,
+                    "valg": null,
+                    "tegnBegrensning": null
+                  },
+                  {
+                    "kode": "DISTRIBUSJONSTYPE",
+                    "beskrivelse": "Type brev",
+                    "feltType": null,
+                    "hjelpetekst": "Type brev må angis slik at bruker får riktig varseltekst om brevet som sendes. Gjelder det et vedtak eller en forespørsel, vil bruker få en påminnelse hvis brevet ikke har blitt lest innen 7 dager.",
+                    "paakrevd": true,
+                    "valg": {
+                      "valgAlternativer": [
+                        {
+                          "kode": "VEDTAK",
+                          "beskrivelse": "Vedtak",
+                          "visFelt": false
+                        },
+                        {
+                          "kode": "VIKTIG",
+                          "beskrivelse": "Viktig",
+                          "visFelt": false
+                        },
+                        {
+                          "kode": "ANNET",
+                          "beskrivelse": "Annet",
+                          "visFelt": false
+                        }
+                      ],
+                      "valgType": "RADIO"
+                    },
+                    "tegnBegrensning": null
+                  },
+                  {
+                    "kode": "DOKUMENT_TITTEL",
+                    "beskrivelse": "Dokumenttittel (valgfri, maks 60 tegn)",
+                    "feltType": "TEKST",
+                    "hjelpetekst": "Dette blir teksten som vises i dokumentoversikten.\nHvis feltet står tomt brukes navnet på brevmalen som dokumenttittel.",
+                    "paakrevd": false,
+                    "valg": null,
+                    "tegnBegrensning": 60
+                  },
+                  {
+                    "kode": "VEDLEGG",
+                    "beskrivelse": "Vedlegg",
+                    "feltType": "VEDLEGG",
+                    "hjelpetekst": null,
+                    "paakrevd": false,
+                    "valg": null,
+                    "tegnBegrensning": null
+                  },
+                  {
+                    "kode": "FRITEKSTVEDLEGG",
+                    "beskrivelse": "Legg til fritekstvedlegg",
+                    "feltType": "FRITEKSTVEDLEGG",
+                    "hjelpetekst": null,
+                    "paakrevd": false,
+                    "valg": null,
+                    "tegnBegrensning": null
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "duration": 127,
+      "dynamicFields": []
+    }
+  ]
+}

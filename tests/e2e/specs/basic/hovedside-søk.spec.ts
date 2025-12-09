@@ -1,9 +1,9 @@
-import { test } from "@playwright/test";
+import { test } from "../../recording/fixtures";
 import { runAxeAnalyze } from "../../utils/axeUtils";
 import { HovedsidePage, USER_ID_INVALID, USER_ID_VALID } from "../../pages/hovedside.page";
 import { SokPage } from "../../pages/sok.page";
 
-test("Søk etter gyldig ID og verifiser resultater", async ({ page }, testInfo) => {
+test("Søk etter gyldig ID og verifiser resultater", async ({ page, apiRecorder }, testInfo) => {
   const mainPage = new HovedsidePage(page);
 
   await mainPage.goto();
@@ -16,7 +16,7 @@ test("Søk etter gyldig ID og verifiser resultater", async ({ page }, testInfo) 
   await runAxeAnalyze(page, testInfo.title);
 });
 
-test("Søk etter ugyldig ID og verifiser feilmelding", async ({ page }, testInfo) => {
+test("Søk etter ugyldig ID og verifiser feilmelding", async ({ page, apiRecorder }, testInfo) => {
   const mainPage = new HovedsidePage(page);
   const searchResultsPage = new SokPage(page);
 

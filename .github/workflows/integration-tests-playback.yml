@@ -1,6 +1,9 @@
 name: Integration Tests (Playback)
 
 on:
+  pull_request:
+  push:
+    branches: [master, main]
   workflow_dispatch:
 
 jobs:

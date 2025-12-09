@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "../../../recording/fixtures";
 import { runAxeAnalyze } from "../../../utils/axeUtils";
 import { HovedsidePage, USER_ID_VALID } from "../../../pages/hovedside.page";
 import { OpprettNySakPage } from "../../../pages/opprett-ny-sak/opprett-ny-sak.page";
@@ -22,9 +22,12 @@ import { TIMEOUT_FOR_COMPLEX_TESTS } from "../../../utils/testUtils";
  * - Parallell data-henting med Promise.all
  */
 test.describe("State-håndtering ved saksbytting", () => {
+  // Kjør tester serielt for å unngå race conditions med delt testdata
+  test.describe.configure({ mode: "serial" });
+
   let opprettNySakPage: OpprettNySakPage;
 
-  test.beforeEach(async ({ page }) => {
+  test.beforeEach(async ({ page, apiRecorder }) => {
     const mainPage = new HovedsidePage(page);
     opprettNySakPage = new OpprettNySakPage(page);
 
@@ -34,7 +37,7 @@ test.describe("State-håndtering ved saksbytting", () => {
     await opprettNySakPage.velgKnyttTilEksisterendeSak();
   });
 
-  test("Avsluttet behandling - viser melding om tidligere behandling", async ({ page }, testInfo) => {
+  test("Avsluttet behandling - viser melding om tidligere behandling", async ({ page, apiRecorder }, testInfo) => {
     // Bruk prepopulert AVSLUTTET sak MEL-1065 (FTRL)
     const sakId = "MEL-1065";
     const valgtSak = opprettNySakPage.finnSakBySaksnummer(sakId);
@@ -53,7 +56,10 @@ test.describe("State-håndtering ved saksbytting", () => {
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("Utenfor avtaleland med aktiv behandling - årsavregning tilgjengelig", async ({ page }, testInfo) => {
+  test("Utenfor avtaleland med aktiv behandling - årsavregning tilgjengelig", async ({
+    page,
+    apiRecorder,
+  }, testInfo) => {
     // Bruk prepopulert UNDER_BEHANDLING sak MEL-1018 (FTRL - Utenfor avtaleland)
     const sakId = "MEL-1018";
     const valgtSak = opprettNySakPage.finnSakBySaksnummer(sakId);
@@ -69,7 +75,7 @@ test.describe("State-håndtering ved saksbytting", () => {
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("EØS-sak med åpen behandling - viser varselmelding", async ({ page }, testInfo) => {
+  test("EØS-sak med åpen behandling - viser varselmelding", async ({ page, apiRecorder }, testInfo) => {
     // Bruk prepopulert UNDER_BEHANDLING EØS-sak MEL-1071 (IKKE_YRKESAKTIV)
     const sakId = "MEL-1071";
     const valgtSak = opprettNySakPage.finnSakBySaksnummer(sakId);
@@ -83,7 +89,7 @@ test.describe("State-håndtering ved saksbytting", () => {
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("Regresjon: Behandlingstema settes automatisk via Redux", async ({ page }, testInfo) => {
+  test("Regresjon: Behandlingstema settes automatisk via Redux", async ({ page, apiRecorder }, testInfo) => {
     // Bruk prepopulert AVSLUTTET sak MEL-1066 (FTRL)
     const sakId = "MEL-1066";
     const valgtSak = opprettNySakPage.finnSakBySaksnummer(sakId);
@@ -105,7 +111,7 @@ test.describe("State-håndtering ved saksbytting", () => {
   // Denne testen er vanskelig å gjøre deterministisk siden enkelte saker kan vise
   // varselmeldinger avhengig av tilstand, og det er ikke alltid en feil
 
-  test("Regresjon: Panel synlig etter feilmelding på annen sak", async ({ page }, testInfo) => {
+  test("Regresjon: Panel synlig etter feilmelding på annen sak", async ({ page, apiRecorder }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout for mange saksvalg
 
     // Dette tester det spesifikke symptomet som ble beskrevet:
@@ -181,7 +187,7 @@ test.describe("State-håndtering ved saksbytting", () => {
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("Regresjon: Sak med trygdeavgift - behandlingstyper lastes korrekt", async ({ page }, testInfo) => {
+  test("Regresjon: Sak med trygdeavgift - behandlingstyper lastes korrekt", async ({ page, apiRecorder }, testInfo) => {
     // Bruk prepopulert AVSLUTTET sak MEL-1066 (FTRL)
     const sakId = "MEL-1066";
     const valgtSak = opprettNySakPage.finnSakBySaksnummer(sakId);

@@ -1,0 +1,4269 @@
+{
+  "version": "1.0",
+  "recordedAt": "2025-12-08T13:18:18.088Z",
+  "testFile": "/Users/rune/source/nav/melosys-web/tests/e2e/specs/opprett-ny-sak/ny-sak/virksomhet-sak-validering.spec.ts",
+  "testName": "Opprett sak for sakstype \"EU/EØS-land\" og verifiser at det ikke oppstår noen feil",
+  "exchanges": [
+    {
+      "request": {
+        "id": "4ce2a0992867",
+        "method": "GET",
+        "url": "http://localhost:3333/api/featuretoggle?features=melosys.faktureringskomponent.vis_referanse&features=melosys.ftrl.begrense_periode_vedtak&features=melosys.11_3_a_Norge_er_utpekt&features=melosys.pensjonist&features=melosys.pensjonist_eos&features=standardvedlegg_eget_vedlegg_avtaleland&features=melosys.arsavregning&features=melosys.arsavregning.uten.flyt&features=melosys.faktureringskomponenten.ikke-tidligere-perioder&features=melosys.eos_fakturering_av_trygdeavgift",
+        "pathname": "/api/featuretoggle",
+        "normalizedPath": "/api/featuretoggle",
+        "query": {
+          "features": "melosys.eos_fakturering_av_trygdeavgift"
+        },
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": {
+          "melosys.faktureringskomponent.vis_referanse": true,
+          "melosys.pensjonist": true,
+          "melosys.pensjonist_eos": true,
+          "standardvedlegg_eget_vedlegg_avtaleland": true,
+          "melosys.ftrl.begrense_periode_vedtak": true,
+          "melosys.arsavregning": true,
+          "melosys.faktureringskomponenten.ikke-tidligere-perioder": true,
+          "melosys.11_3_a_Norge_er_utpekt": true,
+          "melosys.eos_fakturering_av_trygdeavgift": true,
+          "melosys.arsavregning.uten.flyt": false
+        }
+      },
+      "duration": 5,
+      "dynamicFields": []
+    },
+    {
+      "request": {
+        "id": "74592ac6ace6",
+        "method": "GET",
+        "url": "http://localhost:3333/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/?",
+        "pathname": "/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/",
+        "normalizedPath": "/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/",
+        "query": {},
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": [
+          {
+            "kode": "EU_EOS",
+            "term": "EU/EØS-land"
+          },
+          {
+            "kode": "TRYGDEAVTALE",
+            "term": "Avtaleland"
+          },
+          {
+            "kode": "FTRL",
+            "term": "Utenfor avtaleland"
+          }
+        ]
+      },
+      "duration": 8,
+      "dynamicFields": []
+    },
+    {
+      "request": {
+        "id": "deaa444ebfff",
+        "method": "GET",
+        "url": "http://localhost:3333/api/kodeverk/nav-felles/LANDKODER_ISO2",
+        "pathname": "/api/kodeverk/nav-felles/LANDKODER_ISO2",
+        "normalizedPath": "/api/kodeverk/nav-felles/LANDKODER_ISO2",
+        "query": {},
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": [
+          {
+            "kode": "PR",
+            "term": "PUERTO RICO"
+          },
+          {
+            "kode": "PS",
+            "term": "PALESTINA"
+          },
+          {
+            "kode": "PT",
+            "term": "PORTUGAL"
+          },
+          {
+            "kode": "PW",
+            "term": "PALAU"
+          },
+          {
+            "kode": "PY",
+            "term": "PARAGUAY"
+          },
+          {
+            "kode": "QA",
+            "term": "QATAR"
+          },
+          {
+            "kode": "AD",
+            "term": "ANDORRA"
+          },
+          {
+            "kode": "AE",
+            "term": "DE FORENTE ARABISKE EMIRATER"
+          },
+          {
+            "kode": "AF",
+            "term": "AFGHANISTAN"
+          },
+          {
+            "kode": "AG",
+            "term": "ANTIGUA OG BARBUDA"
+          },
+          {
+            "kode": "AI",
+            "term": "ANGUILLA"
+          },
+          {
+            "kode": "AL",
+            "term": "ALBANIA"
+          },
+          {
+            "kode": "AM",
+            "term": "ARMENIA"
+          },
+          {
+            "kode": "AO",
+            "term": "ANGOLA"
+          },
+          {
+            "kode": "AQ",
+            "term": "Antarktis"
+          },
+          {
+            "kode": "AR",
+            "term": "ARGENTINA"
+          },
+          {
+            "kode": "AS",
+            "term": "AM. SAMOA"
+          },
+          {
+            "kode": "AT",
+            "term": "ØSTERRIKE"
+          },
+          {
+            "kode": "RE",
+            "term": "REUNION"
+          },
+          {
+            "kode": "AU",
+            "term": "AUSTRALIA"
+          },
+          {
+            "kode": "AW",
+            "term": "ARUBA"
+          },
+          {
+            "kode": "AX",
+            "term": "ÅLAND"
+          },
+          {
+            "kode": "AZ",
+            "term": "ASERBAJDSJAN"
+          },
+          {
+            "kode": "RO",
+            "term": "ROMANIA"
+          },
+          {
+            "kode": "BA",
+            "term": "BOSNIA-HERCEGOVINA"
+          },
+          {
+            "kode": "BB",
+            "term": "BARBADOS"
+          },
+          {
+            "kode": "RS",
+            "term": "SERBIA"
+          },
+          {
+            "kode": "BD",
+            "term": "BANGLADESH"
+          },
+          {
+            "kode": "RU",
+            "term": "RUSSLAND"
+          },
+          {
+            "kode": "BE",
+            "term": "BELGIA"
+          },
+          {
+            "kode": "BF",
+            "term": "BURKINA FASO"
+          },
+          {
+            "kode": "RW",
+            "term": "RWANDA"
+          },
+          {
+            "kode": "BG",
+            "term": "BULGARIA"
+          },
+          {
+            "kode": "BH",
+            "term": "BAHRAIN"
+          },
+          {
+            "kode": "BI",
+            "term": "BURUNDI"
+          },
+          {
+            "kode": "BJ",
+            "term": "BENIN"
+          },
+          {
+            "kode": "BL",
+            "term": "SAINT BARTHELEMY"
+          },
+          {
+            "kode": "BM",
+            "term": "BERMUDA"
+          },
+          {
+            "kode": "BN",
+            "term": "BRUNEI"
+          },
+          {
+            "kode": "BO",
+            "term": "BOLIVIA"
+          },
+          {
+            "kode": "SA",
+            "term": "SAUDI-ARABIA"
+          },
+          {
+            "kode": "SB",
+            "term": "SALOMONØYENE"
+          },
+          {
+            "kode": "BQ",
+            "term": "BONAIRE, SINT EUSTATIUS OG SABA"
+          },
+          {
+            "kode": "SC",
+            "term": "SEYCHELLENE"
+          },
+          {
+            "kode": "BR",
+            "term": "BRASIL"
+          },
+          {
+            "kode": "BS",
+            "term": "BAHAMAS"
+          },
+          {
+            "kode": "SD",
+            "term": "SUDAN"
+          },
+          {
+            "kode": "BT",
+            "term": "BHUTAN"
+          },
+          {
+            "kode": "SE",
+            "term": "SVERIGE"
+          },
+          {
+            "kode": "SG",
+            "term": "SINGAPORE"
+          },
+          {
+            "kode": "BV",
+            "term": "BOUVETØYA"
+          },
+          {
+            "kode": "BW",
+            "term": "BOTSWANA"
+          },
+          {
+            "kode": "SH",
+            "term": "SANKT HELENA, ASCENSION OG TRISTAN DA CUNHA"
+          },
+          {
+            "kode": "SI",
+            "term": "SLOVENIA"
+          },
+          {
+            "kode": "SJ",
+            "term": "SVALBARD OG JAN MAYEN"
+          },
+          {
+            "kode": "BY",
+            "term": "BELARUS"
+          },
+          {
+            "kode": "BZ",
+            "term": "BELIZE"
+          },
+          {
+            "kode": "SK",
+            "term": "SLOVAKIA"
+          },
+          {
+            "kode": "SL",
+            "term": "SIERRA LEONE"
+          },
+          {
+            "kode": "SM",
+            "term": "SAN MARINO"
+          },
+          {
+            "kode": "SN",
+            "term": "SENEGAL"
+          },
+          {
+            "kode": "SO",
+            "term": "SOMALIA"
+          },
+          {
+            "kode": "CA",
+            "term": "CANADA"
+          },
+          {
+            "kode": "SR",
+            "term": "SURINAM"
+          },
+          {
+            "kode": "???",
+            "term": "UOPPGITT/UKJENT"
+          },
+          {
+            "kode": "SS",
+            "term": "SØR-SUDAN"
+          },
+          {
+            "kode": "CC",
+            "term": "KOKOSØYENE (KEELINGØYENE)"
+          },
+          {
+            "kode": "ST",
+            "term": "SAO TOME OG PRINCIPE"
+          },
+          {
+            "kode": "CD",
+            "term": "KONGO"
+          },
+          {
+            "kode": "SV",
+            "term": "EL SALVADOR"
+          },
+          {
+            "kode": "CF",
+            "term": "DEN SENTRALAFRIKANSKE REPUBLIKK"
+          },
+          {
+            "kode": "CG",
+            "term": "KONGO-BRAZZAVILLE"
+          },
+          {
+            "kode": "CH",
+            "term": "SVEITS"
+          },
+          {
+            "kode": "SX",
+            "term": "SINT MAARTEN"
+          },
+          {
+            "kode": "SY",
+            "term": "SYRIA"
+          },
+          {
+            "kode": "CI",
+            "term": "ELFENBENSKYSTEN"
+          },
+          {
+            "kode": "SZ",
+            "term": "ESWATINI"
+          },
+          {
+            "kode": "CK",
+            "term": "COOKØYENE"
+          },
+          {
+            "kode": "CL",
+            "term": "CHILE"
+          },
+          {
+            "kode": "CM",
+            "term": "KAMERUN"
+          },
+          {
+            "kode": "CN",
+            "term": "KINA"
+          },
+          {
+            "kode": "CO",
+            "term": "COLOMBIA"
+          },
+          {
+            "kode": "CR",
+            "term": "COSTA RICA"
+          },
+          {
+            "kode": "TC",
+            "term": "TURKS- OG CAICOSØYENE"
+          },
+          {
+            "kode": "CS",
+            "term": "SERBIA OG MONTENEGRO"
+          },
+          {
+            "kode": "TD",
+            "term": "TSJAD"
+          },
+          {
+            "kode": "CU",
+            "term": "CUBA"
+          },
+          {
+            "kode": "TG",
+            "term": "TOGO"
+          },
+          {
+            "kode": "CV",
+            "term": "KAPP VERDE"
+          },
+          {
+            "kode": "TH",
+            "term": "THAILAND"
+          },
+          {
+            "kode": "CW",
+            "term": "CURACAO"
+          },
+          {
+            "kode": "CX",
+            "term": "CHRISTMASØYA"
+          },
+          {
+            "kode": "CY",
+            "term": "KYPROS"
+          },
+          {
+            "kode": "TJ",
+            "term": "TADSJIKISTAN"
+          },
+          {
+            "kode": "TK",
+            "term": "TOKELAU"
+          },
+          {
+            "kode": "CZ",
+            "term": "TSJEKKIA"
+          },
+          {
+            "kode": "TL",
+            "term": "ØST-TIMOR"
+          },
+          {
+            "kode": "TM",
+            "term": "TURKMENISTAN"
+          },
+          {
+            "kode": "TN",
+            "term": "TUNISIA"
+          },
+          {
+            "kode": "TO",
+            "term": "TONGA"
+          },
+          {
+            "kode": "TR",
+            "term": "TYRKIA"
+          },
+          {
+            "kode": "TT",
+            "term": "TRINIDAD OG TOBAGO"
+          },
+          {
+            "kode": "DE",
+            "term": "TYSKLAND"
+          },
+          {
+            "kode": "TV",
+            "term": "TUVALU"
+          },
+          {
+            "kode": "TW",
+            "term": "TAIWAN"
+          },
+          {
+            "kode": "DJ",
+            "term": "DJIBOUTI"
+          },
+          {
+            "kode": "TZ",
+            "term": "TANZANIA"
+          },
+          {
+            "kode": "DK",
+            "term": "DANMARK"
+          },
+          {
+            "kode": "DM",
+            "term": "DOMINICA"
+          },
+          {
+            "kode": "DO",
+            "term": "DEN DOMINIKANSKE REPUBLIKK"
+          },
+          {
+            "kode": "UA",
+            "term": "UKRAINA"
+          },
+          {
+            "kode": "UG",
+            "term": "UGANDA"
+          },
+          {
+            "kode": "DZ",
+            "term": "ALGERIE"
+          },
+          {
+            "kode": "UM",
+            "term": "USAS YTRE SMÅØYER"
+          },
+          {
+            "kode": "EC",
+            "term": "ECUADOR"
+          },
+          {
+            "kode": "US",
+            "term": "USA"
+          },
+          {
+            "kode": "EE",
+            "term": "ESTLAND"
+          },
+          {
+            "kode": "EG",
+            "term": "EGYPT"
+          },
+          {
+            "kode": "EH",
+            "term": "VEST-SAHARA"
+          },
+          {
+            "kode": "UY",
+            "term": "URUGUAY"
+          },
+          {
+            "kode": "UZ",
+            "term": "USBEKISTAN"
+          },
+          {
+            "kode": "VA",
+            "term": "VATIKANSTATEN"
+          },
+          {
+            "kode": "ER",
+            "term": "ERITREA"
+          },
+          {
+            "kode": "VC",
+            "term": "SAINT VINCENT OG GRENADINENE"
+          },
+          {
+            "kode": "ES",
+            "term": "SPANIA"
+          },
+          {
+            "kode": "ET",
+            "term": "ETIOPIA"
+          },
+          {
+            "kode": "VE",
+            "term": "VENEZUELA"
+          },
+          {
+            "kode": "VG",
+            "term": "DE BRITISKE JOMFRUØYER"
+          },
+          {
+            "kode": "VI",
+            "term": "DE AMERIKANSKE JOMFRUØYER"
+          },
+          {
+            "kode": "VN",
+            "term": "VIETNAM"
+          },
+          {
+            "kode": "VU",
+            "term": "VANUATU"
+          },
+          {
+            "kode": "FI",
+            "term": "FINLAND"
+          },
+          {
+            "kode": "FJ",
+            "term": "FIJI"
+          },
+          {
+            "kode": "FK",
+            "term": "FALKLANDSØYENE"
+          },
+          {
+            "kode": "FM",
+            "term": "MIKRONESIAFØDERASJONEN"
+          },
+          {
+            "kode": "FO",
+            "term": "FÆRØYENE"
+          },
+          {
+            "kode": "FR",
+            "term": "FRANKRIKE"
+          },
+          {
+            "kode": "WF",
+            "term": "WALLIS OG FUTUNA"
+          },
+          {
+            "kode": "GA",
+            "term": "GABON"
+          },
+          {
+            "kode": "GB",
+            "term": "STORBRITANNIA"
+          },
+          {
+            "kode": "WS",
+            "term": "SAMOA"
+          },
+          {
+            "kode": "GD",
+            "term": "GRENADA"
+          },
+          {
+            "kode": "GE",
+            "term": "GEORGIA"
+          },
+          {
+            "kode": "GF",
+            "term": "FRANSK GUYANA"
+          },
+          {
+            "kode": "GG",
+            "term": "GUERNSEY"
+          },
+          {
+            "kode": "GH",
+            "term": "GHANA"
+          },
+          {
+            "kode": "GI",
+            "term": "GIBRALTAR"
+          },
+          {
+            "kode": "GL",
+            "term": "GRØNLAND"
+          },
+          {
+            "kode": "GM",
+            "term": "GAMBIA"
+          },
+          {
+            "kode": "GN",
+            "term": "GUINEA"
+          },
+          {
+            "kode": "GP",
+            "term": "GUADELOUPE"
+          },
+          {
+            "kode": "GQ",
+            "term": "EKVATORIAL-GUINEA"
+          },
+          {
+            "kode": "XB",
+            "term": "Kanariøyene"
+          },
+          {
+            "kode": "GR",
+            "term": "HELLAS"
+          },
+          {
+            "kode": "GS",
+            "term": "SØR-GEORGIA OG SØR-SANDWICHØYENE"
+          },
+          {
+            "kode": "GT",
+            "term": "GUATEMALA"
+          },
+          {
+            "kode": "GU",
+            "term": "GUAM"
+          },
+          {
+            "kode": "GW",
+            "term": "GUINEA-BISSAU"
+          },
+          {
+            "kode": "GY",
+            "term": "GUYANA"
+          },
+          {
+            "kode": "XK",
+            "term": "KOSOVO"
+          },
+          {
+            "kode": "HK",
+            "term": "HONGKONG"
+          },
+          {
+            "kode": "HM",
+            "term": "HEARD- OG MCDONALD-ØYENE"
+          },
+          {
+            "kode": "HN",
+            "term": "HONDURAS"
+          },
+          {
+            "kode": "HR",
+            "term": "KROATIA"
+          },
+          {
+            "kode": "YE",
+            "term": "JEMEN"
+          },
+          {
+            "kode": "HT",
+            "term": "HAITI"
+          },
+          {
+            "kode": "HU",
+            "term": "UNGARN"
+          },
+          {
+            "kode": "ID",
+            "term": "INDONESIA"
+          },
+          {
+            "kode": "YT",
+            "term": "MAYOTTE"
+          },
+          {
+            "kode": "IE",
+            "term": "IRLAND"
+          },
+          {
+            "kode": "IL",
+            "term": "ISRAEL"
+          },
+          {
+            "kode": "IM",
+            "term": "ISLE OF MAN"
+          },
+          {
+            "kode": "IN",
+            "term": "INDIA"
+          },
+          {
+            "kode": "IO",
+            "term": "DET BRITISKE TERRITORIET I INDIAHAVET"
+          },
+          {
+            "kode": "ZA",
+            "term": "SØR-AFRIKA"
+          },
+          {
+            "kode": "IQ",
+            "term": "IRAK"
+          },
+          {
+            "kode": "IR",
+            "term": "IRAN"
+          },
+          {
+            "kode": "IS",
+            "term": "ISLAND"
+          },
+          {
+            "kode": "IT",
+            "term": "ITALIA"
+          },
+          {
+            "kode": "ZM",
+            "term": "ZAMBIA"
+          },
+          {
+            "kode": "JE",
+            "term": "JERSEY"
+          },
+          {
+            "kode": "ZW",
+            "term": "ZIMBABWE"
+          },
+          {
+            "kode": "JM",
+            "term": "JAMAICA"
+          },
+          {
+            "kode": "JO",
+            "term": "JORDAN"
+          },
+          {
+            "kode": "JP",
+            "term": "JAPAN"
+          },
+          {
+            "kode": "KE",
+            "term": "KENYA"
+          },
+          {
+            "kode": "KG",
+            "term": "KIRGISISTAN"
+          },
+          {
+            "kode": "KH",
+            "term": "KAMBODSJA"
+          },
+          {
+            "kode": "KI",
+            "term": "KIRIBATI"
+          },
+          {
+            "kode": "KM",
+            "term": "KOMORENE"
+          },
+          {
+            "kode": "KN",
+            "term": "SAINT KITTS OG NEVIS"
+          },
+          {
+            "kode": "KP",
+            "term": "NORD-KOREA"
+          },
+          {
+            "kode": "KR",
+            "term": "SØR-KOREA"
+          },
+          {
+            "kode": "KW",
+            "term": "KUWAIT"
+          },
+          {
+            "kode": "KY",
+            "term": "CAYMANØYENE"
+          },
+          {
+            "kode": "KZ",
+            "term": "KASAKHSTAN"
+          },
+          {
+            "kode": "LA",
+            "term": "LAOS"
+          },
+          {
+            "kode": "LB",
+            "term": "LIBANON"
+          },
+          {
+            "kode": "LC",
+            "term": "SAINT LUCIA"
+          },
+          {
+            "kode": "LI",
+            "term": "LIECHTENSTEIN"
+          },
+          {
+            "kode": "LK",
+            "term": "SRI LANKA"
+          },
+          {
+            "kode": "LR",
+            "term": "LIBERIA"
+          },
+          {
+            "kode": "LS",
+            "term": "LESOTHO"
+          },
+          {
+            "kode": "LT",
+            "term": "LITAUEN"
+          },
+          {
+            "kode": "LU",
+            "term": "LUXEMBOURG"
+          },
+          {
+            "kode": "LV",
+            "term": "LATVIA"
+          },
+          {
+            "kode": "LY",
+            "term": "LIBYA"
+          },
+          {
+            "kode": "MA",
+            "term": "MAROKKO"
+          },
+          {
+            "kode": "MC",
+            "term": "MONACO"
+          },
+          {
+            "kode": "MD",
+            "term": "MOLDOVA"
+          },
+          {
+            "kode": "ME",
+            "term": "MONTENEGRO"
+          },
+          {
+            "kode": "MF",
+            "term": "SAINT MARTIN"
+          },
+          {
+            "kode": "MG",
+            "term": "MADAGASKAR"
+          },
+          {
+            "kode": "MH",
+            "term": "MARSHALLØYENE"
+          },
+          {
+            "kode": "MK",
+            "term": "NORD-MAKEDONIA"
+          },
+          {
+            "kode": "ML",
+            "term": "MALI"
+          },
+          {
+            "kode": "MM",
+            "term": "MYANMAR (BURMA)"
+          },
+          {
+            "kode": "MN",
+            "term": "MONGOLIA"
+          },
+          {
+            "kode": "MO",
+            "term": "MACAO"
+          },
+          {
+            "kode": "MP",
+            "term": "NORD-MARIANENE"
+          },
+          {
+            "kode": "MQ",
+            "term": "MARTINIQUE"
+          },
+          {
+            "kode": "MR",
+            "term": "MAURITANIA"
+          },
+          {
+            "kode": "MS",
+            "term": "MONTSERRAT"
+          },
+          {
+            "kode": "MT",
+            "term": "MALTA"
+          },
+          {
+            "kode": "MU",
+            "term": "MAURITIUS"
+          },
+          {
+            "kode": "MV",
+            "term": "MALDIVENE"
+          },
+          {
+            "kode": "MW",
+            "term": "MALAWI"
+          },
+          {
+            "kode": "MX",
+            "term": "MEXICO"
+          },
+          {
+            "kode": "MY",
+            "term": "MALAYSIA"
+          },
+          {
+            "kode": "MZ",
+            "term": "MOSAMBIK"
+          },
+          {
+            "kode": "NA",
+            "term": "NAMIBIA"
+          },
+          {
+            "kode": "NC",
+            "term": "NY-CALEDONIA"
+          },
+          {
+            "kode": "NE",
+            "term": "NIGER"
+          },
+          {
+            "kode": "NF",
+            "term": "NORFOLKØYA"
+          },
+          {
+            "kode": "NG",
+            "term": "NIGERIA"
+          },
+          {
+            "kode": "NI",
+            "term": "NICARAGUA"
+          },
+          {
+            "kode": "NL",
+            "term": "NEDERLAND"
+          },
+          {
+            "kode": "NO",
+            "term": "NORGE"
+          },
+          {
+            "kode": "NP",
+            "term": "NEPAL"
+          },
+          {
+            "kode": "NR",
+            "term": "NAURU"
+          },
+          {
+            "kode": "NU",
+            "term": "NIUE"
+          },
+          {
+            "kode": "NZ",
+            "term": "NEW ZEALAND"
+          },
+          {
+            "kode": "OM",
+            "term": "OMAN"
+          },
+          {
+            "kode": "PA",
+            "term": "PANAMA"
+          },
+          {
+            "kode": "PE",
+            "term": "PERU"
+          },
+          {
+            "kode": "PF",
+            "term": "FRANSK POLYNESIA"
+          },
+          {
+            "kode": "PG",
+            "term": "PAPUA NY-GUINEA"
+          },
+          {
+            "kode": "PH",
+            "term": "FILIPPINENE"
+          },
+          {
+            "kode": "PK",
+            "term": "PAKISTAN"
+          },
+          {
+            "kode": "PL",
+            "term": "POLEN"
+          },
+          {
+            "kode": "PM",
+            "term": "SAINT-PIERRE OG MIQUELON"
+          },
+          {
+            "kode": "PN",
+            "term": "PITCAIRN"
+          }
+        ]
+      },
+      "duration": 3,
+      "dynamicFields": []
+    },
+    {
+      "request": {
+        "id": "94a1c1ce7945",
+        "method": "GET",
+        "url": "http://localhost:3333/api/organisasjoner/999999999",
+        "pathname": "/api/organisasjoner/999999999",
+        "normalizedPath": "/api/organisasjoner/:id",
+        "query": {},
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": {
+          "orgnr": "999999999",
+          "navn": "Ståles Stål AS",
+          "oppstartdato": null,
+          "organisasjonsform": "Aksjeselskap",
+          "forretningsadresse": {
+            "gateadresse": {
+              "gatenavn": "Adresselinje1",
+              "gatenummer": null,
+              "husnummer": null,
+              "husbokstav": null
+            },
+            "postnr": "0010",
+            "poststed": "Oslo",
+            "land": "NORGE"
+          },
+          "postadresse": {
+            "gateadresse": {
+              "gatenavn": "Adresselinje1",
+              "gatenummer": null,
+              "husnummer": null,
+              "husbokstav": null
+            },
+            "postnr": "0010",
+            "poststed": "Oslo",
+            "land": "NORGE"
+          }
+        }
+      },
+      "duration": 11,
+      "dynamicFields": ["oppstartdato"]
+    },
+    {
+      "request": {
+        "id": "f1920dedc01f",
+        "method": "POST",
+        "url": "http://localhost:3333/api/fagsaker/sok",
+        "pathname": "/api/fagsaker/sok",
+        "normalizedPath": "/api/fagsaker/sok",
+        "query": {},
+        "headers": {
+          "content-type": "application/json",
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": {
+          "ident": null,
+          "saksnummer": null,
+          "orgnr": "999999999"
+        }
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": []
+      },
+      "duration": 12,
+      "dynamicFields": []
+    },
+    {
+      "request": {
+        "id": "b6faa9659a02",
+        "method": "GET",
+        "url": "http://localhost:3333/api/oppgaver/oversikt",
+        "pathname": "/api/oppgaver/oversikt",
+        "normalizedPath": "/api/oppgaver/oversikt",
+        "query": {},
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": {
+          "journalforing": [],
+          "saksbehandling": [
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "34",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 33,
+                "behandlingstype": {
+                  "kode": "ÅRSAVREGNING",
+                  "term": "Årsavregning"
+                },
+                "behandlingstema": {
+                  "kode": "YRKESAKTIV",
+                  "term": "Yrkesaktiv"
+                },
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:16.642662Z",
+                "endretDato": "2025-12-08T13:15:16.669593Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1033",
+              "sakstype": {
+                "kode": "FTRL",
+                "term": "Utenfor avtaleland"
+              },
+              "sakstema": {
+                "kode": "MEDLEMSKAP_LOVVALG",
+                "term": "Medlemskap og lovvalg"
+              },
+              "land": null,
+              "periode": null,
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1033\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "35",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 34,
+                "behandlingstype": {
+                  "kode": "ÅRSAVREGNING",
+                  "term": "Årsavregning"
+                },
+                "behandlingstema": {
+                  "kode": "YRKESAKTIV",
+                  "term": "Yrkesaktiv"
+                },
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:16.660054Z",
+                "endretDato": "2025-12-08T13:15:16.689169Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1034",
+              "sakstype": {
+                "kode": "FTRL",
+                "term": "Utenfor avtaleland"
+              },
+              "sakstema": {
+                "kode": "MEDLEMSKAP_LOVVALG",
+                "term": "Medlemskap og lovvalg"
+              },
+              "land": null,
+              "periode": null,
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1034\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "36",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 35,
+                "behandlingstype": {
+                  "kode": "ÅRSAVREGNING",
+                  "term": "Årsavregning"
+                },
+                "behandlingstema": {
+                  "kode": "YRKESAKTIV",
+                  "term": "Yrkesaktiv"
+                },
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:16.681539Z",
+                "endretDato": "2025-12-08T13:15:16.708880Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1035",
+              "sakstype": {
+                "kode": "FTRL",
+                "term": "Utenfor avtaleland"
+              },
+              "sakstema": {
+                "kode": "MEDLEMSKAP_LOVVALG",
+                "term": "Medlemskap og lovvalg"
+              },
+              "land": null,
+              "periode": null,
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1035\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "37",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 36,
+                "behandlingstype": {
+                  "kode": "ÅRSAVREGNING",
+                  "term": "Årsavregning"
+                },
+                "behandlingstema": {
+                  "kode": "YRKESAKTIV",
+                  "term": "Yrkesaktiv"
+                },
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:16.702096Z",
+                "endretDato": "2025-12-08T13:15:16.726478Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1036",
+              "sakstype": {
+                "kode": "FTRL",
+                "term": "Utenfor avtaleland"
+              },
+              "sakstema": {
+                "kode": "MEDLEMSKAP_LOVVALG",
+                "term": "Medlemskap og lovvalg"
+              },
+              "land": null,
+              "periode": null,
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1036\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "38",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 37,
+                "behandlingstype": {
+                  "kode": "ÅRSAVREGNING",
+                  "term": "Årsavregning"
+                },
+                "behandlingstema": {
+                  "kode": "YRKESAKTIV",
+                  "term": "Yrkesaktiv"
+                },
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:16.720005Z",
+                "endretDato": "2025-12-08T13:15:16.743746Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1037",
+              "sakstype": {
+                "kode": "FTRL",
+                "term": "Utenfor avtaleland"
+              },
+              "sakstema": {
+                "kode": "MEDLEMSKAP_LOVVALG",
+                "term": "Medlemskap og lovvalg"
+              },
+              "land": null,
+              "periode": null,
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1037\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "39",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 38,
+                "behandlingstype": {
+                  "kode": "ÅRSAVREGNING",
+                  "term": "Årsavregning"
+                },
+                "behandlingstema": {
+                  "kode": "YRKESAKTIV",
+                  "term": "Yrkesaktiv"
+                },
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:16.737408Z",
+                "endretDato": "2025-12-08T13:15:16.760032Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1038",
+              "sakstype": {
+                "kode": "FTRL",
+                "term": "Utenfor avtaleland"
+              },
+              "sakstema": {
+                "kode": "MEDLEMSKAP_LOVVALG",
+                "term": "Medlemskap og lovvalg"
+              },
+              "land": null,
+              "periode": null,
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1038\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "40",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 39,
+                "behandlingstype": {
+                  "kode": "ÅRSAVREGNING",
+                  "term": "Årsavregning"
+                },
+                "behandlingstema": {
+                  "kode": "YRKESAKTIV",
+                  "term": "Yrkesaktiv"
+                },
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:16.753768Z",
+                "endretDato": "2025-12-08T13:15:16.776261Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1039",
+              "sakstype": {
+                "kode": "FTRL",
+                "term": "Utenfor avtaleland"
+              },
+              "sakstema": {
+                "kode": "MEDLEMSKAP_LOVVALG",
+                "term": "Medlemskap og lovvalg"
+              },
+              "land": null,
+              "periode": null,
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1039\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "41",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 40,
+                "behandlingstype": {
+                  "kode": "ÅRSAVREGNING",
+                  "term": "Årsavregning"
+                },
+                "behandlingstema": {
+                  "kode": "YRKESAKTIV",
+                  "term": "Yrkesaktiv"
+                },
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:16.770223Z",
+                "endretDato": "2025-12-08T13:15:16.792748Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1040",
+              "sakstype": {
+                "kode": "FTRL",
+                "term": "Utenfor avtaleland"
+              },
+              "sakstema": {
+                "kode": "MEDLEMSKAP_LOVVALG",
+                "term": "Medlemskap og lovvalg"
+              },
+              "land": null,
+              "periode": null,
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1040\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "42",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 41,
+                "behandlingstype": {
+                  "kode": "ÅRSAVREGNING",
+                  "term": "Årsavregning"
+                },
+                "behandlingstema": {
+                  "kode": "YRKESAKTIV",
+                  "term": "Yrkesaktiv"
+                },
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:16.786191Z",
+                "endretDato": "2025-12-08T13:15:35.815165Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1041",
+              "sakstype": {
+                "kode": "FTRL",
+                "term": "Utenfor avtaleland"
+              },
+              "sakstema": {
+                "kode": "MEDLEMSKAP_LOVVALG",
+                "term": "Medlemskap og lovvalg"
+              },
+              "land": {
+                "landkoder": [],
+                "flereLandUkjentHvilke": false
+              },
+              "periode": {
+                "fom": null,
+                "tom": null
+              },
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1041\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "43",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 42,
+                "behandlingstype": {
+                  "kode": "ÅRSAVREGNING",
+                  "term": "Årsavregning"
+                },
+                "behandlingstema": {
+                  "kode": "YRKESAKTIV",
+                  "term": "Yrkesaktiv"
+                },
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:16.803715Z",
+                "endretDato": "2025-12-08T13:15:37.401884Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1042",
+              "sakstype": {
+                "kode": "FTRL",
+                "term": "Utenfor avtaleland"
+              },
+              "sakstema": {
+                "kode": "MEDLEMSKAP_LOVVALG",
+                "term": "Medlemskap og lovvalg"
+              },
+              "land": {
+                "landkoder": [],
+                "flereLandUkjentHvilke": false
+              },
+              "periode": {
+                "fom": null,
+                "tom": null
+              },
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1042\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "44",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 43,
+                "behandlingstype": {
+                  "kode": "ÅRSAVREGNING",
+                  "term": "Årsavregning"
+                },
+                "behandlingstema": {
+                  "kode": "YRKESAKTIV",
+                  "term": "Yrkesaktiv"
+                },
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:16.821054Z",
+                "endretDato": "2025-12-08T13:15:38.917430Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1043",
+              "sakstype": {
+                "kode": "FTRL",
+                "term": "Utenfor avtaleland"
+              },
+              "sakstema": {
+                "kode": "MEDLEMSKAP_LOVVALG",
+                "term": "Medlemskap og lovvalg"
+              },
+              "land": {
+                "landkoder": [],
+                "flereLandUkjentHvilke": false
+              },
+              "periode": {
+                "fom": null,
+                "tom": null
+              },
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1043\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "45",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 44,
+                "behandlingstype": {
+                  "kode": "ÅRSAVREGNING",
+                  "term": "Årsavregning"
+                },
+                "behandlingstema": {
+                  "kode": "YRKESAKTIV",
+                  "term": "Yrkesaktiv"
+                },
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:16.841577Z",
+                "endretDato": "2025-12-08T13:15:40.132804Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1044",
+              "sakstype": {
+                "kode": "FTRL",
+                "term": "Utenfor avtaleland"
+              },
+              "sakstema": {
+                "kode": "MEDLEMSKAP_LOVVALG",
+                "term": "Medlemskap og lovvalg"
+              },
+              "land": {
+                "landkoder": [],
+                "flereLandUkjentHvilke": false
+              },
+              "periode": {
+                "fom": null,
+                "tom": null
+              },
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1044\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "46",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 45,
+                "behandlingstype": {
+                  "kode": "ÅRSAVREGNING",
+                  "term": "Årsavregning"
+                },
+                "behandlingstema": {
+                  "kode": "YRKESAKTIV",
+                  "term": "Yrkesaktiv"
+                },
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:16.858926Z",
+                "endretDato": "2025-12-08T13:15:41.591638Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1045",
+              "sakstype": {
+                "kode": "FTRL",
+                "term": "Utenfor avtaleland"
+              },
+              "sakstema": {
+                "kode": "MEDLEMSKAP_LOVVALG",
+                "term": "Medlemskap og lovvalg"
+              },
+              "land": {
+                "landkoder": [],
+                "flereLandUkjentHvilke": false
+              },
+              "periode": {
+                "fom": null,
+                "tom": null
+              },
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1045\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "47",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 46,
+                "behandlingstype": {
+                  "kode": "ÅRSAVREGNING",
+                  "term": "Årsavregning"
+                },
+                "behandlingstema": {
+                  "kode": "YRKESAKTIV",
+                  "term": "Yrkesaktiv"
+                },
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:16.876485Z",
+                "endretDato": "2025-12-08T13:15:43.300905Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1046",
+              "sakstype": {
+                "kode": "FTRL",
+                "term": "Utenfor avtaleland"
+              },
+              "sakstema": {
+                "kode": "MEDLEMSKAP_LOVVALG",
+                "term": "Medlemskap og lovvalg"
+              },
+              "land": {
+                "landkoder": [],
+                "flereLandUkjentHvilke": false
+              },
+              "periode": {
+                "fom": null,
+                "tom": null
+              },
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1046\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "48",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 47,
+                "behandlingstype": {
+                  "kode": "ÅRSAVREGNING",
+                  "term": "Årsavregning"
+                },
+                "behandlingstema": {
+                  "kode": "YRKESAKTIV",
+                  "term": "Yrkesaktiv"
+                },
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:16.892331Z",
+                "endretDato": "2025-12-08T13:15:45.104314Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1047",
+              "sakstype": {
+                "kode": "FTRL",
+                "term": "Utenfor avtaleland"
+              },
+              "sakstema": {
+                "kode": "MEDLEMSKAP_LOVVALG",
+                "term": "Medlemskap og lovvalg"
+              },
+              "land": {
+                "landkoder": [],
+                "flereLandUkjentHvilke": false
+              },
+              "periode": {
+                "fom": null,
+                "tom": null
+              },
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1047\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "49",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 48,
+                "behandlingstype": {
+                  "kode": "ÅRSAVREGNING",
+                  "term": "Årsavregning"
+                },
+                "behandlingstema": {
+                  "kode": "YRKESAKTIV",
+                  "term": "Yrkesaktiv"
+                },
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:16.908778Z",
+                "endretDato": "2025-12-08T13:15:16.930102Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1048",
+              "sakstype": {
+                "kode": "FTRL",
+                "term": "Utenfor avtaleland"
+              },
+              "sakstema": {
+                "kode": "MEDLEMSKAP_LOVVALG",
+                "term": "Medlemskap og lovvalg"
+              },
+              "land": null,
+              "periode": null,
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1048\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "50",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 49,
+                "behandlingstype": {
+                  "kode": "ÅRSAVREGNING",
+                  "term": "Årsavregning"
+                },
+                "behandlingstema": {
+                  "kode": "YRKESAKTIV",
+                  "term": "Yrkesaktiv"
+                },
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:16.922985Z",
+                "endretDato": "2025-12-08T13:15:16.947932Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1049",
+              "sakstype": {
+                "kode": "FTRL",
+                "term": "Utenfor avtaleland"
+              },
+              "sakstema": {
+                "kode": "MEDLEMSKAP_LOVVALG",
+                "term": "Medlemskap og lovvalg"
+              },
+              "land": null,
+              "periode": null,
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1049\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "51",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 50,
+                "behandlingstype": {
+                  "kode": "ÅRSAVREGNING",
+                  "term": "Årsavregning"
+                },
+                "behandlingstema": {
+                  "kode": "YRKESAKTIV",
+                  "term": "Yrkesaktiv"
+                },
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:16.941293Z",
+                "endretDato": "2025-12-08T13:15:16.965782Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1050",
+              "sakstype": {
+                "kode": "FTRL",
+                "term": "Utenfor avtaleland"
+              },
+              "sakstema": {
+                "kode": "MEDLEMSKAP_LOVVALG",
+                "term": "Medlemskap og lovvalg"
+              },
+              "land": null,
+              "periode": null,
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1050\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "52",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 51,
+                "behandlingstype": {
+                  "kode": "FØRSTEGANG",
+                  "term": "Førstegangsbehandling"
+                },
+                "behandlingstema": {
+                  "kode": "IKKE_YRKESAKTIV",
+                  "term": "Ikke yrkesaktiv"
+                },
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:16.959076Z",
+                "endretDato": "2025-12-08T13:15:16.986083Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1051",
+              "sakstype": {
+                "kode": "EU_EOS",
+                "term": "EU/EØS-land"
+              },
+              "sakstema": {
+                "kode": "MEDLEMSKAP_LOVVALG",
+                "term": "Medlemskap og lovvalg"
+              },
+              "land": null,
+              "periode": null,
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1051\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "53",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 52,
+                "behandlingstype": {
+                  "kode": "FØRSTEGANG",
+                  "term": "Førstegangsbehandling"
+                },
+                "behandlingstema": {
+                  "kode": "IKKE_YRKESAKTIV",
+                  "term": "Ikke yrkesaktiv"
+                },
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:16.977356Z",
+                "endretDato": "2025-12-08T13:15:53.512055Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1052",
+              "sakstype": {
+                "kode": "EU_EOS",
+                "term": "EU/EØS-land"
+              },
+              "sakstema": {
+                "kode": "MEDLEMSKAP_LOVVALG",
+                "term": "Medlemskap og lovvalg"
+              },
+              "land": {
+                "landkoder": ["SE"],
+                "flereLandUkjentHvilke": false
+              },
+              "periode": {
+                "fom": "2024-01-01",
+                "tom": null
+              },
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1052\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "54",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 53,
+                "behandlingstype": {
+                  "kode": "FØRSTEGANG",
+                  "term": "Førstegangsbehandling"
+                },
+                "behandlingstema": {
+                  "kode": "IKKE_YRKESAKTIV",
+                  "term": "Ikke yrkesaktiv"
+                },
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:16.999996Z",
+                "endretDato": "2025-12-08T13:15:17.027829Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1053",
+              "sakstype": {
+                "kode": "EU_EOS",
+                "term": "EU/EØS-land"
+              },
+              "sakstema": {
+                "kode": "MEDLEMSKAP_LOVVALG",
+                "term": "Medlemskap og lovvalg"
+              },
+              "land": {
+                "landkoder": [],
+                "flereLandUkjentHvilke": false
+              },
+              "periode": {
+                "fom": null,
+                "tom": null
+              },
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1053\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "11",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 10,
+                "behandlingstype": {
+                  "kode": "FØRSTEGANG",
+                  "term": "Førstegangsbehandling"
+                },
+                "behandlingstema": {
+                  "kode": "YRKESAKTIV",
+                  "term": "Yrkesaktiv"
+                },
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:16.277182Z",
+                "endretDato": "2025-12-08T13:15:16.296024Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1010",
+              "sakstype": {
+                "kode": "TRYGDEAVTALE",
+                "term": "Avtaleland"
+              },
+              "sakstema": {
+                "kode": "MEDLEMSKAP_LOVVALG",
+                "term": "Medlemskap og lovvalg"
+              },
+              "land": null,
+              "periode": null,
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1010\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "55",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 54,
+                "behandlingstype": {
+                  "kode": "FØRSTEGANG",
+                  "term": "Førstegangsbehandling"
+                },
+                "behandlingstema": {
+                  "kode": "PENSJONIST",
+                  "term": "Pensjonist/uføretrygdet"
+                },
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:17.020980Z",
+                "endretDato": "2025-12-08T13:15:48.190448Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1054",
+              "sakstype": {
+                "kode": "EU_EOS",
+                "term": "EU/EØS-land"
+              },
+              "sakstema": {
+                "kode": "TRYGDEAVGIFT",
+                "term": "Trygdeavgift"
+              },
+              "land": {
+                "landkoder": ["SE"],
+                "flereLandUkjentHvilke": false
+              },
+              "periode": {
+                "fom": null,
+                "tom": null
+              },
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1054\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "12",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 11,
+                "behandlingstype": {
+                  "kode": "FØRSTEGANG",
+                  "term": "Førstegangsbehandling"
+                },
+                "behandlingstema": {
+                  "kode": "YRKESAKTIV",
+                  "term": "Yrkesaktiv"
+                },
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:16.291346Z",
+                "endretDato": "2025-12-08T13:15:16.310031Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1011",
+              "sakstype": {
+                "kode": "TRYGDEAVTALE",
+                "term": "Avtaleland"
+              },
+              "sakstema": {
+                "kode": "MEDLEMSKAP_LOVVALG",
+                "term": "Medlemskap og lovvalg"
+              },
+              "land": null,
+              "periode": null,
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1011\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "56",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 55,
+                "behandlingstype": {
+                  "kode": "FØRSTEGANG",
+                  "term": "Førstegangsbehandling"
+                },
+                "behandlingstema": {
+                  "kode": "PENSJONIST",
+                  "term": "Pensjonist/uføretrygdet"
+                },
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:17.038290Z",
+                "endretDato": "2025-12-08T13:15:17.063672Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1055",
+              "sakstype": {
+                "kode": "EU_EOS",
+                "term": "EU/EØS-land"
+              },
+              "sakstema": {
+                "kode": "TRYGDEAVGIFT",
+                "term": "Trygdeavgift"
+              },
+              "land": null,
+              "periode": null,
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1055\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "13",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 12,
+                "behandlingstype": {
+                  "kode": "FØRSTEGANG",
+                  "term": "Førstegangsbehandling"
+                },
+                "behandlingstema": {
+                  "kode": "YRKESAKTIV",
+                  "term": "Yrkesaktiv"
+                },
+                "behandlingsstatus": {
+                  "kode": "OPPRETTET",
+                  "term": "Behandlingen er opprettet"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:16.304820Z",
+                "endretDato": "2025-12-08T13:15:16.324831Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1012",
+              "sakstype": {
+                "kode": "TRYGDEAVTALE",
+                "term": "Avtaleland"
+              },
+              "sakstema": {
+                "kode": "MEDLEMSKAP_LOVVALG",
+                "term": "Medlemskap og lovvalg"
+              },
+              "land": null,
+              "periode": null,
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1012\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "57",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 56,
+                "behandlingstype": {
+                  "kode": "FØRSTEGANG",
+                  "term": "Førstegangsbehandling"
+                },
+                "behandlingstema": {
+                  "kode": "PENSJONIST",
+                  "term": "Pensjonist/uføretrygdet"
+                },
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:17.056510Z",
+                "endretDato": "2025-12-08T13:15:17.083287Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1056",
+              "sakstype": {
+                "kode": "EU_EOS",
+                "term": "EU/EØS-land"
+              },
+              "sakstema": {
+                "kode": "TRYGDEAVGIFT",
+                "term": "Trygdeavgift"
+              },
+              "land": null,
+              "periode": null,
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1056\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "14",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 13,
+                "behandlingstype": {
+                  "kode": "FØRSTEGANG",
+                  "term": "Førstegangsbehandling"
+                },
+                "behandlingstema": {
+                  "kode": "YRKESAKTIV",
+                  "term": "Yrkesaktiv"
+                },
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:16.319016Z",
+                "endretDato": "2025-12-08T13:15:16.340580Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1013",
+              "sakstype": {
+                "kode": "FTRL",
+                "term": "Utenfor avtaleland"
+              },
+              "sakstema": {
+                "kode": "MEDLEMSKAP_LOVVALG",
+                "term": "Medlemskap og lovvalg"
+              },
+              "land": null,
+              "periode": null,
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1013\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "58",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 57,
+                "behandlingstype": {
+                  "kode": "FØRSTEGANG",
+                  "term": "Førstegangsbehandling"
+                },
+                "behandlingstema": {
+                  "kode": "YRKESAKTIV",
+                  "term": "Yrkesaktiv"
+                },
+                "behandlingsstatus": {
+                  "kode": "OPPRETTET",
+                  "term": "Behandlingen er opprettet"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:17.075265Z",
+                "endretDato": "2025-12-08T13:15:17.103381Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1057",
+              "sakstype": {
+                "kode": "TRYGDEAVTALE",
+                "term": "Avtaleland"
+              },
+              "sakstema": {
+                "kode": "MEDLEMSKAP_LOVVALG",
+                "term": "Medlemskap og lovvalg"
+              },
+              "land": null,
+              "periode": null,
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1057\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "15",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 14,
+                "behandlingstype": {
+                  "kode": "FØRSTEGANG",
+                  "term": "Førstegangsbehandling"
+                },
+                "behandlingstema": {
+                  "kode": "YRKESAKTIV",
+                  "term": "Yrkesaktiv"
+                },
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:16.334580Z",
+                "endretDato": "2025-12-08T13:15:16.358519Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1014",
+              "sakstype": {
+                "kode": "FTRL",
+                "term": "Utenfor avtaleland"
+              },
+              "sakstema": {
+                "kode": "MEDLEMSKAP_LOVVALG",
+                "term": "Medlemskap og lovvalg"
+              },
+              "land": null,
+              "periode": null,
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1014\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "59",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 58,
+                "behandlingstype": {
+                  "kode": "FØRSTEGANG",
+                  "term": "Førstegangsbehandling"
+                },
+                "behandlingstema": {
+                  "kode": "YRKESAKTIV",
+                  "term": "Yrkesaktiv"
+                },
+                "behandlingsstatus": {
+                  "kode": "OPPRETTET",
+                  "term": "Behandlingen er opprettet"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:17.095753Z",
+                "endretDato": "2025-12-08T13:15:17.124144Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1058",
+              "sakstype": {
+                "kode": "TRYGDEAVTALE",
+                "term": "Avtaleland"
+              },
+              "sakstema": {
+                "kode": "MEDLEMSKAP_LOVVALG",
+                "term": "Medlemskap og lovvalg"
+              },
+              "land": null,
+              "periode": null,
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1058\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "18",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 17,
+                "behandlingstype": {
+                  "kode": "FØRSTEGANG",
+                  "term": "Førstegangsbehandling"
+                },
+                "behandlingstema": {
+                  "kode": "YRKESAKTIV",
+                  "term": "Yrkesaktiv"
+                },
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:16.388309Z",
+                "endretDato": "2025-12-08T13:16:13.089779Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1017",
+              "sakstype": {
+                "kode": "FTRL",
+                "term": "Utenfor avtaleland"
+              },
+              "sakstema": {
+                "kode": "MEDLEMSKAP_LOVVALG",
+                "term": "Medlemskap og lovvalg"
+              },
+              "land": {
+                "landkoder": ["SE"],
+                "flereLandUkjentHvilke": false
+              },
+              "periode": {
+                "fom": "2024-01-01",
+                "tom": null
+              },
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1017\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "19",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 18,
+                "behandlingstype": {
+                  "kode": "FØRSTEGANG",
+                  "term": "Førstegangsbehandling"
+                },
+                "behandlingstema": {
+                  "kode": "YRKESAKTIV",
+                  "term": "Yrkesaktiv"
+                },
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:16.408703Z",
+                "endretDato": "2025-12-08T13:15:16.433912Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1018",
+              "sakstype": {
+                "kode": "FTRL",
+                "term": "Utenfor avtaleland"
+              },
+              "sakstema": {
+                "kode": "MEDLEMSKAP_LOVVALG",
+                "term": "Medlemskap og lovvalg"
+              },
+              "land": null,
+              "periode": null,
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1018\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "3",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 2,
+                "behandlingstype": {
+                  "kode": "FØRSTEGANG",
+                  "term": "Førstegangsbehandling"
+                },
+                "behandlingstema": {
+                  "kode": "YRKESAKTIV",
+                  "term": "Yrkesaktiv"
+                },
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:16.154916Z",
+                "endretDato": "2025-12-08T13:15:16.179890Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1002",
+              "sakstype": {
+                "kode": "TRYGDEAVTALE",
+                "term": "Avtaleland"
+              },
+              "sakstema": {
+                "kode": "MEDLEMSKAP_LOVVALG",
+                "term": "Medlemskap og lovvalg"
+              },
+              "land": null,
+              "periode": null,
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1002\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "4",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 3,
+                "behandlingstype": {
+                  "kode": "FØRSTEGANG",
+                  "term": "Førstegangsbehandling"
+                },
+                "behandlingstema": {
+                  "kode": "YRKESAKTIV",
+                  "term": "Yrkesaktiv"
+                },
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:16.174349Z",
+                "endretDato": "2025-12-08T13:15:16.195169Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1003",
+              "sakstype": {
+                "kode": "TRYGDEAVTALE",
+                "term": "Avtaleland"
+              },
+              "sakstema": {
+                "kode": "MEDLEMSKAP_LOVVALG",
+                "term": "Medlemskap og lovvalg"
+              },
+              "land": {
+                "landkoder": [],
+                "flereLandUkjentHvilke": false
+              },
+              "periode": {
+                "fom": null,
+                "tom": null
+              },
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1003\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "5",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 4,
+                "behandlingstype": {
+                  "kode": "FØRSTEGANG",
+                  "term": "Førstegangsbehandling"
+                },
+                "behandlingstema": {
+                  "kode": "YRKESAKTIV",
+                  "term": "Yrkesaktiv"
+                },
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:16.189465Z",
+                "endretDato": "2025-12-08T13:15:16.209201Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1004",
+              "sakstype": {
+                "kode": "TRYGDEAVTALE",
+                "term": "Avtaleland"
+              },
+              "sakstema": {
+                "kode": "MEDLEMSKAP_LOVVALG",
+                "term": "Medlemskap og lovvalg"
+              },
+              "land": {
+                "landkoder": [],
+                "flereLandUkjentHvilke": false
+              },
+              "periode": {
+                "fom": null,
+                "tom": null
+              },
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1004\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "6",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 5,
+                "behandlingstype": {
+                  "kode": "FØRSTEGANG",
+                  "term": "Førstegangsbehandling"
+                },
+                "behandlingstema": {
+                  "kode": "YRKESAKTIV",
+                  "term": "Yrkesaktiv"
+                },
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:16.203621Z",
+                "endretDato": "2025-12-08T13:15:16.224261Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1005",
+              "sakstype": {
+                "kode": "TRYGDEAVTALE",
+                "term": "Avtaleland"
+              },
+              "sakstema": {
+                "kode": "MEDLEMSKAP_LOVVALG",
+                "term": "Medlemskap og lovvalg"
+              },
+              "land": {
+                "landkoder": [],
+                "flereLandUkjentHvilke": false
+              },
+              "periode": {
+                "fom": null,
+                "tom": null
+              },
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1005\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "7",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 6,
+                "behandlingstype": {
+                  "kode": "FØRSTEGANG",
+                  "term": "Førstegangsbehandling"
+                },
+                "behandlingstema": {
+                  "kode": "YRKESAKTIV",
+                  "term": "Yrkesaktiv"
+                },
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:16.218478Z",
+                "endretDato": "2025-12-08T13:15:16.239301Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1006",
+              "sakstype": {
+                "kode": "TRYGDEAVTALE",
+                "term": "Avtaleland"
+              },
+              "sakstema": {
+                "kode": "MEDLEMSKAP_LOVVALG",
+                "term": "Medlemskap og lovvalg"
+              },
+              "land": {
+                "landkoder": [],
+                "flereLandUkjentHvilke": false
+              },
+              "periode": {
+                "fom": null,
+                "tom": null
+              },
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1006\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "8",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 7,
+                "behandlingstype": {
+                  "kode": "FØRSTEGANG",
+                  "term": "Førstegangsbehandling"
+                },
+                "behandlingstema": {
+                  "kode": "YRKESAKTIV",
+                  "term": "Yrkesaktiv"
+                },
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:16.233662Z",
+                "endretDato": "2025-12-08T13:15:16.254411Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1007",
+              "sakstype": {
+                "kode": "TRYGDEAVTALE",
+                "term": "Avtaleland"
+              },
+              "sakstema": {
+                "kode": "MEDLEMSKAP_LOVVALG",
+                "term": "Medlemskap og lovvalg"
+              },
+              "land": {
+                "landkoder": [],
+                "flereLandUkjentHvilke": false
+              },
+              "periode": {
+                "fom": null,
+                "tom": null
+              },
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1007\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "9",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 8,
+                "behandlingstype": {
+                  "kode": "FØRSTEGANG",
+                  "term": "Førstegangsbehandling"
+                },
+                "behandlingstema": {
+                  "kode": "YRKESAKTIV",
+                  "term": "Yrkesaktiv"
+                },
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:16.248393Z",
+                "endretDato": "2025-12-08T13:15:16.268173Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1008",
+              "sakstype": {
+                "kode": "TRYGDEAVTALE",
+                "term": "Avtaleland"
+              },
+              "sakstema": {
+                "kode": "MEDLEMSKAP_LOVVALG",
+                "term": "Medlemskap og lovvalg"
+              },
+              "land": null,
+              "periode": null,
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1008\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "60",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 59,
+                "behandlingstype": {
+                  "kode": "FØRSTEGANG",
+                  "term": "Førstegangsbehandling"
+                },
+                "behandlingstema": {
+                  "kode": "YRKESAKTIV",
+                  "term": "Yrkesaktiv"
+                },
+                "behandlingsstatus": {
+                  "kode": "OPPRETTET",
+                  "term": "Behandlingen er opprettet"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:17.115710Z",
+                "endretDato": "2025-12-08T13:15:17.144350Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1059",
+              "sakstype": {
+                "kode": "FTRL",
+                "term": "Utenfor avtaleland"
+              },
+              "sakstema": {
+                "kode": "MEDLEMSKAP_LOVVALG",
+                "term": "Medlemskap og lovvalg"
+              },
+              "land": null,
+              "periode": null,
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1059\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "61",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 60,
+                "behandlingstype": {
+                  "kode": "FØRSTEGANG",
+                  "term": "Førstegangsbehandling"
+                },
+                "behandlingstema": {
+                  "kode": "YRKESAKTIV",
+                  "term": "Yrkesaktiv"
+                },
+                "behandlingsstatus": {
+                  "kode": "OPPRETTET",
+                  "term": "Behandlingen er opprettet"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:17.136530Z",
+                "endretDato": "2025-12-08T13:15:17.164669Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1060",
+              "sakstype": {
+                "kode": "FTRL",
+                "term": "Utenfor avtaleland"
+              },
+              "sakstema": {
+                "kode": "MEDLEMSKAP_LOVVALG",
+                "term": "Medlemskap og lovvalg"
+              },
+              "land": null,
+              "periode": null,
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1060\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "62",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 61,
+                "behandlingstype": {
+                  "kode": "FØRSTEGANG",
+                  "term": "Førstegangsbehandling"
+                },
+                "behandlingstema": {
+                  "kode": "IKKE_YRKESAKTIV",
+                  "term": "Ikke yrkesaktiv"
+                },
+                "behandlingsstatus": {
+                  "kode": "OPPRETTET",
+                  "term": "Behandlingen er opprettet"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:17.157017Z",
+                "endretDato": "2025-12-08T13:15:17.184003Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1061",
+              "sakstype": {
+                "kode": "EU_EOS",
+                "term": "EU/EØS-land"
+              },
+              "sakstema": {
+                "kode": "MEDLEMSKAP_LOVVALG",
+                "term": "Medlemskap og lovvalg"
+              },
+              "land": null,
+              "periode": null,
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1061\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "63",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 62,
+                "behandlingstype": {
+                  "kode": "FØRSTEGANG",
+                  "term": "Førstegangsbehandling"
+                },
+                "behandlingstema": {
+                  "kode": "PENSJONIST",
+                  "term": "Pensjonist/uføretrygdet"
+                },
+                "behandlingsstatus": {
+                  "kode": "OPPRETTET",
+                  "term": "Behandlingen er opprettet"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:17.176351Z",
+                "endretDato": "2025-12-08T13:15:17.200371Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1062",
+              "sakstype": {
+                "kode": "EU_EOS",
+                "term": "EU/EØS-land"
+              },
+              "sakstema": {
+                "kode": "TRYGDEAVGIFT",
+                "term": "Trygdeavgift"
+              },
+              "land": null,
+              "periode": null,
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1062\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "20",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 19,
+                "behandlingstype": {
+                  "kode": "FØRSTEGANG",
+                  "term": "Førstegangsbehandling"
+                },
+                "behandlingstema": {
+                  "kode": "YRKESAKTIV",
+                  "term": "Yrkesaktiv"
+                },
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:16.427713Z",
+                "endretDato": "2025-12-08T13:15:16.449620Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1019",
+              "sakstype": {
+                "kode": "FTRL",
+                "term": "Utenfor avtaleland"
+              },
+              "sakstema": {
+                "kode": "MEDLEMSKAP_LOVVALG",
+                "term": "Medlemskap og lovvalg"
+              },
+              "land": {
+                "landkoder": [],
+                "flereLandUkjentHvilke": false
+              },
+              "periode": {
+                "fom": null,
+                "tom": null
+              },
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1019\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "64",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 69,
+                "behandlingstype": {
+                  "kode": "FØRSTEGANG",
+                  "term": "Førstegangsbehandling"
+                },
+                "behandlingstema": {
+                  "kode": "YRKESAKTIV",
+                  "term": "Yrkesaktiv"
+                },
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:17.261904Z",
+                "endretDato": "2025-12-08T13:15:17.286741Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1069",
+              "sakstype": {
+                "kode": "TRYGDEAVTALE",
+                "term": "Avtaleland"
+              },
+              "sakstema": {
+                "kode": "MEDLEMSKAP_LOVVALG",
+                "term": "Medlemskap og lovvalg"
+              },
+              "land": null,
+              "periode": null,
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1069\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "65",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 71,
+                "behandlingstype": {
+                  "kode": "FØRSTEGANG",
+                  "term": "Førstegangsbehandling"
+                },
+                "behandlingstema": {
+                  "kode": "IKKE_YRKESAKTIV",
+                  "term": "Ikke yrkesaktiv"
+                },
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:17.293463Z",
+                "endretDato": "2025-12-08T13:15:17.316890Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1071",
+              "sakstype": {
+                "kode": "EU_EOS",
+                "term": "EU/EØS-land"
+              },
+              "sakstema": {
+                "kode": "MEDLEMSKAP_LOVVALG",
+                "term": "Medlemskap og lovvalg"
+              },
+              "land": null,
+              "periode": null,
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1071\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "22",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 21,
+                "behandlingstype": {
+                  "kode": "FØRSTEGANG",
+                  "term": "Førstegangsbehandling"
+                },
+                "behandlingstema": {
+                  "kode": "YRKESAKTIV",
+                  "term": "Yrkesaktiv"
+                },
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:16.459506Z",
+                "endretDato": "2025-12-08T13:16:03.232177Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1021",
+              "sakstype": {
+                "kode": "FTRL",
+                "term": "Utenfor avtaleland"
+              },
+              "sakstema": {
+                "kode": "MEDLEMSKAP_LOVVALG",
+                "term": "Medlemskap og lovvalg"
+              },
+              "land": {
+                "landkoder": ["SE"],
+                "flereLandUkjentHvilke": false
+              },
+              "periode": {
+                "fom": "2024-01-01",
+                "tom": null
+              },
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1021\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "66",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 72,
+                "behandlingstype": {
+                  "kode": "ÅRSAVREGNING",
+                  "term": "Årsavregning"
+                },
+                "behandlingstema": {
+                  "kode": "YRKESAKTIV",
+                  "term": "Yrkesaktiv"
+                },
+                "behandlingsstatus": {
+                  "kode": "OPPRETTET",
+                  "term": "Behandlingen er opprettet"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:17:38.542724Z",
+                "endretDato": "2025-12-08T13:17:38.613302Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1014",
+              "sakstype": {
+                "kode": "FTRL",
+                "term": "Utenfor avtaleland"
+              },
+              "sakstema": {
+                "kode": "MEDLEMSKAP_LOVVALG",
+                "term": "Medlemskap og lovvalg"
+              },
+              "land": {
+                "landkoder": [],
+                "flereLandUkjentHvilke": false
+              },
+              "periode": {
+                "fom": null,
+                "tom": null
+              },
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:17 (srvmelosys, Melosys) ---\n  - MEL-1014\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "23",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 22,
+                "behandlingstype": {
+                  "kode": "FØRSTEGANG",
+                  "term": "Førstegangsbehandling"
+                },
+                "behandlingstema": {
+                  "kode": "YRKESAKTIV",
+                  "term": "Yrkesaktiv"
+                },
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:16.474629Z",
+                "endretDato": "2025-12-08T13:15:16.494172Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1022",
+              "sakstype": {
+                "kode": "FTRL",
+                "term": "Utenfor avtaleland"
+              },
+              "sakstema": {
+                "kode": "MEDLEMSKAP_LOVVALG",
+                "term": "Medlemskap og lovvalg"
+              },
+              "land": null,
+              "periode": null,
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1022\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "24",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 23,
+                "behandlingstype": {
+                  "kode": "ÅRSAVREGNING",
+                  "term": "Årsavregning"
+                },
+                "behandlingstema": {
+                  "kode": "YRKESAKTIV",
+                  "term": "Yrkesaktiv"
+                },
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:16.488741Z",
+                "endretDato": "2025-12-08T13:15:16.508509Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1023",
+              "sakstype": {
+                "kode": "FTRL",
+                "term": "Utenfor avtaleland"
+              },
+              "sakstema": {
+                "kode": "MEDLEMSKAP_LOVVALG",
+                "term": "Medlemskap og lovvalg"
+              },
+              "land": {
+                "landkoder": [],
+                "flereLandUkjentHvilke": false
+              },
+              "periode": {
+                "fom": null,
+                "tom": null
+              },
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1023\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "25",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 24,
+                "behandlingstype": {
+                  "kode": "ÅRSAVREGNING",
+                  "term": "Årsavregning"
+                },
+                "behandlingstema": {
+                  "kode": "YRKESAKTIV",
+                  "term": "Yrkesaktiv"
+                },
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:16.503474Z",
+                "endretDato": "2025-12-08T13:15:32.949666Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1024",
+              "sakstype": {
+                "kode": "FTRL",
+                "term": "Utenfor avtaleland"
+              },
+              "sakstema": {
+                "kode": "MEDLEMSKAP_LOVVALG",
+                "term": "Medlemskap og lovvalg"
+              },
+              "land": {
+                "landkoder": [],
+                "flereLandUkjentHvilke": false
+              },
+              "periode": {
+                "fom": null,
+                "tom": null
+              },
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1024\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "26",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 25,
+                "behandlingstype": {
+                  "kode": "ÅRSAVREGNING",
+                  "term": "Årsavregning"
+                },
+                "behandlingstema": {
+                  "kode": "YRKESAKTIV",
+                  "term": "Yrkesaktiv"
+                },
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:16.517279Z",
+                "endretDato": "2025-12-08T13:15:34.367988Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1025",
+              "sakstype": {
+                "kode": "FTRL",
+                "term": "Utenfor avtaleland"
+              },
+              "sakstema": {
+                "kode": "MEDLEMSKAP_LOVVALG",
+                "term": "Medlemskap og lovvalg"
+              },
+              "land": {
+                "landkoder": [],
+                "flereLandUkjentHvilke": false
+              },
+              "periode": {
+                "fom": null,
+                "tom": null
+              },
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1025\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "27",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 26,
+                "behandlingstype": {
+                  "kode": "ÅRSAVREGNING",
+                  "term": "Årsavregning"
+                },
+                "behandlingstema": {
+                  "kode": "YRKESAKTIV",
+                  "term": "Yrkesaktiv"
+                },
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:16.533096Z",
+                "endretDato": "2025-12-08T13:15:31.589587Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1026",
+              "sakstype": {
+                "kode": "FTRL",
+                "term": "Utenfor avtaleland"
+              },
+              "sakstema": {
+                "kode": "MEDLEMSKAP_LOVVALG",
+                "term": "Medlemskap og lovvalg"
+              },
+              "land": {
+                "landkoder": [],
+                "flereLandUkjentHvilke": false
+              },
+              "periode": {
+                "fom": null,
+                "tom": null
+              },
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1026\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "28",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 27,
+                "behandlingstype": {
+                  "kode": "ÅRSAVREGNING",
+                  "term": "Årsavregning"
+                },
+                "behandlingstema": {
+                  "kode": "YRKESAKTIV",
+                  "term": "Yrkesaktiv"
+                },
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:16.548364Z",
+                "endretDato": "2025-12-08T13:15:16.569170Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1027",
+              "sakstype": {
+                "kode": "FTRL",
+                "term": "Utenfor avtaleland"
+              },
+              "sakstema": {
+                "kode": "MEDLEMSKAP_LOVVALG",
+                "term": "Medlemskap og lovvalg"
+              },
+              "land": null,
+              "periode": null,
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1027\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "29",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 28,
+                "behandlingstype": {
+                  "kode": "ÅRSAVREGNING",
+                  "term": "Årsavregning"
+                },
+                "behandlingstema": {
+                  "kode": "YRKESAKTIV",
+                  "term": "Yrkesaktiv"
+                },
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:16.563450Z",
+                "endretDato": "2025-12-08T13:15:16.586823Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1028",
+              "sakstype": {
+                "kode": "FTRL",
+                "term": "Utenfor avtaleland"
+              },
+              "sakstema": {
+                "kode": "MEDLEMSKAP_LOVVALG",
+                "term": "Medlemskap og lovvalg"
+              },
+              "land": null,
+              "periode": null,
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1028\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "30",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 29,
+                "behandlingstype": {
+                  "kode": "ÅRSAVREGNING",
+                  "term": "Årsavregning"
+                },
+                "behandlingstema": {
+                  "kode": "YRKESAKTIV",
+                  "term": "Yrkesaktiv"
+                },
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:16.580553Z",
+                "endretDato": "2025-12-08T13:15:16.600904Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1029",
+              "sakstype": {
+                "kode": "FTRL",
+                "term": "Utenfor avtaleland"
+              },
+              "sakstema": {
+                "kode": "MEDLEMSKAP_LOVVALG",
+                "term": "Medlemskap og lovvalg"
+              },
+              "land": null,
+              "periode": null,
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1029\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "31",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 30,
+                "behandlingstype": {
+                  "kode": "ÅRSAVREGNING",
+                  "term": "Årsavregning"
+                },
+                "behandlingstema": {
+                  "kode": "YRKESAKTIV",
+                  "term": "Yrkesaktiv"
+                },
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:16.595034Z",
+                "endretDato": "2025-12-08T13:15:16.615957Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1030",
+              "sakstype": {
+                "kode": "FTRL",
+                "term": "Utenfor avtaleland"
+              },
+              "sakstema": {
+                "kode": "MEDLEMSKAP_LOVVALG",
+                "term": "Medlemskap og lovvalg"
+              },
+              "land": null,
+              "periode": null,
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1030\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "32",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 31,
+                "behandlingstype": {
+                  "kode": "ÅRSAVREGNING",
+                  "term": "Årsavregning"
+                },
+                "behandlingstema": {
+                  "kode": "YRKESAKTIV",
+                  "term": "Yrkesaktiv"
+                },
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:16.609976Z",
+                "endretDato": "2025-12-08T13:15:16.632677Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1031",
+              "sakstype": {
+                "kode": "FTRL",
+                "term": "Utenfor avtaleland"
+              },
+              "sakstema": {
+                "kode": "MEDLEMSKAP_LOVVALG",
+                "term": "Medlemskap og lovvalg"
+              },
+              "land": null,
+              "periode": null,
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1031\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-03-08",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "33",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 32,
+                "behandlingstype": {
+                  "kode": "ÅRSAVREGNING",
+                  "term": "Årsavregning"
+                },
+                "behandlingstema": {
+                  "kode": "YRKESAKTIV",
+                  "term": "Yrkesaktiv"
+                },
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-12-08T13:15:16.626387Z",
+                "endretDato": "2025-12-08T13:15:16.648722Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1032",
+              "sakstype": {
+                "kode": "FTRL",
+                "term": "Utenfor avtaleland"
+              },
+              "sakstema": {
+                "kode": "MEDLEMSKAP_LOVVALG",
+                "term": "Medlemskap og lovvalg"
+              },
+              "land": null,
+              "periode": null,
+              "oppgaveBeskrivelse": "--- 08.12.2025 14:15 (srvmelosys, Melosys) ---\n  - MEL-1032\n",
+              "sisteNotat": null
+            }
+          ]
+        }
+      },
+      "duration": 318,
+      "dynamicFields": [
+        "saksbehandling[0].behandling.registrertDato",
+        "saksbehandling[0].behandling.endretDato",
+        "saksbehandling[1].behandling.registrertDato",
+        "saksbehandling[1].behandling.endretDato",
+        "saksbehandling[2].behandling.registrertDato",
+        "saksbehandling[2].behandling.endretDato",
+        "saksbehandling[3].behandling.registrertDato",
+        "saksbehandling[3].behandling.endretDato",
+        "saksbehandling[4].behandling.registrertDato",
+        "saksbehandling[4].behandling.endretDato",
+        "saksbehandling[5].behandling.registrertDato",
+        "saksbehandling[5].behandling.endretDato",
+        "saksbehandling[6].behandling.registrertDato",
+        "saksbehandling[6].behandling.endretDato",
+        "saksbehandling[7].behandling.registrertDato",
+        "saksbehandling[7].behandling.endretDato",
+        "saksbehandling[8].behandling.registrertDato",
+        "saksbehandling[8].behandling.endretDato",
+        "saksbehandling[8].periode.fom",
+        "saksbehandling[8].periode.tom",
+        "saksbehandling[9].behandling.registrertDato",
+        "saksbehandling[9].behandling.endretDato",
+        "saksbehandling[9].periode.fom",
+        "saksbehandling[9].periode.tom",
+        "saksbehandling[10].behandling.registrertDato",
+        "saksbehandling[10].behandling.endretDato",
+        "saksbehandling[10].periode.fom",
+        "saksbehandling[10].periode.tom",
+        "saksbehandling[11].behandling.registrertDato",
+        "saksbehandling[11].behandling.endretDato",
+        "saksbehandling[11].periode.fom",
+        "saksbehandling[11].periode.tom",
+        "saksbehandling[12].behandling.registrertDato",
+        "saksbehandling[12].behandling.endretDato",
+        "saksbehandling[12].periode.fom",
+        "saksbehandling[12].periode.tom",
+        "saksbehandling[13].behandling.registrertDato",
+        "saksbehandling[13].behandling.endretDato",
+        "saksbehandling[13].periode.fom",
+        "saksbehandling[13].periode.tom",
+        "saksbehandling[14].behandling.registrertDato",
+        "saksbehandling[14].behandling.endretDato",
+        "saksbehandling[14].periode.fom",
+        "saksbehandling[14].periode.tom",
+        "saksbehandling[15].behandling.registrertDato",
+        "saksbehandling[15].behandling.endretDato",
+        "saksbehandling[16].behandling.registrertDato",
+        "saksbehandling[16].behandling.endretDato",
+        "saksbehandling[17].behandling.registrertDato",
+        "saksbehandling[17].behandling.endretDato",
+        "saksbehandling[18].behandling.registrertDato",
+        "saksbehandling[18].behandling.endretDato",
+        "saksbehandling[19].behandling.registrertDato",
+        "saksbehandling[19].behandling.endretDato",
+        "saksbehandling[19].periode.fom",
+        "saksbehandling[19].periode.tom",
+        "saksbehandling[20].behandling.registrertDato",
+        "saksbehandling[20].behandling.endretDato",
+        "saksbehandling[20].periode.fom",
+        "saksbehandling[20].periode.tom",
+        "saksbehandling[21].behandling.registrertDato",
+        "saksbehandling[21].behandling.endretDato",
+        "saksbehandling[22].behandling.registrertDato",
+        "saksbehandling[22].behandling.endretDato",
+        "saksbehandling[22].periode.fom",
+        "saksbehandling[22].periode.tom",
+        "saksbehandling[23].behandling.registrertDato",
+        "saksbehandling[23].behandling.endretDato",
+        "saksbehandling[24].behandling.registrertDato",
+        "saksbehandling[24].behandling.endretDato",
+        "saksbehandling[25].behandling.registrertDato",
+        "saksbehandling[25].behandling.endretDato",
+        "saksbehandling[26].behandling.registrertDato",
+        "saksbehandling[26].behandling.endretDato",
+        "saksbehandling[27].behandling.registrertDato",
+        "saksbehandling[27].behandling.endretDato",
+        "saksbehandling[28].behandling.registrertDato",
+        "saksbehandling[28].behandling.endretDato",
+        "saksbehandling[29].behandling.registrertDato",
+        "saksbehandling[29].behandling.endretDato",
+        "saksbehandling[30].behandling.registrertDato",
+        "saksbehandling[30].behandling.endretDato",
+        "saksbehandling[31].behandling.registrertDato",
+        "saksbehandling[31].behandling.endretDato",
+        "saksbehandling[31].periode.fom",
+        "saksbehandling[31].periode.tom",
+        "saksbehandling[32].behandling.registrertDato",
+        "saksbehandling[32].behandling.endretDato",
+        "saksbehandling[33].behandling.registrertDato",
+        "saksbehandling[33].behandling.endretDato",
+        "saksbehandling[34].behandling.registrertDato",
+        "saksbehandling[34].behandling.endretDato",
+        "saksbehandling[34].periode.fom",
+        "saksbehandling[34].periode.tom",
+        "saksbehandling[35].behandling.registrertDato",
+        "saksbehandling[35].behandling.endretDato",
+        "saksbehandling[35].periode.fom",
+        "saksbehandling[35].periode.tom",
+        "saksbehandling[36].behandling.registrertDato",
+        "saksbehandling[36].behandling.endretDato",
+        "saksbehandling[36].periode.fom",
+        "saksbehandling[36].periode.tom",
+        "saksbehandling[37].behandling.registrertDato",
+        "saksbehandling[37].behandling.endretDato",
+        "saksbehandling[37].periode.fom",
+        "saksbehandling[37].periode.tom",
+        "saksbehandling[38].behandling.registrertDato",
+        "saksbehandling[38].behandling.endretDato",
+        "saksbehandling[38].periode.fom",
+        "saksbehandling[38].periode.tom",
+        "saksbehandling[39].behandling.registrertDato",
+        "saksbehandling[39].behandling.endretDato",
+        "saksbehandling[40].behandling.registrertDato",
+        "saksbehandling[40].behandling.endretDato",
+        "saksbehandling[41].behandling.registrertDato",
+        "saksbehandling[41].behandling.endretDato",
+        "saksbehandling[42].behandling.registrertDato",
+        "saksbehandling[42].behandling.endretDato",
+        "saksbehandling[43].behandling.registrertDato",
+        "saksbehandling[43].behandling.endretDato",
+        "saksbehandling[44].behandling.registrertDato",
+        "saksbehandling[44].behandling.endretDato",
+        "saksbehandling[44].periode.fom",
+        "saksbehandling[44].periode.tom",
+        "saksbehandling[45].behandling.registrertDato",
+        "saksbehandling[45].behandling.endretDato",
+        "saksbehandling[46].behandling.registrertDato",
+        "saksbehandling[46].behandling.endretDato",
+        "saksbehandling[47].behandling.registrertDato",
+        "saksbehandling[47].behandling.endretDato",
+        "saksbehandling[47].periode.fom",
+        "saksbehandling[47].periode.tom",
+        "saksbehandling[48].behandling.registrertDato",
+        "saksbehandling[48].behandling.endretDato",
+        "saksbehandling[48].periode.fom",
+        "saksbehandling[48].periode.tom",
+        "saksbehandling[49].behandling.registrertDato",
+        "saksbehandling[49].behandling.endretDato",
+        "saksbehandling[50].behandling.registrertDato",
+        "saksbehandling[50].behandling.endretDato",
+        "saksbehandling[50].periode.fom",
+        "saksbehandling[50].periode.tom",
+        "saksbehandling[51].behandling.registrertDato",
+        "saksbehandling[51].behandling.endretDato",
+        "saksbehandling[51].periode.fom",
+        "saksbehandling[51].periode.tom",
+        "saksbehandling[52].behandling.registrertDato",
+        "saksbehandling[52].behandling.endretDato",
+        "saksbehandling[52].periode.fom",
+        "saksbehandling[52].periode.tom",
+        "saksbehandling[53].behandling.registrertDato",
+        "saksbehandling[53].behandling.endretDato",
+        "saksbehandling[53].periode.fom",
+        "saksbehandling[53].periode.tom",
+        "saksbehandling[54].behandling.registrertDato",
+        "saksbehandling[54].behandling.endretDato",
+        "saksbehandling[55].behandling.registrertDato",
+        "saksbehandling[55].behandling.endretDato",
+        "saksbehandling[56].behandling.registrertDato",
+        "saksbehandling[56].behandling.endretDato",
+        "saksbehandling[57].behandling.registrertDato",
+        "saksbehandling[57].behandling.endretDato",
+        "saksbehandling[58].behandling.registrertDato",
+        "saksbehandling[58].behandling.endretDato",
+        "saksbehandling[59].behandling.registrertDato",
+        "saksbehandling[59].behandling.endretDato"
+      ]
+    },
+    {
+      "request": {
+        "id": "74592ac6ace6",
+        "method": "GET",
+        "url": "http://localhost:3333/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/?",
+        "pathname": "/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/",
+        "normalizedPath": "/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/",
+        "query": {},
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": [
+          {
+            "kode": "EU_EOS",
+            "term": "EU/EØS-land"
+          },
+          {
+            "kode": "TRYGDEAVTALE",
+            "term": "Avtaleland"
+          },
+          {
+            "kode": "FTRL",
+            "term": "Utenfor avtaleland"
+          }
+        ]
+      },
+      "duration": 4,
+      "dynamicFields": []
+    },
+    {
+      "request": {
+        "id": "feea05caebc9",
+        "method": "GET",
+        "url": "http://localhost:3333/api/saksbehandling/sakstemaer/hent-lovlige-kombinasjoner/?hovedpart=VIRKSOMHET&sakstype=EU_EOS",
+        "pathname": "/api/saksbehandling/sakstemaer/hent-lovlige-kombinasjoner/",
+        "normalizedPath": "/api/saksbehandling/sakstemaer/hent-lovlige-kombinasjoner/",
+        "query": {
+          "hovedpart": "VIRKSOMHET",
+          "sakstype": "EU_EOS"
+        },
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": [
+          {
+            "kode": "MEDLEMSKAP_LOVVALG",
+            "term": "Medlemskap og lovvalg"
+          },
+          {
+            "kode": "UNNTAK",
+            "term": "Unntak"
+          },
+          {
+            "kode": "TRYGDEAVGIFT",
+            "term": "Trygdeavgift"
+          }
+        ]
+      },
+      "duration": 7,
+      "dynamicFields": []
+    },
+    {
+      "request": {
+        "id": "4ff784e8a373",
+        "method": "GET",
+        "url": "http://localhost:3333/api/saksbehandling/behandlingstemaer/hent-lovlige-kombinasjoner/?hovedpart=VIRKSOMHET&sakstype=EU_EOS&sakstema=MEDLEMSKAP_LOVVALG",
+        "pathname": "/api/saksbehandling/behandlingstemaer/hent-lovlige-kombinasjoner/",
+        "normalizedPath": "/api/saksbehandling/behandlingstemaer/hent-lovlige-kombinasjoner/",
+        "query": {
+          "hovedpart": "VIRKSOMHET",
+          "sakstype": "EU_EOS",
+          "sakstema": "MEDLEMSKAP_LOVVALG"
+        },
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": [
+          {
+            "kode": "VIRKSOMHET",
+            "term": "Virksomhet"
+          }
+        ]
+      },
+      "duration": 6,
+      "dynamicFields": []
+    },
+    {
+      "request": {
+        "id": "1d0b300e1e4f",
+        "method": "GET",
+        "url": "http://localhost:3333/api/saksbehandling/behandlingstyper/kombinasjoner/?hovedpart=VIRKSOMHET&sakstype=EU_EOS&sakstema=MEDLEMSKAP_LOVVALG&behandlingstema=VIRKSOMHET",
+        "pathname": "/api/saksbehandling/behandlingstyper/kombinasjoner/",
+        "normalizedPath": "/api/saksbehandling/behandlingstyper/kombinasjoner/",
+        "query": {
+          "hovedpart": "VIRKSOMHET",
+          "sakstype": "EU_EOS",
+          "sakstema": "MEDLEMSKAP_LOVVALG",
+          "behandlingstema": "VIRKSOMHET"
+        },
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": [
+          {
+            "kode": "HENVENDELSE",
+            "term": "Henvendelse"
+          }
+        ]
+      },
+      "duration": 7,
+      "dynamicFields": []
+    },
+    {
+      "request": {
+        "id": "b1e668e6cd04",
+        "method": "GET",
+        "url": "http://localhost:3333/api/saksbehandling/behandlingsaarsaktyper/hent-lovlige-kombinasjoner/?behandlingstype=HENVENDELSE",
+        "pathname": "/api/saksbehandling/behandlingsaarsaktyper/hent-lovlige-kombinasjoner/",
+        "normalizedPath": "/api/saksbehandling/behandlingsaarsaktyper/hent-lovlige-kombinasjoner/",
+        "query": {
+          "behandlingstype": "HENVENDELSE"
+        },
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": [
+          {
+            "kode": "SØKNAD",
+            "term": "Søknad"
+          },
+          {
+            "kode": "SED",
+            "term": "SED"
+          },
+          {
+            "kode": "HENVENDELSE",
+            "term": "Henvendelse"
+          },
+          {
+            "kode": "FRITEKST",
+            "term": "Fritekst"
+          }
+        ]
+      },
+      "duration": 7,
+      "dynamicFields": []
+    },
+    {
+      "request": {
+        "id": "59a98a512d4d",
+        "method": "POST",
+        "url": "http://localhost:3333/api/fagsaker",
+        "pathname": "/api/fagsaker",
+        "normalizedPath": "/api/fagsaker",
+        "query": {},
+        "headers": {
+          "content-type": "application/json",
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": {
+          "behandlingstema": "VIRKSOMHET",
+          "behandlingstype": "HENVENDELSE",
+          "skalTilordnes": false,
+          "mottaksdato": "2025-12-08",
+          "behandlingsaarsakType": "SØKNAD",
+          "hovedpart": "VIRKSOMHET",
+          "brukerID": null,
+          "virksomhetOrgnr": "999999999",
+          "sakstype": "EU_EOS",
+          "sakstema": "MEDLEMSKAP_LOVVALG",
+          "soknadDto": {
+            "periode": {
+              "fom": null,
+              "tom": null
+            },
+            "land": {
+              "landkoder": [],
+              "flereLandUkjentHvilke": false
+            }
+          }
+        }
+      },
+      "response": {
+        "status": 204,
+        "statusText": "No Content",
+        "headers": {},
+        "body": null
+      },
+      "duration": 11,
+      "dynamicFields": []
+    },
+    {
+      "request": {
+        "id": "74592ac6ace6",
+        "method": "GET",
+        "url": "http://localhost:3333/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/?",
+        "pathname": "/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/",
+        "normalizedPath": "/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/",
+        "query": {},
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": [
+          {
+            "kode": "EU_EOS",
+            "term": "EU/EØS-land"
+          },
+          {
+            "kode": "TRYGDEAVTALE",
+            "term": "Avtaleland"
+          },
+          {
+            "kode": "FTRL",
+            "term": "Utenfor avtaleland"
+          }
+        ]
+      },
+      "duration": 5,
+      "dynamicFields": []
+    }
+  ]
+}

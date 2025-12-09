@@ -1,4 +1,4 @@
-import { test } from "@playwright/test";
+import { test } from "../../recording/fixtures";
 import { runAxeAnalyze } from "../../utils/axeUtils";
 import { HovedsidePage } from "../../pages/hovedside.page";
 import { OpprettNySakPage } from "../../pages/opprett-ny-sak/opprett-ny-sak.page";
@@ -7,7 +7,7 @@ import { assertErrors } from "../../utils/testUtils";
 let opprettNySakPage: OpprettNySakPage;
 
 test.describe("'Opprett ny sak/behandling' hovedside", () => {
-  test.beforeEach(async ({ page }) => {
+  test.beforeEach(async ({ page, apiRecorder }) => {
     const mainPage = new HovedsidePage(page);
     opprettNySakPage = new OpprettNySakPage(page);
 

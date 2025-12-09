@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "../../../recording/fixtures";
 import { runAxeAnalyze } from "../../../utils/axeUtils";
 import { HovedsidePage, USER_ID_VALID } from "../../../pages/hovedside.page";
 import { OpprettNySakPage } from "../../../pages/opprett-ny-sak/opprett-ny-sak.page";
@@ -6,7 +6,7 @@ import { OpprettNySakPage } from "../../../pages/opprett-ny-sak/opprett-ny-sak.p
 let opprettNySakPage: OpprettNySakPage;
 
 test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
-  test.beforeEach(async ({ page }) => {
+  test.beforeEach(async ({ page, apiRecorder }) => {
     const mainPage = new HovedsidePage(page);
     opprettNySakPage = new OpprettNySakPage(page);
 
@@ -14,7 +14,7 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
     await mainPage.klikkOpprettNySakKnapp();
   });
 
-  test("Utenfor avtaleland med åpne behandlinger - viser behandlingstyper", async ({ page }, testInfo) => {
+  test("Utenfor avtaleland med åpne behandlinger - viser behandlingstyper", async ({ page, apiRecorder }, testInfo) => {
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgKnyttTilEksisterendeSak();
 
@@ -31,7 +31,7 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("EØS-sak med aktive behandlinger - viser varselmelding", async ({ page }, testInfo) => {
+  test("EØS-sak med aktive behandlinger - viser varselmelding", async ({ page, apiRecorder }, testInfo) => {
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgKnyttTilEksisterendeSak();
 
@@ -48,7 +48,7 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("EØS pensjonist med trygdeavgift - årsavregning tilgjengelig", async ({ page }, testInfo) => {
+  test("EØS pensjonist med trygdeavgift - årsavregning tilgjengelig", async ({ page, apiRecorder }, testInfo) => {
     // Test unntaket for EØS pensjonister med trygdeavgift som skal kunne opprette årsavregning
     // selv om de har aktive behandlinger
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
@@ -70,7 +70,7 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("Avtaleland med åpne behandlinger - viser varselmelding", async ({ page }, testInfo) => {
+  test("Avtaleland med åpne behandlinger - viser varselmelding", async ({ page, apiRecorder }, testInfo) => {
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgKnyttTilEksisterendeSak();
 
@@ -90,7 +90,10 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("Avtaleland med avsluttede behandlinger - alle behandlingstyper tilgjengelige", async ({ page }, testInfo) => {
+  test("Avtaleland med avsluttede behandlinger - alle behandlingstyper tilgjengelige", async ({
+    page,
+    apiRecorder,
+  }, testInfo) => {
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgKnyttTilEksisterendeSak();
 
@@ -109,7 +112,10 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("Utenfor avtaleland med åpne behandlinger - kun årsavregning tilgjengelig", async ({ page }, testInfo) => {
+  test("Utenfor avtaleland med åpne behandlinger - kun årsavregning tilgjengelig", async ({
+    page,
+    apiRecorder,
+  }, testInfo) => {
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgKnyttTilEksisterendeSak();
 
@@ -127,7 +133,7 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("Alle behandlinger avsluttet - alle behandlingstyper tilgjengelige", async ({ page }, testInfo) => {
+  test("Alle behandlinger avsluttet - alle behandlingstyper tilgjengelige", async ({ page, apiRecorder }, testInfo) => {
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgKnyttTilEksisterendeSak();
 
@@ -150,7 +156,7 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("Konsistent oppførsel ved navigasjon mellom saker", async ({ page }, testInfo) => {
+  test("Konsistent oppførsel ved navigasjon mellom saker", async ({ page, apiRecorder }, testInfo) => {
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgKnyttTilEksisterendeSak();
 

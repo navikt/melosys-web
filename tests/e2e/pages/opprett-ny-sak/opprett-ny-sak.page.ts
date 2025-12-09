@@ -191,22 +191,20 @@ export class OpprettNySakPage {
   async velgSakstype(value: "Avtaleland" | "Utenfor avtaleland" | "EU/EØS-land"): Promise<void> {
     const sakstypeSelect = this.page.locator("select[name='sakstype']");
 
-    // Vent på elementet med timeout, returner stille hvis det ikke kommer
+    // Vent på at select er synlig
     try {
       await expect(sakstypeSelect, "Fant ikke sakstype dropdown").toBeVisible({ timeout: 5000 });
     } catch {
       return;
     }
 
-    const options = await sakstypeSelect.locator("option").all();
-    let foundValue: string | null = null;
-    for (const option of options) {
-      const text = await option.textContent();
-      if (text && text.trim() === value) {
-        foundValue = await option.getAttribute("value");
-        break;
-      }
-    }
+    // Vent på at den ønskede option finnes (options kan lastes dynamisk)
+    const targetOption = sakstypeSelect.locator(`option:text-is("${value}")`);
+    await expect(targetOption, `Venter på at sakstype option "${value}" skal lastes`).toBeAttached({
+      timeout: 5000,
+    });
+
+    const foundValue = await targetOption.getAttribute("value");
 
     expect(foundValue, `Fant ikke sakstype med tekst "${value}"`).not.toBeNull();
     if (!foundValue) return; // Type guard for TypeScript

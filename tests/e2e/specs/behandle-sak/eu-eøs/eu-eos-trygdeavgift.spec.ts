@@ -1,4 +1,4 @@
-import { test } from "@playwright/test";
+import { test } from "../../../recording/fixtures";
 import { TrygdeavgiftPage } from "../../../pages/behandling/trygdeavgift.page";
 import { InngangPage } from "../../../pages/behandling/inngang.page";
 import { BehandlingPage } from "../../../pages/behandling/behandling.page";
@@ -19,10 +19,13 @@ import { runAxeAnalyze } from "../../../utils/axeUtils";
  */
 
 test.describe("EU/EØS Trygdeavgift", () => {
-  test("skal vise inntektskilder når bruker ikke er skattepliktig", async ({ page }, testInfo) => {
+  test("skal vise inntektskilder når bruker ikke er skattepliktig", async ({ page, apiRecorder }, testInfo) => {
+    // Note: This test uses the write-then-read pattern (form saves + subsequent reads).
+    // The mock server supports this via sequence-based matching - it returns responses
+    // in the order they were recorded, so GET after POST returns the updated state.
+
     const saksnummer = "MEL-1054";
     const behandlingPage = new BehandlingPage(page, saksnummer);
-
     // Hent URL til prepopulert EØS pensjonist-sak med trygdeavgift og naviger direkte dit
     const url = hentPrepopulertSakUrl(saksnummer);
     await behandlingPage.goto(url, "Oppgi opplysninger fra attest / S1");
@@ -36,7 +39,7 @@ test.describe("EU/EØS Trygdeavgift", () => {
     await inngangPage.setTilOgMedDato(`31.12.${inneværendeÅr}`);
     await inngangPage.velgLand("SE");
 
-    // Steg 2: Gå til Trygdeavgift og verifiser intiell tilstand
+    // Steg 2: Gå til Trygdeavgift og verifiser initiell tilstand
     await inngangPage.klikkBekreftOgFortsett();
     const trygdeavgiftPage = new TrygdeavgiftPage(page, saksnummer);
     await trygdeavgiftPage.verifiserSteg("Trygdeavgift");

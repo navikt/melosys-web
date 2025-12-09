@@ -1,4 +1,5 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "../../../recording/fixtures";
+import { getTestMode } from "../../../config/mode";
 import { runAxeAnalyze } from "../../../utils/axeUtils";
 import { HovedsidePage, USER_ID_VALID } from "../../../pages/hovedside.page";
 import { OpprettNySakPage } from "../../../pages/opprett-ny-sak/opprett-ny-sak.page";
@@ -17,7 +18,7 @@ import { BehandlingPage } from "../../../pages/behandling/behandling.page";
 test.describe("'Utenfor avtaleland' behandlingslogikk", () => {
   let opprettNySakPage: OpprettNySakPage;
 
-  test.beforeEach(async ({ page }) => {
+  test.beforeEach(async ({ page, apiRecorder }) => {
     const mainPage = new HovedsidePage(page);
     opprettNySakPage = new OpprettNySakPage(page);
 
@@ -26,7 +27,10 @@ test.describe("'Utenfor avtaleland' behandlingslogikk", () => {
     await mainPage.klikkOpprettNySakKnapp();
   });
 
-  test("Utenfor avtaleland med åpen behandling - kun årsavregning tilgjengelig", async ({ page }, testInfo) => {
+  test("Utenfor avtaleland med åpen behandling - kun årsavregning tilgjengelig", async ({
+    page,
+    apiRecorder,
+  }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout siden vi oppretter sak
 
     // Bruk prepopulert FTRL-sak med UNDER_BEHANDLING status
@@ -51,7 +55,7 @@ test.describe("'Utenfor avtaleland' behandlingslogikk", () => {
     await runAxeAnalyze(page, testInfo.title);
   });
 
-  test("Utenfor avtaleland med åpen årsavregning - finner sak", async ({ page }, testInfo) => {
+  test("Utenfor avtaleland med åpen årsavregning - finner sak", async ({ page, apiRecorder }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout siden vi oppretter sak + årsavregning
 
     // Bruk prepopulert FTRL-sak med UNDER_BEHANDLING status
@@ -69,9 +73,19 @@ test.describe("'Utenfor avtaleland' behandlingslogikk", () => {
     await eksisterendeSak.click();
 
     await opprettNySakPage.velgBehandlingstypeRadio("Årsavregning");
-    await opprettNySakPage.klikkOpprettNyBehandling();
 
-    await page.waitForLoadState("domcontentloaded");
+    // For Årsavregning må vi velge en behandlingsårsak før vi kan opprette behandlingen
+    await opprettNySakPage.velgBehandlingsaarsak("Søknad");
+
+    // Click and wait for navigation to complete (behandling creation triggers navigation to frontpage)
+    // This ensures the POST is fully completed and captured in recordings
+    await Promise.all([
+      page.waitForURL(/\/melosys\/$/, { timeout: 15000 }),
+      opprettNySakPage.klikkOpprettNyBehandling(),
+    ]);
+
+    // Allow the POST response to be fully captured by the recorder
+    await page.waitForLoadState("networkidle");
 
     await hovedsidePage.goto();
     await hovedsidePage.klikkOpprettNySakKnapp();
@@ -93,7 +107,16 @@ test.describe("'Utenfor avtaleland' behandlingslogikk", () => {
 
   test("Utenfor avtaleland med avsluttet behandling - alle behandlingstyper tilgjengelige", async ({
     page,
+    apiRecorder,
   }, testInfo) => {
+    // Skip in playback mode: This test closes a behandling then verifies behandlingstyper.
+    // The mock server returns pre-recorded behandlingstyper that don't reflect the closed state,
+    // because the recordings were captured with a different behandling state.
+    // The API returns only "Årsavregning" instead of all 4 types because it still sees the behandling as open.
+    test.skip(
+      getTestMode() === "playback",
+      "Write-then-read pattern: behandlingstyper don't update after closing behandling in playback",
+    );
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout siden vi oppretter og avslutter sak
 
     const saksnummer = "MEL-1020";
