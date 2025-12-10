@@ -35,18 +35,19 @@ export async function setDatoFelt(feltNavn: string, dato: string, scope: Page | 
 }
 
 /**
- * Klikk på en knapp basert på label/navn
+ * Finn en knapp basert på label/navn og verifiser at den finnes og er unik
  * @param label - Knappens label/navn (synlig tekst eller aria-label)
  * @param scope - Page eller Locator å søke innenfor
+ * @returns Locator for knappen (garantert å finnes og være unik)
  */
-export async function klikkKnapp(label: string, scope: Page | Locator): Promise<void> {
+export async function finnKnapp(label: string, scope: Page | Locator): Promise<Locator> {
   const knapp = scope.getByRole("button", { name: label });
   const count = await knapp.count();
 
   expect(count, `Knapp "${label}" skal finnes`).toBeGreaterThan(0);
   expect(count, `Knapp "${label}" skal være unik - bruk smalere scope`).toBe(1);
 
-  await knapp.click();
+  return knapp;
 }
 
 /**

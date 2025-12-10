@@ -1,10 +1,6 @@
 import { expect, Locator, Page } from "@playwright/test";
-import { getSaksnummerFraLocator, setDatoFelt, velgRadio } from "../../utils/testUtils";
+import { finnKnapp, getSaksnummerFraLocator, setDatoFelt, velgRadio } from "../../utils/testUtils";
 import { UI_TEXTS } from "../../config/ui-texts";
-
-const SELECTORS = {
-  CUSTOM_RADIO_PANEL_TITLE: ".customRadioPanelTittel",
-} as const;
 
 interface LocatorWithSakId extends Locator {
   _sakId?: string;
@@ -177,9 +173,8 @@ export class OpprettNySakPage {
    * Klikk "Opprett ny behandling" knappen
    */
   async klikkOpprettNyBehandling(): Promise<void> {
-    const opprettKnapp = this.page.getByRole("button", { name: UI_TEXTS.BUTTONS.OPPRETT_NY_BEHANDLING });
-    await expect(opprettKnapp, `Fant ikke '${UI_TEXTS.BUTTONS.OPPRETT_NY_BEHANDLING}' knappen`).toBeVisible();
-    await opprettKnapp.click();
+    const knapp = await finnKnapp(UI_TEXTS.BUTTONS.OPPRETT_NY_BEHANDLING, this.page);
+    await knapp.click();
     await this.page.waitForLoadState("domcontentloaded");
   }
 
@@ -271,7 +266,7 @@ export class OpprettNySakPage {
     // Etter behandlingsårsak vises enten land-felt eller "Opprett ny behandling" knapp
     // Vent på at ett av disse er synlig
     const landFieldset = this.page.locator("fieldset:has-text('Land')");
-    const opprettKnapp = this.page.locator(SELECTORS.OPPRETT_NY_BEHANDLING_BUTTON);
+    const opprettKnapp = this.page.getByRole("button", { name: UI_TEXTS.BUTTONS.OPPRETT_NY_BEHANDLING });
     await Promise.race([
       expect(landFieldset, "Land-fieldset skal være synlig")
         .toBeVisible({ timeout: 5000 })

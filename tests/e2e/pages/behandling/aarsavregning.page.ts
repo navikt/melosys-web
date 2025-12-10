@@ -1,7 +1,7 @@
 import { expect, Page } from "@playwright/test";
 import { BehandlingPage } from "./behandling.page";
 import { PrepopulertSaksnummer } from "../../utils/testdataUtils";
-import { klikkKnapp, velgFraListe } from "../../utils/testUtils";
+import { finnKnapp, velgFraListe } from "../../utils/testUtils";
 import { UI_TEXTS } from "../../config/ui-texts";
 
 /**
@@ -81,7 +81,8 @@ export class AarsavregningPage extends BehandlingPage {
     const perioder = this.page.locator(".medlemskapsperiode__rad");
     const antallFør = await perioder.count();
 
-    await klikkKnapp(UI_TEXTS.BUTTONS.LEGG_TIL_PERIODE, this.page);
+    const knapp = await finnKnapp(UI_TEXTS.BUTTONS.LEGG_TIL_PERIODE, this.page);
+    await knapp.click();
 
     // Vent på at ny periode er lagt til
     await expect(perioder, `${this.ctx}: Ny medlemskapsperiode skal være lagt til`).toHaveCount(antallFør + 1, {
@@ -169,7 +170,8 @@ export class AarsavregningPage extends BehandlingPage {
 
   // Skatteforholdsperiode operasjoner
   async klikkLeggTilSkatteforhold() {
-    await klikkKnapp("Legg til skatteforhold", this.page);
+    const knapp = await finnKnapp("Legg til skatteforhold", this.page);
+    await knapp.click();
   }
 
   async fyllUtSkatteforholdFomDato(index: number, dato: string) {
@@ -235,7 +237,8 @@ export class AarsavregningPage extends BehandlingPage {
 
   // Inntektsperiode operasjoner
   async klikkLeggTilInntekt() {
-    await klikkKnapp("Legg til inntekt", this.page);
+    const knapp = await finnKnapp("Legg til inntekt", this.page);
+    await knapp.click();
   }
 
   async fyllUtInntektsperiodeFomDato(index: number, dato: string) {
@@ -404,7 +407,8 @@ export class AarsavregningPage extends BehandlingPage {
 
     // Finn "Åpne datovelger" knappen som er søsken til input-feltet
     const inputElement = allInputs[inputIndex];
-    const datepickerButton = inputElement.locator("..").getByRole("button", { name: "Åpne datovelger" });
+    const container = inputElement.locator("..");
+    const datepickerButton = await finnKnapp("Åpne datovelger", container);
     await datepickerButton.click();
   }
 
