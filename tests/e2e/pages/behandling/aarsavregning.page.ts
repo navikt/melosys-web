@@ -13,7 +13,7 @@ export class AarsavregningPage extends BehandlingPage {
 
   // Hent første tilgjengelige år fra dropdown-en (ikke "Velg...")
   async hentFørsteTilgjengeligeÅr(): Promise<string> {
-    const årSelect = this.page.getByRole("combobox", { name: /år/i });
+    const årSelect = this.page.getByRole("combobox", { name: "År" });
     await expect(årSelect, "År-select skal være synlig").toBeVisible({ timeout: 5000 });
 
     // Hent alle options og finn første som ikke er disabled
@@ -29,7 +29,7 @@ export class AarsavregningPage extends BehandlingPage {
 
   // År dropdown
   async velgÅr(år: string) {
-    const årSelect = this.page.getByRole("combobox", { name: /år/i });
+    const årSelect = this.page.getByRole("combobox", { name: "År" });
     await expect(årSelect, `${this.ctx}: År-select skal være synlig`).toBeVisible({ timeout: 5000 });
 
     // Sett opp lyttere for API-kall FØR vi velger år
@@ -61,7 +61,7 @@ export class AarsavregningPage extends BehandlingPage {
     // Vent på at data for året har lastet ved å sjekke at spørsmålet om trygdeavgift fra Avgiftssystemet vises
     // Bestemmelse-dropdown vises ikke før etter at brukeren har svart på dette spørsmålet og valgt "endeligAvgiftValg"
     const trygdeavgiftSpørsmålTekst = this.page.getByText(
-      /skal du legge til trygdeavgift fra avgiftssystemet til denne årsavregningen/i,
+      "Skal du legge til trygdeavgift fra Avgiftssystemet til denne årsavregningen?",
     );
     await expect(
       trygdeavgiftSpørsmålTekst,
@@ -78,7 +78,7 @@ export class AarsavregningPage extends BehandlingPage {
 
   // Medlemskapsperiode operasjoner
   async leggTilMedlemskapsperiode() {
-    const knapp = this.page.getByRole("button", { name: /legg til periode/i });
+    const knapp = this.page.getByRole("button", { name: "Legg til periode" });
     await expect(knapp, `${this.ctx}: Knapp 'Legg til periode' skal være synlig`).toBeVisible({ timeout: 5000 });
 
     // Tell antall perioder før klikk
@@ -96,7 +96,7 @@ export class AarsavregningPage extends BehandlingPage {
   async fyllUtMedlemskapsperiodeFomDato(index: number, dato: string) {
     // Bruk trygdedekning combobox som anker - dette sikrer at perioden eksisterer
     const trygdedekningDropdown = this.page.getByRole("combobox", {
-      name: new RegExp(`Trygdedekning periode ${index + 1}`, "i"),
+      name: `Trygdedekning periode ${index + 1}`,
     });
     await expect(
       trygdedekningDropdown,
@@ -124,7 +124,7 @@ export class AarsavregningPage extends BehandlingPage {
   async fyllUtMedlemskapsperiodeTomDato(index: number, dato: string) {
     // Bruk trygdedekning combobox som anker - dette sikrer at perioden eksisterer
     const trygdedekningDropdown = this.page.getByRole("combobox", {
-      name: new RegExp(`Trygdedekning periode ${index + 1}`, "i"),
+      name: `Trygdedekning periode ${index + 1}`,
     });
     await expect(
       trygdedekningDropdown,
@@ -173,7 +173,7 @@ export class AarsavregningPage extends BehandlingPage {
 
   // Skatteforholdsperiode operasjoner
   async leggTilSkatteforholdsperiode() {
-    await this.page.getByRole("button", { name: /legg til skatteforhold/i }).click();
+    await this.page.getByRole("button", { name: "Legg til skatteforhold" }).click();
   }
 
   async fyllUtSkatteforholdFomDato(index: number, dato: string) {
@@ -230,7 +230,7 @@ export class AarsavregningPage extends BehandlingPage {
 
     // Finn radio-knappen ved å bruke group legend som anker
     const radioGroup = this.page.locator(`[name="skatteforholdsperioder[${index}].skatteplikttype"]`).locator("..");
-    const radio = radioGroup.getByRole("radio", { name: new RegExp(radioValue, "i") });
+    const radio = radioGroup.getByRole("radio", { name: radioValue });
     await expect(radio, `${this.ctx}: Radio-button "${radioValue}" for skatteplikttype skal være synlig`).toBeVisible({
       timeout: 5000,
     });
@@ -239,7 +239,7 @@ export class AarsavregningPage extends BehandlingPage {
 
   // Inntektsperiode operasjoner
   async leggTilInntektsperiode() {
-    await this.page.getByRole("button", { name: /legg til inntekt/i }).click();
+    await this.page.getByRole("button", { name: "Legg til inntekt" }).click();
   }
 
   async fyllUtInntektsperiodeFomDato(index: number, dato: string) {
@@ -328,7 +328,7 @@ export class AarsavregningPage extends BehandlingPage {
 
   // Trygdeavgift fra Avgiftssystemet (delt grunnlag)
   async velgDeltGrunnlagJa() {
-    const jaRadio = this.page.getByRole("radio", { name: /^ja$/i }).first();
+    const jaRadio = this.page.getByRole("radio", { name: "Ja" }).first();
     await expect(jaRadio, `${this.ctx}: Radio-button 'Ja' skal være synlig`).toBeVisible({ timeout: 10000 });
 
     // Sjekk om radioknappen allerede er checked
@@ -364,7 +364,7 @@ export class AarsavregningPage extends BehandlingPage {
 
     // Vent på at "Beregn endelig trygdeavgift" radioknappen vises
     // Dette kan ta litt tid pga React re-rendering
-    const beregnEndeligRadio = this.page.getByRole("radio", { name: /beregn endelig trygdeavgift/i });
+    const beregnEndeligRadio = this.page.getByRole("radio", { name: "Beregn endelig trygdeavgift" });
     await expect(
       beregnEndeligRadio,
       `${this.ctx}: 'Beregn endelig trygdeavgift' radio skal være synlig etter Ja valgt`,
@@ -379,7 +379,7 @@ export class AarsavregningPage extends BehandlingPage {
     }
 
     // Vent på at skjemaet re-rendres med medlemskapsperiode-feltene
-    const medlemskapsperiodeFelt = this.page.getByRole("combobox", { name: /trygdedekning periode 1/i });
+    const medlemskapsperiodeFelt = this.page.getByRole("combobox", { name: "Trygdedekning periode 1" });
     await expect(
       medlemskapsperiodeFelt,
       `${this.ctx}: Medlemskapsperiode-felt skal være synlig etter delt grunnlag valgt`,
@@ -389,7 +389,7 @@ export class AarsavregningPage extends BehandlingPage {
   // Datepicker-spesifikke metoder for å teste datovelger
   async klikkMedlemskapsperiodeFomDatepicker(index: number) {
     const trygdedekningDropdown = this.page.getByRole("combobox", {
-      name: new RegExp(`Trygdedekning periode ${index + 1}`, "i"),
+      name: `Trygdedekning periode ${index + 1}`,
     });
     await expect(
       trygdedekningDropdown,
@@ -408,7 +408,7 @@ export class AarsavregningPage extends BehandlingPage {
 
     // Finn "Åpne datovelger" knappen som er søsken til input-feltet
     const inputElement = allInputs[inputIndex];
-    const datepickerButton = inputElement.locator("..").getByRole("button", { name: /åpne datovelger/i });
+    const datepickerButton = inputElement.locator("..").getByRole("button", { name: "Åpne datovelger" });
     await datepickerButton.click();
   }
 
@@ -444,7 +444,7 @@ export class AarsavregningPage extends BehandlingPage {
   // Verifiser at siden er lastet
   async verifiserAarsavregningside() {
     await expect(
-      this.page.getByRole("heading", { name: /årsavregning/i }),
+      this.page.getByRole("heading", { name: "Årsavregning" }),
       `${this.ctx}: Årsavregning-overskrift skal være synlig`,
     ).toBeVisible();
   }

@@ -35,7 +35,7 @@ test.describe("EU/EØS Stegvelger - Navigasjon", () => {
     await stegvelgerPage.goto(url);
 
     // === STEG 1: Inngang ===
-    await stegvelgerPage.verifiserSteg(/inngang|opplysninger/i);
+    await stegvelgerPage.verifiserSteg("Oppgi opplysninger fra søknaden");
     await stegvelgerPage.verifiserBekreftKnappDeaktivert();
 
     // Fyll ut minimum: fom-dato og land
@@ -45,7 +45,7 @@ test.describe("EU/EØS Stegvelger - Navigasjon", () => {
 
     // === STEG 2: Neste steg ===
     // Verifiser at vi har navigert videre (ikke lenger på Inngang)
-    await stegvelgerPage.verifiserSteg(new RegExp(`^(?!.*inngang).*$`, "i"));
+    await stegvelgerPage.verifiserSteg("Bestemmelse og vurdering");
 
     await runAxeAnalyze(page, testInfo.title);
   });
@@ -59,7 +59,7 @@ test.describe("EU/EØS Stegvelger - Navigasjon", () => {
     await stegvelgerPage.goto(url);
 
     // Start på Inngang
-    await stegvelgerPage.verifiserSteg(/inngang|opplysninger/i);
+    await stegvelgerPage.verifiserSteg("Oppgi opplysninger fra søknaden");
 
     // Fyll ut og gå videre
     await stegvelgerPage.fyllUtEosIkkeYrkesaktivInngang("01.01.2024", "Sverige");
@@ -70,15 +70,15 @@ test.describe("EU/EØS Stegvelger - Navigasjon", () => {
 
     // Gå tilbake til Inngang via Tilbake-knapp
     await stegvelgerPage.gåTilbake();
-    await stegvelgerPage.verifiserSteg(/inngang|opplysninger/i);
+    await stegvelgerPage.verifiserSteg("Oppgi opplysninger fra søknaden");
 
     // Gå frem igjen via Bekreft-knapp
     await stegvelgerPage.bekreftOgFortsett();
-    await stegvelgerPage.verifiserSteg(new RegExp(andreStegTittel.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i"));
+    await stegvelgerPage.verifiserSteg(andreStegTittel);
 
     // Gå tilbake via klikk på steg 1 i progressbar
     await stegvelgerPage.klikkPåSteg(1);
-    await stegvelgerPage.verifiserSteg(/inngang|opplysninger/i);
+    await stegvelgerPage.verifiserSteg("Oppgi opplysninger fra søknaden");
 
     await runAxeAnalyze(page, testInfo.title);
   });
@@ -94,7 +94,7 @@ test.describe("EU/EØS Stegvelger - Navigasjon", () => {
     const url = hentPrepopulertSakUrl(saksnummer);
     await stegvelgerPage.goto(url);
 
-    await stegvelgerPage.verifiserSteg(/inngang|opplysninger/i);
+    await stegvelgerPage.verifiserSteg("Oppgi opplysninger fra søknaden");
 
     // Knappen skal være deaktivert ved start
     await stegvelgerPage.verifiserBekreftKnappDeaktivert();

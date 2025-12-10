@@ -143,14 +143,14 @@ export class StegvelgerPage extends BehandlingPage {
     const landInput = landMultiSelect.locator("input");
     await landInput.click();
 
-    const landOption = this.page.getByRole("option", { name: new RegExp(arbeidsland, "i") });
+    const landOption = this.page.getByRole("option", { name: arbeidsland });
     await expect(landOption, `${this.ctx}: Land-option "${arbeidsland}" ikke funnet i dropdown`).toBeVisible({
       timeout: 5000,
     });
     await landOption.click();
 
     // Velg trygdedekning fra dropdown
-    const trygdedekningSelect = this.page.getByRole("combobox", { name: /trygdedekning/i });
+    const trygdedekningSelect = this.page.getByRole("combobox", { name: "Trygdedekning" });
     await expect(trygdedekningSelect, `${this.ctx}: Fant ikke trygdedekning-dropdown`).toBeVisible({ timeout: 5000 });
     await trygdedekningSelect.selectOption({ index: 1 });
 
@@ -172,7 +172,7 @@ export class StegvelgerPage extends BehandlingPage {
    * @param bestemmelse Søkestreng for bestemmelse (kan være delvis match, f.eks. "§ 2-5")
    */
   async velgBestemmelse(bestemmelse: string): Promise<void> {
-    const bestemmelseSelect = this.page.getByRole("combobox", { name: /bestemmelse/i });
+    const bestemmelseSelect = this.page.getByRole("combobox", { name: "Bestemmelse" });
     await expect(bestemmelseSelect, `${this.ctx}: Fant ikke bestemmelse-dropdown`).toBeVisible({ timeout: 5000 });
 
     // Hent alle options og finn første som inneholder søkestrengen
@@ -204,7 +204,7 @@ export class StegvelgerPage extends BehandlingPage {
 
       for (let g = 0; g < groupCount; g++) {
         const group = radioGroups.nth(g);
-        const jaRadio = group.getByRole("radio", { name: /^ja$/i });
+        const jaRadio = group.getByRole("radio", { name: "Ja" });
 
         if (await jaRadio.isVisible({ timeout: 500 }).catch(() => false)) {
           const isChecked = await jaRadio.isChecked();
@@ -233,7 +233,7 @@ export class StegvelgerPage extends BehandlingPage {
     await this.page.waitForTimeout(300);
 
     // Velg trygdedekning for første periode
-    const trygdedekningSelect = this.page.getByRole("combobox", { name: /trygdedekning/i }).first();
+    const trygdedekningSelect = this.page.getByRole("combobox", { name: "Trygdedekning" }).first();
     if (await trygdedekningSelect.isVisible({ timeout: 2000 }).catch(() => false)) {
       const selectedIndex = await trygdedekningSelect.evaluate((el: HTMLSelectElement) => el.selectedIndex);
       if (selectedIndex <= 0) {
@@ -242,7 +242,7 @@ export class StegvelgerPage extends BehandlingPage {
     }
 
     // Velg resultat for første periode
-    const resultatSelect = this.page.getByRole("combobox", { name: /resultat/i }).first();
+    const resultatSelect = this.page.getByRole("combobox", { name: "Resultat" }).first();
     if (await resultatSelect.isVisible({ timeout: 2000 }).catch(() => false)) {
       const selectedIndex = await resultatSelect.evaluate((el: HTMLSelectElement) => el.selectedIndex);
       if (selectedIndex <= 0) {
@@ -275,7 +275,7 @@ export class StegvelgerPage extends BehandlingPage {
     await setDatoFelt("Fra og med", fomDato, this.page);
 
     // Velg land fra dropdown
-    const landSelect = this.page.getByRole("combobox", { name: /^land$/i });
+    const landSelect = this.page.getByRole("combobox", { name: "Land" });
     if (await landSelect.isVisible({ timeout: 2000 }).catch(() => false)) {
       // Prøv å velge basert på landnavn (label)
       try {
