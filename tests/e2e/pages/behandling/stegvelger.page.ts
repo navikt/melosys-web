@@ -1,6 +1,7 @@
 import { expect, Locator, Page } from "@playwright/test";
 import { BehandlingPage } from "./behandling.page";
 import { PrepopulertSaksnummer } from "../../utils/testdataUtils";
+import { setDatoFelt } from "../../utils/testUtils";
 
 /**
  * Page Object for stegvelger-navigasjon
@@ -126,10 +127,7 @@ export class StegvelgerPage extends BehandlingPage {
    */
   async fyllUtInngangMinimum(fomDato: string, arbeidsland: string = "Sverige"): Promise<void> {
     // Fyll ut fra og med dato
-    const fomInput = this.page.getByLabel(/fra og med/i);
-    await expect(fomInput, `${this.ctx}: Fant ikke "Fra og med"-felt`).toBeVisible({ timeout: 5000 });
-    await fomInput.click();
-    await fomInput.pressSequentially(fomDato, { delay: 50 });
+    await setDatoFelt("Fra og med", fomDato, this.page);
     await this.page.keyboard.press("Tab"); // Lukk evt. datepicker
 
     // Velg "Velg land fra liste" radio
@@ -239,15 +237,8 @@ export class StegvelgerPage extends BehandlingPage {
    */
   async fyllUtPerioderMinimum(): Promise<void> {
     // Fyll ut "Til og med" dato hvis tom (påkrevd felt)
-    const tomInput = this.page.getByRole("textbox", { name: /til og med/i }).first();
-    if (await tomInput.isVisible({ timeout: 2000 }).catch(() => false)) {
-      const currentValue = await tomInput.inputValue();
-      if (!currentValue) {
-        // Sett til 31.12.2024 som standard sluttdato
-        await tomInput.fill("31.12.2024");
-        await this.page.waitForTimeout(300);
-      }
-    }
+    await setDatoFelt("Til og med", "31.12.2024", this.page);
+    await this.page.waitForTimeout(300);
 
     // Velg trygdedekning for første periode
     const trygdedekningSelect = this.page.getByRole("combobox", { name: /trygdedekning/i }).first();
@@ -289,10 +280,7 @@ export class StegvelgerPage extends BehandlingPage {
     if (erAktiv) return;
 
     // Fyll ut "Fra og med" dato
-    const fomInput = this.page.getByLabel(/fra og med/i);
-    if (await fomInput.isVisible({ timeout: 2000 }).catch(() => false)) {
-      await fomInput.fill(fomDato);
-    }
+    await setDatoFelt("Fra og med", fomDato, this.page);
 
     // Velg land fra dropdown
     const landSelect = this.page.getByRole("combobox", { name: /^land$/i });

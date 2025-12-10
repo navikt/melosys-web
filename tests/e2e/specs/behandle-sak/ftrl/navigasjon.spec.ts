@@ -1,5 +1,5 @@
 import { test } from "../../../recording/fixtures";
-import { TIMEOUT_FOR_COMPLEX_TESTS } from "../../../utils/testUtils";
+import { TIMEOUT_FOR_COMPLEX_TESTS, setDatoFelt } from "../../../utils/testUtils";
 import { hentPrepopulertSakUrl } from "../../../utils/testdataUtils";
 import { runAxeAnalyze } from "../../../utils/axeUtils";
 import { StegvelgerPage } from "../../../pages/behandling/stegvelger.page";
@@ -127,8 +127,8 @@ test.describe("FTRL Stegvelger - Navigasjon", () => {
     await stegvelgerPage.verifiserBekreftKnappDeaktivert();
 
     // Fyll ut kun dato (uten arbeidsland) - knappen bør fortsatt være deaktivert
-    const fomInput = page.getByLabel(/fra og med/i);
-    await fomInput.fill("01.01.2024");
+
+    await setDatoFelt("Fra og med", "01.01.2024", page);
     await page.waitForTimeout(500);
 
     // Knappen skal fortsatt være deaktivert siden arbeidsland mangler
