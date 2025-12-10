@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 import { connect, useSelector } from "react-redux";
 import { getFormValues, isValid, reduxForm } from "redux-form";
 import PT from "prop-types";
@@ -19,7 +19,7 @@ import { lovvalgsperioderSelectors } from "../../../../ducks/lovvalgsperioder";
 import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
 import { avklartefaktaSelectors } from "../../../../ducks/avklartefakta";
 import { fagsakSelectors } from "../../../../ducks/fagsaker";
-import { vedtakOperations } from "../../../../ducks/vedtak";
+import { vedtakOperations, vedtakSelectors } from "../../../../ducks/vedtak";
 import { formOperations } from "../../../../ducks/form";
 
 import Dokumentliste from "../../../../felleskomponenter/dokumentliste";
@@ -117,7 +117,7 @@ export function VurderingArbeidTjenestepersonEllerFlyVedtak({
   fattVedtak,
   selvstendigArbeid,
 }) {
-  const [vedtakPending, setVedtakPending] = useState(false);
+  const vedtakErPending = useSelector(vedtakSelectors.ErPendingSelector);
   let oppdaterFørKontroll = true;
 
   const arbeidsland = useSelector(avklartefaktaSelectors.ArbeidslandKTSelector);
@@ -208,7 +208,6 @@ export function VurderingArbeidTjenestepersonEllerFlyVedtak({
 
   async function kontroller(data) {
     if (redigerbart && data.mottatteOpplysningerStatus === "OK" && data.aktivtSteg) {
-      setVedtakPending(true);
       const request = {
         behandlingID,
         vedtakstype: data.formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
@@ -220,7 +219,6 @@ export function VurderingArbeidTjenestepersonEllerFlyVedtak({
       };
       oppdaterFørKontroll = false;
       await kontrollerFerdigbehandling(request);
-      setVedtakPending(false);
     }
   }
 
@@ -228,22 +226,11 @@ export function VurderingArbeidTjenestepersonEllerFlyVedtak({
 
   useEffect(() => {
     debouncedKontrollerBehandling({ aktivtSteg, mottatteOpplysningerStatus, formValues });
-  }, [aktivtSteg, formIsValid, formValues?.kopiTilArbeidsgiver, mottatteOpplysningerStatus]);
+  }, [aktivtSteg, formValues?.vedtakstype, formValues?.kopiTilArbeidsgiver, mottatteOpplysningerStatus]);
 
-  const onSubmit = async (_values, _dispatch, _props) => {
-    setVedtakPending(true);
-
-    // Periode håndteres allerede i periode-steget
-
-    validerMottatteOpplysninger()
-      .then(() => {
-        fattVedtak(behandlingID, lagFattVedtakEOSReqDto()).then((res) => {
-          if (res.data?.data?.error) {
-            setVedtakPending(false);
-          }
-        });
-      })
-      .catch(() => setVedtakPending(false));
+  const onSubmit = async () => {
+    await validerMottatteOpplysninger();
+    fattVedtak(behandlingID, lagFattVedtakEOSReqDto());
   };
 
   const stegErGyldig = redigerbart && formIsValid && !harFeilmeldinger && !harFlereSoknadslandEnnTillatt;
@@ -268,8 +255,10 @@ export function VurderingArbeidTjenestepersonEllerFlyVedtak({
               name="informerUtenlandskTrygdemyndighet"
               readOnly={!redigerbart}
             >
-              <Nav.Radio value>Ja</Nav.Radio>
-              <Nav.Radio value={false}>Nei</Nav.Radio>
+              <Nav.HStack gap="16">
+                <Nav.Radio value>Ja</Nav.Radio>
+                <Nav.Radio value={false}>Nei</Nav.Radio>
+              </Nav.HStack>
             </Skjema.RadioGroup>
           </Nav.Column>
         </Nav.Row>
@@ -341,8 +330,8 @@ export function VurderingArbeidTjenestepersonEllerFlyVedtak({
       )}
       <Mui.StegKnapper
         bekreftKnappProps={{
-          loading: vedtakPending,
-          disabled: !stegErGyldig,
+          loading: vedtakErPending,
+          disabled: !stegErGyldig || vedtakErPending,
         }}
         bekreftTekst="Fatt vedtak"
         tilbakeKnappProps={{
@@ -392,7 +381,7 @@ const mapStateToProps = (state, ownProps) => {
         "days",
       ) !== 0;
 
-  const informerUtenlandskTrygdemyndighet = !Utils._isEmpty(ownProps.informertMyndighetFakta);
+  const informerUtenlandskTrygdemyndighet = !Utils._isEmpty(ownProps.informertMyndighetFakta) ? true : null;
   const mottakerLand = ownProps.informertMyndighetFakta.subjektID;
 
   return {

@@ -68,7 +68,7 @@ export function VurderingPeriode({
     lovvalgsTomDato &&
     (lovvalgsFomDato !== mottatteOpplysningerFom || lovvalgsTomDato !== mottatteOpplysningerTom);
 
-  const { control, watch, formState, handleSubmit, reset } = useForm<FormValues>({
+  const { control, watch, formState, handleSubmit } = useForm<FormValues>({
     // @ts-expect-error - yup schema nullable() matcher ikke FormValues optional field perfekt
     resolver: yupResolver(VurderingPeriodeSchema),
     mode: "onChange",
@@ -77,8 +77,12 @@ export function VurderingPeriode({
     },
     defaultValues: {
       forkortLovvalgsperiode: harForkortetPeriode || forkortLovvalgsperiode,
-      tomDato: Utils.dato.formatterDatoTilNorsk(mottatteOpplysningerTom),
-      fomDato: Utils.dato.formatterDatoTilNorsk(mottatteOpplysningerFom),
+      fomDato: harForkortetPeriode
+        ? Utils.dato.formatterDatoTilNorsk(lovvalgsFomDato)
+        : Utils.dato.formatterDatoTilNorsk(mottatteOpplysningerFom),
+      tomDato: harForkortetPeriode
+        ? Utils.dato.formatterDatoTilNorsk(lovvalgsTomDato)
+        : Utils.dato.formatterDatoTilNorsk(mottatteOpplysningerTom),
       lovvalgsbestemmelse: lovvalgsbestemmelseSomSkalVises || undefined,
     },
   });
@@ -93,23 +97,6 @@ export function VurderingPeriode({
       slettData();
     };
   }, []);
-
-  // Oppdater form-verdiene hvis det finnes en eksisterende forkortet lovvalgsperiode
-  useEffect(() => {
-    if (
-      lovvalgsFomDato &&
-      lovvalgsTomDato &&
-      (lovvalgsFomDato !== mottatteOpplysningerFom || lovvalgsTomDato !== mottatteOpplysningerTom)
-    ) {
-      // Det finnes en eksisterende forkortet periode - oppdater form
-      reset({
-        forkortLovvalgsperiode: true,
-        fomDato: Utils.dato.formatterDatoTilNorsk(lovvalgsFomDato),
-        tomDato: Utils.dato.formatterDatoTilNorsk(lovvalgsTomDato),
-        lovvalgsbestemmelse: lovvalgsbestemmelseSomSkalVises || undefined,
-      });
-    }
-  }, [lovvalgsFomDato, lovvalgsTomDato]);
 
   const valgbareLovvalgsbestemmelser = [
     ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.filter(
@@ -142,14 +129,12 @@ export function VurderingPeriode({
   // Oppdater lovvalgsperioden når brukeren endrer datoer eller checkbox
   useEffect(() => {
     if (redigerbart) {
-      const fomDato =
-        formValues.forkortLovvalgsperiode && formValues.fomDato
-          ? Utils.dato.formatterDatoTilISO(formValues.fomDato)
-          : mottatteOpplysningerFom;
-      const tomDato =
-        formValues.forkortLovvalgsperiode && formValues.tomDato
-          ? Utils.dato.formatterDatoTilISO(formValues.tomDato)
-          : mottatteOpplysningerTom;
+      const fomDato = formValues.forkortLovvalgsperiode
+        ? Utils.dato.formatterDatoTilISO(formValues.fomDato, null)
+        : mottatteOpplysningerFom;
+      const tomDato = formValues.forkortLovvalgsperiode
+        ? Utils.dato.formatterDatoTilISO(formValues.tomDato, null)
+        : mottatteOpplysningerTom;
 
       // Bare oppdater hvis vi har gyldige datoer
       if (fomDato && tomDato) {
@@ -173,11 +158,14 @@ export function VurderingPeriode({
     bekreftOgFortsett();
   };
 
+  const fomDatoErGyldig = formValues.fomDato && Utils.dato.formatterDatoTilISO(formValues.fomDato, null);
+  const tomDatoErGyldig = formValues.tomDato && Utils.dato.formatterDatoTilISO(formValues.tomDato, null);
+
   const fom = Utils.dato.formatterDatoTilNorsk(
-    (formValues.forkortLovvalgsperiode && formValues.fomDato) || soknadsperiode.fom,
+    (formValues.forkortLovvalgsperiode && fomDatoErGyldig && formValues.fomDato) || soknadsperiode.fom,
   );
   const tom = Utils.dato.formatterDatoTilNorsk(
-    (formValues.forkortLovvalgsperiode && formValues.tomDato) || soknadsperiode.tom,
+    (formValues.forkortLovvalgsperiode && tomDatoErGyldig && formValues.tomDato) || soknadsperiode.tom,
   );
 
   const stegErGyldig = redigerbart && formState.isValid && !!formValues.lovvalgsbestemmelse;
