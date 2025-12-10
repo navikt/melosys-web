@@ -21,6 +21,8 @@ test.describe("'Opprett ny sak/behandling' hovedside", () => {
     await runAxeAnalyze(page, testInfo.title);
   });
 
+  // TODO: Re-enable when validation logic is fixed
+  // See: [Add issue number or description]
   test.skip("Klikk på 'Opprett ny behandling' når ingen påkrevde felter er fylt ut og verifiser feilmeldinger", async ({
     page,
   }, testInfo) => {

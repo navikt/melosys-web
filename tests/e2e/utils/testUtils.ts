@@ -70,12 +70,21 @@ export async function velgFraListe(navn: string, verdi: string, scope: Page | Lo
 }
 
 /**
+ * Extended Locator interface with custom _sakId property
+ */
+interface LocatorWithSakId extends Locator {
+  _sakId?: string;
+}
+
+/**
  * Hent sakId fra locator
  * @param sak - Sak-locator
  * @returns sakId eller "ukjent"
+ *
+ * Note: This relies on custom _sakId property set by setSakId() in OpprettNySakPage
  */
 export function getSaksnummerFraLocator(sak: Locator): string {
-  return sak ? ((sak as unknown as Record<string, unknown>)._sakId as string) || "ukjent" : "ukjent";
+  return (sak as LocatorWithSakId)._sakId || "ukjent";
 }
 
 /**
@@ -94,21 +103,17 @@ export function sanitizeFilename(filename: string): string {
     .trim(); // Trim leading/trailing whitespace
 }
 
+const ERROR_SELECTORS =
+  ".navds-error-message, .feilmelding, .skjemaelement__feilmelding, [data-testid*='error'], .navds-alert--error";
+
 /**
  * Verifiserer at en spesifikk field error er synlig
  * @param scope - Side eller locator-område å søke innenfor
  * @param errorText - Forventet feilmeldingstekst
  */
 export async function assertFieldError(scope: Page | Locator, errorText: string | RegExp) {
-  const fieldError = scope
-    .locator(
-      ".navds-error-message, .feilmelding, .skjemaelement__feilmelding, [data-testid*='error'], .navds-alert--error",
-    )
-    .filter({
-      hasText: errorText,
-    })
-    .first();
-  await expect(fieldError, `Fant ikke feilmedingen: ` + errorText).toBeVisible();
+  const fieldError = scope.locator(ERROR_SELECTORS).filter({ hasText: errorText }).first();
+  await expect(fieldError, `Fant ikke feilmedingen: ${errorText}`).toBeVisible();
 }
 
 /**
@@ -119,9 +124,7 @@ export async function assertFieldError(scope: Page | Locator, errorText: string 
 export async function assertFieldErrors(scope: Page | Locator, errorTexts: (string | RegExp)[]) {
   // Hent alle synlige field errors, ekskluder feiloppsummering
   const allFieldErrors = scope
-    .locator(
-      ".navds-error-message, .feilmelding, .skjemaelement__feilmelding, [data-testid*='error'], .navds-alert--error",
-    )
+    .locator(ERROR_SELECTORS)
     .and(scope.locator(':not(:has-text("Følgende feil ble funnet"))'));
   const actualCount = await allFieldErrors.count();
 
@@ -166,9 +169,7 @@ export async function assertErrors(scope: Page | Locator, errorTexts: (string | 
   // Hvis tom array, sjekk at INGEN feilmeldinger vises
   if (errorTexts.length === 0) {
     const allFieldErrors = scope
-      .locator(
-        ".navds-alert--error, .feilmelding, .skjemaelement__feilmelding, [data-testid*='error'], .navds-alert--error",
-      )
+      .locator(ERROR_SELECTORS)
       .and(scope.locator(':not(:has-text("Følgende feil ble funnet"))'));
 
     // Sjekk også for tekniske feilmeldinger

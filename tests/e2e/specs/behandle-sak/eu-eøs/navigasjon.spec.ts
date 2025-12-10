@@ -101,7 +101,17 @@ test.describe("EU/EØS Stegvelger - Navigasjon", () => {
 
     // Fyll ut kun dato (uten land) - knappen bør fortsatt være deaktivert
     await setDatoFelt("Fra og med", "01.01.2024", page);
-    await page.waitForTimeout(500);
+
+    // Wait for form validation to complete
+    await page
+      .waitForFunction(
+        () => {
+          const buttons = Array.from(document.querySelectorAll("button"));
+          return buttons.some((btn) => btn.textContent?.includes("Bekreft og fortsett"));
+        },
+        { timeout: 2000 },
+      )
+      .catch(() => {});
 
     // Knappen skal fortsatt være deaktivert siden land mangler
     await stegvelgerPage.verifiserBekreftKnappDeaktivert();
