@@ -1,6 +1,7 @@
 import { expect, Page } from "@playwright/test";
 import { BehandlingPage } from "./behandling.page";
 import { PrepopulertSaksnummer } from "../../utils/testdataUtils";
+import { velgFraListe } from "../../utils/testUtils";
 
 /**
  * Page Object for Årsavregning-siden
@@ -72,7 +73,7 @@ export class AarsavregningPage extends BehandlingPage {
 
   // Bestemmelse
   async velgBestemmelse(bestemmelse: string) {
-    await this.page.getByRole("combobox", { name: /bestemmelse/i }).selectOption({ label: bestemmelse });
+    await velgFraListe("Bestemmelse", bestemmelse, this.page);
   }
 
   // Medlemskapsperiode operasjoner
@@ -147,13 +148,7 @@ export class AarsavregningPage extends BehandlingPage {
   }
 
   async velgTrygdedekning(index: number, dekning: string) {
-    const select = this.page.getByRole("combobox", {
-      name: new RegExp(`Trygdedekning periode ${index + 1}`, "i"),
-    });
-    await expect(select, `${this.ctx}: Trygdedekning-select for periode ${index + 1} skal være synlig`).toBeVisible({
-      timeout: 10000,
-    });
-    await select.selectOption({ label: dekning });
+    await velgFraListe(`Trygdedekning periode ${index + 1}`, dekning, this.page);
   }
 
   async getMedlemskapsperiodeFomDato(index: number): Promise<string> {

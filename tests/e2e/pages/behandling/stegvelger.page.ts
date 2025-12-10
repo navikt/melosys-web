@@ -1,7 +1,7 @@
 import { expect, Locator, Page } from "@playwright/test";
 import { BehandlingPage } from "./behandling.page";
 import { PrepopulertSaksnummer } from "../../utils/testdataUtils";
-import { setDatoFelt } from "../../utils/testUtils";
+import { setDatoFelt, velgRadio } from "../../utils/testUtils";
 
 /**
  * Page Object for stegvelger-navigasjon
@@ -131,15 +131,7 @@ export class StegvelgerPage extends BehandlingPage {
     await this.page.keyboard.press("Tab"); // Lukk evt. datepicker
 
     // Velg "Velg land fra liste" radio
-    const velgLandRadio = this.page.getByRole("radio", { name: /velg land fra liste/i });
-    await expect(velgLandRadio, `${this.ctx}: Fant ikke "Velg land fra liste"-radioknapp`).toBeVisible({
-      timeout: 5000,
-    });
-
-    const isChecked = await velgLandRadio.isChecked();
-    if (!isChecked) {
-      await velgLandRadio.click({ force: true });
-    }
+    await velgRadio("Velg land fra liste", this.page);
 
     // Vent på at MultiSelect-komponenten vises etter radioknapp-klikk
     const landMultiSelect = this.page.locator(".land_multiselect");

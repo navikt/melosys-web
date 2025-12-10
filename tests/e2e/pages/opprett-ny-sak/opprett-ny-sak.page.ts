@@ -1,5 +1,5 @@
 import { expect, Locator, Page } from "@playwright/test";
-import { getSaksnummerFraLocator, setDatoFelt } from "../../utils/testUtils";
+import { getSaksnummerFraLocator, setDatoFelt, velgRadio } from "../../utils/testUtils";
 
 const SELECTORS = {
   OPPRETT_NY_BEHANDLING_BUTTON: "button:has-text('Opprett ny behandling')",
@@ -319,10 +319,7 @@ export class OpprettNySakPage {
   async velgBehandlingstypeRadio(behandlingstype: string): Promise<void> {
     const behandlingstypeGruppe = this.page.getByRole("group", { name: "Behandlingstype" });
     await expect(behandlingstypeGruppe, "Fant ikke behandlingstype-gruppe").toBeVisible();
-
-    const radioButton = behandlingstypeGruppe.getByRole("radio", { name: new RegExp(behandlingstype, "i") });
-    await expect(radioButton, `Fant ikke radioknapp for behandlingstype "${behandlingstype}"`).toBeVisible();
-    await radioButton.click();
+    await velgRadio(behandlingstype, behandlingstypeGruppe);
   }
 
   /**

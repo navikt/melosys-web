@@ -20,17 +20,53 @@ export const TIMEOUT_FOR_COMPLEX_TESTS = 30000 * CI_TIMEOUT_MULTIPLIER;
 
 /**
  * Generisk funksjon for å sette dato i et datofelt
- * @private
+ * @param feltNavn - Navn/label på datofeltet
+ * @param dato - Dato i norsk format (DD.MM.YYYY)
+ * @param scope - Page eller Locator å søke innenfor
  */
-export async function setDatoFelt(feltNavn: string, dato: string, page: Page): Promise<void> {
-  const datoInput = page.getByRole("textbox", { name: feltNavn });
+export async function setDatoFelt(feltNavn: string, dato: string, scope: Page | Locator): Promise<void> {
+  const datoInput = scope.getByRole("textbox", { name: feltNavn });
   const count = await datoInput.count();
-  expect(count, `${feltNavn}-dato input skal finnes`).toBeGreaterThan(0);
+  expect(count, `Datofelt "${feltNavn}" skal finnes`).toBeGreaterThan(0);
+  expect(count, `Datofelt "${feltNavn}" skal være unik - bruk smalere scope`).toBe(1);
 
-  // Hvis det finnes flere, bruk den første
-  const input = count > 1 ? datoInput.first() : datoInput;
-  await expect(input, `${feltNavn}-dato input skal være synlig`).toBeVisible();
-  await input.fill(dato);
+  await expect(datoInput, `Datofelt "${feltNavn}" skal være synlig`).toBeVisible();
+  await datoInput.fill(dato);
+}
+
+/**
+ * Generisk funksjon for å velge en radio-knapp
+ * @param navn - Navn/label på radio-knappen
+ * @param scope - Page eller Locator å søke innenfor
+ */
+export async function velgRadio(navn: string, scope: Page | Locator): Promise<void> {
+  const radio = scope.getByRole("radio", { name: navn });
+  const count = await radio.count();
+  expect(count, `Radio-knapp "${navn}" skal finnes`).toBeGreaterThan(0);
+  expect(count, `Radio-knapp "${navn}" skal være unik - bruk smalere scope`).toBe(1);
+
+  await expect(radio, `Radio-knapp "${navn}" skal være synlig`).toBeVisible();
+
+  const isChecked = await radio.isChecked();
+  if (!isChecked) {
+    await radio.check();
+  }
+}
+
+/**
+ * Generisk funksjon for å velge verdi fra en combobox/select
+ * @param navn - Navn/label på combobox/select
+ * @param verdi - Verdien som skal velges (label)
+ * @param scope - Page eller Locator å søke innenfor
+ */
+export async function velgFraListe(navn: string, verdi: string, scope: Page | Locator): Promise<void> {
+  const select = scope.getByRole("combobox", { name: navn });
+  const count = await select.count();
+  expect(count, `Combobox "${navn}" skal finnes`).toBeGreaterThan(0);
+  expect(count, `Combobox "${navn}" skal være unik - bruk smalere scope`).toBe(1);
+
+  await expect(select, `Combobox "${navn}" skal være synlig`).toBeVisible();
+  await select.selectOption({ label: verdi });
 }
 
 /**
