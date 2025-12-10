@@ -183,7 +183,7 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
       await aarsavregningPage.velgTrygdedekning(nyMedlemIndex, "Helse- og pensjonsdel (§ 2-9)");
 
       // Legg til skatteforholdsperiode
-      await aarsavregningPage.leggTilSkatteforholdsperiode();
+      await aarsavregningPage.klikkLeggTilSkatteforhold();
 
       // Fyll ut skatteforholdsperiode innenfor medlemskapsperioden
       await aarsavregningPage.fyllUtSkatteforholdFomDato(0, lagDato("01.01"));
@@ -216,7 +216,7 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
       await aarsavregningPage.velgTrygdedekning(nyMedlemIndex, "Helse- og pensjonsdel (§ 2-9)");
 
       // Legg til skatteforholdsperiode
-      await aarsavregningPage.leggTilSkatteforholdsperiode();
+      await aarsavregningPage.klikkLeggTilSkatteforhold();
       await aarsavregningPage.fyllUtSkatteforholdFomDato(0, lagDato("01.01"));
       await aarsavregningPage.fyllUtSkatteforholdTomDato(0, lagDato("30.06"));
       await aarsavregningPage.velgSkatteplikttype(0, "Allmennpliktig");
@@ -320,7 +320,7 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
       await aarsavregningPage.velgSkatteplikttype(0, "Nei");
 
       // Legg til inntektsperiode
-      await aarsavregningPage.leggTilInntektsperiode();
+      await aarsavregningPage.klikkLeggTilInntekt();
 
       // Fyll ut inntektsperiode innenfor medlemskapsperioden
       await aarsavregningPage.fyllUtInntektsperiodeFomDato(0, lagDato("01.01"));
@@ -359,7 +359,7 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
       await aarsavregningPage.velgSkatteplikttype(0, "Nei");
 
       // Legg til inntektsperiode
-      await aarsavregningPage.leggTilInntektsperiode();
+      await aarsavregningPage.klikkLeggTilInntekt();
       await aarsavregningPage.fyllUtInntektsperiodeFomDato(0, lagDato("01.01"));
       await aarsavregningPage.fyllUtInntektsperiodeTomDato(0, lagDato("31.03"));
       await aarsavregningPage.velgKildetype(0, "Arbeidsinntekt");
@@ -400,14 +400,14 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
       await aarsavregningPage.velgSkatteplikttype(0, "Nei");
 
       // Legg til første inntektsperiode
-      await aarsavregningPage.leggTilInntektsperiode();
+      await aarsavregningPage.klikkLeggTilInntekt();
       await aarsavregningPage.fyllUtInntektsperiodeFomDato(0, lagDato("01.01"));
       await aarsavregningPage.fyllUtInntektsperiodeTomDato(0, lagDato("30.06"));
       await aarsavregningPage.velgKildetype(0, "Arbeidsinntekt");
       await aarsavregningPage.fyllUtBruttoInntekt(0, "300000");
 
       // Legg til andre inntektsperiode
-      await aarsavregningPage.leggTilInntektsperiode();
+      await aarsavregningPage.klikkLeggTilInntekt();
       await aarsavregningPage.fyllUtInntektsperiodeFomDato(1, lagDato("01.07"));
       await aarsavregningPage.fyllUtInntektsperiodeTomDato(1, lagDato("31.12"));
       await aarsavregningPage.velgKildetype(1, "Arbeidsinntekt");

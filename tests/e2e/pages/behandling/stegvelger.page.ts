@@ -2,6 +2,7 @@ import { expect, Locator, Page } from "@playwright/test";
 import { BehandlingPage } from "./behandling.page";
 import { PrepopulertSaksnummer } from "../../utils/testdataUtils";
 import { setDatoFelt, velgRadio } from "../../utils/testUtils";
+import { UI_TEXTS } from "../../config/ui-texts";
 
 /**
  * Page Object for stegvelger-navigasjon
@@ -58,7 +59,7 @@ export class StegvelgerPage extends BehandlingPage {
   /**
    * Klikk "Bekreft og fortsett" og vent på neste steg
    */
-  async bekreftOgFortsett(): Promise<void> {
+  async klikkBekreftOgFortsett(): Promise<void> {
     await this.verifiserBekreftKnappAktivert();
     const nåværendeTittel = await this.stegTittel.textContent();
     await this.bekreftKnapp.click();
@@ -242,7 +243,7 @@ export class StegvelgerPage extends BehandlingPage {
     }
 
     // Velg resultat for første periode
-    const resultatSelect = this.page.getByRole("combobox", { name: "Resultat" }).first();
+    const resultatSelect = this.page.getByRole("combobox", { name: UI_TEXTS.LABELS.RESULTAT }).first();
     if (await resultatSelect.isVisible({ timeout: 2000 }).catch(() => false)) {
       const selectedIndex = await resultatSelect.evaluate((el: HTMLSelectElement) => el.selectedIndex);
       if (selectedIndex <= 0) {

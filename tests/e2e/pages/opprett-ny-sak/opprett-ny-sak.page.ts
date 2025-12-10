@@ -1,10 +1,8 @@
 import { expect, Locator, Page } from "@playwright/test";
 import { getSaksnummerFraLocator, setDatoFelt, velgRadio } from "../../utils/testUtils";
+import { UI_TEXTS } from "../../config/ui-texts";
 
 const SELECTORS = {
-  OPPRETT_NY_BEHANDLING_BUTTON: "button:has-text('Opprett ny behandling')",
-  AVBRYT_BUTTON: "button:has-text('Avbryt')",
-  VIS_FLERE_SAKER_BUTTON: 'button:has-text("Vis flere saker")',
   CUSTOM_RADIO_PANEL_TITLE: ".customRadioPanelTittel",
 } as const;
 
@@ -148,7 +146,7 @@ export class OpprettNySakPage {
    * Klikk "Vis flere saker" knappen hvis den finnes
    */
   async klikkVisFlereSaker(): Promise<void> {
-    const visFlereSakerKnapp = this.page.locator(SELECTORS.VIS_FLERE_SAKER_BUTTON);
+    const visFlereSakerKnapp = this.page.getByRole("button", { name: UI_TEXTS.BUTTONS.VIS_FLERE_SAKER });
     const harVisFlereSakerKnapp = await visFlereSakerKnapp.isVisible();
     if (harVisFlereSakerKnapp) {
       await visFlereSakerKnapp.click();
@@ -179,8 +177,8 @@ export class OpprettNySakPage {
    * Klikk "Opprett ny behandling" knappen
    */
   async klikkOpprettNyBehandling(): Promise<void> {
-    const opprettKnapp = this.page.locator(SELECTORS.OPPRETT_NY_BEHANDLING_BUTTON);
-    await expect(opprettKnapp, "Fant ikke 'Opprett ny behandling' knappen").toBeVisible();
+    const opprettKnapp = this.page.getByRole("button", { name: UI_TEXTS.BUTTONS.OPPRETT_NY_BEHANDLING });
+    await expect(opprettKnapp, `Fant ikke '${UI_TEXTS.BUTTONS.OPPRETT_NY_BEHANDLING}' knappen`).toBeVisible();
     await opprettKnapp.click();
     await this.page.waitForLoadState("domcontentloaded");
   }
@@ -256,7 +254,7 @@ export class OpprettNySakPage {
   async velgBehandlingstype(
     value: "Førstegangsbehandling" | "Ny vurdering" | "Klage" | "Henvendelse" | "Årsavregning",
   ): Promise<void> {
-    await this.velgDropdownVerdi("behandlingstype", value, "Behandlingstype");
+    await this.velgDropdownVerdi("behandlingstype", value, UI_TEXTS.LABELS.BEHANDLINGSTYPE);
     // Vent på at behandlingsårsak-dropdown er lastet inn
     const behandlingsaarsakSelect = this.page.locator("select[name='behandlingsaarsakType']");
     await expect(
@@ -317,7 +315,7 @@ export class OpprettNySakPage {
    * @param behandlingstype - Navn på behandlingstypen (f.eks. "Årsavregning", "Henvendelse")
    */
   async velgBehandlingstypeRadio(behandlingstype: string): Promise<void> {
-    const behandlingstypeGruppe = this.page.getByRole("group", { name: "Behandlingstype" });
+    const behandlingstypeGruppe = this.page.getByRole("group", { name: UI_TEXTS.LABELS.BEHANDLINGSTYPE });
     await expect(behandlingstypeGruppe, "Fant ikke behandlingstype-gruppe").toBeVisible();
     await velgRadio(behandlingstype, behandlingstypeGruppe);
   }
@@ -478,7 +476,7 @@ export class OpprettNySakPage {
    * Sjekk om behandlingstype-gruppen er synlig
    */
   async erBehandlingstypeGruppeSynlig(): Promise<boolean> {
-    const behandlingstypeGruppe = this.page.getByRole("group", { name: "Behandlingstype" });
+    const behandlingstypeGruppe = this.page.getByRole("group", { name: UI_TEXTS.LABELS.BEHANDLINGSTYPE });
     return await behandlingstypeGruppe.isVisible().catch(() => false);
   }
 
@@ -612,31 +610,35 @@ export class OpprettNySakPage {
   ): Promise<void> {
     const sakId = saksnummer || getSaksnummerFraLocator(valgtSak!);
     await expect(
-      this.page.getByRole("group", { name: "Behandlingstype" }),
+      this.page.getByRole("group", { name: UI_TEXTS.LABELS.BEHANDLINGSTYPE }),
       `Behandlingstype-gruppe for sak ${sakId} skal være synlig`,
     ).toBeVisible({ timeout: 10000 });
 
     // Hent alle faktiske radiobuttons som er tilstede
-    let alleRadioButtons = this.page.getByRole("group", { name: "Behandlingstype" }).getByRole("radio");
+    let alleRadioButtons = this.page.getByRole("group", { name: UI_TEXTS.LABELS.BEHANDLINGSTYPE }).getByRole("radio");
     let antallRadioButtons = await alleRadioButtons.count();
 
     // Prøv alternative selektorer hvis ingen radiobuttons finnes
     if (antallRadioButtons === 0) {
       const alternativeRadios = await this.page
-        .getByRole("group", { name: "Behandlingstype" })
+        .getByRole("group", { name: UI_TEXTS.LABELS.BEHANDLINGSTYPE })
         .locator("input[type='radio']")
         .count();
       const navdsRadios = await this.page
-        .getByRole("group", { name: "Behandlingstype" })
+        .getByRole("group", { name: UI_TEXTS.LABELS.BEHANDLINGSTYPE })
         .locator(".navds-radio")
         .count();
 
       // Bruk alternative selektorer hvis de finner radiobuttons
       if (alternativeRadios > 0) {
-        alleRadioButtons = this.page.getByRole("group", { name: "Behandlingstype" }).locator("input[type='radio']");
+        alleRadioButtons = this.page
+          .getByRole("group", { name: UI_TEXTS.LABELS.BEHANDLINGSTYPE })
+          .locator("input[type='radio']");
         antallRadioButtons = alternativeRadios;
       } else if (navdsRadios > 0) {
-        alleRadioButtons = this.page.getByRole("group", { name: "Behandlingstype" }).locator(".navds-radio input");
+        alleRadioButtons = this.page
+          .getByRole("group", { name: UI_TEXTS.LABELS.BEHANDLINGSTYPE })
+          .locator(".navds-radio input");
         antallRadioButtons = navdsRadios;
       }
     }
@@ -703,7 +705,7 @@ export class OpprettNySakPage {
    * Verifiser at behandlingstype-gruppen er synlig og har behandlingstyper
    */
   async verifiserBehandlingstypeGruppe(): Promise<void> {
-    const behandlingstypeGruppe = this.page.getByRole("group", { name: "Behandlingstype" });
+    const behandlingstypeGruppe = this.page.getByRole("group", { name: UI_TEXTS.LABELS.BEHANDLINGSTYPE });
     await expect(behandlingstypeGruppe, "Behandlingstype-gruppe skal være synlig").toBeVisible();
 
     const behandlingstypeRadios = behandlingstypeGruppe.locator(".navds-radio");
@@ -747,7 +749,7 @@ export class OpprettNySakPage {
    * Verifiser at behandlingstype-gruppen IKKE er synlig
    */
   async verifiserBehandlingstypeGruppeIkkeSynlig(): Promise<void> {
-    const behandlingstypeGruppe = this.page.getByRole("group", { name: "Behandlingstype" });
+    const behandlingstypeGruppe = this.page.getByRole("group", { name: UI_TEXTS.LABELS.BEHANDLINGSTYPE });
     await expect(behandlingstypeGruppe, "Behandlingstype-gruppe skal ikke være synlig").not.toBeVisible();
   }
 }

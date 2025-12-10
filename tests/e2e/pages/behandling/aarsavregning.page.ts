@@ -1,7 +1,8 @@
 import { expect, Page } from "@playwright/test";
 import { BehandlingPage } from "./behandling.page";
 import { PrepopulertSaksnummer } from "../../utils/testdataUtils";
-import { velgFraListe } from "../../utils/testUtils";
+import { klikkKnapp, velgFraListe } from "../../utils/testUtils";
+import { UI_TEXTS } from "../../config/ui-texts";
 
 /**
  * Page Object for Årsavregning-siden
@@ -20,11 +21,9 @@ export class AarsavregningPage extends BehandlingPage {
     const options = årSelect.locator("option:not([disabled])");
     const førsteÅr = await options.first().textContent();
 
-    if (!førsteÅr) {
-      throw new Error("Kunne ikke finne tilgjengelige år i dropdown");
-    }
+    expect(førsteÅr, "Skal finne tilgjengelige år i dropdown").toBeTruthy();
 
-    return førsteÅr.trim();
+    return førsteÅr!.trim();
   }
 
   // År dropdown
@@ -78,14 +77,11 @@ export class AarsavregningPage extends BehandlingPage {
 
   // Medlemskapsperiode operasjoner
   async leggTilMedlemskapsperiode() {
-    const knapp = this.page.getByRole("button", { name: "Legg til periode" });
-    await expect(knapp, `${this.ctx}: Knapp 'Legg til periode' skal være synlig`).toBeVisible({ timeout: 5000 });
-
     // Tell antall perioder før klikk
     const perioder = this.page.locator(".medlemskapsperiode__rad");
     const antallFør = await perioder.count();
 
-    await knapp.click();
+    await klikkKnapp(UI_TEXTS.BUTTONS.LEGG_TIL_PERIODE, this.page);
 
     // Vent på at ny periode er lagt til
     await expect(perioder, `${this.ctx}: Ny medlemskapsperiode skal være lagt til`).toHaveCount(antallFør + 1, {
@@ -172,8 +168,8 @@ export class AarsavregningPage extends BehandlingPage {
   }
 
   // Skatteforholdsperiode operasjoner
-  async leggTilSkatteforholdsperiode() {
-    await this.page.getByRole("button", { name: "Legg til skatteforhold" }).click();
+  async klikkLeggTilSkatteforhold() {
+    await klikkKnapp("Legg til skatteforhold", this.page);
   }
 
   async fyllUtSkatteforholdFomDato(index: number, dato: string) {
@@ -238,8 +234,8 @@ export class AarsavregningPage extends BehandlingPage {
   }
 
   // Inntektsperiode operasjoner
-  async leggTilInntektsperiode() {
-    await this.page.getByRole("button", { name: "Legg til inntekt" }).click();
+  async klikkLeggTilInntekt() {
+    await klikkKnapp("Legg til inntekt", this.page);
   }
 
   async fyllUtInntektsperiodeFomDato(index: number, dato: string) {

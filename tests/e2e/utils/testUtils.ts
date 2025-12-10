@@ -35,6 +35,21 @@ export async function setDatoFelt(feltNavn: string, dato: string, scope: Page | 
 }
 
 /**
+ * Klikk på en knapp basert på label/navn
+ * @param label - Knappens label/navn (synlig tekst eller aria-label)
+ * @param scope - Page eller Locator å søke innenfor
+ */
+export async function klikkKnapp(label: string, scope: Page | Locator): Promise<void> {
+  const knapp = scope.getByRole("button", { name: label });
+  const count = await knapp.count();
+
+  expect(count, `Knapp "${label}" skal finnes`).toBeGreaterThan(0);
+  expect(count, `Knapp "${label}" skal være unik - bruk smalere scope`).toBe(1);
+
+  await knapp.click();
+}
+
+/**
  * Generisk funksjon for å velge en radio-knapp
  * @param navn - Navn/label på radio-knappen
  * @param scope - Page eller Locator å søke innenfor

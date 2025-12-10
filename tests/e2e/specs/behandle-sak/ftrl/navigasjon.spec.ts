@@ -3,6 +3,7 @@ import { TIMEOUT_FOR_COMPLEX_TESTS, setDatoFelt } from "../../../utils/testUtils
 import { hentPrepopulertSakUrl } from "../../../utils/testdataUtils";
 import { runAxeAnalyze } from "../../../utils/axeUtils";
 import { StegvelgerPage } from "../../../pages/behandling/stegvelger.page";
+import { UI_TEXTS } from "../../../config/ui-texts";
 
 /**
  * E2E-tester for EnkelStegvelger i FTRL (Utenfor avtaleland) saksbehandling
@@ -35,14 +36,14 @@ test.describe("FTRL Stegvelger - Navigasjon", () => {
     await stegvelgerPage.verifiserBekreftKnappDeaktivert();
     await stegvelgerPage.fyllUtInngangMinimum("01.01.2024", "Sverige");
     await stegvelgerPage.verifiserBekreftKnappAktivert();
-    await stegvelgerPage.bekreftOgFortsett();
+    await stegvelgerPage.klikkBekreftOgFortsett();
 
     // === STEG 2: Virksomhet ===
     await stegvelgerPage.verifiserSteg("Virksomhet");
     await stegvelgerPage.verifiserBekreftKnappDeaktivert();
     await stegvelgerPage.velgFørsteVirksomhet();
     await stegvelgerPage.verifiserBekreftKnappAktivert();
-    await stegvelgerPage.bekreftOgFortsett();
+    await stegvelgerPage.klikkBekreftOgFortsett();
 
     // === STEG 3: Bestemmelse ===
     await stegvelgerPage.verifiserSteg("Bestemmelse");
@@ -55,7 +56,7 @@ test.describe("FTRL Stegvelger - Navigasjon", () => {
       await stegvelgerPage.velgBestemmelse("§ 2-5");
     }
     await stegvelgerPage.verifiserBekreftKnappAktivert();
-    await stegvelgerPage.bekreftOgFortsett();
+    await stegvelgerPage.klikkBekreftOgFortsett();
 
     // === STEG 4: Perioder ===
     await stegvelgerPage.verifiserSteg("Medlemskapsperioder");
@@ -68,12 +69,12 @@ test.describe("FTRL Stegvelger - Navigasjon", () => {
       await stegvelgerPage.fyllUtPerioderMinimum();
     }
     await stegvelgerPage.verifiserBekreftKnappAktivert();
-    await stegvelgerPage.bekreftOgFortsett();
+    await stegvelgerPage.klikkBekreftOgFortsett();
 
     // === STEG 5: Trygdeavgift ===
-    await stegvelgerPage.verifiserSteg("Trygdeavgift");
+    await stegvelgerPage.verifiserSteg(UI_TEXTS.STEG.TRYGDEAVGIFT);
     await stegvelgerPage.verifiserBekreftKnappAktivert();
-    await stegvelgerPage.bekreftOgFortsett();
+    await stegvelgerPage.klikkBekreftOgFortsett();
 
     // === STEG 6: Vedtak ("Pliktig medlemskap etter folketrygdloven") ===
     await stegvelgerPage.verifiserSteg("Pliktig medlemskap etter folketrygdloven");
@@ -95,7 +96,7 @@ test.describe("FTRL Stegvelger - Navigasjon", () => {
 
     // Fyll ut og gå til Virksomhet
     await stegvelgerPage.fyllUtInngangMinimum("01.01.2024", "Sverige");
-    await stegvelgerPage.bekreftOgFortsett();
+    await stegvelgerPage.klikkBekreftOgFortsett();
     await stegvelgerPage.verifiserSteg("Virksomhet");
 
     // Gå tilbake til Inngang via Tilbake-knapp
@@ -103,7 +104,7 @@ test.describe("FTRL Stegvelger - Navigasjon", () => {
     await stegvelgerPage.verifiserSteg("Oppgi opplysninger fra søknaden");
 
     // Gå frem igjen via Bekreft-knapp
-    await stegvelgerPage.bekreftOgFortsett();
+    await stegvelgerPage.klikkBekreftOgFortsett();
     await stegvelgerPage.verifiserSteg("Virksomhet");
 
     // Gå tilbake via klikk på steg 1 i progressbar
