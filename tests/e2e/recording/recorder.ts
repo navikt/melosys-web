@@ -7,14 +7,13 @@
 
 import type { Page, Route, Request, APIResponse } from "@playwright/test";
 import { writeFileSync, mkdirSync, existsSync, readFileSync } from "fs";
+import { execSync } from "child_process";
 import { join } from "path";
-import { createHash } from "crypto";
 import { getRecordingsPath } from "../config/mode";
 import { normalizePath } from "../shared/path-normalization";
 
 // Types for recorded data
 export interface RecordedRequest {
-  id: string;
   method: string;
   url: string;
   pathname: string;
@@ -34,8 +33,6 @@ export interface RecordedResponse {
 export interface RecordedExchange {
   request: RecordedRequest;
   response: RecordedResponse;
-  duration: number;
-  dynamicFields: string[];
 }
 
 export interface Recording {
@@ -46,19 +43,6 @@ export interface Recording {
   exchanges: RecordedExchange[];
 }
 
-// Known dynamic fields that change between runs (for detection/logging)
-const KNOWN_DYNAMIC_FIELDS = [
-  "opprettetTidspunkt",
-  "endretTidspunkt",
-  "sistOppdatert",
-  "opprettetAv",
-  "endretAv",
-  "timestamp",
-  "dato",
-  "fom",
-  "tom",
-];
-
 // Fields that should be normalized to stable values before saving
 // Key patterns (case-insensitive) → normalized value
 const NORMALIZE_PATTERNS: Array<{ pattern: RegExp; value: string }> = [
@@ -68,6 +52,13 @@ const NORMALIZE_PATTERNS: Array<{ pattern: RegExp; value: string }> = [
   { pattern: /^\d{4}-\d{2}-\d{2}$/, value: "2025-01-01" },
   // Norwegian dates (11.12.2025)
   { pattern: /^\d{2}\.\d{2}\.\d{4}$/, value: "01.01.2025" },
+];
+
+// Patterns for normalizing embedded timestamps in string values (like oppgaveBeskrivelse)
+// These are applied to ALL string values, not just specific fields
+const EMBEDDED_TIMESTAMP_PATTERNS: Array<{ pattern: RegExp; replacement: string }> = [
+  // "--- 11.12.2025 15:53 (srvmelosys, Melosys) ---" → "--- 01.01.2025 00:00 (srvmelosys, Melosys) ---"
+  { pattern: /--- \d{2}\.\d{2}\.\d{4} \d{2}:\d{2} \(/g, replacement: "--- 01.01.2025 00:00 (" },
 ];
 
 // Field names that should have their values normalized (case-insensitive partial match)
@@ -82,7 +73,64 @@ const FIELDS_TO_NORMALIZE = [
   "svarFrist",
   "opprettetDato",
   "sisteOpplysningerHentetDato",
+  "opprettelsestidspunkt",
+  "sistBekreftet",
+  "correlationId",
 ];
+
+// UUID pattern for normalization
+const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const NORMALIZED_UUID = "00000000-0000-0000-0000-000000000000";
+
+/**
+ * Normalize embedded timestamps in a string value.
+ */
+function normalizeEmbeddedTimestamps(value: string): string {
+  let normalized = value;
+  for (const { pattern, replacement } of EMBEDDED_TIMESTAMP_PATTERNS) {
+    normalized = normalized.replace(pattern, replacement);
+  }
+  return normalized;
+}
+
+// Keys to use for sorting arrays of objects (in priority order)
+const SORT_KEYS = ["id", "orgnr", "kode", "saksnummer", "behandlingId", "navn", "land", "postnummer"];
+
+/**
+ * Get a stable sort key for an object.
+ * Tries known keys in order, falls back to JSON stringification.
+ */
+function getObjectSortKey(obj: Record<string, unknown>): string {
+  // Try known unique identifiers first
+  for (const key of SORT_KEYS) {
+    if (obj[key] !== undefined && obj[key] !== null) {
+      return `${key}:${String(obj[key])}`;
+    }
+  }
+  // Fall back to stringified object (deterministic for same content)
+  return JSON.stringify(obj);
+}
+
+/**
+ * Sort an array of objects deterministically.
+ */
+function sortArrayDeterministically(arr: unknown[]): unknown[] {
+  // First normalize all items
+  const normalized = arr.map((item) => normalizeForStableRecording(item));
+
+  // Only sort if all items are objects (not primitives)
+  const allObjects = normalized.every((item) => item !== null && typeof item === "object" && !Array.isArray(item));
+
+  if (allObjects) {
+    return [...normalized].sort((a, b) => {
+      const keyA = getObjectSortKey(a as Record<string, unknown>);
+      const keyB = getObjectSortKey(b as Record<string, unknown>);
+      return keyA.localeCompare(keyB);
+    });
+  }
+
+  return normalized;
+}
 
 /**
  * Normalize dynamic values in an object for stable recordings.
@@ -94,7 +142,12 @@ function normalizeForStableRecording(obj: unknown): unknown {
   }
 
   if (Array.isArray(obj)) {
-    return obj.map((item) => normalizeForStableRecording(item));
+    return sortArrayDeterministically(obj);
+  }
+
+  if (typeof obj === "string") {
+    // Normalize embedded timestamps in all string values
+    return normalizeEmbeddedTimestamps(obj);
   }
 
   if (typeof obj === "object") {
@@ -106,13 +159,21 @@ function normalizeForStableRecording(obj: unknown): unknown {
       if (shouldNormalize && typeof value === "string") {
         // Try to normalize the value based on its format
         let normalizedValue = value;
-        for (const { pattern, value: replacement } of NORMALIZE_PATTERNS) {
-          if (pattern.test(value)) {
-            normalizedValue = replacement;
-            break;
+
+        // Check for UUID first
+        if (UUID_PATTERN.test(value)) {
+          normalizedValue = NORMALIZED_UUID;
+        } else {
+          // Try timestamp patterns
+          for (const { pattern, value: replacement } of NORMALIZE_PATTERNS) {
+            if (pattern.test(value)) {
+              normalizedValue = replacement;
+              break;
+            }
           }
         }
-        normalized[key] = normalizedValue;
+        // Also normalize any embedded timestamps
+        normalized[key] = normalizeEmbeddedTimestamps(normalizedValue);
       } else {
         normalized[key] = normalizeForStableRecording(value);
       }
@@ -124,7 +185,58 @@ function normalizeForStableRecording(obj: unknown): unknown {
 }
 
 /**
- * Check if two recordings have equivalent exchanges (ignoring metadata like recordedAt).
+ * Create a deterministic sort key for an exchange.
+ * This ensures exchanges are always sorted in the same order regardless of when they completed.
+ */
+function getExchangeSortKey(exchange: RecordedExchange): string {
+  const { method, normalizedPath, query, body } = exchange.request;
+  // Sort query params deterministically
+  const sortedQuery = Object.keys(query)
+    .sort()
+    .map((k) => `${k}=${query[k]}`)
+    .join("&");
+  // Include body hash for POST/PUT requests that have same path but different body
+  const bodyHash = body ? JSON.stringify(body) : "";
+  return `${method}|${normalizedPath}|${sortedQuery}|${bodyHash}`;
+}
+
+/**
+ * Sort exchanges deterministically by their request signature.
+ * This ensures recordings are stable regardless of async timing.
+ */
+function sortExchanges(exchanges: RecordedExchange[]): RecordedExchange[] {
+  return [...exchanges].sort((a, b) => {
+    const keyA = getExchangeSortKey(a);
+    const keyB = getExchangeSortKey(b);
+    return keyA.localeCompare(keyB);
+  });
+}
+
+/**
+ * Canonical JSON stringify that sorts object keys for deterministic comparison.
+ * This ensures {"a":1,"b":2} equals {"b":2,"a":1}.
+ */
+function canonicalStringify(obj: unknown): string {
+  if (obj === null || obj === undefined) {
+    return JSON.stringify(obj);
+  }
+  if (Array.isArray(obj)) {
+    return "[" + obj.map((item) => canonicalStringify(item)).join(",") + "]";
+  }
+  if (typeof obj === "object") {
+    const sortedKeys = Object.keys(obj as Record<string, unknown>).sort();
+    const pairs = sortedKeys.map((key) => {
+      const value = (obj as Record<string, unknown>)[key];
+      return JSON.stringify(key) + ":" + canonicalStringify(value);
+    });
+    return "{" + pairs.join(",") + "}";
+  }
+  return JSON.stringify(obj);
+}
+
+/**
+ * Check if two recordings have equivalent exchanges (ignoring metadata like recordedAt, duration, dynamicFields).
+ * Compares exchanges after sorting them deterministically.
  * Returns true if they are equivalent and no update is needed.
  */
 function recordingsAreEquivalent(existing: Recording, newRecording: Recording): boolean {
@@ -133,43 +245,38 @@ function recordingsAreEquivalent(existing: Recording, newRecording: Recording): 
     return false;
   }
 
-  // Compare each exchange (request + response, ignoring duration)
-  for (let i = 0; i < existing.exchanges.length; i++) {
-    const existingEx = existing.exchanges[i];
-    const newEx = newRecording.exchanges[i];
+  // Sort both sets of exchanges for deterministic comparison
+  const sortedExisting = sortExchanges(existing.exchanges);
+  const sortedNew = sortExchanges(newRecording.exchanges);
+
+  // Compare each exchange (request + response, ignoring duration/dynamicFields)
+  for (let i = 0; i < sortedExisting.length; i++) {
+    const existingEx = sortedExisting[i];
+    const newEx = sortedNew[i];
 
     // Compare requests (ignoring id which is generated)
     if (
       existingEx.request.method !== newEx.request.method ||
       existingEx.request.pathname !== newEx.request.pathname ||
-      JSON.stringify(existingEx.request.query) !== JSON.stringify(newEx.request.query) ||
-      JSON.stringify(existingEx.request.body) !== JSON.stringify(newEx.request.body)
+      canonicalStringify(existingEx.request.query) !== canonicalStringify(newEx.request.query) ||
+      canonicalStringify(existingEx.request.body) !== canonicalStringify(newEx.request.body)
     ) {
       return false;
     }
 
     // Compare responses (status and normalized body)
+    // Normalize existing body too, since old recordings may have non-normalized dates/arrays
+    const existingBodyNormalized = normalizeForStableRecording(existingEx.response.body);
+    const newBodyNormalized = normalizeForStableRecording(newEx.response.body);
     if (
       existingEx.response.status !== newEx.response.status ||
-      JSON.stringify(existingEx.response.body) !== JSON.stringify(newEx.response.body)
+      canonicalStringify(existingBodyNormalized) !== canonicalStringify(newBodyNormalized)
     ) {
       return false;
     }
   }
 
   return true;
-}
-
-/**
- * Generate a unique ID for a request based on method, path, query, and body.
- */
-function generateRequestId(method: string, pathname: string, query: Record<string, string>, body: unknown): string {
-  const queryString = Object.entries(query)
-    .sort(([a], [b]) => a.localeCompare(b))
-    .map(([k, v]) => `${k}=${v}`)
-    .join("&");
-  const content = `${method}:${pathname}:${queryString}:${JSON.stringify(body || "")}`;
-  return createHash("md5").update(content).digest("hex").substring(0, 12);
 }
 
 /**
@@ -195,37 +302,6 @@ function extractHeaders(headers: Record<string, string>): Record<string, string>
     }
   }
   return extracted;
-}
-
-/**
- * Find dynamic fields in a response body.
- */
-function findDynamicFields(body: unknown, path: string = ""): string[] {
-  const fields: string[] = [];
-
-  if (body === null || body === undefined) {
-    return fields;
-  }
-
-  if (Array.isArray(body)) {
-    body.forEach((item, index) => {
-      fields.push(...findDynamicFields(item, `${path}[${index}]`));
-    });
-  } else if (typeof body === "object") {
-    for (const [key, value] of Object.entries(body as Record<string, unknown>)) {
-      const fieldPath = path ? `${path}.${key}` : key;
-
-      // Check if this is a known dynamic field
-      if (KNOWN_DYNAMIC_FIELDS.some((df) => key.toLowerCase().includes(df.toLowerCase()))) {
-        fields.push(fieldPath);
-      }
-
-      // Recurse into nested objects
-      fields.push(...findDynamicFields(value, fieldPath));
-    }
-  }
-
-  return fields;
 }
 
 /**
@@ -281,15 +357,13 @@ export class ApiRecorder {
    */
   private async handleRoute(route: Route): Promise<void> {
     const request = route.request();
-    const startTime = Date.now();
 
     try {
       // Fetch from the real API
       const response = await route.fetch();
-      const duration = Date.now() - startTime;
 
       // Record the exchange
-      const exchange = await this.captureExchange(request, response, duration);
+      const exchange = await this.captureExchange(request, response);
       this.exchanges.push(exchange);
 
       // Continue with the real response
@@ -309,7 +383,7 @@ export class ApiRecorder {
   /**
    * Capture a request/response exchange.
    */
-  private async captureExchange(request: Request, response: APIResponse, duration: number): Promise<RecordedExchange> {
+  private async captureExchange(request: Request, response: APIResponse): Promise<RecordedExchange> {
     const url = new URL(request.url());
     const pathname = url.pathname;
     const method = request.method();
@@ -329,15 +403,11 @@ export class ApiRecorder {
     const rawResponseBody = await safeParseBody(response);
     const responseBody = normalizeForStableRecording(rawResponseBody);
 
-    // Find dynamic fields in response (for logging/debugging)
-    const dynamicFields = findDynamicFields(rawResponseBody);
-
     // Parse query parameters for ID generation
     const query = parseQuery(url);
 
     return {
       request: {
-        id: generateRequestId(method, pathname, query, requestBody),
         method,
         url: request.url(),
         pathname,
@@ -352,8 +422,6 @@ export class ApiRecorder {
         headers: extractHeaders(response.headers()),
         body: responseBody,
       },
-      duration,
-      dynamicFields,
     };
   }
 
@@ -379,12 +447,18 @@ export class ApiRecorder {
     const outputDir = join(this.recordingsPath, "specs", relativePath);
     const outputPath = join(outputDir, `${sanitizedTestName}.json`);
 
+    // Sort exchanges deterministically for stable recordings
+    const sortedExchanges = sortExchanges(this.exchanges);
+
+    // Use a fixed timestamp for stable recordings
+    const STABLE_RECORDED_AT = "2025-01-01T00:00:00.000Z";
+
     const newRecording: Recording = {
       version: "1.0",
-      recordedAt: new Date().toISOString(),
+      recordedAt: STABLE_RECORDED_AT,
       testFile: this.testFile,
       testName: this.testName,
-      exchanges: this.exchanges,
+      exchanges: sortedExchanges,
     };
 
     // Check if file exists and compare with existing recording
@@ -393,7 +467,7 @@ export class ApiRecorder {
         const existingContent = readFileSync(outputPath, "utf-8");
         const existingRecording: Recording = JSON.parse(existingContent);
 
-        // If recordings are equivalent, skip writing
+        // If recordings are equivalent, skip writing entirely
         if (recordingsAreEquivalent(existingRecording, newRecording)) {
           // eslint-disable-next-line no-console
           console.log(`[Recorder] Skipped (unchanged): ${outputPath}`);
@@ -409,8 +483,15 @@ export class ApiRecorder {
       mkdirSync(outputDir, { recursive: true });
     }
 
-    // Write recording
+    // Write recording as JSON
     writeFileSync(outputPath, JSON.stringify(newRecording, null, 2));
+
+    // Format with prettier for consistent formatting
+    try {
+      execSync(`npx prettier --write "${outputPath}"`, { stdio: "ignore" });
+    } catch {
+      // Ignore prettier errors - file is still valid JSON
+    }
 
     // eslint-disable-next-line no-console
     console.log(`[Recorder] Saved ${this.exchanges.length} exchanges to ${outputPath}`);
