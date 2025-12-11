@@ -15,6 +15,9 @@ export const UI_TEXTS = {
     SEND_BREV: "Send brev",
     AVSLUTT_BEHANDLING: "Avslutt behandling",
     LEGG_TIL_PERIODE: "Legg til periode",
+    LEGG_TIL_SKATTEFORHOLD: "Legg til skatteforhold",
+    LEGG_TIL_INNTEKT: "Legg til inntekt",
+    ÅPNE_DATOVELGER: "Åpne datovelger",
   },
   HEADINGS: {
     MINE_OPPGAVER: "Mine oppgaver",

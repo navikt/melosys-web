@@ -170,7 +170,7 @@ export class AarsavregningPage extends BehandlingPage {
 
   // Skatteforholdsperiode operasjoner
   async klikkLeggTilSkatteforhold() {
-    const knapp = await finnKnapp("Legg til skatteforhold", this.page);
+    const knapp = await finnKnapp(UI_TEXTS.BUTTONS.LEGG_TIL_SKATTEFORHOLD, this.page);
     await knapp.click();
   }
 
@@ -237,7 +237,7 @@ export class AarsavregningPage extends BehandlingPage {
 
   // Inntektsperiode operasjoner
   async klikkLeggTilInntekt() {
-    const knapp = await finnKnapp("Legg til inntekt", this.page);
+    const knapp = await finnKnapp(UI_TEXTS.BUTTONS.LEGG_TIL_INNTEKT, this.page);
     await knapp.click();
   }
 
@@ -405,10 +405,10 @@ export class AarsavregningPage extends BehandlingPage {
       `${this.ctx}: Kan ikke finne input ${inputIndex} for periode ${index + 1}. Totalt ${allInputs.length} inputs funnet.`,
     ).toBe(true);
 
-    // Finn "Åpne datovelger" knappen som er søsken til input-feltet
+    // Finn datovelger-knappen som er søsken til input-feltet
     const inputElement = allInputs[inputIndex];
     const container = inputElement.locator("..");
-    const datepickerButton = await finnKnapp("Åpne datovelger", container);
+    const datepickerButton = await finnKnapp(UI_TEXTS.BUTTONS.ÅPNE_DATOVELGER, container);
     await datepickerButton.click();
   }
 
