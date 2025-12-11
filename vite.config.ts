@@ -4,7 +4,10 @@ import viteTsconfigPaths from "vite-tsconfig-paths";
 import svgrPlugin from "vite-plugin-svgr";
 import * as path from "path";
 
-const LOCAL_API_PORT = 8080;
+// API port can be overridden via VITE_API_PORT env var (e.g., for E2E playback mode)
+const LOCAL_API_PORT = parseInt(process.env.VITE_API_PORT || "8080", 10);
+// eslint-disable-next-line no-console
+if (process.env.VITE_API_PORT) console.log(`[Vite] Using API port: ${LOCAL_API_PORT}`);
 const LOCAL_TRYGDEAVTALE_FLYT_PORT = 8088;
 const LOCAL_FAKTURERINGSKOMPONENTEN_PORT = 8084;
 
