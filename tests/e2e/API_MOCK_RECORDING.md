@@ -286,7 +286,6 @@ test.describe("My test suite", () => {
 These files use `USER_ID_VALID` and may need serial mode:
 - `bruker-sak-validering.spec.ts`
 - `virksomhet-sak-validering.spec.ts`
-- `regresjon-state-ved-saksbytting.spec.ts`
 - `behandlingstype-tilgjengelighet.spec.ts`
 - `avtaleland-behandlingslogikk.spec.ts`
 - `eos-pensjonist-aarsavregning.spec.ts`
@@ -626,14 +625,7 @@ These tests are skipped in playback mode due to state/sequence issues that are d
 |-----------|-----------|--------|
 | `eu-eøs/navigasjon.spec.ts` | EU/EØS Ikke yrkesaktiv - Navigasjon gjennom steg med minimum input | Form state mismatch - button enabled state differs from recording. The test expects "Bekreft og fortsett" to be disabled initially, but mock returns pre-filled form data. |
 | `utenfor-avtaleland-behandlingslogikk.spec.ts` | Utenfor avtaleland med avsluttet behandling - alle behandlingstyper tilgjengelige | Write-then-read pattern - test closes behandling then verifies behandlingstyper, but mock returns pre-recorded types that don't reflect the closed state. |
-| `regresjon-state-ved-saksbytting.spec.ts` | Regresjon: Panel synlig etter feilmelding på annen sak | Testdata state issue - requires specific sak configurations that aren't available in the test metadata. |
 | `ui-grunnleggende.spec.ts` | (skipped by default) | Intentionally skipped - placeholder test. |
-
-### Pre-existing Test Failures (1 test in record mode)
-
-| Test File | Test Name | Reason |
-|-----------|-----------|--------|
-| `regresjon-state-ved-saksbytting.spec.ts` | Regresjon: Panel synlig etter feilmelding på annen sak | Testdata issue - can't find saker with the required state for this regression test. |
 
 ---
 
