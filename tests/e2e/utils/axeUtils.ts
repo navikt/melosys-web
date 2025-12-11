@@ -5,7 +5,23 @@ import { createHtmlReport } from "axe-html-reporter";
 import { sanitizeFilename } from "./testUtils";
 
 // Siden accessibility testing er nedprioritert deaktiverer vi de som default.
-export const disableAxeTests = true;
+export const disableAxeTests = false;
+
+/**
+ * Kjente tredjepartsbibliotek-problemer som vi eksluderer fra Axe-testing.
+ * Disse er dokumentert og rapportert til respektive bibliotek-maintainers.
+ *
+ * @see https://github.com/JedWatson/react-select/issues/3355 - react-select label issues
+ * @see https://github.com/quilljs/quill/issues - Quill editor accessibility issues
+ */
+const KNOWN_THIRD_PARTY_EXCLUSIONS = [
+  // Quill Editor - mangler accessible name på picker-elementer
+  ".ql-picker-label",
+  ".ql-toolbar",
+  // react-select har kjente ARIA-problemer som er rapportert
+  // Se: https://github.com/JedWatson/react-select/issues/3355
+  "[class*='react-select']",
+];
 
 /**
  * Runs an accessibility analysis using Axe and formats the results
@@ -22,7 +38,10 @@ export async function runAxeAnalyze(page: Page, testName: string, contextDescrip
     return;
   }
 
-  const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).analyze();
+  const results = await new AxeBuilder({ page })
+    .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
+    .exclude(KNOWN_THIRD_PARTY_EXCLUSIONS)
+    .analyze();
 
   createHtmlReport({
     results,
