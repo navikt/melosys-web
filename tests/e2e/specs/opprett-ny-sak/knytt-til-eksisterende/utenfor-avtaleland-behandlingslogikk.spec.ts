@@ -2,7 +2,6 @@ import { UI_TEXTS } from "../../../config/ui-texts";
 
 import { expect, test } from "../../../recording/fixtures";
 import { getTestMode } from "../../../config/mode";
-import { runAxeAnalyze } from "../../../utils/axeUtils";
 import { HovedsidePage, USER_ID_VALID } from "../../../pages/hovedside.page";
 import { OpprettNySakPage } from "../../../pages/opprett-ny-sak/opprett-ny-sak.page";
 import { TIMEOUT_FOR_COMPLEX_TESTS } from "../../../utils/testUtils";
@@ -53,8 +52,6 @@ test.describe("'Utenfor avtaleland' behandlingslogikk", () => {
     await opprettNySakPage.verifiserTilgjengeligeBehandlingstyper(valgtSak, ["Årsavregning"]);
 
     expect(await opprettNySakPage.harFeilmelding(), "Ingen feilmelding skal vises for gyldig scenario").toBe(false);
-
-    await runAxeAnalyze(page, testInfo.title);
   });
 
   test("Utenfor avtaleland med åpen årsavregning - finner sak", async ({ page, apiRecorder }, testInfo) => {
@@ -103,8 +100,6 @@ test.describe("'Utenfor avtaleland' behandlingslogikk", () => {
     await opprettNySakPage.verifiserTilgjengeligeBehandlingstyper(valgtSak, ["Årsavregning"]);
 
     expect(await opprettNySakPage.harFeilmelding(), "Ingen feilmelding skal vises for gyldig scenario").toBe(false);
-
-    await runAxeAnalyze(page, testInfo.title);
   });
 
   test("Utenfor avtaleland med avsluttet behandling - alle behandlingstyper tilgjengelige", async ({
@@ -151,7 +146,5 @@ test.describe("'Utenfor avtaleland' behandlingslogikk", () => {
     ]);
 
     expect(await opprettNySakPage.harFeilmelding(), "Ingen feilmelding skal vises for gyldig scenario").toBe(false);
-
-    await runAxeAnalyze(page, testInfo.title);
   });
 });

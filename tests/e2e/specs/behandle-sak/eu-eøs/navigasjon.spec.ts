@@ -2,7 +2,6 @@ import { test } from "../../../recording/fixtures";
 import { getTestMode } from "../../../config/mode";
 import { TIMEOUT_FOR_COMPLEX_TESTS, setDatoFelt } from "../../../utils/testUtils";
 import { hentPrepopulertSakUrl } from "../../../utils/testdataUtils";
-import { runAxeAnalyze } from "../../../utils/axeUtils";
 import { StegvelgerPage } from "../../../pages/behandling/stegvelger.page";
 import { UI_TEXTS } from "../../../config/ui-texts";
 
@@ -47,8 +46,6 @@ test.describe("EU/EØS Stegvelger - Navigasjon", () => {
     // === STEG 2: Neste steg ===
     // Verifiser at vi har navigert videre (ikke lenger på Inngang)
     await stegvelgerPage.verifiserSteg(UI_TEXTS.STEG.BESTEMMELSE_OG_VURDERING);
-
-    await runAxeAnalyze(page, testInfo.title);
   });
 
   test("EU/EØS Ikke yrkesaktiv - Navigasjon frem og tilbake", async ({ page, apiRecorder }, testInfo) => {
@@ -80,8 +77,6 @@ test.describe("EU/EØS Stegvelger - Navigasjon", () => {
     // Gå tilbake via klikk på steg 1 i progressbar
     await stegvelgerPage.klikkPåSteg(1);
     await stegvelgerPage.verifiserSteg(UI_TEXTS.STEG.OPPGI_OPPLYSNINGER);
-
-    await runAxeAnalyze(page, testInfo.title);
   });
 
   test("EU/EØS Ikke yrkesaktiv - Bekreft-knapp forblir deaktivert ved ugyldig input", async ({
@@ -116,7 +111,5 @@ test.describe("EU/EØS Stegvelger - Navigasjon", () => {
 
     // Knappen skal fortsatt være deaktivert siden land mangler
     await stegvelgerPage.verifiserBekreftKnappDeaktivert();
-
-    await runAxeAnalyze(page, testInfo.title);
   });
 });

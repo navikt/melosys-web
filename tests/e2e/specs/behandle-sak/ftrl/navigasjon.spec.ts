@@ -1,7 +1,6 @@
 import { test } from "../../../recording/fixtures";
 import { TIMEOUT_FOR_COMPLEX_TESTS, setDatoFelt } from "../../../utils/testUtils";
 import { hentPrepopulertSakUrl } from "../../../utils/testdataUtils";
-import { runAxeAnalyze } from "../../../utils/axeUtils";
 import { StegvelgerPage } from "../../../pages/behandling/stegvelger.page";
 import { UI_TEXTS } from "../../../config/ui-texts";
 
@@ -78,8 +77,6 @@ test.describe("FTRL Stegvelger - Navigasjon", () => {
 
     // === STEG 6: Vedtak ("Pliktig medlemskap etter folketrygdloven") ===
     await stegvelgerPage.verifiserSteg("Pliktig medlemskap etter folketrygdloven");
-
-    await runAxeAnalyze(page, testInfo.title);
   });
 
   test("Navigasjon frem og tilbake mellom steg", async ({ page, apiRecorder }, testInfo) => {
@@ -110,8 +107,6 @@ test.describe("FTRL Stegvelger - Navigasjon", () => {
     // Gå tilbake via klikk på steg 1 i progressbar
     await stegvelgerPage.klikkPåSteg(1);
     await stegvelgerPage.verifiserSteg("Oppgi opplysninger fra søknaden");
-
-    await runAxeAnalyze(page, testInfo.title);
   });
 
   test("Bekreft-knapp forblir deaktivert ved ugyldig input", async ({ page, apiRecorder }, testInfo) => {
@@ -134,7 +129,5 @@ test.describe("FTRL Stegvelger - Navigasjon", () => {
 
     // Knappen skal fortsatt være deaktivert siden arbeidsland mangler
     await stegvelgerPage.verifiserBekreftKnappDeaktivert();
-
-    await runAxeAnalyze(page, testInfo.title);
   });
 });

@@ -1,5 +1,4 @@
 import { expect, test } from "../../../recording/fixtures";
-import { runAxeAnalyze } from "../../../utils/axeUtils";
 import { HovedsidePage, USER_ID_VALID } from "../../../pages/hovedside.page";
 import { OpprettNySakPage } from "../../../pages/opprett-ny-sak/opprett-ny-sak.page";
 
@@ -36,7 +35,5 @@ test.describe("EØS pensjonist med trygdeavgift - årsavregning", () => {
     // Verifiser at ingen feilmelding vises
     const harFeilmelding = await opprettNySakPage.harFeilmelding();
     expect(harFeilmelding, `Ingen feilmelding skal vises for EØS pensjonist-sak ${sakId}`).toBe(false);
-
-    await runAxeAnalyze(page, testInfo.title);
   });
 });

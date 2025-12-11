@@ -19,6 +19,7 @@
 import { test as base, expect } from "@playwright/test";
 import { ApiRecorder } from "./recorder";
 import { shouldRecordResponses, shouldUseMockServer, getApiBaseUrl } from "../config/mode";
+import { runAxeAnalyze } from "../utils/axeUtils";
 
 // Header name used to identify workers (must match mock server)
 const WORKER_ID_HEADER = "x-playwright-worker-id";
@@ -91,6 +92,9 @@ export const test = base.extend<{ apiRecorder: ApiRecorder | null }>({
 
     // Run the test
     await use(recorder);
+
+    // After test: run accessibility analysis
+    await runAxeAnalyze(page, testInfo.title);
 
     // After test: save recordings
     if (recorder && recorder.exchangeCount > 0) {

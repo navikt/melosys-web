@@ -1,5 +1,4 @@
 import { test } from "../../../recording/fixtures";
-import { runAxeAnalyze } from "../../../utils/axeUtils";
 import { HovedsidePage, ORG_NUMBER_VALID } from "../../../pages/hovedside.page";
 import { OpprettNySakPage } from "../../../pages/opprett-ny-sak/opprett-ny-sak.page";
 import { assertFieldError, assertNyBehandlingOpprettet } from "../../../utils/testUtils";
@@ -24,8 +23,6 @@ test.describe("'Opprett ny sak for virksomhet", () => {
     await opprettNySakPage.klikkOpprettNyBehandling();
 
     await assertFieldError(page, "Fant ingen navn på dette organisasjonsnummeret");
-
-    await runAxeAnalyze(page, testInfo.title);
   });
 
   test('Opprett sak for sakstype "EU/EØS-land" og verifiser at det ikke oppstår noen feil', async ({
@@ -46,8 +43,6 @@ test.describe("'Opprett ny sak for virksomhet", () => {
     await opprettNySakPage.klikkOpprettNyBehandling();
 
     await assertNyBehandlingOpprettet(page);
-
-    await runAxeAnalyze(page, testInfo.title);
   });
 
   test('Opprett sak for sakstype "Avtaleland" og verifiser at det ikke oppstår noen feil', async ({
@@ -68,7 +63,5 @@ test.describe("'Opprett ny sak for virksomhet", () => {
     await opprettNySakPage.klikkOpprettNyBehandling();
 
     await assertNyBehandlingOpprettet(page);
-
-    await runAxeAnalyze(page, testInfo.title);
   });
 });

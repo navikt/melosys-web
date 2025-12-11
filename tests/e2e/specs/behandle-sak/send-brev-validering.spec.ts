@@ -1,7 +1,6 @@
 import { test } from "../../recording/fixtures";
 import { SendBrevPage } from "../../pages/behandling/send-brev.page";
 import { assertErrors, TIMEOUT_FOR_COMPLEX_TESTS } from "../../utils/testUtils";
-import { runAxeAnalyze } from "../../utils/axeUtils";
 import { hentPrepopulertSakUrl, PrepopulertSaksnummer } from "../../utils/testdataUtils";
 import { Page } from "@playwright/test";
 
@@ -26,7 +25,6 @@ test.describe("Verifiser disable/enable av 'Send brev' knapp", () => {
   }, testInfo) => {
     await setupSendBrevTest(page, "MEL-1003");
     await sendBrevPage.verifiserSendKnappDeaktivert();
-    await runAxeAnalyze(page, testInfo.title);
   });
 
   test("'Send brev' knappen er disabled når mottaker er valgt men ikke brevmal", async ({
@@ -36,7 +34,6 @@ test.describe("Verifiser disable/enable av 'Send brev' knapp", () => {
     await setupSendBrevTest(page, "MEL-1004");
     await sendBrevPage.selectFirstMottaker();
     await sendBrevPage.verifiserSendKnappDeaktivert();
-    await runAxeAnalyze(page, testInfo.title);
   });
 
   test("'Send brev' knappen blir enabled når både mottaker og brevmal er valgt", async ({
@@ -47,7 +44,6 @@ test.describe("Verifiser disable/enable av 'Send brev' knapp", () => {
     await sendBrevPage.selectFirstMottaker();
     await sendBrevPage.selectFirstBrevmal();
     await sendBrevPage.verifiserSendKnappAktivert();
-    await runAxeAnalyze(page, testInfo.title);
   });
 });
 
@@ -65,8 +61,6 @@ test.describe("Validering av brevmaler for mottaker 'Bruker eller brukers fullme
       "Du må velge minst én av standardtekst eller fritekst",
       "Du må skrive inn hva mottaker skal sende inn",
     ]);
-
-    await runAxeAnalyze(page, testInfo.title);
   });
 
   test("Korrekt validering for brevmal 'Fritekstbrev til bruker'", async ({ page, apiRecorder }, testInfo) => {
@@ -80,8 +74,6 @@ test.describe("Validering av brevmaler for mottaker 'Bruker eller brukers fullme
       "Du må skrive inn hovedtekst til brevet",
       "Du må velge type brev",
     ]);
-
-    await runAxeAnalyze(page, testInfo.title);
   });
 });
 
@@ -109,7 +101,5 @@ test.describe("Validering av årsavregning brevmaler", () => {
     await sendBrevPage.clickSendBrev();
 
     await assertErrors(page, ["Du må velge minst én av standardtekst eller fritekst"]);
-
-    await runAxeAnalyze(page, testInfo.title);
   });
 });
