@@ -4,8 +4,9 @@ import AxeBuilder from "@axe-core/playwright";
 import { createHtmlReport } from "axe-html-reporter";
 import { sanitizeFilename } from "./testUtils";
 
-// Siden accessibility testing er nedprioritert deaktiverer vi de som default.
-export const disableAxeTests = true;
+// Styres via DISABLE_AXE_TESTS environment variable
+// Default: true (disabled) - kjør med DISABLE_AXE_TESTS=false for å aktivere
+export const disableAxeTests = process.env.DISABLE_AXE_TESTS !== "false";
 
 /**
  * Kjente tredjepartsbibliotek-problemer som vi eksluderer fra Axe-testing.
