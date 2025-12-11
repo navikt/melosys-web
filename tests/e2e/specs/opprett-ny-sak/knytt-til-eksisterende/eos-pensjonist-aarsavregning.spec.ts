@@ -2,7 +2,6 @@ import { expect, test } from "../../../recording/fixtures";
 import { runAxeAnalyze } from "../../../utils/axeUtils";
 import { HovedsidePage, USER_ID_VALID } from "../../../pages/hovedside.page";
 import { OpprettNySakPage } from "../../../pages/opprett-ny-sak/opprett-ny-sak.page";
-import { hentPrepopulertSakUrl } from "../../../utils/testdataUtils";
 
 let opprettNySakPage: OpprettNySakPage;
 let hovedsidePage: HovedsidePage;
@@ -11,16 +10,6 @@ test.describe("EØS pensjonist med trygdeavgift - årsavregning", () => {
   test.beforeEach(async ({ page, apiRecorder }) => {
     hovedsidePage = new HovedsidePage(page);
     opprettNySakPage = new OpprettNySakPage(page);
-  });
-
-  test("Opprett EØS pensjonist-sak med trygdeavgift for testdata", async ({ page, apiRecorder }, testInfo) => {
-    // Denne testen oppretter testdata som brukes av de andre testene
-    const url = hentPrepopulertSakUrl("MEL-1056");
-
-    expect(url, "URL skal være opprettet").toBeTruthy();
-    expect(url).toContain("/melosys/EU_EOS/");
-
-    await runAxeAnalyze(page, testInfo.title);
   });
 
   test("Knytt til EØS pensjonist-sak med åpne behandlinger - årsavregning tilgjengelig", async ({

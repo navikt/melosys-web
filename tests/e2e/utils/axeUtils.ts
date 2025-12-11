@@ -27,6 +27,8 @@ const KNOWN_THIRD_PARTY_EXCLUSIONS = [
   // react-select har kjente ARIA-problemer som er rapportert
   // Se: https://github.com/JedWatson/react-select/issues/3355
   "[class*='react-select']",
+  // react-select input-felt (har dynamisk genererte IDer som starter med 'select')
+  "input[id^='select']",
   // NAV Aksel DatePicker - input-felt mangler labels (kjent issue)
   ".navds-date__field-input",
   // Definition lists som brukes for metadata-visning (ikke interaktive)
@@ -48,10 +50,14 @@ export async function runAxeAnalyze(page: Page, testName: string, contextDescrip
     return;
   }
 
-  const results = await new AxeBuilder({ page })
-    .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
-    .exclude(KNOWN_THIRD_PARTY_EXCLUSIONS)
-    .analyze();
+  let builder = new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]);
+
+  // Ekskluder hvert element individuelt (AxeBuilder krever dette)
+  for (const selector of KNOWN_THIRD_PARTY_EXCLUSIONS) {
+    builder = builder.exclude(selector);
+  }
+
+  const results = await builder.analyze();
 
   createHtmlReport({
     results,
