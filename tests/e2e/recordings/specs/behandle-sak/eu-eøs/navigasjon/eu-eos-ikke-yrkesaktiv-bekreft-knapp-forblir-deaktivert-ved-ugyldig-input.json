@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "recordedAt": "2025-12-11T10:56:38.684Z",
+  "recordedAt": "2025-12-11T14:05:31.378Z",
   "testFile": "/Users/ragnarwestad/develop/nav/melosys-web/tests/e2e/specs/behandle-sak/eu-eøs/navigasjon.spec.ts",
   "testName": "EU/EØS Ikke yrkesaktiv - Bekreft-knapp forblir deaktivert ved ugyldig input",
   "exchanges": [
@@ -39,7 +39,7 @@
           "melosys.arsavregning.uten.flyt": false
         }
       },
-      "duration": 4,
+      "duration": 14,
       "dynamicFields": []
     },
     {
@@ -78,12 +78,12 @@
             "term": "Saken er opprettet"
           },
           "betalingsvalg": null,
-          "registrertDato": "2025-12-11T10:56:21.700457Z",
-          "endretDato": "2025-12-11T10:56:21.707127Z",
+          "registrertDato": "2025-12-11T14:05:27.397376Z",
+          "endretDato": "2025-12-11T14:05:27.405616Z",
           "hovedpartRolle": "BRUKER"
         }
       },
-      "duration": 11,
+      "duration": 87,
       "dynamicFields": ["registrertDato", "endretDato"]
     },
     {
@@ -121,8 +121,8 @@
               "kode": "IKKE_YRKESAKTIV",
               "term": "Ikke yrkesaktiv"
             },
-            "registrertDato": "2025-12-11T10:56:21.701597Z",
-            "endretDato": "2025-12-11T10:56:21.720510Z",
+            "registrertDato": "2025-12-11T14:05:27.399261Z",
+            "endretDato": "2025-12-11T14:05:27.419580Z",
             "endretAvNavn": "Lokal Testbruker",
             "sisteOpplysningerHentetDato": null,
             "svarFrist": null,
@@ -157,7 +157,7 @@
           "redigerbart": true
         }
       },
-      "duration": 38,
+      "duration": 457,
       "dynamicFields": [
         "oppsummering.registrertDato",
         "oppsummering.endretDato",
@@ -200,7 +200,7 @@
           "aarsavregningID": null
         }
       },
-      "duration": 32,
+      "duration": 17,
       "dynamicFields": []
     },
     {
@@ -291,7 +291,7 @@
           "mottaksdato": "2025-12-11"
         }
       },
-      "duration": 30,
+      "duration": 15,
       "dynamicFields": [
         "data.periode.fom",
         "data.periode.tom",
@@ -322,7 +322,7 @@
         },
         "body": []
       },
-      "duration": 17,
+      "duration": 7,
       "dynamicFields": []
     },
     {
@@ -347,49 +347,7 @@
         },
         "body": []
       },
-      "duration": 11,
-      "dynamicFields": []
-    },
-    {
-      "request": {
-        "id": "38852a33c5f8",
-        "method": "GET",
-        "url": "http://localhost:3333/api/saksbehandling/sakstemaer/hent-lovlige-kombinasjoner/?hovedpart=BRUKER&sakstype=EU_EOS&saksnummer=MEL-1053",
-        "pathname": "/api/saksbehandling/sakstemaer/hent-lovlige-kombinasjoner/",
-        "normalizedPath": "/api/saksbehandling/sakstemaer/hent-lovlige-kombinasjoner/",
-        "query": {
-          "hovedpart": "BRUKER",
-          "sakstype": "EU_EOS",
-          "saksnummer": "MEL-1053"
-        },
-        "headers": {
-          "accept": "application/json",
-          "authorization": "[REDACTED]"
-        },
-        "body": null
-      },
-      "response": {
-        "status": 200,
-        "statusText": "OK",
-        "headers": {
-          "content-type": "application/json"
-        },
-        "body": [
-          {
-            "kode": "MEDLEMSKAP_LOVVALG",
-            "term": "Medlemskap og lovvalg"
-          },
-          {
-            "kode": "UNNTAK",
-            "term": "Unntak"
-          },
-          {
-            "kode": "TRYGDEAVGIFT",
-            "term": "Trygdeavgift"
-          }
-        ]
-      },
-      "duration": 16,
+      "duration": 8,
       "dynamicFields": []
     },
     {
@@ -456,7 +414,49 @@
           }
         ]
       },
-      "duration": 17,
+      "duration": 23,
+      "dynamicFields": []
+    },
+    {
+      "request": {
+        "id": "38852a33c5f8",
+        "method": "GET",
+        "url": "http://localhost:3333/api/saksbehandling/sakstemaer/hent-lovlige-kombinasjoner/?hovedpart=BRUKER&sakstype=EU_EOS&saksnummer=MEL-1053",
+        "pathname": "/api/saksbehandling/sakstemaer/hent-lovlige-kombinasjoner/",
+        "normalizedPath": "/api/saksbehandling/sakstemaer/hent-lovlige-kombinasjoner/",
+        "query": {
+          "hovedpart": "BRUKER",
+          "sakstype": "EU_EOS",
+          "saksnummer": "MEL-1053"
+        },
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": [
+          {
+            "kode": "MEDLEMSKAP_LOVVALG",
+            "term": "Medlemskap og lovvalg"
+          },
+          {
+            "kode": "UNNTAK",
+            "term": "Unntak"
+          },
+          {
+            "kode": "TRYGDEAVGIFT",
+            "term": "Trygdeavgift"
+          }
+        ]
+      },
+      "duration": 33,
       "dynamicFields": []
     },
     {
@@ -503,8 +503,35 @@
           }
         ]
       },
-      "duration": 18,
+      "duration": 31,
       "dynamicFields": []
+    },
+    {
+      "request": {
+        "id": "2c6b1e0e101a",
+        "method": "GET",
+        "url": "http://localhost:3333/api/behandlinger/53/aarsak/mottaksdato",
+        "pathname": "/api/behandlinger/53/aarsak/mottaksdato",
+        "normalizedPath": "/api/behandlinger/:behandlingId/aarsak/mottaksdato",
+        "query": {},
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": {
+          "mottaksdato": "2025-12-11"
+        }
+      },
+      "duration": 31,
+      "dynamicFields": ["mottaksdato"]
     },
     {
       "request": {
@@ -543,7 +570,7 @@
           }
         ]
       },
-      "duration": 20,
+      "duration": 42,
       "dynamicFields": []
     },
     {
@@ -568,35 +595,8 @@
         },
         "body": []
       },
-      "duration": 21,
+      "duration": 37,
       "dynamicFields": []
-    },
-    {
-      "request": {
-        "id": "2c6b1e0e101a",
-        "method": "GET",
-        "url": "http://localhost:3333/api/behandlinger/53/aarsak/mottaksdato",
-        "pathname": "/api/behandlinger/53/aarsak/mottaksdato",
-        "normalizedPath": "/api/behandlinger/:behandlingId/aarsak/mottaksdato",
-        "query": {},
-        "headers": {
-          "accept": "application/json",
-          "authorization": "[REDACTED]"
-        },
-        "body": null
-      },
-      "response": {
-        "status": 200,
-        "statusText": "OK",
-        "headers": {
-          "content-type": "application/json"
-        },
-        "body": {
-          "mottaksdato": "2025-12-11"
-        }
-      },
-      "duration": 24,
-      "dynamicFields": ["mottaksdato"]
     },
     {
       "request": {
@@ -638,6 +638,11 @@
                 "kjoenn": "UKJENT",
                 "folkeregisterpersonstatuser": [
                   {
+                    "kode": "BOSATT",
+                    "erHistorisk": false,
+                    "__typename": "Folkeregisterpersonstatus"
+                  },
+                  {
                     "kode": "UTFLYTTET",
                     "erHistorisk": true,
                     "__typename": "Folkeregisterpersonstatus"
@@ -645,11 +650,6 @@
                   {
                     "kode": "MIDLERTIDIG",
                     "erHistorisk": true,
-                    "__typename": "Folkeregisterpersonstatus"
-                  },
-                  {
-                    "kode": "BOSATT",
-                    "erHistorisk": false,
                     "__typename": "Folkeregisterpersonstatus"
                   }
                 ],
@@ -690,7 +690,7 @@
           }
         }
       },
-      "duration": 25,
+      "duration": 45,
       "dynamicFields": []
     },
     {
@@ -717,7 +717,7 @@
           "harBehandlingMedTrygdeavgift": false
         }
       },
-      "duration": 31,
+      "duration": 186,
       "dynamicFields": []
     }
   ]

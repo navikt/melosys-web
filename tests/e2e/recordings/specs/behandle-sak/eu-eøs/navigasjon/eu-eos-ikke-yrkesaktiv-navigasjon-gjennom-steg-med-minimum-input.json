@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "recordedAt": "2025-12-11T10:56:41.578Z",
+  "recordedAt": "2025-12-11T14:05:36.088Z",
   "testFile": "/Users/ragnarwestad/develop/nav/melosys-web/tests/e2e/specs/behandle-sak/eu-eøs/navigasjon.spec.ts",
   "testName": "EU/EØS Ikke yrkesaktiv - Navigasjon gjennom steg med minimum input",
   "exchanges": [
@@ -39,7 +39,7 @@
           "melosys.arsavregning.uten.flyt": false
         }
       },
-      "duration": 14,
+      "duration": 25,
       "dynamicFields": []
     },
     {
@@ -78,12 +78,12 @@
             "term": "Saken er opprettet"
           },
           "betalingsvalg": null,
-          "registrertDato": "2025-12-11T10:56:21.688730Z",
-          "endretDato": "2025-12-11T10:56:21.694273Z",
+          "registrertDato": "2025-12-11T14:05:27.382458Z",
+          "endretDato": "2025-12-11T14:05:27.389704Z",
           "hovedpartRolle": "BRUKER"
         }
       },
-      "duration": 24,
+      "duration": 68,
       "dynamicFields": ["registrertDato", "endretDato"]
     },
     {
@@ -121,8 +121,8 @@
               "kode": "IKKE_YRKESAKTIV",
               "term": "Ikke yrkesaktiv"
             },
-            "registrertDato": "2025-12-11T10:56:21.689952Z",
-            "endretDato": "2025-12-11T10:56:21.707075Z",
+            "registrertDato": "2025-12-11T14:05:27.384280Z",
+            "endretDato": "2025-12-11T14:05:27.405570Z",
             "endretAvNavn": "Lokal Testbruker",
             "sisteOpplysningerHentetDato": null,
             "svarFrist": null,
@@ -157,7 +157,7 @@
           "redigerbart": true
         }
       },
-      "duration": 62,
+      "duration": 454,
       "dynamicFields": [
         "oppsummering.registrertDato",
         "oppsummering.endretDato",
@@ -200,7 +200,7 @@
           "aarsavregningID": null
         }
       },
-      "duration": 32,
+      "duration": 102,
       "dynamicFields": []
     },
     {
@@ -291,7 +291,7 @@
           "mottaksdato": "2025-12-11"
         }
       },
-      "duration": 34,
+      "duration": 21,
       "dynamicFields": [
         "data.periode.fom",
         "data.periode.tom",
@@ -322,7 +322,7 @@
         },
         "body": []
       },
-      "duration": 15,
+      "duration": 14,
       "dynamicFields": []
     },
     {
@@ -347,7 +347,7 @@
         },
         "body": []
       },
-      "duration": 9,
+      "duration": 10,
       "dynamicFields": []
     },
     {
@@ -414,7 +414,89 @@
           }
         ]
       },
-      "duration": 29,
+      "duration": 16,
+      "dynamicFields": []
+    },
+    {
+      "request": {
+        "id": "9cd9cd09d767",
+        "method": "GET",
+        "url": "http://localhost:3333/api/saksbehandling/sakstemaer/hent-lovlige-kombinasjoner/?hovedpart=BRUKER&sakstype=EU_EOS&saksnummer=MEL-1052",
+        "pathname": "/api/saksbehandling/sakstemaer/hent-lovlige-kombinasjoner/",
+        "normalizedPath": "/api/saksbehandling/sakstemaer/hent-lovlige-kombinasjoner/",
+        "query": {
+          "hovedpart": "BRUKER",
+          "sakstype": "EU_EOS",
+          "saksnummer": "MEL-1052"
+        },
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": [
+          {
+            "kode": "MEDLEMSKAP_LOVVALG",
+            "term": "Medlemskap og lovvalg"
+          },
+          {
+            "kode": "UNNTAK",
+            "term": "Unntak"
+          },
+          {
+            "kode": "TRYGDEAVGIFT",
+            "term": "Trygdeavgift"
+          }
+        ]
+      },
+      "duration": 25,
+      "dynamicFields": []
+    },
+    {
+      "request": {
+        "id": "36cf9495fd87",
+        "method": "GET",
+        "url": "http://localhost:3333/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/?saksnummer=MEL-1052",
+        "pathname": "/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/",
+        "normalizedPath": "/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/",
+        "query": {
+          "saksnummer": "MEL-1052"
+        },
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": [
+          {
+            "kode": "EU_EOS",
+            "term": "EU/EØS-land"
+          },
+          {
+            "kode": "TRYGDEAVTALE",
+            "term": "Avtaleland"
+          },
+          {
+            "kode": "FTRL",
+            "term": "Utenfor avtaleland"
+          }
+        ]
+      },
+      "duration": 27,
       "dynamicFields": []
     },
     {
@@ -461,89 +543,7 @@
           }
         ]
       },
-      "duration": 29,
-      "dynamicFields": []
-    },
-    {
-      "request": {
-        "id": "9cd9cd09d767",
-        "method": "GET",
-        "url": "http://localhost:3333/api/saksbehandling/sakstemaer/hent-lovlige-kombinasjoner/?hovedpart=BRUKER&sakstype=EU_EOS&saksnummer=MEL-1052",
-        "pathname": "/api/saksbehandling/sakstemaer/hent-lovlige-kombinasjoner/",
-        "normalizedPath": "/api/saksbehandling/sakstemaer/hent-lovlige-kombinasjoner/",
-        "query": {
-          "hovedpart": "BRUKER",
-          "sakstype": "EU_EOS",
-          "saksnummer": "MEL-1052"
-        },
-        "headers": {
-          "accept": "application/json",
-          "authorization": "[REDACTED]"
-        },
-        "body": null
-      },
-      "response": {
-        "status": 200,
-        "statusText": "OK",
-        "headers": {
-          "content-type": "application/json"
-        },
-        "body": [
-          {
-            "kode": "MEDLEMSKAP_LOVVALG",
-            "term": "Medlemskap og lovvalg"
-          },
-          {
-            "kode": "UNNTAK",
-            "term": "Unntak"
-          },
-          {
-            "kode": "TRYGDEAVGIFT",
-            "term": "Trygdeavgift"
-          }
-        ]
-      },
-      "duration": 33,
-      "dynamicFields": []
-    },
-    {
-      "request": {
-        "id": "36cf9495fd87",
-        "method": "GET",
-        "url": "http://localhost:3333/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/?saksnummer=MEL-1052",
-        "pathname": "/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/",
-        "normalizedPath": "/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/",
-        "query": {
-          "saksnummer": "MEL-1052"
-        },
-        "headers": {
-          "accept": "application/json",
-          "authorization": "[REDACTED]"
-        },
-        "body": null
-      },
-      "response": {
-        "status": 200,
-        "statusText": "OK",
-        "headers": {
-          "content-type": "application/json"
-        },
-        "body": [
-          {
-            "kode": "EU_EOS",
-            "term": "EU/EØS-land"
-          },
-          {
-            "kode": "TRYGDEAVTALE",
-            "term": "Avtaleland"
-          },
-          {
-            "kode": "FTRL",
-            "term": "Utenfor avtaleland"
-          }
-        ]
-      },
-      "duration": 33,
+      "duration": 23,
       "dynamicFields": []
     },
     {
@@ -568,7 +568,7 @@
         },
         "body": []
       },
-      "duration": 30,
+      "duration": 22,
       "dynamicFields": []
     },
     {
@@ -595,7 +595,7 @@
           "mottaksdato": "2025-12-11"
         }
       },
-      "duration": 35,
+      "duration": 24,
       "dynamicFields": ["mottaksdato"]
     },
     {
@@ -638,6 +638,11 @@
                 "kjoenn": "UKJENT",
                 "folkeregisterpersonstatuser": [
                   {
+                    "kode": "BOSATT",
+                    "erHistorisk": false,
+                    "__typename": "Folkeregisterpersonstatus"
+                  },
+                  {
                     "kode": "UTFLYTTET",
                     "erHistorisk": true,
                     "__typename": "Folkeregisterpersonstatus"
@@ -645,11 +650,6 @@
                   {
                     "kode": "MIDLERTIDIG",
                     "erHistorisk": true,
-                    "__typename": "Folkeregisterpersonstatus"
-                  },
-                  {
-                    "kode": "BOSATT",
-                    "erHistorisk": false,
                     "__typename": "Folkeregisterpersonstatus"
                   }
                 ],
@@ -690,7 +690,7 @@
           }
         }
       },
-      "duration": 36,
+      "duration": 24,
       "dynamicFields": []
     },
     {
@@ -717,7 +717,7 @@
           "harBehandlingMedTrygdeavgift": false
         }
       },
-      "duration": 56,
+      "duration": 127,
       "dynamicFields": []
     },
     {
@@ -872,7 +872,7 @@
           "mottaksdato": "2025-12-11"
         }
       },
-      "duration": 27,
+      "duration": 14,
       "dynamicFields": [
         "data.periode.fom",
         "data.periode.tom",
@@ -903,7 +903,7 @@
         "headers": {},
         "body": null
       },
-      "duration": 118,
+      "duration": 257,
       "dynamicFields": []
     },
     {
@@ -946,6 +946,11 @@
                 "kjoenn": "UKJENT",
                 "folkeregisterpersonstatuser": [
                   {
+                    "kode": "BOSATT",
+                    "erHistorisk": false,
+                    "__typename": "Folkeregisterpersonstatus"
+                  },
+                  {
                     "kode": "UTFLYTTET",
                     "erHistorisk": true,
                     "__typename": "Folkeregisterpersonstatus"
@@ -953,11 +958,6 @@
                   {
                     "kode": "MIDLERTIDIG",
                     "erHistorisk": true,
-                    "__typename": "Folkeregisterpersonstatus"
-                  },
-                  {
-                    "kode": "BOSATT",
-                    "erHistorisk": false,
                     "__typename": "Folkeregisterpersonstatus"
                   }
                 ],
@@ -998,32 +998,7 @@
           }
         }
       },
-      "duration": 30,
-      "dynamicFields": []
-    },
-    {
-      "request": {
-        "id": "63879f68e7a5",
-        "method": "GET",
-        "url": "http://localhost:3333/api/lovvalgsperioder/52",
-        "pathname": "/api/lovvalgsperioder/52",
-        "normalizedPath": "/api/lovvalgsperioder/:id",
-        "query": {},
-        "headers": {
-          "accept": "application/json",
-          "authorization": "[REDACTED]"
-        },
-        "body": null
-      },
-      "response": {
-        "status": 200,
-        "statusText": "OK",
-        "headers": {
-          "content-type": "application/json"
-        },
-        "body": []
-      },
-      "duration": 23,
+      "duration": 12,
       "dynamicFields": []
     },
     {
@@ -1062,13 +1037,38 @@
             "term": "Saken er opprettet"
           },
           "betalingsvalg": null,
-          "registrertDato": "2025-12-11T10:56:21.688730Z",
-          "endretDato": "2025-12-11T10:56:21.694273Z",
+          "registrertDato": "2025-12-11T14:05:27.382458Z",
+          "endretDato": "2025-12-11T14:05:27.389704Z",
           "hovedpartRolle": "BRUKER"
         }
       },
-      "duration": 27,
+      "duration": 16,
       "dynamicFields": ["registrertDato", "endretDato"]
+    },
+    {
+      "request": {
+        "id": "63879f68e7a5",
+        "method": "GET",
+        "url": "http://localhost:3333/api/lovvalgsperioder/52",
+        "pathname": "/api/lovvalgsperioder/52",
+        "normalizedPath": "/api/lovvalgsperioder/:id",
+        "query": {},
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": []
+      },
+      "duration": 15,
+      "dynamicFields": []
     },
     {
       "request": {
@@ -1092,7 +1092,7 @@
         },
         "body": []
       },
-      "duration": 23,
+      "duration": 17,
       "dynamicFields": []
     },
     {
@@ -1183,7 +1183,7 @@
           "mottaksdato": "2025-12-11"
         }
       },
-      "duration": 35,
+      "duration": 26,
       "dynamicFields": [
         "data.periode.fom",
         "data.periode.tom",
@@ -1227,7 +1227,7 @@
           "aarsavregningID": null
         }
       },
-      "duration": 46,
+      "duration": 33,
       "dynamicFields": []
     },
     {
@@ -1265,10 +1265,10 @@
               "kode": "IKKE_YRKESAKTIV",
               "term": "Ikke yrkesaktiv"
             },
-            "registrertDato": "2025-12-11T10:56:21.689952Z",
-            "endretDato": "2025-12-11T10:56:37.784042Z",
+            "registrertDato": "2025-12-11T14:05:27.384280Z",
+            "endretDato": "2025-12-11T14:05:31.979364Z",
             "endretAvNavn": "Lokal Testbruker",
-            "sisteOpplysningerHentetDato": "2025-12-11T10:56:37.755936Z",
+            "sisteOpplysningerHentetDato": "2025-12-11T14:05:31.861458Z",
             "svarFrist": null,
             "behandlingsfrist": "2026-03-11",
             "behandlingsresultattype": {
@@ -1320,16 +1320,16 @@
                 "arbeidstakerID": "30056928150",
                 "opplysningspliktigtype": "ORGANISASJON",
                 "opplysningspliktigID": "999999999",
-                "opprettelsestidspunkt": "2025-12-11T10:56:37.71523Z",
-                "sistBekreftet": "2025-12-11T10:56:37.715233Z",
+                "opprettelsestidspunkt": "2025-12-11T14:05:31.743754Z",
+                "sistBekreftet": "2025-12-11T14:05:31.743756Z",
                 "Aordning": null,
                 "timerTimelonnet": []
               }
             ],
             "organisasjoner": [
               {
-                "orgnr": "999999999",
-                "navn": "Ståles Stål AS",
+                "orgnr": "888888888",
+                "navn": "Steinars Stein AS",
                 "oppstartdato": null,
                 "organisasjonsform": "Aksjeselskap",
                 "forretningsadresse": {
@@ -1356,8 +1356,8 @@
                 }
               },
               {
-                "orgnr": "888888888",
-                "navn": "Steinars Stein AS",
+                "orgnr": "999999999",
+                "navn": "Ståles Stål AS",
                 "oppstartdato": null,
                 "organisasjonsform": "Aksjeselskap",
                 "forretningsadresse": {
@@ -2277,7 +2277,7 @@
           "redigerbart": true
         }
       },
-      "duration": 83,
+      "duration": 43,
       "dynamicFields": [
         "oppsummering.registrertDato",
         "oppsummering.endretDato",
@@ -2402,7 +2402,7 @@
           }
         }
       },
-      "duration": 11,
+      "duration": 19,
       "dynamicFields": ["data.hentSaksopplysninger.persondata.statsborgerskap[0].bekreftelsesdato"]
     },
     {
@@ -2438,6 +2438,15 @@
               "persondata": {
                 "folkeregisterpersonstatuser": [
                   {
+                    "kode": "BOSATT",
+                    "tekst": "Bosatt etter folkeregisterloven",
+                    "master": "FREG",
+                    "kilde": "Folkeregisteret",
+                    "fregGyldighetstidspunkt": "1990-01-01",
+                    "erHistorisk": false,
+                    "__typename": "Folkeregisterpersonstatus"
+                  },
+                  {
                     "kode": "UTFLYTTET",
                     "tekst": "Utflyttet",
                     "master": "FREG",
@@ -2453,15 +2462,6 @@
                     "kilde": "Folkeregisteret",
                     "fregGyldighetstidspunkt": "2020-10-22",
                     "erHistorisk": true,
-                    "__typename": "Folkeregisterpersonstatus"
-                  },
-                  {
-                    "kode": "BOSATT",
-                    "tekst": "Bosatt etter folkeregisterloven",
-                    "master": "FREG",
-                    "kilde": "Folkeregisteret",
-                    "fregGyldighetstidspunkt": "1990-01-01",
-                    "erHistorisk": false,
                     "__typename": "Folkeregisterpersonstatus"
                   }
                 ],
@@ -2521,7 +2521,7 @@
           }
         }
       },
-      "duration": 13,
+      "duration": 20,
       "dynamicFields": [
         "data.hentSaksopplysninger.persondata.foedsel.foedselsdato",
         "data.hentSaksopplysninger.persondata.sivilstand[0].bekreftelsesdato",
@@ -2675,7 +2675,7 @@
           }
         }
       },
-      "duration": 12,
+      "duration": 19,
       "dynamicFields": []
     },
     {
@@ -2718,6 +2718,11 @@
                 "kjoenn": "UKJENT",
                 "folkeregisterpersonstatuser": [
                   {
+                    "kode": "BOSATT",
+                    "erHistorisk": false,
+                    "__typename": "Folkeregisterpersonstatus"
+                  },
+                  {
                     "kode": "UTFLYTTET",
                     "erHistorisk": true,
                     "__typename": "Folkeregisterpersonstatus"
@@ -2725,11 +2730,6 @@
                   {
                     "kode": "MIDLERTIDIG",
                     "erHistorisk": true,
-                    "__typename": "Folkeregisterpersonstatus"
-                  },
-                  {
-                    "kode": "BOSATT",
-                    "erHistorisk": false,
                     "__typename": "Folkeregisterpersonstatus"
                   }
                 ],
@@ -2770,61 +2770,8 @@
           }
         }
       },
-      "duration": 19,
+      "duration": 13,
       "dynamicFields": []
-    },
-    {
-      "request": {
-        "id": "6acf98d5edad",
-        "method": "POST",
-        "url": "http://localhost:3333/graphql/",
-        "pathname": "/graphql/",
-        "normalizedPath": "/graphql/",
-        "query": {},
-        "headers": {
-          "content-type": "application/json",
-          "accept": "*/*",
-          "authorization": "[REDACTED]"
-        },
-        "body": {
-          "operationName": "hentStatsborgerskap",
-          "variables": {
-            "behandlingID": 52
-          },
-          "query": "query hentStatsborgerskap($behandlingID: Long!) {\n  hentSaksopplysninger(behandlingID: $behandlingID) {\n    persondata {\n      statsborgerskap {\n        land\n        bekreftelsesdato\n        gyldigFraOgMed\n        gyldigTilOgMed\n        master\n        kilde\n        erHistorisk\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}"
-        }
-      },
-      "response": {
-        "status": 200,
-        "statusText": "OK",
-        "headers": {
-          "content-type": "application/json"
-        },
-        "body": {
-          "data": {
-            "hentSaksopplysninger": {
-              "persondata": {
-                "statsborgerskap": [
-                  {
-                    "land": "NORGE",
-                    "bekreftelsesdato": null,
-                    "gyldigFraOgMed": "1990-01-01",
-                    "gyldigTilOgMed": null,
-                    "master": "FREG",
-                    "kilde": "Folkeregisteret",
-                    "erHistorisk": false,
-                    "__typename": "Statsborgerskap"
-                  }
-                ],
-                "__typename": "Personopplysninger"
-              },
-              "__typename": "Saksopplysninger"
-            }
-          }
-        }
-      },
-      "duration": 18,
-      "dynamicFields": ["data.hentSaksopplysninger.persondata.statsborgerskap[0].bekreftelsesdato"]
     },
     {
       "request": {
@@ -2859,6 +2806,15 @@
               "persondata": {
                 "folkeregisterpersonstatuser": [
                   {
+                    "kode": "BOSATT",
+                    "tekst": "Bosatt etter folkeregisterloven",
+                    "master": "FREG",
+                    "kilde": "Folkeregisteret",
+                    "fregGyldighetstidspunkt": "1990-01-01",
+                    "erHistorisk": false,
+                    "__typename": "Folkeregisterpersonstatus"
+                  },
+                  {
                     "kode": "UTFLYTTET",
                     "tekst": "Utflyttet",
                     "master": "FREG",
@@ -2874,15 +2830,6 @@
                     "kilde": "Folkeregisteret",
                     "fregGyldighetstidspunkt": "2020-10-22",
                     "erHistorisk": true,
-                    "__typename": "Folkeregisterpersonstatus"
-                  },
-                  {
-                    "kode": "BOSATT",
-                    "tekst": "Bosatt etter folkeregisterloven",
-                    "master": "FREG",
-                    "kilde": "Folkeregisteret",
-                    "fregGyldighetstidspunkt": "1990-01-01",
-                    "erHistorisk": false,
                     "__typename": "Folkeregisterpersonstatus"
                   }
                 ],
@@ -2942,7 +2889,7 @@
           }
         }
       },
-      "duration": 19,
+      "duration": 11,
       "dynamicFields": [
         "data.hentSaksopplysninger.persondata.foedsel.foedselsdato",
         "data.hentSaksopplysninger.persondata.sivilstand[0].bekreftelsesdato",
@@ -2950,6 +2897,59 @@
         "data.hentSaksopplysninger.persondata.sivilstand[2].bekreftelsesdato",
         "data.hentSaksopplysninger.persondata.sivilstand[3].bekreftelsesdato"
       ]
+    },
+    {
+      "request": {
+        "id": "6acf98d5edad",
+        "method": "POST",
+        "url": "http://localhost:3333/graphql/",
+        "pathname": "/graphql/",
+        "normalizedPath": "/graphql/",
+        "query": {},
+        "headers": {
+          "content-type": "application/json",
+          "accept": "*/*",
+          "authorization": "[REDACTED]"
+        },
+        "body": {
+          "operationName": "hentStatsborgerskap",
+          "variables": {
+            "behandlingID": 52
+          },
+          "query": "query hentStatsborgerskap($behandlingID: Long!) {\n  hentSaksopplysninger(behandlingID: $behandlingID) {\n    persondata {\n      statsborgerskap {\n        land\n        bekreftelsesdato\n        gyldigFraOgMed\n        gyldigTilOgMed\n        master\n        kilde\n        erHistorisk\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}"
+        }
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": {
+          "data": {
+            "hentSaksopplysninger": {
+              "persondata": {
+                "statsborgerskap": [
+                  {
+                    "land": "NORGE",
+                    "bekreftelsesdato": null,
+                    "gyldigFraOgMed": "1990-01-01",
+                    "gyldigTilOgMed": null,
+                    "master": "FREG",
+                    "kilde": "Folkeregisteret",
+                    "erHistorisk": false,
+                    "__typename": "Statsborgerskap"
+                  }
+                ],
+                "__typename": "Personopplysninger"
+              },
+              "__typename": "Saksopplysninger"
+            }
+          }
+        }
+      },
+      "duration": 14,
+      "dynamicFields": ["data.hentSaksopplysninger.persondata.statsborgerskap[0].bekreftelsesdato"]
     },
     {
       "request": {
@@ -3251,7 +3251,7 @@
           "mottaksdato": "2025-12-11"
         }
       },
-      "duration": 10,
+      "duration": 16,
       "dynamicFields": [
         "data.periode.fom",
         "data.periode.tom",
@@ -3300,7 +3300,7 @@
           }
         ]
       },
-      "duration": 7,
+      "duration": 12,
       "dynamicFields": []
     }
   ]

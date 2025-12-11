@@ -244,6 +244,7 @@ export function OpprettSak(props) {
                     feltNavn={feltNavn.soknadsland}
                     options={MKV.KTObjects.landkoder.map((item) => ({ value: item.kode, label: item.term }))}
                     className="multiselect"
+                    aria-label="I hvilke land skal arbeidet/næringen utføres i?"
                   />
                 </Nav.Column>
               </Nav.Row>

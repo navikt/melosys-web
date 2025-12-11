@@ -60,6 +60,7 @@
     "test:e2e:record": "E2E_MODE=record npx playwright test",
     "test:e2e:playback": "E2E_MODE=playback npx playwright test",
     "test:e2e:ui": "npx playwright test --ui",
+    "test:axe": "ENABLE_AXE_TESTS=true npx playwright test",
     "e2e:mock:install": "cd tests/e2e/mock-server && npm install",
     "e2e:mock:build": "cd tests/e2e/mock-server && npm run build",
     "e2e:mock:start": "cd tests/e2e/mock-server && npm start",

@@ -1,5 +1,4 @@
 import { expect, test } from "../../../recording/fixtures";
-import { runAxeAnalyze } from "../../../utils/axeUtils";
 import { HovedsidePage, USER_ID_VALID } from "../../../pages/hovedside.page";
 import { OpprettNySakPage } from "../../../pages/opprett-ny-sak/opprett-ny-sak.page";
 
@@ -27,8 +26,6 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
     await opprettNySakPage.verifiserTilgjengeligeBehandlingstyper(valgtSak!, ["Årsavregning"]);
     const harFeilmelding = await opprettNySakPage.harFeilmelding();
     expect(harFeilmelding, `Ingen feilmelding skal vises for sak ${sakId}`).toBe(false);
-
-    await runAxeAnalyze(page, testInfo.title);
   });
 
   test("EØS-sak med aktive behandlinger - viser varselmelding", async ({ page, apiRecorder }, testInfo) => {
@@ -44,8 +41,6 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
     await opprettNySakPage.verifiserEosFeilmelding();
 
     await opprettNySakPage.verifiserBehandlingstypeGruppeIkkeSynlig();
-
-    await runAxeAnalyze(page, testInfo.title);
   });
 
   test("EØS pensjonist med trygdeavgift - årsavregning tilgjengelig", async ({ page, apiRecorder }, testInfo) => {
@@ -66,8 +61,6 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
     // Verifiser at ingen feilmelding vises
     const harFeilmelding = await opprettNySakPage.harFeilmelding();
     expect(harFeilmelding, `Ingen feilmelding skal vises for EØS pensjonist-sak ${sakId}`).toBe(false);
-
-    await runAxeAnalyze(page, testInfo.title);
   });
 
   test("Avtaleland med åpne behandlinger - viser varselmelding", async ({ page, apiRecorder }, testInfo) => {
@@ -86,8 +79,6 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
 
     // Behandlingstype-gruppen skal IKKE være synlig
     await opprettNySakPage.verifiserBehandlingstypeGruppeIkkeSynlig();
-
-    await runAxeAnalyze(page, testInfo.title);
   });
 
   test("Avtaleland med avsluttede behandlinger - alle behandlingstyper tilgjengelige", async ({
@@ -108,8 +99,6 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
 
     const harFeilmelding = await opprettNySakPage.harFeilmelding();
     expect(harFeilmelding, `Ingen feilmelding skal vises for sak ${sakId}`).toBe(false);
-
-    await runAxeAnalyze(page, testInfo.title);
   });
 
   test("Utenfor avtaleland med åpne behandlinger - kun årsavregning tilgjengelig", async ({
@@ -129,8 +118,6 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
 
     const harFeilmelding = await opprettNySakPage.harFeilmelding();
     expect(harFeilmelding, `Ingen feilmelding skal vises for sak ${sakId}`).toBe(false);
-
-    await runAxeAnalyze(page, testInfo.title);
   });
 
   test("Alle behandlinger avsluttet - alle behandlingstyper tilgjengelige", async ({ page, apiRecorder }, testInfo) => {
@@ -152,8 +139,6 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
 
     const harFeilmelding = await opprettNySakPage.harFeilmelding();
     expect(harFeilmelding, `Ingen feilmelding skal vises for sak ${sakId}`).toBe(false);
-
-    await runAxeAnalyze(page, testInfo.title);
   });
 
   test("Konsistent oppførsel ved navigasjon mellom saker", async ({ page, apiRecorder }, testInfo) => {
@@ -182,7 +167,5 @@ test.describe("'Opprett ny sak for bruker - knytt til eksisterende sak", () => {
     // Sjekk at UI-en fungerer etter navigasjon - at den ikke krasjer
     const sidenFungerer = await opprettNySakPage.erOpprettNySakSidenSynlig();
     expect(sidenFungerer).toBe(true);
-
-    await runAxeAnalyze(page, testInfo.title);
   });
 });
