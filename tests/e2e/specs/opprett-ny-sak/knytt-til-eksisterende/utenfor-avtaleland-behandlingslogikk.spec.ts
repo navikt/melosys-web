@@ -1,3 +1,5 @@
+import { UI_TEXTS } from "../../../config/ui-texts";
+
 import { expect, test } from "../../../recording/fixtures";
 import { getTestMode } from "../../../config/mode";
 import { runAxeAnalyze } from "../../../utils/axeUtils";
@@ -126,7 +128,7 @@ test.describe("'Utenfor avtaleland' behandlingslogikk", () => {
     const url = hentPrepopulertSakUrl(saksnummer);
     await behandlingPage.goto(url);
 
-    await behandlingPage.avsluttBehandling("Søknaden er innvilget", "Bekreft");
+    await behandlingPage.avsluttBehandling(UI_TEXTS.VEDTAK.INNVILGET, UI_TEXTS.BUTTONS.BEKREFT);
 
     const hovedsidePage = new HovedsidePage(page);
 

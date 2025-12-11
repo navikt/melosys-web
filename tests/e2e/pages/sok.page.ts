@@ -26,7 +26,7 @@ export class SokPage {
     await this.verifySearchResultsPage();
 
     await expect(this.page.locator(`h2:has-text('Resultater for f.nr./d-nr. ${id}')`)).toBeVisible();
-    await expect(this.page.locator(`text=Fant ingen saker knyttet til f.nr./d-nr. ${id}`)).not.toBeVisible();
+    await expect(this.page.locator(`text=Fant ingen saker knyttet til f.nr./d-nr. ${id}.`)).not.toBeVisible();
 
     // Verifiser at minst én sak vises (kan være mange prepopulerte saker)
     const fagsakCount = await this.page.locator(".fagsak").count();
@@ -41,6 +41,6 @@ export class SokPage {
     await this.verifySearchResultsPage();
 
     await expect(this.page.locator(`h2:has-text('Resultater for saksnummer ${id}')`)).toBeVisible();
-    await expect(this.page.locator(`text=Fant ingen saker knyttet til saksnummer ${id}`)).toBeVisible();
+    await expect(this.page.locator(`text=Fant ingen saker knyttet til saksnummer ${id}.`)).toBeVisible();
   }
 }

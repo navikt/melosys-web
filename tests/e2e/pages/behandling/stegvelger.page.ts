@@ -1,6 +1,8 @@
 import { expect, Locator, Page } from "@playwright/test";
 import { BehandlingPage } from "./behandling.page";
 import { PrepopulertSaksnummer } from "../../utils/testdataUtils";
+import { setDatoFelt, velgRadio } from "../../utils/testUtils";
+import { UI_TEXTS } from "../../config/ui-texts";
 
 /**
  * Page Object for stegvelger-navigasjon
@@ -57,7 +59,7 @@ export class StegvelgerPage extends BehandlingPage {
   /**
    * Klikk "Bekreft og fortsett" og vent på neste steg
    */
-  async bekreftOgFortsett(): Promise<void> {
+  async klikkBekreftOgFortsett(): Promise<void> {
     await this.verifiserBekreftKnappAktivert();
     const nåværendeTittel = await this.stegTittel.textContent();
     await this.bekreftKnapp.click();
@@ -126,22 +128,11 @@ export class StegvelgerPage extends BehandlingPage {
    */
   async fyllUtInngangMinimum(fomDato: string, arbeidsland: string = "Sverige"): Promise<void> {
     // Fyll ut fra og med dato
-    const fomInput = this.page.getByLabel(/fra og med/i);
-    await expect(fomInput, `${this.ctx}: Fant ikke "Fra og med"-felt`).toBeVisible({ timeout: 5000 });
-    await fomInput.click();
-    await fomInput.pressSequentially(fomDato, { delay: 50 });
+    await setDatoFelt("Fra og med", fomDato, this.page);
     await this.page.keyboard.press("Tab"); // Lukk evt. datepicker
 
     // Velg "Velg land fra liste" radio
-    const velgLandRadio = this.page.getByRole("radio", { name: /velg land fra liste/i });
-    await expect(velgLandRadio, `${this.ctx}: Fant ikke "Velg land fra liste"-radioknapp`).toBeVisible({
-      timeout: 5000,
-    });
-
-    const isChecked = await velgLandRadio.isChecked();
-    if (!isChecked) {
-      await velgLandRadio.click({ force: true });
-    }
+    await velgRadio("Velg land fra liste", this.page);
 
     // Vent på at MultiSelect-komponenten vises etter radioknapp-klikk
     const landMultiSelect = this.page.locator(".land_multiselect");
@@ -153,14 +144,14 @@ export class StegvelgerPage extends BehandlingPage {
     const landInput = landMultiSelect.locator("input");
     await landInput.click();
 
-    const landOption = this.page.getByRole("option", { name: new RegExp(arbeidsland, "i") });
+    const landOption = this.page.getByRole("option", { name: arbeidsland });
     await expect(landOption, `${this.ctx}: Land-option "${arbeidsland}" ikke funnet i dropdown`).toBeVisible({
       timeout: 5000,
     });
     await landOption.click();
 
     // Velg trygdedekning fra dropdown
-    const trygdedekningSelect = this.page.getByRole("combobox", { name: /trygdedekning/i });
+    const trygdedekningSelect = this.page.getByRole("combobox", { name: "Trygdedekning" });
     await expect(trygdedekningSelect, `${this.ctx}: Fant ikke trygdedekning-dropdown`).toBeVisible({ timeout: 5000 });
     await trygdedekningSelect.selectOption({ index: 1 });
 
@@ -182,7 +173,7 @@ export class StegvelgerPage extends BehandlingPage {
    * @param bestemmelse Søkestreng for bestemmelse (kan være delvis match, f.eks. "§ 2-5")
    */
   async velgBestemmelse(bestemmelse: string): Promise<void> {
-    const bestemmelseSelect = this.page.getByRole("combobox", { name: /bestemmelse/i });
+    const bestemmelseSelect = this.page.getByRole("combobox", { name: "Bestemmelse" });
     await expect(bestemmelseSelect, `${this.ctx}: Fant ikke bestemmelse-dropdown`).toBeVisible({ timeout: 5000 });
 
     // Hent alle options og finn første som inneholder søkestrengen
@@ -214,7 +205,7 @@ export class StegvelgerPage extends BehandlingPage {
 
       for (let g = 0; g < groupCount; g++) {
         const group = radioGroups.nth(g);
-        const jaRadio = group.getByRole("radio", { name: /^ja$/i });
+        const jaRadio = group.getByRole("radio", { name: "Ja" });
 
         if (await jaRadio.isVisible({ timeout: 500 }).catch(() => false)) {
           const isChecked = await jaRadio.isChecked();
@@ -238,19 +229,12 @@ export class StegvelgerPage extends BehandlingPage {
    * Fyller ut "Til og med" dato, trygdedekning og resultat for første periode
    */
   async fyllUtPerioderMinimum(): Promise<void> {
-    // Fyll ut "Til og med" dato hvis tom (påkrevd felt)
-    const tomInput = this.page.getByRole("textbox", { name: /til og med/i }).first();
-    if (await tomInput.isVisible({ timeout: 2000 }).catch(() => false)) {
-      const currentValue = await tomInput.inputValue();
-      if (!currentValue) {
-        // Sett til 31.12.2024 som standard sluttdato
-        await tomInput.fill("31.12.2024");
-        await this.page.waitForTimeout(300);
-      }
-    }
+    // Fyll ut "Til og med" dato (påkrevd felt)
+    await setDatoFelt("Til og med", "31.12.2024", this.page);
+    await this.page.waitForTimeout(300);
 
     // Velg trygdedekning for første periode
-    const trygdedekningSelect = this.page.getByRole("combobox", { name: /trygdedekning/i }).first();
+    const trygdedekningSelect = this.page.getByRole("combobox", { name: "Trygdedekning" }).first();
     if (await trygdedekningSelect.isVisible({ timeout: 2000 }).catch(() => false)) {
       const selectedIndex = await trygdedekningSelect.evaluate((el: HTMLSelectElement) => el.selectedIndex);
       if (selectedIndex <= 0) {
@@ -259,7 +243,7 @@ export class StegvelgerPage extends BehandlingPage {
     }
 
     // Velg resultat for første periode
-    const resultatSelect = this.page.getByRole("combobox", { name: /resultat/i }).first();
+    const resultatSelect = this.page.getByRole("combobox", { name: UI_TEXTS.LABELS.RESULTAT }).first();
     if (await resultatSelect.isVisible({ timeout: 2000 }).catch(() => false)) {
       const selectedIndex = await resultatSelect.evaluate((el: HTMLSelectElement) => el.selectedIndex);
       if (selectedIndex <= 0) {
@@ -289,13 +273,10 @@ export class StegvelgerPage extends BehandlingPage {
     if (erAktiv) return;
 
     // Fyll ut "Fra og med" dato
-    const fomInput = this.page.getByLabel(/fra og med/i);
-    if (await fomInput.isVisible({ timeout: 2000 }).catch(() => false)) {
-      await fomInput.fill(fomDato);
-    }
+    await setDatoFelt("Fra og med", fomDato, this.page);
 
     // Velg land fra dropdown
-    const landSelect = this.page.getByRole("combobox", { name: /^land$/i });
+    const landSelect = this.page.getByRole("combobox", { name: "Land" });
     if (await landSelect.isVisible({ timeout: 2000 }).catch(() => false)) {
       // Prøv å velge basert på landnavn (label)
       try {

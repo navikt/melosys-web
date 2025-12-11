@@ -1,4 +1,5 @@
 import { expect, Page } from "@playwright/test";
+import { UI_TEXTS } from "../../config/ui-texts";
 import { BehandlingPage } from "./behandling.page";
 import { PrepopulertSaksnummer } from "../../utils/testdataUtils";
 
@@ -27,7 +28,7 @@ export class TrygdeavgiftPage extends BehandlingPage {
    * @param erSkattepliktig - true for "Ja", false for "Nei"
    */
   async velgSkattepliktig(indeks: number, erSkattepliktig: boolean): Promise<void> {
-    await this.verifiserSteg("Trygdeavgift");
+    await this.verifiserSteg(UI_TEXTS.STEG.TRYGDEAVGIFT);
 
     // Radio-knappene har verdier "SKATTEPLIKTIG" (Ja) og "IKKE_SKATTEPLIKTIG" (Nei)
     const name = `skatteforholdsperioder[${indeks}].skatteplikttype`;

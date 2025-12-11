@@ -250,7 +250,7 @@ export class BehandlingPage {
       }
     }
 
-    // Finn "Bekreft" knappen inne i modalen
+    // Finn bekreft-knappen inne i modalen
     const bekreftKnapp = modal.locator(`button:has-text("${buttonText}")`);
 
     await expect(bekreftKnapp, `${this.ctx}: Fant ikke bekreft-knappen`).toBeVisible({ timeout: 2000 });

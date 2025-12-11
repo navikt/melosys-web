@@ -23,9 +23,19 @@ function withTimeout(baseTimeout: number): number {
   return baseTimeout * TIMEOUT_MULTIPLIER;
 }
 
-/** Vite dev server configuration (shared between modes) */
+/** Vite dev server configuration for live/record mode (uses real API) */
 const VITE_SERVER = {
   command: COMMANDS.VITE,
+  url: `http://localhost:${PORTS.VITE}`,
+  reuseExistingServer: false,
+  timeout: TIMEOUTS.VITE_STARTUP,
+  stdout: "pipe" as const,
+  stderr: "pipe" as const,
+};
+
+/** Vite dev server configuration for playback mode (uses mock API) */
+const VITE_SERVER_PLAYBACK = {
+  command: COMMANDS.VITE_PLAYBACK,
   url: `http://localhost:${PORTS.VITE}`,
   reuseExistingServer: false,
   timeout: TIMEOUTS.VITE_STARTUP,
@@ -39,13 +49,13 @@ function getWebServerConfig() {
     return [
       {
         command: COMMANDS.MOCK_SERVER,
-        url: `http://localhost:${PORTS.API}/health`,
+        url: `http://localhost:${PORTS.MOCK_API}/health`,
         reuseExistingServer: !IS_CI,
         timeout: TIMEOUTS.MOCK_SERVER_STARTUP,
         stdout: "pipe" as const,
         stderr: "pipe" as const,
       },
-      VITE_SERVER,
+      VITE_SERVER_PLAYBACK,
     ];
   }
   return VITE_SERVER;

@@ -1,4 +1,5 @@
 import { expect, Page } from "@playwright/test";
+import { UI_TEXTS } from "../config/ui-texts";
 
 export const USER_ID_VALID = "30056928150";
 export const USER_ID_INVALID = "INVALID123";
@@ -14,6 +15,22 @@ export class HovedsidePage {
     this.page = page;
   }
 
+  private get createButton() {
+    return this.page.getByRole("button", { name: UI_TEXTS.BUTTONS.OPPRETT_NY_SAK });
+  }
+
+  private get searchForm() {
+    return this.page.locator("form.sokeskjema");
+  }
+
+  private get searchInput() {
+    return this.searchForm.locator("input[type='text']");
+  }
+
+  private get searchButton() {
+    return this.searchForm.locator(".sokeskjema__knapp button");
+  }
+
   /**
    * Naviger til hovedsiden og vent på at den er ferdig lastet
    */
@@ -22,8 +39,8 @@ export class HovedsidePage {
     await expect(this.page).toHaveURL("/melosys");
     await expect(this.page).toHaveTitle(/Melosys/);
     await expect(
-      this.page.locator("h1:has-text('Mine oppgaver')"),
-      "Heading 'Mine oppgaver' skal være synlig",
+      this.page.getByRole("heading", { name: UI_TEXTS.HEADINGS.MINE_OPPGAVER, level: 1 }),
+      `Heading '${UI_TEXTS.HEADINGS.MINE_OPPGAVER}' skal være synlig`,
     ).toBeVisible();
     await expect(this.page.locator("text=/\\d+ oppgaver/"), "Oppgaveteller skal være synlig").toBeVisible();
   }
@@ -32,44 +49,32 @@ export class HovedsidePage {
    * Verifiser at "Opprett ny sak/behandling" button er synlig
    */
   async verifiserOpprettNySakKnapp(): Promise<void> {
-    const createButton = this.page.locator("button:has-text('Opprett ny sak/behandling')");
-    await expect(createButton, "Knapp 'Opprett ny sak/behandling' skal være synlig").toBeVisible();
+    await expect(this.createButton, `Knapp '${UI_TEXTS.BUTTONS.OPPRETT_NY_SAK}' skal være synlig`).toBeVisible();
   }
 
   /**
    * Klikk på "Opprett ny sak/behandling" button
    */
   async klikkOpprettNySakKnapp(): Promise<void> {
-    const createButton = this.page.locator("button:has-text('Opprett ny sak/behandling')");
-    await expect(createButton, "Knapp 'Opprett ny sak/behandling' skal være synlig").toBeVisible();
-    await createButton.click();
+    await expect(this.createButton, `Knapp '${UI_TEXTS.BUTTONS.OPPRETT_NY_SAK}' skal være synlig`).toBeVisible();
+    await this.createButton.click();
     await this.page.waitForLoadState("domcontentloaded");
   }
 
   /**
-   * Gi iput til søkefeltet og klikk på søkeknappen
+   * Gi input til søkefeltet og klikk på søkeknappen
    * @param input - søkestreng
    */
   async søk(input: string): Promise<void> {
-    await expect(this.page.locator("form.sokeskjema"), "Søkeskjema skal være synlig").toBeVisible();
-
-    const searchInput = this.page.locator("form.sokeskjema input[type='text']");
-
-    const searchInputCount = await searchInput.count();
-    expect(searchInputCount > 0, "Søkefeltet 'Søk sak:' ble ikke funnet").toBeTruthy();
-
-    await searchInput.fill(input);
-
-    const searchButton = this.page.locator("form.sokeskjema .sokeskjema__knapp button");
-
-    const searchButtonCount = await searchButton.count();
-    expect(searchButtonCount > 0, "Søkeknappen ble ikke funnet").toBeTruthy();
-
-    await searchButton.click();
+    await expect(this.searchForm, "Søkeskjema skal være synlig").toBeVisible();
+    await expect(this.searchInput, "Søkefeltet skal være synlig").toBeVisible();
+    await this.searchInput.fill(input);
+    await expect(this.searchButton, "Søkeknappen skal være synlig").toBeVisible();
+    await this.searchButton.click();
 
     await expect(
-      this.page.locator("section.sokresultat h1:has-text('Saksoversikt')"),
-      "Forventet at søkeresultatsiden med 'Saksoversikt' vises etter klikk på Søk-knappen",
+      this.page.locator("section.sokresultat").getByRole("heading", { name: UI_TEXTS.HEADINGS.SAKSOVERSIKT, level: 1 }),
+      `Forventet at søkeresultatsiden med '${UI_TEXTS.HEADINGS.SAKSOVERSIKT}' vises etter klikk på Søk-knappen`,
     ).toBeVisible({ timeout: 15000 });
   }
 }
