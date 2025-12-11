@@ -65,7 +65,7 @@ exports[`AdresseTableContainer > snapshot test 1`] = `
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
           focusable="false"
-          role="img"
+          aria-hidden="true"
         >
           <path
             fill-rule="evenodd"
@@ -195,7 +195,7 @@ exports[`AdresseTableContainer > snapshot test historisk åpnet 1`] = `
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
           focusable="false"
-          role="img"
+          aria-hidden="true"
         >
           <path
             fill-rule="evenodd"

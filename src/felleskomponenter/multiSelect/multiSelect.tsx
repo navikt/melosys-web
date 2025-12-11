@@ -17,19 +17,29 @@ interface MultiSelectProps<T> {
   feil?: string;
   redigerbart?: boolean;
   className?: string;
+  /** aria-label for tilgjengelighet - brukes hvis label er en ReactNode som ikke kan leses som tekst */
+  "aria-label"?: string;
 }
 
 function MultiSelect<T extends OptionBase>(props: MultiSelectProps<T>) {
   const { label, values, onChange, options, feil, className, redigerbart = true } = props;
+  const ariaLabel = props["aria-label"];
 
   const selectId = `select${Utils._uuid()}`;
+  const labelId = `${selectId}-label`;
+
+  // Utled aria-label fra label prop hvis den er en string, ellers bruk eksplisitt aria-label
+  const effectiveAriaLabel = ariaLabel ?? (typeof label === "string" ? label : undefined);
+
   return (
     <div className={className} style={{ cursor: redigerbart ? "default" : "not-allowed" }}>
-      <label htmlFor={selectId} style={{ display: "block", paddingBottom: "0.5rem" }}>
+      <label id={labelId} htmlFor={selectId} style={{ display: "block", paddingBottom: "0.5rem" }}>
         {label}
       </label>
       <Select
-        id={selectId}
+        inputId={selectId}
+        aria-labelledby={labelId}
+        aria-label={effectiveAriaLabel}
         onChange={(selectedOptions) => onChange(selectedOptions || [])}
         menuPortalTarget={document.body}
         options={options}
