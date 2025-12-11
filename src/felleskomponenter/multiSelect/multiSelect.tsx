@@ -39,7 +39,7 @@ function MultiSelect<T extends OptionBase>(props: MultiSelectProps<T>) {
       <Select
         inputId={selectId}
         aria-labelledby={labelId}
-        aria-label={effectiveAriaLabel}
+        {...(effectiveAriaLabel ? { "aria-label": effectiveAriaLabel } : {})}
         onChange={(selectedOptions) => onChange(selectedOptions || [])}
         menuPortalTarget={document.body}
         options={options}

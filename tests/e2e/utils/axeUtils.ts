@@ -13,14 +13,23 @@ export const disableAxeTests = true;
  *
  * @see https://github.com/JedWatson/react-select/issues/3355 - react-select label issues
  * @see https://github.com/quilljs/quill/issues - Quill editor accessibility issues
+ * @see https://github.com/navikt/aksel/issues - NAV Aksel DatePicker label issues
  */
 const KNOWN_THIRD_PARTY_EXCLUSIONS = [
   // Quill Editor - mangler accessible name på picker-elementer
+  // Bruker flere selectors for å fange alle Quill-elementer
   ".ql-picker-label",
+  ".ql-picker",
   ".ql-toolbar",
+  ".ql-toolbar button",
+  "[class^='ql-']",
   // react-select har kjente ARIA-problemer som er rapportert
   // Se: https://github.com/JedWatson/react-select/issues/3355
   "[class*='react-select']",
+  // NAV Aksel DatePicker - input-felt mangler labels (kjent issue)
+  ".navds-date__field-input",
+  // Definition lists som brukes for metadata-visning (ikke interaktive)
+  ".behandling__meta",
 ];
 
 /**
