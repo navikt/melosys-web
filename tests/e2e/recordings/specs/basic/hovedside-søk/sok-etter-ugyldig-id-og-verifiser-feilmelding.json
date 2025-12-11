@@ -1,47 +1,9 @@
 {
   "version": "1.0",
-  "recordedAt": "2025-12-11T10:56:28.099Z",
+  "recordedAt": "2025-12-11T13:43:27.922Z",
   "testFile": "/Users/ragnarwestad/develop/nav/melosys-web/tests/e2e/specs/basic/hovedside-søk.spec.ts",
   "testName": "Søk etter ugyldig ID og verifiser feilmelding",
   "exchanges": [
-    {
-      "request": {
-        "id": "4ce2a0992867",
-        "method": "GET",
-        "url": "http://localhost:3333/api/featuretoggle?features=melosys.faktureringskomponent.vis_referanse&features=melosys.ftrl.begrense_periode_vedtak&features=melosys.11_3_a_Norge_er_utpekt&features=melosys.pensjonist&features=melosys.pensjonist_eos&features=standardvedlegg_eget_vedlegg_avtaleland&features=melosys.arsavregning&features=melosys.arsavregning.uten.flyt&features=melosys.faktureringskomponenten.ikke-tidligere-perioder&features=melosys.eos_fakturering_av_trygdeavgift",
-        "pathname": "/api/featuretoggle",
-        "normalizedPath": "/api/featuretoggle",
-        "query": {
-          "features": "melosys.eos_fakturering_av_trygdeavgift"
-        },
-        "headers": {
-          "accept": "application/json",
-          "authorization": "[REDACTED]"
-        },
-        "body": null
-      },
-      "response": {
-        "status": 200,
-        "statusText": "OK",
-        "headers": {
-          "content-type": "application/json"
-        },
-        "body": {
-          "melosys.faktureringskomponent.vis_referanse": true,
-          "melosys.pensjonist": true,
-          "melosys.pensjonist_eos": true,
-          "standardvedlegg_eget_vedlegg_avtaleland": true,
-          "melosys.ftrl.begrense_periode_vedtak": true,
-          "melosys.arsavregning": true,
-          "melosys.faktureringskomponenten.ikke-tidligere-perioder": true,
-          "melosys.11_3_a_Norge_er_utpekt": true,
-          "melosys.eos_fakturering_av_trygdeavgift": true,
-          "melosys.arsavregning.uten.flyt": false
-        }
-      },
-      "duration": 17,
-      "dynamicFields": []
-    },
     {
       "request": {
         "id": "74592ac6ace6",
@@ -77,7 +39,45 @@
           }
         ]
       },
-      "duration": 25,
+      "duration": 21,
+      "dynamicFields": []
+    },
+    {
+      "request": {
+        "id": "4ce2a0992867",
+        "method": "GET",
+        "url": "http://localhost:3333/api/featuretoggle?features=melosys.faktureringskomponent.vis_referanse&features=melosys.ftrl.begrense_periode_vedtak&features=melosys.11_3_a_Norge_er_utpekt&features=melosys.pensjonist&features=melosys.pensjonist_eos&features=standardvedlegg_eget_vedlegg_avtaleland&features=melosys.arsavregning&features=melosys.arsavregning.uten.flyt&features=melosys.faktureringskomponenten.ikke-tidligere-perioder&features=melosys.eos_fakturering_av_trygdeavgift",
+        "pathname": "/api/featuretoggle",
+        "normalizedPath": "/api/featuretoggle",
+        "query": {
+          "features": "melosys.eos_fakturering_av_trygdeavgift"
+        },
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": {
+          "melosys.faktureringskomponent.vis_referanse": true,
+          "melosys.pensjonist": true,
+          "melosys.pensjonist_eos": true,
+          "standardvedlegg_eget_vedlegg_avtaleland": true,
+          "melosys.ftrl.begrense_periode_vedtak": true,
+          "melosys.arsavregning": true,
+          "melosys.faktureringskomponenten.ikke-tidligere-perioder": true,
+          "melosys.11_3_a_Norge_er_utpekt": true,
+          "melosys.eos_fakturering_av_trygdeavgift": true,
+          "melosys.arsavregning.uten.flyt": false
+        }
+      },
+      "duration": 22,
       "dynamicFields": []
     },
     {
@@ -1111,39 +1111,7 @@
           }
         ]
       },
-      "duration": 7,
-      "dynamicFields": []
-    },
-    {
-      "request": {
-        "id": "34b413fb9032",
-        "method": "POST",
-        "url": "http://localhost:3333/api/fagsaker/sok?aktiveBehandlinger=false",
-        "pathname": "/api/fagsaker/sok",
-        "normalizedPath": "/api/fagsaker/sok",
-        "query": {
-          "aktiveBehandlinger": "false"
-        },
-        "headers": {
-          "content-type": "application/json",
-          "accept": "application/json",
-          "authorization": "[REDACTED]"
-        },
-        "body": {
-          "ident": null,
-          "saksnummer": "INVALID123",
-          "orgnr": null
-        }
-      },
-      "response": {
-        "status": 200,
-        "statusText": "OK",
-        "headers": {
-          "content-type": "application/json"
-        },
-        "body": []
-      },
-      "duration": 9,
+      "duration": 60,
       "dynamicFields": []
     }
   ]

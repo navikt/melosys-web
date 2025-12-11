@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "recordedAt": "2025-12-11T10:56:44.011Z",
+  "recordedAt": "2025-12-11T13:36:44.240Z",
   "testFile": "/Users/ragnarwestad/develop/nav/melosys-web/tests/e2e/specs/behandle-sak/send-brev-validering.spec.ts",
   "testName": "'Send brev' knappen er disabled når hverken mottaker eller brevmal er valgt ",
   "exchanges": [
@@ -39,7 +39,7 @@
           "melosys.arsavregning.uten.flyt": false
         }
       },
-      "duration": 9,
+      "duration": 18,
       "dynamicFields": []
     },
     {
@@ -1073,7 +1073,7 @@
           }
         ]
       },
-      "duration": 10,
+      "duration": 19,
       "dynamicFields": []
     },
     {
@@ -1112,12 +1112,12 @@
             "term": "Saken er opprettet"
           },
           "betalingsvalg": null,
-          "registrertDato": "2025-12-11T10:56:21.037356Z",
-          "endretDato": "2025-12-11T10:56:21.043172Z",
+          "registrertDato": "2025-12-11T13:36:09.027915Z",
+          "endretDato": "2025-12-11T13:36:09.041983Z",
           "hovedpartRolle": "BRUKER"
         }
       },
-      "duration": 20,
+      "duration": 81,
       "dynamicFields": ["registrertDato", "endretDato"]
     },
     {
@@ -1155,8 +1155,8 @@
               "kode": "YRKESAKTIV",
               "term": "Yrkesaktiv"
             },
-            "registrertDato": "2025-12-11T10:56:21.038691Z",
-            "endretDato": "2025-12-11T10:56:21.053498Z",
+            "registrertDato": "2025-12-11T13:36:09.031864Z",
+            "endretDato": "2025-12-11T13:36:09.066449Z",
             "endretAvNavn": "Lokal Testbruker",
             "sisteOpplysningerHentetDato": null,
             "svarFrist": null,
@@ -1191,7 +1191,7 @@
           "redigerbart": true
         }
       },
-      "duration": 62,
+      "duration": 185,
       "dynamicFields": [
         "oppsummering.registrertDato",
         "oppsummering.endretDato",
@@ -1234,7 +1234,7 @@
           "aarsavregningID": null
         }
       },
-      "duration": 46,
+      "duration": 151,
       "dynamicFields": []
     },
     {
@@ -1326,7 +1326,7 @@
           "mottaksdato": "2025-12-11"
         }
       },
-      "duration": 36,
+      "duration": 112,
       "dynamicFields": [
         "data.periode.fom",
         "data.periode.tom",
@@ -1357,7 +1357,7 @@
         },
         "body": []
       },
-      "duration": 21,
+      "duration": 11,
       "dynamicFields": []
     },
     {
@@ -1381,46 +1381,6 @@
           "content-type": "application/json"
         },
         "body": []
-      },
-      "duration": 18,
-      "dynamicFields": []
-    },
-    {
-      "request": {
-        "id": "fc1dd229b921",
-        "method": "GET",
-        "url": "http://localhost:3333/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/?saksnummer=MEL-1003",
-        "pathname": "/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/",
-        "normalizedPath": "/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/",
-        "query": {
-          "saksnummer": "MEL-1003"
-        },
-        "headers": {
-          "accept": "application/json",
-          "authorization": "[REDACTED]"
-        },
-        "body": null
-      },
-      "response": {
-        "status": 200,
-        "statusText": "OK",
-        "headers": {
-          "content-type": "application/json"
-        },
-        "body": [
-          {
-            "kode": "EU_EOS",
-            "term": "EU/EØS-land"
-          },
-          {
-            "kode": "TRYGDEAVTALE",
-            "term": "Avtaleland"
-          },
-          {
-            "kode": "FTRL",
-            "term": "Utenfor avtaleland"
-          }
-        ]
       },
       "duration": 11,
       "dynamicFields": []
@@ -1464,54 +1424,7 @@
           }
         ]
       },
-      "duration": 12,
-      "dynamicFields": []
-    },
-    {
-      "request": {
-        "id": "e1760f33db63",
-        "method": "GET",
-        "url": "http://localhost:3333/api/saksbehandling/MEL-1003/behandlingstyper/kombinasjoner-for-endring/?hovedpart=BRUKER&sakstype=TRYGDEAVTALE&sakstema=MEDLEMSKAP_LOVVALG&behandlingstema=YRKESAKTIV",
-        "pathname": "/api/saksbehandling/MEL-1003/behandlingstyper/kombinasjoner-for-endring/",
-        "normalizedPath": "/api/saksbehandling/:saksnummer/behandlingstyper/kombinasjoner-for-endring/",
-        "query": {
-          "hovedpart": "BRUKER",
-          "sakstype": "TRYGDEAVTALE",
-          "sakstema": "MEDLEMSKAP_LOVVALG",
-          "behandlingstema": "YRKESAKTIV"
-        },
-        "headers": {
-          "accept": "application/json",
-          "authorization": "[REDACTED]"
-        },
-        "body": null
-      },
-      "response": {
-        "status": 200,
-        "statusText": "OK",
-        "headers": {
-          "content-type": "application/json"
-        },
-        "body": [
-          {
-            "kode": "FØRSTEGANG",
-            "term": "Førstegangsbehandling"
-          },
-          {
-            "kode": "NY_VURDERING",
-            "term": "Ny vurdering"
-          },
-          {
-            "kode": "KLAGE",
-            "term": "Klage"
-          },
-          {
-            "kode": "HENVENDELSE",
-            "term": "Henvendelse"
-          }
-        ]
-      },
-      "duration": 14,
+      "duration": 49,
       "dynamicFields": []
     },
     {
@@ -1558,70 +1471,18 @@
           }
         ]
       },
-      "duration": 15,
+      "duration": 71,
       "dynamicFields": []
     },
     {
       "request": {
-        "id": "aa48562e6130",
+        "id": "fc1dd229b921",
         "method": "GET",
-        "url": "http://localhost:3333/api/brev/utkast/3",
-        "pathname": "/api/brev/utkast/3",
-        "normalizedPath": "/api/brev/utkast/:id",
-        "query": {},
-        "headers": {
-          "accept": "application/json",
-          "authorization": "[REDACTED]"
-        },
-        "body": null
-      },
-      "response": {
-        "status": 200,
-        "statusText": "OK",
-        "headers": {
-          "content-type": "application/json"
-        },
-        "body": []
-      },
-      "duration": 18,
-      "dynamicFields": []
-    },
-    {
-      "request": {
-        "id": "223b043bcb56",
-        "method": "GET",
-        "url": "http://localhost:3333/api/behandlinger/3/aarsak/mottaksdato",
-        "pathname": "/api/behandlinger/3/aarsak/mottaksdato",
-        "normalizedPath": "/api/behandlinger/:behandlingId/aarsak/mottaksdato",
-        "query": {},
-        "headers": {
-          "accept": "application/json",
-          "authorization": "[REDACTED]"
-        },
-        "body": null
-      },
-      "response": {
-        "status": 200,
-        "statusText": "OK",
-        "headers": {
-          "content-type": "application/json"
-        },
-        "body": {
-          "mottaksdato": "2025-12-11"
-        }
-      },
-      "duration": 18,
-      "dynamicFields": ["mottaksdato"]
-    },
-    {
-      "request": {
-        "id": "629a476cbb05",
-        "method": "GET",
-        "url": "http://localhost:3333/api/fagsaker/MEL-1003/aktoerer/?rolleKode=FULLMEKTIG",
-        "pathname": "/api/fagsaker/MEL-1003/aktoerer/",
-        "normalizedPath": "/api/fagsaker/:saksnummer/aktoerer/",
+        "url": "http://localhost:3333/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/?saksnummer=MEL-1003",
+        "pathname": "/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/",
+        "normalizedPath": "/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/",
         "query": {
-          "rolleKode": "FULLMEKTIG"
+          "saksnummer": "MEL-1003"
         },
         "headers": {
           "accept": "application/json",
@@ -1635,9 +1496,69 @@
         "headers": {
           "content-type": "application/json"
         },
-        "body": []
+        "body": [
+          {
+            "kode": "EU_EOS",
+            "term": "EU/EØS-land"
+          },
+          {
+            "kode": "TRYGDEAVTALE",
+            "term": "Avtaleland"
+          },
+          {
+            "kode": "FTRL",
+            "term": "Utenfor avtaleland"
+          }
+        ]
       },
-      "duration": 23,
+      "duration": 75,
+      "dynamicFields": []
+    },
+    {
+      "request": {
+        "id": "e1760f33db63",
+        "method": "GET",
+        "url": "http://localhost:3333/api/saksbehandling/MEL-1003/behandlingstyper/kombinasjoner-for-endring/?hovedpart=BRUKER&sakstype=TRYGDEAVTALE&sakstema=MEDLEMSKAP_LOVVALG&behandlingstema=YRKESAKTIV",
+        "pathname": "/api/saksbehandling/MEL-1003/behandlingstyper/kombinasjoner-for-endring/",
+        "normalizedPath": "/api/saksbehandling/:saksnummer/behandlingstyper/kombinasjoner-for-endring/",
+        "query": {
+          "hovedpart": "BRUKER",
+          "sakstype": "TRYGDEAVTALE",
+          "sakstema": "MEDLEMSKAP_LOVVALG",
+          "behandlingstema": "YRKESAKTIV"
+        },
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": [
+          {
+            "kode": "FØRSTEGANG",
+            "term": "Førstegangsbehandling"
+          },
+          {
+            "kode": "NY_VURDERING",
+            "term": "Ny vurdering"
+          },
+          {
+            "kode": "KLAGE",
+            "term": "Klage"
+          },
+          {
+            "kode": "HENVENDELSE",
+            "term": "Henvendelse"
+          }
+        ]
+      },
+      "duration": 81,
       "dynamicFields": []
     },
     {
@@ -1680,6 +1601,11 @@
                 "kjoenn": "UKJENT",
                 "folkeregisterpersonstatuser": [
                   {
+                    "kode": "BOSATT",
+                    "erHistorisk": false,
+                    "__typename": "Folkeregisterpersonstatus"
+                  },
+                  {
                     "kode": "UTFLYTTET",
                     "erHistorisk": true,
                     "__typename": "Folkeregisterpersonstatus"
@@ -1687,11 +1613,6 @@
                   {
                     "kode": "MIDLERTIDIG",
                     "erHistorisk": true,
-                    "__typename": "Folkeregisterpersonstatus"
-                  },
-                  {
-                    "kode": "BOSATT",
-                    "erHistorisk": false,
                     "__typename": "Folkeregisterpersonstatus"
                   }
                 ],
@@ -1732,7 +1653,7 @@
           }
         }
       },
-      "duration": 19,
+      "duration": 127,
       "dynamicFields": []
     },
     {
@@ -1759,7 +1680,7 @@
           "harBehandlingMedTrygdeavgift": false
         }
       },
-      "duration": 32,
+      "duration": 203,
       "dynamicFields": []
     },
     {
@@ -1786,7 +1707,111 @@
           "harBehandlingMedTrygdeavgift": false
         }
       },
-      "duration": 31,
+      "duration": 171,
+      "dynamicFields": []
+    },
+    {
+      "request": {
+        "id": "aa48562e6130",
+        "method": "GET",
+        "url": "http://localhost:3333/api/brev/utkast/3",
+        "pathname": "/api/brev/utkast/3",
+        "normalizedPath": "/api/brev/utkast/:id",
+        "query": {},
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": []
+      },
+      "duration": 161,
+      "dynamicFields": []
+    },
+    {
+      "request": {
+        "id": "223b043bcb56",
+        "method": "GET",
+        "url": "http://localhost:3333/api/behandlinger/3/aarsak/mottaksdato",
+        "pathname": "/api/behandlinger/3/aarsak/mottaksdato",
+        "normalizedPath": "/api/behandlinger/:behandlingId/aarsak/mottaksdato",
+        "query": {},
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": {
+          "mottaksdato": "2025-12-11"
+        }
+      },
+      "duration": 179,
+      "dynamicFields": ["mottaksdato"]
+    },
+    {
+      "request": {
+        "id": "629a476cbb05",
+        "method": "GET",
+        "url": "http://localhost:3333/api/fagsaker/MEL-1003/aktoerer/?rolleKode=FULLMEKTIG",
+        "pathname": "/api/fagsaker/MEL-1003/aktoerer/",
+        "normalizedPath": "/api/fagsaker/:saksnummer/aktoerer/",
+        "query": {
+          "rolleKode": "FULLMEKTIG"
+        },
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": []
+      },
+      "duration": 196,
+      "dynamicFields": []
+    },
+    {
+      "request": {
+        "id": "aa48562e6130",
+        "method": "GET",
+        "url": "http://localhost:3333/api/brev/utkast/3",
+        "pathname": "/api/brev/utkast/3",
+        "normalizedPath": "/api/brev/utkast/:id",
+        "query": {},
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": []
+      },
+      "duration": 22,
       "dynamicFields": []
     },
     {
@@ -1822,32 +1847,7 @@
           }
         ]
       },
-      "duration": 5,
-      "dynamicFields": []
-    },
-    {
-      "request": {
-        "id": "aa48562e6130",
-        "method": "GET",
-        "url": "http://localhost:3333/api/brev/utkast/3",
-        "pathname": "/api/brev/utkast/3",
-        "normalizedPath": "/api/brev/utkast/:id",
-        "query": {},
-        "headers": {
-          "accept": "application/json",
-          "authorization": "[REDACTED]"
-        },
-        "body": null
-      },
-      "response": {
-        "status": 200,
-        "statusText": "OK",
-        "headers": {
-          "content-type": "application/json"
-        },
-        "body": []
-      },
-      "duration": 9,
+      "duration": 49,
       "dynamicFields": []
     },
     {
@@ -2574,7 +2574,7 @@
           }
         ]
       },
-      "duration": 52,
+      "duration": 179,
       "dynamicFields": []
     }
   ]

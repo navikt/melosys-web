@@ -1,47 +1,9 @@
 {
   "version": "1.0",
-  "recordedAt": "2025-12-11T10:56:26.841Z",
+  "recordedAt": "2025-12-11T13:43:27.446Z",
   "testFile": "/Users/ragnarwestad/develop/nav/melosys-web/tests/e2e/specs/basic/hovedside-søk.spec.ts",
   "testName": "Søk etter gyldig ID og verifiser resultater",
   "exchanges": [
-    {
-      "request": {
-        "id": "74592ac6ace6",
-        "method": "GET",
-        "url": "http://localhost:3333/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/?",
-        "pathname": "/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/",
-        "normalizedPath": "/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/",
-        "query": {},
-        "headers": {
-          "accept": "application/json",
-          "authorization": "[REDACTED]"
-        },
-        "body": null
-      },
-      "response": {
-        "status": 200,
-        "statusText": "OK",
-        "headers": {
-          "content-type": "application/json"
-        },
-        "body": [
-          {
-            "kode": "EU_EOS",
-            "term": "EU/EØS-land"
-          },
-          {
-            "kode": "TRYGDEAVTALE",
-            "term": "Avtaleland"
-          },
-          {
-            "kode": "FTRL",
-            "term": "Utenfor avtaleland"
-          }
-        ]
-      },
-      "duration": 74,
-      "dynamicFields": []
-    },
     {
       "request": {
         "id": "4ce2a0992867",
@@ -77,7 +39,45 @@
           "melosys.arsavregning.uten.flyt": false
         }
       },
-      "duration": 78,
+      "duration": 29,
+      "dynamicFields": []
+    },
+    {
+      "request": {
+        "id": "74592ac6ace6",
+        "method": "GET",
+        "url": "http://localhost:3333/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/?",
+        "pathname": "/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/",
+        "normalizedPath": "/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/",
+        "query": {},
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": [
+          {
+            "kode": "EU_EOS",
+            "term": "EU/EØS-land"
+          },
+          {
+            "kode": "TRYGDEAVTALE",
+            "term": "Avtaleland"
+          },
+          {
+            "kode": "FTRL",
+            "term": "Utenfor avtaleland"
+          }
+        ]
+      },
+      "duration": 31,
       "dynamicFields": []
     },
     {
@@ -1111,7 +1111,7 @@
           }
         ]
       },
-      "duration": 6,
+      "duration": 8,
       "dynamicFields": []
     },
     {
@@ -1160,8 +1160,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.443727Z",
-                "endretDato": "2025-12-11T10:56:21.461970Z",
+                "registrertDato": "2025-12-11T13:43:19.795323Z",
+                "endretDato": "2025-12-11T13:43:19.830259Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1033",
@@ -1175,7 +1175,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1033\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1033\n",
               "sisteNotat": null
             },
             {
@@ -1201,8 +1201,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.455487Z",
-                "endretDato": "2025-12-11T10:56:21.472864Z",
+                "registrertDato": "2025-12-11T13:43:19.809789Z",
+                "endretDato": "2025-12-11T13:43:19.849505Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1034",
@@ -1216,7 +1216,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1034\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1034\n",
               "sisteNotat": null
             },
             {
@@ -1242,8 +1242,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.468910Z",
-                "endretDato": "2025-12-11T10:56:21.483840Z",
+                "registrertDato": "2025-12-11T13:43:19.843498Z",
+                "endretDato": "2025-12-11T13:43:19.866793Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1035",
@@ -1257,7 +1257,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1035\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1035\n",
               "sisteNotat": null
             },
             {
@@ -1283,8 +1283,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.479645Z",
-                "endretDato": "2025-12-11T10:56:21.495145Z",
+                "registrertDato": "2025-12-11T13:43:19.860432Z",
+                "endretDato": "2025-12-11T13:43:19.882261Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1036",
@@ -1298,7 +1298,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1036\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1036\n",
               "sisteNotat": null
             },
             {
@@ -1324,8 +1324,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.490450Z",
-                "endretDato": "2025-12-11T10:56:21.506506Z",
+                "registrertDato": "2025-12-11T13:43:19.876825Z",
+                "endretDato": "2025-12-11T13:43:19.896725Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1037",
@@ -1339,7 +1339,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1037\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1037\n",
               "sisteNotat": null
             },
             {
@@ -1365,8 +1365,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.502379Z",
-                "endretDato": "2025-12-11T10:56:21.519289Z",
+                "registrertDato": "2025-12-11T13:43:19.891595Z",
+                "endretDato": "2025-12-11T13:43:19.909762Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1038",
@@ -1380,7 +1380,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1038\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1038\n",
               "sisteNotat": null
             },
             {
@@ -1406,8 +1406,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.514046Z",
-                "endretDato": "2025-12-11T10:56:21.532570Z",
+                "registrertDato": "2025-12-11T13:43:19.904719Z",
+                "endretDato": "2025-12-11T13:43:19.923426Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1039",
@@ -1421,7 +1421,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1039\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1039\n",
               "sisteNotat": null
             },
             {
@@ -1447,8 +1447,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.527413Z",
-                "endretDato": "2025-12-11T10:56:21.545631Z",
+                "registrertDato": "2025-12-11T13:43:19.917924Z",
+                "endretDato": "2025-12-11T13:43:19.937239Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1040",
@@ -1462,7 +1462,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1040\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1040\n",
               "sisteNotat": null
             },
             {
@@ -1488,8 +1488,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.540676Z",
-                "endretDato": "2025-12-11T10:56:21.560197Z",
+                "registrertDato": "2025-12-11T13:43:19.932278Z",
+                "endretDato": "2025-12-11T13:43:19.951026Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1041",
@@ -1503,7 +1503,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1041\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1041\n",
               "sisteNotat": null
             },
             {
@@ -1529,8 +1529,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.555306Z",
-                "endretDato": "2025-12-11T10:56:21.573949Z",
+                "registrertDato": "2025-12-11T13:43:19.946279Z",
+                "endretDato": "2025-12-11T13:43:19.965876Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1042",
@@ -1544,7 +1544,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1042\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1042\n",
               "sisteNotat": null
             },
             {
@@ -1570,8 +1570,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.568765Z",
-                "endretDato": "2025-12-11T10:56:21.587519Z",
+                "registrertDato": "2025-12-11T13:43:19.960664Z",
+                "endretDato": "2025-12-11T13:43:19.979067Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1043",
@@ -1585,7 +1585,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1043\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1043\n",
               "sisteNotat": null
             },
             {
@@ -1611,8 +1611,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.582601Z",
-                "endretDato": "2025-12-11T10:56:21.601242Z",
+                "registrertDato": "2025-12-11T13:43:19.974001Z",
+                "endretDato": "2025-12-11T13:43:19.997068Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1044",
@@ -1626,7 +1626,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1044\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1044\n",
               "sisteNotat": null
             },
             {
@@ -1652,8 +1652,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.595820Z",
-                "endretDato": "2025-12-11T10:56:21.616425Z",
+                "registrertDato": "2025-12-11T13:43:19.988679Z",
+                "endretDato": "2025-12-11T13:43:20.012015Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1045",
@@ -1667,7 +1667,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1045\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1045\n",
               "sisteNotat": null
             },
             {
@@ -1693,8 +1693,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.610584Z",
-                "endretDato": "2025-12-11T10:56:21.628936Z",
+                "registrertDato": "2025-12-11T13:43:20.006480Z",
+                "endretDato": "2025-12-11T13:43:20.028580Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1046",
@@ -1708,7 +1708,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1046\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1046\n",
               "sisteNotat": null
             },
             {
@@ -1734,8 +1734,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.623961Z",
-                "endretDato": "2025-12-11T10:56:21.641213Z",
+                "registrertDato": "2025-12-11T13:43:20.022129Z",
+                "endretDato": "2025-12-11T13:43:20.051292Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1047",
@@ -1749,7 +1749,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1047\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1047\n",
               "sisteNotat": null
             },
             {
@@ -1775,8 +1775,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.636582Z",
-                "endretDato": "2025-12-11T10:56:21.652477Z",
+                "registrertDato": "2025-12-11T13:43:20.042441Z",
+                "endretDato": "2025-12-11T13:43:20.067624Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1048",
@@ -1790,7 +1790,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1048\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1048\n",
               "sisteNotat": null
             },
             {
@@ -1816,8 +1816,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.648072Z",
-                "endretDato": "2025-12-11T10:56:21.667291Z",
+                "registrertDato": "2025-12-11T13:43:20.061874Z",
+                "endretDato": "2025-12-11T13:43:20.081999Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1049",
@@ -1831,7 +1831,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1049\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1049\n",
               "sisteNotat": null
             },
             {
@@ -1857,8 +1857,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.660829Z",
-                "endretDato": "2025-12-11T10:56:21.681313Z",
+                "registrertDato": "2025-12-11T13:43:20.076782Z",
+                "endretDato": "2025-12-11T13:43:20.096009Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1050",
@@ -1872,7 +1872,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1050\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1050\n",
               "sisteNotat": null
             },
             {
@@ -1898,8 +1898,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.675991Z",
-                "endretDato": "2025-12-11T10:56:21.694247Z",
+                "registrertDato": "2025-12-11T13:43:20.091208Z",
+                "endretDato": "2025-12-11T13:43:20.107940Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1051",
@@ -1913,7 +1913,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1051\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1051\n",
               "sisteNotat": null
             },
             {
@@ -1939,8 +1939,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.689952Z",
-                "endretDato": "2025-12-11T10:56:21.707075Z",
+                "registrertDato": "2025-12-11T13:43:20.103073Z",
+                "endretDato": "2025-12-11T13:43:20.124917Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1052",
@@ -1954,7 +1954,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1052\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1052\n",
               "sisteNotat": null
             },
             {
@@ -1980,8 +1980,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.095881Z",
-                "endretDato": "2025-12-11T10:56:21.112268Z",
+                "registrertDato": "2025-12-11T13:43:19.466811Z",
+                "endretDato": "2025-12-11T13:43:19.481754Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1009",
@@ -1995,7 +1995,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1009\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1009\n",
               "sisteNotat": null
             },
             {
@@ -2021,8 +2021,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.701597Z",
-                "endretDato": "2025-12-11T10:56:21.720510Z",
+                "registrertDato": "2025-12-11T13:43:20.118220Z",
+                "endretDato": "2025-12-11T13:43:20.149406Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1053",
@@ -2036,7 +2036,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1053\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1053\n",
               "sisteNotat": null
             },
             {
@@ -2062,8 +2062,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.107590Z",
-                "endretDato": "2025-12-11T10:56:21.125855Z",
+                "registrertDato": "2025-12-11T13:43:19.477600Z",
+                "endretDato": "2025-12-11T13:43:19.492967Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1010",
@@ -2077,7 +2077,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1010\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1010\n",
               "sisteNotat": null
             },
             {
@@ -2103,8 +2103,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.715233Z",
-                "endretDato": "2025-12-11T10:56:21.737170Z",
+                "registrertDato": "2025-12-11T13:43:20.141774Z",
+                "endretDato": "2025-12-11T13:43:20.175772Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1054",
@@ -2118,7 +2118,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1054\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1054\n",
               "sisteNotat": null
             },
             {
@@ -2144,8 +2144,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.119550Z",
-                "endretDato": "2025-12-11T10:56:21.147708Z",
+                "registrertDato": "2025-12-11T13:43:19.488565Z",
+                "endretDato": "2025-12-11T13:43:19.507604Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1011",
@@ -2159,7 +2159,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1011\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1011\n",
               "sisteNotat": null
             },
             {
@@ -2185,8 +2185,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.729197Z",
-                "endretDato": "2025-12-11T10:56:21.754627Z",
+                "registrertDato": "2025-12-11T13:43:20.166957Z",
+                "endretDato": "2025-12-11T13:43:20.208196Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1055",
@@ -2200,7 +2200,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1055\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1055\n",
               "sisteNotat": null
             },
             {
@@ -2226,8 +2226,8 @@
                   "term": "Behandlingen er opprettet"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.139243Z",
-                "endretDato": "2025-12-11T10:56:21.182855Z",
+                "registrertDato": "2025-12-11T13:43:19.502918Z",
+                "endretDato": "2025-12-11T13:43:19.520613Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1012",
@@ -2241,7 +2241,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1012\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1012\n",
               "sisteNotat": null
             },
             {
@@ -2267,8 +2267,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.748562Z",
-                "endretDato": "2025-12-11T10:56:21.770159Z",
+                "registrertDato": "2025-12-11T13:43:20.197466Z",
+                "endretDato": "2025-12-11T13:43:20.238628Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1056",
@@ -2282,7 +2282,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1056\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1056\n",
               "sisteNotat": null
             },
             {
@@ -2308,8 +2308,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.175563Z",
-                "endretDato": "2025-12-11T10:56:21.227257Z",
+                "registrertDato": "2025-12-11T13:43:19.516319Z",
+                "endretDato": "2025-12-11T13:43:19.533262Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1013",
@@ -2323,7 +2323,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1013\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1013\n",
               "sisteNotat": null
             },
             {
@@ -2349,8 +2349,8 @@
                   "term": "Behandlingen er opprettet"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.763527Z",
-                "endretDato": "2025-12-11T10:56:21.787296Z",
+                "registrertDato": "2025-12-11T13:43:20.229286Z",
+                "endretDato": "2025-12-11T13:43:20.265980Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1057",
@@ -2364,7 +2364,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1057\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1057\n",
               "sisteNotat": null
             },
             {
@@ -2390,8 +2390,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.207860Z",
-                "endretDato": "2025-12-11T10:56:21.240844Z",
+                "registrertDato": "2025-12-11T13:43:19.528829Z",
+                "endretDato": "2025-12-11T13:43:19.545599Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1014",
@@ -2405,7 +2405,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1014\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1014\n",
               "sisteNotat": null
             },
             {
@@ -2431,8 +2431,8 @@
                   "term": "Behandlingen er opprettet"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.780786Z",
-                "endretDato": "2025-12-11T10:56:21.802993Z",
+                "registrertDato": "2025-12-11T13:43:20.257787Z",
+                "endretDato": "2025-12-11T13:43:20.293208Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1058",
@@ -2446,7 +2446,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1058\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1058\n",
               "sisteNotat": null
             },
             {
@@ -2472,8 +2472,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.237188Z",
-                "endretDato": "2025-12-11T10:56:21.250497Z",
+                "registrertDato": "2025-12-11T13:43:19.540776Z",
+                "endretDato": "2025-12-11T13:43:19.558827Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1015",
@@ -2487,7 +2487,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1015\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1015\n",
               "sisteNotat": null
             },
             {
@@ -2513,8 +2513,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.246937Z",
-                "endretDato": "2025-12-11T10:56:21.263062Z",
+                "registrertDato": "2025-12-11T13:43:19.553759Z",
+                "endretDato": "2025-12-11T13:43:19.571390Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1016",
@@ -2528,7 +2528,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1016\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1016\n",
               "sisteNotat": null
             },
             {
@@ -2554,8 +2554,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.258582Z",
-                "endretDato": "2025-12-11T10:56:21.273914Z",
+                "registrertDato": "2025-12-11T13:43:19.567107Z",
+                "endretDato": "2025-12-11T13:43:19.585904Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1017",
@@ -2569,7 +2569,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1017\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1017\n",
               "sisteNotat": null
             },
             {
@@ -2595,8 +2595,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.270395Z",
-                "endretDato": "2025-12-11T10:56:21.283607Z",
+                "registrertDato": "2025-12-11T13:43:19.580831Z",
+                "endretDato": "2025-12-11T13:43:19.598171Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1018",
@@ -2610,7 +2610,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1018\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1018\n",
               "sisteNotat": null
             },
             {
@@ -2636,8 +2636,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:20.926436Z",
-                "endretDato": "2025-12-11T10:56:21.030475Z",
+                "registrertDato": "2025-12-11T13:43:19.190567Z",
+                "endretDato": "2025-12-11T13:43:19.328609Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1001",
@@ -2649,9 +2649,15 @@
                 "kode": "MEDLEMSKAP_LOVVALG",
                 "term": "Medlemskap og lovvalg"
               },
-              "land": null,
-              "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1001\n",
+              "land": {
+                "landkoder": [],
+                "flereLandUkjentHvilke": false
+              },
+              "periode": {
+                "fom": null,
+                "tom": null
+              },
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1001\n",
               "sisteNotat": null
             },
             {
@@ -2677,8 +2683,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.023225Z",
-                "endretDato": "2025-12-11T10:56:21.043117Z",
+                "registrertDato": "2025-12-11T13:43:19.320069Z",
+                "endretDato": "2025-12-11T13:43:19.349605Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1002",
@@ -2692,7 +2698,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1002\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1002\n",
               "sisteNotat": null
             },
             {
@@ -2718,8 +2724,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.038691Z",
-                "endretDato": "2025-12-11T10:56:21.053498Z",
+                "registrertDato": "2025-12-11T13:43:19.339238Z",
+                "endretDato": "2025-12-11T13:43:19.364942Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1003",
@@ -2733,7 +2739,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1003\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1003\n",
               "sisteNotat": null
             },
             {
@@ -2759,8 +2765,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.049992Z",
-                "endretDato": "2025-12-11T10:56:21.063533Z",
+                "registrertDato": "2025-12-11T13:43:19.358687Z",
+                "endretDato": "2025-12-11T13:43:19.390380Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1004",
@@ -2774,7 +2780,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1004\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1004\n",
               "sisteNotat": null
             },
             {
@@ -2800,8 +2806,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.060358Z",
-                "endretDato": "2025-12-11T10:56:21.072443Z",
+                "registrertDato": "2025-12-11T13:43:19.376451Z",
+                "endretDato": "2025-12-11T13:43:19.426298Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1005",
@@ -2815,7 +2821,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1005\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1005\n",
               "sisteNotat": null
             },
             {
@@ -2841,8 +2847,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.068900Z",
-                "endretDato": "2025-12-11T10:56:21.080777Z",
+                "registrertDato": "2025-12-11T13:43:19.418976Z",
+                "endretDato": "2025-12-11T13:43:19.445459Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1006",
@@ -2856,7 +2862,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1006\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1006\n",
               "sisteNotat": null
             },
             {
@@ -2882,8 +2888,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.077489Z",
-                "endretDato": "2025-12-11T10:56:21.090116Z",
+                "registrertDato": "2025-12-11T13:43:19.438942Z",
+                "endretDato": "2025-12-11T13:43:19.459260Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1007",
@@ -2897,7 +2903,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1007\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1007\n",
               "sisteNotat": null
             },
             {
@@ -2923,8 +2929,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.086643Z",
-                "endretDato": "2025-12-11T10:56:21.099720Z",
+                "registrertDato": "2025-12-11T13:43:19.455160Z",
+                "endretDato": "2025-12-11T13:43:19.470601Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1008",
@@ -2938,7 +2944,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1008\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1008\n",
               "sisteNotat": null
             },
             {
@@ -2964,8 +2970,8 @@
                   "term": "Behandlingen er opprettet"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.797141Z",
-                "endretDato": "2025-12-11T10:56:21.817398Z",
+                "registrertDato": "2025-12-11T13:43:20.283618Z",
+                "endretDato": "2025-12-11T13:43:20.312907Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1059",
@@ -2979,7 +2985,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1059\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1059\n",
               "sisteNotat": null
             },
             {
@@ -3005,8 +3011,8 @@
                   "term": "Behandlingen er opprettet"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.812039Z",
-                "endretDato": "2025-12-11T10:56:21.831893Z",
+                "registrertDato": "2025-12-11T13:43:20.305584Z",
+                "endretDato": "2025-12-11T13:43:20.328688Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1060",
@@ -3020,7 +3026,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1060\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1060\n",
               "sisteNotat": null
             },
             {
@@ -3046,8 +3052,8 @@
                   "term": "Behandlingen er opprettet"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.826055Z",
-                "endretDato": "2025-12-11T10:56:21.844852Z",
+                "registrertDato": "2025-12-11T13:43:20.323118Z",
+                "endretDato": "2025-12-11T13:43:20.346615Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1061",
@@ -3061,7 +3067,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1061\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1061\n",
               "sisteNotat": null
             },
             {
@@ -3087,8 +3093,8 @@
                   "term": "Behandlingen er opprettet"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.839678Z",
-                "endretDato": "2025-12-11T10:56:21.855369Z",
+                "registrertDato": "2025-12-11T13:43:20.340427Z",
+                "endretDato": "2025-12-11T13:43:20.360582Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1062",
@@ -3102,7 +3108,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1062\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1062\n",
               "sisteNotat": null
             },
             {
@@ -3128,8 +3134,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.279728Z",
-                "endretDato": "2025-12-11T10:56:21.292796Z",
+                "registrertDato": "2025-12-11T13:43:19.593329Z",
+                "endretDato": "2025-12-11T13:43:19.611659Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1019",
@@ -3143,7 +3149,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1019\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1019\n",
               "sisteNotat": null
             },
             {
@@ -3169,8 +3175,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.885610Z",
-                "endretDato": "2025-12-11T10:56:21.900636Z",
+                "registrertDato": "2025-12-11T13:43:20.412299Z",
+                "endretDato": "2025-12-11T13:43:20.435554Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1069",
@@ -3184,7 +3190,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1069\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1069\n",
               "sisteNotat": null
             },
             {
@@ -3210,8 +3216,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.289359Z",
-                "endretDato": "2025-12-11T10:56:21.303011Z",
+                "registrertDato": "2025-12-11T13:43:19.606491Z",
+                "endretDato": "2025-12-11T13:43:19.627587Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1020",
@@ -3225,7 +3231,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1020\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1020\n",
               "sisteNotat": null
             },
             {
@@ -3251,8 +3257,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.903262Z",
-                "endretDato": "2025-12-11T10:56:21.913398Z",
+                "registrertDato": "2025-12-11T13:43:20.441389Z",
+                "endretDato": "2025-12-11T13:43:20.460741Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1071",
@@ -3266,7 +3272,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1071\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1071\n",
               "sisteNotat": null
             },
             {
@@ -3292,8 +3298,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.299220Z",
-                "endretDato": "2025-12-11T10:56:21.313320Z",
+                "registrertDato": "2025-12-11T13:43:19.621911Z",
+                "endretDato": "2025-12-11T13:43:19.642890Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1021",
@@ -3307,7 +3313,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1021\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1021\n",
               "sisteNotat": null
             },
             {
@@ -3333,8 +3339,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.308916Z",
-                "endretDato": "2025-12-11T10:56:21.326064Z",
+                "registrertDato": "2025-12-11T13:43:19.637395Z",
+                "endretDato": "2025-12-11T13:43:19.659023Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1022",
@@ -3348,7 +3354,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1022\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1022\n",
               "sisteNotat": null
             },
             {
@@ -3374,8 +3380,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.320973Z",
-                "endretDato": "2025-12-11T10:56:21.337076Z",
+                "registrertDato": "2025-12-11T13:43:19.652908Z",
+                "endretDato": "2025-12-11T13:43:19.679393Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1023",
@@ -3389,7 +3395,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1023\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1023\n",
               "sisteNotat": null
             },
             {
@@ -3415,8 +3421,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.333239Z",
-                "endretDato": "2025-12-11T10:56:21.349278Z",
+                "registrertDato": "2025-12-11T13:43:19.672884Z",
+                "endretDato": "2025-12-11T13:43:19.695633Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1024",
@@ -3430,7 +3436,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1024\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1024\n",
               "sisteNotat": null
             },
             {
@@ -3456,8 +3462,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.344943Z",
-                "endretDato": "2025-12-11T10:56:21.361559Z",
+                "registrertDato": "2025-12-11T13:43:19.690115Z",
+                "endretDato": "2025-12-11T13:43:19.708377Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1025",
@@ -3471,7 +3477,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1025\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1025\n",
               "sisteNotat": null
             },
             {
@@ -3497,8 +3503,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.357236Z",
-                "endretDato": "2025-12-11T10:56:21.373336Z",
+                "registrertDato": "2025-12-11T13:43:19.703756Z",
+                "endretDato": "2025-12-11T13:43:19.720969Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1026",
@@ -3512,7 +3518,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1026\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1026\n",
               "sisteNotat": null
             },
             {
@@ -3538,8 +3544,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.368843Z",
-                "endretDato": "2025-12-11T10:56:21.387228Z",
+                "registrertDato": "2025-12-11T13:43:19.715979Z",
+                "endretDato": "2025-12-11T13:43:19.733556Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1027",
@@ -3553,7 +3559,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1027\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1027\n",
               "sisteNotat": null
             },
             {
@@ -3579,8 +3585,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.382111Z",
-                "endretDato": "2025-12-11T10:56:21.401062Z",
+                "registrertDato": "2025-12-11T13:43:19.729274Z",
+                "endretDato": "2025-12-11T13:43:19.745994Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1028",
@@ -3594,7 +3600,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1028\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1028\n",
               "sisteNotat": null
             },
             {
@@ -3620,8 +3626,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.396919Z",
-                "endretDato": "2025-12-11T10:56:21.412997Z",
+                "registrertDato": "2025-12-11T13:43:19.741236Z",
+                "endretDato": "2025-12-11T13:43:19.759644Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1029",
@@ -3635,7 +3641,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1029\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1029\n",
               "sisteNotat": null
             },
             {
@@ -3661,8 +3667,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.409004Z",
-                "endretDato": "2025-12-11T10:56:21.424154Z",
+                "registrertDato": "2025-12-11T13:43:19.754706Z",
+                "endretDato": "2025-12-11T13:43:19.773319Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1030",
@@ -3676,7 +3682,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1030\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1030\n",
               "sisteNotat": null
             },
             {
@@ -3702,8 +3708,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.420031Z",
-                "endretDato": "2025-12-11T10:56:21.435565Z",
+                "registrertDato": "2025-12-11T13:43:19.767738Z",
+                "endretDato": "2025-12-11T13:43:19.786918Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1031",
@@ -3717,7 +3723,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1031\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1031\n",
               "sisteNotat": null
             },
             {
@@ -3743,8 +3749,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.431100Z",
-                "endretDato": "2025-12-11T10:56:21.448368Z",
+                "registrertDato": "2025-12-11T13:43:19.782155Z",
+                "endretDato": "2025-12-11T13:43:19.801660Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1032",
@@ -3758,13 +3764,13 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1032\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:43 (srvmelosys, Melosys) ---\n  - MEL-1032\n",
               "sisteNotat": null
             }
           ]
         }
       },
-      "duration": 986,
+      "duration": 1110,
       "dynamicFields": [
         "saksbehandling[0].behandling.registrertDato",
         "saksbehandling[0].behandling.endretDato",
@@ -3840,6 +3846,8 @@
         "saksbehandling[35].behandling.endretDato",
         "saksbehandling[36].behandling.registrertDato",
         "saksbehandling[36].behandling.endretDato",
+        "saksbehandling[36].periode.fom",
+        "saksbehandling[36].periode.tom",
         "saksbehandling[37].behandling.registrertDato",
         "saksbehandling[37].behandling.endretDato",
         "saksbehandling[38].behandling.registrertDato",
@@ -3947,7 +3955,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.902418Z",
+            "opprettetDato": "2025-12-11T13:43:20.439266Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 71,
@@ -3968,7 +3976,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.903262Z",
+                "opprettetDato": "2025-12-11T13:43:20.441389Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -4001,7 +4009,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.896419Z",
+            "opprettetDato": "2025-12-11T13:43:20.429074Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 70,
@@ -4022,7 +4030,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.897532Z",
+                "opprettetDato": "2025-12-11T13:43:20.431275Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -4055,7 +4063,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.884618Z",
+            "opprettetDato": "2025-12-11T13:43:20.411034Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 69,
@@ -4076,7 +4084,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.885610Z",
+                "opprettetDato": "2025-12-11T13:43:20.412299Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -4109,7 +4117,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.879431Z",
+            "opprettetDato": "2025-12-11T13:43:20.403627Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 68,
@@ -4130,7 +4138,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.880289Z",
+                "opprettetDato": "2025-12-11T13:43:20.405060Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -4163,7 +4171,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.874178Z",
+            "opprettetDato": "2025-12-11T13:43:20.389828Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 67,
@@ -4184,7 +4192,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.875127Z",
+                "opprettetDato": "2025-12-11T13:43:20.392499Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -4217,7 +4225,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.868646Z",
+            "opprettetDato": "2025-12-11T13:43:20.381251Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 66,
@@ -4238,7 +4246,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.869534Z",
+                "opprettetDato": "2025-12-11T13:43:20.382385Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -4271,7 +4279,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.862818Z",
+            "opprettetDato": "2025-12-11T13:43:20.372822Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 65,
@@ -4292,7 +4300,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.863916Z",
+                "opprettetDato": "2025-12-11T13:43:20.374254Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -4325,7 +4333,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.857263Z",
+            "opprettetDato": "2025-12-11T13:43:20.363693Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 64,
@@ -4346,7 +4354,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.858326Z",
+                "opprettetDato": "2025-12-11T13:43:20.366212Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -4379,7 +4387,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.851394Z",
+            "opprettetDato": "2025-12-11T13:43:20.355061Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 63,
@@ -4400,7 +4408,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.852507Z",
+                "opprettetDato": "2025-12-11T13:43:20.356928Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -4433,7 +4441,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.838390Z",
+            "opprettetDato": "2025-12-11T13:43:20.338892Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 62,
@@ -4454,7 +4462,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.839678Z",
+                "opprettetDato": "2025-12-11T13:43:20.340427Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -4487,7 +4495,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.824886Z",
+            "opprettetDato": "2025-12-11T13:43:20.321720Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 61,
@@ -4508,7 +4516,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.826055Z",
+                "opprettetDato": "2025-12-11T13:43:20.323118Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -4541,7 +4549,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.810331Z",
+            "opprettetDato": "2025-12-11T13:43:20.303914Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 60,
@@ -4562,7 +4570,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.812039Z",
+                "opprettetDato": "2025-12-11T13:43:20.305584Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -4595,7 +4603,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.795573Z",
+            "opprettetDato": "2025-12-11T13:43:20.279535Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 59,
@@ -4616,7 +4624,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.797141Z",
+                "opprettetDato": "2025-12-11T13:43:20.283618Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -4649,7 +4657,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.779295Z",
+            "opprettetDato": "2025-12-11T13:43:20.254476Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 58,
@@ -4670,7 +4678,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.780786Z",
+                "opprettetDato": "2025-12-11T13:43:20.257787Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -4703,7 +4711,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.762236Z",
+            "opprettetDato": "2025-12-11T13:43:20.225533Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 57,
@@ -4724,7 +4732,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.763527Z",
+                "opprettetDato": "2025-12-11T13:43:20.229286Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -4757,7 +4765,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.747242Z",
+            "opprettetDato": "2025-12-11T13:43:20.193265Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 56,
@@ -4778,7 +4786,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.748562Z",
+                "opprettetDato": "2025-12-11T13:43:20.197466Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -4811,7 +4819,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.727616Z",
+            "opprettetDato": "2025-12-11T13:43:20.164123Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 55,
@@ -4832,7 +4840,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.729197Z",
+                "opprettetDato": "2025-12-11T13:43:20.166957Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -4865,7 +4873,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.713981Z",
+            "opprettetDato": "2025-12-11T13:43:20.139708Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 54,
@@ -4886,7 +4894,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.715233Z",
+                "opprettetDato": "2025-12-11T13:43:20.141774Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -4919,7 +4927,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.700457Z",
+            "opprettetDato": "2025-12-11T13:43:20.116158Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 53,
@@ -4940,7 +4948,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.701597Z",
+                "opprettetDato": "2025-12-11T13:43:20.118220Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -4973,7 +4981,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.688730Z",
+            "opprettetDato": "2025-12-11T13:43:20.101916Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 52,
@@ -4994,7 +5002,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.689952Z",
+                "opprettetDato": "2025-12-11T13:43:20.103073Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -5027,7 +5035,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.674569Z",
+            "opprettetDato": "2025-12-11T13:43:20.089680Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 51,
@@ -5048,7 +5056,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.675991Z",
+                "opprettetDato": "2025-12-11T13:43:20.091208Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -5081,7 +5089,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.659013Z",
+            "opprettetDato": "2025-12-11T13:43:20.074689Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 50,
@@ -5102,7 +5110,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.660829Z",
+                "opprettetDato": "2025-12-11T13:43:20.076782Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -5135,7 +5143,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.646883Z",
+            "opprettetDato": "2025-12-11T13:43:20.060484Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 49,
@@ -5156,7 +5164,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.648072Z",
+                "opprettetDato": "2025-12-11T13:43:20.061874Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -5189,7 +5197,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.635406Z",
+            "opprettetDato": "2025-12-11T13:43:20.039495Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 48,
@@ -5210,7 +5218,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.636582Z",
+                "opprettetDato": "2025-12-11T13:43:20.042441Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -5243,7 +5251,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.622760Z",
+            "opprettetDato": "2025-12-11T13:43:20.020593Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 47,
@@ -5264,7 +5272,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.623961Z",
+                "opprettetDato": "2025-12-11T13:43:20.022129Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -5297,7 +5305,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.608923Z",
+            "opprettetDato": "2025-12-11T13:43:20.004937Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 46,
@@ -5318,7 +5326,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.610584Z",
+                "opprettetDato": "2025-12-11T13:43:20.006480Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -5351,7 +5359,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.594155Z",
+            "opprettetDato": "2025-12-11T13:43:19.986835Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 45,
@@ -5372,7 +5380,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.595820Z",
+                "opprettetDato": "2025-12-11T13:43:19.988679Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -5405,7 +5413,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.581011Z",
+            "opprettetDato": "2025-12-11T13:43:19.972399Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 44,
@@ -5426,7 +5434,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.582601Z",
+                "opprettetDato": "2025-12-11T13:43:19.974001Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -5459,7 +5467,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.567509Z",
+            "opprettetDato": "2025-12-11T13:43:19.958503Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 43,
@@ -5480,7 +5488,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.568765Z",
+                "opprettetDato": "2025-12-11T13:43:19.960664Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -5513,7 +5521,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.553709Z",
+            "opprettetDato": "2025-12-11T13:43:19.944479Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 42,
@@ -5534,7 +5542,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.555306Z",
+                "opprettetDato": "2025-12-11T13:43:19.946279Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -5567,7 +5575,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.539326Z",
+            "opprettetDato": "2025-12-11T13:43:19.930750Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 41,
@@ -5588,7 +5596,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.540676Z",
+                "opprettetDato": "2025-12-11T13:43:19.932278Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -5621,7 +5629,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.525767Z",
+            "opprettetDato": "2025-12-11T13:43:19.916586Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 40,
@@ -5642,7 +5650,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.527413Z",
+                "opprettetDato": "2025-12-11T13:43:19.917924Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -5675,7 +5683,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.512073Z",
+            "opprettetDato": "2025-12-11T13:43:19.903304Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 39,
@@ -5696,7 +5704,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.514046Z",
+                "opprettetDato": "2025-12-11T13:43:19.904719Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -5729,7 +5737,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.501179Z",
+            "opprettetDato": "2025-12-11T13:43:19.890034Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 38,
@@ -5750,7 +5758,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.502379Z",
+                "opprettetDato": "2025-12-11T13:43:19.891595Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -5783,7 +5791,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.488983Z",
+            "opprettetDato": "2025-12-11T13:43:19.874837Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 37,
@@ -5804,7 +5812,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.490450Z",
+                "opprettetDato": "2025-12-11T13:43:19.876825Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -5837,7 +5845,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.478339Z",
+            "opprettetDato": "2025-12-11T13:43:19.858022Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 36,
@@ -5858,7 +5866,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.479645Z",
+                "opprettetDato": "2025-12-11T13:43:19.860432Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -5891,7 +5899,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.467741Z",
+            "opprettetDato": "2025-12-11T13:43:19.840932Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 35,
@@ -5912,7 +5920,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.468910Z",
+                "opprettetDato": "2025-12-11T13:43:19.843498Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -5945,7 +5953,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.454335Z",
+            "opprettetDato": "2025-12-11T13:43:19.808317Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 34,
@@ -5966,7 +5974,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.455487Z",
+                "opprettetDato": "2025-12-11T13:43:19.809789Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -5999,7 +6007,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.442163Z",
+            "opprettetDato": "2025-12-11T13:43:19.793801Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 33,
@@ -6020,7 +6028,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.443727Z",
+                "opprettetDato": "2025-12-11T13:43:19.795323Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -6053,7 +6061,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.429392Z",
+            "opprettetDato": "2025-12-11T13:43:19.779706Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 32,
@@ -6074,7 +6082,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.431100Z",
+                "opprettetDato": "2025-12-11T13:43:19.782155Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -6107,7 +6115,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.418764Z",
+            "opprettetDato": "2025-12-11T13:43:19.766383Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 31,
@@ -6128,7 +6136,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.420031Z",
+                "opprettetDato": "2025-12-11T13:43:19.767738Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -6161,7 +6169,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.407683Z",
+            "opprettetDato": "2025-12-11T13:43:19.753497Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 30,
@@ -6182,7 +6190,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.409004Z",
+                "opprettetDato": "2025-12-11T13:43:19.754706Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -6215,7 +6223,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.395663Z",
+            "opprettetDato": "2025-12-11T13:43:19.739864Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 29,
@@ -6236,7 +6244,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.396919Z",
+                "opprettetDato": "2025-12-11T13:43:19.741236Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -6269,7 +6277,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.380726Z",
+            "opprettetDato": "2025-12-11T13:43:19.727902Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 28,
@@ -6290,7 +6298,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.382111Z",
+                "opprettetDato": "2025-12-11T13:43:19.729274Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -6323,7 +6331,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.367610Z",
+            "opprettetDato": "2025-12-11T13:43:19.714356Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 27,
@@ -6344,7 +6352,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.368843Z",
+                "opprettetDato": "2025-12-11T13:43:19.715979Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -6377,7 +6385,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.355630Z",
+            "opprettetDato": "2025-12-11T13:43:19.702455Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 26,
@@ -6398,7 +6406,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.357236Z",
+                "opprettetDato": "2025-12-11T13:43:19.703756Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -6431,7 +6439,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.343482Z",
+            "opprettetDato": "2025-12-11T13:43:19.688044Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 25,
@@ -6452,7 +6460,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.344943Z",
+                "opprettetDato": "2025-12-11T13:43:19.690115Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -6485,7 +6493,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.331703Z",
+            "opprettetDato": "2025-12-11T13:43:19.670784Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 24,
@@ -6506,7 +6514,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.333239Z",
+                "opprettetDato": "2025-12-11T13:43:19.672884Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -6539,7 +6547,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.319693Z",
+            "opprettetDato": "2025-12-11T13:43:19.651101Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 23,
@@ -6560,7 +6568,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.320973Z",
+                "opprettetDato": "2025-12-11T13:43:19.652908Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -6593,7 +6601,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.307709Z",
+            "opprettetDato": "2025-12-11T13:43:19.635467Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 22,
@@ -6614,7 +6622,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.308916Z",
+                "opprettetDato": "2025-12-11T13:43:19.637395Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -6647,7 +6655,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.297982Z",
+            "opprettetDato": "2025-12-11T13:43:19.620482Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 21,
@@ -6668,7 +6676,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.299220Z",
+                "opprettetDato": "2025-12-11T13:43:19.621911Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -6701,7 +6709,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.288088Z",
+            "opprettetDato": "2025-12-11T13:43:19.604765Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 20,
@@ -6722,7 +6730,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.289359Z",
+                "opprettetDato": "2025-12-11T13:43:19.606491Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -6755,7 +6763,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.278493Z",
+            "opprettetDato": "2025-12-11T13:43:19.591959Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 19,
@@ -6776,7 +6784,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.279728Z",
+                "opprettetDato": "2025-12-11T13:43:19.593329Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -6809,7 +6817,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.269131Z",
+            "opprettetDato": "2025-12-11T13:43:19.577926Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 18,
@@ -6830,7 +6838,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.270395Z",
+                "opprettetDato": "2025-12-11T13:43:19.580831Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -6863,7 +6871,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.256706Z",
+            "opprettetDato": "2025-12-11T13:43:19.565408Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 17,
@@ -6884,7 +6892,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.258582Z",
+                "opprettetDato": "2025-12-11T13:43:19.567107Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -6917,7 +6925,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.245741Z",
+            "opprettetDato": "2025-12-11T13:43:19.551673Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 16,
@@ -6938,7 +6946,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.246937Z",
+                "opprettetDato": "2025-12-11T13:43:19.553759Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -6971,7 +6979,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.235356Z",
+            "opprettetDato": "2025-12-11T13:43:19.539165Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 15,
@@ -6992,7 +7000,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.237188Z",
+                "opprettetDato": "2025-12-11T13:43:19.540776Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -7025,7 +7033,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.205239Z",
+            "opprettetDato": "2025-12-11T13:43:19.527503Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 14,
@@ -7046,7 +7054,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.207860Z",
+                "opprettetDato": "2025-12-11T13:43:19.528829Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -7079,7 +7087,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.172196Z",
+            "opprettetDato": "2025-12-11T13:43:19.514329Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 13,
@@ -7100,7 +7108,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.175563Z",
+                "opprettetDato": "2025-12-11T13:43:19.516319Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -7133,7 +7141,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.136463Z",
+            "opprettetDato": "2025-12-11T13:43:19.500516Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 12,
@@ -7154,7 +7162,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.139243Z",
+                "opprettetDato": "2025-12-11T13:43:19.502918Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -7187,7 +7195,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.117953Z",
+            "opprettetDato": "2025-12-11T13:43:19.486705Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 11,
@@ -7208,7 +7216,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.119550Z",
+                "opprettetDato": "2025-12-11T13:43:19.488565Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -7241,7 +7249,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.106042Z",
+            "opprettetDato": "2025-12-11T13:43:19.476234Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 10,
@@ -7262,7 +7270,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.107590Z",
+                "opprettetDato": "2025-12-11T13:43:19.477600Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -7295,7 +7303,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.094630Z",
+            "opprettetDato": "2025-12-11T13:43:19.465463Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 9,
@@ -7316,7 +7324,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.095881Z",
+                "opprettetDato": "2025-12-11T13:43:19.466811Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -7349,7 +7357,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.085169Z",
+            "opprettetDato": "2025-12-11T13:43:19.453795Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 8,
@@ -7370,7 +7378,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.086643Z",
+                "opprettetDato": "2025-12-11T13:43:19.455160Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -7403,7 +7411,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.076319Z",
+            "opprettetDato": "2025-12-11T13:43:19.436191Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 7,
@@ -7424,7 +7432,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.077489Z",
+                "opprettetDato": "2025-12-11T13:43:19.438942Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -7457,7 +7465,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.067631Z",
+            "opprettetDato": "2025-12-11T13:43:19.413908Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 6,
@@ -7478,7 +7486,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.068900Z",
+                "opprettetDato": "2025-12-11T13:43:19.418976Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -7511,7 +7519,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.058754Z",
+            "opprettetDato": "2025-12-11T13:43:19.372031Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 5,
@@ -7532,7 +7540,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.060358Z",
+                "opprettetDato": "2025-12-11T13:43:19.376451Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -7565,7 +7573,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.048557Z",
+            "opprettetDato": "2025-12-11T13:43:19.357280Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 4,
@@ -7586,7 +7594,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.049992Z",
+                "opprettetDato": "2025-12-11T13:43:19.358687Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -7619,7 +7627,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.037356Z",
+            "opprettetDato": "2025-12-11T13:43:19.335706Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 3,
@@ -7640,7 +7648,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.038691Z",
+                "opprettetDato": "2025-12-11T13:43:19.339238Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -7673,7 +7681,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:21.021293Z",
+            "opprettetDato": "2025-12-11T13:43:19.315260Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 2,
@@ -7694,7 +7702,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:21.023225Z",
+                "opprettetDato": "2025-12-11T13:43:19.320069Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -7727,7 +7735,7 @@
               "fom": null,
               "tom": null
             },
-            "opprettetDato": "2025-12-11T10:56:20.912541Z",
+            "opprettetDato": "2025-12-11T13:43:19.175340Z",
             "behandlingOversikter": [
               {
                 "behandlingID": 1,
@@ -7748,7 +7756,7 @@
                   "fom": null,
                   "tom": null
                 },
-                "opprettetDato": "2025-12-11T10:56:20.926436Z",
+                "opprettetDato": "2025-12-11T13:43:19.190567Z",
                 "behandlingsresultattype": {
                   "kode": "IKKE_FASTSATT",
                   "term": "Ikke fastsatt"
@@ -7760,7 +7768,7 @@
           }
         ]
       },
-      "duration": 1525,
+      "duration": 1518,
       "dynamicFields": [
         "[0].periode.fom",
         "[0].periode.tom",
