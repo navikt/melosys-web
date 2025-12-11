@@ -5,8 +5,8 @@ import { createHtmlReport } from "axe-html-reporter";
 import { sanitizeFilename } from "./testUtils";
 
 // Styres via ENABLE_AXE_TESTS environment variable
-// Default: false (disabled) - kjør med ENABLE_AXE_TESTS=true for å aktivere
-export const enableAxeTests = process.env.ENABLE_AXE_TESTS === "true";
+// Default: true (enabled) - kjør med ENABLE_AXE_TESTS=false for å deaktivere
+export const enableAxeTests = process.env.ENABLE_AXE_TESTS !== "false";
 
 /**
  * Kjente tredjepartsbibliotek-problemer som vi eksluderer fra Axe-testing.
