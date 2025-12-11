@@ -31,14 +31,18 @@ function MultiSelect<T extends OptionBase>(props: MultiSelectProps<T>) {
   // Utled aria-label fra label prop hvis den er en string, ellers bruk eksplisitt aria-label
   const effectiveAriaLabel = ariaLabel ?? (typeof label === "string" ? label : undefined);
 
+  const hasVisibleLabel = label !== "" && label !== null && label !== undefined;
+
   return (
     <div className={className} style={{ cursor: redigerbart ? "default" : "not-allowed" }}>
-      <label id={labelId} htmlFor={selectId} style={{ display: "block", paddingBottom: "0.5rem" }}>
-        {label}
-      </label>
+      {hasVisibleLabel && (
+        <label id={labelId} htmlFor={selectId} style={{ display: "block", paddingBottom: "0.5rem" }}>
+          {label}
+        </label>
+      )}
       <Select
         inputId={selectId}
-        aria-labelledby={labelId}
+        {...(hasVisibleLabel ? { "aria-labelledby": labelId } : {})}
         {...(effectiveAriaLabel ? { "aria-label": effectiveAriaLabel } : {})}
         onChange={(selectedOptions) => onChange(selectedOptions || [])}
         menuPortalTarget={document.body}

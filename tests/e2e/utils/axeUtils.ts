@@ -24,11 +24,6 @@ const KNOWN_THIRD_PARTY_EXCLUSIONS = [
   ".ql-toolbar",
   ".ql-toolbar button",
   "[class^='ql-']",
-  // react-select har kjente ARIA-problemer som er rapportert
-  // Se: https://github.com/JedWatson/react-select/issues/3355
-  "[class*='react-select']",
-  // react-select input-felt (har dynamisk genererte IDer som starter med 'select')
-  "input[id^='select']",
   // NAV Aksel DatePicker - input-felt mangler labels (kjent issue)
   ".navds-date__field-input",
   // Definition lists som brukes for metadata-visning (ikke interaktive)
