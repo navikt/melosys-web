@@ -1,7 +1,7 @@
 import { expect, Locator, Page } from "@playwright/test";
 import { BehandlingPage } from "./behandling.page";
 import { PrepopulertSaksnummer } from "../../utils/testdataUtils";
-import { setDatoFelt, velgRadio } from "../../utils/testUtils";
+import { finnKnapp, setDatoFelt, velgRadio } from "../../utils/testUtils";
 import { UI_TEXTS } from "../../config/ui-texts";
 
 /**
@@ -11,20 +11,6 @@ import { UI_TEXTS } from "../../config/ui-texts";
 export class StegvelgerPage extends BehandlingPage {
   constructor(page: Page, saksnummer: PrepopulertSaksnummer) {
     super(page, saksnummer);
-  }
-
-  /**
-   * Hent "Bekreft og fortsett"-knappen i aktivt steg
-   */
-  private get bekreftKnapp(): Locator {
-    return this.page.locator(".stegFane--aktiv button.stegKnapper__bekreft");
-  }
-
-  /**
-   * Hent "Tilbake"-knappen i aktivt steg
-   */
-  private get tilbakeKnapp(): Locator {
-    return this.page.locator(".stegFane--aktiv button.stegKnapper__tilbake");
   }
 
   /**
@@ -43,17 +29,33 @@ export class StegvelgerPage extends BehandlingPage {
   }
 
   /**
+   * Hent "Bekreft og fortsett"-knappen i aktivt steg
+   */
+  private async hentBekreftOgFortsettKnapp(): Promise<Locator> {
+    return finnKnapp(UI_TEXTS.BUTTONS.BEKREFT_OG_FORTSETT, this.page);
+  }
+
+  /**
+   * Hent "Tilbake"-knappen i aktivt steg
+   */
+  private async hentTilbakeKnapp(): Promise<Locator> {
+    return finnKnapp(UI_TEXTS.BUTTONS.TILBAKE, this.page);
+  }
+
+  /**
    * Verifiser at "Bekreft og fortsett"-knappen er deaktivert
    */
-  async verifiserBekreftKnappDeaktivert(): Promise<void> {
-    await expect(this.bekreftKnapp, `${this.ctx}: "Bekreft og fortsett" er uventet aktivert`).toBeDisabled();
+  async verifiserBekreftOgFortsettKnappDeaktivert(): Promise<void> {
+    const knapp = await this.hentBekreftOgFortsettKnapp();
+    await expect(knapp, `${this.ctx}: "${UI_TEXTS.BUTTONS.BEKREFT_OG_FORTSETT}" er uventet aktivert`).toBeDisabled();
   }
 
   /**
    * Verifiser at "Bekreft og fortsett"-knappen er aktivert
    */
   async verifiserBekreftKnappAktivert(): Promise<void> {
-    await expect(this.bekreftKnapp, `${this.ctx}: "Bekreft og fortsett" er uventet deaktivert`).toBeEnabled();
+    const knapp = await this.hentBekreftOgFortsettKnapp();
+    await expect(knapp, `${this.ctx}: "${UI_TEXTS.BUTTONS.BEKREFT_OG_FORTSETT}" er uventet deaktivert`).toBeEnabled();
   }
 
   /**
@@ -62,7 +64,8 @@ export class StegvelgerPage extends BehandlingPage {
   async klikkBekreftOgFortsett(): Promise<void> {
     await this.verifiserBekreftKnappAktivert();
     const nåværendeTittel = await this.stegTittel.textContent();
-    await this.bekreftKnapp.click();
+    const knapp = await this.hentBekreftOgFortsettKnapp();
+    await knapp.click();
 
     // Vent på at tittelen endres (vi er på nytt steg)
     await expect(this.stegTittel, `${this.ctx}: Steget endret seg ikke etter klikk`).not.toHaveText(nåværendeTittel!, {
@@ -75,7 +78,8 @@ export class StegvelgerPage extends BehandlingPage {
    */
   async gåTilbake(): Promise<void> {
     const nåværendeTittel = await this.stegTittel.textContent();
-    await this.tilbakeKnapp.click();
+    const knapp = await this.hentTilbakeKnapp();
+    await knapp.click();
 
     // Vent på at tittelen endres
     await expect(this.stegTittel, `${this.ctx}: Steget endret seg ikke etter tilbake`).not.toHaveText(
@@ -269,7 +273,8 @@ export class StegvelgerPage extends BehandlingPage {
    */
   async fyllUtEosIkkeYrkesaktivInngang(fomDato: string = "01.01.2024", land: string = "Sverige"): Promise<void> {
     // Sjekk om knappen allerede er aktiv (data forhåndsutfylt)
-    const erAktiv = await this.bekreftKnapp.isEnabled().catch(() => false);
+    const knapp = await this.hentBekreftOgFortsettKnapp();
+    const erAktiv = await knapp.isEnabled().catch(() => false);
     if (erAktiv) return;
 
     // Fyll ut "Fra og med" dato

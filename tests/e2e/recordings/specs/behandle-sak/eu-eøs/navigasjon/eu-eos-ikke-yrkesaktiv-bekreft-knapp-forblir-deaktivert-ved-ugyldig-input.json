@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "recordedAt": "2025-12-11T13:36:38.517Z",
+  "recordedAt": "2025-12-11T14:05:31.378Z",
   "testFile": "/Users/ragnarwestad/develop/nav/melosys-web/tests/e2e/specs/behandle-sak/eu-eøs/navigasjon.spec.ts",
   "testName": "EU/EØS Ikke yrkesaktiv - Bekreft-knapp forblir deaktivert ved ugyldig input",
   "exchanges": [
@@ -39,7 +39,7 @@
           "melosys.arsavregning.uten.flyt": false
         }
       },
-      "duration": 17,
+      "duration": 14,
       "dynamicFields": []
     },
     {
@@ -78,12 +78,12 @@
             "term": "Saken er opprettet"
           },
           "betalingsvalg": null,
-          "registrertDato": "2025-12-11T13:36:11.597701Z",
-          "endretDato": "2025-12-11T13:36:11.606755Z",
+          "registrertDato": "2025-12-11T14:05:27.397376Z",
+          "endretDato": "2025-12-11T14:05:27.405616Z",
           "hovedpartRolle": "BRUKER"
         }
       },
-      "duration": 27,
+      "duration": 87,
       "dynamicFields": ["registrertDato", "endretDato"]
     },
     {
@@ -121,8 +121,8 @@
               "kode": "IKKE_YRKESAKTIV",
               "term": "Ikke yrkesaktiv"
             },
-            "registrertDato": "2025-12-11T13:36:11.599519Z",
-            "endretDato": "2025-12-11T13:36:11.623183Z",
+            "registrertDato": "2025-12-11T14:05:27.399261Z",
+            "endretDato": "2025-12-11T14:05:27.419580Z",
             "endretAvNavn": "Lokal Testbruker",
             "sisteOpplysningerHentetDato": null,
             "svarFrist": null,
@@ -157,7 +157,7 @@
           "redigerbart": true
         }
       },
-      "duration": 32,
+      "duration": 457,
       "dynamicFields": [
         "oppsummering.registrertDato",
         "oppsummering.endretDato",
@@ -200,7 +200,7 @@
           "aarsavregningID": null
         }
       },
-      "duration": 33,
+      "duration": 17,
       "dynamicFields": []
     },
     {
@@ -291,7 +291,7 @@
           "mottaksdato": "2025-12-11"
         }
       },
-      "duration": 24,
+      "duration": 15,
       "dynamicFields": [
         "data.periode.fom",
         "data.periode.tom",
@@ -322,7 +322,7 @@
         },
         "body": []
       },
-      "duration": 11,
+      "duration": 7,
       "dynamicFields": []
     },
     {
@@ -347,7 +347,7 @@
         },
         "body": []
       },
-      "duration": 10,
+      "duration": 8,
       "dynamicFields": []
     },
     {
@@ -414,7 +414,7 @@
           }
         ]
       },
-      "duration": 15,
+      "duration": 23,
       "dynamicFields": []
     },
     {
@@ -456,47 +456,7 @@
           }
         ]
       },
-      "duration": 19,
-      "dynamicFields": []
-    },
-    {
-      "request": {
-        "id": "780beeaf3b04",
-        "method": "GET",
-        "url": "http://localhost:3333/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/?saksnummer=MEL-1053",
-        "pathname": "/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/",
-        "normalizedPath": "/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/",
-        "query": {
-          "saksnummer": "MEL-1053"
-        },
-        "headers": {
-          "accept": "application/json",
-          "authorization": "[REDACTED]"
-        },
-        "body": null
-      },
-      "response": {
-        "status": 200,
-        "statusText": "OK",
-        "headers": {
-          "content-type": "application/json"
-        },
-        "body": [
-          {
-            "kode": "EU_EOS",
-            "term": "EU/EØS-land"
-          },
-          {
-            "kode": "TRYGDEAVTALE",
-            "term": "Avtaleland"
-          },
-          {
-            "kode": "FTRL",
-            "term": "Utenfor avtaleland"
-          }
-        ]
-      },
-      "duration": 22,
+      "duration": 33,
       "dynamicFields": []
     },
     {
@@ -543,32 +503,7 @@
           }
         ]
       },
-      "duration": 20,
-      "dynamicFields": []
-    },
-    {
-      "request": {
-        "id": "c94e773738d3",
-        "method": "GET",
-        "url": "http://localhost:3333/api/brev/utkast/53",
-        "pathname": "/api/brev/utkast/53",
-        "normalizedPath": "/api/brev/utkast/:id",
-        "query": {},
-        "headers": {
-          "accept": "application/json",
-          "authorization": "[REDACTED]"
-        },
-        "body": null
-      },
-      "response": {
-        "status": 200,
-        "statusText": "OK",
-        "headers": {
-          "content-type": "application/json"
-        },
-        "body": []
-      },
-      "duration": 20,
+      "duration": 31,
       "dynamicFields": []
     },
     {
@@ -595,8 +530,73 @@
           "mottaksdato": "2025-12-11"
         }
       },
-      "duration": 22,
+      "duration": 31,
       "dynamicFields": ["mottaksdato"]
+    },
+    {
+      "request": {
+        "id": "780beeaf3b04",
+        "method": "GET",
+        "url": "http://localhost:3333/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/?saksnummer=MEL-1053",
+        "pathname": "/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/",
+        "normalizedPath": "/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/",
+        "query": {
+          "saksnummer": "MEL-1053"
+        },
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": [
+          {
+            "kode": "EU_EOS",
+            "term": "EU/EØS-land"
+          },
+          {
+            "kode": "TRYGDEAVTALE",
+            "term": "Avtaleland"
+          },
+          {
+            "kode": "FTRL",
+            "term": "Utenfor avtaleland"
+          }
+        ]
+      },
+      "duration": 42,
+      "dynamicFields": []
+    },
+    {
+      "request": {
+        "id": "c94e773738d3",
+        "method": "GET",
+        "url": "http://localhost:3333/api/brev/utkast/53",
+        "pathname": "/api/brev/utkast/53",
+        "normalizedPath": "/api/brev/utkast/:id",
+        "query": {},
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": []
+      },
+      "duration": 37,
+      "dynamicFields": []
     },
     {
       "request": {
@@ -690,7 +690,7 @@
           }
         }
       },
-      "duration": 24,
+      "duration": 45,
       "dynamicFields": []
     },
     {
@@ -717,7 +717,7 @@
           "harBehandlingMedTrygdeavgift": false
         }
       },
-      "duration": 36,
+      "duration": 186,
       "dynamicFields": []
     }
   ]

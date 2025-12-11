@@ -1,5 +1,4 @@
 import { test } from "../../../recording/fixtures";
-import { getTestMode } from "../../../config/mode";
 import { TIMEOUT_FOR_COMPLEX_TESTS, setDatoFelt } from "../../../utils/testUtils";
 import { hentPrepopulertSakUrl } from "../../../utils/testdataUtils";
 import { StegvelgerPage } from "../../../pages/behandling/stegvelger.page";
@@ -20,13 +19,6 @@ test.describe("EU/EØS Stegvelger - Navigasjon", () => {
     page,
     apiRecorder,
   }, testInfo) => {
-    // Skip in playback mode: The test expects "Bekreft og fortsett" button to be disabled initially,
-    // but mock server returns pre-filled form data causing the button to be enabled.
-    // This is a state mismatch issue where the recording captures data from a different test execution order.
-    test.skip(
-      getTestMode() === "playback",
-      "Form state mismatch in playback - button enabled state differs from recording",
-    );
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
     const saksnummer = "MEL-1052";
     const stegvelgerPage = new StegvelgerPage(page, saksnummer);
@@ -36,9 +28,8 @@ test.describe("EU/EØS Stegvelger - Navigasjon", () => {
 
     // === STEG 1: Inngang ===
     await stegvelgerPage.verifiserSteg(UI_TEXTS.STEG.OPPGI_OPPLYSNINGER);
-    await stegvelgerPage.verifiserBekreftKnappDeaktivert();
 
-    // Fyll ut minimum: fom-dato og land
+    // Fyll ut minimum: fom-dato og land (metoden sjekker selv om data allerede er utfylt)
     await stegvelgerPage.fyllUtEosIkkeYrkesaktivInngang("01.01.2024", "Sverige");
     await stegvelgerPage.verifiserBekreftKnappAktivert();
     await stegvelgerPage.klikkBekreftOgFortsett();
@@ -50,7 +41,7 @@ test.describe("EU/EØS Stegvelger - Navigasjon", () => {
 
   test("EU/EØS Ikke yrkesaktiv - Navigasjon frem og tilbake", async ({ page, apiRecorder }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
-    const saksnummer = "MEL-1052";
+    const saksnummer = "MEL-1051";
     const stegvelgerPage = new StegvelgerPage(page, saksnummer);
 
     const url = hentPrepopulertSakUrl(saksnummer);
@@ -93,7 +84,7 @@ test.describe("EU/EØS Stegvelger - Navigasjon", () => {
     await stegvelgerPage.verifiserSteg(UI_TEXTS.STEG.OPPGI_OPPLYSNINGER);
 
     // Knappen skal være deaktivert ved start
-    await stegvelgerPage.verifiserBekreftKnappDeaktivert();
+    await stegvelgerPage.verifiserBekreftOgFortsettKnappDeaktivert();
 
     // Fyll ut kun dato (uten land) - knappen bør fortsatt være deaktivert
     await setDatoFelt("Fra og med", "01.01.2024", page);
@@ -110,6 +101,6 @@ test.describe("EU/EØS Stegvelger - Navigasjon", () => {
       .catch(() => {});
 
     // Knappen skal fortsatt være deaktivert siden land mangler
-    await stegvelgerPage.verifiserBekreftKnappDeaktivert();
+    await stegvelgerPage.verifiserBekreftOgFortsettKnappDeaktivert();
   });
 });
