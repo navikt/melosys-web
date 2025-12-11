@@ -4,9 +4,9 @@ import AxeBuilder from "@axe-core/playwright";
 import { createHtmlReport } from "axe-html-reporter";
 import { sanitizeFilename } from "./testUtils";
 
-// Styres via DISABLE_AXE_TESTS environment variable
-// Default: true (disabled) - kjør med DISABLE_AXE_TESTS=false for å aktivere
-export const disableAxeTests = process.env.DISABLE_AXE_TESTS !== "false";
+// Styres via ENABLE_AXE_TESTS environment variable
+// Default: false (disabled) - kjør med ENABLE_AXE_TESTS=true for å aktivere
+export const enableAxeTests = process.env.ENABLE_AXE_TESTS === "true";
 
 /**
  * Kjente tredjepartsbibliotek-problemer som vi eksluderer fra Axe-testing.
@@ -37,7 +37,7 @@ const KNOWN_THIRD_PARTY_EXCLUSIONS = [
  * @param contextDescription - Optional description for log messages
  */
 export async function runAxeAnalyze(page: Page, testName: string, contextDescription: string = ""): Promise<void> {
-  if (disableAxeTests) {
+  if (!enableAxeTests) {
     /* eslint-disable-next-line no-console */
     console.log(
       `\n⏭️ Skipping Axe analyze for: '${testName}' ${contextDescription ? ` - (${contextDescription})` : ""}`,
