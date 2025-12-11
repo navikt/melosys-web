@@ -229,7 +229,7 @@ export class StegvelgerPage extends BehandlingPage {
    * Fyller ut "Til og med" dato, trygdedekning og resultat for første periode
    */
   async fyllUtPerioderMinimum(): Promise<void> {
-    // Fyll ut "Til og med" dato hvis tom (påkrevd felt)
+    // Fyll ut "Til og med" dato (påkrevd felt)
     await setDatoFelt("Til og med", "31.12.2024", this.page);
     await this.page.waitForTimeout(300);
 

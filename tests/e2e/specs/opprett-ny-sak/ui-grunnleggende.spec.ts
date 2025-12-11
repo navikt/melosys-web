@@ -22,7 +22,7 @@ test.describe("'Opprett ny sak/behandling' hovedside", () => {
   });
 
   // TODO: Re-enable when validation logic is fixed
-  // See: [Add issue number or description]
+  // Issue: Validation does not trigger error messages for empty required fields
   test.skip("Klikk på 'Opprett ny behandling' når ingen påkrevde felter er fylt ut og verifiser feilmeldinger", async ({
     page,
   }, testInfo) => {
