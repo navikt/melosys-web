@@ -88,7 +88,7 @@ export async function velgFraListe(navn: string, verdi: string, scope: Page | Lo
 /**
  * Extended Locator interface with custom _sakId property
  */
-interface LocatorWithSakId extends Locator {
+export interface LocatorWithSakId extends Locator {
   _sakId?: string;
 }
 

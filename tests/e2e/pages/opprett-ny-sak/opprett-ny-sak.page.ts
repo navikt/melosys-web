@@ -1,10 +1,6 @@
 import { expect, Locator, Page } from "@playwright/test";
-import { finnKnapp, getSaksnummerFraLocator, setDatoFelt, velgRadio } from "../../utils/testUtils";
+import { finnKnapp, getSaksnummerFraLocator, LocatorWithSakId, setDatoFelt, velgRadio } from "../../utils/testUtils";
 import { UI_TEXTS } from "../../config/ui-texts";
-
-interface LocatorWithSakId extends Locator {
-  _sakId?: string;
-}
 
 /**
  * Sett sakId på locator ved å hente den fra .customRadioPanelTittel
