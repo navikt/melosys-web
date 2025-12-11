@@ -9,7 +9,7 @@ import { sanitizeFilename } from "./testUtils";
 export const enableAxeTests = process.env.ENABLE_AXE_TESTS !== "false";
 
 /**
- * Kjente tredjepartsbibliotek-problemer som vi eksluderer fra Axe-testing.
+ * Kjente tredjepartsbibliotek-problemer som vi ekskluderer fra Axe-testing.
  * Disse er dokumentert og rapportert til respektive bibliotek-maintainers.
  *
  * @see https://github.com/JedWatson/react-select/issues/3355 - react-select label issues
