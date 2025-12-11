@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "recordedAt": "2025-12-11T14:05:31.378Z",
+  "recordedAt": "2025-12-11T14:19:52.348Z",
   "testFile": "/Users/ragnarwestad/develop/nav/melosys-web/tests/e2e/specs/behandle-sak/eu-eøs/navigasjon.spec.ts",
   "testName": "EU/EØS Ikke yrkesaktiv - Bekreft-knapp forblir deaktivert ved ugyldig input",
   "exchanges": [
@@ -39,7 +39,7 @@
           "melosys.arsavregning.uten.flyt": false
         }
       },
-      "duration": 14,
+      "duration": 36,
       "dynamicFields": []
     },
     {
@@ -78,12 +78,12 @@
             "term": "Saken er opprettet"
           },
           "betalingsvalg": null,
-          "registrertDato": "2025-12-11T14:05:27.397376Z",
-          "endretDato": "2025-12-11T14:05:27.405616Z",
+          "registrertDato": "2025-01-01T00:00:00.000Z",
+          "endretDato": "2025-01-01T00:00:00.000Z",
           "hovedpartRolle": "BRUKER"
         }
       },
-      "duration": 87,
+      "duration": 92,
       "dynamicFields": ["registrertDato", "endretDato"]
     },
     {
@@ -121,12 +121,12 @@
               "kode": "IKKE_YRKESAKTIV",
               "term": "Ikke yrkesaktiv"
             },
-            "registrertDato": "2025-12-11T14:05:27.399261Z",
-            "endretDato": "2025-12-11T14:05:27.419580Z",
+            "registrertDato": "2025-01-01T00:00:00.000Z",
+            "endretDato": "2025-01-01T00:00:00.000Z",
             "endretAvNavn": "Lokal Testbruker",
             "sisteOpplysningerHentetDato": null,
             "svarFrist": null,
-            "behandlingsfrist": "2026-03-11",
+            "behandlingsfrist": "2025-01-01",
             "behandlingsresultattype": {
               "kode": "IKKE_FASTSATT",
               "term": "Ikke fastsatt"
@@ -157,7 +157,7 @@
           "redigerbart": true
         }
       },
-      "duration": 457,
+      "duration": 468,
       "dynamicFields": [
         "oppsummering.registrertDato",
         "oppsummering.endretDato",
@@ -200,7 +200,7 @@
           "aarsavregningID": null
         }
       },
-      "duration": 17,
+      "duration": 66,
       "dynamicFields": []
     },
     {
@@ -288,10 +288,10 @@
             "ikkeYrkesaktivSituasjontype": null
           },
           "type": "SØKNAD_IKKE_YRKESAKTIV",
-          "mottaksdato": "2025-12-11"
+          "mottaksdato": "2025-01-01"
         }
       },
-      "duration": 15,
+      "duration": 32,
       "dynamicFields": [
         "data.periode.fom",
         "data.periode.tom",
@@ -322,7 +322,7 @@
         },
         "body": []
       },
-      "duration": 7,
+      "duration": 17,
       "dynamicFields": []
     },
     {
@@ -347,7 +347,7 @@
         },
         "body": []
       },
-      "duration": 8,
+      "duration": 13,
       "dynamicFields": []
     },
     {
@@ -414,7 +414,47 @@
           }
         ]
       },
-      "duration": 23,
+      "duration": 29,
+      "dynamicFields": []
+    },
+    {
+      "request": {
+        "id": "780beeaf3b04",
+        "method": "GET",
+        "url": "http://localhost:3333/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/?saksnummer=MEL-1053",
+        "pathname": "/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/",
+        "normalizedPath": "/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/",
+        "query": {
+          "saksnummer": "MEL-1053"
+        },
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": [
+          {
+            "kode": "EU_EOS",
+            "term": "EU/EØS-land"
+          },
+          {
+            "kode": "TRYGDEAVTALE",
+            "term": "Avtaleland"
+          },
+          {
+            "kode": "FTRL",
+            "term": "Utenfor avtaleland"
+          }
+        ]
+      },
+      "duration": 30,
       "dynamicFields": []
     },
     {
@@ -456,7 +496,7 @@
           }
         ]
       },
-      "duration": 33,
+      "duration": 36,
       "dynamicFields": []
     },
     {
@@ -503,7 +543,7 @@
           }
         ]
       },
-      "duration": 31,
+      "duration": 36,
       "dynamicFields": []
     },
     {
@@ -527,51 +567,11 @@
           "content-type": "application/json"
         },
         "body": {
-          "mottaksdato": "2025-12-11"
+          "mottaksdato": "2025-01-01"
         }
       },
-      "duration": 31,
+      "duration": 36,
       "dynamicFields": ["mottaksdato"]
-    },
-    {
-      "request": {
-        "id": "780beeaf3b04",
-        "method": "GET",
-        "url": "http://localhost:3333/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/?saksnummer=MEL-1053",
-        "pathname": "/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/",
-        "normalizedPath": "/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/",
-        "query": {
-          "saksnummer": "MEL-1053"
-        },
-        "headers": {
-          "accept": "application/json",
-          "authorization": "[REDACTED]"
-        },
-        "body": null
-      },
-      "response": {
-        "status": 200,
-        "statusText": "OK",
-        "headers": {
-          "content-type": "application/json"
-        },
-        "body": [
-          {
-            "kode": "EU_EOS",
-            "term": "EU/EØS-land"
-          },
-          {
-            "kode": "TRYGDEAVTALE",
-            "term": "Avtaleland"
-          },
-          {
-            "kode": "FTRL",
-            "term": "Utenfor avtaleland"
-          }
-        ]
-      },
-      "duration": 42,
-      "dynamicFields": []
     },
     {
       "request": {
@@ -595,7 +595,7 @@
         },
         "body": []
       },
-      "duration": 37,
+      "duration": 43,
       "dynamicFields": []
     },
     {
@@ -638,13 +638,13 @@
                 "kjoenn": "UKJENT",
                 "folkeregisterpersonstatuser": [
                   {
-                    "kode": "BOSATT",
-                    "erHistorisk": false,
+                    "kode": "UTFLYTTET",
+                    "erHistorisk": true,
                     "__typename": "Folkeregisterpersonstatus"
                   },
                   {
-                    "kode": "UTFLYTTET",
-                    "erHistorisk": true,
+                    "kode": "BOSATT",
+                    "erHistorisk": false,
                     "__typename": "Folkeregisterpersonstatus"
                   },
                   {
@@ -690,7 +690,7 @@
           }
         }
       },
-      "duration": 45,
+      "duration": 62,
       "dynamicFields": []
     },
     {
@@ -717,7 +717,7 @@
           "harBehandlingMedTrygdeavgift": false
         }
       },
-      "duration": 186,
+      "duration": 188,
       "dynamicFields": []
     }
   ]

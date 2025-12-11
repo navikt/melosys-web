@@ -6,7 +6,7 @@
  */
 
 import type { Page, Route, Request, APIResponse } from "@playwright/test";
-import { writeFileSync, mkdirSync, existsSync } from "fs";
+import { writeFileSync, mkdirSync, existsSync, readFileSync } from "fs";
 import { join } from "path";
 import { createHash } from "crypto";
 import { getRecordingsPath } from "../config/mode";
@@ -46,7 +46,7 @@ export interface Recording {
   exchanges: RecordedExchange[];
 }
 
-// Known dynamic fields that change between runs
+// Known dynamic fields that change between runs (for detection/logging)
 const KNOWN_DYNAMIC_FIELDS = [
   "opprettetTidspunkt",
   "endretTidspunkt",
@@ -58,6 +58,107 @@ const KNOWN_DYNAMIC_FIELDS = [
   "fom",
   "tom",
 ];
+
+// Fields that should be normalized to stable values before saving
+// Key patterns (case-insensitive) → normalized value
+const NORMALIZE_PATTERNS: Array<{ pattern: RegExp; value: string }> = [
+  // ISO timestamps (2025-12-11T14:00:28.983841Z)
+  { pattern: /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z?$/, value: "2025-01-01T00:00:00.000Z" },
+  // ISO dates (2025-12-11)
+  { pattern: /^\d{4}-\d{2}-\d{2}$/, value: "2025-01-01" },
+  // Norwegian dates (11.12.2025)
+  { pattern: /^\d{2}\.\d{2}\.\d{4}$/, value: "01.01.2025" },
+];
+
+// Field names that should have their values normalized (case-insensitive partial match)
+const FIELDS_TO_NORMALIZE = [
+  "registrertDato",
+  "endretDato",
+  "opprettetTidspunkt",
+  "endretTidspunkt",
+  "sistOppdatert",
+  "mottaksdato",
+  "behandlingsfrist",
+  "svarFrist",
+  "opprettetDato",
+  "sisteOpplysningerHentetDato",
+];
+
+/**
+ * Normalize dynamic values in an object for stable recordings.
+ * This ensures recordings don't change just because timestamps differ.
+ */
+function normalizeForStableRecording(obj: unknown): unknown {
+  if (obj === null || obj === undefined) {
+    return obj;
+  }
+
+  if (Array.isArray(obj)) {
+    return obj.map((item) => normalizeForStableRecording(item));
+  }
+
+  if (typeof obj === "object") {
+    const normalized: Record<string, unknown> = {};
+    for (const [key, value] of Object.entries(obj as Record<string, unknown>)) {
+      // Check if this field should be normalized
+      const shouldNormalize = FIELDS_TO_NORMALIZE.some((field) => key.toLowerCase().includes(field.toLowerCase()));
+
+      if (shouldNormalize && typeof value === "string") {
+        // Try to normalize the value based on its format
+        let normalizedValue = value;
+        for (const { pattern, value: replacement } of NORMALIZE_PATTERNS) {
+          if (pattern.test(value)) {
+            normalizedValue = replacement;
+            break;
+          }
+        }
+        normalized[key] = normalizedValue;
+      } else {
+        normalized[key] = normalizeForStableRecording(value);
+      }
+    }
+    return normalized;
+  }
+
+  return obj;
+}
+
+/**
+ * Check if two recordings have equivalent exchanges (ignoring metadata like recordedAt).
+ * Returns true if they are equivalent and no update is needed.
+ */
+function recordingsAreEquivalent(existing: Recording, newRecording: Recording): boolean {
+  // Different number of exchanges = not equivalent
+  if (existing.exchanges.length !== newRecording.exchanges.length) {
+    return false;
+  }
+
+  // Compare each exchange (request + response, ignoring duration)
+  for (let i = 0; i < existing.exchanges.length; i++) {
+    const existingEx = existing.exchanges[i];
+    const newEx = newRecording.exchanges[i];
+
+    // Compare requests (ignoring id which is generated)
+    if (
+      existingEx.request.method !== newEx.request.method ||
+      existingEx.request.pathname !== newEx.request.pathname ||
+      JSON.stringify(existingEx.request.query) !== JSON.stringify(newEx.request.query) ||
+      JSON.stringify(existingEx.request.body) !== JSON.stringify(newEx.request.body)
+    ) {
+      return false;
+    }
+
+    // Compare responses (status and normalized body)
+    if (
+      existingEx.response.status !== newEx.response.status ||
+      JSON.stringify(existingEx.response.body) !== JSON.stringify(newEx.response.body)
+    ) {
+      return false;
+    }
+  }
+
+  return true;
+}
 
 /**
  * Generate a unique ID for a request based on method, path, query, and body.
@@ -224,11 +325,12 @@ export class ApiRecorder {
       requestBody = request.postData();
     }
 
-    // Parse response body
-    const responseBody = await safeParseBody(response);
+    // Parse response body and normalize dynamic fields for stable recordings
+    const rawResponseBody = await safeParseBody(response);
+    const responseBody = normalizeForStableRecording(rawResponseBody);
 
-    // Find dynamic fields in response
-    const dynamicFields = findDynamicFields(responseBody);
+    // Find dynamic fields in response (for logging/debugging)
+    const dynamicFields = findDynamicFields(rawResponseBody);
 
     // Parse query parameters for ID generation
     const query = parseQuery(url);
@@ -264,19 +366,12 @@ export class ApiRecorder {
 
   /**
    * Save recordings to a JSON file.
+   * Only writes if the recording has actually changed (ignoring metadata like recordedAt).
    */
   save(): void {
     if (this.exchanges.length === 0) {
       return;
     }
-
-    const recording: Recording = {
-      version: "1.0",
-      recordedAt: new Date().toISOString(),
-      testFile: this.testFile,
-      testName: this.testName,
-      exchanges: this.exchanges,
-    };
 
     // Create output path based on test file structure
     const relativePath = this.testFile.replace(/.*\/specs\//, "").replace(/\.spec\.ts$/, "");
@@ -284,13 +379,38 @@ export class ApiRecorder {
     const outputDir = join(this.recordingsPath, "specs", relativePath);
     const outputPath = join(outputDir, `${sanitizedTestName}.json`);
 
+    const newRecording: Recording = {
+      version: "1.0",
+      recordedAt: new Date().toISOString(),
+      testFile: this.testFile,
+      testName: this.testName,
+      exchanges: this.exchanges,
+    };
+
+    // Check if file exists and compare with existing recording
+    if (existsSync(outputPath)) {
+      try {
+        const existingContent = readFileSync(outputPath, "utf-8");
+        const existingRecording: Recording = JSON.parse(existingContent);
+
+        // If recordings are equivalent, skip writing
+        if (recordingsAreEquivalent(existingRecording, newRecording)) {
+          // eslint-disable-next-line no-console
+          console.log(`[Recorder] Skipped (unchanged): ${outputPath}`);
+          return;
+        }
+      } catch {
+        // If we can't read/parse existing file, just overwrite it
+      }
+    }
+
     // Ensure directory exists
     if (!existsSync(outputDir)) {
       mkdirSync(outputDir, { recursive: true });
     }
 
     // Write recording
-    writeFileSync(outputPath, JSON.stringify(recording, null, 2));
+    writeFileSync(outputPath, JSON.stringify(newRecording, null, 2));
 
     // eslint-disable-next-line no-console
     console.log(`[Recorder] Saved ${this.exchanges.length} exchanges to ${outputPath}`);
