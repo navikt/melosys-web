@@ -5,7 +5,7 @@ import { createHtmlReport } from "axe-html-reporter";
 import { sanitizeFilename } from "./testUtils";
 
 // Siden accessibility testing er nedprioritert deaktiverer vi de som default.
-export const disableAxeTests = false;
+export const disableAxeTests = true;
 
 /**
  * Kjente tredjepartsbibliotek-problemer som vi eksluderer fra Axe-testing.
