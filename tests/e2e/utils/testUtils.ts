@@ -85,6 +85,33 @@ export async function finnCheckboxGroup(legend: string, scope: Page | Locator): 
 }
 
 /**
+ * Finn en radio-gruppe (role="group") og verifiser synlighet
+ * @param navn - Gruppens accessible name (fra legend eller aria-label)
+ * @param scope - Page eller Locator å søke innenfor
+ * @param options - Valgfrie options: timeout (ms), erSynlig (default true)
+ * @returns Locator for gruppen (scoped)
+ */
+export async function finnRadioGroup(
+  navn: string,
+  scope: Page | Locator,
+  options?: { timeout?: number; erSynlig?: boolean },
+): Promise<Locator> {
+  const gruppe = scope.getByRole("group", { name: navn });
+  const erSynlig = options?.erSynlig ?? true;
+  const timeoutOptions = options?.timeout ? { timeout: options.timeout } : undefined;
+
+  if (erSynlig) {
+    await expect(gruppe, `Radio-gruppe "${navn}" skal være synlig`).toBeVisible(timeoutOptions);
+    const count = await gruppe.count();
+    expect(count, `Radio-gruppe "${navn}" skal være unik - bruk smalere scope`).toBe(1);
+  } else {
+    await expect(gruppe, `Radio-gruppe "${navn}" skal ikke være synlig`).not.toBeVisible(timeoutOptions);
+  }
+
+  return gruppe;
+}
+
+/**
  * Finn en radioknapp basert på label/navn og verifiser at den finnes og er unik
  * @param label - Radioknappens label/navn (synlig tekst eller aria-label)
  * @param scope - Page eller Locator å søke innenfor

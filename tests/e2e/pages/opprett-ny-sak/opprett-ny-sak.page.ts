@@ -2,6 +2,7 @@ import { expect, Locator, Page } from "@playwright/test";
 import {
   finnCheckbox,
   finnKnapp,
+  finnRadioGroup,
   getSaksnummerFraLocator,
   LocatorWithSakId,
   setDatoFelt,
@@ -313,9 +314,7 @@ export class OpprettNySakPage {
    * @param behandlingstype - Navn på behandlingstypen (f.eks. "Årsavregning", "Henvendelse")
    */
   async velgBehandlingstypeRadio(behandlingstype: string): Promise<void> {
-    const behandlingstypeGruppe = this.page.getByRole("group", { name: UI_TEXTS.LABELS.BEHANDLINGSTYPE });
-    await expect(behandlingstypeGruppe, "Fant ikke behandlingstype-gruppe").toBeVisible();
-    await velgRadioknapp(behandlingstype, behandlingstypeGruppe);
+    await velgRadioknapp(behandlingstype, this.page);
   }
 
   /**
@@ -457,58 +456,10 @@ export class OpprettNySakPage {
   }
 
   /**
-   * Tell antall saker som vises
-   */
-  async tellAntallSaker(): Promise<number> {
-    return await this.page.locator(".customRadioPanel").count();
-  }
-
-  /**
    * Sjekk om opprett-ny-sak siden er synlig
    */
   async erOpprettNySakSidenSynlig(): Promise<boolean> {
     return await this.page.locator(".opprettnysak").isVisible();
-  }
-
-  /**
-   * Sjekk om behandlingstype-gruppen er synlig
-   */
-  async erBehandlingstypeGruppeSynlig(): Promise<boolean> {
-    const behandlingstypeGruppe = this.page.getByRole("group", { name: UI_TEXTS.LABELS.BEHANDLINGSTYPE });
-    return await behandlingstypeGruppe.isVisible().catch(() => false);
-  }
-
-  /**
-   * Hent locator for behandlingspanel-rammen
-   * Dette panelet inneholder "Velg tema og type for ny behandling"
-   * @param sakIndex - Valgfri index for å hente panel rett etter spesifikk sak
-   */
-  hentBehandlingspanelRamme(sakIndex?: number): Locator {
-    if (sakIndex !== undefined) {
-      // Finn saken først, deretter neste sibling panelramme
-      const sak = this.page.locator(".customRadioPanel").nth(sakIndex);
-      return sak.locator("~ .knyttTilSak__panelramme").first();
-    }
-
-    // Fallback til global sjekk (bakoverkompatibilitet)
-    return this.page.locator(".knyttTilSak__panelramme");
-  }
-
-  /**
-   * Tell antall behandlingstyper i behandlingspanel-rammen
-   */
-  async tellBehandlingstyperIPanel(): Promise<number> {
-    const behandlingspanelRamme = this.page.locator(".knyttTilSak__panelramme");
-    const behandlingstypeRadios = behandlingspanelRamme.locator(".navds-radio");
-    return await behandlingstypeRadios.count();
-  }
-
-  /**
-   * Hent behandlingstema-verdi
-   */
-  async hentBehandlingstemaVerdi(): Promise<string> {
-    const behandlingstemaSelect = this.page.locator("select[name='behandlingstema']");
-    return await behandlingstemaSelect.inputValue();
   }
 
   // ===== ASSERTIONS (verifiserer tilstand) =====
@@ -605,36 +556,23 @@ export class OpprettNySakPage {
     saksnummer?: string,
   ): Promise<void> {
     const sakId = saksnummer || getSaksnummerFraLocator(valgtSak!);
-    await expect(
-      this.page.getByRole("group", { name: UI_TEXTS.LABELS.BEHANDLINGSTYPE }),
-      `Behandlingstype-gruppe for sak ${sakId} skal være synlig`,
-    ).toBeVisible({ timeout: 10000 });
+    const behandlingstypeGruppe = await finnRadioGroup(UI_TEXTS.LABELS.BEHANDLINGSTYPE, this.page, { timeout: 10000 });
 
     // Hent alle faktiske radiobuttons som er tilstede
-    let alleRadioButtons = this.page.getByRole("group", { name: UI_TEXTS.LABELS.BEHANDLINGSTYPE }).getByRole("radio");
+    let alleRadioButtons = behandlingstypeGruppe.getByRole("radio");
     let antallRadioButtons = await alleRadioButtons.count();
 
     // Prøv alternative selektorer hvis ingen radiobuttons finnes
     if (antallRadioButtons === 0) {
-      const alternativeRadios = await this.page
-        .getByRole("group", { name: UI_TEXTS.LABELS.BEHANDLINGSTYPE })
-        .locator("input[type='radio']")
-        .count();
-      const navdsRadios = await this.page
-        .getByRole("group", { name: UI_TEXTS.LABELS.BEHANDLINGSTYPE })
-        .locator(".navds-radio")
-        .count();
+      const alternativeRadios = await behandlingstypeGruppe.locator("input[type='radio']").count();
+      const navdsRadios = await behandlingstypeGruppe.locator(".navds-radio").count();
 
       // Bruk alternative selektorer hvis de finner radiobuttons
       if (alternativeRadios > 0) {
-        alleRadioButtons = this.page
-          .getByRole("group", { name: UI_TEXTS.LABELS.BEHANDLINGSTYPE })
-          .locator("input[type='radio']");
+        alleRadioButtons = behandlingstypeGruppe.locator("input[type='radio']");
         antallRadioButtons = alternativeRadios;
       } else if (navdsRadios > 0) {
-        alleRadioButtons = this.page
-          .getByRole("group", { name: UI_TEXTS.LABELS.BEHANDLINGSTYPE })
-          .locator(".navds-radio input");
+        alleRadioButtons = behandlingstypeGruppe.locator(".navds-radio input");
         antallRadioButtons = navdsRadios;
       }
     }
@@ -698,18 +636,6 @@ export class OpprettNySakPage {
   }
 
   /**
-   * Verifiser at behandlingstype-gruppen er synlig og har behandlingstyper
-   */
-  async verifiserBehandlingstypeGruppe(): Promise<void> {
-    const behandlingstypeGruppe = this.page.getByRole("group", { name: UI_TEXTS.LABELS.BEHANDLINGSTYPE });
-    await expect(behandlingstypeGruppe, "Behandlingstype-gruppe skal være synlig").toBeVisible();
-
-    const behandlingstypeRadios = behandlingstypeGruppe.locator(".navds-radio");
-    const antallBehandlingstyper = await behandlingstypeRadios.count();
-    expect(antallBehandlingstyper, "Minst én behandlingstype skal være tilgjengelig").toBeGreaterThan(0);
-  }
-
-  /**
    * Verifiser at "Tidligere behandling er avsluttet" melding vises
    */
   async verifiserTidligereBehandlingAvsluttet(): Promise<void> {
@@ -734,18 +660,9 @@ export class OpprettNySakPage {
   }
 
   /**
-   * Verifiser at behandlingstema-select er synlig
-   */
-  async verifiserBehandlingstemaSelectSynlig(): Promise<void> {
-    const behandlingstemaSelect = this.page.locator("select[name='behandlingstema']");
-    await expect(behandlingstemaSelect, "Select-felt for behandlingstema skal være synlig").toBeVisible();
-  }
-
-  /**
    * Verifiser at behandlingstype-gruppen IKKE er synlig
    */
   async verifiserBehandlingstypeGruppeIkkeSynlig(): Promise<void> {
-    const behandlingstypeGruppe = this.page.getByRole("group", { name: UI_TEXTS.LABELS.BEHANDLINGSTYPE });
-    await expect(behandlingstypeGruppe, "Behandlingstype-gruppe skal ikke være synlig").not.toBeVisible();
+    await finnRadioGroup(UI_TEXTS.LABELS.BEHANDLINGSTYPE, this.page, { erSynlig: false });
   }
 }
