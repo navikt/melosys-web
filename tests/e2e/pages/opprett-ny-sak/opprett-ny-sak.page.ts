@@ -5,7 +5,7 @@ import {
   getSaksnummerFraLocator,
   LocatorWithSakId,
   setDatoFelt,
-  velgRadio,
+  velgRadioknapp,
 } from "../../utils/testUtils";
 import { UI_TEXTS } from "../../config/ui-texts";
 
@@ -315,7 +315,7 @@ export class OpprettNySakPage {
   async velgBehandlingstypeRadio(behandlingstype: string): Promise<void> {
     const behandlingstypeGruppe = this.page.getByRole("group", { name: UI_TEXTS.LABELS.BEHANDLINGSTYPE });
     await expect(behandlingstypeGruppe, "Fant ikke behandlingstype-gruppe").toBeVisible();
-    await velgRadio(behandlingstype, behandlingstypeGruppe);
+    await velgRadioknapp(behandlingstype, behandlingstypeGruppe);
   }
 
   /**

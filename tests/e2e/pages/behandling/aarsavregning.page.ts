@@ -1,7 +1,7 @@
 import { expect, Page } from "@playwright/test";
 import { BehandlingPage } from "./behandling.page";
 import { PrepopulertSaksnummer } from "../../utils/testdataUtils";
-import { finnKnapp, velgFraListe } from "../../utils/testUtils";
+import { finnKnapp, finnRadioknapp, velgFraListe } from "../../utils/testUtils";
 import { UI_TEXTS } from "../../config/ui-texts";
 
 /**
@@ -228,8 +228,8 @@ export class AarsavregningPage extends BehandlingPage {
 
     // Finn radio-knappen ved å bruke group legend som anker
     const radioGroup = this.page.locator(`[name="skatteforholdsperioder[${index}].skatteplikttype"]`).locator("..");
-    const radio = radioGroup.getByRole("radio", { name: radioValue });
-    await expect(radio, `${this.ctx}: Radio-button "${radioValue}" for skatteplikttype skal være synlig`).toBeVisible({
+    const radio = await finnRadioknapp(radioValue, radioGroup);
+    await expect(radio, `${this.ctx}: Radioknapp "${radioValue}" for skatteplikttype skal være synlig`).toBeVisible({
       timeout: 5000,
     });
     await radio.click({ force: true });
@@ -363,11 +363,7 @@ export class AarsavregningPage extends BehandlingPage {
 
     // Vent på at "Beregn endelig trygdeavgift" radioknappen vises
     // Dette kan ta litt tid pga React re-rendering
-    const beregnEndeligRadio = this.page.getByRole("radio", { name: "Beregn endelig trygdeavgift" });
-    await expect(
-      beregnEndeligRadio,
-      `${this.ctx}: 'Beregn endelig trygdeavgift' radio skal være synlig etter Ja valgt`,
-    ).toBeVisible({ timeout: 15000 });
+    const beregnEndeligRadio = await finnRadioknapp("Beregn endelig trygdeavgift", this.page, 15000);
 
     // Sjekk om "Beregn endelig trygdeavgift" allerede er valgt
     const beregnIsChecked = await beregnEndeligRadio.isChecked();

@@ -1,7 +1,7 @@
 import { expect, Locator, Page } from "@playwright/test";
 import { BehandlingPage } from "./behandling.page";
 import { PrepopulertSaksnummer } from "../../utils/testdataUtils";
-import { finnCheckboxGroup, finnKnapp, setDatoFelt, velgRadio } from "../../utils/testUtils";
+import { finnCheckboxGroup, finnKnapp, setDatoFelt, velgRadioknapp } from "../../utils/testUtils";
 import { UI_TEXTS } from "../../config/ui-texts";
 
 /**
@@ -136,7 +136,7 @@ export class StegvelgerPage extends BehandlingPage {
     await this.page.keyboard.press("Tab"); // Lukk evt. datepicker
 
     // Velg "Velg land fra liste" radio
-    await velgRadio("Velg land fra liste", this.page);
+    await velgRadioknapp("Velg land fra liste", this.page);
 
     // Vent på at MultiSelect-komponenten vises etter radioknapp-klikk
     const landMultiSelect = this.page.locator(".land_multiselect");

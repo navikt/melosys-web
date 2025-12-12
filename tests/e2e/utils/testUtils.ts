@@ -85,17 +85,33 @@ export async function finnCheckboxGroup(legend: string, scope: Page | Locator): 
 }
 
 /**
- * Generisk funksjon for å velge en radio-knapp
- * @param navn - Navn/label på radio-knappen
+ * Finn en radioknapp basert på label/navn og verifiser at den finnes og er unik
+ * @param label - Radioknappens label/navn (synlig tekst eller aria-label)
  * @param scope - Page eller Locator å søke innenfor
+ * @param timeout - Valgfri timeout i ms for å vente på at elementet skal dukke opp
+ * @returns Locator for radioknappen (garantert å finnes og være unik)
  */
-export async function velgRadio(navn: string, scope: Page | Locator): Promise<void> {
-  const radio = scope.getByRole("radio", { name: navn });
-  const count = await radio.count();
-  expect(count, `Radio-knapp "${navn}" skal finnes`).toBeGreaterThan(0);
-  expect(count, `Radio-knapp "${navn}" skal være unik - bruk smalere scope`).toBe(1);
+export async function finnRadioknapp(label: string, scope: Page | Locator, timeout?: number): Promise<Locator> {
+  const radio = scope.getByRole("radio", { name: label });
 
-  await expect(radio, `Radio-knapp "${navn}" skal være synlig`).toBeVisible();
+  // Verifiser at radioknappen er synlig (med valgfri timeout)
+  const options = timeout ? { timeout } : undefined;
+  await expect(radio, `Radioknapp "${label}" skal være synlig`).toBeVisible(options);
+
+  const count = await radio.count();
+  expect(count, `Radioknapp "${label}" skal være unik - bruk smalere scope`).toBe(1);
+
+  return radio;
+}
+
+/**
+ * Finn og velg en radioknapp
+ * @param navn - Navn/label på radioknappen
+ * @param scope - Page eller Locator å søke innenfor
+ * @param timeout - Valgfri timeout i ms for å vente på at elementet skal dukke opp
+ */
+export async function velgRadioknapp(navn: string, scope: Page | Locator, timeout?: number): Promise<void> {
+  const radio = await finnRadioknapp(navn, scope, timeout);
 
   const isChecked = await radio.isChecked();
   if (!isChecked) {
