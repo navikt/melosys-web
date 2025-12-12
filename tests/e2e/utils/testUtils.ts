@@ -67,6 +67,24 @@ export async function finnCheckbox(label: string, scope: Page | Locator): Promis
 }
 
 /**
+ * Finn en checkbox-gruppe (fieldset med legend) og returner scoped locator
+ * @param legend - Tekst i legend-elementet (kan være delvis match)
+ * @param scope - Page eller Locator å søke innenfor
+ * @returns Locator for fieldset-en (scoped til gruppen)
+ */
+export async function finnCheckboxGroup(legend: string, scope: Page | Locator): Promise<Locator> {
+  const fieldset = scope.locator("fieldset").filter({
+    has: scope.locator(`legend:has-text("${legend}")`),
+  });
+  const count = await fieldset.count();
+
+  expect(count, `Checkbox-gruppe "${legend}" skal finnes`).toBeGreaterThan(0);
+  expect(count, `Checkbox-gruppe "${legend}" skal være unik - bruk smalere scope`).toBe(1);
+
+  return fieldset;
+}
+
+/**
  * Generisk funksjon for å velge en radio-knapp
  * @param navn - Navn/label på radio-knappen
  * @param scope - Page eller Locator å søke innenfor

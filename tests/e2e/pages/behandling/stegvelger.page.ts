@@ -1,7 +1,7 @@
 import { expect, Locator, Page } from "@playwright/test";
 import { BehandlingPage } from "./behandling.page";
 import { PrepopulertSaksnummer } from "../../utils/testdataUtils";
-import { finnCheckbox, finnKnapp, setDatoFelt, velgRadio } from "../../utils/testUtils";
+import { finnCheckboxGroup, finnKnapp, setDatoFelt, velgRadio } from "../../utils/testUtils";
 import { UI_TEXTS } from "../../config/ui-texts";
 
 /**
@@ -167,12 +167,8 @@ export class StegvelgerPage extends BehandlingPage {
    * Velg første virksomhet i Virksomhet-steget (FTRL)
    */
   async velgFørsteVirksomhet(): Promise<void> {
-    // Find the checkbox within the "Velg virksomhet(er)" fieldset (CheckboxGroup)
-    // Avoid selecting "Inkl. siste 5 år" or other checkboxes outside the form
-    const virksomhetFieldset = this.page.locator("fieldset").filter({
-      has: this.page.locator('legend:has-text("Velg virksomhet")'),
-    });
-    const virksomhetCheckbox = virksomhetFieldset.getByRole("checkbox").first();
+    const virksomhetGruppe = await finnCheckboxGroup("Velg virksomhet(er)", this.page);
+    const virksomhetCheckbox = virksomhetGruppe.getByRole("checkbox").first();
     await expect(virksomhetCheckbox, `${this.ctx}: Fant ingen virksomhet-checkbox`).toBeVisible({ timeout: 5000 });
     await virksomhetCheckbox.check();
 
