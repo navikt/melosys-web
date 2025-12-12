@@ -1,7 +1,7 @@
 import { expect, Locator, Page } from "@playwright/test";
 import { BehandlingPage } from "./behandling.page";
 import { PrepopulertSaksnummer } from "../../utils/testdataUtils";
-import { finnCheckboxGroup, finnKnapp, setDatoFelt, velgRadioknapp } from "../../utils/testUtils";
+import { finnCheckboxGroup, finnCombobox, finnKnapp, setDatoFelt, velgRadioknapp } from "../../utils/testUtils";
 import { UI_TEXTS } from "../../config/ui-texts";
 
 /**
@@ -155,8 +155,7 @@ export class StegvelgerPage extends BehandlingPage {
     await landOption.click();
 
     // Velg trygdedekning fra dropdown
-    const trygdedekningSelect = this.page.getByRole("combobox", { name: "Trygdedekning" });
-    await expect(trygdedekningSelect, `${this.ctx}: Fant ikke trygdedekning-dropdown`).toBeVisible({ timeout: 5000 });
+    const trygdedekningSelect = await finnCombobox("Trygdedekning", this.page, 5000);
     await trygdedekningSelect.selectOption({ index: 1 });
 
     // Vent på at validering kjører
@@ -181,8 +180,7 @@ export class StegvelgerPage extends BehandlingPage {
    * @param bestemmelse Søkestreng for bestemmelse (kan være delvis match, f.eks. "§ 2-5")
    */
   async velgBestemmelse(bestemmelse: string): Promise<void> {
-    const bestemmelseSelect = this.page.getByRole("combobox", { name: "Bestemmelse" });
-    await expect(bestemmelseSelect, `${this.ctx}: Fant ikke bestemmelse-dropdown`).toBeVisible({ timeout: 5000 });
+    const bestemmelseSelect = await finnCombobox("Bestemmelse", this.page, 5000);
 
     // Hent alle options og finn første som inneholder søkestrengen
     const options = bestemmelseSelect.locator("option");

@@ -147,19 +147,39 @@ export async function velgRadioknapp(navn: string, scope: Page | Locator, timeou
 }
 
 /**
- * Generisk funksjon for å velge verdi fra en combobox/select
+ * Finn en combobox/select basert på label/navn og verifiser at den finnes og er unik
+ * @param navn - Comboboxens label/navn (synlig tekst eller aria-label)
+ * @param scope - Page eller Locator å søke innenfor
+ * @param timeout - Valgfri timeout i ms for å vente på at elementet skal dukke opp
+ * @returns Locator for comboboxen (garantert å finnes og være unik)
+ */
+export async function finnCombobox(navn: string, scope: Page | Locator, timeout?: number): Promise<Locator> {
+  const combobox = scope.getByRole("combobox", { name: navn });
+
+  const options = timeout ? { timeout } : undefined;
+  await expect(combobox, `Combobox "${navn}" skal være synlig`).toBeVisible(options);
+
+  const count = await combobox.count();
+  expect(count, `Combobox "${navn}" skal være unik - bruk smalere scope`).toBe(1);
+
+  return combobox;
+}
+
+/**
+ * Finn og velg verdi fra en combobox/select
  * @param navn - Navn/label på combobox/select
  * @param verdi - Verdien som skal velges (label)
  * @param scope - Page eller Locator å søke innenfor
+ * @param timeout - Valgfri timeout i ms for å vente på at elementet skal dukke opp
  */
-export async function velgFraListe(navn: string, verdi: string, scope: Page | Locator): Promise<void> {
-  const select = scope.getByRole("combobox", { name: navn });
-  const count = await select.count();
-  expect(count, `Combobox "${navn}" skal finnes`).toBeGreaterThan(0);
-  expect(count, `Combobox "${navn}" skal være unik - bruk smalere scope`).toBe(1);
-
-  await expect(select, `Combobox "${navn}" skal være synlig`).toBeVisible();
-  await select.selectOption({ label: verdi });
+export async function velgFraListe(
+  navn: string,
+  verdi: string,
+  scope: Page | Locator,
+  timeout?: number,
+): Promise<void> {
+  const combobox = await finnCombobox(navn, scope, timeout);
+  await combobox.selectOption({ label: verdi });
 }
 
 /**

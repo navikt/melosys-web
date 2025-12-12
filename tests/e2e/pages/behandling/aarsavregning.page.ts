@@ -1,7 +1,7 @@
 import { expect, Page } from "@playwright/test";
 import { BehandlingPage } from "./behandling.page";
 import { PrepopulertSaksnummer } from "../../utils/testdataUtils";
-import { finnKnapp, finnRadioknapp, velgFraListe } from "../../utils/testUtils";
+import { finnCombobox, finnKnapp, finnRadioknapp, velgFraListe } from "../../utils/testUtils";
 import { UI_TEXTS } from "../../config/ui-texts";
 
 /**
@@ -14,8 +14,7 @@ export class AarsavregningPage extends BehandlingPage {
 
   // Hent første tilgjengelige år fra dropdown-en (ikke "Velg...")
   async hentFørsteTilgjengeligeÅr(): Promise<string> {
-    const årSelect = this.page.getByRole("combobox", { name: "År" });
-    await expect(årSelect, "År-select skal være synlig").toBeVisible({ timeout: 5000 });
+    const årSelect = await finnCombobox("År", this.page, 5000);
 
     // Hent alle options og finn første som ikke er disabled
     const options = årSelect.locator("option:not([disabled])");
@@ -28,8 +27,7 @@ export class AarsavregningPage extends BehandlingPage {
 
   // År dropdown
   async velgÅr(år: string) {
-    const årSelect = this.page.getByRole("combobox", { name: "År" });
-    await expect(årSelect, `${this.ctx}: År-select skal være synlig`).toBeVisible({ timeout: 5000 });
+    const årSelect = await finnCombobox("År", this.page, 5000);
 
     // Sett opp lyttere for API-kall FØR vi velger år
     // Vi trenger å vente på ENTEN:
@@ -91,14 +89,8 @@ export class AarsavregningPage extends BehandlingPage {
   }
 
   async fyllUtMedlemskapsperiodeFomDato(index: number, dato: string) {
-    // Bruk trygdedekning combobox som anker - dette sikrer at perioden eksisterer
-    const trygdedekningDropdown = this.page.getByRole("combobox", {
-      name: `Trygdedekning periode ${index + 1}`,
-    });
-    await expect(
-      trygdedekningDropdown,
-      `${this.ctx}: Trygdedekning-dropdown for periode ${index + 1} skal være synlig`,
-    ).toBeVisible({ timeout: 10000 });
+    // Vent på at perioden eksisterer ved å sjekke at trygdedekning-dropdown er synlig
+    await finnCombobox(`Trygdedekning periode ${index + 1}`, this.page, 10000);
 
     // Finn alle inputs på siden, og filtrér ved å telle medlemskapsperiode-inputs
     // Hent alle inputs i perioder-seksjonen som ikke er hidden
@@ -119,14 +111,8 @@ export class AarsavregningPage extends BehandlingPage {
   }
 
   async fyllUtMedlemskapsperiodeTomDato(index: number, dato: string) {
-    // Bruk trygdedekning combobox som anker - dette sikrer at perioden eksisterer
-    const trygdedekningDropdown = this.page.getByRole("combobox", {
-      name: `Trygdedekning periode ${index + 1}`,
-    });
-    await expect(
-      trygdedekningDropdown,
-      `${this.ctx}: Trygdedekning-dropdown for periode ${index + 1} skal være synlig`,
-    ).toBeVisible({ timeout: 10000 });
+    // Vent på at perioden eksisterer ved å sjekke at trygdedekning-dropdown er synlig
+    await finnCombobox(`Trygdedekning periode ${index + 1}`, this.page, 10000);
 
     // Finn alle inputs på siden
     const allInputs = await this.page
@@ -374,22 +360,12 @@ export class AarsavregningPage extends BehandlingPage {
     }
 
     // Vent på at skjemaet re-rendres med medlemskapsperiode-feltene
-    const medlemskapsperiodeFelt = this.page.getByRole("combobox", { name: "Trygdedekning periode 1" });
-    await expect(
-      medlemskapsperiodeFelt,
-      `${this.ctx}: Medlemskapsperiode-felt skal være synlig etter delt grunnlag valgt`,
-    ).toBeVisible({ timeout: 10000 });
+    await finnCombobox("Trygdedekning periode 1", this.page, 10000);
   }
 
   // Datepicker-spesifikke metoder for å teste datovelger
   async klikkMedlemskapsperiodeFomDatepicker(index: number) {
-    const trygdedekningDropdown = this.page.getByRole("combobox", {
-      name: `Trygdedekning periode ${index + 1}`,
-    });
-    await expect(
-      trygdedekningDropdown,
-      `${this.ctx}: Trygdedekning-dropdown for periode ${index + 1} skal være synlig`,
-    ).toBeVisible({ timeout: 10000 });
+    await finnCombobox(`Trygdedekning periode ${index + 1}`, this.page, 10000);
 
     const allInputs = await this.page
       .locator('.perioder input[type="text"]:visible, .perioder input:not([type]):visible')
