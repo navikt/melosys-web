@@ -89,45 +89,19 @@ export class AarsavregningPage extends BehandlingPage {
   }
 
   async fyllUtMedlemskapsperiodeFomDato(index: number, dato: string) {
-    // Vent på at perioden eksisterer ved å sjekke at trygdedekning-dropdown er synlig
-    await finnCombobox(`Trygdedekning periode ${index + 1}`, this.page, 10000);
-
-    // Finn alle inputs på siden, og filtrér ved å telle medlemskapsperiode-inputs
-    // Hent alle inputs i perioder-seksjonen som ikke er hidden
-    const allInputs = await this.page
-      .locator('.perioder input[type="text"]:visible, .perioder input:not([type]):visible')
-      .all();
-
-    // Finn de to første inputs som tilhører medlemskapsperiode (før skatteforhold-seksjonen)
-    // Vi tar index * 2 fordi hver periode har 2 inputs (fom, tom)
-    const inputIndex = index * 2;
-
-    expect(
-      inputIndex < allInputs.length,
-      `${this.ctx}: Kan ikke finne input ${inputIndex} for periode ${index + 1}. Totalt ${allInputs.length} inputs funnet.`,
-    ).toBe(true);
-
-    await allInputs[inputIndex].fill(dato);
+    // Finn wrapper med aria-label, så finn textbox inni
+    const wrapper = this.page.locator(`[aria-label="Fra og med periode ${index + 1}"]`);
+    await expect(wrapper, `${this.ctx}: Wrapper for fom-dato periode ${index + 1} ikke funnet`).toBeVisible();
+    const input = wrapper.getByRole("textbox");
+    await input.fill(dato);
   }
 
   async fyllUtMedlemskapsperiodeTomDato(index: number, dato: string) {
-    // Vent på at perioden eksisterer ved å sjekke at trygdedekning-dropdown er synlig
-    await finnCombobox(`Trygdedekning periode ${index + 1}`, this.page, 10000);
-
-    // Finn alle inputs på siden
-    const allInputs = await this.page
-      .locator('.perioder input[type="text"]:visible, .perioder input:not([type]):visible')
-      .all();
-
-    // Vi tar index * 2 + 1 fordi hver periode har 2 inputs (fom=0, tom=1)
-    const inputIndex = index * 2 + 1;
-
-    expect(
-      inputIndex < allInputs.length,
-      `${this.ctx}: Kan ikke finne input ${inputIndex} for periode ${index + 1}. Totalt ${allInputs.length} inputs funnet.`,
-    ).toBe(true);
-
-    await allInputs[inputIndex].fill(dato);
+    // Finn wrapper med aria-label, så finn textbox inni
+    const wrapper = this.page.locator(`[aria-label="Til og med periode ${index + 1}"]`);
+    await expect(wrapper, `${this.ctx}: Wrapper for tom-dato periode ${index + 1} ikke funnet`).toBeVisible();
+    const input = wrapper.getByRole("textbox");
+    await input.fill(dato);
   }
 
   async velgTrygdedekning(index: number, dekning: string) {
