@@ -1,7 +1,7 @@
 import { expect, Locator, Page } from "@playwright/test";
 import { BehandlingPage } from "./behandling.page";
 import { PrepopulertSaksnummer } from "../../utils/testdataUtils";
-import { finnKnapp, setDatoFelt, velgRadio } from "../../utils/testUtils";
+import { finnCheckbox, finnKnapp, setDatoFelt, velgRadio } from "../../utils/testUtils";
 import { UI_TEXTS } from "../../config/ui-texts";
 
 /**

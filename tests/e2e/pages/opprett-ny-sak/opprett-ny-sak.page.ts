@@ -1,5 +1,12 @@
 import { expect, Locator, Page } from "@playwright/test";
-import { finnKnapp, getSaksnummerFraLocator, LocatorWithSakId, setDatoFelt, velgRadio } from "../../utils/testUtils";
+import {
+  finnCheckbox,
+  finnKnapp,
+  getSaksnummerFraLocator,
+  LocatorWithSakId,
+  setDatoFelt,
+  velgRadio,
+} from "../../utils/testUtils";
 import { UI_TEXTS } from "../../config/ui-texts";
 
 /**
@@ -544,14 +551,12 @@ export class OpprettNySakPage {
   }
 
   /**
-   * Verifiser at "Legg behandlingen til en eksisterende sak?" checkbox er synlig
+   * Verifiser at "Legg behandlingen i mine oppgaver" checkbox er synlig og uavkrysset
    */
   private async verifiserLeggBehandlingenCheckbox(): Promise<void> {
-    await expect(
-      this.page.locator(".navds-checkbox:has-text('Legg behandlingen i mine oppgaver')"),
-      "Checkbox 'Legg behandlingen i mine oppgaver' skal være synlig",
-    ).toBeVisible();
-    await expect(this.page.locator("input[name='skalTilordnes']")).not.toBeChecked();
+    const checkbox = await finnCheckbox("Legg behandlingen i mine oppgaver", this.page);
+    await expect(checkbox, "Checkbox 'Legg behandlingen i mine oppgaver' skal være synlig").toBeVisible();
+    await expect(checkbox).not.toBeChecked();
   }
 
   /**

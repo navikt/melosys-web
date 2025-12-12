@@ -51,6 +51,22 @@ export async function finnKnapp(label: string, scope: Page | Locator): Promise<L
 }
 
 /**
+ * Finn en checkbox basert på label/navn og verifiser at den finnes og er unik
+ * @param label - Checkboxens label/navn (synlig tekst eller aria-label)
+ * @param scope - Page eller Locator å søke innenfor
+ * @returns Locator for checkboxen (garantert å finnes og være unik)
+ */
+export async function finnCheckbox(label: string, scope: Page | Locator): Promise<Locator> {
+  const checkbox = scope.getByRole("checkbox", { name: label });
+  const count = await checkbox.count();
+
+  expect(count, `Checkbox "${label}" skal finnes`).toBeGreaterThan(0);
+  expect(count, `Checkbox "${label}" skal være unik - bruk smalere scope`).toBe(1);
+
+  return checkbox;
+}
+
+/**
  * Generisk funksjon for å velge en radio-knapp
  * @param navn - Navn/label på radio-knappen
  * @param scope - Page eller Locator å søke innenfor
