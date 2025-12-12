@@ -15,11 +15,11 @@ export class TrygdeavgiftPage extends BehandlingPage {
   /**
    * Vent på at et spesifikt steg i trygdeavgift-komponenten er synlig
    */
-  async verifiserSteg(stegnavn: string, timeout = 10000): Promise<void> {
+  async verifiserSteg(stegnavn: string): Promise<void> {
     await expect(
       this.page.locator(`text=${stegnavn}`).first(),
       `${this.ctx}: Fant ikke steget "${stegnavn}"`,
-    ).toBeVisible({ timeout });
+    ).toBeVisible();
   }
 
   /**
@@ -37,24 +37,18 @@ export class TrygdeavgiftPage extends BehandlingPage {
 
     // Vent på at skatteforholdsperioder-delen er synlig før vi prøver å klikke
     const skatteforholdsHeading = this.page.locator("text=Oppgi informasjon om brukers skatteforhold");
-    await expect(skatteforholdsHeading, `${this.ctx}: Fant ikke skatteforhold-seksjonen`).toBeVisible({
-      timeout: 10000,
-    });
+    await expect(skatteforholdsHeading, `${this.ctx}: Fant ikke skatteforhold-seksjonen`).toBeVisible();
 
     // Finn fieldset-et for denne skatteforholdsperioden
     const fieldset = this.page.locator("fieldset.skatteforholdsperioder-radio-group").nth(indeks);
-    await expect(fieldset, `${this.ctx}: Fant ikke skatteforholdsperiode ${indeks}`).toBeVisible({
-      timeout: 10000,
-    });
+    await expect(fieldset, `${this.ctx}: Fant ikke skatteforholdsperiode ${indeks}`).toBeVisible();
 
     // Finn radio-input med riktig name og value
     const radioInput = fieldset.locator(`input[name="${name}"][type="radio"][value="${value}"]`);
     await expect(
       radioInput,
       `${this.ctx}: Fant ikke valget "${valgtekst}" for skatteforholdsperiode ${indeks}`,
-    ).toBeVisible({
-      timeout: 10000,
-    });
+    ).toBeVisible();
 
     // Bruk check() for å velge radio-knappen (Playwright sin anbefalte metode)
     await radioInput.check({ force: true });

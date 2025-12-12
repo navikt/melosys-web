@@ -68,9 +68,7 @@ export class StegvelgerPage extends BehandlingPage {
     await knapp.click();
 
     // Vent på at tittelen endres (vi er på nytt steg)
-    await expect(this.stegTittel, `${this.ctx}: Steget endret seg ikke etter klikk`).not.toHaveText(nåværendeTittel!, {
-      timeout: 10000,
-    });
+    await expect(this.stegTittel, `${this.ctx}: Steget endret seg ikke etter klikk`).not.toHaveText(nåværendeTittel!);
   }
 
   /**
@@ -82,12 +80,7 @@ export class StegvelgerPage extends BehandlingPage {
     await knapp.click();
 
     // Vent på at tittelen endres
-    await expect(this.stegTittel, `${this.ctx}: Steget endret seg ikke etter tilbake`).not.toHaveText(
-      nåværendeTittel!,
-      {
-        timeout: 10000,
-      },
-    );
+    await expect(this.stegTittel, `${this.ctx}: Steget endret seg ikke etter tilbake`).not.toHaveText(nåværendeTittel!);
   }
 
   /**
@@ -101,7 +94,7 @@ export class StegvelgerPage extends BehandlingPage {
    * Verifiser at vi er på forventet steg
    */
   async verifiserSteg(forventetTittel: string | RegExp): Promise<void> {
-    await expect(this.stegTittel, `${this.ctx}: Feil steg-tittel`).toHaveText(forventetTittel, { timeout: 10000 });
+    await expect(this.stegTittel, `${this.ctx}: Feil steg-tittel`).toHaveText(forventetTittel);
   }
 
   /**
@@ -133,18 +126,14 @@ export class StegvelgerPage extends BehandlingPage {
 
     // Vent på at MultiSelect-komponenten vises etter radioknapp-klikk
     const landMultiSelect = this.page.locator(".land_multiselect");
-    await expect(landMultiSelect, `${this.ctx}: Land MultiSelect dukket ikke opp etter radioknapp-klikk`).toBeVisible({
-      timeout: 5000,
-    });
+    await expect(landMultiSelect, `${this.ctx}: Land MultiSelect dukket ikke opp etter radioknapp-klikk`).toBeVisible();
 
     // Åpne dropdown og velg land
     const landInput = landMultiSelect.locator("input");
     await landInput.click();
 
     const landOption = this.page.getByRole("option", { name: arbeidsland });
-    await expect(landOption, `${this.ctx}: Land-option "${arbeidsland}" ikke funnet i dropdown`).toBeVisible({
-      timeout: 5000,
-    });
+    await expect(landOption, `${this.ctx}: Land-option "${arbeidsland}" ikke funnet i dropdown`).toBeVisible();
     await landOption.click();
 
     // Velg trygdedekning fra dropdown
@@ -161,7 +150,7 @@ export class StegvelgerPage extends BehandlingPage {
   async velgFørsteVirksomhet(): Promise<void> {
     const virksomhetGruppe = await finnCheckboxGroup("Velg virksomhet(er)", this.page);
     const virksomhetCheckbox = virksomhetGruppe.getByRole("checkbox").first();
-    await expect(virksomhetCheckbox, `${this.ctx}: Fant ingen virksomhet-checkbox`).toBeVisible({ timeout: 5000 });
+    await expect(virksomhetCheckbox, `${this.ctx}: Fant ingen virksomhet-checkbox`).toBeVisible();
     await virksomhetCheckbox.check();
 
     // Wait for form validation to update

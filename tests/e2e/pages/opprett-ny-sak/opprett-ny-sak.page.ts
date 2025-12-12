@@ -52,9 +52,7 @@ export class OpprettNySakPage {
     );
 
     try {
-      await expect(undertittel, "Fant ikke undertittel 'Knytt til eksisterende sak eller opprett ny'").toBeVisible({
-        timeout: 5000,
-      });
+      await expect(undertittel, "Fant ikke undertittel 'Knytt til eksisterende sak eller opprett ny'").toBeVisible();
     } catch {
       return;
     }
@@ -71,9 +69,7 @@ export class OpprettNySakPage {
 
     // Det finnes eksisterende saker - velg "Opprett ny sak" radioknapp
     const opprettNySakRadio = this.page.locator(".navds-radio__content:has-text('Opprett ny sak')");
-    await expect(opprettNySakRadio, "Kunne ikke finne 'Opprett ny sak").toBeVisible({
-      timeout: 10000,
-    });
+    await expect(opprettNySakRadio, "Kunne ikke finne 'Opprett ny sak").toBeVisible();
     await opprettNySakRadio.click();
     await this.page.waitForLoadState("domcontentloaded");
   }
@@ -150,16 +146,14 @@ export class OpprettNySakPage {
 
     // Vent på at select er synlig
     try {
-      await expect(sakstypeSelect, "Fant ikke sakstype dropdown").toBeVisible({ timeout: 5000 });
+      await expect(sakstypeSelect, "Fant ikke sakstype dropdown").toBeVisible();
     } catch {
       return;
     }
 
     // Vent på at den ønskede option finnes (options kan lastes dynamisk)
     const targetOption = sakstypeSelect.locator(`option:text-is("${value}")`);
-    await expect(targetOption, `Venter på at sakstype option "${value}" skal lastes`).toBeAttached({
-      timeout: 5000,
-    });
+    await expect(targetOption, `Venter på at sakstype option "${value}" skal lastes`).toBeAttached();
 
     const foundValue = await targetOption.getAttribute("value");
 
@@ -176,9 +170,7 @@ export class OpprettNySakPage {
     await this.velgDropdownVerdi("sakstema", value, "Sakstema");
     // Vent på at behandlingstema-dropdown er lastet inn
     const behandlingstemaSelect = this.page.locator("select[name='behandlingstema']");
-    await expect(behandlingstemaSelect, "Behandlingstema-select skal være synlig etter sakstema valgt").toBeVisible({
-      timeout: 5000,
-    });
+    await expect(behandlingstemaSelect, "Behandlingstema-select skal være synlig etter sakstema valgt").toBeVisible();
   }
 
   /**
@@ -204,7 +196,7 @@ export class OpprettNySakPage {
     await expect(
       behandlingstypeSelect,
       "Behandlingstype-select skal være synlig etter behandlingstema valgt",
-    ).toBeVisible({ timeout: 5000 });
+    ).toBeVisible();
   }
 
   /**
@@ -219,7 +211,7 @@ export class OpprettNySakPage {
     await expect(
       behandlingsaarsakSelect,
       "Behandlingsårsak-select skal være synlig etter behandlingstype valgt",
-    ).toBeVisible({ timeout: 5000 });
+    ).toBeVisible();
   }
 
   /**
@@ -233,10 +225,10 @@ export class OpprettNySakPage {
     const opprettKnapp = this.page.getByRole("button", { name: UI_TEXTS.BUTTONS.OPPRETT_NY_BEHANDLING });
     await Promise.race([
       expect(landFieldset, "Land-fieldset skal være synlig")
-        .toBeVisible({ timeout: 5000 })
+        .toBeVisible()
         .catch(() => {}),
       expect(opprettKnapp, "Opprett-knapp skal være synlig")
-        .toBeVisible({ timeout: 5000 })
+        .toBeVisible()
         .catch(() => {}),
     ]);
   }
@@ -248,7 +240,7 @@ export class OpprettNySakPage {
     // Vent for at land-feltet skal vises etter behandlingsårsak er valgt
     // Feltet vises ikke for alle kombinasjoner av sakstype/tema
     const landFieldset = this.page.locator('fieldset:has-text("land")').first();
-    await expect(landFieldset, "Fant ikke land-feltet").toBeVisible({ timeout: 10000 });
+    await expect(landFieldset, "Fant ikke land-feltet").toBeVisible();
 
     const combobox = landFieldset.locator('[role="combobox"]').first();
     await expect(combobox, "Fant ikke land combobox").toBeVisible();
@@ -477,7 +469,7 @@ export class OpprettNySakPage {
     saksnummer?: string,
   ): Promise<void> {
     const sakId = saksnummer || getSaksnummerFraLocator(valgtSak!);
-    const behandlingstypeGruppe = await finnRadioGroup(UI_TEXTS.LABELS.BEHANDLINGSTYPE, this.page, { timeout: 10000 });
+    const behandlingstypeGruppe = await finnRadioGroup(UI_TEXTS.LABELS.BEHANDLINGSTYPE, this.page);
 
     // Hent alle faktiske radiobuttons som er tilstede
     let alleRadioButtons = behandlingstypeGruppe.getByRole("radio");
