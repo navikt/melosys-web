@@ -6,20 +6,8 @@ import {
   getSaksnummerFraLocator,
   LocatorWithSakId,
   setDatoFelt,
-  velgRadioknapp,
 } from "../../utils/testUtils";
 import { UI_TEXTS } from "../../config/ui-texts";
-
-/**
- * Sett sakId på locator ved å hente den fra .customRadioPanelTittel
- * Denne funksjonen er spesifikk for opprett-ny-sak-siden
- * @param sak - Sak-locator
- */
-export async function setSakId(sak: Locator): Promise<void> {
-  const sakId = await sak.locator(".customRadioPanelTittel").textContent();
-  const sakIdMatch = sakId?.match(/MEL-\d+/);
-  (sak as LocatorWithSakId)._sakId = sakIdMatch ? sakIdMatch[0] : "ukjent";
-}
 
 /**
  * Page Object Model for opprett ny sak - Actions only
@@ -32,35 +20,7 @@ export class OpprettNySakPage {
     this.page = page;
   }
 
-  // ===== ACTIONS (utfører handlinger på siden) =====
-
-  /**
-   * Velg sak ved index
-   * Venter automatisk på at enten behandlingspanel eller feilmelding vises før den returnerer
-   */
-  async velgSakVedIndex(index: number): Promise<void> {
-    const sak = this.page.locator(".customRadioPanel").nth(index);
-    await expect(sak, "Fant ikke sak med index " + index).toBeVisible();
-    await sak.click();
-
-    // Vent på at enten panelramme eller behandlingspanel vises (data er lastet)
-    await this.page
-      .locator(".knyttTilSak__panelramme, .knyttTilSak__behandlingspanel")
-      .first()
-      .waitFor({ state: "visible", timeout: 5000 });
-  }
-
   // ===== QUERIES (henter data fra siden) =====
-
-  /**
-   * Hent saks-ID ved index
-   */
-  async hentSakIdVedIndex(index: number): Promise<string> {
-    const sak = this.page.locator(".customRadioPanel").nth(index);
-    const sakIdElement = await sak.locator(".customRadioPanelTittel").textContent();
-    const sakIdMatch = sakIdElement?.match(/MEL-\d+/);
-    return sakIdMatch ? sakIdMatch[0] : `sak-${index}`;
-  }
 
   /**
    * Fyll inn bruker-ID
@@ -310,14 +270,6 @@ export class OpprettNySakPage {
   }
 
   /**
-   * Velg en spesifikk behandlingstype via radio button
-   * @param behandlingstype - Navn på behandlingstypen (f.eks. "Årsavregning", "Henvendelse")
-   */
-  async velgBehandlingstypeRadio(behandlingstype: string): Promise<void> {
-    await velgRadioknapp(behandlingstype, this.page);
-  }
-
-  /**
    * Sett fra-dato i søknadsperiode
    */
   async setFraDato(dato: string): Promise<void> {
@@ -378,37 +330,6 @@ export class OpprettNySakPage {
     if (!foundValue) return; // Type guard for TypeScript
 
     await selectElement.selectOption({ value: foundValue });
-  }
-
-  /**
-   * Generisk funksjon for å velge første sak av en bestemt sakstype
-   * @private
-   */
-  async velgFørsteSak(
-    sakstype: "Utenfor avtaleland" | "EU/EØS-land" | "Avtaleland",
-    status?: "Behandlingen er opprettet" | "Behandlingen pågår" | "Behandlingen er avsluttet" | "Søknaden er henlagt",
-    behandlingstema?: string,
-  ): Promise<Locator> {
-    await this.page.waitForSelector(".customRadioPanel", { timeout: 10000 });
-
-    // Bygg tittel-søk basert på sakstype og behandlingstema
-    const tittelSok: string = behandlingstema ? `${sakstype} - ${behandlingstema}` : sakstype;
-
-    let selector = `.customRadioPanel:has(.customRadioPanelTittel h1:has-text("${tittelSok}"))`;
-    if (status) {
-      selector += `:has(.behandlingsstatus__span:has-text("${status}"))`;
-    }
-    const sak = this.page.locator(selector).first();
-
-    await expect(
-      sak,
-      `Fant ingen ${sakstype}-sak ${behandlingstema ? `med tema "${behandlingstema}" ` : ""}${status ? ` med status "${status}"` : ""}. Selector: ${selector}`,
-    ).toBeVisible({ timeout: 10000 });
-
-    await setSakId(sak);
-    await sak.click();
-
-    return sak;
   }
 
   /**
@@ -633,18 +554,6 @@ export class OpprettNySakPage {
       uventedeBehandlingstyper.length,
       `Sak ${sakId}: Uventede behandlingstyper: ${uventedeBehandlingstyper.join(", ")}. Forventede: ${forventedeBehandlingstyper.join(", ")}`,
     ).toBe(0);
-  }
-
-  /**
-   * Verifiser at "Tidligere behandling er avsluttet" melding vises
-   */
-  async verifiserTidligereBehandlingAvsluttet(): Promise<void> {
-    await expect(
-      this.page.locator(".tidligereBehandlingAvsluttet", {
-        hasText: "Tidligere behandling er avsluttet",
-      }),
-      "Melding 'Tidligere behandling er avsluttet' skal være synlig",
-    ).toBeVisible();
   }
 
   /**
