@@ -356,7 +356,7 @@ export class OpprettNySakPage {
       return nextError;
     }
 
-    // Fallback til global sjekk (bakoverkompatibilitet)
+    // Global sjekk (når sakIndex ikke er spesifisert)
     const selector = ".knyttTilSak__behandlingspanel";
     if (feilmelding) {
       return this.page.locator(selector).filter({ hasText: feilmelding });

@@ -105,13 +105,6 @@ export class StegvelgerPage extends BehandlingPage {
   }
 
   /**
-   * Verifiser at progressbar viser forventet antall steg
-   */
-  async verifiserAntallSteg(forventetAntall: number): Promise<void> {
-    await expect(this.progressbarSteg, `${this.ctx}: Feil antall steg i progressbar`).toHaveCount(forventetAntall);
-  }
-
-  /**
    * Klikk på et spesifikt steg i progressbar
    */
   async klikkPåSteg(stegNummer: number): Promise<void> {
@@ -283,24 +276,9 @@ export class StegvelgerPage extends BehandlingPage {
     await setDatoFelt("Fra og med", fomDato, this.page);
 
     // Velg land fra dropdown
-    const landSelect = this.page.getByRole("combobox", { name: "Land" });
-    if (await landSelect.isVisible({ timeout: 2000 }).catch(() => false)) {
-      // Prøv å velge basert på landnavn (label)
-      try {
-        await landSelect.selectOption({ label: land });
-      } catch {
-        // Fallback: velg første ikke-tomme alternativ
-        await landSelect.selectOption({ index: 1 });
-      }
-    }
+    const landSelect = await finnCombobox("Land", this.page, 2000);
+    await landSelect.selectOption({ label: land });
 
     await this.page.waitForTimeout(500);
-  }
-
-  /**
-   * @deprecated Bruk fyllUtEosIkkeYrkesaktivInngang() i stedet
-   */
-  async fyllUtEosInngangMinimum(): Promise<void> {
-    await this.fyllUtEosIkkeYrkesaktivInngang();
   }
 }

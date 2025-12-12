@@ -180,37 +180,9 @@ export class BehandlingPage {
    * Velg en generisk avslutningstype basert på tekst
    */
   async velgAvslutningstype(tekst: string): Promise<void> {
-    // Første prioritet: Søk etter behandlingsmeny__handling elementer
-    const behandlingsHandling = this.page.locator(
-      `.behandlingsmeny__handling:has(.behandlingsmeny__handling__tekst:has-text("${tekst}"))`,
-    );
-
-    const handlingSynlig = await behandlingsHandling.isVisible({ timeout: 2000 }).catch(() => false);
-
-    if (handlingSynlig) {
-      await behandlingsHandling.click();
-      return;
-    }
-
-    // Fallback: Søk etter andre typer elementer
-    const selectors = [
-      `button:has-text("${tekst}")`,
-      `li:has-text("${tekst}")`,
-      `[role="option"]:has-text("${tekst}")`,
-      `a:has-text("${tekst}")`,
-    ];
-
-    let alternativFunnet = false;
-    for (const selector of selectors) {
-      const alternativ = this.page.locator(selector).first();
-      if (await alternativ.isVisible({ timeout: 2000 }).catch(() => false)) {
-        await alternativ.click();
-        alternativFunnet = true;
-        break;
-      }
-    }
-
-    expect(alternativFunnet, `${this.ctx}: Fant ikke alternativet "${tekst}"`).toBe(true);
+    const handling = this.page.getByRole("button", { name: tekst });
+    await expect(handling, `${this.ctx}: Fant ikke avslutningstype "${tekst}"`).toBeVisible();
+    await handling.click();
   }
 
   /**
@@ -219,49 +191,24 @@ export class BehandlingPage {
    * @param selectText - Valgfri spesifikk tekst på bekreft-knappen (hvis den avviker fra menyteksten)
    */
   async bekreftAvslutning(buttonText: string, selectText?: string): Promise<void> {
-    const modalSelectors = [".navds-modal[open]", ".modal[open]", '[role="dialog"]', ".dialog", ".confirmation-modal"];
-
-    let modal = null;
-    for (const selector of modalSelectors) {
-      const modalElement = this.page.locator(selector);
-      if (await modalElement.isVisible({ timeout: 2000 }).catch(() => false)) {
-        modal = modalElement;
-        break;
-      }
-    }
-
-    expect(modal, `${this.saksnummer}: Fant ingen åpen modal for bekreftelse`).not.toBeNull();
-    if (!modal) return; // Type guard for TypeScript
+    const modal = this.page.getByRole("dialog");
+    await expect(modal, `${this.ctx}: Fant ingen åpen modal for bekreftelse`).toBeVisible({ timeout: 2000 });
 
     // Sjekk om det er en "Henlegg saken" modal som krever begrunnelse
     const modalTekst = await modal.textContent();
     const erHenleggModal = modalTekst?.includes("Henlegg saken") || false;
 
-    if (erHenleggModal) {
-      // Finn og fyll ut begrunnelse dropdown
-      const begrunnelseDropdown = modal.locator("select, .navds-select__input");
-      const dropdownSynlig = await begrunnelseDropdown.isVisible({ timeout: 2000 }).catch(() => false);
-
-      if (dropdownSynlig && selectText) {
-        // Bruk den oppgitte teksten til å velge riktig dropdown-verdi
+    if (erHenleggModal && selectText) {
+      const begrunnelseDropdown = modal.getByRole("combobox");
+      if (await begrunnelseDropdown.isVisible({ timeout: 2000 }).catch(() => false)) {
         await begrunnelseDropdown.selectOption({ label: selectText });
-        // Vent litt på at knappen blir enabled
         await this.page.waitForTimeout(500);
       }
     }
 
-    // Finn bekreft-knappen inne i modalen
-    const bekreftKnapp = modal.locator(`button:has-text("${buttonText}")`);
-
-    await expect(bekreftKnapp, `${this.ctx}: Fant ikke bekreft-knappen`).toBeVisible({ timeout: 2000 });
-
-    const erEnabled = await bekreftKnapp.isEnabled();
-
-    if (erEnabled) {
-      await bekreftKnapp.click();
-    } else {
-      await bekreftKnapp.click({ force: true });
-    }
+    const bekreftKnapp = modal.getByRole("button", { name: buttonText });
+    await expect(bekreftKnapp, `${this.ctx}: Fant ikke bekreft-knappen "${buttonText}"`).toBeVisible({ timeout: 2000 });
+    await bekreftKnapp.click();
   }
 
   /**
@@ -299,12 +246,8 @@ export class BehandlingPage {
   async verifiserVellykketAvslutning(): Promise<void> {
     await this.page.waitForURL(/\/melosys\/$/);
 
-    // Sjekk at det ikke er noen feilmeldinger
-    const feilmeldinger = [".alert-error", ".error", ".feilmelding", '[role="alert"]', ".navds-alert--error"];
-
-    for (const selector of feilmeldinger) {
-      const feilmelding = this.page.locator(selector);
-      await expect(feilmelding, `${this.ctx}: Feilmelding vises etter avslutning`).not.toBeVisible();
-    }
+    // Sjekk at det ikke er noen feilmeldinger (role="alert" er semantisk standard)
+    const feilmelding = this.page.getByRole("alert");
+    await expect(feilmelding, `${this.ctx}: Feilmelding vises etter avslutning`).not.toBeVisible();
   }
 }

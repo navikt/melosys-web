@@ -7,11 +7,11 @@
  */
 import { resetTestData } from "./utils/testdataUtils";
 import { withDatabase } from "./utils/databaseHelper";
-import { writeFileSync, existsSync, readFileSync, mkdirSync } from "fs";
+import { writeFileSync, existsSync, readFileSync } from "fs";
 import { tmpdir } from "os";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
-import { getTestMode, shouldUseMockServer, shouldRecordResponses } from "./config/mode";
+import { getTestMode, shouldUseMockServer } from "./config/mode";
 
 // ES module equivalent of __dirname
 const __filename = fileURLToPath(import.meta.url);
