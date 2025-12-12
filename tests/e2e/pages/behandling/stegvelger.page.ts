@@ -167,9 +167,17 @@ export class StegvelgerPage extends BehandlingPage {
    * Velg første virksomhet i Virksomhet-steget (FTRL)
    */
   async velgFørsteVirksomhet(): Promise<void> {
-    const virksomhetCheckbox = this.page.locator('input[type="checkbox"]').first();
+    // Find the checkbox within the "Velg virksomhet(er)" fieldset (CheckboxGroup)
+    // Avoid selecting "Inkl. siste 5 år" or other checkboxes outside the form
+    const virksomhetFieldset = this.page.locator("fieldset").filter({
+      has: this.page.locator('legend:has-text("Velg virksomhet")'),
+    });
+    const virksomhetCheckbox = virksomhetFieldset.getByRole("checkbox").first();
     await expect(virksomhetCheckbox, `${this.ctx}: Fant ingen virksomhet-checkbox`).toBeVisible({ timeout: 5000 });
     await virksomhetCheckbox.check();
+
+    // Wait for form validation to update
+    await this.page.waitForTimeout(300);
   }
 
   /**
