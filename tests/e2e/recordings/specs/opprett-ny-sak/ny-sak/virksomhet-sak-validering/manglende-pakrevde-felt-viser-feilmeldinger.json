@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "recordedAt": "2025-12-11T10:57:09.613Z",
+  "recordedAt": "2025-12-11T13:37:18.371Z",
   "testFile": "/Users/ragnarwestad/develop/nav/melosys-web/tests/e2e/specs/opprett-ny-sak/ny-sak/virksomhet-sak-validering.spec.ts",
   "testName": "Manglende påkrevde felt - viser feilmeldinger",
   "exchanges": [
@@ -39,7 +39,7 @@
           }
         ]
       },
-      "duration": 10,
+      "duration": 8,
       "dynamicFields": []
     },
     {
@@ -77,7 +77,7 @@
           "melosys.arsavregning.uten.flyt": false
         }
       },
-      "duration": 9,
+      "duration": 13,
       "dynamicFields": []
     },
     {
@@ -1111,7 +1111,7 @@
           }
         ]
       },
-      "duration": 4,
+      "duration": 5,
       "dynamicFields": []
     },
     {
@@ -1160,8 +1160,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.443727Z",
-                "endretDato": "2025-12-11T10:56:21.461970Z",
+                "registrertDato": "2025-12-11T13:36:11.245099Z",
+                "endretDato": "2025-12-11T13:36:11.280387Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1033",
@@ -1175,7 +1175,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1033\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1033\n",
               "sisteNotat": null
             },
             {
@@ -1201,8 +1201,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.455487Z",
-                "endretDato": "2025-12-11T10:56:21.472864Z",
+                "registrertDato": "2025-12-11T13:36:11.268633Z",
+                "endretDato": "2025-12-11T13:36:11.300965Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1034",
@@ -1216,7 +1216,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1034\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1034\n",
               "sisteNotat": null
             },
             {
@@ -1242,8 +1242,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.468910Z",
-                "endretDato": "2025-12-11T10:56:21.483840Z",
+                "registrertDato": "2025-12-11T13:36:11.292745Z",
+                "endretDato": "2025-12-11T13:36:11.323707Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1035",
@@ -1257,7 +1257,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1035\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1035\n",
               "sisteNotat": null
             },
             {
@@ -1283,8 +1283,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.479645Z",
-                "endretDato": "2025-12-11T10:56:21.495145Z",
+                "registrertDato": "2025-12-11T13:36:11.315576Z",
+                "endretDato": "2025-12-11T13:36:11.341943Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1036",
@@ -1298,7 +1298,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1036\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1036\n",
               "sisteNotat": null
             },
             {
@@ -1324,8 +1324,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.490450Z",
-                "endretDato": "2025-12-11T10:56:21.506506Z",
+                "registrertDato": "2025-12-11T13:36:11.335963Z",
+                "endretDato": "2025-12-11T13:36:11.357179Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1037",
@@ -1339,7 +1339,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1037\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1037\n",
               "sisteNotat": null
             },
             {
@@ -1365,8 +1365,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.502379Z",
-                "endretDato": "2025-12-11T10:56:21.519289Z",
+                "registrertDato": "2025-12-11T13:36:11.351407Z",
+                "endretDato": "2025-12-11T13:36:11.373923Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1038",
@@ -1380,7 +1380,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1038\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1038\n",
               "sisteNotat": null
             },
             {
@@ -1406,8 +1406,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.514046Z",
-                "endretDato": "2025-12-11T10:56:21.532570Z",
+                "registrertDato": "2025-12-11T13:36:11.367782Z",
+                "endretDato": "2025-12-11T13:36:11.389027Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1039",
@@ -1421,7 +1421,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1039\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1039\n",
               "sisteNotat": null
             },
             {
@@ -1447,8 +1447,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.527413Z",
-                "endretDato": "2025-12-11T10:56:21.545631Z",
+                "registrertDato": "2025-12-11T13:36:11.382979Z",
+                "endretDato": "2025-12-11T13:36:11.403110Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1040",
@@ -1462,7 +1462,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1040\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1040\n",
               "sisteNotat": null
             },
             {
@@ -1488,8 +1488,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.540676Z",
-                "endretDato": "2025-12-11T10:56:31.562512Z",
+                "registrertDato": "2025-12-11T13:36:11.397308Z",
+                "endretDato": "2025-12-11T13:36:27.364089Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1041",
@@ -1509,7 +1509,7 @@
                 "fom": null,
                 "tom": null
               },
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1041\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1041\n",
               "sisteNotat": null
             },
             {
@@ -1535,8 +1535,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.555306Z",
-                "endretDato": "2025-12-11T10:56:33.633470Z",
+                "registrertDato": "2025-12-11T13:36:11.412770Z",
+                "endretDato": "2025-12-11T13:36:30.244539Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1042",
@@ -1556,7 +1556,7 @@
                 "fom": null,
                 "tom": null
               },
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1042\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1042\n",
               "sisteNotat": null
             },
             {
@@ -1582,8 +1582,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.568765Z",
-                "endretDato": "2025-12-11T10:56:33.781227Z",
+                "registrertDato": "2025-12-11T13:36:11.427418Z",
+                "endretDato": "2025-12-11T13:36:30.245319Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1043",
@@ -1603,7 +1603,7 @@
                 "fom": null,
                 "tom": null
               },
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1043\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1043\n",
               "sisteNotat": null
             },
             {
@@ -1629,8 +1629,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.582601Z",
-                "endretDato": "2025-12-11T10:56:33.895736Z",
+                "registrertDato": "2025-12-11T13:36:11.443236Z",
+                "endretDato": "2025-12-11T13:36:30.561421Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1044",
@@ -1650,7 +1650,7 @@
                 "fom": null,
                 "tom": null
               },
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1044\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1044\n",
               "sisteNotat": null
             },
             {
@@ -1676,8 +1676,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.595820Z",
-                "endretDato": "2025-12-11T10:56:34.374143Z",
+                "registrertDato": "2025-12-11T13:36:11.456916Z",
+                "endretDato": "2025-12-11T13:36:32.366105Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1045",
@@ -1697,7 +1697,7 @@
                 "fom": null,
                 "tom": null
               },
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1045\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1045\n",
               "sisteNotat": null
             },
             {
@@ -1723,8 +1723,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.610584Z",
-                "endretDato": "2025-12-11T10:56:35.475022Z",
+                "registrertDato": "2025-12-11T13:36:11.471395Z",
+                "endretDato": "2025-12-11T13:36:32.924561Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1046",
@@ -1744,7 +1744,7 @@
                 "fom": null,
                 "tom": null
               },
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1046\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1046\n",
               "sisteNotat": null
             },
             {
@@ -1770,8 +1770,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.623961Z",
-                "endretDato": "2025-12-11T10:56:36.082818Z",
+                "registrertDato": "2025-12-11T13:36:11.491245Z",
+                "endretDato": "2025-12-11T13:36:34.051294Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1047",
@@ -1791,7 +1791,7 @@
                 "fom": null,
                 "tom": null
               },
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1047\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1047\n",
               "sisteNotat": null
             },
             {
@@ -1817,8 +1817,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.636582Z",
-                "endretDato": "2025-12-11T10:56:21.652477Z",
+                "registrertDato": "2025-12-11T13:36:11.510022Z",
+                "endretDato": "2025-12-11T13:36:11.534767Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1048",
@@ -1832,7 +1832,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1048\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1048\n",
               "sisteNotat": null
             },
             {
@@ -1858,8 +1858,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.648072Z",
-                "endretDato": "2025-12-11T10:56:21.667291Z",
+                "registrertDato": "2025-12-11T13:36:11.527145Z",
+                "endretDato": "2025-12-11T13:36:11.553340Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1049",
@@ -1873,7 +1873,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1049\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1049\n",
               "sisteNotat": null
             },
             {
@@ -1899,8 +1899,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.660829Z",
-                "endretDato": "2025-12-11T10:56:21.681313Z",
+                "registrertDato": "2025-12-11T13:36:11.546101Z",
+                "endretDato": "2025-12-11T13:36:11.571202Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1050",
@@ -1914,7 +1914,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1050\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1050\n",
               "sisteNotat": null
             },
             {
@@ -1940,8 +1940,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.675991Z",
-                "endretDato": "2025-12-11T10:56:21.694247Z",
+                "registrertDato": "2025-12-11T13:36:11.564355Z",
+                "endretDato": "2025-12-11T13:36:11.588772Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1051",
@@ -1955,7 +1955,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1051\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1051\n",
               "sisteNotat": null
             },
             {
@@ -1981,8 +1981,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.689952Z",
-                "endretDato": "2025-12-11T10:56:38.742663Z",
+                "registrertDato": "2025-12-11T13:36:11.581932Z",
+                "endretDato": "2025-12-11T13:36:37.208237Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1052",
@@ -2002,7 +2002,7 @@
                 "fom": "2024-01-01",
                 "tom": null
               },
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1052\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1052\n",
               "sisteNotat": null
             },
             {
@@ -2028,8 +2028,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.095881Z",
-                "endretDato": "2025-12-11T10:56:21.112268Z",
+                "registrertDato": "2025-12-11T13:36:09.176286Z",
+                "endretDato": "2025-12-11T13:36:09.204894Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1009",
@@ -2043,7 +2043,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1009\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1009\n",
               "sisteNotat": null
             },
             {
@@ -2069,8 +2069,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.701597Z",
-                "endretDato": "2025-12-11T10:56:21.720510Z",
+                "registrertDato": "2025-12-11T13:36:11.599519Z",
+                "endretDato": "2025-12-11T13:36:11.623183Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1053",
@@ -2090,7 +2090,7 @@
                 "fom": null,
                 "tom": null
               },
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1053\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1053\n",
               "sisteNotat": null
             },
             {
@@ -2116,8 +2116,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.107590Z",
-                "endretDato": "2025-12-11T10:56:21.125855Z",
+                "registrertDato": "2025-12-11T13:36:09.196573Z",
+                "endretDato": "2025-12-11T13:36:09.228148Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1010",
@@ -2131,7 +2131,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1010\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1010\n",
               "sisteNotat": null
             },
             {
@@ -2157,8 +2157,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.715233Z",
-                "endretDato": "2025-12-11T10:56:37.192268Z",
+                "registrertDato": "2025-12-11T13:36:11.615785Z",
+                "endretDato": "2025-12-11T13:36:35.155658Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1054",
@@ -2178,7 +2178,7 @@
                 "fom": null,
                 "tom": null
               },
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1054\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1054\n",
               "sisteNotat": null
             },
             {
@@ -2204,8 +2204,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.119550Z",
-                "endretDato": "2025-12-11T10:56:21.147708Z",
+                "registrertDato": "2025-12-11T13:36:09.219872Z",
+                "endretDato": "2025-12-11T13:36:09.251950Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1011",
@@ -2219,7 +2219,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1011\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1011\n",
               "sisteNotat": null
             },
             {
@@ -2245,8 +2245,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.729197Z",
-                "endretDato": "2025-12-11T10:56:21.754627Z",
+                "registrertDato": "2025-12-11T13:36:11.635221Z",
+                "endretDato": "2025-12-11T13:36:11.659670Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1055",
@@ -2260,7 +2260,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1055\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1055\n",
               "sisteNotat": null
             },
             {
@@ -2286,8 +2286,8 @@
                   "term": "Behandlingen er opprettet"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.139243Z",
-                "endretDato": "2025-12-11T10:56:21.182855Z",
+                "registrertDato": "2025-12-11T13:36:09.243668Z",
+                "endretDato": "2025-12-11T13:36:09.272954Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1012",
@@ -2301,7 +2301,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1012\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1012\n",
               "sisteNotat": null
             },
             {
@@ -2327,8 +2327,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.748562Z",
-                "endretDato": "2025-12-11T10:56:21.770159Z",
+                "registrertDato": "2025-12-11T13:36:11.653124Z",
+                "endretDato": "2025-12-11T13:36:11.674711Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1056",
@@ -2342,7 +2342,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1056\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1056\n",
               "sisteNotat": null
             },
             {
@@ -2368,8 +2368,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.175563Z",
-                "endretDato": "2025-12-11T10:56:21.227257Z",
+                "registrertDato": "2025-12-11T13:36:09.265567Z",
+                "endretDato": "2025-12-11T13:36:09.293009Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1013",
@@ -2383,7 +2383,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1013\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1013\n",
               "sisteNotat": null
             },
             {
@@ -2409,8 +2409,8 @@
                   "term": "Behandlingen er opprettet"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.763527Z",
-                "endretDato": "2025-12-11T10:56:21.787296Z",
+                "registrertDato": "2025-12-11T13:36:11.668483Z",
+                "endretDato": "2025-12-11T13:36:11.689963Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1057",
@@ -2424,7 +2424,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1057\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1057\n",
               "sisteNotat": null
             },
             {
@@ -2450,8 +2450,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.207860Z",
-                "endretDato": "2025-12-11T10:56:21.240844Z",
+                "registrertDato": "2025-12-11T13:36:09.285248Z",
+                "endretDato": "2025-12-11T13:36:09.314779Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1014",
@@ -2465,7 +2465,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1014\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1014\n",
               "sisteNotat": null
             },
             {
@@ -2491,8 +2491,8 @@
                   "term": "Behandlingen er opprettet"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.780786Z",
-                "endretDato": "2025-12-11T10:56:21.802993Z",
+                "registrertDato": "2025-12-11T13:36:11.684344Z",
+                "endretDato": "2025-12-11T13:36:11.707282Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1058",
@@ -2506,7 +2506,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1058\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1058\n",
               "sisteNotat": null
             },
             {
@@ -2532,8 +2532,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.258582Z",
-                "endretDato": "2025-12-11T10:56:43.455598Z",
+                "registrertDato": "2025-12-11T13:36:09.362688Z",
+                "endretDato": "2025-12-11T13:36:42.860655Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1017",
@@ -2553,7 +2553,7 @@
                 "fom": "2024-01-01",
                 "tom": null
               },
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1017\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1017\n",
               "sisteNotat": null
             },
             {
@@ -2579,8 +2579,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.270395Z",
-                "endretDato": "2025-12-11T10:56:21.283607Z",
+                "registrertDato": "2025-12-11T13:36:09.387711Z",
+                "endretDato": "2025-12-11T13:36:09.419191Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1018",
@@ -2594,7 +2594,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1018\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1018\n",
               "sisteNotat": null
             },
             {
@@ -2620,8 +2620,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.023225Z",
-                "endretDato": "2025-12-11T10:56:21.043117Z",
+                "registrertDato": "2025-12-11T13:36:09.000263Z",
+                "endretDato": "2025-12-11T13:36:09.041807Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1002",
@@ -2635,7 +2635,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1002\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1002\n",
               "sisteNotat": null
             },
             {
@@ -2661,8 +2661,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.038691Z",
-                "endretDato": "2025-12-11T10:56:21.053498Z",
+                "registrertDato": "2025-12-11T13:36:09.031864Z",
+                "endretDato": "2025-12-11T13:36:09.066449Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1003",
@@ -2682,7 +2682,7 @@
                 "fom": null,
                 "tom": null
               },
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1003\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1003\n",
               "sisteNotat": null
             },
             {
@@ -2708,8 +2708,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.049992Z",
-                "endretDato": "2025-12-11T10:56:21.063533Z",
+                "registrertDato": "2025-12-11T13:36:09.057190Z",
+                "endretDato": "2025-12-11T13:36:09.091640Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1004",
@@ -2729,7 +2729,7 @@
                 "fom": null,
                 "tom": null
               },
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1004\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1004\n",
               "sisteNotat": null
             },
             {
@@ -2755,8 +2755,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.060358Z",
-                "endretDato": "2025-12-11T10:56:21.072443Z",
+                "registrertDato": "2025-12-11T13:36:09.082210Z",
+                "endretDato": "2025-12-11T13:36:09.116388Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1005",
@@ -2776,7 +2776,7 @@
                 "fom": null,
                 "tom": null
               },
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1005\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1005\n",
               "sisteNotat": null
             },
             {
@@ -2802,8 +2802,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.068900Z",
-                "endretDato": "2025-12-11T10:56:21.080777Z",
+                "registrertDato": "2025-12-11T13:36:09.107537Z",
+                "endretDato": "2025-12-11T13:36:09.139955Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1006",
@@ -2823,7 +2823,7 @@
                 "fom": null,
                 "tom": null
               },
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1006\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1006\n",
               "sisteNotat": null
             },
             {
@@ -2849,8 +2849,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.077489Z",
-                "endretDato": "2025-12-11T10:56:21.090116Z",
+                "registrertDato": "2025-12-11T13:36:09.131697Z",
+                "endretDato": "2025-12-11T13:36:09.160825Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1007",
@@ -2870,7 +2870,7 @@
                 "fom": null,
                 "tom": null
               },
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1007\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1007\n",
               "sisteNotat": null
             },
             {
@@ -2896,8 +2896,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.086643Z",
-                "endretDato": "2025-12-11T10:56:21.099720Z",
+                "registrertDato": "2025-12-11T13:36:09.153558Z",
+                "endretDato": "2025-12-11T13:36:09.183582Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1008",
@@ -2911,7 +2911,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1008\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1008\n",
               "sisteNotat": null
             },
             {
@@ -2937,8 +2937,8 @@
                   "term": "Behandlingen er opprettet"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.797141Z",
-                "endretDato": "2025-12-11T10:56:21.817398Z",
+                "registrertDato": "2025-12-11T13:36:11.700480Z",
+                "endretDato": "2025-12-11T13:36:11.728673Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1059",
@@ -2952,7 +2952,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1059\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1059\n",
               "sisteNotat": null
             },
             {
@@ -2978,8 +2978,8 @@
                   "term": "Behandlingen er opprettet"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.812039Z",
-                "endretDato": "2025-12-11T10:56:21.831893Z",
+                "registrertDato": "2025-12-11T13:36:11.721041Z",
+                "endretDato": "2025-12-11T13:36:11.748628Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1060",
@@ -2993,7 +2993,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1060\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1060\n",
               "sisteNotat": null
             },
             {
@@ -3019,8 +3019,8 @@
                   "term": "Behandlingen er opprettet"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.826055Z",
-                "endretDato": "2025-12-11T10:56:21.844852Z",
+                "registrertDato": "2025-12-11T13:36:11.740706Z",
+                "endretDato": "2025-12-11T13:36:11.766606Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1061",
@@ -3034,7 +3034,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1061\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1061\n",
               "sisteNotat": null
             },
             {
@@ -3060,8 +3060,8 @@
                   "term": "Behandlingen er opprettet"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.839678Z",
-                "endretDato": "2025-12-11T10:56:21.855369Z",
+                "registrertDato": "2025-12-11T13:36:11.759301Z",
+                "endretDato": "2025-12-11T13:36:11.785522Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1062",
@@ -3075,7 +3075,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1062\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1062\n",
               "sisteNotat": null
             },
             {
@@ -3101,8 +3101,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.279728Z",
-                "endretDato": "2025-12-11T10:56:21.292796Z",
+                "registrertDato": "2025-12-11T13:36:09.411589Z",
+                "endretDato": "2025-12-11T13:36:09.441119Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1019",
@@ -3122,7 +3122,7 @@
                 "fom": null,
                 "tom": null
               },
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1019\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1019\n",
               "sisteNotat": null
             },
             {
@@ -3148,8 +3148,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.885610Z",
-                "endretDato": "2025-12-11T10:56:21.900636Z",
+                "registrertDato": "2025-12-11T13:36:11.831666Z",
+                "endretDato": "2025-12-11T13:36:11.853023Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1069",
@@ -3163,7 +3163,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1069\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1069\n",
               "sisteNotat": null
             },
             {
@@ -3189,8 +3189,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.903262Z",
-                "endretDato": "2025-12-11T10:56:21.913398Z",
+                "registrertDato": "2025-12-11T13:36:11.857473Z",
+                "endretDato": "2025-12-11T13:36:11.881920Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1071",
@@ -3204,7 +3204,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1071\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1071\n",
               "sisteNotat": null
             },
             {
@@ -3230,8 +3230,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.299220Z",
-                "endretDato": "2025-12-11T10:56:41.192531Z",
+                "registrertDato": "2025-12-11T13:36:09.457961Z",
+                "endretDato": "2025-12-11T13:36:49.430887Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1021",
@@ -3251,7 +3251,7 @@
                 "fom": "2024-01-01",
                 "tom": null
               },
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1021\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1021\n",
               "sisteNotat": null
             },
             {
@@ -3277,8 +3277,8 @@
                   "term": "Behandlingen er opprettet"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:57:05.807688Z",
-                "endretDato": "2025-12-11T10:57:05.960795Z",
+                "registrertDato": "2025-12-11T13:37:13.818380Z",
+                "endretDato": "2025-12-11T13:37:14.057215Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1014",
@@ -3298,7 +3298,7 @@
                 "fom": null,
                 "tom": null
               },
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:57 (srvmelosys, Melosys) ---\n  - MEL-1014\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:37 (srvmelosys, Melosys) ---\n  - MEL-1014\n",
               "sisteNotat": null
             },
             {
@@ -3324,8 +3324,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.308916Z",
-                "endretDato": "2025-12-11T10:56:21.326064Z",
+                "registrertDato": "2025-12-11T13:36:09.481999Z",
+                "endretDato": "2025-12-11T13:36:09.508030Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1022",
@@ -3339,7 +3339,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1022\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1022\n",
               "sisteNotat": null
             },
             {
@@ -3365,8 +3365,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.320973Z",
-                "endretDato": "2025-12-11T10:56:21.337076Z",
+                "registrertDato": "2025-12-11T13:36:09.500317Z",
+                "endretDato": "2025-12-11T13:36:09.526714Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1023",
@@ -3386,7 +3386,7 @@
                 "fom": null,
                 "tom": null
               },
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1023\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1023\n",
               "sisteNotat": null
             },
             {
@@ -3412,8 +3412,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.333239Z",
-                "endretDato": "2025-12-11T10:56:31.301156Z",
+                "registrertDato": "2025-12-11T13:36:09.519770Z",
+                "endretDato": "2025-12-11T13:36:27.364089Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1024",
@@ -3433,7 +3433,7 @@
                 "fom": null,
                 "tom": null
               },
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1024\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1024\n",
               "sisteNotat": null
             },
             {
@@ -3459,8 +3459,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.344943Z",
-                "endretDato": "2025-12-11T10:56:31.308093Z",
+                "registrertDato": "2025-12-11T13:36:09.537294Z",
+                "endretDato": "2025-12-11T13:36:27.364696Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1025",
@@ -3480,7 +3480,7 @@
                 "fom": null,
                 "tom": null
               },
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1025\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1025\n",
               "sisteNotat": null
             },
             {
@@ -3506,8 +3506,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.357236Z",
-                "endretDato": "2025-12-11T10:56:31.353831Z",
+                "registrertDato": "2025-12-11T13:36:09.558393Z",
+                "endretDato": "2025-12-11T13:36:09.587722Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1026",
@@ -3527,7 +3527,7 @@
                 "fom": null,
                 "tom": null
               },
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1026\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1026\n",
               "sisteNotat": null
             },
             {
@@ -3553,8 +3553,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.368843Z",
-                "endretDato": "2025-12-11T10:56:21.387228Z",
+                "registrertDato": "2025-12-11T13:36:09.579427Z",
+                "endretDato": "2025-12-11T13:36:09.617754Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1027",
@@ -3568,7 +3568,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1027\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1027\n",
               "sisteNotat": null
             },
             {
@@ -3594,8 +3594,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.382111Z",
-                "endretDato": "2025-12-11T10:56:21.401062Z",
+                "registrertDato": "2025-12-11T13:36:09.601042Z",
+                "endretDato": "2025-12-11T13:36:09.650796Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1028",
@@ -3609,7 +3609,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1028\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1028\n",
               "sisteNotat": null
             },
             {
@@ -3635,8 +3635,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.396919Z",
-                "endretDato": "2025-12-11T10:56:21.412997Z",
+                "registrertDato": "2025-12-11T13:36:09.640673Z",
+                "endretDato": "2025-12-11T13:36:09.683446Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1029",
@@ -3650,7 +3650,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1029\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1029\n",
               "sisteNotat": null
             },
             {
@@ -3676,8 +3676,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.409004Z",
-                "endretDato": "2025-12-11T10:56:21.424154Z",
+                "registrertDato": "2025-12-11T13:36:09.669526Z",
+                "endretDato": "2025-12-11T13:36:09.734964Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1030",
@@ -3691,7 +3691,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1030\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1030\n",
               "sisteNotat": null
             },
             {
@@ -3717,8 +3717,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.420031Z",
-                "endretDato": "2025-12-11T10:56:21.435565Z",
+                "registrertDato": "2025-12-11T13:36:09.726011Z",
+                "endretDato": "2025-12-11T13:36:09.756816Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1031",
@@ -3732,7 +3732,7 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1031\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1031\n",
               "sisteNotat": null
             },
             {
@@ -3758,8 +3758,8 @@
                   "term": "Behandlingen pågår"
                 },
                 "erUnderOppdatering": false,
-                "registrertDato": "2025-12-11T10:56:21.431100Z",
-                "endretDato": "2025-12-11T10:56:21.448368Z",
+                "registrertDato": "2025-12-11T13:36:09.750163Z",
+                "endretDato": "2025-12-11T13:36:11.257245Z",
                 "svarFrist": null
               },
               "saksnummer": "MEL-1032",
@@ -3773,13 +3773,13 @@
               },
               "land": null,
               "periode": null,
-              "oppgaveBeskrivelse": "--- 11.12.2025 11:56 (srvmelosys, Melosys) ---\n  - MEL-1032\n",
+              "oppgaveBeskrivelse": "--- 11.12.2025 14:36 (srvmelosys, Melosys) ---\n  - MEL-1032\n",
               "sisteNotat": null
             }
           ]
         }
       },
-      "duration": 475,
+      "duration": 1237,
       "dynamicFields": [
         "saksbehandling[0].behandling.registrertDato",
         "saksbehandling[0].behandling.endretDato",

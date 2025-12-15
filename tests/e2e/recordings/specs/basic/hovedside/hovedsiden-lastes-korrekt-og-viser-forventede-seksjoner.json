@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "recordedAt": "2025-12-11T10:56:28.437Z",
+  "recordedAt": "2025-12-11T13:43:29.455Z",
   "testFile": "/Users/ragnarwestad/develop/nav/melosys-web/tests/e2e/specs/basic/hovedside.spec.ts",
   "testName": "Hovedsiden lastes korrekt og viser forventede seksjoner",
   "exchanges": [
@@ -39,7 +39,7 @@
           }
         ]
       },
-      "duration": 83,
+      "duration": 75,
       "dynamicFields": []
     },
     {
@@ -77,7 +77,7 @@
           "melosys.arsavregning.uten.flyt": false
         }
       },
-      "duration": 98,
+      "duration": 84,
       "dynamicFields": []
     }
   ]

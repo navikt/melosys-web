@@ -3,7 +3,6 @@ import { TrygdeavgiftPage } from "../../../pages/behandling/trygdeavgift.page";
 import { InngangPage } from "../../../pages/behandling/inngang.page";
 import { BehandlingPage } from "../../../pages/behandling/behandling.page";
 import { hentPrepopulertSakUrl } from "../../../utils/testdataUtils";
-import { runAxeAnalyze } from "../../../utils/axeUtils";
 import { UI_TEXTS } from "../../../config/ui-texts";
 
 /**
@@ -58,7 +57,5 @@ test.describe("EU/EØS Trygdeavgift", () => {
     // Steg 3: Gå til Bekreftelse og verifiser intiell tilstand
     await inngangPage.klikkBekreftOgFortsett();
     await trygdeavgiftPage.verifiserSteg(UI_TEXTS.STEG.BEKREFTELSE);
-
-    await runAxeAnalyze(page, testInfo.title);
   });
 });

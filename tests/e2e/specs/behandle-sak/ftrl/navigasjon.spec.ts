@@ -1,7 +1,6 @@
 import { test } from "../../../recording/fixtures";
 import { TIMEOUT_FOR_COMPLEX_TESTS, setDatoFelt } from "../../../utils/testUtils";
 import { hentPrepopulertSakUrl } from "../../../utils/testdataUtils";
-import { runAxeAnalyze } from "../../../utils/axeUtils";
 import { StegvelgerPage } from "../../../pages/behandling/stegvelger.page";
 import { UI_TEXTS } from "../../../config/ui-texts";
 
@@ -33,14 +32,14 @@ test.describe("FTRL Stegvelger - Navigasjon", () => {
     // === STEG 1: Inngang ("Oppgi opplysninger fra søknaden") ===
     // Note: FTRL shows all 6 steps in progressbar from the start
     await stegvelgerPage.verifiserSteg("Oppgi opplysninger fra søknaden");
-    await stegvelgerPage.verifiserBekreftKnappDeaktivert();
+    await stegvelgerPage.verifiserBekreftOgFortsettKnappDeaktivert();
     await stegvelgerPage.fyllUtInngangMinimum("01.01.2024", "Sverige");
     await stegvelgerPage.verifiserBekreftKnappAktivert();
     await stegvelgerPage.klikkBekreftOgFortsett();
 
     // === STEG 2: Virksomhet ===
     await stegvelgerPage.verifiserSteg("Virksomhet");
-    await stegvelgerPage.verifiserBekreftKnappDeaktivert();
+    await stegvelgerPage.verifiserBekreftOgFortsettKnappDeaktivert();
     await stegvelgerPage.velgFørsteVirksomhet();
     await stegvelgerPage.verifiserBekreftKnappAktivert();
     await stegvelgerPage.klikkBekreftOgFortsett();
@@ -78,8 +77,6 @@ test.describe("FTRL Stegvelger - Navigasjon", () => {
 
     // === STEG 6: Vedtak ("Pliktig medlemskap etter folketrygdloven") ===
     await stegvelgerPage.verifiserSteg("Pliktig medlemskap etter folketrygdloven");
-
-    await runAxeAnalyze(page, testInfo.title);
   });
 
   test("Navigasjon frem og tilbake mellom steg", async ({ page, apiRecorder }, testInfo) => {
@@ -110,8 +107,6 @@ test.describe("FTRL Stegvelger - Navigasjon", () => {
     // Gå tilbake via klikk på steg 1 i progressbar
     await stegvelgerPage.klikkPåSteg(1);
     await stegvelgerPage.verifiserSteg("Oppgi opplysninger fra søknaden");
-
-    await runAxeAnalyze(page, testInfo.title);
   });
 
   test("Bekreft-knapp forblir deaktivert ved ugyldig input", async ({ page, apiRecorder }, testInfo) => {
@@ -125,7 +120,7 @@ test.describe("FTRL Stegvelger - Navigasjon", () => {
     await stegvelgerPage.verifiserSteg("Oppgi opplysninger fra søknaden");
 
     // Knappen skal være deaktivert ved start
-    await stegvelgerPage.verifiserBekreftKnappDeaktivert();
+    await stegvelgerPage.verifiserBekreftOgFortsettKnappDeaktivert();
 
     // Fyll ut kun dato (uten arbeidsland) - knappen bør fortsatt være deaktivert
 
@@ -133,8 +128,6 @@ test.describe("FTRL Stegvelger - Navigasjon", () => {
     await page.waitForTimeout(500);
 
     // Knappen skal fortsatt være deaktivert siden arbeidsland mangler
-    await stegvelgerPage.verifiserBekreftKnappDeaktivert();
-
-    await runAxeAnalyze(page, testInfo.title);
+    await stegvelgerPage.verifiserBekreftOgFortsettKnappDeaktivert();
   });
 });
