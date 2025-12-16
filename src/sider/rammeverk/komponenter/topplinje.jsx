@@ -6,6 +6,9 @@ import NavLogo from "../../../resources/images/nav.svg?react";
 import * as Nav from "../../../navFrontend";
 
 import "./topplinje.less";
+import { MistelteinSvg } from "../../../felleskomponenter/høytidOgMorro/jul/MistelteinSvg";
+import { ChristmasSantaAndDeer } from "../../../felleskomponenter/høytidOgMorro/jul/ChristmasSantaAndDeer";
+import { ChristmasDeer } from "../../../felleskomponenter/høytidOgMorro/jul/ChristmasReindeer";
 
 function Topplinje(props) {
   const { saksbehandler = "" } = props;
@@ -35,9 +38,12 @@ function Topplinje(props) {
         <div className="brand__tittel">
           <span>Melosys</span>
         </div>
+        <ChristmasDeer />
       </div>
+      <ChristmasSantaAndDeer />
       <div className="topplinje__saksbehandler">
         <div className="dropdown">
+          <MistelteinSvg />
           <div className="saksbehandler__navn ">{saksbehandler}</div>
           {!erProduksjonsmiljo && (
             <div className="dropdown-content">
