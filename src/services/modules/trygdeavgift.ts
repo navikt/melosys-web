@@ -47,6 +47,9 @@ export interface Fakturamottaker {
 export const hentTrygdeavgiftMottaker = (behandlingID: number): Promise<TrygdeavgiftMottakerDto> =>
   getAsJson(`${API_BASE_URL}behandlinger/${behandlingID}/${TRYGDEAVGIFT}/mottaker`);
 
+export const hentTrygdeavgiftperioder = (behandlingID: number): Promise<Trygdeavgiftsperiode[]> =>
+  getAsJson(`${API_BASE_URL}behandlinger/${behandlingID}/${TRYGDEAVGIFT}`);
+
 export const beregnTrygdeavgiftsperioder = (
   behandlingID: number,
   trygdeavgiftsgrunnlag: TrygdeavgiftsgrunnlagDto,
