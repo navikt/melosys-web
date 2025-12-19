@@ -112,7 +112,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     trigger,
   } = useForm({
     resolver: yupResolver(vurderingTrygdeavgiftSchema),
-    context: { medlemskapsperiode: avgiftspliktigeperioder, medlemskapsTypeErPliktig, erÅpenSluttDato },
+    context: { avgiftspliktigeperiode: avgiftspliktigeperioder, medlemskapsTypeErPliktig, erÅpenSluttDato },
     mode: "onChange",
     defaultValues: {
       skatteforholdsperioder: [{}],
