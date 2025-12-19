@@ -1,7 +1,7 @@
 import { FANE_STATUS } from "../../../felleskomponenter/stegvelger";
 import VurderingOpplysninger from "./stegKomponenter/vurderingOpplysninger/vurderingOpplysninger";
 import VurderingBekreftelse from "./stegKomponenter/vurderingBekreftelse/vurderingBekreftelse";
-import { VurderingTrygdeavgift } from "./stegKomponenter/vurderingTrygdeavgift/vurderingTrygdeavgift";
+import { VurderingTrygdeavgift } from "../../vurderingTrygdeavgift/vurderingTrygdeavgift";
 
 const inngangSteg = {
   id: "Inngang",
