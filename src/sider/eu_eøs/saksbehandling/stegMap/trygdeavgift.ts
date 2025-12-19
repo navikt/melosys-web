@@ -1,6 +1,6 @@
 import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
 import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
-import { VurderingTrygdeavgift as VurderingTrygdeavgiftFTRL } from "../../../ftrl/saksbehandling/stegKomponenter/vurderingTrygdeavgift/vurderingTrygdeavgift";
+import { VurderingTrygdeavgift } from "../../../vurderingTrygdeavgift/vurderingTrygdeavgift";
 import type { PropsLight } from "../../../../felleskomponenter/stegvelger/stegMotor/typer";
 
 // Spesifikke typer for Trygdeavgift-steg
@@ -30,7 +30,7 @@ class Trygdeavgift extends Steg {
 
     this.id = STEG.VURDERING_TRYGDEAVGIFT;
     this.tittel = "Trygdeavgift";
-    this.komponent = VurderingTrygdeavgiftFTRL;
+    this.komponent = VurderingTrygdeavgift;
 
     this.samleRelevanteData = (_propsLight: PropsLight): TrygdeavgiftRelevanteData => ({
       behandlingID: _propsLight.behandlingID,
