@@ -15,7 +15,7 @@ const {
   PENSJON_UFØRETRYGD,
   PENSJON_UFØRETRYGD_KILDESKATT,
 } = MKV.Koder.inntektskildetype;
-const UTENFOR_MEDLEMSKAPSPERIODEN_ELLER_LOVVALGSPERIODEN = { melding: "Utenfor medlemskapsperioden/lovvalgsperioden" };
+const UTENFOR_MEDLEMSKAPSPERIODEN_ELLER_LOVVALGSPERIODEN = { melding: "Utenfor medlemskaps-/lovvalgsperioden" };
 
 export const arbAvgBetalesKreves = (kildetype, medlemskapsTypeErPliktig) =>
   !medlemskapsTypeErPliktig && kildetype !== MISJONÆR;
