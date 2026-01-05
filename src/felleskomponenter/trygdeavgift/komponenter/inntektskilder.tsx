@@ -13,7 +13,7 @@ import { FieldArrayProps, FormValuesProps, Inntektskilde } from "./types";
 import {
   arbAvgBetalesKreves,
   bruttoInntektKreves,
-} from "../../../sider/ftrl/saksbehandling/stegKomponenter/vurderingTrygdeavgift/vurderingTrygdeavgiftSchema";
+} from "../../../sider/vurderingTrygdeavgift/vurderingTrygdeavgiftSchema";
 import "./inntektskilder.less";
 import { Stack } from "@navikt/ds-react";
 

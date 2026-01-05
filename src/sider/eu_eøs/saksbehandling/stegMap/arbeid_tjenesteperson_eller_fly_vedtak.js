@@ -11,7 +11,7 @@ class ArbeidTjenestepersonEllerFlyVedtak extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
 
-    const toggleEnabled = propsLight.eøsFaktureringAvTrygdeavgiftToggleEnabled;
+    const eøsFaktureringAvTrygdeavgiftToggleEnabled = propsLight.eøsFaktureringAvTrygdeavgiftToggleEnabled;
 
     const lovvalgsbestemmelseSomSkalVises =
       propsLight.lovvalgsbestemmelse ===
@@ -29,13 +29,13 @@ class ArbeidTjenestepersonEllerFlyVedtak extends Steg {
     this.kriterier = [];
     this.id = STEG.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK;
     this.tittel = "Vedtak";
-    this.komponent = toggleEnabled
-      ? VurderingArbeidTjenestepersonEllerFlyVedtak
-      : VurderingArbeidTjenestepersonEllerFlyVedtakLegacy;
+    this.komponent = this.skalBrukeLegacyKomponent(propsLight)
+      ? VurderingArbeidTjenestepersonEllerFlyVedtakLegacy
+      : VurderingArbeidTjenestepersonEllerFlyVedtak;
     this.samleRelevanteData = (_propsLight) => ({
       redigerbart: _propsLight.generiskStegRedigerbart,
       lovvalgsbestemmelseSomSkalVises,
-      ...(!toggleEnabled && { lovvalgsbestemmelseSomSkalLagres }),
+      ...(!eøsFaktureringAvTrygdeavgiftToggleEnabled && { lovvalgsbestemmelseSomSkalLagres }),
       informertMyndighetFakta,
       harFeilmeldinger: _propsLight.harFeilmeldinger,
     });
@@ -43,7 +43,9 @@ class ArbeidTjenestepersonEllerFlyVedtak extends Steg {
     this.handlers = {
       tilbake: propsLight.tilgjengeligeHandlers.tilbake,
       lagreLovvalgsperioder: this._propsLight.tilgjengeligeHandlers.lagreLovvalgsperioder,
-      ...(!toggleEnabled && { byggLovvalgsperioder: this._propsLight.tilgjengeligeHandlers.byggLovvalgsperioder }),
+      ...(!eøsFaktureringAvTrygdeavgiftToggleEnabled && {
+        byggLovvalgsperioder: this._propsLight.tilgjengeligeHandlers.byggLovvalgsperioder,
+      }),
       oppdaterData: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, verdi),
       slettData: (data) => this._propsLight.tilgjengeligeHandlers.slettStegData(this.id, data),
       kontrollerFerdigbehandling: this._propsLight.tilgjengeligeHandlers.kontrollerFerdigbehandling,
@@ -51,6 +53,21 @@ class ArbeidTjenestepersonEllerFlyVedtak extends Steg {
     };
     this._status = FANE_STATUS.OK;
   }
+
+  skalBrukeLegacyKomponent = (propsLight) => {
+    const innsynsmodusSkalIkkeViseEndringerFraFaktureringAvTrygdeavgift =
+      !propsLight.generiskStegRedigerbart && !propsLight.harTrygdeavgiftperiode;
+
+    if (propsLight.eøsFaktureringAvTrygdeavgiftToggleEnabled) {
+      if (innsynsmodusSkalIkkeViseEndringerFraFaktureringAvTrygdeavgift) {
+        return true;
+      }
+
+      return false;
+    }
+
+    return true;
+  };
 }
 
 export default ArbeidTjenestepersonEllerFlyVedtak;

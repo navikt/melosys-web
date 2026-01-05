@@ -2,48 +2,44 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useCallback, useEffect, useState } from "react";
 import { FieldValue, useFieldArray, useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
-import * as Mui from "../../../../../felleskomponenter/ui";
-import * as Nav from "../../../../../navFrontend";
-import * as Api from "../../../../../services/api";
-import * as Utils from "../../../../../utils";
+import * as Mui from "../../felleskomponenter/ui";
+import * as Nav from "../../navFrontend";
+import * as Api from "../../services/api";
+import * as Utils from "../../utils";
 
-import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
-import { medlemskapsperioderSelectors } from "../../../../../ducks/medlemskapsperioder";
+import { behandlingerSelectors } from "../../ducks/behandlinger";
+import { medlemskapsperioderSelectors } from "../../ducks/medlemskapsperioder";
 
-import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
-import { useAsyncCallbackState } from "../../../../../hooks";
-import { STATUS } from "../../../../../services";
+import { redigerbartSelectors } from "../../ducks/redigerbart";
+import { useAsyncCallbackState } from "../../hooks";
+import { STATUS } from "../../services";
 
-import { BOOLSK_STRING } from "../../../../../constants";
-import LabelMedHjelpetekst from "../../../../../felleskomponenter/labelMedHjelpetekst";
-import { Inntektskilder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/inntektskilder";
+import { BOOLSK_STRING } from "../../constants";
+import LabelMedHjelpetekst from "../../felleskomponenter/labelMedHjelpetekst";
+import { Inntektskilder } from "../../felleskomponenter/trygdeavgift/komponenter/inntektskilder";
 import {
   Feilmelding,
   feilMeldingBlokkerer,
   finnAktivFeilmelding,
-} from "../../../../../felleskomponenter/trygdeavgift/komponenter/meldinger";
-import { Skatteforholdsperioder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/skatteforholdsperioder";
-import TrygdeavgiftsperioderTabell from "../../../../../felleskomponenter/trygdeavgift/komponenter/trygdeavgiftsperioderTabell";
-import {
-  FormValuesProps,
-  Inntektskilde,
-  Skatteforhold,
-} from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
-import MKV from "../../../../../melosyskodeverk";
-import { BeregnetTrygdeavgift, TrygdeavgiftsgrunnlagDto } from "../../../../../services/modules/trygdeavgift";
+} from "../../felleskomponenter/trygdeavgift/komponenter/meldinger";
+import { Skatteforholdsperioder } from "../../felleskomponenter/trygdeavgift/komponenter/skatteforholdsperioder";
+import TrygdeavgiftsperioderTabell from "../../felleskomponenter/trygdeavgift/komponenter/trygdeavgiftsperioderTabell";
+import { FormValuesProps, Inntektskilde, Skatteforhold } from "../../felleskomponenter/trygdeavgift/komponenter/types";
+import MKV from "../../melosyskodeverk";
+import { BeregnetTrygdeavgift, TrygdeavgiftsgrunnlagDto } from "../../services/modules/trygdeavgift";
 import "./vurderingTrygdeavgift.less";
 import vurderingTrygdeavgiftSchema from "./vurderingTrygdeavgiftSchema";
 
-import { erBrukerSkattepliktigIHelePerioden } from "../../../../aarsavregning/stegKomponenter/vurderingAarsavregning/utils";
-import { useFeatureToggle } from "../../../../../featuretoggle";
+import { erBrukerSkattepliktigIHelePerioden } from "../aarsavregning/stegKomponenter/vurderingAarsavregning/utils";
+import { useFeatureToggle } from "../../featuretoggle";
 import {
   MELOSYS_FAKTURERINGSKOMPONENTEN_IKKE_TIDLIGERE_PERIODER,
   MELOSYS_EØS_FAKTURERING_AV_TRYGDEAVGIFT,
-} from "../../../../../featuretoggle/toggleNavn";
-import { Alert } from "../../../../../navFrontend";
-import { fagsakSelectors } from "../../../../../ducks/fagsaker";
-import { lovvalgsperioderSelectors } from "../../../../../ducks/lovvalgsperioder";
-import { harPerioderFraTidligereÅr } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+} from "../../featuretoggle/toggleNavn";
+import { Alert } from "../../navFrontend";
+import { fagsakSelectors } from "../../ducks/fagsaker";
+import { lovvalgsperioderSelectors } from "../../ducks/lovvalgsperioder";
+import { harPerioderFraTidligereÅr } from "../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 
 interface Props {
   bekreft: () => void;
@@ -116,7 +112,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     trigger,
   } = useForm({
     resolver: yupResolver(vurderingTrygdeavgiftSchema),
-    context: { medlemskapsperiode: avgiftspliktigeperioder, medlemskapsTypeErPliktig, erÅpenSluttDato },
+    context: { avgiftspliktigeperiode: avgiftspliktigeperioder, medlemskapsTypeErPliktig, erÅpenSluttDato },
     mode: "onChange",
     defaultValues: {
       skatteforholdsperioder: [{}],
