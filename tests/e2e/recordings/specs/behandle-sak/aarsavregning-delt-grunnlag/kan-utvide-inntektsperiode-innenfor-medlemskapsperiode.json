@@ -49,7 +49,7 @@
         },
         "body": {
           "aarsavregningID": 46,
-          "aar": 2024,
+          "aar": 2025,
           "tidligereTrygdeavgiftsGrunnlagsopplysninger": {
             "trygdeavgiftsgrunnlag": {
               "avgiftspliktigperioder": [],
@@ -316,7 +316,7 @@
                 "arbeidsforholdID": "123",
                 "arbeidsforholdIDnav": 123,
                 "ansettelsesPeriode": {
-                  "fom": "2020-12-12",
+                  "fom": "2021-01-05",
                   "tom": null
                 },
                 "arbeidsforholdstype": "ordinaertArbeidsforhold",
@@ -332,13 +332,13 @@
                       "term": "KONSULENT"
                     },
                     "gyldighetsperiode": {
-                      "fom": "2020-12-12",
+                      "fom": "2021-01-05",
                       "tom": null
                     },
                     "avtaltArbeidstimerPerUke": 37.5,
                     "stillingsprosent": 100,
                     "beregnetAntallTimerPrUke": 37.5,
-                    "endringsdatoStillingsprosent": "2020-12-12",
+                    "endringsdatoStillingsprosent": "2021-01-05",
                     "skipsregister": null,
                     "skipstype": null,
                     "maritimArbeidsavtale": false,
@@ -424,354 +424,6 @@
             "inntekt": {
               "arbeidsInntektMaanedListe": [
                 {
-                  "aarMaaned": "2023-07",
-                  "arbeidsInntektInformasjon": {
-                    "inntektListe": [
-                      {
-                        "type": "Loennsinntekt",
-                        "beloep": 50000,
-                        "fordel": "kontantytelse",
-                        "inntektskilde": "A-ordningen",
-                        "inntektsperiodetype": "Maaned",
-                        "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2025-12-01T00:00:00",
-                        "opptjeningsland": null,
-                        "opptjeningsperiode": {
-                          "fom": null,
-                          "tom": null
-                        },
-                        "utbetaltIPeriode": "2023-07",
-                        "opplysningspliktigID": "974761076",
-                        "virksomhetID": "888888888",
-                        "inntektsmottakerID": "30056928150",
-                        "inngaarIGrunnlagForTrekk": true,
-                        "utloeserArbeidsgiveravgift": true,
-                        "informasjonsstatus": "InngaarAlltid",
-                        "beskrivelse": "fastloenn"
-                      }
-                    ]
-                  }
-                },
-                {
-                  "aarMaaned": "2023-08",
-                  "arbeidsInntektInformasjon": {
-                    "inntektListe": [
-                      {
-                        "type": "Loennsinntekt",
-                        "beloep": 50000,
-                        "fordel": "kontantytelse",
-                        "inntektskilde": "A-ordningen",
-                        "inntektsperiodetype": "Maaned",
-                        "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2025-12-01T00:00:00",
-                        "opptjeningsland": null,
-                        "opptjeningsperiode": {
-                          "fom": null,
-                          "tom": null
-                        },
-                        "utbetaltIPeriode": "2023-08",
-                        "opplysningspliktigID": "974761076",
-                        "virksomhetID": "888888888",
-                        "inntektsmottakerID": "30056928150",
-                        "inngaarIGrunnlagForTrekk": true,
-                        "utloeserArbeidsgiveravgift": true,
-                        "informasjonsstatus": "InngaarAlltid",
-                        "beskrivelse": "fastloenn"
-                      }
-                    ]
-                  }
-                },
-                {
-                  "aarMaaned": "2023-09",
-                  "arbeidsInntektInformasjon": {
-                    "inntektListe": [
-                      {
-                        "type": "Loennsinntekt",
-                        "beloep": 50000,
-                        "fordel": "kontantytelse",
-                        "inntektskilde": "A-ordningen",
-                        "inntektsperiodetype": "Maaned",
-                        "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2025-12-01T00:00:00",
-                        "opptjeningsland": null,
-                        "opptjeningsperiode": {
-                          "fom": null,
-                          "tom": null
-                        },
-                        "utbetaltIPeriode": "2023-09",
-                        "opplysningspliktigID": "974761076",
-                        "virksomhetID": "888888888",
-                        "inntektsmottakerID": "30056928150",
-                        "inngaarIGrunnlagForTrekk": true,
-                        "utloeserArbeidsgiveravgift": true,
-                        "informasjonsstatus": "InngaarAlltid",
-                        "beskrivelse": "fastloenn"
-                      }
-                    ]
-                  }
-                },
-                {
-                  "aarMaaned": "2023-10",
-                  "arbeidsInntektInformasjon": {
-                    "inntektListe": [
-                      {
-                        "type": "Loennsinntekt",
-                        "beloep": 50000,
-                        "fordel": "kontantytelse",
-                        "inntektskilde": "A-ordningen",
-                        "inntektsperiodetype": "Maaned",
-                        "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2025-12-01T00:00:00",
-                        "opptjeningsland": null,
-                        "opptjeningsperiode": {
-                          "fom": null,
-                          "tom": null
-                        },
-                        "utbetaltIPeriode": "2023-10",
-                        "opplysningspliktigID": "974761076",
-                        "virksomhetID": "888888888",
-                        "inntektsmottakerID": "30056928150",
-                        "inngaarIGrunnlagForTrekk": true,
-                        "utloeserArbeidsgiveravgift": true,
-                        "informasjonsstatus": "InngaarAlltid",
-                        "beskrivelse": "fastloenn"
-                      }
-                    ]
-                  }
-                },
-                {
-                  "aarMaaned": "2023-11",
-                  "arbeidsInntektInformasjon": {
-                    "inntektListe": [
-                      {
-                        "type": "Loennsinntekt",
-                        "beloep": 50000,
-                        "fordel": "kontantytelse",
-                        "inntektskilde": "A-ordningen",
-                        "inntektsperiodetype": "Maaned",
-                        "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2025-12-01T00:00:00",
-                        "opptjeningsland": null,
-                        "opptjeningsperiode": {
-                          "fom": null,
-                          "tom": null
-                        },
-                        "utbetaltIPeriode": "2023-11",
-                        "opplysningspliktigID": "974761076",
-                        "virksomhetID": "888888888",
-                        "inntektsmottakerID": "30056928150",
-                        "inngaarIGrunnlagForTrekk": true,
-                        "utloeserArbeidsgiveravgift": true,
-                        "informasjonsstatus": "InngaarAlltid",
-                        "beskrivelse": "fastloenn"
-                      }
-                    ]
-                  }
-                },
-                {
-                  "aarMaaned": "2023-12",
-                  "arbeidsInntektInformasjon": {
-                    "inntektListe": [
-                      {
-                        "type": "Loennsinntekt",
-                        "beloep": 50000,
-                        "fordel": "kontantytelse",
-                        "inntektskilde": "A-ordningen",
-                        "inntektsperiodetype": "Maaned",
-                        "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2025-12-01T00:00:00",
-                        "opptjeningsland": null,
-                        "opptjeningsperiode": {
-                          "fom": null,
-                          "tom": null
-                        },
-                        "utbetaltIPeriode": "2023-12",
-                        "opplysningspliktigID": "974761076",
-                        "virksomhetID": "888888888",
-                        "inntektsmottakerID": "30056928150",
-                        "inngaarIGrunnlagForTrekk": true,
-                        "utloeserArbeidsgiveravgift": true,
-                        "informasjonsstatus": "InngaarAlltid",
-                        "beskrivelse": "fastloenn"
-                      }
-                    ]
-                  }
-                },
-                {
-                  "aarMaaned": "2024-01",
-                  "arbeidsInntektInformasjon": {
-                    "inntektListe": [
-                      {
-                        "type": "Loennsinntekt",
-                        "beloep": 50000,
-                        "fordel": "kontantytelse",
-                        "inntektskilde": "A-ordningen",
-                        "inntektsperiodetype": "Maaned",
-                        "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2025-12-01T00:00:00",
-                        "opptjeningsland": null,
-                        "opptjeningsperiode": {
-                          "fom": null,
-                          "tom": null
-                        },
-                        "utbetaltIPeriode": "2024-01",
-                        "opplysningspliktigID": "974761076",
-                        "virksomhetID": "888888888",
-                        "inntektsmottakerID": "30056928150",
-                        "inngaarIGrunnlagForTrekk": true,
-                        "utloeserArbeidsgiveravgift": true,
-                        "informasjonsstatus": "InngaarAlltid",
-                        "beskrivelse": "fastloenn"
-                      }
-                    ]
-                  }
-                },
-                {
-                  "aarMaaned": "2024-02",
-                  "arbeidsInntektInformasjon": {
-                    "inntektListe": [
-                      {
-                        "type": "Loennsinntekt",
-                        "beloep": 50000,
-                        "fordel": "kontantytelse",
-                        "inntektskilde": "A-ordningen",
-                        "inntektsperiodetype": "Maaned",
-                        "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2025-12-01T00:00:00",
-                        "opptjeningsland": null,
-                        "opptjeningsperiode": {
-                          "fom": null,
-                          "tom": null
-                        },
-                        "utbetaltIPeriode": "2024-02",
-                        "opplysningspliktigID": "974761076",
-                        "virksomhetID": "888888888",
-                        "inntektsmottakerID": "30056928150",
-                        "inngaarIGrunnlagForTrekk": true,
-                        "utloeserArbeidsgiveravgift": true,
-                        "informasjonsstatus": "InngaarAlltid",
-                        "beskrivelse": "fastloenn"
-                      }
-                    ]
-                  }
-                },
-                {
-                  "aarMaaned": "2024-03",
-                  "arbeidsInntektInformasjon": {
-                    "inntektListe": [
-                      {
-                        "type": "Loennsinntekt",
-                        "beloep": 50000,
-                        "fordel": "kontantytelse",
-                        "inntektskilde": "A-ordningen",
-                        "inntektsperiodetype": "Maaned",
-                        "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2025-12-01T00:00:00",
-                        "opptjeningsland": null,
-                        "opptjeningsperiode": {
-                          "fom": null,
-                          "tom": null
-                        },
-                        "utbetaltIPeriode": "2024-03",
-                        "opplysningspliktigID": "974761076",
-                        "virksomhetID": "888888888",
-                        "inntektsmottakerID": "30056928150",
-                        "inngaarIGrunnlagForTrekk": true,
-                        "utloeserArbeidsgiveravgift": true,
-                        "informasjonsstatus": "InngaarAlltid",
-                        "beskrivelse": "fastloenn"
-                      }
-                    ]
-                  }
-                },
-                {
-                  "aarMaaned": "2024-04",
-                  "arbeidsInntektInformasjon": {
-                    "inntektListe": [
-                      {
-                        "type": "Loennsinntekt",
-                        "beloep": 50000,
-                        "fordel": "kontantytelse",
-                        "inntektskilde": "A-ordningen",
-                        "inntektsperiodetype": "Maaned",
-                        "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2025-12-01T00:00:00",
-                        "opptjeningsland": null,
-                        "opptjeningsperiode": {
-                          "fom": null,
-                          "tom": null
-                        },
-                        "utbetaltIPeriode": "2024-04",
-                        "opplysningspliktigID": "974761076",
-                        "virksomhetID": "888888888",
-                        "inntektsmottakerID": "30056928150",
-                        "inngaarIGrunnlagForTrekk": true,
-                        "utloeserArbeidsgiveravgift": true,
-                        "informasjonsstatus": "InngaarAlltid",
-                        "beskrivelse": "fastloenn"
-                      }
-                    ]
-                  }
-                },
-                {
-                  "aarMaaned": "2024-05",
-                  "arbeidsInntektInformasjon": {
-                    "inntektListe": [
-                      {
-                        "type": "Loennsinntekt",
-                        "beloep": 50000,
-                        "fordel": "kontantytelse",
-                        "inntektskilde": "A-ordningen",
-                        "inntektsperiodetype": "Maaned",
-                        "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2025-12-01T00:00:00",
-                        "opptjeningsland": null,
-                        "opptjeningsperiode": {
-                          "fom": null,
-                          "tom": null
-                        },
-                        "utbetaltIPeriode": "2024-05",
-                        "opplysningspliktigID": "974761076",
-                        "virksomhetID": "888888888",
-                        "inntektsmottakerID": "30056928150",
-                        "inngaarIGrunnlagForTrekk": true,
-                        "utloeserArbeidsgiveravgift": true,
-                        "informasjonsstatus": "InngaarAlltid",
-                        "beskrivelse": "fastloenn"
-                      }
-                    ]
-                  }
-                },
-                {
-                  "aarMaaned": "2024-06",
-                  "arbeidsInntektInformasjon": {
-                    "inntektListe": [
-                      {
-                        "type": "Loennsinntekt",
-                        "beloep": 50000,
-                        "fordel": "kontantytelse",
-                        "inntektskilde": "A-ordningen",
-                        "inntektsperiodetype": "Maaned",
-                        "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2025-12-01T00:00:00",
-                        "opptjeningsland": null,
-                        "opptjeningsperiode": {
-                          "fom": null,
-                          "tom": null
-                        },
-                        "utbetaltIPeriode": "2024-06",
-                        "opplysningspliktigID": "974761076",
-                        "virksomhetID": "888888888",
-                        "inntektsmottakerID": "30056928150",
-                        "inngaarIGrunnlagForTrekk": true,
-                        "utloeserArbeidsgiveravgift": true,
-                        "informasjonsstatus": "InngaarAlltid",
-                        "beskrivelse": "fastloenn"
-                      }
-                    ]
-                  }
-                },
-                {
                   "aarMaaned": "2024-07",
                   "arbeidsInntektInformasjon": {
                     "inntektListe": [
@@ -782,7 +434,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2025-12-01T00:00:00",
+                        "levereringstidspunkt": "2026-01-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -811,7 +463,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2025-12-01T00:00:00",
+                        "levereringstidspunkt": "2026-01-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -840,7 +492,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2025-12-01T00:00:00",
+                        "levereringstidspunkt": "2026-01-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -869,7 +521,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2025-12-01T00:00:00",
+                        "levereringstidspunkt": "2026-01-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -898,7 +550,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2025-12-01T00:00:00",
+                        "levereringstidspunkt": "2026-01-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -927,13 +579,361 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2025-12-01T00:00:00",
+                        "levereringstidspunkt": "2026-01-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
                           "tom": null
                         },
                         "utbetaltIPeriode": "2024-12",
+                        "opplysningspliktigID": "974761076",
+                        "virksomhetID": "888888888",
+                        "inntektsmottakerID": "30056928150",
+                        "inngaarIGrunnlagForTrekk": true,
+                        "utloeserArbeidsgiveravgift": true,
+                        "informasjonsstatus": "InngaarAlltid",
+                        "beskrivelse": "fastloenn"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "aarMaaned": "2025-01",
+                  "arbeidsInntektInformasjon": {
+                    "inntektListe": [
+                      {
+                        "type": "Loennsinntekt",
+                        "beloep": 50000,
+                        "fordel": "kontantytelse",
+                        "inntektskilde": "A-ordningen",
+                        "inntektsperiodetype": "Maaned",
+                        "inntektsstatus": "LoependeInnrapportert",
+                        "levereringstidspunkt": "2026-01-01T00:00:00",
+                        "opptjeningsland": null,
+                        "opptjeningsperiode": {
+                          "fom": null,
+                          "tom": null
+                        },
+                        "utbetaltIPeriode": "2025-01",
+                        "opplysningspliktigID": "974761076",
+                        "virksomhetID": "888888888",
+                        "inntektsmottakerID": "30056928150",
+                        "inngaarIGrunnlagForTrekk": true,
+                        "utloeserArbeidsgiveravgift": true,
+                        "informasjonsstatus": "InngaarAlltid",
+                        "beskrivelse": "fastloenn"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "aarMaaned": "2025-02",
+                  "arbeidsInntektInformasjon": {
+                    "inntektListe": [
+                      {
+                        "type": "Loennsinntekt",
+                        "beloep": 50000,
+                        "fordel": "kontantytelse",
+                        "inntektskilde": "A-ordningen",
+                        "inntektsperiodetype": "Maaned",
+                        "inntektsstatus": "LoependeInnrapportert",
+                        "levereringstidspunkt": "2026-01-01T00:00:00",
+                        "opptjeningsland": null,
+                        "opptjeningsperiode": {
+                          "fom": null,
+                          "tom": null
+                        },
+                        "utbetaltIPeriode": "2025-02",
+                        "opplysningspliktigID": "974761076",
+                        "virksomhetID": "888888888",
+                        "inntektsmottakerID": "30056928150",
+                        "inngaarIGrunnlagForTrekk": true,
+                        "utloeserArbeidsgiveravgift": true,
+                        "informasjonsstatus": "InngaarAlltid",
+                        "beskrivelse": "fastloenn"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "aarMaaned": "2025-03",
+                  "arbeidsInntektInformasjon": {
+                    "inntektListe": [
+                      {
+                        "type": "Loennsinntekt",
+                        "beloep": 50000,
+                        "fordel": "kontantytelse",
+                        "inntektskilde": "A-ordningen",
+                        "inntektsperiodetype": "Maaned",
+                        "inntektsstatus": "LoependeInnrapportert",
+                        "levereringstidspunkt": "2026-01-01T00:00:00",
+                        "opptjeningsland": null,
+                        "opptjeningsperiode": {
+                          "fom": null,
+                          "tom": null
+                        },
+                        "utbetaltIPeriode": "2025-03",
+                        "opplysningspliktigID": "974761076",
+                        "virksomhetID": "888888888",
+                        "inntektsmottakerID": "30056928150",
+                        "inngaarIGrunnlagForTrekk": true,
+                        "utloeserArbeidsgiveravgift": true,
+                        "informasjonsstatus": "InngaarAlltid",
+                        "beskrivelse": "fastloenn"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "aarMaaned": "2025-04",
+                  "arbeidsInntektInformasjon": {
+                    "inntektListe": [
+                      {
+                        "type": "Loennsinntekt",
+                        "beloep": 50000,
+                        "fordel": "kontantytelse",
+                        "inntektskilde": "A-ordningen",
+                        "inntektsperiodetype": "Maaned",
+                        "inntektsstatus": "LoependeInnrapportert",
+                        "levereringstidspunkt": "2026-01-01T00:00:00",
+                        "opptjeningsland": null,
+                        "opptjeningsperiode": {
+                          "fom": null,
+                          "tom": null
+                        },
+                        "utbetaltIPeriode": "2025-04",
+                        "opplysningspliktigID": "974761076",
+                        "virksomhetID": "888888888",
+                        "inntektsmottakerID": "30056928150",
+                        "inngaarIGrunnlagForTrekk": true,
+                        "utloeserArbeidsgiveravgift": true,
+                        "informasjonsstatus": "InngaarAlltid",
+                        "beskrivelse": "fastloenn"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "aarMaaned": "2025-05",
+                  "arbeidsInntektInformasjon": {
+                    "inntektListe": [
+                      {
+                        "type": "Loennsinntekt",
+                        "beloep": 50000,
+                        "fordel": "kontantytelse",
+                        "inntektskilde": "A-ordningen",
+                        "inntektsperiodetype": "Maaned",
+                        "inntektsstatus": "LoependeInnrapportert",
+                        "levereringstidspunkt": "2026-01-01T00:00:00",
+                        "opptjeningsland": null,
+                        "opptjeningsperiode": {
+                          "fom": null,
+                          "tom": null
+                        },
+                        "utbetaltIPeriode": "2025-05",
+                        "opplysningspliktigID": "974761076",
+                        "virksomhetID": "888888888",
+                        "inntektsmottakerID": "30056928150",
+                        "inngaarIGrunnlagForTrekk": true,
+                        "utloeserArbeidsgiveravgift": true,
+                        "informasjonsstatus": "InngaarAlltid",
+                        "beskrivelse": "fastloenn"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "aarMaaned": "2025-06",
+                  "arbeidsInntektInformasjon": {
+                    "inntektListe": [
+                      {
+                        "type": "Loennsinntekt",
+                        "beloep": 50000,
+                        "fordel": "kontantytelse",
+                        "inntektskilde": "A-ordningen",
+                        "inntektsperiodetype": "Maaned",
+                        "inntektsstatus": "LoependeInnrapportert",
+                        "levereringstidspunkt": "2026-01-01T00:00:00",
+                        "opptjeningsland": null,
+                        "opptjeningsperiode": {
+                          "fom": null,
+                          "tom": null
+                        },
+                        "utbetaltIPeriode": "2025-06",
+                        "opplysningspliktigID": "974761076",
+                        "virksomhetID": "888888888",
+                        "inntektsmottakerID": "30056928150",
+                        "inngaarIGrunnlagForTrekk": true,
+                        "utloeserArbeidsgiveravgift": true,
+                        "informasjonsstatus": "InngaarAlltid",
+                        "beskrivelse": "fastloenn"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "aarMaaned": "2025-07",
+                  "arbeidsInntektInformasjon": {
+                    "inntektListe": [
+                      {
+                        "type": "Loennsinntekt",
+                        "beloep": 50000,
+                        "fordel": "kontantytelse",
+                        "inntektskilde": "A-ordningen",
+                        "inntektsperiodetype": "Maaned",
+                        "inntektsstatus": "LoependeInnrapportert",
+                        "levereringstidspunkt": "2026-01-01T00:00:00",
+                        "opptjeningsland": null,
+                        "opptjeningsperiode": {
+                          "fom": null,
+                          "tom": null
+                        },
+                        "utbetaltIPeriode": "2025-07",
+                        "opplysningspliktigID": "974761076",
+                        "virksomhetID": "888888888",
+                        "inntektsmottakerID": "30056928150",
+                        "inngaarIGrunnlagForTrekk": true,
+                        "utloeserArbeidsgiveravgift": true,
+                        "informasjonsstatus": "InngaarAlltid",
+                        "beskrivelse": "fastloenn"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "aarMaaned": "2025-08",
+                  "arbeidsInntektInformasjon": {
+                    "inntektListe": [
+                      {
+                        "type": "Loennsinntekt",
+                        "beloep": 50000,
+                        "fordel": "kontantytelse",
+                        "inntektskilde": "A-ordningen",
+                        "inntektsperiodetype": "Maaned",
+                        "inntektsstatus": "LoependeInnrapportert",
+                        "levereringstidspunkt": "2026-01-01T00:00:00",
+                        "opptjeningsland": null,
+                        "opptjeningsperiode": {
+                          "fom": null,
+                          "tom": null
+                        },
+                        "utbetaltIPeriode": "2025-08",
+                        "opplysningspliktigID": "974761076",
+                        "virksomhetID": "888888888",
+                        "inntektsmottakerID": "30056928150",
+                        "inngaarIGrunnlagForTrekk": true,
+                        "utloeserArbeidsgiveravgift": true,
+                        "informasjonsstatus": "InngaarAlltid",
+                        "beskrivelse": "fastloenn"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "aarMaaned": "2025-09",
+                  "arbeidsInntektInformasjon": {
+                    "inntektListe": [
+                      {
+                        "type": "Loennsinntekt",
+                        "beloep": 50000,
+                        "fordel": "kontantytelse",
+                        "inntektskilde": "A-ordningen",
+                        "inntektsperiodetype": "Maaned",
+                        "inntektsstatus": "LoependeInnrapportert",
+                        "levereringstidspunkt": "2026-01-01T00:00:00",
+                        "opptjeningsland": null,
+                        "opptjeningsperiode": {
+                          "fom": null,
+                          "tom": null
+                        },
+                        "utbetaltIPeriode": "2025-09",
+                        "opplysningspliktigID": "974761076",
+                        "virksomhetID": "888888888",
+                        "inntektsmottakerID": "30056928150",
+                        "inngaarIGrunnlagForTrekk": true,
+                        "utloeserArbeidsgiveravgift": true,
+                        "informasjonsstatus": "InngaarAlltid",
+                        "beskrivelse": "fastloenn"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "aarMaaned": "2025-10",
+                  "arbeidsInntektInformasjon": {
+                    "inntektListe": [
+                      {
+                        "type": "Loennsinntekt",
+                        "beloep": 50000,
+                        "fordel": "kontantytelse",
+                        "inntektskilde": "A-ordningen",
+                        "inntektsperiodetype": "Maaned",
+                        "inntektsstatus": "LoependeInnrapportert",
+                        "levereringstidspunkt": "2026-01-01T00:00:00",
+                        "opptjeningsland": null,
+                        "opptjeningsperiode": {
+                          "fom": null,
+                          "tom": null
+                        },
+                        "utbetaltIPeriode": "2025-10",
+                        "opplysningspliktigID": "974761076",
+                        "virksomhetID": "888888888",
+                        "inntektsmottakerID": "30056928150",
+                        "inngaarIGrunnlagForTrekk": true,
+                        "utloeserArbeidsgiveravgift": true,
+                        "informasjonsstatus": "InngaarAlltid",
+                        "beskrivelse": "fastloenn"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "aarMaaned": "2025-11",
+                  "arbeidsInntektInformasjon": {
+                    "inntektListe": [
+                      {
+                        "type": "Loennsinntekt",
+                        "beloep": 50000,
+                        "fordel": "kontantytelse",
+                        "inntektskilde": "A-ordningen",
+                        "inntektsperiodetype": "Maaned",
+                        "inntektsstatus": "LoependeInnrapportert",
+                        "levereringstidspunkt": "2026-01-01T00:00:00",
+                        "opptjeningsland": null,
+                        "opptjeningsperiode": {
+                          "fom": null,
+                          "tom": null
+                        },
+                        "utbetaltIPeriode": "2025-11",
+                        "opplysningspliktigID": "974761076",
+                        "virksomhetID": "888888888",
+                        "inntektsmottakerID": "30056928150",
+                        "inngaarIGrunnlagForTrekk": true,
+                        "utloeserArbeidsgiveravgift": true,
+                        "informasjonsstatus": "InngaarAlltid",
+                        "beskrivelse": "fastloenn"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "aarMaaned": "2025-12",
+                  "arbeidsInntektInformasjon": {
+                    "inntektListe": [
+                      {
+                        "type": "Loennsinntekt",
+                        "beloep": 50000,
+                        "fordel": "kontantytelse",
+                        "inntektskilde": "A-ordningen",
+                        "inntektsperiodetype": "Maaned",
+                        "inntektsstatus": "LoependeInnrapportert",
+                        "levereringstidspunkt": "2026-01-01T00:00:00",
+                        "opptjeningsland": null,
+                        "opptjeningsperiode": {
+                          "fom": null,
+                          "tom": null
+                        },
+                        "utbetaltIPeriode": "2025-12",
                         "opplysningspliktigID": "974761076",
                         "virksomhetID": "888888888",
                         "inntektsmottakerID": "30056928150",
@@ -1011,11 +1011,11 @@
     {
       "request": {
         "method": "GET",
-        "url": "http://localhost:3333/api/fagsaker/MEL-1046/aarsavregninger?&aar=2024&resultattype=FASTSATT_TRYGDEAVGIFT",
+        "url": "http://localhost:3333/api/fagsaker/MEL-1046/aarsavregninger?&aar=2025&resultattype=FASTSATT_TRYGDEAVGIFT",
         "pathname": "/api/fagsaker/MEL-1046/aarsavregninger",
         "normalizedPath": "/api/fagsaker/:saksnummer/aarsavregninger",
         "query": {
-          "aar": "2024",
+          "aar": "2025",
           "resultattype": "FASTSATT_TRYGDEAVGIFT"
         },
         "headers": {
@@ -1036,11 +1036,11 @@
     {
       "request": {
         "method": "GET",
-        "url": "http://localhost:3333/api/fagsaker/MEL-1046/aarsavregninger?&aar=2024&resultattype=IKKE_FASTSATT",
+        "url": "http://localhost:3333/api/fagsaker/MEL-1046/aarsavregninger?&aar=2025&resultattype=IKKE_FASTSATT",
         "pathname": "/api/fagsaker/MEL-1046/aarsavregninger",
         "normalizedPath": "/api/fagsaker/:saksnummer/aarsavregninger",
         "query": {
-          "aar": "2024",
+          "aar": "2025",
           "resultattype": "IKKE_FASTSATT"
         },
         "headers": {
@@ -1590,7 +1590,7 @@
         },
         "body": {
           "aarsavregningID": 46,
-          "aar": 2024,
+          "aar": 2025,
           "tidligereTrygdeavgiftsGrunnlagsopplysninger": {
             "trygdeavgiftsgrunnlag": {
               "avgiftspliktigperioder": [],
@@ -1634,7 +1634,7 @@
           "authorization": "[REDACTED]"
         },
         "body": {
-          "aar": 2024
+          "aar": 2025
         }
       },
       "response": {
@@ -1645,7 +1645,7 @@
         },
         "body": {
           "aarsavregningID": 46,
-          "aar": 2024,
+          "aar": 2025,
           "tidligereTrygdeavgiftsGrunnlagsopplysninger": {
             "trygdeavgiftsgrunnlag": {
               "avgiftspliktigperioder": [],
@@ -1865,7 +1865,7 @@
                       "land": "NORGE",
                       "__typename": "StrukturertAdresseformat"
                     },
-                    "gyldigFraOgMed": "2015-12-12",
+                    "gyldigFraOgMed": "2016-01-05",
                     "gyldigTilOgMed": null,
                     "kilde": "Folkeregisteret",
                     "master": "FREG",
@@ -1888,7 +1888,7 @@
                       "land": "SVERIGE",
                       "__typename": "StrukturertAdresseformat"
                     },
-                    "gyldigFraOgMed": "2015-12-12",
+                    "gyldigFraOgMed": "2016-01-05",
                     "gyldigTilOgMed": null,
                     "master": "FREG",
                     "kilde": "Folkeregisteret",
@@ -2010,7 +2010,7 @@
                       "land": "NORGE",
                       "__typename": "StrukturertAdresseformat"
                     },
-                    "gyldigFraOgMed": "2015-12-12",
+                    "gyldigFraOgMed": "2016-01-05",
                     "gyldigTilOgMed": null,
                     "kilde": "Folkeregisteret",
                     "master": "FREG",
@@ -2033,7 +2033,7 @@
                       "land": "SVERIGE",
                       "__typename": "StrukturertAdresseformat"
                     },
-                    "gyldigFraOgMed": "2015-12-12",
+                    "gyldigFraOgMed": "2016-01-05",
                     "gyldigTilOgMed": null,
                     "master": "FREG",
                     "kilde": "Folkeregisteret",
@@ -2406,11 +2406,11 @@
           "authorization": "[REDACTED]"
         },
         "body": {
-          "operationName": "hentStatsborgerskap",
+          "operationName": "hentPersonopplysninger",
           "variables": {
             "behandlingID": 46
           },
-          "query": "query hentStatsborgerskap($behandlingID: Long!) {\n  hentSaksopplysninger(behandlingID: $behandlingID) {\n    persondata {\n      statsborgerskap {\n        land\n        bekreftelsesdato\n        gyldigFraOgMed\n        gyldigTilOgMed\n        master\n        kilde\n        erHistorisk\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}"
+          "query": "query hentPersonopplysninger($behandlingID: Long!) {\n  hentSaksopplysninger(behandlingID: $behandlingID) {\n    persondata {\n      navn {\n        fornavn\n        mellomnavn\n        etternavn\n        __typename\n      }\n      kjoenn\n      folkeregisterpersonstatuser {\n        kode\n        erHistorisk\n        __typename\n      }\n      folkeregisteridentifikator\n      statsborgerskap {\n        land\n        erHistorisk\n        __typename\n      }\n      sivilstand {\n        type\n        erHistorisk\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}"
         }
       },
       "response": {
@@ -2423,16 +2423,58 @@
           "data": {
             "hentSaksopplysninger": {
               "persondata": {
+                "navn": {
+                  "fornavn": "KARAFFEL",
+                  "mellomnavn": null,
+                  "etternavn": "TRIVIELL",
+                  "__typename": "Navn"
+                },
+                "kjoenn": "UKJENT",
+                "folkeregisterpersonstatuser": [
+                  {
+                    "kode": "BOSATT",
+                    "erHistorisk": false,
+                    "__typename": "Folkeregisterpersonstatus"
+                  },
+                  {
+                    "kode": "MIDLERTIDIG",
+                    "erHistorisk": true,
+                    "__typename": "Folkeregisterpersonstatus"
+                  },
+                  {
+                    "kode": "UTFLYTTET",
+                    "erHistorisk": true,
+                    "__typename": "Folkeregisterpersonstatus"
+                  }
+                ],
+                "folkeregisteridentifikator": "30056928150",
                 "statsborgerskap": [
                   {
                     "land": "NORGE",
-                    "bekreftelsesdato": null,
-                    "gyldigFraOgMed": "1990-01-01",
-                    "gyldigTilOgMed": null,
-                    "master": "FREG",
-                    "kilde": "Folkeregisteret",
                     "erHistorisk": false,
                     "__typename": "Statsborgerskap"
+                  }
+                ],
+                "sivilstand": [
+                  {
+                    "type": "Gift",
+                    "erHistorisk": false,
+                    "__typename": "Sivilstand"
+                  },
+                  {
+                    "type": "Gift",
+                    "erHistorisk": false,
+                    "__typename": "Sivilstand"
+                  },
+                  {
+                    "type": "Separert",
+                    "erHistorisk": true,
+                    "__typename": "Sivilstand"
+                  },
+                  {
+                    "type": "Skilt",
+                    "erHistorisk": true,
+                    "__typename": "Sivilstand"
                   }
                 ],
                 "__typename": "Personopplysninger"
