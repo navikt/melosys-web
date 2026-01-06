@@ -51,17 +51,94 @@ export async function finnKnapp(label: string, scope: Page | Locator): Promise<L
 }
 
 /**
- * Generisk funksjon for å velge en radio-knapp
- * @param navn - Navn/label på radio-knappen
+ * Finn en checkbox basert på label/navn og verifiser at den finnes og er unik
+ * @param label - Checkboxens label/navn (synlig tekst eller aria-label)
  * @param scope - Page eller Locator å søke innenfor
+ * @returns Locator for checkboxen (garantert å finnes og være unik)
  */
-export async function velgRadio(navn: string, scope: Page | Locator): Promise<void> {
-  const radio = scope.getByRole("radio", { name: navn });
-  const count = await radio.count();
-  expect(count, `Radio-knapp "${navn}" skal finnes`).toBeGreaterThan(0);
-  expect(count, `Radio-knapp "${navn}" skal være unik - bruk smalere scope`).toBe(1);
+export async function finnCheckbox(label: string, scope: Page | Locator): Promise<Locator> {
+  const checkbox = scope.getByRole("checkbox", { name: label });
+  const count = await checkbox.count();
 
-  await expect(radio, `Radio-knapp "${navn}" skal være synlig`).toBeVisible();
+  expect(count, `Checkbox "${label}" skal finnes`).toBeGreaterThan(0);
+  expect(count, `Checkbox "${label}" skal være unik - bruk smalere scope`).toBe(1);
+
+  return checkbox;
+}
+
+/**
+ * Finn en checkbox-gruppe (fieldset med legend) og returner scoped locator
+ * @param legend - Tekst i legend-elementet (kan være delvis match)
+ * @param scope - Page eller Locator å søke innenfor
+ * @returns Locator for fieldset-en (scoped til gruppen)
+ */
+export async function finnCheckboxGroup(legend: string, scope: Page | Locator): Promise<Locator> {
+  const fieldset = scope.locator("fieldset").filter({
+    has: scope.locator(`legend:has-text("${legend}")`),
+  });
+  const count = await fieldset.count();
+
+  expect(count, `Checkbox-gruppe "${legend}" skal finnes`).toBeGreaterThan(0);
+  expect(count, `Checkbox-gruppe "${legend}" skal være unik - bruk smalere scope`).toBe(1);
+
+  return fieldset;
+}
+
+/**
+ * Finn en radio-gruppe (role="group") og verifiser synlighet
+ * @param navn - Gruppens accessible name (fra legend eller aria-label)
+ * @param scope - Page eller Locator å søke innenfor
+ * @param options - Valgfrie options: timeout (ms), erSynlig (default true)
+ * @returns Locator for gruppen (scoped)
+ */
+export async function finnRadioGroup(
+  navn: string,
+  scope: Page | Locator,
+  options?: { timeout?: number; erSynlig?: boolean },
+): Promise<Locator> {
+  const gruppe = scope.getByRole("group", { name: navn });
+  const erSynlig = options?.erSynlig ?? true;
+  const timeoutOptions = options?.timeout ? { timeout: options.timeout } : undefined;
+
+  if (erSynlig) {
+    await expect(gruppe, `Radio-gruppe "${navn}" skal være synlig`).toBeVisible(timeoutOptions);
+    const count = await gruppe.count();
+    expect(count, `Radio-gruppe "${navn}" skal være unik - bruk smalere scope`).toBe(1);
+  } else {
+    await expect(gruppe, `Radio-gruppe "${navn}" skal ikke være synlig`).not.toBeVisible(timeoutOptions);
+  }
+
+  return gruppe;
+}
+
+/**
+ * Finn en radioknapp basert på label/navn og verifiser at den finnes og er unik
+ * @param label - Radioknappens label/navn (synlig tekst eller aria-label)
+ * @param scope - Page eller Locator å søke innenfor
+ * @param timeout - Valgfri timeout i ms for å vente på at elementet skal dukke opp
+ * @returns Locator for radioknappen (garantert å finnes og være unik)
+ */
+export async function finnRadioknapp(label: string, scope: Page | Locator, timeout?: number): Promise<Locator> {
+  const radio = scope.getByRole("radio", { name: label });
+
+  // Verifiser at radioknappen er synlig (med valgfri timeout)
+  const options = timeout ? { timeout } : undefined;
+  await expect(radio, `Radioknapp "${label}" skal være synlig`).toBeVisible(options);
+
+  const count = await radio.count();
+  expect(count, `Radioknapp "${label}" skal være unik - bruk smalere scope`).toBe(1);
+
+  return radio;
+}
+
+/**
+ * Finn og velg en radioknapp
+ * @param navn - Navn/label på radioknappen
+ * @param scope - Page eller Locator å søke innenfor
+ * @param timeout - Valgfri timeout i ms for å vente på at elementet skal dukke opp
+ */
+export async function velgRadioknapp(navn: string, scope: Page | Locator, timeout?: number): Promise<void> {
+  const radio = await finnRadioknapp(navn, scope, timeout);
 
   const isChecked = await radio.isChecked();
   if (!isChecked) {
@@ -70,19 +147,39 @@ export async function velgRadio(navn: string, scope: Page | Locator): Promise<vo
 }
 
 /**
- * Generisk funksjon for å velge verdi fra en combobox/select
+ * Finn en combobox/select basert på label/navn og verifiser at den finnes og er unik
+ * @param navn - Comboboxens label/navn (synlig tekst eller aria-label)
+ * @param scope - Page eller Locator å søke innenfor
+ * @param timeout - Valgfri timeout i ms for å vente på at elementet skal dukke opp
+ * @returns Locator for comboboxen (garantert å finnes og være unik)
+ */
+export async function finnCombobox(navn: string, scope: Page | Locator, timeout?: number): Promise<Locator> {
+  const combobox = scope.getByRole("combobox", { name: navn });
+
+  const options = timeout ? { timeout } : undefined;
+  await expect(combobox, `Combobox "${navn}" skal være synlig`).toBeVisible(options);
+
+  const count = await combobox.count();
+  expect(count, `Combobox "${navn}" skal være unik - bruk smalere scope`).toBe(1);
+
+  return combobox;
+}
+
+/**
+ * Finn og velg verdi fra en combobox/select
  * @param navn - Navn/label på combobox/select
  * @param verdi - Verdien som skal velges (label)
  * @param scope - Page eller Locator å søke innenfor
+ * @param timeout - Valgfri timeout i ms for å vente på at elementet skal dukke opp
  */
-export async function velgFraListe(navn: string, verdi: string, scope: Page | Locator): Promise<void> {
-  const select = scope.getByRole("combobox", { name: navn });
-  const count = await select.count();
-  expect(count, `Combobox "${navn}" skal finnes`).toBeGreaterThan(0);
-  expect(count, `Combobox "${navn}" skal være unik - bruk smalere scope`).toBe(1);
-
-  await expect(select, `Combobox "${navn}" skal være synlig`).toBeVisible();
-  await select.selectOption({ label: verdi });
+export async function velgFraListe(
+  navn: string,
+  verdi: string,
+  scope: Page | Locator,
+  timeout?: number,
+): Promise<void> {
+  const combobox = await finnCombobox(navn, scope, timeout);
+  await combobox.selectOption({ label: verdi });
 }
 
 /**

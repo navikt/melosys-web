@@ -1,7 +1,7 @@
 import { expect, Locator, Page } from "@playwright/test";
 import { BehandlingPage } from "./behandling.page";
 import { PrepopulertSaksnummer } from "../../utils/testdataUtils";
-import { finnKnapp, setDatoFelt, velgRadio } from "../../utils/testUtils";
+import { finnCheckboxGroup, finnCombobox, finnKnapp, setDatoFelt, velgRadioknapp } from "../../utils/testUtils";
 import { UI_TEXTS } from "../../config/ui-texts";
 
 /**
@@ -68,9 +68,7 @@ export class StegvelgerPage extends BehandlingPage {
     await knapp.click();
 
     // Vent på at tittelen endres (vi er på nytt steg)
-    await expect(this.stegTittel, `${this.ctx}: Steget endret seg ikke etter klikk`).not.toHaveText(nåværendeTittel!, {
-      timeout: 10000,
-    });
+    await expect(this.stegTittel, `${this.ctx}: Steget endret seg ikke etter klikk`).not.toHaveText(nåværendeTittel!);
   }
 
   /**
@@ -82,12 +80,7 @@ export class StegvelgerPage extends BehandlingPage {
     await knapp.click();
 
     // Vent på at tittelen endres
-    await expect(this.stegTittel, `${this.ctx}: Steget endret seg ikke etter tilbake`).not.toHaveText(
-      nåværendeTittel!,
-      {
-        timeout: 10000,
-      },
-    );
+    await expect(this.stegTittel, `${this.ctx}: Steget endret seg ikke etter tilbake`).not.toHaveText(nåværendeTittel!);
   }
 
   /**
@@ -101,14 +94,7 @@ export class StegvelgerPage extends BehandlingPage {
    * Verifiser at vi er på forventet steg
    */
   async verifiserSteg(forventetTittel: string | RegExp): Promise<void> {
-    await expect(this.stegTittel, `${this.ctx}: Feil steg-tittel`).toHaveText(forventetTittel, { timeout: 10000 });
-  }
-
-  /**
-   * Verifiser at progressbar viser forventet antall steg
-   */
-  async verifiserAntallSteg(forventetAntall: number): Promise<void> {
-    await expect(this.progressbarSteg, `${this.ctx}: Feil antall steg i progressbar`).toHaveCount(forventetAntall);
+    await expect(this.stegTittel, `${this.ctx}: Feil steg-tittel`).toHaveText(forventetTittel);
   }
 
   /**
@@ -136,27 +122,22 @@ export class StegvelgerPage extends BehandlingPage {
     await this.page.keyboard.press("Tab"); // Lukk evt. datepicker
 
     // Velg "Velg land fra liste" radio
-    await velgRadio("Velg land fra liste", this.page);
+    await velgRadioknapp("Velg land fra liste", this.page);
 
     // Vent på at MultiSelect-komponenten vises etter radioknapp-klikk
     const landMultiSelect = this.page.locator(".land_multiselect");
-    await expect(landMultiSelect, `${this.ctx}: Land MultiSelect dukket ikke opp etter radioknapp-klikk`).toBeVisible({
-      timeout: 5000,
-    });
+    await expect(landMultiSelect, `${this.ctx}: Land MultiSelect dukket ikke opp etter radioknapp-klikk`).toBeVisible();
 
     // Åpne dropdown og velg land
     const landInput = landMultiSelect.locator("input");
     await landInput.click();
 
     const landOption = this.page.getByRole("option", { name: arbeidsland });
-    await expect(landOption, `${this.ctx}: Land-option "${arbeidsland}" ikke funnet i dropdown`).toBeVisible({
-      timeout: 5000,
-    });
+    await expect(landOption, `${this.ctx}: Land-option "${arbeidsland}" ikke funnet i dropdown`).toBeVisible();
     await landOption.click();
 
     // Velg trygdedekning fra dropdown
-    const trygdedekningSelect = this.page.getByRole("combobox", { name: "Trygdedekning" });
-    await expect(trygdedekningSelect, `${this.ctx}: Fant ikke trygdedekning-dropdown`).toBeVisible({ timeout: 5000 });
+    const trygdedekningSelect = await finnCombobox("Trygdedekning", this.page, 5000);
     await trygdedekningSelect.selectOption({ index: 1 });
 
     // Vent på at validering kjører
@@ -167,9 +148,13 @@ export class StegvelgerPage extends BehandlingPage {
    * Velg første virksomhet i Virksomhet-steget (FTRL)
    */
   async velgFørsteVirksomhet(): Promise<void> {
-    const virksomhetCheckbox = this.page.locator('input[type="checkbox"]').first();
-    await expect(virksomhetCheckbox, `${this.ctx}: Fant ingen virksomhet-checkbox`).toBeVisible({ timeout: 5000 });
+    const virksomhetGruppe = await finnCheckboxGroup("Velg virksomhet(er)", this.page);
+    const virksomhetCheckbox = virksomhetGruppe.getByRole("checkbox").first();
+    await expect(virksomhetCheckbox, `${this.ctx}: Fant ingen virksomhet-checkbox`).toBeVisible();
     await virksomhetCheckbox.check();
+
+    // Wait for form validation to update
+    await this.page.waitForTimeout(300);
   }
 
   /**
@@ -177,8 +162,7 @@ export class StegvelgerPage extends BehandlingPage {
    * @param bestemmelse Søkestreng for bestemmelse (kan være delvis match, f.eks. "§ 2-5")
    */
   async velgBestemmelse(bestemmelse: string): Promise<void> {
-    const bestemmelseSelect = this.page.getByRole("combobox", { name: "Bestemmelse" });
-    await expect(bestemmelseSelect, `${this.ctx}: Fant ikke bestemmelse-dropdown`).toBeVisible({ timeout: 5000 });
+    const bestemmelseSelect = await finnCombobox("Bestemmelse", this.page, 5000);
 
     // Hent alle options og finn første som inneholder søkestrengen
     const options = bestemmelseSelect.locator("option");
@@ -281,24 +265,9 @@ export class StegvelgerPage extends BehandlingPage {
     await setDatoFelt("Fra og med", fomDato, this.page);
 
     // Velg land fra dropdown
-    const landSelect = this.page.getByRole("combobox", { name: "Land" });
-    if (await landSelect.isVisible({ timeout: 2000 }).catch(() => false)) {
-      // Prøv å velge basert på landnavn (label)
-      try {
-        await landSelect.selectOption({ label: land });
-      } catch {
-        // Fallback: velg første ikke-tomme alternativ
-        await landSelect.selectOption({ index: 1 });
-      }
-    }
+    const landSelect = await finnCombobox("Land", this.page, 2000);
+    await landSelect.selectOption({ label: land });
 
     await this.page.waitForTimeout(500);
-  }
-
-  /**
-   * @deprecated Bruk fyllUtEosIkkeYrkesaktivInngang() i stedet
-   */
-  async fyllUtEosInngangMinimum(): Promise<void> {
-    await this.fyllUtEosIkkeYrkesaktivInngang();
   }
 }

@@ -4,7 +4,7 @@ import { expect, test } from "../../../recording/fixtures";
 import { getTestMode } from "../../../config/mode";
 import { HovedsidePage, USER_ID_VALID } from "../../../pages/hovedside.page";
 import { OpprettNySakPage } from "../../../pages/opprett-ny-sak/opprett-ny-sak.page";
-import { TIMEOUT_FOR_COMPLEX_TESTS } from "../../../utils/testUtils";
+import { TIMEOUT_FOR_COMPLEX_TESTS, velgRadioknapp } from "../../../utils/testUtils";
 import { hentPrepopulertSakUrl } from "../../../utils/testdataUtils";
 import { BehandlingPage } from "../../../pages/behandling/behandling.page";
 
@@ -71,7 +71,7 @@ test.describe("'Utenfor avtaleland' behandlingslogikk", () => {
     const eksisterendeSak = opprettNySakPage.finnSakBySaksnummer(sakId);
     await eksisterendeSak.click();
 
-    await opprettNySakPage.velgBehandlingstypeRadio("Årsavregning");
+    await velgRadioknapp("Årsavregning", opprettNySakPage.page);
 
     // For Årsavregning må vi velge en behandlingsårsak før vi kan opprette behandlingen
     await opprettNySakPage.velgBehandlingsaarsak("Søknad");

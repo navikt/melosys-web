@@ -75,6 +75,6 @@ export class HovedsidePage {
     await expect(
       this.page.locator("section.sokresultat").getByRole("heading", { name: UI_TEXTS.HEADINGS.SAKSOVERSIKT, level: 1 }),
       `Forventet at søkeresultatsiden med '${UI_TEXTS.HEADINGS.SAKSOVERSIKT}' vises etter klikk på Søk-knappen`,
-    ).toBeVisible({ timeout: 15000 });
+    ).toBeVisible();
   }
 }

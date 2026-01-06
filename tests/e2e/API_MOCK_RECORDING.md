@@ -110,14 +110,14 @@ Each test generates a JSON file with recorded API exchanges:
 ```json
 {
   "version": "1.0",
-  "recordedAt": "2025-12-03T21:23:27.682Z",
+  "recordedAt": "2025-01-01T00:00:00.000Z",
   "testFile": "tests/e2e/specs/basic/hovedside.spec.ts",
   "testName": "Hovedsiden lastes korrekt",
   "exchanges": [
     {
       "request": {
-        "id": "b8d1080ddc67",
         "method": "GET",
+        "url": "http://localhost:8080/api/featuretoggle?features=...",
         "pathname": "/api/featuretoggle",
         "normalizedPath": "/api/featuretoggle",
         "query": { "features": "..." },
@@ -126,14 +126,48 @@ Each test generates a JSON file with recorded API exchanges:
       },
       "response": {
         "status": 200,
+        "statusText": "OK",
+        "headers": { "content-type": "application/json" },
         "body": { "feature.toggle": true }
-      },
-      "duration": 16,
-      "dynamicFields": []
+      }
     }
   ]
 }
 ```
+
+**Note:** The `recordedAt` timestamp is always set to `2025-01-01T00:00:00.000Z` for deterministic recordings.
+
+## Recording Stability
+
+The recording system is designed to produce stable, deterministic recordings that don't change unnecessarily when re-recorded.
+
+### Deterministic Features
+
+1. **Fixed timestamp**: `recordedAt` is always `2025-01-01T00:00:00.000Z`
+2. **Sorted exchanges**: Exchanges are sorted by `method|normalizedPath|query|bodyHash`
+3. **Sorted arrays**: Arrays in responses are sorted by known keys (id, kode, etc.)
+4. **Normalized values**: Dynamic fields (dates, UUIDs) are normalized to fixed values
+
+### Skip Unchanged Recordings
+
+When re-recording, the recorder compares the new recording with the existing file. If they are equivalent (same requests/responses, ignoring metadata), the file is **not rewritten**:
+
+```
+[Recorder] Skipped (unchanged): tests/e2e/recordings/specs/basic/hovedside.json
+```
+
+This prevents unnecessary git diffs when recordings haven't actually changed.
+
+### Equivalence Comparison
+
+Two recordings are considered equivalent if:
+
+- Same number of exchanges
+- Same request signatures (method, pathname, query, body)
+- Same response status codes
+- Same response bodies (after normalization)
+
+Metadata like `recordedAt` is ignored during comparison.
 
 ## Request Matching
 
@@ -171,7 +205,34 @@ The matcher distinguishes between two types of paths:
 
 ## Dynamic Value Handling
 
-These fields are automatically transformed during playback:
+### Normalization During Recording
+
+To ensure recordings are stable and don't change unnecessarily when re-recorded, dynamic values are normalized **during recording**:
+
+**Fields that are normalized:**
+
+- `registrertDato`, `endretDato`, `opprettetTidspunkt`, `endretTidspunkt`
+- `sistOppdatert`, `mottaksdato`, `behandlingsfrist`, `svarFrist`
+- `opprettetDato`, `sisteOpplysningerHentetDato`, `opprettelsestidspunkt`
+- `sistBekreftet`, `correlationId`
+
+**Normalization patterns:**
+
+| Input Format | Normalized Value |
+|--------------|------------------|
+| ISO timestamp (`2025-12-11T14:00:28.983Z`) | `2025-01-01T00:00:00.000Z` |
+| ISO date (`2025-12-11`) | `2025-01-01` |
+| Norwegian date (`11.12.2025`) | `01.01.2025` |
+| UUID (for `correlationId`) | `00000000-0000-0000-0000-000000000000` |
+| Embedded timestamps (`--- 11.12.2025 15:53 ---`) | `--- 01.01.2025 00:00 ---` |
+
+**Array sorting:**
+
+Arrays in responses are sorted deterministically by known keys (`id`, `orgnr`, `kode`, `saksnummer`, `behandlingId`, `navn`, `land`, `postnummer`) to ensure consistent ordering.
+
+### Transformation During Playback
+
+The mock server can also transform date fields during playback (if needed):
 
 - `opprettetTidspunkt`, `endretTidspunkt`, `sistOppdatert`
 - `fom`, `tom`, `startdato`, `sluttdato`
@@ -604,7 +665,7 @@ test.skip("test name", async ({ page }) => {
 
 ---
 
-## Current Status (as of 2025-12-08)
+## Current Status (as of 2025-12-12)
 
 | Mode | Passed | Failed | Skipped | Notes |
 |------|--------|--------|---------|-------|

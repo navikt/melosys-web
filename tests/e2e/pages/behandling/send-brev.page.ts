@@ -1,6 +1,7 @@
 import { Page, Locator, expect } from "@playwright/test";
 import { BehandlingPage } from "./behandling.page";
 import { PrepopulertSaksnummer } from "../../utils/testdataUtils";
+import { finnCombobox } from "../../utils/testUtils";
 
 export class SendBrevPage extends BehandlingPage {
   constructor(page: Page, saksnummer: PrepopulertSaksnummer) {
@@ -33,17 +34,6 @@ export class SendBrevPage extends BehandlingPage {
     return scope.locator('select[name="mottaker"]');
   }
 
-  // Behold ARIA-combobox for brevmal, men ha fallback til native select[name="type"]
-  private get brevmalCombobox(): Locator {
-    const scope = this.sendBrevPanel ?? this.page;
-    return scope.getByRole("combobox", { name: this.labels.brevmal });
-  }
-
-  private get brevmalNativeSelect(): Locator {
-    const scope = this.sendBrevPanel ?? this.page;
-    return scope.locator('select[name="type"]');
-  }
-
   async clickSendBrevTab(): Promise<void> {
     const tab = this.sendBrevTab;
 
@@ -71,15 +61,8 @@ export class SendBrevPage extends BehandlingPage {
   }
 
   private async waitForBrevmalSelect(timeoutMs: number = 5000): Promise<Locator> {
-    // Vent på enten aria-combobox eller native select[name="type"]
-    const combo = this.brevmalCombobox;
-    if (await combo.count()) {
-      await combo.waitFor({ state: "visible", timeout: timeoutMs });
-      return combo;
-    }
-    const nativeSel = this.brevmalNativeSelect;
-    await nativeSel.waitFor({ state: "visible", timeout: timeoutMs });
-    return nativeSel;
+    const scope = this.sendBrevPanel ?? this.page;
+    return await finnCombobox(this.labels.brevmal, scope, timeoutMs);
   }
 
   async selectFirstMottaker() {
@@ -96,8 +79,7 @@ export class SendBrevPage extends BehandlingPage {
 
   async selectFirstBrevmal() {
     const ctl = await this.waitForBrevmalSelect();
-    // Hvis dette er en native <select>, velg første reelle alternativ.
-    // Hvis det er en combobox, bruk tastatur (ArrowDown+Enter).
+    // Native select bruker selectOption, ARIA combobox bruker tastaturnavigasjon
     const tag = await ctl.evaluate((el) => el.tagName.toLowerCase());
     if (tag === "select") {
       await ctl.selectOption({ index: 1 });
@@ -106,12 +88,12 @@ export class SendBrevPage extends BehandlingPage {
     }
   }
 
-  // Valgfritt: velg brevmal via synlig tekst (f.eks. "Innhenting av inntektsopplysninger for årsavregning")
+  // Velg brevmal via synlig tekst (f.eks. "Innhenting av inntektsopplysninger for årsavregning")
   async selectBrevmalByLabel(label: string | RegExp) {
     const ctl = await this.waitForBrevmalSelect();
     const tag = await ctl.evaluate((el) => el.tagName.toLowerCase());
     if (tag === "select") {
-      // Map label -> value via evaluate og bruk selectOption
+      // Native select: finn option-verdi og bruk selectOption
       const value = await ctl.evaluate(
         (el, l) => {
           const sel = el as HTMLSelectElement;
@@ -124,6 +106,7 @@ export class SendBrevPage extends BehandlingPage {
       expect(value, `${this.ctx}: Fant ikke brevmalen "${label}"`).toBeTruthy();
       await ctl.selectOption(value);
     } else {
+      // ARIA combobox: klikk og velg fra listbox
       await ctl.click({ force: true });
       const scope = this.sendBrevPanel ?? this.page;
       await scope.getByRole("option", { name: label }).first().click();
