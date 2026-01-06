@@ -19,6 +19,7 @@
 import { test as base, expect } from "@playwright/test";
 import { ApiRecorder } from "./recorder";
 import { shouldRecordResponses, shouldUseMockServer, getApiBaseUrl } from "../config/mode";
+import { runAxeAnalyze } from "../utils/axeUtils";
 
 // Header name used to identify workers (must match mock server)
 const WORKER_ID_HEADER = "x-playwright-worker-id";
@@ -91,6 +92,14 @@ export const test = base.extend<{ apiRecorder: ApiRecorder | null }>({
 
     // Run the test
     await use(recorder);
+
+    // After test: run accessibility analysis (only if test was not skipped)
+    // When a test is skipped, the page may be empty which causes false positives
+    const pageUrl = page.url();
+    const wasSkipped = pageUrl === "about:blank" || pageUrl === "";
+    if (!wasSkipped) {
+      await runAxeAnalyze(page, testInfo.title);
+    }
 
     // After test: save recordings
     if (recorder && recorder.exchangeCount > 0) {

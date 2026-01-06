@@ -3,7 +3,6 @@ import { TIMEOUT_FOR_COMPLEX_TESTS } from "../../utils/testUtils";
 import { BehandlingPage } from "../../pages/behandling/behandling.page";
 import { AarsavregningPage } from "../../pages/behandling/aarsavregning.page";
 import { hentPrepopulertSakUrl, PrepopulertSaksnummer } from "../../utils/testdataUtils";
-import { runAxeAnalyze } from "../../utils/axeUtils";
 import { Page } from "@playwright/test";
 
 /**
@@ -92,8 +91,6 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
       // Verifiser at det ikke er valideringsfeil
       await aarsavregningPage.verifiserIngenFeilmelding("utenfor");
       await aarsavregningPage.verifiserIngenFeilmelding("overlapper");
-
-      await runAxeAnalyze(page, testInfo.title);
     });
 
     test("Datepicker skal fungere for fra-dato på ny medlemskapsperiode", async ({ page, apiRecorder }, testInfo) => {
@@ -126,8 +123,6 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
       // Verifiser at feltet har en verdi
       const fomVerdi = await aarsavregningPage.getMedlemskapsperiodeFomDato(nyPeriodeIndex);
       expect(fomVerdi).not.toBe("");
-
-      await runAxeAnalyze(page, testInfo.title);
     });
 
     test("Kan legge til sammenhengende medlemskapsperiode innenfor samme år", async ({
@@ -157,8 +152,6 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
       await aarsavregningPage.verifiserIngenFeilmelding("overlapper");
       await aarsavregningPage.verifiserIngenFeilmelding("ugyldig");
       await aarsavregningPage.verifiserIngenFeilmelding("må være etter");
-
-      await runAxeAnalyze(page, testInfo.title);
     });
   });
 
@@ -183,7 +176,7 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
       await aarsavregningPage.velgTrygdedekning(nyMedlemIndex, "Helse- og pensjonsdel (§ 2-9)");
 
       // Legg til skatteforholdsperiode
-      await aarsavregningPage.leggTilSkatteforholdsperiode();
+      await aarsavregningPage.klikkLeggTilSkatteforhold();
 
       // Fyll ut skatteforholdsperiode innenfor medlemskapsperioden
       await aarsavregningPage.fyllUtSkatteforholdFomDato(0, lagDato("01.01"));
@@ -192,8 +185,6 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
 
       // Verifiser at det ikke er valideringsfeil om "utenfor medlemskapsperioden"
       await aarsavregningPage.verifiserIngenFeilmelding("utenfor medlemskapsperioden");
-
-      await runAxeAnalyze(page, testInfo.title);
     });
 
     test("Kan utvide skatteforholdsperiode innenfor medlemskapsperiode", async ({ page, apiRecorder }, testInfo) => {
@@ -216,7 +207,7 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
       await aarsavregningPage.velgTrygdedekning(nyMedlemIndex, "Helse- og pensjonsdel (§ 2-9)");
 
       // Legg til skatteforholdsperiode
-      await aarsavregningPage.leggTilSkatteforholdsperiode();
+      await aarsavregningPage.klikkLeggTilSkatteforhold();
       await aarsavregningPage.fyllUtSkatteforholdFomDato(0, lagDato("01.01"));
       await aarsavregningPage.fyllUtSkatteforholdTomDato(0, lagDato("30.06"));
       await aarsavregningPage.velgSkatteplikttype(0, "Allmennpliktig");
@@ -227,8 +218,6 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
       // Verifiser at det ikke er valideringsfeil
       await aarsavregningPage.verifiserIngenFeilmelding("utenfor medlemskapsperioden");
       await aarsavregningPage.verifiserIngenFeilmelding("ugyldig");
-
-      await runAxeAnalyze(page, testInfo.title);
     });
   });
 
@@ -255,8 +244,6 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
 
       // Verifiser at knappen er klikkbar (ikke disabled)
       await expect(leggTilKnapp).toBeEnabled();
-
-      await runAxeAnalyze(page, testInfo.title);
     });
 
     test("kan legge til ny periode med pliktig bestemmelse og delt grunnlag", async ({
@@ -291,8 +278,6 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
       // Verifiser at det ikke er valideringsfeil
       await aarsavregningPage.verifiserIngenFeilmelding("utenfor");
       await aarsavregningPage.verifiserIngenFeilmelding("overlapper");
-
-      await runAxeAnalyze(page, testInfo.title);
     });
   });
 
@@ -320,7 +305,7 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
       await aarsavregningPage.velgSkatteplikttype(0, "Nei");
 
       // Legg til inntektsperiode
-      await aarsavregningPage.leggTilInntektsperiode();
+      await aarsavregningPage.klikkLeggTilInntekt();
 
       // Fyll ut inntektsperiode innenfor medlemskapsperioden
       await aarsavregningPage.fyllUtInntektsperiodeFomDato(0, lagDato("01.01"));
@@ -330,8 +315,6 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
 
       // Verifiser at det ikke er valideringsfeil om "utenfor medlemskapsperioden"
       await aarsavregningPage.verifiserIngenFeilmelding("utenfor medlemskapsperioden");
-
-      await runAxeAnalyze(page, testInfo.title);
     });
 
     test("Kan utvide inntektsperiode innenfor medlemskapsperiode", async ({ page, apiRecorder }, testInfo) => {
@@ -359,7 +342,7 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
       await aarsavregningPage.velgSkatteplikttype(0, "Nei");
 
       // Legg til inntektsperiode
-      await aarsavregningPage.leggTilInntektsperiode();
+      await aarsavregningPage.klikkLeggTilInntekt();
       await aarsavregningPage.fyllUtInntektsperiodeFomDato(0, lagDato("01.01"));
       await aarsavregningPage.fyllUtInntektsperiodeTomDato(0, lagDato("31.03"));
       await aarsavregningPage.velgKildetype(0, "Arbeidsinntekt");
@@ -371,8 +354,6 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
       // Verifiser at det ikke er valideringsfeil
       await aarsavregningPage.verifiserIngenFeilmelding("utenfor medlemskapsperioden");
       await aarsavregningPage.verifiserIngenFeilmelding("ugyldig");
-
-      await runAxeAnalyze(page, testInfo.title);
     });
 
     test("Kan legge til flere inntektsperioder innenfor samme år", async ({ page, apiRecorder }, testInfo) => {
@@ -400,14 +381,14 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
       await aarsavregningPage.velgSkatteplikttype(0, "Nei");
 
       // Legg til første inntektsperiode
-      await aarsavregningPage.leggTilInntektsperiode();
+      await aarsavregningPage.klikkLeggTilInntekt();
       await aarsavregningPage.fyllUtInntektsperiodeFomDato(0, lagDato("01.01"));
       await aarsavregningPage.fyllUtInntektsperiodeTomDato(0, lagDato("30.06"));
       await aarsavregningPage.velgKildetype(0, "Arbeidsinntekt");
       await aarsavregningPage.fyllUtBruttoInntekt(0, "300000");
 
       // Legg til andre inntektsperiode
-      await aarsavregningPage.leggTilInntektsperiode();
+      await aarsavregningPage.klikkLeggTilInntekt();
       await aarsavregningPage.fyllUtInntektsperiodeFomDato(1, lagDato("01.07"));
       await aarsavregningPage.fyllUtInntektsperiodeTomDato(1, lagDato("31.12"));
       await aarsavregningPage.velgKildetype(1, "Arbeidsinntekt");
@@ -416,8 +397,6 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
       // Verifiser at ingen valideringsfeil
       await aarsavregningPage.verifiserIngenFeilmelding("utenfor medlemskapsperioden");
       await aarsavregningPage.verifiserIngenFeilmelding("overlapper");
-
-      await runAxeAnalyze(page, testInfo.title);
     });
   });
 });

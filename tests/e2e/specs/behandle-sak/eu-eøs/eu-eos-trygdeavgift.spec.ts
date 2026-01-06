@@ -3,7 +3,7 @@ import { TrygdeavgiftPage } from "../../../pages/behandling/trygdeavgift.page";
 import { InngangPage } from "../../../pages/behandling/inngang.page";
 import { BehandlingPage } from "../../../pages/behandling/behandling.page";
 import { hentPrepopulertSakUrl } from "../../../utils/testdataUtils";
-import { runAxeAnalyze } from "../../../utils/axeUtils";
+import { UI_TEXTS } from "../../../config/ui-texts";
 
 /**
  * E2E-tester for Trygdeavgift-steget i EU/EØS saksbehandling
@@ -42,7 +42,7 @@ test.describe("EU/EØS Trygdeavgift", () => {
     // Steg 2: Gå til Trygdeavgift og verifiser initiell tilstand
     await inngangPage.klikkBekreftOgFortsett();
     const trygdeavgiftPage = new TrygdeavgiftPage(page, saksnummer);
-    await trygdeavgiftPage.verifiserSteg("Trygdeavgift");
+    await trygdeavgiftPage.verifiserSteg(UI_TEXTS.STEG.TRYGDEAVGIFT);
     await trygdeavgiftPage.verifiserSkattepliktigErIkkeValgt();
     await trygdeavgiftPage.verifiserInntektskilderSynlige(false);
 
@@ -56,8 +56,6 @@ test.describe("EU/EØS Trygdeavgift", () => {
 
     // Steg 3: Gå til Bekreftelse og verifiser intiell tilstand
     await inngangPage.klikkBekreftOgFortsett();
-    await trygdeavgiftPage.verifiserSteg("Bekreftelse");
-
-    await runAxeAnalyze(page, testInfo.title);
+    await trygdeavgiftPage.verifiserSteg(UI_TEXTS.STEG.BEKREFTELSE);
   });
 });

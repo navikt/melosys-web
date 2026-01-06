@@ -1,5 +1,4 @@
 import { test } from "../../recording/fixtures";
-import { runAxeAnalyze } from "../../utils/axeUtils";
 import { HovedsidePage } from "../../pages/hovedside.page";
 import { OpprettNySakPage } from "../../pages/opprett-ny-sak/opprett-ny-sak.page";
 import { assertErrors } from "../../utils/testUtils";
@@ -18,15 +17,14 @@ test.describe("'Opprett ny sak/behandling' hovedside", () => {
     page,
   }, testInfo) => {
     await opprettNySakPage.verifiserAlleElementer();
-    await runAxeAnalyze(page, testInfo.title);
   });
 
+  // TODO: Re-enable when validation logic is fixed
+  // Issue: Validation does not trigger error messages for empty required fields
   test.skip("Klikk på 'Opprett ny behandling' når ingen påkrevde felter er fylt ut og verifiser feilmeldinger", async ({
     page,
   }, testInfo) => {
     await opprettNySakPage.klikkOpprettNyBehandling();
     await assertErrors(page, ["Skriv inn gyldig f.nr. eller d-nr."]);
-
-    await runAxeAnalyze(page, testInfo.title);
   });
 });

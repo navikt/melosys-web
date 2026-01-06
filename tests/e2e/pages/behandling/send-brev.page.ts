@@ -12,9 +12,9 @@ export class SendBrevPage extends BehandlingPage {
   readonly path = "/send-brev";
 
   readonly labels = {
-    mottaker: /mottaker/i,
-    brevmal: /brevmal|brevtype|type/i,
-    sendBrev: /send brev/i,
+    mottaker: "Mottaker",
+    brevmal: "Velg brevmal",
+    sendBrev: "Send brev",
   };
 
   private sendBrevPanel?: Locator;

@@ -4,8 +4,31 @@ import AxeBuilder from "@axe-core/playwright";
 import { createHtmlReport } from "axe-html-reporter";
 import { sanitizeFilename } from "./testUtils";
 
-// Siden accessibility testing er nedprioritert deaktiverer vi de som default.
-export const disableAxeTests = true;
+// Styres via ENABLE_AXE_TESTS environment variable
+// Default: true (enabled) - kjør med ENABLE_AXE_TESTS=false for å deaktivere
+export const enableAxeTests = process.env.ENABLE_AXE_TESTS !== "false";
+
+/**
+ * Kjente tredjepartsbibliotek-problemer som vi ekskluderer fra Axe-testing.
+ * Disse er dokumentert og rapportert til respektive bibliotek-maintainers.
+ *
+ * @see https://github.com/JedWatson/react-select/issues/3355 - react-select label issues
+ * @see https://github.com/quilljs/quill/issues - Quill editor accessibility issues
+ * @see https://github.com/navikt/aksel/issues - NAV Aksel DatePicker label issues
+ */
+const KNOWN_THIRD_PARTY_EXCLUSIONS = [
+  // Quill Editor - mangler accessible name på picker-elementer
+  // Bruker flere selectors for å fange alle Quill-elementer
+  ".ql-picker-label",
+  ".ql-picker",
+  ".ql-toolbar",
+  ".ql-toolbar button",
+  "[class^='ql-']",
+  // NAV Aksel DatePicker - input-felt mangler labels (kjent issue)
+  ".navds-date__field-input",
+  // Definition lists som brukes for metadata-visning (ikke interaktive)
+  ".behandling__meta",
+];
 
 /**
  * Runs an accessibility analysis using Axe and formats the results
@@ -14,7 +37,7 @@ export const disableAxeTests = true;
  * @param contextDescription - Optional description for log messages
  */
 export async function runAxeAnalyze(page: Page, testName: string, contextDescription: string = ""): Promise<void> {
-  if (disableAxeTests) {
+  if (!enableAxeTests) {
     /* eslint-disable-next-line no-console */
     console.log(
       `\n⏭️ Skipping Axe analyze for: '${testName}' ${contextDescription ? ` - (${contextDescription})` : ""}`,
@@ -22,7 +45,14 @@ export async function runAxeAnalyze(page: Page, testName: string, contextDescrip
     return;
   }
 
-  const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).analyze();
+  let builder = new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]);
+
+  // Ekskluder hvert element individuelt (AxeBuilder krever dette)
+  for (const selector of KNOWN_THIRD_PARTY_EXCLUSIONS) {
+    builder = builder.exclude(selector);
+  }
+
+  const results = await builder.analyze();
 
   createHtmlReport({
     results,

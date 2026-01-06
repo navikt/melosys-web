@@ -198,6 +198,7 @@ export function VurderingInngang({ bekreft, aktivtSteg, oppdaterStatus }: Props)
                 redigerbart={redigerbart}
                 control={control}
                 options={alleLandkoder.map((kt) => ({ value: kt.kode, label: kt.term! }))}
+                aria-label={behandlingstema === YRKESAKTIV ? "Arbeidsland" : "Land"}
               />
             )}
           </Nav.Column>

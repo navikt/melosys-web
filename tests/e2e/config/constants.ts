@@ -9,8 +9,10 @@
 export const PORTS = {
   /** Vite dev server port */
   VITE: 3333,
-  /** Mock API server port (and real API in local dev) */
+  /** Real API server port (melosys-api) */
   API: 8080,
+  /** Mock API server port (used in playback mode) */
+  MOCK_API: 8081,
 } as const;
 
 /** Timeout values in milliseconds */
@@ -40,10 +42,12 @@ export const PATHS = {
 
 /** Shell commands for starting servers */
 export const COMMANDS = {
-  /** Start Vite dev server with local config */
+  /** Start Vite dev server with local config (uses real API on port 8080) */
   VITE: `node generate-local-config.mjs .local.env && npx vite --port ${PORTS.VITE}`,
-  /** Start mock API server */
-  MOCK_SERVER: "cd tests/e2e/mock-server && npm start",
+  /** Start Vite dev server pointing to mock API (for playback mode) */
+  VITE_PLAYBACK: `node generate-local-config.mjs .local.env && VITE_API_PORT=${PORTS.MOCK_API} npx vite --port ${PORTS.VITE}`,
+  /** Start mock API server on dedicated port */
+  MOCK_SERVER: `cd tests/e2e/mock-server && PORT=${PORTS.MOCK_API} npm start`,
 } as const;
 
 /** CI environment configuration */

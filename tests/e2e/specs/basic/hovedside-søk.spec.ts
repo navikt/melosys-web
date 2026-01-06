@@ -1,5 +1,4 @@
 import { test } from "../../recording/fixtures";
-import { runAxeAnalyze } from "../../utils/axeUtils";
 import { HovedsidePage, USER_ID_INVALID, USER_ID_VALID } from "../../pages/hovedside.page";
 import { SokPage } from "../../pages/sok.page";
 
@@ -12,8 +11,6 @@ test("Søk etter gyldig ID og verifiser resultater", async ({ page, apiRecorder 
   await mainPage.søk(USER_ID_VALID);
 
   await searchResultsPage.verifyValidSearchResults(USER_ID_VALID);
-
-  await runAxeAnalyze(page, testInfo.title);
 });
 
 test("Søk etter ugyldig ID og verifiser feilmelding", async ({ page, apiRecorder }, testInfo) => {
@@ -25,6 +22,4 @@ test("Søk etter ugyldig ID og verifiser feilmelding", async ({ page, apiRecorde
   await mainPage.søk(USER_ID_INVALID);
 
   await searchResultsPage.verifyInvalidSearchResults(USER_ID_INVALID);
-
-  await runAxeAnalyze(page, testInfo.title);
 });

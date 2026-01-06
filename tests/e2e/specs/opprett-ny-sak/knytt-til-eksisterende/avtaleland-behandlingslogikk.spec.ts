@@ -1,5 +1,4 @@
 import { expect, test } from "../../../recording/fixtures";
-import { runAxeAnalyze } from "../../../utils/axeUtils";
 import { HovedsidePage, USER_ID_VALID } from "../../../pages/hovedside.page";
 import { OpprettNySakPage } from "../../../pages/opprett-ny-sak/opprett-ny-sak.page";
 import { TIMEOUT_FOR_COMPLEX_TESTS } from "../../../utils/testUtils";
@@ -60,8 +59,6 @@ test.describe("Avtaleland behandlingslogikk (regresjon)", () => {
     expect(await opprettNySakPage.erBehandlingstypeGruppeSynlig(), "Behandlingstype-gruppe skal ikke være synlig").toBe(
       false,
     );
-
-    await runAxeAnalyze(page, testInfo.title);
   });
 
   test("Regresjon: Avtaleland med henlagt søknad - viser varselmelding", async ({ page, apiRecorder }, testInfo) => {
@@ -96,8 +93,6 @@ test.describe("Avtaleland behandlingslogikk (regresjon)", () => {
       await opprettNySakPage.erBehandlingstypeGruppeSynlig(),
       "Behandlingstype-gruppe skal ikke være synlig for henlagt behandling",
     ).toBe(false);
-
-    await runAxeAnalyze(page, testInfo.title);
   });
 
   test("Regresjon: Avtaleland med ferdigbehandlede - Ny vurdering og Henvendelse tilgjengelig", async ({
@@ -133,7 +128,5 @@ test.describe("Avtaleland behandlingslogikk (regresjon)", () => {
       await opprettNySakPage.harFeilmelding(),
       `Ingen feilmelding skal vises for ferdigbehandlet Avtaleland-sak ${sakId}`,
     ).toBe(false);
-
-    await runAxeAnalyze(page, testInfo.title);
   });
 });
