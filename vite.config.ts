@@ -72,9 +72,9 @@ export default defineConfig({
         rewrite: (urlpath) => urlpath.replace(/^\/faktureringskomponenten/, ""),
       },
     },
-    // Ignore node_modules and dist directories during watch (moved from vitest.config watchExclude)
+    // Ignore directories during watch to prevent HMR reloads during E2E tests
     watch: {
-      ignored: ["**/node_modules/**", "**/dist/**"],
+      ignored: ["**/node_modules/**", "**/dist/**", "**/tests/e2e/reports/**", "**/tests/e2e/artifacts/**"],
     },
   },
   optimizeDeps: {
