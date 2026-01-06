@@ -7,11 +7,11 @@
  */
 import { resetTestData } from "./utils/testdataUtils";
 import { withDatabase } from "./utils/databaseHelper";
-import { writeFileSync, existsSync, readFileSync, mkdirSync } from "fs";
+import { writeFileSync, existsSync, readFileSync } from "fs";
 import { tmpdir } from "os";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
-import { getTestMode, shouldUseMockServer, shouldRecordResponses } from "./config/mode";
+import { getTestMode, shouldUseMockServer } from "./config/mode";
 
 // ES module equivalent of __dirname
 const __filename = fileURLToPath(import.meta.url);
@@ -126,7 +126,7 @@ async function globalSetup() {
       // In record mode, also save metadata to recordings directory for playback
       if (mode === "record") {
         const recordingsMetadataPath = join(__dirname, "recordings", "metadata.json");
-        writeFileSync(recordingsMetadataPath, JSON.stringify(metadata, null, 2));
+        writeFileSync(recordingsMetadataPath, JSON.stringify(metadata, null, 2) + "\n");
         console.log(`  Metadata also saved to ${recordingsMetadataPath} for playback\n`);
       }
     }

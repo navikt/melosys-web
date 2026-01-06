@@ -49,25 +49,6 @@ function createNormalizedKey(request: MatchRequest): string {
 }
 
 /**
- * Extract path parameters from a URL based on a normalized pattern.
- */
-function extractPathParams(pathname: string, normalizedPattern: string): Record<string, string> {
-  const params: Record<string, string> = {};
-
-  const pathParts = pathname.split("/");
-  const patternParts = normalizedPattern.split("/");
-
-  for (let i = 0; i < patternParts.length; i++) {
-    if (patternParts[i].startsWith(":")) {
-      const paramName = patternParts[i].substring(1);
-      params[paramName] = pathParts[i];
-    }
-  }
-
-  return params;
-}
-
-/**
  * Recording Matcher - matches incoming requests to recorded exchanges.
  *
  * Supports per-worker sequence tracking for parallel test execution:

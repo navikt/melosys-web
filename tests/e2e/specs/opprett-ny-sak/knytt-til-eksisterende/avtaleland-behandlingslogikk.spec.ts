@@ -56,9 +56,7 @@ test.describe("Avtaleland behandlingslogikk (regresjon)", () => {
     ).toBe(true);
 
     // Behandlingstype-gruppen skal IKKE være synlig
-    expect(await opprettNySakPage.erBehandlingstypeGruppeSynlig(), "Behandlingstype-gruppe skal ikke være synlig").toBe(
-      false,
-    );
+    await opprettNySakPage.verifiserBehandlingstypeGruppeIkkeSynlig();
   });
 
   test("Regresjon: Avtaleland med henlagt søknad - viser varselmelding", async ({ page, apiRecorder }, testInfo) => {
@@ -89,10 +87,7 @@ test.describe("Avtaleland behandlingslogikk (regresjon)", () => {
     ).toBe(true);
 
     // Behandlingstype-gruppen skal IKKE være synlig når behandling er henlagt
-    expect(
-      await opprettNySakPage.erBehandlingstypeGruppeSynlig(),
-      "Behandlingstype-gruppe skal ikke være synlig for henlagt behandling",
-    ).toBe(false);
+    await opprettNySakPage.verifiserBehandlingstypeGruppeIkkeSynlig();
   });
 
   test("Regresjon: Avtaleland med ferdigbehandlede - Ny vurdering og Henvendelse tilgjengelig", async ({
