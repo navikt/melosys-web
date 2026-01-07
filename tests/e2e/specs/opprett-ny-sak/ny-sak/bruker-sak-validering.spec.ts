@@ -2,22 +2,25 @@ import { test } from "../../../recording/fixtures";
 import { HovedsidePage, USER_ID_VALID } from "../../../pages/hovedside.page";
 import { OpprettNySakPage } from "../../../pages/opprett-ny-sak/opprett-ny-sak.page";
 import { assertErrors, assertNyBehandlingOpprettet } from "../../../utils/testUtils";
+import { Page } from "@playwright/test";
 
-let opprettNySakPage: OpprettNySakPage;
+/**
+ * Gjenbrukbar setup-funksjon som navigerer til opprett ny sak-siden
+ * Returnerer opprettNySakPage for å unngå race conditions ved parallell kjøring
+ */
+async function setupOpprettNySakTest(page: Page): Promise<OpprettNySakPage> {
+  const mainPage = new HovedsidePage(page);
+  const opprettNySakPage = new OpprettNySakPage(page);
+
+  await mainPage.goto();
+  await mainPage.klikkOpprettNySakKnapp();
+
+  return opprettNySakPage;
+}
 
 test.describe("'Opprett ny sak for bruker", () => {
-  // Kjør tester serielt fordi de deler module-level state (opprettNySakPage)
-  test.describe.configure({ mode: "serial" });
-
-  test.beforeEach(async ({ page, apiRecorder }) => {
-    const mainPage = new HovedsidePage(page);
-    opprettNySakPage = new OpprettNySakPage(page);
-
-    await mainPage.goto();
-    await mainPage.klikkOpprettNySakKnapp();
-  });
-
   test("Manglende påkrevde felt - viser feilmeldinger", async ({ page, apiRecorder }, testInfo) => {
+    const opprettNySakPage = await setupOpprettNySakTest(page);
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgOpprettNySak();
     await opprettNySakPage.klikkOpprettNyBehandling();
@@ -32,6 +35,7 @@ test.describe("'Opprett ny sak for bruker", () => {
   });
 
   test("Alle påkrevde felt utfylt - oppretter behandling", async ({ page, apiRecorder }, testInfo) => {
+    const opprettNySakPage = await setupOpprettNySakTest(page);
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgOpprettNySak();
 
@@ -52,7 +56,7 @@ test.describe("'Opprett ny sak for bruker", () => {
   test('Opprett sak for sakstype "EU/EØS-land" og verifiser at det ikke oppstår noen feil', async ({
     page,
   }, testInfo) => {
-    // beforeEach allerede setter opp siden
+    const opprettNySakPage = await setupOpprettNySakTest(page);
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgOpprettNySak();
 
@@ -76,7 +80,7 @@ test.describe("'Opprett ny sak for bruker", () => {
   test('Opprett sak for sakstype "EU/EØS-land", sakstema "Medlemsskap og lovvalg", uten å velge fra- til-dato og verifiser at det ikke oppstår noen feil', async ({
     page,
   }, testInfo) => {
-    // beforeEach allerede setter opp siden
+    const opprettNySakPage = await setupOpprettNySakTest(page);
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgOpprettNySak();
 
@@ -101,7 +105,7 @@ test.describe("'Opprett ny sak for bruker", () => {
   test.skip('Opprett sak for sakstype "EU/EØS-land", sakstema "Medlemsskap og lovvalg", uten å velge land og verifiser at det ikke oppstår noen feil', async ({
     page,
   }, testInfo) => {
-    // beforeEach allerede setter opp siden
+    const opprettNySakPage = await setupOpprettNySakTest(page);
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgOpprettNySak();
 
@@ -128,7 +132,7 @@ test.describe("'Opprett ny sak for bruker", () => {
   test('Opprett sak for sakstype "Avtaleland" og verifiser at det ikke oppstår noen feil', async ({
     page,
   }, testInfo) => {
-    // beforeEach allerede setter opp siden
+    const opprettNySakPage = await setupOpprettNySakTest(page);
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgOpprettNySak();
 
@@ -148,7 +152,7 @@ test.describe("'Opprett ny sak for bruker", () => {
   test('Opprett sak for sakstype "Utenfor avtaleland" og verifiser at det ikke oppstår noen feil', async ({
     page,
   }, testInfo) => {
-    // beforeEach allerede setter opp siden
+    const opprettNySakPage = await setupOpprettNySakTest(page);
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgOpprettNySak();
 
@@ -168,7 +172,7 @@ test.describe("'Opprett ny sak for bruker", () => {
   test('Opprett sak for sakstype "Utenfor avtaleland" med behandlingstype "Årsavregning" og verifiser at det ikke oppstår noen feil', async ({
     page,
   }, testInfo) => {
-    // beforeEach allerede setter opp siden
+    const opprettNySakPage = await setupOpprettNySakTest(page);
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgOpprettNySak();
 

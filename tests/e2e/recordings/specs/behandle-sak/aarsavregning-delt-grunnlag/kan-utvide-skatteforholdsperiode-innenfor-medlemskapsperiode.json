@@ -1539,7 +1539,20 @@
         "headers": {
           "content-type": "application/json"
         },
-        "body": []
+        "body": [
+          {
+            "kode": "MEDLEMSKAP_LOVVALG",
+            "term": "Medlemskap og lovvalg"
+          },
+          {
+            "kode": "UNNTAK",
+            "term": "Unntak"
+          },
+          {
+            "kode": "TRYGDEAVGIFT",
+            "term": "Trygdeavgift"
+          }
+        ]
       }
     },
     {
@@ -1563,7 +1576,20 @@
         "headers": {
           "content-type": "application/json"
         },
-        "body": []
+        "body": [
+          {
+            "kode": "EU_EOS",
+            "term": "EU/EØS-land"
+          },
+          {
+            "kode": "FTRL",
+            "term": "Utenfor avtaleland"
+          },
+          {
+            "kode": "TRYGDEAVTALE",
+            "term": "Avtaleland"
+          }
+        ]
       }
     },
     {
