@@ -425,6 +425,59 @@ describe("journalforing operations", () => {
       expect(finalState.form.testForm.values.vurderDokument).toBe(true);
     });
 
+    it("tillater behandlingstyper for EØS-sak med pågående artikkel 16 og sendt anmodning om unntak", async () => {
+      // Mock anmodningsperiode som er sendt til utland
+      mswServer.use(
+        http.get("/api/anmodningsperioder/:behandlingId", () =>
+          HttpResponse.json({ anmodningsperioder: [{ sendtUtland: true }] }),
+        ),
+        http.get("/api/fagsaker/:saksnummer/trygdeavgift/oppsummering", () =>
+          HttpResponse.json({ harBehandlingMedTrygdeavgift: false }),
+        ),
+        http.get("/api/saksbehandling/behandlingstemaer/hent-lovlige-kombinasjoner/", () =>
+          HttpResponse.json([{ kode: MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV, term: "Yrkesaktiv" }]),
+        ),
+        http.get("/api/saksbehandling/:saksnummer/behandlingstyper/kombinasjoner-for-knytt-sak/", () =>
+          HttpResponse.json([{ kode: MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING, term: "Ny vurdering" }]),
+        ),
+      );
+
+      const artikkel16EøsSak: Sak = {
+        ...baseSak,
+        sakstype: { kode: MKV.Koder.sakstyper.EU_EOS, term: "EU/EØS" },
+        behandlingOversikter: [
+          {
+            ...baseSak.behandlingOversikter[0],
+            behandlingsstatus: {
+              kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
+              term: "Under behandling",
+            },
+          },
+        ],
+      };
+
+      const initialState: Partial<RootState> = {
+        form: {
+          testForm: {
+            values: {},
+          },
+        },
+      };
+
+      const store = createTestStore(initialState);
+
+      const result = await store.dispatch(
+        operations.prepareKnyttTilSakForm(artikkel16EøsSak, false, "BRUKER", feltNavn) as any,
+      );
+
+      // For EØS-sak med pågående artikkel 16 og sendt anmodning om unntak skal behandlingstyper IKKE filtreres bort
+      expect(result.sisteBehandlingErPågåendeArtikkel16Sak).toBe(true);
+      expect(result.muligeBehandlingstyper).toEqual([
+        { kode: MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING, term: "Ny vurdering" },
+      ]);
+      expect(result.sisteBehandlingKanOpprettesAndregangsbehandlingPå).toBe(true);
+    });
+
     it("håndterer API-feil gracefully med .catch() fallbacks", async () => {
       mswServer.use(
         http.get("/api/anmodningsperioder/:behandlingId", () => new HttpResponse(null, { status: 500 })),

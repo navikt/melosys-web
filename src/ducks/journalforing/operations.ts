@@ -142,7 +142,10 @@ export function prepareKnyttTilSakForm(
     );
 
     let muligeBehandlingstyper;
-    if (erEøsEllerAvtaleland && !erEøsPensjonist && harÅpneBehandlinger) {
+    if (sisteBehandlingErPågåendeArtikkel16Sak) {
+      // For pågående Artikkel 16-sak med sendt anmodning om unntak: bruk API-responsen direkte
+      muligeBehandlingstyper = alleMuligeBehandlingstyper;
+    } else if (erEøsEllerAvtaleland && !erEøsPensjonist && harÅpneBehandlinger) {
       // For EØS/AVTALELAND med åpne behandlinger: ingen behandlingstyper
       muligeBehandlingstyper = [];
     } else if (harÅpneIkkeÅrsavregningsbehandlinger && sakstype.kode !== MKV.Koder.sakstyper.FTRL) {
